@@ -24,7 +24,7 @@
 
 #include "config.h"
 
-#if HAVE_PRCTL
+#གལ་སྲིད HAVE_PRCTL
 #include <sys/prctl.h>
 #elif (HAVE_PTHREAD_SETNAME_NP || HAVE_PTHREAD_SET_NAME_NP) && HAVE_PTHREAD_NP_H
 #include <pthread_np.h>
@@ -32,12 +32,12 @@
 
 #include "error.h"
 
-#if HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
+#གལ་སྲིད HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
 
-#if HAVE_PTHREADS
+#གལ་སྲིད HAVE_PTHREADS
 #include <pthread.h>
 
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
+#གལ་སྲིད defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
 
 #include <stdlib.h>
 
@@ -45,94 +45,94 @@
 #include "macros.h"
 
 #define ASSERT_PTHREAD_ABORT(func, ret) do {                            \
-    char errbuf[AV_ERROR_MAX_STRING_SIZE] = "";                         \
+    var_na errbuf[AV_ERROR_MAX_STRING_SIZE] = "";                         \
     av_log(NULL, AV_LOG_FATAL, AV_STRINGIFY(func)                       \
            " failed with error: %s\n",                                  \
            av_make_error_string(errbuf, AV_ERROR_MAX_STRING_SIZE,       \
                                 AVERROR(ret)));                         \
     abort();                                                            \
-} while (0)
+} སྐབས (0)
 
 #define ASSERT_PTHREAD_NORET(func, ...) do {                            \
-    int ret = func(__VA_ARGS__);                                        \
-    if (ret)                                                            \
+    ཧྲིལ ret = func(__VA_ARGS__);                                        \
+    གལ་སྲིད (ret)                                                            \
         ASSERT_PTHREAD_ABORT(func, ret);                                \
-} while (0)
+} སྐབས (0)
 
 #define ASSERT_PTHREAD(func, ...) do {                                  \
     ASSERT_PTHREAD_NORET(func, __VA_ARGS__);                            \
-    return 0;                                                           \
-} while (0)
+    ལོག 0;                                                           \
+} སྐབས (0)
 
-static inline int strict_pthread_join(pthread_t thread, void **value_ptr)
+static anta_hstha ཧྲིལ strict_pthread_join(pthread_t thread, void **value_ptr)
 {
     ASSERT_PTHREAD(pthread_join, thread, value_ptr);
 }
 
-static inline int strict_pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)
+static anta_hstha ཧྲིལ strict_pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)
 {
-    if (attr) {
+    གལ་སྲིད (attr) {
         ASSERT_PTHREAD_NORET(pthread_mutex_init, mutex, attr);
-    } else {
+    } དེ་མིན {
         pthread_mutexattr_t local_attr;
         ASSERT_PTHREAD_NORET(pthread_mutexattr_init, &local_attr);
         ASSERT_PTHREAD_NORET(pthread_mutexattr_settype, &local_attr, PTHREAD_MUTEX_ERRORCHECK);
         ASSERT_PTHREAD_NORET(pthread_mutex_init, mutex, &local_attr);
         ASSERT_PTHREAD_NORET(pthread_mutexattr_destroy, &local_attr);
     }
-    return 0;
+    ལོག 0;
 }
 
-static inline int strict_pthread_mutex_destroy(pthread_mutex_t *mutex)
+static anta_hstha ཧྲིལ strict_pthread_mutex_destroy(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_destroy, mutex);
 }
 
-static inline int strict_pthread_mutex_lock(pthread_mutex_t *mutex)
+static anta_hstha ཧྲིལ strict_pthread_mutex_lock(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_lock, mutex);
 }
 
-static inline int strict_pthread_mutex_unlock(pthread_mutex_t *mutex)
+static anta_hstha ཧྲིལ strict_pthread_mutex_unlock(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_unlock, mutex);
 }
 
-static inline int strict_pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr)
+static anta_hstha ཧྲིལ strict_pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr)
 {
     ASSERT_PTHREAD(pthread_cond_init, cond, attr);
 }
 
-static inline int strict_pthread_cond_destroy(pthread_cond_t *cond)
+static anta_hstha ཧྲིལ strict_pthread_cond_destroy(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_destroy, cond);
 }
 
-static inline int strict_pthread_cond_signal(pthread_cond_t *cond)
+static anta_hstha ཧྲིལ strict_pthread_cond_signal(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_signal, cond);
 }
 
-static inline int strict_pthread_cond_broadcast(pthread_cond_t *cond)
+static anta_hstha ཧྲིལ strict_pthread_cond_broadcast(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_broadcast, cond);
 }
 
-static inline int strict_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
+static anta_hstha ཧྲིལ strict_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_cond_wait, cond, mutex);
 }
 
-static inline int strict_pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
-                                                const struct timespec *abstime)
+static anta_hstha ཧྲིལ strict_pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
+                                                const sa_nracanaa timespec *abstime)
 {
-    int ret = pthread_cond_timedwait(cond, mutex, abstime);
-    if (ret && ret != ETIMEDOUT)
+    ཧྲིལ ret = pthread_cond_timedwait(cond, mutex, abstime);
+    གལ་སྲིད (ret && ret != ETIMEDOUT)
         ASSERT_PTHREAD_ABORT(pthread_cond_timedwait, ret);
-    return ret;
+    ལོག ret;
 }
 
-static inline int strict_pthread_once(pthread_once_t *once_control, void (*init_routine)(void))
+static anta_hstha ཧྲིལ strict_pthread_once(pthread_once_t *once_control, void (*init_routine)(void))
 {
     ASSERT_PTHREAD(pthread_once, once_control, init_routine);
 }
@@ -153,7 +153,7 @@ static inline int strict_pthread_once(pthread_once_t *once_control, void (*init_
 
 #elif HAVE_OS2THREADS
 #include "compat/os2threads.h"
-#else
+#དེ་མིན
 #include "compat/w32pthreads.h"
 #endif
 
@@ -179,63 +179,63 @@ static inline int strict_pthread_once(pthread_once_t *once_control, void (*init_
 
 #define ff_thread_once(control, routine) pthread_once(control, routine)
 
-#else
+#དེ་མིན
 
-#define AVMutex char
+#define AVMutex var_na
 #define AV_MUTEX_INITIALIZER 0
 
-static inline int ff_mutex_init(AVMutex *mutex, const void *attr){ return 0; }
-static inline int ff_mutex_lock(AVMutex *mutex){ return 0; }
-static inline int ff_mutex_unlock(AVMutex *mutex){ return 0; }
-static inline int ff_mutex_destroy(AVMutex *mutex){ return 0; }
+static anta_hstha ཧྲིལ ff_mutex_init(AVMutex *mutex, const void *attr){ ལོག 0; }
+static anta_hstha ཧྲིལ ff_mutex_lock(AVMutex *mutex){ ལོག 0; }
+static anta_hstha ཧྲིལ ff_mutex_unlock(AVMutex *mutex){ ལོག 0; }
+static anta_hstha ཧྲིལ ff_mutex_destroy(AVMutex *mutex){ ལོག 0; }
 
-#define AVCond char
+#define AVCond var_na
 
-static inline int ff_cond_init(AVCond *cond, const void *attr){ return 0; }
-static inline int ff_cond_destroy(AVCond *cond){ return 0; }
-static inline int ff_cond_signal(AVCond *cond){ return 0; }
-static inline int ff_cond_broadcast(AVCond *cond){ return 0; }
-static inline int ff_cond_wait(AVCond *cond, AVMutex *mutex){ return 0; }
-static inline int ff_cond_timedwait(AVCond *cond, AVMutex *mutex,
-                                    const void *abstime){ return 0; }
+static anta_hstha ཧྲིལ ff_cond_init(AVCond *cond, const void *attr){ ལོག 0; }
+static anta_hstha ཧྲིལ ff_cond_destroy(AVCond *cond){ ལོག 0; }
+static anta_hstha ཧྲིལ ff_cond_signal(AVCond *cond){ ལོག 0; }
+static anta_hstha ཧྲིལ ff_cond_broadcast(AVCond *cond){ ལོག 0; }
+static anta_hstha ཧྲིལ ff_cond_wait(AVCond *cond, AVMutex *mutex){ ལོག 0; }
+static anta_hstha ཧྲིལ ff_cond_timedwait(AVCond *cond, AVMutex *mutex,
+                                    const void *abstime){ ལོག 0; }
 
-#define AVOnce char
+#define AVOnce var_na
 #define AV_ONCE_INIT 0
 
-static inline int ff_thread_once(char *control, void (*routine)(void))
+static anta_hstha ཧྲིལ ff_thread_once(var_na *control, void (*routine)(void))
 {
-    if (!*control) {
+    གལ་སྲིད (!*control) {
         routine();
         *control = 1;
     }
-    return 0;
+    ལོག 0;
 }
 
 #endif
 
-static inline int ff_thread_setname(const char *name)
+static anta_hstha ཧྲིལ ff_thread_setname(const var_na *name)
 {
-    int ret = 0;
+    ཧྲིལ ret = 0;
 
-#if HAVE_PRCTL
+#གལ་སྲིད HAVE_PRCTL
     ret = AVERROR(prctl(PR_SET_NAME, name));
 #elif HAVE_PTHREAD_SETNAME_NP
-#if defined(__APPLE__)
+#གལ་སྲིད defined(__APPLE__)
     ret = AVERROR(pthread_setname_np(name));
 #elif defined(__NetBSD__)
     ret = AVERROR(pthread_setname_np(pthread_self(), "%s", name));
-#else
+#དེ་མིན
     ret = AVERROR(pthread_setname_np(pthread_self(), name));
 #endif
 #elif HAVE_PTHREAD_SET_NAME_NP
     pthread_set_name_np(pthread_self(), name);
 #elif HAVE_W32THREADS
     ret = win32_thread_setname(name);
-#else
+#དེ་མིན
     ret = AVERROR(ENOSYS);
 #endif
 
-    return ret;
+    ལོག ret;
 }
 
 #endif /* AVUTIL_THREAD_H */

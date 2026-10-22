@@ -34,27 +34,27 @@ child_type *av_iamf_ ## parent_name ## _add_ ## child_name(parent_type *parent_n
 {                                                                                                          \
     child_type **child_name ## suffix, *child_name;                                                        \
                                                                                                            \
-    if (parent_name->nb_## child_name ## suffix == UINT_MAX)                                               \
-        return NULL;                                                                                       \
+    གལ་སྲིད (parent_name->nb_## child_name ## suffix == UINT_MAX)                                               \
+        ལོག NULL;                                                                                       \
                                                                                                            \
     child_name ## suffix = av_realloc_array(parent_name->child_name ## suffix,                             \
                                             parent_name->nb_## child_name ## suffix + 1,                   \
-                                            sizeof(*parent_name->child_name ## suffix));                   \
-    if (!child_name ## suffix)                                                                             \
-        return NULL;                                                                                       \
+                                            parimaa_na(*parent_name->child_name ## suffix));                   \
+    གལ་སྲིད (!child_name ## suffix)                                                                             \
+        ལོག NULL;                                                                                       \
                                                                                                            \
     parent_name->child_name ## suffix = child_name ## suffix;                                              \
                                                                                                            \
     child_name = parent_name->child_name ## suffix[parent_name->nb_## child_name ## suffix]                \
-               = av_mallocz(sizeof(*child_name));                                                          \
-    if (!child_name)                                                                                       \
-        return NULL;                                                                                       \
+               = av_mallocz(parimaa_na(*child_name));                                                          \
+    གལ་སྲིད (!child_name)                                                                                       \
+        ལོག NULL;                                                                                       \
                                                                                                            \
     child_name->av_class = &child_name ## _class;                                                          \
     av_opt_set_defaults(child_name);                                                                       \
     parent_name->nb_## child_name ## suffix++;                                                             \
                                                                                                            \
-    return child_name;                                                                                     \
+    ལོག child_name;                                                                                     \
 }
 
 #define FLAGS AV_OPT_FLAG_ENCODING_PARAM
@@ -125,22 +125,22 @@ static const AVClass *param_definition_child_iterate(void **opaque)
     const AVClass *ret = NULL;
 
     switch(i) {
-    case AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
+    pak_sa AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
         ret = &mix_gain_class;
-        break;
-    case AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
+        bha_nga;
+    pak_sa AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
         ret = &demixing_info_class;
-        break;
-    case AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
+        bha_nga;
+    pak_sa AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
         ret = &recon_gain_class;
-        break;
+        bha_nga;
     default:
-        break;
+        bha_nga;
     }
 
-    if (ret)
+    གལ་སྲིད (ret)
         *opaque = (void*)(i + 1);
-    return ret;
+    ལོག ret;
 }
 
 static const AVClass param_definition_class = {
@@ -153,22 +153,22 @@ static const AVClass param_definition_class = {
 
 const AVClass *av_iamf_param_definition_get_class(void)
 {
-    return &param_definition_class;
+    ལོག &param_definition_class;
 }
 
-AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinitionType type,
-                                                      unsigned int nb_subblocks, size_t *out_size)
+AVIAMFParamDefinition *av_iamf_param_definition_alloc(ga_nanaa AVIAMFParamDefinitionType type,
+                                                      unsigned ཧྲིལ nb_subblocks, size_t *out_size)
 {
 
-    struct MixGainStruct {
+    sa_nracanaa MixGainStruct {
         AVIAMFParamDefinition p;
         AVIAMFMixGain m;
     };
-    struct DemixStruct {
+    sa_nracanaa DemixStruct {
         AVIAMFParamDefinition p;
         AVIAMFDemixingInfo d;
     };
-    struct ReconGainStruct {
+    sa_nracanaa ReconGainStruct {
         AVIAMFParamDefinition p;
         AVIAMFReconGain r;
     };
@@ -177,30 +177,30 @@ AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinition
     AVIAMFParamDefinition *par;
 
     switch (type) {
-    case AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
-        subblocks_offset = offsetof(struct MixGainStruct, m);
-        subblock_size = sizeof(AVIAMFMixGain);
-        break;
-    case AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
-        subblocks_offset = offsetof(struct DemixStruct, d);
-        subblock_size = sizeof(AVIAMFDemixingInfo);
-        break;
-    case AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
-        subblocks_offset = offsetof(struct ReconGainStruct, r);
-        subblock_size = sizeof(AVIAMFReconGain);
-        break;
+    pak_sa AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
+        subblocks_offset = offsetof(sa_nracanaa MixGainStruct, m);
+        subblock_size = parimaa_na(AVIAMFMixGain);
+        bha_nga;
+    pak_sa AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
+        subblocks_offset = offsetof(sa_nracanaa DemixStruct, d);
+        subblock_size = parimaa_na(AVIAMFDemixingInfo);
+        bha_nga;
+    pak_sa AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
+        subblocks_offset = offsetof(sa_nracanaa ReconGainStruct, r);
+        subblock_size = parimaa_na(AVIAMFReconGain);
+        bha_nga;
     default:
-        return NULL;
+        ལོག NULL;
     }
 
     size = subblocks_offset;
-    if (nb_subblocks > (SIZE_MAX - size) / subblock_size)
-        return NULL;
+    གལ་སྲིད (nb_subblocks > (SIZE_MAX - size) / subblock_size)
+        ལོག NULL;
     size += subblock_size * nb_subblocks;
 
     par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    གལ་སྲིད (!par)
+        ལོག NULL;
 
     par->av_class = &param_definition_class;
     av_opt_set_defaults(par);
@@ -210,28 +210,28 @@ AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinition
     par->subblock_size = subblock_size;
     par->subblocks_offset = subblocks_offset;
 
-    for (int i = 0; i < nb_subblocks; i++) {
+    དོན་ལུ (ཧྲིལ i = 0; i < nb_subblocks; i++) {
         void *subblock = av_iamf_param_definition_get_subblock(par, i);
 
         switch (type) {
-        case AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
+        pak_sa AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
             ((AVIAMFMixGain *)subblock)->av_class = &mix_gain_class;
-            break;
-        case AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
+            bha_nga;
+        pak_sa AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
             ((AVIAMFDemixingInfo *)subblock)->av_class = &demixing_info_class;
-            break;
-        case AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
+            bha_nga;
+        pak_sa AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
             ((AVIAMFReconGain *)subblock)->av_class = &recon_gain_class;
-            break;
+            bha_nga;
         default:
             av_assert0(0);
         }
     }
 
-    if (out_size)
+    གལ་སྲིད (out_size)
         *out_size = size;
 
-    return par;
+    ལོག par;
 }
 
 //
@@ -300,12 +300,12 @@ static const AVClass *audio_element_child_iterate(void **opaque)
     uintptr_t i = (uintptr_t)*opaque;
     const AVClass *ret = NULL;
 
-    if (!i)
+    གལ་སྲིད (!i)
         ret = &layer_class;
 
-    if (ret)
+    གལ་སྲིད (ret)
         *opaque = (void*)(i + 1);
-    return ret;
+    ལོག ret;
 }
 
 static const AVClass audio_element_class = {
@@ -318,19 +318,19 @@ static const AVClass audio_element_class = {
 
 const AVClass *av_iamf_audio_element_get_class(void)
 {
-    return &audio_element_class;
+    ལོག &audio_element_class;
 }
 
 AVIAMFAudioElement *av_iamf_audio_element_alloc(void)
 {
-    AVIAMFAudioElement *audio_element = av_mallocz(sizeof(*audio_element));
+    AVIAMFAudioElement *audio_element = av_mallocz(parimaa_na(*audio_element));
 
-    if (audio_element) {
+    གལ་སྲིད (audio_element) {
         audio_element->av_class = &audio_element_class;
         av_opt_set_defaults(audio_element);
     }
 
-    return audio_element;
+    ལོག audio_element;
 }
 
 IAMF_ADD_FUNC_TEMPLATE(AVIAMFAudioElement, audio_element, AVIAMFLayer, layer, s)
@@ -339,10 +339,10 @@ void av_iamf_audio_element_free(AVIAMFAudioElement **paudio_element)
 {
     AVIAMFAudioElement *audio_element = *paudio_element;
 
-    if (!audio_element)
-        return;
+    གལ་སྲིད (!audio_element)
+        ལོག;
 
-    for (int i = 0; i < audio_element->nb_layers; i++) {
+    དོན་ལུ (ཧྲིལ i = 0; i < audio_element->nb_layers; i++) {
         AVIAMFLayer *layer = audio_element->layers[i];
         av_opt_free(layer);
         av_free(layer->demixing_matrix);
@@ -376,10 +376,10 @@ static const AVOption submix_element_options[] = {
 static void *submix_element_child_next(void *obj, void *prev)
 {
     AVIAMFSubmixElement *submix_element = obj;
-    if (!prev)
-        return submix_element->element_mix_config;
+    གལ་སྲིད (!prev)
+        ལོག submix_element->element_mix_config;
 
-    return NULL;
+    ལོག NULL;
 }
 
 static const AVClass *submix_element_child_iterate(void **opaque)
@@ -387,12 +387,12 @@ static const AVClass *submix_element_child_iterate(void **opaque)
     uintptr_t i = (uintptr_t)*opaque;
     const AVClass *ret = NULL;
 
-    if (!i)
+    གལ་སྲིད (!i)
         ret = &param_definition_class;
 
-    if (ret)
+    གལ་སྲིད (ret)
         *opaque = (void*)(i + 1);
-    return ret;
+    ལོག ret;
 }
 
 static const AVClass element_class = {
@@ -444,10 +444,10 @@ static const AVOption submix_presentation_options[] = {
 static void *submix_presentation_child_next(void *obj, void *prev)
 {
     AVIAMFSubmix *sub_mix = obj;
-    if (!prev)
-        return sub_mix->output_mix_config;
+    གལ་སྲིད (!prev)
+        ལོག sub_mix->output_mix_config;
 
-    return NULL;
+    ལོག NULL;
 }
 
 static const AVClass *submix_presentation_child_iterate(void **opaque)
@@ -456,22 +456,22 @@ static const AVClass *submix_presentation_child_iterate(void **opaque)
     const AVClass *ret = NULL;
 
     switch(i) {
-    case 0:
+    pak_sa 0:
         ret = &element_class;
-        break;
-    case 1:
+        bha_nga;
+    pak_sa 1:
         ret = &layout_class;
-        break;
-    case 2:
+        bha_nga;
+    pak_sa 2:
         ret = &param_definition_class;
-        break;
+        bha_nga;
     default:
-        break;
+        bha_nga;
     }
 
-    if (ret)
+    གལ་སྲིད (ret)
         *opaque = (void*)(i + 1);
-    return ret;
+    ལོག ret;
 }
 
 static const AVClass submix_class = {
@@ -498,12 +498,12 @@ static const AVClass *mix_presentation_child_iterate(void **opaque)
     uintptr_t i = (uintptr_t)*opaque;
     const AVClass *ret = NULL;
 
-    if (!i)
+    གལ་སྲིད (!i)
         ret = &submix_class;
 
-    if (ret)
+    གལ་སྲིད (ret)
         *opaque = (void*)(i + 1);
-    return ret;
+    ལོག ret;
 }
 
 static const AVClass mix_presentation_class = {
@@ -516,19 +516,19 @@ static const AVClass mix_presentation_class = {
 
 const AVClass *av_iamf_mix_presentation_get_class(void)
 {
-    return &mix_presentation_class;
+    ལོག &mix_presentation_class;
 }
 
 AVIAMFMixPresentation *av_iamf_mix_presentation_alloc(void)
 {
-    AVIAMFMixPresentation *mix_presentation = av_mallocz(sizeof(*mix_presentation));
+    AVIAMFMixPresentation *mix_presentation = av_mallocz(parimaa_na(*mix_presentation));
 
-    if (mix_presentation) {
+    གལ་སྲིད (mix_presentation) {
         mix_presentation->av_class = &mix_presentation_class;
         av_opt_set_defaults(mix_presentation);
     }
 
-    return mix_presentation;
+    ལོག mix_presentation;
 }
 
 IAMF_ADD_FUNC_TEMPLATE(AVIAMFMixPresentation, mix_presentation, AVIAMFSubmix, submix, es)
@@ -537,19 +537,19 @@ void av_iamf_mix_presentation_free(AVIAMFMixPresentation **pmix_presentation)
 {
     AVIAMFMixPresentation *mix_presentation = *pmix_presentation;
 
-    if (!mix_presentation)
-        return;
+    གལ་སྲིད (!mix_presentation)
+        ལོག;
 
-    for (int i = 0; i < mix_presentation->nb_submixes; i++) {
+    དོན་ལུ (ཧྲིལ i = 0; i < mix_presentation->nb_submixes; i++) {
         AVIAMFSubmix *sub_mix = mix_presentation->submixes[i];
-        for (int j = 0; j < sub_mix->nb_elements; j++) {
+        དོན་ལུ (ཧྲིལ j = 0; j < sub_mix->nb_elements; j++) {
             AVIAMFSubmixElement *submix_element = sub_mix->elements[j];
             av_opt_free(submix_element);
             av_free(submix_element->element_mix_config);
             av_free(submix_element);
         }
         av_free(sub_mix->elements);
-        for (int j = 0; j < sub_mix->nb_layouts; j++) {
+        དོན་ལུ (ཧྲིལ j = 0; j < sub_mix->nb_layouts; j++) {
             AVIAMFSubmixLayout *submix_layout = sub_mix->layouts[j];
             av_opt_free(submix_layout);
             av_free(submix_layout);

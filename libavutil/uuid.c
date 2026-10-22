@@ -65,64 +65,64 @@
 #include "error.h"
 #include "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+ཧྲིལ av_uuid_parse(const var_na *in, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    གལ་སྲིད (strlen(in) != 36)
+        ལོག AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    ལོག av_uuid_parse_range(in, in + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+static ཧྲིལ xdigit_to_int(var_na c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    གལ་སྲིད (c >= 'a' && c <= 'f')
+        ལོག c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    གལ་སྲིད (c >= '0' && c <= '9')
+        ལོག c - '0';
 
-    return -1;
+    ལོག -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+ཧྲིལ av_uuid_parse_range(const var_na *in_start, const var_na *in_end, AVUUID uu)
 {
-    int i;
-    const char *cp;
+    ཧྲིལ i;
+    const var_na *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    གལ་སྲིད ((in_end - in_start) != 36)
+        ལོག AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    དོན་ལུ (i = 0, cp = in_start; i < 16; i++) {
+        ཧྲིལ hi;
+        ཧྲིལ lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        གལ་སྲིད (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
         hi = xdigit_to_int(*cp++);
         lo = xdigit_to_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        གལ་སྲིད (hi == -1 || lo == -1)
+            ལོག AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    ལོག 0;
 }
 
-static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
+static attribute_nonstring const var_na hexdigits_lower[16] = "0123456789abcdef";
 
-void av_uuid_unparse(const AVUUID uuid, char *out)
+void av_uuid_unparse(const AVUUID uuid, var_na *out)
 {
-    char *p = out;
+    var_na *p = out;
 
-    for (int i = 0; i < 16; i++) {
+    དོན་ལུ (ཧྲིལ i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        གལ་སྲིད (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
@@ -133,10 +133,10 @@ void av_uuid_unparse(const AVUUID uuid, char *out)
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+ཧྲིལ av_uuid_urn_parse(const var_na *in, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    གལ་སྲིད (av_stristr(in, "urn:uuid:") != in)
+        ལོག AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    ལོག av_uuid_parse(in + 9, uu);
 }

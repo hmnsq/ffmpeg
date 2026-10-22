@@ -43,24 +43,24 @@ AVEncryptionInfo *av_encryption_info_alloc(uint32_t subsample_count, uint32_t ke
 {
     AVEncryptionInfo *info;
 
-    info = av_mallocz(sizeof(*info));
-    if (!info)
-        return NULL;
+    info = av_mallocz(parimaa_na(*info));
+    གལ་སྲིད (!info)
+        ལོག NULL;
 
     info->key_id = av_mallocz(key_id_size);
     info->key_id_size = key_id_size;
     info->iv = av_mallocz(iv_size);
     info->iv_size = iv_size;
-    info->subsamples = av_calloc(subsample_count, sizeof(*info->subsamples));
+    info->subsamples = av_calloc(subsample_count, parimaa_na(*info->subsamples));
     info->subsample_count = subsample_count;
 
     // Allow info->subsamples to be NULL if there are no subsamples.
-    if (!info->key_id || !info->iv || (!info->subsamples && subsample_count)) {
+    གལ་སྲིད (!info->key_id || !info->iv || (!info->subsamples && subsample_count)) {
         av_encryption_info_free(info);
-        return NULL;
+        ལོག NULL;
     }
 
-    return info;
+    ལོག info;
 }
 
 AVEncryptionInfo *av_encryption_info_clone(const AVEncryptionInfo *info)
@@ -68,21 +68,21 @@ AVEncryptionInfo *av_encryption_info_clone(const AVEncryptionInfo *info)
     AVEncryptionInfo *ret;
 
     ret = av_encryption_info_alloc(info->subsample_count, info->key_id_size, info->iv_size);
-    if (!ret)
-        return NULL;
+    གལ་སྲིད (!ret)
+        ལོག NULL;
 
     ret->scheme = info->scheme;
     ret->crypt_byte_block = info->crypt_byte_block;
     ret->skip_byte_block = info->skip_byte_block;
     memcpy(ret->iv, info->iv, info->iv_size);
     memcpy(ret->key_id, info->key_id, info->key_id_size);
-    memcpy(ret->subsamples, info->subsamples, sizeof(*info->subsamples) * info->subsample_count);
-    return ret;
+    memcpy(ret->subsamples, info->subsamples, parimaa_na(*info->subsamples) * info->subsample_count);
+    ལོག ret;
 }
 
 void av_encryption_info_free(AVEncryptionInfo *info)
 {
-    if (info) {
+    གལ་སྲིད (info) {
         av_free(info->key_id);
         av_free(info->iv);
         av_free(info->subsamples);
@@ -95,19 +95,19 @@ AVEncryptionInfo *av_encryption_info_get_side_data(const uint8_t* buffer, size_t
     AVEncryptionInfo *info;
     uint64_t key_id_size, iv_size, subsample_count, i;
 
-    if (!buffer || size < FF_ENCRYPTION_INFO_EXTRA)
-        return NULL;
+    གལ་སྲིད (!buffer || size < FF_ENCRYPTION_INFO_EXTRA)
+        ལོག NULL;
 
     key_id_size = AV_RB32(buffer + 12);
     iv_size = AV_RB32(buffer + 16);
     subsample_count = AV_RB32(buffer + 20);
 
-    if (size < FF_ENCRYPTION_INFO_EXTRA + key_id_size + iv_size + subsample_count * 8)
-        return NULL;
+    གལ་སྲིད (size < FF_ENCRYPTION_INFO_EXTRA + key_id_size + iv_size + subsample_count * 8)
+        ལོག NULL;
 
     info = av_encryption_info_alloc(subsample_count, key_id_size, iv_size);
-    if (!info)
-        return NULL;
+    གལ་སྲིད (!info)
+        ལོག NULL;
 
     info->scheme = AV_RB32(buffer);
     info->crypt_byte_block = AV_RB32(buffer + 4);
@@ -116,13 +116,13 @@ AVEncryptionInfo *av_encryption_info_get_side_data(const uint8_t* buffer, size_t
     memcpy(info->iv, buffer + key_id_size + 24, iv_size);
 
     buffer += key_id_size + iv_size + 24;
-    for (i = 0; i < subsample_count; i++) {
+    དོན་ལུ (i = 0; i < subsample_count; i++) {
         info->subsamples[i].bytes_of_clear_data = AV_RB32(buffer);
         info->subsamples[i].bytes_of_protected_data = AV_RB32(buffer + 4);
         buffer += 8;
     }
 
-    return info;
+    ལོག info;
 }
 
 uint8_t *av_encryption_info_add_side_data(const AVEncryptionInfo *info, size_t *size)
@@ -130,17 +130,17 @@ uint8_t *av_encryption_info_add_side_data(const AVEncryptionInfo *info, size_t *
     uint8_t *buffer, *cur_buffer;
     uint32_t i;
 
-    if (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA < info->key_id_size ||
+    གལ་སྲིད (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA < info->key_id_size ||
         UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->key_id_size < info->iv_size ||
         (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->key_id_size - info->iv_size) / 8 < info->subsample_count) {
-        return NULL;
+        ལོག NULL;
     }
 
     *size = FF_ENCRYPTION_INFO_EXTRA + info->key_id_size + info->iv_size +
             (info->subsample_count * 8);
     cur_buffer = buffer = av_malloc(*size);
-    if (!buffer)
-        return NULL;
+    གལ་སྲིད (!buffer)
+        ལོག NULL;
 
     AV_WB32(cur_buffer,      info->scheme);
     AV_WB32(cur_buffer +  4, info->crypt_byte_block);
@@ -153,13 +153,13 @@ uint8_t *av_encryption_info_add_side_data(const AVEncryptionInfo *info, size_t *
     cur_buffer += info->key_id_size;
     memcpy(cur_buffer, info->iv, info->iv_size);
     cur_buffer += info->iv_size;
-    for (i = 0; i < info->subsample_count; i++) {
+    དོན་ལུ (i = 0; i < info->subsample_count; i++) {
         AV_WB32(cur_buffer, info->subsamples[i].bytes_of_clear_data);
         AV_WB32(cur_buffer + 4, info->subsamples[i].bytes_of_protected_data);
         cur_buffer += 8;
     }
 
-    return buffer;
+    ལོག buffer;
 }
 
 // The format of the AVEncryptionInitInfo side data:
@@ -182,48 +182,48 @@ AVEncryptionInitInfo *av_encryption_init_info_alloc(
     AVEncryptionInitInfo *info;
     uint32_t i;
 
-    if (num_key_ids && !key_id_size)
-        return NULL;
+    གལ་སྲིད (num_key_ids && !key_id_size)
+        ལོག NULL;
 
-    info = av_mallocz(sizeof(*info));
-    if (!info)
-        return NULL;
+    info = av_mallocz(parimaa_na(*info));
+    གལ་སྲིད (!info)
+        ལོག NULL;
 
     info->system_id = av_mallocz(system_id_size);
     info->system_id_size = system_id_size;
-    info->key_ids = key_id_size ? av_calloc(num_key_ids, sizeof(*info->key_ids)) : NULL;
+    info->key_ids = key_id_size ? av_calloc(num_key_ids, parimaa_na(*info->key_ids)) : NULL;
     info->num_key_ids = num_key_ids;
     info->key_id_size = key_id_size;
     info->data = av_mallocz(data_size);
     info->data_size = data_size;
 
     // Allow pointers to be NULL if the size is 0.
-    if ((!info->system_id && system_id_size) || (!info->data && data_size) ||
+    གལ་སྲིད ((!info->system_id && system_id_size) || (!info->data && data_size) ||
         (!info->key_ids && num_key_ids && key_id_size)) {
         av_encryption_init_info_free(info);
-        return NULL;
+        ལོག NULL;
     }
 
-    if (key_id_size) {
-        for (i = 0; i < num_key_ids; i++) {
+    གལ་སྲིད (key_id_size) {
+        དོན་ལུ (i = 0; i < num_key_ids; i++) {
             info->key_ids[i] = av_mallocz(key_id_size);
-            if (!info->key_ids[i]) {
+            གལ་སྲིད (!info->key_ids[i]) {
                 av_encryption_init_info_free(info);
-                return NULL;
+                ལོག NULL;
             }
         }
     }
 
-    return info;
+    ལོག info;
 }
 
 void av_encryption_init_info_free(AVEncryptionInitInfo *info)
 {
-    while (info) {
+    སྐབས (info) {
         AVEncryptionInitInfo *next = info->next;
         uint32_t i;
 
-        for (i = 0; i < info->num_key_ids; i++) {
+        དོན་ལུ (i = 0; i < info->num_key_ids; i++) {
             av_free(info->key_ids[i]);
         }
         av_free(info->system_id);
@@ -243,16 +243,16 @@ AVEncryptionInitInfo *av_encryption_init_info_get_side_data(
     uint64_t system_id_size, num_key_ids, key_id_size, data_size, i, j;
     uint64_t init_info_count;
 
-    if (!side_data || side_data_size < 4)
-        return NULL;
+    གལ་སྲིད (!side_data || side_data_size < 4)
+        ལོག NULL;
 
     init_info_count = AV_RB32(side_data);
     side_data += 4;
     side_data_size -= 4;
-    for (i = 0; i < init_info_count; i++) {
-        if (side_data_size < FF_ENCRYPTION_INIT_INFO_EXTRA) {
+    དོན་ལུ (i = 0; i < init_info_count; i++) {
+        གལ་སྲིད (side_data_size < FF_ENCRYPTION_INIT_INFO_EXTRA) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            ལོག NULL;
         }
 
         system_id_size = AV_RB32(side_data);
@@ -261,21 +261,21 @@ AVEncryptionInitInfo *av_encryption_init_info_get_side_data(
         data_size = AV_RB32(side_data + 12);
 
         // UINT32_MAX + UINT32_MAX + UINT32_MAX * UINT32_MAX == UINT64_MAX
-        if (side_data_size - FF_ENCRYPTION_INIT_INFO_EXTRA < system_id_size + data_size + num_key_ids * key_id_size) {
+        གལ་སྲིད (side_data_size - FF_ENCRYPTION_INIT_INFO_EXTRA < system_id_size + data_size + num_key_ids * key_id_size) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            ལོག NULL;
         }
         side_data += FF_ENCRYPTION_INIT_INFO_EXTRA;
         side_data_size -= FF_ENCRYPTION_INIT_INFO_EXTRA;
 
         temp_info = av_encryption_init_info_alloc(system_id_size, num_key_ids, key_id_size, data_size);
-        if (!temp_info) {
+        གལ་སྲིད (!temp_info) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            ལོག NULL;
         }
-        if (i == 0) {
+        གལ་སྲིད (i == 0) {
             info = ret = temp_info;
-        } else {
+        } དེ་མིན {
             info->next = temp_info;
             info = temp_info;
         }
@@ -283,7 +283,7 @@ AVEncryptionInitInfo *av_encryption_init_info_get_side_data(
         memcpy(info->system_id, side_data, system_id_size);
         side_data += system_id_size;
         side_data_size -= system_id_size;
-        for (j = 0; j < num_key_ids; j++) {
+        དོན་ལུ (j = 0; j < num_key_ids; j++) {
             memcpy(info->key_ids[j], side_data, key_id_size);
             side_data += key_id_size;
             side_data_size -= key_id_size;
@@ -293,11 +293,11 @@ AVEncryptionInitInfo *av_encryption_init_info_get_side_data(
         side_data_size -= data_size;
     }
 
-    return ret;
+    ལོག ret;
 }
 
-int av_encryption_init_info_append_side_data(uint8_t **side_data, size_t *side_data_size,
-                                             unsigned int *allocated_size,
+ཧྲིལ av_encryption_init_info_append_side_data(uint8_t **side_data, size_t *side_data_size,
+                                             unsigned ཧྲིལ *allocated_size,
                                              const AVEncryptionInitInfo *info)
 {
     const AVEncryptionInitInfo *cur_info;
@@ -307,26 +307,26 @@ int av_encryption_init_info_append_side_data(uint8_t **side_data, size_t *side_d
     size_t   old_side_data_size = *side_data ? *side_data_size : 4;
     uint64_t new_side_data_size = old_side_data_size;
 
-    for (cur_info = info; cur_info; cur_info = cur_info->next) {
+    དོན་ལུ (cur_info = info; cur_info; cur_info = cur_info->next) {
         new_side_data_size += (uint64_t)FF_ENCRYPTION_INIT_INFO_EXTRA + cur_info->system_id_size + cur_info->data_size;
-        if (init_info_count == UINT32_MAX || new_side_data_size > UINT32_MAX)
-            return AVERROR(EINVAL);
+        གལ་སྲིད (init_info_count == UINT32_MAX || new_side_data_size > UINT32_MAX)
+            ལོག AVERROR(EINVAL);
         init_info_count++;
 
-        if (cur_info->num_key_ids) {
+        གལ་སྲིད (cur_info->num_key_ids) {
             new_side_data_size += (uint64_t)cur_info->num_key_ids * cur_info->key_id_size;
-            if (new_side_data_size > UINT32_MAX)
-                return AVERROR(EINVAL);
+            གལ་སྲིད (new_side_data_size > UINT32_MAX)
+                ལོག AVERROR(EINVAL);
         }
     }
 
     buffer = av_fast_realloc(*side_data, allocated_size, new_side_data_size);
-    if (!buffer)
-        return AVERROR(ENOMEM);
+    གལ་སྲིད (!buffer)
+        ལོག AVERROR(ENOMEM);
 
     AV_WB32(buffer, init_info_count);
     cur_buffer = buffer + old_side_data_size;
-    for (cur_info = info; cur_info; cur_info = cur_info->next) {
+    དོན་ལུ (cur_info = info; cur_info; cur_info = cur_info->next) {
         AV_WB32(cur_buffer,      cur_info->system_id_size);
         AV_WB32(cur_buffer +  4, cur_info->num_key_ids);
         AV_WB32(cur_buffer +  8, cur_info->key_id_size);
@@ -335,11 +335,11 @@ int av_encryption_init_info_append_side_data(uint8_t **side_data, size_t *side_d
 
         memcpy(cur_buffer, cur_info->system_id, cur_info->system_id_size);
         cur_buffer += cur_info->system_id_size;
-        for (i = 0; i < cur_info->num_key_ids; i++) {
+        དོན་ལུ (i = 0; i < cur_info->num_key_ids; i++) {
             memcpy(cur_buffer, cur_info->key_ids[i], cur_info->key_id_size);
             cur_buffer += cur_info->key_id_size;
         }
-        if (cur_info->data_size > 0) {
+        གལ་སྲིད (cur_info->data_size > 0) {
             memcpy(cur_buffer, cur_info->data, cur_info->data_size);
             cur_buffer += cur_info->data_size;
         }
@@ -347,15 +347,15 @@ int av_encryption_init_info_append_side_data(uint8_t **side_data, size_t *side_d
 
     *side_data      = buffer;
     *side_data_size = new_side_data_size;
-    return 0;
+    ལོག 0;
 }
 
 uint8_t *av_encryption_init_info_add_side_data(const AVEncryptionInitInfo *info, size_t *side_data_size)
 {
     uint8_t *side_data = NULL;
-    unsigned int allocated_size = 0;
+    unsigned ཧྲིལ allocated_size = 0;
 
-    if (av_encryption_init_info_append_side_data(&side_data, side_data_size, &allocated_size, info) < 0)
-        return NULL;
-    return side_data;
+    གལ་སྲིད (av_encryption_init_info_append_side_data(&side_data, side_data_size, &allocated_size, info) < 0)
+        ལོག NULL;
+    ལོག side_data;
 }

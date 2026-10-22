@@ -25,37 +25,37 @@
 
 #define LA_HWCAP_LSX    (1<<4)
 #define LA_HWCAP_LASX   (1<<5)
-static int cpu_flags_getauxval(void)
+static ཧྲིལ cpu_flags_getauxval(void)
 {
-    int flags = 0;
-    int flag  = (int)ff_getauxval(AT_HWCAP);
+    ཧྲིལ flags = 0;
+    ཧྲིལ flag  = (ཧྲིལ)ff_getauxval(AT_HWCAP);
 
-    if (flag & LA_HWCAP_LSX)
+    གལ་སྲིད (flag & LA_HWCAP_LSX)
         flags |= AV_CPU_FLAG_LSX;
-    if (flag & LA_HWCAP_LASX)
+    གལ་སྲིད (flag & LA_HWCAP_LASX)
         flags |= AV_CPU_FLAG_LASX;
 
-    return flags;
+    ལོག flags;
 }
 
-int ff_get_cpu_flags_loongarch(void)
+ཧྲིལ ff_get_cpu_flags_loongarch(void)
 {
-#if defined __linux__
-    return cpu_flags_getauxval();
-#else
+#གལ་སྲིད defined __linux__
+    ལོག cpu_flags_getauxval();
+#དེ་མིན
     /* Assume no SIMD ASE supported */
-    return 0;
+    ལོག 0;
 #endif
 }
 
 size_t ff_get_cpu_max_align_loongarch(void)
 {
-    int flags = av_get_cpu_flags();
+    ཧྲིལ flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_LASX)
-        return 32;
-    if (flags & AV_CPU_FLAG_LSX)
-        return 16;
+    གལ་སྲིད (flags & AV_CPU_FLAG_LASX)
+        ལོག 32;
+    གལ་སྲིད (flags & AV_CPU_FLAG_LSX)
+        ལོག 16;
 
-    return 8;
+    ལོག 8;
 }

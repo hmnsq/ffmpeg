@@ -23,46 +23,46 @@
 #include "libavutil/attributes.h"
 #include "libavutil/reverse.h"
 
-static uint64_t reverse(uint64_t p, unsigned int deg)
+static uint64_t reverse(uint64_t p, unsigned ཧྲིལ deg)
 {
     uint64_t ret = 0;
-    int i;
-    for (i = 0; i < (deg / 8); i += 1) {
+    ཧྲིལ i;
+    དོན་ལུ (i = 0; i < (deg / 8); i += 1) {
         ret = (ret << 8) | (ff_reverse[p & 0xff]);
         p >>= 8;
     }
-    int rem = (deg + 1) - 8 * i;
+    ཧྲིལ rem = (deg + 1) - 8 * i;
     ret = (ret << rem) | (ff_reverse[p & 0xff] >> (8 - rem));
-    return ret;
+    ལོག ret;
 }
 
 av_unused static uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
-                                 uint64_t *div, int bitreverse)
+                                 uint64_t *div, ཧྲིལ bitreverse)
 {
     uint64_t mod, mask, high;
 
-    if (n < deg) {
+    གལ་སྲིད (n < deg) {
         *div = 0;
-        return poly;
+        ལོག poly;
     }
     mask = ((uint64_t)1 << deg) - 1;
     poly &= mask;
     mod = poly;
     *div = 1;
     deg--;
-    while (--n > deg) {
+    སྐབས (--n > deg) {
         high = (mod >> deg) & 1;
         *div = (*div << 1) | high;
         mod <<= 1;
-        if (high)
+        གལ་སྲིད (high)
             mod ^= poly;
     }
     uint64_t ret = mod & mask;
-    if (bitreverse) {
+    གལ་སྲིད (bitreverse) {
         *div = reverse(*div, deg) << 1;
-        return reverse(ret, deg) << 1;
+        ལོག reverse(ret, deg) << 1;
     }
-    return ret;
+    ལོག ret;
 }
 
 #endif /* AVUTIL_CRC_INTERNAL_H */

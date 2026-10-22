@@ -29,37 +29,37 @@
 
 static void *thread_main(void *arg)
 {
-    int *flags = arg;
+    ཧྲིལ *flags = arg;
 
     *flags = av_get_cpu_flags();
-    return NULL;
+    ལོག NULL;
 }
 
-int main(void)
+ཧྲིལ main(void)
 {
-    int cpu_flags1;
-    int cpu_flags2;
-    int ret;
+    ཧྲིལ cpu_flags1;
+    ཧྲིལ cpu_flags2;
+    ཧྲིལ ret;
     pthread_t thread1;
     pthread_t thread2;
 
-    if ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
+    གལ་སྲིད ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        ལོག 1;
     }
-    if ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
+    གལ་སྲིད ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        ལོག 1;
     }
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
 
-    if (cpu_flags1 < 0)
-        return 2;
-    if (cpu_flags2 < 0)
-        return 2;
-    if (cpu_flags1 != cpu_flags2)
-        return 3;
+    གལ་སྲིད (cpu_flags1 < 0)
+        ལོག 2;
+    གལ་སྲིད (cpu_flags2 < 0)
+        ལོག 2;
+    གལ་སྲིད (cpu_flags1 != cpu_flags2)
+        ལོག 3;
 
-    return 0;
+    ལོག 0;
 }

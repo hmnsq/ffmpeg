@@ -23,8 +23,8 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#if HAVE_FAST_CLZ
-#if defined(_MSC_VER)
+#གལ་སྲིད HAVE_FAST_CLZ
+#གལ་སྲིད defined(_MSC_VER)
 #include <intrin.h>
 #elif defined(__INTEL_COMPILER)
 #include <immintrin.h>
@@ -32,32 +32,32 @@
 #endif
 #include "config.h"
 
-#if HAVE_FAST_CLZ
-#if (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
-#   if defined(__INTEL_COMPILER)
+#གལ་སྲིད HAVE_FAST_CLZ
+#གལ་སྲིད (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
+#   གལ་སྲིད defined(__INTEL_COMPILER)
 #       define ff_log2(x) (_bit_scan_reverse((x)|1))
-#   else
+#   དེ་མིན
 #       define ff_log2 ff_log2_x86
-static av_always_inline av_const int ff_log2_x86(unsigned int v)
+static av_always_inline av_const ཧྲིལ ff_log2_x86(unsigned ཧྲིལ v)
 {
     unsigned long n;
     _BitScanReverse(&n, v|1);
-    return n;
+    ལོག n;
 }
 #   endif
 #   define ff_log2_16bit av_log2
 
-#if defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
+#གལ་སྲིད defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
                                   (defined(__BMI__) || !defined(__clang__)))
 #   define ff_ctz(v) _tzcnt_u32(v)
 
-#   if ARCH_X86_64
+#   གལ་སྲིད ARCH_X86_64
 #       define ff_ctzll(v) _tzcnt_u64(v)
-#   else
+#   དེ་མིན
 #       define ff_ctzll ff_ctzll_x86
-static av_always_inline av_const int ff_ctzll_x86(long long v)
+static av_always_inline av_const ཧྲིལ ff_ctzll_x86(long long v)
 {
-    return ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
+    ལོག ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
 }
 #   endif
 #endif /* _MSC_VER */
@@ -66,30 +66,30 @@ static av_always_inline av_const int ff_ctzll_x86(long long v)
 
 #endif /* HAVE_FAST_CLZ */
 
-#if defined(__GNUC__) || defined(__clang__)
+#གལ་སྲིད defined(__GNUC__) || defined(__clang__)
 
 /* Our generic version of av_popcount is faster than GCC's built-in on
  * CPUs that don't support the popcnt instruction.
  */
-#if defined(__POPCNT__)
+#གལ་སྲིད defined(__POPCNT__)
     #define av_popcount   __builtin_popcount
-#if ARCH_X86_64
+#གལ་སྲིད ARCH_X86_64
     #define av_popcount64 __builtin_popcountll
 #endif
 
 #endif /* __POPCNT__ */
 
-#if defined(__BMI2__)
+#གལ་སྲིད defined(__BMI2__)
 
-#if AV_GCC_VERSION_AT_LEAST(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+#གལ་སྲིད AV_GCC_VERSION_AT_LEAST(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
+#གལ་སྲིད defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
 #define av_zero_extend av_zero_extend_bmi2
 static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
 {
-    if (p > 31) abort();
-    return __builtin_ia32_bzhi_si(a, p);
+    གལ་སྲིད (p > 31) abort();
+    ལོག __builtin_ia32_bzhi_si(a, p);
 }
-#else
+#དེ་མིན
 #define av_zero_extend __builtin_ia32_bzhi_si
 #endif
 #elif HAVE_INLINE_ASM
@@ -99,15 +99,15 @@ static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsign
 #define av_zero_extend av_zero_extend_bmi2
 static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
 {
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (p > 31) abort();
+#གལ་སྲིད defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    གལ་སྲིད (p > 31) abort();
 #endif
-    if (av_builtin_constant_p(p))
-        return a & ((1U << p) - 1);
-    else {
+    གལ་སྲིད (av_builtin_constant_p(p))
+        ལོག a & ((1U << p) - 1);
+    དེ་མིན {
         unsigned x;
         __asm__ ("bzhi %2, %1, %0 \n\t" : "=r"(x) : "rm"(a), "r"(p));
-        return x;
+        ལོག x;
     }
 }
 #endif /* AV_GCC_VERSION_AT_LEAST */

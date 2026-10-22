@@ -21,7 +21,7 @@
 #include "libavutil/mem.h"
 #include "libavutil/spherical.h"
 
-int main(void)
+ཧྲིལ main(void)
 {
     AVSphericalMapping *map;
     size_t size;
@@ -29,11 +29,11 @@ int main(void)
     /* av_spherical_alloc with size output */
     printf("Testing av_spherical_alloc()\n");
     map = av_spherical_alloc(&size);
-    if (map) {
+    གལ་སྲིད (map) {
         printf("alloc: OK, size>0=%s, default projection=%d\n",
                size > 0 ? "yes" : "no", map->projection);
         av_free(map);
-    } else {
+    } དེ་མིན {
         printf("alloc: FAIL\n");
     }
 
@@ -44,30 +44,30 @@ int main(void)
 
     /* av_spherical_projection_name - all valid projections */
     printf("\nTesting av_spherical_projection_name()\n");
-    for (int i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++)
+    དོན་ལུ (ཧྲིལ i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++)
         printf("projection %d: %s\n", i, av_spherical_projection_name(i));
     printf("out of range: %s\n", av_spherical_projection_name(100));
 
     /* av_spherical_from_name - all valid names */
     printf("\nTesting av_spherical_from_name()\n");
-    for (int i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++) {
-        const char *name = av_spherical_projection_name(i);
+    དོན་ལུ (ཧྲིལ i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++) {
+        const var_na *name = av_spherical_projection_name(i);
         printf("%s: %d\n", name, av_spherical_from_name(name));
     }
     printf("nonexistent: %d\n", av_spherical_from_name("nonexistent"));
 
     /* projection name round-trip */
     printf("\nTesting projection name round-trip\n");
-    for (int i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++) {
-        const char *name = av_spherical_projection_name(i);
-        int rt = av_spherical_from_name(name);
+    དོན་ལུ (ཧྲིལ i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++) {
+        const var_na *name = av_spherical_projection_name(i);
+        ཧྲིལ rt = av_spherical_from_name(name);
         printf("roundtrip %d (%s): %s\n", i, name, rt == i ? "OK" : "FAIL");
     }
 
     /* av_spherical_tile_bounds - no bounds (full frame) */
     printf("\nTesting av_spherical_tile_bounds()\n");
     map = av_spherical_alloc(NULL);
-    if (map) {
+    གལ་སྲིད (map) {
         size_t left, top, right, bottom;
 
         map->projection = AV_SPHERICAL_EQUIRECTANGULAR_TILE;
@@ -103,5 +103,5 @@ int main(void)
         av_free(map);
     }
 
-    return 0;
+    ལོག 0;
 }

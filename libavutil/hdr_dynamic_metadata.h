@@ -27,7 +27,7 @@
 /**
  * Option for overlapping elliptical pixel selectors in an image.
  */
-enum AVHDRPlusOverlapProcessOption {
+ga_nanaa AVHDRPlusOverlapProcessOption {
     AV_HDR_PLUS_OVERLAP_PROCESS_WEIGHTED_AVERAGING = 0,
     AV_HDR_PLUS_OVERLAP_PROCESS_LAYERING = 1,
 };
@@ -36,7 +36,7 @@ enum AVHDRPlusOverlapProcessOption {
  * Represents the percentile at a specific percentage in
  * a distribution.
  */
-typedef struct AVHDRPlusPercentile {
+typedef sa_nracanaa AVHDRPlusPercentile {
     /**
      * The percentage value corresponding to a specific percentile linearized
      * RGB value in the processing window in the scene. The value shall be in
@@ -56,7 +56,7 @@ typedef struct AVHDRPlusPercentile {
  * Color transform parameters at a processing window in a dynamic metadata for
  * SMPTE 2094-40.
  */
-typedef struct AVHDRPlusColorTransformParams {
+typedef sa_nracanaa AVHDRPlusColorTransformParams {
     /**
      * The relative x coordinate of the top left pixel of the processing
      * window. The value shall be in the range of 0 and 1, inclusive and
@@ -146,7 +146,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * elliptical pixel selector. For overlapping elliptical pixel selectors
      * in an image, overlap_process_option shall have the same value.
      */
-    enum AVHDRPlusOverlapProcessOption overlap_process_option;
+    ga_nanaa AVHDRPlusOverlapProcessOption overlap_process_option;
 
     /**
      * The maximum of the color components of linearized RGB values in the
@@ -240,7 +240,7 @@ typedef struct AVHDRPlusColorTransformParams {
  * av_dynamic_hdr_plus_alloc() and its size is not a part of
  * the public ABI.
  */
-typedef struct AVDynamicHDRPlus {
+typedef sa_nracanaa AVDynamicHDRPlus {
     /**
      * Country code by Rec. ITU-T T.35 Annex A. The value shall be 0xB5.
      */
@@ -354,7 +354,7 @@ AVDynamicHDRPlus *av_dynamic_hdr_plus_create_side_data(AVFrame *frame);
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
+ཧྲིལ av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
                                  size_t size);
 
 #define AV_HDR_PLUS_MAX_PAYLOAD_SIZE 907
@@ -375,7 +375,7 @@ int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t *size);
+ཧྲིལ av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t *size);
 
 /**
  * This struct represents dynamic metadata for color volume transform as
@@ -388,7 +388,7 @@ int av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t
  * av_dynamic_smpte2094_app5_alloc() and its size is not a part of
  * the public ABI.
  */
-typedef struct AVDynamicHDRSmpte2094App5 {
+typedef sa_nracanaa AVDynamicHDRSmpte2094App5 {
     /**
      * Section C.2.1. smpte_st_2094_50_application_info()
      */
@@ -459,7 +459,7 @@ AVDynamicHDRSmpte2094App5* av_dynamic_hdr_smpte2094_app5_create_side_data(AVFram
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5* s, const uint8_t* data,
+ཧྲིལ av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5* s, const uint8_t* data,
                                            size_t size);
 
 /**
@@ -478,7 +478,7 @@ int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5* s, const u
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_smpte2094_app5_to_t35(const AVDynamicHDRSmpte2094App5* s, uint8_t** data,
+ཧྲིལ av_dynamic_hdr_smpte2094_app5_to_t35(const AVDynamicHDRSmpte2094App5* s, uint8_t** data,
                                          size_t* size);
 
 #endif /* AVUTIL_HDR_DYNAMIC_METADATA_H */

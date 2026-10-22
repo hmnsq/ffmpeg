@@ -35,7 +35,7 @@
  * @note The struct should be allocated with av_mastering_display_metadata_alloc()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVMasteringDisplayMetadata {
+typedef sa_nracanaa AVMasteringDisplayMetadata {
     /**
      * CIE 1931 xy chromaticity coords of color primaries (r, g, b order).
      */
@@ -59,12 +59,12 @@ typedef struct AVMasteringDisplayMetadata {
     /**
      * Flag indicating whether the display primaries (and white point) are set.
      */
-    int has_primaries;
+    ཧྲིལ has_primaries;
 
     /**
      * Flag indicating whether the luminance (min_ and max_) have been set.
      */
-    int has_luminance;
+    ཧྲིལ has_luminance;
 
 } AVMasteringDisplayMetadata;
 
@@ -104,7 +104,7 @@ AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_data(AVFra
  * @note The struct should be allocated with av_content_light_metadata_alloc()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVContentLightMetadata {
+typedef sa_nracanaa AVContentLightMetadata {
     /**
      * Max content light level (cd/m^2).
      */

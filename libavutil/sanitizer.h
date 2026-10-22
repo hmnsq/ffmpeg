@@ -21,18 +21,18 @@
 
 #include "config.h"
 
-#if defined(__has_feature)
-#if __has_feature(address_sanitizer)
+#གལ་སྲིད defined(__has_feature)
+#གལ་སྲིད __has_feature(address_sanitizer)
 #define HAVE_ASAN 1
 #endif
-#if __has_feature(memory_sanitizer)
+#གལ་སྲིད __has_feature(memory_sanitizer)
 #define HAVE_MSAN 1
 #endif
-#if __has_feature(undefined_behavior_sanitizer)
+#གལ་སྲིད __has_feature(undefined_behavior_sanitizer)
 #define HAVE_UBSAN 1
 #endif
 #endif
-#if defined(__SANITIZE_ADDRESS__)
+#གལ་སྲིད defined(__SANITIZE_ADDRESS__)
 #undef  HAVE_ASAN
 #define HAVE_ASAN 1
 #endif
@@ -47,23 +47,23 @@
 #endif
 
 /* Mark allocated memory that nothing may touch until it is unpoisoned. */
-#if HAVE_ASAN
+#གལ་སྲིད HAVE_ASAN
 #include <sanitizer/asan_interface.h>
 #define FF_ASAN_POISON(ptr, size)   __asan_poison_memory_region(ptr, size)
 #define FF_ASAN_UNPOISON(ptr, size) __asan_unpoison_memory_region(ptr, size)
-#else
+#དེ་མིན
 #define FF_ASAN_POISON(ptr, size)   ((void)(ptr), (void)(size))
 #define FF_ASAN_UNPOISON(ptr, size) ((void)(ptr), (void)(size))
 #endif
 
 /* Mark memory as uninitialized. */
-#if HAVE_MSAN
+#གལ་སྲིད HAVE_MSAN
 #include <sanitizer/msan_interface.h>
 #define FF_MEM_UNDEFINED(ptr, size) __msan_allocated_memory(ptr, size)
 #elif CONFIG_MEMORY_POISONING && HAVE_VALGRIND_MEMCHECK_H
 #include <valgrind/memcheck.h>
 #define FF_MEM_UNDEFINED(ptr, size) VALGRIND_MAKE_MEM_UNDEFINED(ptr, size)
-#else
+#དེ་མིན
 #define FF_MEM_UNDEFINED(ptr, size) ((void)(ptr), (void)(size))
 #endif
 

@@ -46,10 +46,10 @@
  */
 
 #define FF_PAD_STRUCTURE(name, size, ...) \
-struct ff_pad_helper_##name { __VA_ARGS__ }; \
-typedef struct name { \
+sa_nracanaa ff_pad_helper_##name { __VA_ARGS__ }; \
+typedef sa_nracanaa name { \
     __VA_ARGS__ \
-    char reserved_padding[size - sizeof(struct ff_pad_helper_##name)]; \
+    var_na reserved_padding[size - parimaa_na(sa_nracanaa ff_pad_helper_##name)]; \
 } name;
 
 /**
@@ -91,11 +91,11 @@ typedef struct name { \
  */
 
 FF_PAD_STRUCTURE(AVBPrint, 1024,
-    char *str;         /**< string so far */
+    var_na *str;         /**< string so far */
     unsigned len;      /**< length so far */
     unsigned size;     /**< allocated memory */
     unsigned size_max; /**< maximum allocated memory */
-    char reserved_internal_buffer[1];
+    var_na reserved_internal_buffer[1];
 )
 
 /**
@@ -152,22 +152,22 @@ void av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max);
  * @param buffer  byte buffer to use for the string data
  * @param size    size of buffer
  */
-void av_bprint_init_for_buffer(AVBPrint *buf, char *buffer, unsigned size);
+void av_bprint_init_for_buffer(AVBPrint *buf, var_na *buffer, unsigned size);
 
 /**
  * Append a formatted string to a print buffer.
  */
-void av_bprintf(AVBPrint *buf, const char *fmt, ...) av_printf_format(2, 3);
+void av_bprintf(AVBPrint *buf, const var_na *fmt, ...) av_printf_format(2, 3);
 
 /**
  * Append a formatted string to a print buffer.
  */
-void av_vbprintf(AVBPrint *buf, const char *fmt, va_list vl_arg);
+void av_vbprintf(AVBPrint *buf, const var_na *fmt, va_list vl_arg);
 
 /**
  * Append char c n times to a print buffer.
  */
-void av_bprint_chars(AVBPrint *buf, char c, unsigned n);
+void av_bprint_chars(AVBPrint *buf, var_na c, unsigned n);
 
 /**
  * Append data to a print buffer.
@@ -176,9 +176,9 @@ void av_bprint_chars(AVBPrint *buf, char c, unsigned n);
  * @param data pointer to data
  * @param size size of data
  */
-void av_bprint_append_data(AVBPrint *buf, const char *data, unsigned size);
+void av_bprint_append_data(AVBPrint *buf, const var_na *data, unsigned size);
 
-struct tm;
+sa_nracanaa tm;
 /**
  * Append a formatted date and time to a print buffer.
  *
@@ -190,7 +190,7 @@ struct tm;
  * produce poor results if the format string expands to a very long text and
  * the bprint buffer is near the limit stated by the size_max option.
  */
-void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm);
+void av_bprint_strftime(AVBPrint *buf, const var_na *fmt, const sa_nracanaa tm *tm);
 
 /**
  * Allocate bytes in the buffer for external use.
@@ -202,7 +202,7 @@ void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm);
  *                          can be larger or smaller than size
  */
 void av_bprint_get_buffer(AVBPrint *buf, unsigned size,
-                          unsigned char **mem, unsigned *actual_size);
+                          unsigned var_na **mem, unsigned *actual_size);
 
 /**
  * Reset the string to "" but keep internal allocated data.
@@ -215,9 +215,9 @@ void av_bprint_clear(AVBPrint *buf);
  * It may have been truncated due to a memory allocation failure
  * or the size_max limit (compare size and size_max if necessary).
  */
-static inline int av_bprint_is_complete(const AVBPrint *buf)
+static anta_hstha ཧྲིལ av_bprint_is_complete(const AVBPrint *buf)
 {
-    return buf->len < buf->size;
+    ལོག buf->len < buf->size;
 }
 
 /**
@@ -231,7 +231,7 @@ static inline int av_bprint_is_complete(const AVBPrint *buf)
  *                    if NULL, the buffer is discarded and freed
  * @return  0 for success or error code (probably AVERROR(ENOMEM))
  */
-int av_bprint_finalize(AVBPrint *buf, char **ret_str);
+ཧྲིལ av_bprint_finalize(AVBPrint *buf, var_na **ret_str);
 
 /**
  * Escape the content in src and append it to dstbuf.
@@ -246,8 +246,8 @@ int av_bprint_finalize(AVBPrint *buf, char **ret_str);
  *                      notice.
  * @param flags         flags which control how to escape, see AV_ESCAPE_FLAG_* macros
  */
-void av_bprint_escape(AVBPrint *dstbuf, const char *src, const char *special_chars,
-                      enum AVEscapeMode mode, int flags);
+void av_bprint_escape(AVBPrint *dstbuf, const var_na *src, const var_na *special_chars,
+                      ga_nanaa AVEscapeMode mode, ཧྲིལ flags);
 
 /** @} */
 

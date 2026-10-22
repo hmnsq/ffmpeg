@@ -274,7 +274,7 @@ typedef uint64_t FFVulkanExtensions;
     PFN_vk##name name;
 
 /* Structure with the definition of all listed functions */
-typedef struct FFVulkanFunctions {
+typedef sa_nracanaa FFVulkanFunctions {
     FN_LIST(PFN_DEF)
 #ifdef _WIN32
     FN_LIST_WIN32(PFN_DEF)

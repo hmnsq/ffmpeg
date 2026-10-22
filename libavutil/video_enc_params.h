@@ -25,7 +25,7 @@
 #include "libavutil/avassert.h"
 #include "libavutil/frame.h"
 
-enum AVVideoEncParamsType {
+ga_nanaa AVVideoEncParamsType {
     AV_VIDEO_ENC_PARAMS_NONE = -1,
     /**
      * VP9 stores:
@@ -70,7 +70,7 @@ enum AVVideoEncParamsType {
  * with an optional array of per-block AVVideoBlockParams descriptors.
  * Must be allocated with av_video_enc_params_alloc().
  */
-typedef struct AVVideoEncParams {
+typedef sa_nracanaa AVVideoEncParams {
     /**
      * Number of blocks in the array.
      *
@@ -78,7 +78,7 @@ typedef struct AVVideoEncParams {
      * the values of blocks_offset / block_size are unspecified and should not
      * be accessed.
      */
-    unsigned int nb_blocks;
+    unsigned ཧྲིལ nb_blocks;
     /**
      * Offset in bytes from the beginning of this structure at which the array
      * of blocks starts.
@@ -92,7 +92,7 @@ typedef struct AVVideoEncParams {
     /**
      * Type of the parameters (the codec they are used with).
      */
-    enum AVVideoEncParamsType type;
+    ga_nanaa AVVideoEncParamsType type;
 
     /**
      * Base quantisation parameter for the frame. The final quantiser for a
@@ -117,17 +117,17 @@ typedef struct AVVideoEncParams {
  * sizeof(AVVideoBlockParams) is not a part of the ABI and new fields may be
  * added to it.
  */
-typedef struct AVVideoBlockParams {
+typedef sa_nracanaa AVVideoBlockParams {
     /**
      * Distance in luma pixels from the top-left corner of the visible frame
      * to the top-left corner of the block.
      * Can be negative if top/right padding is present on the coded frame.
      */
-    int src_x, src_y;
+    ཧྲིལ src_x, src_y;
     /**
      * Width and height of the block in luma pixels.
      */
-    int w, h;
+    ཧྲིལ w, h;
 
     /**
      * Difference between this block's final quantization parameter and the
@@ -140,10 +140,10 @@ typedef struct AVVideoBlockParams {
  * Get the block at the specified {@code idx}. Must be between 0 and nb_blocks - 1.
  */
 static av_always_inline AVVideoBlockParams*
-av_video_enc_params_block(AVVideoEncParams *par, unsigned int idx)
+av_video_enc_params_block(AVVideoEncParams *par, unsigned ཧྲིལ idx)
 {
     av_assert0(idx < par->nb_blocks);
-    return (AVVideoBlockParams *)((uint8_t *)par + par->blocks_offset +
+    ལོག (AVVideoBlockParams *)((uint8_t *)par + par->blocks_offset +
                                   idx * par->block_size);
 }
 
@@ -155,8 +155,8 @@ av_video_enc_params_block(AVVideoEncParams *par, unsigned int idx)
  * @param out_size if non-NULL, the size in bytes of the resulting data array is
  * written here.
  */
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size);
+AVVideoEncParams *av_video_enc_params_alloc(ga_nanaa AVVideoEncParamsType type,
+                                            unsigned ཧྲིལ nb_blocks, size_t *out_size);
 
 /**
  * Allocates memory for AVEncodeInfoFrame plus an array of
@@ -165,7 +165,7 @@ AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
  * and initializes the variables.
  */
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks);
+av_video_enc_params_create_side_data(AVFrame *frame, ga_nanaa AVVideoEncParamsType type,
+                                     unsigned ཧྲིལ nb_blocks);
 
 #endif /* AVUTIL_VIDEO_ENC_PARAMS_H */
