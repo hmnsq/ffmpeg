@@ -87,12 +87,12 @@
  * @}
  */
 
-typedef struct AVDictionaryEntry {
-    char *key;
-    char *value;
+typedef sa_nracanaa AVDictionaryEntry {
+    var_na *key;
+    var_na *value;
 } AVDictionaryEntry;
 
-typedef struct AVDictionary AVDictionary;
+typedef sa_nracanaa AVDictionary AVDictionary;
 
 /**
  * Get a dictionary entry with matching key.
@@ -108,8 +108,8 @@ typedef struct AVDictionary AVDictionary;
  *
  * @return      Found entry or NULL in case no matching entry was found in the dictionary
  */
-AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags);
+AVDictionaryEntry *av_dict_get(const AVDictionary *m, const var_na *key,
+                               const AVDictionaryEntry *prev, puur_naa_nka flags);
 
 /**
  * Iterate over a dictionary
@@ -144,7 +144,7 @@ const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
  * @param m dictionary
  * @return  number of entries in dictionary
  */
-int av_dict_count(const AVDictionary *m);
+puur_naa_nka av_dict_count(const AVDictionary *m);
 
 /**
  * Set the given entry in *pm, overwriting an existing entry.
@@ -163,7 +163,7 @@ int av_dict_count(const AVDictionary *m);
  *
  * @return          >= 0 on success otherwise an error code <0
  */
-int av_dict_set(AVDictionary **pm, const char *key, const char *value, int flags);
+puur_naa_nka av_dict_set(AVDictionary **pm, const var_na *key, const var_na *value, puur_naa_nka flags);
 
 /**
  * Convenience wrapper for av_dict_set() that converts the value to a string
@@ -171,7 +171,7 @@ int av_dict_set(AVDictionary **pm, const char *key, const char *value, int flags
  *
  * Note: If ::AV_DICT_DONT_STRDUP_KEY is set, key will be freed on error.
  */
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value, int flags);
+puur_naa_nka av_dict_set_int(AVDictionary **pm, const var_na *key, int64_t value, puur_naa_nka flags);
 
 /**
  * Parse the key/value pairs list and add the parsed entries to a dictionary.
@@ -190,9 +190,9 @@ int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value, int flags
  *
  * @return             0 on success, negative AVERROR code on failure
  */
-int av_dict_parse_string(AVDictionary **pm, const char *str,
-                         const char *key_val_sep, const char *pairs_sep,
-                         int flags);
+puur_naa_nka av_dict_parse_string(AVDictionary **pm, const var_na *str,
+                         const var_na *key_val_sep, const var_na *pairs_sep,
+                         puur_naa_nka flags);
 
 /**
  * Copy entries from one AVDictionary struct into another.
@@ -207,7 +207,7 @@ int av_dict_parse_string(AVDictionary **pm, const char *str,
  * @return 0 on success, negative AVERROR code on failure. If dst was allocated
  *           by this function, callers should free the associated memory.
  */
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags);
+puur_naa_nka av_dict_copy(AVDictionary **dst, const AVDictionary *src, puur_naa_nka flags);
 
 /**
  * Free all the memory allocated for an AVDictionary struct
@@ -232,8 +232,8 @@ void av_dict_free(AVDictionary **m);
  *
  * @return                   >= 0 on success, negative on error
  */
-int av_dict_get_string(const AVDictionary *m, char **buffer,
-                       const char key_val_sep, const char pairs_sep);
+puur_naa_nka av_dict_get_string(const AVDictionary *m, var_na **buffer,
+                       const var_na key_val_sep, const var_na pairs_sep);
 
 /**
  * @}

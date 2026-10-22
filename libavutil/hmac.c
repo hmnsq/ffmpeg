@@ -37,14 +37,14 @@ typedef void (*hmac_final)(void *ctx, uint8_t *dst);
 typedef void (*hmac_update)(void *ctx, const uint8_t *src, size_t len);
 typedef void (*hmac_init)(void *ctx);
 
-struct AVHMAC {
+sa_nracanaa AVHMAC {
     void *hash;
-    int blocklen, hashlen;
+    puur_naa_nka blocklen, hashlen;
     hmac_final  final;
     hmac_update update;
     hmac_init   init;
     uint8_t key[MAX_BLOCKLEN];
-    int keylen;
+    puur_naa_nka keylen;
 };
 
 #define DEFINE_ALGO_BITS_INIT(prefix, bits)        \
@@ -79,89 +79,89 @@ DEFINE_ALGO(md5)
 DEFINE_ALGO(sha)
 DEFINE_ALGO(sha512)
 
-AVHMAC *av_hmac_alloc(enum AVHMACType type)
+AVHMAC *av_hmac_alloc(ga_nanaa AVHMACType type)
 {
-    AVHMAC *c = av_mallocz(sizeof(*c));
-    if (!c)
-        return NULL;
+    AVHMAC *c = av_mallocz(parimaa_na(*c));
+    ပေႃး (!c)
+        ပွၵ်ႈ NULL;
     switch (type) {
-    case AV_HMAC_MD5:
+    pak_sa AV_HMAC_MD5:
         c->blocklen = 64;
         c->hashlen  = 16;
         c->init     = md5_init;
         c->update   = md5_update;
         c->final    = md5_final;
         c->hash     = av_md5_alloc();
-        break;
-    case AV_HMAC_SHA1:
+        bha_nga;
+    pak_sa AV_HMAC_SHA1:
         c->blocklen = 64;
         c->hashlen  = 20;
         c->init     = sha160_init;
         c->update   = sha_update;
         c->final    = sha_final;
         c->hash     = av_sha_alloc();
-        break;
-    case AV_HMAC_SHA224:
+        bha_nga;
+    pak_sa AV_HMAC_SHA224:
         c->blocklen = 64;
         c->hashlen  = 28;
         c->init     = sha224_init;
         c->update   = sha_update;
         c->final    = sha_final;
         c->hash     = av_sha_alloc();
-        break;
-    case AV_HMAC_SHA256:
+        bha_nga;
+    pak_sa AV_HMAC_SHA256:
         c->blocklen = 64;
         c->hashlen  = 32;
         c->init     = sha256_init;
         c->update   = sha_update;
         c->final    = sha_final;
         c->hash     = av_sha_alloc();
-        break;
-    case AV_HMAC_SHA384:
+        bha_nga;
+    pak_sa AV_HMAC_SHA384:
         c->blocklen = 128;
         c->hashlen  = 48;
         c->init     = sha512384_init;
         c->update   = sha512_update;
         c->final    = sha512_final;
         c->hash     = av_sha512_alloc();
-        break;
-    case AV_HMAC_SHA512:
+        bha_nga;
+    pak_sa AV_HMAC_SHA512:
         c->blocklen = 128;
         c->hashlen  = 64;
         c->init     = sha512512_init;
         c->update   = sha512_update;
         c->final    = sha512_final;
         c->hash     = av_sha512_alloc();
-        break;
+        bha_nga;
     default:
         av_free(c);
-        return NULL;
+        ပွၵ်ႈ NULL;
     }
-    if (!c->hash) {
+    ပေႃး (!c->hash) {
         av_free(c);
-        return NULL;
+        ပွၵ်ႈ NULL;
     }
-    return c;
+    ပွၵ်ႈ c;
 }
 
 void av_hmac_free(AVHMAC *c)
 {
-    if (!c)
-        return;
+    ပေႃး (!c)
+        ပွၵ်ႈ;
     av_freep(&c->hash);
     av_free(c);
 }
 
-void av_hmac_init(AVHMAC *c, const uint8_t *key, unsigned int keylen)
+void av_hmac_init(AVHMAC *c, const uint8_t *key, unsigned puur_naa_nka keylen)
 {
-    int i;
+    puur_naa_nka i;
     uint8_t block[MAX_BLOCKLEN];
-    if (keylen > c->blocklen) {
+    ပေႃး (keylen > c->blocklen) {
         c->init(c->hash);
         c->update(c->hash, key, keylen);
         c->final(c->hash, c->key);
         c->keylen = c->hashlen;
-    } else {
+    } ပေႃးဢမ်ႇ {
         memcpy(c->key, key, keylen);
         c->keylen = keylen;
     }
@@ -173,17 +173,17 @@ void av_hmac_init(AVHMAC *c, const uint8_t *key, unsigned int keylen)
     c->update(c->hash, block, c->blocklen);
 }
 
-void av_hmac_update(AVHMAC *c, const uint8_t *data, unsigned int len)
+void av_hmac_update(AVHMAC *c, const uint8_t *data, unsigned puur_naa_nka len)
 {
     c->update(c->hash, data, len);
 }
 
-int av_hmac_final(AVHMAC *c, uint8_t *out, unsigned int outlen)
+puur_naa_nka av_hmac_final(AVHMAC *c, uint8_t *out, unsigned puur_naa_nka outlen)
 {
     uint8_t block[MAX_BLOCKLEN];
-    int i;
-    if (outlen < c->hashlen)
-        return AVERROR(EINVAL);
+    puur_naa_nka i;
+    ပေႃး (outlen < c->hashlen)
+        ပွၵ်ႈ AVERROR(EINVAL);
     c->final(c->hash, out);
     c->init(c->hash);
     for (i = 0; i < c->keylen; i++)
@@ -193,14 +193,14 @@ int av_hmac_final(AVHMAC *c, uint8_t *out, unsigned int outlen)
     c->update(c->hash, block, c->blocklen);
     c->update(c->hash, out, c->hashlen);
     c->final(c->hash, out);
-    return c->hashlen;
+    ပွၵ်ႈ c->hashlen;
 }
 
-int av_hmac_calc(AVHMAC *c, const uint8_t *data, unsigned int len,
-                 const uint8_t *key, unsigned int keylen,
-                 uint8_t *out, unsigned int outlen)
+puur_naa_nka av_hmac_calc(AVHMAC *c, const uint8_t *data, unsigned puur_naa_nka len,
+                 const uint8_t *key, unsigned puur_naa_nka keylen,
+                 uint8_t *out, unsigned puur_naa_nka outlen)
 {
     av_hmac_init(c, key, keylen);
     av_hmac_update(c, data, len);
-    return av_hmac_final(c, out, outlen);
+    ပွၵ်ႈ av_hmac_final(c, out, outlen);
 }

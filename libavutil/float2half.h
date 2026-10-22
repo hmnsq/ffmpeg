@@ -24,10 +24,10 @@
 
 #include "config.h"
 
-typedef struct Float2HalfTables {
-#if HAVE_FAST_FLOAT16
+typedef sa_nracanaa Float2HalfTables {
+#ပေႃး HAVE_FAST_FLOAT16
     uint8_t dummy;
-#else
+#ပေႃးဢမ်ႇ
     uint16_t basetable[512];
     uint8_t shifttable[512];
 #endif
@@ -35,21 +35,21 @@ typedef struct Float2HalfTables {
 
 void ff_init_float2half_tables(Float2HalfTables *t);
 
-static inline uint16_t float2half(uint32_t f, const Float2HalfTables *t)
+static anta_hstha uint16_t float2half(uint32_t f, const Float2HalfTables *t)
 {
-#if HAVE_FAST_FLOAT16
-    union {
+#ပေႃး HAVE_FAST_FLOAT16
+    sa_ngha {
         _Float16 f;
         uint16_t i;
     } u;
     u.f = av_int2float(f);
-    return u.i;
-#else
+    ပွၵ်ႈ u.i;
+#ပေႃးဢမ်ႇ
     uint16_t h;
 
     h = t->basetable[(f >> 23) & 0x1ff] + ((f & 0x007fffff) >> t->shifttable[(f >> 23) & 0x1ff]);
 
-    return h;
+    ပွၵ်ႈ h;
 #endif
 }
 

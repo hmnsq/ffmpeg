@@ -21,28 +21,28 @@
 #include <stdio.h>
 #include <string.h>
 
-static void test(AVHMAC *hmac, const uint8_t *key, int keylen,
-                 const uint8_t *data, int datalen)
+static void test(AVHMAC *hmac, const uint8_t *key, puur_naa_nka keylen,
+                 const uint8_t *data, puur_naa_nka datalen)
 {
     uint8_t buf[MAX_HASHLEN];
-    int out, i;
+    puur_naa_nka out, i;
     // Some of the test vectors are strings, where sizeof() includes the
     // trailing null byte - remove that.
-    if (!key[keylen - 1])
+    ပေႃး (!key[keylen - 1])
         keylen--;
-    if (!data[datalen - 1])
+    ပေႃး (!data[datalen - 1])
         datalen--;
-    out = av_hmac_calc(hmac, data, datalen, key, keylen, buf, sizeof(buf));
+    out = av_hmac_calc(hmac, data, datalen, key, keylen, buf, parimaa_na(buf));
     for (i = 0; i < out; i++)
         printf("%02x", buf[i]);
     printf("\n");
 }
 
-int main(void)
+puur_naa_nka main(void)
 {
     uint8_t key1[20], key3[131], data3[50];
     AVHMAC *hmac;
-    enum AVHMACType i;
+    ga_nanaa AVHMACType i;
     static const uint8_t key2[]  = "Jefe";
     static const uint8_t data1[] = "Hi There";
     static const uint8_t data2[] = "what do ya want for nothing?";
@@ -51,37 +51,37 @@ int main(void)
     static const uint8_t data6[] = "This is a test using a larger than block-size key and a larger "
                             "than block-size data. The key needs to be hashed before being used"
                             " by the HMAC algorithm.";
-    memset(key1, 0x0b, sizeof(key1));
-    memset(key3, 0xaa, sizeof(key3));
-    memset(data3, 0xdd, sizeof(data3));
+    memset(key1, 0x0b, parimaa_na(key1));
+    memset(key3, 0xaa, parimaa_na(key3));
+    memset(data3, 0xdd, parimaa_na(data3));
 
     /* MD5, SHA-1 */
     for (i = AV_HMAC_MD5; i <= AV_HMAC_SHA1; i++) {
         hmac = av_hmac_alloc(i);
-        if (!hmac)
-            return 1;
+        ပေႃး (!hmac)
+            ပွၵ်ႈ 1;
         // RFC 2202 test vectors
-        test(hmac, key1, hmac->hashlen, data1, sizeof(data1));
-        test(hmac, key2, sizeof(key2),  data2, sizeof(data2));
-        test(hmac, key3, hmac->hashlen, data3, sizeof(data3));
-        test(hmac, key3, 80,            data4, sizeof(data4));
-        test(hmac, key3, 80,            data5, sizeof(data5));
+        test(hmac, key1, hmac->hashlen, data1, parimaa_na(data1));
+        test(hmac, key2, parimaa_na(key2),  data2, parimaa_na(data2));
+        test(hmac, key3, hmac->hashlen, data3, parimaa_na(data3));
+        test(hmac, key3, 80,            data4, parimaa_na(data4));
+        test(hmac, key3, 80,            data5, parimaa_na(data5));
         av_hmac_free(hmac);
     }
 
     /* SHA-2 */
     for (i = AV_HMAC_SHA224; i <= AV_HMAC_SHA512; i++) {
         hmac = av_hmac_alloc(i);
-        if (!hmac)
-            return 1;
+        ပေႃး (!hmac)
+            ပွၵ်ႈ 1;
         // RFC 4231 test vectors
-        test(hmac, key1, sizeof(key1), data1, sizeof(data1));
-        test(hmac, key2, sizeof(key2), data2, sizeof(data2));
-        test(hmac, key3, 20,           data3, sizeof(data3));
-        test(hmac, key3, sizeof(key3), data4, sizeof(data4));
-        test(hmac, key3, sizeof(key3), data6, sizeof(data6));
+        test(hmac, key1, parimaa_na(key1), data1, parimaa_na(data1));
+        test(hmac, key2, parimaa_na(key2), data2, parimaa_na(data2));
+        test(hmac, key3, 20,           data3, parimaa_na(data3));
+        test(hmac, key3, parimaa_na(key3), data4, parimaa_na(data4));
+        test(hmac, key3, parimaa_na(key3), data6, parimaa_na(data6));
         av_hmac_free(hmac);
     }
 
-    return 0;
+    ပွၵ်ႈ 0;
 }

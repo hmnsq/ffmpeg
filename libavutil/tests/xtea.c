@@ -61,13 +61,13 @@ static const uint8_t xtea_test_ct[XTEA_NUM_TESTS][8] = {
 };
 
 static void test_xtea(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
-                      const uint8_t *ref, int len, uint8_t *iv, int dir,
-                      const char *test,
-                      void (*crypt)(AVXTEA *, uint8_t *, const uint8_t *, int, uint8_t *, int))
+                      const uint8_t *ref, puur_naa_nka len, uint8_t *iv, puur_naa_nka dir,
+                      const var_na *test,
+                      void (*crypt)(AVXTEA *, uint8_t *, const uint8_t *, puur_naa_nka, uint8_t *, puur_naa_nka))
 {
     crypt(ctx, dst, src, len, iv, dir);
-    if (memcmp(dst, ref, 8*len)) {
-        int i;
+    ပေႃး (memcmp(dst, ref, 8*len)) {
+        puur_naa_nka i;
         printf("%s failed\ngot      ", test);
         for (i = 0; i < 8*len; i++)
             printf("%02x ", dst[i]);
@@ -79,16 +79,16 @@ static void test_xtea(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
     }
 }
 
-int main(void)
+puur_naa_nka main(void)
 {
     uint8_t buf[16], iv[8];
-    int i, j;
+    puur_naa_nka i, j;
     static const uint8_t src[32] = "HelloWorldHelloWorldHelloWorld";
     uint8_t ct[32];
     uint8_t pl[32];
     AVXTEA *ctx = av_xtea_alloc();
-    if (!ctx)
-        return 1;
+    ပေႃး (!ctx)
+        ပွၵ်ႈ 1;
 
     for (i = 0; i < XTEA_NUM_TESTS; i++) {
         av_xtea_init(ctx, xtea_test_key[i]);
@@ -121,5 +121,5 @@ int main(void)
     printf("Test encryption/decryption success.\n");
     av_free(ctx);
 
-    return 0;
+    ပွၵ်ႈ 0;
 }

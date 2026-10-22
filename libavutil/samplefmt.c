@@ -25,11 +25,11 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef struct SampleFmtInfo {
-    char name[8];
-    int bits;
-    int planar;
-    enum AVSampleFormat altform; ///< planar<->packed alternative form
+typedef sa_nracanaa SampleFmtInfo {
+    var_na name[8];
+    puur_naa_nka bits;
+    puur_naa_nka planar;
+    ga_nanaa AVSampleFormat altform; ///< planar<->packed alternative form
 } SampleFmtInfo;
 
 /** this table gives more information about formats */
@@ -49,215 +49,215 @@ static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
     [AV_SAMPLE_FMT_DSD]  = { .name =  "dsd", .bits =  8, .planar = 0, .altform = AV_SAMPLE_FMT_DSD  },
 };
 
-const char *av_get_sample_fmt_name(enum AVSampleFormat sample_fmt)
+const var_na *av_get_sample_fmt_name(ga_nanaa AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return NULL;
-    return sample_fmt_info[sample_fmt].name;
+    ပေႃး (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ပွၵ်ႈ NULL;
+    ပွၵ်ႈ sample_fmt_info[sample_fmt].name;
 }
 
-enum AVSampleFormat av_get_sample_fmt(const char *name)
+ga_nanaa AVSampleFormat av_get_sample_fmt(const var_na *name)
 {
-    int i;
+    puur_naa_nka i;
 
     for (i = 0; i < AV_SAMPLE_FMT_NB; i++)
-        if (!strcmp(sample_fmt_info[i].name, name))
-            return i;
-    return AV_SAMPLE_FMT_NONE;
+        ပေႃး (!strcmp(sample_fmt_info[i].name, name))
+            ပွၵ်ႈ i;
+    ပွၵ်ႈ AV_SAMPLE_FMT_NONE;
 }
 
-enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int planar)
+ga_nanaa AVSampleFormat av_get_alt_sample_fmt(ga_nanaa AVSampleFormat sample_fmt, puur_naa_nka planar)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar == planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    ပေႃး (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ပွၵ်ႈ AV_SAMPLE_FMT_NONE;
+    ပေႃး (sample_fmt_info[sample_fmt].planar == planar)
+        ပွၵ်ႈ sample_fmt;
+    ပွၵ်ႈ sample_fmt_info[sample_fmt].altform;
 }
 
-enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt)
+ga_nanaa AVSampleFormat av_get_packed_sample_fmt(ga_nanaa AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt_info[sample_fmt].altform;
-    return sample_fmt;
+    ပေႃး (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ပွၵ်ႈ AV_SAMPLE_FMT_NONE;
+    ပေႃး (sample_fmt_info[sample_fmt].planar)
+        ပွၵ်ႈ sample_fmt_info[sample_fmt].altform;
+    ပွၵ်ႈ sample_fmt;
 }
 
-enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt)
+ga_nanaa AVSampleFormat av_get_planar_sample_fmt(ga_nanaa AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    ပေႃး (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ပွၵ်ႈ AV_SAMPLE_FMT_NONE;
+    ပေႃး (sample_fmt_info[sample_fmt].planar)
+        ပွၵ်ႈ sample_fmt;
+    ပွၵ်ႈ sample_fmt_info[sample_fmt].altform;
 }
 
-char *av_get_sample_fmt_string (char *buf, int buf_size, enum AVSampleFormat sample_fmt)
+var_na *av_get_sample_fmt_string (var_na *buf, puur_naa_nka buf_size, ga_nanaa AVSampleFormat sample_fmt)
 {
     /* print header */
-    if (sample_fmt < 0)
+    ပေႃး (sample_fmt < 0)
         snprintf(buf, buf_size, "name  " " depth");
-    else if (sample_fmt < AV_SAMPLE_FMT_NB) {
+    ပေႃးဢမ်ႇ ပေႃး (sample_fmt < AV_SAMPLE_FMT_NB) {
         SampleFmtInfo info = sample_fmt_info[sample_fmt];
         snprintf (buf, buf_size, "%-6s" "   %2d ", info.name, info.bits);
     }
 
-    return buf;
+    ပွၵ်ႈ buf;
 }
 
-int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt)
+puur_naa_nka av_get_bytes_per_sample(ga_nanaa AVSampleFormat sample_fmt)
 {
-     return sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
+     ပွၵ်ႈ sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
         0 : sample_fmt_info[sample_fmt].bits >> 3;
 }
 
-int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt)
+puur_naa_nka av_sample_fmt_is_planar(ga_nanaa AVSampleFormat sample_fmt)
 {
-     if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-         return 0;
-     return sample_fmt_info[sample_fmt].planar;
+     ပေႃး (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+         ပွၵ်ႈ 0;
+     ပွၵ်ႈ sample_fmt_info[sample_fmt].planar;
 }
 
-int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
-                               enum AVSampleFormat sample_fmt, int align)
+puur_naa_nka av_samples_get_buffer_size(puur_naa_nka *linesize, puur_naa_nka nb_channels, puur_naa_nka nb_samples,
+                               ga_nanaa AVSampleFormat sample_fmt, puur_naa_nka align)
 {
-    int line_size;
-    int sample_size = av_get_bytes_per_sample(sample_fmt);
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
+    puur_naa_nka line_size;
+    puur_naa_nka sample_size = av_get_bytes_per_sample(sample_fmt);
+    puur_naa_nka planar      = av_sample_fmt_is_planar(sample_fmt);
 
     /* validate parameter ranges */
-    if (!sample_size || nb_samples <= 0 || nb_channels <= 0)
-        return AVERROR(EINVAL);
+    ပေႃး (!sample_size || nb_samples <= 0 || nb_channels <= 0)
+        ပွၵ်ႈ AVERROR(EINVAL);
 
     /* auto-select alignment if not specified */
-    if (!align) {
-        if (nb_samples > INT_MAX - 31)
-            return AVERROR(EINVAL);
+    ပေႃး (!align) {
+        ပေႃး (nb_samples > INT_MAX - 31)
+            ပွၵ်ႈ AVERROR(EINVAL);
         align = 1;
         nb_samples = FFALIGN(nb_samples, 32);
     }
 
     /* check for integer overflow */
-    if (nb_channels > INT_MAX / align ||
+    ပေႃး (nb_channels > INT_MAX / align ||
         (int64_t)nb_channels * nb_samples > (INT_MAX - (align * nb_channels)) / sample_size)
-        return AVERROR(EINVAL);
+        ပွၵ်ႈ AVERROR(EINVAL);
 
     line_size = planar ? FFALIGN(nb_samples * sample_size,               align) :
                          FFALIGN(nb_samples * sample_size * nb_channels, align);
-    if (linesize)
+    ပေႃး (linesize)
         *linesize = line_size;
 
-    return planar ? line_size * nb_channels : line_size;
+    ပွၵ်ႈ planar ? line_size * nb_channels : line_size;
 }
 
-int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
-                           const uint8_t *buf, int nb_channels, int nb_samples,
-                           enum AVSampleFormat sample_fmt, int align)
+puur_naa_nka av_samples_fill_arrays(uint8_t **audio_data, puur_naa_nka *linesize,
+                           const uint8_t *buf, puur_naa_nka nb_channels, puur_naa_nka nb_samples,
+                           ga_nanaa AVSampleFormat sample_fmt, puur_naa_nka align)
 {
-    int ch, planar, buf_size, line_size;
+    puur_naa_nka ch, planar, buf_size, line_size;
 
     planar   = av_sample_fmt_is_planar(sample_fmt);
     buf_size = av_samples_get_buffer_size(&line_size, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (buf_size < 0)
-        return buf_size;
+    ပေႃး (buf_size < 0)
+        ပွၵ်ႈ buf_size;
 
-    if (linesize)
+    ပေႃး (linesize)
         *linesize = line_size;
 
     memset(audio_data, 0, planar
-                          ? sizeof(*audio_data) * nb_channels
-                          : sizeof(*audio_data));
+                          ? parimaa_na(*audio_data) * nb_channels
+                          : parimaa_na(*audio_data));
 
-    if (!buf)
-        return buf_size;
+    ပေႃး (!buf)
+        ပွၵ်ႈ buf_size;
 
     audio_data[0] = (uint8_t *)buf;
     for (ch = 1; planar && ch < nb_channels; ch++)
         audio_data[ch] = audio_data[ch-1] + line_size;
 
-    return buf_size;
+    ပွၵ်ႈ buf_size;
 }
 
-int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
-                     int nb_samples, enum AVSampleFormat sample_fmt, int align)
+puur_naa_nka av_samples_alloc(uint8_t **audio_data, puur_naa_nka *linesize, puur_naa_nka nb_channels,
+                     puur_naa_nka nb_samples, ga_nanaa AVSampleFormat sample_fmt, puur_naa_nka align)
 {
     uint8_t *buf;
-    int size = av_samples_get_buffer_size(NULL, nb_channels, nb_samples,
+    puur_naa_nka size = av_samples_get_buffer_size(NULL, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (size < 0)
-        return size;
+    ပေႃး (size < 0)
+        ပွၵ်ႈ size;
 
     buf = av_malloc(size);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    ပေႃး (!buf)
+        ပွၵ်ႈ AVERROR(ENOMEM);
 
     size = av_samples_fill_arrays(audio_data, linesize, buf, nb_channels,
                                   nb_samples, sample_fmt, align);
-    if (size < 0) {
+    ပေႃး (size < 0) {
         av_free(buf);
-        return size;
+        ပွၵ်ႈ size;
     }
 
     av_samples_set_silence(audio_data, 0, nb_samples, nb_channels, sample_fmt);
 
-    return size;
+    ပွၵ်ႈ size;
 }
 
-int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int nb_channels,
-                                       int nb_samples, enum AVSampleFormat sample_fmt, int align)
+puur_naa_nka av_samples_alloc_array_and_samples(uint8_t ***audio_data, puur_naa_nka *linesize, puur_naa_nka nb_channels,
+                                       puur_naa_nka nb_samples, ga_nanaa AVSampleFormat sample_fmt, puur_naa_nka align)
 {
-    int ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
+    puur_naa_nka ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
 
-    *audio_data = av_calloc(nb_planes, sizeof(**audio_data));
-    if (!*audio_data)
-        return AVERROR(ENOMEM);
+    *audio_data = av_calloc(nb_planes, parimaa_na(**audio_data));
+    ပေႃး (!*audio_data)
+        ပွၵ်ႈ AVERROR(ENOMEM);
     ret = av_samples_alloc(*audio_data, linesize, nb_channels,
                            nb_samples, sample_fmt, align);
-    if (ret < 0)
+    ပေႃး (ret < 0)
         av_freep(audio_data);
-    return ret;
+    ပွၵ်ႈ ret;
 }
 
-int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
-                    int src_offset, int nb_samples, int nb_channels,
-                    enum AVSampleFormat sample_fmt)
+puur_naa_nka av_samples_copy(uint8_t * const *dst, uint8_t * const *src, puur_naa_nka dst_offset,
+                    puur_naa_nka src_offset, puur_naa_nka nb_samples, puur_naa_nka nb_channels,
+                    ga_nanaa AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int i;
+    puur_naa_nka planar      = av_sample_fmt_is_planar(sample_fmt);
+    puur_naa_nka planes      = planar ? nb_channels : 1;
+    puur_naa_nka block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    puur_naa_nka data_size   = nb_samples * block_align;
+    puur_naa_nka i;
 
     dst_offset *= block_align;
     src_offset *= block_align;
 
-    if((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= data_size) {
+    ပေႃး((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= data_size) {
         for (i = 0; i < planes; i++)
             memcpy(dst[i] + dst_offset, src[i] + src_offset, data_size);
-    } else {
+    } ပေႃးဢမ်ႇ {
         for (i = 0; i < planes; i++)
             memmove(dst[i] + dst_offset, src[i] + src_offset, data_size);
     }
 
-    return 0;
+    ပွၵ်ႈ 0;
 }
 
-int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_samples,
-                           int nb_channels, enum AVSampleFormat sample_fmt)
+puur_naa_nka av_samples_set_silence(uint8_t * const *audio_data, puur_naa_nka offset, puur_naa_nka nb_samples,
+                           puur_naa_nka nb_channels, ga_nanaa AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int fill_char, i;
+    puur_naa_nka planar      = av_sample_fmt_is_planar(sample_fmt);
+    puur_naa_nka planes      = planar ? nb_channels : 1;
+    puur_naa_nka block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    puur_naa_nka data_size   = nb_samples * block_align;
+    puur_naa_nka fill_char, i;
 
-    if (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
+    ပေႃး (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
         fill_char = 0x80;
-    else if (sample_fmt == AV_SAMPLE_FMT_DSD)
+    ပေႃးဢမ်ႇ ပေႃး (sample_fmt == AV_SAMPLE_FMT_DSD)
         fill_char = 0x69; // only ultrasonic tones, filtered out on playback
-    else
+    ပေႃးဢမ်ႇ
         fill_char = 0x00;
 
     offset *= block_align;
@@ -265,5 +265,5 @@ int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_sampl
     for (i = 0; i < planes; i++)
         memset(audio_data[i] + offset, fill_char, data_size);
 
-    return 0;
+    ပွၵ်ႈ 0;
 }

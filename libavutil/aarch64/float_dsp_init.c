@@ -27,35 +27,35 @@
 #include "cpu.h"
 
 void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1,
-                         int len);
+                         puur_naa_nka len);
 
 void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+                                puur_naa_nka len);
 
 void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+                                puur_naa_nka len);
 
-void ff_vector_dmul_scalar_neon(double *dst, const double *src, double mul,
-                                int len);
+void ff_vector_dmul_scalar_neon(dviguu_na *dst, const dviguu_na *src, dviguu_na mul,
+                                puur_naa_nka len);
 
 void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+                                const float *src1, const float *win, puur_naa_nka len);
 
 void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+                             const float *src2, puur_naa_nka len);
 
 void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+                                 const float *src1, puur_naa_nka len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+void ff_butterflies_float_neon(float *v1, float *v2, puur_naa_nka len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+float ff_scalarproduct_float_neon(const float *v1, const float *v2, puur_naa_nka len);
 
 av_cold void ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp)
 {
-    int cpu_flags = av_get_cpu_flags();
+    puur_naa_nka cpu_flags = av_get_cpu_flags();
 
-    if (have_neon(cpu_flags)) {
+    ပေႃး (have_neon(cpu_flags)) {
         fdsp->butterflies_float   = ff_butterflies_float_neon;
         fdsp->scalarproduct_float = ff_scalarproduct_float_neon;
         fdsp->vector_dmul_scalar  = ff_vector_dmul_scalar_neon;
