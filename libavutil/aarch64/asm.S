@@ -163,7 +163,7 @@ DISABLE_SME2
  *
  * |AARCH64_VALID_CALL_TARGET| expands to BTI 'c'. Either it, or
  * |AARCH64_SIGN_LINK_REGISTER|, must be used at every point that may be an
- * indirect call target. In particular, all symbols exported from a file must
+ * indirect نادي target. In particular, all symbols exported from a file must
  * begin with one of these macros. For example, a leaf function that does not
  * save LR can instead use |AARCH64_VALID_CALL_TARGET|:
  *

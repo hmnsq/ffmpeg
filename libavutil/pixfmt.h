@@ -26,11 +26,11 @@
  * pixel format definitions
  */
 
-#include "libavutil/avconfig.h"
-#include "version.h"
+#ضمن "libavutil/avconfig.h"
+#ضمن "version.h"
 
 #define AVPALETTE_SIZE 1024
-#define AVPALETTE_COUNT 256
+#define AVPALETTE_سانى 256
 
 /**
  * Maximum number of planes in any pixel format.
@@ -68,7 +68,7 @@
  * for pal8. This palette is filled in automatically by the function
  * allocating the picture.
  */
-enum AVPixelFormat {
+تعداد AVPixelFormat {
     AV_PIX_FMT_NONE = -1,
     AV_PIX_FMT_YUV420P,   ///< planar YUV 4:2:0, 12bpp, (1 Cr & Cb sample per 2x2 Y samples)
     AV_PIX_FMT_YUYV422,   ///< packed YUV 4:2:2, 16bpp, Y0 Cb Y1 Cr
@@ -348,7 +348,7 @@ enum AVPixelFormat {
      *
      * data[0] points to an AVDRMFrameDescriptor.
      */
-    AV_PIX_FMT_DRM_PRIME,
+    AV_PIX_FMT_DRM_ئاددىي_سان,
     /**
      * Hardware surfaces for OpenCL.
      *
@@ -511,9 +511,9 @@ enum AVPixelFormat {
     AV_PIX_FMT_NB         ///< number of pixel formats, DO NOT USE THIS if you want to link with shared libav* because the number of formats might differ between versions
 };
 
-#if AV_HAVE_BIGENDIAN
+#إذا AV_HAVE_BIGENDIAN
 #   define AV_PIX_FMT_NE(be, le) AV_PIX_FMT_##be
-#else
+#وإلا
 #   define AV_PIX_FMT_NE(be, le) AV_PIX_FMT_##le
 #endif
 
@@ -644,7 +644,7 @@ enum AVPixelFormat {
   * Chromaticity coordinates of the source primaries.
   * These values match the ones defined by ISO/IEC 23091-2_2019 subclause 8.1 and ITU-T H.273.
   */
-enum AVColorPrimaries {
+تعداد AVColorPrimaries {
     AVCOL_PRI_RESERVED0   = 0,
     AVCOL_PRI_BT709       = 1,  ///< also ITU-R BT1361 / IEC 61966-2-4 / SMPTE RP 177 Annex B
     AVCOL_PRI_UNSPECIFIED = 2,
@@ -674,7 +674,7 @@ enum AVColorPrimaries {
  * Color Transfer Characteristic.
  * These values match the ones defined by ISO/IEC 23091-2_2019 subclause 8.2.
  */
-enum AVColorTransferCharacteristic {
+تعداد AVColorTransferCharacteristic {
     AVCOL_TRC_RESERVED0    = 0,
     AVCOL_TRC_BT709        = 1,  ///< also ITU-R BT1361
     AVCOL_TRC_UNSPECIFIED  = 2,
@@ -708,7 +708,7 @@ enum AVColorTransferCharacteristic {
  * YUV colorspace type.
  * These values match the ones defined by ISO/IEC 23091-2_2019 subclause 8.3.
  */
-enum AVColorSpace {
+تعداد AVColorSpace {
     AVCOL_SPC_RGB         = 0,  ///< order of coefficients is actually GBR, also IEC 61966-2-1 (sRGB), YZX and ST 428-1
     AVCOL_SPC_BT709       = 1,  ///< also ITU-R BT1361 / IEC 61966-2-4 xvYCC709 / derived in SMPTE RP 177 Annex B
     AVCOL_SPC_UNSPECIFIED = 2,
@@ -750,7 +750,7 @@ enum AVColorSpace {
  *   - For additional definitions such as rounding and clipping to valid n
  *     bit unsigned integer range, please refer to BT.2100 (Table 9).
  */
-enum AVColorRange {
+تعداد AVColorRange {
     AVCOL_RANGE_UNSPECIFIED = 0,
 
     /**
@@ -804,12 +804,12 @@ enum AVColorRange {
  *                |             |1 2           1-6 are possible chroma positions
  *2nd luma line > |X   X ...    |5 6 X ...     0 is undefined/unknown position
  */
-enum AVChromaLocation {
+تعداد AVChromaLocation {
     AVCHROMA_LOC_UNSPECIFIED = 0,
-    AVCHROMA_LOC_LEFT        = 1, ///< MPEG-2/4 4:2:0, H.264 default for 4:2:0
+    AVCHROMA_LOC_سول        = 1, ///< MPEG-2/4 4:2:0, H.264 default for 4:2:0
     AVCHROMA_LOC_CENTER      = 2, ///< MPEG-1 4:2:0, JPEG 4:2:0, H.263 4:2:0
     AVCHROMA_LOC_TOPLEFT     = 3, ///< ITU-R 601, SMPTE 274M 296M S314M(DV 4:1:1), mpeg2 4:2:2
-    AVCHROMA_LOC_TOP         = 4,
+    AVCHROMA_LOC_چوققا         = 4,
     AVCHROMA_LOC_BOTTOMLEFT  = 5,
     AVCHROMA_LOC_BOTTOM      = 6,
     AVCHROMA_LOC_NB               ///< Not part of ABI
@@ -818,7 +818,7 @@ enum AVChromaLocation {
 /**
  * Correlation between the alpha channel and color values.
  */
-enum AVAlphaMode {
+تعداد AVAlphaMode {
     AVALPHA_MODE_UNSPECIFIED   = 0, ///< Unknown alpha handling, or no alpha channel
     AVALPHA_MODE_PREMULTIPLIED = 1, ///< Alpha channel is multiplied into color values
     AVALPHA_MODE_STRAIGHT      = 2, ///< Alpha channel is independent of color values

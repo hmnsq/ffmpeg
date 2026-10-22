@@ -29,12 +29,12 @@
  * @{
  */
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
 /** @name Error flags returned by av_lzo1x_decode
  * @{ */
 /// end of the input buffer reached before decoding finished
-#define AV_LZO_INPUT_DEPLETED  1
+#define AV_LZO_كىرگۈزۈش_DEPLETED  1
 /// decoded data did not fit into output buffer
 #define AV_LZO_OUTPUT_FULL     2
 /// a reference to previously decoded data was wrong
@@ -43,7 +43,7 @@
 #define AV_LZO_ERROR           8
 /** @} */
 
-#define AV_LZO_INPUT_PADDING   8
+#define AV_LZO_كىرگۈزۈش_PADDING   8
 #define AV_LZO_OUTPUT_PADDING 12
 
 /**
@@ -57,7 +57,7 @@
  * Make sure all buffers are appropriately padded, in must provide
  * AV_LZO_INPUT_PADDING, out must provide AV_LZO_OUTPUT_PADDING additional bytes.
  */
-int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen);
+صحيح av_lzo1x_decode(فراغ *out, صحيح *outlen, ثابت فراغ *in, صحيح *inlen);
 
 /**
  * @}

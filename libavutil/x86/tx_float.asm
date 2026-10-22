@@ -897,7 +897,7 @@ cglobal fft8_float, 4, 4, 6, ctx, out, in, tmp
 
 %if %1
 cglobal fft8_ns_float, 4, 5, 6, ctx, out, in, stride, tmp
-    call mangle(ff_tx_fft8_asm_float_sse3)
+    نادي mangle(ff_tx_fft8_asm_float_sse3)
     RET
 %endif
 %endmacro
@@ -937,7 +937,7 @@ cglobal fft8_float, 4, 4, 4, ctx, out, in, tmp
 
 %if %1
 cglobal fft8_ns_float, 4, 5, 4, ctx, out, in, stride, tmp
-    call mangle(ff_tx_fft8_asm_float_avx)
+    نادي mangle(ff_tx_fft8_asm_float_avx)
     RET
 %endif
 %endmacro
@@ -986,7 +986,7 @@ cglobal fft16_float, 4, 4, 8, ctx, out, in, tmp
 
 %if %2
 cglobal fft16_ns_float, 4, 5, 8, ctx, out, in, stride, tmp
-    call mangle(ff_tx_fft16_asm_float_ %+ %1)
+    نادي mangle(ff_tx_fft16_asm_float_ %+ %1)
     RET
 %endif
 %endmacro
@@ -1070,7 +1070,7 @@ cglobal fft32_float, 4, 4, 16, ctx, out, in, tmp
 
 %if %2
 cglobal fft32_ns_float, 4, 5, 16, ctx, out, in, stride, tmp
-    call mangle(ff_tx_fft32_asm_float_ %+ %1)
+    نادي mangle(ff_tx_fft32_asm_float_ %+ %1)
     RET
 %endif
 %endmacro
@@ -1089,10 +1089,10 @@ ALIGN 16
     mov lenq, (%1/4)
 
     add outq, (%1*4) - (%1/1)
-    call .32pt
+    نادي .32pt
 
     add outq, (%1*2) - (%1/2) ; the synth loops also increment outq
-    call .32pt
+    نادي .32pt
 
     POP lenq
     sub outq, (%1*4) + (%1*2) + (%1/2)
@@ -1260,10 +1260,10 @@ ALIGN 16
     mov lenq, 32
 
     add outq, 16*mmsize
-    call .32pt
+    نادي .32pt
 
     add outq, 8*mmsize
-    call .32pt
+    نادي .32pt
 
     POP lenq
     sub outq, 24*mmsize
@@ -1287,10 +1287,10 @@ ALIGN 16
     mov lenq, 64
 
     add outq, 32*mmsize
-    call .32pt
+    نادي .32pt
 
     add outq, 16*mmsize
-    call .32pt
+    نادي .32pt
 
     POP lenq
     sub outq, 48*mmsize
@@ -1315,10 +1315,10 @@ ALIGN 16
     mov lenq, 128
 
     add outq, 64*mmsize
-    call .32pt
+    نادي .32pt
 
     add outq, 32*mmsize
-    call .32pt
+    نادي .32pt
 
     POP lenq
     sub outq, 96*mmsize
@@ -1350,10 +1350,10 @@ ALIGN 16
     mov lenq, 256
 
     add outq, 96*mmsize
-    call .32pt
+    نادي .32pt
 
     add outq, 64*mmsize
-    call .32pt
+    نادي .32pt
 
     POP lenq
     sub outq, 192*mmsize
@@ -1503,7 +1503,7 @@ cglobal fft_sr_ns_float, 4, 10, 16, 272, ctx, out, in, tmp, len, lut, itab, rtab
     movsxd lenq, dword [ctxq + AVTXContext.len]
     mov lutq, [ctxq + AVTXContext.map]
 
-    call mangle(ff_tx_fft_sr_asm_float_ %+ %1)
+    نادي mangle(ff_tx_fft_sr_asm_float_ %+ %1)
     RET
 %endif
 %endmacro
@@ -1716,15 +1716,15 @@ cglobal mdct_inv_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, exp, t1,
     movsxd lenq, dword [ctxq + AVTXContext.len]
 
     mov inq, outq                    ; in-place transform
-    call t5q                         ; call the FFT
+    نادي t5q                         ; call the FFT
 
     mov ctxq, t4q                    ; restore original context
     movsxd lenq, dword [ctxq + AVTXContext.len]
     mov expq, [ctxq + AVTXContext.exp]
     lea expq, [expq + lenq*4]
 
-    xor t1q, t1q                     ; low
-    lea t2q, [lenq*4 - mmsize]       ; high
+    xor t1q, t1q                     ;تۆۋەن
+    lea t2q, [lenq*4 - mmsize]       ;يۇقىرى
 
 .post:
     movaps m2, [expq + t2q]          ; tab h
@@ -1877,7 +1877,7 @@ cglobal fft_pfa_15xM_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, buf,
     vzeroupper
 
 .dim2:
-    call tgt5q                                      ; call the FFT
+    نادي tgt5q                                      ; call the FFT
     lea inq,  [inq  + lenq*8]
     lea outq, [outq + lenq*8]
     sub stride3q, lenq
@@ -1925,7 +1925,7 @@ cglobal fft_pfa_15xM_ns_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, b
     movsxd lenq, dword [ctxq + AVTXContext.len]
     mov lutq, [ctxq + AVTXContext.map]
 
-    call mangle(ff_tx_fft_pfa_15xM_asm_float)
+    نادي mangle(ff_tx_fft_pfa_15xM_asm_float)
     RET
 %endif
 %endmacro

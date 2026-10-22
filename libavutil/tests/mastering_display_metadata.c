@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#ضمن <limits.h>
+#ضمن <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/mastering_display_metadata.h"
-#include "libavutil/mem.h"
+#ضمن "libavutil/frame.h"
+#ضمن "libavutil/mastering_display_metadata.h"
+#ضمن "libavutil/mem.h"
 
-int main(void)
+صحيح main(فراغ)
 {
     AVMasteringDisplayMetadata *mdm;
     AVContentLightMetadata *clm;
@@ -33,40 +33,40 @@ int main(void)
     /* av_mastering_display_metadata_alloc */
     printf("Testing av_mastering_display_metadata_alloc()\n");
     mdm = av_mastering_display_metadata_alloc();
-    if (mdm) {
+    إذا (mdm) {
         /* verify defaults: all rationals should be {0, 1} */
         printf("alloc: OK\n");
         printf("defaults: primaries[0][0]=%d/%d, white_point[0]=%d/%d\n",
-               mdm->display_primaries[0][0].num,
+               mdm->display_primaries[0][0].رەقەم,
                mdm->display_primaries[0][0].den,
-               mdm->white_point[0].num, mdm->white_point[0].den);
+               mdm->white_point[0].رەقەم, mdm->white_point[0].den);
         printf("defaults: min_lum=%d/%d, max_lum=%d/%d\n",
-               mdm->min_luminance.num, mdm->min_luminance.den,
-               mdm->max_luminance.num, mdm->max_luminance.den);
+               mdm->min_luminance.رەقەم, mdm->min_luminance.den,
+               mdm->max_luminance.رەقەم, mdm->max_luminance.den);
         printf("defaults: has_primaries=%d, has_luminance=%d\n",
                mdm->has_primaries, mdm->has_luminance);
         av_free(mdm);
-    } else {
+    } وإلا {
         printf("alloc: FAIL\n");
     }
 
     /* av_mastering_display_metadata_alloc_size */
     printf("\nTesting av_mastering_display_metadata_alloc_size()\n");
     mdm = av_mastering_display_metadata_alloc_size(&size);
-    if (mdm) {
+    إذا (mdm) {
         printf("alloc_size: OK, size>0=%s\n", size > 0 ? "yes" : "no");
         printf("defaults: primaries[0][0]=%d/%d\n",
-               mdm->display_primaries[0][0].num,
+               mdm->display_primaries[0][0].رەقەم,
                mdm->display_primaries[0][0].den);
         av_free(mdm);
-    } else {
+    } وإلا {
         printf("alloc_size: FAIL\n");
     }
 
     /* write and read back */
     printf("\nTesting write/read back\n");
     mdm = av_mastering_display_metadata_alloc();
-    if (mdm) {
+    إذا (mdm) {
         mdm->display_primaries[0][0] = (AVRational){ 34000, 50000 };
         mdm->display_primaries[0][1] = (AVRational){ 16000, 50000 };
         mdm->white_point[0] = (AVRational){ 15635, 50000 };
@@ -76,29 +76,29 @@ int main(void)
         mdm->has_primaries = 1;
         mdm->has_luminance = 1;
         printf("primaries[0]=(%d/%d, %d/%d)\n",
-               mdm->display_primaries[0][0].num,
+               mdm->display_primaries[0][0].رەقەم,
                mdm->display_primaries[0][0].den,
-               mdm->display_primaries[0][1].num,
+               mdm->display_primaries[0][1].رەقەم,
                mdm->display_primaries[0][1].den);
         printf("white_point=(%d/%d, %d/%d)\n",
-               mdm->white_point[0].num, mdm->white_point[0].den,
-               mdm->white_point[1].num, mdm->white_point[1].den);
+               mdm->white_point[0].رەقەم, mdm->white_point[0].den,
+               mdm->white_point[1].رەقەم, mdm->white_point[1].den);
         printf("luminance: min=%d/%d max=%d/%d\n",
-               mdm->min_luminance.num, mdm->min_luminance.den,
-               mdm->max_luminance.num, mdm->max_luminance.den);
+               mdm->min_luminance.رەقەم, mdm->min_luminance.den,
+               mdm->max_luminance.رەقەم, mdm->max_luminance.den);
         av_free(mdm);
     }
 
     /* av_mastering_display_metadata_create_side_data */
     printf("\nTesting av_mastering_display_metadata_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    إذا (frame) {
         mdm = av_mastering_display_metadata_create_side_data(frame);
-        if (mdm) {
+        إذا (mdm) {
             printf("side_data: OK, defaults: primaries[0][0]=%d/%d\n",
-                   mdm->display_primaries[0][0].num,
+                   mdm->display_primaries[0][0].رەقەم,
                    mdm->display_primaries[0][0].den);
-        } else {
+        } وإلا {
             printf("side_data: FAIL\n");
         }
         av_frame_free(&frame);
@@ -107,25 +107,25 @@ int main(void)
     /* av_content_light_metadata_alloc */
     printf("\nTesting av_content_light_metadata_alloc()\n");
     clm = av_content_light_metadata_alloc(&size);
-    if (clm) {
+    إذا (clm) {
         printf("alloc: OK, size>0=%s, MaxCLL=%u, MaxFALL=%u\n",
                size > 0 ? "yes" : "no", clm->MaxCLL, clm->MaxFALL);
         clm->MaxCLL = 1000;
         clm->MaxFALL = 400;
         printf("write: MaxCLL=%u, MaxFALL=%u\n", clm->MaxCLL, clm->MaxFALL);
         av_free(clm);
-    } else {
+    } وإلا {
         printf("alloc: FAIL\n");
     }
 
     /* av_content_light_metadata_create_side_data */
     printf("\nTesting av_content_light_metadata_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    إذا (frame) {
         clm = av_content_light_metadata_create_side_data(frame);
-        if (clm) {
+        إذا (clm) {
             printf("side_data: OK, MaxCLL=%u\n", clm->MaxCLL);
-        } else {
+        } وإلا {
             printf("side_data: FAIL\n");
         }
         av_frame_free(&frame);
@@ -146,7 +146,7 @@ int main(void)
     av_max_alloc(INT_MAX);
 
     frame = av_frame_alloc();
-    if (frame) {
+    إذا (frame) {
         av_max_alloc(1);
         mdm = av_mastering_display_metadata_create_side_data(frame);
         printf("mastering side_data OOM: %s\n", mdm ? "FAIL" : "OK");
@@ -156,5 +156,5 @@ int main(void)
         av_frame_free(&frame);
     }
 
-    return 0;
+    أرجع 0;
 }
