@@ -22,7 +22,7 @@
 #ifndef AVUTIL_BLOWFISH_H
 #define AVUTIL_BLOWFISH_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
 /**
  * @defgroup lavu_blowfish Blowfish
@@ -32,7 +32,7 @@
 
 #define AV_BF_ROUNDS 16
 
-typedef struct AVBlowfish {
+تعريفنوع بنية AVBlowfish {
     uint32_t p[AV_BF_ROUNDS + 2];
     uint32_t s[4][256];
 } AVBlowfish;
@@ -40,7 +40,7 @@ typedef struct AVBlowfish {
 /**
  * Allocate an AVBlowfish context.
  */
-AVBlowfish *av_blowfish_alloc(void);
+AVBlowfish *av_blowfish_alloc(فراغ);
 
 /**
  * Initialize an AVBlowfish context.
@@ -49,7 +49,7 @@ AVBlowfish *av_blowfish_alloc(void);
  * @param key a key
  * @param key_len length of the key
  */
-void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
+فراغ av_blowfish_init(بنية AVBlowfish *ctx, ثابت uint8_t *کلیل, صحيح کلیل_len);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -59,8 +59,8 @@ void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
  * @param xr right four bytes halves of input to be encrypted
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
-                           int decrypt);
+فراغ av_blowfish_crypt_ecb(بنية AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
+                           صحيح decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -72,8 +72,8 @@ void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
  * @param iv initialization vector for CBC mode, if NULL ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_blowfish_crypt(struct AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                       int count, uint8_t *iv, int decrypt);
+فراغ av_blowfish_crypt(بنية AVBlowfish *ctx, uint8_t *dst, ثابت uint8_t *src,
+                       صحيح ژماردن, uint8_t *iv, صحيح decrypt);
 
 /**
  * @}

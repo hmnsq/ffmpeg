@@ -21,34 +21,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ضمن <string.h>
 
-#include "config.h"
-#include "attributes.h"
-#include "bswap.h"
-#include "error.h"
-#include "sha.h"
-#include "intreadwrite.h"
-#include "mem.h"
+#ضمن "config.h"
+#ضمن "attributes.h"
+#ضمن "bswap.h"
+#ضمن "error.h"
+#ضمن "sha.h"
+#ضمن "intreadwrite.h"
+#ضمن "mem.h"
 
 /** hash context */
-typedef struct AVSHA {
+تعريفنوع بنية AVSHA {
     uint8_t  digest_len;  ///< digest length in 32-bit words
-    uint64_t count;       ///< number of bytes in buffer
+    uint64_t ژماردن;       ///< number of bytes in buffer
     uint8_t  buffer[64];  ///< 512-bit buffer of input values used in hash updating
     uint32_t state[8];    ///< current hash value
     /** function used to update hash for 512-bit input block */
-    void     (*transform)(uint32_t *state, const uint8_t buffer[64]);
+    فراغ     (*transform)(uint32_t *state, ثابت uint8_t buffer[64]);
 } AVSHA;
 
-const int av_sha_size = sizeof(AVSHA);
+ثابت صحيح av_sha_size = حجم(AVSHA);
 
-struct AVSHA *av_sha_alloc(void)
+بنية AVSHA *av_sha_alloc(فراغ)
 {
-    return av_mallocz(sizeof(struct AVSHA));
+    أرجع av_mallocz(حجم(بنية AVSHA));
 }
 
-#define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
+#define rol(بەها, bits) (((بەها) << (bits)) | ((بەها) >> (32 - (bits))))
 
 /* (R0+R1), R2, R3, R4 are the different operations used in SHA1 */
 #define blk0(i) (block[i] = AV_RB32(buffer + 4 * (i)))
@@ -62,34 +62,34 @@ struct AVSHA *av_sha_alloc(void)
 
 /* Hash a single 512-bit block. This is the core of the algorithm. */
 
-static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
+ساكن فراغ sha1_transform(uint32_t state[5], ثابت uint8_t buffer[64])
 {
     uint32_t block[80];
-    unsigned int i, a, b, c, d, e;
+    unsigned صحيح i, a, b, c, d, e;
 
     a = state[0];
     b = state[1];
     c = state[2];
     d = state[3];
     e = state[4];
-#if CONFIG_SMALL
-    for (i = 0; i < 80; i++) {
-        int t;
-        if (i < 16)
+#إذا CONFIG_SMALL
+    لكل (i = 0; i < 80; i++) {
+        صحيح t;
+        إذا (i < 16)
             t = AV_RB32(buffer + 4 * i);
-        else
+        وإلا
             t = rol(block[i-3] ^ block[i-8] ^ block[i-14] ^ block[i-16], 1);
         block[i] = t;
         t += e + rol(a, 5);
-        if (i < 40) {
-            if (i < 20)
+        إذا (i < 40) {
+            إذا (i < 20)
                 t += ((b&(c^d))^d)     + 0x5A827999;
-            else
+            وإلا
                 t += ( b^c     ^d)     + 0x6ED9EBA1;
-        } else {
-            if (i < 60)
+        } وإلا {
+            إذا (i < 60)
                 t += (((b|c)&d)|(b&c)) + 0x8F1BBCDC;
-            else
+            وإلا
                 t += ( b^c     ^d)     + 0xCA62C1D6;
         }
         e = d;
@@ -98,7 +98,7 @@ static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
         b = a;
         a = t;
     }
-#else
+#وإلا
 
 #define R1_0 \
     R0(a, b, c, d, e, 0 + i); \
@@ -154,7 +154,7 @@ static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
     state[4] += e;
 }
 
-static const uint32_t K256[64] = {
+ساكن ثابت uint32_t K256[64] = {
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
     0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -200,9 +200,9 @@ static const uint32_t K256[64] = {
     T1 = blk(i); \
     ROUND256(a,b,c,d,e,f,g,h)
 
-static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
+ساكن فراغ sha256_transform(uint32_t *state, ثابت uint8_t buffer[64])
 {
-    unsigned int i, a, b, c, d, e, f, g, h;
+    unsigned صحيح i, a, b, c, d, e, f, g, h;
     uint32_t block[64];
     uint32_t T1;
 
@@ -214,12 +214,12 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
     f = state[5];
     g = state[6];
     h = state[7];
-#if CONFIG_SMALL
-    for (i = 0; i < 64; i++) {
+#إذا CONFIG_SMALL
+    لكل (i = 0; i < 64; i++) {
         uint32_t T2;
-        if (i < 16)
+        إذا (i < 16)
             T1 = blk0(i);
-        else
+        وإلا
             T1 = blk(i);
         T1 += h + Sigma1_256(e) + Ch(e, f, g) + K256[i];
         T2 = Sigma0_256(a) + Maj(a, b, c);
@@ -232,7 +232,7 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
         b = a;
         a = T1 + T2;
     }
-#else
+#وإلا
 
     i = 0;
 #define R256_0 \
@@ -271,19 +271,19 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
 }
 
 
-av_cold int av_sha_init(AVSHA *ctx, int bits)
+av_cold صحيح av_sha_init(AVSHA *ctx, صحيح bits)
 {
     ctx->digest_len = bits >> 5;
-    switch (bits) {
-    case 160: // SHA-1
+    بدل (bits) {
+    حالة 160: // SHA-1
         ctx->state[0] = 0x67452301;
         ctx->state[1] = 0xEFCDAB89;
         ctx->state[2] = 0x98BADCFE;
         ctx->state[3] = 0x10325476;
         ctx->state[4] = 0xC3D2E1F0;
         ctx->transform = sha1_transform;
-        break;
-    case 224: // SHA-224
+        اكسر;
+    حالة 224: // SHA-224
         ctx->state[0] = 0xC1059ED8;
         ctx->state[1] = 0x367CD507;
         ctx->state[2] = 0x3070DD17;
@@ -293,8 +293,8 @@ av_cold int av_sha_init(AVSHA *ctx, int bits)
         ctx->state[6] = 0x64F98FA7;
         ctx->state[7] = 0xBEFA4FA4;
         ctx->transform = sha256_transform;
-        break;
-    case 256: // SHA-256
+        اكسر;
+    حالة 256: // SHA-256
         ctx->state[0] = 0x6A09E667;
         ctx->state[1] = 0xBB67AE85;
         ctx->state[2] = 0x3C6EF372;
@@ -304,39 +304,39 @@ av_cold int av_sha_init(AVSHA *ctx, int bits)
         ctx->state[6] = 0x1F83D9AB;
         ctx->state[7] = 0x5BE0CD19;
         ctx->transform = sha256_transform;
-        break;
-    default:
-        return AVERROR(EINVAL);
+        اكسر;
+    افتراضي:
+        أرجع AVERROR(EINVAL);
     }
-    ctx->count = 0;
-    return 0;
+    ctx->ژماردن = 0;
+    أرجع 0;
 }
 
-void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len)
+فراغ av_sha_update(بنية AVSHA *ctx, ثابت uint8_t *data, size_t len)
 {
-    unsigned int j;
+    unsigned صحيح j;
     size_t i;
 
-    j = ctx->count & 63;
-    ctx->count += len;
-#if CONFIG_SMALL
-    for (i = 0; i < len; i++) {
+    j = ctx->ژماردن & 63;
+    ctx->ژماردن += len;
+#إذا CONFIG_SMALL
+    لكل (i = 0; i < len; i++) {
         ctx->buffer[j++] = data[i];
-        if (64 == j) {
+        إذا (64 == j) {
             ctx->transform(ctx->state, ctx->buffer);
             j = 0;
         }
     }
-#else
-    if (len >= 64 - j) {
-        const uint8_t *end;
+#وإلا
+    إذا (len >= 64 - j) {
+        ثابت uint8_t *end;
         memcpy(&ctx->buffer[j], data, (i = 64 - j));
         ctx->transform(ctx->state, ctx->buffer);
         data += i;
         len  -= i;
         end   = data + (len & ~63);
         len   = len % 64;
-        for (; data < end; data += 64)
+        لكل (; data < end; data += 64)
             ctx->transform(ctx->state, data);
         j = 0;
     }
@@ -344,15 +344,15 @@ void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len)
 #endif
 }
 
-void av_sha_final(AVSHA* ctx, uint8_t *digest)
+فراغ av_sha_final(AVSHA* ctx, uint8_t *digest)
 {
-    int i;
-    uint64_t finalcount = av_be2ne64(ctx->count << 3);
+    صحيح i;
+    uint64_t finalcount = av_be2ne64(ctx->ژماردن << 3);
 
     av_sha_update(ctx, "\200", 1);
-    while ((ctx->count & 63) != 56)
+    طالما ((ctx->ژماردن & 63) != 56)
         av_sha_update(ctx, "", 1);
     av_sha_update(ctx, (uint8_t *)&finalcount, 8); /* Should cause a transform() */
-    for (i = 0; i < ctx->digest_len; i++)
+    لكل (i = 0; i < ctx->digest_len; i++)
         AV_WB32(digest + i*4, ctx->state[i]);
 }

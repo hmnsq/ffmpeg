@@ -16,44 +16,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ضمن "config.h"
 
-#include <windows.h>
+#ضمن <windows.h>
 
 #define COBJMACROS
 
-#include <initguid.h>
-#include <d3d11.h>
-#include <dxgi1_2.h>
+#ضمن <initguid.h>
+#ضمن <d3d11.h>
+#ضمن <dxgi1_2.h>
 
-#if HAVE_DXGIDEBUG_H
-#include <dxgidebug.h>
+#إذا HAVE_DXGIDEBUG_H
+#ضمن <dxgidebug.h>
 #endif
 
-#include "avassert.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_d3d11va.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "thread.h"
-#include "compat/w32dlfcn.h"
+#ضمن "avassert.h"
+#ضمن "common.h"
+#ضمن "hwcontext.h"
+#ضمن "hwcontext_d3d11va.h"
+#ضمن "hwcontext_internal.h"
+#ضمن "imgutils.h"
+#ضمن "mem.h"
+#ضمن "pixdesc.h"
+#ضمن "pixfmt.h"
+#ضمن "thread.h"
+#ضمن "compat/w32dlfcn.h"
 
 #define MAX_ARRAY_SIZE 64 // Driver specification limits ArraySize to 64 for decoder-bound resources
 
-typedef HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, void **ppFactory);
+تعريفنوع HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, فراغ **ppFactory);
 
-static AVOnce functions_loaded = AV_ONCE_INIT;
+ساكن AVOnce functions_loaded = AV_ONCE_INIT;
 
-static PFN_CREATE_DXGI_FACTORY mCreateDXGIFactory;
-static PFN_D3D11_CREATE_DEVICE mD3D11CreateDevice;
+ساكن PFN_CREATE_DXGI_FACTORY mCreateDXGIFactory;
+ساكن PFN_D3D11_CREATE_DEVICE mD3D11CreateDevice;
 
-static av_cold void load_functions(void)
+ساكن av_cold فراغ load_functions(فراغ)
 {
-#if !HAVE_UWP
+#إذا !HAVE_UWP
     // We let these "leak" - this is fine, as unloading has no great benefit, and
     // Windows will mark a DLL as loaded forever if its internal refcount overflows
     // from too many LoadLibrary calls.
@@ -61,14 +61,14 @@ static av_cold void load_functions(void)
 
     d3dlib  = dlopen("d3d11.dll", 0);
     dxgilib = dlopen("dxgi.dll", 0);
-    if (!d3dlib || !dxgilib)
-        return;
+    إذا (!d3dlib || !dxgilib)
+        أرجع;
 
     mD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE) GetProcAddress(d3dlib, "D3D11CreateDevice");
     mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) GetProcAddress(dxgilib, "CreateDXGIFactory1");
-    if (!mCreateDXGIFactory)
+    إذا (!mCreateDXGIFactory)
         mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) GetProcAddress(dxgilib, "CreateDXGIFactory");
-#else
+#وإلا
     // In UWP (which lacks LoadLibrary), CreateDXGIFactory isn't available,
     // only CreateDXGIFactory1
     mD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE) D3D11CreateDevice;
@@ -76,23 +76,23 @@ static av_cold void load_functions(void)
 #endif
 }
 
-typedef struct D3D11VAFramesContext {
+تعريفنوع بنية D3D11VAFramesContext {
     /**
      * The public AVD3D11VAFramesContext. See hwcontext_d3d11va.h for it.
      */
     AVD3D11VAFramesContext p;
 
-    int nb_surfaces;
-    int nb_surfaces_used;
+    صحيح nb_surfaces;
+    صحيح nb_surfaces_used;
 
     DXGI_FORMAT format;
 
     ID3D11Texture2D *staging_texture;
 } D3D11VAFramesContext;
 
-static const struct {
+ساكن ثابت بنية {
     DXGI_FORMAT d3d_format;
-    enum AVPixelFormat pix_fmt;
+    تعداد AVPixelFormat pix_fmt;
 } supported_formats[] = {
     { DXGI_FORMAT_NV12,         AV_PIX_FMT_NV12 },
     { DXGI_FORMAT_P010,         AV_PIX_FMT_P010 },
@@ -116,89 +116,89 @@ static const struct {
     { DXGI_FORMAT_420_OPAQUE,   AV_PIX_FMT_YUV420P },
 };
 
-static void d3d11va_default_lock(void *ctx)
+ساكن فراغ d3d11va_default_lock(فراغ *ctx)
 {
     WaitForSingleObjectEx(ctx, INFINITE, FALSE);
 }
 
-static void d3d11va_default_unlock(void *ctx)
+ساكن فراغ d3d11va_default_unlock(فراغ *ctx)
 {
     ReleaseMutex(ctx);
 }
 
-static void d3d11va_frames_uninit(AVHWFramesContext *ctx)
+ساكن فراغ d3d11va_frames_uninit(AVHWFramesContext *ctx)
 {
     D3D11VAFramesContext *s = ctx->hwctx;
     AVD3D11VAFramesContext *frames_hwctx = &s->p;
 
-    if (frames_hwctx->texture)
+    إذا (frames_hwctx->texture)
         ID3D11Texture2D_Release(frames_hwctx->texture);
-    frames_hwctx->texture = NULL;
+    frames_hwctx->texture = عدم;
 
-    if (s->staging_texture)
+    إذا (s->staging_texture)
         ID3D11Texture2D_Release(s->staging_texture);
-    s->staging_texture = NULL;
+    s->staging_texture = عدم;
 
     av_freep(&frames_hwctx->texture_infos);
 }
 
-static int d3d11va_frames_get_constraints(AVHWDeviceContext *ctx,
-                                          const void *hwconfig,
+ساكن صحيح d3d11va_frames_get_constraints(AVHWDeviceContext *ctx,
+                                          ثابت فراغ *hwconfig,
                                           AVHWFramesConstraints *constraints)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->hwctx;
-    int nb_sw_formats = 0;
+    صحيح nb_sw_formats = 0;
     HRESULT hr;
-    int i;
+    صحيح i;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_formats) + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    حجم(*constraints->valid_sw_formats));
+    إذا (!constraints->valid_sw_formats)
+        أرجع AVERROR(ENOMEM);
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+    لكل (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
         UINT format_support = 0;
         hr = ID3D11Device_CheckFormatSupport(device_hwctx->device, supported_formats[i].d3d_format, &format_support);
-        if (SUCCEEDED(hr) && (format_support & D3D11_FORMAT_SUPPORT_TEXTURE2D))
+        إذا (SUCCEEDED(hr) && (format_support & D3D11_FORMAT_SUPPORT_TEXTURE2D))
             constraints->valid_sw_formats[nb_sw_formats++] = supported_formats[i].pix_fmt;
     }
     constraints->valid_sw_formats[nb_sw_formats] = AV_PIX_FMT_NONE;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, حجم(*constraints->valid_hw_formats));
+    إذا (!constraints->valid_hw_formats)
+        أرجع AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_D3D11;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    أرجع 0;
 }
 
-static void free_texture(void *opaque, uint8_t *data)
+ساكن فراغ free_texture(فراغ *opaque, uint8_t *data)
 {
     ID3D11Texture2D_Release((ID3D11Texture2D *)opaque);
     av_free(data);
 }
 
-static AVBufferRef *wrap_texture_buf(AVHWFramesContext *ctx, ID3D11Texture2D *tex, int index)
+ساكن AVBufferRef *wrap_texture_buf(AVHWFramesContext *ctx, ID3D11Texture2D *tex, صحيح index)
 {
     AVBufferRef *buf;
-    AVD3D11FrameDescriptor         *desc = av_mallocz(sizeof(*desc));
+    AVD3D11FrameDescriptor         *desc = av_mallocz(حجم(*desc));
     D3D11VAFramesContext              *s = ctx->hwctx;
     AVD3D11VAFramesContext *frames_hwctx = &s->p;
-    if (!desc) {
+    إذا (!desc) {
         ID3D11Texture2D_Release(tex);
-        return NULL;
+        أرجع عدم;
     }
 
-    if (s->nb_surfaces <= s->nb_surfaces_used) {
+    إذا (s->nb_surfaces <= s->nb_surfaces_used) {
         frames_hwctx->texture_infos = av_realloc_f(frames_hwctx->texture_infos,
                                                    s->nb_surfaces_used + 1,
-                                                   sizeof(*frames_hwctx->texture_infos));
-        if (!frames_hwctx->texture_infos) {
+                                                   حجم(*frames_hwctx->texture_infos));
+        إذا (!frames_hwctx->texture_infos) {
             ID3D11Texture2D_Release(tex);
             av_free(desc);
-            return NULL;
+            أرجع عدم;
         }
         s->nb_surfaces = s->nb_surfaces_used + 1;
     }
@@ -210,17 +210,17 @@ static AVBufferRef *wrap_texture_buf(AVHWFramesContext *ctx, ID3D11Texture2D *te
     desc->texture = tex;
     desc->index   = index;
 
-    buf = av_buffer_create((uint8_t *)desc, sizeof(*desc), free_texture, tex, 0);
-    if (!buf) {
+    buf = av_buffer_create((uint8_t *)desc, حجم(*desc), free_texture, tex, 0);
+    إذا (!buf) {
         ID3D11Texture2D_Release(tex);
         av_free(desc);
-        return NULL;
+        أرجع عدم;
     }
 
-    return buf;
+    أرجع buf;
 }
 
-static AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
+ساكن AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
 {
     D3D11VAFramesContext       *s = ctx->hwctx;
     AVD3D11VAFramesContext *hwctx = &s->p;
@@ -232,69 +232,69 @@ static AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
         .Height     = ctx->height,
         .MipLevels  = 1,
         .Format     = s->format,
-        .SampleDesc = { .Count = 1 },
+        .SampleDesc = { .ژماردن_2 = 1 },
         .ArraySize  = 1,
         .Usage      = D3D11_USAGE_DEFAULT,
         .BindFlags  = hwctx->BindFlags,
         .MiscFlags  = hwctx->MiscFlags,
     };
 
-    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &tex);
-    if (FAILED(hr)) {
+    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, عدم, &tex);
+    إذا (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (long)hr);
-        return NULL;
+        أرجع عدم;
     }
 
-    return wrap_texture_buf(ctx, tex, 0);
+    أرجع wrap_texture_buf(ctx, tex, 0);
 }
 
-static AVBufferRef *d3d11va_pool_alloc(void *opaque, size_t size)
+ساكن AVBufferRef *d3d11va_pool_alloc(فراغ *opaque, size_t size)
 {
     AVHWFramesContext        *ctx = (AVHWFramesContext*)opaque;
     D3D11VAFramesContext       *s = ctx->hwctx;
     AVD3D11VAFramesContext *hwctx = &s->p;
     D3D11_TEXTURE2D_DESC  texDesc;
 
-    if (!hwctx->texture)
-        return d3d11va_alloc_single(ctx);
+    إذا (!hwctx->texture)
+        أرجع d3d11va_alloc_single(ctx);
 
     ID3D11Texture2D_GetDesc(hwctx->texture, &texDesc);
 
-    if (s->nb_surfaces_used >= texDesc.ArraySize) {
+    إذا (s->nb_surfaces_used >= texDesc.ArraySize) {
         av_log(ctx, AV_LOG_ERROR, "Static surface pool size exceeded.\n");
-        return NULL;
+        أرجع عدم;
     }
 
     ID3D11Texture2D_AddRef(hwctx->texture);
-    return wrap_texture_buf(ctx, hwctx->texture, s->nb_surfaces_used);
+    أرجع wrap_texture_buf(ctx, hwctx->texture, s->nb_surfaces_used);
 }
 
-static int d3d11va_frames_init(AVHWFramesContext *ctx)
+ساكن صحيح d3d11va_frames_init(AVHWFramesContext *ctx)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
     AVD3D11VAFramesContext        *hwctx = &s->p;
 
-    int i;
+    صحيح i;
     HRESULT hr;
     D3D11_TEXTURE2D_DESC texDesc;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i].pix_fmt) {
+    لكل (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        إذا (ctx->sw_format == supported_formats[i].pix_fmt) {
             s->format = supported_formats[i].d3d_format;
-            break;
+            اكسر;
         }
     }
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    إذا (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported pixel format: %s\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(EINVAL);
+        أرجع AVERROR(EINVAL);
     }
 
     hwctx->BindFlags |= device_hwctx->BindFlags;
     hwctx->MiscFlags |= device_hwctx->MiscFlags;
 
-    if (s->format == DXGI_FORMAT_420_OPAQUE)
+    إذا (s->format == DXGI_FORMAT_420_OPAQUE)
         hwctx->BindFlags &= ~D3D11_BIND_SHADER_RESOURCE;
 
     ctx->initial_pool_size = FFMIN(ctx->initial_pool_size, MAX_ARRAY_SIZE);
@@ -304,56 +304,56 @@ static int d3d11va_frames_init(AVHWFramesContext *ctx)
         .Height     = ctx->height,
         .MipLevels  = 1,
         .Format     = s->format,
-        .SampleDesc = { .Count = 1 },
+        .SampleDesc = { .ژماردن_2 = 1 },
         .ArraySize  = ctx->initial_pool_size,
         .Usage      = D3D11_USAGE_DEFAULT,
         .BindFlags  = hwctx->BindFlags,
         .MiscFlags  = hwctx->MiscFlags,
     };
 
-    if (hwctx->texture) {
+    إذا (hwctx->texture) {
         D3D11_TEXTURE2D_DESC texDesc2;
         ID3D11Texture2D_GetDesc(hwctx->texture, &texDesc2);
 
-        if (texDesc.Width != texDesc2.Width ||
+        إذا (texDesc.Width != texDesc2.Width ||
             texDesc.Height != texDesc2.Height ||
             texDesc.Format != texDesc2.Format) {
             av_log(ctx, AV_LOG_ERROR, "User-provided texture has mismatching parameters\n");
-            return AVERROR(EINVAL);
+            أرجع AVERROR(EINVAL);
         }
 
         ctx->initial_pool_size = texDesc2.ArraySize;
         hwctx->BindFlags = texDesc2.BindFlags;
         hwctx->MiscFlags = texDesc2.MiscFlags;
-    } else if (texDesc.ArraySize > 0) {
-        hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &hwctx->texture);
-        if (FAILED(hr)) {
+    } وإلا إذا (texDesc.ArraySize > 0) {
+        hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, عدم, &hwctx->texture);
+        إذا (FAILED(hr)) {
             av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (long)hr);
-            return AVERROR_UNKNOWN;
+            أرجع AVERROR_UNKNOWN;
         }
     }
 
-    hwctx->texture_infos = av_realloc_f(NULL, ctx->initial_pool_size, sizeof(*hwctx->texture_infos));
-    if (!hwctx->texture_infos)
-        return AVERROR(ENOMEM);
+    hwctx->texture_infos = av_realloc_f(عدم, ctx->initial_pool_size, حجم(*hwctx->texture_infos));
+    إذا (!hwctx->texture_infos)
+        أرجع AVERROR(ENOMEM);
     s->nb_surfaces = ctx->initial_pool_size;
 
     ffhwframesctx(ctx)->pool_internal =
-        av_buffer_pool_init2(sizeof(AVD3D11FrameDescriptor),
-                             ctx, d3d11va_pool_alloc, NULL);
-    if (!ffhwframesctx(ctx)->pool_internal)
-        return AVERROR(ENOMEM);
+        av_buffer_pool_init2(حجم(AVD3D11FrameDescriptor),
+                             ctx, d3d11va_pool_alloc, عدم);
+    إذا (!ffhwframesctx(ctx)->pool_internal)
+        أرجع AVERROR(ENOMEM);
 
-    return 0;
+    أرجع 0;
 }
 
-static int d3d11va_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+ساكن صحيح d3d11va_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
 {
     AVD3D11FrameDescriptor *desc;
 
     frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    إذا (!frame->buf[0])
+        أرجع AVERROR(ENOMEM);
 
     desc = (AVD3D11FrameDescriptor *)frame->buf[0]->data;
 
@@ -363,33 +363,33 @@ static int d3d11va_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
     frame->width   = ctx->width;
     frame->height  = ctx->height;
 
-    return 0;
+    أرجع 0;
 }
 
-static int d3d11va_transfer_get_formats(AVHWFramesContext *ctx,
-                                        enum AVHWFrameTransferDirection dir,
-                                        enum AVPixelFormat **formats)
+ساكن صحيح d3d11va_transfer_get_formats(AVHWFramesContext *ctx,
+                                        تعداد AVHWFrameTransferDirection dir,
+                                        تعداد AVPixelFormat **formats)
 {
     D3D11VAFramesContext *s = ctx->hwctx;
-    enum AVPixelFormat *fmts;
+    تعداد AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, حجم(*fmts));
+    إذا (!fmts)
+        أرجع AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     // Don't signal support for opaque formats. Actual access would fail.
-    if (s->format == DXGI_FORMAT_420_OPAQUE)
+    إذا (s->format == DXGI_FORMAT_420_OPAQUE)
         fmts[0] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    أرجع 0;
 }
 
-static int d3d11va_create_staging_texture(AVHWFramesContext *ctx, DXGI_FORMAT format)
+ساكن صحيح d3d11va_create_staging_texture(AVHWFramesContext *ctx, DXGI_FORMAT format)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
@@ -399,81 +399,81 @@ static int d3d11va_create_staging_texture(AVHWFramesContext *ctx, DXGI_FORMAT fo
         .Height         = ctx->height,
         .MipLevels      = 1,
         .Format         = format,
-        .SampleDesc     = { .Count = 1 },
+        .SampleDesc     = { .ژماردن_2 = 1 },
         .ArraySize      = 1,
         .Usage          = D3D11_USAGE_STAGING,
         .CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE,
     };
 
-    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &s->staging_texture);
-    if (FAILED(hr)) {
+    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, عدم, &s->staging_texture);
+    إذا (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the staging texture (%lx)\n", (long)hr);
-        return AVERROR_UNKNOWN;
+        أرجع AVERROR_UNKNOWN;
     }
 
-    return 0;
+    أرجع 0;
 }
 
-static void fill_texture_ptrs(uint8_t *data[4], int linesize[4],
+ساكن فراغ fill_texture_ptrs(uint8_t *data[4], صحيح linesize[4],
                               AVHWFramesContext *ctx,
                               D3D11_TEXTURE2D_DESC *desc,
                               D3D11_MAPPED_SUBRESOURCE *map)
 {
-    int i;
+    صحيح i;
 
-    for (i = 0; i < 4; i++)
+    لكل (i = 0; i < 4; i++)
         linesize[i] = map->RowPitch;
 
     av_image_fill_pointers(data, ctx->sw_format, desc->Height,
                            (uint8_t*)map->pData, linesize);
 }
 
-static int d3d11va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src)
+ساكن صحيح d3d11va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
+                                 ثابت AVFrame *src)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
-    int download = src->format == AV_PIX_FMT_D3D11;
-    const AVFrame *frame = download ? src : dst;
-    const AVFrame *other = download ? dst : src;
+    صحيح download = src->format == AV_PIX_FMT_D3D11;
+    ثابت AVFrame *frame = download ? src : dst;
+    ثابت AVFrame *other = download ? dst : src;
     // (The interface types are compatible.)
     ID3D11Resource *texture = (ID3D11Resource *)(ID3D11Texture2D *)frame->data[0];
-    int index = (intptr_t)frame->data[1];
+    صحيح index = (intptr_t)frame->data[1];
     ID3D11Resource *staging;
-    int w = FFMIN(dst->width,  src->width);
-    int h = FFMIN(dst->height, src->height);
+    صحيح w = FFMIN(dst->width,  src->width);
+    صحيح h = FFMIN(dst->height, src->height);
     uint8_t *map_data[4];
-    int map_linesize[4];
+    صحيح map_linesize[4];
     D3D11_TEXTURE2D_DESC desc;
     D3D11_MAPPED_SUBRESOURCE map;
     HRESULT hr;
-    int res;
+    صحيح res;
 
-    if (frame->hw_frames_ctx->data != (uint8_t *)ctx || other->format != ctx->sw_format)
-        return AVERROR(EINVAL);
+    إذا (frame->hw_frames_ctx->data != (uint8_t *)ctx || other->format != ctx->sw_format)
+        أرجع AVERROR(EINVAL);
 
     device_hwctx->lock(device_hwctx->lock_ctx);
 
-    if (!s->staging_texture) {
+    إذا (!s->staging_texture) {
         ID3D11Texture2D_GetDesc((ID3D11Texture2D *)texture, &desc);
         res = d3d11va_create_staging_texture(ctx, desc.Format);
-        if (res < 0)
-            return res;
+        إذا (res < 0)
+            أرجع res;
     }
 
     staging = (ID3D11Resource *)s->staging_texture;
 
     ID3D11Texture2D_GetDesc(s->staging_texture, &desc);
 
-    if (download) {
+    إذا (download) {
         ID3D11DeviceContext_CopySubresourceRegion(device_hwctx->device_context,
                                                   staging, 0, 0, 0, 0,
-                                                  texture, index, NULL);
+                                                  texture, index, عدم);
 
         hr = ID3D11DeviceContext_Map(device_hwctx->device_context,
                                      staging, 0, D3D11_MAP_READ, 0, &map);
-        if (FAILED(hr))
-            goto map_failed;
+        إذا (FAILED(hr))
+            اذهب map_failed;
 
         fill_texture_ptrs(map_data, map_linesize, ctx, &desc, &map);
 
@@ -481,11 +481,11 @@ static int d3d11va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
                        ctx->sw_format, w, h);
 
         ID3D11DeviceContext_Unmap(device_hwctx->device_context, staging, 0);
-    } else {
+    } وإلا {
         hr = ID3D11DeviceContext_Map(device_hwctx->device_context,
                                      staging, 0, D3D11_MAP_WRITE, 0, &map);
-        if (FAILED(hr))
-            goto map_failed;
+        إذا (FAILED(hr))
+            اذهب map_failed;
 
         fill_texture_ptrs(map_data, map_linesize, ctx, &desc, &map);
 
@@ -496,248 +496,248 @@ static int d3d11va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
 
         ID3D11DeviceContext_CopySubresourceRegion(device_hwctx->device_context,
                                                   texture, index, 0, 0, 0,
-                                                  staging, 0, NULL);
+                                                  staging, 0, عدم);
     }
 
     device_hwctx->unlock(device_hwctx->lock_ctx);
-    return 0;
+    أرجع 0;
 
 map_failed:
     av_log(ctx, AV_LOG_ERROR, "Unable to lock D3D11VA surface (%lx)\n", (long)hr);
     device_hwctx->unlock(device_hwctx->lock_ctx);
-    return AVERROR_UNKNOWN;
+    أرجع AVERROR_UNKNOWN;
 }
 
-static int d3d11va_device_init(AVHWDeviceContext *hwdev)
+ساكن صحيح d3d11va_device_init(AVHWDeviceContext *hwdev)
 {
     AVD3D11VADeviceContext *device_hwctx = hwdev->hwctx;
     HRESULT hr;
 
-    if (!device_hwctx->lock) {
-        device_hwctx->lock_ctx = CreateMutex(NULL, 0, NULL);
-        if (device_hwctx->lock_ctx == INVALID_HANDLE_VALUE) {
-            av_log(NULL, AV_LOG_ERROR, "Failed to create a mutex\n");
-            return AVERROR(EINVAL);
+    إذا (!device_hwctx->lock) {
+        device_hwctx->lock_ctx = CreateMutex(عدم, 0, عدم);
+        إذا (device_hwctx->lock_ctx == INVALID_HANDLE_بەها) {
+            av_log(عدم, AV_LOG_ERROR, "Failed to create a mutex\n");
+            أرجع AVERROR(EINVAL);
         }
         device_hwctx->lock   = d3d11va_default_lock;
         device_hwctx->unlock = d3d11va_default_unlock;
     }
 
-    if (!device_hwctx->device_context) {
+    إذا (!device_hwctx->device_context) {
         ID3D11Device_GetImmediateContext(device_hwctx->device, &device_hwctx->device_context);
-        if (!device_hwctx->device_context)
-            return AVERROR_UNKNOWN;
+        إذا (!device_hwctx->device_context)
+            أرجع AVERROR_UNKNOWN;
     }
 
-    if (!device_hwctx->video_device) {
+    إذا (!device_hwctx->video_device) {
         hr = ID3D11DeviceContext_QueryInterface(device_hwctx->device, &IID_ID3D11VideoDevice,
-                                                (void **)&device_hwctx->video_device);
-        if (FAILED(hr))
-            return AVERROR_UNKNOWN;
+                                                (فراغ **)&device_hwctx->video_device);
+        إذا (FAILED(hr))
+            أرجع AVERROR_UNKNOWN;
     }
 
-    if (!device_hwctx->video_context) {
+    إذا (!device_hwctx->video_context) {
         hr = ID3D11DeviceContext_QueryInterface(device_hwctx->device_context, &IID_ID3D11VideoContext,
-                                                (void **)&device_hwctx->video_context);
-        if (FAILED(hr))
-            return AVERROR_UNKNOWN;
+                                                (فراغ **)&device_hwctx->video_context);
+        إذا (FAILED(hr))
+            أرجع AVERROR_UNKNOWN;
     }
 
-    return 0;
+    أرجع 0;
 }
 
-static void d3d11va_device_uninit(AVHWDeviceContext *hwdev)
+ساكن فراغ d3d11va_device_uninit(AVHWDeviceContext *hwdev)
 {
     AVD3D11VADeviceContext *device_hwctx = hwdev->hwctx;
 
-    if (device_hwctx->device) {
+    إذا (device_hwctx->device) {
         ID3D11Device_Release(device_hwctx->device);
-        device_hwctx->device = NULL;
+        device_hwctx->device = عدم;
     }
 
-    if (device_hwctx->device_context) {
+    إذا (device_hwctx->device_context) {
         ID3D11DeviceContext_Release(device_hwctx->device_context);
-        device_hwctx->device_context = NULL;
+        device_hwctx->device_context = عدم;
     }
 
-    if (device_hwctx->video_device) {
+    إذا (device_hwctx->video_device) {
         ID3D11VideoDevice_Release(device_hwctx->video_device);
-        device_hwctx->video_device = NULL;
+        device_hwctx->video_device = عدم;
     }
 
-    if (device_hwctx->video_context) {
+    إذا (device_hwctx->video_context) {
         ID3D11VideoContext_Release(device_hwctx->video_context);
-        device_hwctx->video_context = NULL;
+        device_hwctx->video_context = عدم;
     }
 
-    if (device_hwctx->lock == d3d11va_default_lock) {
+    إذا (device_hwctx->lock == d3d11va_default_lock) {
         CloseHandle(device_hwctx->lock_ctx);
-        device_hwctx->lock_ctx = INVALID_HANDLE_VALUE;
-        device_hwctx->lock = NULL;
+        device_hwctx->lock_ctx = INVALID_HANDLE_بەها;
+        device_hwctx->lock = عدم;
     }
 }
 
-static int d3d11va_device_find_adapter_by_vendor_id(AVHWDeviceContext *ctx, uint32_t flags, const char *vendor_id)
+ساكن صحيح d3d11va_device_find_adapter_by_vendor_id(AVHWDeviceContext *ctx, uint32_t flags, ثابت حرف *vendor_id)
 {
     HRESULT hr;
-    IDXGIAdapter *adapter = NULL;
+    IDXGIAdapter *adapter = عدم;
     IDXGIFactory2 *factory;
-    int adapter_id = 0;
-    long int id = strtol(vendor_id, NULL, 0);
+    صحيح adapter_id = 0;
+    long صحيح id = strtol(vendor_id, عدم, 0);
 
-    hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (void **)&factory);
-    if (FAILED(hr)) {
+    hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (فراغ **)&factory);
+    إذا (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "CreateDXGIFactory returned error\n");
-        return -1;
+        أرجع -1;
     }
 
-    while (IDXGIFactory2_EnumAdapters(factory, adapter_id++, &adapter) != DXGI_ERROR_NOT_FOUND) {
-        ID3D11Device* device = NULL;
+    طالما (IDXGIFactory2_EnumAdapters(factory, adapter_id++, &adapter) != DXGI_ERROR_NOT_FOUND) {
+        ID3D11Device* device = عدم;
         DXGI_ADAPTER_DESC adapter_desc;
 
-        hr = mD3D11CreateDevice(adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, flags, NULL, 0, D3D11_SDK_VERSION, &device, NULL, NULL);
-        if (FAILED(hr)) {
+        hr = mD3D11CreateDevice(adapter, D3D_DRIVER_TYPE_UNKNOWN, عدم, flags, عدم, 0, D3D11_SDK_VERSION, &device, عدم, عدم);
+        إذا (FAILED(hr)) {
             av_log(ctx, AV_LOG_DEBUG, "D3D11CreateDevice returned error, try next adapter\n");
             IDXGIAdapter_Release(adapter);
-            continue;
+            استمر;
         }
 
         hr = IDXGIAdapter2_GetDesc(adapter, &adapter_desc);
         ID3D11Device_Release(device);
         IDXGIAdapter_Release(adapter);
-        if (FAILED(hr)) {
+        إذا (FAILED(hr)) {
             av_log(ctx, AV_LOG_DEBUG, "IDXGIAdapter2_GetDesc returned error, try next adapter\n");
-            continue;
-        } else if (adapter_desc.VendorId == id) {
+            استمر;
+        } وإلا إذا (adapter_desc.VendorId == id) {
             IDXGIFactory2_Release(factory);
-            return adapter_id - 1;
+            أرجع adapter_id - 1;
         }
     }
 
     IDXGIFactory2_Release(factory);
-    return -1;
+    أرجع -1;
 }
 
-static int d3d11va_device_create(AVHWDeviceContext *ctx, const char *device,
-                                 AVDictionary *opts, int flags)
+ساكن صحيح d3d11va_device_create(AVHWDeviceContext *ctx, ثابت حرف *device,
+                                 AVDictionary *opts, صحيح flags)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->hwctx;
 
     HRESULT hr;
-    IDXGIAdapter           *pAdapter = NULL;
+    IDXGIAdapter           *pAdapter = عدم;
     ID3D10Multithread      *pMultithread;
     UINT creationFlags = D3D11_CREATE_DEVICE_VIDEO_SUPPORT;
-    int is_debug       = !!av_dict_get(opts, "debug", NULL, 0);
-    int ret;
-    int adapter = -1;
+    صحيح is_debug       = !!av_dict_get(opts, "debug", عدم, 0);
+    صحيح ret;
+    صحيح adapter = -1;
 
-    if (is_debug) {
+    إذا (is_debug) {
         creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
         av_log(ctx, AV_LOG_INFO, "Enabling d3d11 debugging.\n");
     }
 
-    if ((ret = ff_thread_once(&functions_loaded, load_functions)) != 0)
-        return AVERROR_UNKNOWN;
-    if (!mD3D11CreateDevice || !mCreateDXGIFactory) {
+    إذا ((ret = ff_thread_once(&functions_loaded, load_functions)) != 0)
+        أرجع AVERROR_UNKNOWN;
+    إذا (!mD3D11CreateDevice || !mCreateDXGIFactory) {
         av_log(ctx, AV_LOG_ERROR, "Failed to load D3D11 library or its functions\n");
-        return AVERROR_UNKNOWN;
+        أرجع AVERROR_UNKNOWN;
     }
 
-    if (device) {
+    إذا (device) {
         adapter = atoi(device);
-    } else {
-        AVDictionaryEntry *e = av_dict_get(opts, "vendor_id", NULL, 0);
-        if (e && e->value) {
-            adapter = d3d11va_device_find_adapter_by_vendor_id(ctx, creationFlags, e->value);
-            if (adapter < 0) {
+    } وإلا {
+        AVDictionaryEntry *e = av_dict_get(opts, "vendor_id", عدم, 0);
+        إذا (e && e->بەها) {
+            adapter = d3d11va_device_find_adapter_by_vendor_id(ctx, creationFlags, e->بەها);
+            إذا (adapter < 0) {
                 av_log(ctx, AV_LOG_ERROR, "Failed to find d3d11va adapter by "
-                       "vendor id %s\n", e->value);
-                return AVERROR_UNKNOWN;
+                       "vendor id %s\n", e->بەها);
+                أرجع AVERROR_UNKNOWN;
             }
         }
     }
 
-    if (adapter >= 0) {
+    إذا (adapter >= 0) {
         IDXGIFactory2 *pDXGIFactory;
 
         av_log(ctx, AV_LOG_VERBOSE, "Selecting d3d11va adapter %d\n", adapter);
-        hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (void **)&pDXGIFactory);
-        if (SUCCEEDED(hr)) {
-            if (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
-                pAdapter = NULL;
+        hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (فراغ **)&pDXGIFactory);
+        إذا (SUCCEEDED(hr)) {
+            إذا (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
+                pAdapter = عدم;
             IDXGIFactory2_Release(pDXGIFactory);
         }
     }
 
-    if (pAdapter) {
+    إذا (pAdapter) {
         DXGI_ADAPTER_DESC desc;
         hr = IDXGIAdapter2_GetDesc(pAdapter, &desc);
-        if (!FAILED(hr)) {
+        إذا (!FAILED(hr)) {
             av_log(ctx, AV_LOG_INFO, "Using device %04x:%04x (%ls).\n",
                    desc.VendorId, desc.DeviceId, desc.Description);
         }
     }
 
-    hr = mD3D11CreateDevice(pAdapter, pAdapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_HARDWARE, NULL, creationFlags, NULL, 0,
-                   D3D11_SDK_VERSION, &device_hwctx->device, NULL, NULL);
-    if (pAdapter)
+    hr = mD3D11CreateDevice(pAdapter, pAdapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_HARDWARE, عدم, creationFlags, عدم, 0,
+                   D3D11_SDK_VERSION, &device_hwctx->device, عدم, عدم);
+    إذا (pAdapter)
         IDXGIAdapter_Release(pAdapter);
-    if (FAILED(hr)) {
+    إذا (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device (%lx)\n", (long)hr);
-        return AVERROR_UNKNOWN;
+        أرجع AVERROR_UNKNOWN;
     }
 
-    hr = ID3D11Device_QueryInterface(device_hwctx->device, &IID_ID3D10Multithread, (void **)&pMultithread);
-    if (SUCCEEDED(hr)) {
+    hr = ID3D11Device_QueryInterface(device_hwctx->device, &IID_ID3D10Multithread, (فراغ **)&pMultithread);
+    إذا (SUCCEEDED(hr)) {
         ID3D10Multithread_SetMultithreadProtected(pMultithread, TRUE);
         ID3D10Multithread_Release(pMultithread);
     }
 
-#if !HAVE_UWP && HAVE_DXGIDEBUG_H
-    if (is_debug) {
+#إذا !HAVE_UWP && HAVE_DXGIDEBUG_H
+    إذا (is_debug) {
         HANDLE dxgidebug_dll = LoadLibrary("dxgidebug.dll");
-        if (dxgidebug_dll) {
-            HRESULT (WINAPI  * pf_DXGIGetDebugInterface)(const GUID *riid, void **ppDebug)
-                = (void *)GetProcAddress(dxgidebug_dll, "DXGIGetDebugInterface");
-            if (pf_DXGIGetDebugInterface) {
-                IDXGIDebug *dxgi_debug = NULL;
-                hr = pf_DXGIGetDebugInterface(&IID_IDXGIDebug, (void**)&dxgi_debug);
-                if (SUCCEEDED(hr) && dxgi_debug) {
+        إذا (dxgidebug_dll) {
+            HRESULT (WINAPI  * pf_DXGIGetDebugInterface)(ثابت GUID *riid, فراغ **ppDebug)
+                = (فراغ *)GetProcAddress(dxgidebug_dll, "DXGIGetDebugInterface");
+            إذا (pf_DXGIGetDebugInterface) {
+                IDXGIDebug *dxgi_debug = عدم;
+                hr = pf_DXGIGetDebugInterface(&IID_IDXGIDebug, (فراغ**)&dxgi_debug);
+                إذا (SUCCEEDED(hr) && dxgi_debug) {
                     IDXGIDebug_ReportLiveObjects(dxgi_debug, DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
                     av_log(ctx, AV_LOG_INFO, "Enabled dxgi debugging.\n");
-                } else {
+                } وإلا {
                     av_log(ctx, AV_LOG_WARNING, "Failed enabling dxgi debugging.\n");
                 }
-            } else {
+            } وإلا {
                 av_log(ctx, AV_LOG_WARNING, "Failed getting dxgi debug interface.\n");
             }
-        } else {
+        } وإلا {
             av_log(ctx, AV_LOG_WARNING, "Failed loading dxgi debug library.\n");
         }
     }
 #endif
 
-    if (av_dict_get(opts, "SHADER", NULL, 0))
+    إذا (av_dict_get(opts, "SHADER", عدم, 0))
         device_hwctx->BindFlags |= D3D11_BIND_SHADER_RESOURCE;
 
-    if (av_dict_get(opts, "UAV", NULL, 0))
+    إذا (av_dict_get(opts, "UAV", عدم, 0))
         device_hwctx->BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
 
-    if (av_dict_get(opts, "RTV", NULL, 0))
+    إذا (av_dict_get(opts, "RTV", عدم, 0))
         device_hwctx->BindFlags |= D3D11_BIND_RENDER_TARGET;
 
-    if (av_dict_get(opts, "SHARED", NULL, 0))
+    إذا (av_dict_get(opts, "SHARED", عدم, 0))
         device_hwctx->MiscFlags |= D3D11_RESOURCE_MISC_SHARED;
 
-    return 0;
+    أرجع 0;
 }
 
-const HWContextType ff_hwcontext_type_d3d11va = {
+ثابت HWContextType ff_hwcontext_type_d3d11va = {
     .type                 = AV_HWDEVICE_TYPE_D3D11VA,
     .name                 = "D3D11VA",
 
-    .device_hwctx_size    = sizeof(AVD3D11VADeviceContext),
-    .frames_hwctx_size    = sizeof(D3D11VAFramesContext),
+    .device_hwctx_size    = حجم(AVD3D11VADeviceContext),
+    .frames_hwctx_size    = حجم(D3D11VAFramesContext),
 
     .device_create        = d3d11va_device_create,
     .device_init          = d3d11va_device_init,
@@ -750,5 +750,5 @@ const HWContextType ff_hwcontext_type_d3d11va = {
     .transfer_data_to     = d3d11va_transfer_data,
     .transfer_data_from   = d3d11va_transfer_data,
 
-    .pix_fmts             = (const enum AVPixelFormat[]){ AV_PIX_FMT_D3D11, AV_PIX_FMT_NONE },
+    .pix_fmts             = (ثابت تعداد AVPixelFormat[]){ AV_PIX_FMT_D3D11, AV_PIX_FMT_NONE },
 };

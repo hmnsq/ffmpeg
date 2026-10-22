@@ -16,31 +16,31 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "avassert.h"
-#include "macos_kperf.h"
-#include "thread.h"
+#ضمن "avassert.h"
+#ضمن "macos_kperf.h"
+#ضمن "thread.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <dlfcn.h>
+#ضمن <stdio.h>
+#ضمن <stdlib.h>
+#ضمن <dlfcn.h>
 
 #define KPERF_LIST                                             \
-    F(int, kpc_get_counting, void)                             \
-    F(int, kpc_force_all_ctrs_set, int)                        \
-    F(int, kpc_set_counting, uint32_t)                         \
-    F(int, kpc_set_thread_counting, uint32_t)                  \
-    F(int, kpc_set_config, uint32_t, void *)                   \
-    F(int, kpc_get_config, uint32_t, void *)                   \
-    F(int, kpc_set_period, uint32_t, void *)                   \
-    F(int, kpc_get_period, uint32_t, void *)                   \
-    F(uint32_t, kpc_get_counter_count, uint32_t)               \
-    F(uint32_t, kpc_get_config_count, uint32_t)                \
-    F(int, kperf_sample_get, int *)                            \
-    F(int, kpc_get_thread_counters, int, unsigned int, void *)
+    F(صحيح, kpc_get_counting, فراغ)                             \
+    F(صحيح, kpc_force_all_ctrs_set, صحيح)                        \
+    F(صحيح, kpc_set_counting, uint32_t)                         \
+    F(صحيح, kpc_set_thread_counting, uint32_t)                  \
+    F(صحيح, kpc_set_config, uint32_t, فراغ *)                   \
+    F(صحيح, kpc_get_config, uint32_t, فراغ *)                   \
+    F(صحيح, kpc_set_period, uint32_t, فراغ *)                   \
+    F(صحيح, kpc_get_period, uint32_t, فراغ *)                   \
+    F(uint32_t, kpc_get_counter_ژماردن, uint32_t)               \
+    F(uint32_t, kpc_get_config_ژماردن, uint32_t)                \
+    F(صحيح, kperf_sample_get, صحيح *)                            \
+    F(صحيح, kpc_get_thread_counters, صحيح, unsigned صحيح, فراغ *)
 
 #define F(ret, name, ...)                                      \
-    typedef ret name##proc(__VA_ARGS__);                       \
-    static name##proc *name = NULL;
+    تعريفنوع ret name##proc(__VA_ARGS__);                       \
+    ساكن name##proc *name = عدم;
 KPERF_LIST
 #undef F
 
@@ -68,13 +68,13 @@ KPERF_LIST
 #define KPC_CLASS_RAWPMU_MASK       (1 << 3)
 
 #define KPC_MAX_COUNTERS 32
-#define CONFIG_COUNT 8
+#define CONFIG_ژماردن 8
 #define KPC_MASK (KPC_CLASS_CONFIGURABLE_MASK | KPC_CLASS_FIXED_MASK)
 
-static void kperf_init(void)
+ساكن فراغ kperf_init(فراغ)
 {
-    uint64_t config[CONFIG_COUNT] = {0};
-    void *kperf = NULL;
+    uint64_t config[CONFIG_ژماردن] = {0};
+    فراغ *kperf = عدم;
     uint32_t n;
 
     av_assert0(kperf = dlopen("/System/Library/PrivateFrameworks/kperf.framework/Versions/A/kperf", RTLD_LAZY));
@@ -83,10 +83,10 @@ static void kperf_init(void)
     KPERF_LIST
 #undef F
 
-    n = kpc_get_counter_count(KPC_MASK);
+    n = kpc_get_counter_ژماردن(KPC_MASK);
     av_assert0(n <= KPC_MAX_COUNTERS);
-    n = kpc_get_config_count(KPC_MASK);
-    av_assert0(n <= CONFIG_COUNT);
+    n = kpc_get_config_ژماردن(KPC_MASK);
+    av_assert0(n <= CONFIG_ژماردن);
 
     config[0] = CPMU_CORE_CYCLE | CFGWORD_EL0A64EN_MASK;
     // config[3] = CPMU_INST_BRANCH | CFGWORD_EL0A64EN_MASK;
@@ -99,19 +99,19 @@ static void kperf_init(void)
     av_assert0(kpc_set_thread_counting(KPC_MASK) == 0);
 }
 
-void ff_kperf_init(void)
+فراغ ff_kperf_init(فراغ)
 {
-    static AVOnce init_static_once = AV_ONCE_INIT;
+    ساكن AVOnce init_static_once = AV_ONCE_INIT;
     ff_thread_once(&init_static_once, kperf_init);
 }
 
-uint64_t ff_kperf_cycles(void)
+uint64_t ff_kperf_cycles(فراغ)
 {
     uint64_t counters[KPC_MAX_COUNTERS];
 
-    if (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
-        return -1;
+    إذا (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
+        أرجع -1;
     }
 
-    return counters[0];
+    أرجع counters[0];
 }

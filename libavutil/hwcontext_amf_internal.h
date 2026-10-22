@@ -19,23 +19,23 @@
 
 #ifndef AVUTIL_HWCONTEXT_AMF_INTERNAL_H
 #define AVUTIL_HWCONTEXT_AMF_INTERNAL_H
-#include <AMF/core/Factory.h>
-#include <AMF/core/Context.h>
+#ضمن <AMF/core/Factory.h>
+#ضمن <AMF/core/Context.h>
 
 /**
 * Error handling helper
 */
-#define AMF_RETURN_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#define AMF_RETURN_IF_FALSE(avctx, exp, ret_بەها, /*message,*/ ...) \
+    إذا (!(exp)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        return ret_value; \
+        أرجع ret_بەها; \
     }
 
-#define AMF_GOTO_FAIL_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#define AMF_GOTO_FAIL_IF_FALSE(avctx, exp, ret_بەها, /*message,*/ ...) \
+    إذا (!(exp)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        ret = ret_value; \
-        goto fail; \
+        ret = ret_بەها; \
+        اذهب fail; \
     }
 
 #define AMF_TIME_BASE_Q          (AVRational){1, AMF_SECOND}
