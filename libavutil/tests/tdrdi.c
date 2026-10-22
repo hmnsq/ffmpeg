@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdio.h>
+#அந்தர்பாவ <limits.h>
+#அந்தர்பாவ <stdint.h>
+#அந்தர்பாவ <stdio.h>
 
-#include "libavutil/mem.h"
-#include "libavutil/tdrdi.h"
+#அந்தர்பாவ "libavutil/mem.h"
+#அந்தர்பாவ "libavutil/tdrdi.h"
 
-int main(void)
+முழு முதன்மை(வெறுமை)
 {
     AV3DReferenceDisplaysInfo *tdrdi;
     AV3DReferenceDisplay *display;
@@ -32,42 +32,42 @@ int main(void)
     /* av_tdrdi_alloc with 1 display */
     printf("Testing av_tdrdi_alloc()\n");
     tdrdi = av_tdrdi_alloc(1, &size);
-    if (tdrdi) {
+    எனில் (tdrdi) {
         printf("alloc 1: size>0=%s, num_ref_displays=%u\n",
-               size > 0 ? "yes" : "no", tdrdi->num_ref_displays);
+               size > 0 ? "yes" : "no", tdrdi->இலக்கம்_ref_displays);
 
         display = av_tdrdi_get_display(tdrdi, 0);
         /* pointer consistency check */
-        if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset)
+        எனில் ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset)
             printf("display 0: pointer inconsistent with entries_offset\n");
 
         /* write and read back */
         display->exponent_ref_display_width = 3;
         display->mantissa_ref_display_width = 100;
-        display->left_view_id = 0;
-        display->right_view_id = 1;
+        display->இடது_view_id = 0;
+        display->வலது_view_id = 1;
         display = av_tdrdi_get_display(tdrdi, 0);
         printf("display 0: width_exp=%u width_man=%u left=%u right=%u\n",
                display->exponent_ref_display_width,
                display->mantissa_ref_display_width,
-               display->left_view_id, display->right_view_id);
+               display->இடது_view_id, display->வலது_view_id);
         av_free(tdrdi);
     }
 
     /* alloc with multiple displays */
     printf("\nTesting multiple displays\n");
     tdrdi = av_tdrdi_alloc(3, &size);
-    if (tdrdi) {
-        printf("alloc 3: num_ref_displays=%u\n", tdrdi->num_ref_displays);
-        for (int i = 0; i < 3; i++) {
+    எனில் (tdrdi) {
+        printf("alloc 3: num_ref_displays=%u\n", tdrdi->இலக்கம்_ref_displays);
+        க்கு (முழு i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
             /* verify stride consistency */
-            if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset +
+            எனில் ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset +
                                       (size_t)i * tdrdi->entry_size)
                 printf("display %d: pointer inconsistent\n", i);
             display->exponent_ref_display_width = i + 1;
         }
-        for (int i = 0; i < 3; i++) {
+        க்கு (முழு i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
             printf("display %d: width_exp=%u\n", i,
                    display->exponent_ref_display_width);
@@ -76,7 +76,7 @@ int main(void)
     }
 
     /* alloc with NULL size */
-    tdrdi = av_tdrdi_alloc(1, NULL);
+    tdrdi = av_tdrdi_alloc(1, வெற்று);
     printf("\nalloc (no size): %s\n", tdrdi ? "OK" : "FAIL");
     av_free(tdrdi);
 
@@ -88,5 +88,5 @@ int main(void)
     av_free(tdrdi);
     av_max_alloc(INT_MAX);
 
-    return 0;
+    திரும்பு 0;
 }

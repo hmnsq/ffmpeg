@@ -20,36 +20,36 @@
 #ifndef AVUTIL_CUDA_CHECK_H
 #define AVUTIL_CUDA_CHECK_H
 
-#include "compat/cuda/dynlink_loader.h"
-#include "error.h"
+#அந்தர்பாவ "compat/cuda/dynlink_loader.h"
+#அந்தர்பாவ "error.h"
 
-typedef CUresult CUDAAPI cuda_check_GetErrorName(CUresult error, const char** pstr);
-typedef CUresult CUDAAPI cuda_check_GetErrorString(CUresult error, const char** pstr);
+வகைவரை CUresult CUDAAPI cuda_check_GetErrorName(CUresult error, மாறிலி எழுத்து** pstr);
+வகைவரை CUresult CUDAAPI cuda_check_GetErrorString(CUresult error, மாறிலி எழுத்து** pstr);
 
 /**
  * Wrap a CUDA function call and print error information if it fails.
  */
-static inline int ff_cuda_check(void *avctx,
-                                void *cuGetErrorName_fn, void *cuGetErrorString_fn,
-                                CUresult err, const char *func)
+நிலையான உள்வரி முழு ff_cuda_check(வெறுமை *avctx,
+                                வெறுமை *cuGetErrorName_fn, வெறுமை *cuGetErrorString_fn,
+                                CUresult err, மாறிலி எழுத்து *func)
 {
-    const char *err_name;
-    const char *err_string;
+    மாறிலி எழுத்து *err_name;
+    மாறிலி எழுத்து *err_string;
 
     av_log(avctx, AV_LOG_TRACE, "Calling %s\n", func);
 
-    if (err == CUDA_SUCCESS)
-        return 0;
+    எனில் (err == CUDA_SUCCESS)
+        திரும்பு 0;
 
     ((cuda_check_GetErrorName *)cuGetErrorName_fn)(err, &err_name);
     ((cuda_check_GetErrorString *)cuGetErrorString_fn)(err, &err_string);
 
     av_log(avctx, AV_LOG_ERROR, "%s failed", func);
-    if (err_name && err_string)
+    எனில் (err_name && err_string)
         av_log(avctx, AV_LOG_ERROR, " -> %s: %s", err_name, err_string);
     av_log(avctx, AV_LOG_ERROR, "\n");
 
-    return AVERROR_EXTERNAL;
+    திரும்பு AVERROR_EXTERNAL;
 }
 
 /**

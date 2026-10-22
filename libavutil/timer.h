@@ -26,9 +26,9 @@
 #ifndef AVUTIL_TIMER_H
 #define AVUTIL_TIMER_H
 
-#include "config.h"
+#அந்தர்பாவ "config.h"
 
-#if CONFIG_LINUX_PERF
+#எனில் CONFIG_LINUX_PERF
 # ifndef _GNU_SOURCE
 #  define _GNU_SOURCE
 # endif
@@ -38,44 +38,44 @@
 # include <linux/perf_event.h>
 #endif
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <inttypes.h>
+#அந்தர்பாவ <stdlib.h>
+#அந்தர்பாவ <stdint.h>
+#அந்தர்பாவ <inttypes.h>
 
-#if CONFIG_MACOS_KPERF
-#include "macos_kperf.h"
+#எனில் CONFIG_MACOS_KPERF
+#அந்தர்பாவ "macos_kperf.h"
 #endif
 
-#if HAVE_MACH_ABSOLUTE_TIME
-#include <mach/mach_time.h>
-#elif HAVE_CLOCK_GETTIME
-#include <time.h>
+#எனில் HAVE_MACH_ABSOLUTE_TIME
+#அந்தர்பாவ <mach/mach_time.h>
+#அல்லதெனில் HAVE_CLOCK_GETTIME
+#அந்தர்பாவ <time.h>
 #endif
 
-#include "common.h"
-#include "log.h"
+#அந்தர்பாவ "common.h"
+#அந்தர்பாவ "log.h"
 
-#if   ARCH_AARCH64
+#எனில்   ARCH_AARCH64
 #   include "aarch64/timer.h"
-#elif ARCH_PPC
+#அல்லதெனில் ARCH_PPC
 #   include "ppc/timer.h"
-#elif ARCH_X86
+#அல்லதெனில் ARCH_X86
 #   include "x86/timer.h"
-#elif ARCH_LOONGARCH
+#அல்லதெனில் ARCH_LOONGARCH
 #   include "loongarch/timer.h"
 #endif
 
-#if !defined(AV_READ_TIME)
-#   if HAVE_GETHRTIME
+#எனில் !defined(AV_READ_TIME)
+#   எனில் HAVE_GETHRTIME
 #       define AV_READ_TIME gethrtime
 #   elif HAVE_MACH_ABSOLUTE_TIME
 #       define AV_READ_TIME mach_absolute_time
 #   elif HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
-        static inline int64_t ff_read_time(void)
+        நிலையான உள்வரி int64_t ff_read_time(வெறுமை)
         {
-            struct timespec ts;
+            கட்டமைப்பு timespec ts;
             clock_gettime(CLOCK_MONOTONIC, &ts);
-            return ts.tv_sec * INT64_C(1000000000) + ts.tv_nsec;
+            திரும்பு ts.tv_sec * INT64_C(1000000000) + ts.tv_nsec;
         }
 #       define AV_READ_TIME ff_read_time
 #       define FF_TIMER_UNITS "ns"
@@ -88,39 +88,39 @@
 
 #define TIMER_REPORT(id, tdiff)                                           \
     {                                                                     \
-        static uint64_t tsum   = 0;                                       \
-        static int tcount      = 0;                                       \
-        static int tskip_count = 0;                                       \
-        static int thistogram[32] = {0};                                  \
+        நிலையான uint64_t tsum   = 0;                                       \
+        நிலையான முழு tcount      = 0;                                       \
+        நிலையான முழு tskip_மொத்தம் = 0;                                       \
+        நிலையான முழு thistogram[32] = {0};                                  \
         thistogram[av_log2(tdiff)]++;                                     \
-        if (tcount < 2                ||                                  \
+        எனில் (tcount < 2                ||                                  \
             (tdiff) < 8 * tsum / tcount ||                                \
             (tdiff) < 2000) {                                             \
             tsum += (tdiff);                                              \
             tcount++;                                                     \
-        } else                                                            \
-            tskip_count++;                                                \
-        if (((tcount + tskip_count) & (tcount + tskip_count - 1)) == 0) { \
-            int i;                                                        \
-            av_log(NULL, AV_LOG_ERROR,                                    \
+        } இல்லையெனில்                                                            \
+            tskip_மொத்தம்++;                                                \
+        எனில் (((tcount + tskip_மொத்தம்) & (tcount + tskip_மொத்தம் - 1)) == 0) { \
+            முழு i;                                                        \
+            av_log(வெற்று, AV_LOG_ERROR,                                    \
                    "%7" PRIu64 " " FF_TIMER_UNITS " in %s,%8d runs,%7d skips",\
-                   tsum * 10 / tcount, id, tcount, tskip_count);          \
-            for (i = 0; i < 32; i++)                                      \
-                av_log(NULL, AV_LOG_VERBOSE, " %2d", av_log2(2*thistogram[i]));\
-            av_log(NULL, AV_LOG_ERROR, "\n");                             \
+                   tsum * 10 / tcount, id, tcount, tskip_மொத்தம்);          \
+            க்கு (i = 0; i < 32; i++)                                      \
+                av_log(வெற்று, AV_LOG_VERBOSE, " %2d", av_log2(2*thistogram[i]));\
+            av_log(வெற்று, AV_LOG_ERROR, "\n");                             \
         }                                                                 \
     }
 
-#if CONFIG_LINUX_PERF
+#எனில் CONFIG_LINUX_PERF
 
 #define START_TIMER                                                         \
-    static int linux_perf_fd = -1;                                          \
+    நிலையான முழு linux_perf_fd = -1;                                          \
     uint64_t tperf;                                                         \
-    if (linux_perf_fd == -1) {                                              \
-        struct perf_event_attr attr = {                                     \
+    எனில் (linux_perf_fd == -1) {                                              \
+        கட்டமைப்பு perf_event_attr attr = {                                     \
             .type           = PERF_TYPE_HARDWARE,                           \
-            .size           = sizeof(struct perf_event_attr),               \
-            .config         = PERF_COUNT_HW_CPU_CYCLES,                     \
+            .size           = அளவு(கட்டமைப்பு perf_event_attr),               \
+            .config         = PERF_மொத்தம்_HW_CPU_CYCLES,                     \
             .disabled       = 1,                                            \
             .exclude_kernel = 1,                                            \
             .exclude_hv     = 1,                                            \
@@ -128,21 +128,21 @@
         linux_perf_fd = syscall(__NR_perf_event_open, &attr,                \
                                 0, -1, -1, 0);                              \
     }                                                                       \
-    if (linux_perf_fd == -1) {                                              \
-        av_log(NULL, AV_LOG_ERROR, "perf_event_open failed: %s\n",          \
+    எனில் (linux_perf_fd == -1) {                                              \
+        av_log(வெற்று, AV_LOG_ERROR, "perf_event_open failed: %s\n",          \
                av_err2str(AVERROR(errno)));                                 \
-    } else {                                                                \
+    } இல்லையெனில் {                                                                \
         ioctl(linux_perf_fd, PERF_EVENT_IOC_RESET, 0);                      \
         ioctl(linux_perf_fd, PERF_EVENT_IOC_ENABLE, 0);                     \
     }
 
 #define STOP_TIMER(id)                                                      \
     ioctl(linux_perf_fd, PERF_EVENT_IOC_DISABLE, 0);                        \
-    if (read(linux_perf_fd, &tperf, sizeof(tperf)) != sizeof(tperf))        \
+    எனில் (பட(linux_perf_fd, &tperf, அளவு(tperf)) != அளவு(tperf))        \
         tperf = 0;                                                          \
     TIMER_REPORT(id, tperf)
 
-#elif CONFIG_MACOS_KPERF
+#அல்லதெனில் CONFIG_MACOS_KPERF
 
 #define START_TIMER                                                         \
     uint64_t tperf;                                                         \
@@ -152,7 +152,7 @@
 #define STOP_TIMER(id)                                                      \
     TIMER_REPORT(id, ff_kperf_cycles() - tperf);
 
-#elif defined(AV_READ_TIME)
+#அல்லதெனில் defined(AV_READ_TIME)
 #define START_TIMER                             \
     uint64_t tend;                              \
     uint64_t tstart = AV_READ_TIME();           \
@@ -160,7 +160,7 @@
 #define STOP_TIMER(id)                                                    \
     tend = AV_READ_TIME();                                                \
     TIMER_REPORT(id, tend - tstart)
-#else
+#இல்லையெனில்
 #define START_TIMER
 #define STOP_TIMER(id) { }
 #endif

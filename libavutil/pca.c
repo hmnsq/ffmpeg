@@ -24,73 +24,73 @@
  * principal component analysis (PCA)
  */
 
-#include "common.h"
-#include "mem.h"
-#include "pca.h"
+#அந்தர்பாவ "common.h"
+#அந்தர்பாவ "mem.h"
+#அந்தர்பாவ "pca.h"
 
-typedef struct PCA{
-    int count;
-    int n;
-    double *covariance;
-    double *mean;
-    double *z;
+வகைவரை கட்டமைப்பு PCA{
+    முழு மொத்தம்;
+    முழு n;
+    இரட்டை *covariance;
+    இரட்டை *mean;
+    இரட்டை *z;
 }PCA;
 
-PCA *ff_pca_init(int n){
+PCA *ff_pca_init(முழு n){
     PCA *pca;
-    if(n<=0)
-        return NULL;
+    எனில்(n<=0)
+        திரும்பு வெற்று;
 
-    pca= av_mallocz(sizeof(*pca));
-    if (!pca)
-        return NULL;
+    pca= av_mallocz(அளவு(*pca));
+    எனில் (!pca)
+        திரும்பு வெற்று;
 
     pca->n= n;
-    pca->z = av_malloc_array(n, sizeof(*pca->z));
-    pca->count=0;
-    pca->covariance= av_calloc(n*n, sizeof(double));
-    pca->mean= av_calloc(n, sizeof(double));
+    pca->z = av_malloc_array(n, அளவு(*pca->z));
+    pca->மொத்தம்=0;
+    pca->covariance= av_calloc(n*n, அளவு(இரட்டை));
+    pca->mean= av_calloc(n, அளவு(இரட்டை));
 
-    if (!pca->z || !pca->covariance || !pca->mean) {
+    எனில் (!pca->z || !pca->covariance || !pca->mean) {
         ff_pca_free(pca);
-        return NULL;
+        திரும்பு வெற்று;
     }
 
-    return pca;
+    திரும்பு pca;
 }
 
-void ff_pca_free(PCA *pca){
+வெறுமை ff_pca_free(PCA *pca){
     av_freep(&pca->covariance);
     av_freep(&pca->mean);
     av_freep(&pca->z);
     av_free(pca);
 }
 
-void ff_pca_add(PCA *pca, const double *v){
-    int i, j;
-    const int n= pca->n;
+வெறுமை ff_pca_add(PCA *pca, மாறிலி இரட்டை *v){
+    முழு i, j;
+    மாறிலி முழு n= pca->n;
 
-    for(i=0; i<n; i++){
+    க்கு(i=0; i<n; i++){
         pca->mean[i] += v[i];
-        for(j=i; j<n; j++)
+        க்கு(j=i; j<n; j++)
             pca->covariance[j + i*n] += v[i]*v[j];
     }
-    pca->count++;
+    pca->மொத்தம்++;
 }
 
-int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
-    int i, j, pass;
-    int k=0;
-    const int n= pca->n;
-    double *z = pca->z;
+முழு ff_pca(PCA *pca, இரட்டை *eigenvector, இரட்டை *eigenvalue){
+    முழு i, j, pass;
+    முழு k=0;
+    மாறிலி முழு n= pca->n;
+    இரட்டை *z = pca->z;
 
-    memset(eigenvector, 0, sizeof(double)*n*n);
+    memset(eigenvector, 0, அளவு(இரட்டை)*n*n);
 
-    for(j=0; j<n; j++){
-        pca->mean[j] /= pca->count;
+    க்கு(j=0; j<n; j++){
+        pca->mean[j] /= pca->மொத்தம்;
         eigenvector[j + j*n] = 1.0;
-        for(i=0; i<=j; i++){
-            pca->covariance[j + i*n] /= pca->count;
+        க்கு(i=0; i<=j; i++){
+            pca->covariance[j + i*n] /= pca->மொத்தம்;
             pca->covariance[j + i*n] -= pca->mean[i] * pca->mean[j];
             pca->covariance[i + j*n] = pca->covariance[j + i*n];
         }
@@ -98,51 +98,51 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
         z[j]= 0;
     }
 
-    for(pass=0; pass < 50; pass++){
-        double sum=0;
+    க்கு(pass=0; pass < 50; pass++){
+        இரட்டை sum=0;
 
-        for(i=0; i<n; i++)
-            for(j=i+1; j<n; j++)
+        க்கு(i=0; i<n; i++)
+            க்கு(j=i+1; j<n; j++)
                 sum += fabs(pca->covariance[j + i*n]);
 
-        if(sum == 0){
-            for(i=0; i<n; i++){
-                double maxvalue= -1;
-                for(j=i; j<n; j++){
-                    if(eigenvalue[j] > maxvalue){
+        எனில்(sum == 0){
+            க்கு(i=0; i<n; i++){
+                இரட்டை maxvalue= -1;
+                க்கு(j=i; j<n; j++){
+                    எனில்(eigenvalue[j] > maxvalue){
                         maxvalue= eigenvalue[j];
                         k= j;
                     }
                 }
                 eigenvalue[k]= eigenvalue[i];
                 eigenvalue[i]= maxvalue;
-                for(j=0; j<n; j++){
-                    double tmp= eigenvector[k + j*n];
+                க்கு(j=0; j<n; j++){
+                    இரட்டை tmp= eigenvector[k + j*n];
                     eigenvector[k + j*n]= eigenvector[i + j*n];
                     eigenvector[i + j*n]= tmp;
                 }
             }
-            return pass;
+            திரும்பு pass;
         }
 
-        for(i=0; i<n; i++){
-            for(j=i+1; j<n; j++){
-                double covar= pca->covariance[j + i*n];
-                double t,c,s,tau,theta, h;
+        க்கு(i=0; i<n; i++){
+            க்கு(j=i+1; j<n; j++){
+                இரட்டை covar= pca->covariance[j + i*n];
+                இரட்டை t,c,s,tau,theta, h;
 
-                if(pass < 3 && fabs(covar) < sum / (5*n*n)) //FIXME why pass < 3
-                    continue;
-                if(fabs(covar) == 0.0) //FIXME should not be needed
-                    continue;
-                if(pass >=3 && fabs((eigenvalue[j]+z[j])/covar) > (1LL<<32) && fabs((eigenvalue[i]+z[i])/covar) > (1LL<<32)){
+                எனில்(pass < 3 && fabs(covar) < sum / (5*n*n)) //FIXME why pass < 3
+                    தொடர்;
+                எனில்(fabs(covar) == 0.0) //FIXME should not be needed
+                    தொடர்;
+                எனில்(pass >=3 && fabs((eigenvalue[j]+z[j])/covar) > (1LL<<32) && fabs((eigenvalue[i]+z[i])/covar) > (1LL<<32)){
                     pca->covariance[j + i*n]=0.0;
-                    continue;
+                    தொடர்;
                 }
 
                 h= (eigenvalue[j]+z[j]) - (eigenvalue[i]+z[i]);
                 theta=0.5*h/covar;
                 t=1.0/(fabs(theta)+sqrt(1.0+theta*theta));
-                if(theta < 0.0) t = -t;
+                எனில்(theta < 0.0) t = -t;
 
                 c=1.0/sqrt(1+t*t);
                 s=t*c;
@@ -151,12 +151,12 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
                 z[j] += t*covar;
 
 #define ROTATE(a,i,j,k,l) {\
-    double g=a[j + i*n];\
-    double h=a[l + k*n];\
+    இரட்டை g=a[j + i*n];\
+    இரட்டை h=a[l + k*n];\
     a[j + i*n]=g-s*(h+g*tau);\
     a[l + k*n]=h+s*(g-h*tau); }
-                for(k=0; k<n; k++) {
-                    if(k!=i && k!=j){
+                க்கு(k=0; k<n; k++) {
+                    எனில்(k!=i && k!=j){
                         ROTATE(pca->covariance,FFMIN(k,i),FFMAX(k,i),FFMIN(k,j),FFMAX(k,j))
                     }
                     ROTATE(eigenvector,k,i,k,j)
@@ -164,11 +164,11 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
                 pca->covariance[j + i*n]=0.0;
             }
         }
-        for (i=0; i<n; i++) {
+        க்கு (i=0; i<n; i++) {
             eigenvalue[i] += z[i];
             z[i]=0.0;
         }
     }
 
-    return -1;
+    திரும்பு -1;
 }

@@ -16,24 +16,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
-#include "samplefmt.h"
+#அந்தர்பாவ "error.h"
+#அந்தர்பாவ "macros.h"
+#அந்தர்பாவ "mem.h"
+#அந்தர்பாவ "samplefmt.h"
 
-#include <limits.h>
-#include <stdio.h>
-#include <string.h>
+#அந்தர்பாவ <limits.h>
+#அந்தர்பாவ <stdio.h>
+#அந்தர்பாவ <string.h>
 
-typedef struct SampleFmtInfo {
-    char name[8];
-    int bits;
-    int planar;
-    enum AVSampleFormat altform; ///< planar<->packed alternative form
+வகைவரை கட்டமைப்பு SampleFmtInfo {
+    எழுத்து name[8];
+    முழு bits;
+    முழு planar;
+    எண்ணிக்கை AVSampleFormat altform; ///< planar<->packed alternative form
 } SampleFmtInfo;
 
 /** this table gives more information about formats */
-static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
+நிலையான மாறிலி SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
     [AV_SAMPLE_FMT_U8]   = { .name =   "u8", .bits =  8, .planar = 0, .altform = AV_SAMPLE_FMT_U8P  },
     [AV_SAMPLE_FMT_S16]  = { .name =  "s16", .bits = 16, .planar = 0, .altform = AV_SAMPLE_FMT_S16P },
     [AV_SAMPLE_FMT_S32]  = { .name =  "s32", .bits = 32, .planar = 0, .altform = AV_SAMPLE_FMT_S32P },
@@ -49,221 +49,221 @@ static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
     [AV_SAMPLE_FMT_DSD]  = { .name =  "dsd", .bits =  8, .planar = 0, .altform = AV_SAMPLE_FMT_DSD  },
 };
 
-const char *av_get_sample_fmt_name(enum AVSampleFormat sample_fmt)
+மாறிலி எழுத்து *av_get_sample_fmt_name(எண்ணிக்கை AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return NULL;
-    return sample_fmt_info[sample_fmt].name;
+    எனில் (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        திரும்பு வெற்று;
+    திரும்பு sample_fmt_info[sample_fmt].name;
 }
 
-enum AVSampleFormat av_get_sample_fmt(const char *name)
+எண்ணிக்கை AVSampleFormat av_get_sample_fmt(மாறிலி எழுத்து *name)
 {
-    int i;
+    முழு i;
 
-    for (i = 0; i < AV_SAMPLE_FMT_NB; i++)
-        if (!strcmp(sample_fmt_info[i].name, name))
-            return i;
-    return AV_SAMPLE_FMT_NONE;
+    க்கு (i = 0; i < AV_SAMPLE_FMT_NB; i++)
+        எனில் (!strcmp(sample_fmt_info[i].name, name))
+            திரும்பு i;
+    திரும்பு AV_SAMPLE_FMT_NONE;
 }
 
-enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int planar)
+எண்ணிக்கை AVSampleFormat av_get_alt_sample_fmt(எண்ணிக்கை AVSampleFormat sample_fmt, முழு planar)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar == planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    எனில் (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        திரும்பு AV_SAMPLE_FMT_NONE;
+    எனில் (sample_fmt_info[sample_fmt].planar == planar)
+        திரும்பு sample_fmt;
+    திரும்பு sample_fmt_info[sample_fmt].altform;
 }
 
-enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt)
+எண்ணிக்கை AVSampleFormat av_get_packed_sample_fmt(எண்ணிக்கை AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt_info[sample_fmt].altform;
-    return sample_fmt;
+    எனில் (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        திரும்பு AV_SAMPLE_FMT_NONE;
+    எனில் (sample_fmt_info[sample_fmt].planar)
+        திரும்பு sample_fmt_info[sample_fmt].altform;
+    திரும்பு sample_fmt;
 }
 
-enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt)
+எண்ணிக்கை AVSampleFormat av_get_planar_sample_fmt(எண்ணிக்கை AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    எனில் (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        திரும்பு AV_SAMPLE_FMT_NONE;
+    எனில் (sample_fmt_info[sample_fmt].planar)
+        திரும்பு sample_fmt;
+    திரும்பு sample_fmt_info[sample_fmt].altform;
 }
 
-char *av_get_sample_fmt_string (char *buf, int buf_size, enum AVSampleFormat sample_fmt)
+எழுத்து *av_get_sample_fmt_string (எழுத்து *buf, முழு buf_size, எண்ணிக்கை AVSampleFormat sample_fmt)
 {
     /* print header */
-    if (sample_fmt < 0)
+    எனில் (sample_fmt < 0)
         snprintf(buf, buf_size, "name  " " depth");
-    else if (sample_fmt < AV_SAMPLE_FMT_NB) {
+    இல்லையெனில் எனில் (sample_fmt < AV_SAMPLE_FMT_NB) {
         SampleFmtInfo info = sample_fmt_info[sample_fmt];
         snprintf (buf, buf_size, "%-6s" "   %2d ", info.name, info.bits);
     }
 
-    return buf;
+    திரும்பு buf;
 }
 
-int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt)
+முழு av_get_bytes_per_sample(எண்ணிக்கை AVSampleFormat sample_fmt)
 {
-     return sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
+     திரும்பு sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
         0 : sample_fmt_info[sample_fmt].bits >> 3;
 }
 
-int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt)
+முழு av_sample_fmt_is_planar(எண்ணிக்கை AVSampleFormat sample_fmt)
 {
-     if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-         return 0;
-     return sample_fmt_info[sample_fmt].planar;
+     எனில் (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+         திரும்பு 0;
+     திரும்பு sample_fmt_info[sample_fmt].planar;
 }
 
-int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
-                               enum AVSampleFormat sample_fmt, int align)
+முழு av_samples_get_buffer_size(முழு *linesize, முழு nb_channels, முழு nb_samples,
+                               எண்ணிக்கை AVSampleFormat sample_fmt, முழு align)
 {
-    int line_size;
-    int sample_size = av_get_bytes_per_sample(sample_fmt);
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
+    முழு வரி_size;
+    முழு sample_size = av_get_bytes_per_sample(sample_fmt);
+    முழு planar      = av_sample_fmt_is_planar(sample_fmt);
 
     /* validate parameter ranges */
-    if (!sample_size || nb_samples <= 0 || nb_channels <= 0)
-        return AVERROR(EINVAL);
+    எனில் (!sample_size || nb_samples <= 0 || nb_channels <= 0)
+        திரும்பு AVERROR(EINVAL);
 
     /* auto-select alignment if not specified */
-    if (!align) {
-        if (nb_samples > INT_MAX - 31)
-            return AVERROR(EINVAL);
+    எனில் (!align) {
+        எனில் (nb_samples > INT_MAX - 31)
+            திரும்பு AVERROR(EINVAL);
         align = 1;
         nb_samples = FFALIGN(nb_samples, 32);
     }
 
     /* check for integer overflow */
-    if (nb_channels > INT_MAX / align ||
+    எனில் (nb_channels > INT_MAX / align ||
         (int64_t)nb_channels * nb_samples > (INT_MAX - (align * nb_channels)) / sample_size)
-        return AVERROR(EINVAL);
+        திரும்பு AVERROR(EINVAL);
 
-    line_size = planar ? FFALIGN(nb_samples * sample_size,               align) :
+    வரி_size = planar ? FFALIGN(nb_samples * sample_size,               align) :
                          FFALIGN(nb_samples * sample_size * nb_channels, align);
-    if (linesize)
-        *linesize = line_size;
+    எனில் (linesize)
+        *linesize = வரி_size;
 
-    return planar ? line_size * nb_channels : line_size;
+    திரும்பு planar ? வரி_size * nb_channels : வரி_size;
 }
 
-int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
-                           const uint8_t *buf, int nb_channels, int nb_samples,
-                           enum AVSampleFormat sample_fmt, int align)
+முழு av_samples_fill_arrays(uint8_t **audio_data, முழு *linesize,
+                           மாறிலி uint8_t *buf, முழு nb_channels, முழு nb_samples,
+                           எண்ணிக்கை AVSampleFormat sample_fmt, முழு align)
 {
-    int ch, planar, buf_size, line_size;
+    முழு ch, planar, buf_size, வரி_size;
 
     planar   = av_sample_fmt_is_planar(sample_fmt);
-    buf_size = av_samples_get_buffer_size(&line_size, nb_channels, nb_samples,
+    buf_size = av_samples_get_buffer_size(&வரி_size, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (buf_size < 0)
-        return buf_size;
+    எனில் (buf_size < 0)
+        திரும்பு buf_size;
 
-    if (linesize)
-        *linesize = line_size;
+    எனில் (linesize)
+        *linesize = வரி_size;
 
     memset(audio_data, 0, planar
-                          ? sizeof(*audio_data) * nb_channels
-                          : sizeof(*audio_data));
+                          ? அளவு(*audio_data) * nb_channels
+                          : அளவு(*audio_data));
 
-    if (!buf)
-        return buf_size;
+    எனில் (!buf)
+        திரும்பு buf_size;
 
     audio_data[0] = (uint8_t *)buf;
-    for (ch = 1; planar && ch < nb_channels; ch++)
-        audio_data[ch] = audio_data[ch-1] + line_size;
+    க்கு (ch = 1; planar && ch < nb_channels; ch++)
+        audio_data[ch] = audio_data[ch-1] + வரி_size;
 
-    return buf_size;
+    திரும்பு buf_size;
 }
 
-int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
-                     int nb_samples, enum AVSampleFormat sample_fmt, int align)
+முழு av_samples_alloc(uint8_t **audio_data, முழு *linesize, முழு nb_channels,
+                     முழு nb_samples, எண்ணிக்கை AVSampleFormat sample_fmt, முழு align)
 {
     uint8_t *buf;
-    int size = av_samples_get_buffer_size(NULL, nb_channels, nb_samples,
+    முழு size = av_samples_get_buffer_size(வெற்று, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (size < 0)
-        return size;
+    எனில் (size < 0)
+        திரும்பு size;
 
     buf = av_malloc(size);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    எனில் (!buf)
+        திரும்பு AVERROR(ENOMEM);
 
     size = av_samples_fill_arrays(audio_data, linesize, buf, nb_channels,
                                   nb_samples, sample_fmt, align);
-    if (size < 0) {
+    எனில் (size < 0) {
         av_free(buf);
-        return size;
+        திரும்பு size;
     }
 
     av_samples_set_silence(audio_data, 0, nb_samples, nb_channels, sample_fmt);
 
-    return size;
+    திரும்பு size;
 }
 
-int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int nb_channels,
-                                       int nb_samples, enum AVSampleFormat sample_fmt, int align)
+முழு av_samples_alloc_array_and_samples(uint8_t ***audio_data, முழு *linesize, முழு nb_channels,
+                                       முழு nb_samples, எண்ணிக்கை AVSampleFormat sample_fmt, முழு align)
 {
-    int ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
+    முழு ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
 
-    *audio_data = av_calloc(nb_planes, sizeof(**audio_data));
-    if (!*audio_data)
-        return AVERROR(ENOMEM);
+    *audio_data = av_calloc(nb_planes, அளவு(**audio_data));
+    எனில் (!*audio_data)
+        திரும்பு AVERROR(ENOMEM);
     ret = av_samples_alloc(*audio_data, linesize, nb_channels,
                            nb_samples, sample_fmt, align);
-    if (ret < 0)
+    எனில் (ret < 0)
         av_freep(audio_data);
-    return ret;
+    திரும்பு ret;
 }
 
-int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
-                    int src_offset, int nb_samples, int nb_channels,
-                    enum AVSampleFormat sample_fmt)
+முழு av_samples_copy(uint8_t * மாறிலி *dst, uint8_t * மாறிலி *src, முழு dst_offset,
+                    முழு src_offset, முழு nb_samples, முழு nb_channels,
+                    எண்ணிக்கை AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int i;
+    முழு planar      = av_sample_fmt_is_planar(sample_fmt);
+    முழு planes      = planar ? nb_channels : 1;
+    முழு block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    முழு data_size   = nb_samples * block_align;
+    முழு i;
 
     dst_offset *= block_align;
     src_offset *= block_align;
 
-    if((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= data_size) {
-        for (i = 0; i < planes; i++)
+    எனில்((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= data_size) {
+        க்கு (i = 0; i < planes; i++)
             memcpy(dst[i] + dst_offset, src[i] + src_offset, data_size);
-    } else {
-        for (i = 0; i < planes; i++)
+    } இல்லையெனில் {
+        க்கு (i = 0; i < planes; i++)
             memmove(dst[i] + dst_offset, src[i] + src_offset, data_size);
     }
 
-    return 0;
+    திரும்பு 0;
 }
 
-int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_samples,
-                           int nb_channels, enum AVSampleFormat sample_fmt)
+முழு av_samples_set_silence(uint8_t * மாறிலி *audio_data, முழு offset, முழு nb_samples,
+                           முழு nb_channels, எண்ணிக்கை AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int fill_char, i;
+    முழு planar      = av_sample_fmt_is_planar(sample_fmt);
+    முழு planes      = planar ? nb_channels : 1;
+    முழு block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    முழு data_size   = nb_samples * block_align;
+    முழு fill_char, i;
 
-    if (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
+    எனில் (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
         fill_char = 0x80;
-    else if (sample_fmt == AV_SAMPLE_FMT_DSD)
+    இல்லையெனில் எனில் (sample_fmt == AV_SAMPLE_FMT_DSD)
         fill_char = 0x69; // only ultrasonic tones, filtered out on playback
-    else
+    இல்லையெனில்
         fill_char = 0x00;
 
     offset *= block_align;
 
-    for (i = 0; i < planes; i++)
+    க்கு (i = 0; i < planes; i++)
         memset(audio_data[i] + offset, fill_char, data_size);
 
-    return 0;
+    திரும்பு 0;
 }

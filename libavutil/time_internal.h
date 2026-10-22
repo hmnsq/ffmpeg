@@ -19,29 +19,29 @@
 #ifndef AVUTIL_TIME_INTERNAL_H
 #define AVUTIL_TIME_INTERNAL_H
 
-#include <time.h>
-#include "config.h"
+#அந்தர்பாவ <time.h>
+#அந்தர்பாவ "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
-static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
+#எனில் !HAVE_GMTIME_R && !defined(gmtime_r)
+நிலையான உள்வரி கட்டமைப்பு tm *ff_gmtime_r(மாறிலி time_t* clock, கட்டமைப்பு tm *result)
 {
-    struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
+    கட்டமைப்பு tm *ptr = gmtime(clock);
+    எனில் (!ptr)
+        திரும்பு வெற்று;
     *result = *ptr;
-    return result;
+    திரும்பு result;
 }
 #define gmtime_r ff_gmtime_r
 #endif
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
-static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
+#எனில் !HAVE_LOCALTIME_R && !defined(localtime_r)
+நிலையான உள்வரி கட்டமைப்பு tm *ff_localtime_r(மாறிலி time_t* clock, கட்டமைப்பு tm *result)
 {
-    struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
+    கட்டமைப்பு tm *ptr = localtime(clock);
+    எனில் (!ptr)
+        திரும்பு வெற்று;
     *result = *ptr;
-    return result;
+    திரும்பு result;
 }
 #define localtime_r ff_localtime_r
 #endif

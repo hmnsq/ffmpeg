@@ -18,20 +18,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#அந்தர்பாவ <stddef.h>
+#அந்தர்பாவ <stdint.h>
 
-#include "generic_macros_msa.h"
-#include "pixelutils.h"
+#அந்தர்பாவ "generic_macros_msa.h"
+#அந்தர்பாவ "pixelutils.h"
 
-int ff_pixelutils_sad16_msa(const uint8_t *src, ptrdiff_t src_stride,
-                            const uint8_t *ref, ptrdiff_t ref_stride)
+முழு ff_pixelutils_sad16_msa(மாறிலி uint8_t *src, ptrdiff_t src_stride,
+                            மாறிலி uint8_t *ref, ptrdiff_t ref_stride)
 {
     int32_t ht_cnt = 16/4;
     v16u8 src0, src1, ref0, ref1;
     v8u16 sad = { 0 };
 
-    for (; ht_cnt--; ) {
+    க்கு (; ht_cnt--; ) {
         LD_UB2(src, src_stride, src0, src1);
         src += (2 * src_stride);
         LD_UB2(ref, ref_stride, ref0, ref1);
@@ -44,5 +44,5 @@ int ff_pixelutils_sad16_msa(const uint8_t *src, ptrdiff_t src_stride,
         ref += (2 * ref_stride);
         sad += SAD_UB2_UH(src0, src1, ref0, ref1);
     }
-    return (HADD_UH_U32(sad));
+    திரும்பு (HADD_UH_U32(sad));
 }

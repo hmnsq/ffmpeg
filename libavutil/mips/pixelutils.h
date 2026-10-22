@@ -19,22 +19,22 @@
 #ifndef AVUTIL_MIPS_PIXELUTILS_H
 #define AVUTIL_MIPS_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#அந்தர்பாவ <stddef.h>
+#அந்தர்பாவ <stdint.h>
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#அந்தர்பாவ "cpu.h"
+#அந்தர்பாவ "libavutil/attributes.h"
+#அந்தர்பாவ "libavutil/cpu.h"
+#அந்தர்பாவ "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_msa(const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
+முழு ff_pixelutils_sad16_msa(மாறிலி uint8_t *src1, ptrdiff_t stride1,
+                            மாறிலி uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, int aligned)
+நிலையான உள்வரி av_cold வெறுமை ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, முழு aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    முழு cpu_flags = av_get_cpu_flags();
 
-    if (have_msa(cpu_flags)) {
+    எனில் (have_msa(cpu_flags)) {
         sad[3] = ff_pixelutils_sad16_msa;
     }
 }

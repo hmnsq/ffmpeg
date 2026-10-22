@@ -21,14 +21,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#அந்தர்பாவ <string.h>
 
-#include "attributes.h"
-#include "intreadwrite.h"
-#include "mem.h"
-#include "blowfish.h"
+#அந்தர்பாவ "attributes.h"
+#அந்தர்பாவ "intreadwrite.h"
+#அந்தர்பாவ "mem.h"
+#அந்தர்பாவ "blowfish.h"
 
-static const uint32_t orig_p[AV_BF_ROUNDS + 2] = {
+நிலையான மாறிலி uint32_t orig_p[AV_BF_ROUNDS + 2] = {
     0x243F6A88, 0x85A308D3, 0x13198A2E, 0x03707344,
     0xA4093822, 0x299F31D0, 0x082EFA98, 0xEC4E6C89,
     0x452821E6, 0x38D01377, 0xBE5466CF, 0x34E90C6C,
@@ -36,7 +36,7 @@ static const uint32_t orig_p[AV_BF_ROUNDS + 2] = {
     0x9216D5D9, 0x8979FB1B
 };
 
-static const uint32_t orig_s[4][256] = {
+நிலையான மாறிலி uint32_t orig_s[4][256] = {
     { 0xD1310BA6, 0x98DFB5AC, 0x2FFD72DB, 0xD01ADFB7,
       0xB8E1AFED, 0x6A267E96, 0xBA7C9045, 0xF12C7F99,
       0x24A19947, 0xB3916CF7, 0x0801F2E2, 0x858EFC16,
@@ -302,24 +302,24 @@ static const uint32_t orig_s[4][256] = {
            + ctx->s[3][ Xl        & 0xFF])\
            ^ P;
 
-AVBlowfish *av_blowfish_alloc(void)
+AVBlowfish *av_blowfish_alloc(வெறுமை)
 {
-    return av_mallocz(sizeof(struct AVBlowfish));
+    திரும்பு av_mallocz(அளவு(கட்டமைப்பு AVBlowfish));
 }
 
-av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, int key_len)
+av_cold வெறுமை av_blowfish_init(AVBlowfish *ctx, மாறிலி uint8_t *சாவி, முழு சாவி_len)
 {
     uint32_t data, data_l, data_r;
-    int i, j, k;
+    முழு i, j, k;
 
-    memcpy(ctx->s, orig_s, sizeof(orig_s));
+    memcpy(ctx->s, orig_s, அளவு(orig_s));
 
     j = 0;
-    for (i = 0; i < AV_BF_ROUNDS + 2; ++i) {
+    க்கு (i = 0; i < AV_BF_ROUNDS + 2; ++i) {
         data = 0;
-        for (k = 0; k < 4; k++) {
-            data = (data << 8) | key[j];
-            if (++j >= key_len)
+        க்கு (k = 0; k < 4; k++) {
+            data = (data << 8) | சாவி[j];
+            எனில் (++j >= சாவி_len)
                 j = 0;
         }
         ctx->p[i] = orig_p[i] ^ data;
@@ -327,14 +327,14 @@ av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, int key_len)
 
     data_l = data_r = 0;
 
-    for (i = 0; i < AV_BF_ROUNDS + 2; i += 2) {
+    க்கு (i = 0; i < AV_BF_ROUNDS + 2; i += 2) {
         av_blowfish_crypt_ecb(ctx, &data_l, &data_r, 0);
         ctx->p[i]     = data_l;
         ctx->p[i + 1] = data_r;
     }
 
-    for (i = 0; i < 4; ++i) {
-        for (j = 0; j < 256; j += 2) {
+    க்கு (i = 0; i < 4; ++i) {
+        க்கு (j = 0; j < 256; j += 2) {
             av_blowfish_crypt_ecb(ctx, &data_l, &data_r, 0);
             ctx->s[i][j]     = data_l;
             ctx->s[i][j + 1] = data_r;
@@ -342,26 +342,26 @@ av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, int key_len)
     }
 }
 
-void av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
-                           int decrypt)
+வெறுமை av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
+                           முழு decrypt)
 {
     uint32_t Xl, Xr;
-    int i;
+    முழு i;
 
     Xl = *xl;
     Xr = *xr;
 
-    if (decrypt) {
+    எனில் (decrypt) {
         Xl ^= ctx->p[AV_BF_ROUNDS + 1];
-        for (i = AV_BF_ROUNDS; i > 0; i-=2) {
+        க்கு (i = AV_BF_ROUNDS; i > 0; i-=2) {
             F(Xl, Xr, ctx->p[i  ]);
             F(Xr, Xl, ctx->p[i-1]);
         }
 
         Xr ^= ctx->p[0];
-    } else {
+    } இல்லையெனில் {
         Xl ^= ctx->p[0];
-        for (i = 1; i < AV_BF_ROUNDS+1; i+=2){
+        க்கு (i = 1; i < AV_BF_ROUNDS+1; i+=2){
             F(Xl, Xr, ctx->p[i  ]);
             F(Xr, Xl, ctx->p[i+1]);
         }
@@ -373,20 +373,20 @@ void av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
     *xr = Xl;
 }
 
-void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                       int count, uint8_t *iv, int decrypt)
+வெறுமை av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, மாறிலி uint8_t *src,
+                       முழு மொத்தம், uint8_t *iv, முழு decrypt)
 {
     uint32_t v0, v1;
-    int i;
+    முழு i;
 
-    if (decrypt) {
-        while (count--) {
+    எனில் (decrypt) {
+        போது (மொத்தம்--) {
             v0 = AV_RB32(src);
             v1 = AV_RB32(src + 4);
 
             av_blowfish_crypt_ecb(ctx, &v0, &v1, decrypt);
 
-            if (iv) {
+            எனில் (iv) {
                 v0 ^= AV_RB32(iv);
                 v1 ^= AV_RB32(iv + 4);
                 memcpy(iv, src, 8);
@@ -398,14 +398,14 @@ void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
             src   += 8;
             dst   += 8;
         }
-    } else {
-        while (count--) {
-            if (iv) {
-                for (i = 0; i < 8; i++)
+    } இல்லையெனில் {
+        போது (மொத்தம்--) {
+            எனில் (iv) {
+                க்கு (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];
                 v0 = AV_RB32(dst);
                 v1 = AV_RB32(dst + 4);
-            } else {
+            } இல்லையெனில் {
                 v0 = AV_RB32(src);
                 v1 = AV_RB32(src + 4);
             }
@@ -415,7 +415,7 @@ void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
             AV_WB32(dst, v0);
             AV_WB32(dst + 4, v1);
 
-            if (iv)
+            எனில் (iv)
                 memcpy(iv, dst, 8);
 
             src   += 8;

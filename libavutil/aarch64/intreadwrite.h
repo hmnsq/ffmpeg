@@ -19,19 +19,19 @@
 #ifndef AVUTIL_AARCH64_INTREADWRITE_H
 #define AVUTIL_AARCH64_INTREADWRITE_H
 
-#if HAVE_INTRINSICS_NEON
+#எனில் HAVE_INTRINSICS_NEON
 
-#include <arm_neon.h>
+#அந்தர்பாவ <arm_neon.h>
 
 #define AV_COPY128 AV_COPY128
-static av_always_inline void AV_COPY128(void *d, const void *s)
+நிலையான av_always_inline வெறுமை AV_COPY128(வெறுமை *d, மாறிலி வெறுமை *s)
 {
-    uint8x16_t tmp = vld1q_u8((const uint8_t *)s);
+    uint8x16_t tmp = vld1q_u8((மாறிலி uint8_t *)s);
     vst1q_u8((uint8_t *)d, tmp);
 }
 
 #define AV_ZERO128 AV_ZERO128
-static av_always_inline void AV_ZERO128(void *d)
+நிலையான av_always_inline வெறுமை AV_ZERO128(வெறுமை *d)
 {
     uint8x16_t zero = vdupq_n_u8(0);
     vst1q_u8((uint8_t *)d, zero);

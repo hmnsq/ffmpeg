@@ -18,74 +18,74 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "log.h"
-#include "mem.h"
-#include "tree.h"
+#அந்தர்பாவ "error.h"
+#அந்தர்பாவ "log.h"
+#அந்தர்பாவ "mem.h"
+#அந்தர்பாவ "tree.h"
 
-typedef struct AVTreeNode {
-    struct AVTreeNode *child[2];
-    void *elem;
-    int state;
-} AVTreeNode;
+வகைவரை கட்டமைப்பு AVTree_முனை {
+    கட்டமைப்பு AVTree_முனை *child[2];
+    வெறுமை *elem;
+    முழு state;
+} AVTree_முனை;
 
-const int av_tree_node_size = sizeof(AVTreeNode);
+மாறிலி முழு av_மரம்_முனை_size = அளவு(AVTree_முனை);
 
-struct AVTreeNode *av_tree_node_alloc(void)
+கட்டமைப்பு AVTree_முனை *av_மரம்_முனை_alloc(வெறுமை)
 {
-    return av_mallocz(sizeof(struct AVTreeNode));
+    திரும்பு av_mallocz(அளவு(கட்டமைப்பு AVTree_முனை));
 }
 
-void *av_tree_find(const AVTreeNode *t, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2])
+வெறுமை *av_மரம்_find(மாறிலி AVTree_முனை *t, வெறுமை *சாவி,
+                   முழு (*cmp)(மாறிலி வெறுமை *சாவி, மாறிலி வெறுமை *b), வெறுமை *next[2])
 {
-    if (t) {
-        unsigned int v = cmp(key, t->elem);
-        if (v) {
-            if (next)
+    எனில் (t) {
+        unsigned முழு v = cmp(சாவி, t->elem);
+        எனில் (v) {
+            எனில் (next)
                 next[v >> 31] = t->elem;
-            return av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
-        } else {
-            if (next) {
-                av_tree_find(t->child[0], key, cmp, next);
-                av_tree_find(t->child[1], key, cmp, next);
+            திரும்பு av_மரம்_find(t->child[(v >> 31) ^ 1], சாவி, cmp, next);
+        } இல்லையெனில் {
+            எனில் (next) {
+                av_மரம்_find(t->child[0], சாவி, cmp, next);
+                av_மரம்_find(t->child[1], சாவி, cmp, next);
             }
-            return t->elem;
+            திரும்பு t->elem;
         }
     }
-    return NULL;
+    திரும்பு வெற்று;
 }
 
-void *av_tree_insert(AVTreeNode **tp, void *key,
-                     int (*cmp)(const void *key, const void *b), AVTreeNode **next)
+வெறுமை *av_மரம்_செருகு(AVTree_முனை **tp, வெறுமை *சாவி,
+                     முழு (*cmp)(மாறிலி வெறுமை *சாவி, மாறிலி வெறுமை *b), AVTree_முனை **next)
 {
-    AVTreeNode *t = *tp;
-    if (t) {
-        unsigned int v = cmp(t->elem, key);
-        void *ret;
-        if (!v) {
-            if (*next)
-                return t->elem;
-            else if (t->child[0] || t->child[1]) {
-                int i = !t->child[0];
-                void *next_elem[2];
-                av_tree_find(t->child[i], key, cmp, next_elem);
-                key = t->elem = next_elem[i];
+    AVTree_முனை *t = *tp;
+    எனில் (t) {
+        unsigned முழு v = cmp(t->elem, சாவி);
+        வெறுமை *ret;
+        எனில் (!v) {
+            எனில் (*next)
+                திரும்பு t->elem;
+            இல்லையெனில் எனில் (t->child[0] || t->child[1]) {
+                முழு i = !t->child[0];
+                வெறுமை *next_elem[2];
+                av_மரம்_find(t->child[i], சாவி, cmp, next_elem);
+                சாவி = t->elem = next_elem[i];
                 v   = -i;
-            } else {
+            } இல்லையெனில் {
                 *next = t;
-                *tp   = NULL;
-                return NULL;
+                *tp   = வெற்று;
+                திரும்பு வெற்று;
             }
         }
-        ret = av_tree_insert(&t->child[v >> 31], key, cmp, next);
-        if (!ret) {
-            int i              = (v >> 31) ^ !!*next;
-            AVTreeNode **child = &t->child[i];
+        ret = av_மரம்_செருகு(&t->child[v >> 31], சாவி, cmp, next);
+        எனில் (!ret) {
+            முழு i              = (v >> 31) ^ !!*next;
+            AVTree_முனை **child = &t->child[i];
             t->state += 2 * i - 1;
 
-            if (!(t->state & 1)) {
-                if (t->state) {
+            எனில் (!(t->state & 1)) {
+                எனில் (t->state) {
                     /* The following code is equivalent to
                      * if ((*child)->state * 2 == -t->state)
                      *     rotate(child, i ^ 1);
@@ -106,7 +106,7 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                      * }
                      * but such a rotate function is both bigger and slower
                      */
-                    if ((*child)->state * 2 == -t->state) {
+                    எனில் ((*child)->state * 2 == -t->state) {
                         *tp                    = (*child)->child[i ^ 1];
                         (*child)->child[i ^ 1] = (*tp)->child[i];
                         (*tp)->child[i]        = *child;
@@ -116,53 +116,53 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                         (*tp)->child[0]->state = -((*tp)->state > 0);
                         (*tp)->child[1]->state = (*tp)->state < 0;
                         (*tp)->state           = 0;
-                    } else {
+                    } இல்லையெனில் {
                         *tp                 = *child;
                         *child              = (*child)->child[i ^ 1];
                         (*tp)->child[i ^ 1] = t;
-                        if ((*tp)->state)
+                        எனில் ((*tp)->state)
                             t->state = 0;
-                        else
+                        இல்லையெனில்
                             t->state >>= 1;
                         (*tp)->state = -t->state;
                     }
                 }
             }
-            if (!(*tp)->state ^ !!*next)
-                return key;
+            எனில் (!(*tp)->state ^ !!*next)
+                திரும்பு சாவி;
         }
-        return ret;
-    } else {
+        திரும்பு ret;
+    } இல்லையெனில் {
         *tp   = *next;
-        *next = NULL;
-        if (*tp) {
-            (*tp)->elem = key;
-            return NULL;
-        } else
-            return key;
+        *next = வெற்று;
+        எனில் (*tp) {
+            (*tp)->elem = சாவி;
+            திரும்பு வெற்று;
+        } இல்லையெனில்
+            திரும்பு சாவி;
     }
 }
 
-void av_tree_destroy(AVTreeNode *t)
+வெறுமை av_மரம்_destroy(AVTree_முனை *t)
 {
-    if (t) {
-        av_tree_destroy(t->child[0]);
-        av_tree_destroy(t->child[1]);
+    எனில் (t) {
+        av_மரம்_destroy(t->child[0]);
+        av_மரம்_destroy(t->child[1]);
         av_free(t);
     }
 }
 
-void av_tree_enumerate(AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem))
+வெறுமை av_மரம்_enumerate(AVTree_முனை *t, வெறுமை *opaque,
+                       முழு (*cmp)(வெறுமை *opaque, வெறுமை *elem),
+                       முழு (*enu)(வெறுமை *opaque, வெறுமை *elem))
 {
-    if (t) {
-        int v = cmp ? cmp(opaque, t->elem) : 0;
-        if (v >= 0)
-            av_tree_enumerate(t->child[0], opaque, cmp, enu);
-        if (v == 0)
+    எனில் (t) {
+        முழு v = cmp ? cmp(opaque, t->elem) : 0;
+        எனில் (v >= 0)
+            av_மரம்_enumerate(t->child[0], opaque, cmp, enu);
+        எனில் (v == 0)
             enu(opaque, t->elem);
-        if (v <= 0)
-            av_tree_enumerate(t->child[1], opaque, cmp, enu);
+        எனில் (v <= 0)
+            av_மரம்_enumerate(t->child[1], opaque, cmp, enu);
     }
 }

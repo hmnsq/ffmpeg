@@ -19,26 +19,26 @@
 #ifndef AVUTIL_DETECTION_BBOX_H
 #define AVUTIL_DETECTION_BBOX_H
 
-#include "rational.h"
-#include "avassert.h"
-#include "frame.h"
+#அந்தர்பாவ "rational.h"
+#அந்தர்பாவ "avassert.h"
+#அந்தர்பாவ "frame.h"
 
-typedef struct AVDetectionBBox {
+வகைவரை கட்டமைப்பு AVDetectionBBox {
     /**
      * Distance in pixels from the left/top edge of the frame,
      * together with width and height, defining the bounding box.
      */
-    int x;
-    int y;
-    int w;
-    int h;
+    முழு x;
+    முழு y;
+    முழு w;
+    முழு h;
 
 #define AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE 64
 
     /**
      * Detect result with confidence
      */
-    char detect_label[AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
+    எழுத்து detect_label[AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
     AVRational detect_confidence;
 
     /**
@@ -47,18 +47,18 @@ typedef struct AVDetectionBBox {
      * DNN models on one bounding box.
      * classify_count is zero if no classification.
      */
-#define AV_NUM_DETECTION_BBOX_CLASSIFY 4
-    uint32_t classify_count;
-    char classify_labels[AV_NUM_DETECTION_BBOX_CLASSIFY][AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
-    AVRational classify_confidences[AV_NUM_DETECTION_BBOX_CLASSIFY];
+#define AV_இலக்கம்_DETECTION_BBOX_CLASSIFY 4
+    uint32_t classify_மொத்தம்;
+    எழுத்து classify_labels[AV_இலக்கம்_DETECTION_BBOX_CLASSIFY][AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
+    AVRational classify_confidences[AV_இலக்கம்_DETECTION_BBOX_CLASSIFY];
 } AVDetectionBBox;
 
-typedef struct AVDetectionBBoxHeader {
+வகைவரை கட்டமைப்பு AVDetectionBBoxHeader {
     /**
      * Information about how the bounding box is generated.
      * for example, the DNN model name.
      */
-    char source[256];
+    எழுத்து source[256];
 
     /**
      * Number of bounding boxes in the array.
@@ -80,11 +80,11 @@ typedef struct AVDetectionBBoxHeader {
 /*
  * Get the bounding box at the specified {@code idx}. Must be between 0 and nb_bboxes.
  */
-static av_always_inline AVDetectionBBox *
-av_get_detection_bbox(const AVDetectionBBoxHeader *header, unsigned int idx)
+நிலையான av_always_inline AVDetectionBBox *
+av_get_detection_bbox(மாறிலி AVDetectionBBoxHeader *header, unsigned முழு idx)
 {
     av_assert0(idx < header->nb_bboxes);
-    return (AVDetectionBBox *)((uint8_t *)header + header->bboxes_offset +
+    திரும்பு (AVDetectionBBox *)((uint8_t *)header + header->bboxes_offset +
                                idx * header->bbox_size);
 }
 

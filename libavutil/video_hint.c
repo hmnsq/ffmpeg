@@ -18,41 +18,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#அந்தர்பாவ <string.h>
 
-#include "avstring.h"
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "video_hint.h"
+#அந்தர்பாவ "avstring.h"
+#அந்தர்பாவ "frame.h"
+#அந்தர்பாவ "macros.h"
+#அந்தர்பாவ "mem.h"
+#அந்தர்பாவ "video_hint.h"
 
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
                                  size_t *out_size)
 {
-    struct TestStruct {
+    கட்டமைப்பு TestStruct {
         AVVideoHint hint;
         AVVideoRect rect;
     };
-    const size_t rect_offset = offsetof(struct TestStruct, rect);
+    மாறிலி size_t rect_offset = offsetof(கட்டமைப்பு TestStruct, rect);
     size_t size = rect_offset;
     AVVideoHint *hint;
 
     *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
-    size += sizeof(AVVideoRect) * nb_rects;
+    எனில் (nb_rects > (SIZE_MAX - size) / அளவு(AVVideoRect))
+        திரும்பு வெற்று;
+    size += அளவு(AVVideoRect) * nb_rects;
 
     hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    எனில் (!hint)
+        திரும்பு வெற்று;
 
     hint->nb_rects    = nb_rects;
     hint->rect_offset = rect_offset;
-    hint->rect_size   = sizeof(AVVideoRect);
+    hint->rect_size   = அளவு(AVVideoRect);
 
     *out_size = size;
 
-    return hint;
+    திரும்பு hint;
 }
 
 AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
@@ -63,19 +63,19 @@ AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
     size_t size = 0;
 
     hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    எனில் (!hint)
+        திரும்பு வெற்று;
 
-    buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    buf = av_buffer_create((uint8_t *)hint, size, வெற்று, வெற்று, 0);
+    எனில் (!buf) {
         av_freep(&hint);
-        return NULL;
+        திரும்பு வெற்று;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
+    எனில் (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        திரும்பு வெற்று;
     }
 
-    return hint;
+    திரும்பு hint;
 }

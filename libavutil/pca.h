@@ -27,9 +27,9 @@
 #ifndef AVUTIL_PCA_H
 #define AVUTIL_PCA_H
 
-struct PCA *ff_pca_init(int n);
-void ff_pca_free(struct PCA *pca);
-void ff_pca_add(struct PCA *pca, const double *v);
-int ff_pca(struct PCA *pca, double *eigenvector, double *eigenvalue);
+கட்டமைப்பு PCA *ff_pca_init(முழு n);
+வெறுமை ff_pca_free(கட்டமைப்பு PCA *pca);
+வெறுமை ff_pca_add(கட்டமைப்பு PCA *pca, மாறிலி இரட்டை *v);
+முழு ff_pca(கட்டமைப்பு PCA *pca, இரட்டை *eigenvector, இரட்டை *eigenvalue);
 
 #endif /* AVUTIL_PCA_H */

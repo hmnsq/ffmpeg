@@ -16,50 +16,50 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
+#அந்தர்பாவ <stddef.h>
 
-#include "config.h"
-#include "pixelutils.h"
+#அந்தர்பாவ "config.h"
+#அந்தர்பாவ "pixelutils.h"
 
-#if CONFIG_PIXELUTILS
-#include <stdlib.h>
-#include <string.h>
+#எனில் CONFIG_PIXELUTILS
+#அந்தர்பாவ <stdlib.h>
+#அந்தர்பாவ <string.h>
 
-#include "attributes.h"
-#include "macros.h"
+#அந்தர்பாவ "attributes.h"
+#அந்தர்பாவ "macros.h"
 
-#if ARCH_AARCH64 && HAVE_NEON
-#include "aarch64/pixelutils.h"
-#elif ARCH_ARM && HAVE_ARMV6
-#include "arm/pixelutils.h"
-#elif ARCH_MIPS && HAVE_MSA
-#include "mips/pixelutils.h"
-#elif ARCH_RISCV
-#include "riscv/pixelutils.h"
-#elif ARCH_X86 && HAVE_X86ASM
-#include "x86/pixelutils.h"
+#எனில் ARCH_AARCH64 && HAVE_NEON
+#அந்தர்பாவ "aarch64/pixelutils.h"
+#அல்லதெனில் ARCH_ARM && HAVE_ARMV6
+#அந்தர்பாவ "arm/pixelutils.h"
+#அல்லதெனில் ARCH_MIPS && HAVE_MSA
+#அந்தர்பாவ "mips/pixelutils.h"
+#அல்லதெனில் ARCH_RISCV
+#அந்தர்பாவ "riscv/pixelutils.h"
+#அல்லதெனில் ARCH_X86 && HAVE_X86ASM
+#அந்தர்பாவ "x86/pixelutils.h"
 #endif
 
-static av_always_inline int sad_wxh(const uint8_t *src1, ptrdiff_t stride1,
-                                    const uint8_t *src2, ptrdiff_t stride2,
-                                    int w, int h)
+நிலையான av_always_inline முழு sad_wxh(மாறிலி uint8_t *src1, ptrdiff_t stride1,
+                                    மாறிலி uint8_t *src2, ptrdiff_t stride2,
+                                    முழு w, முழு h)
 {
-    int x, y, sum = 0;
+    முழு x, y, sum = 0;
 
-    for (y = 0; y < h; y++) {
-        for (x = 0; x < w; x++)
+    க்கு (y = 0; y < h; y++) {
+        க்கு (x = 0; x < w; x++)
             sum += abs(src1[x] - src2[x]);
         src1 += stride1;
         src2 += stride2;
     }
-    return sum;
+    திரும்பு sum;
 }
 
 #define DECLARE_BLOCK_FUNCTIONS(size)                                               \
-static int block_sad_##size##x##size##_c(const uint8_t *src1, ptrdiff_t stride1,    \
-                                         const uint8_t *src2, ptrdiff_t stride2)    \
+நிலையான முழு block_sad_##size##x##size##_c(மாறிலி uint8_t *src1, ptrdiff_t stride1,    \
+                                         மாறிலி uint8_t *src2, ptrdiff_t stride2)    \
 {                                                                                   \
-    return sad_wxh(src1, stride1, src2, stride2, size, size);                       \
+    திரும்பு sad_wxh(src1, stride1, src2, stride2, size, size);                       \
 }
 
 DECLARE_BLOCK_FUNCTIONS(2)
@@ -68,46 +68,46 @@ DECLARE_BLOCK_FUNCTIONS(8)
 DECLARE_BLOCK_FUNCTIONS(16)
 DECLARE_BLOCK_FUNCTIONS(32)
 
-static const av_pixelutils_sad_fn sad_c[] = {
+நிலையான மாறிலி av_pixelutils_sad_fn sad_c[] = {
     block_sad_2x2_c,
     block_sad_4x4_c,
     block_sad_8x8_c,
     block_sad_16x16_c,
     block_sad_32x32_c,
 };
-#else
-#include "log.h"
+#இல்லையெனில்
+#அந்தர்பாவ "log.h"
 #endif /* CONFIG_PIXELUTILS */
 
-av_pixelutils_sad_fn av_pixelutils_get_sad_fn(int w_bits, int h_bits, int aligned, void *log_ctx)
+av_pixelutils_sad_fn av_pixelutils_get_sad_fn(முழு w_bits, முழு h_bits, முழு aligned, வெறுமை *log_ctx)
 {
-#if !CONFIG_PIXELUTILS
+#எனில் !CONFIG_PIXELUTILS
     av_log(log_ctx, AV_LOG_ERROR, "pixelutils support is required "
            "but libavutil is not compiled with it\n");
-    return NULL;
-#else
+    திரும்பு வெற்று;
+#இல்லையெனில்
     av_pixelutils_sad_fn sad[FF_ARRAY_ELEMS(sad_c)];
 
-    memcpy(sad, sad_c, sizeof(sad));
+    memcpy(sad, sad_c, அளவு(sad));
 
-    if (w_bits < 1 || w_bits > FF_ARRAY_ELEMS(sad) ||
+    எனில் (w_bits < 1 || w_bits > FF_ARRAY_ELEMS(sad) ||
         h_bits < 1 || h_bits > FF_ARRAY_ELEMS(sad))
-        return NULL;
-    if (w_bits != h_bits) // only squared sad for now
-        return NULL;
+        திரும்பு வெற்று;
+    எனில் (w_bits != h_bits) // only squared sad for now
+        திரும்பு வெற்று;
 
-#if ARCH_AARCH64 && HAVE_NEON
+#எனில் ARCH_AARCH64 && HAVE_NEON
     ff_pixelutils_sad_init_aarch64(sad, aligned);
-#elif ARCH_ARM
+#அல்லதெனில் ARCH_ARM
     ff_pixelutils_sad_init_arm(sad, aligned);
-#elif ARCH_MIPS && HAVE_MSA
+#அல்லதெனில் ARCH_MIPS && HAVE_MSA
     ff_pixelutils_sad_init_mips(sad, aligned);
-#elif ARCH_RISCV
+#அல்லதெனில் ARCH_RISCV
     ff_pixelutils_init_riscv(sad, aligned);
-#elif ARCH_X86 && HAVE_X86ASM
+#அல்லதெனில் ARCH_X86 && HAVE_X86ASM
     ff_pixelutils_sad_init_x86(sad, aligned);
 #endif
 
-    return sad[w_bits - 1];
+    திரும்பு sad[w_bits - 1];
 #endif
 }

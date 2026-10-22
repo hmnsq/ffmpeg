@@ -18,23 +18,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#அந்தர்பாவ <string.h>
 
-#include "dovi_meta.h"
-#include "mem.h"
+#அந்தர்பாவ "dovi_meta.h"
+#அந்தர்பாவ "mem.h"
 
 AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size)
 {
     AVDOVIDecoderConfigurationRecord *dovi =
-        av_mallocz(sizeof(AVDOVIDecoderConfigurationRecord));
+        av_mallocz(அளவு(AVDOVIDecoderConfigurationRecord));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    எனில் (size)
+        *size = dovi ? அளவு(*dovi) : 0;
 
-    return dovi;
+    திரும்பு dovi;
 }
 
-typedef struct AVDOVIMetadataInternal {
+வகைவரை கட்டமைப்பு AVDOVIMetadataInternal {
     AVDOVIMetadata metadata;
     AVDOVIRpuDataHeader header;
     AVDOVIDataMapping mapping;
@@ -44,32 +44,32 @@ typedef struct AVDOVIMetadataInternal {
 
 AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
 {
-    AVDOVIMetadataInternal *dovi = av_mallocz(sizeof(AVDOVIMetadataInternal));
+    AVDOVIMetadataInternal *dovi = av_mallocz(அளவு(AVDOVIMetadataInternal));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    எனில் (size)
+        *size = dovi ? அளவு(*dovi) : 0;
 
-    if (!dovi)
-        return NULL;
+    எனில் (!dovi)
+        திரும்பு வெற்று;
 
-    dovi->metadata = (struct AVDOVIMetadata) {
+    dovi->metadata = (கட்டமைப்பு AVDOVIMetadata) {
         .header_offset      = offsetof(AVDOVIMetadataInternal, header),
         .mapping_offset     = offsetof(AVDOVIMetadataInternal, mapping),
         .color_offset       = offsetof(AVDOVIMetadataInternal, color),
         .ext_block_offset   = offsetof(AVDOVIMetadataInternal, ext_blocks),
-        .ext_block_size     = sizeof(AVDOVIDmData),
+        .ext_block_size     = அளவு(AVDOVIDmData),
     };
 
-    return &dovi->metadata;
+    திரும்பு &dovi->metadata;
 }
 
-AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level)
+AVDOVIDmData *av_dovi_find_level(மாறிலி AVDOVIMetadata *data, uint8_t level)
 {
-    for (int i = 0; i < data->num_ext_blocks; i++) {
+    க்கு (முழு i = 0; i < data->இலக்கம்_ext_blocks; i++) {
         AVDOVIDmData *ext = av_dovi_get_ext(data, i);
-        if (ext->level == level)
-            return ext;
+        எனில் (ext->level == level)
+            திரும்பு ext;
     }
 
-    return NULL;
+    திரும்பு வெற்று;
 }

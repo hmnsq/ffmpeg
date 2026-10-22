@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
-#include "libavutil/timer.h"
-#include "libavutil/lfg.h"
+#அந்தர்பாவ "libavutil/log.h"
+#அந்தர்பாவ "libavutil/mem.h"
+#அந்தர்பாவ "libavutil/timer.h"
+#அந்தர்பாவ "libavutil/lfg.h"
 
-static const double Z_TABLE[31][10] = {
+நிலையான மாறிலி இரட்டை Z_TABLE[31][10] = {
     {0.5000,  0.5040,  0.5080,  0.5120,  0.5160,  0.5199,  0.5239,  0.5279,  0.5319,  0.5359},
     {0.5398,  0.5438,  0.5478,  0.5517,  0.5557,  0.5596,  0.5636,  0.5675,  0.5714,  0.5753},
     {0.5793,  0.5832,  0.5871,  0.5910,  0.5948,  0.5987,  0.6026,  0.6064,  0.6103,  0.6141},
@@ -55,19 +55,19 @@ static const double Z_TABLE[31][10] = {
     {0.9987,  0.9987,  0.9987,  0.9988,  0.9988,  0.9989,  0.9989,  0.9989,  0.9990,  0.9990} };
 
 // Inverse cumulative distribution function
-static double inv_cdf(double u)
+நிலையான இரட்டை inv_cdf(இரட்டை u)
 {
-    const double a[4] = { 2.50662823884,
+    மாறிலி இரட்டை a[4] = { 2.50662823884,
                          -18.61500062529,
                           41.39119773534,
                          -25.44106049637};
 
-    const double b[4] = {-8.47351093090,
+    மாறிலி இரட்டை b[4] = {-8.47351093090,
                           23.08336743743,
                          -21.06224101826,
                            3.13082909833};
 
-    const double c[9] = {0.3374754822726147,
+    மாறிலி இரட்டை c[9] = {0.3374754822726147,
                           0.9761690190917186,
                           0.1607979714918209,
                           0.0276438810333863,
@@ -77,59 +77,59 @@ static double inv_cdf(double u)
                           0.0000002888167364,
                           0.0000003960315187};
 
-    double r;
-    double x = u - 0.5;
+    இரட்டை r;
+    இரட்டை x = u - 0.5;
 
     // Beasley-Springer
-     if (fabs(x) < 0.42) {
+     எனில் (fabs(x) < 0.42) {
 
-        double y = x * x;
+        இரட்டை y = x * x;
         r        = x * (((a[3]*y+a[2])*y+a[1])*y+a[0]) /
                         ((((b[3]*y+b[2])*y+b[1])*y+b[0])*y+1.0);
     }
-    else {// Moro
+    இல்லையெனில் {// Moro
         r = u;
-        if (x > 0.0)
+        எனில் (x > 0.0)
             r = 1.0 - u;
         r = log(-log(r));
         r = c[0] + r*(c[1]+r*(c[2]+r*(c[3]+r*(c[4]+r*(c[5]+r*(c[6]+
                                                         r*(c[7]+r*c[8])))))));
-        if (x < 0.0)
+        எனில் (x < 0.0)
             r = -r;
     }
 
-    return r;
+    திரும்பு r;
 }
-int main(void)
+முழு முதன்மை(வெறுமை)
 {
-    int x = 0;
-    int i, j;
+    முழு x = 0;
+    முழு i, j;
     AVLFG state;
     av_lfg_init(&state, 0xdeadbeef);
-    for (j = 0; j < 10000; j++) {
-        for (i = 0; i < 624; i++) {
+    க்கு (j = 0; j < 10000; j++) {
+        க்கு (i = 0; i < 624; i++) {
             //av_log(NULL, AV_LOG_ERROR, "%X\n", av_lfg_get(&state));
             x += av_lfg_get(&state);
         }
     }
-    av_log(NULL, AV_LOG_ERROR, "final value:%X\n", x);
+    av_log(வெற்று, AV_LOG_ERROR, "final value:%X\n", x);
 
     /* BMG usage example */
     {
-        double mean   = 1000;
-        double stddev = 53;
-        double samp_mean = 0.0, samp_stddev = 0.0, QH = 0;
-        double Z, p_value = -1, tot_samp = 1000;
-        double *PRN_arr = av_malloc_array(tot_samp, sizeof(double));
+        இரட்டை mean   = 1000;
+        இரட்டை stddev = 53;
+        இரட்டை samp_mean = 0.0, samp_stddev = 0.0, QH = 0;
+        இரட்டை Z, p_மதிப்பு = -1, tot_samp = 1000;
+        இரட்டை *PRN_arr = av_malloc_array(tot_samp, அளவு(இரட்டை));
 
-        if (!PRN_arr) {
+        எனில் (!PRN_arr) {
             fprintf(stderr, "failed to allocate memory!\n");
-            return 1;
+            திரும்பு 1;
         }
 
         av_lfg_init(&state, 42);
-        for (i = 0; i < tot_samp; i += 2) {
-            double bmg_out[2];
+        க்கு (i = 0; i < tot_samp; i += 2) {
+            இரட்டை bmg_out[2];
             av_bmg_get(&state, bmg_out);
             PRN_arr[i  ] = bmg_out[0] * stddev + mean;
             PRN_arr[i+1] = bmg_out[1] * stddev + mean;
@@ -145,30 +145,30 @@ int main(void)
         samp_stddev = sqrt(samp_stddev);
         Z = (mean - samp_mean) / (stddev / sqrt(tot_samp));
         {
-            int x, y, a, b, flag = 0;
+            முழு x, y, a, b, flag = 0;
 
-            if (Z < 0.0) {
+            எனில் (Z < 0.0) {
                 flag = !flag;
                 Z = Z * -1.0;
             }
 
-            a = (int)(Z * 100);
-            b = ((int)Z * 100);
+            a = (முழு)(Z * 100);
+            b = ((முழு)Z * 100);
             x = Z * 10;
             y = (b > 0) ? a % b : a;
             y = y % 10;
-            if (x > 30 || y > 9) {
-                av_log(NULL, AV_LOG_INFO, "error: out of bounds! tried to access"
+            எனில் (x > 30 || y > 9) {
+                av_log(வெற்று, AV_LOG_INFO, "error: out of bounds! tried to access"
                                           "Z_TABLE[%d][%d]\n", x, y);
-                goto SKIP;
+                செல் SKIP;
             }
-            p_value = flag ? 1 - Z_TABLE[x][y] : Z_TABLE[x][y];
+            p_மதிப்பு = flag ? 1 - Z_TABLE[x][y] : Z_TABLE[x][y];
         }
 
-SKIP:   for (i = 0; i < tot_samp; ++i) {
+SKIP:   க்கு (i = 0; i < tot_samp; ++i) {
 
-            if ( i < (tot_samp - 1)) {
-                double H_diff;
+            எனில் ( i < (tot_samp - 1)) {
+                இரட்டை H_diff;
                 H_diff  = inv_cdf((i + 2.0 - (3.0/8.0)) / (tot_samp + (1.0/4.0)));
                 H_diff -= inv_cdf((i + 1.0 - (3.0/8.0)) / (tot_samp + (1.0/4.0)));
 
@@ -184,9 +184,9 @@ SKIP:   for (i = 0; i < tot_samp; ++i) {
                "z-score      : %f\n"
                "p-value      : %f\n"
                "QH[normality]: %f\n",
-               samp_mean, mean, samp_stddev, stddev, Z, p_value, QH);
+               samp_mean, mean, samp_stddev, stddev, Z, p_மதிப்பு, QH);
 
         av_freep(&PRN_arr);
     }
-    return 0;
+    திரும்பு 0;
 }

@@ -16,34 +16,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#அந்தர்பாவ <stdio.h>
 
-#include "libavutil/avassert.h"
-#include "libavutil/internal.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixelutils.c"
-#include "libavutil/pixfmt.h"
+#அந்தர்பாவ "libavutil/avassert.h"
+#அந்தர்பாவ "libavutil/internal.h"
+#அந்தர்பாவ "libavutil/log.h"
+#அந்தர்பாவ "libavutil/mem.h"
+#அந்தர்பாவ "libavutil/pixdesc.h"
+#அந்தர்பாவ "libavutil/pixelutils.c"
+#அந்தர்பாவ "libavutil/pixfmt.h"
 
 #define W1 320
 #define H1 240
 #define W2 640
 #define H2 480
 
-static void check_pixfmt_descriptors(void)
+நிலையான வெறுமை check_pixfmt_descriptors(வெறுமை)
 {
-    const AVPixFmtDescriptor *d, *last = NULL;
-    int i;
+    மாறிலி AVPixFmtDescriptor *d, *last = வெற்று;
+    முழு i;
 
-    for (i = AV_PIX_FMT_NONE, d = NULL; i++, d = av_pix_fmt_desc_next(d);) {
+    க்கு (i = AV_PIX_FMT_NONE, d = வெற்று; i++, d = av_pix_fmt_desc_next(d);) {
         uint8_t fill[4][8 + 6 + 3] = {{ 0 }};
         uint8_t *data[4] = { fill[0], fill[1], fill[2], fill[3] };
-        int linesize[4] = { 0, 0, 0, 0 };
+        முழு linesize[4] = { 0, 0, 0, 0 };
         uint16_t tmp[2];
 
         av_assert0(d->name && d->name[0]);
-        av_log(NULL, AV_LOG_INFO, "Checking: %s\n", d->name);
+        av_log(வெற்று, AV_LOG_INFO, "Checking: %s\n", d->name);
         av_assert0(d->log2_chroma_w <= 3);
         av_assert0(d->log2_chroma_h <= 3);
         av_assert0(d->nb_components <= 4);
@@ -56,41 +56,41 @@ static void check_pixfmt_descriptors(void)
         av_assert0(i == av_pix_fmt_desc_get_id(d));
         av_assert0(!last || last + 1 == d);
 
-        for (int j = 0; j < FF_ARRAY_ELEMS(d->comp); j++) {
-            const AVComponentDescriptor *c = &d->comp[j];
-            if (!c->depth) {
-                continue;
+        க்கு (முழு j = 0; j < FF_ARRAY_ELEMS(d->comp); j++) {
+            மாறிலி AVComponentDescriptor *c = &d->comp[j];
+            எனில் (!c->depth) {
+                தொடர்;
             }
-            if (d->flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+            எனில் (d->flags & AV_PIX_FMT_FLAG_BITSTREAM) {
                 av_assert0(c->step >= c->depth);
-            } else {
+            } இல்லையெனில் {
                 av_assert0(8*c->step >= c->depth);
             }
-            if (d->flags & AV_PIX_FMT_FLAG_BAYER)
-                continue;
-            av_read_image_line(tmp, (void*)data, linesize, d, 0, 0, j, 2, 0);
+            எனில் (d->flags & AV_PIX_FMT_FLAG_BAYER)
+                தொடர்;
+            av_read_image_வரி(tmp, (வெறுமை*)data, linesize, d, 0, 0, j, 2, 0);
             av_assert0(tmp[0] == 0 && tmp[1] == 0);
             tmp[0] = tmp[1] = (1ULL << c->depth) - 1;
-            av_write_image_line(tmp, data, linesize, d, 0, 0, j, 2);
+            av_write_image_வரி(tmp, data, linesize, d, 0, 0, j, 2);
         }
         last = d;
     }
     av_assert0(i == AV_PIX_FMT_NB);
 }
 
-static int run_single_test(const char *test,
-                           const uint8_t *block1, ptrdiff_t stride1,
-                           const uint8_t *block2, ptrdiff_t stride2,
-                           int align, int n)
+நிலையான முழு run_single_test(மாறிலி எழுத்து *test,
+                           மாறிலி uint8_t *block1, ptrdiff_t stride1,
+                           மாறிலி uint8_t *block2, ptrdiff_t stride2,
+                           முழு align, முழு n)
 {
-    int out, ref;
+    முழு out, ref;
     av_pixelutils_sad_fn f_ref = sad_c[n - 1];
-    av_pixelutils_sad_fn f_out = av_pixelutils_get_sad_fn(n, n, align, NULL);
+    av_pixelutils_sad_fn f_out = av_pixelutils_get_sad_fn(n, n, align, வெற்று);
 
-    switch (align) {
-    case 0: block1++; block2++; break;
-    case 1:           block2++; break;
-    case 2:                     break;
+    தேர்வு (align) {
+    நிலை 0: block1++; block2++; நிறுத்து;
+    நிலை 1:           block2++; நிறுத்து;
+    நிலை 2:                     நிறுத்து;
     }
 
     out = f_out(block1, stride1, block2, stride2);
@@ -99,101 +99,101 @@ static int run_single_test(const char *test,
            out == ref ? "OK" : "FAIL",
            align ? 'A' : 'U', align == 2 ? 'A' : 'U',
            test, 1<<n, 1<<n, out, ref);
-    return out != ref;
+    திரும்பு out != ref;
 }
 
-static int run_test(const char *test,
-                    const uint8_t *b1, const uint8_t *b2)
+நிலையான முழு run_test(மாறிலி எழுத்து *test,
+                    மாறிலி uint8_t *b1, மாறிலி uint8_t *b2)
 {
-    int i, a, ret = 0;
+    முழு i, a, ret = 0;
 
-    for (a = 0; a < 3; a++) {
-        for (i = 1; i <= FF_ARRAY_ELEMS(sad_c); i++) {
-            int r = run_single_test(test, b1, W1, b2, W2, a, i);
-            if (r)
+    க்கு (a = 0; a < 3; a++) {
+        க்கு (i = 1; i <= FF_ARRAY_ELEMS(sad_c); i++) {
+            முழு r = run_single_test(test, b1, W1, b2, W2, a, i);
+            எனில் (r)
                 ret = r;
         }
     }
-    return ret;
+    திரும்பு ret;
 }
 
-int main(void)
+முழு முதன்மை(வெறுமை)
 {
-    int i, align, ret;
+    முழு i, align, ret;
     uint8_t *buf1 = av_malloc(W1*H1);
     uint8_t *buf2 = av_malloc(W2*H2);
     uint32_t state = 0;
 
-    if (!buf1 || !buf2) {
+    எனில் (!buf1 || !buf2) {
         fprintf(stderr, "malloc failure\n");
         ret = 1;
-        goto end;
+        செல் end;
     }
 
     check_pixfmt_descriptors();
 
-#define RANDOM_INIT(buf, size) do {             \
-    int k;                                      \
-    for (k = 0; k < size; k++) {                \
+#define RANDOM_INIT(buf, size) செய் {             \
+    முழு k;                                      \
+    க்கு (k = 0; k < size; k++) {                \
         state = state * 1664525 + 1013904223;   \
         buf[k] = state>>24;                     \
     }                                           \
-} while (0)
+} போது (0)
 
     /* Normal test with different strides */
     RANDOM_INIT(buf1, W1*H1);
     RANDOM_INIT(buf2, W2*H2);
     ret = run_test("random", buf1, buf2);
-    if (ret < 0)
-        goto end;
+    எனில் (ret < 0)
+        செல் end;
 
     /* Check for maximum SAD */
     memset(buf1, 0xff, W1*H1);
     memset(buf2, 0x00, W2*H2);
     ret = run_test("max", buf1, buf2);
-    if (ret < 0)
-        goto end;
+    எனில் (ret < 0)
+        செல் end;
 
     /* Check for minimum SAD */
     memset(buf1, 0x90, W1*H1);
     memset(buf2, 0x90, W2*H2);
     ret = run_test("min", buf1, buf2);
-    if (ret < 0)
-        goto end;
+    எனில் (ret < 0)
+        செல் end;
 
     /* Exact buffer sizes, to check for overreads */
-    for (i = 1; i <= 5; i++) {
-        for (align = 0; align < 3; align++) {
-            int size1, size2;
+    க்கு (i = 1; i <= 5; i++) {
+        க்கு (align = 0; align < 3; align++) {
+            முழு size1, size2;
 
             av_freep(&buf1);
             av_freep(&buf2);
 
             size1 = size2 = 1 << (i << 1);
 
-            switch (align) {
-            case 0: size1++; size2++; break;
-            case 1:          size2++; break;
-            case 2:                   break;
+            தேர்வு (align) {
+            நிலை 0: size1++; size2++; நிறுத்து;
+            நிலை 1:          size2++; நிறுத்து;
+            நிலை 2:                   நிறுத்து;
             }
 
             buf1 = av_malloc(size1);
             buf2 = av_malloc(size2);
-            if (!buf1 || !buf2) {
+            எனில் (!buf1 || !buf2) {
                 fprintf(stderr, "malloc failure\n");
                 ret = 1;
-                goto end;
+                செல் end;
             }
             RANDOM_INIT(buf1, size1);
             RANDOM_INIT(buf2, size2);
             ret = run_single_test("small", buf1, 1<<i, buf2, 1<<i, align, i);
-            if (ret < 0)
-                goto end;
+            எனில் (ret < 0)
+                செல் end;
         }
     }
 
 end:
     av_free(buf1);
     av_free(buf2);
-    return ret;
+    திரும்பு ret;
 }

@@ -33,8 +33,8 @@
 #ifndef AVUTIL_UUID_H
 #define AVUTIL_UUID_H
 
-#include <stdint.h>
-#include <string.h>
+#அந்தர்பாவ <stdint.h>
+#அந்தர்பாவ <string.h>
 
 #define AV_PRI_UUID                          \
     "%02hhx%02hhx%02hhx%02hhx-%02hhx%02hhx-" \
@@ -57,7 +57,7 @@
 #define AV_UUID_LEN 16
 
 /* Binary representation of a UUID */
-typedef uint8_t AVUUID[AV_UUID_LEN];
+வகைவரை uint8_t AVUUID[AV_UUID_LEN];
 
 /**
  * Parses a string representation of a UUID formatted according to IETF RFC 4122
@@ -71,7 +71,7 @@ typedef uint8_t AVUUID[AV_UUID_LEN];
  * @param[out] uu  AVUUID
  * @return         A non-zero value in case of an error.
  */
-int av_uuid_parse(const char *in, AVUUID uu);
+முழு av_uuid_parse(மாறிலி எழுத்து *in, AVUUID uu);
 
 /**
  * Parses a URN representation of a UUID, as specified at IETF RFC 4122,
@@ -84,7 +84,7 @@ int av_uuid_parse(const char *in, AVUUID uu);
  * @param[out] uu  AVUUID
  * @return         A non-zero value in case of an error.
  */
-int av_uuid_urn_parse(const char *in, AVUUID uu);
+முழு av_uuid_urn_parse(மாறிலி எழுத்து *in, AVUUID uu);
 
 /**
  * Parses a string representation of a UUID formatted according to IETF RFC 4122
@@ -97,7 +97,7 @@ int av_uuid_urn_parse(const char *in, AVUUID uu);
  * @param[out] uu       AVUUID
  * @return              A non-zero value in case of an error.
  */
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu);
+முழு av_uuid_parse_range(மாறிலி எழுத்து *in_start, மாறிலி எழுத்து *in_end, AVUUID uu);
 
 /**
  * Serializes a AVUUID into a string representation according to IETF RFC 4122.
@@ -107,7 +107,7 @@ int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu);
  * @param[in]  uu  AVUUID
  * @param[out] out Pointer to an array of no less than 37 characters.
  */
-void av_uuid_unparse(const AVUUID uu, char *out);
+வெறுமை av_uuid_unparse(மாறிலி AVUUID uu, எழுத்து *out);
 
 /**
  * Compares two UUIDs for equality.
@@ -116,9 +116,9 @@ void av_uuid_unparse(const AVUUID uu, char *out);
  * @param[in]  uu2  AVUUID
  * @return          Nonzero if uu1 and uu2 are identical, 0 otherwise
  */
-static inline int av_uuid_equal(const AVUUID uu1, const AVUUID uu2)
+நிலையான உள்வரி முழு av_uuid_equal(மாறிலி AVUUID uu1, மாறிலி AVUUID uu2)
 {
-    return memcmp(uu1, uu2, AV_UUID_LEN) == 0;
+    திரும்பு memcmp(uu1, uu2, AV_UUID_LEN) == 0;
 }
 
 /**
@@ -127,7 +127,7 @@ static inline int av_uuid_equal(const AVUUID uu1, const AVUUID uu2)
  * @param[out]  dest  AVUUID
  * @param[in]   src   AVUUID
  */
-static inline void av_uuid_copy(AVUUID dest, const AVUUID src)
+நிலையான உள்வரி வெறுமை av_uuid_copy(AVUUID dest, மாறிலி AVUUID src)
 {
     memcpy(dest, src, AV_UUID_LEN);
 }
@@ -138,7 +138,7 @@ static inline void av_uuid_copy(AVUUID dest, const AVUUID src)
  *
  * @param[in,out]  uu  UUID to be set to the nil UUID
  */
-static inline void av_uuid_nil(AVUUID uu)
+நிலையான உள்வரி வெறுமை av_uuid_nil(AVUUID uu)
 {
     memset(uu, 0, AV_UUID_LEN);
 }

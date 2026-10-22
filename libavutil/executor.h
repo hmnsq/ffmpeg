@@ -21,26 +21,26 @@
 #ifndef AVUTIL_EXECUTOR_H
 #define AVUTIL_EXECUTOR_H
 
-typedef struct AVExecutor AVExecutor;
-typedef struct AVTask AVTask;
+வகைவரை கட்டமைப்பு AVExecutor AVExecutor;
+வகைவரை கட்டமைப்பு AVTask AVTask;
 
-struct AVTask {
+கட்டமைப்பு AVTask {
     AVTask *next;
 };
 
-typedef struct AVTaskCallbacks {
-    void *user_data;
+வகைவரை கட்டமைப்பு AVTaskCallbacks {
+    வெறுமை *user_data;
 
-    int local_context_size;
+    முழு local_context_size;
 
     // return 1 if a's priority > b's priority
-    int (*priority_higher)(const AVTask *a, const AVTask *b);
+    முழு (*priority_higher)(மாறிலி AVTask *a, மாறிலி AVTask *b);
 
     // task is ready for run
-    int (*ready)(const AVTask *t, void *user_data);
+    முழு (*ready)(மாறிலி AVTask *t, வெறுமை *user_data);
 
     // run the task
-    int (*run)(AVTask *t, void *local_context, void *user_data);
+    முழு (*run)(AVTask *t, வெறுமை *local_context, வெறுமை *user_data);
 } AVTaskCallbacks;
 
 /**
@@ -49,19 +49,19 @@ typedef struct AVTaskCallbacks {
  * @param thread_count worker thread number, 0 for run on caller's thread directly
  * @return return the executor
  */
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *callbacks, int thread_count);
+AVExecutor* av_executor_alloc(மாறிலி AVTaskCallbacks *callbacks, முழு thread_மொத்தம்);
 
 /**
  * Free executor
  * @param e  pointer to executor
  */
-void av_executor_free(AVExecutor **e);
+வெறுமை av_executor_free(AVExecutor **e);
 
 /**
  * Add task to executor
  * @param e pointer to executor
  * @param t pointer to task. If NULL, it will wakeup one work thread
  */
-void av_executor_execute(AVExecutor *e, AVTask *t);
+வெறுமை av_executor_execute(AVExecutor *e, AVTask *t);
 
 #endif //AVUTIL_EXECUTOR_H

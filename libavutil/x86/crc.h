@@ -21,32 +21,32 @@
 #ifndef AVUTIL_X86_CRC_H
 #define AVUTIL_X86_CRC_H
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/attributes_internal.h"
-#include "libavutil/avassert.h"
-#include "libavutil/cpu.h"
-#include "libavutil/crc.h"
-#include "libavutil/intreadwrite.h"
-#include "libavutil/x86/cpu.h"
+#அந்தர்பாவ "config.h"
+#அந்தர்பாவ "libavutil/attributes.h"
+#அந்தர்பாவ "libavutil/attributes_internal.h"
+#அந்தர்பாவ "libavutil/avassert.h"
+#அந்தர்பாவ "libavutil/cpu.h"
+#அந்தர்பாவ "libavutil/crc.h"
+#அந்தர்பாவ "libavutil/intreadwrite.h"
+#அந்தர்பாவ "libavutil/x86/cpu.h"
 
-#if HAVE_CLMUL_EXTERNAL
-#include "libavutil/crc_internal.h"
+#எனில் HAVE_CLMUL_EXTERNAL
+#அந்தர்பாவ "libavutil/crc_internal.h"
 
-FF_VISIBILITY_PUSH_HIDDEN
-uint32_t ff_crc_clmul(const AVCRC *ctx, uint32_t crc,
-                      const uint8_t *buffer, size_t length);
-uint32_t ff_crc_le_clmul(const AVCRC *ctx, uint32_t crc,
-                         const uint8_t *buffer, size_t length);
-FF_VISIBILITY_POP_HIDDEN
+FF_VISIBILITY_தள்ளு_HIDDEN
+uint32_t ff_crc_clmul(மாறிலி AVCRC *ctx, uint32_t crc,
+                      மாறிலி uint8_t *buffer, size_t length);
+uint32_t ff_crc_le_clmul(மாறிலி AVCRC *ctx, uint32_t crc,
+                         மாறிலி uint8_t *buffer, size_t length);
+FF_VISIBILITY_எடு_HIDDEN
 
-enum {
+எண்ணிக்கை {
     CRC_C    = 0,
     CLMUL_BE,
     CLMUL_LE,
 };
 
-static const AVCRC crc_table_clmul[AV_CRC_MAX][17] = {
+நிலையான மாறிலி AVCRC crc_table_clmul[AV_CRC_MAX][17] = {
     [AV_CRC_8_ATM] = {
         CLMUL_BE,
         0x32000000, 0x0, 0xbc000000, 0x0,
@@ -105,10 +105,10 @@ static const AVCRC crc_table_clmul[AV_CRC_MAX][17] = {
     },
 };
 
-static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+நிலையான உள்வரி வெறுமை crc_init_x86(AVCRC *ctx, முழு le, முழு bits, uint32_t poly, முழு ctx_size)
 {
     uint64_t poly_;
-    if (le) {
+    எனில் (le) {
         // convert the reversed representation to regular form
         poly = reverse(poly, bits) >> 1;
     }
@@ -117,7 +117,7 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
 
     uint64_t div;
     uint8_t *dst = (uint8_t*)(ctx + 1);
-    if (le) {
+    எனில் (le) {
         ctx[0] = CLMUL_LE;
         AV_WN64(dst,      xnmodp(4 * 128 - 32, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128 + 32, poly_, 32, &div, le));
@@ -128,7 +128,7 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
         AV_WN64(dst + 40, xnmodp(64, poly_, 32, &div, le));
         AV_WN64(dst + 48, div);
         AV_WN64(dst + 56, reverse(poly_ | (1ULL << 32), 32));
-    } else {
+    } இல்லையெனில் {
         ctx[0] = CLMUL_BE;
         AV_WN64(dst,      xnmodp(4 * 128 + 64, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128, poly_, 32, &div, le));
@@ -142,42 +142,42 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
 }
 #endif
 
-static inline const AVCRC *ff_crc_get_table_x86(AVCRCId crc_id)
+நிலையான உள்வரி மாறிலி AVCRC *ff_crc_get_table_x86(AVCRCId crc_id)
 {
-#if HAVE_CLMUL_EXTERNAL
-    int cpu_flags = av_get_cpu_flags();
+#எனில் HAVE_CLMUL_EXTERNAL
+    முழு cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_CLMUL(cpu_flags)) {
-        return crc_table_clmul[crc_id];
+    எனில் (EXTERNAL_CLMUL(cpu_flags)) {
+        திரும்பு crc_table_clmul[crc_id];
     }
 #endif
-    return NULL;
+    திரும்பு வெற்று;
 }
 
-static inline av_cold int ff_crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+நிலையான உள்வரி av_cold முழு ff_crc_init_x86(AVCRC *ctx, முழு le, முழு bits, uint32_t poly, முழு ctx_size)
 {
-#if HAVE_CLMUL_EXTERNAL
-    int cpu_flags = av_get_cpu_flags();
+#எனில் HAVE_CLMUL_EXTERNAL
+    முழு cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_CLMUL(cpu_flags)) {
+    எனில் (EXTERNAL_CLMUL(cpu_flags)) {
         crc_init_x86(ctx, le, bits, poly, ctx_size);
-        return 1;
+        திரும்பு 1;
     }
 #endif
-    return 0;
+    திரும்பு 0;
 }
 
-static inline uint32_t ff_crc_x86(const AVCRC *ctx, uint32_t crc,
-                                  const uint8_t *buffer, size_t length)
+நிலையான உள்வரி uint32_t ff_crc_x86(மாறிலி AVCRC *ctx, uint32_t crc,
+                                  மாறிலி uint8_t *buffer, size_t length)
 {
-    switch (ctx[0]) {
-#if HAVE_CLMUL_EXTERNAL
-    case CLMUL_BE: return ff_crc_clmul(ctx, crc, buffer, length);
-    case CLMUL_LE: return ff_crc_le_clmul(ctx, crc, buffer, length);
+    தேர்வு (ctx[0]) {
+#எனில் HAVE_CLMUL_EXTERNAL
+    நிலை CLMUL_BE: திரும்பு ff_crc_clmul(ctx, crc, buffer, length);
+    நிலை CLMUL_LE: திரும்பு ff_crc_le_clmul(ctx, crc, buffer, length);
 #endif
-    default: av_unreachable("x86 CRC only uses CLMUL_BE and CLMUL_LE");
+    இயல்பு: av_unreachable("x86 CRC only uses CLMUL_BE and CLMUL_LE");
     }
-    return 0;
+    திரும்பு 0;
 }
 
 #endif /* AVUTIL_X86_CRC_H */

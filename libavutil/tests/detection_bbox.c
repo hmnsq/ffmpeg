@@ -16,66 +16,66 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+#அந்தர்பாவ <stdint.h>
+#அந்தர்பாவ <stdio.h>
+#அந்தர்பாவ <string.h>
 
-#include "libavutil/detection_bbox.h"
-#include "libavutil/frame.h"
-#include "libavutil/macros.h"
-#include "libavutil/mem.h"
+#அந்தர்பாவ "libavutil/detection_bbox.h"
+#அந்தர்பாவ "libavutil/frame.h"
+#அந்தர்பாவ "libavutil/macros.h"
+#அந்தர்பாவ "libavutil/mem.h"
 
-int main(void)
+முழு முதன்மை(வெறுமை)
 {
     AVDetectionBBoxHeader *header;
     AVDetectionBBox *bbox;
     AVFrame *frame;
     size_t size;
 
-    static const unsigned int alloc_counts[] = { 0, 1, 4 };
+    நிலையான மாறிலி unsigned முழு alloc_counts[] = { 0, 1, 4 };
 
     /* av_detection_bbox_alloc - various counts */
     printf("Testing av_detection_bbox_alloc()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
-        unsigned int nb = alloc_counts[i];
+    க்கு (முழு i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
+        unsigned முழு nb = alloc_counts[i];
         header = av_detection_bbox_alloc(nb, &size);
-        if (header) {
+        எனில் (header) {
             printf("alloc %u: OK, nb=%u, size>0=%s\n",
                    nb, header->nb_bboxes, size > 0 ? "yes" : "no");
             av_free(header);
-        } else {
+        } இல்லையெனில் {
             printf("alloc %u: FAIL\n", nb);
         }
     }
 
     /* av_detection_bbox_alloc without size */
-    header = av_detection_bbox_alloc(1, NULL);
+    header = av_detection_bbox_alloc(1, வெற்று);
     printf("alloc (no size): %s\n", header ? "OK" : "FAIL");
     av_free(header);
 
     /* av_get_detection_bbox - pointer consistency and write/read back */
     printf("\nTesting av_get_detection_bbox()\n");
-    header = av_detection_bbox_alloc(3, NULL);
-    if (header) {
-        for (int i = 0; i < 3; i++) {
+    header = av_detection_bbox_alloc(3, வெற்று);
+    எனில் (header) {
+        க்கு (முழு i = 0; i < 3; i++) {
             bbox = av_get_detection_bbox(header, i);
-            if ((uint8_t *)bbox != (uint8_t *)header + header->bboxes_offset +
+            எனில் ((uint8_t *)bbox != (uint8_t *)header + header->bboxes_offset +
                                    (size_t)i * header->bbox_size)
                 printf("bbox %d: pointer inconsistent with bboxes_offset/bbox_size\n", i);
             bbox->x = i * 100;
             bbox->y = i * 200;
             bbox->w = 50 + i;
             bbox->h = 60 + i;
-            snprintf(bbox->detect_label, sizeof(bbox->detect_label),
+            snprintf(bbox->detect_label, அளவு(bbox->detect_label),
                      "obj%d", i);
             bbox->detect_confidence = (AVRational){ 90 + i, 100 };
         }
-        for (int i = 0; i < 3; i++) {
+        க்கு (முழு i = 0; i < 3; i++) {
             bbox = av_get_detection_bbox(header, i);
             printf("bbox %d: x=%d y=%d w=%d h=%d label=%s conf=%d/%d\n",
                    i, bbox->x, bbox->y, bbox->w, bbox->h,
                    bbox->detect_label,
-                   bbox->detect_confidence.num,
+                   bbox->detect_confidence.இலக்கம்,
                    bbox->detect_confidence.den);
         }
         av_free(header);
@@ -83,30 +83,30 @@ int main(void)
 
     /* classify fields */
     printf("\nTesting classify fields\n");
-    header = av_detection_bbox_alloc(1, NULL);
-    if (header) {
+    header = av_detection_bbox_alloc(1, வெற்று);
+    எனில் (header) {
         bbox = av_get_detection_bbox(header, 0);
-        bbox->classify_count = 2;
-        snprintf(bbox->classify_labels[0], sizeof(bbox->classify_labels[0]),
+        bbox->classify_மொத்தம் = 2;
+        snprintf(bbox->classify_labels[0], அளவு(bbox->classify_labels[0]),
                  "cat");
         bbox->classify_confidences[0] = (AVRational){ 95, 100 };
-        snprintf(bbox->classify_labels[1], sizeof(bbox->classify_labels[1]),
+        snprintf(bbox->classify_labels[1], அளவு(bbox->classify_labels[1]),
                  "animal");
         bbox->classify_confidences[1] = (AVRational){ 80, 100 };
-        printf("classify_count=%u\n", bbox->classify_count);
-        for (int i = 0; i < (int)bbox->classify_count; i++)
+        printf("classify_count=%u\n", bbox->classify_மொத்தம்);
+        க்கு (முழு i = 0; i < (முழு)bbox->classify_மொத்தம்; i++)
             printf("classify %d: %s %d/%d\n", i,
                    bbox->classify_labels[i],
-                   bbox->classify_confidences[i].num,
+                   bbox->classify_confidences[i].இலக்கம்,
                    bbox->classify_confidences[i].den);
         av_free(header);
     }
 
     /* header source field */
     printf("\nTesting source field\n");
-    header = av_detection_bbox_alloc(1, NULL);
-    if (header) {
-        snprintf(header->source, sizeof(header->source), "test_model_v1");
+    header = av_detection_bbox_alloc(1, வெற்று);
+    எனில் (header) {
+        snprintf(header->source, அளவு(header->source), "test_model_v1");
         printf("source: %s\n", header->source);
         av_free(header);
     }
@@ -114,19 +114,19 @@ int main(void)
     /* av_detection_bbox_create_side_data */
     printf("\nTesting av_detection_bbox_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    எனில் (frame) {
         header = av_detection_bbox_create_side_data(frame, 2);
-        if (header) {
+        எனில் (header) {
             printf("side_data: OK, nb=%u\n", header->nb_bboxes);
             bbox = av_get_detection_bbox(header, 0);
             bbox->x = 10;
             bbox->y = 20;
             printf("side_data bbox 0: x=%d y=%d\n", bbox->x, bbox->y);
-        } else {
+        } இல்லையெனில் {
             printf("side_data: FAIL\n");
         }
         av_frame_free(&frame);
     }
 
-    return 0;
+    திரும்பு 0;
 }

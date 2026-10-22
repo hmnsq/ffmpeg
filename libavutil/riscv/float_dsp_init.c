@@ -18,44 +18,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#அந்தர்பாவ <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
+#அந்தர்பாவ "config.h"
+#அந்தர்பாவ "libavutil/attributes.h"
+#அந்தர்பாவ "libavutil/cpu.h"
+#அந்தர்பாவ "libavutil/float_dsp.h"
 
-void ff_vector_fmul_rvv(float *dst, const float *src0, const float *src1,
-                         int len);
-void ff_vector_fmac_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_window_rvv(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
-void ff_vector_fmul_add_rvv(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
-void ff_vector_fmul_reverse_rvv(float *dst, const float *src0,
-                                 const float *src1, int len);
-void ff_butterflies_float_rvv(float *v1, float *v2, int len);
-float ff_scalarproduct_float_rvv(const float *v1, const float *v2, int len);
+வெறுமை ff_vector_fmul_rvv(தசம *dst, மாறிலி தசம *src0, மாறிலி தசம *src1,
+                         முழு len);
+வெறுமை ff_vector_fmac_scalar_rvv(தசம *dst, மாறிலி தசம *src, தசம mul,
+                                முழு len);
+வெறுமை ff_vector_fmul_scalar_rvv(தசம *dst, மாறிலி தசம *src, தசம mul,
+                                முழு len);
+வெறுமை ff_vector_fmul_window_rvv(தசம *dst, மாறிலி தசம *src0,
+                                மாறிலி தசம *src1, மாறிலி தசம *win, முழு len);
+வெறுமை ff_vector_fmul_add_rvv(தசம *dst, மாறிலி தசம *src0, மாறிலி தசம *src1,
+                             மாறிலி தசம *src2, முழு len);
+வெறுமை ff_vector_fmul_reverse_rvv(தசம *dst, மாறிலி தசம *src0,
+                                 மாறிலி தசம *src1, முழு len);
+வெறுமை ff_butterflies_float_rvv(தசம *v1, தசம *v2, முழு len);
+தசம ff_scalarproduct_float_rvv(மாறிலி தசம *v1, மாறிலி தசம *v2, முழு len);
 
-void ff_vector_dmul_rvv(double *dst, const double *src0, const double *src1,
-                         int len);
-void ff_vector_dmac_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-void ff_vector_dmul_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-double ff_scalarproduct_double_rvv(const double *v1, const double *v2,
+வெறுமை ff_vector_dmul_rvv(இரட்டை *dst, மாறிலி இரட்டை *src0, மாறிலி இரட்டை *src1,
+                         முழு len);
+வெறுமை ff_vector_dmac_scalar_rvv(இரட்டை *dst, மாறிலி இரட்டை *src, இரட்டை mul,
+                                முழு len);
+வெறுமை ff_vector_dmul_scalar_rvv(இரட்டை *dst, மாறிலி இரட்டை *src, இரட்டை mul,
+                                முழு len);
+இரட்டை ff_scalarproduct_double_rvv(மாறிலி இரட்டை *v1, மாறிலி இரட்டை *v2,
                                    size_t len);
 
-av_cold void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
+av_cold வெறுமை ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#எனில் HAVE_RVV
+    முழு flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVB) {
-        if (flags & AV_CPU_FLAG_RVV_F32) {
+    எனில் (flags & AV_CPU_FLAG_RVB) {
+        எனில் (flags & AV_CPU_FLAG_RVV_F32) {
             fdsp->vector_fmul = ff_vector_fmul_rvv;
             fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_rvv;
             fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_rvv;
@@ -66,7 +66,7 @@ av_cold void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
             fdsp->scalarproduct_float = ff_scalarproduct_float_rvv;
         }
 
-        if (flags & AV_CPU_FLAG_RVV_F64) {
+        எனில் (flags & AV_CPU_FLAG_RVV_F64) {
             fdsp->vector_dmul = ff_vector_dmul_rvv;
             fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_rvv;
             fdsp->vector_dmul_scalar = ff_vector_dmul_scalar_rvv;

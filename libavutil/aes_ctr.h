@@ -28,19 +28,19 @@
  * @{
  */
 
-#include <stdint.h>
+#அந்தர்பாவ <stdint.h>
 
-#include "attributes.h"
+#அந்தர்பாவ "attributes.h"
 
-#define AES_CTR_KEY_SIZE (16)
+#define AES_CTR_சாவி_SIZE (16)
 #define AES_CTR_IV_SIZE (8)
 
-struct AVAESCTR;
+கட்டமைப்பு AVAESCTR;
 
 /**
  * Allocate an AVAESCTR context.
  */
-struct AVAESCTR *av_aes_ctr_alloc(void);
+கட்டமைப்பு AVAESCTR *av_aes_ctr_alloc(வெறுமை);
 
 /**
  * Initialize an AVAESCTR context.
@@ -48,14 +48,14 @@ struct AVAESCTR *av_aes_ctr_alloc(void);
  * @param a The AVAESCTR context to initialize
  * @param key encryption key, must have a length of AES_CTR_KEY_SIZE
  */
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key);
+முழு av_aes_ctr_init(கட்டமைப்பு AVAESCTR *a, மாறிலி uint8_t *சாவி);
 
 /**
  * Release an AVAESCTR context.
  *
  * @param a The AVAESCTR context
  */
-void av_aes_ctr_free(struct AVAESCTR *a);
+வெறுமை av_aes_ctr_free(கட்டமைப்பு AVAESCTR *a);
 
 /**
  * Process a buffer using a previously initialized context.
@@ -65,32 +65,32 @@ void av_aes_ctr_free(struct AVAESCTR *a);
  * @param src source array, can be equal to dst
  * @param size the size of src and dst
  */
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int size);
+வெறுமை av_aes_ctr_crypt(கட்டமைப்பு AVAESCTR *a, uint8_t *dst, மாறிலி uint8_t *src, முழு size);
 
 /**
  * Get the current iv
  */
-const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a);
+மாறிலி uint8_t* av_aes_ctr_get_iv(கட்டமைப்பு AVAESCTR *a);
 
 /**
  * Generate a random iv
  */
-void av_aes_ctr_set_random_iv(struct AVAESCTR *a);
+வெறுமை av_aes_ctr_set_random_iv(கட்டமைப்பு AVAESCTR *a);
 
 /**
  * Forcefully change the 8-byte iv
  */
-void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv);
+வெறுமை av_aes_ctr_set_iv(கட்டமைப்பு AVAESCTR *a, மாறிலி uint8_t* iv);
 
 /**
  * Forcefully change the "full" 16-byte iv, including the counter
  */
-void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv);
+வெறுமை av_aes_ctr_set_full_iv(கட்டமைப்பு AVAESCTR *a, மாறிலி uint8_t* iv);
 
 /**
  * Increment the top 64 bit of the iv (performed after each frame)
  */
-void av_aes_ctr_increment_iv(struct AVAESCTR *a);
+வெறுமை av_aes_ctr_increment_iv(கட்டமைப்பு AVAESCTR *a);
 
 /**
  * @}

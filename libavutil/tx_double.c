@@ -17,5 +17,5 @@
  */
 
 #define TX_DOUBLE
-#include "tx_priv.h"
-#include "tx_template.c"
+#அந்தர்பாவ "tx_priv.h"
+#அந்தர்பாவ "tx_template.c"

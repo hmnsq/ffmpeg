@@ -24,10 +24,10 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_TREE_H
-#define AVUTIL_TREE_H
+#ifndef AVUTIL_மரம்_H
+#define AVUTIL_மரம்_H
 
-#include "attributes.h"
+#அந்தர்பாவ "attributes.h"
 
 /**
  * @addtogroup lavu_tree AVTree
@@ -41,13 +41,13 @@
  */
 
 
-struct AVTreeNode;
-extern const int av_tree_node_size;
+கட்டமைப்பு AVTree_முனை;
+வெளி மாறிலி முழு av_மரம்_முனை_size;
 
 /**
  * Allocate an AVTreeNode.
  */
-struct AVTreeNode *av_tree_node_alloc(void);
+கட்டமைப்பு AVTree_முனை *av_மரம்_முனை_alloc(வெறுமை);
 
 /**
  * Find an element.
@@ -63,8 +63,8 @@ struct AVTreeNode *av_tree_node_alloc(void);
  * @return An element with cmp(key, elem) == 0 or NULL if no such element
  *         exists in the tree.
  */
-void *av_tree_find(const struct AVTreeNode *root, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2]);
+வெறுமை *av_மரம்_find(மாறிலி கட்டமைப்பு AVTree_முனை *வேர், வெறுமை *சாவி,
+                   முழு (*cmp)(மாறிலி வெறுமை *சாவி, மாறிலி வெறுமை *b), வெறுமை *next[2]);
 
 /**
  * Insert or remove an element.
@@ -110,11 +110,11 @@ void *av_tree_find(const struct AVTreeNode *root, void *key,
  *         Which one it is depends on the tree state and the implementation. You
  *         should make no assumptions that it's one or the other in the code.
  */
-void *av_tree_insert(struct AVTreeNode **rootp, void *key,
-                     int (*cmp)(const void *key, const void *b),
-                     struct AVTreeNode **next);
+வெறுமை *av_மரம்_செருகு(கட்டமைப்பு AVTree_முனை **rootp, வெறுமை *சாவி,
+                     முழு (*cmp)(மாறிலி வெறுமை *சாவி, மாறிலி வெறுமை *b),
+                     கட்டமைப்பு AVTree_முனை **next);
 
-void av_tree_destroy(struct AVTreeNode *t);
+வெறுமை av_மரம்_destroy(கட்டமைப்பு AVTree_முனை *t);
 
 /**
  * Apply enu(opaque, &elem) to all the elements in the tree in a given range.
@@ -126,9 +126,9 @@ void av_tree_destroy(struct AVTreeNode *t);
  * @note The cmp function should use the same ordering used to construct the
  *       tree.
  */
-void av_tree_enumerate(struct AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem));
+வெறுமை av_மரம்_enumerate(கட்டமைப்பு AVTree_முனை *t, வெறுமை *opaque,
+                       முழு (*cmp)(வெறுமை *opaque, வெறுமை *elem),
+                       முழு (*enu)(வெறுமை *opaque, வெறுமை *elem));
 
 /**
  * @}

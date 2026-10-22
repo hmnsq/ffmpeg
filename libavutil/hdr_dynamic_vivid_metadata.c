@@ -18,28 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "hdr_dynamic_vivid_metadata.h"
-#include "mem.h"
+#அந்தர்பாவ "hdr_dynamic_vivid_metadata.h"
+#அந்தர்பாவ "mem.h"
 
 AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *size)
 {
-    AVDynamicHDRVivid *hdr_vivid = av_mallocz(sizeof(AVDynamicHDRVivid));
+    AVDynamicHDRVivid *hdr_vivid = av_mallocz(அளவு(AVDynamicHDRVivid));
 
-    if (size)
-        *size = hdr_vivid ? sizeof(*hdr_vivid) : 0;
+    எனில் (size)
+        *size = hdr_vivid ? அளவு(*hdr_vivid) : 0;
 
-    return hdr_vivid;
+    திரும்பு hdr_vivid;
 }
 
 AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_DYNAMIC_HDR_VIVID,
-                                                        sizeof(AVDynamicHDRVivid));
-    if (!side_data)
-        return NULL;
+                                                        அளவு(AVDynamicHDRVivid));
+    எனில் (!side_data)
+        திரும்பு வெற்று;
 
-    memset(side_data->data, 0, sizeof(AVDynamicHDRVivid));
+    memset(side_data->data, 0, அளவு(AVDynamicHDRVivid));
 
-    return (AVDynamicHDRVivid *)side_data->data;
+    திரும்பு (AVDynamicHDRVivid *)side_data->data;
 }

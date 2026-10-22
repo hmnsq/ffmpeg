@@ -24,31 +24,31 @@
 #ifndef AVUTIL_TABLEGEN_H
 #define AVUTIL_TABLEGEN_H
 
-#include <math.h>
+#அந்தர்பாவ <math.h>
 
 // we lack some functions on all host platforms, and we don't care about
 // performance and/or strict ISO C semantics as it's performed at build time
-static inline double ff_cbrt(double x)
+நிலையான உள்வரி இரட்டை ff_cbrt(இரட்டை x)
 {
-    return x < 0 ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
+    திரும்பு x < 0 ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
 }
 #define cbrt ff_cbrt
 
-static inline double ff_rint(double x)
+நிலையான உள்வரி இரட்டை ff_rint(இரட்டை x)
 {
-    return x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
+    திரும்பு x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
 }
 #define rint ff_rint
 
-static inline long long ff_llrint(double x)
+நிலையான உள்வரி long long ff_llrint(இரட்டை x)
 {
-    return rint(x);
+    திரும்பு rint(x);
 }
 #define llrint ff_llrint
 
-static inline long ff_lrint(double x)
+நிலையான உள்வரி long ff_lrint(இரட்டை x)
 {
-    return rint(x);
+    திரும்பு rint(x);
 }
 #define lrint ff_lrint
 

@@ -22,7 +22,7 @@
 #ifndef AVUTIL_TWOFISH_H
 #define AVUTIL_TWOFISH_H
 
-#include <stdint.h>
+#அந்தர்பாவ <stdint.h>
 
 
 /**
@@ -33,15 +33,15 @@
   * @{
   */
 
-extern const int av_twofish_size;
+வெளி மாறிலி முழு av_twofish_size;
 
-struct AVTWOFISH;
+கட்டமைப்பு AVTWOFISH;
 
 /**
   * Allocate an AVTWOFISH context
   * To free the struct: av_free(ptr)
   */
-struct AVTWOFISH *av_twofish_alloc(void);
+கட்டமைப்பு AVTWOFISH *av_twofish_alloc(வெறுமை);
 
 /**
   * Initialize an AVTWOFISH context.
@@ -50,7 +50,7 @@ struct AVTWOFISH *av_twofish_alloc(void);
   * @param key a key of size ranging from 1 to 32 bytes used for encryption/decryption
   * @param key_bits number of keybits: 128, 192, 256 If less than the required, padded with zeroes to nearest valid value; return value is 0 if key_bits is 128/192/256, -1 if less than 0, 1 otherwise
  */
-int av_twofish_init(struct AVTWOFISH *ctx, const uint8_t *key, int key_bits);
+முழு av_twofish_init(கட்டமைப்பு AVTWOFISH *ctx, மாறிலி uint8_t *சாவி, முழு சாவி_bits);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context
@@ -62,7 +62,7 @@ int av_twofish_init(struct AVTWOFISH *ctx, const uint8_t *key, int key_bits);
   * @param iv initialization vector for CBC mode, NULL for ECB mode
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_twofish_crypt(struct AVTWOFISH *ctx, uint8_t *dst, const uint8_t *src, int count, uint8_t* iv, int decrypt);
+வெறுமை av_twofish_crypt(கட்டமைப்பு AVTWOFISH *ctx, uint8_t *dst, மாறிலி uint8_t *src, முழு மொத்தம், uint8_t* iv, முழு decrypt);
 
 /**
  * @}

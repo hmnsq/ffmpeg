@@ -29,109 +29,109 @@
 #ifdef __GNUC__
 #    define AV_GCC_VERSION_AT_LEAST(x,y) (__GNUC__ > (x) || __GNUC__ == (x) && __GNUC_MINOR__ >= (y))
 #    define AV_GCC_VERSION_AT_MOST(x,y)  (__GNUC__ < (x) || __GNUC__ == (x) && __GNUC_MINOR__ <= (y))
-#else
+#இல்லையெனில்
 #    define AV_GCC_VERSION_AT_LEAST(x,y) 0
 #    define AV_GCC_VERSION_AT_MOST(x,y)  0
 #endif
 
 #ifdef __has_builtin
 #    define AV_HAS_BUILTIN(x) __has_builtin(x)
-#else
+#இல்லையெனில்
 #    define AV_HAS_BUILTIN(x) 0
 #endif
 
 #ifdef __has_attribute
 #    define AV_HAS_ATTRIBUTE(x) __has_attribute(x)
-#else
+#இல்லையெனில்
 #    define AV_HAS_ATTRIBUTE(x) 0
 #endif
 
-#if defined(__cplusplus) && \
+#எனில் defined(__cplusplus) && \
     defined(__has_cpp_attribute) && \
     __cplusplus >= 201103L
 #    define AV_HAS_STD_ATTRIBUTE(x) __has_cpp_attribute(x)
-#elif !defined(__cplusplus) && \
+#அல்லதெனில் !defined(__cplusplus) && \
       defined(__has_c_attribute) && \
       defined(__STDC_VERSION__) && \
       __STDC_VERSION__ >= 202311L
 #    define AV_HAS_STD_ATTRIBUTE(x) __has_c_attribute(x)
-#else
+#இல்லையெனில்
 #    define AV_HAS_STD_ATTRIBUTE(x) 0
 #endif
 
-#if AV_HAS_STD_ATTRIBUTE(fallthrough)
+#எனில் AV_HAS_STD_ATTRIBUTE(fallthrough)
 #    define av_fallthrough [[fallthrough]]
-#elif AV_HAS_ATTRIBUTE(fallthrough)
+#அல்லதெனில் AV_HAS_ATTRIBUTE(fallthrough)
 #    define av_fallthrough __attribute__((fallthrough))
-#else
-#    define av_fallthrough do {} while(0)
+#இல்லையெனில்
+#    define av_fallthrough செய் {} போது(0)
 #endif
 
 #ifndef av_always_inline
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
-#    define av_always_inline __attribute__((always_inline)) inline
-#elif defined(_MSC_VER)
+#எனில் AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
+#    define av_always_inline __attribute__((always_inline)) உள்வரி
+#அல்லதெனில் defined(_MSC_VER)
 #    define av_always_inline __forceinline
-#else
-#    define av_always_inline inline
+#இல்லையெனில்
+#    define av_always_inline உள்வரி
 #endif
 #endif
 
 #ifndef av_extern_inline
-#if defined(__ICL) && __ICL >= 1210 || defined(__GNUC_STDC_INLINE__)
-#    define av_extern_inline extern inline
-#else
-#    define av_extern_inline inline
+#எனில் defined(__ICL) && __ICL >= 1210 || defined(__GNUC_STDC_INLINE__)
+#    define av_extern_inline வெளி உள்வரி
+#இல்லையெனில்
+#    define av_extern_inline உள்வரி
 #endif
 #endif
 
-#if AV_HAS_STD_ATTRIBUTE(nodiscard)
+#எனில் AV_HAS_STD_ATTRIBUTE(nodiscard)
 #    define av_warn_unused_result [[nodiscard]]
-#elif AV_GCC_VERSION_AT_LEAST(3,4) || defined(__clang__)
+#அல்லதெனில் AV_GCC_VERSION_AT_LEAST(3,4) || defined(__clang__)
 #    define av_warn_unused_result __attribute__((warn_unused_result))
-#else
+#இல்லையெனில்
 #    define av_warn_unused_result
 #endif
 
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
+#எனில் AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
 #    define av_noinline __attribute__((noinline))
-#elif defined(_MSC_VER)
+#அல்லதெனில் defined(_MSC_VER)
 #    define av_noinline __declspec(noinline)
-#else
+#இல்லையெனில்
 #    define av_noinline
 #endif
 
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
+#எனில் AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
 #    define av_pure __attribute__((pure))
-#else
+#இல்லையெனில்
 #    define av_pure
 #endif
 
-#if AV_GCC_VERSION_AT_LEAST(2,6) || defined(__clang__)
-#    define av_const __attribute__((const))
-#else
+#எனில் AV_GCC_VERSION_AT_LEAST(2,6) || defined(__clang__)
+#    define av_const __attribute__((மாறிலி))
+#இல்லையெனில்
 #    define av_const
 #endif
 
-#if AV_GCC_VERSION_AT_LEAST(4,3) || defined(__clang__)
+#எனில் AV_GCC_VERSION_AT_LEAST(4,3) || defined(__clang__)
 #    define av_cold __attribute__((cold))
-#else
+#இல்லையெனில்
 #    define av_cold
 #endif
 
-#if (AV_GCC_VERSION_AT_LEAST(4,1) && !defined(__clang__ )) || AV_HAS_ATTRIBUTE(flatten)
+#எனில் (AV_GCC_VERSION_AT_LEAST(4,1) && !defined(__clang__ )) || AV_HAS_ATTRIBUTE(flatten)
 #    define av_flatten __attribute__((flatten))
-#else
+#இல்லையெனில்
 #    define av_flatten
 #endif
 
-#if AV_HAS_STD_ATTRIBUTE(deprecated)
+#எனில் AV_HAS_STD_ATTRIBUTE(deprecated)
 #    define attribute_deprecated [[deprecated]]
-#elif AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
+#அல்லதெனில் AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
 #    define attribute_deprecated __attribute__((deprecated))
-#elif defined(_MSC_VER)
+#அல்லதெனில் defined(_MSC_VER)
 #    define attribute_deprecated __declspec(deprecated)
-#else
+#இல்லையெனில்
 #    define attribute_deprecated
 #endif
 
@@ -141,28 +141,28 @@
  * scheduled for removal.
  */
 #ifndef AV_NOWARN_DEPRECATED
-#if AV_GCC_VERSION_AT_LEAST(4,6) || defined(__clang__)
+#எனில் AV_GCC_VERSION_AT_LEAST(4,6) || defined(__clang__)
 #    define AV_NOWARN_DEPRECATED(code) \
         _Pragma("GCC diagnostic push") \
         _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"") \
         code \
         _Pragma("GCC diagnostic pop")
-#elif defined(_MSC_VER)
+#அல்லதெனில் defined(_MSC_VER)
 #    define AV_NOWARN_DEPRECATED(code) \
-        __pragma(warning(push)) \
+        __pragma(warning(தள்ளு)) \
         __pragma(warning(disable : 4996)) \
         code; \
-        __pragma(warning(pop))
-#else
+        __pragma(warning(எடு))
+#இல்லையெனில்
 #    define AV_NOWARN_DEPRECATED(code) code
 #endif
 #endif
 
-#if AV_HAS_STD_ATTRIBUTE(maybe_unused)
+#எனில் AV_HAS_STD_ATTRIBUTE(maybe_unused)
 #    define av_unused [[maybe_unused]]
-#elif defined(__GNUC__) || defined(__clang__)
+#அல்லதெனில் defined(__GNUC__) || defined(__clang__)
 #    define av_unused __attribute__((unused))
-#else
+#இல்லையெனில்
 #    define av_unused
 #endif
 
@@ -171,27 +171,27 @@
  * away.  This is useful for variables accessed only from inline
  * assembler without the compiler being aware.
  */
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
+#எனில் AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
 #    define av_used __attribute__((used))
-#else
+#இல்லையெனில்
 #    define av_used
 #endif
 
-#if AV_GCC_VERSION_AT_LEAST(3,3) || defined(__clang__)
+#எனில் AV_GCC_VERSION_AT_LEAST(3,3) || defined(__clang__)
 #   define av_alias __attribute__((may_alias))
-#else
+#இல்லையெனில்
 #   define av_alias
 #endif
 
-#if (defined(__GNUC__) || defined(__clang__)) && !defined(__INTEL_COMPILER)
+#எனில் (defined(__GNUC__) || defined(__clang__)) && !defined(__INTEL_COMPILER)
 #    define av_uninit(x) x=x
-#else
+#இல்லையெனில்
 #    define av_uninit(x) x
 #endif
 
-#if defined(__GNUC__) || defined(__clang__)
+#எனில் defined(__GNUC__) || defined(__clang__)
 #    define av_builtin_constant_p __builtin_constant_p
-#else
+#இல்லையெனில்
 #    define av_builtin_constant_p(x) 0
 #endif
 
@@ -202,33 +202,33 @@
 
 #ifdef __MINGW_PRINTF_FORMAT
 #    define AV_PRINTF_FMT __MINGW_PRINTF_FORMAT
-#elif AV_HAS_ATTRIBUTE(format)
+#அல்லதெனில் AV_HAS_ATTRIBUTE(format)
 #    define AV_PRINTF_FMT __printf__
 #endif
 
 #ifdef __MINGW_SCANF_FORMAT
 #    define AV_SCANF_FMT __MINGW_SCANF_FORMAT
-#elif AV_HAS_ATTRIBUTE(format)
+#அல்லதெனில் AV_HAS_ATTRIBUTE(format)
 #    define AV_SCANF_FMT __scanf__
 #endif
 
 #ifdef AV_PRINTF_FMT
 #    define av_printf_format(fmtpos, attrpos) __attribute__((format(AV_PRINTF_FMT, fmtpos, attrpos)))
-#else
+#இல்லையெனில்
 #    define av_printf_format(fmtpos, attrpos)
 #endif
 
 #ifdef AV_SCANF_FMT
 #    define av_scanf_format(fmtpos, attrpos) __attribute__((format(AV_SCANF_FMT, fmtpos, attrpos)))
-#else
+#இல்லையெனில்
 #    define av_scanf_format(fmtpos, attrpos)
 #endif
 
-#if AV_HAS_STD_ATTRIBUTE(noreturn)
+#எனில் AV_HAS_STD_ATTRIBUTE(noreturn)
 #    define av_noreturn [[noreturn]]
-#elif AV_GCC_VERSION_AT_LEAST(2,5) || defined(__clang__)
+#அல்லதெனில் AV_GCC_VERSION_AT_LEAST(2,5) || defined(__clang__)
 #    define av_noreturn __attribute__((noreturn))
-#else
+#இல்லையெனில்
 #    define av_noreturn
 #endif
 

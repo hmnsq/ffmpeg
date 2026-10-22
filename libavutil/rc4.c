@@ -21,41 +21,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
-#include "rc4.h"
+#அந்தர்பாவ "error.h"
+#அந்தர்பாவ "macros.h"
+#அந்தர்பாவ "mem.h"
+#அந்தர்பாவ "rc4.h"
 
-AVRC4 *av_rc4_alloc(void)
+AVRC4 *av_rc4_alloc(வெறுமை)
 {
-    return av_mallocz(sizeof(struct AVRC4));
+    திரும்பு av_mallocz(அளவு(கட்டமைப்பு AVRC4));
 }
 
-int av_rc4_init(AVRC4 *r, const uint8_t *key, int key_bits, int decrypt) {
-    int i, j;
+முழு av_rc4_init(AVRC4 *r, மாறிலி uint8_t *சாவி, முழு சாவி_bits, முழு decrypt) {
+    முழு i, j;
     uint8_t y;
     uint8_t *state = r->state;
-    int keylen = key_bits >> 3;
-    if (key_bits & 7)
-        return AVERROR(EINVAL);
-    for (i = 0; i < 256; i++)
+    முழு keylen = சாவி_bits >> 3;
+    எனில் (சாவி_bits & 7)
+        திரும்பு AVERROR(EINVAL);
+    க்கு (i = 0; i < 256; i++)
         state[i] = i;
     y = 0;
     // j is i % keylen
-    for (j = 0, i = 0; i < 256; i++, j++) {
-        if (j == keylen) j = 0;
-        y += state[i] + key[j];
+    க்கு (j = 0, i = 0; i < 256; i++, j++) {
+        எனில் (j == keylen) j = 0;
+        y += state[i] + சாவி[j];
         FFSWAP(uint8_t, state[i], state[y]);
     }
     r->x = 1;
     r->y = state[1];
-    return 0;
+    திரும்பு 0;
 }
 
-void av_rc4_crypt(AVRC4 *r, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt) {
+வெறுமை av_rc4_crypt(AVRC4 *r, uint8_t *dst, மாறிலி uint8_t *src, முழு மொத்தம், uint8_t *iv, முழு decrypt) {
     uint8_t x = r->x, y = r->y;
     uint8_t *state = r->state;
-    while (count-- > 0) {
+    போது (மொத்தம்-- > 0) {
         uint8_t sum = state[x] + state[y];
         FFSWAP(uint8_t, state[x], state[y]);
         *dst++ = src ? *src++ ^ state[sum] : state[sum];

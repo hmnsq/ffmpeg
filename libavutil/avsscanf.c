@@ -21,26 +21,26 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <errno.h>
-#include <limits.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <float.h>
+#அந்தர்பாவ <errno.h>
+#அந்தர்பாவ <limits.h>
+#அந்தர்பாவ <math.h>
+#அந்தர்பாவ <stdarg.h>
+#அந்தர்பாவ <stddef.h>
+#அந்தர்பாவ <stdint.h>
+#அந்தர்பாவ <stdio.h>
+#அந்தர்பாவ <string.h>
+#அந்தர்பாவ <float.h>
 
-#include "avstring.h"
+#அந்தர்பாவ "avstring.h"
 
-typedef struct FFFILE {
+வகைவரை கட்டமைப்பு FFFILE {
     size_t buf_size;
-    unsigned char *buf;
-    unsigned char *rpos, *rend;
-    unsigned char *shend;
+    unsigned எழுத்து *buf;
+    unsigned எழுத்து *rpos, *rend;
+    unsigned எழுத்து *shend;
     ptrdiff_t shlim, shcnt;
-    void *cookie;
-    size_t (*read)(struct FFFILE *, unsigned char *, size_t);
+    வெறுமை *cookie;
+    size_t (*பட)(கட்டமைப்பு FFFILE *, unsigned எழுத்து *, size_t);
 } FFFILE;
 
 #define SIZE_hh -2
@@ -52,70 +52,70 @@ typedef struct FFFILE {
 
 #define shcnt(f) ((f)->shcnt + ((f)->rpos - (f)->buf))
 
-static int fftoread(FFFILE *f)
+நிலையான முழு fftoread(FFFILE *f)
 {
     f->rpos = f->rend = f->buf + f->buf_size;
-    return 0;
+    திரும்பு 0;
 }
 
-static size_t ffstring_read(FFFILE *f, unsigned char *buf, size_t len)
+நிலையான size_t ffstring_read(FFFILE *f, unsigned எழுத்து *buf, size_t len)
 {
-    char *src = f->cookie;
+    எழுத்து *src = f->cookie;
     size_t k = len+256;
-    char *end = memchr(src, 0, k);
+    எழுத்து *end = memchr(src, 0, k);
 
-    if (end) k = end-src;
-    if (k < len) len = k;
+    எனில் (end) k = end-src;
+    எனில் (k < len) len = k;
     memcpy(buf, src, len);
-    f->rpos = (void *)(src+len);
-    f->rend = (void *)(src+k);
+    f->rpos = (வெறுமை *)(src+len);
+    f->rend = (வெறுமை *)(src+k);
     f->cookie = src+k;
 
-    return len;
+    திரும்பு len;
 }
 
-static int ffuflow(FFFILE *f)
+நிலையான முழு ffuflow(FFFILE *f)
 {
-    unsigned char c;
-    if (!fftoread(f) && f->read(f, &c, 1)==1) return c;
-    return EOF;
+    unsigned எழுத்து c;
+    எனில் (!fftoread(f) && f->பட(f, &c, 1)==1) திரும்பு c;
+    திரும்பு EOF;
 }
 
-static void ffshlim(FFFILE *f, ptrdiff_t lim)
+நிலையான வெறுமை ffshlim(FFFILE *f, ptrdiff_t lim)
 {
     f->shlim = lim;
     f->shcnt = f->buf - f->rpos;
     /* If lim is nonzero, rend must be a valid pointer. */
-    if (lim && f->rend - f->rpos > lim)
+    எனில் (lim && f->rend - f->rpos > lim)
         f->shend = f->rpos + lim;
-    else
+    இல்லையெனில்
         f->shend = f->rend;
 }
 
-static int ffshgetc(FFFILE *f)
+நிலையான முழு ffshgetc(FFFILE *f)
 {
-    int c;
+    முழு c;
     ptrdiff_t cnt = shcnt(f);
-    if (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
+    எனில் (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
         f->shcnt = f->buf - f->rpos + cnt;
         f->shend = 0;
-        return EOF;
+        திரும்பு EOF;
     }
     cnt++;
-    if (f->shlim && f->rend - f->rpos > f->shlim - cnt)
+    எனில் (f->shlim && f->rend - f->rpos > f->shlim - cnt)
         f->shend = f->rpos + (f->shlim - cnt);
-    else
+    இல்லையெனில்
         f->shend = f->rend;
     f->shcnt = f->buf - f->rpos + cnt;
-    if (f->rpos[-1] != c) f->rpos[-1] = c;
-    return c;
+    எனில் (f->rpos[-1] != c) f->rpos[-1] = c;
+    திரும்பு c;
 }
 
 #define shlim(f, lim) ffshlim((f), (lim))
 #define shgetc(f) (((f)->rpos < (f)->shend) ? *(f)->rpos++ : ffshgetc(f))
-#define shunget(f) ((f)->shend ? (void)(f)->rpos-- : (void)0)
+#define shunget(f) ((f)->shend ? (வெறுமை)(f)->rpos-- : (வெறுமை)0)
 
-static const unsigned char table[] = { -1,
+நிலையான மாறிலி unsigned எழுத்து table[] = { -1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
@@ -134,106 +134,106 @@ static const unsigned char table[] = { -1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 };
 
-static unsigned long long ffintscan(FFFILE *f, unsigned base, int pok, unsigned long long lim)
+நிலையான unsigned long long ffintscan(FFFILE *f, unsigned base, முழு pok, unsigned long long lim)
 {
-    const unsigned char *val = table+1;
-    int c, neg=0;
+    மாறிலி unsigned எழுத்து *val = table+1;
+    முழு c, neg=0;
     unsigned x;
     unsigned long long y;
-    if (base > 36 || base == 1) {
+    எனில் (base > 36 || base == 1) {
         errno = EINVAL;
-        return 0;
+        திரும்பு 0;
     }
-    while (av_isspace((c=shgetc(f))));
-    if (c=='+' || c=='-') {
+    போது (av_isspace((c=shgetc(f))));
+    எனில் (c=='+' || c=='-') {
         neg = -(c=='-');
         c = shgetc(f);
     }
-    if ((base == 0 || base == 16) && c=='0') {
+    எனில் ((base == 0 || base == 16) && c=='0') {
         c = shgetc(f);
-        if ((c|32)=='x') {
+        எனில் ((c|32)=='x') {
             c = shgetc(f);
-            if (val[c]>=16) {
+            எனில் (val[c]>=16) {
                 shunget(f);
-                if (pok) shunget(f);
-                else shlim(f, 0);
-                return 0;
+                எனில் (pok) shunget(f);
+                இல்லையெனில் shlim(f, 0);
+                திரும்பு 0;
             }
             base = 16;
-        } else if (base == 0) {
+        } இல்லையெனில் எனில் (base == 0) {
             base = 8;
         }
-    } else {
-        if (base == 0) base = 10;
-        if (val[c] >= base) {
+    } இல்லையெனில் {
+        எனில் (base == 0) base = 10;
+        எனில் (val[c] >= base) {
             shunget(f);
             shlim(f, 0);
             errno = EINVAL;
-            return 0;
+            திரும்பு 0;
         }
     }
-    if (base == 10) {
-        for (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
+    எனில் (base == 10) {
+        க்கு (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
             x = x*10 + (c-'0');
-        for (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
+        க்கு (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
             y = y*10 + (c-'0');
-        if (c-'0'>=10U) goto done;
-    } else if (!(base & base-1)) {
-        int bs = "\0\1\2\4\7\3\6\5"[(0x17*base)>>5&7];
-        for (x=0; val[c]<base && x<=UINT_MAX/32; c=shgetc(f))
+        எனில் (c-'0'>=10U) செல் done;
+    } இல்லையெனில் எனில் (!(base & base-1)) {
+        முழு bs = "\0\1\2\4\7\3\6\5"[(0x17*base)>>5&7];
+        க்கு (x=0; val[c]<base && x<=UINT_MAX/32; c=shgetc(f))
             x = x<<bs | val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX>>bs; c=shgetc(f))
+        க்கு (y=x; val[c]<base && y<=ULLONG_MAX>>bs; c=shgetc(f))
             y = y<<bs | val[c];
-    } else {
-        for (x=0; val[c]<base && x<=UINT_MAX/36-1; c=shgetc(f))
+    } இல்லையெனில் {
+        க்கு (x=0; val[c]<base && x<=UINT_MAX/36-1; c=shgetc(f))
             x = x*base + val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX/base && base*y<=ULLONG_MAX-val[c]; c=shgetc(f))
+        க்கு (y=x; val[c]<base && y<=ULLONG_MAX/base && base*y<=ULLONG_MAX-val[c]; c=shgetc(f))
             y = y*base + val[c];
     }
-    if (val[c]<base) {
-        for (; val[c]<base; c=shgetc(f));
+    எனில் (val[c]<base) {
+        க்கு (; val[c]<base; c=shgetc(f));
         errno = ERANGE;
         y = lim;
-        if (lim&1) neg = 0;
+        எனில் (lim&1) neg = 0;
     }
 done:
     shunget(f);
-    if (y>=lim) {
-        if (!(lim&1) && !neg) {
+    எனில் (y>=lim) {
+        எனில் (!(lim&1) && !neg) {
             errno = ERANGE;
-            return lim-1;
-        } else if (y>lim) {
+            திரும்பு lim-1;
+        } இல்லையெனில் எனில் (y>lim) {
             errno = ERANGE;
-            return lim;
+            திரும்பு lim;
         }
     }
-    return (y^neg)-neg;
+    திரும்பு (y^neg)-neg;
 }
 
-static long long scanexp(FFFILE *f, int pok)
+நிலையான long long scanexp(FFFILE *f, முழு pok)
 {
-    int c;
-    int x;
+    முழு c;
+    முழு x;
     long long y;
-    int neg = 0;
+    முழு neg = 0;
 
     c = shgetc(f);
-    if (c=='+' || c=='-') {
+    எனில் (c=='+' || c=='-') {
         neg = (c=='-');
         c = shgetc(f);
-        if (c-'0'>=10U && pok) shunget(f);
+        எனில் (c-'0'>=10U && pok) shunget(f);
     }
-    if (c-'0'>=10U) {
+    எனில் (c-'0'>=10U) {
         shunget(f);
-        return LLONG_MIN;
+        திரும்பு LLONG_MIN;
     }
-    for (x=0; c-'0'<10U && x<INT_MAX/10; c = shgetc(f))
+    க்கு (x=0; c-'0'<10U && x<INT_MAX/10; c = shgetc(f))
         x = 10*x + (c-'0');
-    for (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
+    க்கு (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
         y = 10*y + (c-'0');
-    for (; c-'0'<10U; c = shgetc(f));
+    க்கு (; c-'0'<10U; c = shgetc(f));
     shunget(f);
-    return neg ? -y : y;
+    திரும்பு neg ? -y : y;
 }
 
 #define LD_B1B_DIG 2
@@ -241,100 +241,100 @@ static long long scanexp(FFFILE *f, int pok)
 #define KMAX 128
 #define MASK (KMAX-1)
 
-static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
+நிலையான இரட்டை decfloat(FFFILE *f, முழு c, முழு bits, முழு emin, முழு sign, முழு pok)
 {
     uint32_t x[KMAX];
-    static const uint32_t th[] = { LD_B1B_MAX };
-    int i, j, k, a, z;
+    நிலையான மாறிலி uint32_t th[] = { LD_B1B_MAX };
+    முழு i, j, k, a, z;
     long long lrp=0, dc=0;
     long long e10=0;
-    int lnz = 0;
-    int gotdig = 0, gotrad = 0;
-    int rp;
-    int e2;
-    int emax = -emin-bits+3;
-    int denormal = 0;
-    double y;
-    double frac=0;
-    double bias=0;
-    static const int p10s[] = { 10, 100, 1000, 10000,
+    முழு lnz = 0;
+    முழு gotdig = 0, gotrad = 0;
+    முழு rp;
+    முழு e2;
+    முழு emax = -emin-bits+3;
+    முழு denormal = 0;
+    இரட்டை y;
+    இரட்டை frac=0;
+    இரட்டை bias=0;
+    நிலையான மாறிலி முழு p10s[] = { 10, 100, 1000, 10000,
         100000, 1000000, 10000000, 100000000 };
 
     j=0;
     k=0;
 
     /* Don't let leading zeros consume buffer space */
-    for (; c=='0'; c = shgetc(f)) gotdig=1;
-    if (c=='.') {
+    க்கு (; c=='0'; c = shgetc(f)) gotdig=1;
+    எனில் (c=='.') {
         gotrad = 1;
-        for (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
+        க்கு (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
     }
 
     x[0] = 0;
-    for (; c-'0'<10U || c=='.'; c = shgetc(f)) {
-        if (c == '.') {
-            if (gotrad) break;
+    க்கு (; c-'0'<10U || c=='.'; c = shgetc(f)) {
+        எனில் (c == '.') {
+            எனில் (gotrad) நிறுத்து;
             gotrad = 1;
             lrp = dc;
-        } else if (k < KMAX-3) {
+        } இல்லையெனில் எனில் (k < KMAX-3) {
             dc++;
-            if (c!='0') lnz = dc;
-            if (j) x[k] = x[k]*10 + c-'0';
-            else x[k] = c-'0';
-            if (++j==9) {
+            எனில் (c!='0') lnz = dc;
+            எனில் (j) x[k] = x[k]*10 + c-'0';
+            இல்லையெனில் x[k] = c-'0';
+            எனில் (++j==9) {
                 k++;
                 j=0;
             }
             gotdig=1;
-        } else {
+        } இல்லையெனில் {
             dc++;
-            if (c!='0') {
+            எனில் (c!='0') {
                 lnz = (KMAX-4)*9;
                 x[KMAX-4] |= 1;
             }
         }
     }
-    if (!gotrad) lrp=dc;
+    எனில் (!gotrad) lrp=dc;
 
-    if (gotdig && (c|32)=='e') {
+    எனில் (gotdig && (c|32)=='e') {
         e10 = scanexp(f, pok);
-        if (e10 == LLONG_MIN) {
-            if (pok) {
+        எனில் (e10 == LLONG_MIN) {
+            எனில் (pok) {
                 shunget(f);
-            } else {
+            } இல்லையெனில் {
                 shlim(f, 0);
-                return 0;
+                திரும்பு 0;
             }
             e10 = 0;
         }
         lrp += e10;
-    } else if (c>=0) {
+    } இல்லையெனில் எனில் (c>=0) {
         shunget(f);
     }
-    if (!gotdig) {
+    எனில் (!gotdig) {
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        திரும்பு 0;
     }
 
     /* Handle zero specially to avoid nasty special cases later */
-    if (!x[0]) return sign * 0.0;
+    எனில் (!x[0]) திரும்பு sign * 0.0;
 
     /* Optimize small integers (w/no exponent) and over/under-flow */
-    if (lrp==dc && dc<10 && (bits>30 || x[0]>>bits==0))
-        return sign * (double)x[0];
-    if (lrp > -emin/2) {
+    எனில் (lrp==dc && dc<10 && (bits>30 || x[0]>>bits==0))
+        திரும்பு sign * (இரட்டை)x[0];
+    எனில் (lrp > -emin/2) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        திரும்பு sign * DBL_MAX * DBL_MAX;
     }
-    if (lrp < emin-2*DBL_MANT_DIG) {
+    எனில் (lrp < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        திரும்பு sign * DBL_MIN * DBL_MIN;
     }
 
     /* Align incomplete final B1B digit */
-    if (j) {
-        for (; j<9; j++) x[k]*=10;
+    எனில் (j) {
+        க்கு (; j<9; j++) x[k]*=10;
         k++;
         j=0;
     }
@@ -345,56 +345,56 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     rp = lrp;
 
     /* Optimize small to mid-size integers (even in exp. notation) */
-    if (lnz<9 && lnz<=rp && rp < 18) {
-        int bitlim;
-        if (rp == 9) return sign * (double)x[0];
-        if (rp < 9) return sign * (double)x[0] / p10s[8-rp];
-        bitlim = bits-3*(int)(rp-9);
-        if (bitlim>30 || x[0]>>bitlim==0)
-            return sign * (double)x[0] * p10s[rp-10];
+    எனில் (lnz<9 && lnz<=rp && rp < 18) {
+        முழு bitlim;
+        எனில் (rp == 9) திரும்பு sign * (இரட்டை)x[0];
+        எனில் (rp < 9) திரும்பு sign * (இரட்டை)x[0] / p10s[8-rp];
+        bitlim = bits-3*(முழு)(rp-9);
+        எனில் (bitlim>30 || x[0]>>bitlim==0)
+            திரும்பு sign * (இரட்டை)x[0] * p10s[rp-10];
     }
 
     /* Drop trailing zeros */
-    for (; !x[z-1]; z--);
+    க்கு (; !x[z-1]; z--);
 
     /* Align radix point to B1B digit boundary */
-    if (rp % 9) {
-        int rpm9 = rp>=0 ? rp%9 : rp%9+9;
-        int p10 = p10s[8-rpm9];
+    எனில் (rp % 9) {
+        முழு rpm9 = rp>=0 ? rp%9 : rp%9+9;
+        முழு p10 = p10s[8-rpm9];
         uint32_t carry = 0;
-        for (k=a; k!=z; k++) {
+        க்கு (k=a; k!=z; k++) {
             uint32_t tmp = x[k] % p10;
             x[k] = x[k]/p10 + carry;
             carry = 1000000000/p10 * tmp;
-            if (k==a && !x[k]) {
+            எனில் (k==a && !x[k]) {
                 a = (a+1 & MASK);
                 rp -= 9;
             }
         }
-        if (carry) x[z++] = carry;
+        எனில் (carry) x[z++] = carry;
         rp += 9-rpm9;
     }
 
     /* Upscale until desired number of bits are left of radix point */
-    while (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
+    போது (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
         uint32_t carry = 0;
         e2 -= 29;
-        for (k=(z-1 & MASK); ; k=(k-1 & MASK)) {
+        க்கு (k=(z-1 & MASK); ; k=(k-1 & MASK)) {
             uint64_t tmp = ((uint64_t)x[k] << 29) + carry;
-            if (tmp > 1000000000) {
+            எனில் (tmp > 1000000000) {
                 carry = tmp / 1000000000;
                 x[k] = tmp % 1000000000;
-            } else {
+            } இல்லையெனில் {
                 carry = 0;
                 x[k] = tmp;
             }
-            if (k==(z-1 & MASK) && k!=a && !x[k]) z = k;
-            if (k==a) break;
+            எனில் (k==(z-1 & MASK) && k!=a && !x[k]) z = k;
+            எனில் (k==a) நிறுத்து;
         }
-        if (carry) {
+        எனில் (carry) {
             rp += 9;
             a = (a-1 & MASK);
-            if (a == z) {
+            எனில் (a == z) {
                 z = (z-1 & MASK);
                 x[z-1 & MASK] |= x[z];
             }
@@ -403,56 +403,56 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     }
 
     /* Downscale until exactly number of bits are left of radix point */
-    for (;;) {
+    க்கு (;;) {
         uint32_t carry = 0;
-        int sh = 1;
-        for (i=0; i<LD_B1B_DIG; i++) {
+        முழு sh = 1;
+        க்கு (i=0; i<LD_B1B_DIG; i++) {
             k = (a+i & MASK);
-            if (k == z || x[k] < th[i]) {
+            எனில் (k == z || x[k] < th[i]) {
                 i=LD_B1B_DIG;
-                break;
+                நிறுத்து;
             }
-            if (x[a+i & MASK] > th[i]) break;
+            எனில் (x[a+i & MASK] > th[i]) நிறுத்து;
         }
-        if (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) break;
+        எனில் (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) நிறுத்து;
         /* FIXME: find a way to compute optimal sh */
-        if (rp > 9+9*LD_B1B_DIG) sh = 9;
+        எனில் (rp > 9+9*LD_B1B_DIG) sh = 9;
         e2 += sh;
-        for (k=a; k!=z; k=(k+1 & MASK)) {
+        க்கு (k=a; k!=z; k=(k+1 & MASK)) {
             uint32_t tmp = x[k] & (1<<sh)-1;
             x[k] = (x[k]>>sh) + carry;
             carry = (1000000000>>sh) * tmp;
-            if (k==a && !x[k]) {
+            எனில் (k==a && !x[k]) {
                 a = (a+1 & MASK);
                 i--;
                 rp -= 9;
             }
         }
-        if (carry) {
-            if ((z+1 & MASK) != a) {
+        எனில் (carry) {
+            எனில் ((z+1 & MASK) != a) {
                 x[z] = carry;
                 z = (z+1 & MASK);
-            } else x[z-1 & MASK] |= 1;
+            } இல்லையெனில் x[z-1 & MASK] |= 1;
         }
     }
 
     /* Assemble desired bits into floating point variable */
-    for (y=i=0; i<LD_B1B_DIG; i++) {
-        if ((a+i & MASK)==z) x[(z=(z+1 & MASK))-1 & MASK] = 0;
+    க்கு (y=i=0; i<LD_B1B_DIG; i++) {
+        எனில் ((a+i & MASK)==z) x[(z=(z+1 & MASK))-1 & MASK] = 0;
         y = 1000000000.0L * y + x[a+i & MASK];
     }
 
     y *= sign;
 
     /* Limit precision for denormal results */
-    if (bits > DBL_MANT_DIG+e2-emin) {
+    எனில் (bits > DBL_MANT_DIG+e2-emin) {
         bits = DBL_MANT_DIG+e2-emin;
-        if (bits<0) bits=0;
+        எனில் (bits<0) bits=0;
         denormal = 1;
     }
 
     /* Calculate bias term to force rounding, move out lower bits */
-    if (bits < DBL_MANT_DIG) {
+    எனில் (bits < DBL_MANT_DIG) {
         bias = copysign(scalbn(1, 2*DBL_MANT_DIG-bits-1), y);
         frac = fmod(y, scalbn(1, DBL_MANT_DIG-bits));
         y -= frac;
@@ -460,399 +460,399 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     }
 
     /* Process tail of decimal input so it can affect rounding */
-    if ((a+i & MASK) != z) {
+    எனில் ((a+i & MASK) != z) {
         uint32_t t = x[a+i & MASK];
-        if (t < 500000000 && (t || (a+i+1 & MASK) != z))
+        எனில் (t < 500000000 && (t || (a+i+1 & MASK) != z))
             frac += 0.25*sign;
-        else if (t > 500000000)
+        இல்லையெனில் எனில் (t > 500000000)
             frac += 0.75*sign;
-        else if (t == 500000000) {
-            if ((a+i+1 & MASK) == z)
+        இல்லையெனில் எனில் (t == 500000000) {
+            எனில் ((a+i+1 & MASK) == z)
                 frac += 0.5*sign;
-            else
+            இல்லையெனில்
                 frac += 0.75*sign;
         }
-        if (DBL_MANT_DIG-bits >= 2 && !fmod(frac, 1))
+        எனில் (DBL_MANT_DIG-bits >= 2 && !fmod(frac, 1))
             frac++;
     }
 
     y += frac;
     y -= bias;
 
-    if ((e2+DBL_MANT_DIG & INT_MAX) > emax-5) {
-        if (fabs(y) >= pow(2, DBL_MANT_DIG)) {
-            if (denormal && bits==DBL_MANT_DIG+e2-emin)
+    எனில் ((e2+DBL_MANT_DIG & INT_MAX) > emax-5) {
+        எனில் (fabs(y) >= pow(2, DBL_MANT_DIG)) {
+            எனில் (denormal && bits==DBL_MANT_DIG+e2-emin)
                 denormal = 0;
             y *= 0.5;
             e2++;
         }
-        if (e2+DBL_MANT_DIG>emax || (denormal && frac))
+        எனில் (e2+DBL_MANT_DIG>emax || (denormal && frac))
             errno = ERANGE;
     }
 
-    return scalbn(y, e2);
+    திரும்பு scalbn(y, e2);
 }
 
-static double hexfloat(FFFILE *f, int bits, int emin, int sign, int pok)
+நிலையான இரட்டை hexfloat(FFFILE *f, முழு bits, முழு emin, முழு sign, முழு pok)
 {
     uint32_t x = 0;
-    double y = 0;
-    double scale = 1;
-    double bias = 0;
-    int gottail = 0, gotrad = 0, gotdig = 0;
+    இரட்டை y = 0;
+    இரட்டை scale = 1;
+    இரட்டை bias = 0;
+    முழு gottail = 0, gotrad = 0, gotdig = 0;
     long long rp = 0;
     long long dc = 0;
     long long e2 = 0;
-    int d;
-    int c;
+    முழு d;
+    முழு c;
 
     c = shgetc(f);
 
     /* Skip leading zeros */
-    for (; c=='0'; c = shgetc(f))
+    க்கு (; c=='0'; c = shgetc(f))
         gotdig = 1;
 
-    if (c=='.') {
+    எனில் (c=='.') {
         gotrad = 1;
         c = shgetc(f);
         /* Count zeros after the radix point before significand */
-        for (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
+        க்கு (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
     }
 
-    for (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
-        if (c=='.') {
-            if (gotrad) break;
+    க்கு (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
+        எனில் (c=='.') {
+            எனில் (gotrad) நிறுத்து;
             rp = dc;
             gotrad = 1;
-        } else {
+        } இல்லையெனில் {
             gotdig = 1;
-            if (c > '9') d = (c|32)+10-'a';
-            else d = c-'0';
-            if (dc<8) {
+            எனில் (c > '9') d = (c|32)+10-'a';
+            இல்லையெனில் d = c-'0';
+            எனில் (dc<8) {
                 x = x*16 + d;
-            } else if (dc < DBL_MANT_DIG/4+1) {
+            } இல்லையெனில் எனில் (dc < DBL_MANT_DIG/4+1) {
                 y += d*(scale/=16);
-            } else if (d && !gottail) {
+            } இல்லையெனில் எனில் (d && !gottail) {
                 y += 0.5*scale;
                 gottail = 1;
             }
             dc++;
         }
     }
-    if (!gotdig) {
+    எனில் (!gotdig) {
         shunget(f);
-        if (pok) {
+        எனில் (pok) {
             shunget(f);
-            if (gotrad) shunget(f);
-        } else {
+            எனில் (gotrad) shunget(f);
+        } இல்லையெனில் {
             shlim(f, 0);
         }
-        return sign * 0.0;
+        திரும்பு sign * 0.0;
     }
-    if (!gotrad) rp = dc;
-    while (dc<8) x *= 16, dc++;
-    if ((c|32)=='p') {
+    எனில் (!gotrad) rp = dc;
+    போது (dc<8) x *= 16, dc++;
+    எனில் ((c|32)=='p') {
         e2 = scanexp(f, pok);
-        if (e2 == LLONG_MIN) {
-            if (pok) {
+        எனில் (e2 == LLONG_MIN) {
+            எனில் (pok) {
                 shunget(f);
-            } else {
+            } இல்லையெனில் {
                 shlim(f, 0);
-                return 0;
+                திரும்பு 0;
             }
             e2 = 0;
         }
-    } else {
+    } இல்லையெனில் {
         shunget(f);
     }
     e2 += 4*rp - 32;
 
-    if (!x) return sign * 0.0;
-    if (e2 > -emin) {
+    எனில் (!x) திரும்பு sign * 0.0;
+    எனில் (e2 > -emin) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        திரும்பு sign * DBL_MAX * DBL_MAX;
     }
-    if (e2 < emin-2*DBL_MANT_DIG) {
+    எனில் (e2 < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        திரும்பு sign * DBL_MIN * DBL_MIN;
     }
 
-    while (x < 0x80000000) {
-        if (y>=0.5) {
+    போது (x < 0x80000000) {
+        எனில் (y>=0.5) {
             x += x + 1;
             y += y - 1;
-        } else {
+        } இல்லையெனில் {
             x += x;
             y += y;
         }
         e2--;
     }
 
-    if (bits > 32+e2-emin) {
+    எனில் (bits > 32+e2-emin) {
         bits = 32+e2-emin;
-        if (bits<0) bits=0;
+        எனில் (bits<0) bits=0;
     }
 
-    if (bits < DBL_MANT_DIG)
+    எனில் (bits < DBL_MANT_DIG)
         bias = copysign(scalbn(1, 32+DBL_MANT_DIG-bits-1), sign);
 
-    if (bits<32 && y && !(x&1)) x++, y=0;
+    எனில் (bits<32 && y && !(x&1)) x++, y=0;
 
-    y = bias + sign*(double)x + sign*y;
+    y = bias + sign*(இரட்டை)x + sign*y;
     y -= bias;
 
-    if (!y) errno = ERANGE;
+    எனில் (!y) errno = ERANGE;
 
-    return scalbn(y, e2);
+    திரும்பு scalbn(y, e2);
 }
 
-static double fffloatscan(FFFILE *f, int prec, int pok)
+நிலையான இரட்டை fffloatscan(FFFILE *f, முழு prec, முழு pok)
 {
-    int sign = 1;
+    முழு sign = 1;
     size_t i;
-    int bits;
-    int emin;
-    int c;
+    முழு bits;
+    முழு emin;
+    முழு c;
 
-    switch (prec) {
-    case 0:
+    தேர்வு (prec) {
+    நிலை 0:
         bits = FLT_MANT_DIG;
         emin = FLT_MIN_EXP-bits;
-        break;
-    case 1:
+        நிறுத்து;
+    நிலை 1:
         bits = DBL_MANT_DIG;
         emin = DBL_MIN_EXP-bits;
-        break;
-    case 2:
+        நிறுத்து;
+    நிலை 2:
         bits = DBL_MANT_DIG;
         emin = DBL_MIN_EXP-bits;
-        break;
-    default:
-        return 0;
+        நிறுத்து;
+    இயல்பு:
+        திரும்பு 0;
     }
 
-    while (av_isspace((c = shgetc(f))));
+    போது (av_isspace((c = shgetc(f))));
 
-    if (c=='+' || c=='-') {
+    எனில் (c=='+' || c=='-') {
         sign -= 2*(c=='-');
         c = shgetc(f);
     }
 
-    for (i=0; i<8 && (c|32)=="infinity"[i]; i++)
-        if (i<7) c = shgetc(f);
-    if (i==3 || i==8 || (i>3 && pok)) {
-        if (i!=8) {
+    க்கு (i=0; i<8 && (c|32)=="infinity"[i]; i++)
+        எனில் (i<7) c = shgetc(f);
+    எனில் (i==3 || i==8 || (i>3 && pok)) {
+        எனில் (i!=8) {
             shunget(f);
-            if (pok) for (; i>3; i--) shunget(f);
+            எனில் (pok) க்கு (; i>3; i--) shunget(f);
         }
-        return sign * INFINITY;
+        திரும்பு sign * INFINITY;
     }
-    if (!i) for (i=0; i<3 && (c|32)=="nan"[i]; i++)
-        if (i<2) c = shgetc(f);
-    if (i==3) {
-        if (shgetc(f) != '(') {
+    எனில் (!i) க்கு (i=0; i<3 && (c|32)=="nan"[i]; i++)
+        எனில் (i<2) c = shgetc(f);
+    எனில் (i==3) {
+        எனில் (shgetc(f) != '(') {
             shunget(f);
-            return NAN;
+            திரும்பு NAN;
         }
-        for (i=1; ; i++) {
+        க்கு (i=1; ; i++) {
             c = shgetc(f);
-            if (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
-                continue;
-            if (c==')') return NAN;
+            எனில் (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
+                தொடர்;
+            எனில் (c==')') திரும்பு NAN;
             shunget(f);
-            if (!pok) {
+            எனில் (!pok) {
                 errno = EINVAL;
                 shlim(f, 0);
-                return 0;
+                திரும்பு 0;
             }
-            while (i--) shunget(f);
-            return NAN;
+            போது (i--) shunget(f);
+            திரும்பு NAN;
         }
     }
 
-    if (i) {
+    எனில் (i) {
         shunget(f);
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        திரும்பு 0;
     }
 
-    if (c=='0') {
+    எனில் (c=='0') {
         c = shgetc(f);
-        if ((c|32) == 'x')
-            return hexfloat(f, bits, emin, sign, pok);
+        எனில் ((c|32) == 'x')
+            திரும்பு hexfloat(f, bits, emin, sign, pok);
         shunget(f);
         c = '0';
     }
 
-    return decfloat(f, c, bits, emin, sign, pok);
+    திரும்பு decfloat(f, c, bits, emin, sign, pok);
 }
 
-static void *arg_n(va_list ap, unsigned int n)
+நிலையான வெறுமை *arg_n(va_list ap, unsigned முழு n)
 {
-    void *p;
-    unsigned int i;
+    வெறுமை *p;
+    unsigned முழு i;
     va_list ap2;
     va_copy(ap2, ap);
-    for (i=n; i>1; i--) va_arg(ap2, void *);
-    p = va_arg(ap2, void *);
+    க்கு (i=n; i>1; i--) va_arg(ap2, வெறுமை *);
+    p = va_arg(ap2, வெறுமை *);
     va_end(ap2);
-    return p;
+    திரும்பு p;
 }
 
-static void store_int(void *dest, int size, unsigned long long i)
+நிலையான வெறுமை store_int(வெறுமை *dest, முழு size, unsigned long long i)
 {
-    if (!dest) return;
-    switch (size) {
-    case SIZE_hh:
-        *(char *)dest = i;
-        break;
-    case SIZE_h:
+    எனில் (!dest) திரும்பு;
+    தேர்வு (size) {
+    நிலை SIZE_hh:
+        *(எழுத்து *)dest = i;
+        நிறுத்து;
+    நிலை SIZE_h:
         *(short *)dest = i;
-        break;
-    case SIZE_def:
-        *(int *)dest = i;
-        break;
-    case SIZE_l:
+        நிறுத்து;
+    நிலை SIZE_def:
+        *(முழு *)dest = i;
+        நிறுத்து;
+    நிலை SIZE_l:
         *(long *)dest = i;
-        break;
-    case SIZE_ll:
+        நிறுத்து;
+    நிலை SIZE_ll:
         *(long long *)dest = i;
-        break;
+        நிறுத்து;
     }
 }
 
-static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
+நிலையான முழு ff_vfscanf(FFFILE *f, மாறிலி எழுத்து *fmt, va_list ap)
 {
-    int width;
-    int size;
-    int base;
-    const unsigned char *p;
-    int c, t;
-    char *s;
-    void *dest=NULL;
-    int invert;
-    int matches=0;
+    முழு width;
+    முழு size;
+    முழு base;
+    மாறிலி unsigned எழுத்து *p;
+    முழு c, t;
+    எழுத்து *s;
+    வெறுமை *dest=வெற்று;
+    முழு invert;
+    முழு matches=0;
     unsigned long long x;
-    double y;
+    இரட்டை y;
     ptrdiff_t pos = 0;
-    unsigned char scanset[257];
+    unsigned எழுத்து scanset[257];
     size_t i;
 
-    for (p=(const unsigned char *)fmt; *p; p++) {
+    க்கு (p=(மாறிலி unsigned எழுத்து *)fmt; *p; p++) {
 
-        if (av_isspace(*p)) {
-            while (av_isspace(p[1])) p++;
+        எனில் (av_isspace(*p)) {
+            போது (av_isspace(p[1])) p++;
             shlim(f, 0);
-            while (av_isspace(shgetc(f)));
+            போது (av_isspace(shgetc(f)));
             shunget(f);
             pos += shcnt(f);
-            continue;
+            தொடர்;
         }
-        if (*p != '%' || p[1] == '%') {
+        எனில் (*p != '%' || p[1] == '%') {
             shlim(f, 0);
-            if (*p == '%') {
+            எனில் (*p == '%') {
                 p++;
-                while (av_isspace((c=shgetc(f))));
-            } else {
+                போது (av_isspace((c=shgetc(f))));
+            } இல்லையெனில் {
                 c = shgetc(f);
             }
-            if (c!=*p) {
+            எனில் (c!=*p) {
                 shunget(f);
-                if (c<0) goto input_fail;
-                goto match_fail;
+                எனில் (c<0) செல் உள்ளீடு_fail;
+                செல் match_fail;
             }
             pos += shcnt(f);
-            continue;
+            தொடர்;
         }
 
         p++;
-        if (*p=='*') {
+        எனில் (*p=='*') {
             dest = 0; p++;
-        } else if (av_isdigit(*p) && p[1]=='$') {
+        } இல்லையெனில் எனில் (av_isdigit(*p) && p[1]=='$') {
             dest = arg_n(ap, *p-'0'); p+=2;
-        } else {
-            dest = va_arg(ap, void *);
+        } இல்லையெனில் {
+            dest = va_arg(ap, வெறுமை *);
         }
 
-        for (width=0; av_isdigit(*p); p++) {
+        க்கு (width=0; av_isdigit(*p); p++) {
             width = 10*width + *p - '0';
         }
 
-        if (*p=='m') {
+        எனில் (*p=='m') {
             s = 0;
             p++;
         }
 
         size = SIZE_def;
-        switch (*p++) {
-        case 'h':
-            if (*p == 'h') p++, size = SIZE_hh;
-            else size = SIZE_h;
-            break;
-        case 'l':
-            if (*p == 'l') p++, size = SIZE_ll;
-            else size = SIZE_l;
-            break;
-        case 'j':
+        தேர்வு (*p++) {
+        நிலை 'h':
+            எனில் (*p == 'h') p++, size = SIZE_hh;
+            இல்லையெனில் size = SIZE_h;
+            நிறுத்து;
+        நிலை 'l':
+            எனில் (*p == 'l') p++, size = SIZE_ll;
+            இல்லையெனில் size = SIZE_l;
+            நிறுத்து;
+        நிலை 'j':
             size = SIZE_ll;
-            break;
-        case 'z':
-        case 't':
+            நிறுத்து;
+        நிலை 'z':
+        நிலை 't':
             size = SIZE_l;
-            break;
-        case 'L':
+            நிறுத்து;
+        நிலை 'L':
             size = SIZE_L;
-            break;
-        case 'd': case 'i': case 'o': case 'u': case 'x':
-        case 'a': case 'e': case 'f': case 'g':
-        case 'A': case 'E': case 'F': case 'G': case 'X':
-        case 's': case 'c': case '[':
-        case 'S': case 'C':
-        case 'p': case 'n':
+            நிறுத்து;
+        நிலை 'd': நிலை 'i': நிலை 'o': நிலை 'u': நிலை 'x':
+        நிலை 'a': நிலை 'e': நிலை 'f': நிலை 'g':
+        நிலை 'A': நிலை 'E': நிலை 'F': நிலை 'G': நிலை 'X':
+        நிலை 's': நிலை 'c': நிலை '[':
+        நிலை 'S': நிலை 'C':
+        நிலை 'p': நிலை 'n':
             p--;
-            break;
-        default:
-            goto fmt_fail;
+            நிறுத்து;
+        இயல்பு:
+            செல் fmt_fail;
         }
 
         t = *p;
 
         /* C or S */
-        if ((t&0x2f) == 3) {
+        எனில் ((t&0x2f) == 3) {
             t |= 32;
             size = SIZE_l;
         }
 
-        switch (t) {
-            case 'c':
-                if (width < 1) width = 1;
-                break;
-            case '[':
-                break;
-            case 'n':
+        தேர்வு (t) {
+            நிலை 'c':
+                எனில் (width < 1) width = 1;
+                நிறுத்து;
+            நிலை '[':
+                நிறுத்து;
+            நிலை 'n':
                 store_int(dest, size, pos);
                 /* do not increment match count, etc! */
-                continue;
-            default:
+                தொடர்;
+            இயல்பு:
                 shlim(f, 0);
-                while (av_isspace(shgetc(f)));
+                போது (av_isspace(shgetc(f)));
                 shunget(f);
                 pos += shcnt(f);
         }
 
         shlim(f, width);
-        if (shgetc(f) < 0) goto input_fail;
+        எனில் (shgetc(f) < 0) செல் உள்ளீடு_fail;
         shunget(f);
 
-        switch (t) {
-            case 's':
-            case 'c':
-            case '[':
-                if (t == 'c' || t == 's') {
-                    memset(scanset, -1, sizeof scanset);
+        தேர்வு (t) {
+            நிலை 's':
+            நிலை 'c':
+            நிலை '[':
+                எனில் (t == 'c' || t == 's') {
+                    memset(scanset, -1, அளவு scanset);
                     scanset[0] = 0;
-                    if (t == 's') {
+                    எனில் (t == 's') {
                         scanset[1 + '\t'] = 0;
                         scanset[1 + '\n'] = 0;
                         scanset[1 + '\v'] = 0;
@@ -860,110 +860,110 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
                         scanset[1 + '\r'] = 0;
                         scanset[1 + ' ' ] = 0;
                     }
-                } else {
-                    if (*++p == '^') p++, invert = 1;
-                    else invert = 0;
-                    memset(scanset, invert, sizeof scanset);
+                } இல்லையெனில் {
+                    எனில் (*++p == '^') p++, invert = 1;
+                    இல்லையெனில் invert = 0;
+                    memset(scanset, invert, அளவு scanset);
                     scanset[0] = 0;
-                    if (*p == '-') p++, scanset[1+'-'] = 1-invert;
-                    else if (*p == ']') p++, scanset[1+']'] = 1-invert;
-                    for (; *p != ']'; p++) {
-                        if (!*p) goto fmt_fail;
-                        if (*p=='-' && p[1] && p[1] != ']')
-                            for (c=p++[-1]; c<*p; c++)
+                    எனில் (*p == '-') p++, scanset[1+'-'] = 1-invert;
+                    இல்லையெனில் எனில் (*p == ']') p++, scanset[1+']'] = 1-invert;
+                    க்கு (; *p != ']'; p++) {
+                        எனில் (!*p) செல் fmt_fail;
+                        எனில் (*p=='-' && p[1] && p[1] != ']')
+                            க்கு (c=p++[-1]; c<*p; c++)
                                 scanset[1+c] = 1-invert;
                         scanset[1+*p] = 1-invert;
                     }
                 }
                 s = 0;
                 i = 0;
-                if ((s = dest)) {
-                    while (scanset[(c=shgetc(f))+1])
+                எனில் ((s = dest)) {
+                    போது (scanset[(c=shgetc(f))+1])
                         s[i++] = c;
-                } else {
-                    while (scanset[(c=shgetc(f))+1]);
+                } இல்லையெனில் {
+                    போது (scanset[(c=shgetc(f))+1]);
                 }
                 shunget(f);
-                if (!shcnt(f)) goto match_fail;
-                if (t == 'c' && shcnt(f) != width) goto match_fail;
-                if (t != 'c') {
-                    if (s) s[i] = 0;
+                எனில் (!shcnt(f)) செல் match_fail;
+                எனில் (t == 'c' && shcnt(f) != width) செல் match_fail;
+                எனில் (t != 'c') {
+                    எனில் (s) s[i] = 0;
                 }
-                break;
-            case 'p':
-            case 'X':
-            case 'x':
+                நிறுத்து;
+            நிலை 'p':
+            நிலை 'X':
+            நிலை 'x':
                 base = 16;
-                goto int_common;
-            case 'o':
+                செல் int_common;
+            நிலை 'o':
                 base = 8;
-                goto int_common;
-            case 'd':
-            case 'u':
+                செல் int_common;
+            நிலை 'd':
+            நிலை 'u':
                 base = 10;
-                goto int_common;
-            case 'i':
+                செல் int_common;
+            நிலை 'i':
                 base = 0;
 int_common:
                 x = ffintscan(f, base, 0, ULLONG_MAX);
-                if (!shcnt(f))
-                    goto match_fail;
-                if (t=='p' && dest)
-                    *(void **)dest = (void *)(uintptr_t)x;
-                else
+                எனில் (!shcnt(f))
+                    செல் match_fail;
+                எனில் (t=='p' && dest)
+                    *(வெறுமை **)dest = (வெறுமை *)(uintptr_t)x;
+                இல்லையெனில்
                     store_int(dest, size, x);
-                break;
-            case 'a': case 'A':
-            case 'e': case 'E':
-            case 'f': case 'F':
-            case 'g': case 'G':
+                நிறுத்து;
+            நிலை 'a': நிலை 'A':
+            நிலை 'e': நிலை 'E':
+            நிலை 'f': நிலை 'F':
+            நிலை 'g': நிலை 'G':
                 y = fffloatscan(f, size, 0);
-                if (!shcnt(f))
-                    goto match_fail;
-                if (dest) {
-                    switch (size) {
-                    case SIZE_def:
-                        *(float *)dest = y;
-                        break;
-                    case SIZE_l:
-                        *(double *)dest = y;
-                        break;
-                    case SIZE_L:
-                        *(double *)dest = y;
-                        break;
+                எனில் (!shcnt(f))
+                    செல் match_fail;
+                எனில் (dest) {
+                    தேர்வு (size) {
+                    நிலை SIZE_def:
+                        *(தசம *)dest = y;
+                        நிறுத்து;
+                    நிலை SIZE_l:
+                        *(இரட்டை *)dest = y;
+                        நிறுத்து;
+                    நிலை SIZE_L:
+                        *(இரட்டை *)dest = y;
+                        நிறுத்து;
                     }
                 }
-                break;
+                நிறுத்து;
         }
 
         pos += shcnt(f);
-        if (dest) matches++;
+        எனில் (dest) matches++;
     }
-    if (0) {
+    எனில் (0) {
 fmt_fail:
-input_fail:
-        if (!matches) matches--;
+உள்ளீடு_fail:
+        எனில் (!matches) matches--;
     }
 match_fail:
-    return matches;
+    திரும்பு matches;
 }
 
-static int ff_vsscanf(const char *s, const char *fmt, va_list ap)
+நிலையான முழு ff_vsscanf(மாறிலி எழுத்து *s, மாறிலி எழுத்து *fmt, va_list ap)
 {
     FFFILE f = {
-        .buf = (void *)s, .cookie = (void *)s,
-        .read = ffstring_read,
+        .buf = (வெறுமை *)s, .cookie = (வெறுமை *)s,
+        .பட = ffstring_read,
     };
 
-    return ff_vfscanf(&f, fmt, ap);
+    திரும்பு ff_vfscanf(&f, fmt, ap);
 }
 
-int av_sscanf(const char *string, const char *format, ...)
+முழு av_sscanf(மாறிலி எழுத்து *string, மாறிலி எழுத்து *format, ...)
 {
-    int ret;
+    முழு ret;
     va_list ap;
     va_start(ap, format);
     ret = ff_vsscanf(string, format, ap);
     va_end(ap);
-    return ret;
+    திரும்பு ret;
 }

@@ -16,73 +16,73 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "avutil.h"
-#include "avassert.h"
+#அந்தர்பாவ "config.h"
+#அந்தர்பாவ "avutil.h"
+#அந்தர்பாவ "avassert.h"
 
 /**
  * @file
  * various utility functions
  */
 
-const char *av_get_media_type_string(enum AVMediaType media_type)
+மாறிலி எழுத்து *av_get_media_type_string(எண்ணிக்கை AVMediaType media_type)
 {
-    switch (media_type) {
-    case AVMEDIA_TYPE_VIDEO:      return "video";
-    case AVMEDIA_TYPE_AUDIO:      return "audio";
-    case AVMEDIA_TYPE_DATA:       return "data";
-    case AVMEDIA_TYPE_SUBTITLE:   return "subtitle";
-    case AVMEDIA_TYPE_ATTACHMENT: return "attachment";
-    default:                      return NULL;
+    தேர்வு (media_type) {
+    நிலை AVMEDIA_TYPE_VIDEO:      திரும்பு "video";
+    நிலை AVMEDIA_TYPE_AUDIO:      திரும்பு "audio";
+    நிலை AVMEDIA_TYPE_DATA:       திரும்பு "data";
+    நிலை AVMEDIA_TYPE_SUBTITLE:   திரும்பு "subtitle";
+    நிலை AVMEDIA_TYPE_ATTACHMENT: திரும்பு "attachment";
+    இயல்பு:                      திரும்பு வெற்று;
     }
 }
 
-char av_get_picture_type_char(enum AVPictureType pict_type)
+எழுத்து av_get_picture_type_char(எண்ணிக்கை AVPictureType pict_type)
 {
-    switch (pict_type) {
-    case AV_PICTURE_TYPE_I:  return 'I';
-    case AV_PICTURE_TYPE_P:  return 'P';
-    case AV_PICTURE_TYPE_B:  return 'B';
-    case AV_PICTURE_TYPE_S:  return 'S';
-    case AV_PICTURE_TYPE_SI: return 'i';
-    case AV_PICTURE_TYPE_SP: return 'p';
-    case AV_PICTURE_TYPE_BI: return 'b';
-    default:                 return '?';
+    தேர்வு (pict_type) {
+    நிலை AV_PICTURE_TYPE_I:  திரும்பு 'I';
+    நிலை AV_PICTURE_TYPE_P:  திரும்பு 'P';
+    நிலை AV_PICTURE_TYPE_B:  திரும்பு 'B';
+    நிலை AV_PICTURE_TYPE_S:  திரும்பு 'S';
+    நிலை AV_PICTURE_TYPE_SI: திரும்பு 'i';
+    நிலை AV_PICTURE_TYPE_SP: திரும்பு 'p';
+    நிலை AV_PICTURE_TYPE_BI: திரும்பு 'b';
+    இயல்பு:                 திரும்பு '?';
     }
 }
 
-char *av_fourcc_make_string(char *buf, uint32_t fourcc)
+எழுத்து *av_fourcc_make_string(எழுத்து *buf, uint32_t fourcc)
 {
-    int i;
-    char *orig_buf = buf;
+    முழு i;
+    எழுத்து *orig_buf = buf;
     size_t buf_size = AV_FOURCC_MAX_STRING_SIZE;
 
-    for (i = 0; i < 4; i++) {
-        const int c = fourcc & 0xff;
-        const int print_chr = (c >= '0' && c <= '9') ||
+    க்கு (i = 0; i < 4; i++) {
+        மாறிலி முழு c = fourcc & 0xff;
+        மாறிலி முழு print_chr = (c >= '0' && c <= '9') ||
                               (c >= 'a' && c <= 'z') ||
                               (c >= 'A' && c <= 'Z') ||
                               (c && strchr(". -_", c));
-        const int len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
-        if (len < 0)
-            break;
+        மாறிலி முழு len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
+        எனில் (len < 0)
+            நிறுத்து;
         buf += len;
         buf_size = buf_size > len ? buf_size - len : 0;
         fourcc >>= 8;
     }
 
-    return orig_buf;
+    திரும்பு orig_buf;
 }
 
-AVRational av_get_time_base_q(void)
+AVRational av_get_time_base_q(வெறுமை)
 {
-    return (AVRational){1, AV_TIME_BASE};
+    திரும்பு (AVRational){1, AV_TIME_BASE};
 }
-#if FF_API_ASSERT_FPU
-void av_assert0_fpu(void) {
-#if HAVE_MMX_INLINE
+#எனில் FF_API_ASSERT_FPU
+வெறுமை av_assert0_fpu(வெறுமை) {
+#எனில் HAVE_MMX_INLINE
     uint16_t state[14];
-     __asm__ volatile (
+     __asm__ நிலையற்ற (
         "fstenv %0 \n\t"
         : "+m" (state)
         :

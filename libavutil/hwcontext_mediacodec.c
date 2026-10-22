@@ -16,105 +16,105 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#அந்தர்பாவ "config.h"
 
-#include <android/native_window.h>
-#include <dlfcn.h>
-#include <media/NdkMediaCodec.h>
+#அந்தர்பாவ <android/native_window.h>
+#அந்தர்பாவ <dlfcn.h>
+#அந்தர்பாவ <media/NdkMediaCodec.h>
 
-#include "buffer.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_mediacodec.h"
+#அந்தர்பாவ "buffer.h"
+#அந்தர்பாவ "common.h"
+#அந்தர்பாவ "hwcontext.h"
+#அந்தர்பாவ "hwcontext_internal.h"
+#அந்தர்பாவ "hwcontext_mediacodec.h"
 
-typedef struct MediaCodecDeviceContext {
+வகைவரை கட்டமைப்பு MediaCodecDeviceContext {
     AVMediaCodecDeviceContext ctx;
 
-    void *libmedia;
+    வெறுமை *libmedia;
     media_status_t (*create_surface)(ANativeWindow **surface);
 } MediaCodecDeviceContext;
 
 
-static int mc_device_create(AVHWDeviceContext *ctx, const char *device,
-                            AVDictionary *opts, int flags)
+நிலையான முழு mc_device_create(AVHWDeviceContext *ctx, மாறிலி எழுத்து *device,
+                            AVDictionary *opts, முழு flags)
 {
-    const AVDictionaryEntry *entry = NULL;
+    மாறிலி AVDictionaryEntry *entry = வெற்று;
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = &s->ctx;
 
-    if (device && device[0]) {
+    எனில் (device && device[0]) {
         av_log(ctx, AV_LOG_ERROR, "Device selection unsupported.\n");
-        return AVERROR_UNKNOWN;
+        திரும்பு AVERROR_UNKNOWN;
     }
 
-    while ((entry = av_dict_iterate(opts, entry))) {
-        if (!strcmp(entry->key, "create_window"))
-            dev->create_window = atoi(entry->value);
+    போது ((entry = av_dict_iterate(opts, entry))) {
+        எனில் (!strcmp(entry->சாவி, "create_window"))
+            dev->create_window = atoi(entry->மதிப்பு);
     }
 
     av_log(ctx, AV_LOG_DEBUG, "%s createPersistentInputSurface\n",
             dev->create_window ? "Enable" : "Disable");
 
-    return 0;
+    திரும்பு 0;
 }
 
-static int mc_device_init(AVHWDeviceContext *ctx)
+நிலையான முழு mc_device_init(AVHWDeviceContext *ctx)
 {
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = (AVMediaCodecDeviceContext *)s;
-    ANativeWindow *native_window = NULL;
+    ANativeWindow *native_window = வெற்று;
 
-    if (dev->surface)
-        return 0;
+    எனில் (dev->surface)
+        திரும்பு 0;
 
-    if (dev->native_window)
-        return 0;
+    எனில் (dev->native_window)
+        திரும்பு 0;
 
     // For backward compatibility, don't return error for a dummy
     // AVHWDeviceContext without surface or native_window.
-    if (!dev->create_window)
-        return 0;
+    எனில் (!dev->create_window)
+        திரும்பு 0;
 
     s->libmedia = dlopen("libmediandk.so", RTLD_NOW);
-    if (!s->libmedia)
-        return AVERROR_UNKNOWN;
+    எனில் (!s->libmedia)
+        திரும்பு AVERROR_UNKNOWN;
 
     s->create_surface = dlsym(s->libmedia, "AMediaCodec_createPersistentInputSurface");
-    if (!s->create_surface)
-        return AVERROR_UNKNOWN;
+    எனில் (!s->create_surface)
+        திரும்பு AVERROR_UNKNOWN;
 
     s->create_surface(&native_window);
     dev->native_window = native_window;
-    return 0;
+    திரும்பு 0;
 }
 
-static void mc_device_uninit(AVHWDeviceContext *ctx)
+நிலையான வெறுமை mc_device_uninit(AVHWDeviceContext *ctx)
 {
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = ctx->hwctx;
-    if (!s->libmedia)
-        return;
+    எனில் (!s->libmedia)
+        திரும்பு;
 
-    if (dev->native_window) {
+    எனில் (dev->native_window) {
         ANativeWindow_release(dev->native_window);
-        dev->native_window = NULL;
+        dev->native_window = வெற்று;
     }
     dlclose(s->libmedia);
-    s->libmedia = NULL;
+    s->libmedia = வெற்று;
 }
 
-const HWContextType ff_hwcontext_type_mediacodec = {
+மாறிலி HWContextType ff_hwcontext_type_mediacodec = {
     .type                 = AV_HWDEVICE_TYPE_MEDIACODEC,
     .name                 = "mediacodec",
 
-    .device_hwctx_size    = sizeof(MediaCodecDeviceContext),
+    .device_hwctx_size    = அளவு(MediaCodecDeviceContext),
 
     .device_create        = mc_device_create,
     .device_init          = mc_device_init,
     .device_uninit        = mc_device_uninit,
 
-    .pix_fmts = (const enum AVPixelFormat[]){
+    .pix_fmts = (மாறிலி எண்ணிக்கை AVPixelFormat[]){
         AV_PIX_FMT_MEDIACODEC,
         AV_PIX_FMT_NONE
     },

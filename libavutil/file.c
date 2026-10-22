@@ -16,25 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "error.h"
-#include "file.h"
-#include "file_open.h"
-#include "internal.h"
-#include "log.h"
-#include "mem.h"
-#include <fcntl.h>
-#include <sys/stat.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
+#அந்தர்பாவ "config.h"
+#அந்தர்பாவ "error.h"
+#அந்தர்பாவ "file.h"
+#அந்தர்பாவ "file_open.h"
+#அந்தர்பாவ "internal.h"
+#அந்தர்பாவ "log.h"
+#அந்தர்பாவ "mem.h"
+#அந்தர்பாவ <fcntl.h>
+#அந்தர்பாவ <sys/stat.h>
+#எனில் HAVE_UNISTD_H
+#அந்தர்பாவ <unistd.h>
 #endif
-#if HAVE_IO_H
-#include <io.h>
+#எனில் HAVE_IO_H
+#அந்தர்பாவ <io.h>
 #endif
-#if HAVE_MMAP
-#include <sys/mman.h>
-#elif HAVE_MAPVIEWOFFILE
-#include <windows.h>
+#எனில் HAVE_MMAP
+#அந்தர்பாவ <sys/mman.h>
+#அல்லதெனில் HAVE_MAPVIEWOFFILE
+#அந்தர்பாவ <windows.h>
 #endif
 
 #ifdef _WIN32
@@ -45,160 +45,160 @@
 #define fstat _fstat64
 #endif
 
-typedef struct FileLogContext {
-    const AVClass *class;
-    int   log_offset;
-    void *log_ctx;
+வகைவரை கட்டமைப்பு FileLogContext {
+    மாறிலி AVClass *class;
+    முழு   log_offset;
+    வெறுமை *log_ctx;
 } FileLogContext;
 
-static const AVClass file_log_ctx_class = {
+நிலையான மாறிலி AVClass file_log_ctx_class = {
     .class_name                = "FILE",
     .item_name                 = av_default_item_name,
-    .option                    = NULL,
+    .option                    = வெற்று,
     .version                   = LIBAVUTIL_VERSION_INT,
     .log_level_offset_offset   = offsetof(FileLogContext, log_offset),
     .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
 };
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
+#எனில் HAVE_MMAP || HAVE_MAPVIEWOFFILE
 /* Map the first size bytes of the file, as a private copy or shared and
  * writable. The shared mapping extends the file to size, on Windows the
  * mapping object does it. */
-static int map_file(int fd, size_t size, int shared, void **ptr)
+நிலையான முழு map_file(முழு fd, size_t size, முழு shared, வெறுமை **ptr)
 {
-#if HAVE_MMAP
-    if (shared) {
-        struct stat st;
-        if (fstat(fd, &st) < 0)
-            return AVERROR(errno);
-        if (st.st_size < size && ftruncate(fd, size) < 0)
-            return AVERROR(errno);
+#எனில் HAVE_MMAP
+    எனில் (shared) {
+        கட்டமைப்பு stat st;
+        எனில் (fstat(fd, &st) < 0)
+            திரும்பு AVERROR(errno);
+        எனில் (st.st_size < size && ftruncate(fd, size) < 0)
+            திரும்பு AVERROR(errno);
     }
 
-    void *map = mmap(NULL, size, PROT_READ | PROT_WRITE,
+    வெறுமை *map = mmap(வெற்று, size, PROT_READ | PROT_WRITE,
                      shared ? MAP_SHARED : MAP_PRIVATE, fd, 0);
-    if (map == MAP_FAILED)
-        return AVERROR(errno);
-#else
+    எனில் (map == MAP_FAILED)
+        திரும்பு AVERROR(errno);
+#இல்லையெனில்
     HANDLE fh = (HANDLE)_get_osfhandle(fd);
-    if (fh == INVALID_HANDLE_VALUE)
-        return AVERROR(EBADF);
+    எனில் (fh == INVALID_HANDLE_மதிப்பு)
+        திரும்பு AVERROR(EBADF);
 
-    HANDLE mh = CreateFileMapping(fh, NULL,
+    HANDLE mh = CreateFileMapping(fh, வெற்று,
                                   shared ? PAGE_READWRITE : PAGE_READONLY,
-                                  (uint64_t)size >> 32, size, NULL);
-    if (!mh)
-        return AVERROR(EIO);
+                                  (uint64_t)size >> 32, size, வெற்று);
+    எனில் (!mh)
+        திரும்பு AVERROR(EIO);
 
-    void *map = MapViewOfFile(mh, shared ? FILE_MAP_ALL_ACCESS : FILE_MAP_COPY,
+    வெறுமை *map = MapViewOfFile(mh, shared ? FILE_MAP_ALL_ACCESS : FILE_MAP_COPY,
                               0, 0, size);
     CloseHandle(mh);
-    if (!map)
-        return AVERROR(EIO);
+    எனில் (!map)
+        திரும்பு AVERROR(EIO);
 #endif
 
     *ptr = map;
-    return 0;
+    திரும்பு 0;
 }
 
-static void unmap_file(void *ptr, size_t size)
+நிலையான வெறுமை unmap_file(வெறுமை *ptr, size_t size)
 {
-#if HAVE_MMAP
+#எனில் HAVE_MMAP
     munmap(ptr, size);
-#else
+#இல்லையெனில்
     UnmapViewOfFile(ptr);
 #endif
 }
 #endif
 
-int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
-                int log_offset, void *log_ctx)
+முழு av_file_map(மாறிலி எழுத்து *filename, uint8_t **bufptr, size_t *size,
+                முழு log_offset, வெறுமை *log_ctx)
 {
     FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int err, fd = avpriv_open(filename, O_RDONLY);
-    struct stat st;
-    av_unused void *ptr;
-    *bufptr = NULL;
+    முழு err, fd = avpriv_open(filename, O_RDONLY);
+    கட்டமைப்பு stat st;
+    av_unused வெறுமை *ptr;
+    *bufptr = வெற்று;
     *size = 0;
 
-    if (fd < 0) {
+    எனில் (fd < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot read file '%s': %s\n", filename, av_err2str(err));
-        return err;
+        திரும்பு err;
     }
 
-    if (fstat(fd, &st) < 0) {
+    எனில் (fstat(fd, &st) < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Error occurred in fstat(): %s\n", av_err2str(err));
         close(fd);
-        return err;
+        திரும்பு err;
     }
 
-    if (st.st_size > SIZE_MAX) {
+    எனில் (st.st_size > SIZE_MAX) {
         av_log(&file_log_ctx, AV_LOG_ERROR,
                "File size for file '%s' is too big\n", filename);
         close(fd);
-        return AVERROR(EINVAL);
+        திரும்பு AVERROR(EINVAL);
     }
     *size = st.st_size;
 
-    if (!*size) {
-        *bufptr = NULL;
-        goto out;
+    எனில் (!*size) {
+        *bufptr = வெற்று;
+        செல் out;
     }
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
+#எனில் HAVE_MMAP || HAVE_MAPVIEWOFFILE
     err = map_file(fd, *size, 0, &ptr);
-    if (err < 0) {
+    எனில் (err < 0) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot map file '%s': %s\n", filename, av_err2str(err));
         close(fd);
         *size = 0;
-        return err;
+        திரும்பு err;
     }
     *bufptr = ptr;
-#else
+#இல்லையெனில்
     *bufptr = av_malloc(*size);
-    if (!*bufptr) {
+    எனில் (!*bufptr) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Memory allocation error occurred\n");
         close(fd);
         *size = 0;
-        return AVERROR(ENOMEM);
+        திரும்பு AVERROR(ENOMEM);
     }
-    read(fd, *bufptr, *size);
+    பட(fd, *bufptr, *size);
 #endif
 
 out:
     close(fd);
-    return 0;
+    திரும்பு 0;
 }
 
-void av_file_unmap(uint8_t *bufptr, size_t size)
+வெறுமை av_file_unmap(uint8_t *bufptr, size_t size)
 {
-    if (!size || !bufptr)
-        return;
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    எனில் (!size || !bufptr)
+        திரும்பு;
+#எனில் HAVE_MMAP || HAVE_MAPVIEWOFFILE
     unmap_file(bufptr, size);
-#else
+#இல்லையெனில்
     av_free(bufptr);
 #endif
 }
 
-int av_file_map_shared(int fd, size_t size, void **bufptr)
+முழு av_file_map_shared(முழு fd, size_t size, வெறுமை **bufptr)
 {
-    *bufptr = NULL;
-    if (!size)
-        return AVERROR(EINVAL);
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    return map_file(fd, size, 1, bufptr);
-#else
-    return AVERROR(ENOSYS);
+    *bufptr = வெற்று;
+    எனில் (!size)
+        திரும்பு AVERROR(EINVAL);
+#எனில் HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    திரும்பு map_file(fd, size, 1, bufptr);
+#இல்லையெனில்
+    திரும்பு AVERROR(ENOSYS);
 #endif
 }
 
-void av_file_unmap_shared(void *bufptr, size_t size)
+வெறுமை av_file_unmap_shared(வெறுமை *bufptr, size_t size)
 {
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    if (size && bufptr)
+#எனில் HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    எனில் (size && bufptr)
         unmap_file(bufptr, size);
 #endif
 }

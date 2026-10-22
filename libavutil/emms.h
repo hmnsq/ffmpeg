@@ -19,18 +19,18 @@
 #ifndef AVUTIL_EMMS_H
 #define AVUTIL_EMMS_H
 
-#include <stdint.h>
-#include <stdlib.h>
+#அந்தர்பாவ <stdint.h>
+#அந்தர்பாவ <stdlib.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/log.h"
+#அந்தர்பாவ "config.h"
+#அந்தர்பாவ "libavutil/attributes.h"
+#அந்தர்பாவ "libavutil/log.h"
 
-#if ARCH_X86
+#எனில் ARCH_X86
 
-#if HAVE_MMX_INLINE
+#எனில் HAVE_MMX_INLINE
 #ifndef __MMX__
-#include "libavutil/cpu.h"
+#அந்தர்பாவ "libavutil/cpu.h"
 #endif
 
 #   define emms_c emms_c
@@ -41,61 +41,61 @@
  * Note, *alloc() and *free() also use float code in some libc implementations
  * thus this also applies to them or any function using them.
  */
-static av_always_inline void emms_c(void)
+நிலையான av_always_inline வெறுமை emms_c(வெறுமை)
 {
 /* Some inlined functions may also use mmx instructions regardless of
  * runtime cpuflags. With that in mind, we unconditionally empty the
  * mmx state if the target cpu chosen at configure time supports it.
  */
-#if !defined(__MMX__)
-    if(av_get_cpu_flags() & AV_CPU_FLAG_MMX)
+#எனில் !defined(__MMX__)
+    எனில்(av_get_cpu_flags() & AV_CPU_FLAG_MMX)
 #endif
-        __asm__ volatile ("emms" ::: "memory");
+        __asm__ நிலையற்ற ("emms" ::: "memory");
 }
 
-static inline void ff_assert0_fpu(const char *file, int line_number)
+நிலையான உள்வரி வெறுமை ff_assert0_fpu(மாறிலி எழுத்து *file, முழு வரி_எண்)
 {
     uint16_t state[14];
-     __asm__ volatile (
+     __asm__ நிலையற்ற (
         "fstenv %0 \n\t"
         : "+m" (state)
         :
         : "memory"
     );
-    if ((state[4] & 3) != 3) {
+    எனில் ((state[4] & 3) != 3) {
         emms_c();
-        av_log(NULL, AV_LOG_PANIC,
+        av_log(வெற்று, AV_LOG_PANIC,
                "Invalid floating point state assertion "
                "triggered at line %u in file %s\n",
-               line_number, file);
+               வரி_எண், file);
         abort();
     }
 }
 
 #define ff_assert0_fpu() ff_assert0_fpu(__FILE__, __LINE__)
 
-#elif HAVE_MMX && HAVE_MM_EMPTY
+#அல்லதெனில் HAVE_MMX && HAVE_MM_EMPTY
 #   include <mmintrin.h>
 #   define emms_c _mm_empty
-#elif HAVE_MMX_EXTERNAL
-void ff_emms_asm(void);
+#அல்லதெனில் HAVE_MMX_EXTERNAL
+வெறுமை ff_emms_asm(வெறுமை);
 #   define emms_c ff_emms_asm
 #endif /* HAVE_MMX_INLINE */
 
 #endif /* ARCH_X86 */
 
 #ifndef emms_c
-#   define emms_c() do {} while(0)
+#   define emms_c() செய் {} போது(0)
 #endif
 
 #ifndef ff_assert0_fpu
-#define ff_assert0_fpu() ((void)0)
+#define ff_assert0_fpu() ((வெறுமை)0)
 #endif
 
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 1
+#எனில் defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 1
 #define ff_assert1_fpu() ff_assert0_fpu()
-#else
-#define ff_assert1_fpu() ((void)0)
+#இல்லையெனில்
+#define ff_assert1_fpu() ((வெறுமை)0)
 #endif
 
 #endif /* AVUTIL_EMMS_H */

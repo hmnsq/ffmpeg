@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#அந்தர்பாவ "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#அந்தர்பாவ <math.h>
+#அந்தர்பாவ <stdio.h>
+#அந்தர்பாவ <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#அந்தர்பாவ "libavutil/mathematics.h"
+#அந்தர்பாவ "libavutil/eval.h"
 
-static const double const_values[] = {
+நிலையான மாறிலி இரட்டை const_மதிப்புகள்[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+நிலையான மாறிலி எழுத்து *மாறிலி const_names[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+முழு முதன்மை(முழு argc, எழுத்து **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    முழு i;
+    இரட்டை d;
+    மாறிலி எழுத்து *மாறிலி *கோவை;
+    நிலையான மாறிலி எழுத்து *மாறிலி exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        வெற்று
     };
-    int ret;
+    முழு ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
+    க்கு (கோவை = exprs; *கோவை; கோவை++) {
+        printf("Evaluating '%s'\n", *கோவை);
+        ret = av_கோவை_parse_and_eval(&d, *கோவை,
+                               const_names, const_மதிப்புகள்,
+                               வெற்று, வெற்று, வெற்று, வெற்று, வெற்று, 0, வெற்று);
+        எனில் (isnan(d))
+            printf("'%s' -> nan\n\n", *கோவை);
+        இல்லையெனில்
+            printf("'%s' -> %f\n\n", *கோவை, d);
+        எனில் (ret < 0)
             printf("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_கோவை_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_names, const_மதிப்புகள்,
+                           வெற்று, வெற்று, வெற்று, வெற்று, வெற்று, 0, வெற்று);
     printf("%f == 12.7\n", d);
-    if (ret < 0)
+    எனில் (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_கோவை_parse_and_eval(&d, "80G/80Gi",
+                           const_names, const_மதிப்புகள்,
+                           வெற்று, வெற்று, வெற்று, வெற்று, வெற்று, 0, வெற்று);
     printf("%f == 0.931322575\n", d);
-    if (ret < 0)
+    எனில் (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
+    எனில் (argc > 1 && !strcmp(argv[1], "-t")) {
+        க்கு (i = 0; i < 1050; i++) {
             START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
+            ret = av_கோவை_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_names, const_மதிப்புகள்,
+                                   வெற்று, வெற்று, வெற்று, வெற்று, வெற்று, 0, வெற்று);
+            எனில் (ret < 0)
                 printf("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    திரும்பு 0;
 }

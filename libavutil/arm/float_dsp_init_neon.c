@@ -19,34 +19,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#அந்தர்பாவ <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "float_dsp_arm.h"
+#அந்தர்பாவ "libavutil/attributes.h"
+#அந்தர்பாவ "libavutil/float_dsp.h"
+#அந்தர்பாவ "float_dsp_arm.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1, int len);
+வெறுமை ff_vector_fmul_neon(தசம *dst, மாறிலி தசம *src0, மாறிலி தசம *src1, முழு len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+வெறுமை ff_vector_fmac_scalar_neon(தசம *dst, மாறிலி தசம *src, தசம mul,
+                                முழு len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+வெறுமை ff_vector_fmul_scalar_neon(தசம *dst, மாறிலி தசம *src, தசம mul,
+                                முழு len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+வெறுமை ff_vector_fmul_window_neon(தசம *dst, மாறிலி தசம *src0,
+                                மாறிலி தசம *src1, மாறிலி தசம *win, முழு len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+வெறுமை ff_vector_fmul_add_neon(தசம *dst, மாறிலி தசம *src0, மாறிலி தசம *src1,
+                             மாறிலி தசம *src2, முழு len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+வெறுமை ff_vector_fmul_reverse_neon(தசம *dst, மாறிலி தசம *src0,
+                                 மாறிலி தசம *src1, முழு len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+வெறுமை ff_butterflies_float_neon(தசம *v1, தசம *v2, முழு len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+தசம ff_scalarproduct_float_neon(மாறிலி தசம *v1, மாறிலி தசம *v2, முழு len);
 
-av_cold void ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
+av_cold வெறுமை ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
 {
     fdsp->vector_fmul = ff_vector_fmul_neon;
     fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_neon;

@@ -16,45 +16,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/error.c"
+#அந்தர்பாவ "libavutil/error.c"
 
 /* errno descriptions depend on the C library, so those are only looked up */
-static const struct {
-    int num;
-    const char *tag;
+நிலையான மாறிலி கட்டமைப்பு {
+    முழு இலக்கம்;
+    மாறிலி எழுத்து *tag;
 } ffmpeg_codes[] = {
 #define ERROR_TAG(CODE, DESC)         { AVERROR_ ## CODE, #CODE },
 #define ERROR_TAG2(CODE, CODE2, DESC) { AVERROR_ ## CODE, #CODE },
     AVERROR_LIST(ERROR_TAG, ERROR_TAG2)
 };
 
-static const int errno_codes[] = {
+நிலையான மாறிலி முழு errno_codes[] = {
 #define ERRNO_CODE(CODE, DESC) AVERROR(CODE),
     STRERROR_LIST(ERRNO_CODE)
 };
 
-int main(void)
+முழு முதன்மை(வெறுமை)
 {
-    char buf[AV_ERROR_MAX_STRING_SIZE];
-    int ret = 0;
+    எழுத்து buf[AV_ERROR_MAX_STRING_SIZE];
+    முழு ret = 0;
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
-        int num = ffmpeg_codes[i].num;
+    க்கு (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
+        முழு இலக்கம் = ffmpeg_codes[i].இலக்கம்;
 
-        if (av_strerror(num, buf, sizeof(buf)) < 0) {
-            printf("%d: lookup failed [%s]\n", num, ffmpeg_codes[i].tag);
+        எனில் (av_strerror(இலக்கம், buf, அளவு(buf)) < 0) {
+            printf("%d: lookup failed [%s]\n", இலக்கம், ffmpeg_codes[i].tag);
             ret = 1;
-            continue;
+            தொடர்;
         }
-        printf("%d: %s [%s]\n", num, buf, ffmpeg_codes[i].tag);
+        printf("%d: %s [%s]\n", இலக்கம், buf, ffmpeg_codes[i].tag);
     }
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
-        if (av_strerror(errno_codes[i], buf, sizeof(buf)) < 0) {
+    க்கு (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
+        எனில் (av_strerror(errno_codes[i], buf, அளவு(buf)) < 0) {
             printf("errno %d: lookup failed\n", AVUNERROR(errno_codes[i]));
             ret = 1;
         }
     }
 
-    return ret;
+    திரும்பு ret;
 }

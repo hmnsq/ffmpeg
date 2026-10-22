@@ -19,19 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "timecode_internal.h"
+#அந்தர்பாவ "timecode_internal.h"
 
-static unsigned bcd2uint(uint8_t bcd)
+நிலையான unsigned bcd2uint(uint8_t bcd)
 {
-   unsigned low  = bcd & 0xf;
-   unsigned high = bcd >> 4;
-   if (low > 9 || high > 9)
-       return 0;
-   return low + 10*high;
+   unsigned கீழ்  = bcd & 0xf;
+   unsigned உயர்வு = bcd >> 4;
+   எனில் (கீழ் > 9 || உயர்வு > 9)
+       திரும்பு 0;
+   திரும்பு கீழ் + 10*உயர்வு;
 }
 
-void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned *ss, unsigned *ff,
-                           AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field)
+வெறுமை ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned *ss, unsigned *ff,
+                           AVRational rate, uint32_t tcsmpte, முழு prevent_df, முழு skip_field)
 {
     *hh   = bcd2uint(tcsmpte     & 0x3f);    // 6-bit hours
     *mm   = bcd2uint(tcsmpte>>8  & 0x7f);    // 7-bit minutes
@@ -39,12 +39,12 @@ void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned 
     *ff   = bcd2uint(tcsmpte>>24 & 0x3f);    // 6-bit frames
     *drop = tcsmpte & 1<<30 && !prevent_df;  // 1-bit drop if not arbitrary bit
 
-    if (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
+    எனில் (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
         *ff <<= 1;
-        if (!skip_field) {
-            if (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
+        எனில் (!skip_field) {
+            எனில் (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
                 *ff += !!(tcsmpte & 1 << 7);
-            else
+            இல்லையெனில்
                 *ff += !!(tcsmpte & 1 << 23);
         }
     }

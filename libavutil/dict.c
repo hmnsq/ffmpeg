@@ -18,295 +18,295 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
-#include <string.h>
+#அந்தர்பாவ <inttypes.h>
+#அந்தர்பாவ <stdio.h>
+#அந்தர்பாவ <string.h>
 
-#include "avassert.h"
-#include "avstring.h"
-#include "dict.h"
-#include "error.h"
-#include "mem.h"
-#include "bprint.h"
+#அந்தர்பாவ "avassert.h"
+#அந்தர்பாவ "avstring.h"
+#அந்தர்பாவ "dict.h"
+#அந்தர்பாவ "error.h"
+#அந்தர்பாவ "mem.h"
+#அந்தர்பாவ "bprint.h"
 
-struct AVDictionary {
-    int count;
+கட்டமைப்பு AVDictionary {
+    முழு மொத்தம்;
     AVDictionaryEntry *elems;
-    int duplicate_keys;
+    முழு duplicate_சாவிகள்;
 };
 
-int av_dict_count(const AVDictionary *m)
+முழு av_dict_மொத்தம்(மாறிலி AVDictionary *m)
 {
-    return m ? m->count : 0;
+    திரும்பு m ? m->மொத்தம் : 0;
 }
 
-const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
-                                         const AVDictionaryEntry *prev)
+மாறிலி AVDictionaryEntry *av_dict_iterate(மாறிலி AVDictionary *m,
+                                         மாறிலி AVDictionaryEntry *prev)
 {
-    int i = 0;
+    முழு i = 0;
 
-    if (!m)
-        return NULL;
+    எனில் (!m)
+        திரும்பு வெற்று;
 
-    if (prev)
+    எனில் (prev)
         i = prev - m->elems + 1;
 
     av_assert2(i >= 0);
-    if (i >= m->count)
-        return NULL;
+    எனில் (i >= m->மொத்தம்)
+        திரும்பு வெற்று;
 
-    return &m->elems[i];
+    திரும்பு &m->elems[i];
 }
 
-AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags)
+AVDictionaryEntry *av_dict_get(மாறிலி AVDictionary *m, மாறிலி எழுத்து *சாவி,
+                               மாறிலி AVDictionaryEntry *prev, முழு flags)
 {
-    const AVDictionaryEntry *entry = prev;
-    unsigned int j;
+    மாறிலி AVDictionaryEntry *entry = prev;
+    unsigned முழு j;
 
-    if (!key)
-        return NULL;
+    எனில் (!சாவி)
+        திரும்பு வெற்று;
 
-    while ((entry = av_dict_iterate(m, entry))) {
-        const char *s = entry->key;
-        if (flags & AV_DICT_MATCH_CASE)
-            for (j = 0; s[j] == key[j] && key[j]; j++)
+    போது ((entry = av_dict_iterate(m, entry))) {
+        மாறிலி எழுத்து *s = entry->சாவி;
+        எனில் (flags & AV_DICT_MATCH_CASE)
+            க்கு (j = 0; s[j] == சாவி[j] && சாவி[j]; j++)
                 ;
-        else
-            for (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
+        இல்லையெனில்
+            க்கு (j = 0; av_toupper(s[j]) == av_toupper(சாவி[j]) && சாவி[j]; j++)
                 ;
-        if (key[j])
-            continue;
-        if (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
-            continue;
-        return (AVDictionaryEntry *)entry;
+        எனில் (சாவி[j])
+            தொடர்;
+        எனில் (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
+            தொடர்;
+        திரும்பு (AVDictionaryEntry *)entry;
     }
-    return NULL;
+    திரும்பு வெற்று;
 }
 
-int av_dict_set(AVDictionary **pm, const char *key, const char *value,
-                int flags)
+முழு av_dict_set(AVDictionary **pm, மாறிலி எழுத்து *சாவி, மாறிலி எழுத்து *மதிப்பு,
+                முழு flags)
 {
     AVDictionary *m = *pm;
-    AVDictionaryEntry *tag = NULL;
-    char *copy_key = NULL, *copy_value = NULL;
-    int err;
+    AVDictionaryEntry *tag = வெற்று;
+    எழுத்து *copy_சாவி = வெற்று, *copy_மதிப்பு = வெற்று;
+    முழு err;
 
-    if (flags & AV_DICT_DONT_STRDUP_VAL)
-        copy_value = (void *)value;
-    else if (value)
-        copy_value = av_strdup(value);
-    if (!key) {
+    எனில் (flags & AV_DICT_DONT_STRDUP_VAL)
+        copy_மதிப்பு = (வெறுமை *)மதிப்பு;
+    இல்லையெனில் எனில் (மதிப்பு)
+        copy_மதிப்பு = av_strdup(மதிப்பு);
+    எனில் (!சாவி) {
         err = AVERROR(EINVAL);
-        goto err_out;
+        செல் err_out;
     }
-    if (flags & AV_DICT_DONT_STRDUP_KEY)
-        copy_key = (void *)key;
-    else
-        copy_key = av_strdup(key);
-    if (!copy_key || (value && !copy_value))
-        goto enomem;
+    எனில் (flags & AV_DICT_DONT_STRDUP_சாவி)
+        copy_சாவி = (வெறுமை *)சாவி;
+    இல்லையெனில்
+        copy_சாவி = av_strdup(சாவி);
+    எனில் (!copy_சாவி || (மதிப்பு && !copy_மதிப்பு))
+        செல் enomem;
 
-    if (!(flags & AV_DICT_MULTIKEY)) {
-        tag = av_dict_get(m, key, NULL, flags);
-    } else if (flags & AV_DICT_DEDUP) {
-        while ((tag = av_dict_get(m, key, tag, flags))) {
-            if ((!value && !tag->value) ||
-                (value && tag->value && !strcmp(value, tag->value))) {
-                av_free(copy_key);
-                av_free(copy_value);
-                return 0;
+    எனில் (!(flags & AV_DICT_MULTIKEY)) {
+        tag = av_dict_get(m, சாவி, வெற்று, flags);
+    } இல்லையெனில் எனில் (flags & AV_DICT_DEDUP) {
+        போது ((tag = av_dict_get(m, சாவி, tag, flags))) {
+            எனில் ((!மதிப்பு && !tag->மதிப்பு) ||
+                (மதிப்பு && tag->மதிப்பு && !strcmp(மதிப்பு, tag->மதிப்பு))) {
+                av_free(copy_சாவி);
+                av_free(copy_மதிப்பு);
+                திரும்பு 0;
             }
         }
     }
-    if (!m)
-        m = *pm = av_mallocz(sizeof(*m));
-    if (!m)
-        goto enomem;
+    எனில் (!m)
+        m = *pm = av_mallocz(அளவு(*m));
+    எனில் (!m)
+        செல் enomem;
 
-    if (tag) {
-        if (flags & AV_DICT_DONT_OVERWRITE) {
-            av_free(copy_key);
-            av_free(copy_value);
-            return 0;
+    எனில் (tag) {
+        எனில் (flags & AV_DICT_DONT_OVERWRITE) {
+            av_free(copy_சாவி);
+            av_free(copy_மதிப்பு);
+            திரும்பு 0;
         }
-        if (copy_value && flags & AV_DICT_APPEND) {
-            size_t oldlen = strlen(tag->value);
-            size_t new_part_len = strlen(copy_value);
+        எனில் (copy_மதிப்பு && flags & AV_DICT_APPEND) {
+            size_t oldlen = strlen(tag->மதிப்பு);
+            size_t new_part_len = strlen(copy_மதிப்பு);
             size_t len = oldlen + new_part_len + 1;
-            char *newval = av_realloc(tag->value, len);
-            if (!newval)
-                goto enomem;
-            memcpy(newval + oldlen, copy_value, new_part_len + 1);
-            av_freep(&copy_value);
-            copy_value = newval;
-        } else
-            av_free(tag->value);
-        av_free(tag->key);
-        *tag = m->elems[--m->count];
-    } else if (copy_value) {
+            எழுத்து *newval = av_realloc(tag->மதிப்பு, len);
+            எனில் (!newval)
+                செல் enomem;
+            memcpy(newval + oldlen, copy_மதிப்பு, new_part_len + 1);
+            av_freep(&copy_மதிப்பு);
+            copy_மதிப்பு = newval;
+        } இல்லையெனில்
+            av_free(tag->மதிப்பு);
+        av_free(tag->சாவி);
+        *tag = m->elems[--m->மொத்தம்];
+    } இல்லையெனில் எனில் (copy_மதிப்பு) {
         AVDictionaryEntry *tmp = av_realloc_array(m->elems,
-                                                  m->count + 1, sizeof(*m->elems));
-        if (!tmp)
-            goto enomem;
+                                                  m->மொத்தம் + 1, அளவு(*m->elems));
+        எனில் (!tmp)
+            செல் enomem;
         m->elems = tmp;
     }
-    if (copy_value) {
-        m->elems[m->count].key = copy_key;
-        m->elems[m->count].value = copy_value;
-        m->count++;
-        if (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
-            m->duplicate_keys = 1;
-    } else {
+    எனில் (copy_மதிப்பு) {
+        m->elems[m->மொத்தம்].சாவி = copy_சாவி;
+        m->elems[m->மொத்தம்].மதிப்பு = copy_மதிப்பு;
+        m->மொத்தம்++;
+        எனில் (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
+            m->duplicate_சாவிகள் = 1;
+    } இல்லையெனில் {
         err = 0;
-        goto end;
+        செல் end;
     }
 
-    return 0;
+    திரும்பு 0;
 
 enomem:
     err = AVERROR(ENOMEM);
 err_out:
-    av_free(copy_value);
+    av_free(copy_மதிப்பு);
 end:
-    if (m && !m->count) {
+    எனில் (m && !m->மொத்தம்) {
         av_freep(&m->elems);
         av_freep(pm);
     }
-    av_free(copy_key);
-    return err;
+    av_free(copy_சாவி);
+    திரும்பு err;
 }
 
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
-                int flags)
+முழு av_dict_set_int(AVDictionary **pm, மாறிலி எழுத்து *சாவி, int64_t மதிப்பு,
+                முழு flags)
 {
-    char valuestr[22];
-    snprintf(valuestr, sizeof(valuestr), "%"PRId64, value);
+    எழுத்து valuestr[22];
+    snprintf(valuestr, அளவு(valuestr), "%"PRId64, மதிப்பு);
     flags &= ~AV_DICT_DONT_STRDUP_VAL;
-    return av_dict_set(pm, key, valuestr, flags);
+    திரும்பு av_dict_set(pm, சாவி, valuestr, flags);
 }
 
-static int parse_key_value_pair(AVDictionary **pm, const char **buf,
-                                const char *key_val_sep, const char *pairs_sep,
-                                int flags)
+நிலையான முழு parse_சாவி_மதிப்பு_pair(AVDictionary **pm, மாறிலி எழுத்து **buf,
+                                மாறிலி எழுத்து *சாவி_val_sep, மாறிலி எழுத்து *pairs_sep,
+                                முழு flags)
 {
-    char *key = av_get_token(buf, key_val_sep);
-    char *val = NULL;
-    int ret;
+    எழுத்து *சாவி = av_get_token(buf, சாவி_val_sep);
+    எழுத்து *val = வெற்று;
+    முழு ret;
 
-    if (key && *key && strspn(*buf, key_val_sep)) {
+    எனில் (சாவி && *சாவி && strspn(*buf, சாவி_val_sep)) {
         (*buf)++;
         val = av_get_token(buf, pairs_sep);
     }
 
-    if (key && *key && val && *val)
-        ret = av_dict_set(pm, key, val, flags);
-    else
+    எனில் (சாவி && *சாவி && val && *val)
+        ret = av_dict_set(pm, சாவி, val, flags);
+    இல்லையெனில்
         ret = AVERROR(EINVAL);
 
-    av_freep(&key);
+    av_freep(&சாவி);
     av_freep(&val);
 
-    return ret;
+    திரும்பு ret;
 }
 
-int av_dict_parse_string(AVDictionary **pm, const char *str,
-                         const char *key_val_sep, const char *pairs_sep,
-                         int flags)
+முழு av_dict_parse_string(AVDictionary **pm, மாறிலி எழுத்து *str,
+                         மாறிலி எழுத்து *சாவி_val_sep, மாறிலி எழுத்து *pairs_sep,
+                         முழு flags)
 {
-    int ret;
+    முழு ret;
 
-    if (!str)
-        return 0;
+    எனில் (!str)
+        திரும்பு 0;
 
     /* ignore STRDUP flags */
-    flags &= ~(AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    flags &= ~(AV_DICT_DONT_STRDUP_சாவி | AV_DICT_DONT_STRDUP_VAL);
 
-    while (*str) {
-        if ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
-            return ret;
+    போது (*str) {
+        எனில் ((ret = parse_சாவி_மதிப்பு_pair(pm, &str, சாவி_val_sep, pairs_sep, flags)) < 0)
+            திரும்பு ret;
 
-        if (*str)
+        எனில் (*str)
             str++;
     }
 
-    return 0;
+    திரும்பு 0;
 }
 
-void av_dict_free(AVDictionary **pm)
+வெறுமை av_dict_free(AVDictionary **pm)
 {
     AVDictionary *m = *pm;
 
-    if (m) {
-        while (m->count--) {
-            av_freep(&m->elems[m->count].key);
-            av_freep(&m->elems[m->count].value);
+    எனில் (m) {
+        போது (m->மொத்தம்--) {
+            av_freep(&m->elems[m->மொத்தம்].சாவி);
+            av_freep(&m->elems[m->மொத்தம்].மதிப்பு);
         }
         av_freep(&m->elems);
     }
     av_freep(pm);
 }
 
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags)
+முழு av_dict_copy(AVDictionary **dst, மாறிலி AVDictionary *src, முழு flags)
 {
-    const AVDictionaryEntry *t = NULL;
+    மாறிலி AVDictionaryEntry *t = வெற்று;
 
-    if (!*dst && src && src->count && !src->duplicate_keys &&
+    எனில் (!*dst && src && src->மொத்தம் && !src->duplicate_சாவிகள் &&
         !(flags & AV_DICT_IGNORE_SUFFIX)) {
-        AVDictionary *m = av_mallocz(sizeof(*m));
-        if (!m)
-            return AVERROR(ENOMEM);
-        m->elems = av_calloc(src->count, sizeof(*m->elems));
-        if (!m->elems) {
+        AVDictionary *m = av_mallocz(அளவு(*m));
+        எனில் (!m)
+            திரும்பு AVERROR(ENOMEM);
+        m->elems = av_calloc(src->மொத்தம், அளவு(*m->elems));
+        எனில் (!m->elems) {
             av_free(m);
-            return AVERROR(ENOMEM);
+            திரும்பு AVERROR(ENOMEM);
         }
         *dst = m;
-        for (int i = 0; i < src->count; i++) {
-            m->elems[i].key   = av_strdup(src->elems[i].key);
-            m->elems[i].value = av_strdup(src->elems[i].value);
-            m->count++;
-            if (!m->elems[i].key || !m->elems[i].value) {
+        க்கு (முழு i = 0; i < src->மொத்தம்; i++) {
+            m->elems[i].சாவி   = av_strdup(src->elems[i].சாவி);
+            m->elems[i].மதிப்பு = av_strdup(src->elems[i].மதிப்பு);
+            m->மொத்தம்++;
+            எனில் (!m->elems[i].சாவி || !m->elems[i].மதிப்பு) {
                 av_dict_free(dst);
-                return AVERROR(ENOMEM);
+                திரும்பு AVERROR(ENOMEM);
             }
         }
-        return 0;
+        திரும்பு 0;
     }
 
-    while ((t = av_dict_iterate(src, t))) {
-        int ret = av_dict_set(dst, t->key, t->value, flags);
-        if (ret < 0)
-            return ret;
+    போது ((t = av_dict_iterate(src, t))) {
+        முழு ret = av_dict_set(dst, t->சாவி, t->மதிப்பு, flags);
+        எனில் (ret < 0)
+            திரும்பு ret;
     }
 
-    return 0;
+    திரும்பு 0;
 }
 
-int av_dict_get_string(const AVDictionary *m, char **buffer,
-                       const char key_val_sep, const char pairs_sep)
+முழு av_dict_get_string(மாறிலி AVDictionary *m, எழுத்து **buffer,
+                       மாறிலி எழுத்து சாவி_val_sep, மாறிலி எழுத்து pairs_sep)
 {
-    const AVDictionaryEntry *t = NULL;
+    மாறிலி AVDictionaryEntry *t = வெற்று;
     AVBPrint bprint;
-    int cnt = 0;
-    char special_chars[] = {pairs_sep, key_val_sep, '\0'};
+    முழு cnt = 0;
+    எழுத்து special_chars[] = {pairs_sep, சாவி_val_sep, '\0'};
 
-    if (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
-        pairs_sep == '\\' || key_val_sep == '\\')
-        return AVERROR(EINVAL);
+    எனில் (!buffer || pairs_sep == '\0' || சாவி_val_sep == '\0' || pairs_sep == சாவி_val_sep ||
+        pairs_sep == '\\' || சாவி_val_sep == '\\')
+        திரும்பு AVERROR(EINVAL);
 
-    if (!av_dict_count(m)) {
+    எனில் (!av_dict_மொத்தம்(m)) {
         *buffer = av_strdup("");
-        return *buffer ? 0 : AVERROR(ENOMEM);
+        திரும்பு *buffer ? 0 : AVERROR(ENOMEM);
     }
 
     av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
-    while ((t = av_dict_iterate(m, t))) {
-        if (cnt++)
+    போது ((t = av_dict_iterate(m, t))) {
+        எனில் (cnt++)
             av_bprint_append_data(&bprint, &pairs_sep, 1);
-        av_bprint_escape(&bprint, t->key, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
-        av_bprint_append_data(&bprint, &key_val_sep, 1);
-        av_bprint_escape(&bprint, t->value, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+        av_bprint_escape(&bprint, t->சாவி, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+        av_bprint_append_data(&bprint, &சாவி_val_sep, 1);
+        av_bprint_escape(&bprint, t->மதிப்பு, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
     }
-    return av_bprint_finalize(&bprint, buffer);
+    திரும்பு av_bprint_finalize(&bprint, buffer);
 }

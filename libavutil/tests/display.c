@@ -18,22 +18,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include "libavutil/display.c"
+#அந்தர்பாவ <stdio.h>
+#அந்தர்பாவ "libavutil/display.c"
 
-static void print_matrix(int32_t matrix[9])
+நிலையான வெறுமை print_matrix(int32_t matrix[9])
 {
-    int i, j;
+    முழு i, j;
 
-    for (i = 0; i < 3; ++i) {
-        for (j = 0; j < 3 - 1; ++j)
+    க்கு (i = 0; i < 3; ++i) {
+        க்கு (j = 0; j < 3 - 1; ++j)
             printf("%d ", matrix[i*3 + j]);
 
         printf("%d\n", matrix[i*3 + j]);
     }
 }
 
-int main(void)
+முழு முதன்மை(வெறுமை)
 {
     int32_t matrix[9];
 
@@ -57,6 +57,6 @@ int main(void)
     print_matrix(matrix);
     printf("degrees: %f\n", av_display_rotation_get(matrix));
 
-    return 0;
+    திரும்பு 0;
 
 }

@@ -19,33 +19,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/pca.c"
-#include "libavutil/lfg.h"
+#அந்தர்பாவ "libavutil/pca.c"
+#அந்தர்பாவ "libavutil/lfg.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#அந்தர்பாவ <stdio.h>
+#அந்தர்பாவ <stdlib.h>
 
-int main(void){
+முழு முதன்மை(வெறுமை){
     PCA *pca;
-    int i, j, k;
+    முழு i, j, k;
 #define LEN 8
-    double eigenvector[LEN*LEN];
-    double eigenvalue[LEN];
+    இரட்டை eigenvector[LEN*LEN];
+    இரட்டை eigenvalue[LEN];
     AVLFG prng;
 
     av_lfg_init(&prng, 1);
 
     pca= ff_pca_init(LEN);
 
-    for(i=0; i<9000000; i++){
-        double v[2*LEN+100];
+    க்கு(i=0; i<9000000; i++){
+        இரட்டை v[2*LEN+100];
 //        double sum=0;
-        int pos = av_lfg_get(&prng) % LEN;
-        int v2  = (int)(av_lfg_get(&prng) % 101) - 50;
-        v[0]    = (int)(av_lfg_get(&prng) % 101) - 50;
-        for(j=1; j<8; j++){
-            if(j<=pos) v[j]= v[0];
-            else       v[j]= v2;
+        முழு pos = av_lfg_get(&prng) % LEN;
+        முழு v2  = (முழு)(av_lfg_get(&prng) % 101) - 50;
+        v[0]    = (முழு)(av_lfg_get(&prng) % 101) - 50;
+        க்கு(j=1; j<8; j++){
+            எனில்(j<=pos) v[j]= v[0];
+            இல்லையெனில்       v[j]= v2;
 //            sum += v[j];
         }
 /*        for(j=0; j<LEN; j++){
@@ -61,26 +61,26 @@ int main(void){
 
 
     ff_pca(pca, eigenvector, eigenvalue);
-    for(i=0; i<LEN; i++){
-        pca->count= 1;
+    க்கு(i=0; i<LEN; i++){
+        pca->மொத்தம்= 1;
         pca->mean[i]= 0;
 
 //        (0.5^|x|)^2 = 0.5^2|x| = 0.25^|x|
 
 
 //        pca.covariance[i + i*LEN]= pow(0.5, fabs
-        for(j=i; j<LEN; j++){
+        க்கு(j=i; j<LEN; j++){
             printf("%f ", pca->covariance[i + j*LEN]);
         }
         printf("\n");
     }
 
-    for(i=0; i<LEN; i++){
-        double v[LEN];
-        double error=0;
-        memset(v, 0, sizeof(v));
-        for(j=0; j<LEN; j++){
-            for(k=0; k<LEN; k++){
+    க்கு(i=0; i<LEN; i++){
+        இரட்டை v[LEN];
+        இரட்டை error=0;
+        memset(v, 0, அளவு(v));
+        க்கு(j=0; j<LEN; j++){
+            க்கு(k=0; k<LEN; k++){
                 v[j] += pca->covariance[FFMIN(k,j) + FFMAX(k,j)*LEN] * eigenvector[i + k*LEN];
             }
             v[j] /= eigenvalue[i];
@@ -90,13 +90,13 @@ int main(void){
     }
     printf("\n");
 
-    for(i=0; i<LEN; i++){
-        for(j=0; j<LEN; j++){
+    க்கு(i=0; i<LEN; i++){
+        க்கு(j=0; j<LEN; j++){
             printf("%9.6f ", eigenvector[i + j*LEN]);
         }
         printf("  %9.1f %f\n", eigenvalue[i], eigenvalue[i]/eigenvalue[0]);
     }
 
     ff_pca_free(pca);
-    return 0;
+    திரும்பு 0;
 }

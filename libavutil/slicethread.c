@@ -16,75 +16,75 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include "cpu.h"
-#include "internal.h"
-#include "slicethread.h"
-#include "mem.h"
-#include "thread.h"
-#include "avassert.h"
+#அந்தர்பாவ <stdatomic.h>
+#அந்தர்பாவ "cpu.h"
+#அந்தர்பாவ "internal.h"
+#அந்தர்பாவ "slicethread.h"
+#அந்தர்பாவ "mem.h"
+#அந்தர்பாவ "thread.h"
+#அந்தர்பாவ "avassert.h"
 
 #define MAX_AUTO_THREADS 16
 
-#if HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
+#எனில் HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
 
-typedef struct WorkerContext {
+வகைவரை கட்டமைப்பு WorkerContext {
     AVSliceThread   *ctx;
     pthread_mutex_t mutex;
     pthread_cond_t  cond;
     pthread_t       thread;
-    int             done;
+    முழு             done;
 } WorkerContext;
 
-struct AVSliceThread {
+கட்டமைப்பு AVSliceThread {
     WorkerContext   *workers;
-    int             nb_threads;
-    int             nb_active_threads;
-    int             nb_jobs;
+    முழு             nb_threads;
+    முழு             nb_active_threads;
+    முழு             nb_jobs;
 
     atomic_uint     first_job;
     atomic_uint     current_job;
     pthread_mutex_t done_mutex;
     pthread_cond_t  done_cond;
-    int             done;
-    int             finished;
+    முழு             done;
+    முழு             finished;
     atomic_int      error;
 
-    void            *priv;
-    int            (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads);
-    int            (*main_func)(void *priv);
+    வெறுமை            *priv;
+    முழு            (*worker_func)(வெறுமை *priv, முழு jobnr, முழு threadnr, முழு nb_jobs, முழு nb_threads);
+    முழு            (*main_func)(வெறுமை *priv);
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
-    void           (*worker_func_v1)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads);
-    void           (*main_func_v1)(void *priv);
-    void            *priv_v1;
+#எனில் LIBAVUTIL_VERSION_MAJOR < 62
+    வெறுமை           (*worker_func_v1)(வெறுமை *priv, முழு jobnr, முழு threadnr, முழு nb_jobs, முழு nb_threads);
+    வெறுமை           (*main_func_v1)(வெறுமை *priv);
+    வெறுமை            *priv_v1;
 #endif
 };
 
-static int run_jobs(AVSliceThread *ctx)
+நிலையான முழு run_jobs(AVSliceThread *ctx)
 {
     unsigned nb_jobs    = ctx->nb_jobs;
     unsigned nb_active_threads = ctx->nb_active_threads;
     unsigned first_job    = atomic_fetch_add_explicit(&ctx->first_job, 1, memory_order_acq_rel);
     unsigned current_job  = first_job;
 
-    do {
-        int ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
-        if (ret)
-            continue;
+    செய் {
+        முழு ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
+        எனில் (ret)
+            தொடர்;
         ret = ctx->worker_func(ctx->priv, current_job, first_job, nb_jobs, nb_active_threads);
-        if (ret) {
-            int prev = 0;
+        எனில் (ret) {
+            முழு prev = 0;
             atomic_compare_exchange_strong_explicit(&ctx->error, &prev, ret,
                                                     memory_order_relaxed,
                                                     memory_order_relaxed);
         }
-    } while ((current_job = atomic_fetch_add_explicit(&ctx->current_job, 1, memory_order_acq_rel)) < nb_jobs);
+    } போது ((current_job = atomic_fetch_add_explicit(&ctx->current_job, 1, memory_order_acq_rel)) < nb_jobs);
 
-    return current_job == nb_jobs + nb_active_threads - 1;
+    திரும்பு current_job == nb_jobs + nb_active_threads - 1;
 }
 
-static void *attribute_align_arg thread_worker(void *v)
+நிலையான வெறுமை *attribute_align_arg thread_worker(வெறுமை *v)
 {
     WorkerContext *w = v;
     AVSliceThread *ctx = w->ctx;
@@ -92,17 +92,17 @@ static void *attribute_align_arg thread_worker(void *v)
     pthread_mutex_lock(&w->mutex);
     pthread_cond_signal(&w->cond);
 
-    while (1) {
+    போது (1) {
         w->done = 1;
-        while (w->done)
+        போது (w->done)
             pthread_cond_wait(&w->cond, &w->mutex);
 
-        if (ctx->finished) {
+        எனில் (ctx->finished) {
             pthread_mutex_unlock(&w->mutex);
-            return NULL;
+            திரும்பு வெற்று;
         }
 
-        if (run_jobs(ctx)) {
+        எனில் (run_jobs(ctx)) {
             pthread_mutex_lock(&ctx->done_mutex);
             ctx->done = 1;
             pthread_cond_signal(&ctx->done_cond);
@@ -112,35 +112,35 @@ static void *attribute_align_arg thread_worker(void *v)
 }
 
 av_cold
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads)
+முழு avpriv_slicethread_create2(AVSliceThread **pctx, வெறுமை *priv,
+                               முழு (*worker_func)(வெறுமை *priv, முழு jobnr, முழு threadnr, முழு nb_jobs, முழு nb_threads),
+                               முழு (*main_func)(வெறுமை *priv),
+                               முழு nb_threads)
 {
     AVSliceThread *ctx;
-    int nb_workers, i;
-    int ret;
+    முழு nb_workers, i;
+    முழு ret;
 
     av_assert0(nb_threads >= 0);
-    if (!nb_threads) {
-        int nb_cpus = av_cpu_count();
-        if (nb_cpus > 1)
+    எனில் (!nb_threads) {
+        முழு nb_cpus = av_cpu_மொத்தம்();
+        எனில் (nb_cpus > 1)
             nb_threads = FFMIN(nb_cpus + 1, MAX_AUTO_THREADS);
-        else
+        இல்லையெனில்
             nb_threads = 1;
     }
 
     nb_workers = nb_threads;
-    if (!main_func)
+    எனில் (!main_func)
         nb_workers--;
 
-    *pctx = ctx = av_mallocz(sizeof(*ctx));
-    if (!ctx)
-        return AVERROR(ENOMEM);
+    *pctx = ctx = av_mallocz(அளவு(*ctx));
+    எனில் (!ctx)
+        திரும்பு AVERROR(ENOMEM);
 
-    if (nb_workers && !(ctx->workers = av_calloc(nb_workers, sizeof(*ctx->workers)))) {
+    எனில் (nb_workers && !(ctx->workers = av_calloc(nb_workers, அளவு(*ctx->workers)))) {
         av_freep(pctx);
-        return AVERROR(ENOMEM);
+        திரும்பு AVERROR(ENOMEM);
     }
 
     ctx->priv        = priv;
@@ -153,59 +153,59 @@ int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
 
     atomic_init(&ctx->first_job, 0);
     atomic_init(&ctx->current_job, 0);
-    ret = pthread_mutex_init(&ctx->done_mutex, NULL);
-    if (ret) {
+    ret = pthread_mutex_init(&ctx->done_mutex, வெற்று);
+    எனில் (ret) {
         av_freep(&ctx->workers);
         av_freep(pctx);
-        return AVERROR(ret);
+        திரும்பு AVERROR(ret);
     }
-    ret = pthread_cond_init(&ctx->done_cond, NULL);
-    if (ret) {
+    ret = pthread_cond_init(&ctx->done_cond, வெற்று);
+    எனில் (ret) {
         ctx->nb_threads = main_func ? 0 : 1;
         avpriv_slicethread_free(pctx);
-        return AVERROR(ret);
+        திரும்பு AVERROR(ret);
     }
     ctx->done        = 0;
 
-    for (i = 0; i < nb_workers; i++) {
+    க்கு (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
         w->ctx = ctx;
-        ret = pthread_mutex_init(&w->mutex, NULL);
-        if (ret) {
+        ret = pthread_mutex_init(&w->mutex, வெற்று);
+        எனில் (ret) {
             ctx->nb_threads = main_func ? i : i + 1;
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            திரும்பு AVERROR(ret);
         }
-        ret = pthread_cond_init(&w->cond, NULL);
-        if (ret) {
+        ret = pthread_cond_init(&w->cond, வெற்று);
+        எனில் (ret) {
             pthread_mutex_destroy(&w->mutex);
             ctx->nb_threads = main_func ? i : i + 1;
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            திரும்பு AVERROR(ret);
         }
         pthread_mutex_lock(&w->mutex);
         w->done = 0;
 
-        if (ret = pthread_create(&w->thread, NULL, thread_worker, w)) {
+        எனில் (ret = pthread_create(&w->thread, வெற்று, thread_worker, w)) {
             ctx->nb_threads = main_func ? i : i + 1;
             pthread_mutex_unlock(&w->mutex);
             pthread_cond_destroy(&w->cond);
             pthread_mutex_destroy(&w->mutex);
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            திரும்பு AVERROR(ret);
         }
 
-        while (!w->done)
+        போது (!w->done)
             pthread_cond_wait(&w->cond, &w->mutex);
         pthread_mutex_unlock(&w->mutex);
     }
 
-    return nb_threads;
+    திரும்பு nb_threads;
 }
 
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main)
+முழு avpriv_slicethread_execute2(AVSliceThread *ctx, முழு nb_jobs, முழு execute_main)
 {
-    int nb_workers, i, is_last = 0, ret = 0;
+    முழு nb_workers, i, is_last = 0, ret = 0;
 
     av_assert0(nb_jobs > 0);
     ctx->nb_jobs           = nb_jobs;
@@ -214,10 +214,10 @@ int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_mai
     atomic_store_explicit(&ctx->first_job, 0, memory_order_relaxed);
     atomic_store_explicit(&ctx->current_job, ctx->nb_active_threads, memory_order_relaxed);
     nb_workers             = ctx->nb_active_threads;
-    if (!ctx->main_func || !execute_main)
+    எனில் (!ctx->main_func || !execute_main)
         nb_workers--;
 
-    for (i = 0; i < nb_workers; i++) {
+    க்கு (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
         pthread_mutex_lock(&w->mutex);
         w->done = 0;
@@ -225,39 +225,39 @@ int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_mai
         pthread_mutex_unlock(&w->mutex);
     }
 
-    if (ctx->main_func && execute_main) {
+    எனில் (ctx->main_func && execute_main) {
         ret = ctx->main_func(ctx->priv);
-    } else
+    } இல்லையெனில்
         is_last = run_jobs(ctx);
 
-    if (!is_last) {
+    எனில் (!is_last) {
         pthread_mutex_lock(&ctx->done_mutex);
-        while (!ctx->done)
+        போது (!ctx->done)
             pthread_cond_wait(&ctx->done_cond, &ctx->done_mutex);
         ctx->done = 0;
         pthread_mutex_unlock(&ctx->done_mutex);
     }
 
-    if (!ret)
+    எனில் (!ret)
         ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
 
-    return ret;
+    திரும்பு ret;
 }
 
-av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
+av_cold வெறுமை avpriv_slicethread_free(AVSliceThread **pctx)
 {
     AVSliceThread *ctx = *pctx;
-    int nb_workers, i;
+    முழு nb_workers, i;
 
-    if (!ctx)
-        return;
+    எனில் (!ctx)
+        திரும்பு;
 
     nb_workers = ctx->nb_threads;
-    if (!ctx->main_func)
+    எனில் (!ctx->main_func)
         nb_workers--;
 
     ctx->finished = 1;
-    for (i = 0; i < nb_workers; i++) {
+    க்கு (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
         pthread_mutex_lock(&w->mutex);
         w->done = 0;
@@ -265,9 +265,9 @@ av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
         pthread_mutex_unlock(&w->mutex);
     }
 
-    for (i = 0; i < nb_workers; i++) {
+    க்கு (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
-        pthread_join(w->thread, NULL);
+        pthread_join(w->thread, வெற்று);
         pthread_cond_destroy(&w->cond);
         pthread_mutex_destroy(&w->mutex);
     }
@@ -282,80 +282,80 @@ av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
  * Backwards compatibility wrapper for the deprecated avpriv_ slicethread API.
  */
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#எனில் LIBAVUTIL_VERSION_MAJOR < 62
 
-static int wrapper_worker(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads)
+நிலையான முழு wrapper_worker(வெறுமை *priv, முழு jobnr, முழு threadnr, முழு nb_jobs, முழு nb_threads)
 {
     AVSliceThread *ctx = priv;
     ctx->worker_func_v1(ctx->priv_v1, jobnr, threadnr, nb_jobs, nb_threads);
-    return 0;
+    திரும்பு 0;
 }
 
-static int wrapper_main(void *priv)
+நிலையான முழு wrapper_main(வெறுமை *priv)
 {
     AVSliceThread *ctx = priv;
     ctx->main_func_v1(ctx->priv_v1);
-    return 0;
+    திரும்பு 0;
 }
 
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                              void (*main_func)(void *priv),
-                              int nb_threads)
+முழு avpriv_slicethread_create(AVSliceThread **pctx, வெறுமை *priv,
+                              வெறுமை (*worker_func)(வெறுமை *priv, முழு jobnr, முழு threadnr, முழு nb_jobs, முழு nb_threads),
+                              வெறுமை (*main_func)(வெறுமை *priv),
+                              முழு nb_threads)
 {
-    int ret = avpriv_slicethread_create2(pctx, NULL, wrapper_worker,
-                                         main_func ? wrapper_main : NULL,
+    முழு ret = avpriv_slicethread_create2(pctx, வெற்று, wrapper_worker,
+                                         main_func ? wrapper_main : வெற்று,
                                          nb_threads);
-    if (ret < 0)
-        return ret;
+    எனில் (ret < 0)
+        திரும்பு ret;
 
     (*pctx)->priv           = *pctx;
     (*pctx)->priv_v1        = priv;
     (*pctx)->worker_func_v1 = worker_func;
     (*pctx)->main_func_v1   = main_func;
-    return ret;
+    திரும்பு ret;
 }
 
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main)
+வெறுமை avpriv_slicethread_execute(AVSliceThread *ctx, முழு nb_jobs, முழு execute_main)
 {
     avpriv_slicethread_execute2(ctx, nb_jobs, execute_main);
 }
 
 #endif /* LIBAVUTIL_VERSION_MAJOR < 62 */
 
-#else /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
+#இல்லையெனில் /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
 
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads)
+முழு avpriv_slicethread_create2(AVSliceThread **pctx, வெறுமை *priv,
+                               முழு (*worker_func)(வெறுமை *priv, முழு jobnr, முழு threadnr, முழு nb_jobs, முழு nb_threads),
+                               முழு (*main_func)(வெறுமை *priv),
+                               முழு nb_threads)
 {
-    *pctx = NULL;
-    return AVERROR(ENOSYS);
+    *pctx = வெற்று;
+    திரும்பு AVERROR(ENOSYS);
 }
 
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main)
+முழு avpriv_slicethread_execute2(AVSliceThread *ctx, முழு nb_jobs, முழு execute_main)
 {
     av_assert0(0);
 }
 
-void avpriv_slicethread_free(AVSliceThread **pctx)
+வெறுமை avpriv_slicethread_free(AVSliceThread **pctx)
 {
     av_assert0(!pctx || !*pctx);
 }
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#எனில் LIBAVUTIL_VERSION_MAJOR < 62
 
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                              void (*main_func)(void *priv),
-                              int nb_threads)
+முழு avpriv_slicethread_create(AVSliceThread **pctx, வெறுமை *priv,
+                              வெறுமை (*worker_func)(வெறுமை *priv, முழு jobnr, முழு threadnr, முழு nb_jobs, முழு nb_threads),
+                              வெறுமை (*main_func)(வெறுமை *priv),
+                              முழு nb_threads)
 {
-    *pctx = NULL;
-    return AVERROR(ENOSYS);
+    *pctx = வெற்று;
+    திரும்பு AVERROR(ENOSYS);
 }
 
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main)
+வெறுமை avpriv_slicethread_execute(AVSliceThread *ctx, முழு nb_jobs, முழு execute_main)
 {
     av_assert0(0);
 }

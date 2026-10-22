@@ -18,37 +18,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
-#include <stdint.h>
+#அந்தர்பாவ <assert.h>
+#அந்தர்பாவ <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/lls.h"
+#அந்தர்பாவ "config.h"
+#அந்தர்பாவ "libavutil/attributes.h"
+#அந்தர்பாவ "libavutil/cpu.h"
+#அந்தர்பாவ "libavutil/riscv/cpu.h"
+#அந்தர்பாவ "libavutil/lls.h"
 
-void ff_lls_update_covariance_rvv(double covar[][36], const double *var,
-                                  int count);
-double ff_scalarproduct_double_rvv(const double *, const double *, size_t);
+வெறுமை ff_lls_update_covariance_rvv(இரட்டை covar[][36], மாறிலி இரட்டை *var,
+                                  முழு மொத்தம்);
+இரட்டை ff_scalarproduct_double_rvv(மாறிலி இரட்டை *, மாறிலி இரட்டை *, size_t);
 
-static void ff_lls_update_rvv(struct LLSModel *m, const double *var)
+நிலையான வெறுமை ff_lls_update_rvv(கட்டமைப்பு LLSModel *m, மாறிலி இரட்டை *var)
 {
-    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_count + 1);
+    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_மொத்தம் + 1);
 }
 
-static double ff_lls_evaluate_rvv(struct LLSModel *m, const double *var,
-                                  int order)
+நிலையான இரட்டை ff_lls_evaluate_rvv(கட்டமைப்பு LLSModel *m, மாறிலி இரட்டை *var,
+                                  முழு order)
 {
-    return ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
+    திரும்பு ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
 }
 
-av_cold void ff_init_lls_riscv(LLSModel *m)
+av_cold வெறுமை ff_init_lls_riscv(LLSModel *m)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#எனில் HAVE_RVV
+    முழு flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
-        if (ff_get_rv_vlenb() > m->indep_count)
+    எனில் ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
+        எனில் (ff_get_rv_vlenb() > m->indep_மொத்தம்)
             m->update_lls = ff_lls_update_rvv;
         m->evaluate_lls = ff_lls_evaluate_rvv;
     }

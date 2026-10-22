@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#அந்தர்பாவ <stdarg.h>
+#அந்தர்பாவ <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#அந்தர்பாவ "libavutil/file.c"
+#அந்தர்பாவ "libavutil/log.h"
 
-static int last_log_level = -1;
+நிலையான முழு last_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+நிலையான வெறுமை log_callback(வெறுமை *ctx, முழு level, மாறிலி எழுத்து *fmt, va_list args)
 {
-    (void)ctx; (void)fmt; (void)args;
+    (வெறுமை)ctx; (வெறுமை)fmt; (வெறுமை)args;
     last_log_level = level;
 }
 
-int main(int argc, char **argv)
+முழு முதன்மை(முழு argc, எழுத்து **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    மாறிலி எழுத்து *path = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
     size_t size;
 
     av_log_set_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
+    எனில் (av_file_map(path, &buf, &size, 0, வெற்று) < 0)
+        திரும்பு 1;
     av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    எனில் (size == 0)
+        திரும்பு 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
+    க்கு (முழு i = 0; i < 2; i++) {
         last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
+        எனில் (av_file_map("no_such_file_xyz", &buf, &size, i, வெற்று) >= 0) {
             av_file_unmap(buf, size);
-            return 2;
+            திரும்பு 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
+        எனில் (last_log_level != AV_LOG_ERROR + i) {
             fprintf(stderr, "expected level %d with offset=%d, got %d\n",
                     AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+            திரும்பு 3;
         }
     }
 
-    return 0;
+    திரும்பு 0;
 }

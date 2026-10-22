@@ -19,37 +19,37 @@
 #ifndef AVUTIL_FLOAT2HALF_H
 #define AVUTIL_FLOAT2HALF_H
 
-#include <stdint.h>
-#include "intfloat.h"
+#அந்தர்பாவ <stdint.h>
+#அந்தர்பாவ "intfloat.h"
 
-#include "config.h"
+#அந்தர்பாவ "config.h"
 
-typedef struct Float2HalfTables {
-#if HAVE_FAST_FLOAT16
+வகைவரை கட்டமைப்பு Float2HalfTables {
+#எனில் HAVE_FAST_FLOAT16
     uint8_t dummy;
-#else
+#இல்லையெனில்
     uint16_t basetable[512];
     uint8_t shifttable[512];
 #endif
 } Float2HalfTables;
 
-void ff_init_float2half_tables(Float2HalfTables *t);
+வெறுமை ff_init_float2half_tables(Float2HalfTables *t);
 
-static inline uint16_t float2half(uint32_t f, const Float2HalfTables *t)
+நிலையான உள்வரி uint16_t float2half(uint32_t f, மாறிலி Float2HalfTables *t)
 {
-#if HAVE_FAST_FLOAT16
-    union {
+#எனில் HAVE_FAST_FLOAT16
+    ஒன்றிப்பு {
         _Float16 f;
         uint16_t i;
     } u;
     u.f = av_int2float(f);
-    return u.i;
-#else
+    திரும்பு u.i;
+#இல்லையெனில்
     uint16_t h;
 
     h = t->basetable[(f >> 23) & 0x1ff] + ((f & 0x007fffff) >> t->shifttable[(f >> 23) & 0x1ff]);
 
-    return h;
+    திரும்பு h;
 #endif
 }
 

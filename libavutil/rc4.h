@@ -21,7 +21,7 @@
 #ifndef AVUTIL_RC4_H
 #define AVUTIL_RC4_H
 
-#include <stdint.h>
+#அந்தர்பாவ <stdint.h>
 
 /**
  * @defgroup lavu_rc4 RC4
@@ -29,15 +29,15 @@
  * @{
  */
 
-typedef struct AVRC4 {
+வகைவரை கட்டமைப்பு AVRC4 {
     uint8_t state[256];
-    int x, y;
+    முழு x, y;
 } AVRC4;
 
 /**
  * Allocate an AVRC4 context.
  */
-AVRC4 *av_rc4_alloc(void);
+AVRC4 *av_rc4_alloc(வெறுமை);
 
 /**
  * @brief Initializes an AVRC4 context.
@@ -48,7 +48,7 @@ AVRC4 *av_rc4_alloc(void);
  * @param decrypt 0 for encryption, 1 for decryption, currently has no effect
  * @return zero on success, negative value otherwise
  */
-int av_rc4_init(struct AVRC4 *d, const uint8_t *key, int key_bits, int decrypt);
+முழு av_rc4_init(கட்டமைப்பு AVRC4 *d, மாறிலி uint8_t *சாவி, முழு சாவி_bits, முழு decrypt);
 
 /**
  * @brief Encrypts / decrypts using the RC4 algorithm.
@@ -60,7 +60,7 @@ int av_rc4_init(struct AVRC4 *d, const uint8_t *key, int key_bits, int decrypt);
  * @param iv not (yet) used for RC4, should be NULL
  * @param decrypt 0 for encryption, 1 for decryption, not (yet) used
  */
-void av_rc4_crypt(struct AVRC4 *d, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+வெறுமை av_rc4_crypt(கட்டமைப்பு AVRC4 *d, uint8_t *dst, மாறிலி uint8_t *src, முழு மொத்தம், uint8_t *iv, முழு decrypt);
 
 /**
  * @}

@@ -27,52 +27,52 @@
 #ifndef AVUTIL_AVASSERT_H
 #define AVUTIL_AVASSERT_H
 
-#include <stdlib.h>
+#அந்தர்பாவ <stdlib.h>
 #ifdef HAVE_AV_CONFIG_H
 #   include "config.h"
 #endif
-#include "attributes.h"
-#include "log.h"
-#include "macros.h"
-#include "version.h"
+#அந்தர்பாவ "attributes.h"
+#அந்தர்பாவ "log.h"
+#அந்தர்பாவ "macros.h"
+#அந்தர்பாவ "version.h"
 
 /**
  * assert() equivalent, that is always enabled.
  */
-#define av_assert0(cond) do {                                           \
-    if (!(cond)) {                                                      \
-        av_log(NULL, AV_LOG_PANIC, "Assertion %s failed at %s:%d\n",    \
+#define av_assert0(cond) செய் {                                           \
+    எனில் (!(cond)) {                                                      \
+        av_log(வெற்று, AV_LOG_PANIC, "Assertion %s failed at %s:%d\n",    \
                AV_STRINGIFY(cond), __FILE__, __LINE__);                 \
         abort();                                                        \
     }                                                                   \
-} while (0)
+} போது (0)
 
 
 /**
  * assert() equivalent, that does not lie in speed critical code.
  * These asserts() thus can be enabled without fearing speed loss.
  */
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 0
+#எனில் defined(ASSERT_LEVEL) && ASSERT_LEVEL > 0
 #define av_assert1(cond) av_assert0(cond)
-#else
-#define av_assert1(cond) ((void)0)
+#இல்லையெனில்
+#define av_assert1(cond) ((வெறுமை)0)
 #endif
 
 
 /**
  * assert() equivalent, that does lie in speed critical code.
  */
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
+#எனில் defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
 #define av_assert2(cond) av_assert0(cond)
-#else
-#define av_assert2(cond) ((void)0)
+#இல்லையெனில்
+#define av_assert2(cond) ((வெறுமை)0)
 #endif
 
-#if FF_API_ASSERT_FPU
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
+#எனில் FF_API_ASSERT_FPU
+#எனில் defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
 #define av_assert2_fpu() av_assert0_fpu()
-#else
-#define av_assert2_fpu() ((void)0)
+#இல்லையெனில்
+#define av_assert2_fpu() ((வெறுமை)0)
 #endif
 /**
  * Assert that floating point operations can be executed.
@@ -81,7 +81,7 @@
  * @deprecated without replacement
  */
 attribute_deprecated
-void av_assert0_fpu(void);
+வெறுமை av_assert0_fpu(வெறுமை);
 #endif
 
 /**
@@ -95,31 +95,31 @@ void av_assert0_fpu(void);
  * The condition used with av_assume() should not have side-effects
  * and should be visible to the compiler.
  */
-#if defined(ASSERT_LEVEL) ? ASSERT_LEVEL > 0 : !defined(HAVE_AV_CONFIG_H) && !defined(NDEBUG)
-#define av_unreachable(msg)                                             \
-do {                                                                    \
-    av_log(NULL, AV_LOG_PANIC,                                          \
+#எனில் defined(ASSERT_LEVEL) ? ASSERT_LEVEL > 0 : !defined(HAVE_AV_CONFIG_H) && !defined(NDEBUG)
+#define av_unreachable(செய்தி)                                             \
+செய் {                                                                    \
+    av_log(வெற்று, AV_LOG_PANIC,                                          \
            "Reached supposedly unreachable code at %s:%d: %s\n",        \
-           __FILE__, __LINE__, msg);                                    \
+           __FILE__, __LINE__, செய்தி);                                    \
     abort();                                                            \
-} while (0)
+} போது (0)
 #define av_assume(cond) av_assert0(cond)
-#else
-#if AV_GCC_VERSION_AT_LEAST(4, 5) || AV_HAS_BUILTIN(__builtin_unreachable)
-#define av_unreachable(msg) __builtin_unreachable()
-#elif  defined(_MSC_VER)
-#define av_unreachable(msg) __assume(0)
-#elif __STDC_VERSION__ >= 202311L
-#include <stddef.h>
-#define av_unreachable(msg) unreachable()
-#else
-#define av_unreachable(msg) ((void)0)
+#இல்லையெனில்
+#எனில் AV_GCC_VERSION_AT_LEAST(4, 5) || AV_HAS_BUILTIN(__builtin_unreachable)
+#define av_unreachable(செய்தி) __builtin_unreachable()
+#அல்லதெனில்  defined(_MSC_VER)
+#define av_unreachable(செய்தி) __assume(0)
+#அல்லதெனில் __STDC_VERSION__ >= 202311L
+#அந்தர்பாவ <stddef.h>
+#define av_unreachable(செய்தி) unreachable()
+#இல்லையெனில்
+#define av_unreachable(செய்தி) ((வெறுமை)0)
 #endif
 
-#define av_assume(cond) do { \
-    if (!(cond))             \
+#define av_assume(cond) செய் { \
+    எனில் (!(cond))             \
         av_unreachable();    \
-} while (0)
+} போது (0)
 #endif
 
 #endif /* AVUTIL_AVASSERT_H */

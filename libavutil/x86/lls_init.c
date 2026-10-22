@@ -20,27 +20,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/attributes.h"
-#include "libavutil/lls.h"
-#include "libavutil/x86/cpu.h"
+#அந்தர்பாவ "libavutil/attributes.h"
+#அந்தர்பாவ "libavutil/lls.h"
+#அந்தர்பாவ "libavutil/x86/cpu.h"
 
-void ff_update_lls_sse2(LLSModel *m, const double *var);
-void ff_update_lls_avx(LLSModel *m, const double *var);
-void ff_update_lls_fma3(LLSModel *m, const double *var);
-double ff_evaluate_lls_sse2(LLSModel *m, const double *var, int order);
+வெறுமை ff_update_lls_sse2(LLSModel *m, மாறிலி இரட்டை *var);
+வெறுமை ff_update_lls_avx(LLSModel *m, மாறிலி இரட்டை *var);
+வெறுமை ff_update_lls_fma3(LLSModel *m, மாறிலி இரட்டை *var);
+இரட்டை ff_evaluate_lls_sse2(LLSModel *m, மாறிலி இரட்டை *var, முழு order);
 
-av_cold void ff_init_lls_x86(LLSModel *m)
+av_cold வெறுமை ff_init_lls_x86(LLSModel *m)
 {
-    int cpu_flags = av_get_cpu_flags();
-    if (EXTERNAL_SSE2(cpu_flags)) {
+    முழு cpu_flags = av_get_cpu_flags();
+    எனில் (EXTERNAL_SSE2(cpu_flags)) {
         m->update_lls = ff_update_lls_sse2;
-        if (m->indep_count >= 4)
+        எனில் (m->indep_மொத்தம் >= 4)
             m->evaluate_lls = ff_evaluate_lls_sse2;
     }
-    if (EXTERNAL_AVX_FAST(cpu_flags)) {
+    எனில் (EXTERNAL_AVX_FAST(cpu_flags)) {
         m->update_lls = ff_update_lls_avx;
     }
-    if (EXTERNAL_FMA3_FAST(cpu_flags)) {
+    எனில் (EXTERNAL_FMA3_FAST(cpu_flags)) {
         m->update_lls = ff_update_lls_fma3;
     }
 }

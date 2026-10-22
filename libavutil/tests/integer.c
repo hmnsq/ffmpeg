@@ -18,17 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#அந்தர்பாவ <stdint.h>
 
-#include "libavutil/avassert.h"
-#include "libavutil/integer.h"
-#include "libavutil/intmath.h"
+#அந்தர்பாவ "libavutil/avassert.h"
+#அந்தர்பாவ "libavutil/integer.h"
+#அந்தர்பாவ "libavutil/intmath.h"
 
-int main(void){
+முழு முதன்மை(வெறுமை){
     int64_t a,b;
 
-    for(a=7; a<256*256*256; a+=13215){
-        for(b=3; b<256*256*256; b+=27118){
+    க்கு(a=7; a<256*256*256; a+=13215){
+        க்கு(b=3; b<256*256*256; b+=27118){
             AVInteger ai= av_int2i(a);
             AVInteger bi= av_int2i(b);
 
@@ -45,5 +45,5 @@ int main(void){
             av_assert0(av_i2int(av_div_i(ai,bi)) == a/b);
         }
     }
-    return 0;
+    திரும்பு 0;
 }

@@ -167,24 +167,24 @@
 /**
  * Return the LIBAVUTIL_VERSION_INT constant.
  */
-unsigned avutil_version(void);
+unsigned avutil_version(வெறுமை);
 
 /**
  * Return an informative version string. This usually is the actual release
  * version number or a git commit description. This string has no fixed format
  * and can change any time. It should never be parsed by code.
  */
-const char *av_version_info(void);
+மாறிலி எழுத்து *av_version_info(வெறுமை);
 
 /**
  * Return the libavutil build-time configuration.
  */
-const char *avutil_configuration(void);
+மாறிலி எழுத்து *avutil_configuration(வெறுமை);
 
 /**
  * Return the libavutil license.
  */
-const char *avutil_license(void);
+மாறிலி எழுத்து *avutil_license(வெறுமை);
 
 /**
  * @}
@@ -195,7 +195,7 @@ const char *avutil_license(void);
  * @brief Media Type
  */
 
-enum AVMediaType {
+எண்ணிக்கை AVMediaType {
     AVMEDIA_TYPE_UNKNOWN = -1,  ///< Usually treated as AVMEDIA_TYPE_DATA
     AVMEDIA_TYPE_VIDEO,
     AVMEDIA_TYPE_AUDIO,
@@ -209,7 +209,7 @@ enum AVMediaType {
  * Return a string describing the media_type enum, NULL if media_type
  * is unknown.
  */
-const char *av_get_media_type_string(enum AVMediaType media_type);
+மாறிலி எழுத்து *av_get_media_type_string(எண்ணிக்கை AVMediaType media_type);
 
 /**
  * @defgroup lavu_const Constants
@@ -244,7 +244,7 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * either pts or dts.
  */
 
-#define AV_NOPTS_VALUE          ((int64_t)UINT64_C(0x8000000000000000))
+#define AV_NOPTS_மதிப்பு          ((int64_t)UINT64_C(0x8000000000000000))
 
 /**
  * Internal time base represented as integer
@@ -259,7 +259,7 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
 #ifdef __cplusplus
 /* ISO C++ forbids compound-literals. */
 #define AV_TIME_BASE_Q          av_make_q(1, AV_TIME_BASE)
-#else
+#இல்லையெனில்
 #define AV_TIME_BASE_Q          (AVRational){1, AV_TIME_BASE}
 #endif
 
@@ -273,7 +273,7 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * @{
  */
 
-enum AVPictureType {
+எண்ணிக்கை AVPictureType {
     AV_PICTURE_TYPE_NONE = 0, ///< Undefined
     AV_PICTURE_TYPE_I,     ///< Intra
     AV_PICTURE_TYPE_P,     ///< Predicted
@@ -291,36 +291,36 @@ enum AVPictureType {
  * @param[in] pict_type the picture type @return a single character
  * representing the picture type, '?' if pict_type is unknown
  */
-char av_get_picture_type_char(enum AVPictureType pict_type);
+எழுத்து av_get_picture_type_char(எண்ணிக்கை AVPictureType pict_type);
 
 /**
  * @}
  */
 
-#include "common.h"
-#include "rational.h"
-#include "version.h"
-#include "macros.h"
-#include "mathematics.h"
-#include "log.h"
-#include "pixfmt.h"
+#அந்தர்பாவ "common.h"
+#அந்தர்பாவ "rational.h"
+#அந்தர்பாவ "version.h"
+#அந்தர்பாவ "macros.h"
+#அந்தர்பாவ "mathematics.h"
+#அந்தர்பாவ "log.h"
+#அந்தர்பாவ "pixfmt.h"
 
 /**
  * Return x default pointer in case p is NULL.
  */
-static inline void *av_x_if_null(const void *p, const void *x)
+நிலையான உள்வரி வெறுமை *av_x_if_null(மாறிலி வெறுமை *p, மாறிலி வெறுமை *x)
 {
-    return (void *)(intptr_t)(p ? p : x);
+    திரும்பு (வெறுமை *)(intptr_t)(p ? p : x);
 }
 
 /**
  * Return the fractional representation of the internal time base.
  */
-AVRational av_get_time_base_q(void);
+AVRational av_get_time_base_q(வெறுமை);
 
 #define AV_FOURCC_MAX_STRING_SIZE 32
 
-#define av_fourcc2str(fourcc) av_fourcc_make_string((char[AV_FOURCC_MAX_STRING_SIZE]){0}, fourcc)
+#define av_fourcc2str(fourcc) av_fourcc_make_string((எழுத்து[AV_FOURCC_MAX_STRING_SIZE]){0}, fourcc)
 
 /**
  * Fill the provided buffer with a string containing a FourCC (four-character
@@ -330,7 +330,7 @@ AVRational av_get_time_base_q(void);
  * @param fourcc the fourcc to represent
  * @return the buffer in input
  */
-char *av_fourcc_make_string(char *buf, uint32_t fourcc);
+எழுத்து *av_fourcc_make_string(எழுத்து *buf, uint32_t fourcc);
 
 /**
  * @}

@@ -60,69 +60,69 @@
  * @author Zane van Iperen <zane@zanevaniperen.com>
  */
 
-#include "attributes_internal.h"
-#include "uuid.h"
-#include "error.h"
-#include "avstring.h"
+#அந்தர்பாவ "attributes_internal.h"
+#அந்தர்பாவ "uuid.h"
+#அந்தர்பாவ "error.h"
+#அந்தர்பாவ "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+முழு av_uuid_parse(மாறிலி எழுத்து *in, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    எனில் (strlen(in) != 36)
+        திரும்பு AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    திரும்பு av_uuid_parse_range(in, in + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+நிலையான முழு xdigit_to_int(எழுத்து c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    எனில் (c >= 'a' && c <= 'f')
+        திரும்பு c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    எனில் (c >= '0' && c <= '9')
+        திரும்பு c - '0';
 
-    return -1;
+    திரும்பு -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+முழு av_uuid_parse_range(மாறிலி எழுத்து *in_start, மாறிலி எழுத்து *in_end, AVUUID uu)
 {
-    int i;
-    const char *cp;
+    முழு i;
+    மாறிலி எழுத்து *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    எனில் ((in_end - in_start) != 36)
+        திரும்பு AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    க்கு (i = 0, cp = in_start; i < 16; i++) {
+        முழு hi;
+        முழு lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        எனில் (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
         hi = xdigit_to_int(*cp++);
         lo = xdigit_to_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        எனில் (hi == -1 || lo == -1)
+            திரும்பு AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    திரும்பு 0;
 }
 
-static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
+நிலையான attribute_nonstring மாறிலி எழுத்து hexdigits_lower[16] = "0123456789abcdef";
 
-void av_uuid_unparse(const AVUUID uuid, char *out)
+வெறுமை av_uuid_unparse(மாறிலி AVUUID uuid, எழுத்து *out)
 {
-    char *p = out;
+    எழுத்து *p = out;
 
-    for (int i = 0; i < 16; i++) {
+    க்கு (முழு i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        எனில் (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
@@ -133,10 +133,10 @@ void av_uuid_unparse(const AVUUID uuid, char *out)
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+முழு av_uuid_urn_parse(மாறிலி எழுத்து *in, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    எனில் (av_stristr(in, "urn:uuid:") != in)
+        திரும்பு AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    திரும்பு av_uuid_parse(in + 9, uu);
 }

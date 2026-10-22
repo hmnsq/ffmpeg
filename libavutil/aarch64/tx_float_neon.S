@@ -674,7 +674,7 @@ FFT15_FN ns_float, 1
 // 15xM PFA (len = 15*M, M a power of two), like the x86 fft_pfa_15xM:
 // dim1 = M 15pt transforms scattered into s->tmp at sub_map[i], spaced M
 // apart; dim2 = 15 in-place M-pt subtransforms (plain blr, the uniform ABI
-// needs no asm-call variant); post = out[i*stride] = s->tmp[out_map[i]].
+// needs no asm-அழை variant); post = out[i*stride] = s->tmp[out_map[i]].
 // AVTXContext offsets: len=0, map=8, tmp=24, sub=32, fn[0]=40.
 .macro PFA_15_FN name, no_perm
 function ff_tx_fft_pfa_15xM_\name\()_neon, export=1
@@ -1465,7 +1465,7 @@ function ff_tx_fft_sr_\name\()_neon, export=1
         stp             d14, d15, [sp, #16*2]
         stp             x19, x20, [sp, #16]
 
-        ldr             w19, [x0, #0] // global target
+        ldr             w19, [x0, #0] // வைஶ்விக target
         mov             w20, w19      // local length
 
         LOAD_SUBADD

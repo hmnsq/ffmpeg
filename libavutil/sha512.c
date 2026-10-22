@@ -21,32 +21,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#அந்தர்பாவ <string.h>
 
-#include "config.h"
-#include "attributes.h"
-#include "bswap.h"
-#include "error.h"
-#include "sha512.h"
-#include "intreadwrite.h"
-#include "mem.h"
+#அந்தர்பாவ "config.h"
+#அந்தர்பாவ "attributes.h"
+#அந்தர்பாவ "bswap.h"
+#அந்தர்பாவ "error.h"
+#அந்தர்பாவ "sha512.h"
+#அந்தர்பாவ "intreadwrite.h"
+#அந்தர்பாவ "mem.h"
 
 /** hash context */
-typedef struct AVSHA512 {
+வகைவரை கட்டமைப்பு AVSHA512 {
     uint8_t  digest_len;  ///< digest length in 64-bit words
-    uint64_t count;       ///< number of bytes in buffer
+    uint64_t மொத்தம்;       ///< number of bytes in buffer
     uint8_t  buffer[128]; ///< 1024-bit buffer of input values used in hash updating
     uint64_t state[8];    ///< current hash value
 } AVSHA512;
 
-const int av_sha512_size = sizeof(AVSHA512);
+மாறிலி முழு av_sha512_size = அளவு(AVSHA512);
 
-struct AVSHA512 *av_sha512_alloc(void)
+கட்டமைப்பு AVSHA512 *av_sha512_alloc(வெறுமை)
 {
-    return av_mallocz(sizeof(struct AVSHA512));
+    திரும்பு av_mallocz(அளவு(கட்டமைப்பு AVSHA512));
 }
 
-static const uint64_t K512[80] = {
+நிலையான மாறிலி uint64_t K512[80] = {
     UINT64_C(0x428a2f98d728ae22),  UINT64_C(0x7137449123ef65cd),
     UINT64_C(0xb5c0fbcfec4d3b2f),  UINT64_C(0xe9b5dba58189dbbc),
     UINT64_C(0x3956c25bf348b538),  UINT64_C(0x59f111f1b605d019),
@@ -89,7 +89,7 @@ static const uint64_t K512[80] = {
     UINT64_C(0x5fcb6fab3ad6faec),  UINT64_C(0x6c44198c4a475817),
 };
 
-#define ror(value, bits) (((value) >> (bits)) | ((value) << (64 - (bits))))
+#define ror(மதிப்பு, bits) (((மதிப்பு) >> (bits)) | ((மதிப்பு) << (64 - (bits))))
 
 #define Ch(x,y,z)   (((x) & ((y) ^ (z))) ^ (z))
 #define Maj(z,y,x)  ((((x) | (y)) & (z)) | ((x) & (y)))
@@ -117,12 +117,12 @@ static const uint64_t K512[80] = {
     T1 = blk(i); \
     ROUND512(a,b,c,d,e,f,g,h)
 
-static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
+நிலையான வெறுமை sha512_transform(uint64_t *state, மாறிலி uint8_t buffer[128])
 {
     uint64_t a, b, c, d, e, f, g, h;
     uint64_t block[80];
     uint64_t T1;
-    int i;
+    முழு i;
 
     a = state[0];
     b = state[1];
@@ -132,12 +132,12 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
     f = state[5];
     g = state[6];
     h = state[7];
-#if CONFIG_SMALL
-    for (i = 0; i < 80; i++) {
+#எனில் CONFIG_SMALL
+    க்கு (i = 0; i < 80; i++) {
         uint64_t T2;
-        if (i < 16)
+        எனில் (i < 16)
             T1 = blk0(i);
-        else
+        இல்லையெனில்
             T1 = blk(i);
         T1 += h + Sigma1_512(e) + Ch(e, f, g) + K512[i];
         T2 = Sigma0_512(a) + Maj(a, b, c);
@@ -150,7 +150,7 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
         b = a;
         a = T1 + T2;
     }
-#else
+#இல்லையெனில்
 
 #define R512_0 \
     ROUND512_0_TO_15(a, b, c, d, e, f, g, h); \
@@ -189,11 +189,11 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
 }
 
 
-av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
+av_cold முழு av_sha512_init(AVSHA512 *ctx, முழு bits)
 {
     ctx->digest_len = bits >> 6;
-    switch (bits) {
-    case 224: // SHA-512/224
+    தேர்வு (bits) {
+    நிலை 224: // SHA-512/224
         ctx->state[0] = UINT64_C(0x8C3D37C819544DA2);
         ctx->state[1] = UINT64_C(0x73E1996689DCD4D6);
         ctx->state[2] = UINT64_C(0x1DFAB7AE32FF9C82);
@@ -202,8 +202,8 @@ av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
         ctx->state[5] = UINT64_C(0x77E36F7304C48942);
         ctx->state[6] = UINT64_C(0x3F9D85A86A1D36C8);
         ctx->state[7] = UINT64_C(0x1112E6AD91D692A1);
-        break;
-    case 256: // SHA-512/256
+        நிறுத்து;
+    நிலை 256: // SHA-512/256
         ctx->state[0] = UINT64_C(0x22312194FC2BF72C);
         ctx->state[1] = UINT64_C(0x9F555FA3C84C64C2);
         ctx->state[2] = UINT64_C(0x2393B86B6F53B151);
@@ -212,8 +212,8 @@ av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
         ctx->state[5] = UINT64_C(0xBE5E1E2553863992);
         ctx->state[6] = UINT64_C(0x2B0199FC2C85B8AA);
         ctx->state[7] = UINT64_C(0x0EB72DDC81C52CA2);
-        break;
-    case 384: // SHA-384
+        நிறுத்து;
+    நிலை 384: // SHA-384
         ctx->state[0] = UINT64_C(0xCBBB9D5DC1059ED8);
         ctx->state[1] = UINT64_C(0x629A292A367CD507);
         ctx->state[2] = UINT64_C(0x9159015A3070DD17);
@@ -222,8 +222,8 @@ av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
         ctx->state[5] = UINT64_C(0x8EB44A8768581511);
         ctx->state[6] = UINT64_C(0xDB0C2E0D64F98FA7);
         ctx->state[7] = UINT64_C(0x47B5481DBEFA4FA4);
-        break;
-    case 512: // SHA-512
+        நிறுத்து;
+    நிலை 512: // SHA-512
         ctx->state[0] = UINT64_C(0x6A09E667F3BCC908);
         ctx->state[1] = UINT64_C(0xBB67AE8584CAA73B);
         ctx->state[2] = UINT64_C(0x3C6EF372FE94F82B);
@@ -232,39 +232,39 @@ av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
         ctx->state[5] = UINT64_C(0x9B05688C2B3E6C1F);
         ctx->state[6] = UINT64_C(0x1F83D9ABFB41BD6B);
         ctx->state[7] = UINT64_C(0x5BE0CD19137E2179);
-        break;
-    default:
-        return AVERROR(EINVAL);
+        நிறுத்து;
+    இயல்பு:
+        திரும்பு AVERROR(EINVAL);
     }
-    ctx->count = 0;
-    return 0;
+    ctx->மொத்தம் = 0;
+    திரும்பு 0;
 }
 
-void av_sha512_update(AVSHA512* ctx, const uint8_t* data, size_t len)
+வெறுமை av_sha512_update(AVSHA512* ctx, மாறிலி uint8_t* data, size_t len)
 {
-    unsigned int j;
+    unsigned முழு j;
     size_t i;
 
-    j = ctx->count & 127;
-    ctx->count += len;
-#if CONFIG_SMALL
-    for (i = 0; i < len; i++) {
+    j = ctx->மொத்தம் & 127;
+    ctx->மொத்தம் += len;
+#எனில் CONFIG_SMALL
+    க்கு (i = 0; i < len; i++) {
         ctx->buffer[j++] = data[i];
-        if (128 == j) {
+        எனில் (128 == j) {
             sha512_transform(ctx->state, ctx->buffer);
             j = 0;
         }
     }
-#else
-    if (len >= 128 - j) {
-        const uint8_t *end;
+#இல்லையெனில்
+    எனில் (len >= 128 - j) {
+        மாறிலி uint8_t *end;
         memcpy(&ctx->buffer[j], data, (i = 128 - j));
         sha512_transform(ctx->state, ctx->buffer);
         data += i;
         len  -= i;
         end   = data + (len & ~127);
         len   = len % 128;
-        for (; data < end; data += 128)
+        க்கு (; data < end; data += 128)
             sha512_transform(ctx->state, data);
         j = 0;
     }
@@ -272,18 +272,18 @@ void av_sha512_update(AVSHA512* ctx, const uint8_t* data, size_t len)
 #endif
 }
 
-void av_sha512_final(AVSHA512* ctx, uint8_t *digest)
+வெறுமை av_sha512_final(AVSHA512* ctx, uint8_t *digest)
 {
     uint64_t i = 0;
-    uint64_t finalcount = av_be2ne64(ctx->count << 3);
+    uint64_t finalcount = av_be2ne64(ctx->மொத்தம் << 3);
 
     av_sha512_update(ctx, "\200", 1);
-    while ((ctx->count & 127) != 112)
+    போது ((ctx->மொத்தம் & 127) != 112)
         av_sha512_update(ctx, "", 1);
     av_sha512_update(ctx, (uint8_t *)&i, 8);
     av_sha512_update(ctx, (uint8_t *)&finalcount, 8); /* Should cause a transform() */
-    for (i = 0; i < ctx->digest_len; i++)
+    க்கு (i = 0; i < ctx->digest_len; i++)
         AV_WB64(digest + i*8, ctx->state[i]);
-    if (ctx->digest_len & 1) /* SHA512/224 is 28 bytes, and is not divisible by 8. */
+    எனில் (ctx->digest_len & 1) /* SHA512/224 is 28 bytes, and is not divisible by 8. */
         AV_WB32(digest + i*8, ctx->state[i] >> 32);
 }

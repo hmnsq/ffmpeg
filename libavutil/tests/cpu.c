@@ -16,31 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#அந்தர்பாவ <stdio.h>
 
-#include "config.h"
+#அந்தர்பாவ "config.h"
 
-#include "libavutil/cpu.h"
-#include "libavutil/avstring.h"
+#அந்தர்பாவ "libavutil/cpu.h"
+#அந்தர்பாவ "libavutil/avstring.h"
 
-#if ARCH_AARCH64
-#include "libavutil/aarch64/cpu.h"
-#elif ARCH_RISCV
-#include "libavutil/riscv/cpu.h"
+#எனில் ARCH_AARCH64
+#அந்தர்பாவ "libavutil/aarch64/cpu.h"
+#அல்லதெனில் ARCH_RISCV
+#அந்தர்பாவ "libavutil/riscv/cpu.h"
 #endif
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
+#எனில் HAVE_UNISTD_H
+#அந்தர்பாவ <unistd.h>
 #endif
-#if !HAVE_GETOPT
-#include "compat/getopt.c"
+#எனில் !HAVE_GETOPT
+#அந்தர்பாவ "compat/getopt.c"
 #endif
 
-static const struct {
-    int flag;
-    const char *name;
+நிலையான மாறிலி கட்டமைப்பு {
+    முழு flag;
+    மாறிலி எழுத்து *name;
 } cpu_flag_tab[] = {
-#if   ARCH_AARCH64
+#எனில்   ARCH_AARCH64
     { AV_CPU_FLAG_ARMV8,     "armv8"      },
     { AV_CPU_FLAG_NEON,      "neon"       },
     { AV_CPU_FLAG_VFP,       "vfp"        },
@@ -55,7 +55,7 @@ static const struct {
     { AV_CPU_FLAG_PMULL,     "pmull"      },
     { AV_CPU_FLAG_EOR3,      "eor3"       },
     { AV_CPU_FLAG_ARM_AES,   "aes"        },
-#elif ARCH_ARM
+#அல்லதெனில் ARCH_ARM
     { AV_CPU_FLAG_ARMV5TE,   "armv5te"    },
     { AV_CPU_FLAG_ARMV6,     "armv6"      },
     { AV_CPU_FLAG_ARMV6T2,   "armv6t2"    },
@@ -64,14 +64,14 @@ static const struct {
     { AV_CPU_FLAG_VFPV3,     "vfpv3"      },
     { AV_CPU_FLAG_NEON,      "neon"       },
     { AV_CPU_FLAG_SETEND,    "setend"     },
-#elif ARCH_PPC
+#அல்லதெனில் ARCH_PPC
     { AV_CPU_FLAG_ALTIVEC,   "altivec"    },
     { AV_CPU_FLAG_VSX,       "vsx"        },
     { AV_CPU_FLAG_POWER8,    "power8"     },
-#elif ARCH_MIPS
+#அல்லதெனில் ARCH_MIPS
     { AV_CPU_FLAG_MMI,       "mmi"        },
     { AV_CPU_FLAG_MSA,       "msa"        },
-#elif ARCH_X86
+#அல்லதெனில் ARCH_X86
     { AV_CPU_FLAG_MMX,       "mmx"        },
     { AV_CPU_FLAG_MMXEXT,    "mmxext"     },
     { AV_CPU_FLAG_SSE,       "sse"        },
@@ -99,10 +99,10 @@ static const struct {
     { AV_CPU_FLAG_AVX512,    "avx512"     },
     { AV_CPU_FLAG_AVX512ICL, "avx512icl"  },
     { AV_CPU_FLAG_SLOW_GATHER, "slowgather" },
-#elif ARCH_LOONGARCH
+#அல்லதெனில் ARCH_LOONGARCH
     { AV_CPU_FLAG_LSX,       "lsx"        },
     { AV_CPU_FLAG_LASX,      "lasx"       },
-#elif ARCH_RISCV
+#அல்லதெனில் ARCH_RISCV
     { AV_CPU_FLAG_RVI,       "rvi"        },
     { AV_CPU_FLAG_RVB_BASIC, "zbb"        },
     { AV_CPU_FLAG_RVB,       "rvb"        },
@@ -112,59 +112,59 @@ static const struct {
     { AV_CPU_FLAG_RVV_F64,   "zve64d"     },
     { AV_CPU_FLAG_RV_ZVBB,   "zvbb"       },
     { AV_CPU_FLAG_RV_MISALIGNED, "misaligned" },
-#elif ARCH_WASM
+#அல்லதெனில் ARCH_WASM
     { AV_CPU_FLAG_SIMD128,   "simd128"    },
 #endif
     { 0 }
 };
 
-static void print_cpu_flags(int cpu_flags, const char *type)
+நிலையான வெறுமை print_cpu_flags(முழு cpu_flags, மாறிலி எழுத்து *type)
 {
-    int i;
+    முழு i;
 
     printf("cpu_flags(%s) = 0x%08X\n", type, cpu_flags);
     printf("cpu_flags_str(%s) =", type);
-    for (i = 0; cpu_flag_tab[i].flag; i++)
-        if (cpu_flags & cpu_flag_tab[i].flag)
+    க்கு (i = 0; cpu_flag_tab[i].flag; i++)
+        எனில் (cpu_flags & cpu_flag_tab[i].flag)
             printf(" %s", cpu_flag_tab[i].name);
     printf("\n");
 }
 
 
-int main(int argc, char **argv)
+முழு முதன்மை(முழு argc, எழுத்து **argv)
 {
-    int cpu_flags_raw = av_get_cpu_flags();
-    int cpu_flags_eff;
-    int cpu_count = av_cpu_count();
-    const char *threads = "auto";
-    int i;
+    முழு cpu_flags_raw = av_get_cpu_flags();
+    முழு cpu_flags_eff;
+    முழு cpu_மொத்தம் = av_cpu_மொத்தம்();
+    மாறிலி எழுத்து *threads = "auto";
+    முழு i;
 
-    for(i = 0; cpu_flag_tab[i].flag; i++) {
+    க்கு(i = 0; cpu_flag_tab[i].flag; i++) {
         unsigned tmp = 0;
-        if (av_parse_cpu_caps(&tmp, cpu_flag_tab[i].name) < 0) {
+        எனில் (av_parse_cpu_caps(&tmp, cpu_flag_tab[i].name) < 0) {
             fprintf(stderr, "Table missing %s\n", cpu_flag_tab[i].name);
-            return 4;
+            திரும்பு 4;
         }
     }
 
-    if (cpu_flags_raw < 0)
-        return 1;
+    எனில் (cpu_flags_raw < 0)
+        திரும்பு 1;
 
-    for (;;) {
-        int c = getopt(argc, argv, "c:t:");
-        if (c == -1)
-            break;
-        switch (c) {
-        case 'c':
+    க்கு (;;) {
+        முழு c = getopt(argc, argv, "c:t:");
+        எனில் (c == -1)
+            நிறுத்து;
+        தேர்வு (c) {
+        நிலை 'c':
         {
             unsigned flags = av_get_cpu_flags();
-            if (av_parse_cpu_caps(&flags, optarg) < 0)
-                return 2;
+            எனில் (av_parse_cpu_caps(&flags, optarg) < 0)
+                திரும்பு 2;
 
             av_force_cpu_flags(flags);
-            break;
+            நிறுத்து;
         }
-        case 't':
+        நிலை 't':
         {
             threads = optarg;
         }
@@ -173,27 +173,27 @@ int main(int argc, char **argv)
 
     cpu_flags_eff = av_get_cpu_flags();
 
-    if (cpu_flags_eff < 0)
-        return 3;
+    எனில் (cpu_flags_eff < 0)
+        திரும்பு 3;
 
     print_cpu_flags(cpu_flags_raw, "raw");
     print_cpu_flags(cpu_flags_eff, "effective");
-    printf("threads = %s (cpu_count = %d)\n", threads, cpu_count);
-#if ARCH_AARCH64 && HAVE_SVE
-    if (cpu_flags_raw & AV_CPU_FLAG_SVE)
+    printf("threads = %s (cpu_count = %d)\n", threads, cpu_மொத்தம்);
+#எனில் ARCH_AARCH64 && HAVE_SVE
+    எனில் (cpu_flags_raw & AV_CPU_FLAG_SVE)
         printf("sve_vector_length = %d\n", 8 * ff_aarch64_sve_length());
 #endif
-#if ARCH_AARCH64 && HAVE_SME
-    if (cpu_flags_raw & AV_CPU_FLAG_SME)
+#எனில் ARCH_AARCH64 && HAVE_SME
+    எனில் (cpu_flags_raw & AV_CPU_FLAG_SME)
         printf("sme_vector_length = %d\n", 8 * ff_aarch64_sme_length());
 #endif
-#if ARCH_RISCV && HAVE_RVV
-    if (cpu_flags_raw & AV_CPU_FLAG_RVV_I32) {
+#எனில் ARCH_RISCV && HAVE_RVV
+    எனில் (cpu_flags_raw & AV_CPU_FLAG_RVV_I32) {
         size_t bytes = ff_get_rv_vlenb();
 
         printf("rv_vlenb = %zu (%zu bits)\n", bytes, 8 * bytes);
     }
 #endif
 
-    return 0;
+    திரும்பு 0;
 }

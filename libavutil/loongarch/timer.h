@@ -22,24 +22,24 @@
 #ifndef AVUTIL_LOONGARCH_TIMER_H
 #define AVUTIL_LOONGARCH_TIMER_H
 
-#include <stdint.h>
-#include "config.h"
+#அந்தர்பாவ <stdint.h>
+#அந்தர்பாவ "config.h"
 
-#if HAVE_INLINE_ASM
+#எனில் HAVE_INLINE_ASM
 
 #define AV_READ_TIME read_time
 
-static inline uint64_t read_time(void)
+நிலையான உள்வரி uint64_t read_time(வெறுமை)
 {
 
-#if ARCH_LOONGARCH64
+#எனில் ARCH_LOONGARCH64
     uint64_t a, id;
-    __asm__ volatile ( "rdtime.d  %0, %1" : "=r"(a), "=r"(id) :: );
-    return a;
-#else
+    __asm__ நிலையற்ற ( "rdtime.d  %0, %1" : "=r"(a), "=r"(id) :: );
+    திரும்பு a;
+#இல்லையெனில்
     uint32_t a, id;
-    __asm__ volatile ( "rdtimel.w  %0, %1" : "=r"(a), "=r"(id) :: );
-    return (uint64_t)a;
+    __asm__ நிலையற்ற ( "rdtimel.w  %0, %1" : "=r"(a), "=r"(id) :: );
+    திரும்பு (uint64_t)a;
 #endif
 }
 

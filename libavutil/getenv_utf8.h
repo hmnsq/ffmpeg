@@ -19,66 +19,66 @@
 #ifndef AVUTIL_GETENV_UTF8_H
 #define AVUTIL_GETENV_UTF8_H
 
-#include <stdlib.h>
+#அந்தர்பாவ <stdlib.h>
 
-#include "config.h"
-#include "mem.h"
+#அந்தர்பாவ "config.h"
+#அந்தர்பாவ "mem.h"
 
-#if HAVE_GETENV && defined(_WIN32)
+#எனில் HAVE_GETENV && defined(_WIN32)
 
-#include "libavutil/wchar_filename.h"
+#அந்தர்பாவ "libavutil/wchar_filename.h"
 
-static inline char *getenv_utf8(const char *varname)
+நிலையான உள்வரி எழுத்து *getenv_utf8(மாறிலி எழுத்து *varname)
 {
     wchar_t *varname_w, *var_w;
-    char *var;
+    எழுத்து *var;
 
-    if (utf8towchar(varname, &varname_w))
-        return NULL;
-    if (!varname_w)
-        return NULL;
+    எனில் (utf8towchar(varname, &varname_w))
+        திரும்பு வெற்று;
+    எனில் (!varname_w)
+        திரும்பு வெற்று;
 
     var_w = _wgetenv(varname_w);
     av_free(varname_w);
 
-    if (!var_w)
-        return NULL;
-    if (wchartoutf8(var_w, &var))
-        return NULL;
+    எனில் (!var_w)
+        திரும்பு வெற்று;
+    எனில் (wchartoutf8(var_w, &var))
+        திரும்பு வெற்று;
 
-    return var;
+    திரும்பு var;
 
     // No CP_ACP fallback compared to other *_utf8() functions:
     // non UTF-8 strings must not be returned.
 }
 
-static inline void freeenv_utf8(char *var)
+நிலையான உள்வரி வெறுமை freeenv_utf8(எழுத்து *var)
 {
     av_free(var);
 }
 
-static inline char *getenv_dup(const char *varname)
+நிலையான உள்வரி எழுத்து *getenv_dup(மாறிலி எழுத்து *varname)
 {
-    return getenv_utf8(varname);
+    திரும்பு getenv_utf8(varname);
 }
 
-#else
+#இல்லையெனில்
 
-static inline char *getenv_utf8(const char *varname)
+நிலையான உள்வரி எழுத்து *getenv_utf8(மாறிலி எழுத்து *varname)
 {
-    return getenv(varname);
+    திரும்பு getenv(varname);
 }
 
-static inline void freeenv_utf8(char *var)
+நிலையான உள்வரி வெறுமை freeenv_utf8(எழுத்து *var)
 {
 }
 
-static inline char *getenv_dup(const char *varname)
+நிலையான உள்வரி எழுத்து *getenv_dup(மாறிலி எழுத்து *varname)
 {
-    char *var = getenv(varname);
-    if (!var)
-        return NULL;
-    return av_strdup(var);
+    எழுத்து *var = getenv(varname);
+    எனில் (!var)
+        திரும்பு வெற்று;
+    திரும்பு av_strdup(var);
 }
 
 #endif // HAVE_GETENV && defined(_WIN32)

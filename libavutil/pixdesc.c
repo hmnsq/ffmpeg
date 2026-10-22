@@ -19,169 +19,169 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <string.h>
+#அந்தர்பாவ <stdio.h>
+#அந்தர்பாவ <string.h>
 
-#include "avstring.h"
-#include "common.h"
-#include "pixfmt.h"
-#include "pixdesc.h"
-#include "intreadwrite.h"
+#அந்தர்பாவ "avstring.h"
+#அந்தர்பாவ "common.h"
+#அந்தர்பாவ "pixfmt.h"
+#அந்தர்பாவ "pixdesc.h"
+#அந்தர்பாவ "intreadwrite.h"
 
-void av_read_image_line2(void *dst,
-                        const uint8_t *data[4], const int linesize[4],
-                        const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w,
-                        int read_pal_component,
-                        int dst_element_size)
+வெறுமை av_read_image_line2(வெறுமை *dst,
+                        மாறிலி uint8_t *data[4], மாறிலி முழு linesize[4],
+                        மாறிலி AVPixFmtDescriptor *desc,
+                        முழு x, முழு y, முழு c, முழு w,
+                        முழு read_pal_component,
+                        முழு dst_element_size)
 {
     AVComponentDescriptor comp = desc->comp[c];
-    int plane = comp.plane;
-    int depth = comp.depth;
+    முழு plane = comp.plane;
+    முழு depth = comp.depth;
     unsigned mask  = (1ULL << depth) - 1;
-    int shift = comp.shift;
-    int step  = comp.step;
-    int flags = desc->flags;
+    முழு shift = comp.shift;
+    முழு step  = comp.step;
+    முழு flags = desc->flags;
     uint16_t *dst16 = dst;
     uint32_t *dst32 = dst;
 
-    if (!depth)
-        return;
+    எனில் (!depth)
+        திரும்பு;
 
-    if (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
-        if (step > 8) {
+    எனில் (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+        எனில் (step > 8) {
             // Assume all channels are packed into a 32bit value
-            const uint8_t *byte_p = data[plane] + y * linesize[plane];
-            const uint32_t *p = (uint32_t *)byte_p;
+            மாறிலி uint8_t *byte_p = data[plane] + y * linesize[plane];
+            மாறிலி uint32_t *p = (uint32_t *)byte_p;
 
-            while (w--) {
-                int val = AV_RB32(p);
+            போது (w--) {
+                முழு val = AV_RB32(p);
                 val = (val >> comp.offset) & mask;
-                if (read_pal_component)
+                எனில் (read_pal_component)
                     val = data[1][4*val + c];
-                if (dst_element_size == 4) *dst32++ = val;
-                else                       *dst16++ = val;
+                எனில் (dst_element_size == 4) *dst32++ = val;
+                இல்லையெனில்                       *dst16++ = val;
                 p++;
             }
-        } else {
-            int skip = x * step + comp.offset;
-            const uint8_t *p = data[plane] + y * linesize[plane] + (skip >> 3);
-            int shift = 8 - depth - (skip & 7);
+        } இல்லையெனில் {
+            முழு skip = x * step + comp.offset;
+            மாறிலி uint8_t *p = data[plane] + y * linesize[plane] + (skip >> 3);
+            முழு shift = 8 - depth - (skip & 7);
 
-            while (w--) {
-                int val = (*p >> shift) & mask;
-                if (read_pal_component)
+            போது (w--) {
+                முழு val = (*p >> shift) & mask;
+                எனில் (read_pal_component)
                     val = data[1][4*val + c];
                 shift -= step;
                 p -= shift >> 3;
                 shift &= 7;
-                if (dst_element_size == 4) *dst32++ = val;
-                else                       *dst16++ = val;
+                எனில் (dst_element_size == 4) *dst32++ = val;
+                இல்லையெனில்                       *dst16++ = val;
             }
         }
-    } else {
-        const uint8_t *p = data[plane] + y * linesize[plane] +
+    } இல்லையெனில் {
+        மாறிலி uint8_t *p = data[plane] + y * linesize[plane] +
                            x * step + comp.offset;
-        int is_8bit = shift + depth <= 8;
-        int is_16bit= shift + depth <=16;
+        முழு is_8bit = shift + depth <= 8;
+        முழு is_16bit= shift + depth <=16;
 
-        if (is_8bit)
+        எனில் (is_8bit)
             p += !!(flags & AV_PIX_FMT_FLAG_BE);
 
-        while (w--) {
+        போது (w--) {
             unsigned val;
-            if     (is_8bit)  val = *p;
-            else if(is_16bit) val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB16(p) : AV_RL16(p);
-            else              val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB32(p) : AV_RL32(p);
+            எனில்     (is_8bit)  val = *p;
+            இல்லையெனில் எனில்(is_16bit) val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB16(p) : AV_RL16(p);
+            இல்லையெனில்              val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB32(p) : AV_RL32(p);
             val = (val >> shift) & mask;
-            if (read_pal_component)
+            எனில் (read_pal_component)
                 val = data[1][4 * val + c];
             p += step;
-            if (dst_element_size == 4) *dst32++ = val;
-            else                       *dst16++ = val;
+            எனில் (dst_element_size == 4) *dst32++ = val;
+            இல்லையெனில்                       *dst16++ = val;
         }
     }
 }
 
-void av_read_image_line(uint16_t *dst,
-                        const uint8_t *data[4], const int linesize[4],
-                        const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w,
-                        int read_pal_component)
+வெறுமை av_read_image_வரி(uint16_t *dst,
+                        மாறிலி uint8_t *data[4], மாறிலி முழு linesize[4],
+                        மாறிலி AVPixFmtDescriptor *desc,
+                        முழு x, முழு y, முழு c, முழு w,
+                        முழு read_pal_component)
 {
     av_read_image_line2(dst, data, linesize, desc,x, y, c, w,
                         read_pal_component,
                         2);
 }
 
-void av_write_image_line2(const void *src,
-                         uint8_t *data[4], const int linesize[4],
-                         const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w, int src_element_size)
+வெறுமை av_write_image_line2(மாறிலி வெறுமை *src,
+                         uint8_t *data[4], மாறிலி முழு linesize[4],
+                         மாறிலி AVPixFmtDescriptor *desc,
+                         முழு x, முழு y, முழு c, முழு w, முழு src_element_size)
 {
     AVComponentDescriptor comp = desc->comp[c];
-    int plane = comp.plane;
-    int depth = comp.depth;
-    int step  = comp.step;
-    int flags = desc->flags;
-    const uint32_t *src32 = src;
-    const uint16_t *src16 = src;
+    முழு plane = comp.plane;
+    முழு depth = comp.depth;
+    முழு step  = comp.step;
+    முழு flags = desc->flags;
+    மாறிலி uint32_t *src32 = src;
+    மாறிலி uint16_t *src16 = src;
 
-    if (!depth)
-        return;
+    எனில் (!depth)
+        திரும்பு;
 
-    if (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
-        if (step > 8) {
+    எனில் (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+        எனில் (step > 8) {
             // Assume all channels are packed into a 32bit value
-            const uint8_t *byte_p = data[plane] + y * linesize[plane];
+            மாறிலி uint8_t *byte_p = data[plane] + y * linesize[plane];
             uint32_t *p = (uint32_t *)byte_p;
-            int offset = comp.offset;
+            முழு offset = comp.offset;
             uint32_t mask  = ((1ULL << depth) - 1) << offset;
 
-            while (w--) {
+            போது (w--) {
                 unsigned val = src_element_size == 4 ? *src32++ : *src16++;
                 AV_WB32(p, (AV_RB32(p) & ~mask) | (val << offset));
                 p++;
             }
-        } else {
-            int skip = x * step + comp.offset;
+        } இல்லையெனில் {
+            முழு skip = x * step + comp.offset;
             uint8_t *p = data[plane] + y * linesize[plane] + (skip >> 3);
-            int shift = 8 - depth - (skip & 7);
+            முழு shift = 8 - depth - (skip & 7);
 
-            while (w--) {
+            போது (w--) {
                 *p |= (src_element_size == 4 ? *src32++ : *src16++) << shift;
                 shift -= step;
                 p -= shift >> 3;
                 shift &= 7;
             }
         }
-    } else {
-        int shift = comp.shift;
+    } இல்லையெனில் {
+        முழு shift = comp.shift;
         uint8_t *p = data[plane] + y * linesize[plane] +
                      x * step + comp.offset;
 
-        if (shift + depth <= 8) {
+        எனில் (shift + depth <= 8) {
             p += !!(flags & AV_PIX_FMT_FLAG_BE);
-            while (w--) {
+            போது (w--) {
                 *p |= ((src_element_size == 4 ? *src32++ : *src16++) << shift);
                 p += step;
             }
-        } else {
-            while (w--) {
+        } இல்லையெனில் {
+            போது (w--) {
                 unsigned s = (src_element_size == 4 ? *src32++ : *src16++);
-                if (shift + depth <= 16) {
-                    if (flags & AV_PIX_FMT_FLAG_BE) {
+                எனில் (shift + depth <= 16) {
+                    எனில் (flags & AV_PIX_FMT_FLAG_BE) {
                         uint16_t val = AV_RB16(p) | (s << shift);
                         AV_WB16(p, val);
-                    } else {
+                    } இல்லையெனில் {
                         uint16_t val = AV_RL16(p) | (s << shift);
                         AV_WL16(p, val);
                     }
-                } else {
-                    if (flags & AV_PIX_FMT_FLAG_BE) {
+                } இல்லையெனில் {
+                    எனில் (flags & AV_PIX_FMT_FLAG_BE) {
                         uint32_t val = AV_RB32(p) | (s << shift);
                         AV_WB32(p, val);
-                    } else {
+                    } இல்லையெனில் {
                         uint32_t val = AV_RL32(p) | (s << shift);
                         AV_WL32(p, val);
                     }
@@ -192,15 +192,15 @@ void av_write_image_line2(const void *src,
     }
 }
 
-void av_write_image_line(const uint16_t *src,
-                         uint8_t *data[4], const int linesize[4],
-                         const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w)
+வெறுமை av_write_image_வரி(மாறிலி uint16_t *src,
+                         uint8_t *data[4], மாறிலி முழு linesize[4],
+                         மாறிலி AVPixFmtDescriptor *desc,
+                         முழு x, முழு y, முழு c, முழு w)
 {
     av_write_image_line2(src, data, linesize, desc, x, y, c, w, 2);
 }
 
-static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
+நிலையான மாறிலி AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
     [AV_PIX_FMT_YUV420P] = {
         .name = "yuv420p",
         .nb_components = 3,
@@ -2645,7 +2645,7 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
         .flags = AV_PIX_FMT_FLAG_PLANAR | AV_PIX_FMT_FLAG_ALPHA |
                  AV_PIX_FMT_FLAG_RGB | AV_PIX_FMT_FLAG_FLOAT,
     },
-    [AV_PIX_FMT_DRM_PRIME] = {
+    [AV_PIX_FMT_DRM_பகாஎண்] = {
         .name = "drm_prime",
         .flags = AV_PIX_FMT_FLAG_HWACCEL,
     },
@@ -3297,13 +3297,13 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
     },
 };
 
-static const char * const color_range_names[] = {
+நிலையான மாறிலி எழுத்து * மாறிலி color_range_names[] = {
     [AVCOL_RANGE_UNSPECIFIED] = "unknown",
     [AVCOL_RANGE_MPEG] = "tv",
     [AVCOL_RANGE_JPEG] = "pc",
 };
 
-static const char * const color_primaries_names[AVCOL_PRI_NB] = {
+நிலையான மாறிலி எழுத்து * மாறிலி color_primaries_names[AVCOL_PRI_NB] = {
     [AVCOL_PRI_RESERVED0] = "reserved",
     [AVCOL_PRI_BT709] = "bt709",
     [AVCOL_PRI_UNSPECIFIED] = "unknown",
@@ -3320,12 +3320,12 @@ static const char * const color_primaries_names[AVCOL_PRI_NB] = {
     [AVCOL_PRI_EBU3213] = "ebu3213",
 };
 
-static const char * const color_primaries_names_ext[AVCOL_PRI_EXT_NB -
+நிலையான மாறிலி எழுத்து * மாறிலி color_primaries_names_ext[AVCOL_PRI_EXT_NB -
                                                     AVCOL_PRI_EXT_BASE] = {
     [AVCOL_PRI_V_GAMUT - AVCOL_PRI_EXT_BASE] = "vgamut",
 };
 
-static const char * const color_transfer_names[] = {
+நிலையான மாறிலி எழுத்து * மாறிலி color_transfer_names[] = {
     [AVCOL_TRC_RESERVED0] = "reserved",
     [AVCOL_TRC_BT709] = "bt709",
     [AVCOL_TRC_UNSPECIFIED] = "unknown",
@@ -3347,11 +3347,11 @@ static const char * const color_transfer_names[] = {
     [AVCOL_TRC_ARIB_STD_B67] = "arib-std-b67",
 };
 
-static const char * const color_transfer_names_ext[] = {
+நிலையான மாறிலி எழுத்து * மாறிலி color_transfer_names_ext[] = {
     [AVCOL_TRC_V_LOG - AVCOL_TRC_EXT_BASE] = "vlog",
 };
 
-static const char * const color_space_names[] = {
+நிலையான மாறிலி எழுத்து * மாறிலி color_space_names[] = {
     [AVCOL_SPC_RGB] = "gbr",
     [AVCOL_SPC_BT709] = "bt709",
     [AVCOL_SPC_UNSPECIFIED] = "unknown",
@@ -3372,186 +3372,186 @@ static const char * const color_space_names[] = {
     [AVCOL_SPC_YCGCO_RO] = "ycgco-ro",
 };
 
-static const char * const chroma_location_names[] = {
+நிலையான மாறிலி எழுத்து * மாறிலி chroma_location_names[] = {
     [AVCHROMA_LOC_UNSPECIFIED] = "unspecified",
-    [AVCHROMA_LOC_LEFT] = "left",
+    [AVCHROMA_LOC_இடது] = "left",
     [AVCHROMA_LOC_CENTER] = "center",
     [AVCHROMA_LOC_TOPLEFT] = "topleft",
-    [AVCHROMA_LOC_TOP] = "top",
+    [AVCHROMA_LOC_உச்சி] = "top",
     [AVCHROMA_LOC_BOTTOMLEFT] = "bottomleft",
     [AVCHROMA_LOC_BOTTOM] = "bottom",
 };
 
-static const char * const alpha_mode_names[] = {
+நிலையான மாறிலி எழுத்து * மாறிலி alpha_mode_names[] = {
     [AVALPHA_MODE_UNSPECIFIED] = "unspecified",
     [AVALPHA_MODE_PREMULTIPLIED] = "premultiplied",
     [AVALPHA_MODE_STRAIGHT] = "straight",
 };
 
-static enum AVPixelFormat get_pix_fmt_internal(const char *name)
+நிலையான எண்ணிக்கை AVPixelFormat get_pix_fmt_internal(மாறிலி எழுத்து *name)
 {
-    enum AVPixelFormat pix_fmt;
+    எண்ணிக்கை AVPixelFormat pix_fmt;
 
-    for (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++)
-        if (av_pix_fmt_descriptors[pix_fmt].name &&
+    க்கு (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++)
+        எனில் (av_pix_fmt_descriptors[pix_fmt].name &&
             (!strcmp(av_pix_fmt_descriptors[pix_fmt].name, name) ||
              av_match_name(name, av_pix_fmt_descriptors[pix_fmt].alias)))
-            return pix_fmt;
+            திரும்பு pix_fmt;
 
-    return AV_PIX_FMT_NONE;
+    திரும்பு AV_PIX_FMT_NONE;
 }
 
-const char *av_get_pix_fmt_name(enum AVPixelFormat pix_fmt)
+மாறிலி எழுத்து *av_get_pix_fmt_name(எண்ணிக்கை AVPixelFormat pix_fmt)
 {
-    return (unsigned)pix_fmt < AV_PIX_FMT_NB ?
-        av_pix_fmt_descriptors[pix_fmt].name : NULL;
+    திரும்பு (unsigned)pix_fmt < AV_PIX_FMT_NB ?
+        av_pix_fmt_descriptors[pix_fmt].name : வெற்று;
 }
 
-#if HAVE_BIGENDIAN
+#எனில் HAVE_BIGENDIAN
 #   define X_NE(be, le) be
-#else
+#இல்லையெனில்
 #   define X_NE(be, le) le
 #endif
 
-enum AVPixelFormat av_get_pix_fmt(const char *name)
+எண்ணிக்கை AVPixelFormat av_get_pix_fmt(மாறிலி எழுத்து *name)
 {
-    enum AVPixelFormat pix_fmt;
+    எண்ணிக்கை AVPixelFormat pix_fmt;
 
-    if (!strcmp(name, "rgb32"))
+    எனில் (!strcmp(name, "rgb32"))
         name = X_NE("argb", "bgra");
-    else if (!strcmp(name, "bgr32"))
+    இல்லையெனில் எனில் (!strcmp(name, "bgr32"))
         name = X_NE("abgr", "rgba");
 
     pix_fmt = get_pix_fmt_internal(name);
-    if (pix_fmt == AV_PIX_FMT_NONE) {
-        char name2[32];
+    எனில் (pix_fmt == AV_PIX_FMT_NONE) {
+        எழுத்து name2[32];
 
-        snprintf(name2, sizeof(name2), "%s%s", name, X_NE("be", "le"));
+        snprintf(name2, அளவு(name2), "%s%s", name, X_NE("be", "le"));
         pix_fmt = get_pix_fmt_internal(name2);
     }
 
-    return pix_fmt;
+    திரும்பு pix_fmt;
 }
 
-int av_get_bits_per_pixel(const AVPixFmtDescriptor *pixdesc)
+முழு av_get_bits_per_pixel(மாறிலி AVPixFmtDescriptor *pixdesc)
 {
-    int c, bits = 0;
-    int log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
+    முழு c, bits = 0;
+    முழு log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
 
-    for (c = 0; c < pixdesc->nb_components; c++) {
-        int s = c == 1 || c == 2 ? 0 : log2_pixels;
+    க்கு (c = 0; c < pixdesc->nb_components; c++) {
+        முழு s = c == 1 || c == 2 ? 0 : log2_pixels;
         bits += pixdesc->comp[c].depth << s;
     }
 
-    return bits >> log2_pixels;
+    திரும்பு bits >> log2_pixels;
 }
 
-int av_get_padded_bits_per_pixel(const AVPixFmtDescriptor *pixdesc)
+முழு av_get_padded_bits_per_pixel(மாறிலி AVPixFmtDescriptor *pixdesc)
 {
-    int c, bits = 0;
-    int log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
-    int steps[4] = {0};
+    முழு c, bits = 0;
+    முழு log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
+    முழு steps[4] = {0};
 
-    for (c = 0; c < pixdesc->nb_components; c++) {
-        const AVComponentDescriptor *comp = &pixdesc->comp[c];
-        int s = c == 1 || c == 2 ? 0 : log2_pixels;
+    க்கு (c = 0; c < pixdesc->nb_components; c++) {
+        மாறிலி AVComponentDescriptor *comp = &pixdesc->comp[c];
+        முழு s = c == 1 || c == 2 ? 0 : log2_pixels;
         steps[comp->plane] = comp->step << s;
     }
-    for (c = 0; c < 4; c++)
+    க்கு (c = 0; c < 4; c++)
         bits += steps[c];
 
-    if(!(pixdesc->flags & AV_PIX_FMT_FLAG_BITSTREAM))
+    எனில்(!(pixdesc->flags & AV_PIX_FMT_FLAG_BITSTREAM))
         bits *= 8;
 
-    return bits >> log2_pixels;
+    திரும்பு bits >> log2_pixels;
 }
 
-char *av_get_pix_fmt_string(char *buf, int buf_size,
-                            enum AVPixelFormat pix_fmt)
+எழுத்து *av_get_pix_fmt_string(எழுத்து *buf, முழு buf_size,
+                            எண்ணிக்கை AVPixelFormat pix_fmt)
 {
     /* print header */
-    if (pix_fmt < 0) {
+    எனில் (pix_fmt < 0) {
        snprintf (buf, buf_size, "name" " nb_components" " nb_bits");
-    } else {
-        const AVPixFmtDescriptor *pixdesc = &av_pix_fmt_descriptors[pix_fmt];
+    } இல்லையெனில் {
+        மாறிலி AVPixFmtDescriptor *pixdesc = &av_pix_fmt_descriptors[pix_fmt];
         snprintf(buf, buf_size, "%-11s %7d %10d", pixdesc->name,
                  pixdesc->nb_components, av_get_bits_per_pixel(pixdesc));
     }
 
-    return buf;
+    திரும்பு buf;
 }
 
-const AVPixFmtDescriptor *av_pix_fmt_desc_get(enum AVPixelFormat pix_fmt)
+மாறிலி AVPixFmtDescriptor *av_pix_fmt_desc_get(எண்ணிக்கை AVPixelFormat pix_fmt)
 {
-    if (pix_fmt < 0 || pix_fmt >= AV_PIX_FMT_NB)
-        return NULL;
-    return &av_pix_fmt_descriptors[pix_fmt];
+    எனில் (pix_fmt < 0 || pix_fmt >= AV_PIX_FMT_NB)
+        திரும்பு வெற்று;
+    திரும்பு &av_pix_fmt_descriptors[pix_fmt];
 }
 
-const AVPixFmtDescriptor *av_pix_fmt_desc_next(const AVPixFmtDescriptor *prev)
+மாறிலி AVPixFmtDescriptor *av_pix_fmt_desc_next(மாறிலி AVPixFmtDescriptor *prev)
 {
-    if (!prev)
-        return &av_pix_fmt_descriptors[0];
-    while (prev - av_pix_fmt_descriptors < FF_ARRAY_ELEMS(av_pix_fmt_descriptors) - 1) {
+    எனில் (!prev)
+        திரும்பு &av_pix_fmt_descriptors[0];
+    போது (prev - av_pix_fmt_descriptors < FF_ARRAY_ELEMS(av_pix_fmt_descriptors) - 1) {
         prev++;
-        if (prev->name)
-            return prev;
+        எனில் (prev->name)
+            திரும்பு prev;
     }
-    return NULL;
+    திரும்பு வெற்று;
 }
 
-enum AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc)
+எண்ணிக்கை AVPixelFormat av_pix_fmt_desc_get_id(மாறிலி AVPixFmtDescriptor *desc)
 {
-    if (desc < av_pix_fmt_descriptors ||
+    எனில் (desc < av_pix_fmt_descriptors ||
         desc >= av_pix_fmt_descriptors + FF_ARRAY_ELEMS(av_pix_fmt_descriptors))
-        return AV_PIX_FMT_NONE;
+        திரும்பு AV_PIX_FMT_NONE;
 
-    return desc - av_pix_fmt_descriptors;
+    திரும்பு desc - av_pix_fmt_descriptors;
 }
 
-int av_pix_fmt_get_chroma_sub_sample(enum AVPixelFormat pix_fmt,
-                                     int *h_shift, int *v_shift)
+முழு av_pix_fmt_get_chroma_sub_sample(எண்ணிக்கை AVPixelFormat pix_fmt,
+                                     முழு *h_shift, முழு *v_shift)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    if (!desc)
-        return AVERROR(ENOSYS);
+    மாறிலி AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    எனில் (!desc)
+        திரும்பு AVERROR(ENOSYS);
     *h_shift = desc->log2_chroma_w;
     *v_shift = desc->log2_chroma_h;
 
-    return 0;
+    திரும்பு 0;
 }
 
-int av_pix_fmt_count_planes(enum AVPixelFormat pix_fmt)
+முழு av_pix_fmt_மொத்தம்_planes(எண்ணிக்கை AVPixelFormat pix_fmt)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int i, planes[4] = { 0 }, ret = 0;
+    மாறிலி AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    முழு i, planes[4] = { 0 }, ret = 0;
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    எனில் (!desc)
+        திரும்பு AVERROR(EINVAL);
 
-    for (i = 0; i < desc->nb_components; i++)
+    க்கு (i = 0; i < desc->nb_components; i++)
         planes[desc->comp[i].plane] = 1;
-    for (i = 0; i < FF_ARRAY_ELEMS(planes); i++)
+    க்கு (i = 0; i < FF_ARRAY_ELEMS(planes); i++)
         ret += planes[i];
-    return ret;
+    திரும்பு ret;
 }
 
-enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt)
+எண்ணிக்கை AVPixelFormat av_pix_fmt_swap_endianness(எண்ணிக்கை AVPixelFormat pix_fmt)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    char name[16];
-    int i;
+    மாறிலி AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    எழுத்து name[16];
+    முழு i;
 
-    if (!desc || strlen(desc->name) < 2)
-        return AV_PIX_FMT_NONE;
-    av_strlcpy(name, desc->name, sizeof(name));
+    எனில் (!desc || strlen(desc->name) < 2)
+        திரும்பு AV_PIX_FMT_NONE;
+    av_strlcpy(name, desc->name, அளவு(name));
     i = strlen(name) - 2;
-    if (strcmp(name + i, "be") && strcmp(name + i, "le"))
-        return AV_PIX_FMT_NONE;
+    எனில் (strcmp(name + i, "be") && strcmp(name + i, "le"))
+        திரும்பு AV_PIX_FMT_NONE;
 
     name[i] ^= 'b' ^ 'l';
 
-    return get_pix_fmt_internal(name);
+    திரும்பு get_pix_fmt_internal(name);
 }
 
 #define FF_COLOR_NA      -1
@@ -3565,95 +3565,95 @@ enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt)
     ((pixdesc)->flags & AV_PIX_FMT_FLAG_ALPHA)
 
 
-static int get_color_type(const AVPixFmtDescriptor *desc) {
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL)
-        return FF_COLOR_RGB;
+நிலையான முழு get_color_type(மாறிலி AVPixFmtDescriptor *desc) {
+    எனில் (desc->flags & AV_PIX_FMT_FLAG_PAL)
+        திரும்பு FF_COLOR_RGB;
 
-    if(desc->nb_components == 1 || desc->nb_components == 2)
-        return FF_COLOR_GRAY;
+    எனில்(desc->nb_components == 1 || desc->nb_components == 2)
+        திரும்பு FF_COLOR_GRAY;
 
-    if (desc->name) {
-        if (av_strstart(desc->name, "yuvj", NULL))
-            return FF_COLOR_YUV_JPEG;
+    எனில் (desc->name) {
+        எனில் (av_strstart(desc->name, "yuvj", வெற்று))
+            திரும்பு FF_COLOR_YUV_JPEG;
     }
 
-    if(desc->flags & AV_PIX_FMT_FLAG_RGB)
-        return FF_COLOR_RGB;
+    எனில்(desc->flags & AV_PIX_FMT_FLAG_RGB)
+        திரும்பு FF_COLOR_RGB;
 
-    if(desc->flags & AV_PIX_FMT_FLAG_XYZ)
-        return FF_COLOR_XYZ;
+    எனில்(desc->flags & AV_PIX_FMT_FLAG_XYZ)
+        திரும்பு FF_COLOR_XYZ;
 
-    if(desc->nb_components == 0)
-        return FF_COLOR_NA;
+    எனில்(desc->nb_components == 0)
+        திரும்பு FF_COLOR_NA;
 
-    return FF_COLOR_YUV;
+    திரும்பு FF_COLOR_YUV;
 }
 
-static int get_pix_fmt_depth(int *min, int *max, enum AVPixelFormat pix_fmt)
+நிலையான முழு get_pix_fmt_depth(முழு *min, முழு *max, எண்ணிக்கை AVPixelFormat pix_fmt)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int i;
+    மாறிலி AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    முழு i;
 
-    if (!desc || !desc->nb_components) {
+    எனில் (!desc || !desc->nb_components) {
         *min = *max = 0;
-        return AVERROR(EINVAL);
+        திரும்பு AVERROR(EINVAL);
     }
 
     *min = INT_MAX, *max = -INT_MAX;
-    for (i = 0; i < desc->nb_components; i++) {
+    க்கு (i = 0; i < desc->nb_components; i++) {
         *min = FFMIN(desc->comp[i].depth, *min);
         *max = FFMAX(desc->comp[i].depth, *max);
     }
-    return 0;
+    திரும்பு 0;
 }
 
-static int get_pix_fmt_score(enum AVPixelFormat dst_pix_fmt,
-                              enum AVPixelFormat src_pix_fmt,
+நிலையான முழு get_pix_fmt_score(எண்ணிக்கை AVPixelFormat dst_pix_fmt,
+                              எண்ணிக்கை AVPixelFormat src_pix_fmt,
                               unsigned *lossp, unsigned consider)
 {
-    const AVPixFmtDescriptor *src_desc = av_pix_fmt_desc_get(src_pix_fmt);
-    const AVPixFmtDescriptor *dst_desc = av_pix_fmt_desc_get(dst_pix_fmt);
-    int src_color, dst_color;
-    int src_min_depth, src_max_depth, dst_min_depth, dst_max_depth;
-    int ret, loss, i, nb_components;
-    int score = INT_MAX - 1;
+    மாறிலி AVPixFmtDescriptor *src_desc = av_pix_fmt_desc_get(src_pix_fmt);
+    மாறிலி AVPixFmtDescriptor *dst_desc = av_pix_fmt_desc_get(dst_pix_fmt);
+    முழு src_color, dst_color;
+    முழு src_min_depth, src_max_depth, dst_min_depth, dst_max_depth;
+    முழு ret, loss, i, nb_components;
+    முழு score = INT_MAX - 1;
 
-    if (!src_desc || !dst_desc)
-        return -4;
+    எனில் (!src_desc || !dst_desc)
+        திரும்பு -4;
 
-    if ((src_desc->flags & AV_PIX_FMT_FLAG_HWACCEL) ||
+    எனில் ((src_desc->flags & AV_PIX_FMT_FLAG_HWACCEL) ||
         (dst_desc->flags & AV_PIX_FMT_FLAG_HWACCEL)) {
-        if (dst_pix_fmt == src_pix_fmt)
-            return -1;
-        else
-            return -2;
+        எனில் (dst_pix_fmt == src_pix_fmt)
+            திரும்பு -1;
+        இல்லையெனில்
+            திரும்பு -2;
     }
 
     /* compute loss */
     *lossp = loss = 0;
 
-    if (dst_pix_fmt == src_pix_fmt)
-        return INT_MAX;
+    எனில் (dst_pix_fmt == src_pix_fmt)
+        திரும்பு INT_MAX;
 
-    if ((ret = get_pix_fmt_depth(&src_min_depth, &src_max_depth, src_pix_fmt)) < 0)
-        return -3;
-    if ((ret = get_pix_fmt_depth(&dst_min_depth, &dst_max_depth, dst_pix_fmt)) < 0)
-        return -3;
+    எனில் ((ret = get_pix_fmt_depth(&src_min_depth, &src_max_depth, src_pix_fmt)) < 0)
+        திரும்பு -3;
+    எனில் ((ret = get_pix_fmt_depth(&dst_min_depth, &dst_max_depth, dst_pix_fmt)) < 0)
+        திரும்பு -3;
 
     src_color = get_color_type(src_desc);
     dst_color = get_color_type(dst_desc);
-    if (dst_pix_fmt == AV_PIX_FMT_PAL8)
+    எனில் (dst_pix_fmt == AV_PIX_FMT_PAL8)
         nb_components = FFMIN(src_desc->nb_components, 4);
-    else
+    இல்லையெனில்
         nb_components = FFMIN(src_desc->nb_components, dst_desc->nb_components);
 
-    for (i = 0; i < nb_components; i++) {
-        int depth_minus1 = (dst_pix_fmt == AV_PIX_FMT_PAL8) ? 7/nb_components : (dst_desc->comp[i].depth - 1);
-        int depth_delta = src_desc->comp[i].depth - 1 - depth_minus1;
-        if (depth_delta > 0 && (consider & FF_LOSS_DEPTH)) {
+    க்கு (i = 0; i < nb_components; i++) {
+        முழு depth_minus1 = (dst_pix_fmt == AV_PIX_FMT_PAL8) ? 7/nb_components : (dst_desc->comp[i].depth - 1);
+        முழு depth_delta = src_desc->comp[i].depth - 1 - depth_minus1;
+        எனில் (depth_delta > 0 && (consider & FF_LOSS_DEPTH)) {
             loss |= FF_LOSS_DEPTH;
             score -= 65536 >> depth_minus1;
-        } else if (depth_delta < 0 && (consider & FF_LOSS_EXCESS_DEPTH)) {
+        } இல்லையெனில் எனில் (depth_delta < 0 && (consider & FF_LOSS_EXCESS_DEPTH)) {
             // Favour formats where bit depth exactly matches. If all other
             // scoring is equal, we'd rather use the bit depth that most closely
             // matches the source.
@@ -3662,305 +3662,305 @@ static int get_pix_fmt_score(enum AVPixelFormat dst_pix_fmt,
         }
     }
 
-    if (consider & FF_LOSS_RESOLUTION) {
-        if (dst_desc->log2_chroma_w > src_desc->log2_chroma_w) {
+    எனில் (consider & FF_LOSS_RESOLUTION) {
+        எனில் (dst_desc->log2_chroma_w > src_desc->log2_chroma_w) {
             loss |= FF_LOSS_RESOLUTION;
             score -= 256 << dst_desc->log2_chroma_w;
         }
-        if (dst_desc->log2_chroma_h > src_desc->log2_chroma_h) {
+        எனில் (dst_desc->log2_chroma_h > src_desc->log2_chroma_h) {
             loss |= FF_LOSS_RESOLUTION;
             score -= 256 << dst_desc->log2_chroma_h;
         }
         // don't favor 422 over 420 if downsampling is needed, because 420 has much better support on the decoder side
-        if (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 0 &&
+        எனில் (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 0 &&
             dst_desc->log2_chroma_h == 1 && src_desc->log2_chroma_h == 0 ) {
             score += 512;
         }
     }
 
-    if (consider & FF_LOSS_EXCESS_RESOLUTION) {
+    எனில் (consider & FF_LOSS_EXCESS_RESOLUTION) {
         // Favour formats where chroma subsampling exactly matches. If all other
         // scoring is equal, we'd rather use the subsampling that most closely
         // matches the source.
-        if (dst_desc->log2_chroma_w < src_desc->log2_chroma_w) {
+        எனில் (dst_desc->log2_chroma_w < src_desc->log2_chroma_w) {
             loss |= FF_LOSS_EXCESS_RESOLUTION;
             score -= 1 << (src_desc->log2_chroma_w - dst_desc->log2_chroma_w);
         }
 
-        if (dst_desc->log2_chroma_h < src_desc->log2_chroma_h) {
+        எனில் (dst_desc->log2_chroma_h < src_desc->log2_chroma_h) {
             loss |= FF_LOSS_EXCESS_RESOLUTION;
             score -= 1 << (src_desc->log2_chroma_h - dst_desc->log2_chroma_h);
         }
 
         // don't favour 411 over 420, because 420 has much better support on the
         // decoder side.
-        if (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 2 &&
+        எனில் (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 2 &&
             dst_desc->log2_chroma_h == 1 && src_desc->log2_chroma_h == 2) {
                 score += 4;
             }
     }
 
-    if(consider & FF_LOSS_COLORSPACE)
-    switch(dst_color) {
-    case FF_COLOR_RGB:
-        if (src_color != FF_COLOR_RGB &&
+    எனில்(consider & FF_LOSS_COLORSPACE)
+    தேர்வு(dst_color) {
+    நிலை FF_COLOR_RGB:
+        எனில் (src_color != FF_COLOR_RGB &&
             src_color != FF_COLOR_GRAY)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_GRAY:
-        if (src_color != FF_COLOR_GRAY)
+        நிறுத்து;
+    நிலை FF_COLOR_GRAY:
+        எனில் (src_color != FF_COLOR_GRAY)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_YUV:
-        if (src_color != FF_COLOR_YUV)
+        நிறுத்து;
+    நிலை FF_COLOR_YUV:
+        எனில் (src_color != FF_COLOR_YUV)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_YUV_JPEG:
-        if (src_color != FF_COLOR_YUV_JPEG &&
+        நிறுத்து;
+    நிலை FF_COLOR_YUV_JPEG:
+        எனில் (src_color != FF_COLOR_YUV_JPEG &&
             src_color != FF_COLOR_YUV &&
             src_color != FF_COLOR_GRAY)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    default:
+        நிறுத்து;
+    இயல்பு:
         /* fail safe test */
-        if (src_color != dst_color)
+        எனில் (src_color != dst_color)
             loss |= FF_LOSS_COLORSPACE;
-        break;
+        நிறுத்து;
     }
-    if(loss & FF_LOSS_COLORSPACE)
+    எனில்(loss & FF_LOSS_COLORSPACE)
         score -= (nb_components * 65536) >> FFMIN(dst_desc->comp[0].depth - 1, src_desc->comp[0].depth - 1);
 
-    if (dst_color == FF_COLOR_GRAY &&
+    எனில் (dst_color == FF_COLOR_GRAY &&
         src_color != FF_COLOR_GRAY && (consider & FF_LOSS_CHROMA)) {
         loss |= FF_LOSS_CHROMA;
         score -= 2 * 65536;
     }
-    if (!pixdesc_has_alpha(dst_desc) && (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))) {
+    எனில் (!pixdesc_has_alpha(dst_desc) && (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))) {
         loss |= FF_LOSS_ALPHA;
         score -= 65536;
     }
-    if (dst_pix_fmt == AV_PIX_FMT_PAL8 && (consider & FF_LOSS_COLORQUANT) &&
+    எனில் (dst_pix_fmt == AV_PIX_FMT_PAL8 && (consider & FF_LOSS_COLORQUANT) &&
         (src_pix_fmt != AV_PIX_FMT_PAL8 && (src_color != FF_COLOR_GRAY || (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))))) {
         loss |= FF_LOSS_COLORQUANT;
         score -= 65536;
     }
 
     *lossp = loss;
-    return score;
+    திரும்பு score;
 }
 
-int av_get_pix_fmt_loss(enum AVPixelFormat dst_pix_fmt,
-                            enum AVPixelFormat src_pix_fmt,
-                            int has_alpha)
+முழு av_get_pix_fmt_loss(எண்ணிக்கை AVPixelFormat dst_pix_fmt,
+                            எண்ணிக்கை AVPixelFormat src_pix_fmt,
+                            முழு has_alpha)
 {
-    int loss;
-    int ret = get_pix_fmt_score(dst_pix_fmt, src_pix_fmt, &loss, has_alpha ? ~0 : ~FF_LOSS_ALPHA);
-    if (ret < 0)
-        return ret;
-    return loss;
+    முழு loss;
+    முழு ret = get_pix_fmt_score(dst_pix_fmt, src_pix_fmt, &loss, has_alpha ? ~0 : ~FF_LOSS_ALPHA);
+    எனில் (ret < 0)
+        திரும்பு ret;
+    திரும்பு loss;
 }
 
-enum AVPixelFormat av_find_best_pix_fmt_of_2(enum AVPixelFormat dst_pix_fmt1, enum AVPixelFormat dst_pix_fmt2,
-                                             enum AVPixelFormat src_pix_fmt, int has_alpha, int *loss_ptr)
+எண்ணிக்கை AVPixelFormat av_find_best_pix_fmt_of_2(எண்ணிக்கை AVPixelFormat dst_pix_fmt1, எண்ணிக்கை AVPixelFormat dst_pix_fmt2,
+                                             எண்ணிக்கை AVPixelFormat src_pix_fmt, முழு has_alpha, முழு *loss_ptr)
 {
-    enum AVPixelFormat dst_pix_fmt;
-    int loss1, loss2, loss_mask;
-    const AVPixFmtDescriptor *desc1 = av_pix_fmt_desc_get(dst_pix_fmt1);
-    const AVPixFmtDescriptor *desc2 = av_pix_fmt_desc_get(dst_pix_fmt2);
-    int score1, score2;
+    எண்ணிக்கை AVPixelFormat dst_pix_fmt;
+    முழு loss1, loss2, loss_mask;
+    மாறிலி AVPixFmtDescriptor *desc1 = av_pix_fmt_desc_get(dst_pix_fmt1);
+    மாறிலி AVPixFmtDescriptor *desc2 = av_pix_fmt_desc_get(dst_pix_fmt2);
+    முழு score1, score2;
 
-    if (!desc1) {
+    எனில் (!desc1) {
         dst_pix_fmt = dst_pix_fmt2;
-    } else if (!desc2) {
+    } இல்லையெனில் எனில் (!desc2) {
         dst_pix_fmt = dst_pix_fmt1;
-    } else {
+    } இல்லையெனில் {
         loss_mask= loss_ptr?~*loss_ptr:~0; /* use loss mask if provided */
-        if(!has_alpha)
+        எனில்(!has_alpha)
             loss_mask &= ~FF_LOSS_ALPHA;
 
         score1 = get_pix_fmt_score(dst_pix_fmt1, src_pix_fmt, &loss1, loss_mask);
         score2 = get_pix_fmt_score(dst_pix_fmt2, src_pix_fmt, &loss2, loss_mask);
 
-        if (score1 == score2) {
-            if(av_get_padded_bits_per_pixel(desc2) != av_get_padded_bits_per_pixel(desc1)) {
+        எனில் (score1 == score2) {
+            எனில்(av_get_padded_bits_per_pixel(desc2) != av_get_padded_bits_per_pixel(desc1)) {
                 dst_pix_fmt = av_get_padded_bits_per_pixel(desc2) < av_get_padded_bits_per_pixel(desc1) ? dst_pix_fmt2 : dst_pix_fmt1;
-            } else {
+            } இல்லையெனில் {
                 dst_pix_fmt = desc2->nb_components < desc1->nb_components ? dst_pix_fmt2 : dst_pix_fmt1;
             }
-        } else {
+        } இல்லையெனில் {
             dst_pix_fmt = score1 < score2 ? dst_pix_fmt2 : dst_pix_fmt1;
         }
     }
 
-    if (loss_ptr)
+    எனில் (loss_ptr)
         *loss_ptr = av_get_pix_fmt_loss(dst_pix_fmt, src_pix_fmt, has_alpha);
-    return dst_pix_fmt;
+    திரும்பு dst_pix_fmt;
 }
 
-const char *av_color_range_name(enum AVColorRange range)
+மாறிலி எழுத்து *av_color_range_name(எண்ணிக்கை AVColorRange range)
 {
-    return (unsigned) range < AVCOL_RANGE_NB ?
-        color_range_names[range] : NULL;
+    திரும்பு (unsigned) range < AVCOL_RANGE_NB ?
+        color_range_names[range] : வெற்று;
 }
 
-int av_color_range_from_name(const char *name)
+முழு av_color_range_from_name(மாறிலி எழுத்து *name)
 {
-    int i;
+    முழு i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_range_names); i++) {
-        if (!strcmp(name, color_range_names[i]))
-            return i;
+    க்கு (i = 0; i < FF_ARRAY_ELEMS(color_range_names); i++) {
+        எனில் (!strcmp(name, color_range_names[i]))
+            திரும்பு i;
     }
 
-    return AVERROR(EINVAL);
+    திரும்பு AVERROR(EINVAL);
 }
 
-const char *av_color_primaries_name(enum AVColorPrimaries primaries)
+மாறிலி எழுத்து *av_color_primaries_name(எண்ணிக்கை AVColorPrimaries primaries)
 {
-    if ((unsigned)primaries < AVCOL_PRI_NB)
-        return color_primaries_names[primaries];
-    else if (((unsigned)primaries >= AVCOL_PRI_EXT_BASE) &&
+    எனில் ((unsigned)primaries < AVCOL_PRI_NB)
+        திரும்பு color_primaries_names[primaries];
+    இல்லையெனில் எனில் (((unsigned)primaries >= AVCOL_PRI_EXT_BASE) &&
              ((unsigned)primaries < AVCOL_PRI_EXT_NB))
-        return color_primaries_names_ext[primaries - AVCOL_TRC_EXT_BASE];
-    return NULL;
+        திரும்பு color_primaries_names_ext[primaries - AVCOL_TRC_EXT_BASE];
+    திரும்பு வெற்று;
 }
 
-int av_color_primaries_from_name(const char *name)
+முழு av_color_primaries_from_name(மாறிலி எழுத்து *name)
 {
-    int i;
+    முழு i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names); i++) {
-        if (!color_primaries_names[i])
-            continue;
+    க்கு (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names); i++) {
+        எனில் (!color_primaries_names[i])
+            தொடர்;
 
-        if (!strcmp(name, color_primaries_names[i]))
-            return i;
+        எனில் (!strcmp(name, color_primaries_names[i]))
+            திரும்பு i;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names_ext); i++) {
-        if (!color_primaries_names_ext[i])
-            continue;
+    க்கு (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names_ext); i++) {
+        எனில் (!color_primaries_names_ext[i])
+            தொடர்;
 
-        if (!strcmp(name, color_primaries_names_ext[i]))
-            return AVCOL_PRI_EXT_BASE + i;
+        எனில் (!strcmp(name, color_primaries_names_ext[i]))
+            திரும்பு AVCOL_PRI_EXT_BASE + i;
     }
 
-    return AVERROR(EINVAL);
+    திரும்பு AVERROR(EINVAL);
 }
 
-const char *av_color_transfer_name(enum AVColorTransferCharacteristic transfer)
+மாறிலி எழுத்து *av_color_transfer_name(எண்ணிக்கை AVColorTransferCharacteristic transfer)
 {
-    if ((unsigned)transfer < AVCOL_TRC_NB)
-        return color_transfer_names[transfer];
-    else if (((unsigned)transfer >= AVCOL_TRC_EXT_BASE) &&
+    எனில் ((unsigned)transfer < AVCOL_TRC_NB)
+        திரும்பு color_transfer_names[transfer];
+    இல்லையெனில் எனில் (((unsigned)transfer >= AVCOL_TRC_EXT_BASE) &&
              ((unsigned)transfer < AVCOL_TRC_EXT_NB))
-        return color_transfer_names_ext[transfer - AVCOL_TRC_EXT_BASE];
-    return NULL;
+        திரும்பு color_transfer_names_ext[transfer - AVCOL_TRC_EXT_BASE];
+    திரும்பு வெற்று;
 }
 
-int av_color_transfer_from_name(const char *name)
+முழு av_color_transfer_from_name(மாறிலி எழுத்து *name)
 {
-    int i;
+    முழு i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names); i++) {
-        if (!color_transfer_names[i])
-            continue;
+    க்கு (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names); i++) {
+        எனில் (!color_transfer_names[i])
+            தொடர்;
 
-        if (!strcmp(name, color_transfer_names[i]))
-            return i;
+        எனில் (!strcmp(name, color_transfer_names[i]))
+            திரும்பு i;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names_ext); i++) {
-        if (!color_transfer_names_ext[i])
-            continue;
+    க்கு (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names_ext); i++) {
+        எனில் (!color_transfer_names_ext[i])
+            தொடர்;
 
-        if (!strcmp(name, color_transfer_names_ext[i]))
-            return AVCOL_TRC_EXT_BASE + i;
+        எனில் (!strcmp(name, color_transfer_names_ext[i]))
+            திரும்பு AVCOL_TRC_EXT_BASE + i;
     }
 
-    return AVERROR(EINVAL);
+    திரும்பு AVERROR(EINVAL);
 }
 
-const char *av_color_space_name(enum AVColorSpace space)
+மாறிலி எழுத்து *av_color_space_name(எண்ணிக்கை AVColorSpace space)
 {
-    return (unsigned) space < AVCOL_SPC_NB ?
-        color_space_names[space] : NULL;
+    திரும்பு (unsigned) space < AVCOL_SPC_NB ?
+        color_space_names[space] : வெற்று;
 }
 
-int av_color_space_from_name(const char *name)
+முழு av_color_space_from_name(மாறிலி எழுத்து *name)
 {
-    int i;
+    முழு i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_space_names); i++) {
-        if (!color_space_names[i])
-            continue;
+    க்கு (i = 0; i < FF_ARRAY_ELEMS(color_space_names); i++) {
+        எனில் (!color_space_names[i])
+            தொடர்;
 
-        if (!strcmp(name, color_space_names[i]))
-            return i;
+        எனில் (!strcmp(name, color_space_names[i]))
+            திரும்பு i;
     }
 
-    return AVERROR(EINVAL);
+    திரும்பு AVERROR(EINVAL);
 }
 
-const char *av_chroma_location_name(enum AVChromaLocation location)
+மாறிலி எழுத்து *av_chroma_location_name(எண்ணிக்கை AVChromaLocation location)
 {
-    return (unsigned) location < AVCHROMA_LOC_NB ?
-        chroma_location_names[location] : NULL;
+    திரும்பு (unsigned) location < AVCHROMA_LOC_NB ?
+        chroma_location_names[location] : வெற்று;
 }
 
-int av_chroma_location_from_name(const char *name)
+முழு av_chroma_location_from_name(மாறிலி எழுத்து *name)
 {
-    int i;
+    முழு i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(chroma_location_names); i++) {
-        if (!chroma_location_names[i])
-            continue;
+    க்கு (i = 0; i < FF_ARRAY_ELEMS(chroma_location_names); i++) {
+        எனில் (!chroma_location_names[i])
+            தொடர்;
 
-        if (!strcmp(name, chroma_location_names[i]))
-            return i;
+        எனில் (!strcmp(name, chroma_location_names[i]))
+            திரும்பு i;
     }
 
-    return AVERROR(EINVAL);
+    திரும்பு AVERROR(EINVAL);
 }
 
-int av_chroma_location_enum_to_pos(int *xpos, int *ypos, enum AVChromaLocation pos)
+முழு av_chroma_location_enum_to_pos(முழு *xpos, முழு *ypos, எண்ணிக்கை AVChromaLocation pos)
 {
-    if (pos <= AVCHROMA_LOC_UNSPECIFIED || pos >= AVCHROMA_LOC_NB)
-        return AVERROR(EINVAL);
+    எனில் (pos <= AVCHROMA_LOC_UNSPECIFIED || pos >= AVCHROMA_LOC_NB)
+        திரும்பு AVERROR(EINVAL);
     pos--;
 
     *xpos = (pos&1) * 128;
     *ypos = ((pos>>1)^(pos<4)) * 128;
 
-    return 0;
+    திரும்பு 0;
 }
 
-enum AVChromaLocation av_chroma_location_pos_to_enum(int xpos, int ypos)
+எண்ணிக்கை AVChromaLocation av_chroma_location_pos_to_enum(முழு xpos, முழு ypos)
 {
-    int pos, xout, yout;
+    முழு pos, xout, yout;
 
-    for (pos = AVCHROMA_LOC_UNSPECIFIED + 1; pos < AVCHROMA_LOC_NB; pos++) {
-        if (av_chroma_location_enum_to_pos(&xout, &yout, pos) == 0 && xout == xpos && yout == ypos)
-            return pos;
+    க்கு (pos = AVCHROMA_LOC_UNSPECIFIED + 1; pos < AVCHROMA_LOC_NB; pos++) {
+        எனில் (av_chroma_location_enum_to_pos(&xout, &yout, pos) == 0 && xout == xpos && yout == ypos)
+            திரும்பு pos;
     }
-    return AVCHROMA_LOC_UNSPECIFIED;
+    திரும்பு AVCHROMA_LOC_UNSPECIFIED;
 }
 
-const char *av_alpha_mode_name(enum AVAlphaMode mode)
+மாறிலி எழுத்து *av_alpha_mode_name(எண்ணிக்கை AVAlphaMode mode)
 {
-    return (unsigned) mode < AVALPHA_MODE_NB ?
-        alpha_mode_names[mode] : NULL;
+    திரும்பு (unsigned) mode < AVALPHA_MODE_NB ?
+        alpha_mode_names[mode] : வெற்று;
 }
 
-enum AVAlphaMode av_alpha_mode_from_name(const char *name)
+எண்ணிக்கை AVAlphaMode av_alpha_mode_from_name(மாறிலி எழுத்து *name)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(alpha_mode_names); i++) {
-        if (!alpha_mode_names[i])
-            continue;
+    க்கு (முழு i = 0; i < FF_ARRAY_ELEMS(alpha_mode_names); i++) {
+        எனில் (!alpha_mode_names[i])
+            தொடர்;
 
-        if (!strcmp(name, alpha_mode_names[i]))
-            return i;
+        எனில் (!strcmp(name, alpha_mode_names[i]))
+            திரும்பு i;
     }
 
-    return AVERROR(EINVAL);
+    திரும்பு AVERROR(EINVAL);
 }

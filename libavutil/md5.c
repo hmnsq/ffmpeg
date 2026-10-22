@@ -30,36 +30,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
+#அந்தர்பாவ <stdint.h>
+#அந்தர்பாவ <string.h>
 
-#include "bswap.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "md5.h"
+#அந்தர்பாவ "bswap.h"
+#அந்தர்பாவ "intreadwrite.h"
+#அந்தர்பாவ "macros.h"
+#அந்தர்பாவ "mem.h"
+#அந்தர்பாவ "md5.h"
 
-typedef struct AVMD5 {
+வகைவரை கட்டமைப்பு AVMD5 {
     uint64_t len;
     uint8_t  block[64];
     uint32_t ABCD[4];
 } AVMD5;
 
-const int av_md5_size = sizeof(AVMD5);
+மாறிலி முழு av_md5_size = அளவு(AVMD5);
 
-struct AVMD5 *av_md5_alloc(void)
+கட்டமைப்பு AVMD5 *av_md5_alloc(வெறுமை)
 {
-    return av_mallocz(sizeof(struct AVMD5));
+    திரும்பு av_mallocz(அளவு(கட்டமைப்பு AVMD5));
 }
 
-static const uint8_t S[4][4] = {
+நிலையான மாறிலி uint8_t S[4][4] = {
     { 7, 12, 17, 22 },  /* round 1 */
     { 5,  9, 14, 20 },  /* round 2 */
     { 4, 11, 16, 23 },  /* round 3 */
     { 6, 10, 15, 21 }   /* round 4 */
 };
 
-static const uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
+நிலையான மாறிலி uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,   /* round 1 */
     0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
     0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
@@ -82,39 +82,39 @@ static const uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
 };
 
 #define CORE(i, a, b, c, d)                                             \
-    do {                                                                \
+    செய் {                                                                \
         t  = S[i >> 4][i & 3];                                          \
         a += T[i];                                                      \
                                                                         \
-        if (i < 32) {                                                   \
-            if (i < 16)                                                 \
+        எனில் (i < 32) {                                                   \
+            எனில் (i < 16)                                                 \
                 a += (d ^ (b & (c ^ d)))  + AV_RL32(X+(       i  & 15));\
-            else                                                        \
+            இல்லையெனில்                                                        \
                 a += ((d & b) | (~d & c)) + AV_RL32(X+((1 + 5*i) & 15));\
-        } else {                                                        \
-            if (i < 48)                                                 \
+        } இல்லையெனில் {                                                        \
+            எனில் (i < 48)                                                 \
                 a += (b ^ c ^ d)          + AV_RL32(X+((5 + 3*i) & 15));\
-            else                                                        \
+            இல்லையெனில்                                                        \
                 a += (c ^ (b | ~d))       + AV_RL32(X+((    7*i) & 15));\
         }                                                               \
         a = b + (a << t | a >> (32 - t));                               \
-    } while (0)
+    } போது (0)
 
-static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
+நிலையான வெறுமை body(uint32_t ABCD[4], மாறிலி uint8_t *src, size_t nblocks)
 {
-    const uint32_t *X;
+    மாறிலி uint32_t *X;
     uint32_t a, b, c, d, t;
 
-    for (size_t n = 0; n < nblocks; n++) {
+    க்கு (size_t n = 0; n < nblocks; n++) {
         a = ABCD[3];
         b = ABCD[2];
         c = ABCD[1];
         d = ABCD[0];
 
-        X = (const uint32_t *)src + n * 16;
+        X = (மாறிலி uint32_t *)src + n * 16;
 
-#if CONFIG_SMALL
-        for (int i = 0; i < 64; i++) {
+#எனில் CONFIG_SMALL
+        க்கு (முழு i = 0; i < 64; i++) {
             CORE(i, a, b, c, d);
             t = d;
             d = c;
@@ -122,7 +122,7 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
             b = a;
             a = t;
         }
-#else
+#இல்லையெனில்
 #define CORE2(i)                                                        \
         CORE(i, a, b, c, d); CORE((i + 1), d, a, b, c);                 \
         CORE((i + 2), c, d, a, b); CORE((i + 3), b, c, d, a)
@@ -140,7 +140,7 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
     }
 }
 
-void av_md5_init(AVMD5 *ctx)
+வெறுமை av_md5_init(AVMD5 *ctx)
 {
     ctx->len     = 0;
 
@@ -150,57 +150,57 @@ void av_md5_init(AVMD5 *ctx)
     ctx->ABCD[3] = 0x67452301;
 }
 
-void av_md5_update(AVMD5 *ctx, const uint8_t *src, size_t len)
+வெறுமை av_md5_update(AVMD5 *ctx, மாறிலி uint8_t *src, size_t len)
 {
-    const uint8_t *end;
-    int j;
+    மாறிலி uint8_t *end;
+    முழு j;
 
     j         = ctx->len & 63;
     ctx->len += len;
 
-    if (j) {
-        int cnt = FFMIN(len, 64 - j);
+    எனில் (j) {
+        முழு cnt = FFMIN(len, 64 - j);
         memcpy(ctx->block + j, src, cnt);
         src += cnt;
         len -= cnt;
-        if (j + cnt < 64)
-            return;
+        எனில் (j + cnt < 64)
+            திரும்பு;
         body(ctx->ABCD, ctx->block, 1);
     }
 
     end = src + (len & ~63);
-    if (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
-       while (src < end) {
+    எனில் (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
+       போது (src < end) {
            memcpy(ctx->block, src, 64);
            body(ctx->ABCD, ctx->block, 1);
            src += 64;
         }
-    } else {
+    } இல்லையெனில் {
         size_t nblocks = len / 64;
         body(ctx->ABCD, src, nblocks);
         src = end;
     }
     len &= 63;
-    if (len > 0)
+    எனில் (len > 0)
         memcpy(ctx->block, src, len);
 }
 
-void av_md5_final(AVMD5 *ctx, uint8_t *dst)
+வெறுமை av_md5_final(AVMD5 *ctx, uint8_t *dst)
 {
-    int i;
+    முழு i;
     uint64_t finalcount = av_le2ne64(ctx->len << 3);
 
     av_md5_update(ctx, "\200", 1);
-    while ((ctx->len & 63) != 56)
+    போது ((ctx->len & 63) != 56)
         av_md5_update(ctx, "", 1);
 
     av_md5_update(ctx, (uint8_t *) &finalcount, 8);
 
-    for (i = 0; i < 4; i++)
+    க்கு (i = 0; i < 4; i++)
         AV_WL32(dst + 4 * i, ctx->ABCD[3 - i]);
 }
 
-void av_md5_sum(uint8_t *dst, const uint8_t *src, size_t len)
+வெறுமை av_md5_sum(uint8_t *dst, மாறிலி uint8_t *src, size_t len)
 {
     AVMD5 ctx;
 

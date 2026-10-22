@@ -21,17 +21,17 @@
 #ifndef AVUTIL_VIDEO_HINT_H
 #define AVUTIL_VIDEO_HINT_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "libavutil/avassert.h"
-#include "libavutil/frame.h"
+#அந்தர்பாவ <stddef.h>
+#அந்தர்பாவ <stdint.h>
+#அந்தர்பாவ "libavutil/avassert.h"
+#அந்தர்பாவ "libavutil/frame.h"
 
-typedef struct AVVideoRect {
+வகைவரை கட்டமைப்பு AVVideoRect {
     uint32_t x, y;
     uint32_t width, height;
 } AVVideoRect;
 
-typedef enum AVVideoHintType {
+வகைவரை எண்ணிக்கை AVVideoHintType {
     /* rectangled delimit the constant areas (unchanged), default is changed */
     AV_VIDEO_HINT_TYPE_CONSTANT,
 
@@ -39,7 +39,7 @@ typedef enum AVVideoHintType {
     AV_VIDEO_HINT_TYPE_CHANGED,
 } AVVideoHintType;
 
-typedef struct AVVideoHint {
+வகைவரை கட்டமைப்பு AVVideoHint {
     /**
      * Number of AVVideoRect present.
      *
@@ -63,14 +63,14 @@ typedef struct AVVideoHint {
     AVVideoHintType type;
 } AVVideoHint;
 
-static av_always_inline AVVideoRect *
-av_video_hint_rects(const AVVideoHint *hints) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
+நிலையான av_always_inline AVVideoRect *
+av_video_hint_rects(மாறிலி AVVideoHint *hints) {
+    திரும்பு (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
 }
 
-static av_always_inline AVVideoRect *
-av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
+நிலையான av_always_inline AVVideoRect *
+av_video_hint_get_rect(மாறிலி AVVideoHint *hints, size_t idx) {
+    திரும்பு (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
 }
 
 /**

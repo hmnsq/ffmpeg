@@ -19,27 +19,27 @@
 #ifndef AVUTIL_RISCV_PIXELUTILS_H
 #define AVUTIL_RISCV_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#அந்தர்பாவ <stddef.h>
+#அந்தர்பாவ <stdint.h>
 
-#include "config.h"
+#அந்தர்பாவ "config.h"
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#அந்தர்பாவ "cpu.h"
+#அந்தர்பாவ "libavutil/attributes.h"
+#அந்தர்பாவ "libavutil/cpu.h"
+#அந்தர்பாவ "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_rvv(const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad8_rvv (const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
+முழு ff_pixelutils_sad16_rvv(மாறிலி uint8_t *src1, ptrdiff_t stride1,
+                            மாறிலி uint8_t *src2, ptrdiff_t stride2);
+முழு ff_pixelutils_sad8_rvv (மாறிலி uint8_t *src1, ptrdiff_t stride1,
+                            மாறிலி uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, int aligned)
+நிலையான உள்வரி av_cold வெறுமை ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, முழு aligned)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#எனில் HAVE_RVV
+    முழு flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
+    எனில் (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
         sad[3] = ff_pixelutils_sad16_rvv;
         sad[2] = ff_pixelutils_sad8_rvv;
     }
