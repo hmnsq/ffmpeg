@@ -27,11 +27,11 @@
 #ifndef AVUTIL_DOVI_META_H
 #define AVUTIL_DOVI_META_H
 
-#include <stdint.h>
-#include <stddef.h>
+#ضمن <stdint.h>
+#ضمن <stddef.h>
 
-#include "rational.h"
-#include "csp.h"
+#ضمن "rational.h"
+#ضمن "csp.h"
 
 /*
  * DOVI configuration
@@ -52,7 +52,7 @@
  * @note The struct must be allocated with av_dovi_alloc() and
  *       its size is not a part of the public ABI.
  */
-typedef struct AVDOVIDecoderConfigurationRecord {
+تعريفنوع بنية AVDOVIDecoderConfigurationRecord {
     uint8_t dv_version_major;
     uint8_t dv_version_minor;
     uint8_t dv_profile;
@@ -64,7 +64,7 @@ typedef struct AVDOVIDecoderConfigurationRecord {
     uint8_t dv_md_compression;
 } AVDOVIDecoderConfigurationRecord;
 
-enum AVDOVICompression {
+تعداد AVDOVICompression {
     AV_DOVI_COMPRESSION_NONE     = 0,
     AV_DOVI_COMPRESSION_LIMITED  = 1,
     AV_DOVI_COMPRESSION_RESERVED = 2,
@@ -84,7 +84,7 @@ AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size);
  *
  * @note sizeof(AVDOVIRpuDataHeader) is not part of the public ABI.
  */
-typedef struct AVDOVIRpuDataHeader {
+تعريفنوع بنية AVDOVIRpuDataHeader {
     uint8_t rpu_type;
     uint16_t rpu_format;
     uint8_t vdr_rpu_profile;
@@ -104,7 +104,7 @@ typedef struct AVDOVIRpuDataHeader {
     uint8_t ext_mapping_idc_5_7; /* reserved */
 } AVDOVIRpuDataHeader;
 
-enum AVDOVIMappingMethod {
+تعداد AVDOVIMappingMethod {
     AV_DOVI_MAPPING_POLYNOMIAL = 0,
     AV_DOVI_MAPPING_MMR = 1,
 };
@@ -114,10 +114,10 @@ enum AVDOVIMappingMethod {
  * value ranges between two adjacent pivot values.
  */
 #define AV_DOVI_MAX_PIECES 8
-typedef struct AVDOVIReshapingCurve {
-    uint8_t num_pivots;                         /* [2, 9] */
+تعريفنوع بنية AVDOVIReshapingCurve {
+    uint8_t اڠک_pivots;                         /* [2, 9] */
     uint16_t pivots[AV_DOVI_MAX_PIECES + 1];    /* sorted ascending */
-    enum AVDOVIMappingMethod mapping_idc[AV_DOVI_MAX_PIECES];
+    تعداد AVDOVIMappingMethod mapping_idc[AV_DOVI_MAX_PIECES];
     /* AV_DOVI_MAPPING_POLYNOMIAL */
     uint8_t poly_order[AV_DOVI_MAX_PIECES];     /* [1, 2] */
     int64_t poly_coef[AV_DOVI_MAX_PIECES][3];   /* x^0, x^1, x^2 */
@@ -127,7 +127,7 @@ typedef struct AVDOVIReshapingCurve {
     int64_t mmr_coef[AV_DOVI_MAX_PIECES][3/* order - 1 */][7];
 } AVDOVIReshapingCurve;
 
-enum AVDOVINLQMethod {
+تعداد AVDOVINLQMethod {
     AV_DOVI_NLQ_NONE = -1,
     AV_DOVI_NLQ_LINEAR_DZ = 0,
 };
@@ -136,7 +136,7 @@ enum AVDOVINLQMethod {
  * Coefficients of the non-linear inverse quantization. For the interpretation
  * of these, see ETSI GS CCM 001.
  */
-typedef struct AVDOVINLQParams {
+تعريفنوع بنية AVDOVINLQParams {
     uint16_t nlq_offset;
     uint64_t vdr_in_max;
     /* AV_DOVI_NLQ_LINEAR_DZ */
@@ -149,16 +149,16 @@ typedef struct AVDOVINLQParams {
  *
  * @note sizeof(AVDOVIDataMapping) is not part of the public ABI.
  */
-typedef struct AVDOVIDataMapping {
+تعريفنوع بنية AVDOVIDataMapping {
     uint8_t vdr_rpu_id;
     uint8_t mapping_color_space;
     uint8_t mapping_chroma_format_idc;
     AVDOVIReshapingCurve curves[3]; /* per component */
 
     /* Non-linear inverse quantization */
-    enum AVDOVINLQMethod nlq_method_idc;
-    uint32_t num_x_partitions;
-    uint32_t num_y_partitions;
+    تعداد AVDOVINLQMethod nlq_method_idc;
+    uint32_t اڠک_x_partitions;
+    uint32_t اڠک_y_partitions;
     AVDOVINLQParams nlq[3]; /* per component */
     uint16_t nlq_pivots[2];
 } AVDOVIDataMapping;
@@ -168,7 +168,7 @@ typedef struct AVDOVIDataMapping {
  *
  * @note sizeof(AVDOVIColorMetadata) is not part of the public ABI.
  */
-typedef struct AVDOVIColorMetadata {
+تعريفنوع بنية AVDOVIColorMetadata {
     uint8_t dm_metadata_id;
     uint8_t scene_refresh_flag;
 
@@ -200,14 +200,14 @@ typedef struct AVDOVIColorMetadata {
     uint16_t source_diagonal;
 } AVDOVIColorMetadata;
 
-typedef struct AVDOVIDmLevel1 {
+تعريفنوع بنية AVDOVIDmLevel1 {
     /* Per-frame brightness metadata */
     uint16_t min_pq;
     uint16_t max_pq;
     uint16_t avg_pq;
 } AVDOVIDmLevel1;
 
-typedef struct AVDOVIDmLevel2 {
+تعريفنوع بنية AVDOVIDmLevel2 {
     /* Usually derived from level 8 (at different levels) */
     uint16_t target_max_pq;
     uint16_t trim_slope;
@@ -218,26 +218,26 @@ typedef struct AVDOVIDmLevel2 {
     int16_t ms_weight;
 } AVDOVIDmLevel2;
 
-typedef struct AVDOVIDmLevel3 {
+تعريفنوع بنية AVDOVIDmLevel3 {
     uint16_t min_pq_offset;
     uint16_t max_pq_offset;
     uint16_t avg_pq_offset;
 } AVDOVIDmLevel3;
 
-typedef struct AVDOVIDmLevel4 {
+تعريفنوع بنية AVDOVIDmLevel4 {
     uint16_t anchor_pq;
     uint16_t anchor_power;
 } AVDOVIDmLevel4;
 
-typedef struct AVDOVIDmLevel5 {
+تعريفنوع بنية AVDOVIDmLevel5 {
     /* Active area definition */
-    uint16_t left_offset;
-    uint16_t right_offset;
-    uint16_t top_offset;
+    uint16_t کيري_offset;
+    uint16_t کانن_offset;
+    uint16_t اتس_offset;
     uint16_t bottom_offset;
 } AVDOVIDmLevel5;
 
-typedef struct AVDOVIDmLevel6 {
+تعريفنوع بنية AVDOVIDmLevel6 {
     /* Static HDR10 metadata */
     uint16_t max_luminance;
     uint16_t min_luminance;
@@ -245,7 +245,7 @@ typedef struct AVDOVIDmLevel6 {
     uint16_t max_fall;
 } AVDOVIDmLevel6;
 
-typedef struct AVDOVIDmLevel8 {
+تعريفنوع بنية AVDOVIDmLevel8 {
     /* Extended version of level 2 */
     uint8_t target_display_index;
     uint16_t trim_slope;
@@ -260,13 +260,13 @@ typedef struct AVDOVIDmLevel8 {
     uint8_t hue_vector_field[6];
 } AVDOVIDmLevel8;
 
-typedef struct AVDOVIDmLevel9 {
+تعريفنوع بنية AVDOVIDmLevel9 {
     /* Source display characteristics */
     uint8_t source_primary_index;
     AVColorPrimariesDesc source_display_primaries;
 } AVDOVIDmLevel9;
 
-typedef struct AVDOVIDmLevel10 {
+تعريفنوع بنية AVDOVIDmLevel10 {
     /* Target display characteristics */
     uint8_t target_display_index;
     uint16_t target_max_pq;
@@ -275,11 +275,11 @@ typedef struct AVDOVIDmLevel10 {
     AVColorPrimariesDesc target_display_primaries;
 } AVDOVIDmLevel10;
 
-typedef struct AVDOVIDmLevel11 {
+تعريفنوع بنية AVDOVIDmLevel11 {
     uint8_t content_type;
     uint8_t whitepoint;
     uint8_t reference_mode_flag;
-#if FF_API_DOVI_L11_INVALID_PROPS
+#إذا FF_API_DOVI_L11_INVALID_PROPS
     attribute_deprecated
     uint8_t sharpness;
     attribute_deprecated
@@ -295,13 +295,13 @@ typedef struct AVDOVIDmLevel11 {
 #endif
 } AVDOVIDmLevel11;
 
-typedef struct AVDOVIDmLevel254 {
+تعريفنوع بنية AVDOVIDmLevel254 {
     /* DMv2 info block, always present in samples with DMv2 metadata */
     uint8_t dm_mode;
     uint8_t dm_version_index;
 } AVDOVIDmLevel254;
 
-typedef struct AVDOVIDmLevel255 {
+تعريفنوع بنية AVDOVIDmLevel255 {
     /* Debug block, not really used in samples */
     uint8_t dm_run_mode;
     uint8_t dm_run_version;
@@ -315,9 +315,9 @@ typedef struct AVDOVIDmLevel255 {
  *
  * @note sizeof(AVDOVIDmData) is not part of the public API.
  */
-typedef struct AVDOVIDmData {
+تعريفنوع بنية AVDOVIDmData {
     uint8_t level; /* [1, 255] */
-    union {
+    اتحاد {
         AVDOVIDmLevel1 l1; /* dynamic */
         AVDOVIDmLevel2 l2; /* dynamic, may appear multiple times */
         AVDOVIDmLevel3 l3; /* dynamic */
@@ -342,7 +342,7 @@ typedef struct AVDOVIDmData {
  *       its size is not a part of the public ABI.
  */
 
-typedef struct AVDOVIMetadata {
+تعريفنوع بنية AVDOVIMetadata {
     /**
      * Offset in bytes from the beginning of this structure at which the
      * respective structs start.
@@ -353,38 +353,38 @@ typedef struct AVDOVIMetadata {
 
     size_t ext_block_offset; /* offset to start of ext blocks array */
     size_t ext_block_size; /* size per element */
-    int num_ext_blocks; /* number of extension blocks */
+    صحيح اڠک_ext_blocks; /* number of extension blocks */
 
     /* static limit on num_ext_blocks, derived from bitstream limitations */
 #define AV_DOVI_MAX_EXT_BLOCKS 32
 } AVDOVIMetadata;
 
-static av_always_inline AVDOVIRpuDataHeader *
-av_dovi_get_header(const AVDOVIMetadata *data)
+ساكن av_always_inline AVDOVIRpuDataHeader *
+av_dovi_get_header(ثابت AVDOVIMetadata *data)
 {
-    return (AVDOVIRpuDataHeader *)((uint8_t *) data + data->header_offset);
+    أرجع (AVDOVIRpuDataHeader *)((uint8_t *) data + data->header_offset);
 }
 
-static av_always_inline AVDOVIDataMapping *
-av_dovi_get_mapping(const AVDOVIMetadata *data)
+ساكن av_always_inline AVDOVIDataMapping *
+av_dovi_get_mapping(ثابت AVDOVIMetadata *data)
 {
-    return (AVDOVIDataMapping *)((uint8_t *) data + data->mapping_offset);
+    أرجع (AVDOVIDataMapping *)((uint8_t *) data + data->mapping_offset);
 }
 
-static av_always_inline AVDOVIColorMetadata *
-av_dovi_get_color(const AVDOVIMetadata *data)
+ساكن av_always_inline AVDOVIColorMetadata *
+av_dovi_get_color(ثابت AVDOVIMetadata *data)
 {
-    return (AVDOVIColorMetadata *)((uint8_t *) data + data->color_offset);
+    أرجع (AVDOVIColorMetadata *)((uint8_t *) data + data->color_offset);
 }
 
 /**
  * Gets the specified Dolby Vision Display Management (DM) metadata
  * @param index must be non negative and below data->num_ext_blocks
  */
-static av_always_inline AVDOVIDmData *
-av_dovi_get_ext(const AVDOVIMetadata *data, int index)
+ساكن av_always_inline AVDOVIDmData *
+av_dovi_get_ext(ثابت AVDOVIMetadata *data, صحيح index)
 {
-    return (AVDOVIDmData *)((uint8_t *) data + data->ext_block_offset +
+    أرجع (AVDOVIDmData *)((uint8_t *) data + data->ext_block_offset +
                             data->ext_block_size * index);
 }
 
@@ -392,7 +392,7 @@ av_dovi_get_ext(const AVDOVIMetadata *data, int index)
  * Find an extension block with a given level, or NULL. In the case of
  * multiple extension blocks, only the first is returned.
  */
-AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level);
+AVDOVIDmData *av_dovi_find_level(ثابت AVDOVIMetadata *data, uint8_t level);
 
 /**
  * Allocate an AVDOVIMetadata structure and initialize its
