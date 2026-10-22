@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avassert.h"
-#include "intmath.h"
-#include "cpu.h"
-#include "mem.h"
-#include "qsort.h"
-#include "bprint.h"
+#ضمن "avassert.h"
+#ضمن "intmath.h"
+#ضمن "cpu.h"
+#ضمن "mem.h"
+#ضمن "qsort.h"
+#ضمن "bprint.h"
 
-#include "tx_priv.h"
+#ضمن "tx_priv.h"
 
 #define TYPE_IS(type, x)               \
     (((x) == AV_TX_FLOAT_ ## type)  || \
@@ -31,203 +31,203 @@
      ((x) == AV_TX_INT32_ ## type))
 
 /* Calculates the modular multiplicative inverse */
-static av_always_inline int mulinv(int n, int m)
+ساكن av_always_inline صحيح mulinv(صحيح n, صحيح m)
 {
     n = n % m;
-    for (int x = 1; x < m; x++)
-        if (((n * x) % m) == 1)
-            return x;
+    لكل (صحيح x = 1; x < m; x++)
+        إذا (((n * x) % m) == 1)
+            أرجع x;
     av_assert0(0); /* Never reached */
-    return 0;
+    أرجع 0;
 }
 
-int ff_tx_gen_pfa_input_map(AVTXContext *s, FFTXCodeletOptions *opts,
-                            int d1, int d2)
+صحيح ff_tx_gen_pfa_مدخل_map(AVTXContext *s, FFTXCodeletOptions *opts,
+                            صحيح d1, صحيح d2)
 {
-    const int sl = d1*d2;
+    ثابت صحيح sl = d1*d2;
 
-    s->map = av_malloc(s->len*sizeof(*s->map));
-    if (!s->map)
-        return AVERROR(ENOMEM);
+    s->map = av_malloc(s->len*حجم(*s->map));
+    إذا (!s->map)
+        أرجع AVERROR(ENOMEM);
 
-    for (int k = 0; k < s->len; k += sl) {
-        if (s->inv || (opts && opts->map_dir == FF_TX_MAP_SCATTER)) {
-            for (int m = 0; m < d2; m++)
-                for (int n = 0; n < d1; n++)
+    لكل (صحيح k = 0; k < s->len; k += sl) {
+        إذا (s->inv || (opts && opts->map_dir == FF_TX_MAP_SCATTER)) {
+            لكل (صحيح m = 0; m < d2; m++)
+                لكل (صحيح n = 0; n < d1; n++)
                     s->map[k + ((m*d1 + n*d2) % (sl))] = m*d1 + n;
-        } else {
-            for (int m = 0; m < d2; m++)
-                for (int n = 0; n < d1; n++)
+        } وإلا {
+            لكل (صحيح m = 0; m < d2; m++)
+                لكل (صحيح n = 0; n < d1; n++)
                     s->map[k + m*d1 + n] = (m*d1 + n*d2) % (sl);
         }
 
-        if (s->inv)
-            for (int w = 1; w <= ((sl) >> 1); w++)
-                FFSWAP(int, s->map[k + w], s->map[k + sl - w]);
+        إذا (s->inv)
+            لكل (صحيح w = 1; w <= ((sl) >> 1); w++)
+                FFSWAP(صحيح, s->map[k + w], s->map[k + sl - w]);
     }
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    أرجع 0;
 }
 
 /* Guaranteed to work for any n, m where gcd(n, m) == 1 */
-int ff_tx_gen_compound_mapping(AVTXContext *s, FFTXCodeletOptions *opts,
-                               int inv, int n, int m)
+صحيح ff_tx_gen_compound_mapping(AVTXContext *s, FFTXCodeletOptions *opts,
+                               صحيح inv, صحيح n, صحيح m)
 {
-    int *in_map, *out_map;
-    const int len = n*m;    /* Will not be equal to s->len for MDCTs */
-    int m_inv, n_inv;
+    صحيح *in_map, *out_map;
+    ثابت صحيح len = n*m;    /* Will not be equal to s->len for MDCTs */
+    صحيح m_inv, n_inv;
 
     /* Make sure the numbers are coprime */
-    if (av_gcd(n, m) != 1)
-        return AVERROR(EINVAL);
+    إذا (av_gcd(n, m) != 1)
+        أرجع AVERROR(EINVAL);
 
     m_inv = mulinv(m, n);
     n_inv = mulinv(n, m);
 
-    if (!(s->map = av_malloc(2*len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    إذا (!(s->map = av_malloc(2*len*حجم(*s->map))))
+        أرجع AVERROR(ENOMEM);
 
     in_map  = s->map;
     out_map = s->map + len;
 
     /* Ruritanian map for input, CRT map for output, can be swapped */
-    if (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
-        for (int j = 0; j < m; j++) {
-            for (int i = 0; i < n; i++) {
+    إذا (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
+        لكل (صحيح j = 0; j < m; j++) {
+            لكل (صحيح i = 0; i < n; i++) {
                 in_map[(i*m + j*n) % len] = j*n + i;
                 out_map[(i*m*m_inv + j*n*n_inv) % len] = i*m + j;
             }
         }
-    } else {
-        for (int j = 0; j < m; j++) {
-            for (int i = 0; i < n; i++) {
+    } وإلا {
+        لكل (صحيح j = 0; j < m; j++) {
+            لكل (صحيح i = 0; i < n; i++) {
                 in_map[j*n + i] = (i*m + j*n) % len;
                 out_map[(i*m*m_inv + j*n*n_inv) % len] = i*m + j;
             }
         }
     }
 
-    if (inv) {
-        for (int i = 0; i < m; i++) {
-            int *in = &in_map[i*n + 1]; /* Skip the DC */
-            for (int j = 0; j < ((n - 1) >> 1); j++)
-                FFSWAP(int, in[j], in[n - j - 2]);
+    إذا (inv) {
+        لكل (صحيح i = 0; i < m; i++) {
+            صحيح *in = &in_map[i*n + 1]; /* Skip the DC */
+            لكل (صحيح j = 0; j < ((n - 1) >> 1); j++)
+                FFSWAP(صحيح, in[j], in[n - j - 2]);
         }
     }
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    أرجع 0;
 }
 
-static inline int split_radix_permutation(int i, int len, int inv)
+ساكن مضمن صحيح split_radix_permutation(صحيح i, صحيح len, صحيح inv)
 {
     len >>= 1;
-    if (len <= 1)
-        return i & 1;
-    if (!(i & len))
-        return split_radix_permutation(i, len, inv) * 2;
+    إذا (len <= 1)
+        أرجع i & 1;
+    إذا (!(i & len))
+        أرجع split_radix_permutation(i, len, inv) * 2;
     len >>= 1;
-    return split_radix_permutation(i, len, inv) * 4 + 1 - 2*(!(i & len) ^ inv);
+    أرجع split_radix_permutation(i, len, inv) * 4 + 1 - 2*(!(i & len) ^ inv);
 }
 
-int ff_tx_gen_ptwo_revtab(AVTXContext *s, FFTXCodeletOptions *opts)
+صحيح ff_tx_gen_ptwo_revtab(AVTXContext *s, FFTXCodeletOptions *opts)
 {
-    int len = s->len;
+    صحيح len = s->len;
 
-    if (!(s->map = av_malloc(len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    إذا (!(s->map = av_malloc(len*حجم(*s->map))))
+        أرجع AVERROR(ENOMEM);
 
-    if (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
-        for (int i = 0; i < s->len; i++)
+    إذا (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
+        لكل (صحيح i = 0; i < s->len; i++)
             s->map[-split_radix_permutation(i, len, s->inv) & (len - 1)] = i;
-    } else {
-        for (int i = 0; i < s->len; i++)
+    } وإلا {
+        لكل (صحيح i = 0; i < s->len; i++)
             s->map[i] = -split_radix_permutation(i, len, s->inv) & (len - 1);
     }
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    أرجع 0;
 }
 
-int ff_tx_gen_inplace_map(AVTXContext *s, int len)
+صحيح ff_tx_gen_inplace_map(AVTXContext *s, صحيح len)
 {
-    int *src_map, out_map_idx = 0;
+    صحيح *src_map, out_map_idx = 0;
 
-    if (!s->sub || !s->sub->map)
-        return AVERROR(EINVAL);
+    إذا (!s->sub || !s->sub->map)
+        أرجع AVERROR(EINVAL);
 
-    if (!(s->map = av_mallocz(len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    إذا (!(s->map = av_mallocz(len*حجم(*s->map))))
+        أرجع AVERROR(ENOMEM);
 
     src_map = s->sub->map;
 
     /* The first coefficient is always already in-place */
-    for (int src = 1; src < s->len; src++) {
-        int dst = src_map[src];
-        int found = 0;
+    لكل (صحيح src = 1; src < s->len; src++) {
+        صحيح dst = src_map[src];
+        صحيح found = 0;
 
-        if (dst <= src)
-            continue;
+        إذا (dst <= src)
+            استمر;
 
         /* This just checks if a closed loop has been encountered before,
          * and if so, skips it, since to fully permute a loop we must only
          * enter it once. */
-        do {
-            for (int j = 0; j < out_map_idx; j++) {
-                if (dst == s->map[j]) {
+        افعل {
+            لكل (صحيح j = 0; j < out_map_idx; j++) {
+                إذا (dst == s->map[j]) {
                     found = 1;
-                    break;
+                    اكسر;
                 }
             }
             dst = src_map[dst];
-        } while (dst != src && !found);
+        } طالما (dst != src && !found);
 
-        if (!found)
+        إذا (!found)
             s->map[out_map_idx++] = src;
     }
 
     s->map[out_map_idx++] = 0;
 
-    return 0;
+    أرجع 0;
 }
 
-static void parity_revtab_generator(int *revtab, int n, int inv, int offset,
-                                    int is_dual, int dual_high, int len,
-                                    int basis, int dual_stride, int inv_lookup)
+ساكن فراغ parity_revtab_generator(صحيح *revtab, صحيح n, صحيح inv, صحيح offset,
+                                    صحيح is_dual, صحيح dual_عالي, صحيح len,
+                                    صحيح basis, صحيح dual_stride, صحيح inv_lookup)
 {
     len >>= 1;
 
-    if (len <= basis) {
-        int k1, k2, stride, even_idx, odd_idx;
+    إذا (len <= basis) {
+        صحيح k1, k2, stride, even_idx, odd_idx;
 
         is_dual = is_dual && dual_stride;
-        dual_high = is_dual & dual_high;
+        dual_عالي = is_dual & dual_عالي;
         stride = is_dual ? FFMIN(dual_stride, len) : 0;
 
-        even_idx = offset + dual_high*(stride - 2*len);
-        odd_idx  = even_idx + len + (is_dual && !dual_high)*len + dual_high*len;
+        even_idx = offset + dual_عالي*(stride - 2*len);
+        odd_idx  = even_idx + len + (is_dual && !dual_عالي)*len + dual_عالي*len;
 
-        for (int i = 0; i < len; i++) {
+        لكل (صحيح i = 0; i < len; i++) {
             k1 = -split_radix_permutation(offset + i*2 + 0, n, inv) & (n - 1);
             k2 = -split_radix_permutation(offset + i*2 + 1, n, inv) & (n - 1);
-            if (inv_lookup) {
+            إذا (inv_lookup) {
                 revtab[even_idx++] = k1;
                 revtab[odd_idx++]  = k2;
-            } else {
+            } وإلا {
                 revtab[k1] = even_idx++;
                 revtab[k2] = odd_idx++;
             }
-            if (stride && !((i + 1) % stride)) {
+            إذا (stride && !((i + 1) % stride)) {
                 even_idx += stride;
                 odd_idx  += stride;
             }
         }
 
-        return;
+        أرجع;
     }
 
     parity_revtab_generator(revtab, n, inv, offset,
@@ -238,16 +238,16 @@ static void parity_revtab_generator(int *revtab, int n, int inv, int offset,
                             1, 1, len >> 1, basis, dual_stride, inv_lookup);
 }
 
-int ff_tx_gen_split_radix_parity_revtab(AVTXContext *s, int len, int inv,
+صحيح ff_tx_gen_split_radix_parity_revtab(AVTXContext *s, صحيح len, صحيح inv,
                                         FFTXCodeletOptions *opts,
-                                        int basis, int dual_stride)
+                                        صحيح basis, صحيح dual_stride)
 {
     basis >>= 1;
-    if (len < basis)
-        return AVERROR(EINVAL);
+    إذا (len < basis)
+        أرجع AVERROR(EINVAL);
 
-    if (!(s->map = av_mallocz(len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    إذا (!(s->map = av_mallocz(len*حجم(*s->map))))
+        أرجع AVERROR(ENOMEM);
 
     av_assert0(!dual_stride || !(dual_stride & (dual_stride - 1)));
     av_assert0(dual_stride <= basis);
@@ -258,22 +258,22 @@ int ff_tx_gen_split_radix_parity_revtab(AVTXContext *s, int len, int inv,
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    أرجع 0;
 }
 
-static void reset_ctx(AVTXContext *s, int free_sub)
+ساكن فراغ reset_ctx(AVTXContext *s, صحيح free_sub)
 {
-    if (!s)
-        return;
+    إذا (!s)
+        أرجع;
 
-    if (s->sub)
-        for (int i = 0; i < TX_MAX_SUB; i++)
+    إذا (s->sub)
+        لكل (صحيح i = 0; i < TX_MAX_SUB; i++)
             reset_ctx(&s->sub[i], free_sub + 1);
 
-    if (s->cd_self && s->cd_self->uninit)
+    إذا (s->cd_self && s->cd_self->uninit)
         s->cd_self->uninit(s);
 
-    if (free_sub)
+    إذا (free_sub)
         av_freep(&s->sub);
 
     av_freep(&s->map);
@@ -283,41 +283,41 @@ static void reset_ctx(AVTXContext *s, int free_sub)
     /* Nothing else needs to be reset, it gets overwritten if another
      * ff_tx_init_subtx() call is made. */
     s->nb_sub = 0;
-    s->opaque = NULL;
-    memset(s->fn, 0, sizeof(s->fn));
+    s->opaque = عدم;
+    memset(s->fn, 0, حجم(s->fn));
 }
 
-void ff_tx_clear_ctx(AVTXContext *s)
+فراغ ff_tx_clear_ctx(AVTXContext *s)
 {
     reset_ctx(s, 0);
 }
 
-av_cold void av_tx_uninit(AVTXContext **ctx)
+av_cold فراغ av_tx_uninit(AVTXContext **ctx)
 {
-    if (!(*ctx))
-        return;
+    إذا (!(*ctx))
+        أرجع;
 
     reset_ctx(*ctx, 1);
     av_freep(ctx);
 }
 
-static av_cold int ff_tx_null_init(AVTXContext *s, const FFTXCodelet *cd,
+ساكن av_cold صحيح ff_tx_null_init(AVTXContext *s, ثابت FFTXCodelet *cd,
                                    uint64_t flags, FFTXCodeletOptions *opts,
-                                   int len, int inv, const void *scale)
+                                   صحيح len, صحيح inv, ثابت فراغ *scale)
 {
     /* Can only handle one sample+type to one sample+type transforms */
-    if (TYPE_IS(MDCT, s->type) || TYPE_IS(RDFT, s->type))
-        return AVERROR(EINVAL);
-    return 0;
+    إذا (TYPE_IS(MDCT, s->type) || TYPE_IS(RDFT, s->type))
+        أرجع AVERROR(EINVAL);
+    أرجع 0;
 }
 
 /* Null transform when the length is 1 */
-static void ff_tx_null(AVTXContext *s, void *_out, void *_in, ptrdiff_t stride)
+ساكن فراغ ff_tx_null(AVTXContext *s, فراغ *_out, فراغ *_in, ptrdiff_t stride)
 {
     memcpy(_out, _in, stride);
 }
 
-static const FFTXCodelet ff_tx_null_def = {
+ساكن ثابت FFTXCodelet ff_tx_null_def = {
     .name       = NULL_IF_CONFIG_SMALL("null"),
     .function   = ff_tx_null,
     .type       = TX_TYPE_ANY,
@@ -331,31 +331,31 @@ static const FFTXCodelet ff_tx_null_def = {
     .prio       = FF_TX_PRIO_MAX,
 };
 
-static const FFTXCodelet * const ff_tx_null_list[] = {
+ساكن ثابت FFTXCodelet * ثابت ff_tx_null_list[] = {
     &ff_tx_null_def,
-    NULL,
+    عدم,
 };
 
 /* Array of all compiled codelet lists. Order is irrelevant. */
-static const FFTXCodelet * const * const codelet_list[] = {
+ساكن ثابت FFTXCodelet * ثابت * ثابت codelet_list[] = {
     ff_tx_codelet_list_float_c,
     ff_tx_codelet_list_double_c,
     ff_tx_codelet_list_int32_c,
     ff_tx_null_list,
-#if HAVE_X86ASM
+#إذا HAVE_X86ASM
     ff_tx_codelet_list_float_x86,
 #endif
-#if ARCH_AARCH64
+#إذا ARCH_AARCH64
     ff_tx_codelet_list_float_aarch64,
 #endif
 };
-static const int codelet_list_num = FF_ARRAY_ELEMS(codelet_list);
+ساكن ثابت صحيح codelet_list_رقم = FF_ARRAY_ELEMS(codelet_list);
 
-static const int cpu_slow_mask = AV_CPU_FLAG_SSE2SLOW | AV_CPU_FLAG_SSE3SLOW  |
+ساكن ثابت صحيح cpu_slow_mask = AV_CPU_FLAG_SSE2SLOW | AV_CPU_FLAG_SSE3SLOW  |
                                  AV_CPU_FLAG_ATOM     | AV_CPU_FLAG_SSSE3SLOW |
                                  AV_CPU_FLAG_AVXSLOW  | AV_CPU_FLAG_SLOW_GATHER;
 
-static const int cpu_slow_penalties[][2] = {
+ساكن ثابت صحيح cpu_slow_penalties[][2] = {
     { AV_CPU_FLAG_SSE2SLOW,    1 + 64  },
     { AV_CPU_FLAG_SSE3SLOW,    1 + 64  },
     { AV_CPU_FLAG_SSSE3SLOW,   1 + 64  },
@@ -364,139 +364,139 @@ static const int cpu_slow_penalties[][2] = {
     { AV_CPU_FLAG_SLOW_GATHER, 1 + 32  },
 };
 
-static int get_codelet_prio(const FFTXCodelet *cd, int cpu_flags, int len)
+ساكن صحيح get_codelet_prio(ثابت FFTXCodelet *cd, صحيح cpu_flags, صحيح len)
 {
-    int prio = cd->prio;
-    int max_factor = 0;
+    صحيح prio = cd->prio;
+    صحيح max_factor = 0;
 
     /* If the CPU has a SLOW flag, and the instruction is also flagged
      * as being slow for such, reduce its priority */
-    for (int i = 0; i < FF_ARRAY_ELEMS(cpu_slow_penalties); i++) {
-        if ((cpu_flags & cd->cpu_flags) & cpu_slow_penalties[i][0])
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(cpu_slow_penalties); i++) {
+        إذا ((cpu_flags & cd->cpu_flags) & cpu_slow_penalties[i][0])
             prio -= cpu_slow_penalties[i][1];
     }
 
     /* Prioritize aligned-only codelets */
-    if ((cd->flags & FF_TX_ALIGNED) && !(cd->flags & AV_TX_UNALIGNED))
+    إذا ((cd->flags & FF_TX_ALIGNED) && !(cd->flags & AV_TX_UNALIGNED))
         prio += 64;
 
     /* Codelets for specific lengths are generally faster */
-    if ((len == cd->min_len) && (len == cd->max_len))
+    إذا ((len == cd->min_len) && (len == cd->max_len))
         prio += 64;
 
     /* Forward-only or inverse-only transforms are generally better */
-    if ((cd->flags & (FF_TX_FORWARD_ONLY | FF_TX_INVERSE_ONLY)))
+    إذا ((cd->flags & (FF_TX_FORWARD_ONLY | FF_TX_INVERSE_ONLY)))
         prio += 64;
 
     /* Larger factors are generally better */
-    for (int i = 0; i < TX_MAX_SUB; i++)
+    لكل (صحيح i = 0; i < TX_MAX_SUB; i++)
         max_factor = FFMAX(cd->factors[i], max_factor);
-    if (max_factor)
+    إذا (max_factor)
         prio += 16*max_factor;
 
-    return prio;
+    أرجع prio;
 }
 
-typedef struct FFTXLenDecomp {
-    int len;
-    int len2;
-    int prio;
-    const FFTXCodelet *cd;
+تعريفنوع بنية FFTXLenDecomp {
+    صحيح len;
+    صحيح len2;
+    صحيح prio;
+    ثابت FFTXCodelet *cd;
 } FFTXLenDecomp;
 
-static int cmp_decomp(FFTXLenDecomp *a, FFTXLenDecomp *b)
+ساكن صحيح cmp_decomp(FFTXLenDecomp *a, FFTXLenDecomp *b)
 {
-    return FFDIFFSIGN(b->prio, a->prio);
+    أرجع FFDIFFSIGN(b->prio, a->prio);
 }
 
-int ff_tx_decompose_length(int dst[TX_MAX_DECOMPOSITIONS], enum AVTXType type,
-                           int len, int inv)
+صحيح ff_tx_decompose_length(صحيح dst[TX_MAX_DECOMPOSITIONS], تعداد AVTXType type,
+                           صحيح len, صحيح inv)
 {
-    int nb_decomp = 0;
+    صحيح nb_decomp = 0;
     FFTXLenDecomp ld[TX_MAX_DECOMPOSITIONS];
-    int codelet_list_idx = codelet_list_num;
+    صحيح codelet_list_idx = codelet_list_رقم;
 
-    const int cpu_flags = av_get_cpu_flags();
+    ثابت صحيح cpu_flags = av_get_cpu_flags();
 
     /* Loop through all codelets in all codelet lists to find matches
      * to the requirements */
-    while (codelet_list_idx--) {
-        const FFTXCodelet * const * list = codelet_list[codelet_list_idx];
-        const FFTXCodelet *cd = NULL;
+    طالما (codelet_list_idx--) {
+        ثابت FFTXCodelet * ثابت * list = codelet_list[codelet_list_idx];
+        ثابت FFTXCodelet *cd = عدم;
 
-        while ((cd = *list++)) {
-            int fl = len;
-            int skip = 0, prio;
-            int factors_product = 1, factors_mod = 0;
+        طالما ((cd = *list++)) {
+            صحيح fl = len;
+            صحيح skip = 0, prio;
+            صحيح factors_product = 1, factors_mod = 0;
 
-            if (nb_decomp >= TX_MAX_DECOMPOSITIONS)
-                goto sort;
+            إذا (nb_decomp >= TX_MAX_DECOMPOSITIONS)
+                اذهب sort;
 
             /* Check if the type matches */
-            if (cd->type != TX_TYPE_ANY && type != cd->type)
-                continue;
+            إذا (cd->type != TX_TYPE_ANY && type != cd->type)
+                استمر;
 
             /* Check direction for non-orthogonal codelets */
-            if (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
+            إذا (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
                 ((cd->flags & (FF_TX_INVERSE_ONLY | AV_TX_FULL_IMDCT)) && !inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_REAL)) && inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_IMAGINARY)) && inv))
-                continue;
+                استمر;
 
             /* Check if the CPU supports the required ISA */
-            if (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
+            إذا (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
                 !(cpu_flags & (cd->cpu_flags & ~cpu_slow_mask)))
-                continue;
+                استمر;
 
-            for (int i = 0; i < TX_MAX_FACTORS; i++) {
-                if (!cd->factors[i] || (fl == 1))
-                    break;
+            لكل (صحيح i = 0; i < TX_MAX_FACTORS; i++) {
+                إذا (!cd->factors[i] || (fl == 1))
+                    اكسر;
 
-                if (cd->factors[i] == TX_FACTOR_ANY) {
+                إذا (cd->factors[i] == TX_FACTOR_ANY) {
                     factors_mod++;
                     factors_product *= fl;
-                } else if (!(fl % cd->factors[i])) {
+                } وإلا إذا (!(fl % cd->factors[i])) {
                     factors_mod++;
-                    if (cd->factors[i] == 2) {
-                        int b = ff_ctz(fl);
+                    إذا (cd->factors[i] == 2) {
+                        صحيح b = ff_ctz(fl);
                         fl >>= b;
                         factors_product <<= b;
-                    } else {
-                        do {
+                    } وإلا {
+                        افعل {
                             fl /= cd->factors[i];
                             factors_product *= cd->factors[i];
-                        } while (!(fl % cd->factors[i]));
+                        } طالما (!(fl % cd->factors[i]));
                     }
                 }
             }
 
             /* Disqualify if factor requirements are not satisfied or if trivial */
-            if ((factors_mod < cd->nb_factors) || (len == factors_product))
-                continue;
+            إذا ((factors_mod < cd->nb_factors) || (len == factors_product))
+                استمر;
 
-            if (av_gcd(factors_product, fl) != 1)
-                continue;
+            إذا (av_gcd(factors_product, fl) != 1)
+                استمر;
 
             /* Check if length is supported and factorization was successful */
-            if ((factors_product < cd->min_len) ||
+            إذا ((factors_product < cd->min_len) ||
                 (cd->max_len != TX_LEN_UNLIMITED && (factors_product > cd->max_len)))
-                continue;
+                استمر;
 
             prio = get_codelet_prio(cd, cpu_flags, factors_product) * factors_product;
 
             /* Check for duplicates */
-            for (int i = 0; i < nb_decomp; i++) {
-                if (factors_product == ld[i].len) {
+            لكل (صحيح i = 0; i < nb_decomp; i++) {
+                إذا (factors_product == ld[i].len) {
                     /* Update priority if new one is higher */
-                    if (prio > ld[i].prio)
+                    إذا (prio > ld[i].prio)
                         ld[i].prio = prio;
                     skip = 1;
-                    break;
+                    اكسر;
                 }
             }
 
             /* Add decomposition if unique */
-            if (!skip) {
+            إذا (!skip) {
                 ld[nb_decomp].cd = cd;
                 ld[nb_decomp].len = factors_product;
                 ld[nb_decomp].len2 = fl;
@@ -506,73 +506,73 @@ int ff_tx_decompose_length(int dst[TX_MAX_DECOMPOSITIONS], enum AVTXType type,
         }
     }
 
-    if (!nb_decomp)
-        return AVERROR(EINVAL);
+    إذا (!nb_decomp)
+        أرجع AVERROR(EINVAL);
 
 sort:
     AV_QSORT(ld, nb_decomp, FFTXLenDecomp, cmp_decomp);
 
-    for (int i = 0; i < nb_decomp; i++) {
-        if (ld[i].cd->nb_factors > 1)
+    لكل (صحيح i = 0; i < nb_decomp; i++) {
+        إذا (ld[i].cd->nb_factors > 1)
             dst[i] = ld[i].len2;
-        else
+        وإلا
             dst[i] = ld[i].len;
     }
 
-    return nb_decomp;
+    أرجع nb_decomp;
 }
 
-int ff_tx_gen_default_map(AVTXContext *s, FFTXCodeletOptions *opts)
+صحيح ff_tx_gen_default_map(AVTXContext *s, FFTXCodeletOptions *opts)
 {
-    s->map = av_malloc(s->len*sizeof(*s->map));
-    if (!s->map)
-        return AVERROR(ENOMEM);
+    s->map = av_malloc(s->len*حجم(*s->map));
+    إذا (!s->map)
+        أرجع AVERROR(ENOMEM);
 
     s->map[0] = 0; /* DC is always at the start */
-    if (s->inv) /* Reversing the ACs flips the transform direction */
-        for (int i = 1; i < s->len; i++)
+    إذا (s->inv) /* Reversing the ACs flips the transform direction */
+        لكل (صحيح i = 1; i < s->len; i++)
             s->map[i] = s->len - i;
-    else
-        for (int i = 1; i < s->len; i++)
+    وإلا
+        لكل (صحيح i = 1; i < s->len; i++)
             s->map[i] = i;
 
     s->map_dir = FF_TX_MAP_GATHER;
 
-    return 0;
+    أرجع 0;
 }
 
-#if !CONFIG_SMALL
-static void print_flags(AVBPrint *bp, uint64_t f)
+#إذا !CONFIG_SMALL
+ساكن فراغ اطبع_flags(AVBPrint *bp, uint64_t f)
 {
-    int prev = 0;
-    const char *sep = ", ";
+    صحيح prev = 0;
+    ثابت حرف *sep = ", ";
     av_bprintf(bp, "flags: [");
-    if ((f & FF_TX_ALIGNED) && ++prev)
+    إذا ((f & FF_TX_ALIGNED) && ++prev)
         av_bprintf(bp, "aligned");
-    if ((f & AV_TX_UNALIGNED) && ++prev)
+    إذا ((f & AV_TX_UNALIGNED) && ++prev)
         av_bprintf(bp, "%sunaligned", prev > 1 ? sep : "");
-    if ((f & AV_TX_INPLACE) && ++prev)
+    إذا ((f & AV_TX_INPLACE) && ++prev)
         av_bprintf(bp, "%sinplace", prev > 1 ? sep : "");
-    if ((f & FF_TX_OUT_OF_PLACE) && ++prev)
+    إذا ((f & FF_TX_OUT_OF_PLACE) && ++prev)
         av_bprintf(bp, "%sout_of_place", prev > 1 ? sep : "");
-    if ((f & FF_TX_FORWARD_ONLY) && ++prev)
+    إذا ((f & FF_TX_FORWARD_ONLY) && ++prev)
         av_bprintf(bp, "%sfwd_only", prev > 1 ? sep : "");
-    if ((f & FF_TX_INVERSE_ONLY) && ++prev)
+    إذا ((f & FF_TX_INVERSE_ONLY) && ++prev)
         av_bprintf(bp, "%sinv_only", prev > 1 ? sep : "");
-    if ((f & FF_TX_PRESHUFFLE) && ++prev)
+    إذا ((f & FF_TX_PRESHUFFLE) && ++prev)
         av_bprintf(bp, "%spreshuf", prev > 1 ? sep : "");
-    if ((f & AV_TX_FULL_IMDCT) && ++prev)
+    إذا ((f & AV_TX_FULL_IMDCT) && ++prev)
         av_bprintf(bp, "%simdct_full", prev > 1 ? sep : "");
-    if ((f & AV_TX_REAL_TO_REAL) && ++prev)
+    إذا ((f & AV_TX_REAL_TO_REAL) && ++prev)
         av_bprintf(bp, "%sreal_to_real", prev > 1 ? sep : "");
-    if ((f & AV_TX_REAL_TO_IMAGINARY) && ++prev)
+    إذا ((f & AV_TX_REAL_TO_IMAGINARY) && ++prev)
         av_bprintf(bp, "%sreal_to_imaginary", prev > 1 ? sep : "");
-    if ((f & FF_TX_ASM_CALL) && ++prev)
+    إذا ((f & FF_TX_ASM_CALL) && ++prev)
         av_bprintf(bp, "%sasm_call", prev > 1 ? sep : "");
     av_bprintf(bp, "]");
 }
 
-static void print_type(AVBPrint *bp, enum AVTXType type)
+ساكن فراغ اطبع_type(AVBPrint *bp, تعداد AVTXType type)
 {
     av_bprintf(bp, "%s",
                type == TX_TYPE_ANY       ? "any"         :
@@ -594,111 +594,111 @@ static void print_type(AVBPrint *bp, enum AVTXType type)
                "unknown");
 }
 
-static void print_cd_info(const FFTXCodelet *cd, int prio, int len, int print_prio,
-                          int log_level)
+ساكن فراغ اطبع_cd_info(ثابت FFTXCodelet *cd, صحيح prio, صحيح len, صحيح اطبع_prio,
+                          صحيح log_level)
 {
     AVBPrint bp;
     av_bprint_init(&bp, 0, AV_BPRINT_SIZE_AUTOMATIC);
 
     av_bprintf(&bp, "%s - type: ", cd->name);
 
-    print_type(&bp, cd->type);
+    اطبع_type(&bp, cd->type);
 
     av_bprintf(&bp, ", len: ");
-    if (!len) {
-        if (cd->min_len != cd->max_len)
+    إذا (!len) {
+        إذا (cd->min_len != cd->max_len)
             av_bprintf(&bp, "[%i, ", cd->min_len);
 
-        if (cd->max_len == TX_LEN_UNLIMITED)
+        إذا (cd->max_len == TX_LEN_UNLIMITED)
             av_bprintf(&bp, "∞");
-        else
+        وإلا
             av_bprintf(&bp, "%i", cd->max_len);
-    } else {
+    } وإلا {
         av_bprintf(&bp, "%i", len);
     }
 
-    if (cd->factors[1]) {
+    إذا (cd->factors[1]) {
         av_bprintf(&bp, "%s, factors", !len && cd->min_len != cd->max_len ? "]" : "");
-        if (!cd->nb_factors)
+        إذا (!cd->nb_factors)
             av_bprintf(&bp, ": [");
-        else
+        وإلا
             av_bprintf(&bp, "[%i]: [", cd->nb_factors);
 
-        for (int i = 0; i < TX_MAX_FACTORS; i++) {
-            if (i && cd->factors[i])
+        لكل (صحيح i = 0; i < TX_MAX_FACTORS; i++) {
+            إذا (i && cd->factors[i])
                 av_bprintf(&bp, ", ");
-            if (cd->factors[i] == TX_FACTOR_ANY)
+            إذا (cd->factors[i] == TX_FACTOR_ANY)
                 av_bprintf(&bp, "any");
-            else if (cd->factors[i])
+            وإلا إذا (cd->factors[i])
                 av_bprintf(&bp, "%i", cd->factors[i]);
-            else
-                break;
+            وإلا
+                اكسر;
         }
 
         av_bprintf(&bp, "], ");
-    } else {
+    } وإلا {
         av_bprintf(&bp, "%s, factor: %i, ",
                    !len && cd->min_len != cd->max_len ? "]" : "", cd->factors[0]);
     }
-    print_flags(&bp, cd->flags);
+    اطبع_flags(&bp, cd->flags);
 
-    if (print_prio)
+    إذا (اطبع_prio)
         av_bprintf(&bp, ", prio: %i", prio);
 
-    av_log(NULL, log_level, "%s\n", bp.str);
+    av_log(عدم, log_level, "%s\n", bp.str);
 }
 
-static void print_tx_structure(AVTXContext *s, int depth)
+ساكن فراغ اطبع_tx_structure(AVTXContext *s, صحيح depth)
 {
-    const FFTXCodelet *cd = s->cd_self;
+    ثابت FFTXCodelet *cd = s->cd_self;
 
-    for (int i = 0; i <= depth; i++)
-        av_log(NULL, AV_LOG_DEBUG, "    ");
+    لكل (صحيح i = 0; i <= depth; i++)
+        av_log(عدم, AV_LOG_DEBUG, "    ");
 
-    print_cd_info(cd, cd->prio, s->len, 0, AV_LOG_DEBUG);
+    اطبع_cd_info(cd, cd->prio, s->len, 0, AV_LOG_DEBUG);
 
-    for (int i = 0; i < s->nb_sub; i++)
-        print_tx_structure(&s->sub[i], depth + 1);
+    لكل (صحيح i = 0; i < s->nb_sub; i++)
+        اطبع_tx_structure(&s->sub[i], depth + 1);
 }
 #endif /* CONFIG_SMALL */
 
-typedef struct TXCodeletMatch {
-    const FFTXCodelet *cd;
-    int prio;
+تعريفنوع بنية TXCodeletMatch {
+    ثابت FFTXCodelet *cd;
+    صحيح prio;
 } TXCodeletMatch;
 
-static int cmp_matches(TXCodeletMatch *a, TXCodeletMatch *b)
+ساكن صحيح cmp_matches(TXCodeletMatch *a, TXCodeletMatch *b)
 {
-    return FFDIFFSIGN(b->prio, a->prio);
+    أرجع FFDIFFSIGN(b->prio, a->prio);
 }
 
 /* We want all factors to completely cover the length */
-static inline int check_cd_factors(const FFTXCodelet *cd, int len)
+ساكن مضمن صحيح check_cd_factors(ثابت FFTXCodelet *cd, صحيح len)
 {
-    int matches = 0, any_flag = 0;
+    صحيح matches = 0, any_flag = 0;
 
-    for (int i = 0; i < TX_MAX_FACTORS; i++) {
-        int factor = cd->factors[i];
+    لكل (صحيح i = 0; i < TX_MAX_FACTORS; i++) {
+        صحيح factor = cd->factors[i];
 
-        if (factor == TX_FACTOR_ANY) {
+        إذا (factor == TX_FACTOR_ANY) {
             any_flag = 1;
             matches++;
-            continue;
-        } else if (len <= 1 || !factor) {
-            break;
-        } else if (factor == 2) { /* Fast path */
-            int bits_2 = ff_ctz(len);
-            if (!bits_2)
-                continue; /* Factor not supported */
+            استمر;
+        } وإلا إذا (len <= 1 || !factor) {
+            اكسر;
+        } وإلا إذا (factor == 2) { /* Fast path */
+            صحيح bits_2 = ff_ctz(len);
+            إذا (!bits_2)
+                استمر; /* Factor not supported */
 
             len >>= bits_2;
             matches++;
-        } else {
-            int res = len % factor;
-            if (res)
-                continue; /* Factor not supported */
+        } وإلا {
+            صحيح res = len % factor;
+            إذا (res)
+                استمر; /* Factor not supported */
 
-            while (!res) {
+            طالما (!res) {
                 len /= factor;
                 res = len % factor;
             }
@@ -706,26 +706,26 @@ static inline int check_cd_factors(const FFTXCodelet *cd, int len)
         }
     }
 
-    return (cd->nb_factors <= matches) && (any_flag || len == 1);
+    أرجع (cd->nb_factors <= matches) && (any_flag || len == 1);
 }
 
-av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
+av_cold صحيح ff_tx_init_subtx(AVTXContext *s, تعداد AVTXType type,
                              uint64_t flags, FFTXCodeletOptions *opts,
-                             int len, int inv, const void *scale)
+                             صحيح len, صحيح inv, ثابت فراغ *scale)
 {
-    int ret = 0;
-    AVTXContext *sub = NULL;
-    TXCodeletMatch *cd_tmp, *cd_matches = NULL;
-    unsigned int cd_matches_size = 0;
-    int codelet_list_idx = codelet_list_num;
-    int nb_cd_matches = 0;
-#if !CONFIG_SMALL
+    صحيح ret = 0;
+    AVTXContext *sub = عدم;
+    TXCodeletMatch *cd_tmp, *cd_matches = عدم;
+    unsigned صحيح cd_matches_size = 0;
+    صحيح codelet_list_idx = codelet_list_رقم;
+    صحيح nb_cd_matches = 0;
+#إذا !CONFIG_SMALL
     AVBPrint bp;
 #endif
 
     /* We still accept functions marked with SLOW, even if the CPU is
      * marked with the same flag, but we give them lower priority. */
-    const int cpu_flags = av_get_cpu_flags();
+    ثابت صحيح cpu_flags = av_get_cpu_flags();
 
     /* Flags the transform wants */
     uint64_t req_flags = flags;
@@ -738,57 +738,57 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
                             FF_TX_ASM_CALL;
 
     /* Unaligned codelets are compatible with the aligned flag */
-    if (req_flags & FF_TX_ALIGNED)
+    إذا (req_flags & FF_TX_ALIGNED)
         req_flags |= AV_TX_UNALIGNED;
 
     /* If either flag is set, both are okay, so don't check for an exact match */
-    if ((req_flags & AV_TX_INPLACE) && (req_flags & FF_TX_OUT_OF_PLACE))
+    إذا ((req_flags & AV_TX_INPLACE) && (req_flags & FF_TX_OUT_OF_PLACE))
         req_flags &= ~(AV_TX_INPLACE | FF_TX_OUT_OF_PLACE);
-    if ((req_flags & FF_TX_ALIGNED) && (req_flags & AV_TX_UNALIGNED))
+    إذا ((req_flags & FF_TX_ALIGNED) && (req_flags & AV_TX_UNALIGNED))
         req_flags &= ~(FF_TX_ALIGNED | AV_TX_UNALIGNED);
 
     /* Loop through all codelets in all codelet lists to find matches
      * to the requirements */
-    while (codelet_list_idx--) {
-        const FFTXCodelet * const * list = codelet_list[codelet_list_idx];
-        const FFTXCodelet *cd = NULL;
+    طالما (codelet_list_idx--) {
+        ثابت FFTXCodelet * ثابت * list = codelet_list[codelet_list_idx];
+        ثابت FFTXCodelet *cd = عدم;
 
-        while ((cd = *list++)) {
+        طالما ((cd = *list++)) {
             /* Check if the type matches */
-            if (cd->type != TX_TYPE_ANY && type != cd->type)
-                continue;
+            إذا (cd->type != TX_TYPE_ANY && type != cd->type)
+                استمر;
 
             /* Check direction for non-orthogonal codelets */
-            if (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
+            إذا (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
                 ((cd->flags & (FF_TX_INVERSE_ONLY | AV_TX_FULL_IMDCT)) && !inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_REAL)) && inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_IMAGINARY)) && inv))
-                continue;
+                استمر;
 
             /* Check if the requested flags match from both sides */
-            if (((req_flags    & cd->flags) != (req_flags)) ||
+            إذا (((req_flags    & cd->flags) != (req_flags)) ||
                 ((inv_req_mask & cd->flags) != (req_flags & inv_req_mask)))
-                continue;
+                استمر;
 
             /* Check if length is supported */
-            if ((len < cd->min_len) || (cd->max_len != -1 && (len > cd->max_len)))
-                continue;
+            إذا ((len < cd->min_len) || (cd->max_len != -1 && (len > cd->max_len)))
+                استمر;
 
             /* Check if the CPU supports the required ISA */
-            if (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
+            إذا (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
                 !(cpu_flags & (cd->cpu_flags & ~cpu_slow_mask)))
-                continue;
+                استمر;
 
             /* Check for factors */
-            if (!check_cd_factors(cd, len))
-                continue;
+            إذا (!check_cd_factors(cd, len))
+                استمر;
 
             /* Realloc array and append */
             cd_tmp = av_fast_realloc(cd_matches, &cd_matches_size,
-                                     sizeof(*cd_tmp) * (nb_cd_matches + 1));
-            if (!cd_tmp) {
+                                     حجم(*cd_tmp) * (nb_cd_matches + 1));
+            إذا (!cd_tmp) {
                 av_free(cd_matches);
-                return AVERROR(ENOMEM);
+                أرجع AVERROR(ENOMEM);
             }
 
             cd_matches                     = cd_tmp;
@@ -798,45 +798,45 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
         }
     }
 
-#if !CONFIG_SMALL
+#إذا !CONFIG_SMALL
     /* Print debugging info */
     av_bprint_init(&bp, 0, AV_BPRINT_SIZE_AUTOMATIC);
     av_bprintf(&bp, "For transform of length %i, %s, ", len,
                inv ? "inverse" : "forward");
-    print_type(&bp, type);
+    اطبع_type(&bp, type);
     av_bprintf(&bp, ", ");
-    print_flags(&bp, flags);
+    اطبع_flags(&bp, flags);
     av_bprintf(&bp, ", found %i matches%s", nb_cd_matches,
                nb_cd_matches ? ":" : ".");
 #endif
 
     /* No matches found */
-    if (!nb_cd_matches)
-        return AVERROR(ENOSYS);
+    إذا (!nb_cd_matches)
+        أرجع AVERROR(ENOSYS);
 
     /* Sort the list */
     AV_QSORT(cd_matches, nb_cd_matches, TXCodeletMatch, cmp_matches);
 
-#if !CONFIG_SMALL
-    av_log(NULL, AV_LOG_TRACE, "%s\n", bp.str);
+#إذا !CONFIG_SMALL
+    av_log(عدم, AV_LOG_TRACE, "%s\n", bp.str);
 
-    for (int i = 0; i < nb_cd_matches; i++) {
-        av_log(NULL, AV_LOG_TRACE, "    %i: ", i + 1);
-        print_cd_info(cd_matches[i].cd, cd_matches[i].prio, 0, 1, AV_LOG_TRACE);
+    لكل (صحيح i = 0; i < nb_cd_matches; i++) {
+        av_log(عدم, AV_LOG_TRACE, "    %i: ", i + 1);
+        اطبع_cd_info(cd_matches[i].cd, cd_matches[i].prio, 0, 1, AV_LOG_TRACE);
     }
 #endif
 
-    if (!s->sub) {
-        s->sub = sub = av_mallocz(TX_MAX_SUB*sizeof(*sub));
-        if (!sub) {
+    إذا (!s->sub) {
+        s->sub = sub = av_mallocz(TX_MAX_SUB*حجم(*sub));
+        إذا (!sub) {
             ret = AVERROR(ENOMEM);
-            goto end;
+            اذهب end;
         }
     }
 
     /* Attempt to initialize each */
-    for (int i = 0; i < nb_cd_matches; i++) {
-        const FFTXCodelet *cd = cd_matches[i].cd;
+    لكل (صحيح i = 0; i < nb_cd_matches; i++) {
+        ثابت FFTXCodelet *cd = cd_matches[i].cd;
         AVTXContext *sctx = &s->sub[s->nb_sub];
 
         sctx->len        = len;
@@ -849,91 +849,91 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
         s->cd[s->nb_sub] = cd;
 
         ret = 0;
-        if (cd->init)
+        إذا (cd->init)
             ret = cd->init(sctx, cd, flags, opts, len, inv, scale);
 
-        if (ret >= 0) {
-            if (opts && opts->map_dir != FF_TX_MAP_NONE &&
+        إذا (ret >= 0) {
+            إذا (opts && opts->map_dir != FF_TX_MAP_NONE &&
                 sctx->map_dir == FF_TX_MAP_NONE) {
                 /* If a specific map direction was requested, and it doesn't
                  * exist, create one.*/
-                sctx->map = av_malloc(len*sizeof(*sctx->map));
-                if (!sctx->map) {
+                sctx->map = av_malloc(len*حجم(*sctx->map));
+                إذا (!sctx->map) {
                     ret = AVERROR(ENOMEM);
-                    goto end;
+                    اذهب end;
                 }
 
-                for (int i = 0; i < len; i++)
+                لكل (صحيح i = 0; i < len; i++)
                     sctx->map[i] = i;
-            } else if (opts && (opts->map_dir != sctx->map_dir)) {
-                int *tmp = av_malloc(len*sizeof(*sctx->map));
-                if (!tmp) {
+            } وإلا إذا (opts && (opts->map_dir != sctx->map_dir)) {
+                صحيح *tmp = av_malloc(len*حجم(*sctx->map));
+                إذا (!tmp) {
                     ret = AVERROR(ENOMEM);
-                    goto end;
+                    اذهب end;
                 }
 
-                memcpy(tmp, sctx->map, len*sizeof(*sctx->map));
+                memcpy(tmp, sctx->map, len*حجم(*sctx->map));
 
-                for (int i = 0; i < len; i++)
+                لكل (صحيح i = 0; i < len; i++)
                     sctx->map[tmp[i]] = i;
 
                 av_free(tmp);
             }
 
             s->nb_sub++;
-            goto end;
+            اذهب end;
         }
 
-        s->fn[s->nb_sub] = NULL;
-        s->cd[s->nb_sub] = NULL;
+        s->fn[s->nb_sub] = عدم;
+        s->cd[s->nb_sub] = عدم;
 
         reset_ctx(sctx, 0);
-        if (ret == AVERROR(ENOMEM))
-            break;
+        إذا (ret == AVERROR(ENOMEM))
+            اكسر;
     }
 
-    if (!s->nb_sub)
+    إذا (!s->nb_sub)
         av_freep(&s->sub);
 
 end:
     av_free(cd_matches);
-    return ret;
+    أرجع ret;
 }
 
-av_cold int av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
-                       int inv, int len, const void *scale, uint64_t flags)
+av_cold صحيح av_tx_init(AVTXContext **ctx, av_tx_fn *tx, تعداد AVTXType type,
+                       صحيح inv, صحيح len, ثابت فراغ *scale, uint64_t flags)
 {
-    int ret;
+    صحيح ret;
     AVTXContext tmp = { 0 };
-    const double default_scale_d = 1.0;
-    const float  default_scale_f = 1.0f;
+    ثابت مزدوج default_scale_d = 1.0;
+    ثابت عائم  default_scale_f = 1.0f;
 
-    if (!len || type >= AV_TX_NB || !ctx || !tx)
-        return AVERROR(EINVAL);
+    إذا (!len || type >= AV_TX_NB || !ctx || !tx)
+        أرجع AVERROR(EINVAL);
 
-    if (!(flags & AV_TX_UNALIGNED))
+    إذا (!(flags & AV_TX_UNALIGNED))
         flags |= FF_TX_ALIGNED;
-    if (!(flags & AV_TX_INPLACE))
+    إذا (!(flags & AV_TX_INPLACE))
         flags |= FF_TX_OUT_OF_PLACE;
 
-    if (!scale && ((type == AV_TX_DOUBLE_MDCT) || (type == AV_TX_DOUBLE_DCT) ||
+    إذا (!scale && ((type == AV_TX_DOUBLE_MDCT) || (type == AV_TX_DOUBLE_DCT) ||
                    (type == AV_TX_DOUBLE_DCT_I) || (type == AV_TX_DOUBLE_DST_I) ||
                    (type == AV_TX_DOUBLE_RDFT)))
         scale = &default_scale_d;
-    else if (!scale && !TYPE_IS(FFT, type))
+    وإلا إذا (!scale && !TYPE_IS(FFT, type))
         scale = &default_scale_f;
 
-    ret = ff_tx_init_subtx(&tmp, type, flags, NULL, len, inv, scale);
-    if (ret < 0)
-        return ret;
+    ret = ff_tx_init_subtx(&tmp, type, flags, عدم, len, inv, scale);
+    إذا (ret < 0)
+        أرجع ret;
 
     *ctx = &tmp.sub[0];
     *tx  = tmp.fn[0];
 
-#if !CONFIG_SMALL
-    av_log(NULL, AV_LOG_DEBUG, "Transform tree:\n");
-    print_tx_structure(*ctx, 0);
+#إذا !CONFIG_SMALL
+    av_log(عدم, AV_LOG_DEBUG, "Transform tree:\n");
+    اطبع_tx_structure(*ctx, 0);
 #endif
 
-    return ret;
+    أرجع ret;
 }
