@@ -27,15 +27,15 @@ AVSphericalMapping *av_spherical_alloc(size_t *size)
 {
     AVSphericalMapping *spherical = av_mallocz(sizeof(AVSphericalMapping));
 
-    if (size)
+    만약 (size)
         *size = spherical ? sizeof(*spherical) : 0;
 
-    if (!spherical)
-        return NULL;
+    만약 (!spherical)
+        반환 NULL;
 
     spherical->projection = AV_SPHERICAL_RECTILINEAR;
 
-    return spherical;
+    반환 spherical;
 }
 
 void av_spherical_tile_bounds(const AVSphericalMapping *map,
@@ -68,20 +68,20 @@ static const char *const spherical_projection_names[] = {
 
 const char *av_spherical_projection_name(enum AVSphericalProjection projection)
 {
-    if ((unsigned)projection >= FF_ARRAY_ELEMS(spherical_projection_names))
-        return "unknown";
+    만약 ((unsigned)projection >= FF_ARRAY_ELEMS(spherical_projection_names))
+        반환 "unknown";
 
-    return spherical_projection_names[projection];
+    반환 spherical_projection_names[projection];
 }
 
-int av_spherical_from_name(const char *name)
+정수 av_spherical_from_name(const char *name)
 {
-    int i;
+    정수 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(spherical_projection_names); i++) {
-        if (av_strstart(name, spherical_projection_names[i], NULL))
-            return i;
+    위해 (i = 0; i < FF_ARRAY_ELEMS(spherical_projection_names); i++) {
+        만약 (av_strstart(name, spherical_projection_names[i], NULL))
+            반환 i;
     }
 
-    return -1;
+    반환 -1;
 }

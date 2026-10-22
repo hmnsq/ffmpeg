@@ -38,13 +38,13 @@ AVVideoHint *av_video_hint_alloc(size_t nb_rects,
     AVVideoHint *hint;
 
     *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
+    만약 (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
+        반환 NULL;
     size += sizeof(AVVideoRect) * nb_rects;
 
     hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    만약 (!hint)
+        반환 NULL;
 
     hint->nb_rects    = nb_rects;
     hint->rect_offset = rect_offset;
@@ -52,7 +52,7 @@ AVVideoHint *av_video_hint_alloc(size_t nb_rects,
 
     *out_size = size;
 
-    return hint;
+    반환 hint;
 }
 
 AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
@@ -63,19 +63,19 @@ AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
     size_t size = 0;
 
     hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    만약 (!hint)
+        반환 NULL;
 
     buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    만약 (!buf) {
         av_freep(&hint);
-        return NULL;
+        반환 NULL;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
+    만약 (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        반환 NULL;
     }
 
-    return hint;
+    반환 hint;
 }

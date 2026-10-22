@@ -28,10 +28,10 @@ AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size)
     AVDOVIDecoderConfigurationRecord *dovi =
         av_mallocz(sizeof(AVDOVIDecoderConfigurationRecord));
 
-    if (size)
+    만약 (size)
         *size = dovi ? sizeof(*dovi) : 0;
 
-    return dovi;
+    반환 dovi;
 }
 
 typedef struct AVDOVIMetadataInternal {
@@ -46,11 +46,11 @@ AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
 {
     AVDOVIMetadataInternal *dovi = av_mallocz(sizeof(AVDOVIMetadataInternal));
 
-    if (size)
+    만약 (size)
         *size = dovi ? sizeof(*dovi) : 0;
 
-    if (!dovi)
-        return NULL;
+    만약 (!dovi)
+        반환 NULL;
 
     dovi->metadata = (struct AVDOVIMetadata) {
         .header_offset      = offsetof(AVDOVIMetadataInternal, header),
@@ -60,16 +60,16 @@ AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
         .ext_block_size     = sizeof(AVDOVIDmData),
     };
 
-    return &dovi->metadata;
+    반환 &dovi->metadata;
 }
 
 AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level)
 {
-    for (int i = 0; i < data->num_ext_blocks; i++) {
+    위해 (정수 i = 0; i < data->num_ext_blocks; i++) {
         AVDOVIDmData *ext = av_dovi_get_ext(data, i);
-        if (ext->level == level)
-            return ext;
+        만약 (ext->level == level)
+            반환 ext;
     }
 
-    return NULL;
+    반환 NULL;
 }

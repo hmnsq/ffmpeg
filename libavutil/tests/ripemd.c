@@ -24,30 +24,30 @@
 #include "libavutil/mem.h"
 #include "libavutil/ripemd.h"
 
-int main(void)
+정수 main(void)
 {
-    int i, j, k;
+    정수 i, j, k;
     struct AVRIPEMD *ctx;
     unsigned char digest[40];
-    static const int lengths[4] = { 128, 160, 256, 320 };
+    static const 정수 lengths[4] = { 128, 160, 256, 320 };
 
     ctx = av_ripemd_alloc();
-    if (!ctx)
-        return 1;
+    만약 (!ctx)
+        반환 1;
 
-    for (j = 0; j < 4; j++) {
+    위해 (j = 0; j < 4; j++) {
         printf("Testing RIPEMD-%d\n", lengths[j]);
-        for (k = 0; k < 3; k++) {
+        위해 (k = 0; k < 3; k++) {
             av_ripemd_init(ctx, lengths[j]);
-            if (k == 0)
+            만약 (k == 0)
                 av_ripemd_update(ctx, "abc", 3);
-            else if (k == 1)
+            아니면 만약 (k == 1)
                 av_ripemd_update(ctx, "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq", 56);
-            else
-                for (i = 0; i < 1000*1000; i++)
+            아니면
+                위해 (i = 0; i < 1000*1000; i++)
                     av_ripemd_update(ctx, "a", 1);
             av_ripemd_final(ctx, digest);
-            for (i = 0; i < lengths[j] >> 3; i++)
+            위해 (i = 0; i < lengths[j] >> 3; i++)
                 printf("%02X", digest[i]);
             putchar('\n');
         }
@@ -76,5 +76,5 @@ int main(void)
     }
     av_free(ctx);
 
-    return 0;
+    반환 0;
 }

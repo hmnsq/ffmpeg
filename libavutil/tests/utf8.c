@@ -40,10 +40,10 @@ static const uint8_t vectors[] =
     "\xC3" "A\n"                /* missing continuation */
     "\xE2\x82";                 /* truncated */
 
-static void print_sequence(const char *p, int l, int indent)
+static void print_sequence(const char *p, 정수 l, 정수 indent)
 {
-    int i;
-    for (i = 0; i < l; i++)
+    정수 i;
+    위해 (i = 0; i < l; i++)
         printf("%02X", (uint8_t)p[i]);
     printf("%*s", indent-l*2, "");
 }
@@ -52,40 +52,40 @@ static void decode(const uint8_t *p, const uint8_t *endp)
 {
     uint32_t code;
 
-    while (p < endp) {
-        int l, r;
+    동안 (p < endp) {
+        정수 l, r;
         const uint8_t *p0 = p;
         code = UINT32_MAX;
         r = av_utf8_decode(&code, &p, endp, 0);
-        l = (int)(p-p0);
+        l = (정수)(p-p0);
         print_sequence(p0, l, 20);
-        if (code != UINT32_MAX) {
+        만약 (code != UINT32_MAX) {
             printf("%-10d 0x%-10X %-5d ", code, code, l);
-            if (r >= 0) {
-                if (*p0 == '\n') printf("\\n\n");
-                else             printf ("%.*s\n", l, p0);
-            } else {
+            만약 (r >= 0) {
+                만약 (*p0 == '\n') printf("\\n\n");
+                아니면             printf ("%.*s\n", l, p0);
+            } 아니면 {
                 printf("invalid code range\n");
             }
-        } else {
+        } 아니면 {
             printf("invalid sequence\n");
         }
     }
 }
 
-int main(int argc, char **argv)
+정수 main(정수 argc, char **argv)
 {
-    if (argc > 1) {
+    만약 (argc > 1) {
         uint8_t *file_buf;
         size_t file_buf_size;
-        int ret = av_file_map(argv[1], &file_buf, &file_buf_size, 0, NULL);
-        if (ret < 0)
-            return 1;
+        정수 ret = av_file_map(argv[1], &file_buf, &file_buf_size, 0, NULL);
+        만약 (ret < 0)
+            반환 1;
         decode(file_buf, file_buf + file_buf_size);
         av_file_unmap(file_buf, file_buf_size);
-    } else {
+    } 아니면 {
         decode(vectors, vectors + sizeof(vectors) - 1);
     }
 
-    return 0;
+    반환 0;
 }

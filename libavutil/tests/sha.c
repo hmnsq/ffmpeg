@@ -21,30 +21,30 @@
 #include "libavutil/mem.h"
 #include "libavutil/sha.h"
 
-int main(void)
+정수 main(void)
 {
-    int i, j, k;
+    정수 i, j, k;
     struct AVSHA *ctx;
     unsigned char digest[32];
-    static const int lengths[3] = { 160, 224, 256 };
+    static const 정수 lengths[3] = { 160, 224, 256 };
 
     ctx = av_sha_alloc();
-    if (!ctx)
-        return 1;
+    만약 (!ctx)
+        반환 1;
 
-    for (j = 0; j < 3; j++) {
+    위해 (j = 0; j < 3; j++) {
         printf("Testing SHA-%d\n", lengths[j]);
-        for (k = 0; k < 3; k++) {
+        위해 (k = 0; k < 3; k++) {
             av_sha_init(ctx, lengths[j]);
-            if (k == 0)
+            만약 (k == 0)
                 av_sha_update(ctx, "abc", 3);
-            else if (k == 1)
+            아니면 만약 (k == 1)
                 av_sha_update(ctx, "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq", 56);
-            else
-                for (i = 0; i < 1000*1000; i++)
+            아니면
+                위해 (i = 0; i < 1000*1000; i++)
                     av_sha_update(ctx, "a", 1);
             av_sha_final(ctx, digest);
-            for (i = 0; i < lengths[j] >> 3; i++)
+            위해 (i = 0; i < lengths[j] >> 3; i++)
                 printf("%02X", digest[i]);
             putchar('\n');
         }
@@ -71,5 +71,5 @@ int main(void)
     }
     av_free(ctx);
 
-    return 0;
+    반환 0;
 }

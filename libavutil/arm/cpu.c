@@ -31,14 +31,14 @@
      CORE_FLAG(VFPV3)   |                       \
      CORE_FLAG(NEON))
 
-#if defined __linux__ || defined __ANDROID__ || HAVE_ELF_AUX_INFO
+#만약 defined __linux__ || defined __ANDROID__ || HAVE_ELF_AUX_INFO
 
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include "libavutil/avstring.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#만약 HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
 #include <sys/auxv.h>
 #endif
 
@@ -66,31 +66,31 @@
 #define HWCAP_ARM_TLS     (1 << 15)
 #endif
 
-static int get_auxval(uint32_t *hwcap)
+static 정수 get_auxval(uint32_t *hwcap)
 {
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#만약 HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
     unsigned long ret = ff_getauxval(AT_HWCAP);
-    if (ret == 0)
-        return -1;
+    만약 (ret == 0)
+        반환 -1;
     *hwcap = ret;
-    return 0;
-#else
-    return -1;
+    반환 0;
+#아니면
+    반환 -1;
 #endif
 }
 
-#if defined __linux__ || defined __ANDROID__
-static int get_hwcap(uint32_t *hwcap)
+#만약 defined __linux__ || defined __ANDROID__
+static 정수 get_hwcap(uint32_t *hwcap)
 {
     struct { uint32_t a_type; uint32_t a_val; } auxv;
     FILE *f = fopen("/proc/self/auxv", "r");
-    int err = -1;
+    정수 err = -1;
 
-    if (!f)
-        return -1;
+    만약 (!f)
+        반환 -1;
 
-    while (fread(&auxv, sizeof(auxv), 1, f) > 0) {
-        if (auxv.a_type == AT_HWCAP) {
+    동안 (fread(&auxv, sizeof(auxv), 1, f) > 0) {
+        만약 (auxv.a_type == AT_HWCAP) {
             *hwcap = auxv.a_val;
             err = 0;
             break;
@@ -98,58 +98,58 @@ static int get_hwcap(uint32_t *hwcap)
     }
 
     fclose(f);
-    return err;
+    반환 err;
 }
 
-static int get_cpuinfo(uint32_t *hwcap)
+static 정수 get_cpuinfo(uint32_t *hwcap)
 {
     FILE *f = fopen("/proc/cpuinfo", "r");
     char buf[200];
 
-    if (!f)
-        return -1;
+    만약 (!f)
+        반환 -1;
 
     *hwcap = 0;
-    while (fgets(buf, sizeof(buf), f)) {
-        if (av_strstart(buf, "Features", NULL)) {
-            if (strstr(buf, " edsp "))
+    동안 (fgets(buf, sizeof(buf), f)) {
+        만약 (av_strstart(buf, "Features", NULL)) {
+            만약 (strstr(buf, " edsp "))
                 *hwcap |= HWCAP_ARM_EDSP;
-            if (strstr(buf, " tls "))
+            만약 (strstr(buf, " tls "))
                 *hwcap |= HWCAP_ARM_TLS;
-            if (strstr(buf, " thumbee "))
+            만약 (strstr(buf, " thumbee "))
                 *hwcap |= HWCAP_ARM_THUMBEE;
-            if (strstr(buf, " vfp "))
+            만약 (strstr(buf, " vfp "))
                 *hwcap |= HWCAP_ARM_VFP;
-            if (strstr(buf, " vfpv3 "))
+            만약 (strstr(buf, " vfpv3 "))
                 *hwcap |= HWCAP_ARM_VFPv3;
-            if (strstr(buf, " neon ") || strstr(buf, " asimd "))
+            만약 (strstr(buf, " neon ") || strstr(buf, " asimd "))
                 *hwcap |= HWCAP_ARM_NEON;
-            if (strstr(buf, " fp ")) // Listed on 64 bit ARMv8 kernels
+            만약 (strstr(buf, " fp ")) // Listed on 64 bit ARMv8 kernels
                 *hwcap |= HWCAP_ARM_VFP | HWCAP_ARM_VFPv3;
             break;
         }
     }
     fclose(f);
-    return 0;
+    반환 0;
 }
 #endif
 
-int ff_get_cpu_flags_arm(void)
+정수 ff_get_cpu_flags_arm(void)
 {
-    int flags = CORE_CPU_FLAGS;
+    정수 flags = CORE_CPU_FLAGS;
     uint32_t hwcap;
 
-    if (get_auxval(&hwcap) < 0)
-#if defined __linux__ || defined __ANDROID__
-        if (get_hwcap(&hwcap) < 0)
-            if (get_cpuinfo(&hwcap) < 0)
+    만약 (get_auxval(&hwcap) < 0)
+#만약 defined __linux__ || defined __ANDROID__
+        만약 (get_hwcap(&hwcap) < 0)
+            만약 (get_cpuinfo(&hwcap) < 0)
 #endif
-                return flags;
+                반환 flags;
 
 #define check_cap(cap, flag) do {               \
-        if (hwcap & HWCAP_ARM_ ## cap)          \
+        만약 (hwcap & HWCAP_ARM_ ## cap)          \
             flags |= AV_CPU_FLAG_ ## flag;      \
-    } while (0)
+    } 동안 (0)
 
     /* No flags explicitly indicate v6 or v6T2 so check others which
        imply support. */
@@ -162,29 +162,29 @@ int ff_get_cpu_flags_arm(void)
 
     /* The v6 checks above are not reliable so let higher flags
        trickle down. */
-    if (flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON))
+    만약 (flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON))
         flags |= AV_CPU_FLAG_ARMV6T2;
-    else if (flags & (AV_CPU_FLAG_ARMV6T2 | AV_CPU_FLAG_ARMV6))
+    아니면 만약 (flags & (AV_CPU_FLAG_ARMV6T2 | AV_CPU_FLAG_ARMV6))
     /* Some functions use the 'setend' instruction which is deprecated on ARMv8
      * and serializing on some ARMv7 cores. This ensures such functions
      * are only enabled on ARMv6. */
         flags |= AV_CPU_FLAG_SETEND;
 
-    if (flags & AV_CPU_FLAG_ARMV6T2)
+    만약 (flags & AV_CPU_FLAG_ARMV6T2)
         flags |= AV_CPU_FLAG_ARMV6;
 
     /* set the virtual VFPv2 vector mode flag */
-    if ((flags & AV_CPU_FLAG_VFP) && !(flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON)))
+    만약 ((flags & AV_CPU_FLAG_VFP) && !(flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON)))
         flags |= AV_CPU_FLAG_VFP_VM;
 
-    return flags;
+    반환 flags;
 }
 
-#else
+#아니면
 
-int ff_get_cpu_flags_arm(void)
+정수 ff_get_cpu_flags_arm(void)
 {
-    return AV_CPU_FLAG_ARMV5TE * HAVE_ARMV5TE |
+    반환 AV_CPU_FLAG_ARMV5TE * HAVE_ARMV5TE |
            AV_CPU_FLAG_ARMV6   * HAVE_ARMV6   |
            AV_CPU_FLAG_ARMV6T2 * HAVE_ARMV6T2 |
            AV_CPU_FLAG_VFP     * HAVE_VFP     |
@@ -197,10 +197,10 @@ int ff_get_cpu_flags_arm(void)
 
 size_t ff_get_cpu_max_align_arm(void)
 {
-    int flags = av_get_cpu_flags();
+    정수 flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_NEON)
-        return 16;
+    만약 (flags & AV_CPU_FLAG_NEON)
+        반환 16;
 
-    return 8;
+    반환 8;
 }

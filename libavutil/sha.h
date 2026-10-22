@@ -48,7 +48,7 @@
  * @{
  */
 
-extern const int av_sha_size;
+extern const 정수 av_sha_size;
 
 struct AVSHA;
 
@@ -64,7 +64,7 @@ struct AVSHA *av_sha_alloc(void);
  * @param bits    number of bits in digest (SHA-1 - 160 bits, SHA-2 224 or 256 bits)
  * @return        zero if initialization succeeded, -1 otherwise
  */
-int av_sha_init(struct AVSHA* context, int bits);
+정수 av_sha_init(struct AVSHA* context, 정수 bits);
 
 /**
  * Update hash value.

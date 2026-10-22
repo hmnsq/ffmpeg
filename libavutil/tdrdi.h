@@ -142,10 +142,10 @@ typedef struct AV3DReferenceDisplay {
 } AV3DReferenceDisplay;
 
 static av_always_inline AV3DReferenceDisplay*
-av_tdrdi_get_display(AV3DReferenceDisplaysInfo *tdrdi, unsigned int idx)
+av_tdrdi_get_display(AV3DReferenceDisplaysInfo *tdrdi, unsigned 정수 idx)
 {
     av_assert0(idx < tdrdi->num_ref_displays);
-    return (AV3DReferenceDisplay *)((uint8_t *)tdrdi + tdrdi->entries_offset +
+    반환 (AV3DReferenceDisplay *)((uint8_t *)tdrdi + tdrdi->entries_offset +
                                     idx * tdrdi->entry_size);
 }
 
@@ -155,7 +155,7 @@ av_tdrdi_get_display(AV3DReferenceDisplaysInfo *tdrdi, unsigned int idx)
  *
  * @return the newly allocated struct or NULL on failure
  */
-AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *size);
+AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned 정수 nb_displays, size_t *size);
 
 /**
  * @}

@@ -18,7 +18,7 @@
 
 #include "config.h"
 
-#if !CONFIG_VULKAN
+#만약 !CONFIG_VULKAN
 #include <stddef.h>
 #include "pixfmt.h"
 
@@ -29,11 +29,11 @@ AVVkFrame *av_vk_frame_alloc(void);
 
 const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p)
 {
-    return NULL;
+    반환 NULL;
 }
 
 AVVkFrame *av_vk_frame_alloc(void)
 {
-    return NULL;
+    반환 NULL;
 }
 #endif /* CONFIG_VULKAN */

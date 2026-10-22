@@ -32,7 +32,7 @@ typedef struct AVHDRVivid3SplineParams {
      * The mode of three Spline. the value shall be in the range
      * of 0 to 3, inclusive.
      */
-    int th_mode;
+    정수 th_mode;
 
     /**
      * three_Spline_TH_enable_MB is in the range of 0.0 to 1.0, inclusive
@@ -85,7 +85,7 @@ typedef struct AVHDRVividColorToneMappingParams {
     /**
      * This flag indicates that transfer the base parameter(for value of 1)
      */
-    int base_enable_flag;
+    정수 base_enable_flag;
 
     /**
      * base_param_m_p in the base parameter,
@@ -127,14 +127,14 @@ typedef struct AVHDRVividColorToneMappingParams {
      * base_param_k1 <= 1: k1_0 = base_param_k1
      * base_param_k1 > 1: reserved
      */
-    int base_param_k1;
+    정수 base_param_k1;
 
     /**
      * indicates k2_0 in the base parameter,
      * base_param_k2 <= 1: k2_0 = base_param_k2
      * base_param_k2 > 1: reserved
      */
-    int base_param_k2;
+    정수 base_param_k2;
 
     /**
      * indicates k3_0 in the base parameter,
@@ -142,12 +142,12 @@ typedef struct AVHDRVividColorToneMappingParams {
      * base_param_k3 == 2: k3_0 = maximum_maxrgb
      * base_param_k3 > 2: reserved
      */
-    int base_param_k3;
+    정수 base_param_k3;
 
     /**
      * This flag indicates that delta mode of base parameter(for value of 1)
      */
-    int base_param_Delta_enable_mode;
+    정수 base_param_Delta_enable_mode;
 
     /**
      * base_param_Delta in the base parameter,
@@ -160,13 +160,13 @@ typedef struct AVHDRVividColorToneMappingParams {
      * indicates 3Spline_enable_flag in the base parameter,
      * This flag indicates that transfer three Spline of base parameter(for value of 1)
      */
-    int three_Spline_enable_flag;
+    정수 three_Spline_enable_flag;
 
     /**
      * The number of three Spline. The value shall be in the range
      * of 1 to 2, inclusive.
      */
-    int three_Spline_num;
+    정수 three_Spline_num;
 
     AVHDRVivid3SplineParams three_spline[2];
 } AVHDRVividColorToneMappingParams;
@@ -209,13 +209,13 @@ typedef struct AVHDRVividColorTransformParams {
      * This flag indicates that the metadata for the tone mapping function in
      * the processing window is present (for value of 1).
      */
-    int tone_mapping_mode_flag;
+    정수 tone_mapping_mode_flag;
 
     /**
      * The number of tone mapping param. The value shall be in the range
      * of 1 to 2, inclusive.
      */
-    int tone_mapping_param_num;
+    정수 tone_mapping_param_num;
 
     /**
      * The color tone mapping parameters.
@@ -226,13 +226,13 @@ typedef struct AVHDRVividColorTransformParams {
      * This flag indicates that the metadata for the color saturation mapping in
      * the processing window is present (for value of 1).
      */
-    int color_saturation_mapping_flag;
+    정수 color_saturation_mapping_flag;
 
     /**
      * The number of color saturation param. The value shall be in the range
      * of 0 to 7, inclusive.
      */
-    int color_saturation_num;
+    정수 color_saturation_num;
 
     /**
      * Indicates the color correction strength parameter.

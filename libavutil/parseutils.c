@@ -42,30 +42,30 @@ static uint32_t av_get_random_seed_deterministic(void);
 
 #endif
 
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx)
+정수 av_parse_ratio(AVRational *q, const char *str, 정수 max,
+                   정수 log_offset, void *log_ctx)
 {
     char c;
-    int ret;
+    정수 ret;
 
-    if (sscanf(str, "%d:%d%c", &q->num, &q->den, &c) != 2) {
+    만약 (sscanf(str, "%d:%d%c", &q->num, &q->den, &c) != 2) {
         double d;
         ret = av_expr_parse_and_eval(&d, str, NULL, NULL,
                                      NULL, NULL, NULL, NULL,
                                      NULL, log_offset, log_ctx);
-        if (ret < 0)
-            return ret;
+        만약 (ret < 0)
+            반환 ret;
         *q = av_d2q(d, max);
-    } else {
+    } 아니면 {
         av_reduce(&q->num, &q->den, q->num, q->den, max);
     }
 
-    return 0;
+    반환 0;
 }
 
 typedef struct VideoSizeAbbr {
     const char *abbr;
-    int width, height;
+    정수 width, height;
 } VideoSizeAbbr;
 
 typedef struct VideoRateAbbr {
@@ -147,58 +147,58 @@ static const char *months[12] = {
     "september", "october", "november", "december"
 };
 
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str)
+정수 av_parse_video_size(정수 *width_ptr, 정수 *height_ptr, const char *str)
 {
-    int i;
-    int n = FF_ARRAY_ELEMS(video_size_abbrs);
+    정수 i;
+    정수 n = FF_ARRAY_ELEMS(video_size_abbrs);
     const char *p;
-    int width = 0, height = 0;
+    정수 width = 0, height = 0;
 
-    for (i = 0; i < n; i++) {
-        if (!strcmp(video_size_abbrs[i].abbr, str)) {
+    위해 (i = 0; i < n; i++) {
+        만약 (!strcmp(video_size_abbrs[i].abbr, str)) {
             width  = video_size_abbrs[i].width;
             height = video_size_abbrs[i].height;
             break;
         }
     }
-    if (i == n) {
+    만약 (i == n) {
         width = strtol(str, (void*)&p, 10);
-        if (*p)
+        만약 (*p)
             p++;
         height = strtol(p, (void*)&p, 10);
 
         /* trailing extraneous data detected, like in 123x345foobar */
-        if (*p)
-            return AVERROR(EINVAL);
+        만약 (*p)
+            반환 AVERROR(EINVAL);
     }
-    if (width <= 0 || height <= 0)
-        return AVERROR(EINVAL);
+    만약 (width <= 0 || height <= 0)
+        반환 AVERROR(EINVAL);
     *width_ptr  = width;
     *height_ptr = height;
-    return 0;
+    반환 0;
 }
 
-int av_parse_video_rate(AVRational *rate, const char *arg)
+정수 av_parse_video_rate(AVRational *rate, const char *arg)
 {
-    int i, ret;
-    int n = FF_ARRAY_ELEMS(video_rate_abbrs);
+    정수 i, ret;
+    정수 n = FF_ARRAY_ELEMS(video_rate_abbrs);
 
     /* First, we check our abbreviation table */
-    for (i = 0; i < n; ++i)
-        if (!strcmp(video_rate_abbrs[i].abbr, arg)) {
+    위해 (i = 0; i < n; ++i)
+        만약 (!strcmp(video_rate_abbrs[i].abbr, arg)) {
             *rate = video_rate_abbrs[i].rate;
-            return 0;
+            반환 0;
         }
 
     /* Then, we try to parse it as fraction */
-    if ((ret = av_parse_ratio_quiet(rate, arg, 1001000)) < 0)
-        return ret;
-    if (!rate->num || !rate->den)
-        if ((ret = av_parse_ratio_quiet(rate, arg, INT_MAX)) < 0)
-            return ret;
-    if (rate->num <= 0 || rate->den <= 0)
-        return AVERROR(EINVAL);
-    return 0;
+    만약 ((ret = av_parse_ratio_quiet(rate, arg, 1001000)) < 0)
+        반환 ret;
+    만약 (!rate->num || !rate->den)
+        만약 ((ret = av_parse_ratio_quiet(rate, arg, INT_MAX)) < 0)
+            반환 ret;
+    만약 (rate->num <= 0 || rate->den <= 0)
+        반환 AVERROR(EINVAL);
+    반환 0;
 }
 
 typedef struct ColorEntry {
@@ -349,159 +349,159 @@ static const ColorEntry color_table[] = {
     { "YellowGreen",          { 0x9A, 0xCD, 0x32 } },
 };
 
-static int color_table_compare(const void *lhs, const void *rhs)
+static 정수 color_table_compare(const void *lhs, const void *rhs)
 {
-    return av_strcasecmp(lhs, ((const ColorEntry *)rhs)->name);
+    반환 av_strcasecmp(lhs, ((const ColorEntry *)rhs)->name);
 }
 
 #define ALPHA_SEP '@'
 
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
+정수 av_parse_color(uint8_t *rgba_color, const char *color_string, 정수 slen,
                    void *log_ctx)
 {
     char *tail, color_string2[128];
     const ColorEntry *entry;
-    int len, hex_offset = 0;
+    정수 len, hex_offset = 0;
 
-    if (color_string[0] == '#') {
+    만약 (color_string[0] == '#') {
         hex_offset = 1;
-    } else if (!strncmp(color_string, "0x", 2))
+    } 아니면 만약 (!strncmp(color_string, "0x", 2))
         hex_offset = 2;
 
-    if (slen < 0)
+    만약 (slen < 0)
         slen = strlen(color_string);
     av_strlcpy(color_string2, color_string + hex_offset,
                FFMIN(slen-hex_offset+1, sizeof(color_string2)));
-    if ((tail = strchr(color_string2, ALPHA_SEP)))
+    만약 ((tail = strchr(color_string2, ALPHA_SEP)))
         *tail++ = 0;
     len = strlen(color_string2);
     rgba_color[3] = 255;
 
-    if (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
-        int rgba = av_get_random_seed();
+    만약 (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
+        정수 rgba = av_get_random_seed();
         rgba_color[0] = rgba >> 24;
         rgba_color[1] = rgba >> 16;
         rgba_color[2] = rgba >> 8;
         rgba_color[3] = rgba;
-    } else if (hex_offset ||
+    } 아니면 만약 (hex_offset ||
                strspn(color_string2, "0123456789ABCDEFabcdef") == len) {
         char *tail;
-        unsigned int rgba = strtoul(color_string2, &tail, 16);
+        unsigned 정수 rgba = strtoul(color_string2, &tail, 16);
 
-        if (*tail || (len != 6 && len != 8)) {
+        만약 (*tail || (len != 6 && len != 8)) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid 0xRRGGBB[AA] color string: '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            반환 AVERROR(EINVAL);
         }
-        if (len == 8) {
+        만약 (len == 8) {
             rgba_color[3] = rgba;
             rgba >>= 8;
         }
         rgba_color[0] = rgba >> 16;
         rgba_color[1] = rgba >> 8;
         rgba_color[2] = rgba;
-    } else {
+    } 아니면 {
         entry = bsearch(color_string2,
                         color_table,
                         FF_ARRAY_ELEMS(color_table),
                         sizeof(ColorEntry),
                         color_table_compare);
-        if (!entry) {
+        만약 (!entry) {
             av_log(log_ctx, AV_LOG_ERROR, "Cannot find color '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            반환 AVERROR(EINVAL);
         }
         memcpy(rgba_color, entry->rgb_color, 3);
     }
 
-    if (tail) {
+    만약 (tail) {
         double alpha;
         const char *alpha_string = tail;
-        if (!strncmp(alpha_string, "0x", 2)) {
+        만약 (!strncmp(alpha_string, "0x", 2)) {
             alpha = strtoul(alpha_string, &tail, 16);
-        } else {
+        } 아니면 {
             double norm_alpha = strtod(alpha_string, &tail);
-            if (norm_alpha < 0.0 || norm_alpha > 1.0)
+            만약 (norm_alpha < 0.0 || norm_alpha > 1.0)
                 alpha = 256;
-            else
+            아니면
                 alpha = 255 * norm_alpha;
         }
 
-        if (tail == alpha_string || *tail || alpha > 255 || alpha < 0) {
+        만약 (tail == alpha_string || *tail || alpha > 255 || alpha < 0) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid alpha value specifier '%s' in '%s'\n",
                    alpha_string, color_string);
-            return AVERROR(EINVAL);
+            반환 AVERROR(EINVAL);
         }
         rgba_color[3] = alpha;
     }
 
-    return 0;
+    반환 0;
 }
 
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgbp)
+const char *av_get_known_color_name(정수 color_idx, const uint8_t **rgbp)
 {
     const ColorEntry *color;
 
-    if ((unsigned)color_idx >= FF_ARRAY_ELEMS(color_table))
-        return NULL;
+    만약 ((unsigned)color_idx >= FF_ARRAY_ELEMS(color_table))
+        반환 NULL;
 
     color = &color_table[color_idx];
-    if (rgbp)
+    만약 (rgbp)
         *rgbp = color->rgb_color;
 
-    return color->name;
+    반환 color->name;
 }
 
 /* get a positive number between n_min and n_max, for a maximum length
    of len_max. Return -1 if error. */
-static int date_get_num(const char **pp,
-                        int n_min, int n_max, int len_max)
+static 정수 date_get_num(const char **pp,
+                        정수 n_min, 정수 n_max, 정수 len_max)
 {
-    int i, val, c;
+    정수 i, val, c;
     const char *p;
 
     p = *pp;
     val = 0;
-    for(i = 0; i < len_max; i++) {
+    위해(i = 0; i < len_max; i++) {
         c = *p;
-        if (!av_isdigit(c))
+        만약 (!av_isdigit(c))
             break;
         val = (val * 10) + c - '0';
         p++;
     }
     /* no number read ? */
-    if (p == *pp)
-        return -1;
-    if (val < n_min || val > n_max)
-        return -1;
+    만약 (p == *pp)
+        반환 -1;
+    만약 (val < n_min || val > n_max)
+        반환 -1;
     *pp = p;
-    return val;
+    반환 val;
 }
 
-static int date_get_month(const char **pp) {
-    int i = 0;
-    for (; i < 12; i++) {
-        if (!av_strncasecmp(*pp, months[i], 3)) {
+static 정수 date_get_month(const char **pp) {
+    정수 i = 0;
+    위해 (; i < 12; i++) {
+        만약 (!av_strncasecmp(*pp, months[i], 3)) {
             const char *mo_full = months[i] + 3;
-            int len = strlen(mo_full);
+            정수 len = strlen(mo_full);
             *pp += 3;
-            if (len > 0 && !av_strncasecmp(*pp, mo_full, len))
+            만약 (len > 0 && !av_strncasecmp(*pp, mo_full, len))
                 *pp += len;
-            return i;
+            반환 i;
         }
     }
-    return -1;
+    반환 -1;
 }
 
 char *av_small_strptime(const char *p, const char *fmt, struct tm *dt)
 {
-    int c, val;
+    정수 c, val;
 
-    while((c = *fmt++)) {
-        if (c != '%') {
-            if (av_isspace(c))
-                for (; *p && av_isspace(*p); p++);
-            else if (*p != c)
-                return NULL;
-            else p++;
+    동안((c = *fmt++)) {
+        만약 (c != '%') {
+            만약 (av_isspace(c))
+                위해 (; *p && av_isspace(*p); p++);
+            아니면 만약 (*p != c)
+                반환 NULL;
+            아니면 p++;
             continue;
         }
 
@@ -511,72 +511,72 @@ char *av_small_strptime(const char *p, const char *fmt, struct tm *dt)
         case 'J':
             val = date_get_num(&p, 0, c == 'H' ? 23 : INT_MAX, c == 'H' ? 2 : 4);
 
-            if (val == -1)
-                return NULL;
+            만약 (val == -1)
+                반환 NULL;
             dt->tm_hour = val;
             break;
         case 'M':
             val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            만약 (val == -1)
+                반환 NULL;
             dt->tm_min = val;
             break;
         case 'S':
             val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            만약 (val == -1)
+                반환 NULL;
             dt->tm_sec = val;
             break;
         case 'Y':
             val = date_get_num(&p, 0, 9999, 4);
-            if (val == -1)
-                return NULL;
+            만약 (val == -1)
+                반환 NULL;
             dt->tm_year = val - 1900;
             break;
         case 'm':
             val = date_get_num(&p, 1, 12, 2);
-            if (val == -1)
-                return NULL;
+            만약 (val == -1)
+                반환 NULL;
             dt->tm_mon = val - 1;
             break;
         case 'd':
             val = date_get_num(&p, 1, 31, 2);
-            if (val == -1)
-                return NULL;
+            만약 (val == -1)
+                반환 NULL;
             dt->tm_mday = val;
             break;
         case 'T':
             p = av_small_strptime(p, "%H:%M:%S", dt);
-            if (!p)
-                return NULL;
+            만약 (!p)
+                반환 NULL;
             break;
         case 'b':
         case 'B':
         case 'h':
             val = date_get_month(&p);
-            if (val == -1)
-                return NULL;
+            만약 (val == -1)
+                반환 NULL;
             dt->tm_mon = val;
             break;
         case '%':
-            if (*p++ != '%')
-                return NULL;
+            만약 (*p++ != '%')
+                반환 NULL;
             break;
         default:
-            return NULL;
+            반환 NULL;
         }
     }
 
-    return (char*)p;
+    반환 (char*)p;
 }
 
 time_t av_timegm(struct tm *tm)
 {
     time_t t;
 
-    int y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
+    정수 y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
 
-    if (m < 3) {
+    만약 (m < 3) {
         m += 12;
         y--;
     }
@@ -586,17 +586,17 @@ time_t av_timegm(struct tm *tm)
 
     t += 3600 * tm->tm_hour + 60 * tm->tm_min + tm->tm_sec;
 
-    return t;
+    반환 t;
 }
 
-int av_parse_time(int64_t *timeval, const char *timestr, int duration)
+정수 av_parse_time(int64_t *timeval, const char *timestr, 정수 duration)
 {
     const char *p, *q;
     int64_t t, now64;
     time_t now;
     struct tm dt = { 0 }, tmbuf;
-    int today = 0, negative = 0, microseconds = 0, suffix = 1000000;
-    int i;
+    정수 today = 0, negative = 0, microseconds = 0, suffix = 1000000;
+    정수 i;
     static const char * const date_fmt[] = {
         "%Y - %m - %d",
         "%Y%m%d",
@@ -614,118 +614,118 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration)
     p = timestr;
     q = NULL;
     *timeval = INT64_MIN;
-    if (!duration) {
+    만약 (!duration) {
         now64 = av_gettime();
         now = now64 / 1000000;
 
-        if (!av_strcasecmp(timestr, "now")) {
+        만약 (!av_strcasecmp(timestr, "now")) {
             *timeval = now64;
-            return 0;
+            반환 0;
         }
 
         /* parse the year-month-day part */
-        for (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
+        위해 (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
             q = av_small_strptime(p, date_fmt[i], &dt);
-            if (q)
+            만약 (q)
                 break;
         }
 
         /* if the year-month-day part is missing, then take the
          * current year-month-day time */
-        if (!q) {
+        만약 (!q) {
             today = 1;
             q = p;
         }
         p = q;
 
-        if (*p == 'T' || *p == 't')
+        만약 (*p == 'T' || *p == 't')
             p++;
-        else
-            while (av_isspace(*p))
+        아니면
+            동안 (av_isspace(*p))
                 p++;
 
         /* parse the hour-minute-second part */
-        for (i = 0; i < FF_ARRAY_ELEMS(time_fmt); i++) {
+        위해 (i = 0; i < FF_ARRAY_ELEMS(time_fmt); i++) {
             q = av_small_strptime(p, time_fmt[i], &dt);
-            if (q)
+            만약 (q)
                 break;
         }
-    } else {
+    } 아니면 {
         /* parse timestr as a duration */
-        if (p[0] == '-') {
+        만약 (p[0] == '-') {
             negative = 1;
             ++p;
         }
         /* parse timestr as HH:MM:SS */
         q = av_small_strptime(p, "%J:%M:%S", &dt);
-        if (!q) {
+        만약 (!q) {
             /* parse timestr as MM:SS */
             q = av_small_strptime(p, "%M:%S", &dt);
             dt.tm_hour = 0;
         }
-        if (!q) {
+        만약 (!q) {
             char *o;
             /* parse timestr as S+ */
             errno = 0;
             t = strtoll(p, &o, 10);
-            if (o == p) /* the parsing didn't succeed */
-                return AVERROR(EINVAL);
-            if (errno == ERANGE)
-                return AVERROR(ERANGE);
+            만약 (o == p) /* the parsing didn't succeed */
+                반환 AVERROR(EINVAL);
+            만약 (errno == ERANGE)
+                반환 AVERROR(ERANGE);
             q = o;
-        } else {
+        } 아니면 {
             t = dt.tm_hour * 3600 + dt.tm_min * 60 + dt.tm_sec;
         }
     }
 
     /* Now we have all the fields that we can get */
-    if (!q)
-        return AVERROR(EINVAL);
+    만약 (!q)
+        반환 AVERROR(EINVAL);
 
     /* parse the .m... part */
-    if (*q == '.') {
-        int n;
+    만약 (*q == '.') {
+        정수 n;
         q++;
-        for (n = 100000; n >= 1; n /= 10, q++) {
-            if (!av_isdigit(*q))
+        위해 (n = 100000; n >= 1; n /= 10, q++) {
+            만약 (!av_isdigit(*q))
                 break;
             microseconds += n * (*q - '0');
         }
-        while (av_isdigit(*q))
+        동안 (av_isdigit(*q))
             q++;
     }
 
-    if (duration) {
-        if (q[0] == 'm' && q[1] == 's') {
+    만약 (duration) {
+        만약 (q[0] == 'm' && q[1] == 's') {
             suffix = 1000;
             microseconds /= 1000;
             q += 2;
-        } else if (q[0] == 'u' && q[1] == 's') {
+        } 아니면 만약 (q[0] == 'u' && q[1] == 's') {
             suffix = 1;
             microseconds = 0;
             q += 2;
-        } else if (*q == 's')
+        } 아니면 만약 (*q == 's')
             q++;
-    } else {
-        int is_utc = *q == 'Z' || *q == 'z';
-        int tzoffset = 0;
+    } 아니면 {
+        정수 is_utc = *q == 'Z' || *q == 'z';
+        정수 tzoffset = 0;
         q += is_utc;
-        if (!today && !is_utc && (*q == '+' || *q == '-')) {
+        만약 (!today && !is_utc && (*q == '+' || *q == '-')) {
             struct tm tz = { 0 };
-            int sign = (*q == '+' ? -1 : 1);
+            정수 sign = (*q == '+' ? -1 : 1);
             q++;
             p = q;
-            for (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
+            위해 (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
                 q = av_small_strptime(p, tz_fmt[i], &tz);
-                if (q)
+                만약 (q)
                     break;
             }
-            if (!q)
-                return AVERROR(EINVAL);
+            만약 (!q)
+                반환 AVERROR(EINVAL);
             tzoffset = sign * (tz.tm_hour * 60 + tz.tm_min) * 60;
             is_utc = 1;
         }
-        if (today) { /* fill in today's date */
+        만약 (today) { /* fill in today's date */
             struct tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
             dt2.tm_hour = dt.tm_hour;
             dt2.tm_min  = dt.tm_min;
@@ -738,56 +738,56 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration)
     }
 
     /* Check that we are at the end of the string */
-    if (*q)
-        return AVERROR(EINVAL);
+    만약 (*q)
+        반환 AVERROR(EINVAL);
 
-    if (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
-        return AVERROR(ERANGE);
+    만약 (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
+        반환 AVERROR(ERANGE);
     t *= suffix;
-    if (INT64_MAX - microseconds < t)
-        return AVERROR(ERANGE);
+    만약 (INT64_MAX - microseconds < t)
+        반환 AVERROR(ERANGE);
     t += microseconds;
-    if (t == INT64_MIN && negative)
-        return AVERROR(ERANGE);
+    만약 (t == INT64_MIN && negative)
+        반환 AVERROR(ERANGE);
     *timeval = negative ? -t : t;
-    return 0;
+    반환 0;
 }
 
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info)
+정수 av_find_info_tag(char *arg, 정수 arg_size, const char *tag1, const char *info)
 {
     const char *p;
     char tag[128], *q;
 
     p = info;
-    if (*p == '?')
+    만약 (*p == '?')
         p++;
-    for(;;) {
+    위해(;;) {
         q = tag;
-        while (*p != '\0' && *p != '=' && *p != '&') {
-            if ((q - tag) < sizeof(tag) - 1)
+        동안 (*p != '\0' && *p != '=' && *p != '&') {
+            만약 ((q - tag) < sizeof(tag) - 1)
                 *q++ = *p;
             p++;
         }
         *q = '\0';
         q = arg;
-        if (*p == '=') {
+        만약 (*p == '=') {
             p++;
-            while (*p != '&' && *p != '\0') {
-                if ((q - arg) < arg_size - 1) {
-                    if (*p == '+')
+            동안 (*p != '&' && *p != '\0') {
+                만약 ((q - arg) < arg_size - 1) {
+                    만약 (*p == '+')
                         *q++ = ' ';
-                    else
+                    아니면
                         *q++ = *p;
                 }
                 p++;
             }
         }
         *q = '\0';
-        if (!strcmp(tag, tag1))
-            return 1;
-        if (*p != '&')
+        만약 (!strcmp(tag, tag1))
+            반환 1;
+        만약 (*p != '&')
             break;
         p++;
     }
-    return 0;
+    반환 0;
 }

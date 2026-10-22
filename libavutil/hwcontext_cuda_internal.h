@@ -30,9 +30,9 @@
 
 struct AVCUDADeviceContextInternal {
     CudaFunctions *cuda_dl;
-    int is_allocated;
+    정수 is_allocated;
     CUdevice cuda_device;
-    int flags;
+    정수 flags;
 };
 
 /**
@@ -41,18 +41,18 @@ struct AVCUDADeviceContextInternal {
  * Used to compute frame->linesize[] for CUarray frames (block-linear).
  * Callers that need a fallback should treat a 0 return as an error.
  */
-static inline int ff_cuda_cuarray_elem_size(CUarray_format fmt)
+static inline 정수 ff_cuda_cuarray_elem_size(CUarray_format fmt)
 {
     switch (fmt) {
     case CU_AD_FORMAT_UNSIGNED_INT8:
-    case CU_AD_FORMAT_SIGNED_INT8:   return 1;
+    case CU_AD_FORMAT_SIGNED_INT8:   반환 1;
     case CU_AD_FORMAT_UNSIGNED_INT16:
     case CU_AD_FORMAT_SIGNED_INT16:
-    case CU_AD_FORMAT_HALF:          return 2;
+    case CU_AD_FORMAT_HALF:          반환 2;
     case CU_AD_FORMAT_UNSIGNED_INT32:
     case CU_AD_FORMAT_SIGNED_INT32:
-    case CU_AD_FORMAT_FLOAT:         return 4;
-    default:                         return 0;
+    case CU_AD_FORMAT_FLOAT:         반환 4;
+    default:                         반환 0;
     }
 }
 

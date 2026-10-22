@@ -33,22 +33,22 @@ static void get_defaults(AVStereo3D *stereo)
 
 AVStereo3D *av_stereo3d_alloc(void)
 {
-    return av_stereo3d_alloc_size(NULL);
+    반환 av_stereo3d_alloc_size(NULL);
 }
 
 AVStereo3D *av_stereo3d_alloc_size(size_t *size)
 {
     AVStereo3D *stereo = av_mallocz(sizeof(AVStereo3D));
 
-    if (size)
+    만약 (size)
         *size = stereo ? sizeof(*stereo) : 0;
 
-    if (!stereo)
-        return NULL;
+    만약 (!stereo)
+        반환 NULL;
 
     get_defaults(stereo);
 
-    return stereo;
+    반환 stereo;
 }
 
 AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame)
@@ -56,13 +56,13 @@ AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame)
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_STEREO3D,
                                                         sizeof(AVStereo3D));
-    if (!side_data)
-        return NULL;
+    만약 (!side_data)
+        반환 NULL;
 
     memset(side_data->data, 0, sizeof(AVStereo3D));
     get_defaults((AVStereo3D *)side_data->data);
 
-    return (AVStereo3D *)side_data->data;
+    반환 (AVStereo3D *)side_data->data;
 }
 
 static const char * const stereo3d_type_names[] = {
@@ -90,62 +90,62 @@ static const char * const stereo3d_primary_eye_names[] = {
     [AV_PRIMARY_EYE_RIGHT] = "right",
 };
 
-const char *av_stereo3d_type_name(unsigned int type)
+const char *av_stereo3d_type_name(unsigned 정수 type)
 {
-    if (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
-        return "unknown";
+    만약 (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
+        반환 "unknown";
 
-    return stereo3d_type_names[type];
+    반환 stereo3d_type_names[type];
 }
 
-int av_stereo3d_from_name(const char *name)
+정수 av_stereo3d_from_name(const char *name)
 {
-    int i;
+    정수 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
-        if (!strcmp(name, stereo3d_type_names[i]))
-            return i;
+    위해 (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
+        만약 (!strcmp(name, stereo3d_type_names[i]))
+            반환 i;
     }
 
-    return -1;
+    반환 -1;
 }
 
-const char *av_stereo3d_view_name(unsigned int view)
+const char *av_stereo3d_view_name(unsigned 정수 view)
 {
-    if (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
-        return "unknown";
+    만약 (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
+        반환 "unknown";
 
-    return stereo3d_view_names[view];
+    반환 stereo3d_view_names[view];
 }
 
-int av_stereo3d_view_from_name(const char *name)
+정수 av_stereo3d_view_from_name(const char *name)
 {
-    int i;
+    정수 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
-        if (!strcmp(name, stereo3d_view_names[i]))
-            return i;
+    위해 (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
+        만약 (!strcmp(name, stereo3d_view_names[i]))
+            반환 i;
     }
 
-    return -1;
+    반환 -1;
 }
 
-const char *av_stereo3d_primary_eye_name(unsigned int eye)
+const char *av_stereo3d_primary_eye_name(unsigned 정수 eye)
 {
-    if (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
-        return "unknown";
+    만약 (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
+        반환 "unknown";
 
-    return stereo3d_primary_eye_names[eye];
+    반환 stereo3d_primary_eye_names[eye];
 }
 
-int av_stereo3d_primary_eye_from_name(const char *name)
+정수 av_stereo3d_primary_eye_from_name(const char *name)
 {
-    int i;
+    정수 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
-        if (!strcmp(name, stereo3d_primary_eye_names[i]))
-            return i;
+    위해 (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
+        만약 (!strcmp(name, stereo3d_primary_eye_names[i]))
+            반환 i;
     }
 
-    return -1;
+    반환 -1;
 }

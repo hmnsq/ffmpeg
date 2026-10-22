@@ -73,7 +73,7 @@ typedef enum {
  * @param ctx_size size of ctx in bytes
  * @return <0 on failure
  */
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size);
+정수 av_crc_init(AVCRC *ctx, 정수 le, 정수 bits, uint32_t poly, 정수 ctx_size);
 
 /**
  * Get an initialized standard CRC table.

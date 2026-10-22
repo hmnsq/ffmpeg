@@ -33,15 +33,15 @@ AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size)
     AVAmbientViewingEnvironment *env =
         av_mallocz(sizeof(AVAmbientViewingEnvironment));
 
-    if (size)
+    만약 (size)
         *size = env ? sizeof(*env) : 0;
 
-    if (!env)
-        return NULL;
+    만약 (!env)
+        반환 NULL;
 
     get_defaults(env);
 
-    return env;
+    반환 env;
 }
 
 AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame)
@@ -50,11 +50,11 @@ AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVF
         av_frame_new_side_data(frame,
                                AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
                                sizeof(AVAmbientViewingEnvironment));
-    if (!side_data)
-        return NULL;
+    만약 (!side_data)
+        반환 NULL;
 
     memset(side_data->data, 0, side_data->size);
     get_defaults((AVAmbientViewingEnvironment *)side_data->data);
 
-    return (AVAmbientViewingEnvironment *)side_data->data;
+    반환 (AVAmbientViewingEnvironment *)side_data->data;
 }

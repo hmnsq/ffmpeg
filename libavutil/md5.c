@@ -45,11 +45,11 @@ typedef struct AVMD5 {
     uint32_t ABCD[4];
 } AVMD5;
 
-const int av_md5_size = sizeof(AVMD5);
+const 정수 av_md5_size = sizeof(AVMD5);
 
 struct AVMD5 *av_md5_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVMD5));
+    반환 av_mallocz(sizeof(struct AVMD5));
 }
 
 static const uint8_t S[4][4] = {
@@ -86,26 +86,26 @@ static const uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
         t  = S[i >> 4][i & 3];                                          \
         a += T[i];                                                      \
                                                                         \
-        if (i < 32) {                                                   \
-            if (i < 16)                                                 \
+        만약 (i < 32) {                                                   \
+            만약 (i < 16)                                                 \
                 a += (d ^ (b & (c ^ d)))  + AV_RL32(X+(       i  & 15));\
-            else                                                        \
+            아니면                                                        \
                 a += ((d & b) | (~d & c)) + AV_RL32(X+((1 + 5*i) & 15));\
-        } else {                                                        \
-            if (i < 48)                                                 \
+        } 아니면 {                                                        \
+            만약 (i < 48)                                                 \
                 a += (b ^ c ^ d)          + AV_RL32(X+((5 + 3*i) & 15));\
-            else                                                        \
+            아니면                                                        \
                 a += (c ^ (b | ~d))       + AV_RL32(X+((    7*i) & 15));\
         }                                                               \
         a = b + (a << t | a >> (32 - t));                               \
-    } while (0)
+    } 동안 (0)
 
 static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
 {
     const uint32_t *X;
     uint32_t a, b, c, d, t;
 
-    for (size_t n = 0; n < nblocks; n++) {
+    위해 (size_t n = 0; n < nblocks; n++) {
         a = ABCD[3];
         b = ABCD[2];
         c = ABCD[1];
@@ -113,8 +113,8 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
 
         X = (const uint32_t *)src + n * 16;
 
-#if CONFIG_SMALL
-        for (int i = 0; i < 64; i++) {
+#만약 CONFIG_SMALL
+        위해 (정수 i = 0; i < 64; i++) {
             CORE(i, a, b, c, d);
             t = d;
             d = c;
@@ -122,7 +122,7 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
             b = a;
             a = t;
         }
-#else
+#아니면
 #define CORE2(i)                                                        \
         CORE(i, a, b, c, d); CORE((i + 1), d, a, b, c);                 \
         CORE((i + 2), c, d, a, b); CORE((i + 3), b, c, d, a)
@@ -153,50 +153,50 @@ void av_md5_init(AVMD5 *ctx)
 void av_md5_update(AVMD5 *ctx, const uint8_t *src, size_t len)
 {
     const uint8_t *end;
-    int j;
+    정수 j;
 
     j         = ctx->len & 63;
     ctx->len += len;
 
-    if (j) {
-        int cnt = FFMIN(len, 64 - j);
+    만약 (j) {
+        정수 cnt = FFMIN(len, 64 - j);
         memcpy(ctx->block + j, src, cnt);
         src += cnt;
         len -= cnt;
-        if (j + cnt < 64)
-            return;
+        만약 (j + cnt < 64)
+            반환;
         body(ctx->ABCD, ctx->block, 1);
     }
 
     end = src + (len & ~63);
-    if (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
-       while (src < end) {
+    만약 (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
+       동안 (src < end) {
            memcpy(ctx->block, src, 64);
            body(ctx->ABCD, ctx->block, 1);
            src += 64;
         }
-    } else {
+    } 아니면 {
         size_t nblocks = len / 64;
         body(ctx->ABCD, src, nblocks);
         src = end;
     }
     len &= 63;
-    if (len > 0)
+    만약 (len > 0)
         memcpy(ctx->block, src, len);
 }
 
 void av_md5_final(AVMD5 *ctx, uint8_t *dst)
 {
-    int i;
+    정수 i;
     uint64_t finalcount = av_le2ne64(ctx->len << 3);
 
     av_md5_update(ctx, "\200", 1);
-    while ((ctx->len & 63) != 56)
+    동안 ((ctx->len & 63) != 56)
         av_md5_update(ctx, "", 1);
 
     av_md5_update(ctx, (uint8_t *) &finalcount, 8);
 
-    for (i = 0; i < 4; i++)
+    위해 (i = 0; i < 4; i++)
         AV_WL32(dst + 4 * i, ctx->ABCD[3 - i]);
 }
 

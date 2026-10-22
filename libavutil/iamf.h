@@ -82,7 +82,7 @@ typedef struct AVIAMFMixGain {
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
-    unsigned int subblock_duration;
+    unsigned 정수 subblock_duration;
     /**
      * The type of animation applied to the parameter values.
      */
@@ -133,11 +133,11 @@ typedef struct AVIAMFDemixingInfo {
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
-    unsigned int subblock_duration;
+    unsigned 정수 subblock_duration;
     /**
      * Pre-defined combination of demixing parameters.
      */
-    unsigned int dmixp_mode;
+    unsigned 정수 dmixp_mode;
 } AVIAMFDemixingInfo;
 
 /**
@@ -153,7 +153,7 @@ typedef struct AVIAMFReconGain {
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
-    unsigned int subblock_duration;
+    unsigned 정수 subblock_duration;
 
     /**
      * Array of gain values to be applied to each channel for each layer
@@ -205,7 +205,7 @@ typedef struct AVIAMFParamDefinition {
     /**
      * Number of subblocks in the array.
      */
-    unsigned int nb_subblocks;
+    unsigned 정수 nb_subblocks;
 
     /**
      * Parameters type. Determines the type of the subblock elements.
@@ -215,11 +215,11 @@ typedef struct AVIAMFParamDefinition {
     /**
      * Identifier for the parameter substream.
      */
-    unsigned int parameter_id;
+    unsigned 정수 parameter_id;
     /**
      * Sample rate for the parameter substream. It must not be 0.
      */
-    unsigned int parameter_rate;
+    unsigned 정수 parameter_rate;
 
     /**
      * The accumulated duration of all blocks in this parameter definition,
@@ -228,14 +228,14 @@ typedef struct AVIAMFParamDefinition {
      * May be 0, in which case all duration values should be specified in
      * another parameter definition referencing the same parameter_id.
      */
-    unsigned int duration;
+    unsigned 정수 duration;
     /**
      * The duration of every subblock in the case where all subblocks, with
      * the optional exception of the last subblock, have equal durations.
      *
      * Must be 0 if subblocks have different durations.
      */
-    unsigned int constant_subblock_duration;
+    unsigned 정수 constant_subblock_duration;
 } AVIAMFParamDefinition;
 
 const AVClass *av_iamf_param_definition_get_class(void);
@@ -248,7 +248,7 @@ const AVClass *av_iamf_param_definition_get_class(void);
  * @param size if non-NULL, the size in bytes of the resulting data array is written here.
  */
 AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinitionType type,
-                                                      unsigned int nb_subblocks, size_t *size);
+                                                      unsigned 정수 nb_subblocks, size_t *size);
 
 /**
  * Get the subblock at the specified {@code idx}. Must be between 0 and nb_subblocks - 1.
@@ -257,10 +257,10 @@ AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinition
  * the struct type of the returned pointer.
  */
 static av_always_inline void*
-av_iamf_param_definition_get_subblock(const AVIAMFParamDefinition *par, unsigned int idx)
+av_iamf_param_definition_get_subblock(const AVIAMFParamDefinition *par, unsigned 정수 idx)
 {
     av_assert0(idx < par->nb_subblocks);
-    return (void *)((uint8_t *)par + par->subblocks_offset + idx * par->subblock_size);
+    반환 (void *)((uint8_t *)par + par->subblocks_offset + idx * par->subblock_size);
 }
 
 /**
@@ -299,7 +299,7 @@ typedef struct AVIAMFLayer {
     /**
      * A bitmask which may contain a combination of AV_IAMF_LAYER_FLAG_* flags.
      */
-    unsigned int flags;
+    unsigned 정수 flags;
     /**
      * Output gain channel flags as defined in section 3.6.2 of IAMF.
      *
@@ -307,7 +307,7 @@ typedef struct AVIAMFLayer {
      * "the parent's Audio Element type" is AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL,
      * must be 0 otherwise.
      */
-    unsigned int output_gain_flags;
+    unsigned 정수 output_gain_flags;
     /**
      * Output gain as defined in section 3.6.2 of IAMF.
      *
@@ -340,7 +340,7 @@ typedef struct AVIAMFLayer {
      * by the sum of the amount of streams in the group plus the amount of streams in
      * the group that are stereo.
      */
-    unsigned int nb_demixing_matrix;
+    unsigned 정수 nb_demixing_matrix;
 } AVIAMFLayer;
 
 
@@ -368,7 +368,7 @@ typedef struct AVIAMFAudioElement {
      * Set by av_iamf_audio_element_add_layer(), must not be
      * modified by any other code.
      */
-    unsigned int nb_layers;
+    unsigned 정수 nb_layers;
 
     /**
      * Demixing information used to reconstruct a scalable channel audio
@@ -393,7 +393,7 @@ typedef struct AVIAMFAudioElement {
     /**
      * Default weight value as defined in section 3.6 of IAMF.
      */
-    unsigned int default_w;
+    unsigned 정수 default_w;
 } AVIAMFAudioElement;
 
 const AVClass *av_iamf_audio_element_get_class(void);
@@ -452,7 +452,7 @@ typedef struct AVIAMFSubmixElement {
     /**
      * The id of the Audio Element this submix element references.
      */
-    unsigned int audio_element_id;
+    unsigned 정수 audio_element_id;
 
     /**
      * Information required required for applying any processing to the
@@ -572,7 +572,7 @@ typedef struct AVIAMFSubmix {
      * Set by av_iamf_submix_add_element(), must not be modified by any
      * other code.
      */
-    unsigned int nb_elements;
+    unsigned 정수 nb_elements;
 
     /**
      * Array of submix layouts.
@@ -587,7 +587,7 @@ typedef struct AVIAMFSubmix {
      * Set by av_iamf_submix_add_layout(), must not be modified by any
      * other code.
      */
-    unsigned int nb_layouts;
+    unsigned 정수 nb_layouts;
 
     /**
      * Information required for post-processing the mixed audio signal to
@@ -629,7 +629,7 @@ typedef struct AVIAMFMixPresentation {
      * Set by av_iamf_mix_presentation_add_submix(), must not be modified
      * by any other code.
      */
-    unsigned int nb_submixes;
+    unsigned 정수 nb_submixes;
 
     /**
      * A dictionary of strings describing the mix in different languages.

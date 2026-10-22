@@ -20,17 +20,17 @@
 
 char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb)
 {
-    if (ts == AV_NOPTS_VALUE) {
+    만약 (ts == AV_NOPTS_VALUE) {
         snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
-    } else {
+    } 아니면 {
         double val = av_q2d(tb) * ts;
         double log = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
-        int precision = (isfinite(log) && log < 0) ? -log + 5 : 6;
-        int last = snprintf(buf, AV_TS_MAX_STRING_SIZE, "%.*f", precision, val);
+        정수 precision = (isfinite(log) && log < 0) ? -log + 5 : 6;
+        정수 last = snprintf(buf, AV_TS_MAX_STRING_SIZE, "%.*f", precision, val);
         last = FFMIN(last, AV_TS_MAX_STRING_SIZE - 1) - 1;
-        for (; last && buf[last] == '0'; last--);
-        for (; last && buf[last] != 'f' && (buf[last] < '0' || buf[0] > '9'); last--);
+        위해 (; last && buf[last] == '0'; last--);
+        위해 (; last && buf[last] != 'f' && (buf[last] < '0' || buf[0] > '9'); last--);
         buf[last + 1] = '\0';
     }
-    return buf;
+    반환 buf;
 }

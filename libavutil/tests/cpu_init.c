@@ -29,37 +29,37 @@
 
 static void *thread_main(void *arg)
 {
-    int *flags = arg;
+    정수 *flags = arg;
 
     *flags = av_get_cpu_flags();
-    return NULL;
+    반환 NULL;
 }
 
-int main(void)
+정수 main(void)
 {
-    int cpu_flags1;
-    int cpu_flags2;
-    int ret;
+    정수 cpu_flags1;
+    정수 cpu_flags2;
+    정수 ret;
     pthread_t thread1;
     pthread_t thread2;
 
-    if ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
+    만약 ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        반환 1;
     }
-    if ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
+    만약 ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        반환 1;
     }
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
 
-    if (cpu_flags1 < 0)
-        return 2;
-    if (cpu_flags2 < 0)
-        return 2;
-    if (cpu_flags1 != cpu_flags2)
-        return 3;
+    만약 (cpu_flags1 < 0)
+        반환 2;
+    만약 (cpu_flags2 < 0)
+        반환 2;
+    만약 (cpu_flags1 != cpu_flags2)
+        반환 3;
 
-    return 0;
+    반환 0;
 }

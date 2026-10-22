@@ -39,11 +39,11 @@ typedef struct AVSHA512 {
     uint64_t state[8];    ///< current hash value
 } AVSHA512;
 
-const int av_sha512_size = sizeof(AVSHA512);
+const 정수 av_sha512_size = sizeof(AVSHA512);
 
 struct AVSHA512 *av_sha512_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVSHA512));
+    반환 av_mallocz(sizeof(struct AVSHA512));
 }
 
 static const uint64_t K512[80] = {
@@ -122,7 +122,7 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
     uint64_t a, b, c, d, e, f, g, h;
     uint64_t block[80];
     uint64_t T1;
-    int i;
+    정수 i;
 
     a = state[0];
     b = state[1];
@@ -132,12 +132,12 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
     f = state[5];
     g = state[6];
     h = state[7];
-#if CONFIG_SMALL
-    for (i = 0; i < 80; i++) {
+#만약 CONFIG_SMALL
+    위해 (i = 0; i < 80; i++) {
         uint64_t T2;
-        if (i < 16)
+        만약 (i < 16)
             T1 = blk0(i);
-        else
+        아니면
             T1 = blk(i);
         T1 += h + Sigma1_512(e) + Ch(e, f, g) + K512[i];
         T2 = Sigma0_512(a) + Maj(a, b, c);
@@ -150,7 +150,7 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
         b = a;
         a = T1 + T2;
     }
-#else
+#아니면
 
 #define R512_0 \
     ROUND512_0_TO_15(a, b, c, d, e, f, g, h); \
@@ -189,7 +189,7 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
 }
 
 
-av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
+av_cold 정수 av_sha512_init(AVSHA512 *ctx, 정수 bits)
 {
     ctx->digest_len = bits >> 6;
     switch (bits) {
@@ -234,29 +234,29 @@ av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
         ctx->state[7] = UINT64_C(0x5BE0CD19137E2179);
         break;
     default:
-        return AVERROR(EINVAL);
+        반환 AVERROR(EINVAL);
     }
     ctx->count = 0;
-    return 0;
+    반환 0;
 }
 
 void av_sha512_update(AVSHA512* ctx, const uint8_t* data, size_t len)
 {
-    unsigned int j;
+    unsigned 정수 j;
     size_t i;
 
     j = ctx->count & 127;
     ctx->count += len;
-#if CONFIG_SMALL
-    for (i = 0; i < len; i++) {
+#만약 CONFIG_SMALL
+    위해 (i = 0; i < len; i++) {
         ctx->buffer[j++] = data[i];
-        if (128 == j) {
+        만약 (128 == j) {
             sha512_transform(ctx->state, ctx->buffer);
             j = 0;
         }
     }
-#else
-    if (len >= 128 - j) {
+#아니면
+    만약 (len >= 128 - j) {
         const uint8_t *end;
         memcpy(&ctx->buffer[j], data, (i = 128 - j));
         sha512_transform(ctx->state, ctx->buffer);
@@ -264,7 +264,7 @@ void av_sha512_update(AVSHA512* ctx, const uint8_t* data, size_t len)
         len  -= i;
         end   = data + (len & ~127);
         len   = len % 128;
-        for (; data < end; data += 128)
+        위해 (; data < end; data += 128)
             sha512_transform(ctx->state, data);
         j = 0;
     }
@@ -278,12 +278,12 @@ void av_sha512_final(AVSHA512* ctx, uint8_t *digest)
     uint64_t finalcount = av_be2ne64(ctx->count << 3);
 
     av_sha512_update(ctx, "\200", 1);
-    while ((ctx->count & 127) != 112)
+    동안 ((ctx->count & 127) != 112)
         av_sha512_update(ctx, "", 1);
     av_sha512_update(ctx, (uint8_t *)&i, 8);
     av_sha512_update(ctx, (uint8_t *)&finalcount, 8); /* Should cause a transform() */
-    for (i = 0; i < ctx->digest_len; i++)
+    위해 (i = 0; i < ctx->digest_len; i++)
         AV_WB64(digest + i*8, ctx->state[i]);
-    if (ctx->digest_len & 1) /* SHA512/224 is 28 bytes, and is not divisible by 8. */
+    만약 (ctx->digest_len & 1) /* SHA512/224 is 28 bytes, and is not divisible by 8. */
         AV_WB32(digest + i*8, ctx->state[i] >> 32);
 }

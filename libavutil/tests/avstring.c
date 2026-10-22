@@ -22,9 +22,9 @@
 #include "libavutil/mem.h"
 #include "libavutil/avstring.h"
 
-int main(void)
+정수 main(void)
 {
-    int i;
+    정수 i;
     char *fullpath, *ptr;
     static const char * const strings[] = {
         "''",
@@ -58,7 +58,7 @@ int main(void)
     const char * const needle[] = {"learned.", "unlearned.", "Unlearned"};
 
     printf("Testing av_get_token()\n");
-    for (i = 0; i < FF_ARRAY_ELEMS(strings); i++) {
+    위해 (i = 0; i < FF_ARRAY_ELEMS(strings); i++) {
         const char *p = strings[i];
         char *q;
         printf("|%s|", p);
@@ -85,7 +85,7 @@ int main(void)
     /*Testing av_strnstr()*/
     #define TEST_STRNSTR(haystack, needle, hay_length, expected) \
         ptr = av_strnstr(haystack, needle, hay_length); \
-        if (ptr != expected){ \
+        만약 (ptr != expected){ \
             printf("expected: %p, received %p\n", expected, ptr); \
         }
     TEST_STRNSTR(haystack, needle [0], strlen(haystack), haystack+44);
@@ -96,10 +96,10 @@ int main(void)
     /*Testing av_strireplace()*/
     #define TEST_STRIREPLACE(haystack, needle, expected) \
         ptr = av_strireplace(haystack, needle, "instead"); \
-        if (ptr == NULL) { \
+        만약 (ptr == NULL) { \
             printf("error, received null pointer!\n"); \
-        } else { \
-            if (strcmp(ptr, expected) != 0) \
+        } 아니면 { \
+            만약 (strcmp(ptr, expected) != 0) \
                 printf( "expected: %s, received: %s\n", expected, ptr); \
             av_free(ptr); \
         }
@@ -109,5 +109,5 @@ int main(void)
     TEST_STRIREPLACE(haystack, needle [2], "Education consists mainly in what we have instead.");
     TEST_STRIREPLACE(haystack, needle [1], "Education consists mainly in what we have instead");
 
-    return 0;
+    반환 0;
 }

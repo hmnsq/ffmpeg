@@ -24,10 +24,10 @@ AVFilmGrainParams *av_film_grain_params_alloc(size_t *size)
 {
     AVFilmGrainParams *params = av_mallocz(sizeof(AVFilmGrainParams));
 
-    if (size)
+    만약 (size)
         *size = params ? sizeof(*params) : 0;
 
-    return params;
+    반환 params;
 }
 
 AVFilmGrainParams *av_film_grain_params_create_side_data(AVFrame *frame)
@@ -36,8 +36,8 @@ AVFilmGrainParams *av_film_grain_params_create_side_data(AVFrame *frame)
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_FILM_GRAIN_PARAMS,
                                                         sizeof(AVFilmGrainParams));
-    if (!side_data)
-        return NULL;
+    만약 (!side_data)
+        반환 NULL;
 
     fgp = (AVFilmGrainParams *) side_data->data;
     *fgp = (AVFilmGrainParams) {
@@ -47,31 +47,31 @@ AVFilmGrainParams *av_film_grain_params_create_side_data(AVFrame *frame)
         .color_space     = AVCOL_SPC_UNSPECIFIED,
     };
 
-    return fgp;
+    반환 fgp;
 }
 
 const AVFilmGrainParams *av_film_grain_params_select(const AVFrame *frame)
 {
     const AVFilmGrainParams *fgp, *best = NULL;
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
-    int bit_depth_luma, bit_depth_chroma;
-    if (!desc)
-        return NULL;
+    정수 bit_depth_luma, bit_depth_chroma;
+    만약 (!desc)
+        반환 NULL;
 
     /* There are no YUV formats with different bit depth per component,
      * so just check both against the first component for simplicity */
     bit_depth_luma = bit_depth_chroma = desc->comp[0].depth;
 
-    for (int i = 0; i < frame->nb_side_data; i++) {
-        if (frame->side_data[i]->type != AV_FRAME_DATA_FILM_GRAIN_PARAMS)
+    위해 (정수 i = 0; i < frame->nb_side_data; i++) {
+        만약 (frame->side_data[i]->type != AV_FRAME_DATA_FILM_GRAIN_PARAMS)
             continue;
         fgp = (const AVFilmGrainParams*)frame->side_data[i]->data;
-        if (fgp->width  && fgp->width  > frame->width ||
+        만약 (fgp->width  && fgp->width  > frame->width ||
             fgp->height && fgp->height > frame->height)
             continue;
 
 #define CHECK(a, b, unspec)                                     \
-        if ((a) != (unspec) && (b) != (unspec) && (a) != (b))   \
+        만약 ((a) != (unspec) && (b) != (unspec) && (a) != (b))   \
             continue
 
         CHECK(fgp->bit_depth_luma,   bit_depth_luma,         0);
@@ -86,21 +86,21 @@ const AVFilmGrainParams *av_film_grain_params_select(const AVFrame *frame)
             continue;
         case AV_FILM_GRAIN_PARAMS_AV1:
             /* AOM FGS needs an exact match for the chroma resolution */
-            if (fgp->subsampling_x != desc->log2_chroma_w ||
+            만약 (fgp->subsampling_x != desc->log2_chroma_w ||
                 fgp->subsampling_y != desc->log2_chroma_h)
                 continue;
             break;
         case AV_FILM_GRAIN_PARAMS_H274:
             /* H.274 FGS can be adapted to any lower chroma resolution */
-            if (fgp->subsampling_x > desc->log2_chroma_w ||
+            만약 (fgp->subsampling_x > desc->log2_chroma_w ||
                 fgp->subsampling_y > desc->log2_chroma_h)
                 continue;
             break;
         }
 
-        if (!best || best->width < fgp->width || best->height < fgp->height)
+        만약 (!best || best->width < fgp->width || best->height < fgp->height)
             best = fgp;
     }
 
-    return best;
+    반환 best;
 }

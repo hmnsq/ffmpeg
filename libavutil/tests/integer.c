@@ -24,11 +24,11 @@
 #include "libavutil/integer.h"
 #include "libavutil/intmath.h"
 
-int main(void){
+정수 main(void){
     int64_t a,b;
 
-    for(a=7; a<256*256*256; a+=13215){
-        for(b=3; b<256*256*256; b+=27118){
+    위해(a=7; a<256*256*256; a+=13215){
+        위해(b=3; b<256*256*256; b+=27118){
             AVInteger ai= av_int2i(a);
             AVInteger bi= av_int2i(b);
 
@@ -45,5 +45,5 @@ int main(void){
             av_assert0(av_i2int(av_div_i(ai,bi)) == a/b);
         }
     }
-    return 0;
+    반환 0;
 }

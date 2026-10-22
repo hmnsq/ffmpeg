@@ -23,46 +23,46 @@
 #include "libavutil/attributes.h"
 #include "libavutil/reverse.h"
 
-static uint64_t reverse(uint64_t p, unsigned int deg)
+static uint64_t reverse(uint64_t p, unsigned 정수 deg)
 {
     uint64_t ret = 0;
-    int i;
-    for (i = 0; i < (deg / 8); i += 1) {
+    정수 i;
+    위해 (i = 0; i < (deg / 8); i += 1) {
         ret = (ret << 8) | (ff_reverse[p & 0xff]);
         p >>= 8;
     }
-    int rem = (deg + 1) - 8 * i;
+    정수 rem = (deg + 1) - 8 * i;
     ret = (ret << rem) | (ff_reverse[p & 0xff] >> (8 - rem));
-    return ret;
+    반환 ret;
 }
 
 av_unused static uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
-                                 uint64_t *div, int bitreverse)
+                                 uint64_t *div, 정수 bitreverse)
 {
     uint64_t mod, mask, high;
 
-    if (n < deg) {
+    만약 (n < deg) {
         *div = 0;
-        return poly;
+        반환 poly;
     }
     mask = ((uint64_t)1 << deg) - 1;
     poly &= mask;
     mod = poly;
     *div = 1;
     deg--;
-    while (--n > deg) {
+    동안 (--n > deg) {
         high = (mod >> deg) & 1;
         *div = (*div << 1) | high;
         mod <<= 1;
-        if (high)
+        만약 (high)
             mod ^= poly;
     }
     uint64_t ret = mod & mask;
-    if (bitreverse) {
+    만약 (bitreverse) {
         *div = reverse(*div, deg) << 1;
-        return reverse(ret, deg) << 1;
+        반환 reverse(ret, deg) << 1;
     }
-    return ret;
+    반환 ret;
 }
 
 #endif /* AVUTIL_CRC_INTERNAL_H */

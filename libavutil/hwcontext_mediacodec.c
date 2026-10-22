@@ -36,67 +36,67 @@ typedef struct MediaCodecDeviceContext {
 } MediaCodecDeviceContext;
 
 
-static int mc_device_create(AVHWDeviceContext *ctx, const char *device,
-                            AVDictionary *opts, int flags)
+static 정수 mc_device_create(AVHWDeviceContext *ctx, const char *device,
+                            AVDictionary *opts, 정수 flags)
 {
     const AVDictionaryEntry *entry = NULL;
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = &s->ctx;
 
-    if (device && device[0]) {
+    만약 (device && device[0]) {
         av_log(ctx, AV_LOG_ERROR, "Device selection unsupported.\n");
-        return AVERROR_UNKNOWN;
+        반환 AVERROR_UNKNOWN;
     }
 
-    while ((entry = av_dict_iterate(opts, entry))) {
-        if (!strcmp(entry->key, "create_window"))
+    동안 ((entry = av_dict_iterate(opts, entry))) {
+        만약 (!strcmp(entry->key, "create_window"))
             dev->create_window = atoi(entry->value);
     }
 
     av_log(ctx, AV_LOG_DEBUG, "%s createPersistentInputSurface\n",
             dev->create_window ? "Enable" : "Disable");
 
-    return 0;
+    반환 0;
 }
 
-static int mc_device_init(AVHWDeviceContext *ctx)
+static 정수 mc_device_init(AVHWDeviceContext *ctx)
 {
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = (AVMediaCodecDeviceContext *)s;
     ANativeWindow *native_window = NULL;
 
-    if (dev->surface)
-        return 0;
+    만약 (dev->surface)
+        반환 0;
 
-    if (dev->native_window)
-        return 0;
+    만약 (dev->native_window)
+        반환 0;
 
     // For backward compatibility, don't return error for a dummy
     // AVHWDeviceContext without surface or native_window.
-    if (!dev->create_window)
-        return 0;
+    만약 (!dev->create_window)
+        반환 0;
 
     s->libmedia = dlopen("libmediandk.so", RTLD_NOW);
-    if (!s->libmedia)
-        return AVERROR_UNKNOWN;
+    만약 (!s->libmedia)
+        반환 AVERROR_UNKNOWN;
 
     s->create_surface = dlsym(s->libmedia, "AMediaCodec_createPersistentInputSurface");
-    if (!s->create_surface)
-        return AVERROR_UNKNOWN;
+    만약 (!s->create_surface)
+        반환 AVERROR_UNKNOWN;
 
     s->create_surface(&native_window);
     dev->native_window = native_window;
-    return 0;
+    반환 0;
 }
 
 static void mc_device_uninit(AVHWDeviceContext *ctx)
 {
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = ctx->hwctx;
-    if (!s->libmedia)
-        return;
+    만약 (!s->libmedia)
+        반환;
 
-    if (dev->native_window) {
+    만약 (dev->native_window) {
         ANativeWindow_release(dev->native_window);
         dev->native_window = NULL;
     }

@@ -25,13 +25,13 @@
 #include "bswap.h"
 #include "crc.h"
 #include "error.h"
-#if ARCH_AARCH64
+#만약 ARCH_AARCH64
 #include "libavutil/aarch64/crc.h"
 #elif ARCH_X86
 #include "libavutil/x86/crc.h"
 #endif
 
-#if CONFIG_HARDCODED_TABLES
+#만약 CONFIG_HARDCODED_TABLES
 static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
     [AV_CRC_8_ATM] = {
         0x00, 0x07, 0x0E, 0x09, 0x1C, 0x1B, 0x12, 0x15, 0x38, 0x3F, 0x36, 0x31,
@@ -316,10 +316,10 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x0001
     },
 };
-#else
-#if CONFIG_SMALL
+#아니면
+#만약 CONFIG_SMALL
 #define CRC_TABLE_SIZE 257
-#else
+#아니면
 #define CRC_TABLE_SIZE 1024
 #endif
 static AVCRC av_crc_table[AV_CRC_MAX][CRC_TABLE_SIZE];
@@ -343,66 +343,66 @@ DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE_LE, 1, 32, 0xEDB88320)
 DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI_LE, 1, 16,     0xA001)
 #endif
 
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+정수 av_crc_init(AVCRC *ctx, 정수 le, 정수 bits, uint32_t poly, 정수 ctx_size)
 {
     unsigned i, j;
     uint32_t c;
 
-    if (bits < 8 || bits > 32 || poly >= (1LL << bits))
-        return AVERROR(EINVAL);
-    if (ctx_size != sizeof(AVCRC) * 257 && ctx_size != sizeof(AVCRC) * 1024)
-        return AVERROR(EINVAL);
+    만약 (bits < 8 || bits > 32 || poly >= (1LL << bits))
+        반환 AVERROR(EINVAL);
+    만약 (ctx_size != sizeof(AVCRC) * 257 && ctx_size != sizeof(AVCRC) * 1024)
+        반환 AVERROR(EINVAL);
 
-#if ARCH_X86
-    int done = ff_crc_init_x86(ctx, le, bits, poly, ctx_size);
-    if (done)
-        return 0;
+#만약 ARCH_X86
+    정수 done = ff_crc_init_x86(ctx, le, bits, poly, ctx_size);
+    만약 (done)
+        반환 0;
 #elif ARCH_AARCH64
-    int done = ff_crc_init_aarch64(ctx, le, bits, poly, ctx_size);
-    if (done)
-        return 0;
+    정수 done = ff_crc_init_aarch64(ctx, le, bits, poly, ctx_size);
+    만약 (done)
+        반환 0;
 #endif
 
-    for (i = 0; i < 256; i++) {
-        if (le) {
-            for (c = i, j = 0; j < 8; j++)
+    위해 (i = 0; i < 256; i++) {
+        만약 (le) {
+            위해 (c = i, j = 0; j < 8; j++)
                 c = (c >> 1) ^ (poly & (-(c & 1)));
             ctx[i] = c;
-        } else {
-            for (c = i << 24, j = 0; j < 8; j++)
+        } 아니면 {
+            위해 (c = i << 24, j = 0; j < 8; j++)
                 c = (c << 1) ^ ((poly << (32 - bits)) & (((int32_t) c) >> 31));
             ctx[i] = av_bswap32(c);
         }
     }
     ctx[256] = 1;
-#if !CONFIG_SMALL
-    if (ctx_size >= sizeof(AVCRC) * 1024)
-        for (i = 0; i < 256; i++)
-            for (j = 0; j < 3; j++)
+#만약 !CONFIG_SMALL
+    만약 (ctx_size >= sizeof(AVCRC) * 1024)
+        위해 (i = 0; i < 256; i++)
+            위해 (j = 0; j < 3; j++)
                 ctx[256 * (j + 1) + i] =
                     (ctx[256 * j + i] >> 8) ^ ctx[ctx[256 * j + i] & 0xFF];
 #endif
 
-    return 0;
+    반환 0;
 }
 
 const AVCRC *av_crc_get_table(AVCRCId crc_id)
 {
-    if ((unsigned)crc_id >= AV_CRC_MAX)
-        return NULL;
+    만약 ((unsigned)crc_id >= AV_CRC_MAX)
+        반환 NULL;
 // Check for arch-specific extensions first to avoid initializing
 // ordinary CRC tables unnecessarily.
-#if ARCH_AARCH64
+#만약 ARCH_AARCH64
     const AVCRC *table = ff_crc_get_table_aarch64(crc_id);
-    if (table)
-        return table;
+    만약 (table)
+        반환 table;
 #elif ARCH_X86
     const AVCRC *table = ff_crc_get_table_x86(crc_id);
-    if (table)
-        return table;
+    만약 (table)
+        반환 table;
 #endif
 
-#if !CONFIG_HARDCODED_TABLES
+#만약 !CONFIG_HARDCODED_TABLES
     switch (crc_id) {
     case AV_CRC_8_ATM:      CRC_INIT_TABLE_ONCE(AV_CRC_8_ATM); break;
     case AV_CRC_8_EBU:      CRC_INIT_TABLE_ONCE(AV_CRC_8_EBU); break;
@@ -415,29 +415,29 @@ const AVCRC *av_crc_get_table(AVCRCId crc_id)
     default: av_unreachable("already checked");
     }
 #endif
-    return av_crc_table[crc_id];
+    반환 av_crc_table[crc_id];
 }
 
 uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
                 const uint8_t *buffer, size_t length)
 {
-    if (ctx[0]) {
-#if ARCH_AARCH64
-        return ff_crc_aarch64(ctx, crc, buffer, length);
+    만약 (ctx[0]) {
+#만약 ARCH_AARCH64
+        반환 ff_crc_aarch64(ctx, crc, buffer, length);
 #elif ARCH_X86
-        return ff_crc_x86(ctx, crc, buffer, length);
+        반환 ff_crc_x86(ctx, crc, buffer, length);
 #endif
     }
     av_assert2(ctx[0] == 0);
 
     const uint8_t *end = buffer + length;
 
-#if !CONFIG_SMALL
-    if (!ctx[256]) {
-        while (((intptr_t) buffer & 3) && buffer < end)
+#만약 !CONFIG_SMALL
+    만약 (!ctx[256]) {
+        동안 (((intptr_t) buffer & 3) && buffer < end)
             crc = ctx[((uint8_t) crc) ^ *buffer++] ^ (crc >> 8);
 
-        while (buffer < end - 3) {
+        동안 (buffer < end - 3) {
             crc ^= av_le2ne32(*(const uint32_t *) buffer); buffer += 4;
             crc = ctx[3 * 256 + ( crc        & 0xFF)] ^
                   ctx[2 * 256 + ((crc >> 8 ) & 0xFF)] ^
@@ -446,8 +446,8 @@ uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
         }
     }
 #endif
-    while (buffer < end)
+    동안 (buffer < end)
         crc = ctx[((uint8_t) crc) ^ *buffer++] ^ (crc >> 8);
 
-    return crc;
+    반환 crc;
 }

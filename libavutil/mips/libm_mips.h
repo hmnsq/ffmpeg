@@ -57,9 +57,9 @@
 
 #include "libavutil/attributes.h"
 
-static av_always_inline av_const long int lrintf_mips(float x)
+static av_always_inline av_const long 정수 lrintf_mips(float x)
 {
-    register int ret_int;
+    register 정수 ret_int;
 
     __asm__ volatile (
         "cvt.w.s    %[x],       %[x]    \n\t"
@@ -67,7 +67,7 @@ static av_always_inline av_const long int lrintf_mips(float x)
 
         :[x]"+f"(x), [ret_int]"=r"(ret_int)
     );
-    return ret_int;
+    반환 ret_int;
 }
 
 #undef lrintf

@@ -130,7 +130,7 @@ AVBufferRef *av_buffer_allocz(size_t size);
  */
 AVBufferRef *av_buffer_create(uint8_t *data, size_t size,
                               void (*free)(void *opaque, uint8_t *data),
-                              void *opaque, int flags);
+                              void *opaque, 정수 flags);
 
 /**
  * Default free callback, which calls av_free() on the buffer data.
@@ -161,14 +161,14 @@ void av_buffer_unref(AVBufferRef **buf);
  * Return 0 otherwise.
  * A positive answer is valid until av_buffer_ref() is called on buf.
  */
-int av_buffer_is_writable(const AVBufferRef *buf);
+정수 av_buffer_is_writable(const AVBufferRef *buf);
 
 /**
  * @return the opaque parameter set by av_buffer_create.
  */
 void *av_buffer_get_opaque(const AVBufferRef *buf);
 
-int av_buffer_get_ref_count(const AVBufferRef *buf);
+정수 av_buffer_get_ref_count(const AVBufferRef *buf);
 
 /**
  * Create a writable reference from a given buffer reference, avoiding data copy
@@ -179,7 +179,7 @@ int av_buffer_get_ref_count(const AVBufferRef *buf);
  *            written in its place. On failure, buf is left untouched.
  * @return 0 on success, a negative AVERROR on failure.
  */
-int av_buffer_make_writable(AVBufferRef **buf);
+정수 av_buffer_make_writable(AVBufferRef **buf);
 
 /**
  * Reallocate a given buffer.
@@ -196,7 +196,7 @@ int av_buffer_make_writable(AVBufferRef **buf);
  * reference to it (i.e. the one passed to this function). In all other cases
  * a new buffer is allocated and the data is copied.
  */
-int av_buffer_realloc(AVBufferRef **buf, size_t size);
+정수 av_buffer_realloc(AVBufferRef **buf, size_t size);
 
 /**
  * Ensure dst refers to the same data as src.
@@ -212,7 +212,7 @@ int av_buffer_realloc(AVBufferRef **buf, size_t size);
  * @return 0 on success
  *         AVERROR(ENOMEM) on memory allocation failure.
  */
-int av_buffer_replace(AVBufferRef **dst, const AVBufferRef *src);
+정수 av_buffer_replace(AVBufferRef **dst, const AVBufferRef *src);
 
 /**
  * @}

@@ -24,13 +24,13 @@
 AVRawColorParams *av_raw_color_params_alloc(size_t *size)
 {
     AVRawColorParams *p = av_mallocz(sizeof(AVRawColorParams));
-    if (!p)
-        return NULL;
+    만약 (!p)
+        반환 NULL;
 
-    if (size)
+    만약 (size)
         *size = sizeof(*p);
 
-    return p;
+    반환 p;
 }
 
 AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame)
@@ -38,10 +38,10 @@ AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame)
     AVFrameSideData *side_data =
         av_frame_new_side_data(frame, AV_FRAME_DATA_RAW_COLOR_PARAMS,
                                sizeof(AVRawColorParams));
-    if (!side_data)
-        return NULL;
+    만약 (!side_data)
+        반환 NULL;
 
     memset(side_data->data, 0, side_data->size);
 
-    return (AVRawColorParams *)side_data->data;
+    반환 (AVRawColorParams *)side_data->data;
 }

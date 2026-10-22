@@ -21,12 +21,12 @@
 
 #include "float_dsp.h"
 
-float ff_scalarproduct_float_c(const float *v1, const float *v2, int len)
+float ff_scalarproduct_float_c(const float *v1, const float *v2, 정수 len)
 {
     float p = 0.0;
 
-    for (int i = 0; i < len; i++)
+    위해 (정수 i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    반환 p;
 }

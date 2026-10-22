@@ -89,39 +89,39 @@ enum {
 
 static const struct {
     const char name[MAX_HASH_NAME_SIZE];
-    int size;
+    정수 size;
 } hashdesc[] = {
 #define HASH_DESC(TYPE, NAME, SIZE) [TYPE] = { NAME, SIZE },
     HASHES(HASH_DESC)
 };
 
-const char *av_hash_names(int i)
+const char *av_hash_names(정수 i)
 {
-    if (i < 0 || i >= NUM_HASHES) return NULL;
-    return hashdesc[i].name;
+    만약 (i < 0 || i >= NUM_HASHES) 반환 NULL;
+    반환 hashdesc[i].name;
 }
 
 const char *av_hash_get_name(const AVHashContext *ctx)
 {
-    return hashdesc[ctx->type].name;
+    반환 hashdesc[ctx->type].name;
 }
 
-int av_hash_get_size(const AVHashContext *ctx)
+정수 av_hash_get_size(const AVHashContext *ctx)
 {
-    return hashdesc[ctx->type].size;
+    반환 hashdesc[ctx->type].size;
 }
 
-int av_hash_alloc(AVHashContext **ctx, const char *name)
+정수 av_hash_alloc(AVHashContext **ctx, const char *name)
 {
     AVHashContext *res;
-    int i;
+    정수 i;
     *ctx = NULL;
-    for (i = 0; i < NUM_HASHES; i++)
-        if (av_strcasecmp(name, hashdesc[i].name) == 0)
+    위해 (i = 0; i < NUM_HASHES; i++)
+        만약 (av_strcasecmp(name, hashdesc[i].name) == 0)
             break;
-    if (i >= NUM_HASHES) return AVERROR(EINVAL);
+    만약 (i >= NUM_HASHES) 반환 AVERROR(EINVAL);
     res = av_mallocz(sizeof(*res));
-    if (!res) return AVERROR(ENOMEM);
+    만약 (!res) 반환 AVERROR(ENOMEM);
     res->type = i;
     switch (i) {
     case MD5:     res->ctx = av_md5_alloc(); break;
@@ -140,12 +140,12 @@ int av_hash_alloc(AVHashContext **ctx, const char *name)
     case CRC32:   res->crctab = av_crc_get_table(AV_CRC_32_IEEE_LE); break;
     case ADLER32: break;
     }
-    if (i != ADLER32 && i != CRC32 && !res->ctx) {
+    만약 (i != ADLER32 && i != CRC32 && !res->ctx) {
         av_free(res);
-        return AVERROR(ENOMEM);
+        반환 AVERROR(ENOMEM);
     }
     *ctx = res;
-    return 0;
+    반환 0;
 }
 
 void av_hash_init(AVHashContext *ctx)
@@ -211,28 +211,28 @@ void av_hash_final(AVHashContext *ctx, uint8_t *dst)
     }
 }
 
-void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, int size)
+void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, 정수 size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE];
     unsigned rsize = av_hash_get_size(ctx);
 
     av_hash_final(ctx, buf);
     memcpy(dst, buf, FFMIN(size, rsize));
-    if (size > rsize)
+    만약 (size > rsize)
         memset(dst + rsize, 0, size - rsize);
 }
 
-void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, int size)
+void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, 정수 size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE];
     unsigned rsize = av_hash_get_size(ctx), i;
 
     av_hash_final(ctx, buf);
-    for (i = 0; i < FFMIN(rsize, size / 2); i++)
+    위해 (i = 0; i < FFMIN(rsize, size / 2); i++)
         snprintf(dst + i * 2, size - i * 2, "%02x", buf[i]);
 }
 
-void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, int size)
+void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, 정수 size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE], b64[AV_BASE64_SIZE(AV_HASH_MAX_SIZE)];
     unsigned rsize = av_hash_get_size(ctx), osize;
@@ -241,13 +241,13 @@ void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, int size)
     av_base64_encode(b64, sizeof(b64), buf, rsize);
     osize = AV_BASE64_SIZE(rsize);
     memcpy(dst, b64, FFMIN(osize, size));
-    if (size < osize)
+    만약 (size < osize)
         dst[size - 1] = 0;
 }
 
 void av_hash_freep(AVHashContext **ctx)
 {
-    if (*ctx)
+    만약 (*ctx)
         av_freep(&(*ctx)->ctx);
     av_freep(ctx);
 }

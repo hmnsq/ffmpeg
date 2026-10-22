@@ -57,12 +57,12 @@ struct AVBuffer {
     /**
      * A combination of AV_BUFFER_FLAG_*
      */
-    int flags;
+    정수 flags;
 
     /**
      * A combination of BUFFER_FLAG_*
      */
-    int flags_internal;
+    정수 flags_internal;
 };
 
 typedef struct BufferPoolEntry {

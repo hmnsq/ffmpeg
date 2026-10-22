@@ -39,12 +39,12 @@ typedef void (*hmac_init)(void *ctx);
 
 struct AVHMAC {
     void *hash;
-    int blocklen, hashlen;
+    정수 blocklen, hashlen;
     hmac_final  final;
     hmac_update update;
     hmac_init   init;
     uint8_t key[MAX_BLOCKLEN];
-    int keylen;
+    정수 keylen;
 };
 
 #define DEFINE_ALGO_BITS_INIT(prefix, bits)        \
@@ -82,8 +82,8 @@ DEFINE_ALGO(sha512)
 AVHMAC *av_hmac_alloc(enum AVHMACType type)
 {
     AVHMAC *c = av_mallocz(sizeof(*c));
-    if (!c)
-        return NULL;
+    만약 (!c)
+        반환 NULL;
     switch (type) {
     case AV_HMAC_MD5:
         c->blocklen = 64;
@@ -135,72 +135,72 @@ AVHMAC *av_hmac_alloc(enum AVHMACType type)
         break;
     default:
         av_free(c);
-        return NULL;
+        반환 NULL;
     }
-    if (!c->hash) {
+    만약 (!c->hash) {
         av_free(c);
-        return NULL;
+        반환 NULL;
     }
-    return c;
+    반환 c;
 }
 
 void av_hmac_free(AVHMAC *c)
 {
-    if (!c)
-        return;
+    만약 (!c)
+        반환;
     av_freep(&c->hash);
     av_free(c);
 }
 
-void av_hmac_init(AVHMAC *c, const uint8_t *key, unsigned int keylen)
+void av_hmac_init(AVHMAC *c, const uint8_t *key, unsigned 정수 keylen)
 {
-    int i;
+    정수 i;
     uint8_t block[MAX_BLOCKLEN];
-    if (keylen > c->blocklen) {
+    만약 (keylen > c->blocklen) {
         c->init(c->hash);
         c->update(c->hash, key, keylen);
         c->final(c->hash, c->key);
         c->keylen = c->hashlen;
-    } else {
+    } 아니면 {
         memcpy(c->key, key, keylen);
         c->keylen = keylen;
     }
     c->init(c->hash);
-    for (i = 0; i < c->keylen; i++)
+    위해 (i = 0; i < c->keylen; i++)
         block[i] = c->key[i] ^ 0x36;
-    for (i = c->keylen; i < c->blocklen; i++)
+    위해 (i = c->keylen; i < c->blocklen; i++)
         block[i] = 0x36;
     c->update(c->hash, block, c->blocklen);
 }
 
-void av_hmac_update(AVHMAC *c, const uint8_t *data, unsigned int len)
+void av_hmac_update(AVHMAC *c, const uint8_t *data, unsigned 정수 len)
 {
     c->update(c->hash, data, len);
 }
 
-int av_hmac_final(AVHMAC *c, uint8_t *out, unsigned int outlen)
+정수 av_hmac_final(AVHMAC *c, uint8_t *out, unsigned 정수 outlen)
 {
     uint8_t block[MAX_BLOCKLEN];
-    int i;
-    if (outlen < c->hashlen)
-        return AVERROR(EINVAL);
+    정수 i;
+    만약 (outlen < c->hashlen)
+        반환 AVERROR(EINVAL);
     c->final(c->hash, out);
     c->init(c->hash);
-    for (i = 0; i < c->keylen; i++)
+    위해 (i = 0; i < c->keylen; i++)
         block[i] = c->key[i] ^ 0x5C;
-    for (i = c->keylen; i < c->blocklen; i++)
+    위해 (i = c->keylen; i < c->blocklen; i++)
         block[i] = 0x5C;
     c->update(c->hash, block, c->blocklen);
     c->update(c->hash, out, c->hashlen);
     c->final(c->hash, out);
-    return c->hashlen;
+    반환 c->hashlen;
 }
 
-int av_hmac_calc(AVHMAC *c, const uint8_t *data, unsigned int len,
-                 const uint8_t *key, unsigned int keylen,
-                 uint8_t *out, unsigned int outlen)
+정수 av_hmac_calc(AVHMAC *c, const uint8_t *data, unsigned 정수 len,
+                 const uint8_t *key, unsigned 정수 keylen,
+                 uint8_t *out, unsigned 정수 outlen)
 {
     av_hmac_init(c, key, keylen);
     av_hmac_update(c, data, len);
-    return av_hmac_final(c, out, outlen);
+    반환 av_hmac_final(c, out, outlen);
 }
