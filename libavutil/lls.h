@@ -23,8 +23,8 @@
 #ifndef AVUTIL_LLS_H
 #define AVUTIL_LLS_H
 
-#include "macros.h"
-#include "mem_internal.h"
+#અન્તર્ભાવ "macros.h"
+#અન્તર્ભાવ "mem_internal.h"
 
 #define MAX_VARS 32
 #define MAX_VARS_ALIGN FFALIGN(MAX_VARS+1,4)
@@ -34,11 +34,11 @@
 /**
  * Linear least squares model.
  */
-typedef struct LLSModel {
-    DECLARE_ALIGNED(32, double, covariance[MAX_VARS_ALIGN][MAX_VARS_ALIGN]);
-    DECLARE_ALIGNED(32, double, coeff[MAX_VARS][MAX_VARS]);
-    double variance[MAX_VARS];
-    int indep_count;
+પ્રકારવ્યાખ્યા સંરચના LLSModel {
+    DECLARE_ALIGNED(32, દ્વિગુણ, covariance[MAX_VARS_ALIGN][MAX_VARS_ALIGN]);
+    DECLARE_ALIGNED(32, દ્વિગુણ, coeff[MAX_VARS][MAX_VARS]);
+    દ્વિગુણ variance[MAX_VARS];
+    પૂર્ણાંક indep_ગણતરી;
     /**
      * Take the outer-product of var[] with itself, and add to the covariance matrix.
      * @param m this context
@@ -46,19 +46,19 @@ typedef struct LLSModel {
      *            32-byte aligned, and any padding elements must be initialized
      *            (i.e not denormal/nan).
      */
-    void (*update_lls)(struct LLSModel *m, const double *var);
+    શૂન્ય (*update_lls)(સંરચના LLSModel *m, અચલ દ્વિગુણ *var);
     /**
      * Inner product of var[] and the LPC coefs.
      * @param m this context
      * @param var training samples, excluding the value to be predicted. unaligned.
      * @param order lpc order
      */
-    double (*evaluate_lls)(struct LLSModel *m, const double *var, int order);
+    દ્વિગુણ (*evaluate_lls)(સંરચના LLSModel *m, અચલ દ્વિગુણ *var, પૂર્ણાંક order);
 } LLSModel;
 
-void avpriv_init_lls(LLSModel *m, int indep_count);
-void ff_init_lls_riscv(LLSModel *m);
-void ff_init_lls_x86(LLSModel *m);
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order);
+શૂન્ય avpriv_init_lls(LLSModel *m, પૂર્ણાંક indep_ગણતરી);
+શૂન્ય ff_init_lls_riscv(LLSModel *m);
+શૂન્ય ff_init_lls_x86(LLSModel *m);
+શૂન્ય avpriv_solve_lls(LLSModel *m, દ્વિગુણ threshold, unsigned short min_order);
 
 #endif /* AVUTIL_LLS_H */

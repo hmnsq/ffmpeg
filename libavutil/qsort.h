@@ -21,7 +21,7 @@
 #ifndef AVUTIL_QSORT_H
 #define AVUTIL_QSORT_H
 
-#include "macros.h"
+#અન્તર્ભાવ "macros.h"
 
 
 /**
@@ -30,69 +30,69 @@
  * to construct input that requires O(n^2) time but this is very unlikely to
  * happen with non constructed input.
  */
-#define AV_QSORT(p, num, type, cmp) do {\
-    void *stack[64][2];\
-    int sp= 1;\
-    stack[0][0] = p;\
-    stack[0][1] = (p)+(num)-1;\
-    while(sp){\
-        type *start= stack[--sp][0];\
-        type *end  = stack[  sp][1];\
-        while(start < end){\
-            if(start < end-1) {\
-                int checksort=0;\
-                type *right = end-2;\
-                type *left  = start+1;\
+#define AV_QSORT(p, અંક, type, cmp) કરો {\
+    શૂન્ય *ઢગલો[64][2];\
+    પૂર્ણાંક sp= 1;\
+    ઢગલો[0][0] = p;\
+    ઢગલો[0][1] = (p)+(અંક)-1;\
+    જ્યારે(sp){\
+        type *start= ઢગલો[--sp][0];\
+        type *end  = ઢગલો[  sp][1];\
+        જ્યારે(start < end){\
+            જો(start < end-1) {\
+                પૂર્ણાંક checksort=0;\
+                type *જમણું = end-2;\
+                type *ડાબું  = start+1;\
                 type *mid = start + ((end-start)>>1);\
-                if(cmp(start, end) > 0) {\
-                    if(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else                    FFSWAP(type, *start, *end);\
-                }else{\
-                    if(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else checksort= 1;\
+                જો(cmp(start, end) > 0) {\
+                    જો(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
+                    નહીંતર                    FFSWAP(type, *start, *end);\
+                }નહીંતર{\
+                    જો(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
+                    નહીંતર checksort= 1;\
                 }\
-                if(cmp(mid, end) > 0){ \
+                જો(cmp(mid, end) > 0){ \
                     FFSWAP(type, *mid, *end);\
                     checksort=0;\
                 }\
-                if(start == end-2) break;\
+                જો(start == end-2) તોડો;\
                 FFSWAP(type, end[-1], *mid);\
-                while(left <= right){\
-                    while(left<=right && cmp(left, end-1) < 0)\
-                        left++;\
-                    while(left<=right && cmp(right, end-1) > 0)\
-                        right--;\
-                    if(left <= right){\
-                        FFSWAP(type, *left, *right);\
-                        left++;\
-                        right--;\
+                જ્યારે(ડાબું <= જમણું){\
+                    જ્યારે(ડાબું<=જમણું && cmp(ડાબું, end-1) < 0)\
+                        ડાબું++;\
+                    જ્યારે(ડાબું<=જમણું && cmp(જમણું, end-1) > 0)\
+                        જમણું--;\
+                    જો(ડાબું <= જમણું){\
+                        FFSWAP(type, *ડાબું, *જમણું);\
+                        ડાબું++;\
+                        જમણું--;\
                     }\
                 }\
-                FFSWAP(type, end[-1], *left);\
-                if(checksort && (mid == left-1 || mid == left)){\
+                FFSWAP(type, end[-1], *ડાબું);\
+                જો(checksort && (mid == ડાબું-1 || mid == ડાબું)){\
                     mid= start;\
-                    while(mid<end && cmp(mid, mid+1) <= 0)\
+                    જ્યારે(mid<end && cmp(mid, mid+1) <= 0)\
                         mid++;\
-                    if(mid==end)\
-                        break;\
+                    જો(mid==end)\
+                        તોડો;\
                 }\
-                if(end-left < left-start){\
-                    stack[sp  ][0]= start;\
-                    stack[sp++][1]= right;\
-                    start = left+1;\
-                }else{\
-                    stack[sp  ][0]= left+1;\
-                    stack[sp++][1]= end;\
-                    end = right;\
+                જો(end-ડાબું < ડાબું-start){\
+                    ઢગલો[sp  ][0]= start;\
+                    ઢગલો[sp++][1]= જમણું;\
+                    start = ડાબું+1;\
+                }નહીંતર{\
+                    ઢગલો[sp  ][0]= ડાબું+1;\
+                    ઢગલો[sp++][1]= end;\
+                    end = જમણું;\
                 }\
-            }else{\
-                if(cmp(start, end) > 0)\
+            }નહીંતર{\
+                જો(cmp(start, end) > 0)\
                     FFSWAP(type, *start, *end);\
-                break;\
+                તોડો;\
             }\
         }\
     }\
-} while (0)
+} જ્યારે (0)
 
 /**
  * Merge sort, this sort requires a temporary buffer and is stable, its worst
@@ -100,23 +100,23 @@
  * @param p     must be a lvalue pointer, this function may exchange it with tmp
  * @param tmp   must be a lvalue pointer, this function may exchange it with p
  */
-#define AV_MSORT(p, tmp, num, type, cmp) do {\
+#define AV_MSORT(p, tmp, અંક, type, cmp) કરો {\
     unsigned i, j, step;\
-    for(step=1; step<(num); step+=step){\
-        for(i=0; i<(num); i+=2*step){\
+    માટે(step=1; step<(અંક); step+=step){\
+        માટે(i=0; i<(અંક); i+=2*step){\
             unsigned a[2] = {i, i+step};\
-            unsigned end = FFMIN(i+2*step, (num));\
-            for(j=i; a[0]<i+step && a[1]<end; j++){\
-                int idx= cmp(p+a[0], p+a[1]) > 0;\
+            unsigned end = FFMIN(i+2*step, (અંક));\
+            માટે(j=i; a[0]<i+step && a[1]<end; j++){\
+                પૂર્ણાંક idx= cmp(p+a[0], p+a[1]) > 0;\
                 tmp[j] = p[ a[idx]++ ];\
             }\
-            if(a[0]>=i+step) a[0] = a[1];\
-            for(; j<end; j++){\
+            જો(a[0]>=i+step) a[0] = a[1];\
+            માટે(; j<end; j++){\
                 tmp[j] = p[ a[0]++ ];\
             }\
         }\
         FFSWAP(type*, p, tmp);\
     }\
-} while (0)
+} જ્યારે (0)
 
 #endif /* AVUTIL_QSORT_H */

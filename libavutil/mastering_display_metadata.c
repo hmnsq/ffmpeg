@@ -18,17 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
+#અન્તર્ભાવ <stddef.h>
+#અન્તર્ભાવ <stdint.h>
+#અન્તર્ભાવ <string.h>
 
-#include "mastering_display_metadata.h"
-#include "mem.h"
+#અન્તર્ભાવ "mastering_display_metadata.h"
+#અન્તર્ભાવ "mem.h"
 
-static void get_defaults(AVMasteringDisplayMetadata *mastering)
+સ્થિર શૂન્ય get_defaults(AVMasteringDisplayMetadata *mastering)
 {
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 2; j++)
+    માટે (પૂર્ણાંક i = 0; i < 3; i++)
+        માટે (પૂર્ણાંક j = 0; j < 2; j++)
             mastering->display_primaries[i][j] = (AVRational) { 0, 1 };
     mastering->white_point[0] =
     mastering->white_point[1] =
@@ -36,59 +36,59 @@ static void get_defaults(AVMasteringDisplayMetadata *mastering)
     mastering->max_luminance  = (AVRational) { 0, 1 };
 }
 
-AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(void)
+AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(શૂન્ય)
 {
-    return av_mastering_display_metadata_alloc_size(NULL);
+    પાછા av_mastering_display_metadata_alloc_size(ખાલી);
 }
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc_size(size_t *size)
 {
-    AVMasteringDisplayMetadata *mastering = av_mallocz(sizeof(AVMasteringDisplayMetadata));
+    AVMasteringDisplayMetadata *mastering = av_mallocz(કદ(AVMasteringDisplayMetadata));
 
-    if (size)
-        *size = mastering ? sizeof(*mastering) : 0;
+    જો (size)
+        *size = mastering ? કદ(*mastering) : 0;
 
-    if (!mastering)
-        return NULL;
+    જો (!mastering)
+        પાછા ખાલી;
 
     get_defaults(mastering);
 
-    return mastering;
+    પાછા mastering;
 }
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_MASTERING_DISPLAY_METADATA,
-                                                        sizeof(AVMasteringDisplayMetadata));
-    if (!side_data)
-        return NULL;
+                                                        કદ(AVMasteringDisplayMetadata));
+    જો (!side_data)
+        પાછા ખાલી;
 
-    memset(side_data->data, 0, sizeof(AVMasteringDisplayMetadata));
+    memset(side_data->data, 0, કદ(AVMasteringDisplayMetadata));
     get_defaults((AVMasteringDisplayMetadata *)side_data->data);
 
-    return (AVMasteringDisplayMetadata *)side_data->data;
+    પાછા (AVMasteringDisplayMetadata *)side_data->data;
 }
 
 AVContentLightMetadata *av_content_light_metadata_alloc(size_t *size)
 {
-    AVContentLightMetadata *metadata = av_mallocz(sizeof(AVContentLightMetadata));
+    AVContentLightMetadata *metadata = av_mallocz(કદ(AVContentLightMetadata));
 
-    if (size)
-        *size = metadata ? sizeof(*metadata) : 0;
+    જો (size)
+        *size = metadata ? કદ(*metadata) : 0;
 
-    return metadata;
+    પાછા metadata;
 }
 
 AVContentLightMetadata *av_content_light_metadata_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                                                        sizeof(AVContentLightMetadata));
-    if (!side_data)
-        return NULL;
+                                                        કદ(AVContentLightMetadata));
+    જો (!side_data)
+        પાછા ખાલી;
 
-    memset(side_data->data, 0, sizeof(AVContentLightMetadata));
+    memset(side_data->data, 0, કદ(AVContentLightMetadata));
 
-    return (AVContentLightMetadata *)side_data->data;
+    પાછા (AVContentLightMetadata *)side_data->data;
 }

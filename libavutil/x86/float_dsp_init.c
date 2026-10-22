@@ -16,73 +16,73 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
-#include "cpu.h"
+#અન્તર્ભાવ "libavutil/attributes.h"
+#અન્તર્ભાવ "libavutil/cpu.h"
+#અન્તર્ભાવ "libavutil/float_dsp.h"
+#અન્તર્ભાવ "cpu.h"
 
-void ff_vector_fmul_sse(float *dst, const float *src0, const float *src1,
-                        int len);
-void ff_vector_fmul_avx(float *dst, const float *src0, const float *src1,
-                        int len);
+શૂન્ય ff_vector_fmul_sse(દશાંશ *dst, અચલ દશાંશ *src0, અચલ દશાંશ *src1,
+                        પૂર્ણાંક len);
+શૂન્ય ff_vector_fmul_avx(દશાંશ *dst, અચલ દશાંશ *src0, અચલ દશાંશ *src1,
+                        પૂર્ણાંક len);
 
-void ff_vector_dmul_sse2(double *dst, const double *src0, const double *src1,
-                         int len);
-void ff_vector_dmul_avx(double *dst, const double *src0, const double *src1,
-                        int len);
+શૂન્ય ff_vector_dmul_sse2(દ્વિગુણ *dst, અચલ દ્વિગુણ *src0, અચલ દ્વિગુણ *src1,
+                         પૂર્ણાંક len);
+શૂન્ય ff_vector_dmul_avx(દ્વિગુણ *dst, અચલ દ્વિગુણ *src0, અચલ દ્વિગુણ *src1,
+                        પૂર્ણાંક len);
 
-void ff_vector_fmac_scalar_sse(float *dst, const float *src, float mul,
-                               int len);
-void ff_vector_fmac_scalar_avx(float *dst, const float *src, float mul,
-                               int len);
-void ff_vector_fmac_scalar_fma3(float *dst, const float *src, float mul,
-                                int len);
+શૂન્ય ff_vector_fmac_scalar_sse(દશાંશ *dst, અચલ દશાંશ *src, દશાંશ mul,
+                               પૂર્ણાંક len);
+શૂન્ય ff_vector_fmac_scalar_avx(દશાંશ *dst, અચલ દશાંશ *src, દશાંશ mul,
+                               પૂર્ણાંક len);
+શૂન્ય ff_vector_fmac_scalar_fma3(દશાંશ *dst, અચલ દશાંશ *src, દશાંશ mul,
+                                પૂર્ણાંક len);
 
-void ff_vector_fmul_scalar_sse(float *dst, const float *src, float mul,
-                               int len);
+શૂન્ય ff_vector_fmul_scalar_sse(દશાંશ *dst, અચલ દશાંશ *src, દશાંશ mul,
+                               પૂર્ણાંક len);
 
-void ff_vector_dmac_scalar_sse2(double *dst, const double *src, double mul,
-                                int len);
-void ff_vector_dmac_scalar_avx(double *dst, const double *src, double mul,
-                               int len);
-void ff_vector_dmac_scalar_fma3(double *dst, const double *src, double mul,
-                                int len);
+શૂન્ય ff_vector_dmac_scalar_sse2(દ્વિગુણ *dst, અચલ દ્વિગુણ *src, દ્વિગુણ mul,
+                                પૂર્ણાંક len);
+શૂન્ય ff_vector_dmac_scalar_avx(દ્વિગુણ *dst, અચલ દ્વિગુણ *src, દ્વિગુણ mul,
+                               પૂર્ણાંક len);
+શૂન્ય ff_vector_dmac_scalar_fma3(દ્વિગુણ *dst, અચલ દ્વિગુણ *src, દ્વિગુણ mul,
+                                પૂર્ણાંક len);
 
-void ff_vector_dmul_scalar_sse2(double *dst, const double *src,
-                                double mul, int len);
-void ff_vector_dmul_scalar_avx(double *dst, const double *src,
-                               double mul, int len);
+શૂન્ય ff_vector_dmul_scalar_sse2(દ્વિગુણ *dst, અચલ દ્વિગુણ *src,
+                                દ્વિગુણ mul, પૂર્ણાંક len);
+શૂન્ય ff_vector_dmul_scalar_avx(દ્વિગુણ *dst, અચલ દ્વિગુણ *src,
+                               દ્વિગુણ mul, પૂર્ણાંક len);
 
-void ff_vector_fmul_window_sse(float *dst, const float *src0,
-                               const float *src1, const float *win, int len);
+શૂન્ય ff_vector_fmul_window_sse(દશાંશ *dst, અચલ દશાંશ *src0,
+                               અચલ દશાંશ *src1, અચલ દશાંશ *win, પૂર્ણાંક len);
 
-void ff_vector_fmul_add_sse(float *dst, const float *src0, const float *src1,
-                            const float *src2, int len);
-void ff_vector_fmul_add_avx(float *dst, const float *src0, const float *src1,
-                            const float *src2, int len);
-void ff_vector_fmul_add_fma3(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+શૂન્ય ff_vector_fmul_add_sse(દશાંશ *dst, અચલ દશાંશ *src0, અચલ દશાંશ *src1,
+                            અચલ દશાંશ *src2, પૂર્ણાંક len);
+શૂન્ય ff_vector_fmul_add_avx(દશાંશ *dst, અચલ દશાંશ *src0, અચલ દશાંશ *src1,
+                            અચલ દશાંશ *src2, પૂર્ણાંક len);
+શૂન્ય ff_vector_fmul_add_fma3(દશાંશ *dst, અચલ દશાંશ *src0, અચલ દશાંશ *src1,
+                             અચલ દશાંશ *src2, પૂર્ણાંક len);
 
-void ff_vector_fmul_reverse_sse(float *dst, const float *src0,
-                                const float *src1, int len);
-void ff_vector_fmul_reverse_avx(float *dst, const float *src0,
-                                const float *src1, int len);
-void ff_vector_fmul_reverse_avx2(float *dst, const float *src0,
-                                 const float *src1, int len);
+શૂન્ય ff_vector_fmul_reverse_sse(દશાંશ *dst, અચલ દશાંશ *src0,
+                                અચલ દશાંશ *src1, પૂર્ણાંક len);
+શૂન્ય ff_vector_fmul_reverse_avx(દશાંશ *dst, અચલ દશાંશ *src0,
+                                અચલ દશાંશ *src1, પૂર્ણાંક len);
+શૂન્ય ff_vector_fmul_reverse_avx2(દશાંશ *dst, અચલ દશાંશ *src0,
+                                 અચલ દશાંશ *src1, પૂર્ણાંક len);
 
-float ff_scalarproduct_float_sse(const float *v1, const float *v2, int order);
-float ff_scalarproduct_float_fma3(const float *v1, const float *v2, int order);
+દશાંશ ff_scalarproduct_float_sse(અચલ દશાંશ *v1, અચલ દશાંશ *v2, પૂર્ણાંક order);
+દશાંશ ff_scalarproduct_float_fma3(અચલ દશાંશ *v1, અચલ દશાંશ *v2, પૂર્ણાંક order);
 
-double ff_scalarproduct_double_sse2(const double *v1, const double *v2, size_t order);
-double ff_scalarproduct_double_avx(const double *v1, const double *v2, size_t order);
+દ્વિગુણ ff_scalarproduct_double_sse2(અચલ દ્વિગુણ *v1, અચલ દ્વિગુણ *v2, size_t order);
+દ્વિગુણ ff_scalarproduct_double_avx(અચલ દ્વિગુણ *v1, અચલ દ્વિગુણ *v2, size_t order);
 
-void ff_butterflies_float_sse(float *restrict src0, float *restrict src1, int len);
+શૂન્ય ff_butterflies_float_sse(દશાંશ *restrict src0, દશાંશ *restrict src1, પૂર્ણાંક len);
 
-av_cold void ff_float_dsp_init_x86(AVFloatDSPContext *fdsp)
+av_cold શૂન્ય ff_float_dsp_init_x86(AVFloatDSPContext *fdsp)
 {
-    int cpu_flags = av_get_cpu_flags();
+    પૂર્ણાંક cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_SSE(cpu_flags)) {
+    જો (EXTERNAL_SSE(cpu_flags)) {
         fdsp->vector_fmul = ff_vector_fmul_sse;
         fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_sse;
         fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_sse;
@@ -92,13 +92,13 @@ av_cold void ff_float_dsp_init_x86(AVFloatDSPContext *fdsp)
         fdsp->scalarproduct_float = ff_scalarproduct_float_sse;
         fdsp->butterflies_float   = ff_butterflies_float_sse;
     }
-    if (EXTERNAL_SSE2(cpu_flags)) {
+    જો (EXTERNAL_SSE2(cpu_flags)) {
         fdsp->vector_dmul = ff_vector_dmul_sse2;
         fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_sse2;
         fdsp->vector_dmul_scalar = ff_vector_dmul_scalar_sse2;
         fdsp->scalarproduct_double = ff_scalarproduct_double_sse2;
     }
-    if (EXTERNAL_AVX_FAST(cpu_flags)) {
+    જો (EXTERNAL_AVX_FAST(cpu_flags)) {
         fdsp->vector_fmul = ff_vector_fmul_avx;
         fdsp->vector_dmul = ff_vector_dmul_avx;
         fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_avx;
@@ -108,10 +108,10 @@ av_cold void ff_float_dsp_init_x86(AVFloatDSPContext *fdsp)
         fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_avx;
         fdsp->scalarproduct_double = ff_scalarproduct_double_avx;
     }
-    if (EXTERNAL_AVX2_FAST(cpu_flags)) {
+    જો (EXTERNAL_AVX2_FAST(cpu_flags)) {
         fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_avx2;
     }
-    if (EXTERNAL_FMA3_FAST(cpu_flags)) {
+    જો (EXTERNAL_FMA3_FAST(cpu_flags)) {
         fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_fma3;
         fdsp->vector_fmul_add    = ff_vector_fmul_add_fma3;
         fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_fma3;

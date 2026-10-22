@@ -25,64 +25,64 @@
  * linear least squares model
  */
 
-#include <math.h>
-#include <string.h>
+#અન્તર્ભાવ <math.h>
+#અન્તર્ભાવ <string.h>
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "lls.h"
+#અન્તર્ભાવ "config.h"
+#અન્તર્ભાવ "attributes.h"
+#અન્તર્ભાવ "float_dsp.h"
+#અન્તર્ભાવ "lls.h"
 
-static void update_lls(LLSModel *m, const double *var)
+સ્થિર શૂન્ય update_lls(LLSModel *m, અચલ દ્વિગુણ *var)
 {
-    int i, j;
+    પૂર્ણાંક i, j;
 
-    for (i = 0; i <= m->indep_count; i++) {
-        for (j = i; j <= m->indep_count; j++) {
+    માટે (i = 0; i <= m->indep_ગણતરી; i++) {
+        માટે (j = i; j <= m->indep_ગણતરી; j++) {
             m->covariance[i][j] += var[i] * var[j];
         }
     }
 }
 
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
+શૂન્ય avpriv_solve_lls(LLSModel *m, દ્વિગુણ threshold, unsigned short min_order)
 {
-    int i, j, k;
-    double (*factor)[MAX_VARS_ALIGN] = (void *) &m->covariance[1][0];
-    double (*covar) [MAX_VARS_ALIGN] = (void *) &m->covariance[1][1];
-    double *covar_y                = m->covariance[0];
-    int count                      = m->indep_count;
+    પૂર્ણાંક i, j, k;
+    દ્વિગુણ (*factor)[MAX_VARS_ALIGN] = (શૂન્ય *) &m->covariance[1][0];
+    દ્વિગુણ (*covar) [MAX_VARS_ALIGN] = (શૂન્ય *) &m->covariance[1][1];
+    દ્વિગુણ *covar_y                = m->covariance[0];
+    પૂર્ણાંક ગણતરી                      = m->indep_ગણતરી;
 
-    for (i = 0; i < count; i++) {
-        for (j = i; j < count; j++) {
-            double sum = covar[i][j];
+    માટે (i = 0; i < ગણતરી; i++) {
+        માટે (j = i; j < ગણતરી; j++) {
+            દ્વિગુણ sum = covar[i][j];
 
-            for (k = 0; k <= i-1; k++)
+            માટે (k = 0; k <= i-1; k++)
                 sum -= factor[i][k] * factor[j][k];
 
-            if (i == j) {
-                if (sum < threshold)
+            જો (i == j) {
+                જો (sum < threshold)
                     sum = 1.0;
                 factor[i][i] = sqrt(sum);
-            } else {
+            } નહીંતર {
                 factor[j][i] = sum / factor[i][i];
             }
         }
     }
 
-    for (i = 0; i < count; i++) {
-        double sum = covar_y[i + 1];
+    માટે (i = 0; i < ગણતરી; i++) {
+        દ્વિગુણ sum = covar_y[i + 1];
 
-        for (k = 0; k <= i-1; k++)
+        માટે (k = 0; k <= i-1; k++)
             sum -= factor[i][k] * m->coeff[0][k];
 
         m->coeff[0][i] = sum / factor[i][i];
     }
 
-    for (j = count - 1; j >= min_order; j--) {
-        for (i = j; i >= 0; i--) {
-            double sum = m->coeff[0][i];
+    માટે (j = ગણતરી - 1; j >= min_order; j--) {
+        માટે (i = j; i >= 0; i--) {
+            દ્વિગુણ sum = m->coeff[0][i];
 
-            for (k = i + 1; k <= j; k++)
+            માટે (k = i + 1; k <= j; k++)
                 sum -= factor[k][i] * m->coeff[j][k];
 
             m->coeff[j][i] = sum / factor[i][i];
@@ -90,10 +90,10 @@ void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
 
         m->variance[j] = covar_y[0];
 
-        for (i = 0; i <= j; i++) {
-            double sum = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
+        માટે (i = 0; i <= j; i++) {
+            દ્વિગુણ sum = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
 
-            for (k = 0; k < i; k++)
+            માટે (k = 0; k < i; k++)
                 sum += 2 * m->coeff[j][k] * covar[k][i];
 
             m->variance[j] += m->coeff[j][i] * sum;
@@ -101,20 +101,20 @@ void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
     }
 }
 
-static double evaluate_lls(LLSModel *m, const double *param, int order)
+સ્થિર દ્વિગુણ evaluate_lls(LLSModel *m, અચલ દ્વિગુણ *param, પૂર્ણાંક order)
 {
-    return ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
+    પાછા ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
 }
 
-av_cold void avpriv_init_lls(LLSModel *m, int indep_count)
+av_cold શૂન્ય avpriv_init_lls(LLSModel *m, પૂર્ણાંક indep_ગણતરી)
 {
-    memset(m, 0, sizeof(LLSModel));
-    m->indep_count = indep_count;
+    memset(m, 0, કદ(LLSModel));
+    m->indep_ગણતરી = indep_ગણતરી;
     m->update_lls = update_lls;
     m->evaluate_lls = evaluate_lls;
-#if ARCH_RISCV
+#જો ARCH_RISCV
     ff_init_lls_riscv(m);
-#elif ARCH_X86 && HAVE_X86ASM
+#અથવાજો ARCH_X86 && HAVE_X86ASM
     ff_init_lls_x86(m);
 #endif
 }

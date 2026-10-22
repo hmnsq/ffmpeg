@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#અન્તર્ભાવ <stddef.h>
+#અન્તર્ભાવ <stdint.h>
 
-#include "buffer.h"
-#include "frame.h"
-#include "mem.h"
-#include "video_enc_params.h"
+#અન્તર્ભાવ "buffer.h"
+#અન્તર્ભાવ "frame.h"
+#અન્તર્ભાવ "mem.h"
+#અન્તર્ભાવ "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(ગણના AVVideoEncParamsType type,
+                                            unsigned પૂર્ણાંક nb_blocks, size_t *out_size)
 {
-    struct TestStruct {
+    સંરચના TestStruct {
         AVVideoEncParams   p;
         AVVideoBlockParams b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
+    અચલ size_t blocks_offset = offsetof(સંરચના TestStruct, b);
     size_t size = blocks_offset;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    જો (nb_blocks > (SIZE_MAX - size) / કદ(AVVideoBlockParams))
+        પાછા ખાલી;
+    size += કદ(AVVideoBlockParams) * nb_blocks;
 
     par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    જો (!par)
+        પાછા ખાલી;
 
     par->type          = type;
     par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
+    par->block_size    = કદ(AVVideoBlockParams);
     par->blocks_offset = blocks_offset;
 
-    if (out_size)
+    જો (out_size)
         *out_size = size;
 
-    return par;
+    પાછા par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_data(AVFrame *frame, ગણના AVVideoEncParamsType type,
+                                     unsigned પૂર્ણાંક nb_blocks)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
     size_t size;
 
     par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    જો (!par)
+        પાછા ખાલી;
+    buf = av_buffer_create((uint8_t *)par, size, ખાલી, ખાલી, 0);
+    જો (!buf) {
         av_freep(&par);
-        return NULL;
+        પાછા ખાલી;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
+    જો (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        પાછા ખાલી;
     }
 
-    return par;
+    પાછા par;
 }

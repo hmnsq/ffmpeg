@@ -19,88 +19,88 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+#અન્તર્ભાવ <limits.h>
+#અન્તર્ભાવ <stdarg.h>
+#અન્તર્ભાવ <stdint.h>
+#અન્તર્ભાવ <stdio.h>
+#અન્તર્ભાવ <string.h>
 
-#include "config.h"
-#include "mem.h"
-#include "avassert.h"
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
+#અન્તર્ભાવ "config.h"
+#અન્તર્ભાવ "mem.h"
+#અન્તર્ભાવ "avassert.h"
+#અન્તર્ભાવ "avstring.h"
+#અન્તર્ભાવ "bprint.h"
+#અન્તર્ભાવ "error.h"
+#અન્તર્ભાવ "macros.h"
 
-int av_strstart(const char *str, const char *pfx, const char **ptr)
+પૂર્ણાંક av_strstart(અચલ અક્ષર *str, અચલ અક્ષર *pfx, અચલ અક્ષર **ptr)
 {
-    while (*pfx && *pfx == *str) {
+    જ્યારે (*pfx && *pfx == *str) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    જો (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    પાછા !*pfx;
 }
 
-int av_stristart(const char *str, const char *pfx, const char **ptr)
+પૂર્ણાંક av_stristart(અચલ અક્ષર *str, અચલ અક્ષર *pfx, અચલ અક્ષર **ptr)
 {
-    while (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
+    જ્યારે (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    જો (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    પાછા !*pfx;
 }
 
-char *av_stristr(const char *s1, const char *s2)
+અક્ષર *av_stristr(અચલ અક્ષર *s1, અચલ અક્ષર *s2)
 {
-    if (!*s2)
-        return (char*)(intptr_t)s1;
+    જો (!*s2)
+        પાછા (અક્ષર*)(intptr_t)s1;
 
-    do
-        if (av_stristart(s1, s2, NULL))
-            return (char*)(intptr_t)s1;
-    while (*s1++);
+    કરો
+        જો (av_stristart(s1, s2, ખાલી))
+            પાછા (અક્ષર*)(intptr_t)s1;
+    જ્યારે (*s1++);
 
-    return NULL;
+    પાછા ખાલી;
 }
 
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length)
+અક્ષર *av_strnstr(અચલ અક્ષર *haystack, અચલ અક્ષર *needle, size_t hay_length)
 {
     size_t needle_len = strlen(needle);
-    if (!needle_len)
-        return (char*)haystack;
-    while (hay_length >= needle_len) {
+    જો (!needle_len)
+        પાછા (અક્ષર*)haystack;
+    જ્યારે (hay_length >= needle_len) {
         hay_length--;
-        if (!memcmp(haystack, needle, needle_len))
-            return (char*)haystack;
+        જો (!memcmp(haystack, needle, needle_len))
+            પાછા (અક્ષર*)haystack;
         haystack++;
     }
-    return NULL;
+    પાછા ખાલી;
 }
 
-size_t av_strlcpy(char *dst, const char *src, size_t size)
+size_t av_strlcpy(અક્ષર *dst, અચલ અક્ષર *src, size_t size)
 {
     size_t len = 0;
-    while (++len < size && *src)
+    જ્યારે (++len < size && *src)
         *dst++ = *src++;
-    if (len <= size)
+    જો (len <= size)
         *dst = 0;
-    return len + strlen(src) - 1;
+    પાછા len + strlen(src) - 1;
 }
 
-size_t av_strlcat(char *dst, const char *src, size_t size)
+size_t av_strlcat(અક્ષર *dst, અચલ અક્ષર *src, size_t size)
 {
     size_t len = strlen(dst);
-    if (size <= len + 1)
-        return len + strlen(src);
-    return len + av_strlcpy(dst + len, src, size - len);
+    જો (size <= len + 1)
+        પાછા len + strlen(src);
+    પાછા len + av_strlcpy(dst + len, src, size - len);
 }
 
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
+size_t av_strlcatf(અક્ષર *dst, size_t size, અચલ અક્ષર *fmt, ...)
 {
     size_t len = strlen(dst);
     va_list vl;
@@ -109,355 +109,355 @@ size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
     len += vsnprintf(dst + len, size > len ? size - len : 0, fmt, vl);
     va_end(vl);
 
-    return len;
+    પાછા len;
 }
 
-char *av_asprintf(const char *fmt, ...)
+અક્ષર *av_asprintf(અચલ અક્ષર *fmt, ...)
 {
-    char *p = NULL;
+    અક્ષર *p = ખાલી;
     va_list va;
-    int len;
+    પૂર્ણાંક len;
 
     va_start(va, fmt);
-    len = vsnprintf(NULL, 0, fmt, va);
+    len = vsnprintf(ખાલી, 0, fmt, va);
     va_end(va);
-    if (len < 0)
-        goto end;
+    જો (len < 0)
+        જાઓ end;
 
     p = av_malloc(len + 1);
-    if (!p)
-        goto end;
+    જો (!p)
+        જાઓ end;
 
     va_start(va, fmt);
     len = vsnprintf(p, len + 1, fmt, va);
     va_end(va);
-    if (len < 0)
+    જો (len < 0)
         av_freep(&p);
 
 end:
-    return p;
+    પાછા p;
 }
 
 #define WHITESPACES " \n\t\r"
 
-char *av_get_token(const char **buf, const char *term)
+અક્ષર *av_get_token(અચલ અક્ષર **buf, અચલ અક્ષર *term)
 {
-    char *out     = av_realloc(NULL, strlen(*buf) + 1);
-    char *ret     = out, *end = out;
-    const char *p = *buf;
-    if (!out)
-        return NULL;
+    અક્ષર *out     = av_realloc(ખાલી, strlen(*buf) + 1);
+    અક્ષર *ret     = out, *end = out;
+    અચલ અક્ષર *p = *buf;
+    જો (!out)
+        પાછા ખાલી;
     p += strspn(p, WHITESPACES);
 
-    while (*p && !strspn(p, term)) {
-        char c = *p++;
-        if (c == '\\' && *p) {
+    જ્યારે (*p && !strspn(p, term)) {
+        અક્ષર c = *p++;
+        જો (c == '\\' && *p) {
             *out++ = *p++;
             end    = out;
-        } else if (c == '\'') {
-            while (*p && *p != '\'')
+        } નહીંતર જો (c == '\'') {
+            જ્યારે (*p && *p != '\'')
                 *out++ = *p++;
-            if (*p) {
+            જો (*p) {
                 p++;
                 end = out;
             }
-        } else {
+        } નહીંતર {
             *out++ = c;
         }
     }
 
-    do
+    કરો
         *out-- = 0;
-    while (out >= end && strspn(out, WHITESPACES));
+    જ્યારે (out >= end && strspn(out, WHITESPACES));
 
     *buf = p;
 
-    char *small_ret = av_realloc(ret, out - ret + 2);
-    return small_ret ? small_ret : ret;
+    અક્ષર *small_ret = av_realloc(ret, out - ret + 2);
+    પાછા small_ret ? small_ret : ret;
 }
 
-char *av_strtok(char *s, const char *delim, char **saveptr)
+અક્ષર *av_strtok(અક્ષર *s, અચલ અક્ષર *delim, અક્ષર **saveptr)
 {
-    char *tok;
+    અક્ષર *tok;
 
-    if (!s && !(s = *saveptr))
-        return NULL;
+    જો (!s && !(s = *saveptr))
+        પાછા ખાલી;
 
     /* skip leading delimiters */
     s += strspn(s, delim);
 
     /* s now points to the first non delimiter char, or to the end of the string */
-    if (!*s) {
-        *saveptr = NULL;
-        return NULL;
+    જો (!*s) {
+        *saveptr = ખાલી;
+        પાછા ખાલી;
     }
     tok = s++;
 
     /* skip non delimiters */
     s += strcspn(s, delim);
-    if (*s) {
+    જો (*s) {
         *s = 0;
         *saveptr = s+1;
-    } else {
-        *saveptr = NULL;
+    } નહીંતર {
+        *saveptr = ખાલી;
     }
 
-    return tok;
+    પાછા tok;
 }
 
-int av_strcasecmp(const char *a, const char *b)
+પૂર્ણાંક av_strcasecmp(અચલ અક્ષર *a, અચલ અક્ષર *b)
 {
     uint8_t c1, c2;
-    do {
+    કરો {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (c1 && c1 == c2);
-    return c1 - c2;
+    } જ્યારે (c1 && c1 == c2);
+    પાછા c1 - c2;
 }
 
-int av_strncasecmp(const char *a, const char *b, size_t n)
+પૂર્ણાંક av_strncasecmp(અચલ અક્ષર *a, અચલ અક્ષર *b, size_t n)
 {
     uint8_t c1, c2;
-    if (n <= 0)
-        return 0;
-    do {
+    જો (n <= 0)
+        પાછા 0;
+    કરો {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (--n && c1 && c1 == c2);
-    return c1 - c2;
+    } જ્યારે (--n && c1 && c1 == c2);
+    પાછા c1 - c2;
 }
 
-char *av_strireplace(const char *str, const char *from, const char *to)
+અક્ષર *av_strireplace(અચલ અક્ષર *str, અચલ અક્ષર *from, અચલ અક્ષર *to)
 {
-    char *ret = NULL;
-    const char *pstr2, *pstr = str;
+    અક્ષર *ret = ખાલી;
+    અચલ અક્ષર *pstr2, *pstr = str;
     size_t tolen = strlen(to), fromlen = strlen(from);
     AVBPrint pbuf;
 
-    if (!fromlen)
-        return av_strdup(str);
+    જો (!fromlen)
+        પાછા av_strdup(str);
 
     av_bprint_init(&pbuf, 1, AV_BPRINT_SIZE_UNLIMITED);
-    while ((pstr2 = av_stristr(pstr, from))) {
+    જ્યારે ((pstr2 = av_stristr(pstr, from))) {
         av_bprint_append_data(&pbuf, pstr, pstr2 - pstr);
         pstr = pstr2 + fromlen;
         av_bprint_append_data(&pbuf, to, tolen);
     }
     av_bprint_append_data(&pbuf, pstr, strlen(pstr));
-    if (!av_bprint_is_complete(&pbuf)) {
-        av_bprint_finalize(&pbuf, NULL);
-    } else {
+    જો (!av_bprint_is_complete(&pbuf)) {
+        av_bprint_finalize(&pbuf, ખાલી);
+    } નહીંતર {
         av_bprint_finalize(&pbuf, &ret);
     }
 
-    return ret;
+    પાછા ret;
 }
 
-const char *av_basename(const char *path)
+અચલ અક્ષર *av_basename(અચલ અક્ષર *path)
 {
-    if (!path || *path == '\0')
-        return ".";
+    જો (!path || *path == '\0')
+        પાછા ".";
 
-    const char *p = strrchr(path, '/');
-#if HAVE_DOS_PATHS
-    const char *q = strrchr(path, '\\');
-    const char *d = strchr(path, ':');
+    અચલ અક્ષર *p = strrchr(path, '/');
+#જો HAVE_DOS_PATHS
+    અચલ અક્ષર *q = strrchr(path, '\\');
+    અચલ અક્ષર *d = strchr(path, ':');
     p = FFMAX3(p, q, d);
 #endif
 
-    if (!p)
-        return path;
+    જો (!p)
+        પાછા path;
 
-    return p + 1;
+    પાછા p + 1;
 }
 
-const char *av_dirname(char *path)
+અચલ અક્ષર *av_dirname(અક્ષર *path)
 {
-    char *p = path ? strrchr(path, '/') : NULL;
+    અક્ષર *p = path ? strrchr(path, '/') : ખાલી;
 
-#if HAVE_DOS_PATHS
-    char *q = path ? strrchr(path, '\\') : NULL;
-    char *d = path ? strchr(path, ':')  : NULL;
+#જો HAVE_DOS_PATHS
+    અક્ષર *q = path ? strrchr(path, '\\') : ખાલી;
+    અક્ષર *d = path ? strchr(path, ':')  : ખાલી;
 
     d = d ? d + 1 : d;
 
     p = FFMAX3(p, q, d);
 #endif
 
-    if (!p)
-        return ".";
+    જો (!p)
+        પાછા ".";
 
     *p = '\0';
 
-    return path;
+    પાછા path;
 }
 
-char *av_append_path_component(const char *path, const char *component)
+અક્ષર *av_append_path_component(અચલ અક્ષર *path, અચલ અક્ષર *component)
 {
     size_t p_len, c_len;
-    char *fullpath;
+    અક્ષર *fullpath;
 
-    if (!path)
-        return av_strdup(component);
-    if (!component)
-        return av_strdup(path);
+    જો (!path)
+        પાછા av_strdup(component);
+    જો (!component)
+        પાછા av_strdup(path);
 
     p_len = strlen(path);
     c_len = strlen(component);
-    if (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
-        return NULL;
+    જો (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
+        પાછા ખાલી;
     fullpath = av_malloc(p_len + c_len + 2);
-    if (fullpath) {
-        if (p_len) {
+    જો (fullpath) {
+        જો (p_len) {
             av_strlcpy(fullpath, path, p_len + 1);
-            if (c_len) {
-                if (fullpath[p_len - 1] != '/' && component[0] != '/')
+            જો (c_len) {
+                જો (fullpath[p_len - 1] != '/' && component[0] != '/')
                     fullpath[p_len++] = '/';
-                else if (fullpath[p_len - 1] == '/' && component[0] == '/')
+                નહીંતર જો (fullpath[p_len - 1] == '/' && component[0] == '/')
                     p_len--;
             }
         }
         av_strlcpy(&fullpath[p_len], component, c_len + 1);
         fullpath[p_len + c_len] = 0;
     }
-    return fullpath;
+    પાછા fullpath;
 }
 
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags)
+પૂર્ણાંક av_escape(અક્ષર **dst, અચલ અક્ષર *src, અચલ અક્ષર *special_chars,
+              ગણના AVEscapeMode mode, પૂર્ણાંક flags)
 {
     AVBPrint dstbuf;
-    int ret;
+    પૂર્ણાંક ret;
 
     av_bprint_init(&dstbuf, 1, INT_MAX); /* (int)dstbuf.len must be >= 0 */
     av_bprint_escape(&dstbuf, src, special_chars, mode, flags);
 
-    if (!av_bprint_is_complete(&dstbuf)) {
-        av_bprint_finalize(&dstbuf, NULL);
-        return AVERROR(ENOMEM);
+    જો (!av_bprint_is_complete(&dstbuf)) {
+        av_bprint_finalize(&dstbuf, ખાલી);
+        પાછા AVERROR(ENOMEM);
     }
-    if ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
-        return ret;
-    return dstbuf.len;
+    જો ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
+        પાછા ret;
+    પાછા dstbuf.len;
 }
 
-int av_match_name(const char *name, const char *names)
+પૂર્ણાંક av_match_name(અચલ અક્ષર *name, અચલ અક્ષર *names)
 {
-    const char *p;
+    અચલ અક્ષર *p;
     size_t len, namelen;
 
-    if (!name || !names)
-        return 0;
+    જો (!name || !names)
+        પાછા 0;
 
     namelen = strlen(name);
-    while (*names) {
-        int negate = '-' == *names;
+    જ્યારે (*names) {
+        પૂર્ણાંક negate = '-' == *names;
         p = strchr(names, ',');
-        if (!p)
+        જો (!p)
             p = names + strlen(names);
         names += negate;
         len = FFMAX(p - names, namelen);
-        if (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
-            return !negate;
+        જો (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
+            પાછા !negate;
         names = p + (*p == ',');
     }
-    return 0;
+    પાછા 0;
 }
 
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags)
+પૂર્ણાંક av_utf8_decode(int32_t *codep, અચલ uint8_t **bufp, અચલ uint8_t *buf_end,
+                   unsigned પૂર્ણાંક flags)
 {
-    const uint8_t *p = *bufp;
-    uint32_t top;
+    અચલ uint8_t *p = *bufp;
+    uint32_t ટોચ;
     uint64_t code;
-    int ret = 0, tail_len;
+    પૂર્ણાંક ret = 0, tail_len;
     uint32_t overlong_encoding_mins[6] = {
         0x00000000, 0x00000080, 0x00000800, 0x00010000, 0x00200000, 0x04000000,
     };
 
-    if (p >= buf_end)
-        return 0;
+    જો (p >= buf_end)
+        પાછા 0;
 
     code = *p++;
 
     /* first sequence byte starts with 10, or is 1111-1110 or 1111-1111,
        which is not admitted */
-    if ((code & 0xc0) == 0x80 || code >= 0xFE) {
+    જો ((code & 0xc0) == 0x80 || code >= 0xFE) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        જાઓ end;
     }
-    top = (code & 128) >> 1;
+    ટોચ = (code & 128) >> 1;
 
     tail_len = 0;
-    while (code & top) {
-        int tmp;
+    જ્યારે (code & ટોચ) {
+        પૂર્ણાંક tmp;
         tail_len++;
-        if (p >= buf_end) {
+        જો (p >= buf_end) {
             (*bufp) ++;
-            return AVERROR(EILSEQ); /* incomplete sequence */
+            પાછા AVERROR(EILSEQ); /* incomplete sequence */
         }
 
         /* we assume the byte to be in the form 10xx-xxxx */
         tmp = *p++ - 128;   /* strip leading 1 */
-        if (tmp>>6) {
+        જો (tmp>>6) {
             (*bufp) ++;
-            return AVERROR(EILSEQ);
+            પાછા AVERROR(EILSEQ);
         }
         code = (code<<6) + tmp;
-        top <<= 5;
+        ટોચ <<= 5;
     }
-    code &= (top << 1) - 1;
+    code &= (ટોચ << 1) - 1;
 
     /* check for overlong encodings */
     av_assert0(tail_len <= 5);
-    if (code < overlong_encoding_mins[tail_len]) {
+    જો (code < overlong_encoding_mins[tail_len]) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        જાઓ end;
     }
 
-    if (code >= 1U<<31) {
+    જો (code >= 1U<<31) {
         ret = AVERROR(EILSEQ);  /* out-of-range value */
-        goto end;
+        જાઓ end;
     }
 
     *codep = code;
 
-    if (code > 0x10FFFF &&
+    જો (code > 0x10FFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES))
         ret = AVERROR(EILSEQ);
-    if (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
+    જો (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
         flags & AV_UTF8_FLAG_EXCLUDE_XML_INVALID_CONTROL_CODES)
         ret = AVERROR(EILSEQ);
-    if (code >= 0xD800 && code <= 0xDFFF &&
+    જો (code >= 0xD800 && code <= 0xDFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_SURROGATES))
         ret = AVERROR(EILSEQ);
-    if ((code == 0xFFFE || code == 0xFFFF) &&
+    જો ((code == 0xFFFE || code == 0xFFFF) &&
         !(flags & AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS))
         ret = AVERROR(EILSEQ);
 
 end:
     *bufp = p;
-    return ret;
+    પાછા ret;
 }
 
-int av_match_list(const char *name, const char *list, char separator)
+પૂર્ણાંક av_match_list(અચલ અક્ષર *name, અચલ અક્ષર *list, અક્ષર separator)
 {
-    const char *p, *q;
+    અચલ અક્ષર *p, *q;
 
-    for (p = name; p && *p; ) {
-        for (q = list; q && *q; ) {
-            int k;
-            for (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
-                if (k && (!p[k] || p[k] == separator))
-                    return 1;
+    માટે (p = name; p && *p; ) {
+        માટે (q = list; q && *q; ) {
+            પૂર્ણાંક k;
+            માટે (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
+                જો (k && (!p[k] || p[k] == separator))
+                    પાછા 1;
             q = strchr(q, separator);
-            if(q)
+            જો(q)
                 q++;
         }
         p = strchr(p, separator);
-        if (p)
+        જો (p)
             p++;
     }
 
-    return 0;
+    પાછા 0;
 }

@@ -19,7 +19,7 @@
 #ifndef AVUTIL_REFSTRUCT_H
 #define AVUTIL_REFSTRUCT_H
 
-#include <stddef.h>
+#અન્તર્ભાવ <stddef.h>
 
 /**
  * RefStruct is an API for creating reference-counted objects
@@ -55,9 +55,9 @@
  * named foo_c and foo. The foo function accepts void* as opaque and is just
  * a wrapper around the foo_c function; "_c" means "(potentially) const".
  */
-typedef union {
-    void *nc;
-    const void *c;
+પ્રકારવ્યાખ્યા સંઘ {
+    શૂન્ય *nc;
+    અચલ શૂન્ય *c;
 } AVRefStructOpaque;
 
 /**
@@ -81,8 +81,8 @@ typedef union {
  *                it must not free the object itself.
  * @return A pointer to an object of the desired size or NULL on failure.
  */
-void *av_refstruct_alloc_ext_c(size_t size, unsigned flags, AVRefStructOpaque opaque,
-                               void (*free_cb)(AVRefStructOpaque opaque, void *obj));
+શૂન્ય *av_refstruct_alloc_ext_c(size_t size, unsigned flags, AVRefStructOpaque opaque,
+                               શૂન્ય (*free_cb)(AVRefStructOpaque opaque, શૂન્ય *obj));
 
 /**
  * A wrapper around av_refstruct_alloc_ext_c() for the common case
@@ -90,21 +90,21 @@ void *av_refstruct_alloc_ext_c(size_t size, unsigned flags, AVRefStructOpaque op
  *
  * @see av_refstruct_alloc_ext_c()
  */
-static inline
-void *av_refstruct_alloc_ext(size_t size, unsigned flags, void *opaque,
-                             void (*free_cb)(AVRefStructOpaque opaque, void *obj))
+સ્થિર અંતઃરેખ
+શૂન્ય *av_refstruct_alloc_ext(size_t size, unsigned flags, શૂન્ય *opaque,
+                             શૂન્ય (*free_cb)(AVRefStructOpaque opaque, શૂન્ય *obj))
 {
-    return av_refstruct_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
+    પાછા av_refstruct_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
                                     free_cb);
 }
 
 /**
  * Equivalent to av_refstruct_alloc_ext(size, 0, NULL, NULL)
  */
-static inline
-void *av_refstruct_allocz(size_t size)
+સ્થિર અંતઃરેખ
+શૂન્ય *av_refstruct_allocz(size_t size)
 {
-    return av_refstruct_alloc_ext(size, 0, NULL, NULL);
+    પાછા av_refstruct_alloc_ext(size, 0, ખાલી, ખાલી);
 }
 
 /**
@@ -116,7 +116,7 @@ void *av_refstruct_allocz(size_t size)
  * @param objp Pointer to a pointer that is either NULL or points to an object
  *             managed via this API. `*objp` is set to NULL on return.
  */
-void av_refstruct_unref(void *objp);
+શૂન્ય av_refstruct_unref(શૂન્ય *objp);
 
 /**
  * Create a new reference to an object managed via this API,
@@ -124,13 +124,13 @@ void av_refstruct_unref(void *objp);
  * and return obj.
  * @return a pointer equal to obj.
  */
-void *av_refstruct_ref(void *obj);
+શૂન્ય *av_refstruct_ref(શૂન્ય *obj);
 
 /**
  * Analog of av_refstruct_ref(), but for constant objects.
  * @see av_refstruct_ref()
  */
-const void *av_refstruct_ref_c(const void *obj);
+અચલ શૂન્ય *av_refstruct_ref_c(અચલ શૂન્ય *obj);
 
 /**
  * Ensure `*dstp` refers to the same object as src.
@@ -144,7 +144,7 @@ const void *av_refstruct_ref_c(const void *obj);
  *             managed via this API.
  * @param src  A pointer to an object managed via this API or NULL.
  */
-void av_refstruct_replace(void *dstp, const void *src);
+શૂન્ય av_refstruct_replace(શૂન્ય *dstp, અચલ શૂન્ય *src);
 
 /**
  * Check whether the reference count of an object managed
@@ -153,7 +153,7 @@ void av_refstruct_replace(void *dstp, const void *src);
  * @param obj A pointer to an object managed via this API.
  * @return 1 if the reference count of obj is 1; 0 otherwise.
  */
-int av_refstruct_exclusive(const void *obj);
+પૂર્ણાંક av_refstruct_exclusive(અચલ શૂન્ય *obj);
 
 /**
  * AVRefStructPool is an API for a thread-safe pool of objects managed
@@ -186,7 +186,7 @@ int av_refstruct_exclusive(const void *obj);
  * directly. It is allocated with the allocators below and freed with
  * av_refstruct_pool_uninit().
  */
-typedef struct AVRefStructPool AVRefStructPool;
+પ્રકારવ્યાખ્યા સંરચના AVRefStructPool AVRefStructPool;
 
 /**
  * If this flag is not set, every object in the pool will be zeroed before
@@ -243,10 +243,10 @@ AVRefStructPool *av_refstruct_pool_alloc(size_t size, unsigned flags);
  */
 AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
                                                AVRefStructOpaque opaque,
-                                               int  (*init_cb)(AVRefStructOpaque opaque, void *obj),
-                                               void (*reset_cb)(AVRefStructOpaque opaque, void *obj),
-                                               void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj),
-                                               void (*free_cb)(AVRefStructOpaque opaque));
+                                               પૂર્ણાંક  (*init_cb)(AVRefStructOpaque opaque, શૂન્ય *obj),
+                                               શૂન્ય (*reset_cb)(AVRefStructOpaque opaque, શૂન્ય *obj),
+                                               શૂન્ય (*free_entry_cb)(AVRefStructOpaque opaque, શૂન્ય *obj),
+                                               શૂન્ય (*free_cb)(AVRefStructOpaque opaque));
 
 /**
  * A wrapper around av_refstruct_pool_alloc_ext_c() for the common case
@@ -254,15 +254,15 @@ AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
  *
  * @see av_refstruct_pool_alloc_ext_c()
  */
-static inline
+સ્થિર અંતઃરેખ
 AVRefStructPool *av_refstruct_pool_alloc_ext(size_t size, unsigned flags,
-                                             void *opaque,
-                                             int  (*init_cb)(AVRefStructOpaque opaque, void *obj),
-                                             void (*reset_cb)(AVRefStructOpaque opaque, void *obj),
-                                             void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj),
-                                             void (*free_cb)(AVRefStructOpaque opaque))
+                                             શૂન્ય *opaque,
+                                             પૂર્ણાંક  (*init_cb)(AVRefStructOpaque opaque, શૂન્ય *obj),
+                                             શૂન્ય (*reset_cb)(AVRefStructOpaque opaque, શૂન્ય *obj),
+                                             શૂન્ય (*free_entry_cb)(AVRefStructOpaque opaque, શૂન્ય *obj),
+                                             શૂન્ય (*free_cb)(AVRefStructOpaque opaque))
 {
-    return av_refstruct_pool_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
+    પાછા av_refstruct_pool_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
                                          init_cb, reset_cb, free_entry_cb, free_cb);
 }
 
@@ -276,7 +276,7 @@ AVRefStructPool *av_refstruct_pool_alloc_ext(size_t size, unsigned flags,
  * @param pool the pool from which to get the object
  * @return a reference to the object on success, NULL on error.
  */
-void *av_refstruct_pool_get(AVRefStructPool *pool);
+શૂન્ય *av_refstruct_pool_get(AVRefStructPool *pool);
 
 /**
  * Mark the pool as being available for freeing. It will actually be freed
@@ -289,7 +289,7 @@ void *av_refstruct_pool_get(AVRefStructPool *pool);
  * @param poolp pointer to a pointer to either NULL or a pool to be freed.
  *              `*poolp` will be set to NULL.
  */
-static inline void av_refstruct_pool_uninit(AVRefStructPool **poolp)
+સ્થિર અંતઃરેખ શૂન્ય av_refstruct_pool_uninit(AVRefStructPool **poolp)
 {
     av_refstruct_unref(poolp);
 }

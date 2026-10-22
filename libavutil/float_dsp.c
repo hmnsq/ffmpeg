@@ -19,124 +19,124 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "mem.h"
+#અન્તર્ભાવ "config.h"
+#અન્તર્ભાવ "attributes.h"
+#અન્તર્ભાવ "float_dsp.h"
+#અન્તર્ભાવ "mem.h"
 
-static void vector_fmul_c(float *dst, const float *src0, const float *src1,
-                          int len)
+સ્થિર શૂન્ય vector_fmul_c(દશાંશ *dst, અચલ દશાંશ *src0, અચલ દશાંશ *src1,
+                          પૂર્ણાંક len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    પૂર્ણાંક i;
+    માટે (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_dmul_c(double *dst, const double *src0, const double *src1,
-                          int len)
+સ્થિર શૂન્ય vector_dmul_c(દ્વિગુણ *dst, અચલ દ્વિગુણ *src0, અચલ દ્વિગુણ *src1,
+                          પૂર્ણાંક len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    પૂર્ણાંક i;
+    માટે (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_fmac_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+સ્થિર શૂન્ય vector_fmac_scalar_c(દશાંશ *dst, અચલ દશાંશ *src, દશાંશ mul,
+                                 પૂર્ણાંક len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    પૂર્ણાંક i;
+    માટે (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_dmac_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+સ્થિર શૂન્ય vector_dmac_scalar_c(દ્વિગુણ *dst, અચલ દ્વિગુણ *src, દ્વિગુણ mul,
+                                 પૂર્ણાંક len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    પૂર્ણાંક i;
+    માટે (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_fmul_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+સ્થિર શૂન્ય vector_fmul_scalar_c(દશાંશ *dst, અચલ દશાંશ *src, દશાંશ mul,
+                                 પૂર્ણાંક len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    પૂર્ણાંક i;
+    માટે (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_dmul_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+સ્થિર શૂન્ય vector_dmul_scalar_c(દ્વિગુણ *dst, અચલ દ્વિગુણ *src, દ્વિગુણ mul,
+                                 પૂર્ણાંક len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    પૂર્ણાંક i;
+    માટે (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_fmul_window_c(float *dst, const float *src0,
-                                 const float *src1, const float *win, int len)
+સ્થિર શૂન્ય vector_fmul_window_c(દશાંશ *dst, અચલ દશાંશ *src0,
+                                 અચલ દશાંશ *src1, અચલ દશાંશ *win, પૂર્ણાંક len)
 {
-    int i, j;
+    પૂર્ણાંક i, j;
 
     dst  += len;
     win  += len;
     src0 += len;
 
-    for (i = -len, j = len - 1; i < 0; i++, j--) {
-        float s0 = src0[i];
-        float s1 = src1[j];
-        float wi = win[i];
-        float wj = win[j];
+    માટે (i = -len, j = len - 1; i < 0; i++, j--) {
+        દશાંશ s0 = src0[i];
+        દશાંશ s1 = src1[j];
+        દશાંશ wi = win[i];
+        દશાંશ wj = win[j];
         dst[i] = s0 * wj - s1 * wi;
         dst[j] = s0 * wi + s1 * wj;
     }
 }
 
-static void vector_fmul_add_c(float *dst, const float *src0, const float *src1,
-                              const float *src2, int len){
-    int i;
+સ્થિર શૂન્ય vector_fmul_add_c(દશાંશ *dst, અચલ દશાંશ *src0, અચલ દશાંશ *src1,
+                              અચલ દશાંશ *src2, પૂર્ણાંક len){
+    પૂર્ણાંક i;
 
-    for (i = 0; i < len; i++)
+    માટે (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i] + src2[i];
 }
 
-static void vector_fmul_reverse_c(float *dst, const float *src0,
-                                  const float *src1, int len)
+સ્થિર શૂન્ય vector_fmul_reverse_c(દશાંશ *dst, અચલ દશાંશ *src0,
+                                  અચલ દશાંશ *src1, પૂર્ણાંક len)
 {
-    int i;
+    પૂર્ણાંક i;
 
     src1 += len-1;
-    for (i = 0; i < len; i++)
+    માટે (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[-i];
 }
 
-static void butterflies_float_c(float *restrict v1, float *restrict v2,
-                                int len)
+સ્થિર શૂન્ય butterflies_float_c(દશાંશ *restrict v1, દશાંશ *restrict v2,
+                                પૂર્ણાંક len)
 {
-    int i;
+    પૂર્ણાંક i;
 
-    for (i = 0; i < len; i++) {
-        float t = v1[i] - v2[i];
+    માટે (i = 0; i < len; i++) {
+        દશાંશ t = v1[i] - v2[i];
         v1[i] += v2[i];
         v2[i] = t;
     }
 }
 
-double ff_scalarproduct_double_c(const double *v1, const double *v2,
+દ્વિગુણ ff_scalarproduct_double_c(અચલ દ્વિગુણ *v1, અચલ દ્વિગુણ *v2,
                                  size_t len)
 {
-    double p = 0.0;
+    દ્વિગુણ p = 0.0;
 
-    for (size_t i = 0; i < len; i++)
+    માટે (size_t i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    પાછા p;
 }
 
-av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
+av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(પૂર્ણાંક bit_exact)
 {
-    AVFloatDSPContext *fdsp = av_mallocz(sizeof(AVFloatDSPContext));
-    if (!fdsp)
-        return NULL;
+    AVFloatDSPContext *fdsp = av_mallocz(કદ(AVFloatDSPContext));
+    જો (!fdsp)
+        પાછા ખાલી;
 
     fdsp->vector_fmul = vector_fmul_c;
     fdsp->vector_dmul = vector_dmul_c;
@@ -151,18 +151,18 @@ av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
     fdsp->scalarproduct_float = ff_scalarproduct_float_c;
     fdsp->scalarproduct_double = ff_scalarproduct_double_c;
 
-#if ARCH_AARCH64
+#જો ARCH_AARCH64
     ff_float_dsp_init_aarch64(fdsp);
-#elif ARCH_ARM
+#અથવાજો ARCH_ARM
     ff_float_dsp_init_arm(fdsp);
-#elif ARCH_PPC
+#અથવાજો ARCH_PPC
     ff_float_dsp_init_ppc(fdsp, bit_exact);
-#elif ARCH_RISCV
+#અથવાજો ARCH_RISCV
     ff_float_dsp_init_riscv(fdsp);
-#elif ARCH_X86 && HAVE_X86ASM
+#અથવાજો ARCH_X86 && HAVE_X86ASM
     ff_float_dsp_init_x86(fdsp);
-#elif ARCH_MIPS
+#અથવાજો ARCH_MIPS
     ff_float_dsp_init_mips(fdsp);
 #endif
-    return fdsp;
+    પાછા fdsp;
 }

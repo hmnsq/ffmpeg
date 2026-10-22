@@ -27,8 +27,8 @@
 #ifndef AVUTIL_SPHERICAL_H
 #define AVUTIL_SPHERICAL_H
 
-#include <stddef.h>
-#include <stdint.h>
+#અન્તર્ભાવ <stddef.h>
+#અન્તર્ભાવ <stdint.h>
 
 /**
  * @defgroup lavu_video_spherical Spherical video mapping
@@ -44,7 +44,7 @@
 /**
  * Projection of the video surface(s) on a sphere.
  */
-enum AVSphericalProjection {
+ગણના AVSphericalProjection {
     /**
      * Video represents a sphere mapped on a flat surface using
      * equirectangular projection.
@@ -97,11 +97,11 @@ enum AVSphericalProjection {
  * @note The struct must be allocated with av_spherical_alloc() and
  *       its size is not a part of the public ABI.
  */
-typedef struct AVSphericalMapping {
+પ્રકારવ્યાખ્યા સંરચના AVSphericalMapping {
     /**
      * Projection type.
      */
-    enum AVSphericalProjection projection;
+    ગણના AVSphericalProjection projection;
 
     /**
      * @name Initial orientation
@@ -182,9 +182,9 @@ typedef struct AVSphericalMapping {
      *       projection type (@ref AV_SPHERICAL_EQUIRECTANGULAR_TILE),
      *       and should be ignored in all other cases.
      */
-    uint32_t bound_left;   ///< Distance from the left edge
-    uint32_t bound_top;    ///< Distance from the top edge
-    uint32_t bound_right;  ///< Distance from the right edge
+    uint32_t bound_ડાબું;   ///< Distance from the left edge
+    uint32_t bound_ટોચ;    ///< Distance from the top edge
+    uint32_t bound_જમણું;  ///< Distance from the right edge
     uint32_t bound_bottom; ///< Distance from the bottom edge
     /**
      * @}
@@ -220,10 +220,10 @@ AVSphericalMapping *av_spherical_alloc(size_t *size);
  * @param right  Pixels from the right edge.
  * @param bottom Pixels from the bottom edge.
  */
-void av_spherical_tile_bounds(const AVSphericalMapping *map,
+શૂન્ય av_spherical_tile_bounds(અચલ AVSphericalMapping *map,
                               size_t width, size_t height,
-                              size_t *left, size_t *top,
-                              size_t *right, size_t *bottom);
+                              size_t *ડાબું, size_t *ટોચ,
+                              size_t *જમણું, size_t *bottom);
 
 /**
  * Provide a human-readable name of a given AVSphericalProjection.
@@ -232,7 +232,7 @@ void av_spherical_tile_bounds(const AVSphericalMapping *map,
  *
  * @return The name of the AVSphericalProjection, or "unknown".
  */
-const char *av_spherical_projection_name(enum AVSphericalProjection projection);
+અચલ અક્ષર *av_spherical_projection_name(ગણના AVSphericalProjection projection);
 
 /**
  * Get the AVSphericalProjection form a human-readable name.
@@ -241,7 +241,7 @@ const char *av_spherical_projection_name(enum AVSphericalProjection projection);
  *
  * @return The AVSphericalProjection value, or -1 if not found.
  */
-int av_spherical_from_name(const char *name);
+પૂર્ણાંક av_spherical_from_name(અચલ અક્ષર *name);
 /**
  * @}
  */

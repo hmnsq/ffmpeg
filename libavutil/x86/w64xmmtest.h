@@ -22,16 +22,16 @@
 #ifndef AVUTIL_X86_W64XMMTEST_H
 #define AVUTIL_X86_W64XMMTEST_H
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
+#અન્તર્ભાવ <inttypes.h>
+#અન્તર્ભાવ <stdint.h>
+#અન્તર્ભાવ <stdlib.h>
+#અન્તર્ભાવ <stdarg.h>
+#અન્તર્ભાવ <string.h>
 
-#include "libavutil/bswap.h"
+#અન્તર્ભાવ "libavutil/bswap.h"
 
 #define storexmmregs(mem)               \
-    __asm__ volatile(                   \
+    __asm__ અસ્થિર(                   \
         "movups %%xmm6 , 0x00(%0)\n\t"  \
         "movups %%xmm7 , 0x10(%0)\n\t"  \
         "movups %%xmm8 , 0x20(%0)\n\t"  \
@@ -46,16 +46,16 @@
 
 #define testxmmclobbers(func, ctx, ...)                         \
     uint64_t xmm[2][10][2];                                     \
-    int ret;                                                    \
+    પૂર્ણાંક ret;                                                    \
     storexmmregs(xmm[0]);                                       \
     ret = __real_ ## func(ctx, __VA_ARGS__);                    \
     storexmmregs(xmm[1]);                                       \
-    if (memcmp(xmm[0], xmm[1], sizeof(xmm[0]))) {               \
-        int i;                                                  \
+    જો (memcmp(xmm[0], xmm[1], કદ(xmm[0]))) {               \
+        પૂર્ણાંક i;                                                  \
         av_log(ctx, AV_LOG_ERROR,                               \
                "XMM REGS CLOBBERED IN %s!\n", #func);           \
-        for (i = 0; i < 10; i ++)                               \
-            if (xmm[0][i][0] != xmm[1][i][0] ||                 \
+        માટે (i = 0; i < 10; i ++)                               \
+            જો (xmm[0][i][0] != xmm[1][i][0] ||                 \
                 xmm[0][i][1] != xmm[1][i][1]) {                 \
                 av_log(ctx, AV_LOG_ERROR,                       \
                        "xmm%-2d = %016"PRIx64"%016"PRIx64"\n",  \
@@ -68,11 +68,11 @@
             }                                                   \
         abort();                                                \
     }                                                           \
-    return ret
+    પાછા ret
 
 #define wrap(func)      \
-int __real_ ## func;    \
-int __wrap_ ## func;    \
-int __wrap_ ## func
+પૂર્ણાંક __real_ ## func;    \
+પૂર્ણાંક __wrap_ ## func;    \
+પૂર્ણાંક __wrap_ ## func
 
 #endif /* AVUTIL_X86_W64XMMTEST_H */

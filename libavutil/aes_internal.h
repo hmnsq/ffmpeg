@@ -21,26 +21,26 @@
 #ifndef AVUTIL_AES_INTERNAL_H
 #define AVUTIL_AES_INTERNAL_H
 
-#include "mem_internal.h"
-#include <stdint.h>
+#અન્તર્ભાવ "mem_internal.h"
+#અન્તર્ભાવ <stdint.h>
 
-typedef union {
+પ્રકારવ્યાખ્યા સંઘ {
     uint64_t u64[2];
     uint32_t u32[4];
     uint8_t u8x4[4][4];
     uint8_t u8[16];
 } av_aes_block;
 
-typedef struct AVAES {
+પ્રકારવ્યાખ્યા સંરચના AVAES {
     // Note: round_key[16] is accessed in the init code, but this only
     // overwrites state, which does not matter (see also commit ba554c0).
-    DECLARE_ALIGNED(16, av_aes_block, round_key)[15];
+    DECLARE_ALIGNED(16, av_aes_block, round_ચાવી)[15];
     DECLARE_ALIGNED(16, av_aes_block, state)[2];
-    int rounds;
-    void (*crypt)(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int rounds);
+    પૂર્ણાંક rounds;
+    શૂન્ય (*crypt)(સંરચના AVAES *a, uint8_t *dst, અચલ uint8_t *src, પૂર્ણાંક ગણતરી, uint8_t *iv, પૂર્ણાંક rounds);
 } AVAES;
 
-void ff_init_aes_x86(AVAES *a, int decrypt);
-void ff_init_aes_aarch64(AVAES *a, int decrypt);
+શૂન્ય ff_init_aes_x86(AVAES *a, પૂર્ણાંક decrypt);
+શૂન્ય ff_init_aes_aarch64(AVAES *a, પૂર્ણાંક decrypt);
 
 #endif /* AVUTIL_AES_INTERNAL_H */

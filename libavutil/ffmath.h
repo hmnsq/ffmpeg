@@ -26,10 +26,10 @@
 #ifndef AVUTIL_FFMATH_H
 #define AVUTIL_FFMATH_H
 
-#include <math.h>
+#અન્તર્ભાવ <math.h>
 
-#include "attributes.h"
-#include "mathematics.h"
+#અન્તર્ભાવ "attributes.h"
+#અન્તર્ભાવ "mathematics.h"
 
 /**
  * Compute 10^x for floating point values. Note: this function is by no means
@@ -41,14 +41,14 @@
  * @param x exponent
  * @return 10^x
  */
-static av_always_inline double ff_exp10(double x)
+સ્થિર av_always_inline દ્વિગુણ ff_exp10(દ્વિગુણ x)
 {
-    return exp2(M_LOG2_10 * x);
+    પાછા exp2(M_LOG2_10 * x);
 }
 
-static av_always_inline float ff_exp10f(float x)
+સ્થિર av_always_inline દશાંશ ff_exp10f(દશાંશ x)
 {
-    return exp2f(M_LOG2_10 * x);
+    પાછા exp2f(M_LOG2_10 * x);
 }
 
 /**
@@ -61,9 +61,9 @@ static av_always_inline float ff_exp10f(float x)
  * @param y exponent
  * @return x^y
  */
-static av_always_inline float ff_fast_powf(float x, float y)
+સ્થિર av_always_inline દશાંશ ff_fast_powf(દશાંશ x, દશાંશ y)
 {
-    return expf(logf(x) * y);
+    પાછા expf(logf(x) * y);
 }
 
 #endif /* AVUTIL_FFMATH_H */

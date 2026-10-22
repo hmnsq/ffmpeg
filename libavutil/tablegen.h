@@ -24,31 +24,31 @@
 #ifndef AVUTIL_TABLEGEN_H
 #define AVUTIL_TABLEGEN_H
 
-#include <math.h>
+#અન્તર્ભાવ <math.h>
 
 // we lack some functions on all host platforms, and we don't care about
 // performance and/or strict ISO C semantics as it's performed at build time
-static inline double ff_cbrt(double x)
+સ્થિર અંતઃરેખ દ્વિગુણ ff_cbrt(દ્વિગુણ x)
 {
-    return x < 0 ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
+    પાછા x < 0 ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
 }
 #define cbrt ff_cbrt
 
-static inline double ff_rint(double x)
+સ્થિર અંતઃરેખ દ્વિગુણ ff_rint(દ્વિગુણ x)
 {
-    return x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
+    પાછા x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
 }
 #define rint ff_rint
 
-static inline long long ff_llrint(double x)
+સ્થિર અંતઃરેખ long long ff_llrint(દ્વિગુણ x)
 {
-    return rint(x);
+    પાછા rint(x);
 }
 #define llrint ff_llrint
 
-static inline long ff_lrint(double x)
+સ્થિર અંતઃરેખ long ff_lrint(દ્વિગુણ x)
 {
-    return rint(x);
+    પાછા rint(x);
 }
 #define lrint ff_lrint
 

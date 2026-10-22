@@ -27,19 +27,19 @@
 #ifndef AVUTIL_TIMECODE_H
 #define AVUTIL_TIMECODE_H
 
-#include <stdint.h>
-#include "rational.h"
+#અન્તર્ભાવ <stdint.h>
+#અન્તર્ભાવ "rational.h"
 
 #define AV_TIMECODE_STR_SIZE 23
 
-enum AVTimecodeFlag {
+ગણના AVTimecodeFlag {
     AV_TIMECODE_FLAG_DROPFRAME      = 1<<0, ///< timecode is drop frame
     AV_TIMECODE_FLAG_24HOURSMAX     = 1<<1, ///< timecode wraps after 24 hours
     AV_TIMECODE_FLAG_ALLOWNEGATIVE  = 1<<2, ///< negative time values are allowed
 };
 
-typedef struct {
-    int start;          ///< timecode frame start (first base frame number)
+પ્રકારવ્યાખ્યા સંરચના {
+    પૂર્ણાંક start;          ///< timecode frame start (first base frame number)
     uint32_t flags;     ///< flags such as drop frame, +24 hours support, ...
     AVRational rate;    ///< frame rate in rational form
     unsigned fps;       ///< frame per second; must be consistent with the rate field
@@ -53,7 +53,7 @@ typedef struct {
  * @return         adjusted frame number
  * @warning        adjustment is only valid for multiples of NTSC 29.97
  */
-int av_timecode_adjust_ntsc_framenum2(int framenum, int fps);
+પૂર્ણાંક av_timecode_adjust_ntsc_framenum2(પૂર્ણાંક framenum, પૂર્ણાંક fps);
 
 /**
  * Convert frame number to SMPTE 12M binary representation.
@@ -80,7 +80,7 @@ int av_timecode_adjust_ntsc_framenum2(int framenum, int fps);
  * @note The frame number is relative to tc->start.
  * @note Color frame (CF) and binary group flags (BGF) bits are set to zero.
  */
-uint32_t av_timecode_get_smpte_from_framenum(const AVTimecode *tc, int framenum);
+uint32_t av_timecode_get_smpte_from_framenum(અચલ AVTimecode *tc, પૂર્ણાંક framenum);
 
 /**
  * Convert sei info to SMPTE 12M binary representation.
@@ -93,7 +93,7 @@ uint32_t av_timecode_get_smpte_from_framenum(const AVTimecode *tc, int framenum)
  * @param ff       frame number
  * @return         the SMPTE binary representation
  */
-uint32_t av_timecode_get_smpte(AVRational rate, int drop, int hh, int mm, int ss, int ff);
+uint32_t av_timecode_get_smpte(AVRational rate, પૂર્ણાંક drop, પૂર્ણાંક hh, પૂર્ણાંક mm, પૂર્ણાંક ss, પૂર્ણાંક ff);
 
 /**
  * Load timecode string in buf.
@@ -107,7 +107,7 @@ uint32_t av_timecode_get_smpte(AVRational rate, int drop, int hh, int mm, int ss
  *       24 hours, but will only be honored if the flags are correctly set.
  * @note The frame number is relative to tc->start.
  */
-char *av_timecode_make_string(const AVTimecode *tc, char *buf, int framenum);
+અક્ષર *av_timecode_make_string(અચલ AVTimecode *tc, અક્ષર *buf, પૂર્ણાંક framenum);
 
 /**
  * Get the timecode string from the SMPTE timecode format.
@@ -124,7 +124,7 @@ char *av_timecode_make_string(const AVTimecode *tc, char *buf, int framenum);
  *                   bit is arbitrary (e.g. because it is used as PC flag)
  * @return           the buf parameter
  */
-char *av_timecode_make_smpte_tc_string2(char *buf, AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field);
+અક્ષર *av_timecode_make_smpte_tc_string2(અક્ષર *buf, AVRational rate, uint32_t tcsmpte, પૂર્ણાંક prevent_df, પૂર્ણાંક skip_field);
 
 /**
  * Get the timecode string from the SMPTE timecode format.
@@ -135,7 +135,7 @@ char *av_timecode_make_smpte_tc_string2(char *buf, AVRational rate, uint32_t tcs
  *                   is arbitrary
  * @return           the buf parameter
  */
-char *av_timecode_make_smpte_tc_string(char *buf, uint32_t tcsmpte, int prevent_df);
+અક્ષર *av_timecode_make_smpte_tc_string(અક્ષર *buf, uint32_t tcsmpte, પૂર્ણાંક prevent_df);
 
 /**
  * Get the timecode string from the 25-bit timecode format (MPEG GOP format).
@@ -144,7 +144,7 @@ char *av_timecode_make_smpte_tc_string(char *buf, uint32_t tcsmpte, int prevent_
  * @param tc25bit the 25-bits timecode
  * @return        the buf parameter
  */
-char *av_timecode_make_mpeg_tc_string(char *buf, uint32_t tc25bit);
+અક્ષર *av_timecode_make_mpeg_tc_string(અક્ષર *buf, uint32_t tc25bit);
 
 /**
  * Init a timecode struct with the passed parameters.
@@ -158,7 +158,7 @@ char *av_timecode_make_mpeg_tc_string(char *buf, uint32_t tc25bit);
  *                    is a pointer to an AVClass struct (used for av_log)
  * @return            0 on success, AVERROR otherwise
  */
-int av_timecode_init(AVTimecode *tc, AVRational rate, int flags, int frame_start, void *log_ctx);
+પૂર્ણાંક av_timecode_init(AVTimecode *tc, AVRational rate, પૂર્ણાંક flags, પૂર્ણાંક frame_start, શૂન્ય *log_ctx);
 
 /**
  * Init a timecode struct from the passed timecode components.
@@ -175,7 +175,7 @@ int av_timecode_init(AVTimecode *tc, AVRational rate, int flags, int frame_start
  *                    is a pointer to an AVClass struct (used for av_log)
  * @return            0 on success, AVERROR otherwise
  */
-int av_timecode_init_from_components(AVTimecode *tc, AVRational rate, int flags, int hh, int mm, int ss, int ff, void *log_ctx);
+પૂર્ણાંક av_timecode_init_from_components(AVTimecode *tc, AVRational rate, પૂર્ણાંક flags, પૂર્ણાંક hh, પૂર્ણાંક mm, પૂર્ણાંક ss, પૂર્ણાંક ff, શૂન્ય *log_ctx);
 
 /**
  * Parse timecode representation (hh:mm:ss[:;.]ff).
@@ -187,13 +187,13 @@ int av_timecode_init_from_components(AVTimecode *tc, AVRational rate, int flags,
  *                pointer to an AVClass struct (used for av_log).
  * @return        0 on success, AVERROR otherwise
  */
-int av_timecode_init_from_string(AVTimecode *tc, AVRational rate, const char *str, void *log_ctx);
+પૂર્ણાંક av_timecode_init_from_string(AVTimecode *tc, AVRational rate, અચલ અક્ષર *str, શૂન્ય *log_ctx);
 
 /**
  * Check if the timecode feature is available for the given frame rate
  *
  * @return 0 if supported, <0 otherwise
  */
-int av_timecode_check_frame_rate(AVRational rate);
+પૂર્ણાંક av_timecode_check_frame_rate(AVRational rate);
 
 #endif /* AVUTIL_TIMECODE_H */

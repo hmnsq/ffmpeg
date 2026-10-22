@@ -19,26 +19,26 @@
 #ifndef AVUTIL_ATTRIBUTES_INTERNAL_H
 #define AVUTIL_ATTRIBUTES_INTERNAL_H
 
-#include "attributes.h"
+#અન્તર્ભાવ "attributes.h"
 
-#if (defined(__GNUC__) || defined(__clang__)) && (defined(__ELF__) || defined(__MACH__))
+#જો (defined(__GNUC__) || defined(__clang__)) && (defined(__ELF__) || defined(__MACH__))
 #    define attribute_visibility_hidden __attribute__((visibility("hidden")))
-#    define FF_VISIBILITY_PUSH_HIDDEN   _Pragma("GCC visibility push(hidden)")
-#    define FF_VISIBILITY_POP_HIDDEN    _Pragma("GCC visibility pop")
-#else
+#    define FF_VISIBILITY_ધકેલો_HIDDEN   _Pragma("GCC visibility push(hidden)")
+#    define FF_VISIBILITY_કાઢો_HIDDEN    _Pragma("GCC visibility pop")
+#નહીંતર
 #    define attribute_visibility_hidden
-#    define FF_VISIBILITY_PUSH_HIDDEN
-#    define FF_VISIBILITY_POP_HIDDEN
+#    define FF_VISIBILITY_ધકેલો_HIDDEN
+#    define FF_VISIBILITY_કાઢો_HIDDEN
 #endif
 
-#define EXTERN extern attribute_visibility_hidden
+#define EXTERN બાહ્ય attribute_visibility_hidden
 
-#if (AV_HAS_ATTRIBUTE(nonstring) && (AV_GCC_VERSION_AT_LEAST(15,1) || defined(__clang__)))
+#જો (AV_HAS_ATTRIBUTE(nonstring) && (AV_GCC_VERSION_AT_LEAST(15,1) || defined(__clang__)))
 // Attribute to mark a variable initialized via a string literal as not
 // containing string data to suppress warnings about unterminated strings
 // in situations like char fourcc[4] = "TALB".
 #define attribute_nonstring __attribute__((nonstring))
-#else
+#નહીંતર
 #define attribute_nonstring
 #endif
 

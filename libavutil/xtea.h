@@ -22,7 +22,7 @@
 #ifndef AVUTIL_XTEA_H
 #define AVUTIL_XTEA_H
 
-#include <stdint.h>
+#અન્તર્ભાવ <stdint.h>
 
 /**
  * @file
@@ -32,14 +32,14 @@
  * @{
  */
 
-typedef struct AVXTEA {
-    uint32_t key[16];
+પ્રકારવ્યાખ્યા સંરચના AVXTEA {
+    uint32_t ચાવી[16];
 } AVXTEA;
 
 /**
  * Allocate an AVXTEA context.
  */
-AVXTEA *av_xtea_alloc(void);
+AVXTEA *av_xtea_alloc(શૂન્ય);
 
 /**
  * Initialize an AVXTEA context.
@@ -48,7 +48,7 @@ AVXTEA *av_xtea_alloc(void);
  * @param key a key of 16 bytes used for encryption/decryption,
  *            interpreted as big endian 32 bit numbers
  */
-void av_xtea_init(struct AVXTEA *ctx, const uint8_t key[16]);
+શૂન્ય av_xtea_init(સંરચના AVXTEA *ctx, અચલ uint8_t ચાવી[16]);
 
 /**
  * Initialize an AVXTEA context.
@@ -57,7 +57,7 @@ void av_xtea_init(struct AVXTEA *ctx, const uint8_t key[16]);
  * @param key a key of 16 bytes used for encryption/decryption,
  *            interpreted as little endian 32 bit numbers
  */
-void av_xtea_le_init(struct AVXTEA *ctx, const uint8_t key[16]);
+શૂન્ય av_xtea_le_init(સંરચના AVXTEA *ctx, અચલ uint8_t ચાવી[16]);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context,
@@ -70,8 +70,8 @@ void av_xtea_le_init(struct AVXTEA *ctx, const uint8_t key[16]);
  * @param iv initialization vector for CBC mode, if NULL then ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_xtea_crypt(struct AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
-                   int count, uint8_t *iv, int decrypt);
+શૂન્ય av_xtea_crypt(સંરચના AVXTEA *ctx, uint8_t *dst, અચલ uint8_t *src,
+                   પૂર્ણાંક ગણતરી, uint8_t *iv, પૂર્ણાંક decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context,
@@ -84,8 +84,8 @@ void av_xtea_crypt(struct AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
  * @param iv initialization vector for CBC mode, if NULL then ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_xtea_le_crypt(struct AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
-                      int count, uint8_t *iv, int decrypt);
+શૂન્ય av_xtea_le_crypt(સંરચના AVXTEA *ctx, uint8_t *dst, અચલ uint8_t *src,
+                      પૂર્ણાંક ગણતરી, uint8_t *iv, પૂર્ણાંક decrypt);
 
 /**
  * @}

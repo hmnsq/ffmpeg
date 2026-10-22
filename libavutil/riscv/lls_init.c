@@ -18,37 +18,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
-#include <stdint.h>
+#અન્તર્ભાવ <assert.h>
+#અન્તર્ભાવ <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/lls.h"
+#અન્તર્ભાવ "config.h"
+#અન્તર્ભાવ "libavutil/attributes.h"
+#અન્તર્ભાવ "libavutil/cpu.h"
+#અન્તર્ભાવ "libavutil/riscv/cpu.h"
+#અન્તર્ભાવ "libavutil/lls.h"
 
-void ff_lls_update_covariance_rvv(double covar[][36], const double *var,
-                                  int count);
-double ff_scalarproduct_double_rvv(const double *, const double *, size_t);
+શૂન્ય ff_lls_update_covariance_rvv(દ્વિગુણ covar[][36], અચલ દ્વિગુણ *var,
+                                  પૂર્ણાંક ગણતરી);
+દ્વિગુણ ff_scalarproduct_double_rvv(અચલ દ્વિગુણ *, અચલ દ્વિગુણ *, size_t);
 
-static void ff_lls_update_rvv(struct LLSModel *m, const double *var)
+સ્થિર શૂન્ય ff_lls_update_rvv(સંરચના LLSModel *m, અચલ દ્વિગુણ *var)
 {
-    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_count + 1);
+    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_ગણતરી + 1);
 }
 
-static double ff_lls_evaluate_rvv(struct LLSModel *m, const double *var,
-                                  int order)
+સ્થિર દ્વિગુણ ff_lls_evaluate_rvv(સંરચના LLSModel *m, અચલ દ્વિગુણ *var,
+                                  પૂર્ણાંક order)
 {
-    return ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
+    પાછા ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
 }
 
-av_cold void ff_init_lls_riscv(LLSModel *m)
+av_cold શૂન્ય ff_init_lls_riscv(LLSModel *m)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#જો HAVE_RVV
+    પૂર્ણાંક flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
-        if (ff_get_rv_vlenb() > m->indep_count)
+    જો ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
+        જો (ff_get_rv_vlenb() > m->indep_ગણતરી)
             m->update_lls = ff_lls_update_rvv;
         m->evaluate_lls = ff_lls_evaluate_rvv;
     }

@@ -18,45 +18,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avstring.h"
-#include "macros.h"
-#include "mem.h"
-#include "spherical.h"
+#અન્તર્ભાવ "avstring.h"
+#અન્તર્ભાવ "macros.h"
+#અન્તર્ભાવ "mem.h"
+#અન્તર્ભાવ "spherical.h"
 
 AVSphericalMapping *av_spherical_alloc(size_t *size)
 {
-    AVSphericalMapping *spherical = av_mallocz(sizeof(AVSphericalMapping));
+    AVSphericalMapping *spherical = av_mallocz(કદ(AVSphericalMapping));
 
-    if (size)
-        *size = spherical ? sizeof(*spherical) : 0;
+    જો (size)
+        *size = spherical ? કદ(*spherical) : 0;
 
-    if (!spherical)
-        return NULL;
+    જો (!spherical)
+        પાછા ખાલી;
 
     spherical->projection = AV_SPHERICAL_RECTILINEAR;
 
-    return spherical;
+    પાછા spherical;
 }
 
-void av_spherical_tile_bounds(const AVSphericalMapping *map,
+શૂન્ય av_spherical_tile_bounds(અચલ AVSphericalMapping *map,
                               size_t width, size_t height,
-                              size_t *left, size_t *top,
-                              size_t *right, size_t *bottom)
+                              size_t *ડાબું, size_t *ટોચ,
+                              size_t *જમણું, size_t *bottom)
 {
     /* conversion from 0.32 coordinates to pixels */
     uint64_t orig_width  = (uint64_t) width  * UINT32_MAX /
-                           (UINT32_MAX - map->bound_right  - map->bound_left);
+                           (UINT32_MAX - map->bound_જમણું  - map->bound_ડાબું);
     uint64_t orig_height = (uint64_t) height * UINT32_MAX /
-                           (UINT32_MAX - map->bound_bottom - map->bound_top);
+                           (UINT32_MAX - map->bound_bottom - map->bound_ટોચ);
 
     /* add a (UINT32_MAX - 1) to round up integer division */
-    *left   = (orig_width  * map->bound_left + UINT32_MAX - 1) / UINT32_MAX;
-    *top    = (orig_height * map->bound_top  + UINT32_MAX - 1) / UINT32_MAX;
-    *right  = orig_width  - width  - *left;
-    *bottom = orig_height - height - *top;
+    *ડાબું   = (orig_width  * map->bound_ડાબું + UINT32_MAX - 1) / UINT32_MAX;
+    *ટોચ    = (orig_height * map->bound_ટોચ  + UINT32_MAX - 1) / UINT32_MAX;
+    *જમણું  = orig_width  - width  - *ડાબું;
+    *bottom = orig_height - height - *ટોચ;
 }
 
-static const char *const spherical_projection_names[] = {
+સ્થિર અચલ અક્ષર *અચલ spherical_projection_names[] = {
     [AV_SPHERICAL_EQUIRECTANGULAR]      = "equirectangular",
     [AV_SPHERICAL_CUBEMAP]              = "cubemap",
     [AV_SPHERICAL_EQUIRECTANGULAR_TILE] = "tiled equirectangular",
@@ -66,22 +66,22 @@ static const char *const spherical_projection_names[] = {
     [AV_SPHERICAL_PARAMETRIC_IMMERSIVE] = "parametric immersive",
 };
 
-const char *av_spherical_projection_name(enum AVSphericalProjection projection)
+અચલ અક્ષર *av_spherical_projection_name(ગણના AVSphericalProjection projection)
 {
-    if ((unsigned)projection >= FF_ARRAY_ELEMS(spherical_projection_names))
-        return "unknown";
+    જો ((unsigned)projection >= FF_ARRAY_ELEMS(spherical_projection_names))
+        પાછા "unknown";
 
-    return spherical_projection_names[projection];
+    પાછા spherical_projection_names[projection];
 }
 
-int av_spherical_from_name(const char *name)
+પૂર્ણાંક av_spherical_from_name(અચલ અક્ષર *name)
 {
-    int i;
+    પૂર્ણાંક i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(spherical_projection_names); i++) {
-        if (av_strstart(name, spherical_projection_names[i], NULL))
-            return i;
+    માટે (i = 0; i < FF_ARRAY_ELEMS(spherical_projection_names); i++) {
+        જો (av_strstart(name, spherical_projection_names[i], ખાલી))
+            પાછા i;
     }
 
-    return -1;
+    પાછા -1;
 }

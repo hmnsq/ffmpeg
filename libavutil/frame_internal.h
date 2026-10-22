@@ -19,10 +19,10 @@
 #ifndef AVUTIL_FRAME_INTERNAL_H
 #define AVUTIL_FRAME_INTERNAL_H
 
-#include <stddef.h>
+#અન્તર્ભાવ <stddef.h>
 
-#include "buffer.h"
-#include "frame.h"
+#અન્તર્ભાવ "buffer.h"
+#અન્તર્ભાવ "frame.h"
 
 /**
  * Allocate the buffer of a video frame like av_frame_get_buffer().
@@ -30,8 +30,8 @@
  * @param alloc  allocates the buffer, av_buffer_alloc() is used if NULL
  * @param opaque passed to alloc
  */
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
-                              AVBufferRef *(*alloc)(void *opaque, size_t size),
-                              void *opaque);
+પૂર્ણાંક ff_frame_get_video_buffer(AVFrame *frame, પૂર્ણાંક align,
+                              AVBufferRef *(*alloc)(શૂન્ય *opaque, size_t size),
+                              શૂન્ય *opaque);
 
 #endif /* AVUTIL_FRAME_INTERNAL_H */

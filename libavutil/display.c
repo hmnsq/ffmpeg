@@ -18,42 +18,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
-#include <math.h>
+#અન્તર્ભાવ <stdint.h>
+#અન્તર્ભાવ <string.h>
+#અન્તર્ભાવ <math.h>
 
-#include "display.h"
-#include "mathematics.h"
+#અન્તર્ભાવ "display.h"
+#અન્તર્ભાવ "mathematics.h"
 
 // fixed point to double
-#define CONV_FP(x) ((double) (x)) / (1 << 16)
+#define CONV_FP(x) ((દ્વિગુણ) (x)) / (1 << 16)
 
 // double to fixed point
 #define CONV_DB(x) (int32_t) ((x) * (1 << 16))
 
-double av_display_rotation_get(const int32_t matrix[9])
+દ્વિગુણ av_display_rotation_get(અચલ int32_t matrix[9])
 {
-    double rotation, scale[2];
+    દ્વિગુણ rotation, scale[2];
 
     scale[0] = hypot(CONV_FP(matrix[0]), CONV_FP(matrix[3]));
     scale[1] = hypot(CONV_FP(matrix[1]), CONV_FP(matrix[4]));
 
-    if (scale[0] == 0.0 || scale[1] == 0.0)
-        return NAN;
+    જો (scale[0] == 0.0 || scale[1] == 0.0)
+        પાછા NAN;
 
     rotation = atan2(CONV_FP(matrix[1]) / scale[1],
                      CONV_FP(matrix[0]) / scale[0]) * 180 / M_PI;
 
-    return -rotation;
+    પાછા -rotation;
 }
 
-void av_display_rotation_set(int32_t matrix[9], double angle)
+શૂન્ય av_display_rotation_set(int32_t matrix[9], દ્વિગુણ angle)
 {
-    double radians = -angle * M_PI / 180.0f;
-    double c = cos(radians);
-    double s = sin(radians);
+    દ્વિગુણ radians = -angle * M_PI / 180.0f;
+    દ્વિગુણ c = cos(radians);
+    દ્વિગુણ s = sin(radians);
 
-    memset(matrix, 0, 9 * sizeof(int32_t));
+    memset(matrix, 0, 9 * કદ(int32_t));
 
     matrix[0] = CONV_DB(c);
     matrix[1] = CONV_DB(-s);
@@ -62,12 +62,12 @@ void av_display_rotation_set(int32_t matrix[9], double angle)
     matrix[8] = 1 << 30;
 }
 
-void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip)
+શૂન્ય av_display_matrix_flip(int32_t matrix[9], પૂર્ણાંક hflip, પૂર્ણાંક vflip)
 {
-    int i;
-    const int flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
+    પૂર્ણાંક i;
+    અચલ પૂર્ણાંક flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
 
-    if (hflip || vflip)
-        for (i = 0; i < 9; i++)
+    જો (hflip || vflip)
+        માટે (i = 0; i < 9; i++)
             matrix[i] *= flip[i % 3];
 }

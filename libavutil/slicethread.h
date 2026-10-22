@@ -19,10 +19,10 @@
 #ifndef AVUTIL_SLICETHREAD_H
 #define AVUTIL_SLICETHREAD_H
 
-#include "attributes.h"
-#include "version.h"
+#અન્તર્ભાવ "attributes.h"
+#અન્તર્ભાવ "version.h"
 
-typedef struct AVSliceThread AVSliceThread;
+પ્રકારવ્યાખ્યા સંરચના AVSliceThread AVSliceThread;
 
 /**
  * Create slice threading context.
@@ -33,10 +33,10 @@ typedef struct AVSliceThread AVSliceThread;
  * @param nb_threads number of threads, 0 for automatic, must be >= 0
  * @return return number of threads or negative AVERROR on failure
  */
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads);
+પૂર્ણાંક avpriv_slicethread_create2(AVSliceThread **pctx, શૂન્ય *priv,
+                               પૂર્ણાંક (*worker_func)(શૂન્ય *priv, પૂર્ણાંક jobnr, પૂર્ણાંક threadnr, પૂર્ણાંક nb_jobs, પૂર્ણાંક nb_threads),
+                               પૂર્ણાંક (*main_func)(શૂન્ય *priv),
+                               પૂર્ણાંક nb_threads);
 
 /**
  * Execute slice threading. If any job returns a nonzero value,
@@ -50,31 +50,31 @@ int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
  * @param execute_main also execute main_func
  * @return 0 on success, else first seen return value
  */
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main);
+પૂર્ણાંક avpriv_slicethread_execute2(AVSliceThread *ctx, પૂર્ણાંક nb_jobs, પૂર્ણાંક execute_main);
 
 /**
  * Destroy slice threading context.
  * @param pctx pointer to context
  */
-void avpriv_slicethread_free(AVSliceThread **pctx);
+શૂન્ય avpriv_slicethread_free(AVSliceThread **pctx);
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#જો LIBAVUTIL_VERSION_MAJOR < 62
 /**
  * @deprecated
  * Wrapper around avpriv_slicethread_create2() for ABI backwards compatibility.
  */
 attribute_deprecated
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                              void (*main_func)(void *priv),
-                              int nb_threads);
+પૂર્ણાંક avpriv_slicethread_create(AVSliceThread **pctx, શૂન્ય *priv,
+                              શૂન્ય (*worker_func)(શૂન્ય *priv, પૂર્ણાંક jobnr, પૂર્ણાંક threadnr, પૂર્ણાંક nb_jobs, પૂર્ણાંક nb_threads),
+                              શૂન્ય (*main_func)(શૂન્ય *priv),
+                              પૂર્ણાંક nb_threads);
 
 /**
  * @deprecated
  * Wrapper around avpriv_slicethread_execute2() for ABI backwards compatibility.
  */
 attribute_deprecated
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main);
+શૂન્ય avpriv_slicethread_execute(AVSliceThread *ctx, પૂર્ણાંક nb_jobs, પૂર્ણાંક execute_main);
 #endif /* LIBAVUTIL_VERSION_MAJOR < 62 */
 
 #endif

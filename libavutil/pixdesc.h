@@ -22,39 +22,39 @@
 #ifndef AVUTIL_PIXDESC_H
 #define AVUTIL_PIXDESC_H
 
-#include <inttypes.h>
+#અન્તર્ભાવ <inttypes.h>
 
-#include "attributes.h"
-#include "pixfmt.h"
+#અન્તર્ભાવ "attributes.h"
+#અન્તર્ભાવ "pixfmt.h"
 
-typedef struct AVComponentDescriptor {
+પ્રકારવ્યાખ્યા સંરચના AVComponentDescriptor {
     /**
      * Which of the 4 planes contains the component.
      */
-    int plane;
+    પૂર્ણાંક plane;
 
     /**
      * Number of elements between 2 horizontally consecutive pixels.
      * Elements are bits for bitstream formats, bytes otherwise.
      */
-    int step;
+    પૂર્ણાંક step;
 
     /**
      * Number of elements before the component of the first pixel.
      * Elements are bits for bitstream formats, bytes otherwise.
      */
-    int offset;
+    પૂર્ણાંક offset;
 
     /**
      * Number of least significant bits that must be shifted away
      * to get the value.
      */
-    int shift;
+    પૂર્ણાંક shift;
 
     /**
      * Number of bits in the component.
      */
-    int depth;
+    પૂર્ણાંક depth;
 } AVComponentDescriptor;
 
 /**
@@ -66,8 +66,8 @@ typedef struct AVComponentDescriptor {
  *       and all the YUV variants) AVPixFmtDescriptor just stores how values
  *       are stored not what these values represent.
  */
-typedef struct AVPixFmtDescriptor {
-    const char *name;
+પ્રકારવ્યાખ્યા સંરચના AVPixFmtDescriptor {
+    અચલ અક્ષર *name;
     uint8_t nb_components;  ///< The number of components each pixel has, (1-4)
 
     /**
@@ -107,7 +107,7 @@ typedef struct AVPixFmtDescriptor {
     /**
      * Alternative comma-separated names.
      */
-    const char *alias;
+    અચલ અક્ષર *alias;
 } AVPixFmtDescriptor;
 
 /**
@@ -171,19 +171,19 @@ typedef struct AVPixFmtDescriptor {
  * used for storing the pixel information, that is padding bits are
  * not counted.
  */
-int av_get_bits_per_pixel(const AVPixFmtDescriptor *pixdesc);
+પૂર્ણાંક av_get_bits_per_pixel(અચલ AVPixFmtDescriptor *pixdesc);
 
 /**
  * Return the number of bits per pixel for the pixel format
  * described by pixdesc, including any padding or unused bits.
  */
-int av_get_padded_bits_per_pixel(const AVPixFmtDescriptor *pixdesc);
+પૂર્ણાંક av_get_padded_bits_per_pixel(અચલ AVPixFmtDescriptor *pixdesc);
 
 /**
  * @return a pixel format descriptor for provided pixel format or NULL if
  * this pixel format is unknown.
  */
-const AVPixFmtDescriptor *av_pix_fmt_desc_get(enum AVPixelFormat pix_fmt);
+અચલ AVPixFmtDescriptor *av_pix_fmt_desc_get(ગણના AVPixelFormat pix_fmt);
 
 /**
  * Iterate over all pixel format descriptors known to libavutil.
@@ -192,13 +192,13 @@ const AVPixFmtDescriptor *av_pix_fmt_desc_get(enum AVPixelFormat pix_fmt);
  *
  * @return next descriptor or NULL after the last descriptor
  */
-const AVPixFmtDescriptor *av_pix_fmt_desc_next(const AVPixFmtDescriptor *prev);
+અચલ AVPixFmtDescriptor *av_pix_fmt_desc_next(અચલ AVPixFmtDescriptor *prev);
 
 /**
  * @return an AVPixelFormat id described by desc, or AV_PIX_FMT_NONE if desc
  * is not a valid pointer to a pixel format descriptor.
  */
-enum AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc);
+ગણના AVPixelFormat av_pix_fmt_desc_get_id(અચલ AVPixFmtDescriptor *desc);
 
 /**
  * Utility function to access log2_chroma_w log2_chroma_h from
@@ -210,64 +210,64 @@ enum AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc);
  *
  * @return 0 on success, AVERROR(ENOSYS) on invalid or unknown pixel format
  */
-int av_pix_fmt_get_chroma_sub_sample(enum AVPixelFormat pix_fmt,
-                                     int *h_shift, int *v_shift);
+પૂર્ણાંક av_pix_fmt_get_chroma_sub_sample(ગણના AVPixelFormat pix_fmt,
+                                     પૂર્ણાંક *h_shift, પૂર્ણાંક *v_shift);
 
 /**
  * @return number of planes in pix_fmt, a negative AVERROR if pix_fmt is not a
  * valid pixel format.
  */
-int av_pix_fmt_count_planes(enum AVPixelFormat pix_fmt);
+પૂર્ણાંક av_pix_fmt_ગણતરી_planes(ગણના AVPixelFormat pix_fmt);
 
 /**
  * @return the name for provided color range or NULL if unknown.
  */
-const char *av_color_range_name(enum AVColorRange range);
+અચલ અક્ષર *av_color_range_name(ગણના AVColorRange range);
 
 /**
  * @return the AVColorRange value for name or an AVError if not found.
  */
-int av_color_range_from_name(const char *name);
+પૂર્ણાંક av_color_range_from_name(અચલ અક્ષર *name);
 
 /**
  * @return the name for provided color primaries or NULL if unknown.
  */
-const char *av_color_primaries_name(enum AVColorPrimaries primaries);
+અચલ અક્ષર *av_color_primaries_name(ગણના AVColorPrimaries primaries);
 
 /**
  * @return the AVColorPrimaries value for name or an AVError if not found.
  */
-int av_color_primaries_from_name(const char *name);
+પૂર્ણાંક av_color_primaries_from_name(અચલ અક્ષર *name);
 
 /**
  * @return the name for provided color transfer or NULL if unknown.
  */
-const char *av_color_transfer_name(enum AVColorTransferCharacteristic transfer);
+અચલ અક્ષર *av_color_transfer_name(ગણના AVColorTransferCharacteristic transfer);
 
 /**
  * @return the AVColorTransferCharacteristic value for name or an AVError if not found.
  */
-int av_color_transfer_from_name(const char *name);
+પૂર્ણાંક av_color_transfer_from_name(અચલ અક્ષર *name);
 
 /**
  * @return the name for provided color space or NULL if unknown.
  */
-const char *av_color_space_name(enum AVColorSpace space);
+અચલ અક્ષર *av_color_space_name(ગણના AVColorSpace space);
 
 /**
  * @return the AVColorSpace value for name or an AVError if not found.
  */
-int av_color_space_from_name(const char *name);
+પૂર્ણાંક av_color_space_from_name(અચલ અક્ષર *name);
 
 /**
  * @return the name for provided chroma location or NULL if unknown.
  */
-const char *av_chroma_location_name(enum AVChromaLocation location);
+અચલ અક્ષર *av_chroma_location_name(ગણના AVChromaLocation location);
 
 /**
  * @return the AVChromaLocation value for name or an AVError if not found.
  */
-int av_chroma_location_from_name(const char *name);
+પૂર્ણાંક av_chroma_location_from_name(અચલ અક્ષર *name);
 
 /**
  * Converts AVChromaLocation to swscale x/y chroma position.
@@ -278,7 +278,7 @@ int av_chroma_location_from_name(const char *name);
  * @param xpos  horizontal chroma sample position
  * @param ypos  vertical   chroma sample position
  */
-int av_chroma_location_enum_to_pos(int *xpos, int *ypos, enum AVChromaLocation pos);
+પૂર્ણાંક av_chroma_location_enum_to_pos(પૂર્ણાંક *xpos, પૂર્ણાંક *ypos, ગણના AVChromaLocation pos);
 
 /**
  * Converts swscale x/y chroma position to AVChromaLocation.
@@ -289,17 +289,17 @@ int av_chroma_location_enum_to_pos(int *xpos, int *ypos, enum AVChromaLocation p
  * @param xpos  horizontal chroma sample position
  * @param ypos  vertical   chroma sample position
  */
-enum AVChromaLocation av_chroma_location_pos_to_enum(int xpos, int ypos);
+ગણના AVChromaLocation av_chroma_location_pos_to_enum(પૂર્ણાંક xpos, પૂર્ણાંક ypos);
 
 /**
  * @return the name for provided alpha mode or NULL if unknown.
  */
-const char *av_alpha_mode_name(enum AVAlphaMode mode);
+અચલ અક્ષર *av_alpha_mode_name(ગણના AVAlphaMode mode);
 
 /**
  * @return the AVAlphaMode value for name or an AVError if not found.
  */
-enum AVAlphaMode av_alpha_mode_from_name(const char *name);
+ગણના AVAlphaMode av_alpha_mode_from_name(અચલ અક્ષર *name);
 
 /**
  * Return the pixel format corresponding to name.
@@ -312,7 +312,7 @@ enum AVAlphaMode av_alpha_mode_from_name(const char *name);
  *
  * Finally if no pixel format has been found, returns AV_PIX_FMT_NONE.
  */
-enum AVPixelFormat av_get_pix_fmt(const char *name);
+ગણના AVPixelFormat av_get_pix_fmt(અચલ અક્ષર *name);
 
 /**
  * Return the short name for a pixel format, NULL in case pix_fmt is
@@ -320,7 +320,7 @@ enum AVPixelFormat av_get_pix_fmt(const char *name);
  *
  * @see av_get_pix_fmt(), av_get_pix_fmt_string()
  */
-const char *av_get_pix_fmt_name(enum AVPixelFormat pix_fmt);
+અચલ અક્ષર *av_get_pix_fmt_name(ગણના AVPixelFormat pix_fmt);
 
 /**
  * Print in buf the string corresponding to the pixel format with
@@ -332,8 +332,8 @@ const char *av_get_pix_fmt_name(enum AVPixelFormat pix_fmt);
  * corresponding info string, or a negative value to print the
  * corresponding header.
  */
-char *av_get_pix_fmt_string(char *buf, int buf_size,
-                            enum AVPixelFormat pix_fmt);
+અક્ષર *av_get_pix_fmt_string(અક્ષર *buf, પૂર્ણાંક buf_size,
+                            ગણના AVPixelFormat pix_fmt);
 
 /**
  * Read a line from an image, and write the values of the
@@ -352,14 +352,14 @@ char *av_get_pix_fmt_string(char *buf, int buf_size,
  * data[0]. The behavior is undefined if the format is not paletted.
  * @param dst_element_size size of elements in dst array (2 or 4 byte)
  */
-void av_read_image_line2(void *dst, const uint8_t *data[4],
-                        const int linesize[4], const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w, int read_pal_component,
-                        int dst_element_size);
+શૂન્ય av_read_image_line2(શૂન્ય *dst, અચલ uint8_t *data[4],
+                        અચલ પૂર્ણાંક linesize[4], અચલ AVPixFmtDescriptor *desc,
+                        પૂર્ણાંક x, પૂર્ણાંક y, પૂર્ણાંક c, પૂર્ણાંક w, પૂર્ણાંક read_pal_component,
+                        પૂર્ણાંક dst_element_size);
 
-void av_read_image_line(uint16_t *dst, const uint8_t *data[4],
-                        const int linesize[4], const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w, int read_pal_component);
+શૂન્ય av_read_image_લીટી(uint16_t *dst, અચલ uint8_t *data[4],
+                        અચલ પૂર્ણાંક linesize[4], અચલ AVPixFmtDescriptor *desc,
+                        પૂર્ણાંક x, પૂર્ણાંક y, પૂર્ણાંક c, પૂર્ણાંક w, પૂર્ણાંક read_pal_component);
 
 /**
  * Write the values from src to the pixel format component c of an
@@ -376,13 +376,13 @@ void av_read_image_line(uint16_t *dst, const uint8_t *data[4],
  * values to write to the image line
  * @param src_element_size size of elements in src array (2 or 4 byte)
  */
-void av_write_image_line2(const void *src, uint8_t *data[4],
-                         const int linesize[4], const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w, int src_element_size);
+શૂન્ય av_write_image_line2(અચલ શૂન્ય *src, uint8_t *data[4],
+                         અચલ પૂર્ણાંક linesize[4], અચલ AVPixFmtDescriptor *desc,
+                         પૂર્ણાંક x, પૂર્ણાંક y, પૂર્ણાંક c, પૂર્ણાંક w, પૂર્ણાંક src_element_size);
 
-void av_write_image_line(const uint16_t *src, uint8_t *data[4],
-                         const int linesize[4], const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w);
+શૂન્ય av_write_image_લીટી(અચલ uint16_t *src, uint8_t *data[4],
+                         અચલ પૂર્ણાંક linesize[4], અચલ AVPixFmtDescriptor *desc,
+                         પૂર્ણાંક x, પૂર્ણાંક y, પૂર્ણાંક c, પૂર્ણાંક w);
 
 /**
  * Utility function to swap the endianness of a pixel format.
@@ -392,7 +392,7 @@ void av_write_image_line(const uint16_t *src, uint8_t *data[4],
  * @return pixel format with swapped endianness if it exists,
  * otherwise AV_PIX_FMT_NONE
  */
-enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt);
+ગણના AVPixelFormat av_pix_fmt_swap_endianness(ગણના AVPixelFormat pix_fmt);
 
 #define FF_LOSS_RESOLUTION        0x0001 /**< loss due to resolution change */
 #define FF_LOSS_DEPTH             0x0002 /**< loss due to color depth change */
@@ -422,9 +422,9 @@ enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt);
  * @return Combination of flags informing you what kind of losses will occur
  * (maximum loss for an invalid dst_pix_fmt).
  */
-int av_get_pix_fmt_loss(enum AVPixelFormat dst_pix_fmt,
-                        enum AVPixelFormat src_pix_fmt,
-                        int has_alpha);
+પૂર્ણાંક av_get_pix_fmt_loss(ગણના AVPixelFormat dst_pix_fmt,
+                        ગણના AVPixelFormat src_pix_fmt,
+                        પૂર્ણાંક has_alpha);
 
 /**
  * Compute what kind of losses will occur when converting from one specific
@@ -444,7 +444,7 @@ int av_get_pix_fmt_loss(enum AVPixelFormat dst_pix_fmt,
  * @return Combination of flags informing you what kind of losses will occur
  * (maximum loss for an invalid dst_pix_fmt).
  */
-enum AVPixelFormat av_find_best_pix_fmt_of_2(enum AVPixelFormat dst_pix_fmt1, enum AVPixelFormat dst_pix_fmt2,
-                                             enum AVPixelFormat src_pix_fmt, int has_alpha, int *loss_ptr);
+ગણના AVPixelFormat av_find_best_pix_fmt_of_2(ગણના AVPixelFormat dst_pix_fmt1, ગણના AVPixelFormat dst_pix_fmt2,
+                                             ગણના AVPixelFormat src_pix_fmt, પૂર્ણાંક has_alpha, પૂર્ણાંક *loss_ptr);
 
 #endif /* AVUTIL_PIXDESC_H */

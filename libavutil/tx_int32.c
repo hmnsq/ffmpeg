@@ -17,5 +17,5 @@
  */
 
 #define TX_INT32
-#include "tx_priv.h"
-#include "tx_template.c"
+#અન્તર્ભાવ "tx_priv.h"
+#અન્તર્ભાવ "tx_template.c"

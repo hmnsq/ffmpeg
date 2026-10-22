@@ -19,34 +19,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#અન્તર્ભાવ <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "float_dsp_arm.h"
+#અન્તર્ભાવ "libavutil/attributes.h"
+#અન્તર્ભાવ "libavutil/float_dsp.h"
+#અન્તર્ભાવ "float_dsp_arm.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1, int len);
+શૂન્ય ff_vector_fmul_neon(દશાંશ *dst, અચલ દશાંશ *src0, અચલ દશાંશ *src1, પૂર્ણાંક len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+શૂન્ય ff_vector_fmac_scalar_neon(દશાંશ *dst, અચલ દશાંશ *src, દશાંશ mul,
+                                પૂર્ણાંક len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+શૂન્ય ff_vector_fmul_scalar_neon(દશાંશ *dst, અચલ દશાંશ *src, દશાંશ mul,
+                                પૂર્ણાંક len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+શૂન્ય ff_vector_fmul_window_neon(દશાંશ *dst, અચલ દશાંશ *src0,
+                                અચલ દશાંશ *src1, અચલ દશાંશ *win, પૂર્ણાંક len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+શૂન્ય ff_vector_fmul_add_neon(દશાંશ *dst, અચલ દશાંશ *src0, અચલ દશાંશ *src1,
+                             અચલ દશાંશ *src2, પૂર્ણાંક len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+શૂન્ય ff_vector_fmul_reverse_neon(દશાંશ *dst, અચલ દશાંશ *src0,
+                                 અચલ દશાંશ *src1, પૂર્ણાંક len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+શૂન્ય ff_butterflies_float_neon(દશાંશ *v1, દશાંશ *v2, પૂર્ણાંક len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+દશાંશ ff_scalarproduct_float_neon(અચલ દશાંશ *v1, અચલ દશાંશ *v2, પૂર્ણાંક len);
 
-av_cold void ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
+av_cold શૂન્ય ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
 {
     fdsp->vector_fmul = ff_vector_fmul_neon;
     fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_neon;

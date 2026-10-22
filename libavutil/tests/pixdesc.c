@@ -19,12 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <string.h>
+#અન્તર્ભાવ <stdio.h>
+#અન્તર્ભાવ <string.h>
 
-#include "libavutil/macros.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixfmt.h"
+#અન્તર્ભાવ "libavutil/macros.h"
+#અન્તર્ભાવ "libavutil/pixdesc.h"
+#અન્તર્ભાવ "libavutil/pixfmt.h"
 
 /*
  * from_name() may legitimately map to a different index when two enum
@@ -32,126 +32,126 @@
  * AVCOL_PRI_RESERVED both use "reserved"). Accept that as long as
  * name(back) equals name(i).
  */
-static int check_name_equivalence(const char *name, const char *back_name)
+સ્થિર પૂર્ણાંક check_name_equivalence(અચલ અક્ષર *name, અચલ અક્ષર *back_name)
 {
-    return back_name && !strcmp(name, back_name);
+    પાછા back_name && !strcmp(name, back_name);
 }
 
-static int test_pix_fmt_round_trip(void)
+સ્થિર પૂર્ણાંક test_pix_fmt_round_trip(શૂન્ય)
 {
-    int fail = 0;
-    for (int i = 0; i < AV_PIX_FMT_NB; i++) {
-        const char *name = av_get_pix_fmt_name(i);
-        if (!name)
-            continue;
-        if (av_get_pix_fmt(name) != i)
+    પૂર્ણાંક fail = 0;
+    માટે (પૂર્ણાંક i = 0; i < AV_PIX_FMT_NB; i++) {
+        અચલ અક્ષર *name = av_get_pix_fmt_name(i);
+        જો (!name)
+            ચાલુ;
+        જો (av_get_pix_fmt(name) != i)
             fail++;
     }
-    return fail;
+    પાછા fail;
 }
 
-static int test_color_range_round_trip(void)
+સ્થિર પૂર્ણાંક test_color_range_round_trip(શૂન્ય)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_RANGE_NB; i++) {
-        const char *name = av_color_range_name(i);
-        if (!name)
-            continue;
-        int back = av_color_range_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_range_name(back)))
+    પૂર્ણાંક fail = 0;
+    માટે (પૂર્ણાંક i = 0; i < AVCOL_RANGE_NB; i++) {
+        અચલ અક્ષર *name = av_color_range_name(i);
+        જો (!name)
+            ચાલુ;
+        પૂર્ણાંક back = av_color_range_from_name(name);
+        જો (back < 0 || !check_name_equivalence(name, av_color_range_name(back)))
             fail++;
     }
-    return fail;
+    પાછા fail;
 }
 
-static int test_color_primaries_round_trip(void)
+સ્થિર પૂર્ણાંક test_color_primaries_round_trip(શૂન્ય)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_PRI_NB; i++) {
-        const char *name = av_color_primaries_name(i);
-        if (!name)
-            continue;
-        int back = av_color_primaries_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_primaries_name(back)))
+    પૂર્ણાંક fail = 0;
+    માટે (પૂર્ણાંક i = 0; i < AVCOL_PRI_NB; i++) {
+        અચલ અક્ષર *name = av_color_primaries_name(i);
+        જો (!name)
+            ચાલુ;
+        પૂર્ણાંક back = av_color_primaries_from_name(name);
+        જો (back < 0 || !check_name_equivalence(name, av_color_primaries_name(back)))
             fail++;
     }
-    return fail;
+    પાછા fail;
 }
 
-static int test_color_transfer_round_trip(void)
+સ્થિર પૂર્ણાંક test_color_transfer_round_trip(શૂન્ય)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_TRC_NB; i++) {
-        const char *name = av_color_transfer_name(i);
-        if (!name)
-            continue;
-        int back = av_color_transfer_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_transfer_name(back)))
+    પૂર્ણાંક fail = 0;
+    માટે (પૂર્ણાંક i = 0; i < AVCOL_TRC_NB; i++) {
+        અચલ અક્ષર *name = av_color_transfer_name(i);
+        જો (!name)
+            ચાલુ;
+        પૂર્ણાંક back = av_color_transfer_from_name(name);
+        જો (back < 0 || !check_name_equivalence(name, av_color_transfer_name(back)))
             fail++;
     }
-    return fail;
+    પાછા fail;
 }
 
-static int test_color_space_round_trip(void)
+સ્થિર પૂર્ણાંક test_color_space_round_trip(શૂન્ય)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_SPC_NB; i++) {
-        const char *name = av_color_space_name(i);
-        if (!name)
-            continue;
-        int back = av_color_space_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_space_name(back)))
+    પૂર્ણાંક fail = 0;
+    માટે (પૂર્ણાંક i = 0; i < AVCOL_SPC_NB; i++) {
+        અચલ અક્ષર *name = av_color_space_name(i);
+        જો (!name)
+            ચાલુ;
+        પૂર્ણાંક back = av_color_space_from_name(name);
+        જો (back < 0 || !check_name_equivalence(name, av_color_space_name(back)))
             fail++;
     }
-    return fail;
+    પાછા fail;
 }
 
-static int test_chroma_location_round_trip(void)
+સ્થિર પૂર્ણાંક test_chroma_location_round_trip(શૂન્ય)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCHROMA_LOC_NB; i++) {
-        const char *name = av_chroma_location_name(i);
-        if (!name)
-            continue;
-        int back = av_chroma_location_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_chroma_location_name(back)))
+    પૂર્ણાંક fail = 0;
+    માટે (પૂર્ણાંક i = 0; i < AVCHROMA_LOC_NB; i++) {
+        અચલ અક્ષર *name = av_chroma_location_name(i);
+        જો (!name)
+            ચાલુ;
+        પૂર્ણાંક back = av_chroma_location_from_name(name);
+        જો (back < 0 || !check_name_equivalence(name, av_chroma_location_name(back)))
             fail++;
     }
-    return fail;
+    પાછા fail;
 }
 
-static int test_alpha_mode_round_trip(void)
+સ્થિર પૂર્ણાંક test_alpha_mode_round_trip(શૂન્ય)
 {
-    int fail = 0;
-    for (int i = 0; i < AVALPHA_MODE_NB; i++) {
-        const char *name = av_alpha_mode_name(i);
-        if (!name)
-            continue;
-        int back = av_alpha_mode_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_alpha_mode_name(back)))
+    પૂર્ણાંક fail = 0;
+    માટે (પૂર્ણાંક i = 0; i < AVALPHA_MODE_NB; i++) {
+        અચલ અક્ષર *name = av_alpha_mode_name(i);
+        જો (!name)
+            ચાલુ;
+        પૂર્ણાંક back = av_alpha_mode_from_name(name);
+        જો (back < 0 || !check_name_equivalence(name, av_alpha_mode_name(back)))
             fail++;
     }
-    return fail;
+    પાછા fail;
 }
 
-static int test_chroma_location_pos_round_trip(void)
+સ્થિર પૂર્ણાંક test_chroma_location_pos_round_trip(શૂન્ય)
 {
-    int fail = 0;
-    for (int i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
-        int xpos, ypos;
-        if (av_chroma_location_enum_to_pos(&xpos, &ypos, i) < 0) {
+    પૂર્ણાંક fail = 0;
+    માટે (પૂર્ણાંક i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
+        પૂર્ણાંક xpos, ypos;
+        જો (av_chroma_location_enum_to_pos(&xpos, &ypos, i) < 0) {
             fail++;
-            continue;
+            ચાલુ;
         }
-        if ((int)av_chroma_location_pos_to_enum(xpos, ypos) != i)
+        જો ((પૂર્ણાંક)av_chroma_location_pos_to_enum(xpos, ypos) != i)
             fail++;
     }
-    return fail;
+    પાછા fail;
 }
 
-int main(void)
+પૂર્ણાંક મુખ્ય(શૂન્ય)
 {
-    int skip = 0;
+    પૂર્ણાંક skip = 0;
 
     printf("Testing av_get_pix_fmt() / av_get_pix_fmt_name() round-trip\n");
     printf("  result: %s\n",
@@ -176,20 +176,20 @@ int main(void)
            test_chroma_location_pos_round_trip() ? "FAIL" : "OK");
 
     printf("\nTesting pixel format descriptors\n");
-    for (int i = 0; i < AV_PIX_FMT_NB * 2; i++) {
-        const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
-        if (!desc || !desc->name) {
+    માટે (પૂર્ણાંક i = 0; i < AV_PIX_FMT_NB * 2; i++) {
+        અચલ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
+        જો (!desc || !desc->name) {
             skip++;
-            continue;
+            ચાલુ;
         }
-        if (skip) {
+        જો (skip) {
             printf("  %3d unused pixel format values\n", skip);
             skip = 0;
         }
         printf("  pix fmt %s avg_bpp:%d planes:%d\n", desc->name,
                av_get_padded_bits_per_pixel(desc),
-               av_pix_fmt_count_planes(i));
+               av_pix_fmt_ગણતરી_planes(i));
     }
 
-    return 0;
+    પાછા 0;
 }

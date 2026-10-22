@@ -16,31 +16,31 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "avassert.h"
-#include "macos_kperf.h"
-#include "thread.h"
+#અન્તર્ભાવ "avassert.h"
+#અન્તર્ભાવ "macos_kperf.h"
+#અન્તર્ભાવ "thread.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <dlfcn.h>
+#અન્તર્ભાવ <stdio.h>
+#અન્તર્ભાવ <stdlib.h>
+#અન્તર્ભાવ <dlfcn.h>
 
 #define KPERF_LIST                                             \
-    F(int, kpc_get_counting, void)                             \
-    F(int, kpc_force_all_ctrs_set, int)                        \
-    F(int, kpc_set_counting, uint32_t)                         \
-    F(int, kpc_set_thread_counting, uint32_t)                  \
-    F(int, kpc_set_config, uint32_t, void *)                   \
-    F(int, kpc_get_config, uint32_t, void *)                   \
-    F(int, kpc_set_period, uint32_t, void *)                   \
-    F(int, kpc_get_period, uint32_t, void *)                   \
-    F(uint32_t, kpc_get_counter_count, uint32_t)               \
-    F(uint32_t, kpc_get_config_count, uint32_t)                \
-    F(int, kperf_sample_get, int *)                            \
-    F(int, kpc_get_thread_counters, int, unsigned int, void *)
+    F(પૂર્ણાંક, kpc_get_counting, શૂન્ય)                             \
+    F(પૂર્ણાંક, kpc_force_all_ctrs_set, પૂર્ણાંક)                        \
+    F(પૂર્ણાંક, kpc_set_counting, uint32_t)                         \
+    F(પૂર્ણાંક, kpc_set_thread_counting, uint32_t)                  \
+    F(પૂર્ણાંક, kpc_set_config, uint32_t, શૂન્ય *)                   \
+    F(પૂર્ણાંક, kpc_get_config, uint32_t, શૂન્ય *)                   \
+    F(પૂર્ણાંક, kpc_set_period, uint32_t, શૂન્ય *)                   \
+    F(પૂર્ણાંક, kpc_get_period, uint32_t, શૂન્ય *)                   \
+    F(uint32_t, kpc_get_counter_ગણતરી, uint32_t)               \
+    F(uint32_t, kpc_get_config_ગણતરી, uint32_t)                \
+    F(પૂર્ણાંક, kperf_sample_get, પૂર્ણાંક *)                            \
+    F(પૂર્ણાંક, kpc_get_thread_counters, પૂર્ણાંક, unsigned પૂર્ણાંક, શૂન્ય *)
 
 #define F(ret, name, ...)                                      \
-    typedef ret name##proc(__VA_ARGS__);                       \
-    static name##proc *name = NULL;
+    પ્રકારવ્યાખ્યા ret name##proc(__VA_ARGS__);                       \
+    સ્થિર name##proc *name = ખાલી;
 KPERF_LIST
 #undef F
 
@@ -68,13 +68,13 @@ KPERF_LIST
 #define KPC_CLASS_RAWPMU_MASK       (1 << 3)
 
 #define KPC_MAX_COUNTERS 32
-#define CONFIG_COUNT 8
+#define CONFIG_ગણતરી 8
 #define KPC_MASK (KPC_CLASS_CONFIGURABLE_MASK | KPC_CLASS_FIXED_MASK)
 
-static void kperf_init(void)
+સ્થિર શૂન્ય kperf_init(શૂન્ય)
 {
-    uint64_t config[CONFIG_COUNT] = {0};
-    void *kperf = NULL;
+    uint64_t config[CONFIG_ગણતરી] = {0};
+    શૂન્ય *kperf = ખાલી;
     uint32_t n;
 
     av_assert0(kperf = dlopen("/System/Library/PrivateFrameworks/kperf.framework/Versions/A/kperf", RTLD_LAZY));
@@ -83,10 +83,10 @@ static void kperf_init(void)
     KPERF_LIST
 #undef F
 
-    n = kpc_get_counter_count(KPC_MASK);
+    n = kpc_get_counter_ગણતરી(KPC_MASK);
     av_assert0(n <= KPC_MAX_COUNTERS);
-    n = kpc_get_config_count(KPC_MASK);
-    av_assert0(n <= CONFIG_COUNT);
+    n = kpc_get_config_ગણતરી(KPC_MASK);
+    av_assert0(n <= CONFIG_ગણતરી);
 
     config[0] = CPMU_CORE_CYCLE | CFGWORD_EL0A64EN_MASK;
     // config[3] = CPMU_INST_BRANCH | CFGWORD_EL0A64EN_MASK;
@@ -99,19 +99,19 @@ static void kperf_init(void)
     av_assert0(kpc_set_thread_counting(KPC_MASK) == 0);
 }
 
-void ff_kperf_init(void)
+શૂન્ય ff_kperf_init(શૂન્ય)
 {
-    static AVOnce init_static_once = AV_ONCE_INIT;
+    સ્થિર AVOnce init_static_once = AV_ONCE_INIT;
     ff_thread_once(&init_static_once, kperf_init);
 }
 
-uint64_t ff_kperf_cycles(void)
+uint64_t ff_kperf_cycles(શૂન્ય)
 {
     uint64_t counters[KPC_MAX_COUNTERS];
 
-    if (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
-        return -1;
+    જો (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
+        પાછા -1;
     }
 
-    return counters[0];
+    પાછા counters[0];
 }

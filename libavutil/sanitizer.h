@@ -19,20 +19,20 @@
 #ifndef AVUTIL_SANITIZER_H
 #define AVUTIL_SANITIZER_H
 
-#include "config.h"
+#અન્તર્ભાવ "config.h"
 
-#if defined(__has_feature)
-#if __has_feature(address_sanitizer)
+#જો defined(__has_feature)
+#જો __has_feature(address_sanitizer)
 #define HAVE_ASAN 1
 #endif
-#if __has_feature(memory_sanitizer)
+#જો __has_feature(memory_sanitizer)
 #define HAVE_MSAN 1
 #endif
-#if __has_feature(undefined_behavior_sanitizer)
+#જો __has_feature(undefined_behavior_sanitizer)
 #define HAVE_UBSAN 1
 #endif
 #endif
-#if defined(__SANITIZE_ADDRESS__)
+#જો defined(__SANITIZE_ADDRESS__)
 #undef  HAVE_ASAN
 #define HAVE_ASAN 1
 #endif
@@ -47,24 +47,24 @@
 #endif
 
 /* Mark allocated memory that nothing may touch until it is unpoisoned. */
-#if HAVE_ASAN
-#include <sanitizer/asan_interface.h>
+#જો HAVE_ASAN
+#અન્તર્ભાવ <sanitizer/asan_interface.h>
 #define FF_ASAN_POISON(ptr, size)   __asan_poison_memory_region(ptr, size)
 #define FF_ASAN_UNPOISON(ptr, size) __asan_unpoison_memory_region(ptr, size)
-#else
-#define FF_ASAN_POISON(ptr, size)   ((void)(ptr), (void)(size))
-#define FF_ASAN_UNPOISON(ptr, size) ((void)(ptr), (void)(size))
+#નહીંતર
+#define FF_ASAN_POISON(ptr, size)   ((શૂન્ય)(ptr), (શૂન્ય)(size))
+#define FF_ASAN_UNPOISON(ptr, size) ((શૂન્ય)(ptr), (શૂન્ય)(size))
 #endif
 
 /* Mark memory as uninitialized. */
-#if HAVE_MSAN
-#include <sanitizer/msan_interface.h>
+#જો HAVE_MSAN
+#અન્તર્ભાવ <sanitizer/msan_interface.h>
 #define FF_MEM_UNDEFINED(ptr, size) __msan_allocated_memory(ptr, size)
-#elif CONFIG_MEMORY_POISONING && HAVE_VALGRIND_MEMCHECK_H
-#include <valgrind/memcheck.h>
+#અથવાજો CONFIG_MEMORY_POISONING && HAVE_VALGRIND_MEMCHECK_H
+#અન્તર્ભાવ <valgrind/memcheck.h>
 #define FF_MEM_UNDEFINED(ptr, size) VALGRIND_MAKE_MEM_UNDEFINED(ptr, size)
-#else
-#define FF_MEM_UNDEFINED(ptr, size) ((void)(ptr), (void)(size))
+#નહીંતર
+#define FF_MEM_UNDEFINED(ptr, size) ((શૂન્ય)(ptr), (શૂન્ય)(size))
 #endif
 
 #endif /* AVUTIL_SANITIZER_H */

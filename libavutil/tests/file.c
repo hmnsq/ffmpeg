@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#અન્તર્ભાવ <stdarg.h>
+#અન્તર્ભાવ <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#અન્તર્ભાવ "libavutil/file.c"
+#અન્તર્ભાવ "libavutil/log.h"
 
-static int last_log_level = -1;
+સ્થિર પૂર્ણાંક last_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+સ્થિર શૂન્ય log_callback(શૂન્ય *ctx, પૂર્ણાંક level, અચલ અક્ષર *fmt, va_list args)
 {
-    (void)ctx; (void)fmt; (void)args;
+    (શૂન્ય)ctx; (શૂન્ય)fmt; (શૂન્ય)args;
     last_log_level = level;
 }
 
-int main(int argc, char **argv)
+પૂર્ણાંક મુખ્ય(પૂર્ણાંક argc, અક્ષર **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    અચલ અક્ષર *path = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
     size_t size;
 
     av_log_set_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
+    જો (av_file_map(path, &buf, &size, 0, ખાલી) < 0)
+        પાછા 1;
     av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    જો (size == 0)
+        પાછા 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
+    માટે (પૂર્ણાંક i = 0; i < 2; i++) {
         last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
+        જો (av_file_map("no_such_file_xyz", &buf, &size, i, ખાલી) >= 0) {
             av_file_unmap(buf, size);
-            return 2;
+            પાછા 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
+        જો (last_log_level != AV_LOG_ERROR + i) {
             fprintf(stderr, "expected level %d with offset=%d, got %d\n",
                     AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+            પાછા 3;
         }
     }
 
-    return 0;
+    પાછા 0;
 }

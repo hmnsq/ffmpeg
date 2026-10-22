@@ -21,45 +21,45 @@
  * av_get_cpu_flags() has data races.
  */
 
-#include <stdio.h>
-#include <string.h>
+#અન્તર્ભાવ <stdio.h>
+#અન્તર્ભાવ <string.h>
 
-#include "libavutil/cpu.h"
-#include "libavutil/thread.h"
+#અન્તર્ભાવ "libavutil/cpu.h"
+#અન્તર્ભાવ "libavutil/thread.h"
 
-static void *thread_main(void *arg)
+સ્થિર શૂન્ય *thread_main(શૂન્ય *arg)
 {
-    int *flags = arg;
+    પૂર્ણાંક *flags = arg;
 
     *flags = av_get_cpu_flags();
-    return NULL;
+    પાછા ખાલી;
 }
 
-int main(void)
+પૂર્ણાંક મુખ્ય(શૂન્ય)
 {
-    int cpu_flags1;
-    int cpu_flags2;
-    int ret;
+    પૂર્ણાંક cpu_flags1;
+    પૂર્ણાંક cpu_flags2;
+    પૂર્ણાંક ret;
     pthread_t thread1;
     pthread_t thread2;
 
-    if ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
+    જો ((ret = pthread_create(&thread1, ખાલી, thread_main, &cpu_flags1))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        પાછા 1;
     }
-    if ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
+    જો ((ret = pthread_create(&thread2, ખાલી, thread_main, &cpu_flags2))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        પાછા 1;
     }
-    pthread_join(thread1, NULL);
-    pthread_join(thread2, NULL);
+    pthread_join(thread1, ખાલી);
+    pthread_join(thread2, ખાલી);
 
-    if (cpu_flags1 < 0)
-        return 2;
-    if (cpu_flags2 < 0)
-        return 2;
-    if (cpu_flags1 != cpu_flags2)
-        return 3;
+    જો (cpu_flags1 < 0)
+        પાછા 2;
+    જો (cpu_flags2 < 0)
+        પાછા 2;
+    જો (cpu_flags1 != cpu_flags2)
+        પાછા 3;
 
-    return 0;
+    પાછા 0;
 }

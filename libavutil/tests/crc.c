@@ -16,16 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#અન્તર્ભાવ <stdint.h>
+#અન્તર્ભાવ <stdio.h>
 
-#include "libavutil/crc.h"
+#અન્તર્ભાવ "libavutil/crc.h"
 
-int main(void)
+પૂર્ણાંક મુખ્ય(શૂન્ય)
 {
     uint8_t buf[1999];
-    int i;
-    static const unsigned p[7][3] = {
+    પૂર્ણાંક i;
+    સ્થિર અચલ unsigned p[7][3] = {
         { AV_CRC_32_IEEE_LE, 0xEDB88320, 0x3D5CDD04 },
         { AV_CRC_32_IEEE   , 0x04C11DB7, 0xC0F5BAE0 },
         { AV_CRC_24_IEEE   , 0x864CFB  , 0xB704CE   },
@@ -34,14 +34,14 @@ int main(void)
         { AV_CRC_8_ATM     , 0x07      , 0xE3       },
         { AV_CRC_8_EBU     , 0x1D      , 0xD6       },
     };
-    const AVCRC *ctx;
+    અચલ AVCRC *ctx;
 
-    for (i = 0; i < sizeof(buf); i++)
+    માટે (i = 0; i < કદ(buf); i++)
         buf[i] = i + i * i;
 
-    for (i = 0; i < 7; i++) {
+    માટે (i = 0; i < 7; i++) {
         ctx = av_crc_get_table(p[i][0]);
-        printf("crc %08X = %X\n", p[i][1], av_crc(ctx, 0, buf, sizeof(buf)));
+        printf("crc %08X = %X\n", p[i][1], av_crc(ctx, 0, buf, કદ(buf)));
     }
-    return 0;
+    પાછા 0;
 }

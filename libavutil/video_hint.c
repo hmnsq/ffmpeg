@@ -18,41 +18,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#અન્તર્ભાવ <string.h>
 
-#include "avstring.h"
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "video_hint.h"
+#અન્તર્ભાવ "avstring.h"
+#અન્તર્ભાવ "frame.h"
+#અન્તર્ભાવ "macros.h"
+#અન્તર્ભાવ "mem.h"
+#અન્તર્ભાવ "video_hint.h"
 
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
                                  size_t *out_size)
 {
-    struct TestStruct {
+    સંરચના TestStruct {
         AVVideoHint hint;
         AVVideoRect rect;
     };
-    const size_t rect_offset = offsetof(struct TestStruct, rect);
+    અચલ size_t rect_offset = offsetof(સંરચના TestStruct, rect);
     size_t size = rect_offset;
     AVVideoHint *hint;
 
     *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
-    size += sizeof(AVVideoRect) * nb_rects;
+    જો (nb_rects > (SIZE_MAX - size) / કદ(AVVideoRect))
+        પાછા ખાલી;
+    size += કદ(AVVideoRect) * nb_rects;
 
     hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    જો (!hint)
+        પાછા ખાલી;
 
     hint->nb_rects    = nb_rects;
     hint->rect_offset = rect_offset;
-    hint->rect_size   = sizeof(AVVideoRect);
+    hint->rect_size   = કદ(AVVideoRect);
 
     *out_size = size;
 
-    return hint;
+    પાછા hint;
 }
 
 AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
@@ -63,19 +63,19 @@ AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
     size_t size = 0;
 
     hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    જો (!hint)
+        પાછા ખાલી;
 
-    buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    buf = av_buffer_create((uint8_t *)hint, size, ખાલી, ખાલી, 0);
+    જો (!buf) {
         av_freep(&hint);
-        return NULL;
+        પાછા ખાલી;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
+    જો (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        પાછા ખાલી;
     }
 
-    return hint;
+    પાછા hint;
 }

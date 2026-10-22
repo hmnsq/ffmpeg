@@ -18,79 +18,79 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#અન્તર્ભાવ "libavutil/timer.h"
 
-#include <inttypes.h>
+#અન્તર્ભાવ <inttypes.h>
 
-#include "libavutil/softfloat.h"
-#include "libavutil/common.h"
-#include "libavutil/log.h"
+#અન્તર્ભાવ "libavutil/softfloat.h"
+#અન્તર્ભાવ "libavutil/common.h"
+#અન્તર્ભાવ "libavutil/log.h"
 
-#include <stdio.h>
-#include <string.h>
+#અન્તર્ભાવ <stdio.h>
+#અન્તર્ભાવ <string.h>
 
-static const SoftFloat FLOAT_0_017776489257 = {0x1234, 12};
-static const SoftFloat FLOAT_1374_40625 = {0xabcd, 25};
-static const SoftFloat FLOAT_0_1249694824218 = {0xFFF, 15};
+સ્થિર અચલ SoftFloat FLOAT_0_017776489257 = {0x1234, 12};
+સ્થિર અચલ SoftFloat FLOAT_1374_40625 = {0xabcd, 25};
+સ્થિર અચલ SoftFloat FLOAT_0_1249694824218 = {0xFFF, 15};
 
-static double add_mul(int i)
+સ્થિર દ્વિગુણ add_mul(પૂર્ણાંક i)
 {
-    double d1 = i, d2 = i/100.0;
+    દ્વિગુણ d1 = i, d2 = i/100.0;
 
-    for (int j = 0; j < 1000; j++)
+    માટે (પૂર્ણાંક j = 0; j < 1000; j++)
         d1 = (d1+1)*d2;
-    return d1;
+    પાછા d1;
 }
 
-static SoftFloat add_mul_sf(int i)
+સ્થિર SoftFloat add_mul_sf(પૂર્ણાંક i)
 {
     SoftFloat one = av_int2sf(1, 0);
     SoftFloat sf1 = av_int2sf(i, 0);
     SoftFloat sf2 = av_div_sf(av_int2sf(i, 2), av_int2sf(200, 3));
 
-    for (int j = 0; j < 1000; j++)
+    માટે (પૂર્ણાંક j = 0; j < 1000; j++)
         sf1 = av_mul_sf(av_add_sf(sf1, one), sf2);
-    return sf1;
+    પાછા sf1;
 }
 
-int main(int argc, char **argv){
+પૂર્ણાંક મુખ્ય(પૂર્ણાંક argc, અક્ષર **argv){
     SoftFloat one= av_int2sf(1, 0);
     SoftFloat sf1, sf2, sf3;
-    double d1, d2, d3;
-    int i, j;
-    int bench = argc > 1 && !strcmp(argv[1], "-t");
+    દ્વિગુણ d1, d2, d3;
+    પૂર્ણાંક i, j;
+    પૂર્ણાંક bench = argc > 1 && !strcmp(argv[1], "-t");
     av_log_set_level(AV_LOG_DEBUG);
 
     d1= 1;
-    for(i= 0; i<10; i++){
+    માટે(i= 0; i<10; i++){
         d1= 1/(d1+1);
     }
-    printf("test1 double=%d\n", (int)(d1 * (1<<24)));
+    printf("test1 double=%d\n", (પૂર્ણાંક)(d1 * (1<<24)));
 
     sf1= one;
-    for(i= 0; i<10; i++){
+    માટે(i= 0; i<10; i++){
         sf1= av_div_sf(one, av_normalize_sf(av_add_sf(one, sf1)));
     }
     printf("test1 sf    =%d\n", av_sf2int(sf1, 24));
 
 
-    if (bench) {
-        for(i= 0; i<100; i++){
+    જો (bench) {
+        માટે(i= 0; i<100; i++){
             START_TIMER
             d1= add_mul(i);
             STOP_TIMER("float add mul")
         }
-    } else
+    } નહીંતર
         d1= add_mul(99);
-    printf("test2 double=%d\n", (int)(d1 * (1<<24)));
+    printf("test2 double=%d\n", (પૂર્ણાંક)(d1 * (1<<24)));
 
-    if (bench) {
-        for(i= 0; i<100; i++){
+    જો (bench) {
+        માટે(i= 0; i<100; i++){
             START_TIMER
             sf1= add_mul_sf(i);
             STOP_TIMER("softfloat add mul")
         }
-    } else
+    } નહીંતર
         sf1= add_mul_sf(99);
     printf("test2 sf    =%d (%d %d)\n", av_sf2int(sf1, 24), sf1.exp, sf1.mant);
 
@@ -106,72 +106,72 @@ int main(int argc, char **argv){
     sf3 = FLOAT_0_1249694824218;
     sf2 = av_add_sf(sf1, sf2);
     sf3 = av_add_sf(sf3, sf2);
-    printf("test3 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf3), sf3.mant, sf3.exp);
+    printf("test3 softfloat: %.10lf (0x%08x %d)\n", (દ્વિગુણ)av_sf2double(sf3), sf3.mant, sf3.exp);
 
     sf1 = av_int2sf(0xFFFFFFF0, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (દ્વિગુણ)av_sf2double(sf1), sf1.mant, sf1.exp);
     sf1 = av_int2sf(0x00000010, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (દ્વિગુણ)av_sf2double(sf1), sf1.mant, sf1.exp);
 
     sf1 = av_int2sf(0x1FFFFFFF, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (દ્વિગુણ)av_sf2double(sf1), sf1.mant, sf1.exp);
     sf1 = av_int2sf(0xE0000001, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (દ્વિગુણ)av_sf2double(sf1), sf1.mant, sf1.exp);
 
 
     sf1 = (SoftFloat){ 0x20000000,   MIN_EXP };
     sf1 = av_mul_sf(sf1, sf1);
-    printf("test5 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    printf("test5 softfloat: %.10lf (0x%08x %d)\n", (દ્વિગુણ)av_sf2double(sf1), sf1.mant, sf1.exp);
 
     sf1 = (SoftFloat){ 0x20000000,   MIN_EXP };
     sf2 = (SoftFloat){ 0x20000000,   MAX_EXP };
     i = av_cmp_sf(sf1, sf2);
     j = av_cmp_sf(sf2, sf1);
     sf1 = av_div_sf(sf1, sf2);
-    printf("test6 softfloat: %.10lf (0x%08x %d) %d %d\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp, i, j);
+    printf("test6 softfloat: %.10lf (0x%08x %d) %d %d\n", (દ્વિગુણ)av_sf2double(sf1), sf1.mant, sf1.exp, i, j);
 
-    for(i= -50; i<50; i++) {
+    માટે(i= -50; i<50; i++) {
         sf1= av_int2sf(i, 0);
-        for(j= -50; j<50; j++) {
-            int c;
+        માટે(j= -50; j<50; j++) {
+            પૂર્ણાંક c;
             sf2= av_int2sf(j, 0);
             c = av_cmp_sf(sf1, sf2);
-            if (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c)<0) {
+            જો (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c)<0) {
                 printf("av_cmp_sf failed at %d %d as %X\n", i, j, c);
             }
             c = av_gt_sf(sf1, sf2);
-            if ((i>j) != c) {
+            જો ((i>j) != c) {
                 printf("av_gt_sf failed at %d %d as %X\n", i, j, c);
             }
         }
         sf1 = av_int2sf(1, i);
-        for(j = -50; j < 50; j++) {
-            int c;
+        માટે(j = -50; j < 50; j++) {
+            પૂર્ણાંક c;
             sf2 = av_int2sf(1, j);
             c = av_cmp_sf(sf2, sf1);
-            if (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c) < 0) {
+            જો (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c) < 0) {
                 printf("av_cmp_sf failed2 at %d %d as %X\n", i, j, c);
             }
             c = av_gt_sf(sf1, sf2);
-            if ((i<j) != c) {
+            જો ((i<j) != c) {
                 printf("av_gt_sf failed2 at %d %d as %X\n", i, j, c);
             }
         }
     }
 
 
-    for(i= 0; i<4*36; i++){
-        int s, c;
-        double errs, errc;
+    માટે(i= 0; i<4*36; i++){
+        પૂર્ણાંક s, c;
+        દ્વિગુણ errs, errc;
 
         av_sincos_sf(i*(1ULL<<32)/36/4, &s, &c);
-        errs = (double)s/ (1<<30) - sin(i*M_PI/36);
-        errc = (double)c/ (1<<30) - cos(i*M_PI/36);
-        if (fabs(errs) > 0.000000004 || fabs(errc) >0.000000004) {
-            printf("sincos FAIL %d %f %f %f %f\n", i, (float)s/ (1<<30), (float)c/ (1<<30), sin(i*M_PI/36), cos(i*M_PI/36));
+        errs = (દ્વિગુણ)s/ (1<<30) - sin(i*M_PI/36);
+        errc = (દ્વિગુણ)c/ (1<<30) - cos(i*M_PI/36);
+        જો (fabs(errs) > 0.000000004 || fabs(errc) >0.000000004) {
+            printf("sincos FAIL %d %f %f %f %f\n", i, (દશાંશ)s/ (1<<30), (દશાંશ)c/ (1<<30), sin(i*M_PI/36), cos(i*M_PI/36));
         }
 
     }
-    return 0;
+    પાછા 0;
 
 }

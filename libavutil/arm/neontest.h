@@ -23,31 +23,31 @@
 #ifndef AVUTIL_ARM_NEONTEST_H
 #define AVUTIL_ARM_NEONTEST_H
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
+#અન્તર્ભાવ <inttypes.h>
+#અન્તર્ભાવ <stdint.h>
+#અન્તર્ભાવ <stdlib.h>
+#અન્તર્ભાવ <stdarg.h>
+#અન્તર્ભાવ <string.h>
 
-#include "libavutil/bswap.h"
+#અન્તર્ભાવ "libavutil/bswap.h"
 
 #define storeneonregs(mem)                \
-    __asm__ volatile(                     \
+    __asm__ અસ્થિર(                     \
         "vstm %0, {d8-d15}\n\t"           \
         :: "r"(mem) : "memory")
 
 #define testneonclobbers(func, ctx, ...)                        \
     uint64_t neon[2][8];                                        \
-    int ret;                                                    \
+    પૂર્ણાંક ret;                                                    \
     storeneonregs(neon[0]);                                     \
     ret = __real_ ## func(ctx, __VA_ARGS__);                    \
     storeneonregs(neon[1]);                                     \
-    if (memcmp(neon[0], neon[1], sizeof(neon[0]))) {            \
-        int i;                                                  \
+    જો (memcmp(neon[0], neon[1], કદ(neon[0]))) {            \
+        પૂર્ણાંક i;                                                  \
         av_log(ctx, AV_LOG_ERROR,                               \
                "NEON REGS CLOBBERED IN %s!\n", #func);          \
-        for (i = 0; i < 8; i ++)                                \
-            if (neon[0][i] != neon[1][i]) {                     \
+        માટે (i = 0; i < 8; i ++)                                \
+            જો (neon[0][i] != neon[1][i]) {                     \
                 av_log(ctx, AV_LOG_ERROR,                       \
                        "d%-2d = %016"PRIx64"\n",                \
                        8 + i, av_bswap64(neon[0][i]));          \
@@ -57,11 +57,11 @@
             }                                                   \
         abort();                                                \
     }                                                           \
-    return ret
+    પાછા ret
 
 #define wrap(func)      \
-int __real_ ## func;    \
-int __wrap_ ## func;    \
-int __wrap_ ## func
+પૂર્ણાંક __real_ ## func;    \
+પૂર્ણાંક __wrap_ ## func;    \
+પૂર્ણાંક __wrap_ ## func
 
 #endif /* AVUTIL_ARM_NEONTEST_H */

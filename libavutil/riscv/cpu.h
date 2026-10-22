@@ -21,31 +21,31 @@
 #ifndef AVUTIL_RISCV_CPU_H
 #define AVUTIL_RISCV_CPU_H
 
-#include "config.h"
-#include <stdbool.h>
-#include <stddef.h>
-#include "libavutil/attributes_internal.h"
-#include "libavutil/cpu.h"
+#અન્તર્ભાવ "config.h"
+#અન્તર્ભાવ <stdbool.h>
+#અન્તર્ભાવ <stddef.h>
+#અન્તર્ભાવ "libavutil/attributes_internal.h"
+#અન્તર્ભાવ "libavutil/cpu.h"
 
 #ifndef __riscv_zbb
-extern attribute_visibility_hidden bool ff_rv_zbb_supported;
+બાહ્ય attribute_visibility_hidden bool ff_rv_zbb_supported;
 #endif
 
-static inline av_const bool ff_rv_zbb_support(void)
+સ્થિર અંતઃરેખ av_const bool ff_rv_zbb_support(શૂન્ય)
 {
 #ifndef __riscv_zbb
-    return ff_rv_zbb_supported;
-#else
-    return true;
+    પાછા ff_rv_zbb_supported;
+#નહીંતર
+    પાછા true;
 #endif
 }
 
-#if HAVE_RVV
+#જો HAVE_RVV
 /**
  * Returns the vector size in bytes (always a power of two and at least 4).
  * This is undefined behaviour if vectors are not implemented.
  */
-static inline av_const size_t ff_get_rv_vlenb(void)
+સ્થિર અંતઃરેખ av_const size_t ff_get_rv_vlenb(શૂન્ય)
 {
     size_t vlenb;
 
@@ -54,27 +54,27 @@ static inline av_const size_t ff_get_rv_vlenb(void)
         ".option arch, +v\n"
         "    csrr %0, vlenb\n"
         ".option pop\n" : "=r" (vlenb));
-    return vlenb;
+    પાછા vlenb;
 }
 
 /**
  * Checks that the vector bit-size is at least the given value.
  * This is potentially undefined behaviour if vectors are not implemented.
  */
-static inline av_const bool ff_rv_vlen_least(unsigned int bits)
+સ્થિર અંતઃરેખ av_const bool ff_rv_vlen_least(unsigned પૂર્ણાંક bits)
 {
 #ifdef __riscv_v_min_vlen
-    if (bits <= __riscv_v_min_vlen)
-        return true;
-#else
+    જો (bits <= __riscv_v_min_vlen)
+        પાછા true;
+#નહીંતર
     /*
      * Vector lengths smaller than 128 bits are only possible in embedded cases
      * and cannot be run-time detected, so we can assume 128 bits at least.
      */
-    if (bits <= 128)
-        return true;
+    જો (bits <= 128)
+        પાછા true;
 #endif
-    return bits <= (8 * ff_get_rv_vlenb());
+    પાછા bits <= (8 * ff_get_rv_vlenb());
 }
 #endif
 #endif /* HAVE_RVV */

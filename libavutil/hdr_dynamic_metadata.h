@@ -21,13 +21,13 @@
 #ifndef AVUTIL_HDR_DYNAMIC_METADATA_H
 #define AVUTIL_HDR_DYNAMIC_METADATA_H
 
-#include "frame.h"
-#include "rational.h"
+#અન્તર્ભાવ "frame.h"
+#અન્તર્ભાવ "rational.h"
 
 /**
  * Option for overlapping elliptical pixel selectors in an image.
  */
-enum AVHDRPlusOverlapProcessOption {
+ગણના AVHDRPlusOverlapProcessOption {
     AV_HDR_PLUS_OVERLAP_PROCESS_WEIGHTED_AVERAGING = 0,
     AV_HDR_PLUS_OVERLAP_PROCESS_LAYERING = 1,
 };
@@ -36,7 +36,7 @@ enum AVHDRPlusOverlapProcessOption {
  * Represents the percentile at a specific percentage in
  * a distribution.
  */
-typedef struct AVHDRPlusPercentile {
+પ્રકારવ્યાખ્યા સંરચના AVHDRPlusPercentile {
     /**
      * The percentage value corresponding to a specific percentile linearized
      * RGB value in the processing window in the scene. The value shall be in
@@ -56,7 +56,7 @@ typedef struct AVHDRPlusPercentile {
  * Color transform parameters at a processing window in a dynamic metadata for
  * SMPTE 2094-40.
  */
-typedef struct AVHDRPlusColorTransformParams {
+પ્રકારવ્યાખ્યા સંરચના AVHDRPlusColorTransformParams {
     /**
      * The relative x coordinate of the top left pixel of the processing
      * window. The value shall be in the range of 0 and 1, inclusive and
@@ -64,7 +64,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * to the absolute coordinate of width of Picture - 1. The value for
      * first processing window shall be 0.
      */
-    AVRational window_upper_left_corner_x;
+    AVRational window_upper_ડાબું_corner_x;
 
     /**
      * The relative y coordinate of the top left pixel of the processing
@@ -73,7 +73,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * to the absolute coordinate of height of Picture - 1. The value for
      * first processing window shall be 0.
      */
-    AVRational window_upper_left_corner_y;
+    AVRational window_upper_ડાબું_corner_y;
 
     /**
      * The relative x coordinate of the bottom right pixel of the processing
@@ -82,7 +82,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * to the absolute coordinate of width of Picture - 1. The value for
      * first processing window shall be 1.
      */
-    AVRational window_lower_right_corner_x;
+    AVRational window_lower_જમણું_corner_x;
 
     /**
      * The relative y coordinate of the bottom right pixel of the processing
@@ -91,7 +91,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * to the absolute coordinate of height of Picture - 1. The value for
      * first processing window shall be 1.
      */
-    AVRational window_lower_right_corner_y;
+    AVRational window_lower_જમણું_corner_y;
 
     /**
      * The x coordinate of the center position of the concentric internal and
@@ -146,7 +146,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * elliptical pixel selector. For overlapping elliptical pixel selectors
      * in an image, overlap_process_option shall have the same value.
      */
-    enum AVHDRPlusOverlapProcessOption overlap_process_option;
+    ગણના AVHDRPlusOverlapProcessOption overlap_process_option;
 
     /**
      * The maximum of the color components of linearized RGB values in the
@@ -167,7 +167,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * The number of linearized maxRGB values at given percentiles in the
      * processing window in the scene. The maximum value shall be 15.
      */
-    uint8_t num_distribution_maxrgb_percentiles;
+    uint8_t અંક_distribution_maxrgb_percentiles;
 
     /**
      * The linearized maxRGB values at given percentiles in the
@@ -206,7 +206,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * The number of the intermediate anchor parameters of the tone mapping
      * function in the processing window. The maximum value shall be 15.
      */
-    uint8_t num_bezier_curve_anchors;
+    uint8_t અંક_bezier_curve_anchors;
 
     /**
      * The intermediate anchor parameters of the tone mapping function in the
@@ -240,7 +240,7 @@ typedef struct AVHDRPlusColorTransformParams {
  * av_dynamic_hdr_plus_alloc() and its size is not a part of
  * the public ABI.
  */
-typedef struct AVDynamicHDRPlus {
+પ્રકારવ્યાખ્યા સંરચના AVDynamicHDRPlus {
     /**
      * Country code by Rec. ITU-T T.35 Annex A. The value shall be 0xB5.
      */
@@ -260,7 +260,7 @@ typedef struct AVDynamicHDRPlus {
      * The number of processing windows. The value shall be in the range
      * of 1 to 3, inclusive.
      */
-    uint8_t num_windows;
+    uint8_t અંક_windows;
 
     /**
      * The color transform parameters for every processing window.
@@ -284,14 +284,14 @@ typedef struct AVDynamicHDRPlus {
      * The number of rows in the targeted system_display_actual_peak_luminance
      * array. The value shall be in the range of 2 to 25, inclusive.
      */
-    uint8_t num_rows_targeted_system_display_actual_peak_luminance;
+    uint8_t અંક_rows_targeted_system_display_actual_peak_luminance;
 
     /**
      * The number of columns in the
      * targeted_system_display_actual_peak_luminance array. The value shall be
      * in the range of 2 to 25, inclusive.
      */
-    uint8_t num_cols_targeted_system_display_actual_peak_luminance;
+    uint8_t અંક_cols_targeted_system_display_actual_peak_luminance;
 
     /**
      * The normalized actual peak luminance of the targeted system display. The
@@ -310,13 +310,13 @@ typedef struct AVDynamicHDRPlus {
      * The number of rows in the mastering_display_actual_peak_luminance array.
      * The value shall be in the range of 2 to 25, inclusive.
      */
-    uint8_t num_rows_mastering_display_actual_peak_luminance;
+    uint8_t અંક_rows_mastering_display_actual_peak_luminance;
 
     /**
      * The number of columns in the mastering_display_actual_peak_luminance
      * array. The value shall be in the range of 2 to 25, inclusive.
      */
-    uint8_t num_cols_mastering_display_actual_peak_luminance;
+    uint8_t અંક_cols_mastering_display_actual_peak_luminance;
 
     /**
      * The normalized actual peak luminance of the mastering display used for
@@ -354,7 +354,7 @@ AVDynamicHDRPlus *av_dynamic_hdr_plus_create_side_data(AVFrame *frame);
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
+પૂર્ણાંક av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, અચલ uint8_t *data,
                                  size_t size);
 
 #define AV_HDR_PLUS_MAX_PAYLOAD_SIZE 907
@@ -375,7 +375,7 @@ int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t *size);
+પૂર્ણાંક av_dynamic_hdr_plus_to_t35(અચલ AVDynamicHDRPlus *s, uint8_t **data, size_t *size);
 
 /**
  * This struct represents dynamic metadata for color volume transform as
@@ -388,7 +388,7 @@ int av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t
  * av_dynamic_smpte2094_app5_alloc() and its size is not a part of
  * the public ABI.
  */
-typedef struct AVDynamicHDRSmpte2094App5 {
+પ્રકારવ્યાખ્યા સંરચના AVDynamicHDRSmpte2094App5 {
     /**
      * Section C.2.1. smpte_st_2094_50_application_info()
      */
@@ -407,7 +407,7 @@ typedef struct AVDynamicHDRSmpte2094App5 {
      */
     uint16_t baseline_hdr_headroom;
     uint8_t use_reference_white_tone_mapping_flag;
-    uint8_t num_alternate_images;
+    uint8_t અંક_alternate_images;
     uint8_t gain_application_space_chromaticities_flag;
     uint8_t has_common_component_mix_params_flag;
     uint8_t has_common_curve_params_flag;
@@ -424,7 +424,7 @@ typedef struct AVDynamicHDRSmpte2094App5 {
     /**
      * Section C.2.5 smpte_st_2094_50_gain_curve()
      */
-    uint8_t gain_curve_num_control_points_minus_1[4];
+    uint8_t gain_curve_અંક_control_points_minus_1[4];
     uint8_t gain_curve_use_pchip_slope_flag[4];
     uint16_t gain_curve_control_points_x[4][32];
     uint16_t gain_curve_control_points_y[4][32];
@@ -459,7 +459,7 @@ AVDynamicHDRSmpte2094App5* av_dynamic_hdr_smpte2094_app5_create_side_data(AVFram
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5* s, const uint8_t* data,
+પૂર્ણાંક av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5* s, અચલ uint8_t* data,
                                            size_t size);
 
 /**
@@ -478,7 +478,7 @@ int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5* s, const u
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_smpte2094_app5_to_t35(const AVDynamicHDRSmpte2094App5* s, uint8_t** data,
+પૂર્ણાંક av_dynamic_hdr_smpte2094_app5_to_t35(અચલ AVDynamicHDRSmpte2094App5* s, uint8_t** data,
                                          size_t* size);
 
 #endif /* AVUTIL_HDR_DYNAMIC_METADATA_H */

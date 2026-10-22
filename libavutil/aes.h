@@ -21,9 +21,9 @@
 #ifndef AVUTIL_AES_H
 #define AVUTIL_AES_H
 
-#include <stdint.h>
+#અન્તર્ભાવ <stdint.h>
 
-#include "attributes.h"
+#અન્તર્ભાવ "attributes.h"
 
 /**
  * @defgroup lavu_aes AES
@@ -31,14 +31,14 @@
  * @{
  */
 
-extern const int av_aes_size;
+બાહ્ય અચલ પૂર્ણાંક av_aes_size;
 
-struct AVAES;
+સંરચના AVAES;
 
 /**
  * Allocate an AVAES context.
  */
-struct AVAES *av_aes_alloc(void);
+સંરચના AVAES *av_aes_alloc(શૂન્ય);
 
 /**
  * Initialize an AVAES context.
@@ -48,7 +48,7 @@ struct AVAES *av_aes_alloc(void);
  * @param key_bits 128, 192 or 256
  * @param decrypt 0 for encryption, 1 for decryption
  */
-int av_aes_init(struct AVAES *a, const uint8_t *key, int key_bits, int decrypt);
+પૂર્ણાંક av_aes_init(સંરચના AVAES *a, અચલ uint8_t *ચાવી, પૂર્ણાંક ચાવી_bits, પૂર્ણાંક decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -60,7 +60,7 @@ int av_aes_init(struct AVAES *a, const uint8_t *key, int key_bits, int decrypt);
  * @param iv initialization vector for CBC mode, if NULL then ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_aes_crypt(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+શૂન્ય av_aes_crypt(સંરચના AVAES *a, uint8_t *dst, અચલ uint8_t *src, પૂર્ણાંક ગણતરી, uint8_t *iv, પૂર્ણાંક decrypt);
 
 /**
  * @}

@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#અન્તર્ભાવ <stdio.h>
 
-#include "libavutil/avstring.h"
-#include "libavutil/file.h"
+#અન્તર્ભાવ "libavutil/avstring.h"
+#અન્તર્ભાવ "libavutil/file.h"
 
-static const uint8_t vectors[] =
+સ્થિર અચલ uint8_t vectors[] =
     "A\n"
     "\xC3\xA9\n"                /* U+00E9 */
     "\xE2\x82\xAC\n"            /* U+20AC */
@@ -40,52 +40,52 @@ static const uint8_t vectors[] =
     "\xC3" "A\n"                /* missing continuation */
     "\xE2\x82";                 /* truncated */
 
-static void print_sequence(const char *p, int l, int indent)
+સ્થિર શૂન્ય print_sequence(અચલ અક્ષર *p, પૂર્ણાંક l, પૂર્ણાંક indent)
 {
-    int i;
-    for (i = 0; i < l; i++)
+    પૂર્ણાંક i;
+    માટે (i = 0; i < l; i++)
         printf("%02X", (uint8_t)p[i]);
     printf("%*s", indent-l*2, "");
 }
 
-static void decode(const uint8_t *p, const uint8_t *endp)
+સ્થિર શૂન્ય decode(અચલ uint8_t *p, અચલ uint8_t *endp)
 {
     uint32_t code;
 
-    while (p < endp) {
-        int l, r;
-        const uint8_t *p0 = p;
+    જ્યારે (p < endp) {
+        પૂર્ણાંક l, r;
+        અચલ uint8_t *p0 = p;
         code = UINT32_MAX;
         r = av_utf8_decode(&code, &p, endp, 0);
-        l = (int)(p-p0);
+        l = (પૂર્ણાંક)(p-p0);
         print_sequence(p0, l, 20);
-        if (code != UINT32_MAX) {
+        જો (code != UINT32_MAX) {
             printf("%-10d 0x%-10X %-5d ", code, code, l);
-            if (r >= 0) {
-                if (*p0 == '\n') printf("\\n\n");
-                else             printf ("%.*s\n", l, p0);
-            } else {
+            જો (r >= 0) {
+                જો (*p0 == '\n') printf("\\n\n");
+                નહીંતર             printf ("%.*s\n", l, p0);
+            } નહીંતર {
                 printf("invalid code range\n");
             }
-        } else {
+        } નહીંતર {
             printf("invalid sequence\n");
         }
     }
 }
 
-int main(int argc, char **argv)
+પૂર્ણાંક મુખ્ય(પૂર્ણાંક argc, અક્ષર **argv)
 {
-    if (argc > 1) {
+    જો (argc > 1) {
         uint8_t *file_buf;
         size_t file_buf_size;
-        int ret = av_file_map(argv[1], &file_buf, &file_buf_size, 0, NULL);
-        if (ret < 0)
-            return 1;
+        પૂર્ણાંક ret = av_file_map(argv[1], &file_buf, &file_buf_size, 0, ખાલી);
+        જો (ret < 0)
+            પાછા 1;
         decode(file_buf, file_buf + file_buf_size);
         av_file_unmap(file_buf, file_buf_size);
-    } else {
-        decode(vectors, vectors + sizeof(vectors) - 1);
+    } નહીંતર {
+        decode(vectors, vectors + કદ(vectors) - 1);
     }
 
-    return 0;
+    પાછા 0;
 }

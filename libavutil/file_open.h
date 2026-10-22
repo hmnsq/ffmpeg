@@ -19,12 +19,12 @@
 #ifndef AVUTIL_FILE_OPEN_H
 #define AVUTIL_FILE_OPEN_H
 
-#include <stdio.h>
+#અન્તર્ભાવ <stdio.h>
 
-#include "config.h"
-#include "attributes.h"
+#અન્તર્ભાવ "config.h"
+#અન્તર્ભાવ "attributes.h"
 
-#if HAVE_LIBC_MSVCRT
+#જો HAVE_LIBC_MSVCRT
 #define avpriv_fopen_utf8 ff_fopen_utf8
 #define avpriv_open ff_open
 #define avpriv_tempfile ff_tempfile
@@ -34,12 +34,12 @@
  * A wrapper for open() setting O_CLOEXEC.
  */
 av_warn_unused_result
-int avpriv_open(const char *filename, int flags, ...);
+પૂર્ણાંક avpriv_open(અચલ અક્ષર *filename, પૂર્ણાંક flags, ...);
 
 /**
  * Open a file using a UTF-8 filename.
  */
-FILE *avpriv_fopen_utf8(const char *path, const char *mode);
+FILE *avpriv_fopen_utf8(અચલ અક્ષર *path, અચલ અક્ષર *mode);
 
 /**
  * Wrapper to work around the lack of mkstemp() on mingw.
@@ -52,6 +52,6 @@ FILE *avpriv_fopen_utf8(const char *path, const char *mode);
  *       calling this, av_tempfile() can't call umask itself as it is used in
  *       libraries and could interfere with the calling application.
  */
-int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *log_ctx);
+પૂર્ણાંક avpriv_tempfile(અચલ અક્ષર *prefix, અક્ષર **filename, પૂર્ણાંક log_offset, શૂન્ય *log_ctx);
 
 #endif /* AVUTIL_FILE_OPEN_H */
