@@ -19,43 +19,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
-#include "cpu.h"
+#अन्तर्भाव "libavutil/attributes.h"
+#अन्तर्भाव "libavutil/cpu.h"
+#अन्तर्भाव "libavutil/float_dsp.h"
+#अन्तर्भाव "cpu.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1,
-                         int len);
+शून्य ff_vector_fmul_neon(भिन्न *dst, अचर भिन्न *src0, अचर भिन्न *src1,
+                         पूर्णाङ्क len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+शून्य ff_vector_fmac_scalar_neon(भिन्न *dst, अचर भिन्न *src, भिन्न mul,
+                                पूर्णाङ्क len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+शून्य ff_vector_fmul_scalar_neon(भिन्न *dst, अचर भिन्न *src, भिन्न mul,
+                                पूर्णाङ्क len);
 
-void ff_vector_dmul_scalar_neon(double *dst, const double *src, double mul,
-                                int len);
+शून्य ff_vector_dmul_scalar_neon(द्विगुण *dst, अचर द्विगुण *src, द्विगुण mul,
+                                पूर्णाङ्क len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+शून्य ff_vector_fmul_window_neon(भिन्न *dst, अचर भिन्न *src0,
+                                अचर भिन्न *src1, अचर भिन्न *win, पूर्णाङ्क len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+शून्य ff_vector_fmul_add_neon(भिन्न *dst, अचर भिन्न *src0, अचर भिन्न *src1,
+                             अचर भिन्न *src2, पूर्णाङ्क len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+शून्य ff_vector_fmul_reverse_neon(भिन्न *dst, अचर भिन्न *src0,
+                                 अचर भिन्न *src1, पूर्णाङ्क len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+शून्य ff_butterflies_float_neon(भिन्न *v1, भिन्न *v2, पूर्णाङ्क len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+भिन्न ff_scalarproduct_float_neon(अचर भिन्न *v1, अचर भिन्न *v2, पूर्णाङ्क len);
 
-av_cold void ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp)
+av_cold शून्य ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp)
 {
-    int cpu_flags = av_get_cpu_flags();
+    पूर्णाङ्क cpu_flags = av_get_cpu_flags();
 
-    if (have_neon(cpu_flags)) {
+    यदि (have_neon(cpu_flags)) {
         fdsp->butterflies_float   = ff_butterflies_float_neon;
         fdsp->scalarproduct_float = ff_scalarproduct_float_neon;
         fdsp->vector_dmul_scalar  = ff_vector_dmul_scalar_neon;

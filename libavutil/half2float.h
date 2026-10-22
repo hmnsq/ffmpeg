@@ -19,38 +19,38 @@
 #ifndef AVUTIL_HALF2FLOAT_H
 #define AVUTIL_HALF2FLOAT_H
 
-#include <stdint.h>
-#include "intfloat.h"
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव "intfloat.h"
 
-#include "config.h"
+#अन्तर्भाव "config.h"
 
-typedef struct Half2FloatTables {
-#if HAVE_FAST_FLOAT16
+प्रकारनिर्देश संरचना Half2FloatTables {
+#यदि HAVE_FAST_FLOAT16
     uint8_t dummy;
-#else
+#अन्यथा
     uint32_t mantissatable[3072];
     uint32_t exponenttable[64];
     uint16_t offsettable[64];
 #endif
 } Half2FloatTables;
 
-void ff_init_half2float_tables(Half2FloatTables *t);
+शून्य ff_init_half2float_tables(Half2FloatTables *t);
 
-static inline uint32_t half2float(uint16_t h, const Half2FloatTables *t)
+स्थिर अन्तःस्थ uint32_t half2float(uint16_t h, अचर Half2FloatTables *t)
 {
-#if HAVE_FAST_FLOAT16
-    union {
+#यदि HAVE_FAST_FLOAT16
+    सङ्घ {
         _Float16 f;
         uint16_t i;
     } u;
     u.i = h;
-    return av_float2int(u.f);
-#else
+    फर्काऊ av_float2int(u.f);
+#अन्यथा
     uint32_t f;
 
     f = t->mantissatable[t->offsettable[h >> 10] + (h & 0x3ff)] + t->exponenttable[h >> 10];
 
-    return f;
+    फर्काऊ f;
 #endif
 }
 

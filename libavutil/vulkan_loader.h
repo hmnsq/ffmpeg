@@ -19,25 +19,25 @@
 #ifndef AVUTIL_VULKAN_LOADER_H
 #define AVUTIL_VULKAN_LOADER_H
 
-#include <stdio.h>
+#अन्तर्भाव <stdio.h>
 
-#include "avassert.h"
-#include "vulkan_functions.h"
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव "vulkan_functions.h"
 
 /* Macro to turn a function name into a loader struct */
 #define PFN_LOAD_INFO(req_inst, req_dev, ext_flag, name) \
     {                                                    \
         req_inst,                                        \
         req_dev,                                         \
-        offsetof(FFVulkanFunctions, name),               \
+        दुरत्व(FFVulkanFunctions, name),               \
         ext_flag,                                        \
     },
 
-static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
-                                                int nb_extensions)
+स्थिर अन्तःस्थ uint64_t ff_vk_extensions_to_mask(अचर वर्ण * अचर *extensions,
+                                                पूर्णाङ्क nb_extensions)
 {
-    static const struct ExtensionMap {
-        const char *name;
+    स्थिर अचर संरचना ExtensionMap {
+        अचर वर्ण *name;
         FFVulkanExtensions flag;
     } extension_map[] = {
         /* Instance extensions */
@@ -89,7 +89,7 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
         { VK_KHR_VIDEO_DECODE_VP9_EXTENSION_NAME,          FF_VK_EXT_VIDEO_DECODE_VP9       },
 #endif
         { VK_KHR_VIDEO_DECODE_AV1_EXTENSION_NAME,          FF_VK_EXT_VIDEO_DECODE_AV1       },
-        { VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME,           FF_VK_EXT_PUSH_DESCRIPTOR        },
+        { VK_KHR_थप_DESCRIPTOR_EXTENSION_NAME,           FF_VK_EXT_थप_DESCRIPTOR        },
 #ifdef VK_KHR_shader_expect_assume
         { VK_KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME,      FF_VK_EXT_EXPECT_ASSUME          },
 #endif
@@ -115,16 +115,16 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
 
     FFVulkanExtensions mask = 0x0;
 
-    for (int i = 0; i < nb_extensions; i++) {
-        for (int j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
-            if (!strcmp(extensions[i], extension_map[j].name)) {
+    लागि (पूर्णाङ्क i = 0; i < nb_extensions; i++) {
+        लागि (पूर्णाङ्क j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
+            यदि (!म_भेद(extensions[i], extension_map[j].name)) {
                 mask |= extension_map[j].flag;
-                continue;
+                जारी;
             }
         }
     }
 
-    return mask;
+    फर्काऊ mask;
 }
 
 /**
@@ -140,16 +140,16 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
  * plus you can be sure that any extensions you've enabled during device
  * initialization will be available.
  */
-static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
+स्थिर अन्तःस्थ पूर्णाङ्क ff_vk_load_functions(AVHWDeviceContext *ctx,
                                        FFVulkanFunctions *vk,
                                        uint64_t extensions_mask,
-                                       int has_inst, int has_dev)
+                                       पूर्णाङ्क has_inst, पूर्णाङ्क has_dev)
 {
     AVVulkanDeviceContext *hwctx = ctx->hwctx;
 
-    static const struct FunctionLoadInfo {
-        char req_inst;
-        char req_dev;
+    स्थिर अचर संरचना FunctionLoadInfo {
+        वर्ण req_inst;
+        वर्ण req_dev;
         uint16_t struct_offset;
         FFVulkanExtensions ext_flag;
     } vk_load_info[] = {
@@ -161,7 +161,7 @@ static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
     // Concatenate the names to avoid relocations. The resulting string
     // will end with \0\0
 #define FUNC_NAME(req_inst, req_dev, ext_flag, name) "vk"#name"\0"
-    const char *name =
+    अचर वर्ण *name =
         FN_LIST(FUNC_NAME)
 #ifdef _WIN32
         FN_LIST_WIN32(FUNC_NAME)
@@ -169,45 +169,45 @@ static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
     ;
 #undef FUNC_NAME
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += strlen(name) + 1, i++) {
-        const struct FunctionLoadInfo *load = &vk_load_info[i];
-        static const char extensions[][4] = { "", "EXT", "KHR" };
+    लागि (पूर्णाङ्क i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += म_माप(name) + 1, i++) {
+        अचर संरचना FunctionLoadInfo *load = &vk_load_info[i];
+        स्थिर अचर वर्ण extensions[][4] = { "", "EXT", "KHR" };
         PFN_vkVoidFunction fn;
 
-        if (load->req_dev  && !has_dev)
-            continue;
-        if (load->req_inst && !has_inst)
-            continue;
+        यदि (load->req_dev  && !has_dev)
+            जारी;
+        यदि (load->req_inst && !has_inst)
+            जारी;
 
-        for (int j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
-            char ext_name[128];
-            av_unused int n;
+        लागि (पूर्णाङ्क j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
+            वर्ण ext_name[128];
+            av_unused पूर्णाङ्क n;
 
-            n = snprintf(ext_name, sizeof(ext_name), "%s%s", name, extensions[j]);
-            av_assert1(n < sizeof(ext_name));
+            n = snprintf(ext_name, परिमाण(ext_name), "%s%s", name, extensions[j]);
+            av_assert1(n < परिमाण(ext_name));
 
-            if (load->req_dev)
+            यदि (load->req_dev)
                 fn = vk->GetDeviceProcAddr(hwctx->act_dev, ext_name);
-            else if (load->req_inst)
+            अन्यथा यदि (load->req_inst)
                 fn = hwctx->get_proc_addr(hwctx->inst, ext_name);
-            else
-                fn = hwctx->get_proc_addr(NULL, ext_name);
+            अन्यथा
+                fn = hwctx->get_proc_addr(रिक्त, ext_name);
 
-            if (fn)
-                break;
+            यदि (fn)
+                रोक;
         }
 
-        if (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
+        यदि (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
             av_log(ctx, AV_LOG_ERROR, "Loader error, function \"%s\" indicated "
                    "as supported, but got NULL function pointer!\n", name);
-            return AVERROR_EXTERNAL;
+            फर्काऊ AVERROR_EXTERNAL;
         }
 
         *(PFN_vkVoidFunction *)((uint8_t *)vk + load->struct_offset) = fn;
     }
     av_assert1(*name == '\0');
 
-    return 0;
+    फर्काऊ 0;
 }
 
 #endif /* AVUTIL_VULKAN_LOADER_H */

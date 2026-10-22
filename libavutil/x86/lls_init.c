@@ -20,27 +20,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/attributes.h"
-#include "libavutil/lls.h"
-#include "libavutil/x86/cpu.h"
+#अन्तर्भाव "libavutil/attributes.h"
+#अन्तर्भाव "libavutil/lls.h"
+#अन्तर्भाव "libavutil/x86/cpu.h"
 
-void ff_update_lls_sse2(LLSModel *m, const double *var);
-void ff_update_lls_avx(LLSModel *m, const double *var);
-void ff_update_lls_fma3(LLSModel *m, const double *var);
-double ff_evaluate_lls_sse2(LLSModel *m, const double *var, int order);
+शून्य ff_update_lls_sse2(LLSModel *m, अचर द्विगुण *var);
+शून्य ff_update_lls_avx(LLSModel *m, अचर द्विगुण *var);
+शून्य ff_update_lls_fma3(LLSModel *m, अचर द्विगुण *var);
+द्विगुण ff_evaluate_lls_sse2(LLSModel *m, अचर द्विगुण *var, पूर्णाङ्क order);
 
-av_cold void ff_init_lls_x86(LLSModel *m)
+av_cold शून्य ff_init_lls_x86(LLSModel *m)
 {
-    int cpu_flags = av_get_cpu_flags();
-    if (EXTERNAL_SSE2(cpu_flags)) {
+    पूर्णाङ्क cpu_flags = av_get_cpu_flags();
+    यदि (EXTERNAL_SSE2(cpu_flags)) {
         m->update_lls = ff_update_lls_sse2;
-        if (m->indep_count >= 4)
+        यदि (m->indep_गन्ती >= 4)
             m->evaluate_lls = ff_evaluate_lls_sse2;
     }
-    if (EXTERNAL_AVX_FAST(cpu_flags)) {
+    यदि (EXTERNAL_AVX_FAST(cpu_flags)) {
         m->update_lls = ff_update_lls_avx;
     }
-    if (EXTERNAL_FMA3_FAST(cpu_flags)) {
+    यदि (EXTERNAL_FMA3_FAST(cpu_flags)) {
         m->update_lls = ff_update_lls_fma3;
     }
 }

@@ -16,31 +16,31 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "avassert.h"
-#include "macos_kperf.h"
-#include "thread.h"
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव "macos_kperf.h"
+#अन्तर्भाव "thread.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <dlfcn.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <dlfcn.h>
 
 #define KPERF_LIST                                             \
-    F(int, kpc_get_counting, void)                             \
-    F(int, kpc_force_all_ctrs_set, int)                        \
-    F(int, kpc_set_counting, uint32_t)                         \
-    F(int, kpc_set_thread_counting, uint32_t)                  \
-    F(int, kpc_set_config, uint32_t, void *)                   \
-    F(int, kpc_get_config, uint32_t, void *)                   \
-    F(int, kpc_set_period, uint32_t, void *)                   \
-    F(int, kpc_get_period, uint32_t, void *)                   \
-    F(uint32_t, kpc_get_counter_count, uint32_t)               \
-    F(uint32_t, kpc_get_config_count, uint32_t)                \
-    F(int, kperf_sample_get, int *)                            \
-    F(int, kpc_get_thread_counters, int, unsigned int, void *)
+    F(पूर्णाङ्क, kpc_get_counting, शून्य)                             \
+    F(पूर्णाङ्क, kpc_force_all_ctrs_set, पूर्णाङ्क)                        \
+    F(पूर्णाङ्क, kpc_set_counting, uint32_t)                         \
+    F(पूर्णाङ्क, kpc_set_thread_counting, uint32_t)                  \
+    F(पूर्णाङ्क, kpc_set_config, uint32_t, शून्य *)                   \
+    F(पूर्णाङ्क, kpc_get_config, uint32_t, शून्य *)                   \
+    F(पूर्णाङ्क, kpc_set_period, uint32_t, शून्य *)                   \
+    F(पूर्णाङ्क, kpc_get_period, uint32_t, शून्य *)                   \
+    F(uint32_t, kpc_get_counter_गन्ती, uint32_t)               \
+    F(uint32_t, kpc_get_config_गन्ती, uint32_t)                \
+    F(पूर्णाङ्क, kperf_sample_get, पूर्णाङ्क *)                            \
+    F(पूर्णाङ्क, kpc_get_thread_counters, पूर्णाङ्क, अचिन्हित पूर्णाङ्क, शून्य *)
 
 #define F(ret, name, ...)                                      \
-    typedef ret name##proc(__VA_ARGS__);                       \
-    static name##proc *name = NULL;
+    प्रकारनिर्देश ret name##proc(__VA_ARGS__);                       \
+    स्थिर name##proc *name = रिक्त;
 KPERF_LIST
 #undef F
 
@@ -68,13 +68,13 @@ KPERF_LIST
 #define KPC_CLASS_RAWPMU_MASK       (1 << 3)
 
 #define KPC_MAX_COUNTERS 32
-#define CONFIG_COUNT 8
+#define CONFIG_गन्ती 8
 #define KPC_MASK (KPC_CLASS_CONFIGURABLE_MASK | KPC_CLASS_FIXED_MASK)
 
-static void kperf_init(void)
+स्थिर शून्य kperf_init(शून्य)
 {
-    uint64_t config[CONFIG_COUNT] = {0};
-    void *kperf = NULL;
+    uint64_t config[CONFIG_गन्ती] = {0};
+    शून्य *kperf = रिक्त;
     uint32_t n;
 
     av_assert0(kperf = dlopen("/System/Library/PrivateFrameworks/kperf.framework/Versions/A/kperf", RTLD_LAZY));
@@ -83,10 +83,10 @@ static void kperf_init(void)
     KPERF_LIST
 #undef F
 
-    n = kpc_get_counter_count(KPC_MASK);
+    n = kpc_get_counter_गन्ती(KPC_MASK);
     av_assert0(n <= KPC_MAX_COUNTERS);
-    n = kpc_get_config_count(KPC_MASK);
-    av_assert0(n <= CONFIG_COUNT);
+    n = kpc_get_config_गन्ती(KPC_MASK);
+    av_assert0(n <= CONFIG_गन्ती);
 
     config[0] = CPMU_CORE_CYCLE | CFGWORD_EL0A64EN_MASK;
     // config[3] = CPMU_INST_BRANCH | CFGWORD_EL0A64EN_MASK;
@@ -99,19 +99,19 @@ static void kperf_init(void)
     av_assert0(kpc_set_thread_counting(KPC_MASK) == 0);
 }
 
-void ff_kperf_init(void)
+शून्य ff_kperf_init(शून्य)
 {
-    static AVOnce init_static_once = AV_ONCE_INIT;
+    स्थिर AVOnce init_static_once = AV_ONCE_INIT;
     ff_thread_once(&init_static_once, kperf_init);
 }
 
-uint64_t ff_kperf_cycles(void)
+uint64_t ff_kperf_cycles(शून्य)
 {
     uint64_t counters[KPC_MAX_COUNTERS];
 
-    if (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
-        return -1;
+    यदि (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
+        फर्काऊ -1;
     }
 
-    return counters[0];
+    फर्काऊ counters[0];
 }

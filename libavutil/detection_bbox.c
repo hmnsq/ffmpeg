@@ -16,58 +16,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "detection_bbox.h"
-#include "mem.h"
+#अन्तर्भाव "detection_bbox.h"
+#अन्तर्भाव "mem.h"
 
-AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size)
+AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, माप_प्रकार *out_size)
 {
-    size_t size;
-    struct BBoxContext {
+    माप_प्रकार size;
+    संरचना BBoxContext {
         AVDetectionBBoxHeader header;
         AVDetectionBBox boxes;
     };
-    const size_t bboxes_offset = offsetof(struct BBoxContext, boxes);
-    const size_t bbox_size = sizeof(AVDetectionBBox);
+    अचर माप_प्रकार bboxes_offset = दुरत्व(संरचना BBoxContext, boxes);
+    अचर माप_प्रकार bbox_size = परिमाण(AVDetectionBBox);
     AVDetectionBBoxHeader *header;
 
     size = bboxes_offset;
-    if (nb_bboxes > (SIZE_MAX - size) / bbox_size)
-        return NULL;
+    यदि (nb_bboxes > (SIZE_MAX - size) / bbox_size)
+        फर्काऊ रिक्त;
     size += bbox_size * nb_bboxes;
 
     header = av_mallocz(size);
-    if (!header)
-        return NULL;
+    यदि (!header)
+        फर्काऊ रिक्त;
 
     header->nb_bboxes     = nb_bboxes;
     header->bbox_size     = bbox_size;
     header->bboxes_offset = bboxes_offset;
 
-    if (out_size)
+    यदि (out_size)
         *out_size = size;
 
-    return header;
+    फर्काऊ header;
 }
 
 AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes)
 {
     AVBufferRef         *buf;
     AVDetectionBBoxHeader *header;
-    size_t size;
+    माप_प्रकार size;
 
     header = av_detection_bbox_alloc(nb_bboxes, &size);
-    if (!header)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)header, size, NULL, NULL, 0);
-    if (!buf) {
+    यदि (!header)
+        फर्काऊ रिक्त;
+    buf = av_buffer_create((uint8_t *)header, size, रिक्त, रिक्त, 0);
+    यदि (!buf) {
         av_freep(&header);
-        return NULL;
+        फर्काऊ रिक्त;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
+    यदि (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        फर्काऊ रिक्त;
     }
 
-    return header;
+    फर्काऊ header;
 }

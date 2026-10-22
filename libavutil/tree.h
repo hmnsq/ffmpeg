@@ -24,10 +24,10 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_TREE_H
-#define AVUTIL_TREE_H
+#ifndef AVUTIL_रूख_H
+#define AVUTIL_रूख_H
 
-#include "attributes.h"
+#अन्तर्भाव "attributes.h"
 
 /**
  * @addtogroup lavu_tree AVTree
@@ -41,13 +41,13 @@
  */
 
 
-struct AVTreeNode;
-extern const int av_tree_node_size;
+संरचना AVTree_गाँठो;
+बाह्य अचर पूर्णाङ्क av_रूख_गाँठो_size;
 
 /**
  * Allocate an AVTreeNode.
  */
-struct AVTreeNode *av_tree_node_alloc(void);
+संरचना AVTree_गाँठो *av_रूख_गाँठो_alloc(शून्य);
 
 /**
  * Find an element.
@@ -63,8 +63,8 @@ struct AVTreeNode *av_tree_node_alloc(void);
  * @return An element with cmp(key, elem) == 0 or NULL if no such element
  *         exists in the tree.
  */
-void *av_tree_find(const struct AVTreeNode *root, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2]);
+शून्य *av_रूख_find(अचर संरचना AVTree_गाँठो *जरा, शून्य *साँचो,
+                   पूर्णाङ्क (*cmp)(अचर शून्य *साँचो, अचर शून्य *b), शून्य *next[2]);
 
 /**
  * Insert or remove an element.
@@ -110,11 +110,11 @@ void *av_tree_find(const struct AVTreeNode *root, void *key,
  *         Which one it is depends on the tree state and the implementation. You
  *         should make no assumptions that it's one or the other in the code.
  */
-void *av_tree_insert(struct AVTreeNode **rootp, void *key,
-                     int (*cmp)(const void *key, const void *b),
-                     struct AVTreeNode **next);
+शून्य *av_रूख_घुसाउ(संरचना AVTree_गाँठो **rootp, शून्य *साँचो,
+                     पूर्णाङ्क (*cmp)(अचर शून्य *साँचो, अचर शून्य *b),
+                     संरचना AVTree_गाँठो **next);
 
-void av_tree_destroy(struct AVTreeNode *t);
+शून्य av_रूख_destroy(संरचना AVTree_गाँठो *t);
 
 /**
  * Apply enu(opaque, &elem) to all the elements in the tree in a given range.
@@ -126,9 +126,9 @@ void av_tree_destroy(struct AVTreeNode *t);
  * @note The cmp function should use the same ordering used to construct the
  *       tree.
  */
-void av_tree_enumerate(struct AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem));
+शून्य av_रूख_enumerate(संरचना AVTree_गाँठो *t, शून्य *opaque,
+                       पूर्णाङ्क (*cmp)(शून्य *opaque, शून्य *elem),
+                       पूर्णाङ्क (*enu)(शून्य *opaque, शून्य *elem));
 
 /**
  * @}

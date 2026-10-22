@@ -19,7 +19,7 @@
 #ifndef AVUTIL_HWCONTEXT_QSV_H
 #define AVUTIL_HWCONTEXT_QSV_H
 
-#include <mfxvideo.h>
+#अन्तर्भाव <mfxvideo.h>
 
 /**
  * @file
@@ -32,7 +32,7 @@
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVQSVDeviceContext {
+प्रकारनिर्देश संरचना AVQSVDeviceContext {
     mfxSession session;
     /**
      * The mfxLoader handle used for mfxSession creation
@@ -44,13 +44,13 @@ typedef struct AVQSVDeviceContext {
      * cast to mfxLoader handle. Deallocating the AVHWDeviceContext will always
      * release this interface.
      */
-    void *loader;
+    शून्य *loader;
 } AVQSVDeviceContext;
 
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVQSVFramesContext {
+प्रकारनिर्देश संरचना AVQSVFramesContext {
     /**
      * A pointer to a mfxFrameSurface1 struct
      *
@@ -67,12 +67,12 @@ typedef struct AVQSVFramesContext {
      * Note only oneVPL GPU runtime 2.9+ can support dynamic frame pools
      * on d3d11va or vaapi
      */
-    int            nb_surfaces;
+    पूर्णाङ्क            nb_surfaces;
 
     /**
      * A combination of MFX_MEMTYPE_* describing the frame pool.
      */
-    int frame_type;
+    पूर्णाङ्क frame_type;
 
     /**
      * A pointer to a mfxFrameInfo struct

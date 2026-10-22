@@ -18,37 +18,37 @@
 
 // LCOV_EXCL_START
 
-#include "libavutil/timer.h"
+#अन्तर्भाव "libavutil/timer.h"
 
-#include <string.h>
+#अन्तर्भाव <string.h>
 
-#include "libavutil/log.h"
-#include "libavutil/adler32.h"
+#अन्तर्भाव "libavutil/log.h"
+#अन्तर्भाव "libavutil/adler32.h"
 
 #define LEN 7001
 
-int main(int argc, char **argv)
+पूर्णाङ्क main(पूर्णाङ्क argc, वर्ण **argv)
 {
-    int i;
+    पूर्णाङ्क i;
     uint8_t data[LEN];
     AVAdler checksum;
 
     av_log_set_level(AV_LOG_DEBUG);
 
-    for (i = 0; i < LEN; i++)
+    लागि (i = 0; i < LEN; i++)
         data[i] = ((i * i) >> 3) + 123 * i;
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1000; i++) {
+    यदि (argc > 1 && !म_भेद(argv[1], "-t")) {
+        लागि (i = 0; i < 1000; i++) {
             START_TIMER;
             checksum = av_adler32_update(1, data, LEN);
             STOP_TIMER("adler");
         }
-    } else {
+    } अन्यथा {
         checksum = av_adler32_update(1, data, LEN);
     }
 
-    av_log(NULL, AV_LOG_DEBUG, "%X (expected 50E6E508)\n", checksum);
-    return checksum == 0x50e6e508 ? 0 : 1;
+    av_log(रिक्त, AV_LOG_DEBUG, "%X (expected 50E6E508)\n", checksum);
+    फर्काऊ checksum == 0x50e6e508 ? 0 : 1;
 }
 // LCOV_EXCL_STOP

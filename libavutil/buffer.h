@@ -25,8 +25,8 @@
 #ifndef AVUTIL_BUFFER_H
 #define AVUTIL_BUFFER_H
 
-#include <stddef.h>
-#include <stdint.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdint.h>
 
 /**
  * @defgroup lavu_buffer AVBuffer
@@ -71,7 +71,7 @@
  * A reference counted buffer type. It is opaque and is meant to be used through
  * references (AVBufferRef).
  */
-typedef struct AVBuffer AVBuffer;
+प्रकारनिर्देश संरचना AVBuffer AVBuffer;
 
 /**
  * A reference to a data buffer.
@@ -79,7 +79,7 @@ typedef struct AVBuffer AVBuffer;
  * The size of this struct is not a part of the public ABI and it is not meant
  * to be allocated directly.
  */
-typedef struct AVBufferRef {
+प्रकारनिर्देश संरचना AVBufferRef {
     AVBuffer *buffer;
 
     /**
@@ -91,7 +91,7 @@ typedef struct AVBufferRef {
     /**
      * Size of data in bytes.
      */
-    size_t   size;
+    माप_प्रकार   size;
 } AVBufferRef;
 
 /**
@@ -99,13 +99,13 @@ typedef struct AVBufferRef {
  *
  * @return an AVBufferRef of given size or NULL when out of memory
  */
-AVBufferRef *av_buffer_alloc(size_t size);
+AVBufferRef *av_buffer_alloc(माप_प्रकार size);
 
 /**
  * Same as av_buffer_alloc(), except the returned buffer will be initialized
  * to zero.
  */
-AVBufferRef *av_buffer_allocz(size_t size);
+AVBufferRef *av_buffer_allocz(माप_प्रकार size);
 
 /**
  * Always treat the buffer as read-only, even when it has only one
@@ -128,16 +128,16 @@ AVBufferRef *av_buffer_allocz(size_t size);
  *
  * @return an AVBufferRef referring to data on success, NULL on failure.
  */
-AVBufferRef *av_buffer_create(uint8_t *data, size_t size,
-                              void (*free)(void *opaque, uint8_t *data),
-                              void *opaque, int flags);
+AVBufferRef *av_buffer_create(uint8_t *data, माप_प्रकार size,
+                              शून्य (*मुक्त)(शून्य *opaque, uint8_t *data),
+                              शून्य *opaque, पूर्णाङ्क flags);
 
 /**
  * Default free callback, which calls av_free() on the buffer data.
  * This function is meant to be passed to av_buffer_create(), not called
  * directly.
  */
-void av_buffer_default_free(void *opaque, uint8_t *data);
+शून्य av_buffer_default_free(शून्य *opaque, uint8_t *data);
 
 /**
  * Create a new reference to an AVBuffer.
@@ -145,7 +145,7 @@ void av_buffer_default_free(void *opaque, uint8_t *data);
  * @return a new AVBufferRef referring to the same AVBuffer as buf or NULL on
  * failure.
  */
-AVBufferRef *av_buffer_ref(const AVBufferRef *buf);
+AVBufferRef *av_buffer_ref(अचर AVBufferRef *buf);
 
 /**
  * Free a given reference and automatically free the buffer if there are no more
@@ -153,7 +153,7 @@ AVBufferRef *av_buffer_ref(const AVBufferRef *buf);
  *
  * @param buf the reference to be freed. The pointer is set to NULL on return.
  */
-void av_buffer_unref(AVBufferRef **buf);
+शून्य av_buffer_unref(AVBufferRef **buf);
 
 /**
  * @return 1 if the caller may write to the data referred to by buf (which is
@@ -161,14 +161,14 @@ void av_buffer_unref(AVBufferRef **buf);
  * Return 0 otherwise.
  * A positive answer is valid until av_buffer_ref() is called on buf.
  */
-int av_buffer_is_writable(const AVBufferRef *buf);
+पूर्णाङ्क av_buffer_is_writable(अचर AVBufferRef *buf);
 
 /**
  * @return the opaque parameter set by av_buffer_create.
  */
-void *av_buffer_get_opaque(const AVBufferRef *buf);
+शून्य *av_buffer_get_opaque(अचर AVBufferRef *buf);
 
-int av_buffer_get_ref_count(const AVBufferRef *buf);
+पूर्णाङ्क av_buffer_get_ref_गन्ती(अचर AVBufferRef *buf);
 
 /**
  * Create a writable reference from a given buffer reference, avoiding data copy
@@ -179,7 +179,7 @@ int av_buffer_get_ref_count(const AVBufferRef *buf);
  *            written in its place. On failure, buf is left untouched.
  * @return 0 on success, a negative AVERROR on failure.
  */
-int av_buffer_make_writable(AVBufferRef **buf);
+पूर्णाङ्क av_buffer_make_writable(AVBufferRef **buf);
 
 /**
  * Reallocate a given buffer.
@@ -196,7 +196,7 @@ int av_buffer_make_writable(AVBufferRef **buf);
  * reference to it (i.e. the one passed to this function). In all other cases
  * a new buffer is allocated and the data is copied.
  */
-int av_buffer_realloc(AVBufferRef **buf, size_t size);
+पूर्णाङ्क av_buffer_realloc(AVBufferRef **buf, माप_प्रकार size);
 
 /**
  * Ensure dst refers to the same data as src.
@@ -212,7 +212,7 @@ int av_buffer_realloc(AVBufferRef **buf, size_t size);
  * @return 0 on success
  *         AVERROR(ENOMEM) on memory allocation failure.
  */
-int av_buffer_replace(AVBufferRef **dst, const AVBufferRef *src);
+पूर्णाङ्क av_buffer_replace(AVBufferRef **dst, अचर AVBufferRef *src);
 
 /**
  * @}
@@ -252,7 +252,7 @@ int av_buffer_replace(AVBufferRef **dst, const AVBufferRef *src);
  * directly. It is allocated with av_buffer_pool_init() and freed with
  * av_buffer_pool_uninit().
  */
-typedef struct AVBufferPool AVBufferPool;
+प्रकारनिर्देश संरचना AVBufferPool AVBufferPool;
 
 /**
  * Allocate and initialize a buffer pool.
@@ -263,7 +263,7 @@ typedef struct AVBufferPool AVBufferPool;
  * (av_buffer_alloc()).
  * @return newly created buffer pool on success, NULL on error.
  */
-AVBufferPool *av_buffer_pool_init(size_t size, AVBufferRef* (*alloc)(size_t size));
+AVBufferPool *av_buffer_pool_init(माप_प्रकार size, AVBufferRef* (*alloc)(माप_प्रकार size));
 
 /**
  * Allocate and initialize a buffer pool with a more complex allocator.
@@ -280,9 +280,9 @@ AVBufferPool *av_buffer_pool_init(size_t size, AVBufferRef* (*alloc)(size_t size
  *                  data. May be NULL.
  * @return newly created buffer pool on success, NULL on error.
  */
-AVBufferPool *av_buffer_pool_init2(size_t size, void *opaque,
-                                   AVBufferRef* (*alloc)(void *opaque, size_t size),
-                                   void (*pool_free)(void *opaque));
+AVBufferPool *av_buffer_pool_init2(माप_प्रकार size, शून्य *opaque,
+                                   AVBufferRef* (*alloc)(शून्य *opaque, माप_प्रकार size),
+                                   शून्य (*pool_free)(शून्य *opaque));
 
 /**
  * Mark the pool as being available for freeing. It will actually be freed only
@@ -292,7 +292,7 @@ AVBufferPool *av_buffer_pool_init2(size_t size, void *opaque,
  *
  * @param pool pointer to the pool to be freed. It will be set to NULL.
  */
-void av_buffer_pool_uninit(AVBufferPool **pool);
+शून्य av_buffer_pool_uninit(AVBufferPool **pool);
 
 /**
  * Allocate a new AVBuffer, reusing an old buffer from the pool when available.
@@ -313,7 +313,7 @@ AVBufferRef *av_buffer_pool_get(AVBufferPool *pool);
  * therefore you have to use this function to access the original opaque
  * parameter of an allocated buffer.
  */
-void *av_buffer_pool_buffer_get_opaque(const AVBufferRef *ref);
+शून्य *av_buffer_pool_buffer_get_opaque(अचर AVBufferRef *ref);
 
 /**
  * @}

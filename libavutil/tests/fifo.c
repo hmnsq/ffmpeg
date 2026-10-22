@@ -16,123 +16,123 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "libavutil/common.h"
-#include "libavutil/fifo.h"
-#include "libavutil/lfg.h"
-#include "libavutil/random_seed.h"
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव "libavutil/common.h"
+#अन्तर्भाव "libavutil/fifo.h"
+#अन्तर्भाव "libavutil/lfg.h"
+#अन्तर्भाव "libavutil/random_seed.h"
 
-typedef struct CBState {
-    unsigned int read_idx;
-    unsigned int write_idx;
-    unsigned int to_process;
-    unsigned int offset;
+प्रकारनिर्देश संरचना CBState {
+    अचिन्हित पूर्णाङ्क read_idx;
+    अचिन्हित पूर्णाङ्क write_idx;
+    अचिन्हित पूर्णाङ्क to_process;
+    अचिन्हित पूर्णाङ्क offset;
 } CBState;
 
-static int read_cb(void *opaque, void *buf, size_t *nb_elems)
+स्थिर पूर्णाङ्क read_cb(शून्य *opaque, शून्य *buf, माप_प्रकार *nb_elems)
 {
     CBState  *s = opaque;
-    unsigned *b = buf;
+    अचिन्हित *b = buf;
 
     *nb_elems = FFMIN(*nb_elems, s->to_process);
 
-    for (unsigned i = 0; i < *nb_elems; i++)
-        if (b[i] != s->read_idx + s->offset + i) {
-            printf("Mismatch at idx %u offset %u i %u\n",
+    लागि (अचिन्हित i = 0; i < *nb_elems; i++)
+        यदि (b[i] != s->read_idx + s->offset + i) {
+            म_लिखो("Mismatch at idx %u offset %u i %u\n",
                    s->read_idx, s->offset, i);
-            return AVERROR_BUG;
+            फर्काऊ AVERROR_BUG;
         }
 
     s->offset     += *nb_elems;
     s->to_process -= *nb_elems;
 
-    return 0;
+    फर्काऊ 0;
 }
 
-static int write_cb(void *opaque, void *buf, size_t *nb_elems)
+स्थिर पूर्णाङ्क write_cb(शून्य *opaque, शून्य *buf, माप_प्रकार *nb_elems)
 {
     CBState  *s = opaque;
-    unsigned *b = buf;
+    अचिन्हित *b = buf;
 
     *nb_elems = FFMIN(*nb_elems, s->to_process);
 
-    for (unsigned i = 0; i < *nb_elems; i++)
+    लागि (अचिन्हित i = 0; i < *nb_elems; i++)
         b[i] = s->write_idx + i;
 
     s->write_idx  += *nb_elems;
     s->to_process -= *nb_elems;
 
-    return 0;
+    फर्काऊ 0;
 }
 
-int main(void)
+पूर्णाङ्क main(शून्य)
 {
     /* create a FIFO buffer */
-    AVFifo *fifo = av_fifo_alloc2(13, sizeof(int), 0);
-    int i, j, n, *p;
+    AVFifo *fifo = av_fifo_alloc2(13, परिमाण(पूर्णाङ्क), 0);
+    पूर्णाङ्क i, j, n, *p;
 
     /* fill data */
-    for (i = 0; av_fifo_can_write(fifo); i++)
+    लागि (i = 0; av_fifo_can_write(fifo); i++)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    लागि (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        म_लिखो("%d: %d\n", i, j);
     }
-    printf("\n");
+    म_लिखो("\n");
 
     /* generic peek at FIFO */
 
     n = av_fifo_can_read(fifo);
-    p = malloc(n * av_fifo_elem_size(fifo));
-    if (p == NULL) {
-        fprintf(stderr, "failed to allocate memory.\n");
-        exit(1);
+    p = दो_स्मृति(n * av_fifo_elem_size(fifo));
+    यदि (p == रिक्त) {
+        ख_लिखो(मानक_त्रुटि, "failed to allocate memory.\n");
+        निकास(1);
     }
 
-    (void) av_fifo_peek(fifo, p, n, 0);
+    (शून्य) av_fifo_peek(fifo, p, n, 0);
 
     /* read data at p */
-    for(i = 0; i < n; ++i)
-        printf("%d: %d\n", i, p[i]);
+    लागि(i = 0; i < n; ++i)
+        म_लिखो("%d: %d\n", i, p[i]);
 
-    putchar('\n');
+    अक्षर_दो('\n');
 
     /* read data */
-    for (i = 0; av_fifo_can_read(fifo); i++) {
+    लागि (i = 0; av_fifo_can_read(fifo); i++) {
         av_fifo_read(fifo, &j, 1);
-        printf(i == 0 ? "%d" : " %d", j);
+        म_लिखो(i == 0 ? "%d" : " %d", j);
     }
-    printf("\n");
+    म_लिखो("\n");
 
     /* fill data */
-    for (i = 0; av_fifo_can_write(fifo); i++)
+    लागि (i = 0; av_fifo_can_write(fifo); i++)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    लागि (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        म_लिखो("%d: %d\n", i, j);
     }
-    putchar('\n');
+    अक्षर_दो('\n');
 
     /* test fifo_grow */
-    (void) av_fifo_grow2(fifo, 15);
+    (शून्य) av_fifo_grow2(fifo, 15);
 
     /* fill data */
     n = av_fifo_can_read(fifo);
-    for (i = n; av_fifo_can_write(fifo); ++i)
+    लागि (i = n; av_fifo_can_write(fifo); ++i)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    लागि (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        म_लिखो("%d: %d\n", i, j);
     }
 
     av_fifo_freep2(&fifo);
@@ -143,26 +143,26 @@ int main(void)
         uint32_t    seed = av_get_random_seed();
 
         AVLFG lfg;
-        int ret;
+        पूर्णाङ्क ret;
 
         av_lfg_init(&lfg, seed);
 
-        fifo = av_fifo_alloc2(1, sizeof(unsigned), AV_FIFO_FLAG_AUTO_GROW);
+        fifo = av_fifo_alloc2(1, परिमाण(अचिन्हित), AV_FIFO_FLAG_AUTO_GROW);
 
-        for (i = 0; i < 32; i++) {
-            size_t       nb_elems = 16;
-            unsigned   to_process = av_lfg_get(&lfg) % nb_elems;
+        लागि (i = 0; i < 32; i++) {
+            माप_प्रकार       nb_elems = 16;
+            अचिन्हित   to_process = av_lfg_get(&lfg) % nb_elems;
 
             s.to_process = to_process;
 
             ret = av_fifo_write_from_cb(fifo, write_cb, &s, &nb_elems);
-            if (ret < 0 || s.to_process || nb_elems != to_process) {
-                printf("FIFO write fail; seed %"PRIu32"\n", seed);
-                return 1;
+            यदि (ret < 0 || s.to_process || nb_elems != to_process) {
+                म_लिखो("FIFO write fail; seed %"PRIu32"\n", seed);
+                फर्काऊ 1;
             }
 
             nb_elems = av_fifo_can_read(fifo);
-            if (nb_elems > 1) {
+            यदि (nb_elems > 1) {
                 s.offset     = av_lfg_get(&lfg) % (nb_elems - 1);
                 nb_elems    -= s.offset;
 
@@ -170,9 +170,9 @@ int main(void)
                 to_process   = s.to_process;
 
                 ret = av_fifo_peek_to_cb(fifo, read_cb, &s, &nb_elems, s.offset);
-                if (ret < 0 || s.to_process || nb_elems != to_process) {
-                    printf("FIFO peek fail; seed %"PRIu32"\n", seed);
-                    return 1;
+                यदि (ret < 0 || s.to_process || nb_elems != to_process) {
+                    म_लिखो("FIFO peek fail; seed %"PRIu32"\n", seed);
+                    फर्काऊ 1;
                 }
             }
 
@@ -182,16 +182,16 @@ int main(void)
             s.offset     = 0;
 
             ret = av_fifo_read_to_cb(fifo, read_cb, &s, &nb_elems);
-            if (ret < 0 || s.to_process || to_process != nb_elems) {
-                printf("FIFO read fail; seed %"PRIu32"\n", seed);
-                return 1;
+            यदि (ret < 0 || s.to_process || to_process != nb_elems) {
+                म_लिखो("FIFO read fail; seed %"PRIu32"\n", seed);
+                फर्काऊ 1;
             }
             s.read_idx += s.offset;
         }
     }
 
     av_fifo_freep2(&fifo);
-    free(p);
+    मुक्त(p);
 
-    return 0;
+    फर्काऊ 0;
 }

@@ -18,14 +18,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <lzo/lzo1x.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <string.h>
+#अन्तर्भाव <lzo/lzo1x.h>
 
-#include "libavutil/log.h"
-#include "libavutil/lzo.h"
-#include "libavutil/mem.h"
+#अन्तर्भाव "libavutil/log.h"
+#अन्तर्भाव "libavutil/lzo.h"
+#अन्तर्भाव "libavutil/mem.h"
 
 #define MAXSZ (10*1024*1024)
 
@@ -34,46 +34,46 @@
 #define BENCHMARK_LIBLZO_SAFE   0
 #define BENCHMARK_LIBLZO_UNSAFE 0
 
-int main(int argc, char *argv[]) {
-    FILE *in = fopen(argv[1], "rb");
-    int comp_level = argc > 2 ? atoi(argv[2]) : 0;
+पूर्णाङ्क main(पूर्णाङ्क argc, वर्ण *argv[]) {
+    खाता *in = ख_खोलो(argv[1], "rb");
+    पूर्णाङ्क comp_level = argc > 2 ? म_से_प(argv[2]) : 0;
     uint8_t *orig = av_malloc(MAXSZ + 16);
     uint8_t *comp = av_malloc(2*MAXSZ + 16);
     uint8_t *decomp = av_malloc(MAXSZ + 16);
-    size_t s = fread(orig, 1, MAXSZ, in);
+    माप_प्रकार s = ख_पढ़ो(orig, 1, MAXSZ, in);
     lzo_uint clen = 0;
-    long tmp[LZO1X_MEM_COMPRESS];
-    int inlen, outlen;
-    int i;
+    दीर्घ tmp[LZO1X_MEM_COMPRESS];
+    पूर्णाङ्क inlen, outlen;
+    पूर्णाङ्क i;
     av_log_set_level(AV_LOG_DEBUG);
-    if (comp_level == 0) {
+    यदि (comp_level == 0) {
         lzo1x_1_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 11) {
+    } अन्यथा यदि (comp_level == 11) {
         lzo1x_1_11_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 12) {
+    } अन्यथा यदि (comp_level == 12) {
         lzo1x_1_12_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 15) {
+    } अन्यथा यदि (comp_level == 15) {
         lzo1x_1_15_compress(orig, s, comp, &clen, tmp);
-    } else
+    } अन्यथा
         lzo1x_999_compress(orig, s, comp, &clen, tmp);
-    for (i = 0; i < 300; i++) {
+    लागि (i = 0; i < 300; i++) {
         inlen = clen; outlen = MAXSZ;
-#if BENCHMARK_LIBLZO_SAFE
-        if (lzo1x_decompress_safe(comp, inlen, decomp, &outlen, NULL))
-#elif BENCHMARK_LIBLZO_UNSAFE
-        if (lzo1x_decompress(comp, inlen, decomp, &outlen, NULL))
-#else
-        if (av_lzo1x_decode(decomp, &outlen, comp, &inlen))
+#यदि BENCHMARK_LIBLZO_SAFE
+        यदि (lzo1x_decompress_safe(comp, inlen, decomp, &outlen, रिक्त))
+#अथवायदि BENCHMARK_LIBLZO_UNSAFE
+        यदि (lzo1x_decompress(comp, inlen, decomp, &outlen, रिक्त))
+#अन्यथा
+        यदि (av_lzo1x_decode(decomp, &outlen, comp, &inlen))
 #endif
-            av_log(NULL, AV_LOG_ERROR, "decompression error\n");
+            av_log(रिक्त, AV_LOG_ERROR, "decompression error\n");
     }
-    if (memcmp(orig, decomp, s))
-        av_log(NULL, AV_LOG_ERROR, "decompression incorrect\n");
-    else
-        av_log(NULL, AV_LOG_ERROR, "decompression OK\n");
-    fclose(in);
+    यदि (स_भेद(orig, decomp, s))
+        av_log(रिक्त, AV_LOG_ERROR, "decompression incorrect\n");
+    अन्यथा
+        av_log(रिक्त, AV_LOG_ERROR, "decompression OK\n");
+    ख_बंद(in);
     av_free(orig);
     av_free(comp);
     av_free(decomp);
-    return 0;
+    फर्काऊ 0;
 }

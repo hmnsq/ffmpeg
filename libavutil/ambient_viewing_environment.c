@@ -18,30 +18,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "ambient_viewing_environment.h"
-#include "mem.h"
+#अन्तर्भाव "ambient_viewing_environment.h"
+#अन्तर्भाव "mem.h"
 
-static void get_defaults(AVAmbientViewingEnvironment *env)
+स्थिर शून्य get_defaults(AVAmbientViewingEnvironment *env)
 {
     env->ambient_illuminance =
     env->ambient_light_x     =
     env->ambient_light_y     = (AVRational) { 0, 1 };
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(माप_प्रकार *size)
 {
     AVAmbientViewingEnvironment *env =
-        av_mallocz(sizeof(AVAmbientViewingEnvironment));
+        av_mallocz(परिमाण(AVAmbientViewingEnvironment));
 
-    if (size)
-        *size = env ? sizeof(*env) : 0;
+    यदि (size)
+        *size = env ? परिमाण(*env) : 0;
 
-    if (!env)
-        return NULL;
+    यदि (!env)
+        फर्काऊ रिक्त;
 
     get_defaults(env);
 
-    return env;
+    फर्काऊ env;
 }
 
 AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame)
@@ -49,12 +49,12 @@ AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVF
     AVFrameSideData *side_data =
         av_frame_new_side_data(frame,
                                AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
-                               sizeof(AVAmbientViewingEnvironment));
-    if (!side_data)
-        return NULL;
+                               परिमाण(AVAmbientViewingEnvironment));
+    यदि (!side_data)
+        फर्काऊ रिक्त;
 
-    memset(side_data->data, 0, side_data->size);
+    स_रखो(side_data->data, 0, side_data->size);
     get_defaults((AVAmbientViewingEnvironment *)side_data->data);
 
-    return (AVAmbientViewingEnvironment *)side_data->data;
+    फर्काऊ (AVAmbientViewingEnvironment *)side_data->data;
 }

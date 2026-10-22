@@ -18,71 +18,71 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/mem.h"
+#अन्तर्भाव "libavutil/mem.h"
 
-#include "libavutil/dict.c"
+#अन्तर्भाव "libavutil/dict.c"
 
-static const AVDictionaryEntry *dict_iterate(const AVDictionary *m,
-                                             const AVDictionaryEntry *prev)
+स्थिर अचर AVDictionaryEntry *dict_iterate(अचर AVDictionary *m,
+                                             अचर AVDictionaryEntry *prev)
 {
-    const AVDictionaryEntry *dict_get = av_dict_get(m, "", prev, AV_DICT_IGNORE_SUFFIX);
-    const AVDictionaryEntry *dict_iterate = av_dict_iterate(m, prev);
+    अचर AVDictionaryEntry *dict_get = av_dict_get(m, "", prev, AV_DICT_IGNORE_SUFFIX);
+    अचर AVDictionaryEntry *dict_iterate = av_dict_iterate(m, prev);
 
-    if (dict_get != dict_iterate) {
+    यदि (dict_get != dict_iterate) {
 #define GET(entry, mem) ((entry) ? (entry)->mem : "N/A")
-        printf("Iterating with av_dict_iterate() yields a different result "
+        म_लिखो("Iterating with av_dict_iterate() yields a different result "
                "than iterating with av_dict_get() and AV_DICT_IGNORE_SUFFIX "
                "(prev: %p, key %s; av_dict_iterate() %p, key %s, value %s; "
                "av_dict_get() %p, key %s, value %s)\n",
-               prev, GET(prev, key),
-               dict_iterate, GET(dict_iterate, key), GET(dict_iterate, value),
-               dict_get, GET(dict_get, key), GET(dict_get, value));
+               prev, GET(prev, साँचो),
+               dict_iterate, GET(dict_iterate, साँचो), GET(dict_iterate, मान),
+               dict_get, GET(dict_get, साँचो), GET(dict_get, मान));
 #undef GET
     }
-    return dict_iterate;
+    फर्काऊ dict_iterate;
 }
 
-static void print_dict(const AVDictionary *m)
+स्थिर शून्य print_dict(अचर AVDictionary *m)
 {
-    const AVDictionaryEntry *t = NULL;
-    const char *sep = "";
-    while ((t = dict_iterate(m, t))) {
-        printf("%s%s %s", sep, t->key, t->value);
+    अचर AVDictionaryEntry *t = रिक्त;
+    अचर वर्ण *sep = "";
+    जबसम्म ((t = dict_iterate(m, t))) {
+        म_लिखो("%s%s %s", sep, t->साँचो, t->मान);
         sep = "   ";
     }
-    printf("\n");
+    म_लिखो("\n");
 }
 
-static void test_separators(const AVDictionary *m, const char pair, const char val)
+स्थिर शून्य test_separators(अचर AVDictionary *m, अचर वर्ण pair, अचर वर्ण val)
 {
-    AVDictionary *dict = NULL;
-    char pairs[] = {pair , '\0'};
-    char vals[]  = {val, '\0'};
+    AVDictionary *dict = रिक्त;
+    वर्ण pairs[] = {pair , '\0'};
+    वर्ण vals[]  = {val, '\0'};
 
-    char *buffer = NULL;
-    int ret;
+    वर्ण *buffer = रिक्त;
+    पूर्णाङ्क ret;
 
     av_dict_copy(&dict, m, 0);
     print_dict(dict);
     av_dict_get_string(dict, &buffer, val, pair);
-    printf("%s\n", buffer);
+    म_लिखो("%s\n", buffer);
     av_dict_free(&dict);
     ret = av_dict_parse_string(&dict, buffer, vals, pairs, 0);
-    printf("ret %d\n", ret);
+    म_लिखो("ret %d\n", ret);
     av_freep(&buffer);
     print_dict(dict);
     av_dict_free(&dict);
 }
 
-int main(void)
+पूर्णाङ्क main(शून्य)
 {
-    AVDictionary *dict = NULL;
-    const AVDictionaryEntry *e;
-    char *buffer = NULL;
+    AVDictionary *dict = रिक्त;
+    अचर AVDictionaryEntry *e;
+    वर्ण *buffer = रिक्त;
 
-    printf("Testing av_dict_get_string() and av_dict_parse_string()\n");
+    म_लिखो("Testing av_dict_get_string() and av_dict_parse_string()\n");
     av_dict_get_string(dict, &buffer, '=', ',');
-    printf("%s\n", buffer);
+    म_लिखो("%s\n", buffer);
     av_freep(&buffer);
     av_dict_set(&dict, "aaa", "aaa", 0);
     av_dict_set(&dict, "b,b", "bbb", 0);
@@ -105,66 +105,66 @@ int main(void)
     test_separators(dict, '"', '\'');
     av_dict_free(&dict);
 
-    printf("\nTesting av_dict_set()\n");
+    म_लिखो("\nTesting av_dict_set()\n");
     av_dict_set(&dict, "a", "a", 0);
     av_dict_set(&dict, "b", av_strdup("b"), AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set(&dict, av_strdup("c"), "c", AV_DICT_DONT_STRDUP_KEY);
-    av_dict_set(&dict, av_strdup("d"), av_strdup("d"), AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    av_dict_set(&dict, av_strdup("c"), "c", AV_DICT_DONT_STRDUP_साँचो);
+    av_dict_set(&dict, av_strdup("d"), av_strdup("d"), AV_DICT_DONT_STRDUP_साँचो | AV_DICT_DONT_STRDUP_VAL);
     av_dict_set(&dict, "e", "e", AV_DICT_DONT_OVERWRITE);
     av_dict_set(&dict, "e", "f", AV_DICT_DONT_OVERWRITE);
     av_dict_set(&dict, "f", "f", 0);
-    av_dict_set(&dict, "f", NULL, 0);
+    av_dict_set(&dict, "f", रिक्त, 0);
     av_dict_set(&dict, "ff", "f", 0);
     av_dict_set(&dict, "ff", "f", AV_DICT_APPEND);
-    if (av_dict_get(dict, NULL, NULL, 0))
-        printf("av_dict_get() does not correctly handle NULL key.\n");
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("%s %s\n", e->key, e->value);
+    यदि (av_dict_get(dict, रिक्त, रिक्त, 0))
+        म_लिखो("av_dict_get() does not correctly handle NULL key.\n");
+    e = रिक्त;
+    जबसम्म ((e = dict_iterate(dict, e)))
+        म_लिखो("%s %s\n", e->साँचो, e->मान);
     av_dict_free(&dict);
 
-    if (av_dict_set(&dict, NULL, "a", 0) >= 0 ||
-        av_dict_set(&dict, NULL, "b", 0) >= 0 ||
-        av_dict_set(&dict, NULL, NULL, AV_DICT_DONT_STRDUP_KEY) >= 0 ||
-        av_dict_set(&dict, NULL, av_strdup("b"), AV_DICT_DONT_STRDUP_VAL) >= 0 ||
-        av_dict_count(dict))
-        printf("av_dict_set does not correctly handle NULL key\n");
+    यदि (av_dict_set(&dict, रिक्त, "a", 0) >= 0 ||
+        av_dict_set(&dict, रिक्त, "b", 0) >= 0 ||
+        av_dict_set(&dict, रिक्त, रिक्त, AV_DICT_DONT_STRDUP_साँचो) >= 0 ||
+        av_dict_set(&dict, रिक्त, av_strdup("b"), AV_DICT_DONT_STRDUP_VAL) >= 0 ||
+        av_dict_गन्ती(dict))
+        म_लिखो("av_dict_set does not correctly handle NULL key\n");
 
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("'%s' '%s'\n", e->key, e->value);
+    e = रिक्त;
+    जबसम्म ((e = dict_iterate(dict, e)))
+        म_लिखो("'%s' '%s'\n", e->साँचो, e->मान);
     av_dict_free(&dict);
 
 
     //valgrind sensible test
-    printf("\nTesting av_dict_set_int()\n");
+    म_लिखो("\nTesting av_dict_set_int()\n");
     av_dict_set_int(&dict, "1", 1, AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set_int(&dict, av_strdup("2"), 2, AV_DICT_DONT_STRDUP_KEY);
-    av_dict_set_int(&dict, av_strdup("3"), 3, AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    av_dict_set_int(&dict, av_strdup("2"), 2, AV_DICT_DONT_STRDUP_साँचो);
+    av_dict_set_int(&dict, av_strdup("3"), 3, AV_DICT_DONT_STRDUP_साँचो | AV_DICT_DONT_STRDUP_VAL);
     av_dict_set_int(&dict, "4", 4, 0);
     av_dict_set_int(&dict, "5", 5, AV_DICT_DONT_OVERWRITE);
     av_dict_set_int(&dict, "5", 6, AV_DICT_DONT_OVERWRITE);
     av_dict_set_int(&dict, "12", 1, 0);
     av_dict_set_int(&dict, "12", 2, AV_DICT_APPEND);
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("%s %s\n", e->key, e->value);
+    e = रिक्त;
+    जबसम्म ((e = dict_iterate(dict, e)))
+        म_लिखो("%s %s\n", e->साँचो, e->मान);
     av_dict_free(&dict);
 
     //valgrind sensible test
-    printf("\nTesting av_dict_set() with existing AVDictionaryEntry.key as key\n");
-    if (av_dict_set(&dict, "key", "old", 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    if (av_dict_set(&dict, e->key, "new val OK", 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    printf("%s\n", e->value);
-    if (av_dict_set(&dict, e->key, e->value, 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    printf("%s\n", e->value);
+    म_लिखो("\nTesting av_dict_set() with existing AVDictionaryEntry.key as key\n");
+    यदि (av_dict_set(&dict, "key", "old", 0) < 0)
+        फर्काऊ 1;
+    e = av_dict_get(dict, "key", रिक्त, 0);
+    यदि (av_dict_set(&dict, e->साँचो, "new val OK", 0) < 0)
+        फर्काऊ 1;
+    e = av_dict_get(dict, "key", रिक्त, 0);
+    म_लिखो("%s\n", e->मान);
+    यदि (av_dict_set(&dict, e->साँचो, e->मान, 0) < 0)
+        फर्काऊ 1;
+    e = av_dict_get(dict, "key", रिक्त, 0);
+    म_लिखो("%s\n", e->मान);
     av_dict_free(&dict);
 
-    return 0;
+    फर्काऊ 0;
 }

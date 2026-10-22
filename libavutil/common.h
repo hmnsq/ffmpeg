@@ -26,29 +26,29 @@
 #ifndef AVUTIL_COMMON_H
 #define AVUTIL_COMMON_H
 
-#if defined(__cplusplus) && !defined(__STDC_CONSTANT_MACROS) && !defined(UINT64_C)
+#यदि defined(__cplusplus) && !defined(__STDC_CONSTANT_MACROS) && !defined(UINT64_C)
 #error missing -D__STDC_CONSTANT_MACROS / #define __STDC_CONSTANT_MACROS
 #endif
 
-#include <errno.h>
-#include <inttypes.h>
-#include <limits.h>
-#include <math.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#अन्तर्भाव <errno.h>
+#अन्तर्भाव <inttypes.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <math.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <string.h>
 
-#include "attributes.h"
-#include "error.h"
-#include "macros.h"
-#include "version.h"
+#अन्तर्भाव "attributes.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "macros.h"
+#अन्तर्भाव "version.h"
 
 #ifdef HAVE_AV_CONFIG_H
 #   include "config.h"
 #   include "intmath.h"
 #   include "internal.h"
-#else
+#अन्यथा
 #   include "mem.h"
 #endif /* HAVE_AV_CONFIG_H */
 
@@ -88,7 +88,7 @@
  * This also works with INT_MIN which would otherwise not be representable
  * As with many macros, this evaluates its argument twice.
  */
-#define FFABSU(a) ((a) <= 0 ? -(unsigned)(a) : (unsigned)(a))
+#define FFABSU(a) ((a) <= 0 ? -(अचिन्हित)(a) : (अचिन्हित)(a))
 #define FFABS64U(a) ((a) <= 0 ? -(uint64_t)(a) : (uint64_t)(a))
 
 /* misc math functions */
@@ -161,11 +161,11 @@
 #endif
 
 #ifndef av_log2
-av_const int av_log2(unsigned v);
+av_const पूर्णाङ्क av_log2(अचिन्हित v);
 #endif
 
 #ifndef av_log2_16bit
-av_const int av_log2_16bit(unsigned v);
+av_const पूर्णाङ्क av_log2_16bit(अचिन्हित v);
 #endif
 
 /**
@@ -175,14 +175,14 @@ av_const int av_log2_16bit(unsigned v);
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
+स्थिर av_always_inline av_const पूर्णाङ्क av_clip_c(पूर्णाङ्क a, पूर्णाङ्क amin, पूर्णाङ्क amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
+#यदि defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    यदि (amin > amax) पात();
 #endif
-    if      (a < amin) return amin;
-    else if (a > amax) return amax;
-    else               return a;
+    यदि      (a < amin) फर्काऊ amin;
+    अन्यथा यदि (a > amax) फर्काऊ amax;
+    अन्यथा               फर्काऊ a;
 }
 
 /**
@@ -192,14 +192,14 @@ static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, int64_t amax)
+स्थिर av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, int64_t amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
+#यदि defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    यदि (amin > amax) पात();
 #endif
-    if      (a < amin) return amin;
-    else if (a > amax) return amax;
-    else               return a;
+    यदि      (a < amin) फर्काऊ amin;
+    अन्यथा यदि (a > amax) फर्काऊ amax;
+    अन्यथा               फर्काऊ a;
 }
 
 /**
@@ -207,10 +207,10 @@ static av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, in
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const uint8_t av_clip_uint8_c(int a)
+स्थिर av_always_inline av_const uint8_t av_clip_uint8_c(पूर्णाङ्क a)
 {
-    if (a&(~0xFF)) return (~a)>>31;
-    else           return a;
+    यदि (a&(~0xFF)) फर्काऊ (~a)>>31;
+    अन्यथा           फर्काऊ a;
 }
 
 /**
@@ -218,10 +218,10 @@ static av_always_inline av_const uint8_t av_clip_uint8_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const int8_t av_clip_int8_c(int a)
+स्थिर av_always_inline av_const int8_t av_clip_int8_c(पूर्णाङ्क a)
 {
-    if ((a+0x80U) & ~0xFF) return (a>>31) ^ 0x7F;
-    else                  return a;
+    यदि ((a+0x80U) & ~0xFF) फर्काऊ (a>>31) ^ 0x7F;
+    अन्यथा                  फर्काऊ a;
 }
 
 /**
@@ -229,10 +229,10 @@ static av_always_inline av_const int8_t av_clip_int8_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const uint16_t av_clip_uint16_c(int a)
+स्थिर av_always_inline av_const uint16_t av_clip_uint16_c(पूर्णाङ्क a)
 {
-    if (a&(~0xFFFF)) return (~a)>>31;
-    else             return a;
+    यदि (a&(~0xFFFF)) फर्काऊ (~a)>>31;
+    अन्यथा             फर्काऊ a;
 }
 
 /**
@@ -240,10 +240,10 @@ static av_always_inline av_const uint16_t av_clip_uint16_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const int16_t av_clip_int16_c(int a)
+स्थिर av_always_inline av_const int16_t av_clip_int16_c(पूर्णाङ्क a)
 {
-    if ((a+0x8000U) & ~0xFFFF) return (a>>31) ^ 0x7FFF;
-    else                      return a;
+    यदि ((a+0x8000U) & ~0xFFFF) फर्काऊ (a>>31) ^ 0x7FFF;
+    अन्यथा                      फर्काऊ a;
 }
 
 /**
@@ -251,10 +251,10 @@ static av_always_inline av_const int16_t av_clip_int16_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
+स्थिर av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
 {
-    if ((a+UINT64_C(0x80000000)) & ~UINT64_C(0xFFFFFFFF)) return (int32_t)((a>>63) ^ 0x7FFFFFFF);
-    else                                                  return (int32_t)a;
+    यदि ((a+UINT64_C(0x80000000)) & ~UINT64_C(0xFFFFFFFF)) फर्काऊ (int32_t)((a>>63) ^ 0x7FFFFFFF);
+    अन्यथा                                                  फर्काऊ (int32_t)a;
 }
 
 /**
@@ -263,12 +263,12 @@ static av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
  * @param  p bit position to clip at
  * @return clipped value
  */
-static av_always_inline av_const int av_clip_intp2_c(int a, int p)
+स्थिर av_always_inline av_const पूर्णाङ्क av_clip_intp2_c(पूर्णाङ्क a, पूर्णाङ्क p)
 {
-    if (((unsigned)a + (1U << p)) & ~((2U << p) - 1))
-        return (a >> 31) ^ ((1 << p) - 1);
-    else
-        return a;
+    यदि (((अचिन्हित)a + (1U << p)) & ~((2U << p) - 1))
+        फर्काऊ (a >> 31) ^ ((1 << p) - 1);
+    अन्यथा
+        फर्काऊ a;
 }
 
 /**
@@ -277,10 +277,10 @@ static av_always_inline av_const int av_clip_intp2_c(int a, int p)
  * @param  p bit position to clip at
  * @return clipped value
  */
-static av_always_inline av_const unsigned av_clip_uintp2_c(int a, int p)
+स्थिर av_always_inline av_const अचिन्हित av_clip_uintp2_c(पूर्णाङ्क a, पूर्णाङ्क p)
 {
-    if (a & ~((1U<<p) - 1)) return (~a) >> 31 & ((1U<<p) - 1);
-    else                    return  a;
+    यदि (a & ~((1U<<p) - 1)) फर्काऊ (~a) >> 31 & ((1U<<p) - 1);
+    अन्यथा                    फर्काऊ  a;
 }
 
 /**
@@ -289,12 +289,12 @@ static av_always_inline av_const unsigned av_clip_uintp2_c(int a, int p)
  * @param  p bit position to clip at. Must be between 0 and 31.
  * @return clipped value
  */
-static av_always_inline av_const unsigned av_zero_extend_c(unsigned a, unsigned p)
+स्थिर av_always_inline av_const अचिन्हित av_zero_extend_c(अचिन्हित a, अचिन्हित p)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (p > 31) abort();
+#यदि defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    यदि (p > 31) पात();
 #endif
-    return a & ((1U << p) - 1);
+    फर्काऊ a & ((1U << p) - 1);
 }
 
 /**
@@ -304,9 +304,9 @@ static av_always_inline av_const unsigned av_zero_extend_c(unsigned a, unsigned 
  * @param  b another value
  * @return sum with signed saturation
  */
-static av_always_inline int av_sat_add32_c(int a, int b)
+स्थिर av_always_inline पूर्णाङ्क av_sat_add32_c(पूर्णाङ्क a, पूर्णाङ्क b)
 {
-    return av_clipl_int32((int64_t)a + b);
+    फर्काऊ av_clipl_int32((int64_t)a + b);
 }
 
 /**
@@ -316,9 +316,9 @@ static av_always_inline int av_sat_add32_c(int a, int b)
  * @param  b value doubled and added to a
  * @return sum sat(a + sat(2*b)) with signed saturation
  */
-static av_always_inline int av_sat_dadd32_c(int a, int b)
+स्थिर av_always_inline पूर्णाङ्क av_sat_dadd32_c(पूर्णाङ्क a, पूर्णाङ्क b)
 {
-    return av_sat_add32(a, av_sat_add32(b, b));
+    फर्काऊ av_sat_add32(a, av_sat_add32(b, b));
 }
 
 /**
@@ -328,9 +328,9 @@ static av_always_inline int av_sat_dadd32_c(int a, int b)
  * @param  b another value
  * @return difference with signed saturation
  */
-static av_always_inline int av_sat_sub32_c(int a, int b)
+स्थिर av_always_inline पूर्णाङ्क av_sat_sub32_c(पूर्णाङ्क a, पूर्णाङ्क b)
 {
-    return av_clipl_int32((int64_t)a - b);
+    फर्काऊ av_clipl_int32((int64_t)a - b);
 }
 
 /**
@@ -340,9 +340,9 @@ static av_always_inline int av_sat_sub32_c(int a, int b)
  * @param  b value doubled and subtracted from a
  * @return difference sat(a - sat(2*b)) with signed saturation
  */
-static av_always_inline int av_sat_dsub32_c(int a, int b)
+स्थिर av_always_inline पूर्णाङ्क av_sat_dsub32_c(पूर्णाङ्क a, पूर्णाङ्क b)
 {
-    return av_sat_sub32(a, av_sat_add32(b, b));
+    फर्काऊ av_sat_sub32(a, av_sat_add32(b, b));
 }
 
 /**
@@ -352,15 +352,15 @@ static av_always_inline int av_sat_dsub32_c(int a, int b)
  * @param  b another value
  * @return sum with signed saturation
  */
-static av_always_inline int64_t av_sat_add64_c(int64_t a, int64_t b) {
-#if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_add_overflow)
+स्थिर av_always_inline int64_t av_sat_add64_c(int64_t a, int64_t b) {
+#यदि (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_add_overflow)
     int64_t tmp;
-    return !__builtin_add_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
-#else
+    फर्काऊ !__builtin_add_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
+#अन्यथा
     int64_t s = a+(uint64_t)b;
-    if ((int64_t)(a^b | ~s^b) >= 0)
-        return INT64_MAX ^ (b >> 63);
-    return s;
+    यदि ((int64_t)(a^b | ~s^b) >= 0)
+        फर्काऊ INT64_MAX ^ (b >> 63);
+    फर्काऊ s;
 #endif
 }
 
@@ -371,16 +371,16 @@ static av_always_inline int64_t av_sat_add64_c(int64_t a, int64_t b) {
  * @param  b another value
  * @return difference with signed saturation
  */
-static av_always_inline int64_t av_sat_sub64_c(int64_t a, int64_t b) {
-#if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_sub_overflow)
+स्थिर av_always_inline int64_t av_sat_sub64_c(int64_t a, int64_t b) {
+#यदि (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_sub_overflow)
     int64_t tmp;
-    return !__builtin_sub_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
-#else
-    if (b <= 0 && a >= INT64_MAX + b)
-        return INT64_MAX;
-    if (b >= 0 && a <= INT64_MIN + b)
-        return INT64_MIN;
-    return a - b;
+    फर्काऊ !__builtin_sub_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
+#अन्यथा
+    यदि (b <= 0 && a >= INT64_MAX + b)
+        फर्काऊ INT64_MAX;
+    यदि (b >= 0 && a <= INT64_MIN + b)
+        फर्काऊ INT64_MIN;
+    फर्काऊ a - b;
 #endif
 }
 
@@ -393,12 +393,12 @@ static av_always_inline int64_t av_sat_sub64_c(int64_t a, int64_t b) {
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const float av_clipf_c(float a, float amin, float amax)
+स्थिर av_always_inline av_const भिन्न av_clipf_c(भिन्न a, भिन्न amin, भिन्न amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
+#यदि defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    यदि (amin > amax) पात();
 #endif
-    return FFMIN(FFMAX(a, amin), amax);
+    फर्काऊ FFMIN(FFMAX(a, amin), amax);
 }
 
 /**
@@ -410,21 +410,21 @@ static av_always_inline av_const float av_clipf_c(float a, float amin, float ama
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const double av_clipd_c(double a, double amin, double amax)
+स्थिर av_always_inline av_const द्विगुण av_clipd_c(द्विगुण a, द्विगुण amin, द्विगुण amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
+#यदि defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    यदि (amin > amax) पात();
 #endif
-    return FFMIN(FFMAX(a, amin), amax);
+    फर्काऊ FFMIN(FFMAX(a, amin), amax);
 }
 
 /** Compute ceil(log2(x)).
  * @param x value used to compute ceil(log2(x))
  * @return computed ceiling of log2(x)
  */
-static av_always_inline av_const int av_ceil_log2_c(int x)
+स्थिर av_always_inline av_const पूर्णाङ्क av_ceil_log2_c(पूर्णाङ्क x)
 {
-    return av_log2((x - 1U) << 1);
+    फर्काऊ av_log2((x - 1U) << 1);
 }
 
 /**
@@ -432,13 +432,13 @@ static av_always_inline av_const int av_ceil_log2_c(int x)
  * @param x value to count bits of
  * @return the number of bits set to one in x
  */
-static av_always_inline av_const int av_popcount_c(uint32_t x)
+स्थिर av_always_inline av_const पूर्णाङ्क av_popcount_c(uint32_t x)
 {
     x -= (x >> 1) & 0x55555555;
     x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
     x = (x + (x >> 4)) & 0x0F0F0F0F;
     x += x >> 8;
-    return (x + (x >> 16)) & 0x3F;
+    फर्काऊ (x + (x >> 16)) & 0x3F;
 }
 
 /**
@@ -446,14 +446,14 @@ static av_always_inline av_const int av_popcount_c(uint32_t x)
  * @param x value to count bits of
  * @return the number of bits set to one in x
  */
-static av_always_inline av_const int av_popcount64_c(uint64_t x)
+स्थिर av_always_inline av_const पूर्णाङ्क av_popcount64_c(uint64_t x)
 {
-    return av_popcount((uint32_t)x) + av_popcount((uint32_t)(x >> 32));
+    फर्काऊ av_popcount((uint32_t)x) + av_popcount((uint32_t)(x >> 32));
 }
 
-static av_always_inline av_const int av_parity_c(uint32_t v)
+स्थिर av_always_inline av_const पूर्णाङ्क av_parity_c(uint32_t v)
 {
-    return av_popcount(v) & 1;
+    फर्काऊ av_popcount(v) & 1;
 }
 
 /**
@@ -477,17 +477,17 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
 #define GET_UTF8(val, GET_BYTE, ERROR)\
     val= (uint8_t)(GET_BYTE);\
     {\
-        uint32_t top = (val & 128) >> 1;\
-        if ((val & 0xc0) == 0x80 || val >= 0xFE)\
+        uint32_t शीर्ष = (val & 128) >> 1;\
+        यदि ((val & 0xc0) == 0x80 || val >= 0xFE)\
             {ERROR}\
-        while (val & top) {\
-            unsigned int tmp = (uint8_t)(GET_BYTE) - 128;\
-            if(tmp>>6)\
+        जबसम्म (val & शीर्ष) {\
+            अचिन्हित पूर्णाङ्क tmp = (uint8_t)(GET_BYTE) - 128;\
+            यदि(tmp>>6)\
                 {ERROR}\
             val= (val<<6) + tmp;\
-            top <<= 5;\
+            शीर्ष <<= 5;\
         }\
-        val &= (top << 1) - 1;\
+        val &= (शीर्ष << 1) - 1;\
     }
 
 /**
@@ -502,10 +502,10 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
 #define GET_UTF16(val, GET_16BIT, ERROR)\
     val = (uint16_t)(GET_16BIT);\
     {\
-        unsigned int hi = val - 0xD800;\
-        if (hi < 0x800) {\
+        अचिन्हित पूर्णाङ्क hi = val - 0xD800;\
+        यदि (hi < 0x800) {\
             val = (uint16_t)(GET_16BIT) - 0xDC00;\
-            if (val > 0x3FFU || hi > 0x3FFU)\
+            यदि (val > 0x3FFU || hi > 0x3FFU)\
                 {ERROR}\
             val += (hi<<10) + 0x10000;\
         }\
@@ -529,17 +529,17 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
  */
 #define PUT_UTF8(val, tmp, PUT_BYTE)\
     {\
-        int bytes, shift;\
+        पूर्णाङ्क bytes, shift;\
         uint32_t in = val;\
-        if (in < 0x80) {\
+        यदि (in < 0x80) {\
             tmp = in;\
             PUT_BYTE\
-        } else {\
+        } अन्यथा {\
             bytes = (av_log2(in) + 4) / 5;\
             shift = (bytes - 1) * 6;\
             tmp = (256 - (256 >> bytes)) | (in >> shift);\
             PUT_BYTE\
-            while (shift >= 6) {\
+            जबसम्म (shift >= 6) {\
                 shift -= 6;\
                 tmp = 0x80 | ((in >> shift) & 0x3f);\
                 PUT_BYTE\
@@ -564,10 +564,10 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
 #define PUT_UTF16(val, tmp, PUT_16BIT)\
     {\
         uint32_t in = val;\
-        if (in < 0x10000) {\
+        यदि (in < 0x10000) {\
             tmp = in;\
             PUT_16BIT\
-        } else {\
+        } अन्यथा {\
             tmp = 0xD800 | ((in - 0x10000) >> 10);\
             PUT_16BIT\
             tmp = 0xDC00 | ((in - 0x10000) & 0x3FF);\

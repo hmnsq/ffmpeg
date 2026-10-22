@@ -19,26 +19,26 @@
 #ifndef AVUTIL_DETECTION_BBOX_H
 #define AVUTIL_DETECTION_BBOX_H
 
-#include "rational.h"
-#include "avassert.h"
-#include "frame.h"
+#अन्तर्भाव "rational.h"
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव "frame.h"
 
-typedef struct AVDetectionBBox {
+प्रकारनिर्देश संरचना AVDetectionBBox {
     /**
      * Distance in pixels from the left/top edge of the frame,
      * together with width and height, defining the bounding box.
      */
-    int x;
-    int y;
-    int w;
-    int h;
+    पूर्णाङ्क x;
+    पूर्णाङ्क y;
+    पूर्णाङ्क w;
+    पूर्णाङ्क h;
 
 #define AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE 64
 
     /**
      * Detect result with confidence
      */
-    char detect_label[AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
+    वर्ण detect_label[AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
     AVRational detect_confidence;
 
     /**
@@ -47,18 +47,18 @@ typedef struct AVDetectionBBox {
      * DNN models on one bounding box.
      * classify_count is zero if no classification.
      */
-#define AV_NUM_DETECTION_BBOX_CLASSIFY 4
-    uint32_t classify_count;
-    char classify_labels[AV_NUM_DETECTION_BBOX_CLASSIFY][AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
-    AVRational classify_confidences[AV_NUM_DETECTION_BBOX_CLASSIFY];
+#define AV_अङ्क_DETECTION_BBOX_CLASSIFY 4
+    uint32_t classify_गन्ती;
+    वर्ण classify_labels[AV_अङ्क_DETECTION_BBOX_CLASSIFY][AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
+    AVRational classify_confidences[AV_अङ्क_DETECTION_BBOX_CLASSIFY];
 } AVDetectionBBox;
 
-typedef struct AVDetectionBBoxHeader {
+प्रकारनिर्देश संरचना AVDetectionBBoxHeader {
     /**
      * Information about how the bounding box is generated.
      * for example, the DNN model name.
      */
-    char source[256];
+    वर्ण source[256];
 
     /**
      * Number of bounding boxes in the array.
@@ -69,22 +69,22 @@ typedef struct AVDetectionBBoxHeader {
      * Offset in bytes from the beginning of this structure at which
      * the array of bounding boxes starts.
      */
-    size_t bboxes_offset;
+    माप_प्रकार bboxes_offset;
 
     /**
      * Size of each bounding box in bytes.
      */
-    size_t bbox_size;
+    माप_प्रकार bbox_size;
 } AVDetectionBBoxHeader;
 
 /*
  * Get the bounding box at the specified {@code idx}. Must be between 0 and nb_bboxes.
  */
-static av_always_inline AVDetectionBBox *
-av_get_detection_bbox(const AVDetectionBBoxHeader *header, unsigned int idx)
+स्थिर av_always_inline AVDetectionBBox *
+av_get_detection_bbox(अचर AVDetectionBBoxHeader *header, अचिन्हित पूर्णाङ्क idx)
 {
     av_assert0(idx < header->nb_bboxes);
-    return (AVDetectionBBox *)((uint8_t *)header + header->bboxes_offset +
+    फर्काऊ (AVDetectionBBox *)((uint8_t *)header + header->bboxes_offset +
                                idx * header->bbox_size);
 }
 
@@ -97,7 +97,7 @@ av_get_detection_bbox(const AVDetectionBBoxHeader *header, unsigned int idx)
  * @param out_size if non-NULL, the size in bytes of the resulting data array is
  * written here.
  */
-AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size);
+AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, माप_प्रकार *out_size);
 
 /**
  * Allocates memory for AVDetectionBBoxHeader, plus an array of {@code nb_bboxes}

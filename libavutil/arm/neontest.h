@@ -23,31 +23,31 @@
 #ifndef AVUTIL_ARM_NEONTEST_H
 #define AVUTIL_ARM_NEONTEST_H
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
+#अन्तर्भाव <inttypes.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <stdarg.h>
+#अन्तर्भाव <string.h>
 
-#include "libavutil/bswap.h"
+#अन्तर्भाव "libavutil/bswap.h"
 
 #define storeneonregs(mem)                \
-    __asm__ volatile(                     \
+    __asm__ चञ्चल(                     \
         "vstm %0, {d8-d15}\n\t"           \
         :: "r"(mem) : "memory")
 
 #define testneonclobbers(func, ctx, ...)                        \
     uint64_t neon[2][8];                                        \
-    int ret;                                                    \
+    पूर्णाङ्क ret;                                                    \
     storeneonregs(neon[0]);                                     \
     ret = __real_ ## func(ctx, __VA_ARGS__);                    \
     storeneonregs(neon[1]);                                     \
-    if (memcmp(neon[0], neon[1], sizeof(neon[0]))) {            \
-        int i;                                                  \
+    यदि (स_भेद(neon[0], neon[1], परिमाण(neon[0]))) {            \
+        पूर्णाङ्क i;                                                  \
         av_log(ctx, AV_LOG_ERROR,                               \
                "NEON REGS CLOBBERED IN %s!\n", #func);          \
-        for (i = 0; i < 8; i ++)                                \
-            if (neon[0][i] != neon[1][i]) {                     \
+        लागि (i = 0; i < 8; i ++)                                \
+            यदि (neon[0][i] != neon[1][i]) {                     \
                 av_log(ctx, AV_LOG_ERROR,                       \
                        "d%-2d = %016"PRIx64"\n",                \
                        8 + i, av_bswap64(neon[0][i]));          \
@@ -55,13 +55,13 @@
                        "   -> %016"PRIx64"\n",                  \
                        av_bswap64(neon[1][i]));                 \
             }                                                   \
-        abort();                                                \
+        पात();                                                \
     }                                                           \
-    return ret
+    फर्काऊ ret
 
 #define wrap(func)      \
-int __real_ ## func;    \
-int __wrap_ ## func;    \
-int __wrap_ ## func
+पूर्णाङ्क __real_ ## func;    \
+पूर्णाङ्क __wrap_ ## func;    \
+पूर्णाङ्क __wrap_ ## func
 
 #endif /* AVUTIL_ARM_NEONTEST_H */
