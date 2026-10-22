@@ -53,7 +53,7 @@ static av_always_inline void emms_c(void)
         __asm__ volatile ("emms" ::: "memory");
 }
 
-static inline void ff_assert0_fpu(const char *file, int line_number)
+static inline void ff_assert0_fpu(const char *file, int लिन्या_नुमेरो)
 {
     uint16_t state[14];
      __asm__ volatile (
@@ -67,7 +67,7 @@ static inline void ff_assert0_fpu(const char *file, int line_number)
         av_log(NULL, AV_LOG_PANIC,
                "Invalid floating point state assertion "
                "triggered at line %u in file %s\n",
-               line_number, file);
+               लिन्या_नुमेरो, file);
         abort();
     }
 }

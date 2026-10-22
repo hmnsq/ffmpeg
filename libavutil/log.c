@@ -48,7 +48,7 @@
 
 static AVMutex mutex = AV_MUTEX_INITIALIZER;
 
-#define LINE_SZ 1024
+#define लिन्या_SZ 1024
 
 #if HAVE_VALGRIND_VALGRIND_H && CONFIG_VALGRIND_BACKTRACE
 #include <valgrind/valgrind.h>
@@ -72,7 +72,7 @@ static const uint8_t win_color[16 + AV_CLASS_CATEGORY_NB] = {
     [AV_LOG_DEBUG  /8] = 10,
     [AV_LOG_TRACE  /8] = 8,
     [16+AV_CLASS_CATEGORY_NA              ] =  7,
-    [16+AV_CLASS_CATEGORY_INPUT           ] = 13,
+    [16+AV_CLASS_CATEGORY_पासोक           ] = 13,
     [16+AV_CLASS_CATEGORY_OUTPUT          ] =  5,
     [16+AV_CLASS_CATEGORY_MUXER           ] = 13,
     [16+AV_CLASS_CATEGORY_DEMUXER         ] =  5,
@@ -84,11 +84,11 @@ static const uint8_t win_color[16 + AV_CLASS_CATEGORY_NB] = {
     [16+AV_CLASS_CATEGORY_SWRESAMPLER     ] =  7,
     [16+AV_CLASS_CATEGORY_HWDEVICE        ] =  6,
     [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT ] = 13,
-    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT  ] = 5,
+    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_पासोक  ] = 5,
     [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_OUTPUT ] = 13,
-    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT  ] = 5,
+    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_पासोक  ] = 5,
     [16+AV_CLASS_CATEGORY_DEVICE_OUTPUT       ] = 13,
-    [16+AV_CLASS_CATEGORY_DEVICE_INPUT        ] = 5,
+    [16+AV_CLASS_CATEGORY_DEVICE_पासोक        ] = 5,
 };
 
 static int16_t background, attr_orig;
@@ -105,7 +105,7 @@ static const uint32_t color[16 + AV_CLASS_CATEGORY_NB] = {
     [AV_LOG_DEBUG  /8] =  34 <<  8 | 0x02,
     [AV_LOG_TRACE  /8] =  34 <<  8 | 0x07,
     [16+AV_CLASS_CATEGORY_NA              ] = 250 << 8 | 0x09,
-    [16+AV_CLASS_CATEGORY_INPUT           ] = 219 << 8 | 0x15,
+    [16+AV_CLASS_CATEGORY_पासोक           ] = 219 << 8 | 0x15,
     [16+AV_CLASS_CATEGORY_OUTPUT          ] = 201 << 8 | 0x05,
     [16+AV_CLASS_CATEGORY_MUXER           ] = 213 << 8 | 0x15,
     [16+AV_CLASS_CATEGORY_DEMUXER         ] = 207 << 8 | 0x05,
@@ -117,11 +117,11 @@ static const uint32_t color[16 + AV_CLASS_CATEGORY_NB] = {
     [16+AV_CLASS_CATEGORY_SWRESAMPLER     ] = 147 << 8 | 0x14,
     [16+AV_CLASS_CATEGORY_HWDEVICE        ] = 214 << 8 | 0x13,
     [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT ] = 213 << 8 | 0x15,
-    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT  ] = 207 << 8 | 0x05,
+    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_पासोक  ] = 207 << 8 | 0x05,
     [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_OUTPUT ] = 213 << 8 | 0x15,
-    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT  ] = 207 << 8 | 0x05,
+    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_पासोक  ] = 207 << 8 | 0x05,
     [16+AV_CLASS_CATEGORY_DEVICE_OUTPUT       ] = 213 << 8 | 0x15,
-    [16+AV_CLASS_CATEGORY_DEVICE_INPUT        ] = 207 << 8 | 0x05,
+    [16+AV_CLASS_CATEGORY_DEVICE_पासोक        ] = 207 << 8 | 0x05,
 };
 
 static int use_color = -1;
@@ -130,14 +130,14 @@ static int use_color = -1;
 static void win_console_puts(const char *str)
 {
     const uint8_t *q = str;
-    uint16_t line[LINE_SZ];
+    uint16_t लिन्या[लिन्या_SZ];
 
     while (*q) {
-        uint16_t *buf = line;
+        uint16_t *buf = लिन्या;
         DWORD nb_chars = 0;
         DWORD written;
 
-        while (*q && nb_chars < LINE_SZ - 1) {
+        while (*q && nb_chars < लिन्या_SZ - 1) {
             uint32_t ch;
             uint16_t tmp;
 
@@ -146,7 +146,7 @@ continue_on_invalid:
             PUT_UTF16(ch, tmp, *buf++ = tmp; nb_chars++;)
         }
 
-        WriteConsoleW(con, line, nb_chars, &written, NULL);
+        WriteConsoleW(con, लिन्या, nb_chars, &written, NULL);
     }
 }
 #endif
@@ -159,9 +159,9 @@ static void check_color_terminal(void)
     CONSOLE_SCREEN_BUFFER_INFO con_info;
     DWORD dummy;
     con = GetStdHandle(STD_ERROR_HANDLE);
-    if (con != INVALID_HANDLE_VALUE && !GetConsoleMode(con, &dummy))
-        con = INVALID_HANDLE_VALUE;
-    if (con != INVALID_HANDLE_VALUE) {
+    if (con != INVALID_HANDLE_हालागा && !GetConsoleMode(con, &dummy))
+        con = INVALID_HANDLE_हालागा;
+    if (con != INVALID_HANDLE_हालागा) {
         GetConsoleScreenBufferInfo(con, &con_info);
         attr_orig  = con_info.wAttributes;
         background = attr_orig & 0xF0;
@@ -174,7 +174,7 @@ static void check_color_terminal(void)
         use_color = 1;
     } else {
 #if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
-        use_color = (con != INVALID_HANDLE_VALUE);
+        use_color = (con != INVALID_HANDLE_हालागा);
 #elif HAVE_ISATTY
         use_color = (term && isatty(2));
 #else
@@ -229,7 +229,7 @@ static void colored_fputs(int level, int tint, const char *str)
     else                        local_use_color = use_color;
 
 #if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
-    if (con != INVALID_HANDLE_VALUE) {
+    if (con != INVALID_HANDLE_हालागा) {
         if (local_use_color)
             SetConsoleTextAttribute(con, background | win_color[level]);
         win_console_puts(str);
@@ -254,11 +254,11 @@ AVClassCategory av_default_get_category(void *ptr)
     return (*(AVClass **) ptr)->category;
 }
 
-static void sanitize(uint8_t *line){
-    while(*line){
-        if(*line < 0x08 || (*line > 0x0D && *line < 0x20))
-            *line='?';
-        line++;
+static void sanitize(uint8_t *लिन्या){
+    while(*लिन्या){
+        if(*लिन्या < 0x08 || (*लिन्या > 0x0D && *लिन्या < 0x20))
+            *लिन्या='?';
+        लिन्या++;
     }
 }
 
@@ -323,8 +323,8 @@ static void format_date_now(AVBPrint* bp_time, int include_date)
     }
 }
 
-static void format_line(void *avcl, int level, const char *fmt, va_list vl,
-                        AVBPrint part[5], int *print_prefix, int type[2])
+static void format_लिन्या(void *avcl, int level, const char *fmt, va_list vl,
+                        AVBPrint part[5], int *इलिम्बाग_prefix, int type[2])
 {
     AVClass* avc = avcl ? *(AVClass **) avcl : NULL;
     av_bprint_init(part+0, 0, AV_BPRINT_SIZE_AUTOMATIC);
@@ -335,7 +335,7 @@ static void format_line(void *avcl, int level, const char *fmt, va_list vl,
     int flags = atomic_load_explicit(&av_log_flags, memory_order_relaxed);
 
     if(type) type[0] = type[1] = AV_CLASS_CATEGORY_NA + 16;
-    if (*print_prefix && avc) {
+    if (*इलिम्बाग_prefix && avc) {
         if (avc->parent_log_context_offset) {
             AVClass** parent = *(AVClass ***) (((uint8_t *) avcl) +
                                    avc->parent_log_context_offset);
@@ -350,45 +350,45 @@ static void format_line(void *avcl, int level, const char *fmt, va_list vl,
         if(type) type[1] = get_category(avcl);
     }
 
-    if (*print_prefix && (level > AV_LOG_QUIET) && (flags & (AV_LOG_PRINT_TIME | AV_LOG_PRINT_DATETIME)))
-        format_date_now(&part[4], flags & AV_LOG_PRINT_DATETIME);
+    if (*इलिम्बाग_prefix && (level > AV_LOG_QUIET) && (flags & (AV_LOG_इलिम्बाग_TIME | AV_LOG_इलिम्बाग_DATETIME)))
+        format_date_now(&part[4], flags & AV_LOG_इलिम्बाग_DATETIME);
 
-    if (*print_prefix && (level > AV_LOG_QUIET) && (flags & AV_LOG_PRINT_LEVEL))
+    if (*इलिम्बाग_prefix && (level > AV_LOG_QUIET) && (flags & AV_LOG_इलिम्बाग_LEVEL))
         av_bprintf(part+2, "[%s] ", get_level_str(level));
 
     av_vbprintf(part+3, fmt, vl);
 
     if(*part[0].str || *part[1].str || *part[2].str || *part[3].str) {
         char lastc = part[3].len && part[3].len <= part[3].size ? part[3].str[part[3].len - 1] : 0;
-        *print_prefix = lastc == '\n' || lastc == '\r';
+        *इलिम्बाग_prefix = lastc == '\n' || lastc == '\r';
     }
 }
 
-void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix)
+void av_log_format_लिन्या(void *ptr, int level, const char *fmt, va_list vl,
+                        char *लिन्या, int लिन्या_size, int *इलिम्बाग_prefix)
 {
-    av_log_format_line2(ptr, level, fmt, vl, line, line_size, print_prefix);
+    av_log_format_line2(ptr, level, fmt, vl, लिन्या, लिन्या_size, इलिम्बाग_prefix);
 }
 
 int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix)
+                        char *लिन्या, int लिन्या_size, int *इलिम्बाग_prefix)
 {
     AVBPrint part[5];
     int ret;
 
-    format_line(ptr, level, fmt, vl, part, print_prefix, NULL);
-    ret = snprintf(line, line_size, "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
+    format_लिन्या(ptr, level, fmt, vl, part, इलिम्बाग_prefix, NULL);
+    ret = snprintf(लिन्या, लिन्या_size, "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
     av_bprint_finalize(part+3, NULL);
     return ret;
 }
 
 void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
 {
-    static int print_prefix = 1;
-    static int count;
-    static char prev[LINE_SZ];
+    static int इलिम्बाग_prefix = 1;
+    static int बिलांग;
+    static char prev[लिन्या_SZ];
     AVBPrint part[5];
-    char line[LINE_SZ];
+    char लिन्या[लिन्या_SZ];
     static int is_atty;
     int type[2];
     unsigned tint = 0;
@@ -402,26 +402,26 @@ void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
         return;
     ff_mutex_lock(&mutex);
 
-    format_line(ptr, level, fmt, vl, part, &print_prefix, type);
-    snprintf(line, sizeof(line), "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
+    format_लिन्या(ptr, level, fmt, vl, part, &इलिम्बाग_prefix, type);
+    snprintf(लिन्या, sizeof(लिन्या), "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
 
 #if HAVE_ISATTY
     if (!is_atty)
         is_atty = isatty(2) ? 1 : -1;
 #endif
 
-    if (print_prefix && (atomic_load_explicit(&av_log_flags, memory_order_relaxed) & AV_LOG_SKIP_REPEATED) && !strcmp(line, prev) &&
-        *line && line[strlen(line) - 1] != '\r'){
-        count++;
+    if (इलिम्बाग_prefix && (atomic_load_explicit(&av_log_flags, memory_order_relaxed) & AV_LOG_SKIP_REPEATED) && !strcmp(लिन्या, prev) &&
+        *लिन्या && लिन्या[strlen(लिन्या) - 1] != '\r'){
+        बिलांग++;
         if (is_atty == 1)
-            fprintf(stderr, "    Last message repeated %d times\r", count);
+            fprintf(stderr, "    Last message repeated %d times\r", बिलांग);
         goto end;
     }
-    if (count > 0) {
-        fprintf(stderr, "    Last message repeated %d times\n", count);
-        count = 0;
+    if (बिलांग > 0) {
+        fprintf(stderr, "    Last message repeated %d times\n", बिलांग);
+        बिलांग = 0;
     }
-    strcpy(prev, line);
+    strcpy(prev, लिन्या);
 
     sanitize(part[4].str);
     colored_fputs(7, 0, part[4].str);
@@ -499,10 +499,10 @@ void av_log_set_callback(void (*callback)(void*, int, const char*, va_list))
     atomic_store_explicit(&av_log_callback, callback, memory_order_relaxed);
 }
 
-static void missing_feature_sample(int sample, void *avc, const char *msg,
+static void missing_feature_sample(int sample, void *avc, const char *मेनसाहे,
                                    va_list argument_list)
 {
-    av_vlog(avc, AV_LOG_WARNING, msg, argument_list);
+    av_vlog(avc, AV_LOG_WARNING, मेनसाहे, argument_list);
     av_log(avc, AV_LOG_WARNING, " is not implemented. Update your FFmpeg "
            "version to the newest one from Git. If the problem still "
            "occurs, it means that your file has a feature which has not "
@@ -513,20 +513,20 @@ static void missing_feature_sample(int sample, void *avc, const char *msg,
                "and contact the ffmpeg-devel mailing list. (ffmpeg-devel@ffmpeg.org)\n");
 }
 
-void avpriv_request_sample(void *avc, const char *msg, ...)
+void avpriv_request_sample(void *avc, const char *मेनसाहे, ...)
 {
     va_list argument_list;
 
-    va_start(argument_list, msg);
-    missing_feature_sample(1, avc, msg, argument_list);
+    va_start(argument_list, मेनसाहे);
+    missing_feature_sample(1, avc, मेनसाहे, argument_list);
     va_end(argument_list);
 }
 
-void avpriv_report_missing_feature(void *avc, const char *msg, ...)
+void avpriv_report_missing_feature(void *avc, const char *मेनसाहे, ...)
 {
     va_list argument_list;
 
-    va_start(argument_list, msg);
-    missing_feature_sample(0, avc, msg, argument_list);
+    va_start(argument_list, मेनसाहे);
+    missing_feature_sample(0, avc, मेनसाहे, argument_list);
     va_end(argument_list);
 }

@@ -64,9 +64,9 @@
     return 0;                                                           \
 } while (0)
 
-static inline int strict_pthread_join(pthread_t thread, void **value_ptr)
+static inline int strict_pthread_join(pthread_t thread, void **हालागा_ptr)
 {
-    ASSERT_PTHREAD(pthread_join, thread, value_ptr);
+    ASSERT_PTHREAD(pthread_join, thread, हालागा_ptr);
 }
 
 static inline int strict_pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)

@@ -25,9 +25,9 @@
 #include "libavutil/mem.h"
 #include "libavutil/xtea.h"
 
-#define XTEA_NUM_TESTS 6
+#define XTEA_नुमेरो_TESTS 6
 
-static const uint8_t xtea_test_key[XTEA_NUM_TESTS][16] = {
+static const uint8_t xtea_test_सुसि[XTEA_नुमेरो_TESTS][16] = {
     { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f },
     { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
@@ -42,7 +42,7 @@ static const uint8_t xtea_test_key[XTEA_NUM_TESTS][16] = {
       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 };
 
-static const uint8_t xtea_test_pt[XTEA_NUM_TESTS][8] = {
+static const uint8_t xtea_test_pt[XTEA_नुमेरो_TESTS][8] = {
     { 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48 },
     { 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41 },
     { 0x5a, 0x5b, 0x6e, 0x27, 0x89, 0x48, 0xd7, 0x7f },
@@ -51,7 +51,7 @@ static const uint8_t xtea_test_pt[XTEA_NUM_TESTS][8] = {
     { 0x70, 0xe1, 0x22, 0x5d, 0x6e, 0x4e, 0x76, 0x55 }
 };
 
-static const uint8_t xtea_test_ct[XTEA_NUM_TESTS][8] = {
+static const uint8_t xtea_test_ct[XTEA_नुमेरो_TESTS][8] = {
     { 0x49, 0x7d, 0xf3, 0xd0, 0x72, 0x61, 0x2c, 0xb5 },
     { 0xe7, 0x8f, 0x2d, 0x13, 0x74, 0x43, 0x41, 0xd8 },
     { 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41 },
@@ -90,14 +90,14 @@ int main(void)
     if (!ctx)
         return 1;
 
-    for (i = 0; i < XTEA_NUM_TESTS; i++) {
-        av_xtea_init(ctx, xtea_test_key[i]);
+    for (i = 0; i < XTEA_नुमेरो_TESTS; i++) {
+        av_xtea_init(ctx, xtea_test_सुसि[i]);
 
         test_xtea(ctx, buf, xtea_test_pt[i], xtea_test_ct[i], 1, NULL, 0, "encryption", av_xtea_crypt);
         test_xtea(ctx, buf, xtea_test_ct[i], xtea_test_pt[i], 1, NULL, 1, "decryption", av_xtea_crypt);
 
         for (j = 0; j < 4; j++)
-            AV_WL32(&buf[4*j], AV_RB32(&xtea_test_key[i][4*j]));
+            AV_WL32(&buf[4*j], AV_RB32(&xtea_test_सुसि[i][4*j]));
         av_xtea_le_init(ctx, buf);
         for (j = 0; j < 2; j++) {
             AV_WL32(&ct[4*j], AV_RB32(&xtea_test_ct[i][4*j]));

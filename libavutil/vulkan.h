@@ -54,7 +54,7 @@
 
 #define SPEC_LIST_ADD(name, idx, val_bits, val)                \
 do {                                                           \
-    unsigned int name##_cnt = name->mapEntryCount;             \
+    unsigned int name##_cnt = name->map_Entry_बिलांग;             \
     size_t name##_off = name->dataSize;                        \
     uint8_t *name##_dp = (uint8_t *)name->pData;               \
     void *name##_ep = (void *)&name->pMapEntries[name##_cnt];  \
@@ -67,7 +67,7 @@ do {                                                           \
     memcpy(name##_ep, &name##_new_entry,                       \
            sizeof(VkSpecializationMapEntry));                  \
     name->dataSize = name##_off + (val_bits >> 3);             \
-    name->mapEntryCount = name##_cnt + 1;                      \
+    name->map_Entry_बिलांग = name##_cnt + 1;                      \
 } while (0)
 
 #define DUP_SAMPLER(x) { x, x, x, x }
@@ -75,7 +75,7 @@ do {                                                           \
 #define FF_VK_MAX_DESCRIPTOR_SETS 4
 #define FF_VK_MAX_DESCRIPTOR_BINDINGS 16
 #define FF_VK_MAX_DESCRIPTOR_TYPES 16
-#define FF_VK_MAX_PUSH_CONSTS 4
+#define FF_VK_MAX_इतुलाक_CONSTS 4
 #define FF_VK_MAX_SHADERS 16
 
 typedef struct FFVulkanDescriptorSetBinding {
@@ -115,7 +115,7 @@ typedef struct FFVkBuffer {
 #define FF_VK_EXEC_MAX_FRAME_DEPS 64
 #define FF_VK_EXEC_MAX_BUF_DEPS 256
 #define FF_VK_EXEC_MAX_SW_FRAME_DEPS 16
-#define FF_VK_EXEC_MAX_SEM_OPS (FF_VK_EXEC_MAX_FRAME_DEPS*AV_NUM_DATA_POINTERS)
+#define FF_VK_EXEC_MAX_SEM_OPS (FF_VK_EXEC_MAX_FRAME_DEPS*AV_नुमेरो_DATA_POINTERS)
 
 /* Default number of in-flight execution contexts per pool */
 #define FF_VK_DEFAULT_EXEC_CONTEXTS 4
@@ -144,7 +144,7 @@ typedef struct FFVkExecContext {
     /* Busy (claimed or executing) while the counter is below sem_value;
      * signalled by the submission, or by ff_vk_exec_discard() */
     VkSemaphore sem;
-    uint64_t sem_value;
+    uint64_t sem_हालागा;
 
     /* Briefly guards the dependency lists; the busy state is carried by the
      * semaphore above */
@@ -231,8 +231,8 @@ typedef struct FFVulkanShader {
     VkPipelineLayout pipeline_layout;
 
     /* Push consts */
-    VkPushConstantRange push_consts[FF_VK_MAX_PUSH_CONSTS];
-    int push_consts_num;
+    Vk_इतुलाक_Constant_Range इतुलाक_consts[FF_VK_MAX_इतुलाक_CONSTS];
+    int इतुलाक_consts_नुमेरो;
 
     /* Descriptor sets */
     FFVulkanDescriptorSet desc_set[FF_VK_MAX_DESCRIPTOR_SETS];
@@ -242,7 +242,7 @@ typedef struct FFVulkanShader {
     VkDescriptorSetLayout desc_layout[FF_VK_MAX_DESCRIPTOR_SETS];
 
     /* Descriptor pool */
-    int use_push;
+    int use_इतुलाक;
     VkDescriptorPoolSize desc_pool_size[FF_VK_MAX_DESCRIPTOR_TYPES];
     int nb_desc_pool_size;
 } FFVulkanShader;
@@ -303,7 +303,7 @@ typedef struct FFVulkanContext {
     VkPhysicalDeviceDescriptorBufferPropertiesEXT desc_buf_props;
     VkPhysicalDeviceSubgroupSizeControlProperties subgroup_props;
     VkPhysicalDeviceCooperativeMatrixPropertiesKHR coop_matrix_props;
-    VkPhysicalDevicePushDescriptorPropertiesKHR push_desc_props;
+    Vk_Physical_Device_इतुलाक_Descriptor_Properties_KHR इतुलाक_desc_props;
     VkPhysicalDeviceOpticalFlowPropertiesNV optical_flow_props;
 #ifdef VK_EXT_shader_long_vector
     VkPhysicalDeviceShaderLongVectorPropertiesEXT long_vector_props;
@@ -339,7 +339,7 @@ typedef struct FFVulkanContext {
     AVHWDeviceContext     *device;
     AVVulkanDeviceContext *hwctx;
 
-    AVBufferRef           *input_frames_ref;
+    AVBufferRef           *पासोक_frames_ref;
     AVBufferRef           *frames_ref;
     AVHWFramesContext     *frames;
     AVVulkanFramesContext *hwfc;
@@ -351,10 +351,10 @@ typedef struct FFVulkanContext {
     int                 output_width;
     int                output_height;
     enum AVPixelFormat output_format;
-    enum AVPixelFormat  input_format;
+    enum AVPixelFormat  पासोक_format;
 } FFVulkanContext;
 
-static inline int ff_vk_count_images(AVVkFrame *f)
+static inline int ff_vk_बिलांग_images(AVVkFrame *f)
 {
     int cnt = 0;
     while (cnt < FF_ARRAY_ELEMS(f->img) && f->img[cnt])
@@ -546,7 +546,7 @@ int ff_vk_exec_add_dep_sw_frame(FFVulkanContext *s, FFVkExecContext *e,
                                 AVFrame *f);
 void ff_vk_exec_update_frame(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
                              VkImageMemoryBarrier2 *bar, uint32_t *nb_img_bar);
-int ff_vk_exec_mirror_sem_value(FFVulkanContext *s, FFVkExecContext *e,
+int ff_vk_exec_mirror_sem_हालागा(FFVulkanContext *s, FFVkExecContext *e,
                                 VkSemaphore *dst, uint64_t *dst_val,
                                 AVFrame *f);
 void ff_vk_exec_discard(FFVulkanContext *s, FFVkExecContext *e);
@@ -566,7 +566,7 @@ typedef struct FFVkImageViews {
     const VkAllocationCallbacks *alloc;
     PFN_vkDestroyImageView destroy_image_view;
 
-    VkImageView views[AV_NUM_DATA_POINTERS];
+    VkImageView views[AV_नुमेरो_DATA_POINTERS];
 } FFVkImageViews;
 
 /**
@@ -579,7 +579,7 @@ FFVkImageViews *ff_vk_imageviews_alloc(FFVulkanContext *s, int nb_views);
  * Create an imageview and add it as a dependency to an execution.
  */
 int ff_vk_create_imageviews(FFVulkanContext *s, FFVkExecContext *e,
-                            VkImageView views[AV_NUM_DATA_POINTERS],
+                            VkImageView views[AV_नुमेरो_DATA_POINTERS],
                             AVFrame *f, enum FFVkShaderRepFormat rep_fmt);
 
 /**
@@ -587,9 +587,9 @@ int ff_vk_create_imageviews(FFVulkanContext *s, FFVkExecContext *e,
  * each plane, which must be compatible with the format of the image.
  */
 int ff_vk_create_imageviews_fmt(FFVulkanContext *s, FFVkExecContext *e,
-                                VkImageView views[AV_NUM_DATA_POINTERS],
+                                VkImageView views[AV_नुमेरो_DATA_POINTERS],
                                 AVFrame *f,
-                                const VkFormat fmts[AV_NUM_DATA_POINTERS]);
+                                const VkFormat fmts[AV_नुमेरो_DATA_POINTERS]);
 
 #define ff_vk_buf_barrier(dst, vkb, s_stage, s_access, s_access2,              \
                           d_stage, d_access, d_access2, offs, bsz)             \
@@ -715,7 +715,7 @@ int ff_vk_shader_link(FFVulkanContext *s, FFVulkanShader *shd,
 /**
  * Add/update push constants for execution.
  */
-int ff_vk_shader_add_push_const(FFVulkanShader *shd, int offset, int size,
+int ff_vk_shader_add_इतुलाक_const(FFVulkanShader *shd, int offset, int size,
                                 VkShaderStageFlagBits stage);
 
 /**
@@ -742,7 +742,7 @@ void ff_vk_exec_bind_shader(FFVulkanContext *s, FFVkExecContext *e,
  * Update push constant in a shader.
  * Must be called before binding the shader.
  */
-void ff_vk_shader_update_push_const(FFVulkanContext *s, FFVkExecContext *e,
+void ff_vk_shader_update_इतुलाक_const(FFVulkanContext *s, FFVkExecContext *e,
                                     FFVulkanShader *shd,
                                     VkShaderStageFlagBits stage,
                                     int offset, size_t size, void *src);

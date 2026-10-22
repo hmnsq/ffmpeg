@@ -40,7 +40,7 @@
  * @{
  */
 
-#define AV_TDRDI_MAX_NUM_REF_DISPLAY 32
+#define AV_TDRDI_MAX_नुमेरो_REF_DISPLAY 32
 
 /**
  * This structure describes information about the reference display width(s) and reference
@@ -75,7 +75,7 @@ typedef struct AV3DReferenceDisplaysInfo {
      * The number of reference displays that are signalled in this struct.
      * Allowed range is 1 to 32, inclusive.
      */
-    uint8_t num_ref_displays;
+    uint8_t नुमेरो_ref_displays;
 
     /**
      * Offset in bytes from the beginning of this structure at which the array
@@ -101,12 +101,12 @@ typedef struct AV3DReferenceDisplay {
     /**
      * The ViewId of the left view of a stereo pair corresponding to the n-th reference display.
      */
-    uint16_t left_view_id;
+    uint16_t कालिवा_view_id;
 
     /**
      * The ViewId of the left view of a stereo pair corresponding to the n-th reference display.
      */
-    uint16_t right_view_id;
+    uint16_t कानान_view_id;
 
     /**
      * The exponent part of the reference display width of the n-th reference display.
@@ -138,13 +138,13 @@ typedef struct AV3DReferenceDisplay {
      * The recommended additional horizontal shift for a stereo pair corresponding to the n-th
      * reference baseline and the n-th reference display.
      */
-    int16_t num_sample_shift;
+    int16_t नुमेरो_sample_shift;
 } AV3DReferenceDisplay;
 
 static av_always_inline AV3DReferenceDisplay*
 av_tdrdi_get_display(AV3DReferenceDisplaysInfo *tdrdi, unsigned int idx)
 {
-    av_assert0(idx < tdrdi->num_ref_displays);
+    av_assert0(idx < tdrdi->नुमेरो_ref_displays);
     return (AV3DReferenceDisplay *)((uint8_t *)tdrdi + tdrdi->entries_offset +
                                     idx * tdrdi->entry_size);
 }

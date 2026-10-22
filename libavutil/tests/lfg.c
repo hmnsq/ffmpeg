@@ -119,7 +119,7 @@ int main(void)
         double mean   = 1000;
         double stddev = 53;
         double samp_mean = 0.0, samp_stddev = 0.0, QH = 0;
-        double Z, p_value = -1, tot_samp = 1000;
+        double Z, p_हालागा = -1, tot_samp = 1000;
         double *PRN_arr = av_malloc_array(tot_samp, sizeof(double));
 
         if (!PRN_arr) {
@@ -162,7 +162,7 @@ int main(void)
                                           "Z_TABLE[%d][%d]\n", x, y);
                 goto SKIP;
             }
-            p_value = flag ? 1 - Z_TABLE[x][y] : Z_TABLE[x][y];
+            p_हालागा = flag ? 1 - Z_TABLE[x][y] : Z_TABLE[x][y];
         }
 
 SKIP:   for (i = 0; i < tot_samp; ++i) {
@@ -184,7 +184,7 @@ SKIP:   for (i = 0; i < tot_samp; ++i) {
                "z-score      : %f\n"
                "p-value      : %f\n"
                "QH[normality]: %f\n",
-               samp_mean, mean, samp_stddev, stddev, Z, p_value, QH);
+               samp_mean, mean, samp_stddev, stddev, Z, p_हालागा, QH);
 
         av_freep(&PRN_arr);
     }

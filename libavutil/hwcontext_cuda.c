@@ -36,7 +36,7 @@ typedef struct CUDAFramesContext {
     int shift_width, shift_height;
     int tex_alignment;
 
-    int cuarray_num_surfaces_used;
+    int cuarray_नुमेरो_surfaces_used;
 } CUDAFramesContext;
 
 typedef struct CUDADeviceContext {
@@ -116,7 +116,7 @@ static void cuda_buffer_free(void *opaque, uint8_t *data)
 
     CUcontext dummy;
 
-    CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+    CHECK_CU(cu->cu_Ctx_इतुलाक_Current(hwctx->cuda_ctx));
 
     if (ctx->format == AV_PIX_FMT_CUARRAY) {
         AVCUDAArrayFrameDescriptor *desc = (AVCUDAArrayFrameDescriptor*)data;
@@ -126,7 +126,7 @@ static void cuda_buffer_free(void *opaque, uint8_t *data)
         CHECK_CU(cu->cuMemFree((CUdeviceptr)data));
     }
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_आलिसिन_Current(&dummy));
 }
 
 static AVBufferRef *cuda_pool_alloc(void *opaque, size_t size)
@@ -142,7 +142,7 @@ static AVBufferRef *cuda_pool_alloc(void *opaque, size_t size)
     CUdeviceptr data;
     int err;
 
-    err = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+    err = CHECK_CU(cu->cu_Ctx_इतुलाक_Current(hwctx->cuda_ctx));
     if (err < 0)
         return NULL;
 
@@ -151,13 +151,13 @@ static AVBufferRef *cuda_pool_alloc(void *opaque, size_t size)
         if (!desc)
             goto done;
 
-        if (priv->p.cuarray_num_surfaces > 0) {
-            if (priv->cuarray_num_surfaces_used >= priv->p.cuarray_num_surfaces) {
+        if (priv->p.cuarray_नुमेरो_surfaces > 0) {
+            if (priv->cuarray_नुमेरो_surfaces_used >= priv->p.cuarray_नुमेरो_surfaces) {
                 av_log(ctx, AV_LOG_ERROR, "Static surface pool size exceeded.\n");
                 av_free(desc);
                 goto done;
             }
-            desc->index = priv->cuarray_num_surfaces_used++;
+            desc->index = priv->cuarray_नुमेरो_surfaces_used++;
             desc->array = priv->p.cuarray_surfaces[desc->index];
         } else {
             err = CHECK_CU(cu->cuArray3DCreate(&desc->array, &priv->p.cuarray_desc));
@@ -192,7 +192,7 @@ static AVBufferRef *cuda_pool_alloc(void *opaque, size_t size)
     // Common exit: reached on both success (ret holds the buffer) and
     // failure (ret == NULL); restores the CUDA context and returns ret.
 done:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_आलिसिन_Current(&dummy));
     return ret;
 }
 
@@ -204,9 +204,9 @@ static void cuda_transfer_buffer_free(void *opaque, uint8_t *data)
     CudaFunctions             *cu = hwctx->internal->cuda_dl;
     CUcontext dummy;
 
-    CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+    CHECK_CU(cu->cu_Ctx_इतुलाक_Current(hwctx->cuda_ctx));
     CHECK_CU(cu->cuMemFreeHost(data));
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_आलिसिन_Current(&dummy));
 }
 
 /* The device transfers directly to and from page-locked memory, other memory
@@ -220,7 +220,7 @@ static AVBufferRef *cuda_transfer_buffer_alloc(void *device_ref, size_t size)
     CUcontext dummy;
     void *host;
 
-    if (CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx)) < 0)
+    if (CHECK_CU(cu->cu_Ctx_इतुलाक_Current(hwctx->cuda_ctx)) < 0)
         return av_buffer_alloc(size);
 
     if (CHECK_CU(cu->cuMemHostAlloc(&host, size, 0)) >= 0) {
@@ -229,7 +229,7 @@ static AVBufferRef *cuda_transfer_buffer_alloc(void *device_ref, size_t size)
             CHECK_CU(cu->cuMemFreeHost(host));
     }
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_आलिसिन_Current(&dummy));
     return ret ? ret : av_buffer_alloc(size);
 }
 #endif
@@ -243,17 +243,17 @@ static void cuda_frames_uninit(AVHWFramesContext *ctx)
 
     if (priv->p.cuarray_surfaces) {
         CUcontext dummy;
-        CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+        CHECK_CU(cu->cu_Ctx_इतुलाक_Current(hwctx->cuda_ctx));
 
         // Make sure we don't free surfaces that have been adopted by the pool already
-        for (int i = priv->cuarray_num_surfaces_used; i < priv->p.cuarray_num_surfaces; i++)
+        for (int i = priv->cuarray_नुमेरो_surfaces_used; i < priv->p.cuarray_नुमेरो_surfaces; i++)
             if (priv->p.cuarray_surfaces[i])
                 CHECK_CU(cu->cuArrayDestroy(priv->p.cuarray_surfaces[i]));
 
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+        CHECK_CU(cu->cu_Ctx_आलिसिन_Current(&dummy));
 
         av_freep(&priv->p.cuarray_surfaces);
-        priv->p.cuarray_num_surfaces = 0;
+        priv->p.cuarray_नुमेरो_surfaces = 0;
     }
 }
 
@@ -359,8 +359,8 @@ static int cuda_frames_init(AVHWFramesContext *ctx)
             priv->p.cuarray_desc.Width = ctx->width;
         if (!priv->p.cuarray_desc.Height)
             priv->p.cuarray_desc.Height = ctx->height;
-        if (!priv->p.cuarray_desc.NumChannels)
-            priv->p.cuarray_desc.NumChannels = cuda_array_numchannels_for_pix_fmt(ctx->sw_format);
+        if (!priv->p.cuarray_desc.नुमेरो_Channels)
+            priv->p.cuarray_desc.नुमेरो_Channels = cuda_array_numchannels_for_pix_fmt(ctx->sw_format);
 
         if (priv->p.cuarray_desc.Depth) {
             av_log(ctx, AV_LOG_ERROR, "CUarrays with non-zero depth are not supported.\n");
@@ -377,37 +377,37 @@ static int cuda_frames_init(AVHWFramesContext *ctx)
         priv->p.cuarray_desc.Flags |= CUDA_ARRAY3D_SURFACE_LDST | CUDA_ARRAY3D_VIDEO_ENCODE_DECODE;
     }
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY && priv->p.cuarray_num_surfaces > 0) {
+    if (ctx->format == AV_PIX_FMT_CUARRAY && priv->p.cuarray_नुमेरो_surfaces > 0) {
         CUcontext dummy;
 
-        priv->p.cuarray_surfaces = av_calloc(priv->p.cuarray_num_surfaces, sizeof(*priv->p.cuarray_surfaces));
+        priv->p.cuarray_surfaces = av_calloc(priv->p.cuarray_नुमेरो_surfaces, sizeof(*priv->p.cuarray_surfaces));
         if (!priv->p.cuarray_surfaces)
             return AVERROR(ENOMEM);
 
-        err = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+        err = CHECK_CU(cu->cu_Ctx_इतुलाक_Current(hwctx->cuda_ctx));
         if (err < 0) {
             av_freep(&priv->p.cuarray_surfaces);
             return err;
         }
 
-        for (int i = 0; i < priv->p.cuarray_num_surfaces; i++) {
+        for (int i = 0; i < priv->p.cuarray_नुमेरो_surfaces; i++) {
             err = CHECK_CU(cu->cuArray3DCreate(&priv->p.cuarray_surfaces[i], &priv->p.cuarray_desc));
             if (err < 0) {
                 for (i = i - 1; i >= 0; i--)
                     CHECK_CU(cu->cuArrayDestroy(priv->p.cuarray_surfaces[i]));
-                CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+                CHECK_CU(cu->cu_Ctx_आलिसिन_Current(&dummy));
 
                 av_freep(&priv->p.cuarray_surfaces);
                 return err;
             }
         }
 
-        err = CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+        err = CHECK_CU(cu->cu_Ctx_आलिसिन_Current(&dummy));
         if (err < 0)
             goto fail;
 
         av_log(ctx, AV_LOG_DEBUG, "allocated %d CUarray surfaces (%zux%zu)\n",
-               priv->p.cuarray_num_surfaces, priv->p.cuarray_desc.Width, priv->p.cuarray_desc.Height);
+               priv->p.cuarray_नुमेरो_surfaces, priv->p.cuarray_desc.Width, priv->p.cuarray_desc.Height);
     }
 #endif
 
@@ -461,7 +461,7 @@ static int cuda_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
         frame->data[0] = (uint8_t*)desc->array;
         frame->data[1] = (uint8_t*)desc->index;
 
-        res = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+        res = CHECK_CU(cu->cu_Ctx_इतुलाक_Current(hwctx->cuda_ctx));
         if (res < 0)
             return res;
 
@@ -470,7 +470,7 @@ static int cuda_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
             CUarray plane_array;
             CUresult arr_plane_res = cu->cuArrayGetPlane(&plane_array, desc->array, i);
 
-            if (arr_plane_res == CUDA_ERROR_INVALID_VALUE) {
+            if (arr_plane_res == CUDA_ERROR_INVALID_हालागा) {
                 if (i > 0)
                     break;
                 /* Non-planar format (e.g. UNSIGNED_INT8 x4 for packed RGB):
@@ -493,13 +493,13 @@ static int cuda_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
                 goto fail;
             }
 
-            frame->linesize[i] = plane_desc.Width * plane_desc.NumChannels * elem_size;
+            frame->linesize[i] = plane_desc.Width * plane_desc.नुमेरो_Channels * elem_size;
 
-            if (arr_plane_res == CUDA_ERROR_INVALID_VALUE)
+            if (arr_plane_res == CUDA_ERROR_INVALID_हालागा)
                 break;
         }
 
-        res = CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+        res = CHECK_CU(cu->cu_Ctx_आलिसिन_Current(&dummy));
         if (res < 0)
             return res;
 #else
@@ -528,7 +528,7 @@ static int cuda_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
 
 #if HAVE_FFNVCODEC_CUARRAY
 fail:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_आलिसिन_Current(&dummy));
     return res;
 #endif
 }
@@ -567,7 +567,7 @@ static int cuda_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
     CudaFunctions             *cu = hwctx->internal->cuda_dl;
 
     const AVFrame *sw_frame = src->hw_frames_ctx ? dst : src;
-    AVFrame *top_down = NULL, *bottom_up_dst = NULL;
+    AVFrame *इताअस_down = NULL, *bottom_up_dst = NULL;
     CUcontext dummy;
     int i, ret, copy_queued = 0, bottom_up = 0;
 
@@ -587,31 +587,31 @@ static int cuda_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
     /* The device copies rows upwards through memory, so a bottom-up frame is
      * transferred through a top-down copy of it. */
     if (bottom_up) {
-        top_down = av_frame_alloc();
-        if (!top_down)
+        इताअस_down = av_frame_alloc();
+        if (!इताअस_down)
             return AVERROR(ENOMEM);
-        top_down->format = ctx->sw_format;
-        top_down->width  = ctx->width;
-        top_down->height = ctx->height;
+        इताअस_down->format = ctx->sw_format;
+        इताअस_down->width  = ctx->width;
+        इताअस_down->height = ctx->height;
         ret = av_hwframe_get_transfer_buffer((src->hw_frames_ctx ? src : dst)->hw_frames_ctx,
-                                             top_down);
+                                             इताअस_down);
         if (ret < 0)
-            goto free_top_down;
-        top_down->width  = src->width;
-        top_down->height = src->height;
+            goto free_इताअस_down;
+        इताअस_down->width  = src->width;
+        इताअस_down->height = src->height;
         if (sw_frame == src) {
-            av_image_copy2(top_down->data, top_down->linesize, src->data, src->linesize,
+            av_image_copy2(इताअस_down->data, इताअस_down->linesize, src->data, src->linesize,
                            ctx->sw_format, src->width, src->height);
-            src = top_down;
+            src = इताअस_down;
         } else {
             bottom_up_dst = dst;
-            dst           = top_down;
+            dst           = इताअस_down;
         }
     }
 
-    ret = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+    ret = CHECK_CU(cu->cu_Ctx_इतुलाक_Current(hwctx->cuda_ctx));
     if (ret < 0)
-        goto free_top_down;
+        goto free_इताअस_down;
 
     /*
      * Copy one plane per iteration, bounded by the AVFrame linesizes. src and
@@ -655,7 +655,7 @@ static int cuda_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
 #if HAVE_FFNVCODEC_CUARRAY
             CUarray array;
             CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)src->data[0], i);
-            if (cures == CUDA_ERROR_INVALID_VALUE && i == 0) {
+            if (cures == CUDA_ERROR_INVALID_हालागा && i == 0) {
                 /* Not a multi-planar array (packed format): the whole array is
                  * the single plane. */
                 array = (CUarray)src->data[0];
@@ -683,7 +683,7 @@ static int cuda_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
 #if HAVE_FFNVCODEC_CUARRAY
             CUarray array;
             CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)dst->data[0], i);
-            if (cures == CUDA_ERROR_INVALID_VALUE && i == 0) {
+            if (cures == CUDA_ERROR_INVALID_हालागा && i == 0) {
                 /* Not a multi-planar array (packed format): the whole array is
                  * the single plane. */
                 array = (CUarray)dst->data[0];
@@ -724,14 +724,14 @@ fail:
     if (ret < 0 && copy_queued)
         CHECK_CU(cu->cuStreamSynchronize(hwctx->stream));
 exit:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_आलिसिन_Current(&dummy));
 
     if (bottom_up_dst && ret >= 0)
         av_image_copy2(bottom_up_dst->data, bottom_up_dst->linesize,
-                       top_down->data, top_down->linesize,
+                       इताअस_down->data, इताअस_down->linesize,
                        ctx->sw_format, src->width, src->height);
-free_top_down:
-    av_frame_free(&top_down);
+free_इताअस_down:
+    av_frame_free(&इताअस_down);
 
     return ret;
 }
@@ -824,7 +824,7 @@ static int cuda_context_init(AVHWDeviceContext *device_ctx, int flags) {
         if (ret < 0)
             return ret;
 
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+        CHECK_CU(cu->cu_Ctx_आलिसिन_Current(&dummy));
     }
 
     hwctx->internal->is_allocated = 1;
@@ -843,10 +843,10 @@ static int cuda_flags_from_opts(AVHWDeviceContext *device_ctx,
 
     int use_primary_ctx = 0, use_current_ctx = 0;
     if (primary_ctx_opt)
-        use_primary_ctx = strtol(primary_ctx_opt->value, NULL, 10);
+        use_primary_ctx = strtol(primary_ctx_opt->हालागा, NULL, 10);
 
     if (current_ctx_opt)
-        use_current_ctx = strtol(current_ctx_opt->value, NULL, 10);
+        use_current_ctx = strtol(current_ctx_opt->हालागा, NULL, 10);
 
     if (use_primary_ctx && use_current_ctx) {
         av_log(device_ctx, AV_LOG_ERROR, "Requested both primary and current CUDA context simultaneously.\n");
@@ -921,7 +921,7 @@ static int cuda_device_derive(AVHWDeviceContext *device_ctx,
 #if CONFIG_VULKAN
     VkPhysicalDeviceIDProperties vk_idp;
 #endif
-    int ret, i, device_count;
+    int ret, i, device_बिलांग;
 
     ret = cuda_flags_from_opts(device_ctx, opts, &flags);
     if (ret < 0)
@@ -971,12 +971,12 @@ static int cuda_device_derive(AVHWDeviceContext *device_ctx,
     if (ret < 0)
         goto error;
 
-    ret = CHECK_CU(cu->cuDeviceGetCount(&device_count));
+    ret = CHECK_CU(cu->cu_Device_Get_बिलांग(&device_बिलांग));
     if (ret < 0)
         goto error;
 
     hwctx->internal->cuda_device = -1;
-    for (i = 0; i < device_count; i++) {
+    for (i = 0; i < device_बिलांग; i++) {
         CUdevice dev;
         CUuuid uuid;
 

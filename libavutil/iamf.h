@@ -93,7 +93,7 @@ typedef struct AVIAMFMixGain {
      *
      * Valid range of values is -128.0 to 128.0
      */
-    AVRational start_point_value;
+    AVRational start_point_हालागा;
     /**
      * Parameter value that is applied at the end of the subblock.
      * Applies only to AV_IAMF_ANIMATION_TYPE_LINEAR and
@@ -101,7 +101,7 @@ typedef struct AVIAMFMixGain {
      *
      * Valid range of values is -128.0 to 128.0
      */
-    AVRational end_point_value;
+    AVRational end_point_हालागा;
     /**
      * Parameter value of the middle control point of a quadratic Bezier
      * curve, i.e., its y-axis value.
@@ -109,7 +109,7 @@ typedef struct AVIAMFMixGain {
      *
      * Valid range of values is -128.0 to 128.0
      */
-    AVRational control_point_value;
+    AVRational control_point_हालागा;
     /**
      * Parameter value of the time of the middle control point of a
      * quadratic Bezier curve, i.e., its x-axis value.

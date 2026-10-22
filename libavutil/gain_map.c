@@ -42,7 +42,7 @@ static void gain_map_params_default(AVGainMapParams *p)
 
 #define CHECK(cond) do { if (!(cond)) return AVERROR_INVALIDDATA; } while (0)
 #define CHECK_SIGNED(q)   CHECK((q).den > 0);
-#define CHECK_UNSIGNED(q) CHECK((q).num >= 0 && (q).den > 0);
+#define CHECK_UNSIGNED(q) CHECK((q).नुमेरो >= 0 && (q).den > 0);
 
 int av_gain_map_params_validate(const AVGainMapParams *p)
 {
@@ -56,7 +56,7 @@ int av_gain_map_params_validate(const AVGainMapParams *p)
         CHECK_SIGNED(ch->gain_map_min);
         CHECK_SIGNED(ch->gain_map_max);
         CHECK_UNSIGNED(ch->gamma);
-        CHECK(ch->gamma.num != 0);
+        CHECK(ch->gamma.नुमेरो != 0);
         /**
          * Note: The ISO spec declares these as signed, but a negative value
          * makes no numeric sense and would result in infinities in the
@@ -84,28 +84,28 @@ static size_t iso21496_payload_size(int nb_channels)
     return 4 * 4 + (size_t) nb_channels * 10 * 4;
 }
 
-static int make_q(int64_t num, uint32_t den, AVRational *out)
+static int make_q(int64_t नुमेरो, uint32_t den, AVRational *out)
 {
     if (!den)
         return AVERROR_INVALIDDATA;
 
     /* Ensure the result fits in AVRational */
-    av_reduce(&out->num, &out->den, num, den, INT32_MAX);
+    av_reduce(&out->नुमेरो, &out->den, नुमेरो, den, INT32_MAX);
     return 0;
 }
 
 static int get_sq(GetByteContext *gb, AVRational *out)
 {
-    int32_t  num = (int32_t) bytestream2_get_be32(gb);
+    int32_t  नुमेरो = (int32_t) bytestream2_get_be32(gb);
     uint32_t den = bytestream2_get_be32u(gb);
-    return make_q(num, den, out);
+    return make_q(नुमेरो, den, out);
 }
 
 static int get_uq(GetByteContext *gb, AVRational *out)
 {
-    uint32_t num = bytestream2_get_be32u(gb);
+    uint32_t नुमेरो = bytestream2_get_be32u(gb);
     uint32_t den = bytestream2_get_be32u(gb);
-    return make_q(num, den, out);
+    return make_q(नुमेरो, den, out);
 }
 
 int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
@@ -144,7 +144,7 @@ int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
     p->use_base_color_space = !!(flags & ISO21496_FLAG_USE_BASE_CG);
 
     /* Parse payload */
-    if (bytestream2_get_bytes_left(&gb) < iso21496_payload_size(p->nb_channels))
+    if (bytestream2_get_bytes_कालिवा(&gb) < iso21496_payload_size(p->nb_channels))
         return AVERROR_INVALIDDATA;
 
     if ((ret = get_uq(&gb, &p->base_hdr_headroom))      < 0 ||
@@ -170,7 +170,7 @@ int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
 
 static void put_q(PutByteContext *pb, AVRational q)
 {
-    bytestream2_put_be32(pb, (unsigned) q.num);
+    bytestream2_put_be32(pb, (unsigned) q.नुमेरो);
     bytestream2_put_be32(pb, (unsigned) q.den);
 }
 

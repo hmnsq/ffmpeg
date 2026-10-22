@@ -37,8 +37,8 @@ static void update_lls(LLSModel *m, const double *var)
 {
     int i, j;
 
-    for (i = 0; i <= m->indep_count; i++) {
-        for (j = i; j <= m->indep_count; j++) {
+    for (i = 0; i <= m->indep_बिलांग; i++) {
+        for (j = i; j <= m->indep_बिलांग; j++) {
             m->covariance[i][j] += var[i] * var[j];
         }
     }
@@ -50,10 +50,10 @@ void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
     double (*factor)[MAX_VARS_ALIGN] = (void *) &m->covariance[1][0];
     double (*covar) [MAX_VARS_ALIGN] = (void *) &m->covariance[1][1];
     double *covar_y                = m->covariance[0];
-    int count                      = m->indep_count;
+    int बिलांग                      = m->indep_बिलांग;
 
-    for (i = 0; i < count; i++) {
-        for (j = i; j < count; j++) {
+    for (i = 0; i < बिलांग; i++) {
+        for (j = i; j < बिलांग; j++) {
             double sum = covar[i][j];
 
             for (k = 0; k <= i-1; k++)
@@ -69,7 +69,7 @@ void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
         }
     }
 
-    for (i = 0; i < count; i++) {
+    for (i = 0; i < बिलांग; i++) {
         double sum = covar_y[i + 1];
 
         for (k = 0; k <= i-1; k++)
@@ -78,7 +78,7 @@ void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
         m->coeff[0][i] = sum / factor[i][i];
     }
 
-    for (j = count - 1; j >= min_order; j--) {
+    for (j = बिलांग - 1; j >= min_order; j--) {
         for (i = j; i >= 0; i--) {
             double sum = m->coeff[0][i];
 
@@ -106,10 +106,10 @@ static double evaluate_lls(LLSModel *m, const double *param, int order)
     return ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
 }
 
-av_cold void avpriv_init_lls(LLSModel *m, int indep_count)
+av_cold void avpriv_init_lls(LLSModel *m, int indep_बिलांग)
 {
     memset(m, 0, sizeof(LLSModel));
-    m->indep_count = indep_count;
+    m->indep_बिलांग = indep_बिलांग;
     m->update_lls = update_lls;
     m->evaluate_lls = evaluate_lls;
 #if ARCH_RISCV

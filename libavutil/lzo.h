@@ -34,7 +34,7 @@
 /** @name Error flags returned by av_lzo1x_decode
  * @{ */
 /// end of the input buffer reached before decoding finished
-#define AV_LZO_INPUT_DEPLETED  1
+#define AV_LZO_पासोक_DEPLETED  1
 /// decoded data did not fit into output buffer
 #define AV_LZO_OUTPUT_FULL     2
 /// a reference to previously decoded data was wrong
@@ -43,7 +43,7 @@
 #define AV_LZO_ERROR           8
 /** @} */
 
-#define AV_LZO_INPUT_PADDING   8
+#define AV_LZO_पासोक_PADDING   8
 #define AV_LZO_OUTPUT_PADDING 12
 
 /**

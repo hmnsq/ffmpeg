@@ -232,7 +232,7 @@ static AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
         .Height     = ctx->height,
         .MipLevels  = 1,
         .Format     = s->format,
-        .SampleDesc = { .Count = 1 },
+        .SampleDesc = { .बिलांग_2 = 1 },
         .ArraySize  = 1,
         .Usage      = D3D11_USAGE_DEFAULT,
         .BindFlags  = hwctx->BindFlags,
@@ -304,7 +304,7 @@ static int d3d11va_frames_init(AVHWFramesContext *ctx)
         .Height     = ctx->height,
         .MipLevels  = 1,
         .Format     = s->format,
-        .SampleDesc = { .Count = 1 },
+        .SampleDesc = { .बिलांग_2 = 1 },
         .ArraySize  = ctx->initial_pool_size,
         .Usage      = D3D11_USAGE_DEFAULT,
         .BindFlags  = hwctx->BindFlags,
@@ -399,7 +399,7 @@ static int d3d11va_create_staging_texture(AVHWFramesContext *ctx, DXGI_FORMAT fo
         .Height         = ctx->height,
         .MipLevels      = 1,
         .Format         = format,
-        .SampleDesc     = { .Count = 1 },
+        .SampleDesc     = { .बिलांग_2 = 1 },
         .ArraySize      = 1,
         .Usage          = D3D11_USAGE_STAGING,
         .CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE,
@@ -515,7 +515,7 @@ static int d3d11va_device_init(AVHWDeviceContext *hwdev)
 
     if (!device_hwctx->lock) {
         device_hwctx->lock_ctx = CreateMutex(NULL, 0, NULL);
-        if (device_hwctx->lock_ctx == INVALID_HANDLE_VALUE) {
+        if (device_hwctx->lock_ctx == INVALID_HANDLE_हालागा) {
             av_log(NULL, AV_LOG_ERROR, "Failed to create a mutex\n");
             return AVERROR(EINVAL);
         }
@@ -572,7 +572,7 @@ static void d3d11va_device_uninit(AVHWDeviceContext *hwdev)
 
     if (device_hwctx->lock == d3d11va_default_lock) {
         CloseHandle(device_hwctx->lock_ctx);
-        device_hwctx->lock_ctx = INVALID_HANDLE_VALUE;
+        device_hwctx->lock_ctx = INVALID_HANDLE_हालागा;
         device_hwctx->lock = NULL;
     }
 }
@@ -647,11 +647,11 @@ static int d3d11va_device_create(AVHWDeviceContext *ctx, const char *device,
         adapter = atoi(device);
     } else {
         AVDictionaryEntry *e = av_dict_get(opts, "vendor_id", NULL, 0);
-        if (e && e->value) {
-            adapter = d3d11va_device_find_adapter_by_vendor_id(ctx, creationFlags, e->value);
+        if (e && e->हालागा) {
+            adapter = d3d11va_device_find_adapter_by_vendor_id(ctx, creationFlags, e->हालागा);
             if (adapter < 0) {
                 av_log(ctx, AV_LOG_ERROR, "Failed to find d3d11va adapter by "
-                       "vendor id %s\n", e->value);
+                       "vendor id %s\n", e->हालागा);
                 return AVERROR_UNKNOWN;
             }
         }

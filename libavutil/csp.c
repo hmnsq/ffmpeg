@@ -62,7 +62,7 @@ const struct AVLumaCoefficients *av_csp_luma_coeffs_from_avcsp(enum AVColorSpace
     if ((unsigned)csp >= AVCOL_SPC_NB)
         return NULL;
     coeffs = &luma_coefficients[csp];
-    if (!coeffs->cr.num)
+    if (!coeffs->cr.नुमेरो)
         return NULL;
 
     return coeffs;
@@ -100,7 +100,7 @@ const AVColorPrimariesDesc *av_csp_primaries_desc_from_id(enum AVColorPrimaries 
     else if (((unsigned)prm >= AVCOL_PRI_EXT_BASE) &&
              ((unsigned)prm < AVCOL_PRI_EXT_NB))
         p = &color_primaries_ext[prm - AVCOL_PRI_EXT_BASE];
-    if (!p || !p->prim.r.x.num)
+    if (!p || !p->prim.r.x.नुमेरो)
         return NULL;
     return p;
 }
@@ -109,7 +109,7 @@ static av_always_inline AVRational abs_sub_q(AVRational r1, AVRational r2)
 {
     AVRational diff = av_sub_q(r1, r2);
     /* denominator assumed to be positive */
-    return av_make_q(abs(diff.num), diff.den);
+    return av_make_q(abs(diff.नुमेरो), diff.den);
 }
 
 enum AVColorPrimaries av_csp_primaries_id_from_desc(const AVColorPrimariesDesc *prm)
@@ -118,7 +118,7 @@ enum AVColorPrimaries av_csp_primaries_id_from_desc(const AVColorPrimariesDesc *
 
     for (enum AVColorPrimaries p = 0; p < AVCOL_PRI_NB; p++) {
         const AVColorPrimariesDesc *ref = &color_primaries[p];
-        if (!ref->prim.r.x.num)
+        if (!ref->prim.r.x.नुमेरो)
             continue;
 
         delta = abs_sub_q(prm->prim.r.x, ref->prim.r.x);

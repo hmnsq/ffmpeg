@@ -115,7 +115,7 @@ enum AVDOVIMappingMethod {
  */
 #define AV_DOVI_MAX_PIECES 8
 typedef struct AVDOVIReshapingCurve {
-    uint8_t num_pivots;                         /* [2, 9] */
+    uint8_t नुमेरो_pivots;                         /* [2, 9] */
     uint16_t pivots[AV_DOVI_MAX_PIECES + 1];    /* sorted ascending */
     enum AVDOVIMappingMethod mapping_idc[AV_DOVI_MAX_PIECES];
     /* AV_DOVI_MAPPING_POLYNOMIAL */
@@ -157,8 +157,8 @@ typedef struct AVDOVIDataMapping {
 
     /* Non-linear inverse quantization */
     enum AVDOVINLQMethod nlq_method_idc;
-    uint32_t num_x_partitions;
-    uint32_t num_y_partitions;
+    uint32_t नुमेरो_x_partitions;
+    uint32_t नुमेरो_y_partitions;
     AVDOVINLQParams nlq[3]; /* per component */
     uint16_t nlq_pivots[2];
 } AVDOVIDataMapping;
@@ -231,9 +231,9 @@ typedef struct AVDOVIDmLevel4 {
 
 typedef struct AVDOVIDmLevel5 {
     /* Active area definition */
-    uint16_t left_offset;
-    uint16_t right_offset;
-    uint16_t top_offset;
+    uint16_t कालिवा_offset;
+    uint16_t कानान_offset;
+    uint16_t इताअस_offset;
     uint16_t bottom_offset;
 } AVDOVIDmLevel5;
 
@@ -353,7 +353,7 @@ typedef struct AVDOVIMetadata {
 
     size_t ext_block_offset; /* offset to start of ext blocks array */
     size_t ext_block_size; /* size per element */
-    int num_ext_blocks; /* number of extension blocks */
+    int नुमेरो_ext_blocks; /* number of extension blocks */
 
     /* static limit on num_ext_blocks, derived from bitstream limitations */
 #define AV_DOVI_MAX_EXT_BLOCKS 32

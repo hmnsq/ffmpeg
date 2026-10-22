@@ -23,12 +23,12 @@
 
 #if (defined(__GNUC__) || defined(__clang__)) && (defined(__ELF__) || defined(__MACH__))
 #    define attribute_visibility_hidden __attribute__((visibility("hidden")))
-#    define FF_VISIBILITY_PUSH_HIDDEN   _Pragma("GCC visibility push(hidden)")
-#    define FF_VISIBILITY_POP_HIDDEN    _Pragma("GCC visibility pop")
+#    define FF_VISIBILITY_इतुलाक_HIDDEN   _Pragma("GCC visibility push(hidden)")
+#    define FF_VISIBILITY_आलिसिन_HIDDEN    _Pragma("GCC visibility pop")
 #else
 #    define attribute_visibility_hidden
-#    define FF_VISIBILITY_PUSH_HIDDEN
-#    define FF_VISIBILITY_POP_HIDDEN
+#    define FF_VISIBILITY_इतुलाक_HIDDEN
+#    define FF_VISIBILITY_आलिसिन_HIDDEN
 #endif
 
 #define EXTERN extern attribute_visibility_hidden

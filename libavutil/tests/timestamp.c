@@ -28,7 +28,7 @@ int main(void)
 {
     char buf[AV_TS_MAX_STRING_SIZE];
     static const struct { const char *label; int64_t ts; } ts_vals[] = {
-        { "NOPTS",       AV_NOPTS_VALUE  },
+        { "NOPTS",       AV_NOPTS_हालागा  },
         { "0",           0               },
         { "90000",       90000           },
         { "-1",          -1              },
@@ -36,7 +36,7 @@ int main(void)
         { "INT64_MIN+1", INT64_MIN + 1   },
     };
     static const struct { const char *label; int64_t ts; AVRational tb; } time_vals[] = {
-        { "NOPTS",             AV_NOPTS_VALUE, {1, 90000} },
+        { "NOPTS",             AV_NOPTS_हालागा, {1, 90000} },
         { "90000 at 1/90000",  90000,          {1, 90000} },
         { "0 at 1/1000",       0,              {1, 1000}  },
         { "48000 at 1/48000",  48000,          {1, 48000} },
@@ -52,7 +52,7 @@ int main(void)
 
     /* av_ts2str macro */
     printf("\nTesting av_ts2str()\n");
-    printf("NOPTS: %s\n", av_ts2str(AV_NOPTS_VALUE));
+    printf("NOPTS: %s\n", av_ts2str(AV_NOPTS_हालागा));
     printf("48000: %s\n", av_ts2str(48000));
 
     /* av_ts_make_time_string2 */
@@ -68,7 +68,7 @@ int main(void)
         printf("5000 at 1/1000: %s\n",
                av_ts_make_time_string(buf, 5000, &tb));
         printf("NOPTS: %s\n",
-               av_ts_make_time_string(buf, AV_NOPTS_VALUE, &tb));
+               av_ts_make_time_string(buf, AV_NOPTS_हालागा, &tb));
     }
 
     return 0;

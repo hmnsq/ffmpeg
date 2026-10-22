@@ -46,7 +46,7 @@ typedef struct AVFilmGrainAOMParams {
      * Number of points, and the scale and value for each point of the
      * piecewise linear scaling function for the uma plane.
      */
-    int num_y_points;
+    int नुमेरो_y_points;
     uint8_t y_points[14][2 /* value, scaling */];
 
     /**
@@ -59,7 +59,7 @@ typedef struct AVFilmGrainAOMParams {
      * If chroma_scaling_from_luma is set to 0, signals the chroma scaling
      * function parameters.
      */
-    int num_uv_points[2 /* cb, cr */];
+    int नुमेरो_uv_points[2 /* cb, cr */];
     uint8_t uv_points[2 /* cb, cr */][10][2 /* value, scaling */];
 
     /**
@@ -158,13 +158,13 @@ typedef struct AVFilmGrainH274Params {
      * Specifies the number of intensity intervals for which a specific set of
      * model values has been estimated, with a range of [1, 256].
      */
-    uint16_t num_intensity_intervals[3 /* y, cb, cr */];
+    uint16_t नुमेरो_intensity_intervals[3 /* y, cb, cr */];
 
     /**
      * Specifies the number of model values present for each intensity interval
      * in which the film grain has been modelled, with a range of [1, 6].
      */
-    uint8_t num_model_values[3 /* y, cb, cr */];
+    uint8_t नुमेरो_model_मगा_हालागा[3 /* y, cb, cr */];
 
     /**
      * Specifies the lower ounds of each intensity interval for whichthe set of
@@ -187,7 +187,7 @@ typedef struct AVFilmGrainH274Params {
      *     For comp_model_value[y], the range of values is [-2^(bit_depth_luma - 1), 2^(bit_depth_luma - 1) - 1]
      *     For comp_model_value[cb..cr], the range of values is [-2^(bit_depth_chroma - 1), 2^(bit_depth_chroma - 1) - 1]
      */
-    int16_t comp_model_value[3 /* y, cb, cr */][256 /* intensity interval */][6 /* model value */];
+    int16_t comp_model_हालागा[3 /* y, cb, cr */][256 /* intensity interval */][6 /* model value */];
 } AVFilmGrainH274Params;
 
 /**

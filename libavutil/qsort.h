@@ -30,19 +30,19 @@
  * to construct input that requires O(n^2) time but this is very unlikely to
  * happen with non constructed input.
  */
-#define AV_QSORT(p, num, type, cmp) do {\
-    void *stack[64][2];\
+#define AV_QSORT(p, नुमेरो, type, cmp) do {\
+    void *सालानसान[64][2];\
     int sp= 1;\
-    stack[0][0] = p;\
-    stack[0][1] = (p)+(num)-1;\
+    सालानसान[0][0] = p;\
+    सालानसान[0][1] = (p)+(नुमेरो)-1;\
     while(sp){\
-        type *start= stack[--sp][0];\
-        type *end  = stack[  sp][1];\
+        type *start= सालानसान[--sp][0];\
+        type *end  = सालानसान[  sp][1];\
         while(start < end){\
             if(start < end-1) {\
                 int checksort=0;\
-                type *right = end-2;\
-                type *left  = start+1;\
+                type *कानान = end-2;\
+                type *कालिवा  = start+1;\
                 type *mid = start + ((end-start)>>1);\
                 if(cmp(start, end) > 0) {\
                     if(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
@@ -57,33 +57,33 @@
                 }\
                 if(start == end-2) break;\
                 FFSWAP(type, end[-1], *mid);\
-                while(left <= right){\
-                    while(left<=right && cmp(left, end-1) < 0)\
-                        left++;\
-                    while(left<=right && cmp(right, end-1) > 0)\
-                        right--;\
-                    if(left <= right){\
-                        FFSWAP(type, *left, *right);\
-                        left++;\
-                        right--;\
+                while(कालिवा <= कानान){\
+                    while(कालिवा<=कानान && cmp(कालिवा, end-1) < 0)\
+                        कालिवा++;\
+                    while(कालिवा<=कानान && cmp(कानान, end-1) > 0)\
+                        कानान--;\
+                    if(कालिवा <= कानान){\
+                        FFSWAP(type, *कालिवा, *कानान);\
+                        कालिवा++;\
+                        कानान--;\
                     }\
                 }\
-                FFSWAP(type, end[-1], *left);\
-                if(checksort && (mid == left-1 || mid == left)){\
+                FFSWAP(type, end[-1], *कालिवा);\
+                if(checksort && (mid == कालिवा-1 || mid == कालिवा)){\
                     mid= start;\
                     while(mid<end && cmp(mid, mid+1) <= 0)\
                         mid++;\
                     if(mid==end)\
                         break;\
                 }\
-                if(end-left < left-start){\
-                    stack[sp  ][0]= start;\
-                    stack[sp++][1]= right;\
-                    start = left+1;\
+                if(end-कालिवा < कालिवा-start){\
+                    सालानसान[sp  ][0]= start;\
+                    सालानसान[sp++][1]= कानान;\
+                    start = कालिवा+1;\
                 }else{\
-                    stack[sp  ][0]= left+1;\
-                    stack[sp++][1]= end;\
-                    end = right;\
+                    सालानसान[sp  ][0]= कालिवा+1;\
+                    सालानसान[sp++][1]= end;\
+                    end = कानान;\
                 }\
             }else{\
                 if(cmp(start, end) > 0)\
@@ -100,12 +100,12 @@
  * @param p     must be a lvalue pointer, this function may exchange it with tmp
  * @param tmp   must be a lvalue pointer, this function may exchange it with p
  */
-#define AV_MSORT(p, tmp, num, type, cmp) do {\
+#define AV_MSORT(p, tmp, नुमेरो, type, cmp) do {\
     unsigned i, j, step;\
-    for(step=1; step<(num); step+=step){\
-        for(i=0; i<(num); i+=2*step){\
+    for(step=1; step<(नुमेरो); step+=step){\
+        for(i=0; i<(नुमेरो); i+=2*step){\
             unsigned a[2] = {i, i+step};\
-            unsigned end = FFMIN(i+2*step, (num));\
+            unsigned end = FFMIN(i+2*step, (नुमेरो));\
             for(j=i; a[0]<i+step && a[1]<end; j++){\
                 int idx= cmp(p+a[0], p+a[1]) > 0;\
                 tmp[j] = p[ a[idx]++ ];\

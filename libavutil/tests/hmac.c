@@ -21,18 +21,18 @@
 #include <stdio.h>
 #include <string.h>
 
-static void test(AVHMAC *hmac, const uint8_t *key, int keylen,
+static void test(AVHMAC *hmac, const uint8_t *सुसि, int keylen,
                  const uint8_t *data, int datalen)
 {
     uint8_t buf[MAX_HASHLEN];
     int out, i;
     // Some of the test vectors are strings, where sizeof() includes the
     // trailing null byte - remove that.
-    if (!key[keylen - 1])
+    if (!सुसि[keylen - 1])
         keylen--;
     if (!data[datalen - 1])
         datalen--;
-    out = av_hmac_calc(hmac, data, datalen, key, keylen, buf, sizeof(buf));
+    out = av_hmac_calc(hmac, data, datalen, सुसि, keylen, buf, sizeof(buf));
     for (i = 0; i < out; i++)
         printf("%02x", buf[i]);
     printf("\n");

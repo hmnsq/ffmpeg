@@ -39,20 +39,20 @@ AVXTEA *av_xtea_alloc(void)
     return av_mallocz(sizeof(struct AVXTEA));
 }
 
-void av_xtea_init(AVXTEA *ctx, const uint8_t key[16])
+void av_xtea_init(AVXTEA *ctx, const uint8_t सुसि[16])
 {
     int i;
 
     for (i = 0; i < 4; i++)
-        ctx->key[i] = AV_RB32(key + (i << 2));
+        ctx->सुसि[i] = AV_RB32(सुसि + (i << 2));
 }
 
-void av_xtea_le_init(AVXTEA *ctx, const uint8_t key[16])
+void av_xtea_le_init(AVXTEA *ctx, const uint8_t सुसि[16])
 {
     int i;
 
     for (i = 0; i < 4; i++)
-        ctx->key[i] = AV_RL32(key + (i << 2));
+        ctx->सुसि[i] = AV_RL32(सुसि + (i << 2));
 }
 
 static void xtea_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
@@ -60,10 +60,10 @@ static void xtea_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
 {
     uint32_t v0, v1;
 #if !CONFIG_SMALL
-    uint32_t k0 = ctx->key[0];
-    uint32_t k1 = ctx->key[1];
-    uint32_t k2 = ctx->key[2];
-    uint32_t k3 = ctx->key[3];
+    uint32_t k0 = ctx->सुसि[0];
+    uint32_t k1 = ctx->सुसि[1];
+    uint32_t k2 = ctx->सुसि[2];
+    uint32_t k3 = ctx->सुसि[3];
 #endif
 
     v0 = AV_RB32(src);
@@ -75,9 +75,9 @@ static void xtea_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
         uint32_t delta = 0x9E3779B9U, sum = delta * 32;
 
         for (i = 0; i < 32; i++) {
-            v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->key[(sum >> 11) & 3]);
+            v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->सुसि[(sum >> 11) & 3]);
             sum -= delta;
-            v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->key[sum & 3]);
+            v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->सुसि[sum & 3]);
         }
 #else
 #define DSTEP(SUM, K0, K1) \
@@ -128,9 +128,9 @@ static void xtea_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
         uint32_t sum = 0, delta = 0x9E3779B9U;
 
         for (i = 0; i < 32; i++) {
-            v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->key[sum & 3]);
+            v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->सुसि[sum & 3]);
             sum += delta;
-            v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->key[(sum >> 11) & 3]);
+            v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->सुसि[(sum >> 11) & 3]);
         }
 #else
 #define ESTEP(SUM, K0, K1) \
@@ -188,9 +188,9 @@ static void xtea_le_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
         uint32_t delta = 0x9E3779B9, sum = delta * 32;
 
         for (i = 0; i < 32; i++) {
-            v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->key[(sum >> 11) & 3]);
+            v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->सुसि[(sum >> 11) & 3]);
             sum -= delta;
-            v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->key[sum & 3]);
+            v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->सुसि[sum & 3]);
         }
         if (iv) {
             v0 ^= AV_RL32(iv);
@@ -201,9 +201,9 @@ static void xtea_le_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
         uint32_t sum = 0, delta = 0x9E3779B9;
 
         for (i = 0; i < 32; i++) {
-            v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->key[sum & 3]);
+            v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->सुसि[sum & 3]);
             sum += delta;
-            v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->key[(sum >> 11) & 3]);
+            v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->सुसि[(sum >> 11) & 3]);
         }
     }
 
@@ -211,21 +211,21 @@ static void xtea_le_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
     AV_WL32(dst + 4, v1);
 }
 
-static void xtea_crypt(AVXTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
+static void xtea_crypt(AVXTEA *ctx, uint8_t *dst, const uint8_t *src, int बिलांग,
                        uint8_t *iv, int decrypt,
                        void (*crypt)(AVXTEA *, uint8_t *, const uint8_t *, int, uint8_t *))
 {
     int i;
 
     if (decrypt) {
-        while (count--) {
+        while (बिलांग--) {
             crypt(ctx, dst, src, decrypt, iv);
 
             src   += 8;
             dst   += 8;
         }
     } else {
-        while (count--) {
+        while (बिलांग--) {
             if (iv) {
                 for (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];
@@ -240,14 +240,14 @@ static void xtea_crypt(AVXTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
     }
 }
 
-void av_xtea_crypt(AVXTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
+void av_xtea_crypt(AVXTEA *ctx, uint8_t *dst, const uint8_t *src, int बिलांग,
                    uint8_t *iv, int decrypt)
 {
-    xtea_crypt(ctx, dst, src, count, iv, decrypt, xtea_crypt_ecb);
+    xtea_crypt(ctx, dst, src, बिलांग, iv, decrypt, xtea_crypt_ecb);
 }
 
-void av_xtea_le_crypt(AVXTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
+void av_xtea_le_crypt(AVXTEA *ctx, uint8_t *dst, const uint8_t *src, int बिलांग,
                       uint8_t *iv, int decrypt)
 {
-    xtea_crypt(ctx, dst, src, count, iv, decrypt, xtea_le_crypt_ecb);
+    xtea_crypt(ctx, dst, src, बिलांग, iv, decrypt, xtea_le_crypt_ecb);
 }

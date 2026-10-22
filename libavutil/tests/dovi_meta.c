@@ -53,7 +53,7 @@ int main(void)
         AVDOVIColorMetadata *color;
 
         printf("alloc: OK, size>0=%s\n", size > 0 ? "yes" : "no");
-        printf("num_ext_blocks=%d\n", md->num_ext_blocks);
+        printf("num_ext_blocks=%d\n", md->नुमेरो_ext_blocks);
 
         /* pointer consistency checks for inline accessors */
         header = av_dovi_get_header(md);
@@ -96,7 +96,7 @@ int main(void)
         AVDOVIDmData *ext, *found;
 
         /* set up 3 ext blocks with different levels */
-        md->num_ext_blocks = 3;
+        md->नुमेरो_ext_blocks = 3;
         ext = av_dovi_get_ext(md, 0);
         if ((uint8_t *)ext != (uint8_t *)md + md->ext_block_offset)
             printf("ext[0]: pointer inconsistent with ext_block_offset\n");

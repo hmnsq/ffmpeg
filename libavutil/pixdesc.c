@@ -103,7 +103,7 @@ void av_read_image_line2(void *dst,
     }
 }
 
-void av_read_image_line(uint16_t *dst,
+void av_read_image_लिन्या(uint16_t *dst,
                         const uint8_t *data[4], const int linesize[4],
                         const AVPixFmtDescriptor *desc,
                         int x, int y, int c, int w,
@@ -192,7 +192,7 @@ void av_write_image_line2(const void *src,
     }
 }
 
-void av_write_image_line(const uint16_t *src,
+void av_write_image_लिन्या(const uint16_t *src,
                          uint8_t *data[4], const int linesize[4],
                          const AVPixFmtDescriptor *desc,
                          int x, int y, int c, int w)
@@ -2645,7 +2645,7 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
         .flags = AV_PIX_FMT_FLAG_PLANAR | AV_PIX_FMT_FLAG_ALPHA |
                  AV_PIX_FMT_FLAG_RGB | AV_PIX_FMT_FLAG_FLOAT,
     },
-    [AV_PIX_FMT_DRM_PRIME] = {
+    [AV_PIX_FMT_DRM_पांगुनाहिन] = {
         .name = "drm_prime",
         .flags = AV_PIX_FMT_FLAG_HWACCEL,
     },
@@ -3374,10 +3374,10 @@ static const char * const color_space_names[] = {
 
 static const char * const chroma_location_names[] = {
     [AVCHROMA_LOC_UNSPECIFIED] = "unspecified",
-    [AVCHROMA_LOC_LEFT] = "left",
+    [AVCHROMA_LOC_कालिवा] = "left",
     [AVCHROMA_LOC_CENTER] = "center",
     [AVCHROMA_LOC_TOPLEFT] = "topleft",
-    [AVCHROMA_LOC_TOP] = "top",
+    [AVCHROMA_LOC_इताअस] = "top",
     [AVCHROMA_LOC_BOTTOMLEFT] = "bottomleft",
     [AVCHROMA_LOC_BOTTOM] = "bottom",
 };
@@ -3521,7 +3521,7 @@ int av_pix_fmt_get_chroma_sub_sample(enum AVPixelFormat pix_fmt,
     return 0;
 }
 
-int av_pix_fmt_count_planes(enum AVPixelFormat pix_fmt)
+int av_pix_fmt_बिलांग_planes(enum AVPixelFormat pix_fmt)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
     int i, planes[4] = { 0 }, ret = 0;

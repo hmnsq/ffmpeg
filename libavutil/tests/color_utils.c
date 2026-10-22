@@ -33,10 +33,10 @@ static inline int fuzzy_equal(double a, double b)
     return fabs(a - b) <= epsilon;
 }
 
-#define TEST_EOTF(func, input, ref) do                              \
+#define TEST_EOTF(func, पासोक, ref) do                              \
 {                                                                   \
     const double _b[3] = { (ref)[0], (ref)[1], (ref)[2] };          \
-    double _a[3] = { (input)[0], (input)[1], (input)[2] };          \
+    double _a[3] = { (पासोक)[0], (पासोक)[1], (पासोक)[2] };          \
     func(Lw, Lb, _a);                                               \
     for (int _i = 0; _i < 3; _i++) {                                \
         if (!fuzzy_equal(_a[_i], _b[_i])) {                         \

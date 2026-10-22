@@ -112,7 +112,7 @@ const char *ff_vk_ret2str(VkResult res)
                VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR);                \
         MAP_TO(VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR,            \
                VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR);                \
-        MAP_TO(VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR,          \
+        MAP_TO(VK_FORMAT_FEATURE_2_VIDEO_ENCODE_पासोक_BIT_KHR,          \
                VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR);                \
         MAP_TO(VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT_EXT,         \
                VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT);                   \
@@ -163,8 +163,8 @@ int ff_vk_load_props(FFVulkanContext *s)
     FF_VK_STRUCT_EXT(s, &s->props, &s->subgroup_props, FF_VK_EXT_NO_FLAG,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES);
 
-    FF_VK_STRUCT_EXT(s, &s->props, &s->push_desc_props, FF_VK_EXT_PUSH_DESCRIPTOR,
-                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR);
+    FF_VK_STRUCT_EXT(s, &s->props, &s->इतुलाक_desc_props, FF_VK_EXT_इतुलाक_DESCRIPTOR,
+                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_इतुलाक_DESCRIPTOR_PROPERTIES_KHR);
     FF_VK_STRUCT_EXT(s, &s->props, &s->hprops, FF_VK_EXT_EXTERNAL_HOST_MEMORY,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT);
     FF_VK_STRUCT_EXT(s, &s->props, &s->coop_matrix_props, FF_VK_EXT_COOP_MATRIX,
@@ -207,25 +207,25 @@ int ff_vk_load_props(FFVulkanContext *s)
     /* Try allocating 1024 layouts */
     s->host_image_copy_layouts = av_malloc(sizeof(*s->host_image_copy_layouts)*1024);
     s->host_image_props.pCopySrcLayouts = s->host_image_copy_layouts;
-    s->host_image_props.copySrcLayoutCount = 512;
+    s->host_image_props.copy_Src_Layout_बिलांग = 512;
     s->host_image_props.pCopyDstLayouts = s->host_image_copy_layouts + 512;
-    s->host_image_props.copyDstLayoutCount = 512;
+    s->host_image_props.copy_Dst_Layout_बिलांग = 512;
 
     vk->GetPhysicalDeviceProperties2(s->hwctx->phys_dev, &s->props);
 
     /* Check if we had enough memory for all layouts */
-    if (s->host_image_props.copySrcLayoutCount == 512 ||
-        s->host_image_props.copyDstLayoutCount == 512) {
+    if (s->host_image_props.copy_Src_Layout_बिलांग == 512 ||
+        s->host_image_props.copy_Dst_Layout_बिलांग == 512) {
         VkImageLayout *new_array;
         size_t new_size;
         s->host_image_props.pCopySrcLayouts =
         s->host_image_props.pCopyDstLayouts = NULL;
-        s->host_image_props.copySrcLayoutCount =
-        s->host_image_props.copyDstLayoutCount = 0;
+        s->host_image_props.copy_Src_Layout_बिलांग =
+        s->host_image_props.copy_Dst_Layout_बिलांग = 0;
         vk->GetPhysicalDeviceProperties2(s->hwctx->phys_dev, &s->props);
 
-        new_size = s->host_image_props.copySrcLayoutCount +
-                   s->host_image_props.copyDstLayoutCount;
+        new_size = s->host_image_props.copy_Src_Layout_बिलांग +
+                   s->host_image_props.copy_Dst_Layout_बिलांग;
         new_size *= sizeof(*s->host_image_copy_layouts);
         new_array = av_realloc(s->host_image_copy_layouts, new_size);
         if (!new_array)
@@ -233,14 +233,14 @@ int ff_vk_load_props(FFVulkanContext *s)
 
         s->host_image_copy_layouts = new_array;
         s->host_image_props.pCopySrcLayouts = new_array;
-        s->host_image_props.pCopyDstLayouts = new_array + s->host_image_props.copySrcLayoutCount;
+        s->host_image_props.pCopyDstLayouts = new_array + s->host_image_props.copy_Src_Layout_बिलांग;
         vk->GetPhysicalDeviceProperties2(s->hwctx->phys_dev, &s->props);
     }
 
     vk->GetPhysicalDeviceMemoryProperties(s->hwctx->phys_dev, &s->mprops);
     vk->GetPhysicalDeviceFeatures2(s->hwctx->phys_dev, &s->feats);
 
-    for (int i = 0; i < s->mprops.memoryTypeCount; i++)
+    for (int i = 0; i < s->mprops.memory_Type_बिलांग; i++)
         s->host_cached_flag |= s->mprops.memoryTypes[i].propertyFlags &
                                VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
 
@@ -342,9 +342,9 @@ void ff_vk_exec_pool_free(FFVulkanContext *s, FFVkExecPool *pool)
         if (e->sem) {
             VkSemaphoreWaitInfo sem_wait_info = {
                 .sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
-                .semaphoreCount = 1,
+                .semaphore_बिलांग = 1,
                 .pSemaphores = &e->sem,
-                .pValues = &e->sem_value,
+                .p_मगा_हालागा = &e->sem_हालागा,
             };
             vk->WaitSemaphores(s->hwctx->act_dev, &sem_wait_info, UINT64_MAX);
             vk->DestroySemaphore(s->hwctx->act_dev, e->sem, s->hwctx->alloc);
@@ -456,7 +456,7 @@ int ff_vk_exec_pool_init(FFVulkanContext *s, AVVulkanDeviceQueueFamily *qf,
             .sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
             .level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
             .commandPool        = pool->cmd_buf_pools[i],
-            .commandBufferCount = 1,
+            .command_Buffer_बिलांग = 1,
         };
         ret = vk->AllocateCommandBuffers(s->hwctx->act_dev, &cbuf_create,
                                          &pool->cmd_bufs[i]);
@@ -474,7 +474,7 @@ int ff_vk_exec_pool_init(FFVulkanContext *s, AVVulkanDeviceQueueFamily *qf,
             .sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO,
             .pNext = query_create_pnext,
             .queryType = query_type,
-            .queryCount = nb_queries*nb_contexts,
+            .query_बिलांग = nb_queries*nb_contexts,
         };
         ret = vk->CreateQueryPool(s->hwctx->act_dev, &query_pool_info,
                                   s->hwctx->alloc, &pool->query_pool);
@@ -574,7 +574,7 @@ int ff_vk_exec_pool_init(FFVulkanContext *s, AVVulkanDeviceQueueFamily *qf,
         e->buf = pool->cmd_bufs[i];
 
         /* Queue index distribution */
-        e->qi = pin_queue ? phase % qf->num : (i + phase) % qf->num;
+        e->qi = pin_queue ? phase % qf->नुमेरो : (i + phase) % qf->नुमेरो;
         e->qf = qf->idx;
         VkDeviceQueueInfo2 qinfo = {
             .sType            = VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2,
@@ -635,8 +635,8 @@ FFVkExecContext *ff_vk_exec_get(FFVulkanContext *s, FFVkExecPool *pool)
             continue; /* In use by a recording or submitting thread */
         /* Busy contexts (counter below sem_value) are claimed or executing:
          * their dependency lists are off-limits */
-        if (vk->GetSemaphoreCounterValue(s->hwctx->act_dev, e->sem, &sem_val) == VK_SUCCESS &&
-            sem_val >= e->sem_value &&
+        if (vk->Get_Semaphore_Counter_हालागा(s->hwctx->act_dev, e->sem, &sem_val) == VK_SUCCESS &&
+            sem_val >= e->sem_हालागा &&
             (e->nb_buf_deps || e->nb_refstruct_deps || e->nb_obj_deps ||
              e->nb_frame_deps || e->nb_sw_frame_deps))
             exec_discard_deps(s, e);
@@ -651,9 +651,9 @@ void ff_vk_exec_wait(FFVulkanContext *s, FFVkExecContext *e)
     FFVulkanFunctions *vk = &s->vkfn;
     VkSemaphoreWaitInfo sem_wait_info = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
-        .semaphoreCount = 1,
+        .semaphore_बिलांग = 1,
         .pSemaphores = &e->sem,
-        .pValues = &e->sem_value,
+        .p_मगा_हालागा = &e->sem_हालागा,
     };
     pthread_mutex_lock(&e->lock);
     vk->WaitSemaphores(s->hwctx->act_dev, &sem_wait_info, UINT64_MAX);
@@ -673,9 +673,9 @@ int ff_vk_exec_start(FFVulkanContext *s, FFVkExecContext *e)
     };
     VkSemaphoreWaitInfo sem_wait_info = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
-        .semaphoreCount = 1,
+        .semaphore_बिलांग = 1,
         .pSemaphores = &e->sem,
-        .pValues = &e->sem_value,
+        .p_मगा_हालागा = &e->sem_हालागा,
     };
 
     pthread_mutex_lock(&e->lock);
@@ -700,11 +700,11 @@ int ff_vk_exec_start(FFVulkanContext *s, FFVkExecContext *e)
 
     /* Claim: the semaphore stays below this value until submission completes
      * or the recording is discarded, keeping every other user away */
-    e->sem_value++;
+    e->sem_हालागा++;
     e->sem_sig[e->sem_sig_cnt++] = (VkSemaphoreSubmitInfo) {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
         .semaphore = e->sem,
-        .value = e->sem_value,
+        .हालागा = e->sem_हालागा,
         .stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
     };
 
@@ -770,7 +770,7 @@ void ff_vk_exec_discard(FFVulkanContext *s, FFVkExecContext *e)
     VkSemaphoreSignalInfo sig_info = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO,
         .semaphore = e->sem,
-        .value = e->sem_value,
+        .हालागा = e->sem_हालागा,
     };
 
     /* An abandoned recording is exclusively the claimer's: free everything
@@ -835,7 +835,7 @@ void ff_vk_exec_add_dep_wait_sem(FFVulkanContext *s, FFVkExecContext *e,
     e->sem_wait[e->sem_wait_cnt++] = (VkSemaphoreSubmitInfo) {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
         .semaphore = sem,
-        .value = val,
+        .हालागा = val,
         .stageMask = stage,
     };
 }
@@ -849,7 +849,7 @@ void ff_vk_exec_add_dep_signal_sem(FFVulkanContext *s, FFVkExecContext *e,
     e->sem_sig[e->sem_sig_cnt++] = (VkSemaphoreSubmitInfo) {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
         .semaphore = sem,
-        .value = val,
+        .हालागा = val,
         .stageMask = stage,
     };
 }
@@ -889,7 +889,7 @@ int ff_vk_exec_add_dep_frame(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
     AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
     AVVulkanFramesContext *vkfc = hwfc->hwctx;
     AVVkFrame *vkf = (AVVkFrame *)f->data[0];
-    int nb_images = ff_vk_count_images(vkf);
+    int nb_images = ff_vk_बिलांग_images(vkf);
 
     /* Don't add duplicates */
     for (int i = 0; i < e->nb_frame_deps; i++)
@@ -922,18 +922,18 @@ int ff_vk_exec_add_dep_frame(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
         e->sem_wait[e->sem_wait_cnt++] = (VkSemaphoreSubmitInfo) {
             .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
             .semaphore = vkf->sem[i],
-            .value = vkf->sem_value[i],
+            .हालागा = vkf->sem_हालागा[i],
             .stageMask = wait_stage,
         };
 
         e->sem_sig[e->sem_sig_cnt++] = (VkSemaphoreSubmitInfo) {
             .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
             .semaphore = vkf->sem[i],
-            .value = vkf->sem_value[i] + 1,
+            .हालागा = vkf->sem_हालागा[i] + 1,
             .stageMask = signal_stage,
         };
 
-        e->sem_sig_val_dst[e->sem_sig_val_dst_cnt] = &vkf->sem_value[i];
+        e->sem_sig_val_dst[e->sem_sig_val_dst_cnt] = &vkf->sem_हालागा[i];
         e->sem_sig_val_dst_cnt++;
     }
 
@@ -959,7 +959,7 @@ void ff_vk_exec_update_frame(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
     e->frame_update[i] = 1;
 }
 
-int ff_vk_exec_mirror_sem_value(FFVulkanContext *s, FFVkExecContext *e,
+int ff_vk_exec_mirror_sem_हालागा(FFVulkanContext *s, FFVkExecContext *e,
                                 VkSemaphore *dst, uint64_t *dst_val,
                                 AVFrame *f)
 {
@@ -976,7 +976,7 @@ int ff_vk_exec_mirror_sem_value(FFVulkanContext *s, FFVkExecContext *e,
     av_assert1(e->sem_sig_val_dst_cnt < FF_VK_EXEC_MAX_SEM_OPS);
 
     *dst     = vkf->sem[0];
-    *dst_val = vkf->sem_value[0];
+    *dst_val = vkf->sem_हालागा[0];
 
     e->sem_sig_val_dst[e->sem_sig_val_dst_cnt] = dst_val;
     e->sem_sig_val_dst_cnt++;
@@ -995,11 +995,11 @@ int ff_vk_exec_submit(FFVulkanContext *s, FFVkExecContext *e)
     VkSubmitInfo2 submit_info = (VkSubmitInfo2) {
         .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO_2,
         .pCommandBufferInfos = &cmd_buf_info,
-        .commandBufferInfoCount = 1,
+        .command_Buffer_Info_बिलांग = 1,
         .pWaitSemaphoreInfos = e->sem_wait,
-        .waitSemaphoreInfoCount = e->sem_wait_cnt,
+        .wait_Semaphore_Info_बिलांग = e->sem_wait_cnt,
         .pSignalSemaphoreInfos = e->sem_sig,
-        .signalSemaphoreInfoCount = e->sem_sig_cnt,
+        .signal_Semaphore_Info_बिलांग = e->sem_sig_cnt,
     };
 
     ret = vk->EndCommandBuffer(e->buf);
@@ -1042,7 +1042,7 @@ FF_ENABLE_DEPRECATION_WARNINGS
             AVVkFrame *vkf = (AVVkFrame *)f->data[0];
 
             if (e->frame_update[j]) {
-                int nb_images = ff_vk_count_images(vkf);
+                int nb_images = ff_vk_बिलांग_images(vkf);
                 for (int i = 0; i < nb_images; i++) {
                     vkf->layout[i] = e->layout_dst[j];
                     vkf->access[i] = e->access_dst[j];
@@ -1076,7 +1076,7 @@ int ff_vk_alloc_mem(FFVulkanContext *s, VkMemoryRequirements *req,
 
     /* The vulkan spec requires memory types to be sorted in the "optimal"
      * order, so the first matching type we find will be the best/fastest one */
-    for (int i = 0; i < s->mprops.memoryTypeCount; i++) {
+    for (int i = 0; i < s->mprops.memory_Type_बिलांग; i++) {
         /* The memory type must be supported by the requirements (bitfield) */
         if (!(req->memoryTypeBits & (1 << i)))
             continue;
@@ -1132,7 +1132,7 @@ int ff_vk_image_create(FFVulkanContext *s, VkImage *img, VkDeviceMemory *mem,
         .tiling        = tiling,
         .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
         .usage         = usage,
-        .samples       = VK_SAMPLE_COUNT_1_BIT,
+        .samples       = VK_SAMPLE_बिलांग_1_BIT,
         .sharingMode   = VK_SHARING_MODE_EXCLUSIVE,
     };
     VkMemoryDedicatedAllocateInfo ded_alloc = {
@@ -1299,7 +1299,7 @@ int ff_vk_map_buffers(FFVulkanContext *s, FFVkBuffer **buf, uint8_t *mem[],
     VkResult ret;
     FFVulkanFunctions *vk = &s->vkfn;
     VkMappedMemoryRange inval_list[64];
-    int inval_count = 0;
+    int inval_बिलांग = 0;
 
     for (int i = 0; i < nb_buffers; i++) {
         void *dst;
@@ -1326,11 +1326,11 @@ int ff_vk_map_buffers(FFVulkanContext *s, FFVkBuffer **buf, uint8_t *mem[],
         };
         if (buf[i]->flags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
             continue;
-        inval_list[inval_count++] = ival_buf;
+        inval_list[inval_बिलांग++] = ival_buf;
     }
 
-    if (inval_count) {
-        ret = vk->InvalidateMappedMemoryRanges(s->hwctx->act_dev, inval_count,
+    if (inval_बिलांग) {
+        ret = vk->InvalidateMappedMemoryRanges(s->hwctx->act_dev, inval_बिलांग,
                                                inval_list);
         if (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Failed to invalidate memory: %s\n",
@@ -1380,7 +1380,7 @@ int ff_vk_unmap_buffers(FFVulkanContext *s, FFVkBuffer **buf, int nb_buffers,
     VkResult ret;
     FFVulkanFunctions *vk = &s->vkfn;
     VkMappedMemoryRange flush_list[64];
-    int flush_count = 0;
+    int flush_बिलांग = 0;
 
     if (flush) {
         for (int i = 0; i < nb_buffers; i++) {
@@ -1393,12 +1393,12 @@ int ff_vk_unmap_buffers(FFVulkanContext *s, FFVkBuffer **buf, int nb_buffers,
             av_assert0(!buf[i]->host_ref);
             if (buf[i]->flags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
                 continue;
-            flush_list[flush_count++] = flush_buf;
+            flush_list[flush_बिलांग++] = flush_buf;
         }
     }
 
-    if (flush_count) {
-        ret = vk->FlushMappedMemoryRanges(s->hwctx->act_dev, flush_count,
+    if (flush_बिलांग) {
+        ret = vk->FlushMappedMemoryRanges(s->hwctx->act_dev, flush_बिलांग,
                                           flush_list);
         if (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Failed to flush memory: %s\n",
@@ -1628,11 +1628,11 @@ int ff_vk_host_map_buffer(FFVulkanContext *s, FFVkBuffer **dst,
     return 0;
 }
 
-int ff_vk_shader_add_push_const(FFVulkanShader *shd, int offset, int size,
+int ff_vk_shader_add_इतुलाक_const(FFVulkanShader *shd, int offset, int size,
                                 VkShaderStageFlagBits stage)
 {
-    VkPushConstantRange *pc = &shd->push_consts[shd->push_consts_num++];
-    av_assert1(shd->push_consts_num < FF_VK_MAX_PUSH_CONSTS);
+    Vk_इतुलाक_Constant_Range *pc = &shd->इतुलाक_consts[shd->इतुलाक_consts_नुमेरो++];
+    av_assert1(shd->इतुलाक_consts_नुमेरो < FF_VK_MAX_इतुलाक_CONSTS);
     pc->stageFlags = stage;
     pc->offset = offset;
     pc->size = size;
@@ -1676,8 +1676,8 @@ VkImageAspectFlags ff_vk_aspect_flag(AVFrame *f, int p)
 {
     AVVkFrame *vkf = (AVVkFrame *)f->data[0];
     AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
-    int nb_images = ff_vk_count_images(vkf);
-    int nb_planes = av_pix_fmt_count_planes(hwfc->sw_format);
+    int nb_images = ff_vk_बिलांग_images(vkf);
+    int nb_planes = av_pix_fmt_बिलांग_planes(hwfc->sw_format);
 
     static const VkImageAspectFlags plane_aspect[] = { VK_IMAGE_ASPECT_PLANE_0_BIT,
                                                        VK_IMAGE_ASPECT_PLANE_1_BIT,
@@ -1982,7 +1982,7 @@ FFVkImageViews *ff_vk_imageviews_alloc(FFVulkanContext *s, int nb_views)
     FFVulkanFunctions *vk = &s->vkfn;
     FFVkImageViews *iv;
 
-    av_assert1(nb_views <= AV_NUM_DATA_POINTERS);
+    av_assert1(nb_views <= AV_नुमेरो_DATA_POINTERS);
 
     iv = av_refstruct_pool_get(s->imageviews_pool);
     if (!iv)
@@ -2004,11 +2004,11 @@ VkFormat ff_vk_map_fmt_to_rep(VkFormat fmt, enum FFVkShaderRepFormat rep_fmt)
     [FF_VK_REP_INT]    = fmt ## _SINT, \
     [FF_VK_REP_UINT]   = fmt ## _UINT,
 
-#define REPS_FMT_PACK(fmt, num) \
-    [FF_VK_REP_NATIVE] = fmt ## _UINT_PACK ## num, \
-    [FF_VK_REP_FLOAT]  = fmt ## _UNORM_PACK ## num, \
-    [FF_VK_REP_INT]    = fmt ## _SINT_PACK ## num, \
-    [FF_VK_REP_UINT]   = fmt ## _UINT_PACK ## num,
+#define REPS_FMT_PACK(fmt, नुमेरो) \
+    [FF_VK_REP_NATIVE] = fmt ## _UINT_PACK ## नुमेरो, \
+    [FF_VK_REP_FLOAT]  = fmt ## _UNORM_PACK ## नुमेरो, \
+    [FF_VK_REP_INT]    = fmt ## _SINT_PACK ## नुमेरो, \
+    [FF_VK_REP_UINT]   = fmt ## _UINT_PACK ## नुमेरो,
 
     const VkFormat fmts_map[][4] = {
         { REPS_FMT_PACK(VK_FORMAT_A2B10G10R10, 32) },
@@ -2105,7 +2105,7 @@ int ff_vk_create_imageview(FFVulkanContext *s,
     AVVulkanFramesContext *vkfc = hwfc->hwctx;
     const VkFormat *rep_fmts = av_vkfmt_from_pixfmt(hwfc->sw_format);
     AVVkFrame *vkf = (AVVkFrame *)f->data[0];
-    const int nb_images = ff_vk_count_images(vkf);
+    const int nb_images = ff_vk_बिलांग_images(vkf);
 
     VkImageViewUsageCreateInfo view_usage_info = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
@@ -2122,8 +2122,8 @@ int ff_vk_create_imageview(FFVulkanContext *s,
         .components = ff_comp_identity_map,
         .subresourceRange = {
             .aspectMask = ff_vk_aspect_flag(f, plane),
-            .levelCount = 1,
-            .layerCount = 1,
+            .level_बिलांग = 1,
+            .layer_बिलांग = 1,
         },
     };
     if (view_create_info.format == VK_FORMAT_UNDEFINED) {
@@ -2147,9 +2147,9 @@ int ff_vk_create_imageview(FFVulkanContext *s,
 }
 
 int ff_vk_create_imageviews_fmt(FFVulkanContext *s, FFVkExecContext *e,
-                                VkImageView views[AV_NUM_DATA_POINTERS],
+                                VkImageView views[AV_नुमेरो_DATA_POINTERS],
                                 AVFrame *f,
-                                const VkFormat fmts[AV_NUM_DATA_POINTERS])
+                                const VkFormat fmts[AV_नुमेरो_DATA_POINTERS])
 {
     int err = 0;
     VkResult ret;
@@ -2157,9 +2157,9 @@ int ff_vk_create_imageviews_fmt(FFVulkanContext *s, FFVkExecContext *e,
     AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
     AVVulkanFramesContext *vkfc = hwfc->hwctx;
     AVVkFrame *vkf = (AVVkFrame *)f->data[0];
-    const int nb_images = ff_vk_count_images(vkf);
-    const int nb_planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    VkImageView tmp_views[AV_NUM_DATA_POINTERS] = { 0 };
+    const int nb_images = ff_vk_बिलांग_images(vkf);
+    const int nb_planes = av_pix_fmt_बिलांग_planes(hwfc->sw_format);
+    VkImageView tmp_views[AV_नुमेरो_DATA_POINTERS] = { 0 };
 
     for (int i = 0; i < nb_planes; i++) {
         VkImageViewUsageCreateInfo view_usage_info = {
@@ -2177,8 +2177,8 @@ int ff_vk_create_imageviews_fmt(FFVulkanContext *s, FFVkExecContext *e,
             .components = ff_comp_identity_map,
             .subresourceRange = {
                 .aspectMask = ff_vk_aspect_flag(f, i),
-                .levelCount = 1,
-                .layerCount = 1,
+                .level_बिलांग = 1,
+                .layer_बिलांग = 1,
             },
         };
 
@@ -2209,13 +2209,13 @@ fail:
 }
 
 int ff_vk_create_imageviews(FFVulkanContext *s, FFVkExecContext *e,
-                            VkImageView views[AV_NUM_DATA_POINTERS],
+                            VkImageView views[AV_नुमेरो_DATA_POINTERS],
                             AVFrame *f, enum FFVkShaderRepFormat rep_fmt)
 {
     AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
     const VkFormat *rep_fmts = av_vkfmt_from_pixfmt(hwfc->sw_format);
-    const int nb_planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    VkFormat fmts[AV_NUM_DATA_POINTERS] = { 0 };
+    const int nb_planes = av_pix_fmt_बिलांग_planes(hwfc->sw_format);
+    VkFormat fmts[AV_नुमेरो_DATA_POINTERS] = { 0 };
 
     for (int i = 0; i < nb_planes; i++) {
         fmts[i] = ff_vk_map_fmt_to_rep(rep_fmts[i], rep_fmt);
@@ -2240,7 +2240,7 @@ void ff_vk_frame_barrier(FFVulkanContext *s, FFVkExecContext *e,
 {
     int found = -1;
     AVVkFrame *vkf = (AVVkFrame *)pic->data[0];
-    const int nb_images = ff_vk_count_images(vkf);
+    const int nb_images = ff_vk_बिलांग_images(vkf);
     for (int i = 0; i < e->nb_frame_deps; i++)
         if (e->frame_deps[i]->data[0] == pic->data[0]) {
             if (e->frame_update[i])
@@ -2266,8 +2266,8 @@ void ff_vk_frame_barrier(FFVulkanContext *s, FFVkExecContext *e,
             .image = vkf->img[i],
             .subresourceRange = (VkImageSubresourceRange) {
                 .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-                .layerCount = 1,
-                .levelCount = 1,
+                .layer_बिलांग = 1,
+                .level_बिलांग = 1,
             },
         };
         *nb_bar += 1;
@@ -2320,9 +2320,9 @@ static int init_pipeline_layout(FFVulkanContext *s, FFVulkanShader *shd)
     pipeline_layout_info = (VkPipelineLayoutCreateInfo) {
         .sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
         .pSetLayouts            = shd->desc_layout,
-        .setLayoutCount         = shd->nb_descriptor_sets,
-        .pushConstantRangeCount = shd->push_consts_num,
-        .pPushConstantRanges    = shd->push_consts,
+        .set_Layout_बिलांग         = shd->nb_descriptor_sets,
+        .इतुलाक_Constant_Range_बिलांग = shd->इतुलाक_consts_नुमेरो,
+        .p_इतुलाक_Constant_Ranges    = shd->इतुलाक_consts,
     };
 
     ret = vk->CreatePipelineLayout(s->hwctx->act_dev, &pipeline_layout_info,
@@ -2409,8 +2409,8 @@ static int init_descriptors(FFVulkanContext *s, FFVulkanShader *shd)
         if (shd->desc_set[i].singular)
             has_singular = 1;
     }
-    shd->use_push = (s->extensions & FF_VK_EXT_PUSH_DESCRIPTOR) &&
-                    (max_descriptors <= s->push_desc_props.maxPushDescriptors) &&
+    shd->use_इतुलाक = (s->extensions & FF_VK_EXT_इतुलाक_DESCRIPTOR) &&
+                    (max_descriptors <= s->इतुलाक_desc_props.max_इतुलाक_Descriptors) &&
                     (shd->nb_descriptor_sets == 1) &&
                     (has_singular == 0);
 
@@ -2418,10 +2418,10 @@ static int init_descriptors(FFVulkanContext *s, FFVulkanShader *shd)
         FFVulkanDescriptorSet *set = &shd->desc_set[i];
         VkDescriptorSetLayoutCreateInfo desc_layout_create = {
             .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-            .bindingCount = set->nb_bindings,
+            .binding_बिलांग = set->nb_bindings,
             .pBindings = set->binding,
-            .flags = (shd->use_push) ?
-                     VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR :
+            .flags = (shd->use_इतुलाक) ?
+                     VK_DESCRIPTOR_SET_LAYOUT_CREATE_इतुलाक_DESCRIPTOR_BIT_KHR :
                      0x0,
         };
 
@@ -2448,13 +2448,13 @@ int ff_vk_shader_link(FFVulkanContext *s, FFVulkanShader *shd,
     VkSpecializationMapEntry spec_entries[3];
     VkSpecializationInfo spec_info;
     VkShaderModule mod;
-    size_t input_size = spirv_len;
+    size_t पासोक_size = spirv_len;
 
     if (shd->precompiled) {
         if (!shd->specialization_info) {
             spec_info = (VkSpecializationInfo) {
                 .pMapEntries = spec_entries,
-                .mapEntryCount = 0,
+                .map_Entry_बिलांग = 0,
                 .pData = shd->lg_size,
                 .dataSize = 0,
             };
@@ -2463,7 +2463,7 @@ int ff_vk_shader_link(FFVulkanContext *s, FFVulkanShader *shd,
 
         VkSpecializationMapEntry *spe = (void *)shd->specialization_info->pMapEntries;
         for (int i = 0; i < 3; i++) {
-            spe[shd->specialization_info->mapEntryCount++] = (VkSpecializationMapEntry) {
+            spe[shd->specialization_info->map_Entry_बिलांग++] = (VkSpecializationMapEntry) {
                 .constantID = 253 + i,
                 .offset = shd->specialization_info->dataSize + i*sizeof(uint32_t),
                 .size = sizeof(uint32_t),
@@ -2519,13 +2519,13 @@ int ff_vk_shader_link(FFVulkanContext *s, FFVulkanShader *shd,
     else
         av_log(s, AV_LOG_VERBOSE, "Shader linked, size:");
 
-    if (input_size != spirv_len)
-        av_log(s, AV_LOG_VERBOSE, " %zu compressed,", input_size);
+    if (पासोक_size != spirv_len)
+        av_log(s, AV_LOG_VERBOSE, " %zu compressed,", पासोक_size);
     av_log(s, AV_LOG_VERBOSE, " %zu SPIR-V\n", spirv_len);
 
 end:
     if (shd->precompiled) {
-        shd->specialization_info->mapEntryCount -= 3;
+        shd->specialization_info->map_Entry_बिलांग -= 3;
         shd->specialization_info->dataSize -= 3*sizeof(uint32_t);
     }
 #if CONFIG_SHADER_COMPRESSION
@@ -2546,7 +2546,7 @@ void ff_vk_shader_add_descriptor_set(FFVulkanContext *s, FFVulkanShader *shd,
     for (int i = 0; i < nb; i++) {
         set->binding[i].binding            = i;
         set->binding[i].descriptorType     = desc[i].type;
-        set->binding[i].descriptorCount    = FFMAX(desc[i].elems, 1);
+        set->binding[i].descriptor_बिलांग    = FFMAX(desc[i].elems, 1);
         set->binding[i].stageFlags         = desc[i].stages;
         set->binding[i].pImmutableSamplers = desc[i].samplers;
     }
@@ -2562,7 +2562,7 @@ void ff_vk_shader_add_descriptor_set(FFVulkanContext *s, FFVulkanShader *shd,
         }
 
         shd->desc_pool_size[j].type             = desc[i].type;
-        shd->desc_pool_size[j].descriptorCount += FFMAX(desc[i].elems, 1);
+        shd->desc_pool_size[j].descriptor_बिलांग += FFMAX(desc[i].elems, 1);
     }
 
     set->singular = singular;
@@ -2581,7 +2581,7 @@ int ff_vk_shader_register_exec(FFVulkanContext *s, FFVkExecPool *pool,
     sd->shd = shd;
     sd->nb_descriptor_sets = shd->nb_descriptor_sets;
 
-    if (!shd->use_push) {
+    if (!shd->use_इतुलाक) {
         VkResult ret;
         FFVulkanFunctions *vk = &s->vkfn;
         VkDescriptorSetLayout *tmp_layouts;
@@ -2589,13 +2589,13 @@ int ff_vk_shader_register_exec(FFVulkanContext *s, FFVkExecPool *pool,
         VkDescriptorPoolCreateInfo pool_create_info;
 
         for (int i = 0; i < shd->nb_desc_pool_size; i++)
-            shd->desc_pool_size[i].descriptorCount *= pool->pool_size;
+            shd->desc_pool_size[i].descriptor_बिलांग *= pool->pool_size;
 
         pool_create_info = (VkDescriptorPoolCreateInfo) {
             .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
             .flags = 0,
             .pPoolSizes = shd->desc_pool_size,
-            .poolSizeCount = shd->nb_desc_pool_size,
+            .pool_Size_बिलांग = shd->nb_desc_pool_size,
             .maxSets = sd->nb_descriptor_sets*pool->pool_size,
         };
 
@@ -2620,7 +2620,7 @@ int ff_vk_shader_register_exec(FFVulkanContext *s, FFVkExecPool *pool,
             .sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
             .descriptorPool     = sd->desc_pool,
             .pSetLayouts        = tmp_layouts,
-            .descriptorSetCount = pool_create_info.maxSets,
+            .descriptor_Set_बिलांग = pool_create_info.maxSets,
         };
 
         sd->desc_sets = av_malloc_array(pool_create_info.maxSets,
@@ -2666,8 +2666,8 @@ static inline void update_set_pool_write(FFVulkanContext *s, FFVkExecContext *e,
             vk->UpdateDescriptorSets(s->hwctx->act_dev, 1, write_info, 0, NULL);
         }
     } else {
-        if (shd->use_push) {
-            vk->CmdPushDescriptorSetKHR(e->buf,
+        if (shd->use_इतुलाक) {
+            vk->Cmd_इतुलाक_Descriptor_Set_KHR(e->buf,
                                         shd->bind_point,
                                         shd->pipeline_layout,
                                         set, 1,
@@ -2694,7 +2694,7 @@ int ff_vk_shader_update_img(FFVulkanContext *s, FFVkExecContext *e,
     VkWriteDescriptorSet desc_pool_write_info = {
         .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
         .dstBinding = bind,
-        .descriptorCount = 1,
+        .descriptor_बिलांग = 1,
         .dstArrayElement = offs,
         .descriptorType = desc_set->binding[bind].descriptorType,
         .pImageInfo = &desc_pool_write_info_img,
@@ -2710,7 +2710,7 @@ void ff_vk_shader_update_img_array(FFVulkanContext *s, FFVkExecContext *e,
                                    VkImageLayout layout, VkSampler sampler)
 {
     AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
-    const int nb_planes = av_pix_fmt_count_planes(hwfc->sw_format);
+    const int nb_planes = av_pix_fmt_बिलांग_planes(hwfc->sw_format);
 
     for (int i = 0; i < nb_planes; i++)
         ff_vk_shader_update_img(s, e, shd, set, binding, i,
@@ -2733,7 +2733,7 @@ int ff_vk_shader_update_desc_buffer(FFVulkanContext *s, FFVkExecContext *e,
     VkWriteDescriptorSet desc_pool_write_info = {
         .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
         .dstBinding = bind,
-        .descriptorCount = 1,
+        .descriptor_बिलांग = 1,
         .dstArrayElement = elem,
         .descriptorType = desc_set->binding[bind].descriptorType,
         .pBufferInfo = &desc_pool_write_info_buf,
@@ -2743,13 +2743,13 @@ int ff_vk_shader_update_desc_buffer(FFVulkanContext *s, FFVkExecContext *e,
     return 0;
 }
 
-void ff_vk_shader_update_push_const(FFVulkanContext *s, FFVkExecContext *e,
+void ff_vk_shader_update_इतुलाक_const(FFVulkanContext *s, FFVkExecContext *e,
                                     FFVulkanShader *shd,
                                     VkShaderStageFlagBits stage,
                                     int offset, size_t size, void *src)
 {
     FFVulkanFunctions *vk = &s->vkfn;
-    vk->CmdPushConstants(e->buf, shd->pipeline_layout,
+    vk->Cmd_इतुलाक_Constants(e->buf, shd->pipeline_layout,
                          stage, offset, size, src);
 }
 
@@ -2762,7 +2762,7 @@ void ff_vk_exec_bind_shader(FFVulkanContext *s, FFVkExecContext *e,
     vk->CmdBindPipeline(e->buf, shd->bind_point, shd->pipeline);
 
     if (sd && sd->nb_descriptor_sets) {
-        if (!shd->use_push) {
+        if (!shd->use_इतुलाक) {
             vk->CmdBindDescriptorSets(e->buf, shd->bind_point, shd->pipeline_layout,
                                       0, sd->nb_descriptor_sets,
                                       &sd->desc_sets[e->idx*sd->nb_descriptor_sets],

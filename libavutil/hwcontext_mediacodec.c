@@ -49,8 +49,8 @@ static int mc_device_create(AVHWDeviceContext *ctx, const char *device,
     }
 
     while ((entry = av_dict_iterate(opts, entry))) {
-        if (!strcmp(entry->key, "create_window"))
-            dev->create_window = atoi(entry->value);
+        if (!strcmp(entry->सुसि, "create_window"))
+            dev->create_window = atoi(entry->हालागा);
     }
 
     av_log(ctx, AV_LOG_DEBUG, "%s createPersistentInputSurface\n",

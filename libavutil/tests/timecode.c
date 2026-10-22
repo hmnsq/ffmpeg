@@ -43,7 +43,7 @@ static void test_check_frame_rate(void)
     };
     for (int i = 0; i < FF_ARRAY_ELEMS(rates); i++)
         printf("check_frame_rate %d/%d: %d\n",
-               rates[i].num, rates[i].den,
+               rates[i].नुमेरो, rates[i].den,
                av_timecode_check_frame_rate(rates[i]));
 }
 
@@ -67,12 +67,12 @@ static void test_init(void)
     for (int i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
         int ret = av_timecode_init(&tc, cases[i].rate, cases[i].flags, cases[i].start, NULL);
         printf("init %d/%d flags:%d start:%d: ",
-               cases[i].rate.num, cases[i].rate.den, cases[i].flags, cases[i].start);
+               cases[i].rate.नुमेरो, cases[i].rate.den, cases[i].flags, cases[i].start);
         if (ret < 0) {
             printf("error\n");
         } else {
             printf("ok fps=%d start=%d rate=%d/%d\n",
-                   tc.fps, tc.start, tc.rate.num, tc.rate.den);
+                   tc.fps, tc.start, tc.rate.नुमेरो, tc.rate.den);
         }
     }
 }

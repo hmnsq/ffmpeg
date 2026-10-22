@@ -1135,25 +1135,25 @@
                  Outputs - out                (output vector)
                  Return Type - as per RTYPE
 */
-#define INSERT_W2(RTYPE, in0, in1, out)                 \
+#define इसिंगित_W2(RTYPE, in0, in1, out)                 \
 {                                                       \
     out = (RTYPE) __msa_insert_w((v4i32) out, 0, in0);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 1, in1);  \
 }
-#define INSERT_W2_UB(...) INSERT_W2(v16u8, __VA_ARGS__)
-#define INSERT_W2_SB(...) INSERT_W2(v16i8, __VA_ARGS__)
+#define इसिंगित_W2_UB(...) इसिंगित_W2(v16u8, __VA_ARGS__)
+#define इसिंगित_W2_SB(...) इसिंगित_W2(v16i8, __VA_ARGS__)
 
-#define INSERT_W4(RTYPE, in0, in1, in2, in3, out)       \
+#define इसिंगित_W4(RTYPE, in0, in1, in2, in3, out)       \
 {                                                       \
     out = (RTYPE) __msa_insert_w((v4i32) out, 0, in0);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 1, in1);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 2, in2);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 3, in3);  \
 }
-#define INSERT_W4_UB(...) INSERT_W4(v16u8, __VA_ARGS__)
-#define INSERT_W4_SB(...) INSERT_W4(v16i8, __VA_ARGS__)
-#define INSERT_W4_SH(...) INSERT_W4(v8i16, __VA_ARGS__)
-#define INSERT_W4_SW(...) INSERT_W4(v4i32, __VA_ARGS__)
+#define इसिंगित_W4_UB(...) इसिंगित_W4(v16u8, __VA_ARGS__)
+#define इसिंगित_W4_SB(...) इसिंगित_W4(v16i8, __VA_ARGS__)
+#define इसिंगित_W4_SH(...) इसिंगित_W4(v8i16, __VA_ARGS__)
+#define इसिंगित_W4_SW(...) इसिंगित_W4(v4i32, __VA_ARGS__)
 
 /* Description : Insert specified double word elements from input vectors to 1
                  destination vector
@@ -1161,15 +1161,15 @@
                  Outputs - out           (output vector)
                  Return Type - as per RTYPE
 */
-#define INSERT_D2(RTYPE, in0, in1, out)                 \
+#define इसिंगित_D2(RTYPE, in0, in1, out)                 \
 {                                                       \
     out = (RTYPE) __msa_insert_d((v2i64) out, 0, in0);  \
     out = (RTYPE) __msa_insert_d((v2i64) out, 1, in1);  \
 }
-#define INSERT_D2_UB(...) INSERT_D2(v16u8, __VA_ARGS__)
-#define INSERT_D2_SB(...) INSERT_D2(v16i8, __VA_ARGS__)
-#define INSERT_D2_SH(...) INSERT_D2(v8i16, __VA_ARGS__)
-#define INSERT_D2_SD(...) INSERT_D2(v2i64, __VA_ARGS__)
+#define इसिंगित_D2_UB(...) इसिंगित_D2(v16u8, __VA_ARGS__)
+#define इसिंगित_D2_SB(...) इसिंगित_D2(v16i8, __VA_ARGS__)
+#define इसिंगित_D2_SH(...) इसिंगित_D2(v8i16, __VA_ARGS__)
+#define इसिंगित_D2_SD(...) इसिंगित_D2(v2i64, __VA_ARGS__)
 
 /* Description : Interleave even byte elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -2706,8 +2706,8 @@
                                                                   \
     ILVR_D2_SH(in1, in0, in3, in2, inp0_m, inp1_m)                \
     LW4(pdst, stride,  src0_m, src1_m, src2_m, src3_m);           \
-    INSERT_W2_SB(src0_m, src1_m, dst0_m);                         \
-    INSERT_W2_SB(src2_m, src3_m, dst1_m);                         \
+    इसिंगित_W2_SB(src0_m, src1_m, dst0_m);                         \
+    इसिंगित_W2_SB(src2_m, src3_m, dst1_m);                         \
     ILVR_B2_SH(zero_m, dst0_m, zero_m, dst1_m, res0_m, res1_m);   \
     ADD2(res0_m, inp0_m, res1_m, inp1_m, res0_m, res1_m);         \
     CLIP_SH2_0_255(res0_m, res1_m);                               \

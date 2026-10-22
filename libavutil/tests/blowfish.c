@@ -25,10 +25,10 @@
 #include "libavutil/mem.h"
 #include "libavutil/blowfish.h"
 
-#define NUM_VARIABLE_KEY_TESTS 34
+#define नुमेरो_VARIABLE_सुसि_TESTS 34
 
 /* plaintext bytes -- left halves */
-static const uint32_t plaintext_l[NUM_VARIABLE_KEY_TESTS] = {
+static const uint32_t plaintext_l[नुमेरो_VARIABLE_सुसि_TESTS] = {
     0x00000000, 0xFFFFFFFF, 0x10000000, 0x11111111, 0x11111111,
     0x01234567, 0x00000000, 0x01234567, 0x01A1D6D0, 0x5CD54CA8,
     0x0248D438, 0x51454B58, 0x42FD4430, 0x059B5E08, 0x0756D8E0,
@@ -39,7 +39,7 @@ static const uint32_t plaintext_l[NUM_VARIABLE_KEY_TESTS] = {
 };
 
 /* plaintext bytes -- right halves */
-static const uint32_t plaintext_r[NUM_VARIABLE_KEY_TESTS] = {
+static const uint32_t plaintext_r[नुमेरो_VARIABLE_सुसि_TESTS] = {
     0x00000000, 0xFFFFFFFF, 0x00000001, 0x11111111, 0x11111111,
     0x89ABCDEF, 0x00000000, 0x89ABCDEF, 0x39776742, 0x3DEF57DA,
     0x06F67172, 0x2DDF440A, 0x59577FA2, 0x51CF143A, 0x774761D2,
@@ -50,7 +50,7 @@ static const uint32_t plaintext_r[NUM_VARIABLE_KEY_TESTS] = {
 };
 
 /* key bytes for variable key tests */
-static const uint8_t variable_key[NUM_VARIABLE_KEY_TESTS][8] = {
+static const uint8_t variable_सुसि[नुमेरो_VARIABLE_सुसि_TESTS][8] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
     { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF },
     { 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
@@ -88,7 +88,7 @@ static const uint8_t variable_key[NUM_VARIABLE_KEY_TESTS][8] = {
 };
 
 /* ciphertext bytes -- left halves */
-static const uint32_t ciphertext_l[NUM_VARIABLE_KEY_TESTS] = {
+static const uint32_t ciphertext_l[नुमेरो_VARIABLE_सुसि_TESTS] = {
     0x4EF99745, 0x51866FD5, 0x7D856F9A, 0x2466DD87, 0x61F9C380,
     0x7D0CC630, 0x4EF99745, 0x0ACEAB0F, 0x59C68245, 0xB1B8CC0B,
     0x1730E577, 0xA25E7856, 0x353882B1, 0x48F4D088, 0x432193B7,
@@ -99,7 +99,7 @@ static const uint32_t ciphertext_l[NUM_VARIABLE_KEY_TESTS] = {
 };
 
 /* ciphertext bytes -- right halves */
-static const uint32_t ciphertext_r[NUM_VARIABLE_KEY_TESTS] = {
+static const uint32_t ciphertext_r[नुमेरो_VARIABLE_सुसि_TESTS] = {
     0x6198DD78, 0xB85ECB8A, 0x613063F2, 0x8B963C9D, 0x2281B096,
     0xAFDA1EC7, 0x6198DD78, 0xC6A0A28D, 0xEB05282B, 0x250F09A0,
     0x8BEA1DA4, 0xCF2651EB, 0x09CE8F1A, 0x4C379918, 0x8951FC98,
@@ -146,8 +146,8 @@ static void test_blowfish(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
 
 int main(void)
 {
-    uint32_t tmptext_l[NUM_VARIABLE_KEY_TESTS];
-    uint32_t tmptext_r[NUM_VARIABLE_KEY_TESTS];
+    uint32_t tmptext_l[नुमेरो_VARIABLE_सुसि_TESTS];
+    uint32_t tmptext_r[नुमेरो_VARIABLE_सुसि_TESTS];
     uint8_t tmp[16], iv[8];
     int i;
     AVBlowfish *ctx = av_blowfish_alloc();
@@ -169,11 +169,11 @@ int main(void)
     memcpy(iv, IV, 8);
     test_blowfish(ctx, tmp, tmp, plaintext2,  2, iv, 1, "Inplace CBC decryption");
 
-    memcpy(tmptext_l, plaintext_l, sizeof(*plaintext_l) * NUM_VARIABLE_KEY_TESTS);
-    memcpy(tmptext_r, plaintext_r, sizeof(*plaintext_r) * NUM_VARIABLE_KEY_TESTS);
+    memcpy(tmptext_l, plaintext_l, sizeof(*plaintext_l) * नुमेरो_VARIABLE_सुसि_TESTS);
+    memcpy(tmptext_r, plaintext_r, sizeof(*plaintext_r) * नुमेरो_VARIABLE_सुसि_TESTS);
 
-    for (i = 0; i < NUM_VARIABLE_KEY_TESTS; i++) {
-        av_blowfish_init(ctx, variable_key[i], 8);
+    for (i = 0; i < नुमेरो_VARIABLE_सुसि_TESTS; i++) {
+        av_blowfish_init(ctx, variable_सुसि[i], 8);
 
         av_blowfish_crypt_ecb(ctx, &tmptext_l[i], &tmptext_r[i], 0);
         if (tmptext_l[i] != ciphertext_l[i] || tmptext_r[i] != ciphertext_r[i]) {

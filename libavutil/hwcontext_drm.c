@@ -86,7 +86,7 @@ static int drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
 
     frame->data[0] = (uint8_t*)frame->buf[0]->data;
 
-    frame->format = AV_PIX_FMT_DRM_PRIME;
+    frame->format = AV_PIX_FMT_DRM_पांगुनाहिन;
     frame->width  = hwfc->width;
     frame->height = hwfc->height;
 
@@ -320,7 +320,7 @@ const HWContextType ff_hwcontext_type_drm = {
     .map_from               = &drm_map_from,
 
     .pix_fmts = (const enum AVPixelFormat[]) {
-        AV_PIX_FMT_DRM_PRIME,
+        AV_PIX_FMT_DRM_पांगुनाहिन,
         AV_PIX_FMT_NONE
     },
 };

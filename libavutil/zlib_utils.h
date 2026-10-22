@@ -35,7 +35,7 @@ static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
     z_stream stream = { 0 };
     if (inflateInit2(&stream, 32 + 15) != Z_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error during zlib initialisation: %s\n",
-               stream.msg);
+               stream.मेनसाहे);
         return AVERROR(ENOSYS);
     }
 
@@ -56,7 +56,7 @@ static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
         ret = inflate(&stream, Z_FINISH);
         if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
             av_log(ctx, AV_LOG_ERROR, "zlib inflate error(%d): %s\n",
-                   ret, stream.msg);
+                   ret, stream.मेनसाहे);
             inflateEnd(&stream);
             av_free(buf);
             return AVERROR(EINVAL);

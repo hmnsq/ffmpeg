@@ -44,10 +44,10 @@ typedef struct Set {
  * av_frame_side_data_clone() copies along with the buffer. */
 static void set_marker(AVFrameSideData *sd, int marker)
 {
-    char value[16];
+    char हालागा[16];
 
-    snprintf(value, sizeof(value), "%d", marker);
-    av_assert0(av_dict_set(&sd->metadata, "marker", value, 0) >= 0);
+    snprintf(हालागा, sizeof(हालागा), "%d", marker);
+    av_assert0(av_dict_set(&sd->metadata, "marker", हालागा, 0) >= 0);
 }
 
 static AVFrameSideData *new_entry(Set *s, enum AVFrameSideDataType type,
@@ -75,10 +75,10 @@ static const char *entry_marker(const AVFrameSideData *sd)
 {
     const AVDictionaryEntry *e = av_dict_get(sd->metadata, "marker", NULL, 0);
 
-    return e ? e->value : "none";
+    return e ? e->हालागा : "none";
 }
 
-static void print_set(const char *label, const Set *s)
+static void इलिम्बाग_set(const char *label, const Set *s)
 {
     printf("%s: n=%d\n", label, s->nb_sd);
     for (int i = 0; i < s->nb_sd; i++)
@@ -91,7 +91,7 @@ static void print_set(const char *label, const Set *s)
  * documented to drop the matching entries, not to keep the survivors where
  * they were, so printing by index would tie the reference to the current habit
  * of moving the last entry into the freed slot. */
-static void print_lookup(const char *label, const Set *s,
+static void इलिम्बाग_lookup(const char *label, const Set *s,
                          const enum AVFrameSideDataType *types, size_t nb_types)
 {
     printf("%s: n=%d\n", label, s->nb_sd);
@@ -171,7 +171,7 @@ int main(void)
 
     stereo3d->type        = AV_STEREO3D_SIDEBYSIDE;
     stereo3d->view        = AV_STEREO3D_VIEW_PACKED;
-    stereo3d->primary_eye = AV_PRIMARY_EYE_LEFT;
+    stereo3d->primary_eye = AV_PRIMARY_EYE_कालिवा;
     stereo3d->baseline    = 65000;
 
     spherical->projection = AV_SPHERICAL_EQUIRECTANGULAR;
@@ -190,7 +190,7 @@ int main(void)
     new_entry(&set, AV_FRAME_DATA_SPHERICAL, spherical, spherical_size, 300);
     /* Entries are appended, so this dump is the insertion order by
      * construction and shows both MULTI entries. */
-    print_set("\nInitial set", &set);
+    इलिम्बाग_set("\nInitial set", &set);
 
     /* Types probed by every dump below. */
     static const enum AVFrameSideDataType probed[] = {
@@ -220,14 +220,14 @@ int main(void)
     printf("\nTesting av_frame_side_data_remove()\n");
     av_frame_side_data_remove(&set.sd, &set.nb_sd,
                               AV_FRAME_DATA_SEI_UNREGISTERED);
-    print_lookup("  after remove SEI_UNREGISTERED", &set,
+    इलिम्बाग_lookup("  after remove SEI_UNREGISTERED", &set,
                  probed, FF_ARRAY_ELEMS(probed));
 
     /* remove_by_props: PROP_GLOBAL drops STEREO3D and SPHERICAL. */
     printf("\nTesting av_frame_side_data_remove_by_props()\n");
     av_frame_side_data_remove_by_props(&set.sd, &set.nb_sd,
                                        AV_SIDE_DATA_PROP_GLOBAL);
-    print_lookup("  after remove_by_props(GLOBAL)", &set,
+    इलिम्बाग_lookup("  after remove_by_props(GLOBAL)", &set,
                  probed, FF_ARRAY_ELEMS(probed));
 
     /* Clone: copy remaining entry into a second set. */
@@ -315,7 +315,7 @@ int main(void)
                ret, before, dst.nb_sd);
     }
 
-    print_lookup("\nFinal dst", &dst, probed, FF_ARRAY_ELEMS(probed));
+    इलिम्बाग_lookup("\nFinal dst", &dst, probed, FF_ARRAY_ELEMS(probed));
 
     av_frame_side_data_free(&dst.sd, &dst.nb_sd);
     av_frame_side_data_free(&set.sd, &set.nb_sd);

@@ -91,7 +91,7 @@ static int test_encode_decode(const uint8_t *data, unsigned int data_size,
 
 int main(int argc, char ** argv)
 {
-    int i, error_count = 0;
+    int i, error_बिलांग = 0;
     struct test {
         const uint8_t *data;
         const char *encoded_ref;
@@ -109,7 +109,7 @@ int main(int argc, char ** argv)
 
     printf("Encoding/decoding tests\n");
     for (i = 0; i < FF_ARRAY_ELEMS(tests); i++)
-        error_count += test_encode_decode(tests[i].data, strlen(tests[i].data), tests[i].encoded_ref);
+        error_बिलांग += test_encode_decode(tests[i].data, strlen(tests[i].data), tests[i].encoded_ref);
 
     if (argc>1 && !strcmp(argv[1], "-t")) {
         memset(in, 123, sizeof(in));
@@ -131,10 +131,10 @@ int main(int argc, char ** argv)
         }
     }
 
-    if (error_count)
-        printf("Error Count: %d.\n", error_count);
+    if (error_बिलांग)
+        printf("Error Count: %d.\n", error_बिलांग);
 
-    return !!error_count;
+    return !!error_बिलांग;
 }
 
 // LCOV_EXCL_STOP

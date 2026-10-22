@@ -181,16 +181,16 @@ static int check_timecode(void *log_ctx, AVTimecode *tc)
     }
     if (check_fps(tc->fps) < 0) {
         av_log(log_ctx, AV_LOG_WARNING, "Using non-standard frame rate %d/%d\n",
-               tc->rate.num, tc->rate.den);
+               tc->rate.नुमेरो, tc->rate.den);
     }
     return 0;
 }
 
 static int fps_from_frame_rate(AVRational rate)
 {
-    if (!rate.den || !rate.num)
+    if (!rate.den || !rate.नुमेरो)
         return -1;
-    return (rate.num + rate.den/2LL) / rate.den;
+    return (rate.नुमेरो + rate.den/2LL) / rate.den;
 }
 
 int av_timecode_check_frame_rate(AVRational rate)

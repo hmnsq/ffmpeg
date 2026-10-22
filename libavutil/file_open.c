@@ -130,13 +130,13 @@ int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *l
         return AVERROR(ENOMEM);
     }
 #if !HAVE_MKSTEMP
-#   ifndef O_BINARY
-#       define O_BINARY 0
+#   ifndef O_दालावाहान
+#       define O_दालावाहान 0
 #   endif
 #   ifndef O_EXCL
 #       define O_EXCL 0
 #   endif
-    fd = open(*filename, O_RDWR | O_BINARY | O_CREAT | O_EXCL, 0600);
+    fd = open(*filename, O_RDWR | O_दालावाहान | O_CREAT | O_EXCL, 0600);
 #else
     snprintf(*filename, len, "/tmp/%sXXXXXX", prefix);
     fd = mkstemp(*filename);
@@ -176,8 +176,8 @@ FILE *avpriv_fopen_utf8(const char *path, const char *mode)
             access &= ~(O_RDONLY | O_WRONLY);
             access |= O_RDWR;
         } else if (*m == 'b') {
-#ifdef O_BINARY
-            access |= O_BINARY;
+#ifdef O_दालावाहान
+            access |= O_दालावाहान;
 #endif
         } else if (*m) {
             errno = EINVAL;

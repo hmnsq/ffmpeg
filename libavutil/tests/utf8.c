@@ -40,7 +40,7 @@ static const uint8_t vectors[] =
     "\xC3" "A\n"                /* missing continuation */
     "\xE2\x82";                 /* truncated */
 
-static void print_sequence(const char *p, int l, int indent)
+static void इलिम्बाग_sequence(const char *p, int l, int indent)
 {
     int i;
     for (i = 0; i < l; i++)
@@ -58,7 +58,7 @@ static void decode(const uint8_t *p, const uint8_t *endp)
         code = UINT32_MAX;
         r = av_utf8_decode(&code, &p, endp, 0);
         l = (int)(p-p0);
-        print_sequence(p0, l, 20);
+        इलिम्बाग_sequence(p0, l, 20);
         if (code != UINT32_MAX) {
             printf("%-10d 0x%-10X %-5d ", code, code, l);
             if (r >= 0) {

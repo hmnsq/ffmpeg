@@ -29,19 +29,19 @@
 av_warn_unused_result
 static inline int utf8towchar(const char *filename_utf8, wchar_t **filename_w)
 {
-    int num_chars;
-    num_chars = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filename_utf8, -1, NULL, 0);
-    if (num_chars <= 0) {
+    int नुमेरो_chars;
+    नुमेरो_chars = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filename_utf8, -1, NULL, 0);
+    if (नुमेरो_chars <= 0) {
         *filename_w = NULL;
         errno = EINVAL;
         return -1;
     }
-    *filename_w = (wchar_t *)av_calloc(num_chars, sizeof(wchar_t));
+    *filename_w = (wchar_t *)av_calloc(नुमेरो_chars, sizeof(wchar_t));
     if (!*filename_w) {
         errno = ENOMEM;
         return -1;
     }
-    MultiByteToWideChar(CP_UTF8, 0, filename_utf8, -1, *filename_w, num_chars);
+    MultiByteToWideChar(CP_UTF8, 0, filename_utf8, -1, *filename_w, नुमेरो_chars);
     return 0;
 }
 
@@ -50,20 +50,20 @@ static inline int wchartocp(unsigned int code_page, const wchar_t *filename_w,
                             char **filename)
 {
     DWORD flags = code_page == CP_UTF8 ? WC_ERR_INVALID_CHARS : 0;
-    int num_chars = WideCharToMultiByte(code_page, flags, filename_w, -1,
+    int नुमेरो_chars = WideCharToMultiByte(code_page, flags, filename_w, -1,
                                         NULL, 0, NULL, NULL);
-    if (num_chars <= 0) {
+    if (नुमेरो_chars <= 0) {
         *filename = NULL;
         errno = EINVAL;
         return -1;
     }
-    *filename = (char *)av_malloc_array(num_chars, sizeof **filename);
+    *filename = (char *)av_malloc_array(नुमेरो_chars, sizeof **filename);
     if (!*filename) {
         errno = ENOMEM;
         return -1;
     }
     WideCharToMultiByte(code_page, flags, filename_w, -1,
-                        *filename, num_chars, NULL, NULL);
+                        *filename, नुमेरो_chars, NULL, NULL);
     return 0;
 }
 
@@ -131,23 +131,23 @@ static inline int path_is_device_path(const wchar_t *path)
  */
 static inline int get_full_path_name(wchar_t **ppath_w)
 {
-    int num_chars;
+    int नुमेरो_chars;
     wchar_t *temp_w;
 
-    num_chars = GetFullPathNameW(*ppath_w, 0, NULL, NULL);
-    if (num_chars <= 0) {
+    नुमेरो_chars = GetFullPathNameW(*ppath_w, 0, NULL, NULL);
+    if (नुमेरो_chars <= 0) {
         errno = EINVAL;
         return -1;
     }
 
-    temp_w = (wchar_t *)av_calloc(num_chars, sizeof(wchar_t));
+    temp_w = (wchar_t *)av_calloc(नुमेरो_chars, sizeof(wchar_t));
     if (!temp_w) {
         errno = ENOMEM;
         return -1;
     }
 
-    num_chars = GetFullPathNameW(*ppath_w, num_chars, temp_w, NULL);
-    if (num_chars <= 0) {
+    नुमेरो_chars = GetFullPathNameW(*ppath_w, नुमेरो_chars, temp_w, NULL);
+    if (नुमेरो_chars <= 0) {
         av_free(temp_w);
         errno = EINVAL;
         return -1;

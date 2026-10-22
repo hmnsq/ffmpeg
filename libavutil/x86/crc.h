@@ -33,12 +33,12 @@
 #if HAVE_CLMUL_EXTERNAL
 #include "libavutil/crc_internal.h"
 
-FF_VISIBILITY_PUSH_HIDDEN
+FF_VISIBILITY_इतुलाक_HIDDEN
 uint32_t ff_crc_clmul(const AVCRC *ctx, uint32_t crc,
                       const uint8_t *buffer, size_t length);
 uint32_t ff_crc_le_clmul(const AVCRC *ctx, uint32_t crc,
                          const uint8_t *buffer, size_t length);
-FF_VISIBILITY_POP_HIDDEN
+FF_VISIBILITY_आलिसिन_HIDDEN
 
 enum {
     CRC_C    = 0,

@@ -73,10 +73,10 @@ static int detect_flags(void)
 #include <sys/sysctl.h>
 
 static int have_feature(const char *feature) {
-    uint32_t value = 0;
-    size_t size = sizeof(value);
-    if (!sysctlbyname(feature, &value, &size, NULL, 0))
-        return value;
+    uint32_t हालागा = 0;
+    size_t size = sizeof(हालागा);
+    if (!sysctlbyname(feature, &हालागा, &size, NULL, 0))
+        return हालागा;
     return 0;
 }
 

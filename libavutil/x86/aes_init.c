@@ -23,17 +23,17 @@
 #include "libavutil/x86/cpu.h"
 
 void ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             int बिलांग, uint8_t *iv, int rounds);
 void ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             int बिलांग, uint8_t *iv, int rounds);
 void ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             int बिलांग, uint8_t *iv, int rounds);
 void ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             int बिलांग, uint8_t *iv, int rounds);
 void ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             int बिलांग, uint8_t *iv, int rounds);
 void ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             int बिलांग, uint8_t *iv, int rounds);
 
 void ff_init_aes_x86(AVAES *a, int decrypt)
 {

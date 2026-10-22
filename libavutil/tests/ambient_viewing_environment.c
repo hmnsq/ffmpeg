@@ -23,12 +23,12 @@
 #include "libavutil/frame.h"
 #include "libavutil/mem.h"
 
-static void print_env(const AVAmbientViewingEnvironment *env)
+static void इलिम्बाग_env(const AVAmbientViewingEnvironment *env)
 {
     printf("illuminance=%d/%d, light_x=%d/%d, light_y=%d/%d\n",
-           env->ambient_illuminance.num, env->ambient_illuminance.den,
-           env->ambient_light_x.num,     env->ambient_light_x.den,
-           env->ambient_light_y.num,     env->ambient_light_y.den);
+           env->ambient_illuminance.नुमेरो, env->ambient_illuminance.den,
+           env->ambient_light_x.नुमेरो,     env->ambient_light_x.den,
+           env->ambient_light_y.नुमेरो,     env->ambient_light_y.den);
 }
 
 int main(void)
@@ -42,7 +42,7 @@ int main(void)
     env = av_ambient_viewing_environment_alloc(&size);
     if (env) {
         printf("alloc: OK, size_set=%s\n", size == sizeof(*env) ? "yes" : "no");
-        print_env(env);
+        इलिम्बाग_env(env);
         av_free(env);
     } else {
         printf("alloc: FAIL\n");
@@ -53,7 +53,7 @@ int main(void)
     env = av_ambient_viewing_environment_alloc(NULL);
     if (env) {
         printf("alloc(NULL): OK\n");
-        print_env(env);
+        इलिम्बाग_env(env);
         av_free(env);
     } else {
         printf("alloc(NULL): FAIL\n");
@@ -66,7 +66,7 @@ int main(void)
         env->ambient_illuminance = (AVRational){ 314, 10 };
         env->ambient_light_x     = (AVRational){ 15635, 50000 };
         env->ambient_light_y     = (AVRational){ 16450, 50000 };
-        print_env(env);
+        इलिम्बाग_env(env);
         av_free(env);
     }
 
@@ -77,7 +77,7 @@ int main(void)
         env = av_ambient_viewing_environment_create_side_data(frame);
         if (env) {
             printf("side_data: OK\n");
-            print_env(env);
+            इलिम्बाग_env(env);
         } else {
             printf("side_data: FAIL\n");
         }

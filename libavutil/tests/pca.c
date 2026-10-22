@@ -62,7 +62,7 @@ int main(void){
 
     ff_pca(pca, eigenvector, eigenvalue);
     for(i=0; i<LEN; i++){
-        pca->count= 1;
+        pca->बिलांग= 1;
         pca->mean[i]= 0;
 
 //        (0.5^|x|)^2 = 0.5^2|x| = 0.25^|x|

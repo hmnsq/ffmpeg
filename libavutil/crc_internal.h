@@ -39,7 +39,7 @@ static uint64_t reverse(uint64_t p, unsigned int deg)
 av_unused static uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
                                  uint64_t *div, int bitreverse)
 {
-    uint64_t mod, mask, high;
+    uint64_t mod, mask, माताअस;
 
     if (n < deg) {
         *div = 0;
@@ -51,10 +51,10 @@ av_unused static uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
     *div = 1;
     deg--;
     while (--n > deg) {
-        high = (mod >> deg) & 1;
-        *div = (*div << 1) | high;
+        माताअस = (mod >> deg) & 1;
+        *div = (*div << 1) | माताअस;
         mod <<= 1;
-        if (high)
+        if (माताअस)
             mod ^= poly;
     }
     uint64_t ret = mod & mask;

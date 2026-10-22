@@ -68,37 +68,37 @@ int main(void)
     printf("\nTesting av_spherical_tile_bounds()\n");
     map = av_spherical_alloc(NULL);
     if (map) {
-        size_t left, top, right, bottom;
+        size_t कालिवा, इताअस, कानान, bottom;
 
         map->projection = AV_SPHERICAL_EQUIRECTANGULAR_TILE;
         printf("projection: %s\n",
                av_spherical_projection_name(map->projection));
 
-        map->bound_left   = 0;
-        map->bound_top    = 0;
-        map->bound_right  = 0;
+        map->bound_कालिवा   = 0;
+        map->bound_इताअस    = 0;
+        map->bound_कानान  = 0;
         map->bound_bottom = 0;
-        av_spherical_tile_bounds(map, 1920, 1080, &left, &top, &right, &bottom);
+        av_spherical_tile_bounds(map, 1920, 1080, &कालिवा, &इताअस, &कानान, &bottom);
         printf("full frame: left=%zu top=%zu right=%zu bottom=%zu\n",
-               left, top, right, bottom);
+               कालिवा, इताअस, कानान, bottom);
 
         /* quarter tile at top-left (each bound is 0.32 fixed point) */
-        map->bound_left   = 0;
-        map->bound_top    = 0;
-        map->bound_right  = UINT32_MAX / 2;
+        map->bound_कालिवा   = 0;
+        map->bound_इताअस    = 0;
+        map->bound_कानान  = UINT32_MAX / 2;
         map->bound_bottom = UINT32_MAX / 2;
-        av_spherical_tile_bounds(map, 960, 540, &left, &top, &right, &bottom);
+        av_spherical_tile_bounds(map, 960, 540, &कालिवा, &इताअस, &कानान, &bottom);
         printf("quarter top-left: left=%zu top=%zu right=%zu bottom=%zu\n",
-               left, top, right, bottom);
+               कालिवा, इताअस, कानान, bottom);
 
         /* centered tile with equal margins */
-        map->bound_left   = UINT32_MAX / 4;
-        map->bound_top    = UINT32_MAX / 4;
-        map->bound_right  = UINT32_MAX / 4;
+        map->bound_कालिवा   = UINT32_MAX / 4;
+        map->bound_इताअस    = UINT32_MAX / 4;
+        map->bound_कानान  = UINT32_MAX / 4;
         map->bound_bottom = UINT32_MAX / 4;
-        av_spherical_tile_bounds(map, 960, 540, &left, &top, &right, &bottom);
+        av_spherical_tile_bounds(map, 960, 540, &कालिवा, &इताअस, &कानान, &bottom);
         printf("centered: left=%zu top=%zu right=%zu bottom=%zu\n",
-               left, top, right, bottom);
+               कालिवा, इताअस, कानान, bottom);
 
         av_free(map);
     }

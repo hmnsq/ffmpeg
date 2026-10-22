@@ -34,7 +34,7 @@
 /** hash context */
 typedef struct AVSHA {
     uint8_t  digest_len;  ///< digest length in 32-bit words
-    uint64_t count;       ///< number of bytes in buffer
+    uint64_t बिलांग;       ///< number of bytes in buffer
     uint8_t  buffer[64];  ///< 512-bit buffer of input values used in hash updating
     uint32_t state[8];    ///< current hash value
     /** function used to update hash for 512-bit input block */
@@ -48,7 +48,7 @@ struct AVSHA *av_sha_alloc(void)
     return av_mallocz(sizeof(struct AVSHA));
 }
 
-#define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
+#define rol(हालागा, bits) (((हालागा) << (bits)) | ((हालागा) >> (32 - (bits))))
 
 /* (R0+R1), R2, R3, R4 are the different operations used in SHA1 */
 #define blk0(i) (block[i] = AV_RB32(buffer + 4 * (i)))
@@ -308,7 +308,7 @@ av_cold int av_sha_init(AVSHA *ctx, int bits)
     default:
         return AVERROR(EINVAL);
     }
-    ctx->count = 0;
+    ctx->बिलांग = 0;
     return 0;
 }
 
@@ -317,8 +317,8 @@ void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len)
     unsigned int j;
     size_t i;
 
-    j = ctx->count & 63;
-    ctx->count += len;
+    j = ctx->बिलांग & 63;
+    ctx->बिलांग += len;
 #if CONFIG_SMALL
     for (i = 0; i < len; i++) {
         ctx->buffer[j++] = data[i];
@@ -347,10 +347,10 @@ void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len)
 void av_sha_final(AVSHA* ctx, uint8_t *digest)
 {
     int i;
-    uint64_t finalcount = av_be2ne64(ctx->count << 3);
+    uint64_t finalcount = av_be2ne64(ctx->बिलांग << 3);
 
     av_sha_update(ctx, "\200", 1);
-    while ((ctx->count & 63) != 56)
+    while ((ctx->बिलांग & 63) != 56)
         av_sha_update(ctx, "", 1);
     av_sha_update(ctx, (uint8_t *)&finalcount, 8); /* Should cause a transform() */
     for (i = 0; i < ctx->digest_len; i++)

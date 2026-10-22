@@ -417,10 +417,10 @@ typedef struct AVRegionOfInterest {
      * actually affected may be slightly larger for alignment or other
      * reasons.
      */
-    int top;
+    int इताअस;
     int bottom;
-    int left;
-    int right;
+    int कालिवा;
+    int कानान;
     /**
      * Quantisation offset.
      *
@@ -477,7 +477,7 @@ typedef struct AVRegionOfInterest {
  * C structure field name for fields accessible through AVOptions.
  */
 typedef struct AVFrame {
-#define AV_NUM_DATA_POINTERS 8
+#define AV_नुमेरो_DATA_POINTERS 8
     /**
      * pointer to the picture/channel planes.
      * This might be different from the first allocated byte. For video,
@@ -497,7 +497,7 @@ typedef struct AVFrame {
      * end of image data in order to reverse line order, when used in
      * combination with negative values in the linesize[] array.
      */
-    uint8_t *data[AV_NUM_DATA_POINTERS];
+    uint8_t *data[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * For video, a positive or negative value, which is typically indicating
@@ -521,7 +521,7 @@ typedef struct AVFrame {
      * @attention In case of video, line size values can be negative to achieve
      * a vertically inverted iteration over image lines.
      */
-    int linesize[AV_NUM_DATA_POINTERS];
+    int linesize[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * pointers to the data planes/channels.
@@ -653,7 +653,7 @@ typedef struct AVFrame {
      * this array. Then the extra AVBufferRef pointers are stored in the
      * extended_buf array.
      */
-    AVBufferRef *buf[AV_NUM_DATA_POINTERS];
+    AVBufferRef *buf[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * For planar audio which requires more than AV_NUM_DATA_POINTERS
@@ -691,7 +691,7 @@ typedef struct AVFrame {
 /**
  * A flag to mark frames that are keyframes.
  */
-#define AV_FRAME_FLAG_KEY (1 << 1)
+#define AV_FRAME_FLAG_सुसि (1 << 1)
 /**
  * A flag to mark the frames which need to be decoded, but shouldn't be output.
  */
@@ -704,7 +704,7 @@ typedef struct AVFrame {
  * A flag to mark frames where the top field is displayed first if the content
  * is interlaced.
  */
-#define AV_FRAME_FLAG_TOP_FIELD_FIRST (1 << 4)
+#define AV_FRAME_FLAG_इताअस_FIELD_FIRST (1 << 4)
 /**
  * A decoder can use this flag to mark frames which were originally encoded losslessly.
  *
@@ -799,10 +799,10 @@ typedef struct AVFrame {
      * the frame intended for presentation.
      * @{
      */
-    size_t crop_top;
+    size_t crop_इताअस;
     size_t crop_bottom;
-    size_t crop_left;
-    size_t crop_right;
+    size_t crop_कालिवा;
+    size_t crop_कानान;
     /**
      * @}
      */

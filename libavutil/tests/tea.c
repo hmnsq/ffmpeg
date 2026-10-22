@@ -28,10 +28,10 @@
 #include "libavutil/mem.h"
 #include "libavutil/tea.h"
 
-#define TEA_NUM_TESTS 4
+#define TEA_नुमेरो_TESTS 4
 
 // https://github.com/logandrews/TeaCrypt/blob/master/tea/tea_test.go
-static const uint8_t tea_test_key[TEA_NUM_TESTS][16] = {
+static const uint8_t tea_test_सुसि[TEA_नुमेरो_TESTS][16] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     },
@@ -46,14 +46,14 @@ static const uint8_t tea_test_key[TEA_NUM_TESTS][16] = {
     }
 };
 
-static const uint8_t tea_test_pt[TEA_NUM_TESTS][8] = {
+static const uint8_t tea_test_pt[TEA_नुमेरो_TESTS][8] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
     { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 },
     { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 },
     { 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF }
 };
 
-static const uint8_t tea_test_ct[TEA_NUM_TESTS][8] = {
+static const uint8_t tea_test_ct[TEA_नुमेरो_TESTS][8] = {
     { 0x41, 0xEA, 0x3A, 0x0A, 0x94, 0xBA, 0xA9, 0x40 },
     { 0x6A, 0x2F, 0x9C, 0xF3, 0xFC, 0xCF, 0x3C, 0x55 },
     { 0xDE, 0xB1, 0xC0, 0xA2, 0x7E, 0x74, 0x5D, 0xB3 },
@@ -91,8 +91,8 @@ int main(void)
     if (!ctx)
         return 1;
 
-    for (i = 0; i < TEA_NUM_TESTS; i++) {
-        av_tea_init(ctx, tea_test_key[i], 64);
+    for (i = 0; i < TEA_नुमेरो_TESTS; i++) {
+        av_tea_init(ctx, tea_test_सुसि[i], 64);
 
         test_tea(ctx, buf, tea_test_pt[i], tea_test_ct[i], 1, NULL, 0, "encryption");
         test_tea(ctx, buf, tea_test_ct[i], tea_test_pt[i], 1, NULL, 1, "decryption");

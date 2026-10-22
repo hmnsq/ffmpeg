@@ -34,7 +34,7 @@
 /** hash context */
 typedef struct AVSHA512 {
     uint8_t  digest_len;  ///< digest length in 64-bit words
-    uint64_t count;       ///< number of bytes in buffer
+    uint64_t बिलांग;       ///< number of bytes in buffer
     uint8_t  buffer[128]; ///< 1024-bit buffer of input values used in hash updating
     uint64_t state[8];    ///< current hash value
 } AVSHA512;
@@ -89,7 +89,7 @@ static const uint64_t K512[80] = {
     UINT64_C(0x5fcb6fab3ad6faec),  UINT64_C(0x6c44198c4a475817),
 };
 
-#define ror(value, bits) (((value) >> (bits)) | ((value) << (64 - (bits))))
+#define ror(हालागा, bits) (((हालागा) >> (bits)) | ((हालागा) << (64 - (bits))))
 
 #define Ch(x,y,z)   (((x) & ((y) ^ (z))) ^ (z))
 #define Maj(z,y,x)  ((((x) | (y)) & (z)) | ((x) & (y)))
@@ -236,7 +236,7 @@ av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
     default:
         return AVERROR(EINVAL);
     }
-    ctx->count = 0;
+    ctx->बिलांग = 0;
     return 0;
 }
 
@@ -245,8 +245,8 @@ void av_sha512_update(AVSHA512* ctx, const uint8_t* data, size_t len)
     unsigned int j;
     size_t i;
 
-    j = ctx->count & 127;
-    ctx->count += len;
+    j = ctx->बिलांग & 127;
+    ctx->बिलांग += len;
 #if CONFIG_SMALL
     for (i = 0; i < len; i++) {
         ctx->buffer[j++] = data[i];
@@ -275,10 +275,10 @@ void av_sha512_update(AVSHA512* ctx, const uint8_t* data, size_t len)
 void av_sha512_final(AVSHA512* ctx, uint8_t *digest)
 {
     uint64_t i = 0;
-    uint64_t finalcount = av_be2ne64(ctx->count << 3);
+    uint64_t finalcount = av_be2ne64(ctx->बिलांग << 3);
 
     av_sha512_update(ctx, "\200", 1);
-    while ((ctx->count & 127) != 112)
+    while ((ctx->बिलांग & 127) != 112)
         av_sha512_update(ctx, "", 1);
     av_sha512_update(ctx, (uint8_t *)&i, 8);
     av_sha512_update(ctx, (uint8_t *)&finalcount, 8); /* Should cause a transform() */

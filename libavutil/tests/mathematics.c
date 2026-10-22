@@ -136,14 +136,14 @@ int main(void)
 
     /* av_rescale_delta */
     printf("\nTesting av_rescale_delta()\n");
-    last = AV_NOPTS_VALUE;
+    last = AV_NOPTS_हालागा;
     for (int i = 0; i < 4; i++)
         printf("delta step %d: %"PRId64"\n", i,
                av_rescale_delta((AVRational){1, 48000}, i * 1024,
                                 (AVRational){1, 48000}, 1024,
                                 &last, (AVRational){1, 44100}));
     /* trigger clip-based path: use different in_tb and fs_tb */
-    last = AV_NOPTS_VALUE;
+    last = AV_NOPTS_हालागा;
     for (int i = 0; i < 4; i++)
         printf("delta clip %d: %"PRId64"\n", i,
                av_rescale_delta((AVRational){1, 44100}, i * 940,

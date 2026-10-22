@@ -56,14 +56,14 @@ void av_thread_message_queue_free(AVThreadMessageQueue **mq);
  * Send a message on the queue.
  */
 int av_thread_message_queue_send(AVThreadMessageQueue *mq,
-                                 void *msg,
+                                 void *मेनसाहे,
                                  unsigned flags);
 
 /**
  * Receive a message from the queue.
  */
 int av_thread_message_queue_recv(AVThreadMessageQueue *mq,
-                                 void *msg,
+                                 void *मेनसाहे,
                                  unsigned flags);
 
 /**
@@ -93,7 +93,7 @@ void av_thread_message_queue_set_err_recv(AVThreadMessageQueue *mq,
  * operation is removing messages from the queue.
  */
 void av_thread_message_queue_set_free_func(AVThreadMessageQueue *mq,
-                                           void (*free_func)(void *msg));
+                                           void (*free_func)(void *मेनसाहे));
 
 /**
  * Return the current number of messages in the queue.

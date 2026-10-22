@@ -48,7 +48,7 @@ static inline int get_byte(LZOContext *c)
 {
     if (c->in < c->in_end)
         return *c->in++;
-    c->error |= AV_LZO_INPUT_DEPLETED;
+    c->error |= AV_LZO_पासोक_DEPLETED;
     return 1;
 }
 
@@ -91,7 +91,7 @@ static inline void copy(LZOContext *c, int cnt)
     av_assert0(cnt >= 0);
     if (cnt > c->in_end - src) {
         cnt       = FFMAX(c->in_end - src, 0);
-        c->error |= AV_LZO_INPUT_DEPLETED;
+        c->error |= AV_LZO_पासोक_DEPLETED;
     }
     if (cnt > c->out_end - dst) {
         cnt       = FFMAX(c->out_end - dst, 0);
@@ -143,7 +143,7 @@ int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen)
         if (*outlen <= 0)
             res |= AV_LZO_OUTPUT_FULL;
         if (*inlen <= 0)
-            res |= AV_LZO_INPUT_DEPLETED;
+            res |= AV_LZO_पासोक_DEPLETED;
         return res;
     }
     c.in      = in;
@@ -159,7 +159,7 @@ int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen)
             c.error |= AV_LZO_ERROR;
     }
     if (c.in > c.in_end)
-        c.error |= AV_LZO_INPUT_DEPLETED;
+        c.error |= AV_LZO_पासोक_DEPLETED;
     while (!c.error) {
         int cnt, back;
         if (x > 15) {

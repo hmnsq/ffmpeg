@@ -28,12 +28,12 @@
 #include "libavutil/lls.h"
 
 void ff_lls_update_covariance_rvv(double covar[][36], const double *var,
-                                  int count);
+                                  int बिलांग);
 double ff_scalarproduct_double_rvv(const double *, const double *, size_t);
 
 static void ff_lls_update_rvv(struct LLSModel *m, const double *var)
 {
-    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_count + 1);
+    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_बिलांग + 1);
 }
 
 static double ff_lls_evaluate_rvv(struct LLSModel *m, const double *var,
@@ -48,7 +48,7 @@ av_cold void ff_init_lls_riscv(LLSModel *m)
     int flags = av_get_cpu_flags();
 
     if ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
-        if (ff_get_rv_vlenb() > m->indep_count)
+        if (ff_get_rv_vlenb() > m->indep_बिलांग)
             m->update_lls = ff_lls_update_rvv;
         m->evaluate_lls = ff_lls_evaluate_rvv;
     }

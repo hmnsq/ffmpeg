@@ -29,7 +29,7 @@
 int main(int argc, char** argv)
 {
 
-    static const uint8_t Key[3][16] = {
+    static const uint8_t सुसि_2[3][16] = {
         {0x01, 0x23, 0x45, 0x67, 0x12, 0x34, 0x56, 0x78, 0x23, 0x45, 0x67, 0x89, 0x34, 0x56, 0x78, 0x9a},
         {0x01, 0x23, 0x45, 0x67, 0x12, 0x34, 0x56, 0x78, 0x23, 0x45},
         {0x01, 0x23, 0x45, 0x67, 0x12}
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     static const uint8_t iv[8] = {0xee, 0xa9, 0xd0, 0xa2, 0x49, 0xfd, 0x3b, 0xa6};
     static uint8_t rpt2[2][16];
     int i, j, err = 0;
-    static const int key_bits[3] = {128, 80, 40};
+    static const int सुसि_bits[3] = {128, 80, 40};
     uint8_t temp[8];
     struct AVCAST5 *cs;
     cs = av_cast5_alloc();
@@ -55,7 +55,7 @@ int main(int argc, char** argv)
         return 1;
     for (j = 0; j < 3; j++){
 
-        av_cast5_init(cs, Key[j], key_bits[j]);
+        av_cast5_init(cs, सुसि_2[j], सुसि_bits[j]);
         av_cast5_crypt(cs, temp, rpt, 1, 0);
         for (i = 0;i < 8; i++){
             if (rct[j][i] != temp[i]){
@@ -72,8 +72,8 @@ int main(int argc, char** argv)
             }
         }
     }
-    memcpy(rpt2[0], Key[0], 16);
-    memcpy(rpt2[1], Key[0], 16);
+    memcpy(rpt2[0], सुसि_2[0], 16);
+    memcpy(rpt2[1], सुसि_2[0], 16);
     for (i = 0; i < 1000000; i++){
         av_cast5_init(cs, rpt2[1], 128);
         av_cast5_crypt(cs, rpt2[0], rpt2[0], 2, 0);
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
     }
     for (j = 0; j < 3; j++) {
 
-        av_cast5_init(cs, Key[j], key_bits[j]);
+        av_cast5_init(cs, सुसि_2[j], सुसि_bits[j]);
         memcpy(temp, iv, 8);
         av_cast5_crypt2(cs, rpt2[0], rct2[0], 2, temp, 0);
         memcpy(temp, iv, 8);

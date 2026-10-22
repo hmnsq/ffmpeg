@@ -71,7 +71,7 @@ int main(void)
     printf("Long text in automatic buffer: %u/%u\n", (unsigned)strlen(b.str)/8*8, b.len);
     /* Note that the size of the automatic buffer is arch-dependent. */
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_COUNT_ONLY);
+    av_bprint_init(&b, 0, AV_BPRINT_SIZE_बिलांग_ONLY);
     bprint_pascal(&b, 25);
     printf("Long text count only buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
 

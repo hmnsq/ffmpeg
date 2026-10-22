@@ -59,7 +59,7 @@ AVDynamicHDRPlus *av_dynamic_hdr_plus_create_side_data(AVFrame *frame)
 int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
                                  size_t size)
 {
-    uint8_t padded_buf[AV_HDR_PLUS_MAX_PAYLOAD_SIZE + AV_INPUT_BUFFER_PADDING_SIZE];
+    uint8_t padded_buf[AV_HDR_PLUS_MAX_PAYLOAD_SIZE + AV_पासोक_BUFFER_PADDING_SIZE];
     GetBitContext gbc, *gb = &gbc;
     int ret;
 
@@ -71,36 +71,36 @@ int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
 
     memcpy(padded_buf, data, size);
     // Zero-initialize the buffer padding to avoid overreads into uninitialized data.
-    memset(padded_buf + size, 0, AV_INPUT_BUFFER_PADDING_SIZE);
+    memset(padded_buf + size, 0, AV_पासोक_BUFFER_PADDING_SIZE);
 
     ret = init_get_bits8(gb, padded_buf, size);
     if (ret < 0)
         return ret;
 
-    if (get_bits_left(gb) < 10)
+    if (get_bits_कालिवा(gb) < 10)
         return AVERROR_INVALIDDATA;
 
     s->application_version = get_bits(gb, 8);
-    s->num_windows = get_bits(gb, 2);
+    s->नुमेरो_windows = get_bits(gb, 2);
 
-    if (s->num_windows < 1 || s->num_windows > 3) {
+    if (s->नुमेरो_windows < 1 || s->नुमेरो_windows > 3) {
         return AVERROR_INVALIDDATA;
     }
 
-    if (get_bits_left(gb) < ((19 * 8 + 1) * (s->num_windows - 1)))
+    if (get_bits_कालिवा(gb) < ((19 * 8 + 1) * (s->नुमेरो_windows - 1)))
         return AVERROR_INVALIDDATA;
 
-    for (int w = 1; w < s->num_windows; w++) {
+    for (int w = 1; w < s->नुमेरो_windows; w++) {
         // The corners are set to absolute coordinates here. They should be
         // converted to the relative coordinates (in [0, 1]) in the decoder.
         AVHDRPlusColorTransformParams *params = &s->params[w];
-        params->window_upper_left_corner_x =
+        params->window_upper_कालिवा_corner_x =
             (AVRational){get_bits(gb, 16), 1};
-        params->window_upper_left_corner_y =
+        params->window_upper_कालिवा_corner_y =
             (AVRational){get_bits(gb, 16), 1};
-        params->window_lower_right_corner_x =
+        params->window_lower_कानान_corner_x =
             (AVRational){get_bits(gb, 16), 1};
-        params->window_lower_right_corner_y =
+        params->window_lower_कानान_corner_y =
             (AVRational){get_bits(gb, 16), 1};
 
         params->center_of_ellipse_x = get_bits(gb, 16);
@@ -112,7 +112,7 @@ int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
         params->overlap_process_option = get_bits1(gb);
     }
 
-    if (get_bits_left(gb) < 28)
+    if (get_bits_कालिवा(gb) < 28)
         return AVERROR_INVALIDDATA;
 
     s->targeted_system_display_maximum_luminance =
@@ -121,17 +121,17 @@ int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
 
     if (s->targeted_system_display_actual_peak_luminance_flag) {
         int rows, cols;
-        if (get_bits_left(gb) < 10)
+        if (get_bits_कालिवा(gb) < 10)
             return AVERROR_INVALIDDATA;
         rows = get_bits(gb, 5);
         cols = get_bits(gb, 5);
         if (((rows < 2) || (rows > 25)) || ((cols < 2) || (cols > 25))) {
             return AVERROR_INVALIDDATA;
         }
-        s->num_rows_targeted_system_display_actual_peak_luminance = rows;
-        s->num_cols_targeted_system_display_actual_peak_luminance = cols;
+        s->नुमेरो_rows_targeted_system_display_actual_peak_luminance = rows;
+        s->नुमेरो_cols_targeted_system_display_actual_peak_luminance = cols;
 
-        if (get_bits_left(gb) < (rows * cols * 4))
+        if (get_bits_कालिवा(gb) < (rows * cols * 4))
             return AVERROR_INVALIDDATA;
 
         for (int i = 0; i < rows; i++) {
@@ -141,9 +141,9 @@ int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
             }
         }
     }
-    for (int w = 0; w < s->num_windows; w++) {
+    for (int w = 0; w < s->नुमेरो_windows; w++) {
         AVHDRPlusColorTransformParams *params = &s->params[w];
-        if (get_bits_left(gb) < (3 * 17 + 17 + 4))
+        if (get_bits_कालिवा(gb) < (3 * 17 + 17 + 4))
             return AVERROR_INVALIDDATA;
 
         for (int i = 0; i < 3; i++) {
@@ -152,39 +152,39 @@ int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
         }
         params->average_maxrgb =
             (AVRational){get_bits(gb, 17), rgb_den};
-        params->num_distribution_maxrgb_percentiles = get_bits(gb, 4);
+        params->नुमेरो_distribution_maxrgb_percentiles = get_bits(gb, 4);
 
-        if (get_bits_left(gb) <
-            (params->num_distribution_maxrgb_percentiles * 24))
+        if (get_bits_कालिवा(gb) <
+            (params->नुमेरो_distribution_maxrgb_percentiles * 24))
             return AVERROR_INVALIDDATA;
 
-        for (int i = 0; i < params->num_distribution_maxrgb_percentiles; i++) {
+        for (int i = 0; i < params->नुमेरो_distribution_maxrgb_percentiles; i++) {
             params->distribution_maxrgb[i].percentage = get_bits(gb, 7);
             params->distribution_maxrgb[i].percentile =
                 (AVRational){get_bits(gb, 17), rgb_den};
         }
 
-        if (get_bits_left(gb) < 10)
+        if (get_bits_कालिवा(gb) < 10)
             return AVERROR_INVALIDDATA;
 
         params->fraction_bright_pixels = (AVRational){get_bits(gb, 10), fraction_pixel_den};
     }
-    if (get_bits_left(gb) < 1)
+    if (get_bits_कालिवा(gb) < 1)
         return AVERROR_INVALIDDATA;
     s->mastering_display_actual_peak_luminance_flag = get_bits1(gb);
     if (s->mastering_display_actual_peak_luminance_flag) {
         int rows, cols;
-        if (get_bits_left(gb) < 10)
+        if (get_bits_कालिवा(gb) < 10)
             return AVERROR_INVALIDDATA;
         rows = get_bits(gb, 5);
         cols = get_bits(gb, 5);
         if (((rows < 2) || (rows > 25)) || ((cols < 2) || (cols > 25))) {
             return AVERROR_INVALIDDATA;
         }
-        s->num_rows_mastering_display_actual_peak_luminance = rows;
-        s->num_cols_mastering_display_actual_peak_luminance = cols;
+        s->नुमेरो_rows_mastering_display_actual_peak_luminance = rows;
+        s->नुमेरो_cols_mastering_display_actual_peak_luminance = cols;
 
-        if (get_bits_left(gb) < (rows * cols * 4))
+        if (get_bits_कालिवा(gb) < (rows * cols * 4))
             return AVERROR_INVALIDDATA;
 
         for (int i = 0; i < rows; i++) {
@@ -195,36 +195,36 @@ int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
         }
     }
 
-    for (int w = 0; w < s->num_windows; w++) {
+    for (int w = 0; w < s->नुमेरो_windows; w++) {
         AVHDRPlusColorTransformParams *params = &s->params[w];
-        if (get_bits_left(gb) < 1)
+        if (get_bits_कालिवा(gb) < 1)
             return AVERROR_INVALIDDATA;
 
         params->tone_mapping_flag = get_bits1(gb);
         if (params->tone_mapping_flag) {
-            if (get_bits_left(gb) < 28)
+            if (get_bits_कालिवा(gb) < 28)
                 return AVERROR_INVALIDDATA;
 
             params->knee_point_x =
                 (AVRational){get_bits(gb, 12), knee_point_den};
             params->knee_point_y =
                 (AVRational){get_bits(gb, 12), knee_point_den};
-            params->num_bezier_curve_anchors = get_bits(gb, 4);
+            params->नुमेरो_bezier_curve_anchors = get_bits(gb, 4);
 
-            if (get_bits_left(gb) < (params->num_bezier_curve_anchors * 10))
+            if (get_bits_कालिवा(gb) < (params->नुमेरो_bezier_curve_anchors * 10))
                 return AVERROR_INVALIDDATA;
 
-            for (int i = 0; i < params->num_bezier_curve_anchors; i++) {
+            for (int i = 0; i < params->नुमेरो_bezier_curve_anchors; i++) {
                 params->bezier_curve_anchors[i] =
                     (AVRational){get_bits(gb, 10), bezier_anchor_den};
             }
         }
 
-        if (get_bits_left(gb) < 1)
+        if (get_bits_कालिवा(gb) < 1)
             return AVERROR_INVALIDDATA;
         params->color_saturation_mapping_flag = get_bits1(gb);
         if (params->color_saturation_mapping_flag) {
-            if (get_bits_left(gb) < 6)
+            if (get_bits_कालिवा(gb) < 6)
                 return AVERROR_INVALIDDATA;
             params->color_saturation_weight =
                 (AVRational){get_bits(gb, 6), saturation_weight_den};
@@ -263,7 +263,7 @@ int av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t
 
     size_bits += 2;
 
-    for (int w = 1; w < s->num_windows; w++)
+    for (int w = 1; w < s->नुमेरो_windows; w++)
         size_bits += 153;
 
     size_bits += 27;
@@ -271,22 +271,22 @@ int av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t
     size_bits += 1;
     if (s->targeted_system_display_actual_peak_luminance_flag)
         size_bits += 10 +
-                     s->num_rows_targeted_system_display_actual_peak_luminance *
-                     s->num_cols_targeted_system_display_actual_peak_luminance * 4;
+                     s->नुमेरो_rows_targeted_system_display_actual_peak_luminance *
+                     s->नुमेरो_cols_targeted_system_display_actual_peak_luminance * 4;
 
-    for (int w = 0; w < s->num_windows; w++)
-        size_bits += 72 + s->params[w].num_distribution_maxrgb_percentiles * 24 + 10;
+    for (int w = 0; w < s->नुमेरो_windows; w++)
+        size_bits += 72 + s->params[w].नुमेरो_distribution_maxrgb_percentiles * 24 + 10;
 
     size_bits += 1;
     if (s->mastering_display_actual_peak_luminance_flag)
         size_bits += 10 +
-                     s->num_rows_mastering_display_actual_peak_luminance *
-                     s->num_cols_mastering_display_actual_peak_luminance * 4;
+                     s->नुमेरो_rows_mastering_display_actual_peak_luminance *
+                     s->नुमेरो_cols_mastering_display_actual_peak_luminance * 4;
 
-    for (int w = 0; w < s->num_windows; w++) {
+    for (int w = 0; w < s->नुमेरो_windows; w++) {
         size_bits += 1;
         if (s->params[w].tone_mapping_flag)
-            size_bits += 28 + s->params[w].num_bezier_curve_anchors * 10;
+            size_bits += 28 + s->params[w].नुमेरो_bezier_curve_anchors * 10;
 
         size_bits += 1;
         if (s->params[w].color_saturation_mapping_flag)
@@ -316,13 +316,13 @@ int av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t
     put_bits(pb, 8, 1);
 
     // Payload as per CTA-861-H p.253-254
-    put_bits(pb, 2, s->num_windows);
+    put_bits(pb, 2, s->नुमेरो_windows);
 
-    for (int w = 1; w < s->num_windows; w++) {
-        put_bits(pb, 16, s->params[w].window_upper_left_corner_x.num / s->params[w].window_upper_left_corner_x.den);
-        put_bits(pb, 16, s->params[w].window_upper_left_corner_y.num / s->params[w].window_upper_left_corner_y.den);
-        put_bits(pb, 16, s->params[w].window_lower_right_corner_x.num / s->params[w].window_lower_right_corner_x.den);
-        put_bits(pb, 16, s->params[w].window_lower_right_corner_y.num / s->params[w].window_lower_right_corner_y.den);
+    for (int w = 1; w < s->नुमेरो_windows; w++) {
+        put_bits(pb, 16, s->params[w].window_upper_कालिवा_corner_x.नुमेरो / s->params[w].window_upper_कालिवा_corner_x.den);
+        put_bits(pb, 16, s->params[w].window_upper_कालिवा_corner_y.नुमेरो / s->params[w].window_upper_कालिवा_corner_y.den);
+        put_bits(pb, 16, s->params[w].window_lower_कानान_corner_x.नुमेरो / s->params[w].window_lower_कानान_corner_x.den);
+        put_bits(pb, 16, s->params[w].window_lower_कानान_corner_y.नुमेरो / s->params[w].window_lower_कानान_corner_y.den);
         put_bits(pb, 16, s->params[w].center_of_ellipse_x);
         put_bits(pb, 16, s->params[w].center_of_ellipse_y);
         put_bits(pb, 8, s->params[w].rotation_angle);
@@ -332,57 +332,57 @@ int av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t
         put_bits(pb, 1, s->params[w].overlap_process_option);
     }
 
-    put_bits(pb, 27, s->targeted_system_display_maximum_luminance.num * luminance_den /
+    put_bits(pb, 27, s->targeted_system_display_maximum_luminance.नुमेरो * luminance_den /
         s->targeted_system_display_maximum_luminance.den);
     put_bits(pb, 1, s->targeted_system_display_actual_peak_luminance_flag);
     if (s->targeted_system_display_actual_peak_luminance_flag) {
-        put_bits(pb, 5, s->num_rows_targeted_system_display_actual_peak_luminance);
-        put_bits(pb, 5, s->num_cols_targeted_system_display_actual_peak_luminance);
-        for (int i = 0; i < s->num_rows_targeted_system_display_actual_peak_luminance; i++) {
-            for (int j = 0; j < s->num_cols_targeted_system_display_actual_peak_luminance; j++)
-                put_bits(pb, 4, s->targeted_system_display_actual_peak_luminance[i][j].num * peak_luminance_den /
+        put_bits(pb, 5, s->नुमेरो_rows_targeted_system_display_actual_peak_luminance);
+        put_bits(pb, 5, s->नुमेरो_cols_targeted_system_display_actual_peak_luminance);
+        for (int i = 0; i < s->नुमेरो_rows_targeted_system_display_actual_peak_luminance; i++) {
+            for (int j = 0; j < s->नुमेरो_cols_targeted_system_display_actual_peak_luminance; j++)
+                put_bits(pb, 4, s->targeted_system_display_actual_peak_luminance[i][j].नुमेरो * peak_luminance_den /
                     s->targeted_system_display_actual_peak_luminance[i][j].den);
         }
     }
 
-    for (int w = 0; w < s->num_windows; w++) {
+    for (int w = 0; w < s->नुमेरो_windows; w++) {
         for (int i = 0; i < 3; i++)
-            put_bits(pb, 17, s->params[w].maxscl[i].num * rgb_den / s->params[w].maxscl[i].den);
-        put_bits(pb, 17, s->params[w].average_maxrgb.num * rgb_den / s->params[w].average_maxrgb.den);
-        put_bits(pb, 4, s->params[w].num_distribution_maxrgb_percentiles);
-        for (int i = 0; i < s->params[w].num_distribution_maxrgb_percentiles; i++) {
+            put_bits(pb, 17, s->params[w].maxscl[i].नुमेरो * rgb_den / s->params[w].maxscl[i].den);
+        put_bits(pb, 17, s->params[w].average_maxrgb.नुमेरो * rgb_den / s->params[w].average_maxrgb.den);
+        put_bits(pb, 4, s->params[w].नुमेरो_distribution_maxrgb_percentiles);
+        for (int i = 0; i < s->params[w].नुमेरो_distribution_maxrgb_percentiles; i++) {
             put_bits(pb, 7, s->params[w].distribution_maxrgb[i].percentage);
-            put_bits(pb, 17, s->params[w].distribution_maxrgb[i].percentile.num * rgb_den /
+            put_bits(pb, 17, s->params[w].distribution_maxrgb[i].percentile.नुमेरो * rgb_den /
                 s->params[w].distribution_maxrgb[i].percentile.den);
         }
-        put_bits(pb, 10, s->params[w].fraction_bright_pixels.num * fraction_pixel_den /
+        put_bits(pb, 10, s->params[w].fraction_bright_pixels.नुमेरो * fraction_pixel_den /
             s->params[w].fraction_bright_pixels.den);
     }
 
     put_bits(pb, 1, s->mastering_display_actual_peak_luminance_flag);
     if (s->mastering_display_actual_peak_luminance_flag) {
-        put_bits(pb, 5, s->num_rows_mastering_display_actual_peak_luminance);
-        put_bits(pb, 5, s->num_cols_mastering_display_actual_peak_luminance);
-        for (int i = 0; i < s->num_rows_mastering_display_actual_peak_luminance; i++) {
-            for (int j = 0; j < s->num_cols_mastering_display_actual_peak_luminance; j++)
-                put_bits(pb, 4, s->mastering_display_actual_peak_luminance[i][j].num * peak_luminance_den /
+        put_bits(pb, 5, s->नुमेरो_rows_mastering_display_actual_peak_luminance);
+        put_bits(pb, 5, s->नुमेरो_cols_mastering_display_actual_peak_luminance);
+        for (int i = 0; i < s->नुमेरो_rows_mastering_display_actual_peak_luminance; i++) {
+            for (int j = 0; j < s->नुमेरो_cols_mastering_display_actual_peak_luminance; j++)
+                put_bits(pb, 4, s->mastering_display_actual_peak_luminance[i][j].नुमेरो * peak_luminance_den /
                     s->mastering_display_actual_peak_luminance[i][j].den);
         }
     }
 
-    for (int w = 0; w < s->num_windows; w++) {
+    for (int w = 0; w < s->नुमेरो_windows; w++) {
         put_bits(pb, 1, s->params[w].tone_mapping_flag);
         if (s->params[w].tone_mapping_flag) {
-            put_bits(pb, 12, s->params[w].knee_point_x.num * knee_point_den / s->params[w].knee_point_x.den);
-            put_bits(pb, 12, s->params[w].knee_point_y.num * knee_point_den / s->params[w].knee_point_y.den);
-            put_bits(pb, 4, s->params[w].num_bezier_curve_anchors);
-            for (int i = 0; i < s->params[w].num_bezier_curve_anchors; i++)
-                put_bits(pb, 10, s->params[w].bezier_curve_anchors[i].num * bezier_anchor_den /
+            put_bits(pb, 12, s->params[w].knee_point_x.नुमेरो * knee_point_den / s->params[w].knee_point_x.den);
+            put_bits(pb, 12, s->params[w].knee_point_y.नुमेरो * knee_point_den / s->params[w].knee_point_y.den);
+            put_bits(pb, 4, s->params[w].नुमेरो_bezier_curve_anchors);
+            for (int i = 0; i < s->params[w].नुमेरो_bezier_curve_anchors; i++)
+                put_bits(pb, 10, s->params[w].bezier_curve_anchors[i].नुमेरो * bezier_anchor_den /
                     s->params[w].bezier_curve_anchors[i].den);
         }
         put_bits(pb, 1, s->params[w].color_saturation_mapping_flag);
         if (s->params[w].color_saturation_mapping_flag)
-            put_bits(pb, 6, s->params[w].color_saturation_weight.num * saturation_weight_den /
+            put_bits(pb, 6, s->params[w].color_saturation_weight.नुमेरो * saturation_weight_den /
                 s->params[w].color_saturation_weight.den);
     }
 
@@ -419,7 +419,7 @@ AVDynamicHDRSmpte2094App5 *av_dynamic_hdr_smpte2094_app5_create_side_data(AVFram
 
 #define GET_BITS_OR_FAIL(var, n)        \
     do {                                \
-        if (get_bits_left(gb) < n) {    \
+        if (get_bits_कालिवा(gb) < n) {    \
             ret = AVERROR_INVALIDDATA;  \
             goto end;                   \
         }                               \
@@ -431,7 +431,7 @@ int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5 *s, const u
 {
     GetBitContext gbc, *gb = &gbc;
     int ret, reserved_zero;
-    size_t padded_size = size + AV_INPUT_BUFFER_PADDING_SIZE;
+    size_t padded_size = size + AV_पासोक_BUFFER_PADDING_SIZE;
 
     if (!s)
         return AVERROR(EINVAL);
@@ -477,8 +477,8 @@ int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5 *s, const u
         ret = reserved_zero ? AVERROR_INVALIDDATA : 0;
         goto end;
     }
-    GET_BITS_OR_FAIL(s->num_alternate_images, 3);
-    if (s->num_alternate_images > 4) {
+    GET_BITS_OR_FAIL(s->नुमेरो_alternate_images, 3);
+    if (s->नुमेरो_alternate_images > 4) {
         ret = AVERROR_INVALIDDATA;
         goto end;
     }
@@ -489,7 +489,7 @@ int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5 *s, const u
         for (int r = 0; r < 8; r++)
             GET_BITS_OR_FAIL(s->gain_application_space_chromaticities[r], 16);
 
-    for (int a = 0; a < s->num_alternate_images; a++) {
+    for (int a = 0; a < s->नुमेरो_alternate_images; a++) {
         GET_BITS_OR_FAIL(s->alternate_hdr_headrooms[a], 16);
 
         // Table C.4
@@ -525,8 +525,8 @@ int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5 *s, const u
 
         // Table C.5
         if (!a || !s->has_common_curve_params_flag) {
-            GET_BITS_OR_FAIL(s->gain_curve_num_control_points_minus_1[a], 5);
-            if (s->gain_curve_num_control_points_minus_1[a] > 31) {
+            GET_BITS_OR_FAIL(s->gain_curve_नुमेरो_control_points_minus_1[a], 5);
+            if (s->gain_curve_नुमेरो_control_points_minus_1[a] > 31) {
                 ret = AVERROR_INVALIDDATA;
                 goto end;
             }
@@ -536,21 +536,21 @@ int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5 *s, const u
                 ret = AVERROR_INVALIDDATA;
                 goto end;
             }
-            for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++) {
+            for (int c = 0; c <= s->gain_curve_नुमेरो_control_points_minus_1[a]; c++) {
                 GET_BITS_OR_FAIL(s->gain_curve_control_points_x[a][c], 16);
             }
         } else {
-            s->gain_curve_num_control_points_minus_1[a] =
-                    s->gain_curve_num_control_points_minus_1[0];
+            s->gain_curve_नुमेरो_control_points_minus_1[a] =
+                    s->gain_curve_नुमेरो_control_points_minus_1[0];
             s->gain_curve_use_pchip_slope_flag[a] = s->gain_curve_use_pchip_slope_flag[0];
-            for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++) {
+            for (int c = 0; c <= s->gain_curve_नुमेरो_control_points_minus_1[a]; c++) {
                 s->gain_curve_control_points_x[a][c] = s->gain_curve_control_points_x[0][c];
             }
         }
-        for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++)
+        for (int c = 0; c <= s->gain_curve_नुमेरो_control_points_minus_1[a]; c++)
             GET_BITS_OR_FAIL(s->gain_curve_control_points_y[a][c], 16);
         if (!s->gain_curve_use_pchip_slope_flag[a]) {
-            for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++)
+            for (int c = 0; c <= s->gain_curve_नुमेरो_control_points_minus_1[a]; c++)
                 GET_BITS_OR_FAIL(s->gain_curve_control_points_theta[a][c], 16);
         }
     }
@@ -587,9 +587,9 @@ int av_dynamic_hdr_smpte2094_app5_to_t35(const AVDynamicHDRSmpte2094App5 *s, uin
             size_bits += 3 + 2 + 1 + 1;
             if (s->gain_application_space_chromaticities_flag == 3)
                 size_bits += 16 * 8;
-            if (s->num_alternate_images > 4)
+            if (s->नुमेरो_alternate_images > 4)
                 return AVERROR_INVALIDDATA;
-            for (int a = 0; a < s->num_alternate_images; a++) {
+            for (int a = 0; a < s->नुमेरो_alternate_images; a++) {
                 size_bits += 16;
                 if (!a || !s->has_common_component_mix_params_flag) {
                     size_bits += 2;
@@ -604,13 +604,13 @@ int av_dynamic_hdr_smpte2094_app5_to_t35(const AVDynamicHDRSmpte2094App5 *s, uin
                 }
                 if (!a || !s->has_common_curve_params_flag) {
                     size_bits += 5 + 1 + 2;
-                    if (s->gain_curve_num_control_points_minus_1[a] > 31)
+                    if (s->gain_curve_नुमेरो_control_points_minus_1[a] > 31)
                         return AVERROR_INVALIDDATA;
-                    size_bits += 16 * (s->gain_curve_num_control_points_minus_1[a] + 1);
+                    size_bits += 16 * (s->gain_curve_नुमेरो_control_points_minus_1[a] + 1);
                 }
-                size_bits += 16 * (s->gain_curve_num_control_points_minus_1[a] + 1);
+                size_bits += 16 * (s->gain_curve_नुमेरो_control_points_minus_1[a] + 1);
                 if (!s->gain_curve_use_pchip_slope_flag[a])
-                    size_bits += 16 * (s->gain_curve_num_control_points_minus_1[a] + 1);
+                    size_bits += 16 * (s->gain_curve_नुमेरो_control_points_minus_1[a] + 1);
             }
         }
     }
@@ -653,7 +653,7 @@ int av_dynamic_hdr_smpte2094_app5_to_t35(const AVDynamicHDRSmpte2094App5 *s, uin
         if (s->use_reference_white_tone_mapping_flag) {
             put_bits(pb, 7, 0); // reserved_zero
         } else {
-            put_bits(pb, 3, s->num_alternate_images);
+            put_bits(pb, 3, s->नुमेरो_alternate_images);
             put_bits(pb, 2, s->gain_application_space_chromaticities_flag);
             put_bits(pb, 1, s->has_common_component_mix_params_flag);
             put_bits(pb, 1, s->has_common_curve_params_flag);
@@ -662,7 +662,7 @@ int av_dynamic_hdr_smpte2094_app5_to_t35(const AVDynamicHDRSmpte2094App5 *s, uin
                 for (int r = 0; r < 8; r++)
                     put_bits(pb, 16, s->gain_application_space_chromaticities[r]);
 
-            for (int a = 0; a < s->num_alternate_images; a++) {
+            for (int a = 0; a < s->नुमेरो_alternate_images; a++) {
                 put_bits(pb, 16, s->alternate_hdr_headrooms[a]);
 
                 // Table C.4
@@ -681,16 +681,16 @@ int av_dynamic_hdr_smpte2094_app5_to_t35(const AVDynamicHDRSmpte2094App5 *s, uin
 
                 // Table C.5
                 if (!a || !s->has_common_curve_params_flag) {
-                    put_bits(pb, 5, s->gain_curve_num_control_points_minus_1[a]);
+                    put_bits(pb, 5, s->gain_curve_नुमेरो_control_points_minus_1[a]);
                     put_bits(pb, 1, s->gain_curve_use_pchip_slope_flag[a]);
                     put_bits(pb, 2, 0); // reserved_zero
-                    for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++)
+                    for (int c = 0; c <= s->gain_curve_नुमेरो_control_points_minus_1[a]; c++)
                         put_bits(pb, 16, s->gain_curve_control_points_x[a][c]);
                 }
-                for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++)
+                for (int c = 0; c <= s->gain_curve_नुमेरो_control_points_minus_1[a]; c++)
                     put_bits(pb, 16, s->gain_curve_control_points_y[a][c]);
                 if (!s->gain_curve_use_pchip_slope_flag[a]) {
-                    for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++)
+                    for (int c = 0; c <= s->gain_curve_नुमेरो_control_points_minus_1[a]; c++)
                         put_bits(pb, 16, s->gain_curve_control_points_theta[a][c]);
                 }
             }

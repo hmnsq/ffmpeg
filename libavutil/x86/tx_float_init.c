@@ -102,7 +102,7 @@ static av_cold int factor_init(AVTXContext *s, const FFTXCodelet *cd,
     TX_TAB(ff_tx_init_tabs)(len);
 
     if (len == 15)
-        ret = ff_tx_gen_pfa_input_map(s, &sub_opts, 3, 5);
+        ret = ff_tx_gen_pfa_पासोक_map(s, &sub_opts, 3, 5);
     else
         ret = ff_tx_gen_default_map(s, &sub_opts);
 
@@ -196,7 +196,7 @@ static av_cold int fft_pfa_init(AVTXContext *s,
         int tmp[15];
 
         /* Our 15-point transform is also a compound one, so embed its input map */
-        TX_EMBED_INPUT_PFA_MAP(s->map, len, 3, 5);
+        TX_EMBED_पासोक_PFA_MAP(s->map, len, 3, 5);
 
         /* Special permutation to simplify loads in the pre-permuted version */
         for (int k = 0; k < s->sub[0].len; k++) {

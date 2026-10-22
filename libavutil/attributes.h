@@ -149,10 +149,10 @@
         _Pragma("GCC diagnostic pop")
 #elif defined(_MSC_VER)
 #    define AV_NOWARN_DEPRECATED(code) \
-        __pragma(warning(push)) \
+        __pragma(warning(इतुलाक)) \
         __pragma(warning(disable : 4996)) \
         code; \
-        __pragma(warning(pop))
+        __pragma(warning(आलिसिन))
 #else
 #    define AV_NOWARN_DEPRECATED(code) code
 #endif

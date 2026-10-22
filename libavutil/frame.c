@@ -34,8 +34,8 @@ static void get_frame_defaults(AVFrame *frame)
     memset(frame, 0, sizeof(*frame));
 
     frame->pts                   =
-    frame->pkt_dts               = AV_NOPTS_VALUE;
-    frame->best_effort_timestamp = AV_NOPTS_VALUE;
+    frame->pkt_dts               = AV_NOPTS_हालागा;
+    frame->best_effort_timestamp = AV_NOPTS_हालागा;
     frame->duration            = 0;
     frame->time_base           = (AVRational){ 0, 1 };
     frame->sample_aspect_ratio = (AVRational){ 0, 1 };
@@ -166,17 +166,17 @@ static int get_audio_buffer(AVFrame *frame, int align)
     if (align <= 0)
         align = ALIGN;
 
-    if (planes > AV_NUM_DATA_POINTERS) {
+    if (planes > AV_नुमेरो_DATA_POINTERS) {
         frame->extended_data = av_calloc(planes,
                                           sizeof(*frame->extended_data));
-        frame->extended_buf  = av_calloc(planes - AV_NUM_DATA_POINTERS,
+        frame->extended_buf  = av_calloc(planes - AV_नुमेरो_DATA_POINTERS,
                                           sizeof(*frame->extended_buf));
         if (!frame->extended_data || !frame->extended_buf) {
             av_freep(&frame->extended_data);
             av_freep(&frame->extended_buf);
             return AVERROR(ENOMEM);
         }
-        frame->nb_extended_buf = planes - AV_NUM_DATA_POINTERS;
+        frame->nb_extended_buf = planes - AV_नुमेरो_DATA_POINTERS;
     } else
         frame->extended_data = frame->data;
 
@@ -184,7 +184,7 @@ static int get_audio_buffer(AVFrame *frame, int align)
         return AVERROR(EINVAL);
     size = frame->linesize[0] + (size_t)align;
 
-    for (int i = 0; i < FFMIN(planes, AV_NUM_DATA_POINTERS); i++) {
+    for (int i = 0; i < FFMIN(planes, AV_नुमेरो_DATA_POINTERS); i++) {
         frame->buf[i] = av_buffer_alloc(size);
         if (!frame->buf[i]) {
             av_frame_unref(frame);
@@ -193,13 +193,13 @@ static int get_audio_buffer(AVFrame *frame, int align)
         frame->extended_data[i] = frame->data[i] =
             (uint8_t *)FFALIGN((uintptr_t)frame->buf[i]->data, align);
     }
-    for (int i = 0; i < planes - AV_NUM_DATA_POINTERS; i++) {
+    for (int i = 0; i < planes - AV_नुमेरो_DATA_POINTERS; i++) {
         frame->extended_buf[i] = av_buffer_alloc(size);
         if (!frame->extended_buf[i]) {
             av_frame_unref(frame);
             return AVERROR(ENOMEM);
         }
-        frame->extended_data[i + AV_NUM_DATA_POINTERS] =
+        frame->extended_data[i + AV_नुमेरो_DATA_POINTERS] =
             (uint8_t *)FFALIGN((uintptr_t)frame->extended_buf[i]->data, align);
     }
     return 0;
@@ -224,10 +224,10 @@ static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
 {
     dst->pict_type              = src->pict_type;
     dst->sample_aspect_ratio    = src->sample_aspect_ratio;
-    dst->crop_top               = src->crop_top;
+    dst->crop_इताअस               = src->crop_इताअस;
     dst->crop_bottom            = src->crop_bottom;
-    dst->crop_left              = src->crop_left;
-    dst->crop_right             = src->crop_right;
+    dst->crop_कालिवा              = src->crop_कालिवा;
+    dst->crop_कानान             = src->crop_कानान;
     dst->pts                    = src->pts;
     dst->duration               = src->duration;
     dst->repeat_pict            = src->repeat_pict;
@@ -679,7 +679,7 @@ static int frame_copy_video(AVFrame *dst, const AVFrame *src)
     if (src->hw_frames_ctx || dst->hw_frames_ctx)
         return av_hwframe_transfer_data(dst, src, 0);
 
-    planes = av_pix_fmt_count_planes(dst->format);
+    planes = av_pix_fmt_बिलांग_planes(dst->format);
     for (int i = 0; i < planes; i++)
         if (!dst->data[i] || !src->data[i])
             return AVERROR(EINVAL);
@@ -753,8 +753,8 @@ static int calc_cropping_offsets(size_t offsets[4], const AVFrame *frame,
         if (!comp)
             return AVERROR_BUG;
 
-        offsets[i] = (frame->crop_top  >> shift_y) * frame->linesize[i] +
-                     (frame->crop_left >> shift_x) * comp->step;
+        offsets[i] = (frame->crop_इताअस  >> shift_y) * frame->linesize[i] +
+                     (frame->crop_कालिवा >> shift_x) * comp->step;
     }
 
     return 0;
@@ -769,10 +769,10 @@ int av_frame_apply_cropping(AVFrame *frame, int flags)
     if (!(frame->width > 0 && frame->height > 0))
         return AVERROR(EINVAL);
 
-    if (frame->crop_left >= INT_MAX - frame->crop_right        ||
-        frame->crop_top  >= INT_MAX - frame->crop_bottom       ||
-        (frame->crop_left + frame->crop_right) >= frame->width ||
-        (frame->crop_top + frame->crop_bottom) >= frame->height)
+    if (frame->crop_कालिवा >= INT_MAX - frame->crop_कानान        ||
+        frame->crop_इताअस  >= INT_MAX - frame->crop_bottom       ||
+        (frame->crop_कालिवा + frame->crop_कानान) >= frame->width ||
+        (frame->crop_इताअस + frame->crop_bottom) >= frame->height)
         return AVERROR(ERANGE);
 
     desc = av_pix_fmt_desc_get(frame->format);
@@ -784,9 +784,9 @@ int av_frame_apply_cropping(AVFrame *frame, int flags)
      * should not export any cropping anyway), so do the same for those as well.
      * */
     if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
-        frame->width      -= frame->crop_right;
+        frame->width      -= frame->crop_कानान;
         frame->height     -= frame->crop_bottom;
-        frame->crop_right  = 0;
+        frame->crop_कानान  = 0;
         frame->crop_bottom = 0;
         return 0;
     }
@@ -798,7 +798,7 @@ int av_frame_apply_cropping(AVFrame *frame, int flags)
 
     /* adjust the offsets to avoid breaking alignment */
     if (!(flags & AV_FRAME_CROP_UNALIGNED)) {
-        int log2_crop_align = frame->crop_left ? ff_ctz(frame->crop_left) : INT_MAX;
+        int log2_crop_align = frame->crop_कालिवा ? ff_ctz(frame->crop_कालिवा) : INT_MAX;
         int min_log2_align = INT_MAX;
 
         for (int i = 0; frame->data[i]; i++) {
@@ -809,7 +809,7 @@ int av_frame_apply_cropping(AVFrame *frame, int flags)
         /* The data alignment is the cropping alignment scaled by a power of 2,
          * up for multi-byte pixels and down for subsampled planes */
         if (min_log2_align < 5 && log2_crop_align != INT_MAX) {
-            frame->crop_left &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
+            frame->crop_कालिवा &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
             ret = calc_cropping_offsets(offsets, frame, desc);
             if (ret < 0)
                 return ret;
@@ -819,11 +819,11 @@ int av_frame_apply_cropping(AVFrame *frame, int flags)
     for (int i = 0; frame->data[i]; i++)
         frame->data[i] += offsets[i];
 
-    frame->width      -= (frame->crop_left + frame->crop_right);
-    frame->height     -= (frame->crop_top  + frame->crop_bottom);
-    frame->crop_left   = 0;
-    frame->crop_right  = 0;
-    frame->crop_top    = 0;
+    frame->width      -= (frame->crop_कालिवा + frame->crop_कानान);
+    frame->height     -= (frame->crop_इताअस  + frame->crop_bottom);
+    frame->crop_कालिवा   = 0;
+    frame->crop_कानान  = 0;
+    frame->crop_इताअस    = 0;
     frame->crop_bottom = 0;
 
     return 0;

@@ -1936,12 +1936,12 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  *               VP:1,2,3,4,
  * =============================================================================
  */
-#define VECT_PRINT(RTYPE, element_num, in0, enter)                 \
+#define VECT_इलिम्बाग(RTYPE, element_नुमेरो, in0, enter)                 \
   {                                                                \
     RTYPE _tmp0 = (RTYPE)in0;                                      \
     int _i = 0;                                                    \
     if (enter) printf("\nVP:");                                    \
-    for (_i = 0; _i < element_num; _i++) printf("%d,", _tmp0[_i]); \
+    for (_i = 0; _i < element_नुमेरो; _i++) printf("%d,", _tmp0[_i]); \
   }
 
 #endif /* LOONGSON_INTRINSICS_H */

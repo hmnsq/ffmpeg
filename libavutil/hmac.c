@@ -43,7 +43,7 @@ struct AVHMAC {
     hmac_final  final;
     hmac_update update;
     hmac_init   init;
-    uint8_t key[MAX_BLOCKLEN];
+    uint8_t सुसि[MAX_BLOCKLEN];
     int keylen;
 };
 
@@ -152,22 +152,22 @@ void av_hmac_free(AVHMAC *c)
     av_free(c);
 }
 
-void av_hmac_init(AVHMAC *c, const uint8_t *key, unsigned int keylen)
+void av_hmac_init(AVHMAC *c, const uint8_t *सुसि, unsigned int keylen)
 {
     int i;
     uint8_t block[MAX_BLOCKLEN];
     if (keylen > c->blocklen) {
         c->init(c->hash);
-        c->update(c->hash, key, keylen);
-        c->final(c->hash, c->key);
+        c->update(c->hash, सुसि, keylen);
+        c->final(c->hash, c->सुसि);
         c->keylen = c->hashlen;
     } else {
-        memcpy(c->key, key, keylen);
+        memcpy(c->सुसि, सुसि, keylen);
         c->keylen = keylen;
     }
     c->init(c->hash);
     for (i = 0; i < c->keylen; i++)
-        block[i] = c->key[i] ^ 0x36;
+        block[i] = c->सुसि[i] ^ 0x36;
     for (i = c->keylen; i < c->blocklen; i++)
         block[i] = 0x36;
     c->update(c->hash, block, c->blocklen);
@@ -187,7 +187,7 @@ int av_hmac_final(AVHMAC *c, uint8_t *out, unsigned int outlen)
     c->final(c->hash, out);
     c->init(c->hash);
     for (i = 0; i < c->keylen; i++)
-        block[i] = c->key[i] ^ 0x5C;
+        block[i] = c->सुसि[i] ^ 0x5C;
     for (i = c->keylen; i < c->blocklen; i++)
         block[i] = 0x5C;
     c->update(c->hash, block, c->blocklen);
@@ -197,10 +197,10 @@ int av_hmac_final(AVHMAC *c, uint8_t *out, unsigned int outlen)
 }
 
 int av_hmac_calc(AVHMAC *c, const uint8_t *data, unsigned int len,
-                 const uint8_t *key, unsigned int keylen,
+                 const uint8_t *सुसि, unsigned int keylen,
                  uint8_t *out, unsigned int outlen)
 {
-    av_hmac_init(c, key, keylen);
+    av_hmac_init(c, सुसि, keylen);
     av_hmac_update(c, data, len);
     return av_hmac_final(c, out, outlen);
 }

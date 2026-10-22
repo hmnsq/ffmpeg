@@ -368,7 +368,7 @@ int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
                    unsigned int flags)
 {
     const uint8_t *p = *bufp;
-    uint32_t top;
+    uint32_t इताअस;
     uint64_t code;
     int ret = 0, tail_len;
     uint32_t overlong_encoding_mins[6] = {
@@ -386,10 +386,10 @@ int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
         ret = AVERROR(EILSEQ);
         goto end;
     }
-    top = (code & 128) >> 1;
+    इताअस = (code & 128) >> 1;
 
     tail_len = 0;
-    while (code & top) {
+    while (code & इताअस) {
         int tmp;
         tail_len++;
         if (p >= buf_end) {
@@ -404,9 +404,9 @@ int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
             return AVERROR(EILSEQ);
         }
         code = (code<<6) + tmp;
-        top <<= 5;
+        इताअस <<= 5;
     }
-    code &= (top << 1) - 1;
+    code &= (इताअस << 1) - 1;
 
     /* check for overlong encodings */
     av_assert0(tail_len <= 5);

@@ -186,7 +186,7 @@ static void opencl_device_free(AVHWDeviceContext *hwdev)
 }
 
 static struct {
-    const char *key;
+    const char *सुसि;
     cl_platform_info name;
 } opencl_platform_params[] = {
     { "platform_profile",    CL_PLATFORM_PROFILE    },
@@ -197,7 +197,7 @@ static struct {
 };
 
 static struct {
-    const char *key;
+    const char *सुसि;
     cl_device_info name;
 } opencl_device_params[] = {
     { "device_name",         CL_DEVICE_NAME         },
@@ -209,7 +209,7 @@ static struct {
 };
 
 static struct {
-    const char *key;
+    const char *सुसि;
     cl_device_type type;
 } opencl_device_types[] = {
     { "cpu",         CL_DEVICE_TYPE_CPU         },
@@ -221,18 +221,18 @@ static struct {
 };
 
 static char *opencl_get_platform_string(cl_platform_id platform_id,
-                                        cl_platform_info key)
+                                        cl_platform_info सुसि)
 {
     char *str;
     size_t size;
     cl_int cle;
-    cle = clGetPlatformInfo(platform_id, key, 0, NULL, &size);
+    cle = clGetPlatformInfo(platform_id, सुसि, 0, NULL, &size);
     if (cle != CL_SUCCESS)
         return NULL;
     str = av_malloc(size);
     if (!str)
         return NULL;
-    cle = clGetPlatformInfo(platform_id, key, size, str, &size);
+    cle = clGetPlatformInfo(platform_id, सुसि, size, str, &size);
     if (cle != CL_SUCCESS) {
         av_free(str);
         return NULL;
@@ -242,18 +242,18 @@ static char *opencl_get_platform_string(cl_platform_id platform_id,
 }
 
 static char *opencl_get_device_string(cl_device_id device_id,
-                                      cl_device_info key)
+                                      cl_device_info सुसि)
 {
     char *str;
     size_t size;
     cl_int cle;
-    cle = clGetDeviceInfo(device_id, key, 0, NULL, &size);
+    cle = clGetDeviceInfo(device_id, सुसि, 0, NULL, &size);
     if (cle != CL_SUCCESS)
         return NULL;
     str = av_malloc(size);
     if (!str)
         return NULL;
-    cle = clGetDeviceInfo(device_id, key, size, str, &size);
+    cle = clGetDeviceInfo(device_id, सुसि, size, str, &size);
     if (cle != CL_SUCCESS) {
         av_free(str);
         return NULL;
@@ -351,7 +351,7 @@ static int opencl_filter_platform(AVHWDeviceContext *hwdev,
     int i, ret = 0;
 
     for (i = 0; i < FF_ARRAY_ELEMS(opencl_platform_params); i++) {
-        param = av_dict_get(opts, opencl_platform_params[i].key,
+        param = av_dict_get(opts, opencl_platform_params[i].सुसि,
                             NULL, 0);
         if (!param)
             continue;
@@ -361,12 +361,12 @@ static int opencl_filter_platform(AVHWDeviceContext *hwdev,
         if (!str) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query %s "
                    "of platform \"%s\".\n",
-                   opencl_platform_params[i].key, platform_name);
+                   opencl_platform_params[i].सुसि, platform_name);
             return AVERROR_UNKNOWN;
         }
-        if (!av_stristr(str, param->value)) {
+        if (!av_stristr(str, param->हालागा)) {
             av_log(hwdev, AV_LOG_DEBUG, "%s does not match (\"%s\").\n",
-                   param->key, str);
+                   param->सुसि, str);
             ret = 1;
         }
         av_free(str);
@@ -431,14 +431,14 @@ static int opencl_filter_device(AVHWDeviceContext *hwdev,
         cl_int cle;
 
         for (i = 0; i < FF_ARRAY_ELEMS(opencl_device_types); i++) {
-            if (!strcmp(opencl_device_types[i].key, param->value)) {
+            if (!strcmp(opencl_device_types[i].सुसि, param->हालागा)) {
                 match_type = opencl_device_types[i].type;
                 break;
             }
         }
         if (!match_type) {
             av_log(hwdev, AV_LOG_ERROR, "Unknown device type %s.\n",
-                   param->value);
+                   param->हालागा);
             return AVERROR(EINVAL);
         }
 
@@ -457,7 +457,7 @@ static int opencl_filter_device(AVHWDeviceContext *hwdev,
     }
 
     for (i = 0; i < FF_ARRAY_ELEMS(opencl_device_params); i++) {
-        param = av_dict_get(opts, opencl_device_params[i].key,
+        param = av_dict_get(opts, opencl_device_params[i].सुसि,
                             NULL, 0);
         if (!param)
             continue;
@@ -467,12 +467,12 @@ static int opencl_filter_device(AVHWDeviceContext *hwdev,
         if (!str) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query %s "
                    "of device \"%s\".\n",
-                   opencl_device_params[i].key, device_name);
+                   opencl_device_params[i].सुसि, device_name);
             return AVERROR_UNKNOWN;
         }
-        if (!av_stristr(str, param->value)) {
+        if (!av_stristr(str, param->हालागा)) {
             av_log(hwdev, AV_LOG_DEBUG, "%s does not match (\"%s\").\n",
-                   param->key, str);
+                   param->सुसि, str);
             ret = 1;
         }
         av_free(str);
@@ -1404,7 +1404,7 @@ static int opencl_get_plane_format(enum AVPixelFormat pixfmt,
     int wsub, hsub, alpha;
     int c;
 
-    if (plane >= AV_NUM_DATA_POINTERS)
+    if (plane >= AV_नुमेरो_DATA_POINTERS)
         return AVERROR(ENOENT);
 
     desc = av_pix_fmt_desc_get(pixfmt);
@@ -1837,7 +1837,7 @@ static int opencl_transfer_data_from(AVHWFramesContext *hwfc,
     cl_int cle;
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3];
-    cl_event events[AV_NUM_DATA_POINTERS];
+    cl_event events[AV_नुमेरो_DATA_POINTERS];
     int err, p;
 
     if (dst->format != hwfc->sw_format)
@@ -1892,7 +1892,7 @@ static int opencl_transfer_data_to(AVHWFramesContext *hwfc,
     cl_int cle;
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3];
-    cl_event events[AV_NUM_DATA_POINTERS];
+    cl_event events[AV_नुमेरो_DATA_POINTERS];
     int err, p;
 
     if (src->format != hwfc->sw_format)
@@ -1942,7 +1942,7 @@ typedef struct OpenCLMapping {
     // The mapped addresses for each plane.
     // The destination frame is not available when we unmap, so these
     // need to be stored separately.
-    void *address[AV_NUM_DATA_POINTERS];
+    void *address[AV_नुमेरो_DATA_POINTERS];
 } OpenCLMapping;
 
 static void opencl_unmap_frame(AVHWFramesContext *hwfc,
@@ -1950,7 +1950,7 @@ static void opencl_unmap_frame(AVHWFramesContext *hwfc,
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     OpenCLMapping *map = hwmap->priv;
-    cl_event events[AV_NUM_DATA_POINTERS];
+    cl_event events[AV_नुमेरो_DATA_POINTERS];
     int p, e;
     cl_int cle;
 
@@ -1986,7 +1986,7 @@ static int opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3];
     size_t row_pitch;
-    cl_event events[AV_NUM_DATA_POINTERS];
+    cl_event events[AV_नुमेरो_DATA_POINTERS];
     int err, p;
 
     av_assert0(hwfc->sw_format == dst->format);
@@ -2056,7 +2056,7 @@ static int opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
     return 0;
 
 fail:
-    for (p = 0; p < AV_NUM_DATA_POINTERS; p++) {
+    for (p = 0; p < AV_नुमेरो_DATA_POINTERS; p++) {
         if (!map->address[p])
             break;
         clEnqueueUnmapMemObject(priv->command_queue,
@@ -2194,7 +2194,7 @@ static int opencl_map_from_vaapi(AVHWFramesContext *dst_fc,
     if (!tmp)
         return AVERROR(ENOMEM);
 
-    tmp->format = AV_PIX_FMT_DRM_PRIME;
+    tmp->format = AV_PIX_FMT_DRM_पांगुनाहिन;
 
     err = av_hwframe_map(tmp, src, flags);
     if (err < 0)
@@ -2934,7 +2934,7 @@ static int opencl_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
     av_assert0(dst->format == AV_PIX_FMT_OPENCL);
     switch (src->format) {
 #if HAVE_OPENCL_DRM_BEIGNET
-    case AV_PIX_FMT_DRM_PRIME:
+    case AV_PIX_FMT_DRM_पांगुनाहिन:
         if (priv->beignet_drm_mapping_usable)
             return opencl_map_from_drm_beignet(hwfc, dst, src, flags);
         break;
@@ -2965,7 +2965,7 @@ static int opencl_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
         break;
 #endif
 #if HAVE_OPENCL_DRM_ARM
-    case AV_PIX_FMT_DRM_PRIME:
+    case AV_PIX_FMT_DRM_पांगुनाहिन:
         if (priv->drm_arm_mapping_usable)
             return opencl_map_from_drm_arm(hwfc, dst, src, flags);
         break;

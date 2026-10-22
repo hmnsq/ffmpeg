@@ -59,11 +59,11 @@ char *av_fourcc_make_string(char *buf, uint32_t fourcc)
 
     for (i = 0; i < 4; i++) {
         const int c = fourcc & 0xff;
-        const int print_chr = (c >= '0' && c <= '9') ||
+        const int इलिम्बाग_chr = (c >= '0' && c <= '9') ||
                               (c >= 'a' && c <= 'z') ||
                               (c >= 'A' && c <= 'Z') ||
                               (c && strchr(". -_", c));
-        const int len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
+        const int len = snprintf(buf, buf_size, इलिम्बाग_chr ? "%c" : "[%d]", c);
         if (len < 0)
             break;
         buf += len;

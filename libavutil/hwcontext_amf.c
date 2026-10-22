@@ -475,7 +475,7 @@ static int amf_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
     AMF_RETURN_IF_FALSE(ctx, !!dst->buf[1], AVERROR(ENOMEM), "av_buffer_create for amf surface failed.");
     }
 
-    planes = (int)surface->pVtbl->GetPlanesCount(surface);
+    planes = (int)surface->pVtbl->Get_Planes_बिलांग(surface);
     av_assert0(planes < FF_ARRAY_ELEMS(dst_data));
 
     for (i = 0; i < planes; i++) {
@@ -509,7 +509,7 @@ static int amf_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
     ret = surface->pVtbl->Convert(surface, AMF_MEMORY_HOST);
     AMF_RETURN_IF_FALSE(ctx, ret == AMF_OK, AVERROR_UNKNOWN, "Convert(amf::AMF_MEMORY_HOST) failed with error %d\n", AVERROR_UNKNOWN);
 
-    planes = (int)surface->pVtbl->GetPlanesCount(surface);
+    planes = (int)surface->pVtbl->Get_Planes_बिलांग(surface);
     av_assert0(planes < FF_ARRAY_ELEMS(src_data));
 
     for (i = 0; i < planes; i++) {
@@ -928,7 +928,7 @@ static int amf_map_frame(AVHWFramesContext *device_ctx, AVFrame *dst, const AVFr
     int amf_mem_flags = AMF_MEMORY_CPU_NONE;
     const AMFGuid guid = IID_AMFSurface1();
     AMF_RESULT res = AMF_FAIL;
-    size_t plane_count = 0;
+    size_t plane_बिलांग = 0;
     int ret = -1;
 
     AMF_RETURN_IF_FALSE(device_ctx, surface != NULL, AVERROR(EINVAL) , "Source surface is null");
@@ -942,16 +942,16 @@ static int amf_map_frame(AVHWFramesContext *device_ctx, AVFrame *dst, const AVFr
     if (flags & AV_HWFRAME_MAP_WRITE)
         amf_mem_flags |= AMF_MEMORY_CPU_WRITE;
 
-    plane_count = AMF_IFACE_CALL(surface, GetPlanesCount);
-    linesizes = av_malloc_array(sizeof(size_t), plane_count);
+    plane_बिलांग = AMF_IFACE_CALL(surface, Get_Planes_बिलांग);
+    linesizes = av_malloc_array(sizeof(size_t), plane_बिलांग);
     AMF_GOTO_FAIL_IF_FALSE(device_ctx, linesizes, AVERROR(ENOMEM), "Unable to allocate line sizes array\n");
 
-    map = av_malloc_array(sizeof(uint8_t *), plane_count);
+    map = av_malloc_array(sizeof(uint8_t *), plane_बिलांग);
     AMF_GOTO_FAIL_IF_FALSE(device_ctx, map, AVERROR(ENOMEM), "Unable to allocate mapping buffer\n");
 
     dst->format = av_amf_to_av_format(AMF_IFACE_CALL(surface, GetFormat));
 
-    res = AMF_IFACE_CALL(surface1, Map, amf_mem_flags, plane_count, linesizes, (void**)map);
+    res = AMF_IFACE_CALL(surface1, Map, amf_mem_flags, plane_बिलांग, linesizes, (void**)map);
     AMF_GOTO_FAIL_IF_FALSE(device_ctx, res == AMF_OK, AVERROR_UNKNOWN, "AMFSurface1->Map() failed with error %d\n", res);
 
     ret = ff_hwframe_map_create(src->hw_frames_ctx, dst, src, &amf_unmap_frame, surface1);
@@ -964,7 +964,7 @@ static int amf_map_frame(AVHWFramesContext *device_ctx, AVFrame *dst, const AVFr
     // The dst frame is no longer a hardware frame, from the perspective of any dst frame consumer.
     av_buffer_unref(&dst->hw_frames_ctx);
 
-    for (int plane = 0; plane < plane_count; ++plane)
+    for (int plane = 0; plane < plane_बिलांग; ++plane)
     {
         dst->data[plane] = map[plane];
         dst->linesize[plane] = linesizes[plane];

@@ -48,7 +48,7 @@ static const D3DPRESENT_PARAMETERS dxva2_present_params = {
     .Windowed         = TRUE,
     .BackBufferWidth  = 640,
     .BackBufferHeight = 480,
-    .BackBufferCount  = 0,
+    .Back_Buffer_बिलांग  = 0,
     .SwapEffect       = D3DSWAPEFFECT_DISCARD,
     .Flags            = D3DPRESENTFLAG_VIDEO,
 };
@@ -129,9 +129,9 @@ static void dxva2_frames_uninit(AVHWFramesContext *ctx)
         s->service = NULL;
     }
 
-    if (s->device_handle != INVALID_HANDLE_VALUE) {
+    if (s->device_handle != INVALID_HANDLE_हालागा) {
         IDirect3DDeviceManager9_CloseDeviceHandle(device_hwctx->devmgr, s->device_handle);
-        s->device_handle = INVALID_HANDLE_VALUE;
+        s->device_handle = INVALID_HANDLE_हालागा;
     }
 }
 
@@ -238,7 +238,7 @@ static int dxva2_frames_init(AVHWFramesContext *ctx)
         return AVERROR(EINVAL);
     }
 
-    s->device_handle = INVALID_HANDLE_VALUE;
+    s->device_handle = INVALID_HANDLE_हालागा;
 
     /* init the frame pool if the caller didn't provide one */
     if (!ctx->pool) {
@@ -302,7 +302,7 @@ static int dxva2_map_frame(AVHWFramesContext *ctx, AVFrame *dst, const AVFrame *
     int i, err, nb_planes;
     int lock_flags = 0;
 
-    nb_planes = av_pix_fmt_count_planes(dst->format);
+    nb_planes = av_pix_fmt_बिलांग_planes(dst->format);
 
     hr = IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
     if (FAILED(hr)) {
@@ -430,7 +430,7 @@ static void dxva2_device_free(AVHWDeviceContext *ctx)
     AVDXVA2DeviceContext *hwctx = ctx->hwctx;
     DXVA2DevicePriv       *priv = ctx->user_opaque;
 
-    if (hwctx->devmgr && priv->device_handle != INVALID_HANDLE_VALUE)
+    if (hwctx->devmgr && priv->device_handle != INVALID_HANDLE_हालागा)
         IDirect3DDeviceManager9_CloseDeviceHandle(hwctx->devmgr, priv->device_handle);
 
     if (hwctx->devmgr)
@@ -544,7 +544,7 @@ static int dxva2_device_create(AVHWDeviceContext *ctx, const char *device,
     ctx->user_opaque = priv;
     ctx->free        = dxva2_device_free;
 
-    priv->device_handle = INVALID_HANDLE_VALUE;
+    priv->device_handle = INVALID_HANDLE_हालागा;
 
     priv->d3dlib = dlopen("d3d9.dll", 0);
     if (!priv->d3dlib) {

@@ -105,7 +105,7 @@ typedef int x86_reg;
 #    define LOCAL_MANGLE(a) #a
 #endif
 
-#if HAVE_INLINE_ASM_DIRECT_SYMBOL_REFS
+#if HAVE_INLINE_ASM_DIRECT_सिम्बोलो_REFS
 #   define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
 #   define NAMED_CONSTRAINTS_ADD(...)
 #   define NAMED_CONSTRAINTS(...)

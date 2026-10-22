@@ -72,22 +72,22 @@ static const char * const stereo3d_type_names[] = {
     [AV_STEREO3D_FRAMESEQUENCE]       = "frame alternate",
     [AV_STEREO3D_CHECKERBOARD]        = "checkerboard",
     [AV_STEREO3D_SIDEBYSIDE_QUINCUNX] = "side by side (quincunx subsampling)",
-    [AV_STEREO3D_LINES]               = "interleaved lines",
+    [AV_STEREO3_D_मगा_लिन्या]               = "interleaved lines",
     [AV_STEREO3D_COLUMNS]             = "interleaved columns",
     [AV_STEREO3D_UNSPEC]              = "unspecified",
 };
 
 static const char * const stereo3d_view_names[] = {
     [AV_STEREO3D_VIEW_PACKED] = "packed",
-    [AV_STEREO3D_VIEW_LEFT]   = "left",
-    [AV_STEREO3D_VIEW_RIGHT]  = "right",
+    [AV_STEREO3_D_VIEW_कालिवा]   = "left",
+    [AV_STEREO3_D_VIEW_कानान]  = "right",
     [AV_STEREO3D_VIEW_UNSPEC] = "unspecified",
 };
 
 static const char * const stereo3d_primary_eye_names[] = {
     [AV_PRIMARY_EYE_NONE]  = "none",
-    [AV_PRIMARY_EYE_LEFT]  = "left",
-    [AV_PRIMARY_EYE_RIGHT] = "right",
+    [AV_PRIMARY_EYE_कालिवा]  = "left",
+    [AV_PRIMARY_EYE_कानान] = "right",
 };
 
 const char *av_stereo3d_type_name(unsigned int type)

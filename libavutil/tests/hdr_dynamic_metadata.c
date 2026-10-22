@@ -44,31 +44,31 @@
  * instead of silently passing a flag-only check.
  */
 
-static void print_peak_matrix(const char *label, int rows, int cols,
+static void इलिम्बाग_peak_matrix(const char *label, int rows, int cols,
                               const AVRational m[25][25])
 {
     printf("    %s %dx%d:", label, rows, cols);
     for (int i = 0; i < rows; i++)
         for (int j = 0; j < cols; j++)
-            printf(" %d/%d", m[i][j].num, m[i][j].den);
+            printf(" %d/%d", m[i][j].नुमेरो, m[i][j].den);
     printf("\n");
 }
 
-static void print_window(int w, const AVHDRPlusColorTransformParams *p,
+static void इलिम्बाग_window(int w, const AVHDRPlusColorTransformParams *p,
                          int geometry)
 {
     printf("  window %d:\n", w);
     /* Window 0 covers the whole frame; its geometry is not serialized. */
     if (geometry) {
         printf("    corners: ul=%d/%d,%d/%d lr=%d/%d,%d/%d\n",
-               p->window_upper_left_corner_x.num,
-               p->window_upper_left_corner_x.den,
-               p->window_upper_left_corner_y.num,
-               p->window_upper_left_corner_y.den,
-               p->window_lower_right_corner_x.num,
-               p->window_lower_right_corner_x.den,
-               p->window_lower_right_corner_y.num,
-               p->window_lower_right_corner_y.den);
+               p->window_upper_कालिवा_corner_x.नुमेरो,
+               p->window_upper_कालिवा_corner_x.den,
+               p->window_upper_कालिवा_corner_y.नुमेरो,
+               p->window_upper_कालिवा_corner_y.den,
+               p->window_lower_कानान_corner_x.नुमेरो,
+               p->window_lower_कानान_corner_x.den,
+               p->window_lower_कानान_corner_y.नुमेरो,
+               p->window_lower_कानान_corner_y.den);
         printf("    ellipse: center=%u,%u rotation=%u semimajor_int=%u"
                " semimajor_ext=%u semiminor_ext=%u overlap=%u\n",
                p->center_of_ellipse_x, p->center_of_ellipse_y,
@@ -78,63 +78,63 @@ static void print_window(int w, const AVHDRPlusColorTransformParams *p,
                p->overlap_process_option);
     }
     printf("    maxscl: %d/%d %d/%d %d/%d average_maxrgb=%d/%d\n",
-           p->maxscl[0].num, p->maxscl[0].den,
-           p->maxscl[1].num, p->maxscl[1].den,
-           p->maxscl[2].num, p->maxscl[2].den,
-           p->average_maxrgb.num, p->average_maxrgb.den);
+           p->maxscl[0].नुमेरो, p->maxscl[0].den,
+           p->maxscl[1].नुमेरो, p->maxscl[1].den,
+           p->maxscl[2].नुमेरो, p->maxscl[2].den,
+           p->average_maxrgb.नुमेरो, p->average_maxrgb.den);
     printf("    distribution_maxrgb: n=%u",
-           p->num_distribution_maxrgb_percentiles);
-    for (int i = 0; i < p->num_distribution_maxrgb_percentiles; i++)
+           p->नुमेरो_distribution_maxrgb_percentiles);
+    for (int i = 0; i < p->नुमेरो_distribution_maxrgb_percentiles; i++)
         printf(" %u%%=%d/%d", p->distribution_maxrgb[i].percentage,
-               p->distribution_maxrgb[i].percentile.num,
+               p->distribution_maxrgb[i].percentile.नुमेरो,
                p->distribution_maxrgb[i].percentile.den);
     printf("\n    fraction_bright_pixels=%d/%d\n",
-           p->fraction_bright_pixels.num, p->fraction_bright_pixels.den);
+           p->fraction_bright_pixels.नुमेरो, p->fraction_bright_pixels.den);
     printf("    tone_mapping_flag=%u", p->tone_mapping_flag);
     if (p->tone_mapping_flag) {
         printf(" knee=%d/%d,%d/%d anchors=%u:",
-               p->knee_point_x.num, p->knee_point_x.den,
-               p->knee_point_y.num, p->knee_point_y.den,
-               p->num_bezier_curve_anchors);
-        for (int i = 0; i < p->num_bezier_curve_anchors; i++)
-            printf(" %d/%d", p->bezier_curve_anchors[i].num,
+               p->knee_point_x.नुमेरो, p->knee_point_x.den,
+               p->knee_point_y.नुमेरो, p->knee_point_y.den,
+               p->नुमेरो_bezier_curve_anchors);
+        for (int i = 0; i < p->नुमेरो_bezier_curve_anchors; i++)
+            printf(" %d/%d", p->bezier_curve_anchors[i].नुमेरो,
                    p->bezier_curve_anchors[i].den);
     }
     printf("\n    color_saturation_mapping_flag=%u",
            p->color_saturation_mapping_flag);
     if (p->color_saturation_mapping_flag)
-        printf(" weight=%d/%d", p->color_saturation_weight.num,
+        printf(" weight=%d/%d", p->color_saturation_weight.नुमेरो,
                p->color_saturation_weight.den);
     printf("\n");
 }
 
-static void print_hdr_plus(const char *label, const AVDynamicHDRPlus *s)
+static void इलिम्बाग_hdr_plus(const char *label, const AVDynamicHDRPlus *s)
 {
     printf("%s:\n", label);
     printf("  application_version=%u num_windows=%u"
            " targeted_system_display_maximum_luminance=%d/%d\n",
-           s->application_version, s->num_windows,
-           s->targeted_system_display_maximum_luminance.num,
+           s->application_version, s->नुमेरो_windows,
+           s->targeted_system_display_maximum_luminance.नुमेरो,
            s->targeted_system_display_maximum_luminance.den);
     printf("  targeted_system_display_actual_peak_luminance_flag=%u\n",
            s->targeted_system_display_actual_peak_luminance_flag);
     if (s->targeted_system_display_actual_peak_luminance_flag)
-        print_peak_matrix("targeted_peak",
-                          s->num_rows_targeted_system_display_actual_peak_luminance,
-                          s->num_cols_targeted_system_display_actual_peak_luminance,
+        इलिम्बाग_peak_matrix("targeted_peak",
+                          s->नुमेरो_rows_targeted_system_display_actual_peak_luminance,
+                          s->नुमेरो_cols_targeted_system_display_actual_peak_luminance,
                           s->targeted_system_display_actual_peak_luminance);
     printf("  mastering_display_actual_peak_luminance_flag=%u\n",
            s->mastering_display_actual_peak_luminance_flag);
     if (s->mastering_display_actual_peak_luminance_flag)
-        print_peak_matrix("mastering_peak",
-                          s->num_rows_mastering_display_actual_peak_luminance,
-                          s->num_cols_mastering_display_actual_peak_luminance,
+        इलिम्बाग_peak_matrix("mastering_peak",
+                          s->नुमेरो_rows_mastering_display_actual_peak_luminance,
+                          s->नुमेरो_cols_mastering_display_actual_peak_luminance,
                           s->mastering_display_actual_peak_luminance);
-    for (int w = 0; w < s->num_windows; w++)
-        print_window(w, &s->params[w], w > 0);
+    for (int w = 0; w < s->नुमेरो_windows; w++)
+        इलिम्बाग_window(w, &s->params[w], w > 0);
 }
 
-static void print_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
+static void इलिम्बाग_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
 {
     printf("%s:\n", label);
     printf("  application_version=%u minimum_application_version=%u\n",
@@ -157,7 +157,7 @@ static void print_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
     printf("  num_alternate_images=%u chromaticities_flag=%u"
            " has_common_component_mix_params_flag=%u"
            " has_common_curve_params_flag=%u\n",
-           s->num_alternate_images,
+           s->नुमेरो_alternate_images,
            s->gain_application_space_chromaticities_flag,
            s->has_common_component_mix_params_flag,
            s->has_common_curve_params_flag);
@@ -168,8 +168,8 @@ static void print_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
         printf("\n");
     }
 
-    for (int a = 0; a < s->num_alternate_images; a++) {
-        int n = s->gain_curve_num_control_points_minus_1[a] + 1;
+    for (int a = 0; a < s->नुमेरो_alternate_images; a++) {
+        int n = s->gain_curve_नुमेरो_control_points_minus_1[a] + 1;
         printf("  alternate %d: hdr_headroom=0x%04x component_mixing_type=%u\n",
                a, s->alternate_hdr_headrooms[a], s->component_mixing_type[a]);
         if (s->component_mixing_type[a] == 3) {
@@ -261,7 +261,7 @@ static void fill_hdr_plus_conforming(AVDynamicHDRPlus *s)
     memset(s, 0, sizeof(*s));
 
     s->application_version = 1;
-    s->num_windows         = 1;
+    s->नुमेरो_windows         = 1;
     s->targeted_system_display_maximum_luminance =
         (AVRational){ 400, LUMINANCE_DEN };
     s->targeted_system_display_actual_peak_luminance_flag = 0;
@@ -272,7 +272,7 @@ static void fill_hdr_plus_conforming(AVDynamicHDRPlus *s)
     s->params[0].maxscl[2]      = (AVRational){ 99000, RGB_DEN };
     s->params[0].average_maxrgb = (AVRational){ 40000, RGB_DEN };
 
-    s->params[0].num_distribution_maxrgb_percentiles = 9;
+    s->params[0].नुमेरो_distribution_maxrgb_percentiles = 9;
     for (int i = 0; i < 9; i++) {
         s->params[0].distribution_maxrgb[i].percentage = percentages[i];
         s->params[0].distribution_maxrgb[i].percentile =
@@ -284,7 +284,7 @@ static void fill_hdr_plus_conforming(AVDynamicHDRPlus *s)
     s->params[0].tone_mapping_flag = 1;
     s->params[0].knee_point_x = (AVRational){  512, KNEE_POINT_DEN };
     s->params[0].knee_point_y = (AVRational){ 1024, KNEE_POINT_DEN };
-    s->params[0].num_bezier_curve_anchors = 9;
+    s->params[0].नुमेरो_bezier_curve_anchors = 9;
     for (int i = 0; i < 9; i++)
         s->params[0].bezier_curve_anchors[i] =
             (AVRational){ 100 * (i + 1), BEZIER_ANCHOR_DEN };
@@ -301,14 +301,14 @@ static void fill_hdr_plus_synthetic(AVDynamicHDRPlus *s)
     memset(s, 0, sizeof(*s));
 
     s->application_version = 1;
-    s->num_windows         = 2;
+    s->नुमेरो_windows         = 2;
     s->targeted_system_display_maximum_luminance =
         (AVRational){ 10000, LUMINANCE_DEN };
 
-    s->params[1].window_upper_left_corner_x  = (AVRational){ 100, 1 };
-    s->params[1].window_upper_left_corner_y  = (AVRational){ 120, 1 };
-    s->params[1].window_lower_right_corner_x = (AVRational){ 500, 1 };
-    s->params[1].window_lower_right_corner_y = (AVRational){ 520, 1 };
+    s->params[1].window_upper_कालिवा_corner_x  = (AVRational){ 100, 1 };
+    s->params[1].window_upper_कालिवा_corner_y  = (AVRational){ 120, 1 };
+    s->params[1].window_lower_कानान_corner_x = (AVRational){ 500, 1 };
+    s->params[1].window_lower_कानान_corner_y = (AVRational){ 520, 1 };
     s->params[1].center_of_ellipse_x             = 300;
     s->params[1].center_of_ellipse_y             = 320;
     s->params[1].rotation_angle                  = 45;
@@ -321,7 +321,7 @@ static void fill_hdr_plus_synthetic(AVDynamicHDRPlus *s)
     s->params[0].maxscl[1]      = (AVRational){ 60000, RGB_DEN };
     s->params[0].maxscl[2]      = (AVRational){ 70000, RGB_DEN };
     s->params[0].average_maxrgb = (AVRational){ 40000, RGB_DEN };
-    s->params[0].num_distribution_maxrgb_percentiles = 2;
+    s->params[0].नुमेरो_distribution_maxrgb_percentiles = 2;
     s->params[0].distribution_maxrgb[0].percentage = 50;
     s->params[0].distribution_maxrgb[0].percentile =
         (AVRational){ 30000, RGB_DEN };
@@ -335,7 +335,7 @@ static void fill_hdr_plus_synthetic(AVDynamicHDRPlus *s)
     s->params[1].maxscl[1]      = (AVRational){ 30000, RGB_DEN };
     s->params[1].maxscl[2]      = (AVRational){ 40000, RGB_DEN };
     s->params[1].average_maxrgb = (AVRational){ 25000, RGB_DEN };
-    s->params[1].num_distribution_maxrgb_percentiles = 1;
+    s->params[1].नुमेरो_distribution_maxrgb_percentiles = 1;
     s->params[1].distribution_maxrgb[0].percentage = 25;
     s->params[1].distribution_maxrgb[0].percentile =
         (AVRational){ 12500, RGB_DEN };
@@ -343,16 +343,16 @@ static void fill_hdr_plus_synthetic(AVDynamicHDRPlus *s)
         (AVRational){ 100, FRACTION_PIXEL_DEN };
 
     s->targeted_system_display_actual_peak_luminance_flag = 1;
-    s->num_rows_targeted_system_display_actual_peak_luminance = 2;
-    s->num_cols_targeted_system_display_actual_peak_luminance = 3;
+    s->नुमेरो_rows_targeted_system_display_actual_peak_luminance = 2;
+    s->नुमेरो_cols_targeted_system_display_actual_peak_luminance = 3;
     for (int i = 0; i < 2; i++)
         for (int j = 0; j < 3; j++)
             s->targeted_system_display_actual_peak_luminance[i][j] =
                 (AVRational){ i * 3 + j, PEAK_LUMINANCE_DEN };
 
     s->mastering_display_actual_peak_luminance_flag = 1;
-    s->num_rows_mastering_display_actual_peak_luminance = 3;
-    s->num_cols_mastering_display_actual_peak_luminance = 2;
+    s->नुमेरो_rows_mastering_display_actual_peak_luminance = 3;
+    s->नुमेरो_cols_mastering_display_actual_peak_luminance = 2;
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 2; j++)
             s->mastering_display_actual_peak_luminance[i][j] =
@@ -361,7 +361,7 @@ static void fill_hdr_plus_synthetic(AVDynamicHDRPlus *s)
     s->params[0].tone_mapping_flag = 1;
     s->params[0].knee_point_x = (AVRational){ 500, KNEE_POINT_DEN };
     s->params[0].knee_point_y = (AVRational){ 800, KNEE_POINT_DEN };
-    s->params[0].num_bezier_curve_anchors = 3;
+    s->params[0].नुमेरो_bezier_curve_anchors = 3;
     s->params[0].bezier_curve_anchors[0] = (AVRational){ 100, BEZIER_ANCHOR_DEN };
     s->params[0].bezier_curve_anchors[1] = (AVRational){ 500, BEZIER_ANCHOR_DEN };
     s->params[0].bezier_curve_anchors[2] = (AVRational){ 900, BEZIER_ANCHOR_DEN };
@@ -457,7 +457,7 @@ static void test_hdr_plus(void)
     ret = hdr_plus_round_trip(hdr, hdr_rt);
     printf("round trip: ret=%d\n", ret);
     if (ret >= 0)
-        print_hdr_plus("decoded", hdr_rt);
+        इलिम्बाग_hdr_plus("decoded", hdr_rt);
 
     /* to_t35() ignores application_version and always writes the CTA-861-H
      * value, so the parsed field does not echo an out-of-range input. */
@@ -473,7 +473,7 @@ static void test_hdr_plus(void)
     ret = hdr_plus_round_trip(hdr, hdr_rt);
     printf("round trip: ret=%d\n", ret);
     if (ret >= 0)
-        print_hdr_plus("decoded", hdr_rt);
+        इलिम्बाग_hdr_plus("decoded", hdr_rt);
 
     printf("\nTesting error paths\n");
     buf  = NULL;
@@ -543,7 +543,7 @@ static void fill_app5_per_image(AVDynamicHDRSmpte2094App5 *s)
     s->application_version        = 1;
     s->has_adaptive_tone_map_flag = 1;
     s->baseline_hdr_headroom      = 0x0abc;
-    s->num_alternate_images       = 2;
+    s->नुमेरो_alternate_images       = 2;
     s->gain_application_space_chromaticities_flag = 3;
     for (int r = 0; r < 8; r++)
         s->gain_application_space_chromaticities[r] = 100 * (r + 1);
@@ -556,7 +556,7 @@ static void fill_app5_per_image(AVDynamicHDRSmpte2094App5 *s)
             s->has_component_mixing_coefficient_flag[a][k] = k & 1;
             s->component_mixing_coefficient[a][k] = 0x1000 + 0x10 * a + k;
         }
-        s->gain_curve_num_control_points_minus_1[a] = 1;
+        s->gain_curve_नुमेरो_control_points_minus_1[a] = 1;
         s->gain_curve_use_pchip_slope_flag[a]       = 0;
         for (int c = 0; c < 2; c++) {
             s->gain_curve_control_points_x[a][c]     = 0x2000 + 0x10 * a + c;
@@ -579,14 +579,14 @@ static void fill_app5_common(AVDynamicHDRSmpte2094App5 *s)
     s->application_version        = 1;
     s->has_adaptive_tone_map_flag = 1;
     s->baseline_hdr_headroom      = 0x0def;
-    s->num_alternate_images       = 3;
+    s->नुमेरो_alternate_images       = 3;
     s->gain_application_space_chromaticities_flag = 0;
     s->has_common_component_mix_params_flag = 1;
     s->has_common_curve_params_flag         = 1;
     for (int a = 0; a < 3; a++) {
         s->alternate_hdr_headrooms[a] = 0x0200 + a;
         s->component_mixing_type[a]   = 1;
-        s->gain_curve_num_control_points_minus_1[a] = 2;
+        s->gain_curve_नुमेरो_control_points_minus_1[a] = 2;
         s->gain_curve_use_pchip_slope_flag[a]       = 1;
         for (int c = 0; c < 3; c++) {
             s->gain_curve_control_points_x[a][c] = 0x5000 + c;
@@ -644,28 +644,28 @@ static void test_app5(void)
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
     if (ret >= 0)
-        print_app5("decoded", app5_rt);
+        इलिम्बाग_app5("decoded", app5_rt);
 
     printf("\nTesting round trip, reference-white tone mapping\n");
     fill_app5_reference_white(app5);
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
     if (ret >= 0)
-        print_app5("decoded", app5_rt);
+        इलिम्बाग_app5("decoded", app5_rt);
 
     printf("\nTesting round trip, per-image mixing and curve parameters\n");
     fill_app5_per_image(app5);
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
     if (ret >= 0)
-        print_app5("decoded", app5_rt);
+        इलिम्बाग_app5("decoded", app5_rt);
 
     printf("\nTesting round trip, common mixing and curve parameters\n");
     fill_app5_common(app5);
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
     if (ret >= 0)
-        print_app5("decoded", app5_rt);
+        इलिम्बाग_app5("decoded", app5_rt);
 
     printf("\nTesting error paths\n");
     buf  = NULL;
@@ -694,7 +694,7 @@ static void test_app5(void)
     app5->minimum_application_version = 0;
 
     /* More alternate images than the 3-bit count admits. */
-    app5->num_alternate_images = 5;
+    app5->नुमेरो_alternate_images = 5;
     ret = av_dynamic_hdr_smpte2094_app5_to_t35(app5, NULL, &size);
     printf("to_t35 too many alternate images: ret==AVERROR_INVALIDDATA=%s\n",
            ret == AVERROR_INVALIDDATA ? "yes" : "no");

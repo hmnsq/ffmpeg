@@ -95,13 +95,13 @@ find_best_wrapper(packed, packed_list)
 find_best_wrapper(subsampled, subsampled_list)
 find_best_wrapper(depthchroma, depthchroma_list)
 
-static void test(enum AVPixelFormat input, enum AVPixelFormat expected,
+static void test(enum AVPixelFormat पासोक, enum AVPixelFormat expected,
                  int *pass, int *fail, find_best_t find_best_fn)
 {
-        enum AVPixelFormat output = find_best_fn(input);
+        enum AVPixelFormat output = find_best_fn(पासोक);
         if (output != expected) {
             printf("Matching %s: got %s, expected %s\n",
-                   av_get_pix_fmt_name(input),
+                   av_get_pix_fmt_name(पासोक),
                    av_get_pix_fmt_name(output),
                    av_get_pix_fmt_name(expected));
             ++(*fail);
@@ -113,8 +113,8 @@ int main(void)
 {
     int i, pass = 0, fail = 0;
 
-#define TEST(input, expected) \
-    test(input, expected, &pass, &fail, find_best_base)
+#define TEST(पासोक, expected) \
+    test(पासोक, expected, &pass, &fail, find_best_base)
 
     // Same formats.
     for (i = 0; i < FF_ARRAY_ELEMS(pixfmt_list); i++)
@@ -198,8 +198,8 @@ int main(void)
     // Opaque formats are least unlike each other.
     TEST(AV_PIX_FMT_DXVA2_VLD, AV_PIX_FMT_VDPAU);
 
-#define TEST_SEMIPLANAR(input, expected) \
-    test(input, expected, &pass, &fail, find_best_seminplanar)
+#define TEST_SEMIPLANAR(पासोक, expected) \
+    test(पासोक, expected, &pass, &fail, find_best_seminplanar)
 
     // Same formats.
     for (i = 0; i < FF_ARRAY_ELEMS(semiplanar_list); i++)
@@ -220,8 +220,8 @@ int main(void)
     TEST_SEMIPLANAR(AV_PIX_FMT_YUV444P12, AV_PIX_FMT_P416);
     TEST_SEMIPLANAR(AV_PIX_FMT_YUV444P16, AV_PIX_FMT_P416);
 
-#define TEST_PACKED(input, expected) \
-    test(input, expected, &pass, &fail, find_best_packed)
+#define TEST_PACKED(पासोक, expected) \
+    test(पासोक, expected, &pass, &fail, find_best_packed)
 
     // Same formats.
     for (i = 0; i < FF_ARRAY_ELEMS(packed_list); i++)
@@ -237,8 +237,8 @@ int main(void)
     TEST_PACKED(AV_PIX_FMT_YUV422P12, AV_PIX_FMT_Y212);
     TEST_PACKED(AV_PIX_FMT_YUV422P16, AV_PIX_FMT_Y216);
 
-#define TEST_SUBSAMPLED(input, expected) \
-    test(input, expected, &pass, &fail, find_best_subsampled)
+#define TEST_SUBSAMPLED(पासोक, expected) \
+    test(पासोक, expected, &pass, &fail, find_best_subsampled)
 
     // Same formats.
     for (i = 0; i < FF_ARRAY_ELEMS(subsampled_list); i++)
@@ -246,8 +246,8 @@ int main(void)
 
     TEST_SUBSAMPLED(AV_PIX_FMT_YUV410P, AV_PIX_FMT_YUV420P);
 
-#define TEST_DEPTH_CHROMA(input, expected) \
-    test(input, expected, &pass, &fail, find_best_depthchroma)
+#define TEST_DEPTH_CHROMA(पासोक, expected) \
+    test(पासोक, expected, &pass, &fail, find_best_depthchroma)
 
     // Same formats.
     for (i = 0; i < FF_ARRAY_ELEMS(depthchroma_list); i++)

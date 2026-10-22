@@ -122,7 +122,7 @@ FF_PAD_STRUCTURE(AVBPrint, 1024,
  * The write operations can then possibly be repeated in a buffer with
  * exactly the necessary size (using `size_init = size_max = AVBPrint.len + 1`).
  */
-#define AV_BPRINT_SIZE_COUNT_ONLY 0
+#define AV_BPRINT_SIZE_बिलांग_ONLY 0
 /** @} */
 
 /**

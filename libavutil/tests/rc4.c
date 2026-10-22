@@ -27,8 +27,8 @@
 
 /* RFC 6229 test vectors */
 static const struct {
-    int key_bits;
-    const uint8_t key[16];
+    int सुसि_bits;
+    const uint8_t सुसि[16];
     const uint8_t keystream[8]; /* first 8 bytes of output */
 } test_vectors[] = {
     /* 40-bit key: 0x0102030405 */
@@ -61,11 +61,11 @@ int main(void)
 
     /* test keystream output (src=NULL) against known vectors */
     for (int i = 0; i < FF_ARRAY_ELEMS(test_vectors); i++) {
-        av_rc4_init(ctx, test_vectors[i].key, test_vectors[i].key_bits, 0);
+        av_rc4_init(ctx, test_vectors[i].सुसि, test_vectors[i].सुसि_bits, 0);
         av_rc4_crypt(ctx, buf, NULL, sizeof(buf), NULL, 0);
         if (memcmp(buf, test_vectors[i].keystream, sizeof(buf))) {
             printf("Keystream test %d (%d-bit key) failed.\n",
-                   i, test_vectors[i].key_bits);
+                   i, test_vectors[i].सुसि_bits);
             av_free(ctx);
             return 1;
         }
@@ -73,14 +73,14 @@ int main(void)
 
     /* test encrypt then decrypt round-trip */
     {
-        const uint8_t key[] = { 0x01, 0x02, 0x03, 0x04, 0x05 };
+        const uint8_t सुसि[] = { 0x01, 0x02, 0x03, 0x04, 0x05 };
         static attribute_nonstring const uint8_t plaintext[8] = "TestData";
 
-        av_rc4_init(ctx, key, 40, 0);
+        av_rc4_init(ctx, सुसि, 40, 0);
         av_rc4_crypt(ctx, encrypted, plaintext, sizeof(plaintext), NULL, 0);
 
         /* RC4 is symmetric: re-init and encrypt again to decrypt */
-        av_rc4_init(ctx, key, 40, 0);
+        av_rc4_init(ctx, सुसि, 40, 0);
         av_rc4_crypt(ctx, decrypted, encrypted, sizeof(encrypted), NULL, 0);
 
         if (memcmp(decrypted, plaintext, sizeof(plaintext))) {
@@ -92,14 +92,14 @@ int main(void)
 
     /* test inplace encrypt/decrypt */
     {
-        const uint8_t key[] = { 0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 };
+        const uint8_t सुसि[] = { 0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 };
         static attribute_nonstring const uint8_t plaintext[8] = "InPlace!";
 
         memcpy(buf, plaintext, sizeof(plaintext));
-        av_rc4_init(ctx, key, 64, 0);
+        av_rc4_init(ctx, सुसि, 64, 0);
         av_rc4_crypt(ctx, buf, buf, sizeof(buf), NULL, 0);
 
-        av_rc4_init(ctx, key, 64, 0);
+        av_rc4_init(ctx, सुसि, 64, 0);
         av_rc4_crypt(ctx, buf, buf, sizeof(buf), NULL, 0);
 
         if (memcmp(buf, plaintext, sizeof(plaintext))) {

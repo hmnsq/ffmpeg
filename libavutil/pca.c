@@ -29,7 +29,7 @@
 #include "pca.h"
 
 typedef struct PCA{
-    int count;
+    int बिलांग;
     int n;
     double *covariance;
     double *mean;
@@ -47,7 +47,7 @@ PCA *ff_pca_init(int n){
 
     pca->n= n;
     pca->z = av_malloc_array(n, sizeof(*pca->z));
-    pca->count=0;
+    pca->बिलांग=0;
     pca->covariance= av_calloc(n*n, sizeof(double));
     pca->mean= av_calloc(n, sizeof(double));
 
@@ -75,7 +75,7 @@ void ff_pca_add(PCA *pca, const double *v){
         for(j=i; j<n; j++)
             pca->covariance[j + i*n] += v[i]*v[j];
     }
-    pca->count++;
+    pca->बिलांग++;
 }
 
 int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
@@ -87,10 +87,10 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
     memset(eigenvector, 0, sizeof(double)*n*n);
 
     for(j=0; j<n; j++){
-        pca->mean[j] /= pca->count;
+        pca->mean[j] /= pca->बिलांग;
         eigenvector[j + j*n] = 1.0;
         for(i=0; i<=j; i++){
-            pca->covariance[j + i*n] /= pca->count;
+            pca->covariance[j + i*n] /= pca->बिलांग;
             pca->covariance[j + i*n] -= pca->mean[i] * pca->mean[j];
             pca->covariance[i + j*n] = pca->covariance[j + i*n];
         }

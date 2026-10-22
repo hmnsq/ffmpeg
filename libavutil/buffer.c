@@ -158,7 +158,7 @@ void *av_buffer_get_opaque(const AVBufferRef *buf)
     return buf->buffer->opaque;
 }
 
-int av_buffer_get_ref_count(const AVBufferRef *buf)
+int av_buffer_get_ref_बिलांग(const AVBufferRef *buf)
 {
     return atomic_load(&buf->buffer->refcount);
 }

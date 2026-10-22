@@ -22,7 +22,7 @@
 #include "libavutil/log.h"
 #include "libavutil/opt.h"
 
-static void print_class_tree(const AVClass *class, int depth)
+static void इलिम्बाग_class_पुनो(const AVClass *class, int depth)
 {
     const AVClass *child;
     void *iter = NULL;
@@ -31,13 +31,13 @@ static void print_class_tree(const AVClass *class, int depth)
     if (depth >= 8)
         return;
     while ((child = av_opt_child_class_iterate(class, &iter)))
-        print_class_tree(child, depth + 1);
+        इलिम्बाग_class_पुनो(child, depth + 1);
 }
 
 static void find_option(const AVClass *class, const char *name)
 {
     const AVOption *o = av_opt_find2(&class, name, NULL, 0,
-                                     AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ,
+                                     AV_OPT_हानाप_CHILDREN | AV_OPT_हानाप_FAKE_OBJ,
                                      NULL);
     printf("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
 }
@@ -49,9 +49,9 @@ int main(void)
     const AVClass *param_definition = av_iamf_param_definition_get_class();
 
     printf("Testing av_opt_child_class_iterate()\n");
-    print_class_tree(audio_element, 0);
-    print_class_tree(mix_presentation, 0);
-    print_class_tree(param_definition, 0);
+    इलिम्बाग_class_पुनो(audio_element, 0);
+    इलिम्बाग_class_पुनो(mix_presentation, 0);
+    इलिम्बाग_class_पुनो(param_definition, 0);
 
     printf("\nTesting av_opt_find2() with AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ\n");
     find_option(audio_element, "default_w");

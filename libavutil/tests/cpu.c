@@ -118,7 +118,7 @@ static const struct {
     { 0 }
 };
 
-static void print_cpu_flags(int cpu_flags, const char *type)
+static void इलिम्बाग_cpu_flags(int cpu_flags, const char *type)
 {
     int i;
 
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
 {
     int cpu_flags_raw = av_get_cpu_flags();
     int cpu_flags_eff;
-    int cpu_count = av_cpu_count();
+    int cpu_बिलांग = av_cpu_बिलांग();
     const char *threads = "auto";
     int i;
 
@@ -176,9 +176,9 @@ int main(int argc, char **argv)
     if (cpu_flags_eff < 0)
         return 3;
 
-    print_cpu_flags(cpu_flags_raw, "raw");
-    print_cpu_flags(cpu_flags_eff, "effective");
-    printf("threads = %s (cpu_count = %d)\n", threads, cpu_count);
+    इलिम्बाग_cpu_flags(cpu_flags_raw, "raw");
+    इलिम्बाग_cpu_flags(cpu_flags_eff, "effective");
+    printf("threads = %s (cpu_count = %d)\n", threads, cpu_बिलांग);
 #if ARCH_AARCH64 && HAVE_SVE
     if (cpu_flags_raw & AV_CPU_FLAG_SVE)
         printf("sve_vector_length = %d\n", 8 * ff_aarch64_sve_length());

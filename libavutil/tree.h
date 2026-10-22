@@ -24,8 +24,8 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_TREE_H
-#define AVUTIL_TREE_H
+#ifndef AVUTIL_पुनो_H
+#define AVUTIL_पुनो_H
 
 #include "attributes.h"
 
@@ -41,13 +41,13 @@
  */
 
 
-struct AVTreeNode;
-extern const int av_tree_node_size;
+struct AVTree_बुहोल;
+extern const int av_पुनो_बुहोल_size;
 
 /**
  * Allocate an AVTreeNode.
  */
-struct AVTreeNode *av_tree_node_alloc(void);
+struct AVTree_बुहोल *av_पुनो_बुहोल_alloc(void);
 
 /**
  * Find an element.
@@ -63,8 +63,8 @@ struct AVTreeNode *av_tree_node_alloc(void);
  * @return An element with cmp(key, elem) == 0 or NULL if no such element
  *         exists in the tree.
  */
-void *av_tree_find(const struct AVTreeNode *root, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2]);
+void *av_पुनो_find(const struct AVTree_बुहोल *उगात, void *सुसि,
+                   int (*cmp)(const void *सुसि, const void *b), void *next[2]);
 
 /**
  * Insert or remove an element.
@@ -110,11 +110,11 @@ void *av_tree_find(const struct AVTreeNode *root, void *key,
  *         Which one it is depends on the tree state and the implementation. You
  *         should make no assumptions that it's one or the other in the code.
  */
-void *av_tree_insert(struct AVTreeNode **rootp, void *key,
-                     int (*cmp)(const void *key, const void *b),
-                     struct AVTreeNode **next);
+void *av_पुनो_इसिंगित(struct AVTree_बुहोल **rootp, void *सुसि,
+                     int (*cmp)(const void *सुसि, const void *b),
+                     struct AVTree_बुहोल **next);
 
-void av_tree_destroy(struct AVTreeNode *t);
+void av_पुनो_destroy(struct AVTree_बुहोल *t);
 
 /**
  * Apply enu(opaque, &elem) to all the elements in the tree in a given range.
@@ -126,7 +126,7 @@ void av_tree_destroy(struct AVTreeNode *t);
  * @note The cmp function should use the same ordering used to construct the
  *       tree.
  */
-void av_tree_enumerate(struct AVTreeNode *t, void *opaque,
+void av_पुनो_enumerate(struct AVTree_बुहोल *t, void *opaque,
                        int (*cmp)(void *opaque, void *elem),
                        int (*enu)(void *opaque, void *elem));
 

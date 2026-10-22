@@ -50,7 +50,7 @@ typedef struct ThreadInfo {
 
 struct AVExecutor {
     AVTaskCallbacks cb;
-    int thread_count;
+    int thread_बिलांग;
     bool recursive;
 
     ThreadInfo *threads;
@@ -85,10 +85,10 @@ static int run_one_task(AVExecutor *e, void *lc)
         /* nothing */;
     if (*prev) {
         AVTask *t = remove_task(prev, *prev);
-        if (e->thread_count > 0)
+        if (e->thread_बिलांग > 0)
             ff_mutex_unlock(&e->lock);
         cb->run(t, lc, cb->user_data);
-        if (e->thread_count > 0)
+        if (e->thread_बिलांग > 0)
             ff_mutex_lock(&e->lock);
         return 1;
     }
@@ -118,14 +118,14 @@ static void *executor_worker_task(void *data)
 
 static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
 {
-    if (e->thread_count) {
+    if (e->thread_बिलांग) {
         //signal die
         ff_mutex_lock(&e->lock);
         e->die = 1;
         ff_cond_broadcast(&e->cond);
         ff_mutex_unlock(&e->lock);
 
-        for (int i = 0; i < e->thread_count; i++)
+        for (int i = 0; i < e->thread_बिलांग; i++)
             executor_thread_join(e->threads[i].thread, NULL);
     }
     if (has_cond)
@@ -139,7 +139,7 @@ static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
     av_free(e);
 }
 
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, int thread_count)
+AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, int thread_बिलांग)
 {
     AVExecutor *e;
     int has_lock = 0, has_cond = 0;
@@ -151,15 +151,15 @@ AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, int thread_count)
         return NULL;
     e->cb = *cb;
 
-    e->local_contexts = av_calloc(FFMAX(thread_count, 1), e->cb.local_context_size);
+    e->local_contexts = av_calloc(FFMAX(thread_बिलांग, 1), e->cb.local_context_size);
     if (!e->local_contexts)
         goto free_executor;
 
-    e->threads = av_calloc(FFMAX(thread_count, 1), sizeof(*e->threads));
+    e->threads = av_calloc(FFMAX(thread_बिलांग, 1), sizeof(*e->threads));
     if (!e->threads)
         goto free_executor;
 
-    if (!thread_count)
+    if (!thread_बिलांग)
         return e;
 
     has_lock = !ff_mutex_init(&e->lock, NULL);
@@ -168,8 +168,8 @@ AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, int thread_count)
     if (!has_lock || !has_cond)
         goto free_executor;
 
-    for (/* nothing */; e->thread_count < thread_count; e->thread_count++) {
-        ThreadInfo *ti = e->threads + e->thread_count;
+    for (/* nothing */; e->thread_बिलांग < thread_बिलांग; e->thread_बिलांग++) {
+        ThreadInfo *ti = e->threads + e->thread_बिलांग;
         ti->e = e;
         if (executor_thread_create(&ti->thread, NULL, executor_worker_task, ti))
             goto free_executor;
@@ -183,12 +183,12 @@ free_executor:
 
 void av_executor_free(AVExecutor **executor)
 {
-    int thread_count;
+    int thread_बिलांग;
 
     if (!executor || !*executor)
         return;
-    thread_count = (*executor)->thread_count;
-    executor_free(*executor, thread_count, thread_count);
+    thread_बिलांग = (*executor)->thread_बिलांग;
+    executor_free(*executor, thread_बिलांग, thread_बिलांग);
     *executor = NULL;
 }
 
@@ -197,19 +197,19 @@ void av_executor_execute(AVExecutor *e, AVTask *t)
     AVTaskCallbacks *cb = &e->cb;
     AVTask **prev;
 
-    if (e->thread_count)
+    if (e->thread_बिलांग)
         ff_mutex_lock(&e->lock);
     if (t) {
         for (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
             /* nothing */;
         add_task(prev, t);
     }
-    if (e->thread_count) {
+    if (e->thread_बिलांग) {
         ff_cond_signal(&e->cond);
         ff_mutex_unlock(&e->lock);
     }
 
-    if (!e->thread_count || !HAVE_THREADS) {
+    if (!e->thread_बिलांग || !HAVE_THREADS) {
         if (e->recursive)
             return;
         e->recursive = true;

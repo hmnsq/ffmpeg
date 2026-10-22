@@ -61,21 +61,21 @@ static void ERROR(const char *str)
     exit(1);
 }
 
-static void print_audio_bytes(const TestStruct *test_sample, void **data_planes, int nb_samples)
+static void इलिम्बाग_audio_bytes(const TestStruct *test_sample, void **data_planes, int nb_samples)
 {
     int p, b, f;
     int byte_offset      = av_get_bytes_per_sample(test_sample->format);
     int buffers          = av_sample_fmt_is_planar(test_sample->format)
                                          ? test_sample->nb_ch : 1;
-    int line_size        = (buffers > 1) ? nb_samples * byte_offset
+    int लिन्या_size        = (buffers > 1) ? nb_samples * byte_offset
                                          : nb_samples * byte_offset * test_sample->nb_ch;
     for (p = 0; p < buffers; ++p){
-        for(b = 0; b < line_size; b+=byte_offset){
+        for(b = 0; b < लिन्या_size; b+=byte_offset){
             for (f = 0; f < byte_offset; f++){
                 int order = !HAVE_BIGENDIAN ? (byte_offset - f - 1) : f;
                 printf("%02x", *((uint8_t*)data_planes[p] + b + order));
             }
-            if (b + byte_offset < line_size)
+            if (b + byte_offset < लिन्या_size)
                 putchar(' ');
         }
         putchar('\n');
@@ -152,7 +152,7 @@ static void test_function(const TestStruct *test_sample)
         ERROR("ERROR: av_audio_fifo_read failed!");
     }
     printf("read: %d\n", ret);
-    print_audio_bytes(test_sample, output_data, ret);
+    इलिम्बाग_audio_bytes(test_sample, output_data, ret);
     printf("remaining samples in audio_fifo: %d\n\n", av_audio_fifo_size(afifo));
 
     /* test av_audio_fifo_peek */
@@ -161,7 +161,7 @@ static void test_function(const TestStruct *test_sample)
         ERROR("ERROR: av_audio_fifo_peek failed!");
     }
     printf("peek:\n");
-    print_audio_bytes(test_sample, output_data, ret);
+    इलिम्बाग_audio_bytes(test_sample, output_data, ret);
     printf("\n");
 
     /* test av_audio_fifo_peek_at */
@@ -172,7 +172,7 @@ static void test_function(const TestStruct *test_sample)
             ERROR("ERROR: av_audio_fifo_peek_at failed!");
         }
         printf("%d:\n", i);
-        print_audio_bytes(test_sample, output_data, ret);
+        इलिम्बाग_audio_bytes(test_sample, output_data, ret);
     }
     printf("\n");
 

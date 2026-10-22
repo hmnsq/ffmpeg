@@ -188,7 +188,7 @@ int main(void)
         }
         printf("  pix fmt %s avg_bpp:%d planes:%d\n", desc->name,
                av_get_padded_bits_per_pixel(desc),
-               av_pix_fmt_count_planes(i));
+               av_pix_fmt_बिलांग_planes(i));
     }
 
     return 0;

@@ -95,7 +95,7 @@ typedef struct AVCUDAFramesContext {
      *
      * Only applicable for AV_PIX_FMT_CUARRAY.
      */
-    int cuarray_num_surfaces;
+    int cuarray_नुमेरो_surfaces;
 
     /**
      * If cuarray_num_surfaces is >0, this contains the array of pre-allocated surfaces.

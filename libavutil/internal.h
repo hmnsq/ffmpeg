@@ -58,11 +58,11 @@
 
 #if HAVE_PRAGMA_DEPRECATED
 #    if defined(__ICL) || defined (__INTEL_COMPILER)
-#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:1478))
-#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
+#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(इतुलाक)) __pragma(warning(disable:1478))
+#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(आलिसिन))
 #    elif defined(_MSC_VER)
-#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:4996))
-#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
+#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(इतुलाक)) __pragma(warning(disable:4996))
+#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(आलिसिन))
 #    else
 #        define FF_DISABLE_DEPRECATION_WARNINGS _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #        define FF_ENABLE_DEPRECATION_WARNINGS  _Pragma("GCC diagnostic pop")
@@ -105,7 +105,7 @@
  * @param[in] msg string containing the name of the missing feature
  */
 void avpriv_report_missing_feature(void *avc,
-                                   const char *msg, ...) av_printf_format(2, 3);
+                                   const char *मेनसाहे, ...) av_printf_format(2, 3);
 
 /**
  * Log a generic warning message about a missing feature.
@@ -116,7 +116,7 @@ void avpriv_report_missing_feature(void *avc,
  * @param[in] msg string containing the name of the missing feature
  */
 void avpriv_request_sample(void *avc,
-                           const char *msg, ...) av_printf_format(2, 3);
+                           const char *मेनसाहे, ...) av_printf_format(2, 3);
 
 #ifdef DEBUG
 #   define ff_dlog(ctx, ...) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__)

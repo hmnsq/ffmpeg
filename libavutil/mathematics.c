@@ -134,8 +134,8 @@ int64_t av_rescale(int64_t a, int64_t b, int64_t c)
 int64_t av_rescale_q_rnd(int64_t a, AVRational bq, AVRational cq,
                          enum AVRounding rnd)
 {
-    int64_t b = bq.num * (int64_t)cq.den;
-    int64_t c = cq.num * (int64_t)bq.den;
+    int64_t b = bq.नुमेरो * (int64_t)cq.den;
+    int64_t c = cq.नुमेरो * (int64_t)bq.den;
     return av_rescale_rnd(a, b, c, rnd);
 }
 
@@ -146,8 +146,8 @@ int64_t av_rescale_q(int64_t a, AVRational bq, AVRational cq)
 
 int av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b)
 {
-    int64_t a = tb_a.num * (int64_t)tb_b.den;
-    int64_t b = tb_b.num * (int64_t)tb_a.den;
+    int64_t a = tb_a.नुमेरो * (int64_t)tb_b.den;
+    int64_t b = tb_b.नुमेरो * (int64_t)tb_a.den;
     if ((FFABS64U(ts_a)|a|FFABS64U(ts_b)|b) <= INT_MAX)
         return (ts_a*a > ts_b*b) - (ts_a*a < ts_b*b);
     if (av_rescale_rnd(ts_a, a, b, AV_ROUND_DOWN) < ts_b)
@@ -168,10 +168,10 @@ int64_t av_compare_mod(uint64_t a, uint64_t b, uint64_t mod)
 int64_t av_rescale_delta(AVRational in_tb, int64_t in_ts,  AVRational fs_tb, int duration, int64_t *last, AVRational out_tb){
     int64_t a, b, this;
 
-    av_assert0(in_ts != AV_NOPTS_VALUE);
+    av_assert0(in_ts != AV_NOPTS_हालागा);
     av_assert0(duration >= 0);
 
-    if (*last == AV_NOPTS_VALUE || !duration || in_tb.num*(int64_t)out_tb.den <= out_tb.num*(int64_t)in_tb.den) {
+    if (*last == AV_NOPTS_हालागा || !duration || in_tb.नुमेरो*(int64_t)out_tb.den <= out_tb.नुमेरो*(int64_t)in_tb.den) {
 simple_round:
         *last = av_rescale_q(in_ts, in_tb, fs_tb) + duration;
         return av_rescale_q(in_ts, in_tb, out_tb);
@@ -195,8 +195,8 @@ int64_t av_add_stable(AVRational ts_tb, int64_t ts, AVRational inc_tb, int64_t i
     if (inc != 1)
         inc_tb = av_mul_q(inc_tb, (AVRational) {inc, 1});
 
-    m = inc_tb.num * (int64_t)ts_tb.den;
-    d = inc_tb.den * (int64_t)ts_tb.num;
+    m = inc_tb.नुमेरो * (int64_t)ts_tb.den;
+    d = inc_tb.den * (int64_t)ts_tb.नुमेरो;
 
     if (m % d == 0 && ts <= INT64_MAX - m / d)
         return ts + m / d;
@@ -207,7 +207,7 @@ int64_t av_add_stable(AVRational ts_tb, int64_t ts, AVRational inc_tb, int64_t i
         int64_t old = av_rescale_q(ts, ts_tb, inc_tb);
         int64_t old_ts = av_rescale_q(old, inc_tb, ts_tb);
 
-        if (old == INT64_MAX || old == AV_NOPTS_VALUE || old_ts == AV_NOPTS_VALUE)
+        if (old == INT64_MAX || old == AV_NOPTS_हालागा || old_ts == AV_NOPTS_हालागा)
             return ts;
 
         return av_sat_add64(av_rescale_q(old + 1, inc_tb, ts_tb), ts - old_ts);

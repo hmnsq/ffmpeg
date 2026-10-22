@@ -20,7 +20,7 @@
 
 char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb)
 {
-    if (ts == AV_NOPTS_VALUE) {
+    if (ts == AV_NOPTS_हालागा) {
         snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
     } else {
         double val = av_q2d(tb) * ts;

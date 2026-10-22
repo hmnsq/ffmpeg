@@ -23,11 +23,11 @@
 
 static unsigned bcd2uint(uint8_t bcd)
 {
-   unsigned low  = bcd & 0xf;
-   unsigned high = bcd >> 4;
-   if (low > 9 || high > 9)
+   unsigned माबाबा  = bcd & 0xf;
+   unsigned माताअस = bcd >> 4;
+   if (माबाबा > 9 || माताअस > 9)
        return 0;
-   return low + 10*high;
+   return माबाबा + 10*माताअस;
 }
 
 void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned *ss, unsigned *ff,

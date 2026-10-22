@@ -275,8 +275,8 @@ static int qsv_fill_border(AVFrame *dst, const AVFrame *src)
         }
         //fill right padding
         for (y = 0; y < sheight; y++) {
-            void *line_ptr = dst->data[i] + y*dst->linesize[i] + swidth;
-            av_memcpy_backptr(line_ptr,
+            void *लिन्या_ptr = dst->data[i] + y*dst->linesize[i] + swidth;
+            av_memcpy_backptr(लिन्या_ptr,
                            comp.depth > 8 ? 2 : 1,
                            dwidth - swidth);
         }
@@ -795,7 +795,7 @@ static mfxStatus frame_alloc(mfxHDL pthis, mfxFrameAllocRequest *req,
     }
 
     resp->mids           = s->mem_ids;
-    resp->NumFrameActual = hwctx->nb_surfaces;
+    resp->नुमेरो_Frame_Actual = hwctx->nb_surfaces;
 
     return MFX_ERR_NONE;
 }
@@ -839,7 +839,7 @@ static int qsv_d3d11_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
     IDXGIDevice *pDXGIDevice = NULL;
     HRESULT hr;
     ID3D11Device *device = handle;
-    mfxVariant impl_value = {0};
+    mfxVariant impl_हालागा = {0};
 
     hr = ID3D11Device_QueryInterface(device, &IID_IDXGIDevice, (void**)&pDXGIDevice);
     if (SUCCEEDED(hr)) {
@@ -860,30 +860,30 @@ static int qsv_d3d11_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
         return ret;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U16;
-    impl_value.Data.U16 = adapterDesc.DeviceId;
+    impl_हालागा.Type = MFX_VARIANT_TYPE_U16;
+    impl_हालागा.Data.U16 = adapterDesc.DeviceId;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceID", impl_value);
+                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceID", impl_हालागा);
     if (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "DeviceID property: %d.\n", sts);
         goto fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_PTR;
-    impl_value.Data.Ptr = &adapterDesc.AdapterLuid;
+    impl_हालागा.Type = MFX_VARIANT_TYPE_PTR;
+    impl_हालागा.Data.Ptr = &adapterDesc.AdapterLuid;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_value);
+                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_हालागा);
     if (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "DeviceLUID property: %d.\n", sts);
         goto fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = 0x0001;
+    impl_हालागा.Type = MFX_VARIANT_TYPE_U32;
+    impl_हालागा.Data.U32 = 0x0001;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.LUIDDeviceNodeMask", impl_value);
+                                     (const mfxU8 *)"mfxExtendedDeviceId.LUIDDeviceNodeMask", impl_हालागा);
     if (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "LUIDDeviceNodeMask property: %d.\n", sts);
@@ -913,7 +913,7 @@ static int qsv_d3d9_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
     LUID luid;
     D3DDEVICE_CREATION_PARAMETERS params;
     HRESULT hr;
-    mfxVariant impl_value = {0};
+    mfxVariant impl_हालागा = {0};
 
     hr = IDirect3DDeviceManager9_OpenDeviceHandle(devmgr, &device_handle);
     if (FAILED(hr)) {
@@ -961,10 +961,10 @@ static int qsv_d3d9_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
         goto release;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_PTR;
-    impl_value.Data.Ptr = &luid;
+    impl_हालागा.Type = MFX_VARIANT_TYPE_PTR;
+    impl_हालागा.Data.Ptr = &luid;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_value);
+                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_हालागा);
     if (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "DeviceLUID property: %d.\n", sts);
@@ -995,14 +995,14 @@ static int qsv_va_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
     VADisplayAttribute attr = {
         .type = VADisplayPCIID,
     };
-    mfxVariant impl_value = {0};
+    mfxVariant impl_हालागा = {0};
 
     vas = vaGetDisplayAttributes(dpy, &attr, 1);
     if (vas == VA_STATUS_SUCCESS && attr.flags != VA_DISPLAY_ATTRIB_NOT_SUPPORTED) {
-        impl_value.Type = MFX_VARIANT_TYPE_U16;
-        impl_value.Data.U16 = (attr.value & 0xFFFF);
+        impl_हालागा.Type = MFX_VARIANT_TYPE_U16;
+        impl_हालागा.Data.U16 = (attr.हालागा & 0xFFFF);
         sts = MFXSetConfigFilterProperty(cfg,
-                                         (const mfxU8 *)"mfxImplDescription.mfxDeviceDescription.DeviceID", impl_value);
+                                         (const mfxU8 *)"mfxImplDescription.mfxDeviceDescription.DeviceID", impl_हालागा);
         if (sts != MFX_ERR_NONE) {
             av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                    "DeviceID property: %d.\n", sts);
@@ -1036,7 +1036,7 @@ static int qsv_new_mfx_loader(void *ctx,
     mfxStatus sts;
     mfxLoader loader = NULL;
     mfxConfig cfg;
-    mfxVariant impl_value = {0};
+    mfxVariant impl_हालागा = {0};
 
     *ploader = NULL;
     loader = MFXLoad();
@@ -1052,32 +1052,32 @@ static int qsv_new_mfx_loader(void *ctx,
         goto fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = (implementation == MFX_IMPL_SOFTWARE) ?
+    impl_हालागा.Type = MFX_VARIANT_TYPE_U32;
+    impl_हालागा.Data.U32 = (implementation == MFX_IMPL_SOFTWARE) ?
         MFX_IMPL_TYPE_SOFTWARE : MFX_IMPL_TYPE_HARDWARE;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxImplDescription.Impl", impl_value);
+                                     (const mfxU8 *)"mfxImplDescription.Impl", impl_हालागा);
     if (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration "
                "property: %d.\n", sts);
         goto fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = pver->Version;
+    impl_हालागा.Type = MFX_VARIANT_TYPE_U32;
+    impl_हालागा.Data.U32 = pver->Version;
     sts = MFXSetConfigFilterProperty(cfg,
                                      (const mfxU8 *)"mfxImplDescription.ApiVersion.Version",
-                                     impl_value);
+                                     impl_हालागा);
     if (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration "
                "property: %d.\n", sts);
         goto fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = 0x8086; // Intel device only
+    impl_हालागा.Type = MFX_VARIANT_TYPE_U32;
+    impl_हालागा.Data.U32 = 0x8086; // Intel device only
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxImplDescription.VendorID", impl_value);
+                                     (const mfxU8 *)"mfxImplDescription.VendorID", impl_हालागा);
     if (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "VendorID property: %d.\n", sts);
@@ -1088,22 +1088,22 @@ static int qsv_new_mfx_loader(void *ctx,
         if (handle && qsv_va_update_config(ctx, handle, cfg))
             goto fail;
 
-        impl_value.Data.U32 = MFX_ACCEL_MODE_VIA_VAAPI;
+        impl_हालागा.Data.U32 = MFX_ACCEL_MODE_VIA_VAAPI;
     } else if (MFX_HANDLE_D3D9_DEVICE_MANAGER == handle_type) {
         if (handle && qsv_d3d9_update_config(ctx, handle, cfg))
             goto fail;
 
-        impl_value.Data.U32 = MFX_ACCEL_MODE_VIA_D3D9;
+        impl_हालागा.Data.U32 = MFX_ACCEL_MODE_VIA_D3D9;
     } else {
         if (handle && qsv_d3d11_update_config(ctx, handle, cfg))
             goto fail;
 
-        impl_value.Data.U32 = MFX_ACCEL_MODE_VIA_D3D11;
+        impl_हालागा.Data.U32 = MFX_ACCEL_MODE_VIA_D3D11;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
+    impl_हालागा.Type = MFX_VARIANT_TYPE_U32;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxImplDescription.AccelerationMode", impl_value);
+                                     (const mfxU8 *)"mfxImplDescription.AccelerationMode", impl_हालागा);
     if (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "AccelerationMode property: %d.\n", sts);
@@ -1364,7 +1364,7 @@ static int qsv_init_internal_session(AVHWFramesContext *ctx,
 #if QSV_HAVE_OPAQUE
     else {
         par.ExtParam    = s->ext_buffers;
-        par.NumExtParam = FF_ARRAY_ELEMS(s->ext_buffers);
+        par.नुमेरो_Ext_Param = FF_ARRAY_ELEMS(s->ext_buffers);
         par.IOPattern   = upload ? MFX_IOPATTERN_OUT_OPAQUE_MEMORY :
                                    MFX_IOPATTERN_IN_OPAQUE_MEMORY;
     }
@@ -1451,7 +1451,7 @@ static int qsv_frames_init(AVHWFramesContext *ctx)
             s->surface_ptrs[i] = frames_hwctx->surfaces + i;
 
         s->opaque_alloc.In.Surfaces   = s->surface_ptrs;
-        s->opaque_alloc.In.NumSurface = frames_hwctx->nb_surfaces;
+        s->opaque_alloc.In.नुमेरो_Surface = frames_hwctx->nb_surfaces;
         s->opaque_alloc.In.Type       = frames_hwctx->frame_type;
 
         s->opaque_alloc.Out = s->opaque_alloc.In;
@@ -2517,10 +2517,10 @@ static int qsv_device_create(AVHWDeviceContext *ctx, const char *device,
 
     e = av_dict_get(opts, "child_device_type", NULL, 0);
     if (e) {
-        child_device_type = av_hwdevice_find_type_by_name(e->value);
+        child_device_type = av_hwdevice_find_type_by_name(e->हालागा);
         if (child_device_type == AV_HWDEVICE_TYPE_NONE) {
             av_log(ctx, AV_LOG_ERROR, "Unknown child device type "
-                   "\"%s\".\n", e->value);
+                   "\"%s\".\n", e->हालागा);
             return AVERROR(EINVAL);
         }
 #if QSV_ONEVPL
@@ -2554,7 +2554,7 @@ static int qsv_device_create(AVHWDeviceContext *ctx, const char *device,
     /* Reject user specified child_device_type or CONFIG_VAAPI on Windows */
     if (child_device_type == AV_HWDEVICE_TYPE_VAAPI) {
         av_log(ctx, AV_LOG_ERROR, "VAAPI child device type not supported for oneVPL on Windows"
-                "\"%s\".\n", e->value);
+                "\"%s\".\n", e->हालागा);
         return AVERROR(EINVAL);
     }
 #endif
@@ -2605,7 +2605,7 @@ static int qsv_device_create(AVHWDeviceContext *ctx, const char *device,
 
     e = av_dict_get(opts, "child_device", NULL, 0);
     ret = av_hwdevice_ctx_create(&priv->child_device_ctx, child_device_type,
-                                 e ? e->value : NULL, child_device_opts, 0);
+                                 e ? e->हालागा : NULL, child_device_opts, 0);
 
     av_dict_free(&child_device_opts);
     if (ret < 0)

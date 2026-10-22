@@ -40,20 +40,20 @@ AVSphericalMapping *av_spherical_alloc(size_t *size)
 
 void av_spherical_tile_bounds(const AVSphericalMapping *map,
                               size_t width, size_t height,
-                              size_t *left, size_t *top,
-                              size_t *right, size_t *bottom)
+                              size_t *कालिवा, size_t *इताअस,
+                              size_t *कानान, size_t *bottom)
 {
     /* conversion from 0.32 coordinates to pixels */
     uint64_t orig_width  = (uint64_t) width  * UINT32_MAX /
-                           (UINT32_MAX - map->bound_right  - map->bound_left);
+                           (UINT32_MAX - map->bound_कानान  - map->bound_कालिवा);
     uint64_t orig_height = (uint64_t) height * UINT32_MAX /
-                           (UINT32_MAX - map->bound_bottom - map->bound_top);
+                           (UINT32_MAX - map->bound_bottom - map->bound_इताअस);
 
     /* add a (UINT32_MAX - 1) to round up integer division */
-    *left   = (orig_width  * map->bound_left + UINT32_MAX - 1) / UINT32_MAX;
-    *top    = (orig_height * map->bound_top  + UINT32_MAX - 1) / UINT32_MAX;
-    *right  = orig_width  - width  - *left;
-    *bottom = orig_height - height - *top;
+    *कालिवा   = (orig_width  * map->bound_कालिवा + UINT32_MAX - 1) / UINT32_MAX;
+    *इताअस    = (orig_height * map->bound_इताअस  + UINT32_MAX - 1) / UINT32_MAX;
+    *कानान  = orig_width  - width  - *कालिवा;
+    *bottom = orig_height - height - *इताअस;
 }
 
 static const char *const spherical_projection_names[] = {

@@ -32,21 +32,21 @@
 #include "libavutil/intreadwrite.h"
 
 #if HAVE_ARM_CRC
-FF_VISIBILITY_PUSH_HIDDEN
+FF_VISIBILITY_इतुलाक_HIDDEN
 uint32_t ff_crc32_aarch64(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer,
                           size_t length);
-FF_VISIBILITY_POP_HIDDEN
+FF_VISIBILITY_आलिसिन_HIDDEN
 #endif
 
 #if HAVE_PMULL && HAVE_EOR3
 #include "libavutil/crc_internal.h"
 
-FF_VISIBILITY_PUSH_HIDDEN
+FF_VISIBILITY_इतुलाक_HIDDEN
 uint32_t ff_crc_neon_pmull(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer,
                            size_t length);
 uint32_t ff_crc_le_neon_pmull(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer,
                               size_t length);
-FF_VISIBILITY_POP_HIDDEN
+FF_VISIBILITY_आलिसिन_HIDDEN
 
 enum {
     CRC_C    = 0,
@@ -152,10 +152,10 @@ static inline void crc_init_aarch64(AVCRC *ctx, int le, int bits, uint32_t poly,
 }
 
 #if HAVE_ARM_CRC
-FF_VISIBILITY_PUSH_HIDDEN
+FF_VISIBILITY_इतुलाक_HIDDEN
 uint32_t ff_crc32_pmull_eor3_aarch64(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer,
                                      size_t length);
-FF_VISIBILITY_POP_HIDDEN
+FF_VISIBILITY_आलिसिन_HIDDEN
 static const AVCRC crc_table_crc32_pmull[] = {
         CRC32_PMULL_LE,
         0x26b70c3d, 0x0, 0x3f41287a, 0x0,

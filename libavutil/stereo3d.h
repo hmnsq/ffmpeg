@@ -123,7 +123,7 @@ enum AVStereo3DType {
      *    ...
      * @endcode
      */
-    AV_STEREO3D_LINES,
+    AV_STEREO3_D_मगा_लिन्या,
 
     /**
      * Views are packed per column.
@@ -155,12 +155,12 @@ enum AVStereo3DView {
     /**
      * Frame contains only the left view.
      */
-    AV_STEREO3D_VIEW_LEFT,
+    AV_STEREO3_D_VIEW_कालिवा,
 
     /**
      * Frame contains only the right view.
      */
-    AV_STEREO3D_VIEW_RIGHT,
+    AV_STEREO3_D_VIEW_कानान,
 
     /**
      * Content is unspecified.
@@ -180,12 +180,12 @@ enum AVStereo3DPrimaryEye {
     /**
      * Left eye.
      */
-    AV_PRIMARY_EYE_LEFT,
+    AV_PRIMARY_EYE_कालिवा,
 
     /**
      * Right eye
      */
-    AV_PRIMARY_EYE_RIGHT,
+    AV_PRIMARY_EYE_कानान,
 };
 
 /**

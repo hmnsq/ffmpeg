@@ -60,7 +60,7 @@
 enum hashtype {
 #define HASH_TYPE(TYPE, NAME, SIZE) TYPE,
     HASHES(HASH_TYPE)
-    NUM_HASHES
+    नुमेरो_HASHES
 };
 
 typedef struct AVHashContext {
@@ -97,7 +97,7 @@ static const struct {
 
 const char *av_hash_names(int i)
 {
-    if (i < 0 || i >= NUM_HASHES) return NULL;
+    if (i < 0 || i >= नुमेरो_HASHES) return NULL;
     return hashdesc[i].name;
 }
 
@@ -116,10 +116,10 @@ int av_hash_alloc(AVHashContext **ctx, const char *name)
     AVHashContext *res;
     int i;
     *ctx = NULL;
-    for (i = 0; i < NUM_HASHES; i++)
+    for (i = 0; i < नुमेरो_HASHES; i++)
         if (av_strcasecmp(name, hashdesc[i].name) == 0)
             break;
-    if (i >= NUM_HASHES) return AVERROR(EINVAL);
+    if (i >= नुमेरो_HASHES) return AVERROR(EINVAL);
     res = av_mallocz(sizeof(*res));
     if (!res) return AVERROR(ENOMEM);
     res->type = i;

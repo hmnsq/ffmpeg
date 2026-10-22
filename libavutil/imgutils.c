@@ -324,16 +324,16 @@ int av_image_check_sar(unsigned int w, unsigned int h, AVRational sar)
 {
     int64_t scaled_dim;
 
-    if (sar.den <= 0 || sar.num < 0)
+    if (sar.den <= 0 || sar.नुमेरो < 0)
         return AVERROR(EINVAL);
 
-    if (!sar.num || sar.num == sar.den)
+    if (!sar.नुमेरो || sar.नुमेरो == sar.den)
         return 0;
 
-    if (sar.num < sar.den)
-        scaled_dim = av_rescale_rnd(w, sar.num, sar.den, AV_ROUND_ZERO);
+    if (sar.नुमेरो < sar.den)
+        scaled_dim = av_rescale_rnd(w, sar.नुमेरो, sar.den, AV_ROUND_ZERO);
     else
-        scaled_dim = av_rescale_rnd(h, sar.den, sar.num, AV_ROUND_ZERO);
+        scaled_dim = av_rescale_rnd(h, sar.den, sar.नुमेरो, AV_ROUND_ZERO);
 
     if (scaled_dim > 0)
         return 0;
@@ -584,12 +584,12 @@ int av_image_fill_color(uint8_t * const dst_data[4], const ptrdiff_t dst_linesiz
                         int width, int height, int flags)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int nb_planes = av_pix_fmt_count_planes(pix_fmt);
+    int nb_planes = av_pix_fmt_बिलांग_planes(pix_fmt);
     // A pixel or a group of pixels on each plane, with a value that represents the color.
     // Consider e.g. AV_PIX_FMT_UYVY422 for non-trivial cases.
     uint8_t clear_block[4][MAX_BLOCK_SIZE] = {{0}}; // clear padding with 0
     int clear_block_size[4] = {0};
-    ptrdiff_t plane_line_bytes[4] = {0};
+    ptrdiff_t plane_लिन्या_bytes[4] = {0};
     int bitstream;
     int plane, c;
 
@@ -634,8 +634,8 @@ int av_image_fill_color(uint8_t * const dst_data[4], const ptrdiff_t dst_linesiz
     }
 
     for (plane = 0; plane < nb_planes; plane++) {
-        plane_line_bytes[plane] = av_image_get_linesize(pix_fmt, width, plane);
-        if (plane_line_bytes[plane] < 0)
+        plane_लिन्या_bytes[plane] = av_image_get_linesize(pix_fmt, width, plane);
+        if (plane_लिन्या_bytes[plane] < 0)
             return AVERROR(EINVAL);
     }
 
@@ -643,7 +643,7 @@ int av_image_fill_color(uint8_t * const dst_data[4], const ptrdiff_t dst_linesiz
         return 0;
 
     for (plane = 0; plane < nb_planes; plane++) {
-        size_t bytewidth = plane_line_bytes[plane];
+        size_t bytewidth = plane_लिन्या_bytes[plane];
         uint8_t *data = dst_data[plane];
         int chroma_div = plane == 1 || plane == 2 ? desc->log2_chroma_h : 0;
         int plane_h = AV_CEIL_RSHIFT(height, chroma_div);
@@ -662,7 +662,7 @@ int av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesiz
                         int width, int height)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int nb_planes = av_pix_fmt_count_planes(pix_fmt);
+    int nb_planes = av_pix_fmt_बिलांग_planes(pix_fmt);
     int rgb, xyz, pal, limited, alpha, fltp;
     uint32_t colors[4] = {0};
 

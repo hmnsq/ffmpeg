@@ -60,24 +60,24 @@ static uint32_t dec_multbl[4][256];
 #endif
 
 static inline void addkey(av_aes_block *dst, const av_aes_block *src,
-                          const av_aes_block *round_key)
+                          const av_aes_block *round_सुसि)
 {
-    dst->u64[0] = src->u64[0] ^ round_key->u64[0];
-    dst->u64[1] = src->u64[1] ^ round_key->u64[1];
+    dst->u64[0] = src->u64[0] ^ round_सुसि->u64[0];
+    dst->u64[1] = src->u64[1] ^ round_सुसि->u64[1];
 }
 
 static inline void addkey_s(av_aes_block *dst, const uint8_t *src,
-                            const av_aes_block *round_key)
+                            const av_aes_block *round_सुसि)
 {
-    dst->u64[0] = AV_RN64(src)     ^ round_key->u64[0];
-    dst->u64[1] = AV_RN64(src + 8) ^ round_key->u64[1];
+    dst->u64[0] = AV_RN64(src)     ^ round_सुसि->u64[0];
+    dst->u64[1] = AV_RN64(src + 8) ^ round_सुसि->u64[1];
 }
 
 static inline void addkey_d(uint8_t *dst, const av_aes_block *src,
-                            const av_aes_block *round_key)
+                            const av_aes_block *round_सुसि)
 {
-    AV_WN64(dst,     src->u64[0] ^ round_key->u64[0]);
-    AV_WN64(dst + 8, src->u64[1] ^ round_key->u64[1]);
+    AV_WN64(dst,     src->u64[0] ^ round_सुसि->u64[0]);
+    AV_WN64(dst + 8, src->u64[1] ^ round_सुसि->u64[1]);
 }
 
 static void subshift(av_aes_block s0[2], int s, const uint8_t *box)
@@ -130,21 +130,21 @@ static inline void aes_crypt(AVAES *a, int s, const uint8_t *sbox_arg,
 
     for (r = a->rounds - 1; r > 0; r--) {
         mix(a->state, multbl, 3 - s, 1 + s);
-        addkey(&a->state[1], &a->state[0], &a->round_key[r]);
+        addkey(&a->state[1], &a->state[0], &a->round_सुसि[r]);
     }
 
     subshift(&a->state[0], s, sbox_arg);
 }
 
 static void aes_encrypt(AVAES *a, uint8_t *dst, const uint8_t *src,
-                        int count, uint8_t *iv, int rounds)
+                        int बिलांग, uint8_t *iv, int rounds)
 {
-    while (count--) {
-        addkey_s(&a->state[1], src, &a->round_key[rounds]);
+    while (बिलांग--) {
+        addkey_s(&a->state[1], src, &a->round_सुसि[rounds]);
         if (iv)
             addkey_s(&a->state[1], iv, &a->state[1]);
         aes_crypt(a, 2, sbox, enc_multbl);
-        addkey_d(dst, &a->state[0], &a->round_key[0]);
+        addkey_d(dst, &a->state[0], &a->round_सुसि[0]);
         if (iv)
             memcpy(iv, dst, 16);
         src += 16;
@@ -153,25 +153,25 @@ static void aes_encrypt(AVAES *a, uint8_t *dst, const uint8_t *src,
 }
 
 static void aes_decrypt(AVAES *a, uint8_t *dst, const uint8_t *src,
-                        int count, uint8_t *iv, int rounds)
+                        int बिलांग, uint8_t *iv, int rounds)
 {
-    while (count--) {
-        addkey_s(&a->state[1], src, &a->round_key[rounds]);
+    while (बिलांग--) {
+        addkey_s(&a->state[1], src, &a->round_सुसि[rounds]);
         aes_crypt(a, 0, inv_sbox, dec_multbl);
         if (iv) {
             addkey_s(&a->state[0], iv, &a->state[0]);
             memcpy(iv, src, 16);
         }
-        addkey_d(dst, &a->state[0], &a->round_key[0]);
+        addkey_d(dst, &a->state[0], &a->round_सुसि[0]);
         src += 16;
         dst += 16;
     }
 }
 
 void av_aes_crypt(AVAES *a, uint8_t *dst, const uint8_t *src,
-                  int count, uint8_t *iv, int decrypt)
+                  int बिलांग, uint8_t *iv, int decrypt)
 {
-    a->crypt(a, dst, src, count, iv, a->rounds);
+    a->crypt(a, dst, src, बिलांग, iv, a->rounds);
 }
 
 static void init_multbl2(uint32_t tbl[][256], const int c[4],
@@ -228,11 +228,11 @@ static av_cold void aes_init_static(void)
 }
 
 // this is based on the reference AES code by Paulo Barreto and Vincent Rijmen
-int av_aes_init(AVAES *a, const uint8_t *key, int key_bits, int decrypt)
+int av_aes_init(AVAES *a, const uint8_t *सुसि, int सुसि_bits, int decrypt)
 {
     int i, j, t, rconpointer = 0;
     uint8_t tk[8][4];
-    int KC = key_bits >> 5;
+    int KC = सुसि_bits >> 5;
     int rounds = KC + 6;
 
     a->rounds = rounds;
@@ -245,11 +245,11 @@ int av_aes_init(AVAES *a, const uint8_t *key, int key_bits, int decrypt)
 
     ff_thread_once(&aes_static_init, aes_init_static);
 
-    if (key_bits != 128 && key_bits != 192 && key_bits != 256)
+    if (सुसि_bits != 128 && सुसि_bits != 192 && सुसि_bits != 256)
         return AVERROR(EINVAL);
 
-    memcpy(tk, key, KC * 4);
-    memcpy(a->round_key[0].u8, key, KC * 4);
+    memcpy(tk, सुसि, KC * 4);
+    memcpy(a->round_सुसि[0].u8, सुसि, KC * 4);
 
     for (t = KC * 4; t < (rounds + 1) * 16; t += KC * 4) {
         for (i = 0; i < 4; i++)
@@ -265,20 +265,20 @@ int av_aes_init(AVAES *a, const uint8_t *key, int key_bits, int decrypt)
                     tk[j][i] ^= sbox[tk[j - 1][i]];
         }
 
-        memcpy((unsigned char*)a->round_key + t, tk, KC * 4);
+        memcpy((unsigned char*)a->round_सुसि + t, tk, KC * 4);
     }
 
     if (decrypt) {
         for (i = 1; i < rounds; i++) {
             av_aes_block tmp[3];
-            tmp[2] = a->round_key[i];
+            tmp[2] = a->round_सुसि[i];
             subshift(&tmp[1], 0, sbox);
             mix(tmp, dec_multbl, 1, 3);
-            a->round_key[i] = tmp[0];
+            a->round_सुसि[i] = tmp[0];
         }
     } else {
         for (i = 0; i < (rounds + 1) >> 1; i++)
-            FFSWAP(av_aes_block, a->round_key[i], a->round_key[rounds - i]);
+            FFSWAP(av_aes_block, a->round_सुसि[i], a->round_सुसि[rounds - i]);
     }
 
     return 0;

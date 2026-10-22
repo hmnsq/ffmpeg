@@ -168,7 +168,7 @@ int av_buffer_is_writable(const AVBufferRef *buf);
  */
 void *av_buffer_get_opaque(const AVBufferRef *buf);
 
-int av_buffer_get_ref_count(const AVBufferRef *buf);
+int av_buffer_get_ref_बिलांग(const AVBufferRef *buf);
 
 /**
  * Create a writable reference from a given buffer reference, avoiding data copy

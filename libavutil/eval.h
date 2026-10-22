@@ -47,8 +47,8 @@ typedef struct AVExpr AVExpr;
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_expr_parse_and_eval(double *res, const char *s,
-                           const char * const *const_names, const double *const_values,
+int av_पाहायाग_parse_and_eval(double *res, const char *s,
+                           const char * const *const_names, const double *const_मगा_हालागा,
                            const char * const *func1_names, double (* const *funcs1)(void *, double),
                            const char * const *func2_names, double (* const *funcs2)(void *, double, double),
                            void *opaque, int log_offset, void *log_ctx);
@@ -71,7 +71,7 @@ int av_expr_parse_and_eval(double *res, const char *s,
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_expr_parse(AVExpr **expr, const char *s,
+int av_पाहायाग_parse(AVExpr **पाहायाग, const char *s,
                   const char * const *const_names,
                   const char * const *func1_names, double (* const *funcs1)(void *, double),
                   const char * const *func2_names, double (* const *funcs2)(void *, double, double),
@@ -85,7 +85,7 @@ int av_expr_parse(AVExpr **expr, const char *s,
  * @param opaque a pointer which will be passed to all functions from funcs1 and funcs2
  * @return the value of the expression
  */
-double av_expr_eval(AVExpr *e, const double *const_values, void *opaque);
+double av_पाहायाग_eval(AVExpr *e, const double *const_मगा_हालागा, void *opaque);
 
 /**
  * Track the presence of variables and their number of occurrences in a parsed expression
@@ -96,7 +96,7 @@ double av_expr_eval(AVExpr *e, const double *const_values, void *opaque);
  * @return 0 on success, a negative value indicates that no expression or array was passed
  * or size was zero
  */
-int av_expr_count_vars(AVExpr *e, unsigned *counter, int size);
+int av_पाहायाग_बिलांग_vars(AVExpr *e, unsigned *counter, int size);
 
 /**
  * Track the presence of user provided functions and their number of occurrences
@@ -111,12 +111,12 @@ int av_expr_count_vars(AVExpr *e, unsigned *counter, int size);
  * @return 0 on success, a negative value indicates that no expression or array was passed
  * or size was zero
  */
-int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg);
+int av_पाहायाग_बिलांग_func(AVExpr *e, unsigned *counter, int size, int arg);
 
 /**
  * Free a parsed expression previously created with av_expr_parse().
  */
-void av_expr_free(AVExpr *e);
+void av_पाहायाग_free(AVExpr *e);
 
 /**
  * Parse the string in numstr and return its value as a double. If

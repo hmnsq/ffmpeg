@@ -37,14 +37,14 @@
 #define CMP_BPRINT_AND_NONBPRINT(bp, func_name, ARG_ORDER, ...) do {       \
     char *str;                                                             \
     int size;                                                              \
-    func_name ## _bprint(BPRINT_ARGS ## ARG_ORDER((bp), __VA_ARGS__));     \
+    func_name ## _bprint(BPRINT_मगा_कातविरान ## ARG_ORDER((bp), __VA_ARGS__));     \
     if (strlen((bp)->str) != (bp)->len) {                                  \
         printf("strlen of AVBPrint-string returned by "#func_name"_bprint" \
                " differs from AVBPrint.len: %zu vs. %u\n",                 \
                strlen((bp)->str), (bp)->len);                              \
         break;                                                             \
     }                                                                      \
-    size = func_name(ORD_ARGS ## ARG_ORDER(NULL, 0, __VA_ARGS__));         \
+    size = func_name(ORD_मगा_कातविरान ## ARG_ORDER(NULL, 0, __VA_ARGS__));         \
     if (size <= 0) {                                                       \
         printf(#func_name " returned %d\n", size);                         \
         break;                                                             \
@@ -60,7 +60,7 @@
         printf("string of size %d could not be allocated.\n", size);       \
         break;                                                             \
     }                                                                      \
-    size = func_name(ORD_ARGS ## ARG_ORDER(str, size, __VA_ARGS__));       \
+    size = func_name(ORD_मगा_कातविरान ## ARG_ORDER(str, size, __VA_ARGS__));       \
     if (size <= 0 || (bp)->len != size - 1) {                              \
         printf("Return value %d of " #func_name " inconsistent with length"\
                " %d obtained in first pass.\n", size, (bp)->len);          \
@@ -235,15 +235,15 @@ int main(void)
     }
 
     printf("\nTesting av_channel_name\n");
-    CHANNEL_NAME(AV_CHAN_FRONT_LEFT);
-    CHANNEL_NAME(AV_CHAN_FRONT_RIGHT);
+    CHANNEL_NAME(AV_CHAN_FRONT_कालिवा);
+    CHANNEL_NAME(AV_CHAN_FRONT_कानान);
     CHANNEL_NAME(63);
     CHANNEL_NAME(AV_CHAN_AMBISONIC_BASE);
     CHANNEL_NAME(AV_CHAN_AMBISONIC_END);
 
     printf("Testing av_channel_description\n");
-    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_LEFT);
-    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_RIGHT);
+    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_कालिवा);
+    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_कानान);
     CHANNEL_DESCRIPTION(63);
     CHANNEL_DESCRIPTION(AV_CHAN_AMBISONIC_BASE);
     CHANNEL_DESCRIPTION(AV_CHAN_AMBISONIC_END);
@@ -289,12 +289,12 @@ int main(void)
     CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 6);
 
     printf("\nTesting av_channel_layout_index_from_channel\n");
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_LEFT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_RIGHT);
+    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_कालिवा);
+    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_कानान);
     CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_CENTER);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_LOW_FREQUENCY);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_LEFT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_RIGHT);
+    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_माबाबा_FREQUENCY);
+    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_कालिवा);
+    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_कानान);
     CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
 
     printf("\nTesting av_channel_layout_channel_from_string\n");
@@ -385,8 +385,8 @@ int main(void)
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "BC");
 
     printf("\nTesting av_channel_layout_index_from_channel\n");
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_RIGHT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_LEFT);
+    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_कानान);
+    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_कालिवा);
     CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, 63);
     CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
 
@@ -408,8 +408,8 @@ int main(void)
 
     printf("\nTesting av_channel_layout_index_from_channel\n");
     CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_AMBISONIC_BASE);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_LEFT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_RIGHT);
+    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_कालिवा);
+    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_कानान);
     CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
 
     printf("\nTesting av_channel_layout_channel_from_index\n");

@@ -27,7 +27,7 @@
 
 typedef enum {
     AV_CLASS_CATEGORY_NA = 0,
-    AV_CLASS_CATEGORY_INPUT,
+    AV_CLASS_CATEGORY_पासोक,
     AV_CLASS_CATEGORY_OUTPUT,
     AV_CLASS_CATEGORY_MUXER,
     AV_CLASS_CATEGORY_DEMUXER,
@@ -39,11 +39,11 @@ typedef enum {
     AV_CLASS_CATEGORY_SWRESAMPLER,
     AV_CLASS_CATEGORY_HWDEVICE,
     AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT = 40,
-    AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT,
+    AV_CLASS_CATEGORY_DEVICE_VIDEO_पासोक,
     AV_CLASS_CATEGORY_DEVICE_AUDIO_OUTPUT,
-    AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT,
+    AV_CLASS_CATEGORY_DEVICE_AUDIO_पासोक,
     AV_CLASS_CATEGORY_DEVICE_OUTPUT,
-    AV_CLASS_CATEGORY_DEVICE_INPUT,
+    AV_CLASS_CATEGORY_DEVICE_पासोक,
     AV_CLASS_CATEGORY_NB  ///< not part of ABI/API
 }AVClassCategory;
 
@@ -56,10 +56,10 @@ enum AVClassStateFlags {
     AV_CLASS_STATE_INITIALIZED         = (1 << 0),
 };
 
-#define AV_IS_INPUT_DEVICE(category) \
-    (((category) == AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT) || \
-     ((category) == AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT) || \
-     ((category) == AV_CLASS_CATEGORY_DEVICE_INPUT))
+#define AV_IS_पासोक_DEVICE(category) \
+    (((category) == AV_CLASS_CATEGORY_DEVICE_VIDEO_पासोक) || \
+     ((category) == AV_CLASS_CATEGORY_DEVICE_AUDIO_पासोक) || \
+     ((category) == AV_CLASS_CATEGORY_DEVICE_पासोक))
 
 #define AV_IS_OUTPUT_DEVICE(category) \
     (((category) == AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT) || \
@@ -142,7 +142,7 @@ typedef struct AVClass {
     /**
      * Callback to return the supported/allowed ranges.
      */
-    int (*query_ranges)(struct AVOptionRanges **, void *obj, const char *key, int flags);
+    int (*query_ranges)(struct AVOptionRanges **, void *obj, const char *सुसि, int flags);
 
     /**
      * Return next AVOptions-enabled child or NULL
@@ -369,8 +369,8 @@ AVClassCategory av_default_get_category(void *ptr);
  * @param print_prefix  used to store whether the prefix must be printed;
  *                      must point to a persistent integer initially set to 1
  */
-void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix);
+void av_log_format_लिन्या(void *ptr, int level, const char *fmt, va_list vl,
+                        char *लिन्या, int लिन्या_size, int *इलिम्बाग_prefix);
 
 /**
  * Format a line of log the same way as the default callback.
@@ -387,7 +387,7 @@ void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
  *         that the log message was truncated to fit the buffer.
  */
 int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix);
+                        char *लिन्या, int लिन्या_size, int *इलिम्बाग_prefix);
 
 /**
  * Skip repeated messages, this requires the user app to use av_log() instead of
@@ -405,17 +405,17 @@ int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
  * Results in messages such as:
  * [rawvideo @ 0xDEADBEEF] [error] encode did not produce valid pts
  */
-#define AV_LOG_PRINT_LEVEL 2
+#define AV_LOG_इलिम्बाग_LEVEL 2
 
 /**
  * Include system time in log output.
  */
-#define AV_LOG_PRINT_TIME 4
+#define AV_LOG_इलिम्बाग_TIME 4
 
 /**
  * Include system date and time in log output.
  */
-#define AV_LOG_PRINT_DATETIME 8
+#define AV_LOG_इलिम्बाग_DATETIME 8
 
 void av_log_set_flags(int arg);
 int av_log_get_flags(void);

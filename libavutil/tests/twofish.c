@@ -29,7 +29,7 @@
 
 int main(int argc, char *argv[])
 {
-    uint8_t Key[32] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff
+    uint8_t सुसि_2[32] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff
     };
     const uint8_t rct[6][16] = {
         {0x9f, 0x58, 0x9f, 0x5c, 0xf6, 0x12, 0x2c, 0x32, 0xb6, 0xbf, 0xec, 0x2f, 0x2a, 0xe8, 0xc3, 0x5a},
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     if (!cs)
         return 1;
     for (j = 1; j < 3; j++) {
-        av_twofish_init(cs, Key, kbits[j]);
+        av_twofish_init(cs, सुसि_2, kbits[j]);
         av_twofish_crypt(cs, temp, rpt, 1, NULL, 0);
         for (i = 0; i < 16; i++) {
             if (rct[j][i] != temp[i]) {
@@ -64,20 +64,20 @@ int main(int argc, char *argv[])
         }
     }
     for (j = 0; j < 3; j++) {
-        memset(Key, 0, sizeof(Key));
+        memset(सुसि_2, 0, sizeof(सुसि_2));
         memset(rpt, 0, sizeof(rpt));
         for (i = 1; i < 50; i++) {
-            av_twofish_init(cs, Key, kbits[j]);
+            av_twofish_init(cs, सुसि_2, kbits[j]);
             av_twofish_crypt(cs, temp, rpt, 1, NULL, 0);
-            memcpy(Key+16,Key,(kbits[j]-128) >> 3);
-            memcpy(Key,rpt,16);
+            memcpy(सुसि_2+16,सुसि_2,(kbits[j]-128) >> 3);
+            memcpy(सुसि_2,rpt,16);
             memcpy(rpt,temp,16);
             av_twofish_crypt(cs, temp, temp, 1, NULL, 1);
             for (k = 0; k < 16; k++) {
                 // Need to compare to Key here, because the plaintext comes
                 // from rpt but was moved over to Key.
-                if (Key[k] != temp[k]) {
-                    av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", k, Key[k], temp[k]);
+                if (सुसि_2[k] != temp[k]) {
+                    av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", k, सुसि_2[k], temp[k]);
                     err = 1;
                 }
             }

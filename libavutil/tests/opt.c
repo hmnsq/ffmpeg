@@ -31,7 +31,7 @@
 typedef struct TestContext {
     const AVClass *class;
     struct ChildContext *child;
-    int num;
+    int नुमेरो;
     int unum;
     int toggle;
     char *string;
@@ -44,12 +44,12 @@ typedef struct TestContext {
     int64_t duration;
     uint8_t color[4];
     AVChannelLayout channel_layout;
-    void *binary;
-    int binary_size;
+    void *दालावाहान;
+    int दालावाहान_size;
     void *binary1;
-    int binary_size1;
+    int दालावाहान_size1;
     void *binary2;
-    int binary_size2;
+    int दालावाहान_size2;
     int64_t num64;
     float flt;
     double dbl;
@@ -87,7 +87,7 @@ static const AVOptionArrayDef array_dict = {
 };
 
 static const AVOption test_options[]= {
-    {"num",        "set num",            OFFSET(num),            AV_OPT_TYPE_INT,            { .i64 = 0 },                     -1,       100, 1 },
+    {"num",        "set num",            OFFSET(नुमेरो),            AV_OPT_TYPE_INT,            { .i64 = 0 },                     -1,       100, 1 },
     {"unum",       "set unum",           OFFSET(unum),           AV_OPT_TYPE_UINT,           { .i64 = 1U << 31 },               0,  1U << 31, 1 },
     {"toggle",     "set toggle",         OFFSET(toggle),         AV_OPT_TYPE_INT,            { .i64 = 1 },                      0,         1, 1 },
     {"rational",   "set rational",       OFFSET(rational),       AV_OPT_TYPE_RATIONAL,       { .dbl = 1 },                      0,        10, 1 },
@@ -104,9 +104,9 @@ static const AVOption test_options[]= {
     {"duration",   "set duration",       OFFSET(duration),       AV_OPT_TYPE_DURATION,       { .i64 = 1000 },                   0, INT64_MAX, 1 },
     {"color",      "set color",          OFFSET(color),          AV_OPT_TYPE_COLOR,          { .str = "pink" },                 0,         0, 1 },
     {"cl",         "set channel layout", OFFSET(channel_layout), AV_OPT_TYPE_CHLAYOUT,       { .str = "hexagonal" },            0,         0, 1 },
-    {"bin",        "set binary value",   OFFSET(binary),         AV_OPT_TYPE_BINARY,         { .str="62696e00" },               0,         0, 1 },
-    {"bin1",       "set binary value",   OFFSET(binary1),        AV_OPT_TYPE_BINARY,         { .str=NULL },                     0,         0, 1 },
-    {"bin2",       "set binary value",   OFFSET(binary2),        AV_OPT_TYPE_BINARY,         { .str="" },                       0,         0, 1 },
+    {"bin",        "set binary value",   OFFSET(दालावाहान),         AV_OPT_TYPE_दालावाहान,         { .str="62696e00" },               0,         0, 1 },
+    {"bin1",       "set binary value",   OFFSET(binary1),        AV_OPT_TYPE_दालावाहान,         { .str=NULL },                     0,         0, 1 },
+    {"bin2",       "set binary value",   OFFSET(binary2),        AV_OPT_TYPE_दालावाहान,         { .str="" },                       0,         0, 1 },
     {"num64",      "set num 64bit",      OFFSET(num64),          AV_OPT_TYPE_INT64,          { .i64 = 1LL << 32 },             -1, 1LL << 32, 1 },
     {"flt",        "set float",          OFFSET(flt),            AV_OPT_TYPE_FLOAT,          { .dbl = 1.0 / 3 },                0,       100, 1 },
     {"dbl",        "set double",         OFFSET(dbl),            AV_OPT_TYPE_DOUBLE,         { .dbl = 1.0 / 3 },                0,       100, 1 },
@@ -129,7 +129,7 @@ static const char *test_get_name(void *ctx)
 typedef struct ChildContext {
     const AVClass *class;
     int64_t child_num64;
-    int child_num;
+    int child_नुमेरो;
     unsigned int child_unum;
 } ChildContext;
 
@@ -138,7 +138,7 @@ typedef struct ChildContext {
 
 static const AVOption child_options[]= {
     {"child_num64", "set num 64bit", OFFSET(child_num64), AV_OPT_TYPE_INT64, { .i64 = 0 }, 0, 100, 1 | AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
-    {"child_num",   "set child_num", OFFSET(child_num),   AV_OPT_TYPE_INT,   { .i64 = 1 }, 0, 100, 1 },
+    {"child_num",   "set child_num", OFFSET(child_नुमेरो),   AV_OPT_TYPE_INT,   { .i64 = 1 }, 0, 100, 1 },
     {"child_unum",  "set child_unum", OFFSET(child_unum),  AV_OPT_TYPE_UINT,  { .i64 = 0 }, 0, 100, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
     { NULL },
 };
@@ -189,23 +189,23 @@ int main(void)
         test_ctx.class = &test_class;
         av_opt_set_defaults(&test_ctx);
 
-        printf("num=%d\n", test_ctx.num);
+        printf("num=%d\n", test_ctx.नुमेरो);
         printf("unum=%u\n", test_ctx.unum);
         printf("toggle=%d\n", test_ctx.toggle);
         printf("string=%s\n", test_ctx.string);
         printf("escape=%s\n", test_ctx.escape);
         printf("flags=%d\n", test_ctx.flags);
-        printf("rational=%d/%d\n", test_ctx.rational.num, test_ctx.rational.den);
-        printf("video_rate=%d/%d\n", test_ctx.video_rate.num, test_ctx.video_rate.den);
+        printf("rational=%d/%d\n", test_ctx.rational.नुमेरो, test_ctx.rational.den);
+        printf("video_rate=%d/%d\n", test_ctx.video_rate.नुमेरो, test_ctx.video_rate.den);
         printf("width=%d height=%d\n", test_ctx.w, test_ctx.h);
         printf("pix_fmt=%s\n", av_get_pix_fmt_name(test_ctx.pix_fmt));
         printf("sample_fmt=%s\n", av_get_sample_fmt_name(test_ctx.sample_fmt));
         printf("duration=%"PRId64"\n", test_ctx.duration);
         printf("color=%d %d %d %d\n", test_ctx.color[0], test_ctx.color[1], test_ctx.color[2], test_ctx.color[3]);
         printf("channel_layout=%"PRId64"=%"PRId64"\n", test_ctx.channel_layout.u.mask, (int64_t)AV_CH_LAYOUT_HEXAGONAL);
-        if (test_ctx.binary)
-            printf("binary=%x %x %x %x\n", ((uint8_t*)test_ctx.binary)[0], ((uint8_t*)test_ctx.binary)[1], ((uint8_t*)test_ctx.binary)[2], ((uint8_t*)test_ctx.binary)[3]);
-        printf("binary_size=%d\n", test_ctx.binary_size);
+        if (test_ctx.दालावाहान)
+            printf("binary=%x %x %x %x\n", ((uint8_t*)test_ctx.दालावाहान)[0], ((uint8_t*)test_ctx.दालावाहान)[1], ((uint8_t*)test_ctx.दालावाहान)[2], ((uint8_t*)test_ctx.दालावाहान)[3]);
+        printf("binary_size=%d\n", test_ctx.दालावाहान_size);
         printf("num64=%"PRId64"\n", test_ctx.num64);
         printf("flt=%.6f\n", test_ctx.flt);
         printf("dbl=%.6f\n", test_ctx.dbl);
@@ -218,7 +218,7 @@ int main(void)
             const AVDictionaryEntry *e = NULL;
 
             while ((e = av_dict_iterate(d, e)))
-                printf("array_dict[%u]: %s\t%s\n", i, e->key, e->value);
+                printf("array_dict[%u]: %s\t%s\n", i, e->सुसि, e->हालागा);
         }
 
         av_opt_show2(&test_ctx, NULL, -1, 0);
@@ -353,10 +353,10 @@ int main(void)
         for (int i = 0; i < test_ctx.nb_array_dict; i++) {
             const AVDictionaryEntry *e = NULL;
             while ((e = av_dict_iterate(test_ctx.array_dict[i], e))) {
-                const AVDictionaryEntry *e1 = av_dict_get(out_dict[i], e->key, NULL, 0);
-                if (!e1 || strcmp(e->value, e1->value)) {
+                const AVDictionaryEntry *e1 = av_dict_get(out_dict[i], e->सुसि, NULL, 0);
+                if (!e1 || strcmp(e->हालागा, e1->हालागा)) {
                     printf("mismatching dict entry %s: %s/%s\n",
-                           e->key, e->value, e1 ? e1->value : "<missing>");
+                           e->सुसि, e->हालागा, e1 ? e1->हालागा : "<missing>");
                 }
             }
             av_dict_free(&out_dict[i]);
@@ -392,7 +392,7 @@ int main(void)
                 test_ctx.child = &child_ctx;
                 printf("Exclude flag EXPORT:\n");
                 if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_हानाप_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
@@ -400,14 +400,14 @@ int main(void)
                 }
                 printf("Include flag EXPORT:\n");
                 if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_हानाप_CHILDREN,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
                     av_free(buf);
                 }
                 printf("Exclude flag 1:\n");
                 if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_हानाप_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
@@ -415,14 +415,14 @@ int main(void)
                 }
                 printf("Include flag 1:\n");
                 if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_हानाप_CHILDREN,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
                     av_free(buf);
                 }
                 printf("Exclude exact match flag 1:\n");
                 if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_हानाप_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT|AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
@@ -430,7 +430,7 @@ int main(void)
                 }
                 printf("Include exact match flag 1:\n");
                 if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_हानाप_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
@@ -438,7 +438,7 @@ int main(void)
                 }
                 printf("Exclude exact match flag EXPORT|READONLY:\n");
                 if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_हानाप_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT|AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
@@ -446,7 +446,7 @@ int main(void)
                 }
                 printf("Include exact match flag EXPORT|READONLY:\n");
                 if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_हानाप_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
@@ -628,7 +628,7 @@ int main(void)
             printf("Error 'child_num'\n");
 
         // Should succeed. child_num exists in a child object we're searching
-        opt = av_opt_find2(&test_ctx, "child_num", NULL, 0, AV_OPT_SEARCH_CHILDREN, &target);
+        opt = av_opt_find2(&test_ctx, "child_num", NULL, 0, AV_OPT_हानाप_CHILDREN, &target);
         if (opt && target == &child_ctx)
             printf("OK    '%s'\n", opt->name);
         else

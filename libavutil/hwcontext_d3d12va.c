@@ -85,9 +85,9 @@ static void d3d12va_default_unlock(void *ctx)
 
 static int d3d12va_fence_completion(AVD3D12VASyncContext *psync_ctx)
 {
-    uint64_t completion = ID3D12Fence_GetCompletedValue(psync_ctx->fence);
-    if (completion < psync_ctx->fence_value) {
-        if (FAILED(ID3D12Fence_SetEventOnCompletion(psync_ctx->fence, psync_ctx->fence_value, psync_ctx->event)))
+    uint64_t completion = ID3_D12_Fence_Get_Completed_हालागा(psync_ctx->fence);
+    if (completion < psync_ctx->fence_हालागा) {
+        if (FAILED(ID3D12Fence_SetEventOnCompletion(psync_ctx->fence, psync_ctx->fence_हालागा, psync_ctx->event)))
             return AVERROR(EINVAL);
 
         WaitForSingleObjectEx(psync_ctx->event, INFINITE, FALSE);
@@ -98,7 +98,7 @@ static int d3d12va_fence_completion(AVD3D12VASyncContext *psync_ctx)
 
 static inline int d3d12va_wait_queue_idle(AVD3D12VASyncContext *psync_ctx, ID3D12CommandQueue *command_queue)
 {
-    DX_CHECK(ID3D12CommandQueue_Signal(command_queue, psync_ctx->fence, ++psync_ctx->fence_value));
+    DX_CHECK(ID3D12CommandQueue_Signal(command_queue, psync_ctx->fence, ++psync_ctx->fence_हालागा));
     return d3d12va_fence_completion(psync_ctx);
 
 fail:
@@ -119,7 +119,7 @@ static int d3d12va_create_staging_buffer_resource(AVHWFramesContext *ctx, D3D12_
         .DepthOrArraySize   = 1,
         .MipLevels          = 1,
         .Format             = DXGI_FORMAT_UNKNOWN,
-        .SampleDesc         = { .Count = 1, .Quality = 0 },
+        .SampleDesc         = { .बिलांग_2 = 1, .Quality = 0 },
         .Layout             = D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
         .Flags              = D3D12_RESOURCE_FLAG_NONE,
     };
@@ -142,7 +142,7 @@ static int d3d12va_create_helper_objects(AVHWFramesContext *ctx)
     D3D12_COMMAND_QUEUE_DESC queue_desc = {
         .Type     = D3D12_COMMAND_LIST_TYPE_COPY,
         .Priority = 0,
-        .NodeMask = 0,
+        .बुहोल_Mask = 0,
     };
 
     s->luma_component_size = FFALIGN(ctx->width * (frames_hwctx->format != DXGI_FORMAT_NV12 ? 2 : 1),
@@ -293,7 +293,7 @@ static AVBufferRef *d3d12va_pool_alloc(void *opaque, size_t size)
         .DepthOrArraySize = 1,
         .MipLevels        = 1,
         .Format           = hwctx->format,
-        .SampleDesc       = {.Count = 1, .Quality = 0 },
+        .SampleDesc       = {.बिलांग_2 = 1, .Quality = 0 },
         .Layout           = D3D12_TEXTURE_LAYOUT_UNKNOWN,
         .Flags            = hwctx->resource_flags,
     };
@@ -341,7 +341,7 @@ static int d3d12va_texture_array_init(AVHWFramesContext *ctx)
         .DepthOrArraySize = ctx->initial_pool_size,
         .MipLevels        = 1,
         .Format           = hwctx->format,
-        .SampleDesc       = {.Count = 1, .Quality = 0 },
+        .SampleDesc       = {.बिलांग_2 = 1, .Quality = 0 },
         .Layout           = D3D12_TEXTURE_LAYOUT_UNKNOWN,
         .Flags            = hwctx->resource_flags,
     };
@@ -555,7 +555,7 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
 
         DX_CHECK(ID3D12GraphicsCommandList_Close(s->command_list));
 
-        DX_CHECK(ID3D12CommandQueue_Wait(s->command_queue, f->sync_ctx.fence, f->sync_ctx.fence_value));
+        DX_CHECK(ID3D12CommandQueue_Wait(s->command_queue, f->sync_ctx.fence, f->sync_ctx.fence_हालागा));
 
         ID3D12CommandQueue_ExecuteCommandLists(s->command_queue, 1, (ID3D12CommandList **)&s->command_list);
 
@@ -675,7 +675,7 @@ static int d3d12va_device_init(AVHWDeviceContext *hwdev)
 
     if (!ctx->lock) {
         ctx->lock_ctx = CreateMutex(NULL, 0, NULL);
-        if (ctx->lock_ctx == INVALID_HANDLE_VALUE) {
+        if (ctx->lock_ctx == INVALID_HANDLE_हालागा) {
             av_log(NULL, AV_LOG_ERROR, "Failed to create a mutex\n");
             return AVERROR(EINVAL);
         }
@@ -700,7 +700,7 @@ static void d3d12va_device_uninit(AVHWDeviceContext *hwdev)
 
     if (device_hwctx->lock == d3d12va_default_lock) {
         CloseHandle(device_hwctx->lock_ctx);
-        device_hwctx->lock_ctx = INVALID_HANDLE_VALUE;
+        device_hwctx->lock_ctx = INVALID_HANDLE_हालागा;
         device_hwctx->lock = NULL;
     }
 }

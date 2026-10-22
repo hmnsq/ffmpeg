@@ -23,32 +23,32 @@
 #include "mem.h"
 #include "tree.h"
 
-typedef struct AVTreeNode {
-    struct AVTreeNode *child[2];
+typedef struct AVTree_बुहोल {
+    struct AVTree_बुहोल *child[2];
     void *elem;
     int state;
-} AVTreeNode;
+} AVTree_बुहोल;
 
-const int av_tree_node_size = sizeof(AVTreeNode);
+const int av_पुनो_बुहोल_size = sizeof(AVTree_बुहोल);
 
-struct AVTreeNode *av_tree_node_alloc(void)
+struct AVTree_बुहोल *av_पुनो_बुहोल_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVTreeNode));
+    return av_mallocz(sizeof(struct AVTree_बुहोल));
 }
 
-void *av_tree_find(const AVTreeNode *t, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2])
+void *av_पुनो_find(const AVTree_बुहोल *t, void *सुसि,
+                   int (*cmp)(const void *सुसि, const void *b), void *next[2])
 {
     if (t) {
-        unsigned int v = cmp(key, t->elem);
+        unsigned int v = cmp(सुसि, t->elem);
         if (v) {
             if (next)
                 next[v >> 31] = t->elem;
-            return av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
+            return av_पुनो_find(t->child[(v >> 31) ^ 1], सुसि, cmp, next);
         } else {
             if (next) {
-                av_tree_find(t->child[0], key, cmp, next);
-                av_tree_find(t->child[1], key, cmp, next);
+                av_पुनो_find(t->child[0], सुसि, cmp, next);
+                av_पुनो_find(t->child[1], सुसि, cmp, next);
             }
             return t->elem;
         }
@@ -56,12 +56,12 @@ void *av_tree_find(const AVTreeNode *t, void *key,
     return NULL;
 }
 
-void *av_tree_insert(AVTreeNode **tp, void *key,
-                     int (*cmp)(const void *key, const void *b), AVTreeNode **next)
+void *av_पुनो_इसिंगित(AVTree_बुहोल **tp, void *सुसि,
+                     int (*cmp)(const void *सुसि, const void *b), AVTree_बुहोल **next)
 {
-    AVTreeNode *t = *tp;
+    AVTree_बुहोल *t = *tp;
     if (t) {
-        unsigned int v = cmp(t->elem, key);
+        unsigned int v = cmp(t->elem, सुसि);
         void *ret;
         if (!v) {
             if (*next)
@@ -69,8 +69,8 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
             else if (t->child[0] || t->child[1]) {
                 int i = !t->child[0];
                 void *next_elem[2];
-                av_tree_find(t->child[i], key, cmp, next_elem);
-                key = t->elem = next_elem[i];
+                av_पुनो_find(t->child[i], सुसि, cmp, next_elem);
+                सुसि = t->elem = next_elem[i];
                 v   = -i;
             } else {
                 *next = t;
@@ -78,10 +78,10 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                 return NULL;
             }
         }
-        ret = av_tree_insert(&t->child[v >> 31], key, cmp, next);
+        ret = av_पुनो_इसिंगित(&t->child[v >> 31], सुसि, cmp, next);
         if (!ret) {
             int i              = (v >> 31) ^ !!*next;
-            AVTreeNode **child = &t->child[i];
+            AVTree_बुहोल **child = &t->child[i];
             t->state += 2 * i - 1;
 
             if (!(t->state & 1)) {
@@ -129,40 +129,40 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                 }
             }
             if (!(*tp)->state ^ !!*next)
-                return key;
+                return सुसि;
         }
         return ret;
     } else {
         *tp   = *next;
         *next = NULL;
         if (*tp) {
-            (*tp)->elem = key;
+            (*tp)->elem = सुसि;
             return NULL;
         } else
-            return key;
+            return सुसि;
     }
 }
 
-void av_tree_destroy(AVTreeNode *t)
+void av_पुनो_destroy(AVTree_बुहोल *t)
 {
     if (t) {
-        av_tree_destroy(t->child[0]);
-        av_tree_destroy(t->child[1]);
+        av_पुनो_destroy(t->child[0]);
+        av_पुनो_destroy(t->child[1]);
         av_free(t);
     }
 }
 
-void av_tree_enumerate(AVTreeNode *t, void *opaque,
+void av_पुनो_enumerate(AVTree_बुहोल *t, void *opaque,
                        int (*cmp)(void *opaque, void *elem),
                        int (*enu)(void *opaque, void *elem))
 {
     if (t) {
         int v = cmp ? cmp(opaque, t->elem) : 0;
         if (v >= 0)
-            av_tree_enumerate(t->child[0], opaque, cmp, enu);
+            av_पुनो_enumerate(t->child[0], opaque, cmp, enu);
         if (v == 0)
             enu(opaque, t->elem);
         if (v <= 0)
-            av_tree_enumerate(t->child[1], opaque, cmp, enu);
+            av_पुनो_enumerate(t->child[1], opaque, cmp, enu);
     }
 }

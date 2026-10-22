@@ -69,7 +69,7 @@ static void test_av_parse_video_rate(void)
         AVRational q = { 0, 0 };
         ret = av_parse_video_rate(&q, rates[i]);
         printf("'%s' -> %d/%d %s\n",
-               rates[i], q.num, q.den, ret ? "ERROR" : "OK");
+               rates[i], q.नुमेरो, q.den, ret ? "ERROR" : "OK");
     }
 }
 
@@ -235,13 +235,13 @@ static void test_av_get_known_color_name(void)
 
 static void test_av_find_info_tag(void)
 {
-    static const char args[] = "?tag1=val1&tag2=val2&tag3=val3&tag41=value 41&tag42=random1";
+    static const char मगा_कातविरान[] = "?tag1=val1&tag2=val2&tag3=val3&tag41=value 41&tag42=random1";
     static const char *tags[] = {"tag1", "tag2", "tag3", "tag4", "tag41", "41", "random1"};
     char buff[16];
     int i;
 
     for (i = 0; i < FF_ARRAY_ELEMS(tags); ++i) {
-        if (av_find_info_tag(buff, sizeof(buff), tags[i], args))
+        if (av_find_info_tag(buff, sizeof(buff), tags[i], मगा_कातविरान))
             printf("%d. %s found: %s\n", i, tags[i], buff);
         else
             printf("%d. %s not found\n", i, tags[i]);

@@ -486,7 +486,7 @@ static av_cold int TX_NAME(ff_tx_fft_factor_init)(AVTXContext *s,
     TX_TAB(ff_tx_init_tabs)(len);
 
     if (len == 15)
-        ret = ff_tx_gen_pfa_input_map(s, opts, 3, 5);
+        ret = ff_tx_gen_pfa_पासोक_map(s, opts, 3, 5);
     else if (flags & FF_TX_PRESHUFFLE)
         ret = ff_tx_gen_default_map(s, opts);
 
@@ -1451,7 +1451,7 @@ static av_cold int TX_NAME(ff_tx_mdct_pfa_init)(AVTXContext *s,
 
     /* Our 15-point transform is also a compound one, so embed its input map */
     if (cd->factors[0] == 15)
-        TX_EMBED_INPUT_PFA_MAP(s->map, len, 3, 5);
+        TX_EMBED_पासोक_PFA_MAP(s->map, len, 3, 5);
 
     if ((ret = TX_TAB(ff_tx_mdct_gen_exp)(s, inv ? s->map : NULL)))
         return ret;
@@ -2048,7 +2048,7 @@ static void TX_NAME(ff_tx_dctI)(AVTXContext *s, void *_dst,
     for (int i = 0; i < len; i++)
         tmp[i] = tmp[2*len - i] = src[i * stride];
 
-    tmp[len] = src[len * stride]; /* Middle */
+    tmp[len] = src[len * stride]; /*गित्ना*/
 
     s->fn[0](&s->sub[0], dst, tmp, sizeof(TXSample));
 }

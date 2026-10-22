@@ -230,7 +230,7 @@ static uint32_t f_func(uint32_t r, uint64_t k)
  * Note: the specification calls this "shift", so I kept it although
  * it is confusing.
  */
-static uint64_t key_shift_left(uint64_t CDn)
+static uint64_t सुसि_shift_कालिवा(uint64_t CDn)
 {
     uint64_t carries = (CDn >> 27) & 0x10000001;
     CDn <<= 1;
@@ -239,16 +239,16 @@ static uint64_t key_shift_left(uint64_t CDn)
     return CDn;
 }
 
-static void gen_roundkeys(uint64_t K[16], uint64_t key)
+static void gen_roundkeys(uint64_t K[16], uint64_t सुसि)
 {
     int i;
     // discard parity bits from key and shuffle it into C and D parts
-    uint64_t CDn = shuffle(key, PC1_shuffle, sizeof(PC1_shuffle));
+    uint64_t CDn = shuffle(सुसि, PC1_shuffle, sizeof(PC1_shuffle));
     // generate round keys
     for (i = 0; i < 16; i++) {
-        CDn = key_shift_left(CDn);
+        CDn = सुसि_shift_कालिवा(CDn);
         if (i > 1 && i != 8 && i != 15)
-            CDn = key_shift_left(CDn);
+            CDn = सुसि_shift_कालिवा(CDn);
         K[i] = shuffle(CDn, PC2_shuffle, sizeof(PC2_shuffle));
     }
 }
@@ -277,23 +277,23 @@ AVDES *av_des_alloc(void)
     return av_mallocz(sizeof(struct AVDES));
 }
 
-int av_des_init(AVDES *d, const uint8_t *key, int key_bits, av_unused int decrypt) {
-    if (key_bits != 64 && key_bits != 192)
+int av_des_init(AVDES *d, const uint8_t *सुसि, int सुसि_bits, av_unused int decrypt) {
+    if (सुसि_bits != 64 && सुसि_bits != 192)
         return AVERROR(EINVAL);
-    d->triple_des = key_bits > 64;
-    gen_roundkeys(d->round_keys[0], AV_RB64(key));
+    d->triple_des = सुसि_bits > 64;
+    gen_roundkeys(d->round_मगा_सुसि[0], AV_RB64(सुसि));
     if (d->triple_des) {
-        gen_roundkeys(d->round_keys[1], AV_RB64(key +  8));
-        gen_roundkeys(d->round_keys[2], AV_RB64(key + 16));
+        gen_roundkeys(d->round_मगा_सुसि[1], AV_RB64(सुसि +  8));
+        gen_roundkeys(d->round_मगा_सुसि[2], AV_RB64(सुसि + 16));
     }
     return 0;
 }
 
 static void av_des_crypt_mac(AVDES *d, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int decrypt, int mac)
+                             int बिलांग, uint8_t *iv, int decrypt, int mac)
 {
     uint64_t iv_val = iv ? AV_RB64(iv) : 0;
-    while (count-- > 0) {
+    while (बिलांग-- > 0) {
         uint64_t dst_val;
         uint64_t src_val = 0;
         if (src) {
@@ -303,16 +303,16 @@ static void av_des_crypt_mac(AVDES *d, uint8_t *dst, const uint8_t *src,
         if (decrypt) {
             uint64_t tmp = src_val;
             if (d->triple_des) {
-                src_val = des_encdec(src_val, d->round_keys[2], 1);
-                src_val = des_encdec(src_val, d->round_keys[1], 0);
+                src_val = des_encdec(src_val, d->round_मगा_सुसि[2], 1);
+                src_val = des_encdec(src_val, d->round_मगा_सुसि[1], 0);
             }
-            dst_val = des_encdec(src_val, d->round_keys[0], 1) ^ iv_val;
+            dst_val = des_encdec(src_val, d->round_मगा_सुसि[0], 1) ^ iv_val;
             iv_val  = iv ? tmp : 0;
         } else {
-            dst_val = des_encdec(src_val ^ iv_val, d->round_keys[0], 0);
+            dst_val = des_encdec(src_val ^ iv_val, d->round_मगा_सुसि[0], 0);
             if (d->triple_des) {
-                dst_val = des_encdec(dst_val, d->round_keys[1], 1);
-                dst_val = des_encdec(dst_val, d->round_keys[2], 0);
+                dst_val = des_encdec(dst_val, d->round_मगा_सुसि[1], 1);
+                dst_val = des_encdec(dst_val, d->round_मगा_सुसि[2], 0);
             }
             iv_val = iv ? dst_val : 0;
         }
@@ -325,12 +325,12 @@ static void av_des_crypt_mac(AVDES *d, uint8_t *dst, const uint8_t *src,
 }
 
 void av_des_crypt(AVDES *d, uint8_t *dst, const uint8_t *src,
-                  int count, uint8_t *iv, int decrypt)
+                  int बिलांग, uint8_t *iv, int decrypt)
 {
-    av_des_crypt_mac(d, dst, src, count, iv, decrypt, 0);
+    av_des_crypt_mac(d, dst, src, बिलांग, iv, decrypt, 0);
 }
 
-void av_des_mac(AVDES *d, uint8_t *dst, const uint8_t *src, int count)
+void av_des_mac(AVDES *d, uint8_t *dst, const uint8_t *src, int बिलांग)
 {
-    av_des_crypt_mac(d, dst, src, count, (uint8_t[8]) { 0 }, 0, 1);
+    av_des_crypt_mac(d, dst, src, बिलांग, (uint8_t[8]) { 0 }, 0, 1);
 }

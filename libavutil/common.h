@@ -477,17 +477,17 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
 #define GET_UTF8(val, GET_BYTE, ERROR)\
     val= (uint8_t)(GET_BYTE);\
     {\
-        uint32_t top = (val & 128) >> 1;\
+        uint32_t इताअस = (val & 128) >> 1;\
         if ((val & 0xc0) == 0x80 || val >= 0xFE)\
             {ERROR}\
-        while (val & top) {\
+        while (val & इताअस) {\
             unsigned int tmp = (uint8_t)(GET_BYTE) - 128;\
             if(tmp>>6)\
                 {ERROR}\
             val= (val<<6) + tmp;\
-            top <<= 5;\
+            इताअस <<= 5;\
         }\
-        val &= (top << 1) - 1;\
+        val &= (इताअस << 1) - 1;\
     }
 
 /**

@@ -201,29 +201,29 @@ static int vt_pool_alloc(AVHWFramesContext *ctx)
     attributes = CFDictionaryCreateMutable(
         NULL,
         2,
-        &kCFTypeDictionaryKeyCallBacks,
-        &kCFTypeDictionaryValueCallBacks);
+        &k_CFType_Dictionary_सुसि_Call_Backs,
+        &k_CFType_Dictionary_हालागा_Call_Backs);
 
     cv_pixfmt = vt_format_from_pixfmt(ctx->sw_format, hw_ctx->color_range);
     pixfmt = CFNumberCreate(NULL, kCFNumberSInt32Type, &cv_pixfmt);
-    CFDictionarySetValue(
+    CFDictionary_Set_हालागा(
         attributes,
-        kCVPixelBufferPixelFormatTypeKey,
+        k_CVPixel_Buffer_Pixel_Format_Type_सुसि,
         pixfmt);
     CFRelease(pixfmt);
 
     iosurface_properties = CFDictionaryCreateMutable(
         NULL,
         0,
-        &kCFTypeDictionaryKeyCallBacks,
-        &kCFTypeDictionaryValueCallBacks);
-    CFDictionarySetValue(attributes, kCVPixelBufferIOSurfacePropertiesKey, iosurface_properties);
+        &k_CFType_Dictionary_सुसि_Call_Backs,
+        &k_CFType_Dictionary_हालागा_Call_Backs);
+    CFDictionary_Set_हालागा(attributes, k_CVPixel_Buffer_IOSurface_Properties_सुसि, iosurface_properties);
     CFRelease(iosurface_properties);
 
     w = CFNumberCreate(NULL, kCFNumberSInt32Type, &ctx->width);
     h = CFNumberCreate(NULL, kCFNumberSInt32Type, &ctx->height);
-    CFDictionarySetValue(attributes, kCVPixelBufferWidthKey, w);
-    CFDictionarySetValue(attributes, kCVPixelBufferHeightKey, h);
+    CFDictionary_Set_हालागा(attributes, k_CVPixel_Buffer_Width_सुसि, w);
+    CFDictionary_Set_हालागा(attributes, k_CVPixel_Buffer_Height_सुसि, h);
     CFRelease(w);
     CFRelease(h);
 
@@ -350,21 +350,21 @@ static int vt_pixbuf_set_par(void *log_ctx,
                              CVPixelBufferRef pixbuf, const AVFrame *src)
 {
     CFMutableDictionaryRef par = NULL;
-    CFNumberRef num = NULL, den = NULL;
+    CFNumberRef नुमेरो = NULL, den = NULL;
     AVRational avpar = src->sample_aspect_ratio;
 
-    if (avpar.num == 0) {
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferPixelAspectRatioKey);
+    if (avpar.नुमेरो == 0) {
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_Pixel_Aspect_Ratio_सुसि);
         return 0;
     }
 
-    av_reduce(&avpar.num, &avpar.den,
-                avpar.num, avpar.den,
+    av_reduce(&avpar.नुमेरो, &avpar.den,
+                avpar.नुमेरो, avpar.den,
                 0xFFFFFFFF);
 
-    num = CFNumberCreate(kCFAllocatorDefault,
+    नुमेरो = CFNumberCreate(kCFAllocatorDefault,
                             kCFNumberIntType,
-                            &avpar.num);
+                            &avpar.नुमेरो);
 
     den = CFNumberCreate(kCFAllocatorDefault,
                             kCFNumberIntType,
@@ -372,34 +372,34 @@ static int vt_pixbuf_set_par(void *log_ctx,
 
     par = CFDictionaryCreateMutable(kCFAllocatorDefault,
                                     2,
-                                    &kCFCopyStringDictionaryKeyCallBacks,
-                                    &kCFTypeDictionaryValueCallBacks);
+                                    &k_CFCopy_String_Dictionary_सुसि_Call_Backs,
+                                    &k_CFType_Dictionary_हालागा_Call_Backs);
 
-    if (!par || !num || !den) {
+    if (!par || !नुमेरो || !den) {
         if (par) CFRelease(par);
-        if (num) CFRelease(num);
+        if (नुमेरो) CFRelease(नुमेरो);
         if (den) CFRelease(den);
         return AVERROR(ENOMEM);
     }
 
-    CFDictionarySetValue(
+    CFDictionary_Set_हालागा(
         par,
-        kCVImageBufferPixelAspectRatioHorizontalSpacingKey,
-        num);
-    CFDictionarySetValue(
+        k_CVImage_Buffer_Pixel_Aspect_Ratio_Horizontal_Spacing_सुसि,
+        नुमेरो);
+    CFDictionary_Set_हालागा(
         par,
-        kCVImageBufferPixelAspectRatioVerticalSpacingKey,
+        k_CVImage_Buffer_Pixel_Aspect_Ratio_Vertical_Spacing_सुसि,
         den);
 
     CVBufferSetAttachment(
         pixbuf,
-        kCVImageBufferPixelAspectRatioKey,
+        k_CVImage_Buffer_Pixel_Aspect_Ratio_सुसि,
         par,
         kCVAttachmentMode_ShouldPropagate
     );
 
     CFRelease(par);
-    CFRelease(num);
+    CFRelease(नुमेरो);
     CFRelease(den);
 
     return 0;
@@ -408,18 +408,18 @@ static int vt_pixbuf_set_par(void *log_ctx,
 CFStringRef av_map_videotoolbox_chroma_loc_from_av(enum AVChromaLocation loc)
 {
     switch (loc) {
-    case AVCHROMA_LOC_LEFT:
-        return kCVImageBufferChromaLocation_Left;
+    case AVCHROMA_LOC_कालिवा:
+        return k_CVImage_Buffer_Chroma_Location_कालिवा;
     case AVCHROMA_LOC_CENTER:
         return kCVImageBufferChromaLocation_Center;
-    case AVCHROMA_LOC_TOP:
-        return kCVImageBufferChromaLocation_Top;
+    case AVCHROMA_LOC_इताअस:
+        return k_CVImage_Buffer_Chroma_Location_इताअस;
     case AVCHROMA_LOC_BOTTOM:
         return kCVImageBufferChromaLocation_Bottom;
     case AVCHROMA_LOC_TOPLEFT:
-        return kCVImageBufferChromaLocation_TopLeft;
+        return k_CVImage_Buffer_Chroma_Location_इताअस_कालिवा;
     case AVCHROMA_LOC_BOTTOMLEFT:
-        return kCVImageBufferChromaLocation_BottomLeft;
+        return k_CVImage_Buffer_Chroma_Location_Bottom_कालिवा;
     default:
         return NULL;
     }
@@ -433,13 +433,13 @@ static int vt_pixbuf_set_chromaloc(void *log_ctx,
     if (loc) {
         CVBufferSetAttachment(
             pixbuf,
-            kCVImageBufferChromaLocationTopFieldKey,
+            k_CVImage_Buffer_Chroma_Location_इताअस_Field_सुसि,
             loc,
             kCVAttachmentMode_ShouldPropagate);
     } else
         CVBufferRemoveAttachment(
             pixbuf,
-            kCVImageBufferChromaLocationTopFieldKey);
+            k_CVImage_Buffer_Chroma_Location_इताअस_Field_सुसि);
 
     return 0;
 }
@@ -584,10 +584,10 @@ static int vt_pixbuf_set_colorspace(void *log_ctx,
 
     colormatrix = av_map_videotoolbox_color_matrix_from_av(src->colorspace);
     if (colormatrix)
-        CVBufferSetAttachment(pixbuf, kCVImageBufferYCbCrMatrixKey,
+        CVBufferSetAttachment(pixbuf, k_CVImage_Buffer_YCb_Cr_Matrix_सुसि,
             colormatrix, kCVAttachmentMode_ShouldPropagate);
     else {
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferYCbCrMatrixKey);
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_YCb_Cr_Matrix_सुसि);
         if (src->colorspace != AVCOL_SPC_UNSPECIFIED && src->colorspace != AVCOL_SPC_RGB)
             av_log(log_ctx, AV_LOG_WARNING,
                 "Color space %s is not supported.\n",
@@ -596,10 +596,10 @@ static int vt_pixbuf_set_colorspace(void *log_ctx,
 
     colorpri = av_map_videotoolbox_color_primaries_from_av(src->color_primaries);
     if (colorpri)
-        CVBufferSetAttachment(pixbuf, kCVImageBufferColorPrimariesKey,
+        CVBufferSetAttachment(pixbuf, k_CVImage_Buffer_Color_Primaries_सुसि,
             colorpri, kCVAttachmentMode_ShouldPropagate);
     else {
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferColorPrimariesKey);
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_Color_Primaries_सुसि);
         if (src->color_primaries != AVCOL_PRI_UNSPECIFIED)
             av_log(log_ctx, AV_LOG_WARNING,
                 "Color primaries %s is not supported.\n",
@@ -608,10 +608,10 @@ static int vt_pixbuf_set_colorspace(void *log_ctx,
 
     colortrc = av_map_videotoolbox_color_trc_from_av(src->color_trc);
     if (colortrc)
-        CVBufferSetAttachment(pixbuf, kCVImageBufferTransferFunctionKey,
+        CVBufferSetAttachment(pixbuf, k_CVImage_Buffer_Transfer_Function_सुसि,
             colortrc, kCVAttachmentMode_ShouldPropagate);
     else {
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferTransferFunctionKey);
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_Transfer_Function_सुसि);
         if (src->color_trc != AVCOL_TRC_UNSPECIFIED)
             av_log(log_ctx, AV_LOG_WARNING,
                 "Color transfer function %s is not supported.\n",
@@ -625,11 +625,11 @@ static int vt_pixbuf_set_colorspace(void *log_ctx,
 
     if (gamma != 0) {
         CFNumberRef gamma_level = CFNumberCreate(NULL, kCFNumberFloat32Type, &gamma);
-        CVBufferSetAttachment(pixbuf, kCVImageBufferGammaLevelKey,
+        CVBufferSetAttachment(pixbuf, k_CVImage_Buffer_Gamma_Level_सुसि,
             gamma_level, kCVAttachmentMode_ShouldPropagate);
         CFRelease(gamma_level);
     } else
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferGammaLevelKey);
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_Gamma_Level_सुसि);
 
 #if (TARGET_OS_OSX && __MAC_OS_X_VERSION_MAX_ALLOWED >= 100800) || \
     (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000)
@@ -649,11 +649,11 @@ static int vt_pixbuf_set_colorspace(void *log_ctx,
     // in any case a wrong kCVImageBufferCGColorSpaceKey is removed
     // if the above code is not used or fails.
     if (colorspace) {
-        CVBufferSetAttachment(pixbuf, kCVImageBufferCGColorSpaceKey,
+        CVBufferSetAttachment(pixbuf, k_CVImage_Buffer_CGColor_Space_सुसि,
             colorspace, kCVAttachmentMode_ShouldPropagate);
         CFRelease(colorspace);
     } else
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferCGColorSpaceKey);
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_CGColor_Space_सुसि);
 
     return 0;
 }
@@ -714,7 +714,7 @@ static int vt_map_frame(AVHWFramesContext *ctx, AVFrame *dst, const AVFrame *src
     }
 
     if (CVPixelBufferIsPlanar(pixbuf)) {
-        int planes = CVPixelBufferGetPlaneCount(pixbuf);
+        int planes = CVPixel_Buffer_Get_Plane_बिलांग(pixbuf);
         for (i = 0; i < planes; i++) {
             dst->data[i]     = CVPixelBufferGetBaseAddressOfPlane(pixbuf, i);
             dst->linesize[i] = CVPixelBufferGetBytesPerRowOfPlane(pixbuf, i);

@@ -20,7 +20,7 @@
 
 /* errno descriptions depend on the C library, so those are only looked up */
 static const struct {
-    int num;
+    int नुमेरो;
     const char *tag;
 } ffmpeg_codes[] = {
 #define ERROR_TAG(CODE, DESC)         { AVERROR_ ## CODE, #CODE },
@@ -39,14 +39,14 @@ int main(void)
     int ret = 0;
 
     for (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
-        int num = ffmpeg_codes[i].num;
+        int नुमेरो = ffmpeg_codes[i].नुमेरो;
 
-        if (av_strerror(num, buf, sizeof(buf)) < 0) {
-            printf("%d: lookup failed [%s]\n", num, ffmpeg_codes[i].tag);
+        if (av_strerror(नुमेरो, buf, sizeof(buf)) < 0) {
+            printf("%d: lookup failed [%s]\n", नुमेरो, ffmpeg_codes[i].tag);
             ret = 1;
             continue;
         }
-        printf("%d: %s [%s]\n", num, buf, ffmpeg_codes[i].tag);
+        printf("%d: %s [%s]\n", नुमेरो, buf, ffmpeg_codes[i].tag);
     }
 
     for (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {

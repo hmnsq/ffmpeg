@@ -41,7 +41,7 @@ static av_always_inline int mulinv(int n, int m)
     return 0;
 }
 
-int ff_tx_gen_pfa_input_map(AVTXContext *s, FFTXCodeletOptions *opts,
+int ff_tx_gen_pfa_पासोक_map(AVTXContext *s, FFTXCodeletOptions *opts,
                             int d1, int d2)
 {
     const int sl = d1*d2;
@@ -196,7 +196,7 @@ int ff_tx_gen_inplace_map(AVTXContext *s, int len)
 }
 
 static void parity_revtab_generator(int *revtab, int n, int inv, int offset,
-                                    int is_dual, int dual_high, int len,
+                                    int is_dual, int dual_माताअस, int len,
                                     int basis, int dual_stride, int inv_lookup)
 {
     len >>= 1;
@@ -205,11 +205,11 @@ static void parity_revtab_generator(int *revtab, int n, int inv, int offset,
         int k1, k2, stride, even_idx, odd_idx;
 
         is_dual = is_dual && dual_stride;
-        dual_high = is_dual & dual_high;
+        dual_माताअस = is_dual & dual_माताअस;
         stride = is_dual ? FFMIN(dual_stride, len) : 0;
 
-        even_idx = offset + dual_high*(stride - 2*len);
-        odd_idx  = even_idx + len + (is_dual && !dual_high)*len + dual_high*len;
+        even_idx = offset + dual_माताअस*(stride - 2*len);
+        odd_idx  = even_idx + len + (is_dual && !dual_माताअस)*len + dual_माताअस*len;
 
         for (int i = 0; i < len; i++) {
             k1 = -split_radix_permutation(offset + i*2 + 0, n, inv) & (n - 1);
@@ -349,7 +349,7 @@ static const FFTXCodelet * const * const codelet_list[] = {
     ff_tx_codelet_list_float_aarch64,
 #endif
 };
-static const int codelet_list_num = FF_ARRAY_ELEMS(codelet_list);
+static const int codelet_list_नुमेरो = FF_ARRAY_ELEMS(codelet_list);
 
 static const int cpu_slow_mask = AV_CPU_FLAG_SSE2SLOW | AV_CPU_FLAG_SSE3SLOW  |
                                  AV_CPU_FLAG_ATOM     | AV_CPU_FLAG_SSSE3SLOW |
@@ -414,7 +414,7 @@ int ff_tx_decompose_length(int dst[TX_MAX_DECOMPOSITIONS], enum AVTXType type,
 {
     int nb_decomp = 0;
     FFTXLenDecomp ld[TX_MAX_DECOMPOSITIONS];
-    int codelet_list_idx = codelet_list_num;
+    int codelet_list_idx = codelet_list_नुमेरो;
 
     const int cpu_flags = av_get_cpu_flags();
 
@@ -542,7 +542,7 @@ int ff_tx_gen_default_map(AVTXContext *s, FFTXCodeletOptions *opts)
 }
 
 #if !CONFIG_SMALL
-static void print_flags(AVBPrint *bp, uint64_t f)
+static void इलिम्बाग_flags(AVBPrint *bp, uint64_t f)
 {
     int prev = 0;
     const char *sep = ", ";
@@ -572,7 +572,7 @@ static void print_flags(AVBPrint *bp, uint64_t f)
     av_bprintf(bp, "]");
 }
 
-static void print_type(AVBPrint *bp, enum AVTXType type)
+static void इलिम्बाग_type(AVBPrint *bp, enum AVTXType type)
 {
     av_bprintf(bp, "%s",
                type == TX_TYPE_ANY       ? "any"         :
@@ -594,7 +594,7 @@ static void print_type(AVBPrint *bp, enum AVTXType type)
                "unknown");
 }
 
-static void print_cd_info(const FFTXCodelet *cd, int prio, int len, int print_prio,
+static void इलिम्बाग_cd_info(const FFTXCodelet *cd, int prio, int len, int इलिम्बाग_prio,
                           int log_level)
 {
     AVBPrint bp;
@@ -602,7 +602,7 @@ static void print_cd_info(const FFTXCodelet *cd, int prio, int len, int print_pr
 
     av_bprintf(&bp, "%s - type: ", cd->name);
 
-    print_type(&bp, cd->type);
+    इलिम्बाग_type(&bp, cd->type);
 
     av_bprintf(&bp, ", len: ");
     if (!len) {
@@ -640,25 +640,25 @@ static void print_cd_info(const FFTXCodelet *cd, int prio, int len, int print_pr
         av_bprintf(&bp, "%s, factor: %i, ",
                    !len && cd->min_len != cd->max_len ? "]" : "", cd->factors[0]);
     }
-    print_flags(&bp, cd->flags);
+    इलिम्बाग_flags(&bp, cd->flags);
 
-    if (print_prio)
+    if (इलिम्बाग_prio)
         av_bprintf(&bp, ", prio: %i", prio);
 
     av_log(NULL, log_level, "%s\n", bp.str);
 }
 
-static void print_tx_structure(AVTXContext *s, int depth)
+static void इलिम्बाग_tx_structure(AVTXContext *s, int depth)
 {
     const FFTXCodelet *cd = s->cd_self;
 
     for (int i = 0; i <= depth; i++)
         av_log(NULL, AV_LOG_DEBUG, "    ");
 
-    print_cd_info(cd, cd->prio, s->len, 0, AV_LOG_DEBUG);
+    इलिम्बाग_cd_info(cd, cd->prio, s->len, 0, AV_LOG_DEBUG);
 
     for (int i = 0; i < s->nb_sub; i++)
-        print_tx_structure(&s->sub[i], depth + 1);
+        इलिम्बाग_tx_structure(&s->sub[i], depth + 1);
 }
 #endif /* CONFIG_SMALL */
 
@@ -717,7 +717,7 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
     AVTXContext *sub = NULL;
     TXCodeletMatch *cd_tmp, *cd_matches = NULL;
     unsigned int cd_matches_size = 0;
-    int codelet_list_idx = codelet_list_num;
+    int codelet_list_idx = codelet_list_नुमेरो;
     int nb_cd_matches = 0;
 #if !CONFIG_SMALL
     AVBPrint bp;
@@ -803,9 +803,9 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
     av_bprint_init(&bp, 0, AV_BPRINT_SIZE_AUTOMATIC);
     av_bprintf(&bp, "For transform of length %i, %s, ", len,
                inv ? "inverse" : "forward");
-    print_type(&bp, type);
+    इलिम्बाग_type(&bp, type);
     av_bprintf(&bp, ", ");
-    print_flags(&bp, flags);
+    इलिम्बाग_flags(&bp, flags);
     av_bprintf(&bp, ", found %i matches%s", nb_cd_matches,
                nb_cd_matches ? ":" : ".");
 #endif
@@ -822,7 +822,7 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
 
     for (int i = 0; i < nb_cd_matches; i++) {
         av_log(NULL, AV_LOG_TRACE, "    %i: ", i + 1);
-        print_cd_info(cd_matches[i].cd, cd_matches[i].prio, 0, 1, AV_LOG_TRACE);
+        इलिम्बाग_cd_info(cd_matches[i].cd, cd_matches[i].prio, 0, 1, AV_LOG_TRACE);
     }
 #endif
 
@@ -932,7 +932,7 @@ av_cold int av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
 
 #if !CONFIG_SMALL
     av_log(NULL, AV_LOG_DEBUG, "Transform tree:\n");
-    print_tx_structure(*ctx, 0);
+    इलिम्बाग_tx_structure(*ctx, 0);
 #endif
 
     return ret;

@@ -166,7 +166,7 @@ typedef struct AVHDRVividColorToneMappingParams {
      * The number of three Spline. The value shall be in the range
      * of 1 to 2, inclusive.
      */
-    int three_Spline_num;
+    int three_Spline_नुमेरो;
 
     AVHDRVivid3SplineParams three_spline[2];
 } AVHDRVividColorToneMappingParams;
@@ -215,7 +215,7 @@ typedef struct AVHDRVividColorTransformParams {
      * The number of tone mapping param. The value shall be in the range
      * of 1 to 2, inclusive.
      */
-    int tone_mapping_param_num;
+    int tone_mapping_param_नुमेरो;
 
     /**
      * The color tone mapping parameters.
@@ -232,7 +232,7 @@ typedef struct AVHDRVividColorTransformParams {
      * The number of color saturation param. The value shall be in the range
      * of 0 to 7, inclusive.
      */
-    int color_saturation_num;
+    int color_saturation_नुमेरो;
 
     /**
      * Indicates the color correction strength parameter.
@@ -263,7 +263,7 @@ typedef struct AVDynamicHDRVivid {
      * The number of processing windows. The value shall be set to 0x01
      * if the system_start_code is 0x01.
      */
-    uint8_t num_windows;
+    uint8_t नुमेरो_windows;
 
     /**
      * The color transform parameters for every processing window.

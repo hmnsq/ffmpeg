@@ -71,9 +71,9 @@ void av_aes_ctr_set_random_iv(struct AVAESCTR *a)
     av_aes_ctr_set_iv(a, (uint8_t*)iv);
 }
 
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key)
+int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *सुसि)
 {
-    av_aes_init(&a->aes, key, 128, 0);
+    av_aes_init(&a->aes, सुसि, 128, 0);
 
     memset(a->counter, 0, sizeof(a->counter));
     a->block_offset = 0;
@@ -99,19 +99,19 @@ void av_aes_ctr_increment_iv(struct AVAESCTR *a)
     a->block_offset = 0;
 }
 
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int count)
+void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int बिलांग)
 {
-    if (a->block_offset && count > 0) {
-        int left = FFMIN(count, AES_BLOCK_SIZE - a->block_offset);
-        for (int len = 0; len < left; len++)
+    if (a->block_offset && बिलांग > 0) {
+        int कालिवा = FFMIN(बिलांग, AES_BLOCK_SIZE - a->block_offset);
+        for (int len = 0; len < कालिवा; len++)
             dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
         a->block_offset &= AES_BLOCK_SIZE - 1;
-        dst += left;
-        src += left;
-        count -= left;
+        dst += कालिवा;
+        src += कालिवा;
+        बिलांग -= कालिवा;
     }
 
-    while (count >= AES_BLOCK_SIZE) {
+    while (बिलांग >= AES_BLOCK_SIZE) {
         av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
         av_aes_ctr_increment_be64(a->counter + 8);
 #if HAVE_FAST_64BIT
@@ -123,13 +123,13 @@ void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int 
 #endif
         dst += AES_BLOCK_SIZE;
         src += AES_BLOCK_SIZE;
-        count -= AES_BLOCK_SIZE;
+        बिलांग -= AES_BLOCK_SIZE;
     }
 
-    if (count > 0) {
+    if (बिलांग > 0) {
         av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
         av_aes_ctr_increment_be64(a->counter + 8);
-        for (int len = 0; len < count; len++)
+        for (int len = 0; len < बिलांग; len++)
             dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
     }
 }

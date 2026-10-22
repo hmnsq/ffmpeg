@@ -55,7 +55,7 @@ int main(void)
     if (buf) {
         printf("alloc: size=%zu data=%s\n", buf->size, buf->data ? "set" : "null");
         printf("writable: %d\n", av_buffer_is_writable(buf));
-        printf("refcount: %d\n", av_buffer_get_ref_count(buf));
+        printf("refcount: %d\n", av_buffer_get_ref_बिलांग(buf));
         av_buffer_unref(&buf);
         printf("after unref: %s\n", buf == NULL ? "null" : "leaked");
     }
@@ -114,12 +114,12 @@ int main(void)
         buf->data[0] = 0xAB;
         buf2 = av_buffer_ref(buf);
         if (buf2) {
-            printf("ref: refcount=%d\n", av_buffer_get_ref_count(buf));
+            printf("ref: refcount=%d\n", av_buffer_get_ref_बिलांग(buf));
             printf("shared data: %s\n",
                    buf2->data[0] == 0xAB ? "yes" : "no");
             printf("writable after ref: %d\n", av_buffer_is_writable(buf));
             av_buffer_unref(&buf2);
-            printf("refcount after unref: %d\n", av_buffer_get_ref_count(buf));
+            printf("refcount after unref: %d\n", av_buffer_get_ref_बिलांग(buf));
             printf("writable after unref: %d\n", av_buffer_is_writable(buf));
         }
         av_buffer_unref(&buf);
@@ -172,7 +172,7 @@ int main(void)
         buf2->data[0] = 0x22;
         av_buffer_replace(&buf, buf2);
         printf("replace: data=0x%02x\n", buf->data[0]);
-        printf("refcount: %d\n", av_buffer_get_ref_count(buf2));
+        printf("refcount: %d\n", av_buffer_get_ref_बिलांग(buf2));
     }
     av_buffer_unref(&buf);
     av_buffer_unref(&buf2);

@@ -42,12 +42,12 @@ static const DECLARE_ALIGNED(8, uint8_t, fixed_iv)[] = {
     0xde, 0xad, 0xbe, 0xef, 0xde, 0xad, 0xbe, 0xef
 };
 
-static const DECLARE_ALIGNED(8, uint8_t, fixed_key)[] = {
+static const DECLARE_ALIGNED(8, uint8_t, fixed_सुसि)[] = {
     0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
     0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66
 };
 
-static DECLARE_ALIGNED(8, uint32_t, key)[4];
+static DECLARE_ALIGNED(8, uint32_t, सुसि)[4];
 
 static DECLARE_ALIGNED(8, uint8_t, tmp)[40];
 
@@ -68,16 +68,16 @@ int main (void)
             goto ERROR;
 
         if (i)
-            k = fixed_key;
+            k = fixed_सुसि;
         else {
             // Note: av_random_bytes() should be used in a real world scenario,
             // but since that function can fail, av_get_random_seed() is used
             // here for the purpose of this test, as its output is sufficient.
-            key[0] = av_get_random_seed();
-            key[1] = av_get_random_seed();
-            key[2] = av_get_random_seed();
-            key[3] = av_get_random_seed();
-            k = (uint8_t *)key;
+            सुसि[0] = av_get_random_seed();
+            सुसि[1] = av_get_random_seed();
+            सुसि[2] = av_get_random_seed();
+            सुसि[3] = av_get_random_seed();
+            k = (uint8_t *)सुसि;
         }
 
         if (av_aes_ctr_init(ae, k) < 0)
@@ -95,13 +95,13 @@ int main (void)
 
         uint8_t *dst = tmp;
         const uint8_t *src = plain;
-        int left = sizeof(plain);
-        while (left > 0) {
-            int count = (av_lfg_get(&lfg) % left) + 1;
-            av_aes_ctr_crypt(ae, dst, src, count);
-            dst += count;
-            src += count;
-            left -= count;
+        int कालिवा = sizeof(plain);
+        while (कालिवा > 0) {
+            int बिलांग = (av_lfg_get(&lfg) % कालिवा) + 1;
+            av_aes_ctr_crypt(ae, dst, src, बिलांग);
+            dst += बिलांग;
+            src += बिलांग;
+            कालिवा -= बिलांग;
         }
         if (i && memcmp(tmp, encrypted, sizeof(tmp)) != 0) {
             av_log(NULL, AV_LOG_ERROR, "test failed\n");
@@ -109,12 +109,12 @@ int main (void)
         }
 
         dst = tmp;
-        left = sizeof(plain);
-        while (left > 0) {
-            int count = (av_lfg_get(&lfg) % left) + 1;
-            av_aes_ctr_crypt(ad, dst, dst, count);
-            dst += count;
-            left -= count;
+        कालिवा = sizeof(plain);
+        while (कालिवा > 0) {
+            int बिलांग = (av_lfg_get(&lfg) % कालिवा) + 1;
+            av_aes_ctr_crypt(ad, dst, dst, बिलांग);
+            dst += बिलांग;
+            कालिवा -= बिलांग;
         }
 
         if (memcmp(tmp, plain, sizeof(tmp)) != 0){

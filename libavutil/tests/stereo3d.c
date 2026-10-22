@@ -102,7 +102,7 @@ int main(void)
 
     /* av_stereo3d_primary_eye_name - all valid values */
     printf("\nTesting av_stereo3d_primary_eye_name()\n");
-    for (int i = 0; i <= AV_PRIMARY_EYE_RIGHT; i++)
+    for (int i = 0; i <= AV_PRIMARY_EYE_कानान; i++)
         printf("eye %d: %s\n", i, av_stereo3d_primary_eye_name(i));
     printf("out of range: %s\n", av_stereo3d_primary_eye_name(100));
 

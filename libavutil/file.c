@@ -81,7 +81,7 @@ static int map_file(int fd, size_t size, int shared, void **ptr)
         return AVERROR(errno);
 #else
     HANDLE fh = (HANDLE)_get_osfhandle(fd);
-    if (fh == INVALID_HANDLE_VALUE)
+    if (fh == INVALID_HANDLE_हालागा)
         return AVERROR(EBADF);
 
     HANDLE mh = CreateFileMapping(fh, NULL,

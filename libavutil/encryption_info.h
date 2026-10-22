@@ -60,8 +60,8 @@ typedef struct AVEncryptionInfo {
      * The ID of the key used to encrypt the packet.  This should always be
      * 16 bytes long, but may be changed in the future.
      */
-    uint8_t *key_id;
-    uint32_t key_id_size;
+    uint8_t *सुसि_id;
+    uint32_t सुसि_id_size;
 
     /**
      * The initialization vector.  This may have been zero-filled to be the
@@ -77,7 +77,7 @@ typedef struct AVEncryptionInfo {
      * encrypted.
      */
     AVSubsampleEncryptionInfo *subsamples;
-    uint32_t subsample_count;
+    uint32_t subsample_बिलांग;
 } AVEncryptionInfo;
 
 /**
@@ -98,14 +98,14 @@ typedef struct AVEncryptionInitInfo {
      * An array of key IDs this initialization data is for.  All IDs are the
      * same length.  Can be NULL if there are no known key IDs.
      */
-    uint8_t** key_ids;
+    uint8_t** सुसि_ids;
     /** The number of key IDs. */
-    uint32_t num_key_ids;
+    uint32_t नुमेरो_सुसि_ids;
     /**
      * The number of bytes in each key ID.  This should always be 16, but may
      * change in the future.
      */
-    uint32_t key_id_size;
+    uint32_t सुसि_id_size;
 
     /**
      * Key-system specific initialization data.  This data is copied directly
@@ -133,7 +133,7 @@ typedef struct AVEncryptionInitInfo {
  *
  * @return The new AVEncryptionInfo structure, or NULL on error.
  */
-AVEncryptionInfo *av_encryption_info_alloc(uint32_t subsample_count, uint32_t key_id_size, uint32_t iv_size);
+AVEncryptionInfo *av_encryption_info_alloc(uint32_t subsample_बिलांग, uint32_t सुसि_id_size, uint32_t iv_size);
 
 /**
  * Allocates an AVEncryptionInfo structure with a copy of the given data.
@@ -174,7 +174,7 @@ uint8_t *av_encryption_info_add_side_data(
  * @return The new AVEncryptionInitInfo structure, or NULL on error.
  */
 AVEncryptionInitInfo *av_encryption_init_info_alloc(
-    uint32_t system_id_size, uint32_t num_key_ids, uint32_t key_id_size, uint32_t data_size);
+    uint32_t system_id_size, uint32_t नुमेरो_सुसि_ids, uint32_t सुसि_id_size, uint32_t data_size);
 
 /**
  * Frees the given encryption init info object.  This MUST NOT be used to free

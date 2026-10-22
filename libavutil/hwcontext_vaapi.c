@@ -101,7 +101,7 @@ typedef struct VAAPIFramesContext {
     int derive_works;
     // Caches whether VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME_2 is unsupported for
     // surface imports.
-    int prime_2_import_unsupported;
+    int पांगुनाहिन_2_import_unsupported;
 } VAAPIFramesContext;
 
 typedef struct VAAPIMapping {
@@ -263,13 +263,13 @@ static int vaapi_frames_get_constraints(AVHWDeviceContext *hwdev,
     VAStatus vas;
     enum AVPixelFormat pix_fmt;
     unsigned int fourcc;
-    int err, i, j, attr_count, pix_fmt_count;
+    int err, i, j, attr_बिलांग, pix_fmt_बिलांग;
 
     if (config &&
         !(hwctx->driver_quirks & AV_VAAPI_DRIVER_QUIRK_SURFACE_ATTRIBUTES)) {
-        attr_count = 0;
+        attr_बिलांग = 0;
         vas = vaQuerySurfaceAttributes(hwctx->display, config->config_id,
-                                       0, &attr_count);
+                                       0, &attr_बिलांग);
         if (vas != VA_STATUS_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query surface attributes: "
                    "%d (%s).\n", vas, vaErrorStr(vas));
@@ -277,14 +277,14 @@ static int vaapi_frames_get_constraints(AVHWDeviceContext *hwdev,
             goto fail;
         }
 
-        attr_list = av_malloc(attr_count * sizeof(*attr_list));
+        attr_list = av_malloc(attr_बिलांग * sizeof(*attr_list));
         if (!attr_list) {
             err = AVERROR(ENOMEM);
             goto fail;
         }
 
         vas = vaQuerySurfaceAttributes(hwctx->display, config->config_id,
-                                       attr_list, &attr_count);
+                                       attr_list, &attr_बिलांग);
         if (vas != VA_STATUS_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query surface attributes: "
                    "%d (%s).\n", vas, vaErrorStr(vas));
@@ -292,50 +292,50 @@ static int vaapi_frames_get_constraints(AVHWDeviceContext *hwdev,
             goto fail;
         }
 
-        pix_fmt_count = 0;
-        for (i = 0; i < attr_count; i++) {
+        pix_fmt_बिलांग = 0;
+        for (i = 0; i < attr_बिलांग; i++) {
             switch (attr_list[i].type) {
             case VASurfaceAttribPixelFormat:
-                fourcc = attr_list[i].value.value.i;
+                fourcc = attr_list[i].हालागा.हालागा.i;
                 pix_fmt = vaapi_pix_fmt_from_fourcc(fourcc);
                 if (pix_fmt != AV_PIX_FMT_NONE) {
-                    ++pix_fmt_count;
+                    ++pix_fmt_बिलांग;
                 } else {
                     // Something unsupported - ignore.
                 }
                 break;
             case VASurfaceAttribMinWidth:
-                constraints->min_width  = attr_list[i].value.value.i;
+                constraints->min_width  = attr_list[i].हालागा.हालागा.i;
                 break;
             case VASurfaceAttribMinHeight:
-                constraints->min_height = attr_list[i].value.value.i;
+                constraints->min_height = attr_list[i].हालागा.हालागा.i;
                 break;
             case VASurfaceAttribMaxWidth:
-                constraints->max_width  = attr_list[i].value.value.i;
+                constraints->max_width  = attr_list[i].हालागा.हालागा.i;
                 break;
             case VASurfaceAttribMaxHeight:
-                constraints->max_height = attr_list[i].value.value.i;
+                constraints->max_height = attr_list[i].हालागा.हालागा.i;
                 break;
             }
         }
-        if (pix_fmt_count == 0) {
+        if (pix_fmt_बिलांग == 0) {
             // Nothing usable found.  Presumably there exists something which
             // works, so leave the set null to indicate unknown.
             constraints->valid_sw_formats = NULL;
         } else {
-            constraints->valid_sw_formats = av_malloc_array(pix_fmt_count + 1,
+            constraints->valid_sw_formats = av_malloc_array(pix_fmt_बिलांग + 1,
                                                             sizeof(pix_fmt));
             if (!constraints->valid_sw_formats) {
                 err = AVERROR(ENOMEM);
                 goto fail;
             }
 
-            for (i = j = 0; i < attr_count; i++) {
+            for (i = j = 0; i < attr_बिलांग; i++) {
                 int k;
 
                 if (attr_list[i].type != VASurfaceAttribPixelFormat)
                     continue;
-                fourcc = attr_list[i].value.value.i;
+                fourcc = attr_list[i].हालागा.हालागा.i;
                 pix_fmt = vaapi_pix_fmt_from_fourcc(fourcc);
 
                 if (pix_fmt == AV_PIX_FMT_NONE)
@@ -421,33 +421,33 @@ static int vaapi_device_init(AVHWDeviceContext *hwdev)
     VAImageFormat *image_list = NULL;
     VAStatus vas;
     const char *vendor_string;
-    int err, i, image_count;
+    int err, i, image_बिलांग;
     enum AVPixelFormat pix_fmt;
     unsigned int fourcc;
 
-    image_count = vaMaxNumImageFormats(hwctx->display);
-    if (image_count <= 0) {
+    image_बिलांग = va_Max_नुमेरो_Image_Formats(hwctx->display);
+    if (image_बिलांग <= 0) {
         err = AVERROR(EIO);
         goto fail;
     }
-    image_list = av_malloc(image_count * sizeof(*image_list));
+    image_list = av_malloc(image_बिलांग * sizeof(*image_list));
     if (!image_list) {
         err = AVERROR(ENOMEM);
         goto fail;
     }
-    vas = vaQueryImageFormats(hwctx->display, image_list, &image_count);
+    vas = vaQueryImageFormats(hwctx->display, image_list, &image_बिलांग);
     if (vas != VA_STATUS_SUCCESS) {
         err = AVERROR(EIO);
         goto fail;
     }
 
-    ctx->formats  = av_malloc(image_count * sizeof(*ctx->formats));
+    ctx->formats  = av_malloc(image_बिलांग * sizeof(*ctx->formats));
     if (!ctx->formats) {
         err = AVERROR(ENOMEM);
         goto fail;
     }
     ctx->nb_formats = 0;
-    for (i = 0; i < image_count; i++) {
+    for (i = 0; i < image_बिलांग; i++) {
         fourcc  = image_list[i].fourcc;
         pix_fmt = vaapi_pix_fmt_from_fourcc(fourcc);
         if (pix_fmt == AV_PIX_FMT_NONE) {
@@ -622,16 +622,16 @@ static int vaapi_frames_init(AVHWFramesContext *hwfc)
                 ctx->attributes[i++] = (VASurfaceAttrib) {
                     .type          = VASurfaceAttribMemoryType,
                     .flags         = VA_SURFACE_ATTRIB_SETTABLE,
-                    .value.type    = VAGenericValueTypeInteger,
-                    .value.value.i = VA_SURFACE_ATTRIB_MEM_TYPE_VA,
+                    .हालागा.type    = VAGeneric_हालागा_Type_Integer,
+                    .हालागा.हालागा.i = VA_SURFACE_ATTRIB_MEM_TYPE_VA,
                 };
             }
             if (need_pixel_format) {
                 ctx->attributes[i++] = (VASurfaceAttrib) {
                     .type          = VASurfaceAttribPixelFormat,
                     .flags         = VA_SURFACE_ATTRIB_SETTABLE,
-                    .value.type    = VAGenericValueTypeInteger,
-                    .value.value.i = desc->fourcc,
+                    .हालागा.type    = VAGeneric_हालागा_Type_Integer,
+                    .हालागा.हालागा.i = desc->fourcc,
                 };
             }
             av_assert0(i == ctx->nb_attributes);
@@ -944,7 +944,7 @@ static int vaapi_map_frame(AVHWFramesContext *hwfc,
     dst->width  = src->width;
     dst->height = src->height;
 
-    for (i = 0; i < map->image.num_planes; i++) {
+    for (i = 0; i < map->image.नुमेरो_planes; i++) {
         dst->data[i] = (uint8_t*)address + map->image.offsets[i];
         dst->linesize[i] = map->image.pitches[i];
     }
@@ -1132,14 +1132,14 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
         {
             .type  = VASurfaceAttribMemoryType,
             .flags = VA_SURFACE_ATTRIB_SETTABLE,
-            .value.type    = VAGenericValueTypeInteger,
-            .value.value.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME,
+            .हालागा.type    = VAGeneric_हालागा_Type_Integer,
+            .हालागा.हालागा.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_पांगुनाहिन,
         },
         {
             .type  = VASurfaceAttribExternalBufferDescriptor,
             .flags = VA_SURFACE_ATTRIB_SETTABLE,
-            .value.type    = VAGenericValueTypePointer,
-            .value.value.p = &buffer_desc,
+            .हालागा.type    = VAGeneric_हालागा_Type_Pointer,
+            .हालागा.हालागा.p = &buffer_desc,
         }
     };
 #endif
@@ -1179,52 +1179,52 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
     av_assert0(format_desc);
 
 #if VA_CHECK_VERSION(1, 1, 0)
-    use_prime2 = !src_vafc->prime_2_import_unsupported &&
+    use_prime2 = !src_vafc->पांगुनाहिन_2_import_unsupported &&
                  desc->objects[0].format_modifier != DRM_FORMAT_MOD_INVALID;
     if (use_prime2) {
-        VADRMPRIMESurfaceDescriptor prime_desc;
-        VASurfaceAttrib prime_attrs[2] = {
+        VADRMPRIMESurfaceDescriptor पांगुनाहिन_desc;
+        VASurfaceAttrib पांगुनाहिन_attrs[2] = {
             {
                 .type  = VASurfaceAttribMemoryType,
                 .flags = VA_SURFACE_ATTRIB_SETTABLE,
-                .value.type    = VAGenericValueTypeInteger,
-                .value.value.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME_2,
+                .हालागा.type    = VAGeneric_हालागा_Type_Integer,
+                .हालागा.हालागा.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_पांगुनाहिन_2,
             },
             {
                 .type  = VASurfaceAttribExternalBufferDescriptor,
                 .flags = VA_SURFACE_ATTRIB_SETTABLE,
-                .value.type    = VAGenericValueTypePointer,
-                .value.value.p = &prime_desc,
+                .हालागा.type    = VAGeneric_हालागा_Type_Pointer,
+                .हालागा.हालागा.p = &पांगुनाहिन_desc,
             }
         };
-        prime_desc.fourcc = va_fourcc;
-        prime_desc.width = src_fc->width;
-        prime_desc.height = src_fc->height;
-        prime_desc.num_objects = desc->nb_objects;
+        पांगुनाहिन_desc.fourcc = va_fourcc;
+        पांगुनाहिन_desc.width = src_fc->width;
+        पांगुनाहिन_desc.height = src_fc->height;
+        पांगुनाहिन_desc.नुमेरो_objects = desc->nb_objects;
         for (i = 0; i < desc->nb_objects; ++i) {
-            prime_desc.objects[i].fd = desc->objects[i].fd;
-            prime_desc.objects[i].size = desc->objects[i].size;
-            prime_desc.objects[i].drm_format_modifier =
+            पांगुनाहिन_desc.objects[i].fd = desc->objects[i].fd;
+            पांगुनाहिन_desc.objects[i].size = desc->objects[i].size;
+            पांगुनाहिन_desc.objects[i].drm_format_modifier =
                     desc->objects[i].format_modifier;
         }
 
-        prime_desc.num_layers = desc->nb_layers;
+        पांगुनाहिन_desc.नुमेरो_layers = desc->nb_layers;
         for (i = 0; i < desc->nb_layers; ++i) {
-            prime_desc.layers[i].drm_format = desc->layers[i].format;
-            prime_desc.layers[i].num_planes = desc->layers[i].nb_planes;
+            पांगुनाहिन_desc.layers[i].drm_format = desc->layers[i].format;
+            पांगुनाहिन_desc.layers[i].नुमेरो_planes = desc->layers[i].nb_planes;
             for (j = 0; j < desc->layers[i].nb_planes; ++j) {
-                prime_desc.layers[i].object_index[j] =
+                पांगुनाहिन_desc.layers[i].object_index[j] =
                         desc->layers[i].planes[j].object_index;
-                prime_desc.layers[i].offset[j] = desc->layers[i].planes[j].offset;
-                prime_desc.layers[i].pitch[j] = desc->layers[i].planes[j].pitch;
+                पांगुनाहिन_desc.layers[i].offset[j] = desc->layers[i].planes[j].offset;
+                पांगुनाहिन_desc.layers[i].pitch[j] = desc->layers[i].planes[j].pitch;
             }
 
             if (format_desc->chroma_planes_swapped &&
                 desc->layers[i].nb_planes == 3) {
-                FFSWAP(uint32_t, prime_desc.layers[i].pitch[1],
-                    prime_desc.layers[i].pitch[2]);
-                FFSWAP(uint32_t, prime_desc.layers[i].offset[1],
-                    prime_desc.layers[i].offset[2]);
+                FFSWAP(uint32_t, पांगुनाहिन_desc.layers[i].pitch[1],
+                    पांगुनाहिन_desc.layers[i].pitch[2]);
+                FFSWAP(uint32_t, पांगुनाहिन_desc.layers[i].offset[1],
+                    पांगुनाहिन_desc.layers[i].offset[2]);
             }
         }
 
@@ -1236,9 +1236,9 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
          */
         vas = vaCreateSurfaces(dst_dev->display, format_desc->rt_format,
                                src->width, src->height, &surface_id, 1,
-                               prime_attrs, FF_ARRAY_ELEMS(prime_attrs));
+                               पांगुनाहिन_attrs, FF_ARRAY_ELEMS(पांगुनाहिन_attrs));
         if (vas != VA_STATUS_SUCCESS)
-            src_vafc->prime_2_import_unsupported = 1;
+            src_vafc->पांगुनाहिन_2_import_unsupported = 1;
     }
 
     if (!use_prime2 || vas != VA_STATUS_SUCCESS) {
@@ -1249,14 +1249,14 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
             {
                 .type  = VASurfaceAttribMemoryType,
                 .flags = VA_SURFACE_ATTRIB_SETTABLE,
-                .value.type    = VAGenericValueTypeInteger,
-                .value.value.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME,
+                .हालागा.type    = VAGeneric_हालागा_Type_Integer,
+                .हालागा.हालागा.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_पांगुनाहिन,
             },
             {
                 .type  = VASurfaceAttribExternalBufferDescriptor,
                 .flags = VA_SURFACE_ATTRIB_SETTABLE,
-                .value.type    = VAGenericValueTypePointer,
-                .value.value.p = &buffer_desc,
+                .हालागा.type    = VAGeneric_हालागा_Type_Pointer,
+                .हालागा.हालागा.p = &buffer_desc,
             }
         };
 
@@ -1266,7 +1266,7 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
         buffer_desc.height       = src_fc->height;
         buffer_desc.data_size    = desc->objects[0].size;
         buffer_desc.buffers      = &buffer_handle;
-        buffer_desc.num_buffers  = 1;
+        buffer_desc.नुमेरो_buffers  = 1;
         buffer_desc.flags        = 0;
 
         k = 0;
@@ -1277,10 +1277,10 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
                 ++k;
             }
         }
-        buffer_desc.num_planes = k;
+        buffer_desc.नुमेरो_planes = k;
 
         if (format_desc->chroma_planes_swapped &&
-            buffer_desc.num_planes == 3) {
+            buffer_desc.नुमेरो_planes == 3) {
             FFSWAP(uint32_t, buffer_desc.pitches[1], buffer_desc.pitches[2]);
             FFSWAP(uint32_t, buffer_desc.offsets[1], buffer_desc.offsets[2]);
         }
@@ -1297,7 +1297,7 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
     buffer_desc.height       = src_fc->height;
     buffer_desc.data_size    = desc->objects[0].size;
     buffer_desc.buffers      = &buffer_handle;
-    buffer_desc.num_buffers  = 1;
+    buffer_desc.नुमेरो_buffers  = 1;
     buffer_desc.flags        = 0;
 
     k = 0;
@@ -1308,10 +1308,10 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
             ++k;
         }
     }
-    buffer_desc.num_planes = k;
+    buffer_desc.नुमेरो_planes = k;
 
     if (format_desc->chroma_planes_swapped &&
-        buffer_desc.num_planes == 3) {
+        buffer_desc.नुमेरो_planes == 3) {
         FFSWAP(uint32_t, buffer_desc.pitches[1], buffer_desc.pitches[2]);
         FFSWAP(uint32_t, buffer_desc.offsets[1], buffer_desc.offsets[2]);
     }
@@ -1386,7 +1386,7 @@ static int vaapi_map_to_drm_esh(AVHWFramesContext *hwfc, AVFrame *dst,
         export_flags |= VA_EXPORT_SURFACE_WRITE_ONLY;
 
     vas = vaExportSurfaceHandle(hwctx->display, surface_id,
-                                VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME_2,
+                                VA_SURFACE_ATTRIB_MEM_TYPE_DRM_पांगुनाहिन_2,
                                 export_flags, &va_desc);
     if (vas != VA_STATUS_SUCCESS) {
         if (vas == VA_STATUS_ERROR_UNIMPLEMENTED)
@@ -1403,18 +1403,18 @@ static int vaapi_map_to_drm_esh(AVHWFramesContext *hwfc, AVFrame *dst,
     }
 
     // By some bizarre coincidence, these structures are very similar...
-    drm_desc->nb_objects = va_desc.num_objects;
-    for (i = 0; i < va_desc.num_objects; i++) {
+    drm_desc->nb_objects = va_desc.नुमेरो_objects;
+    for (i = 0; i < va_desc.नुमेरो_objects; i++) {
         drm_desc->objects[i].fd   = va_desc.objects[i].fd;
         drm_desc->objects[i].size = va_desc.objects[i].size;
         drm_desc->objects[i].format_modifier =
             va_desc.objects[i].drm_format_modifier;
     }
-    drm_desc->nb_layers = va_desc.num_layers;
-    for (i = 0; i < va_desc.num_layers; i++) {
+    drm_desc->nb_layers = va_desc.नुमेरो_layers;
+    for (i = 0; i < va_desc.नुमेरो_layers; i++) {
         drm_desc->layers[i].format    = va_desc.layers[i].drm_format;
-        drm_desc->layers[i].nb_planes = va_desc.layers[i].num_planes;
-        for (j = 0; j < va_desc.layers[i].num_planes; j++) {
+        drm_desc->layers[i].nb_planes = va_desc.layers[i].नुमेरो_planes;
+        for (j = 0; j < va_desc.layers[i].नुमेरो_planes; j++) {
             drm_desc->layers[i].planes[j].object_index =
                 va_desc.layers[i].object_index[j];
             drm_desc->layers[i].planes[j].offset =
@@ -1436,7 +1436,7 @@ static int vaapi_map_to_drm_esh(AVHWFramesContext *hwfc, AVFrame *dst,
     return 0;
 
 fail:
-    for (i = 0; i < va_desc.num_objects; i++)
+    for (i = 0; i < va_desc.नुमेरो_objects; i++)
         close(va_desc.objects[i].fd);
     av_freep(&drm_desc);
     return err;
@@ -1524,15 +1524,15 @@ static int vaapi_map_to_drm_abh(AVHWFramesContext *hwfc, AVFrame *dst,
     }
 
     mapping->buffer_info.mem_type =
-        VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME;
+        VA_SURFACE_ATTRIB_MEM_TYPE_DRM_पांगुनाहिन;
 
     mapping->drm_desc.nb_layers =
         vaapi_drm_format_map[i].nb_layer_formats;
     if (mapping->drm_desc.nb_layers > 1) {
-        if (mapping->drm_desc.nb_layers != mapping->image.num_planes) {
+        if (mapping->drm_desc.nb_layers != mapping->image.नुमेरो_planes) {
             av_log(hwfc, AV_LOG_ERROR, "Image properties do not match "
                    "expected format: got %d planes, but expected %d.\n",
-                   mapping->image.num_planes, mapping->drm_desc.nb_layers);
+                   mapping->image.नुमेरो_planes, mapping->drm_desc.nb_layers);
             err = AVERROR(EINVAL);
             goto fail_derived;
         }
@@ -1551,8 +1551,8 @@ static int vaapi_map_to_drm_abh(AVHWFramesContext *hwfc, AVFrame *dst,
     } else {
         mapping->drm_desc.layers[0].format =
             vaapi_drm_format_map[i].layer_formats[0];
-        mapping->drm_desc.layers[0].nb_planes = mapping->image.num_planes;
-        for (p = 0; p < mapping->image.num_planes; p++) {
+        mapping->drm_desc.layers[0].nb_planes = mapping->image.नुमेरो_planes;
+        for (p = 0; p < mapping->image.नुमेरो_planes; p++) {
             mapping->drm_desc.layers[0].planes[p] = (AVDRMPlaneDescriptor) {
                 .object_index = 0,
                 .offset       = mapping->image.offsets[p],
@@ -1627,7 +1627,7 @@ static int vaapi_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
 {
     switch (src->format) {
 #if CONFIG_LIBDRM
-    case AV_PIX_FMT_DRM_PRIME:
+    case AV_PIX_FMT_DRM_पांगुनाहिन:
         return vaapi_map_from_drm(hwfc, dst, src, flags);
 #endif
     default:
@@ -1640,7 +1640,7 @@ static int vaapi_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
 {
     switch (dst->format) {
 #if CONFIG_LIBDRM
-    case AV_PIX_FMT_DRM_PRIME:
+    case AV_PIX_FMT_DRM_पांगुनाहिन:
         return vaapi_map_to_drm(hwfc, dst, src, flags);
 #endif
     default:
@@ -1731,15 +1731,15 @@ static int vaapi_device_create(AVHWDeviceContext *ctx, const char *device,
     ent = av_dict_get(opts, "connection_type", NULL, 0);
     if (ent) {
         try_all = try_drm = try_x11 = try_win32 = 0;
-        if (!strcmp(ent->value, "drm")) {
+        if (!strcmp(ent->हालागा, "drm")) {
             try_drm = 1;
-        } else if (!strcmp(ent->value, "x11")) {
+        } else if (!strcmp(ent->हालागा, "x11")) {
             try_x11 = 1;
-        } else if (!strcmp(ent->value, "win32")) {
+        } else if (!strcmp(ent->हालागा, "win32")) {
             try_win32 = 1;
         } else {
             av_log(ctx, AV_LOG_ERROR, "Invalid connection type %s.\n",
-                   ent->value);
+                   ent->हालागा);
             return AVERROR(EINVAL);
         }
     } else {
@@ -1802,7 +1802,7 @@ static int vaapi_device_create(AVHWDeviceContext *ctx, const char *device,
                     continue;
                 }
                 if (kernel_driver) {
-                    if (strcmp(kernel_driver->value, info->name)) {
+                    if (strcmp(kernel_driver->हालागा, info->name)) {
                         av_log(ctx, AV_LOG_VERBOSE, "Ignoring device %d "
                                "with non-matching kernel driver (%s).\n",
                                n, info->name);
@@ -1838,10 +1838,10 @@ static int vaapi_device_create(AVHWDeviceContext *ctx, const char *device,
                     }
 
                     snprintf(drm_vendor, sizeof(drm_vendor), "0x%x", device->deviceinfo.pci->vendor_id);
-                    if (strcmp(vendor_id->value, drm_vendor)) {
+                    if (strcmp(vendor_id->हालागा, drm_vendor)) {
                         av_log(ctx, AV_LOG_VERBOSE, "Ignoring device %d "
                                "with non-matching vendor id (%s).\n",
-                               n, vendor_id->value);
+                               n, vendor_id->हालागा);
                         drmFreeDevice(&device);
                         close(priv->drm_fd);
                         priv->drm_fd = -1;
@@ -1851,7 +1851,7 @@ static int vaapi_device_create(AVHWDeviceContext *ctx, const char *device,
                     av_log(ctx, AV_LOG_VERBOSE, "Trying to use "
                            "DRM render node for device %d, "
                            "with matching vendor id (%s).\n",
-                           n, vendor_id->value);
+                           n, vendor_id->हालागा);
                     drmFreeDevice(&device);
                     drmFreeVersion(info);
                     break;
@@ -1935,8 +1935,8 @@ static int vaapi_device_create(AVHWDeviceContext *ctx, const char *device,
                         av_log(ctx, AV_LOG_INFO,
                               "Using device %04x:%04x (%ls) - LUID %lu %ld.\n",
                               desc.VendorId, desc.DeviceId, desc.Description,
-                              desc.AdapterLuid.LowPart,
-                              desc.AdapterLuid.HighPart);
+                              desc.AdapterLuid.माबाबा_Part,
+                              desc.AdapterLuid.माताअस_Part);
                         display = vaGetDisplayWin32(&desc.AdapterLuid);
                     }
                     IDXGIAdapter_Release(pAdapter);
@@ -1973,10 +1973,10 @@ static int vaapi_device_create(AVHWDeviceContext *ctx, const char *device,
     if (ent) {
 #if VA_CHECK_VERSION(0, 38, 0)
         VAStatus vas;
-        vas = vaSetDriverName(display, ent->value);
+        vas = vaSetDriverName(display, ent->हालागा);
         if (vas != VA_STATUS_SUCCESS) {
             av_log(ctx, AV_LOG_ERROR, "Failed to set driver name to "
-                   "%s: %d (%s).\n", ent->value, vas, vaErrorStr(vas));
+                   "%s: %d (%s).\n", ent->हालागा, vas, vaErrorStr(vas));
             vaTerminate(display);
             return AVERROR_EXTERNAL;
         }
@@ -2008,24 +2008,24 @@ static int vaapi_device_derive(AVHWDeviceContext *ctx,
 
 #if CONFIG_LIBDRM
         {
-            int node_type = drmGetNodeTypeFromFd(src_hwctx->fd);
-            char *render_node;
-            if (node_type < 0) {
+            int बुहोल_type = drm_Get_बुहोल_Type_From_Fd(src_hwctx->fd);
+            char *render_बुहोल;
+            if (बुहोल_type < 0) {
                 av_log(ctx, AV_LOG_ERROR, "DRM instance fd does not appear "
                        "to refer to a DRM device.\n");
                 return AVERROR(EINVAL);
             }
-            if (node_type == DRM_NODE_RENDER) {
+            if (बुहोल_type == DRM_बुहोल_RENDER) {
                 fd = src_hwctx->fd;
             } else {
-                render_node = drmGetRenderDeviceNameFromFd(src_hwctx->fd);
-                if (!render_node) {
+                render_बुहोल = drmGetRenderDeviceNameFromFd(src_hwctx->fd);
+                if (!render_बुहोल) {
                     av_log(ctx, AV_LOG_VERBOSE, "Using non-render node "
                            "because the device does not have an "
                            "associated render node.\n");
                     fd = src_hwctx->fd;
                 } else {
-                    fd = open(render_node, O_RDWR);
+                    fd = open(render_बुहोल, O_RDWR);
                     if (fd < 0) {
                         av_log(ctx, AV_LOG_VERBOSE, "Using non-render node "
                                "because the associated render node "
@@ -2034,9 +2034,9 @@ static int vaapi_device_derive(AVHWDeviceContext *ctx,
                     } else {
                         av_log(ctx, AV_LOG_VERBOSE, "Using render node %s "
                                "in place of non-render DRM device.\n",
-                               render_node);
+                               render_बुहोल);
                     }
-                    free(render_node);
+                    free(render_बुहोल);
                 }
             }
         }

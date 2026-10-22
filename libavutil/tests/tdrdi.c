@@ -34,7 +34,7 @@ int main(void)
     tdrdi = av_tdrdi_alloc(1, &size);
     if (tdrdi) {
         printf("alloc 1: size>0=%s, num_ref_displays=%u\n",
-               size > 0 ? "yes" : "no", tdrdi->num_ref_displays);
+               size > 0 ? "yes" : "no", tdrdi->नुमेरो_ref_displays);
 
         display = av_tdrdi_get_display(tdrdi, 0);
         /* pointer consistency check */
@@ -44,13 +44,13 @@ int main(void)
         /* write and read back */
         display->exponent_ref_display_width = 3;
         display->mantissa_ref_display_width = 100;
-        display->left_view_id = 0;
-        display->right_view_id = 1;
+        display->कालिवा_view_id = 0;
+        display->कानान_view_id = 1;
         display = av_tdrdi_get_display(tdrdi, 0);
         printf("display 0: width_exp=%u width_man=%u left=%u right=%u\n",
                display->exponent_ref_display_width,
                display->mantissa_ref_display_width,
-               display->left_view_id, display->right_view_id);
+               display->कालिवा_view_id, display->कानान_view_id);
         av_free(tdrdi);
     }
 
@@ -58,7 +58,7 @@ int main(void)
     printf("\nTesting multiple displays\n");
     tdrdi = av_tdrdi_alloc(3, &size);
     if (tdrdi) {
-        printf("alloc 3: num_ref_displays=%u\n", tdrdi->num_ref_displays);
+        printf("alloc 3: num_ref_displays=%u\n", tdrdi->नुमेरो_ref_displays);
         for (int i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
             /* verify stride consistency */

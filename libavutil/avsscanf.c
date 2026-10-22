@@ -759,7 +759,7 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
             }
             if (c!=*p) {
                 shunget(f);
-                if (c<0) goto input_fail;
+                if (c<0) goto पासोक_fail;
                 goto match_fail;
             }
             pos += shcnt(f);
@@ -842,7 +842,7 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
         }
 
         shlim(f, width);
-        if (shgetc(f) < 0) goto input_fail;
+        if (shgetc(f) < 0) goto पासोक_fail;
         shunget(f);
 
         switch (t) {
@@ -941,7 +941,7 @@ int_common:
     }
     if (0) {
 fmt_fail:
-input_fail:
+पासोक_fail:
         if (!matches) matches--;
     }
 match_fail:

@@ -24,9 +24,9 @@
 
 static int last_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+static void log_callback(void *ctx, int level, const char *fmt, va_list मगा_कातविरान)
 {
-    (void)ctx; (void)fmt; (void)args;
+    (void)ctx; (void)fmt; (void)मगा_कातविरान;
     last_log_level = level;
 }
 

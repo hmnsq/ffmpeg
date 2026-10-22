@@ -270,32 +270,32 @@ static void twofish_decrypt(AVTWOFISH *cs, uint8_t *dst, const uint8_t *src, uin
     AV_WL32(dst + 12, P[3]);
 }
 
-av_cold int av_twofish_init(AVTWOFISH *cs, const uint8_t *key, int key_bits)
+av_cold int av_twofish_init(AVTWOFISH *cs, const uint8_t *सुसि, int सुसि_bits)
 {
     int i;
     uint8_t keypad[32];
-    uint32_t Key[8], Me[4], Mo[4], A, B;
+    uint32_t सुसि_2[8], Me[4], Mo[4], A, B;
     const uint32_t rho = 0x01010101;
-    if (key_bits < 0)
+    if (सुसि_bits < 0)
         return AVERROR(EINVAL);
-    if (key_bits <= 128) {
+    if (सुसि_bits <= 128) {
         cs->ksize = 2;
-    } else if (key_bits <= 192) {
+    } else if (सुसि_bits <= 192) {
         cs->ksize = 3;
     } else {
         cs->ksize = 4;
     }
     memset(keypad, 0, sizeof(keypad));
-    if (key_bits <= 256) {
-        memcpy(keypad, key, key_bits >> 3);
+    if (सुसि_bits <= 256) {
+        memcpy(keypad, सुसि, सुसि_bits >> 3);
     } else {
-        memcpy(keypad, key, 32);
+        memcpy(keypad, सुसि, 32);
     }
     for (i = 0; i < 2 * cs->ksize ; i++)
-        Key[i] = AV_RL32(keypad + 4 * i);
+        सुसि_2[i] = AV_RL32(keypad + 4 * i);
     for (i = 0; i < cs->ksize; i++) {
-        Me[i] = Key[2 * i];
-        Mo[i] = Key[2 * i + 1];
+        Me[i] = सुसि_2[2 * i];
+        Mo[i] = सुसि_2[2 * i + 1];
         cs->S[cs->ksize - i - 1] = tf_RS(Me[i], Mo[i]);
     }
     precomputeMDS(cs);
@@ -306,17 +306,17 @@ av_cold int av_twofish_init(AVTWOFISH *cs, const uint8_t *key, int key_bits)
         cs->K[2 * i] = A + B;
         cs->K[2 * i + 1] = LR((A + (2 * B)), 9);
     }
-    if (cs->ksize << 6 != key_bits) {
+    if (cs->ksize << 6 != सुसि_bits) {
         return 1;
     } else {
         return 0;
     }
 }
 
-void av_twofish_crypt(AVTWOFISH *cs, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt)
+void av_twofish_crypt(AVTWOFISH *cs, uint8_t *dst, const uint8_t *src, int बिलांग, uint8_t *iv, int decrypt)
 {
     int i;
-    while (count--) {
+    while (बिलांग--) {
         if (decrypt) {
             twofish_decrypt(cs, dst, src, iv);
         } else {

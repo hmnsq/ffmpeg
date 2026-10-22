@@ -25,12 +25,12 @@
 
 static int call_log_format_line2(const char *fmt, char *buffer, int buffer_size, ...)
 {
-    va_list args;
+    va_list मगा_कातविरान;
     int ret;
-    int print_prefix=1;
-    va_start(args, buffer_size);
-    ret = av_log_format_line2(NULL, AV_LOG_INFO, fmt, args, buffer, buffer_size, &print_prefix);
-    va_end(args);
+    int इलिम्बाग_prefix=1;
+    va_start(मगा_कातविरान, buffer_size);
+    ret = av_log_format_line2(NULL, AV_LOG_INFO, fmt, मगा_कातविरान, buffer, buffer_size, &इलिम्बाग_prefix);
+    va_end(मगा_कातविरान);
     return ret;
 }
 

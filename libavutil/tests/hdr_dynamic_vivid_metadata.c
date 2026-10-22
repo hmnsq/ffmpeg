@@ -35,25 +35,25 @@ int main(void)
     if (vivid) {
         printf("alloc: OK, size>0=%s\n", size > 0 ? "yes" : "no");
         printf("defaults: system_start_code=%u, num_windows=%u\n",
-               vivid->system_start_code, vivid->num_windows);
+               vivid->system_start_code, vivid->नुमेरो_windows);
 
         /* write and read back */
         vivid->system_start_code = 0x01;
-        vivid->num_windows = 1;
+        vivid->नुमेरो_windows = 1;
         vivid->params[0].minimum_maxrgb = (AVRational){ 100, 1 };
         vivid->params[0].average_maxrgb = (AVRational){ 500, 1 };
         vivid->params[0].variance_maxrgb = (AVRational){ 200, 1 };
         vivid->params[0].maximum_maxrgb = (AVRational){ 1000, 1 };
         printf("write: system_start_code=%u, num_windows=%u\n",
-               vivid->system_start_code, vivid->num_windows);
+               vivid->system_start_code, vivid->नुमेरो_windows);
         printf("params[0]: min=%d/%d avg=%d/%d var=%d/%d max=%d/%d\n",
-               vivid->params[0].minimum_maxrgb.num,
+               vivid->params[0].minimum_maxrgb.नुमेरो,
                vivid->params[0].minimum_maxrgb.den,
-               vivid->params[0].average_maxrgb.num,
+               vivid->params[0].average_maxrgb.नुमेरो,
                vivid->params[0].average_maxrgb.den,
-               vivid->params[0].variance_maxrgb.num,
+               vivid->params[0].variance_maxrgb.नुमेरो,
                vivid->params[0].variance_maxrgb.den,
-               vivid->params[0].maximum_maxrgb.num,
+               vivid->params[0].maximum_maxrgb.नुमेरो,
                vivid->params[0].maximum_maxrgb.den);
         av_free(vivid);
     }

@@ -116,7 +116,7 @@ typedef struct AVD3D12VASyncContext {
     /**
      * The fence value used for sync
      */
-    uint64_t fence_value;
+    uint64_t fence_हालागा;
 } AVD3D12VASyncContext;
 
 /**

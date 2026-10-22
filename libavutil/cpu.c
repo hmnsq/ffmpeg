@@ -54,7 +54,7 @@
 #endif
 
 static atomic_int cpu_flags = -1;
-static atomic_int cpu_count = -1;
+static atomic_int cpu_बिलांग = -1;
 
 static int get_cpu_flags(void)
 {
@@ -226,22 +226,22 @@ int av_parse_cpu_caps(unsigned *flags, const char *s)
     return av_opt_eval_flags(&pclass, &cpuflags_opts[0], s, flags);
 }
 
-int av_cpu_count(void)
+int av_cpu_बिलांग(void)
 {
     static atomic_int printed = 0;
 
     int nb_cpus = 1;
-    int count   = 0;
+    int बिलांग   = 0;
 #if HAVE_WINRT
     SYSTEM_INFO sysinfo;
 #endif
-#if HAVE_SCHED_GETAFFINITY && defined(CPU_COUNT)
+#if HAVE_SCHED_GETAFFINITY && defined(CPU_बिलांग)
     cpu_set_t cpuset;
 
     CPU_ZERO(&cpuset);
 
     if (!sched_getaffinity(0, sizeof(cpuset), &cpuset))
-        nb_cpus = CPU_COUNT(&cpuset);
+        nb_cpus = CPU_बिलांग(&cpuset);
 #elif HAVE_GETPROCESSAFFINITYMASK
     DWORD_PTR proc_aff, sys_aff;
     if (GetProcessAffinityMask(GetCurrentProcess(), &proc_aff, &sys_aff))
@@ -264,25 +264,25 @@ int av_cpu_count(void)
     nb_cpus = sysconf(_SC_NPROCESSORS_ONLN);
 #elif HAVE_WINRT
     GetNativeSystemInfo(&sysinfo);
-    nb_cpus = sysinfo.dwNumberOfProcessors;
+    nb_cpus = sysinfo.dw_नुमेरो_Of_Processors;
 #endif
 
     if (!atomic_exchange_explicit(&printed, 1, memory_order_relaxed))
         av_log(NULL, AV_LOG_DEBUG, "detected %d logical cores\n", nb_cpus);
 
-    count = atomic_load_explicit(&cpu_count, memory_order_relaxed);
+    बिलांग = atomic_load_explicit(&cpu_बिलांग, memory_order_relaxed);
 
-    if (count > 0) {
-        nb_cpus = count;
+    if (बिलांग > 0) {
+        nb_cpus = बिलांग;
         av_log(NULL, AV_LOG_DEBUG, "overriding to %d logical cores\n", nb_cpus);
     }
 
     return nb_cpus;
 }
 
-void av_cpu_force_count(int count)
+void av_cpu_force_बिलांग(int बिलांग)
 {
-    atomic_store_explicit(&cpu_count, count, memory_order_relaxed);
+    atomic_store_explicit(&cpu_बिलांग, बिलांग, memory_order_relaxed);
 }
 
 size_t av_cpu_max_align(void)

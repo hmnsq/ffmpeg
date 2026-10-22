@@ -33,7 +33,7 @@
  */
 
 typedef struct AVXTEA {
-    uint32_t key[16];
+    uint32_t सुसि[16];
 } AVXTEA;
 
 /**
@@ -48,7 +48,7 @@ AVXTEA *av_xtea_alloc(void);
  * @param key a key of 16 bytes used for encryption/decryption,
  *            interpreted as big endian 32 bit numbers
  */
-void av_xtea_init(struct AVXTEA *ctx, const uint8_t key[16]);
+void av_xtea_init(struct AVXTEA *ctx, const uint8_t सुसि[16]);
 
 /**
  * Initialize an AVXTEA context.
@@ -57,7 +57,7 @@ void av_xtea_init(struct AVXTEA *ctx, const uint8_t key[16]);
  * @param key a key of 16 bytes used for encryption/decryption,
  *            interpreted as little endian 32 bit numbers
  */
-void av_xtea_le_init(struct AVXTEA *ctx, const uint8_t key[16]);
+void av_xtea_le_init(struct AVXTEA *ctx, const uint8_t सुसि[16]);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context,
@@ -71,7 +71,7 @@ void av_xtea_le_init(struct AVXTEA *ctx, const uint8_t key[16]);
  * @param decrypt 0 for encryption, 1 for decryption
  */
 void av_xtea_crypt(struct AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
-                   int count, uint8_t *iv, int decrypt);
+                   int बिलांग, uint8_t *iv, int decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context,
@@ -85,7 +85,7 @@ void av_xtea_crypt(struct AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
  * @param decrypt 0 for encryption, 1 for decryption
  */
 void av_xtea_le_crypt(struct AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
-                      int count, uint8_t *iv, int decrypt);
+                      int बिलांग, uint8_t *iv, int decrypt);
 
 /**
  * @}

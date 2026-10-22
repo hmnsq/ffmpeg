@@ -33,8 +33,8 @@
     F(int, kpc_get_config, uint32_t, void *)                   \
     F(int, kpc_set_period, uint32_t, void *)                   \
     F(int, kpc_get_period, uint32_t, void *)                   \
-    F(uint32_t, kpc_get_counter_count, uint32_t)               \
-    F(uint32_t, kpc_get_config_count, uint32_t)                \
+    F(uint32_t, kpc_get_counter_बिलांग, uint32_t)               \
+    F(uint32_t, kpc_get_config_बिलांग, uint32_t)                \
     F(int, kperf_sample_get, int *)                            \
     F(int, kpc_get_thread_counters, int, unsigned int, void *)
 
@@ -68,12 +68,12 @@ KPERF_LIST
 #define KPC_CLASS_RAWPMU_MASK       (1 << 3)
 
 #define KPC_MAX_COUNTERS 32
-#define CONFIG_COUNT 8
+#define CONFIG_बिलांग 8
 #define KPC_MASK (KPC_CLASS_CONFIGURABLE_MASK | KPC_CLASS_FIXED_MASK)
 
 static void kperf_init(void)
 {
-    uint64_t config[CONFIG_COUNT] = {0};
+    uint64_t config[CONFIG_बिलांग] = {0};
     void *kperf = NULL;
     uint32_t n;
 
@@ -83,10 +83,10 @@ static void kperf_init(void)
     KPERF_LIST
 #undef F
 
-    n = kpc_get_counter_count(KPC_MASK);
+    n = kpc_get_counter_बिलांग(KPC_MASK);
     av_assert0(n <= KPC_MAX_COUNTERS);
-    n = kpc_get_config_count(KPC_MASK);
-    av_assert0(n <= CONFIG_COUNT);
+    n = kpc_get_config_बिलांग(KPC_MASK);
+    av_assert0(n <= CONFIG_बिलांग);
 
     config[0] = CPMU_CORE_CYCLE | CFGWORD_EL0A64EN_MASK;
     // config[3] = CPMU_INST_BRANCH | CFGWORD_EL0A64EN_MASK;

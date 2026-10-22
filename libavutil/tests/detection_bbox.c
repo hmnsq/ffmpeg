@@ -75,7 +75,7 @@ int main(void)
             printf("bbox %d: x=%d y=%d w=%d h=%d label=%s conf=%d/%d\n",
                    i, bbox->x, bbox->y, bbox->w, bbox->h,
                    bbox->detect_label,
-                   bbox->detect_confidence.num,
+                   bbox->detect_confidence.नुमेरो,
                    bbox->detect_confidence.den);
         }
         av_free(header);
@@ -86,18 +86,18 @@ int main(void)
     header = av_detection_bbox_alloc(1, NULL);
     if (header) {
         bbox = av_get_detection_bbox(header, 0);
-        bbox->classify_count = 2;
+        bbox->classify_बिलांग = 2;
         snprintf(bbox->classify_labels[0], sizeof(bbox->classify_labels[0]),
                  "cat");
         bbox->classify_confidences[0] = (AVRational){ 95, 100 };
         snprintf(bbox->classify_labels[1], sizeof(bbox->classify_labels[1]),
                  "animal");
         bbox->classify_confidences[1] = (AVRational){ 80, 100 };
-        printf("classify_count=%u\n", bbox->classify_count);
-        for (int i = 0; i < (int)bbox->classify_count; i++)
+        printf("classify_count=%u\n", bbox->classify_बिलांग);
+        for (int i = 0; i < (int)bbox->classify_बिलांग; i++)
             printf("classify %d: %s %d/%d\n", i,
                    bbox->classify_labels[i],
-                   bbox->classify_confidences[i].num,
+                   bbox->classify_confidences[i].नुमेरो,
                    bbox->classify_confidences[i].den);
         av_free(header);
     }

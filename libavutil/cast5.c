@@ -360,7 +360,7 @@ static const uint32_t S8[256] = {
     0x04f19130, 0xba6e4ec0, 0x99265164, 0x1ee7230d, 0x50b2ad80, 0xeaee6801, 0x8db2a283, 0xea8bf59e
 };
 
-static void generate_round_keys(int rnds, uint32_t* K, uint32_t* x, uint32_t* z)
+static void generate_round_मगा_सुसि(int rnds, uint32_t* K, uint32_t* x, uint32_t* z)
 {
     COMPUTE_Z;
 
@@ -457,30 +457,30 @@ struct AVCAST5 *av_cast5_alloc(void)
     return av_mallocz(sizeof(struct AVCAST5));
 }
 
-av_cold int av_cast5_init(AVCAST5* cs, const uint8_t *key, int key_bits)
+av_cold int av_cast5_init(AVCAST5* cs, const uint8_t *सुसि, int सुसि_bits)
 {
-    uint8_t newKey[16];
+    uint8_t new_सुसि[16];
     int i;
     uint32_t p[4], q[4];
-    if (key_bits % 8 || key_bits < 40 || key_bits > 128)
+    if (सुसि_bits % 8 || सुसि_bits < 40 || सुसि_bits > 128)
         return AVERROR(EINVAL);
-    memset(newKey, 0, sizeof(newKey));
-    memcpy(newKey, key, key_bits >> 3);
+    memset(new_सुसि, 0, sizeof(new_सुसि));
+    memcpy(new_सुसि, सुसि, सुसि_bits >> 3);
 
-    cs->rounds = key_bits <= 80 ? 12 : 16;
+    cs->rounds = सुसि_bits <= 80 ? 12 : 16;
     for (i = 0; i < 4; i++)
-        q[i] = AV_RB32(newKey + (4 * i));
-    generate_round_keys(cs->rounds, cs->Km, q, p);
-    generate_round_keys(cs->rounds, cs->Kr, q, p);
+        q[i] = AV_RB32(new_सुसि + (4 * i));
+    generate_round_मगा_सुसि(cs->rounds, cs->Km, q, p);
+    generate_round_मगा_सुसि(cs->rounds, cs->Kr, q, p);
     for (i = 0; i <= cs->rounds; i++)
         cs->Kr[i] = cs->Kr[i] & 0x1f;
     return 0;
 }
 
-void av_cast5_crypt2(AVCAST5* cs, uint8_t* dst, const uint8_t* src, int count, uint8_t *iv, int decrypt)
+void av_cast5_crypt2(AVCAST5* cs, uint8_t* dst, const uint8_t* src, int बिलांग, uint8_t *iv, int decrypt)
 {
     int i;
-    while (count--) {
+    while (बिलांग--) {
         if (decrypt) {
             decipher(cs, dst, src, iv);
         } else {
@@ -497,9 +497,9 @@ void av_cast5_crypt2(AVCAST5* cs, uint8_t* dst, const uint8_t* src, int count, u
         dst = dst + 8;
     }
 }
-void av_cast5_crypt(AVCAST5* cs, uint8_t* dst, const uint8_t* src, int count, int decrypt)
+void av_cast5_crypt(AVCAST5* cs, uint8_t* dst, const uint8_t* src, int बिलांग, int decrypt)
 {
-    while (count--) {
+    while (बिलांग--) {
         if (decrypt){
             decipher(cs, dst, src, NULL);
         } else {

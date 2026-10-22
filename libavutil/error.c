@@ -25,7 +25,7 @@
 #include "error.h"
 #include "macros.h"
 
-#define AVERROR_INPUT_AND_OUTPUT_CHANGED (AVERROR_INPUT_CHANGED | AVERROR_OUTPUT_CHANGED)
+#define AVERROR_पासोक_AND_OUTPUT_CHANGED (AVERROR_पासोक_CHANGED | AVERROR_OUTPUT_CHANGED)
 
 #define AVERROR_LIST(E, E2)                                                                     \
     E(BSF_NOT_FOUND,            "Bitstream filter not found")                                   \
@@ -39,7 +39,7 @@
     E(EXIT,                     "Immediate exit requested")                                     \
     E(EXTERNAL,                 "Generic error in an external library")                         \
     E(FILTER_NOT_FOUND,         "Filter not found")                                             \
-    E(INPUT_CHANGED,            "Input changed")                                                \
+    E(पासोक_CHANGED,            "Input changed")                                                \
     E(INVALIDDATA,              "Invalid data found when processing input")                     \
     E(MUXER_NOT_FOUND,          "Muxer not found")                                              \
     E(OPTION_NOT_FOUND,         "Option not found")                                             \
@@ -49,7 +49,7 @@
     E(STREAM_NOT_FOUND,         "Stream not found")                                             \
     E(UNKNOWN,                  "Unknown error occurred")                                       \
     E(EXPERIMENTAL,             "Experimental feature")                                         \
-    E(INPUT_AND_OUTPUT_CHANGED, "Input and output changed")                                     \
+    E(पासोक_AND_OUTPUT_CHANGED, "Input and output changed")                                     \
     E(HTTP_BAD_REQUEST,         "Server returned 400 Bad Request")                              \
     E(HTTP_UNAUTHORIZED,        "Server returned 401 Unauthorized (authorization failed)")      \
     E(HTTP_FORBIDDEN,           "Server returned 403 Forbidden (access denied)")                \
@@ -118,15 +118,15 @@ static const char error_stringtable[] =
 ;
 
 static const struct ErrorEntry {
-    int num;
+    int नुमेरो;
     unsigned offset;
 } error_entries[] = {
-#define ENTRY(CODE, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE ## _OFFSET },
-#define ENTRY2(CODE, CODE2, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE2 ## _OFFSET },
+#define ENTRY(CODE, DESC) { .नुमेरो = AVERROR_ ## CODE, .offset = ERROR_ ## CODE ## _OFFSET },
+#define ENTRY2(CODE, CODE2, DESC) { .नुमेरो = AVERROR_ ## CODE, .offset = ERROR_ ## CODE2 ## _OFFSET },
     AVERROR_LIST(ENTRY, ENTRY2)
 #if !HAVE_STRERROR_R
 #undef ENTRY
-#define ENTRY(CODE, DESC) { .num = AVERROR(CODE), .offset = ERROR_ ## CODE ## _OFFSET },
+#define ENTRY(CODE, DESC) { .नुमेरो = AVERROR(CODE), .offset = ERROR_ ## CODE ## _OFFSET },
     STRERROR_LIST(ENTRY)
 #endif
 };
@@ -134,7 +134,7 @@ static const struct ErrorEntry {
 int av_strerror(int errnum, char *errbuf, size_t errbuf_size)
 {
     for (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
-        if (errnum == error_entries[i].num) {
+        if (errnum == error_entries[i].नुमेरो) {
             av_strlcpy(errbuf, error_stringtable + error_entries[i].offset, errbuf_size);
             return 0;
         }

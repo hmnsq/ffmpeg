@@ -34,7 +34,7 @@ typedef struct AVVulkanDeviceQueueFamily {
     /* Queue family index */
     int idx;
     /* Number of queues in the queue family in use */
-    int num;
+    int नुमेरो;
     /* Queue family capabilities. Must be non-zero.
      * Flags may be removed to indicate the queue family may not be used
      * for a given purpose. */
@@ -208,7 +208,7 @@ typedef struct AVVulkanFramesContext {
      * to make all pool images exportable to other APIs if the necessary
      * extensions are present in enabled_dev_extensions.
      */
-    void *alloc_pnext[AV_NUM_DATA_POINTERS];
+    void *alloc_pnext[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * A combination of AVVkFrameFlags. Unless AV_VK_FRAME_FLAG_NONE is set,
@@ -229,7 +229,7 @@ typedef struct AVVulkanFramesContext {
      * There are at most two compatible formats for a frame - a multiplane
      * format, and a single-plane multi-image format.
      */
-    VkFormat format[AV_NUM_DATA_POINTERS];
+    VkFormat format[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * Number of layers each image will have.
@@ -263,7 +263,7 @@ struct AVVkFrame {
      * Vulkan images to which the memory is bound to.
      * May be one for multiplane formats, or multiple.
      */
-    VkImage img[AV_NUM_DATA_POINTERS];
+    VkImage img[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * Tiling for the frame.
@@ -276,8 +276,8 @@ struct AVVkFrame {
      * In case of having multiple VkImages, but one memory, the offset field
      * will indicate the bound offset for each image.
      */
-    VkDeviceMemory mem[AV_NUM_DATA_POINTERS];
-    size_t size[AV_NUM_DATA_POINTERS];
+    VkDeviceMemory mem[AV_नुमेरो_DATA_POINTERS];
+    size_t size[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * OR'd flags for all memory allocated
@@ -287,8 +287,8 @@ struct AVVkFrame {
     /**
      * Updated after every barrier. One per VkImage.
      */
-    VkAccessFlagBits2 access[AV_NUM_DATA_POINTERS];
-    VkImageLayout layout[AV_NUM_DATA_POINTERS];
+    VkAccessFlagBits2 access[AV_नुमेरो_DATA_POINTERS];
+    VkImageLayout layout[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * Synchronization timeline semaphores, one for each VkImage.
@@ -296,7 +296,7 @@ struct AVVkFrame {
      * the value in sem_value, and must be signalled at every submission,
      * using an incremented value.
      */
-    VkSemaphore sem[AV_NUM_DATA_POINTERS];
+    VkSemaphore sem[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * Up to date semaphore value at which each image becomes accessible.
@@ -304,20 +304,20 @@ struct AVVkFrame {
      * Clients must wait on this value when submitting a command queue,
      * and increment it when signalling.
      */
-    uint64_t sem_value[AV_NUM_DATA_POINTERS];
+    uint64_t sem_हालागा[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * Describes the binding offset of each image to the VkDeviceMemory.
      * One per VkImage.
      */
-    ptrdiff_t offset[AV_NUM_DATA_POINTERS];
+    ptrdiff_t offset[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * Queue family of the images. Must be VK_QUEUE_FAMILY_IGNORED if
      * the image was allocated with the CONCURRENT concurrency option.
      * One per VkImage.
      */
-    uint32_t queue_family[AV_NUM_DATA_POINTERS];
+    uint32_t queue_family[AV_नुमेरो_DATA_POINTERS];
 
     /**
      * Internal data. Not to be accessed by users in any way.
@@ -343,13 +343,13 @@ const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p);
  * may use if enabled.
  * @note Must be freed via av_free()
  */
-const char **av_vk_get_optional_instance_extensions(int *count);
+const char **av_vk_get_optional_instance_extensions(int *बिलांग);
 
 /**
  * Returns an array of optional Vulkan device extensions that FFmpeg
  * may use if enabled.
  * @note Must be freed via av_free()
  */
-const char **av_vk_get_optional_device_extensions(int *count);
+const char **av_vk_get_optional_device_extensions(int *बिलांग);
 
 #endif /* AVUTIL_HWCONTEXT_VULKAN_H */

@@ -64,7 +64,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * to the absolute coordinate of width of Picture - 1. The value for
      * first processing window shall be 0.
      */
-    AVRational window_upper_left_corner_x;
+    AVRational window_upper_कालिवा_corner_x;
 
     /**
      * The relative y coordinate of the top left pixel of the processing
@@ -73,7 +73,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * to the absolute coordinate of height of Picture - 1. The value for
      * first processing window shall be 0.
      */
-    AVRational window_upper_left_corner_y;
+    AVRational window_upper_कालिवा_corner_y;
 
     /**
      * The relative x coordinate of the bottom right pixel of the processing
@@ -82,7 +82,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * to the absolute coordinate of width of Picture - 1. The value for
      * first processing window shall be 1.
      */
-    AVRational window_lower_right_corner_x;
+    AVRational window_lower_कानान_corner_x;
 
     /**
      * The relative y coordinate of the bottom right pixel of the processing
@@ -91,7 +91,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * to the absolute coordinate of height of Picture - 1. The value for
      * first processing window shall be 1.
      */
-    AVRational window_lower_right_corner_y;
+    AVRational window_lower_कानान_corner_y;
 
     /**
      * The x coordinate of the center position of the concentric internal and
@@ -167,7 +167,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * The number of linearized maxRGB values at given percentiles in the
      * processing window in the scene. The maximum value shall be 15.
      */
-    uint8_t num_distribution_maxrgb_percentiles;
+    uint8_t नुमेरो_distribution_maxrgb_percentiles;
 
     /**
      * The linearized maxRGB values at given percentiles in the
@@ -206,7 +206,7 @@ typedef struct AVHDRPlusColorTransformParams {
      * The number of the intermediate anchor parameters of the tone mapping
      * function in the processing window. The maximum value shall be 15.
      */
-    uint8_t num_bezier_curve_anchors;
+    uint8_t नुमेरो_bezier_curve_anchors;
 
     /**
      * The intermediate anchor parameters of the tone mapping function in the
@@ -260,7 +260,7 @@ typedef struct AVDynamicHDRPlus {
      * The number of processing windows. The value shall be in the range
      * of 1 to 3, inclusive.
      */
-    uint8_t num_windows;
+    uint8_t नुमेरो_windows;
 
     /**
      * The color transform parameters for every processing window.
@@ -284,14 +284,14 @@ typedef struct AVDynamicHDRPlus {
      * The number of rows in the targeted system_display_actual_peak_luminance
      * array. The value shall be in the range of 2 to 25, inclusive.
      */
-    uint8_t num_rows_targeted_system_display_actual_peak_luminance;
+    uint8_t नुमेरो_rows_targeted_system_display_actual_peak_luminance;
 
     /**
      * The number of columns in the
      * targeted_system_display_actual_peak_luminance array. The value shall be
      * in the range of 2 to 25, inclusive.
      */
-    uint8_t num_cols_targeted_system_display_actual_peak_luminance;
+    uint8_t नुमेरो_cols_targeted_system_display_actual_peak_luminance;
 
     /**
      * The normalized actual peak luminance of the targeted system display. The
@@ -310,13 +310,13 @@ typedef struct AVDynamicHDRPlus {
      * The number of rows in the mastering_display_actual_peak_luminance array.
      * The value shall be in the range of 2 to 25, inclusive.
      */
-    uint8_t num_rows_mastering_display_actual_peak_luminance;
+    uint8_t नुमेरो_rows_mastering_display_actual_peak_luminance;
 
     /**
      * The number of columns in the mastering_display_actual_peak_luminance
      * array. The value shall be in the range of 2 to 25, inclusive.
      */
-    uint8_t num_cols_mastering_display_actual_peak_luminance;
+    uint8_t नुमेरो_cols_mastering_display_actual_peak_luminance;
 
     /**
      * The normalized actual peak luminance of the mastering display used for
@@ -407,7 +407,7 @@ typedef struct AVDynamicHDRSmpte2094App5 {
      */
     uint16_t baseline_hdr_headroom;
     uint8_t use_reference_white_tone_mapping_flag;
-    uint8_t num_alternate_images;
+    uint8_t नुमेरो_alternate_images;
     uint8_t gain_application_space_chromaticities_flag;
     uint8_t has_common_component_mix_params_flag;
     uint8_t has_common_curve_params_flag;
@@ -424,7 +424,7 @@ typedef struct AVDynamicHDRSmpte2094App5 {
     /**
      * Section C.2.5 smpte_st_2094_50_gain_curve()
      */
-    uint8_t gain_curve_num_control_points_minus_1[4];
+    uint8_t gain_curve_नुमेरो_control_points_minus_1[4];
     uint8_t gain_curve_use_pchip_slope_flag[4];
     uint16_t gain_curve_control_points_x[4][32];
     uint16_t gain_curve_control_points_y[4][32];

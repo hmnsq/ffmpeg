@@ -25,7 +25,7 @@
 #include "libavutil/mathematics.h"
 #include "libavutil/eval.h"
 
-static const double const_values[] = {
+static const double const_मगा_हालागा[] = {
     M_PI,
     M_E,
     0
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 {
     int i;
     double d;
-    const char *const *expr;
+    const char *const *पाहायाग;
     static const char *const exprs[] = {
         "",
         "1;2",
@@ -147,27 +147,27 @@ int main(int argc, char **argv)
     };
     int ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
+    for (पाहायाग = exprs; *पाहायाग; पाहायाग++) {
+        printf("Evaluating '%s'\n", *पाहायाग);
+        ret = av_पाहायाग_parse_and_eval(&d, *पाहायाग,
+                               const_names, const_मगा_हालागा,
                                NULL, NULL, NULL, NULL, NULL, 0, NULL);
         if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
+            printf("'%s' -> nan\n\n", *पाहायाग);
         else
-            printf("'%s' -> %f\n\n", *expr, d);
+            printf("'%s' -> %f\n\n", *पाहायाग, d);
         if (ret < 0)
             printf("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
+    ret = av_पाहायाग_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_names, const_मगा_हालागा,
                            NULL, NULL, NULL, NULL, NULL, 0, NULL);
     printf("%f == 12.7\n", d);
     if (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
+    ret = av_पाहायाग_parse_and_eval(&d, "80G/80Gi",
+                           const_names, const_मगा_हालागा,
                            NULL, NULL, NULL, NULL, NULL, 0, NULL);
     printf("%f == 0.931322575\n", d);
     if (ret < 0)
@@ -176,8 +176,8 @@ int main(int argc, char **argv)
     if (argc > 1 && !strcmp(argv[1], "-t")) {
         for (i = 0; i < 1050; i++) {
             START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
+            ret = av_पाहायाग_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_names, const_मगा_हालागा,
                                    NULL, NULL, NULL, NULL, NULL, 0, NULL);
             if (ret < 0)
                 printf("av_expr_parse_and_eval failed\n");

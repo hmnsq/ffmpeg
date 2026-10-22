@@ -32,46 +32,46 @@
 #include "mathematics.h"
 #include "rational.h"
 
-int av_reduce(int *dst_num, int *dst_den,
-              int64_t num, int64_t den, int64_t max)
+int av_reduce(int *dst_नुमेरो, int *dst_den,
+              int64_t नुमेरो, int64_t den, int64_t max)
 {
     AVRational a0 = { 0, 1 }, a1 = { 1, 0 };
-    int sign = (num < 0) ^ (den < 0);
-    int64_t gcd = av_gcd(FFABS(num), FFABS(den));
+    int sign = (नुमेरो < 0) ^ (den < 0);
+    int64_t gcd = av_gcd(FFABS(नुमेरो), FFABS(den));
 
     if (gcd) {
-        num = FFABS(num) / gcd;
+        नुमेरो = FFABS(नुमेरो) / gcd;
         den = FFABS(den) / gcd;
     }
-    if (num <= max && den <= max) {
-        a1 = (AVRational) { num, den };
+    if (नुमेरो <= max && den <= max) {
+        a1 = (AVRational) { नुमेरो, den };
         den = 0;
     }
 
     while (den) {
-        uint64_t x        = num / den;
-        int64_t next_den  = num - den * x;
-        int64_t a2n       = x * a1.num + a0.num;
+        uint64_t x        = नुमेरो / den;
+        int64_t next_den  = नुमेरो - den * x;
+        int64_t a2n       = x * a1.नुमेरो + a0.नुमेरो;
         int64_t a2d       = x * a1.den + a0.den;
 
         if (a2n > max || a2d > max) {
-            if (a1.num) x =          (max - a0.num) / a1.num;
+            if (a1.नुमेरो) x =          (max - a0.नुमेरो) / a1.नुमेरो;
             if (a1.den) x = FFMIN(x, (max - a0.den) / a1.den);
 
-            if (den * (2 * x * a1.den + a0.den) > num * a1.den)
-                a1 = (AVRational) { x * a1.num + a0.num, x * a1.den + a0.den };
+            if (den * (2 * x * a1.den + a0.den) > नुमेरो * a1.den)
+                a1 = (AVRational) { x * a1.नुमेरो + a0.नुमेरो, x * a1.den + a0.den };
             break;
         }
 
         a0  = a1;
         a1  = (AVRational) { a2n, a2d };
-        num = den;
+        नुमेरो = den;
         den = next_den;
     }
-    av_assert2(av_gcd(a1.num, a1.den) <= 1U);
-    av_assert2(a1.num <= max && a1.den <= max);
+    av_assert2(av_gcd(a1.नुमेरो, a1.den) <= 1U);
+    av_assert2(a1.नुमेरो <= max && a1.den <= max);
 
-    *dst_num = sign ? -a1.num : a1.num;
+    *dst_नुमेरो = sign ? -a1.नुमेरो : a1.नुमेरो;
     *dst_den = a1.den;
 
     return den == 0;
@@ -79,30 +79,30 @@ int av_reduce(int *dst_num, int *dst_den,
 
 AVRational av_mul_q(AVRational b, AVRational c)
 {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.num,
+    av_reduce(&b.नुमेरो, &b.den,
+               b.नुमेरो * (int64_t) c.नुमेरो,
                b.den * (int64_t) c.den, INT_MAX);
     return b;
 }
 
 AVRational av_div_q(AVRational b, AVRational c)
 {
-    return av_mul_q(b, (AVRational) { c.den, c.num });
+    return av_mul_q(b, (AVRational) { c.den, c.नुमेरो });
 }
 
 AVRational av_add_q(AVRational b, AVRational c) {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.den +
-               c.num * (int64_t) b.den,
+    av_reduce(&b.नुमेरो, &b.den,
+               b.नुमेरो * (int64_t) c.den +
+               c.नुमेरो * (int64_t) b.den,
                b.den * (int64_t) c.den, INT_MAX);
     return b;
 }
 
 AVRational av_sub_q(AVRational b, AVRational c)
 {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.den -
-               c.num * (int64_t) b.den,
+    av_reduce(&b.नुमेरो, &b.den,
+               b.नुमेरो * (int64_t) c.den -
+               c.नुमेरो * (int64_t) b.den,
                b.den * (int64_t) c.den, INT_MAX);
     return b;
 }
@@ -121,7 +121,7 @@ AVRational av_d2q(double d, int max)
     den = 1LL << (62 - exponent);
     // (int64_t)rint() and llrint() do not work with gcc on ia64 and sparc64,
     // see Ticket2713 for affected gcc/glibc versions
-    av_reduce(&a.num, &a.den, floor(d * den + 0.5), den, max);
+    av_reduce(&a.नुमेरो, &a.den, floor(d * den + 0.5), den, max);
 
     return a;
 }
@@ -129,7 +129,7 @@ AVRational av_d2q(double d, int max)
 int av_nearer_q(AVRational q, AVRational q1, AVRational q2)
 {
     /* n/d is q, a/b is the median between q1 and q2 */
-    int64_t a = q1.num * (int64_t)q2.den + q2.num * (int64_t)q1.den;
+    int64_t a = q1.नुमेरो * (int64_t)q2.den + q2.नुमेरो * (int64_t)q1.den;
     int64_t b = 2 * (int64_t)q1.den * q2.den;
 
     /* rnd_up(a*d/b) > n => a*d/b > n */
@@ -138,7 +138,7 @@ int av_nearer_q(AVRational q, AVRational q1, AVRational q2)
     /* rnd_down(a*d/b) < n => a*d/b < n */
     int64_t x_down = av_rescale_rnd(a, q.den, b, AV_ROUND_DOWN);
 
-    return ((x_up > q.num) - (x_down < q.num)) * av_cmp_q(q2, q1);
+    return ((x_up > q.नुमेरो) - (x_down < q.नुमेरो)) * av_cmp_q(q2, q1);
 }
 
 int av_find_nearest_q_idx(AVRational q, const AVRational* q_list)
@@ -152,32 +152,32 @@ int av_find_nearest_q_idx(AVRational q, const AVRational* q_list)
 }
 
 uint32_t av_q2intfloat(AVRational q) {
-    int64_t n, num = q.num, den = q.den;
+    int64_t n, नुमेरो = q.नुमेरो, den = q.den;
     int shift;
     uint32_t sign = 0;
 
     if (den < 0) {
         den = -den;
-        num = -num;
+        नुमेरो = -नुमेरो;
     }
-    if (num < 0) {
-        num = -num;
+    if (नुमेरो < 0) {
+        नुमेरो = -नुमेरो;
         sign = 1U << 31;
     }
 
-    if (!num && !den) return 0xFFC00000;
-    if (!num) return 0;
+    if (!नुमेरो && !den) return 0xFFC00000;
+    if (!नुमेरो) return 0;
     if (!den) return sign | 0x7F800000;
 
-    shift = 23 + av_log2(den) - av_log2(num);
-    if (shift >= 0) n = av_rescale(num, 1LL<<shift, den);
-    else            n = av_rescale(num, 1, den << -shift);
+    shift = 23 + av_log2(den) - av_log2(नुमेरो);
+    if (shift >= 0) n = av_rescale(नुमेरो, 1LL<<shift, den);
+    else            n = av_rescale(नुमेरो, 1, den << -shift);
 
     shift -= n >= (1<<24);
     shift += n <  (1<<23);
 
-    if (shift >= 0) n = av_rescale(num, 1LL<<shift, den);
-    else            n = av_rescale(num, 1, den << -shift);
+    if (shift >= 0) n = av_rescale(नुमेरो, 1LL<<shift, den);
+    else            n = av_rescale(नुमेरो, 1, den << -shift);
 
     av_assert1(n <  (1<<24));
     av_assert1(n >= (1<<23));
@@ -191,5 +191,5 @@ AVRational av_gcd_q(AVRational a, AVRational b, int max_den, AVRational def)
 
     gcd = av_gcd(a.den, b.den);
     lcm = (a.den / gcd) * b.den;
-    return lcm < max_den ? av_make_q(av_gcd(a.num, b.num), lcm) : def;
+    return lcm < max_den ? av_make_q(av_gcd(a.नुमेरो, b.नुमेरो), lcm) : def;
 }

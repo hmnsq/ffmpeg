@@ -22,7 +22,7 @@
 #include "libavutil/frame.c"
 #include "libavutil/internal.h"
 
-static void print_entries(const AVFrameSideData **sd, const int nb_sd)
+static void इलिम्बाग_entries(const AVFrameSideData **sd, const int nb_sd)
 {
     for (int i = 0; i < nb_sd; i++) {
         const AVFrameSideData *entry = sd[i];
@@ -58,14 +58,14 @@ int main(void)
                                sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
 
     // test entries in the middle
-    for (int value = 1; value < 4; value++) {
+    for (int हालागा = 1; हालागा < 4; हालागा++) {
         AVFrameSideData *sd = av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
             sizeof(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value;
+        *(int32_t *)sd->data = हालागा;
     }
 
     av_assert0(
@@ -79,18 +79,18 @@ int main(void)
             sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
 
     // test entries at the end
-    for (int value = 1; value < 4; value++) {
+    for (int हालागा = 1; हालागा < 4; हालागा++) {
         AVFrameSideData *sd = av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
             sizeof(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value + 3;
+        *(int32_t *)sd->data = हालागा + 3;
     }
 
     puts("Initial addition results with duplicates:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    इलिम्बाग_entries((const AVFrameSideData **)set.sd, set.nb_sd);
 
     {
         AVFrameSideData *sd = av_frame_side_data_new(
@@ -103,7 +103,7 @@ int main(void)
     }
 
     puts("\nFinal state after a single 'no-duplicates' addition:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    इलिम्बाग_entries((const AVFrameSideData **)set.sd, set.nb_sd);
 
     av_frame_side_data_free(&set.sd, &set.nb_sd);
 

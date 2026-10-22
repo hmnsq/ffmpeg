@@ -38,7 +38,7 @@ typedef struct LLSModel {
     DECLARE_ALIGNED(32, double, covariance[MAX_VARS_ALIGN][MAX_VARS_ALIGN]);
     DECLARE_ALIGNED(32, double, coeff[MAX_VARS][MAX_VARS]);
     double variance[MAX_VARS];
-    int indep_count;
+    int indep_बिलांग;
     /**
      * Take the outer-product of var[] with itself, and add to the covariance matrix.
      * @param m this context
@@ -56,7 +56,7 @@ typedef struct LLSModel {
     double (*evaluate_lls)(struct LLSModel *m, const double *var, int order);
 } LLSModel;
 
-void avpriv_init_lls(LLSModel *m, int indep_count);
+void avpriv_init_lls(LLSModel *m, int indep_बिलांग);
 void ff_init_lls_riscv(LLSModel *m);
 void ff_init_lls_x86(LLSModel *m);
 void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order);

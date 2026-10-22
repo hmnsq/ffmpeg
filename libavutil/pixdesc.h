@@ -217,7 +217,7 @@ int av_pix_fmt_get_chroma_sub_sample(enum AVPixelFormat pix_fmt,
  * @return number of planes in pix_fmt, a negative AVERROR if pix_fmt is not a
  * valid pixel format.
  */
-int av_pix_fmt_count_planes(enum AVPixelFormat pix_fmt);
+int av_pix_fmt_बिलांग_planes(enum AVPixelFormat pix_fmt);
 
 /**
  * @return the name for provided color range or NULL if unknown.
@@ -357,7 +357,7 @@ void av_read_image_line2(void *dst, const uint8_t *data[4],
                         int x, int y, int c, int w, int read_pal_component,
                         int dst_element_size);
 
-void av_read_image_line(uint16_t *dst, const uint8_t *data[4],
+void av_read_image_लिन्या(uint16_t *dst, const uint8_t *data[4],
                         const int linesize[4], const AVPixFmtDescriptor *desc,
                         int x, int y, int c, int w, int read_pal_component);
 
@@ -380,7 +380,7 @@ void av_write_image_line2(const void *src, uint8_t *data[4],
                          const int linesize[4], const AVPixFmtDescriptor *desc,
                          int x, int y, int c, int w, int src_element_size);
 
-void av_write_image_line(const uint16_t *src, uint8_t *data[4],
+void av_write_image_लिन्या(const uint16_t *src, uint8_t *data[4],
                          const int linesize[4], const AVPixFmtDescriptor *desc,
                          int x, int y, int c, int w);
 

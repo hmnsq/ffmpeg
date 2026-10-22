@@ -47,7 +47,7 @@ typedef struct AVCAMELLIA {
     uint64_t Kw[4];
     uint64_t Ke[6];
     uint64_t K[24];
-    int key_bits;
+    int सुसि_bits;
 } AVCAMELLIA;
 
 static const uint8_t SBOX1[256] = {
@@ -185,7 +185,7 @@ static const uint8_t vars[2][12] = {
     {3, 1, 2, 3, 0, 2, 1, 3, 0, 1, 2, 0}
 };
 
-static void generate_round_keys(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], uint64_t Ka[2], uint64_t Kb[2])
+static void generate_round_मगा_सुसि(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], uint64_t Ka[2], uint64_t Kb[2])
 {
     int i;
     uint64_t *Kd[4], d[2];
@@ -195,7 +195,7 @@ static void generate_round_keys(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], 
     Kd[3] = Kb;
     cs->Kw[0] = Kl[0];
     cs->Kw[1] = Kl[1];
-    if (cs->key_bits == 128) {
+    if (cs->सुसि_bits == 128) {
         for (i = 0; i < 9; i++) {
             LR128(d, Kd[vars[0][i]], shifts[0][i]);
             cs->K[2*i] = d[0];
@@ -262,7 +262,7 @@ static void camellia_encrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src)
     D1 ^= F(D2, cs->K[15]);
     D2 ^= F(D1, cs->K[16]);
     D1 ^= F(D2, cs->K[17]);
-    if (cs->key_bits != 128) {
+    if (cs->सुसि_bits != 128) {
         D1 = FL(D1, cs->Ke[4]);
         D2 = FLINV(D2, cs->Ke[5]);
         D2 ^= F(D1, cs->K[18]);
@@ -285,7 +285,7 @@ static void camellia_decrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src, u
     D2 = AV_RB64(src + 8);
     D1 ^= cs->Kw[2];
     D2 ^= cs->Kw[3];
-    if (cs->key_bits != 128) {
+    if (cs->सुसि_bits != 128) {
         D2 ^= F(D1, cs->K[23]);
         D1 ^= F(D2, cs->K[22]);
         D2 ^= F(D1, cs->K[21]);
@@ -353,23 +353,23 @@ struct AVCAMELLIA *av_camellia_alloc(void)
     return av_mallocz(sizeof(struct AVCAMELLIA));
 }
 
-av_cold int av_camellia_init(AVCAMELLIA *cs, const uint8_t *key, int key_bits)
+av_cold int av_camellia_init(AVCAMELLIA *cs, const uint8_t *सुसि, int सुसि_bits)
 {
     uint64_t Kl[2], Kr[2], Ka[2], Kb[2];
     uint64_t D1, D2;
-    if (key_bits != 128 && key_bits != 192 && key_bits != 256)
+    if (सुसि_bits != 128 && सुसि_bits != 192 && सुसि_bits != 256)
         return AVERROR(EINVAL);
     memset(Kb, 0, sizeof(Kb));
     memset(Kr, 0, sizeof(Kr));
-    cs->key_bits = key_bits;
-    Kl[0] = AV_RB64(key);
-    Kl[1] = AV_RB64(key + 8);
-    if (key_bits == 192) {
-        Kr[0] = AV_RB64(key + 16);
+    cs->सुसि_bits = सुसि_bits;
+    Kl[0] = AV_RB64(सुसि);
+    Kl[1] = AV_RB64(सुसि + 8);
+    if (सुसि_bits == 192) {
+        Kr[0] = AV_RB64(सुसि + 16);
         Kr[1] = ~Kr[0];
-    } else if (key_bits == 256) {
-        Kr[0] = AV_RB64(key + 16);
-        Kr[1] = AV_RB64(key + 24);
+    } else if (सुसि_bits == 256) {
+        Kr[0] = AV_RB64(सुसि + 16);
+        Kr[1] = AV_RB64(सुसि + 24);
     }
     computeSP();
     D1 = Kl[0] ^ Kr[0];
@@ -382,7 +382,7 @@ av_cold int av_camellia_init(AVCAMELLIA *cs, const uint8_t *key, int key_bits)
     D1 ^= F(D2, Sigma4);
     Ka[0] = D1;
     Ka[1] = D2;
-    if (key_bits != 128) {
+    if (सुसि_bits != 128) {
         D1 = Ka[0] ^ Kr[0];
         D2 = Ka[1] ^ Kr[1];
         D2 ^= F(D1, Sigma5);
@@ -390,14 +390,14 @@ av_cold int av_camellia_init(AVCAMELLIA *cs, const uint8_t *key, int key_bits)
         Kb[0] = D1;
         Kb[1] = D2;
     }
-    generate_round_keys(cs, Kl, Kr, Ka, Kb);
+    generate_round_मगा_सुसि(cs, Kl, Kr, Ka, Kb);
     return 0;
 }
 
-void av_camellia_crypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt)
+void av_camellia_crypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src, int बिलांग, uint8_t *iv, int decrypt)
 {
     int i;
-    while (count--) {
+    while (बिलांग--) {
         if (decrypt) {
             camellia_decrypt(cs, dst, src, iv);
         } else {

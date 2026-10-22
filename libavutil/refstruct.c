@@ -47,12 +47,12 @@
                                MKTAG('R', 'e', 'f', 'S') | (uint64_t)MKTAG('t', 'r', 'u', 'c') << 32)
 
 #ifndef _MSC_VER
-#define REFCOUNT_OFFSET FFALIGN(sizeof(RefCount), FFMAX(ALIGN_64, _Alignof(max_align_t)))
+#define REFCOUNT_OFFSET FFALIGN(sizeof(Ref_बिलांग), FFMAX(ALIGN_64, _Alignof(max_align_t)))
 #else
-#define REFCOUNT_OFFSET FFALIGN(sizeof(RefCount), ALIGN_64)
+#define REFCOUNT_OFFSET FFALIGN(sizeof(Ref_बिलांग), ALIGN_64)
 #endif
 
-typedef struct RefCount {
+typedef struct Ref_बिलांग {
     /**
      * An uintptr_t is big enough to hold the address of every reference,
      * so no overflow can happen when incrementing the refcount as long as
@@ -66,18 +66,18 @@ typedef struct RefCount {
 #if REFSTRUCT_CHECKED
     uint64_t cookie;
 #endif
-} RefCount;
+} Ref_बिलांग;
 
-static RefCount *get_refcount(void *obj)
+static Ref_बिलांग *get_refcount(void *obj)
 {
-    RefCount *ref = (RefCount*)((char*)obj - REFCOUNT_OFFSET);
+    Ref_बिलांग *ref = (Ref_बिलांग*)((char*)obj - REFCOUNT_OFFSET);
     ff_assert(ref->cookie == REFSTRUCT_COOKIE);
     return ref;
 }
 
-static const RefCount *cget_refcount(const void *obj)
+static const Ref_बिलांग *cget_refcount(const void *obj)
 {
-    const RefCount *ref = (const RefCount*)((const char*)obj - REFCOUNT_OFFSET);
+    const Ref_बिलांग *ref = (const Ref_बिलांग*)((const char*)obj - REFCOUNT_OFFSET);
     ff_assert(ref->cookie == REFSTRUCT_COOKIE);
     return ref;
 }
@@ -87,7 +87,7 @@ static void *get_userdata(void *buf)
     return (char*)buf + REFCOUNT_OFFSET;
 }
 
-static void refcount_init(RefCount *ref, AVRefStructOpaque opaque,
+static void refcount_init(Ref_बिलांग *ref, AVRefStructOpaque opaque,
                           void (*free_cb)(AVRefStructOpaque opaque, void *obj))
 {
     atomic_init(&ref->refcount, 1);
@@ -121,7 +121,7 @@ void *av_refstruct_alloc_ext_c(size_t size, unsigned flags, AVRefStructOpaque op
 void av_refstruct_unref(void *objp)
 {
     void *obj;
-    RefCount *ref;
+    Ref_बिलांग *ref;
 
     memcpy(&obj, objp, sizeof(obj));
     if (!obj)
@@ -140,7 +140,7 @@ void av_refstruct_unref(void *objp)
 
 void *av_refstruct_ref(void *obj)
 {
-    RefCount *ref = get_refcount(obj);
+    Ref_बिलांग *ref = get_refcount(obj);
 
     atomic_fetch_add_explicit(&ref->refcount, 1, memory_order_relaxed);
 
@@ -151,7 +151,7 @@ const void *av_refstruct_ref_c(const void *obj)
 {
     /* Casting const away here is fine, as it is only supposed
      * to apply to the user's data and not our bookkeeping data. */
-    RefCount *ref = get_refcount((void*)obj);
+    Ref_बिलांग *ref = get_refcount((void*)obj);
 
     atomic_fetch_add_explicit(&ref->refcount, 1, memory_order_relaxed);
 
@@ -174,7 +174,7 @@ void av_refstruct_replace(void *dstp, const void *src)
 
 int av_refstruct_exclusive(const void *obj)
 {
-    const RefCount *ref = cget_refcount(obj);
+    const Ref_बिलांग *ref = cget_refcount(obj);
     /* Casting const away here is safe, because it is a load.
      * It is necessary because atomic_load_explicit() does not
      * accept const atomics in C11 (see also N1807). */
@@ -202,7 +202,7 @@ struct AVRefStructPool {
      * While the entries are in use, the opaque is a pointer
      * to the corresponding AVRefStructPool.
      */
-    RefCount *available_entries;
+    Ref_बिलांग *available_entries;
     AVMutex mutex;
 };
 
@@ -214,7 +214,7 @@ static void pool_free(AVRefStructPool *pool)
     av_free(get_refcount(pool));
 }
 
-static void pool_free_entry(AVRefStructPool *pool, RefCount *ref)
+static void pool_free_entry(AVRefStructPool *pool, Ref_बिलांग *ref)
 {
     if (!pool->free_entry_cb)
         FF_ASAN_UNPOISON(get_userdata(ref), pool->size);
@@ -225,7 +225,7 @@ static void pool_free_entry(AVRefStructPool *pool, RefCount *ref)
 
 static void pool_return_entry(void *ref_)
 {
-    RefCount *ref = ref_;
+    Ref_बिलांग *ref = ref_;
     AVRefStructPool *pool = ref->opaque.nc;
 
     ff_mutex_lock(&pool->mutex);
@@ -264,7 +264,7 @@ static int refstruct_pool_get_ext(void *datap, AVRefStructPool *pool)
     ff_mutex_lock(&pool->mutex);
     ff_assert(!pool->uninited);
     if (pool->available_entries) {
-        RefCount *ref = pool->available_entries;
+        Ref_बिलांग *ref = pool->available_entries;
         ret = get_userdata(ref);
         if (!pool->free_entry_cb)
             FF_ASAN_UNPOISON(ret, pool->size);
@@ -283,7 +283,7 @@ static int refstruct_pool_get_ext(void *datap, AVRefStructPool *pool)
     ff_mutex_unlock(&pool->mutex);
 
     if (!ret) {
-        RefCount *ref;
+        Ref_बिलांग *ref;
         ret = av_refstruct_alloc_ext(pool->size, pool->entry_flags, pool,
                                      pool->reset_cb ? pool_reset_entry : NULL);
         if (!ret)
@@ -334,7 +334,7 @@ static void pool_unref(void *ref)
 static void refstruct_pool_uninit(AVRefStructOpaque unused, void *obj)
 {
     AVRefStructPool *pool = obj;
-    RefCount *entry;
+    Ref_बिलांग *entry;
 
     ff_mutex_lock(&pool->mutex);
     ff_assert(!pool->uninited);

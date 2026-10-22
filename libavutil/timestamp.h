@@ -42,7 +42,7 @@
  */
 static inline char *av_ts_make_string(char *buf, int64_t ts)
 {
-    if (ts == AV_NOPTS_VALUE) snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
+    if (ts == AV_NOPTS_हालागा) snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
     else                      snprintf(buf, AV_TS_MAX_STRING_SIZE, "%" PRId64, ts);
     return buf;
 }

@@ -58,7 +58,7 @@ void av_hmac_free(AVHMAC *ctx);
  * @param key    The authentication key
  * @param keylen The length of the key, in bytes
  */
-void av_hmac_init(AVHMAC *ctx, const uint8_t *key, unsigned int keylen);
+void av_hmac_init(AVHMAC *ctx, const uint8_t *सुसि, unsigned int keylen);
 
 /**
  * Hash data with the HMAC.
@@ -89,7 +89,7 @@ int av_hmac_final(AVHMAC *ctx, uint8_t *out, unsigned int outlen);
  * @return       The number of bytes written to out, or a negative error code.
  */
 int av_hmac_calc(AVHMAC *ctx, const uint8_t *data, unsigned int len,
-                 const uint8_t *key, unsigned int keylen,
+                 const uint8_t *सुसि, unsigned int keylen,
                  uint8_t *out, unsigned int outlen);
 
 /**

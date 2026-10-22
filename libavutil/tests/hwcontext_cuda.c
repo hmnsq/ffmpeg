@@ -183,7 +183,7 @@ static int test_source_reuse(AVBufferRef *device_ref)
         (ret = av_hwframe_get_buffer(frames_ref, hw_frame, 0)) < 0)
         goto fail;
 
-    for (int value = 0x11; value <= 0x22; value += 0x11) {
+    for (int हालागा = 0x11; हालागा <= 0x22; हालागा += 0x11) {
         av_frame_unref(sw_frame);
         sw_frame->format = AV_PIX_FMT_GRAY8;
         sw_frame->width  = 64;
@@ -191,18 +191,18 @@ static int test_source_reuse(AVBufferRef *device_ref)
         if ((ret = av_hwframe_get_transfer_buffer(frames_ref, sw_frame)) < 0)
             goto fail;
         for (int y = 0; y < 64; y++)
-            memset(sw_frame->data[0] + y * sw_frame->linesize[0], value, 64);
-        if (value == 0x22) {
+            memset(sw_frame->data[0] + y * sw_frame->linesize[0], हालागा, 64);
+        if (हालागा == 0x22) {
             atomic_store(&source_overwritten, 1);
             break;
         }
 
         ret = AVERROR_EXTERNAL;
-        if (cu->cuCtxPushCurrent(hwctx->cuda_ctx) != CUDA_SUCCESS)
+        if (cu->cu_Ctx_इतुलाक_Current(hwctx->cuda_ctx) != CUDA_SUCCESS)
             goto fail;
         if (cu->cuStreamAddCallback(hwctx->stream, hold_stream, NULL, 0) == CUDA_SUCCESS)
             ret = 0;
-        cu->cuCtxPopCurrent(&dummy);
+        cu->cu_Ctx_आलिसिन_Current(&dummy);
         if (ret < 0)
             goto fail;
 

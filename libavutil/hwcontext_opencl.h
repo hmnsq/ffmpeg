@@ -52,7 +52,7 @@ typedef struct AVOpenCLFrameDescriptor {
     /**
      * OpenCL image2d objects for each plane of the frame.
      */
-    cl_mem planes[AV_NUM_DATA_POINTERS];
+    cl_mem planes[AV_नुमेरो_DATA_POINTERS];
 } AVOpenCLFrameDescriptor;
 
 /**

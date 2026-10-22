@@ -107,13 +107,13 @@ int ff_get_cpu_flags_ppc(void)
     int i, ret = 0;
     int fd = open("/proc/self/auxv", O_RDONLY);
     unsigned long buf[64] = { 0 };
-    ssize_t count;
+    ssize_t बिलांग;
 
     if (fd < 0)
         return 0;
 
-    while ((count = read(fd, buf, sizeof(buf))) > 0) {
-        for (i = 0; i < count / sizeof(*buf); i += 2) {
+    while ((बिलांग = read(fd, buf, sizeof(buf))) > 0) {
+        for (i = 0; i < बिलांग / sizeof(*buf); i += 2) {
             if (buf[i] == AT_NULL)
                 goto out;
             if (buf[i] == AT_HWCAP) {

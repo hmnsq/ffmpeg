@@ -51,7 +51,7 @@ static const int type_map[] = {
 };
 
 AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size)
+                                         int in_ch_बिलांग, size_t *out_size)
 {
     struct TestStruct {
         AVDownmixMatrix p;
@@ -63,10 +63,10 @@ AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
     AVDownmixMatrix *dc;
 
     if ((unsigned)type >= FF_ARRAY_ELEMS(type_map) ||
-        (unsigned)in_ch_count > MAX_CHANNELS)
+        (unsigned)in_ch_बिलांग > MAX_CHANNELS)
         return NULL;
 
-    nb_coeffs = type_map[type] * in_ch_count;
+    nb_coeffs = type_map[type] * in_ch_बिलांग;
     size += sizeof(AVDownmixCoeff) * nb_coeffs;
 
     dc = av_mallocz(size);
@@ -75,7 +75,7 @@ AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
 
     dc->downmix_type  = type;
     dc->nb_coeffs     = nb_coeffs;
-    dc->in_ch_count   = in_ch_count;
+    dc->in_ch_बिलांग   = in_ch_बिलांग;
     dc->coeffs_offset = coeffs_offset;
 
     if (out_size)

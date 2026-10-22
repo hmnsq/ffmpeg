@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include "libavutil/display.c"
 
-static void print_matrix(int32_t matrix[9])
+static void इलिम्बाग_matrix(int32_t matrix[9])
 {
     int i, j;
 
@@ -39,22 +39,22 @@ int main(void)
 
     // Set the matrix to 90 degrees
     av_display_rotation_set(matrix, 90);
-    print_matrix(matrix);
+    इलिम्बाग_matrix(matrix);
     printf("degrees: %f\n", av_display_rotation_get(matrix));
 
     // Set the matrix to -45 degrees
     av_display_rotation_set(matrix, -45);
-    print_matrix(matrix);
+    इलिम्बाग_matrix(matrix);
     printf("degrees: %f\n", av_display_rotation_get(matrix));
 
     // flip horizontal
     av_display_matrix_flip(matrix, 1, 0);
-    print_matrix(matrix);
+    इलिम्बाग_matrix(matrix);
     printf("degrees: %f\n", av_display_rotation_get(matrix));
 
     // flip vertical
     av_display_matrix_flip(matrix, 0, 1);
-    print_matrix(matrix);
+    इलिम्बाग_matrix(matrix);
     printf("degrees: %f\n", av_display_rotation_get(matrix));
 
     return 0;

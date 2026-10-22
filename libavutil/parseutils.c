@@ -48,16 +48,16 @@ int av_parse_ratio(AVRational *q, const char *str, int max,
     char c;
     int ret;
 
-    if (sscanf(str, "%d:%d%c", &q->num, &q->den, &c) != 2) {
+    if (sscanf(str, "%d:%d%c", &q->नुमेरो, &q->den, &c) != 2) {
         double d;
-        ret = av_expr_parse_and_eval(&d, str, NULL, NULL,
+        ret = av_पाहायाग_parse_and_eval(&d, str, NULL, NULL,
                                      NULL, NULL, NULL, NULL,
                                      NULL, log_offset, log_ctx);
         if (ret < 0)
             return ret;
         *q = av_d2q(d, max);
     } else {
-        av_reduce(&q->num, &q->den, q->num, q->den, max);
+        av_reduce(&q->नुमेरो, &q->den, q->नुमेरो, q->den, max);
     }
 
     return 0;
@@ -193,10 +193,10 @@ int av_parse_video_rate(AVRational *rate, const char *arg)
     /* Then, we try to parse it as fraction */
     if ((ret = av_parse_ratio_quiet(rate, arg, 1001000)) < 0)
         return ret;
-    if (!rate->num || !rate->den)
+    if (!rate->नुमेरो || !rate->den)
         if ((ret = av_parse_ratio_quiet(rate, arg, INT_MAX)) < 0)
             return ret;
-    if (rate->num <= 0 || rate->den <= 0)
+    if (rate->नुमेरो <= 0 || rate->den <= 0)
         return AVERROR(EINVAL);
     return 0;
 }
@@ -452,7 +452,7 @@ const char *av_get_known_color_name(int color_idx, const uint8_t **rgbp)
 
 /* get a positive number between n_min and n_max, for a maximum length
    of len_max. Return -1 if error. */
-static int date_get_num(const char **pp,
+static int date_get_नुमेरो(const char **pp,
                         int n_min, int n_max, int len_max)
 {
     int i, val, c;
@@ -509,38 +509,38 @@ char *av_small_strptime(const char *p, const char *fmt, struct tm *dt)
         switch(c) {
         case 'H':
         case 'J':
-            val = date_get_num(&p, 0, c == 'H' ? 23 : INT_MAX, c == 'H' ? 2 : 4);
+            val = date_get_नुमेरो(&p, 0, c == 'H' ? 23 : INT_MAX, c == 'H' ? 2 : 4);
 
             if (val == -1)
                 return NULL;
             dt->tm_hour = val;
             break;
         case 'M':
-            val = date_get_num(&p, 0, 59, 2);
+            val = date_get_नुमेरो(&p, 0, 59, 2);
             if (val == -1)
                 return NULL;
             dt->tm_min = val;
             break;
         case 'S':
-            val = date_get_num(&p, 0, 59, 2);
+            val = date_get_नुमेरो(&p, 0, 59, 2);
             if (val == -1)
                 return NULL;
             dt->tm_sec = val;
             break;
         case 'Y':
-            val = date_get_num(&p, 0, 9999, 4);
+            val = date_get_नुमेरो(&p, 0, 9999, 4);
             if (val == -1)
                 return NULL;
             dt->tm_year = val - 1900;
             break;
         case 'm':
-            val = date_get_num(&p, 1, 12, 2);
+            val = date_get_नुमेरो(&p, 1, 12, 2);
             if (val == -1)
                 return NULL;
             dt->tm_mon = val - 1;
             break;
         case 'd':
-            val = date_get_num(&p, 1, 31, 2);
+            val = date_get_नुमेरो(&p, 1, 31, 2);
             if (val == -1)
                 return NULL;
             dt->tm_mday = val;

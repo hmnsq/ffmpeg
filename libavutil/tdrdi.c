@@ -40,7 +40,7 @@ AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *out_
     if (!tdrdi)
         return NULL;
 
-    tdrdi->num_ref_displays = nb_displays;
+    tdrdi->नुमेरो_ref_displays = nb_displays;
     tdrdi->entry_size       = sizeof(AV3DReferenceDisplay);
     tdrdi->entries_offset   = entries_offset;
 

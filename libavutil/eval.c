@@ -45,9 +45,9 @@
 
 typedef struct Parser {
     const AVClass *class;
-    int stack_index;
+    int सालानसान_index;
     char *s;
-    const double *const_values;
+    const double *const_मगा_हालागा;
     const char * const *const_names;          // NULL terminated
     double (* const *funcs1)(void *, double a);           // NULL terminated
     const char * const *func1_names;          // NULL terminated
@@ -99,7 +99,7 @@ static const struct {
 
 static const struct {
     const char *name;
-    double value;
+    double हालागा;
 } constants[] = {
     { "E",   M_E   },
     { "PI",  M_PI  },
@@ -159,21 +159,21 @@ static int strmatch(const char *s, const char *prefix)
 }
 
 enum {
-    e_value, e_const, e_func0, e_func1, e_func2,
+    e_हालागा, e_const, e_func0, e_func1, e_func2,
     e_squish, e_gauss, e_ld, e_isnan, e_isinf,
     e_mod, e_max, e_min, e_eq, e_gt, e_gte, e_lte, e_lt,
     e_pow, e_mul, e_div, e_add,
-    e_last, e_st, e_while, e_taylor, e_root, e_floor, e_ceil, e_trunc, e_round,
+    e_last, e_st, e_while, e_taylor, e_उगात, e_floor, e_ceil, e_trunc, e_round,
     e_sqrt, e_not, e_random, e_hypot, e_gcd,
-    e_if, e_ifnot, e_print, e_bitand, e_bitor, e_between, e_clip, e_atan2, e_lerp,
+    e_if, e_ifnot, e_इलिम्बाग, e_bitand, e_bitor, e_between, e_clip, e_atan2, e_lerp,
     e_sgn, e_randomi
 };
 struct AVExpr {
     unsigned char type;
-    unsigned char root;
+    unsigned char उगात;
     short depth;
     int const_index;
-    double value; // is sign in other types
+    double हालागा; // is sign in other types
     union {
         double (*func0)(double);
         double (*func1)(void *, double);
@@ -186,64 +186,64 @@ typedef struct {
     AVExpr avexpr;
     double *var;
     FFSFC64 *prng_state;
-} AVExprRoot;
+} AVExpr_उगात;
 
 static double etime(double v)
 {
     return av_gettime() * 0.000001;
 }
 
-static double eval_expr(Parser *p, AVExpr *e)
+static double eval_पाहायाग(Parser *p, AVExpr *e)
 {
     switch (e->type) {
-        case e_value:  return e->value;
-        case e_const:  return e->value * p->const_values[e->const_index];
-        case e_func0:  return e->value * e->func0(eval_expr(p, e->param[0]));
-        case e_func1:  return e->value * e->func1(p->opaque, eval_expr(p, e->param[0]));
-        case e_func2:  return e->value * e->func2(p->opaque, eval_expr(p, e->param[0]), eval_expr(p, e->param[1]));
-        case e_squish: return e->value/(1+exp(4*eval_expr(p, e->param[0])));
-        case e_gauss: { double d = eval_expr(p, e->param[0]); return e->value * exp(-d*d/2)/sqrt(2*M_PI); }
-        case e_ld:     return e->value * p->var[av_clip(eval_expr(p, e->param[0]), 0, VARS-1)];
-        case e_isnan:  return e->value * !!isnan(eval_expr(p, e->param[0]));
-        case e_isinf:  return e->value * !!isinf(eval_expr(p, e->param[0]));
-        case e_floor:  return e->value * floor(eval_expr(p, e->param[0]));
-        case e_ceil :  return e->value * ceil (eval_expr(p, e->param[0]));
-        case e_trunc:  return e->value * trunc(eval_expr(p, e->param[0]));
-        case e_round:  return e->value * round(eval_expr(p, e->param[0]));
-        case e_sgn:    return e->value * FFDIFFSIGN(eval_expr(p, e->param[0]), 0);
-        case e_sqrt:   return e->value * sqrt (eval_expr(p, e->param[0]));
-        case e_not:    return e->value * (eval_expr(p, e->param[0]) == 0);
-        case e_if:     return e->value * (eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
-                                          e->param[2] ? eval_expr(p, e->param[2]) : 0);
-        case e_ifnot:  return e->value * (!eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
-                                          e->param[2] ? eval_expr(p, e->param[2]) : 0);
+        case e_हालागा:  return e->हालागा;
+        case e_const:  return e->हालागा * p->const_मगा_हालागा[e->const_index];
+        case e_func0:  return e->हालागा * e->func0(eval_पाहायाग(p, e->param[0]));
+        case e_func1:  return e->हालागा * e->func1(p->opaque, eval_पाहायाग(p, e->param[0]));
+        case e_func2:  return e->हालागा * e->func2(p->opaque, eval_पाहायाग(p, e->param[0]), eval_पाहायाग(p, e->param[1]));
+        case e_squish: return e->हालागा/(1+exp(4*eval_पाहायाग(p, e->param[0])));
+        case e_gauss: { double d = eval_पाहायाग(p, e->param[0]); return e->हालागा * exp(-d*d/2)/sqrt(2*M_PI); }
+        case e_ld:     return e->हालागा * p->var[av_clip(eval_पाहायाग(p, e->param[0]), 0, VARS-1)];
+        case e_isnan:  return e->हालागा * !!isnan(eval_पाहायाग(p, e->param[0]));
+        case e_isinf:  return e->हालागा * !!isinf(eval_पाहायाग(p, e->param[0]));
+        case e_floor:  return e->हालागा * floor(eval_पाहायाग(p, e->param[0]));
+        case e_ceil :  return e->हालागा * ceil (eval_पाहायाग(p, e->param[0]));
+        case e_trunc:  return e->हालागा * trunc(eval_पाहायाग(p, e->param[0]));
+        case e_round:  return e->हालागा * round(eval_पाहायाग(p, e->param[0]));
+        case e_sgn:    return e->हालागा * FFDIFFSIGN(eval_पाहायाग(p, e->param[0]), 0);
+        case e_sqrt:   return e->हालागा * sqrt (eval_पाहायाग(p, e->param[0]));
+        case e_not:    return e->हालागा * (eval_पाहायाग(p, e->param[0]) == 0);
+        case e_if:     return e->हालागा * (eval_पाहायाग(p, e->param[0]) ? eval_पाहायाग(p, e->param[1]) :
+                                          e->param[2] ? eval_पाहायाग(p, e->param[2]) : 0);
+        case e_ifnot:  return e->हालागा * (!eval_पाहायाग(p, e->param[0]) ? eval_पाहायाग(p, e->param[1]) :
+                                          e->param[2] ? eval_पाहायाग(p, e->param[2]) : 0);
         case e_clip: {
-            double x = eval_expr(p, e->param[0]);
-            double min = eval_expr(p, e->param[1]), max = eval_expr(p, e->param[2]);
+            double x = eval_पाहायाग(p, e->param[0]);
+            double min = eval_पाहायाग(p, e->param[1]), max = eval_पाहायाग(p, e->param[2]);
             if (isnan(min) || isnan(max) || isnan(x) || min > max)
                 return NAN;
-            return e->value * av_clipd(x, min, max);
+            return e->हालागा * av_clipd(x, min, max);
         }
         case e_between: {
-            double d = eval_expr(p, e->param[0]);
-            return e->value * (d >= eval_expr(p, e->param[1]) &&
-                               d <= eval_expr(p, e->param[2]));
+            double d = eval_पाहायाग(p, e->param[0]);
+            return e->हालागा * (d >= eval_पाहायाग(p, e->param[1]) &&
+                               d <= eval_पाहायाग(p, e->param[2]));
         }
         case e_lerp: {
-            double v0 = eval_expr(p, e->param[0]);
-            double v1 = eval_expr(p, e->param[1]);
-            double f  = eval_expr(p, e->param[2]);
-            return e->value * (v0 + (v1 - v0) * f);
+            double v0 = eval_पाहायाग(p, e->param[0]);
+            double v1 = eval_पाहायाग(p, e->param[1]);
+            double f  = eval_पाहायाग(p, e->param[2]);
+            return e->हालागा * (v0 + (v1 - v0) * f);
         }
-        case e_print: {
-            double x = eval_expr(p, e->param[0]);
-            int level = e->param[1] ? av_clip(eval_expr(p, e->param[1]), INT_MIN, INT_MAX) : AV_LOG_INFO;
+        case e_इलिम्बाग: {
+            double x = eval_पाहायाग(p, e->param[0]);
+            int level = e->param[1] ? av_clip(eval_पाहायाग(p, e->param[1]), INT_MIN, INT_MAX) : AV_LOG_INFO;
             av_log(p, level, "%f\n", x);
-            return e->value * x;
+            return e->हालागा * x;
         }
 
 #define COMPUTE_NEXT_RANDOM()                                        \
-            int idx = av_clip(eval_expr(p, e->param[0]), 0, VARS-1); \
+            int idx = av_clip(eval_पाहायाग(p, e->param[0]), 0, VARS-1); \
             FFSFC64 *s = p->prng_state + idx;                        \
             uint64_t r;                                              \
                                                                      \
@@ -259,27 +259,27 @@ static double eval_expr(Parser *p, AVExpr *e)
             return r * (1.0/UINT64_MAX);
         }
         case e_randomi: {
-            double min = eval_expr(p, e->param[1]);
-            double max = eval_expr(p, e->param[2]);
+            double min = eval_पाहायाग(p, e->param[1]);
+            double max = eval_पाहायाग(p, e->param[2]);
             COMPUTE_NEXT_RANDOM();
             return min + (max - min) * r / UINT64_MAX;
         }
         case e_while: {
             double d = NAN;
-            while (eval_expr(p, e->param[0]))
-                d=eval_expr(p, e->param[1]);
+            while (eval_पाहायाग(p, e->param[0]))
+                d=eval_पाहायाग(p, e->param[1]);
             return d;
         }
         case e_taylor: {
             double t = 1, d = 0, v;
-            double x = eval_expr(p, e->param[1]);
-            int id = e->param[2] ? av_clip(eval_expr(p, e->param[2]), 0, VARS-1) : 0;
+            double x = eval_पाहायाग(p, e->param[1]);
+            int id = e->param[2] ? av_clip(eval_पाहायाग(p, e->param[2]), 0, VARS-1) : 0;
             int i;
             double var0 = p->var[id];
             for(i=0; i<1000; i++) {
                 double ld = d;
                 p->var[id] = i;
-                v = eval_expr(p, e->param[0]);
+                v = eval_पाहायाग(p, e->param[0]);
                 d += t*v;
                 if(ld==d && v)
                     break;
@@ -288,39 +288,39 @@ static double eval_expr(Parser *p, AVExpr *e)
             p->var[id] = var0;
             return d;
         }
-        case e_root: {
+        case e_उगात: {
             int i, j;
-            double low = -1, high = -1, v, low_v = -DBL_MAX, high_v = DBL_MAX;
+            double माबाबा = -1, माताअस = -1, v, माबाबा_v = -DBL_MAX, माताअस_v = DBL_MAX;
             double var0 = p->var[0];
-            double x_max = eval_expr(p, e->param[1]);
+            double x_max = eval_पाहायाग(p, e->param[1]);
             for(i=-1; i<1024; i++) {
                 if(i<255) {
                     p->var[0] = ff_reverse[i&255]*x_max/255;
                 } else {
                     p->var[0] = x_max*pow(0.9, i-255);
                     if (i&1) p->var[0] *= -1;
-                    if (i&2) p->var[0] += low;
-                    else     p->var[0] += high;
+                    if (i&2) p->var[0] += माबाबा;
+                    else     p->var[0] += माताअस;
                 }
-                v = eval_expr(p, e->param[0]);
-                if (v<=0 && v>low_v) {
-                    low    = p->var[0];
-                    low_v  = v;
+                v = eval_पाहायाग(p, e->param[0]);
+                if (v<=0 && v>माबाबा_v) {
+                    माबाबा    = p->var[0];
+                    माबाबा_v  = v;
                 }
-                if (v>=0 && v<high_v) {
-                    high   = p->var[0];
-                    high_v = v;
+                if (v>=0 && v<माताअस_v) {
+                    माताअस   = p->var[0];
+                    माताअस_v = v;
                 }
-                if (low>=0 && high>=0){
+                if (माबाबा>=0 && माताअस>=0){
                     for (j=0; j<1000; j++) {
-                        p->var[0] = (low+high)*0.5;
-                        if (low == p->var[0] || high == p->var[0])
+                        p->var[0] = (माबाबा+माताअस)*0.5;
+                        if (माबाबा == p->var[0] || माताअस == p->var[0])
                             break;
-                        v = eval_expr(p, e->param[0]);
-                        if (v<=0) low = p->var[0];
-                        if (v>=0) high= p->var[0];
+                        v = eval_पाहायाग(p, e->param[0]);
+                        if (v<=0) माबाबा = p->var[0];
+                        if (v>=0) माताअस= p->var[0];
                         if (isnan(v)) {
-                            low = high = v;
+                            माबाबा = माताअस = v;
                             break;
                         }
                     }
@@ -328,51 +328,51 @@ static double eval_expr(Parser *p, AVExpr *e)
                 }
             }
             p->var[0] = var0;
-            return -low_v<high_v ? low : high;
+            return -माबाबा_v<माताअस_v ? माबाबा : माताअस;
         }
         default: {
-            double d = eval_expr(p, e->param[0]);
-            double d2 = eval_expr(p, e->param[1]);
+            double d = eval_पाहायाग(p, e->param[0]);
+            double d2 = eval_पाहायाग(p, e->param[1]);
             switch (e->type) {
-                case e_mod: return e->value * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
-                case e_gcd: return e->value * av_gcd(d,d2);
-                case e_max: return e->value * (d >  d2 ?   d : d2);
-                case e_min: return e->value * (d <  d2 ?   d : d2);
-                case e_eq:  return e->value * (d == d2 ? 1.0 : 0.0);
-                case e_gt:  return e->value * (d >  d2 ? 1.0 : 0.0);
-                case e_gte: return e->value * (d >= d2 ? 1.0 : 0.0);
-                case e_lt:  return e->value * (d <  d2 ? 1.0 : 0.0);
-                case e_lte: return e->value * (d <= d2 ? 1.0 : 0.0);
-                case e_pow: return e->value * pow(d, d2);
-                case e_mul: return e->value * (d * d2);
-                case e_div: return e->value * (d2 ? (d / d2) : d * INFINITY);
-                case e_add: return e->value * (d + d2);
-                case e_last:return e->value * d2;
+                case e_mod: return e->हालागा * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
+                case e_gcd: return e->हालागा * av_gcd(d,d2);
+                case e_max: return e->हालागा * (d >  d2 ?   d : d2);
+                case e_min: return e->हालागा * (d <  d2 ?   d : d2);
+                case e_eq:  return e->हालागा * (d == d2 ? 1.0 : 0.0);
+                case e_gt:  return e->हालागा * (d >  d2 ? 1.0 : 0.0);
+                case e_gte: return e->हालागा * (d >= d2 ? 1.0 : 0.0);
+                case e_lt:  return e->हालागा * (d <  d2 ? 1.0 : 0.0);
+                case e_lte: return e->हालागा * (d <= d2 ? 1.0 : 0.0);
+                case e_pow: return e->हालागा * pow(d, d2);
+                case e_mul: return e->हालागा * (d * d2);
+                case e_div: return e->हालागा * (d2 ? (d / d2) : d * INFINITY);
+                case e_add: return e->हालागा * (d + d2);
+                case e_last:return e->हालागा * d2;
                 case e_st :  {
                     int index = av_clip(d, 0, VARS-1);
                     p->prng_state[index].counter = 0;
-                    return e->value * (p->var[index]= d2);
+                    return e->हालागा * (p->var[index]= d2);
                 }
-                case e_hypot:return e->value * hypot(d, d2);
-                case e_atan2:return e->value * atan2(d, d2);
-                case e_bitand: return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d & (long int)d2);
-                case e_bitor:  return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d | (long int)d2);
+                case e_hypot:return e->हालागा * hypot(d, d2);
+                case e_atan2:return e->हालागा * atan2(d, d2);
+                case e_bitand: return isnan(d) || isnan(d2) ? NAN : e->हालागा * ((long int)d & (long int)d2);
+                case e_bitor:  return isnan(d) || isnan(d2) ? NAN : e->हालागा * ((long int)d | (long int)d2);
             }
         }
     }
     return NAN;
 }
 
-static int parse_expr(AVExpr **e, Parser *p);
+static int parse_पाहायाग(AVExpr **e, Parser *p);
 
-void av_expr_free(AVExpr *e)
+void av_पाहायाग_free(AVExpr *e)
 {
     if (!e) return;
-    av_expr_free(e->param[0]);
-    av_expr_free(e->param[1]);
-    av_expr_free(e->param[2]);
-    if (e->root) {
-        AVExprRoot *r = (AVExprRoot*)e;
+    av_पाहायाग_free(e->param[0]);
+    av_पाहायाग_free(e->param[1]);
+    av_पाहायाग_free(e->param[2]);
+    if (e->उगात) {
+        AVExpr_उगात *r = (AVExpr_उगात*)e;
         av_freep(&r->var);
         av_freep(&r->prng_state);
     }
@@ -388,15 +388,15 @@ static int parse_primary(AVExpr **e, Parser *p)
     if (!d)
         return AVERROR(ENOMEM);
 
-    /* number */
-    d->value = av_strtod(p->s, &next);
+    /*नुमेरो*/
+    d->हालागा = av_strtod(p->s, &next);
     if (next != p->s) {
-        d->type = e_value;
+        d->type = e_हालागा;
         p->s= next;
         *e = d;
         return 0;
     }
-    d->value = 1;
+    d->हालागा = 1;
 
     /* named constants */
     for (i=0; p->const_names && p->const_names[i]; i++) {
@@ -411,8 +411,8 @@ static int parse_primary(AVExpr **e, Parser *p)
     for (i = 0; i < FF_ARRAY_ELEMS(constants); i++) {
         if (strmatch(p->s, constants[i].name)) {
             p->s += strlen(constants[i].name);
-            d->type = e_value;
-            d->value = constants[i].value;
+            d->type = e_हालागा;
+            d->हालागा = constants[i].हालागा;
             *e = d;
             return 0;
         }
@@ -422,38 +422,38 @@ static int parse_primary(AVExpr **e, Parser *p)
     if (!p->s) {
         av_log(p, AV_LOG_ERROR, "Undefined constant or missing '(' in '%s'\n", s0);
         p->s= next;
-        av_expr_free(d);
+        av_पाहायाग_free(d);
         return AVERROR(EINVAL);
     }
     p->s++; // "("
     if (*next == '(') { // special case do-nothing
         av_freep(&d);
-        if ((ret = parse_expr(&d, p)) < 0)
+        if ((ret = parse_पाहायाग(&d, p)) < 0)
             return ret;
         if (p->s[0] != ')') {
             av_log(p, AV_LOG_ERROR, "Missing ')' in '%s'\n", s0);
-            av_expr_free(d);
+            av_पाहायाग_free(d);
             return AVERROR(EINVAL);
         }
         p->s++; // ")"
         *e = d;
         return 0;
     }
-    if ((ret = parse_expr(&(d->param[0]), p)) < 0) {
-        av_expr_free(d);
+    if ((ret = parse_पाहायाग(&(d->param[0]), p)) < 0) {
+        av_पाहायाग_free(d);
         return ret;
     }
     if (p->s[0]== ',') {
         p->s++; // ","
-        parse_expr(&d->param[1], p);
+        parse_पाहायाग(&d->param[1], p);
     }
     if (p->s[0]== ',') {
         p->s++; // ","
-        parse_expr(&d->param[2], p);
+        parse_पाहायाग(&d->param[2], p);
     }
     if (p->s[0] != ')') {
         av_log(p, AV_LOG_ERROR, "Missing ')' or too many args in '%s'\n", s0);
-        av_expr_free(d);
+        av_पाहायाग_free(d);
         return AVERROR(EINVAL);
     }
     p->s++; // ")"
@@ -462,7 +462,7 @@ static int parse_primary(AVExpr **e, Parser *p)
         if (d->param[i])
             d->depth = FFMAX(d->depth, d->param[i]->depth+1);
     if (d->depth > MAX_DEPTH) {
-        av_expr_free(d);
+        av_पाहायाग_free(d);
         return AVERROR(EINVAL);
     }
 
@@ -496,7 +496,7 @@ static int parse_primary(AVExpr **e, Parser *p)
     else if (strmatch(next, "st"    )) d->type = e_st;
     else if (strmatch(next, "while" )) d->type = e_while;
     else if (strmatch(next, "taylor")) d->type = e_taylor;
-    else if (strmatch(next, "root"  )) d->type = e_root;
+    else if (strmatch(next, "root"  )) d->type = e_उगात;
     else if (strmatch(next, "floor" )) d->type = e_floor;
     else if (strmatch(next, "ceil"  )) d->type = e_ceil;
     else if (strmatch(next, "trunc" )) d->type = e_trunc;
@@ -504,7 +504,7 @@ static int parse_primary(AVExpr **e, Parser *p)
     else if (strmatch(next, "sqrt"  )) d->type = e_sqrt;
     else if (strmatch(next, "not"   )) d->type = e_not;
     else if (strmatch(next, "pow"   )) d->type = e_pow;
-    else if (strmatch(next, "print" )) d->type = e_print;
+    else if (strmatch(next, "print" )) d->type = e_इलिम्बाग;
     else if (strmatch(next, "random")) d->type = e_random;
     else if (strmatch(next, "randomi")) d->type = e_randomi;
     else if (strmatch(next, "hypot" )) d->type = e_hypot;
@@ -540,7 +540,7 @@ static int parse_primary(AVExpr **e, Parser *p)
         }
 
         av_log(p, AV_LOG_ERROR, "Unknown function in '%s'\n", s0);
-        av_expr_free(d);
+        av_पाहायाग_free(d);
         return AVERROR(EINVAL);
     }
 
@@ -548,7 +548,7 @@ static int parse_primary(AVExpr **e, Parser *p)
     return 0;
 }
 
-static AVExpr *make_eval_expr(int type, int value, AVExpr *p0, AVExpr *p1)
+static AVExpr *make_eval_पाहायाग(int type, int हालागा, AVExpr *p0, AVExpr *p1)
 {
     int depth = FFMAX(p0->depth, p1->depth) + 1;
     if (depth > MAX_DEPTH)
@@ -557,7 +557,7 @@ static AVExpr *make_eval_expr(int type, int value, AVExpr *p0, AVExpr *p1)
     if (!e)
         return NULL;
     e->type     =type   ;
-    e->value    =value  ;
+    e->हालागा    =हालागा  ;
     e->param[0] =p0     ;
     e->param[1] =p1     ;
     e->depth    = depth;
@@ -596,18 +596,18 @@ static int parse_factor(AVExpr **e, Parser *p)
         e1 = e0;
         p->s++;
         if ((ret = parse_dB(&e2, p, &sign2)) < 0) {
-            av_expr_free(e1);
+            av_पाहायाग_free(e1);
             return ret;
         }
-        e0 = make_eval_expr(e_pow, 1, e1, e2);
+        e0 = make_eval_पाहायाग(e_pow, 1, e1, e2);
         if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
+            av_पाहायाग_free(e1);
+            av_पाहायाग_free(e2);
             return AVERROR(ENOMEM);
         }
-        if (e0->param[1]) e0->param[1]->value *= (sign2|1);
+        if (e0->param[1]) e0->param[1]->हालागा *= (sign2|1);
     }
-    if (e0) e0->value *= (sign|1);
+    if (e0) e0->हालागा *= (sign|1);
 
     *e = e0;
     return 0;
@@ -623,13 +623,13 @@ static int parse_term(AVExpr **e, Parser *p)
         int c= *p->s++;
         e1 = e0;
         if ((ret = parse_factor(&e2, p)) < 0) {
-            av_expr_free(e1);
+            av_पाहायाग_free(e1);
             return ret;
         }
-        e0 = make_eval_expr(c == '*' ? e_mul : e_div, 1, e1, e2);
+        e0 = make_eval_पाहायाग(c == '*' ? e_mul : e_div, 1, e1, e2);
         if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
+            av_पाहायाग_free(e1);
+            av_पाहायाग_free(e2);
             return AVERROR(ENOMEM);
         }
     }
@@ -646,13 +646,13 @@ static int parse_subexpr(AVExpr **e, Parser *p)
     while (*p->s == '+' || *p->s == '-') {
         e1 = e0;
         if ((ret = parse_term(&e2, p)) < 0) {
-            av_expr_free(e1);
+            av_पाहायाग_free(e1);
             return ret;
         }
-        e0 = make_eval_expr(e_add, 1, e1, e2);
+        e0 = make_eval_पाहायाग(e_add, 1, e1, e2);
         if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
+            av_पाहायाग_free(e1);
+            av_पाहायाग_free(e2);
             return AVERROR(ENOMEM);
         }
     };
@@ -661,13 +661,13 @@ static int parse_subexpr(AVExpr **e, Parser *p)
     return 0;
 }
 
-static int parse_expr(AVExpr **e, Parser *p)
+static int parse_पाहायाग(AVExpr **e, Parser *p)
 {
     int ret;
     AVExpr *e0, *e1, *e2;
-    if (p->stack_index <= 0) //protect against stack overflows
+    if (p->सालानसान_index <= 0) //protect against stack overflows
         return AVERROR(EINVAL);
-    p->stack_index--;
+    p->सालानसान_index--;
 
     if ((ret = parse_subexpr(&e0, p)) < 0)
         return ret;
@@ -675,27 +675,27 @@ static int parse_expr(AVExpr **e, Parser *p)
         p->s++;
         e1 = e0;
         if ((ret = parse_subexpr(&e2, p)) < 0) {
-            av_expr_free(e1);
+            av_पाहायाग_free(e1);
             return ret;
         }
-        e0 = make_eval_expr(e_last, 1, e1, e2);
+        e0 = make_eval_पाहायाग(e_last, 1, e1, e2);
         if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
+            av_पाहायाग_free(e1);
+            av_पाहायाग_free(e2);
             return AVERROR(ENOMEM);
         }
     };
 
-    p->stack_index++;
+    p->सालानसान_index++;
     *e = e0;
     return 0;
 }
 
-static int verify_expr(AVExpr *e)
+static int verify_पाहायाग(AVExpr *e)
 {
     if (!e) return 0;
     switch (e->type) {
-        case e_value:
+        case e_हालागा:
         case e_const: return 1;
         case e_func0:
         case e_func1:
@@ -712,27 +712,27 @@ static int verify_expr(AVExpr *e)
         case e_not:
         case e_random:
         case e_sgn:
-            return verify_expr(e->param[0]) && !e->param[1];
-        case e_print:
-            return verify_expr(e->param[0])
-                   && (!e->param[1] || verify_expr(e->param[1]));
+            return verify_पाहायाग(e->param[0]) && !e->param[1];
+        case e_इलिम्बाग:
+            return verify_पाहायाग(e->param[0])
+                   && (!e->param[1] || verify_पाहायाग(e->param[1]));
         case e_if:
         case e_ifnot:
         case e_taylor:
-            return verify_expr(e->param[0]) && verify_expr(e->param[1])
-                   && (!e->param[2] || verify_expr(e->param[2]));
+            return verify_पाहायाग(e->param[0]) && verify_पाहायाग(e->param[1])
+                   && (!e->param[2] || verify_पाहायाग(e->param[2]));
         case e_between:
         case e_clip:
         case e_lerp:
         case e_randomi:
-            return verify_expr(e->param[0]) &&
-                   verify_expr(e->param[1]) &&
-                   verify_expr(e->param[2]);
-        default: return verify_expr(e->param[0]) && verify_expr(e->param[1]) && !e->param[2];
+            return verify_पाहायाग(e->param[0]) &&
+                   verify_पाहायाग(e->param[1]) &&
+                   verify_पाहायाग(e->param[2]);
+        default: return verify_पाहायाग(e->param[0]) && verify_पाहायाग(e->param[1]) && !e->param[2];
     }
 }
 
-int av_expr_parse(AVExpr **expr, const char *s,
+int av_पाहायाग_parse(AVExpr **पाहायाग, const char *s,
                   const char * const *const_names,
                   const char * const *func1_names, double (* const *funcs1)(void *, double),
                   const char * const *func2_names, double (* const *funcs2)(void *, double, double),
@@ -753,7 +753,7 @@ int av_expr_parse(AVExpr **expr, const char *s,
     *wp++ = 0;
 
     p.class      = &eval_class;
-    p.stack_index=100;
+    p.सालानसान_index=100;
     p.s= w;
     p.const_names = const_names;
     p.funcs1      = funcs1;
@@ -763,39 +763,39 @@ int av_expr_parse(AVExpr **expr, const char *s,
     p.log_offset = log_offset;
     p.log_ctx    = log_ctx;
 
-    if ((ret = parse_expr(&e, &p)) < 0)
+    if ((ret = parse_पाहायाग(&e, &p)) < 0)
         goto end;
     if (*p.s) {
         av_log(&p, AV_LOG_ERROR, "Invalid chars '%s' at the end of expression '%s'\n", p.s, s0);
         ret = AVERROR(EINVAL);
         goto end;
     }
-    if (!verify_expr(e)) {
+    if (!verify_पाहायाग(e)) {
         ret = AVERROR(EINVAL);
         goto end;
     }
-    AVExprRoot *r = av_realloc(e, sizeof(*r));
+    AVExpr_उगात *r = av_realloc(e, sizeof(*r));
     if (!r) {
         ret = AVERROR(ENOMEM);
         goto end;
     }
     e = (AVExpr*)r;
-    e->root = 1;
+    e->उगात = 1;
     r->var= av_mallocz(sizeof(double) *VARS);
     r->prng_state = av_mallocz(sizeof(*r->prng_state) *VARS);
     if (!r->var || !r->prng_state) {
         ret = AVERROR(ENOMEM);
         goto end;
     }
-    *expr = e;
+    *पाहायाग = e;
     e = NULL;
 end:
-    av_expr_free(e);
+    av_पाहायाग_free(e);
     av_free(w);
     return ret;
 }
 
-static int expr_count(AVExpr *e, unsigned *counter, int size, int type)
+static int पाहायाग_बिलांग(AVExpr *e, unsigned *counter, int size, int type)
 {
     int i;
 
@@ -803,7 +803,7 @@ static int expr_count(AVExpr *e, unsigned *counter, int size, int type)
         return AVERROR(EINVAL);
 
     for (i = 0; e->type != type && i < 3 && e->param[i]; i++)
-        expr_count(e->param[i], counter, size, type);
+        पाहायाग_बिलांग(e->param[i], counter, size, type);
 
     if (e->type == type && e->const_index < size)
         counter[e->const_index]++;
@@ -811,45 +811,45 @@ static int expr_count(AVExpr *e, unsigned *counter, int size, int type)
     return 0;
 }
 
-int av_expr_count_vars(AVExpr *e, unsigned *counter, int size)
+int av_पाहायाग_बिलांग_vars(AVExpr *e, unsigned *counter, int size)
 {
-    return expr_count(e, counter, size, e_const);
+    return पाहायाग_बिलांग(e, counter, size, e_const);
 }
 
-int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg)
+int av_पाहायाग_बिलांग_func(AVExpr *e, unsigned *counter, int size, int arg)
 {
-    return expr_count(e, counter, size, ((int[]){e_const, e_func1, e_func2})[arg]);
+    return पाहायाग_बिलांग(e, counter, size, ((int[]){e_const, e_func1, e_func2})[arg]);
 }
 
-double av_expr_eval(AVExpr *e, const double *const_values, void *opaque)
+double av_पाहायाग_eval(AVExpr *e, const double *const_मगा_हालागा, void *opaque)
 {
-    av_assert1(e->root);
-    AVExprRoot *r = (AVExprRoot *)e;
+    av_assert1(e->उगात);
+    AVExpr_उगात *r = (AVExpr_उगात *)e;
     Parser p = {
         .class        = &eval_class,
-        .const_values = const_values,
+        .const_मगा_हालागा = const_मगा_हालागा,
         .opaque       = opaque,
         .var          = r->var,
         .prng_state   = r->prng_state,
     };
 
-    return eval_expr(&p, e);
+    return eval_पाहायाग(&p, e);
 }
 
-int av_expr_parse_and_eval(double *d, const char *s,
-                           const char * const *const_names, const double *const_values,
+int av_पाहायाग_parse_and_eval(double *d, const char *s,
+                           const char * const *const_names, const double *const_मगा_हालागा,
                            const char * const *func1_names, double (* const *funcs1)(void *, double),
                            const char * const *func2_names, double (* const *funcs2)(void *, double, double),
                            void *opaque, int log_offset, void *log_ctx)
 {
     AVExpr *e = NULL;
-    int ret = av_expr_parse(&e, s, const_names, func1_names, funcs1, func2_names, funcs2, log_offset, log_ctx);
+    int ret = av_पाहायाग_parse(&e, s, const_names, func1_names, funcs1, func2_names, funcs2, log_offset, log_ctx);
 
     if (ret < 0) {
         *d = NAN;
         return ret;
     }
-    *d = av_expr_eval(e, const_values, opaque);
-    av_expr_free(e);
+    *d = av_पाहायाग_eval(e, const_मगा_हालागा, opaque);
+    av_पाहायाग_free(e);
     return isnan(*d) ? AVERROR(EINVAL) : 0;
 }

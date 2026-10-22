@@ -34,7 +34,7 @@
 /** hash context */
 typedef struct AVRIPEMD {
     uint8_t  digest_len;  ///< digest length in 32-bit words
-    uint64_t count;       ///< number of bytes in buffer
+    uint64_t बिलांग;       ///< number of bytes in buffer
     uint8_t  buffer[64];  ///< 512-bit buffer of input values used in hash updating
     uint32_t state[10];   ///< current hash value
     /** function used to update hash for 512-bit input block */
@@ -88,7 +88,7 @@ static const int WB[80] = {
     12, 15, 10,  4,  1,  5,  8,  7,  6,  2, 13, 14,  0,  3,  9, 11
 };
 
-#define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
+#define rol(हालागा, bits) (((हालागा) << (bits)) | ((हालागा) >> (32 - (bits))))
 
 #define ROUND128_0_TO_15(a,b,c,d,e,f,g,h)                               \
     a = rol(a + ((  b ^ c  ^ d)      + block[WA[n]]),         ROTA[n]); \
@@ -509,7 +509,7 @@ av_cold int av_ripemd_init(AVRIPEMD *ctx, int bits)
     default:
         return AVERROR(EINVAL);
     }
-    ctx->count = 0;
+    ctx->बिलांग = 0;
     return 0;
 }
 
@@ -518,8 +518,8 @@ void av_ripemd_update(AVRIPEMD* ctx, const uint8_t* data, size_t len)
     unsigned int j;
     size_t i;
 
-    j = ctx->count & 63;
-    ctx->count += len;
+    j = ctx->बिलांग & 63;
+    ctx->बिलांग += len;
 #if CONFIG_SMALL
     for (i = 0; i < len; i++) {
         ctx->buffer[j++] = data[i];
@@ -548,10 +548,10 @@ void av_ripemd_update(AVRIPEMD* ctx, const uint8_t* data, size_t len)
 void av_ripemd_final(AVRIPEMD* ctx, uint8_t *digest)
 {
     int i;
-    uint64_t finalcount = av_le2ne64(ctx->count << 3);
+    uint64_t finalcount = av_le2ne64(ctx->बिलांग << 3);
 
     av_ripemd_update(ctx, "\200", 1);
-    while ((ctx->count & 63) != 56)
+    while ((ctx->बिलांग & 63) != 56)
         av_ripemd_update(ctx, "", 1);
     av_ripemd_update(ctx, (uint8_t *)&finalcount, 8); /* Should cause a transform() */
     for (i = 0; i < ctx->digest_len; i++)

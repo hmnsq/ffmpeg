@@ -37,12 +37,12 @@ int main(void)
         /* verify defaults: all rationals should be {0, 1} */
         printf("alloc: OK\n");
         printf("defaults: primaries[0][0]=%d/%d, white_point[0]=%d/%d\n",
-               mdm->display_primaries[0][0].num,
+               mdm->display_primaries[0][0].नुमेरो,
                mdm->display_primaries[0][0].den,
-               mdm->white_point[0].num, mdm->white_point[0].den);
+               mdm->white_point[0].नुमेरो, mdm->white_point[0].den);
         printf("defaults: min_lum=%d/%d, max_lum=%d/%d\n",
-               mdm->min_luminance.num, mdm->min_luminance.den,
-               mdm->max_luminance.num, mdm->max_luminance.den);
+               mdm->min_luminance.नुमेरो, mdm->min_luminance.den,
+               mdm->max_luminance.नुमेरो, mdm->max_luminance.den);
         printf("defaults: has_primaries=%d, has_luminance=%d\n",
                mdm->has_primaries, mdm->has_luminance);
         av_free(mdm);
@@ -56,7 +56,7 @@ int main(void)
     if (mdm) {
         printf("alloc_size: OK, size>0=%s\n", size > 0 ? "yes" : "no");
         printf("defaults: primaries[0][0]=%d/%d\n",
-               mdm->display_primaries[0][0].num,
+               mdm->display_primaries[0][0].नुमेरो,
                mdm->display_primaries[0][0].den);
         av_free(mdm);
     } else {
@@ -76,16 +76,16 @@ int main(void)
         mdm->has_primaries = 1;
         mdm->has_luminance = 1;
         printf("primaries[0]=(%d/%d, %d/%d)\n",
-               mdm->display_primaries[0][0].num,
+               mdm->display_primaries[0][0].नुमेरो,
                mdm->display_primaries[0][0].den,
-               mdm->display_primaries[0][1].num,
+               mdm->display_primaries[0][1].नुमेरो,
                mdm->display_primaries[0][1].den);
         printf("white_point=(%d/%d, %d/%d)\n",
-               mdm->white_point[0].num, mdm->white_point[0].den,
-               mdm->white_point[1].num, mdm->white_point[1].den);
+               mdm->white_point[0].नुमेरो, mdm->white_point[0].den,
+               mdm->white_point[1].नुमेरो, mdm->white_point[1].den);
         printf("luminance: min=%d/%d max=%d/%d\n",
-               mdm->min_luminance.num, mdm->min_luminance.den,
-               mdm->max_luminance.num, mdm->max_luminance.den);
+               mdm->min_luminance.नुमेरो, mdm->min_luminance.den,
+               mdm->max_luminance.नुमेरो, mdm->max_luminance.den);
         av_free(mdm);
     }
 
@@ -96,7 +96,7 @@ int main(void)
         mdm = av_mastering_display_metadata_create_side_data(frame);
         if (mdm) {
             printf("side_data: OK, defaults: primaries[0][0]=%d/%d\n",
-                   mdm->display_primaries[0][0].num,
+                   mdm->display_primaries[0][0].नुमेरो,
                    mdm->display_primaries[0][0].den);
         } else {
             printf("side_data: FAIL\n");

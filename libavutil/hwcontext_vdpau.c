@@ -108,14 +108,14 @@ typedef struct VDPAUFramesContext {
     int                       nb_pix_fmts;
 } VDPAUFramesContext;
 
-static int count_pixfmts(const VDPAUPixFmtMap *map)
+static int बिलांग_pixfmts(const VDPAUPixFmtMap *map)
 {
-    int count = 0;
+    int बिलांग = 0;
     while (map->pix_fmt != AV_PIX_FMT_NONE) {
         map++;
-        count++;
+        बिलांग++;
     }
-    return count;
+    return बिलांग;
 }
 
 static int vdpau_init_pixmfts(AVHWDeviceContext *ctx)
@@ -128,7 +128,7 @@ static int vdpau_init_pixmfts(AVHWDeviceContext *ctx)
         const VDPAUPixFmtMap *map = vdpau_pix_fmts[i].map;
         int nb_pix_fmts;
 
-        nb_pix_fmts = count_pixfmts(map);
+        nb_pix_fmts = बिलांग_pixfmts(map);
         priv->pix_fmts[i] = av_malloc_array(nb_pix_fmts + 1, sizeof(*priv->pix_fmts[i]));
         if (!priv->pix_fmts[i])
             return AVERROR(ENOMEM);

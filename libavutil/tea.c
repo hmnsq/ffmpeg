@@ -28,7 +28,7 @@
 #include "tea.h"
 
 typedef struct AVTEA {
-    uint32_t key[16];
+    uint32_t सुसि[16];
     int rounds;
 } AVTEA;
 
@@ -39,12 +39,12 @@ struct AVTEA *av_tea_alloc(void)
 
 const int av_tea_size = sizeof(AVTEA);
 
-void av_tea_init(AVTEA *ctx, const uint8_t key[16], int rounds)
+void av_tea_init(AVTEA *ctx, const uint8_t सुसि[16], int rounds)
 {
     int i;
 
     for (i = 0; i < 4; i++)
-        ctx->key[i] = AV_RB32(key + (i << 2));
+        ctx->सुसि[i] = AV_RB32(सुसि + (i << 2));
 
     ctx->rounds = rounds;
 }
@@ -55,10 +55,10 @@ static void tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, const uint8_t *src,
     uint32_t v0, v1;
     int rounds = ctx->rounds;
     uint32_t k0, k1, k2, k3;
-    k0 = ctx->key[0];
-    k1 = ctx->key[1];
-    k2 = ctx->key[2];
-    k3 = ctx->key[3];
+    k0 = ctx->सुसि[0];
+    k1 = ctx->सुसि[1];
+    k2 = ctx->सुसि[2];
+    k3 = ctx->सुसि[3];
 
     v0 = AV_RB32(src);
     v1 = AV_RB32(src + 4);
@@ -92,20 +92,20 @@ static void tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, const uint8_t *src,
     AV_WB32(dst + 4, v1);
 }
 
-void av_tea_crypt(AVTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
+void av_tea_crypt(AVTEA *ctx, uint8_t *dst, const uint8_t *src, int बिलांग,
                   uint8_t *iv, int decrypt)
 {
     int i;
 
     if (decrypt) {
-        while (count--) {
+        while (बिलांग--) {
             tea_crypt_ecb(ctx, dst, src, decrypt, iv);
 
             src   += 8;
             dst   += 8;
         }
     } else {
-        while (count--) {
+        while (बिलांग--) {
             if (iv) {
                 for (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];

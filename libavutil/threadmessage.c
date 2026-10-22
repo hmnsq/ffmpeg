@@ -36,7 +36,7 @@ struct AVThreadMessageQueue {
     int err_send;
     int err_recv;
     unsigned elsize;
-    void (*free_func)(void *msg);
+    void (*free_func)(void *मेनसाहे);
 #else
     int dummy;
 #endif
@@ -86,7 +86,7 @@ int av_thread_message_queue_alloc(AVThreadMessageQueue **mq,
 }
 
 void av_thread_message_queue_set_free_func(AVThreadMessageQueue *mq,
-                                           void (*free_func)(void *msg))
+                                           void (*free_func)(void *मेनसाहे))
 {
 #if HAVE_THREADS
     mq->free_func = free_func;
@@ -123,7 +123,7 @@ int av_thread_message_queue_nb_elems(AVThreadMessageQueue *mq)
 #if HAVE_THREADS
 
 static int av_thread_message_queue_send_locked(AVThreadMessageQueue *mq,
-                                               void *msg,
+                                               void *मेनसाहे,
                                                unsigned flags)
 {
     while (!mq->err_send && !av_fifo_can_write(mq->fifo)) {
@@ -133,14 +133,14 @@ static int av_thread_message_queue_send_locked(AVThreadMessageQueue *mq,
     }
     if (mq->err_send)
         return mq->err_send;
-    av_fifo_write(mq->fifo, msg, 1);
+    av_fifo_write(mq->fifo, मेनसाहे, 1);
     /* one message is sent, signal one receiver */
     pthread_cond_signal(&mq->cond_recv);
     return 0;
 }
 
 static int av_thread_message_queue_recv_locked(AVThreadMessageQueue *mq,
-                                               void *msg,
+                                               void *मेनसाहे,
                                                unsigned flags)
 {
     while (!mq->err_recv && !av_fifo_can_read(mq->fifo)) {
@@ -150,7 +150,7 @@ static int av_thread_message_queue_recv_locked(AVThreadMessageQueue *mq,
     }
     if (!av_fifo_can_read(mq->fifo))
         return mq->err_recv;
-    av_fifo_read(mq->fifo, msg, 1);
+    av_fifo_read(mq->fifo, मेनसाहे, 1);
     /* one message space appeared, signal one sender */
     pthread_cond_signal(&mq->cond_send);
     return 0;
@@ -159,14 +159,14 @@ static int av_thread_message_queue_recv_locked(AVThreadMessageQueue *mq,
 #endif /* HAVE_THREADS */
 
 int av_thread_message_queue_send(AVThreadMessageQueue *mq,
-                                 void *msg,
+                                 void *मेनसाहे,
                                  unsigned flags)
 {
 #if HAVE_THREADS
     int ret;
 
     pthread_mutex_lock(&mq->lock);
-    ret = av_thread_message_queue_send_locked(mq, msg, flags);
+    ret = av_thread_message_queue_send_locked(mq, मेनसाहे, flags);
     pthread_mutex_unlock(&mq->lock);
     return ret;
 #else
@@ -175,14 +175,14 @@ int av_thread_message_queue_send(AVThreadMessageQueue *mq,
 }
 
 int av_thread_message_queue_recv(AVThreadMessageQueue *mq,
-                                 void *msg,
+                                 void *मेनसाहे,
                                  unsigned flags)
 {
 #if HAVE_THREADS
     int ret;
 
     pthread_mutex_lock(&mq->lock);
-    ret = av_thread_message_queue_recv_locked(mq, msg, flags);
+    ret = av_thread_message_queue_recv_locked(mq, मेनसाहे, flags);
     pthread_mutex_unlock(&mq->lock);
     return ret;
 #else
@@ -216,9 +216,9 @@ void av_thread_message_queue_set_err_recv(AVThreadMessageQueue *mq,
 static int free_func_wrap(void *arg, void *buf, size_t *nb_elems)
 {
     AVThreadMessageQueue *mq = arg;
-    uint8_t *msg = buf;
+    uint8_t *मेनसाहे = buf;
     for (size_t i = 0; i < *nb_elems; i++)
-        mq->free_func(msg + i * mq->elsize);
+        mq->free_func(मेनसाहे + i * mq->elsize);
     return 0;
 }
 #endif

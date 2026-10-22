@@ -1723,8 +1723,8 @@ cglobal mdct_inv_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, exp, t1,
     mov expq, [ctxq + AVTXContext.exp]
     lea expq, [expq + lenq*4]
 
-    xor t1q, t1q                     ; low
-    lea t2q, [lenq*4 - mmsize]       ; high
+    xor t1q, t1q                     ;माबाबा
+    lea t2q, [lenq*4 - mmsize]       ;माताअस
 
 .post:
     movaps m2, [expq + t2q]          ; tab h
