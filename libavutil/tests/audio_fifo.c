@@ -26,11 +26,11 @@
 #define MAX_CHANNELS    32
 
 
-typedef struct TestStruct {
-    const enum AVSampleFormat format;
-    const int nb_ch;
+typedef sa_nracanaa TestStruct {
+    const ga_nanaa AVSampleFormat format;
+    const ຈຳນວນເຕັມ nb_ch;
     void const *data_planes[MAX_CHANNELS];
-    const int nb_samples_pch;
+    const ຈຳນວນເຕັມ nb_samples_pch;
 } TestStruct;
 
 static const uint8_t data_U8 [] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11                        };
@@ -48,107 +48,107 @@ static const TestStruct test_struct[] = {
 
 static void free_data_planes(AVAudioFifo *afifo, void **output_data)
 {
-    int i;
-    for (i = 0; i < afifo->nb_buffers; ++i){
+    ຈຳນວນເຕັມ i;
+    ສຳລັບ (i = 0; i < afifo->nb_buffers; ++i){
         av_freep(&output_data[i]);
     }
     av_freep(&output_data);
 }
 
-static void ERROR(const char *str)
+static void ERROR(const var_na *str)
 {
     fprintf(stderr, "%s\n", str);
     exit(1);
 }
 
-static void print_audio_bytes(const TestStruct *test_sample, void **data_planes, int nb_samples)
+static void print_audio_bytes(const TestStruct *test_sample, void **data_planes, ຈຳນວນເຕັມ nb_samples)
 {
-    int p, b, f;
-    int byte_offset      = av_get_bytes_per_sample(test_sample->format);
-    int buffers          = av_sample_fmt_is_planar(test_sample->format)
+    ຈຳນວນເຕັມ p, b, f;
+    ຈຳນວນເຕັມ byte_offset      = av_get_bytes_per_sample(test_sample->format);
+    ຈຳນວນເຕັມ buffers          = av_sample_fmt_is_planar(test_sample->format)
                                          ? test_sample->nb_ch : 1;
-    int line_size        = (buffers > 1) ? nb_samples * byte_offset
+    ຈຳນວນເຕັມ line_size        = (buffers > 1) ? nb_samples * byte_offset
                                          : nb_samples * byte_offset * test_sample->nb_ch;
-    for (p = 0; p < buffers; ++p){
-        for(b = 0; b < line_size; b+=byte_offset){
-            for (f = 0; f < byte_offset; f++){
-                int order = !HAVE_BIGENDIAN ? (byte_offset - f - 1) : f;
+    ສຳລັບ (p = 0; p < buffers; ++p){
+        ສຳລັບ(b = 0; b < line_size; b+=byte_offset){
+            ສຳລັບ (f = 0; f < byte_offset; f++){
+                ຈຳນວນເຕັມ order = !HAVE_BIGENDIAN ? (byte_offset - f - 1) : f;
                 printf("%02x", *((uint8_t*)data_planes[p] + b + order));
             }
-            if (b + byte_offset < line_size)
+            ຖ້າ (b + byte_offset < line_size)
                 putchar(' ');
         }
         putchar('\n');
     }
 }
 
-static int read_samples_from_audio_fifo(AVAudioFifo* afifo, void ***output, int nb_samples)
+static ຈຳນວນເຕັມ read_samples_from_audio_fifo(AVAudioFifo* afifo, void ***output, ຈຳນວນເຕັມ nb_samples)
 {
-    int i;
-    int samples        = FFMIN(nb_samples, afifo->nb_samples);
-    int tot_elements   = !av_sample_fmt_is_planar(afifo->sample_fmt)
+    ຈຳນວນເຕັມ i;
+    ຈຳນວນເຕັມ samples        = FFMIN(nb_samples, afifo->nb_samples);
+    ຈຳນວນເຕັມ tot_elements   = !av_sample_fmt_is_planar(afifo->sample_fmt)
                          ? samples : afifo->channels * samples;
-    void **data_planes = av_malloc_array(afifo->nb_buffers, sizeof(void*));
-    if (!data_planes)
+    void **data_planes = av_malloc_array(afifo->nb_buffers, parimaa_na(void*));
+    ຖ້າ (!data_planes)
         ERROR("failed to allocate memory!");
-    if (*output)
+    ຖ້າ (*output)
         free_data_planes(afifo, *output);
     *output            = data_planes;
 
-    for (i = 0; i < afifo->nb_buffers; ++i){
+    ສຳລັບ (i = 0; i < afifo->nb_buffers; ++i){
         data_planes[i] = av_malloc_array(tot_elements, afifo->sample_size);
-        if (!data_planes[i])
+        ຖ້າ (!data_planes[i])
             ERROR("failed to allocate memory!");
     }
 
-    return av_audio_fifo_read(afifo, *output, nb_samples);
+    ສົ່ງຄືນ av_audio_fifo_read(afifo, *output, nb_samples);
 }
 
-static int write_samples_to_audio_fifo(AVAudioFifo* afifo, const TestStruct *test_sample,
-                                       int nb_samples, int offset)
+static ຈຳນວນເຕັມ write_samples_to_audio_fifo(AVAudioFifo* afifo, const TestStruct *test_sample,
+                                       ຈຳນວນເຕັມ nb_samples, ຈຳນວນເຕັມ offset)
 {
-    int offset_size, i;
+    ຈຳນວນເຕັມ offset_size, i;
     void *data_planes[MAX_CHANNELS];
 
-    if(nb_samples > test_sample->nb_samples_pch - offset){
-        return 0;
+    ຖ້າ(nb_samples > test_sample->nb_samples_pch - offset){
+        ສົ່ງຄືນ 0;
     }
-    if(offset >= test_sample->nb_samples_pch){
-        return 0;
+    ຖ້າ(offset >= test_sample->nb_samples_pch){
+        ສົ່ງຄືນ 0;
     }
     offset_size  = offset * afifo->sample_size;
 
-    for (i = 0; i < afifo->nb_buffers ; ++i){
+    ສຳລັບ (i = 0; i < afifo->nb_buffers ; ++i){
         data_planes[i] = (uint8_t*)test_sample->data_planes[i] + offset_size;
     }
 
-    return av_audio_fifo_write(afifo, data_planes, nb_samples);
+    ສົ່ງຄືນ av_audio_fifo_write(afifo, data_planes, nb_samples);
 }
 
 static void test_function(const TestStruct *test_sample)
 {
-    int ret, i;
+    ຈຳນວນເຕັມ ret, i;
     void **output_data  = NULL;
     AVAudioFifo *afifo  = av_audio_fifo_alloc(test_sample->format, test_sample->nb_ch,
                                             test_sample->nb_samples_pch);
-    if (!afifo) {
+    ຖ້າ (!afifo) {
         ERROR("ERROR: av_audio_fifo_alloc returned NULL!");
     }
     ret = write_samples_to_audio_fifo(afifo, test_sample, test_sample->nb_samples_pch, 0);
-    if (ret < 0){
+    ຖ້າ (ret < 0){
         ERROR("ERROR: av_audio_fifo_write failed!");
     }
     printf("written: %d\n", ret);
 
     ret = write_samples_to_audio_fifo(afifo, test_sample, test_sample->nb_samples_pch, 0);
-    if (ret < 0){
+    ຖ້າ (ret < 0){
         ERROR("ERROR: av_audio_fifo_write failed!");
     }
     printf("written: %d\n", ret);
     printf("remaining samples in audio_fifo: %d\n\n", av_audio_fifo_size(afifo));
 
     ret = read_samples_from_audio_fifo(afifo, &output_data, test_sample->nb_samples_pch);
-    if (ret < 0){
+    ຖ້າ (ret < 0){
         ERROR("ERROR: av_audio_fifo_read failed!");
     }
     printf("read: %d\n", ret);
@@ -157,7 +157,7 @@ static void test_function(const TestStruct *test_sample)
 
     /* test av_audio_fifo_peek */
     ret = av_audio_fifo_peek(afifo, output_data, afifo->nb_samples);
-    if (ret < 0){
+    ຖ້າ (ret < 0){
         ERROR("ERROR: av_audio_fifo_peek failed!");
     }
     printf("peek:\n");
@@ -166,9 +166,9 @@ static void test_function(const TestStruct *test_sample)
 
     /* test av_audio_fifo_peek_at */
     printf("peek_at:\n");
-    for (i = 0; i < afifo->nb_samples; ++i){
+    ສຳລັບ (i = 0; i < afifo->nb_samples; ++i){
         ret = av_audio_fifo_peek_at(afifo, output_data, 1, i);
-        if (ret < 0){
+        ຖ້າ (ret < 0){
             ERROR("ERROR: av_audio_fifo_peek_at failed!");
         }
         printf("%d:\n", i);
@@ -178,10 +178,10 @@ static void test_function(const TestStruct *test_sample)
 
     /* test av_audio_fifo_drain */
     ret = av_audio_fifo_drain(afifo, afifo->nb_samples);
-    if (ret < 0){
+    ຖ້າ (ret < 0){
         ERROR("ERROR: av_audio_fifo_drain failed!");
     }
-    if (afifo->nb_samples){
+    ຖ້າ (afifo->nb_samples){
         ERROR("drain failed to flush all samples in audio_fifo!");
     }
 
@@ -190,13 +190,13 @@ static void test_function(const TestStruct *test_sample)
     av_audio_fifo_free(afifo);
 }
 
-int main(void)
+ຈຳນວນເຕັມ main(void)
 {
-    int t, tests = sizeof(test_struct)/sizeof(test_struct[0]);
+    ຈຳນວນເຕັມ t, tests = parimaa_na(test_struct)/parimaa_na(test_struct[0]);
 
-    for (t = 0; t < tests; ++t){
+    ສຳລັບ (t = 0; t < tests; ++t){
         printf("\nTEST: %d\n\n", t+1);
         test_function(&test_struct[t]);
     }
-    return 0;
+    ສົ່ງຄືນ 0;
 }

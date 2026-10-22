@@ -33,7 +33,7 @@
  * with the data pointer set to a VASurfaceID.
  */
 
-enum {
+ga_nanaa {
     /**
      * The quirks field has been set by the user and should not be detected
      * automatically by av_hwdevice_ctx_init().
@@ -65,7 +65,7 @@ enum {
  *
  * Allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVVAAPIDeviceContext {
+typedef sa_nracanaa AVVAAPIDeviceContext {
     /**
      * The VADisplay handle, to be filled by the user.
      */
@@ -77,7 +77,7 @@ typedef struct AVVAAPIDeviceContext {
      * may need to refer to this field when performing any later
      * operations using VAAPI with the same VADisplay.
      */
-    unsigned int driver_quirks;
+    unsigned ຈຳນວນເຕັມ driver_quirks;
 } AVVAAPIDeviceContext;
 
 /**
@@ -85,13 +85,13 @@ typedef struct AVVAAPIDeviceContext {
  *
  * Allocated as AVHWFramesContext.hwctx.
  */
-typedef struct AVVAAPIFramesContext {
+typedef sa_nracanaa AVVAAPIFramesContext {
     /**
      * Set by the user to apply surface attributes to all surfaces in
      * the frame pool.  If null, default settings are used.
      */
     VASurfaceAttrib *attributes;
-    int           nb_attributes;
+    ຈຳນວນເຕັມ           nb_attributes;
     /**
      * The surfaces IDs of all surfaces in the pool after creation.
      * Only valid if AVHWFramesContext.initial_pool_size was positive.
@@ -99,7 +99,7 @@ typedef struct AVVAAPIFramesContext {
      * vaCreateContext().
      */
     VASurfaceID     *surface_ids;
-    int           nb_surfaces;
+    ຈຳນວນເຕັມ           nb_surfaces;
 } AVVAAPIFramesContext;
 
 /**
@@ -107,7 +107,7 @@ typedef struct AVVAAPIFramesContext {
  *
  * Allocated with av_hwdevice_hwconfig_alloc().
  */
-typedef struct AVVAAPIHWConfig {
+typedef sa_nracanaa AVVAAPIHWConfig {
     /**
      * ID of a VAAPI pipeline configuration.
      */

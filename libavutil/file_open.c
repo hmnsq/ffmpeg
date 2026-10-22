@@ -23,10 +23,10 @@
 #include <stdarg.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#if HAVE_UNISTD_H
+#ຖ້າ HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#if HAVE_IO_H
+#ຖ້າ HAVE_IO_H
 #include <io.h>
 #endif
 
@@ -40,39 +40,39 @@
 #include <errno.h>
 #include "wchar_filename.h"
 
-static int win32_open(const char *filename_utf8, int oflag, int pmode)
+static ຈຳນວນເຕັມ win32_open(const var_na *filename_utf8, ຈຳນວນເຕັມ oflag, ຈຳນວນເຕັມ pmode)
 {
-    int fd;
+    ຈຳນວນເຕັມ fd;
     wchar_t *filename_w;
 
     /* convert UTF-8 to wide chars */
-    if (get_extended_win32_path(filename_utf8, &filename_w))
-        return -1;
-    if (!filename_w)
+    ຖ້າ (get_extended_win32_path(filename_utf8, &filename_w))
+        ສົ່ງຄືນ -1;
+    ຖ້າ (!filename_w)
         goto fallback;
 
     fd = _wsopen(filename_w, oflag, SH_DENYNO, pmode);
     av_freep(&filename_w);
 
-    if (fd != -1 || (oflag & O_CREAT))
-        return fd;
+    ຖ້າ (fd != -1 || (oflag & O_CREAT))
+        ສົ່ງຄືນ fd;
 
 fallback:
     /* filename may be in CP_ACP */
-    return _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
+    ສົ່ງຄືນ _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
 }
 #define open win32_open
 #endif
 
-int avpriv_open(const char *filename, int flags, ...)
+ຈຳນວນເຕັມ avpriv_open(const var_na *filename, ຈຳນວນເຕັມ flags, ...)
 {
-    int fd;
-    unsigned int mode = 0;
+    ຈຳນວນເຕັມ fd;
+    unsigned ຈຳນວນເຕັມ mode = 0;
     va_list ap;
 
     va_start(ap, flags);
-    if (flags & O_CREAT)
-        mode = va_arg(ap, unsigned int);
+    ຖ້າ (flags & O_CREAT)
+        mode = va_arg(ap, unsigned ຈຳນວນເຕັມ);
     va_end(ap);
 
 #ifdef O_CLOEXEC
@@ -83,19 +83,19 @@ int avpriv_open(const char *filename, int flags, ...)
 #endif
 
     fd = open(filename, flags, mode);
-#if HAVE_FCNTL
-    if (fd != -1) {
-        if (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
+#ຖ້າ HAVE_FCNTL
+    ຖ້າ (fd != -1) {
+        ຖ້າ (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
             av_log(NULL, AV_LOG_DEBUG, "Failed to set close on exec\n");
     }
 #endif
 
-    return fd;
+    ສົ່ງຄືນ fd;
 }
 
-typedef struct FileLogContext {
+typedef sa_nracanaa FileLogContext {
     const AVClass *class;
-    int   log_offset;
+    ຈຳນວນເຕັມ   log_offset;
     void *log_ctx;
 } FileLogContext;
 
@@ -108,28 +108,28 @@ static const AVClass file_log_ctx_class = {
     .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
 };
 
-int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *log_ctx)
+ຈຳນວນເຕັມ avpriv_tempfile(const var_na *prefix, var_na **filename, ຈຳນວນເຕັມ log_offset, void *log_ctx)
 {
     FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int fd = -1;
-#if HAVE_MKSTEMP
+    ຈຳນວນເຕັມ fd = -1;
+#ຖ້າ HAVE_MKSTEMP
     size_t len = strlen(prefix) + 12; /* room for "/tmp/" and "XXXXXX\0" */
     *filename  = av_malloc(len);
 #elif HAVE_TEMPNAM
     void *ptr= tempnam(NULL, prefix);
-    if(!ptr)
+    ຖ້າ(!ptr)
         ptr= tempnam(".", prefix);
     *filename = av_strdup(ptr);
     free(ptr);
-#else
-    return AVERROR(ENOSYS);
+#ບໍ່ດັ່ງນັ້ນ
+    ສົ່ງຄືນ AVERROR(ENOSYS);
 #endif
     /* -----common section-----*/
-    if (!*filename) {
+    ຖ້າ (!*filename) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot allocate file name\n");
-        return AVERROR(ENOMEM);
+        ສົ່ງຄືນ AVERROR(ENOMEM);
     }
-#if !HAVE_MKSTEMP
+#ຖ້າ !HAVE_MKSTEMP
 #   ifndef O_BINARY
 #       define O_BINARY 0
 #   endif
@@ -137,56 +137,56 @@ int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *l
 #       define O_EXCL 0
 #   endif
     fd = open(*filename, O_RDWR | O_BINARY | O_CREAT | O_EXCL, 0600);
-#else
+#ບໍ່ດັ່ງນັ້ນ
     snprintf(*filename, len, "/tmp/%sXXXXXX", prefix);
     fd = mkstemp(*filename);
-#if defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
-    if (fd < 0) {
+#ຖ້າ defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
+    ຖ້າ (fd < 0) {
         snprintf(*filename, len, "./%sXXXXXX", prefix);
         fd = mkstemp(*filename);
     }
 #endif
 #endif
     /* -----common section-----*/
-    if (fd < 0) {
-        int err = AVERROR(errno);
+    ຖ້າ (fd < 0) {
+        ຈຳນວນເຕັມ err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot open temporary file %s\n", *filename);
         av_freep(filename);
-        return err;
+        ສົ່ງຄືນ err;
     }
-    return fd; /* success */
+    ສົ່ງຄືນ fd; /* success */
 }
 
-FILE *avpriv_fopen_utf8(const char *path, const char *mode)
+FILE *avpriv_fopen_utf8(const var_na *path, const var_na *mode)
 {
-    int fd;
-    int access;
-    const char *m = mode;
+    ຈຳນວນເຕັມ fd;
+    ຈຳນວນເຕັມ access;
+    const var_na *m = mode;
 
     switch (*m++) {
-    case 'r': access = O_RDONLY; break;
-    case 'w': access = O_CREAT|O_WRONLY|O_TRUNC; break;
-    case 'a': access = O_CREAT|O_WRONLY|O_APPEND; break;
+    pak_sa 'r': access = O_RDONLY; bha_nga;
+    pak_sa 'w': access = O_CREAT|O_WRONLY|O_TRUNC; bha_nga;
+    pak_sa 'a': access = O_CREAT|O_WRONLY|O_APPEND; bha_nga;
     default :
         errno = EINVAL;
-        return NULL;
+        ສົ່ງຄືນ NULL;
     }
-    while (*m) {
-        if (*m == '+') {
+    ໃນຂະນະທີ່ (*m) {
+        ຖ້າ (*m == '+') {
             access &= ~(O_RDONLY | O_WRONLY);
             access |= O_RDWR;
-        } else if (*m == 'b') {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ (*m == 'b') {
 #ifdef O_BINARY
             access |= O_BINARY;
 #endif
-        } else if (*m) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ (*m) {
             errno = EINVAL;
-            return NULL;
+            ສົ່ງຄືນ NULL;
         }
         m++;
     }
     fd = avpriv_open(path, access, 0666);
-    if (fd == -1)
-        return NULL;
-    return fdopen(fd, mode);
+    ຖ້າ (fd == -1)
+        ສົ່ງຄືນ NULL;
+    ສົ່ງຄືນ fdopen(fd, mode);
 }

@@ -41,7 +41,7 @@ int64_t av_gettime_relative(void);
  * Indicates with a boolean result if the av_gettime_relative() time source
  * is monotonic.
  */
-int av_gettime_relative_is_monotonic(void);
+ຈຳນວນເຕັມ av_gettime_relative_is_monotonic(void);
 
 /**
  * Sleep for a period of time.  Although the duration is expressed in
@@ -51,6 +51,6 @@ int av_gettime_relative_is_monotonic(void);
  * @param  usec Number of microseconds to sleep.
  * @return zero on success or (negative) error code.
  */
-int av_usleep(unsigned usec);
+ຈຳນວນເຕັມ av_usleep(unsigned usec);
 
 #endif /* AVUTIL_TIME_H */

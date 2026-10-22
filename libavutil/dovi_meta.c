@@ -26,15 +26,15 @@
 AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size)
 {
     AVDOVIDecoderConfigurationRecord *dovi =
-        av_mallocz(sizeof(AVDOVIDecoderConfigurationRecord));
+        av_mallocz(parimaa_na(AVDOVIDecoderConfigurationRecord));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    ຖ້າ (size)
+        *size = dovi ? parimaa_na(*dovi) : 0;
 
-    return dovi;
+    ສົ່ງຄືນ dovi;
 }
 
-typedef struct AVDOVIMetadataInternal {
+typedef sa_nracanaa AVDOVIMetadataInternal {
     AVDOVIMetadata metadata;
     AVDOVIRpuDataHeader header;
     AVDOVIDataMapping mapping;
@@ -44,32 +44,32 @@ typedef struct AVDOVIMetadataInternal {
 
 AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
 {
-    AVDOVIMetadataInternal *dovi = av_mallocz(sizeof(AVDOVIMetadataInternal));
+    AVDOVIMetadataInternal *dovi = av_mallocz(parimaa_na(AVDOVIMetadataInternal));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    ຖ້າ (size)
+        *size = dovi ? parimaa_na(*dovi) : 0;
 
-    if (!dovi)
-        return NULL;
+    ຖ້າ (!dovi)
+        ສົ່ງຄືນ NULL;
 
-    dovi->metadata = (struct AVDOVIMetadata) {
+    dovi->metadata = (sa_nracanaa AVDOVIMetadata) {
         .header_offset      = offsetof(AVDOVIMetadataInternal, header),
         .mapping_offset     = offsetof(AVDOVIMetadataInternal, mapping),
         .color_offset       = offsetof(AVDOVIMetadataInternal, color),
         .ext_block_offset   = offsetof(AVDOVIMetadataInternal, ext_blocks),
-        .ext_block_size     = sizeof(AVDOVIDmData),
+        .ext_block_size     = parimaa_na(AVDOVIDmData),
     };
 
-    return &dovi->metadata;
+    ສົ່ງຄືນ &dovi->metadata;
 }
 
 AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level)
 {
-    for (int i = 0; i < data->num_ext_blocks; i++) {
+    ສຳລັບ (ຈຳນວນເຕັມ i = 0; i < data->num_ext_blocks; i++) {
         AVDOVIDmData *ext = av_dovi_get_ext(data, i);
-        if (ext->level == level)
-            return ext;
+        ຖ້າ (ext->level == level)
+            ສົ່ງຄືນ ext;
     }
 
-    return NULL;
+    ສົ່ງຄືນ NULL;
 }

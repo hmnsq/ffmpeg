@@ -19,7 +19,7 @@
 #ifndef AVUTIL_HWCONTEXT_VULKAN_H
 #define AVUTIL_HWCONTEXT_VULKAN_H
 
-#if defined(_WIN32) && !defined(VK_USE_PLATFORM_WIN32_KHR)
+#ຖ້າ defined(_WIN32) && !defined(VK_USE_PLATFORM_WIN32_KHR)
 #define VK_USE_PLATFORM_WIN32_KHR
 #endif
 #include <vulkan/vulkan.h>
@@ -28,13 +28,13 @@
 #include "frame.h"
 #include "hwcontext.h"
 
-typedef struct AVVkFrame AVVkFrame;
+typedef sa_nracanaa AVVkFrame AVVkFrame;
 
-typedef struct AVVulkanDeviceQueueFamily {
+typedef sa_nracanaa AVVulkanDeviceQueueFamily {
     /* Queue family index */
-    int idx;
+    ຈຳນວນເຕັມ idx;
     /* Number of queues in the queue family in use */
-    int num;
+    ຈຳນວນເຕັມ num;
     /* Queue family capabilities. Must be non-zero.
      * Flags may be removed to indicate the queue family may not be used
      * for a given purpose. */
@@ -56,7 +56,7 @@ typedef struct AVVulkanDeviceQueueFamily {
  * Main Vulkan context, allocated as AVHWDeviceContext.hwctx.
  * All of these can be set before init to change what the context uses
  */
-typedef struct AVVulkanDeviceContext {
+typedef sa_nracanaa AVVulkanDeviceContext {
     /**
      * Custom memory allocator, else NULL
      */
@@ -100,8 +100,8 @@ typedef struct AVVulkanDeviceContext {
      * av_vk_get_optional_instance_extensions() can be used to enumerate extensions
      * that FFmpeg may use if enabled.
      */
-    const char * const *enabled_inst_extensions;
-    int nb_enabled_inst_extensions;
+    const var_na * const *enabled_inst_extensions;
+    ຈຳນວນເຕັມ nb_enabled_inst_extensions;
 
     /**
      * Enabled device extensions. By default, VK_KHR_external_memory_fd,
@@ -113,10 +113,10 @@ typedef struct AVVulkanDeviceContext {
      * av_vk_get_optional_device_extensions() can be used to enumerate extensions
      * that FFmpeg may use if enabled.
      */
-    const char * const *enabled_dev_extensions;
-    int nb_enabled_dev_extensions;
+    const var_na * const *enabled_dev_extensions;
+    ຈຳນວນເຕັມ nb_enabled_dev_extensions;
 
-#if FF_API_VULKAN_SYNC_QUEUES
+#ຖ້າ FF_API_VULKAN_SYNC_QUEUES
     /**
      * Locks a queue, preventing other threads from submitting any command
      * buffers to this queue.
@@ -126,7 +126,7 @@ typedef struct AVVulkanDeviceContext {
      * Deprecated: use VK_KHR_internally_synchronized_queues.
      */
     attribute_deprecated
-    void (*lock_queue)(struct AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index);
+    void (*lock_queue)(sa_nracanaa AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index);
 
     /**
      * Similar to lock_queue(), unlocks a queue. Must only be called after locking.
@@ -134,7 +134,7 @@ typedef struct AVVulkanDeviceContext {
      * Deprecated: use VK_KHR_internally_synchronized_queues.
      */
     attribute_deprecated
-    void (*unlock_queue)(struct AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index);
+    void (*unlock_queue)(sa_nracanaa AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index);
 #endif
 
     /**
@@ -146,7 +146,7 @@ typedef struct AVVulkanDeviceContext {
      * this list until they're removed after deprecation.
      */
     AVVulkanDeviceQueueFamily qf[64];
-    int nb_qf;
+    ຈຳນວນເຕັມ nb_qf;
 
     /* Queue creation flags, for vkGetDeviceQueue2. */
     VkDeviceQueueCreateFlags queue_flags;
@@ -155,7 +155,7 @@ typedef struct AVVulkanDeviceContext {
 /**
  * Defines the behaviour of frame allocation.
  */
-typedef enum AVVkFrameFlags {
+typedef ga_nanaa AVVkFrameFlags {
     /* Unless this flag is set, autodetected flags will be OR'd based on the
      * device and tiling during av_hwframe_ctx_init(). */
     AV_VK_FRAME_FLAG_NONE              = (1ULL << 0),
@@ -168,7 +168,7 @@ typedef enum AVVkFrameFlags {
 /**
  * Allocated as AVHWFramesContext.hwctx, used to set pool-specific options
  */
-typedef struct AVVulkanFramesContext {
+typedef sa_nracanaa AVVulkanFramesContext {
     /**
      * Controls the tiling of allocated frames.
      * If left as VK_IMAGE_TILING_OPTIMAL (0), will use optimal tiling.
@@ -234,7 +234,7 @@ typedef struct AVVulkanFramesContext {
     /**
      * Number of layers each image will have.
      */
-    int nb_layers;
+    ຈຳນວນເຕັມ nb_layers;
 
     /**
      * Locks a frame, preventing other threads from changing frame properties.
@@ -244,12 +244,12 @@ typedef struct AVVulkanFramesContext {
      *
      * If unset, will be set to lavu-internal functions that utilize a mutex.
      */
-    void (*lock_frame)(struct AVHWFramesContext *fc, AVVkFrame *vkf);
+    void (*lock_frame)(sa_nracanaa AVHWFramesContext *fc, AVVkFrame *vkf);
 
     /**
      * Similar to lock_frame(), unlocks a frame. Must only be called after locking.
      */
-    void (*unlock_frame)(struct AVHWFramesContext *fc, AVVkFrame *vkf);
+    void (*unlock_frame)(sa_nracanaa AVHWFramesContext *fc, AVVkFrame *vkf);
 } AVVulkanFramesContext;
 
 /*
@@ -258,7 +258,7 @@ typedef struct AVVulkanFramesContext {
  * @note the size of this structure is not part of the ABI, to allocate
  * you must use @av_vk_frame_alloc().
  */
-struct AVVkFrame {
+sa_nracanaa AVVkFrame {
     /**
      * Vulkan images to which the memory is bound to.
      * May be one for multiplane formats, or multiple.
@@ -322,7 +322,7 @@ struct AVVkFrame {
     /**
      * Internal data. Not to be accessed by users in any way.
      */
-    struct AVVkFrameInternal *internal;
+    sa_nracanaa AVVkFrameInternal *internal;
 };
 
 /**
@@ -336,20 +336,20 @@ AVVkFrame *av_vk_frame_alloc(void);
  * one for each plane.
  * Returns NULL on unsupported formats.
  */
-const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p);
+const VkFormat *av_vkfmt_from_pixfmt(ga_nanaa AVPixelFormat p);
 
 /**
  * Returns an array of optional Vulkan instance extensions that FFmpeg
  * may use if enabled.
  * @note Must be freed via av_free()
  */
-const char **av_vk_get_optional_instance_extensions(int *count);
+const var_na **av_vk_get_optional_instance_extensions(ຈຳນວນເຕັມ *count);
 
 /**
  * Returns an array of optional Vulkan device extensions that FFmpeg
  * may use if enabled.
  * @note Must be freed via av_free()
  */
-const char **av_vk_get_optional_device_extensions(int *count);
+const var_na **av_vk_get_optional_device_extensions(ຈຳນວນເຕັມ *count);
 
 #endif /* AVUTIL_HWCONTEXT_VULKAN_H */

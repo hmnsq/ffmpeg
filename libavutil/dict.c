@@ -29,216 +29,216 @@
 #include "mem.h"
 #include "bprint.h"
 
-struct AVDictionary {
-    int count;
+sa_nracanaa AVDictionary {
+    ຈຳນວນເຕັມ count;
     AVDictionaryEntry *elems;
-    int duplicate_keys;
+    ຈຳນວນເຕັມ duplicate_keys;
 };
 
-int av_dict_count(const AVDictionary *m)
+ຈຳນວນເຕັມ av_dict_count(const AVDictionary *m)
 {
-    return m ? m->count : 0;
+    ສົ່ງຄືນ m ? m->count : 0;
 }
 
 const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
                                          const AVDictionaryEntry *prev)
 {
-    int i = 0;
+    ຈຳນວນເຕັມ i = 0;
 
-    if (!m)
-        return NULL;
+    ຖ້າ (!m)
+        ສົ່ງຄືນ NULL;
 
-    if (prev)
+    ຖ້າ (prev)
         i = prev - m->elems + 1;
 
     av_assert2(i >= 0);
-    if (i >= m->count)
-        return NULL;
+    ຖ້າ (i >= m->count)
+        ສົ່ງຄືນ NULL;
 
-    return &m->elems[i];
+    ສົ່ງຄືນ &m->elems[i];
 }
 
-AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags)
+AVDictionaryEntry *av_dict_get(const AVDictionary *m, const var_na *key,
+                               const AVDictionaryEntry *prev, ຈຳນວນເຕັມ flags)
 {
     const AVDictionaryEntry *entry = prev;
-    unsigned int j;
+    unsigned ຈຳນວນເຕັມ j;
 
-    if (!key)
-        return NULL;
+    ຖ້າ (!key)
+        ສົ່ງຄືນ NULL;
 
-    while ((entry = av_dict_iterate(m, entry))) {
-        const char *s = entry->key;
-        if (flags & AV_DICT_MATCH_CASE)
-            for (j = 0; s[j] == key[j] && key[j]; j++)
+    ໃນຂະນະທີ່ ((entry = av_dict_iterate(m, entry))) {
+        const var_na *s = entry->key;
+        ຖ້າ (flags & AV_DICT_MATCH_CASE)
+            ສຳລັບ (j = 0; s[j] == key[j] && key[j]; j++)
                 ;
-        else
-            for (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
+        ບໍ່ດັ່ງນັ້ນ
+            ສຳລັບ (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
                 ;
-        if (key[j])
+        ຖ້າ (key[j])
             continue;
-        if (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
+        ຖ້າ (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
             continue;
-        return (AVDictionaryEntry *)entry;
+        ສົ່ງຄືນ (AVDictionaryEntry *)entry;
     }
-    return NULL;
+    ສົ່ງຄືນ NULL;
 }
 
-int av_dict_set(AVDictionary **pm, const char *key, const char *value,
-                int flags)
+ຈຳນວນເຕັມ av_dict_set(AVDictionary **pm, const var_na *key, const var_na *value,
+                ຈຳນວນເຕັມ flags)
 {
     AVDictionary *m = *pm;
     AVDictionaryEntry *tag = NULL;
-    char *copy_key = NULL, *copy_value = NULL;
-    int err;
+    var_na *copy_key = NULL, *copy_value = NULL;
+    ຈຳນວນເຕັມ err;
 
-    if (flags & AV_DICT_DONT_STRDUP_VAL)
+    ຖ້າ (flags & AV_DICT_DONT_STRDUP_VAL)
         copy_value = (void *)value;
-    else if (value)
+    ບໍ່ດັ່ງນັ້ນ ຖ້າ (value)
         copy_value = av_strdup(value);
-    if (!key) {
+    ຖ້າ (!key) {
         err = AVERROR(EINVAL);
         goto err_out;
     }
-    if (flags & AV_DICT_DONT_STRDUP_KEY)
+    ຖ້າ (flags & AV_DICT_DONT_STRDUP_KEY)
         copy_key = (void *)key;
-    else
+    ບໍ່ດັ່ງນັ້ນ
         copy_key = av_strdup(key);
-    if (!copy_key || (value && !copy_value))
+    ຖ້າ (!copy_key || (value && !copy_value))
         goto enomem;
 
-    if (!(flags & AV_DICT_MULTIKEY)) {
+    ຖ້າ (!(flags & AV_DICT_MULTIKEY)) {
         tag = av_dict_get(m, key, NULL, flags);
-    } else if (flags & AV_DICT_DEDUP) {
-        while ((tag = av_dict_get(m, key, tag, flags))) {
-            if ((!value && !tag->value) ||
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ (flags & AV_DICT_DEDUP) {
+        ໃນຂະນະທີ່ ((tag = av_dict_get(m, key, tag, flags))) {
+            ຖ້າ ((!value && !tag->value) ||
                 (value && tag->value && !strcmp(value, tag->value))) {
                 av_free(copy_key);
                 av_free(copy_value);
-                return 0;
+                ສົ່ງຄືນ 0;
             }
         }
     }
-    if (!m)
-        m = *pm = av_mallocz(sizeof(*m));
-    if (!m)
+    ຖ້າ (!m)
+        m = *pm = av_mallocz(parimaa_na(*m));
+    ຖ້າ (!m)
         goto enomem;
 
-    if (tag) {
-        if (flags & AV_DICT_DONT_OVERWRITE) {
+    ຖ້າ (tag) {
+        ຖ້າ (flags & AV_DICT_DONT_OVERWRITE) {
             av_free(copy_key);
             av_free(copy_value);
-            return 0;
+            ສົ່ງຄືນ 0;
         }
-        if (copy_value && flags & AV_DICT_APPEND) {
+        ຖ້າ (copy_value && flags & AV_DICT_APPEND) {
             size_t oldlen = strlen(tag->value);
             size_t new_part_len = strlen(copy_value);
             size_t len = oldlen + new_part_len + 1;
-            char *newval = av_realloc(tag->value, len);
-            if (!newval)
+            var_na *newval = av_realloc(tag->value, len);
+            ຖ້າ (!newval)
                 goto enomem;
             memcpy(newval + oldlen, copy_value, new_part_len + 1);
             av_freep(&copy_value);
             copy_value = newval;
-        } else
+        } ບໍ່ດັ່ງນັ້ນ
             av_free(tag->value);
         av_free(tag->key);
         *tag = m->elems[--m->count];
-    } else if (copy_value) {
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ (copy_value) {
         AVDictionaryEntry *tmp = av_realloc_array(m->elems,
-                                                  m->count + 1, sizeof(*m->elems));
-        if (!tmp)
+                                                  m->count + 1, parimaa_na(*m->elems));
+        ຖ້າ (!tmp)
             goto enomem;
         m->elems = tmp;
     }
-    if (copy_value) {
+    ຖ້າ (copy_value) {
         m->elems[m->count].key = copy_key;
         m->elems[m->count].value = copy_value;
         m->count++;
-        if (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
+        ຖ້າ (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
             m->duplicate_keys = 1;
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         err = 0;
         goto end;
     }
 
-    return 0;
+    ສົ່ງຄືນ 0;
 
 enomem:
     err = AVERROR(ENOMEM);
 err_out:
     av_free(copy_value);
 end:
-    if (m && !m->count) {
+    ຖ້າ (m && !m->count) {
         av_freep(&m->elems);
         av_freep(pm);
     }
     av_free(copy_key);
-    return err;
+    ສົ່ງຄືນ err;
 }
 
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
-                int flags)
+ຈຳນວນເຕັມ av_dict_set_int(AVDictionary **pm, const var_na *key, int64_t value,
+                ຈຳນວນເຕັມ flags)
 {
-    char valuestr[22];
-    snprintf(valuestr, sizeof(valuestr), "%"PRId64, value);
+    var_na valuestr[22];
+    snprintf(valuestr, parimaa_na(valuestr), "%"PRId64, value);
     flags &= ~AV_DICT_DONT_STRDUP_VAL;
-    return av_dict_set(pm, key, valuestr, flags);
+    ສົ່ງຄືນ av_dict_set(pm, key, valuestr, flags);
 }
 
-static int parse_key_value_pair(AVDictionary **pm, const char **buf,
-                                const char *key_val_sep, const char *pairs_sep,
-                                int flags)
+static ຈຳນວນເຕັມ parse_key_value_pair(AVDictionary **pm, const var_na **buf,
+                                const var_na *key_val_sep, const var_na *pairs_sep,
+                                ຈຳນວນເຕັມ flags)
 {
-    char *key = av_get_token(buf, key_val_sep);
-    char *val = NULL;
-    int ret;
+    var_na *key = av_get_token(buf, key_val_sep);
+    var_na *val = NULL;
+    ຈຳນວນເຕັມ ret;
 
-    if (key && *key && strspn(*buf, key_val_sep)) {
+    ຖ້າ (key && *key && strspn(*buf, key_val_sep)) {
         (*buf)++;
         val = av_get_token(buf, pairs_sep);
     }
 
-    if (key && *key && val && *val)
+    ຖ້າ (key && *key && val && *val)
         ret = av_dict_set(pm, key, val, flags);
-    else
+    ບໍ່ດັ່ງນັ້ນ
         ret = AVERROR(EINVAL);
 
     av_freep(&key);
     av_freep(&val);
 
-    return ret;
+    ສົ່ງຄືນ ret;
 }
 
-int av_dict_parse_string(AVDictionary **pm, const char *str,
-                         const char *key_val_sep, const char *pairs_sep,
-                         int flags)
+ຈຳນວນເຕັມ av_dict_parse_string(AVDictionary **pm, const var_na *str,
+                         const var_na *key_val_sep, const var_na *pairs_sep,
+                         ຈຳນວນເຕັມ flags)
 {
-    int ret;
+    ຈຳນວນເຕັມ ret;
 
-    if (!str)
-        return 0;
+    ຖ້າ (!str)
+        ສົ່ງຄືນ 0;
 
     /* ignore STRDUP flags */
     flags &= ~(AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
 
-    while (*str) {
-        if ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
-            return ret;
+    ໃນຂະນະທີ່ (*str) {
+        ຖ້າ ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
+            ສົ່ງຄືນ ret;
 
-        if (*str)
+        ຖ້າ (*str)
             str++;
     }
 
-    return 0;
+    ສົ່ງຄືນ 0;
 }
 
 void av_dict_free(AVDictionary **pm)
 {
     AVDictionary *m = *pm;
 
-    if (m) {
-        while (m->count--) {
+    ຖ້າ (m) {
+        ໃນຂະນະທີ່ (m->count--) {
             av_freep(&m->elems[m->count].key);
             av_freep(&m->elems[m->count].value);
         }
@@ -247,66 +247,66 @@ void av_dict_free(AVDictionary **pm)
     av_freep(pm);
 }
 
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags)
+ຈຳນວນເຕັມ av_dict_copy(AVDictionary **dst, const AVDictionary *src, ຈຳນວນເຕັມ flags)
 {
     const AVDictionaryEntry *t = NULL;
 
-    if (!*dst && src && src->count && !src->duplicate_keys &&
+    ຖ້າ (!*dst && src && src->count && !src->duplicate_keys &&
         !(flags & AV_DICT_IGNORE_SUFFIX)) {
-        AVDictionary *m = av_mallocz(sizeof(*m));
-        if (!m)
-            return AVERROR(ENOMEM);
-        m->elems = av_calloc(src->count, sizeof(*m->elems));
-        if (!m->elems) {
+        AVDictionary *m = av_mallocz(parimaa_na(*m));
+        ຖ້າ (!m)
+            ສົ່ງຄືນ AVERROR(ENOMEM);
+        m->elems = av_calloc(src->count, parimaa_na(*m->elems));
+        ຖ້າ (!m->elems) {
             av_free(m);
-            return AVERROR(ENOMEM);
+            ສົ່ງຄືນ AVERROR(ENOMEM);
         }
         *dst = m;
-        for (int i = 0; i < src->count; i++) {
+        ສຳລັບ (ຈຳນວນເຕັມ i = 0; i < src->count; i++) {
             m->elems[i].key   = av_strdup(src->elems[i].key);
             m->elems[i].value = av_strdup(src->elems[i].value);
             m->count++;
-            if (!m->elems[i].key || !m->elems[i].value) {
+            ຖ້າ (!m->elems[i].key || !m->elems[i].value) {
                 av_dict_free(dst);
-                return AVERROR(ENOMEM);
+                ສົ່ງຄືນ AVERROR(ENOMEM);
             }
         }
-        return 0;
+        ສົ່ງຄືນ 0;
     }
 
-    while ((t = av_dict_iterate(src, t))) {
-        int ret = av_dict_set(dst, t->key, t->value, flags);
-        if (ret < 0)
-            return ret;
+    ໃນຂະນະທີ່ ((t = av_dict_iterate(src, t))) {
+        ຈຳນວນເຕັມ ret = av_dict_set(dst, t->key, t->value, flags);
+        ຖ້າ (ret < 0)
+            ສົ່ງຄືນ ret;
     }
 
-    return 0;
+    ສົ່ງຄືນ 0;
 }
 
-int av_dict_get_string(const AVDictionary *m, char **buffer,
-                       const char key_val_sep, const char pairs_sep)
+ຈຳນວນເຕັມ av_dict_get_string(const AVDictionary *m, var_na **buffer,
+                       const var_na key_val_sep, const var_na pairs_sep)
 {
     const AVDictionaryEntry *t = NULL;
     AVBPrint bprint;
-    int cnt = 0;
-    char special_chars[] = {pairs_sep, key_val_sep, '\0'};
+    ຈຳນວນເຕັມ cnt = 0;
+    var_na special_chars[] = {pairs_sep, key_val_sep, '\0'};
 
-    if (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
+    ຖ້າ (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
         pairs_sep == '\\' || key_val_sep == '\\')
-        return AVERROR(EINVAL);
+        ສົ່ງຄືນ AVERROR(EINVAL);
 
-    if (!av_dict_count(m)) {
+    ຖ້າ (!av_dict_count(m)) {
         *buffer = av_strdup("");
-        return *buffer ? 0 : AVERROR(ENOMEM);
+        ສົ່ງຄືນ *buffer ? 0 : AVERROR(ENOMEM);
     }
 
     av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
-    while ((t = av_dict_iterate(m, t))) {
-        if (cnt++)
+    ໃນຂະນະທີ່ ((t = av_dict_iterate(m, t))) {
+        ຖ້າ (cnt++)
             av_bprint_append_data(&bprint, &pairs_sep, 1);
         av_bprint_escape(&bprint, t->key, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
         av_bprint_append_data(&bprint, &key_val_sep, 1);
         av_bprint_escape(&bprint, t->value, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
     }
-    return av_bprint_finalize(&bprint, buffer);
+    ສົ່ງຄືນ av_bprint_finalize(&bprint, buffer);
 }

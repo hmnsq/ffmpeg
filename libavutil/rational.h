@@ -55,9 +55,9 @@
 /**
  * Rational number (pair of numerator and denominator).
  */
-typedef struct AVRational{
-    int num; ///< Numerator
-    int den; ///< Denominator
+typedef sa_nracanaa AVRational{
+    ຈຳນວນເຕັມ num; ///< Numerator
+    ຈຳນວນເຕັມ den; ///< Denominator
 } AVRational;
 
 /**
@@ -68,10 +68,10 @@ typedef struct AVRational{
  * @note The return value is not reduced.
  * @see av_reduce()
  */
-static inline AVRational av_make_q(int num, int den)
+static anta_hstha AVRational av_make_q(ຈຳນວນເຕັມ num, ຈຳນວນເຕັມ den)
 {
     AVRational r = { num, den };
-    return r;
+    ສົ່ງຄືນ r;
 }
 
 /**
@@ -86,13 +86,13 @@ static inline AVRational av_make_q(int num, int den)
  *         - -1 if `a < b`
  *         - `INT_MIN` if one of the values is of the form `0 / 0`
  */
-static inline int av_cmp_q(AVRational a, AVRational b){
+static anta_hstha ຈຳນວນເຕັມ av_cmp_q(AVRational a, AVRational b){
     const int64_t tmp= a.num * (int64_t)b.den - b.num * (int64_t)a.den;
 
-    if(tmp) return (int)((tmp ^ a.den ^ b.den)>>63)|1;
-    else if(b.den && a.den) return 0;
-    else if(a.num && b.num) return (a.num>>31) - (b.num>>31);
-    else                    return INT_MIN;
+    ຖ້າ(tmp) ສົ່ງຄືນ (ຈຳນວນເຕັມ)((tmp ^ a.den ^ b.den)>>63)|1;
+    ບໍ່ດັ່ງນັ້ນ ຖ້າ(b.den && a.den) ສົ່ງຄືນ 0;
+    ບໍ່ດັ່ງນັ້ນ ຖ້າ(a.num && b.num) ສົ່ງຄືນ (a.num>>31) - (b.num>>31);
+    ບໍ່ດັ່ງນັ້ນ                    ສົ່ງຄືນ INT_MIN;
 }
 
 /**
@@ -101,8 +101,8 @@ static inline int av_cmp_q(AVRational a, AVRational b){
  * @return `a` in floating-point form
  * @see av_d2q()
  */
-static inline double av_q2d(AVRational a){
-    return a.num / (double) a.den;
+static anta_hstha dviguu_na av_q2d(AVRational a){
+    ສົ່ງຄືນ a.num / (dviguu_na) a.den;
 }
 
 /**
@@ -117,7 +117,7 @@ static inline double av_q2d(AVRational a){
  * @param[in]      max Maximum allowed values for `dst_num` & `dst_den`
  * @return 1 if the operation is exact, 0 otherwise
  */
-int av_reduce(int *dst_num, int *dst_den, int64_t num, int64_t den, int64_t max);
+ຈຳນວນເຕັມ av_reduce(ຈຳນວນເຕັມ *dst_num, ຈຳນວນເຕັມ *dst_den, int64_t num, int64_t den, int64_t max);
 
 /**
  * Multiply two rationals.
@@ -159,7 +159,7 @@ AVRational av_sub_q(AVRational b, AVRational c) av_const;
 static av_always_inline AVRational av_inv_q(AVRational q)
 {
     AVRational r = { q.den, q.num };
-    return r;
+    ສົ່ງຄືນ r;
 }
 
 /**
@@ -177,7 +177,7 @@ static av_always_inline AVRational av_inv_q(AVRational q)
  * @return `d` in AVRational form
  * @see av_q2d()
  */
-AVRational av_d2q(double d, int max) av_const;
+AVRational av_d2q(dviguu_na d, ຈຳນວນເຕັມ max) av_const;
 
 /**
  * Find which of the two rationals is closer to another rational.
@@ -190,7 +190,7 @@ AVRational av_d2q(double d, int max) av_const;
  *         - -1 if `q2` is nearer to `q` than `q1`
  *         - 0 if they have the same distance
  */
-int av_nearer_q(AVRational q, AVRational q1, AVRational q2);
+ຈຳນວນເຕັມ av_nearer_q(AVRational q, AVRational q1, AVRational q2);
 
 /**
  * Find the value in a list of rationals nearest a given reference rational.
@@ -199,7 +199,7 @@ int av_nearer_q(AVRational q, AVRational q1, AVRational q2);
  * @param q_list Array of rationals terminated by `{0, 0}`
  * @return Index of the nearest value found in the array
  */
-int av_find_nearest_q_idx(AVRational q, const AVRational* q_list);
+ຈຳນວນເຕັມ av_find_nearest_q_idx(AVRational q, const AVRational* q_list);
 
 /**
  * Convert an AVRational to a IEEE 32-bit `float` expressed in fixed-point
@@ -216,7 +216,7 @@ uint32_t av_q2intfloat(AVRational q);
  * Return the best rational so that a and b are multiple of it.
  * If the resulting denominator is larger than max_den, return def.
  */
-AVRational av_gcd_q(AVRational a, AVRational b, int max_den, AVRational def);
+AVRational av_gcd_q(AVRational a, AVRational b, ຈຳນວນເຕັມ max_den, AVRational def);
 
 /**
  * @}

@@ -127,32 +127,32 @@ static const uint8_t ciphertext2[16] = {
 #define IV "blowfish"
 
 static void test_blowfish(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                          const uint8_t *ref, int len, uint8_t *iv, int dir,
-                          const char *test)
+                          const uint8_t *ref, ຈຳນວນເຕັມ len, uint8_t *iv, ຈຳນວນເຕັມ dir,
+                          const var_na *test)
 {
     av_blowfish_crypt(ctx, dst, src, len, iv, dir);
-    if (memcmp(dst, ref, 8*len)) {
-        int i;
+    ຖ້າ (memcmp(dst, ref, 8*len)) {
+        ຈຳນວນເຕັມ i;
         printf("%s failed\ngot      ", test);
-        for (i = 0; i < 8*len; i++)
+        ສຳລັບ (i = 0; i < 8*len; i++)
             printf("%02x ", dst[i]);
         printf("\nexpected ");
-        for (i = 0; i < 8*len; i++)
+        ສຳລັບ (i = 0; i < 8*len; i++)
             printf("%02x ", ref[i]);
         printf("\n");
         exit(1);
     }
 }
 
-int main(void)
+ຈຳນວນເຕັມ main(void)
 {
     uint32_t tmptext_l[NUM_VARIABLE_KEY_TESTS];
     uint32_t tmptext_r[NUM_VARIABLE_KEY_TESTS];
     uint8_t tmp[16], iv[8];
-    int i;
+    ຈຳນວນເຕັມ i;
     AVBlowfish *ctx = av_blowfish_alloc();
-    if (!ctx)
-        return 1;
+    ຖ້າ (!ctx)
+        ສົ່ງຄືນ 1;
 
     av_blowfish_init(ctx, "abcdefghijklmnopqrstuvwxyz", 26);
 
@@ -169,26 +169,26 @@ int main(void)
     memcpy(iv, IV, 8);
     test_blowfish(ctx, tmp, tmp, plaintext2,  2, iv, 1, "Inplace CBC decryption");
 
-    memcpy(tmptext_l, plaintext_l, sizeof(*plaintext_l) * NUM_VARIABLE_KEY_TESTS);
-    memcpy(tmptext_r, plaintext_r, sizeof(*plaintext_r) * NUM_VARIABLE_KEY_TESTS);
+    memcpy(tmptext_l, plaintext_l, parimaa_na(*plaintext_l) * NUM_VARIABLE_KEY_TESTS);
+    memcpy(tmptext_r, plaintext_r, parimaa_na(*plaintext_r) * NUM_VARIABLE_KEY_TESTS);
 
-    for (i = 0; i < NUM_VARIABLE_KEY_TESTS; i++) {
+    ສຳລັບ (i = 0; i < NUM_VARIABLE_KEY_TESTS; i++) {
         av_blowfish_init(ctx, variable_key[i], 8);
 
         av_blowfish_crypt_ecb(ctx, &tmptext_l[i], &tmptext_r[i], 0);
-        if (tmptext_l[i] != ciphertext_l[i] || tmptext_r[i] != ciphertext_r[i]) {
+        ຖ້າ (tmptext_l[i] != ciphertext_l[i] || tmptext_r[i] != ciphertext_r[i]) {
             printf("Test encryption failed.\n");
-            return 2;
+            ສົ່ງຄືນ 2;
         }
 
         av_blowfish_crypt_ecb(ctx, &tmptext_l[i], &tmptext_r[i], 1);
-        if (tmptext_l[i] != plaintext_l[i] || tmptext_r[i] != plaintext_r[i]) {
+        ຖ້າ (tmptext_l[i] != plaintext_l[i] || tmptext_r[i] != plaintext_r[i]) {
             printf("Test decryption failed.\n");
-            return 3;
+            ສົ່ງຄືນ 3;
         }
     }
     printf("Test encryption/decryption success.\n");
     av_free(ctx);
 
-    return 0;
+    ສົ່ງຄືນ 0;
 }

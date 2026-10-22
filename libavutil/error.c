@@ -98,54 +98,54 @@
     E(ESRCH,             "No such process")                                  \
     E(EXDEV,             "Cross-device link")                                \
 
-enum {
+ga_nanaa {
 #define OFFSET(CODE, DESC)     \
     ERROR_ ## CODE ## _OFFSET, \
-    ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + sizeof(DESC) - 1,
+    ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + parimaa_na(DESC) - 1,
 #define NOTHING(CODE, CODE2, DESC)
     AVERROR_LIST(OFFSET, NOTHING)
-#if !HAVE_STRERROR_R
+#ຖ້າ !HAVE_STRERROR_R
     STRERROR_LIST(OFFSET)
 #endif
 };
 
 #define STRING(CODE, DESC) DESC "\0"
-static const char error_stringtable[] =
+static const var_na error_stringtable[] =
     AVERROR_LIST(STRING, NOTHING)
-#if !HAVE_STRERROR_R
+#ຖ້າ !HAVE_STRERROR_R
     STRERROR_LIST(STRING)
 #endif
 ;
 
-static const struct ErrorEntry {
-    int num;
+static const sa_nracanaa ErrorEntry {
+    ຈຳນວນເຕັມ num;
     unsigned offset;
 } error_entries[] = {
 #define ENTRY(CODE, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE ## _OFFSET },
 #define ENTRY2(CODE, CODE2, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE2 ## _OFFSET },
     AVERROR_LIST(ENTRY, ENTRY2)
-#if !HAVE_STRERROR_R
+#ຖ້າ !HAVE_STRERROR_R
 #undef ENTRY
 #define ENTRY(CODE, DESC) { .num = AVERROR(CODE), .offset = ERROR_ ## CODE ## _OFFSET },
     STRERROR_LIST(ENTRY)
 #endif
 };
 
-int av_strerror(int errnum, char *errbuf, size_t errbuf_size)
+ຈຳນວນເຕັມ av_strerror(ຈຳນວນເຕັມ errnum, var_na *errbuf, size_t errbuf_size)
 {
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
-        if (errnum == error_entries[i].num) {
+    ສຳລັບ (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
+        ຖ້າ (errnum == error_entries[i].num) {
             av_strlcpy(errbuf, error_stringtable + error_entries[i].offset, errbuf_size);
-            return 0;
+            ສົ່ງຄືນ 0;
         }
     }
-#if HAVE_STRERROR_R
-    int ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
-#else
-    int ret = -1;
+#ຖ້າ HAVE_STRERROR_R
+    ຈຳນວນເຕັມ ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
+#ບໍ່ດັ່ງນັ້ນ
+    ຈຳນວນເຕັມ ret = -1;
 #endif
-    if (ret < 0)
+    ຖ້າ (ret < 0)
         snprintf(errbuf, errbuf_size, "Error number %d occurred", errnum);
 
-    return ret;
+    ສົ່ງຄືນ ret;
 }

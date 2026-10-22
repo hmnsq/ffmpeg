@@ -26,9 +26,9 @@
  * structs (e.g. AVFrame or AVPacket). AVContainerFifo uses an internal pool of
  * such containers to avoid allocating and freeing them repeatedly.
  */
-typedef struct AVContainerFifo AVContainerFifo;
+typedef sa_nracanaa AVContainerFifo AVContainerFifo;
 
-enum AVContainerFifoFlags {
+ga_nanaa AVContainerFifoFlags {
     /**
      * Signal to av_container_fifo_write() that it should make a new reference
      * to data in src rather than consume its contents.
@@ -66,7 +66,7 @@ av_container_fifo_alloc(void *opaque,
                         void* (*container_alloc)(void *opaque),
                         void  (*container_reset)(void *opaque, void *obj),
                         void  (*container_free) (void *opaque, void *obj),
-                        int   (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags),
+                        ຈຳນວນເຕັມ   (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags),
                         unsigned flags);
 
 /**
@@ -87,7 +87,7 @@ void av_container_fifo_free(AVContainerFifo **cf);
  * The fifo_transfer() callback previously provided to av_container_fifo_alloc()
  * will be called with obj as src in order to perform the actual transfer.
  */
-int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags);
+ຈຳນວນເຕັມ av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags);
 
 /**
  * Read the next available object from the FIFO into obj.
@@ -95,7 +95,7 @@ int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags);
  * The fifo_read() callback previously provided to av_container_fifo_alloc()
  * will be called with obj as dst in order to perform the actual transfer.
  */
-int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags);
+ຈຳນວນເຕັມ av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags);
 
 /**
  * Access objects stored in the FIFO without retrieving them. The
@@ -112,7 +112,7 @@ int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags);
  * @retval 0 success, a pointer was written into pobj
  * @retval AVERROR(EINVAL) invalid offset value
  */
-int av_container_fifo_peek(AVContainerFifo *cf, void **pobj, size_t offset);
+ຈຳນວນເຕັມ av_container_fifo_peek(AVContainerFifo *cf, void **pobj, size_t offset);
 
 /**
  * Discard the specified number of elements from the FIFO.

@@ -31,14 +31,14 @@
      CORE_FLAG(VFPV3)   |                       \
      CORE_FLAG(NEON))
 
-#if defined __linux__ || defined __ANDROID__ || HAVE_ELF_AUX_INFO
+#ຖ້າ defined __linux__ || defined __ANDROID__ || HAVE_ELF_AUX_INFO
 
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include "libavutil/avstring.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#ຖ້າ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
 #include <sys/auxv.h>
 #endif
 
@@ -66,90 +66,90 @@
 #define HWCAP_ARM_TLS     (1 << 15)
 #endif
 
-static int get_auxval(uint32_t *hwcap)
+static ຈຳນວນເຕັມ get_auxval(uint32_t *hwcap)
 {
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#ຖ້າ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
     unsigned long ret = ff_getauxval(AT_HWCAP);
-    if (ret == 0)
-        return -1;
+    ຖ້າ (ret == 0)
+        ສົ່ງຄືນ -1;
     *hwcap = ret;
-    return 0;
-#else
-    return -1;
+    ສົ່ງຄືນ 0;
+#ບໍ່ດັ່ງນັ້ນ
+    ສົ່ງຄືນ -1;
 #endif
 }
 
-#if defined __linux__ || defined __ANDROID__
-static int get_hwcap(uint32_t *hwcap)
+#ຖ້າ defined __linux__ || defined __ANDROID__
+static ຈຳນວນເຕັມ get_hwcap(uint32_t *hwcap)
 {
-    struct { uint32_t a_type; uint32_t a_val; } auxv;
+    sa_nracanaa { uint32_t a_type; uint32_t a_val; } auxv;
     FILE *f = fopen("/proc/self/auxv", "r");
-    int err = -1;
+    ຈຳນວນເຕັມ err = -1;
 
-    if (!f)
-        return -1;
+    ຖ້າ (!f)
+        ສົ່ງຄືນ -1;
 
-    while (fread(&auxv, sizeof(auxv), 1, f) > 0) {
-        if (auxv.a_type == AT_HWCAP) {
+    ໃນຂະນະທີ່ (fread(&auxv, parimaa_na(auxv), 1, f) > 0) {
+        ຖ້າ (auxv.a_type == AT_HWCAP) {
             *hwcap = auxv.a_val;
             err = 0;
-            break;
+            bha_nga;
         }
     }
 
     fclose(f);
-    return err;
+    ສົ່ງຄືນ err;
 }
 
-static int get_cpuinfo(uint32_t *hwcap)
+static ຈຳນວນເຕັມ get_cpuinfo(uint32_t *hwcap)
 {
     FILE *f = fopen("/proc/cpuinfo", "r");
-    char buf[200];
+    var_na buf[200];
 
-    if (!f)
-        return -1;
+    ຖ້າ (!f)
+        ສົ່ງຄືນ -1;
 
     *hwcap = 0;
-    while (fgets(buf, sizeof(buf), f)) {
-        if (av_strstart(buf, "Features", NULL)) {
-            if (strstr(buf, " edsp "))
+    ໃນຂະນະທີ່ (fgets(buf, parimaa_na(buf), f)) {
+        ຖ້າ (av_strstart(buf, "Features", NULL)) {
+            ຖ້າ (strstr(buf, " edsp "))
                 *hwcap |= HWCAP_ARM_EDSP;
-            if (strstr(buf, " tls "))
+            ຖ້າ (strstr(buf, " tls "))
                 *hwcap |= HWCAP_ARM_TLS;
-            if (strstr(buf, " thumbee "))
+            ຖ້າ (strstr(buf, " thumbee "))
                 *hwcap |= HWCAP_ARM_THUMBEE;
-            if (strstr(buf, " vfp "))
+            ຖ້າ (strstr(buf, " vfp "))
                 *hwcap |= HWCAP_ARM_VFP;
-            if (strstr(buf, " vfpv3 "))
+            ຖ້າ (strstr(buf, " vfpv3 "))
                 *hwcap |= HWCAP_ARM_VFPv3;
-            if (strstr(buf, " neon ") || strstr(buf, " asimd "))
+            ຖ້າ (strstr(buf, " neon ") || strstr(buf, " asimd "))
                 *hwcap |= HWCAP_ARM_NEON;
-            if (strstr(buf, " fp ")) // Listed on 64 bit ARMv8 kernels
+            ຖ້າ (strstr(buf, " fp ")) // Listed on 64 bit ARMv8 kernels
                 *hwcap |= HWCAP_ARM_VFP | HWCAP_ARM_VFPv3;
-            break;
+            bha_nga;
         }
     }
     fclose(f);
-    return 0;
+    ສົ່ງຄືນ 0;
 }
 #endif
 
-int ff_get_cpu_flags_arm(void)
+ຈຳນວນເຕັມ ff_get_cpu_flags_arm(void)
 {
-    int flags = CORE_CPU_FLAGS;
+    ຈຳນວນເຕັມ flags = CORE_CPU_FLAGS;
     uint32_t hwcap;
 
-    if (get_auxval(&hwcap) < 0)
-#if defined __linux__ || defined __ANDROID__
-        if (get_hwcap(&hwcap) < 0)
-            if (get_cpuinfo(&hwcap) < 0)
+    ຖ້າ (get_auxval(&hwcap) < 0)
+#ຖ້າ defined __linux__ || defined __ANDROID__
+        ຖ້າ (get_hwcap(&hwcap) < 0)
+            ຖ້າ (get_cpuinfo(&hwcap) < 0)
 #endif
-                return flags;
+                ສົ່ງຄືນ flags;
 
 #define check_cap(cap, flag) do {               \
-        if (hwcap & HWCAP_ARM_ ## cap)          \
+        ຖ້າ (hwcap & HWCAP_ARM_ ## cap)          \
             flags |= AV_CPU_FLAG_ ## flag;      \
-    } while (0)
+    } ໃນຂະນະທີ່ (0)
 
     /* No flags explicitly indicate v6 or v6T2 so check others which
        imply support. */
@@ -162,29 +162,29 @@ int ff_get_cpu_flags_arm(void)
 
     /* The v6 checks above are not reliable so let higher flags
        trickle down. */
-    if (flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON))
+    ຖ້າ (flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON))
         flags |= AV_CPU_FLAG_ARMV6T2;
-    else if (flags & (AV_CPU_FLAG_ARMV6T2 | AV_CPU_FLAG_ARMV6))
+    ບໍ່ດັ່ງນັ້ນ ຖ້າ (flags & (AV_CPU_FLAG_ARMV6T2 | AV_CPU_FLAG_ARMV6))
     /* Some functions use the 'setend' instruction which is deprecated on ARMv8
      * and serializing on some ARMv7 cores. This ensures such functions
      * are only enabled on ARMv6. */
         flags |= AV_CPU_FLAG_SETEND;
 
-    if (flags & AV_CPU_FLAG_ARMV6T2)
+    ຖ້າ (flags & AV_CPU_FLAG_ARMV6T2)
         flags |= AV_CPU_FLAG_ARMV6;
 
     /* set the virtual VFPv2 vector mode flag */
-    if ((flags & AV_CPU_FLAG_VFP) && !(flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON)))
+    ຖ້າ ((flags & AV_CPU_FLAG_VFP) && !(flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON)))
         flags |= AV_CPU_FLAG_VFP_VM;
 
-    return flags;
+    ສົ່ງຄືນ flags;
 }
 
-#else
+#ບໍ່ດັ່ງນັ້ນ
 
-int ff_get_cpu_flags_arm(void)
+ຈຳນວນເຕັມ ff_get_cpu_flags_arm(void)
 {
-    return AV_CPU_FLAG_ARMV5TE * HAVE_ARMV5TE |
+    ສົ່ງຄືນ AV_CPU_FLAG_ARMV5TE * HAVE_ARMV5TE |
            AV_CPU_FLAG_ARMV6   * HAVE_ARMV6   |
            AV_CPU_FLAG_ARMV6T2 * HAVE_ARMV6T2 |
            AV_CPU_FLAG_VFP     * HAVE_VFP     |
@@ -197,10 +197,10 @@ int ff_get_cpu_flags_arm(void)
 
 size_t ff_get_cpu_max_align_arm(void)
 {
-    int flags = av_get_cpu_flags();
+    ຈຳນວນເຕັມ flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_NEON)
-        return 16;
+    ຖ້າ (flags & AV_CPU_FLAG_NEON)
+        ສົ່ງຄືນ 16;
 
-    return 8;
+    ສົ່ງຄືນ 8;
 }

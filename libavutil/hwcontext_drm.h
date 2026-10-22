@@ -32,7 +32,7 @@
  * added in future.
  */
 
-enum {
+ga_nanaa {
     /**
      * The maximum number of layers/planes in a DRM frame.
      */
@@ -45,11 +45,11 @@ enum {
  * Describes a single DRM object, addressing it as a PRIME file
  * descriptor.
  */
-typedef struct AVDRMObjectDescriptor {
+typedef sa_nracanaa AVDRMObjectDescriptor {
     /**
      * DRM PRIME fd for the object.
      */
-    int fd;
+    ຈຳນວນເຕັມ fd;
     /**
      * Total size of the object.
      *
@@ -71,12 +71,12 @@ typedef struct AVDRMObjectDescriptor {
  * Describes a single plane of a layer, which is contained within
  * a single object.
  */
-typedef struct AVDRMPlaneDescriptor {
+typedef sa_nracanaa AVDRMPlaneDescriptor {
     /**
      * Index of the object containing this plane in the objects
      * array of the enclosing frame descriptor.
      */
-    int object_index;
+    ຈຳນວນເຕັມ object_index;
     /**
      * Offset within that object of this plane.
      */
@@ -93,7 +93,7 @@ typedef struct AVDRMPlaneDescriptor {
  * Describes a single layer within a frame.  This has the structure
  * defined by its format, and will contain one or more planes.
  */
-typedef struct AVDRMLayerDescriptor {
+typedef sa_nracanaa AVDRMLayerDescriptor {
     /**
      * Format of the layer (DRM_FORMAT_*).
      */
@@ -103,7 +103,7 @@ typedef struct AVDRMLayerDescriptor {
      *
      * This must match the number of planes required by format.
      */
-    int nb_planes;
+    ຈຳນວນເຕັມ nb_planes;
     /**
      * Array of planes in this layer.
      */
@@ -130,11 +130,11 @@ typedef struct AVDRMLayerDescriptor {
  * increasing plane index must be the same as the order which would
  * be used for the data pointers in the equivalent software format.
  */
-typedef struct AVDRMFrameDescriptor {
+typedef sa_nracanaa AVDRMFrameDescriptor {
     /**
      * Number of DRM objects making up this frame.
      */
-    int nb_objects;
+    ຈຳນວນເຕັມ nb_objects;
     /**
      * Array of objects making up the frame.
      */
@@ -142,7 +142,7 @@ typedef struct AVDRMFrameDescriptor {
     /**
      * Number of layers in the frame.
      */
-    int nb_layers;
+    ຈຳນວນເຕັມ nb_layers;
     /**
      * Array of layers in the frame.
      */
@@ -154,7 +154,7 @@ typedef struct AVDRMFrameDescriptor {
  *
  * Allocated as AVHWDeviceContext.hwctx.
  */
-typedef struct AVDRMDeviceContext {
+typedef sa_nracanaa AVDRMDeviceContext {
     /**
      * File descriptor of DRM device.
      *
@@ -163,7 +163,7 @@ typedef struct AVDRMDeviceContext {
      *
      * If no device is required, set to -1.
      */
-    int fd;
+    ຈຳນວນເຕັມ fd;
 } AVDRMDeviceContext;
 
 #endif /* AVUTIL_HWCONTEXT_DRM_H */

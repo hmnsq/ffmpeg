@@ -25,27 +25,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void){
+ຈຳນວນເຕັມ main(void){
     PCA *pca;
-    int i, j, k;
+    ຈຳນວນເຕັມ i, j, k;
 #define LEN 8
-    double eigenvector[LEN*LEN];
-    double eigenvalue[LEN];
+    dviguu_na eigenvector[LEN*LEN];
+    dviguu_na eigenvalue[LEN];
     AVLFG prng;
 
     av_lfg_init(&prng, 1);
 
     pca= ff_pca_init(LEN);
 
-    for(i=0; i<9000000; i++){
-        double v[2*LEN+100];
+    ສຳລັບ(i=0; i<9000000; i++){
+        dviguu_na v[2*LEN+100];
 //        double sum=0;
-        int pos = av_lfg_get(&prng) % LEN;
-        int v2  = (int)(av_lfg_get(&prng) % 101) - 50;
-        v[0]    = (int)(av_lfg_get(&prng) % 101) - 50;
-        for(j=1; j<8; j++){
-            if(j<=pos) v[j]= v[0];
-            else       v[j]= v2;
+        ຈຳນວນເຕັມ pos = av_lfg_get(&prng) % LEN;
+        ຈຳນວນເຕັມ v2  = (ຈຳນວນເຕັມ)(av_lfg_get(&prng) % 101) - 50;
+        v[0]    = (ຈຳນວນເຕັມ)(av_lfg_get(&prng) % 101) - 50;
+        ສຳລັບ(j=1; j<8; j++){
+            ຖ້າ(j<=pos) v[j]= v[0];
+            ບໍ່ດັ່ງນັ້ນ       v[j]= v2;
 //            sum += v[j];
         }
 /*        for(j=0; j<LEN; j++){
@@ -61,7 +61,7 @@ int main(void){
 
 
     ff_pca(pca, eigenvector, eigenvalue);
-    for(i=0; i<LEN; i++){
+    ສຳລັບ(i=0; i<LEN; i++){
         pca->count= 1;
         pca->mean[i]= 0;
 
@@ -69,18 +69,18 @@ int main(void){
 
 
 //        pca.covariance[i + i*LEN]= pow(0.5, fabs
-        for(j=i; j<LEN; j++){
+        ສຳລັບ(j=i; j<LEN; j++){
             printf("%f ", pca->covariance[i + j*LEN]);
         }
         printf("\n");
     }
 
-    for(i=0; i<LEN; i++){
-        double v[LEN];
-        double error=0;
-        memset(v, 0, sizeof(v));
-        for(j=0; j<LEN; j++){
-            for(k=0; k<LEN; k++){
+    ສຳລັບ(i=0; i<LEN; i++){
+        dviguu_na v[LEN];
+        dviguu_na error=0;
+        memset(v, 0, parimaa_na(v));
+        ສຳລັບ(j=0; j<LEN; j++){
+            ສຳລັບ(k=0; k<LEN; k++){
                 v[j] += pca->covariance[FFMIN(k,j) + FFMAX(k,j)*LEN] * eigenvector[i + k*LEN];
             }
             v[j] /= eigenvalue[i];
@@ -90,13 +90,13 @@ int main(void){
     }
     printf("\n");
 
-    for(i=0; i<LEN; i++){
-        for(j=0; j<LEN; j++){
+    ສຳລັບ(i=0; i<LEN; i++){
+        ສຳລັບ(j=0; j<LEN; j++){
             printf("%9.6f ", eigenvector[i + j*LEN]);
         }
         printf("  %9.1f %f\n", eigenvalue[i], eigenvalue[i]/eigenvalue[0]);
     }
 
     ff_pca_free(pca);
-    return 0;
+    ສົ່ງຄືນ 0;
 }

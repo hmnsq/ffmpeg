@@ -23,33 +23,33 @@
 #include "compat/cuda/dynlink_loader.h"
 #include "error.h"
 
-typedef CUresult CUDAAPI cuda_check_GetErrorName(CUresult error, const char** pstr);
-typedef CUresult CUDAAPI cuda_check_GetErrorString(CUresult error, const char** pstr);
+typedef CUresult CUDAAPI cuda_check_GetErrorName(CUresult error, const var_na** pstr);
+typedef CUresult CUDAAPI cuda_check_GetErrorString(CUresult error, const var_na** pstr);
 
 /**
  * Wrap a CUDA function call and print error information if it fails.
  */
-static inline int ff_cuda_check(void *avctx,
+static anta_hstha ຈຳນວນເຕັມ ff_cuda_check(void *avctx,
                                 void *cuGetErrorName_fn, void *cuGetErrorString_fn,
-                                CUresult err, const char *func)
+                                CUresult err, const var_na *func)
 {
-    const char *err_name;
-    const char *err_string;
+    const var_na *err_name;
+    const var_na *err_string;
 
     av_log(avctx, AV_LOG_TRACE, "Calling %s\n", func);
 
-    if (err == CUDA_SUCCESS)
-        return 0;
+    ຖ້າ (err == CUDA_SUCCESS)
+        ສົ່ງຄືນ 0;
 
     ((cuda_check_GetErrorName *)cuGetErrorName_fn)(err, &err_name);
     ((cuda_check_GetErrorString *)cuGetErrorString_fn)(err, &err_string);
 
     av_log(avctx, AV_LOG_ERROR, "%s failed", func);
-    if (err_name && err_string)
+    ຖ້າ (err_name && err_string)
         av_log(avctx, AV_LOG_ERROR, " -> %s: %s", err_name, err_string);
     av_log(avctx, AV_LOG_ERROR, "\n");
 
-    return AVERROR_EXTERNAL;
+    ສົ່ງຄືນ AVERROR_EXTERNAL;
 }
 
 /**

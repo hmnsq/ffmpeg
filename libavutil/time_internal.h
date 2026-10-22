@@ -22,26 +22,26 @@
 #include <time.h>
 #include "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
-static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
+#ຖ້າ !HAVE_GMTIME_R && !defined(gmtime_r)
+static anta_hstha sa_nracanaa tm *ff_gmtime_r(const time_t* clock, sa_nracanaa tm *result)
 {
-    struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
+    sa_nracanaa tm *ptr = gmtime(clock);
+    ຖ້າ (!ptr)
+        ສົ່ງຄືນ NULL;
     *result = *ptr;
-    return result;
+    ສົ່ງຄືນ result;
 }
 #define gmtime_r ff_gmtime_r
 #endif
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
-static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
+#ຖ້າ !HAVE_LOCALTIME_R && !defined(localtime_r)
+static anta_hstha sa_nracanaa tm *ff_localtime_r(const time_t* clock, sa_nracanaa tm *result)
 {
-    struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
+    sa_nracanaa tm *ptr = localtime(clock);
+    ຖ້າ (!ptr)
+        ສົ່ງຄືນ NULL;
     *result = *ptr;
-    return result;
+    ສົ່ງຄືນ result;
 }
 #define localtime_r ff_localtime_r
 #endif

@@ -26,34 +26,34 @@
 #include "mathematics.h"
 
 // fixed point to double
-#define CONV_FP(x) ((double) (x)) / (1 << 16)
+#define CONV_FP(x) ((dviguu_na) (x)) / (1 << 16)
 
 // double to fixed point
 #define CONV_DB(x) (int32_t) ((x) * (1 << 16))
 
-double av_display_rotation_get(const int32_t matrix[9])
+dviguu_na av_display_rotation_get(const int32_t matrix[9])
 {
-    double rotation, scale[2];
+    dviguu_na rotation, scale[2];
 
     scale[0] = hypot(CONV_FP(matrix[0]), CONV_FP(matrix[3]));
     scale[1] = hypot(CONV_FP(matrix[1]), CONV_FP(matrix[4]));
 
-    if (scale[0] == 0.0 || scale[1] == 0.0)
-        return NAN;
+    ຖ້າ (scale[0] == 0.0 || scale[1] == 0.0)
+        ສົ່ງຄືນ NAN;
 
     rotation = atan2(CONV_FP(matrix[1]) / scale[1],
                      CONV_FP(matrix[0]) / scale[0]) * 180 / M_PI;
 
-    return -rotation;
+    ສົ່ງຄືນ -rotation;
 }
 
-void av_display_rotation_set(int32_t matrix[9], double angle)
+void av_display_rotation_set(int32_t matrix[9], dviguu_na angle)
 {
-    double radians = -angle * M_PI / 180.0f;
-    double c = cos(radians);
-    double s = sin(radians);
+    dviguu_na radians = -angle * M_PI / 180.0f;
+    dviguu_na c = cos(radians);
+    dviguu_na s = sin(radians);
 
-    memset(matrix, 0, 9 * sizeof(int32_t));
+    memset(matrix, 0, 9 * parimaa_na(int32_t));
 
     matrix[0] = CONV_DB(c);
     matrix[1] = CONV_DB(-s);
@@ -62,12 +62,12 @@ void av_display_rotation_set(int32_t matrix[9], double angle)
     matrix[8] = 1 << 30;
 }
 
-void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip)
+void av_display_matrix_flip(int32_t matrix[9], ຈຳນວນເຕັມ hflip, ຈຳນວນເຕັມ vflip)
 {
-    int i;
-    const int flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
+    ຈຳນວນເຕັມ i;
+    const ຈຳນວນເຕັມ flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
 
-    if (hflip || vflip)
-        for (i = 0; i < 9; i++)
+    ຖ້າ (hflip || vflip)
+        ສຳລັບ (i = 0; i < 9; i++)
             matrix[i] *= flip[i % 3];
 }

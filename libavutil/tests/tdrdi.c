@@ -23,7 +23,7 @@
 #include "libavutil/mem.h"
 #include "libavutil/tdrdi.h"
 
-int main(void)
+ຈຳນວນເຕັມ main(void)
 {
     AV3DReferenceDisplaysInfo *tdrdi;
     AV3DReferenceDisplay *display;
@@ -32,13 +32,13 @@ int main(void)
     /* av_tdrdi_alloc with 1 display */
     printf("Testing av_tdrdi_alloc()\n");
     tdrdi = av_tdrdi_alloc(1, &size);
-    if (tdrdi) {
+    ຖ້າ (tdrdi) {
         printf("alloc 1: size>0=%s, num_ref_displays=%u\n",
                size > 0 ? "yes" : "no", tdrdi->num_ref_displays);
 
         display = av_tdrdi_get_display(tdrdi, 0);
         /* pointer consistency check */
-        if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset)
+        ຖ້າ ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset)
             printf("display 0: pointer inconsistent with entries_offset\n");
 
         /* write and read back */
@@ -57,17 +57,17 @@ int main(void)
     /* alloc with multiple displays */
     printf("\nTesting multiple displays\n");
     tdrdi = av_tdrdi_alloc(3, &size);
-    if (tdrdi) {
+    ຖ້າ (tdrdi) {
         printf("alloc 3: num_ref_displays=%u\n", tdrdi->num_ref_displays);
-        for (int i = 0; i < 3; i++) {
+        ສຳລັບ (ຈຳນວນເຕັມ i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
             /* verify stride consistency */
-            if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset +
+            ຖ້າ ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset +
                                       (size_t)i * tdrdi->entry_size)
                 printf("display %d: pointer inconsistent\n", i);
             display->exponent_ref_display_width = i + 1;
         }
-        for (int i = 0; i < 3; i++) {
+        ສຳລັບ (ຈຳນວນເຕັມ i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
             printf("display %d: width_exp=%u\n", i,
                    display->exponent_ref_display_width);
@@ -88,5 +88,5 @@ int main(void)
     av_free(tdrdi);
     av_max_alloc(INT_MAX);
 
-    return 0;
+    ສົ່ງຄືນ 0;
 }

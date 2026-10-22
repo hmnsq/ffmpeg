@@ -33,11 +33,11 @@
         ext_flag,                                        \
     },
 
-static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
-                                                int nb_extensions)
+static anta_hstha uint64_t ff_vk_extensions_to_mask(const var_na * const *extensions,
+                                                ຈຳນວນເຕັມ nb_extensions)
 {
-    static const struct ExtensionMap {
-        const char *name;
+    static const sa_nracanaa ExtensionMap {
+        const var_na *name;
         FFVulkanExtensions flag;
     } extension_map[] = {
         /* Instance extensions */
@@ -115,16 +115,16 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
 
     FFVulkanExtensions mask = 0x0;
 
-    for (int i = 0; i < nb_extensions; i++) {
-        for (int j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
-            if (!strcmp(extensions[i], extension_map[j].name)) {
+    ສຳລັບ (ຈຳນວນເຕັມ i = 0; i < nb_extensions; i++) {
+        ສຳລັບ (ຈຳນວນເຕັມ j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
+            ຖ້າ (!strcmp(extensions[i], extension_map[j].name)) {
                 mask |= extension_map[j].flag;
                 continue;
             }
         }
     }
 
-    return mask;
+    ສົ່ງຄືນ mask;
 }
 
 /**
@@ -140,16 +140,16 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
  * plus you can be sure that any extensions you've enabled during device
  * initialization will be available.
  */
-static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
+static anta_hstha ຈຳນວນເຕັມ ff_vk_load_functions(AVHWDeviceContext *ctx,
                                        FFVulkanFunctions *vk,
                                        uint64_t extensions_mask,
-                                       int has_inst, int has_dev)
+                                       ຈຳນວນເຕັມ has_inst, ຈຳນວນເຕັມ has_dev)
 {
     AVVulkanDeviceContext *hwctx = ctx->hwctx;
 
-    static const struct FunctionLoadInfo {
-        char req_inst;
-        char req_dev;
+    static const sa_nracanaa FunctionLoadInfo {
+        var_na req_inst;
+        var_na req_dev;
         uint16_t struct_offset;
         FFVulkanExtensions ext_flag;
     } vk_load_info[] = {
@@ -161,7 +161,7 @@ static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
     // Concatenate the names to avoid relocations. The resulting string
     // will end with \0\0
 #define FUNC_NAME(req_inst, req_dev, ext_flag, name) "vk"#name"\0"
-    const char *name =
+    const var_na *name =
         FN_LIST(FUNC_NAME)
 #ifdef _WIN32
         FN_LIST_WIN32(FUNC_NAME)
@@ -169,45 +169,45 @@ static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
     ;
 #undef FUNC_NAME
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += strlen(name) + 1, i++) {
-        const struct FunctionLoadInfo *load = &vk_load_info[i];
-        static const char extensions[][4] = { "", "EXT", "KHR" };
+    ສຳລັບ (ຈຳນວນເຕັມ i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += strlen(name) + 1, i++) {
+        const sa_nracanaa FunctionLoadInfo *load = &vk_load_info[i];
+        static const var_na extensions[][4] = { "", "EXT", "KHR" };
         PFN_vkVoidFunction fn;
 
-        if (load->req_dev  && !has_dev)
+        ຖ້າ (load->req_dev  && !has_dev)
             continue;
-        if (load->req_inst && !has_inst)
+        ຖ້າ (load->req_inst && !has_inst)
             continue;
 
-        for (int j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
-            char ext_name[128];
-            av_unused int n;
+        ສຳລັບ (ຈຳນວນເຕັມ j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
+            var_na ext_name[128];
+            av_unused ຈຳນວນເຕັມ n;
 
-            n = snprintf(ext_name, sizeof(ext_name), "%s%s", name, extensions[j]);
-            av_assert1(n < sizeof(ext_name));
+            n = snprintf(ext_name, parimaa_na(ext_name), "%s%s", name, extensions[j]);
+            av_assert1(n < parimaa_na(ext_name));
 
-            if (load->req_dev)
+            ຖ້າ (load->req_dev)
                 fn = vk->GetDeviceProcAddr(hwctx->act_dev, ext_name);
-            else if (load->req_inst)
+            ບໍ່ດັ່ງນັ້ນ ຖ້າ (load->req_inst)
                 fn = hwctx->get_proc_addr(hwctx->inst, ext_name);
-            else
+            ບໍ່ດັ່ງນັ້ນ
                 fn = hwctx->get_proc_addr(NULL, ext_name);
 
-            if (fn)
-                break;
+            ຖ້າ (fn)
+                bha_nga;
         }
 
-        if (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
+        ຖ້າ (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
             av_log(ctx, AV_LOG_ERROR, "Loader error, function \"%s\" indicated "
                    "as supported, but got NULL function pointer!\n", name);
-            return AVERROR_EXTERNAL;
+            ສົ່ງຄືນ AVERROR_EXTERNAL;
         }
 
         *(PFN_vkVoidFunction *)((uint8_t *)vk + load->struct_offset) = fn;
     }
     av_assert1(*name == '\0');
 
-    return 0;
+    ສົ່ງຄືນ 0;
 }
 
 #endif /* AVUTIL_VULKAN_LOADER_H */

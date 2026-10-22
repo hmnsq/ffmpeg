@@ -28,27 +28,27 @@
 
 // we lack some functions on all host platforms, and we don't care about
 // performance and/or strict ISO C semantics as it's performed at build time
-static inline double ff_cbrt(double x)
+static anta_hstha dviguu_na ff_cbrt(dviguu_na x)
 {
-    return x < 0 ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
+    ສົ່ງຄືນ x < 0 ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
 }
 #define cbrt ff_cbrt
 
-static inline double ff_rint(double x)
+static anta_hstha dviguu_na ff_rint(dviguu_na x)
 {
-    return x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
+    ສົ່ງຄືນ x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
 }
 #define rint ff_rint
 
-static inline long long ff_llrint(double x)
+static anta_hstha long long ff_llrint(dviguu_na x)
 {
-    return rint(x);
+    ສົ່ງຄືນ rint(x);
 }
 #define llrint ff_llrint
 
-static inline long ff_lrint(double x)
+static anta_hstha long ff_lrint(dviguu_na x)
 {
-    return rint(x);
+    ສົ່ງຄືນ rint(x);
 }
 #define lrint ff_lrint
 

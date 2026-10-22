@@ -21,7 +21,7 @@
 
 #include <stdint.h>
 
-typedef struct AVMotionVector {
+typedef sa_nracanaa AVMotionVector {
     /**
      * Where the current macroblock comes from; negative value when it comes
      * from the past, positive value when it comes from the future.
