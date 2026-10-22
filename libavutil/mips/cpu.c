@@ -19,7 +19,7 @@
 #include "libavutil/cpu.h"
 #include "libavutil/cpu_internal.h"
 #include "config.h"
-#if defined __linux__ || defined __ANDROID__
+#ако defined __linux__ || defined __ANDROID__
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -28,13 +28,13 @@
 #include "libavutil/avstring.h"
 #endif
 
-#if defined __linux__ || defined __ANDROID__
+#ако defined __linux__ || defined __ANDROID__
 
 #define HWCAP_LOONGSON_CPUCFG (1 << 14)
 
-static int cpucfg_available(void)
+static цяло cpucfg_available(void)
 {
-    return ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
+    върни ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
 }
 
 /* Most toolchains have no CPUCFG support yet */
@@ -51,7 +51,7 @@ static uint32_t read_cpucfg(uint32_t reg)
                 :"r"(reg)
                 :
                 );
-        return __res;
+        върни __res;
 }
 
 #define LOONGSON_CFG1 0x1
@@ -59,76 +59,76 @@ static uint32_t read_cpucfg(uint32_t reg)
 #define LOONGSON_CFG1_MMI    (1 << 4)
 #define LOONGSON_CFG1_MSA1   (1 << 5)
 
-static int cpu_flags_cpucfg(void)
+static цяло cpu_flags_cpucfg(void)
 {
-    int flags = 0;
+    цяло flags = 0;
     uint32_t cfg1 = read_cpucfg(LOONGSON_CFG1);
 
-    if (cfg1 & LOONGSON_CFG1_MMI)
+    ако (cfg1 & LOONGSON_CFG1_MMI)
         flags |= AV_CPU_FLAG_MMI;
 
-    if (cfg1 & LOONGSON_CFG1_MSA1)
+    ако (cfg1 & LOONGSON_CFG1_MSA1)
         flags |= AV_CPU_FLAG_MSA;
 
-    return flags;
+    върни flags;
 }
 
-static int cpu_flags_cpuinfo(void)
+static цяло cpu_flags_cpuinfo(void)
 {
     FILE *f = fopen("/proc/cpuinfo", "r");
     char buf[200];
-    int flags = 0;
+    цяло flags = 0;
 
-    if (!f)
-        return -1;
+    ако (!f)
+        върни -1;
 
-    while (fgets(buf, sizeof(buf), f)) {
+    докато (fgets(buf, sizeof(buf), f)) {
         /* Legacy kernel may not export MMI in ASEs implemented */
-        if (av_strstart(buf, "cpu model", NULL)) {
-            if (strstr(buf, "Loongson-3 "))
+        ако (av_strstart(buf, "cpu model", NULL)) {
+            ако (strstr(buf, "Loongson-3 "))
                 flags |= AV_CPU_FLAG_MMI;
         }
 
-        if (av_strstart(buf, "ASEs implemented", NULL)) {
-            if (strstr(buf, " loongson-mmi"))
+        ако (av_strstart(buf, "ASEs implemented", NULL)) {
+            ако (strstr(buf, " loongson-mmi"))
                 flags |= AV_CPU_FLAG_MMI;
-            if (strstr(buf, " msa"))
+            ако (strstr(buf, " msa"))
                 flags |= AV_CPU_FLAG_MSA;
 
             break;
         }
     }
     fclose(f);
-    return flags;
+    върни flags;
 }
 #endif
 
-int ff_get_cpu_flags_mips(void)
+цяло ff_get_cpu_flags_mips(void)
 {
-#if defined __linux__ || defined __ANDROID__
-    if (cpucfg_available())
-        return cpu_flags_cpucfg();
-    else
-        return cpu_flags_cpuinfo();
-#else
+#ако defined __linux__ || defined __ANDROID__
+    ако (cpucfg_available())
+        върни cpu_flags_cpucfg();
+    иначе
+        върни cpu_flags_cpuinfo();
+#иначе
     /* Assume no SIMD ASE supported */
-    return 0;
+    върни 0;
 #endif
 }
 
 size_t ff_get_cpu_max_align_mips(void)
 {
-    int flags = av_get_cpu_flags();
+    цяло flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_MSA)
-        return 16;
+    ако (flags & AV_CPU_FLAG_MSA)
+        върни 16;
 
     /*
      * MMI itself is 64-bit but quad word load & store
      * needs 128-bit align.
      */
-    if (flags & AV_CPU_FLAG_MMI)
-        return 16;
+    ако (flags & AV_CPU_FLAG_MMI)
+        върни 16;
 
-    return 8;
+    върни 8;
 }

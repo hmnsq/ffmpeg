@@ -21,26 +21,26 @@
 #include "libavutil/film_grain_params.h"
 #include "libavutil/mem.h"
 
-static AVFrame *create_frame(enum AVPixelFormat format, int width, int height)
+static AVFrame *create_frame(enum AVPixelFormat format, цяло width, цяло height)
 {
     AVFrame *frame = av_frame_alloc();
-    if (!frame)
-        return NULL;
+    ако (!frame)
+        върни NULL;
     frame->format = format;
     frame->width  = width;
     frame->height = height;
-    return frame;
+    върни frame;
 }
 
 static AVFilmGrainParams *add_grain(AVFrame *frame,
                                      enum AVFilmGrainParamsType type,
-                                     int width, int height,
-                                     int sub_x, int sub_y,
-                                     int bd_luma, int bd_chroma)
+                                     цяло width, цяло height,
+                                     цяло sub_x, цяло sub_y,
+                                     цяло bd_luma, цяло bd_chroma)
 {
     AVFilmGrainParams *fgp = av_film_grain_params_create_side_data(frame);
-    if (!fgp)
-        return NULL;
+    ако (!fgp)
+        върни NULL;
     fgp->type             = type;
     fgp->width            = width;
     fgp->height           = height;
@@ -48,10 +48,10 @@ static AVFilmGrainParams *add_grain(AVFrame *frame,
     fgp->subsampling_y    = sub_y;
     fgp->bit_depth_luma   = bd_luma;
     fgp->bit_depth_chroma = bd_chroma;
-    return fgp;
+    върни fgp;
 }
 
-int main(void)
+цяло main(void)
 {
     AVFilmGrainParams *fgp;
     const AVFilmGrainParams *sel;
@@ -72,11 +72,11 @@ int main(void)
 
     frame = av_frame_alloc();
     fgp = av_film_grain_params_create_side_data(frame);
-    if (fgp)
+    ако (fgp)
         printf("create: OK\ndefaults: range=%d pri=%d trc=%d space=%d\n",
                fgp->color_range, fgp->color_primaries,
                fgp->color_trc, fgp->color_space);
-    else
+    иначе
         printf("create: FAIL\n");
     av_frame_free(&frame);
 
@@ -239,5 +239,5 @@ int main(void)
            sel ? sel->width : -1, sel ? sel->height : -1);
     av_frame_free(&frame);
 
-    return 0;
+    върни 0;
 }

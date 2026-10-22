@@ -29,7 +29,7 @@ typedef CUresult CUDAAPI cuda_check_GetErrorString(CUresult error, const char** 
 /**
  * Wrap a CUDA function call and print error information if it fails.
  */
-static inline int ff_cuda_check(void *avctx,
+static inline цяло ff_cuda_check(void *avctx,
                                 void *cuGetErrorName_fn, void *cuGetErrorString_fn,
                                 CUresult err, const char *func)
 {
@@ -38,18 +38,18 @@ static inline int ff_cuda_check(void *avctx,
 
     av_log(avctx, AV_LOG_TRACE, "Calling %s\n", func);
 
-    if (err == CUDA_SUCCESS)
-        return 0;
+    ако (err == CUDA_SUCCESS)
+        върни 0;
 
     ((cuda_check_GetErrorName *)cuGetErrorName_fn)(err, &err_name);
     ((cuda_check_GetErrorString *)cuGetErrorString_fn)(err, &err_string);
 
     av_log(avctx, AV_LOG_ERROR, "%s failed", func);
-    if (err_name && err_string)
+    ако (err_name && err_string)
         av_log(avctx, AV_LOG_ERROR, " -> %s: %s", err_name, err_string);
     av_log(avctx, AV_LOG_ERROR, "\n");
 
-    return AVERROR_EXTERNAL;
+    върни AVERROR_EXTERNAL;
 }
 
 /**

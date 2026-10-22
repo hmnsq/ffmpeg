@@ -37,9 +37,9 @@ static const char *const const_names[] = {
     0
 };
 
-int main(int argc, char **argv)
+цяло main(цяло argc, char **argv)
 {
-    int i;
+    цяло i;
     double d;
     const char *const *expr;
     static const char *const exprs[] = {
@@ -145,18 +145,18 @@ int main(int argc, char **argv)
         "clip(0, 0/0, 1)",
         NULL
     };
-    int ret;
+    цяло ret;
 
-    for (expr = exprs; *expr; expr++) {
+    за (expr = exprs; *expr; expr++) {
         printf("Evaluating '%s'\n", *expr);
         ret = av_expr_parse_and_eval(&d, *expr,
                                const_names, const_values,
                                NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
+        ако (isnan(d))
             printf("'%s' -> nan\n\n", *expr);
-        else
+        иначе
             printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
+        ако (ret < 0)
             printf("av_expr_parse_and_eval failed\n");
     }
 
@@ -164,26 +164,26 @@ int main(int argc, char **argv)
                            const_names, const_values,
                            NULL, NULL, NULL, NULL, NULL, 0, NULL);
     printf("%f == 12.7\n", d);
-    if (ret < 0)
+    ако (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
     ret = av_expr_parse_and_eval(&d, "80G/80Gi",
                            const_names, const_values,
                            NULL, NULL, NULL, NULL, NULL, 0, NULL);
     printf("%f == 0.931322575\n", d);
-    if (ret < 0)
+    ако (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
+    ако (argc > 1 && !strcmp(argv[1], "-t")) {
+        за (i = 0; i < 1050; i++) {
             START_TIMER;
             ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
                                    const_names, const_values,
                                    NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
+            ако (ret < 0)
                 printf("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    върни 0;
 }

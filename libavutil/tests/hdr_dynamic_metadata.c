@@ -44,22 +44,22 @@
  * instead of silently passing a flag-only check.
  */
 
-static void print_peak_matrix(const char *label, int rows, int cols,
+static void print_peak_matrix(const char *label, цяло rows, цяло cols,
                               const AVRational m[25][25])
 {
     printf("    %s %dx%d:", label, rows, cols);
-    for (int i = 0; i < rows; i++)
-        for (int j = 0; j < cols; j++)
+    за (цяло i = 0; i < rows; i++)
+        за (цяло j = 0; j < cols; j++)
             printf(" %d/%d", m[i][j].num, m[i][j].den);
     printf("\n");
 }
 
-static void print_window(int w, const AVHDRPlusColorTransformParams *p,
-                         int geometry)
+static void print_window(цяло w, const AVHDRPlusColorTransformParams *p,
+                         цяло geometry)
 {
     printf("  window %d:\n", w);
     /* Window 0 covers the whole frame; its geometry is not serialized. */
-    if (geometry) {
+    ако (geometry) {
         printf("    corners: ul=%d/%d,%d/%d lr=%d/%d,%d/%d\n",
                p->window_upper_left_corner_x.num,
                p->window_upper_left_corner_x.den,
@@ -84,25 +84,25 @@ static void print_window(int w, const AVHDRPlusColorTransformParams *p,
            p->average_maxrgb.num, p->average_maxrgb.den);
     printf("    distribution_maxrgb: n=%u",
            p->num_distribution_maxrgb_percentiles);
-    for (int i = 0; i < p->num_distribution_maxrgb_percentiles; i++)
+    за (цяло i = 0; i < p->num_distribution_maxrgb_percentiles; i++)
         printf(" %u%%=%d/%d", p->distribution_maxrgb[i].percentage,
                p->distribution_maxrgb[i].percentile.num,
                p->distribution_maxrgb[i].percentile.den);
     printf("\n    fraction_bright_pixels=%d/%d\n",
            p->fraction_bright_pixels.num, p->fraction_bright_pixels.den);
     printf("    tone_mapping_flag=%u", p->tone_mapping_flag);
-    if (p->tone_mapping_flag) {
+    ако (p->tone_mapping_flag) {
         printf(" knee=%d/%d,%d/%d anchors=%u:",
                p->knee_point_x.num, p->knee_point_x.den,
                p->knee_point_y.num, p->knee_point_y.den,
                p->num_bezier_curve_anchors);
-        for (int i = 0; i < p->num_bezier_curve_anchors; i++)
+        за (цяло i = 0; i < p->num_bezier_curve_anchors; i++)
             printf(" %d/%d", p->bezier_curve_anchors[i].num,
                    p->bezier_curve_anchors[i].den);
     }
     printf("\n    color_saturation_mapping_flag=%u",
            p->color_saturation_mapping_flag);
-    if (p->color_saturation_mapping_flag)
+    ако (p->color_saturation_mapping_flag)
         printf(" weight=%d/%d", p->color_saturation_weight.num,
                p->color_saturation_weight.den);
     printf("\n");
@@ -118,19 +118,19 @@ static void print_hdr_plus(const char *label, const AVDynamicHDRPlus *s)
            s->targeted_system_display_maximum_luminance.den);
     printf("  targeted_system_display_actual_peak_luminance_flag=%u\n",
            s->targeted_system_display_actual_peak_luminance_flag);
-    if (s->targeted_system_display_actual_peak_luminance_flag)
+    ако (s->targeted_system_display_actual_peak_luminance_flag)
         print_peak_matrix("targeted_peak",
                           s->num_rows_targeted_system_display_actual_peak_luminance,
                           s->num_cols_targeted_system_display_actual_peak_luminance,
                           s->targeted_system_display_actual_peak_luminance);
     printf("  mastering_display_actual_peak_luminance_flag=%u\n",
            s->mastering_display_actual_peak_luminance_flag);
-    if (s->mastering_display_actual_peak_luminance_flag)
+    ако (s->mastering_display_actual_peak_luminance_flag)
         print_peak_matrix("mastering_peak",
                           s->num_rows_mastering_display_actual_peak_luminance,
                           s->num_cols_mastering_display_actual_peak_luminance,
                           s->mastering_display_actual_peak_luminance);
-    for (int w = 0; w < s->num_windows; w++)
+    за (цяло w = 0; w < s->num_windows; w++)
         print_window(w, &s->params[w], w > 0);
 }
 
@@ -141,18 +141,18 @@ static void print_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
            s->application_version, s->minimum_application_version);
     printf("  has_custom_hdr_reference_white_flag=%u",
            s->has_custom_hdr_reference_white_flag);
-    if (s->has_custom_hdr_reference_white_flag)
+    ако (s->has_custom_hdr_reference_white_flag)
         printf(" hdr_reference_white=0x%04x", s->hdr_reference_white);
     printf("\n  has_adaptive_tone_map_flag=%u\n",
            s->has_adaptive_tone_map_flag);
-    if (!s->has_adaptive_tone_map_flag)
-        return;
+    ако (!s->has_adaptive_tone_map_flag)
+        върни;
 
     printf("  baseline_hdr_headroom=0x%04x"
            " use_reference_white_tone_mapping_flag=%u\n",
            s->baseline_hdr_headroom, s->use_reference_white_tone_mapping_flag);
-    if (s->use_reference_white_tone_mapping_flag)
-        return;
+    ако (s->use_reference_white_tone_mapping_flag)
+        върни;
 
     printf("  num_alternate_images=%u chromaticities_flag=%u"
            " has_common_component_mix_params_flag=%u"
@@ -161,20 +161,20 @@ static void print_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
            s->gain_application_space_chromaticities_flag,
            s->has_common_component_mix_params_flag,
            s->has_common_curve_params_flag);
-    if (s->gain_application_space_chromaticities_flag == 3) {
+    ако (s->gain_application_space_chromaticities_flag == 3) {
         printf("  chromaticities:");
-        for (int r = 0; r < 8; r++)
+        за (цяло r = 0; r < 8; r++)
             printf(" 0x%04x", s->gain_application_space_chromaticities[r]);
         printf("\n");
     }
 
-    for (int a = 0; a < s->num_alternate_images; a++) {
-        int n = s->gain_curve_num_control_points_minus_1[a] + 1;
+    за (цяло a = 0; a < s->num_alternate_images; a++) {
+        цяло n = s->gain_curve_num_control_points_minus_1[a] + 1;
         printf("  alternate %d: hdr_headroom=0x%04x component_mixing_type=%u\n",
                a, s->alternate_hdr_headrooms[a], s->component_mixing_type[a]);
-        if (s->component_mixing_type[a] == 3) {
+        ако (s->component_mixing_type[a] == 3) {
             printf("    mixing flag:coefficient:");
-            for (int k = 0; k < 6; k++)
+            за (цяло k = 0; k < 6; k++)
                 printf(" %u:0x%04x",
                        s->has_component_mixing_coefficient_flag[a][k],
                        s->component_mixing_coefficient[a][k]);
@@ -183,16 +183,16 @@ static void print_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
         printf("    curve: num_control_points=%d use_pchip_slope=%u\n", n,
                s->gain_curve_use_pchip_slope_flag[a]);
         printf("    x:");
-        for (int c = 0; c < n; c++)
+        за (цяло c = 0; c < n; c++)
             printf(" 0x%04x", s->gain_curve_control_points_x[a][c]);
         printf("\n    y:");
-        for (int c = 0; c < n; c++)
+        за (цяло c = 0; c < n; c++)
             printf(" 0x%04x", s->gain_curve_control_points_y[a][c]);
         printf("\n");
         /* theta is only serialized when the pchip slope is not used. */
-        if (!s->gain_curve_use_pchip_slope_flag[a]) {
+        ако (!s->gain_curve_use_pchip_slope_flag[a]) {
             printf("    theta:");
-            for (int c = 0; c < n; c++)
+            за (цяло c = 0; c < n; c++)
                 printf(" 0x%04x", s->gain_curve_control_points_theta[a][c]);
             printf("\n");
         }
@@ -203,37 +203,37 @@ static void print_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
  * Round-trip helpers: serialize, then parse back into a zeroed struct.
  */
 
-static int hdr_plus_round_trip(const AVDynamicHDRPlus *in, AVDynamicHDRPlus *out)
+static цяло hdr_plus_round_trip(const AVDynamicHDRPlus *in, AVDynamicHDRPlus *out)
 {
     uint8_t *buf = NULL;
     size_t size = 0;
-    int ret;
+    цяло ret;
 
     ret = av_dynamic_hdr_plus_to_t35(in, &buf, &size);
-    if (ret < 0)
-        return ret;
+    ако (ret < 0)
+        върни ret;
 
     memset(out, 0, sizeof(*out));
     ret = av_dynamic_hdr_plus_from_t35(out, buf, size);
     av_free(buf);
-    return ret;
+    върни ret;
 }
 
-static int app5_round_trip(const AVDynamicHDRSmpte2094App5 *in,
+static цяло app5_round_trip(const AVDynamicHDRSmpte2094App5 *in,
                            AVDynamicHDRSmpte2094App5 *out)
 {
     uint8_t *buf = NULL;
     size_t size = 0;
-    int ret;
+    цяло ret;
 
     ret = av_dynamic_hdr_smpte2094_app5_to_t35(in, &buf, &size);
-    if (ret < 0)
-        return ret;
+    ако (ret < 0)
+        върни ret;
 
     memset(out, 0, sizeof(*out));
     ret = av_dynamic_hdr_smpte2094_app5_from_t35(out, buf, size);
     av_free(buf);
-    return ret;
+    върни ret;
 }
 
 /*
@@ -254,7 +254,7 @@ static int app5_round_trip(const AVDynamicHDRSmpte2094App5 *in,
 static void fill_hdr_plus_conforming(AVDynamicHDRPlus *s)
 {
     static const uint8_t percentages[9] = { 1, 5, 10, 25, 50, 75, 90, 95, 99 };
-    static const int percentiles[9] = {
+    static const цяло percentiles[9] = {
         1000, 0, 255, 25000, 50000, 75000, 90000, 95000, 99000,
     };
 
@@ -273,7 +273,7 @@ static void fill_hdr_plus_conforming(AVDynamicHDRPlus *s)
     s->params[0].average_maxrgb = (AVRational){ 40000, RGB_DEN };
 
     s->params[0].num_distribution_maxrgb_percentiles = 9;
-    for (int i = 0; i < 9; i++) {
+    за (цяло i = 0; i < 9; i++) {
         s->params[0].distribution_maxrgb[i].percentage = percentages[i];
         s->params[0].distribution_maxrgb[i].percentile =
             (AVRational){ percentiles[i], RGB_DEN };
@@ -285,7 +285,7 @@ static void fill_hdr_plus_conforming(AVDynamicHDRPlus *s)
     s->params[0].knee_point_x = (AVRational){  512, KNEE_POINT_DEN };
     s->params[0].knee_point_y = (AVRational){ 1024, KNEE_POINT_DEN };
     s->params[0].num_bezier_curve_anchors = 9;
-    for (int i = 0; i < 9; i++)
+    за (цяло i = 0; i < 9; i++)
         s->params[0].bezier_curve_anchors[i] =
             (AVRational){ 100 * (i + 1), BEZIER_ANCHOR_DEN };
 
@@ -345,16 +345,16 @@ static void fill_hdr_plus_synthetic(AVDynamicHDRPlus *s)
     s->targeted_system_display_actual_peak_luminance_flag = 1;
     s->num_rows_targeted_system_display_actual_peak_luminance = 2;
     s->num_cols_targeted_system_display_actual_peak_luminance = 3;
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 3; j++)
+    за (цяло i = 0; i < 2; i++)
+        за (цяло j = 0; j < 3; j++)
             s->targeted_system_display_actual_peak_luminance[i][j] =
                 (AVRational){ i * 3 + j, PEAK_LUMINANCE_DEN };
 
     s->mastering_display_actual_peak_luminance_flag = 1;
     s->num_rows_mastering_display_actual_peak_luminance = 3;
     s->num_cols_mastering_display_actual_peak_luminance = 2;
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 2; j++)
+    за (цяло i = 0; i < 3; i++)
+        за (цяло j = 0; j < 2; j++)
             s->mastering_display_actual_peak_luminance[i][j] =
                 (AVRational){ 15 - (i * 2 + j), PEAK_LUMINANCE_DEN };
 
@@ -367,7 +367,7 @@ static void fill_hdr_plus_synthetic(AVDynamicHDRPlus *s)
     s->params[0].bezier_curve_anchors[2] = (AVRational){ 900, BEZIER_ANCHOR_DEN };
     s->params[1].tone_mapping_flag = 0;
 
-    for (int w = 0; w < 2; w++) {
+    за (цяло w = 0; w < 2; w++) {
         s->params[w].color_saturation_mapping_flag = 1;
         s->params[w].color_saturation_weight =
             (AVRational){ 8 + w, SATURATION_DEN };
@@ -380,7 +380,7 @@ static void test_hdr_plus(void)
     AVFrame *frame;
     size_t size = 0, required = 0;
     uint8_t *buf = NULL;
-    int ret;
+    цяло ret;
 
     printf("=== AVDynamicHDRPlus ===\n");
 
@@ -396,7 +396,7 @@ static void test_hdr_plus(void)
 
     printf("\nTesting av_dynamic_hdr_plus_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    ако (frame) {
         hdr = av_dynamic_hdr_plus_create_side_data(frame);
         printf("create_side_data: %s\n", hdr ? "OK" : "FAIL");
         av_frame_free(&frame);
@@ -404,10 +404,10 @@ static void test_hdr_plus(void)
 
     hdr    = av_dynamic_hdr_plus_alloc(NULL);
     hdr_rt = av_dynamic_hdr_plus_alloc(NULL);
-    if (!hdr || !hdr_rt) {
+    ако (!hdr || !hdr_rt) {
         av_freep(&hdr);
         av_freep(&hdr_rt);
-        return;
+        върни;
     }
     fill_hdr_plus_conforming(hdr);
 
@@ -430,7 +430,7 @@ static void test_hdr_plus(void)
     /* Existing-buffer mode: a caller-owned buffer is filled in place. */
     printf("\nTesting av_dynamic_hdr_plus_to_t35() existing buffer\n");
     buf = av_malloc(required);
-    if (buf) {
+    ако (buf) {
         uint8_t *orig = buf;
         size = required;
         ret = av_dynamic_hdr_plus_to_t35(hdr, &buf, &size);
@@ -442,9 +442,9 @@ static void test_hdr_plus(void)
 
     /* Buffer-too-small: caller-owned buffer shorter than required. */
     printf("\nTesting av_dynamic_hdr_plus_to_t35() buffer too small\n");
-    if (required > 1) {
+    ако (required > 1) {
         buf = av_malloc(required - 1);
-        if (buf) {
+        ако (buf) {
             size = required - 1;
             ret = av_dynamic_hdr_plus_to_t35(hdr, &buf, &size);
             printf("too small: ret==AVERROR_BUFFER_TOO_SMALL=%s\n",
@@ -456,7 +456,7 @@ static void test_hdr_plus(void)
     printf("\nTesting round trip, conforming ST 2094-40 Version 1 payload\n");
     ret = hdr_plus_round_trip(hdr, hdr_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    ако (ret >= 0)
         print_hdr_plus("decoded", hdr_rt);
 
     /* to_t35() ignores application_version and always writes the CTA-861-H
@@ -472,7 +472,7 @@ static void test_hdr_plus(void)
     fill_hdr_plus_synthetic(hdr);
     ret = hdr_plus_round_trip(hdr, hdr_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    ако (ret >= 0)
         print_hdr_plus("decoded", hdr_rt);
 
     printf("\nTesting error paths\n");
@@ -494,7 +494,7 @@ static void test_hdr_plus(void)
         /* Oversized input is rejected before parsing. */
         size_t big = AV_HDR_PLUS_MAX_PAYLOAD_SIZE + 1;
         uint8_t *oversized = av_mallocz(big);
-        if (oversized) {
+        ако (oversized) {
             ret = av_dynamic_hdr_plus_from_t35(hdr_rt, oversized, big);
             printf("from_t35 oversized: ret==AVERROR(EINVAL)=%s\n",
                    ret == AVERROR(EINVAL) ? "yes" : "no");
@@ -545,20 +545,20 @@ static void fill_app5_per_image(AVDynamicHDRSmpte2094App5 *s)
     s->baseline_hdr_headroom      = 0x0abc;
     s->num_alternate_images       = 2;
     s->gain_application_space_chromaticities_flag = 3;
-    for (int r = 0; r < 8; r++)
+    за (цяло r = 0; r < 8; r++)
         s->gain_application_space_chromaticities[r] = 100 * (r + 1);
     s->has_common_component_mix_params_flag = 0;
     s->has_common_curve_params_flag         = 0;
-    for (int a = 0; a < 2; a++) {
+    за (цяло a = 0; a < 2; a++) {
         s->alternate_hdr_headrooms[a] = 0x0100 + a;
         s->component_mixing_type[a]   = 3;
-        for (int k = 0; k < 6; k++) {
+        за (цяло k = 0; k < 6; k++) {
             s->has_component_mixing_coefficient_flag[a][k] = k & 1;
             s->component_mixing_coefficient[a][k] = 0x1000 + 0x10 * a + k;
         }
         s->gain_curve_num_control_points_minus_1[a] = 1;
         s->gain_curve_use_pchip_slope_flag[a]       = 0;
-        for (int c = 0; c < 2; c++) {
+        за (цяло c = 0; c < 2; c++) {
             s->gain_curve_control_points_x[a][c]     = 0x2000 + 0x10 * a + c;
             s->gain_curve_control_points_y[a][c]     = 0x3000 + 0x10 * a + c;
             s->gain_curve_control_points_theta[a][c] = 0x4000 + 0x10 * a + c;
@@ -583,12 +583,12 @@ static void fill_app5_common(AVDynamicHDRSmpte2094App5 *s)
     s->gain_application_space_chromaticities_flag = 0;
     s->has_common_component_mix_params_flag = 1;
     s->has_common_curve_params_flag         = 1;
-    for (int a = 0; a < 3; a++) {
+    за (цяло a = 0; a < 3; a++) {
         s->alternate_hdr_headrooms[a] = 0x0200 + a;
         s->component_mixing_type[a]   = 1;
         s->gain_curve_num_control_points_minus_1[a] = 2;
         s->gain_curve_use_pchip_slope_flag[a]       = 1;
-        for (int c = 0; c < 3; c++) {
+        за (цяло c = 0; c < 3; c++) {
             s->gain_curve_control_points_x[a][c] = 0x5000 + c;
             s->gain_curve_control_points_y[a][c] = 0x6000 + 0x10 * a + c;
         }
@@ -601,7 +601,7 @@ static void test_app5(void)
     AVFrame *frame;
     size_t size = 0, required = 0;
     uint8_t *buf = NULL;
-    int ret;
+    цяло ret;
 
     printf("\n=== AVDynamicHDRSmpte2094App5 ===\n");
     printf("Testing av_dynamic_hdr_smpte2094_app5_alloc()\n");
@@ -612,7 +612,7 @@ static void test_app5(void)
 
     printf("\nTesting av_dynamic_hdr_smpte2094_app5_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    ако (frame) {
         app5 = av_dynamic_hdr_smpte2094_app5_create_side_data(frame);
         printf("create_side_data: %s\n", app5 ? "OK" : "FAIL");
         av_frame_free(&frame);
@@ -620,10 +620,10 @@ static void test_app5(void)
 
     app5    = av_dynamic_hdr_smpte2094_app5_alloc(NULL);
     app5_rt = av_dynamic_hdr_smpte2094_app5_alloc(NULL);
-    if (!app5 || !app5_rt) {
+    ако (!app5 || !app5_rt) {
         av_freep(&app5);
         av_freep(&app5_rt);
-        return;
+        върни;
     }
     fill_app5_minimal(app5);
 
@@ -643,28 +643,28 @@ static void test_app5(void)
     printf("\nTesting round trip, no adaptive tone map\n");
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    ако (ret >= 0)
         print_app5("decoded", app5_rt);
 
     printf("\nTesting round trip, reference-white tone mapping\n");
     fill_app5_reference_white(app5);
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    ако (ret >= 0)
         print_app5("decoded", app5_rt);
 
     printf("\nTesting round trip, per-image mixing and curve parameters\n");
     fill_app5_per_image(app5);
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    ако (ret >= 0)
         print_app5("decoded", app5_rt);
 
     printf("\nTesting round trip, common mixing and curve parameters\n");
     fill_app5_common(app5);
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    ако (ret >= 0)
         print_app5("decoded", app5_rt);
 
     printf("\nTesting error paths\n");
@@ -710,9 +710,9 @@ static void test_app5(void)
     av_freep(&app5);
 }
 
-int main(void)
+цяло main(void)
 {
     test_hdr_plus();
     test_app5();
-    return 0;
+    върни 0;
 }

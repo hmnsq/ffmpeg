@@ -28,10 +28,10 @@ typedef struct AVDetectionBBox {
      * Distance in pixels from the left/top edge of the frame,
      * together with width and height, defining the bounding box.
      */
-    int x;
-    int y;
-    int w;
-    int h;
+    цяло x;
+    цяло y;
+    цяло w;
+    цяло h;
 
 #define AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE 64
 
@@ -81,10 +81,10 @@ typedef struct AVDetectionBBoxHeader {
  * Get the bounding box at the specified {@code idx}. Must be between 0 and nb_bboxes.
  */
 static av_always_inline AVDetectionBBox *
-av_get_detection_bbox(const AVDetectionBBoxHeader *header, unsigned int idx)
+av_get_detection_bbox(const AVDetectionBBoxHeader *header, unsigned цяло idx)
 {
     av_assert0(idx < header->nb_bboxes);
-    return (AVDetectionBBox *)((uint8_t *)header + header->bboxes_offset +
+    върни (AVDetectionBBox *)((uint8_t *)header + header->bboxes_offset +
                                idx * header->bbox_size);
 }
 

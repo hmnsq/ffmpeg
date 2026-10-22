@@ -27,15 +27,15 @@ AVSphericalMapping *av_spherical_alloc(size_t *size)
 {
     AVSphericalMapping *spherical = av_mallocz(sizeof(AVSphericalMapping));
 
-    if (size)
+    ако (size)
         *size = spherical ? sizeof(*spherical) : 0;
 
-    if (!spherical)
-        return NULL;
+    ако (!spherical)
+        върни NULL;
 
     spherical->projection = AV_SPHERICAL_RECTILINEAR;
 
-    return spherical;
+    върни spherical;
 }
 
 void av_spherical_tile_bounds(const AVSphericalMapping *map,
@@ -68,20 +68,20 @@ static const char *const spherical_projection_names[] = {
 
 const char *av_spherical_projection_name(enum AVSphericalProjection projection)
 {
-    if ((unsigned)projection >= FF_ARRAY_ELEMS(spherical_projection_names))
-        return "unknown";
+    ако ((unsigned)projection >= FF_ARRAY_ELEMS(spherical_projection_names))
+        върни "unknown";
 
-    return spherical_projection_names[projection];
+    върни spherical_projection_names[projection];
 }
 
-int av_spherical_from_name(const char *name)
+цяло av_spherical_from_name(const char *name)
 {
-    int i;
+    цяло i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(spherical_projection_names); i++) {
-        if (av_strstart(name, spherical_projection_names[i], NULL))
-            return i;
+    за (i = 0; i < FF_ARRAY_ELEMS(spherical_projection_names); i++) {
+        ако (av_strstart(name, spherical_projection_names[i], NULL))
+            върни i;
     }
 
-    return -1;
+    върни -1;
 }

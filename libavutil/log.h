@@ -101,7 +101,7 @@ typedef struct AVClass {
      * major version bumps everywhere.
      */
 
-    int version;
+    цяло version;
 
     /**
      * Offset in the structure where the log level offset is stored. The log
@@ -110,7 +110,7 @@ typedef struct AVClass {
      *
      * 0 means there is no such variable.
      */
-    int log_level_offset_offset;
+    цяло log_level_offset_offset;
 
     /**
      * Offset in the structure where a pointer to the parent context for
@@ -121,7 +121,7 @@ typedef struct AVClass {
      * When the pointer is NULL, or this offset is zero, the object is assumed
      * to have no parent.
      */
-    int parent_log_context_offset;
+    цяло parent_log_context_offset;
 
     /**
      * Category used for visualization (like color).
@@ -142,7 +142,7 @@ typedef struct AVClass {
     /**
      * Callback to return the supported/allowed ranges.
      */
-    int (*query_ranges)(struct AVOptionRanges **, void *obj, const char *key, int flags);
+    цяло (*query_ranges)(struct AVOptionRanges **, void *obj, const char *key, цяло flags);
 
     /**
      * Return next AVOptions-enabled child or NULL
@@ -173,7 +173,7 @@ typedef struct AVClass {
      *
      * Added in version 59.41.100.
      */
-    int state_flags_offset;
+    цяло state_flags_offset;
 } AVClass;
 
 /**
@@ -265,7 +265,7 @@ typedef struct AVClass {
  * @param fmt The format string (printf-compatible) that specifies how
  *        subsequent arguments are converted to output.
  */
-void av_log(void *avcl, int level, const char *fmt, ...) av_printf_format(3, 4);
+void av_log(void *avcl, цяло level, const char *fmt, ...) av_printf_format(3, 4);
 
 /**
  * Send the specified message to the log once with the initial_level and then with
@@ -286,7 +286,7 @@ void av_log(void *avcl, int level, const char *fmt, ...) av_printf_format(3, 4);
  *        this must be initialized to 0 before the first use. The same state
  *        must not be accessed by 2 Threads simultaneously.
  */
-void av_log_once(void* avcl, int initial_level, int subsequent_level, int *state, const char *fmt, ...) av_printf_format(5, 6);
+void av_log_once(void* avcl, цяло initial_level, цяло subsequent_level, цяло *state, const char *fmt, ...) av_printf_format(5, 6);
 
 
 /**
@@ -304,7 +304,7 @@ void av_log_once(void* avcl, int initial_level, int subsequent_level, int *state
  *        subsequent arguments are converted to output.
  * @param vl The arguments referenced by the format string.
  */
-void av_vlog(void *avcl, int level, const char *fmt, va_list vl);
+void av_vlog(void *avcl, цяло level, const char *fmt, va_list vl);
 
 /**
  * Get the current log level
@@ -313,7 +313,7 @@ void av_vlog(void *avcl, int level, const char *fmt, va_list vl);
  *
  * @return Current log level
  */
-int av_log_get_level(void);
+цяло av_log_get_level(void);
 
 /**
  * Set the log level
@@ -322,7 +322,7 @@ int av_log_get_level(void);
  *
  * @param level Logging level
  */
-void av_log_set_level(int level);
+void av_log_set_level(цяло level);
 
 /**
  * Set the logging callback
@@ -334,7 +334,7 @@ void av_log_set_level(int level);
  *
  * @param callback A logging function with a compatible signature.
  */
-void av_log_set_callback(void (*callback)(void*, int, const char*, va_list));
+void av_log_set_callback(void (*callback)(void*, цяло, const char*, va_list));
 
 /**
  * Default logging callback
@@ -349,7 +349,7 @@ void av_log_set_callback(void (*callback)(void*, int, const char*, va_list));
  *        subsequent arguments are converted to output.
  * @param vl The arguments referenced by the format string.
  */
-void av_log_default_callback(void *avcl, int level, const char *fmt,
+void av_log_default_callback(void *avcl, цяло level, const char *fmt,
                              va_list vl);
 
 /**
@@ -369,8 +369,8 @@ AVClassCategory av_default_get_category(void *ptr);
  * @param print_prefix  used to store whether the prefix must be printed;
  *                      must point to a persistent integer initially set to 1
  */
-void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix);
+void av_log_format_line(void *ptr, цяло level, const char *fmt, va_list vl,
+                        char *line, цяло line_size, цяло *print_prefix);
 
 /**
  * Format a line of log the same way as the default callback.
@@ -386,8 +386,8 @@ void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
  *         character. If the return value is not less than line_size, it means
  *         that the log message was truncated to fit the buffer.
  */
-int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix);
+цяло av_log_format_line2(void *ptr, цяло level, const char *fmt, va_list vl,
+                        char *line, цяло line_size, цяло *print_prefix);
 
 /**
  * Skip repeated messages, this requires the user app to use av_log() instead of
@@ -417,8 +417,8 @@ int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
  */
 #define AV_LOG_PRINT_DATETIME 8
 
-void av_log_set_flags(int arg);
-int av_log_get_flags(void);
+void av_log_set_flags(цяло arg);
+цяло av_log_get_flags(void);
 
 /**
  * @}

@@ -25,7 +25,7 @@
 #include "libavutil/mem.h"
 #include "libavutil/video_hint.h"
 
-int main(void)
+цяло main(void)
 {
     AVVideoHint *hint;
     AVVideoRect *rect;
@@ -36,14 +36,14 @@ int main(void)
 
     /* av_video_hint_alloc - various counts */
     printf("Testing av_video_hint_alloc()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
+    за (цяло i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
         size_t nb = alloc_counts[i];
         hint = av_video_hint_alloc(nb, &size);
-        if (hint) {
+        ако (hint) {
             printf("alloc %zu: OK, nb_rects=%zu, size>0=%s\n",
                    nb, hint->nb_rects, size > 0 ? "yes" : "no");
             av_free(hint);
-        } else {
+        } иначе {
             printf("alloc %zu: FAIL\n", nb);
         }
     }
@@ -51,15 +51,15 @@ int main(void)
     /* pointer consistency and write/read back */
     printf("\nTesting av_video_hint_get_rect()\n");
     hint = av_video_hint_alloc(3, &size);
-    if (hint) {
+    ако (hint) {
         /* verify av_video_hint_rects points to first rect */
         rect = av_video_hint_rects(hint);
-        if ((uint8_t *)rect != (uint8_t *)hint + hint->rect_offset)
+        ако ((uint8_t *)rect != (uint8_t *)hint + hint->rect_offset)
             printf("rects: pointer inconsistent with rect_offset\n");
 
-        for (int i = 0; i < 3; i++) {
+        за (цяло i = 0; i < 3; i++) {
             rect = av_video_hint_get_rect(hint, i);
-            if ((uint8_t *)rect != (uint8_t *)hint + hint->rect_offset +
+            ако ((uint8_t *)rect != (uint8_t *)hint + hint->rect_offset +
                                    (size_t)i * hint->rect_size)
                 printf("rect %d: pointer inconsistent with rect_offset/rect_size\n", i);
             rect->x = i * 100;
@@ -67,7 +67,7 @@ int main(void)
             rect->width = 64 + i;
             rect->height = 48 + i;
         }
-        for (int i = 0; i < 3; i++) {
+        за (цяло i = 0; i < 3; i++) {
             rect = av_video_hint_get_rect(hint, i);
             printf("rect %d: x=%u y=%u w=%u h=%u\n",
                    i, rect->x, rect->y, rect->width, rect->height);
@@ -79,7 +79,7 @@ int main(void)
     /* type field */
     printf("\nTesting type field\n");
     hint = av_video_hint_alloc(1, &size);
-    if (hint) {
+    ако (hint) {
         hint->type = AV_VIDEO_HINT_TYPE_CONSTANT;
         printf("constant: type=%d\n", hint->type);
         hint->type = AV_VIDEO_HINT_TYPE_CHANGED;
@@ -90,9 +90,9 @@ int main(void)
     /* av_video_hint_create_side_data */
     printf("\nTesting av_video_hint_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    ако (frame) {
         hint = av_video_hint_create_side_data(frame, 2);
-        if (hint) {
+        ако (hint) {
             printf("side_data: OK, nb_rects=%zu\n", hint->nb_rects);
             rect = av_video_hint_get_rect(hint, 0);
             rect->x = 10;
@@ -101,7 +101,7 @@ int main(void)
             rect->height = 240;
             rect = av_video_hint_get_rect(hint, 0);
             printf("side_data rect 0: x=%u y=%u\n", rect->x, rect->y);
-        } else {
+        } иначе {
             printf("side_data: FAIL\n");
         }
         av_frame_free(&frame);
@@ -116,7 +116,7 @@ int main(void)
     av_max_alloc(INT_MAX);
 
     frame = av_frame_alloc();
-    if (frame) {
+    ако (frame) {
         av_max_alloc(1);
         hint = av_video_hint_create_side_data(frame, 1);
         printf("side_data OOM: %s\n", hint ? "FAIL" : "OK");
@@ -124,5 +124,5 @@ int main(void)
         av_frame_free(&frame);
     }
 
-    return 0;
+    върни 0;
 }

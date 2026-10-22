@@ -25,25 +25,25 @@
 #include "libavutil/macros.h"
 #include "libavutil/mem.h"
 
-int main(void)
+цяло main(void)
 {
     AVDetectionBBoxHeader *header;
     AVDetectionBBox *bbox;
     AVFrame *frame;
     size_t size;
 
-    static const unsigned int alloc_counts[] = { 0, 1, 4 };
+    static const unsigned цяло alloc_counts[] = { 0, 1, 4 };
 
     /* av_detection_bbox_alloc - various counts */
     printf("Testing av_detection_bbox_alloc()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
-        unsigned int nb = alloc_counts[i];
+    за (цяло i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
+        unsigned цяло nb = alloc_counts[i];
         header = av_detection_bbox_alloc(nb, &size);
-        if (header) {
+        ако (header) {
             printf("alloc %u: OK, nb=%u, size>0=%s\n",
                    nb, header->nb_bboxes, size > 0 ? "yes" : "no");
             av_free(header);
-        } else {
+        } иначе {
             printf("alloc %u: FAIL\n", nb);
         }
     }
@@ -56,10 +56,10 @@ int main(void)
     /* av_get_detection_bbox - pointer consistency and write/read back */
     printf("\nTesting av_get_detection_bbox()\n");
     header = av_detection_bbox_alloc(3, NULL);
-    if (header) {
-        for (int i = 0; i < 3; i++) {
+    ако (header) {
+        за (цяло i = 0; i < 3; i++) {
             bbox = av_get_detection_bbox(header, i);
-            if ((uint8_t *)bbox != (uint8_t *)header + header->bboxes_offset +
+            ако ((uint8_t *)bbox != (uint8_t *)header + header->bboxes_offset +
                                    (size_t)i * header->bbox_size)
                 printf("bbox %d: pointer inconsistent with bboxes_offset/bbox_size\n", i);
             bbox->x = i * 100;
@@ -70,7 +70,7 @@ int main(void)
                      "obj%d", i);
             bbox->detect_confidence = (AVRational){ 90 + i, 100 };
         }
-        for (int i = 0; i < 3; i++) {
+        за (цяло i = 0; i < 3; i++) {
             bbox = av_get_detection_bbox(header, i);
             printf("bbox %d: x=%d y=%d w=%d h=%d label=%s conf=%d/%d\n",
                    i, bbox->x, bbox->y, bbox->w, bbox->h,
@@ -84,7 +84,7 @@ int main(void)
     /* classify fields */
     printf("\nTesting classify fields\n");
     header = av_detection_bbox_alloc(1, NULL);
-    if (header) {
+    ако (header) {
         bbox = av_get_detection_bbox(header, 0);
         bbox->classify_count = 2;
         snprintf(bbox->classify_labels[0], sizeof(bbox->classify_labels[0]),
@@ -94,7 +94,7 @@ int main(void)
                  "animal");
         bbox->classify_confidences[1] = (AVRational){ 80, 100 };
         printf("classify_count=%u\n", bbox->classify_count);
-        for (int i = 0; i < (int)bbox->classify_count; i++)
+        за (цяло i = 0; i < (цяло)bbox->classify_count; i++)
             printf("classify %d: %s %d/%d\n", i,
                    bbox->classify_labels[i],
                    bbox->classify_confidences[i].num,
@@ -105,7 +105,7 @@ int main(void)
     /* header source field */
     printf("\nTesting source field\n");
     header = av_detection_bbox_alloc(1, NULL);
-    if (header) {
+    ако (header) {
         snprintf(header->source, sizeof(header->source), "test_model_v1");
         printf("source: %s\n", header->source);
         av_free(header);
@@ -114,19 +114,19 @@ int main(void)
     /* av_detection_bbox_create_side_data */
     printf("\nTesting av_detection_bbox_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    ако (frame) {
         header = av_detection_bbox_create_side_data(frame, 2);
-        if (header) {
+        ако (header) {
             printf("side_data: OK, nb=%u\n", header->nb_bboxes);
             bbox = av_get_detection_bbox(header, 0);
             bbox->x = 10;
             bbox->y = 20;
             printf("side_data bbox 0: x=%d y=%d\n", bbox->x, bbox->y);
-        } else {
+        } иначе {
             printf("side_data: FAIL\n");
         }
         av_frame_free(&frame);
     }
 
-    return 0;
+    върни 0;
 }

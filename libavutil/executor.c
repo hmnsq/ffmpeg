@@ -27,14 +27,14 @@
 
 #include "executor.h"
 
-#if !HAVE_THREADS
+#ако !HAVE_THREADS
 
 #define ExecutorThread  char
 
 #define executor_thread_create(t, a, s, ar)      0
-#define executor_thread_join(t, r)               do {} while(0)
+#define executor_thread_join(t, r)               do {} докато(0)
 
-#else
+#иначе
 
 #define ExecutorThread  pthread_t
 
@@ -50,7 +50,7 @@ typedef struct ThreadInfo {
 
 struct AVExecutor {
     AVTaskCallbacks cb;
-    int thread_count;
+    цяло thread_count;
     bool recursive;
 
     ThreadInfo *threads;
@@ -58,7 +58,7 @@ struct AVExecutor {
 
     AVMutex lock;
     AVCond cond;
-    int die;
+    цяло die;
 
     AVTask *tasks;
 };
@@ -67,7 +67,7 @@ static AVTask* remove_task(AVTask **prev, AVTask *t)
 {
     *prev  = t->next;
     t->next = NULL;
-    return t;
+    върни t;
 }
 
 static void add_task(AVTask **prev, AVTask *t)
@@ -76,26 +76,26 @@ static void add_task(AVTask **prev, AVTask *t)
     *prev   = t;
 }
 
-static int run_one_task(AVExecutor *e, void *lc)
+static цяло run_one_task(AVExecutor *e, void *lc)
 {
     AVTaskCallbacks *cb = &e->cb;
     AVTask **prev;
 
-    for (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_data); prev = &(*prev)->next)
+    за (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_data); prev = &(*prev)->next)
         /* nothing */;
-    if (*prev) {
+    ако (*prev) {
         AVTask *t = remove_task(prev, *prev);
-        if (e->thread_count > 0)
+        ако (e->thread_count > 0)
             ff_mutex_unlock(&e->lock);
         cb->run(t, lc, cb->user_data);
-        if (e->thread_count > 0)
+        ако (e->thread_count > 0)
             ff_mutex_lock(&e->lock);
-        return 1;
+        върни 1;
     }
-    return 0;
+    върни 0;
 }
 
-#if HAVE_THREADS
+#ако HAVE_THREADS
 static void *executor_worker_task(void *data)
 {
     ThreadInfo *ti = (ThreadInfo*)data;
@@ -103,34 +103,34 @@ static void *executor_worker_task(void *data)
     void *lc       = e->local_contexts + (ti - e->threads) * e->cb.local_context_size;
 
     ff_mutex_lock(&e->lock);
-    while (1) {
-        if (e->die) break;
+    докато (1) {
+        ако (e->die) break;
 
-        if (!run_one_task(e, lc)) {
+        ако (!run_one_task(e, lc)) {
             //no task in one loop
             ff_cond_wait(&e->cond, &e->lock);
         }
     }
     ff_mutex_unlock(&e->lock);
-    return NULL;
+    върни NULL;
 }
 #endif
 
-static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
+static void executor_free(AVExecutor *e, const цяло has_lock, const цяло has_cond)
 {
-    if (e->thread_count) {
+    ако (e->thread_count) {
         //signal die
         ff_mutex_lock(&e->lock);
         e->die = 1;
         ff_cond_broadcast(&e->cond);
         ff_mutex_unlock(&e->lock);
 
-        for (int i = 0; i < e->thread_count; i++)
+        за (цяло i = 0; i < e->thread_count; i++)
             executor_thread_join(e->threads[i].thread, NULL);
     }
-    if (has_cond)
+    ако (has_cond)
         ff_cond_destroy(&e->cond);
-    if (has_lock)
+    ако (has_lock)
         ff_mutex_destroy(&e->lock);
 
     av_free(e->threads);
@@ -139,54 +139,54 @@ static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
     av_free(e);
 }
 
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, int thread_count)
+AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, цяло thread_count)
 {
     AVExecutor *e;
-    int has_lock = 0, has_cond = 0;
-    if (!cb || !cb->user_data || !cb->ready || !cb->run || !cb->priority_higher)
-        return NULL;
+    цяло has_lock = 0, has_cond = 0;
+    ако (!cb || !cb->user_data || !cb->ready || !cb->run || !cb->priority_higher)
+        върни NULL;
 
     e = av_mallocz(sizeof(*e));
-    if (!e)
-        return NULL;
+    ако (!e)
+        върни NULL;
     e->cb = *cb;
 
     e->local_contexts = av_calloc(FFMAX(thread_count, 1), e->cb.local_context_size);
-    if (!e->local_contexts)
+    ако (!e->local_contexts)
         goto free_executor;
 
     e->threads = av_calloc(FFMAX(thread_count, 1), sizeof(*e->threads));
-    if (!e->threads)
+    ако (!e->threads)
         goto free_executor;
 
-    if (!thread_count)
-        return e;
+    ако (!thread_count)
+        върни e;
 
     has_lock = !ff_mutex_init(&e->lock, NULL);
     has_cond = !ff_cond_init(&e->cond, NULL);
 
-    if (!has_lock || !has_cond)
+    ако (!has_lock || !has_cond)
         goto free_executor;
 
-    for (/* nothing */; e->thread_count < thread_count; e->thread_count++) {
+    за (/* nothing */; e->thread_count < thread_count; e->thread_count++) {
         ThreadInfo *ti = e->threads + e->thread_count;
         ti->e = e;
-        if (executor_thread_create(&ti->thread, NULL, executor_worker_task, ti))
+        ако (executor_thread_create(&ti->thread, NULL, executor_worker_task, ti))
             goto free_executor;
     }
-    return e;
+    върни e;
 
 free_executor:
     executor_free(e, has_lock, has_cond);
-    return NULL;
+    върни NULL;
 }
 
 void av_executor_free(AVExecutor **executor)
 {
-    int thread_count;
+    цяло thread_count;
 
-    if (!executor || !*executor)
-        return;
+    ако (!executor || !*executor)
+        върни;
     thread_count = (*executor)->thread_count;
     executor_free(*executor, thread_count, thread_count);
     *executor = NULL;
@@ -197,24 +197,24 @@ void av_executor_execute(AVExecutor *e, AVTask *t)
     AVTaskCallbacks *cb = &e->cb;
     AVTask **prev;
 
-    if (e->thread_count)
+    ако (e->thread_count)
         ff_mutex_lock(&e->lock);
-    if (t) {
-        for (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
+    ако (t) {
+        за (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
             /* nothing */;
         add_task(prev, t);
     }
-    if (e->thread_count) {
+    ако (e->thread_count) {
         ff_cond_signal(&e->cond);
         ff_mutex_unlock(&e->lock);
     }
 
-    if (!e->thread_count || !HAVE_THREADS) {
-        if (e->recursive)
-            return;
+    ако (!e->thread_count || !HAVE_THREADS) {
+        ако (e->recursive)
+            върни;
         e->recursive = true;
         // We are running in a single-threaded environment, so we must handle all tasks ourselves
-        while (run_one_task(e, e->local_contexts))
+        докато (run_one_task(e, e->local_contexts))
             /* nothing */;
         e->recursive = false;
     }

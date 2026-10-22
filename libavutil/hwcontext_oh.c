@@ -24,15 +24,15 @@
 #include "hwcontext_internal.h"
 #include "hwcontext_oh.h"
 
-static int oh_device_create(AVHWDeviceContext *ctx, const char *device,
-                            AVDictionary *opts, int flags)
+static цяло oh_device_create(AVHWDeviceContext *ctx, const char *device,
+                            AVDictionary *opts, цяло flags)
 {
-    if (device && device[0]) {
+    ако (device && device[0]) {
         av_log(ctx, AV_LOG_ERROR, "Device selection unsupported.\n");
-        return AVERROR_UNKNOWN;
+        върни AVERROR_UNKNOWN;
     }
 
-    return 0;
+    върни 0;
 }
 
 const HWContextType ff_hwcontext_type_oh = {

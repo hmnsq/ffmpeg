@@ -30,17 +30,17 @@ static void bprint_pascal(AVBPrint *b, unsigned size)
 
     p[0] = 1;
     av_bprintf(b, "%8d\n", 1);
-    for (i = 1; i <= size; i++) {
+    за (i = 1; i <= size; i++) {
         p[i] = 1;
-        for (j = i - 1; j > 0; j--)
+        за (j = i - 1; j > 0; j--)
             p[j] = p[j] + p[j - 1];
-        for (j = 0; j <= i; j++)
+        за (j = 0; j <= i; j++)
             av_bprintf(b, "%8d", p[j]);
         av_bprintf(b, "\n");
     }
 }
 
-int main(void)
+цяло main(void)
 {
     AVBPrint b;
     char buf[256];
@@ -88,5 +88,5 @@ int main(void)
     av_bprint_strftime(&b, "%Y-%m-%d", &testtime);
     printf("strftime truncated: %u/%u \"%s\"\n", (unsigned)strlen(buf), b.len, b.str);
 
-    return 0;
+    върни 0;
 }

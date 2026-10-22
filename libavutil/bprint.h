@@ -215,9 +215,9 @@ void av_bprint_clear(AVBPrint *buf);
  * It may have been truncated due to a memory allocation failure
  * or the size_max limit (compare size and size_max if necessary).
  */
-static inline int av_bprint_is_complete(const AVBPrint *buf)
+static inline цяло av_bprint_is_complete(const AVBPrint *buf)
 {
-    return buf->len < buf->size;
+    върни buf->len < buf->size;
 }
 
 /**
@@ -231,7 +231,7 @@ static inline int av_bprint_is_complete(const AVBPrint *buf)
  *                    if NULL, the buffer is discarded and freed
  * @return  0 for success or error code (probably AVERROR(ENOMEM))
  */
-int av_bprint_finalize(AVBPrint *buf, char **ret_str);
+цяло av_bprint_finalize(AVBPrint *buf, char **ret_str);
 
 /**
  * Escape the content in src and append it to dstbuf.
@@ -247,7 +247,7 @@ int av_bprint_finalize(AVBPrint *buf, char **ret_str);
  * @param flags         flags which control how to escape, see AV_ESCAPE_FLAG_* macros
  */
 void av_bprint_escape(AVBPrint *dstbuf, const char *src, const char *special_chars,
-                      enum AVEscapeMode mode, int flags);
+                      enum AVEscapeMode mode, цяло flags);
 
 /** @} */
 

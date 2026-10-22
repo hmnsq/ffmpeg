@@ -33,64 +33,64 @@ static const SoftFloat FLOAT_0_017776489257 = {0x1234, 12};
 static const SoftFloat FLOAT_1374_40625 = {0xabcd, 25};
 static const SoftFloat FLOAT_0_1249694824218 = {0xFFF, 15};
 
-static double add_mul(int i)
+static double add_mul(цяло i)
 {
     double d1 = i, d2 = i/100.0;
 
-    for (int j = 0; j < 1000; j++)
+    за (цяло j = 0; j < 1000; j++)
         d1 = (d1+1)*d2;
-    return d1;
+    върни d1;
 }
 
-static SoftFloat add_mul_sf(int i)
+static SoftFloat add_mul_sf(цяло i)
 {
     SoftFloat one = av_int2sf(1, 0);
     SoftFloat sf1 = av_int2sf(i, 0);
     SoftFloat sf2 = av_div_sf(av_int2sf(i, 2), av_int2sf(200, 3));
 
-    for (int j = 0; j < 1000; j++)
+    за (цяло j = 0; j < 1000; j++)
         sf1 = av_mul_sf(av_add_sf(sf1, one), sf2);
-    return sf1;
+    върни sf1;
 }
 
-int main(int argc, char **argv){
+цяло main(цяло argc, char **argv){
     SoftFloat one= av_int2sf(1, 0);
     SoftFloat sf1, sf2, sf3;
     double d1, d2, d3;
-    int i, j;
-    int bench = argc > 1 && !strcmp(argv[1], "-t");
+    цяло i, j;
+    цяло bench = argc > 1 && !strcmp(argv[1], "-t");
     av_log_set_level(AV_LOG_DEBUG);
 
     d1= 1;
-    for(i= 0; i<10; i++){
+    за(i= 0; i<10; i++){
         d1= 1/(d1+1);
     }
-    printf("test1 double=%d\n", (int)(d1 * (1<<24)));
+    printf("test1 double=%d\n", (цяло)(d1 * (1<<24)));
 
     sf1= one;
-    for(i= 0; i<10; i++){
+    за(i= 0; i<10; i++){
         sf1= av_div_sf(one, av_normalize_sf(av_add_sf(one, sf1)));
     }
     printf("test1 sf    =%d\n", av_sf2int(sf1, 24));
 
 
-    if (bench) {
-        for(i= 0; i<100; i++){
+    ако (bench) {
+        за(i= 0; i<100; i++){
             START_TIMER
             d1= add_mul(i);
             STOP_TIMER("float add mul")
         }
-    } else
+    } иначе
         d1= add_mul(99);
-    printf("test2 double=%d\n", (int)(d1 * (1<<24)));
+    printf("test2 double=%d\n", (цяло)(d1 * (1<<24)));
 
-    if (bench) {
-        for(i= 0; i<100; i++){
+    ако (bench) {
+        за(i= 0; i<100; i++){
             START_TIMER
             sf1= add_mul_sf(i);
             STOP_TIMER("softfloat add mul")
         }
-    } else
+    } иначе
         sf1= add_mul_sf(99);
     printf("test2 sf    =%d (%d %d)\n", av_sf2int(sf1, 24), sf1.exp, sf1.mant);
 
@@ -130,48 +130,48 @@ int main(int argc, char **argv){
     sf1 = av_div_sf(sf1, sf2);
     printf("test6 softfloat: %.10lf (0x%08x %d) %d %d\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp, i, j);
 
-    for(i= -50; i<50; i++) {
+    за(i= -50; i<50; i++) {
         sf1= av_int2sf(i, 0);
-        for(j= -50; j<50; j++) {
-            int c;
+        за(j= -50; j<50; j++) {
+            цяло c;
             sf2= av_int2sf(j, 0);
             c = av_cmp_sf(sf1, sf2);
-            if (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c)<0) {
+            ако (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c)<0) {
                 printf("av_cmp_sf failed at %d %d as %X\n", i, j, c);
             }
             c = av_gt_sf(sf1, sf2);
-            if ((i>j) != c) {
+            ако ((i>j) != c) {
                 printf("av_gt_sf failed at %d %d as %X\n", i, j, c);
             }
         }
         sf1 = av_int2sf(1, i);
-        for(j = -50; j < 50; j++) {
-            int c;
+        за(j = -50; j < 50; j++) {
+            цяло c;
             sf2 = av_int2sf(1, j);
             c = av_cmp_sf(sf2, sf1);
-            if (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c) < 0) {
+            ако (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c) < 0) {
                 printf("av_cmp_sf failed2 at %d %d as %X\n", i, j, c);
             }
             c = av_gt_sf(sf1, sf2);
-            if ((i<j) != c) {
+            ако ((i<j) != c) {
                 printf("av_gt_sf failed2 at %d %d as %X\n", i, j, c);
             }
         }
     }
 
 
-    for(i= 0; i<4*36; i++){
-        int s, c;
+    за(i= 0; i<4*36; i++){
+        цяло s, c;
         double errs, errc;
 
         av_sincos_sf(i*(1ULL<<32)/36/4, &s, &c);
         errs = (double)s/ (1<<30) - sin(i*M_PI/36);
         errc = (double)c/ (1<<30) - cos(i*M_PI/36);
-        if (fabs(errs) > 0.000000004 || fabs(errc) >0.000000004) {
+        ако (fabs(errs) > 0.000000004 || fabs(errc) >0.000000004) {
             printf("sincos FAIL %d %f %f %f %f\n", i, (float)s/ (1<<30), (float)c/ (1<<30), sin(i*M_PI/36), cos(i*M_PI/36));
         }
 
     }
-    return 0;
+    върни 0;
 
 }

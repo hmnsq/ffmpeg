@@ -32,20 +32,20 @@ struct AVContainerFifo {
     void*             (*container_alloc)(void *opaque);
     void              (*container_reset)(void *opaque, void *obj);
     void              (*container_free) (void *opaque, void *obj);
-    int               (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags);
+    цяло               (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags);
 
 };
 
-static int container_fifo_init_entry(AVRefStructOpaque opaque, void *obj)
+static цяло container_fifo_init_entry(AVRefStructOpaque opaque, void *obj)
 {
     AVContainerFifo *cf = opaque.nc;
     void **pobj = obj;
 
     *pobj = cf->container_alloc(cf->opaque);
-    if (!*pobj)
-        return AVERROR(ENOMEM);
+    ако (!*pobj)
+        върни AVERROR(ENOMEM);
 
-    return 0;
+    върни 0;
 }
 
 static void container_fifo_reset_entry(AVRefStructOpaque opaque, void *obj)
@@ -65,14 +65,14 @@ av_container_fifo_alloc(void *opaque,
                         void* (*container_alloc)(void *opaque),
                         void  (*container_reset)(void *opaque, void *obj),
                         void  (*container_free) (void *opaque, void *obj),
-                        int   (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags),
+                        цяло   (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags),
                         unsigned flags)
 {
     AVContainerFifo *cf;
 
     cf = av_mallocz(sizeof(*cf));
-    if (!cf)
-        return NULL;
+    ако (!cf)
+        върни NULL;
 
     cf->opaque          = opaque;
     cf->container_alloc = container_alloc;
@@ -81,7 +81,7 @@ av_container_fifo_alloc(void *opaque,
     cf->fifo_transfer   = fifo_transfer;
 
     cf->fifo = av_fifo_alloc2(1, sizeof(void*), AV_FIFO_FLAG_AUTO_GROW);
-    if (!cf->fifo)
+    ако (!cf->fifo)
         goto fail;
 
     cf->pool = av_refstruct_pool_alloc_ext(sizeof(void*), 0, cf,
@@ -89,27 +89,27 @@ av_container_fifo_alloc(void *opaque,
                                            container_fifo_reset_entry,
                                            container_fifo_free_entry,
                                            NULL);
-    if (!cf->pool)
+    ако (!cf->pool)
         goto fail;
 
-    return cf;
+    върни cf;
 fail:
     av_container_fifo_free(&cf);
-    return NULL;
+    върни NULL;
 }
 
 void av_container_fifo_free(AVContainerFifo **pcf)
 {
     AVContainerFifo *cf;
 
-    if (!*pcf)
-        return;
+    ако (!*pcf)
+        върни;
 
     cf = *pcf;
 
-    if (cf->fifo) {
+    ако (cf->fifo) {
         void *obj;
-        while (av_fifo_read(cf->fifo, &obj, 1) >= 0)
+        докато (av_fifo_read(cf->fifo, &obj, 1) >= 0)
             av_refstruct_unref(&obj);
         av_fifo_freep2(&cf->fifo);
     }
@@ -119,77 +119,77 @@ void av_container_fifo_free(AVContainerFifo **pcf)
     av_freep(pcf);
 }
 
-int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags)
+цяло av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags)
 {
     void **psrc;
-    int ret;
+    цяло ret;
 
     ret = av_fifo_read(cf->fifo, &psrc, 1);
-    if (ret < 0)
-        return ret;
+    ако (ret < 0)
+        върни ret;
 
     ret = cf->fifo_transfer(cf->opaque, obj, *psrc, flags);
     av_refstruct_unref(&psrc);
 
-    return ret;
+    върни ret;
 }
 
-int av_container_fifo_peek(AVContainerFifo *cf, void **pdst, size_t offset)
+цяло av_container_fifo_peek(AVContainerFifo *cf, void **pdst, size_t offset)
 {
     void **pobj;
-    int ret;
+    цяло ret;
 
     ret = av_fifo_peek(cf->fifo, &pobj, 1, offset);
-    if (ret < 0)
-        return ret;
+    ако (ret < 0)
+        върни ret;
 
     *pdst = *pobj;
 
-    return 0;
+    върни 0;
 }
 
 void av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems)
 {
     av_assert0(nb_elems <= av_fifo_can_read(cf->fifo));
-    while (nb_elems--) {
+    докато (nb_elems--) {
         void **pobj;
-        int ret = av_fifo_read(cf->fifo, &pobj, 1);
+        цяло ret = av_fifo_read(cf->fifo, &pobj, 1);
         av_assert0(ret >= 0);
         av_refstruct_unref(&pobj);
     }
 }
 
-int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags)
+цяло av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags)
 {
     void **pdst;
-    int ret;
+    цяло ret;
 
     pdst = av_refstruct_pool_get(cf->pool);
-    if (!pdst)
-        return AVERROR(ENOMEM);
+    ако (!pdst)
+        върни AVERROR(ENOMEM);
 
     ret = cf->fifo_transfer(cf->opaque, *pdst, obj, flags);
-    if (ret < 0)
+    ако (ret < 0)
         goto fail;
 
     ret = av_fifo_write(cf->fifo, &pdst, 1);
-    if (ret < 0)
+    ако (ret < 0)
         goto fail;
 
-    return 0;
+    върни 0;
 fail:
     av_refstruct_unref(&pdst);
-    return ret;
+    върни ret;
 }
 
 size_t av_container_fifo_can_read(const AVContainerFifo *cf)
 {
-    return av_fifo_can_read(cf->fifo);
+    върни av_fifo_can_read(cf->fifo);
 }
 
 static void *frame_alloc(void *opaque)
 {
-    return av_frame_alloc();
+    върни av_frame_alloc();
 }
 
 static void frame_reset(void *opaque, void *obj)
@@ -203,17 +203,17 @@ static void frame_free(void *opaque, void *obj)
     av_frame_free(&frame);
 }
 
-static int frame_transfer(void *opaque, void *dst, void *src, unsigned flags)
+static цяло frame_transfer(void *opaque, void *dst, void *src, unsigned flags)
 {
-    if (flags & AV_CONTAINER_FIFO_FLAG_REF)
-        return av_frame_ref(dst, src);
+    ако (flags & AV_CONTAINER_FIFO_FLAG_REF)
+        върни av_frame_ref(dst, src);
 
     av_frame_move_ref(dst, src);
-    return 0;
+    върни 0;
 }
 
 AVContainerFifo *av_container_fifo_alloc_avframe(unsigned flags)
 {
-    return av_container_fifo_alloc(NULL, frame_alloc, frame_reset, frame_free,
+    върни av_container_fifo_alloc(NULL, frame_alloc, frame_reset, frame_free,
                                    frame_transfer, 0);
 }
