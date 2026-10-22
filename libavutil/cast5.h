@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CAST5_H
-#define AVUTIL_CAST5_H
+#جے_بنا_تعریف AVUTIL_CAST5_H
+#تعریف_کرو AVUTIL_CAST5_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
 
 /**
@@ -33,15 +33,15 @@
   * @{
   */
 
-extern const int av_cast5_size;
+خارجي ثابت صحيح av_cast5_ناپ;
 
-struct AVCAST5;
+بنية AVCAST5;
 
 /**
   * Allocate an AVCAST5 context
   * To free the struct: av_free(ptr)
   */
-struct AVCAST5 *av_cast5_alloc(void);
+بنية AVCAST5 *av_cast5_alloc(فراغ);
 /**
   * Initialize an AVCAST5 context.
   *
@@ -50,7 +50,7 @@ struct AVCAST5 *av_cast5_alloc(void);
   * @param key_bits number of keybits: possible are 40,48,...,128
   * @return 0 on success, less than 0 on failure
  */
-int av_cast5_init(struct AVCAST5 *ctx, const uint8_t *key, int key_bits);
+صحيح av_cast5_init(بنية AVCAST5 *ctx, ثابت uint8_t *کلید, صحيح کلید_بٹ);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context, ECB mode only
@@ -61,7 +61,7 @@ int av_cast5_init(struct AVCAST5 *ctx, const uint8_t *key, int key_bits);
   * @param count number of 8 byte blocks
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_cast5_crypt(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int count, int decrypt);
+فراغ av_cast5_crypt(بنية AVCAST5 *ctx, uint8_t *dst, ثابت uint8_t *src, صحيح گنتی, صحيح decrypt);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context
@@ -73,8 +73,8 @@ void av_cast5_crypt(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int c
   * @param iv initialization vector for CBC mode, NULL for ECB mode
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_cast5_crypt2(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+فراغ av_cast5_crypt2(بنية AVCAST5 *ctx, uint8_t *dst, ثابت uint8_t *src, صحيح گنتی, uint8_t *iv, صحيح decrypt);
 /**
  * @}
  */
-#endif /* AVUTIL_CAST5_H */
+#جے_انت /* AVUTIL_CAST5_H */

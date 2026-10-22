@@ -25,13 +25,13 @@
  * Public header for RIPEMD hash function implementation.
  */
 
-#ifndef AVUTIL_RIPEMD_H
-#define AVUTIL_RIPEMD_H
+#جے_بنا_تعریف AVUTIL_RIPEMD_H
+#تعریف_کرو AVUTIL_RIPEMD_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ضمن <stddef.h>
+#ضمن <stdint.h>
 
-#include "attributes.h"
+#ضمن "attributes.h"
 
 /**
  * @defgroup lavu_ripemd RIPEMD
@@ -41,14 +41,14 @@
  * @{
  */
 
-extern const int av_ripemd_size;
+خارجي ثابت صحيح av_ripemd_ناپ;
 
-struct AVRIPEMD;
+بنية AVRIPEMD;
 
 /**
  * Allocate an AVRIPEMD context.
  */
-struct AVRIPEMD *av_ripemd_alloc(void);
+بنية AVRIPEMD *av_ripemd_alloc(فراغ);
 
 /**
  * Initialize RIPEMD hashing.
@@ -57,7 +57,7 @@ struct AVRIPEMD *av_ripemd_alloc(void);
  * @param bits    number of bits in digest (128, 160, 256 or 320 bits)
  * @return        zero if initialization succeeded, -1 otherwise
  */
-int av_ripemd_init(struct AVRIPEMD* context, int bits);
+صحيح av_ripemd_init(بنية AVRIPEMD* context, صحيح بٹ);
 
 /**
  * Update hash value.
@@ -66,7 +66,7 @@ int av_ripemd_init(struct AVRIPEMD* context, int bits);
  * @param data    input data to update hash with
  * @param len     input data length
  */
-void av_ripemd_update(struct AVRIPEMD* context, const uint8_t* data, size_t len);
+فراغ av_ripemd_update(بنية AVRIPEMD* context, ثابت uint8_t* انکڑے, size_t len);
 
 /**
  * Finish hashing and output digest value.
@@ -74,10 +74,10 @@ void av_ripemd_update(struct AVRIPEMD* context, const uint8_t* data, size_t len)
  * @param context hash function context
  * @param digest  buffer where output digest value is stored
  */
-void av_ripemd_final(struct AVRIPEMD* context, uint8_t *digest);
+فراغ av_ripemd_final(بنية AVRIPEMD* context, uint8_t *digest);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_RIPEMD_H */
+#جے_انت /* AVUTIL_RIPEMD_H */

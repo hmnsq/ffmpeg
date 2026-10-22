@@ -16,249 +16,249 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "config.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/cpu_internal.h"
+#ضمن "config.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-#include <stdint.h>
-#include <sys/auxv.h>
+#إذا HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#ضمن <stdint.h>
+#ضمن <sys/auxv.h>
 
-#define HWCAP_AARCH64_AES     (1 << 3)
-#define HWCAP_AARCH64_PMULL   (1 << 4)
-#define HWCAP_AARCH64_CRC32   (1 << 7)
-#define HWCAP_AARCH64_SHA3    (1 << 17)
-#define HWCAP_AARCH64_ASIMDDP (1 << 20)
-#define HWCAP_AARCH64_SVE     (1 << 22)
-#define HWCAP2_AARCH64_SVE2   (1 << 1)
-#define HWCAP2_AARCH64_I8MM   (1 << 13)
-#define HWCAP2_AARCH64_SME    (1 << 23)
-#define HWCAP2_AARCH64_SME_I16I64 (1 << 24)
-#define HWCAP2_AARCH64_SME2   (1ULL << 37)
+#تعریف_کرو HWCAP_AARCH64_AES     (1 << 3)
+#تعریف_کرو HWCAP_AARCH64_PMULL   (1 << 4)
+#تعریف_کرو HWCAP_AARCH64_چکری_جانچ_32   (1 << 7)
+#تعریف_کرو HWCAP_AARCH64_SHA3    (1 << 17)
+#تعریف_کرو HWCAP_AARCH64_ASIMDDP (1 << 20)
+#تعریف_کرو HWCAP_AARCH64_SVE     (1 << 22)
+#تعریف_کرو HWCAP2_AARCH64_SVE2   (1 << 1)
+#تعریف_کرو HWCAP2_AARCH64_I8MM   (1 << 13)
+#تعریف_کرو HWCAP2_AARCH64_SME    (1 << 23)
+#تعریف_کرو HWCAP2_AARCH64_SME_I16I64 (1 << 24)
+#تعریف_کرو HWCAP2_AARCH64_SME2   (1ULL << 37)
 
-static int detect_flags(void)
+ساكن صحيح detect_flags(فراغ)
 {
-    int flags = 0;
+    صحيح flags = 0;
 
-    unsigned long hwcap = ff_getauxval(AT_HWCAP);
-    unsigned long hwcap2 = ff_getauxval(AT_HWCAP2);
+    بنانشانی لما hwcap = ff_getauxval(AT_HWCAP);
+    بنانشانی لما hwcap2 = ff_getauxval(AT_HWCAP2);
 
-    if (hwcap & HWCAP_AARCH64_AES)
+    إذا (hwcap & HWCAP_AARCH64_AES)
         flags |= AV_CPU_FLAG_ARM_AES;
-    if (hwcap & HWCAP_AARCH64_PMULL)
+    إذا (hwcap & HWCAP_AARCH64_PMULL)
         flags |= AV_CPU_FLAG_PMULL;
-    if (hwcap & HWCAP_AARCH64_SHA3)
+    إذا (hwcap & HWCAP_AARCH64_SHA3)
         flags |= AV_CPU_FLAG_EOR3;
-    if (hwcap & HWCAP_AARCH64_CRC32)
-        flags |= AV_CPU_FLAG_ARM_CRC;
-    if (hwcap & HWCAP_AARCH64_ASIMDDP)
+    إذا (hwcap & HWCAP_AARCH64_چکری_جانچ_32)
+        flags |= AV_CPU_FLAG_ARM_چکری_جانچ;
+    إذا (hwcap & HWCAP_AARCH64_ASIMDDP)
         flags |= AV_CPU_FLAG_DOTPROD;
-    if (hwcap & HWCAP_AARCH64_SVE)
+    إذا (hwcap & HWCAP_AARCH64_SVE)
         flags |= AV_CPU_FLAG_SVE;
-    if (hwcap2 & HWCAP2_AARCH64_SVE2)
+    إذا (hwcap2 & HWCAP2_AARCH64_SVE2)
         flags |= AV_CPU_FLAG_SVE2;
-    if (hwcap2 & HWCAP2_AARCH64_I8MM)
+    إذا (hwcap2 & HWCAP2_AARCH64_I8MM)
         flags |= AV_CPU_FLAG_I8MM;
-    if (hwcap2 & HWCAP2_AARCH64_SME)
+    إذا (hwcap2 & HWCAP2_AARCH64_SME)
         flags |= AV_CPU_FLAG_SME;
-    if (hwcap2 & HWCAP2_AARCH64_SME_I16I64)
+    إذا (hwcap2 & HWCAP2_AARCH64_SME_I16I64)
         flags |= AV_CPU_FLAG_SME_I16I64;
-    if (hwcap2 & HWCAP2_AARCH64_SME2)
+    إذا (hwcap2 & HWCAP2_AARCH64_SME2)
         flags |= AV_CPU_FLAG_SME2;
 
-    return flags;
+    أرجع flags;
 }
 
-#elif defined(__APPLE__) && HAVE_SYSCTLBYNAME
-#include <sys/sysctl.h>
+#وإلاإذا defined(__APPLE__) && HAVE_SYSCTLBYNAME
+#ضمن <sys/sysctl.h>
 
-static int have_feature(const char *feature) {
-    uint32_t value = 0;
-    size_t size = sizeof(value);
-    if (!sysctlbyname(feature, &value, &size, NULL, 0))
-        return value;
-    return 0;
+ساكن صحيح have_feature(ثابت حرف *feature) {
+    uint32_t قدر = 0;
+    size_t ناپ = حجم(قدر);
+    إذا (!sysctlbyname(feature, &قدر, &ناپ, عدم, 0))
+        أرجع قدر;
+    أرجع 0;
 }
 
-static int detect_flags(void)
+ساكن صحيح detect_flags(فراغ)
 {
-    int flags = 0;
+    صحيح flags = 0;
 
-    if (have_feature("hw.optional.arm.FEAT_DotProd"))
+    إذا (have_feature("hw.optional.arm.FEAT_DotProd"))
         flags |= AV_CPU_FLAG_DOTPROD;
-    if (have_feature("hw.optional.arm.FEAT_I8MM"))
+    إذا (have_feature("hw.optional.arm.FEAT_I8MM"))
         flags |= AV_CPU_FLAG_I8MM;
-    if (have_feature("hw.optional.arm.FEAT_SME"))
+    إذا (have_feature("hw.optional.arm.FEAT_SME"))
         flags |= AV_CPU_FLAG_SME;
-    if (have_feature("hw.optional.arm.FEAT_SME_I16I64"))
+    إذا (have_feature("hw.optional.arm.FEAT_SME_I16I64"))
         flags |= AV_CPU_FLAG_SME_I16I64;
-    if (have_feature("hw.optional.armv8_crc32"))
-        flags |= AV_CPU_FLAG_ARM_CRC;
-    if (have_feature("hw.optional.arm.FEAT_AES"))
+    إذا (have_feature("hw.optional.armv8_crc32"))
+        flags |= AV_CPU_FLAG_ARM_چکری_جانچ;
+    إذا (have_feature("hw.optional.arm.FEAT_AES"))
         flags |= AV_CPU_FLAG_ARM_AES;
-    if (have_feature("hw.optional.arm.FEAT_PMULL"))
+    إذا (have_feature("hw.optional.arm.FEAT_PMULL"))
         flags |= AV_CPU_FLAG_PMULL;
-    if (have_feature("hw.optional.armv8_2_sha3"))
+    إذا (have_feature("hw.optional.armv8_2_sha3"))
         flags |= AV_CPU_FLAG_EOR3;
-    if (have_feature("hw.optional.arm.FEAT_SME2"))
+    إذا (have_feature("hw.optional.arm.FEAT_SME2"))
         flags |= AV_CPU_FLAG_SME2;
 
-    return flags;
+    أرجع flags;
 }
 
-#elif defined(__OpenBSD__)
-#include <machine/armreg.h>
-#include <machine/cpu.h>
-#include <sys/types.h>
-#include <sys/sysctl.h>
+#وإلاإذا defined(__OpenBSD__)
+#ضمن <machine/armreg.h>
+#ضمن <machine/cpu.h>
+#ضمن <sys/types.h>
+#ضمن <sys/sysctl.h>
 
-static int detect_flags(void)
+ساكن صحيح detect_flags(فراغ)
 {
-    int flags = 0;
+    صحيح flags = 0;
 
-#ifdef CPU_ID_AA64ISAR0
-    int mib[2];
+#جے_تعریف_شدہ CPU_ID_AA64ISAR0
+    صحيح mib[2];
     uint64_t isar0;
     uint64_t isar1;
     size_t len;
 
     mib[0] = CTL_MACHDEP;
     mib[1] = CPU_ID_AA64ISAR0;
-    len = sizeof(isar0);
-    if (sysctl(mib, 2, &isar0, &len, NULL, 0) != -1) {
-        if (ID_AA64ISAR0_DP(isar0) >= ID_AA64ISAR0_DP_IMPL)
+    len = حجم(isar0);
+    إذا (sysctl(mib, 2, &isar0, &len, عدم, 0) != -1) {
+        إذا (ID_AA64ISAR0_DP(isar0) >= ID_AA64ISAR0_DP_IMPL)
             flags |= AV_CPU_FLAG_DOTPROD;
-        if (ID_AA64ISAR0_CRC32(isar0) >= ID_AA64ISAR0_CRC32_BASE)
-            flags |= AV_CPU_FLAG_ARM_CRC;
-        if (ID_AA64ISAR0_AES(isar0) >= ID_AA64ISAR0_AES_BASE)
+        إذا (ID_AA64_ISAR0_چکری_جانچ_32(isar0) >= ID_AA64_ISAR0_چکری_جانچ_32_ادھار)
+            flags |= AV_CPU_FLAG_ARM_چکری_جانچ;
+        إذا (ID_AA64ISAR0_AES(isar0) >= ID_AA64_ISAR0_AES_ادھار)
             flags |= AV_CPU_FLAG_ARM_AES;
-        if (ID_AA64ISAR0_AES(isar0) >= ID_AA64ISAR0_AES_PMULL)
+        إذا (ID_AA64ISAR0_AES(isar0) >= ID_AA64ISAR0_AES_PMULL)
             flags |= AV_CPU_FLAG_PMULL;
-        if (ID_AA64ISAR0_SHA3(isar0) >= ID_AA64ISAR0_SHA3_IMPL)
+        إذا (ID_AA64ISAR0_SHA3(isar0) >= ID_AA64ISAR0_SHA3_IMPL)
             flags |= AV_CPU_FLAG_EOR3;
     }
 
     mib[0] = CTL_MACHDEP;
     mib[1] = CPU_ID_AA64ISAR1;
-    len = sizeof(isar1);
-    if (sysctl(mib, 2, &isar1, &len, NULL, 0) != -1) {
-#ifdef ID_AA64ISAR1_I8MM_IMPL
-        if (ID_AA64ISAR1_I8MM(isar1) >= ID_AA64ISAR1_I8MM_IMPL)
+    len = حجم(isar1);
+    إذا (sysctl(mib, 2, &isar1, &len, عدم, 0) != -1) {
+#جے_تعریف_شدہ ID_AA64ISAR1_I8MM_IMPL
+        إذا (ID_AA64ISAR1_I8MM(isar1) >= ID_AA64ISAR1_I8MM_IMPL)
             flags |= AV_CPU_FLAG_I8MM;
-#endif
+#جے_انت
     }
-#endif
+#جے_انت
 
-    return flags;
+    أرجع flags;
 }
 
-#elif defined(_WIN32)
-#include <windows.h>
+#وإلاإذا defined(_WIN32)
+#ضمن <windows.h>
 
-static int detect_flags(void)
+ساكن صحيح detect_flags(فراغ)
 {
-    int flags = 0;
-#ifdef PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE))
-        flags |= AV_CPU_FLAG_ARM_CRC;
-#endif
-#ifdef PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE)) {
+    صحيح flags = 0;
+#جے_تعریف_شدہ PF_ARM_V8_چکری_جانچ_32_INSTRUCTIONS_دستیاب
+    إذا (IsProcessorFeaturePresent(PF_ARM_V8_چکری_جانچ_32_INSTRUCTIONS_دستیاب))
+        flags |= AV_CPU_FLAG_ARM_چکری_جانچ;
+#جے_انت
+#جے_تعریف_شدہ PF_ARM_V8_CRYPTO_INSTRUCTIONS_دستیاب
+    إذا (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_دستیاب)) {
         flags |= AV_CPU_FLAG_ARM_AES;
         flags |= AV_CPU_FLAG_PMULL;
     }
-#endif
-#ifdef PF_ARM_SHA3_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SHA3_INSTRUCTIONS_AVAILABLE))
+#جے_انت
+#جے_تعریف_شدہ PF_ARM_SHA3_INSTRUCTIONS_دستیاب
+    إذا (IsProcessorFeaturePresent(PF_ARM_SHA3_INSTRUCTIONS_دستیاب))
         flags |= AV_CPU_FLAG_EOR3;
-#endif
-#ifdef PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE))
+#جے_انت
+#جے_تعریف_شدہ PF_ARM_V82_DP_INSTRUCTIONS_دستیاب
+    إذا (IsProcessorFeaturePresent(PF_ARM_V82_DP_INSTRUCTIONS_دستیاب))
         flags |= AV_CPU_FLAG_DOTPROD;
-#endif
-#ifdef PF_ARM_V82_I8MM_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V82_I8MM_INSTRUCTIONS_AVAILABLE))
+#جے_انت
+#جے_تعریف_شدہ PF_ARM_V82_I8_MM_INSTRUCTIONS_دستیاب
+    إذا (IsProcessorFeaturePresent(PF_ARM_V82_I8_MM_INSTRUCTIONS_دستیاب))
         flags |= AV_CPU_FLAG_I8MM;
-#endif
-#ifdef PF_ARM_SVE_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SVE_INSTRUCTIONS_AVAILABLE))
+#جے_انت
+#جے_تعریف_شدہ PF_ARM_SVE_INSTRUCTIONS_دستیاب
+    إذا (IsProcessorFeaturePresent(PF_ARM_SVE_INSTRUCTIONS_دستیاب))
         flags |= AV_CPU_FLAG_SVE;
-#endif
-#ifdef PF_ARM_SVE2_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SVE2_INSTRUCTIONS_AVAILABLE))
+#جے_انت
+#جے_تعریف_شدہ PF_ARM_SVE2_INSTRUCTIONS_دستیاب
+    إذا (IsProcessorFeaturePresent(PF_ARM_SVE2_INSTRUCTIONS_دستیاب))
         flags |= AV_CPU_FLAG_SVE2;
-#endif
-#ifdef PF_ARM_SME_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SME_INSTRUCTIONS_AVAILABLE))
+#جے_انت
+#جے_تعریف_شدہ PF_ARM_SME_INSTRUCTIONS_دستیاب
+    إذا (IsProcessorFeaturePresent(PF_ARM_SME_INSTRUCTIONS_دستیاب))
         flags |= AV_CPU_FLAG_SME;
-#endif
-#ifdef PF_ARM_SME_I16I64_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SME_I16I64_INSTRUCTIONS_AVAILABLE))
+#جے_انت
+#جے_تعریف_شدہ PF_ARM_SME_I16_I64_INSTRUCTIONS_دستیاب
+    إذا (IsProcessorFeaturePresent(PF_ARM_SME_I16_I64_INSTRUCTIONS_دستیاب))
         flags |= AV_CPU_FLAG_SME_I16I64;
-#endif
-#ifdef PF_ARM_SME2_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SME2_INSTRUCTIONS_AVAILABLE))
+#جے_انت
+#جے_تعریف_شدہ PF_ARM_SME2_INSTRUCTIONS_دستیاب
+    إذا (IsProcessorFeaturePresent(PF_ARM_SME2_INSTRUCTIONS_دستیاب))
         flags |= AV_CPU_FLAG_SME2;
-#endif
-    return flags;
+#جے_انت
+    أرجع flags;
 }
-#else
+#وإلا
 
-static int detect_flags(void)
+ساكن صحيح detect_flags(فراغ)
 {
-    return 0;
+    أرجع 0;
 }
 
-#endif
+#جے_انت
 
-int ff_get_cpu_flags_aarch64(void)
+صحيح ff_get_cpu_flags_aarch64(فراغ)
 {
-    int flags = AV_CPU_FLAG_ARMV8 * HAVE_ARMV8 |
+    صحيح flags = AV_CPU_FLAG_ARMV8 * HAVE_ARMV8 |
                 AV_CPU_FLAG_NEON  * HAVE_NEON;
 
-#ifdef __ARM_FEATURE_DOTPROD
+#جے_تعریف_شدہ __ARM_FEATURE_DOTPROD
     flags |= AV_CPU_FLAG_DOTPROD;
-#endif
-#ifdef __ARM_FEATURE_MATMUL_INT8
+#جے_انت
+#جے_تعریف_شدہ __ARM_FEATURE_MATMUL_INT8
     flags |= AV_CPU_FLAG_I8MM;
-#endif
-#ifdef __ARM_FEATURE_SVE
+#جے_انت
+#جے_تعریف_شدہ __ARM_FEATURE_SVE
     flags |= AV_CPU_FLAG_SVE;
-#endif
-#ifdef __ARM_FEATURE_SVE2
+#جے_انت
+#جے_تعریف_شدہ __ARM_FEATURE_SVE2
     flags |= AV_CPU_FLAG_SVE2;
-#endif
-#ifdef __ARM_FEATURE_SME
+#جے_انت
+#جے_تعریف_شدہ __ARM_FEATURE_SME
     flags |= AV_CPU_FLAG_SME;
-#endif
-#ifdef __ARM_FEATURE_CRC32
-    flags |= AV_CPU_FLAG_ARM_CRC;
-#endif
-#ifdef __ARM_FEATURE_AES
+#جے_انت
+#جے_تعریف_شدہ __ARM_FEATURE_CRC32
+    flags |= AV_CPU_FLAG_ARM_چکری_جانچ;
+#جے_انت
+#جے_تعریف_شدہ __ARM_FEATURE_AES
     flags |= AV_CPU_FLAG_ARM_AES;
     flags |= AV_CPU_FLAG_PMULL;
-#endif
-#ifdef __ARM_FEATURE_SHA3
+#جے_انت
+#جے_تعریف_شدہ __ARM_FEATURE_SHA3
     flags |= AV_CPU_FLAG_EOR3;
-#endif
-#ifdef __ARM_FEATURE_SME_I16I64
+#جے_انت
+#جے_تعریف_شدہ __ARM_FEATURE_SME_I16I64
     flags |= AV_CPU_FLAG_SME_I16I64;
-#endif
-#ifdef __ARM_FEATURE_SME2
+#جے_انت
+#جے_تعریف_شدہ __ARM_FEATURE_SME2
     flags |= AV_CPU_FLAG_SME2;
-#endif
+#جے_انت
 
     flags |= detect_flags();
 
-    return flags;
+    أرجع flags;
 }
 
-size_t ff_get_cpu_max_align_aarch64(void)
+size_t ff_get_cpu_max_align_aarch64(فراغ)
 {
-    int flags = av_get_cpu_flags();
+    صحيح flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_NEON)
-        return 16;
+    إذا (flags & AV_CPU_FLAG_NEON)
+        أرجع 16;
 
-    return 8;
+    أرجع 8;
 }

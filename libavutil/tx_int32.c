@@ -16,6 +16,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define TX_INT32
-#include "tx_priv.h"
-#include "tx_template.c"
+#تعریف_کرو TX_INT32
+#ضمن "tx_priv.h"
+#ضمن "tx_template.c"

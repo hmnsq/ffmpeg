@@ -16,16 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_VIDEO_ENC_PARAMS_H
-#define AVUTIL_VIDEO_ENC_PARAMS_H
+#جے_بنا_تعریف AVUTIL_VIDEO_ENC_PARAMS_H
+#تعریف_کرو AVUTIL_VIDEO_ENC_PARAMS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ضمن <stddef.h>
+#ضمن <stdint.h>
 
-#include "libavutil/avassert.h"
-#include "libavutil/frame.h"
+#ضمن "libavutil/avassert.h"
+#ضمن "libavutil/frame.h"
 
-enum AVVideoEncParamsType {
+تعداد AVVideoEncParamsType {
     AV_VIDEO_ENC_PARAMS_NONE = -1,
     /**
      * VP9 stores:
@@ -70,7 +70,7 @@ enum AVVideoEncParamsType {
  * with an optional array of per-block AVVideoBlockParams descriptors.
  * Must be allocated with av_video_enc_params_alloc().
  */
-typedef struct AVVideoEncParams {
+تعريفنوع بنية AVVideoEncParams {
     /**
      * Number of blocks in the array.
      *
@@ -78,21 +78,21 @@ typedef struct AVVideoEncParams {
      * the values of blocks_offset / block_size are unspecified and should not
      * be accessed.
      */
-    unsigned int nb_blocks;
+    بنانشانی صحيح nb_بلاکاں;
     /**
      * Offset in bytes from the beginning of this structure at which the array
      * of blocks starts.
      */
-    size_t blocks_offset;
+    size_t بلاکاں_وتھ;
     /*
      * Size of each block in bytes. May not match sizeof(AVVideoBlockParams).
      */
-    size_t block_size;
+    size_t بلاک_ناپ;
 
     /**
      * Type of the parameters (the codec they are used with).
      */
-    enum AVVideoEncParamsType type;
+    تعداد AVVideoEncParamsType type;
 
     /**
      * Base quantisation parameter for the frame. The final quantiser for a
@@ -117,34 +117,34 @@ typedef struct AVVideoEncParams {
  * sizeof(AVVideoBlockParams) is not a part of the ABI and new fields may be
  * added to it.
  */
-typedef struct AVVideoBlockParams {
+تعريفنوع بنية AVVideo_بلاک_Params {
     /**
      * Distance in luma pixels from the top-left corner of the visible frame
      * to the top-left corner of the block.
      * Can be negative if top/right padding is present on the coded frame.
      */
-    int src_x, src_y;
+    صحيح src_x, src_y;
     /**
      * Width and height of the block in luma pixels.
      */
-    int w, h;
+    صحيح w, h;
 
     /**
      * Difference between this block's final quantization parameter and the
      * corresponding per-frame value.
      */
     int32_t delta_qp;
-} AVVideoBlockParams;
+} AVVideo_بلاک_Params;
 
 /**
  * Get the block at the specified {@code idx}. Must be between 0 and nb_blocks - 1.
  */
-static av_always_inline AVVideoBlockParams*
-av_video_enc_params_block(AVVideoEncParams *par, unsigned int idx)
+ساكن av_always_inline AVVideo_بلاک_Params*
+av_video_enc_params_بلاک(AVVideoEncParams *par, بنانشانی صحيح idx)
 {
-    av_assert0(idx < par->nb_blocks);
-    return (AVVideoBlockParams *)((uint8_t *)par + par->blocks_offset +
-                                  idx * par->block_size);
+    av_assert0(idx < par->nb_بلاکاں);
+    أرجع (AVVideo_بلاک_Params *)((uint8_t *)par + par->بلاکاں_وتھ +
+                                  idx * par->بلاک_ناپ);
 }
 
 /**
@@ -155,8 +155,8 @@ av_video_enc_params_block(AVVideoEncParams *par, unsigned int idx)
  * @param out_size if non-NULL, the size in bytes of the resulting data array is
  * written here.
  */
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size);
+AVVideoEncParams *av_video_enc_params_alloc(تعداد AVVideoEncParamsType type,
+                                            بنانشانی صحيح nb_بلاکاں, size_t *باہرلا_ناپ);
 
 /**
  * Allocates memory for AVEncodeInfoFrame plus an array of
@@ -165,7 +165,7 @@ AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
  * and initializes the variables.
  */
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks);
+av_video_enc_params_create_side_انکڑے(AVFrame *چوکھٹا, تعداد AVVideoEncParamsType type,
+                                     بنانشانی صحيح nb_بلاکاں);
 
-#endif /* AVUTIL_VIDEO_ENC_PARAMS_H */
+#جے_انت /* AVUTIL_VIDEO_ENC_PARAMS_H */

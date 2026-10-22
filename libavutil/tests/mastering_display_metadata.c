@@ -16,145 +16,145 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#ضمن <limits.h>
+#ضمن <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/mastering_display_metadata.h"
-#include "libavutil/mem.h"
+#ضمن "libavutil/frame.h"
+#ضمن "libavutil/mastering_display_metadata.h"
+#ضمن "libavutil/mem.h"
 
-int main(void)
+صحيح مکھ(فراغ)
 {
     AVMasteringDisplayMetadata *mdm;
     AVContentLightMetadata *clm;
-    AVFrame *frame;
-    size_t size;
+    AVFrame *چوکھٹا;
+    size_t ناپ;
 
     /* av_mastering_display_metadata_alloc */
-    printf("Testing av_mastering_display_metadata_alloc()\n");
+    لکھو("Testing av_mastering_display_metadata_alloc()\n");
     mdm = av_mastering_display_metadata_alloc();
-    if (mdm) {
+    إذا (mdm) {
         /* verify defaults: all rationals should be {0, 1} */
-        printf("alloc: OK\n");
-        printf("defaults: primaries[0][0]=%d/%d, white_point[0]=%d/%d\n",
-               mdm->display_primaries[0][0].num,
+        لکھو("alloc: OK\n");
+        لکھو("defaults: primaries[0][0]=%d/%d, white_point[0]=%d/%d\n",
+               mdm->display_primaries[0][0].عدد,
                mdm->display_primaries[0][0].den,
-               mdm->white_point[0].num, mdm->white_point[0].den);
-        printf("defaults: min_lum=%d/%d, max_lum=%d/%d\n",
-               mdm->min_luminance.num, mdm->min_luminance.den,
-               mdm->max_luminance.num, mdm->max_luminance.den);
-        printf("defaults: has_primaries=%d, has_luminance=%d\n",
+               mdm->white_نقطہ_2[0].عدد, mdm->white_نقطہ_2[0].den);
+        لکھو("defaults: min_lum=%d/%d, max_lum=%d/%d\n",
+               mdm->min_luminance.عدد, mdm->min_luminance.den,
+               mdm->max_luminance.عدد, mdm->max_luminance.den);
+        لکھو("defaults: has_primaries=%d, has_luminance=%d\n",
                mdm->has_primaries, mdm->has_luminance);
         av_free(mdm);
-    } else {
-        printf("alloc: FAIL\n");
+    } وإلا {
+        لکھو("alloc: FAIL\n");
     }
 
     /* av_mastering_display_metadata_alloc_size */
-    printf("\nTesting av_mastering_display_metadata_alloc_size()\n");
-    mdm = av_mastering_display_metadata_alloc_size(&size);
-    if (mdm) {
-        printf("alloc_size: OK, size>0=%s\n", size > 0 ? "yes" : "no");
-        printf("defaults: primaries[0][0]=%d/%d\n",
-               mdm->display_primaries[0][0].num,
+    لکھو("\nTesting av_mastering_display_metadata_alloc_size()\n");
+    mdm = av_mastering_display_metadata_alloc_ناپ(&ناپ);
+    إذا (mdm) {
+        لکھو("alloc_size: OK, size>0=%s\n", ناپ > 0 ? "yes" : "no");
+        لکھو("defaults: primaries[0][0]=%d/%d\n",
+               mdm->display_primaries[0][0].عدد,
                mdm->display_primaries[0][0].den);
         av_free(mdm);
-    } else {
-        printf("alloc_size: FAIL\n");
+    } وإلا {
+        لکھو("alloc_size: FAIL\n");
     }
 
     /* write and read back */
-    printf("\nTesting write/read back\n");
+    لکھو("\nTesting write/read back\n");
     mdm = av_mastering_display_metadata_alloc();
-    if (mdm) {
+    إذا (mdm) {
         mdm->display_primaries[0][0] = (AVRational){ 34000, 50000 };
         mdm->display_primaries[0][1] = (AVRational){ 16000, 50000 };
-        mdm->white_point[0] = (AVRational){ 15635, 50000 };
-        mdm->white_point[1] = (AVRational){ 16450, 50000 };
+        mdm->white_نقطہ_2[0] = (AVRational){ 15635, 50000 };
+        mdm->white_نقطہ_2[1] = (AVRational){ 16450, 50000 };
         mdm->min_luminance = (AVRational){ 50, 10000 };
         mdm->max_luminance = (AVRational){ 10000000, 10000 };
         mdm->has_primaries = 1;
         mdm->has_luminance = 1;
-        printf("primaries[0]=(%d/%d, %d/%d)\n",
-               mdm->display_primaries[0][0].num,
+        لکھو("primaries[0]=(%d/%d, %d/%d)\n",
+               mdm->display_primaries[0][0].عدد,
                mdm->display_primaries[0][0].den,
-               mdm->display_primaries[0][1].num,
+               mdm->display_primaries[0][1].عدد,
                mdm->display_primaries[0][1].den);
-        printf("white_point=(%d/%d, %d/%d)\n",
-               mdm->white_point[0].num, mdm->white_point[0].den,
-               mdm->white_point[1].num, mdm->white_point[1].den);
-        printf("luminance: min=%d/%d max=%d/%d\n",
-               mdm->min_luminance.num, mdm->min_luminance.den,
-               mdm->max_luminance.num, mdm->max_luminance.den);
+        لکھو("white_point=(%d/%d, %d/%d)\n",
+               mdm->white_نقطہ_2[0].عدد, mdm->white_نقطہ_2[0].den,
+               mdm->white_نقطہ_2[1].عدد, mdm->white_نقطہ_2[1].den);
+        لکھو("luminance: min=%d/%d max=%d/%d\n",
+               mdm->min_luminance.عدد, mdm->min_luminance.den,
+               mdm->max_luminance.عدد, mdm->max_luminance.den);
         av_free(mdm);
     }
 
     /* av_mastering_display_metadata_create_side_data */
-    printf("\nTesting av_mastering_display_metadata_create_side_data()\n");
-    frame = av_frame_alloc();
-    if (frame) {
-        mdm = av_mastering_display_metadata_create_side_data(frame);
-        if (mdm) {
-            printf("side_data: OK, defaults: primaries[0][0]=%d/%d\n",
-                   mdm->display_primaries[0][0].num,
+    لکھو("\nTesting av_mastering_display_metadata_create_side_data()\n");
+    چوکھٹا = av_چوکھٹا_alloc();
+    إذا (چوکھٹا) {
+        mdm = av_mastering_display_metadata_create_side_انکڑے(چوکھٹا);
+        إذا (mdm) {
+            لکھو("side_data: OK, defaults: primaries[0][0]=%d/%d\n",
+                   mdm->display_primaries[0][0].عدد,
                    mdm->display_primaries[0][0].den);
-        } else {
-            printf("side_data: FAIL\n");
+        } وإلا {
+            لکھو("side_data: FAIL\n");
         }
-        av_frame_free(&frame);
+        av_چوکھٹا_free(&چوکھٹا);
     }
 
     /* av_content_light_metadata_alloc */
-    printf("\nTesting av_content_light_metadata_alloc()\n");
-    clm = av_content_light_metadata_alloc(&size);
-    if (clm) {
-        printf("alloc: OK, size>0=%s, MaxCLL=%u, MaxFALL=%u\n",
-               size > 0 ? "yes" : "no", clm->MaxCLL, clm->MaxFALL);
+    لکھو("\nTesting av_content_light_metadata_alloc()\n");
+    clm = av_content_light_metadata_alloc(&ناپ);
+    إذا (clm) {
+        لکھو("alloc: OK, size>0=%s, MaxCLL=%u, MaxFALL=%u\n",
+               ناپ > 0 ? "yes" : "no", clm->MaxCLL, clm->MaxFALL);
         clm->MaxCLL = 1000;
         clm->MaxFALL = 400;
-        printf("write: MaxCLL=%u, MaxFALL=%u\n", clm->MaxCLL, clm->MaxFALL);
+        لکھو("write: MaxCLL=%u, MaxFALL=%u\n", clm->MaxCLL, clm->MaxFALL);
         av_free(clm);
-    } else {
-        printf("alloc: FAIL\n");
+    } وإلا {
+        لکھو("alloc: FAIL\n");
     }
 
     /* av_content_light_metadata_create_side_data */
-    printf("\nTesting av_content_light_metadata_create_side_data()\n");
-    frame = av_frame_alloc();
-    if (frame) {
-        clm = av_content_light_metadata_create_side_data(frame);
-        if (clm) {
-            printf("side_data: OK, MaxCLL=%u\n", clm->MaxCLL);
-        } else {
-            printf("side_data: FAIL\n");
+    لکھو("\nTesting av_content_light_metadata_create_side_data()\n");
+    چوکھٹا = av_چوکھٹا_alloc();
+    إذا (چوکھٹا) {
+        clm = av_content_light_metadata_create_side_انکڑے(چوکھٹا);
+        إذا (clm) {
+            لکھو("side_data: OK, MaxCLL=%u\n", clm->MaxCLL);
+        } وإلا {
+            لکھو("side_data: FAIL\n");
         }
-        av_frame_free(&frame);
+        av_چوکھٹا_free(&چوکھٹا);
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    لکھو("\nTesting OOM paths\n");
     av_max_alloc(1);
     mdm = av_mastering_display_metadata_alloc();
-    printf("mastering alloc OOM: %s\n", mdm ? "FAIL" : "OK");
+    لکھو("mastering alloc OOM: %s\n", mdm ? "FAIL" : "OK");
     av_free(mdm);
-    mdm = av_mastering_display_metadata_alloc_size(&size);
-    printf("mastering alloc_size OOM: %s\n", mdm ? "FAIL" : "OK");
+    mdm = av_mastering_display_metadata_alloc_ناپ(&ناپ);
+    لکھو("mastering alloc_size OOM: %s\n", mdm ? "FAIL" : "OK");
     av_free(mdm);
-    clm = av_content_light_metadata_alloc(&size);
-    printf("content alloc OOM: %s\n", clm ? "FAIL" : "OK");
+    clm = av_content_light_metadata_alloc(&ناپ);
+    لکھو("content alloc OOM: %s\n", clm ? "FAIL" : "OK");
     av_free(clm);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(ودھ_توں_ودھ_عدد);
 
-    frame = av_frame_alloc();
-    if (frame) {
+    چوکھٹا = av_چوکھٹا_alloc();
+    إذا (چوکھٹا) {
         av_max_alloc(1);
-        mdm = av_mastering_display_metadata_create_side_data(frame);
-        printf("mastering side_data OOM: %s\n", mdm ? "FAIL" : "OK");
-        clm = av_content_light_metadata_create_side_data(frame);
-        printf("content side_data OOM: %s\n", clm ? "FAIL" : "OK");
-        av_max_alloc(INT_MAX);
-        av_frame_free(&frame);
+        mdm = av_mastering_display_metadata_create_side_انکڑے(چوکھٹا);
+        لکھو("mastering side_data OOM: %s\n", mdm ? "FAIL" : "OK");
+        clm = av_content_light_metadata_create_side_انکڑے(چوکھٹا);
+        لکھو("content side_data OOM: %s\n", clm ? "FAIL" : "OK");
+        av_max_alloc(ودھ_توں_ودھ_عدد);
+        av_چوکھٹا_free(&چوکھٹا);
     }
 
-    return 0;
+    أرجع 0;
 }

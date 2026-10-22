@@ -21,101 +21,101 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <errno.h>
-#include <limits.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <float.h>
+#ضمن <errno.h>
+#ضمن <limits.h>
+#ضمن <math.h>
+#ضمن <stdarg.h>
+#ضمن <stddef.h>
+#ضمن <stdint.h>
+#ضمن <stdio.h>
+#ضمن <string.h>
+#ضمن <float.h>
 
-#include "avstring.h"
+#ضمن "avstring.h"
 
-typedef struct FFFILE {
-    size_t buf_size;
-    unsigned char *buf;
-    unsigned char *rpos, *rend;
-    unsigned char *shend;
+تعريفنوع بنية FFFILE {
+    size_t buf_ناپ;
+    بنانشانی حرف *buf;
+    بنانشانی حرف *rpos, *rend;
+    بنانشانی حرف *shend;
     ptrdiff_t shlim, shcnt;
-    void *cookie;
-    size_t (*read)(struct FFFILE *, unsigned char *, size_t);
+    فراغ *cookie;
+    size_t (*اقرأ)(بنية FFFILE *, بنانشانی حرف *, size_t);
 } FFFILE;
 
-#define SIZE_hh -2
-#define SIZE_h  -1
-#define SIZE_def 0
-#define SIZE_l   1
-#define SIZE_L   2
-#define SIZE_ll  3
+#تعریف_کرو ناپ_hh -2
+#تعریف_کرو ناپ_h  -1
+#تعریف_کرو ناپ_def 0
+#تعریف_کرو ناپ_l   1
+#تعریف_کرو ناپ_L   2
+#تعریف_کرو ناپ_ll  3
 
-#define shcnt(f) ((f)->shcnt + ((f)->rpos - (f)->buf))
+#تعریف_کرو shcnt(f) ((f)->shcnt + ((f)->rpos - (f)->buf))
 
-static int fftoread(FFFILE *f)
+ساكن صحيح fftoread(FFFILE *f)
 {
-    f->rpos = f->rend = f->buf + f->buf_size;
-    return 0;
+    f->rpos = f->rend = f->buf + f->buf_ناپ;
+    أرجع 0;
 }
 
-static size_t ffstring_read(FFFILE *f, unsigned char *buf, size_t len)
+ساكن size_t ffstring_read(FFFILE *f, بنانشانی حرف *buf, size_t len)
 {
-    char *src = f->cookie;
+    حرف *src = f->cookie;
     size_t k = len+256;
-    char *end = memchr(src, 0, k);
+    حرف *سرا = memchr(src, 0, k);
 
-    if (end) k = end-src;
-    if (k < len) len = k;
-    memcpy(buf, src, len);
-    f->rpos = (void *)(src+len);
-    f->rend = (void *)(src+k);
+    إذا (سرا) k = سرا-src;
+    إذا (k < len) len = k;
+    حافظہ_نقل(buf, src, len);
+    f->rpos = (فراغ *)(src+len);
+    f->rend = (فراغ *)(src+k);
     f->cookie = src+k;
 
-    return len;
+    أرجع len;
 }
 
-static int ffuflow(FFFILE *f)
+ساكن صحيح ffuflow(FFFILE *f)
 {
-    unsigned char c;
-    if (!fftoread(f) && f->read(f, &c, 1)==1) return c;
-    return EOF;
+    بنانشانی حرف c;
+    إذا (!fftoread(f) && f->اقرأ(f, &c, 1)==1) أرجع c;
+    أرجع EOF;
 }
 
-static void ffshlim(FFFILE *f, ptrdiff_t lim)
+ساكن فراغ ffshlim(FFFILE *f, ptrdiff_t lim)
 {
     f->shlim = lim;
     f->shcnt = f->buf - f->rpos;
     /* If lim is nonzero, rend must be a valid pointer. */
-    if (lim && f->rend - f->rpos > lim)
+    إذا (lim && f->rend - f->rpos > lim)
         f->shend = f->rpos + lim;
-    else
+    وإلا
         f->shend = f->rend;
 }
 
-static int ffshgetc(FFFILE *f)
+ساكن صحيح ffshgetc(FFFILE *f)
 {
-    int c;
+    صحيح c;
     ptrdiff_t cnt = shcnt(f);
-    if (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
+    إذا (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
         f->shcnt = f->buf - f->rpos + cnt;
         f->shend = 0;
-        return EOF;
+        أرجع EOF;
     }
     cnt++;
-    if (f->shlim && f->rend - f->rpos > f->shlim - cnt)
+    إذا (f->shlim && f->rend - f->rpos > f->shlim - cnt)
         f->shend = f->rpos + (f->shlim - cnt);
-    else
+    وإلا
         f->shend = f->rend;
     f->shcnt = f->buf - f->rpos + cnt;
-    if (f->rpos[-1] != c) f->rpos[-1] = c;
-    return c;
+    إذا (f->rpos[-1] != c) f->rpos[-1] = c;
+    أرجع c;
 }
 
-#define shlim(f, lim) ffshlim((f), (lim))
-#define shgetc(f) (((f)->rpos < (f)->shend) ? *(f)->rpos++ : ffshgetc(f))
-#define shunget(f) ((f)->shend ? (void)(f)->rpos-- : (void)0)
+#تعریف_کرو shlim(f, lim) ffshlim((f), (lim))
+#تعریف_کرو shgetc(f) (((f)->rpos < (f)->shend) ? *(f)->rpos++ : ffshgetc(f))
+#تعریف_کرو shunget(f) ((f)->shend ? (فراغ)(f)->rpos-- : (فراغ)0)
 
-static const unsigned char table[] = { -1,
+ساكن ثابت بنانشانی حرف جدول[] = { -1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
@@ -134,207 +134,207 @@ static const unsigned char table[] = { -1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 };
 
-static unsigned long long ffintscan(FFFILE *f, unsigned base, int pok, unsigned long long lim)
+ساكن بنانشانی لما لما ffintscan(FFFILE *f, بنانشانی ادھار_2, صحيح pok, بنانشانی لما لما lim)
 {
-    const unsigned char *val = table+1;
-    int c, neg=0;
-    unsigned x;
-    unsigned long long y;
-    if (base > 36 || base == 1) {
+    ثابت بنانشانی حرف *val = جدول+1;
+    صحيح c, neg=0;
+    بنانشانی x;
+    بنانشانی لما لما y;
+    إذا (ادھار_2 > 36 || ادھار_2 == 1) {
         errno = EINVAL;
-        return 0;
+        أرجع 0;
     }
-    while (av_isspace((c=shgetc(f))));
-    if (c=='+' || c=='-') {
+    طالما (av_isspace((c=shgetc(f))));
+    إذا (c=='+' || c=='-') {
         neg = -(c=='-');
         c = shgetc(f);
     }
-    if ((base == 0 || base == 16) && c=='0') {
+    إذا ((ادھار_2 == 0 || ادھار_2 == 16) && c=='0') {
         c = shgetc(f);
-        if ((c|32)=='x') {
+        إذا ((c|32)=='x') {
             c = shgetc(f);
-            if (val[c]>=16) {
+            إذا (val[c]>=16) {
                 shunget(f);
-                if (pok) shunget(f);
-                else shlim(f, 0);
-                return 0;
+                إذا (pok) shunget(f);
+                وإلا shlim(f, 0);
+                أرجع 0;
             }
-            base = 16;
-        } else if (base == 0) {
-            base = 8;
+            ادھار_2 = 16;
+        } وإلا إذا (ادھار_2 == 0) {
+            ادھار_2 = 8;
         }
-    } else {
-        if (base == 0) base = 10;
-        if (val[c] >= base) {
+    } وإلا {
+        إذا (ادھار_2 == 0) ادھار_2 = 10;
+        إذا (val[c] >= ادھار_2) {
             shunget(f);
             shlim(f, 0);
             errno = EINVAL;
-            return 0;
+            أرجع 0;
         }
     }
-    if (base == 10) {
-        for (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
+    إذا (ادھار_2 == 10) {
+        لكل (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
             x = x*10 + (c-'0');
-        for (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
+        لكل (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
             y = y*10 + (c-'0');
-        if (c-'0'>=10U) goto done;
-    } else if (!(base & base-1)) {
-        int bs = "\0\1\2\4\7\3\6\5"[(0x17*base)>>5&7];
-        for (x=0; val[c]<base && x<=UINT_MAX/32; c=shgetc(f))
+        إذا (c-'0'>=10U) اذهب پورا;
+    } وإلا إذا (!(ادھار_2 & ادھار_2-1)) {
+        صحيح bs = "\0\1\2\4\7\3\6\5"[(0x17*ادھار_2)>>5&7];
+        لكل (x=0; val[c]<ادھار_2 && x<=UINT_MAX/32; c=shgetc(f))
             x = x<<bs | val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX>>bs; c=shgetc(f))
+        لكل (y=x; val[c]<ادھار_2 && y<=ULLONG_MAX>>bs; c=shgetc(f))
             y = y<<bs | val[c];
-    } else {
-        for (x=0; val[c]<base && x<=UINT_MAX/36-1; c=shgetc(f))
-            x = x*base + val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX/base && base*y<=ULLONG_MAX-val[c]; c=shgetc(f))
-            y = y*base + val[c];
+    } وإلا {
+        لكل (x=0; val[c]<ادھار_2 && x<=UINT_MAX/36-1; c=shgetc(f))
+            x = x*ادھار_2 + val[c];
+        لكل (y=x; val[c]<ادھار_2 && y<=ULLONG_MAX/ادھار_2 && ادھار_2*y<=ULLONG_MAX-val[c]; c=shgetc(f))
+            y = y*ادھار_2 + val[c];
     }
-    if (val[c]<base) {
-        for (; val[c]<base; c=shgetc(f));
+    إذا (val[c]<ادھار_2) {
+        لكل (; val[c]<ادھار_2; c=shgetc(f));
         errno = ERANGE;
         y = lim;
-        if (lim&1) neg = 0;
+        إذا (lim&1) neg = 0;
     }
-done:
+پورا:
     shunget(f);
-    if (y>=lim) {
-        if (!(lim&1) && !neg) {
+    إذا (y>=lim) {
+        إذا (!(lim&1) && !neg) {
             errno = ERANGE;
-            return lim-1;
-        } else if (y>lim) {
+            أرجع lim-1;
+        } وإلا إذا (y>lim) {
             errno = ERANGE;
-            return lim;
+            أرجع lim;
         }
     }
-    return (y^neg)-neg;
+    أرجع (y^neg)-neg;
 }
 
-static long long scanexp(FFFILE *f, int pok)
+ساكن لما لما scanexp(FFFILE *f, صحيح pok)
 {
-    int c;
-    int x;
-    long long y;
-    int neg = 0;
+    صحيح c;
+    صحيح x;
+    لما لما y;
+    صحيح neg = 0;
 
     c = shgetc(f);
-    if (c=='+' || c=='-') {
+    إذا (c=='+' || c=='-') {
         neg = (c=='-');
         c = shgetc(f);
-        if (c-'0'>=10U && pok) shunget(f);
+        إذا (c-'0'>=10U && pok) shunget(f);
     }
-    if (c-'0'>=10U) {
+    إذا (c-'0'>=10U) {
         shunget(f);
-        return LLONG_MIN;
+        أرجع LLONG_MIN;
     }
-    for (x=0; c-'0'<10U && x<INT_MAX/10; c = shgetc(f))
+    لكل (x=0; c-'0'<10U && x<ودھ_توں_ودھ_عدد/10; c = shgetc(f))
         x = 10*x + (c-'0');
-    for (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
+    لكل (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
         y = 10*y + (c-'0');
-    for (; c-'0'<10U; c = shgetc(f));
+    لكل (; c-'0'<10U; c = shgetc(f));
     shunget(f);
-    return neg ? -y : y;
+    أرجع neg ? -y : y;
 }
 
-#define LD_B1B_DIG 2
-#define LD_B1B_MAX 9007199, 254740991
-#define KMAX 128
-#define MASK (KMAX-1)
+#تعریف_کرو LD_B1B_DIG 2
+#تعریف_کرو LD_B1B_MAX 9007199, 254740991
+#تعریف_کرو KMAX 128
+#تعریف_کرو نقاب (KMAX-1)
 
-static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
+ساكن مزدوج decfloat(FFFILE *f, صحيح c, صحيح بٹ, صحيح emin, صحيح sign, صحيح pok)
 {
     uint32_t x[KMAX];
-    static const uint32_t th[] = { LD_B1B_MAX };
-    int i, j, k, a, z;
-    long long lrp=0, dc=0;
-    long long e10=0;
-    int lnz = 0;
-    int gotdig = 0, gotrad = 0;
-    int rp;
-    int e2;
-    int emax = -emin-bits+3;
-    int denormal = 0;
-    double y;
-    double frac=0;
-    double bias=0;
-    static const int p10s[] = { 10, 100, 1000, 10000,
+    ساكن ثابت uint32_t th[] = { LD_B1B_MAX };
+    صحيح i, j, k, a, z;
+    لما لما lrp=0, dc=0;
+    لما لما e10=0;
+    صحيح lnz = 0;
+    صحيح gotdig = 0, gotrad = 0;
+    صحيح rp;
+    صحيح e2;
+    صحيح emax = -emin-بٹ+3;
+    صحيح denormal = 0;
+    مزدوج y;
+    مزدوج frac=0;
+    مزدوج bias=0;
+    ساكن ثابت صحيح p10s[] = { 10, 100, 1000, 10000,
         100000, 1000000, 10000000, 100000000 };
 
     j=0;
     k=0;
 
     /* Don't let leading zeros consume buffer space */
-    for (; c=='0'; c = shgetc(f)) gotdig=1;
-    if (c=='.') {
+    لكل (; c=='0'; c = shgetc(f)) gotdig=1;
+    إذا (c=='.') {
         gotrad = 1;
-        for (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
+        لكل (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
     }
 
     x[0] = 0;
-    for (; c-'0'<10U || c=='.'; c = shgetc(f)) {
-        if (c == '.') {
-            if (gotrad) break;
+    لكل (; c-'0'<10U || c=='.'; c = shgetc(f)) {
+        إذا (c == '.') {
+            إذا (gotrad) اكسر;
             gotrad = 1;
             lrp = dc;
-        } else if (k < KMAX-3) {
+        } وإلا إذا (k < KMAX-3) {
             dc++;
-            if (c!='0') lnz = dc;
-            if (j) x[k] = x[k]*10 + c-'0';
-            else x[k] = c-'0';
-            if (++j==9) {
+            إذا (c!='0') lnz = dc;
+            إذا (j) x[k] = x[k]*10 + c-'0';
+            وإلا x[k] = c-'0';
+            إذا (++j==9) {
                 k++;
                 j=0;
             }
             gotdig=1;
-        } else {
+        } وإلا {
             dc++;
-            if (c!='0') {
+            إذا (c!='0') {
                 lnz = (KMAX-4)*9;
                 x[KMAX-4] |= 1;
             }
         }
     }
-    if (!gotrad) lrp=dc;
+    إذا (!gotrad) lrp=dc;
 
-    if (gotdig && (c|32)=='e') {
+    إذا (gotdig && (c|32)=='e') {
         e10 = scanexp(f, pok);
-        if (e10 == LLONG_MIN) {
-            if (pok) {
+        إذا (e10 == LLONG_MIN) {
+            إذا (pok) {
                 shunget(f);
-            } else {
+            } وإلا {
                 shlim(f, 0);
-                return 0;
+                أرجع 0;
             }
             e10 = 0;
         }
         lrp += e10;
-    } else if (c>=0) {
+    } وإلا إذا (c>=0) {
         shunget(f);
     }
-    if (!gotdig) {
+    إذا (!gotdig) {
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        أرجع 0;
     }
 
     /* Handle zero specially to avoid nasty special cases later */
-    if (!x[0]) return sign * 0.0;
+    إذا (!x[0]) أرجع sign * 0.0;
 
     /* Optimize small integers (w/no exponent) and over/under-flow */
-    if (lrp==dc && dc<10 && (bits>30 || x[0]>>bits==0))
-        return sign * (double)x[0];
-    if (lrp > -emin/2) {
+    إذا (lrp==dc && dc<10 && (بٹ>30 || x[0]>>بٹ==0))
+        أرجع sign * (مزدوج)x[0];
+    إذا (lrp > -emin/2) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        أرجع sign * DBL_MAX * DBL_MAX;
     }
-    if (lrp < emin-2*DBL_MANT_DIG) {
+    إذا (lrp < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        أرجع sign * DBL_MIN * DBL_MIN;
     }
 
     /* Align incomplete final B1B digit */
-    if (j) {
-        for (; j<9; j++) x[k]*=10;
+    إذا (j) {
+        لكل (; j<9; j++) x[k]*=10;
         k++;
         j=0;
     }
@@ -345,514 +345,514 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     rp = lrp;
 
     /* Optimize small to mid-size integers (even in exp. notation) */
-    if (lnz<9 && lnz<=rp && rp < 18) {
-        int bitlim;
-        if (rp == 9) return sign * (double)x[0];
-        if (rp < 9) return sign * (double)x[0] / p10s[8-rp];
-        bitlim = bits-3*(int)(rp-9);
-        if (bitlim>30 || x[0]>>bitlim==0)
-            return sign * (double)x[0] * p10s[rp-10];
+    إذا (lnz<9 && lnz<=rp && rp < 18) {
+        صحيح bitlim;
+        إذا (rp == 9) أرجع sign * (مزدوج)x[0];
+        إذا (rp < 9) أرجع sign * (مزدوج)x[0] / p10s[8-rp];
+        bitlim = بٹ-3*(صحيح)(rp-9);
+        إذا (bitlim>30 || x[0]>>bitlim==0)
+            أرجع sign * (مزدوج)x[0] * p10s[rp-10];
     }
 
     /* Drop trailing zeros */
-    for (; !x[z-1]; z--);
+    لكل (; !x[z-1]; z--);
 
     /* Align radix point to B1B digit boundary */
-    if (rp % 9) {
-        int rpm9 = rp>=0 ? rp%9 : rp%9+9;
-        int p10 = p10s[8-rpm9];
-        uint32_t carry = 0;
-        for (k=a; k!=z; k++) {
+    إذا (rp % 9) {
+        صحيح rpm9 = rp>=0 ? rp%9 : rp%9+9;
+        صحيح p10 = p10s[8-rpm9];
+        uint32_t حاصل = 0;
+        لكل (k=a; k!=z; k++) {
             uint32_t tmp = x[k] % p10;
-            x[k] = x[k]/p10 + carry;
-            carry = 1000000000/p10 * tmp;
-            if (k==a && !x[k]) {
-                a = (a+1 & MASK);
+            x[k] = x[k]/p10 + حاصل;
+            حاصل = 1000000000/p10 * tmp;
+            إذا (k==a && !x[k]) {
+                a = (a+1 & نقاب);
                 rp -= 9;
             }
         }
-        if (carry) x[z++] = carry;
+        إذا (حاصل) x[z++] = حاصل;
         rp += 9-rpm9;
     }
 
     /* Upscale until desired number of bits are left of radix point */
-    while (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
-        uint32_t carry = 0;
+    طالما (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
+        uint32_t حاصل = 0;
         e2 -= 29;
-        for (k=(z-1 & MASK); ; k=(k-1 & MASK)) {
-            uint64_t tmp = ((uint64_t)x[k] << 29) + carry;
-            if (tmp > 1000000000) {
-                carry = tmp / 1000000000;
+        لكل (k=(z-1 & نقاب); ; k=(k-1 & نقاب)) {
+            uint64_t tmp = ((uint64_t)x[k] << 29) + حاصل;
+            إذا (tmp > 1000000000) {
+                حاصل = tmp / 1000000000;
                 x[k] = tmp % 1000000000;
-            } else {
-                carry = 0;
+            } وإلا {
+                حاصل = 0;
                 x[k] = tmp;
             }
-            if (k==(z-1 & MASK) && k!=a && !x[k]) z = k;
-            if (k==a) break;
+            إذا (k==(z-1 & نقاب) && k!=a && !x[k]) z = k;
+            إذا (k==a) اكسر;
         }
-        if (carry) {
+        إذا (حاصل) {
             rp += 9;
-            a = (a-1 & MASK);
-            if (a == z) {
-                z = (z-1 & MASK);
-                x[z-1 & MASK] |= x[z];
+            a = (a-1 & نقاب);
+            إذا (a == z) {
+                z = (z-1 & نقاب);
+                x[z-1 & نقاب] |= x[z];
             }
-            x[a] = carry;
+            x[a] = حاصل;
         }
     }
 
     /* Downscale until exactly number of bits are left of radix point */
-    for (;;) {
-        uint32_t carry = 0;
-        int sh = 1;
-        for (i=0; i<LD_B1B_DIG; i++) {
-            k = (a+i & MASK);
-            if (k == z || x[k] < th[i]) {
+    لكل (;;) {
+        uint32_t حاصل = 0;
+        صحيح sh = 1;
+        لكل (i=0; i<LD_B1B_DIG; i++) {
+            k = (a+i & نقاب);
+            إذا (k == z || x[k] < th[i]) {
                 i=LD_B1B_DIG;
-                break;
+                اكسر;
             }
-            if (x[a+i & MASK] > th[i]) break;
+            إذا (x[a+i & نقاب] > th[i]) اكسر;
         }
-        if (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) break;
+        إذا (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) اكسر;
         /* FIXME: find a way to compute optimal sh */
-        if (rp > 9+9*LD_B1B_DIG) sh = 9;
+        إذا (rp > 9+9*LD_B1B_DIG) sh = 9;
         e2 += sh;
-        for (k=a; k!=z; k=(k+1 & MASK)) {
+        لكل (k=a; k!=z; k=(k+1 & نقاب)) {
             uint32_t tmp = x[k] & (1<<sh)-1;
-            x[k] = (x[k]>>sh) + carry;
-            carry = (1000000000>>sh) * tmp;
-            if (k==a && !x[k]) {
-                a = (a+1 & MASK);
+            x[k] = (x[k]>>sh) + حاصل;
+            حاصل = (1000000000>>sh) * tmp;
+            إذا (k==a && !x[k]) {
+                a = (a+1 & نقاب);
                 i--;
                 rp -= 9;
             }
         }
-        if (carry) {
-            if ((z+1 & MASK) != a) {
-                x[z] = carry;
-                z = (z+1 & MASK);
-            } else x[z-1 & MASK] |= 1;
+        إذا (حاصل) {
+            إذا ((z+1 & نقاب) != a) {
+                x[z] = حاصل;
+                z = (z+1 & نقاب);
+            } وإلا x[z-1 & نقاب] |= 1;
         }
     }
 
     /* Assemble desired bits into floating point variable */
-    for (y=i=0; i<LD_B1B_DIG; i++) {
-        if ((a+i & MASK)==z) x[(z=(z+1 & MASK))-1 & MASK] = 0;
-        y = 1000000000.0L * y + x[a+i & MASK];
+    لكل (y=i=0; i<LD_B1B_DIG; i++) {
+        إذا ((a+i & نقاب)==z) x[(z=(z+1 & نقاب))-1 & نقاب] = 0;
+        y = 1000000000.0L * y + x[a+i & نقاب];
     }
 
     y *= sign;
 
     /* Limit precision for denormal results */
-    if (bits > DBL_MANT_DIG+e2-emin) {
-        bits = DBL_MANT_DIG+e2-emin;
-        if (bits<0) bits=0;
+    إذا (بٹ > DBL_MANT_DIG+e2-emin) {
+        بٹ = DBL_MANT_DIG+e2-emin;
+        إذا (بٹ<0) بٹ=0;
         denormal = 1;
     }
 
     /* Calculate bias term to force rounding, move out lower bits */
-    if (bits < DBL_MANT_DIG) {
-        bias = copysign(scalbn(1, 2*DBL_MANT_DIG-bits-1), y);
-        frac = fmod(y, scalbn(1, DBL_MANT_DIG-bits));
+    إذا (بٹ < DBL_MANT_DIG) {
+        bias = copysign(scalbn(1, 2*DBL_MANT_DIG-بٹ-1), y);
+        frac = fmod(y, scalbn(1, DBL_MANT_DIG-بٹ));
         y -= frac;
         y += bias;
     }
 
     /* Process tail of decimal input so it can affect rounding */
-    if ((a+i & MASK) != z) {
-        uint32_t t = x[a+i & MASK];
-        if (t < 500000000 && (t || (a+i+1 & MASK) != z))
+    إذا ((a+i & نقاب) != z) {
+        uint32_t t = x[a+i & نقاب];
+        إذا (t < 500000000 && (t || (a+i+1 & نقاب) != z))
             frac += 0.25*sign;
-        else if (t > 500000000)
+        وإلا إذا (t > 500000000)
             frac += 0.75*sign;
-        else if (t == 500000000) {
-            if ((a+i+1 & MASK) == z)
+        وإلا إذا (t == 500000000) {
+            إذا ((a+i+1 & نقاب) == z)
                 frac += 0.5*sign;
-            else
+            وإلا
                 frac += 0.75*sign;
         }
-        if (DBL_MANT_DIG-bits >= 2 && !fmod(frac, 1))
+        إذا (DBL_MANT_DIG-بٹ >= 2 && !fmod(frac, 1))
             frac++;
     }
 
     y += frac;
     y -= bias;
 
-    if ((e2+DBL_MANT_DIG & INT_MAX) > emax-5) {
-        if (fabs(y) >= pow(2, DBL_MANT_DIG)) {
-            if (denormal && bits==DBL_MANT_DIG+e2-emin)
+    إذا ((e2+DBL_MANT_DIG & ودھ_توں_ودھ_عدد) > emax-5) {
+        إذا (fabs(y) >= قوت(2, DBL_MANT_DIG)) {
+            إذا (denormal && بٹ==DBL_MANT_DIG+e2-emin)
                 denormal = 0;
             y *= 0.5;
             e2++;
         }
-        if (e2+DBL_MANT_DIG>emax || (denormal && frac))
+        إذا (e2+DBL_MANT_DIG>emax || (denormal && frac))
             errno = ERANGE;
     }
 
-    return scalbn(y, e2);
+    أرجع scalbn(y, e2);
 }
 
-static double hexfloat(FFFILE *f, int bits, int emin, int sign, int pok)
+ساكن مزدوج hexfloat(FFFILE *f, صحيح بٹ, صحيح emin, صحيح sign, صحيح pok)
 {
     uint32_t x = 0;
-    double y = 0;
-    double scale = 1;
-    double bias = 0;
-    int gottail = 0, gotrad = 0, gotdig = 0;
-    long long rp = 0;
-    long long dc = 0;
-    long long e2 = 0;
-    int d;
-    int c;
+    مزدوج y = 0;
+    مزدوج scale = 1;
+    مزدوج bias = 0;
+    صحيح gottail = 0, gotrad = 0, gotdig = 0;
+    لما لما rp = 0;
+    لما لما dc = 0;
+    لما لما e2 = 0;
+    صحيح d;
+    صحيح c;
 
     c = shgetc(f);
 
     /* Skip leading zeros */
-    for (; c=='0'; c = shgetc(f))
+    لكل (; c=='0'; c = shgetc(f))
         gotdig = 1;
 
-    if (c=='.') {
+    إذا (c=='.') {
         gotrad = 1;
         c = shgetc(f);
         /* Count zeros after the radix point before significand */
-        for (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
+        لكل (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
     }
 
-    for (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
-        if (c=='.') {
-            if (gotrad) break;
+    لكل (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
+        إذا (c=='.') {
+            إذا (gotrad) اكسر;
             rp = dc;
             gotrad = 1;
-        } else {
+        } وإلا {
             gotdig = 1;
-            if (c > '9') d = (c|32)+10-'a';
-            else d = c-'0';
-            if (dc<8) {
+            إذا (c > '9') d = (c|32)+10-'a';
+            وإلا d = c-'0';
+            إذا (dc<8) {
                 x = x*16 + d;
-            } else if (dc < DBL_MANT_DIG/4+1) {
+            } وإلا إذا (dc < DBL_MANT_DIG/4+1) {
                 y += d*(scale/=16);
-            } else if (d && !gottail) {
+            } وإلا إذا (d && !gottail) {
                 y += 0.5*scale;
                 gottail = 1;
             }
             dc++;
         }
     }
-    if (!gotdig) {
+    إذا (!gotdig) {
         shunget(f);
-        if (pok) {
+        إذا (pok) {
             shunget(f);
-            if (gotrad) shunget(f);
-        } else {
+            إذا (gotrad) shunget(f);
+        } وإلا {
             shlim(f, 0);
         }
-        return sign * 0.0;
+        أرجع sign * 0.0;
     }
-    if (!gotrad) rp = dc;
-    while (dc<8) x *= 16, dc++;
-    if ((c|32)=='p') {
+    إذا (!gotrad) rp = dc;
+    طالما (dc<8) x *= 16, dc++;
+    إذا ((c|32)=='p') {
         e2 = scanexp(f, pok);
-        if (e2 == LLONG_MIN) {
-            if (pok) {
+        إذا (e2 == LLONG_MIN) {
+            إذا (pok) {
                 shunget(f);
-            } else {
+            } وإلا {
                 shlim(f, 0);
-                return 0;
+                أرجع 0;
             }
             e2 = 0;
         }
-    } else {
+    } وإلا {
         shunget(f);
     }
     e2 += 4*rp - 32;
 
-    if (!x) return sign * 0.0;
-    if (e2 > -emin) {
+    إذا (!x) أرجع sign * 0.0;
+    إذا (e2 > -emin) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        أرجع sign * DBL_MAX * DBL_MAX;
     }
-    if (e2 < emin-2*DBL_MANT_DIG) {
+    إذا (e2 < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        أرجع sign * DBL_MIN * DBL_MIN;
     }
 
-    while (x < 0x80000000) {
-        if (y>=0.5) {
+    طالما (x < 0x80000000) {
+        إذا (y>=0.5) {
             x += x + 1;
             y += y - 1;
-        } else {
+        } وإلا {
             x += x;
             y += y;
         }
         e2--;
     }
 
-    if (bits > 32+e2-emin) {
-        bits = 32+e2-emin;
-        if (bits<0) bits=0;
+    إذا (بٹ > 32+e2-emin) {
+        بٹ = 32+e2-emin;
+        إذا (بٹ<0) بٹ=0;
     }
 
-    if (bits < DBL_MANT_DIG)
-        bias = copysign(scalbn(1, 32+DBL_MANT_DIG-bits-1), sign);
+    إذا (بٹ < DBL_MANT_DIG)
+        bias = copysign(scalbn(1, 32+DBL_MANT_DIG-بٹ-1), sign);
 
-    if (bits<32 && y && !(x&1)) x++, y=0;
+    إذا (بٹ<32 && y && !(x&1)) x++, y=0;
 
-    y = bias + sign*(double)x + sign*y;
+    y = bias + sign*(مزدوج)x + sign*y;
     y -= bias;
 
-    if (!y) errno = ERANGE;
+    إذا (!y) errno = ERANGE;
 
-    return scalbn(y, e2);
+    أرجع scalbn(y, e2);
 }
 
-static double fffloatscan(FFFILE *f, int prec, int pok)
+ساكن مزدوج fffloatscan(FFFILE *f, صحيح prec, صحيح pok)
 {
-    int sign = 1;
+    صحيح sign = 1;
     size_t i;
-    int bits;
-    int emin;
-    int c;
+    صحيح بٹ;
+    صحيح emin;
+    صحيح c;
 
-    switch (prec) {
-    case 0:
-        bits = FLT_MANT_DIG;
-        emin = FLT_MIN_EXP-bits;
-        break;
-    case 1:
-        bits = DBL_MANT_DIG;
-        emin = DBL_MIN_EXP-bits;
-        break;
-    case 2:
-        bits = DBL_MANT_DIG;
-        emin = DBL_MIN_EXP-bits;
-        break;
-    default:
-        return 0;
+    بدل (prec) {
+    حالة 0:
+        بٹ = FLT_MANT_DIG;
+        emin = FLT_MIN_EXP-بٹ;
+        اكسر;
+    حالة 1:
+        بٹ = DBL_MANT_DIG;
+        emin = DBL_MIN_EXP-بٹ;
+        اكسر;
+    حالة 2:
+        بٹ = DBL_MANT_DIG;
+        emin = DBL_MIN_EXP-بٹ;
+        اكسر;
+    افتراضي:
+        أرجع 0;
     }
 
-    while (av_isspace((c = shgetc(f))));
+    طالما (av_isspace((c = shgetc(f))));
 
-    if (c=='+' || c=='-') {
+    إذا (c=='+' || c=='-') {
         sign -= 2*(c=='-');
         c = shgetc(f);
     }
 
-    for (i=0; i<8 && (c|32)=="infinity"[i]; i++)
-        if (i<7) c = shgetc(f);
-    if (i==3 || i==8 || (i>3 && pok)) {
-        if (i!=8) {
+    لكل (i=0; i<8 && (c|32)=="infinity"[i]; i++)
+        إذا (i<7) c = shgetc(f);
+    إذا (i==3 || i==8 || (i>3 && pok)) {
+        إذا (i!=8) {
             shunget(f);
-            if (pok) for (; i>3; i--) shunget(f);
+            إذا (pok) لكل (; i>3; i--) shunget(f);
         }
-        return sign * INFINITY;
+        أرجع sign * INFINITY;
     }
-    if (!i) for (i=0; i<3 && (c|32)=="nan"[i]; i++)
-        if (i<2) c = shgetc(f);
-    if (i==3) {
-        if (shgetc(f) != '(') {
+    إذا (!i) لكل (i=0; i<3 && (c|32)=="nan"[i]; i++)
+        إذا (i<2) c = shgetc(f);
+    إذا (i==3) {
+        إذا (shgetc(f) != '(') {
             shunget(f);
-            return NAN;
+            أرجع NAN;
         }
-        for (i=1; ; i++) {
+        لكل (i=1; ; i++) {
             c = shgetc(f);
-            if (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
-                continue;
-            if (c==')') return NAN;
+            إذا (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
+                استمر;
+            إذا (c==')') أرجع NAN;
             shunget(f);
-            if (!pok) {
+            إذا (!pok) {
                 errno = EINVAL;
                 shlim(f, 0);
-                return 0;
+                أرجع 0;
             }
-            while (i--) shunget(f);
-            return NAN;
+            طالما (i--) shunget(f);
+            أرجع NAN;
         }
     }
 
-    if (i) {
+    إذا (i) {
         shunget(f);
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        أرجع 0;
     }
 
-    if (c=='0') {
+    إذا (c=='0') {
         c = shgetc(f);
-        if ((c|32) == 'x')
-            return hexfloat(f, bits, emin, sign, pok);
+        إذا ((c|32) == 'x')
+            أرجع hexfloat(f, بٹ, emin, sign, pok);
         shunget(f);
         c = '0';
     }
 
-    return decfloat(f, c, bits, emin, sign, pok);
+    أرجع decfloat(f, c, بٹ, emin, sign, pok);
 }
 
-static void *arg_n(va_list ap, unsigned int n)
+ساكن فراغ *arg_n(va_list ap, بنانشانی صحيح n)
 {
-    void *p;
-    unsigned int i;
+    فراغ *p;
+    بنانشانی صحيح i;
     va_list ap2;
     va_copy(ap2, ap);
-    for (i=n; i>1; i--) va_arg(ap2, void *);
-    p = va_arg(ap2, void *);
+    لكل (i=n; i>1; i--) va_arg(ap2, فراغ *);
+    p = va_arg(ap2, فراغ *);
     va_end(ap2);
-    return p;
+    أرجع p;
 }
 
-static void store_int(void *dest, int size, unsigned long long i)
+ساكن فراغ store_int(فراغ *dest, صحيح ناپ, بنانشانی لما لما i)
 {
-    if (!dest) return;
-    switch (size) {
-    case SIZE_hh:
-        *(char *)dest = i;
-        break;
-    case SIZE_h:
-        *(short *)dest = i;
-        break;
-    case SIZE_def:
-        *(int *)dest = i;
-        break;
-    case SIZE_l:
-        *(long *)dest = i;
-        break;
-    case SIZE_ll:
-        *(long long *)dest = i;
-        break;
+    إذا (!dest) أرجع;
+    بدل (ناپ) {
+    حالة ناپ_hh:
+        *(حرف *)dest = i;
+        اكسر;
+    حالة ناپ_h:
+        *(چھوٹا *)dest = i;
+        اكسر;
+    حالة ناپ_def:
+        *(صحيح *)dest = i;
+        اكسر;
+    حالة ناپ_l:
+        *(لما *)dest = i;
+        اكسر;
+    حالة ناپ_ll:
+        *(لما لما *)dest = i;
+        اكسر;
     }
 }
 
-static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
+ساكن صحيح ff_vfscanf(FFFILE *f, ثابت حرف *fmt, va_list ap)
 {
-    int width;
-    int size;
-    int base;
-    const unsigned char *p;
-    int c, t;
-    char *s;
-    void *dest=NULL;
-    int invert;
-    int matches=0;
-    unsigned long long x;
-    double y;
+    صحيح چوڑائی;
+    صحيح ناپ;
+    صحيح ادھار_2;
+    ثابت بنانشانی حرف *p;
+    صحيح c, t;
+    حرف *s;
+    فراغ *dest=عدم;
+    صحيح invert;
+    صحيح matches=0;
+    بنانشانی لما لما x;
+    مزدوج y;
     ptrdiff_t pos = 0;
-    unsigned char scanset[257];
+    بنانشانی حرف scanset[257];
     size_t i;
 
-    for (p=(const unsigned char *)fmt; *p; p++) {
+    لكل (p=(ثابت بنانشانی حرف *)fmt; *p; p++) {
 
-        if (av_isspace(*p)) {
-            while (av_isspace(p[1])) p++;
+        إذا (av_isspace(*p)) {
+            طالما (av_isspace(p[1])) p++;
             shlim(f, 0);
-            while (av_isspace(shgetc(f)));
+            طالما (av_isspace(shgetc(f)));
             shunget(f);
             pos += shcnt(f);
-            continue;
+            استمر;
         }
-        if (*p != '%' || p[1] == '%') {
+        إذا (*p != '%' || p[1] == '%') {
             shlim(f, 0);
-            if (*p == '%') {
+            إذا (*p == '%') {
                 p++;
-                while (av_isspace((c=shgetc(f))));
-            } else {
+                طالما (av_isspace((c=shgetc(f))));
+            } وإلا {
                 c = shgetc(f);
             }
-            if (c!=*p) {
+            إذا (c!=*p) {
                 shunget(f);
-                if (c<0) goto input_fail;
-                goto match_fail;
+                إذا (c<0) اذهب داخلہ_fail;
+                اذهب میل_fail;
             }
             pos += shcnt(f);
-            continue;
+            استمر;
         }
 
         p++;
-        if (*p=='*') {
+        إذا (*p=='*') {
             dest = 0; p++;
-        } else if (av_isdigit(*p) && p[1]=='$') {
+        } وإلا إذا (av_isdigit(*p) && p[1]=='$') {
             dest = arg_n(ap, *p-'0'); p+=2;
-        } else {
-            dest = va_arg(ap, void *);
+        } وإلا {
+            dest = va_arg(ap, فراغ *);
         }
 
-        for (width=0; av_isdigit(*p); p++) {
-            width = 10*width + *p - '0';
+        لكل (چوڑائی=0; av_isdigit(*p); p++) {
+            چوڑائی = 10*چوڑائی + *p - '0';
         }
 
-        if (*p=='m') {
+        إذا (*p=='m') {
             s = 0;
             p++;
         }
 
-        size = SIZE_def;
-        switch (*p++) {
-        case 'h':
-            if (*p == 'h') p++, size = SIZE_hh;
-            else size = SIZE_h;
-            break;
-        case 'l':
-            if (*p == 'l') p++, size = SIZE_ll;
-            else size = SIZE_l;
-            break;
-        case 'j':
-            size = SIZE_ll;
-            break;
-        case 'z':
-        case 't':
-            size = SIZE_l;
-            break;
-        case 'L':
-            size = SIZE_L;
-            break;
-        case 'd': case 'i': case 'o': case 'u': case 'x':
-        case 'a': case 'e': case 'f': case 'g':
-        case 'A': case 'E': case 'F': case 'G': case 'X':
-        case 's': case 'c': case '[':
-        case 'S': case 'C':
-        case 'p': case 'n':
+        ناپ = ناپ_def;
+        بدل (*p++) {
+        حالة 'h':
+            إذا (*p == 'h') p++, ناپ = ناپ_hh;
+            وإلا ناپ = ناپ_h;
+            اكسر;
+        حالة 'l':
+            إذا (*p == 'l') p++, ناپ = ناپ_ll;
+            وإلا ناپ = ناپ_l;
+            اكسر;
+        حالة 'j':
+            ناپ = ناپ_ll;
+            اكسر;
+        حالة 'z':
+        حالة 't':
+            ناپ = ناپ_l;
+            اكسر;
+        حالة 'L':
+            ناپ = ناپ_L;
+            اكسر;
+        حالة 'd': حالة 'i': حالة 'o': حالة 'u': حالة 'x':
+        حالة 'a': حالة 'e': حالة 'f': حالة 'g':
+        حالة 'A': حالة 'E': حالة 'F': حالة 'G': حالة 'X':
+        حالة 's': حالة 'c': حالة '[':
+        حالة 'S': حالة 'C':
+        حالة 'p': حالة 'n':
             p--;
-            break;
-        default:
-            goto fmt_fail;
+            اكسر;
+        افتراضي:
+            اذهب fmt_fail;
         }
 
         t = *p;
 
         /* C or S */
-        if ((t&0x2f) == 3) {
+        إذا ((t&0x2f) == 3) {
             t |= 32;
-            size = SIZE_l;
+            ناپ = ناپ_l;
         }
 
-        switch (t) {
-            case 'c':
-                if (width < 1) width = 1;
-                break;
-            case '[':
-                break;
-            case 'n':
-                store_int(dest, size, pos);
+        بدل (t) {
+            حالة 'c':
+                إذا (چوڑائی < 1) چوڑائی = 1;
+                اكسر;
+            حالة '[':
+                اكسر;
+            حالة 'n':
+                store_int(dest, ناپ, pos);
                 /* do not increment match count, etc! */
-                continue;
-            default:
+                استمر;
+            افتراضي:
                 shlim(f, 0);
-                while (av_isspace(shgetc(f)));
+                طالما (av_isspace(shgetc(f)));
                 shunget(f);
                 pos += shcnt(f);
         }
 
-        shlim(f, width);
-        if (shgetc(f) < 0) goto input_fail;
+        shlim(f, چوڑائی);
+        إذا (shgetc(f) < 0) اذهب داخلہ_fail;
         shunget(f);
 
-        switch (t) {
-            case 's':
-            case 'c':
-            case '[':
-                if (t == 'c' || t == 's') {
-                    memset(scanset, -1, sizeof scanset);
+        بدل (t) {
+            حالة 's':
+            حالة 'c':
+            حالة '[':
+                إذا (t == 'c' || t == 's') {
+                    memset(scanset, -1, حجم scanset);
                     scanset[0] = 0;
-                    if (t == 's') {
+                    إذا (t == 's') {
                         scanset[1 + '\t'] = 0;
                         scanset[1 + '\n'] = 0;
                         scanset[1 + '\v'] = 0;
@@ -860,110 +860,110 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
                         scanset[1 + '\r'] = 0;
                         scanset[1 + ' ' ] = 0;
                     }
-                } else {
-                    if (*++p == '^') p++, invert = 1;
-                    else invert = 0;
-                    memset(scanset, invert, sizeof scanset);
+                } وإلا {
+                    إذا (*++p == '^') p++, invert = 1;
+                    وإلا invert = 0;
+                    memset(scanset, invert, حجم scanset);
                     scanset[0] = 0;
-                    if (*p == '-') p++, scanset[1+'-'] = 1-invert;
-                    else if (*p == ']') p++, scanset[1+']'] = 1-invert;
-                    for (; *p != ']'; p++) {
-                        if (!*p) goto fmt_fail;
-                        if (*p=='-' && p[1] && p[1] != ']')
-                            for (c=p++[-1]; c<*p; c++)
+                    إذا (*p == '-') p++, scanset[1+'-'] = 1-invert;
+                    وإلا إذا (*p == ']') p++, scanset[1+']'] = 1-invert;
+                    لكل (; *p != ']'; p++) {
+                        إذا (!*p) اذهب fmt_fail;
+                        إذا (*p=='-' && p[1] && p[1] != ']')
+                            لكل (c=p++[-1]; c<*p; c++)
                                 scanset[1+c] = 1-invert;
                         scanset[1+*p] = 1-invert;
                     }
                 }
                 s = 0;
                 i = 0;
-                if ((s = dest)) {
-                    while (scanset[(c=shgetc(f))+1])
+                إذا ((s = dest)) {
+                    طالما (scanset[(c=shgetc(f))+1])
                         s[i++] = c;
-                } else {
-                    while (scanset[(c=shgetc(f))+1]);
+                } وإلا {
+                    طالما (scanset[(c=shgetc(f))+1]);
                 }
                 shunget(f);
-                if (!shcnt(f)) goto match_fail;
-                if (t == 'c' && shcnt(f) != width) goto match_fail;
-                if (t != 'c') {
-                    if (s) s[i] = 0;
+                إذا (!shcnt(f)) اذهب میل_fail;
+                إذا (t == 'c' && shcnt(f) != چوڑائی) اذهب میل_fail;
+                إذا (t != 'c') {
+                    إذا (s) s[i] = 0;
                 }
-                break;
-            case 'p':
-            case 'X':
-            case 'x':
-                base = 16;
-                goto int_common;
-            case 'o':
-                base = 8;
-                goto int_common;
-            case 'd':
-            case 'u':
-                base = 10;
-                goto int_common;
-            case 'i':
-                base = 0;
+                اكسر;
+            حالة 'p':
+            حالة 'X':
+            حالة 'x':
+                ادھار_2 = 16;
+                اذهب int_common;
+            حالة 'o':
+                ادھار_2 = 8;
+                اذهب int_common;
+            حالة 'd':
+            حالة 'u':
+                ادھار_2 = 10;
+                اذهب int_common;
+            حالة 'i':
+                ادھار_2 = 0;
 int_common:
-                x = ffintscan(f, base, 0, ULLONG_MAX);
-                if (!shcnt(f))
-                    goto match_fail;
-                if (t=='p' && dest)
-                    *(void **)dest = (void *)(uintptr_t)x;
-                else
-                    store_int(dest, size, x);
-                break;
-            case 'a': case 'A':
-            case 'e': case 'E':
-            case 'f': case 'F':
-            case 'g': case 'G':
-                y = fffloatscan(f, size, 0);
-                if (!shcnt(f))
-                    goto match_fail;
-                if (dest) {
-                    switch (size) {
-                    case SIZE_def:
-                        *(float *)dest = y;
-                        break;
-                    case SIZE_l:
-                        *(double *)dest = y;
-                        break;
-                    case SIZE_L:
-                        *(double *)dest = y;
-                        break;
+                x = ffintscan(f, ادھار_2, 0, ULLONG_MAX);
+                إذا (!shcnt(f))
+                    اذهب میل_fail;
+                إذا (t=='p' && dest)
+                    *(فراغ **)dest = (فراغ *)(uintptr_t)x;
+                وإلا
+                    store_int(dest, ناپ, x);
+                اكسر;
+            حالة 'a': حالة 'A':
+            حالة 'e': حالة 'E':
+            حالة 'f': حالة 'F':
+            حالة 'g': حالة 'G':
+                y = fffloatscan(f, ناپ, 0);
+                إذا (!shcnt(f))
+                    اذهب میل_fail;
+                إذا (dest) {
+                    بدل (ناپ) {
+                    حالة ناپ_def:
+                        *(عائم *)dest = y;
+                        اكسر;
+                    حالة ناپ_l:
+                        *(مزدوج *)dest = y;
+                        اكسر;
+                    حالة ناپ_L:
+                        *(مزدوج *)dest = y;
+                        اكسر;
                     }
                 }
-                break;
+                اكسر;
         }
 
         pos += shcnt(f);
-        if (dest) matches++;
+        إذا (dest) matches++;
     }
-    if (0) {
+    إذا (0) {
 fmt_fail:
-input_fail:
-        if (!matches) matches--;
+داخلہ_fail:
+        إذا (!matches) matches--;
     }
-match_fail:
-    return matches;
+میل_fail:
+    أرجع matches;
 }
 
-static int ff_vsscanf(const char *s, const char *fmt, va_list ap)
+ساكن صحيح ff_vsscanf(ثابت حرف *s, ثابت حرف *fmt, va_list ap)
 {
     FFFILE f = {
-        .buf = (void *)s, .cookie = (void *)s,
-        .read = ffstring_read,
+        .buf = (فراغ *)s, .cookie = (فراغ *)s,
+        .اقرأ = ffstring_read,
     };
 
-    return ff_vfscanf(&f, fmt, ap);
+    أرجع ff_vfscanf(&f, fmt, ap);
 }
 
-int av_sscanf(const char *string, const char *format, ...)
+صحيح av_sscanf(ثابت حرف *string, ثابت حرف *format, ...)
 {
-    int ret;
+    صحيح ret;
     va_list ap;
     va_start(ap, format);
     ret = ff_vsscanf(string, format, ap);
     va_end(ap);
-    return ret;
+    أرجع ret;
 }

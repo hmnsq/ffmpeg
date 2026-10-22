@@ -18,43 +18,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "ambient_viewing_environment.h"
-#include "mem.h"
+#ضمن "ambient_viewing_environment.h"
+#ضمن "mem.h"
 
-static void get_defaults(AVAmbientViewingEnvironment *env)
+ساكن فراغ get_defaults(AVAmbientViewingEnvironment *env)
 {
     env->ambient_illuminance =
     env->ambient_light_x     =
     env->ambient_light_y     = (AVRational) { 0, 1 };
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *ناپ)
 {
     AVAmbientViewingEnvironment *env =
-        av_mallocz(sizeof(AVAmbientViewingEnvironment));
+        av_mallocz(حجم(AVAmbientViewingEnvironment));
 
-    if (size)
-        *size = env ? sizeof(*env) : 0;
+    إذا (ناپ)
+        *ناپ = env ? حجم(*env) : 0;
 
-    if (!env)
-        return NULL;
+    إذا (!env)
+        أرجع عدم;
 
     get_defaults(env);
 
-    return env;
+    أرجع env;
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_انکڑے(AVFrame *چوکھٹا)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame,
-                               AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
-                               sizeof(AVAmbientViewingEnvironment));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_انکڑے *side_انکڑے =
+        av_چوکھٹا_new_side_انکڑے(چوکھٹا,
+                               AV_چوکھٹا_انکڑے_AMBIENT_VIEWING_ENVIRONMENT,
+                               حجم(AVAmbientViewingEnvironment));
+    إذا (!side_انکڑے)
+        أرجع عدم;
 
-    memset(side_data->data, 0, side_data->size);
-    get_defaults((AVAmbientViewingEnvironment *)side_data->data);
+    memset(side_انکڑے->انکڑے, 0, side_انکڑے->ناپ);
+    get_defaults((AVAmbientViewingEnvironment *)side_انکڑے->انکڑے);
 
-    return (AVAmbientViewingEnvironment *)side_data->data;
+    أرجع (AVAmbientViewingEnvironment *)side_انکڑے->انکڑے;
 }

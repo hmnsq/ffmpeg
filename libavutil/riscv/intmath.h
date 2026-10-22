@@ -18,249 +18,249 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_INTMATH_H
-#define AVUTIL_RISCV_INTMATH_H
+#جے_بنا_تعریف AVUTIL_RISCV_INTMATH_H
+#تعریف_کرو AVUTIL_RISCV_INTMATH_H
 
-#include <stdint.h>
-#include <math.h>
+#ضمن <stdint.h>
+#ضمن <math.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/riscv/cpu.h"
+#ضمن "config.h"
+#ضمن "libavutil/attributes.h"
+#ضمن "libavutil/riscv/cpu.h"
 
 /*
  * The compiler is forced to sign-extend the result anyhow, so it is faster to
  * compute it explicitly and use it.
  */
-#define av_clip_int8 av_clip_int8_rvi
-static av_always_inline av_const int8_t av_clip_int8_rvi(int a)
+#تعریف_کرو av_clip_int8 av_clip_int8_rvi
+ساكن av_always_inline av_const int8_t av_clip_int8_rvi(صحيح a)
 {
-    union { uint8_t u; int8_t s; } u = { .u = a };
+    اتحاد { uint8_t u; int8_t s; } u = { .u = a };
 
-    if (a != u.s)
+    إذا (a != u.s)
         a = ((a >> 31) ^ 0x7F);
-    return a;
+    أرجع a;
 }
 
-#define av_clip_int16 av_clip_int16_rvi
-static av_always_inline av_const int16_t av_clip_int16_rvi(int a)
+#تعریف_کرو av_clip_int16 av_clip_int16_rvi
+ساكن av_always_inline av_const int16_t av_clip_int16_rvi(صحيح a)
 {
-    union { uint16_t u; int16_t s; } u = { .u = a };
+    اتحاد { uint16_t u; int16_t s; } u = { .u = a };
 
-    if (a != u.s)
+    إذا (a != u.s)
         a = ((a >> 31) ^ 0x7FFF);
-    return a;
+    أرجع a;
 }
 
-#define av_clipl_int32 av_clipl_int32_rvi
-static av_always_inline av_const int32_t av_clipl_int32_rvi(int64_t a)
+#تعریف_کرو av_clipl_int32 av_clipl_int32_rvi
+ساكن av_always_inline av_const int32_t av_clipl_int32_rvi(int64_t a)
 {
-    union { uint32_t u; int32_t s; } u = { .u = a };
+    اتحاد { uint32_t u; int32_t s; } u = { .u = a };
 
-    if (a != u.s)
+    إذا (a != u.s)
         a = ((a >> 63) ^ 0x7FFFFFFF);
-    return a;
+    أرجع a;
 }
 
-#define av_clip_intp2 av_clip_intp2_rvi
-static av_always_inline av_const int av_clip_intp2_rvi(int a, int p)
+#تعریف_کرو av_clip_intp2 av_clip_intp2_rvi
+ساكن av_always_inline av_const صحيح av_clip_intp2_rvi(صحيح a, صحيح p)
 {
-    const int shift = 31 - p;
-    int b = ((int)(((unsigned)a) << shift)) >> shift;
+    ثابت صحيح کھسکاؤ = 31 - p;
+    صحيح b = ((صحيح)(((بنانشانی)a) << کھسکاؤ)) >> کھسکاؤ;
 
-    if (a != b)
+    إذا (a != b)
         b = (a >> 31) ^ ((1 << p) - 1);
-    return b;
+    أرجع b;
 }
 
-#if defined (__riscv_f) || defined (__riscv_zfinx)
-#define av_clipf av_clipf_rvf
-static av_always_inline av_const float av_clipf_rvf(float a, float min,
-                                                    float max)
+#إذا defined (__riscv_f) || defined (__riscv_zfinx)
+#تعریف_کرو av_clipf av_clipf_rvf
+ساكن av_always_inline av_const عائم av_clipf_rvf(عائم a, عائم min,
+                                                    عائم max)
 {
-    return fminf(fmaxf(a, min), max);
+    أرجع fminf(fmaxf(a, min), max);
 }
-#endif
+#جے_انت
 
-#if defined (__riscv_d) || defined (__riscv_zdinx)
-#define av_clipd av_clipd_rvd
-static av_always_inline av_const double av_clipd_rvd(double a, double min,
-                                                     double max)
+#إذا defined (__riscv_d) || defined (__riscv_zdinx)
+#تعریف_کرو av_clipd av_clipd_rvd
+ساكن av_always_inline av_const مزدوج av_clipd_rvd(مزدوج a, مزدوج min,
+                                                     مزدوج max)
 {
-    return fmin(fmax(a, min), max);
+    أرجع fmin(fmax(a, min), max);
 }
-#endif
+#جے_انت
 
-#if defined (__GNUC__) || defined (__clang__)
-static inline av_const int ff_ctz_rv(int x)
+#إذا defined (__GNUC__) || defined (__clang__)
+ساكن مضمن av_const صحيح ff_ctz_rv(صحيح x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#إذا HAVE_RV && !defined(__riscv_zbb)
+    إذا (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        صحيح y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#إذا __riscv_xlen >= 64
             "ctzw    %0, %1\n"
-#else
+#وإلا
             "ctz     %0, %1\n"
-#endif
+#جے_انت
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        إذا (y > 32)
             __builtin_unreachable();
-        return y;
+        أرجع y;
     }
-#endif
-    return __builtin_ctz(x);
+#جے_انت
+    أرجع __builtin_ctz(x);
 }
-#define ff_ctz ff_ctz_rv
+#تعریف_کرو ff_ctz ff_ctz_rv
 
-static inline av_const int ff_ctzll_rv(long long x)
+ساكن مضمن av_const صحيح ff_ctzll_rv(لما لما x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
-    if (!__builtin_constant_p(x) &&
+#إذا HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
+    إذا (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        صحيح y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "ctz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        إذا (y > 64)
             __builtin_unreachable();
-        return y;
+        أرجع y;
     }
-#endif
-    return __builtin_ctzll(x);
+#جے_انت
+    أرجع __builtin_ctzll(x);
 }
-#define ff_ctzll ff_ctzll_rv
+#تعریف_کرو ff_ctzll ff_ctzll_rv
 
-static inline av_const int ff_clz_rv(int x)
+ساكن مضمن av_const صحيح ff_clz_rv(صحيح x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#إذا HAVE_RV && !defined(__riscv_zbb)
+    إذا (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        صحيح y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#إذا __riscv_xlen >= 64
             "clzw    %0, %1\n"
-#else
+#وإلا
             "clz     %0, %1\n"
-#endif
+#جے_انت
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        إذا (y > 32)
             __builtin_unreachable();
-        return y;
+        أرجع y;
     }
-#endif
-    return __builtin_clz(x);
+#جے_انت
+    أرجع __builtin_clz(x);
 }
-#define ff_clz ff_clz_rv
+#تعریف_کرو ff_clz ff_clz_rv
 
-#if __riscv_xlen == 64
-static inline av_const int ff_clzll_rv(long long x)
+#إذا __riscv_xlen == 64
+ساكن مضمن av_const صحيح ff_clzll_rv(لما لما x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#إذا HAVE_RV && !defined(__riscv_zbb)
+    إذا (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        صحيح y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "clz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        إذا (y > 64)
             __builtin_unreachable();
-        return y;
+        أرجع y;
     }
-#endif
-    return __builtin_clzll(x);
+#جے_انت
+    أرجع __builtin_clzll(x);
 }
-#define ff_clz ff_clz_rv
-#endif
+#تعریف_کرو ff_clz ff_clz_rv
+#جے_انت
 
-static inline av_const int ff_log2_rv(unsigned int x)
+ساكن مضمن av_const صحيح ff_log2_rv(بنانشانی صحيح x)
 {
-    return 31 - ff_clz_rv(x | 1);
+    أرجع 31 - ff_clz_rv(x | 1);
 }
-#define ff_log2 ff_log2_rv
-#define ff_log2_16bit ff_log2_rv
+#تعریف_کرو ff_log2 ff_log2_rv
+#تعریف_کرو ff_log2_16bit ff_log2_rv
 
-static inline av_const int av_popcount_rv(unsigned int x)
+ساكن مضمن av_const صحيح av_popcount_rv(بنانشانی صحيح x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#إذا HAVE_RV && !defined(__riscv_zbb)
+    إذا (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        صحيح y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#إذا __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#وإلا
             "cpop    %0, %1\n"
-#endif
+#جے_انت
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        إذا (y > 32)
             __builtin_unreachable();
-        return y;
+        أرجع y;
     }
-#endif
-    return __builtin_popcount(x);
+#جے_انت
+    أرجع __builtin_popcount(x);
 }
-#define av_popcount av_popcount_rv
+#تعریف_کرو av_popcount av_popcount_rv
 
-static inline av_const int av_popcount64_rv(uint64_t x)
+ساكن مضمن av_const صحيح av_popcount64_rv(uint64_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
-    if (!__builtin_constant_p(x) &&
+#إذا HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
+    إذا (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        صحيح y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "cpop    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        إذا (y > 64)
             __builtin_unreachable();
-        return y;
+        أرجع y;
     }
-#endif
-    return __builtin_popcountl(x);
+#جے_انت
+    أرجع __builtin_popcountl(x);
 }
-#define av_popcount64 av_popcount64_rv
+#تعریف_کرو av_popcount64 av_popcount64_rv
 
-static inline av_const int av_parity_rv(unsigned int x)
+ساكن مضمن av_const صحيح av_parity_rv(بنانشانی صحيح x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#إذا HAVE_RV && !defined(__riscv_zbb)
+    إذا (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        صحيح y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#إذا __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#وإلا
             "cpop    %0, %1\n"
-#endif
+#جے_انت
             ".option pop" : "=r" (y) : "r" (x));
-        return y & 1;
+        أرجع y & 1;
     }
-#endif
-    return __builtin_parity(x);
+#جے_انت
+    أرجع __builtin_parity(x);
 }
-#define av_parity av_parity_rv
-#endif
+#تعریف_کرو av_parity av_parity_rv
+#جے_انت
 
-#endif /* AVUTIL_RISCV_INTMATH_H */
+#جے_انت /* AVUTIL_RISCV_INTMATH_H */

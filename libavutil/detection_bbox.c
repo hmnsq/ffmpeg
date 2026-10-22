@@ -16,58 +16,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "detection_bbox.h"
-#include "mem.h"
+#ضمن "detection_bbox.h"
+#ضمن "mem.h"
 
-AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size)
+AVDetection_BBox_سرخی *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *باہرلا_ناپ)
 {
-    size_t size;
-    struct BBoxContext {
-        AVDetectionBBoxHeader header;
+    size_t ناپ;
+    بنية BBoxContext {
+        AVDetection_BBox_سرخی سرخی;
         AVDetectionBBox boxes;
     };
-    const size_t bboxes_offset = offsetof(struct BBoxContext, boxes);
-    const size_t bbox_size = sizeof(AVDetectionBBox);
-    AVDetectionBBoxHeader *header;
+    ثابت size_t bboxes_وتھ = offsetof(بنية BBoxContext, boxes);
+    ثابت size_t bbox_ناپ = حجم(AVDetectionBBox);
+    AVDetection_BBox_سرخی *سرخی;
 
-    size = bboxes_offset;
-    if (nb_bboxes > (SIZE_MAX - size) / bbox_size)
-        return NULL;
-    size += bbox_size * nb_bboxes;
+    ناپ = bboxes_وتھ;
+    إذا (nb_bboxes > (SIZE_MAX - ناپ) / bbox_ناپ)
+        أرجع عدم;
+    ناپ += bbox_ناپ * nb_bboxes;
 
-    header = av_mallocz(size);
-    if (!header)
-        return NULL;
+    سرخی = av_mallocz(ناپ);
+    إذا (!سرخی)
+        أرجع عدم;
 
-    header->nb_bboxes     = nb_bboxes;
-    header->bbox_size     = bbox_size;
-    header->bboxes_offset = bboxes_offset;
+    سرخی->nb_bboxes     = nb_bboxes;
+    سرخی->bbox_ناپ     = bbox_ناپ;
+    سرخی->bboxes_وتھ = bboxes_وتھ;
 
-    if (out_size)
-        *out_size = size;
+    إذا (باہرلا_ناپ)
+        *باہرلا_ناپ = ناپ;
 
-    return header;
+    أرجع سرخی;
 }
 
-AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes)
+AVDetection_BBox_سرخی *av_detection_bbox_create_side_انکڑے(AVFrame *چوکھٹا, uint32_t nb_bboxes)
 {
     AVBufferRef         *buf;
-    AVDetectionBBoxHeader *header;
-    size_t size;
+    AVDetection_BBox_سرخی *سرخی;
+    size_t ناپ;
 
-    header = av_detection_bbox_alloc(nb_bboxes, &size);
-    if (!header)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)header, size, NULL, NULL, 0);
-    if (!buf) {
-        av_freep(&header);
-        return NULL;
+    سرخی = av_detection_bbox_alloc(nb_bboxes, &ناپ);
+    إذا (!سرخی)
+        أرجع عدم;
+    buf = av_بفر_create((uint8_t *)سرخی, ناپ, عدم, عدم, 0);
+    إذا (!buf) {
+        av_freep(&سرخی);
+        أرجع عدم;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    إذا (!av_چوکھٹا_new_side_انکڑے_from_buf(چوکھٹا, AV_چوکھٹا_انکڑے_DETECTION_BBOXES, buf)) {
+        av_بفر_unref(&buf);
+        أرجع عدم;
     }
 
-    return header;
+    أرجع سرخی;
 }

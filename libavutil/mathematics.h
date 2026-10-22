@@ -24,99 +24,99 @@
  * Mathematical utilities for working with timestamp and time base.
  */
 
-#ifndef AVUTIL_MATHEMATICS_H
-#define AVUTIL_MATHEMATICS_H
+#جے_بنا_تعریف AVUTIL_MATHEMATICS_H
+#تعریف_کرو AVUTIL_MATHEMATICS_H
 
-#include <stdint.h>
-#include <math.h>
-#include "attributes.h"
-#include "rational.h"
-#include "intfloat.h"
+#ضمن <stdint.h>
+#ضمن <math.h>
+#ضمن "attributes.h"
+#ضمن "rational.h"
+#ضمن "intfloat.h"
 
-#ifndef M_E
-#define M_E            2.7182818284590452354   /* e */
-#endif
-#ifndef M_Ef
-#define M_Ef           2.7182818284590452354f  /* e */
-#endif
-#ifndef M_LN2
-#define M_LN2          0.69314718055994530942  /* log_e 2 */
-#endif
-#ifndef M_LN2f
-#define M_LN2f         0.69314718055994530942f /* log_e 2 */
-#endif
-#ifndef M_LN10
-#define M_LN10         2.30258509299404568402  /* log_e 10 */
-#endif
-#ifndef M_LN10f
-#define M_LN10f        2.30258509299404568402f /* log_e 10 */
-#endif
-#ifndef M_LOG2_10
-#define M_LOG2_10      3.32192809488736234787  /* log_2 10 */
-#endif
-#ifndef M_LOG2_10f
-#define M_LOG2_10f     3.32192809488736234787f /* log_2 10 */
-#endif
-#ifndef M_PHI
-#define M_PHI          1.61803398874989484820   /* phi / golden ratio */
-#endif
-#ifndef M_PHIf
-#define M_PHIf         1.61803398874989484820f  /* phi / golden ratio */
-#endif
-#ifndef M_PI
-#define M_PI           3.14159265358979323846  /* pi */
-#endif
-#ifndef M_PIf
-#define M_PIf          3.14159265358979323846f /* pi */
-#endif
-#ifndef M_PI_2
-#define M_PI_2         1.57079632679489661923  /* pi/2 */
-#endif
-#ifndef M_PI_2f
-#define M_PI_2f        1.57079632679489661923f /* pi/2 */
-#endif
-#ifndef M_PI_4
-#define M_PI_4         0.78539816339744830962  /* pi/4 */
-#endif
-#ifndef M_PI_4f
-#define M_PI_4f        0.78539816339744830962f /* pi/4 */
-#endif
-#ifndef M_1_PI
-#define M_1_PI         0.31830988618379067154  /* 1/pi */
-#endif
-#ifndef M_1_PIf
-#define M_1_PIf        0.31830988618379067154f /* 1/pi */
-#endif
-#ifndef M_2_PI
-#define M_2_PI         0.63661977236758134308  /* 2/pi */
-#endif
-#ifndef M_2_PIf
-#define M_2_PIf        0.63661977236758134308f /* 2/pi */
-#endif
-#ifndef M_2_SQRTPI
-#define M_2_SQRTPI     1.12837916709551257390  /* 2/sqrt(pi) */
-#endif
-#ifndef M_2_SQRTPIf
-#define M_2_SQRTPIf    1.12837916709551257390f /* 2/sqrt(pi) */
-#endif
-#ifndef M_SQRT1_2
-#define M_SQRT1_2      0.70710678118654752440  /* 1/sqrt(2) */
-#endif
-#ifndef M_SQRT1_2f
-#define M_SQRT1_2f     0.70710678118654752440f /* 1/sqrt(2) */
-#endif
-#ifndef M_SQRT2
-#define M_SQRT2        1.41421356237309504880  /* sqrt(2) */
-#endif
-#ifndef M_SQRT2f
-#define M_SQRT2f       1.41421356237309504880f /* sqrt(2) */
-#endif
-#ifndef NAN
-#define NAN            av_int2float(0x7fc00000)
-#endif
-#ifndef INFINITY
-#define INFINITY       av_int2float(0x7f800000)
-#endif
+#جے_بنا_تعریف M_E
+#تعریف_کرو M_E            2.7182818284590452354   /* e */
+#جے_انت
+#جے_بنا_تعریف M_Ef
+#تعریف_کرو M_Ef           2.7182818284590452354f  /* e */
+#جے_انت
+#جے_بنا_تعریف M_LN2
+#تعریف_کرو M_LN2          0.69314718055994530942  /* log_e 2 */
+#جے_انت
+#جے_بنا_تعریف M_LN2f
+#تعریف_کرو M_LN2f         0.69314718055994530942f /* log_e 2 */
+#جے_انت
+#جے_بنا_تعریف M_LN10
+#تعریف_کرو M_LN10         2.30258509299404568402  /* log_e 10 */
+#جے_انت
+#جے_بنا_تعریف M_LN10f
+#تعریف_کرو M_LN10f        2.30258509299404568402f /* log_e 10 */
+#جے_انت
+#جے_بنا_تعریف M_LOG2_10
+#تعریف_کرو M_LOG2_10      3.32192809488736234787  /* log_2 10 */
+#جے_انت
+#جے_بنا_تعریف M_LOG2_10f
+#تعریف_کرو M_LOG2_10f     3.32192809488736234787f /* log_2 10 */
+#جے_انت
+#جے_بنا_تعریف M_PHI
+#تعریف_کرو M_PHI          1.61803398874989484820   /* phi / golden ratio */
+#جے_انت
+#جے_بنا_تعریف M_PHIf
+#تعریف_کرو M_PHIf         1.61803398874989484820f  /* phi / golden ratio */
+#جے_انت
+#جے_بنا_تعریف M_PI
+#تعریف_کرو M_PI           3.14159265358979323846  /* pi */
+#جے_انت
+#جے_بنا_تعریف M_PIf
+#تعریف_کرو M_PIf          3.14159265358979323846f /* pi */
+#جے_انت
+#جے_بنا_تعریف M_PI_2
+#تعریف_کرو M_PI_2         1.57079632679489661923  /* pi/2 */
+#جے_انت
+#جے_بنا_تعریف M_PI_2f
+#تعریف_کرو M_PI_2f        1.57079632679489661923f /* pi/2 */
+#جے_انت
+#جے_بنا_تعریف M_PI_4
+#تعریف_کرو M_PI_4         0.78539816339744830962  /* pi/4 */
+#جے_انت
+#جے_بنا_تعریف M_PI_4f
+#تعریف_کرو M_PI_4f        0.78539816339744830962f /* pi/4 */
+#جے_انت
+#جے_بنا_تعریف M_1_PI
+#تعریف_کرو M_1_PI         0.31830988618379067154  /* 1/pi */
+#جے_انت
+#جے_بنا_تعریف M_1_PIf
+#تعریف_کرو M_1_PIf        0.31830988618379067154f /* 1/pi */
+#جے_انت
+#جے_بنا_تعریف M_2_PI
+#تعریف_کرو M_2_PI         0.63661977236758134308  /* 2/pi */
+#جے_انت
+#جے_بنا_تعریف M_2_PIf
+#تعریف_کرو M_2_PIf        0.63661977236758134308f /* 2/pi */
+#جے_انت
+#جے_بنا_تعریف M_2_SQRTPI
+#تعریف_کرو M_2_SQRTPI     1.12837916709551257390  /* 2/sqrt(pi) */
+#جے_انت
+#جے_بنا_تعریف M_2_SQRTPIf
+#تعریف_کرو M_2_SQRTPIf    1.12837916709551257390f /* 2/sqrt(pi) */
+#جے_انت
+#جے_بنا_تعریف M_SQRT1_2
+#تعریف_کرو M_SQRT1_2      0.70710678118654752440  /* 1/sqrt(2) */
+#جے_انت
+#جے_بنا_تعریف M_SQRT1_2f
+#تعریف_کرو M_SQRT1_2f     0.70710678118654752440f /* 1/sqrt(2) */
+#جے_انت
+#جے_بنا_تعریف M_SQRT2
+#تعریف_کرو M_SQRT2        1.41421356237309504880  /* sqrt(2) */
+#جے_انت
+#جے_بنا_تعریف M_SQRT2f
+#تعریف_کرو M_SQRT2f       1.41421356237309504880f /* sqrt(2) */
+#جے_انت
+#جے_بنا_تعریف NAN
+#تعریف_کرو NAN            av_int2float(0x7fc00000)
+#جے_انت
+#جے_بنا_تعریف INFINITY
+#تعریف_کرو INFINITY       av_int2float(0x7f800000)
+#جے_انت
 
 /**
  * @addtogroup lavu_math
@@ -127,12 +127,12 @@
 /**
  * Rounding methods.
  */
-enum AVRounding {
-    AV_ROUND_ZERO     = 0, ///< Round toward zero.
-    AV_ROUND_INF      = 1, ///< Round away from zero.
-    AV_ROUND_DOWN     = 2, ///< Round toward -infinity.
-    AV_ROUND_UP       = 3, ///< Round toward +infinity.
-    AV_ROUND_NEAR_INF = 5, ///< Round to nearest and halfway cases away from zero.
+تعداد AVRounding {
+    AV_گیڑا_ZERO     = 0, ///< Round toward zero.
+    AV_گیڑا_INF      = 1, ///< Round away from zero.
+    AV_گیڑا_تھلے     = 2, ///< Round toward -infinity.
+    AV_گیڑا_اتے       = 3, ///< Round toward +infinity.
+    AV_گیڑا_NEAR_INF = 5, ///< Round to nearest and halfway cases away from zero.
     /**
      * Flag telling rescaling functions to pass `INT64_MIN`/`MAX` through
      * unchanged, avoiding special cases for #AV_NOPTS_VALUE.
@@ -156,7 +156,7 @@ enum AVRounding {
      * //     => AV_NOPTS_VALUE
      * @endcode
      */
-    AV_ROUND_PASS_MINMAX = 8192,
+    AV_گیڑا_PASS_MINMAX = 8192,
 };
 
 /**
@@ -167,7 +167,7 @@ enum AVRounding {
  * @return GCD of a and b up to sign; if a >= 0 and b >= 0, return value is >= 0;
  * if a == 0 and b == 0, returns 0.
  */
-int64_t av_const av_gcd(int64_t a, int64_t b);
+int64_t av_const av_عاد_اعظم(int64_t a, int64_t b);
 
 /**
  * Rescale a 64-bit integer with rounding to nearest.
@@ -190,7 +190,7 @@ int64_t av_rescale(int64_t a, int64_t b, int64_t c) av_const;
  *
  * @see av_rescale(), av_rescale_q(), av_rescale_q_rnd()
  */
-int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, enum AVRounding rnd) av_const;
+int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, تعداد AVRounding rnd) av_const;
 
 /**
  * Rescale a 64-bit integer by 2 rational numbers.
@@ -211,7 +211,7 @@ int64_t av_rescale_q(int64_t a, AVRational bq, AVRational cq) av_const;
  * @see av_rescale(), av_rescale_rnd(), av_rescale_q()
  */
 int64_t av_rescale_q_rnd(int64_t a, AVRational bq, AVRational cq,
-                         enum AVRounding rnd) av_const;
+                         تعداد AVRounding rnd) av_const;
 
 /**
  * Compare two timestamps each in its own time base.
@@ -225,7 +225,7 @@ int64_t av_rescale_q_rnd(int64_t a, AVRational bq, AVRational cq,
  * The result of the function is undefined if one of the timestamps is outside
  * the `int64_t` range when represented in the other's timebase.
  */
-int av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b);
+صحيح av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b);
 
 /**
  * Compare the remainders of two integer operands divided by a common divisor.
@@ -273,7 +273,7 @@ int64_t av_compare_mod(uint64_t a, uint64_t b, uint64_t mod);
  * @note In the context of this function, "duration" is in term of samples, not
  *       seconds.
  */
-int64_t av_rescale_delta(AVRational in_tb, int64_t in_ts,  AVRational fs_tb, int duration, int64_t *last, AVRational out_tb);
+int64_t av_rescale_delta(AVRational وچ_tb, int64_t وچ_ts,  AVRational fs_tb, صحيح duration, int64_t *آخری, AVRational باہرلا_tb);
 
 /**
  * Add a value to a timestamp.
@@ -286,15 +286,15 @@ int64_t av_rescale_delta(AVRational in_tb, int64_t in_ts,  AVRational fs_tb, int
  * @param[in] inc    Value to be added
  * @param[in] inc_tb Time base of `inc`
  */
-int64_t av_add_stable(AVRational ts_tb, int64_t ts, AVRational inc_tb, int64_t inc);
+int64_t av_جوڑو_stable(AVRational ts_tb, int64_t ts, AVRational inc_tb, int64_t inc);
 
 /**
  * 0th order modified bessel function of the first kind.
  */
-double av_bessel_i0(double x);
+مزدوج av_bessel_i0(مزدوج x);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_MATHEMATICS_H */
+#جے_انت /* AVUTIL_MATHEMATICS_H */

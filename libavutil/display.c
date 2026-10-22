@@ -18,56 +18,56 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
-#include <math.h>
+#ضمن <stdint.h>
+#ضمن <string.h>
+#ضمن <math.h>
 
-#include "display.h"
-#include "mathematics.h"
+#ضمن "display.h"
+#ضمن "mathematics.h"
 
 // fixed point to double
-#define CONV_FP(x) ((double) (x)) / (1 << 16)
+#تعریف_کرو CONV_FP(x) ((مزدوج) (x)) / (1 << 16)
 
 // double to fixed point
-#define CONV_DB(x) (int32_t) ((x) * (1 << 16))
+#تعریف_کرو CONV_DB(x) (int32_t) ((x) * (1 << 16))
 
-double av_display_rotation_get(const int32_t matrix[9])
+مزدوج av_display_rotation_get(ثابت int32_t میٹرکس[9])
 {
-    double rotation, scale[2];
+    مزدوج rotation, scale[2];
 
-    scale[0] = hypot(CONV_FP(matrix[0]), CONV_FP(matrix[3]));
-    scale[1] = hypot(CONV_FP(matrix[1]), CONV_FP(matrix[4]));
+    scale[0] = hypot(CONV_FP(میٹرکس[0]), CONV_FP(میٹرکس[3]));
+    scale[1] = hypot(CONV_FP(میٹرکس[1]), CONV_FP(میٹرکس[4]));
 
-    if (scale[0] == 0.0 || scale[1] == 0.0)
-        return NAN;
+    إذا (scale[0] == 0.0 || scale[1] == 0.0)
+        أرجع NAN;
 
-    rotation = atan2(CONV_FP(matrix[1]) / scale[1],
-                     CONV_FP(matrix[0]) / scale[0]) * 180 / M_PI;
+    rotation = atan2(CONV_FP(میٹرکس[1]) / scale[1],
+                     CONV_FP(میٹرکس[0]) / scale[0]) * 180 / M_PI;
 
-    return -rotation;
+    أرجع -rotation;
 }
 
-void av_display_rotation_set(int32_t matrix[9], double angle)
+فراغ av_display_rotation_سیٹ(int32_t میٹرکس[9], مزدوج angle)
 {
-    double radians = -angle * M_PI / 180.0f;
-    double c = cos(radians);
-    double s = sin(radians);
+    مزدوج radians = -angle * M_PI / 180.0f;
+    مزدوج c = جیب_تمام(radians);
+    مزدوج s = جیب(radians);
 
-    memset(matrix, 0, 9 * sizeof(int32_t));
+    memset(میٹرکس, 0, 9 * حجم(int32_t));
 
-    matrix[0] = CONV_DB(c);
-    matrix[1] = CONV_DB(-s);
-    matrix[3] = CONV_DB(s);
-    matrix[4] = CONV_DB(c);
-    matrix[8] = 1 << 30;
+    میٹرکس[0] = CONV_DB(c);
+    میٹرکس[1] = CONV_DB(-s);
+    میٹرکس[3] = CONV_DB(s);
+    میٹرکس[4] = CONV_DB(c);
+    میٹرکس[8] = 1 << 30;
 }
 
-void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip)
+فراغ av_display_میٹرکس_flip(int32_t میٹرکس[9], صحيح hflip, صحيح vflip)
 {
-    int i;
-    const int flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
+    صحيح i;
+    ثابت صحيح flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
 
-    if (hflip || vflip)
-        for (i = 0; i < 9; i++)
-            matrix[i] *= flip[i % 3];
+    إذا (hflip || vflip)
+        لكل (i = 0; i < 9; i++)
+            میٹرکس[i] *= flip[i % 3];
 }

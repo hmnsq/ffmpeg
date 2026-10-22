@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ضمن <stdio.h>
 
-#include "libavutil/avstring.h"
-#include "libavutil/file.h"
+#ضمن "libavutil/avstring.h"
+#ضمن "libavutil/file.h"
 
-static const uint8_t vectors[] =
+ساكن ثابت uint8_t vectors[] =
     "A\n"
     "\xC3\xA9\n"                /* U+00E9 */
     "\xE2\x82\xAC\n"            /* U+20AC */
@@ -40,52 +40,52 @@ static const uint8_t vectors[] =
     "\xC3" "A\n"                /* missing continuation */
     "\xE2\x82";                 /* truncated */
 
-static void print_sequence(const char *p, int l, int indent)
+ساكن فراغ print_sequence(ثابت حرف *p, صحيح l, صحيح indent)
 {
-    int i;
-    for (i = 0; i < l; i++)
-        printf("%02X", (uint8_t)p[i]);
-    printf("%*s", indent-l*2, "");
+    صحيح i;
+    لكل (i = 0; i < l; i++)
+        لکھو("%02X", (uint8_t)p[i]);
+    لکھو("%*s", indent-l*2, "");
 }
 
-static void decode(const uint8_t *p, const uint8_t *endp)
+ساكن فراغ decode(ثابت uint8_t *p, ثابت uint8_t *endp)
 {
-    uint32_t code;
+    uint32_t کوڈ;
 
-    while (p < endp) {
-        int l, r;
-        const uint8_t *p0 = p;
-        code = UINT32_MAX;
-        r = av_utf8_decode(&code, &p, endp, 0);
-        l = (int)(p-p0);
+    طالما (p < endp) {
+        صحيح l, r;
+        ثابت uint8_t *p0 = p;
+        کوڈ = UINT32_MAX;
+        r = av_utf8_decode(&کوڈ, &p, endp, 0);
+        l = (صحيح)(p-p0);
         print_sequence(p0, l, 20);
-        if (code != UINT32_MAX) {
-            printf("%-10d 0x%-10X %-5d ", code, code, l);
-            if (r >= 0) {
-                if (*p0 == '\n') printf("\\n\n");
-                else             printf ("%.*s\n", l, p0);
-            } else {
-                printf("invalid code range\n");
+        إذا (کوڈ != UINT32_MAX) {
+            لکھو("%-10d 0x%-10X %-5d ", کوڈ, کوڈ, l);
+            إذا (r >= 0) {
+                إذا (*p0 == '\n') لکھو("\\n\n");
+                وإلا             لکھو ("%.*s\n", l, p0);
+            } وإلا {
+                لکھو("invalid code range\n");
             }
-        } else {
-            printf("invalid sequence\n");
+        } وإلا {
+            لکھو("invalid sequence\n");
         }
     }
 }
 
-int main(int argc, char **argv)
+صحيح مکھ(صحيح argc, حرف **argv)
 {
-    if (argc > 1) {
+    إذا (argc > 1) {
         uint8_t *file_buf;
-        size_t file_buf_size;
-        int ret = av_file_map(argv[1], &file_buf, &file_buf_size, 0, NULL);
-        if (ret < 0)
-            return 1;
-        decode(file_buf, file_buf + file_buf_size);
-        av_file_unmap(file_buf, file_buf_size);
-    } else {
-        decode(vectors, vectors + sizeof(vectors) - 1);
+        size_t file_buf_ناپ;
+        صحيح ret = av_file_map(argv[1], &file_buf, &file_buf_ناپ, 0, عدم);
+        إذا (ret < 0)
+            أرجع 1;
+        decode(file_buf, file_buf + file_buf_ناپ);
+        av_file_unmap(file_buf, file_buf_ناپ);
+    } وإلا {
+        decode(vectors, vectors + حجم(vectors) - 1);
     }
 
-    return 0;
+    أرجع 0;
 }

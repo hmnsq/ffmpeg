@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_XTEA_H
-#define AVUTIL_XTEA_H
+#جے_بنا_تعریف AVUTIL_XTEA_H
+#تعریف_کرو AVUTIL_XTEA_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
 /**
  * @file
@@ -32,14 +32,14 @@
  * @{
  */
 
-typedef struct AVXTEA {
-    uint32_t key[16];
+تعريفنوع بنية AVXTEA {
+    uint32_t کلید[16];
 } AVXTEA;
 
 /**
  * Allocate an AVXTEA context.
  */
-AVXTEA *av_xtea_alloc(void);
+AVXTEA *av_xtea_alloc(فراغ);
 
 /**
  * Initialize an AVXTEA context.
@@ -48,7 +48,7 @@ AVXTEA *av_xtea_alloc(void);
  * @param key a key of 16 bytes used for encryption/decryption,
  *            interpreted as big endian 32 bit numbers
  */
-void av_xtea_init(struct AVXTEA *ctx, const uint8_t key[16]);
+فراغ av_xtea_init(بنية AVXTEA *ctx, ثابت uint8_t کلید[16]);
 
 /**
  * Initialize an AVXTEA context.
@@ -57,7 +57,7 @@ void av_xtea_init(struct AVXTEA *ctx, const uint8_t key[16]);
  * @param key a key of 16 bytes used for encryption/decryption,
  *            interpreted as little endian 32 bit numbers
  */
-void av_xtea_le_init(struct AVXTEA *ctx, const uint8_t key[16]);
+فراغ av_xtea_le_init(بنية AVXTEA *ctx, ثابت uint8_t کلید[16]);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context,
@@ -70,8 +70,8 @@ void av_xtea_le_init(struct AVXTEA *ctx, const uint8_t key[16]);
  * @param iv initialization vector for CBC mode, if NULL then ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_xtea_crypt(struct AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
-                   int count, uint8_t *iv, int decrypt);
+فراغ av_xtea_crypt(بنية AVXTEA *ctx, uint8_t *dst, ثابت uint8_t *src,
+                   صحيح گنتی, uint8_t *iv, صحيح decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context,
@@ -84,11 +84,11 @@ void av_xtea_crypt(struct AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
  * @param iv initialization vector for CBC mode, if NULL then ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_xtea_le_crypt(struct AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
-                      int count, uint8_t *iv, int decrypt);
+فراغ av_xtea_le_crypt(بنية AVXTEA *ctx, uint8_t *dst, ثابت uint8_t *src,
+                      صحيح گنتی, uint8_t *iv, صحيح decrypt);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_XTEA_H */
+#جے_انت /* AVUTIL_XTEA_H */

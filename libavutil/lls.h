@@ -20,25 +20,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LLS_H
-#define AVUTIL_LLS_H
+#جے_بنا_تعریف AVUTIL_LLS_H
+#تعریف_کرو AVUTIL_LLS_H
 
-#include "macros.h"
-#include "mem_internal.h"
+#ضمن "macros.h"
+#ضمن "mem_internal.h"
 
-#define MAX_VARS 32
-#define MAX_VARS_ALIGN FFALIGN(MAX_VARS+1,4)
+#تعریف_کرو MAX_VARS 32
+#تعریف_کرو MAX_VARS_ALIGN FFALIGN(MAX_VARS+1,4)
 
 //FIXME avoid direct access to LLSModel from outside
 
 /**
  * Linear least squares model.
  */
-typedef struct LLSModel {
-    DECLARE_ALIGNED(32, double, covariance[MAX_VARS_ALIGN][MAX_VARS_ALIGN]);
-    DECLARE_ALIGNED(32, double, coeff[MAX_VARS][MAX_VARS]);
-    double variance[MAX_VARS];
-    int indep_count;
+تعريفنوع بنية LLSModel {
+    DECLARE_ALIGNED(32, مزدوج, covariance[MAX_VARS_ALIGN][MAX_VARS_ALIGN]);
+    DECLARE_ALIGNED(32, مزدوج, coeff[MAX_VARS][MAX_VARS]);
+    مزدوج variance[MAX_VARS];
+    صحيح indep_گنتی;
     /**
      * Take the outer-product of var[] with itself, and add to the covariance matrix.
      * @param m this context
@@ -46,19 +46,19 @@ typedef struct LLSModel {
      *            32-byte aligned, and any padding elements must be initialized
      *            (i.e not denormal/nan).
      */
-    void (*update_lls)(struct LLSModel *m, const double *var);
+    فراغ (*update_lls)(بنية LLSModel *m, ثابت مزدوج *var);
     /**
      * Inner product of var[] and the LPC coefs.
      * @param m this context
      * @param var training samples, excluding the value to be predicted. unaligned.
      * @param order lpc order
      */
-    double (*evaluate_lls)(struct LLSModel *m, const double *var, int order);
+    مزدوج (*evaluate_lls)(بنية LLSModel *m, ثابت مزدوج *var, صحيح ترتیب);
 } LLSModel;
 
-void avpriv_init_lls(LLSModel *m, int indep_count);
-void ff_init_lls_riscv(LLSModel *m);
-void ff_init_lls_x86(LLSModel *m);
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order);
+فراغ avpriv_init_lls(LLSModel *m, صحيح indep_گنتی);
+فراغ ff_init_lls_riscv(LLSModel *m);
+فراغ ff_init_lls_x86(LLSModel *m);
+فراغ avpriv_solve_lls(LLSModel *m, مزدوج حد, بنانشانی چھوٹا min_ترتیب);
 
-#endif /* AVUTIL_LLS_H */
+#جے_انت /* AVUTIL_LLS_H */

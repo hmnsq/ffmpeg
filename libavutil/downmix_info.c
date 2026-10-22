@@ -18,68 +18,68 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "downmix_info.h"
-#include "frame.h"
-#include "mem.h"
+#ضمن "downmix_info.h"
+#ضمن "frame.h"
+#ضمن "mem.h"
 
-AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame)
+AVDownmixInfo *av_downmix_info_update_side_انکڑے(AVFrame *چوکھٹا)
 {
-    AVFrameSideData *side_data;
+    AVFrame_Side_انکڑے *side_انکڑے;
 
-    side_data = av_frame_get_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO);
+    side_انکڑے = av_چوکھٹا_get_side_انکڑے(چوکھٹا, AV_چوکھٹا_انکڑے_DOWNMIX_INFO);
 
-    if (!side_data) {
-        side_data = av_frame_new_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO,
-                                           sizeof(AVDownmixInfo));
-        if (side_data)
-            memset(side_data->data, 0, sizeof(AVDownmixInfo));
+    إذا (!side_انکڑے) {
+        side_انکڑے = av_چوکھٹا_new_side_انکڑے(چوکھٹا, AV_چوکھٹا_انکڑے_DOWNMIX_INFO,
+                                           حجم(AVDownmixInfo));
+        إذا (side_انکڑے)
+            memset(side_انکڑے->انکڑے, 0, حجم(AVDownmixInfo));
     }
 
-    if (!side_data)
-        return NULL;
+    إذا (!side_انکڑے)
+        أرجع عدم;
 
-    return (AVDownmixInfo*)side_data->data;
+    أرجع (AVDownmixInfo*)side_انکڑے->انکڑے;
 }
 
-#define MAX_CHANNELS 64
+#تعریف_کرو MAX_CHANNELS 64
 
-static const int type_map[] = {
+ساكن ثابت صحيح type_map[] = {
     [AV_DOWNMIX_TYPE_UNKNOWN] = 0,
     [AV_DOWNMIX_TYPE_LORO]    = 2,
     [AV_DOWNMIX_TYPE_LTRT]    = 2,
     [AV_DOWNMIX_TYPE_DPLII]   = 2,
 };
 
-AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size)
+AVDownmix_میٹرکس *av_downmix_میٹرکس_alloc(تعداد AVDownmixType type,
+                                         صحيح وچ_ch_گنتی, size_t *باہرلا_ناپ)
 {
-    struct TestStruct {
-        AVDownmixMatrix p;
+    بنية TestStruct {
+        AVDownmix_میٹرکس p;
         AVDownmixCoeff  b;
     };
-    const size_t coeffs_offset = offsetof(struct TestStruct, b);
-    size_t size = coeffs_offset;
-    unsigned int nb_coeffs;
-    AVDownmixMatrix *dc;
+    ثابت size_t coeffs_وتھ = offsetof(بنية TestStruct, b);
+    size_t ناپ = coeffs_وتھ;
+    بنانشانی صحيح nb_coeffs;
+    AVDownmix_میٹرکس *dc;
 
-    if ((unsigned)type >= FF_ARRAY_ELEMS(type_map) ||
-        (unsigned)in_ch_count > MAX_CHANNELS)
-        return NULL;
+    إذا ((بنانشانی)type >= FF_ARRAY_ELEMS(type_map) ||
+        (بنانشانی)وچ_ch_گنتی > MAX_CHANNELS)
+        أرجع عدم;
 
-    nb_coeffs = type_map[type] * in_ch_count;
-    size += sizeof(AVDownmixCoeff) * nb_coeffs;
+    nb_coeffs = type_map[type] * وچ_ch_گنتی;
+    ناپ += حجم(AVDownmixCoeff) * nb_coeffs;
 
-    dc = av_mallocz(size);
-    if (!dc)
-        return NULL;
+    dc = av_mallocz(ناپ);
+    إذا (!dc)
+        أرجع عدم;
 
     dc->downmix_type  = type;
     dc->nb_coeffs     = nb_coeffs;
-    dc->in_ch_count   = in_ch_count;
-    dc->coeffs_offset = coeffs_offset;
+    dc->وچ_ch_گنتی   = وچ_ch_گنتی;
+    dc->coeffs_وتھ = coeffs_وتھ;
 
-    if (out_size)
-        *out_size = size;
+    إذا (باہرلا_ناپ)
+        *باہرلا_ناپ = ناپ;
 
-    return dc;
+    أرجع dc;
 }

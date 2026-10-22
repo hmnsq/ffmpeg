@@ -23,13 +23,13 @@
  * internal math functions header
  */
 
-#ifndef AVUTIL_FFMATH_H
-#define AVUTIL_FFMATH_H
+#جے_بنا_تعریف AVUTIL_FFMATH_H
+#تعریف_کرو AVUTIL_FFMATH_H
 
-#include <math.h>
+#ضمن <math.h>
 
-#include "attributes.h"
-#include "mathematics.h"
+#ضمن "attributes.h"
+#ضمن "mathematics.h"
 
 /**
  * Compute 10^x for floating point values. Note: this function is by no means
@@ -41,14 +41,14 @@
  * @param x exponent
  * @return 10^x
  */
-static av_always_inline double ff_exp10(double x)
+ساكن av_always_inline مزدوج ff_exp10(مزدوج x)
 {
-    return exp2(M_LOG2_10 * x);
+    أرجع exp2(M_LOG2_10 * x);
 }
 
-static av_always_inline float ff_exp10f(float x)
+ساكن av_always_inline عائم ff_exp10f(عائم x)
 {
-    return exp2f(M_LOG2_10 * x);
+    أرجع exp2f(M_LOG2_10 * x);
 }
 
 /**
@@ -61,9 +61,9 @@ static av_always_inline float ff_exp10f(float x)
  * @param y exponent
  * @return x^y
  */
-static av_always_inline float ff_fast_powf(float x, float y)
+ساكن av_always_inline عائم ff_fast_powf(عائم x, عائم y)
 {
-    return expf(logf(x) * y);
+    أرجع expf(logf(x) * y);
 }
 
-#endif /* AVUTIL_FFMATH_H */
+#جے_انت /* AVUTIL_FFMATH_H */

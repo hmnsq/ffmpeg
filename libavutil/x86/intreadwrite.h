@@ -18,39 +18,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_INTREADWRITE_H
-#define AVUTIL_X86_INTREADWRITE_H
+#جے_بنا_تعریف AVUTIL_X86_INTREADWRITE_H
+#تعریف_کرو AVUTIL_X86_INTREADWRITE_H
 
-#include <stdint.h>
-#include "config.h"
-#if HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
-#include <emmintrin.h>
-#endif
-#include "libavutil/attributes.h"
+#ضمن <stdint.h>
+#ضمن "config.h"
+#إذا HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
+#ضمن <emmintrin.h>
+#جے_انت
+#ضمن "libavutil/attributes.h"
 
-#if HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
+#إذا HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
 
-#define AV_COPY128 AV_COPY128
-static av_always_inline void AV_COPY128(void *d, const void *s)
+#تعریف_کرو AV_COPY128 AV_COPY128
+ساكن av_always_inline فراغ AV_COPY128(فراغ *d, ثابت فراغ *s)
 {
-    __m128i tmp = _mm_load_si128((const __m128i *)s);
+    __m128i tmp = mm_لدو_si128((ثابت __m128i *)s);
     _mm_store_si128((__m128i *)d, tmp);
 }
 
-#define AV_COPY128U AV_COPY128U
-static av_always_inline void AV_COPY128U(void *d, const void *s)
+#تعریف_کرو AV_COPY128U AV_COPY128U
+ساكن av_always_inline فراغ AV_COPY128U(فراغ *d, ثابت فراغ *s)
 {
-    __m128i tmp = _mm_loadu_si128((const __m128i *)s);
+    __m128i tmp = _mm_loadu_si128((ثابت __m128i *)s);
     _mm_storeu_si128((__m128i *)d, tmp);
 }
 
-#define AV_ZERO128 AV_ZERO128
-static av_always_inline void AV_ZERO128(void *d)
+#تعریف_کرو AV_ZERO128 AV_ZERO128
+ساكن av_always_inline فراغ AV_ZERO128(فراغ *d)
 {
     __m128i zero = _mm_setzero_si128();
     _mm_store_si128((__m128i *)d, zero);
 }
 
-#endif /* HAVE_INTRINSICS_SSE2 && defined(__SSE2__) */
+#جے_انت /* HAVE_INTRINSICS_SSE2 && defined(__SSE2__) */
 
-#endif /* AVUTIL_X86_INTREADWRITE_H */
+#جے_انت /* AVUTIL_X86_INTREADWRITE_H */

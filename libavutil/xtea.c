@@ -28,61 +28,61 @@
  * @ingroup lavu_xtea
  */
 
-#include <string.h>
-#include "config.h"
-#include "intreadwrite.h"
-#include "mem.h"
-#include "xtea.h"
+#ضمن <string.h>
+#ضمن "config.h"
+#ضمن "intreadwrite.h"
+#ضمن "mem.h"
+#ضمن "xtea.h"
 
-AVXTEA *av_xtea_alloc(void)
+AVXTEA *av_xtea_alloc(فراغ)
 {
-    return av_mallocz(sizeof(struct AVXTEA));
+    أرجع av_mallocz(حجم(بنية AVXTEA));
 }
 
-void av_xtea_init(AVXTEA *ctx, const uint8_t key[16])
+فراغ av_xtea_init(AVXTEA *ctx, ثابت uint8_t کلید[16])
 {
-    int i;
+    صحيح i;
 
-    for (i = 0; i < 4; i++)
-        ctx->key[i] = AV_RB32(key + (i << 2));
+    لكل (i = 0; i < 4; i++)
+        ctx->کلید[i] = AV_RB32(کلید + (i << 2));
 }
 
-void av_xtea_le_init(AVXTEA *ctx, const uint8_t key[16])
+فراغ av_xtea_le_init(AVXTEA *ctx, ثابت uint8_t کلید[16])
 {
-    int i;
+    صحيح i;
 
-    for (i = 0; i < 4; i++)
-        ctx->key[i] = AV_RL32(key + (i << 2));
+    لكل (i = 0; i < 4; i++)
+        ctx->کلید[i] = AV_RL32(کلید + (i << 2));
 }
 
-static void xtea_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
-                           int decrypt, uint8_t *iv)
+ساكن فراغ xtea_crypt_ecb(AVXTEA *ctx, uint8_t *dst, ثابت uint8_t *src,
+                           صحيح decrypt, uint8_t *iv)
 {
     uint32_t v0, v1;
-#if !CONFIG_SMALL
-    uint32_t k0 = ctx->key[0];
-    uint32_t k1 = ctx->key[1];
-    uint32_t k2 = ctx->key[2];
-    uint32_t k3 = ctx->key[3];
-#endif
+#إذا !CONFIG_SMALL
+    uint32_t k0 = ctx->کلید[0];
+    uint32_t k1 = ctx->کلید[1];
+    uint32_t k2 = ctx->کلید[2];
+    uint32_t k3 = ctx->کلید[3];
+#جے_انت
 
     v0 = AV_RB32(src);
     v1 = AV_RB32(src + 4);
 
-    if (decrypt) {
-#if CONFIG_SMALL
-        int i;
-        uint32_t delta = 0x9E3779B9U, sum = delta * 32;
+    إذا (decrypt) {
+#إذا CONFIG_SMALL
+        صحيح i;
+        uint32_t delta = 0x9E3779B9U, جوڑ = delta * 32;
 
-        for (i = 0; i < 32; i++) {
-            v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->key[(sum >> 11) & 3]);
-            sum -= delta;
-            v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->key[sum & 3]);
+        لكل (i = 0; i < 32; i++) {
+            v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (جوڑ + ctx->کلید[(جوڑ >> 11) & 3]);
+            جوڑ -= delta;
+            v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (جوڑ + ctx->کلید[جوڑ & 3]);
         }
-#else
-#define DSTEP(SUM, K0, K1) \
-            v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (SUM + K0); \
-            v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (SUM - 0x9E3779B9U + K1)
+#وإلا
+#تعریف_کرو DSTEP(جوڑ_2, K0, K1) \
+            v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (جوڑ_2 + K0); \
+            v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (جوڑ_2 - 0x9E3779B9U + K1)
 
         DSTEP(0xC6EF3720U, k2, k3);
         DSTEP(0x28B7BD67U, k3, k2);
@@ -116,26 +116,26 @@ static void xtea_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
         DSTEP(0xDAA66D2BU, k1, k2);
         DSTEP(0x3C6EF372U, k2, k1);
         DSTEP(0x9E3779B9U, k3, k0);
-#endif
-        if (iv) {
+#جے_انت
+        إذا (iv) {
             v0 ^= AV_RB32(iv);
             v1 ^= AV_RB32(iv + 4);
-            memcpy(iv, src, 8);
+            حافظہ_نقل(iv, src, 8);
         }
-    } else {
-#if CONFIG_SMALL
-        int i;
-        uint32_t sum = 0, delta = 0x9E3779B9U;
+    } وإلا {
+#إذا CONFIG_SMALL
+        صحيح i;
+        uint32_t جوڑ = 0, delta = 0x9E3779B9U;
 
-        for (i = 0; i < 32; i++) {
-            v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->key[sum & 3]);
-            sum += delta;
-            v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->key[(sum >> 11) & 3]);
+        لكل (i = 0; i < 32; i++) {
+            v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (جوڑ + ctx->کلید[جوڑ & 3]);
+            جوڑ += delta;
+            v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (جوڑ + ctx->کلید[(جوڑ >> 11) & 3]);
         }
-#else
-#define ESTEP(SUM, K0, K1) \
-            v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (SUM + K0);\
-            v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (SUM + 0x9E3779B9U + K1)
+#وإلا
+#تعریف_کرو ESTEP(جوڑ_2, K0, K1) \
+            v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (جوڑ_2 + K0);\
+            v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (جوڑ_2 + 0x9E3779B9U + K1)
         ESTEP(0x00000000U, k0, k3);
         ESTEP(0x9E3779B9U, k1, k2);
         ESTEP(0x3C6EF372U, k2, k1);
@@ -168,42 +168,42 @@ static void xtea_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
         ESTEP(0xEC48C9F5U, k1, k0);
         ESTEP(0x8A8043AEU, k2, k3);
         ESTEP(0x28B7BD67U, k3, k2);
-#endif
+#جے_انت
     }
 
     AV_WB32(dst, v0);
     AV_WB32(dst + 4, v1);
 }
 
-static void xtea_le_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
-                              int decrypt, uint8_t *iv)
+ساكن فراغ xtea_le_crypt_ecb(AVXTEA *ctx, uint8_t *dst, ثابت uint8_t *src,
+                              صحيح decrypt, uint8_t *iv)
 {
     uint32_t v0, v1;
-    int i;
+    صحيح i;
 
     v0 = AV_RL32(src);
     v1 = AV_RL32(src + 4);
 
-    if (decrypt) {
-        uint32_t delta = 0x9E3779B9, sum = delta * 32;
+    إذا (decrypt) {
+        uint32_t delta = 0x9E3779B9, جوڑ = delta * 32;
 
-        for (i = 0; i < 32; i++) {
-            v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->key[(sum >> 11) & 3]);
-            sum -= delta;
-            v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->key[sum & 3]);
+        لكل (i = 0; i < 32; i++) {
+            v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (جوڑ + ctx->کلید[(جوڑ >> 11) & 3]);
+            جوڑ -= delta;
+            v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (جوڑ + ctx->کلید[جوڑ & 3]);
         }
-        if (iv) {
+        إذا (iv) {
             v0 ^= AV_RL32(iv);
             v1 ^= AV_RL32(iv + 4);
-            memcpy(iv, src, 8);
+            حافظہ_نقل(iv, src, 8);
         }
-    } else {
-        uint32_t sum = 0, delta = 0x9E3779B9;
+    } وإلا {
+        uint32_t جوڑ = 0, delta = 0x9E3779B9;
 
-        for (i = 0; i < 32; i++) {
-            v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + ctx->key[sum & 3]);
-            sum += delta;
-            v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + ctx->key[(sum >> 11) & 3]);
+        لكل (i = 0; i < 32; i++) {
+            v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (جوڑ + ctx->کلید[جوڑ & 3]);
+            جوڑ += delta;
+            v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (جوڑ + ctx->کلید[(جوڑ >> 11) & 3]);
         }
     }
 
@@ -211,28 +211,28 @@ static void xtea_le_crypt_ecb(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
     AV_WL32(dst + 4, v1);
 }
 
-static void xtea_crypt(AVXTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
-                       uint8_t *iv, int decrypt,
-                       void (*crypt)(AVXTEA *, uint8_t *, const uint8_t *, int, uint8_t *))
+ساكن فراغ xtea_crypt(AVXTEA *ctx, uint8_t *dst, ثابت uint8_t *src, صحيح گنتی,
+                       uint8_t *iv, صحيح decrypt,
+                       فراغ (*crypt)(AVXTEA *, uint8_t *, ثابت uint8_t *, صحيح, uint8_t *))
 {
-    int i;
+    صحيح i;
 
-    if (decrypt) {
-        while (count--) {
+    إذا (decrypt) {
+        طالما (گنتی--) {
             crypt(ctx, dst, src, decrypt, iv);
 
             src   += 8;
             dst   += 8;
         }
-    } else {
-        while (count--) {
-            if (iv) {
-                for (i = 0; i < 8; i++)
+    } وإلا {
+        طالما (گنتی--) {
+            إذا (iv) {
+                لكل (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];
-                crypt(ctx, dst, dst, decrypt, NULL);
-                memcpy(iv, dst, 8);
-            } else {
-                crypt(ctx, dst, src, decrypt, NULL);
+                crypt(ctx, dst, dst, decrypt, عدم);
+                حافظہ_نقل(iv, dst, 8);
+            } وإلا {
+                crypt(ctx, dst, src, decrypt, عدم);
             }
             src   += 8;
             dst   += 8;
@@ -240,14 +240,14 @@ static void xtea_crypt(AVXTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
     }
 }
 
-void av_xtea_crypt(AVXTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
-                   uint8_t *iv, int decrypt)
+فراغ av_xtea_crypt(AVXTEA *ctx, uint8_t *dst, ثابت uint8_t *src, صحيح گنتی,
+                   uint8_t *iv, صحيح decrypt)
 {
-    xtea_crypt(ctx, dst, src, count, iv, decrypt, xtea_crypt_ecb);
+    xtea_crypt(ctx, dst, src, گنتی, iv, decrypt, xtea_crypt_ecb);
 }
 
-void av_xtea_le_crypt(AVXTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
-                      uint8_t *iv, int decrypt)
+فراغ av_xtea_le_crypt(AVXTEA *ctx, uint8_t *dst, ثابت uint8_t *src, صحيح گنتی,
+                      uint8_t *iv, صحيح decrypt)
 {
-    xtea_crypt(ctx, dst, src, count, iv, decrypt, xtea_le_crypt_ecb);
+    xtea_crypt(ctx, dst, src, گنتی, iv, decrypt, xtea_le_crypt_ecb);
 }

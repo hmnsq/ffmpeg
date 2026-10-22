@@ -16,11 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_DYNARRAY_H
-#define AVUTIL_DYNARRAY_H
+#جے_بنا_تعریف AVUTIL_DYNARRAY_H
+#تعریف_کرو AVUTIL_DYNARRAY_H
 
-#include "log.h"
-#include "mem.h"
+#ضمن "log.h"
+#ضمن "mem.h"
 
 /**
  * Add an element to a dynamic array.
@@ -42,29 +42,29 @@
  *                     array and size are not changed; the statement can end
  *                     with a return or a goto
  */
-#define FF_DYNARRAY_ADD(av_size_max, av_elt_size, av_array, av_size, \
+#تعریف_کرو FF_DYNARRAY_جوڑو(av_ناپ_max, av_elt_ناپ, av_array, av_ناپ, \
                         av_success, av_failure) \
-    do { \
-        size_t av_size_new = (av_size); \
-        if (!((av_size) & ((av_size) - 1))) { \
-            av_size_new = (av_size) ? (av_size) << 1 : 1; \
-            if (av_size_new > (av_size_max) / (av_elt_size)) { \
-                av_size_new = 0; \
-            } else { \
-                void *av_array_new = \
-                    av_realloc((av_array), av_size_new * (av_elt_size)); \
-                if (!av_array_new) \
-                    av_size_new = 0; \
-                else \
+    افعل { \
+        size_t av_ناپ_new = (av_ناپ); \
+        إذا (!((av_ناپ) & ((av_ناپ) - 1))) { \
+            av_ناپ_new = (av_ناپ) ? (av_ناپ) << 1 : 1; \
+            إذا (av_ناپ_new > (av_ناپ_max) / (av_elt_ناپ)) { \
+                av_ناپ_new = 0; \
+            } وإلا { \
+                فراغ *av_array_new = \
+                    av_realloc((av_array), av_ناپ_new * (av_elt_ناپ)); \
+                إذا (!av_array_new) \
+                    av_ناپ_new = 0; \
+                وإلا \
                     (av_array) = av_array_new; \
             } \
         } \
-        if (av_size_new) { \
+        إذا (av_ناپ_new) { \
             { av_success } \
-            (av_size)++; \
-        } else { \
+            (av_ناپ)++; \
+        } وإلا { \
             av_failure \
         } \
-    } while (0)
+    } طالما (0)
 
-#endif /* AVUTIL_DYNARRAY_H */
+#جے_انت /* AVUTIL_DYNARRAY_H */

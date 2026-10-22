@@ -16,28 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BUFFER_INTERNAL_H
-#define AVUTIL_BUFFER_INTERNAL_H
+#جے_بنا_تعریف AVUTIL_بفر_اندرونی_H
+#تعریف_کرو AVUTIL_بفر_اندرونی_H
 
-#include <stdatomic.h>
-#include <stdint.h>
+#ضمن <stdatomic.h>
+#ضمن <stdint.h>
 
-#include "buffer.h"
-#include "thread.h"
+#ضمن "buffer.h"
+#ضمن "thread.h"
 
 /**
  * The buffer was av_realloc()ed, so it is reallocatable.
  */
-#define BUFFER_FLAG_REALLOCATABLE (1 << 0)
+#تعریف_کرو بفر_FLAG_REALLOCATABLE (1 << 0)
 /**
  * The AVBuffer structure is part of a larger structure
  * and should not be freed.
  */
-#define BUFFER_FLAG_NO_FREE       (1 << 1)
+#تعریف_کرو بفر_FLAG_NO_FREE       (1 << 1)
 
-struct AVBuffer {
-    uint8_t *data; /**< data described by this buffer */
-    size_t size; /**< size of data in bytes */
+بنية AVBuffer {
+    uint8_t *انکڑے; /**< data described by this buffer */
+    size_t ناپ; /**< size of data in bytes */
 
     /**
      *  number of existing AVBufferRef instances referring to this buffer
@@ -47,47 +47,47 @@ struct AVBuffer {
     /**
      * a callback for freeing the data
      */
-    void (*free)(void *opaque, uint8_t *data);
+    فراغ (*حرر)(فراغ *opaque, uint8_t *انکڑے);
 
     /**
      * an opaque pointer, to be used by the freeing callback
      */
-    void *opaque;
+    فراغ *opaque;
 
     /**
      * A combination of AV_BUFFER_FLAG_*
      */
-    int flags;
+    صحيح flags;
 
     /**
      * A combination of BUFFER_FLAG_*
      */
-    int flags_internal;
+    صحيح flags_اندرونی;
 };
 
-typedef struct BufferPoolEntry {
-    uint8_t *data;
+تعريفنوع بنية بفر_Pool_اندراج {
+    uint8_t *انکڑے;
 
     /*
      * Backups of the original opaque/free of the AVBuffer corresponding to
      * data. They will be used to free the buffer when the pool is freed.
      */
-    void *opaque;
-    void (*free)(void *opaque, uint8_t *data);
+    فراغ *opaque;
+    فراغ (*حرر)(فراغ *opaque, uint8_t *انکڑے);
 
     AVBufferPool *pool;
-    struct BufferPoolEntry *next;
+    بنية بفر_Pool_اندراج *اگلا;
 
     /*
      * An AVBuffer structure to (re)use as AVBuffer for subsequent uses
      * of this BufferPoolEntry.
      */
-    AVBuffer buffer;
-} BufferPoolEntry;
+    AVBuffer بفر;
+} بفر_Pool_اندراج;
 
-struct AVBufferPool {
+بنية AVBufferPool {
     AVMutex mutex;
-    BufferPoolEntry *pool;
+    بفر_Pool_اندراج *pool;
 
     /*
      * This is used to track when the pool is to be freed.
@@ -100,11 +100,11 @@ struct AVBufferPool {
      */
     atomic_uint refcount;
 
-    size_t size;
-    void *opaque;
-    AVBufferRef* (*alloc)(size_t size);
-    AVBufferRef* (*alloc2)(void *opaque, size_t size);
-    void         (*pool_free)(void *opaque);
+    size_t ناپ;
+    فراغ *opaque;
+    AVBufferRef* (*alloc)(size_t ناپ);
+    AVBufferRef* (*alloc2)(فراغ *opaque, size_t ناپ);
+    فراغ         (*pool_free)(فراغ *opaque);
 };
 
-#endif /* AVUTIL_BUFFER_INTERNAL_H */
+#جے_انت /* AVUTIL_BUFFER_INTERNAL_H */

@@ -172,7 +172,7 @@
     %if %0 == 2
         %define r%1m  %2d
         %define r%1mp %2
-    %elif ARCH_X86_64 ; memory
+    %elif ARCH_X86_64 ;حافظہ
         %define r%1m [rstk + stack_offset + %3]
         %define r%1mp qword r %+ %1 %+ m
     %else
@@ -240,7 +240,7 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
 %if ARCH_X86_64
     lea %1, [%2]
 %elif PIC
-    call $+5 ; special-cased to not affect the RSB on most CPU:s
+    نادي $+5 ; special-cased to not affect the RSB on most CPU:s
     pop %1
     add %1, (%2)-$+1
 %else
@@ -797,7 +797,7 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
 
 %macro TAIL_CALL 1-2 1 ; callee, is_nonadjacent
     %if has_epilogue
-        call %1
+        نادي %1
         RET
     %elif %2
         jmp %1
@@ -1269,11 +1269,11 @@ INIT_XMM
 %endmacro
 
 ; Append cpuflags to the callee's name iff the appended name is known and the plain name isn't
-%macro call 1
+%macro نادي 1
     %ifid %1
         call_internal %1 %+ SUFFIX, %1
     %else
-        call %1
+        نادي %1
     %endif
 %endmacro
 %macro call_internal 2
@@ -1283,7 +1283,7 @@ INIT_XMM
             %xdefine %%i %1
         %endif
     %endif
-    call %%i
+    نادي %%i
     LOAD_MM_PERMUTATION %%i
 %endmacro
 
