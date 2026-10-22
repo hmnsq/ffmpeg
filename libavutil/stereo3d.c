@@ -18,54 +18,54 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ضمن <string.h>
 
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "stereo3d.h"
+#ضمن "frame.h"
+#ضمن "macros.h"
+#ضمن "mem.h"
+#ضمن "stereo3d.h"
 
-static void get_defaults(AVStereo3D *stereo)
+ساكن فراغ get_defaults(AVStereo3D *stereo)
 {
     stereo->horizontal_disparity_adjustment = (AVRational) { 0, 1 };
     stereo->horizontal_field_of_view = (AVRational) { 0, 1 };
 }
 
-AVStereo3D *av_stereo3d_alloc(void)
+AVStereo3D *av_stereo3d_alloc(فراغ)
 {
-    return av_stereo3d_alloc_size(NULL);
+    החזר av_stereo3d_alloc_size(عدم);
 }
 
 AVStereo3D *av_stereo3d_alloc_size(size_t *size)
 {
-    AVStereo3D *stereo = av_mallocz(sizeof(AVStereo3D));
+    AVStereo3D *stereo = av_mallocz(حجم(AVStereo3D));
 
-    if (size)
-        *size = stereo ? sizeof(*stereo) : 0;
+    אם (size)
+        *size = stereo ? حجم(*stereo) : 0;
 
-    if (!stereo)
-        return NULL;
+    אם (!stereo)
+        החזר عدم;
 
     get_defaults(stereo);
 
-    return stereo;
+    החזר stereo;
 }
 
 AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_STEREO3D,
-                                                        sizeof(AVStereo3D));
-    if (!side_data)
-        return NULL;
+                                                        حجم(AVStereo3D));
+    אם (!side_data)
+        החזר عدم;
 
-    memset(side_data->data, 0, sizeof(AVStereo3D));
+    memset(side_data->data, 0, حجم(AVStereo3D));
     get_defaults((AVStereo3D *)side_data->data);
 
-    return (AVStereo3D *)side_data->data;
+    החזר (AVStereo3D *)side_data->data;
 }
 
-static const char * const stereo3d_type_names[] = {
+ساكن ثابت حرف * ثابت stereo3d_type_names[] = {
     [AV_STEREO3D_2D]                  = "2D",
     [AV_STEREO3D_SIDEBYSIDE]          = "side by side",
     [AV_STEREO3D_TOPBOTTOM]           = "top and bottom",
@@ -77,75 +77,75 @@ static const char * const stereo3d_type_names[] = {
     [AV_STEREO3D_UNSPEC]              = "unspecified",
 };
 
-static const char * const stereo3d_view_names[] = {
+ساكن ثابت حرف * ثابت stereo3d_view_names[] = {
     [AV_STEREO3D_VIEW_PACKED] = "packed",
     [AV_STEREO3D_VIEW_LEFT]   = "left",
     [AV_STEREO3D_VIEW_RIGHT]  = "right",
     [AV_STEREO3D_VIEW_UNSPEC] = "unspecified",
 };
 
-static const char * const stereo3d_primary_eye_names[] = {
+ساكن ثابت حرف * ثابت stereo3d_primary_eye_names[] = {
     [AV_PRIMARY_EYE_NONE]  = "none",
     [AV_PRIMARY_EYE_LEFT]  = "left",
     [AV_PRIMARY_EYE_RIGHT] = "right",
 };
 
-const char *av_stereo3d_type_name(unsigned int type)
+ثابت حرف *av_stereo3d_type_name(unsigned صحيح type)
 {
-    if (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
-        return "unknown";
+    אם (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
+        החזר "unknown";
 
-    return stereo3d_type_names[type];
+    החזר stereo3d_type_names[type];
 }
 
-int av_stereo3d_from_name(const char *name)
+صحيح av_stereo3d_from_name(ثابت حرف *name)
 {
-    int i;
+    صحيح i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
-        if (!strcmp(name, stereo3d_type_names[i]))
-            return i;
+    עבור (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
+        אם (!strcmp(name, stereo3d_type_names[i]))
+            החזר i;
     }
 
-    return -1;
+    החזר -1;
 }
 
-const char *av_stereo3d_view_name(unsigned int view)
+ثابت حرف *av_stereo3d_view_name(unsigned صحيح view)
 {
-    if (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
-        return "unknown";
+    אם (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
+        החזר "unknown";
 
-    return stereo3d_view_names[view];
+    החזר stereo3d_view_names[view];
 }
 
-int av_stereo3d_view_from_name(const char *name)
+صحيح av_stereo3d_view_from_name(ثابت حرف *name)
 {
-    int i;
+    صحيح i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
-        if (!strcmp(name, stereo3d_view_names[i]))
-            return i;
+    עבור (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
+        אם (!strcmp(name, stereo3d_view_names[i]))
+            החזר i;
     }
 
-    return -1;
+    החזר -1;
 }
 
-const char *av_stereo3d_primary_eye_name(unsigned int eye)
+ثابت حرف *av_stereo3d_primary_eye_name(unsigned صحيح eye)
 {
-    if (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
-        return "unknown";
+    אם (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
+        החזר "unknown";
 
-    return stereo3d_primary_eye_names[eye];
+    החזר stereo3d_primary_eye_names[eye];
 }
 
-int av_stereo3d_primary_eye_from_name(const char *name)
+صحيح av_stereo3d_primary_eye_from_name(ثابت حرف *name)
 {
-    int i;
+    صحيح i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
-        if (!strcmp(name, stereo3d_primary_eye_names[i]))
-            return i;
+    עבור (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
+        אם (!strcmp(name, stereo3d_primary_eye_names[i]))
+            החזר i;
     }
 
-    return -1;
+    החזר -1;
 }

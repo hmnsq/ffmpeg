@@ -18,90 +18,90 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ضمن "config.h"
 
-#include <stddef.h>
-#include <stdint.h>
-#include <time.h>
-#if HAVE_GETTIMEOFDAY
-#include <sys/time.h>
+#ضمن <stddef.h>
+#ضمن <stdint.h>
+#ضمن <time.h>
+#אם HAVE_GETTIMEOFDAY
+#ضمن <sys/time.h>
 #endif
-#if HAVE_UNISTD_H
-#include <unistd.h>
+#אם HAVE_UNISTD_H
+#ضمن <unistd.h>
 #endif
-#if HAVE_WINDOWS_H
-#include <windows.h>
+#אם HAVE_WINDOWS_H
+#ضمن <windows.h>
 #endif
 
-#include "time.h"
-#include "error.h"
-#include "mathematics.h"
+#ضمن "time.h"
+#ضمن "error.h"
+#ضمن "mathematics.h"
 
-int64_t av_gettime(void)
+int64_t av_gettime(فراغ)
 {
-#if HAVE_GETTIMEOFDAY
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    return (int64_t)tv.tv_sec * 1000000 + tv.tv_usec;
-#elif HAVE_GETSYSTEMTIMEASFILETIME
+#אם HAVE_GETTIMEOFDAY
+    بنية timeval tv;
+    gettimeofday(&tv, عدم);
+    החזר (int64_t)tv.tv_sec * 1000000 + tv.tv_usec;
+#وإلاإذا HAVE_GETSYSTEMTIMEASFILETIME
     FILETIME ft;
     int64_t t;
     GetSystemTimeAsFileTime(&ft);
     t = (int64_t)ft.dwHighDateTime << 32 | ft.dwLowDateTime;
-    return t / 10 - 11644473600000000; /* Jan 1, 1601 */
-#else
-    return -1;
+    החזר t / 10 - 11644473600000000; /* Jan 1, 1601 */
+#אחרת
+    החזר -1;
 #endif
 }
 
-int64_t av_gettime_relative(void)
+int64_t av_gettime_relative(فراغ)
 {
-#if HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
+#אם HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
 #ifdef __APPLE__
-    if (&clock_gettime)
+    אם (&clock_gettime)
 #endif
     {
-        struct timespec ts;
+        بنية timespec ts;
         clock_gettime(CLOCK_MONOTONIC, &ts);
-        return (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
+        החזר (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
     }
-#elif defined(_WIN32)
+#وإلاإذا defined(_WIN32)
     LARGE_INTEGER freq;
     LARGE_INTEGER counter;
     QueryPerformanceFrequency(&freq);
     QueryPerformanceCounter(&counter);
-    return av_rescale(counter.QuadPart, 1000000, freq.QuadPart);
+    החזר av_rescale(counter.QuadPart, 1000000, freq.QuadPart);
 #endif
-    return av_gettime() + 42 * 60 * 60 * INT64_C(1000000);
+    החזר av_gettime() + 42 * 60 * 60 * INT64_C(1000000);
 }
 
-int av_gettime_relative_is_monotonic(void)
+صحيح av_gettime_relative_is_monotonic(فراغ)
 {
-#if HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
+#אם HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
 #ifdef __APPLE__
-    if (!&clock_gettime)
-        return 0;
+    אם (!&clock_gettime)
+        החזר 0;
 #endif
-    return 1;
-#elif defined(_WIN32)
-    return 1;
-#else
-    return 0;
+    החזר 1;
+#وإلاإذا defined(_WIN32)
+    החזר 1;
+#אחרת
+    החזר 0;
 #endif
 }
 
-int av_usleep(unsigned usec)
+صحيح av_usleep(unsigned usec)
 {
-#if HAVE_NANOSLEEP
-    struct timespec ts = { usec / 1000000, usec % 1000000 * 1000 };
-    while (nanosleep(&ts, &ts) < 0 && errno == EINTR);
-    return 0;
-#elif HAVE_USLEEP
-    return usleep(usec);
-#elif HAVE_SLEEP
+#אם HAVE_NANOSLEEP
+    بنية timespec ts = { usec / 1000000, usec % 1000000 * 1000 };
+    כלעוד (nanosleep(&ts, &ts) < 0 && errno == EINTR);
+    החזר 0;
+#وإلاإذا HAVE_USLEEP
+    החזר usleep(usec);
+#وإلاإذا HAVE_SLEEP
     Sleep(usec / 1000);
-    return 0;
-#else
-    return AVERROR(ENOSYS);
+    החזר 0;
+#אחרת
+    החזר AVERROR(ENOSYS);
 #endif
 }

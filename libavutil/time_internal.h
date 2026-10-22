@@ -19,29 +19,29 @@
 #ifndef AVUTIL_TIME_INTERNAL_H
 #define AVUTIL_TIME_INTERNAL_H
 
-#include <time.h>
-#include "config.h"
+#ضمن <time.h>
+#ضمن "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
-static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
+#אם !HAVE_GMTIME_R && !defined(gmtime_r)
+ساكن مضمن بنية tm *ff_gmtime_r(ثابت time_t* clock, بنية tm *result)
 {
-    struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
+    بنية tm *ptr = gmtime(clock);
+    אם (!ptr)
+        החזר عدم;
     *result = *ptr;
-    return result;
+    החזר result;
 }
 #define gmtime_r ff_gmtime_r
 #endif
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
-static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
+#אם !HAVE_LOCALTIME_R && !defined(localtime_r)
+ساكن مضمن بنية tm *ff_localtime_r(ثابت time_t* clock, بنية tm *result)
 {
-    struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
+    بنية tm *ptr = localtime(clock);
+    אם (!ptr)
+        החזר عدم;
     *result = *ptr;
-    return result;
+    החזר result;
 }
 #define localtime_r ff_localtime_r
 #endif

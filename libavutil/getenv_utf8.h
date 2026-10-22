@@ -19,66 +19,66 @@
 #ifndef AVUTIL_GETENV_UTF8_H
 #define AVUTIL_GETENV_UTF8_H
 
-#include <stdlib.h>
+#ضمن <stdlib.h>
 
-#include "config.h"
-#include "mem.h"
+#ضمن "config.h"
+#ضمن "mem.h"
 
-#if HAVE_GETENV && defined(_WIN32)
+#אם HAVE_GETENV && defined(_WIN32)
 
-#include "libavutil/wchar_filename.h"
+#ضمن "libavutil/wchar_filename.h"
 
-static inline char *getenv_utf8(const char *varname)
+ساكن مضمن حرف *getenv_utf8(ثابت حرف *varname)
 {
     wchar_t *varname_w, *var_w;
-    char *var;
+    حرف *var;
 
-    if (utf8towchar(varname, &varname_w))
-        return NULL;
-    if (!varname_w)
-        return NULL;
+    אם (utf8towchar(varname, &varname_w))
+        החזר عدم;
+    אם (!varname_w)
+        החזר عدم;
 
     var_w = _wgetenv(varname_w);
     av_free(varname_w);
 
-    if (!var_w)
-        return NULL;
-    if (wchartoutf8(var_w, &var))
-        return NULL;
+    אם (!var_w)
+        החזר عدم;
+    אם (wchartoutf8(var_w, &var))
+        החזר عدم;
 
-    return var;
+    החזר var;
 
     // No CP_ACP fallback compared to other *_utf8() functions:
     // non UTF-8 strings must not be returned.
 }
 
-static inline void freeenv_utf8(char *var)
+ساكن مضمن فراغ freeenv_utf8(حرف *var)
 {
     av_free(var);
 }
 
-static inline char *getenv_dup(const char *varname)
+ساكن مضمن حرف *getenv_dup(ثابت حرف *varname)
 {
-    return getenv_utf8(varname);
+    החזר getenv_utf8(varname);
 }
 
-#else
+#אחרת
 
-static inline char *getenv_utf8(const char *varname)
+ساكن مضمن حرف *getenv_utf8(ثابت حرف *varname)
 {
-    return getenv(varname);
+    החזר getenv(varname);
 }
 
-static inline void freeenv_utf8(char *var)
+ساكن مضمن فراغ freeenv_utf8(حرف *var)
 {
 }
 
-static inline char *getenv_dup(const char *varname)
+ساكن مضمن حرف *getenv_dup(ثابت حرف *varname)
 {
-    char *var = getenv(varname);
-    if (!var)
-        return NULL;
-    return av_strdup(var);
+    حرف *var = getenv(varname);
+    אם (!var)
+        החזר عدم;
+    החזר av_strdup(var);
 }
 
 #endif // HAVE_GETENV && defined(_WIN32)

@@ -21,31 +21,31 @@
 #ifndef AVUTIL_RISCV_CPU_H
 #define AVUTIL_RISCV_CPU_H
 
-#include "config.h"
-#include <stdbool.h>
-#include <stddef.h>
-#include "libavutil/attributes_internal.h"
-#include "libavutil/cpu.h"
+#ضمن "config.h"
+#ضمن <stdbool.h>
+#ضمن <stddef.h>
+#ضمن "libavutil/attributes_internal.h"
+#ضمن "libavutil/cpu.h"
 
 #ifndef __riscv_zbb
-extern attribute_visibility_hidden bool ff_rv_zbb_supported;
+خارجي attribute_visibility_hidden bool ff_rv_zbb_supported;
 #endif
 
-static inline av_const bool ff_rv_zbb_support(void)
+ساكن مضمن av_const bool ff_rv_zbb_support(فراغ)
 {
 #ifndef __riscv_zbb
-    return ff_rv_zbb_supported;
-#else
-    return true;
+    החזר ff_rv_zbb_supported;
+#אחרת
+    החזר true;
 #endif
 }
 
-#if HAVE_RVV
+#אם HAVE_RVV
 /**
  * Returns the vector size in bytes (always a power of two and at least 4).
  * This is undefined behaviour if vectors are not implemented.
  */
-static inline av_const size_t ff_get_rv_vlenb(void)
+ساكن مضمن av_const size_t ff_get_rv_vlenb(فراغ)
 {
     size_t vlenb;
 
@@ -54,27 +54,27 @@ static inline av_const size_t ff_get_rv_vlenb(void)
         ".option arch, +v\n"
         "    csrr %0, vlenb\n"
         ".option pop\n" : "=r" (vlenb));
-    return vlenb;
+    החזר vlenb;
 }
 
 /**
  * Checks that the vector bit-size is at least the given value.
  * This is potentially undefined behaviour if vectors are not implemented.
  */
-static inline av_const bool ff_rv_vlen_least(unsigned int bits)
+ساكن مضمن av_const bool ff_rv_vlen_least(unsigned صحيح bits)
 {
 #ifdef __riscv_v_min_vlen
-    if (bits <= __riscv_v_min_vlen)
-        return true;
-#else
+    אם (bits <= __riscv_v_min_vlen)
+        החזר true;
+#אחרת
     /*
      * Vector lengths smaller than 128 bits are only possible in embedded cases
      * and cannot be run-time detected, so we can assume 128 bits at least.
      */
-    if (bits <= 128)
-        return true;
+    אם (bits <= 128)
+        החזר true;
 #endif
-    return bits <= (8 * ff_get_rv_vlenb());
+    החזר bits <= (8 * ff_get_rv_vlenb());
 }
 #endif
 #endif /* HAVE_RVV */

@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
-#include <string.h>
+#ضمن <limits.h>
+#ضمن <stdio.h>
+#ضمن <string.h>
 
-#include "libavutil/error.h"
-#include "libavutil/frame.h"
-#include "libavutil/hdr_dynamic_metadata.h"
-#include "libavutil/mem.h"
-#include "libavutil/rational.h"
+#ضمن "libavutil/error.h"
+#ضمن "libavutil/frame.h"
+#ضمن "libavutil/hdr_dynamic_metadata.h"
+#ضمن "libavutil/mem.h"
+#ضمن "libavutil/rational.h"
 
 /* Denominators av_dynamic_hdr_plus_to_t35() quantises to. The fixtures below
  * express every rational in these terms, so a correct round trip reproduces
@@ -44,22 +44,22 @@
  * instead of silently passing a flag-only check.
  */
 
-static void print_peak_matrix(const char *label, int rows, int cols,
-                              const AVRational m[25][25])
+ساكن فراغ print_peak_matrix(ثابت حرف *label, صحيح rows, صحيح cols,
+                              ثابت AVRational m[25][25])
 {
     printf("    %s %dx%d:", label, rows, cols);
-    for (int i = 0; i < rows; i++)
-        for (int j = 0; j < cols; j++)
+    עבור (صحيح i = 0; i < rows; i++)
+        עבור (صحيح j = 0; j < cols; j++)
             printf(" %d/%d", m[i][j].num, m[i][j].den);
     printf("\n");
 }
 
-static void print_window(int w, const AVHDRPlusColorTransformParams *p,
-                         int geometry)
+ساكن فراغ print_window(صحيح w, ثابت AVHDRPlusColorTransformParams *p,
+                         صحيح geometry)
 {
     printf("  window %d:\n", w);
     /* Window 0 covers the whole frame; its geometry is not serialized. */
-    if (geometry) {
+    אם (geometry) {
         printf("    corners: ul=%d/%d,%d/%d lr=%d/%d,%d/%d\n",
                p->window_upper_left_corner_x.num,
                p->window_upper_left_corner_x.den,
@@ -84,31 +84,31 @@ static void print_window(int w, const AVHDRPlusColorTransformParams *p,
            p->average_maxrgb.num, p->average_maxrgb.den);
     printf("    distribution_maxrgb: n=%u",
            p->num_distribution_maxrgb_percentiles);
-    for (int i = 0; i < p->num_distribution_maxrgb_percentiles; i++)
+    עבור (صحيح i = 0; i < p->num_distribution_maxrgb_percentiles; i++)
         printf(" %u%%=%d/%d", p->distribution_maxrgb[i].percentage,
                p->distribution_maxrgb[i].percentile.num,
                p->distribution_maxrgb[i].percentile.den);
     printf("\n    fraction_bright_pixels=%d/%d\n",
            p->fraction_bright_pixels.num, p->fraction_bright_pixels.den);
     printf("    tone_mapping_flag=%u", p->tone_mapping_flag);
-    if (p->tone_mapping_flag) {
+    אם (p->tone_mapping_flag) {
         printf(" knee=%d/%d,%d/%d anchors=%u:",
                p->knee_point_x.num, p->knee_point_x.den,
                p->knee_point_y.num, p->knee_point_y.den,
                p->num_bezier_curve_anchors);
-        for (int i = 0; i < p->num_bezier_curve_anchors; i++)
+        עבור (صحيح i = 0; i < p->num_bezier_curve_anchors; i++)
             printf(" %d/%d", p->bezier_curve_anchors[i].num,
                    p->bezier_curve_anchors[i].den);
     }
     printf("\n    color_saturation_mapping_flag=%u",
            p->color_saturation_mapping_flag);
-    if (p->color_saturation_mapping_flag)
+    אם (p->color_saturation_mapping_flag)
         printf(" weight=%d/%d", p->color_saturation_weight.num,
                p->color_saturation_weight.den);
     printf("\n");
 }
 
-static void print_hdr_plus(const char *label, const AVDynamicHDRPlus *s)
+ساكن فراغ print_hdr_plus(ثابت حرف *label, ثابت AVDynamicHDRPlus *s)
 {
     printf("%s:\n", label);
     printf("  application_version=%u num_windows=%u"
@@ -118,41 +118,41 @@ static void print_hdr_plus(const char *label, const AVDynamicHDRPlus *s)
            s->targeted_system_display_maximum_luminance.den);
     printf("  targeted_system_display_actual_peak_luminance_flag=%u\n",
            s->targeted_system_display_actual_peak_luminance_flag);
-    if (s->targeted_system_display_actual_peak_luminance_flag)
+    אם (s->targeted_system_display_actual_peak_luminance_flag)
         print_peak_matrix("targeted_peak",
                           s->num_rows_targeted_system_display_actual_peak_luminance,
                           s->num_cols_targeted_system_display_actual_peak_luminance,
                           s->targeted_system_display_actual_peak_luminance);
     printf("  mastering_display_actual_peak_luminance_flag=%u\n",
            s->mastering_display_actual_peak_luminance_flag);
-    if (s->mastering_display_actual_peak_luminance_flag)
+    אם (s->mastering_display_actual_peak_luminance_flag)
         print_peak_matrix("mastering_peak",
                           s->num_rows_mastering_display_actual_peak_luminance,
                           s->num_cols_mastering_display_actual_peak_luminance,
                           s->mastering_display_actual_peak_luminance);
-    for (int w = 0; w < s->num_windows; w++)
+    עבור (صحيح w = 0; w < s->num_windows; w++)
         print_window(w, &s->params[w], w > 0);
 }
 
-static void print_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
+ساكن فراغ print_app5(ثابت حرف *label, ثابت AVDynamicHDRSmpte2094App5 *s)
 {
     printf("%s:\n", label);
     printf("  application_version=%u minimum_application_version=%u\n",
            s->application_version, s->minimum_application_version);
     printf("  has_custom_hdr_reference_white_flag=%u",
            s->has_custom_hdr_reference_white_flag);
-    if (s->has_custom_hdr_reference_white_flag)
+    אם (s->has_custom_hdr_reference_white_flag)
         printf(" hdr_reference_white=0x%04x", s->hdr_reference_white);
     printf("\n  has_adaptive_tone_map_flag=%u\n",
            s->has_adaptive_tone_map_flag);
-    if (!s->has_adaptive_tone_map_flag)
-        return;
+    אם (!s->has_adaptive_tone_map_flag)
+        החזר;
 
     printf("  baseline_hdr_headroom=0x%04x"
            " use_reference_white_tone_mapping_flag=%u\n",
            s->baseline_hdr_headroom, s->use_reference_white_tone_mapping_flag);
-    if (s->use_reference_white_tone_mapping_flag)
-        return;
+    אם (s->use_reference_white_tone_mapping_flag)
+        החזר;
 
     printf("  num_alternate_images=%u chromaticities_flag=%u"
            " has_common_component_mix_params_flag=%u"
@@ -161,20 +161,20 @@ static void print_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
            s->gain_application_space_chromaticities_flag,
            s->has_common_component_mix_params_flag,
            s->has_common_curve_params_flag);
-    if (s->gain_application_space_chromaticities_flag == 3) {
+    אם (s->gain_application_space_chromaticities_flag == 3) {
         printf("  chromaticities:");
-        for (int r = 0; r < 8; r++)
+        עבור (صحيح r = 0; r < 8; r++)
             printf(" 0x%04x", s->gain_application_space_chromaticities[r]);
         printf("\n");
     }
 
-    for (int a = 0; a < s->num_alternate_images; a++) {
-        int n = s->gain_curve_num_control_points_minus_1[a] + 1;
+    עבור (صحيح a = 0; a < s->num_alternate_images; a++) {
+        صحيح n = s->gain_curve_num_control_points_minus_1[a] + 1;
         printf("  alternate %d: hdr_headroom=0x%04x component_mixing_type=%u\n",
                a, s->alternate_hdr_headrooms[a], s->component_mixing_type[a]);
-        if (s->component_mixing_type[a] == 3) {
+        אם (s->component_mixing_type[a] == 3) {
             printf("    mixing flag:coefficient:");
-            for (int k = 0; k < 6; k++)
+            עבור (صحيح k = 0; k < 6; k++)
                 printf(" %u:0x%04x",
                        s->has_component_mixing_coefficient_flag[a][k],
                        s->component_mixing_coefficient[a][k]);
@@ -183,16 +183,16 @@ static void print_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
         printf("    curve: num_control_points=%d use_pchip_slope=%u\n", n,
                s->gain_curve_use_pchip_slope_flag[a]);
         printf("    x:");
-        for (int c = 0; c < n; c++)
+        עבור (صحيح c = 0; c < n; c++)
             printf(" 0x%04x", s->gain_curve_control_points_x[a][c]);
         printf("\n    y:");
-        for (int c = 0; c < n; c++)
+        עבור (صحيح c = 0; c < n; c++)
             printf(" 0x%04x", s->gain_curve_control_points_y[a][c]);
         printf("\n");
         /* theta is only serialized when the pchip slope is not used. */
-        if (!s->gain_curve_use_pchip_slope_flag[a]) {
+        אם (!s->gain_curve_use_pchip_slope_flag[a]) {
             printf("    theta:");
-            for (int c = 0; c < n; c++)
+            עבור (صحيح c = 0; c < n; c++)
                 printf(" 0x%04x", s->gain_curve_control_points_theta[a][c]);
             printf("\n");
         }
@@ -203,37 +203,37 @@ static void print_app5(const char *label, const AVDynamicHDRSmpte2094App5 *s)
  * Round-trip helpers: serialize, then parse back into a zeroed struct.
  */
 
-static int hdr_plus_round_trip(const AVDynamicHDRPlus *in, AVDynamicHDRPlus *out)
+ساكن صحيح hdr_plus_round_trip(ثابت AVDynamicHDRPlus *in, AVDynamicHDRPlus *out)
 {
-    uint8_t *buf = NULL;
+    uint8_t *buf = عدم;
     size_t size = 0;
-    int ret;
+    صحيح ret;
 
     ret = av_dynamic_hdr_plus_to_t35(in, &buf, &size);
-    if (ret < 0)
-        return ret;
+    אם (ret < 0)
+        החזר ret;
 
-    memset(out, 0, sizeof(*out));
+    memset(out, 0, حجم(*out));
     ret = av_dynamic_hdr_plus_from_t35(out, buf, size);
     av_free(buf);
-    return ret;
+    החזר ret;
 }
 
-static int app5_round_trip(const AVDynamicHDRSmpte2094App5 *in,
+ساكن صحيح app5_round_trip(ثابت AVDynamicHDRSmpte2094App5 *in,
                            AVDynamicHDRSmpte2094App5 *out)
 {
-    uint8_t *buf = NULL;
+    uint8_t *buf = عدم;
     size_t size = 0;
-    int ret;
+    صحيح ret;
 
     ret = av_dynamic_hdr_smpte2094_app5_to_t35(in, &buf, &size);
-    if (ret < 0)
-        return ret;
+    אם (ret < 0)
+        החזר ret;
 
-    memset(out, 0, sizeof(*out));
+    memset(out, 0, حجم(*out));
     ret = av_dynamic_hdr_smpte2094_app5_from_t35(out, buf, size);
     av_free(buf);
-    return ret;
+    החזר ret;
 }
 
 /*
@@ -251,14 +251,14 @@ static int app5_round_trip(const AVDynamicHDRSmpte2094App5 *in,
  * exceed the largest MaxSCL component either, since §8.3 takes MaxSCL over each
  * RGB component separately while §8.5.2 draws the distribution from the
  * per-pixel maximum component. */
-static void fill_hdr_plus_conforming(AVDynamicHDRPlus *s)
+ساكن فراغ fill_hdr_plus_conforming(AVDynamicHDRPlus *s)
 {
-    static const uint8_t percentages[9] = { 1, 5, 10, 25, 50, 75, 90, 95, 99 };
-    static const int percentiles[9] = {
+    ساكن ثابت uint8_t percentages[9] = { 1, 5, 10, 25, 50, 75, 90, 95, 99 };
+    ساكن ثابت صحيح percentiles[9] = {
         1000, 0, 255, 25000, 50000, 75000, 90000, 95000, 99000,
     };
 
-    memset(s, 0, sizeof(*s));
+    memset(s, 0, حجم(*s));
 
     s->application_version = 1;
     s->num_windows         = 1;
@@ -273,7 +273,7 @@ static void fill_hdr_plus_conforming(AVDynamicHDRPlus *s)
     s->params[0].average_maxrgb = (AVRational){ 40000, RGB_DEN };
 
     s->params[0].num_distribution_maxrgb_percentiles = 9;
-    for (int i = 0; i < 9; i++) {
+    עבור (صحيح i = 0; i < 9; i++) {
         s->params[0].distribution_maxrgb[i].percentage = percentages[i];
         s->params[0].distribution_maxrgb[i].percentile =
             (AVRational){ percentiles[i], RGB_DEN };
@@ -285,7 +285,7 @@ static void fill_hdr_plus_conforming(AVDynamicHDRPlus *s)
     s->params[0].knee_point_x = (AVRational){  512, KNEE_POINT_DEN };
     s->params[0].knee_point_y = (AVRational){ 1024, KNEE_POINT_DEN };
     s->params[0].num_bezier_curve_anchors = 9;
-    for (int i = 0; i < 9; i++)
+    עבור (صحيح i = 0; i < 9; i++)
         s->params[0].bezier_curve_anchors[i] =
             (AVRational){ 100 * (i + 1), BEZIER_ANCHOR_DEN };
 
@@ -296,9 +296,9 @@ static void fill_hdr_plus_conforming(AVDynamicHDRPlus *s)
  * processing window, both actual-peak-luminance matrices and
  * ColorSaturationWeight, all of which §9.4 excludes for Version 1. It exists
  * only to drive the optional serializer/parser branches those fields guard. */
-static void fill_hdr_plus_synthetic(AVDynamicHDRPlus *s)
+ساكن فراغ fill_hdr_plus_synthetic(AVDynamicHDRPlus *s)
 {
-    memset(s, 0, sizeof(*s));
+    memset(s, 0, حجم(*s));
 
     s->application_version = 1;
     s->num_windows         = 2;
@@ -345,16 +345,16 @@ static void fill_hdr_plus_synthetic(AVDynamicHDRPlus *s)
     s->targeted_system_display_actual_peak_luminance_flag = 1;
     s->num_rows_targeted_system_display_actual_peak_luminance = 2;
     s->num_cols_targeted_system_display_actual_peak_luminance = 3;
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 3; j++)
+    עבור (صحيح i = 0; i < 2; i++)
+        עבור (صحيح j = 0; j < 3; j++)
             s->targeted_system_display_actual_peak_luminance[i][j] =
                 (AVRational){ i * 3 + j, PEAK_LUMINANCE_DEN };
 
     s->mastering_display_actual_peak_luminance_flag = 1;
     s->num_rows_mastering_display_actual_peak_luminance = 3;
     s->num_cols_mastering_display_actual_peak_luminance = 2;
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 2; j++)
+    עבור (صحيح i = 0; i < 3; i++)
+        עבור (صحيح j = 0; j < 2; j++)
             s->mastering_display_actual_peak_luminance[i][j] =
                 (AVRational){ 15 - (i * 2 + j), PEAK_LUMINANCE_DEN };
 
@@ -367,20 +367,20 @@ static void fill_hdr_plus_synthetic(AVDynamicHDRPlus *s)
     s->params[0].bezier_curve_anchors[2] = (AVRational){ 900, BEZIER_ANCHOR_DEN };
     s->params[1].tone_mapping_flag = 0;
 
-    for (int w = 0; w < 2; w++) {
+    עבור (صحيح w = 0; w < 2; w++) {
         s->params[w].color_saturation_mapping_flag = 1;
         s->params[w].color_saturation_weight =
             (AVRational){ 8 + w, SATURATION_DEN };
     }
 }
 
-static void test_hdr_plus(void)
+ساكن فراغ test_hdr_plus(فراغ)
 {
     AVDynamicHDRPlus *hdr, *hdr_rt;
     AVFrame *frame;
     size_t size = 0, required = 0;
-    uint8_t *buf = NULL;
-    int ret;
+    uint8_t *buf = عدم;
+    صحيح ret;
 
     printf("=== AVDynamicHDRPlus ===\n");
 
@@ -390,37 +390,37 @@ static void test_hdr_plus(void)
            size > 0 ? "yes" : "no");
     av_freep(&hdr);
 
-    hdr = av_dynamic_hdr_plus_alloc(NULL);
+    hdr = av_dynamic_hdr_plus_alloc(عدم);
     printf("alloc (no size): %s\n", hdr ? "OK" : "FAIL");
     av_freep(&hdr);
 
     printf("\nTesting av_dynamic_hdr_plus_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    אם (frame) {
         hdr = av_dynamic_hdr_plus_create_side_data(frame);
         printf("create_side_data: %s\n", hdr ? "OK" : "FAIL");
         av_frame_free(&frame);
     }
 
-    hdr    = av_dynamic_hdr_plus_alloc(NULL);
-    hdr_rt = av_dynamic_hdr_plus_alloc(NULL);
-    if (!hdr || !hdr_rt) {
+    hdr    = av_dynamic_hdr_plus_alloc(عدم);
+    hdr_rt = av_dynamic_hdr_plus_alloc(عدم);
+    אם (!hdr || !hdr_rt) {
         av_freep(&hdr);
         av_freep(&hdr_rt);
-        return;
+        החזר;
     }
     fill_hdr_plus_conforming(hdr);
 
     /* Size-query mode: data=NULL, size receives the required byte count. */
     printf("\nTesting av_dynamic_hdr_plus_to_t35() size query\n");
     required = 0;
-    ret = av_dynamic_hdr_plus_to_t35(hdr, NULL, &required);
+    ret = av_dynamic_hdr_plus_to_t35(hdr, عدم, &required);
     printf("size query: ret=%d required>0=%s\n", ret,
            required > 0 ? "yes" : "no");
 
     /* Allocation mode: *data=NULL, the function allocates the buffer. */
     printf("\nTesting av_dynamic_hdr_plus_to_t35() allocation\n");
-    buf  = NULL;
+    buf  = عدم;
     size = 0;
     ret = av_dynamic_hdr_plus_to_t35(hdr, &buf, &size);
     printf("alloc mode: ret=%d size_match=%s\n", ret,
@@ -430,7 +430,7 @@ static void test_hdr_plus(void)
     /* Existing-buffer mode: a caller-owned buffer is filled in place. */
     printf("\nTesting av_dynamic_hdr_plus_to_t35() existing buffer\n");
     buf = av_malloc(required);
-    if (buf) {
+    אם (buf) {
         uint8_t *orig = buf;
         size = required;
         ret = av_dynamic_hdr_plus_to_t35(hdr, &buf, &size);
@@ -442,9 +442,9 @@ static void test_hdr_plus(void)
 
     /* Buffer-too-small: caller-owned buffer shorter than required. */
     printf("\nTesting av_dynamic_hdr_plus_to_t35() buffer too small\n");
-    if (required > 1) {
+    אם (required > 1) {
         buf = av_malloc(required - 1);
-        if (buf) {
+        אם (buf) {
             size = required - 1;
             ret = av_dynamic_hdr_plus_to_t35(hdr, &buf, &size);
             printf("too small: ret==AVERROR_BUFFER_TOO_SMALL=%s\n",
@@ -456,7 +456,7 @@ static void test_hdr_plus(void)
     printf("\nTesting round trip, conforming ST 2094-40 Version 1 payload\n");
     ret = hdr_plus_round_trip(hdr, hdr_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    אם (ret >= 0)
         print_hdr_plus("decoded", hdr_rt);
 
     /* to_t35() ignores application_version and always writes the CTA-861-H
@@ -472,21 +472,21 @@ static void test_hdr_plus(void)
     fill_hdr_plus_synthetic(hdr);
     ret = hdr_plus_round_trip(hdr, hdr_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    אם (ret >= 0)
         print_hdr_plus("decoded", hdr_rt);
 
     printf("\nTesting error paths\n");
-    buf  = NULL;
+    buf  = عدم;
     size = 0;
-    ret = av_dynamic_hdr_plus_to_t35(NULL, &buf, &size);
+    ret = av_dynamic_hdr_plus_to_t35(عدم, &buf, &size);
     printf("to_t35 NULL s: ret==AVERROR(EINVAL)=%s\n",
            ret == AVERROR(EINVAL) ? "yes" : "no");
 
-    ret = av_dynamic_hdr_plus_to_t35(hdr, NULL, NULL);
+    ret = av_dynamic_hdr_plus_to_t35(hdr, عدم, عدم);
     printf("to_t35 no data no size: ret==AVERROR(EINVAL)=%s\n",
            ret == AVERROR(EINVAL) ? "yes" : "no");
 
-    ret = av_dynamic_hdr_plus_from_t35(NULL, (const uint8_t *)"", 0);
+    ret = av_dynamic_hdr_plus_from_t35(عدم, (ثابت uint8_t *)"", 0);
     printf("from_t35 NULL s: ret==AVERROR(EINVAL)=%s\n",
            ret == AVERROR(EINVAL) ? "yes" : "no");
 
@@ -494,7 +494,7 @@ static void test_hdr_plus(void)
         /* Oversized input is rejected before parsing. */
         size_t big = AV_HDR_PLUS_MAX_PAYLOAD_SIZE + 1;
         uint8_t *oversized = av_mallocz(big);
-        if (oversized) {
+        אם (oversized) {
             ret = av_dynamic_hdr_plus_from_t35(hdr_rt, oversized, big);
             printf("from_t35 oversized: ret==AVERROR(EINVAL)=%s\n",
                    ret == AVERROR(EINVAL) ? "yes" : "no");
@@ -514,9 +514,9 @@ static void test_hdr_plus(void)
 }
 
 /* Table C.2 early-out: no adaptive tone map, custom reference white only. */
-static void fill_app5_minimal(AVDynamicHDRSmpte2094App5 *s)
+ساكن فراغ fill_app5_minimal(AVDynamicHDRSmpte2094App5 *s)
 {
-    memset(s, 0, sizeof(*s));
+    memset(s, 0, حجم(*s));
     s->application_version         = 1;
     s->minimum_application_version = 0;
     s->has_custom_hdr_reference_white_flag = 1;
@@ -525,9 +525,9 @@ static void fill_app5_minimal(AVDynamicHDRSmpte2094App5 *s)
 }
 
 /* Table C.3 early-out: reference-white tone mapping, no alternate images. */
-static void fill_app5_reference_white(AVDynamicHDRSmpte2094App5 *s)
+ساكن فراغ fill_app5_reference_white(AVDynamicHDRSmpte2094App5 *s)
 {
-    memset(s, 0, sizeof(*s));
+    memset(s, 0, حجم(*s));
     s->application_version        = 2;
     s->has_adaptive_tone_map_flag = 1;
     s->baseline_hdr_headroom      = 0x0abc;
@@ -537,28 +537,28 @@ static void fill_app5_reference_white(AVDynamicHDRSmpte2094App5 *s)
 /* Per-image parameters: explicit gain application space chromaticities,
  * component mixing type 3 with a mix of present and absent coefficients, and
  * explicit control point slopes (theta). */
-static void fill_app5_per_image(AVDynamicHDRSmpte2094App5 *s)
+ساكن فراغ fill_app5_per_image(AVDynamicHDRSmpte2094App5 *s)
 {
-    memset(s, 0, sizeof(*s));
+    memset(s, 0, حجم(*s));
     s->application_version        = 1;
     s->has_adaptive_tone_map_flag = 1;
     s->baseline_hdr_headroom      = 0x0abc;
     s->num_alternate_images       = 2;
     s->gain_application_space_chromaticities_flag = 3;
-    for (int r = 0; r < 8; r++)
+    עבור (صحيح r = 0; r < 8; r++)
         s->gain_application_space_chromaticities[r] = 100 * (r + 1);
     s->has_common_component_mix_params_flag = 0;
     s->has_common_curve_params_flag         = 0;
-    for (int a = 0; a < 2; a++) {
+    עבור (صحيح a = 0; a < 2; a++) {
         s->alternate_hdr_headrooms[a] = 0x0100 + a;
         s->component_mixing_type[a]   = 3;
-        for (int k = 0; k < 6; k++) {
+        עבור (صحيح k = 0; k < 6; k++) {
             s->has_component_mixing_coefficient_flag[a][k] = k & 1;
             s->component_mixing_coefficient[a][k] = 0x1000 + 0x10 * a + k;
         }
         s->gain_curve_num_control_points_minus_1[a] = 1;
         s->gain_curve_use_pchip_slope_flag[a]       = 0;
-        for (int c = 0; c < 2; c++) {
+        עבור (صحيح c = 0; c < 2; c++) {
             s->gain_curve_control_points_x[a][c]     = 0x2000 + 0x10 * a + c;
             s->gain_curve_control_points_y[a][c]     = 0x3000 + 0x10 * a + c;
             s->gain_curve_control_points_theta[a][c] = 0x4000 + 0x10 * a + c;
@@ -573,9 +573,9 @@ static void fill_app5_per_image(AVDynamicHDRSmpte2094App5 *s)
  * The common_* flags make the parser copy alternate 0's parameters to the
  * other alternates, so the fixture sets them identically everywhere; only
  * alternate_hdr_headrooms and the y control points stay per-image. */
-static void fill_app5_common(AVDynamicHDRSmpte2094App5 *s)
+ساكن فراغ fill_app5_common(AVDynamicHDRSmpte2094App5 *s)
 {
-    memset(s, 0, sizeof(*s));
+    memset(s, 0, حجم(*s));
     s->application_version        = 1;
     s->has_adaptive_tone_map_flag = 1;
     s->baseline_hdr_headroom      = 0x0def;
@@ -583,25 +583,25 @@ static void fill_app5_common(AVDynamicHDRSmpte2094App5 *s)
     s->gain_application_space_chromaticities_flag = 0;
     s->has_common_component_mix_params_flag = 1;
     s->has_common_curve_params_flag         = 1;
-    for (int a = 0; a < 3; a++) {
+    עבור (صحيح a = 0; a < 3; a++) {
         s->alternate_hdr_headrooms[a] = 0x0200 + a;
         s->component_mixing_type[a]   = 1;
         s->gain_curve_num_control_points_minus_1[a] = 2;
         s->gain_curve_use_pchip_slope_flag[a]       = 1;
-        for (int c = 0; c < 3; c++) {
+        עבור (صحيح c = 0; c < 3; c++) {
             s->gain_curve_control_points_x[a][c] = 0x5000 + c;
             s->gain_curve_control_points_y[a][c] = 0x6000 + 0x10 * a + c;
         }
     }
 }
 
-static void test_app5(void)
+ساكن فراغ test_app5(فراغ)
 {
     AVDynamicHDRSmpte2094App5 *app5, *app5_rt;
     AVFrame *frame;
     size_t size = 0, required = 0;
-    uint8_t *buf = NULL;
-    int ret;
+    uint8_t *buf = عدم;
+    صحيح ret;
 
     printf("\n=== AVDynamicHDRSmpte2094App5 ===\n");
     printf("Testing av_dynamic_hdr_smpte2094_app5_alloc()\n");
@@ -612,28 +612,28 @@ static void test_app5(void)
 
     printf("\nTesting av_dynamic_hdr_smpte2094_app5_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    אם (frame) {
         app5 = av_dynamic_hdr_smpte2094_app5_create_side_data(frame);
         printf("create_side_data: %s\n", app5 ? "OK" : "FAIL");
         av_frame_free(&frame);
     }
 
-    app5    = av_dynamic_hdr_smpte2094_app5_alloc(NULL);
-    app5_rt = av_dynamic_hdr_smpte2094_app5_alloc(NULL);
-    if (!app5 || !app5_rt) {
+    app5    = av_dynamic_hdr_smpte2094_app5_alloc(عدم);
+    app5_rt = av_dynamic_hdr_smpte2094_app5_alloc(عدم);
+    אם (!app5 || !app5_rt) {
         av_freep(&app5);
         av_freep(&app5_rt);
-        return;
+        החזר;
     }
     fill_app5_minimal(app5);
 
     printf("\nTesting av_dynamic_hdr_smpte2094_app5_to_t35()\n");
     required = 0;
-    ret = av_dynamic_hdr_smpte2094_app5_to_t35(app5, NULL, &required);
+    ret = av_dynamic_hdr_smpte2094_app5_to_t35(app5, عدم, &required);
     printf("size query: ret=%d required>0=%s\n", ret,
            required > 0 ? "yes" : "no");
 
-    buf  = NULL;
+    buf  = عدم;
     size = 0;
     ret = av_dynamic_hdr_smpte2094_app5_to_t35(app5, &buf, &size);
     printf("alloc mode: ret=%d size_match=%s\n", ret,
@@ -643,51 +643,51 @@ static void test_app5(void)
     printf("\nTesting round trip, no adaptive tone map\n");
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    אם (ret >= 0)
         print_app5("decoded", app5_rt);
 
     printf("\nTesting round trip, reference-white tone mapping\n");
     fill_app5_reference_white(app5);
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    אם (ret >= 0)
         print_app5("decoded", app5_rt);
 
     printf("\nTesting round trip, per-image mixing and curve parameters\n");
     fill_app5_per_image(app5);
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    אם (ret >= 0)
         print_app5("decoded", app5_rt);
 
     printf("\nTesting round trip, common mixing and curve parameters\n");
     fill_app5_common(app5);
     ret = app5_round_trip(app5, app5_rt);
     printf("round trip: ret=%d\n", ret);
-    if (ret >= 0)
+    אם (ret >= 0)
         print_app5("decoded", app5_rt);
 
     printf("\nTesting error paths\n");
-    buf  = NULL;
+    buf  = عدم;
     size = 0;
-    ret = av_dynamic_hdr_smpte2094_app5_to_t35(NULL, &buf, &size);
+    ret = av_dynamic_hdr_smpte2094_app5_to_t35(عدم, &buf, &size);
     printf("to_t35 NULL s: ret==AVERROR(EINVAL)=%s\n",
            ret == AVERROR(EINVAL) ? "yes" : "no");
 
-    ret = av_dynamic_hdr_smpte2094_app5_from_t35(NULL, (const uint8_t *)"", 0);
+    ret = av_dynamic_hdr_smpte2094_app5_from_t35(عدم, (ثابت uint8_t *)"", 0);
     printf("from_t35 NULL s: ret==AVERROR(EINVAL)=%s\n",
            ret == AVERROR(EINVAL) ? "yes" : "no");
 
     /* application_version does not fit the 3-bit field. */
     app5->application_version = 8;
-    ret = av_dynamic_hdr_smpte2094_app5_to_t35(app5, NULL, &size);
+    ret = av_dynamic_hdr_smpte2094_app5_to_t35(app5, عدم, &size);
     printf("to_t35 invalid application_version: ret==AVERROR_INVALIDDATA=%s\n",
            ret == AVERROR_INVALIDDATA ? "yes" : "no");
     app5->application_version = 1;
 
     /* minimum_application_version above the documented maximum. */
     app5->minimum_application_version = 3;
-    ret = av_dynamic_hdr_smpte2094_app5_to_t35(app5, NULL, &size);
+    ret = av_dynamic_hdr_smpte2094_app5_to_t35(app5, عدم, &size);
     printf("to_t35 invalid minimum_application_version:"
            " ret==AVERROR_INVALIDDATA=%s\n",
            ret == AVERROR_INVALIDDATA ? "yes" : "no");
@@ -695,7 +695,7 @@ static void test_app5(void)
 
     /* More alternate images than the 3-bit count admits. */
     app5->num_alternate_images = 5;
-    ret = av_dynamic_hdr_smpte2094_app5_to_t35(app5, NULL, &size);
+    ret = av_dynamic_hdr_smpte2094_app5_to_t35(app5, عدم, &size);
     printf("to_t35 too many alternate images: ret==AVERROR_INVALIDDATA=%s\n",
            ret == AVERROR_INVALIDDATA ? "yes" : "no");
 
@@ -710,9 +710,9 @@ static void test_app5(void)
     av_freep(&app5);
 }
 
-int main(void)
+صحيح main(فراغ)
 {
     test_hdr_plus();
     test_app5();
-    return 0;
+    החזר 0;
 }
