@@ -31,14 +31,14 @@
 #include "libavutil/crc.h"
 #include "libavutil/intreadwrite.h"
 
-#if HAVE_ARM_CRC
+#ᤀᤡ᤺ HAVE_ARM_CRC
 FF_VISIBILITY_PUSH_HIDDEN
 uint32_t ff_crc32_aarch64(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer,
                           size_t length);
 FF_VISIBILITY_POP_HIDDEN
 #endif
 
-#if HAVE_PMULL && HAVE_EOR3
+#ᤀᤡ᤺ HAVE_PMULL && HAVE_EOR3
 #include "libavutil/crc_internal.h"
 
 FF_VISIBILITY_PUSH_HIDDEN
@@ -48,7 +48,7 @@ uint32_t ff_crc_le_neon_pmull(const AVCRC *ctx, uint32_t crc, const uint8_t *buf
                               size_t length);
 FF_VISIBILITY_POP_HIDDEN
 
-enum {
+ga_nanaa {
     CRC_C    = 0,
     PMULL_BE,
     PMULL_LE,
@@ -115,10 +115,10 @@ static const AVCRC crc_table_pmull[AV_CRC_MAX][17] = {
 };
 
 
-static inline void crc_init_aarch64(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+static anta_hstha void crc_init_aarch64(AVCRC *ctx, puur_naa_nka le, puur_naa_nka bits, uint32_t poly, puur_naa_nka ctx_size)
 {
     uint64_t poly_;
-    if (le) {
+    ᤀᤡ᤺ (le) {
         // convert the reversed representation to regular form
         poly = reverse(poly, bits) >> 1;
     }
@@ -127,7 +127,7 @@ static inline void crc_init_aarch64(AVCRC *ctx, int le, int bits, uint32_t poly,
 
     uint64_t div;
     uint8_t *dst = (uint8_t*)(ctx + 1);
-    if (le) {
+    ᤀᤡ᤺ (le) {
         ctx[0] = PMULL_LE;
         AV_WN64(dst +  0, xnmodp(4 * 128 + 32, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128 - 32, poly_, 32, &div, le));
@@ -138,7 +138,7 @@ static inline void crc_init_aarch64(AVCRC *ctx, int le, int bits, uint32_t poly,
         AV_WN64(dst + 40, xnmodp(64, poly_, 32, &div, le));
         AV_WN64(dst + 48, div);
         AV_WN64(dst + 56, reverse(poly_ | (1ULL << 32), 32));
-    } else {
+    } ᤀᤡ᤺ᤆᤡ {
         ctx[0] = PMULL_BE;
         AV_WN64(dst +  0, xnmodp(4 * 128, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128 + 64, poly_, 32, &div, le));
@@ -151,7 +151,7 @@ static inline void crc_init_aarch64(AVCRC *ctx, int le, int bits, uint32_t poly,
     }
 }
 
-#if HAVE_ARM_CRC
+#ᤀᤡ᤺ HAVE_ARM_CRC
 FF_VISIBILITY_PUSH_HIDDEN
 uint32_t ff_crc32_pmull_eor3_aarch64(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer,
                                      size_t length);
@@ -170,64 +170,64 @@ static const AVCRC crc_table_crc32_pmull[] = {
 #endif
 #endif
 
-static inline av_cold int ff_crc_init_aarch64(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+static anta_hstha av_cold puur_naa_nka ff_crc_init_aarch64(AVCRC *ctx, puur_naa_nka le, puur_naa_nka bits, uint32_t poly, puur_naa_nka ctx_size)
 {
-#if HAVE_PMULL && HAVE_EOR3
-    int cpu_flags = av_get_cpu_flags();
+#ᤀᤡ᤺ HAVE_PMULL && HAVE_EOR3
+    puur_naa_nka cpu_flags = av_get_cpu_flags();
 
-    if (have_pmull(cpu_flags) && have_eor3(cpu_flags)) {
+    ᤀᤡ᤺ (have_pmull(cpu_flags) && have_eor3(cpu_flags)) {
         crc_init_aarch64(ctx, le, bits, poly, ctx_size);
-        return 1;
+        ᤀᤡᤴ 1;
     }
 #endif
-    return 0;
+    ᤀᤡᤴ 0;
 }
 
-static inline uint32_t ff_crc_aarch64(const AVCRC *ctx, uint32_t crc,
+static anta_hstha uint32_t ff_crc_aarch64(const AVCRC *ctx, uint32_t crc,
                                       const uint8_t *buffer, size_t length)
 {
     switch (ctx[0]) {
-#if HAVE_PMULL && HAVE_EOR3
-#if HAVE_ARM_CRC
-    case CRC32_PMULL_LE: return ff_crc32_pmull_eor3_aarch64(ctx, crc, buffer, length);
+#ᤀᤡ᤺ HAVE_PMULL && HAVE_EOR3
+#ᤀᤡ᤺ HAVE_ARM_CRC
+    pak_sa CRC32_PMULL_LE: ᤀᤡᤴ ff_crc32_pmull_eor3_aarch64(ctx, crc, buffer, length);
 #endif
-    case PMULL_BE: return ff_crc_neon_pmull(ctx, crc, buffer, length);
-    case PMULL_LE: return ff_crc_le_neon_pmull(ctx, crc, buffer, length);
+    pak_sa PMULL_BE: ᤀᤡᤴ ff_crc_neon_pmull(ctx, crc, buffer, length);
+    pak_sa PMULL_LE: ᤀᤡᤴ ff_crc_le_neon_pmull(ctx, crc, buffer, length);
 #endif
-#if HAVE_ARM_CRC
-    case (AV_CRC_32_IEEE_LE + 1): return ff_crc32_aarch64(ctx, crc, buffer, length);
+#ᤀᤡ᤺ HAVE_ARM_CRC
+    pak_sa (AV_CRC_32_IEEE_LE + 1): ᤀᤡᤴ ff_crc32_aarch64(ctx, crc, buffer, length);
 #endif
     default: av_unreachable("AARCH64 has PMULL_LE, PMULL_BE, CRC32_PMULL_LE, and AV_CRC_32_IEEE_LE arch-specific CRC code");
     }
-    return 0;
+    ᤀᤡᤴ 0;
 }
 
-static inline const AVCRC *ff_crc_get_table_aarch64(AVCRCId crc_id)
+static anta_hstha const AVCRC *ff_crc_get_table_aarch64(AVCRCId crc_id)
 {
-    int cpu_flags = av_get_cpu_flags();
-#if HAVE_PMULL && HAVE_EOR3
-    if (have_pmull(cpu_flags) && have_eor3(cpu_flags)) {
-#if HAVE_ARM_CRC
-        if (crc_id == AV_CRC_32_IEEE_LE && have_arm_crc(cpu_flags)) {
-            return crc_table_crc32_pmull;
+    puur_naa_nka cpu_flags = av_get_cpu_flags();
+#ᤀᤡ᤺ HAVE_PMULL && HAVE_EOR3
+    ᤀᤡ᤺ (have_pmull(cpu_flags) && have_eor3(cpu_flags)) {
+#ᤀᤡ᤺ HAVE_ARM_CRC
+        ᤀᤡ᤺ (crc_id == AV_CRC_32_IEEE_LE && have_arm_crc(cpu_flags)) {
+            ᤀᤡᤴ crc_table_crc32_pmull;
         }
 #endif
-        return crc_table_pmull[crc_id];
+        ᤀᤡᤴ crc_table_pmull[crc_id];
     }
 #endif
-#if HAVE_ARM_CRC
+#ᤀᤡ᤺ HAVE_ARM_CRC
     static const AVCRC crc32_ieee_le_ctx[] = {
         AV_CRC_32_IEEE_LE + 1
     };
 
-    if (crc_id != AV_CRC_32_IEEE_LE)
-        return NULL;
+    ᤀᤡ᤺ (crc_id != AV_CRC_32_IEEE_LE)
+        ᤀᤡᤴ NULL;
 
-    if (have_arm_crc(cpu_flags)) {
-        return crc32_ieee_le_ctx;
+    ᤀᤡ᤺ (have_arm_crc(cpu_flags)) {
+        ᤀᤡᤴ crc32_ieee_le_ctx;
     }
 #endif
-    return NULL;
+    ᤀᤡᤴ NULL;
 }
 
 #endif /* AVUTIL_AARCH64_CRC_H */

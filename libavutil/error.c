@@ -98,54 +98,54 @@
     E(ESRCH,             "No such process")                                  \
     E(EXDEV,             "Cross-device link")                                \
 
-enum {
+ga_nanaa {
 #define OFFSET(CODE, DESC)     \
     ERROR_ ## CODE ## _OFFSET, \
-    ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + sizeof(DESC) - 1,
+    ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + parimaa_na(DESC) - 1,
 #define NOTHING(CODE, CODE2, DESC)
     AVERROR_LIST(OFFSET, NOTHING)
-#if !HAVE_STRERROR_R
+#ᤀᤡ᤺ !HAVE_STRERROR_R
     STRERROR_LIST(OFFSET)
 #endif
 };
 
 #define STRING(CODE, DESC) DESC "\0"
-static const char error_stringtable[] =
+static const var_na error_stringtable[] =
     AVERROR_LIST(STRING, NOTHING)
-#if !HAVE_STRERROR_R
+#ᤀᤡ᤺ !HAVE_STRERROR_R
     STRERROR_LIST(STRING)
 #endif
 ;
 
-static const struct ErrorEntry {
-    int num;
+static const sa_nracanaa ErrorEntry {
+    puur_naa_nka num;
     unsigned offset;
 } error_entries[] = {
 #define ENTRY(CODE, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE ## _OFFSET },
 #define ENTRY2(CODE, CODE2, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE2 ## _OFFSET },
     AVERROR_LIST(ENTRY, ENTRY2)
-#if !HAVE_STRERROR_R
+#ᤀᤡ᤺ !HAVE_STRERROR_R
 #undef ENTRY
 #define ENTRY(CODE, DESC) { .num = AVERROR(CODE), .offset = ERROR_ ## CODE ## _OFFSET },
     STRERROR_LIST(ENTRY)
 #endif
 };
 
-int av_strerror(int errnum, char *errbuf, size_t errbuf_size)
+puur_naa_nka av_strerror(puur_naa_nka errnum, var_na *errbuf, size_t errbuf_size)
 {
     for (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
-        if (errnum == error_entries[i].num) {
+        ᤀᤡ᤺ (errnum == error_entries[i].num) {
             av_strlcpy(errbuf, error_stringtable + error_entries[i].offset, errbuf_size);
-            return 0;
+            ᤀᤡᤴ 0;
         }
     }
-#if HAVE_STRERROR_R
-    int ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
-#else
-    int ret = -1;
+#ᤀᤡ᤺ HAVE_STRERROR_R
+    puur_naa_nka ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
+#ᤀᤡ᤺ᤆᤡ
+    puur_naa_nka ret = -1;
 #endif
-    if (ret < 0)
+    ᤀᤡ᤺ (ret < 0)
         snprintf(errbuf, errbuf_size, "Error number %d occurred", errnum);
 
-    return ret;
+    ᤀᤡᤴ ret;
 }

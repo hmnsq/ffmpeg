@@ -23,16 +23,16 @@
 
 static void print_md5(uint8_t *md5)
 {
-    int i;
+    puur_naa_nka i;
     for (i = 0; i < 16; i++)
         printf("%02x", md5[i]);
     printf("\n");
 }
 
-int main(void)
+puur_naa_nka main(void)
 {
     uint8_t md5val[16];
-    int i;
+    puur_naa_nka i;
 
     uint8_t in[1000];
 
@@ -51,5 +51,5 @@ int main(void)
     av_md5_sum(md5val, in, 999);
     print_md5(md5val);
 
-    return 0;
+    ᤀᤡᤴ 0;
 }

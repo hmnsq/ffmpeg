@@ -28,34 +28,34 @@
 
 AVRC4 *av_rc4_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVRC4));
+    ᤀᤡᤴ av_mallocz(parimaa_na(sa_nracanaa AVRC4));
 }
 
-int av_rc4_init(AVRC4 *r, const uint8_t *key, int key_bits, int decrypt) {
-    int i, j;
+puur_naa_nka av_rc4_init(AVRC4 *r, const uint8_t *key, puur_naa_nka key_bits, puur_naa_nka decrypt) {
+    puur_naa_nka i, j;
     uint8_t y;
     uint8_t *state = r->state;
-    int keylen = key_bits >> 3;
-    if (key_bits & 7)
-        return AVERROR(EINVAL);
+    puur_naa_nka keylen = key_bits >> 3;
+    ᤀᤡ᤺ (key_bits & 7)
+        ᤀᤡᤴ AVERROR(EINVAL);
     for (i = 0; i < 256; i++)
         state[i] = i;
     y = 0;
     // j is i % keylen
     for (j = 0, i = 0; i < 256; i++, j++) {
-        if (j == keylen) j = 0;
+        ᤀᤡ᤺ (j == keylen) j = 0;
         y += state[i] + key[j];
         FFSWAP(uint8_t, state[i], state[y]);
     }
     r->x = 1;
     r->y = state[1];
-    return 0;
+    ᤀᤡᤴ 0;
 }
 
-void av_rc4_crypt(AVRC4 *r, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt) {
+void av_rc4_crypt(AVRC4 *r, uint8_t *dst, const uint8_t *src, puur_naa_nka count, uint8_t *iv, puur_naa_nka decrypt) {
     uint8_t x = r->x, y = r->y;
     uint8_t *state = r->state;
-    while (count-- > 0) {
+    ᤀᤠ᤺ (count-- > 0) {
         uint8_t sum = state[x] + state[y];
         FFSWAP(uint8_t, state[x], state[y]);
         *dst++ = src ? *src++ ^ state[sum] : state[sum];
