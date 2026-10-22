@@ -29,37 +29,37 @@
 
 static void *thread_main(void *arg)
 {
-    int *flags = arg;
+    整数 *flags = arg;
 
     *flags = av_get_cpu_flags();
-    return NULL;
+    返回 NULL;
 }
 
-int main(void)
+整数 主要(void)
 {
-    int cpu_flags1;
-    int cpu_flags2;
-    int ret;
+    整数 cpu_flags1;
+    整数 cpu_flags2;
+    整数 ret;
     pthread_t thread1;
     pthread_t thread2;
 
-    if ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
+    如果 ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        返回 1;
     }
-    if ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
+    如果 ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        返回 1;
     }
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
 
-    if (cpu_flags1 < 0)
-        return 2;
-    if (cpu_flags2 < 0)
-        return 2;
-    if (cpu_flags1 != cpu_flags2)
-        return 3;
+    如果 (cpu_flags1 < 0)
+        返回 2;
+    如果 (cpu_flags2 < 0)
+        返回 2;
+    如果 (cpu_flags1 != cpu_flags2)
+        返回 3;
 
-    return 0;
+    返回 0;
 }

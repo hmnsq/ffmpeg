@@ -279,7 +279,7 @@ typedef struct AVDOVIDmLevel11 {
     uint8_t content_type;
     uint8_t whitepoint;
     uint8_t reference_mode_flag;
-#if FF_API_DOVI_L11_INVALID_PROPS
+#如果 FF_API_DOVI_L11_INVALID_PROPS
     attribute_deprecated
     uint8_t sharpness;
     attribute_deprecated
@@ -353,7 +353,7 @@ typedef struct AVDOVIMetadata {
 
     size_t ext_block_offset; /* offset to start of ext blocks array */
     size_t ext_block_size; /* size per element */
-    int num_ext_blocks; /* number of extension blocks */
+    整数 num_ext_blocks; /* number of extension blocks */
 
     /* static limit on num_ext_blocks, derived from bitstream limitations */
 #define AV_DOVI_MAX_EXT_BLOCKS 32
@@ -362,19 +362,19 @@ typedef struct AVDOVIMetadata {
 static av_always_inline AVDOVIRpuDataHeader *
 av_dovi_get_header(const AVDOVIMetadata *data)
 {
-    return (AVDOVIRpuDataHeader *)((uint8_t *) data + data->header_offset);
+    返回 (AVDOVIRpuDataHeader *)((uint8_t *) data + data->header_offset);
 }
 
 static av_always_inline AVDOVIDataMapping *
 av_dovi_get_mapping(const AVDOVIMetadata *data)
 {
-    return (AVDOVIDataMapping *)((uint8_t *) data + data->mapping_offset);
+    返回 (AVDOVIDataMapping *)((uint8_t *) data + data->mapping_offset);
 }
 
 static av_always_inline AVDOVIColorMetadata *
 av_dovi_get_color(const AVDOVIMetadata *data)
 {
-    return (AVDOVIColorMetadata *)((uint8_t *) data + data->color_offset);
+    返回 (AVDOVIColorMetadata *)((uint8_t *) data + data->color_offset);
 }
 
 /**
@@ -382,9 +382,9 @@ av_dovi_get_color(const AVDOVIMetadata *data)
  * @param index must be non negative and below data->num_ext_blocks
  */
 static av_always_inline AVDOVIDmData *
-av_dovi_get_ext(const AVDOVIMetadata *data, int index)
+av_dovi_get_ext(const AVDOVIMetadata *data, 整数 index)
 {
-    return (AVDOVIDmData *)((uint8_t *) data + data->ext_block_offset +
+    返回 (AVDOVIDmData *)((uint8_t *) data + data->ext_block_offset +
                             data->ext_block_size * index);
 }
 

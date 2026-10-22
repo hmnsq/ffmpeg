@@ -76,7 +76,7 @@
  * @param v Name of the variable
  */
 
-#if defined(__DJGPP__)
+#如果 defined(__DJGPP__)
     #define DECLARE_ALIGNED_T(n,t,v)    alignas(FFMIN(n, 16)) t v
     #define DECLARE_ASM_ALIGNED(n,t,v)  alignas(FFMIN(n, 16)) t av_used v
     #define DECLARE_ASM_CONST(n,t,v)    alignas(FFMIN(n, 16)) static const t av_used v
@@ -84,19 +84,19 @@
     #define DECLARE_ALIGNED_T(n,t,v)    __declspec(align(n)) t v
     #define DECLARE_ASM_ALIGNED(n,t,v)  __declspec(align(n)) t av_used v
     #define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) static const t av_used v
-#else
+#否则
     #define DECLARE_ALIGNED_T(n,t,v)    alignas(n) t v
     #define DECLARE_ASM_ALIGNED(n,t,v)  alignas(n) t av_used v
     #define DECLARE_ASM_CONST(n,t,v)    alignas(n) static const t av_used v
 #endif
 
-#if HAVE_SIMD_ALIGN_64
+#如果 HAVE_SIMD_ALIGN_64
     #define ALIGN_64 64
     #define ALIGN_32 32
 #elif HAVE_SIMD_ALIGN_32
     #define ALIGN_64 32
     #define ALIGN_32 32
-#else
+#否则
     #define ALIGN_64 16
     #define ALIGN_32 16
 #endif

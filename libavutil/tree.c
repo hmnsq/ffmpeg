@@ -26,66 +26,66 @@
 typedef struct AVTreeNode {
     struct AVTreeNode *child[2];
     void *elem;
-    int state;
+    整数 state;
 } AVTreeNode;
 
-const int av_tree_node_size = sizeof(AVTreeNode);
+const 整数 av_tree_node_size = sizeof(AVTreeNode);
 
 struct AVTreeNode *av_tree_node_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVTreeNode));
+    返回 av_mallocz(sizeof(struct AVTreeNode));
 }
 
 void *av_tree_find(const AVTreeNode *t, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2])
+                   整数 (*cmp)(const void *key, const void *b), void *next[2])
 {
-    if (t) {
-        unsigned int v = cmp(key, t->elem);
-        if (v) {
-            if (next)
+    如果 (t) {
+        unsigned 整数 v = cmp(key, t->elem);
+        如果 (v) {
+            如果 (next)
                 next[v >> 31] = t->elem;
-            return av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
-        } else {
-            if (next) {
+            返回 av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
+        } 否则 {
+            如果 (next) {
                 av_tree_find(t->child[0], key, cmp, next);
                 av_tree_find(t->child[1], key, cmp, next);
             }
-            return t->elem;
+            返回 t->elem;
         }
     }
-    return NULL;
+    返回 NULL;
 }
 
 void *av_tree_insert(AVTreeNode **tp, void *key,
-                     int (*cmp)(const void *key, const void *b), AVTreeNode **next)
+                     整数 (*cmp)(const void *key, const void *b), AVTreeNode **next)
 {
     AVTreeNode *t = *tp;
-    if (t) {
-        unsigned int v = cmp(t->elem, key);
+    如果 (t) {
+        unsigned 整数 v = cmp(t->elem, key);
         void *ret;
-        if (!v) {
-            if (*next)
-                return t->elem;
-            else if (t->child[0] || t->child[1]) {
-                int i = !t->child[0];
+        如果 (!v) {
+            如果 (*next)
+                返回 t->elem;
+            否则 如果 (t->child[0] || t->child[1]) {
+                整数 i = !t->child[0];
                 void *next_elem[2];
                 av_tree_find(t->child[i], key, cmp, next_elem);
                 key = t->elem = next_elem[i];
                 v   = -i;
-            } else {
+            } 否则 {
                 *next = t;
                 *tp   = NULL;
-                return NULL;
+                返回 NULL;
             }
         }
         ret = av_tree_insert(&t->child[v >> 31], key, cmp, next);
-        if (!ret) {
-            int i              = (v >> 31) ^ !!*next;
+        如果 (!ret) {
+            整数 i              = (v >> 31) ^ !!*next;
             AVTreeNode **child = &t->child[i];
             t->state += 2 * i - 1;
 
-            if (!(t->state & 1)) {
-                if (t->state) {
+            如果 (!(t->state & 1)) {
+                如果 (t->state) {
                     /* The following code is equivalent to
                      * if ((*child)->state * 2 == -t->state)
                      *     rotate(child, i ^ 1);
@@ -106,7 +106,7 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                      * }
                      * but such a rotate function is both bigger and slower
                      */
-                    if ((*child)->state * 2 == -t->state) {
+                    如果 ((*child)->state * 2 == -t->state) {
                         *tp                    = (*child)->child[i ^ 1];
                         (*child)->child[i ^ 1] = (*tp)->child[i];
                         (*tp)->child[i]        = *child;
@@ -116,36 +116,36 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                         (*tp)->child[0]->state = -((*tp)->state > 0);
                         (*tp)->child[1]->state = (*tp)->state < 0;
                         (*tp)->state           = 0;
-                    } else {
+                    } 否则 {
                         *tp                 = *child;
                         *child              = (*child)->child[i ^ 1];
                         (*tp)->child[i ^ 1] = t;
-                        if ((*tp)->state)
+                        如果 ((*tp)->state)
                             t->state = 0;
-                        else
+                        否则
                             t->state >>= 1;
                         (*tp)->state = -t->state;
                     }
                 }
             }
-            if (!(*tp)->state ^ !!*next)
-                return key;
+            如果 (!(*tp)->state ^ !!*next)
+                返回 key;
         }
-        return ret;
-    } else {
+        返回 ret;
+    } 否则 {
         *tp   = *next;
         *next = NULL;
-        if (*tp) {
+        如果 (*tp) {
             (*tp)->elem = key;
-            return NULL;
-        } else
-            return key;
+            返回 NULL;
+        } 否则
+            返回 key;
     }
 }
 
 void av_tree_destroy(AVTreeNode *t)
 {
-    if (t) {
+    如果 (t) {
         av_tree_destroy(t->child[0]);
         av_tree_destroy(t->child[1]);
         av_free(t);
@@ -153,16 +153,16 @@ void av_tree_destroy(AVTreeNode *t)
 }
 
 void av_tree_enumerate(AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem))
+                       整数 (*cmp)(void *opaque, void *elem),
+                       整数 (*enu)(void *opaque, void *elem))
 {
-    if (t) {
-        int v = cmp ? cmp(opaque, t->elem) : 0;
-        if (v >= 0)
+    如果 (t) {
+        整数 v = cmp ? cmp(opaque, t->elem) : 0;
+        如果 (v >= 0)
             av_tree_enumerate(t->child[0], opaque, cmp, enu);
-        if (v == 0)
+        如果 (v == 0)
             enu(opaque, t->elem);
-        if (v <= 0)
+        如果 (v <= 0)
             av_tree_enumerate(t->child[1], opaque, cmp, enu);
     }
 }

@@ -23,10 +23,10 @@
 #include <stdarg.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#if HAVE_UNISTD_H
+#如果 HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#if HAVE_IO_H
+#如果 HAVE_IO_H
 #include <io.h>
 #endif
 
@@ -40,39 +40,39 @@
 #include <errno.h>
 #include "wchar_filename.h"
 
-static int win32_open(const char *filename_utf8, int oflag, int pmode)
+static 整数 win32_open(const char *filename_utf8, 整数 oflag, 整数 pmode)
 {
-    int fd;
+    整数 fd;
     wchar_t *filename_w;
 
     /* convert UTF-8 to wide chars */
-    if (get_extended_win32_path(filename_utf8, &filename_w))
-        return -1;
-    if (!filename_w)
+    如果 (get_extended_win32_path(filename_utf8, &filename_w))
+        返回 -1;
+    如果 (!filename_w)
         goto fallback;
 
     fd = _wsopen(filename_w, oflag, SH_DENYNO, pmode);
     av_freep(&filename_w);
 
-    if (fd != -1 || (oflag & O_CREAT))
-        return fd;
+    如果 (fd != -1 || (oflag & O_CREAT))
+        返回 fd;
 
 fallback:
     /* filename may be in CP_ACP */
-    return _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
+    返回 _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
 }
 #define open win32_open
 #endif
 
-int avpriv_open(const char *filename, int flags, ...)
+整数 avpriv_open(const char *filename, 整数 flags, ...)
 {
-    int fd;
-    unsigned int mode = 0;
+    整数 fd;
+    unsigned 整数 mode = 0;
     va_list ap;
 
     va_start(ap, flags);
-    if (flags & O_CREAT)
-        mode = va_arg(ap, unsigned int);
+    如果 (flags & O_CREAT)
+        mode = va_arg(ap, unsigned 整数);
     va_end(ap);
 
 #ifdef O_CLOEXEC
@@ -83,19 +83,19 @@ int avpriv_open(const char *filename, int flags, ...)
 #endif
 
     fd = open(filename, flags, mode);
-#if HAVE_FCNTL
-    if (fd != -1) {
-        if (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
+#如果 HAVE_FCNTL
+    如果 (fd != -1) {
+        如果 (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
             av_log(NULL, AV_LOG_DEBUG, "Failed to set close on exec\n");
     }
 #endif
 
-    return fd;
+    返回 fd;
 }
 
 typedef struct FileLogContext {
     const AVClass *class;
-    int   log_offset;
+    整数   log_offset;
     void *log_ctx;
 } FileLogContext;
 
@@ -108,28 +108,28 @@ static const AVClass file_log_ctx_class = {
     .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
 };
 
-int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *log_ctx)
+整数 avpriv_tempfile(const char *prefix, char **filename, 整数 log_offset, void *log_ctx)
 {
     FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int fd = -1;
-#if HAVE_MKSTEMP
+    整数 fd = -1;
+#如果 HAVE_MKSTEMP
     size_t len = strlen(prefix) + 12; /* room for "/tmp/" and "XXXXXX\0" */
     *filename  = av_malloc(len);
 #elif HAVE_TEMPNAM
     void *ptr= tempnam(NULL, prefix);
-    if(!ptr)
+    如果(!ptr)
         ptr= tempnam(".", prefix);
     *filename = av_strdup(ptr);
     free(ptr);
-#else
-    return AVERROR(ENOSYS);
+#否则
+    返回 AVERROR(ENOSYS);
 #endif
     /* -----common section-----*/
-    if (!*filename) {
+    如果 (!*filename) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot allocate file name\n");
-        return AVERROR(ENOMEM);
+        返回 AVERROR(ENOMEM);
     }
-#if !HAVE_MKSTEMP
+#如果 !HAVE_MKSTEMP
 #   ifndef O_BINARY
 #       define O_BINARY 0
 #   endif
@@ -137,30 +137,30 @@ int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *l
 #       define O_EXCL 0
 #   endif
     fd = open(*filename, O_RDWR | O_BINARY | O_CREAT | O_EXCL, 0600);
-#else
+#否则
     snprintf(*filename, len, "/tmp/%sXXXXXX", prefix);
     fd = mkstemp(*filename);
-#if defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
-    if (fd < 0) {
+#如果 defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
+    如果 (fd < 0) {
         snprintf(*filename, len, "./%sXXXXXX", prefix);
         fd = mkstemp(*filename);
     }
 #endif
 #endif
     /* -----common section-----*/
-    if (fd < 0) {
-        int err = AVERROR(errno);
+    如果 (fd < 0) {
+        整数 err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot open temporary file %s\n", *filename);
         av_freep(filename);
-        return err;
+        返回 err;
     }
-    return fd; /* success */
+    返回 fd; /* success */
 }
 
 FILE *avpriv_fopen_utf8(const char *path, const char *mode)
 {
-    int fd;
-    int access;
+    整数 fd;
+    整数 access;
     const char *m = mode;
 
     switch (*m++) {
@@ -169,24 +169,24 @@ FILE *avpriv_fopen_utf8(const char *path, const char *mode)
     case 'a': access = O_CREAT|O_WRONLY|O_APPEND; break;
     default :
         errno = EINVAL;
-        return NULL;
+        返回 NULL;
     }
-    while (*m) {
-        if (*m == '+') {
+    当 (*m) {
+        如果 (*m == '+') {
             access &= ~(O_RDONLY | O_WRONLY);
             access |= O_RDWR;
-        } else if (*m == 'b') {
+        } 否则 如果 (*m == 'b') {
 #ifdef O_BINARY
             access |= O_BINARY;
 #endif
-        } else if (*m) {
+        } 否则 如果 (*m) {
             errno = EINVAL;
-            return NULL;
+            返回 NULL;
         }
         m++;
     }
     fd = avpriv_open(path, access, 0666);
-    if (fd == -1)
-        return NULL;
-    return fdopen(fd, mode);
+    如果 (fd == -1)
+        返回 NULL;
+    返回 fdopen(fd, mode);
 }

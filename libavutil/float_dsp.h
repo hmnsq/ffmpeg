@@ -36,7 +36,7 @@ typedef struct AVFloatDSPContext {
      *             constraints: multiple of 16
      */
     void (*vector_fmul)(float *dst, const float *src0, const float *src1,
-                        int len);
+                        整数 len);
 
     /**
      * Multiply a vector of floats by a scalar float and add to
@@ -52,7 +52,7 @@ typedef struct AVFloatDSPContext {
      *            constraints: multiple of 16
      */
     void (*vector_fmac_scalar)(float *dst, const float *src, float mul,
-                               int len);
+                               整数 len);
 
     /**
      * Multiply a vector of doubles by a scalar double and add to
@@ -68,7 +68,7 @@ typedef struct AVFloatDSPContext {
      *            constraints: multiple of 16
      */
     void (*vector_dmac_scalar)(double *dst, const double *src, double mul,
-                               int len);
+                               整数 len);
 
     /**
      * Multiply a vector of floats by a scalar float.  Source and
@@ -83,7 +83,7 @@ typedef struct AVFloatDSPContext {
      *            constraints: multiple of 4
      */
     void (*vector_fmul_scalar)(float *dst, const float *src, float mul,
-                               int len);
+                               整数 len);
 
     /**
      * Multiply a vector of double by a scalar double.  Source and
@@ -98,7 +98,7 @@ typedef struct AVFloatDSPContext {
      *            constraints: multiple of 8
      */
     void (*vector_dmul_scalar)(double *dst, const double *src, double mul,
-                               int len);
+                               整数 len);
 
     /**
      * Overlap/add with window function.
@@ -117,7 +117,7 @@ typedef struct AVFloatDSPContext {
      *             constraints: multiple of 4
      */
     void (*vector_fmul_window)(float *dst, const float *src0,
-                               const float *src1, const float *win, int len);
+                               const float *src1, const float *win, 整数 len);
 
     /**
      * Calculate the entry wise product of two vectors of floats, add a third vector of
@@ -135,7 +135,7 @@ typedef struct AVFloatDSPContext {
      *             constraints: multiple of 16
      */
     void (*vector_fmul_add)(float *dst, const float *src0, const float *src1,
-                            const float *src2, int len);
+                            const float *src2, 整数 len);
 
     /**
      * Calculate the entry wise product of two vectors of floats, and store the result
@@ -152,7 +152,7 @@ typedef struct AVFloatDSPContext {
      *             constraints: multiple of 16
      */
     void (*vector_fmul_reverse)(float *dst, const float *src0,
-                                const float *src1, int len);
+                                const float *src1, 整数 len);
 
     /**
      * Calculate the sum and difference of two vectors of floats.
@@ -161,7 +161,7 @@ typedef struct AVFloatDSPContext {
      * @param v2  second input vector, difference output, 16-byte aligned
      * @param len length of vectors, multiple of 4
      */
-    void (*butterflies_float)(float *restrict v1, float *restrict v2, int len);
+    void (*butterflies_float)(float *restrict v1, float *restrict v2, 整数 len);
 
     /**
      * Calculate the scalar product of two vectors of floats.
@@ -172,7 +172,7 @@ typedef struct AVFloatDSPContext {
      *
      * @return sum of elementwise products
      */
-    float (*scalarproduct_float)(const float *v1, const float *v2, int len);
+    float (*scalarproduct_float)(const float *v1, const float *v2, 整数 len);
 
     /**
      * Calculate the entry wise product of two vectors of doubles and store the result in
@@ -188,7 +188,7 @@ typedef struct AVFloatDSPContext {
      *             constraints: multiple of 16
      */
     void (*vector_dmul)(double *dst, const double *src0, const double *src1,
-                        int len);
+                        整数 len);
 
     /**
      * Calculate the scalar product of two vectors of doubles.
@@ -215,7 +215,7 @@ typedef struct AVFloatDSPContext {
  *
  * @return sum of elementwise products
  */
-float ff_scalarproduct_float_c(const float *v1, const float *v2, int len);
+float ff_scalarproduct_float_c(const float *v1, const float *v2, 整数 len);
 
 /**
  * Return the scalar product of two vectors of doubles.
@@ -231,7 +231,7 @@ double ff_scalarproduct_double_c(const double *v1, const double *v2,
 
 void ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp);
 void ff_float_dsp_init_arm(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, int strict);
+void ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, 整数 strict);
 void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp);
 void ff_float_dsp_init_x86(AVFloatDSPContext *fdsp);
 void ff_float_dsp_init_mips(AVFloatDSPContext *fdsp);
@@ -241,6 +241,6 @@ void ff_float_dsp_init_mips(AVFloatDSPContext *fdsp);
  *
  * @param strict  setting to non-zero avoids using functions which may not be IEEE-754 compliant
  */
-AVFloatDSPContext *avpriv_float_dsp_alloc(int strict);
+AVFloatDSPContext *avpriv_float_dsp_alloc(整数 strict);
 
 #endif /* AVUTIL_FLOAT_DSP_H */

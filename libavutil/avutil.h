@@ -259,7 +259,7 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
 #ifdef __cplusplus
 /* ISO C++ forbids compound-literals. */
 #define AV_TIME_BASE_Q          av_make_q(1, AV_TIME_BASE)
-#else
+#否则
 #define AV_TIME_BASE_Q          (AVRational){1, AV_TIME_BASE}
 #endif
 
@@ -310,7 +310,7 @@ char av_get_picture_type_char(enum AVPictureType pict_type);
  */
 static inline void *av_x_if_null(const void *p, const void *x)
 {
-    return (void *)(intptr_t)(p ? p : x);
+    返回 (void *)(intptr_t)(p ? p : x);
 }
 
 /**

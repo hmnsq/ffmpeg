@@ -31,7 +31,7 @@
 #include "mem.h"
 #include "pixdesc.h"
 
-#if HAVE_OPENCL_VAAPI_BEIGNET
+#如果 HAVE_OPENCL_VAAPI_BEIGNET
 #include <unistd.h>
 #include <va/va.h>
 #include <va/va_drmcommon.h>
@@ -39,14 +39,14 @@
 #include "hwcontext_vaapi.h"
 #endif
 
-#if HAVE_OPENCL_DRM_BEIGNET
+#如果 HAVE_OPENCL_DRM_BEIGNET
 #include <unistd.h>
 #include <CL/cl_intel.h>
 #include "hwcontext_drm.h"
 #endif
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-#if CONFIG_LIBMFX
+#如果 HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#如果 CONFIG_LIBMFX
 #include <mfxstructures.h>
 #endif
 #include <va/va.h>
@@ -54,31 +54,31 @@
 #include "hwcontext_vaapi.h"
 #endif
 
-#if HAVE_OPENCL_DXVA2
+#如果 HAVE_OPENCL_DXVA2
 #define COBJMACROS
 #include <CL/cl_dx9_media_sharing.h>
 #include <dxva2api.h>
 #include "hwcontext_dxva2.h"
 #endif
 
-#if HAVE_OPENCL_D3D11
+#如果 HAVE_OPENCL_D3D11
 #include <CL/cl_d3d11.h>
 #include "hwcontext_d3d11va.h"
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
+#如果 HAVE_OPENCL_DRM_ARM
 #include <CL/cl_ext.h>
 #include <drm_fourcc.h>
 #include "hwcontext_drm.h"
 #endif
 
-#if HAVE_OPENCL_VIDEOTOOLBOX
+#如果 HAVE_OPENCL_VIDEOTOOLBOX
 #include <OpenCL/cl_gl_ext.h>
 #include <VideoToolbox/VideoToolbox.h>
 #endif
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA && CONFIG_LIBMFX
-extern int ff_qsv_get_surface_base_handle(mfxFrameSurface1 *surf,
+#如果 HAVE_OPENCL_VAAPI_INTEL_MEDIA && CONFIG_LIBMFX
+extern 整数 ff_qsv_get_surface_base_handle(mfxFrameSurface1 *surf,
                                           enum AVHWDeviceType base_dev_typ,
                                           void **base_handle);
 #endif
@@ -100,13 +100,13 @@ typedef struct OpenCLDeviceContext {
     cl_platform_id platform_id;
 
     // Platform/device-specific functions.
-#if HAVE_OPENCL_DRM_BEIGNET
-    int beignet_drm_mapping_usable;
+#如果 HAVE_OPENCL_DRM_BEIGNET
+    整数 beignet_drm_mapping_usable;
     clCreateImageFromFdINTEL_fn clCreateImageFromFdINTEL;
 #endif
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-    int qsv_mapping_usable;
+#如果 HAVE_OPENCL_VAAPI_INTEL_MEDIA
+    整数 qsv_mapping_usable;
     clCreateFromVA_APIMediaSurfaceINTEL_fn
         clCreateFromVA_APIMediaSurfaceINTEL;
     clEnqueueAcquireVA_APIMediaSurfacesINTEL_fn
@@ -115,8 +115,8 @@ typedef struct OpenCLDeviceContext {
         clEnqueueReleaseVA_APIMediaSurfacesINTEL;
 #endif
 
-#if HAVE_OPENCL_DXVA2
-    int dxva2_mapping_usable;
+#如果 HAVE_OPENCL_DXVA2
+    整数 dxva2_mapping_usable;
     cl_dx9_media_adapter_type_khr dx9_media_adapter_type;
 
     clCreateFromDX9MediaSurfaceKHR_fn
@@ -127,8 +127,8 @@ typedef struct OpenCLDeviceContext {
         clEnqueueReleaseDX9MediaSurfacesKHR;
 #endif
 
-#if HAVE_OPENCL_D3D11
-    int d3d11_mapping_usable;
+#如果 HAVE_OPENCL_D3D11
+    整数 d3d11_mapping_usable;
     clCreateFromD3D11Texture2DKHR_fn
         clCreateFromD3D11Texture2DKHR;
     clEnqueueAcquireD3D11ObjectsKHR_fn
@@ -137,8 +137,8 @@ typedef struct OpenCLDeviceContext {
         clEnqueueReleaseD3D11ObjectsKHR;
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
-    int drm_arm_mapping_usable;
+#如果 HAVE_OPENCL_DRM_ARM
+    整数 drm_arm_mapping_usable;
 #endif
 } OpenCLDeviceContext;
 
@@ -154,11 +154,11 @@ typedef struct OpenCLFramesContext {
     // device.
     cl_command_queue command_queue;
 
-#if HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
+#如果 HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
     // For mapping APIs which have separate creation and acquire/release
     // steps, this stores the OpenCL memory objects corresponding to each
     // frame.
-    int                   nb_mapped_frames;
+    整数                   nb_mapped_frames;
     AVOpenCLFrameDescriptor *mapped_frames;
 #endif
 } OpenCLFramesContext;
@@ -179,7 +179,7 @@ static void opencl_device_free(AVHWDeviceContext *hwdev)
     cl_int cle;
 
     cle = clReleaseContext(hwctx->context);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to release OpenCL "
                "context: %d.\n", cle);
     }
@@ -227,18 +227,18 @@ static char *opencl_get_platform_string(cl_platform_id platform_id,
     size_t size;
     cl_int cle;
     cle = clGetPlatformInfo(platform_id, key, 0, NULL, &size);
-    if (cle != CL_SUCCESS)
-        return NULL;
+    如果 (cle != CL_SUCCESS)
+        返回 NULL;
     str = av_malloc(size);
-    if (!str)
-        return NULL;
+    如果 (!str)
+        返回 NULL;
     cle = clGetPlatformInfo(platform_id, key, size, str, &size);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_free(str);
-        return NULL;
+        返回 NULL;
     }
     av_assert0(strlen(str) + 1 == size);
-    return str;
+    返回 str;
 }
 
 static char *opencl_get_device_string(cl_device_id device_id,
@@ -248,68 +248,68 @@ static char *opencl_get_device_string(cl_device_id device_id,
     size_t size;
     cl_int cle;
     cle = clGetDeviceInfo(device_id, key, 0, NULL, &size);
-    if (cle != CL_SUCCESS)
-        return NULL;
+    如果 (cle != CL_SUCCESS)
+        返回 NULL;
     str = av_malloc(size);
-    if (!str)
-        return NULL;
+    如果 (!str)
+        返回 NULL;
     cle = clGetDeviceInfo(device_id, key, size, str, &size);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_free(str);
-        return NULL;
+        返回 NULL;
     }
     av_assert0(strlen(str) + 1== size);
-    return str;
+    返回 str;
 }
 
-static int opencl_check_platform_extension(cl_platform_id platform_id,
+static 整数 opencl_check_platform_extension(cl_platform_id platform_id,
                                            const char *name)
 {
     char *str;
-    int found = 0;
+    整数 found = 0;
     str = opencl_get_platform_string(platform_id,
                                      CL_PLATFORM_EXTENSIONS);
-    if (str && strstr(str, name))
+    如果 (str && strstr(str, name))
         found = 1;
     av_free(str);
-    return found;
+    返回 found;
 }
 
-static int opencl_check_device_extension(cl_device_id device_id,
+static 整数 opencl_check_device_extension(cl_device_id device_id,
                                          const char *name)
 {
     char *str;
-    int found = 0;
+    整数 found = 0;
     str = opencl_get_device_string(device_id,
                                    CL_DEVICE_EXTENSIONS);
-    if (str && strstr(str, name))
+    如果 (str && strstr(str, name))
         found = 1;
     av_free(str);
-    return found;
+    返回 found;
 }
 
-av_unused static int opencl_check_extension(AVHWDeviceContext *hwdev,
+av_unused static 整数 opencl_check_extension(AVHWDeviceContext *hwdev,
                                             const char *name)
 {
     OpenCLDeviceContext    *priv = hwdev->hwctx;
     AVOpenCLDeviceContext *hwctx = &priv->p;
 
-    if (opencl_check_platform_extension(priv->platform_id, name)) {
+    如果 (opencl_check_platform_extension(priv->platform_id, name)) {
         av_log(hwdev, AV_LOG_DEBUG,
                "%s found as platform extension.\n", name);
-        return 1;
+        返回 1;
     }
 
-    if (opencl_check_device_extension(hwctx->device_id, name)) {
+    如果 (opencl_check_device_extension(hwctx->device_id, name)) {
         av_log(hwdev, AV_LOG_DEBUG,
                "%s found as device extension.\n", name);
-        return 1;
+        返回 1;
     }
 
-    return 0;
+    返回 0;
 }
 
-static int opencl_enumerate_platforms(AVHWDeviceContext *hwdev,
+static 整数 opencl_enumerate_platforms(AVHWDeviceContext *hwdev,
                                       cl_uint *nb_platforms,
                                       cl_platform_id **platforms,
                                       void *context)
@@ -317,30 +317,30 @@ static int opencl_enumerate_platforms(AVHWDeviceContext *hwdev,
     cl_int cle;
 
     cle = clGetPlatformIDs(0, NULL, nb_platforms);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of "
                "OpenCL platforms: %d.\n", cle);
-        return AVERROR(ENODEV);
+        返回 AVERROR(ENODEV);
     }
     av_log(hwdev, AV_LOG_DEBUG, "%u OpenCL platforms found.\n",
            *nb_platforms);
 
     *platforms = av_malloc_array(*nb_platforms, sizeof(**platforms));
-    if (!*platforms)
-        return AVERROR(ENOMEM);
+    如果 (!*platforms)
+        返回 AVERROR(ENOMEM);
 
     cle = clGetPlatformIDs(*nb_platforms, *platforms, NULL);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of OpenCL "
                "platforms: %d.\n", cle);
         av_freep(platforms);
-        return AVERROR(ENODEV);
+        返回 AVERROR(ENODEV);
     }
 
-    return 0;
+    返回 0;
 }
 
-static int opencl_filter_platform(AVHWDeviceContext *hwdev,
+static 整数 opencl_filter_platform(AVHWDeviceContext *hwdev,
                                   cl_platform_id platform_id,
                                   const char *platform_name,
                                   void *context)
@@ -348,23 +348,23 @@ static int opencl_filter_platform(AVHWDeviceContext *hwdev,
     AVDictionary *opts = context;
     const AVDictionaryEntry *param;
     char *str;
-    int i, ret = 0;
+    整数 i, ret = 0;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(opencl_platform_params); i++) {
+    为 (i = 0; i < FF_ARRAY_ELEMS(opencl_platform_params); i++) {
         param = av_dict_get(opts, opencl_platform_params[i].key,
                             NULL, 0);
-        if (!param)
+        如果 (!param)
             continue;
 
         str = opencl_get_platform_string(platform_id,
                                          opencl_platform_params[i].name);
-        if (!str) {
+        如果 (!str) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query %s "
                    "of platform \"%s\".\n",
                    opencl_platform_params[i].key, platform_name);
-            return AVERROR_UNKNOWN;
+            返回 AVERROR_UNKNOWN;
         }
-        if (!av_stristr(str, param->value)) {
+        如果 (!av_stristr(str, param->value)) {
             av_log(hwdev, AV_LOG_DEBUG, "%s does not match (\"%s\").\n",
                    param->key, str);
             ret = 1;
@@ -372,10 +372,10 @@ static int opencl_filter_platform(AVHWDeviceContext *hwdev,
         av_free(str);
     }
 
-    return ret;
+    返回 ret;
 }
 
-static int opencl_enumerate_devices(AVHWDeviceContext *hwdev,
+static 整数 opencl_enumerate_devices(AVHWDeviceContext *hwdev,
                                     cl_platform_id platform_id,
                                     const char *platform_name,
                                     cl_uint *nb_devices,
@@ -386,36 +386,36 @@ static int opencl_enumerate_devices(AVHWDeviceContext *hwdev,
 
     cle = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL,
                          0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+    如果 (cle == CL_DEVICE_NOT_FOUND) {
         av_log(hwdev, AV_LOG_DEBUG, "No devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        返回 0;
+    } 否则 如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR(ENODEV);
+        返回 AVERROR(ENODEV);
     }
     av_log(hwdev, AV_LOG_DEBUG, "%u OpenCL devices found on "
            "platform \"%s\".\n", *nb_devices, platform_name);
 
     *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    如果 (!*devices)
+        返回 AVERROR(ENOMEM);
 
     cle = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL,
                          *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR(ENODEV);
+        返回 AVERROR(ENODEV);
     }
 
-    return 0;
+    返回 0;
 }
 
-static int opencl_filter_device(AVHWDeviceContext *hwdev,
+static 整数 opencl_filter_device(AVHWDeviceContext *hwdev,
                                 cl_device_id device_id,
                                 const char *device_name,
                                 void *context)
@@ -423,54 +423,54 @@ static int opencl_filter_device(AVHWDeviceContext *hwdev,
     AVDictionary *opts = context;
     const AVDictionaryEntry *param;
     char *str;
-    int i, ret = 0;
+    整数 i, ret = 0;
 
     param = av_dict_get(opts, "device_type", NULL, 0);
-    if (param) {
+    如果 (param) {
         cl_device_type match_type = 0, device_type;
         cl_int cle;
 
-        for (i = 0; i < FF_ARRAY_ELEMS(opencl_device_types); i++) {
-            if (!strcmp(opencl_device_types[i].key, param->value)) {
+        为 (i = 0; i < FF_ARRAY_ELEMS(opencl_device_types); i++) {
+            如果 (!strcmp(opencl_device_types[i].key, param->value)) {
                 match_type = opencl_device_types[i].type;
                 break;
             }
         }
-        if (!match_type) {
+        如果 (!match_type) {
             av_log(hwdev, AV_LOG_ERROR, "Unknown device type %s.\n",
                    param->value);
-            return AVERROR(EINVAL);
+            返回 AVERROR(EINVAL);
         }
 
         cle = clGetDeviceInfo(device_id, CL_DEVICE_TYPE,
                               sizeof(device_type), &device_type, NULL);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query device type "
                    "of device \"%s\".\n", device_name);
-            return AVERROR_UNKNOWN;
+            返回 AVERROR_UNKNOWN;
         }
 
-        if (!(device_type & match_type)) {
+        如果 (!(device_type & match_type)) {
             av_log(hwdev, AV_LOG_DEBUG, "device_type does not match.\n");
-            return 1;
+            返回 1;
         }
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(opencl_device_params); i++) {
+    为 (i = 0; i < FF_ARRAY_ELEMS(opencl_device_params); i++) {
         param = av_dict_get(opts, opencl_device_params[i].key,
                             NULL, 0);
-        if (!param)
+        如果 (!param)
             continue;
 
         str = opencl_get_device_string(device_id,
                                        opencl_device_params[i].name);
-        if (!str) {
+        如果 (!str) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query %s "
                    "of device \"%s\".\n",
                    opencl_device_params[i].key, device_name);
-            return AVERROR_UNKNOWN;
+            返回 AVERROR_UNKNOWN;
         }
-        if (!av_stristr(str, param->value)) {
+        如果 (!av_stristr(str, param->value)) {
             av_log(hwdev, AV_LOG_DEBUG, "%s does not match (\"%s\").\n",
                    param->key, str);
             ret = 1;
@@ -478,34 +478,34 @@ static int opencl_filter_device(AVHWDeviceContext *hwdev,
         av_free(str);
     }
 
-    return ret;
+    返回 ret;
 }
 
 typedef struct OpenCLDeviceSelector {
-    int platform_index;
-    int device_index;
+    整数 platform_index;
+    整数 device_index;
     void *context;
-    int (*enumerate_platforms)(AVHWDeviceContext *hwdev,
+    整数 (*enumerate_platforms)(AVHWDeviceContext *hwdev,
                                cl_uint *nb_platforms,
                                cl_platform_id **platforms,
                                void *context);
-    int (*filter_platform)    (AVHWDeviceContext *hwdev,
+    整数 (*filter_platform)    (AVHWDeviceContext *hwdev,
                                cl_platform_id platform_id,
                                const char *platform_name,
                                void *context);
-    int (*enumerate_devices)  (AVHWDeviceContext *hwdev,
+    整数 (*enumerate_devices)  (AVHWDeviceContext *hwdev,
                                cl_platform_id platform_id,
                                const char *platform_name,
                                cl_uint *nb_devices,
                                cl_device_id **devices,
                                void *context);
-    int (*filter_device)      (AVHWDeviceContext *hwdev,
+    整数 (*filter_device)      (AVHWDeviceContext *hwdev,
                                cl_device_id device_id,
                                const char *device_name,
                                void *context);
 } OpenCLDeviceSelector;
 
-static int opencl_device_create_internal(AVHWDeviceContext *hwdev,
+static 整数 opencl_device_create_internal(AVHWDeviceContext *hwdev,
                                          const OpenCLDeviceSelector *selector,
                                          cl_context_properties *props)
 {
@@ -519,70 +519,70 @@ static int opencl_device_create_internal(AVHWDeviceContext *hwdev,
     cl_context_properties default_props[3];
     char *platform_name_src = NULL,
          *device_name_src   = NULL;
-    int err, found, p, d;
+    整数 err, found, p, d;
 
     av_assert0(selector->enumerate_platforms &&
                selector->enumerate_devices);
 
     err = selector->enumerate_platforms(hwdev, &nb_platforms, &platforms,
                                         selector->context);
-    if (err)
-        return err;
+    如果 (err)
+        返回 err;
 
     found = 0;
-    for (p = 0; p < nb_platforms; p++) {
+    为 (p = 0; p < nb_platforms; p++) {
         const char *platform_name;
 
-        if (selector->platform_index >= 0 &&
+        如果 (selector->platform_index >= 0 &&
             selector->platform_index != p)
             continue;
 
         av_freep(&platform_name_src);
         platform_name_src = opencl_get_platform_string(platforms[p],
                                                            CL_PLATFORM_NAME);
-        if (platform_name_src)
+        如果 (platform_name_src)
             platform_name = platform_name_src;
-        else
+        否则
             platform_name = "Unknown Platform";
 
-        if (selector->filter_platform) {
+        如果 (selector->filter_platform) {
             err = selector->filter_platform(hwdev, platforms[p],
                                             platform_name,
                                             selector->context);
-            if (err < 0)
+            如果 (err < 0)
                 goto fail;
-            if (err > 0)
+            如果 (err > 0)
                 continue;
         }
 
         err = selector->enumerate_devices(hwdev, platforms[p], platform_name,
                                           &nb_devices, &devices,
                                           selector->context);
-        if (err < 0)
+        如果 (err < 0)
             continue;
 
-        for (d = 0; d < nb_devices; d++) {
+        为 (d = 0; d < nb_devices; d++) {
             const char *device_name;
 
-            if (selector->device_index >= 0 &&
+            如果 (selector->device_index >= 0 &&
                 selector->device_index != d)
                 continue;
 
             av_freep(&device_name_src);
             device_name_src = opencl_get_device_string(devices[d],
                                                            CL_DEVICE_NAME);
-            if (device_name_src)
+            如果 (device_name_src)
                 device_name = device_name_src;
-            else
+            否则
                 device_name = "Unknown Device";
 
-            if (selector->filter_device) {
+            如果 (selector->filter_device) {
                 err = selector->filter_device(hwdev, devices[d],
                                               device_name,
                                               selector->context);
-                if (err < 0)
+                如果 (err < 0)
                     goto fail;
-                if (err > 0)
+                如果 (err > 0)
                     continue;
             }
 
@@ -597,30 +597,30 @@ static int opencl_device_create_internal(AVHWDeviceContext *hwdev,
         av_freep(&devices);
     }
 
-    if (found == 0) {
+    如果 (found == 0) {
         av_log(hwdev, AV_LOG_ERROR, "No matching devices found.\n");
         err = AVERROR(ENODEV);
         goto fail;
     }
-    if (found > 1) {
+    如果 (found > 1) {
         av_log(hwdev, AV_LOG_ERROR, "More than one matching device found.\n");
         err = AVERROR(ENODEV);
         goto fail;
     }
 
-    if (!props) {
+    如果 (!props) {
         props = default_props;
         default_props[0] = CL_CONTEXT_PLATFORM;
         default_props[1] = (intptr_t)platform_id;
         default_props[2] = 0;
-    } else {
-        if (props[0] == CL_CONTEXT_PLATFORM && props[1] == 0)
+    } 否则 {
+        如果 (props[0] == CL_CONTEXT_PLATFORM && props[1] == 0)
             props[1] = (intptr_t)platform_id;
     }
 
     hwctx->context = clCreateContext(props, 1, &hwctx->device_id,
                                      &opencl_error_callback, hwdev, &cle);
-    if (!hwctx->context) {
+    如果 (!hwctx->context) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to create OpenCL context: "
                "%d.\n", cle);
         err = AVERROR(ENODEV);
@@ -635,11 +635,11 @@ fail:
     av_freep(&device_name_src);
     av_freep(&platforms);
     av_freep(&devices);
-    return err;
+    返回 err;
 }
 
-static int opencl_device_create(AVHWDeviceContext *hwdev, const char *device,
-                                AVDictionary *opts, int flags)
+static 整数 opencl_device_create(AVHWDeviceContext *hwdev, const char *device,
+                                AVDictionary *opts, 整数 flags)
 {
     OpenCLDeviceSelector selector = {
         .context = opts,
@@ -649,103 +649,103 @@ static int opencl_device_create(AVHWDeviceContext *hwdev, const char *device,
         .filter_device       = &opencl_filter_device,
     };
 
-    if (device && device[0]) {
+    如果 (device && device[0]) {
         // Match one or both indices for platform and device.
-        int d = -1, p = -1, ret;
-        if (device[0] == '.')
+        整数 d = -1, p = -1, ret;
+        如果 (device[0] == '.')
             ret = sscanf(device, ".%d", &d);
-        else
+        否则
             ret = sscanf(device, "%d.%d", &p, &d);
-        if (ret < 1) {
+        如果 (ret < 1) {
             av_log(hwdev, AV_LOG_ERROR, "Invalid OpenCL platform/device "
                    "index specification \"%s\".\n", device);
-            return AVERROR(EINVAL);
+            返回 AVERROR(EINVAL);
         }
         selector.platform_index = p;
         selector.device_index   = d;
-    } else {
+    } 否则 {
         selector.platform_index = -1;
         selector.device_index   = -1;
     }
 
-    return opencl_device_create_internal(hwdev, &selector, NULL);
+    返回 opencl_device_create_internal(hwdev, &selector, NULL);
 }
 
-static int opencl_device_init(AVHWDeviceContext *hwdev)
+static 整数 opencl_device_init(AVHWDeviceContext *hwdev)
 {
     OpenCLDeviceContext    *priv = hwdev->hwctx;
     AVOpenCLDeviceContext *hwctx = &priv->p;
     cl_int cle;
 
-    if (hwctx->command_queue) {
+    如果 (hwctx->command_queue) {
         cle = clRetainCommandQueue(hwctx->command_queue);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to retain external "
                    "command queue: %d.\n", cle);
-            return AVERROR(EIO);
+            返回 AVERROR(EIO);
         }
         priv->command_queue = hwctx->command_queue;
-    } else {
+    } 否则 {
         priv->command_queue = clCreateCommandQueue(hwctx->context,
                                                    hwctx->device_id,
                                                    0, &cle);
-        if (!priv->command_queue) {
+        如果 (!priv->command_queue) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to create internal "
                    "command queue: %d.\n", cle);
-            return AVERROR(EIO);
+            返回 AVERROR(EIO);
         }
     }
 
     cle = clGetDeviceInfo(hwctx->device_id, CL_DEVICE_PLATFORM,
                           sizeof(priv->platform_id), &priv->platform_id,
                           NULL);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to determine the OpenCL "
                "platform containing the device.\n");
-        return AVERROR(EIO);
+        返回 AVERROR(EIO);
     }
 
 #define CL_FUNC(name, desc) do {                                \
-        if (fail)                                               \
+        如果 (fail)                                               \
             break;                                              \
         priv->name = clGetExtensionFunctionAddressForPlatform(  \
             priv->platform_id, #name);                          \
-        if (!priv->name) {                                      \
+        如果 (!priv->name) {                                      \
             av_log(hwdev, AV_LOG_VERBOSE,                       \
                    desc " function not found (%s).\n", #name);  \
             fail = 1;                                           \
-        } else {                                                \
+        } 否则 {                                                \
             av_log(hwdev, AV_LOG_VERBOSE,                       \
                    desc " function found (%s).\n", #name);      \
         }                                                       \
-    } while (0)
+    } 当 (0)
 
-#if HAVE_OPENCL_DRM_BEIGNET
+#如果 HAVE_OPENCL_DRM_BEIGNET
     {
-        int fail = 0;
+        整数 fail = 0;
 
         CL_FUNC(clCreateImageFromFdINTEL,
                 "Beignet DRM to OpenCL image mapping");
 
-        if (fail) {
+        如果 (fail) {
             av_log(hwdev, AV_LOG_WARNING, "Beignet DRM to OpenCL "
                    "mapping not usable.\n");
             priv->beignet_drm_mapping_usable = 0;
-        } else {
+        } 否则 {
             priv->beignet_drm_mapping_usable = 1;
         }
     }
 #endif
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#如果 HAVE_OPENCL_VAAPI_INTEL_MEDIA
     {
         size_t props_size;
         cl_context_properties *props = NULL;
         VADisplay va_display;
         const char *va_ext = "cl_intel_va_api_media_sharing";
-        int i, fail = 0;
+        整数 i, fail = 0;
 
-        if (!opencl_check_extension(hwdev, va_ext)) {
+        如果 (!opencl_check_extension(hwdev, va_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for QSV to OpenCL mapping.\n", va_ext);
             goto no_qsv;
@@ -753,12 +753,12 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
 
         cle = clGetContextInfo(hwctx->context, CL_CONTEXT_PROPERTIES,
                                0, NULL, &props_size);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_VERBOSE, "Failed to get context "
                    "properties: %d.\n", cle);
             goto no_qsv;
         }
-        if (props_size == 0) {
+        如果 (props_size == 0) {
             av_log(hwdev, AV_LOG_VERBOSE, "Media sharing must be "
                    "enabled on context creation to use QSV to "
                    "OpenCL mapping.\n");
@@ -766,31 +766,31 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
         }
 
         props = av_malloc(props_size);
-        if (!props)
-            return AVERROR(ENOMEM);
+        如果 (!props)
+            返回 AVERROR(ENOMEM);
 
         cle = clGetContextInfo(hwctx->context, CL_CONTEXT_PROPERTIES,
                                props_size, props, NULL);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_VERBOSE, "Failed to get context "
                    "properties: %d.\n", cle);
             goto no_qsv;
         }
 
         va_display = NULL;
-        for (i = 0; i < (props_size / sizeof(*props) - 1); i++) {
-            if (props[i] == CL_CONTEXT_VA_API_DISPLAY_INTEL) {
+        为 (i = 0; i < (props_size / sizeof(*props) - 1); i++) {
+            如果 (props[i] == CL_CONTEXT_VA_API_DISPLAY_INTEL) {
                 va_display = (VADisplay)(intptr_t)props[i+1];
                 break;
             }
         }
-        if (!va_display) {
+        如果 (!va_display) {
             av_log(hwdev, AV_LOG_VERBOSE, "Media sharing must be "
                    "enabled on context creation to use QSV to "
                    "OpenCL mapping.\n");
             goto no_qsv;
         }
-        if (!vaDisplayIsValid(va_display)) {
+        如果 (!vaDisplayIsValid(va_display)) {
             av_log(hwdev, AV_LOG_VERBOSE, "A valid VADisplay is "
                    "required on context creation to use QSV to "
                    "OpenCL mapping.\n");
@@ -804,21 +804,21 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
         CL_FUNC(clEnqueueReleaseVA_APIMediaSurfacesINTEL,
                 "Intel QSV in OpenCL release");
 
-        if (fail) {
+        如果 (fail) {
         no_qsv:
             av_log(hwdev, AV_LOG_WARNING, "QSV to OpenCL mapping "
                    "not usable.\n");
             priv->qsv_mapping_usable = 0;
-        } else {
+        } 否则 {
             priv->qsv_mapping_usable = 1;
         }
         av_free(props);
     }
 #endif
 
-#if HAVE_OPENCL_DXVA2
+#如果 HAVE_OPENCL_DXVA2
     {
-        int fail = 0;
+        整数 fail = 0;
 
         CL_FUNC(clCreateFromDX9MediaSurfaceKHR,
                 "DXVA2 to OpenCL mapping");
@@ -827,28 +827,28 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
         CL_FUNC(clEnqueueReleaseDX9MediaSurfacesKHR,
                 "DXVA2 in OpenCL release");
 
-        if (fail) {
+        如果 (fail) {
             av_log(hwdev, AV_LOG_WARNING, "DXVA2 to OpenCL mapping "
                    "not usable.\n");
             priv->dxva2_mapping_usable = 0;
-        } else {
+        } 否则 {
             priv->dx9_media_adapter_type = CL_ADAPTER_D3D9EX_KHR;
             priv->dxva2_mapping_usable = 1;
         }
     }
 #endif
 
-#if HAVE_OPENCL_D3D11
+#如果 HAVE_OPENCL_D3D11
     {
         const char *d3d11_ext = "cl_khr_d3d11_sharing";
         const char *nv12_ext  = "cl_intel_d3d11_nv12_media_sharing";
-        int fail = 0;
+        整数 fail = 0;
 
-        if (!opencl_check_extension(hwdev, d3d11_ext)) {
+        如果 (!opencl_check_extension(hwdev, d3d11_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for D3D11 to OpenCL mapping.\n", d3d11_ext);
             fail = 1;
-        } else if (!opencl_check_extension(hwdev, nv12_ext)) {
+        } 否则 如果 (!opencl_check_extension(hwdev, nv12_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension may be "
                    "required for D3D11 to OpenCL mapping.\n", nv12_ext);
             // Not fatal.
@@ -861,29 +861,29 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
         CL_FUNC(clEnqueueReleaseD3D11ObjectsKHR,
                 "D3D11 in OpenCL release");
 
-        if (fail) {
+        如果 (fail) {
             av_log(hwdev, AV_LOG_WARNING, "D3D11 to OpenCL mapping "
                    "not usable.\n");
             priv->d3d11_mapping_usable = 0;
-        } else {
+        } 否则 {
             priv->d3d11_mapping_usable = 1;
         }
     }
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
+#如果 HAVE_OPENCL_DRM_ARM
     {
         const char *drm_arm_ext = "cl_arm_import_memory";
         const char *image_ext   = "cl_khr_image2d_from_buffer";
-        int fail = 0;
+        整数 fail = 0;
 
-        if (!opencl_check_extension(hwdev, drm_arm_ext)) {
+        如果 (!opencl_check_extension(hwdev, drm_arm_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for DRM to OpenCL mapping on ARM.\n",
                    drm_arm_ext);
             fail = 1;
         }
-        if (!opencl_check_extension(hwdev, image_ext)) {
+        如果 (!opencl_check_extension(hwdev, image_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for DRM to OpenCL mapping on ARM.\n",
                    image_ext);
@@ -892,11 +892,11 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
 
         // clImportMemoryARM() is linked statically.
 
-        if (fail) {
+        如果 (fail) {
             av_log(hwdev, AV_LOG_WARNING, "DRM to OpenCL mapping on ARM "
                    "not usable.\n");
             priv->drm_arm_mapping_usable = 0;
-        } else {
+        } 否则 {
             priv->drm_arm_mapping_usable = 1;
         }
     }
@@ -904,7 +904,7 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
 
 #undef CL_FUNC
 
-    return 0;
+    返回 0;
 }
 
 static void opencl_device_uninit(AVHWDeviceContext *hwdev)
@@ -912,9 +912,9 @@ static void opencl_device_uninit(AVHWDeviceContext *hwdev)
     OpenCLDeviceContext *priv = hwdev->hwctx;
     cl_int cle;
 
-    if (priv->command_queue) {
+    如果 (priv->command_queue) {
         cle = clReleaseCommandQueue(priv->command_queue);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to release internal "
                    "command queue reference: %d.\n", cle);
         }
@@ -922,8 +922,8 @@ static void opencl_device_uninit(AVHWDeviceContext *hwdev)
     }
 }
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-static int opencl_filter_intel_media_vaapi_platform(AVHWDeviceContext *hwdev,
+#如果 HAVE_OPENCL_VAAPI_INTEL_MEDIA
+static 整数 opencl_filter_intel_media_vaapi_platform(AVHWDeviceContext *hwdev,
                                                     cl_platform_id platform_id,
                                                     const char *platform_name,
                                                     void *context)
@@ -931,17 +931,17 @@ static int opencl_filter_intel_media_vaapi_platform(AVHWDeviceContext *hwdev,
     // This doesn't exist as a platform extension, so just test whether
     // the function we will use for device enumeration exists.
 
-    if (!clGetExtensionFunctionAddressForPlatform(platform_id,
+    如果 (!clGetExtensionFunctionAddressForPlatform(platform_id,
             "clGetDeviceIDsFromVA_APIMediaAdapterINTEL")) {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not export the "
                "VAAPI device enumeration function.\n", platform_name);
-        return 1;
-    } else {
-        return 0;
+        返回 1;
+    } 否则 {
+        返回 0;
     }
 }
 
-static int opencl_enumerate_intel_media_vaapi_devices(AVHWDeviceContext *hwdev,
+static 整数 opencl_enumerate_intel_media_vaapi_devices(AVHWDeviceContext *hwdev,
                                                       cl_platform_id platform_id,
                                                       const char *platform_name,
                                                       cl_uint *nb_devices,
@@ -956,78 +956,78 @@ static int opencl_enumerate_intel_media_vaapi_devices(AVHWDeviceContext *hwdev,
     clGetDeviceIDsFromVA_APIMediaAdapterINTEL =
         clGetExtensionFunctionAddressForPlatform(platform_id,
             "clGetDeviceIDsFromVA_APIMediaAdapterINTEL");
-    if (!clGetDeviceIDsFromVA_APIMediaAdapterINTEL) {
+    如果 (!clGetDeviceIDsFromVA_APIMediaAdapterINTEL) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get address of "
                "clGetDeviceIDsFromVA_APIMediaAdapterINTEL().\n");
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
     cle = clGetDeviceIDsFromVA_APIMediaAdapterINTEL(
         platform_id, CL_VA_API_DISPLAY_INTEL, va_display,
         CL_PREFERRED_DEVICES_FOR_VA_API_INTEL, 0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+    如果 (cle == CL_DEVICE_NOT_FOUND) {
         av_log(hwdev, AV_LOG_DEBUG, "No VAAPI-supporting devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        返回 0;
+    } 否则 如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
     *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    如果 (!*devices)
+        返回 AVERROR(ENOMEM);
 
     cle = clGetDeviceIDsFromVA_APIMediaAdapterINTEL(
         platform_id, CL_VA_API_DISPLAY_INTEL, va_display,
         CL_PREFERRED_DEVICES_FOR_VA_API_INTEL, *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of VAAPI-supporting "
                "devices on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
-    return 0;
+    返回 0;
 }
 
-static int opencl_filter_intel_media_vaapi_device(AVHWDeviceContext *hwdev,
+static 整数 opencl_filter_intel_media_vaapi_device(AVHWDeviceContext *hwdev,
                                                   cl_device_id device_id,
                                                   const char *device_name,
                                                   void *context)
 {
     const char *va_ext = "cl_intel_va_api_media_sharing";
 
-    if (opencl_check_device_extension(device_id, va_ext)) {
-        return 0;
-    } else {
+    如果 (opencl_check_device_extension(device_id, va_ext)) {
+        返回 0;
+    } 否则 {
         av_log(hwdev, AV_LOG_DEBUG, "Device %s does not support the "
                "%s extension.\n", device_name, va_ext);
-        return 1;
+        返回 1;
     }
 }
 #endif
 
-#if HAVE_OPENCL_DXVA2
-static int opencl_filter_dxva2_platform(AVHWDeviceContext *hwdev,
+#如果 HAVE_OPENCL_DXVA2
+static 整数 opencl_filter_dxva2_platform(AVHWDeviceContext *hwdev,
                                         cl_platform_id platform_id,
                                         const char *platform_name,
                                         void *context)
 {
     const char *dx9_ext = "cl_khr_dx9_media_sharing";
 
-    if (opencl_check_platform_extension(platform_id, dx9_ext)) {
-        return 0;
-    } else {
+    如果 (opencl_check_platform_extension(platform_id, dx9_ext)) {
+        返回 0;
+    } 否则 {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not support the "
                "%s extension.\n", platform_name, dx9_ext);
-        return 1;
+        返回 1;
     }
 }
 
-static int opencl_enumerate_dxva2_devices(AVHWDeviceContext *hwdev,
+static 整数 opencl_enumerate_dxva2_devices(AVHWDeviceContext *hwdev,
                                           cl_platform_id platform_id,
                                           const char *platform_name,
                                           cl_uint *nb_devices,
@@ -1043,64 +1043,64 @@ static int opencl_enumerate_dxva2_devices(AVHWDeviceContext *hwdev,
     clGetDeviceIDsFromDX9MediaAdapterKHR =
         clGetExtensionFunctionAddressForPlatform(platform_id,
             "clGetDeviceIDsFromDX9MediaAdapterKHR");
-    if (!clGetDeviceIDsFromDX9MediaAdapterKHR) {
+    如果 (!clGetDeviceIDsFromDX9MediaAdapterKHR) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get address of "
                "clGetDeviceIDsFromDX9MediaAdapterKHR().\n");
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
     cle = clGetDeviceIDsFromDX9MediaAdapterKHR(
         platform_id, 1, &media_adapter_type, (void**)&device,
         CL_PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
         0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+    如果 (cle == CL_DEVICE_NOT_FOUND) {
         av_log(hwdev, AV_LOG_DEBUG, "No DXVA2-supporting devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        返回 0;
+    } 否则 如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
     *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    如果 (!*devices)
+        返回 AVERROR(ENOMEM);
 
     cle = clGetDeviceIDsFromDX9MediaAdapterKHR(
         platform_id, 1, &media_adapter_type, (void**)&device,
         CL_PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
         *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of DXVA2-supporting "
                "devices on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
-    return 0;
+    返回 0;
 }
 #endif
 
-#if HAVE_OPENCL_D3D11
-static int opencl_filter_d3d11_platform(AVHWDeviceContext *hwdev,
+#如果 HAVE_OPENCL_D3D11
+static 整数 opencl_filter_d3d11_platform(AVHWDeviceContext *hwdev,
                                         cl_platform_id platform_id,
                                         const char *platform_name,
                                         void *context)
 {
     const char *d3d11_ext = "cl_khr_d3d11_sharing";
 
-    if (opencl_check_platform_extension(platform_id, d3d11_ext)) {
-        return 0;
-    } else {
+    如果 (opencl_check_platform_extension(platform_id, d3d11_ext)) {
+        返回 0;
+    } 否则 {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not support the "
                "%s extension.\n", platform_name, d3d11_ext);
-        return 1;
+        返回 1;
     }
 }
 
-static int opencl_enumerate_d3d11_devices(AVHWDeviceContext *hwdev,
+static 整数 opencl_enumerate_d3d11_devices(AVHWDeviceContext *hwdev,
                                           cl_platform_id platform_id,
                                           const char *platform_name,
                                           cl_uint *nb_devices,
@@ -1114,48 +1114,48 @@ static int opencl_enumerate_d3d11_devices(AVHWDeviceContext *hwdev,
     clGetDeviceIDsFromD3D11KHR =
         clGetExtensionFunctionAddressForPlatform(platform_id,
             "clGetDeviceIDsFromD3D11KHR");
-    if (!clGetDeviceIDsFromD3D11KHR) {
+    如果 (!clGetDeviceIDsFromD3D11KHR) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get address of "
                "clGetDeviceIDsFromD3D11KHR().\n");
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
     cle = clGetDeviceIDsFromD3D11KHR(platform_id,
                                      CL_D3D11_DEVICE_KHR, device,
                                      CL_PREFERRED_DEVICES_FOR_D3D11_KHR,
                                      0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+    如果 (cle == CL_DEVICE_NOT_FOUND) {
         av_log(hwdev, AV_LOG_DEBUG, "No D3D11-supporting devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        返回 0;
+    } 否则 如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
     *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    如果 (!*devices)
+        返回 AVERROR(ENOMEM);
 
     cle = clGetDeviceIDsFromD3D11KHR(platform_id,
                                      CL_D3D11_DEVICE_KHR, device,
                                      CL_PREFERRED_DEVICES_FOR_D3D11_KHR,
                                      *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of D3D11-supporting "
                "devices on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
-    return 0;
+    返回 0;
 }
 #endif
 
-#if HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
-static int opencl_filter_gpu_device(AVHWDeviceContext *hwdev,
+#如果 HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
+static 整数 opencl_filter_gpu_device(AVHWDeviceContext *hwdev,
                                     cl_device_id device_id,
                                     const char *device_name,
                                     void *context)
@@ -1165,63 +1165,63 @@ static int opencl_filter_gpu_device(AVHWDeviceContext *hwdev,
 
     cle = clGetDeviceInfo(device_id, CL_DEVICE_TYPE,
                           sizeof(device_type), &device_type, NULL);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query device type "
                "of device \"%s\".\n", device_name);
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
-    if (!(device_type & CL_DEVICE_TYPE_GPU)) {
+    如果 (!(device_type & CL_DEVICE_TYPE_GPU)) {
         av_log(hwdev, AV_LOG_DEBUG, "Device %s skipped (not GPU).\n",
                device_name);
-        return 1;
+        返回 1;
     }
 
-    return 0;
+    返回 0;
 }
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
-static int opencl_filter_drm_arm_platform(AVHWDeviceContext *hwdev,
+#如果 HAVE_OPENCL_DRM_ARM
+static 整数 opencl_filter_drm_arm_platform(AVHWDeviceContext *hwdev,
                                           cl_platform_id platform_id,
                                           const char *platform_name,
                                           void *context)
 {
     const char *drm_arm_ext = "cl_arm_import_memory";
 
-    if (opencl_check_platform_extension(platform_id, drm_arm_ext)) {
-        return 0;
-    } else {
+    如果 (opencl_check_platform_extension(platform_id, drm_arm_ext)) {
+        返回 0;
+    } 否则 {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not support the "
                "%s extension.\n", platform_name, drm_arm_ext);
-        return 1;
+        返回 1;
     }
 }
 
-static int opencl_filter_drm_arm_device(AVHWDeviceContext *hwdev,
+static 整数 opencl_filter_drm_arm_device(AVHWDeviceContext *hwdev,
                                         cl_device_id device_id,
                                         const char *device_name,
                                         void *context)
 {
     const char *drm_arm_ext = "cl_arm_import_memory";
 
-    if (opencl_check_device_extension(device_id, drm_arm_ext)) {
-        return 0;
-    } else {
+    如果 (opencl_check_device_extension(device_id, drm_arm_ext)) {
+        返回 0;
+    } 否则 {
         av_log(hwdev, AV_LOG_DEBUG, "Device %s does not support the "
                "%s extension.\n", device_name, drm_arm_ext);
-        return 1;
+        返回 1;
     }
 }
 #endif
 
-static int opencl_device_derive(AVHWDeviceContext *hwdev,
+static 整数 opencl_device_derive(AVHWDeviceContext *hwdev,
                                 AVHWDeviceContext *src_ctx, AVDictionary *opts,
-                                int flags)
+                                整数 flags)
 {
-    int err;
+    整数 err;
     switch (src_ctx->type) {
 
-#if HAVE_OPENCL_DRM_BEIGNET
+#如果 HAVE_OPENCL_DRM_BEIGNET
     case AV_HWDEVICE_TYPE_DRM:
     case AV_HWDEVICE_TYPE_VAAPI:
         {
@@ -1231,9 +1231,9 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
             AVDictionary *selector_opts = NULL;
 
             err = av_dict_set(&selector_opts, "platform_vendor", "Intel", 0);
-            if (err >= 0)
+            如果 (err >= 0)
                 err = av_dict_set(&selector_opts, "platform_version", "beignet", 0);
-            if (err >= 0) {
+            如果 (err >= 0) {
                 OpenCLDeviceSelector selector = {
                     .platform_index      = -1,
                     .device_index        = 0,
@@ -1250,7 +1250,7 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
         break;
 #endif
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#如果 HAVE_OPENCL_VAAPI_INTEL_MEDIA
         // The generic code automatically attempts to derive from all
         // ancestors of the given device, so we can ignore QSV devices here
         // and just consider the inner VAAPI device it was derived from.
@@ -1281,7 +1281,7 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
         break;
 #endif
 
-#if HAVE_OPENCL_DXVA2
+#如果 HAVE_OPENCL_DXVA2
     case AV_HWDEVICE_TYPE_DXVA2:
         {
             AVDXVA2DeviceContext *src_hwctx = src_ctx->hwctx;
@@ -1291,7 +1291,7 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
 
             hr = IDirect3DDeviceManager9_OpenDeviceHandle(src_hwctx->devmgr,
                                                           &device_handle);
-            if (FAILED(hr)) {
+            如果 (FAILED(hr)) {
                 av_log(hwdev, AV_LOG_ERROR, "Failed to open device handle "
                        "for Direct3D9 device: %lx.\n", (unsigned long)hr);
                 err = AVERROR_UNKNOWN;
@@ -1301,7 +1301,7 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
             hr = IDirect3DDeviceManager9_LockDevice(src_hwctx->devmgr,
                                                     device_handle,
                                                     &device, FALSE);
-            if (SUCCEEDED(hr)) {
+            如果 (SUCCEEDED(hr)) {
                 cl_context_properties props[5] = {
                     CL_CONTEXT_PLATFORM,
                     0,
@@ -1323,7 +1323,7 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
 
                 IDirect3DDeviceManager9_UnlockDevice(src_hwctx->devmgr,
                                                      device_handle, FALSE);
-            } else {
+            } 否则 {
                 av_log(hwdev, AV_LOG_ERROR, "Failed to lock device handle "
                        "for Direct3D9 device: %lx.\n", (unsigned long)hr);
                 err = AVERROR_UNKNOWN;
@@ -1335,7 +1335,7 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
         break;
 #endif
 
-#if HAVE_OPENCL_D3D11
+#如果 HAVE_OPENCL_D3D11
     case AV_HWDEVICE_TYPE_D3D11VA:
         {
             AVD3D11VADeviceContext *src_hwctx = src_ctx->hwctx;
@@ -1361,7 +1361,7 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
         break;
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
+#如果 HAVE_OPENCL_DRM_ARM
     case AV_HWDEVICE_TYPE_DRM:
         {
             OpenCLDeviceSelector selector = {
@@ -1379,7 +1379,7 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
         break;
 #endif
 
-#if HAVE_OPENCL_VIDEOTOOLBOX
+#如果 HAVE_OPENCL_VIDEOTOOLBOX
     case AV_HWDEVICE_TYPE_VIDEOTOOLBOX:
         err = opencl_device_create(hwdev, NULL, NULL, 0);
         break;
@@ -1390,63 +1390,63 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
         break;
     }
 
-    return err;
+    返回 err;
 }
 
-static int opencl_get_plane_format(enum AVPixelFormat pixfmt,
-                                   int plane, int width, int height,
+static 整数 opencl_get_plane_format(enum AVPixelFormat pixfmt,
+                                   整数 plane, 整数 width, 整数 height,
                                    cl_image_format *image_format,
                                    cl_image_desc *image_desc)
 {
     const AVPixFmtDescriptor *desc;
     const AVComponentDescriptor *comp;
-    int channels = 0, order = 0, depth = 0, step = 0;
-    int wsub, hsub, alpha;
-    int c;
+    整数 channels = 0, order = 0, depth = 0, step = 0;
+    整数 wsub, hsub, alpha;
+    整数 c;
 
-    if (plane >= AV_NUM_DATA_POINTERS)
-        return AVERROR(ENOENT);
+    如果 (plane >= AV_NUM_DATA_POINTERS)
+        返回 AVERROR(ENOENT);
 
     desc = av_pix_fmt_desc_get(pixfmt);
 
     // Only normal images are allowed.
-    if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM |
+    如果 (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM |
                        AV_PIX_FMT_FLAG_HWACCEL   |
                        AV_PIX_FMT_FLAG_PAL))
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
 
     wsub = 1 << desc->log2_chroma_w;
     hsub = 1 << desc->log2_chroma_h;
     // Subsampled components must be exact.
-    if (width & wsub - 1 || height & hsub - 1)
-        return AVERROR(EINVAL);
+    如果 (width & wsub - 1 || height & hsub - 1)
+        返回 AVERROR(EINVAL);
 
-    for (c = 0; c < desc->nb_components; c++) {
+    为 (c = 0; c < desc->nb_components; c++) {
         comp = &desc->comp[c];
-        if (comp->plane != plane)
+        如果 (comp->plane != plane)
             continue;
         // The step size must be a power of two.
-        if (comp->step != 1 && comp->step != 2 &&
+        如果 (comp->step != 1 && comp->step != 2 &&
             comp->step != 4 && comp->step != 8)
-            return AVERROR(EINVAL);
+            返回 AVERROR(EINVAL);
         // The bits in each component must be packed in the
         // most-significant-bits of the relevant bytes.
-        if (comp->shift + comp->depth != 8 &&
+        如果 (comp->shift + comp->depth != 8 &&
             comp->shift + comp->depth != 16 &&
             comp->shift + comp->depth != 32)
-            return AVERROR(EINVAL);
+            返回 AVERROR(EINVAL);
         // The depth must not vary between components.
-        if (depth && comp->depth != depth)
-            return AVERROR(EINVAL);
+        如果 (depth && comp->depth != depth)
+            返回 AVERROR(EINVAL);
         // If a single data element crosses multiple bytes then
         // it must match the native endianness.
-        if (comp->depth > 8 &&
+        如果 (comp->depth > 8 &&
             HAVE_BIGENDIAN == !(desc->flags & AV_PIX_FMT_FLAG_BE))
-            return AVERROR(EINVAL);
+            返回 AVERROR(EINVAL);
         // A single data element must not contain multiple samples
         // from the same component.
-        if (step && comp->step != step)
-            return AVERROR(EINVAL);
+        如果 (step && comp->step != step)
+            返回 AVERROR(EINVAL);
 
         depth = comp->depth;
         order = order * 10 + comp->offset / ((depth + 7) / 8) + 1;
@@ -1455,32 +1455,32 @@ static int opencl_get_plane_format(enum AVPixelFormat pixfmt,
                  c == desc->nb_components - 1);
         ++channels;
     }
-    if (channels == 0)
-        return AVERROR(ENOENT);
+    如果 (channels == 0)
+        返回 AVERROR(ENOENT);
 
     memset(image_format, 0, sizeof(*image_format));
     memset(image_desc,   0, sizeof(*image_desc));
     image_desc->image_type = CL_MEM_OBJECT_IMAGE2D;
 
-    if (plane == 0 || alpha) {
+    如果 (plane == 0 || alpha) {
         image_desc->image_width     = width;
         image_desc->image_height    = height;
         image_desc->image_row_pitch = step * width;
-    } else {
+    } 否则 {
         image_desc->image_width     = width  / wsub;
         image_desc->image_height    = height / hsub;
         image_desc->image_row_pitch = step * width / wsub;
     }
 
-    if (depth <= 8) {
+    如果 (depth <= 8) {
         image_format->image_channel_data_type = CL_UNORM_INT8;
-    } else {
-        if (depth <= 16)
+    } 否则 {
+        如果 (depth <= 16)
             image_format->image_channel_data_type = CL_UNORM_INT16;
-        else if (depth == 32)
+        否则 如果 (depth == 32)
             image_format->image_channel_data_type = CL_FLOAT;
-        else
-            return AVERROR(EINVAL);
+        否则
+            返回 AVERROR(EINVAL);
     }
 
 #define CHANNEL_ORDER(order, type) \
@@ -1495,14 +1495,14 @@ static int opencl_get_plane_format(enum AVPixelFormat pixfmt,
         CHANNEL_ORDER(4321, CL_ABGR);
 #endif
     default:
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
 #undef CHANNEL_ORDER
 
-    return 0;
+    返回 0;
 }
 
-static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
+static 整数 opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
                                          const void *hwconfig,
                                          AVHWFramesConstraints *constraints)
 {
@@ -1511,23 +1511,23 @@ static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
     cl_image_format *image_formats = NULL;
     cl_int cle;
     enum AVPixelFormat pix_fmt;
-    int err, pix_fmts_found;
+    整数 err, pix_fmts_found;
     size_t max_width, max_height;
 
     cle = clGetDeviceInfo(hwctx->device_id, CL_DEVICE_IMAGE2D_MAX_WIDTH,
                           sizeof(max_width), &max_width, NULL);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query maximum "
                "supported image width: %d.\n", cle);
-    } else {
+    } 否则 {
         constraints->max_width = max_width;
     }
     cle = clGetDeviceInfo(hwctx->device_id, CL_DEVICE_IMAGE2D_MAX_HEIGHT,
                           sizeof(max_height), &max_height, NULL);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query maximum "
                "supported image height: %d.\n", cle);
-    } else {
+    } 否则 {
         constraints->max_height = max_height;
     }
     av_log(hwdev, AV_LOG_DEBUG, "Maximum supported image size %dx%d.\n",
@@ -1537,13 +1537,13 @@ static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
                                      CL_MEM_READ_WRITE,
                                      CL_MEM_OBJECT_IMAGE2D,
                                      0, NULL, &nb_image_formats);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query supported "
                "image formats: %d.\n", cle);
         err = AVERROR(ENOSYS);
         goto fail;
     }
-    if (nb_image_formats == 0) {
+    如果 (nb_image_formats == 0) {
         av_log(hwdev, AV_LOG_ERROR, "No image support in OpenCL "
                "driver (zero supported image formats).\n");
         err = AVERROR(ENOSYS);
@@ -1552,7 +1552,7 @@ static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
 
     image_formats =
         av_malloc_array(nb_image_formats, sizeof(*image_formats));
-    if (!image_formats) {
+    如果 (!image_formats) {
         err = AVERROR(ENOMEM);
         goto fail;
     }
@@ -1562,7 +1562,7 @@ static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
                                      CL_MEM_OBJECT_IMAGE2D,
                                      nb_image_formats,
                                      image_formats, NULL);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query supported "
                "image formats: %d.\n", cle);
         err = AVERROR(ENOSYS);
@@ -1570,31 +1570,31 @@ static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
     }
 
     pix_fmts_found = 0;
-    for (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++) {
+    为 (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++) {
         cl_image_format image_format;
         cl_image_desc   image_desc;
-        int plane, i;
+        整数 plane, i;
 
-        for (plane = 0;; plane++) {
+        为 (plane = 0;; plane++) {
             err = opencl_get_plane_format(pix_fmt, plane, 0, 0,
                                           &image_format,
                                           &image_desc);
-            if (err < 0)
+            如果 (err < 0)
                 break;
 
-            for (i = 0; i < nb_image_formats; i++) {
-                if (image_formats[i].image_channel_order ==
+            为 (i = 0; i < nb_image_formats; i++) {
+                如果 (image_formats[i].image_channel_order ==
                     image_format.image_channel_order &&
                     image_formats[i].image_channel_data_type ==
                     image_format.image_channel_data_type)
                     break;
             }
-            if (i == nb_image_formats) {
+            如果 (i == nb_image_formats) {
                 err = AVERROR(EINVAL);
                 break;
             }
         }
-        if (err != AVERROR(ENOENT))
+        如果 (err != AVERROR(ENOENT))
             continue;
 
         av_log(hwdev, AV_LOG_DEBUG, "Format %s supported.\n",
@@ -1603,7 +1603,7 @@ static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
         err = av_reallocp_array(&constraints->valid_sw_formats,
                                 pix_fmts_found + 2,
                                 sizeof(*constraints->valid_sw_formats));
-        if (err < 0)
+        如果 (err < 0)
             goto fail;
         constraints->valid_sw_formats[pix_fmts_found] = pix_fmt;
         constraints->valid_sw_formats[pix_fmts_found + 1] =
@@ -1615,18 +1615,18 @@ static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
 
     constraints->valid_hw_formats =
         av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats) {
+    如果 (!constraints->valid_hw_formats) {
         err = AVERROR(ENOMEM);
         goto fail;
     }
     constraints->valid_hw_formats[0] = AV_PIX_FMT_OPENCL;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    返回 0;
 
 fail:
     av_freep(&image_formats);
-    return err;
+    返回 err;
 }
 
 static void opencl_pool_free(void *opaque, uint8_t *data)
@@ -1634,11 +1634,11 @@ static void opencl_pool_free(void *opaque, uint8_t *data)
     AVHWFramesContext       *hwfc = opaque;
     AVOpenCLFrameDescriptor *desc = (AVOpenCLFrameDescriptor*)data;
     cl_int cle;
-    int p;
+    整数 p;
 
-    for (p = 0; p < desc->nb_planes; p++) {
+    为 (p = 0; p < desc->nb_planes; p++) {
         cle = clReleaseMemObject(desc->planes[p]);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to release plane %d: "
                    "%d.\n", p, cle);
         }
@@ -1656,20 +1656,20 @@ static AVBufferRef *opencl_pool_alloc(void *opaque, size_t size)
     cl_mem image;
     cl_image_format image_format;
     cl_image_desc   image_desc;
-    int err, p;
+    整数 err, p;
     AVBufferRef *ref;
 
     desc = av_mallocz(sizeof(*desc));
-    if (!desc)
-        return NULL;
+    如果 (!desc)
+        返回 NULL;
 
-    for (p = 0;; p++) {
+    为 (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
                                       hwfc->width, hwfc->height,
                                       &image_format, &image_desc);
-        if (err == AVERROR(ENOENT))
+        如果 (err == AVERROR(ENOENT))
             break;
-        if (err < 0)
+        如果 (err < 0)
             goto fail;
 
         // For generic image objects, the pitch is determined by the
@@ -1678,7 +1678,7 @@ static AVBufferRef *opencl_pool_alloc(void *opaque, size_t size)
 
         image = clCreateImage(hwctx->context, CL_MEM_READ_WRITE,
                               &image_format, &image_desc, NULL, &cle);
-        if (!image) {
+        如果 (!image) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to create image for "
                    "plane %d: %d.\n", p, cle);
             goto fail;
@@ -1691,19 +1691,19 @@ static AVBufferRef *opencl_pool_alloc(void *opaque, size_t size)
 
     ref = av_buffer_create((uint8_t*)desc, sizeof(*desc),
                            &opencl_pool_free, hwfc, 0);
-    if (!ref)
+    如果 (!ref)
         goto fail;
 
-    return ref;
+    返回 ref;
 
 fail:
-    for (p = 0; desc->planes[p]; p++)
+    为 (p = 0; desc->planes[p]; p++)
         clReleaseMemObject(desc->planes[p]);
     av_free(desc);
-    return NULL;
+    返回 NULL;
 }
 
-static int opencl_frames_init_command_queue(AVHWFramesContext *hwfc)
+static 整数 opencl_frames_init_command_queue(AVHWFramesContext *hwfc)
 {
     OpenCLFramesContext    *priv = hwfc->hwctx;
     AVOpenCLFramesContext *hwctx = &priv->p;
@@ -1713,26 +1713,26 @@ static int opencl_frames_init_command_queue(AVHWFramesContext *hwfc)
     priv->command_queue = hwctx->command_queue ? hwctx->command_queue
                                                : devpriv->command_queue;
     cle = clRetainCommandQueue(priv->command_queue);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to retain frame "
                "command queue: %d.\n", cle);
-        return AVERROR(EIO);
+        返回 AVERROR(EIO);
     }
 
-    return 0;
+    返回 0;
 }
 
-static int opencl_frames_init(AVHWFramesContext *hwfc)
+static 整数 opencl_frames_init(AVHWFramesContext *hwfc)
 {
-    if (!hwfc->pool) {
+    如果 (!hwfc->pool) {
         ffhwframesctx(hwfc)->pool_internal =
             av_buffer_pool_init2(sizeof(cl_mem), hwfc,
                                  &opencl_pool_alloc, NULL);
-        if (!ffhwframesctx(hwfc)->pool_internal)
-            return AVERROR(ENOMEM);
+        如果 (!ffhwframesctx(hwfc)->pool_internal)
+            返回 AVERROR(ENOMEM);
     }
 
-    return opencl_frames_init_command_queue(hwfc);
+    返回 opencl_frames_init_command_queue(hwfc);
 }
 
 static void opencl_frames_uninit(AVHWFramesContext *hwfc)
@@ -1740,13 +1740,13 @@ static void opencl_frames_uninit(AVHWFramesContext *hwfc)
     OpenCLFramesContext *priv = hwfc->hwctx;
     cl_int cle;
 
-#if HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
-    int i, p;
-    for (i = 0; i < priv->nb_mapped_frames; i++) {
+#如果 HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
+    整数 i, p;
+    为 (i = 0; i < priv->nb_mapped_frames; i++) {
         AVOpenCLFrameDescriptor *desc = &priv->mapped_frames[i];
-        for (p = 0; p < desc->nb_planes; p++) {
+        为 (p = 0; p < desc->nb_planes; p++) {
             cle = clReleaseMemObject(desc->planes[p]);
-            if (cle != CL_SUCCESS) {
+            如果 (cle != CL_SUCCESS) {
                 av_log(hwfc, AV_LOG_ERROR, "Failed to release mapped "
                        "frame object (frame %d plane %d): %d.\n",
                        i, p, cle);
@@ -1756,9 +1756,9 @@ static void opencl_frames_uninit(AVHWFramesContext *hwfc)
     av_freep(&priv->mapped_frames);
 #endif
 
-    if (priv->command_queue) {
+    如果 (priv->command_queue) {
         cle = clReleaseCommandQueue(priv->command_queue);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to release frame "
                    "command queue: %d.\n", cle);
         }
@@ -1766,69 +1766,69 @@ static void opencl_frames_uninit(AVHWFramesContext *hwfc)
     }
 }
 
-static int opencl_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+static 整数 opencl_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
 {
     AVOpenCLFrameDescriptor *desc;
-    int p;
+    整数 p;
 
     frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    如果 (!frame->buf[0])
+        返回 AVERROR(ENOMEM);
 
     desc = (AVOpenCLFrameDescriptor*)frame->buf[0]->data;
 
-    for (p = 0; p < desc->nb_planes; p++)
+    为 (p = 0; p < desc->nb_planes; p++)
         frame->data[p] = (uint8_t*)desc->planes[p];
 
     frame->format  = AV_PIX_FMT_OPENCL;
     frame->width   = hwfc->width;
     frame->height  = hwfc->height;
 
-    return 0;
+    返回 0;
 }
 
-static int opencl_transfer_get_formats(AVHWFramesContext *hwfc,
+static 整数 opencl_transfer_get_formats(AVHWFramesContext *hwfc,
                                        enum AVHWFrameTransferDirection dir,
                                        enum AVPixelFormat **formats)
 {
     enum AVPixelFormat *fmts;
 
     fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    如果 (!fmts)
+        返回 AVERROR(ENOMEM);
 
     fmts[0] = hwfc->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
-    return 0;
+    返回 0;
 }
 
-static int opencl_wait_events(AVHWFramesContext *hwfc,
-                              cl_event *events, int nb_events)
+static 整数 opencl_wait_events(AVHWFramesContext *hwfc,
+                              cl_event *events, 整数 nb_events)
 {
     cl_int cle;
-    int i;
+    整数 i;
 
     cle = clWaitForEvents(nb_events, events);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to wait for event "
                "completion: %d.\n", cle);
-        return AVERROR(EIO);
+        返回 AVERROR(EIO);
     }
 
-    for (i = 0; i < nb_events; i++) {
+    为 (i = 0; i < nb_events; i++) {
         cle = clReleaseEvent(events[i]);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to release "
                    "event: %d.\n", cle);
         }
     }
 
-    return 0;
+    返回 0;
 }
 
-static int opencl_transfer_data_from(AVHWFramesContext *hwfc,
+static 整数 opencl_transfer_data_from(AVHWFramesContext *hwfc,
                                      AVFrame *dst, const AVFrame *src)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
@@ -1838,22 +1838,22 @@ static int opencl_transfer_data_from(AVHWFramesContext *hwfc,
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3];
     cl_event events[AV_NUM_DATA_POINTERS];
-    int err, p;
+    整数 err, p;
 
-    if (dst->format != hwfc->sw_format)
-        return AVERROR(EINVAL);
+    如果 (dst->format != hwfc->sw_format)
+        返回 AVERROR(EINVAL);
 
-    for (p = 0;; p++) {
+    为 (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
                                       src->width, src->height,
                                       &image_format, &image_desc);
-        if (err < 0) {
-            if (err == AVERROR(ENOENT))
+        如果 (err < 0) {
+            如果 (err == AVERROR(ENOENT))
                 err = 0;
             break;
         }
 
-        if (!dst->data[p]) {
+        如果 (!dst->data[p]) {
             av_log(hwfc, AV_LOG_ERROR, "Plane %d missing on "
                    "destination frame for transfer.\n", p);
             err = AVERROR(EINVAL);
@@ -1870,7 +1870,7 @@ static int opencl_transfer_data_from(AVHWFramesContext *hwfc,
                                  dst->linesize[p], 0,
                                  dst->data[p],
                                  0, NULL, &events[p]);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to enqueue read of "
                    "OpenCL image plane %d: %d.\n", p, cle);
             err = AVERROR(EIO);
@@ -1880,10 +1880,10 @@ static int opencl_transfer_data_from(AVHWFramesContext *hwfc,
 
     opencl_wait_events(hwfc, events, p);
 
-    return err;
+    返回 err;
 }
 
-static int opencl_transfer_data_to(AVHWFramesContext *hwfc,
+static 整数 opencl_transfer_data_to(AVHWFramesContext *hwfc,
                                    AVFrame *dst, const AVFrame *src)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
@@ -1893,22 +1893,22 @@ static int opencl_transfer_data_to(AVHWFramesContext *hwfc,
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3];
     cl_event events[AV_NUM_DATA_POINTERS];
-    int err, p;
+    整数 err, p;
 
-    if (src->format != hwfc->sw_format)
-        return AVERROR(EINVAL);
+    如果 (src->format != hwfc->sw_format)
+        返回 AVERROR(EINVAL);
 
-    for (p = 0;; p++) {
+    为 (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
                                       src->width, src->height,
                                       &image_format, &image_desc);
-        if (err < 0) {
-            if (err == AVERROR(ENOENT))
+        如果 (err < 0) {
+            如果 (err == AVERROR(ENOENT))
                 err = 0;
             break;
         }
 
-        if (!src->data[p]) {
+        如果 (!src->data[p]) {
             av_log(hwfc, AV_LOG_ERROR, "Plane %d missing on "
                    "source frame for transfer.\n", p);
             err = AVERROR(EINVAL);
@@ -1925,7 +1925,7 @@ static int opencl_transfer_data_to(AVHWFramesContext *hwfc,
                                   src->linesize[p], 0,
                                   src->data[p],
                                   0, NULL, &events[p]);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to enqueue write of "
                    "OpenCL image plane %d: %d.\n", p, cle);
             err = AVERROR(EIO);
@@ -1935,7 +1935,7 @@ static int opencl_transfer_data_to(AVHWFramesContext *hwfc,
 
     opencl_wait_events(hwfc, events, p);
 
-    return err;
+    返回 err;
 }
 
 typedef struct OpenCLMapping {
@@ -1951,18 +1951,18 @@ static void opencl_unmap_frame(AVHWFramesContext *hwfc,
     OpenCLFramesContext *priv = hwfc->hwctx;
     OpenCLMapping *map = hwmap->priv;
     cl_event events[AV_NUM_DATA_POINTERS];
-    int p, e;
+    整数 p, e;
     cl_int cle;
 
-    for (p = e = 0; p < FF_ARRAY_ELEMS(map->address); p++) {
-        if (!map->address[p])
+    为 (p = e = 0; p < FF_ARRAY_ELEMS(map->address); p++) {
+        如果 (!map->address[p])
             break;
 
         cle = clEnqueueUnmapMemObject(priv->command_queue,
                                       (cl_mem)hwmap->source->data[p],
                                       map->address[p],
                                       0, NULL, &events[e]);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to unmap OpenCL "
                    "image plane %d: %d.\n", p, cle);
         }
@@ -1974,8 +1974,8 @@ static void opencl_unmap_frame(AVHWFramesContext *hwfc,
     av_free(map);
 }
 
-static int opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
-                            const AVFrame *src, int flags)
+static 整数 opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
+                            const AVFrame *src, 整数 flags)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     cl_map_flags map_flags;
@@ -1987,34 +1987,34 @@ static int opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
     size_t region[3];
     size_t row_pitch;
     cl_event events[AV_NUM_DATA_POINTERS];
-    int err, p;
+    整数 err, p;
 
     av_assert0(hwfc->sw_format == dst->format);
 
-    if (flags & AV_HWFRAME_MAP_OVERWRITE &&
+    如果 (flags & AV_HWFRAME_MAP_OVERWRITE &&
         !(flags & AV_HWFRAME_MAP_READ)) {
         // This is mutually exclusive with the read/write flags, so
         // there is no way to map with read here.
         map_flags = CL_MAP_WRITE_INVALIDATE_REGION;
-    } else {
+    } 否则 {
         map_flags = 0;
-        if (flags & AV_HWFRAME_MAP_READ)
+        如果 (flags & AV_HWFRAME_MAP_READ)
             map_flags |= CL_MAP_READ;
-        if (flags & AV_HWFRAME_MAP_WRITE)
+        如果 (flags & AV_HWFRAME_MAP_WRITE)
             map_flags |= CL_MAP_WRITE;
     }
 
     map = av_mallocz(sizeof(*map));
-    if (!map)
-        return AVERROR(ENOMEM);
+    如果 (!map)
+        返回 AVERROR(ENOMEM);
 
-    for (p = 0;; p++) {
+    为 (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
                                       src->width, src->height,
                                       &image_format, &image_desc);
-        if (err == AVERROR(ENOENT))
+        如果 (err == AVERROR(ENOENT))
             break;
-        if (err < 0)
+        如果 (err < 0)
             goto fail;
 
         region[0] = image_desc.image_width;
@@ -2027,7 +2027,7 @@ static int opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
                               CL_FALSE, map_flags, origin, region,
                               &row_pitch, NULL, 0, NULL,
                               &events[p], &cle);
-        if (!map->address[p]) {
+        如果 (!map->address[p]) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to map OpenCL "
                    "image plane %d: %d.\n", p, cle);
             err = AVERROR(EIO);
@@ -2042,35 +2042,35 @@ static int opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
     }
 
     err = opencl_wait_events(hwfc, events, p);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
                                 &opencl_unmap_frame, map);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    返回 0;
 
 fail:
-    for (p = 0; p < AV_NUM_DATA_POINTERS; p++) {
-        if (!map->address[p])
+    为 (p = 0; p < AV_NUM_DATA_POINTERS; p++) {
+        如果 (!map->address[p])
             break;
         clEnqueueUnmapMemObject(priv->command_queue,
                                 (cl_mem)src->data[p],
                                 map->address[p],
                                 0, NULL, &events[p]);
     }
-    if (p > 0)
+    如果 (p > 0)
         opencl_wait_events(hwfc, events, p);
     av_freep(&map);
-    return err;
+    返回 err;
 }
 
-#if HAVE_OPENCL_DRM_BEIGNET
+#如果 HAVE_OPENCL_DRM_BEIGNET
 
 typedef struct DRMBeignetToOpenCLMapping {
     AVFrame              *drm_frame;
@@ -2084,11 +2084,11 @@ static void opencl_unmap_from_drm_beignet(AVHWFramesContext *dst_fc,
 {
     DRMBeignetToOpenCLMapping *mapping = hwmap->priv;
     cl_int cle;
-    int i;
+    整数 i;
 
-    for (i = 0; i < mapping->frame.nb_planes; i++) {
+    为 (i = 0; i < mapping->frame.nb_planes; i++) {
         cle = clReleaseMemObject(mapping->frame.planes[i]);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to release CL image "
                    "of plane %d of DRM frame: %d.\n", i, cle);
         }
@@ -2097,27 +2097,27 @@ static void opencl_unmap_from_drm_beignet(AVHWFramesContext *dst_fc,
     av_free(mapping);
 }
 
-static int opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
+static 整数 opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
                                        AVFrame *dst, const AVFrame *src,
-                                       int flags)
+                                       整数 flags)
 {
     OpenCLDeviceContext    *priv = dst_fc->device_ctx->hwctx;
     AVOpenCLDeviceContext *hwctx = &priv->p;
     DRMBeignetToOpenCLMapping *mapping;
     const AVDRMFrameDescriptor *desc;
     cl_int cle;
-    int err, i, j, p;
+    整数 err, i, j, p;
 
     desc = (const AVDRMFrameDescriptor*)src->data[0];
 
     mapping = av_mallocz(sizeof(*mapping));
-    if (!mapping)
-        return AVERROR(ENOMEM);
+    如果 (!mapping)
+        返回 AVERROR(ENOMEM);
 
     p = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
+    为 (i = 0; i < desc->nb_layers; i++) {
         const AVDRMLayerDescriptor *layer = &desc->layers[i];
-        for (j = 0; j < layer->nb_planes; j++) {
+        为 (j = 0; j < layer->nb_planes; j++) {
             const AVDRMPlaneDescriptor *plane = &layer->planes[j];
             const AVDRMObjectDescriptor *object =
                 &desc->objects[plane->object_index];
@@ -2135,7 +2135,7 @@ static int opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
                                           src->width, src->height,
                                           &image_info.fmt,
                                           &image_desc);
-            if (err < 0) {
+            如果 (err < 0) {
                 av_log(dst_fc, AV_LOG_ERROR, "DRM frame layer %d "
                        "plane %d is not representable in OpenCL: %d.\n",
                        i, j, err);
@@ -2147,7 +2147,7 @@ static int opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
             mapping->frame.planes[p] =
                 priv->clCreateImageFromFdINTEL(hwctx->context,
                                                &image_info, &cle);
-            if (!mapping->frame.planes[p]) {
+            如果 (!mapping->frame.planes[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL image "
                        "from layer %d plane %d of DRM frame: %d.\n",
                        i, j, cle);
@@ -2163,71 +2163,71 @@ static int opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &opencl_unmap_from_drm_beignet,
                                 mapping);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    返回 0;
 
 fail:
-    for (p = 0; p < mapping->frame.nb_planes; p++) {
-        if (mapping->frame.planes[p])
+    为 (p = 0; p < mapping->frame.nb_planes; p++) {
+        如果 (mapping->frame.planes[p])
             clReleaseMemObject(mapping->frame.planes[p]);
     }
     av_free(mapping);
     memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    返回 err;
 }
 
-#if HAVE_OPENCL_VAAPI_BEIGNET
+#如果 HAVE_OPENCL_VAAPI_BEIGNET
 
-static int opencl_map_from_vaapi(AVHWFramesContext *dst_fc,
+static 整数 opencl_map_from_vaapi(AVHWFramesContext *dst_fc,
                                  AVFrame *dst, const AVFrame *src,
-                                 int flags)
+                                 整数 flags)
 {
     AVFrame *tmp;
-    int err;
+    整数 err;
 
     tmp = av_frame_alloc();
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    如果 (!tmp)
+        返回 AVERROR(ENOMEM);
 
     tmp->format = AV_PIX_FMT_DRM_PRIME;
 
     err = av_hwframe_map(tmp, src, flags);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
     err = opencl_map_from_drm_beignet(dst_fc, dst, tmp, flags);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
     err = ff_hwframe_map_replace(dst, src);
 
 fail:
     av_frame_free(&tmp);
-    return err;
+    返回 err;
 }
 
 #endif /* HAVE_OPENCL_VAAPI_BEIGNET */
 #endif /* HAVE_OPENCL_DRM_BEIGNET */
 
-static inline cl_mem_flags opencl_mem_flags_for_mapping(int map_flags)
+static inline cl_mem_flags opencl_mem_flags_for_mapping(整数 map_flags)
 {
-    if ((map_flags & AV_HWFRAME_MAP_READ) &&
+    如果 ((map_flags & AV_HWFRAME_MAP_READ) &&
         (map_flags & AV_HWFRAME_MAP_WRITE))
-        return CL_MEM_READ_WRITE;
-    else if (map_flags & AV_HWFRAME_MAP_READ)
-        return CL_MEM_READ_ONLY;
-    else if (map_flags & AV_HWFRAME_MAP_WRITE)
-        return CL_MEM_WRITE_ONLY;
-    else
-        return 0;
+        返回 CL_MEM_READ_WRITE;
+    否则 如果 (map_flags & AV_HWFRAME_MAP_READ)
+        返回 CL_MEM_READ_ONLY;
+    否则 如果 (map_flags & AV_HWFRAME_MAP_WRITE)
+        返回 CL_MEM_WRITE_ONLY;
+    否则
+        返回 0;
 }
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#如果 HAVE_OPENCL_VAAPI_INTEL_MEDIA
 
 static void opencl_unmap_from_qsv(AVHWFramesContext *dst_fc,
                                   HWMapDescriptor *hwmap)
@@ -2237,23 +2237,23 @@ static void opencl_unmap_from_qsv(AVHWFramesContext *dst_fc,
     OpenCLFramesContext *frames_priv = dst_fc->hwctx;
     cl_event event;
     cl_int cle;
-    int p;
+    整数 p;
 
     av_log(dst_fc, AV_LOG_DEBUG, "Unmap QSV/VAAPI surface from OpenCL.\n");
 
     cle = device_priv->clEnqueueReleaseVA_APIMediaSurfacesINTEL(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
         0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to release surface "
                "handles: %d.\n", cle);
     }
 
     opencl_wait_events(dst_fc, &event, 1);
 
-    for (p = 0; p < desc->nb_planes; p++) {
+    为 (p = 0; p < desc->nb_planes; p++) {
         cle = clReleaseMemObject(desc->planes[p]);
-        if (cle != CL_SUCCESS) {
+        如果 (cle != CL_SUCCESS) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to release CL "
                    "image of plane %d of QSV/VAAPI surface: %d\n",
                    p, cle);
@@ -2263,8 +2263,8 @@ static void opencl_unmap_from_qsv(AVHWFramesContext *dst_fc,
     av_free(desc);
 }
 
-static int opencl_map_from_qsv(AVHWFramesContext *dst_fc, AVFrame *dst,
-                               const AVFrame *src, int flags)
+static 整数 opencl_map_from_qsv(AVHWFramesContext *dst_fc, AVFrame *dst,
+                               const AVFrame *src, 整数 flags)
 {
     AVHWFramesContext *src_fc =
         (AVHWFramesContext*)src->hw_frames_ctx->data;
@@ -2276,46 +2276,46 @@ static int opencl_map_from_qsv(AVHWFramesContext *dst_fc, AVFrame *dst,
     cl_mem_flags cl_flags;
     cl_event event;
     cl_int cle;
-    int err, p;
+    整数 err, p;
 
-#if CONFIG_LIBMFX
-    if (src->format == AV_PIX_FMT_QSV) {
+#如果 CONFIG_LIBMFX
+    如果 (src->format == AV_PIX_FMT_QSV) {
         void *base_handle;
         mfxFrameSurface1 *mfx_surface = (mfxFrameSurface1*)src->data[3];
         err = ff_qsv_get_surface_base_handle(mfx_surface,
                                              AV_HWDEVICE_TYPE_VAAPI,
                                              &base_handle);
-        if (err < 0)
-            return err;
+        如果 (err < 0)
+            返回 err;
         va_surface = *(VASurfaceID *)base_handle;
-    } else
+    } 否则
 #endif
-        if (src->format == AV_PIX_FMT_VAAPI) {
+        如果 (src->format == AV_PIX_FMT_VAAPI) {
         va_surface = (VASurfaceID)(uintptr_t)src->data[3];
-    } else {
-        return AVERROR(ENOSYS);
+    } 否则 {
+        返回 AVERROR(ENOSYS);
     }
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    如果 (!cl_flags)
+        返回 AVERROR(EINVAL);
 
     av_log(src_fc, AV_LOG_DEBUG, "Map QSV/VAAPI surface %#x to "
            "OpenCL.\n", va_surface);
 
     desc = av_mallocz(sizeof(*desc));
-    if (!desc)
-        return AVERROR(ENOMEM);
+    如果 (!desc)
+        返回 AVERROR(ENOMEM);
 
     // The cl_intel_va_api_media_sharing extension only supports NV12
     // surfaces, so for now there are always exactly two planes.
     desc->nb_planes = 2;
 
-    for (p = 0; p < desc->nb_planes; p++) {
+    为 (p = 0; p < desc->nb_planes; p++) {
         desc->planes[p] =
             device_priv->clCreateFromVA_APIMediaSurfaceINTEL(
                 dst_dev->context, cl_flags, &va_surface, p, &cle);
-        if (!desc->planes[p]) {
+        如果 (!desc->planes[p]) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL "
                    "image from plane %d of QSV/VAAPI surface "
                    "%#x: %d.\n", p, va_surface, cle);
@@ -2329,7 +2329,7 @@ static int opencl_map_from_qsv(AVHWFramesContext *dst_fc, AVFrame *dst,
     cle = device_priv->clEnqueueAcquireVA_APIMediaSurfacesINTEL(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
         0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to acquire surface "
                "handles: %d.\n", cle);
         err = AVERROR(EIO);
@@ -2337,31 +2337,31 @@ static int opencl_map_from_qsv(AVHWFramesContext *dst_fc, AVFrame *dst,
     }
 
     err = opencl_wait_events(dst_fc, &event, 1);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &opencl_unmap_from_qsv, desc);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    返回 0;
 
 fail:
-    for (p = 0; p < desc->nb_planes; p++)
-        if (desc->planes[p])
+    为 (p = 0; p < desc->nb_planes; p++)
+        如果 (desc->planes[p])
             clReleaseMemObject(desc->planes[p]);
     av_freep(&desc);
     memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    返回 err;
 }
 
 #endif
 
-#if HAVE_OPENCL_DXVA2
+#如果 HAVE_OPENCL_DXVA2
 
 static void opencl_unmap_from_dxva2(AVHWFramesContext *dst_fc,
                                     HWMapDescriptor *hwmap)
@@ -2377,17 +2377,17 @@ static void opencl_unmap_from_dxva2(AVHWFramesContext *dst_fc,
     cle = device_priv->clEnqueueReleaseDX9MediaSurfacesKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
         0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to release surface "
                "handle: %d.\n", cle);
-        return;
+        返回;
     }
 
     opencl_wait_events(dst_fc, &event, 1);
 }
 
-static int opencl_map_from_dxva2(AVHWFramesContext *dst_fc, AVFrame *dst,
-                                 const AVFrame *src, int flags)
+static 整数 opencl_map_from_dxva2(AVHWFramesContext *dst_fc, AVFrame *dst,
+                                 const AVFrame *src, 整数 flags)
 {
     AVHWFramesContext *src_fc =
         (AVHWFramesContext*)src->hw_frames_ctx->data;
@@ -2397,19 +2397,19 @@ static int opencl_map_from_dxva2(AVHWFramesContext *dst_fc, AVFrame *dst,
     AVOpenCLFrameDescriptor *desc;
     cl_event event;
     cl_int cle;
-    int err, i;
+    整数 err, i;
 
     av_log(dst_fc, AV_LOG_DEBUG, "Map DXVA2 surface %p to "
            "OpenCL.\n", src->data[3]);
 
-    for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-        if (src_hwctx->surfaces[i] == (IDirect3DSurface9*)src->data[3])
+    为 (i = 0; i < src_hwctx->nb_surfaces; i++) {
+        如果 (src_hwctx->surfaces[i] == (IDirect3DSurface9*)src->data[3])
             break;
     }
-    if (i >= src_hwctx->nb_surfaces) {
+    如果 (i >= src_hwctx->nb_surfaces) {
         av_log(dst_fc, AV_LOG_ERROR, "Trying to map from a surface which "
                "is not in the mapped frames context.\n");
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
 
     desc = &frames_priv->mapped_frames[i];
@@ -2417,41 +2417,41 @@ static int opencl_map_from_dxva2(AVHWFramesContext *dst_fc, AVFrame *dst,
     cle = device_priv->clEnqueueAcquireDX9MediaSurfacesKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
         0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to acquire surface "
                "handle: %d.\n", cle);
-        return AVERROR(EIO);
+        返回 AVERROR(EIO);
     }
 
     err = opencl_wait_events(dst_fc, &event, 1);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
-    for (i = 0; i < desc->nb_planes; i++)
+    为 (i = 0; i < desc->nb_planes; i++)
         dst->data[i] = (uint8_t*)desc->planes[i];
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &opencl_unmap_from_dxva2, desc);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    返回 0;
 
 fail:
     cle = device_priv->clEnqueueReleaseDX9MediaSurfacesKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
         0, NULL, &event);
-    if (cle == CL_SUCCESS)
+    如果 (cle == CL_SUCCESS)
         opencl_wait_events(dst_fc, &event, 1);
     memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    返回 err;
 }
 
-static int opencl_frames_derive_from_dxva2(AVHWFramesContext *dst_fc,
-                                           AVHWFramesContext *src_fc, int flags)
+static 整数 opencl_frames_derive_from_dxva2(AVHWFramesContext *dst_fc,
+                                           AVHWFramesContext *src_fc, 整数 flags)
 {
     AVDXVA2FramesContext  *src_hwctx = src_fc->hwctx;
     OpenCLDeviceContext *device_priv = dst_fc->device_ctx->hwctx;
@@ -2459,47 +2459,47 @@ static int opencl_frames_derive_from_dxva2(AVHWFramesContext *dst_fc,
     OpenCLFramesContext *frames_priv = dst_fc->hwctx;
     cl_mem_flags cl_flags;
     cl_int cle;
-    int err, i, p, nb_planes;
+    整数 err, i, p, nb_planes;
 
-    if (src_fc->sw_format != AV_PIX_FMT_NV12) {
+    如果 (src_fc->sw_format != AV_PIX_FMT_NV12) {
         av_log(dst_fc, AV_LOG_ERROR, "Only NV12 textures are supported "
                "for DXVA2 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
     nb_planes = 2;
 
-    if (src_fc->initial_pool_size == 0) {
+    如果 (src_fc->initial_pool_size == 0) {
         av_log(dst_fc, AV_LOG_ERROR, "Only fixed-size pools are supported "
                "for DXVA2 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    如果 (!cl_flags)
+        返回 AVERROR(EINVAL);
 
     frames_priv->nb_mapped_frames = src_hwctx->nb_surfaces;
 
     frames_priv->mapped_frames =
         av_calloc(frames_priv->nb_mapped_frames,
                   sizeof(*frames_priv->mapped_frames));
-    if (!frames_priv->mapped_frames)
-        return AVERROR(ENOMEM);
+    如果 (!frames_priv->mapped_frames)
+        返回 AVERROR(ENOMEM);
 
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
+    为 (i = 0; i < frames_priv->nb_mapped_frames; i++) {
         AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
         cl_dx9_surface_info_khr surface_info = {
             .resource      = src_hwctx->surfaces[i],
             .shared_handle = NULL,
         };
         desc->nb_planes = nb_planes;
-        for (p = 0; p < nb_planes; p++) {
+        为 (p = 0; p < nb_planes; p++) {
             desc->planes[p] =
                 device_priv->clCreateFromDX9MediaSurfaceKHR(
                     dst_dev->context, cl_flags,
                     device_priv->dx9_media_adapter_type,
                     &surface_info, p, &cle);
-            if (!desc->planes[p]) {
+            如果 (!desc->planes[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL "
                        "image from plane %d of DXVA2 surface %d: %d.\n",
                        p, i, cle);
@@ -2509,24 +2509,24 @@ static int opencl_frames_derive_from_dxva2(AVHWFramesContext *dst_fc,
         }
     }
 
-    return 0;
+    返回 0;
 
 fail:
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
+    为 (i = 0; i < frames_priv->nb_mapped_frames; i++) {
         AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
-        for (p = 0; p < desc->nb_planes; p++) {
-            if (desc->planes[p])
+        为 (p = 0; p < desc->nb_planes; p++) {
+            如果 (desc->planes[p])
                 clReleaseMemObject(desc->planes[p]);
         }
     }
     av_freep(&frames_priv->mapped_frames);
     frames_priv->nb_mapped_frames = 0;
-    return err;
+    返回 err;
 }
 
 #endif
 
-#if HAVE_OPENCL_D3D11
+#如果 HAVE_OPENCL_D3D11
 
 static void opencl_unmap_from_d3d11(AVHWFramesContext *dst_fc,
                                     HWMapDescriptor *hwmap)
@@ -2540,7 +2540,7 @@ static void opencl_unmap_from_d3d11(AVHWFramesContext *dst_fc,
     cle = device_priv->clEnqueueReleaseD3D11ObjectsKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
         0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to release surface "
                "handle: %d.\n", cle);
     }
@@ -2548,21 +2548,21 @@ static void opencl_unmap_from_d3d11(AVHWFramesContext *dst_fc,
     opencl_wait_events(dst_fc, &event, 1);
 }
 
-static int opencl_map_from_d3d11(AVHWFramesContext *dst_fc, AVFrame *dst,
-                                 const AVFrame *src, int flags)
+static 整数 opencl_map_from_d3d11(AVHWFramesContext *dst_fc, AVFrame *dst,
+                                 const AVFrame *src, 整数 flags)
 {
     OpenCLDeviceContext  *device_priv = dst_fc->device_ctx->hwctx;
     OpenCLFramesContext  *frames_priv = dst_fc->hwctx;
     AVOpenCLFrameDescriptor *desc;
     cl_event event;
     cl_int cle;
-    int err, index, i;
+    整数 err, index, i;
 
     index = (intptr_t)src->data[1];
-    if (index >= frames_priv->nb_mapped_frames) {
+    如果 (index >= frames_priv->nb_mapped_frames) {
         av_log(dst_fc, AV_LOG_ERROR, "Texture array index out of range for "
                "mapping: %d >= %d.\n", index, frames_priv->nb_mapped_frames);
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
 
     av_log(dst_fc, AV_LOG_DEBUG, "Map D3D11 texture %d to OpenCL.\n",
@@ -2573,41 +2573,41 @@ static int opencl_map_from_d3d11(AVHWFramesContext *dst_fc, AVFrame *dst,
     cle = device_priv->clEnqueueAcquireD3D11ObjectsKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
         0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    如果 (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to acquire surface "
                "handle: %d.\n", cle);
-        return AVERROR(EIO);
+        返回 AVERROR(EIO);
     }
 
     err = opencl_wait_events(dst_fc, &event, 1);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
-    for (i = 0; i < desc->nb_planes; i++)
+    为 (i = 0; i < desc->nb_planes; i++)
         dst->data[i] = (uint8_t*)desc->planes[i];
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &opencl_unmap_from_d3d11, desc);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    返回 0;
 
 fail:
     cle = device_priv->clEnqueueReleaseD3D11ObjectsKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
         0, NULL, &event);
-    if (cle == CL_SUCCESS)
+    如果 (cle == CL_SUCCESS)
         opencl_wait_events(dst_fc, &event, 1);
     memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    返回 err;
 }
 
-static int opencl_frames_derive_from_d3d11(AVHWFramesContext *dst_fc,
-                                           AVHWFramesContext *src_fc, int flags)
+static 整数 opencl_frames_derive_from_d3d11(AVHWFramesContext *dst_fc,
+                                           AVHWFramesContext *src_fc, 整数 flags)
 {
     AVD3D11VAFramesContext *src_hwctx = src_fc->hwctx;
     OpenCLDeviceContext  *device_priv = dst_fc->device_ctx->hwctx;
@@ -2615,77 +2615,77 @@ static int opencl_frames_derive_from_d3d11(AVHWFramesContext *dst_fc,
     OpenCLFramesContext  *frames_priv = dst_fc->hwctx;
     cl_mem_flags cl_flags;
     cl_int cle;
-    int err, i, p, nb_planes;
+    整数 err, i, p, nb_planes;
 
-    if (src_fc->sw_format != AV_PIX_FMT_NV12) {
+    如果 (src_fc->sw_format != AV_PIX_FMT_NV12) {
         av_log(dst_fc, AV_LOG_ERROR, "Only NV12 textures are supported "
                "for D3D11 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
     nb_planes = 2;
 
-    if (src_fc->initial_pool_size == 0) {
+    如果 (src_fc->initial_pool_size == 0) {
         av_log(dst_fc, AV_LOG_ERROR, "Only fixed-size pools are supported "
                "for D3D11 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    如果 (!cl_flags)
+        返回 AVERROR(EINVAL);
 
     frames_priv->nb_mapped_frames = src_fc->initial_pool_size;
 
     frames_priv->mapped_frames =
         av_calloc(frames_priv->nb_mapped_frames,
                   sizeof(*frames_priv->mapped_frames));
-    if (!frames_priv->mapped_frames)
-        return AVERROR(ENOMEM);
+    如果 (!frames_priv->mapped_frames)
+        返回 AVERROR(ENOMEM);
 
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
+    为 (i = 0; i < frames_priv->nb_mapped_frames; i++) {
         AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
         desc->nb_planes = nb_planes;
-        for (p = 0; p < nb_planes; p++) {
+        为 (p = 0; p < nb_planes; p++) {
             UINT subresource = 2 * i + p;
 
             desc->planes[p] =
                 device_priv->clCreateFromD3D11Texture2DKHR(
                     dst_dev->context, cl_flags, src_hwctx->texture,
                     subresource, &cle);
-            if (!desc->planes[p]) {
+            如果 (!desc->planes[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL "
                        "image from plane %d of D3D texture "
                        "index %d (subresource %u): %d.\n",
-                       p, i, (unsigned int)subresource, cle);
+                       p, i, (unsigned 整数)subresource, cle);
                 err = AVERROR(EIO);
                 goto fail;
             }
         }
     }
 
-    return 0;
+    返回 0;
 
 fail:
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
+    为 (i = 0; i < frames_priv->nb_mapped_frames; i++) {
         AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
-        for (p = 0; p < desc->nb_planes; p++) {
-            if (desc->planes[p])
+        为 (p = 0; p < desc->nb_planes; p++) {
+            如果 (desc->planes[p])
                 clReleaseMemObject(desc->planes[p]);
         }
     }
     av_freep(&frames_priv->mapped_frames);
     frames_priv->nb_mapped_frames = 0;
-    return err;
+    返回 err;
 }
 
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
+#如果 HAVE_OPENCL_DRM_ARM
 
 typedef struct DRMARMtoOpenCLMapping {
-    int nb_objects;
+    整数 nb_objects;
     cl_mem object_buffers[AV_DRM_MAX_PLANES];
-    int nb_planes;
+    整数 nb_planes;
     cl_mem plane_images[AV_DRM_MAX_PLANES];
 } DRMARMtoOpenCLMapping;
 
@@ -2693,19 +2693,19 @@ static void opencl_unmap_from_drm_arm(AVHWFramesContext *dst_fc,
                                       HWMapDescriptor *hwmap)
 {
     DRMARMtoOpenCLMapping *mapping = hwmap->priv;
-    int i;
+    整数 i;
 
-    for (i = 0; i < mapping->nb_planes; i++)
+    为 (i = 0; i < mapping->nb_planes; i++)
         clReleaseMemObject(mapping->plane_images[i]);
 
-    for (i = 0; i < mapping->nb_objects; i++)
+    为 (i = 0; i < mapping->nb_objects; i++)
         clReleaseMemObject(mapping->object_buffers[i]);
 
     av_free(mapping);
 }
 
-static int opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
-                                   const AVFrame *src, int flags)
+static 整数 opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
+                                   const AVFrame *src, 整数 flags)
 {
     AVHWFramesContext *src_fc =
         (AVHWFramesContext*)src->hw_frames_ctx->data;
@@ -2717,25 +2717,25 @@ static int opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
         CL_IMPORT_TYPE_ARM, CL_IMPORT_TYPE_DMA_BUF_ARM, 0,
     };
     cl_int cle;
-    int err, i, j;
+    整数 err, i, j;
 
     desc = (const AVDRMFrameDescriptor*)src->data[0];
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    如果 (!cl_flags)
+        返回 AVERROR(EINVAL);
 
     mapping = av_mallocz(sizeof(*mapping));
-    if (!mapping)
-        return AVERROR(ENOMEM);
+    如果 (!mapping)
+        返回 AVERROR(ENOMEM);
 
     mapping->nb_objects = desc->nb_objects;
-    for (i = 0; i < desc->nb_objects; i++) {
-        int fd = desc->objects[i].fd;
+    为 (i = 0; i < desc->nb_objects; i++) {
+        整数 fd = desc->objects[i].fd;
 
         av_log(dst_fc, AV_LOG_DEBUG, "Map DRM PRIME fd %d to OpenCL.\n", fd);
 
-        if (desc->objects[i].format_modifier) {
+        如果 (desc->objects[i].format_modifier) {
             av_log(dst_fc, AV_LOG_DEBUG, "Warning: object %d fd %d has "
                    "nonzero format modifier %"PRId64", result may not "
                    "be as expected.\n", i, fd,
@@ -2745,7 +2745,7 @@ static int opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
         mapping->object_buffers[i] =
             clImportMemoryARM(dst_dev->context, cl_flags, props,
                               &fd, desc->objects[i].size, &cle);
-        if (!mapping->object_buffers[i]) {
+        如果 (!mapping->object_buffers[i]) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL buffer "
                    "from object %d (fd %d, size %zu) of DRM frame: %d.\n",
                    i, fd, desc->objects[i].size, cle);
@@ -2755,21 +2755,21 @@ static int opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
     }
 
     mapping->nb_planes = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
+    为 (i = 0; i < desc->nb_layers; i++) {
         const AVDRMLayerDescriptor *layer = &desc->layers[i];
 
-        for (j = 0; j < layer->nb_planes; j++) {
+        为 (j = 0; j < layer->nb_planes; j++) {
             const AVDRMPlaneDescriptor *plane = &layer->planes[j];
             cl_mem plane_buffer;
             cl_image_format image_format;
             cl_image_desc   image_desc;
             cl_buffer_region region;
-            int p = mapping->nb_planes;
+            整数 p = mapping->nb_planes;
 
             err = opencl_get_plane_format(src_fc->sw_format, p,
                                           src_fc->width, src_fc->height,
                                           &image_format, &image_desc);
-            if (err < 0) {
+            如果 (err < 0) {
                 av_log(dst_fc, AV_LOG_ERROR, "Invalid plane %d (DRM "
                        "layer %d plane %d): %d.\n", p, i, j, err);
                 goto fail;
@@ -2784,7 +2784,7 @@ static int opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
                                   cl_flags,
                                   CL_BUFFER_CREATE_TYPE_REGION,
                                   &region, &cle);
-            if (!plane_buffer) {
+            如果 (!plane_buffer) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create sub-buffer "
                        "for plane %d: %d.\n", p, cle);
                 err = AVERROR(EIO);
@@ -2801,7 +2801,7 @@ static int opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
             // directly and a reference is held by the image.
             clReleaseMemObject(plane_buffer);
 
-            if (!mapping->plane_images[p]) {
+            如果 (!mapping->plane_images[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create image "
                        "for plane %d: %d.\n", p, cle);
                 err = AVERROR(EIO);
@@ -2812,35 +2812,35 @@ static int opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
         }
     }
 
-    for (i = 0; i < mapping->nb_planes; i++)
+    为 (i = 0; i < mapping->nb_planes; i++)
         dst->data[i] = (uint8_t*)mapping->plane_images[i];
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &opencl_unmap_from_drm_arm, mapping);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    返回 0;
 
 fail:
-    for (i = 0; i < mapping->nb_planes; i++) {
+    为 (i = 0; i < mapping->nb_planes; i++) {
         clReleaseMemObject(mapping->plane_images[i]);
     }
-    for (i = 0; i < mapping->nb_objects; i++) {
-        if (mapping->object_buffers[i])
+    为 (i = 0; i < mapping->nb_objects; i++) {
+        如果 (mapping->object_buffers[i])
             clReleaseMemObject(mapping->object_buffers[i]);
     }
     av_free(mapping);
     memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    返回 err;
 }
 
 #endif
 
-#if HAVE_OPENCL_VIDEOTOOLBOX
+#如果 HAVE_OPENCL_VIDEOTOOLBOX
 
 static void opencl_unmap_from_vt(AVHWFramesContext *hwfc,
                                  HWMapDescriptor *hwmap)
@@ -2849,8 +2849,8 @@ static void opencl_unmap_from_vt(AVHWFramesContext *hwfc,
     opencl_pool_free(hwfc, desc);
 }
 
-static int opencl_map_from_vt(AVHWFramesContext *dst_fc, AVFrame *dst,
-                              const AVFrame *src, int flags)
+static 整数 opencl_map_from_vt(AVHWFramesContext *dst_fc, AVFrame *dst,
+                              const AVFrame *src, 整数 flags)
 {
     CVPixelBufferRef pixbuf = (CVPixelBufferRef) src->data[3];
     IOSurfaceRef io_surface_ref = CVPixelBufferGetIOSurface(pixbuf);
@@ -2858,16 +2858,16 @@ static int opencl_map_from_vt(AVHWFramesContext *dst_fc, AVFrame *dst,
     AVOpenCLFrameDescriptor *desc = NULL;
     AVOpenCLDeviceContext *dst_dev = dst_fc->device_ctx->hwctx;
 
-    if (!io_surface_ref) {
+    如果 (!io_surface_ref) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to get IOSurfaceRef\n");
-        return AVERROR_EXTERNAL;
+        返回 AVERROR_EXTERNAL;
     }
 
     desc = av_mallocz(sizeof(*desc));
-    if (!desc)
-        return AVERROR(ENOMEM);
+    如果 (!desc)
+        返回 AVERROR(ENOMEM);
 
-    for (int p = 0;; p++) {
+    为 (整数 p = 0;; p++) {
         cl_image_format image_format;
         cl_image_desc image_desc;
         cl_iosurface_properties_APPLE props[] = {
@@ -2879,16 +2879,16 @@ static int opencl_map_from_vt(AVHWFramesContext *dst_fc, AVFrame *dst,
         err = opencl_get_plane_format(dst_fc->sw_format, p,
                                       src->width, src->height,
                                       &image_format, &image_desc);
-        if (err == AVERROR(ENOENT))
+        如果 (err == AVERROR(ENOENT))
             break;
-        if (err < 0)
+        如果 (err < 0)
             goto fail;
 
         desc->planes[p] = clCreateImageFromIOSurfaceWithPropertiesAPPLE(dst_dev->context,
                                                     opencl_mem_flags_for_mapping(flags),
                                                     &image_format, &image_desc,
                                                     props, &err);
-        if (!desc->planes[p]) {
+        如果 (!desc->planes[p]) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to create image from IOSurfaceRef\n");
             err = AVERROR(EIO);
             goto fail;
@@ -2896,150 +2896,150 @@ static int opencl_map_from_vt(AVHWFramesContext *dst_fc, AVFrame *dst,
         desc->nb_planes++;
     }
 
-    for (int i = 0; i < desc->nb_planes; i++)
+    为 (整数 i = 0; i < desc->nb_planes; i++)
         dst->data[i] = (uint8_t *) desc->planes[i];
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 opencl_unmap_from_vt, desc);
-    if (err < 0)
+    如果 (err < 0)
         goto fail;
 
     dst->width = src->width;
     dst->height = src->height;
 
-    return 0;
+    返回 0;
 
 fail:
-    for (int i = 0; i < desc->nb_planes; i++)
+    为 (整数 i = 0; i < desc->nb_planes; i++)
         clReleaseMemObject(desc->planes[i]);
     av_freep(&desc);
-    return err;
+    返回 err;
 }
 
 #endif
 
-static int opencl_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                           const AVFrame *src, int flags)
+static 整数 opencl_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                           const AVFrame *src, 整数 flags)
 {
     av_assert0(src->format == AV_PIX_FMT_OPENCL);
-    if (hwfc->sw_format != dst->format)
-        return AVERROR(ENOSYS);
-    return opencl_map_frame(hwfc, dst, src, flags);
+    如果 (hwfc->sw_format != dst->format)
+        返回 AVERROR(ENOSYS);
+    返回 opencl_map_frame(hwfc, dst, src, flags);
 }
 
-static int opencl_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
-                         const AVFrame *src, int flags)
+static 整数 opencl_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
+                         const AVFrame *src, 整数 flags)
 {
     av_unused OpenCLDeviceContext *priv = hwfc->device_ctx->hwctx;
     av_assert0(dst->format == AV_PIX_FMT_OPENCL);
     switch (src->format) {
-#if HAVE_OPENCL_DRM_BEIGNET
+#如果 HAVE_OPENCL_DRM_BEIGNET
     case AV_PIX_FMT_DRM_PRIME:
-        if (priv->beignet_drm_mapping_usable)
-            return opencl_map_from_drm_beignet(hwfc, dst, src, flags);
+        如果 (priv->beignet_drm_mapping_usable)
+            返回 opencl_map_from_drm_beignet(hwfc, dst, src, flags);
         break;
 #endif
-#if HAVE_OPENCL_VAAPI_BEIGNET
+#如果 HAVE_OPENCL_VAAPI_BEIGNET
     case AV_PIX_FMT_VAAPI:
-        if (priv->beignet_drm_mapping_usable)
-            return opencl_map_from_vaapi(hwfc, dst, src, flags);
+        如果 (priv->beignet_drm_mapping_usable)
+            返回 opencl_map_from_vaapi(hwfc, dst, src, flags);
         break;
 #endif
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#如果 HAVE_OPENCL_VAAPI_INTEL_MEDIA
     case AV_PIX_FMT_QSV:
     case AV_PIX_FMT_VAAPI:
-        if (priv->qsv_mapping_usable)
-            return opencl_map_from_qsv(hwfc, dst, src, flags);
+        如果 (priv->qsv_mapping_usable)
+            返回 opencl_map_from_qsv(hwfc, dst, src, flags);
         break;
 #endif
-#if HAVE_OPENCL_DXVA2
+#如果 HAVE_OPENCL_DXVA2
     case AV_PIX_FMT_DXVA2_VLD:
-        if (priv->dxva2_mapping_usable)
-            return opencl_map_from_dxva2(hwfc, dst, src, flags);
+        如果 (priv->dxva2_mapping_usable)
+            返回 opencl_map_from_dxva2(hwfc, dst, src, flags);
         break;
 #endif
-#if HAVE_OPENCL_D3D11
+#如果 HAVE_OPENCL_D3D11
     case AV_PIX_FMT_D3D11:
-        if (priv->d3d11_mapping_usable)
-            return opencl_map_from_d3d11(hwfc, dst, src, flags);
+        如果 (priv->d3d11_mapping_usable)
+            返回 opencl_map_from_d3d11(hwfc, dst, src, flags);
         break;
 #endif
-#if HAVE_OPENCL_DRM_ARM
+#如果 HAVE_OPENCL_DRM_ARM
     case AV_PIX_FMT_DRM_PRIME:
-        if (priv->drm_arm_mapping_usable)
-            return opencl_map_from_drm_arm(hwfc, dst, src, flags);
+        如果 (priv->drm_arm_mapping_usable)
+            返回 opencl_map_from_drm_arm(hwfc, dst, src, flags);
         break;
 #endif
-#if HAVE_OPENCL_VIDEOTOOLBOX
+#如果 HAVE_OPENCL_VIDEOTOOLBOX
     case AV_PIX_FMT_VIDEOTOOLBOX:
-        return opencl_map_from_vt(hwfc, dst, src, flags);
+        返回 opencl_map_from_vt(hwfc, dst, src, flags);
 #endif
     }
-    return AVERROR(ENOSYS);
+    返回 AVERROR(ENOSYS);
 }
 
-static int opencl_frames_derive_to(AVHWFramesContext *dst_fc,
-                                   AVHWFramesContext *src_fc, int flags)
+static 整数 opencl_frames_derive_to(AVHWFramesContext *dst_fc,
+                                   AVHWFramesContext *src_fc, 整数 flags)
 {
     av_unused OpenCLDeviceContext *priv = dst_fc->device_ctx->hwctx;
     switch (src_fc->device_ctx->type) {
-#if HAVE_OPENCL_DRM_BEIGNET
+#如果 HAVE_OPENCL_DRM_BEIGNET
     case AV_HWDEVICE_TYPE_DRM:
-        if (!priv->beignet_drm_mapping_usable)
-            return AVERROR(ENOSYS);
+        如果 (!priv->beignet_drm_mapping_usable)
+            返回 AVERROR(ENOSYS);
         break;
 #endif
-#if HAVE_OPENCL_VAAPI_BEIGNET
+#如果 HAVE_OPENCL_VAAPI_BEIGNET
     case AV_HWDEVICE_TYPE_VAAPI:
-        if (!priv->beignet_drm_mapping_usable)
-            return AVERROR(ENOSYS);
+        如果 (!priv->beignet_drm_mapping_usable)
+            返回 AVERROR(ENOSYS);
         break;
 #endif
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#如果 HAVE_OPENCL_VAAPI_INTEL_MEDIA
     case AV_HWDEVICE_TYPE_QSV:
     case AV_HWDEVICE_TYPE_VAAPI:
-        if (!priv->qsv_mapping_usable)
-            return AVERROR(ENOSYS);
+        如果 (!priv->qsv_mapping_usable)
+            返回 AVERROR(ENOSYS);
         break;
 #endif
-#if HAVE_OPENCL_DXVA2
+#如果 HAVE_OPENCL_DXVA2
     case AV_HWDEVICE_TYPE_DXVA2:
-        if (!priv->dxva2_mapping_usable)
-            return AVERROR(ENOSYS);
+        如果 (!priv->dxva2_mapping_usable)
+            返回 AVERROR(ENOSYS);
         {
-            int err;
+            整数 err;
             err = opencl_frames_derive_from_dxva2(dst_fc, src_fc, flags);
-            if (err < 0)
-                return err;
+            如果 (err < 0)
+                返回 err;
         }
         break;
 #endif
-#if HAVE_OPENCL_D3D11
+#如果 HAVE_OPENCL_D3D11
     case AV_HWDEVICE_TYPE_D3D11VA:
-        if (!priv->d3d11_mapping_usable)
-            return AVERROR(ENOSYS);
+        如果 (!priv->d3d11_mapping_usable)
+            返回 AVERROR(ENOSYS);
         {
-            int err;
+            整数 err;
             err = opencl_frames_derive_from_d3d11(dst_fc, src_fc, flags);
-            if (err < 0)
-                return err;
+            如果 (err < 0)
+                返回 err;
         }
         break;
 #endif
-#if HAVE_OPENCL_DRM_ARM
+#如果 HAVE_OPENCL_DRM_ARM
     case AV_HWDEVICE_TYPE_DRM:
-        if (!priv->drm_arm_mapping_usable)
-            return AVERROR(ENOSYS);
+        如果 (!priv->drm_arm_mapping_usable)
+            返回 AVERROR(ENOSYS);
         break;
 #endif
-#if HAVE_OPENCL_VIDEOTOOLBOX
+#如果 HAVE_OPENCL_VIDEOTOOLBOX
     case AV_HWDEVICE_TYPE_VIDEOTOOLBOX:
         break;
 #endif
     default:
-        return AVERROR(ENOSYS);
+        返回 AVERROR(ENOSYS);
     }
-    return opencl_frames_init_command_queue(dst_fc);
+    返回 opencl_frames_init_command_queue(dst_fc);
 }
 
 const HWContextType ff_hwcontext_type_opencl = {

@@ -33,51 +33,51 @@
 #include "log.h"
 #include "error.h"
 
-int av_timecode_adjust_ntsc_framenum2(int framenum, int fps)
+整数 av_timecode_adjust_ntsc_framenum2(整数 framenum, 整数 fps)
 {
     /* only works for multiples of NTSC 29.97 */
-    int drop_frames = 0;
-    int d, m, frames_per_10mins;
+    整数 drop_frames = 0;
+    整数 d, m, frames_per_10mins;
 
-    if (fps && fps % 30 == 0) {
+    如果 (fps && fps % 30 == 0) {
         drop_frames = fps / 30 * 2;
         frames_per_10mins = fps / 30 * 17982;
-    } else
-        return framenum;
+    } 否则
+        返回 framenum;
 
     d = framenum / frames_per_10mins;
     m = framenum % frames_per_10mins;
 
-    return framenum + 9U * drop_frames * d + drop_frames * ((m - drop_frames) / (frames_per_10mins / 10));
+    返回 framenum + 9U * drop_frames * d + drop_frames * ((m - drop_frames) / (frames_per_10mins / 10));
 }
 
-uint32_t av_timecode_get_smpte_from_framenum(const AVTimecode *tc, int framenum)
+uint32_t av_timecode_get_smpte_from_framenum(const AVTimecode *tc, 整数 framenum)
 {
     unsigned fps = tc->fps;
-    int drop = !!(tc->flags & AV_TIMECODE_FLAG_DROPFRAME);
-    int hh, mm, ss, ff;
+    整数 drop = !!(tc->flags & AV_TIMECODE_FLAG_DROPFRAME);
+    整数 hh, mm, ss, ff;
 
     framenum += tc->start;
-    if (drop)
+    如果 (drop)
         framenum = av_timecode_adjust_ntsc_framenum2(framenum, tc->fps);
     ff = framenum % fps;
     ss = framenum / fps      % 60;
     mm = framenum / (fps*60LL) % 60;
     hh = framenum / (fps*3600LL) % 24;
-    return av_timecode_get_smpte(tc->rate, drop, hh, mm, ss, ff);
+    返回 av_timecode_get_smpte(tc->rate, drop, hh, mm, ss, ff);
 }
 
-uint32_t av_timecode_get_smpte(AVRational rate, int drop, int hh, int mm, int ss, int ff)
+uint32_t av_timecode_get_smpte(AVRational rate, 整数 drop, 整数 hh, 整数 mm, 整数 ss, 整数 ff)
 {
     uint32_t tc = 0;
 
     /* For SMPTE 12-M timecodes, frame count is a special case if > 30 FPS.
        See SMPTE ST 12-1:2014 Sec 12.1 for more info. */
-    if (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
-        if (ff % 2 == 1) {
-            if (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
+    如果 (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
+        如果 (ff % 2 == 1) {
+            如果 (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
                 tc |= (1 << 7);
-            else
+            否则
                 tc |= (1 << 23);
         }
         ff /= 2;
@@ -98,20 +98,20 @@ uint32_t av_timecode_get_smpte(AVRational rate, int drop, int hh, int mm, int ss
     tc |= (hh / 10) << 4;
     tc |= (hh % 10);
 
-    return tc;
+    返回 tc;
 }
 
-char *av_timecode_make_string(const AVTimecode *tc, char *buf, int framenum_arg)
+char *av_timecode_make_string(const AVTimecode *tc, char *buf, 整数 framenum_arg)
 {
     unsigned fps = tc->fps;
-    int drop = tc->flags & AV_TIMECODE_FLAG_DROPFRAME;
-    int hh, mm, ss, ff, ff_len, neg = 0;
+    整数 drop = tc->flags & AV_TIMECODE_FLAG_DROPFRAME;
+    整数 hh, mm, ss, ff, ff_len, neg = 0;
     int64_t framenum = framenum_arg;
 
     framenum += tc->start;
-    if (drop)
+    如果 (drop)
         framenum = av_timecode_adjust_ntsc_framenum2(framenum, fps);
-    if (framenum < 0) {
+    如果 (framenum < 0) {
         framenum = -framenum;
         neg = tc->flags & AV_TIMECODE_FLAG_ALLOWNEGATIVE;
     }
@@ -119,29 +119,29 @@ char *av_timecode_make_string(const AVTimecode *tc, char *buf, int framenum_arg)
     ss = framenum / fps        % 60;
     mm = framenum / (fps*60LL) % 60;
     hh = framenum / (fps*3600LL);
-    if (tc->flags & AV_TIMECODE_FLAG_24HOURSMAX)
+    如果 (tc->flags & AV_TIMECODE_FLAG_24HOURSMAX)
         hh = hh % 24;
     ff_len = fps > 10000 ? 5 : fps > 1000 ? 4 : fps > 100 ? 3 : fps > 10 ? 2 : 1;
     snprintf(buf, AV_TIMECODE_STR_SIZE, "%s%02d:%02d:%02d%c%0*d",
              neg ? "-" : "",
              hh, mm, ss, drop ? ';' : ':', ff_len, ff);
-    return buf;
+    返回 buf;
 }
 
-char *av_timecode_make_smpte_tc_string2(char *buf, AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field)
+char *av_timecode_make_smpte_tc_string2(char *buf, AVRational rate, uint32_t tcsmpte, 整数 prevent_df, 整数 skip_field)
 {
     unsigned hh, mm, ss, ff, drop;
     ff_timecode_set_smpte(&drop, &hh, &mm, &ss, &ff, rate, tcsmpte, prevent_df, skip_field);
 
     snprintf(buf, AV_TIMECODE_STR_SIZE, "%02u:%02u:%02u%c%02u",
              hh, mm, ss, drop ? ';' : ':', ff);
-    return buf;
+    返回 buf;
 
 }
 
-char *av_timecode_make_smpte_tc_string(char *buf, uint32_t tcsmpte, int prevent_df)
+char *av_timecode_make_smpte_tc_string(char *buf, uint32_t tcsmpte, 整数 prevent_df)
 {
-    return av_timecode_make_smpte_tc_string2(buf, (AVRational){30, 1}, tcsmpte, prevent_df, 1);
+    返回 av_timecode_make_smpte_tc_string2(buf, (AVRational){30, 1}, tcsmpte, prevent_df, 1);
 }
 
 char *av_timecode_make_mpeg_tc_string(char *buf, uint32_t tc25bit)
@@ -153,64 +153,64 @@ char *av_timecode_make_mpeg_tc_string(char *buf, uint32_t tc25bit)
              tc25bit>>6  & 0x3f,              // 6-bit seconds
              tc25bit     & 1<<24 ? ';' : ':', // 1-bit drop flag
              tc25bit     & 0x3f);             // 6-bit frames
-    return buf;
+    返回 buf;
 }
 
-static int check_fps(int fps)
+static 整数 check_fps(整数 fps)
 {
-    int i;
-    static const int supported_fps[] = {
+    整数 i;
+    static const 整数 supported_fps[] = {
         24, 25, 30, 48, 50, 60, 100, 120, 150,
     };
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_fps); i++)
-        if (fps == supported_fps[i])
-            return 0;
-    return -1;
+    为 (i = 0; i < FF_ARRAY_ELEMS(supported_fps); i++)
+        如果 (fps == supported_fps[i])
+            返回 0;
+    返回 -1;
 }
 
-static int check_timecode(void *log_ctx, AVTimecode *tc)
+static 整数 check_timecode(void *log_ctx, AVTimecode *tc)
 {
-    if ((int)tc->fps <= 0) {
+    如果 ((整数)tc->fps <= 0) {
         av_log(log_ctx, AV_LOG_ERROR, "Valid timecode frame rate must be specified. Minimum value is 1\n");
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
-    if ((tc->flags & AV_TIMECODE_FLAG_DROPFRAME) && tc->fps % 30 != 0) {
+    如果 ((tc->flags & AV_TIMECODE_FLAG_DROPFRAME) && tc->fps % 30 != 0) {
         av_log(log_ctx, AV_LOG_ERROR, "Drop frame is only allowed with multiples of 30000/1001 FPS\n");
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
-    if (check_fps(tc->fps) < 0) {
+    如果 (check_fps(tc->fps) < 0) {
         av_log(log_ctx, AV_LOG_WARNING, "Using non-standard frame rate %d/%d\n",
                tc->rate.num, tc->rate.den);
     }
-    return 0;
+    返回 0;
 }
 
-static int fps_from_frame_rate(AVRational rate)
+static 整数 fps_from_frame_rate(AVRational rate)
 {
-    if (!rate.den || !rate.num)
-        return -1;
-    return (rate.num + rate.den/2LL) / rate.den;
+    如果 (!rate.den || !rate.num)
+        返回 -1;
+    返回 (rate.num + rate.den/2LL) / rate.den;
 }
 
-int av_timecode_check_frame_rate(AVRational rate)
+整数 av_timecode_check_frame_rate(AVRational rate)
 {
-    return check_fps(fps_from_frame_rate(rate));
+    返回 check_fps(fps_from_frame_rate(rate));
 }
 
-int av_timecode_init(AVTimecode *tc, AVRational rate, int flags, int frame_start, void *log_ctx)
+整数 av_timecode_init(AVTimecode *tc, AVRational rate, 整数 flags, 整数 frame_start, void *log_ctx)
 {
     memset(tc, 0, sizeof(*tc));
     tc->start = frame_start;
     tc->flags = flags;
     tc->rate  = rate;
     tc->fps   = fps_from_frame_rate(rate);
-    return check_timecode(log_ctx, tc);
+    返回 check_timecode(log_ctx, tc);
 }
 
-int av_timecode_init_from_components(AVTimecode *tc, AVRational rate, int flags, int hh, int mm, int ss, int ff, void *log_ctx)
+整数 av_timecode_init_from_components(AVTimecode *tc, AVRational rate, 整数 flags, 整数 hh, 整数 mm, 整数 ss, 整数 ff, void *log_ctx)
 {
-    int ret;
+    整数 ret;
     int64_t s;
 
     memset(tc, 0, sizeof(*tc));
@@ -219,36 +219,36 @@ int av_timecode_init_from_components(AVTimecode *tc, AVRational rate, int flags,
     tc->fps   = fps_from_frame_rate(rate);
 
     ret = check_timecode(log_ctx, tc);
-    if (ret < 0)
-        return ret;
+    如果 (ret < 0)
+        返回 ret;
 
     s = hh*3600LL + mm*60LL + ss;
-    if (s != (int32_t)s)
-        return AVERROR(EINVAL);
+    如果 (s != (int32_t)s)
+        返回 AVERROR(EINVAL);
 
     s = s * tc->fps + ff;
-    if (s != (int32_t)s)
-        return AVERROR(EINVAL);
+    如果 (s != (int32_t)s)
+        返回 AVERROR(EINVAL);
     tc->start = s;
 
-    if (tc->flags & AV_TIMECODE_FLAG_DROPFRAME) { /* adjust frame number */
-        int tmins = 60*hh + mm;
+    如果 (tc->flags & AV_TIMECODE_FLAG_DROPFRAME) { /* adjust frame number */
+        整数 tmins = 60*hh + mm;
         tc->start -= (tc->fps / 30 * 2) * (tmins - tmins/10);
     }
-    return 0;
+    返回 0;
 }
 
-int av_timecode_init_from_string(AVTimecode *tc, AVRational rate, const char *str, void *log_ctx)
+整数 av_timecode_init_from_string(AVTimecode *tc, AVRational rate, const char *str, void *log_ctx)
 {
     char c;
-    int hh, mm, ss, ff, flags;
+    整数 hh, mm, ss, ff, flags;
 
-    if (sscanf(str, "%d:%d:%d%c%d", &hh, &mm, &ss, &c, &ff) != 5) {
+    如果 (sscanf(str, "%d:%d:%d%c%d", &hh, &mm, &ss, &c, &ff) != 5) {
         av_log(log_ctx, AV_LOG_ERROR, "Unable to parse timecode, "
                                       "syntax: hh:mm:ss[:;.]ff\n");
-        return AVERROR_INVALIDDATA;
+        返回 AVERROR_INVALIDDATA;
     }
     flags = c != ':' ? AV_TIMECODE_FLAG_DROPFRAME : 0; // drop if ';', '.', ...
 
-    return av_timecode_init_from_components(tc, rate, flags, hh, mm, ss, ff, log_ctx);
+    返回 av_timecode_init_from_components(tc, rate, flags, hh, mm, ss, ff, log_ctx);
 }

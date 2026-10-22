@@ -55,23 +55,23 @@ typedef struct HWContextType {
      */
     size_t             frames_hwctx_size;
 
-    int              (*device_create)(AVHWDeviceContext *ctx, const char *device,
-                                      AVDictionary *opts, int flags);
-    int              (*device_derive)(AVHWDeviceContext *dst_ctx,
+    整数              (*device_create)(AVHWDeviceContext *ctx, const char *device,
+                                      AVDictionary *opts, 整数 flags);
+    整数              (*device_derive)(AVHWDeviceContext *dst_ctx,
                                       AVHWDeviceContext *src_ctx,
-                                      AVDictionary *opts, int flags);
+                                      AVDictionary *opts, 整数 flags);
 
-    int              (*device_init)(AVHWDeviceContext *ctx);
+    整数              (*device_init)(AVHWDeviceContext *ctx);
     void             (*device_uninit)(AVHWDeviceContext *ctx);
 
-    int              (*frames_get_constraints)(AVHWDeviceContext *ctx,
+    整数              (*frames_get_constraints)(AVHWDeviceContext *ctx,
                                                const void *hwconfig,
                                                AVHWFramesConstraints *constraints);
 
-    int              (*frames_init)(AVHWFramesContext *ctx);
+    整数              (*frames_init)(AVHWFramesContext *ctx);
     void             (*frames_uninit)(AVHWFramesContext *ctx);
 
-    int              (*frames_get_buffer)(AVHWFramesContext *ctx, AVFrame *frame);
+    整数              (*frames_get_buffer)(AVHWFramesContext *ctx, AVFrame *frame);
 
     /**
      * Allocate a buffer of size bytes for av_hwframe_get_transfer_buffer(),
@@ -80,23 +80,23 @@ typedef struct HWContextType {
      * @param device_ref the AVBufferRef of the AVHWDeviceContext
      */
     AVBufferRef     *(*transfer_buffer_alloc)(void *device_ref, size_t size);
-    int              (*transfer_get_formats)(AVHWFramesContext *ctx,
+    整数              (*transfer_get_formats)(AVHWFramesContext *ctx,
                                              enum AVHWFrameTransferDirection dir,
                                              enum AVPixelFormat **formats);
-    int              (*transfer_data_to)(AVHWFramesContext *ctx, AVFrame *dst,
+    整数              (*transfer_data_to)(AVHWFramesContext *ctx, AVFrame *dst,
                                          const AVFrame *src);
-    int              (*transfer_data_from)(AVHWFramesContext *ctx, AVFrame *dst,
+    整数              (*transfer_data_from)(AVHWFramesContext *ctx, AVFrame *dst,
                                            const AVFrame *src);
 
-    int              (*map_to)(AVHWFramesContext *ctx, AVFrame *dst,
-                               const AVFrame *src, int flags);
-    int              (*map_from)(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src, int flags);
+    整数              (*map_to)(AVHWFramesContext *ctx, AVFrame *dst,
+                               const AVFrame *src, 整数 flags);
+    整数              (*map_from)(AVHWFramesContext *ctx, AVFrame *dst,
+                                 const AVFrame *src, 整数 flags);
 
-    int              (*frames_derive_to)(AVHWFramesContext *dst_ctx,
-                                         AVHWFramesContext *src_ctx, int flags);
-    int              (*frames_derive_from)(AVHWFramesContext *dst_ctx,
-                                           AVHWFramesContext *src_ctx, int flags);
+    整数              (*frames_derive_to)(AVHWFramesContext *dst_ctx,
+                                         AVHWFramesContext *src_ctx, 整数 flags);
+    整数              (*frames_derive_from)(AVHWFramesContext *dst_ctx,
+                                           AVHWFramesContext *src_ctx, 整数 flags);
 } HWContextType;
 
 typedef struct FFHWFramesContext {
@@ -126,12 +126,12 @@ typedef struct FFHWFramesContext {
      * Flags to apply to the mapping from the source to the derived
      * frame context when trying to allocate in the derived context.
      */
-    int source_allocation_map_flags;
+    整数 source_allocation_map_flags;
 } FFHWFramesContext;
 
 static inline FFHWFramesContext *ffhwframesctx(AVHWFramesContext *ctx)
 {
-    return (FFHWFramesContext*)ctx;
+    返回 (FFHWFramesContext*)ctx;
 }
 
 typedef struct HWMapDescriptor {
@@ -156,7 +156,7 @@ typedef struct HWMapDescriptor {
     void          *priv;
 } HWMapDescriptor;
 
-int ff_hwframe_map_create(AVBufferRef *hwframe_ref,
+整数 ff_hwframe_map_create(AVBufferRef *hwframe_ref,
                           AVFrame *dst, const AVFrame *src,
                           void (*unmap)(AVHWFramesContext *ctx,
                                         HWMapDescriptor *hwmap),
@@ -166,7 +166,7 @@ int ff_hwframe_map_create(AVBufferRef *hwframe_ref,
  * Replace the current hwmap of dst with the one from src, used for indirect
  * mappings like VAAPI->(DRM)->OpenCL/Vulkan where a direct interop is missing
  */
-int ff_hwframe_map_replace(AVFrame *dst, const AVFrame *src);
+整数 ff_hwframe_map_replace(AVFrame *dst, const AVFrame *src);
 
 extern const HWContextType ff_hwcontext_type_cuda;
 extern const HWContextType ff_hwcontext_type_d3d11va;

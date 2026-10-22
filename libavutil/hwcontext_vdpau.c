@@ -95,50 +95,50 @@ typedef struct VDPAUDeviceContext {
     VdpVideoSurfaceDestroy                          *surf_destroy;
 
     enum AVPixelFormat *pix_fmts[FF_ARRAY_ELEMS(vdpau_pix_fmts)];
-    int              nb_pix_fmts[FF_ARRAY_ELEMS(vdpau_pix_fmts)];
+    整数              nb_pix_fmts[FF_ARRAY_ELEMS(vdpau_pix_fmts)];
 } VDPAUDeviceContext;
 
 typedef struct VDPAUFramesContext {
     VdpVideoSurfaceGetBitsYCbCr *get_data;
     VdpVideoSurfacePutBitsYCbCr *put_data;
     VdpChromaType chroma_type;
-    int chroma_idx;
+    整数 chroma_idx;
 
     const enum AVPixelFormat *pix_fmts;
-    int                       nb_pix_fmts;
+    整数                       nb_pix_fmts;
 } VDPAUFramesContext;
 
-static int count_pixfmts(const VDPAUPixFmtMap *map)
+static 整数 count_pixfmts(const VDPAUPixFmtMap *map)
 {
-    int count = 0;
-    while (map->pix_fmt != AV_PIX_FMT_NONE) {
+    整数 count = 0;
+    当 (map->pix_fmt != AV_PIX_FMT_NONE) {
         map++;
         count++;
     }
-    return count;
+    返回 count;
 }
 
-static int vdpau_init_pixmfts(AVHWDeviceContext *ctx)
+static 整数 vdpau_init_pixmfts(AVHWDeviceContext *ctx)
 {
     VDPAUDeviceContext    *priv = ctx->hwctx;
     AVVDPAUDeviceContext *hwctx = &priv->p;
-    int i;
+    整数 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(priv->pix_fmts); i++) {
+    为 (i = 0; i < FF_ARRAY_ELEMS(priv->pix_fmts); i++) {
         const VDPAUPixFmtMap *map = vdpau_pix_fmts[i].map;
-        int nb_pix_fmts;
+        整数 nb_pix_fmts;
 
         nb_pix_fmts = count_pixfmts(map);
         priv->pix_fmts[i] = av_malloc_array(nb_pix_fmts + 1, sizeof(*priv->pix_fmts[i]));
-        if (!priv->pix_fmts[i])
-            return AVERROR(ENOMEM);
+        如果 (!priv->pix_fmts[i])
+            返回 AVERROR(ENOMEM);
 
         nb_pix_fmts = 0;
-        while (map->pix_fmt != AV_PIX_FMT_NONE) {
+        当 (map->pix_fmt != AV_PIX_FMT_NONE) {
             VdpBool supported;
             VdpStatus err = priv->get_transfer_caps(hwctx->device, vdpau_pix_fmts[i].chroma_type,
                                                     map->vdpau_fmt, &supported);
-            if (err == VDP_STATUS_OK && supported)
+            如果 (err == VDP_STATUS_OK && supported)
                 priv->pix_fmts[i][nb_pix_fmts++] = map->pix_fmt;
             map++;
         }
@@ -146,26 +146,26 @@ static int vdpau_init_pixmfts(AVHWDeviceContext *ctx)
         priv->nb_pix_fmts[i]             = nb_pix_fmts;
     }
 
-    return 0;
+    返回 0;
 }
 
 #define GET_CALLBACK(id, result)                                                \
 do {                                                                            \
     void *tmp;                                                                  \
     err = hwctx->get_proc_address(hwctx->device, id, &tmp);                     \
-    if (err != VDP_STATUS_OK) {                                                 \
+    如果 (err != VDP_STATUS_OK) {                                                 \
         av_log(ctx, AV_LOG_ERROR, "Error getting the " #id " callback.\n");     \
-        return AVERROR_UNKNOWN;                                                 \
+        返回 AVERROR_UNKNOWN;                                                 \
     }                                                                           \
     result = tmp;                                                               \
-} while (0)
+} 当 (0)
 
-static int vdpau_device_init(AVHWDeviceContext *ctx)
+static 整数 vdpau_device_init(AVHWDeviceContext *ctx)
 {
     VDPAUDeviceContext    *priv = ctx->hwctx;
     AVVDPAUDeviceContext *hwctx = &priv->p;
     VdpStatus             err;
-    int                   ret;
+    整数                   ret;
 
     GET_CALLBACK(VDP_FUNC_ID_VIDEO_SURFACE_QUERY_GET_PUT_BITS_Y_CB_CR_CAPABILITIES,
                  priv->get_transfer_caps);
@@ -175,50 +175,50 @@ static int vdpau_device_init(AVHWDeviceContext *ctx)
     GET_CALLBACK(VDP_FUNC_ID_VIDEO_SURFACE_DESTROY,          priv->surf_destroy);
 
     ret = vdpau_init_pixmfts(ctx);
-    if (ret < 0) {
+    如果 (ret < 0) {
         av_log(ctx, AV_LOG_ERROR, "Error querying the supported pixel formats\n");
-        return ret;
+        返回 ret;
     }
 
-    return 0;
+    返回 0;
 }
 
 static void vdpau_device_uninit(AVHWDeviceContext *ctx)
 {
     VDPAUDeviceContext *priv = ctx->hwctx;
-    int i;
+    整数 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(priv->pix_fmts); i++)
+    为 (i = 0; i < FF_ARRAY_ELEMS(priv->pix_fmts); i++)
         av_freep(&priv->pix_fmts[i]);
 }
 
-static int vdpau_frames_get_constraints(AVHWDeviceContext *ctx,
+static 整数 vdpau_frames_get_constraints(AVHWDeviceContext *ctx,
                                         const void *hwconfig,
                                         AVHWFramesConstraints *constraints)
 {
     VDPAUDeviceContext *priv  = ctx->hwctx;
-    int nb_sw_formats = 0;
-    int i;
+    整数 nb_sw_formats = 0;
+    整数 i;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(vdpau_pix_fmts) + 1,
                                                     sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+    如果 (!constraints->valid_sw_formats)
+        返回 AVERROR(ENOMEM);
 
-    for (i = 0; i < FF_ARRAY_ELEMS(vdpau_pix_fmts); i++) {
-        if (priv->nb_pix_fmts[i] > 1)
+    为 (i = 0; i < FF_ARRAY_ELEMS(vdpau_pix_fmts); i++) {
+        如果 (priv->nb_pix_fmts[i] > 1)
             constraints->valid_sw_formats[nb_sw_formats++] = vdpau_pix_fmts[i].frames_sw_format;
     }
     constraints->valid_sw_formats[nb_sw_formats] = AV_PIX_FMT_NONE;
 
     constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    如果 (!constraints->valid_hw_formats)
+        返回 AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_VDPAU;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    返回 0;
 }
 
 static void vdpau_buffer_free(void *opaque, uint8_t *data)
@@ -243,30 +243,30 @@ static AVBufferRef *vdpau_pool_alloc(void *opaque, size_t size)
 
     err = device_priv->surf_create(device_hwctx->device, priv->chroma_type,
                                    ctx->width, ctx->height, &surf);
-    if (err != VDP_STATUS_OK) {
+    如果 (err != VDP_STATUS_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error allocating a VDPAU video surface\n");
-        return NULL;
+        返回 NULL;
     }
 
     ret = av_buffer_create((uint8_t*)(uintptr_t)surf, sizeof(surf),
                            vdpau_buffer_free, ctx, AV_BUFFER_FLAG_READONLY);
-    if (!ret) {
+    如果 (!ret) {
         device_priv->surf_destroy(surf);
-        return NULL;
+        返回 NULL;
     }
 
-    return ret;
+    返回 ret;
 }
 
-static int vdpau_frames_init(AVHWFramesContext *ctx)
+static 整数 vdpau_frames_init(AVHWFramesContext *ctx)
 {
     VDPAUDeviceContext *device_priv = ctx->device_ctx->hwctx;
     VDPAUFramesContext        *priv = ctx->hwctx;
 
-    int i;
+    整数 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(vdpau_pix_fmts); i++) {
-        if (vdpau_pix_fmts[i].frames_sw_format == ctx->sw_format) {
+    为 (i = 0; i < FF_ARRAY_ELEMS(vdpau_pix_fmts); i++) {
+        如果 (vdpau_pix_fmts[i].frames_sw_format == ctx->sw_format) {
             priv->chroma_type = vdpau_pix_fmts[i].chroma_type;
             priv->chroma_idx  = i;
             priv->pix_fmts    = device_priv->pix_fmts[i];
@@ -274,41 +274,41 @@ static int vdpau_frames_init(AVHWFramesContext *ctx)
             break;
         }
     }
-    if (priv->nb_pix_fmts < 2) {
+    如果 (priv->nb_pix_fmts < 2) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported sw format: %s\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(ENOSYS);
+        返回 AVERROR(ENOSYS);
     }
 
-    if (!ctx->pool) {
+    如果 (!ctx->pool) {
         ffhwframesctx(ctx)->pool_internal =
             av_buffer_pool_init2(sizeof(VdpVideoSurface), ctx,
                                  vdpau_pool_alloc, NULL);
-        if (!ffhwframesctx(ctx)->pool_internal)
-            return AVERROR(ENOMEM);
+        如果 (!ffhwframesctx(ctx)->pool_internal)
+            返回 AVERROR(ENOMEM);
     }
 
     priv->get_data = device_priv->get_data;
     priv->put_data = device_priv->put_data;
 
-    return 0;
+    返回 0;
 }
 
-static int vdpau_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+static 整数 vdpau_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
 {
     frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    如果 (!frame->buf[0])
+        返回 AVERROR(ENOMEM);
 
     frame->data[3] = frame->buf[0]->data;
     frame->format  = AV_PIX_FMT_VDPAU;
     frame->width   = ctx->width;
     frame->height  = ctx->height;
 
-    return 0;
+    返回 0;
 }
 
-static int vdpau_transfer_get_formats(AVHWFramesContext *ctx,
+static 整数 vdpau_transfer_get_formats(AVHWFramesContext *ctx,
                                       enum AVHWFrameTransferDirection dir,
                                       enum AVPixelFormat **formats)
 {
@@ -316,23 +316,23 @@ static int vdpau_transfer_get_formats(AVHWFramesContext *ctx,
 
     enum AVPixelFormat *fmts;
 
-    if (priv->nb_pix_fmts == 1) {
+    如果 (priv->nb_pix_fmts == 1) {
         av_log(ctx, AV_LOG_ERROR,
                "No target formats are supported for this chroma type\n");
-        return AVERROR(ENOSYS);
+        返回 AVERROR(ENOSYS);
     }
 
     fmts = av_malloc_array(priv->nb_pix_fmts, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    如果 (!fmts)
+        返回 AVERROR(ENOMEM);
 
     memcpy(fmts, priv->pix_fmts, sizeof(*fmts) * (priv->nb_pix_fmts));
     *formats = fmts;
 
-    return 0;
+    返回 0;
 }
 
-static int vdpau_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
+static 整数 vdpau_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
                                     const AVFrame *src)
 {
     VDPAUFramesContext *priv = ctx->hwctx;
@@ -344,34 +344,34 @@ static int vdpau_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
     const VDPAUPixFmtMap *map;
     VdpYCbCrFormat vdpau_format;
     VdpStatus err;
-    int i;
+    整数 i;
 
-    for (i = 0; i< FF_ARRAY_ELEMS(data) && dst->data[i]; i++) {
+    为 (i = 0; i< FF_ARRAY_ELEMS(data) && dst->data[i]; i++) {
         data[i] = dst->data[i];
-        if (dst->linesize[i] < 0 || dst->linesize[i] > UINT32_MAX) {
+        如果 (dst->linesize[i] < 0 || dst->linesize[i] > UINT32_MAX) {
             av_log(ctx, AV_LOG_ERROR,
                    "The linesize %d cannot be represented as uint32\n",
                    dst->linesize[i]);
-            return AVERROR(ERANGE);
+            返回 AVERROR(ERANGE);
         }
         linesize[i] = dst->linesize[i];
     }
 
     map = vdpau_pix_fmts[priv->chroma_idx].map;
-    for (i = 0; map[i].pix_fmt != AV_PIX_FMT_NONE; i++) {
-        if (map[i].pix_fmt == dst->format) {
+    为 (i = 0; map[i].pix_fmt != AV_PIX_FMT_NONE; i++) {
+        如果 (map[i].pix_fmt == dst->format) {
             vdpau_format = map[i].vdpau_fmt;
             break;
         }
     }
-    if (map[i].pix_fmt == AV_PIX_FMT_NONE) {
+    如果 (map[i].pix_fmt == AV_PIX_FMT_NONE) {
         av_log(ctx, AV_LOG_ERROR,
                "Unsupported target pixel format: %s\n",
                av_get_pix_fmt_name(dst->format));
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
 
-    if ((vdpau_format == VDP_YCBCR_FORMAT_YV12)
+    如果 ((vdpau_format == VDP_YCBCR_FORMAT_YV12)
 #ifdef VDP_YCBCR_FORMAT_Y_U_V_444
             || (vdpau_format == VDP_YCBCR_FORMAT_Y_U_V_444)
 #endif
@@ -382,15 +382,15 @@ static int vdpau_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
         FFSWAP(void*, data[1], data[2]);
 
     err = priv->get_data(surf, vdpau_format, data, linesize);
-    if (err != VDP_STATUS_OK) {
+    如果 (err != VDP_STATUS_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error retrieving the data from a VDPAU surface\n");
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
-    return 0;
+    返回 0;
 }
 
-static int vdpau_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
+static 整数 vdpau_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
                                   const AVFrame *src)
 {
     VDPAUFramesContext *priv = ctx->hwctx;
@@ -402,34 +402,34 @@ static int vdpau_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
     const VDPAUPixFmtMap *map;
     VdpYCbCrFormat vdpau_format;
     VdpStatus err;
-    int i;
+    整数 i;
 
-    for (i = 0; i< FF_ARRAY_ELEMS(data) && src->data[i]; i++) {
+    为 (i = 0; i< FF_ARRAY_ELEMS(data) && src->data[i]; i++) {
         data[i] = src->data[i];
-        if (src->linesize[i] < 0 || src->linesize[i] > UINT32_MAX) {
+        如果 (src->linesize[i] < 0 || src->linesize[i] > UINT32_MAX) {
             av_log(ctx, AV_LOG_ERROR,
                    "The linesize %d cannot be represented as uint32\n",
                    src->linesize[i]);
-            return AVERROR(ERANGE);
+            返回 AVERROR(ERANGE);
         }
         linesize[i] = src->linesize[i];
     }
 
     map = vdpau_pix_fmts[priv->chroma_idx].map;
-    for (i = 0; map[i].pix_fmt != AV_PIX_FMT_NONE; i++) {
-        if (map[i].pix_fmt == src->format) {
+    为 (i = 0; map[i].pix_fmt != AV_PIX_FMT_NONE; i++) {
+        如果 (map[i].pix_fmt == src->format) {
             vdpau_format = map[i].vdpau_fmt;
             break;
         }
     }
-    if (map[i].pix_fmt == AV_PIX_FMT_NONE) {
+    如果 (map[i].pix_fmt == AV_PIX_FMT_NONE) {
         av_log(ctx, AV_LOG_ERROR,
                "Unsupported source pixel format: %s\n",
                av_get_pix_fmt_name(src->format));
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
 
-    if ((vdpau_format == VDP_YCBCR_FORMAT_YV12)
+    如果 ((vdpau_format == VDP_YCBCR_FORMAT_YV12)
 #ifdef VDP_YCBCR_FORMAT_Y_U_V_444
             || (vdpau_format == VDP_YCBCR_FORMAT_Y_U_V_444)
 #endif
@@ -437,15 +437,15 @@ static int vdpau_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
         FFSWAP(const void*, data[1], data[2]);
 
     err = priv->put_data(surf, vdpau_format, data, linesize);
-    if (err != VDP_STATUS_OK) {
+    如果 (err != VDP_STATUS_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error uploading the data to a VDPAU surface\n");
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
-    return 0;
+    返回 0;
 }
 
-#if HAVE_VDPAU_X11
+#如果 HAVE_VDPAU_X11
 #include <vdpau/vdpau_x11.h>
 #include <X11/Xlib.h>
 
@@ -459,15 +459,15 @@ static void vdpau_device_free(AVHWDeviceContext *ctx)
     AVVDPAUDeviceContext *hwctx = ctx->hwctx;
     VDPAUDevicePriv       *priv = ctx->user_opaque;
 
-    if (priv->device_destroy)
+    如果 (priv->device_destroy)
         priv->device_destroy(hwctx->device);
-    if (priv->dpy)
+    如果 (priv->dpy)
         XCloseDisplay(priv->dpy);
     av_freep(&priv);
 }
 
-static int vdpau_device_create(AVHWDeviceContext *ctx, const char *device,
-                               AVDictionary *opts, int flags)
+static 整数 vdpau_device_create(AVHWDeviceContext *ctx, const char *device,
+                               AVDictionary *opts, 整数 flags)
 {
     AVVDPAUDeviceContext *hwctx = ctx->hwctx;
 
@@ -477,26 +477,26 @@ static int vdpau_device_create(AVHWDeviceContext *ctx, const char *device,
     const char *display, *vendor;
 
     priv = av_mallocz(sizeof(*priv));
-    if (!priv)
-        return AVERROR(ENOMEM);
+    如果 (!priv)
+        返回 AVERROR(ENOMEM);
 
     ctx->user_opaque = priv;
     ctx->free        = vdpau_device_free;
 
     priv->dpy = XOpenDisplay(device);
-    if (!priv->dpy) {
+    如果 (!priv->dpy) {
         av_log(ctx, AV_LOG_ERROR, "Cannot open the X11 display %s.\n",
                XDisplayName(device));
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
     display = XDisplayString(priv->dpy);
 
     err = vdp_device_create_x11(priv->dpy, XDefaultScreen(priv->dpy),
                                 &hwctx->device, &hwctx->get_proc_address);
-    if (err != VDP_STATUS_OK) {
+    如果 (err != VDP_STATUS_OK) {
         av_log(ctx, AV_LOG_ERROR, "VDPAU device creation on X11 display %s failed.\n",
                display);
-        return AVERROR_UNKNOWN;
+        返回 AVERROR_UNKNOWN;
     }
 
     GET_CALLBACK(VDP_FUNC_ID_GET_INFORMATION_STRING, get_information_string);
@@ -506,7 +506,7 @@ static int vdpau_device_create(AVHWDeviceContext *ctx, const char *device,
     av_log(ctx, AV_LOG_VERBOSE, "Successfully created a VDPAU device (%s) on "
            "X11 display %s\n", vendor, display);
 
-    return 0;
+    返回 0;
 }
 #endif
 
@@ -517,7 +517,7 @@ const HWContextType ff_hwcontext_type_vdpau = {
     .device_hwctx_size    = sizeof(VDPAUDeviceContext),
     .frames_hwctx_size    = sizeof(VDPAUFramesContext),
 
-#if HAVE_VDPAU_X11
+#如果 HAVE_VDPAU_X11
     .device_create        = vdpau_device_create,
 #endif
     .device_init          = vdpau_device_init,

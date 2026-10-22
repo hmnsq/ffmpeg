@@ -30,12 +30,12 @@ static uint32_t randomv = MKTAG('L','A','V','U');
 
 static uint32_t av_get_random_seed_deterministic(void)
 {
-    return randomv = randomv * 1664525 + 1013904223;
+    返回 randomv = randomv * 1664525 + 1013904223;
 }
 
 static void test_av_parse_video_rate(void)
 {
-    int i;
+    整数 i;
     static const char *const rates[] = {
         "-inf",
         "inf",
@@ -64,8 +64,8 @@ static void test_av_parse_video_rate(void)
         " -21332.2324   ",
     };
 
-    for (i = 0; i < FF_ARRAY_ELEMS(rates); i++) {
-        int ret;
+    为 (i = 0; i < FF_ARRAY_ELEMS(rates); i++) {
+        整数 ret;
         AVRational q = { 0, 0 };
         ret = av_parse_video_rate(&q, rates[i]);
         printf("'%s' -> %d/%d %s\n",
@@ -75,7 +75,7 @@ static void test_av_parse_video_rate(void)
 
 static void test_av_parse_color(void)
 {
-    int i;
+    整数 i;
     uint8_t rgba[4];
     static const char *const color_names[] = {
         "bikeshed",
@@ -118,18 +118,18 @@ static void test_av_parse_color(void)
 
     av_log_set_level(AV_LOG_DEBUG);
 
-    for (i = 0;  i < FF_ARRAY_ELEMS(color_names); i++) {
-        if (av_parse_color(rgba, color_names[i], -1, NULL) >= 0)
+    为 (i = 0;  i < FF_ARRAY_ELEMS(color_names); i++) {
+        如果 (av_parse_color(rgba, color_names[i], -1, NULL) >= 0)
             printf("%s -> R(%d) G(%d) B(%d) A(%d)\n",
                    color_names[i], rgba[0], rgba[1], rgba[2], rgba[3]);
-        else
+        否则
             printf("%s -> error\n", color_names[i]);
     }
 }
 
 static void test_av_small_strptime(void)
 {
-    int i;
+    整数 i;
     struct tm tm = { 0 };
     struct fmt_timespec_entry {
         const char *fmt, *timespec;
@@ -148,16 +148,16 @@ static void test_av_small_strptime(void)
     };
 
     av_log_set_level(AV_LOG_DEBUG);
-    for (i = 0;  i < FF_ARRAY_ELEMS(fmt_timespec_entries); i++) {
+    为 (i = 0;  i < FF_ARRAY_ELEMS(fmt_timespec_entries); i++) {
         char *p;
         struct fmt_timespec_entry *e = &fmt_timespec_entries[i];
         printf("fmt:'%s' spec:'%s' -> ", e->fmt, e->timespec);
         p = av_small_strptime(e->timespec, e->fmt, &tm);
-        if (p) {
+        如果 (p) {
             printf("%04d-%02d-%2d %02d:%02d:%02d\n",
                    1900+tm.tm_year, tm.tm_mon+1, tm.tm_mday,
                    tm.tm_hour, tm.tm_min, tm.tm_sec);
-        } else {
+        } 否则 {
             printf("error\n");
         }
     }
@@ -165,7 +165,7 @@ static void test_av_small_strptime(void)
 
 static void test_av_parse_time(void)
 {
-    int i;
+    整数 i;
     int64_t tv;
     time_t tvi;
     struct tm *tm;
@@ -194,24 +194,24 @@ static void test_av_parse_time(void)
     av_log_set_level(AV_LOG_DEBUG);
     putenv(tzstr);
     printf("(now is 2012-03-17 09:14:13.2 +0100, local time is UTC+1)\n");
-    for (i = 0;  i < FF_ARRAY_ELEMS(time_string); i++) {
+    为 (i = 0;  i < FF_ARRAY_ELEMS(time_string); i++) {
         printf("%-24s -> ", time_string[i]);
-        if (av_parse_time(&tv, time_string[i], 0)) {
+        如果 (av_parse_time(&tv, time_string[i], 0)) {
             printf("error\n");
-        } else {
+        } 否则 {
             tvi = tv / 1000000;
             tm = gmtime(&tvi);
             printf("%14"PRIi64".%06d = %04d-%02d-%02dT%02d:%02d:%02dZ\n",
-                   tv / 1000000, (int)(tv % 1000000),
+                   tv / 1000000, (整数)(tv % 1000000),
                    tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
                    tm->tm_hour, tm->tm_min, tm->tm_sec);
         }
     }
-    for (i = 0;  i < FF_ARRAY_ELEMS(duration_string); i++) {
+    为 (i = 0;  i < FF_ARRAY_ELEMS(duration_string); i++) {
         printf("%-24s -> ", duration_string[i]);
-        if (av_parse_time(&tv, duration_string[i], 1)) {
+        如果 (av_parse_time(&tv, duration_string[i], 1)) {
             printf("error\n");
-        } else {
+        } 否则 {
             printf("%+21"PRIi64"\n", tv);
         }
     }
@@ -219,16 +219,16 @@ static void test_av_parse_time(void)
 
 static void test_av_get_known_color_name(void)
 {
-    int i;
+    整数 i;
     const uint8_t *rgba;
     const char *color;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_table); ++i) {
+    为 (i = 0; i < FF_ARRAY_ELEMS(color_table); ++i) {
         color = av_get_known_color_name(i, &rgba);
-        if (color)
+        如果 (color)
             printf("%s -> R(%d) G(%d) B(%d) A(%d)\n",
                     color, rgba[0], rgba[1], rgba[2], rgba[3]);
-        else
+        否则
             printf("Color ID: %d not found\n", i);
     }
 }
@@ -238,17 +238,17 @@ static void test_av_find_info_tag(void)
     static const char args[] = "?tag1=val1&tag2=val2&tag3=val3&tag41=value 41&tag42=random1";
     static const char *tags[] = {"tag1", "tag2", "tag3", "tag4", "tag41", "41", "random1"};
     char buff[16];
-    int i;
+    整数 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(tags); ++i) {
-        if (av_find_info_tag(buff, sizeof(buff), tags[i], args))
+    为 (i = 0; i < FF_ARRAY_ELEMS(tags); ++i) {
+        如果 (av_find_info_tag(buff, sizeof(buff), tags[i], args))
             printf("%d. %s found: %s\n", i, tags[i], buff);
-        else
+        否则
             printf("%d. %s not found\n", i, tags[i]);
     }
 }
 
-int main(void)
+整数 主要(void)
 {
     printf("Testing av_parse_video_rate()\n");
     test_av_parse_video_rate();
@@ -267,5 +267,5 @@ int main(void)
 
     printf("\nTesting av_find_info_tag()\n");
     test_av_find_info_tag();
-    return 0;
+    返回 0;
 }

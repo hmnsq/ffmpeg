@@ -37,7 +37,7 @@ static const char *UUID_BAD_2 = "75df62c2999b4bd38c9d8058fcde9123";
 static const char *UUID_BAD_3 = "a1b9a05e-f1d1-464g-a951-1ba0a374f02";
 static const char *UUID_BAD_4 = "279c66d432-7b39-41d5-966f-5e8138265c20";
 
-int main(int argc, char **argv)
+整数 主要(整数 argc, char **argv)
 {
     AVUUID uuid;
     AVUUID uuid2 = {0x32, 0xc7, 0x00, 0xc4, 0xd5, 0xd7, 0x42, 0x0,
@@ -45,97 +45,97 @@ int main(int argc, char **argv)
 
     /* test parsing */
 
-    if (av_uuid_parse(UUID_1, uuid))
-        return 1;
+    如果 (av_uuid_parse(UUID_1, uuid))
+        返回 1;
 
-    if (!av_uuid_equal(uuid, UUID_1_BYTES))
-        return 1;
+    如果 (!av_uuid_equal(uuid, UUID_1_BYTES))
+        返回 1;
 
     /* test nil */
 
     av_uuid_nil(uuid);
 
-    if (!av_uuid_equal(uuid, UUID_NIL))
-        return 1;
+    如果 (!av_uuid_equal(uuid, UUID_NIL))
+        返回 1;
 
     /* test equality */
 
-    if (av_uuid_equal(UUID_1_BYTES, uuid2))
-        return 1;
+    如果 (av_uuid_equal(UUID_1_BYTES, uuid2))
+        返回 1;
 
     /* test copy */
 
     av_uuid_copy(uuid2, UUID_1_BYTES);
 
-    if (!av_uuid_equal(uuid2, UUID_1_BYTES))
-        return 1;
+    如果 (!av_uuid_equal(uuid2, UUID_1_BYTES))
+        返回 1;
 
     /* test uppercase parsing */
 
-    if (av_uuid_parse(UUID_1_UC, uuid))
-        return 1;
+    如果 (av_uuid_parse(UUID_1_UC, uuid))
+        返回 1;
 
-    if (!av_uuid_equal(uuid, UUID_1_BYTES))
-        return 1;
+    如果 (!av_uuid_equal(uuid, UUID_1_BYTES))
+        返回 1;
 
     /* test mixed-case parsing */
 
-    if (av_uuid_parse(UUID_1_MIXED, uuid))
-        return 1;
+    如果 (av_uuid_parse(UUID_1_MIXED, uuid))
+        返回 1;
 
-    if (!av_uuid_equal(uuid, UUID_1_BYTES))
-        return 1;
+    如果 (!av_uuid_equal(uuid, UUID_1_BYTES))
+        返回 1;
 
     /* test URN uuid parse */
 
-    if (av_uuid_urn_parse(UUID_1_URN, uuid))
-        return 1;
+    如果 (av_uuid_urn_parse(UUID_1_URN, uuid))
+        返回 1;
 
-    if (!av_uuid_equal(uuid, UUID_1_BYTES))
-        return 1;
+    如果 (!av_uuid_equal(uuid, UUID_1_BYTES))
+        返回 1;
 
     /* test parse range */
 
-    if (av_uuid_parse_range(UUID_1_URN + 9, UUID_1_URN + 45, uuid))
-        return 1;
+    如果 (av_uuid_parse_range(UUID_1_URN + 9, UUID_1_URN + 45, uuid))
+        返回 1;
 
-    if (!av_uuid_equal(uuid, UUID_1_BYTES))
-        return 1;
+    如果 (!av_uuid_equal(uuid, UUID_1_BYTES))
+        返回 1;
 
     /* test bad parse range */
 
-    if (!av_uuid_parse_range(UUID_1_URN + 9, UUID_1_URN + 44, uuid))
-        return 1;
+    如果 (!av_uuid_parse_range(UUID_1_URN + 9, UUID_1_URN + 44, uuid))
+        返回 1;
 
     /* test bad parse range 2 */
 
-    if (!av_uuid_parse_range(UUID_1_URN + 8, UUID_1_URN + 44, uuid))
-        return 1;
+    如果 (!av_uuid_parse_range(UUID_1_URN + 8, UUID_1_URN + 44, uuid))
+        返回 1;
 
     /* test bad parse range 2 */
 
-    if (!av_uuid_parse_range(UUID_1_URN + 8, UUID_1_URN + 45, uuid))
-        return 1;
+    如果 (!av_uuid_parse_range(UUID_1_URN + 8, UUID_1_URN + 45, uuid))
+        返回 1;
 
     /* test bad uuid 1 */
 
-    if (!av_uuid_parse(UUID_BAD_1, uuid))
-        return 1;
+    如果 (!av_uuid_parse(UUID_BAD_1, uuid))
+        返回 1;
 
     /* test bad uuid 2 */
 
-    if (!av_uuid_parse(UUID_BAD_2, uuid))
-        return 1;
+    如果 (!av_uuid_parse(UUID_BAD_2, uuid))
+        返回 1;
 
     /* test bad uuid 3 */
 
-    if (!av_uuid_parse(UUID_BAD_3, uuid))
-        return 1;
+    如果 (!av_uuid_parse(UUID_BAD_3, uuid))
+        返回 1;
 
     /* test bad uuid 4 */
 
-    if (!av_uuid_parse(UUID_BAD_4, uuid))
-        return 1;
+    如果 (!av_uuid_parse(UUID_BAD_4, uuid))
+        返回 1;
 
-    return 0;
+    返回 0;
 }

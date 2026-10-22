@@ -25,10 +25,10 @@ AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *size)
 {
     AVDynamicHDRVivid *hdr_vivid = av_mallocz(sizeof(AVDynamicHDRVivid));
 
-    if (size)
+    如果 (size)
         *size = hdr_vivid ? sizeof(*hdr_vivid) : 0;
 
-    return hdr_vivid;
+    返回 hdr_vivid;
 }
 
 AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_data(AVFrame *frame)
@@ -36,10 +36,10 @@ AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_data(AVFrame *frame)
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_DYNAMIC_HDR_VIVID,
                                                         sizeof(AVDynamicHDRVivid));
-    if (!side_data)
-        return NULL;
+    如果 (!side_data)
+        返回 NULL;
 
     memset(side_data->data, 0, sizeof(AVDynamicHDRVivid));
 
-    return (AVDynamicHDRVivid *)side_data->data;
+    返回 (AVDynamicHDRVivid *)side_data->data;
 }

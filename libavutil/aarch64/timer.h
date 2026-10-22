@@ -24,7 +24,7 @@
 #include <stdint.h>
 #include "config.h"
 
-#if HAVE_INLINE_ASM
+#如果 HAVE_INLINE_ASM
 
 #define AV_READ_TIME read_time
 
@@ -38,7 +38,7 @@ static inline uint64_t read_time(void)
         "mrs %0, cntvct_el0        "
         : "=r"(cycle_counter) :: "memory" );
 
-    return cycle_counter;
+    返回 cycle_counter;
 }
 
 #endif /* HAVE_INLINE_ASM */

@@ -24,30 +24,30 @@
 #include "libavutil/mem.h"
 #include "libavutil/ripemd.h"
 
-int main(void)
+整数 主要(void)
 {
-    int i, j, k;
+    整数 i, j, k;
     struct AVRIPEMD *ctx;
     unsigned char digest[40];
-    static const int lengths[4] = { 128, 160, 256, 320 };
+    static const 整数 lengths[4] = { 128, 160, 256, 320 };
 
     ctx = av_ripemd_alloc();
-    if (!ctx)
-        return 1;
+    如果 (!ctx)
+        返回 1;
 
-    for (j = 0; j < 4; j++) {
+    为 (j = 0; j < 4; j++) {
         printf("Testing RIPEMD-%d\n", lengths[j]);
-        for (k = 0; k < 3; k++) {
+        为 (k = 0; k < 3; k++) {
             av_ripemd_init(ctx, lengths[j]);
-            if (k == 0)
+            如果 (k == 0)
                 av_ripemd_update(ctx, "abc", 3);
-            else if (k == 1)
+            否则 如果 (k == 1)
                 av_ripemd_update(ctx, "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq", 56);
-            else
-                for (i = 0; i < 1000*1000; i++)
+            否则
+                为 (i = 0; i < 1000*1000; i++)
                     av_ripemd_update(ctx, "a", 1);
             av_ripemd_final(ctx, digest);
-            for (i = 0; i < lengths[j] >> 3; i++)
+            为 (i = 0; i < lengths[j] >> 3; i++)
                 printf("%02X", digest[i]);
             putchar('\n');
         }
@@ -76,5 +76,5 @@ int main(void)
     }
     av_free(ctx);
 
-    return 0;
+    返回 0;
 }

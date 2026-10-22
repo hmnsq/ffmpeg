@@ -122,7 +122,7 @@ struct AVHashContext;
  * @note The context is not initialized after a call to this function; you must
  * call av_hash_init() to do so.
  */
-int av_hash_alloc(struct AVHashContext **ctx, const char *name);
+整数 av_hash_alloc(struct AVHashContext **ctx, const char *name);
 
 /**
  * Get the names of available hash algorithms.
@@ -132,7 +132,7 @@ int av_hash_alloc(struct AVHashContext **ctx, const char *name);
  * @param[in] i  Index of the hash algorithm, starting from 0
  * @return       Pointer to a static string or `NULL` if `i` is out of range
  */
-const char *av_hash_names(int i);
+const char *av_hash_names(整数 i);
 
 /**
  * Get the name of the algorithm corresponding to the given hash context.
@@ -164,7 +164,7 @@ const char *av_hash_get_name(const struct AVHashContext *ctx);
  * @param[in]     ctx Hash context
  * @return            Size of the hash value in bytes
  */
-int av_hash_get_size(const struct AVHashContext *ctx);
+整数 av_hash_get_size(const struct AVHashContext *ctx);
 
 /**
  * Initialize or reset a hash context.
@@ -211,7 +211,7 @@ void av_hash_final(struct AVHashContext *ctx, uint8_t *dst);
  * @param[out]    dst  Where the final hash value will be stored
  * @param[in]     size Number of bytes to write to `dst`
  */
-void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, int size);
+void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, 整数 size);
 
 /**
  * Finalize a hash context and store the hexadecimal representation of the
@@ -229,7 +229,7 @@ void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, int size);
  * @param[out]    dst  Where the string will be stored
  * @param[in]     size Maximum number of bytes to write to `dst`
  */
-void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, int size);
+void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, 整数 size);
 
 /**
  * Finalize a hash context and store the Base64 representation of the
@@ -247,7 +247,7 @@ void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, int size);
  * @param[out]    dst  Where the final hash value will be stored
  * @param[in]     size Maximum number of bytes to write to `dst`
  */
-void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, int size);
+void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, 整数 size);
 
 /**
  * Free hash context and set hash context pointer to `NULL`.

@@ -27,28 +27,28 @@
 
 typedef uint32_t (*random_seed_ptr_t)(void);
 
-int main(void)
+整数 主要(void)
 {
-    int i, j, rsf, retry;
+    整数 i, j, rsf, retry;
     uint32_t seeds[N];
     random_seed_ptr_t random_seed[F] = {av_get_random_seed, get_generic_seed};
 
-    for (rsf=0; rsf<F; ++rsf){
-        for (retry=0; retry<3; retry++){
-            for (i=0; i<N; i++){
+    为 (rsf=0; rsf<F; ++rsf){
+        为 (retry=0; retry<3; retry++){
+            为 (i=0; i<N; i++){
                 seeds[i] = random_seed[rsf]();
-                for (j=0; j<i; j++)
-                    if (seeds[j] == seeds[i])
+                为 (j=0; j<i; j++)
+                    如果 (seeds[j] == seeds[i])
                         goto retry;
             }
             printf("seeds OK\n");
             break;
             retry:;
         }
-        if (retry >= 3) {
+        如果 (retry >= 3) {
             printf("rsf %d: FAIL at %d with %"PRIX32"\n", rsf, j, seeds[j]);
-            return 1;
+            返回 1;
         }
     }
-    return 0;
+    返回 0;
 }

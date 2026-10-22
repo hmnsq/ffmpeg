@@ -24,7 +24,7 @@
 #include "libavutil/rational.h"
 #include "libavutil/timestamp.h"
 
-int main(void)
+整数 主要(void)
 {
     char buf[AV_TS_MAX_STRING_SIZE];
     static const struct { const char *label; int64_t ts; } ts_vals[] = {
@@ -46,7 +46,7 @@ int main(void)
 
     /* av_ts_make_string */
     printf("Testing av_ts_make_string()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(ts_vals); i++)
+    为 (整数 i = 0; i < FF_ARRAY_ELEMS(ts_vals); i++)
         printf("%s: %s\n", ts_vals[i].label,
                av_ts_make_string(buf, ts_vals[i].ts));
 
@@ -57,7 +57,7 @@ int main(void)
 
     /* av_ts_make_time_string2 */
     printf("\nTesting av_ts_make_time_string2()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(time_vals); i++)
+    为 (整数 i = 0; i < FF_ARRAY_ELEMS(time_vals); i++)
         printf("%s: %s\n", time_vals[i].label,
                av_ts_make_time_string2(buf, time_vals[i].ts, time_vals[i].tb));
 
@@ -71,5 +71,5 @@ int main(void)
                av_ts_make_time_string(buf, AV_NOPTS_VALUE, &tb));
     }
 
-    return 0;
+    返回 0;
 }

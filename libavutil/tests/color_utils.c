@@ -27,10 +27,10 @@
 #include "libavutil/pixdesc.h"
 #include "libavutil/pixfmt.h"
 
-static inline int fuzzy_equal(double a, double b)
+static inline 整数 fuzzy_equal(double a, double b)
 {
     const double epsilon = fmax(fmax(fabs(a), fabs(b)), 1.0) * 1e-7;
-    return fabs(a - b) <= epsilon;
+    返回 fabs(a - b) <= epsilon;
 }
 
 #define TEST_EOTF(func, input, ref) do                              \
@@ -38,18 +38,18 @@ static inline int fuzzy_equal(double a, double b)
     const double _b[3] = { (ref)[0], (ref)[1], (ref)[2] };          \
     double _a[3] = { (input)[0], (input)[1], (input)[2] };          \
     func(Lw, Lb, _a);                                               \
-    for (int _i = 0; _i < 3; _i++) {                                \
-        if (!fuzzy_equal(_a[_i], _b[_i])) {                         \
+    为 (整数 _i = 0; _i < 3; _i++) {                                \
+        如果 (!fuzzy_equal(_a[_i], _b[_i])) {                         \
             printf("FAIL: trc=%s %s(%g, %g, %s) != %s\n"            \
                    "  expected {%g, %g, %g}, got {%g, %g, %g}\n",   \
                     trc_name, #func, Lw, Lb, #input, #ref,          \
                     _b[0], _b[1], _b[2], _a[0], _a[1], _a[2]);      \
-            return 1;                                               \
+            返回 1;                                               \
         }                                                           \
     }                                                               \
-} while (0)
+} 当 (0)
 
-int main(int argc, char *argv[])
+整数 主要(整数 argc, char *argv[])
 {
     static const double test_data[] = {
         -0.1, -0.018053968510807, -0.01, -0.00449, 0.0, 0.00316227760, 0.005,
@@ -57,43 +57,43 @@ int main(int argc, char *argv[])
         15123.4567, 19845.88923, 98678.4231, 99999.899998
     };
 
-    for (enum AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
-        if (trc == AVCOL_TRC_NB)
+    为 (enum AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
+        如果 (trc == AVCOL_TRC_NB)
             trc = AVCOL_TRC_EXT_BASE;
 
         av_csp_trc_function func = av_csp_trc_func_from_id(trc);
         av_csp_trc_function func_inv = av_csp_trc_func_inv_from_id(trc);
         const char *name = av_color_transfer_name(trc);
-        if (!func)
+        如果 (!func)
             continue;
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(test_data); i++) {
+        为 (整数 i = 0; i < FF_ARRAY_ELEMS(test_data); i++) {
             double result = func(test_data[i]);
             double roundtrip = func_inv(result);
             printf("trc=%s calling func(%f) expected=%f roundtrip=%f\n",
                     name, test_data[i], result, roundtrip);
 
-            if (result > 0.0 && fabs(roundtrip - test_data[i]) > 1e-7) {
+            如果 (result > 0.0 && fabs(roundtrip - test_data[i]) > 1e-7) {
                 printf("  FAIL\n");
-                return 1;
+                返回 1;
             }
         }
     }
 
-    for (enum AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
-        if (trc == AVCOL_TRC_NB)
+    为 (enum AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
+        如果 (trc == AVCOL_TRC_NB)
             trc = AVCOL_TRC_EXT_BASE;
 
         av_csp_eotf_function eotf = av_csp_itu_eotf(trc);
         av_csp_eotf_function eotf_inv = av_csp_itu_eotf_inv(trc);
         const char *trc_name = av_color_transfer_name(trc);
-        if (!eotf)
+        如果 (!eotf)
             continue;
 
-        if (trc == AVCOL_TRC_SMPTE2084) {
+        如果 (trc == AVCOL_TRC_SMPTE2084) {
             /* This one is equivalent to the TRC already tested above */
             continue;
-        } else if (trc == AVCOL_TRC_SMPTE428) {
+        } 否则 如果 (trc == AVCOL_TRC_SMPTE428) {
             /* Test vectors from SMPTE RP-431-2 */
             const struct { double E_xyz[3]; double luma; } tests[] = {
             #define XYZ(X, Y, Z) { X / 4095.0, Y / 4095.0, Z / 4095.0 }
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
             const double Lb = luminance / (contrast - 1);
             const double Lw = Lb + luminance;
 
-            for (int i = 0; i < FF_ARRAY_ELEMS(tests); i++) {
+            为 (整数 i = 0; i < FF_ARRAY_ELEMS(tests); i++) {
                 double L_xyz[3];
                 memcpy(L_xyz, tests[i].E_xyz, sizeof(L_xyz));
                 eotf(Lw, Lb, L_xyz);
@@ -124,18 +124,18 @@ int main(int argc, char *argv[])
                        tests[i].E_xyz[0], tests[i].E_xyz[1], tests[i].E_xyz[2],
                        L_xyz[0], L_xyz[1], L_xyz[2], tests[i].luma);
 
-                if (fabs(L_xyz[1] - tests[i].luma) > 0.01) {
+                如果 (fabs(L_xyz[1] - tests[i].luma) > 0.01) {
                     printf("  FAIL\n");
-                    return 1;
+                    返回 1;
                 }
             }
-        } else {
+        } 否则 {
             /* Normal, display-relative RGB curve */
             static const double black_points[] = { 0.0, 1e-6, 0.1, 1.5 };
             static const double white_points[] = { 50.0, 100.0, 203.0, 1000.0, 10000.0 };
 
-            for (int i = 0; i < FF_ARRAY_ELEMS(black_points); i++) {
-                for (int j = 0; j < FF_ARRAY_ELEMS(white_points); j++) {
+            为 (整数 i = 0; i < FF_ARRAY_ELEMS(black_points); i++) {
+                为 (整数 j = 0; j < FF_ARRAY_ELEMS(white_points); j++) {
                     const double Lb = black_points[i];
                     const double Lw = white_points[j];
                     const double all0[3] = { 0.0, 0.0, 0.0 };
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
                     TEST_EOTF(eotf_inv, white, all1);
 
                     /* Test round-trip on grayscale ramp */
-                    for (double x = 0.0; x < 1.0; x += 0.1) {
+                    为 (double x = 0.0; x < 1.0; x += 0.1) {
                         const double E[3] = { x, x, x };
                         double L[3] = { x, x, x };
                         eotf(Lw, Lb, L);
@@ -159,9 +159,9 @@ int main(int argc, char *argv[])
                                trc_name, Lw, Lb, E[1], L[1]);
                         TEST_EOTF(eotf_inv, L, E);
 
-                        if (x > 0.0 && L[1] <= L_prev) {
+                        如果 (x > 0.0 && L[1] <= L_prev) {
                             printf("  FAIL: non-monotonic!\n");
-                            return 1;
+                            返回 1;
                         }
                         L_prev = L[1];
                     }

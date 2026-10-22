@@ -30,215 +30,215 @@
 #include "bprint.h"
 
 struct AVDictionary {
-    int count;
+    整数 count;
     AVDictionaryEntry *elems;
-    int duplicate_keys;
+    整数 duplicate_keys;
 };
 
-int av_dict_count(const AVDictionary *m)
+整数 av_dict_count(const AVDictionary *m)
 {
-    return m ? m->count : 0;
+    返回 m ? m->count : 0;
 }
 
 const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
                                          const AVDictionaryEntry *prev)
 {
-    int i = 0;
+    整数 i = 0;
 
-    if (!m)
-        return NULL;
+    如果 (!m)
+        返回 NULL;
 
-    if (prev)
+    如果 (prev)
         i = prev - m->elems + 1;
 
     av_assert2(i >= 0);
-    if (i >= m->count)
-        return NULL;
+    如果 (i >= m->count)
+        返回 NULL;
 
-    return &m->elems[i];
+    返回 &m->elems[i];
 }
 
 AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags)
+                               const AVDictionaryEntry *prev, 整数 flags)
 {
     const AVDictionaryEntry *entry = prev;
-    unsigned int j;
+    unsigned 整数 j;
 
-    if (!key)
-        return NULL;
+    如果 (!key)
+        返回 NULL;
 
-    while ((entry = av_dict_iterate(m, entry))) {
+    当 ((entry = av_dict_iterate(m, entry))) {
         const char *s = entry->key;
-        if (flags & AV_DICT_MATCH_CASE)
-            for (j = 0; s[j] == key[j] && key[j]; j++)
+        如果 (flags & AV_DICT_MATCH_CASE)
+            为 (j = 0; s[j] == key[j] && key[j]; j++)
                 ;
-        else
-            for (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
+        否则
+            为 (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
                 ;
-        if (key[j])
+        如果 (key[j])
             continue;
-        if (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
+        如果 (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
             continue;
-        return (AVDictionaryEntry *)entry;
+        返回 (AVDictionaryEntry *)entry;
     }
-    return NULL;
+    返回 NULL;
 }
 
-int av_dict_set(AVDictionary **pm, const char *key, const char *value,
-                int flags)
+整数 av_dict_set(AVDictionary **pm, const char *key, const char *value,
+                整数 flags)
 {
     AVDictionary *m = *pm;
     AVDictionaryEntry *tag = NULL;
     char *copy_key = NULL, *copy_value = NULL;
-    int err;
+    整数 err;
 
-    if (flags & AV_DICT_DONT_STRDUP_VAL)
+    如果 (flags & AV_DICT_DONT_STRDUP_VAL)
         copy_value = (void *)value;
-    else if (value)
+    否则 如果 (value)
         copy_value = av_strdup(value);
-    if (!key) {
+    如果 (!key) {
         err = AVERROR(EINVAL);
         goto err_out;
     }
-    if (flags & AV_DICT_DONT_STRDUP_KEY)
+    如果 (flags & AV_DICT_DONT_STRDUP_KEY)
         copy_key = (void *)key;
-    else
+    否则
         copy_key = av_strdup(key);
-    if (!copy_key || (value && !copy_value))
+    如果 (!copy_key || (value && !copy_value))
         goto enomem;
 
-    if (!(flags & AV_DICT_MULTIKEY)) {
+    如果 (!(flags & AV_DICT_MULTIKEY)) {
         tag = av_dict_get(m, key, NULL, flags);
-    } else if (flags & AV_DICT_DEDUP) {
-        while ((tag = av_dict_get(m, key, tag, flags))) {
-            if ((!value && !tag->value) ||
+    } 否则 如果 (flags & AV_DICT_DEDUP) {
+        当 ((tag = av_dict_get(m, key, tag, flags))) {
+            如果 ((!value && !tag->value) ||
                 (value && tag->value && !strcmp(value, tag->value))) {
                 av_free(copy_key);
                 av_free(copy_value);
-                return 0;
+                返回 0;
             }
         }
     }
-    if (!m)
+    如果 (!m)
         m = *pm = av_mallocz(sizeof(*m));
-    if (!m)
+    如果 (!m)
         goto enomem;
 
-    if (tag) {
-        if (flags & AV_DICT_DONT_OVERWRITE) {
+    如果 (tag) {
+        如果 (flags & AV_DICT_DONT_OVERWRITE) {
             av_free(copy_key);
             av_free(copy_value);
-            return 0;
+            返回 0;
         }
-        if (copy_value && flags & AV_DICT_APPEND) {
+        如果 (copy_value && flags & AV_DICT_APPEND) {
             size_t oldlen = strlen(tag->value);
             size_t new_part_len = strlen(copy_value);
             size_t len = oldlen + new_part_len + 1;
             char *newval = av_realloc(tag->value, len);
-            if (!newval)
+            如果 (!newval)
                 goto enomem;
             memcpy(newval + oldlen, copy_value, new_part_len + 1);
             av_freep(&copy_value);
             copy_value = newval;
-        } else
+        } 否则
             av_free(tag->value);
         av_free(tag->key);
         *tag = m->elems[--m->count];
-    } else if (copy_value) {
+    } 否则 如果 (copy_value) {
         AVDictionaryEntry *tmp = av_realloc_array(m->elems,
                                                   m->count + 1, sizeof(*m->elems));
-        if (!tmp)
+        如果 (!tmp)
             goto enomem;
         m->elems = tmp;
     }
-    if (copy_value) {
+    如果 (copy_value) {
         m->elems[m->count].key = copy_key;
         m->elems[m->count].value = copy_value;
         m->count++;
-        if (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
+        如果 (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
             m->duplicate_keys = 1;
-    } else {
+    } 否则 {
         err = 0;
         goto end;
     }
 
-    return 0;
+    返回 0;
 
 enomem:
     err = AVERROR(ENOMEM);
 err_out:
     av_free(copy_value);
 end:
-    if (m && !m->count) {
+    如果 (m && !m->count) {
         av_freep(&m->elems);
         av_freep(pm);
     }
     av_free(copy_key);
-    return err;
+    返回 err;
 }
 
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
-                int flags)
+整数 av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
+                整数 flags)
 {
     char valuestr[22];
     snprintf(valuestr, sizeof(valuestr), "%"PRId64, value);
     flags &= ~AV_DICT_DONT_STRDUP_VAL;
-    return av_dict_set(pm, key, valuestr, flags);
+    返回 av_dict_set(pm, key, valuestr, flags);
 }
 
-static int parse_key_value_pair(AVDictionary **pm, const char **buf,
+static 整数 parse_key_value_pair(AVDictionary **pm, const char **buf,
                                 const char *key_val_sep, const char *pairs_sep,
-                                int flags)
+                                整数 flags)
 {
     char *key = av_get_token(buf, key_val_sep);
     char *val = NULL;
-    int ret;
+    整数 ret;
 
-    if (key && *key && strspn(*buf, key_val_sep)) {
+    如果 (key && *key && strspn(*buf, key_val_sep)) {
         (*buf)++;
         val = av_get_token(buf, pairs_sep);
     }
 
-    if (key && *key && val && *val)
+    如果 (key && *key && val && *val)
         ret = av_dict_set(pm, key, val, flags);
-    else
+    否则
         ret = AVERROR(EINVAL);
 
     av_freep(&key);
     av_freep(&val);
 
-    return ret;
+    返回 ret;
 }
 
-int av_dict_parse_string(AVDictionary **pm, const char *str,
+整数 av_dict_parse_string(AVDictionary **pm, const char *str,
                          const char *key_val_sep, const char *pairs_sep,
-                         int flags)
+                         整数 flags)
 {
-    int ret;
+    整数 ret;
 
-    if (!str)
-        return 0;
+    如果 (!str)
+        返回 0;
 
     /* ignore STRDUP flags */
     flags &= ~(AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
 
-    while (*str) {
-        if ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
-            return ret;
+    当 (*str) {
+        如果 ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
+            返回 ret;
 
-        if (*str)
+        如果 (*str)
             str++;
     }
 
-    return 0;
+    返回 0;
 }
 
 void av_dict_free(AVDictionary **pm)
 {
     AVDictionary *m = *pm;
 
-    if (m) {
-        while (m->count--) {
+    如果 (m) {
+        当 (m->count--) {
             av_freep(&m->elems[m->count].key);
             av_freep(&m->elems[m->count].value);
         }
@@ -247,66 +247,66 @@ void av_dict_free(AVDictionary **pm)
     av_freep(pm);
 }
 
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags)
+整数 av_dict_copy(AVDictionary **dst, const AVDictionary *src, 整数 flags)
 {
     const AVDictionaryEntry *t = NULL;
 
-    if (!*dst && src && src->count && !src->duplicate_keys &&
+    如果 (!*dst && src && src->count && !src->duplicate_keys &&
         !(flags & AV_DICT_IGNORE_SUFFIX)) {
         AVDictionary *m = av_mallocz(sizeof(*m));
-        if (!m)
-            return AVERROR(ENOMEM);
+        如果 (!m)
+            返回 AVERROR(ENOMEM);
         m->elems = av_calloc(src->count, sizeof(*m->elems));
-        if (!m->elems) {
+        如果 (!m->elems) {
             av_free(m);
-            return AVERROR(ENOMEM);
+            返回 AVERROR(ENOMEM);
         }
         *dst = m;
-        for (int i = 0; i < src->count; i++) {
+        为 (整数 i = 0; i < src->count; i++) {
             m->elems[i].key   = av_strdup(src->elems[i].key);
             m->elems[i].value = av_strdup(src->elems[i].value);
             m->count++;
-            if (!m->elems[i].key || !m->elems[i].value) {
+            如果 (!m->elems[i].key || !m->elems[i].value) {
                 av_dict_free(dst);
-                return AVERROR(ENOMEM);
+                返回 AVERROR(ENOMEM);
             }
         }
-        return 0;
+        返回 0;
     }
 
-    while ((t = av_dict_iterate(src, t))) {
-        int ret = av_dict_set(dst, t->key, t->value, flags);
-        if (ret < 0)
-            return ret;
+    当 ((t = av_dict_iterate(src, t))) {
+        整数 ret = av_dict_set(dst, t->key, t->value, flags);
+        如果 (ret < 0)
+            返回 ret;
     }
 
-    return 0;
+    返回 0;
 }
 
-int av_dict_get_string(const AVDictionary *m, char **buffer,
+整数 av_dict_get_string(const AVDictionary *m, char **buffer,
                        const char key_val_sep, const char pairs_sep)
 {
     const AVDictionaryEntry *t = NULL;
     AVBPrint bprint;
-    int cnt = 0;
+    整数 cnt = 0;
     char special_chars[] = {pairs_sep, key_val_sep, '\0'};
 
-    if (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
+    如果 (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
         pairs_sep == '\\' || key_val_sep == '\\')
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
 
-    if (!av_dict_count(m)) {
+    如果 (!av_dict_count(m)) {
         *buffer = av_strdup("");
-        return *buffer ? 0 : AVERROR(ENOMEM);
+        返回 *buffer ? 0 : AVERROR(ENOMEM);
     }
 
     av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
-    while ((t = av_dict_iterate(m, t))) {
-        if (cnt++)
+    当 ((t = av_dict_iterate(m, t))) {
+        如果 (cnt++)
             av_bprint_append_data(&bprint, &pairs_sep, 1);
         av_bprint_escape(&bprint, t->key, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
         av_bprint_append_data(&bprint, &key_val_sep, 1);
         av_bprint_escape(&bprint, t->value, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
     }
-    return av_bprint_finalize(&bprint, buffer);
+    返回 av_bprint_finalize(&bprint, buffer);
 }

@@ -41,11 +41,11 @@ typedef struct AVRIPEMD {
     void     (*transform)(uint32_t *state, const uint8_t buffer[64]);
 } AVRIPEMD;
 
-const int av_ripemd_size = sizeof(AVRIPEMD);
+const 整数 av_ripemd_size = sizeof(AVRIPEMD);
 
 struct AVRIPEMD *av_ripemd_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVRIPEMD));
+    返回 av_mallocz(sizeof(struct AVRIPEMD));
 }
 
 static const uint32_t KA[4] = {
@@ -56,7 +56,7 @@ static const uint32_t KB[4] = {
     0x50a28be6, 0x5c4dd124, 0x6d703ef3, 0x7a6d76e9
 };
 
-static const int ROTA[80] = {
+static const 整数 ROTA[80] = {
     11, 14, 15, 12,  5,  8,  7 , 9, 11, 13, 14, 15,  6,  7,  9,  8,
      7 , 6,  8, 13, 11,  9,  7, 15,  7, 12, 15,  9, 11,  7, 13, 12,
     11, 13,  6,  7, 14,  9, 13, 15, 14,  8, 13,  6,  5, 12,  7,  5,
@@ -64,7 +64,7 @@ static const int ROTA[80] = {
      9, 15,  5, 11,  6,  8, 13, 12,  5, 12, 13, 14, 11,  8,  5,  6
 };
 
-static const int ROTB[80] = {
+static const 整数 ROTB[80] = {
      8,  9,  9, 11, 13, 15, 15,  5,  7,  7,  8, 11, 14, 14, 12,  6,
      9, 13, 15,  7, 12,  8,  9, 11,  7,  7, 12,  7,  6, 15, 13, 11,
      9,  7, 15, 11,  8,  6,  6, 14, 12, 13,  5, 14, 13, 13,  7,  5,
@@ -72,7 +72,7 @@ static const int ROTB[80] = {
      8,  5, 12,  9, 12,  5, 14,  6,  8, 13,  6,  5, 15, 13, 11, 11
 };
 
-static const int WA[80] = {
+static const 整数 WA[80] = {
      0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
      7,  4, 13,  1, 10,  6, 15,  3, 12,  0,  9,  5,  2, 14, 11,  8,
      3, 10, 14,  4,  9, 15,  8,  1,  2,  7,  0,  6, 13, 11,  5, 12,
@@ -80,7 +80,7 @@ static const int WA[80] = {
      4,  0,  5,  9,  7, 12,  2, 10, 14,  1,  3,  8, 11,  6, 15, 13
 };
 
-static const int WB[80] = {
+static const 整数 WB[80] = {
      5, 14,  7,  0,  9,  2, 11,  4, 13,  6, 15,  8,  1, 10,  3, 12,
      6, 11,  3,  7,  0, 13,  5, 10, 14, 15,  8, 12,  4,  9,  1,  2,
     15,  5,  1,  3,  7, 14,  6,  9, 11,  8, 12,  2, 10,  0,  4, 13,
@@ -138,42 +138,42 @@ static void ripemd128_transform(uint32_t *state, const uint8_t buffer[64])
 {
     uint32_t a, b, c, d, e, f, g, h, t av_unused;
     uint32_t block[16];
-    int n;
+    整数 n;
 
     a = e = state[0];
     b = f = state[1];
     c = g = state[2];
     d = h = state[3];
 
-    for (n = 0; n < 16; n++)
+    为 (n = 0; n < 16; n++)
         block[n] = AV_RL32(buffer + 4 * n);
     n = 0;
 
-#if CONFIG_SMALL
-    for (; n < 16;) {
+#如果 CONFIG_SMALL
+    为 (; n < 16;) {
         ROUND128_0_TO_15(a,b,c,d,e,f,g,h);
         t = d; d = c; c = b; b = a; a = t;
         t = h; h = g; g = f; f = e; e = t;
     }
 
-    for (; n < 32;) {
+    为 (; n < 32;) {
         ROUND128_16_TO_31(a,b,c,d,e,f,g,h);
         t = d; d = c; c = b; b = a; a = t;
         t = h; h = g; g = f; f = e; e = t;
     }
 
-    for (; n < 48;) {
+    为 (; n < 48;) {
         ROUND128_32_TO_47(a,b,c,d,e,f,g,h);
         t = d; d = c; c = b; b = a; a = t;
         t = h; h = g; g = f; f = e; e = t;
     }
 
-    for (; n < 64;) {
+    为 (; n < 64;) {
         ROUND128_48_TO_63(a,b,c,d,e,f,g,h);
         t = d; d = c; c = b; b = a; a = t;
         t = h; h = g; g = f; f = e; e = t;
     }
-#else
+#否则
 
     R128_0; R128_0; R128_0; R128_0;
 
@@ -195,44 +195,44 @@ static void ripemd256_transform(uint32_t *state, const uint8_t buffer[64])
 {
     uint32_t a, b, c, d, e, f, g, h, t av_unused;
     uint32_t block[16];
-    int n;
+    整数 n;
 
     a = state[0]; b = state[1]; c = state[2]; d = state[3];
     e = state[4]; f = state[5]; g = state[6]; h = state[7];
 
-    for (n = 0; n < 16; n++)
+    为 (n = 0; n < 16; n++)
         block[n] = AV_RL32(buffer + 4 * n);
     n = 0;
 
-#if CONFIG_SMALL
-    for (; n < 16;) {
+#如果 CONFIG_SMALL
+    为 (; n < 16;) {
         ROUND128_0_TO_15(a,b,c,d,e,f,g,h);
         t = d; d = c; c = b; b = a; a = t;
         t = h; h = g; g = f; f = e; e = t;
     }
     FFSWAP(uint32_t, a, e);
 
-    for (; n < 32;) {
+    为 (; n < 32;) {
         ROUND128_16_TO_31(a,b,c,d,e,f,g,h);
         t = d; d = c; c = b; b = a; a = t;
         t = h; h = g; g = f; f = e; e = t;
     }
     FFSWAP(uint32_t, b, f);
 
-    for (; n < 48;) {
+    为 (; n < 48;) {
         ROUND128_32_TO_47(a,b,c,d,e,f,g,h);
         t = d; d = c; c = b; b = a; a = t;
         t = h; h = g; g = f; f = e; e = t;
     }
     FFSWAP(uint32_t, c, g);
 
-    for (; n < 64;) {
+    为 (; n < 64;) {
         ROUND128_48_TO_63(a,b,c,d,e,f,g,h);
         t = d; d = c; c = b; b = a; a = t;
         t = h; h = g; g = f; f = e; e = t;
     }
     FFSWAP(uint32_t, d, h);
-#else
+#否则
 
     R128_0; R128_0; R128_0; R128_0;
     FFSWAP(uint32_t, a, e);
@@ -320,7 +320,7 @@ static void ripemd160_transform(uint32_t *state, const uint8_t buffer[64])
 {
     uint32_t a, b, c, d, e, f, g, h, i, j, t av_unused;
     uint32_t block[16];
-    int n;
+    整数 n;
 
     a = f = state[0];
     b = g = state[1];
@@ -328,41 +328,41 @@ static void ripemd160_transform(uint32_t *state, const uint8_t buffer[64])
     d = i = state[3];
     e = j = state[4];
 
-    for (n = 0; n < 16; n++)
+    为 (n = 0; n < 16; n++)
         block[n] = AV_RL32(buffer + 4 * n);
     n = 0;
 
-#if CONFIG_SMALL
-    for (; n < 16;) {
+#如果 CONFIG_SMALL
+    为 (; n < 16;) {
         ROUND160_0_TO_15(a,b,c,d,e,f,g,h,i,j);
         t = e; e = d; d = c; c = b; b = a; a = t;
         t = j; j = i; i = h; h = g; g = f; f = t;
     }
 
-    for (; n < 32;) {
+    为 (; n < 32;) {
         ROUND160_16_TO_31(a,b,c,d,e,f,g,h,i,j);
         t = e; e = d; d = c; c = b; b = a; a = t;
         t = j; j = i; i = h; h = g; g = f; f = t;
     }
 
-    for (; n < 48;) {
+    为 (; n < 48;) {
         ROUND160_32_TO_47(a,b,c,d,e,f,g,h,i,j);
         t = e; e = d; d = c; c = b; b = a; a = t;
         t = j; j = i; i = h; h = g; g = f; f = t;
     }
 
-    for (; n < 64;) {
+    为 (; n < 64;) {
         ROUND160_48_TO_63(a,b,c,d,e,f,g,h,i,j);
         t = e; e = d; d = c; c = b; b = a; a = t;
         t = j; j = i; i = h; h = g; g = f; f = t;
     }
 
-    for (; n < 80;) {
+    为 (; n < 80;) {
         ROUND160_64_TO_79(a,b,c,d,e,f,g,h,i,j);
         t = e; e = d; d = c; c = b; b = a; a = t;
         t = j; j = i; i = h; h = g; g = f; f = t;
     }
-#else
+#否则
 
     R160_0; R160_0; R160_0;
     ROUND160_0_TO_15(a,b,c,d,e,f,g,h,i,j);
@@ -392,51 +392,51 @@ static void ripemd320_transform(uint32_t *state, const uint8_t buffer[64])
 {
     uint32_t a, b, c, d, e, f, g, h, i, j, t av_unused;
     uint32_t block[16];
-    int n;
+    整数 n;
 
     a = state[0]; b = state[1]; c = state[2]; d = state[3]; e = state[4];
     f = state[5]; g = state[6]; h = state[7]; i = state[8]; j = state[9];
 
-    for (n = 0; n < 16; n++)
+    为 (n = 0; n < 16; n++)
         block[n] = AV_RL32(buffer + 4 * n);
     n = 0;
 
-#if CONFIG_SMALL
-    for (; n < 16;) {
+#如果 CONFIG_SMALL
+    为 (; n < 16;) {
         ROUND160_0_TO_15(a,b,c,d,e,f,g,h,i,j);
         t = e; e = d; d = c; c = b; b = a; a = t;
         t = j; j = i; i = h; h = g; g = f; f = t;
     }
     FFSWAP(uint32_t, b, g);
 
-    for (; n < 32;) {
+    为 (; n < 32;) {
         ROUND160_16_TO_31(a,b,c,d,e,f,g,h,i,j);
         t = e; e = d; d = c; c = b; b = a; a = t;
         t = j; j = i; i = h; h = g; g = f; f = t;
     }
     FFSWAP(uint32_t, d, i);
 
-    for (; n < 48;) {
+    为 (; n < 48;) {
         ROUND160_32_TO_47(a,b,c,d,e,f,g,h,i,j);
         t = e; e = d; d = c; c = b; b = a; a = t;
         t = j; j = i; i = h; h = g; g = f; f = t;
     }
     FFSWAP(uint32_t, a, f);
 
-    for (; n < 64;) {
+    为 (; n < 64;) {
         ROUND160_48_TO_63(a,b,c,d,e,f,g,h,i,j);
         t = e; e = d; d = c; c = b; b = a; a = t;
         t = j; j = i; i = h; h = g; g = f; f = t;
     }
     FFSWAP(uint32_t, c, h);
 
-    for (; n < 80;) {
+    为 (; n < 80;) {
         ROUND160_64_TO_79(a,b,c,d,e,f,g,h,i,j);
         t = e; e = d; d = c; c = b; b = a; a = t;
         t = j; j = i; i = h; h = g; g = f; f = t;
     }
     FFSWAP(uint32_t, e, j);
-#else
+#否则
 
     R160_0; R160_0; R160_0;
     ROUND160_0_TO_15(a,b,c,d,e,f,g,h,i,j);
@@ -463,7 +463,7 @@ static void ripemd320_transform(uint32_t *state, const uint8_t buffer[64])
     state[5] += f; state[6] += g; state[7] += h; state[8] += i; state[9] += j;
 }
 
-av_cold int av_ripemd_init(AVRIPEMD *ctx, int bits)
+av_cold 整数 av_ripemd_init(AVRIPEMD *ctx, 整数 bits)
 {
     ctx->digest_len = bits >> 5;
     switch (bits) {
@@ -507,29 +507,29 @@ av_cold int av_ripemd_init(AVRIPEMD *ctx, int bits)
         ctx->transform = ripemd320_transform;
         break;
     default:
-        return AVERROR(EINVAL);
+        返回 AVERROR(EINVAL);
     }
     ctx->count = 0;
-    return 0;
+    返回 0;
 }
 
 void av_ripemd_update(AVRIPEMD* ctx, const uint8_t* data, size_t len)
 {
-    unsigned int j;
+    unsigned 整数 j;
     size_t i;
 
     j = ctx->count & 63;
     ctx->count += len;
-#if CONFIG_SMALL
-    for (i = 0; i < len; i++) {
+#如果 CONFIG_SMALL
+    为 (i = 0; i < len; i++) {
         ctx->buffer[j++] = data[i];
-        if (64 == j) {
+        如果 (64 == j) {
             ctx->transform(ctx->state, ctx->buffer);
             j = 0;
         }
     }
-#else
-    if (len >= 64 - j) {
+#否则
+    如果 (len >= 64 - j) {
         const uint8_t *end;
         memcpy(&ctx->buffer[j], data, (i = 64 - j));
         ctx->transform(ctx->state, ctx->buffer);
@@ -537,7 +537,7 @@ void av_ripemd_update(AVRIPEMD* ctx, const uint8_t* data, size_t len)
         len  -= i;
         end   = data + (len & ~63);
         len   = len % 64;
-        for (; data < end; data += 64)
+        为 (; data < end; data += 64)
             ctx->transform(ctx->state, data);
         j = 0;
     }
@@ -547,13 +547,13 @@ void av_ripemd_update(AVRIPEMD* ctx, const uint8_t* data, size_t len)
 
 void av_ripemd_final(AVRIPEMD* ctx, uint8_t *digest)
 {
-    int i;
+    整数 i;
     uint64_t finalcount = av_le2ne64(ctx->count << 3);
 
     av_ripemd_update(ctx, "\200", 1);
-    while ((ctx->count & 63) != 56)
+    当 ((ctx->count & 63) != 56)
         av_ripemd_update(ctx, "", 1);
     av_ripemd_update(ctx, (uint8_t *)&finalcount, 8); /* Should cause a transform() */
-    for (i = 0; i < ctx->digest_len; i++)
+    为 (i = 0; i < ctx->digest_len; i++)
         AV_WL32(digest + i*4, ctx->state[i]);
 }
