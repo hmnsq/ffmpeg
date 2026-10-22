@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ضمن <string.h>
 
-#include "encryption_info.h"
-#include "error.h"
-#include "mem.h"
-#include "intreadwrite.h"
+#ضمن "encryption_info.h"
+#ضمن "error.h"
+#ضمن "mem.h"
+#ضمن "intreadwrite.h"
 
 #define FF_ENCRYPTION_INFO_EXTRA 24
 
@@ -39,127 +39,127 @@
 //   u32be bytes_of_protected_data
 // }[subsample_count]
 
-AVEncryptionInfo *av_encryption_info_alloc(uint32_t subsample_count, uint32_t key_id_size, uint32_t iv_size)
+AVEncryptionInfo *av_encryption_info_alloc(uint32_t subsample_عدد, uint32_t مفتاح_id_size, uint32_t iv_size)
 {
     AVEncryptionInfo *info;
 
-    info = av_mallocz(sizeof(*info));
-    if (!info)
-        return NULL;
+    info = av_mallocz(حجم(*info));
+    إذا (!info)
+        أرجع عدم;
 
-    info->key_id = av_mallocz(key_id_size);
-    info->key_id_size = key_id_size;
+    info->مفتاح_id = av_mallocz(مفتاح_id_size);
+    info->مفتاح_id_size = مفتاح_id_size;
     info->iv = av_mallocz(iv_size);
     info->iv_size = iv_size;
-    info->subsamples = av_calloc(subsample_count, sizeof(*info->subsamples));
-    info->subsample_count = subsample_count;
+    info->subsamples = av_calloc(subsample_عدد, حجم(*info->subsamples));
+    info->subsample_عدد = subsample_عدد;
 
     // Allow info->subsamples to be NULL if there are no subsamples.
-    if (!info->key_id || !info->iv || (!info->subsamples && subsample_count)) {
+    إذا (!info->مفتاح_id || !info->iv || (!info->subsamples && subsample_عدد)) {
         av_encryption_info_free(info);
-        return NULL;
+        أرجع عدم;
     }
 
-    return info;
+    أرجع info;
 }
 
-AVEncryptionInfo *av_encryption_info_clone(const AVEncryptionInfo *info)
+AVEncryptionInfo *av_encryption_info_clone(ثابت AVEncryptionInfo *info)
 {
     AVEncryptionInfo *ret;
 
-    ret = av_encryption_info_alloc(info->subsample_count, info->key_id_size, info->iv_size);
-    if (!ret)
-        return NULL;
+    ret = av_encryption_info_alloc(info->subsample_عدد, info->مفتاح_id_size, info->iv_size);
+    إذا (!ret)
+        أرجع عدم;
 
     ret->scheme = info->scheme;
     ret->crypt_byte_block = info->crypt_byte_block;
     ret->skip_byte_block = info->skip_byte_block;
     memcpy(ret->iv, info->iv, info->iv_size);
-    memcpy(ret->key_id, info->key_id, info->key_id_size);
-    memcpy(ret->subsamples, info->subsamples, sizeof(*info->subsamples) * info->subsample_count);
-    return ret;
+    memcpy(ret->مفتاح_id, info->مفتاح_id, info->مفتاح_id_size);
+    memcpy(ret->subsamples, info->subsamples, حجم(*info->subsamples) * info->subsample_عدد);
+    أرجع ret;
 }
 
-void av_encryption_info_free(AVEncryptionInfo *info)
+فراغ av_encryption_info_free(AVEncryptionInfo *info)
 {
-    if (info) {
-        av_free(info->key_id);
+    إذا (info) {
+        av_free(info->مفتاح_id);
         av_free(info->iv);
         av_free(info->subsamples);
         av_free(info);
     }
 }
 
-AVEncryptionInfo *av_encryption_info_get_side_data(const uint8_t* buffer, size_t size)
+AVEncryptionInfo *av_encryption_info_get_side_data(ثابت uint8_t* buffer, size_t size)
 {
     AVEncryptionInfo *info;
-    uint64_t key_id_size, iv_size, subsample_count, i;
+    uint64_t مفتاح_id_size, iv_size, subsample_عدد, i;
 
-    if (!buffer || size < FF_ENCRYPTION_INFO_EXTRA)
-        return NULL;
+    إذا (!buffer || size < FF_ENCRYPTION_INFO_EXTRA)
+        أرجع عدم;
 
-    key_id_size = AV_RB32(buffer + 12);
+    مفتاح_id_size = AV_RB32(buffer + 12);
     iv_size = AV_RB32(buffer + 16);
-    subsample_count = AV_RB32(buffer + 20);
+    subsample_عدد = AV_RB32(buffer + 20);
 
-    if (size < FF_ENCRYPTION_INFO_EXTRA + key_id_size + iv_size + subsample_count * 8)
-        return NULL;
+    إذا (size < FF_ENCRYPTION_INFO_EXTRA + مفتاح_id_size + iv_size + subsample_عدد * 8)
+        أرجع عدم;
 
-    info = av_encryption_info_alloc(subsample_count, key_id_size, iv_size);
-    if (!info)
-        return NULL;
+    info = av_encryption_info_alloc(subsample_عدد, مفتاح_id_size, iv_size);
+    إذا (!info)
+        أرجع عدم;
 
     info->scheme = AV_RB32(buffer);
     info->crypt_byte_block = AV_RB32(buffer + 4);
     info->skip_byte_block = AV_RB32(buffer + 8);
-    memcpy(info->key_id, buffer + 24, key_id_size);
-    memcpy(info->iv, buffer + key_id_size + 24, iv_size);
+    memcpy(info->مفتاح_id, buffer + 24, مفتاح_id_size);
+    memcpy(info->iv, buffer + مفتاح_id_size + 24, iv_size);
 
-    buffer += key_id_size + iv_size + 24;
-    for (i = 0; i < subsample_count; i++) {
+    buffer += مفتاح_id_size + iv_size + 24;
+    لكل (i = 0; i < subsample_عدد; i++) {
         info->subsamples[i].bytes_of_clear_data = AV_RB32(buffer);
         info->subsamples[i].bytes_of_protected_data = AV_RB32(buffer + 4);
         buffer += 8;
     }
 
-    return info;
+    أرجع info;
 }
 
-uint8_t *av_encryption_info_add_side_data(const AVEncryptionInfo *info, size_t *size)
+uint8_t *av_encryption_info_add_side_data(ثابت AVEncryptionInfo *info, size_t *size)
 {
     uint8_t *buffer, *cur_buffer;
     uint32_t i;
 
-    if (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA < info->key_id_size ||
-        UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->key_id_size < info->iv_size ||
-        (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->key_id_size - info->iv_size) / 8 < info->subsample_count) {
-        return NULL;
+    إذا (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA < info->مفتاح_id_size ||
+        UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->مفتاح_id_size < info->iv_size ||
+        (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->مفتاح_id_size - info->iv_size) / 8 < info->subsample_عدد) {
+        أرجع عدم;
     }
 
-    *size = FF_ENCRYPTION_INFO_EXTRA + info->key_id_size + info->iv_size +
-            (info->subsample_count * 8);
+    *size = FF_ENCRYPTION_INFO_EXTRA + info->مفتاح_id_size + info->iv_size +
+            (info->subsample_عدد * 8);
     cur_buffer = buffer = av_malloc(*size);
-    if (!buffer)
-        return NULL;
+    إذا (!buffer)
+        أرجع عدم;
 
     AV_WB32(cur_buffer,      info->scheme);
     AV_WB32(cur_buffer +  4, info->crypt_byte_block);
     AV_WB32(cur_buffer +  8, info->skip_byte_block);
-    AV_WB32(cur_buffer + 12, info->key_id_size);
+    AV_WB32(cur_buffer + 12, info->مفتاح_id_size);
     AV_WB32(cur_buffer + 16, info->iv_size);
-    AV_WB32(cur_buffer + 20, info->subsample_count);
+    AV_WB32(cur_buffer + 20, info->subsample_عدد);
     cur_buffer += 24;
-    memcpy(cur_buffer, info->key_id, info->key_id_size);
-    cur_buffer += info->key_id_size;
+    memcpy(cur_buffer, info->مفتاح_id, info->مفتاح_id_size);
+    cur_buffer += info->مفتاح_id_size;
     memcpy(cur_buffer, info->iv, info->iv_size);
     cur_buffer += info->iv_size;
-    for (i = 0; i < info->subsample_count; i++) {
+    لكل (i = 0; i < info->subsample_عدد; i++) {
         AV_WB32(cur_buffer, info->subsamples[i].bytes_of_clear_data);
         AV_WB32(cur_buffer + 4, info->subsamples[i].bytes_of_protected_data);
         cur_buffer += 8;
     }
 
-    return buffer;
+    أرجع buffer;
 }
 
 // The format of the AVEncryptionInitInfo side data:
@@ -177,57 +177,57 @@ uint8_t *av_encryption_info_add_side_data(const AVEncryptionInfo *info, size_t *
 #define FF_ENCRYPTION_INIT_INFO_EXTRA 16
 
 AVEncryptionInitInfo *av_encryption_init_info_alloc(
-    uint32_t system_id_size, uint32_t num_key_ids, uint32_t key_id_size, uint32_t data_size)
+    uint32_t system_id_size, uint32_t رقم_مفتاح_ids, uint32_t مفتاح_id_size, uint32_t data_size)
 {
     AVEncryptionInitInfo *info;
     uint32_t i;
 
-    if (num_key_ids && !key_id_size)
-        return NULL;
+    إذا (رقم_مفتاح_ids && !مفتاح_id_size)
+        أرجع عدم;
 
-    info = av_mallocz(sizeof(*info));
-    if (!info)
-        return NULL;
+    info = av_mallocz(حجم(*info));
+    إذا (!info)
+        أرجع عدم;
 
     info->system_id = av_mallocz(system_id_size);
     info->system_id_size = system_id_size;
-    info->key_ids = key_id_size ? av_calloc(num_key_ids, sizeof(*info->key_ids)) : NULL;
-    info->num_key_ids = num_key_ids;
-    info->key_id_size = key_id_size;
+    info->مفتاح_ids = مفتاح_id_size ? av_calloc(رقم_مفتاح_ids, حجم(*info->مفتاح_ids)) : عدم;
+    info->رقم_مفتاح_ids = رقم_مفتاح_ids;
+    info->مفتاح_id_size = مفتاح_id_size;
     info->data = av_mallocz(data_size);
     info->data_size = data_size;
 
     // Allow pointers to be NULL if the size is 0.
-    if ((!info->system_id && system_id_size) || (!info->data && data_size) ||
-        (!info->key_ids && num_key_ids && key_id_size)) {
+    إذا ((!info->system_id && system_id_size) || (!info->data && data_size) ||
+        (!info->مفتاح_ids && رقم_مفتاح_ids && مفتاح_id_size)) {
         av_encryption_init_info_free(info);
-        return NULL;
+        أرجع عدم;
     }
 
-    if (key_id_size) {
-        for (i = 0; i < num_key_ids; i++) {
-            info->key_ids[i] = av_mallocz(key_id_size);
-            if (!info->key_ids[i]) {
+    إذا (مفتاح_id_size) {
+        لكل (i = 0; i < رقم_مفتاح_ids; i++) {
+            info->مفتاح_ids[i] = av_mallocz(مفتاح_id_size);
+            إذا (!info->مفتاح_ids[i]) {
                 av_encryption_init_info_free(info);
-                return NULL;
+                أرجع عدم;
             }
         }
     }
 
-    return info;
+    أرجع info;
 }
 
-void av_encryption_init_info_free(AVEncryptionInitInfo *info)
+فراغ av_encryption_init_info_free(AVEncryptionInitInfo *info)
 {
-    while (info) {
+    طالما (info) {
         AVEncryptionInitInfo *next = info->next;
         uint32_t i;
 
-        for (i = 0; i < info->num_key_ids; i++) {
-            av_free(info->key_ids[i]);
+        لكل (i = 0; i < info->رقم_مفتاح_ids; i++) {
+            av_free(info->مفتاح_ids[i]);
         }
         av_free(info->system_id);
-        av_free(info->key_ids);
+        av_free(info->مفتاح_ids);
         av_free(info->data);
         av_free(info);
 
@@ -236,46 +236,46 @@ void av_encryption_init_info_free(AVEncryptionInitInfo *info)
 }
 
 AVEncryptionInitInfo *av_encryption_init_info_get_side_data(
-    const uint8_t *side_data, size_t side_data_size)
+    ثابت uint8_t *side_data, size_t side_data_size)
 {
     // |ret| tracks the front of the list, |info| tracks the back.
-    AVEncryptionInitInfo *ret = NULL, *info, *temp_info;
-    uint64_t system_id_size, num_key_ids, key_id_size, data_size, i, j;
-    uint64_t init_info_count;
+    AVEncryptionInitInfo *ret = عدم, *info, *temp_info;
+    uint64_t system_id_size, رقم_مفتاح_ids, مفتاح_id_size, data_size, i, j;
+    uint64_t init_info_عدد;
 
-    if (!side_data || side_data_size < 4)
-        return NULL;
+    إذا (!side_data || side_data_size < 4)
+        أرجع عدم;
 
-    init_info_count = AV_RB32(side_data);
+    init_info_عدد = AV_RB32(side_data);
     side_data += 4;
     side_data_size -= 4;
-    for (i = 0; i < init_info_count; i++) {
-        if (side_data_size < FF_ENCRYPTION_INIT_INFO_EXTRA) {
+    لكل (i = 0; i < init_info_عدد; i++) {
+        إذا (side_data_size < FF_ENCRYPTION_INIT_INFO_EXTRA) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            أرجع عدم;
         }
 
         system_id_size = AV_RB32(side_data);
-        num_key_ids = AV_RB32(side_data + 4);
-        key_id_size = AV_RB32(side_data + 8);
+        رقم_مفتاح_ids = AV_RB32(side_data + 4);
+        مفتاح_id_size = AV_RB32(side_data + 8);
         data_size = AV_RB32(side_data + 12);
 
         // UINT32_MAX + UINT32_MAX + UINT32_MAX * UINT32_MAX == UINT64_MAX
-        if (side_data_size - FF_ENCRYPTION_INIT_INFO_EXTRA < system_id_size + data_size + num_key_ids * key_id_size) {
+        إذا (side_data_size - FF_ENCRYPTION_INIT_INFO_EXTRA < system_id_size + data_size + رقم_مفتاح_ids * مفتاح_id_size) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            أرجع عدم;
         }
         side_data += FF_ENCRYPTION_INIT_INFO_EXTRA;
         side_data_size -= FF_ENCRYPTION_INIT_INFO_EXTRA;
 
-        temp_info = av_encryption_init_info_alloc(system_id_size, num_key_ids, key_id_size, data_size);
-        if (!temp_info) {
+        temp_info = av_encryption_init_info_alloc(system_id_size, رقم_مفتاح_ids, مفتاح_id_size, data_size);
+        إذا (!temp_info) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            أرجع عدم;
         }
-        if (i == 0) {
+        إذا (i == 0) {
             info = ret = temp_info;
-        } else {
+        } وإلا {
             info->next = temp_info;
             info = temp_info;
         }
@@ -283,63 +283,63 @@ AVEncryptionInitInfo *av_encryption_init_info_get_side_data(
         memcpy(info->system_id, side_data, system_id_size);
         side_data += system_id_size;
         side_data_size -= system_id_size;
-        for (j = 0; j < num_key_ids; j++) {
-            memcpy(info->key_ids[j], side_data, key_id_size);
-            side_data += key_id_size;
-            side_data_size -= key_id_size;
+        لكل (j = 0; j < رقم_مفتاح_ids; j++) {
+            memcpy(info->مفتاح_ids[j], side_data, مفتاح_id_size);
+            side_data += مفتاح_id_size;
+            side_data_size -= مفتاح_id_size;
         }
         memcpy(info->data, side_data, data_size);
         side_data += data_size;
         side_data_size -= data_size;
     }
 
-    return ret;
+    أرجع ret;
 }
 
-int av_encryption_init_info_append_side_data(uint8_t **side_data, size_t *side_data_size,
-                                             unsigned int *allocated_size,
-                                             const AVEncryptionInitInfo *info)
+صحيح av_encryption_init_info_append_side_data(uint8_t **side_data, size_t *side_data_size,
+                                             unsigned صحيح *allocated_size,
+                                             ثابت AVEncryptionInitInfo *info)
 {
-    const AVEncryptionInitInfo *cur_info;
+    ثابت AVEncryptionInitInfo *cur_info;
     uint8_t *buffer, *cur_buffer;
     uint32_t i;
-    uint64_t init_info_count    = *side_data ? AV_RB32(*side_data) : 0;
+    uint64_t init_info_عدد    = *side_data ? AV_RB32(*side_data) : 0;
     size_t   old_side_data_size = *side_data ? *side_data_size : 4;
     uint64_t new_side_data_size = old_side_data_size;
 
-    for (cur_info = info; cur_info; cur_info = cur_info->next) {
+    لكل (cur_info = info; cur_info; cur_info = cur_info->next) {
         new_side_data_size += (uint64_t)FF_ENCRYPTION_INIT_INFO_EXTRA + cur_info->system_id_size + cur_info->data_size;
-        if (init_info_count == UINT32_MAX || new_side_data_size > UINT32_MAX)
-            return AVERROR(EINVAL);
-        init_info_count++;
+        إذا (init_info_عدد == UINT32_MAX || new_side_data_size > UINT32_MAX)
+            أرجع AVERROR(EINVAL);
+        init_info_عدد++;
 
-        if (cur_info->num_key_ids) {
-            new_side_data_size += (uint64_t)cur_info->num_key_ids * cur_info->key_id_size;
-            if (new_side_data_size > UINT32_MAX)
-                return AVERROR(EINVAL);
+        إذا (cur_info->رقم_مفتاح_ids) {
+            new_side_data_size += (uint64_t)cur_info->رقم_مفتاح_ids * cur_info->مفتاح_id_size;
+            إذا (new_side_data_size > UINT32_MAX)
+                أرجع AVERROR(EINVAL);
         }
     }
 
     buffer = av_fast_realloc(*side_data, allocated_size, new_side_data_size);
-    if (!buffer)
-        return AVERROR(ENOMEM);
+    إذا (!buffer)
+        أرجع AVERROR(ENOMEM);
 
-    AV_WB32(buffer, init_info_count);
+    AV_WB32(buffer, init_info_عدد);
     cur_buffer = buffer + old_side_data_size;
-    for (cur_info = info; cur_info; cur_info = cur_info->next) {
+    لكل (cur_info = info; cur_info; cur_info = cur_info->next) {
         AV_WB32(cur_buffer,      cur_info->system_id_size);
-        AV_WB32(cur_buffer +  4, cur_info->num_key_ids);
-        AV_WB32(cur_buffer +  8, cur_info->key_id_size);
+        AV_WB32(cur_buffer +  4, cur_info->رقم_مفتاح_ids);
+        AV_WB32(cur_buffer +  8, cur_info->مفتاح_id_size);
         AV_WB32(cur_buffer + 12, cur_info->data_size);
         cur_buffer += 16;
 
         memcpy(cur_buffer, cur_info->system_id, cur_info->system_id_size);
         cur_buffer += cur_info->system_id_size;
-        for (i = 0; i < cur_info->num_key_ids; i++) {
-            memcpy(cur_buffer, cur_info->key_ids[i], cur_info->key_id_size);
-            cur_buffer += cur_info->key_id_size;
+        لكل (i = 0; i < cur_info->رقم_مفتاح_ids; i++) {
+            memcpy(cur_buffer, cur_info->مفتاح_ids[i], cur_info->مفتاح_id_size);
+            cur_buffer += cur_info->مفتاح_id_size;
         }
-        if (cur_info->data_size > 0) {
+        إذا (cur_info->data_size > 0) {
             memcpy(cur_buffer, cur_info->data, cur_info->data_size);
             cur_buffer += cur_info->data_size;
         }
@@ -347,15 +347,15 @@ int av_encryption_init_info_append_side_data(uint8_t **side_data, size_t *side_d
 
     *side_data      = buffer;
     *side_data_size = new_side_data_size;
-    return 0;
+    أرجع 0;
 }
 
-uint8_t *av_encryption_init_info_add_side_data(const AVEncryptionInitInfo *info, size_t *side_data_size)
+uint8_t *av_encryption_init_info_add_side_data(ثابت AVEncryptionInitInfo *info, size_t *side_data_size)
 {
-    uint8_t *side_data = NULL;
-    unsigned int allocated_size = 0;
+    uint8_t *side_data = عدم;
+    unsigned صحيح allocated_size = 0;
 
-    if (av_encryption_init_info_append_side_data(&side_data, side_data_size, &allocated_size, info) < 0)
-        return NULL;
-    return side_data;
+    إذا (av_encryption_init_info_append_side_data(&side_data, side_data_size, &allocated_size, info) < 0)
+        أرجع عدم;
+    أرجع side_data;
 }
