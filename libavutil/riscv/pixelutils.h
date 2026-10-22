@@ -19,27 +19,27 @@
 #ifndef AVUTIL_RISCV_PIXELUTILS_H
 #define AVUTIL_RISCV_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "config.h"
+#അന്തര്ഭാവ "config.h"
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#അന്തര്ഭാവ "cpu.h"
+#അന്തര്ഭാവ "libavutil/attributes.h"
+#അന്തര്ഭാവ "libavutil/cpu.h"
+#അന്തര്ഭാവ "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_rvv(const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad8_rvv (const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
+പൂർണ്ണസംഖ്യ ff_pixelutils_sad16_rvv(സ്ഥിരം uint8_t *src1, ptrdiff_t stride1,
+                            സ്ഥിരം uint8_t *src2, ptrdiff_t stride2);
+പൂർണ്ണസംഖ്യ ff_pixelutils_sad8_rvv (സ്ഥിരം uint8_t *src1, ptrdiff_t stride1,
+                            സ്ഥിരം uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, int aligned)
+സ്ഥിതം വരിയിൽ av_cold ശൂന്യം ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, പൂർണ്ണസംഖ്യ aligned)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#എങ്കിൽ HAVE_RVV
+    പൂർണ്ണസംഖ്യ flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
+    എങ്കിൽ (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
         sad[3] = ff_pixelutils_sad16_rvv;
         sad[2] = ff_pixelutils_sad8_rvv;
     }

@@ -21,8 +21,8 @@
 #ifndef AVUTIL_BASE64_INTERNAL_H
 #define AVUTIL_BASE64_INTERNAL_H
 
-#include <stdint.h>
-#include "intreadwrite.h"
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ "intreadwrite.h"
 
 /*****************************************************************************
 * b64_encode: Stolen from VLC's http.c.
@@ -30,15 +30,15 @@
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-static inline char *ff_base64_encode_c(char *out, const uint8_t *in, int in_size, const char *b64)
+സ്ഥിതം വരിയിൽ അക്ഷരം *ff_base64_encode_c(അക്ഷരം *out, സ്ഥിരം uint8_t *in, പൂർണ്ണസംഖ്യ in_size, സ്ഥിരം അക്ഷരം *b64)
 {
-    char *ret, *dst;
+    അക്ഷരം *ret, *dst;
     unsigned i_bits = 0;
-    int i_shift = 0;
-    int bytes_remaining = in_size;
+    പൂർണ്ണസംഖ്യ i_shift = 0;
+    പൂർണ്ണസംഖ്യ bytes_remaining = in_size;
 
     ret = dst = out;
-    while (bytes_remaining > 3) {
+    ആകുമ്പോൾ (bytes_remaining > 3) {
         i_bits = AV_RB32(in);
         in += 3; bytes_remaining -= 3;
         *dst++ = b64[ i_bits>>26        ];
@@ -47,20 +47,20 @@ static inline char *ff_base64_encode_c(char *out, const uint8_t *in, int in_size
         *dst++ = b64[(i_bits>>8 ) & 0x3F];
     }
     i_bits = 0;
-    while (bytes_remaining) {
+    ആകുമ്പോൾ (bytes_remaining) {
         i_bits = (i_bits << 8) + *in++;
         bytes_remaining--;
         i_shift += 8;
     }
-    while (i_shift > 0) {
+    ആകുമ്പോൾ (i_shift > 0) {
         *dst++ = b64[(i_bits << 6 >> i_shift) & 0x3f];
         i_shift -= 6;
     }
-    while ((dst - ret) & 3)
+    ആകുമ്പോൾ ((dst - ret) & 3)
         *dst++ = '=';
     *dst = '\0';
 
-    return ret;
+    തിരികെ ret;
 }
 
 #endif /* AVUTIL_BASE64_INTERNAL_H */

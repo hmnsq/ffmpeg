@@ -19,9 +19,9 @@
 #ifndef AVUTIL_FLOAT_DSP_H
 #define AVUTIL_FLOAT_DSP_H
 
-#include <stddef.h>
+#അന്തര്ഭാവ <stddef.h>
 
-typedef struct AVFloatDSPContext {
+തരനിർവചനം ഘടന AVFloatDSPContext {
     /**
      * Calculate the entry wise product of two vectors of floats and store the result in
      * a vector of floats.
@@ -35,8 +35,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul)(float *dst, const float *src0, const float *src1,
-                        int len);
+    ശൂന്യം (*vector_fmul)(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0, സ്ഥിരം ദശാംശം *src1,
+                        പൂർണ്ണസംഖ്യ len);
 
     /**
      * Multiply a vector of floats by a scalar float and add to
@@ -51,8 +51,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 16
      */
-    void (*vector_fmac_scalar)(float *dst, const float *src, float mul,
-                               int len);
+    ശൂന്യം (*vector_fmac_scalar)(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src, ദശാംശം mul,
+                               പൂർണ്ണസംഖ്യ len);
 
     /**
      * Multiply a vector of doubles by a scalar double and add to
@@ -67,8 +67,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 16
      */
-    void (*vector_dmac_scalar)(double *dst, const double *src, double mul,
-                               int len);
+    ശൂന്യം (*vector_dmac_scalar)(ഇരട്ട *dst, സ്ഥിരം ഇരട്ട *src, ഇരട്ട mul,
+                               പൂർണ്ണസംഖ്യ len);
 
     /**
      * Multiply a vector of floats by a scalar float.  Source and
@@ -82,8 +82,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 4
      */
-    void (*vector_fmul_scalar)(float *dst, const float *src, float mul,
-                               int len);
+    ശൂന്യം (*vector_fmul_scalar)(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src, ദശാംശം mul,
+                               പൂർണ്ണസംഖ്യ len);
 
     /**
      * Multiply a vector of double by a scalar double.  Source and
@@ -97,8 +97,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 8
      */
-    void (*vector_dmul_scalar)(double *dst, const double *src, double mul,
-                               int len);
+    ശൂന്യം (*vector_dmul_scalar)(ഇരട്ട *dst, സ്ഥിരം ഇരട്ട *src, ഇരട്ട mul,
+                               പൂർണ്ണസംഖ്യ len);
 
     /**
      * Overlap/add with window function.
@@ -116,8 +116,8 @@ typedef struct AVFloatDSPContext {
      * @param len  length of vector
      *             constraints: multiple of 4
      */
-    void (*vector_fmul_window)(float *dst, const float *src0,
-                               const float *src1, const float *win, int len);
+    ശൂന്യം (*vector_fmul_window)(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0,
+                               സ്ഥിരം ദശാംശം *src1, സ്ഥിരം ദശാംശം *win, പൂർണ്ണസംഖ്യ len);
 
     /**
      * Calculate the entry wise product of two vectors of floats, add a third vector of
@@ -134,8 +134,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul_add)(float *dst, const float *src0, const float *src1,
-                            const float *src2, int len);
+    ശൂന്യം (*vector_fmul_add)(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0, സ്ഥിരം ദശാംശം *src1,
+                            സ്ഥിരം ദശാംശം *src2, പൂർണ്ണസംഖ്യ len);
 
     /**
      * Calculate the entry wise product of two vectors of floats, and store the result
@@ -151,8 +151,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul_reverse)(float *dst, const float *src0,
-                                const float *src1, int len);
+    ശൂന്യം (*vector_fmul_reverse)(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0,
+                                സ്ഥിരം ദശാംശം *src1, പൂർണ്ണസംഖ്യ len);
 
     /**
      * Calculate the sum and difference of two vectors of floats.
@@ -161,7 +161,7 @@ typedef struct AVFloatDSPContext {
      * @param v2  second input vector, difference output, 16-byte aligned
      * @param len length of vectors, multiple of 4
      */
-    void (*butterflies_float)(float *restrict v1, float *restrict v2, int len);
+    ശൂന്യം (*butterflies_float)(ദശാംശം *restrict v1, ദശാംശം *restrict v2, പൂർണ്ണസംഖ്യ len);
 
     /**
      * Calculate the scalar product of two vectors of floats.
@@ -172,7 +172,7 @@ typedef struct AVFloatDSPContext {
      *
      * @return sum of elementwise products
      */
-    float (*scalarproduct_float)(const float *v1, const float *v2, int len);
+    ദശാംശം (*scalarproduct_float)(സ്ഥിരം ദശാംശം *v1, സ്ഥിരം ദശാംശം *v2, പൂർണ്ണസംഖ്യ len);
 
     /**
      * Calculate the entry wise product of two vectors of doubles and store the result in
@@ -187,8 +187,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_dmul)(double *dst, const double *src0, const double *src1,
-                        int len);
+    ശൂന്യം (*vector_dmul)(ഇരട്ട *dst, സ്ഥിരം ഇരട്ട *src0, സ്ഥിരം ഇരട്ട *src1,
+                        പൂർണ്ണസംഖ്യ len);
 
     /**
      * Calculate the scalar product of two vectors of doubles.
@@ -202,7 +202,7 @@ typedef struct AVFloatDSPContext {
      *
      * @return inner product of the vectors
      */
-    double (*scalarproduct_double)(const double *v1, const double *v2,
+    ഇരട്ട (*scalarproduct_double)(സ്ഥിരം ഇരട്ട *v1, സ്ഥിരം ഇരട്ട *v2,
                                    size_t len);
 } AVFloatDSPContext;
 
@@ -215,7 +215,7 @@ typedef struct AVFloatDSPContext {
  *
  * @return sum of elementwise products
  */
-float ff_scalarproduct_float_c(const float *v1, const float *v2, int len);
+ദശാംശം ff_scalarproduct_float_c(സ്ഥിരം ദശാംശം *v1, സ്ഥിരം ദശാംശം *v2, പൂർണ്ണസംഖ്യ len);
 
 /**
  * Return the scalar product of two vectors of doubles.
@@ -226,21 +226,21 @@ float ff_scalarproduct_float_c(const float *v1, const float *v2, int len);
  *
  * @return inner product of the vectors
  */
-double ff_scalarproduct_double_c(const double *v1, const double *v2,
+ഇരട്ട ff_scalarproduct_double_c(സ്ഥിരം ഇരട്ട *v1, സ്ഥിരം ഇരട്ട *v2,
                                  size_t len);
 
-void ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_arm(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, int strict);
-void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_x86(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_mips(AVFloatDSPContext *fdsp);
+ശൂന്യം ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp);
+ശൂന്യം ff_float_dsp_init_arm(AVFloatDSPContext *fdsp);
+ശൂന്യം ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, പൂർണ്ണസംഖ്യ strict);
+ശൂന്യം ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp);
+ശൂന്യം ff_float_dsp_init_x86(AVFloatDSPContext *fdsp);
+ശൂന്യം ff_float_dsp_init_mips(AVFloatDSPContext *fdsp);
 
 /**
  * Allocate a float DSP context.
  *
  * @param strict  setting to non-zero avoids using functions which may not be IEEE-754 compliant
  */
-AVFloatDSPContext *avpriv_float_dsp_alloc(int strict);
+AVFloatDSPContext *avpriv_float_dsp_alloc(പൂർണ്ണസംഖ്യ strict);
 
 #endif /* AVUTIL_FLOAT_DSP_H */

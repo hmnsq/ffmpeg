@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#അന്തര്ഭാവ "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#അന്തര്ഭാവ <math.h>
+#അന്തര്ഭാവ <stdio.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#അന്തര്ഭാവ "libavutil/mathematics.h"
+#അന്തര്ഭാവ "libavutil/eval.h"
 
-static const double const_values[] = {
+സ്ഥിതം സ്ഥിരം ഇരട്ട const_മൂല്യങ്ങൾ[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+സ്ഥിതം സ്ഥിരം അക്ഷരം *സ്ഥിരം const_names[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+പൂർണ്ണസംഖ്യ പ്രധാന(പൂർണ്ണസംഖ്യ argc, അക്ഷരം **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    പൂർണ്ണസംഖ്യ i;
+    ഇരട്ട d;
+    സ്ഥിരം അക്ഷരം *സ്ഥിരം *വ്യഞ്ജകം;
+    സ്ഥിതം സ്ഥിരം അക്ഷരം *സ്ഥിരം exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        ശൂന്യ
     };
-    int ret;
+    പൂർണ്ണസംഖ്യ ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
+    വേണ്ടി (വ്യഞ്ജകം = exprs; *വ്യഞ്ജകം; വ്യഞ്ജകം++) {
+        printf("Evaluating '%s'\n", *വ്യഞ്ജകം);
+        ret = av_വ്യഞ്ജകം_parse_and_eval(&d, *വ്യഞ്ജകം,
+                               const_names, const_മൂല്യങ്ങൾ,
+                               ശൂന്യ, ശൂന്യ, ശൂന്യ, ശൂന്യ, ശൂന്യ, 0, ശൂന്യ);
+        എങ്കിൽ (isnan(d))
+            printf("'%s' -> nan\n\n", *വ്യഞ്ജകം);
+        അല്ലെങ്കിൽ
+            printf("'%s' -> %f\n\n", *വ്യഞ്ജകം, d);
+        എങ്കിൽ (ret < 0)
             printf("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_വ്യഞ്ജകം_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_names, const_മൂല്യങ്ങൾ,
+                           ശൂന്യ, ശൂന്യ, ശൂന്യ, ശൂന്യ, ശൂന്യ, 0, ശൂന്യ);
     printf("%f == 12.7\n", d);
-    if (ret < 0)
+    എങ്കിൽ (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_വ്യഞ്ജകം_parse_and_eval(&d, "80G/80Gi",
+                           const_names, const_മൂല്യങ്ങൾ,
+                           ശൂന്യ, ശൂന്യ, ശൂന്യ, ശൂന്യ, ശൂന്യ, 0, ശൂന്യ);
     printf("%f == 0.931322575\n", d);
-    if (ret < 0)
+    എങ്കിൽ (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
+    എങ്കിൽ (argc > 1 && !strcmp(argv[1], "-t")) {
+        വേണ്ടി (i = 0; i < 1050; i++) {
             START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
+            ret = av_വ്യഞ്ജകം_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_names, const_മൂല്യങ്ങൾ,
+                                   ശൂന്യ, ശൂന്യ, ശൂന്യ, ശൂന്യ, ശൂന്യ, 0, ശൂന്യ);
+            എങ്കിൽ (ret < 0)
                 printf("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    തിരികെ 0;
 }

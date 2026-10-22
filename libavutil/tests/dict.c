@@ -18,49 +18,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/mem.h"
+#അന്തര്ഭാവ "libavutil/mem.h"
 
-#include "libavutil/dict.c"
+#അന്തര്ഭാവ "libavutil/dict.c"
 
-static const AVDictionaryEntry *dict_iterate(const AVDictionary *m,
-                                             const AVDictionaryEntry *prev)
+സ്ഥിതം സ്ഥിരം AVDictionaryEntry *dict_iterate(സ്ഥിരം AVDictionary *m,
+                                             സ്ഥിരം AVDictionaryEntry *prev)
 {
-    const AVDictionaryEntry *dict_get = av_dict_get(m, "", prev, AV_DICT_IGNORE_SUFFIX);
-    const AVDictionaryEntry *dict_iterate = av_dict_iterate(m, prev);
+    സ്ഥിരം AVDictionaryEntry *dict_get = av_dict_get(m, "", prev, AV_DICT_IGNORE_SUFFIX);
+    സ്ഥിരം AVDictionaryEntry *dict_iterate = av_dict_iterate(m, prev);
 
-    if (dict_get != dict_iterate) {
+    എങ്കിൽ (dict_get != dict_iterate) {
 #define GET(entry, mem) ((entry) ? (entry)->mem : "N/A")
         printf("Iterating with av_dict_iterate() yields a different result "
                "than iterating with av_dict_get() and AV_DICT_IGNORE_SUFFIX "
                "(prev: %p, key %s; av_dict_iterate() %p, key %s, value %s; "
                "av_dict_get() %p, key %s, value %s)\n",
-               prev, GET(prev, key),
-               dict_iterate, GET(dict_iterate, key), GET(dict_iterate, value),
-               dict_get, GET(dict_get, key), GET(dict_get, value));
+               prev, GET(prev, താക്കോൽ),
+               dict_iterate, GET(dict_iterate, താക്കോൽ), GET(dict_iterate, മൂല്യം),
+               dict_get, GET(dict_get, താക്കോൽ), GET(dict_get, മൂല്യം));
 #undef GET
     }
-    return dict_iterate;
+    തിരികെ dict_iterate;
 }
 
-static void print_dict(const AVDictionary *m)
+സ്ഥിതം ശൂന്യം print_dict(സ്ഥിരം AVDictionary *m)
 {
-    const AVDictionaryEntry *t = NULL;
-    const char *sep = "";
-    while ((t = dict_iterate(m, t))) {
-        printf("%s%s %s", sep, t->key, t->value);
+    സ്ഥിരം AVDictionaryEntry *t = ശൂന്യ;
+    സ്ഥിരം അക്ഷരം *sep = "";
+    ആകുമ്പോൾ ((t = dict_iterate(m, t))) {
+        printf("%s%s %s", sep, t->താക്കോൽ, t->മൂല്യം);
         sep = "   ";
     }
     printf("\n");
 }
 
-static void test_separators(const AVDictionary *m, const char pair, const char val)
+സ്ഥിതം ശൂന്യം test_separators(സ്ഥിരം AVDictionary *m, സ്ഥിരം അക്ഷരം pair, സ്ഥിരം അക്ഷരം val)
 {
-    AVDictionary *dict = NULL;
-    char pairs[] = {pair , '\0'};
-    char vals[]  = {val, '\0'};
+    AVDictionary *dict = ശൂന്യ;
+    അക്ഷരം pairs[] = {pair , '\0'};
+    അക്ഷരം vals[]  = {val, '\0'};
 
-    char *buffer = NULL;
-    int ret;
+    അക്ഷരം *buffer = ശൂന്യ;
+    പൂർണ്ണസംഖ്യ ret;
 
     av_dict_copy(&dict, m, 0);
     print_dict(dict);
@@ -74,11 +74,11 @@ static void test_separators(const AVDictionary *m, const char pair, const char v
     av_dict_free(&dict);
 }
 
-int main(void)
+പൂർണ്ണസംഖ്യ പ്രധാന(ശൂന്യം)
 {
-    AVDictionary *dict = NULL;
-    const AVDictionaryEntry *e;
-    char *buffer = NULL;
+    AVDictionary *dict = ശൂന്യ;
+    സ്ഥിരം AVDictionaryEntry *e;
+    അക്ഷരം *buffer = ശൂന്യ;
 
     printf("Testing av_dict_get_string() and av_dict_parse_string()\n");
     av_dict_get_string(dict, &buffer, '=', ',');
@@ -108,63 +108,63 @@ int main(void)
     printf("\nTesting av_dict_set()\n");
     av_dict_set(&dict, "a", "a", 0);
     av_dict_set(&dict, "b", av_strdup("b"), AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set(&dict, av_strdup("c"), "c", AV_DICT_DONT_STRDUP_KEY);
-    av_dict_set(&dict, av_strdup("d"), av_strdup("d"), AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    av_dict_set(&dict, av_strdup("c"), "c", AV_DICT_DONT_STRDUP_താക്കോൽ);
+    av_dict_set(&dict, av_strdup("d"), av_strdup("d"), AV_DICT_DONT_STRDUP_താക്കോൽ | AV_DICT_DONT_STRDUP_VAL);
     av_dict_set(&dict, "e", "e", AV_DICT_DONT_OVERWRITE);
     av_dict_set(&dict, "e", "f", AV_DICT_DONT_OVERWRITE);
     av_dict_set(&dict, "f", "f", 0);
-    av_dict_set(&dict, "f", NULL, 0);
+    av_dict_set(&dict, "f", ശൂന്യ, 0);
     av_dict_set(&dict, "ff", "f", 0);
     av_dict_set(&dict, "ff", "f", AV_DICT_APPEND);
-    if (av_dict_get(dict, NULL, NULL, 0))
+    എങ്കിൽ (av_dict_get(dict, ശൂന്യ, ശൂന്യ, 0))
         printf("av_dict_get() does not correctly handle NULL key.\n");
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("%s %s\n", e->key, e->value);
+    e = ശൂന്യ;
+    ആകുമ്പോൾ ((e = dict_iterate(dict, e)))
+        printf("%s %s\n", e->താക്കോൽ, e->മൂല്യം);
     av_dict_free(&dict);
 
-    if (av_dict_set(&dict, NULL, "a", 0) >= 0 ||
-        av_dict_set(&dict, NULL, "b", 0) >= 0 ||
-        av_dict_set(&dict, NULL, NULL, AV_DICT_DONT_STRDUP_KEY) >= 0 ||
-        av_dict_set(&dict, NULL, av_strdup("b"), AV_DICT_DONT_STRDUP_VAL) >= 0 ||
-        av_dict_count(dict))
+    എങ്കിൽ (av_dict_set(&dict, ശൂന്യ, "a", 0) >= 0 ||
+        av_dict_set(&dict, ശൂന്യ, "b", 0) >= 0 ||
+        av_dict_set(&dict, ശൂന്യ, ശൂന്യ, AV_DICT_DONT_STRDUP_താക്കോൽ) >= 0 ||
+        av_dict_set(&dict, ശൂന്യ, av_strdup("b"), AV_DICT_DONT_STRDUP_VAL) >= 0 ||
+        av_dict_എണ്ണം(dict))
         printf("av_dict_set does not correctly handle NULL key\n");
 
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("'%s' '%s'\n", e->key, e->value);
+    e = ശൂന്യ;
+    ആകുമ്പോൾ ((e = dict_iterate(dict, e)))
+        printf("'%s' '%s'\n", e->താക്കോൽ, e->മൂല്യം);
     av_dict_free(&dict);
 
 
     //valgrind sensible test
     printf("\nTesting av_dict_set_int()\n");
     av_dict_set_int(&dict, "1", 1, AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set_int(&dict, av_strdup("2"), 2, AV_DICT_DONT_STRDUP_KEY);
-    av_dict_set_int(&dict, av_strdup("3"), 3, AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    av_dict_set_int(&dict, av_strdup("2"), 2, AV_DICT_DONT_STRDUP_താക്കോൽ);
+    av_dict_set_int(&dict, av_strdup("3"), 3, AV_DICT_DONT_STRDUP_താക്കോൽ | AV_DICT_DONT_STRDUP_VAL);
     av_dict_set_int(&dict, "4", 4, 0);
     av_dict_set_int(&dict, "5", 5, AV_DICT_DONT_OVERWRITE);
     av_dict_set_int(&dict, "5", 6, AV_DICT_DONT_OVERWRITE);
     av_dict_set_int(&dict, "12", 1, 0);
     av_dict_set_int(&dict, "12", 2, AV_DICT_APPEND);
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("%s %s\n", e->key, e->value);
+    e = ശൂന്യ;
+    ആകുമ്പോൾ ((e = dict_iterate(dict, e)))
+        printf("%s %s\n", e->താക്കോൽ, e->മൂല്യം);
     av_dict_free(&dict);
 
     //valgrind sensible test
     printf("\nTesting av_dict_set() with existing AVDictionaryEntry.key as key\n");
-    if (av_dict_set(&dict, "key", "old", 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    if (av_dict_set(&dict, e->key, "new val OK", 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    printf("%s\n", e->value);
-    if (av_dict_set(&dict, e->key, e->value, 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    printf("%s\n", e->value);
+    എങ്കിൽ (av_dict_set(&dict, "key", "old", 0) < 0)
+        തിരികെ 1;
+    e = av_dict_get(dict, "key", ശൂന്യ, 0);
+    എങ്കിൽ (av_dict_set(&dict, e->താക്കോൽ, "new val OK", 0) < 0)
+        തിരികെ 1;
+    e = av_dict_get(dict, "key", ശൂന്യ, 0);
+    printf("%s\n", e->മൂല്യം);
+    എങ്കിൽ (av_dict_set(&dict, e->താക്കോൽ, e->മൂല്യം, 0) < 0)
+        തിരികെ 1;
+    e = av_dict_get(dict, "key", ശൂന്യ, 0);
+    printf("%s\n", e->മൂല്യം);
     av_dict_free(&dict);
 
-    return 0;
+    തിരികെ 0;
 }

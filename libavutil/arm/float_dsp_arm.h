@@ -21,9 +21,9 @@
 #ifndef AVUTIL_ARM_FLOAT_DSP_ARM_H
 #define AVUTIL_ARM_FLOAT_DSP_ARM_H
 
-#include "libavutil/float_dsp.h"
+#അന്തര്ഭാവ "libavutil/float_dsp.h"
 
-void ff_float_dsp_init_vfp(AVFloatDSPContext *fdsp, int cpu_flags);
-void ff_float_dsp_init_neon(AVFloatDSPContext *fdsp);
+ശൂന്യം ff_float_dsp_init_vfp(AVFloatDSPContext *fdsp, പൂർണ്ണസംഖ്യ cpu_flags);
+ശൂന്യം ff_float_dsp_init_neon(AVFloatDSPContext *fdsp);
 
 #endif /* AVUTIL_ARM_FLOAT_DSP_ARM_H */

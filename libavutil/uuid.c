@@ -60,69 +60,69 @@
  * @author Zane van Iperen <zane@zanevaniperen.com>
  */
 
-#include "attributes_internal.h"
-#include "uuid.h"
-#include "error.h"
-#include "avstring.h"
+#അന്തര്ഭാവ "attributes_internal.h"
+#അന്തര്ഭാവ "uuid.h"
+#അന്തര്ഭാവ "error.h"
+#അന്തര്ഭാവ "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+പൂർണ്ണസംഖ്യ av_uuid_parse(സ്ഥിരം അക്ഷരം *in, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    എങ്കിൽ (strlen(in) != 36)
+        തിരികെ AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    തിരികെ av_uuid_parse_range(in, in + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+സ്ഥിതം പൂർണ്ണസംഖ്യ xdigit_to_int(അക്ഷരം c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    എങ്കിൽ (c >= 'a' && c <= 'f')
+        തിരികെ c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    എങ്കിൽ (c >= '0' && c <= '9')
+        തിരികെ c - '0';
 
-    return -1;
+    തിരികെ -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+പൂർണ്ണസംഖ്യ av_uuid_parse_range(സ്ഥിരം അക്ഷരം *in_start, സ്ഥിരം അക്ഷരം *in_end, AVUUID uu)
 {
-    int i;
-    const char *cp;
+    പൂർണ്ണസംഖ്യ i;
+    സ്ഥിരം അക്ഷരം *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    എങ്കിൽ ((in_end - in_start) != 36)
+        തിരികെ AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    വേണ്ടി (i = 0, cp = in_start; i < 16; i++) {
+        പൂർണ്ണസംഖ്യ hi;
+        പൂർണ്ണസംഖ്യ lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        എങ്കിൽ (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
         hi = xdigit_to_int(*cp++);
         lo = xdigit_to_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        എങ്കിൽ (hi == -1 || lo == -1)
+            തിരികെ AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    തിരികെ 0;
 }
 
-static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
+സ്ഥിതം attribute_nonstring സ്ഥിരം അക്ഷരം hexdigits_lower[16] = "0123456789abcdef";
 
-void av_uuid_unparse(const AVUUID uuid, char *out)
+ശൂന്യം av_uuid_unparse(സ്ഥിരം AVUUID uuid, അക്ഷരം *out)
 {
-    char *p = out;
+    അക്ഷരം *p = out;
 
-    for (int i = 0; i < 16; i++) {
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        എങ്കിൽ (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
@@ -133,10 +133,10 @@ void av_uuid_unparse(const AVUUID uuid, char *out)
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+പൂർണ്ണസംഖ്യ av_uuid_urn_parse(സ്ഥിരം അക്ഷരം *in, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    എങ്കിൽ (av_stristr(in, "urn:uuid:") != in)
+        തിരികെ AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    തിരികെ av_uuid_parse(in + 9, uu);
 }

@@ -19,29 +19,29 @@
 #ifndef AVUTIL_TIME_INTERNAL_H
 #define AVUTIL_TIME_INTERNAL_H
 
-#include <time.h>
-#include "config.h"
+#അന്തര്ഭാവ <time.h>
+#അന്തര്ഭാവ "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
-static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
+#എങ്കിൽ !HAVE_GMTIME_R && !defined(gmtime_r)
+സ്ഥിതം വരിയിൽ ഘടന tm *ff_gmtime_r(സ്ഥിരം time_t* clock, ഘടന tm *result)
 {
-    struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
+    ഘടന tm *ptr = gmtime(clock);
+    എങ്കിൽ (!ptr)
+        തിരികെ ശൂന്യ;
     *result = *ptr;
-    return result;
+    തിരികെ result;
 }
 #define gmtime_r ff_gmtime_r
 #endif
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
-static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
+#എങ്കിൽ !HAVE_LOCALTIME_R && !defined(localtime_r)
+സ്ഥിതം വരിയിൽ ഘടന tm *ff_localtime_r(സ്ഥിരം time_t* clock, ഘടന tm *result)
 {
-    struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
+    ഘടന tm *ptr = localtime(clock);
+    എങ്കിൽ (!ptr)
+        തിരികെ ശൂന്യ;
     *result = *ptr;
-    return result;
+    തിരികെ result;
 }
 #define localtime_r ff_localtime_r
 #endif

@@ -18,295 +18,295 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
-#include <string.h>
+#അന്തര്ഭാവ <inttypes.h>
+#അന്തര്ഭാവ <stdio.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "avassert.h"
-#include "avstring.h"
-#include "dict.h"
-#include "error.h"
-#include "mem.h"
-#include "bprint.h"
+#അന്തര്ഭാവ "avassert.h"
+#അന്തര്ഭാവ "avstring.h"
+#അന്തര്ഭാവ "dict.h"
+#അന്തര്ഭാവ "error.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "bprint.h"
 
-struct AVDictionary {
-    int count;
+ഘടന AVDictionary {
+    പൂർണ്ണസംഖ്യ എണ്ണം;
     AVDictionaryEntry *elems;
-    int duplicate_keys;
+    പൂർണ്ണസംഖ്യ duplicate_താക്കോലുകൾ;
 };
 
-int av_dict_count(const AVDictionary *m)
+പൂർണ്ണസംഖ്യ av_dict_എണ്ണം(സ്ഥിരം AVDictionary *m)
 {
-    return m ? m->count : 0;
+    തിരികെ m ? m->എണ്ണം : 0;
 }
 
-const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
-                                         const AVDictionaryEntry *prev)
+സ്ഥിരം AVDictionaryEntry *av_dict_iterate(സ്ഥിരം AVDictionary *m,
+                                         സ്ഥിരം AVDictionaryEntry *prev)
 {
-    int i = 0;
+    പൂർണ്ണസംഖ്യ i = 0;
 
-    if (!m)
-        return NULL;
+    എങ്കിൽ (!m)
+        തിരികെ ശൂന്യ;
 
-    if (prev)
+    എങ്കിൽ (prev)
         i = prev - m->elems + 1;
 
     av_assert2(i >= 0);
-    if (i >= m->count)
-        return NULL;
+    എങ്കിൽ (i >= m->എണ്ണം)
+        തിരികെ ശൂന്യ;
 
-    return &m->elems[i];
+    തിരികെ &m->elems[i];
 }
 
-AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags)
+AVDictionaryEntry *av_dict_get(സ്ഥിരം AVDictionary *m, സ്ഥിരം അക്ഷരം *താക്കോൽ,
+                               സ്ഥിരം AVDictionaryEntry *prev, പൂർണ്ണസംഖ്യ flags)
 {
-    const AVDictionaryEntry *entry = prev;
-    unsigned int j;
+    സ്ഥിരം AVDictionaryEntry *entry = prev;
+    unsigned പൂർണ്ണസംഖ്യ j;
 
-    if (!key)
-        return NULL;
+    എങ്കിൽ (!താക്കോൽ)
+        തിരികെ ശൂന്യ;
 
-    while ((entry = av_dict_iterate(m, entry))) {
-        const char *s = entry->key;
-        if (flags & AV_DICT_MATCH_CASE)
-            for (j = 0; s[j] == key[j] && key[j]; j++)
+    ആകുമ്പോൾ ((entry = av_dict_iterate(m, entry))) {
+        സ്ഥിരം അക്ഷരം *s = entry->താക്കോൽ;
+        എങ്കിൽ (flags & AV_DICT_MATCH_CASE)
+            വേണ്ടി (j = 0; s[j] == താക്കോൽ[j] && താക്കോൽ[j]; j++)
                 ;
-        else
-            for (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
+        അല്ലെങ്കിൽ
+            വേണ്ടി (j = 0; av_toupper(s[j]) == av_toupper(താക്കോൽ[j]) && താക്കോൽ[j]; j++)
                 ;
-        if (key[j])
-            continue;
-        if (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
-            continue;
-        return (AVDictionaryEntry *)entry;
+        എങ്കിൽ (താക്കോൽ[j])
+            തുടരുക;
+        എങ്കിൽ (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
+            തുടരുക;
+        തിരികെ (AVDictionaryEntry *)entry;
     }
-    return NULL;
+    തിരികെ ശൂന്യ;
 }
 
-int av_dict_set(AVDictionary **pm, const char *key, const char *value,
-                int flags)
+പൂർണ്ണസംഖ്യ av_dict_set(AVDictionary **pm, സ്ഥിരം അക്ഷരം *താക്കോൽ, സ്ഥിരം അക്ഷരം *മൂല്യം,
+                പൂർണ്ണസംഖ്യ flags)
 {
     AVDictionary *m = *pm;
-    AVDictionaryEntry *tag = NULL;
-    char *copy_key = NULL, *copy_value = NULL;
-    int err;
+    AVDictionaryEntry *tag = ശൂന്യ;
+    അക്ഷരം *copy_താക്കോൽ = ശൂന്യ, *copy_മൂല്യം = ശൂന്യ;
+    പൂർണ്ണസംഖ്യ err;
 
-    if (flags & AV_DICT_DONT_STRDUP_VAL)
-        copy_value = (void *)value;
-    else if (value)
-        copy_value = av_strdup(value);
-    if (!key) {
+    എങ്കിൽ (flags & AV_DICT_DONT_STRDUP_VAL)
+        copy_മൂല്യം = (ശൂന്യം *)മൂല്യം;
+    അല്ലെങ്കിൽ എങ്കിൽ (മൂല്യം)
+        copy_മൂല്യം = av_strdup(മൂല്യം);
+    എങ്കിൽ (!താക്കോൽ) {
         err = AVERROR(EINVAL);
-        goto err_out;
+        പോകുക err_out;
     }
-    if (flags & AV_DICT_DONT_STRDUP_KEY)
-        copy_key = (void *)key;
-    else
-        copy_key = av_strdup(key);
-    if (!copy_key || (value && !copy_value))
-        goto enomem;
+    എങ്കിൽ (flags & AV_DICT_DONT_STRDUP_താക്കോൽ)
+        copy_താക്കോൽ = (ശൂന്യം *)താക്കോൽ;
+    അല്ലെങ്കിൽ
+        copy_താക്കോൽ = av_strdup(താക്കോൽ);
+    എങ്കിൽ (!copy_താക്കോൽ || (മൂല്യം && !copy_മൂല്യം))
+        പോകുക enomem;
 
-    if (!(flags & AV_DICT_MULTIKEY)) {
-        tag = av_dict_get(m, key, NULL, flags);
-    } else if (flags & AV_DICT_DEDUP) {
-        while ((tag = av_dict_get(m, key, tag, flags))) {
-            if ((!value && !tag->value) ||
-                (value && tag->value && !strcmp(value, tag->value))) {
-                av_free(copy_key);
-                av_free(copy_value);
-                return 0;
+    എങ്കിൽ (!(flags & AV_DICT_MULTIKEY)) {
+        tag = av_dict_get(m, താക്കോൽ, ശൂന്യ, flags);
+    } അല്ലെങ്കിൽ എങ്കിൽ (flags & AV_DICT_DEDUP) {
+        ആകുമ്പോൾ ((tag = av_dict_get(m, താക്കോൽ, tag, flags))) {
+            എങ്കിൽ ((!മൂല്യം && !tag->മൂല്യം) ||
+                (മൂല്യം && tag->മൂല്യം && !strcmp(മൂല്യം, tag->മൂല്യം))) {
+                av_free(copy_താക്കോൽ);
+                av_free(copy_മൂല്യം);
+                തിരികെ 0;
             }
         }
     }
-    if (!m)
-        m = *pm = av_mallocz(sizeof(*m));
-    if (!m)
-        goto enomem;
+    എങ്കിൽ (!m)
+        m = *pm = av_mallocz(വലുപ്പം(*m));
+    എങ്കിൽ (!m)
+        പോകുക enomem;
 
-    if (tag) {
-        if (flags & AV_DICT_DONT_OVERWRITE) {
-            av_free(copy_key);
-            av_free(copy_value);
-            return 0;
+    എങ്കിൽ (tag) {
+        എങ്കിൽ (flags & AV_DICT_DONT_OVERWRITE) {
+            av_free(copy_താക്കോൽ);
+            av_free(copy_മൂല്യം);
+            തിരികെ 0;
         }
-        if (copy_value && flags & AV_DICT_APPEND) {
-            size_t oldlen = strlen(tag->value);
-            size_t new_part_len = strlen(copy_value);
+        എങ്കിൽ (copy_മൂല്യം && flags & AV_DICT_APPEND) {
+            size_t oldlen = strlen(tag->മൂല്യം);
+            size_t new_part_len = strlen(copy_മൂല്യം);
             size_t len = oldlen + new_part_len + 1;
-            char *newval = av_realloc(tag->value, len);
-            if (!newval)
-                goto enomem;
-            memcpy(newval + oldlen, copy_value, new_part_len + 1);
-            av_freep(&copy_value);
-            copy_value = newval;
-        } else
-            av_free(tag->value);
-        av_free(tag->key);
-        *tag = m->elems[--m->count];
-    } else if (copy_value) {
+            അക്ഷരം *newval = av_realloc(tag->മൂല്യം, len);
+            എങ്കിൽ (!newval)
+                പോകുക enomem;
+            memcpy(newval + oldlen, copy_മൂല്യം, new_part_len + 1);
+            av_freep(&copy_മൂല്യം);
+            copy_മൂല്യം = newval;
+        } അല്ലെങ്കിൽ
+            av_free(tag->മൂല്യം);
+        av_free(tag->താക്കോൽ);
+        *tag = m->elems[--m->എണ്ണം];
+    } അല്ലെങ്കിൽ എങ്കിൽ (copy_മൂല്യം) {
         AVDictionaryEntry *tmp = av_realloc_array(m->elems,
-                                                  m->count + 1, sizeof(*m->elems));
-        if (!tmp)
-            goto enomem;
+                                                  m->എണ്ണം + 1, വലുപ്പം(*m->elems));
+        എങ്കിൽ (!tmp)
+            പോകുക enomem;
         m->elems = tmp;
     }
-    if (copy_value) {
-        m->elems[m->count].key = copy_key;
-        m->elems[m->count].value = copy_value;
-        m->count++;
-        if (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
-            m->duplicate_keys = 1;
-    } else {
+    എങ്കിൽ (copy_മൂല്യം) {
+        m->elems[m->എണ്ണം].താക്കോൽ = copy_താക്കോൽ;
+        m->elems[m->എണ്ണം].മൂല്യം = copy_മൂല്യം;
+        m->എണ്ണം++;
+        എങ്കിൽ (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
+            m->duplicate_താക്കോലുകൾ = 1;
+    } അല്ലെങ്കിൽ {
         err = 0;
-        goto end;
+        പോകുക end;
     }
 
-    return 0;
+    തിരികെ 0;
 
 enomem:
     err = AVERROR(ENOMEM);
 err_out:
-    av_free(copy_value);
+    av_free(copy_മൂല്യം);
 end:
-    if (m && !m->count) {
+    എങ്കിൽ (m && !m->എണ്ണം) {
         av_freep(&m->elems);
         av_freep(pm);
     }
-    av_free(copy_key);
-    return err;
+    av_free(copy_താക്കോൽ);
+    തിരികെ err;
 }
 
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
-                int flags)
+പൂർണ്ണസംഖ്യ av_dict_set_int(AVDictionary **pm, സ്ഥിരം അക്ഷരം *താക്കോൽ, int64_t മൂല്യം,
+                പൂർണ്ണസംഖ്യ flags)
 {
-    char valuestr[22];
-    snprintf(valuestr, sizeof(valuestr), "%"PRId64, value);
+    അക്ഷരം valuestr[22];
+    snprintf(valuestr, വലുപ്പം(valuestr), "%"PRId64, മൂല്യം);
     flags &= ~AV_DICT_DONT_STRDUP_VAL;
-    return av_dict_set(pm, key, valuestr, flags);
+    തിരികെ av_dict_set(pm, താക്കോൽ, valuestr, flags);
 }
 
-static int parse_key_value_pair(AVDictionary **pm, const char **buf,
-                                const char *key_val_sep, const char *pairs_sep,
-                                int flags)
+സ്ഥിതം പൂർണ്ണസംഖ്യ parse_താക്കോൽ_മൂല്യം_pair(AVDictionary **pm, സ്ഥിരം അക്ഷരം **buf,
+                                സ്ഥിരം അക്ഷരം *താക്കോൽ_val_sep, സ്ഥിരം അക്ഷരം *pairs_sep,
+                                പൂർണ്ണസംഖ്യ flags)
 {
-    char *key = av_get_token(buf, key_val_sep);
-    char *val = NULL;
-    int ret;
+    അക്ഷരം *താക്കോൽ = av_get_token(buf, താക്കോൽ_val_sep);
+    അക്ഷരം *val = ശൂന്യ;
+    പൂർണ്ണസംഖ്യ ret;
 
-    if (key && *key && strspn(*buf, key_val_sep)) {
+    എങ്കിൽ (താക്കോൽ && *താക്കോൽ && strspn(*buf, താക്കോൽ_val_sep)) {
         (*buf)++;
         val = av_get_token(buf, pairs_sep);
     }
 
-    if (key && *key && val && *val)
-        ret = av_dict_set(pm, key, val, flags);
-    else
+    എങ്കിൽ (താക്കോൽ && *താക്കോൽ && val && *val)
+        ret = av_dict_set(pm, താക്കോൽ, val, flags);
+    അല്ലെങ്കിൽ
         ret = AVERROR(EINVAL);
 
-    av_freep(&key);
+    av_freep(&താക്കോൽ);
     av_freep(&val);
 
-    return ret;
+    തിരികെ ret;
 }
 
-int av_dict_parse_string(AVDictionary **pm, const char *str,
-                         const char *key_val_sep, const char *pairs_sep,
-                         int flags)
+പൂർണ്ണസംഖ്യ av_dict_parse_string(AVDictionary **pm, സ്ഥിരം അക്ഷരം *str,
+                         സ്ഥിരം അക്ഷരം *താക്കോൽ_val_sep, സ്ഥിരം അക്ഷരം *pairs_sep,
+                         പൂർണ്ണസംഖ്യ flags)
 {
-    int ret;
+    പൂർണ്ണസംഖ്യ ret;
 
-    if (!str)
-        return 0;
+    എങ്കിൽ (!str)
+        തിരികെ 0;
 
     /* ignore STRDUP flags */
-    flags &= ~(AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    flags &= ~(AV_DICT_DONT_STRDUP_താക്കോൽ | AV_DICT_DONT_STRDUP_VAL);
 
-    while (*str) {
-        if ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
-            return ret;
+    ആകുമ്പോൾ (*str) {
+        എങ്കിൽ ((ret = parse_താക്കോൽ_മൂല്യം_pair(pm, &str, താക്കോൽ_val_sep, pairs_sep, flags)) < 0)
+            തിരികെ ret;
 
-        if (*str)
+        എങ്കിൽ (*str)
             str++;
     }
 
-    return 0;
+    തിരികെ 0;
 }
 
-void av_dict_free(AVDictionary **pm)
+ശൂന്യം av_dict_free(AVDictionary **pm)
 {
     AVDictionary *m = *pm;
 
-    if (m) {
-        while (m->count--) {
-            av_freep(&m->elems[m->count].key);
-            av_freep(&m->elems[m->count].value);
+    എങ്കിൽ (m) {
+        ആകുമ്പോൾ (m->എണ്ണം--) {
+            av_freep(&m->elems[m->എണ്ണം].താക്കോൽ);
+            av_freep(&m->elems[m->എണ്ണം].മൂല്യം);
         }
         av_freep(&m->elems);
     }
     av_freep(pm);
 }
 
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags)
+പൂർണ്ണസംഖ്യ av_dict_copy(AVDictionary **dst, സ്ഥിരം AVDictionary *src, പൂർണ്ണസംഖ്യ flags)
 {
-    const AVDictionaryEntry *t = NULL;
+    സ്ഥിരം AVDictionaryEntry *t = ശൂന്യ;
 
-    if (!*dst && src && src->count && !src->duplicate_keys &&
+    എങ്കിൽ (!*dst && src && src->എണ്ണം && !src->duplicate_താക്കോലുകൾ &&
         !(flags & AV_DICT_IGNORE_SUFFIX)) {
-        AVDictionary *m = av_mallocz(sizeof(*m));
-        if (!m)
-            return AVERROR(ENOMEM);
-        m->elems = av_calloc(src->count, sizeof(*m->elems));
-        if (!m->elems) {
+        AVDictionary *m = av_mallocz(വലുപ്പം(*m));
+        എങ്കിൽ (!m)
+            തിരികെ AVERROR(ENOMEM);
+        m->elems = av_calloc(src->എണ്ണം, വലുപ്പം(*m->elems));
+        എങ്കിൽ (!m->elems) {
             av_free(m);
-            return AVERROR(ENOMEM);
+            തിരികെ AVERROR(ENOMEM);
         }
         *dst = m;
-        for (int i = 0; i < src->count; i++) {
-            m->elems[i].key   = av_strdup(src->elems[i].key);
-            m->elems[i].value = av_strdup(src->elems[i].value);
-            m->count++;
-            if (!m->elems[i].key || !m->elems[i].value) {
+        വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < src->എണ്ണം; i++) {
+            m->elems[i].താക്കോൽ   = av_strdup(src->elems[i].താക്കോൽ);
+            m->elems[i].മൂല്യം = av_strdup(src->elems[i].മൂല്യം);
+            m->എണ്ണം++;
+            എങ്കിൽ (!m->elems[i].താക്കോൽ || !m->elems[i].മൂല്യം) {
                 av_dict_free(dst);
-                return AVERROR(ENOMEM);
+                തിരികെ AVERROR(ENOMEM);
             }
         }
-        return 0;
+        തിരികെ 0;
     }
 
-    while ((t = av_dict_iterate(src, t))) {
-        int ret = av_dict_set(dst, t->key, t->value, flags);
-        if (ret < 0)
-            return ret;
+    ആകുമ്പോൾ ((t = av_dict_iterate(src, t))) {
+        പൂർണ്ണസംഖ്യ ret = av_dict_set(dst, t->താക്കോൽ, t->മൂല്യം, flags);
+        എങ്കിൽ (ret < 0)
+            തിരികെ ret;
     }
 
-    return 0;
+    തിരികെ 0;
 }
 
-int av_dict_get_string(const AVDictionary *m, char **buffer,
-                       const char key_val_sep, const char pairs_sep)
+പൂർണ്ണസംഖ്യ av_dict_get_string(സ്ഥിരം AVDictionary *m, അക്ഷരം **buffer,
+                       സ്ഥിരം അക്ഷരം താക്കോൽ_val_sep, സ്ഥിരം അക്ഷരം pairs_sep)
 {
-    const AVDictionaryEntry *t = NULL;
+    സ്ഥിരം AVDictionaryEntry *t = ശൂന്യ;
     AVBPrint bprint;
-    int cnt = 0;
-    char special_chars[] = {pairs_sep, key_val_sep, '\0'};
+    പൂർണ്ണസംഖ്യ cnt = 0;
+    അക്ഷരം special_chars[] = {pairs_sep, താക്കോൽ_val_sep, '\0'};
 
-    if (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
-        pairs_sep == '\\' || key_val_sep == '\\')
-        return AVERROR(EINVAL);
+    എങ്കിൽ (!buffer || pairs_sep == '\0' || താക്കോൽ_val_sep == '\0' || pairs_sep == താക്കോൽ_val_sep ||
+        pairs_sep == '\\' || താക്കോൽ_val_sep == '\\')
+        തിരികെ AVERROR(EINVAL);
 
-    if (!av_dict_count(m)) {
+    എങ്കിൽ (!av_dict_എണ്ണം(m)) {
         *buffer = av_strdup("");
-        return *buffer ? 0 : AVERROR(ENOMEM);
+        തിരികെ *buffer ? 0 : AVERROR(ENOMEM);
     }
 
     av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
-    while ((t = av_dict_iterate(m, t))) {
-        if (cnt++)
+    ആകുമ്പോൾ ((t = av_dict_iterate(m, t))) {
+        എങ്കിൽ (cnt++)
             av_bprint_append_data(&bprint, &pairs_sep, 1);
-        av_bprint_escape(&bprint, t->key, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
-        av_bprint_append_data(&bprint, &key_val_sep, 1);
-        av_bprint_escape(&bprint, t->value, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+        av_bprint_escape(&bprint, t->താക്കോൽ, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+        av_bprint_append_data(&bprint, &താക്കോൽ_val_sep, 1);
+        av_bprint_escape(&bprint, t->മൂല്യം, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
     }
-    return av_bprint_finalize(&bprint, buffer);
+    തിരികെ av_bprint_finalize(&bprint, buffer);
 }

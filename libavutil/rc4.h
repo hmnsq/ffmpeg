@@ -21,7 +21,7 @@
 #ifndef AVUTIL_RC4_H
 #define AVUTIL_RC4_H
 
-#include <stdint.h>
+#അന്തര്ഭാവ <stdint.h>
 
 /**
  * @defgroup lavu_rc4 RC4
@@ -29,15 +29,15 @@
  * @{
  */
 
-typedef struct AVRC4 {
+തരനിർവചനം ഘടന AVRC4 {
     uint8_t state[256];
-    int x, y;
+    പൂർണ്ണസംഖ്യ x, y;
 } AVRC4;
 
 /**
  * Allocate an AVRC4 context.
  */
-AVRC4 *av_rc4_alloc(void);
+AVRC4 *av_rc4_alloc(ശൂന്യം);
 
 /**
  * @brief Initializes an AVRC4 context.
@@ -48,7 +48,7 @@ AVRC4 *av_rc4_alloc(void);
  * @param decrypt 0 for encryption, 1 for decryption, currently has no effect
  * @return zero on success, negative value otherwise
  */
-int av_rc4_init(struct AVRC4 *d, const uint8_t *key, int key_bits, int decrypt);
+പൂർണ്ണസംഖ്യ av_rc4_init(ഘടന AVRC4 *d, സ്ഥിരം uint8_t *താക്കോൽ, പൂർണ്ണസംഖ്യ താക്കോൽ_bits, പൂർണ്ണസംഖ്യ decrypt);
 
 /**
  * @brief Encrypts / decrypts using the RC4 algorithm.
@@ -60,7 +60,7 @@ int av_rc4_init(struct AVRC4 *d, const uint8_t *key, int key_bits, int decrypt);
  * @param iv not (yet) used for RC4, should be NULL
  * @param decrypt 0 for encryption, 1 for decryption, not (yet) used
  */
-void av_rc4_crypt(struct AVRC4 *d, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+ശൂന്യം av_rc4_crypt(ഘടന AVRC4 *d, uint8_t *dst, സ്ഥിരം uint8_t *src, പൂർണ്ണസംഖ്യ എണ്ണം, uint8_t *iv, പൂർണ്ണസംഖ്യ decrypt);
 
 /**
  * @}

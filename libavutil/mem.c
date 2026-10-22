@@ -26,26 +26,26 @@
 
 #define _XOPEN_SOURCE 600
 
-#include "config.h"
+#അന്തര്ഭാവ "config.h"
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdatomic.h>
-#include <string.h>
-#if HAVE_MALLOC_H
-#include <malloc.h>
+#അന്തര്ഭാവ <limits.h>
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ <stdlib.h>
+#അന്തര്ഭാവ <stdatomic.h>
+#അന്തര്ഭാവ <string.h>
+#എങ്കിൽ HAVE_MALLOC_H
+#അന്തര്ഭാവ <malloc.h>
 #endif
 
-#include "attributes.h"
-#include "avassert.h"
-#include "dynarray.h"
-#include "error.h"
-#include "internal.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "sanitizer.h"
+#അന്തര്ഭാവ "attributes.h"
+#അന്തര്ഭാവ "avassert.h"
+#അന്തര്ഭാവ "dynarray.h"
+#അന്തര്ഭാവ "error.h"
+#അന്തര്ഭാവ "internal.h"
+#അന്തര്ഭാവ "intreadwrite.h"
+#അന്തര്ഭാവ "macros.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "sanitizer.h"
 
 #ifdef MALLOC_PREFIX
 
@@ -53,13 +53,13 @@
 #define memalign       AV_JOIN(MALLOC_PREFIX, memalign)
 #define posix_memalign AV_JOIN(MALLOC_PREFIX, posix_memalign)
 #define realloc        AV_JOIN(MALLOC_PREFIX, realloc)
-#define free           AV_JOIN(MALLOC_PREFIX, free)
+#define സ്വതന്ത്രം           AV_JOIN(MALLOC_PREFIX, സ്വതന്ത്രം)
 
-void *malloc(size_t size);
-void *memalign(size_t align, size_t size);
-int   posix_memalign(void **ptr, size_t align, size_t size);
-void *realloc(void *ptr, size_t size);
-void  free(void *ptr);
+ശൂന്യം *malloc(size_t size);
+ശൂന്യം *memalign(size_t align, size_t size);
+പൂർണ്ണസംഖ്യ   posix_memalign(ശൂന്യം **ptr, size_t align, size_t size);
+ശൂന്യം *realloc(ശൂന്യം *ptr, size_t size);
+ശൂന്യം  സ്വതന്ത്രം(ശൂന്യം *ptr);
 
 #endif /* MALLOC_PREFIX */
 
@@ -67,9 +67,9 @@ void  free(void *ptr);
 
 #define FF_MEMORY_POISON 0x2a
 
-static void poison_memory(void *ptr, size_t size)
+സ്ഥിതം ശൂന്യം poison_memory(ശൂന്യം *ptr, size_t size)
 {
-#if CONFIG_MEMORY_POISONING
+#എങ്കിൽ CONFIG_MEMORY_POISONING
     memset(ptr, FF_MEMORY_POISON, size);
 #endif
     FF_MEM_UNDEFINED(ptr, size);
@@ -81,83 +81,83 @@ static void poison_memory(void *ptr, size_t size)
  * intercept it. Which one is linked cannot be told at compile time, so probe
  * once whether the byte after an aligned allocation is poisoned and align by
  * hand only when it is not. */
-#if HAVE_ASAN && HAVE_ALIGNED_MALLOC && !HAVE_POSIX_MEMALIGN && !HAVE_MEMALIGN
+#എങ്കിൽ HAVE_ASAN && HAVE_ALIGNED_MALLOC && !HAVE_POSIX_MEMALIGN && !HAVE_MEMALIGN
 #define ASAN_ALIGNED_ALLOC 1
 
-static int asan_aligned_alloc_needed(void)
+സ്ഥിതം പൂർണ്ണസംഖ്യ asan_aligned_alloc_needed(ശൂന്യം)
 {
-    static atomic_int needed = -1;
-    int ret = atomic_load_explicit(&needed, memory_order_relaxed);
+    സ്ഥിതം atomic_int needed = -1;
+    പൂർണ്ണസംഖ്യ ret = atomic_load_explicit(&needed, memory_order_relaxed);
 
-    if (ret < 0) {
+    എങ്കിൽ (ret < 0) {
         uint8_t *p = _aligned_malloc(16, ALIGN);
-        int probed = !p || !__asan_address_is_poisoned(p + 16);
+        പൂർണ്ണസംഖ്യ probed = !p || !__asan_address_is_poisoned(p + 16);
         _aligned_free(p);
         /* Every block must be freed by the allocator that made it, so the
          * first probe to finish decides for all callers. */
-        if (atomic_compare_exchange_strong_explicit(&needed, &ret, probed,
+        എങ്കിൽ (atomic_compare_exchange_strong_explicit(&needed, &ret, probed,
                                                     memory_order_relaxed,
                                                     memory_order_relaxed))
             ret = probed;
     }
-    return ret;
+    തിരികെ ret;
 }
 
-typedef struct AsanAlignedHeader {
-    void  *base;
+തരനിർവചനം ഘടന AsanAlignedHeader {
+    ശൂന്യം  *base;
     size_t size;
 } AsanAlignedHeader;
 
-static void *asan_aligned_malloc(size_t size)
+സ്ഥിതം ശൂന്യം *asan_aligned_malloc(size_t size)
 {
     AsanAlignedHeader *hdr;
     uint8_t *base, *ptr;
     size_t total;
 
-    if (size > SIZE_MAX - ALIGN - sizeof(*hdr))
-        return NULL;
-    total = size + ALIGN + sizeof(*hdr);
+    എങ്കിൽ (size > SIZE_MAX - ALIGN - വലുപ്പം(*hdr))
+        തിരികെ ശൂന്യ;
+    total = size + ALIGN + വലുപ്പം(*hdr);
     base  = malloc(total);
-    if (!base)
-        return NULL;
-    ptr = (uint8_t *)FFALIGN((uintptr_t)base + sizeof(*hdr), ALIGN);
+    എങ്കിൽ (!base)
+        തിരികെ ശൂന്യ;
+    ptr = (uint8_t *)FFALIGN((uintptr_t)base + വലുപ്പം(*hdr), ALIGN);
     hdr = (AsanAlignedHeader *)ptr - 1;
     hdr->base = base;
     hdr->size = size;
     FF_ASAN_POISON(base, ptr - base);
     FF_ASAN_POISON(ptr + size, base + total - (ptr + size));
-    return ptr;
+    തിരികെ ptr;
 }
 
-static AsanAlignedHeader *asan_aligned_header(void *ptr)
+സ്ഥിതം AsanAlignedHeader *asan_aligned_header(ശൂന്യം *ptr)
 {
     AsanAlignedHeader *hdr = (AsanAlignedHeader *)ptr - 1;
-    FF_ASAN_UNPOISON(hdr, sizeof(*hdr));
-    return hdr;
+    FF_ASAN_UNPOISON(hdr, വലുപ്പം(*hdr));
+    തിരികെ hdr;
 }
 
-static void asan_aligned_free(void *ptr)
+സ്ഥിതം ശൂന്യം asan_aligned_free(ശൂന്യം *ptr)
 {
-    if (ptr)
-        free(asan_aligned_header(ptr)->base);
+    എങ്കിൽ (ptr)
+        സ്വതന്ത്രം(asan_aligned_header(ptr)->base);
 }
 
-static void *asan_aligned_realloc(void *ptr, size_t size)
+സ്ഥിതം ശൂന്യം *asan_aligned_realloc(ശൂന്യം *ptr, size_t size)
 {
     AsanAlignedHeader *hdr;
-    void *ret;
+    ശൂന്യം *ret;
 
-    if (!ptr)
-        return asan_aligned_malloc(size);
+    എങ്കിൽ (!ptr)
+        തിരികെ asan_aligned_malloc(size);
     ret = asan_aligned_malloc(size);
-    if (!ret)
-        return NULL;
+    എങ്കിൽ (!ret)
+        തിരികെ ശൂന്യ;
     hdr = asan_aligned_header(ptr);
     memcpy(ret, ptr, FFMIN(size, hdr->size));
-    free(hdr->base);
-    return ret;
+    സ്വതന്ത്രം(hdr->base);
+    തിരികെ ret;
 }
-#else
+#അല്ലെങ്കിൽ
 #define ASAN_ALIGNED_ALLOC 0
 #endif
 
@@ -166,52 +166,52 @@ static void *asan_aligned_realloc(void *ptr, size_t size)
  * dynamic libraries and remove -Wl,-Bsymbolic from the linker flags.
  * Note that this will cost performance. */
 
-static atomic_size_t max_alloc_size = INT_MAX;
+സ്ഥിതം atomic_size_t max_alloc_size = INT_MAX;
 
-void av_max_alloc(size_t max){
+ശൂന്യം av_max_alloc(size_t max){
     atomic_store_explicit(&max_alloc_size, max, memory_order_relaxed);
 }
 
-static int size_mult(size_t a, size_t b, size_t *r)
+സ്ഥിതം പൂർണ്ണസംഖ്യ size_mult(size_t a, size_t b, size_t *r)
 {
     size_t t;
 
-#if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_mul_overflow)
-    if (__builtin_mul_overflow(a, b, &t))
-        return AVERROR(EINVAL);
-#else
+#എങ്കിൽ (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_mul_overflow)
+    എങ്കിൽ (__builtin_mul_overflow(a, b, &t))
+        തിരികെ AVERROR(EINVAL);
+#അല്ലെങ്കിൽ
     t = a * b;
     /* Hack inspired from glibc: don't try the division if nelem and elsize
      * are both less than sqrt(SIZE_MAX). */
-    if ((a | b) >= ((size_t)1 << (sizeof(size_t) * 4)) && a && t / a != b)
-        return AVERROR(EINVAL);
+    എങ്കിൽ ((a | b) >= ((size_t)1 << (വലുപ്പം(size_t) * 4)) && a && t / a != b)
+        തിരികെ AVERROR(EINVAL);
 #endif
     *r = t;
-    return 0;
+    തിരികെ 0;
 }
 
-void *av_malloc(size_t size)
+ശൂന്യം *av_malloc(size_t size)
 {
-    void *ptr = NULL;
+    ശൂന്യം *ptr = ശൂന്യ;
 
-    if (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
-        return NULL;
+    എങ്കിൽ (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
+        തിരികെ ശൂന്യ;
 
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
+#എങ്കിൽ ASAN_ALIGNED_ALLOC
+    എങ്കിൽ (asan_aligned_alloc_needed())
         ptr = asan_aligned_malloc(size);
-    else
+    അല്ലെങ്കിൽ
         ptr = _aligned_malloc(size, ALIGN);
-#elif HAVE_POSIX_MEMALIGN
-    if (size) //OS X on SDK 10.6 has a broken posix_memalign implementation
-    if (posix_memalign(&ptr, ALIGN, size))
-        ptr = NULL;
-#elif HAVE_ALIGNED_MALLOC
+#അല്ലെങ്കിലെങ്കിൽ HAVE_POSIX_MEMALIGN
+    എങ്കിൽ (size) //OS X on SDK 10.6 has a broken posix_memalign implementation
+    എങ്കിൽ (posix_memalign(&ptr, ALIGN, size))
+        ptr = ശൂന്യ;
+#അല്ലെങ്കിലെങ്കിൽ HAVE_ALIGNED_MALLOC
     ptr = _aligned_malloc(size, ALIGN);
-#elif HAVE_MEMALIGN
+#അല്ലെങ്കിലെങ്കിൽ HAVE_MEMALIGN
 #ifndef __DJGPP__
     ptr = memalign(ALIGN, size);
-#else
+#അല്ലെങ്കിൽ
     ptr = memalign(size, ALIGN);
 #endif
     /* Why 64?
@@ -238,263 +238,263 @@ void *av_malloc(size_t size)
      *
      * BTW, malloc seems to do 8-byte alignment by default here.
      */
-#else
+#അല്ലെങ്കിൽ
     ptr = malloc(size);
 #endif
-    if(!ptr && !size) {
+    എങ്കിൽ(!ptr && !size) {
         size = 1;
         ptr= av_malloc(1);
     }
-    if (ptr)
+    എങ്കിൽ (ptr)
         poison_memory(ptr, size);
-    return ptr;
+    തിരികെ ptr;
 }
 
-void *av_realloc(void *ptr, size_t size)
+ശൂന്യം *av_realloc(ശൂന്യം *ptr, size_t size)
 {
-    void *ret;
-    if (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
-        return NULL;
+    ശൂന്യം *ret;
+    എങ്കിൽ (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
+        തിരികെ ശൂന്യ;
 
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
+#എങ്കിൽ ASAN_ALIGNED_ALLOC
+    എങ്കിൽ (asan_aligned_alloc_needed())
         ret = asan_aligned_realloc(ptr, size + !size);
-    else
+    അല്ലെങ്കിൽ
         ret = _aligned_realloc(ptr, size + !size, ALIGN);
-#elif HAVE_ALIGNED_MALLOC
+#അല്ലെങ്കിലെങ്കിൽ HAVE_ALIGNED_MALLOC
     ret = _aligned_realloc(ptr, size + !size, ALIGN);
-#else
+#അല്ലെങ്കിൽ
     ret = realloc(ptr, size + !size);
 #endif
-    if (ret && !ptr)
+    എങ്കിൽ (ret && !ptr)
         poison_memory(ret, size);
-    return ret;
+    തിരികെ ret;
 }
 
-void *av_realloc_f(void *ptr, size_t nelem, size_t elsize)
+ശൂന്യം *av_realloc_f(ശൂന്യം *ptr, size_t nelem, size_t elsize)
 {
     size_t size;
-    void *r;
+    ശൂന്യം *r;
 
-    if (size_mult(elsize, nelem, &size)) {
+    എങ്കിൽ (size_mult(elsize, nelem, &size)) {
         av_free(ptr);
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
     r = av_realloc(ptr, size);
-    if (!r)
+    എങ്കിൽ (!r)
         av_free(ptr);
-    return r;
+    തിരികെ r;
 }
 
-int av_reallocp(void *ptr, size_t size)
+പൂർണ്ണസംഖ്യ av_reallocp(ശൂന്യം *ptr, size_t size)
 {
-    void *val;
+    ശൂന്യം *val;
 
-    if (!size) {
+    എങ്കിൽ (!size) {
         av_freep(ptr);
-        return 0;
+        തിരികെ 0;
     }
 
-    memcpy(&val, ptr, sizeof(val));
+    memcpy(&val, ptr, വലുപ്പം(val));
     val = av_realloc(val, size);
 
-    if (!val) {
+    എങ്കിൽ (!val) {
         av_freep(ptr);
-        return AVERROR(ENOMEM);
+        തിരികെ AVERROR(ENOMEM);
     }
 
-    memcpy(ptr, &val, sizeof(val));
-    return 0;
+    memcpy(ptr, &val, വലുപ്പം(val));
+    തിരികെ 0;
 }
 
-void *av_malloc_array(size_t nmemb, size_t size)
+ശൂന്യം *av_malloc_array(size_t nmemb, size_t size)
 {
     size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_malloc(result);
+    എങ്കിൽ (size_mult(nmemb, size, &result) < 0)
+        തിരികെ ശൂന്യ;
+    തിരികെ av_malloc(result);
 }
 
-void *av_realloc_array(void *ptr, size_t nmemb, size_t size)
+ശൂന്യം *av_realloc_array(ശൂന്യം *ptr, size_t nmemb, size_t size)
 {
     size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_realloc(ptr, result);
+    എങ്കിൽ (size_mult(nmemb, size, &result) < 0)
+        തിരികെ ശൂന്യ;
+    തിരികെ av_realloc(ptr, result);
 }
 
-int av_reallocp_array(void *ptr, size_t nmemb, size_t size)
+പൂർണ്ണസംഖ്യ av_reallocp_array(ശൂന്യം *ptr, size_t nmemb, size_t size)
 {
-    void *val;
+    ശൂന്യം *val;
 
-    memcpy(&val, ptr, sizeof(val));
+    memcpy(&val, ptr, വലുപ്പം(val));
     val = av_realloc_f(val, nmemb, size);
-    memcpy(ptr, &val, sizeof(val));
-    if (!val && nmemb && size)
-        return AVERROR(ENOMEM);
+    memcpy(ptr, &val, വലുപ്പം(val));
+    എങ്കിൽ (!val && nmemb && size)
+        തിരികെ AVERROR(ENOMEM);
 
-    return 0;
+    തിരികെ 0;
 }
 
-void av_free(void *ptr)
+ശൂന്യം av_free(ശൂന്യം *ptr)
 {
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
+#എങ്കിൽ ASAN_ALIGNED_ALLOC
+    എങ്കിൽ (asan_aligned_alloc_needed())
         asan_aligned_free(ptr);
-    else
+    അല്ലെങ്കിൽ
         _aligned_free(ptr);
-#elif HAVE_ALIGNED_MALLOC
+#അല്ലെങ്കിലെങ്കിൽ HAVE_ALIGNED_MALLOC
     _aligned_free(ptr);
-#else
-    free(ptr);
+#അല്ലെങ്കിൽ
+    സ്വതന്ത്രം(ptr);
 #endif
 }
 
-void av_freep(void *arg)
+ശൂന്യം av_freep(ശൂന്യം *arg)
 {
-    void *val;
+    ശൂന്യം *val;
 
-    memcpy(&val, arg, sizeof(val));
-    memcpy(arg, &(void *){ NULL }, sizeof(val));
+    memcpy(&val, arg, വലുപ്പം(val));
+    memcpy(arg, &(ശൂന്യം *){ ശൂന്യ }, വലുപ്പം(val));
     av_free(val);
 }
 
-void *av_mallocz(size_t size)
+ശൂന്യം *av_mallocz(size_t size)
 {
-    void *ptr = av_malloc(size);
-    if (ptr)
+    ശൂന്യം *ptr = av_malloc(size);
+    എങ്കിൽ (ptr)
         memset(ptr, 0, size);
-    return ptr;
+    തിരികെ ptr;
 }
 
-void *av_calloc(size_t nmemb, size_t size)
+ശൂന്യം *av_calloc(size_t nmemb, size_t size)
 {
     size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_mallocz(result);
+    എങ്കിൽ (size_mult(nmemb, size, &result) < 0)
+        തിരികെ ശൂന്യ;
+    തിരികെ av_mallocz(result);
 }
 
-char *av_strdup(const char *s)
+അക്ഷരം *av_strdup(സ്ഥിരം അക്ഷരം *s)
 {
-    char *ptr = NULL;
-    if (s) {
+    അക്ഷരം *ptr = ശൂന്യ;
+    എങ്കിൽ (s) {
         size_t len = strlen(s) + 1;
-        ptr = av_realloc(NULL, len);
-        if (ptr)
+        ptr = av_realloc(ശൂന്യ, len);
+        എങ്കിൽ (ptr)
             memcpy(ptr, s, len);
     }
-    return ptr;
+    തിരികെ ptr;
 }
 
-char *av_strndup(const char *s, size_t len)
+അക്ഷരം *av_strndup(സ്ഥിരം അക്ഷരം *s, size_t len)
 {
-    if (!s)
-        return NULL;
+    എങ്കിൽ (!s)
+        തിരികെ ശൂന്യ;
 
-    const char *end = memchr(s, 0, len);
-    if (end)
+    സ്ഥിരം അക്ഷരം *end = memchr(s, 0, len);
+    എങ്കിൽ (end)
         len = end - s;
 
-    char *ret = av_realloc(NULL, len + 1);
-    if (!ret)
-        return NULL;
+    അക്ഷരം *ret = av_realloc(ശൂന്യ, len + 1);
+    എങ്കിൽ (!ret)
+        തിരികെ ശൂന്യ;
 
     memcpy(ret, s, len);
     ret[len] = 0;
-    return ret;
+    തിരികെ ret;
 }
 
-void *av_memdup(const void *p, size_t size)
+ശൂന്യം *av_memdup(സ്ഥിരം ശൂന്യം *p, size_t size)
 {
-    void *ptr = NULL;
-    if (p) {
+    ശൂന്യം *ptr = ശൂന്യ;
+    എങ്കിൽ (p) {
         ptr = av_malloc(size);
-        if (ptr)
+        എങ്കിൽ (ptr)
             memcpy(ptr, p, size);
     }
-    return ptr;
+    തിരികെ ptr;
 }
 
-int av_dynarray_add_nofree(void *tab_ptr, int *nb_ptr, void *elem)
+പൂർണ്ണസംഖ്യ av_dynarray_add_nofree(ശൂന്യം *tab_ptr, പൂർണ്ണസംഖ്യ *nb_ptr, ശൂന്യം *elem)
 {
-    void **tab;
-    memcpy(&tab, tab_ptr, sizeof(tab));
+    ശൂന്യം **tab;
+    memcpy(&tab, tab_ptr, വലുപ്പം(tab));
 
-    FF_DYNARRAY_ADD(INT_MAX, sizeof(*tab), tab, *nb_ptr, {
+    FF_DYNARRAY_ADD(INT_MAX, വലുപ്പം(*tab), tab, *nb_ptr, {
         tab[*nb_ptr] = elem;
-        memcpy(tab_ptr, &tab, sizeof(tab));
+        memcpy(tab_ptr, &tab, വലുപ്പം(tab));
     }, {
-        return AVERROR(ENOMEM);
+        തിരികെ AVERROR(ENOMEM);
     });
-    return 0;
+    തിരികെ 0;
 }
 
-void av_dynarray_add(void *tab_ptr, int *nb_ptr, void *elem)
+ശൂന്യം av_dynarray_add(ശൂന്യം *tab_ptr, പൂർണ്ണസംഖ്യ *nb_ptr, ശൂന്യം *elem)
 {
-    void **tab;
-    memcpy(&tab, tab_ptr, sizeof(tab));
+    ശൂന്യം **tab;
+    memcpy(&tab, tab_ptr, വലുപ്പം(tab));
 
-    FF_DYNARRAY_ADD(INT_MAX, sizeof(*tab), tab, *nb_ptr, {
+    FF_DYNARRAY_ADD(INT_MAX, വലുപ്പം(*tab), tab, *nb_ptr, {
         tab[*nb_ptr] = elem;
-        memcpy(tab_ptr, &tab, sizeof(tab));
+        memcpy(tab_ptr, &tab, വലുപ്പം(tab));
     }, {
         *nb_ptr = 0;
         av_freep(tab_ptr);
     });
 }
 
-void *av_dynarray2_add(void **tab_ptr, int *nb_ptr, size_t elem_size,
-                       const uint8_t *elem_data)
+ശൂന്യം *av_dynarray2_add(ശൂന്യം **tab_ptr, പൂർണ്ണസംഖ്യ *nb_ptr, size_t elem_size,
+                       സ്ഥിരം uint8_t *elem_data)
 {
-    uint8_t *tab_elem_data = NULL;
+    uint8_t *tab_elem_data = ശൂന്യ;
 
     FF_DYNARRAY_ADD(INT_MAX, elem_size, *tab_ptr, *nb_ptr, {
         tab_elem_data = (uint8_t *)*tab_ptr + (*nb_ptr) * elem_size;
-        if (elem_data)
+        എങ്കിൽ (elem_data)
             memcpy(tab_elem_data, elem_data, elem_size);
-        else
+        അല്ലെങ്കിൽ
             poison_memory(tab_elem_data, elem_size);
     }, {
         av_freep(tab_ptr);
         *nb_ptr = 0;
     });
-    return tab_elem_data;
+    തിരികെ tab_elem_data;
 }
 
-static void fill16(uint8_t *dst, int len)
+സ്ഥിതം ശൂന്യം fill16(uint8_t *dst, പൂർണ്ണസംഖ്യ len)
 {
     uint32_t v = AV_RN16(dst - 2);
 
     v |= v << 16;
 
-    while (len >= 4) {
+    ആകുമ്പോൾ (len >= 4) {
         AV_WN32(dst, v);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    ആകുമ്പോൾ (len--) {
         *dst = dst[-2];
         dst++;
     }
 }
 
-static void fill24(uint8_t *dst, int len)
+സ്ഥിതം ശൂന്യം fill24(uint8_t *dst, പൂർണ്ണസംഖ്യ len)
 {
-#if HAVE_BIGENDIAN
+#എങ്കിൽ HAVE_BIGENDIAN
     uint32_t v = AV_RB24(dst - 3);
     uint32_t a = v << 8  | v >> 16;
     uint32_t b = v << 16 | v >> 8;
     uint32_t c = v << 24 | v;
-#else
+#അല്ലെങ്കിൽ
     uint32_t v = AV_RL24(dst - 3);
     uint32_t a = v       | v << 24;
     uint32_t b = v >> 8  | v << 16;
     uint32_t c = v >> 16 | v << 8;
 #endif
 
-    while (len >= 12) {
+    ആകുമ്പോൾ (len >= 12) {
         AV_WN32(dst,     a);
         AV_WN32(dst + 4, b);
         AV_WN32(dst + 8, c);
@@ -502,31 +502,31 @@ static void fill24(uint8_t *dst, int len)
         len -= 12;
     }
 
-    if (len >= 4) {
+    എങ്കിൽ (len >= 4) {
         AV_WN32(dst, a);
         dst += 4;
         len -= 4;
     }
 
-    if (len >= 4) {
+    എങ്കിൽ (len >= 4) {
         AV_WN32(dst, b);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    ആകുമ്പോൾ (len--) {
         *dst = dst[-3];
         dst++;
     }
 }
 
-static void fill32(uint8_t *dst, int len)
+സ്ഥിതം ശൂന്യം fill32(uint8_t *dst, പൂർണ്ണസംഖ്യ len)
 {
     uint32_t v = AV_RN32(dst - 4);
 
-#if HAVE_FAST_64BIT
+#എങ്കിൽ HAVE_FAST_64BIT
     uint64_t v2= v + ((uint64_t)v<<32);
-    while (len >= 32) {
+    ആകുമ്പോൾ (len >= 32) {
         AV_WN64(dst   , v2);
         AV_WN64(dst+ 8, v2);
         AV_WN64(dst+16, v2);
@@ -536,82 +536,82 @@ static void fill32(uint8_t *dst, int len)
     }
 #endif
 
-    while (len >= 4) {
+    ആകുമ്പോൾ (len >= 4) {
         AV_WN32(dst, v);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    ആകുമ്പോൾ (len--) {
         *dst = dst[-4];
         dst++;
     }
 }
 
-void av_memcpy_backptr(uint8_t *dst, int back, int cnt)
+ശൂന്യം av_memcpy_backptr(uint8_t *dst, പൂർണ്ണസംഖ്യ back, പൂർണ്ണസംഖ്യ cnt)
 {
-    const uint8_t *src = &dst[-back];
-    if (!back)
-        return;
+    സ്ഥിരം uint8_t *src = &dst[-back];
+    എങ്കിൽ (!back)
+        തിരികെ;
 
-    if (back == 1) {
+    എങ്കിൽ (back == 1) {
         memset(dst, *src, cnt);
-    } else if (back == 2) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (back == 2) {
         fill16(dst, cnt);
-    } else if (back == 3) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (back == 3) {
         fill24(dst, cnt);
-    } else if (back == 4) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (back == 4) {
         fill32(dst, cnt);
-    } else {
-        if (cnt >= 16) {
-            int blocklen = back;
-            while (cnt > blocklen) {
+    } അല്ലെങ്കിൽ {
+        എങ്കിൽ (cnt >= 16) {
+            പൂർണ്ണസംഖ്യ blocklen = back;
+            ആകുമ്പോൾ (cnt > blocklen) {
                 memcpy(dst, src, blocklen);
                 dst       += blocklen;
                 cnt       -= blocklen;
                 blocklen <<= 1;
             }
             memcpy(dst, src, cnt);
-            return;
+            തിരികെ;
         }
-        if (cnt >= 8) {
+        എങ്കിൽ (cnt >= 8) {
             AV_COPY32U(dst,     src);
             AV_COPY32U(dst + 4, src + 4);
             src += 8;
             dst += 8;
             cnt -= 8;
         }
-        if (cnt >= 4) {
+        എങ്കിൽ (cnt >= 4) {
             AV_COPY32U(dst, src);
             src += 4;
             dst += 4;
             cnt -= 4;
         }
-        if (cnt >= 2) {
+        എങ്കിൽ (cnt >= 2) {
             AV_COPY16U(dst, src);
             src += 2;
             dst += 2;
             cnt -= 2;
         }
-        if (cnt)
+        എങ്കിൽ (cnt)
             *dst = *src;
     }
 }
 
-void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
+ശൂന്യം *av_fast_realloc(ശൂന്യം *ptr, unsigned പൂർണ്ണസംഖ്യ *size, size_t min_size)
 {
     size_t max_size;
 
-    if (min_size <= *size)
-        return ptr;
+    എങ്കിൽ (min_size <= *size)
+        തിരികെ ptr;
 
     max_size = atomic_load_explicit(&max_alloc_size, memory_order_relaxed);
     /* *size is an unsigned, so the real maximum is <= UINT_MAX. */
     max_size = FFMIN(max_size, UINT_MAX);
 
-    if (min_size > max_size) {
+    എങ്കിൽ (min_size > max_size) {
         *size = 0;
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
     min_size = FFMIN(max_size, FFMAX(min_size + min_size / 16 + 32, min_size));
@@ -620,55 +620,55 @@ void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
     /* we could set this to the unmodified min_size but this is safer
      * if the user lost the ptr and uses NULL now
      */
-    if (!ptr)
+    എങ്കിൽ (!ptr)
         min_size = 0;
 
     *size = min_size;
 
-    return ptr;
+    തിരികെ ptr;
 }
 
-static inline void fast_malloc(void *ptr, unsigned int *size, size_t min_size, int zero_realloc)
+സ്ഥിതം വരിയിൽ ശൂന്യം fast_malloc(ശൂന്യം *ptr, unsigned പൂർണ്ണസംഖ്യ *size, size_t min_size, പൂർണ്ണസംഖ്യ zero_realloc)
 {
     size_t max_size;
-    void *val;
+    ശൂന്യം *val;
 
-    memcpy(&val, ptr, sizeof(val));
-    if (min_size <= *size) {
+    memcpy(&val, ptr, വലുപ്പം(val));
+    എങ്കിൽ (min_size <= *size) {
         av_assert0(val || !min_size);
-        return;
+        തിരികെ;
     }
 
     max_size = atomic_load_explicit(&max_alloc_size, memory_order_relaxed);
     /* *size is an unsigned, so the real maximum is <= UINT_MAX. */
     max_size = FFMIN(max_size, UINT_MAX);
 
-    if (min_size > max_size) {
+    എങ്കിൽ (min_size > max_size) {
         av_freep(ptr);
         *size = 0;
-        return;
+        തിരികെ;
     }
     min_size = FFMIN(max_size, FFMAX(min_size + min_size / 16 + 32, min_size));
     av_freep(ptr);
     val = zero_realloc ? av_mallocz(min_size) : av_malloc(min_size);
-    memcpy(ptr, &val, sizeof(val));
-    if (!val)
+    memcpy(ptr, &val, വലുപ്പം(val));
+    എങ്കിൽ (!val)
         min_size = 0;
     *size = min_size;
-    return;
+    തിരികെ;
 }
 
-void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size)
+ശൂന്യം av_fast_malloc(ശൂന്യം *ptr, unsigned പൂർണ്ണസംഖ്യ *size, size_t min_size)
 {
     fast_malloc(ptr, size, min_size, 0);
 }
 
-void av_fast_mallocz(void *ptr, unsigned int *size, size_t min_size)
+ശൂന്യം av_fast_mallocz(ശൂന്യം *ptr, unsigned പൂർണ്ണസംഖ്യ *size, size_t min_size)
 {
     fast_malloc(ptr, size, min_size, 1);
 }
 
-int av_size_mult(size_t a, size_t b, size_t *r)
+പൂർണ്ണസംഖ്യ av_size_mult(size_t a, size_t b, size_t *r)
 {
-    return size_mult(a, b, r);
+    തിരികെ size_mult(a, b, r);
 }

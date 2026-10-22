@@ -19,23 +19,23 @@
 #ifndef AVUTIL_HWCONTEXT_INTERNAL_H
 #define AVUTIL_HWCONTEXT_INTERNAL_H
 
-#include <stddef.h>
+#അന്തര്ഭാവ <stddef.h>
 
-#include "buffer.h"
-#include "hwcontext.h"
-#include "thread.h"
-#include "frame.h"
-#include "pixfmt.h"
+#അന്തര്ഭാവ "buffer.h"
+#അന്തര്ഭാവ "hwcontext.h"
+#അന്തര്ഭാവ "thread.h"
+#അന്തര്ഭാവ "frame.h"
+#അന്തര്ഭാവ "pixfmt.h"
 
-typedef struct HWContextType {
-    enum AVHWDeviceType type;
-    const char         *name;
+തരനിർവചനം ഘടന HWContextType {
+    എണ്ണൽ AVHWDeviceType type;
+    സ്ഥിരം അക്ഷരം         *name;
 
     /**
      * An array of pixel formats supported by the AVHWFramesContext instances
      * Terminated by AV_PIX_FMT_NONE.
      */
-    const enum AVPixelFormat *pix_fmts;
+    സ്ഥിരം എണ്ണൽ AVPixelFormat *pix_fmts;
 
     /**
      * size of the public hardware-specific context,
@@ -55,23 +55,23 @@ typedef struct HWContextType {
      */
     size_t             frames_hwctx_size;
 
-    int              (*device_create)(AVHWDeviceContext *ctx, const char *device,
-                                      AVDictionary *opts, int flags);
-    int              (*device_derive)(AVHWDeviceContext *dst_ctx,
+    പൂർണ്ണസംഖ്യ              (*device_create)(AVHWDeviceContext *ctx, സ്ഥിരം അക്ഷരം *device,
+                                      AVDictionary *opts, പൂർണ്ണസംഖ്യ flags);
+    പൂർണ്ണസംഖ്യ              (*device_derive)(AVHWDeviceContext *dst_ctx,
                                       AVHWDeviceContext *src_ctx,
-                                      AVDictionary *opts, int flags);
+                                      AVDictionary *opts, പൂർണ്ണസംഖ്യ flags);
 
-    int              (*device_init)(AVHWDeviceContext *ctx);
-    void             (*device_uninit)(AVHWDeviceContext *ctx);
+    പൂർണ്ണസംഖ്യ              (*device_init)(AVHWDeviceContext *ctx);
+    ശൂന്യം             (*device_uninit)(AVHWDeviceContext *ctx);
 
-    int              (*frames_get_constraints)(AVHWDeviceContext *ctx,
-                                               const void *hwconfig,
+    പൂർണ്ണസംഖ്യ              (*frames_get_constraints)(AVHWDeviceContext *ctx,
+                                               സ്ഥിരം ശൂന്യം *hwconfig,
                                                AVHWFramesConstraints *constraints);
 
-    int              (*frames_init)(AVHWFramesContext *ctx);
-    void             (*frames_uninit)(AVHWFramesContext *ctx);
+    പൂർണ്ണസംഖ്യ              (*frames_init)(AVHWFramesContext *ctx);
+    ശൂന്യം             (*frames_uninit)(AVHWFramesContext *ctx);
 
-    int              (*frames_get_buffer)(AVHWFramesContext *ctx, AVFrame *frame);
+    പൂർണ്ണസംഖ്യ              (*frames_get_buffer)(AVHWFramesContext *ctx, AVFrame *frame);
 
     /**
      * Allocate a buffer of size bytes for av_hwframe_get_transfer_buffer(),
@@ -79,33 +79,33 @@ typedef struct HWContextType {
      *
      * @param device_ref the AVBufferRef of the AVHWDeviceContext
      */
-    AVBufferRef     *(*transfer_buffer_alloc)(void *device_ref, size_t size);
-    int              (*transfer_get_formats)(AVHWFramesContext *ctx,
-                                             enum AVHWFrameTransferDirection dir,
-                                             enum AVPixelFormat **formats);
-    int              (*transfer_data_to)(AVHWFramesContext *ctx, AVFrame *dst,
-                                         const AVFrame *src);
-    int              (*transfer_data_from)(AVHWFramesContext *ctx, AVFrame *dst,
-                                           const AVFrame *src);
+    AVBufferRef     *(*transfer_buffer_alloc)(ശൂന്യം *device_ref, size_t size);
+    പൂർണ്ണസംഖ്യ              (*transfer_get_formats)(AVHWFramesContext *ctx,
+                                             എണ്ണൽ AVHWFrameTransferDirection dir,
+                                             എണ്ണൽ AVPixelFormat **formats);
+    പൂർണ്ണസംഖ്യ              (*transfer_data_to)(AVHWFramesContext *ctx, AVFrame *dst,
+                                         സ്ഥിരം AVFrame *src);
+    പൂർണ്ണസംഖ്യ              (*transfer_data_from)(AVHWFramesContext *ctx, AVFrame *dst,
+                                           സ്ഥിരം AVFrame *src);
 
-    int              (*map_to)(AVHWFramesContext *ctx, AVFrame *dst,
-                               const AVFrame *src, int flags);
-    int              (*map_from)(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src, int flags);
+    പൂർണ്ണസംഖ്യ              (*map_to)(AVHWFramesContext *ctx, AVFrame *dst,
+                               സ്ഥിരം AVFrame *src, പൂർണ്ണസംഖ്യ flags);
+    പൂർണ്ണസംഖ്യ              (*map_from)(AVHWFramesContext *ctx, AVFrame *dst,
+                                 സ്ഥിരം AVFrame *src, പൂർണ്ണസംഖ്യ flags);
 
-    int              (*frames_derive_to)(AVHWFramesContext *dst_ctx,
-                                         AVHWFramesContext *src_ctx, int flags);
-    int              (*frames_derive_from)(AVHWFramesContext *dst_ctx,
-                                           AVHWFramesContext *src_ctx, int flags);
+    പൂർണ്ണസംഖ്യ              (*frames_derive_to)(AVHWFramesContext *dst_ctx,
+                                         AVHWFramesContext *src_ctx, പൂർണ്ണസംഖ്യ flags);
+    പൂർണ്ണസംഖ്യ              (*frames_derive_from)(AVHWFramesContext *dst_ctx,
+                                           AVHWFramesContext *src_ctx, പൂർണ്ണസംഖ്യ flags);
 } HWContextType;
 
-typedef struct FFHWFramesContext {
+തരനിർവചനം ഘടന FFHWFramesContext {
     /**
      * The public AVHWFramesContext. See hwcontext.h for it.
      */
     AVHWFramesContext p;
 
-    const HWContextType *hw_type;
+    സ്ഥിരം HWContextType *hw_type;
 
     AVBufferPool *pool_internal;
 
@@ -126,15 +126,15 @@ typedef struct FFHWFramesContext {
      * Flags to apply to the mapping from the source to the derived
      * frame context when trying to allocate in the derived context.
      */
-    int source_allocation_map_flags;
+    പൂർണ്ണസംഖ്യ source_allocation_map_flags;
 } FFHWFramesContext;
 
-static inline FFHWFramesContext *ffhwframesctx(AVHWFramesContext *ctx)
+സ്ഥിതം വരിയിൽ FFHWFramesContext *ffhwframesctx(AVHWFramesContext *ctx)
 {
-    return (FFHWFramesContext*)ctx;
+    തിരികെ (FFHWFramesContext*)ctx;
 }
 
-typedef struct HWMapDescriptor {
+തരനിർവചനം ഘടന HWMapDescriptor {
     /**
      * A reference to the original source of the mapping.
      */
@@ -148,39 +148,39 @@ typedef struct HWMapDescriptor {
     /**
      * Unmap function.
      */
-    void (*unmap)(AVHWFramesContext *ctx,
-                  struct HWMapDescriptor *hwmap);
+    ശൂന്യം (*unmap)(AVHWFramesContext *ctx,
+                  ഘടന HWMapDescriptor *hwmap);
     /**
      * Hardware-specific private data associated with the mapping.
      */
-    void          *priv;
+    ശൂന്യം          *priv;
 } HWMapDescriptor;
 
-int ff_hwframe_map_create(AVBufferRef *hwframe_ref,
-                          AVFrame *dst, const AVFrame *src,
-                          void (*unmap)(AVHWFramesContext *ctx,
+പൂർണ്ണസംഖ്യ ff_hwframe_map_create(AVBufferRef *hwframe_ref,
+                          AVFrame *dst, സ്ഥിരം AVFrame *src,
+                          ശൂന്യം (*unmap)(AVHWFramesContext *ctx,
                                         HWMapDescriptor *hwmap),
-                          void *priv);
+                          ശൂന്യം *priv);
 
 /**
  * Replace the current hwmap of dst with the one from src, used for indirect
  * mappings like VAAPI->(DRM)->OpenCL/Vulkan where a direct interop is missing
  */
-int ff_hwframe_map_replace(AVFrame *dst, const AVFrame *src);
+പൂർണ്ണസംഖ്യ ff_hwframe_map_replace(AVFrame *dst, സ്ഥിരം AVFrame *src);
 
-extern const HWContextType ff_hwcontext_type_cuda;
-extern const HWContextType ff_hwcontext_type_d3d11va;
-extern const HWContextType ff_hwcontext_type_d3d12va;
-extern const HWContextType ff_hwcontext_type_drm;
-extern const HWContextType ff_hwcontext_type_dxva2;
-extern const HWContextType ff_hwcontext_type_opencl;
-extern const HWContextType ff_hwcontext_type_qsv;
-extern const HWContextType ff_hwcontext_type_vaapi;
-extern const HWContextType ff_hwcontext_type_vdpau;
-extern const HWContextType ff_hwcontext_type_videotoolbox;
-extern const HWContextType ff_hwcontext_type_mediacodec;
-extern const HWContextType ff_hwcontext_type_vulkan;
-extern const HWContextType ff_hwcontext_type_amf;
-extern const HWContextType ff_hwcontext_type_oh;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_cuda;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_d3d11va;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_d3d12va;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_drm;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_dxva2;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_opencl;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_qsv;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_vaapi;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_vdpau;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_videotoolbox;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_mediacodec;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_vulkan;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_amf;
+ബാഹ്യ സ്ഥിരം HWContextType ff_hwcontext_type_oh;
 
 #endif /* AVUTIL_HWCONTEXT_INTERNAL_H */

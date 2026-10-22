@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "libavutil/cpu.h"
-#include "libavutil/error.h"
-#include "libavutil/imgutils_internal.h"
-#include "libavutil/macros.h"
+#അന്തര്ഭാവ "libavutil/cpu.h"
+#അന്തര്ഭാവ "libavutil/error.h"
+#അന്തര്ഭാവ "libavutil/imgutils_internal.h"
+#അന്തര്ഭാവ "libavutil/macros.h"
 
-#include "cpu.h"
+#അന്തര്ഭാവ "cpu.h"
 
-void ff_image_copy_plane_uc_from_sse4(uint8_t *dst, ptrdiff_t dst_linesize,
-                                      const uint8_t *src, ptrdiff_t src_linesize,
-                                      ptrdiff_t bytewidth, int height);
+ശൂന്യം ff_image_copy_plane_uc_from_sse4(uint8_t *dst, ptrdiff_t dst_linesize,
+                                      സ്ഥിരം uint8_t *src, ptrdiff_t src_linesize,
+                                      ptrdiff_t bytewidth, പൂർണ്ണസംഖ്യ height);
 
-int ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
-                                    const uint8_t *src, ptrdiff_t src_linesize,
-                                    ptrdiff_t bytewidth, int height)
+പൂർണ്ണസംഖ്യ ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
+                                    സ്ഥിരം uint8_t *src, ptrdiff_t src_linesize,
+                                    ptrdiff_t bytewidth, പൂർണ്ണസംഖ്യ height)
 {
-    int cpu_flags = av_get_cpu_flags();
+    പൂർണ്ണസംഖ്യ cpu_flags = av_get_cpu_flags();
     ptrdiff_t bw_aligned = FFALIGN(bytewidth, 64);
 
-    if (EXTERNAL_SSE4(cpu_flags) &&
+    എങ്കിൽ (EXTERNAL_SSE4(cpu_flags) &&
         bw_aligned <= dst_linesize && bw_aligned <= src_linesize)
         ff_image_copy_plane_uc_from_sse4(dst, dst_linesize, src, src_linesize,
                                          bw_aligned, height);
-    else
-        return AVERROR(ENOSYS);
+    അല്ലെങ്കിൽ
+        തിരികെ AVERROR(ENOSYS);
 
-    return 0;
+    തിരികെ 0;
 }

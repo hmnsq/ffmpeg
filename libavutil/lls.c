@@ -25,64 +25,64 @@
  * linear least squares model
  */
 
-#include <math.h>
-#include <string.h>
+#അന്തര്ഭാവ <math.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "lls.h"
+#അന്തര്ഭാവ "config.h"
+#അന്തര്ഭാവ "attributes.h"
+#അന്തര്ഭാവ "float_dsp.h"
+#അന്തര്ഭാവ "lls.h"
 
-static void update_lls(LLSModel *m, const double *var)
+സ്ഥിതം ശൂന്യം update_lls(LLSModel *m, സ്ഥിരം ഇരട്ട *var)
 {
-    int i, j;
+    പൂർണ്ണസംഖ്യ i, j;
 
-    for (i = 0; i <= m->indep_count; i++) {
-        for (j = i; j <= m->indep_count; j++) {
+    വേണ്ടി (i = 0; i <= m->indep_എണ്ണം; i++) {
+        വേണ്ടി (j = i; j <= m->indep_എണ്ണം; j++) {
             m->covariance[i][j] += var[i] * var[j];
         }
     }
 }
 
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
+ശൂന്യം avpriv_solve_lls(LLSModel *m, ഇരട്ട threshold, unsigned short min_order)
 {
-    int i, j, k;
-    double (*factor)[MAX_VARS_ALIGN] = (void *) &m->covariance[1][0];
-    double (*covar) [MAX_VARS_ALIGN] = (void *) &m->covariance[1][1];
-    double *covar_y                = m->covariance[0];
-    int count                      = m->indep_count;
+    പൂർണ്ണസംഖ്യ i, j, k;
+    ഇരട്ട (*factor)[MAX_VARS_ALIGN] = (ശൂന്യം *) &m->covariance[1][0];
+    ഇരട്ട (*covar) [MAX_VARS_ALIGN] = (ശൂന്യം *) &m->covariance[1][1];
+    ഇരട്ട *covar_y                = m->covariance[0];
+    പൂർണ്ണസംഖ്യ എണ്ണം                      = m->indep_എണ്ണം;
 
-    for (i = 0; i < count; i++) {
-        for (j = i; j < count; j++) {
-            double sum = covar[i][j];
+    വേണ്ടി (i = 0; i < എണ്ണം; i++) {
+        വേണ്ടി (j = i; j < എണ്ണം; j++) {
+            ഇരട്ട sum = covar[i][j];
 
-            for (k = 0; k <= i-1; k++)
+            വേണ്ടി (k = 0; k <= i-1; k++)
                 sum -= factor[i][k] * factor[j][k];
 
-            if (i == j) {
-                if (sum < threshold)
+            എങ്കിൽ (i == j) {
+                എങ്കിൽ (sum < threshold)
                     sum = 1.0;
                 factor[i][i] = sqrt(sum);
-            } else {
+            } അല്ലെങ്കിൽ {
                 factor[j][i] = sum / factor[i][i];
             }
         }
     }
 
-    for (i = 0; i < count; i++) {
-        double sum = covar_y[i + 1];
+    വേണ്ടി (i = 0; i < എണ്ണം; i++) {
+        ഇരട്ട sum = covar_y[i + 1];
 
-        for (k = 0; k <= i-1; k++)
+        വേണ്ടി (k = 0; k <= i-1; k++)
             sum -= factor[i][k] * m->coeff[0][k];
 
         m->coeff[0][i] = sum / factor[i][i];
     }
 
-    for (j = count - 1; j >= min_order; j--) {
-        for (i = j; i >= 0; i--) {
-            double sum = m->coeff[0][i];
+    വേണ്ടി (j = എണ്ണം - 1; j >= min_order; j--) {
+        വേണ്ടി (i = j; i >= 0; i--) {
+            ഇരട്ട sum = m->coeff[0][i];
 
-            for (k = i + 1; k <= j; k++)
+            വേണ്ടി (k = i + 1; k <= j; k++)
                 sum -= factor[k][i] * m->coeff[j][k];
 
             m->coeff[j][i] = sum / factor[i][i];
@@ -90,10 +90,10 @@ void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
 
         m->variance[j] = covar_y[0];
 
-        for (i = 0; i <= j; i++) {
-            double sum = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
+        വേണ്ടി (i = 0; i <= j; i++) {
+            ഇരട്ട sum = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
 
-            for (k = 0; k < i; k++)
+            വേണ്ടി (k = 0; k < i; k++)
                 sum += 2 * m->coeff[j][k] * covar[k][i];
 
             m->variance[j] += m->coeff[j][i] * sum;
@@ -101,20 +101,20 @@ void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
     }
 }
 
-static double evaluate_lls(LLSModel *m, const double *param, int order)
+സ്ഥിതം ഇരട്ട evaluate_lls(LLSModel *m, സ്ഥിരം ഇരട്ട *param, പൂർണ്ണസംഖ്യ order)
 {
-    return ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
+    തിരികെ ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
 }
 
-av_cold void avpriv_init_lls(LLSModel *m, int indep_count)
+av_cold ശൂന്യം avpriv_init_lls(LLSModel *m, പൂർണ്ണസംഖ്യ indep_എണ്ണം)
 {
-    memset(m, 0, sizeof(LLSModel));
-    m->indep_count = indep_count;
+    memset(m, 0, വലുപ്പം(LLSModel));
+    m->indep_എണ്ണം = indep_എണ്ണം;
     m->update_lls = update_lls;
     m->evaluate_lls = evaluate_lls;
-#if ARCH_RISCV
+#എങ്കിൽ ARCH_RISCV
     ff_init_lls_riscv(m);
-#elif ARCH_X86 && HAVE_X86ASM
+#അല്ലെങ്കിലെങ്കിൽ ARCH_X86 && HAVE_X86ASM
     ff_init_lls_x86(m);
 #endif
 }

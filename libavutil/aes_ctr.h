@@ -28,19 +28,19 @@
  * @{
  */
 
-#include <stdint.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "attributes.h"
+#അന്തര്ഭാവ "attributes.h"
 
-#define AES_CTR_KEY_SIZE (16)
+#define AES_CTR_താക്കോൽ_SIZE (16)
 #define AES_CTR_IV_SIZE (8)
 
-struct AVAESCTR;
+ഘടന AVAESCTR;
 
 /**
  * Allocate an AVAESCTR context.
  */
-struct AVAESCTR *av_aes_ctr_alloc(void);
+ഘടന AVAESCTR *av_aes_ctr_alloc(ശൂന്യം);
 
 /**
  * Initialize an AVAESCTR context.
@@ -48,14 +48,14 @@ struct AVAESCTR *av_aes_ctr_alloc(void);
  * @param a The AVAESCTR context to initialize
  * @param key encryption key, must have a length of AES_CTR_KEY_SIZE
  */
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key);
+പൂർണ്ണസംഖ്യ av_aes_ctr_init(ഘടന AVAESCTR *a, സ്ഥിരം uint8_t *താക്കോൽ);
 
 /**
  * Release an AVAESCTR context.
  *
  * @param a The AVAESCTR context
  */
-void av_aes_ctr_free(struct AVAESCTR *a);
+ശൂന്യം av_aes_ctr_free(ഘടന AVAESCTR *a);
 
 /**
  * Process a buffer using a previously initialized context.
@@ -65,32 +65,32 @@ void av_aes_ctr_free(struct AVAESCTR *a);
  * @param src source array, can be equal to dst
  * @param size the size of src and dst
  */
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int size);
+ശൂന്യം av_aes_ctr_crypt(ഘടന AVAESCTR *a, uint8_t *dst, സ്ഥിരം uint8_t *src, പൂർണ്ണസംഖ്യ size);
 
 /**
  * Get the current iv
  */
-const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a);
+സ്ഥിരം uint8_t* av_aes_ctr_get_iv(ഘടന AVAESCTR *a);
 
 /**
  * Generate a random iv
  */
-void av_aes_ctr_set_random_iv(struct AVAESCTR *a);
+ശൂന്യം av_aes_ctr_set_random_iv(ഘടന AVAESCTR *a);
 
 /**
  * Forcefully change the 8-byte iv
  */
-void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv);
+ശൂന്യം av_aes_ctr_set_iv(ഘടന AVAESCTR *a, സ്ഥിരം uint8_t* iv);
 
 /**
  * Forcefully change the "full" 16-byte iv, including the counter
  */
-void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv);
+ശൂന്യം av_aes_ctr_set_full_iv(ഘടന AVAESCTR *a, സ്ഥിരം uint8_t* iv);
 
 /**
  * Increment the top 64 bit of the iv (performed after each frame)
  */
-void av_aes_ctr_increment_iv(struct AVAESCTR *a);
+ശൂന്യം av_aes_ctr_increment_iv(ഘടന AVAESCTR *a);
 
 /**
  * @}

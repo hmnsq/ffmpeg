@@ -19,11 +19,11 @@
 #ifndef AVUTIL_BUFFER_INTERNAL_H
 #define AVUTIL_BUFFER_INTERNAL_H
 
-#include <stdatomic.h>
-#include <stdint.h>
+#അന്തര്ഭാവ <stdatomic.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "buffer.h"
-#include "thread.h"
+#അന്തര്ഭാവ "buffer.h"
+#അന്തര്ഭാവ "thread.h"
 
 /**
  * The buffer was av_realloc()ed, so it is reallocatable.
@@ -35,7 +35,7 @@
  */
 #define BUFFER_FLAG_NO_FREE       (1 << 1)
 
-struct AVBuffer {
+ഘടന AVBuffer {
     uint8_t *data; /**< data described by this buffer */
     size_t size; /**< size of data in bytes */
 
@@ -47,36 +47,36 @@ struct AVBuffer {
     /**
      * a callback for freeing the data
      */
-    void (*free)(void *opaque, uint8_t *data);
+    ശൂന്യം (*സ്വതന്ത്രം)(ശൂന്യം *opaque, uint8_t *data);
 
     /**
      * an opaque pointer, to be used by the freeing callback
      */
-    void *opaque;
+    ശൂന്യം *opaque;
 
     /**
      * A combination of AV_BUFFER_FLAG_*
      */
-    int flags;
+    പൂർണ്ണസംഖ്യ flags;
 
     /**
      * A combination of BUFFER_FLAG_*
      */
-    int flags_internal;
+    പൂർണ്ണസംഖ്യ flags_internal;
 };
 
-typedef struct BufferPoolEntry {
+തരനിർവചനം ഘടന BufferPoolEntry {
     uint8_t *data;
 
     /*
      * Backups of the original opaque/free of the AVBuffer corresponding to
      * data. They will be used to free the buffer when the pool is freed.
      */
-    void *opaque;
-    void (*free)(void *opaque, uint8_t *data);
+    ശൂന്യം *opaque;
+    ശൂന്യം (*സ്വതന്ത്രം)(ശൂന്യം *opaque, uint8_t *data);
 
     AVBufferPool *pool;
-    struct BufferPoolEntry *next;
+    ഘടന BufferPoolEntry *next;
 
     /*
      * An AVBuffer structure to (re)use as AVBuffer for subsequent uses
@@ -85,7 +85,7 @@ typedef struct BufferPoolEntry {
     AVBuffer buffer;
 } BufferPoolEntry;
 
-struct AVBufferPool {
+ഘടന AVBufferPool {
     AVMutex mutex;
     BufferPoolEntry *pool;
 
@@ -101,10 +101,10 @@ struct AVBufferPool {
     atomic_uint refcount;
 
     size_t size;
-    void *opaque;
+    ശൂന്യം *opaque;
     AVBufferRef* (*alloc)(size_t size);
-    AVBufferRef* (*alloc2)(void *opaque, size_t size);
-    void         (*pool_free)(void *opaque);
+    AVBufferRef* (*alloc2)(ശൂന്യം *opaque, size_t size);
+    ശൂന്യം         (*pool_free)(ശൂന്യം *opaque);
 };
 
 #endif /* AVUTIL_BUFFER_INTERNAL_H */

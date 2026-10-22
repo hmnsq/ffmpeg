@@ -21,18 +21,18 @@
 #ifndef AVUTIL_PPC_FLOAT_DSP_VSX_H
 #define AVUTIL_PPC_FLOAT_DSP_VSX_H
 
-void ff_vector_fmul_vsx(float *dst, const float *src0,
-                        const float *src1, int len);
+ശൂന്യം ff_vector_fmul_vsx(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0,
+                        സ്ഥിരം ദശാംശം *src1, പൂർണ്ണസംഖ്യ len);
 
-void ff_vector_fmul_window_vsx(float *dst, const float *src0,
-                               const float *src1, const float *win,
-                               int len);
+ശൂന്യം ff_vector_fmul_window_vsx(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0,
+                               സ്ഥിരം ദശാംശം *src1, സ്ഥിരം ദശാംശം *win,
+                               പൂർണ്ണസംഖ്യ len);
 
-void ff_vector_fmul_add_vsx(float *dst, const float *src0,
-                            const float *src1, const float *src2,
-                            int len);
+ശൂന്യം ff_vector_fmul_add_vsx(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0,
+                            സ്ഥിരം ദശാംശം *src1, സ്ഥിരം ദശാംശം *src2,
+                            പൂർണ്ണസംഖ്യ len);
 
-void ff_vector_fmul_reverse_vsx(float *dst, const float *src0,
-                                const float *src1, int len);
+ശൂന്യം ff_vector_fmul_reverse_vsx(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0,
+                                സ്ഥിരം ദശാംശം *src1, പൂർണ്ണസംഖ്യ len);
 
 #endif /* AVUTIL_PPC_FLOAT_DSP_VSX_H */

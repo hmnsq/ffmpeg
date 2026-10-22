@@ -18,28 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "hdr_dynamic_vivid_metadata.h"
-#include "mem.h"
+#അന്തര്ഭാവ "hdr_dynamic_vivid_metadata.h"
+#അന്തര്ഭാവ "mem.h"
 
 AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *size)
 {
-    AVDynamicHDRVivid *hdr_vivid = av_mallocz(sizeof(AVDynamicHDRVivid));
+    AVDynamicHDRVivid *hdr_vivid = av_mallocz(വലുപ്പം(AVDynamicHDRVivid));
 
-    if (size)
-        *size = hdr_vivid ? sizeof(*hdr_vivid) : 0;
+    എങ്കിൽ (size)
+        *size = hdr_vivid ? വലുപ്പം(*hdr_vivid) : 0;
 
-    return hdr_vivid;
+    തിരികെ hdr_vivid;
 }
 
 AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_DYNAMIC_HDR_VIVID,
-                                                        sizeof(AVDynamicHDRVivid));
-    if (!side_data)
-        return NULL;
+                                                        വലുപ്പം(AVDynamicHDRVivid));
+    എങ്കിൽ (!side_data)
+        തിരികെ ശൂന്യ;
 
-    memset(side_data->data, 0, sizeof(AVDynamicHDRVivid));
+    memset(side_data->data, 0, വലുപ്പം(AVDynamicHDRVivid));
 
-    return (AVDynamicHDRVivid *)side_data->data;
+    തിരികെ (AVDynamicHDRVivid *)side_data->data;
 }

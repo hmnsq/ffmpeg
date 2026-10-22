@@ -16,17 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#അന്തര്ഭാവ <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/mem.h"
-#include "libavutil/avstring.h"
+#അന്തര്ഭാവ "libavutil/common.h"
+#അന്തര്ഭാവ "libavutil/mem.h"
+#അന്തര്ഭാവ "libavutil/avstring.h"
 
-int main(void)
+പൂർണ്ണസംഖ്യ പ്രധാന(ശൂന്യം)
 {
-    int i;
-    char *fullpath, *ptr;
-    static const char * const strings[] = {
+    പൂർണ്ണസംഖ്യ i;
+    അക്ഷരം *fullpath, *ptr;
+    സ്ഥിതം സ്ഥിരം അക്ഷരം * സ്ഥിരം strings[] = {
         "''",
         "",
         ":",
@@ -54,13 +54,13 @@ int main(void)
         "'\\fo\\o:': blahblah",
         "\\'fo\\o\\:':  foo  '  :blahblah"
     };
-    const char *haystack = "Education consists mainly in what we have unlearned.";
-    const char * const needle[] = {"learned.", "unlearned.", "Unlearned"};
+    സ്ഥിരം അക്ഷരം *haystack = "Education consists mainly in what we have unlearned.";
+    സ്ഥിരം അക്ഷരം * സ്ഥിരം needle[] = {"learned.", "unlearned.", "Unlearned"};
 
     printf("Testing av_get_token()\n");
-    for (i = 0; i < FF_ARRAY_ELEMS(strings); i++) {
-        const char *p = strings[i];
-        char *q;
+    വേണ്ടി (i = 0; i < FF_ARRAY_ELEMS(strings); i++) {
+        സ്ഥിരം അക്ഷരം *p = strings[i];
+        അക്ഷരം *q;
         printf("|%s|", p);
         q = av_get_token(&p, ":");
         printf(" -> |%s|", q);
@@ -73,9 +73,9 @@ int main(void)
         fullpath = av_append_path_component((path), (component)); \
         printf("%s = %s\n", fullpath ? fullpath : "(null)", expected); \
         av_free(fullpath);
-    TEST_APPEND_PATH_COMPONENT(NULL, NULL, "(null)")
-    TEST_APPEND_PATH_COMPONENT("path", NULL, "path");
-    TEST_APPEND_PATH_COMPONENT(NULL, "comp", "comp");
+    TEST_APPEND_PATH_COMPONENT(ശൂന്യ, ശൂന്യ, "(null)")
+    TEST_APPEND_PATH_COMPONENT("path", ശൂന്യ, "path");
+    TEST_APPEND_PATH_COMPONENT(ശൂന്യ, "comp", "comp");
     TEST_APPEND_PATH_COMPONENT("path", "comp", "path/comp");
     TEST_APPEND_PATH_COMPONENT("path/", "comp", "path/comp");
     TEST_APPEND_PATH_COMPONENT("path", "/comp", "path/comp");
@@ -85,21 +85,21 @@ int main(void)
     /*Testing av_strnstr()*/
     #define TEST_STRNSTR(haystack, needle, hay_length, expected) \
         ptr = av_strnstr(haystack, needle, hay_length); \
-        if (ptr != expected){ \
+        എങ്കിൽ (ptr != expected){ \
             printf("expected: %p, received %p\n", expected, ptr); \
         }
     TEST_STRNSTR(haystack, needle [0], strlen(haystack), haystack+44);
     TEST_STRNSTR(haystack, needle [1], strlen(haystack), haystack+42);
-    TEST_STRNSTR(haystack, needle [2], strlen(haystack), NULL       );
+    TEST_STRNSTR(haystack, needle [2], strlen(haystack), ശൂന്യ       );
     TEST_STRNSTR(haystack, strings[1], strlen(haystack), haystack   );
 
     /*Testing av_strireplace()*/
     #define TEST_STRIREPLACE(haystack, needle, expected) \
         ptr = av_strireplace(haystack, needle, "instead"); \
-        if (ptr == NULL) { \
+        എങ്കിൽ (ptr == ശൂന്യ) { \
             printf("error, received null pointer!\n"); \
-        } else { \
-            if (strcmp(ptr, expected) != 0) \
+        } അല്ലെങ്കിൽ { \
+            എങ്കിൽ (strcmp(ptr, expected) != 0) \
                 printf( "expected: %s, received: %s\n", expected, ptr); \
             av_free(ptr); \
         }
@@ -109,5 +109,5 @@ int main(void)
     TEST_STRIREPLACE(haystack, needle [2], "Education consists mainly in what we have instead.");
     TEST_STRIREPLACE(haystack, needle [1], "Education consists mainly in what we have instead");
 
-    return 0;
+    തിരികെ 0;
 }

@@ -22,66 +22,66 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
-#include "intreadwrite.h"
-#include "mem.h"
-#include "tea.h"
+#അന്തര്ഭാവ <string.h>
+#അന്തര്ഭാവ "intreadwrite.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "tea.h"
 
-typedef struct AVTEA {
-    uint32_t key[16];
-    int rounds;
+തരനിർവചനം ഘടന AVTEA {
+    uint32_t താക്കോൽ[16];
+    പൂർണ്ണസംഖ്യ rounds;
 } AVTEA;
 
-struct AVTEA *av_tea_alloc(void)
+ഘടന AVTEA *av_tea_alloc(ശൂന്യം)
 {
-    return av_mallocz(sizeof(struct AVTEA));
+    തിരികെ av_mallocz(വലുപ്പം(ഘടന AVTEA));
 }
 
-const int av_tea_size = sizeof(AVTEA);
+സ്ഥിരം പൂർണ്ണസംഖ്യ av_tea_size = വലുപ്പം(AVTEA);
 
-void av_tea_init(AVTEA *ctx, const uint8_t key[16], int rounds)
+ശൂന്യം av_tea_init(AVTEA *ctx, സ്ഥിരം uint8_t താക്കോൽ[16], പൂർണ്ണസംഖ്യ rounds)
 {
-    int i;
+    പൂർണ്ണസംഖ്യ i;
 
-    for (i = 0; i < 4; i++)
-        ctx->key[i] = AV_RB32(key + (i << 2));
+    വേണ്ടി (i = 0; i < 4; i++)
+        ctx->താക്കോൽ[i] = AV_RB32(താക്കോൽ + (i << 2));
 
     ctx->rounds = rounds;
 }
 
-static void tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, const uint8_t *src,
-                          int decrypt, uint8_t *iv)
+സ്ഥിതം ശൂന്യം tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, സ്ഥിരം uint8_t *src,
+                          പൂർണ്ണസംഖ്യ decrypt, uint8_t *iv)
 {
     uint32_t v0, v1;
-    int rounds = ctx->rounds;
+    പൂർണ്ണസംഖ്യ rounds = ctx->rounds;
     uint32_t k0, k1, k2, k3;
-    k0 = ctx->key[0];
-    k1 = ctx->key[1];
-    k2 = ctx->key[2];
-    k3 = ctx->key[3];
+    k0 = ctx->താക്കോൽ[0];
+    k1 = ctx->താക്കോൽ[1];
+    k2 = ctx->താക്കോൽ[2];
+    k3 = ctx->താക്കോൽ[3];
 
     v0 = AV_RB32(src);
     v1 = AV_RB32(src + 4);
 
-    if (decrypt) {
-        int i;
+    എങ്കിൽ (decrypt) {
+        പൂർണ്ണസംഖ്യ i;
         uint32_t delta = 0x9E3779B9U, sum = delta * (rounds / 2);
 
-        for (i = 0; i < rounds / 2; i++) {
+        വേണ്ടി (i = 0; i < rounds / 2; i++) {
             v1 -= ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
             v0 -= ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
             sum -= delta;
         }
-        if (iv) {
+        എങ്കിൽ (iv) {
             v0 ^= AV_RB32(iv);
             v1 ^= AV_RB32(iv + 4);
             memcpy(iv, src, 8);
         }
-    } else {
-        int i;
+    } അല്ലെങ്കിൽ {
+        പൂർണ്ണസംഖ്യ i;
         uint32_t sum = 0, delta = 0x9E3779B9U;
 
-        for (i = 0; i < rounds / 2; i++) {
+        വേണ്ടി (i = 0; i < rounds / 2; i++) {
             sum += delta;
             v0 += ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
             v1 += ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
@@ -92,27 +92,27 @@ static void tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, const uint8_t *src,
     AV_WB32(dst + 4, v1);
 }
 
-void av_tea_crypt(AVTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
-                  uint8_t *iv, int decrypt)
+ശൂന്യം av_tea_crypt(AVTEA *ctx, uint8_t *dst, സ്ഥിരം uint8_t *src, പൂർണ്ണസംഖ്യ എണ്ണം,
+                  uint8_t *iv, പൂർണ്ണസംഖ്യ decrypt)
 {
-    int i;
+    പൂർണ്ണസംഖ്യ i;
 
-    if (decrypt) {
-        while (count--) {
+    എങ്കിൽ (decrypt) {
+        ആകുമ്പോൾ (എണ്ണം--) {
             tea_crypt_ecb(ctx, dst, src, decrypt, iv);
 
             src   += 8;
             dst   += 8;
         }
-    } else {
-        while (count--) {
-            if (iv) {
-                for (i = 0; i < 8; i++)
+    } അല്ലെങ്കിൽ {
+        ആകുമ്പോൾ (എണ്ണം--) {
+            എങ്കിൽ (iv) {
+                വേണ്ടി (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];
-                tea_crypt_ecb(ctx, dst, dst, decrypt, NULL);
+                tea_crypt_ecb(ctx, dst, dst, decrypt, ശൂന്യ);
                 memcpy(iv, dst, 8);
-            } else {
-                tea_crypt_ecb(ctx, dst, src, decrypt, NULL);
+            } അല്ലെങ്കിൽ {
+                tea_crypt_ecb(ctx, dst, src, decrypt, ശൂന്യ);
             }
             src   += 8;
             dst   += 8;

@@ -21,100 +21,100 @@
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE
 #endif
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "libavutil/macros.h"
-#include "libavutil/log.h"
-#include "config.h"
+#അന്തര്ഭാവ "libavutil/cpu.h"
+#അന്തര്ഭാവ "libavutil/riscv/cpu.h"
+#അന്തര്ഭാവ "libavutil/cpu_internal.h"
+#അന്തര്ഭാവ "libavutil/macros.h"
+#അന്തര്ഭാവ "libavutil/log.h"
+#അന്തര്ഭാവ "config.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-#include <sys/auxv.h>
+#എങ്കിൽ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#അന്തര്ഭാവ <sys/auxv.h>
 #define HWCAP_RV(letter) (1ul << ((letter) - 'A'))
 #endif
-#if HAVE_SYS_HWPROBE_H
-#include <sys/hwprobe.h>
-#elif HAVE_ASM_HWPROBE_H
-#include <asm/hwprobe.h>
-#include <asm/unistd.h>
-#include <sys/syscall.h>
-#include <unistd.h>
+#എങ്കിൽ HAVE_SYS_HWPROBE_H
+#അന്തര്ഭാവ <sys/hwprobe.h>
+#അല്ലെങ്കിലെങ്കിൽ HAVE_ASM_HWPROBE_H
+#അന്തര്ഭാവ <asm/hwprobe.h>
+#അന്തര്ഭാവ <asm/unistd.h>
+#അന്തര്ഭാവ <sys/syscall.h>
+#അന്തര്ഭാവ <unistd.h>
 
-static int __riscv_hwprobe(struct riscv_hwprobe *pairs, size_t pair_count,
-                           size_t cpu_count, unsigned long *cpus,
-                           unsigned int flags)
+സ്ഥിതം പൂർണ്ണസംഖ്യ __riscv_hwprobe(ഘടന riscv_hwprobe *pairs, size_t pair_എണ്ണം,
+                           size_t cpu_എണ്ണം, unsigned long *cpus,
+                           unsigned പൂർണ്ണസംഖ്യ flags)
 {
-        return syscall(__NR_riscv_hwprobe, pairs, pair_count, cpu_count, cpus,
+        തിരികെ syscall(__NR_riscv_hwprobe, pairs, pair_എണ്ണം, cpu_എണ്ണം, cpus,
                        flags);
 }
 #endif
 
-int ff_get_cpu_flags_riscv(void)
+പൂർണ്ണസംഖ്യ ff_get_cpu_flags_riscv(ശൂന്യം)
 {
-    int ret = 0;
-#if HAVE_SYS_HWPROBE_H || HAVE_ASM_HWPROBE_H
-    struct riscv_hwprobe pairs[] = {
-        { RISCV_HWPROBE_KEY_BASE_BEHAVIOR, 0 },
-        { RISCV_HWPROBE_KEY_IMA_EXT_0, 0 },
-        { RISCV_HWPROBE_KEY_CPUPERF_0, 0 },
+    പൂർണ്ണസംഖ്യ ret = 0;
+#എങ്കിൽ HAVE_SYS_HWPROBE_H || HAVE_ASM_HWPROBE_H
+    ഘടന riscv_hwprobe pairs[] = {
+        { RISCV_HWPROBE_താക്കോൽ_BASE_BEHAVIOR, 0 },
+        { RISCV_HWPROBE_താക്കോൽ_IMA_EXT_0, 0 },
+        { RISCV_HWPROBE_താക്കോൽ_CPUPERF_0, 0 },
     };
 
-    if (__riscv_hwprobe(pairs, FF_ARRAY_ELEMS(pairs), 0, NULL, 0) == 0) {
-        if (pairs[0].value & RISCV_HWPROBE_BASE_BEHAVIOR_IMA)
+    എങ്കിൽ (__riscv_hwprobe(pairs, FF_ARRAY_ELEMS(pairs), 0, ശൂന്യ, 0) == 0) {
+        എങ്കിൽ (pairs[0].മൂല്യം & RISCV_HWPROBE_BASE_BEHAVIOR_IMA)
             ret |= AV_CPU_FLAG_RVI;
 #ifdef RISCV_HWPROBE_IMA_V
-        if (pairs[1].value & RISCV_HWPROBE_IMA_V)
+        എങ്കിൽ (pairs[1].മൂല്യം & RISCV_HWPROBE_IMA_V)
             ret |= AV_CPU_FLAG_RVV_I32 | AV_CPU_FLAG_RVV_I64
                  | AV_CPU_FLAG_RVV_F32 | AV_CPU_FLAG_RVV_F64;
 #ifdef RISCV_HWPROBE_EXT_ZVE32X
-        else if ((pairs[1].value & RISCV_HWPROBE_EXT_ZVE32X) &&
+        അല്ലെങ്കിൽ എങ്കിൽ ((pairs[1].മൂല്യം & RISCV_HWPROBE_EXT_ZVE32X) &&
                  ff_get_rv_vlenb() >= 16) { // runtime detect assumes 128+ bits
             ret |= AV_CPU_FLAG_RVV_I32;
 
-            if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE32F)
+            എങ്കിൽ (pairs[1].മൂല്യം & RISCV_HWPROBE_EXT_ZVE32F)
                 ret |= AV_CPU_FLAG_RVV_F32;
-            if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64X) {
+            എങ്കിൽ (pairs[1].മൂല്യം & RISCV_HWPROBE_EXT_ZVE64X) {
                 ret |= AV_CPU_FLAG_RVV_I64;
 
-                if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64D)
+                എങ്കിൽ (pairs[1].മൂല്യം & RISCV_HWPROBE_EXT_ZVE64D)
                     ret |= AV_CPU_FLAG_RVV_F64;
             }
         }
 #endif
 #endif
 #ifdef RISCV_HWPROBE_EXT_ZBB
-        if (pairs[1].value & RISCV_HWPROBE_EXT_ZBB)
+        എങ്കിൽ (pairs[1].മൂല്യം & RISCV_HWPROBE_EXT_ZBB)
             ret |= AV_CPU_FLAG_RVB_BASIC;
-#if defined (RISCV_HWPROBE_EXT_ZBA) && defined (RISCV_HWPROBE_EXT_ZBS)
-        if ((pairs[1].value & RISCV_HWPROBE_EXT_ZBA) &&
-            (pairs[1].value & RISCV_HWPROBE_EXT_ZBB) &&
-            (pairs[1].value & RISCV_HWPROBE_EXT_ZBS))
+#എങ്കിൽ defined (RISCV_HWPROBE_EXT_ZBA) && defined (RISCV_HWPROBE_EXT_ZBS)
+        എങ്കിൽ ((pairs[1].മൂല്യം & RISCV_HWPROBE_EXT_ZBA) &&
+            (pairs[1].മൂല്യം & RISCV_HWPROBE_EXT_ZBB) &&
+            (pairs[1].മൂല്യം & RISCV_HWPROBE_EXT_ZBS))
             ret |= AV_CPU_FLAG_RVB;
 #endif
 #endif
 #ifdef RISCV_HWPROBE_EXT_ZVBB
-        if (pairs[1].value & RISCV_HWPROBE_EXT_ZVBB)
+        എങ്കിൽ (pairs[1].മൂല്യം & RISCV_HWPROBE_EXT_ZVBB)
             ret |= AV_CPU_FLAG_RV_ZVBB;
 #endif
-        switch (pairs[2].value & RISCV_HWPROBE_MISALIGNED_MASK) {
-            case RISCV_HWPROBE_MISALIGNED_FAST:
+        തിരഞ്ഞെടുപ്പ് (pairs[2].മൂല്യം & RISCV_HWPROBE_MISALIGNED_MASK) {
+            അവസ്ഥ RISCV_HWPROBE_MISALIGNED_FAST:
                 ret |= AV_CPU_FLAG_RV_MISALIGNED;
-                break;
-            default:
+                നിർത്തുക;
+            സ്ഥിരസ്ഥിതി:
                 ; /* do nothing */
         }
     }
-#elif HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#അല്ലെങ്കിലെങ്കിൽ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
     {
-        const unsigned long hwcap = ff_getauxval(AT_HWCAP);
+        സ്ഥിരം unsigned long hwcap = ff_getauxval(AT_HWCAP);
 
-        if (hwcap & HWCAP_RV('I'))
+        എങ്കിൽ (hwcap & HWCAP_RV('I'))
             ret |= AV_CPU_FLAG_RVI;
-        if (hwcap & HWCAP_RV('B'))
+        എങ്കിൽ (hwcap & HWCAP_RV('B'))
             ret |= AV_CPU_FLAG_RVB_BASIC | AV_CPU_FLAG_RVB;
 
         /* The V extension implies all Zve* functional subsets */
-        if (hwcap & HWCAP_RV('V'))
+        എങ്കിൽ (hwcap & HWCAP_RV('V'))
              ret |= AV_CPU_FLAG_RVV_I32 | AV_CPU_FLAG_RVV_I64
                   | AV_CPU_FLAG_RVV_F32 | AV_CPU_FLAG_RVV_F64;
     }
@@ -127,7 +127,7 @@ int ff_get_cpu_flags_riscv(void)
 #ifdef __riscv_zbb
     ret |= AV_CPU_FLAG_RVB_BASIC;
 #endif
-#if defined (__riscv_b) || \
+#എങ്കിൽ defined (__riscv_b) || \
     (defined (__riscv_zba) && defined (__riscv_zbb) && defined (__riscv_zbs))
     ret |= AV_CPU_FLAG_RVB;
 #endif
@@ -135,12 +135,12 @@ int ff_get_cpu_flags_riscv(void)
     /* If RV-V is enabled statically at compile-time, check the details. */
 #ifdef __riscv_vector
     ret |= AV_CPU_FLAG_RVV_I32;
-#if __riscv_v_elen >= 64
+#എങ്കിൽ __riscv_v_elen >= 64
     ret |= AV_CPU_FLAG_RVV_I64;
 #endif
-#if __riscv_v_elen_fp >= 32
+#എങ്കിൽ __riscv_v_elen_fp >= 32
     ret |= AV_CPU_FLAG_RVV_F32;
-#if __riscv_v_elen_fp >= 64
+#എങ്കിൽ __riscv_v_elen_fp >= 64
     ret |= AV_CPU_FLAG_RVV_F64;
 #endif
 #endif
@@ -149,5 +149,5 @@ int ff_get_cpu_flags_riscv(void)
     ret |= AV_CPU_FLAG_RV_ZVBB;
 #endif
 
-    return ret;
+    തിരികെ ret;
 }

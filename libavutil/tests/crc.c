@@ -16,16 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ <stdio.h>
 
-#include "libavutil/crc.h"
+#അന്തര്ഭാവ "libavutil/crc.h"
 
-int main(void)
+പൂർണ്ണസംഖ്യ പ്രധാന(ശൂന്യം)
 {
     uint8_t buf[1999];
-    int i;
-    static const unsigned p[7][3] = {
+    പൂർണ്ണസംഖ്യ i;
+    സ്ഥിതം സ്ഥിരം unsigned p[7][3] = {
         { AV_CRC_32_IEEE_LE, 0xEDB88320, 0x3D5CDD04 },
         { AV_CRC_32_IEEE   , 0x04C11DB7, 0xC0F5BAE0 },
         { AV_CRC_24_IEEE   , 0x864CFB  , 0xB704CE   },
@@ -34,14 +34,14 @@ int main(void)
         { AV_CRC_8_ATM     , 0x07      , 0xE3       },
         { AV_CRC_8_EBU     , 0x1D      , 0xD6       },
     };
-    const AVCRC *ctx;
+    സ്ഥിരം AVCRC *ctx;
 
-    for (i = 0; i < sizeof(buf); i++)
+    വേണ്ടി (i = 0; i < വലുപ്പം(buf); i++)
         buf[i] = i + i * i;
 
-    for (i = 0; i < 7; i++) {
+    വേണ്ടി (i = 0; i < 7; i++) {
         ctx = av_crc_get_table(p[i][0]);
-        printf("crc %08X = %X\n", p[i][1], av_crc(ctx, 0, buf, sizeof(buf)));
+        printf("crc %08X = %X\n", p[i][1], av_crc(ctx, 0, buf, വലുപ്പം(buf)));
     }
-    return 0;
+    തിരികെ 0;
 }

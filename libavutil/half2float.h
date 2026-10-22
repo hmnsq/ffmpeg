@@ -19,38 +19,38 @@
 #ifndef AVUTIL_HALF2FLOAT_H
 #define AVUTIL_HALF2FLOAT_H
 
-#include <stdint.h>
-#include "intfloat.h"
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ "intfloat.h"
 
-#include "config.h"
+#അന്തര്ഭാവ "config.h"
 
-typedef struct Half2FloatTables {
-#if HAVE_FAST_FLOAT16
+തരനിർവചനം ഘടന Half2FloatTables {
+#എങ്കിൽ HAVE_FAST_FLOAT16
     uint8_t dummy;
-#else
+#അല്ലെങ്കിൽ
     uint32_t mantissatable[3072];
     uint32_t exponenttable[64];
     uint16_t offsettable[64];
 #endif
 } Half2FloatTables;
 
-void ff_init_half2float_tables(Half2FloatTables *t);
+ശൂന്യം ff_init_half2float_tables(Half2FloatTables *t);
 
-static inline uint32_t half2float(uint16_t h, const Half2FloatTables *t)
+സ്ഥിതം വരിയിൽ uint32_t half2float(uint16_t h, സ്ഥിരം Half2FloatTables *t)
 {
-#if HAVE_FAST_FLOAT16
-    union {
+#എങ്കിൽ HAVE_FAST_FLOAT16
+    സംഘം {
         _Float16 f;
         uint16_t i;
     } u;
     u.i = h;
-    return av_float2int(u.f);
-#else
+    തിരികെ av_float2int(u.f);
+#അല്ലെങ്കിൽ
     uint32_t f;
 
     f = t->mantissatable[t->offsettable[h >> 10] + (h & 0x3ff)] + t->exponenttable[h >> 10];
 
-    return f;
+    തിരികെ f;
 #endif
 }
 

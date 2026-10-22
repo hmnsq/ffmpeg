@@ -19,43 +19,43 @@
 #ifndef AVUTIL_AARCH64_CRC_H
 #define AVUTIL_AARCH64_CRC_H
 
-#include <stddef.h>
-#include <stdint.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "config.h"
+#അന്തര്ഭാവ "config.h"
 
-#include "cpu.h"
-#include "libavutil/attributes_internal.h"
-#include "libavutil/avassert.h"
-#include "libavutil/cpu.h"
-#include "libavutil/crc.h"
-#include "libavutil/intreadwrite.h"
+#അന്തര്ഭാവ "cpu.h"
+#അന്തര്ഭാവ "libavutil/attributes_internal.h"
+#അന്തര്ഭാവ "libavutil/avassert.h"
+#അന്തര്ഭാവ "libavutil/cpu.h"
+#അന്തര്ഭാവ "libavutil/crc.h"
+#അന്തര്ഭാവ "libavutil/intreadwrite.h"
 
-#if HAVE_ARM_CRC
-FF_VISIBILITY_PUSH_HIDDEN
-uint32_t ff_crc32_aarch64(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer,
+#എങ്കിൽ HAVE_ARM_CRC
+FF_VISIBILITY_തള്ളുക_HIDDEN
+uint32_t ff_crc32_aarch64(സ്ഥിരം AVCRC *ctx, uint32_t crc, സ്ഥിരം uint8_t *buffer,
                           size_t length);
-FF_VISIBILITY_POP_HIDDEN
+FF_VISIBILITY_എടുക്കുക_HIDDEN
 #endif
 
-#if HAVE_PMULL && HAVE_EOR3
-#include "libavutil/crc_internal.h"
+#എങ്കിൽ HAVE_PMULL && HAVE_EOR3
+#അന്തര്ഭാവ "libavutil/crc_internal.h"
 
-FF_VISIBILITY_PUSH_HIDDEN
-uint32_t ff_crc_neon_pmull(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer,
+FF_VISIBILITY_തള്ളുക_HIDDEN
+uint32_t ff_crc_neon_pmull(സ്ഥിരം AVCRC *ctx, uint32_t crc, സ്ഥിരം uint8_t *buffer,
                            size_t length);
-uint32_t ff_crc_le_neon_pmull(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer,
+uint32_t ff_crc_le_neon_pmull(സ്ഥിരം AVCRC *ctx, uint32_t crc, സ്ഥിരം uint8_t *buffer,
                               size_t length);
-FF_VISIBILITY_POP_HIDDEN
+FF_VISIBILITY_എടുക്കുക_HIDDEN
 
-enum {
+എണ്ണൽ {
     CRC_C    = 0,
     PMULL_BE,
     PMULL_LE,
     CRC32_PMULL_LE,
 };
 
-static const AVCRC crc_table_pmull[AV_CRC_MAX][17] = {
+സ്ഥിതം സ്ഥിരം AVCRC crc_table_pmull[AV_CRC_MAX][17] = {
     [AV_CRC_8_ATM] = {
         PMULL_BE,
         0xbc000000, 0x0, 0x32000000, 0x0,
@@ -115,10 +115,10 @@ static const AVCRC crc_table_pmull[AV_CRC_MAX][17] = {
 };
 
 
-static inline void crc_init_aarch64(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+സ്ഥിതം വരിയിൽ ശൂന്യം crc_init_aarch64(AVCRC *ctx, പൂർണ്ണസംഖ്യ le, പൂർണ്ണസംഖ്യ bits, uint32_t poly, പൂർണ്ണസംഖ്യ ctx_size)
 {
     uint64_t poly_;
-    if (le) {
+    എങ്കിൽ (le) {
         // convert the reversed representation to regular form
         poly = reverse(poly, bits) >> 1;
     }
@@ -127,7 +127,7 @@ static inline void crc_init_aarch64(AVCRC *ctx, int le, int bits, uint32_t poly,
 
     uint64_t div;
     uint8_t *dst = (uint8_t*)(ctx + 1);
-    if (le) {
+    എങ്കിൽ (le) {
         ctx[0] = PMULL_LE;
         AV_WN64(dst +  0, xnmodp(4 * 128 + 32, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128 - 32, poly_, 32, &div, le));
@@ -138,7 +138,7 @@ static inline void crc_init_aarch64(AVCRC *ctx, int le, int bits, uint32_t poly,
         AV_WN64(dst + 40, xnmodp(64, poly_, 32, &div, le));
         AV_WN64(dst + 48, div);
         AV_WN64(dst + 56, reverse(poly_ | (1ULL << 32), 32));
-    } else {
+    } അല്ലെങ്കിൽ {
         ctx[0] = PMULL_BE;
         AV_WN64(dst +  0, xnmodp(4 * 128, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128 + 64, poly_, 32, &div, le));
@@ -151,12 +151,12 @@ static inline void crc_init_aarch64(AVCRC *ctx, int le, int bits, uint32_t poly,
     }
 }
 
-#if HAVE_ARM_CRC
-FF_VISIBILITY_PUSH_HIDDEN
-uint32_t ff_crc32_pmull_eor3_aarch64(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer,
+#എങ്കിൽ HAVE_ARM_CRC
+FF_VISIBILITY_തള്ളുക_HIDDEN
+uint32_t ff_crc32_pmull_eor3_aarch64(സ്ഥിരം AVCRC *ctx, uint32_t crc, സ്ഥിരം uint8_t *buffer,
                                      size_t length);
-FF_VISIBILITY_POP_HIDDEN
-static const AVCRC crc_table_crc32_pmull[] = {
+FF_VISIBILITY_എടുക്കുക_HIDDEN
+സ്ഥിതം സ്ഥിരം AVCRC crc_table_crc32_pmull[] = {
         CRC32_PMULL_LE,
         0x26b70c3d, 0x0, 0x3f41287a, 0x0,
         0xae689191, 0x0, 0xccaa009e, 0x0,
@@ -170,64 +170,64 @@ static const AVCRC crc_table_crc32_pmull[] = {
 #endif
 #endif
 
-static inline av_cold int ff_crc_init_aarch64(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+സ്ഥിതം വരിയിൽ av_cold പൂർണ്ണസംഖ്യ ff_crc_init_aarch64(AVCRC *ctx, പൂർണ്ണസംഖ്യ le, പൂർണ്ണസംഖ്യ bits, uint32_t poly, പൂർണ്ണസംഖ്യ ctx_size)
 {
-#if HAVE_PMULL && HAVE_EOR3
-    int cpu_flags = av_get_cpu_flags();
+#എങ്കിൽ HAVE_PMULL && HAVE_EOR3
+    പൂർണ്ണസംഖ്യ cpu_flags = av_get_cpu_flags();
 
-    if (have_pmull(cpu_flags) && have_eor3(cpu_flags)) {
+    എങ്കിൽ (have_pmull(cpu_flags) && have_eor3(cpu_flags)) {
         crc_init_aarch64(ctx, le, bits, poly, ctx_size);
-        return 1;
+        തിരികെ 1;
     }
 #endif
-    return 0;
+    തിരികെ 0;
 }
 
-static inline uint32_t ff_crc_aarch64(const AVCRC *ctx, uint32_t crc,
-                                      const uint8_t *buffer, size_t length)
+സ്ഥിതം വരിയിൽ uint32_t ff_crc_aarch64(സ്ഥിരം AVCRC *ctx, uint32_t crc,
+                                      സ്ഥിരം uint8_t *buffer, size_t length)
 {
-    switch (ctx[0]) {
-#if HAVE_PMULL && HAVE_EOR3
-#if HAVE_ARM_CRC
-    case CRC32_PMULL_LE: return ff_crc32_pmull_eor3_aarch64(ctx, crc, buffer, length);
+    തിരഞ്ഞെടുപ്പ് (ctx[0]) {
+#എങ്കിൽ HAVE_PMULL && HAVE_EOR3
+#എങ്കിൽ HAVE_ARM_CRC
+    അവസ്ഥ CRC32_PMULL_LE: തിരികെ ff_crc32_pmull_eor3_aarch64(ctx, crc, buffer, length);
 #endif
-    case PMULL_BE: return ff_crc_neon_pmull(ctx, crc, buffer, length);
-    case PMULL_LE: return ff_crc_le_neon_pmull(ctx, crc, buffer, length);
+    അവസ്ഥ PMULL_BE: തിരികെ ff_crc_neon_pmull(ctx, crc, buffer, length);
+    അവസ്ഥ PMULL_LE: തിരികെ ff_crc_le_neon_pmull(ctx, crc, buffer, length);
 #endif
-#if HAVE_ARM_CRC
-    case (AV_CRC_32_IEEE_LE + 1): return ff_crc32_aarch64(ctx, crc, buffer, length);
+#എങ്കിൽ HAVE_ARM_CRC
+    അവസ്ഥ (AV_CRC_32_IEEE_LE + 1): തിരികെ ff_crc32_aarch64(ctx, crc, buffer, length);
 #endif
-    default: av_unreachable("AARCH64 has PMULL_LE, PMULL_BE, CRC32_PMULL_LE, and AV_CRC_32_IEEE_LE arch-specific CRC code");
+    സ്ഥിരസ്ഥിതി: av_unreachable("AARCH64 has PMULL_LE, PMULL_BE, CRC32_PMULL_LE, and AV_CRC_32_IEEE_LE arch-specific CRC code");
     }
-    return 0;
+    തിരികെ 0;
 }
 
-static inline const AVCRC *ff_crc_get_table_aarch64(AVCRCId crc_id)
+സ്ഥിതം വരിയിൽ സ്ഥിരം AVCRC *ff_crc_get_table_aarch64(AVCRCId crc_id)
 {
-    int cpu_flags = av_get_cpu_flags();
-#if HAVE_PMULL && HAVE_EOR3
-    if (have_pmull(cpu_flags) && have_eor3(cpu_flags)) {
-#if HAVE_ARM_CRC
-        if (crc_id == AV_CRC_32_IEEE_LE && have_arm_crc(cpu_flags)) {
-            return crc_table_crc32_pmull;
+    പൂർണ്ണസംഖ്യ cpu_flags = av_get_cpu_flags();
+#എങ്കിൽ HAVE_PMULL && HAVE_EOR3
+    എങ്കിൽ (have_pmull(cpu_flags) && have_eor3(cpu_flags)) {
+#എങ്കിൽ HAVE_ARM_CRC
+        എങ്കിൽ (crc_id == AV_CRC_32_IEEE_LE && have_arm_crc(cpu_flags)) {
+            തിരികെ crc_table_crc32_pmull;
         }
 #endif
-        return crc_table_pmull[crc_id];
+        തിരികെ crc_table_pmull[crc_id];
     }
 #endif
-#if HAVE_ARM_CRC
-    static const AVCRC crc32_ieee_le_ctx[] = {
+#എങ്കിൽ HAVE_ARM_CRC
+    സ്ഥിതം സ്ഥിരം AVCRC crc32_ieee_le_ctx[] = {
         AV_CRC_32_IEEE_LE + 1
     };
 
-    if (crc_id != AV_CRC_32_IEEE_LE)
-        return NULL;
+    എങ്കിൽ (crc_id != AV_CRC_32_IEEE_LE)
+        തിരികെ ശൂന്യ;
 
-    if (have_arm_crc(cpu_flags)) {
-        return crc32_ieee_le_ctx;
+    എങ്കിൽ (have_arm_crc(cpu_flags)) {
+        തിരികെ crc32_ieee_le_ctx;
     }
 #endif
-    return NULL;
+    തിരികെ ശൂന്യ;
 }
 
 #endif /* AVUTIL_AARCH64_CRC_H */

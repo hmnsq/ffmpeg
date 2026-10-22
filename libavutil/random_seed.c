@@ -18,90 +18,90 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#അന്തര്ഭാവ "config.h"
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
+#എങ്കിൽ HAVE_UNISTD_H
+#അന്തര്ഭാവ <unistd.h>
 #endif
-#if HAVE_IO_H
-#include <io.h>
+#എങ്കിൽ HAVE_IO_H
+#അന്തര്ഭാവ <io.h>
 #endif
-#if HAVE_BCRYPT
-#include <windows.h>
-#include <bcrypt.h>
+#എങ്കിൽ HAVE_BCRYPT
+#അന്തര്ഭാവ <windows.h>
+#അന്തര്ഭാവ <bcrypt.h>
 #endif
-#if CONFIG_GCRYPT
-#include <gcrypt.h>
-#elif CONFIG_OPENSSL
-#include <openssl/rand.h>
+#എങ്കിൽ CONFIG_GCRYPT
+#അന്തര്ഭാവ <gcrypt.h>
+#അല്ലെങ്കിലെങ്കിൽ CONFIG_OPENSSL
+#അന്തര്ഭാവ <openssl/rand.h>
 #endif
-#include <fcntl.h>
-#include <math.h>
-#include <time.h>
-#include <string.h>
-#include "avassert.h"
-#include "file_open.h"
-#include "internal.h"
-#include "intreadwrite.h"
-#include "timer.h"
-#include "random_seed.h"
-#include "sha.h"
+#അന്തര്ഭാവ <fcntl.h>
+#അന്തര്ഭാവ <math.h>
+#അന്തര്ഭാവ <time.h>
+#അന്തര്ഭാവ <string.h>
+#അന്തര്ഭാവ "avassert.h"
+#അന്തര്ഭാവ "file_open.h"
+#അന്തര്ഭാവ "internal.h"
+#അന്തര്ഭാവ "intreadwrite.h"
+#അന്തര്ഭാവ "timer.h"
+#അന്തര്ഭാവ "random_seed.h"
+#അന്തര്ഭാവ "sha.h"
 
 #ifndef TEST
 #define TEST 0
 #endif
 
-static int read_random(uint8_t *dst, size_t len, const char *file)
+സ്ഥിതം പൂർണ്ണസംഖ്യ read_random(uint8_t *dst, size_t len, സ്ഥിരം അക്ഷരം *file)
 {
-#if HAVE_UNISTD_H
+#എങ്കിൽ HAVE_UNISTD_H
     FILE *fp = avpriv_fopen_utf8(file, "r");
     size_t err;
 
-    if (!fp)
-        return AVERROR_UNKNOWN;
-    setvbuf(fp, NULL, _IONBF, 0);
+    എങ്കിൽ (!fp)
+        തിരികെ AVERROR_UNKNOWN;
+    setvbuf(fp, ശൂന്യ, _IONBF, 0);
     err = fread(dst, 1, len, fp);
     fclose(fp);
 
-    if (err != len)
-        return AVERROR_UNKNOWN;
+    എങ്കിൽ (err != len)
+        തിരികെ AVERROR_UNKNOWN;
 
-    return 0;
-#else
-    return AVERROR(ENOSYS);
+    തിരികെ 0;
+#അല്ലെങ്കിൽ
+    തിരികെ AVERROR(ENOSYS);
 #endif
 }
 
-static uint32_t get_generic_seed(void)
+സ്ഥിതം uint32_t get_generic_seed(ശൂന്യം)
 {
     uint64_t tmp[120/8];
-    struct AVSHA *sha = (void*)tmp;
+    ഘടന AVSHA *sha = (ശൂന്യം*)tmp;
     clock_t last_t  = 0;
     clock_t last_td = 0;
     clock_t init_t = 0;
-    static uint64_t i = 0;
-    static uint32_t buffer[512] = { 0 };
-    unsigned char digest[20];
+    സ്ഥിതം uint64_t i = 0;
+    സ്ഥിതം uint32_t buffer[512] = { 0 };
+    unsigned അക്ഷരം digest[20];
     uint64_t last_i = i;
-    int repeats[3] = { 0 };
+    പൂർണ്ണസംഖ്യ repeats[3] = { 0 };
 
-    av_assert0(sizeof(tmp) >= av_sha_size);
+    av_assert0(വലുപ്പം(tmp) >= av_sha_size);
 
-    if(TEST){
-        memset(buffer, 0, sizeof(buffer));
+    എങ്കിൽ(TEST){
+        memset(buffer, 0, വലുപ്പം(buffer));
         last_i = i = 0;
-    }else{
+    }അല്ലെങ്കിൽ{
 #ifdef AV_READ_TIME
         buffer[13] ^= AV_READ_TIME();
         buffer[41] ^= AV_READ_TIME()>>32;
 #endif
     }
 
-    for (;;) {
+    വേണ്ടി (;;) {
         clock_t t = clock();
-        int incremented_i = 0;
-        int cur_td = t - last_t;
-        if (last_t + 2*last_td + (CLOCKS_PER_SEC > 1000) < t) {
+        പൂർണ്ണസംഖ്യ incremented_i = 0;
+        പൂർണ്ണസംഖ്യ cur_td = t - last_t;
+        എങ്കിൽ (last_t + 2*last_td + (CLOCKS_PER_SEC > 1000) < t) {
             // If the timer incremented by more than 2*last_td at once,
             // we may e.g. have had a context switch. If the timer resolution
             // is high (CLOCKS_PER_SEC > 1000), require that the timer
@@ -109,7 +109,7 @@ static uint32_t get_generic_seed(void)
             // it is enough that the timer incremented at all.
             buffer[++i & 511] += cur_td % 3294638521U;
             incremented_i = 1;
-        } else if (t != last_t && repeats[0] > 0 && repeats[1] > 0 &&
+        } അല്ലെങ്കിൽ എങ്കിൽ (t != last_t && repeats[0] > 0 && repeats[1] > 0 &&
                    repeats[2] > 0 && repeats[0] != repeats[1] &&
                    repeats[0] != repeats[2]) {
             // If the timer resolution is high, and we get the same timer
@@ -119,18 +119,18 @@ static uint32_t get_generic_seed(void)
             // and proceed to the next index.
             buffer[++i & 511] += (repeats[0] + repeats[1] + repeats[2]) % 3294638521U;
             incremented_i = 1;
-        } else {
+        } അല്ലെങ്കിൽ {
             buffer[i & 511] = 1664525*buffer[i & 511] + 1013904223 + (cur_td % 3294638521U);
         }
-        if (incremented_i && (t - init_t) >= CLOCKS_PER_SEC>>5) {
-            if (last_i && i - last_i > 4 || i - last_i > 64 || TEST && i - last_i > 8)
-                break;
+        എങ്കിൽ (incremented_i && (t - init_t) >= CLOCKS_PER_SEC>>5) {
+            എങ്കിൽ (last_i && i - last_i > 4 || i - last_i > 64 || TEST && i - last_i > 8)
+                നിർത്തുക;
         }
-        if (t == last_t) {
+        എങ്കിൽ (t == last_t) {
             repeats[0]++;
-        } else {
+        } അല്ലെങ്കിൽ {
             // If we got a new unique number of repeats, update the history.
-            if (repeats[0] != repeats[1]) {
+            എങ്കിൽ (repeats[0] != repeats[1]) {
                 repeats[2] = repeats[1];
                 repeats[1] = repeats[0];
             }
@@ -138,67 +138,67 @@ static uint32_t get_generic_seed(void)
         }
         last_t = t;
         last_td = cur_td;
-        if (!init_t)
+        എങ്കിൽ (!init_t)
             init_t = t;
     }
 
-    if(TEST) {
+    എങ്കിൽ(TEST) {
         buffer[0] = buffer[1] = 0;
-    } else {
+    } അല്ലെങ്കിൽ {
 #ifdef AV_READ_TIME
         buffer[111] += AV_READ_TIME();
 #endif
     }
 
     av_sha_init(sha, 160);
-    av_sha_update(sha, (const uint8_t *)buffer, sizeof(buffer));
+    av_sha_update(sha, (സ്ഥിരം uint8_t *)buffer, വലുപ്പം(buffer));
     av_sha_final(sha, digest);
-    return AV_RB32(digest) + AV_RB32(digest + 16);
+    തിരികെ AV_RB32(digest) + AV_RB32(digest + 16);
 }
 
-int av_random_bytes(uint8_t* buf, size_t len)
+പൂർണ്ണസംഖ്യ av_random_bytes(uint8_t* buf, size_t len)
 {
-    int err;
+    പൂർണ്ണസംഖ്യ err;
 
-#if HAVE_BCRYPT
+#എങ്കിൽ HAVE_BCRYPT
     BCRYPT_ALG_HANDLE algo_handle;
     NTSTATUS ret = BCryptOpenAlgorithmProvider(&algo_handle, BCRYPT_RNG_ALGORITHM,
                                                MS_PRIMITIVE_PROVIDER, 0);
-    if (BCRYPT_SUCCESS(ret)) {
+    എങ്കിൽ (BCRYPT_SUCCESS(ret)) {
         NTSTATUS ret = BCryptGenRandom(algo_handle, (PUCHAR)buf, len, 0);
         BCryptCloseAlgorithmProvider(algo_handle, 0);
-        if (BCRYPT_SUCCESS(ret))
-            return 0;
+        എങ്കിൽ (BCRYPT_SUCCESS(ret))
+            തിരികെ 0;
     }
 #endif
 
-#if HAVE_ARC4RANDOM_BUF
+#എങ്കിൽ HAVE_ARC4RANDOM_BUF
     arc4random_buf(buf, len);
-    return 0;
+    തിരികെ 0;
 #endif
 
     err = read_random(buf, len, "/dev/urandom");
-    if (!err)
-        return err;
+    എങ്കിൽ (!err)
+        തിരികെ err;
 
-#if CONFIG_GCRYPT
+#എങ്കിൽ CONFIG_GCRYPT
     gcry_randomize(buf, len, GCRY_VERY_STRONG_RANDOM);
-    return 0;
-#elif CONFIG_OPENSSL
-    if (RAND_bytes(buf, len) == 1)
-        return 0;
-    return AVERROR_EXTERNAL;
-#else
-    return err;
+    തിരികെ 0;
+#അല്ലെങ്കിലെങ്കിൽ CONFIG_OPENSSL
+    എങ്കിൽ (RAND_bytes(buf, len) == 1)
+        തിരികെ 0;
+    തിരികെ AVERROR_EXTERNAL;
+#അല്ലെങ്കിൽ
+    തിരികെ err;
 #endif
 }
 
-uint32_t av_get_random_seed(void)
+uint32_t av_get_random_seed(ശൂന്യം)
 {
     uint32_t seed;
 
-    if (av_random_bytes((uint8_t *)&seed, sizeof(seed)) < 0)
-        return get_generic_seed();
+    എങ്കിൽ (av_random_bytes((uint8_t *)&seed, വലുപ്പം(seed)) < 0)
+        തിരികെ get_generic_seed();
 
-    return seed;
+    തിരികെ seed;
 }

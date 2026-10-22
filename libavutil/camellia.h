@@ -22,7 +22,7 @@
 #ifndef AVUTIL_CAMELLIA_H
 #define AVUTIL_CAMELLIA_H
 
-#include <stdint.h>
+#അന്തര്ഭാവ <stdint.h>
 
 
 /**
@@ -33,15 +33,15 @@
   * @{
   */
 
-extern const int av_camellia_size;
+ബാഹ്യ സ്ഥിരം പൂർണ്ണസംഖ്യ av_camellia_size;
 
-struct AVCAMELLIA;
+ഘടന AVCAMELLIA;
 
 /**
   * Allocate an AVCAMELLIA context
   * To free the struct: av_free(ptr)
   */
-struct AVCAMELLIA *av_camellia_alloc(void);
+ഘടന AVCAMELLIA *av_camellia_alloc(ശൂന്യം);
 
 /**
   * Initialize an AVCAMELLIA context.
@@ -50,7 +50,7 @@ struct AVCAMELLIA *av_camellia_alloc(void);
   * @param key a key of 16, 24, 32 bytes used for encryption/decryption
   * @param key_bits number of keybits: possible are 128, 192, 256
  */
-int av_camellia_init(struct AVCAMELLIA *ctx, const uint8_t *key, int key_bits);
+പൂർണ്ണസംഖ്യ av_camellia_init(ഘടന AVCAMELLIA *ctx, സ്ഥിരം uint8_t *താക്കോൽ, പൂർണ്ണസംഖ്യ താക്കോൽ_bits);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context
@@ -62,7 +62,7 @@ int av_camellia_init(struct AVCAMELLIA *ctx, const uint8_t *key, int key_bits);
   * @param iv initialization vector for CBC mode, NULL for ECB mode
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_camellia_crypt(struct AVCAMELLIA *ctx, uint8_t *dst, const uint8_t *src, int count, uint8_t* iv, int decrypt);
+ശൂന്യം av_camellia_crypt(ഘടന AVCAMELLIA *ctx, uint8_t *dst, സ്ഥിരം uint8_t *src, പൂർണ്ണസംഖ്യ എണ്ണം, uint8_t* iv, പൂർണ്ണസംഖ്യ decrypt);
 
 /**
  * @}

@@ -16,63 +16,63 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avassert.h"
-#include "container_fifo.h"
-#include "error.h"
-#include "fifo.h"
-#include "frame.h"
-#include "mem.h"
-#include "refstruct.h"
+#അന്തര്ഭാവ "avassert.h"
+#അന്തര്ഭാവ "container_fifo.h"
+#അന്തര്ഭാവ "error.h"
+#അന്തര്ഭാവ "fifo.h"
+#അന്തര്ഭാവ "frame.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "refstruct.h"
 
-struct AVContainerFifo {
+ഘടന AVContainerFifo {
     AVFifo             *fifo;
     AVRefStructPool    *pool;
 
-    void               *opaque;
-    void*             (*container_alloc)(void *opaque);
-    void              (*container_reset)(void *opaque, void *obj);
-    void              (*container_free) (void *opaque, void *obj);
-    int               (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags);
+    ശൂന്യം               *opaque;
+    ശൂന്യം*             (*container_alloc)(ശൂന്യം *opaque);
+    ശൂന്യം              (*container_reset)(ശൂന്യം *opaque, ശൂന്യം *obj);
+    ശൂന്യം              (*container_free) (ശൂന്യം *opaque, ശൂന്യം *obj);
+    പൂർണ്ണസംഖ്യ               (*fifo_transfer)  (ശൂന്യം *opaque, ശൂന്യം *dst, ശൂന്യം *src, unsigned flags);
 
 };
 
-static int container_fifo_init_entry(AVRefStructOpaque opaque, void *obj)
+സ്ഥിതം പൂർണ്ണസംഖ്യ container_fifo_init_entry(AVRefStructOpaque opaque, ശൂന്യം *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    void **pobj = obj;
+    ശൂന്യം **pobj = obj;
 
     *pobj = cf->container_alloc(cf->opaque);
-    if (!*pobj)
-        return AVERROR(ENOMEM);
+    എങ്കിൽ (!*pobj)
+        തിരികെ AVERROR(ENOMEM);
 
-    return 0;
+    തിരികെ 0;
 }
 
-static void container_fifo_reset_entry(AVRefStructOpaque opaque, void *obj)
+സ്ഥിതം ശൂന്യം container_fifo_reset_entry(AVRefStructOpaque opaque, ശൂന്യം *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    cf->container_reset(cf->opaque, *(void**)obj);
+    cf->container_reset(cf->opaque, *(ശൂന്യം**)obj);
 }
 
-static void container_fifo_free_entry(AVRefStructOpaque opaque, void *obj)
+സ്ഥിതം ശൂന്യം container_fifo_free_entry(AVRefStructOpaque opaque, ശൂന്യം *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    cf->container_free(cf->opaque, *(void**)obj);
+    cf->container_free(cf->opaque, *(ശൂന്യം**)obj);
 }
 
 AVContainerFifo*
-av_container_fifo_alloc(void *opaque,
-                        void* (*container_alloc)(void *opaque),
-                        void  (*container_reset)(void *opaque, void *obj),
-                        void  (*container_free) (void *opaque, void *obj),
-                        int   (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags),
+av_container_fifo_alloc(ശൂന്യം *opaque,
+                        ശൂന്യം* (*container_alloc)(ശൂന്യം *opaque),
+                        ശൂന്യം  (*container_reset)(ശൂന്യം *opaque, ശൂന്യം *obj),
+                        ശൂന്യം  (*container_free) (ശൂന്യം *opaque, ശൂന്യം *obj),
+                        പൂർണ്ണസംഖ്യ   (*fifo_transfer)  (ശൂന്യം *opaque, ശൂന്യം *dst, ശൂന്യം *src, unsigned flags),
                         unsigned flags)
 {
     AVContainerFifo *cf;
 
-    cf = av_mallocz(sizeof(*cf));
-    if (!cf)
-        return NULL;
+    cf = av_mallocz(വലുപ്പം(*cf));
+    എങ്കിൽ (!cf)
+        തിരികെ ശൂന്യ;
 
     cf->opaque          = opaque;
     cf->container_alloc = container_alloc;
@@ -80,36 +80,36 @@ av_container_fifo_alloc(void *opaque,
     cf->container_free  = container_free;
     cf->fifo_transfer   = fifo_transfer;
 
-    cf->fifo = av_fifo_alloc2(1, sizeof(void*), AV_FIFO_FLAG_AUTO_GROW);
-    if (!cf->fifo)
-        goto fail;
+    cf->fifo = av_fifo_alloc2(1, വലുപ്പം(ശൂന്യം*), AV_FIFO_FLAG_AUTO_GROW);
+    എങ്കിൽ (!cf->fifo)
+        പോകുക fail;
 
-    cf->pool = av_refstruct_pool_alloc_ext(sizeof(void*), 0, cf,
+    cf->pool = av_refstruct_pool_alloc_ext(വലുപ്പം(ശൂന്യം*), 0, cf,
                                            container_fifo_init_entry,
                                            container_fifo_reset_entry,
                                            container_fifo_free_entry,
-                                           NULL);
-    if (!cf->pool)
-        goto fail;
+                                           ശൂന്യ);
+    എങ്കിൽ (!cf->pool)
+        പോകുക fail;
 
-    return cf;
+    തിരികെ cf;
 fail:
     av_container_fifo_free(&cf);
-    return NULL;
+    തിരികെ ശൂന്യ;
 }
 
-void av_container_fifo_free(AVContainerFifo **pcf)
+ശൂന്യം av_container_fifo_free(AVContainerFifo **pcf)
 {
     AVContainerFifo *cf;
 
-    if (!*pcf)
-        return;
+    എങ്കിൽ (!*pcf)
+        തിരികെ;
 
     cf = *pcf;
 
-    if (cf->fifo) {
-        void *obj;
-        while (av_fifo_read(cf->fifo, &obj, 1) >= 0)
+    എങ്കിൽ (cf->fifo) {
+        ശൂന്യം *obj;
+        ആകുമ്പോൾ (av_fifo_read(cf->fifo, &obj, 1) >= 0)
             av_refstruct_unref(&obj);
         av_fifo_freep2(&cf->fifo);
     }
@@ -119,101 +119,101 @@ void av_container_fifo_free(AVContainerFifo **pcf)
     av_freep(pcf);
 }
 
-int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags)
+പൂർണ്ണസംഖ്യ av_container_fifo_read(AVContainerFifo *cf, ശൂന്യം *obj, unsigned flags)
 {
-    void **psrc;
-    int ret;
+    ശൂന്യം **psrc;
+    പൂർണ്ണസംഖ്യ ret;
 
     ret = av_fifo_read(cf->fifo, &psrc, 1);
-    if (ret < 0)
-        return ret;
+    എങ്കിൽ (ret < 0)
+        തിരികെ ret;
 
     ret = cf->fifo_transfer(cf->opaque, obj, *psrc, flags);
     av_refstruct_unref(&psrc);
 
-    return ret;
+    തിരികെ ret;
 }
 
-int av_container_fifo_peek(AVContainerFifo *cf, void **pdst, size_t offset)
+പൂർണ്ണസംഖ്യ av_container_fifo_peek(AVContainerFifo *cf, ശൂന്യം **pdst, size_t offset)
 {
-    void **pobj;
-    int ret;
+    ശൂന്യം **pobj;
+    പൂർണ്ണസംഖ്യ ret;
 
     ret = av_fifo_peek(cf->fifo, &pobj, 1, offset);
-    if (ret < 0)
-        return ret;
+    എങ്കിൽ (ret < 0)
+        തിരികെ ret;
 
     *pdst = *pobj;
 
-    return 0;
+    തിരികെ 0;
 }
 
-void av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems)
+ശൂന്യം av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems)
 {
     av_assert0(nb_elems <= av_fifo_can_read(cf->fifo));
-    while (nb_elems--) {
-        void **pobj;
-        int ret = av_fifo_read(cf->fifo, &pobj, 1);
+    ആകുമ്പോൾ (nb_elems--) {
+        ശൂന്യം **pobj;
+        പൂർണ്ണസംഖ്യ ret = av_fifo_read(cf->fifo, &pobj, 1);
         av_assert0(ret >= 0);
         av_refstruct_unref(&pobj);
     }
 }
 
-int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags)
+പൂർണ്ണസംഖ്യ av_container_fifo_write(AVContainerFifo *cf, ശൂന്യം *obj, unsigned flags)
 {
-    void **pdst;
-    int ret;
+    ശൂന്യം **pdst;
+    പൂർണ്ണസംഖ്യ ret;
 
     pdst = av_refstruct_pool_get(cf->pool);
-    if (!pdst)
-        return AVERROR(ENOMEM);
+    എങ്കിൽ (!pdst)
+        തിരികെ AVERROR(ENOMEM);
 
     ret = cf->fifo_transfer(cf->opaque, *pdst, obj, flags);
-    if (ret < 0)
-        goto fail;
+    എങ്കിൽ (ret < 0)
+        പോകുക fail;
 
     ret = av_fifo_write(cf->fifo, &pdst, 1);
-    if (ret < 0)
-        goto fail;
+    എങ്കിൽ (ret < 0)
+        പോകുക fail;
 
-    return 0;
+    തിരികെ 0;
 fail:
     av_refstruct_unref(&pdst);
-    return ret;
+    തിരികെ ret;
 }
 
-size_t av_container_fifo_can_read(const AVContainerFifo *cf)
+size_t av_container_fifo_can_read(സ്ഥിരം AVContainerFifo *cf)
 {
-    return av_fifo_can_read(cf->fifo);
+    തിരികെ av_fifo_can_read(cf->fifo);
 }
 
-static void *frame_alloc(void *opaque)
+സ്ഥിതം ശൂന്യം *frame_alloc(ശൂന്യം *opaque)
 {
-    return av_frame_alloc();
+    തിരികെ av_frame_alloc();
 }
 
-static void frame_reset(void *opaque, void *obj)
+സ്ഥിതം ശൂന്യം frame_reset(ശൂന്യം *opaque, ശൂന്യം *obj)
 {
     av_frame_unref(obj);
 }
 
-static void frame_free(void *opaque, void *obj)
+സ്ഥിതം ശൂന്യം frame_free(ശൂന്യം *opaque, ശൂന്യം *obj)
 {
     AVFrame *frame = obj;
     av_frame_free(&frame);
 }
 
-static int frame_transfer(void *opaque, void *dst, void *src, unsigned flags)
+സ്ഥിതം പൂർണ്ണസംഖ്യ frame_transfer(ശൂന്യം *opaque, ശൂന്യം *dst, ശൂന്യം *src, unsigned flags)
 {
-    if (flags & AV_CONTAINER_FIFO_FLAG_REF)
-        return av_frame_ref(dst, src);
+    എങ്കിൽ (flags & AV_CONTAINER_FIFO_FLAG_REF)
+        തിരികെ av_frame_ref(dst, src);
 
     av_frame_move_ref(dst, src);
-    return 0;
+    തിരികെ 0;
 }
 
 AVContainerFifo *av_container_fifo_alloc_avframe(unsigned flags)
 {
-    return av_container_fifo_alloc(NULL, frame_alloc, frame_reset, frame_free,
+    തിരികെ av_container_fifo_alloc(ശൂന്യ, frame_alloc, frame_reset, frame_free,
                                    frame_transfer, 0);
 }

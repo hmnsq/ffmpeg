@@ -21,12 +21,12 @@
 #define AVUTIL_HWCONTEXT_CUDA_H
 
 #ifndef CUDA_VERSION
-#include <cuda.h>
+#അന്തര്ഭാവ <cuda.h>
 #endif
 
-#include <stdint.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "pixfmt.h"
+#അന്തര്ഭാവ "pixfmt.h"
 
 /**
  * @file
@@ -36,12 +36,12 @@
  * AVBufferRefs whose data pointer is a CUdeviceptr.
  */
 
-typedef struct AVCUDADeviceContextInternal AVCUDADeviceContextInternal;
+തരനിർവചനം ഘടന AVCUDADeviceContextInternal AVCUDADeviceContextInternal;
 
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVCUDADeviceContext {
+തരനിർവചനം ഘടന AVCUDADeviceContext {
     CUcontext cuda_ctx;
     CUstream stream;
     AVCUDADeviceContextInternal *internal;
@@ -57,7 +57,7 @@ typedef struct AVCUDADeviceContext {
  * This has no use outside of custom allocation, and AVFrame AVBufferRef do not
  * necessarily point to an instance of this struct.
  */
-typedef struct AVCUDAArrayFrameDescriptor {
+തരനിർവചനം ഘടന AVCUDAArrayFrameDescriptor {
     /**
      * The CUarray containing the frame data.
      *
@@ -76,7 +76,7 @@ typedef struct AVCUDAArrayFrameDescriptor {
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVCUDAFramesContext {
+തരനിർവചനം ഘടന AVCUDAFramesContext {
     /**
      * CUDA_ARRAY3D_DESCRIPTOR CUarrays will be initialized with.
      * Mostly used to provide external Flags.
@@ -95,7 +95,7 @@ typedef struct AVCUDAFramesContext {
      *
      * Only applicable for AV_PIX_FMT_CUARRAY.
      */
-    int cuarray_num_surfaces;
+    പൂർണ്ണസംഖ്യ cuarray_അക്കം_surfaces;
 
     /**
      * If cuarray_num_surfaces is >0, this contains the array of pre-allocated surfaces.
@@ -113,12 +113,12 @@ typedef struct AVCUDAFramesContext {
  * will be filtered to only those compatible with the specified
  * hw_format.
  */
-typedef struct AVCUDAHWConfig {
+തരനിർവചനം ഘടന AVCUDAHWConfig {
     /**
      * The hardware pixel format to query constraints for.
      * Must be AV_PIX_FMT_CUDA or AV_PIX_FMT_CUARRAY.
      */
-    enum AVPixelFormat hw_format;
+    എണ്ണൽ AVPixelFormat hw_format;
 } AVCUDAHWConfig;
 
 /**

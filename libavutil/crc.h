@@ -27,9 +27,9 @@
 #ifndef AVUTIL_CRC_H
 #define AVUTIL_CRC_H
 
-#include <stdint.h>
-#include <stddef.h>
-#include "attributes.h"
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ "attributes.h"
 
 /**
  * @defgroup lavu_crc32 CRC
@@ -43,9 +43,9 @@
  * @{
  */
 
-typedef uint32_t AVCRC;
+തരനിർവചനം uint32_t AVCRC;
 
-typedef enum {
+തരനിർവചനം എണ്ണൽ {
     AV_CRC_8_ATM,
     AV_CRC_16_ANSI,
     AV_CRC_16_CCITT,
@@ -73,14 +73,14 @@ typedef enum {
  * @param ctx_size size of ctx in bytes
  * @return <0 on failure
  */
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size);
+പൂർണ്ണസംഖ്യ av_crc_init(AVCRC *ctx, പൂർണ്ണസംഖ്യ le, പൂർണ്ണസംഖ്യ bits, uint32_t poly, പൂർണ്ണസംഖ്യ ctx_size);
 
 /**
  * Get an initialized standard CRC table.
  * @param crc_id ID of a standard CRC
  * @return a pointer to the CRC table or NULL on failure
  */
-const AVCRC *av_crc_get_table(AVCRCId crc_id);
+സ്ഥിരം AVCRC *av_crc_get_table(AVCRCId crc_id);
 
 /**
  * Calculate the CRC of a block.
@@ -92,8 +92,8 @@ const AVCRC *av_crc_get_table(AVCRCId crc_id);
  *
  * @see av_crc_init() "le" parameter
  */
-uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
-                const uint8_t *buffer, size_t length) av_pure;
+uint32_t av_crc(സ്ഥിരം AVCRC *ctx, uint32_t crc,
+                സ്ഥിരം uint8_t *buffer, size_t length) av_pure;
 
 /**
  * @}

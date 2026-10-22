@@ -16,26 +16,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "channel_layout.h"
-#include "avassert.h"
-#include "buffer.h"
-#include "dict.h"
-#include "frame.h"
-#include "frame_internal.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "refstruct.h"
-#include "samplefmt.h"
-#include "side_data.h"
-#include "hwcontext.h"
+#അന്തര്ഭാവ "channel_layout.h"
+#അന്തര്ഭാവ "avassert.h"
+#അന്തര്ഭാവ "buffer.h"
+#അന്തര്ഭാവ "dict.h"
+#അന്തര്ഭാവ "frame.h"
+#അന്തര്ഭാവ "frame_internal.h"
+#അന്തര്ഭാവ "imgutils.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "refstruct.h"
+#അന്തര്ഭാവ "samplefmt.h"
+#അന്തര്ഭാവ "side_data.h"
+#അന്തര്ഭാവ "hwcontext.h"
 
-static void get_frame_defaults(AVFrame *frame)
+സ്ഥിതം ശൂന്യം get_frame_defaults(AVFrame *frame)
 {
-    memset(frame, 0, sizeof(*frame));
+    memset(frame, 0, വലുപ്പം(*frame));
 
     frame->pts                   =
-    frame->pkt_dts               = AV_NOPTS_VALUE;
-    frame->best_effort_timestamp = AV_NOPTS_VALUE;
+    frame->pkt_dts               = AV_NOPTS_മൂല്യം;
+    frame->best_effort_timestamp = AV_NOPTS_മൂല്യം;
     frame->duration            = 0;
     frame->time_base           = (AVRational){ 0, 1 };
     frame->sample_aspect_ratio = (AVRational){ 0, 1 };
@@ -50,22 +50,22 @@ static void get_frame_defaults(AVFrame *frame)
     frame->flags               = 0;
 }
 
-AVFrame *av_frame_alloc(void)
+AVFrame *av_frame_alloc(ശൂന്യം)
 {
-    AVFrame *frame = av_malloc(sizeof(*frame));
+    AVFrame *frame = av_malloc(വലുപ്പം(*frame));
 
-    if (!frame)
-        return NULL;
+    എങ്കിൽ (!frame)
+        തിരികെ ശൂന്യ;
 
     get_frame_defaults(frame);
 
-    return frame;
+    തിരികെ frame;
 }
 
-void av_frame_free(AVFrame **frame)
+ശൂന്യം av_frame_free(AVFrame **frame)
 {
-    if (!frame || !*frame)
-        return;
+    എങ്കിൽ (!frame || !*frame)
+        തിരികെ;
 
     av_frame_unref(*frame);
     av_freep(frame);
@@ -73,161 +73,161 @@ void av_frame_free(AVFrame **frame)
 
 #define ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
 
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
-                              AVBufferRef *(*alloc)(void *opaque, size_t size),
-                              void *opaque)
+പൂർണ്ണസംഖ്യ ff_frame_get_video_buffer(AVFrame *frame, പൂർണ്ണസംഖ്യ align,
+                              AVBufferRef *(*alloc)(ശൂന്യം *opaque, size_t size),
+                              ശൂന്യം *opaque)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
-    int ret, padded_height;
-    int plane_padding;
+    സ്ഥിരം AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
+    പൂർണ്ണസംഖ്യ ret, padded_height;
+    പൂർണ്ണസംഖ്യ plane_padding;
     ptrdiff_t linesizes[4];
     size_t total_size, sizes[4];
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    എങ്കിൽ (!desc)
+        തിരികെ AVERROR(EINVAL);
 
-    if ((ret = av_image_check_size(frame->width, frame->height, 0, NULL)) < 0)
-        return ret;
+    എങ്കിൽ ((ret = av_image_check_size(frame->width, frame->height, 0, ശൂന്യ)) < 0)
+        തിരികെ ret;
 
-    if (align <= 0)
+    എങ്കിൽ (align <= 0)
         align = ALIGN;
     plane_padding = FFMAX(ALIGN, align);
 
-    if (!frame->linesize[0]) {
-        for (int i = 1; i <= align; i += i) {
+    എങ്കിൽ (!frame->linesize[0]) {
+        വേണ്ടി (പൂർണ്ണസംഖ്യ i = 1; i <= align; i += i) {
             ret = av_image_fill_linesizes(frame->linesize, frame->format,
                                           FFALIGN(frame->width, i));
-            if (ret < 0)
-                return ret;
-            if (!(frame->linesize[0] & (align-1)))
-                break;
+            എങ്കിൽ (ret < 0)
+                തിരികെ ret;
+            എങ്കിൽ (!(frame->linesize[0] & (align-1)))
+                നിർത്തുക;
         }
 
-        for (int i = 0; i < 4 && frame->linesize[i]; i++)
+        വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < 4 && frame->linesize[i]; i++)
             frame->linesize[i] = FFALIGN(frame->linesize[i], align);
     }
 
-    for (int i = 0; i < 4; i++)
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < 4; i++)
         linesizes[i] = frame->linesize[i];
 
     padded_height = FFALIGN(frame->height, 32);
-    if ((ret = av_image_fill_plane_sizes(sizes, frame->format,
+    എങ്കിൽ ((ret = av_image_fill_plane_sizes(sizes, frame->format,
                                          padded_height, linesizes)) < 0)
-        return ret;
+        തിരികെ ret;
 
     total_size = 4 * plane_padding + 4 * align;
-    for (int i = 0; i < 4; i++) {
-        if (sizes[i] > SIZE_MAX - total_size)
-            return AVERROR(EINVAL);
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < 4; i++) {
+        എങ്കിൽ (sizes[i] > SIZE_MAX - total_size)
+            തിരികെ AVERROR(EINVAL);
         total_size += sizes[i];
     }
 
     frame->buf[0] = alloc ? alloc(opaque, total_size) : av_buffer_alloc(total_size);
-    if (!frame->buf[0]) {
+    എങ്കിൽ (!frame->buf[0]) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        പോകുക fail;
     }
 
-    if ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
+    എങ്കിൽ ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
                                       frame->buf[0]->data, frame->linesize)) < 0)
-        goto fail;
+        പോകുക fail;
 
-    for (int i = 1; i < 4; i++) {
-        if (frame->data[i])
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 1; i < 4; i++) {
+        എങ്കിൽ (frame->data[i])
             frame->data[i] += i * plane_padding;
         frame->data[i] = (uint8_t *)FFALIGN((uintptr_t)frame->data[i], align);
     }
 
     frame->extended_data = frame->data;
 
-    return 0;
+    തിരികെ 0;
 fail:
     av_frame_unref(frame);
-    return ret;
+    തിരികെ ret;
 }
 
-static int get_audio_buffer(AVFrame *frame, int align)
+സ്ഥിതം പൂർണ്ണസംഖ്യ get_audio_buffer(AVFrame *frame, പൂർണ്ണസംഖ്യ align)
 {
-    int planar   = av_sample_fmt_is_planar(frame->format);
-    int channels, planes;
+    പൂർണ്ണസംഖ്യ planar   = av_sample_fmt_is_planar(frame->format);
+    പൂർണ്ണസംഖ്യ channels, planes;
     size_t size;
-    int ret;
+    പൂർണ്ണസംഖ്യ ret;
 
     channels = frame->ch_layout.nb_channels;
     planes   = planar ? channels : 1;
-    if (!frame->linesize[0]) {
+    എങ്കിൽ (!frame->linesize[0]) {
         ret = av_samples_get_buffer_size(&frame->linesize[0], channels,
                                          frame->nb_samples, frame->format,
                                          align);
-        if (ret < 0)
-            return ret;
+        എങ്കിൽ (ret < 0)
+            തിരികെ ret;
     }
 
-    if (align <= 0)
+    എങ്കിൽ (align <= 0)
         align = ALIGN;
 
-    if (planes > AV_NUM_DATA_POINTERS) {
+    എങ്കിൽ (planes > AV_അക്കം_DATA_POINTERS) {
         frame->extended_data = av_calloc(planes,
-                                          sizeof(*frame->extended_data));
-        frame->extended_buf  = av_calloc(planes - AV_NUM_DATA_POINTERS,
-                                          sizeof(*frame->extended_buf));
-        if (!frame->extended_data || !frame->extended_buf) {
+                                          വലുപ്പം(*frame->extended_data));
+        frame->extended_buf  = av_calloc(planes - AV_അക്കം_DATA_POINTERS,
+                                          വലുപ്പം(*frame->extended_buf));
+        എങ്കിൽ (!frame->extended_data || !frame->extended_buf) {
             av_freep(&frame->extended_data);
             av_freep(&frame->extended_buf);
-            return AVERROR(ENOMEM);
+            തിരികെ AVERROR(ENOMEM);
         }
-        frame->nb_extended_buf = planes - AV_NUM_DATA_POINTERS;
-    } else
+        frame->nb_extended_buf = planes - AV_അക്കം_DATA_POINTERS;
+    } അല്ലെങ്കിൽ
         frame->extended_data = frame->data;
 
-    if (frame->linesize[0] > SIZE_MAX - align)
-        return AVERROR(EINVAL);
+    എങ്കിൽ (frame->linesize[0] > SIZE_MAX - align)
+        തിരികെ AVERROR(EINVAL);
     size = frame->linesize[0] + (size_t)align;
 
-    for (int i = 0; i < FFMIN(planes, AV_NUM_DATA_POINTERS); i++) {
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < FFMIN(planes, AV_അക്കം_DATA_POINTERS); i++) {
         frame->buf[i] = av_buffer_alloc(size);
-        if (!frame->buf[i]) {
+        എങ്കിൽ (!frame->buf[i]) {
             av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+            തിരികെ AVERROR(ENOMEM);
         }
         frame->extended_data[i] = frame->data[i] =
             (uint8_t *)FFALIGN((uintptr_t)frame->buf[i]->data, align);
     }
-    for (int i = 0; i < planes - AV_NUM_DATA_POINTERS; i++) {
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < planes - AV_അക്കം_DATA_POINTERS; i++) {
         frame->extended_buf[i] = av_buffer_alloc(size);
-        if (!frame->extended_buf[i]) {
+        എങ്കിൽ (!frame->extended_buf[i]) {
             av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+            തിരികെ AVERROR(ENOMEM);
         }
-        frame->extended_data[i + AV_NUM_DATA_POINTERS] =
+        frame->extended_data[i + AV_അക്കം_DATA_POINTERS] =
             (uint8_t *)FFALIGN((uintptr_t)frame->extended_buf[i]->data, align);
     }
-    return 0;
+    തിരികെ 0;
 
 }
 
-int av_frame_get_buffer(AVFrame *frame, int align)
+പൂർണ്ണസംഖ്യ av_frame_get_buffer(AVFrame *frame, പൂർണ്ണസംഖ്യ align)
 {
-    if (frame->format < 0)
-        return AVERROR(EINVAL);
+    എങ്കിൽ (frame->format < 0)
+        തിരികെ AVERROR(EINVAL);
 
-    if (frame->width > 0 && frame->height > 0)
-        return ff_frame_get_video_buffer(frame, align, NULL, NULL);
-    else if (frame->nb_samples > 0 &&
+    എങ്കിൽ (frame->width > 0 && frame->height > 0)
+        തിരികെ ff_frame_get_video_buffer(frame, align, ശൂന്യ, ശൂന്യ);
+    അല്ലെങ്കിൽ എങ്കിൽ (frame->nb_samples > 0 &&
              (av_channel_layout_check(&frame->ch_layout)))
-        return get_audio_buffer(frame, align);
+        തിരികെ get_audio_buffer(frame, align);
 
-    return AVERROR(EINVAL);
+    തിരികെ AVERROR(EINVAL);
 }
 
-static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
+സ്ഥിതം പൂർണ്ണസംഖ്യ frame_copy_props(AVFrame *dst, സ്ഥിരം AVFrame *src, പൂർണ്ണസംഖ്യ force_copy)
 {
     dst->pict_type              = src->pict_type;
     dst->sample_aspect_ratio    = src->sample_aspect_ratio;
-    dst->crop_top               = src->crop_top;
+    dst->crop_മുകൾ               = src->crop_മുകൾ;
     dst->crop_bottom            = src->crop_bottom;
-    dst->crop_left              = src->crop_left;
-    dst->crop_right             = src->crop_right;
+    dst->crop_ഇടത്              = src->crop_ഇടത്;
+    dst->crop_വലത്             = src->crop_വലത്;
     dst->pts                    = src->pts;
     dst->duration               = src->duration;
     dst->repeat_pict            = src->repeat_pict;
@@ -248,39 +248,39 @@ static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
 
     av_dict_copy(&dst->metadata, src->metadata, 0);
 
-    for (int i = 0; i < src->nb_side_data; i++) {
-        const AVFrameSideData *sd_src = src->side_data[i];
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < src->nb_side_data; i++) {
+        സ്ഥിരം AVFrameSideData *sd_src = src->side_data[i];
         AVFrameSideData *sd_dst;
-        if (   sd_src->type == AV_FRAME_DATA_PANSCAN
+        എങ്കിൽ (   sd_src->type == AV_FRAME_DATA_PANSCAN
             && (src->width != dst->width || src->height != dst->height))
-            continue;
-        if (force_copy) {
+            തുടരുക;
+        എങ്കിൽ (force_copy) {
             sd_dst = av_frame_new_side_data(dst, sd_src->type,
                                             sd_src->size);
-            if (!sd_dst) {
+            എങ്കിൽ (!sd_dst) {
                 av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+                തിരികെ AVERROR(ENOMEM);
             }
             memcpy(sd_dst->data, sd_src->data, sd_src->size);
-        } else {
+        } അല്ലെങ്കിൽ {
             AVBufferRef *ref = av_buffer_ref(sd_src->buf);
             sd_dst = av_frame_new_side_data_from_buf(dst, sd_src->type, ref);
-            if (!sd_dst) {
+            എങ്കിൽ (!sd_dst) {
                 av_buffer_unref(&ref);
                 av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+                തിരികെ AVERROR(ENOMEM);
             }
         }
         av_dict_copy(&sd_dst->metadata, sd_src->metadata, 0);
     }
 
     av_refstruct_replace(&dst->private_ref, src->private_ref);
-    return av_buffer_replace(&dst->opaque_ref, src->opaque_ref);
+    തിരികെ av_buffer_replace(&dst->opaque_ref, src->opaque_ref);
 }
 
-int av_frame_ref(AVFrame *dst, const AVFrame *src)
+പൂർണ്ണസംഖ്യ av_frame_ref(AVFrame *dst, സ്ഥിരം AVFrame *src)
 {
-    int ret = 0;
+    പൂർണ്ണസംഖ്യ ret = 0;
 
     av_assert1(dst->width == 0 && dst->height == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
@@ -292,108 +292,108 @@ int av_frame_ref(AVFrame *dst, const AVFrame *src)
     dst->nb_samples     = src->nb_samples;
 
     ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    എങ്കിൽ (ret < 0)
+        പോകുക fail;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    എങ്കിൽ (ret < 0)
+        പോകുക fail;
 
     /* duplicate the frame data if it's not refcounted */
-    if (!src->buf[0]) {
+    എങ്കിൽ (!src->buf[0]) {
         ret = av_frame_get_buffer(dst, 0);
-        if (ret < 0)
-            goto fail;
+        എങ്കിൽ (ret < 0)
+            പോകുക fail;
 
         ret = av_frame_copy(dst, src);
-        if (ret < 0)
-            goto fail;
+        എങ്കിൽ (ret < 0)
+            പോകുക fail;
 
-        return 0;
+        തിരികെ 0;
     }
 
     /* ref the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        if (!src->buf[i])
-            continue;
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        എങ്കിൽ (!src->buf[i])
+            തുടരുക;
         dst->buf[i] = av_buffer_ref(src->buf[i]);
-        if (!dst->buf[i]) {
+        എങ്കിൽ (!dst->buf[i]) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            പോകുക fail;
         }
     }
 
-    if (src->extended_buf) {
+    എങ്കിൽ (src->extended_buf) {
         dst->extended_buf = av_calloc(src->nb_extended_buf,
-                                      sizeof(*dst->extended_buf));
-        if (!dst->extended_buf) {
+                                      വലുപ്പം(*dst->extended_buf));
+        എങ്കിൽ (!dst->extended_buf) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            പോകുക fail;
         }
         dst->nb_extended_buf = src->nb_extended_buf;
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
+        വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < src->nb_extended_buf; i++) {
             dst->extended_buf[i] = av_buffer_ref(src->extended_buf[i]);
-            if (!dst->extended_buf[i]) {
+            എങ്കിൽ (!dst->extended_buf[i]) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                പോകുക fail;
             }
         }
     }
 
-    if (src->hw_frames_ctx) {
+    എങ്കിൽ (src->hw_frames_ctx) {
         dst->hw_frames_ctx = av_buffer_ref(src->hw_frames_ctx);
-        if (!dst->hw_frames_ctx) {
+        എങ്കിൽ (!dst->hw_frames_ctx) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            പോകുക fail;
         }
     }
 
     /* duplicate extended data */
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    എങ്കിൽ (src->extended_data != src->data) {
+        പൂർണ്ണസംഖ്യ ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        എങ്കിൽ (ch <= 0 || ch > SIZE_MAX / വലുപ്പം(*dst->extended_data)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            പോകുക fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_data = av_memdup(src->extended_data, വലുപ്പം(*dst->extended_data) * ch);
+        എങ്കിൽ (!dst->extended_data) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            പോകുക fail;
         }
-    } else
+    } അല്ലെങ്കിൽ
         dst->extended_data = dst->data;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    memcpy(dst->data,     src->data,     വലുപ്പം(src->data));
+    memcpy(dst->linesize, src->linesize, വലുപ്പം(src->linesize));
 
-    return 0;
+    തിരികെ 0;
 
 fail:
     av_frame_unref(dst);
-    return ret;
+    തിരികെ ret;
 }
 
-int av_frame_replace(AVFrame *dst, const AVFrame *src)
+പൂർണ്ണസംഖ്യ av_frame_replace(AVFrame *dst, സ്ഥിരം AVFrame *src)
 {
-    int ret = 0;
+    പൂർണ്ണസംഖ്യ ret = 0;
 
-    if (dst == src)
-        return AVERROR(EINVAL);
+    എങ്കിൽ (dst == src)
+        തിരികെ AVERROR(EINVAL);
 
-    if (!src->buf[0]) {
+    എങ്കിൽ (!src->buf[0]) {
         av_frame_unref(dst);
 
         /* duplicate the frame data if it's not refcounted */
-        if (   src->data[0] || src->data[1]
+        എങ്കിൽ (   src->data[0] || src->data[1]
             || src->data[2] || src->data[3])
-            return av_frame_ref(dst, src);
+            തിരികെ av_frame_ref(dst, src);
 
         ret = frame_copy_props(dst, src, 0);
-        if (ret < 0)
-            goto fail;
+        എങ്കിൽ (ret < 0)
+            പോകുക fail;
     }
 
     dst->format         = src->format;
@@ -402,110 +402,110 @@ int av_frame_replace(AVFrame *dst, const AVFrame *src)
     dst->nb_samples     = src->nb_samples;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    എങ്കിൽ (ret < 0)
+        പോകുക fail;
 
     av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
     av_dict_free(&dst->metadata);
     ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    എങ്കിൽ (ret < 0)
+        പോകുക fail;
 
     /* replace the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
         ret = av_buffer_replace(&dst->buf[i], src->buf[i]);
-        if (ret < 0)
-            goto fail;
+        എങ്കിൽ (ret < 0)
+            പോകുക fail;
     }
 
-    if (src->extended_buf) {
-        if (dst->nb_extended_buf != src->nb_extended_buf) {
-            int nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
-            void *tmp;
+    എങ്കിൽ (src->extended_buf) {
+        എങ്കിൽ (dst->nb_extended_buf != src->nb_extended_buf) {
+            പൂർണ്ണസംഖ്യ nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
+            ശൂന്യം *tmp;
 
-            for (int i = nb_extended_buf; i < dst->nb_extended_buf; i++)
+            വേണ്ടി (പൂർണ്ണസംഖ്യ i = nb_extended_buf; i < dst->nb_extended_buf; i++)
                 av_buffer_unref(&dst->extended_buf[i]);
 
             tmp = av_realloc_array(dst->extended_buf, src->nb_extended_buf,
-                                   sizeof(*dst->extended_buf));
-            if (!tmp) {
+                                   വലുപ്പം(*dst->extended_buf));
+            എങ്കിൽ (!tmp) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                പോകുക fail;
             }
             dst->extended_buf = tmp;
             dst->nb_extended_buf = src->nb_extended_buf;
 
             memset(&dst->extended_buf[nb_extended_buf], 0,
-                   (src->nb_extended_buf - nb_extended_buf) * sizeof(*dst->extended_buf));
+                   (src->nb_extended_buf - nb_extended_buf) * വലുപ്പം(*dst->extended_buf));
         }
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
+        വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < src->nb_extended_buf; i++) {
             ret = av_buffer_replace(&dst->extended_buf[i], src->extended_buf[i]);
-            if (ret < 0)
-                goto fail;
+            എങ്കിൽ (ret < 0)
+                പോകുക fail;
         }
-    } else if (dst->extended_buf) {
-        for (int i = 0; i < dst->nb_extended_buf; i++)
+    } അല്ലെങ്കിൽ എങ്കിൽ (dst->extended_buf) {
+        വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < dst->nb_extended_buf; i++)
             av_buffer_unref(&dst->extended_buf[i]);
         av_freep(&dst->extended_buf);
     }
 
     ret = av_buffer_replace(&dst->hw_frames_ctx, src->hw_frames_ctx);
-    if (ret < 0)
-        goto fail;
+    എങ്കിൽ (ret < 0)
+        പോകുക fail;
 
-    if (dst->extended_data != dst->data)
+    എങ്കിൽ (dst->extended_data != dst->data)
         av_freep(&dst->extended_data);
 
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    എങ്കിൽ (src->extended_data != src->data) {
+        പൂർണ്ണസംഖ്യ ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        എങ്കിൽ (ch <= 0 || ch > SIZE_MAX / വലുപ്പം(*dst->extended_data)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            പോകുക fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_data = av_memdup(src->extended_data, വലുപ്പം(*dst->extended_data) * ch);
+        എങ്കിൽ (!dst->extended_data) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            പോകുക fail;
         }
-    } else
+    } അല്ലെങ്കിൽ
         dst->extended_data = dst->data;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    memcpy(dst->data,     src->data,     വലുപ്പം(src->data));
+    memcpy(dst->linesize, src->linesize, വലുപ്പം(src->linesize));
 
-    return 0;
+    തിരികെ 0;
 
 fail:
     av_frame_unref(dst);
-    return ret;
+    തിരികെ ret;
 }
 
-AVFrame *av_frame_clone(const AVFrame *src)
+AVFrame *av_frame_clone(സ്ഥിരം AVFrame *src)
 {
     AVFrame *ret = av_frame_alloc();
 
-    if (!ret)
-        return NULL;
+    എങ്കിൽ (!ret)
+        തിരികെ ശൂന്യ;
 
-    if (av_frame_ref(ret, src) < 0)
+    എങ്കിൽ (av_frame_ref(ret, src) < 0)
         av_frame_free(&ret);
 
-    return ret;
+    തിരികെ ret;
 }
 
-void av_frame_unref(AVFrame *frame)
+ശൂന്യം av_frame_unref(AVFrame *frame)
 {
-    if (!frame)
-        return;
+    എങ്കിൽ (!frame)
+        തിരികെ;
 
     av_frame_side_data_free(&frame->side_data, &frame->nb_side_data);
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
         av_buffer_unref(&frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < frame->nb_extended_buf; i++)
         av_buffer_unref(&frame->extended_buf[i]);
     av_freep(&frame->extended_buf);
     av_dict_free(&frame->metadata);
@@ -515,7 +515,7 @@ void av_frame_unref(AVFrame *frame)
     av_buffer_unref(&frame->opaque_ref);
     av_refstruct_unref(&frame->private_ref);
 
-    if (frame->extended_data != frame->data)
+    എങ്കിൽ (frame->extended_data != frame->data)
         av_freep(&frame->extended_data);
 
     av_channel_layout_uninit(&frame->ch_layout);
@@ -523,308 +523,308 @@ void av_frame_unref(AVFrame *frame)
     get_frame_defaults(frame);
 }
 
-void av_frame_move_ref(AVFrame *dst, AVFrame *src)
+ശൂന്യം av_frame_move_ref(AVFrame *dst, AVFrame *src)
 {
     av_assert1(dst->width == 0 && dst->height == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
                dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
 
     *dst = *src;
-    if (src->extended_data == src->data)
+    എങ്കിൽ (src->extended_data == src->data)
         dst->extended_data = dst->data;
     get_frame_defaults(src);
 }
 
-int av_frame_is_writable(AVFrame *frame)
+പൂർണ്ണസംഖ്യ av_frame_is_writable(AVFrame *frame)
 {
-    int ret = 1;
+    പൂർണ്ണസംഖ്യ ret = 1;
 
     /* assume non-refcounted frames are not writable */
-    if (!frame->buf[0])
-        return 0;
+    എങ്കിൽ (!frame->buf[0])
+        തിരികെ 0;
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        if (frame->buf[i])
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
+        എങ്കിൽ (frame->buf[i])
             ret &= !!av_buffer_is_writable(frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < frame->nb_extended_buf; i++)
         ret &= !!av_buffer_is_writable(frame->extended_buf[i]);
 
-    return ret;
+    തിരികെ ret;
 }
 
-int av_frame_make_writable(AVFrame *frame)
+പൂർണ്ണസംഖ്യ av_frame_make_writable(AVFrame *frame)
 {
     AVFrame tmp;
-    int ret;
+    പൂർണ്ണസംഖ്യ ret;
 
-    if (av_frame_is_writable(frame))
-        return 0;
+    എങ്കിൽ (av_frame_is_writable(frame))
+        തിരികെ 0;
 
-    memset(&tmp, 0, sizeof(tmp));
+    memset(&tmp, 0, വലുപ്പം(tmp));
     tmp.format         = frame->format;
     tmp.width          = frame->width;
     tmp.height         = frame->height;
     tmp.nb_samples     = frame->nb_samples;
     ret = av_channel_layout_copy(&tmp.ch_layout, &frame->ch_layout);
-    if (ret < 0) {
+    എങ്കിൽ (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        തിരികെ ret;
     }
 
-    if (frame->hw_frames_ctx)
+    എങ്കിൽ (frame->hw_frames_ctx)
         ret = av_hwframe_get_buffer(frame->hw_frames_ctx, &tmp, 0);
-    else
+    അല്ലെങ്കിൽ
         ret = av_frame_get_buffer(&tmp, 0);
-    if (ret < 0)
-        return ret;
+    എങ്കിൽ (ret < 0)
+        തിരികെ ret;
 
     ret = av_frame_copy(&tmp, frame);
-    if (ret < 0) {
+    എങ്കിൽ (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        തിരികെ ret;
     }
 
     ret = av_frame_copy_props(&tmp, frame);
-    if (ret < 0) {
+    എങ്കിൽ (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        തിരികെ ret;
     }
 
     av_frame_unref(frame);
 
     *frame = tmp;
-    if (tmp.data == tmp.extended_data)
+    എങ്കിൽ (tmp.data == tmp.extended_data)
         frame->extended_data = frame->data;
 
-    return 0;
+    തിരികെ 0;
 }
 
-int av_frame_copy_props(AVFrame *dst, const AVFrame *src)
+പൂർണ്ണസംഖ്യ av_frame_copy_props(AVFrame *dst, സ്ഥിരം AVFrame *src)
 {
-    return frame_copy_props(dst, src, 1);
+    തിരികെ frame_copy_props(dst, src, 1);
 }
 
-AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane)
+AVBufferRef *av_frame_get_plane_buffer(സ്ഥിരം AVFrame *frame, പൂർണ്ണസംഖ്യ plane)
 {
     uintptr_t data;
-    int planes;
+    പൂർണ്ണസംഖ്യ planes;
 
-    if (frame->nb_samples) {
-        int channels = frame->ch_layout.nb_channels;
-        if (!channels)
-            return NULL;
+    എങ്കിൽ (frame->nb_samples) {
+        പൂർണ്ണസംഖ്യ channels = frame->ch_layout.nb_channels;
+        എങ്കിൽ (!channels)
+            തിരികെ ശൂന്യ;
         planes = av_sample_fmt_is_planar(frame->format) ? channels : 1;
-    } else
+    } അല്ലെങ്കിൽ
         planes = 4;
 
-    if (plane < 0 || plane >= planes || !frame->extended_data[plane])
-        return NULL;
+    എങ്കിൽ (plane < 0 || plane >= planes || !frame->extended_data[plane])
+        തിരികെ ശൂന്യ;
     data = (uintptr_t)frame->extended_data[plane];
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
         AVBufferRef *buf = frame->buf[i];
         uintptr_t buf_begin = (uintptr_t)buf->data;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        എങ്കിൽ (data >= buf_begin && data < buf_begin + buf->size)
+            തിരികെ buf;
     }
-    for (int i = 0; i < frame->nb_extended_buf; i++) {
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < frame->nb_extended_buf; i++) {
         AVBufferRef *buf = frame->extended_buf[i];
         uintptr_t buf_begin = (uintptr_t)buf->data;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        എങ്കിൽ (data >= buf_begin && data < buf_begin + buf->size)
+            തിരികെ buf;
     }
-    return NULL;
+    തിരികെ ശൂന്യ;
 }
 
 AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
-                                                 enum AVFrameSideDataType type,
+                                                 എണ്ണൽ AVFrameSideDataType type,
                                                  AVBufferRef *buf)
 {
-    return
+    തിരികെ
         ff_frame_side_data_add_from_buf(
             &frame->side_data, &frame->nb_side_data, type, buf);
 }
 
 AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
-                                        enum AVFrameSideDataType type,
+                                        എണ്ണൽ AVFrameSideDataType type,
                                         size_t size)
 {
     AVFrameSideData *ret;
     AVBufferRef *buf = av_buffer_alloc(size);
     ret = av_frame_new_side_data_from_buf(frame, type, buf);
-    if (!ret)
+    എങ്കിൽ (!ret)
         av_buffer_unref(&buf);
-    return ret;
+    തിരികെ ret;
 }
 
-AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
-                                        enum AVFrameSideDataType type)
+AVFrameSideData *av_frame_get_side_data(സ്ഥിരം AVFrame *frame,
+                                        എണ്ണൽ AVFrameSideDataType type)
 {
-    return (AVFrameSideData *)av_frame_side_data_get(
+    തിരികെ (AVFrameSideData *)av_frame_side_data_get(
         frame->side_data, frame->nb_side_data,
         type
     );
 }
 
-static int frame_copy_video(AVFrame *dst, const AVFrame *src)
+സ്ഥിതം പൂർണ്ണസംഖ്യ frame_copy_video(AVFrame *dst, സ്ഥിരം AVFrame *src)
 {
-    int planes;
+    പൂർണ്ണസംഖ്യ planes;
 
-    if (dst->width  < src->width ||
+    എങ്കിൽ (dst->width  < src->width ||
         dst->height < src->height)
-        return AVERROR(EINVAL);
+        തിരികെ AVERROR(EINVAL);
 
-    if (src->hw_frames_ctx || dst->hw_frames_ctx)
-        return av_hwframe_transfer_data(dst, src, 0);
+    എങ്കിൽ (src->hw_frames_ctx || dst->hw_frames_ctx)
+        തിരികെ av_hwframe_transfer_data(dst, src, 0);
 
-    planes = av_pix_fmt_count_planes(dst->format);
-    for (int i = 0; i < planes; i++)
-        if (!dst->data[i] || !src->data[i])
-            return AVERROR(EINVAL);
+    planes = av_pix_fmt_എണ്ണം_planes(dst->format);
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < planes; i++)
+        എങ്കിൽ (!dst->data[i] || !src->data[i])
+            തിരികെ AVERROR(EINVAL);
 
     av_image_copy2(dst->data, dst->linesize,
                    src->data, src->linesize,
                    dst->format, src->width, src->height);
 
-    return 0;
+    തിരികെ 0;
 }
 
-static int frame_copy_audio(AVFrame *dst, const AVFrame *src)
+സ്ഥിതം പൂർണ്ണസംഖ്യ frame_copy_audio(AVFrame *dst, സ്ഥിരം AVFrame *src)
 {
-    int planar   = av_sample_fmt_is_planar(dst->format);
-    int channels = dst->ch_layout.nb_channels;
-    int planes   = planar ? channels : 1;
+    പൂർണ്ണസംഖ്യ planar   = av_sample_fmt_is_planar(dst->format);
+    പൂർണ്ണസംഖ്യ channels = dst->ch_layout.nb_channels;
+    പൂർണ്ണസംഖ്യ planes   = planar ? channels : 1;
 
-    if (dst->nb_samples != src->nb_samples ||
+    എങ്കിൽ (dst->nb_samples != src->nb_samples ||
         av_channel_layout_compare(&dst->ch_layout, &src->ch_layout))
-        return AVERROR(EINVAL);
+        തിരികെ AVERROR(EINVAL);
 
-    for (int i = 0; i < planes; i++)
-        if (!dst->extended_data[i] || !src->extended_data[i])
-            return AVERROR(EINVAL);
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < planes; i++)
+        എങ്കിൽ (!dst->extended_data[i] || !src->extended_data[i])
+            തിരികെ AVERROR(EINVAL);
 
     av_samples_copy(dst->extended_data, src->extended_data, 0, 0,
                     dst->nb_samples, channels, dst->format);
 
-    return 0;
+    തിരികെ 0;
 }
 
-int av_frame_copy(AVFrame *dst, const AVFrame *src)
+പൂർണ്ണസംഖ്യ av_frame_copy(AVFrame *dst, സ്ഥിരം AVFrame *src)
 {
-    if (dst->format != src->format || dst->format < 0)
-        return AVERROR(EINVAL);
+    എങ്കിൽ (dst->format != src->format || dst->format < 0)
+        തിരികെ AVERROR(EINVAL);
 
-    if (dst->width > 0 && dst->height > 0)
-        return frame_copy_video(dst, src);
-    else if (dst->nb_samples > 0 &&
+    എങ്കിൽ (dst->width > 0 && dst->height > 0)
+        തിരികെ frame_copy_video(dst, src);
+    അല്ലെങ്കിൽ എങ്കിൽ (dst->nb_samples > 0 &&
              (av_channel_layout_check(&dst->ch_layout)))
-        return frame_copy_audio(dst, src);
+        തിരികെ frame_copy_audio(dst, src);
 
-    return AVERROR(EINVAL);
+    തിരികെ AVERROR(EINVAL);
 }
 
-void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type)
+ശൂന്യം av_frame_remove_side_data(AVFrame *frame, എണ്ണൽ AVFrameSideDataType type)
 {
     av_frame_side_data_remove(&frame->side_data, &frame->nb_side_data, type);
 }
 
-static int calc_cropping_offsets(size_t offsets[4], const AVFrame *frame,
-                                 const AVPixFmtDescriptor *desc)
+സ്ഥിതം പൂർണ്ണസംഖ്യ calc_cropping_offsets(size_t offsets[4], സ്ഥിരം AVFrame *frame,
+                                 സ്ഥിരം AVPixFmtDescriptor *desc)
 {
-    for (int i = 0; frame->data[i]; i++) {
-        const AVComponentDescriptor *comp = NULL;
-        int shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
-        int shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; frame->data[i]; i++) {
+        സ്ഥിരം AVComponentDescriptor *comp = ശൂന്യ;
+        പൂർണ്ണസംഖ്യ shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
+        പൂർണ്ണസംഖ്യ shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
 
-        if (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
+        എങ്കിൽ (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
             offsets[i] = 0;
-            break;
+            നിർത്തുക;
         }
 
         /* find any component descriptor for this plane */
-        for (int j = 0; j < desc->nb_components; j++) {
-            if (desc->comp[j].plane == i) {
+        വേണ്ടി (പൂർണ്ണസംഖ്യ j = 0; j < desc->nb_components; j++) {
+            എങ്കിൽ (desc->comp[j].plane == i) {
                 comp = &desc->comp[j];
-                break;
+                നിർത്തുക;
             }
         }
-        if (!comp)
-            return AVERROR_BUG;
+        എങ്കിൽ (!comp)
+            തിരികെ AVERROR_BUG;
 
-        offsets[i] = (frame->crop_top  >> shift_y) * frame->linesize[i] +
-                     (frame->crop_left >> shift_x) * comp->step;
+        offsets[i] = (frame->crop_മുകൾ  >> shift_y) * frame->linesize[i] +
+                     (frame->crop_ഇടത് >> shift_x) * comp->step;
     }
 
-    return 0;
+    തിരികെ 0;
 }
 
-int av_frame_apply_cropping(AVFrame *frame, int flags)
+പൂർണ്ണസംഖ്യ av_frame_apply_cropping(AVFrame *frame, പൂർണ്ണസംഖ്യ flags)
 {
-    const AVPixFmtDescriptor *desc;
+    സ്ഥിരം AVPixFmtDescriptor *desc;
     size_t offsets[4];
-    int ret;
+    പൂർണ്ണസംഖ്യ ret;
 
-    if (!(frame->width > 0 && frame->height > 0))
-        return AVERROR(EINVAL);
+    എങ്കിൽ (!(frame->width > 0 && frame->height > 0))
+        തിരികെ AVERROR(EINVAL);
 
-    if (frame->crop_left >= INT_MAX - frame->crop_right        ||
-        frame->crop_top  >= INT_MAX - frame->crop_bottom       ||
-        (frame->crop_left + frame->crop_right) >= frame->width ||
-        (frame->crop_top + frame->crop_bottom) >= frame->height)
-        return AVERROR(ERANGE);
+    എങ്കിൽ (frame->crop_ഇടത് >= INT_MAX - frame->crop_വലത്        ||
+        frame->crop_മുകൾ  >= INT_MAX - frame->crop_bottom       ||
+        (frame->crop_ഇടത് + frame->crop_വലത്) >= frame->width ||
+        (frame->crop_മുകൾ + frame->crop_bottom) >= frame->height)
+        തിരികെ AVERROR(ERANGE);
 
     desc = av_pix_fmt_desc_get(frame->format);
-    if (!desc)
-        return AVERROR_BUG;
+    എങ്കിൽ (!desc)
+        തിരികെ AVERROR_BUG;
 
     /* Apply just the right/bottom cropping for hwaccel formats. Bitstream
      * formats cannot be easily handled here either (and corresponding decoders
      * should not export any cropping anyway), so do the same for those as well.
      * */
-    if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
-        frame->width      -= frame->crop_right;
+    എങ്കിൽ (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
+        frame->width      -= frame->crop_വലത്;
         frame->height     -= frame->crop_bottom;
-        frame->crop_right  = 0;
+        frame->crop_വലത്  = 0;
         frame->crop_bottom = 0;
-        return 0;
+        തിരികെ 0;
     }
 
     /* calculate the offsets for each plane */
     ret = calc_cropping_offsets(offsets, frame, desc);
-    if (ret < 0)
-        return ret;
+    എങ്കിൽ (ret < 0)
+        തിരികെ ret;
 
     /* adjust the offsets to avoid breaking alignment */
-    if (!(flags & AV_FRAME_CROP_UNALIGNED)) {
-        int log2_crop_align = frame->crop_left ? ff_ctz(frame->crop_left) : INT_MAX;
-        int min_log2_align = INT_MAX;
+    എങ്കിൽ (!(flags & AV_FRAME_CROP_UNALIGNED)) {
+        പൂർണ്ണസംഖ്യ log2_crop_align = frame->crop_ഇടത് ? ff_ctz(frame->crop_ഇടത്) : INT_MAX;
+        പൂർണ്ണസംഖ്യ min_log2_align = INT_MAX;
 
-        for (int i = 0; frame->data[i]; i++) {
-            int log2_align = offsets[i] ? ff_ctz(offsets[i]) : INT_MAX;
+        വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; frame->data[i]; i++) {
+            പൂർണ്ണസംഖ്യ log2_align = offsets[i] ? ff_ctz(offsets[i]) : INT_MAX;
             min_log2_align = FFMIN(log2_align, min_log2_align);
         }
 
         /* The data alignment is the cropping alignment scaled by a power of 2,
          * up for multi-byte pixels and down for subsampled planes */
-        if (min_log2_align < 5 && log2_crop_align != INT_MAX) {
-            frame->crop_left &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
+        എങ്കിൽ (min_log2_align < 5 && log2_crop_align != INT_MAX) {
+            frame->crop_ഇടത് &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
             ret = calc_cropping_offsets(offsets, frame, desc);
-            if (ret < 0)
-                return ret;
+            എങ്കിൽ (ret < 0)
+                തിരികെ ret;
         }
     }
 
-    for (int i = 0; frame->data[i]; i++)
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; frame->data[i]; i++)
         frame->data[i] += offsets[i];
 
-    frame->width      -= (frame->crop_left + frame->crop_right);
-    frame->height     -= (frame->crop_top  + frame->crop_bottom);
-    frame->crop_left   = 0;
-    frame->crop_right  = 0;
-    frame->crop_top    = 0;
+    frame->width      -= (frame->crop_ഇടത് + frame->crop_വലത്);
+    frame->height     -= (frame->crop_മുകൾ  + frame->crop_bottom);
+    frame->crop_ഇടത്   = 0;
+    frame->crop_വലത്  = 0;
+    frame->crop_മുകൾ    = 0;
     frame->crop_bottom = 0;
 
-    return 0;
+    തിരികെ 0;
 }

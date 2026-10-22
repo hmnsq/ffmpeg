@@ -18,74 +18,74 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "log.h"
-#include "mem.h"
-#include "tree.h"
+#അന്തര്ഭാവ "error.h"
+#അന്തര്ഭാവ "log.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "tree.h"
 
-typedef struct AVTreeNode {
-    struct AVTreeNode *child[2];
-    void *elem;
-    int state;
-} AVTreeNode;
+തരനിർവചനം ഘടന AVTree_കണ്ണി {
+    ഘടന AVTree_കണ്ണി *child[2];
+    ശൂന്യം *elem;
+    പൂർണ്ണസംഖ്യ state;
+} AVTree_കണ്ണി;
 
-const int av_tree_node_size = sizeof(AVTreeNode);
+സ്ഥിരം പൂർണ്ണസംഖ്യ av_വൃക്ഷം_കണ്ണി_size = വലുപ്പം(AVTree_കണ്ണി);
 
-struct AVTreeNode *av_tree_node_alloc(void)
+ഘടന AVTree_കണ്ണി *av_വൃക്ഷം_കണ്ണി_alloc(ശൂന്യം)
 {
-    return av_mallocz(sizeof(struct AVTreeNode));
+    തിരികെ av_mallocz(വലുപ്പം(ഘടന AVTree_കണ്ണി));
 }
 
-void *av_tree_find(const AVTreeNode *t, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2])
+ശൂന്യം *av_വൃക്ഷം_find(സ്ഥിരം AVTree_കണ്ണി *t, ശൂന്യം *താക്കോൽ,
+                   പൂർണ്ണസംഖ്യ (*cmp)(സ്ഥിരം ശൂന്യം *താക്കോൽ, സ്ഥിരം ശൂന്യം *b), ശൂന്യം *next[2])
 {
-    if (t) {
-        unsigned int v = cmp(key, t->elem);
-        if (v) {
-            if (next)
+    എങ്കിൽ (t) {
+        unsigned പൂർണ്ണസംഖ്യ v = cmp(താക്കോൽ, t->elem);
+        എങ്കിൽ (v) {
+            എങ്കിൽ (next)
                 next[v >> 31] = t->elem;
-            return av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
-        } else {
-            if (next) {
-                av_tree_find(t->child[0], key, cmp, next);
-                av_tree_find(t->child[1], key, cmp, next);
+            തിരികെ av_വൃക്ഷം_find(t->child[(v >> 31) ^ 1], താക്കോൽ, cmp, next);
+        } അല്ലെങ്കിൽ {
+            എങ്കിൽ (next) {
+                av_വൃക്ഷം_find(t->child[0], താക്കോൽ, cmp, next);
+                av_വൃക്ഷം_find(t->child[1], താക്കോൽ, cmp, next);
             }
-            return t->elem;
+            തിരികെ t->elem;
         }
     }
-    return NULL;
+    തിരികെ ശൂന്യ;
 }
 
-void *av_tree_insert(AVTreeNode **tp, void *key,
-                     int (*cmp)(const void *key, const void *b), AVTreeNode **next)
+ശൂന്യം *av_വൃക്ഷം_തിരുകുക(AVTree_കണ്ണി **tp, ശൂന്യം *താക്കോൽ,
+                     പൂർണ്ണസംഖ്യ (*cmp)(സ്ഥിരം ശൂന്യം *താക്കോൽ, സ്ഥിരം ശൂന്യം *b), AVTree_കണ്ണി **next)
 {
-    AVTreeNode *t = *tp;
-    if (t) {
-        unsigned int v = cmp(t->elem, key);
-        void *ret;
-        if (!v) {
-            if (*next)
-                return t->elem;
-            else if (t->child[0] || t->child[1]) {
-                int i = !t->child[0];
-                void *next_elem[2];
-                av_tree_find(t->child[i], key, cmp, next_elem);
-                key = t->elem = next_elem[i];
+    AVTree_കണ്ണി *t = *tp;
+    എങ്കിൽ (t) {
+        unsigned പൂർണ്ണസംഖ്യ v = cmp(t->elem, താക്കോൽ);
+        ശൂന്യം *ret;
+        എങ്കിൽ (!v) {
+            എങ്കിൽ (*next)
+                തിരികെ t->elem;
+            അല്ലെങ്കിൽ എങ്കിൽ (t->child[0] || t->child[1]) {
+                പൂർണ്ണസംഖ്യ i = !t->child[0];
+                ശൂന്യം *next_elem[2];
+                av_വൃക്ഷം_find(t->child[i], താക്കോൽ, cmp, next_elem);
+                താക്കോൽ = t->elem = next_elem[i];
                 v   = -i;
-            } else {
+            } അല്ലെങ്കിൽ {
                 *next = t;
-                *tp   = NULL;
-                return NULL;
+                *tp   = ശൂന്യ;
+                തിരികെ ശൂന്യ;
             }
         }
-        ret = av_tree_insert(&t->child[v >> 31], key, cmp, next);
-        if (!ret) {
-            int i              = (v >> 31) ^ !!*next;
-            AVTreeNode **child = &t->child[i];
+        ret = av_വൃക്ഷം_തിരുകുക(&t->child[v >> 31], താക്കോൽ, cmp, next);
+        എങ്കിൽ (!ret) {
+            പൂർണ്ണസംഖ്യ i              = (v >> 31) ^ !!*next;
+            AVTree_കണ്ണി **child = &t->child[i];
             t->state += 2 * i - 1;
 
-            if (!(t->state & 1)) {
-                if (t->state) {
+            എങ്കിൽ (!(t->state & 1)) {
+                എങ്കിൽ (t->state) {
                     /* The following code is equivalent to
                      * if ((*child)->state * 2 == -t->state)
                      *     rotate(child, i ^ 1);
@@ -106,7 +106,7 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                      * }
                      * but such a rotate function is both bigger and slower
                      */
-                    if ((*child)->state * 2 == -t->state) {
+                    എങ്കിൽ ((*child)->state * 2 == -t->state) {
                         *tp                    = (*child)->child[i ^ 1];
                         (*child)->child[i ^ 1] = (*tp)->child[i];
                         (*tp)->child[i]        = *child;
@@ -116,53 +116,53 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                         (*tp)->child[0]->state = -((*tp)->state > 0);
                         (*tp)->child[1]->state = (*tp)->state < 0;
                         (*tp)->state           = 0;
-                    } else {
+                    } അല്ലെങ്കിൽ {
                         *tp                 = *child;
                         *child              = (*child)->child[i ^ 1];
                         (*tp)->child[i ^ 1] = t;
-                        if ((*tp)->state)
+                        എങ്കിൽ ((*tp)->state)
                             t->state = 0;
-                        else
+                        അല്ലെങ്കിൽ
                             t->state >>= 1;
                         (*tp)->state = -t->state;
                     }
                 }
             }
-            if (!(*tp)->state ^ !!*next)
-                return key;
+            എങ്കിൽ (!(*tp)->state ^ !!*next)
+                തിരികെ താക്കോൽ;
         }
-        return ret;
-    } else {
+        തിരികെ ret;
+    } അല്ലെങ്കിൽ {
         *tp   = *next;
-        *next = NULL;
-        if (*tp) {
-            (*tp)->elem = key;
-            return NULL;
-        } else
-            return key;
+        *next = ശൂന്യ;
+        എങ്കിൽ (*tp) {
+            (*tp)->elem = താക്കോൽ;
+            തിരികെ ശൂന്യ;
+        } അല്ലെങ്കിൽ
+            തിരികെ താക്കോൽ;
     }
 }
 
-void av_tree_destroy(AVTreeNode *t)
+ശൂന്യം av_വൃക്ഷം_destroy(AVTree_കണ്ണി *t)
 {
-    if (t) {
-        av_tree_destroy(t->child[0]);
-        av_tree_destroy(t->child[1]);
+    എങ്കിൽ (t) {
+        av_വൃക്ഷം_destroy(t->child[0]);
+        av_വൃക്ഷം_destroy(t->child[1]);
         av_free(t);
     }
 }
 
-void av_tree_enumerate(AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem))
+ശൂന്യം av_വൃക്ഷം_enumerate(AVTree_കണ്ണി *t, ശൂന്യം *opaque,
+                       പൂർണ്ണസംഖ്യ (*cmp)(ശൂന്യം *opaque, ശൂന്യം *elem),
+                       പൂർണ്ണസംഖ്യ (*enu)(ശൂന്യം *opaque, ശൂന്യം *elem))
 {
-    if (t) {
-        int v = cmp ? cmp(opaque, t->elem) : 0;
-        if (v >= 0)
-            av_tree_enumerate(t->child[0], opaque, cmp, enu);
-        if (v == 0)
+    എങ്കിൽ (t) {
+        പൂർണ്ണസംഖ്യ v = cmp ? cmp(opaque, t->elem) : 0;
+        എങ്കിൽ (v >= 0)
+            av_വൃക്ഷം_enumerate(t->child[0], opaque, cmp, enu);
+        എങ്കിൽ (v == 0)
             enu(opaque, t->elem);
-        if (v <= 0)
-            av_tree_enumerate(t->child[1], opaque, cmp, enu);
+        എങ്കിൽ (v <= 0)
+            av_വൃക്ഷം_enumerate(t->child[1], opaque, cmp, enu);
     }
 }

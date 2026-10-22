@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "buffer.h"
-#include "frame.h"
-#include "mem.h"
-#include "video_enc_params.h"
+#അന്തര്ഭാവ "buffer.h"
+#അന്തര്ഭാവ "frame.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(എണ്ണൽ AVVideoEncParamsType type,
+                                            unsigned പൂർണ്ണസംഖ്യ nb_blocks, size_t *out_size)
 {
-    struct TestStruct {
+    ഘടന TestStruct {
         AVVideoEncParams   p;
         AVVideoBlockParams b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
+    സ്ഥിരം size_t blocks_offset = offsetof(ഘടന TestStruct, b);
     size_t size = blocks_offset;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    എങ്കിൽ (nb_blocks > (SIZE_MAX - size) / വലുപ്പം(AVVideoBlockParams))
+        തിരികെ ശൂന്യ;
+    size += വലുപ്പം(AVVideoBlockParams) * nb_blocks;
 
     par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    എങ്കിൽ (!par)
+        തിരികെ ശൂന്യ;
 
     par->type          = type;
     par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
+    par->block_size    = വലുപ്പം(AVVideoBlockParams);
     par->blocks_offset = blocks_offset;
 
-    if (out_size)
+    എങ്കിൽ (out_size)
         *out_size = size;
 
-    return par;
+    തിരികെ par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_data(AVFrame *frame, എണ്ണൽ AVVideoEncParamsType type,
+                                     unsigned പൂർണ്ണസംഖ്യ nb_blocks)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
     size_t size;
 
     par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    എങ്കിൽ (!par)
+        തിരികെ ശൂന്യ;
+    buf = av_buffer_create((uint8_t *)par, size, ശൂന്യ, ശൂന്യ, 0);
+    എങ്കിൽ (!buf) {
         av_freep(&par);
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
+    എങ്കിൽ (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
-    return par;
+    തിരികെ par;
 }

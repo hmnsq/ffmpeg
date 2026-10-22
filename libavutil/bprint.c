@@ -18,74 +18,74 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
+#അന്തര്ഭാവ <limits.h>
+#അന്തര്ഭാവ <stdarg.h>
+#അന്തര്ഭാവ <stdio.h>
+#അന്തര്ഭാവ <string.h>
+#അന്തര്ഭാവ <time.h>
+#അന്തര്ഭാവ "avstring.h"
+#അന്തര്ഭാവ "bprint.h"
+#അന്തര്ഭാവ "error.h"
+#അന്തര്ഭാവ "macros.h"
+#അന്തര്ഭാവ "mem.h"
 
 #define av_bprint_room(buf) ((buf)->size - FFMIN((buf)->len, (buf)->size))
 #define av_bprint_is_allocated(buf) ((buf)->str != (buf)->reserved_internal_buffer)
 
-static int av_bprint_alloc(AVBPrint *buf, unsigned room)
+സ്ഥിതം പൂർണ്ണസംഖ്യ av_bprint_alloc(AVBPrint *buf, unsigned room)
 {
-    char *old_str, *new_str;
+    അക്ഷരം *old_str, *new_str;
     unsigned min_size, new_size;
 
-    if (buf->size == buf->size_max)
-        return AVERROR(EIO);
-    if (!av_bprint_is_complete(buf))
-        return AVERROR_INVALIDDATA; /* it is already truncated anyway */
+    എങ്കിൽ (buf->size == buf->size_max)
+        തിരികെ AVERROR(EIO);
+    എങ്കിൽ (!av_bprint_is_complete(buf))
+        തിരികെ AVERROR_INVALIDDATA; /* it is already truncated anyway */
     min_size = buf->len + 1 + FFMIN(UINT_MAX - buf->len - 1, room);
     new_size = buf->size > buf->size_max / 2 ? buf->size_max : buf->size * 2;
-    if (new_size < min_size)
+    എങ്കിൽ (new_size < min_size)
         new_size = FFMIN(buf->size_max, min_size);
-    old_str = av_bprint_is_allocated(buf) ? buf->str : NULL;
+    old_str = av_bprint_is_allocated(buf) ? buf->str : ശൂന്യ;
     new_str = av_realloc(old_str, new_size);
-    if (!new_str)
-        return AVERROR(ENOMEM);
-    if (!old_str)
+    എങ്കിൽ (!new_str)
+        തിരികെ AVERROR(ENOMEM);
+    എങ്കിൽ (!old_str)
         memcpy(new_str, buf->str, buf->len + 1);
     buf->str  = new_str;
     buf->size = new_size;
-    return 0;
+    തിരികെ 0;
 }
 
-static void av_bprint_grow(AVBPrint *buf, unsigned extra_len)
+സ്ഥിതം ശൂന്യം av_bprint_grow(AVBPrint *buf, unsigned extra_len)
 {
     /* arbitrary margin to avoid small overflows */
     extra_len = FFMIN(extra_len, UINT_MAX - 5 - buf->len);
     buf->len += extra_len;
-    if (buf->size)
+    എങ്കിൽ (buf->size)
         buf->str[FFMIN(buf->len, buf->size - 1)] = 0;
 }
 
-void av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max)
+ശൂന്യം av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max)
 {
-    unsigned size_auto = (char *)buf + sizeof(*buf) -
+    unsigned size_auto = (അക്ഷരം *)buf + വലുപ്പം(*buf) -
                          buf->reserved_internal_buffer;
 
-    if (size_max == AV_BPRINT_SIZE_AUTOMATIC)
+    എങ്കിൽ (size_max == AV_BPRINT_SIZE_AUTOMATIC)
         size_max = size_auto;
     buf->str      = buf->reserved_internal_buffer;
     buf->len      = 0;
     buf->size     = FFMIN(size_auto, size_max);
     buf->size_max = size_max;
     *buf->str = 0;
-    if (size_init > buf->size)
+    എങ്കിൽ (size_init > buf->size)
         av_bprint_alloc(buf, size_init - 1);
 }
 
-void av_bprint_init_for_buffer(AVBPrint *buf, char *buffer, unsigned size)
+ശൂന്യം av_bprint_init_for_buffer(AVBPrint *buf, അക്ഷരം *buffer, unsigned size)
 {
-    if (size == 0) {
-        av_bprint_init(buf, 0, AV_BPRINT_SIZE_COUNT_ONLY);
-        return;
+    എങ്കിൽ (size == 0) {
+        av_bprint_init(buf, 0, AV_BPRINT_SIZE_എണ്ണം_ONLY);
+        തിരികെ;
     }
 
     buf->str      = buffer;
@@ -95,30 +95,30 @@ void av_bprint_init_for_buffer(AVBPrint *buf, char *buffer, unsigned size)
     *buf->str = 0;
 }
 
-void av_vbprintf(AVBPrint *buf, const char *fmt, va_list vl_arg)
+ശൂന്യം av_vbprintf(AVBPrint *buf, സ്ഥിരം അക്ഷരം *fmt, va_list vl_arg)
 {
     unsigned room;
-    char *dst;
-    int extra_len;
+    അക്ഷരം *dst;
+    പൂർണ്ണസംഖ്യ extra_len;
     va_list vl;
 
-    while (1) {
+    ആകുമ്പോൾ (1) {
         room = av_bprint_room(buf);
-        dst = room ? buf->str + buf->len : NULL;
+        dst = room ? buf->str + buf->len : ശൂന്യ;
         va_copy(vl, vl_arg);
         extra_len = vsnprintf(dst, room, fmt, vl);
         va_end(vl);
-        if (extra_len <= 0)
-            return;
-        if (extra_len < room)
-            break;
-        if (av_bprint_alloc(buf, extra_len))
-            break;
+        എങ്കിൽ (extra_len <= 0)
+            തിരികെ;
+        എങ്കിൽ (extra_len < room)
+            നിർത്തുക;
+        എങ്കിൽ (av_bprint_alloc(buf, extra_len))
+            നിർത്തുക;
     }
     av_bprint_grow(buf, extra_len);
 }
 
-void av_bprintf(AVBPrint *buf, const char *fmt, ...)
+ശൂന്യം av_bprintf(AVBPrint *buf, സ്ഥിരം അക്ഷരം *fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
@@ -126,206 +126,206 @@ void av_bprintf(AVBPrint *buf, const char *fmt, ...)
     va_end(vl);
 }
 
-void av_bprint_chars(AVBPrint *buf, char c, unsigned n)
+ശൂന്യം av_bprint_chars(AVBPrint *buf, അക്ഷരം c, unsigned n)
 {
     unsigned room, real_n;
 
-    while (1) {
+    ആകുമ്പോൾ (1) {
         room = av_bprint_room(buf);
-        if (n < room)
-            break;
-        if (av_bprint_alloc(buf, n))
-            break;
+        എങ്കിൽ (n < room)
+            നിർത്തുക;
+        എങ്കിൽ (av_bprint_alloc(buf, n))
+            നിർത്തുക;
     }
-    if (room) {
+    എങ്കിൽ (room) {
         real_n = FFMIN(n, room - 1);
         memset(buf->str + buf->len, c, real_n);
     }
     av_bprint_grow(buf, n);
 }
 
-void av_bprint_append_data(AVBPrint *buf, const char *data, unsigned size)
+ശൂന്യം av_bprint_append_data(AVBPrint *buf, സ്ഥിരം അക്ഷരം *data, unsigned size)
 {
     unsigned room, real_n;
 
-    while (1) {
+    ആകുമ്പോൾ (1) {
         room = av_bprint_room(buf);
-        if (size < room)
-            break;
-        if (av_bprint_alloc(buf, size))
-            break;
+        എങ്കിൽ (size < room)
+            നിർത്തുക;
+        എങ്കിൽ (av_bprint_alloc(buf, size))
+            നിർത്തുക;
     }
-    if (room) {
+    എങ്കിൽ (room) {
         real_n = FFMIN(size, room - 1);
         memcpy(buf->str + buf->len, data, real_n);
     }
     av_bprint_grow(buf, size);
 }
 
-void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm)
+ശൂന്യം av_bprint_strftime(AVBPrint *buf, സ്ഥിരം അക്ഷരം *fmt, സ്ഥിരം ഘടന tm *tm)
 {
     unsigned room;
     size_t l;
     size_t fmt_len = strlen(fmt);
 
-    if (!*fmt)
-        return;
-    while (1) {
+    എങ്കിൽ (!*fmt)
+        തിരികെ;
+    ആകുമ്പോൾ (1) {
         room = av_bprint_room(buf);
-        if (room && (l = strftime(buf->str + buf->len, room, fmt, tm)))
-            break;
+        എങ്കിൽ (room && (l = strftime(buf->str + buf->len, room, fmt, tm)))
+            നിർത്തുക;
 
         /* Due to the limitations of strftime() it is not possible to know if
          * the output buffer is too small or the output is empty.
          * However, a 256x output space requirement compared to the format
          * string length is so unlikely we can safely assume empty output. This
          * allows supporting possibly empty format strings like "%p". */
-        if (room >> 8 > fmt_len)
-            break;
+        എങ്കിൽ (room >> 8 > fmt_len)
+            നിർത്തുക;
 
         /* strftime does not tell us how much room it would need: let us
            retry with twice as much until the buffer is large enough */
         room = !room ? fmt_len + 1 :
                room <= INT_MAX / 2 ? room * 2 : INT_MAX;
-        if (av_bprint_alloc(buf, room)) {
+        എങ്കിൽ (av_bprint_alloc(buf, room)) {
             /* impossible to grow, try to manage something useful anyway */
             room = av_bprint_room(buf);
-            if (room < 1024) {
+            എങ്കിൽ (room < 1024) {
                 /* if strftime fails because the buffer has (almost) reached
                    its maximum size, let us try in a local buffer; 1k should
                    be enough to format any real date+time string */
-                char buf2[1024];
-                if ((l = strftime(buf2, sizeof(buf2), fmt, tm))) {
+                അക്ഷരം buf2[1024];
+                എങ്കിൽ ((l = strftime(buf2, വലുപ്പം(buf2), fmt, tm))) {
                     av_bprintf(buf, "%s", buf2);
-                    return;
+                    തിരികെ;
                 }
             }
-            if (room) {
+            എങ്കിൽ (room) {
                 /* if anything else failed and the buffer is not already
                    truncated, let us add a stock string and force truncation */
-                static const char txt[] = "[truncated strftime output]";
+                സ്ഥിതം സ്ഥിരം അക്ഷരം txt[] = "[truncated strftime output]";
                 memset(buf->str + buf->len, '!', room);
-                memcpy(buf->str + buf->len, txt, FFMIN(sizeof(txt) - 1, room));
+                memcpy(buf->str + buf->len, txt, FFMIN(വലുപ്പം(txt) - 1, room));
                 av_bprint_grow(buf, room); /* force truncation */
             }
-            return;
+            തിരികെ;
         }
     }
     av_bprint_grow(buf, l);
 }
 
-void av_bprint_get_buffer(AVBPrint *buf, unsigned size,
-                          unsigned char **mem, unsigned *actual_size)
+ശൂന്യം av_bprint_get_buffer(AVBPrint *buf, unsigned size,
+                          unsigned അക്ഷരം **mem, unsigned *actual_size)
 {
-    if (size > av_bprint_room(buf))
+    എങ്കിൽ (size > av_bprint_room(buf))
         av_bprint_alloc(buf, size);
     *actual_size = av_bprint_room(buf);
-    *mem = *actual_size ? (unsigned char *) (buf->str + buf->len) : NULL;
+    *mem = *actual_size ? (unsigned അക്ഷരം *) (buf->str + buf->len) : ശൂന്യ;
 }
 
-void av_bprint_clear(AVBPrint *buf)
+ശൂന്യം av_bprint_clear(AVBPrint *buf)
 {
-    if (buf->len) {
+    എങ്കിൽ (buf->len) {
         *buf->str = 0;
         buf->len  = 0;
     }
 }
 
-int av_bprint_finalize(AVBPrint *buf, char **ret_str)
+പൂർണ്ണസംഖ്യ av_bprint_finalize(AVBPrint *buf, അക്ഷരം **ret_str)
 {
     unsigned real_size = FFMIN(buf->len + 1, buf->size);
-    char *str;
-    int ret = 0;
+    അക്ഷരം *str;
+    പൂർണ്ണസംഖ്യ ret = 0;
 
-    if (ret_str) {
-        if (av_bprint_is_allocated(buf)) {
+    എങ്കിൽ (ret_str) {
+        എങ്കിൽ (av_bprint_is_allocated(buf)) {
             str = av_realloc(buf->str, real_size);
-            if (!str)
+            എങ്കിൽ (!str)
                 str = buf->str;
-            buf->str = NULL;
-        } else {
+            buf->str = ശൂന്യ;
+        } അല്ലെങ്കിൽ {
             str = av_memdup(buf->str, real_size);
-            if (!str)
+            എങ്കിൽ (!str)
                 ret = AVERROR(ENOMEM);
         }
         *ret_str = str;
-    } else {
-        if (av_bprint_is_allocated(buf))
+    } അല്ലെങ്കിൽ {
+        എങ്കിൽ (av_bprint_is_allocated(buf))
             av_freep(&buf->str);
     }
     buf->size = real_size;
-    return ret;
+    തിരികെ ret;
 }
 
 #define WHITESPACES " \n\t\r"
 
-void av_bprint_escape(AVBPrint *dstbuf, const char *src, const char *special_chars,
-                      enum AVEscapeMode mode, int flags)
+ശൂന്യം av_bprint_escape(AVBPrint *dstbuf, സ്ഥിരം അക്ഷരം *src, സ്ഥിരം അക്ഷരം *special_chars,
+                      എണ്ണൽ AVEscapeMode mode, പൂർണ്ണസംഖ്യ flags)
 {
-    const char *src0 = src;
+    സ്ഥിരം അക്ഷരം *src0 = src;
 
-    if (mode == AV_ESCAPE_MODE_AUTO)
+    എങ്കിൽ (mode == AV_ESCAPE_MODE_AUTO)
         mode = AV_ESCAPE_MODE_BACKSLASH; /* TODO: implement a heuristic */
 
-    switch (mode) {
-    case AV_ESCAPE_MODE_QUOTE:
+    തിരഞ്ഞെടുപ്പ് (mode) {
+    അവസ്ഥ AV_ESCAPE_MODE_QUOTE:
         /* enclose the string between '' */
         av_bprint_chars(dstbuf, '\'', 1);
-        for (; *src; src++) {
-            if (*src == '\'')
+        വേണ്ടി (; *src; src++) {
+            എങ്കിൽ (*src == '\'')
                 av_bprintf(dstbuf, "'\\''");
-            else
+            അല്ലെങ്കിൽ
                 av_bprint_chars(dstbuf, *src, 1);
         }
         av_bprint_chars(dstbuf, '\'', 1);
-        break;
+        നിർത്തുക;
 
-    case AV_ESCAPE_MODE_XML:
+    അവസ്ഥ AV_ESCAPE_MODE_XML:
         /* escape XML non-markup character data as per 2.4 by default: */
         /*  [^<&]* - ([^<&]* ']]>' [^<&]*) */
 
         /* additionally, given one of the AV_ESCAPE_FLAG_XML_* flags, */
         /* escape those specific characters as required. */
-        for (; *src; src++) {
-            switch (*src) {
-            case '&' : av_bprintf(dstbuf, "%s", "&amp;");  break;
-            case '<' : av_bprintf(dstbuf, "%s", "&lt;");   break;
-            case '>' : av_bprintf(dstbuf, "%s", "&gt;");   break;
-            case '\'':
-                if (!(flags & AV_ESCAPE_FLAG_XML_SINGLE_QUOTES))
-                    goto XML_DEFAULT_HANDLING;
+        വേണ്ടി (; *src; src++) {
+            തിരഞ്ഞെടുപ്പ് (*src) {
+            അവസ്ഥ '&' : av_bprintf(dstbuf, "%s", "&amp;");  നിർത്തുക;
+            അവസ്ഥ '<' : av_bprintf(dstbuf, "%s", "&lt;");   നിർത്തുക;
+            അവസ്ഥ '>' : av_bprintf(dstbuf, "%s", "&gt;");   നിർത്തുക;
+            അവസ്ഥ '\'':
+                എങ്കിൽ (!(flags & AV_ESCAPE_FLAG_XML_SINGLE_QUOTES))
+                    പോകുക XML_DEFAULT_HANDLING;
 
                 av_bprintf(dstbuf, "%s", "&apos;");
-                break;
-            case '"' :
-                if (!(flags & AV_ESCAPE_FLAG_XML_DOUBLE_QUOTES))
-                    goto XML_DEFAULT_HANDLING;
+                നിർത്തുക;
+            അവസ്ഥ '"' :
+                എങ്കിൽ (!(flags & AV_ESCAPE_FLAG_XML_DOUBLE_QUOTES))
+                    പോകുക XML_DEFAULT_HANDLING;
 
                 av_bprintf(dstbuf, "%s", "&quot;");
-                break;
+                നിർത്തുക;
 XML_DEFAULT_HANDLING:
-            default: av_bprint_chars(dstbuf, *src, 1);
+            സ്ഥിരസ്ഥിതി: av_bprint_chars(dstbuf, *src, 1);
             }
         }
-        break;
+        നിർത്തുക;
 
     /* case AV_ESCAPE_MODE_BACKSLASH or unknown mode */
-    default:
+    സ്ഥിരസ്ഥിതി:
         /* \-escape characters */
-        for (; *src; src++) {
-            int is_first_last       = src == src0 || !*(src+1);
-            int is_ws               = !!strchr(WHITESPACES, *src);
-            int is_strictly_special = special_chars && strchr(special_chars, *src);
-            int is_special          =
+        വേണ്ടി (; *src; src++) {
+            പൂർണ്ണസംഖ്യ is_first_last       = src == src0 || !*(src+1);
+            പൂർണ്ണസംഖ്യ is_ws               = !!strchr(WHITESPACES, *src);
+            പൂർണ്ണസംഖ്യ is_strictly_special = special_chars && strchr(special_chars, *src);
+            പൂർണ്ണസംഖ്യ is_special          =
                 is_strictly_special || strchr("'\\", *src) ||
                 (is_ws && (flags & AV_ESCAPE_FLAG_WHITESPACE));
 
-            if (is_strictly_special ||
+            എങ്കിൽ (is_strictly_special ||
                 (!(flags & AV_ESCAPE_FLAG_STRICT) &&
                  (is_special || (is_ws && is_first_last))))
                 av_bprint_chars(dstbuf, '\\', 1);
             av_bprint_chars(dstbuf, *src, 1);
         }
-        break;
+        നിർത്തുക;
     }
 }

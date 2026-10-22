@@ -20,36 +20,36 @@
 #ifndef AVUTIL_CUDA_CHECK_H
 #define AVUTIL_CUDA_CHECK_H
 
-#include "compat/cuda/dynlink_loader.h"
-#include "error.h"
+#അന്തര്ഭാവ "compat/cuda/dynlink_loader.h"
+#അന്തര്ഭാവ "error.h"
 
-typedef CUresult CUDAAPI cuda_check_GetErrorName(CUresult error, const char** pstr);
-typedef CUresult CUDAAPI cuda_check_GetErrorString(CUresult error, const char** pstr);
+തരനിർവചനം CUresult CUDAAPI cuda_check_GetErrorName(CUresult error, സ്ഥിരം അക്ഷരം** pstr);
+തരനിർവചനം CUresult CUDAAPI cuda_check_GetErrorString(CUresult error, സ്ഥിരം അക്ഷരം** pstr);
 
 /**
  * Wrap a CUDA function call and print error information if it fails.
  */
-static inline int ff_cuda_check(void *avctx,
-                                void *cuGetErrorName_fn, void *cuGetErrorString_fn,
-                                CUresult err, const char *func)
+സ്ഥിതം വരിയിൽ പൂർണ്ണസംഖ്യ ff_cuda_check(ശൂന്യം *avctx,
+                                ശൂന്യം *cuGetErrorName_fn, ശൂന്യം *cuGetErrorString_fn,
+                                CUresult err, സ്ഥിരം അക്ഷരം *func)
 {
-    const char *err_name;
-    const char *err_string;
+    സ്ഥിരം അക്ഷരം *err_name;
+    സ്ഥിരം അക്ഷരം *err_string;
 
     av_log(avctx, AV_LOG_TRACE, "Calling %s\n", func);
 
-    if (err == CUDA_SUCCESS)
-        return 0;
+    എങ്കിൽ (err == CUDA_SUCCESS)
+        തിരികെ 0;
 
     ((cuda_check_GetErrorName *)cuGetErrorName_fn)(err, &err_name);
     ((cuda_check_GetErrorString *)cuGetErrorString_fn)(err, &err_string);
 
     av_log(avctx, AV_LOG_ERROR, "%s failed", func);
-    if (err_name && err_string)
+    എങ്കിൽ (err_name && err_string)
         av_log(avctx, AV_LOG_ERROR, " -> %s: %s", err_name, err_string);
     av_log(avctx, AV_LOG_ERROR, "\n");
 
-    return AVERROR_EXTERNAL;
+    തിരികെ AVERROR_EXTERNAL;
 }
 
 /**

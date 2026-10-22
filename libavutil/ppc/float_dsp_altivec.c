@@ -18,15 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "util_altivec.h"
-#include "float_dsp_altivec.h"
+#അന്തര്ഭാവ "util_altivec.h"
+#അന്തര്ഭാവ "float_dsp_altivec.h"
 
-void ff_vector_fmul_altivec(float *dst, const float *src0, const float *src1,
-                            int len)
+ശൂന്യം ff_vector_fmul_altivec(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0, സ്ഥിരം ദശാംശം *src1,
+                            പൂർണ്ണസംഖ്യ len)
 {
-    int i;
+    പൂർണ്ണസംഖ്യ i;
     vec_f d0, d1, s, zero = (vec_f)vec_splat_u32(0);
-    for (i = 0; i < len - 7; i += 8) {
+    വേണ്ടി (i = 0; i < len - 7; i += 8) {
         d0 = vec_ld( 0, src0 + i);
         s  = vec_ld( 0, src1 + i);
         d1 = vec_ld(16, src0 + i);
@@ -37,12 +37,12 @@ void ff_vector_fmul_altivec(float *dst, const float *src0, const float *src1,
     }
 }
 
-void ff_vector_fmul_window_altivec(float *dst, const float *src0,
-                                   const float *src1, const float *win, int len)
+ശൂന്യം ff_vector_fmul_window_altivec(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0,
+                                   സ്ഥിരം ദശാംശം *src1, സ്ഥിരം ദശാംശം *win, പൂർണ്ണസംഖ്യ len)
 {
     vec_f zero, t0, t1, s0, s1, wi, wj;
-    const vec_u8 reverse = vcprm(3, 2, 1, 0);
-    int i, j;
+    സ്ഥിരം vec_u8 reverse = vcprm(3, 2, 1, 0);
+    പൂർണ്ണസംഖ്യ i, j;
 
     dst  += len;
     win  += len;
@@ -50,7 +50,7 @@ void ff_vector_fmul_window_altivec(float *dst, const float *src0,
 
     zero = (vec_f)vec_splat_u32(0);
 
-    for (i = -len * 4, j = len * 4 - 16; i < 0; i += 16, j -= 16) {
+    വേണ്ടി (i = -len * 4, j = len * 4 - 16; i < 0; i += 16, j -= 16) {
         s0 = vec_ld(i, src0);
         s1 = vec_ld(j, src1);
         wi = vec_ld(i, win);
@@ -70,14 +70,14 @@ void ff_vector_fmul_window_altivec(float *dst, const float *src0,
     }
 }
 
-void ff_vector_fmul_add_altivec(float *dst, const float *src0,
-                                const float *src1, const float *src2,
-                                int len)
+ശൂന്യം ff_vector_fmul_add_altivec(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0,
+                                സ്ഥിരം ദശാംശം *src1, സ്ഥിരം ദശാംശം *src2,
+                                പൂർണ്ണസംഖ്യ len)
 {
-    int i;
+    പൂർണ്ണസംഖ്യ i;
     vec_f d, ss0, ss1, ss2, t0, t1, edges;
 
-    for (i = 0; i < len - 3; i += 4) {
+    വേണ്ടി (i = 0; i < len - 3; i += 4) {
         t0 = vec_ld(0, dst + i);
         t1 = vec_ld(15, dst + i);
         ss0 = vec_ld(0, src0 + i);
@@ -92,15 +92,15 @@ void ff_vector_fmul_add_altivec(float *dst, const float *src0,
     }
 }
 
-void ff_vector_fmul_reverse_altivec(float *dst, const float *src0,
-                                    const float *src1, int len)
+ശൂന്യം ff_vector_fmul_reverse_altivec(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0,
+                                    സ്ഥിരം ദശാംശം *src1, പൂർണ്ണസംഖ്യ len)
 {
-    int i;
+    പൂർണ്ണസംഖ്യ i;
     vec_f d, s0, s1, h0, l0, s2, s3;
     vec_f zero = (vec_f)vec_splat_u32(0);
 
     src1 += len-4;
-    for(i = 0; i < len - 7; i += 8) {
+    വേണ്ടി(i = 0; i < len - 7; i += 8) {
         s1 = vec_ld(0, src1 - i);              // [a,b,c,d]
         s0 = vec_ld(0, src0 + i);
         l0 = vec_mergel(s1, s1);               // [c,c,d,d]

@@ -25,111 +25,111 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#include "avassert.h"
-#include <limits.h>
+#അന്തര്ഭാവ "avassert.h"
+#അന്തര്ഭാവ <limits.h>
 
-#include "common.h"
-#include "mathematics.h"
-#include "rational.h"
+#അന്തര്ഭാവ "common.h"
+#അന്തര്ഭാവ "mathematics.h"
+#അന്തര്ഭാവ "rational.h"
 
-int av_reduce(int *dst_num, int *dst_den,
-              int64_t num, int64_t den, int64_t max)
+പൂർണ്ണസംഖ്യ av_reduce(പൂർണ്ണസംഖ്യ *dst_അക്കം, പൂർണ്ണസംഖ്യ *dst_den,
+              int64_t അക്കം, int64_t den, int64_t max)
 {
     AVRational a0 = { 0, 1 }, a1 = { 1, 0 };
-    int sign = (num < 0) ^ (den < 0);
-    int64_t gcd = av_gcd(FFABS(num), FFABS(den));
+    പൂർണ്ണസംഖ്യ sign = (അക്കം < 0) ^ (den < 0);
+    int64_t gcd = av_gcd(FFABS(അക്കം), FFABS(den));
 
-    if (gcd) {
-        num = FFABS(num) / gcd;
+    എങ്കിൽ (gcd) {
+        അക്കം = FFABS(അക്കം) / gcd;
         den = FFABS(den) / gcd;
     }
-    if (num <= max && den <= max) {
-        a1 = (AVRational) { num, den };
+    എങ്കിൽ (അക്കം <= max && den <= max) {
+        a1 = (AVRational) { അക്കം, den };
         den = 0;
     }
 
-    while (den) {
-        uint64_t x        = num / den;
-        int64_t next_den  = num - den * x;
-        int64_t a2n       = x * a1.num + a0.num;
+    ആകുമ്പോൾ (den) {
+        uint64_t x        = അക്കം / den;
+        int64_t next_den  = അക്കം - den * x;
+        int64_t a2n       = x * a1.അക്കം + a0.അക്കം;
         int64_t a2d       = x * a1.den + a0.den;
 
-        if (a2n > max || a2d > max) {
-            if (a1.num) x =          (max - a0.num) / a1.num;
-            if (a1.den) x = FFMIN(x, (max - a0.den) / a1.den);
+        എങ്കിൽ (a2n > max || a2d > max) {
+            എങ്കിൽ (a1.അക്കം) x =          (max - a0.അക്കം) / a1.അക്കം;
+            എങ്കിൽ (a1.den) x = FFMIN(x, (max - a0.den) / a1.den);
 
-            if (den * (2 * x * a1.den + a0.den) > num * a1.den)
-                a1 = (AVRational) { x * a1.num + a0.num, x * a1.den + a0.den };
-            break;
+            എങ്കിൽ (den * (2 * x * a1.den + a0.den) > അക്കം * a1.den)
+                a1 = (AVRational) { x * a1.അക്കം + a0.അക്കം, x * a1.den + a0.den };
+            നിർത്തുക;
         }
 
         a0  = a1;
         a1  = (AVRational) { a2n, a2d };
-        num = den;
+        അക്കം = den;
         den = next_den;
     }
-    av_assert2(av_gcd(a1.num, a1.den) <= 1U);
-    av_assert2(a1.num <= max && a1.den <= max);
+    av_assert2(av_gcd(a1.അക്കം, a1.den) <= 1U);
+    av_assert2(a1.അക്കം <= max && a1.den <= max);
 
-    *dst_num = sign ? -a1.num : a1.num;
+    *dst_അക്കം = sign ? -a1.അക്കം : a1.അക്കം;
     *dst_den = a1.den;
 
-    return den == 0;
+    തിരികെ den == 0;
 }
 
 AVRational av_mul_q(AVRational b, AVRational c)
 {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.num,
+    av_reduce(&b.അക്കം, &b.den,
+               b.അക്കം * (int64_t) c.അക്കം,
                b.den * (int64_t) c.den, INT_MAX);
-    return b;
+    തിരികെ b;
 }
 
 AVRational av_div_q(AVRational b, AVRational c)
 {
-    return av_mul_q(b, (AVRational) { c.den, c.num });
+    തിരികെ av_mul_q(b, (AVRational) { c.den, c.അക്കം });
 }
 
 AVRational av_add_q(AVRational b, AVRational c) {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.den +
-               c.num * (int64_t) b.den,
+    av_reduce(&b.അക്കം, &b.den,
+               b.അക്കം * (int64_t) c.den +
+               c.അക്കം * (int64_t) b.den,
                b.den * (int64_t) c.den, INT_MAX);
-    return b;
+    തിരികെ b;
 }
 
 AVRational av_sub_q(AVRational b, AVRational c)
 {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.den -
-               c.num * (int64_t) b.den,
+    av_reduce(&b.അക്കം, &b.den,
+               b.അക്കം * (int64_t) c.den -
+               c.അക്കം * (int64_t) b.den,
                b.den * (int64_t) c.den, INT_MAX);
-    return b;
+    തിരികെ b;
 }
 
-AVRational av_d2q(double d, int max)
+AVRational av_d2q(ഇരട്ട d, പൂർണ്ണസംഖ്യ max)
 {
     AVRational a;
-    int exponent;
+    പൂർണ്ണസംഖ്യ exponent;
     int64_t den;
-    if (isnan(d))
-        return (AVRational) { 0,0 };
-    if (fabs(d) > INT_MAX + 3LL)
-        return (AVRational) { d < 0 ? -1 : 1, 0 };
+    എങ്കിൽ (isnan(d))
+        തിരികെ (AVRational) { 0,0 };
+    എങ്കിൽ (fabs(d) > INT_MAX + 3LL)
+        തിരികെ (AVRational) { d < 0 ? -1 : 1, 0 };
     frexp(d, &exponent);
     exponent = FFMAX(exponent-1, 0);
     den = 1LL << (62 - exponent);
     // (int64_t)rint() and llrint() do not work with gcc on ia64 and sparc64,
     // see Ticket2713 for affected gcc/glibc versions
-    av_reduce(&a.num, &a.den, floor(d * den + 0.5), den, max);
+    av_reduce(&a.അക്കം, &a.den, floor(d * den + 0.5), den, max);
 
-    return a;
+    തിരികെ a;
 }
 
-int av_nearer_q(AVRational q, AVRational q1, AVRational q2)
+പൂർണ്ണസംഖ്യ av_nearer_q(AVRational q, AVRational q1, AVRational q2)
 {
     /* n/d is q, a/b is the median between q1 and q2 */
-    int64_t a = q1.num * (int64_t)q2.den + q2.num * (int64_t)q1.den;
+    int64_t a = q1.അക്കം * (int64_t)q2.den + q2.അക്കം * (int64_t)q1.den;
     int64_t b = 2 * (int64_t)q1.den * q2.den;
 
     /* rnd_up(a*d/b) > n => a*d/b > n */
@@ -138,58 +138,58 @@ int av_nearer_q(AVRational q, AVRational q1, AVRational q2)
     /* rnd_down(a*d/b) < n => a*d/b < n */
     int64_t x_down = av_rescale_rnd(a, q.den, b, AV_ROUND_DOWN);
 
-    return ((x_up > q.num) - (x_down < q.num)) * av_cmp_q(q2, q1);
+    തിരികെ ((x_up > q.അക്കം) - (x_down < q.അക്കം)) * av_cmp_q(q2, q1);
 }
 
-int av_find_nearest_q_idx(AVRational q, const AVRational* q_list)
+പൂർണ്ണസംഖ്യ av_find_nearest_q_idx(AVRational q, സ്ഥിരം AVRational* q_list)
 {
-    int i, nearest_q_idx = 0;
-    for (i = 0; q_list[i].den; i++)
-        if (av_nearer_q(q, q_list[i], q_list[nearest_q_idx]) > 0)
+    പൂർണ്ണസംഖ്യ i, nearest_q_idx = 0;
+    വേണ്ടി (i = 0; q_list[i].den; i++)
+        എങ്കിൽ (av_nearer_q(q, q_list[i], q_list[nearest_q_idx]) > 0)
             nearest_q_idx = i;
 
-    return nearest_q_idx;
+    തിരികെ nearest_q_idx;
 }
 
 uint32_t av_q2intfloat(AVRational q) {
-    int64_t n, num = q.num, den = q.den;
-    int shift;
+    int64_t n, അക്കം = q.അക്കം, den = q.den;
+    പൂർണ്ണസംഖ്യ shift;
     uint32_t sign = 0;
 
-    if (den < 0) {
+    എങ്കിൽ (den < 0) {
         den = -den;
-        num = -num;
+        അക്കം = -അക്കം;
     }
-    if (num < 0) {
-        num = -num;
+    എങ്കിൽ (അക്കം < 0) {
+        അക്കം = -അക്കം;
         sign = 1U << 31;
     }
 
-    if (!num && !den) return 0xFFC00000;
-    if (!num) return 0;
-    if (!den) return sign | 0x7F800000;
+    എങ്കിൽ (!അക്കം && !den) തിരികെ 0xFFC00000;
+    എങ്കിൽ (!അക്കം) തിരികെ 0;
+    എങ്കിൽ (!den) തിരികെ sign | 0x7F800000;
 
-    shift = 23 + av_log2(den) - av_log2(num);
-    if (shift >= 0) n = av_rescale(num, 1LL<<shift, den);
-    else            n = av_rescale(num, 1, den << -shift);
+    shift = 23 + av_log2(den) - av_log2(അക്കം);
+    എങ്കിൽ (shift >= 0) n = av_rescale(അക്കം, 1LL<<shift, den);
+    അല്ലെങ്കിൽ            n = av_rescale(അക്കം, 1, den << -shift);
 
     shift -= n >= (1<<24);
     shift += n <  (1<<23);
 
-    if (shift >= 0) n = av_rescale(num, 1LL<<shift, den);
-    else            n = av_rescale(num, 1, den << -shift);
+    എങ്കിൽ (shift >= 0) n = av_rescale(അക്കം, 1LL<<shift, den);
+    അല്ലെങ്കിൽ            n = av_rescale(അക്കം, 1, den << -shift);
 
     av_assert1(n <  (1<<24));
     av_assert1(n >= (1<<23));
 
-    return sign | (150-shift)<<23 | (n - (1<<23));
+    തിരികെ sign | (150-shift)<<23 | (n - (1<<23));
 }
 
-AVRational av_gcd_q(AVRational a, AVRational b, int max_den, AVRational def)
+AVRational av_gcd_q(AVRational a, AVRational b, പൂർണ്ണസംഖ്യ max_den, AVRational def)
 {
     int64_t gcd, lcm;
 
     gcd = av_gcd(a.den, b.den);
     lcm = (a.den / gcd) * b.den;
-    return lcm < max_den ? av_make_q(av_gcd(a.num, b.num), lcm) : def;
+    തിരികെ lcm < max_den ? av_make_q(av_gcd(a.അക്കം, b.അക്കം), lcm) : def;
 }

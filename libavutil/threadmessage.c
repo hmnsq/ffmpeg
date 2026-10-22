@@ -18,85 +18,85 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stddef.h>
+#അന്തര്ഭാവ <limits.h>
+#അന്തര്ഭാവ <stddef.h>
 
-#include "error.h"
-#include "fifo.h"
-#include "mem.h"
-#include "threadmessage.h"
-#include "thread.h"
+#അന്തര്ഭാവ "error.h"
+#അന്തര്ഭാവ "fifo.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "threadmessage.h"
+#അന്തര്ഭാവ "thread.h"
 
-struct AVThreadMessageQueue {
-#if HAVE_THREADS
+ഘടന AVThreadMessageQueue {
+#എങ്കിൽ HAVE_THREADS
     AVFifo *fifo;
     pthread_mutex_t lock;
     pthread_cond_t cond_recv;
     pthread_cond_t cond_send;
-    int err_send;
-    int err_recv;
+    പൂർണ്ണസംഖ്യ err_send;
+    പൂർണ്ണസംഖ്യ err_recv;
     unsigned elsize;
-    void (*free_func)(void *msg);
-#else
-    int dummy;
+    ശൂന്യം (*free_func)(ശൂന്യം *സന്ദേശം);
+#അല്ലെങ്കിൽ
+    പൂർണ്ണസംഖ്യ dummy;
 #endif
 };
 
-int av_thread_message_queue_alloc(AVThreadMessageQueue **mq,
+പൂർണ്ണസംഖ്യ av_thread_message_queue_alloc(AVThreadMessageQueue **mq,
                                   unsigned nelem,
                                   unsigned elsize)
 {
-#if HAVE_THREADS
+#എങ്കിൽ HAVE_THREADS
     AVThreadMessageQueue *rmq;
-    int ret = 0;
+    പൂർണ്ണസംഖ്യ ret = 0;
 
-    if (nelem > INT_MAX / elsize)
-        return AVERROR(EINVAL);
-    if (!(rmq = av_mallocz(sizeof(*rmq))))
-        return AVERROR(ENOMEM);
-    if ((ret = pthread_mutex_init(&rmq->lock, NULL))) {
+    എങ്കിൽ (nelem > INT_MAX / elsize)
+        തിരികെ AVERROR(EINVAL);
+    എങ്കിൽ (!(rmq = av_mallocz(വലുപ്പം(*rmq))))
+        തിരികെ AVERROR(ENOMEM);
+    എങ്കിൽ ((ret = pthread_mutex_init(&rmq->lock, ശൂന്യ))) {
         av_free(rmq);
-        return AVERROR(ret);
+        തിരികെ AVERROR(ret);
     }
-    if ((ret = pthread_cond_init(&rmq->cond_recv, NULL))) {
+    എങ്കിൽ ((ret = pthread_cond_init(&rmq->cond_recv, ശൂന്യ))) {
         pthread_mutex_destroy(&rmq->lock);
         av_free(rmq);
-        return AVERROR(ret);
+        തിരികെ AVERROR(ret);
     }
-    if ((ret = pthread_cond_init(&rmq->cond_send, NULL))) {
+    എങ്കിൽ ((ret = pthread_cond_init(&rmq->cond_send, ശൂന്യ))) {
         pthread_cond_destroy(&rmq->cond_recv);
         pthread_mutex_destroy(&rmq->lock);
         av_free(rmq);
-        return AVERROR(ret);
+        തിരികെ AVERROR(ret);
     }
-    if (!(rmq->fifo = av_fifo_alloc2(nelem, elsize, 0))) {
+    എങ്കിൽ (!(rmq->fifo = av_fifo_alloc2(nelem, elsize, 0))) {
         pthread_cond_destroy(&rmq->cond_send);
         pthread_cond_destroy(&rmq->cond_recv);
         pthread_mutex_destroy(&rmq->lock);
         av_free(rmq);
-        return AVERROR(ENOMEM);
+        തിരികെ AVERROR(ENOMEM);
     }
     rmq->elsize = elsize;
     *mq = rmq;
-    return 0;
-#else
-    *mq = NULL;
-    return AVERROR(ENOSYS);
+    തിരികെ 0;
+#അല്ലെങ്കിൽ
+    *mq = ശൂന്യ;
+    തിരികെ AVERROR(ENOSYS);
 #endif /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_free_func(AVThreadMessageQueue *mq,
-                                           void (*free_func)(void *msg))
+ശൂന്യം av_thread_message_queue_set_free_func(AVThreadMessageQueue *mq,
+                                           ശൂന്യം (*free_func)(ശൂന്യം *സന്ദേശം))
 {
-#if HAVE_THREADS
+#എങ്കിൽ HAVE_THREADS
     mq->free_func = free_func;
 #endif
 }
 
-void av_thread_message_queue_free(AVThreadMessageQueue **mq)
+ശൂന്യം av_thread_message_queue_free(AVThreadMessageQueue **mq)
 {
-#if HAVE_THREADS
-    if (*mq) {
+#എങ്കിൽ HAVE_THREADS
+    എങ്കിൽ (*mq) {
         av_thread_message_flush(*mq);
         av_fifo_freep2(&(*mq)->fifo);
         pthread_cond_destroy(&(*mq)->cond_send);
@@ -107,93 +107,93 @@ void av_thread_message_queue_free(AVThreadMessageQueue **mq)
 #endif
 }
 
-int av_thread_message_queue_nb_elems(AVThreadMessageQueue *mq)
+പൂർണ്ണസംഖ്യ av_thread_message_queue_nb_elems(AVThreadMessageQueue *mq)
 {
-#if HAVE_THREADS
-    int ret;
+#എങ്കിൽ HAVE_THREADS
+    പൂർണ്ണസംഖ്യ ret;
     pthread_mutex_lock(&mq->lock);
     ret = av_fifo_can_read(mq->fifo);
     pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
+    തിരികെ ret;
+#അല്ലെങ്കിൽ
+    തിരികെ AVERROR(ENOSYS);
 #endif
 }
 
-#if HAVE_THREADS
+#എങ്കിൽ HAVE_THREADS
 
-static int av_thread_message_queue_send_locked(AVThreadMessageQueue *mq,
-                                               void *msg,
+സ്ഥിതം പൂർണ്ണസംഖ്യ av_thread_message_queue_send_locked(AVThreadMessageQueue *mq,
+                                               ശൂന്യം *സന്ദേശം,
                                                unsigned flags)
 {
-    while (!mq->err_send && !av_fifo_can_write(mq->fifo)) {
-        if ((flags & AV_THREAD_MESSAGE_NONBLOCK))
-            return AVERROR(EAGAIN);
+    ആകുമ്പോൾ (!mq->err_send && !av_fifo_can_write(mq->fifo)) {
+        എങ്കിൽ ((flags & AV_THREAD_MESSAGE_NONBLOCK))
+            തിരികെ AVERROR(EAGAIN);
         pthread_cond_wait(&mq->cond_send, &mq->lock);
     }
-    if (mq->err_send)
-        return mq->err_send;
-    av_fifo_write(mq->fifo, msg, 1);
+    എങ്കിൽ (mq->err_send)
+        തിരികെ mq->err_send;
+    av_fifo_write(mq->fifo, സന്ദേശം, 1);
     /* one message is sent, signal one receiver */
     pthread_cond_signal(&mq->cond_recv);
-    return 0;
+    തിരികെ 0;
 }
 
-static int av_thread_message_queue_recv_locked(AVThreadMessageQueue *mq,
-                                               void *msg,
+സ്ഥിതം പൂർണ്ണസംഖ്യ av_thread_message_queue_recv_locked(AVThreadMessageQueue *mq,
+                                               ശൂന്യം *സന്ദേശം,
                                                unsigned flags)
 {
-    while (!mq->err_recv && !av_fifo_can_read(mq->fifo)) {
-        if ((flags & AV_THREAD_MESSAGE_NONBLOCK))
-            return AVERROR(EAGAIN);
+    ആകുമ്പോൾ (!mq->err_recv && !av_fifo_can_read(mq->fifo)) {
+        എങ്കിൽ ((flags & AV_THREAD_MESSAGE_NONBLOCK))
+            തിരികെ AVERROR(EAGAIN);
         pthread_cond_wait(&mq->cond_recv, &mq->lock);
     }
-    if (!av_fifo_can_read(mq->fifo))
-        return mq->err_recv;
-    av_fifo_read(mq->fifo, msg, 1);
+    എങ്കിൽ (!av_fifo_can_read(mq->fifo))
+        തിരികെ mq->err_recv;
+    av_fifo_read(mq->fifo, സന്ദേശം, 1);
     /* one message space appeared, signal one sender */
     pthread_cond_signal(&mq->cond_send);
-    return 0;
+    തിരികെ 0;
 }
 
 #endif /* HAVE_THREADS */
 
-int av_thread_message_queue_send(AVThreadMessageQueue *mq,
-                                 void *msg,
+പൂർണ്ണസംഖ്യ av_thread_message_queue_send(AVThreadMessageQueue *mq,
+                                 ശൂന്യം *സന്ദേശം,
                                  unsigned flags)
 {
-#if HAVE_THREADS
-    int ret;
+#എങ്കിൽ HAVE_THREADS
+    പൂർണ്ണസംഖ്യ ret;
 
     pthread_mutex_lock(&mq->lock);
-    ret = av_thread_message_queue_send_locked(mq, msg, flags);
+    ret = av_thread_message_queue_send_locked(mq, സന്ദേശം, flags);
     pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
+    തിരികെ ret;
+#അല്ലെങ്കിൽ
+    തിരികെ AVERROR(ENOSYS);
 #endif /* HAVE_THREADS */
 }
 
-int av_thread_message_queue_recv(AVThreadMessageQueue *mq,
-                                 void *msg,
+പൂർണ്ണസംഖ്യ av_thread_message_queue_recv(AVThreadMessageQueue *mq,
+                                 ശൂന്യം *സന്ദേശം,
                                  unsigned flags)
 {
-#if HAVE_THREADS
-    int ret;
+#എങ്കിൽ HAVE_THREADS
+    പൂർണ്ണസംഖ്യ ret;
 
     pthread_mutex_lock(&mq->lock);
-    ret = av_thread_message_queue_recv_locked(mq, msg, flags);
+    ret = av_thread_message_queue_recv_locked(mq, സന്ദേശം, flags);
     pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
+    തിരികെ ret;
+#അല്ലെങ്കിൽ
+    തിരികെ AVERROR(ENOSYS);
 #endif /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_err_send(AVThreadMessageQueue *mq,
-                                          int err)
+ശൂന്യം av_thread_message_queue_set_err_send(AVThreadMessageQueue *mq,
+                                          പൂർണ്ണസംഖ്യ err)
 {
-#if HAVE_THREADS
+#എങ്കിൽ HAVE_THREADS
     pthread_mutex_lock(&mq->lock);
     mq->err_send = err;
     pthread_cond_broadcast(&mq->cond_send);
@@ -201,10 +201,10 @@ void av_thread_message_queue_set_err_send(AVThreadMessageQueue *mq,
 #endif /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_err_recv(AVThreadMessageQueue *mq,
-                                          int err)
+ശൂന്യം av_thread_message_queue_set_err_recv(AVThreadMessageQueue *mq,
+                                          പൂർണ്ണസംഖ്യ err)
 {
-#if HAVE_THREADS
+#എങ്കിൽ HAVE_THREADS
     pthread_mutex_lock(&mq->lock);
     mq->err_recv = err;
     pthread_cond_broadcast(&mq->cond_recv);
@@ -212,25 +212,25 @@ void av_thread_message_queue_set_err_recv(AVThreadMessageQueue *mq,
 #endif /* HAVE_THREADS */
 }
 
-#if HAVE_THREADS
-static int free_func_wrap(void *arg, void *buf, size_t *nb_elems)
+#എങ്കിൽ HAVE_THREADS
+സ്ഥിതം പൂർണ്ണസംഖ്യ free_func_wrap(ശൂന്യം *arg, ശൂന്യം *buf, size_t *nb_elems)
 {
     AVThreadMessageQueue *mq = arg;
-    uint8_t *msg = buf;
-    for (size_t i = 0; i < *nb_elems; i++)
-        mq->free_func(msg + i * mq->elsize);
-    return 0;
+    uint8_t *സന്ദേശം = buf;
+    വേണ്ടി (size_t i = 0; i < *nb_elems; i++)
+        mq->free_func(സന്ദേശം + i * mq->elsize);
+    തിരികെ 0;
 }
 #endif
 
-void av_thread_message_flush(AVThreadMessageQueue *mq)
+ശൂന്യം av_thread_message_flush(AVThreadMessageQueue *mq)
 {
-#if HAVE_THREADS
+#എങ്കിൽ HAVE_THREADS
     size_t used;
 
     pthread_mutex_lock(&mq->lock);
     used = av_fifo_can_read(mq->fifo);
-    if (mq->free_func)
+    എങ്കിൽ (mq->free_func)
         av_fifo_read_to_cb(mq->fifo, free_func_wrap, mq, &used);
     /* only the senders need to be notified since the queue is empty and there
      * is nothing to read */

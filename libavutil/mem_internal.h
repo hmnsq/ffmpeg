@@ -21,15 +21,15 @@
 #ifndef AVUTIL_MEM_INTERNAL_H
 #define AVUTIL_MEM_INTERNAL_H
 
-#include "config.h"
+#അന്തര്ഭാവ "config.h"
 
-#include <stdint.h>
+#അന്തര്ഭാവ <stdint.h>
 #ifndef _MSC_VER
-#include <stdalign.h>
+#അന്തര്ഭാവ <stdalign.h>
 #endif
 
-#include "attributes.h"
-#include "macros.h"
+#അന്തര്ഭാവ "attributes.h"
+#അന്തര്ഭാവ "macros.h"
 
 /**
  * @def DECLARE_ALIGNED(n,t,v)
@@ -76,27 +76,27 @@
  * @param v Name of the variable
  */
 
-#if defined(__DJGPP__)
+#എങ്കിൽ defined(__DJGPP__)
     #define DECLARE_ALIGNED_T(n,t,v)    alignas(FFMIN(n, 16)) t v
     #define DECLARE_ASM_ALIGNED(n,t,v)  alignas(FFMIN(n, 16)) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    alignas(FFMIN(n, 16)) static const t av_used v
-#elif defined(_MSC_VER)
+    #define DECLARE_ASM_CONST(n,t,v)    alignas(FFMIN(n, 16)) സ്ഥിതം സ്ഥിരം t av_used v
+#അല്ലെങ്കിലെങ്കിൽ defined(_MSC_VER)
     #define DECLARE_ALIGNED_T(n,t,v)    __declspec(align(n)) t v
     #define DECLARE_ASM_ALIGNED(n,t,v)  __declspec(align(n)) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) static const t av_used v
-#else
+    #define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) സ്ഥിതം സ്ഥിരം t av_used v
+#അല്ലെങ്കിൽ
     #define DECLARE_ALIGNED_T(n,t,v)    alignas(n) t v
     #define DECLARE_ASM_ALIGNED(n,t,v)  alignas(n) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    alignas(n) static const t av_used v
+    #define DECLARE_ASM_CONST(n,t,v)    alignas(n) സ്ഥിതം സ്ഥിരം t av_used v
 #endif
 
-#if HAVE_SIMD_ALIGN_64
+#എങ്കിൽ HAVE_SIMD_ALIGN_64
     #define ALIGN_64 64
     #define ALIGN_32 32
-#elif HAVE_SIMD_ALIGN_32
+#അല്ലെങ്കിലെങ്കിൽ HAVE_SIMD_ALIGN_32
     #define ALIGN_64 32
     #define ALIGN_32 32
-#else
+#അല്ലെങ്കിൽ
     #define ALIGN_64 16
     #define ALIGN_32 16
 #endif

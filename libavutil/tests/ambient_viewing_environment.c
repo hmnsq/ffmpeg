@@ -16,22 +16,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#അന്തര്ഭാവ <limits.h>
+#അന്തര്ഭാവ <stdio.h>
 
-#include "libavutil/ambient_viewing_environment.h"
-#include "libavutil/frame.h"
-#include "libavutil/mem.h"
+#അന്തര്ഭാവ "libavutil/ambient_viewing_environment.h"
+#അന്തര്ഭാവ "libavutil/frame.h"
+#അന്തര്ഭാവ "libavutil/mem.h"
 
-static void print_env(const AVAmbientViewingEnvironment *env)
+സ്ഥിതം ശൂന്യം print_env(സ്ഥിരം AVAmbientViewingEnvironment *env)
 {
     printf("illuminance=%d/%d, light_x=%d/%d, light_y=%d/%d\n",
-           env->ambient_illuminance.num, env->ambient_illuminance.den,
-           env->ambient_light_x.num,     env->ambient_light_x.den,
-           env->ambient_light_y.num,     env->ambient_light_y.den);
+           env->ambient_illuminance.അക്കം, env->ambient_illuminance.den,
+           env->ambient_light_x.അക്കം,     env->ambient_light_x.den,
+           env->ambient_light_y.അക്കം,     env->ambient_light_y.den);
 }
 
-int main(void)
+പൂർണ്ണസംഖ്യ പ്രധാന(ശൂന്യം)
 {
     AVAmbientViewingEnvironment *env;
     AVFrame *frame;
@@ -40,29 +40,29 @@ int main(void)
     /* av_ambient_viewing_environment_alloc with size out-param */
     printf("Testing av_ambient_viewing_environment_alloc(&size)\n");
     env = av_ambient_viewing_environment_alloc(&size);
-    if (env) {
-        printf("alloc: OK, size_set=%s\n", size == sizeof(*env) ? "yes" : "no");
+    എങ്കിൽ (env) {
+        printf("alloc: OK, size_set=%s\n", size == വലുപ്പം(*env) ? "yes" : "no");
         print_env(env);
         av_free(env);
-    } else {
+    } അല്ലെങ്കിൽ {
         printf("alloc: FAIL\n");
     }
 
     /* av_ambient_viewing_environment_alloc with NULL size */
     printf("\nTesting av_ambient_viewing_environment_alloc(NULL)\n");
-    env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
+    env = av_ambient_viewing_environment_alloc(ശൂന്യ);
+    എങ്കിൽ (env) {
         printf("alloc(NULL): OK\n");
         print_env(env);
         av_free(env);
-    } else {
+    } അല്ലെങ്കിൽ {
         printf("alloc(NULL): FAIL\n");
     }
 
     /* write and read back */
     printf("\nTesting write/read back\n");
-    env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
+    env = av_ambient_viewing_environment_alloc(ശൂന്യ);
+    എങ്കിൽ (env) {
         env->ambient_illuminance = (AVRational){ 314, 10 };
         env->ambient_light_x     = (AVRational){ 15635, 50000 };
         env->ambient_light_y     = (AVRational){ 16450, 50000 };
@@ -73,12 +73,12 @@ int main(void)
     /* av_ambient_viewing_environment_create_side_data */
     printf("\nTesting av_ambient_viewing_environment_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    എങ്കിൽ (frame) {
         env = av_ambient_viewing_environment_create_side_data(frame);
-        if (env) {
+        എങ്കിൽ (env) {
             printf("side_data: OK\n");
             print_env(env);
-        } else {
+        } അല്ലെങ്കിൽ {
             printf("side_data: FAIL\n");
         }
         av_frame_free(&frame);
@@ -90,13 +90,13 @@ int main(void)
     env = av_ambient_viewing_environment_alloc(&size);
     printf("alloc OOM: %s\n", env ? "FAIL" : "OK");
     av_free(env);
-    env = av_ambient_viewing_environment_alloc(NULL);
+    env = av_ambient_viewing_environment_alloc(ശൂന്യ);
     printf("alloc(NULL) OOM: %s\n", env ? "FAIL" : "OK");
     av_free(env);
     av_max_alloc(INT_MAX);
 
     frame = av_frame_alloc();
-    if (frame) {
+    എങ്കിൽ (frame) {
         av_max_alloc(1);
         env = av_ambient_viewing_environment_create_side_data(frame);
         printf("side_data OOM: %s\n", env ? "FAIL" : "OK");
@@ -104,5 +104,5 @@ int main(void)
         av_frame_free(&frame);
     }
 
-    return 0;
+    തിരികെ 0;
 }

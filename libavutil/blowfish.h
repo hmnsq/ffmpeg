@@ -22,7 +22,7 @@
 #ifndef AVUTIL_BLOWFISH_H
 #define AVUTIL_BLOWFISH_H
 
-#include <stdint.h>
+#അന്തര്ഭാവ <stdint.h>
 
 /**
  * @defgroup lavu_blowfish Blowfish
@@ -32,7 +32,7 @@
 
 #define AV_BF_ROUNDS 16
 
-typedef struct AVBlowfish {
+തരനിർവചനം ഘടന AVBlowfish {
     uint32_t p[AV_BF_ROUNDS + 2];
     uint32_t s[4][256];
 } AVBlowfish;
@@ -40,7 +40,7 @@ typedef struct AVBlowfish {
 /**
  * Allocate an AVBlowfish context.
  */
-AVBlowfish *av_blowfish_alloc(void);
+AVBlowfish *av_blowfish_alloc(ശൂന്യം);
 
 /**
  * Initialize an AVBlowfish context.
@@ -49,7 +49,7 @@ AVBlowfish *av_blowfish_alloc(void);
  * @param key a key
  * @param key_len length of the key
  */
-void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
+ശൂന്യം av_blowfish_init(ഘടന AVBlowfish *ctx, സ്ഥിരം uint8_t *താക്കോൽ, പൂർണ്ണസംഖ്യ താക്കോൽ_len);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -59,8 +59,8 @@ void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
  * @param xr right four bytes halves of input to be encrypted
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
-                           int decrypt);
+ശൂന്യം av_blowfish_crypt_ecb(ഘടന AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
+                           പൂർണ്ണസംഖ്യ decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -72,8 +72,8 @@ void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
  * @param iv initialization vector for CBC mode, if NULL ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_blowfish_crypt(struct AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                       int count, uint8_t *iv, int decrypt);
+ശൂന്യം av_blowfish_crypt(ഘടന AVBlowfish *ctx, uint8_t *dst, സ്ഥിരം uint8_t *src,
+                       പൂർണ്ണസംഖ്യ എണ്ണം, uint8_t *iv, പൂർണ്ണസംഖ്യ decrypt);
 
 /**
  * @}

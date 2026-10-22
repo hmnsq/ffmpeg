@@ -16,27 +16,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ <stdio.h>
 
-#include "libavutil/md5.h"
+#അന്തര്ഭാവ "libavutil/md5.h"
 
-static void print_md5(uint8_t *md5)
+സ്ഥിതം ശൂന്യം print_md5(uint8_t *md5)
 {
-    int i;
-    for (i = 0; i < 16; i++)
+    പൂർണ്ണസംഖ്യ i;
+    വേണ്ടി (i = 0; i < 16; i++)
         printf("%02x", md5[i]);
     printf("\n");
 }
 
-int main(void)
+പൂർണ്ണസംഖ്യ പ്രധാന(ശൂന്യം)
 {
     uint8_t md5val[16];
-    int i;
+    പൂർണ്ണസംഖ്യ i;
 
     uint8_t in[1000];
 
-    for (i = 0; i < 1000; i++)
+    വേണ്ടി (i = 0; i < 1000; i++)
         in[i] = i * i;
     av_md5_sum(md5val, in, 1000);
     print_md5(md5val);
@@ -46,10 +46,10 @@ int main(void)
     print_md5(md5val);
     av_md5_sum(md5val, in, 65);
     print_md5(md5val);
-    for (i = 0; i < 1000; i++)
+    വേണ്ടി (i = 0; i < 1000; i++)
         in[i] = i % 127;
     av_md5_sum(md5val, in, 999);
     print_md5(md5val);
 
-    return 0;
+    തിരികെ 0;
 }

@@ -21,17 +21,17 @@
 #ifndef AVUTIL_VIDEO_HINT_H
 #define AVUTIL_VIDEO_HINT_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "libavutil/avassert.h"
-#include "libavutil/frame.h"
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ "libavutil/avassert.h"
+#അന്തര്ഭാവ "libavutil/frame.h"
 
-typedef struct AVVideoRect {
+തരനിർവചനം ഘടന AVVideoRect {
     uint32_t x, y;
     uint32_t width, height;
 } AVVideoRect;
 
-typedef enum AVVideoHintType {
+തരനിർവചനം എണ്ണൽ AVVideoHintType {
     /* rectangled delimit the constant areas (unchanged), default is changed */
     AV_VIDEO_HINT_TYPE_CONSTANT,
 
@@ -39,7 +39,7 @@ typedef enum AVVideoHintType {
     AV_VIDEO_HINT_TYPE_CHANGED,
 } AVVideoHintType;
 
-typedef struct AVVideoHint {
+തരനിർവചനം ഘടന AVVideoHint {
     /**
      * Number of AVVideoRect present.
      *
@@ -63,14 +63,14 @@ typedef struct AVVideoHint {
     AVVideoHintType type;
 } AVVideoHint;
 
-static av_always_inline AVVideoRect *
-av_video_hint_rects(const AVVideoHint *hints) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
+സ്ഥിതം av_always_inline AVVideoRect *
+av_video_hint_rects(സ്ഥിരം AVVideoHint *hints) {
+    തിരികെ (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
 }
 
-static av_always_inline AVVideoRect *
-av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
+സ്ഥിതം av_always_inline AVVideoRect *
+av_video_hint_get_rect(സ്ഥിരം AVVideoHint *hints, size_t idx) {
+    തിരികെ (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
 }
 
 /**

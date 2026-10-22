@@ -26,48 +26,48 @@
 #ifndef AVUTIL_INTERNAL_H
 #define AVUTIL_INTERNAL_H
 
-#if !defined(DEBUG) && !defined(NDEBUG)
+#എങ്കിൽ !defined(DEBUG) && !defined(NDEBUG)
 #    define NDEBUG
 #endif
 
 // This can be enabled to allow detection of additional integer overflows with ubsan
 //#define CHECKED
 
-#include <limits.h>
-#include <math.h>
-#include <stdint.h>
-#include <stddef.h>
-#include <assert.h>
-#include <stdio.h>
-#include "config.h"
-#include "attributes.h"
-#include "mathematics.h"
-#include "macros.h"
+#അന്തര്ഭാവ <limits.h>
+#അന്തര്ഭാവ <math.h>
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <assert.h>
+#അന്തര്ഭാവ <stdio.h>
+#അന്തര്ഭാവ "config.h"
+#അന്തര്ഭാവ "attributes.h"
+#അന്തര്ഭാവ "mathematics.h"
+#അന്തര്ഭാവ "macros.h"
 
 #ifndef attribute_align_arg
-#if ARCH_X86_32 && defined(__GNUC__)
+#എങ്കിൽ ARCH_X86_32 && defined(__GNUC__)
 #    define attribute_align_arg __attribute__((force_align_arg_pointer))
-#else
+#അല്ലെങ്കിൽ
 #    define attribute_align_arg
 #endif
 #endif
 
-#if HAVE_MIPSFPU && HAVE_INLINE_ASM
+#എങ്കിൽ HAVE_MIPSFPU && HAVE_INLINE_ASM
 #   include "mips/libm_mips.h"
 #endif
 
-#if HAVE_PRAGMA_DEPRECATED
-#    if defined(__ICL) || defined (__INTEL_COMPILER)
-#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:1478))
-#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
+#എങ്കിൽ HAVE_PRAGMA_DEPRECATED
+#    എങ്കിൽ defined(__ICL) || defined (__INTEL_COMPILER)
+#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(തള്ളുക)) __pragma(warning(disable:1478))
+#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(എടുക്കുക))
 #    elif defined(_MSC_VER)
-#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:4996))
-#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
-#    else
+#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(തള്ളുക)) __pragma(warning(disable:4996))
+#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(എടുക്കുക))
+#    അല്ലെങ്കിൽ
 #        define FF_DISABLE_DEPRECATION_WARNINGS _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #        define FF_ENABLE_DEPRECATION_WARNINGS  _Pragma("GCC diagnostic pop")
 #    endif
-#else
+#അല്ലെങ്കിൽ
 #    define FF_DISABLE_DEPRECATION_WARNINGS
 #    define FF_ENABLE_DEPRECATION_WARNINGS
 #endif
@@ -77,23 +77,23 @@
 #   include "compat/android/math.h"
 #endif
 
-#define FF_ALLOC_TYPED_ARRAY(p, nelem)  (p = av_malloc_array(nelem, sizeof(*p)))
-#define FF_ALLOCZ_TYPED_ARRAY(p, nelem) (p = av_calloc(nelem, sizeof(*p)))
+#define FF_ALLOC_TYPED_ARRAY(p, nelem)  (p = av_malloc_array(nelem, വലുപ്പം(*p)))
+#define FF_ALLOCZ_TYPED_ARRAY(p, nelem) (p = av_calloc(nelem, വലുപ്പം(*p)))
 
 #define FF_PTR_ADD(ptr, off) ((off) ? (ptr) + (off) : (ptr))
 
 /**
  * Access a field in a structure by its offset.
  */
-#define FF_FIELD_AT(type, off, obj) (*(type *)((char *)&(obj) + (off)))
+#define FF_FIELD_AT(type, off, obj) (*(type *)((അക്ഷരം *)&(obj) + (off)))
 
 /**
  * Return NULL if CONFIG_SMALL is true, otherwise the argument
  * without modification. Used to disable the definition of strings.
  */
-#if CONFIG_SMALL
-#   define NULL_IF_CONFIG_SMALL(x) NULL
-#else
+#എങ്കിൽ CONFIG_SMALL
+#   define NULL_IF_CONFIG_SMALL(x) ശൂന്യ
+#അല്ലെങ്കിൽ
 #   define NULL_IF_CONFIG_SMALL(x) x
 #endif
 
@@ -104,8 +104,8 @@
  *                field is a pointer to an AVClass struct
  * @param[in] msg string containing the name of the missing feature
  */
-void avpriv_report_missing_feature(void *avc,
-                                   const char *msg, ...) av_printf_format(2, 3);
+ശൂന്യം avpriv_report_missing_feature(ശൂന്യം *avc,
+                                   സ്ഥിരം അക്ഷരം *സന്ദേശം, ...) av_printf_format(2, 3);
 
 /**
  * Log a generic warning message about a missing feature.
@@ -115,42 +115,42 @@ void avpriv_report_missing_feature(void *avc,
  *                a pointer to an AVClass struct
  * @param[in] msg string containing the name of the missing feature
  */
-void avpriv_request_sample(void *avc,
-                           const char *msg, ...) av_printf_format(2, 3);
+ശൂന്യം avpriv_request_sample(ശൂന്യം *avc,
+                           സ്ഥിരം അക്ഷരം *സന്ദേശം, ...) av_printf_format(2, 3);
 
 #ifdef DEBUG
 #   define ff_dlog(ctx, ...) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__)
-#else
-#   define ff_dlog(ctx, ...) do { if (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } while (0)
+#അല്ലെങ്കിൽ
+#   define ff_dlog(ctx, ...) ചെയ്യുക { എങ്കിൽ (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } ആകുമ്പോൾ (0)
 #endif
 
 #ifdef TRACE
 #   define ff_tlog(ctx, ...) av_log(ctx, AV_LOG_TRACE, __VA_ARGS__)
-#else
-#   define ff_tlog(ctx, ...) do { } while(0)
+#അല്ലെങ്കിൽ
+#   define ff_tlog(ctx, ...) ചെയ്യുക { } ആകുമ്പോൾ(0)
 #endif
 
 // For debugging we use signed operations so overflows can be detected (by ubsan)
 // For production we use unsigned so there are no undefined operations
 #ifdef CHECKED
-#define SUINT   int
+#define SUINT   പൂർണ്ണസംഖ്യ
 #define SUINT32 int32_t
-#else
+#അല്ലെങ്കിൽ
 #define SUINT   unsigned
 #define SUINT32 uint32_t
 #endif
 
-static av_always_inline av_const int avpriv_mirror(int x, int w)
+സ്ഥിതം av_always_inline av_const പൂർണ്ണസംഖ്യ avpriv_mirror(പൂർണ്ണസംഖ്യ x, പൂർണ്ണസംഖ്യ w)
 {
-    if (!w)
-        return 0;
+    എങ്കിൽ (!w)
+        തിരികെ 0;
 
-    while ((unsigned)x > (unsigned)w) {
+    ആകുമ്പോൾ ((unsigned)x > (unsigned)w) {
         x = -x;
-        if (x < 0)
+        എങ്കിൽ (x < 0)
             x += 2 * w;
     }
-    return x;
+    തിരികെ x;
 }
 
 #endif /* AVUTIL_INTERNAL_H */

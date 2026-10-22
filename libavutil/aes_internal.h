@@ -21,26 +21,26 @@
 #ifndef AVUTIL_AES_INTERNAL_H
 #define AVUTIL_AES_INTERNAL_H
 
-#include "mem_internal.h"
-#include <stdint.h>
+#അന്തര്ഭാവ "mem_internal.h"
+#അന്തര്ഭാവ <stdint.h>
 
-typedef union {
+തരനിർവചനം സംഘം {
     uint64_t u64[2];
     uint32_t u32[4];
     uint8_t u8x4[4][4];
     uint8_t u8[16];
 } av_aes_block;
 
-typedef struct AVAES {
+തരനിർവചനം ഘടന AVAES {
     // Note: round_key[16] is accessed in the init code, but this only
     // overwrites state, which does not matter (see also commit ba554c0).
-    DECLARE_ALIGNED(16, av_aes_block, round_key)[15];
+    DECLARE_ALIGNED(16, av_aes_block, round_താക്കോൽ)[15];
     DECLARE_ALIGNED(16, av_aes_block, state)[2];
-    int rounds;
-    void (*crypt)(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int rounds);
+    പൂർണ്ണസംഖ്യ rounds;
+    ശൂന്യം (*crypt)(ഘടന AVAES *a, uint8_t *dst, സ്ഥിരം uint8_t *src, പൂർണ്ണസംഖ്യ എണ്ണം, uint8_t *iv, പൂർണ്ണസംഖ്യ rounds);
 } AVAES;
 
-void ff_init_aes_x86(AVAES *a, int decrypt);
-void ff_init_aes_aarch64(AVAES *a, int decrypt);
+ശൂന്യം ff_init_aes_x86(AVAES *a, പൂർണ്ണസംഖ്യ decrypt);
+ശൂന്യം ff_init_aes_aarch64(AVAES *a, പൂർണ്ണസംഖ്യ decrypt);
 
 #endif /* AVUTIL_AES_INTERNAL_H */

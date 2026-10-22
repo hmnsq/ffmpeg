@@ -19,9 +19,9 @@
 #ifndef AVUTIL_PARSEUTILS_H
 #define AVUTIL_PARSEUTILS_H
 
-#include <time.h>
+#അന്തര്ഭാവ <time.h>
 
-#include "rational.h"
+#അന്തര്ഭാവ "rational.h"
 
 /**
  * @file
@@ -46,11 +46,11 @@
  * @param[in] log_ctx parent logging context
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx);
+പൂർണ്ണസംഖ്യ av_parse_ratio(AVRational *q, സ്ഥിരം അക്ഷരം *str, പൂർണ്ണസംഖ്യ max,
+                   പൂർണ്ണസംഖ്യ log_offset, ശൂന്യം *log_ctx);
 
 #define av_parse_ratio_quiet(rate, str, max) \
-    av_parse_ratio(rate, str, max, AV_LOG_MAX_OFFSET, NULL)
+    av_parse_ratio(rate, str, max, AV_LOG_MAX_OFFSET, ശൂന്യ)
 
 /**
  * Parse str and put in width_ptr and height_ptr the detected values.
@@ -63,7 +63,7 @@ int av_parse_ratio(AVRational *q, const char *str, int max,
  * width x height or a valid video size abbreviation.
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
+പൂർണ്ണസംഖ്യ av_parse_video_size(പൂർണ്ണസംഖ്യ *width_ptr, പൂർണ്ണസംഖ്യ *height_ptr, സ്ഥിരം അക്ഷരം *str);
 
 /**
  * Parse str and store the detected values in *rate.
@@ -74,7 +74,7 @@ int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
  * rate_num / rate_den, a float number or a valid video rate abbreviation
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_rate(AVRational *rate, const char *str);
+പൂർണ്ണസംഖ്യ av_parse_video_rate(AVRational *rate, സ്ഥിരം അക്ഷരം *str);
 
 /**
  * Put the RGBA values that correspond to color_string in rgba_color.
@@ -99,8 +99,8 @@ int av_parse_video_rate(AVRational *rate, const char *str);
  * @return >= 0 in case of success, a negative value in case of
  * failure (for example if color_string cannot be parsed).
  */
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
-                   void *log_ctx);
+പൂർണ്ണസംഖ്യ av_parse_color(uint8_t *rgba_color, സ്ഥിരം അക്ഷരം *color_string, പൂർണ്ണസംഖ്യ slen,
+                   ശൂന്യം *log_ctx);
 
 /**
  * Get the name of a color from the internal table of hard-coded named
@@ -113,7 +113,7 @@ int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
  * @param rgb      if not NULL, will point to a 3-elements array with the color value in RGB
  * @return the color name string or NULL if color_idx is not in the array
  */
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
+സ്ഥിരം അക്ഷരം *av_get_known_color_name(പൂർണ്ണസംഖ്യ color_idx, സ്ഥിരം uint8_t **rgb);
 
 /**
  * Parse timestr and return in *time a corresponding number of
@@ -147,7 +147,7 @@ const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_parse_time(int64_t *timeval, const char *timestr, int duration);
+പൂർണ്ണസംഖ്യ av_parse_time(int64_t *timeval, സ്ഥിരം അക്ഷരം *timestr, പൂർണ്ണസംഖ്യ duration);
 
 /**
  * Attempt to find a specific tag in a URL.
@@ -155,7 +155,7 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration);
  * syntax: '?tag1=val1&tag2=val2...'. Little URL decoding is done.
  * Return 1 if found.
  */
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info);
+പൂർണ്ണസംഖ്യ av_find_info_tag(അക്ഷരം *arg, പൂർണ്ണസംഖ്യ arg_size, സ്ഥിരം അക്ഷരം *tag1, സ്ഥിരം അക്ഷരം *info);
 
 /**
  * Simplified version of strptime
@@ -187,11 +187,11 @@ int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info
  *         is consumed the return value points to the null byte at the end of
  *         the string. On failure NULL is returned.
  */
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt);
+അക്ഷരം *av_small_strptime(സ്ഥിരം അക്ഷരം *p, സ്ഥിരം അക്ഷരം *fmt, ഘടന tm *dt);
 
 /**
  * Convert the decomposed UTC time in tm to a time_t value.
  */
-time_t av_timegm(struct tm *tm);
+time_t av_timegm(ഘടന tm *tm);
 
 #endif /* AVUTIL_PARSEUTILS_H */

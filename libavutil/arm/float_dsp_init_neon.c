@@ -19,34 +19,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "float_dsp_arm.h"
+#അന്തര്ഭാവ "libavutil/attributes.h"
+#അന്തര്ഭാവ "libavutil/float_dsp.h"
+#അന്തര്ഭാവ "float_dsp_arm.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1, int len);
+ശൂന്യം ff_vector_fmul_neon(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0, സ്ഥിരം ദശാംശം *src1, പൂർണ്ണസംഖ്യ len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+ശൂന്യം ff_vector_fmac_scalar_neon(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src, ദശാംശം mul,
+                                പൂർണ്ണസംഖ്യ len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+ശൂന്യം ff_vector_fmul_scalar_neon(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src, ദശാംശം mul,
+                                പൂർണ്ണസംഖ്യ len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+ശൂന്യം ff_vector_fmul_window_neon(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0,
+                                സ്ഥിരം ദശാംശം *src1, സ്ഥിരം ദശാംശം *win, പൂർണ്ണസംഖ്യ len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+ശൂന്യം ff_vector_fmul_add_neon(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0, സ്ഥിരം ദശാംശം *src1,
+                             സ്ഥിരം ദശാംശം *src2, പൂർണ്ണസംഖ്യ len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+ശൂന്യം ff_vector_fmul_reverse_neon(ദശാംശം *dst, സ്ഥിരം ദശാംശം *src0,
+                                 സ്ഥിരം ദശാംശം *src1, പൂർണ്ണസംഖ്യ len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+ശൂന്യം ff_butterflies_float_neon(ദശാംശം *v1, ദശാംശം *v2, പൂർണ്ണസംഖ്യ len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+ദശാംശം ff_scalarproduct_float_neon(സ്ഥിരം ദശാംശം *v1, സ്ഥിരം ദശാംശം *v2, പൂർണ്ണസംഖ്യ len);
 
-av_cold void ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
+av_cold ശൂന്യം ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
 {
     fdsp->vector_fmul = ff_vector_fmul_neon;
     fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_neon;

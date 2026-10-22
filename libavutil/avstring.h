@@ -21,9 +21,9 @@
 #ifndef AVUTIL_AVSTRING_H
 #define AVUTIL_AVSTRING_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "attributes.h"
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ "attributes.h"
 
 /**
  * @addtogroup lavu_string
@@ -39,7 +39,7 @@
  * @param ptr updated if the prefix is matched inside str
  * @return non-zero if the prefix matches, zero otherwise
  */
-int av_strstart(const char *str, const char *pfx, const char **ptr);
+പൂർണ്ണസംഖ്യ av_strstart(സ്ഥിരം അക്ഷരം *str, സ്ഥിരം അക്ഷരം *pfx, സ്ഥിരം അക്ഷരം **ptr);
 
 /**
  * Return non-zero if pfx is a prefix of str independent of case. If
@@ -51,7 +51,7 @@ int av_strstart(const char *str, const char *pfx, const char **ptr);
  * @param ptr updated if the prefix is matched inside str
  * @return non-zero if the prefix matches, zero otherwise
  */
-int av_stristart(const char *str, const char *pfx, const char **ptr);
+പൂർണ്ണസംഖ്യ av_stristart(സ്ഥിരം അക്ഷരം *str, സ്ഥിരം അക്ഷരം *pfx, സ്ഥിരം അക്ഷരം **ptr);
 
 /**
  * Locate the first case-independent occurrence in the string haystack
@@ -65,7 +65,7 @@ int av_stristart(const char *str, const char *pfx, const char **ptr);
  * @return         pointer to the located match within haystack
  *                 or a null pointer if no match
  */
-char *av_stristr(const char *haystack, const char *needle);
+അക്ഷരം *av_stristr(സ്ഥിരം അക്ഷരം *haystack, സ്ഥിരം അക്ഷരം *needle);
 
 /**
  * Locate the first occurrence of the string needle in the string haystack
@@ -80,7 +80,7 @@ char *av_stristr(const char *haystack, const char *needle);
  * @return           pointer to the located match within haystack
  *                   or a null pointer if no match
  */
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length);
+അക്ഷരം *av_strnstr(സ്ഥിരം അക്ഷരം *haystack, സ്ഥിരം അക്ഷരം *needle, size_t hay_length);
 
 /**
  * Copy the string src to dst, but no more than size - 1 bytes, and
@@ -97,7 +97,7 @@ char *av_strnstr(const char *haystack, const char *needle, size_t hay_length);
  * _must_ be a properly 0-terminated string, otherwise this will read beyond
  * the end of the buffer and possibly crash.
  */
-size_t av_strlcpy(char *dst, const char *src, size_t size);
+size_t av_strlcpy(അക്ഷരം *dst, സ്ഥിരം അക്ഷരം *src, size_t size);
 
 /**
  * Append the string src to the string dst, but to a total length of
@@ -115,7 +115,7 @@ size_t av_strlcpy(char *dst, const char *src, size_t size);
  * absolutely _must_ be a properly 0-terminated strings, otherwise this
  * will read beyond the end of the buffer and possibly crash.
  */
-size_t av_strlcat(char *dst, const char *src, size_t size);
+size_t av_strlcat(അക്ഷരം *dst, സ്ഥിരം അക്ഷരം *src, size_t size);
 
 /**
  * Append output to a string, according to a format. Never write out of
@@ -129,7 +129,7 @@ size_t av_strlcat(char *dst, const char *src, size_t size);
  * @return the length of the string that would have been generated
  *  if enough space had been available
  */
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...) av_printf_format(3, 4);
+size_t av_strlcatf(അക്ഷരം *dst, size_t size, സ്ഥിരം അക്ഷരം *fmt, ...) av_printf_format(3, 4);
 
 /**
  * Get the count of continuous non zero chars starting from the beginning.
@@ -138,12 +138,12 @@ size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...) av_printf_forma
  * @param len maximum number of characters to check in the string, that
  *            is the maximum value which is returned by the function
  */
-static inline size_t av_strnlen(const char *s, size_t len)
+സ്ഥിതം വരിയിൽ size_t av_strnlen(സ്ഥിരം അക്ഷരം *s, size_t len)
 {
     size_t i;
-    for (i = 0; i < len && s[i]; i++)
+    വേണ്ടി (i = 0; i < len && s[i]; i++)
         ;
-    return i;
+    തിരികെ i;
 }
 
 /**
@@ -154,7 +154,7 @@ static inline size_t av_strnlen(const char *s, size_t len)
  * @return the allocated string
  * @note You have to free the string yourself with av_free().
  */
-char *av_asprintf(const char *fmt, ...) av_printf_format(1, 2);
+അക്ഷരം *av_asprintf(സ്ഥിരം അക്ഷരം *fmt, ...) av_printf_format(1, 2);
 
 /**
  * Unescape the given string until a non escaped terminating char,
@@ -170,7 +170,7 @@ char *av_asprintf(const char *fmt, ...) av_printf_format(1, 2);
  * @return the malloced unescaped string, which must be av_freed by
  * the user, NULL in case of allocation failure
  */
-char *av_get_token(const char **buf, const char *term);
+അക്ഷരം *av_get_token(സ്ഥിരം അക്ഷരം **buf, സ്ഥിരം അക്ഷരം *term);
 
 /**
  * Split the string into several tokens which can be accessed by
@@ -194,79 +194,79 @@ char *av_get_token(const char **buf, const char *term);
  * first delimiter found, or to NULL if the string was terminated
  * @return the found token, or NULL when no token is found
  */
-char *av_strtok(char *s, const char *delim, char **saveptr);
+അക്ഷരം *av_strtok(അക്ഷരം *s, സ്ഥിരം അക്ഷരം *delim, അക്ഷരം **saveptr);
 
 /**
  * Locale-independent conversion of ASCII isdigit.
  */
-static inline av_const int av_isdigit(int c)
+സ്ഥിതം വരിയിൽ av_const പൂർണ്ണസംഖ്യ av_isdigit(പൂർണ്ണസംഖ്യ c)
 {
-    return c >= '0' && c <= '9';
+    തിരികെ c >= '0' && c <= '9';
 }
 
 /**
  * Locale-independent conversion of ASCII isgraph.
  */
-static inline av_const int av_isgraph(int c)
+സ്ഥിതം വരിയിൽ av_const പൂർണ്ണസംഖ്യ av_isgraph(പൂർണ്ണസംഖ്യ c)
 {
-    return c > 32 && c < 127;
+    തിരികെ c > 32 && c < 127;
 }
 
 /**
  * Locale-independent conversion of ASCII isspace.
  */
-static inline av_const int av_isspace(int c)
+സ്ഥിതം വരിയിൽ av_const പൂർണ്ണസംഖ്യ av_isspace(പൂർണ്ണസംഖ്യ c)
 {
-    return c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
+    തിരികെ c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
            c == '\v';
 }
 
 /**
  * Locale-independent conversion of ASCII characters to uppercase.
  */
-static inline av_const int av_toupper(int c)
+സ്ഥിതം വരിയിൽ av_const പൂർണ്ണസംഖ്യ av_toupper(പൂർണ്ണസംഖ്യ c)
 {
-    if (c >= 'a' && c <= 'z')
+    എങ്കിൽ (c >= 'a' && c <= 'z')
         c ^= 0x20;
-    return c;
+    തിരികെ c;
 }
 
 /**
  * Locale-independent conversion of ASCII characters to lowercase.
  */
-static inline av_const int av_tolower(int c)
+സ്ഥിതം വരിയിൽ av_const പൂർണ്ണസംഖ്യ av_tolower(പൂർണ്ണസംഖ്യ c)
 {
-    if (c >= 'A' && c <= 'Z')
+    എങ്കിൽ (c >= 'A' && c <= 'Z')
         c ^= 0x20;
-    return c;
+    തിരികെ c;
 }
 
 /**
  * Locale-independent conversion of ASCII isxdigit.
  */
-static inline av_const int av_isxdigit(int c)
+സ്ഥിതം വരിയിൽ av_const പൂർണ്ണസംഖ്യ av_isxdigit(പൂർണ്ണസംഖ്യ c)
 {
     c = av_tolower(c);
-    return av_isdigit(c) || (c >= 'a' && c <= 'f');
+    തിരികെ av_isdigit(c) || (c >= 'a' && c <= 'f');
 }
 
 /**
  * Locale-independent case-insensitive compare.
  * @note This means only ASCII-range characters are case-insensitive
  */
-int av_strcasecmp(const char *a, const char *b);
+പൂർണ്ണസംഖ്യ av_strcasecmp(സ്ഥിരം അക്ഷരം *a, സ്ഥിരം അക്ഷരം *b);
 
 /**
  * Locale-independent case-insensitive compare.
  * @note This means only ASCII-range characters are case-insensitive
  */
-int av_strncasecmp(const char *a, const char *b, size_t n);
+പൂർണ്ണസംഖ്യ av_strncasecmp(സ്ഥിരം അക്ഷരം *a, സ്ഥിരം അക്ഷരം *b, size_t n);
 
 /**
  * Locale-independent strings replace.
  * @note This means only ASCII-range characters are replaced.
  */
-char *av_strireplace(const char *str, const char *from, const char *to);
+അക്ഷരം *av_strireplace(സ്ഥിരം അക്ഷരം *str, സ്ഥിരം അക്ഷരം *from, സ്ഥിരം അക്ഷരം *to);
 
 /**
  * Thread safe basename.
@@ -276,7 +276,7 @@ char *av_strireplace(const char *str, const char *from, const char *to);
  * If path is a NULL pointer or points to an empty string, a pointer
  * to a string "." is returned.
  */
-const char *av_basename(const char *path);
+സ്ഥിരം അക്ഷരം *av_basename(സ്ഥിരം അക്ഷരം *path);
 
 /**
  * Thread safe dirname.
@@ -286,7 +286,7 @@ const char *av_basename(const char *path);
  * to a string "." is returned.
  * @note the function may modify the contents of the path, so copies should be passed.
  */
-const char *av_dirname(char *path);
+സ്ഥിരം അക്ഷരം *av_dirname(അക്ഷരം *path);
 
 /**
  * Match instances of a name in a comma-separated list of names.
@@ -299,7 +299,7 @@ const char *av_dirname(char *path);
  * @param names List of names.
  * @return 1 on match, 0 otherwise.
  */
-int av_match_name(const char *name, const char *names);
+പൂർണ്ണസംഖ്യ av_match_name(സ്ഥിരം അക്ഷരം *name, സ്ഥിരം അക്ഷരം *names);
 
 /**
  * Append path component to the existing path.
@@ -309,9 +309,9 @@ int av_match_name(const char *name, const char *names);
  * @param component component to be appended
  * @return new path or NULL on error.
  */
-char *av_append_path_component(const char *path, const char *component);
+അക്ഷരം *av_append_path_component(സ്ഥിരം അക്ഷരം *path, സ്ഥിരം അക്ഷരം *component);
 
-enum AVEscapeMode {
+എണ്ണൽ AVEscapeMode {
     AV_ESCAPE_MODE_AUTO,      ///< Use auto-selected escaping mode.
     AV_ESCAPE_MODE_BACKSLASH, ///< Use backslash escaping.
     AV_ESCAPE_MODE_QUOTE,     ///< Use single-quote escaping.
@@ -365,8 +365,8 @@ enum AVEscapeMode {
  * @see av_bprint_escape()
  */
 av_warn_unused_result
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags);
+പൂർണ്ണസംഖ്യ av_escape(അക്ഷരം **dst, സ്ഥിരം അക്ഷരം *src, സ്ഥിരം അക്ഷരം *special_chars,
+              എണ്ണൽ AVEscapeMode mode, പൂർണ്ണസംഖ്യ flags);
 
 #define AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES          1 ///< accept codepoints over 0x10FFFF
 #define AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS             2 ///< accept non-characters - 0xFFFE and 0xFFFF
@@ -405,21 +405,21 @@ int av_escape(char **dst, const char *src, const char *special_chars,
  * value in case of invalid sequence
  */
 av_warn_unused_result
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags);
+പൂർണ്ണസംഖ്യ av_utf8_decode(int32_t *codep, സ്ഥിരം uint8_t **bufp, സ്ഥിരം uint8_t *buf_end,
+                   unsigned പൂർണ്ണസംഖ്യ flags);
 
 /**
  * Check if a name is in a list.
  * @returns 0 if not found, or the 1 based index where it has been found in the
  *            list.
  */
-int av_match_list(const char *name, const char *list, char separator);
+പൂർണ്ണസംഖ്യ av_match_list(സ്ഥിരം അക്ഷരം *name, സ്ഥിരം അക്ഷരം *list, അക്ഷരം separator);
 
 /**
  * See libc sscanf manual for more information.
  * Locale-independent sscanf implementation.
  */
-int av_sscanf(const char *string, const char *format, ...) av_scanf_format(2, 3);
+പൂർണ്ണസംഖ്യ av_sscanf(സ്ഥിരം അക്ഷരം *string, സ്ഥിരം അക്ഷരം *format, ...) av_scanf_format(2, 3);
 
 /**
  * @}

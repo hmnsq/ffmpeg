@@ -21,14 +21,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "attributes.h"
-#include "intreadwrite.h"
-#include "mem.h"
-#include "blowfish.h"
+#അന്തര്ഭാവ "attributes.h"
+#അന്തര്ഭാവ "intreadwrite.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "blowfish.h"
 
-static const uint32_t orig_p[AV_BF_ROUNDS + 2] = {
+സ്ഥിതം സ്ഥിരം uint32_t orig_p[AV_BF_ROUNDS + 2] = {
     0x243F6A88, 0x85A308D3, 0x13198A2E, 0x03707344,
     0xA4093822, 0x299F31D0, 0x082EFA98, 0xEC4E6C89,
     0x452821E6, 0x38D01377, 0xBE5466CF, 0x34E90C6C,
@@ -36,7 +36,7 @@ static const uint32_t orig_p[AV_BF_ROUNDS + 2] = {
     0x9216D5D9, 0x8979FB1B
 };
 
-static const uint32_t orig_s[4][256] = {
+സ്ഥിതം സ്ഥിരം uint32_t orig_s[4][256] = {
     { 0xD1310BA6, 0x98DFB5AC, 0x2FFD72DB, 0xD01ADFB7,
       0xB8E1AFED, 0x6A267E96, 0xBA7C9045, 0xF12C7F99,
       0x24A19947, 0xB3916CF7, 0x0801F2E2, 0x858EFC16,
@@ -302,24 +302,24 @@ static const uint32_t orig_s[4][256] = {
            + ctx->s[3][ Xl        & 0xFF])\
            ^ P;
 
-AVBlowfish *av_blowfish_alloc(void)
+AVBlowfish *av_blowfish_alloc(ശൂന്യം)
 {
-    return av_mallocz(sizeof(struct AVBlowfish));
+    തിരികെ av_mallocz(വലുപ്പം(ഘടന AVBlowfish));
 }
 
-av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, int key_len)
+av_cold ശൂന്യം av_blowfish_init(AVBlowfish *ctx, സ്ഥിരം uint8_t *താക്കോൽ, പൂർണ്ണസംഖ്യ താക്കോൽ_len)
 {
     uint32_t data, data_l, data_r;
-    int i, j, k;
+    പൂർണ്ണസംഖ്യ i, j, k;
 
-    memcpy(ctx->s, orig_s, sizeof(orig_s));
+    memcpy(ctx->s, orig_s, വലുപ്പം(orig_s));
 
     j = 0;
-    for (i = 0; i < AV_BF_ROUNDS + 2; ++i) {
+    വേണ്ടി (i = 0; i < AV_BF_ROUNDS + 2; ++i) {
         data = 0;
-        for (k = 0; k < 4; k++) {
-            data = (data << 8) | key[j];
-            if (++j >= key_len)
+        വേണ്ടി (k = 0; k < 4; k++) {
+            data = (data << 8) | താക്കോൽ[j];
+            എങ്കിൽ (++j >= താക്കോൽ_len)
                 j = 0;
         }
         ctx->p[i] = orig_p[i] ^ data;
@@ -327,14 +327,14 @@ av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, int key_len)
 
     data_l = data_r = 0;
 
-    for (i = 0; i < AV_BF_ROUNDS + 2; i += 2) {
+    വേണ്ടി (i = 0; i < AV_BF_ROUNDS + 2; i += 2) {
         av_blowfish_crypt_ecb(ctx, &data_l, &data_r, 0);
         ctx->p[i]     = data_l;
         ctx->p[i + 1] = data_r;
     }
 
-    for (i = 0; i < 4; ++i) {
-        for (j = 0; j < 256; j += 2) {
+    വേണ്ടി (i = 0; i < 4; ++i) {
+        വേണ്ടി (j = 0; j < 256; j += 2) {
             av_blowfish_crypt_ecb(ctx, &data_l, &data_r, 0);
             ctx->s[i][j]     = data_l;
             ctx->s[i][j + 1] = data_r;
@@ -342,26 +342,26 @@ av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, int key_len)
     }
 }
 
-void av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
-                           int decrypt)
+ശൂന്യം av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
+                           പൂർണ്ണസംഖ്യ decrypt)
 {
     uint32_t Xl, Xr;
-    int i;
+    പൂർണ്ണസംഖ്യ i;
 
     Xl = *xl;
     Xr = *xr;
 
-    if (decrypt) {
+    എങ്കിൽ (decrypt) {
         Xl ^= ctx->p[AV_BF_ROUNDS + 1];
-        for (i = AV_BF_ROUNDS; i > 0; i-=2) {
+        വേണ്ടി (i = AV_BF_ROUNDS; i > 0; i-=2) {
             F(Xl, Xr, ctx->p[i  ]);
             F(Xr, Xl, ctx->p[i-1]);
         }
 
         Xr ^= ctx->p[0];
-    } else {
+    } അല്ലെങ്കിൽ {
         Xl ^= ctx->p[0];
-        for (i = 1; i < AV_BF_ROUNDS+1; i+=2){
+        വേണ്ടി (i = 1; i < AV_BF_ROUNDS+1; i+=2){
             F(Xl, Xr, ctx->p[i  ]);
             F(Xr, Xl, ctx->p[i+1]);
         }
@@ -373,20 +373,20 @@ void av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
     *xr = Xl;
 }
 
-void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                       int count, uint8_t *iv, int decrypt)
+ശൂന്യം av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, സ്ഥിരം uint8_t *src,
+                       പൂർണ്ണസംഖ്യ എണ്ണം, uint8_t *iv, പൂർണ്ണസംഖ്യ decrypt)
 {
     uint32_t v0, v1;
-    int i;
+    പൂർണ്ണസംഖ്യ i;
 
-    if (decrypt) {
-        while (count--) {
+    എങ്കിൽ (decrypt) {
+        ആകുമ്പോൾ (എണ്ണം--) {
             v0 = AV_RB32(src);
             v1 = AV_RB32(src + 4);
 
             av_blowfish_crypt_ecb(ctx, &v0, &v1, decrypt);
 
-            if (iv) {
+            എങ്കിൽ (iv) {
                 v0 ^= AV_RB32(iv);
                 v1 ^= AV_RB32(iv + 4);
                 memcpy(iv, src, 8);
@@ -398,14 +398,14 @@ void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
             src   += 8;
             dst   += 8;
         }
-    } else {
-        while (count--) {
-            if (iv) {
-                for (i = 0; i < 8; i++)
+    } അല്ലെങ്കിൽ {
+        ആകുമ്പോൾ (എണ്ണം--) {
+            എങ്കിൽ (iv) {
+                വേണ്ടി (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];
                 v0 = AV_RB32(dst);
                 v1 = AV_RB32(dst + 4);
-            } else {
+            } അല്ലെങ്കിൽ {
                 v0 = AV_RB32(src);
                 v1 = AV_RB32(src + 4);
             }
@@ -415,7 +415,7 @@ void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
             AV_WB32(dst, v0);
             AV_WB32(dst + 4, v1);
 
-            if (iv)
+            എങ്കിൽ (iv)
                 memcpy(iv, dst, 8);
 
             src   += 8;

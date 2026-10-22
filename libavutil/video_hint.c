@@ -18,41 +18,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "avstring.h"
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "video_hint.h"
+#അന്തര്ഭാവ "avstring.h"
+#അന്തര്ഭാവ "frame.h"
+#അന്തര്ഭാവ "macros.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "video_hint.h"
 
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
                                  size_t *out_size)
 {
-    struct TestStruct {
+    ഘടന TestStruct {
         AVVideoHint hint;
         AVVideoRect rect;
     };
-    const size_t rect_offset = offsetof(struct TestStruct, rect);
+    സ്ഥിരം size_t rect_offset = offsetof(ഘടന TestStruct, rect);
     size_t size = rect_offset;
     AVVideoHint *hint;
 
     *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
-    size += sizeof(AVVideoRect) * nb_rects;
+    എങ്കിൽ (nb_rects > (SIZE_MAX - size) / വലുപ്പം(AVVideoRect))
+        തിരികെ ശൂന്യ;
+    size += വലുപ്പം(AVVideoRect) * nb_rects;
 
     hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    എങ്കിൽ (!hint)
+        തിരികെ ശൂന്യ;
 
     hint->nb_rects    = nb_rects;
     hint->rect_offset = rect_offset;
-    hint->rect_size   = sizeof(AVVideoRect);
+    hint->rect_size   = വലുപ്പം(AVVideoRect);
 
     *out_size = size;
 
-    return hint;
+    തിരികെ hint;
 }
 
 AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
@@ -63,19 +63,19 @@ AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
     size_t size = 0;
 
     hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    എങ്കിൽ (!hint)
+        തിരികെ ശൂന്യ;
 
-    buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    buf = av_buffer_create((uint8_t *)hint, size, ശൂന്യ, ശൂന്യ, 0);
+    എങ്കിൽ (!buf) {
         av_freep(&hint);
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
+    എങ്കിൽ (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
-    return hint;
+    തിരികെ hint;
 }

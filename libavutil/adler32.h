@@ -27,9 +27,9 @@
 #ifndef AVUTIL_ADLER32_H
 #define AVUTIL_ADLER32_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "attributes.h"
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ "attributes.h"
 
 /**
  * @defgroup lavu_adler32 Adler-32
@@ -39,7 +39,7 @@
  * @{
  */
 
-typedef uint32_t AVAdler;
+തരനിർവചനം uint32_t AVAdler;
 
 /**
  * Calculate the Adler32 checksum of a buffer.
@@ -53,7 +53,7 @@ typedef uint32_t AVAdler;
  * @param len   size of input buffer
  * @return      updated checksum
  */
-AVAdler av_adler32_update(AVAdler adler, const uint8_t *buf,
+AVAdler av_adler32_update(AVAdler adler, സ്ഥിരം uint8_t *buf,
                           size_t len) av_pure;
 
 /**

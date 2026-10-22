@@ -27,10 +27,10 @@
 #ifndef AVUTIL_SHA_H
 #define AVUTIL_SHA_H
 
-#include <stddef.h>
-#include <stdint.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "attributes.h"
+#അന്തര്ഭാവ "attributes.h"
 
 /**
  * @defgroup lavu_sha SHA
@@ -48,14 +48,14 @@
  * @{
  */
 
-extern const int av_sha_size;
+ബാഹ്യ സ്ഥിരം പൂർണ്ണസംഖ്യ av_sha_size;
 
-struct AVSHA;
+ഘടന AVSHA;
 
 /**
  * Allocate an AVSHA context.
  */
-struct AVSHA *av_sha_alloc(void);
+ഘടന AVSHA *av_sha_alloc(ശൂന്യം);
 
 /**
  * Initialize SHA-1 or SHA-2 hashing.
@@ -64,7 +64,7 @@ struct AVSHA *av_sha_alloc(void);
  * @param bits    number of bits in digest (SHA-1 - 160 bits, SHA-2 224 or 256 bits)
  * @return        zero if initialization succeeded, -1 otherwise
  */
-int av_sha_init(struct AVSHA* context, int bits);
+പൂർണ്ണസംഖ്യ av_sha_init(ഘടന AVSHA* context, പൂർണ്ണസംഖ്യ bits);
 
 /**
  * Update hash value.
@@ -73,7 +73,7 @@ int av_sha_init(struct AVSHA* context, int bits);
  * @param data    input data to update hash with
  * @param len     input data length
  */
-void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len);
+ശൂന്യം av_sha_update(ഘടന AVSHA *ctx, സ്ഥിരം uint8_t *data, size_t len);
 
 /**
  * Finish hashing and output digest value.
@@ -81,7 +81,7 @@ void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len);
  * @param context hash function context
  * @param digest  buffer where output digest value is stored
  */
-void av_sha_final(struct AVSHA* context, uint8_t *digest);
+ശൂന്യം av_sha_final(ഘടന AVSHA* context, uint8_t *digest);
 
 /**
  * @}

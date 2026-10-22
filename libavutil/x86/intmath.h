@@ -21,43 +21,43 @@
 #ifndef AVUTIL_X86_INTMATH_H
 #define AVUTIL_X86_INTMATH_H
 
-#include <stdint.h>
-#include <stdlib.h>
-#if HAVE_FAST_CLZ
-#if defined(_MSC_VER)
-#include <intrin.h>
-#elif defined(__INTEL_COMPILER)
-#include <immintrin.h>
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ <stdlib.h>
+#എങ്കിൽ HAVE_FAST_CLZ
+#എങ്കിൽ defined(_MSC_VER)
+#അന്തര്ഭാവ <intrin.h>
+#അല്ലെങ്കിലെങ്കിൽ defined(__INTEL_COMPILER)
+#അന്തര്ഭാവ <immintrin.h>
 #endif
 #endif
-#include "config.h"
+#അന്തര്ഭാവ "config.h"
 
-#if HAVE_FAST_CLZ
-#if (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
-#   if defined(__INTEL_COMPILER)
+#എങ്കിൽ HAVE_FAST_CLZ
+#എങ്കിൽ (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
+#   എങ്കിൽ defined(__INTEL_COMPILER)
 #       define ff_log2(x) (_bit_scan_reverse((x)|1))
-#   else
+#   അല്ലെങ്കിൽ
 #       define ff_log2 ff_log2_x86
-static av_always_inline av_const int ff_log2_x86(unsigned int v)
+സ്ഥിതം av_always_inline av_const പൂർണ്ണസംഖ്യ ff_log2_x86(unsigned പൂർണ്ണസംഖ്യ v)
 {
     unsigned long n;
     _BitScanReverse(&n, v|1);
-    return n;
+    തിരികെ n;
 }
 #   endif
 #   define ff_log2_16bit av_log2
 
-#if defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
+#എങ്കിൽ defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
                                   (defined(__BMI__) || !defined(__clang__)))
 #   define ff_ctz(v) _tzcnt_u32(v)
 
-#   if ARCH_X86_64
+#   എങ്കിൽ ARCH_X86_64
 #       define ff_ctzll(v) _tzcnt_u64(v)
-#   else
+#   അല്ലെങ്കിൽ
 #       define ff_ctzll ff_ctzll_x86
-static av_always_inline av_const int ff_ctzll_x86(long long v)
+സ്ഥിതം av_always_inline av_const പൂർണ്ണസംഖ്യ ff_ctzll_x86(long long v)
 {
-    return ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
+    തിരികെ ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
 }
 #   endif
 #endif /* _MSC_VER */
@@ -66,48 +66,48 @@ static av_always_inline av_const int ff_ctzll_x86(long long v)
 
 #endif /* HAVE_FAST_CLZ */
 
-#if defined(__GNUC__) || defined(__clang__)
+#എങ്കിൽ defined(__GNUC__) || defined(__clang__)
 
 /* Our generic version of av_popcount is faster than GCC's built-in on
  * CPUs that don't support the popcnt instruction.
  */
-#if defined(__POPCNT__)
+#എങ്കിൽ defined(__POPCNT__)
     #define av_popcount   __builtin_popcount
-#if ARCH_X86_64
+#എങ്കിൽ ARCH_X86_64
     #define av_popcount64 __builtin_popcountll
 #endif
 
 #endif /* __POPCNT__ */
 
-#if defined(__BMI2__)
+#എങ്കിൽ defined(__BMI2__)
 
-#if AV_GCC_VERSION_AT_LEAST(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+#എങ്കിൽ AV_GCC_VERSION_AT_LEAST(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
+#എങ്കിൽ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
 #define av_zero_extend av_zero_extend_bmi2
-static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
+സ്ഥിതം av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
 {
-    if (p > 31) abort();
-    return __builtin_ia32_bzhi_si(a, p);
+    എങ്കിൽ (p > 31) abort();
+    തിരികെ __builtin_ia32_bzhi_si(a, p);
 }
-#else
+#അല്ലെങ്കിൽ
 #define av_zero_extend __builtin_ia32_bzhi_si
 #endif
-#elif HAVE_INLINE_ASM
+#അല്ലെങ്കിലെങ്കിൽ HAVE_INLINE_ASM
 /* GCC releases before 5.1.0 have a broken bzhi builtin, so for those we
  * implement it using inline assembly
  */
 #define av_zero_extend av_zero_extend_bmi2
-static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
+സ്ഥിതം av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
 {
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (p > 31) abort();
+#എങ്കിൽ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    എങ്കിൽ (p > 31) abort();
 #endif
-    if (av_builtin_constant_p(p))
-        return a & ((1U << p) - 1);
-    else {
+    എങ്കിൽ (av_builtin_constant_p(p))
+        തിരികെ a & ((1U << p) - 1);
+    അല്ലെങ്കിൽ {
         unsigned x;
         __asm__ ("bzhi %2, %1, %0 \n\t" : "=r"(x) : "rm"(a), "r"(p));
-        return x;
+        തിരികെ x;
     }
 }
 #endif /* AV_GCC_VERSION_AT_LEAST */

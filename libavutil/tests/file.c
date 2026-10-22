@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#അന്തര്ഭാവ <stdarg.h>
+#അന്തര്ഭാവ <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#അന്തര്ഭാവ "libavutil/file.c"
+#അന്തര്ഭാവ "libavutil/log.h"
 
-static int last_log_level = -1;
+സ്ഥിതം പൂർണ്ണസംഖ്യ last_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+സ്ഥിതം ശൂന്യം log_callback(ശൂന്യം *ctx, പൂർണ്ണസംഖ്യ level, സ്ഥിരം അക്ഷരം *fmt, va_list args)
 {
-    (void)ctx; (void)fmt; (void)args;
+    (ശൂന്യം)ctx; (ശൂന്യം)fmt; (ശൂന്യം)args;
     last_log_level = level;
 }
 
-int main(int argc, char **argv)
+പൂർണ്ണസംഖ്യ പ്രധാന(പൂർണ്ണസംഖ്യ argc, അക്ഷരം **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    സ്ഥിരം അക്ഷരം *path = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
     size_t size;
 
     av_log_set_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
+    എങ്കിൽ (av_file_map(path, &buf, &size, 0, ശൂന്യ) < 0)
+        തിരികെ 1;
     av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    എങ്കിൽ (size == 0)
+        തിരികെ 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < 2; i++) {
         last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
+        എങ്കിൽ (av_file_map("no_such_file_xyz", &buf, &size, i, ശൂന്യ) >= 0) {
             av_file_unmap(buf, size);
-            return 2;
+            തിരികെ 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
+        എങ്കിൽ (last_log_level != AV_LOG_ERROR + i) {
             fprintf(stderr, "expected level %d with offset=%d, got %d\n",
                     AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+            തിരികെ 3;
         }
     }
 
-    return 0;
+    തിരികെ 0;
 }

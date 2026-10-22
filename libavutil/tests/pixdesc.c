@@ -19,12 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <string.h>
+#അന്തര്ഭാവ <stdio.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "libavutil/macros.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixfmt.h"
+#അന്തര്ഭാവ "libavutil/macros.h"
+#അന്തര്ഭാവ "libavutil/pixdesc.h"
+#അന്തര്ഭാവ "libavutil/pixfmt.h"
 
 /*
  * from_name() may legitimately map to a different index when two enum
@@ -32,126 +32,126 @@
  * AVCOL_PRI_RESERVED both use "reserved"). Accept that as long as
  * name(back) equals name(i).
  */
-static int check_name_equivalence(const char *name, const char *back_name)
+സ്ഥിതം പൂർണ്ണസംഖ്യ check_name_equivalence(സ്ഥിരം അക്ഷരം *name, സ്ഥിരം അക്ഷരം *back_name)
 {
-    return back_name && !strcmp(name, back_name);
+    തിരികെ back_name && !strcmp(name, back_name);
 }
 
-static int test_pix_fmt_round_trip(void)
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_pix_fmt_round_trip(ശൂന്യം)
 {
-    int fail = 0;
-    for (int i = 0; i < AV_PIX_FMT_NB; i++) {
-        const char *name = av_get_pix_fmt_name(i);
-        if (!name)
-            continue;
-        if (av_get_pix_fmt(name) != i)
+    പൂർണ്ണസംഖ്യ fail = 0;
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < AV_PIX_FMT_NB; i++) {
+        സ്ഥിരം അക്ഷരം *name = av_get_pix_fmt_name(i);
+        എങ്കിൽ (!name)
+            തുടരുക;
+        എങ്കിൽ (av_get_pix_fmt(name) != i)
             fail++;
     }
-    return fail;
+    തിരികെ fail;
 }
 
-static int test_color_range_round_trip(void)
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_color_range_round_trip(ശൂന്യം)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_RANGE_NB; i++) {
-        const char *name = av_color_range_name(i);
-        if (!name)
-            continue;
-        int back = av_color_range_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_range_name(back)))
+    പൂർണ്ണസംഖ്യ fail = 0;
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < AVCOL_RANGE_NB; i++) {
+        സ്ഥിരം അക്ഷരം *name = av_color_range_name(i);
+        എങ്കിൽ (!name)
+            തുടരുക;
+        പൂർണ്ണസംഖ്യ back = av_color_range_from_name(name);
+        എങ്കിൽ (back < 0 || !check_name_equivalence(name, av_color_range_name(back)))
             fail++;
     }
-    return fail;
+    തിരികെ fail;
 }
 
-static int test_color_primaries_round_trip(void)
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_color_primaries_round_trip(ശൂന്യം)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_PRI_NB; i++) {
-        const char *name = av_color_primaries_name(i);
-        if (!name)
-            continue;
-        int back = av_color_primaries_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_primaries_name(back)))
+    പൂർണ്ണസംഖ്യ fail = 0;
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < AVCOL_PRI_NB; i++) {
+        സ്ഥിരം അക്ഷരം *name = av_color_primaries_name(i);
+        എങ്കിൽ (!name)
+            തുടരുക;
+        പൂർണ്ണസംഖ്യ back = av_color_primaries_from_name(name);
+        എങ്കിൽ (back < 0 || !check_name_equivalence(name, av_color_primaries_name(back)))
             fail++;
     }
-    return fail;
+    തിരികെ fail;
 }
 
-static int test_color_transfer_round_trip(void)
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_color_transfer_round_trip(ശൂന്യം)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_TRC_NB; i++) {
-        const char *name = av_color_transfer_name(i);
-        if (!name)
-            continue;
-        int back = av_color_transfer_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_transfer_name(back)))
+    പൂർണ്ണസംഖ്യ fail = 0;
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < AVCOL_TRC_NB; i++) {
+        സ്ഥിരം അക്ഷരം *name = av_color_transfer_name(i);
+        എങ്കിൽ (!name)
+            തുടരുക;
+        പൂർണ്ണസംഖ്യ back = av_color_transfer_from_name(name);
+        എങ്കിൽ (back < 0 || !check_name_equivalence(name, av_color_transfer_name(back)))
             fail++;
     }
-    return fail;
+    തിരികെ fail;
 }
 
-static int test_color_space_round_trip(void)
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_color_space_round_trip(ശൂന്യം)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_SPC_NB; i++) {
-        const char *name = av_color_space_name(i);
-        if (!name)
-            continue;
-        int back = av_color_space_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_space_name(back)))
+    പൂർണ്ണസംഖ്യ fail = 0;
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < AVCOL_SPC_NB; i++) {
+        സ്ഥിരം അക്ഷരം *name = av_color_space_name(i);
+        എങ്കിൽ (!name)
+            തുടരുക;
+        പൂർണ്ണസംഖ്യ back = av_color_space_from_name(name);
+        എങ്കിൽ (back < 0 || !check_name_equivalence(name, av_color_space_name(back)))
             fail++;
     }
-    return fail;
+    തിരികെ fail;
 }
 
-static int test_chroma_location_round_trip(void)
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_chroma_location_round_trip(ശൂന്യം)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCHROMA_LOC_NB; i++) {
-        const char *name = av_chroma_location_name(i);
-        if (!name)
-            continue;
-        int back = av_chroma_location_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_chroma_location_name(back)))
+    പൂർണ്ണസംഖ്യ fail = 0;
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < AVCHROMA_LOC_NB; i++) {
+        സ്ഥിരം അക്ഷരം *name = av_chroma_location_name(i);
+        എങ്കിൽ (!name)
+            തുടരുക;
+        പൂർണ്ണസംഖ്യ back = av_chroma_location_from_name(name);
+        എങ്കിൽ (back < 0 || !check_name_equivalence(name, av_chroma_location_name(back)))
             fail++;
     }
-    return fail;
+    തിരികെ fail;
 }
 
-static int test_alpha_mode_round_trip(void)
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_alpha_mode_round_trip(ശൂന്യം)
 {
-    int fail = 0;
-    for (int i = 0; i < AVALPHA_MODE_NB; i++) {
-        const char *name = av_alpha_mode_name(i);
-        if (!name)
-            continue;
-        int back = av_alpha_mode_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_alpha_mode_name(back)))
+    പൂർണ്ണസംഖ്യ fail = 0;
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < AVALPHA_MODE_NB; i++) {
+        സ്ഥിരം അക്ഷരം *name = av_alpha_mode_name(i);
+        എങ്കിൽ (!name)
+            തുടരുക;
+        പൂർണ്ണസംഖ്യ back = av_alpha_mode_from_name(name);
+        എങ്കിൽ (back < 0 || !check_name_equivalence(name, av_alpha_mode_name(back)))
             fail++;
     }
-    return fail;
+    തിരികെ fail;
 }
 
-static int test_chroma_location_pos_round_trip(void)
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_chroma_location_pos_round_trip(ശൂന്യം)
 {
-    int fail = 0;
-    for (int i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
-        int xpos, ypos;
-        if (av_chroma_location_enum_to_pos(&xpos, &ypos, i) < 0) {
+    പൂർണ്ണസംഖ്യ fail = 0;
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
+        പൂർണ്ണസംഖ്യ xpos, ypos;
+        എങ്കിൽ (av_chroma_location_enum_to_pos(&xpos, &ypos, i) < 0) {
             fail++;
-            continue;
+            തുടരുക;
         }
-        if ((int)av_chroma_location_pos_to_enum(xpos, ypos) != i)
+        എങ്കിൽ ((പൂർണ്ണസംഖ്യ)av_chroma_location_pos_to_enum(xpos, ypos) != i)
             fail++;
     }
-    return fail;
+    തിരികെ fail;
 }
 
-int main(void)
+പൂർണ്ണസംഖ്യ പ്രധാന(ശൂന്യം)
 {
-    int skip = 0;
+    പൂർണ്ണസംഖ്യ skip = 0;
 
     printf("Testing av_get_pix_fmt() / av_get_pix_fmt_name() round-trip\n");
     printf("  result: %s\n",
@@ -176,20 +176,20 @@ int main(void)
            test_chroma_location_pos_round_trip() ? "FAIL" : "OK");
 
     printf("\nTesting pixel format descriptors\n");
-    for (int i = 0; i < AV_PIX_FMT_NB * 2; i++) {
-        const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
-        if (!desc || !desc->name) {
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < AV_PIX_FMT_NB * 2; i++) {
+        സ്ഥിരം AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
+        എങ്കിൽ (!desc || !desc->name) {
             skip++;
-            continue;
+            തുടരുക;
         }
-        if (skip) {
+        എങ്കിൽ (skip) {
             printf("  %3d unused pixel format values\n", skip);
             skip = 0;
         }
         printf("  pix fmt %s avg_bpp:%d planes:%d\n", desc->name,
                av_get_padded_bits_per_pixel(desc),
-               av_pix_fmt_count_planes(i));
+               av_pix_fmt_എണ്ണം_planes(i));
     }
 
-    return 0;
+    തിരികെ 0;
 }

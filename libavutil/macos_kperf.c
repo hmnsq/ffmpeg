@@ -16,31 +16,31 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "avassert.h"
-#include "macos_kperf.h"
-#include "thread.h"
+#അന്തര്ഭാവ "avassert.h"
+#അന്തര്ഭാവ "macos_kperf.h"
+#അന്തര്ഭാവ "thread.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <dlfcn.h>
+#അന്തര്ഭാവ <stdio.h>
+#അന്തര്ഭാവ <stdlib.h>
+#അന്തര്ഭാവ <dlfcn.h>
 
 #define KPERF_LIST                                             \
-    F(int, kpc_get_counting, void)                             \
-    F(int, kpc_force_all_ctrs_set, int)                        \
-    F(int, kpc_set_counting, uint32_t)                         \
-    F(int, kpc_set_thread_counting, uint32_t)                  \
-    F(int, kpc_set_config, uint32_t, void *)                   \
-    F(int, kpc_get_config, uint32_t, void *)                   \
-    F(int, kpc_set_period, uint32_t, void *)                   \
-    F(int, kpc_get_period, uint32_t, void *)                   \
-    F(uint32_t, kpc_get_counter_count, uint32_t)               \
-    F(uint32_t, kpc_get_config_count, uint32_t)                \
-    F(int, kperf_sample_get, int *)                            \
-    F(int, kpc_get_thread_counters, int, unsigned int, void *)
+    F(പൂർണ്ണസംഖ്യ, kpc_get_counting, ശൂന്യം)                             \
+    F(പൂർണ്ണസംഖ്യ, kpc_force_all_ctrs_set, പൂർണ്ണസംഖ്യ)                        \
+    F(പൂർണ്ണസംഖ്യ, kpc_set_counting, uint32_t)                         \
+    F(പൂർണ്ണസംഖ്യ, kpc_set_thread_counting, uint32_t)                  \
+    F(പൂർണ്ണസംഖ്യ, kpc_set_config, uint32_t, ശൂന്യം *)                   \
+    F(പൂർണ്ണസംഖ്യ, kpc_get_config, uint32_t, ശൂന്യം *)                   \
+    F(പൂർണ്ണസംഖ്യ, kpc_set_period, uint32_t, ശൂന്യം *)                   \
+    F(പൂർണ്ണസംഖ്യ, kpc_get_period, uint32_t, ശൂന്യം *)                   \
+    F(uint32_t, kpc_get_counter_എണ്ണം, uint32_t)               \
+    F(uint32_t, kpc_get_config_എണ്ണം, uint32_t)                \
+    F(പൂർണ്ണസംഖ്യ, kperf_sample_get, പൂർണ്ണസംഖ്യ *)                            \
+    F(പൂർണ്ണസംഖ്യ, kpc_get_thread_counters, പൂർണ്ണസംഖ്യ, unsigned പൂർണ്ണസംഖ്യ, ശൂന്യം *)
 
 #define F(ret, name, ...)                                      \
-    typedef ret name##proc(__VA_ARGS__);                       \
-    static name##proc *name = NULL;
+    തരനിർവചനം ret name##proc(__VA_ARGS__);                       \
+    സ്ഥിതം name##proc *name = ശൂന്യ;
 KPERF_LIST
 #undef F
 
@@ -68,13 +68,13 @@ KPERF_LIST
 #define KPC_CLASS_RAWPMU_MASK       (1 << 3)
 
 #define KPC_MAX_COUNTERS 32
-#define CONFIG_COUNT 8
+#define CONFIG_എണ്ണം 8
 #define KPC_MASK (KPC_CLASS_CONFIGURABLE_MASK | KPC_CLASS_FIXED_MASK)
 
-static void kperf_init(void)
+സ്ഥിതം ശൂന്യം kperf_init(ശൂന്യം)
 {
-    uint64_t config[CONFIG_COUNT] = {0};
-    void *kperf = NULL;
+    uint64_t config[CONFIG_എണ്ണം] = {0};
+    ശൂന്യം *kperf = ശൂന്യ;
     uint32_t n;
 
     av_assert0(kperf = dlopen("/System/Library/PrivateFrameworks/kperf.framework/Versions/A/kperf", RTLD_LAZY));
@@ -83,10 +83,10 @@ static void kperf_init(void)
     KPERF_LIST
 #undef F
 
-    n = kpc_get_counter_count(KPC_MASK);
+    n = kpc_get_counter_എണ്ണം(KPC_MASK);
     av_assert0(n <= KPC_MAX_COUNTERS);
-    n = kpc_get_config_count(KPC_MASK);
-    av_assert0(n <= CONFIG_COUNT);
+    n = kpc_get_config_എണ്ണം(KPC_MASK);
+    av_assert0(n <= CONFIG_എണ്ണം);
 
     config[0] = CPMU_CORE_CYCLE | CFGWORD_EL0A64EN_MASK;
     // config[3] = CPMU_INST_BRANCH | CFGWORD_EL0A64EN_MASK;
@@ -99,19 +99,19 @@ static void kperf_init(void)
     av_assert0(kpc_set_thread_counting(KPC_MASK) == 0);
 }
 
-void ff_kperf_init(void)
+ശൂന്യം ff_kperf_init(ശൂന്യം)
 {
-    static AVOnce init_static_once = AV_ONCE_INIT;
+    സ്ഥിതം AVOnce init_static_once = AV_ONCE_INIT;
     ff_thread_once(&init_static_once, kperf_init);
 }
 
-uint64_t ff_kperf_cycles(void)
+uint64_t ff_kperf_cycles(ശൂന്യം)
 {
     uint64_t counters[KPC_MAX_COUNTERS];
 
-    if (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
-        return -1;
+    എങ്കിൽ (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
+        തിരികെ -1;
     }
 
-    return counters[0];
+    തിരികെ counters[0];
 }

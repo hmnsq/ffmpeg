@@ -16,67 +16,67 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#അന്തര്ഭാവ <stdio.h>
 
-#include "libavutil/hwcontext.h"
+#അന്തര്ഭാവ "libavutil/hwcontext.h"
 
-static int test_derivation(AVBufferRef *src_ref, const char *src_name)
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_derivation(AVBufferRef *src_ref, സ്ഥിരം അക്ഷരം *src_name)
 {
-    enum AVHWDeviceType derived_type;
-    const char *derived_name;
-    AVBufferRef *derived_ref = NULL, *back_ref = NULL;
+    എണ്ണൽ AVHWDeviceType derived_type;
+    സ്ഥിരം അക്ഷരം *derived_name;
+    AVBufferRef *derived_ref = ശൂന്യ, *back_ref = ശൂന്യ;
     AVHWDeviceContext *src_dev, *derived_dev;
-    int err;
+    പൂർണ്ണസംഖ്യ err;
 
     src_dev = (AVHWDeviceContext*)src_ref->data;
 
     derived_type = AV_HWDEVICE_TYPE_NONE;
-    while (1) {
+    ആകുമ്പോൾ (1) {
         derived_type = av_hwdevice_iterate_types(derived_type);
-        if (derived_type == AV_HWDEVICE_TYPE_NONE)
-            break;
+        എങ്കിൽ (derived_type == AV_HWDEVICE_TYPE_NONE)
+            നിർത്തുക;
 
         derived_name = av_hwdevice_get_type_name(derived_type);
 
         err = av_hwdevice_ctx_create_derived(&derived_ref, derived_type,
                                              src_ref, 0);
-        if (err < 0) {
+        എങ്കിൽ (err < 0) {
             fprintf(stderr, "Unable to derive %s -> %s: %d.\n",
                     src_name, derived_name, err);
-            continue;
+            തുടരുക;
         }
 
         derived_dev = (AVHWDeviceContext*)derived_ref->data;
-        if (derived_dev->type != derived_type) {
+        എങ്കിൽ (derived_dev->type != derived_type) {
             fprintf(stderr, "Device derived as type %d has type %d.\n",
                     derived_type, derived_dev->type);
-            goto fail;
+            പോകുക fail;
         }
 
-        if (derived_type == src_dev->type) {
-            if (derived_dev != src_dev) {
+        എങ്കിൽ (derived_type == src_dev->type) {
+            എങ്കിൽ (derived_dev != src_dev) {
                 fprintf(stderr, "Derivation of %s from itself succeeded "
                         "but did not return the same device.\n", src_name);
-                goto fail;
+                പോകുക fail;
             }
             av_buffer_unref(&derived_ref);
-            continue;
+            തുടരുക;
         }
 
         err = av_hwdevice_ctx_create_derived(&back_ref, src_dev->type,
                                              derived_ref, 0);
-        if (err < 0) {
+        എങ്കിൽ (err < 0) {
             fprintf(stderr, "Derivation %s to %s succeeded, but derivation "
                     "back again failed: %d.\n",
                     src_name, derived_name, err);
-            goto fail;
+            പോകുക fail;
         }
 
-        if (back_ref->data != src_ref->data) {
+        എങ്കിൽ (back_ref->data != src_ref->data) {
             fprintf(stderr, "Derivation %s to %s succeeded, but derivation "
                     "back again did not return the original device.\n",
                    src_name, derived_name);
-            goto fail;
+            പോകുക fail;
         }
 
         fprintf(stderr, "Successfully tested derivation %s -> %s.\n",
@@ -86,33 +86,33 @@ static int test_derivation(AVBufferRef *src_ref, const char *src_name)
         av_buffer_unref(&back_ref);
     }
 
-    return 0;
+    തിരികെ 0;
 
 fail:
     av_buffer_unref(&derived_ref);
     av_buffer_unref(&back_ref);
-    return -1;
+    തിരികെ -1;
 }
 
-static int test_device(enum AVHWDeviceType type, const char *name,
-                       const char *device, AVDictionary *opts, int flags)
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_device(എണ്ണൽ AVHWDeviceType type, സ്ഥിരം അക്ഷരം *name,
+                       സ്ഥിരം അക്ഷരം *device, AVDictionary *opts, പൂർണ്ണസംഖ്യ flags)
 {
     AVBufferRef *ref;
     AVHWDeviceContext *dev;
-    int err;
+    പൂർണ്ണസംഖ്യ err;
 
     err = av_hwdevice_ctx_create(&ref, type, device, opts, flags);
-    if (err < 0) {
+    എങ്കിൽ (err < 0) {
         fprintf(stderr, "Failed to create %s device: %d.\n", name, err);
-        return 1;
+        തിരികെ 1;
     }
 
     dev = (AVHWDeviceContext*)ref->data;
-    if (dev->type != type) {
+    എങ്കിൽ (dev->type != type) {
         fprintf(stderr, "Device created as type %d has type %d.\n",
                 type, dev->type);
         av_buffer_unref(&ref);
-        return -1;
+        തിരികെ -1;
     }
 
     fprintf(stderr, "Device type %s successfully created.\n", name);
@@ -121,12 +121,12 @@ static int test_device(enum AVHWDeviceType type, const char *name,
 
     av_buffer_unref(&ref);
 
-    return err;
+    തിരികെ err;
 }
 
-static const struct {
-    enum AVHWDeviceType type;
-    const char *possible_devices[5];
+സ്ഥിതം സ്ഥിരം ഘടന {
+    എണ്ണൽ AVHWDeviceType type;
+    സ്ഥിരം അക്ഷരം *possible_devices[5];
 } test_devices[] = {
     { AV_HWDEVICE_TYPE_CUDA,
       { "0", "1", "2" } },
@@ -145,51 +145,51 @@ static const struct {
       { "/dev/dri/renderD128", "/dev/dri/renderD129", ":0", "0", "1" } },
 };
 
-static int test_device_type(enum AVHWDeviceType type)
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_device_type(എണ്ണൽ AVHWDeviceType type)
 {
-    enum AVHWDeviceType check;
-    const char *name;
-    int i, j, found, err;
+    എണ്ണൽ AVHWDeviceType check;
+    സ്ഥിരം അക്ഷരം *name;
+    പൂർണ്ണസംഖ്യ i, j, found, err;
 
     name = av_hwdevice_get_type_name(type);
-    if (!name) {
+    എങ്കിൽ (!name) {
         fprintf(stderr, "No name available for device type %d.\n", type);
-        return -1;
+        തിരികെ -1;
     }
 
     check = av_hwdevice_find_type_by_name(name);
-    if (check != type) {
+    എങ്കിൽ (check != type) {
         fprintf(stderr, "Type %d maps to name %s maps to type %d.\n",
                type, name, check);
-        return -1;
+        തിരികെ -1;
     }
 
     found = 0;
 
-    err = test_device(type, name, NULL, NULL, 0);
-    if (err < 0) {
+    err = test_device(type, name, ശൂന്യ, ശൂന്യ, 0);
+    എങ്കിൽ (err < 0) {
         fprintf(stderr, "Test failed for %s with default options.\n", name);
-        return -1;
+        തിരികെ -1;
     }
-    if (err == 0) {
+    എങ്കിൽ (err == 0) {
         fprintf(stderr, "Test passed for %s with default options.\n", name);
         ++found;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(test_devices); i++) {
-        if (test_devices[i].type != type)
-            continue;
+    വേണ്ടി (i = 0; i < FF_ARRAY_ELEMS(test_devices); i++) {
+        എങ്കിൽ (test_devices[i].type != type)
+            തുടരുക;
 
-        for (j = 0; test_devices[i].possible_devices[j]; j++) {
+        വേണ്ടി (j = 0; test_devices[i].possible_devices[j]; j++) {
             err = test_device(type, name,
                               test_devices[i].possible_devices[j],
-                              NULL, 0);
-            if (err < 0) {
+                              ശൂന്യ, 0);
+            എങ്കിൽ (err < 0) {
                 fprintf(stderr, "Test failed for %s with device %s.\n",
                        name, test_devices[i].possible_devices[j]);
-                return -1;
+                തിരികെ -1;
             }
-            if (err == 0) {
+            എങ്കിൽ (err == 0) {
                 fprintf(stderr, "Test passed for %s with device %s.\n",
                         name, test_devices[i].possible_devices[j]);
                 ++found;
@@ -197,26 +197,26 @@ static int test_device_type(enum AVHWDeviceType type)
         }
     }
 
-    return !found;
+    തിരികെ !found;
 }
 
-int main(void)
+പൂർണ്ണസംഖ്യ പ്രധാന(ശൂന്യം)
 {
-    enum AVHWDeviceType type = AV_HWDEVICE_TYPE_NONE;
-    int pass, fail, skip, err;
+    എണ്ണൽ AVHWDeviceType type = AV_HWDEVICE_TYPE_NONE;
+    പൂർണ്ണസംഖ്യ pass, fail, skip, err;
 
     pass = fail = skip = 0;
-    while (1) {
+    ആകുമ്പോൾ (1) {
         type = av_hwdevice_iterate_types(type);
-        if (type == AV_HWDEVICE_TYPE_NONE)
-            break;
+        എങ്കിൽ (type == AV_HWDEVICE_TYPE_NONE)
+            നിർത്തുക;
 
         err = test_device_type(type);
-        if (err == 0)
+        എങ്കിൽ (err == 0)
             ++pass;
-        else if (err < 0)
+        അല്ലെങ്കിൽ എങ്കിൽ (err < 0)
             ++fail;
-        else
+        അല്ലെങ്കിൽ
             ++skip;
     }
 
@@ -224,5 +224,5 @@ int main(void)
             "%d passed, %d failed, %d skipped.\n",
             pass + fail + skip, pass, fail, skip);
 
-    return fail > 0;
+    തിരികെ fail > 0;
 }

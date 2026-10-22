@@ -20,12 +20,12 @@
 #define AVUTIL_HWCONTEXT_OPENCL_H
 
 #ifdef __APPLE__
-#include <OpenCL/cl.h>
-#else
-#include <CL/cl.h>
+#അന്തര്ഭാവ <OpenCL/cl.h>
+#അല്ലെങ്കിൽ
+#അന്തര്ഭാവ <CL/cl.h>
 #endif
 
-#include "frame.h"
+#അന്തര്ഭാവ "frame.h"
 
 /**
  * @file
@@ -44,15 +44,15 @@
  * with the data pointer pointing at an object of this type describing the
  * planes of the frame.
  */
-typedef struct AVOpenCLFrameDescriptor {
+തരനിർവചനം ഘടന AVOpenCLFrameDescriptor {
     /**
      * Number of planes in the frame.
      */
-    int nb_planes;
+    പൂർണ്ണസംഖ്യ nb_planes;
     /**
      * OpenCL image2d objects for each plane of the frame.
      */
-    cl_mem planes[AV_NUM_DATA_POINTERS];
+    cl_mem planes[AV_അക്കം_DATA_POINTERS];
 } AVOpenCLFrameDescriptor;
 
 /**
@@ -60,7 +60,7 @@ typedef struct AVOpenCLFrameDescriptor {
  *
  * Allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVOpenCLDeviceContext {
+തരനിർവചനം ഘടന AVOpenCLDeviceContext {
     /**
      * The primary device ID of the device.  If multiple OpenCL devices
      * are associated with the context then this is the one which will
@@ -86,7 +86,7 @@ typedef struct AVOpenCLDeviceContext {
  *
  * Allocated as AVHWFramesContext.hwctx.
  */
-typedef struct AVOpenCLFramesContext {
+തരനിർവചനം ഘടന AVOpenCLFramesContext {
     /**
      * The command queue used for internal asynchronous operations on this
      * device (av_hwframe_transfer_data(), av_hwframe_map()).

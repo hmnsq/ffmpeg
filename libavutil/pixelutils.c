@@ -16,50 +16,50 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
+#അന്തര്ഭാവ <stddef.h>
 
-#include "config.h"
-#include "pixelutils.h"
+#അന്തര്ഭാവ "config.h"
+#അന്തര്ഭാവ "pixelutils.h"
 
-#if CONFIG_PIXELUTILS
-#include <stdlib.h>
-#include <string.h>
+#എങ്കിൽ CONFIG_PIXELUTILS
+#അന്തര്ഭാവ <stdlib.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "attributes.h"
-#include "macros.h"
+#അന്തര്ഭാവ "attributes.h"
+#അന്തര്ഭാവ "macros.h"
 
-#if ARCH_AARCH64 && HAVE_NEON
-#include "aarch64/pixelutils.h"
-#elif ARCH_ARM && HAVE_ARMV6
-#include "arm/pixelutils.h"
-#elif ARCH_MIPS && HAVE_MSA
-#include "mips/pixelutils.h"
-#elif ARCH_RISCV
-#include "riscv/pixelutils.h"
-#elif ARCH_X86 && HAVE_X86ASM
-#include "x86/pixelutils.h"
+#എങ്കിൽ ARCH_AARCH64 && HAVE_NEON
+#അന്തര്ഭാവ "aarch64/pixelutils.h"
+#അല്ലെങ്കിലെങ്കിൽ ARCH_ARM && HAVE_ARMV6
+#അന്തര്ഭാവ "arm/pixelutils.h"
+#അല്ലെങ്കിലെങ്കിൽ ARCH_MIPS && HAVE_MSA
+#അന്തര്ഭാവ "mips/pixelutils.h"
+#അല്ലെങ്കിലെങ്കിൽ ARCH_RISCV
+#അന്തര്ഭാവ "riscv/pixelutils.h"
+#അല്ലെങ്കിലെങ്കിൽ ARCH_X86 && HAVE_X86ASM
+#അന്തര്ഭാവ "x86/pixelutils.h"
 #endif
 
-static av_always_inline int sad_wxh(const uint8_t *src1, ptrdiff_t stride1,
-                                    const uint8_t *src2, ptrdiff_t stride2,
-                                    int w, int h)
+സ്ഥിതം av_always_inline പൂർണ്ണസംഖ്യ sad_wxh(സ്ഥിരം uint8_t *src1, ptrdiff_t stride1,
+                                    സ്ഥിരം uint8_t *src2, ptrdiff_t stride2,
+                                    പൂർണ്ണസംഖ്യ w, പൂർണ്ണസംഖ്യ h)
 {
-    int x, y, sum = 0;
+    പൂർണ്ണസംഖ്യ x, y, sum = 0;
 
-    for (y = 0; y < h; y++) {
-        for (x = 0; x < w; x++)
+    വേണ്ടി (y = 0; y < h; y++) {
+        വേണ്ടി (x = 0; x < w; x++)
             sum += abs(src1[x] - src2[x]);
         src1 += stride1;
         src2 += stride2;
     }
-    return sum;
+    തിരികെ sum;
 }
 
 #define DECLARE_BLOCK_FUNCTIONS(size)                                               \
-static int block_sad_##size##x##size##_c(const uint8_t *src1, ptrdiff_t stride1,    \
-                                         const uint8_t *src2, ptrdiff_t stride2)    \
+സ്ഥിതം പൂർണ്ണസംഖ്യ block_sad_##size##x##size##_c(സ്ഥിരം uint8_t *src1, ptrdiff_t stride1,    \
+                                         സ്ഥിരം uint8_t *src2, ptrdiff_t stride2)    \
 {                                                                                   \
-    return sad_wxh(src1, stride1, src2, stride2, size, size);                       \
+    തിരികെ sad_wxh(src1, stride1, src2, stride2, size, size);                       \
 }
 
 DECLARE_BLOCK_FUNCTIONS(2)
@@ -68,46 +68,46 @@ DECLARE_BLOCK_FUNCTIONS(8)
 DECLARE_BLOCK_FUNCTIONS(16)
 DECLARE_BLOCK_FUNCTIONS(32)
 
-static const av_pixelutils_sad_fn sad_c[] = {
+സ്ഥിതം സ്ഥിരം av_pixelutils_sad_fn sad_c[] = {
     block_sad_2x2_c,
     block_sad_4x4_c,
     block_sad_8x8_c,
     block_sad_16x16_c,
     block_sad_32x32_c,
 };
-#else
-#include "log.h"
+#അല്ലെങ്കിൽ
+#അന്തര്ഭാവ "log.h"
 #endif /* CONFIG_PIXELUTILS */
 
-av_pixelutils_sad_fn av_pixelutils_get_sad_fn(int w_bits, int h_bits, int aligned, void *log_ctx)
+av_pixelutils_sad_fn av_pixelutils_get_sad_fn(പൂർണ്ണസംഖ്യ w_bits, പൂർണ്ണസംഖ്യ h_bits, പൂർണ്ണസംഖ്യ aligned, ശൂന്യം *log_ctx)
 {
-#if !CONFIG_PIXELUTILS
+#എങ്കിൽ !CONFIG_PIXELUTILS
     av_log(log_ctx, AV_LOG_ERROR, "pixelutils support is required "
            "but libavutil is not compiled with it\n");
-    return NULL;
-#else
+    തിരികെ ശൂന്യ;
+#അല്ലെങ്കിൽ
     av_pixelutils_sad_fn sad[FF_ARRAY_ELEMS(sad_c)];
 
-    memcpy(sad, sad_c, sizeof(sad));
+    memcpy(sad, sad_c, വലുപ്പം(sad));
 
-    if (w_bits < 1 || w_bits > FF_ARRAY_ELEMS(sad) ||
+    എങ്കിൽ (w_bits < 1 || w_bits > FF_ARRAY_ELEMS(sad) ||
         h_bits < 1 || h_bits > FF_ARRAY_ELEMS(sad))
-        return NULL;
-    if (w_bits != h_bits) // only squared sad for now
-        return NULL;
+        തിരികെ ശൂന്യ;
+    എങ്കിൽ (w_bits != h_bits) // only squared sad for now
+        തിരികെ ശൂന്യ;
 
-#if ARCH_AARCH64 && HAVE_NEON
+#എങ്കിൽ ARCH_AARCH64 && HAVE_NEON
     ff_pixelutils_sad_init_aarch64(sad, aligned);
-#elif ARCH_ARM
+#അല്ലെങ്കിലെങ്കിൽ ARCH_ARM
     ff_pixelutils_sad_init_arm(sad, aligned);
-#elif ARCH_MIPS && HAVE_MSA
+#അല്ലെങ്കിലെങ്കിൽ ARCH_MIPS && HAVE_MSA
     ff_pixelutils_sad_init_mips(sad, aligned);
-#elif ARCH_RISCV
+#അല്ലെങ്കിലെങ്കിൽ ARCH_RISCV
     ff_pixelutils_init_riscv(sad, aligned);
-#elif ARCH_X86 && HAVE_X86ASM
+#അല്ലെങ്കിലെങ്കിൽ ARCH_X86 && HAVE_X86ASM
     ff_pixelutils_sad_init_x86(sad, aligned);
 #endif
 
-    return sad[w_bits - 1];
+    തിരികെ sad[w_bits - 1];
 #endif
 }

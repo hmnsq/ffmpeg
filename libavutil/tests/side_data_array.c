@@ -18,84 +18,84 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include "libavutil/frame.c"
-#include "libavutil/internal.h"
+#അന്തര്ഭാവ <stdio.h>
+#അന്തര്ഭാവ "libavutil/frame.c"
+#അന്തര്ഭാവ "libavutil/internal.h"
 
-static void print_entries(const AVFrameSideData **sd, const int nb_sd)
+സ്ഥിതം ശൂന്യം print_entries(സ്ഥിരം AVFrameSideData **sd, സ്ഥിരം പൂർണ്ണസംഖ്യ nb_sd)
 {
-    for (int i = 0; i < nb_sd; i++) {
-        const AVFrameSideData *entry = sd[i];
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < nb_sd; i++) {
+        സ്ഥിരം AVFrameSideData *entry = sd[i];
 
         printf("sd %d (size %zu), %s",
                i, entry->size, av_frame_side_data_name(entry->type));
 
-        if (entry->type != AV_FRAME_DATA_SEI_UNREGISTERED) {
+        എങ്കിൽ (entry->type != AV_FRAME_DATA_SEI_UNREGISTERED) {
             putchar('\n');
-            continue;
+            തുടരുക;
         }
 
         printf(": %d\n", *(int32_t *)entry->data);
     }
 }
 
-typedef struct FrameSideDataSet {
+തരനിർവചനം ഘടന FrameSideDataSet {
     AVFrameSideData **sd;
-    int            nb_sd;
+    പൂർണ്ണസംഖ്യ            nb_sd;
 } FrameSideDataSet;
 
-int main(void)
+പൂർണ്ണസംഖ്യ പ്രധാന(ശൂന്യം)
 {
     FrameSideDataSet set = { 0 };
 
     av_assert0(
         av_frame_side_data_new(&set.sd, &set.nb_sd,
                                AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int64_t), 0));
+                               വലുപ്പം(int64_t), 0));
     av_assert0(
         av_frame_side_data_new(&set.sd, &set.nb_sd,
                                AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+                               വലുപ്പം(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
 
     // test entries in the middle
-    for (int value = 1; value < 4; value++) {
+    വേണ്ടി (പൂർണ്ണസംഖ്യ മൂല്യം = 1; മൂല്യം < 4; മൂല്യം++) {
         AVFrameSideData *sd = av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+            വലുപ്പം(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value;
+        *(int32_t *)sd->data = മൂല്യം;
     }
 
     av_assert0(
         av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-           sizeof(int64_t), 0));
+           വലുപ്പം(int64_t), 0));
 
     av_assert0(
         av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+            വലുപ്പം(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
 
     // test entries at the end
-    for (int value = 1; value < 4; value++) {
+    വേണ്ടി (പൂർണ്ണസംഖ്യ മൂല്യം = 1; മൂല്യം < 4; മൂല്യം++) {
         AVFrameSideData *sd = av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+            വലുപ്പം(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value + 3;
+        *(int32_t *)sd->data = മൂല്യം + 3;
     }
 
     puts("Initial addition results with duplicates:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    print_entries((സ്ഥിരം AVFrameSideData **)set.sd, set.nb_sd);
 
     {
         AVFrameSideData *sd = av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
+            വലുപ്പം(int32_t), AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
 
         av_assert0(sd);
 
@@ -103,9 +103,9 @@ int main(void)
     }
 
     puts("\nFinal state after a single 'no-duplicates' addition:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    print_entries((സ്ഥിരം AVFrameSideData **)set.sd, set.nb_sd);
 
     av_frame_side_data_free(&set.sd, &set.nb_sd);
 
-    return 0;
+    തിരികെ 0;
 }

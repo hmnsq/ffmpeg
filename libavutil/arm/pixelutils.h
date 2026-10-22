@@ -19,25 +19,25 @@
 #ifndef AVUTIL_ARM_PIXELUTILS_H
 #define AVUTIL_ARM_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#അന്തര്ഭാവ "cpu.h"
+#അന്തര്ഭാവ "libavutil/attributes.h"
+#അന്തര്ഭാവ "libavutil/cpu.h"
+#അന്തര്ഭാവ "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_armv6(const uint8_t *src1, ptrdiff_t stride1,
-                              const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad8_armv6 (const uint8_t *src1, ptrdiff_t stride1,
-                              const uint8_t *src2, ptrdiff_t stride2);
+പൂർണ്ണസംഖ്യ ff_pixelutils_sad16_armv6(സ്ഥിരം uint8_t *src1, ptrdiff_t stride1,
+                              സ്ഥിരം uint8_t *src2, ptrdiff_t stride2);
+പൂർണ്ണസംഖ്യ ff_pixelutils_sad8_armv6 (സ്ഥിരം uint8_t *src1, ptrdiff_t stride1,
+                              സ്ഥിരം uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_arm(av_pixelutils_sad_fn *sad, int aligned)
+സ്ഥിതം വരിയിൽ av_cold ശൂന്യം ff_pixelutils_sad_init_arm(av_pixelutils_sad_fn *sad, പൂർണ്ണസംഖ്യ aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    പൂർണ്ണസംഖ്യ cpu_flags = av_get_cpu_flags();
 
-    if (have_armv6(cpu_flags)) {
-        if (aligned != 0) {
+    എങ്കിൽ (have_armv6(cpu_flags)) {
+        എങ്കിൽ (aligned != 0) {
             sad[2] = ff_pixelutils_sad8_armv6;
             sad[3] = ff_pixelutils_sad16_armv6;
         }

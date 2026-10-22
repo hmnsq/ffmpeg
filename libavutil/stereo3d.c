@@ -18,134 +18,134 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "stereo3d.h"
+#അന്തര്ഭാവ "frame.h"
+#അന്തര്ഭാവ "macros.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "stereo3d.h"
 
-static void get_defaults(AVStereo3D *stereo)
+സ്ഥിതം ശൂന്യം get_defaults(AVStereo3D *stereo)
 {
     stereo->horizontal_disparity_adjustment = (AVRational) { 0, 1 };
     stereo->horizontal_field_of_view = (AVRational) { 0, 1 };
 }
 
-AVStereo3D *av_stereo3d_alloc(void)
+AVStereo3D *av_stereo3d_alloc(ശൂന്യം)
 {
-    return av_stereo3d_alloc_size(NULL);
+    തിരികെ av_stereo3d_alloc_size(ശൂന്യ);
 }
 
 AVStereo3D *av_stereo3d_alloc_size(size_t *size)
 {
-    AVStereo3D *stereo = av_mallocz(sizeof(AVStereo3D));
+    AVStereo3D *stereo = av_mallocz(വലുപ്പം(AVStereo3D));
 
-    if (size)
-        *size = stereo ? sizeof(*stereo) : 0;
+    എങ്കിൽ (size)
+        *size = stereo ? വലുപ്പം(*stereo) : 0;
 
-    if (!stereo)
-        return NULL;
+    എങ്കിൽ (!stereo)
+        തിരികെ ശൂന്യ;
 
     get_defaults(stereo);
 
-    return stereo;
+    തിരികെ stereo;
 }
 
 AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_STEREO3D,
-                                                        sizeof(AVStereo3D));
-    if (!side_data)
-        return NULL;
+                                                        വലുപ്പം(AVStereo3D));
+    എങ്കിൽ (!side_data)
+        തിരികെ ശൂന്യ;
 
-    memset(side_data->data, 0, sizeof(AVStereo3D));
+    memset(side_data->data, 0, വലുപ്പം(AVStereo3D));
     get_defaults((AVStereo3D *)side_data->data);
 
-    return (AVStereo3D *)side_data->data;
+    തിരികെ (AVStereo3D *)side_data->data;
 }
 
-static const char * const stereo3d_type_names[] = {
+സ്ഥിതം സ്ഥിരം അക്ഷരം * സ്ഥിരം stereo3d_type_names[] = {
     [AV_STEREO3D_2D]                  = "2D",
     [AV_STEREO3D_SIDEBYSIDE]          = "side by side",
     [AV_STEREO3D_TOPBOTTOM]           = "top and bottom",
     [AV_STEREO3D_FRAMESEQUENCE]       = "frame alternate",
     [AV_STEREO3D_CHECKERBOARD]        = "checkerboard",
     [AV_STEREO3D_SIDEBYSIDE_QUINCUNX] = "side by side (quincunx subsampling)",
-    [AV_STEREO3D_LINES]               = "interleaved lines",
+    [AV_STEREO3_D_വരികൾ]               = "interleaved lines",
     [AV_STEREO3D_COLUMNS]             = "interleaved columns",
     [AV_STEREO3D_UNSPEC]              = "unspecified",
 };
 
-static const char * const stereo3d_view_names[] = {
+സ്ഥിതം സ്ഥിരം അക്ഷരം * സ്ഥിരം stereo3d_view_names[] = {
     [AV_STEREO3D_VIEW_PACKED] = "packed",
-    [AV_STEREO3D_VIEW_LEFT]   = "left",
-    [AV_STEREO3D_VIEW_RIGHT]  = "right",
+    [AV_STEREO3_D_VIEW_ഇടത്]   = "left",
+    [AV_STEREO3_D_VIEW_വലത്]  = "right",
     [AV_STEREO3D_VIEW_UNSPEC] = "unspecified",
 };
 
-static const char * const stereo3d_primary_eye_names[] = {
+സ്ഥിതം സ്ഥിരം അക്ഷരം * സ്ഥിരം stereo3d_primary_eye_names[] = {
     [AV_PRIMARY_EYE_NONE]  = "none",
-    [AV_PRIMARY_EYE_LEFT]  = "left",
-    [AV_PRIMARY_EYE_RIGHT] = "right",
+    [AV_PRIMARY_EYE_ഇടത്]  = "left",
+    [AV_PRIMARY_EYE_വലത്] = "right",
 };
 
-const char *av_stereo3d_type_name(unsigned int type)
+സ്ഥിരം അക്ഷരം *av_stereo3d_type_name(unsigned പൂർണ്ണസംഖ്യ type)
 {
-    if (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
-        return "unknown";
+    എങ്കിൽ (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
+        തിരികെ "unknown";
 
-    return stereo3d_type_names[type];
+    തിരികെ stereo3d_type_names[type];
 }
 
-int av_stereo3d_from_name(const char *name)
+പൂർണ്ണസംഖ്യ av_stereo3d_from_name(സ്ഥിരം അക്ഷരം *name)
 {
-    int i;
+    പൂർണ്ണസംഖ്യ i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
-        if (!strcmp(name, stereo3d_type_names[i]))
-            return i;
+    വേണ്ടി (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
+        എങ്കിൽ (!strcmp(name, stereo3d_type_names[i]))
+            തിരികെ i;
     }
 
-    return -1;
+    തിരികെ -1;
 }
 
-const char *av_stereo3d_view_name(unsigned int view)
+സ്ഥിരം അക്ഷരം *av_stereo3d_view_name(unsigned പൂർണ്ണസംഖ്യ view)
 {
-    if (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
-        return "unknown";
+    എങ്കിൽ (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
+        തിരികെ "unknown";
 
-    return stereo3d_view_names[view];
+    തിരികെ stereo3d_view_names[view];
 }
 
-int av_stereo3d_view_from_name(const char *name)
+പൂർണ്ണസംഖ്യ av_stereo3d_view_from_name(സ്ഥിരം അക്ഷരം *name)
 {
-    int i;
+    പൂർണ്ണസംഖ്യ i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
-        if (!strcmp(name, stereo3d_view_names[i]))
-            return i;
+    വേണ്ടി (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
+        എങ്കിൽ (!strcmp(name, stereo3d_view_names[i]))
+            തിരികെ i;
     }
 
-    return -1;
+    തിരികെ -1;
 }
 
-const char *av_stereo3d_primary_eye_name(unsigned int eye)
+സ്ഥിരം അക്ഷരം *av_stereo3d_primary_eye_name(unsigned പൂർണ്ണസംഖ്യ eye)
 {
-    if (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
-        return "unknown";
+    എങ്കിൽ (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
+        തിരികെ "unknown";
 
-    return stereo3d_primary_eye_names[eye];
+    തിരികെ stereo3d_primary_eye_names[eye];
 }
 
-int av_stereo3d_primary_eye_from_name(const char *name)
+പൂർണ്ണസംഖ്യ av_stereo3d_primary_eye_from_name(സ്ഥിരം അക്ഷരം *name)
 {
-    int i;
+    പൂർണ്ണസംഖ്യ i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
-        if (!strcmp(name, stereo3d_primary_eye_names[i]))
-            return i;
+    വേണ്ടി (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
+        എങ്കിൽ (!strcmp(name, stereo3d_primary_eye_names[i]))
+            തിരികെ i;
     }
 
-    return -1;
+    തിരികെ -1;
 }

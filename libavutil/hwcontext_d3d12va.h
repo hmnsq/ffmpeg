@@ -30,17 +30,17 @@
  * AVHWFramesContext.pool must contain AVBufferRefs whose
  * data pointer points to an AVD3D12VAFrame struct.
  */
-#include <stdint.h>
-#include <initguid.h>
-#include <d3d12.h>
-#include <d3d12sdklayers.h>
-#include <d3d12video.h>
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ <initguid.h>
+#അന്തര്ഭാവ <d3d12.h>
+#അന്തര്ഭാവ <d3d12sdklayers.h>
+#അന്തര്ഭാവ <d3d12video.h>
 
 /**
  * @brief This struct is allocated as AVHWDeviceContext.hwctx
  *
  */
-typedef struct AVD3D12VADeviceContext {
+തരനിർവചനം ഘടന AVD3D12VADeviceContext {
     /**
      * Device used for objects creation and access. This can also be
      * used to set the libavcodec decoding device.
@@ -72,9 +72,9 @@ typedef struct AVD3D12VADeviceContext {
      * The underlying lock must be recursive. lock_ctx is for free use by the
      * locking implementation.
      */
-    void (*lock)(void *lock_ctx);
-    void (*unlock)(void *lock_ctx);
-    void *lock_ctx;
+    ശൂന്യം (*lock)(ശൂന്യം *lock_ctx);
+    ശൂന്യം (*unlock)(ശൂന്യം *lock_ctx);
+    ശൂന്യം *lock_ctx;
 
     /**
      * Resource flags to be applied to D3D12 resources allocated
@@ -101,7 +101,7 @@ typedef struct AVD3D12VADeviceContext {
  * @brief This struct is used to sync d3d12 execution
  *
  */
-typedef struct AVD3D12VASyncContext {
+തരനിർവചനം ഘടന AVD3D12VASyncContext {
     /**
      * D3D12 fence object
      */
@@ -116,13 +116,13 @@ typedef struct AVD3D12VASyncContext {
     /**
      * The fence value used for sync
      */
-    uint64_t fence_value;
+    uint64_t fence_മൂല്യം;
 } AVD3D12VASyncContext;
 
 /**
  * Define the behaviours of frame allocation.
  */
-typedef enum AVD3D12VAFrameFlags {
+തരനിർവചനം എണ്ണൽ AVD3D12VAFrameFlags {
     AV_D3D12VA_FRAME_FLAG_NONE = 0,
 
     /**
@@ -135,7 +135,7 @@ typedef enum AVD3D12VAFrameFlags {
  * @brief D3D12VA frame descriptor for pool allocation.
  *
  */
-typedef struct AVD3D12VAFrame {
+തരനിർവചനം ഘടന AVD3D12VAFrame {
     /**
      * The texture in which the frame is located. The reference count is
      * managed by the AVBufferRef, and destroying the reference will release
@@ -149,7 +149,7 @@ typedef struct AVD3D12VAFrame {
      * In texture array mode, this specifies the array slice index.
      * When texture array mode is not used, this value is always 0.
      */
-    int subresource_index;
+    പൂർണ്ണസംഖ്യ subresource_index;
 
     /**
      * The sync context for the texture
@@ -169,7 +169,7 @@ typedef struct AVD3D12VAFrame {
  * @brief This struct is allocated as AVHWFramesContext.hwctx
  *
  */
-typedef struct AVD3D12VAFramesContext {
+തരനിർവചനം ഘടന AVD3D12VAFramesContext {
     /**
      * DXGI_FORMAT format. MUST be compatible with the pixel format.
      * If unset, will be automatically set.

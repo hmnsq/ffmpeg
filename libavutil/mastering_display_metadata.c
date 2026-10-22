@@ -18,17 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "mastering_display_metadata.h"
-#include "mem.h"
+#അന്തര്ഭാവ "mastering_display_metadata.h"
+#അന്തര്ഭാവ "mem.h"
 
-static void get_defaults(AVMasteringDisplayMetadata *mastering)
+സ്ഥിതം ശൂന്യം get_defaults(AVMasteringDisplayMetadata *mastering)
 {
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 2; j++)
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i = 0; i < 3; i++)
+        വേണ്ടി (പൂർണ്ണസംഖ്യ j = 0; j < 2; j++)
             mastering->display_primaries[i][j] = (AVRational) { 0, 1 };
     mastering->white_point[0] =
     mastering->white_point[1] =
@@ -36,59 +36,59 @@ static void get_defaults(AVMasteringDisplayMetadata *mastering)
     mastering->max_luminance  = (AVRational) { 0, 1 };
 }
 
-AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(void)
+AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(ശൂന്യം)
 {
-    return av_mastering_display_metadata_alloc_size(NULL);
+    തിരികെ av_mastering_display_metadata_alloc_size(ശൂന്യ);
 }
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc_size(size_t *size)
 {
-    AVMasteringDisplayMetadata *mastering = av_mallocz(sizeof(AVMasteringDisplayMetadata));
+    AVMasteringDisplayMetadata *mastering = av_mallocz(വലുപ്പം(AVMasteringDisplayMetadata));
 
-    if (size)
-        *size = mastering ? sizeof(*mastering) : 0;
+    എങ്കിൽ (size)
+        *size = mastering ? വലുപ്പം(*mastering) : 0;
 
-    if (!mastering)
-        return NULL;
+    എങ്കിൽ (!mastering)
+        തിരികെ ശൂന്യ;
 
     get_defaults(mastering);
 
-    return mastering;
+    തിരികെ mastering;
 }
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_MASTERING_DISPLAY_METADATA,
-                                                        sizeof(AVMasteringDisplayMetadata));
-    if (!side_data)
-        return NULL;
+                                                        വലുപ്പം(AVMasteringDisplayMetadata));
+    എങ്കിൽ (!side_data)
+        തിരികെ ശൂന്യ;
 
-    memset(side_data->data, 0, sizeof(AVMasteringDisplayMetadata));
+    memset(side_data->data, 0, വലുപ്പം(AVMasteringDisplayMetadata));
     get_defaults((AVMasteringDisplayMetadata *)side_data->data);
 
-    return (AVMasteringDisplayMetadata *)side_data->data;
+    തിരികെ (AVMasteringDisplayMetadata *)side_data->data;
 }
 
 AVContentLightMetadata *av_content_light_metadata_alloc(size_t *size)
 {
-    AVContentLightMetadata *metadata = av_mallocz(sizeof(AVContentLightMetadata));
+    AVContentLightMetadata *metadata = av_mallocz(വലുപ്പം(AVContentLightMetadata));
 
-    if (size)
-        *size = metadata ? sizeof(*metadata) : 0;
+    എങ്കിൽ (size)
+        *size = metadata ? വലുപ്പം(*metadata) : 0;
 
-    return metadata;
+    തിരികെ metadata;
 }
 
 AVContentLightMetadata *av_content_light_metadata_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                                                        sizeof(AVContentLightMetadata));
-    if (!side_data)
-        return NULL;
+                                                        വലുപ്പം(AVContentLightMetadata));
+    എങ്കിൽ (!side_data)
+        തിരികെ ശൂന്യ;
 
-    memset(side_data->data, 0, sizeof(AVContentLightMetadata));
+    memset(side_data->data, 0, വലുപ്പം(AVContentLightMetadata));
 
-    return (AVContentLightMetadata *)side_data->data;
+    തിരികെ (AVContentLightMetadata *)side_data->data;
 }

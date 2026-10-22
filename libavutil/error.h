@@ -24,10 +24,10 @@
 #ifndef AVUTIL_ERROR_H
 #define AVUTIL_ERROR_H
 
-#include <errno.h>
-#include <stddef.h>
+#അന്തര്ഭാവ <errno.h>
+#അന്തര്ഭാവ <stddef.h>
 
-#include "macros.h"
+#അന്തര്ഭാവ "macros.h"
 
 /**
  * @addtogroup lavu_error
@@ -37,16 +37,16 @@
 
 
 /* error handling */
-#if EDOM > 0
+#എങ്കിൽ EDOM > 0
 #define AVERROR(e) (-(e))   ///< Returns a negative error code from a POSIX error code, to return from library functions.
 #define AVUNERROR(e) (-(e)) ///< Returns a POSIX error code from a library function error return value.
-#else
+#അല്ലെങ്കിൽ
 /* Some platforms have E* and errno already negated. */
 #define AVERROR(e) (e)
 #define AVUNERROR(e) (e)
 #endif
 
-#define FFERRTAG(a, b, c, d) (-(int)MKTAG(a, b, c, d))
+#define FFERRTAG(a, b, c, d) (-(പൂർണ്ണസംഖ്യ)MKTAG(a, b, c, d))
 
 #define AVERROR_BSF_NOT_FOUND      FFERRTAG(0xF8,'B','S','F') ///< Bitstream filter not found
 #define AVERROR_BUG                FFERRTAG( 'B','U','G','!') ///< Internal bug, also see AVERROR_BUG2
@@ -72,7 +72,7 @@
 #define AVERROR_BUG2               FFERRTAG( 'B','U','G',' ')
 #define AVERROR_UNKNOWN            FFERRTAG( 'U','N','K','N') ///< Unknown error, typically from an external library
 #define AVERROR_EXPERIMENTAL       (-0x2bb2afa8) ///< Requested feature is flagged experimental. Set strict_std_compliance if you really want to use it.
-#define AVERROR_INPUT_CHANGED      (-0x636e6701) ///< Input changed between calls. Reconfiguration is required. (can be OR-ed with AVERROR_OUTPUT_CHANGED)
+#define AVERROR_നിവേശം_CHANGED      (-0x636e6701) ///< Input changed between calls. Reconfiguration is required. (can be OR-ed with AVERROR_OUTPUT_CHANGED)
 #define AVERROR_OUTPUT_CHANGED     (-0x636e6702) ///< Output changed between calls. Reconfiguration is required. (can be OR-ed with AVERROR_INPUT_CHANGED)
 /* HTTP & RTSP errors */
 #define AVERROR_HTTP_BAD_REQUEST   FFERRTAG(0xF8,'4','0','0')
@@ -97,7 +97,7 @@
  * @return 0 on success, a negative value if a description for errnum
  * cannot be found
  */
-int av_strerror(int errnum, char *errbuf, size_t errbuf_size);
+പൂർണ്ണസംഖ്യ av_strerror(പൂർണ്ണസംഖ്യ errnum, അക്ഷരം *errbuf, size_t errbuf_size);
 
 /**
  * Fill the provided buffer with a string containing an error string
@@ -109,10 +109,10 @@ int av_strerror(int errnum, char *errbuf, size_t errbuf_size);
  * @return the buffer in input, filled with the error description
  * @see av_strerror()
  */
-static inline char *av_make_error_string(char *errbuf, size_t errbuf_size, int errnum)
+സ്ഥിതം വരിയിൽ അക്ഷരം *av_make_error_string(അക്ഷരം *errbuf, size_t errbuf_size, പൂർണ്ണസംഖ്യ errnum)
 {
     av_strerror(errnum, errbuf, errbuf_size);
-    return errbuf;
+    തിരികെ errbuf;
 }
 
 /**
@@ -120,7 +120,7 @@ static inline char *av_make_error_string(char *errbuf, size_t errbuf_size, int e
  * function arguments but never stand-alone.
  */
 #define av_err2str(errnum) \
-    av_make_error_string((char[AV_ERROR_MAX_STRING_SIZE]){0}, AV_ERROR_MAX_STRING_SIZE, errnum)
+    av_make_error_string((അക്ഷരം[AV_ERROR_MAX_STRING_SIZE]){0}, AV_ERROR_MAX_STRING_SIZE, errnum)
 
 /**
  * @}

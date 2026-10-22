@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "ambient_viewing_environment.h"
-#include "mem.h"
+#അന്തര്ഭാവ "ambient_viewing_environment.h"
+#അന്തര്ഭാവ "mem.h"
 
-static void get_defaults(AVAmbientViewingEnvironment *env)
+സ്ഥിതം ശൂന്യം get_defaults(AVAmbientViewingEnvironment *env)
 {
     env->ambient_illuminance =
     env->ambient_light_x     =
@@ -31,17 +31,17 @@ static void get_defaults(AVAmbientViewingEnvironment *env)
 AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size)
 {
     AVAmbientViewingEnvironment *env =
-        av_mallocz(sizeof(AVAmbientViewingEnvironment));
+        av_mallocz(വലുപ്പം(AVAmbientViewingEnvironment));
 
-    if (size)
-        *size = env ? sizeof(*env) : 0;
+    എങ്കിൽ (size)
+        *size = env ? വലുപ്പം(*env) : 0;
 
-    if (!env)
-        return NULL;
+    എങ്കിൽ (!env)
+        തിരികെ ശൂന്യ;
 
     get_defaults(env);
 
-    return env;
+    തിരികെ env;
 }
 
 AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame)
@@ -49,12 +49,12 @@ AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVF
     AVFrameSideData *side_data =
         av_frame_new_side_data(frame,
                                AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
-                               sizeof(AVAmbientViewingEnvironment));
-    if (!side_data)
-        return NULL;
+                               വലുപ്പം(AVAmbientViewingEnvironment));
+    എങ്കിൽ (!side_data)
+        തിരികെ ശൂന്യ;
 
     memset(side_data->data, 0, side_data->size);
     get_defaults((AVAmbientViewingEnvironment *)side_data->data);
 
-    return (AVAmbientViewingEnvironment *)side_data->data;
+    തിരികെ (AVAmbientViewingEnvironment *)side_data->data;
 }

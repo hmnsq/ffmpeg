@@ -19,9 +19,9 @@
 #ifndef AVUTIL_CPU_INTERNAL_H
 #define AVUTIL_CPU_INTERNAL_H
 
-#include "config.h"
+#അന്തര്ഭാവ "config.h"
 
-#include "cpu.h"
+#അന്തര്ഭാവ "cpu.h"
 
 #define CPUEXT_SUFFIX(flags, suffix, cpuext)                            \
     (HAVE_ ## cpuext ## suffix && ((flags) & AV_CPU_FLAG_ ## cpuext))
@@ -44,22 +44,22 @@
 #define CPUEXT_FAST(flags, cpuext) CPUEXT_SUFFIX_FAST(flags, , cpuext)
 #define CPUEXT_SLOW(flags, cpuext) CPUEXT_SUFFIX_SLOW(flags, , cpuext)
 
-int ff_get_cpu_flags_mips(void);
-int ff_get_cpu_flags_aarch64(void);
-int ff_get_cpu_flags_arm(void);
-int ff_get_cpu_flags_ppc(void);
-int ff_get_cpu_flags_riscv(void);
-int ff_get_cpu_flags_wasm(void);
-int ff_get_cpu_flags_x86(void);
-int ff_get_cpu_flags_loongarch(void);
+പൂർണ്ണസംഖ്യ ff_get_cpu_flags_mips(ശൂന്യം);
+പൂർണ്ണസംഖ്യ ff_get_cpu_flags_aarch64(ശൂന്യം);
+പൂർണ്ണസംഖ്യ ff_get_cpu_flags_arm(ശൂന്യം);
+പൂർണ്ണസംഖ്യ ff_get_cpu_flags_ppc(ശൂന്യം);
+പൂർണ്ണസംഖ്യ ff_get_cpu_flags_riscv(ശൂന്യം);
+പൂർണ്ണസംഖ്യ ff_get_cpu_flags_wasm(ശൂന്യം);
+പൂർണ്ണസംഖ്യ ff_get_cpu_flags_x86(ശൂന്യം);
+പൂർണ്ണസംഖ്യ ff_get_cpu_flags_loongarch(ശൂന്യം);
 
-size_t ff_get_cpu_max_align_mips(void);
-size_t ff_get_cpu_max_align_aarch64(void);
-size_t ff_get_cpu_max_align_arm(void);
-size_t ff_get_cpu_max_align_ppc(void);
-size_t ff_get_cpu_max_align_wasm(void);
-size_t ff_get_cpu_max_align_x86(void);
-size_t ff_get_cpu_max_align_loongarch(void);
+size_t ff_get_cpu_max_align_mips(ശൂന്യം);
+size_t ff_get_cpu_max_align_aarch64(ശൂന്യം);
+size_t ff_get_cpu_max_align_arm(ശൂന്യം);
+size_t ff_get_cpu_max_align_ppc(ശൂന്യം);
+size_t ff_get_cpu_max_align_wasm(ശൂന്യം);
+size_t ff_get_cpu_max_align_x86(ശൂന്യം);
+size_t ff_get_cpu_max_align_loongarch(ശൂന്യം);
 
 unsigned long ff_getauxval(unsigned long type);
 

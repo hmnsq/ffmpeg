@@ -16,42 +16,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#അന്തര്ഭാവ <stdio.h>
 
-#include "libavutil/iamf.h"
-#include "libavutil/log.h"
-#include "libavutil/opt.h"
+#അന്തര്ഭാവ "libavutil/iamf.h"
+#അന്തര്ഭാവ "libavutil/log.h"
+#അന്തര്ഭാവ "libavutil/opt.h"
 
-static void print_class_tree(const AVClass *class, int depth)
+സ്ഥിതം ശൂന്യം print_class_വൃക്ഷം(സ്ഥിരം AVClass *class, പൂർണ്ണസംഖ്യ depth)
 {
-    const AVClass *child;
-    void *iter = NULL;
+    സ്ഥിരം AVClass *child;
+    ശൂന്യം *iter = ശൂന്യ;
 
     printf("%*s%s\n", depth * 2, "", class->class_name);
-    if (depth >= 8)
-        return;
-    while ((child = av_opt_child_class_iterate(class, &iter)))
-        print_class_tree(child, depth + 1);
+    എങ്കിൽ (depth >= 8)
+        തിരികെ;
+    ആകുമ്പോൾ ((child = av_opt_child_class_iterate(class, &iter)))
+        print_class_വൃക്ഷം(child, depth + 1);
 }
 
-static void find_option(const AVClass *class, const char *name)
+സ്ഥിതം ശൂന്യം find_option(സ്ഥിരം AVClass *class, സ്ഥിരം അക്ഷരം *name)
 {
-    const AVOption *o = av_opt_find2(&class, name, NULL, 0,
-                                     AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ,
-                                     NULL);
+    സ്ഥിരം AVOption *o = av_opt_find2(&class, name, ശൂന്യ, 0,
+                                     AV_OPT_തിരയൽ_CHILDREN | AV_OPT_തിരയൽ_FAKE_OBJ,
+                                     ശൂന്യ);
     printf("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
 }
 
-int main(void)
+പൂർണ്ണസംഖ്യ പ്രധാന(ശൂന്യം)
 {
-    const AVClass *audio_element = av_iamf_audio_element_get_class();
-    const AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
-    const AVClass *param_definition = av_iamf_param_definition_get_class();
+    സ്ഥിരം AVClass *audio_element = av_iamf_audio_element_get_class();
+    സ്ഥിരം AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
+    സ്ഥിരം AVClass *param_definition = av_iamf_param_definition_get_class();
 
     printf("Testing av_opt_child_class_iterate()\n");
-    print_class_tree(audio_element, 0);
-    print_class_tree(mix_presentation, 0);
-    print_class_tree(param_definition, 0);
+    print_class_വൃക്ഷം(audio_element, 0);
+    print_class_വൃക്ഷം(mix_presentation, 0);
+    print_class_വൃക്ഷം(param_definition, 0);
 
     printf("\nTesting av_opt_find2() with AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ\n");
     find_option(audio_element, "default_w");
@@ -64,5 +64,5 @@ int main(void)
     find_option(param_definition, "parameter_rate");
     find_option(param_definition, "subblock_duration");
 
-    return 0;
+    തിരികെ 0;
 }

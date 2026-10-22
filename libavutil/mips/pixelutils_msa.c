@@ -18,20 +18,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "generic_macros_msa.h"
-#include "pixelutils.h"
+#അന്തര്ഭാവ "generic_macros_msa.h"
+#അന്തര്ഭാവ "pixelutils.h"
 
-int ff_pixelutils_sad16_msa(const uint8_t *src, ptrdiff_t src_stride,
-                            const uint8_t *ref, ptrdiff_t ref_stride)
+പൂർണ്ണസംഖ്യ ff_pixelutils_sad16_msa(സ്ഥിരം uint8_t *src, ptrdiff_t src_stride,
+                            സ്ഥിരം uint8_t *ref, ptrdiff_t ref_stride)
 {
     int32_t ht_cnt = 16/4;
     v16u8 src0, src1, ref0, ref1;
     v8u16 sad = { 0 };
 
-    for (; ht_cnt--; ) {
+    വേണ്ടി (; ht_cnt--; ) {
         LD_UB2(src, src_stride, src0, src1);
         src += (2 * src_stride);
         LD_UB2(ref, ref_stride, ref0, ref1);
@@ -44,5 +44,5 @@ int ff_pixelutils_sad16_msa(const uint8_t *src, ptrdiff_t src_stride,
         ref += (2 * ref_stride);
         sad += SAD_UB2_UH(src0, src1, ref0, ref1);
     }
-    return (HADD_UH_U32(sad));
+    തിരികെ (HADD_UH_U32(sad));
 }

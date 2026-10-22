@@ -16,258 +16,258 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include <stdint.h>
-#include <string.h>
+#അന്തര്ഭാവ <stdatomic.h>
+#അന്തര്ഭാവ <stdint.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "avassert.h"
-#include "buffer_internal.h"
-#include "common.h"
-#include "mem.h"
-#include "sanitizer.h"
-#include "thread.h"
+#അന്തര്ഭാവ "avassert.h"
+#അന്തര്ഭാവ "buffer_internal.h"
+#അന്തര്ഭാവ "common.h"
+#അന്തര്ഭാവ "mem.h"
+#അന്തര്ഭാവ "sanitizer.h"
+#അന്തര്ഭാവ "thread.h"
 
-static AVBufferRef *buffer_create(AVBuffer *buf, uint8_t *data, size_t size,
-                                  void (*free)(void *opaque, uint8_t *data),
-                                  void *opaque, int flags)
+സ്ഥിതം AVBufferRef *buffer_create(AVBuffer *buf, uint8_t *data, size_t size,
+                                  ശൂന്യം (*സ്വതന്ത്രം)(ശൂന്യം *opaque, uint8_t *data),
+                                  ശൂന്യം *opaque, പൂർണ്ണസംഖ്യ flags)
 {
-    AVBufferRef *ref = NULL;
+    AVBufferRef *ref = ശൂന്യ;
 
     buf->data     = data;
     buf->size     = size;
-    buf->free     = free ? free : av_buffer_default_free;
+    buf->സ്വതന്ത്രം     = സ്വതന്ത്രം ? സ്വതന്ത്രം : av_buffer_default_free;
     buf->opaque   = opaque;
 
     atomic_init(&buf->refcount, 1);
 
     buf->flags = flags;
 
-    ref = av_mallocz(sizeof(*ref));
-    if (!ref)
-        return NULL;
+    ref = av_mallocz(വലുപ്പം(*ref));
+    എങ്കിൽ (!ref)
+        തിരികെ ശൂന്യ;
 
     ref->buffer = buf;
     ref->data   = data;
     ref->size   = size;
 
-    return ref;
+    തിരികെ ref;
 }
 
 AVBufferRef *av_buffer_create(uint8_t *data, size_t size,
-                              void (*free)(void *opaque, uint8_t *data),
-                              void *opaque, int flags)
+                              ശൂന്യം (*സ്വതന്ത്രം)(ശൂന്യം *opaque, uint8_t *data),
+                              ശൂന്യം *opaque, പൂർണ്ണസംഖ്യ flags)
 {
     AVBufferRef *ret;
-    AVBuffer *buf = av_mallocz(sizeof(*buf));
-    if (!buf)
-        return NULL;
+    AVBuffer *buf = av_mallocz(വലുപ്പം(*buf));
+    എങ്കിൽ (!buf)
+        തിരികെ ശൂന്യ;
 
-    ret = buffer_create(buf, data, size, free, opaque, flags);
-    if (!ret) {
+    ret = buffer_create(buf, data, size, സ്വതന്ത്രം, opaque, flags);
+    എങ്കിൽ (!ret) {
         av_free(buf);
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
-    return ret;
+    തിരികെ ret;
 }
 
-void av_buffer_default_free(void *opaque, uint8_t *data)
+ശൂന്യം av_buffer_default_free(ശൂന്യം *opaque, uint8_t *data)
 {
     av_free(data);
 }
 
 AVBufferRef *av_buffer_alloc(size_t size)
 {
-    AVBufferRef *ret = NULL;
-    uint8_t    *data = NULL;
+    AVBufferRef *ret = ശൂന്യ;
+    uint8_t    *data = ശൂന്യ;
 
     data = av_malloc(size);
-    if (!data)
-        return NULL;
+    എങ്കിൽ (!data)
+        തിരികെ ശൂന്യ;
 
-    ret = av_buffer_create(data, size, av_buffer_default_free, NULL, 0);
-    if (!ret)
+    ret = av_buffer_create(data, size, av_buffer_default_free, ശൂന്യ, 0);
+    എങ്കിൽ (!ret)
         av_freep(&data);
 
-    return ret;
+    തിരികെ ret;
 }
 
 AVBufferRef *av_buffer_allocz(size_t size)
 {
     AVBufferRef *ret = av_buffer_alloc(size);
-    if (!ret)
-        return NULL;
+    എങ്കിൽ (!ret)
+        തിരികെ ശൂന്യ;
 
     memset(ret->data, 0, size);
-    return ret;
+    തിരികെ ret;
 }
 
-AVBufferRef *av_buffer_ref(const AVBufferRef *buf)
+AVBufferRef *av_buffer_ref(സ്ഥിരം AVBufferRef *buf)
 {
-    AVBufferRef *ret = av_mallocz(sizeof(*ret));
+    AVBufferRef *ret = av_mallocz(വലുപ്പം(*ret));
 
-    if (!ret)
-        return NULL;
+    എങ്കിൽ (!ret)
+        തിരികെ ശൂന്യ;
 
     *ret = *buf;
 
     atomic_fetch_add_explicit(&buf->buffer->refcount, 1, memory_order_relaxed);
 
-    return ret;
+    തിരികെ ret;
 }
 
-static void buffer_replace(AVBufferRef **dst, AVBufferRef **src)
+സ്ഥിതം ശൂന്യം buffer_replace(AVBufferRef **dst, AVBufferRef **src)
 {
     AVBuffer *b;
 
     b = (*dst)->buffer;
 
-    if (src) {
+    എങ്കിൽ (src) {
         **dst = **src;
         av_freep(src);
-    } else
+    } അല്ലെങ്കിൽ
         av_freep(dst);
 
-    if (atomic_fetch_sub_explicit(&b->refcount, 1, memory_order_acq_rel) == 1) {
+    എങ്കിൽ (atomic_fetch_sub_explicit(&b->refcount, 1, memory_order_acq_rel) == 1) {
         /* b->free below might already free the structure containing *b,
          * so we have to read the flag now to avoid use-after-free. */
-        int free_avbuffer = !(b->flags_internal & BUFFER_FLAG_NO_FREE);
-        b->free(b->opaque, b->data);
-        if (free_avbuffer)
+        പൂർണ്ണസംഖ്യ free_avbuffer = !(b->flags_internal & BUFFER_FLAG_NO_FREE);
+        b->സ്വതന്ത്രം(b->opaque, b->data);
+        എങ്കിൽ (free_avbuffer)
             av_free(b);
     }
 }
 
-void av_buffer_unref(AVBufferRef **buf)
+ശൂന്യം av_buffer_unref(AVBufferRef **buf)
 {
-    if (!buf || !*buf)
-        return;
+    എങ്കിൽ (!buf || !*buf)
+        തിരികെ;
 
-    buffer_replace(buf, NULL);
+    buffer_replace(buf, ശൂന്യ);
 }
 
-int av_buffer_is_writable(const AVBufferRef *buf)
+പൂർണ്ണസംഖ്യ av_buffer_is_writable(സ്ഥിരം AVBufferRef *buf)
 {
-    if (buf->buffer->flags & AV_BUFFER_FLAG_READONLY)
-        return 0;
+    എങ്കിൽ (buf->buffer->flags & AV_BUFFER_FLAG_READONLY)
+        തിരികെ 0;
 
-    return atomic_load(&buf->buffer->refcount) == 1;
+    തിരികെ atomic_load(&buf->buffer->refcount) == 1;
 }
 
-void *av_buffer_get_opaque(const AVBufferRef *buf)
+ശൂന്യം *av_buffer_get_opaque(സ്ഥിരം AVBufferRef *buf)
 {
-    return buf->buffer->opaque;
+    തിരികെ buf->buffer->opaque;
 }
 
-int av_buffer_get_ref_count(const AVBufferRef *buf)
+പൂർണ്ണസംഖ്യ av_buffer_get_ref_എണ്ണം(സ്ഥിരം AVBufferRef *buf)
 {
-    return atomic_load(&buf->buffer->refcount);
+    തിരികെ atomic_load(&buf->buffer->refcount);
 }
 
-int av_buffer_make_writable(AVBufferRef **pbuf)
+പൂർണ്ണസംഖ്യ av_buffer_make_writable(AVBufferRef **pbuf)
 {
     AVBufferRef *newbuf, *buf = *pbuf;
 
-    if (av_buffer_is_writable(buf))
-        return 0;
+    എങ്കിൽ (av_buffer_is_writable(buf))
+        തിരികെ 0;
 
     newbuf = av_buffer_alloc(buf->size);
-    if (!newbuf)
-        return AVERROR(ENOMEM);
+    എങ്കിൽ (!newbuf)
+        തിരികെ AVERROR(ENOMEM);
 
     memcpy(newbuf->data, buf->data, buf->size);
 
     buffer_replace(pbuf, &newbuf);
 
-    return 0;
+    തിരികെ 0;
 }
 
-int av_buffer_realloc(AVBufferRef **pbuf, size_t size)
+പൂർണ്ണസംഖ്യ av_buffer_realloc(AVBufferRef **pbuf, size_t size)
 {
     AVBufferRef *buf = *pbuf;
     uint8_t *tmp;
-    int ret;
+    പൂർണ്ണസംഖ്യ ret;
 
-    if (!buf) {
+    എങ്കിൽ (!buf) {
         /* allocate a new buffer with av_realloc(), so it will be reallocatable
          * later */
-        uint8_t *data = av_realloc(NULL, size);
-        if (!data)
-            return AVERROR(ENOMEM);
+        uint8_t *data = av_realloc(ശൂന്യ, size);
+        എങ്കിൽ (!data)
+            തിരികെ AVERROR(ENOMEM);
 
-        buf = av_buffer_create(data, size, av_buffer_default_free, NULL, 0);
-        if (!buf) {
+        buf = av_buffer_create(data, size, av_buffer_default_free, ശൂന്യ, 0);
+        എങ്കിൽ (!buf) {
             av_freep(&data);
-            return AVERROR(ENOMEM);
+            തിരികെ AVERROR(ENOMEM);
         }
 
         buf->buffer->flags_internal |= BUFFER_FLAG_REALLOCATABLE;
         *pbuf = buf;
 
-        return 0;
-    } else if (buf->size == size)
-        return 0;
+        തിരികെ 0;
+    } അല്ലെങ്കിൽ എങ്കിൽ (buf->size == size)
+        തിരികെ 0;
 
-    if (!(buf->buffer->flags_internal & BUFFER_FLAG_REALLOCATABLE) ||
+    എങ്കിൽ (!(buf->buffer->flags_internal & BUFFER_FLAG_REALLOCATABLE) ||
         !av_buffer_is_writable(buf) || buf->data != buf->buffer->data) {
         /* cannot realloc, allocate a new reallocable buffer and copy data */
-        AVBufferRef *new = NULL;
+        AVBufferRef *new = ശൂന്യ;
 
         ret = av_buffer_realloc(&new, size);
-        if (ret < 0)
-            return ret;
+        എങ്കിൽ (ret < 0)
+            തിരികെ ret;
 
         memcpy(new->data, buf->data, FFMIN(size, buf->size));
 
         buffer_replace(pbuf, &new);
-        return 0;
+        തിരികെ 0;
     }
 
     tmp = av_realloc(buf->buffer->data, size);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    എങ്കിൽ (!tmp)
+        തിരികെ AVERROR(ENOMEM);
 
     buf->buffer->data = buf->data = tmp;
     buf->buffer->size = buf->size = size;
-    return 0;
+    തിരികെ 0;
 }
 
-int av_buffer_replace(AVBufferRef **pdst, const AVBufferRef *src)
+പൂർണ്ണസംഖ്യ av_buffer_replace(AVBufferRef **pdst, സ്ഥിരം AVBufferRef *src)
 {
     AVBufferRef *dst = *pdst;
     AVBufferRef *tmp;
 
-    if (!src) {
+    എങ്കിൽ (!src) {
         av_buffer_unref(pdst);
-        return 0;
+        തിരികെ 0;
     }
 
-    if (dst && dst->buffer == src->buffer) {
+    എങ്കിൽ (dst && dst->buffer == src->buffer) {
         /* make sure the data pointers match */
         dst->data = src->data;
         dst->size = src->size;
-        return 0;
+        തിരികെ 0;
     }
 
     tmp = av_buffer_ref(src);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    എങ്കിൽ (!tmp)
+        തിരികെ AVERROR(ENOMEM);
 
     av_buffer_unref(pdst);
     *pdst = tmp;
-    return 0;
+    തിരികെ 0;
 }
 
-AVBufferPool *av_buffer_pool_init2(size_t size, void *opaque,
-                                   AVBufferRef* (*alloc)(void *opaque, size_t size),
-                                   void (*pool_free)(void *opaque))
+AVBufferPool *av_buffer_pool_init2(size_t size, ശൂന്യം *opaque,
+                                   AVBufferRef* (*alloc)(ശൂന്യം *opaque, size_t size),
+                                   ശൂന്യം (*pool_free)(ശൂന്യം *opaque))
 {
-    AVBufferPool *pool = av_mallocz(sizeof(*pool));
-    if (!pool)
-        return NULL;
+    AVBufferPool *pool = av_mallocz(വലുപ്പം(*pool));
+    എങ്കിൽ (!pool)
+        തിരികെ ശൂന്യ;
 
-    if (ff_mutex_init(&pool->mutex, NULL)) {
+    എങ്കിൽ (ff_mutex_init(&pool->mutex, ശൂന്യ)) {
         av_free(pool);
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
     pool->size      = size;
@@ -278,18 +278,18 @@ AVBufferPool *av_buffer_pool_init2(size_t size, void *opaque,
 
     atomic_init(&pool->refcount, 1);
 
-    return pool;
+    തിരികെ pool;
 }
 
 AVBufferPool *av_buffer_pool_init(size_t size, AVBufferRef* (*alloc)(size_t size))
 {
-    AVBufferPool *pool = av_mallocz(sizeof(*pool));
-    if (!pool)
-        return NULL;
+    AVBufferPool *pool = av_mallocz(വലുപ്പം(*pool));
+    എങ്കിൽ (!pool)
+        തിരികെ ശൂന്യ;
 
-    if (ff_mutex_init(&pool->mutex, NULL)) {
+    എങ്കിൽ (ff_mutex_init(&pool->mutex, ശൂന്യ)) {
         av_free(pool);
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
     pool->size     = size;
@@ -297,18 +297,18 @@ AVBufferPool *av_buffer_pool_init(size_t size, AVBufferRef* (*alloc)(size_t size
 
     atomic_init(&pool->refcount, 1);
 
-    return pool;
+    തിരികെ pool;
 }
 
-static void buffer_pool_flush(AVBufferPool *pool)
+സ്ഥിതം ശൂന്യം buffer_pool_flush(AVBufferPool *pool)
 {
-    while (pool->pool) {
+    ആകുമ്പോൾ (pool->pool) {
         BufferPoolEntry *buf = pool->pool;
         pool->pool = buf->next;
 
-        if (buf->free == av_buffer_default_free)
+        എങ്കിൽ (buf->സ്വതന്ത്രം == av_buffer_default_free)
             FF_ASAN_UNPOISON(buf->data, pool->size);
-        buf->free(buf->opaque, buf->data);
+        buf->സ്വതന്ത്രം(buf->opaque, buf->data);
         av_freep(&buf);
     }
 }
@@ -317,40 +317,40 @@ static void buffer_pool_flush(AVBufferPool *pool)
  * This function gets called when the pool has been uninited and
  * all the buffers returned to it.
  */
-static void buffer_pool_free(AVBufferPool *pool)
+സ്ഥിതം ശൂന്യം buffer_pool_free(AVBufferPool *pool)
 {
     buffer_pool_flush(pool);
     ff_mutex_destroy(&pool->mutex);
 
-    if (pool->pool_free)
+    എങ്കിൽ (pool->pool_free)
         pool->pool_free(pool->opaque);
 
     av_freep(&pool);
 }
 
-void av_buffer_pool_uninit(AVBufferPool **ppool)
+ശൂന്യം av_buffer_pool_uninit(AVBufferPool **ppool)
 {
     AVBufferPool *pool;
 
-    if (!ppool || !*ppool)
-        return;
+    എങ്കിൽ (!ppool || !*ppool)
+        തിരികെ;
     pool   = *ppool;
-    *ppool = NULL;
+    *ppool = ശൂന്യ;
 
     ff_mutex_lock(&pool->mutex);
     buffer_pool_flush(pool);
     ff_mutex_unlock(&pool->mutex);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+    എങ്കിൽ (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
         buffer_pool_free(pool);
 }
 
-static void pool_release_buffer(void *opaque, uint8_t *data)
+സ്ഥിതം ശൂന്യം pool_release_buffer(ശൂന്യം *opaque, uint8_t *data)
 {
     BufferPoolEntry *buf = opaque;
     AVBufferPool *pool = buf->pool;
 
-    if (buf->free == av_buffer_default_free)
+    എങ്കിൽ (buf->സ്വതന്ത്രം == av_buffer_default_free)
         FF_ASAN_POISON(buf->data, pool->size);
 
     ff_mutex_lock(&pool->mutex);
@@ -358,13 +358,13 @@ static void pool_release_buffer(void *opaque, uint8_t *data)
     pool->pool = buf;
     ff_mutex_unlock(&pool->mutex);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+    എങ്കിൽ (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
         buffer_pool_free(pool);
 }
 
 /* allocate a new buffer and override its free() callback so that
  * it is returned to the pool on free */
-static AVBufferRef *pool_alloc_buffer(AVBufferPool *pool)
+സ്ഥിതം AVBufferRef *pool_alloc_buffer(AVBufferPool *pool)
 {
     BufferPoolEntry *buf;
     AVBufferRef     *ret;
@@ -373,24 +373,24 @@ static AVBufferRef *pool_alloc_buffer(AVBufferPool *pool)
 
     ret = pool->alloc2 ? pool->alloc2(pool->opaque, pool->size) :
                          pool->alloc(pool->size);
-    if (!ret)
-        return NULL;
+    എങ്കിൽ (!ret)
+        തിരികെ ശൂന്യ;
 
-    buf = av_mallocz(sizeof(*buf));
-    if (!buf) {
+    buf = av_mallocz(വലുപ്പം(*buf));
+    എങ്കിൽ (!buf) {
         av_buffer_unref(&ret);
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
     buf->data   = ret->buffer->data;
     buf->opaque = ret->buffer->opaque;
-    buf->free   = ret->buffer->free;
+    buf->സ്വതന്ത്രം   = ret->buffer->സ്വതന്ത്രം;
     buf->pool   = pool;
 
     ret->buffer->opaque = buf;
-    ret->buffer->free   = pool_release_buffer;
+    ret->buffer->സ്വതന്ത്രം   = pool_release_buffer;
 
-    return ret;
+    തിരികെ ret;
 }
 
 AVBufferRef *av_buffer_pool_get(AVBufferPool *pool)
@@ -400,37 +400,37 @@ AVBufferRef *av_buffer_pool_get(AVBufferPool *pool)
 
     ff_mutex_lock(&pool->mutex);
     buf = pool->pool;
-    if (buf) {
-        memset(&buf->buffer, 0, sizeof(buf->buffer));
+    എങ്കിൽ (buf) {
+        memset(&buf->buffer, 0, വലുപ്പം(buf->buffer));
         ret = buffer_create(&buf->buffer, buf->data, pool->size,
                             pool_release_buffer, buf, 0);
-        if (ret) {
+        എങ്കിൽ (ret) {
             pool->pool = buf->next;
-            buf->next = NULL;
+            buf->next = ശൂന്യ;
             buf->buffer.flags_internal |= BUFFER_FLAG_NO_FREE;
-            if (buf->free == av_buffer_default_free) {
+            എങ്കിൽ (buf->സ്വതന്ത്രം == av_buffer_default_free) {
                 FF_ASAN_UNPOISON(buf->data, pool->size);
                 /* A pool that zeroes its buffers may be relied upon for never
                  * written regions staying zero, so only mark a reused buffer
                  * undefined when nothing was ever promised about its contents. */
-                if (!pool->alloc2 && pool->alloc == av_buffer_alloc)
+                എങ്കിൽ (!pool->alloc2 && pool->alloc == av_buffer_alloc)
                     FF_MEM_UNDEFINED(buf->data, pool->size);
             }
         }
-    } else {
+    } അല്ലെങ്കിൽ {
         ret = pool_alloc_buffer(pool);
     }
     ff_mutex_unlock(&pool->mutex);
 
-    if (ret)
+    എങ്കിൽ (ret)
         atomic_fetch_add_explicit(&pool->refcount, 1, memory_order_relaxed);
 
-    return ret;
+    തിരികെ ret;
 }
 
-void *av_buffer_pool_buffer_get_opaque(const AVBufferRef *ref)
+ശൂന്യം *av_buffer_pool_buffer_get_opaque(സ്ഥിരം AVBufferRef *ref)
 {
     BufferPoolEntry *buf = ref->buffer->opaque;
     av_assert0(buf);
-    return buf->opaque;
+    തിരികെ buf->opaque;
 }

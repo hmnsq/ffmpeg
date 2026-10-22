@@ -21,9 +21,9 @@
 #ifndef AVUTIL_AMBIENT_VIEWING_ENVIRONMENT_H
 #define AVUTIL_AMBIENT_VIEWING_ENVIRONMENT_H
 
-#include <stddef.h>
-#include "frame.h"
-#include "rational.h"
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ "frame.h"
+#അന്തര്ഭാവ "rational.h"
 
 /**
  * Ambient viewing environment metadata as defined by H.274. The values are
@@ -33,7 +33,7 @@
  * @note sizeof(AVAmbientViewingEnvironment) is not part of the public ABI, and
  *       it must be allocated using av_ambient_viewing_environment_alloc.
  */
-typedef struct AVAmbientViewingEnvironment {
+തരനിർവചനം ഘടന AVAmbientViewingEnvironment {
     /**
      * Environmental illuminance of the ambient viewing environment in lux.
      */

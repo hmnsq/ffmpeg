@@ -28,10 +28,10 @@
 #ifndef AVUTIL_RIPEMD_H
 #define AVUTIL_RIPEMD_H
 
-#include <stddef.h>
-#include <stdint.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdint.h>
 
-#include "attributes.h"
+#അന്തര്ഭാവ "attributes.h"
 
 /**
  * @defgroup lavu_ripemd RIPEMD
@@ -41,14 +41,14 @@
  * @{
  */
 
-extern const int av_ripemd_size;
+ബാഹ്യ സ്ഥിരം പൂർണ്ണസംഖ്യ av_ripemd_size;
 
-struct AVRIPEMD;
+ഘടന AVRIPEMD;
 
 /**
  * Allocate an AVRIPEMD context.
  */
-struct AVRIPEMD *av_ripemd_alloc(void);
+ഘടന AVRIPEMD *av_ripemd_alloc(ശൂന്യം);
 
 /**
  * Initialize RIPEMD hashing.
@@ -57,7 +57,7 @@ struct AVRIPEMD *av_ripemd_alloc(void);
  * @param bits    number of bits in digest (128, 160, 256 or 320 bits)
  * @return        zero if initialization succeeded, -1 otherwise
  */
-int av_ripemd_init(struct AVRIPEMD* context, int bits);
+പൂർണ്ണസംഖ്യ av_ripemd_init(ഘടന AVRIPEMD* context, പൂർണ്ണസംഖ്യ bits);
 
 /**
  * Update hash value.
@@ -66,7 +66,7 @@ int av_ripemd_init(struct AVRIPEMD* context, int bits);
  * @param data    input data to update hash with
  * @param len     input data length
  */
-void av_ripemd_update(struct AVRIPEMD* context, const uint8_t* data, size_t len);
+ശൂന്യം av_ripemd_update(ഘടന AVRIPEMD* context, സ്ഥിരം uint8_t* data, size_t len);
 
 /**
  * Finish hashing and output digest value.
@@ -74,7 +74,7 @@ void av_ripemd_update(struct AVRIPEMD* context, const uint8_t* data, size_t len)
  * @param context hash function context
  * @param digest  buffer where output digest value is stored
  */
-void av_ripemd_final(struct AVRIPEMD* context, uint8_t *digest);
+ശൂന്യം av_ripemd_final(ഘടന AVRIPEMD* context, uint8_t *digest);
 
 /**
  * @}
