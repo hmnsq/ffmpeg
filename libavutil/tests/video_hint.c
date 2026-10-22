@@ -16,113 +16,113 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdio.h>
+#ضمن <limits.h>
+#ضمن <stdint.h>
+#ضمن <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/macros.h"
-#include "libavutil/mem.h"
-#include "libavutil/video_hint.h"
+#ضمن "libavutil/frame.h"
+#ضمن "libavutil/macros.h"
+#ضمن "libavutil/mem.h"
+#ضمن "libavutil/video_hint.h"
 
-int main(void)
+صحيح مکيه(فراغ)
 {
     AVVideoHint *hint;
     AVVideoRect *rect;
-    AVFrame *frame;
-    size_t size;
+    AVFrame *چوکٺو;
+    size_t سائيز;
 
-    static const size_t alloc_counts[] = { 0, 1, 4 };
+    ساكن ثابت size_t alloc_counts[] = { 0, 1, 4 };
 
     /* av_video_hint_alloc - various counts */
-    printf("Testing av_video_hint_alloc()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
+    لکو("Testing av_video_hint_alloc()\n");
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
         size_t nb = alloc_counts[i];
-        hint = av_video_hint_alloc(nb, &size);
-        if (hint) {
-            printf("alloc %zu: OK, nb_rects=%zu, size>0=%s\n",
-                   nb, hint->nb_rects, size > 0 ? "yes" : "no");
+        hint = av_video_hint_alloc(nb, &سائيز);
+        إذا (hint) {
+            لکو("alloc %zu: OK, nb_rects=%zu, size>0=%s\n",
+                   nb, hint->nb_rects, سائيز > 0 ? "yes" : "no");
             av_free(hint);
-        } else {
-            printf("alloc %zu: FAIL\n", nb);
+        } وإلا {
+            لکو("alloc %zu: FAIL\n", nb);
         }
     }
 
     /* pointer consistency and write/read back */
-    printf("\nTesting av_video_hint_get_rect()\n");
-    hint = av_video_hint_alloc(3, &size);
-    if (hint) {
+    لکو("\nTesting av_video_hint_get_rect()\n");
+    hint = av_video_hint_alloc(3, &سائيز);
+    إذا (hint) {
         /* verify av_video_hint_rects points to first rect */
         rect = av_video_hint_rects(hint);
-        if ((uint8_t *)rect != (uint8_t *)hint + hint->rect_offset)
-            printf("rects: pointer inconsistent with rect_offset\n");
+        إذا ((uint8_t *)rect != (uint8_t *)hint + hint->rect_وٿي)
+            لکو("rects: pointer inconsistent with rect_offset\n");
 
-        for (int i = 0; i < 3; i++) {
+        لكل (صحيح i = 0; i < 3; i++) {
             rect = av_video_hint_get_rect(hint, i);
-            if ((uint8_t *)rect != (uint8_t *)hint + hint->rect_offset +
-                                   (size_t)i * hint->rect_size)
-                printf("rect %d: pointer inconsistent with rect_offset/rect_size\n", i);
+            إذا ((uint8_t *)rect != (uint8_t *)hint + hint->rect_وٿي +
+                                   (size_t)i * hint->rect_سائيز)
+                لکو("rect %d: pointer inconsistent with rect_offset/rect_size\n", i);
             rect->x = i * 100;
             rect->y = i * 200;
-            rect->width = 64 + i;
-            rect->height = 48 + i;
+            rect->ويڪر = 64 + i;
+            rect->اوچائي = 48 + i;
         }
-        for (int i = 0; i < 3; i++) {
+        لكل (صحيح i = 0; i < 3; i++) {
             rect = av_video_hint_get_rect(hint, i);
-            printf("rect %d: x=%u y=%u w=%u h=%u\n",
-                   i, rect->x, rect->y, rect->width, rect->height);
+            لکو("rect %d: x=%u y=%u w=%u h=%u\n",
+                   i, rect->x, rect->y, rect->ويڪر, rect->اوچائي);
         }
 
         av_free(hint);
     }
 
     /* type field */
-    printf("\nTesting type field\n");
-    hint = av_video_hint_alloc(1, &size);
-    if (hint) {
+    لکو("\nTesting type field\n");
+    hint = av_video_hint_alloc(1, &سائيز);
+    إذا (hint) {
         hint->type = AV_VIDEO_HINT_TYPE_CONSTANT;
-        printf("constant: type=%d\n", hint->type);
-        hint->type = AV_VIDEO_HINT_TYPE_CHANGED;
-        printf("changed: type=%d\n", hint->type);
+        لکو("constant: type=%d\n", hint->type);
+        hint->type = AV_VIDEO_HINT_TYPE_بدليو;
+        لکو("changed: type=%d\n", hint->type);
         av_free(hint);
     }
 
     /* av_video_hint_create_side_data */
-    printf("\nTesting av_video_hint_create_side_data()\n");
-    frame = av_frame_alloc();
-    if (frame) {
-        hint = av_video_hint_create_side_data(frame, 2);
-        if (hint) {
-            printf("side_data: OK, nb_rects=%zu\n", hint->nb_rects);
+    لکو("\nTesting av_video_hint_create_side_data()\n");
+    چوکٺو = av_چوکٺو_alloc();
+    إذا (چوکٺو) {
+        hint = av_video_hint_create_side_معلومات(چوکٺو, 2);
+        إذا (hint) {
+            لکو("side_data: OK, nb_rects=%zu\n", hint->nb_rects);
             rect = av_video_hint_get_rect(hint, 0);
             rect->x = 10;
             rect->y = 20;
-            rect->width = 320;
-            rect->height = 240;
+            rect->ويڪر = 320;
+            rect->اوچائي = 240;
             rect = av_video_hint_get_rect(hint, 0);
-            printf("side_data rect 0: x=%u y=%u\n", rect->x, rect->y);
-        } else {
-            printf("side_data: FAIL\n");
+            لکو("side_data rect 0: x=%u y=%u\n", rect->x, rect->y);
+        } وإلا {
+            لکو("side_data: FAIL\n");
         }
-        av_frame_free(&frame);
+        av_چوکٺو_free(&چوکٺو);
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    لکو("\nTesting OOM paths\n");
     av_max_alloc(1);
-    hint = av_video_hint_alloc(1, &size);
-    printf("alloc OOM: %s\n", hint ? "FAIL" : "OK");
+    hint = av_video_hint_alloc(1, &سائيز);
+    لکو("alloc OOM: %s\n", hint ? "FAIL" : "OK");
     av_free(hint);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(وڌ_کان_وڌ_عدد);
 
-    frame = av_frame_alloc();
-    if (frame) {
+    چوکٺو = av_چوکٺو_alloc();
+    إذا (چوکٺو) {
         av_max_alloc(1);
-        hint = av_video_hint_create_side_data(frame, 1);
-        printf("side_data OOM: %s\n", hint ? "FAIL" : "OK");
-        av_max_alloc(INT_MAX);
-        av_frame_free(&frame);
+        hint = av_video_hint_create_side_معلومات(چوکٺو, 1);
+        لکو("side_data OOM: %s\n", hint ? "FAIL" : "OK");
+        av_max_alloc(وڌ_کان_وڌ_عدد);
+        av_چوکٺو_free(&چوکٺو);
     }
 
-    return 0;
+    أرجع 0;
 }

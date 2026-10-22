@@ -18,28 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "hdr_dynamic_vivid_metadata.h"
-#include "mem.h"
+#ضمن "hdr_dynamic_vivid_metadata.h"
+#ضمن "mem.h"
 
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *size)
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *سائيز)
 {
-    AVDynamicHDRVivid *hdr_vivid = av_mallocz(sizeof(AVDynamicHDRVivid));
+    AVDynamicHDRVivid *hdr_vivid = av_mallocz(حجم(AVDynamicHDRVivid));
 
-    if (size)
-        *size = hdr_vivid ? sizeof(*hdr_vivid) : 0;
+    إذا (سائيز)
+        *سائيز = hdr_vivid ? حجم(*hdr_vivid) : 0;
 
-    return hdr_vivid;
+    أرجع hdr_vivid;
 }
 
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_data(AVFrame *frame)
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_معلومات(AVFrame *چوکٺو)
 {
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_DYNAMIC_HDR_VIVID,
-                                                        sizeof(AVDynamicHDRVivid));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_معلومات *side_معلومات = av_چوکٺو_new_side_معلومات(چوکٺو,
+                                                        AV_چوکٺو_معلومات_DYNAMIC_HDR_VIVID,
+                                                        حجم(AVDynamicHDRVivid));
+    إذا (!side_معلومات)
+        أرجع عدم;
 
-    memset(side_data->data, 0, sizeof(AVDynamicHDRVivid));
+    memset(side_معلومات->معلومات, 0, حجم(AVDynamicHDRVivid));
 
-    return (AVDynamicHDRVivid *)side_data->data;
+    أرجع (AVDynamicHDRVivid *)side_معلومات->معلومات;
 }

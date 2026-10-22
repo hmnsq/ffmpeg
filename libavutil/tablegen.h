@@ -21,35 +21,35 @@
  * Compatibility libm for table generation files
  */
 
-#ifndef AVUTIL_TABLEGEN_H
-#define AVUTIL_TABLEGEN_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_TABLEGEN_H
+#وصف_ڪريو AVUTIL_TABLEGEN_H
 
-#include <math.h>
+#ضمن <math.h>
 
 // we lack some functions on all host platforms, and we don't care about
 // performance and/or strict ISO C semantics as it's performed at build time
-static inline double ff_cbrt(double x)
+ساكن مضمن مزدوج ff_cbrt(مزدوج x)
 {
-    return x < 0 ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
+    أرجع x < 0 ? -قوت(-x, 1.0 / 3.0) : قوت(x, 1.0 / 3.0);
 }
-#define cbrt ff_cbrt
+#وصف_ڪريو cbrt ff_cbrt
 
-static inline double ff_rint(double x)
+ساكن مضمن مزدوج ff_rint(مزدوج x)
 {
-    return x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
+    أرجع x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
 }
-#define rint ff_rint
+#وصف_ڪريو rint ff_rint
 
-static inline long long ff_llrint(double x)
+ساكن مضمن ڊگهو ڊگهو ff_llrint(مزدوج x)
 {
-    return rint(x);
+    أرجع rint(x);
 }
-#define llrint ff_llrint
+#وصف_ڪريو llrint ff_llrint
 
-static inline long ff_lrint(double x)
+ساكن مضمن ڊگهو ff_lrint(مزدوج x)
 {
-    return rint(x);
+    أرجع rint(x);
 }
-#define lrint ff_lrint
+#وصف_ڪريو lrint ff_lrint
 
-#endif /* AVUTIL_TABLEGEN_H */
+#جيڪڏهن_پورو /* AVUTIL_TABLEGEN_H */

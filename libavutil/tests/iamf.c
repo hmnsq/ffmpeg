@@ -16,53 +16,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ضمن <stdio.h>
 
-#include "libavutil/iamf.h"
-#include "libavutil/log.h"
-#include "libavutil/opt.h"
+#ضمن "libavutil/iamf.h"
+#ضمن "libavutil/log.h"
+#ضمن "libavutil/opt.h"
 
-static void print_class_tree(const AVClass *class, int depth)
+ساكن فراغ print_class_وڻ(ثابت AVClass *class, صحيح اونهائي)
 {
-    const AVClass *child;
-    void *iter = NULL;
+    ثابت AVClass *ٻار;
+    فراغ *iter = عدم;
 
-    printf("%*s%s\n", depth * 2, "", class->class_name);
-    if (depth >= 8)
-        return;
-    while ((child = av_opt_child_class_iterate(class, &iter)))
-        print_class_tree(child, depth + 1);
+    لکو("%*s%s\n", اونهائي * 2, "", class->class_name);
+    إذا (اونهائي >= 8)
+        أرجع;
+    طالما ((ٻار = av_opt_ٻار_class_iterate(class, &iter)))
+        print_class_وڻ(ٻار, اونهائي + 1);
 }
 
-static void find_option(const AVClass *class, const char *name)
+ساكن فراغ ڳوليو_option(ثابت AVClass *class, ثابت حرف *name)
 {
-    const AVOption *o = av_opt_find2(&class, name, NULL, 0,
-                                     AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ,
-                                     NULL);
-    printf("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
+    ثابت AVOption *o = av_opt_find2(&class, name, عدم, 0,
+                                     AV_OPT_ڳولا_CHILDREN | AV_OPT_ڳولا_FAKE_OBJ,
+                                     عدم);
+    لکو("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
 }
 
-int main(void)
+صحيح مکيه(فراغ)
 {
-    const AVClass *audio_element = av_iamf_audio_element_get_class();
-    const AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
-    const AVClass *param_definition = av_iamf_param_definition_get_class();
+    ثابت AVClass *audio_element = av_iamf_audio_element_get_class();
+    ثابت AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
+    ثابت AVClass *param_definition = av_iamf_param_definition_get_class();
 
-    printf("Testing av_opt_child_class_iterate()\n");
-    print_class_tree(audio_element, 0);
-    print_class_tree(mix_presentation, 0);
-    print_class_tree(param_definition, 0);
+    لکو("Testing av_opt_child_class_iterate()\n");
+    print_class_وڻ(audio_element, 0);
+    print_class_وڻ(mix_presentation, 0);
+    print_class_وڻ(param_definition, 0);
 
-    printf("\nTesting av_opt_find2() with AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ\n");
-    find_option(audio_element, "default_w");
-    find_option(audio_element, "ch_layout");
-    find_option(mix_presentation, "annotations");
-    find_option(mix_presentation, "default_mix_gain");
-    find_option(mix_presentation, "headphones_rendering_mode");
-    find_option(mix_presentation, "sound_system");
-    find_option(mix_presentation, "parameter_rate");
-    find_option(param_definition, "parameter_rate");
-    find_option(param_definition, "subblock_duration");
+    لکو("\nTesting av_opt_find2() with AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ\n");
+    ڳوليو_option(audio_element, "default_w");
+    ڳوليو_option(audio_element, "ch_layout");
+    ڳوليو_option(mix_presentation, "annotations");
+    ڳوليو_option(mix_presentation, "default_mix_gain");
+    ڳوليو_option(mix_presentation, "headphones_rendering_mode");
+    ڳوليو_option(mix_presentation, "sound_system");
+    ڳوليو_option(mix_presentation, "parameter_rate");
+    ڳوليو_option(param_definition, "parameter_rate");
+    ڳوليو_option(param_definition, "subblock_duration");
 
-    return 0;
+    أرجع 0;
 }

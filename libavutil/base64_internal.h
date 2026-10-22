@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BASE64_INTERNAL_H
-#define AVUTIL_BASE64_INTERNAL_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_BASE64_اندروني_H
+#وصف_ڪريو AVUTIL_BASE64_اندروني_H
 
-#include <stdint.h>
-#include "intreadwrite.h"
+#ضمن <stdint.h>
+#ضمن "intreadwrite.h"
 
 /*****************************************************************************
 * b64_encode: Stolen from VLC's http.c.
@@ -30,37 +30,37 @@
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-static inline char *ff_base64_encode_c(char *out, const uint8_t *in, int in_size, const char *b64)
+ساكن مضمن حرف *ff_base64_encode_c(حرف *ٻاهريون, ثابت uint8_t *اندريون, صحيح اندريون_سائيز, ثابت حرف *b64)
 {
-    char *ret, *dst;
-    unsigned i_bits = 0;
-    int i_shift = 0;
-    int bytes_remaining = in_size;
+    حرف *ret, *dst;
+    بنانشان i_بٽ = 0;
+    صحيح i_سرڪايو = 0;
+    صحيح بائيٽون_بچيل = اندريون_سائيز;
 
-    ret = dst = out;
-    while (bytes_remaining > 3) {
-        i_bits = AV_RB32(in);
-        in += 3; bytes_remaining -= 3;
-        *dst++ = b64[ i_bits>>26        ];
-        *dst++ = b64[(i_bits>>20) & 0x3F];
-        *dst++ = b64[(i_bits>>14) & 0x3F];
-        *dst++ = b64[(i_bits>>8 ) & 0x3F];
+    ret = dst = ٻاهريون;
+    طالما (بائيٽون_بچيل > 3) {
+        i_بٽ = AV_RB32(اندريون);
+        اندريون += 3; بائيٽون_بچيل -= 3;
+        *dst++ = b64[ i_بٽ>>26        ];
+        *dst++ = b64[(i_بٽ>>20) & 0x3F];
+        *dst++ = b64[(i_بٽ>>14) & 0x3F];
+        *dst++ = b64[(i_بٽ>>8 ) & 0x3F];
     }
-    i_bits = 0;
-    while (bytes_remaining) {
-        i_bits = (i_bits << 8) + *in++;
-        bytes_remaining--;
-        i_shift += 8;
+    i_بٽ = 0;
+    طالما (بائيٽون_بچيل) {
+        i_بٽ = (i_بٽ << 8) + *اندريون++;
+        بائيٽون_بچيل--;
+        i_سرڪايو += 8;
     }
-    while (i_shift > 0) {
-        *dst++ = b64[(i_bits << 6 >> i_shift) & 0x3f];
-        i_shift -= 6;
+    طالما (i_سرڪايو > 0) {
+        *dst++ = b64[(i_بٽ << 6 >> i_سرڪايو) & 0x3f];
+        i_سرڪايو -= 6;
     }
-    while ((dst - ret) & 3)
+    طالما ((dst - ret) & 3)
         *dst++ = '=';
     *dst = '\0';
 
-    return ret;
+    أرجع ret;
 }
 
-#endif /* AVUTIL_BASE64_INTERNAL_H */
+#جيڪڏهن_پورو /* AVUTIL_BASE64_INTERNAL_H */

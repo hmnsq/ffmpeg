@@ -16,82 +16,82 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/encryption_info.h"
+#ضمن "libavutil/encryption_info.h"
 
-#include <stdio.h>
-#include <string.h>
+#ضمن <stdio.h>
+#ضمن <string.h>
 
-#include "libavutil/avassert.h"
-#include "libavutil/mem.h"
+#ضمن "libavutil/avassert.h"
+#ضمن "libavutil/mem.h"
 
-static const AVSubsampleEncryptionInfo test_subsamples[] = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
-static const size_t test_subsample_count = sizeof(test_subsamples) / sizeof(test_subsamples[0]);
-static const uint8_t test_iv[] = {0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18};
-static const uint8_t test_key_id[] = {0x21, 0x22, 0x23, 0x24};
-static const uint8_t test_key_id_2[] = {0x31, 0x32, 0x33, 0x34};
-static const uint8_t test_system_id[] = {0x41, 0x42, 0x43};
-static const uint8_t test_data[] = {0x51, 0x52};
+ساكن ثابت AVSubsampleEncryptionInfo test_subsamples[] = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
+ساكن ثابت size_t test_subsample_ڳڻپ = حجم(test_subsamples) / حجم(test_subsamples[0]);
+ساكن ثابت uint8_t test_iv[] = {0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18};
+ساكن ثابت uint8_t test_ڪنجي_id[] = {0x21, 0x22, 0x23, 0x24};
+ساكن ثابت uint8_t test_ڪنجي_id_2[] = {0x31, 0x32, 0x33, 0x34};
+ساكن ثابت uint8_t test_system_id[] = {0x41, 0x42, 0x43};
+ساكن ثابت uint8_t test_معلومات[] = {0x51, 0x52};
 
-static int compare_encryption_info(const AVEncryptionInfo *a, const AVEncryptionInfo *b) {
-    if (!a || !b || a->scheme != b->scheme || a->crypt_byte_block != b->crypt_byte_block ||
-        a->skip_byte_block != b->skip_byte_block || a->key_id_size != b->key_id_size ||
-        a->iv_size != b->iv_size || a->subsample_count != b->subsample_count)
-        return 1;
+ساكن صحيح compare_encryption_info(ثابت AVEncryptionInfo *a, ثابت AVEncryptionInfo *b) {
+    إذا (!a || !b || a->scheme != b->scheme || a->crypt_byte_بلاڪ != b->crypt_byte_بلاڪ ||
+        a->skip_byte_بلاڪ != b->skip_byte_بلاڪ || a->ڪنجي_id_سائيز != b->ڪنجي_id_سائيز ||
+        a->iv_سائيز != b->iv_سائيز || a->subsample_ڳڻپ != b->subsample_ڳڻپ)
+        أرجع 1;
 
-    if (memcmp(a->key_id, b->key_id, a->key_id_size) != 0 ||
-        memcmp(a->iv, b->iv, a->iv_size) != 0 ||
-        memcmp(a->subsamples, b->subsamples, a->subsample_count * sizeof(a->subsamples[0])))
-        return 1;
+    إذا (memcmp(a->ڪنجي_id, b->ڪنجي_id, a->ڪنجي_id_سائيز) != 0 ||
+        memcmp(a->iv, b->iv, a->iv_سائيز) != 0 ||
+        memcmp(a->subsamples, b->subsamples, a->subsample_ڳڻپ * حجم(a->subsamples[0])))
+        أرجع 1;
 
-    return 0;
+    أرجع 0;
 }
 
-static int compare_encryption_init_info(const AVEncryptionInitInfo *a, const AVEncryptionInitInfo *b) {
-    if (!a || !b || a->system_id_size != b->system_id_size ||
-        a->num_key_ids != b->num_key_ids || a->key_id_size != b->key_id_size ||
-        a->data_size != b->data_size)
-        return 1;
+ساكن صحيح compare_encryption_init_info(ثابت AVEncryptionInitInfo *a, ثابت AVEncryptionInitInfo *b) {
+    إذا (!a || !b || a->system_id_سائيز != b->system_id_سائيز ||
+        a->انگ_ڪنجي_ids != b->انگ_ڪنجي_ids || a->ڪنجي_id_سائيز != b->ڪنجي_id_سائيز ||
+        a->معلومات_سائيز != b->معلومات_سائيز)
+        أرجع 1;
 
-    if (memcmp(a->system_id, b->system_id, a->system_id_size) != 0 ||
-        memcmp(a->data, b->data, a->data_size) != 0)
-        return 1;
+    إذا (memcmp(a->system_id, b->system_id, a->system_id_سائيز) != 0 ||
+        memcmp(a->معلومات, b->معلومات, a->معلومات_سائيز) != 0)
+        أرجع 1;
 
-    for (uint32_t i = 0; i < a->num_key_ids; i++) {
-        if (memcmp(a->key_ids[i], b->key_ids[i], a->key_id_size) != 0)
-            return 1;
+    لكل (uint32_t i = 0; i < a->انگ_ڪنجي_ids; i++) {
+        إذا (memcmp(a->ڪنجي_ids[i], b->ڪنجي_ids[i], a->ڪنجي_id_سائيز) != 0)
+            أرجع 1;
     }
 
-    if (a->next || b->next) {
-        if (!a->next || !b->next)
-            return 1;
-        if (compare_encryption_init_info(a->next, b->next) != 0)
-            return 1;
+    إذا (a->ايندڙ || b->ايندڙ) {
+        إذا (!a->ايندڙ || !b->ايندڙ)
+            أرجع 1;
+        إذا (compare_encryption_init_info(a->ايندڙ, b->ايندڙ) != 0)
+            أرجع 1;
     }
 
-    return 0;
+    أرجع 0;
 }
 
-static void run_encryption_info_test(void)
+ساكن فراغ لاڳيتو_encryption_info_test(فراغ)
 {
     AVEncryptionInfo *info, *copy;
-    uint8_t *side_data;
-    size_t side_data_size;
+    uint8_t *side_معلومات;
+    size_t side_معلومات_سائيز;
 
-    info = av_encryption_info_alloc(test_subsample_count, sizeof(test_key_id), sizeof(test_iv));
+    info = av_encryption_info_alloc(test_subsample_ڳڻپ, حجم(test_ڪنجي_id), حجم(test_iv));
     av_assert0(info);
-    av_assert0(info->key_id);
-    av_assert0(info->key_id_size == sizeof(test_key_id));
+    av_assert0(info->ڪنجي_id);
+    av_assert0(info->ڪنجي_id_سائيز == حجم(test_ڪنجي_id));
     av_assert0(info->iv);
-    av_assert0(info->iv_size == sizeof(test_iv));
+    av_assert0(info->iv_سائيز == حجم(test_iv));
     av_assert0(info->subsamples);
-    av_assert0(info->subsample_count == test_subsample_count);
+    av_assert0(info->subsample_ڳڻپ == test_subsample_ڳڻپ);
 
     info->scheme = 1234;
-    info->crypt_byte_block = 333;
-    info->skip_byte_block = 444;
-    memcpy(info->key_id, test_key_id, sizeof(test_key_id));
-    memcpy(info->iv, test_iv, sizeof(test_iv));
-    memcpy(info->subsamples, test_subsamples, sizeof(test_subsamples));
+    info->crypt_byte_بلاڪ = 333;
+    info->skip_byte_بلاڪ = 444;
+    يادگيري_نقل(info->ڪنجي_id, test_ڪنجي_id, حجم(test_ڪنجي_id));
+    يادگيري_نقل(info->iv, test_iv, حجم(test_iv));
+    يادگيري_نقل(info->subsamples, test_subsamples, حجم(test_subsamples));
 
     copy = av_encryption_info_clone(info);
     av_assert0(copy);
@@ -99,87 +99,87 @@ static void run_encryption_info_test(void)
     av_assert0(compare_encryption_info(info, copy) == 0);
     av_encryption_info_free(copy);
 
-    side_data = av_encryption_info_add_side_data(info, &side_data_size);
-    av_assert0(side_data);
-    av_assert0(side_data_size > 0);
+    side_معلومات = av_encryption_info_جوڙيو_side_معلومات(info, &side_معلومات_سائيز);
+    av_assert0(side_معلومات);
+    av_assert0(side_معلومات_سائيز > 0);
 
-    copy = av_encryption_info_get_side_data(side_data, side_data_size);
+    copy = av_encryption_info_get_side_معلومات(side_معلومات, side_معلومات_سائيز);
     av_assert0(copy);
     av_assert0(copy != info);
     av_assert0(compare_encryption_info(info, copy) == 0);
     av_encryption_info_free(copy);
-    av_free(side_data);
+    av_free(side_معلومات);
 
     av_encryption_info_free(info);
 }
 
-static AVEncryptionInitInfo *create_init_info(void)
+ساكن AVEncryptionInitInfo *create_init_info(فراغ)
 {
     AVEncryptionInitInfo *info;
 
-    info = av_encryption_init_info_alloc(sizeof(test_system_id), 2, sizeof(test_key_id), sizeof(test_data));
+    info = av_encryption_init_info_alloc(حجم(test_system_id), 2, حجم(test_ڪنجي_id), حجم(test_معلومات));
     av_assert0(info);
     av_assert0(info->system_id);
-    av_assert0(info->system_id_size == sizeof(test_system_id));
-    av_assert0(info->key_ids);
-    av_assert0(info->num_key_ids == 2);
-    av_assert0(info->key_id_size == sizeof(test_key_id));
-    av_assert0(info->key_ids[0]);
-    av_assert0(info->key_ids[1]);
-    av_assert0(info->data);
-    av_assert0(info->data_size == sizeof(test_data));
-    av_assert0(!info->next);
+    av_assert0(info->system_id_سائيز == حجم(test_system_id));
+    av_assert0(info->ڪنجي_ids);
+    av_assert0(info->انگ_ڪنجي_ids == 2);
+    av_assert0(info->ڪنجي_id_سائيز == حجم(test_ڪنجي_id));
+    av_assert0(info->ڪنجي_ids[0]);
+    av_assert0(info->ڪنجي_ids[1]);
+    av_assert0(info->معلومات);
+    av_assert0(info->معلومات_سائيز == حجم(test_معلومات));
+    av_assert0(!info->ايندڙ);
 
-    memcpy(info->system_id, test_system_id, sizeof(test_system_id));
-    memcpy(info->key_ids[0], test_key_id, sizeof(test_key_id));
-    memcpy(info->key_ids[1], test_key_id_2, sizeof(test_key_id_2));
-    memcpy(info->data, test_data, sizeof(test_data));
+    يادگيري_نقل(info->system_id, test_system_id, حجم(test_system_id));
+    يادگيري_نقل(info->ڪنجي_ids[0], test_ڪنجي_id, حجم(test_ڪنجي_id));
+    يادگيري_نقل(info->ڪنجي_ids[1], test_ڪنجي_id_2, حجم(test_ڪنجي_id_2));
+    يادگيري_نقل(info->معلومات, test_معلومات, حجم(test_معلومات));
 
-    return info;
+    أرجع info;
 }
 
-static void run_encryption_init_info_test(void)
+ساكن فراغ لاڳيتو_encryption_init_info_test(فراغ)
 {
     AVEncryptionInitInfo *info, *copy;
-    uint8_t *side_data, *appended;
-    size_t side_data_size, appended_size;
-    unsigned int allocated_size = 0;
+    uint8_t *side_معلومات, *appended;
+    size_t side_معلومات_سائيز, appended_سائيز;
+    بنانشان صحيح allocated_سائيز = 0;
 
     info = create_init_info();
 
-    side_data = av_encryption_init_info_add_side_data(info, &side_data_size);
-    av_assert0(side_data);
-    av_assert0(side_data_size > 0);
-    copy = av_encryption_init_info_get_side_data(side_data, side_data_size);
+    side_معلومات = av_encryption_init_info_جوڙيو_side_معلومات(info, &side_معلومات_سائيز);
+    av_assert0(side_معلومات);
+    av_assert0(side_معلومات_سائيز > 0);
+    copy = av_encryption_init_info_get_side_معلومات(side_معلومات, side_معلومات_سائيز);
     av_assert0(copy);
     av_assert0(compare_encryption_init_info(info, copy) == 0);
     av_encryption_init_info_free(copy);
-    av_free(side_data);
+    av_free(side_معلومات);
 
     // Make the first init info different from the second to test the correct order.
-    memset(info->system_id, 0, info->system_id_size);
-    appended = av_encryption_init_info_add_side_data(info, &appended_size);
+    memset(info->system_id, 0, info->system_id_سائيز);
+    appended = av_encryption_init_info_جوڙيو_side_معلومات(info, &appended_سائيز);
     av_assert0(appended);
-    info->next = create_init_info();
-    side_data = av_encryption_init_info_add_side_data(info, &side_data_size);
-    av_assert0(side_data);
-    copy = av_encryption_init_info_get_side_data(side_data, side_data_size);
+    info->ايندڙ = create_init_info();
+    side_معلومات = av_encryption_init_info_جوڙيو_side_معلومات(info, &side_معلومات_سائيز);
+    av_assert0(side_معلومات);
+    copy = av_encryption_init_info_get_side_معلومات(side_معلومات, side_معلومات_سائيز);
     av_assert0(copy);
     av_assert0(compare_encryption_init_info(info, copy) == 0);
     av_encryption_init_info_free(copy);
 
-    av_assert0(av_encryption_init_info_append_side_data(&appended, &appended_size, &allocated_size, info->next) == 0);
-    av_assert0(appended_size == side_data_size);
-    av_assert0(memcmp(appended, side_data, side_data_size) == 0);
+    av_assert0(av_encryption_init_info_append_side_معلومات(&appended, &appended_سائيز, &allocated_سائيز, info->ايندڙ) == 0);
+    av_assert0(appended_سائيز == side_معلومات_سائيز);
+    av_assert0(memcmp(appended, side_معلومات, side_معلومات_سائيز) == 0);
     av_free(appended);
-    av_free(side_data);
+    av_free(side_معلومات);
 
     av_encryption_init_info_free(info);
 }
 
-int main(int argc, char **argv)
+صحيح مکيه(صحيح argc, حرف **argv)
 {
-    run_encryption_info_test();
-    run_encryption_init_info_test();
-    return 0;
+    لاڳيتو_encryption_info_test();
+    لاڳيتو_encryption_init_info_test();
+    أرجع 0;
 }

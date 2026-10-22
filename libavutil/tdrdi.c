@@ -16,36 +16,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#ضمن <stddef.h>
+#ضمن <stdint.h>
 
-#include "mem.h"
-#include "tdrdi.h"
+#ضمن "mem.h"
+#ضمن "tdrdi.h"
 
-AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *out_size)
+AV3DReferenceDisplaysInfo *av_tdrdi_alloc(بنانشان صحيح nb_displays, size_t *ٻاهريون_سائيز)
 {
-    struct TestStruct {
+    بنية TestStruct {
         AV3DReferenceDisplaysInfo p;
         AV3DReferenceDisplay      b;
     };
-    const size_t entries_offset = offsetof(struct TestStruct, b);
-    size_t size = entries_offset;
+    ثابت size_t entries_وٿي = offsetof(بنية TestStruct, b);
+    size_t سائيز = entries_وٿي;
     AV3DReferenceDisplaysInfo *tdrdi;
 
-    if (nb_displays > (SIZE_MAX - size) / sizeof(AV3DReferenceDisplay))
-        return NULL;
-    size += sizeof(AV3DReferenceDisplay) * nb_displays;
+    إذا (nb_displays > (SIZE_MAX - سائيز) / حجم(AV3DReferenceDisplay))
+        أرجع عدم;
+    سائيز += حجم(AV3DReferenceDisplay) * nb_displays;
 
-    tdrdi = av_mallocz(size);
-    if (!tdrdi)
-        return NULL;
+    tdrdi = av_mallocz(سائيز);
+    إذا (!tdrdi)
+        أرجع عدم;
 
-    tdrdi->num_ref_displays = nb_displays;
-    tdrdi->entry_size       = sizeof(AV3DReferenceDisplay);
-    tdrdi->entries_offset   = entries_offset;
+    tdrdi->انگ_ref_displays = nb_displays;
+    tdrdi->داخلا_سائيز       = حجم(AV3DReferenceDisplay);
+    tdrdi->entries_وٿي   = entries_وٿي;
 
-    if (out_size)
-        *out_size = size;
+    إذا (ٻاهريون_سائيز)
+        *ٻاهريون_سائيز = سائيز;
 
-    return tdrdi;
+    أرجع tdrdi;
 }

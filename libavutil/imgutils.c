@@ -21,653 +21,653 @@
  * misc image utilities
  */
 
-#include "avassert.h"
-#include "common.h"
-#include "imgutils.h"
-#include "imgutils_internal.h"
-#include "intreadwrite.h"
-#include "log.h"
-#include "mathematics.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "rational.h"
+#ضمن "avassert.h"
+#ضمن "common.h"
+#ضمن "imgutils.h"
+#ضمن "imgutils_internal.h"
+#ضمن "intreadwrite.h"
+#ضمن "log.h"
+#ضمن "mathematics.h"
+#ضمن "mem.h"
+#ضمن "pixdesc.h"
+#ضمن "rational.h"
 
-void av_image_fill_max_pixsteps(int max_pixsteps[4], int max_pixstep_comps[4],
-                                const AVPixFmtDescriptor *pixdesc)
+فراغ av_image_fill_max_pixsteps(صحيح max_pixsteps[4], صحيح max_pixstep_comps[4],
+                                ثابت AVPixFmtDescriptor *pixdesc)
 {
-    int i;
-    memset(max_pixsteps, 0, 4*sizeof(max_pixsteps[0]));
-    if (max_pixstep_comps)
-        memset(max_pixstep_comps, 0, 4*sizeof(max_pixstep_comps[0]));
+    صحيح i;
+    memset(max_pixsteps, 0, 4*حجم(max_pixsteps[0]));
+    إذا (max_pixstep_comps)
+        memset(max_pixstep_comps, 0, 4*حجم(max_pixstep_comps[0]));
 
-    for (i = 0; i < 4; i++) {
-        const AVComponentDescriptor *comp = &(pixdesc->comp[i]);
-        if (comp->step > max_pixsteps[comp->plane]) {
-            max_pixsteps[comp->plane] = comp->step;
-            if (max_pixstep_comps)
+    لكل (i = 0; i < 4; i++) {
+        ثابت AVComponentDescriptor *comp = &(pixdesc->comp[i]);
+        إذا (comp->قدم > max_pixsteps[comp->plane]) {
+            max_pixsteps[comp->plane] = comp->قدم;
+            إذا (max_pixstep_comps)
                 max_pixstep_comps[comp->plane] = i;
         }
     }
 }
 
-static inline
-int image_get_linesize(int width, int plane,
-                       int max_step, int max_step_comp,
-                       const AVPixFmtDescriptor *desc)
+ساكن مضمن
+صحيح image_get_linesize(صحيح ويڪر, صحيح plane,
+                       صحيح max_قدم, صحيح max_قدم_comp,
+                       ثابت AVPixFmtDescriptor *desc)
 {
-    int s, shifted_w, linesize;
+    صحيح s, shifted_w, linesize;
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    إذا (!desc)
+        أرجع AVERROR(EINVAL);
 
-    if (width < 0)
-        return AVERROR(EINVAL);
-    s = (max_step_comp == 1 || max_step_comp == 2) ? desc->log2_chroma_w : 0;
-    shifted_w = AV_CEIL_RSHIFT(width, s);
-    if (shifted_w && max_step > INT_MAX / shifted_w)
-        return AVERROR(EINVAL);
-    linesize = max_step * shifted_w;
+    إذا (ويڪر < 0)
+        أرجع AVERROR(EINVAL);
+    s = (max_قدم_comp == 1 || max_قدم_comp == 2) ? desc->log2_chroma_w : 0;
+    shifted_w = AV_CEIL_RSHIFT(ويڪر, s);
+    إذا (shifted_w && max_قدم > وڌ_کان_وڌ_عدد / shifted_w)
+        أرجع AVERROR(EINVAL);
+    linesize = max_قدم * shifted_w;
 
-    if (desc->flags & AV_PIX_FMT_FLAG_BITSTREAM)
+    إذا (desc->flags & AV_PIX_FMT_FLAG_BITSTREAM)
         linesize = (linesize >> 3) + !!(linesize & 7);
-    return linesize;
+    أرجع linesize;
 }
 
-int av_image_get_linesize(enum AVPixelFormat pix_fmt, int width, int plane)
+صحيح av_image_get_linesize(تعداد AVPixelFormat pix_fmt, صحيح ويڪر, صحيح plane)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int max_step     [4];       /* max pixel step for each plane */
-    int max_step_comp[4];       /* the component for each plane which has the max pixel step */
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    صحيح max_قدم     [4];       /* max pixel step for each plane */
+    صحيح max_قدم_comp[4];       /* the component for each plane which has the max pixel step */
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    إذا (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        أرجع AVERROR(EINVAL);
 
-    av_image_fill_max_pixsteps(max_step, max_step_comp, desc);
-    return image_get_linesize(width, plane, max_step[plane], max_step_comp[plane], desc);
+    av_image_fill_max_pixsteps(max_قدم, max_قدم_comp, desc);
+    أرجع image_get_linesize(ويڪر, plane, max_قدم[plane], max_قدم_comp[plane], desc);
 }
 
-int av_image_fill_linesizes(int linesizes[4], enum AVPixelFormat pix_fmt, int width)
+صحيح av_image_fill_linesizes(صحيح linesizes[4], تعداد AVPixelFormat pix_fmt, صحيح ويڪر)
 {
-    int i, ret;
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int max_step     [4];       /* max pixel step for each plane */
-    int max_step_comp[4];       /* the component for each plane which has the max pixel step */
+    صحيح i, ret;
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    صحيح max_قدم     [4];       /* max pixel step for each plane */
+    صحيح max_قدم_comp[4];       /* the component for each plane which has the max pixel step */
 
-    memset(linesizes, 0, 4*sizeof(linesizes[0]));
+    memset(linesizes, 0, 4*حجم(linesizes[0]));
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    إذا (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        أرجع AVERROR(EINVAL);
 
-    av_image_fill_max_pixsteps(max_step, max_step_comp, desc);
-    for (i = 0; i < 4; i++) {
-        if ((ret = image_get_linesize(width, i, max_step[i], max_step_comp[i], desc)) < 0)
-            return ret;
+    av_image_fill_max_pixsteps(max_قدم, max_قدم_comp, desc);
+    لكل (i = 0; i < 4; i++) {
+        إذا ((ret = image_get_linesize(ويڪر, i, max_قدم[i], max_قدم_comp[i], desc)) < 0)
+            أرجع ret;
         linesizes[i] = ret;
     }
 
-    return 0;
+    أرجع 0;
 }
 
-int av_image_fill_plane_sizes(size_t sizes[4], enum AVPixelFormat pix_fmt,
-                              int height, const ptrdiff_t linesizes[4])
+صحيح av_image_fill_plane_sizes(size_t sizes[4], تعداد AVPixelFormat pix_fmt,
+                              صحيح اوچائي, ثابت ptrdiff_t linesizes[4])
 {
-    int i, has_plane[4] = { 0 };
+    صحيح i, has_plane[4] = { 0 };
 
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    memset(sizes    , 0, sizeof(sizes[0])*4);
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    memset(sizes    , 0, حجم(sizes[0])*4);
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    إذا (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        أرجع AVERROR(EINVAL);
 
-    if (linesizes[0] > SIZE_MAX / height)
-        return AVERROR(EINVAL);
-    sizes[0] = linesizes[0] * (size_t)height;
+    إذا (linesizes[0] > SIZE_MAX / اوچائي)
+        أرجع AVERROR(EINVAL);
+    sizes[0] = linesizes[0] * (size_t)اوچائي;
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+    إذا (desc->flags & AV_PIX_FMT_FLAG_PAL) {
         sizes[1] = 256 * 4; /* palette is stored here as 256 32 bits words */
-        return 0;
+        أرجع 0;
     }
 
-    for (i = 0; i < 4; i++)
+    لكل (i = 0; i < 4; i++)
         has_plane[desc->comp[i].plane] = 1;
 
-    for (i = 1; i < 4 && has_plane[i]; i++) {
-        int h, s = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
-        h = AV_CEIL_RSHIFT(height, s);
-        if (linesizes[i] > SIZE_MAX / h)
-            return AVERROR(EINVAL);
+    لكل (i = 1; i < 4 && has_plane[i]; i++) {
+        صحيح h, s = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+        h = AV_CEIL_RSHIFT(اوچائي, s);
+        إذا (linesizes[i] > SIZE_MAX / h)
+            أرجع AVERROR(EINVAL);
         sizes[i] = (size_t)h * linesizes[i];
     }
 
-    return 0;
+    أرجع 0;
 }
 
-int av_image_fill_pointers(uint8_t *data[4], enum AVPixelFormat pix_fmt, int height,
-                           uint8_t *ptr, const int linesizes[4])
+صحيح av_image_fill_اشارا(uint8_t *معلومات[4], تعداد AVPixelFormat pix_fmt, صحيح اوچائي,
+                           uint8_t *ptr, ثابت صحيح linesizes[4])
 {
-    int i, ret;
+    صحيح i, ret;
     ptrdiff_t linesizes1[4];
     size_t sizes[4];
 
-    memset(data     , 0, sizeof(data[0])*4);
+    memset(معلومات     , 0, حجم(معلومات[0])*4);
 
-    for (i = 0; i < 4; i++)
+    لكل (i = 0; i < 4; i++)
         linesizes1[i] = linesizes[i];
 
-    ret = av_image_fill_plane_sizes(sizes, pix_fmt, height, linesizes1);
-    if (ret < 0)
-        return ret;
+    ret = av_image_fill_plane_sizes(sizes, pix_fmt, اوچائي, linesizes1);
+    إذا (ret < 0)
+        أرجع ret;
 
     ret = 0;
-    for (i = 0; i < 4; i++) {
-        if (sizes[i] > INT_MAX - ret)
-            return AVERROR(EINVAL);
+    لكل (i = 0; i < 4; i++) {
+        إذا (sizes[i] > وڌ_کان_وڌ_عدد - ret)
+            أرجع AVERROR(EINVAL);
         ret += sizes[i];
     }
 
-    if (!ptr)
-        return ret;
+    إذا (!ptr)
+        أرجع ret;
 
-    data[0] = ptr;
-    for (i = 1; i < 4 && sizes[i]; i++)
-        data[i] = data[i - 1] + sizes[i - 1];
+    معلومات[0] = ptr;
+    لكل (i = 1; i < 4 && sizes[i]; i++)
+        معلومات[i] = معلومات[i - 1] + sizes[i - 1];
 
-    return ret;
+    أرجع ret;
 }
 
-int avpriv_set_systematic_pal2(uint32_t pal[256], enum AVPixelFormat pix_fmt)
+صحيح avpriv_سيٽ_systematic_pal2(uint32_t pal[256], تعداد AVPixelFormat pix_fmt)
 {
-    int i;
+    صحيح i;
 
-    for (i = 0; i < 256; i++) {
-        int r, g, b;
+    لكل (i = 0; i < 256; i++) {
+        صحيح r, g, b;
 
-        switch (pix_fmt) {
-        case AV_PIX_FMT_RGB8:
+        بدل (pix_fmt) {
+        حالة AV_PIX_FMT_RGB8:
             r = (i>>5    )*36;
             g = ((i>>2)&7)*36;
             b = (i&3     )*85;
-            break;
-        case AV_PIX_FMT_BGR8:
+            اكسر;
+        حالة AV_PIX_FMT_BGR8:
             b = (i>>6    )*85;
             g = ((i>>3)&7)*36;
             r = (i&7     )*36;
-            break;
-        case AV_PIX_FMT_RGB4_BYTE:
+            اكسر;
+        حالة AV_PIX_FMT_RGB4_BYTE:
             r = (i>>3    )*255;
             g = ((i>>1)&3)*85;
             b = (i&1     )*255;
-            break;
-        case AV_PIX_FMT_BGR4_BYTE:
+            اكسر;
+        حالة AV_PIX_FMT_BGR4_BYTE:
             b = (i>>3    )*255;
             g = ((i>>1)&3)*85;
             r = (i&1     )*255;
-            break;
-        case AV_PIX_FMT_GRAY8:
+            اكسر;
+        حالة AV_PIX_FMT_GRAY8:
             r = b = g = i;
-            break;
-        default:
-            return AVERROR(EINVAL);
+            اكسر;
+        افتراضي:
+            أرجع AVERROR(EINVAL);
         }
         pal[i] = b + (g << 8) + (r << 16) + (0xFFU << 24);
     }
 
-    return 0;
+    أرجع 0;
 }
 
-int av_image_alloc(uint8_t *pointers[4], int linesizes[4],
-                   int w, int h, enum AVPixelFormat pix_fmt, int align)
+صحيح av_image_alloc(uint8_t *اشارا[4], صحيح linesizes[4],
+                   صحيح w, صحيح h, تعداد AVPixelFormat pix_fmt, صحيح align)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int i, ret;
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    صحيح i, ret;
     ptrdiff_t linesizes1[4];
-    size_t total_size, sizes[4];
+    size_t ڪل_سائيز, sizes[4];
     uint8_t *buf;
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    إذا (!desc)
+        أرجع AVERROR(EINVAL);
 
-    if ((ret = av_image_check_size(w, h, 0, NULL)) < 0)
-        return ret;
-    if ((ret = av_image_fill_linesizes(linesizes, pix_fmt, align>7 ? FFALIGN(w, 8) : w)) < 0)
-        return ret;
+    إذا ((ret = av_image_check_سائيز(w, h, 0, عدم)) < 0)
+        أرجع ret;
+    إذا ((ret = av_image_fill_linesizes(linesizes, pix_fmt, align>7 ? FFALIGN(w, 8) : w)) < 0)
+        أرجع ret;
 
-    for (i = 0; i < 4; i++) {
+    لكل (i = 0; i < 4; i++) {
         linesizes[i] = FFALIGN(linesizes[i], align);
         linesizes1[i] = linesizes[i];
     }
 
-    if ((ret = av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1)) < 0)
-        return ret;
-    total_size = align;
-    for (i = 0; i < 4; i++) {
-        if (total_size > SIZE_MAX - sizes[i])
-            return AVERROR(EINVAL);
-        total_size += sizes[i];
+    إذا ((ret = av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1)) < 0)
+        أرجع ret;
+    ڪل_سائيز = align;
+    لكل (i = 0; i < 4; i++) {
+        إذا (ڪل_سائيز > SIZE_MAX - sizes[i])
+            أرجع AVERROR(EINVAL);
+        ڪل_سائيز += sizes[i];
     }
-    buf = av_malloc(total_size);
-    if (!buf)
-        return AVERROR(ENOMEM);
-    if ((ret = av_image_fill_pointers(pointers, pix_fmt, h, buf, linesizes)) < 0) {
+    buf = av_malloc(ڪل_سائيز);
+    إذا (!buf)
+        أرجع AVERROR(ENOMEM);
+    إذا ((ret = av_image_fill_اشارا(اشارا, pix_fmt, h, buf, linesizes)) < 0) {
         av_free(buf);
-        return ret;
+        أرجع ret;
     }
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
-        avpriv_set_systematic_pal2((uint32_t*)pointers[1], pix_fmt);
-        if (align < 4) {
-            av_log(NULL, AV_LOG_ERROR, "Formats with a palette require a minimum alignment of 4\n");
+    إذا (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+        avpriv_سيٽ_systematic_pal2((uint32_t*)اشارا[1], pix_fmt);
+        إذا (align < 4) {
+            av_log(عدم, AV_LOG_ERROR, "Formats with a palette require a minimum alignment of 4\n");
             av_free(buf);
-            return AVERROR(EINVAL);
+            أرجع AVERROR(EINVAL);
         }
     }
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL && pointers[1] &&
-        pointers[1] - pointers[0] > linesizes[0] * h) {
+    إذا (desc->flags & AV_PIX_FMT_FLAG_PAL && اشارا[1] &&
+        اشارا[1] - اشارا[0] > linesizes[0] * h) {
         /* zero-initialize the padding before the palette */
-        memset(pointers[0] + linesizes[0] * h, 0,
-               pointers[1] - pointers[0] - linesizes[0] * h);
+        memset(اشارا[0] + linesizes[0] * h, 0,
+               اشارا[1] - اشارا[0] - linesizes[0] * h);
     }
 
-    return ret;
+    أرجع ret;
 }
 
-typedef struct ImgUtils {
-    const AVClass *class;
-    int   log_offset;
-    void *log_ctx;
+تعريفنوع بنية ImgUtils {
+    ثابت AVClass *class;
+    صحيح   log_وٿي;
+    فراغ *log_ctx;
 } ImgUtils;
 
-static const AVClass imgutils_class = {
+ساكن ثابت AVClass imgutils_class = {
     .class_name                = "IMGUTILS",
-    .item_name                 = av_default_item_name,
-    .option                    = NULL,
-    .version                   = LIBAVUTIL_VERSION_INT,
-    .log_level_offset_offset   = offsetof(ImgUtils, log_offset),
-    .parent_log_context_offset = offsetof(ImgUtils, log_ctx),
+    .شي_name                 = av_default_شي_name,
+    .option                    = عدم,
+    .نسخو                   = LIBAVUTIL_نسخو_INT,
+    .log_level_وٿي_وٿي   = offsetof(ImgUtils, log_وٿي),
+    .والد_log_context_وٿي = offsetof(ImgUtils, log_ctx),
 };
 
-int av_image_check_size2(unsigned int w, unsigned int h, int64_t max_pixels, enum AVPixelFormat pix_fmt, int log_offset, void *log_ctx)
+صحيح av_image_check_size2(بنانشان صحيح w, بنانشان صحيح h, int64_t max_pixels, تعداد AVPixelFormat pix_fmt, صحيح log_وٿي, فراغ *log_ctx)
 {
     ImgUtils imgutils = {
         .class      = &imgutils_class,
-        .log_offset = log_offset,
+        .log_وٿي = log_وٿي,
         .log_ctx    = log_ctx,
     };
     int64_t stride = av_image_get_linesize(pix_fmt, w, 0);
-    if (stride <= 0)
+    إذا (stride <= 0)
         stride = 8LL*w;
     stride += 128*8;
 
-    if (w==0 || h==0 || w > INT32_MAX || h > INT32_MAX || stride >= INT_MAX || stride*(h + 128ULL) >= INT_MAX) {
+    إذا (w==0 || h==0 || w > INT32_MAX || h > INT32_MAX || stride >= وڌ_کان_وڌ_عدد || stride*(h + 128ULL) >= وڌ_کان_وڌ_عدد) {
         av_log(&imgutils, AV_LOG_ERROR, "Picture size %ux%u is invalid\n", w, h);
-        return AVERROR(EINVAL);
+        أرجع AVERROR(EINVAL);
     }
 
-    if (max_pixels < INT64_MAX) {
-        if (w*(int64_t)h > max_pixels) {
+    إذا (max_pixels < INT64_MAX) {
+        إذا (w*(int64_t)h > max_pixels) {
             av_log(&imgutils, AV_LOG_ERROR,
                     "Picture size %ux%u exceeds specified max pixel count %"PRId64", see the documentation if you wish to increase it\n",
                     w, h, max_pixels);
-            return AVERROR(EINVAL);
+            أرجع AVERROR(EINVAL);
         }
     }
 
-    return 0;
+    أرجع 0;
 }
 
-int av_image_check_size(unsigned int w, unsigned int h, int log_offset, void *log_ctx)
+صحيح av_image_check_سائيز(بنانشان صحيح w, بنانشان صحيح h, صحيح log_وٿي, فراغ *log_ctx)
 {
-    return av_image_check_size2(w, h, INT64_MAX, AV_PIX_FMT_NONE, log_offset, log_ctx);
+    أرجع av_image_check_size2(w, h, INT64_MAX, AV_PIX_FMT_NONE, log_وٿي, log_ctx);
 }
 
-int av_image_check_sar(unsigned int w, unsigned int h, AVRational sar)
+صحيح av_image_check_sar(بنانشان صحيح w, بنانشان صحيح h, AVRational sar)
 {
     int64_t scaled_dim;
 
-    if (sar.den <= 0 || sar.num < 0)
-        return AVERROR(EINVAL);
+    إذا (sar.den <= 0 || sar.انگ < 0)
+        أرجع AVERROR(EINVAL);
 
-    if (!sar.num || sar.num == sar.den)
-        return 0;
+    إذا (!sar.انگ || sar.انگ == sar.den)
+        أرجع 0;
 
-    if (sar.num < sar.den)
-        scaled_dim = av_rescale_rnd(w, sar.num, sar.den, AV_ROUND_ZERO);
-    else
-        scaled_dim = av_rescale_rnd(h, sar.den, sar.num, AV_ROUND_ZERO);
+    إذا (sar.انگ < sar.den)
+        scaled_dim = av_rescale_rnd(w, sar.انگ, sar.den, AV_ڦيرو_ZERO);
+    وإلا
+        scaled_dim = av_rescale_rnd(h, sar.den, sar.انگ, AV_ڦيرو_ZERO);
 
-    if (scaled_dim > 0)
-        return 0;
+    إذا (scaled_dim > 0)
+        أرجع 0;
 
-    return AVERROR(EINVAL);
+    أرجع AVERROR(EINVAL);
 }
 
-static void image_copy_plane(uint8_t       *dst, ptrdiff_t dst_linesize,
-                             const uint8_t *src, ptrdiff_t src_linesize,
-                             ptrdiff_t bytewidth, int height)
+ساكن فراغ image_copy_plane(uint8_t       *dst, ptrdiff_t dst_linesize,
+                             ثابت uint8_t *src, ptrdiff_t src_linesize,
+                             ptrdiff_t bytewidth, صحيح اوچائي)
 {
-    if (!dst || !src)
-        return;
+    إذا (!dst || !src)
+        أرجع;
     av_assert0(FFABS(src_linesize) >= bytewidth);
     av_assert0(FFABS(dst_linesize) >= bytewidth);
-    for (;height > 0; height--) {
-        memcpy(dst, src, bytewidth);
+    لكل (;اوچائي > 0; اوچائي--) {
+        يادگيري_نقل(dst, src, bytewidth);
         dst += dst_linesize;
         src += src_linesize;
     }
 }
 
-void av_image_copy_plane_uc_from(uint8_t *dst, ptrdiff_t dst_linesize,
-                                 const uint8_t *src, ptrdiff_t src_linesize,
-                                 ptrdiff_t bytewidth, int height)
+فراغ av_image_copy_plane_uc_from(uint8_t *dst, ptrdiff_t dst_linesize,
+                                 ثابت uint8_t *src, ptrdiff_t src_linesize,
+                                 ptrdiff_t bytewidth, صحيح اوچائي)
 {
-    int ret = -1;
+    صحيح ret = -1;
 
-#if ARCH_X86 && HAVE_X86ASM
+#إذا ARCH_X86 && HAVE_X86ASM
     ret = ff_image_copy_plane_uc_from_x86(dst, dst_linesize, src, src_linesize,
-                                          bytewidth, height);
-#endif
+                                          bytewidth, اوچائي);
+#جيڪڏهن_پورو
 
-    if (ret < 0)
-        image_copy_plane(dst, dst_linesize, src, src_linesize, bytewidth, height);
+    إذا (ret < 0)
+        image_copy_plane(dst, dst_linesize, src, src_linesize, bytewidth, اوچائي);
 }
 
-void av_image_copy_plane(uint8_t       *dst, int dst_linesize,
-                         const uint8_t *src, int src_linesize,
-                         int bytewidth, int height)
+فراغ av_image_copy_plane(uint8_t       *dst, صحيح dst_linesize,
+                         ثابت uint8_t *src, صحيح src_linesize,
+                         صحيح bytewidth, صحيح اوچائي)
 {
-    image_copy_plane(dst, dst_linesize, src, src_linesize, bytewidth, height);
+    image_copy_plane(dst, dst_linesize, src, src_linesize, bytewidth, اوچائي);
 }
 
-static void image_copy(uint8_t *const dst_data[4], const ptrdiff_t dst_linesizes[4],
-                       const uint8_t *const src_data[4], const ptrdiff_t src_linesizes[4],
-                       enum AVPixelFormat pix_fmt, int width, int height,
-                       void (*copy_plane)(uint8_t *, ptrdiff_t, const uint8_t *,
-                                          ptrdiff_t, ptrdiff_t, int))
+ساكن فراغ image_copy(uint8_t *ثابت dst_معلومات[4], ثابت ptrdiff_t dst_linesizes[4],
+                       ثابت uint8_t *ثابت src_معلومات[4], ثابت ptrdiff_t src_linesizes[4],
+                       تعداد AVPixelFormat pix_fmt, صحيح ويڪر, صحيح اوچائي,
+                       فراغ (*copy_plane)(uint8_t *, ptrdiff_t, ثابت uint8_t *,
+                                          ptrdiff_t, ptrdiff_t, صحيح))
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return;
+    إذا (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        أرجع;
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
-        copy_plane(dst_data[0], dst_linesizes[0],
-                   src_data[0], src_linesizes[0],
-                   width, height);
+    إذا (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+        copy_plane(dst_معلومات[0], dst_linesizes[0],
+                   src_معلومات[0], src_linesizes[0],
+                   ويڪر, اوچائي);
         /* copy the palette */
-        if ((desc->flags & AV_PIX_FMT_FLAG_PAL) || (dst_data[1] && src_data[1]))
-            memcpy(dst_data[1], src_data[1], 4*256);
-    } else {
-        int i, planes_nb = 0;
+        إذا ((desc->flags & AV_PIX_FMT_FLAG_PAL) || (dst_معلومات[1] && src_معلومات[1]))
+            يادگيري_نقل(dst_معلومات[1], src_معلومات[1], 4*256);
+    } وإلا {
+        صحيح i, planes_nb = 0;
 
-        for (i = 0; i < desc->nb_components; i++)
+        لكل (i = 0; i < desc->nb_components; i++)
             planes_nb = FFMAX(planes_nb, desc->comp[i].plane + 1);
 
-        for (i = 0; i < planes_nb; i++) {
-            int h = height;
-            ptrdiff_t bwidth = av_image_get_linesize(pix_fmt, width, i);
-            if (bwidth < 0) {
-                av_log(NULL, AV_LOG_ERROR, "av_image_get_linesize failed\n");
-                return;
+        لكل (i = 0; i < planes_nb; i++) {
+            صحيح h = اوچائي;
+            ptrdiff_t bwidth = av_image_get_linesize(pix_fmt, ويڪر, i);
+            إذا (bwidth < 0) {
+                av_log(عدم, AV_LOG_ERROR, "av_image_get_linesize failed\n");
+                أرجع;
             }
-            if (i == 1 || i == 2) {
-                h = AV_CEIL_RSHIFT(height, desc->log2_chroma_h);
+            إذا (i == 1 || i == 2) {
+                h = AV_CEIL_RSHIFT(اوچائي, desc->log2_chroma_h);
             }
-            copy_plane(dst_data[i], dst_linesizes[i],
-                       src_data[i], src_linesizes[i],
+            copy_plane(dst_معلومات[i], dst_linesizes[i],
+                       src_معلومات[i], src_linesizes[i],
                        bwidth, h);
         }
     }
 }
 
-void av_image_copy(uint8_t *const dst_data[4], const int dst_linesizes[4],
-                   const uint8_t * const src_data[4], const int src_linesizes[4],
-                   enum AVPixelFormat pix_fmt, int width, int height)
+فراغ av_image_copy(uint8_t *ثابت dst_معلومات[4], ثابت صحيح dst_linesizes[4],
+                   ثابت uint8_t * ثابت src_معلومات[4], ثابت صحيح src_linesizes[4],
+                   تعداد AVPixelFormat pix_fmt, صحيح ويڪر, صحيح اوچائي)
 {
     ptrdiff_t dst_linesizes1[4], src_linesizes1[4];
-    int i;
+    صحيح i;
 
-    for (i = 0; i < 4; i++) {
+    لكل (i = 0; i < 4; i++) {
         dst_linesizes1[i] = dst_linesizes[i];
         src_linesizes1[i] = src_linesizes[i];
     }
 
-    image_copy(dst_data, dst_linesizes1, src_data, src_linesizes1, pix_fmt,
-               width, height, image_copy_plane);
+    image_copy(dst_معلومات, dst_linesizes1, src_معلومات, src_linesizes1, pix_fmt,
+               ويڪر, اوچائي, image_copy_plane);
 }
 
-void av_image_copy_uc_from(uint8_t * const dst_data[4], const ptrdiff_t dst_linesizes[4],
-                           const uint8_t * const src_data[4], const ptrdiff_t src_linesizes[4],
-                           enum AVPixelFormat pix_fmt, int width, int height)
+فراغ av_image_copy_uc_from(uint8_t * ثابت dst_معلومات[4], ثابت ptrdiff_t dst_linesizes[4],
+                           ثابت uint8_t * ثابت src_معلومات[4], ثابت ptrdiff_t src_linesizes[4],
+                           تعداد AVPixelFormat pix_fmt, صحيح ويڪر, صحيح اوچائي)
 {
-    image_copy(dst_data, dst_linesizes, src_data, src_linesizes, pix_fmt,
-               width, height, av_image_copy_plane_uc_from);
+    image_copy(dst_معلومات, dst_linesizes, src_معلومات, src_linesizes, pix_fmt,
+               ويڪر, اوچائي, av_image_copy_plane_uc_from);
 }
 
-int av_image_fill_arrays(uint8_t *dst_data[4], int dst_linesize[4],
-                         const uint8_t *src, enum AVPixelFormat pix_fmt,
-                         int width, int height, int align)
+صحيح av_image_fill_arrays(uint8_t *dst_معلومات[4], صحيح dst_linesize[4],
+                         ثابت uint8_t *src, تعداد AVPixelFormat pix_fmt,
+                         صحيح ويڪر, صحيح اوچائي, صحيح align)
 {
-    int ret, i;
+    صحيح ret, i;
 
-    ret = av_image_check_size(width, height, 0, NULL);
-    if (ret < 0)
-        return ret;
+    ret = av_image_check_سائيز(ويڪر, اوچائي, 0, عدم);
+    إذا (ret < 0)
+        أرجع ret;
 
-    ret = av_image_fill_linesizes(dst_linesize, pix_fmt, width);
-    if (ret < 0)
-        return ret;
+    ret = av_image_fill_linesizes(dst_linesize, pix_fmt, ويڪر);
+    إذا (ret < 0)
+        أرجع ret;
 
-    for (i = 0; i < 4; i++)
+    لكل (i = 0; i < 4; i++)
         dst_linesize[i] = FFALIGN(dst_linesize[i], align);
 
-    return av_image_fill_pointers(dst_data, pix_fmt, height, (uint8_t *)src, dst_linesize);
+    أرجع av_image_fill_اشارا(dst_معلومات, pix_fmt, اوچائي, (uint8_t *)src, dst_linesize);
 }
 
-int av_image_get_buffer_size(enum AVPixelFormat pix_fmt,
-                             int width, int height, int align)
+صحيح av_image_get_بفر_سائيز(تعداد AVPixelFormat pix_fmt,
+                             صحيح ويڪر, صحيح اوچائي, صحيح align)
 {
-    int ret, i;
-    int linesize[4];
+    صحيح ret, i;
+    صحيح linesize[4];
     ptrdiff_t aligned_linesize[4];
     size_t sizes[4];
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    if (!desc)
-        return AVERROR(EINVAL);
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    إذا (!desc)
+        أرجع AVERROR(EINVAL);
 
-    ret = av_image_check_size(width, height, 0, NULL);
-    if (ret < 0)
-        return ret;
+    ret = av_image_check_سائيز(ويڪر, اوچائي, 0, عدم);
+    إذا (ret < 0)
+        أرجع ret;
 
-    ret = av_image_fill_linesizes(linesize, pix_fmt, width);
-    if (ret < 0)
-        return ret;
+    ret = av_image_fill_linesizes(linesize, pix_fmt, ويڪر);
+    إذا (ret < 0)
+        أرجع ret;
 
-    for (i = 0; i < 4; i++)
+    لكل (i = 0; i < 4; i++)
         aligned_linesize[i] = FFALIGN(linesize[i], align);
 
-    ret = av_image_fill_plane_sizes(sizes, pix_fmt, height, aligned_linesize);
-    if (ret < 0)
-        return ret;
+    ret = av_image_fill_plane_sizes(sizes, pix_fmt, اوچائي, aligned_linesize);
+    إذا (ret < 0)
+        أرجع ret;
 
     ret = 0;
-    for (i = 0; i < 4; i++) {
-        if (sizes[i] > INT_MAX - ret)
-            return AVERROR(EINVAL);
+    لكل (i = 0; i < 4; i++) {
+        إذا (sizes[i] > وڌ_کان_وڌ_عدد - ret)
+            أرجع AVERROR(EINVAL);
         ret += sizes[i];
     }
-    return ret;
+    أرجع ret;
 }
 
-int av_image_copy_to_buffer(uint8_t *dst, int dst_size,
-                            const uint8_t * const src_data[4],
-                            const int src_linesize[4],
-                            enum AVPixelFormat pix_fmt,
-                            int width, int height, int align)
+صحيح av_image_copy_منزل_بفر(uint8_t *dst, صحيح dst_سائيز,
+                            ثابت uint8_t * ثابت src_معلومات[4],
+                            ثابت صحيح src_linesize[4],
+                            تعداد AVPixelFormat pix_fmt,
+                            صحيح ويڪر, صحيح اوچائي, صحيح align)
 {
-    int i, j, nb_planes = 0, linesize[4];
-    int size = av_image_get_buffer_size(pix_fmt, width, height, align);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int ret;
+    صحيح i, j, nb_planes = 0, linesize[4];
+    صحيح سائيز = av_image_get_بفر_سائيز(pix_fmt, ويڪر, اوچائي, align);
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    صحيح ret;
 
-    if (size > dst_size || size < 0 || !desc)
-        return AVERROR(EINVAL);
+    إذا (سائيز > dst_سائيز || سائيز < 0 || !desc)
+        أرجع AVERROR(EINVAL);
 
-    for (i = 0; i < desc->nb_components; i++)
+    لكل (i = 0; i < desc->nb_components; i++)
         nb_planes = FFMAX(desc->comp[i].plane, nb_planes);
 
     nb_planes++;
 
-    ret = av_image_fill_linesizes(linesize, pix_fmt, width);
+    ret = av_image_fill_linesizes(linesize, pix_fmt, ويڪر);
     av_assert0(ret >= 0); // was checked previously
 
-    for (i = 0; i < nb_planes; i++) {
-        int h, shift = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
-        const uint8_t *src = src_data[i];
-        h = AV_CEIL_RSHIFT(height, shift);
+    لكل (i = 0; i < nb_planes; i++) {
+        صحيح h, سرڪايو = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+        ثابت uint8_t *src = src_معلومات[i];
+        h = AV_CEIL_RSHIFT(اوچائي, سرڪايو);
 
-        for (j = 0; j < h; j++) {
-            memcpy(dst, src, linesize[i]);
+        لكل (j = 0; j < h; j++) {
+            يادگيري_نقل(dst, src, linesize[i]);
             dst += FFALIGN(linesize[i], align);
             src += src_linesize[i];
         }
     }
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+    إذا (desc->flags & AV_PIX_FMT_FLAG_PAL) {
         uint32_t *d32 = (uint32_t *)dst;
 
-        for (i = 0; i<256; i++)
-            AV_WL32(d32 + i, AV_RN32(src_data[1] + 4*i));
+        لكل (i = 0; i<256; i++)
+            AV_WL32(d32 + i, AV_RN32(src_معلومات[1] + 4*i));
     }
 
-    return size;
+    أرجع سائيز;
 }
 
 // Fill dst[0..dst_size] with the bytes in clear[0..clear_size]. The clear
 // bytes are repeated until dst_size is reached. If dst_size is unaligned (i.e.
 // dst_size%clear_size!=0), the remaining data will be filled with the beginning
 // of the clear data only.
-static void memset_bytes(uint8_t *dst, size_t dst_size, uint8_t *clear,
-                         size_t clear_size)
+ساكن فراغ memset_بائيٽون(uint8_t *dst, size_t dst_سائيز, uint8_t *clear,
+                         size_t clear_سائيز)
 {
-    int same = 1;
-    int i;
+    صحيح same = 1;
+    صحيح i;
 
-    if (!clear_size)
-        return;
+    إذا (!clear_سائيز)
+        أرجع;
 
     // Reduce to memset() if possible.
-    for (i = 0; i < clear_size; i++) {
-        if (clear[i] != clear[0]) {
+    لكل (i = 0; i < clear_سائيز; i++) {
+        إذا (clear[i] != clear[0]) {
             same = 0;
-            break;
+            اكسر;
         }
     }
-    if (same)
-        clear_size = 1;
+    إذا (same)
+        clear_سائيز = 1;
 
-    if (clear_size == 1) {
-        memset(dst, clear[0], dst_size);
-    } else {
-        if (clear_size > dst_size)
-            clear_size = dst_size;
-        memcpy(dst, clear, clear_size);
-        av_memcpy_backptr(dst + clear_size, clear_size, dst_size - clear_size);
+    إذا (clear_سائيز == 1) {
+        memset(dst, clear[0], dst_سائيز);
+    } وإلا {
+        إذا (clear_سائيز > dst_سائيز)
+            clear_سائيز = dst_سائيز;
+        يادگيري_نقل(dst, clear, clear_سائيز);
+        av_memcpy_backptr(dst + clear_سائيز, clear_سائيز, dst_سائيز - clear_سائيز);
     }
 }
 
 // Maximum size in bytes of a plane element (usually a pixel, or multiple pixels
 // if it's a subsampled packed format).
-#define MAX_BLOCK_SIZE 32
+#وصف_ڪريو MAX_بلاڪ_سائيز 32
 
-int av_image_fill_color(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
-                        enum AVPixelFormat pix_fmt, const uint32_t color[4],
-                        int width, int height, int flags)
+صحيح av_image_fill_color(uint8_t * ثابت dst_معلومات[4], ثابت ptrdiff_t dst_linesize[4],
+                        تعداد AVPixelFormat pix_fmt, ثابت uint32_t color[4],
+                        صحيح ويڪر, صحيح اوچائي, صحيح flags)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int nb_planes = av_pix_fmt_count_planes(pix_fmt);
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    صحيح nb_planes = av_pix_fmt_ڳڻپ_planes(pix_fmt);
     // A pixel or a group of pixels on each plane, with a value that represents the color.
     // Consider e.g. AV_PIX_FMT_UYVY422 for non-trivial cases.
-    uint8_t clear_block[4][MAX_BLOCK_SIZE] = {{0}}; // clear padding with 0
-    int clear_block_size[4] = {0};
-    ptrdiff_t plane_line_bytes[4] = {0};
-    int bitstream;
-    int plane, c;
+    uint8_t clear_بلاڪ[4][MAX_بلاڪ_سائيز] = {{0}}; // clear padding with 0
+    صحيح clear_بلاڪ_سائيز[4] = {0};
+    ptrdiff_t plane_سٽ_بائيٽون[4] = {0};
+    صحيح bitstream;
+    صحيح plane, c;
 
-    if (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    إذا (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        أرجع AVERROR(EINVAL);
 
     bitstream = !!(desc->flags & AV_PIX_FMT_FLAG_BITSTREAM);
 
-    for (c = 0; c < desc->nb_components; c++) {
-        const AVComponentDescriptor comp = desc->comp[c];
+    لكل (c = 0; c < desc->nb_components; c++) {
+        ثابت AVComponentDescriptor comp = desc->comp[c];
 
         // We try to operate on entire non-subsampled pixel groups (for
         // AV_PIX_FMT_UYVY422 this would mean two consecutive pixels).
-        clear_block_size[comp.plane] = FFMAX(clear_block_size[comp.plane], comp.step);
+        clear_بلاڪ_سائيز[comp.plane] = FFMAX(clear_بلاڪ_سائيز[comp.plane], comp.قدم);
 
-        if (clear_block_size[comp.plane] > MAX_BLOCK_SIZE)
-            return AVERROR(EINVAL);
+        إذا (clear_بلاڪ_سائيز[comp.plane] > MAX_بلاڪ_سائيز)
+            أرجع AVERROR(EINVAL);
     }
 
     // Create a byte array for clearing 1 pixel (sometimes several pixels).
-    for (c = 0; c < desc->nb_components; c++) {
-        const AVComponentDescriptor comp = desc->comp[c];
+    لكل (c = 0; c < desc->nb_components; c++) {
+        ثابت AVComponentDescriptor comp = desc->comp[c];
         // (Multiple pixels happen e.g. with AV_PIX_FMT_UYVY422.)
-        int w = (bitstream ? 8 : 1) * clear_block_size[comp.plane] / comp.step;
-        uint8_t *c_data[4];
-        const int c_linesize[4] = {0};
-        uint32_t src_array[MAX_BLOCK_SIZE];
-        int x;
+        صحيح w = (bitstream ? 8 : 1) * clear_بلاڪ_سائيز[comp.plane] / comp.قدم;
+        uint8_t *c_معلومات[4];
+        ثابت صحيح c_linesize[4] = {0};
+        uint32_t src_array[MAX_بلاڪ_سائيز];
+        صحيح x;
 
-        if (comp.depth > 32)
-            return AVERROR(EINVAL);
-        if (w < 1)
-            return AVERROR(EINVAL);
+        إذا (comp.اونهائي > 32)
+            أرجع AVERROR(EINVAL);
+        إذا (w < 1)
+            أرجع AVERROR(EINVAL);
 
-        for (x = 0; x < w; x++)
+        لكل (x = 0; x < w; x++)
             src_array[x] = color[c];
 
-        for (x = 0; x < 4; x++)
-            c_data[x] = &clear_block[x][0];
+        لكل (x = 0; x < 4; x++)
+            c_معلومات[x] = &clear_بلاڪ[x][0];
 
-        av_write_image_line2(src_array, c_data, c_linesize, desc, 0, 0, c, w, 4);
+        av_write_image_line2(src_array, c_معلومات, c_linesize, desc, 0, 0, c, w, 4);
     }
 
-    for (plane = 0; plane < nb_planes; plane++) {
-        plane_line_bytes[plane] = av_image_get_linesize(pix_fmt, width, plane);
-        if (plane_line_bytes[plane] < 0)
-            return AVERROR(EINVAL);
+    لكل (plane = 0; plane < nb_planes; plane++) {
+        plane_سٽ_بائيٽون[plane] = av_image_get_linesize(pix_fmt, ويڪر, plane);
+        إذا (plane_سٽ_بائيٽون[plane] < 0)
+            أرجع AVERROR(EINVAL);
     }
 
-    if (!dst_data)
-        return 0;
+    إذا (!dst_معلومات)
+        أرجع 0;
 
-    for (plane = 0; plane < nb_planes; plane++) {
-        size_t bytewidth = plane_line_bytes[plane];
-        uint8_t *data = dst_data[plane];
-        int chroma_div = plane == 1 || plane == 2 ? desc->log2_chroma_h : 0;
-        int plane_h = AV_CEIL_RSHIFT(height, chroma_div);
+    لكل (plane = 0; plane < nb_planes; plane++) {
+        size_t bytewidth = plane_سٽ_بائيٽون[plane];
+        uint8_t *معلومات = dst_معلومات[plane];
+        صحيح chroma_div = plane == 1 || plane == 2 ? desc->log2_chroma_h : 0;
+        صحيح plane_h = AV_CEIL_RSHIFT(اوچائي, chroma_div);
 
-        for (; plane_h > 0; plane_h--) {
-            memset_bytes(data, bytewidth, &clear_block[plane][0], clear_block_size[plane]);
-            data += dst_linesize[plane];
+        لكل (; plane_h > 0; plane_h--) {
+            memset_بائيٽون(معلومات, bytewidth, &clear_بلاڪ[plane][0], clear_بلاڪ_سائيز[plane]);
+            معلومات += dst_linesize[plane];
         }
     }
 
-    return 0;
+    أرجع 0;
 }
 
-int av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
-                        enum AVPixelFormat pix_fmt, enum AVColorRange range,
-                        int width, int height)
+صحيح av_image_fill_black(uint8_t * ثابت dst_معلومات[4], ثابت ptrdiff_t dst_linesize[4],
+                        تعداد AVPixelFormat pix_fmt, تعداد AVColorRange range,
+                        صحيح ويڪر, صحيح اوچائي)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int nb_planes = av_pix_fmt_count_planes(pix_fmt);
-    int rgb, xyz, pal, limited, alpha, fltp;
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    صحيح nb_planes = av_pix_fmt_ڳڻپ_planes(pix_fmt);
+    صحيح rgb, xyz, pal, limited, alpha, fltp;
     uint32_t colors[4] = {0};
 
-    if (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    إذا (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        أرجع AVERROR(EINVAL);
 
     rgb = !!(desc->flags & AV_PIX_FMT_FLAG_RGB);
     xyz = !!(desc->flags & AV_PIX_FMT_FLAG_XYZ);
@@ -676,42 +676,42 @@ int av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesiz
     alpha = !pal && !!(desc->flags & AV_PIX_FMT_FLAG_ALPHA);
     fltp = !!(desc->flags & AV_PIX_FMT_FLAG_FLOAT);
 
-    for (int c = 0; c < desc->nb_components; c++) {
-        const AVComponentDescriptor comp = desc->comp[c];
+    لكل (صحيح c = 0; c < desc->nb_components; c++) {
+        ثابت AVComponentDescriptor comp = desc->comp[c];
         uint32_t color = 0;
 
-        if (comp.depth > 32)
-            return AVERROR(EINVAL);
+        إذا (comp.اونهائي > 32)
+            أرجع AVERROR(EINVAL);
 
-        if (pix_fmt == AV_PIX_FMT_MONOWHITE) {
+        إذا (pix_fmt == AV_PIX_FMT_MONOWHITE) {
             color = 1;
-        } else if (c + 1 == desc->nb_components && alpha) {
+        } وإلا إذا (c + 1 == desc->nb_components && alpha) {
             // (Assume even limited YUV uses full range alpha.)
-            if (fltp) {
-                if (comp.depth != 16 && comp.depth != 32)
-                    return AVERROR(EINVAL);
-                color = (comp.depth == 16 ? 0x3C00 : 0x3F800000); // 1.0
-             } else {
-                color = (comp.depth == 32 ? 0 : (1 << comp.depth)) - 1;
+            إذا (fltp) {
+                إذا (comp.اونهائي != 16 && comp.اونهائي != 32)
+                    أرجع AVERROR(EINVAL);
+                color = (comp.اونهائي == 16 ? 0x3C00 : 0x3F800000); // 1.0
+             } وإلا {
+                color = (comp.اونهائي == 32 ? 0 : (1 << comp.اونهائي)) - 1;
              }
-        } else if (c == 0 && limited && comp.depth > 1) {
-            if (comp.depth < 8 || (fltp && comp.depth != 16 && comp.depth != 32))
-                return AVERROR(EINVAL);
-            if (fltp)
-                color = (comp.depth == 16 ? 0x2C00 : 0x3D800000); // 0.0625
-            else
-                color = 16 << (comp.depth - 8);
-        } else if ((c == 1 || c == 2) && !rgb && !xyz) {
-            if (comp.depth < 8 || fltp && comp.depth != 16 && comp.depth != 32)
-                return AVERROR(EINVAL);
-            if (fltp)
-                color = (comp.depth == 16 ? 0x3800 : 0x3F000000); // 0.5
-            else
-                color = 128 << (comp.depth - 8);
+        } وإلا إذا (c == 0 && limited && comp.اونهائي > 1) {
+            إذا (comp.اونهائي < 8 || (fltp && comp.اونهائي != 16 && comp.اونهائي != 32))
+                أرجع AVERROR(EINVAL);
+            إذا (fltp)
+                color = (comp.اونهائي == 16 ? 0x2C00 : 0x3D800000); // 0.0625
+            وإلا
+                color = 16 << (comp.اونهائي - 8);
+        } وإلا إذا ((c == 1 || c == 2) && !rgb && !xyz) {
+            إذا (comp.اونهائي < 8 || fltp && comp.اونهائي != 16 && comp.اونهائي != 32)
+                أرجع AVERROR(EINVAL);
+            إذا (fltp)
+                color = (comp.اونهائي == 16 ? 0x3800 : 0x3F000000); // 0.5
+            وإلا
+                color = 128 << (comp.اونهائي - 8);
         }
 
         colors[c] = color;
     }
 
-    return av_image_fill_color(dst_data, dst_linesize, pix_fmt, colors, width, height, 0);
+    أرجع av_image_fill_color(dst_معلومات, dst_linesize, pix_fmt, colors, ويڪر, اوچائي, 0);
 }

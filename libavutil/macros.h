@@ -22,16 +22,16 @@
  * Utility Preprocessor macros
  */
 
-#ifndef AVUTIL_MACROS_H
-#define AVUTIL_MACROS_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_MACROS_H
+#وصف_ڪريو AVUTIL_MACROS_H
 
-#include "libavutil/avconfig.h"
+#ضمن "libavutil/avconfig.h"
 
-#if AV_HAVE_BIGENDIAN
+#إذا AV_HAVE_BIGENDIAN
 #   define AV_NE(be, le) (be)
-#else
+#وإلا
 #   define AV_NE(be, le) (le)
-#endif
+#جيڪڏهن_پورو
 
 /**
  * Comparator.
@@ -42,18 +42,18 @@
  * As with many macros, this evaluates its argument multiple times, it thus
  * must not have a side-effect.
  */
-#define FFDIFFSIGN(x,y) (((x)>(y)) - ((x)<(y)))
+#وصف_ڪريو FFDIFFSIGN(x,y) (((x)>(y)) - ((x)<(y)))
 
-#define FFMAX(a,b) ((a) > (b) ? (a) : (b))
-#define FFMAX3(a,b,c) FFMAX(FFMAX(a,b),c)
-#define FFMIN(a,b) ((a) > (b) ? (b) : (a))
-#define FFMIN3(a,b,c) FFMIN(FFMIN(a,b),c)
+#وصف_ڪريو FFMAX(a,b) ((a) > (b) ? (a) : (b))
+#وصف_ڪريو FFMAX3(a,b,c) FFMAX(FFMAX(a,b),c)
+#وصف_ڪريو FFMIN(a,b) ((a) > (b) ? (b) : (a))
+#وصف_ڪريو FFMIN3(a,b,c) FFMIN(FFMIN(a,b),c)
 
-#define FFSWAP(type,a,b) do{type SWAP_tmp= b; b= a; a= SWAP_tmp;}while(0)
-#define FF_ARRAY_ELEMS(a) (sizeof(a) / sizeof((a)[0]))
+#وصف_ڪريو FFSWAP(type,a,b) افعل{type مٽا_سٽا_tmp= b; b= a; a= مٽا_سٽا_tmp;}طالما(0)
+#وصف_ڪريو FF_ARRAY_ELEMS(a) (حجم(a) / حجم((a)[0]))
 
-#define MKTAG(a,b,c,d)   ((a) | ((b) << 8) | ((c) << 16) | ((unsigned)(d) << 24))
-#define MKBETAG(a,b,c,d) ((d) | ((c) << 8) | ((b) << 16) | ((unsigned)(a) << 24))
+#وصف_ڪريو MKTAG(a,b,c,d)   ((a) | ((b) << 8) | ((c) << 16) | ((بنانشان)(d) << 24))
+#وصف_ڪريو MKBETAG(a,b,c,d) ((d) | ((c) << 8) | ((b) << 16) | ((بنانشان)(a) << 24))
 
 /**
  * @addtogroup preproc_misc Preprocessor String Macros
@@ -63,18 +63,18 @@
  * @{
  */
 
-#define AV_STRINGIFY(s)         AV_TOSTRING(s)
-#define AV_TOSTRING(s) #s
+#وصف_ڪريو AV_STRINGIFY(s)         AV_TOSTRING(s)
+#وصف_ڪريو AV_TOSTRING(s) #s
 
-#define AV_GLUE(a, b) a ## b
-#define AV_JOIN(a, b) AV_GLUE(a, b)
+#وصف_ڪريو AV_GLUE(a, b) a ## b
+#وصف_ڪريو AV_JOIN(a, b) AV_GLUE(a, b)
 
 /**
  * @}
  */
 
-#define AV_PRAGMA(s) _Pragma(#s)
+#وصف_ڪريو AV_PRAGMA(s) _Pragma(#s)
 
-#define FFALIGN(x, a) (((x)+(a)-1)&~((a)-1))
+#وصف_ڪريو FFALIGN(x, a) (((x)+(a)-1)&~((a)-1))
 
-#endif /* AVUTIL_MACROS_H */
+#جيڪڏهن_پورو /* AVUTIL_MACROS_H */

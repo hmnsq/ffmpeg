@@ -16,55 +16,55 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_SANITIZER_H
-#define AVUTIL_SANITIZER_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_SANITIZER_H
+#وصف_ڪريو AVUTIL_SANITIZER_H
 
-#include "config.h"
+#ضمن "config.h"
 
-#if defined(__has_feature)
-#if __has_feature(address_sanitizer)
-#define HAVE_ASAN 1
-#endif
-#if __has_feature(memory_sanitizer)
-#define HAVE_MSAN 1
-#endif
-#if __has_feature(undefined_behavior_sanitizer)
-#define HAVE_UBSAN 1
-#endif
-#endif
-#if defined(__SANITIZE_ADDRESS__)
-#undef  HAVE_ASAN
-#define HAVE_ASAN 1
-#endif
-#ifndef HAVE_ASAN
-#define HAVE_ASAN 0
-#endif
-#ifndef HAVE_MSAN
-#define HAVE_MSAN 0
-#endif
-#ifndef HAVE_UBSAN
-#define HAVE_UBSAN 0
-#endif
+#إذا defined(__has_feature)
+#إذا __has_feature(پتو_sanitizer)
+#وصف_ڪريو HAVE_ASAN 1
+#جيڪڏهن_پورو
+#إذا __has_feature(يادگيري_sanitizer)
+#وصف_ڪريو HAVE_MSAN 1
+#جيڪڏهن_پورو
+#إذا __has_feature(undefined_behavior_sanitizer)
+#وصف_ڪريو HAVE_UBSAN 1
+#جيڪڏهن_پورو
+#جيڪڏهن_پورو
+#إذا defined(__SANITIZE_ADDRESS__)
+#وصف_رد  HAVE_ASAN
+#وصف_ڪريو HAVE_ASAN 1
+#جيڪڏهن_پورو
+#جيڪڏهن_وصف_نه_ٿيل HAVE_ASAN
+#وصف_ڪريو HAVE_ASAN 0
+#جيڪڏهن_پورو
+#جيڪڏهن_وصف_نه_ٿيل HAVE_MSAN
+#وصف_ڪريو HAVE_MSAN 0
+#جيڪڏهن_پورو
+#جيڪڏهن_وصف_نه_ٿيل HAVE_UBSAN
+#وصف_ڪريو HAVE_UBSAN 0
+#جيڪڏهن_پورو
 
 /* Mark allocated memory that nothing may touch until it is unpoisoned. */
-#if HAVE_ASAN
-#include <sanitizer/asan_interface.h>
-#define FF_ASAN_POISON(ptr, size)   __asan_poison_memory_region(ptr, size)
-#define FF_ASAN_UNPOISON(ptr, size) __asan_unpoison_memory_region(ptr, size)
-#else
-#define FF_ASAN_POISON(ptr, size)   ((void)(ptr), (void)(size))
-#define FF_ASAN_UNPOISON(ptr, size) ((void)(ptr), (void)(size))
-#endif
+#إذا HAVE_ASAN
+#ضمن <sanitizer/asan_interface.h>
+#وصف_ڪريو FF_ASAN_POISON(ptr, سائيز)   __asan_poison_memory_region(ptr, سائيز)
+#وصف_ڪريو FF_ASAN_UNPOISON(ptr, سائيز) __asan_unpoison_memory_region(ptr, سائيز)
+#وإلا
+#وصف_ڪريو FF_ASAN_POISON(ptr, سائيز)   ((فراغ)(ptr), (فراغ)(سائيز))
+#وصف_ڪريو FF_ASAN_UNPOISON(ptr, سائيز) ((فراغ)(ptr), (فراغ)(سائيز))
+#جيڪڏهن_پورو
 
 /* Mark memory as uninitialized. */
-#if HAVE_MSAN
-#include <sanitizer/msan_interface.h>
-#define FF_MEM_UNDEFINED(ptr, size) __msan_allocated_memory(ptr, size)
-#elif CONFIG_MEMORY_POISONING && HAVE_VALGRIND_MEMCHECK_H
-#include <valgrind/memcheck.h>
-#define FF_MEM_UNDEFINED(ptr, size) VALGRIND_MAKE_MEM_UNDEFINED(ptr, size)
-#else
-#define FF_MEM_UNDEFINED(ptr, size) ((void)(ptr), (void)(size))
-#endif
+#إذا HAVE_MSAN
+#ضمن <sanitizer/msan_interface.h>
+#وصف_ڪريو FF_MEM_UNDEFINED(ptr, سائيز) __msan_allocated_memory(ptr, سائيز)
+#وإلاإذا CONFIG_يادگيري_POISONING && HAVE_VALGRIND_MEMCHECK_H
+#ضمن <valgrind/memcheck.h>
+#وصف_ڪريو FF_MEM_UNDEFINED(ptr, سائيز) VALGRIND_MAKE_MEM_UNDEFINED(ptr, سائيز)
+#وإلا
+#وصف_ڪريو FF_MEM_UNDEFINED(ptr, سائيز) ((فراغ)(ptr), (فراغ)(سائيز))
+#جيڪڏهن_پورو
 
-#endif /* AVUTIL_SANITIZER_H */
+#جيڪڏهن_پورو /* AVUTIL_SANITIZER_H */

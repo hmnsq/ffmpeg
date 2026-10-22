@@ -17,51 +17,51 @@
  */
 
 
-#ifndef AVUTIL_CUDA_CHECK_H
-#define AVUTIL_CUDA_CHECK_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_CUDA_CHECK_H
+#وصف_ڪريو AVUTIL_CUDA_CHECK_H
 
-#include "compat/cuda/dynlink_loader.h"
-#include "error.h"
+#ضمن "compat/cuda/dynlink_loader.h"
+#ضمن "error.h"
 
-typedef CUresult CUDAAPI cuda_check_GetErrorName(CUresult error, const char** pstr);
-typedef CUresult CUDAAPI cuda_check_GetErrorString(CUresult error, const char** pstr);
+تعريفنوع CUresult CUDAAPI cuda_check_GetErrorName(CUresult error, ثابت حرف** pstr);
+تعريفنوع CUresult CUDAAPI cuda_check_GetErrorString(CUresult error, ثابت حرف** pstr);
 
 /**
  * Wrap a CUDA function call and print error information if it fails.
  */
-static inline int ff_cuda_check(void *avctx,
-                                void *cuGetErrorName_fn, void *cuGetErrorString_fn,
-                                CUresult err, const char *func)
+ساكن مضمن صحيح ff_cuda_check(فراغ *avctx,
+                                فراغ *cuGetErrorName_fn, فراغ *cuGetErrorString_fn,
+                                CUresult err, ثابت حرف *func)
 {
-    const char *err_name;
-    const char *err_string;
+    ثابت حرف *err_name;
+    ثابت حرف *err_string;
 
     av_log(avctx, AV_LOG_TRACE, "Calling %s\n", func);
 
-    if (err == CUDA_SUCCESS)
-        return 0;
+    إذا (err == CUDA_SUCCESS)
+        أرجع 0;
 
     ((cuda_check_GetErrorName *)cuGetErrorName_fn)(err, &err_name);
     ((cuda_check_GetErrorString *)cuGetErrorString_fn)(err, &err_string);
 
     av_log(avctx, AV_LOG_ERROR, "%s failed", func);
-    if (err_name && err_string)
+    إذا (err_name && err_string)
         av_log(avctx, AV_LOG_ERROR, " -> %s: %s", err_name, err_string);
     av_log(avctx, AV_LOG_ERROR, "\n");
 
-    return AVERROR_EXTERNAL;
+    أرجع AVERROR_EXTERNAL;
 }
 
 /**
  * Convenience wrapper for ff_cuda_check when directly linking libcuda.
  */
 
-#define FF_CUDA_CHECK(avclass, x) ff_cuda_check(avclass, cuGetErrorName, cuGetErrorString, (x), #x)
+#وصف_ڪريو FF_CUDA_CHECK(avclass, x) ff_cuda_check(avclass, cuGetErrorName, cuGetErrorString, (x), #x)
 
 /**
  * Convenience wrapper for ff_cuda_check when dynamically loading cuda symbols.
  */
 
-#define FF_CUDA_CHECK_DL(avclass, cudl, x) ff_cuda_check(avclass, cudl->cuGetErrorName, cudl->cuGetErrorString, (x), #x)
+#وصف_ڪريو FF_CUDA_CHECK_DL(avclass, cudl, x) ff_cuda_check(avclass, cudl->cuGetErrorName, cudl->cuGetErrorString, (x), #x)
 
-#endif /* AVUTIL_CUDA_CHECK_H */
+#جيڪڏهن_پورو /* AVUTIL_CUDA_CHECK_H */

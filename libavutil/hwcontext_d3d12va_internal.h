@@ -20,40 +20,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H
-#define AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_HWCONTEXT_D3_D12_VA_اندروني_H
+#وصف_ڪريو AVUTIL_HWCONTEXT_D3_D12_VA_اندروني_H
 
 /**
  * @def COBJMACROS
  *
  * @brief Enable C style interface for D3D12
  */
-#ifndef COBJMACROS
-#define COBJMACROS
-#endif
+#جيڪڏهن_وصف_نه_ٿيل COBJMACROS
+#وصف_ڪريو COBJMACROS
+#جيڪڏهن_پورو
 
 /**
  * @def DX_CHECK
  *
  * @brief A check macro used by D3D12 functions highly frequently
  */
-#define DX_CHECK(hr)                              \
-    do {                                          \
-        if (FAILED(hr))                           \
-            goto fail;                            \
-    } while (0)
+#وصف_ڪريو DX_CHECK(hr)                              \
+    افعل {                                          \
+        إذا (FAILED(hr))                           \
+            اذهب fail;                            \
+    } طالما (0)
 
 /**
  * @def D3D12_OBJECT_RELEASE
  *
  * @brief A release macro used by D3D12 objects highly frequently
  */
-#define D3D12_OBJECT_RELEASE(pInterface)              \
-    do {                                              \
-        if (pInterface) {                             \
+#وصف_ڪريو D3D12_OBJECT_RELEASE(pInterface)              \
+    افعل {                                              \
+        إذا (pInterface) {                             \
             IUnknown_Release((IUnknown *)pInterface); \
-            pInterface = NULL;                        \
+            pInterface = عدم;                        \
         }                                             \
-    } while (0)
+    } طالما (0)
 
-#endif /* AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H */
+#جيڪڏهن_پورو /* AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H */

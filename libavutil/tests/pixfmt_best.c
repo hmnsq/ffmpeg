@@ -16,9 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/pixdesc.c"
+#ضمن "libavutil/pixdesc.c"
 
-static const enum AVPixelFormat pixfmt_list[] = {
+ساكن ثابت تعداد AVPixelFormat pixfmt_list[] = {
     AV_PIX_FMT_MONOWHITE,
     AV_PIX_FMT_GRAY8,
     AV_PIX_FMT_GRAY10,
@@ -39,7 +39,7 @@ static const enum AVPixelFormat pixfmt_list[] = {
     AV_PIX_FMT_VAAPI,
 };
 
-static const enum AVPixelFormat semiplanar_list[] = {
+ساكن ثابت تعداد AVPixelFormat semiplanar_list[] = {
     AV_PIX_FMT_P016,
     AV_PIX_FMT_P012,
     AV_PIX_FMT_P010,
@@ -52,7 +52,7 @@ static const enum AVPixelFormat semiplanar_list[] = {
     AV_PIX_FMT_NV12,
 };
 
-static const enum AVPixelFormat packed_list[] = {
+ساكن ثابت تعداد AVPixelFormat packed_list[] = {
     AV_PIX_FMT_XV48,
     AV_PIX_FMT_XV36,
     AV_PIX_FMT_XV30,
@@ -63,61 +63,61 @@ static const enum AVPixelFormat packed_list[] = {
     AV_PIX_FMT_YUYV422,
 };
 
-static const enum AVPixelFormat subsampled_list[] = {
+ساكن ثابت تعداد AVPixelFormat subsampled_list[] = {
     AV_PIX_FMT_YUV411P,
     AV_PIX_FMT_YUV420P,
     AV_PIX_FMT_YUV422P,
     AV_PIX_FMT_YUV444P,
 };
 
-static const enum AVPixelFormat depthchroma_list[] = {
+ساكن ثابت تعداد AVPixelFormat depthchroma_list[] = {
     AV_PIX_FMT_YUV420P14,
     AV_PIX_FMT_YUV422P14,
     AV_PIX_FMT_YUV444P16,
 };
 
-typedef enum AVPixelFormat (*find_best_t)(enum AVPixelFormat pixfmt);
+تعريفنوع تعداد AVPixelFormat (*ڳوليو_بهترين_t)(تعداد AVPixelFormat pixfmt);
 
-#define find_best_wrapper(name, list) \
-static enum AVPixelFormat find_best_ ## name (enum AVPixelFormat pixfmt)    \
+#وصف_ڪريو ڳوليو_بهترين_wrapper(name, list) \
+ساكن تعداد AVPixelFormat ڳوليو_بهترين ## name (تعداد AVPixelFormat pixfmt)    \
 {                                                                           \
-    enum AVPixelFormat best = AV_PIX_FMT_NONE;                              \
-    int i;                                                                  \
-    for (i = 0; i < FF_ARRAY_ELEMS(list); i++)                              \
-        best = av_find_best_pix_fmt_of_2(best, list[i],                     \
-                                         pixfmt, 0, NULL);                  \
-    return best;                                                            \
+    تعداد AVPixelFormat بهترين = AV_PIX_FMT_NONE;                              \
+    صحيح i;                                                                  \
+    لكل (i = 0; i < FF_ARRAY_ELEMS(list); i++)                              \
+        بهترين = av_ڳوليو_بهترين_pix_fmt_جو_2(بهترين, list[i],                     \
+                                         pixfmt, 0, عدم);                  \
+    أرجع بهترين;                                                            \
 }
 
-find_best_wrapper(base, pixfmt_list)
-find_best_wrapper(seminplanar, semiplanar_list)
-find_best_wrapper(packed, packed_list)
-find_best_wrapper(subsampled, subsampled_list)
-find_best_wrapper(depthchroma, depthchroma_list)
+ڳوليو_بهترين_wrapper(بنياد_2, pixfmt_list)
+ڳوليو_بهترين_wrapper(seminplanar, semiplanar_list)
+ڳوليو_بهترين_wrapper(packed, packed_list)
+ڳوليو_بهترين_wrapper(subsampled, subsampled_list)
+ڳوليو_بهترين_wrapper(depthchroma, depthchroma_list)
 
-static void test(enum AVPixelFormat input, enum AVPixelFormat expected,
-                 int *pass, int *fail, find_best_t find_best_fn)
+ساكن فراغ test(تعداد AVPixelFormat داخلا_3, تعداد AVPixelFormat expected,
+                 صحيح *pass, صحيح *fail, ڳوليو_بهترين_t ڳوليو_بهترين_fn)
 {
-        enum AVPixelFormat output = find_best_fn(input);
-        if (output != expected) {
-            printf("Matching %s: got %s, expected %s\n",
-                   av_get_pix_fmt_name(input),
+        تعداد AVPixelFormat output = ڳوليو_بهترين_fn(داخلا_3);
+        إذا (output != expected) {
+            لکو("Matching %s: got %s, expected %s\n",
+                   av_get_pix_fmt_name(داخلا_3),
                    av_get_pix_fmt_name(output),
                    av_get_pix_fmt_name(expected));
             ++(*fail);
-        } else
+        } وإلا
             ++(*pass);
 }
 
-int main(void)
+صحيح مکيه(فراغ)
 {
-    int i, pass = 0, fail = 0;
+    صحيح i, pass = 0, fail = 0;
 
-#define TEST(input, expected) \
-    test(input, expected, &pass, &fail, find_best_base)
+#وصف_ڪريو TEST(داخلا_3, expected) \
+    test(داخلا_3, expected, &pass, &fail, ڳوليو_بهترين_بنياد)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(pixfmt_list); i++)
+    لكل (i = 0; i < FF_ARRAY_ELEMS(pixfmt_list); i++)
         TEST(pixfmt_list[i], pixfmt_list[i]);
 
     // Formats containing the same data in different layouts.
@@ -198,11 +198,11 @@ int main(void)
     // Opaque formats are least unlike each other.
     TEST(AV_PIX_FMT_DXVA2_VLD, AV_PIX_FMT_VDPAU);
 
-#define TEST_SEMIPLANAR(input, expected) \
-    test(input, expected, &pass, &fail, find_best_seminplanar)
+#وصف_ڪريو TEST_SEMIPLANAR(داخلا_3, expected) \
+    test(داخلا_3, expected, &pass, &fail, ڳوليو_بهترين_seminplanar)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(semiplanar_list); i++)
+    لكل (i = 0; i < FF_ARRAY_ELEMS(semiplanar_list); i++)
         TEST_SEMIPLANAR(semiplanar_list[i], semiplanar_list[i]);
 
     // Formats containing the same data in different layouts.
@@ -220,11 +220,11 @@ int main(void)
     TEST_SEMIPLANAR(AV_PIX_FMT_YUV444P12, AV_PIX_FMT_P416);
     TEST_SEMIPLANAR(AV_PIX_FMT_YUV444P16, AV_PIX_FMT_P416);
 
-#define TEST_PACKED(input, expected) \
-    test(input, expected, &pass, &fail, find_best_packed)
+#وصف_ڪريو TEST_PACKED(داخلا_3, expected) \
+    test(داخلا_3, expected, &pass, &fail, ڳوليو_بهترين_packed)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(packed_list); i++)
+    لكل (i = 0; i < FF_ARRAY_ELEMS(packed_list); i++)
         TEST_PACKED(packed_list[i], packed_list[i]);
 
     // Formats containing the same data in different layouts.
@@ -237,26 +237,26 @@ int main(void)
     TEST_PACKED(AV_PIX_FMT_YUV422P12, AV_PIX_FMT_Y212);
     TEST_PACKED(AV_PIX_FMT_YUV422P16, AV_PIX_FMT_Y216);
 
-#define TEST_SUBSAMPLED(input, expected) \
-    test(input, expected, &pass, &fail, find_best_subsampled)
+#وصف_ڪريو TEST_SUBSAMPLED(داخلا_3, expected) \
+    test(داخلا_3, expected, &pass, &fail, ڳوليو_بهترين_subsampled)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(subsampled_list); i++)
+    لكل (i = 0; i < FF_ARRAY_ELEMS(subsampled_list); i++)
         TEST_SUBSAMPLED(subsampled_list[i], subsampled_list[i]);
 
     TEST_SUBSAMPLED(AV_PIX_FMT_YUV410P, AV_PIX_FMT_YUV420P);
 
-#define TEST_DEPTH_CHROMA(input, expected) \
-    test(input, expected, &pass, &fail, find_best_depthchroma)
+#وصف_ڪريو TEST_اونهائي_CHROMA(داخلا_3, expected) \
+    test(داخلا_3, expected, &pass, &fail, ڳوليو_بهترين_depthchroma)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(depthchroma_list); i++)
-        TEST_DEPTH_CHROMA(depthchroma_list[i], depthchroma_list[i]);
+    لكل (i = 0; i < FF_ARRAY_ELEMS(depthchroma_list); i++)
+        TEST_اونهائي_CHROMA(depthchroma_list[i], depthchroma_list[i]);
 
-    TEST_DEPTH_CHROMA(AV_PIX_FMT_YUV420P16, AV_PIX_FMT_YUV444P16);
-    TEST_DEPTH_CHROMA(AV_PIX_FMT_YUV422P16, AV_PIX_FMT_YUV444P16);
+    TEST_اونهائي_CHROMA(AV_PIX_FMT_YUV420P16, AV_PIX_FMT_YUV444P16);
+    TEST_اونهائي_CHROMA(AV_PIX_FMT_YUV422P16, AV_PIX_FMT_YUV444P16);
 
 
-    printf("%d tests passed, %d tests failed.\n", pass, fail);
-    return !!fail;
+    لکو("%d tests passed, %d tests failed.\n", pass, fail);
+    أرجع !!fail;
 }

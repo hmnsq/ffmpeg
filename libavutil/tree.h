@@ -24,10 +24,10 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_TREE_H
-#define AVUTIL_TREE_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_وڻ_H
+#وصف_ڪريو AVUTIL_وڻ_H
 
-#include "attributes.h"
+#ضمن "attributes.h"
 
 /**
  * @addtogroup lavu_tree AVTree
@@ -41,13 +41,13 @@
  */
 
 
-struct AVTreeNode;
-extern const int av_tree_node_size;
+بنية AVTree_ڳنڍ;
+خارجي ثابت صحيح av_وڻ_ڳنڍ_سائيز;
 
 /**
  * Allocate an AVTreeNode.
  */
-struct AVTreeNode *av_tree_node_alloc(void);
+بنية AVTree_ڳنڍ *av_وڻ_ڳنڍ_alloc(فراغ);
 
 /**
  * Find an element.
@@ -63,8 +63,8 @@ struct AVTreeNode *av_tree_node_alloc(void);
  * @return An element with cmp(key, elem) == 0 or NULL if no such element
  *         exists in the tree.
  */
-void *av_tree_find(const struct AVTreeNode *root, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2]);
+فراغ *av_وڻ_ڳوليو(ثابت بنية AVTree_ڳنڍ *پاڙ, فراغ *ڪنجي,
+                   صحيح (*cmp)(ثابت فراغ *ڪنجي, ثابت فراغ *b), فراغ *ايندڙ[2]);
 
 /**
  * Insert or remove an element.
@@ -110,11 +110,11 @@ void *av_tree_find(const struct AVTreeNode *root, void *key,
  *         Which one it is depends on the tree state and the implementation. You
  *         should make no assumptions that it's one or the other in the code.
  */
-void *av_tree_insert(struct AVTreeNode **rootp, void *key,
-                     int (*cmp)(const void *key, const void *b),
-                     struct AVTreeNode **next);
+فراغ *av_وڻ_وجهو(بنية AVTree_ڳنڍ **rootp, فراغ *ڪنجي,
+                     صحيح (*cmp)(ثابت فراغ *ڪنجي, ثابت فراغ *b),
+                     بنية AVTree_ڳنڍ **ايندڙ);
 
-void av_tree_destroy(struct AVTreeNode *t);
+فراغ av_وڻ_destroy(بنية AVTree_ڳنڍ *t);
 
 /**
  * Apply enu(opaque, &elem) to all the elements in the tree in a given range.
@@ -126,12 +126,12 @@ void av_tree_destroy(struct AVTreeNode *t);
  * @note The cmp function should use the same ordering used to construct the
  *       tree.
  */
-void av_tree_enumerate(struct AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem));
+فراغ av_وڻ_enumerate(بنية AVTree_ڳنڍ *t, فراغ *opaque,
+                       صحيح (*cmp)(فراغ *opaque, فراغ *elem),
+                       صحيح (*enu)(فراغ *opaque, فراغ *elem));
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_TREE_H */
+#جيڪڏهن_پورو /* AVUTIL_TREE_H */

@@ -18,232 +18,232 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avassert.h"
-#include "hdr_dynamic_metadata.h"
-#include "mem.h"
-#include "libavcodec/defs.h"
-#include "libavcodec/get_bits.h"
-#include "libavcodec/put_bits.h"
+#ضمن "avassert.h"
+#ضمن "hdr_dynamic_metadata.h"
+#ضمن "mem.h"
+#ضمن "libavcodec/defs.h"
+#ضمن "libavcodec/get_bits.h"
+#ضمن "libavcodec/put_bits.h"
 
-static const int64_t luminance_den = 1;
-static const int32_t peak_luminance_den = 15;
-static const int64_t rgb_den = 100000;
-static const int32_t fraction_pixel_den = 1000;
-static const int32_t knee_point_den = 4095;
-static const int32_t bezier_anchor_den = 1023;
-static const int32_t saturation_weight_den = 8;
+ساكن ثابت int64_t luminance_den = 1;
+ساكن ثابت int32_t peak_luminance_den = 15;
+ساكن ثابت int64_t rgb_den = 100000;
+ساكن ثابت int32_t fraction_pixel_den = 1000;
+ساكن ثابت int32_t knee_نقطو_den = 4095;
+ساكن ثابت int32_t bezier_anchor_den = 1023;
+ساكن ثابت int32_t saturation_وزن_den = 8;
 
-AVDynamicHDRPlus *av_dynamic_hdr_plus_alloc(size_t *size)
+AVDynamicHDRPlus *av_dynamic_hdr_plus_alloc(size_t *سائيز)
 {
-    AVDynamicHDRPlus *hdr_plus = av_mallocz(sizeof(AVDynamicHDRPlus));
+    AVDynamicHDRPlus *hdr_plus = av_mallocz(حجم(AVDynamicHDRPlus));
 
-    if (size)
-        *size = hdr_plus ? sizeof(*hdr_plus) : 0;
+    إذا (سائيز)
+        *سائيز = hdr_plus ? حجم(*hdr_plus) : 0;
 
-    return hdr_plus;
+    أرجع hdr_plus;
 }
 
-AVDynamicHDRPlus *av_dynamic_hdr_plus_create_side_data(AVFrame *frame)
+AVDynamicHDRPlus *av_dynamic_hdr_plus_create_side_معلومات(AVFrame *چوکٺو)
 {
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_DYNAMIC_HDR_PLUS,
-                                                        sizeof(AVDynamicHDRPlus));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_معلومات *side_معلومات = av_چوکٺو_new_side_معلومات(چوکٺو,
+                                                        AV_چوکٺو_معلومات_DYNAMIC_HDR_PLUS,
+                                                        حجم(AVDynamicHDRPlus));
+    إذا (!side_معلومات)
+        أرجع عدم;
 
-    memset(side_data->data, 0, sizeof(AVDynamicHDRPlus));
+    memset(side_معلومات->معلومات, 0, حجم(AVDynamicHDRPlus));
 
-    return (AVDynamicHDRPlus *)side_data->data;
+    أرجع (AVDynamicHDRPlus *)side_معلومات->معلومات;
 }
 
-int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
-                                 size_t size)
+صحيح av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, ثابت uint8_t *معلومات,
+                                 size_t سائيز)
 {
-    uint8_t padded_buf[AV_HDR_PLUS_MAX_PAYLOAD_SIZE + AV_INPUT_BUFFER_PADDING_SIZE];
-    GetBitContext gbc, *gb = &gbc;
-    int ret;
+    uint8_t padded_buf[AV_HDR_PLUS_MAX_PAYLOAD_سائيز + AV_داخلا_بفر_PADDING_سائيز];
+    Get_ٻٽو_انگ_Context gbc, *gb = &gbc;
+    صحيح ret;
 
-    if (!s)
-        return AVERROR(EINVAL);
+    إذا (!s)
+        أرجع AVERROR(EINVAL);
 
-    if (size > AV_HDR_PLUS_MAX_PAYLOAD_SIZE)
-        return AVERROR(EINVAL);
+    إذا (سائيز > AV_HDR_PLUS_MAX_PAYLOAD_سائيز)
+        أرجع AVERROR(EINVAL);
 
-    memcpy(padded_buf, data, size);
+    يادگيري_نقل(padded_buf, معلومات, سائيز);
     // Zero-initialize the buffer padding to avoid overreads into uninitialized data.
-    memset(padded_buf + size, 0, AV_INPUT_BUFFER_PADDING_SIZE);
+    memset(padded_buf + سائيز, 0, AV_داخلا_بفر_PADDING_سائيز);
 
-    ret = init_get_bits8(gb, padded_buf, size);
-    if (ret < 0)
-        return ret;
+    ret = init_get_bits8(gb, padded_buf, سائيز);
+    إذا (ret < 0)
+        أرجع ret;
 
-    if (get_bits_left(gb) < 10)
-        return AVERROR_INVALIDDATA;
+    إذا (get_بٽ_کاٻو(gb) < 10)
+        أرجع AVERROR_INVALIDDATA;
 
-    s->application_version = get_bits(gb, 8);
-    s->num_windows = get_bits(gb, 2);
+    s->application_نسخو = get_بٽ(gb, 8);
+    s->انگ_windows = get_بٽ(gb, 2);
 
-    if (s->num_windows < 1 || s->num_windows > 3) {
-        return AVERROR_INVALIDDATA;
+    إذا (s->انگ_windows < 1 || s->انگ_windows > 3) {
+        أرجع AVERROR_INVALIDDATA;
     }
 
-    if (get_bits_left(gb) < ((19 * 8 + 1) * (s->num_windows - 1)))
-        return AVERROR_INVALIDDATA;
+    إذا (get_بٽ_کاٻو(gb) < ((19 * 8 + 1) * (s->انگ_windows - 1)))
+        أرجع AVERROR_INVALIDDATA;
 
-    for (int w = 1; w < s->num_windows; w++) {
+    لكل (صحيح w = 1; w < s->انگ_windows; w++) {
         // The corners are set to absolute coordinates here. They should be
         // converted to the relative coordinates (in [0, 1]) in the decoder.
         AVHDRPlusColorTransformParams *params = &s->params[w];
-        params->window_upper_left_corner_x =
-            (AVRational){get_bits(gb, 16), 1};
-        params->window_upper_left_corner_y =
-            (AVRational){get_bits(gb, 16), 1};
-        params->window_lower_right_corner_x =
-            (AVRational){get_bits(gb, 16), 1};
-        params->window_lower_right_corner_y =
-            (AVRational){get_bits(gb, 16), 1};
+        params->دري_مٿانهون_کاٻو_ڪنڊ_x =
+            (AVRational){get_بٽ(gb, 16), 1};
+        params->دري_مٿانهون_کاٻو_ڪنڊ_y =
+            (AVRational){get_بٽ(gb, 16), 1};
+        params->دري_هيٺاهون_ساڄو_ڪنڊ_x =
+            (AVRational){get_بٽ(gb, 16), 1};
+        params->دري_هيٺاهون_ساڄو_ڪنڊ_y =
+            (AVRational){get_بٽ(gb, 16), 1};
 
-        params->center_of_ellipse_x = get_bits(gb, 16);
-        params->center_of_ellipse_y = get_bits(gb, 16);
-        params->rotation_angle = get_bits(gb, 8);
-        params->semimajor_axis_internal_ellipse = get_bits(gb, 16);
-        params->semimajor_axis_external_ellipse = get_bits(gb, 16);
-        params->semiminor_axis_external_ellipse = get_bits(gb, 16);
+        params->center_جو_ellipse_x = get_بٽ(gb, 16);
+        params->center_جو_ellipse_y = get_بٽ(gb, 16);
+        params->rotation_angle = get_بٽ(gb, 8);
+        params->semimajor_axis_اندروني_ellipse = get_بٽ(gb, 16);
+        params->semimajor_axis_external_ellipse = get_بٽ(gb, 16);
+        params->semiminor_axis_external_ellipse = get_بٽ(gb, 16);
         params->overlap_process_option = get_bits1(gb);
     }
 
-    if (get_bits_left(gb) < 28)
-        return AVERROR_INVALIDDATA;
+    إذا (get_بٽ_کاٻو(gb) < 28)
+        أرجع AVERROR_INVALIDDATA;
 
-    s->targeted_system_display_maximum_luminance =
-        (AVRational){get_bits_long(gb, 27), luminance_den};
+    s->targeted_system_display_وڌ_کان_وڌ_luminance =
+        (AVRational){get_بٽ_long(gb, 27), luminance_den};
     s->targeted_system_display_actual_peak_luminance_flag = get_bits1(gb);
 
-    if (s->targeted_system_display_actual_peak_luminance_flag) {
-        int rows, cols;
-        if (get_bits_left(gb) < 10)
-            return AVERROR_INVALIDDATA;
-        rows = get_bits(gb, 5);
-        cols = get_bits(gb, 5);
-        if (((rows < 2) || (rows > 25)) || ((cols < 2) || (cols > 25))) {
-            return AVERROR_INVALIDDATA;
+    إذا (s->targeted_system_display_actual_peak_luminance_flag) {
+        صحيح صفون, کانن_ڳڻپ;
+        إذا (get_بٽ_کاٻو(gb) < 10)
+            أرجع AVERROR_INVALIDDATA;
+        صفون = get_بٽ(gb, 5);
+        کانن_ڳڻپ = get_بٽ(gb, 5);
+        إذا (((صفون < 2) || (صفون > 25)) || ((کانن_ڳڻپ < 2) || (کانن_ڳڻپ > 25))) {
+            أرجع AVERROR_INVALIDDATA;
         }
-        s->num_rows_targeted_system_display_actual_peak_luminance = rows;
-        s->num_cols_targeted_system_display_actual_peak_luminance = cols;
+        s->انگ_صفون_targeted_system_display_actual_peak_luminance = صفون;
+        s->انگ_کانن_ڳڻپ_targeted_system_display_actual_peak_luminance = کانن_ڳڻپ;
 
-        if (get_bits_left(gb) < (rows * cols * 4))
-            return AVERROR_INVALIDDATA;
+        إذا (get_بٽ_کاٻو(gb) < (صفون * کانن_ڳڻپ * 4))
+            أرجع AVERROR_INVALIDDATA;
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        لكل (صحيح i = 0; i < صفون; i++) {
+            لكل (صحيح j = 0; j < کانن_ڳڻپ; j++) {
                 s->targeted_system_display_actual_peak_luminance[i][j] =
-                    (AVRational){get_bits(gb, 4), peak_luminance_den};
+                    (AVRational){get_بٽ(gb, 4), peak_luminance_den};
             }
         }
     }
-    for (int w = 0; w < s->num_windows; w++) {
+    لكل (صحيح w = 0; w < s->انگ_windows; w++) {
         AVHDRPlusColorTransformParams *params = &s->params[w];
-        if (get_bits_left(gb) < (3 * 17 + 17 + 4))
-            return AVERROR_INVALIDDATA;
+        إذا (get_بٽ_کاٻو(gb) < (3 * 17 + 17 + 4))
+            أرجع AVERROR_INVALIDDATA;
 
-        for (int i = 0; i < 3; i++) {
+        لكل (صحيح i = 0; i < 3; i++) {
             params->maxscl[i] =
-                (AVRational){get_bits(gb, 17), rgb_den};
+                (AVRational){get_بٽ(gb, 17), rgb_den};
         }
-        params->average_maxrgb =
-            (AVRational){get_bits(gb, 17), rgb_den};
-        params->num_distribution_maxrgb_percentiles = get_bits(gb, 4);
+        params->اوسط_maxrgb =
+            (AVRational){get_بٽ(gb, 17), rgb_den};
+        params->انگ_distribution_maxrgb_percentiles = get_بٽ(gb, 4);
 
-        if (get_bits_left(gb) <
-            (params->num_distribution_maxrgb_percentiles * 24))
-            return AVERROR_INVALIDDATA;
+        إذا (get_بٽ_کاٻو(gb) <
+            (params->انگ_distribution_maxrgb_percentiles * 24))
+            أرجع AVERROR_INVALIDDATA;
 
-        for (int i = 0; i < params->num_distribution_maxrgb_percentiles; i++) {
-            params->distribution_maxrgb[i].percentage = get_bits(gb, 7);
+        لكل (صحيح i = 0; i < params->انگ_distribution_maxrgb_percentiles; i++) {
+            params->distribution_maxrgb[i].percentage = get_بٽ(gb, 7);
             params->distribution_maxrgb[i].percentile =
-                (AVRational){get_bits(gb, 17), rgb_den};
+                (AVRational){get_بٽ(gb, 17), rgb_den};
         }
 
-        if (get_bits_left(gb) < 10)
-            return AVERROR_INVALIDDATA;
+        إذا (get_بٽ_کاٻو(gb) < 10)
+            أرجع AVERROR_INVALIDDATA;
 
-        params->fraction_bright_pixels = (AVRational){get_bits(gb, 10), fraction_pixel_den};
+        params->fraction_bright_pixels = (AVRational){get_بٽ(gb, 10), fraction_pixel_den};
     }
-    if (get_bits_left(gb) < 1)
-        return AVERROR_INVALIDDATA;
+    إذا (get_بٽ_کاٻو(gb) < 1)
+        أرجع AVERROR_INVALIDDATA;
     s->mastering_display_actual_peak_luminance_flag = get_bits1(gb);
-    if (s->mastering_display_actual_peak_luminance_flag) {
-        int rows, cols;
-        if (get_bits_left(gb) < 10)
-            return AVERROR_INVALIDDATA;
-        rows = get_bits(gb, 5);
-        cols = get_bits(gb, 5);
-        if (((rows < 2) || (rows > 25)) || ((cols < 2) || (cols > 25))) {
-            return AVERROR_INVALIDDATA;
+    إذا (s->mastering_display_actual_peak_luminance_flag) {
+        صحيح صفون, کانن_ڳڻپ;
+        إذا (get_بٽ_کاٻو(gb) < 10)
+            أرجع AVERROR_INVALIDDATA;
+        صفون = get_بٽ(gb, 5);
+        کانن_ڳڻپ = get_بٽ(gb, 5);
+        إذا (((صفون < 2) || (صفون > 25)) || ((کانن_ڳڻپ < 2) || (کانن_ڳڻپ > 25))) {
+            أرجع AVERROR_INVALIDDATA;
         }
-        s->num_rows_mastering_display_actual_peak_luminance = rows;
-        s->num_cols_mastering_display_actual_peak_luminance = cols;
+        s->انگ_صفون_mastering_display_actual_peak_luminance = صفون;
+        s->انگ_کانن_ڳڻپ_mastering_display_actual_peak_luminance = کانن_ڳڻپ;
 
-        if (get_bits_left(gb) < (rows * cols * 4))
-            return AVERROR_INVALIDDATA;
+        إذا (get_بٽ_کاٻو(gb) < (صفون * کانن_ڳڻپ * 4))
+            أرجع AVERROR_INVALIDDATA;
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        لكل (صحيح i = 0; i < صفون; i++) {
+            لكل (صحيح j = 0; j < کانن_ڳڻپ; j++) {
                 s->mastering_display_actual_peak_luminance[i][j] =
-                    (AVRational){get_bits(gb, 4), peak_luminance_den};
+                    (AVRational){get_بٽ(gb, 4), peak_luminance_den};
             }
         }
     }
 
-    for (int w = 0; w < s->num_windows; w++) {
+    لكل (صحيح w = 0; w < s->انگ_windows; w++) {
         AVHDRPlusColorTransformParams *params = &s->params[w];
-        if (get_bits_left(gb) < 1)
-            return AVERROR_INVALIDDATA;
+        إذا (get_بٽ_کاٻو(gb) < 1)
+            أرجع AVERROR_INVALIDDATA;
 
         params->tone_mapping_flag = get_bits1(gb);
-        if (params->tone_mapping_flag) {
-            if (get_bits_left(gb) < 28)
-                return AVERROR_INVALIDDATA;
+        إذا (params->tone_mapping_flag) {
+            إذا (get_بٽ_کاٻو(gb) < 28)
+                أرجع AVERROR_INVALIDDATA;
 
-            params->knee_point_x =
-                (AVRational){get_bits(gb, 12), knee_point_den};
-            params->knee_point_y =
-                (AVRational){get_bits(gb, 12), knee_point_den};
-            params->num_bezier_curve_anchors = get_bits(gb, 4);
+            params->knee_نقطو_x =
+                (AVRational){get_بٽ(gb, 12), knee_نقطو_den};
+            params->knee_نقطو_y =
+                (AVRational){get_بٽ(gb, 12), knee_نقطو_den};
+            params->انگ_bezier_وڪر_anchors = get_بٽ(gb, 4);
 
-            if (get_bits_left(gb) < (params->num_bezier_curve_anchors * 10))
-                return AVERROR_INVALIDDATA;
+            إذا (get_بٽ_کاٻو(gb) < (params->انگ_bezier_وڪر_anchors * 10))
+                أرجع AVERROR_INVALIDDATA;
 
-            for (int i = 0; i < params->num_bezier_curve_anchors; i++) {
-                params->bezier_curve_anchors[i] =
-                    (AVRational){get_bits(gb, 10), bezier_anchor_den};
+            لكل (صحيح i = 0; i < params->انگ_bezier_وڪر_anchors; i++) {
+                params->bezier_وڪر_anchors[i] =
+                    (AVRational){get_بٽ(gb, 10), bezier_anchor_den};
             }
         }
 
-        if (get_bits_left(gb) < 1)
-            return AVERROR_INVALIDDATA;
+        إذا (get_بٽ_کاٻو(gb) < 1)
+            أرجع AVERROR_INVALIDDATA;
         params->color_saturation_mapping_flag = get_bits1(gb);
-        if (params->color_saturation_mapping_flag) {
-            if (get_bits_left(gb) < 6)
-                return AVERROR_INVALIDDATA;
-            params->color_saturation_weight =
-                (AVRational){get_bits(gb, 6), saturation_weight_den};
+        إذا (params->color_saturation_mapping_flag) {
+            إذا (get_بٽ_کاٻو(gb) < 6)
+                أرجع AVERROR_INVALIDDATA;
+            params->color_saturation_وزن =
+                (AVRational){get_بٽ(gb, 6), saturation_وزن_den};
         }
     }
 
-    return 0;
+    أرجع 0;
 }
 
-int av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t *size)
+صحيح av_dynamic_hdr_plus_منزل_t35(ثابت AVDynamicHDRPlus *s, uint8_t **معلومات, size_t *سائيز)
 {
     uint8_t *buf;
-    size_t size_bits, size_bytes;
-    PutBitContext pbc, *pb = &pbc;
+    size_t سائيز_بٽ, سائيز_بائيٽون;
+    Put_ٻٽو_انگ_Context pbc, *pb = &pbc;
 
-    if (!s)
-        return AVERROR(EINVAL);
-    if ((!data || *data) && !size)
-       return AVERROR(EINVAL);
+    إذا (!s)
+        أرجع AVERROR(EINVAL);
+    إذا ((!معلومات || *معلومات) && !سائيز)
+       أرجع AVERROR(EINVAL);
 
     /**
      * Buffer size per CTA-861-H p.253-254:
@@ -259,263 +259,263 @@ int av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t
      * 1-7 bits per window for color saturation mapping information
      * Total: 123-7249 bits, excluding trimmed header bits
      */
-    size_bits = 8;
+    سائيز_بٽ = 8;
 
-    size_bits += 2;
+    سائيز_بٽ += 2;
 
-    for (int w = 1; w < s->num_windows; w++)
-        size_bits += 153;
+    لكل (صحيح w = 1; w < s->انگ_windows; w++)
+        سائيز_بٽ += 153;
 
-    size_bits += 27;
+    سائيز_بٽ += 27;
 
-    size_bits += 1;
-    if (s->targeted_system_display_actual_peak_luminance_flag)
-        size_bits += 10 +
-                     s->num_rows_targeted_system_display_actual_peak_luminance *
-                     s->num_cols_targeted_system_display_actual_peak_luminance * 4;
+    سائيز_بٽ += 1;
+    إذا (s->targeted_system_display_actual_peak_luminance_flag)
+        سائيز_بٽ += 10 +
+                     s->انگ_صفون_targeted_system_display_actual_peak_luminance *
+                     s->انگ_کانن_ڳڻپ_targeted_system_display_actual_peak_luminance * 4;
 
-    for (int w = 0; w < s->num_windows; w++)
-        size_bits += 72 + s->params[w].num_distribution_maxrgb_percentiles * 24 + 10;
+    لكل (صحيح w = 0; w < s->انگ_windows; w++)
+        سائيز_بٽ += 72 + s->params[w].انگ_distribution_maxrgb_percentiles * 24 + 10;
 
-    size_bits += 1;
-    if (s->mastering_display_actual_peak_luminance_flag)
-        size_bits += 10 +
-                     s->num_rows_mastering_display_actual_peak_luminance *
-                     s->num_cols_mastering_display_actual_peak_luminance * 4;
+    سائيز_بٽ += 1;
+    إذا (s->mastering_display_actual_peak_luminance_flag)
+        سائيز_بٽ += 10 +
+                     s->انگ_صفون_mastering_display_actual_peak_luminance *
+                     s->انگ_کانن_ڳڻپ_mastering_display_actual_peak_luminance * 4;
 
-    for (int w = 0; w < s->num_windows; w++) {
-        size_bits += 1;
-        if (s->params[w].tone_mapping_flag)
-            size_bits += 28 + s->params[w].num_bezier_curve_anchors * 10;
+    لكل (صحيح w = 0; w < s->انگ_windows; w++) {
+        سائيز_بٽ += 1;
+        إذا (s->params[w].tone_mapping_flag)
+            سائيز_بٽ += 28 + s->params[w].انگ_bezier_وڪر_anchors * 10;
 
-        size_bits += 1;
-        if (s->params[w].color_saturation_mapping_flag)
-            size_bits += 6;
+        سائيز_بٽ += 1;
+        إذا (s->params[w].color_saturation_mapping_flag)
+            سائيز_بٽ += 6;
     }
 
-    size_bytes = (size_bits + 7) / 8;
+    سائيز_بائيٽون = (سائيز_بٽ + 7) / 8;
 
-    av_assert0(size_bytes <= AV_HDR_PLUS_MAX_PAYLOAD_SIZE);
+    av_assert0(سائيز_بائيٽون <= AV_HDR_PLUS_MAX_PAYLOAD_سائيز);
 
-    if (!data) {
-        *size = size_bytes;
-        return 0;
-    } else if (*data) {
-        if (*size < size_bytes)
-            return AVERROR_BUFFER_TOO_SMALL;
-        buf = *data;
-    } else {
-        buf = av_malloc(size_bytes);
-        if (!buf)
-            return AVERROR(ENOMEM);
+    إذا (!معلومات) {
+        *سائيز = سائيز_بائيٽون;
+        أرجع 0;
+    } وإلا إذا (*معلومات) {
+        إذا (*سائيز < سائيز_بائيٽون)
+            أرجع AVERROR_بفر_TOO_SMALL;
+        buf = *معلومات;
+    } وإلا {
+        buf = av_malloc(سائيز_بائيٽون);
+        إذا (!buf)
+            أرجع AVERROR(ENOMEM);
     }
 
-    init_put_bits(pb, buf, size_bytes);
+    init_put_بٽ(pb, buf, سائيز_بائيٽون);
 
     // application_mode is set to Application Version 1
-    put_bits(pb, 8, 1);
+    put_بٽ(pb, 8, 1);
 
     // Payload as per CTA-861-H p.253-254
-    put_bits(pb, 2, s->num_windows);
+    put_بٽ(pb, 2, s->انگ_windows);
 
-    for (int w = 1; w < s->num_windows; w++) {
-        put_bits(pb, 16, s->params[w].window_upper_left_corner_x.num / s->params[w].window_upper_left_corner_x.den);
-        put_bits(pb, 16, s->params[w].window_upper_left_corner_y.num / s->params[w].window_upper_left_corner_y.den);
-        put_bits(pb, 16, s->params[w].window_lower_right_corner_x.num / s->params[w].window_lower_right_corner_x.den);
-        put_bits(pb, 16, s->params[w].window_lower_right_corner_y.num / s->params[w].window_lower_right_corner_y.den);
-        put_bits(pb, 16, s->params[w].center_of_ellipse_x);
-        put_bits(pb, 16, s->params[w].center_of_ellipse_y);
-        put_bits(pb, 8, s->params[w].rotation_angle);
-        put_bits(pb, 16, s->params[w].semimajor_axis_internal_ellipse);
-        put_bits(pb, 16, s->params[w].semimajor_axis_external_ellipse);
-        put_bits(pb, 16, s->params[w].semiminor_axis_external_ellipse);
-        put_bits(pb, 1, s->params[w].overlap_process_option);
+    لكل (صحيح w = 1; w < s->انگ_windows; w++) {
+        put_بٽ(pb, 16, s->params[w].دري_مٿانهون_کاٻو_ڪنڊ_x.انگ / s->params[w].دري_مٿانهون_کاٻو_ڪنڊ_x.den);
+        put_بٽ(pb, 16, s->params[w].دري_مٿانهون_کاٻو_ڪنڊ_y.انگ / s->params[w].دري_مٿانهون_کاٻو_ڪنڊ_y.den);
+        put_بٽ(pb, 16, s->params[w].دري_هيٺاهون_ساڄو_ڪنڊ_x.انگ / s->params[w].دري_هيٺاهون_ساڄو_ڪنڊ_x.den);
+        put_بٽ(pb, 16, s->params[w].دري_هيٺاهون_ساڄو_ڪنڊ_y.انگ / s->params[w].دري_هيٺاهون_ساڄو_ڪنڊ_y.den);
+        put_بٽ(pb, 16, s->params[w].center_جو_ellipse_x);
+        put_بٽ(pb, 16, s->params[w].center_جو_ellipse_y);
+        put_بٽ(pb, 8, s->params[w].rotation_angle);
+        put_بٽ(pb, 16, s->params[w].semimajor_axis_اندروني_ellipse);
+        put_بٽ(pb, 16, s->params[w].semimajor_axis_external_ellipse);
+        put_بٽ(pb, 16, s->params[w].semiminor_axis_external_ellipse);
+        put_بٽ(pb, 1, s->params[w].overlap_process_option);
     }
 
-    put_bits(pb, 27, s->targeted_system_display_maximum_luminance.num * luminance_den /
-        s->targeted_system_display_maximum_luminance.den);
-    put_bits(pb, 1, s->targeted_system_display_actual_peak_luminance_flag);
-    if (s->targeted_system_display_actual_peak_luminance_flag) {
-        put_bits(pb, 5, s->num_rows_targeted_system_display_actual_peak_luminance);
-        put_bits(pb, 5, s->num_cols_targeted_system_display_actual_peak_luminance);
-        for (int i = 0; i < s->num_rows_targeted_system_display_actual_peak_luminance; i++) {
-            for (int j = 0; j < s->num_cols_targeted_system_display_actual_peak_luminance; j++)
-                put_bits(pb, 4, s->targeted_system_display_actual_peak_luminance[i][j].num * peak_luminance_den /
+    put_بٽ(pb, 27, s->targeted_system_display_وڌ_کان_وڌ_luminance.انگ * luminance_den /
+        s->targeted_system_display_وڌ_کان_وڌ_luminance.den);
+    put_بٽ(pb, 1, s->targeted_system_display_actual_peak_luminance_flag);
+    إذا (s->targeted_system_display_actual_peak_luminance_flag) {
+        put_بٽ(pb, 5, s->انگ_صفون_targeted_system_display_actual_peak_luminance);
+        put_بٽ(pb, 5, s->انگ_کانن_ڳڻپ_targeted_system_display_actual_peak_luminance);
+        لكل (صحيح i = 0; i < s->انگ_صفون_targeted_system_display_actual_peak_luminance; i++) {
+            لكل (صحيح j = 0; j < s->انگ_کانن_ڳڻپ_targeted_system_display_actual_peak_luminance; j++)
+                put_بٽ(pb, 4, s->targeted_system_display_actual_peak_luminance[i][j].انگ * peak_luminance_den /
                     s->targeted_system_display_actual_peak_luminance[i][j].den);
         }
     }
 
-    for (int w = 0; w < s->num_windows; w++) {
-        for (int i = 0; i < 3; i++)
-            put_bits(pb, 17, s->params[w].maxscl[i].num * rgb_den / s->params[w].maxscl[i].den);
-        put_bits(pb, 17, s->params[w].average_maxrgb.num * rgb_den / s->params[w].average_maxrgb.den);
-        put_bits(pb, 4, s->params[w].num_distribution_maxrgb_percentiles);
-        for (int i = 0; i < s->params[w].num_distribution_maxrgb_percentiles; i++) {
-            put_bits(pb, 7, s->params[w].distribution_maxrgb[i].percentage);
-            put_bits(pb, 17, s->params[w].distribution_maxrgb[i].percentile.num * rgb_den /
+    لكل (صحيح w = 0; w < s->انگ_windows; w++) {
+        لكل (صحيح i = 0; i < 3; i++)
+            put_بٽ(pb, 17, s->params[w].maxscl[i].انگ * rgb_den / s->params[w].maxscl[i].den);
+        put_بٽ(pb, 17, s->params[w].اوسط_maxrgb.انگ * rgb_den / s->params[w].اوسط_maxrgb.den);
+        put_بٽ(pb, 4, s->params[w].انگ_distribution_maxrgb_percentiles);
+        لكل (صحيح i = 0; i < s->params[w].انگ_distribution_maxrgb_percentiles; i++) {
+            put_بٽ(pb, 7, s->params[w].distribution_maxrgb[i].percentage);
+            put_بٽ(pb, 17, s->params[w].distribution_maxrgb[i].percentile.انگ * rgb_den /
                 s->params[w].distribution_maxrgb[i].percentile.den);
         }
-        put_bits(pb, 10, s->params[w].fraction_bright_pixels.num * fraction_pixel_den /
+        put_بٽ(pb, 10, s->params[w].fraction_bright_pixels.انگ * fraction_pixel_den /
             s->params[w].fraction_bright_pixels.den);
     }
 
-    put_bits(pb, 1, s->mastering_display_actual_peak_luminance_flag);
-    if (s->mastering_display_actual_peak_luminance_flag) {
-        put_bits(pb, 5, s->num_rows_mastering_display_actual_peak_luminance);
-        put_bits(pb, 5, s->num_cols_mastering_display_actual_peak_luminance);
-        for (int i = 0; i < s->num_rows_mastering_display_actual_peak_luminance; i++) {
-            for (int j = 0; j < s->num_cols_mastering_display_actual_peak_luminance; j++)
-                put_bits(pb, 4, s->mastering_display_actual_peak_luminance[i][j].num * peak_luminance_den /
+    put_بٽ(pb, 1, s->mastering_display_actual_peak_luminance_flag);
+    إذا (s->mastering_display_actual_peak_luminance_flag) {
+        put_بٽ(pb, 5, s->انگ_صفون_mastering_display_actual_peak_luminance);
+        put_بٽ(pb, 5, s->انگ_کانن_ڳڻپ_mastering_display_actual_peak_luminance);
+        لكل (صحيح i = 0; i < s->انگ_صفون_mastering_display_actual_peak_luminance; i++) {
+            لكل (صحيح j = 0; j < s->انگ_کانن_ڳڻپ_mastering_display_actual_peak_luminance; j++)
+                put_بٽ(pb, 4, s->mastering_display_actual_peak_luminance[i][j].انگ * peak_luminance_den /
                     s->mastering_display_actual_peak_luminance[i][j].den);
         }
     }
 
-    for (int w = 0; w < s->num_windows; w++) {
-        put_bits(pb, 1, s->params[w].tone_mapping_flag);
-        if (s->params[w].tone_mapping_flag) {
-            put_bits(pb, 12, s->params[w].knee_point_x.num * knee_point_den / s->params[w].knee_point_x.den);
-            put_bits(pb, 12, s->params[w].knee_point_y.num * knee_point_den / s->params[w].knee_point_y.den);
-            put_bits(pb, 4, s->params[w].num_bezier_curve_anchors);
-            for (int i = 0; i < s->params[w].num_bezier_curve_anchors; i++)
-                put_bits(pb, 10, s->params[w].bezier_curve_anchors[i].num * bezier_anchor_den /
-                    s->params[w].bezier_curve_anchors[i].den);
+    لكل (صحيح w = 0; w < s->انگ_windows; w++) {
+        put_بٽ(pb, 1, s->params[w].tone_mapping_flag);
+        إذا (s->params[w].tone_mapping_flag) {
+            put_بٽ(pb, 12, s->params[w].knee_نقطو_x.انگ * knee_نقطو_den / s->params[w].knee_نقطو_x.den);
+            put_بٽ(pb, 12, s->params[w].knee_نقطو_y.انگ * knee_نقطو_den / s->params[w].knee_نقطو_y.den);
+            put_بٽ(pb, 4, s->params[w].انگ_bezier_وڪر_anchors);
+            لكل (صحيح i = 0; i < s->params[w].انگ_bezier_وڪر_anchors; i++)
+                put_بٽ(pb, 10, s->params[w].bezier_وڪر_anchors[i].انگ * bezier_anchor_den /
+                    s->params[w].bezier_وڪر_anchors[i].den);
         }
-        put_bits(pb, 1, s->params[w].color_saturation_mapping_flag);
-        if (s->params[w].color_saturation_mapping_flag)
-            put_bits(pb, 6, s->params[w].color_saturation_weight.num * saturation_weight_den /
-                s->params[w].color_saturation_weight.den);
+        put_بٽ(pb, 1, s->params[w].color_saturation_mapping_flag);
+        إذا (s->params[w].color_saturation_mapping_flag)
+            put_بٽ(pb, 6, s->params[w].color_saturation_وزن.انگ * saturation_وزن_den /
+                s->params[w].color_saturation_وزن.den);
     }
 
-    flush_put_bits(pb);
+    flush_put_بٽ(pb);
 
-    *data = buf;
-    if (size)
-        *size = size_bytes;
-    return 0;
+    *معلومات = buf;
+    إذا (سائيز)
+        *سائيز = سائيز_بائيٽون;
+    أرجع 0;
 }
 
-AVDynamicHDRSmpte2094App5 *av_dynamic_hdr_smpte2094_app5_alloc(size_t *size)
+AVDynamicHDRSmpte2094App5 *av_dynamic_hdr_smpte2094_app5_alloc(size_t *سائيز)
 {
-    AVDynamicHDRSmpte2094App5 *smpte2094_app5 = av_mallocz(sizeof(AVDynamicHDRSmpte2094App5));
+    AVDynamicHDRSmpte2094App5 *smpte2094_app5 = av_mallocz(حجم(AVDynamicHDRSmpte2094App5));
 
-    if (size)
-        *size = smpte2094_app5 ? sizeof(*smpte2094_app5) : 0;
+    إذا (سائيز)
+        *سائيز = smpte2094_app5 ? حجم(*smpte2094_app5) : 0;
 
-    return smpte2094_app5;
+    أرجع smpte2094_app5;
 }
 
-AVDynamicHDRSmpte2094App5 *av_dynamic_hdr_smpte2094_app5_create_side_data(AVFrame *frame)
+AVDynamicHDRSmpte2094App5 *av_dynamic_hdr_smpte2094_app5_create_side_معلومات(AVFrame *چوکٺو)
 {
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_DYNAMIC_HDR_SMPTE_2094_APP5,
-                                                        sizeof(AVDynamicHDRSmpte2094App5));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_معلومات *side_معلومات = av_چوکٺو_new_side_معلومات(چوکٺو,
+                                                        AV_چوکٺو_معلومات_DYNAMIC_HDR_SMPTE_2094_APP5,
+                                                        حجم(AVDynamicHDRSmpte2094App5));
+    إذا (!side_معلومات)
+        أرجع عدم;
 
-    memset(side_data->data, 0, sizeof(AVDynamicHDRSmpte2094App5));
+    memset(side_معلومات->معلومات, 0, حجم(AVDynamicHDRSmpte2094App5));
 
-    return (AVDynamicHDRSmpte2094App5 *)side_data->data;
+    أرجع (AVDynamicHDRSmpte2094App5 *)side_معلومات->معلومات;
 }
 
-#define GET_BITS_OR_FAIL(var, n)        \
-    do {                                \
-        if (get_bits_left(gb) < n) {    \
+#وصف_ڪريو GET_بٽ_OR_FAIL(var, n)        \
+    افعل {                                \
+        إذا (get_بٽ_کاٻو(gb) < n) {    \
             ret = AVERROR_INVALIDDATA;  \
-            goto end;                   \
+            اذهب پڇاڙي;                   \
         }                               \
-        var = get_bits(gb, n);          \
-    } while (0)
+        var = get_بٽ(gb, n);          \
+    } طالما (0)
 
-int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5 *s, const uint8_t *data,
-                                           size_t size)
+صحيح av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5 *s, ثابت uint8_t *معلومات,
+                                           size_t سائيز)
 {
-    GetBitContext gbc, *gb = &gbc;
-    int ret, reserved_zero;
-    size_t padded_size = size + AV_INPUT_BUFFER_PADDING_SIZE;
+    Get_ٻٽو_انگ_Context gbc, *gb = &gbc;
+    صحيح ret, reserved_zero;
+    size_t padded_سائيز = سائيز + AV_داخلا_بفر_PADDING_سائيز;
 
-    if (!s)
-        return AVERROR(EINVAL);
+    إذا (!s)
+        أرجع AVERROR(EINVAL);
 
-    uint8_t *padded_data = av_mallocz(padded_size);
-    if (!padded_data)
-        return AVERROR(ENOMEM);
+    uint8_t *padded_معلومات = av_mallocz(padded_سائيز);
+    إذا (!padded_معلومات)
+        أرجع AVERROR(ENOMEM);
 
-    memcpy(padded_data, data, size);
-    ret = init_get_bits8(gb, padded_data, size);
-    if (ret < 0)
-        goto end;
+    يادگيري_نقل(padded_معلومات, معلومات, سائيز);
+    ret = init_get_bits8(gb, padded_معلومات, سائيز);
+    إذا (ret < 0)
+        اذهب پڇاڙي;
 
     // Table C.1
-    GET_BITS_OR_FAIL(s->application_version, 3);
-    GET_BITS_OR_FAIL(s->minimum_application_version, 3);
-    GET_BITS_OR_FAIL(reserved_zero, 2);
-    if (reserved_zero) {
+    GET_بٽ_OR_FAIL(s->application_نسخو, 3);
+    GET_بٽ_OR_FAIL(s->minimum_application_نسخو, 3);
+    GET_بٽ_OR_FAIL(reserved_zero, 2);
+    إذا (reserved_zero) {
         ret = AVERROR_INVALIDDATA;
-        goto end;
+        اذهب پڇاڙي;
     }
 
     // Table C.2
-    GET_BITS_OR_FAIL(s->has_custom_hdr_reference_white_flag, 1);
-    GET_BITS_OR_FAIL(s->has_adaptive_tone_map_flag, 1);
-    GET_BITS_OR_FAIL(reserved_zero, 6);
-    if (reserved_zero) {
+    GET_بٽ_OR_FAIL(s->has_custom_hdr_reference_white_flag, 1);
+    GET_بٽ_OR_FAIL(s->has_adaptive_tone_map_flag, 1);
+    GET_بٽ_OR_FAIL(reserved_zero, 6);
+    إذا (reserved_zero) {
         ret = AVERROR_INVALIDDATA;
-        goto end;
+        اذهب پڇاڙي;
     }
-    if (s->has_custom_hdr_reference_white_flag)
-        GET_BITS_OR_FAIL(s->hdr_reference_white, 16);
-    if (!s->has_adaptive_tone_map_flag) {
+    إذا (s->has_custom_hdr_reference_white_flag)
+        GET_بٽ_OR_FAIL(s->hdr_reference_white, 16);
+    إذا (!s->has_adaptive_tone_map_flag) {
         ret = 0;
-        goto end;
+        اذهب پڇاڙي;
     }
 
     // Table C.3
-    GET_BITS_OR_FAIL(s->baseline_hdr_headroom, 16);
-    GET_BITS_OR_FAIL(s->use_reference_white_tone_mapping_flag, 1);
-    if (s->use_reference_white_tone_mapping_flag) {
-        GET_BITS_OR_FAIL(reserved_zero, 7);
+    GET_بٽ_OR_FAIL(s->baseline_hdr_headroom, 16);
+    GET_بٽ_OR_FAIL(s->use_reference_white_tone_mapping_flag, 1);
+    إذا (s->use_reference_white_tone_mapping_flag) {
+        GET_بٽ_OR_FAIL(reserved_zero, 7);
         ret = reserved_zero ? AVERROR_INVALIDDATA : 0;
-        goto end;
+        اذهب پڇاڙي;
     }
-    GET_BITS_OR_FAIL(s->num_alternate_images, 3);
-    if (s->num_alternate_images > 4) {
+    GET_بٽ_OR_FAIL(s->انگ_alternate_images, 3);
+    إذا (s->انگ_alternate_images > 4) {
         ret = AVERROR_INVALIDDATA;
-        goto end;
+        اذهب پڇاڙي;
     }
-    GET_BITS_OR_FAIL(s->gain_application_space_chromaticities_flag, 2);
-    GET_BITS_OR_FAIL(s->has_common_component_mix_params_flag, 1);
-    GET_BITS_OR_FAIL(s->has_common_curve_params_flag, 1);
-    if (s->gain_application_space_chromaticities_flag == 3)
-        for (int r = 0; r < 8; r++)
-            GET_BITS_OR_FAIL(s->gain_application_space_chromaticities[r], 16);
+    GET_بٽ_OR_FAIL(s->gain_application_space_chromaticities_flag, 2);
+    GET_بٽ_OR_FAIL(s->has_common_component_mix_params_flag, 1);
+    GET_بٽ_OR_FAIL(s->has_common_وڪر_params_flag, 1);
+    إذا (s->gain_application_space_chromaticities_flag == 3)
+        لكل (صحيح r = 0; r < 8; r++)
+            GET_بٽ_OR_FAIL(s->gain_application_space_chromaticities[r], 16);
 
-    for (int a = 0; a < s->num_alternate_images; a++) {
-        GET_BITS_OR_FAIL(s->alternate_hdr_headrooms[a], 16);
+    لكل (صحيح a = 0; a < s->انگ_alternate_images; a++) {
+        GET_بٽ_OR_FAIL(s->alternate_hdr_headrooms[a], 16);
 
         // Table C.4
-        if (!a || !s->has_common_component_mix_params_flag) {
-            GET_BITS_OR_FAIL(s->component_mixing_type[a], 2);
-            if (s->component_mixing_type[a] != 3) {
-                GET_BITS_OR_FAIL(reserved_zero, 6);
-                if (reserved_zero) {
+        إذا (!a || !s->has_common_component_mix_params_flag) {
+            GET_بٽ_OR_FAIL(s->component_mixing_type[a], 2);
+            إذا (s->component_mixing_type[a] != 3) {
+                GET_بٽ_OR_FAIL(reserved_zero, 6);
+                إذا (reserved_zero) {
                     ret = AVERROR_INVALIDDATA;
-                    goto end;
+                    اذهب پڇاڙي;
                 }
-            } else {
-                for (int k = 0; k < 6; k++)
-                    GET_BITS_OR_FAIL(s->has_component_mixing_coefficient_flag[a][k], 1);
-                for (int k = 0; k < 6; k++) {
-                    if (s->has_component_mixing_coefficient_flag[a][k]) {
-                        GET_BITS_OR_FAIL(s->component_mixing_coefficient[a][k], 16);
-                    } else {
+            } وإلا {
+                لكل (صحيح k = 0; k < 6; k++)
+                    GET_بٽ_OR_FAIL(s->has_component_mixing_coefficient_flag[a][k], 1);
+                لكل (صحيح k = 0; k < 6; k++) {
+                    إذا (s->has_component_mixing_coefficient_flag[a][k]) {
+                        GET_بٽ_OR_FAIL(s->component_mixing_coefficient[a][k], 16);
+                    } وإلا {
                         s->component_mixing_coefficient[a][k] = 0;
                     }
                 }
             }
-        } else {
+        } وإلا {
             s->component_mixing_type[a] = s->component_mixing_type[0];
-            if (s->component_mixing_type[a] == 3) {
-                for (int k = 0; k < 6; k++) {
+            إذا (s->component_mixing_type[a] == 3) {
+                لكل (صحيح k = 0; k < 6; k++) {
                     s->has_component_mixing_coefficient_flag[a][k] =
                             s->has_component_mixing_coefficient_flag[0][k];
                     s->component_mixing_coefficient[a][k] = s->component_mixing_coefficient[0][k];
@@ -524,183 +524,183 @@ int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5 *s, const u
         }
 
         // Table C.5
-        if (!a || !s->has_common_curve_params_flag) {
-            GET_BITS_OR_FAIL(s->gain_curve_num_control_points_minus_1[a], 5);
-            if (s->gain_curve_num_control_points_minus_1[a] > 31) {
+        إذا (!a || !s->has_common_وڪر_params_flag) {
+            GET_بٽ_OR_FAIL(s->gain_وڪر_انگ_control_points_minus_1[a], 5);
+            إذا (s->gain_وڪر_انگ_control_points_minus_1[a] > 31) {
                 ret = AVERROR_INVALIDDATA;
-                goto end;
+                اذهب پڇاڙي;
             }
-            GET_BITS_OR_FAIL(s->gain_curve_use_pchip_slope_flag[a], 1);
-            GET_BITS_OR_FAIL(reserved_zero, 2);
-            if (reserved_zero) {
+            GET_بٽ_OR_FAIL(s->gain_وڪر_use_pchip_لاهي_flag[a], 1);
+            GET_بٽ_OR_FAIL(reserved_zero, 2);
+            إذا (reserved_zero) {
                 ret = AVERROR_INVALIDDATA;
-                goto end;
+                اذهب پڇاڙي;
             }
-            for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++) {
-                GET_BITS_OR_FAIL(s->gain_curve_control_points_x[a][c], 16);
+            لكل (صحيح c = 0; c <= s->gain_وڪر_انگ_control_points_minus_1[a]; c++) {
+                GET_بٽ_OR_FAIL(s->gain_وڪر_control_points_x[a][c], 16);
             }
-        } else {
-            s->gain_curve_num_control_points_minus_1[a] =
-                    s->gain_curve_num_control_points_minus_1[0];
-            s->gain_curve_use_pchip_slope_flag[a] = s->gain_curve_use_pchip_slope_flag[0];
-            for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++) {
-                s->gain_curve_control_points_x[a][c] = s->gain_curve_control_points_x[0][c];
+        } وإلا {
+            s->gain_وڪر_انگ_control_points_minus_1[a] =
+                    s->gain_وڪر_انگ_control_points_minus_1[0];
+            s->gain_وڪر_use_pchip_لاهي_flag[a] = s->gain_وڪر_use_pchip_لاهي_flag[0];
+            لكل (صحيح c = 0; c <= s->gain_وڪر_انگ_control_points_minus_1[a]; c++) {
+                s->gain_وڪر_control_points_x[a][c] = s->gain_وڪر_control_points_x[0][c];
             }
         }
-        for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++)
-            GET_BITS_OR_FAIL(s->gain_curve_control_points_y[a][c], 16);
-        if (!s->gain_curve_use_pchip_slope_flag[a]) {
-            for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++)
-                GET_BITS_OR_FAIL(s->gain_curve_control_points_theta[a][c], 16);
+        لكل (صحيح c = 0; c <= s->gain_وڪر_انگ_control_points_minus_1[a]; c++)
+            GET_بٽ_OR_FAIL(s->gain_وڪر_control_points_y[a][c], 16);
+        إذا (!s->gain_وڪر_use_pchip_لاهي_flag[a]) {
+            لكل (صحيح c = 0; c <= s->gain_وڪر_انگ_control_points_minus_1[a]; c++)
+                GET_بٽ_OR_FAIL(s->gain_وڪر_control_points_theta[a][c], 16);
         }
     }
     ret = 0;
-end:
-    av_free(padded_data);
-    return ret;
+پڇاڙي:
+    av_free(padded_معلومات);
+    أرجع ret;
 }
 
-int av_dynamic_hdr_smpte2094_app5_to_t35(const AVDynamicHDRSmpte2094App5 *s, uint8_t **data,
-                                         size_t *size)
+صحيح av_dynamic_hdr_smpte2094_app5_منزل_t35(ثابت AVDynamicHDRSmpte2094App5 *s, uint8_t **معلومات,
+                                         size_t *سائيز)
 {
     uint8_t *buf;
-    size_t size_bytes, size_bits;
-    PutBitContext pbc, *pb = &pbc;
+    size_t سائيز_بائيٽون, سائيز_بٽ;
+    Put_ٻٽو_انگ_Context pbc, *pb = &pbc;
 
-    if (!s)
-        return AVERROR(EINVAL);
-    if ((!data || *data) && !size)
-       return AVERROR(EINVAL);
+    إذا (!s)
+        أرجع AVERROR(EINVAL);
+    إذا ((!معلومات || *معلومات) && !سائيز)
+       أرجع AVERROR(EINVAL);
 
-    if (s->application_version >= 8 || s->minimum_application_version >= 3)
-        return AVERROR_INVALIDDATA;
-    size_bits = 0;
-    size_bits += 3 + 3 + 2;
-    size_bits += 1 + 1 + 6;
-    if (s->has_custom_hdr_reference_white_flag)
-        size_bits += 16;
-    if (s->has_adaptive_tone_map_flag) {
-        size_bits += 16 + 1;
-        if (s->use_reference_white_tone_mapping_flag) {
-            size_bits += 7;
-        } else {
-            size_bits += 3 + 2 + 1 + 1;
-            if (s->gain_application_space_chromaticities_flag == 3)
-                size_bits += 16 * 8;
-            if (s->num_alternate_images > 4)
-                return AVERROR_INVALIDDATA;
-            for (int a = 0; a < s->num_alternate_images; a++) {
-                size_bits += 16;
-                if (!a || !s->has_common_component_mix_params_flag) {
-                    size_bits += 2;
-                    if (s->component_mixing_type[a] != 3) {
-                        size_bits += 6;
-                    } else {
-                        size_bits += 6;
-                        for (int k = 0; k < 6; k++)
-                          if (s->has_component_mixing_coefficient_flag[a][k])
-                            size_bits += 16;
+    إذا (s->application_نسخو >= 8 || s->minimum_application_نسخو >= 3)
+        أرجع AVERROR_INVALIDDATA;
+    سائيز_بٽ = 0;
+    سائيز_بٽ += 3 + 3 + 2;
+    سائيز_بٽ += 1 + 1 + 6;
+    إذا (s->has_custom_hdr_reference_white_flag)
+        سائيز_بٽ += 16;
+    إذا (s->has_adaptive_tone_map_flag) {
+        سائيز_بٽ += 16 + 1;
+        إذا (s->use_reference_white_tone_mapping_flag) {
+            سائيز_بٽ += 7;
+        } وإلا {
+            سائيز_بٽ += 3 + 2 + 1 + 1;
+            إذا (s->gain_application_space_chromaticities_flag == 3)
+                سائيز_بٽ += 16 * 8;
+            إذا (s->انگ_alternate_images > 4)
+                أرجع AVERROR_INVALIDDATA;
+            لكل (صحيح a = 0; a < s->انگ_alternate_images; a++) {
+                سائيز_بٽ += 16;
+                إذا (!a || !s->has_common_component_mix_params_flag) {
+                    سائيز_بٽ += 2;
+                    إذا (s->component_mixing_type[a] != 3) {
+                        سائيز_بٽ += 6;
+                    } وإلا {
+                        سائيز_بٽ += 6;
+                        لكل (صحيح k = 0; k < 6; k++)
+                          إذا (s->has_component_mixing_coefficient_flag[a][k])
+                            سائيز_بٽ += 16;
                     }
                 }
-                if (!a || !s->has_common_curve_params_flag) {
-                    size_bits += 5 + 1 + 2;
-                    if (s->gain_curve_num_control_points_minus_1[a] > 31)
-                        return AVERROR_INVALIDDATA;
-                    size_bits += 16 * (s->gain_curve_num_control_points_minus_1[a] + 1);
+                إذا (!a || !s->has_common_وڪر_params_flag) {
+                    سائيز_بٽ += 5 + 1 + 2;
+                    إذا (s->gain_وڪر_انگ_control_points_minus_1[a] > 31)
+                        أرجع AVERROR_INVALIDDATA;
+                    سائيز_بٽ += 16 * (s->gain_وڪر_انگ_control_points_minus_1[a] + 1);
                 }
-                size_bits += 16 * (s->gain_curve_num_control_points_minus_1[a] + 1);
-                if (!s->gain_curve_use_pchip_slope_flag[a])
-                    size_bits += 16 * (s->gain_curve_num_control_points_minus_1[a] + 1);
+                سائيز_بٽ += 16 * (s->gain_وڪر_انگ_control_points_minus_1[a] + 1);
+                إذا (!s->gain_وڪر_use_pchip_لاهي_flag[a])
+                    سائيز_بٽ += 16 * (s->gain_وڪر_انگ_control_points_minus_1[a] + 1);
             }
         }
     }
-    if (size_bits % 8)
-      return AVERROR_INVALIDDATA;
-    size_bytes = size_bits >> 3;
+    إذا (سائيز_بٽ % 8)
+      أرجع AVERROR_INVALIDDATA;
+    سائيز_بائيٽون = سائيز_بٽ >> 3;
 
-    if (!data) {
-        *size = size_bytes;
-        return 0;
-    } else if (*data) {
-        if (*size < size_bytes)
-            return AVERROR_BUFFER_TOO_SMALL;
-        buf = *data;
-    } else {
-        buf = av_malloc(size_bytes);
-        if (!buf)
-            return AVERROR(ENOMEM);
+    إذا (!معلومات) {
+        *سائيز = سائيز_بائيٽون;
+        أرجع 0;
+    } وإلا إذا (*معلومات) {
+        إذا (*سائيز < سائيز_بائيٽون)
+            أرجع AVERROR_بفر_TOO_SMALL;
+        buf = *معلومات;
+    } وإلا {
+        buf = av_malloc(سائيز_بائيٽون);
+        إذا (!buf)
+            أرجع AVERROR(ENOMEM);
     }
 
-    init_put_bits(pb, buf, size_bytes);
+    init_put_بٽ(pb, buf, سائيز_بائيٽون);
 
     // Table C.1
-    put_bits(pb, 3, s->application_version);
-    put_bits(pb, 3, s->minimum_application_version);
-    put_bits(pb, 2, 0); // reserved_zero
+    put_بٽ(pb, 3, s->application_نسخو);
+    put_بٽ(pb, 3, s->minimum_application_نسخو);
+    put_بٽ(pb, 2, 0); // reserved_zero
 
     // Table C.2
-    put_bits(pb, 1, s->has_custom_hdr_reference_white_flag);
-    put_bits(pb, 1, s->has_adaptive_tone_map_flag);
-    put_bits(pb, 6, 0); // reserved_zero
+    put_بٽ(pb, 1, s->has_custom_hdr_reference_white_flag);
+    put_بٽ(pb, 1, s->has_adaptive_tone_map_flag);
+    put_بٽ(pb, 6, 0); // reserved_zero
 
-    if (s->has_custom_hdr_reference_white_flag)
-        put_bits(pb, 16, s->hdr_reference_white);
+    إذا (s->has_custom_hdr_reference_white_flag)
+        put_بٽ(pb, 16, s->hdr_reference_white);
 
-    if (s->has_adaptive_tone_map_flag) {
+    إذا (s->has_adaptive_tone_map_flag) {
         // Table C.3
-        put_bits(pb, 16, s->baseline_hdr_headroom);
-        put_bits(pb, 1, s->use_reference_white_tone_mapping_flag);
-        if (s->use_reference_white_tone_mapping_flag) {
-            put_bits(pb, 7, 0); // reserved_zero
-        } else {
-            put_bits(pb, 3, s->num_alternate_images);
-            put_bits(pb, 2, s->gain_application_space_chromaticities_flag);
-            put_bits(pb, 1, s->has_common_component_mix_params_flag);
-            put_bits(pb, 1, s->has_common_curve_params_flag);
+        put_بٽ(pb, 16, s->baseline_hdr_headroom);
+        put_بٽ(pb, 1, s->use_reference_white_tone_mapping_flag);
+        إذا (s->use_reference_white_tone_mapping_flag) {
+            put_بٽ(pb, 7, 0); // reserved_zero
+        } وإلا {
+            put_بٽ(pb, 3, s->انگ_alternate_images);
+            put_بٽ(pb, 2, s->gain_application_space_chromaticities_flag);
+            put_بٽ(pb, 1, s->has_common_component_mix_params_flag);
+            put_بٽ(pb, 1, s->has_common_وڪر_params_flag);
 
-            if (s->gain_application_space_chromaticities_flag == 3)
-                for (int r = 0; r < 8; r++)
-                    put_bits(pb, 16, s->gain_application_space_chromaticities[r]);
+            إذا (s->gain_application_space_chromaticities_flag == 3)
+                لكل (صحيح r = 0; r < 8; r++)
+                    put_بٽ(pb, 16, s->gain_application_space_chromaticities[r]);
 
-            for (int a = 0; a < s->num_alternate_images; a++) {
-                put_bits(pb, 16, s->alternate_hdr_headrooms[a]);
+            لكل (صحيح a = 0; a < s->انگ_alternate_images; a++) {
+                put_بٽ(pb, 16, s->alternate_hdr_headrooms[a]);
 
                 // Table C.4
-                if (!a || !s->has_common_component_mix_params_flag) {
-                    put_bits(pb, 2, s->component_mixing_type[a]);
-                    if (s->component_mixing_type[a] != 3) {
-                        put_bits(pb, 6, 0); // reserved_zero
-                    } else {
-                        for (int k = 0; k < 6; k++)
-                            put_bits(pb, 1, s->has_component_mixing_coefficient_flag[a][k]);
-                        for (int k = 0; k < 6; k++)
-                            if (s->has_component_mixing_coefficient_flag[a][k])
-                                put_bits(pb, 16, s->component_mixing_coefficient[a][k]);
+                إذا (!a || !s->has_common_component_mix_params_flag) {
+                    put_بٽ(pb, 2, s->component_mixing_type[a]);
+                    إذا (s->component_mixing_type[a] != 3) {
+                        put_بٽ(pb, 6, 0); // reserved_zero
+                    } وإلا {
+                        لكل (صحيح k = 0; k < 6; k++)
+                            put_بٽ(pb, 1, s->has_component_mixing_coefficient_flag[a][k]);
+                        لكل (صحيح k = 0; k < 6; k++)
+                            إذا (s->has_component_mixing_coefficient_flag[a][k])
+                                put_بٽ(pb, 16, s->component_mixing_coefficient[a][k]);
                     }
                 }
 
                 // Table C.5
-                if (!a || !s->has_common_curve_params_flag) {
-                    put_bits(pb, 5, s->gain_curve_num_control_points_minus_1[a]);
-                    put_bits(pb, 1, s->gain_curve_use_pchip_slope_flag[a]);
-                    put_bits(pb, 2, 0); // reserved_zero
-                    for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++)
-                        put_bits(pb, 16, s->gain_curve_control_points_x[a][c]);
+                إذا (!a || !s->has_common_وڪر_params_flag) {
+                    put_بٽ(pb, 5, s->gain_وڪر_انگ_control_points_minus_1[a]);
+                    put_بٽ(pb, 1, s->gain_وڪر_use_pchip_لاهي_flag[a]);
+                    put_بٽ(pb, 2, 0); // reserved_zero
+                    لكل (صحيح c = 0; c <= s->gain_وڪر_انگ_control_points_minus_1[a]; c++)
+                        put_بٽ(pb, 16, s->gain_وڪر_control_points_x[a][c]);
                 }
-                for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++)
-                    put_bits(pb, 16, s->gain_curve_control_points_y[a][c]);
-                if (!s->gain_curve_use_pchip_slope_flag[a]) {
-                    for (int c = 0; c <= s->gain_curve_num_control_points_minus_1[a]; c++)
-                        put_bits(pb, 16, s->gain_curve_control_points_theta[a][c]);
+                لكل (صحيح c = 0; c <= s->gain_وڪر_انگ_control_points_minus_1[a]; c++)
+                    put_بٽ(pb, 16, s->gain_وڪر_control_points_y[a][c]);
+                إذا (!s->gain_وڪر_use_pchip_لاهي_flag[a]) {
+                    لكل (صحيح c = 0; c <= s->gain_وڪر_انگ_control_points_minus_1[a]; c++)
+                        put_بٽ(pb, 16, s->gain_وڪر_control_points_theta[a][c]);
                 }
             }
         }
     }
 
-    flush_put_bits(pb);
+    flush_put_بٽ(pb);
 
-    *data = buf;
-    if (size)
-        *size = size_bytes;
-    return 0;
+    *معلومات = buf;
+    إذا (سائيز)
+        *سائيز = سائيز_بائيٽون;
+    أرجع 0;
 }

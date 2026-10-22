@@ -18,31 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PPC_TIMER_H
-#define AVUTIL_PPC_TIMER_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_PPC_TIMER_H
+#وصف_ڪريو AVUTIL_PPC_TIMER_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
-#include "config.h"
+#ضمن "config.h"
 
-#define AV_READ_TIME read_time
+#وصف_ڪريو AV_READ_وقت read_وقت
 
-static inline uint64_t read_time(void)
+ساكن مضمن uint64_t read_وقت(فراغ)
 {
-    uint32_t tbu, tbl, temp;
+    uint32_t tbu, tbl, عارضي;
 
      /* from section 2.2.1 of the 32-bit PowerPC PEM */
-     __asm__ volatile(
+     __asm__ متطاير(
          "mftbu  %2\n"
          "mftb   %0\n"
          "mftbu  %1\n"
          "cmpw   %2,%1\n"
          "bne    $-0x10\n"
-     : "=r"(tbl), "=r"(tbu), "=r"(temp)
+     : "=r"(tbl), "=r"(tbu), "=r"(عارضي)
      :
      : "cc");
 
-     return (((uint64_t)tbu)<<32) | (uint64_t)tbl;
+     أرجع (((uint64_t)tbu)<<32) | (uint64_t)tbl;
 }
 
-#endif /* AVUTIL_PPC_TIMER_H */
+#جيڪڏهن_پورو /* AVUTIL_PPC_TIMER_H */

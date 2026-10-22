@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_REVERSE_H
-#define AVUTIL_REVERSE_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_ابتو_H
+#وصف_ڪريو AVUTIL_ابتو_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
-extern const uint8_t ff_reverse[256];
+خارجي ثابت uint8_t ff_ابتو[256];
 
-#endif /* AVUTIL_REVERSE_H */
+#جيڪڏهن_پورو /* AVUTIL_REVERSE_H */

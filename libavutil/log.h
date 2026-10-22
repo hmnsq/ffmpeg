@@ -18,16 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LOG_H
-#define AVUTIL_LOG_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_LOG_H
+#وصف_ڪريو AVUTIL_LOG_H
 
-#include <stdarg.h>
-#include "attributes.h"
-#include "version.h"
+#ضمن <stdarg.h>
+#ضمن "attributes.h"
+#ضمن "version.h"
 
-typedef enum {
+تعريفنوع تعداد {
     AV_CLASS_CATEGORY_NA = 0,
-    AV_CLASS_CATEGORY_INPUT,
+    AV_CLASS_CATEGORY_داخلا,
     AV_CLASS_CATEGORY_OUTPUT,
     AV_CLASS_CATEGORY_MUXER,
     AV_CLASS_CATEGORY_DEMUXER,
@@ -39,15 +39,15 @@ typedef enum {
     AV_CLASS_CATEGORY_SWRESAMPLER,
     AV_CLASS_CATEGORY_HWDEVICE,
     AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT = 40,
-    AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT,
+    AV_CLASS_CATEGORY_DEVICE_VIDEO_داخلا,
     AV_CLASS_CATEGORY_DEVICE_AUDIO_OUTPUT,
-    AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT,
+    AV_CLASS_CATEGORY_DEVICE_AUDIO_داخلا,
     AV_CLASS_CATEGORY_DEVICE_OUTPUT,
-    AV_CLASS_CATEGORY_DEVICE_INPUT,
+    AV_CLASS_CATEGORY_DEVICE_داخلا,
     AV_CLASS_CATEGORY_NB  ///< not part of ABI/API
 }AVClassCategory;
 
-enum AVClassStateFlags {
+تعداد AVClassStateFlags {
     /**
      * Object initialization has finished and it is now in the 'runtime' stage.
      * This affects e.g. what options can be set on the object (only
@@ -56,35 +56,35 @@ enum AVClassStateFlags {
     AV_CLASS_STATE_INITIALIZED         = (1 << 0),
 };
 
-#define AV_IS_INPUT_DEVICE(category) \
-    (((category) == AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT) || \
-     ((category) == AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT) || \
-     ((category) == AV_CLASS_CATEGORY_DEVICE_INPUT))
+#وصف_ڪريو AV_IS_داخلا_DEVICE(category) \
+    (((category) == AV_CLASS_CATEGORY_DEVICE_VIDEO_داخلا) || \
+     ((category) == AV_CLASS_CATEGORY_DEVICE_AUDIO_داخلا) || \
+     ((category) == AV_CLASS_CATEGORY_DEVICE_داخلا))
 
-#define AV_IS_OUTPUT_DEVICE(category) \
+#وصف_ڪريو AV_IS_OUTPUT_DEVICE(category) \
     (((category) == AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT) || \
      ((category) == AV_CLASS_CATEGORY_DEVICE_AUDIO_OUTPUT) || \
      ((category) == AV_CLASS_CATEGORY_DEVICE_OUTPUT))
 
-struct AVOptionRanges;
+بنية AVOptionRanges;
 
 /**
  * Describe the class of an AVClass context structure. That is an
  * arbitrary struct of which the first field is a pointer to an
  * AVClass struct (e.g. AVCodecContext, AVFormatContext etc.).
  */
-typedef struct AVClass {
+تعريفنوع بنية AVClass {
     /**
      * The name of the class; usually it is the same name as the
      * context structure type to which the AVClass is associated.
      */
-    const char* class_name;
+    ثابت حرف* class_name;
 
     /**
      * A pointer to a function which returns the name of a context
      * instance ctx associated with the class.
      */
-    const char* (*item_name)(void* ctx);
+    ثابت حرف* (*شي_name)(فراغ* ctx);
 
     /**
      * An array of options for the structure or NULL.
@@ -93,7 +93,7 @@ typedef struct AVClass {
      *
      * @see av_set_default_options()
      */
-    const struct AVOption *option;
+    ثابت بنية AVOption *option;
 
     /**
      * LIBAVUTIL_VERSION with which this structure was created.
@@ -101,7 +101,7 @@ typedef struct AVClass {
      * major version bumps everywhere.
      */
 
-    int version;
+    صحيح نسخو;
 
     /**
      * Offset in the structure where the log level offset is stored. The log
@@ -110,7 +110,7 @@ typedef struct AVClass {
      *
      * 0 means there is no such variable.
      */
-    int log_level_offset_offset;
+    صحيح log_level_وٿي_وٿي;
 
     /**
      * Offset in the structure where a pointer to the parent context for
@@ -121,7 +121,7 @@ typedef struct AVClass {
      * When the pointer is NULL, or this offset is zero, the object is assumed
      * to have no parent.
      */
-    int parent_log_context_offset;
+    صحيح والد_log_context_وٿي;
 
     /**
      * Category used for visualization (like color).
@@ -137,17 +137,17 @@ typedef struct AVClass {
      * different instances of this class may have different categories,
      * ::category otherwise.
      */
-    AVClassCategory (*get_category)(void* ctx);
+    AVClassCategory (*get_category)(فراغ* ctx);
 
     /**
      * Callback to return the supported/allowed ranges.
      */
-    int (*query_ranges)(struct AVOptionRanges **, void *obj, const char *key, int flags);
+    صحيح (*query_ranges)(بنية AVOptionRanges **, فراغ *obj, ثابت حرف *ڪنجي, صحيح flags);
 
     /**
      * Return next AVOptions-enabled child or NULL
      */
-    void* (*child_next)(void *obj, void *prev);
+    فراغ* (*ٻار_ايندڙ)(فراغ *obj, فراغ *prev);
 
     /**
      * Iterate over the AVClasses corresponding to potential AVOptions-enabled
@@ -164,7 +164,7 @@ typedef struct AVClass {
      *       over the classes of all _potential_ children of any possible
      *       instance of this class.
      */
-    const struct AVClass* (*child_class_iterate)(void **iter);
+    ثابت بنية AVClass* (*ٻار_class_iterate)(فراغ **iter);
 
     /**
      * When non-zero, offset in the object to an unsigned int holding object
@@ -173,7 +173,7 @@ typedef struct AVClass {
      *
      * Added in version 59.41.100.
      */
-    int state_flags_offset;
+    صحيح state_flags_وٿي;
 } AVClass;
 
 /**
@@ -189,53 +189,53 @@ typedef struct AVClass {
 /**
  * Print no output.
  */
-#define AV_LOG_QUIET    -8
+#وصف_ڪريو AV_LOG_QUIET    -8
 
 /**
  * Something went really wrong and we will crash now.
  */
-#define AV_LOG_PANIC     0
+#وصف_ڪريو AV_LOG_PANIC     0
 
 /**
  * Something went wrong and recovery is not possible.
  * For example, no header was found for a format which depends
  * on headers or an illegal combination of parameters is used.
  */
-#define AV_LOG_FATAL     8
+#وصف_ڪريو AV_LOG_FATAL     8
 
 /**
  * Something went wrong and cannot losslessly be recovered.
  * However, not all future data is affected.
  */
-#define AV_LOG_ERROR    16
+#وصف_ڪريو AV_LOG_ERROR    16
 
 /**
  * Something somehow does not look correct. This may or may not
  * lead to problems. An example would be the use of '-vstrict -2'.
  */
-#define AV_LOG_WARNING  24
+#وصف_ڪريو AV_LOG_WARNING  24
 
 /**
  * Standard information.
  */
-#define AV_LOG_INFO     32
+#وصف_ڪريو AV_LOG_INFO     32
 
 /**
  * Detailed information.
  */
-#define AV_LOG_VERBOSE  40
+#وصف_ڪريو AV_LOG_VERBOSE  40
 
 /**
  * Stuff which is only useful for libav* developers.
  */
-#define AV_LOG_DEBUG    48
+#وصف_ڪريو AV_LOG_DEBUG    48
 
 /**
  * Extremely verbose debugging, useful for libav* development.
  */
-#define AV_LOG_TRACE    56
+#وصف_ڪريو AV_LOG_TRACE    56
 
-#define AV_LOG_MAX_OFFSET (AV_LOG_TRACE - AV_LOG_QUIET)
+#وصف_ڪريو AV_LOG_MAX_وٿي (AV_LOG_TRACE - AV_LOG_QUIET)
 
 /**
  * @}
@@ -249,7 +249,7 @@ typedef struct AVClass {
  * Requires 256color terminal support. Uses outside debugging is not
  * recommended.
  */
-#define AV_LOG_C(x) ((x) << 8)
+#وصف_ڪريو AV_LOG_C(x) ((x) << 8)
 
 /**
  * Send the specified message to the log if the level is less than or equal
@@ -265,7 +265,7 @@ typedef struct AVClass {
  * @param fmt The format string (printf-compatible) that specifies how
  *        subsequent arguments are converted to output.
  */
-void av_log(void *avcl, int level, const char *fmt, ...) av_printf_format(3, 4);
+فراغ av_log(فراغ *avcl, صحيح level, ثابت حرف *fmt, ...) av_printf_format(3, 4);
 
 /**
  * Send the specified message to the log once with the initial_level and then with
@@ -286,7 +286,7 @@ void av_log(void *avcl, int level, const char *fmt, ...) av_printf_format(3, 4);
  *        this must be initialized to 0 before the first use. The same state
  *        must not be accessed by 2 Threads simultaneously.
  */
-void av_log_once(void* avcl, int initial_level, int subsequent_level, int *state, const char *fmt, ...) av_printf_format(5, 6);
+فراغ av_log_once(فراغ* avcl, صحيح initial_level, صحيح subsequent_level, صحيح *state, ثابت حرف *fmt, ...) av_printf_format(5, 6);
 
 
 /**
@@ -304,7 +304,7 @@ void av_log_once(void* avcl, int initial_level, int subsequent_level, int *state
  *        subsequent arguments are converted to output.
  * @param vl The arguments referenced by the format string.
  */
-void av_vlog(void *avcl, int level, const char *fmt, va_list vl);
+فراغ av_vlog(فراغ *avcl, صحيح level, ثابت حرف *fmt, va_list vl);
 
 /**
  * Get the current log level
@@ -313,7 +313,7 @@ void av_vlog(void *avcl, int level, const char *fmt, va_list vl);
  *
  * @return Current log level
  */
-int av_log_get_level(void);
+صحيح av_log_get_level(فراغ);
 
 /**
  * Set the log level
@@ -322,7 +322,7 @@ int av_log_get_level(void);
  *
  * @param level Logging level
  */
-void av_log_set_level(int level);
+فراغ av_log_سيٽ_level(صحيح level);
 
 /**
  * Set the logging callback
@@ -334,7 +334,7 @@ void av_log_set_level(int level);
  *
  * @param callback A logging function with a compatible signature.
  */
-void av_log_set_callback(void (*callback)(void*, int, const char*, va_list));
+فراغ av_log_سيٽ_callback(فراغ (*callback)(فراغ*, صحيح, ثابت حرف*, va_list));
 
 /**
  * Default logging callback
@@ -349,7 +349,7 @@ void av_log_set_callback(void (*callback)(void*, int, const char*, va_list));
  *        subsequent arguments are converted to output.
  * @param vl The arguments referenced by the format string.
  */
-void av_log_default_callback(void *avcl, int level, const char *fmt,
+فراغ av_log_default_callback(فراغ *avcl, صحيح level, ثابت حرف *fmt,
                              va_list vl);
 
 /**
@@ -359,8 +359,8 @@ void av_log_default_callback(void *avcl, int level, const char *fmt,
  *
  * @return The AVClass class_name
  */
-const char* av_default_item_name(void* ctx);
-AVClassCategory av_default_get_category(void *ptr);
+ثابت حرف* av_default_شي_name(فراغ* ctx);
+AVClassCategory av_default_get_category(فراغ *ptr);
 
 /**
  * Format a line of log the same way as the default callback.
@@ -369,8 +369,8 @@ AVClassCategory av_default_get_category(void *ptr);
  * @param print_prefix  used to store whether the prefix must be printed;
  *                      must point to a persistent integer initially set to 1
  */
-void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix);
+فراغ av_log_format_سٽ(فراغ *ptr, صحيح level, ثابت حرف *fmt, va_list vl,
+                        حرف *سٽ, صحيح سٽ_سائيز, صحيح *print_اڳياڙي);
 
 /**
  * Format a line of log the same way as the default callback.
@@ -386,8 +386,8 @@ void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
  *         character. If the return value is not less than line_size, it means
  *         that the log message was truncated to fit the buffer.
  */
-int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix);
+صحيح av_log_format_line2(فراغ *ptr, صحيح level, ثابت حرف *fmt, va_list vl,
+                        حرف *سٽ, صحيح سٽ_سائيز, صحيح *print_اڳياڙي);
 
 /**
  * Skip repeated messages, this requires the user app to use av_log() instead of
@@ -397,7 +397,7 @@ int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
  * Also to receive the last, "last repeated" line if any, the user app must
  * call av_log(NULL, AV_LOG_QUIET, "%s", ""); at the end
  */
-#define AV_LOG_SKIP_REPEATED 1
+#وصف_ڪريو AV_LOG_SKIP_REPEATED 1
 
 /**
  * Include the log severity in messages originating from codecs.
@@ -405,23 +405,23 @@ int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
  * Results in messages such as:
  * [rawvideo @ 0xDEADBEEF] [error] encode did not produce valid pts
  */
-#define AV_LOG_PRINT_LEVEL 2
+#وصف_ڪريو AV_LOG_PRINT_LEVEL 2
 
 /**
  * Include system time in log output.
  */
-#define AV_LOG_PRINT_TIME 4
+#وصف_ڪريو AV_LOG_PRINT_وقت 4
 
 /**
  * Include system date and time in log output.
  */
-#define AV_LOG_PRINT_DATETIME 8
+#وصف_ڪريو AV_LOG_PRINT_DATETIME 8
 
-void av_log_set_flags(int arg);
-int av_log_get_flags(void);
+فراغ av_log_سيٽ_flags(صحيح arg);
+صحيح av_log_get_flags(فراغ);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_LOG_H */
+#جيڪڏهن_پورو /* AVUTIL_LOG_H */

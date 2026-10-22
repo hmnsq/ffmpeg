@@ -16,189 +16,189 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "error.h"
-#include "file.h"
-#include "file_open.h"
-#include "internal.h"
-#include "log.h"
-#include "mem.h"
-#include <fcntl.h>
-#include <sys/stat.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if HAVE_IO_H
-#include <io.h>
-#endif
-#if HAVE_MMAP
-#include <sys/mman.h>
-#elif HAVE_MAPVIEWOFFILE
-#include <windows.h>
-#endif
+#ضمن "config.h"
+#ضمن "error.h"
+#ضمن "file.h"
+#ضمن "file_open.h"
+#ضمن "internal.h"
+#ضمن "log.h"
+#ضمن "mem.h"
+#ضمن <fcntl.h>
+#ضمن <sys/stat.h>
+#إذا HAVE_UNISTD_H
+#ضمن <unistd.h>
+#جيڪڏهن_پورو
+#إذا HAVE_IO_H
+#ضمن <io.h>
+#جيڪڏهن_پورو
+#إذا HAVE_MMAP
+#ضمن <sys/mman.h>
+#وإلاإذا HAVE_MAPVIEWOFFILE
+#ضمن <windows.h>
+#جيڪڏهن_پورو
 
-#ifdef _WIN32
+#جيڪڏهن_وصف_ٿيل _WIN32
 /* struct stat has a 32 bit st_size with the Windows SDK, use the 64 bit variants */
-#undef stat
-#undef fstat
-#define stat  _stat64
-#define fstat _fstat64
-#endif
+#وصف_رد stat
+#وصف_رد fstat
+#وصف_ڪريو stat  _stat64
+#وصف_ڪريو fstat _fstat64
+#جيڪڏهن_پورو
 
-typedef struct FileLogContext {
-    const AVClass *class;
-    int   log_offset;
-    void *log_ctx;
+تعريفنوع بنية FileLogContext {
+    ثابت AVClass *class;
+    صحيح   log_وٿي;
+    فراغ *log_ctx;
 } FileLogContext;
 
-static const AVClass file_log_ctx_class = {
+ساكن ثابت AVClass file_log_ctx_class = {
     .class_name                = "FILE",
-    .item_name                 = av_default_item_name,
-    .option                    = NULL,
-    .version                   = LIBAVUTIL_VERSION_INT,
-    .log_level_offset_offset   = offsetof(FileLogContext, log_offset),
-    .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
+    .شي_name                 = av_default_شي_name,
+    .option                    = عدم,
+    .نسخو                   = LIBAVUTIL_نسخو_INT,
+    .log_level_وٿي_وٿي   = offsetof(FileLogContext, log_وٿي),
+    .والد_log_context_وٿي = offsetof(FileLogContext, log_ctx),
 };
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
+#إذا HAVE_MMAP || HAVE_MAPVIEWOFFILE
 /* Map the first size bytes of the file, as a private copy or shared and
  * writable. The shared mapping extends the file to size, on Windows the
  * mapping object does it. */
-static int map_file(int fd, size_t size, int shared, void **ptr)
+ساكن صحيح map_file(صحيح fd, size_t سائيز, صحيح shared, فراغ **ptr)
 {
-#if HAVE_MMAP
-    if (shared) {
-        struct stat st;
-        if (fstat(fd, &st) < 0)
-            return AVERROR(errno);
-        if (st.st_size < size && ftruncate(fd, size) < 0)
-            return AVERROR(errno);
+#إذا HAVE_MMAP
+    إذا (shared) {
+        بنية stat st;
+        إذا (fstat(fd, &st) < 0)
+            أرجع AVERROR(errno);
+        إذا (st.st_سائيز < سائيز && ftruncate(fd, سائيز) < 0)
+            أرجع AVERROR(errno);
     }
 
-    void *map = mmap(NULL, size, PROT_READ | PROT_WRITE,
-                     shared ? MAP_SHARED : MAP_PRIVATE, fd, 0);
-    if (map == MAP_FAILED)
-        return AVERROR(errno);
-#else
+    فراغ *map = mmap(عدم, سائيز, PROT_READ | PROT_WRITE,
+                     shared ? MAP_SHARED : MAP_ذاتي, fd, 0);
+    إذا (map == MAP_FAILED)
+        أرجع AVERROR(errno);
+#وإلا
     HANDLE fh = (HANDLE)_get_osfhandle(fd);
-    if (fh == INVALID_HANDLE_VALUE)
-        return AVERROR(EBADF);
+    إذا (fh == INVALID_HANDLE_قدر)
+        أرجع AVERROR(EBADF);
 
-    HANDLE mh = CreateFileMapping(fh, NULL,
-                                  shared ? PAGE_READWRITE : PAGE_READONLY,
-                                  (uint64_t)size >> 32, size, NULL);
-    if (!mh)
-        return AVERROR(EIO);
+    HANDLE mh = CreateFileMapping(fh, عدم,
+                                  shared ? صفحو_READWRITE : صفحو_READONLY,
+                                  (uint64_t)سائيز >> 32, سائيز, عدم);
+    إذا (!mh)
+        أرجع AVERROR(EIO);
 
-    void *map = MapViewOfFile(mh, shared ? FILE_MAP_ALL_ACCESS : FILE_MAP_COPY,
-                              0, 0, size);
+    فراغ *map = Map_View_جو_File(mh, shared ? FILE_MAP_ALL_ACCESS : FILE_MAP_COPY,
+                              0, 0, سائيز);
     CloseHandle(mh);
-    if (!map)
-        return AVERROR(EIO);
-#endif
+    إذا (!map)
+        أرجع AVERROR(EIO);
+#جيڪڏهن_پورو
 
     *ptr = map;
-    return 0;
+    أرجع 0;
 }
 
-static void unmap_file(void *ptr, size_t size)
+ساكن فراغ unmap_file(فراغ *ptr, size_t سائيز)
 {
-#if HAVE_MMAP
-    munmap(ptr, size);
-#else
-    UnmapViewOfFile(ptr);
-#endif
+#إذا HAVE_MMAP
+    munmap(ptr, سائيز);
+#وإلا
+    Unmap_View_جو_File(ptr);
+#جيڪڏهن_پورو
 }
-#endif
+#جيڪڏهن_پورو
 
-int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
-                int log_offset, void *log_ctx)
+صحيح av_file_map(ثابت حرف *filename, uint8_t **bufptr, size_t *سائيز,
+                صحيح log_وٿي, فراغ *log_ctx)
 {
-    FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int err, fd = avpriv_open(filename, O_RDONLY);
-    struct stat st;
-    av_unused void *ptr;
-    *bufptr = NULL;
-    *size = 0;
+    FileLogContext file_log_ctx = { &file_log_ctx_class, log_وٿي, log_ctx };
+    صحيح err, fd = avpriv_open(filename, O_RDONLY);
+    بنية stat st;
+    av_اڻ_استعمال_ٿيل فراغ *ptr;
+    *bufptr = عدم;
+    *سائيز = 0;
 
-    if (fd < 0) {
+    إذا (fd < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot read file '%s': %s\n", filename, av_err2str(err));
-        return err;
+        أرجع err;
     }
 
-    if (fstat(fd, &st) < 0) {
+    إذا (fstat(fd, &st) < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Error occurred in fstat(): %s\n", av_err2str(err));
         close(fd);
-        return err;
+        أرجع err;
     }
 
-    if (st.st_size > SIZE_MAX) {
+    إذا (st.st_سائيز > SIZE_MAX) {
         av_log(&file_log_ctx, AV_LOG_ERROR,
                "File size for file '%s' is too big\n", filename);
         close(fd);
-        return AVERROR(EINVAL);
+        أرجع AVERROR(EINVAL);
     }
-    *size = st.st_size;
+    *سائيز = st.st_سائيز;
 
-    if (!*size) {
-        *bufptr = NULL;
-        goto out;
+    إذا (!*سائيز) {
+        *bufptr = عدم;
+        اذهب ٻاهريون;
     }
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    err = map_file(fd, *size, 0, &ptr);
-    if (err < 0) {
+#إذا HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    err = map_file(fd, *سائيز, 0, &ptr);
+    إذا (err < 0) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot map file '%s': %s\n", filename, av_err2str(err));
         close(fd);
-        *size = 0;
-        return err;
+        *سائيز = 0;
+        أرجع err;
     }
     *bufptr = ptr;
-#else
-    *bufptr = av_malloc(*size);
-    if (!*bufptr) {
+#وإلا
+    *bufptr = av_malloc(*سائيز);
+    إذا (!*bufptr) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Memory allocation error occurred\n");
         close(fd);
-        *size = 0;
-        return AVERROR(ENOMEM);
+        *سائيز = 0;
+        أرجع AVERROR(ENOMEM);
     }
-    read(fd, *bufptr, *size);
-#endif
+    اقرأ(fd, *bufptr, *سائيز);
+#جيڪڏهن_پورو
 
-out:
+ٻاهريون:
     close(fd);
-    return 0;
+    أرجع 0;
 }
 
-void av_file_unmap(uint8_t *bufptr, size_t size)
+فراغ av_file_unmap(uint8_t *bufptr, size_t سائيز)
 {
-    if (!size || !bufptr)
-        return;
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    unmap_file(bufptr, size);
-#else
+    إذا (!سائيز || !bufptr)
+        أرجع;
+#إذا HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    unmap_file(bufptr, سائيز);
+#وإلا
     av_free(bufptr);
-#endif
+#جيڪڏهن_پورو
 }
 
-int av_file_map_shared(int fd, size_t size, void **bufptr)
+صحيح av_file_map_shared(صحيح fd, size_t سائيز, فراغ **bufptr)
 {
-    *bufptr = NULL;
-    if (!size)
-        return AVERROR(EINVAL);
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    return map_file(fd, size, 1, bufptr);
-#else
-    return AVERROR(ENOSYS);
-#endif
+    *bufptr = عدم;
+    إذا (!سائيز)
+        أرجع AVERROR(EINVAL);
+#إذا HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    أرجع map_file(fd, سائيز, 1, bufptr);
+#وإلا
+    أرجع AVERROR(ENOSYS);
+#جيڪڏهن_پورو
 }
 
-void av_file_unmap_shared(void *bufptr, size_t size)
+فراغ av_file_unmap_shared(فراغ *bufptr, size_t سائيز)
 {
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    if (size && bufptr)
-        unmap_file(bufptr, size);
-#endif
+#إذا HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    إذا (سائيز && bufptr)
+        unmap_file(bufptr, سائيز);
+#جيڪڏهن_پورو
 }

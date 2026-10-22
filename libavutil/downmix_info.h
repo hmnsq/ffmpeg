@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_DOWNMIX_INFO_H
-#define AVUTIL_DOWNMIX_INFO_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_DOWNMIX_INFO_H
+#وصف_ڪريو AVUTIL_DOWNMIX_INFO_H
 
-#include "avassert.h"
-#include "frame.h"
+#ضمن "avassert.h"
+#ضمن "frame.h"
 
 /**
  * @file
@@ -42,7 +42,7 @@
 /**
  * Possible downmix types.
  */
-enum AVDownmixType {
+تعداد AVDownmixType {
     AV_DOWNMIX_TYPE_UNKNOWN, /**< Not indicated. */
     AV_DOWNMIX_TYPE_LORO,    /**< Lo/Ro 2-channel downmix (Stereo). */
     AV_DOWNMIX_TYPE_LTRT,    /**< Lt/Rt 2-channel downmix, Dolby Surround compatible. */
@@ -56,41 +56,41 @@ enum AVDownmixType {
  * All fields are set by the decoder to the value indicated in the audio
  * bitstream (if present), or to a "sane" default otherwise.
  */
-typedef struct AVDownmixInfo {
+تعريفنوع بنية AVDownmixInfo {
     /**
      * Type of downmix preferred by the mastering engineer.
      */
-    enum AVDownmixType preferred_downmix_type;
+    تعداد AVDownmixType preferred_downmix_type;
 
     /**
      * Absolute scale factor representing the nominal level of the center
      * channel during a regular downmix.
      */
-    double center_mix_level;
+    مزدوج center_mix_level;
 
     /**
      * Absolute scale factor representing the nominal level of the center
      * channel during an Lt/Rt compatible downmix.
      */
-    double center_mix_level_ltrt;
+    مزدوج center_mix_level_ltrt;
 
     /**
      * Absolute scale factor representing the nominal level of the surround
      * channels during a regular downmix.
      */
-    double surround_mix_level;
+    مزدوج surround_mix_level;
 
     /**
      * Absolute scale factor representing the nominal level of the surround
      * channels during an Lt/Rt compatible downmix.
      */
-    double surround_mix_level_ltrt;
+    مزدوج surround_mix_level_ltrt;
 
     /**
      * Absolute scale factor representing the level at which the LFE data is
      * mixed into L/R channels during downmixing.
      */
-    double lfe_mix_level;
+    مزدوج lfe_mix_level;
 } AVDownmixInfo;
 
 /**
@@ -103,7 +103,7 @@ typedef struct AVDownmixInfo {
  * @return the AVDownmixInfo structure to be edited by the caller, or NULL if
  *         the structure cannot be allocated.
  */
-AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame);
+AVDownmixInfo *av_downmix_info_update_side_معلومات(AVFrame *چوکٺو);
 
 /**
  * This structure describes optional metadata relevant to a downmix procedure
@@ -113,35 +113,35 @@ AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame);
  * sizeof(AVDownmixMatrix) is not a part of the ABI and new fields may be
  * added to it.
  */
-typedef struct AVDownmixMatrix {
+تعريفنوع بنية AVDownmix_ميٽرڪس {
     /**
      * Type of downmix the coeffs will produce.
      * Output channel count is derived from this value.
      */
-    enum AVDownmixType downmix_type;
+    تعداد AVDownmixType downmix_type;
 
     /**
      * Input channel count.
      */
-    int in_ch_count;
+    صحيح اندريون_ch_ڳڻپ;
 
     /**
      * Amount of coefficients in the matrix.
      */
-    unsigned int nb_coeffs;
+    بنانشان صحيح nb_coeffs;
 
     /**
      * Offset in bytes from the beginning of this structure at which the array
      * of coefficients starts.
      */
-    size_t coeffs_offset;
-} AVDownmixMatrix;
+    size_t coeffs_وٿي;
+} AVDownmix_ميٽرڪس;
 
 /**
  * Data type for storing coefficients, which are allocated as a part of
  * AVDownmixMatrix and should be retrieved with @ref av_downmix_matrix_coeff.
  */
-typedef double AVDownmixCoeff;
+تعريفنوع مزدوج AVDownmixCoeff;
 
 /**
  * Get a pointer to the coeff that represents the weight of input channel
@@ -150,11 +150,11 @@ typedef double AVDownmixCoeff;
  * out must be between 0 and the implicit output channel count from
  * @ref AVDownmixMatrix.downmix_type "downmix_type" - 1.
  */
-static av_always_inline AVDownmixCoeff*
-av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
+ساكن av_always_inline AVDownmixCoeff*
+av_downmix_ميٽرڪس_coeff(AVDownmix_ميٽرڪس *dm, بنانشان صحيح ٻاهريون, بنانشان صحيح اندريون)
 {
-    AVDownmixCoeff *coeff = (AVDownmixCoeff *)((uint8_t *)dm + dm->coeffs_offset);
-    return &coeff[in + dm->in_ch_count * out];
+    AVDownmixCoeff *coeff = (AVDownmixCoeff *)((uint8_t *)dm + dm->coeffs_وٿي);
+    أرجع &coeff[اندريون + dm->اندريون_ch_ڳڻپ * ٻاهريون];
 }
 
 /**
@@ -166,8 +166,8 @@ av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
  * @param out_size if non-NULL, the size in bytes of the resulting data array is
  * written here.
  */
-AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size);
+AVDownmix_ميٽرڪس *av_downmix_ميٽرڪس_alloc(تعداد AVDownmixType type,
+                                         صحيح اندريون_ch_ڳڻپ, size_t *ٻاهريون_سائيز);
 
 /**
  * @}
@@ -177,4 +177,4 @@ AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
  * @}
  */
 
-#endif /* AVUTIL_DOWNMIX_INFO_H */
+#جيڪڏهن_پورو /* AVUTIL_DOWNMIX_INFO_H */

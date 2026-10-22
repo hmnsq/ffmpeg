@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_DES_H
-#define AVUTIL_DES_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_DES_H
+#وصف_ڪريو AVUTIL_DES_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
 /**
  * @defgroup lavu_des DES
@@ -30,15 +30,15 @@
  * @{
  */
 
-typedef struct AVDES {
-    uint64_t round_keys[3][16];
-    int triple_des;
+تعريفنوع بنية AVDES {
+    uint64_t ڦيرو_ڪنجيون[3][16];
+    صحيح triple_des;
 } AVDES;
 
 /**
  * Allocate an AVDES context.
  */
-AVDES *av_des_alloc(void);
+AVDES *av_des_alloc(فراغ);
 
 /**
  * @brief Initializes an AVDES context.
@@ -49,7 +49,7 @@ AVDES *av_des_alloc(void);
  * @param decrypt 0 for encryption/CBC-MAC, 1 for decryption
  * @return zero on success, negative value otherwise
  */
-int av_des_init(struct AVDES *d, const uint8_t *key, int key_bits, int decrypt);
+صحيح av_des_init(بنية AVDES *d, ثابت uint8_t *ڪنجي, صحيح ڪنجي_بٽ, صحيح decrypt);
 
 /**
  * @brief Encrypts / decrypts using the DES algorithm.
@@ -62,7 +62,7 @@ int av_des_init(struct AVDES *d, const uint8_t *key, int key_bits, int decrypt);
  *           must be 8-byte aligned
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_des_crypt(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+فراغ av_des_crypt(بنية AVDES *d, uint8_t *dst, ثابت uint8_t *src, صحيح ڳڻپ, uint8_t *iv, صحيح decrypt);
 
 /**
  * @brief Calculates CBC-MAC using the DES algorithm.
@@ -72,10 +72,10 @@ void av_des_crypt(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count, 
  * @param src source array, can be equal to dst, must be 8-byte aligned, may be NULL
  * @param count number of 8 byte blocks
  */
-void av_des_mac(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count);
+فراغ av_des_mac(بنية AVDES *d, uint8_t *dst, ثابت uint8_t *src, صحيح ڳڻپ);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_DES_H */
+#جيڪڏهن_پورو /* AVUTIL_DES_H */

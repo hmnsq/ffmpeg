@@ -24,55 +24,55 @@
  * default memory allocator for libavutil
  */
 
-#define _XOPEN_SOURCE 600
+#وصف_ڪريو XOPEN_ذريعو 600
 
-#include "config.h"
+#ضمن "config.h"
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdatomic.h>
-#include <string.h>
-#if HAVE_MALLOC_H
-#include <malloc.h>
-#endif
+#ضمن <limits.h>
+#ضمن <stdint.h>
+#ضمن <stdlib.h>
+#ضمن <stdatomic.h>
+#ضمن <string.h>
+#إذا HAVE_MALLOC_H
+#ضمن <malloc.h>
+#جيڪڏهن_پورو
 
-#include "attributes.h"
-#include "avassert.h"
-#include "dynarray.h"
-#include "error.h"
-#include "internal.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "sanitizer.h"
+#ضمن "attributes.h"
+#ضمن "avassert.h"
+#ضمن "dynarray.h"
+#ضمن "error.h"
+#ضمن "internal.h"
+#ضمن "intreadwrite.h"
+#ضمن "macros.h"
+#ضمن "mem.h"
+#ضمن "sanitizer.h"
 
-#ifdef MALLOC_PREFIX
+#جيڪڏهن_وصف_ٿيل MALLOC_اڳياڙي
 
-#define malloc         AV_JOIN(MALLOC_PREFIX, malloc)
-#define memalign       AV_JOIN(MALLOC_PREFIX, memalign)
-#define posix_memalign AV_JOIN(MALLOC_PREFIX, posix_memalign)
-#define realloc        AV_JOIN(MALLOC_PREFIX, realloc)
-#define free           AV_JOIN(MALLOC_PREFIX, free)
+#وصف_ڪريو يادگيري_ڏيو         AV_JOIN(MALLOC_اڳياڙي, يادگيري_ڏيو)
+#وصف_ڪريو memalign       AV_JOIN(MALLOC_اڳياڙي, memalign)
+#وصف_ڪريو posix_memalign AV_JOIN(MALLOC_اڳياڙي, posix_memalign)
+#وصف_ڪريو realloc        AV_JOIN(MALLOC_اڳياڙي, realloc)
+#وصف_ڪريو حرر           AV_JOIN(MALLOC_اڳياڙي, حرر)
 
-void *malloc(size_t size);
-void *memalign(size_t align, size_t size);
-int   posix_memalign(void **ptr, size_t align, size_t size);
-void *realloc(void *ptr, size_t size);
-void  free(void *ptr);
+فراغ *يادگيري_ڏيو(size_t سائيز);
+فراغ *memalign(size_t align, size_t سائيز);
+صحيح   posix_memalign(فراغ **ptr, size_t align, size_t سائيز);
+فراغ *realloc(فراغ *ptr, size_t سائيز);
+فراغ  حرر(فراغ *ptr);
 
-#endif /* MALLOC_PREFIX */
+#جيڪڏهن_پورو /* MALLOC_PREFIX */
 
-#define ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : (HAVE_SIMD_ALIGN_32 ? 32 : 16))
+#وصف_ڪريو ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : (HAVE_SIMD_ALIGN_32 ? 32 : 16))
 
-#define FF_MEMORY_POISON 0x2a
+#وصف_ڪريو FF_يادگيري_POISON 0x2a
 
-static void poison_memory(void *ptr, size_t size)
+ساكن فراغ poison_يادگيري(فراغ *ptr, size_t سائيز)
 {
-#if CONFIG_MEMORY_POISONING
-    memset(ptr, FF_MEMORY_POISON, size);
-#endif
-    FF_MEM_UNDEFINED(ptr, size);
+#إذا CONFIG_يادگيري_POISONING
+    memset(ptr, FF_يادگيري_POISON, سائيز);
+#جيڪڏهن_پورو
+    FF_MEM_UNDEFINED(ptr, سائيز);
 }
 
 /* The LLVM ASan runtime for Windows does not intercept the _aligned_malloc
@@ -81,139 +81,139 @@ static void poison_memory(void *ptr, size_t size)
  * intercept it. Which one is linked cannot be told at compile time, so probe
  * once whether the byte after an aligned allocation is poisoned and align by
  * hand only when it is not. */
-#if HAVE_ASAN && HAVE_ALIGNED_MALLOC && !HAVE_POSIX_MEMALIGN && !HAVE_MEMALIGN
-#define ASAN_ALIGNED_ALLOC 1
+#إذا HAVE_ASAN && HAVE_ALIGNED_MALLOC && !HAVE_POSIX_MEMALIGN && !HAVE_MEMALIGN
+#وصف_ڪريو ASAN_ALIGNED_ALLOC 1
 
-static int asan_aligned_alloc_needed(void)
+ساكن صحيح asan_aligned_alloc_needed(فراغ)
 {
-    static atomic_int needed = -1;
-    int ret = atomic_load_explicit(&needed, memory_order_relaxed);
+    ساكن atomic_int needed = -1;
+    صحيح ret = atomic_load_explicit(&needed, memory_order_relaxed);
 
-    if (ret < 0) {
+    إذا (ret < 0) {
         uint8_t *p = _aligned_malloc(16, ALIGN);
-        int probed = !p || !__asan_address_is_poisoned(p + 16);
+        صحيح probed = !p || !__asan_address_is_poisoned(p + 16);
         _aligned_free(p);
         /* Every block must be freed by the allocator that made it, so the
          * first probe to finish decides for all callers. */
-        if (atomic_compare_exchange_strong_explicit(&needed, &ret, probed,
+        إذا (atomic_compare_exchange_strong_explicit(&needed, &ret, probed,
                                                     memory_order_relaxed,
                                                     memory_order_relaxed))
             ret = probed;
     }
-    return ret;
+    أرجع ret;
 }
 
-typedef struct AsanAlignedHeader {
-    void  *base;
-    size_t size;
-} AsanAlignedHeader;
+تعريفنوع بنية Asan_Aligned_سرو {
+    فراغ  *بنياد_2;
+    size_t سائيز;
+} Asan_Aligned_سرو;
 
-static void *asan_aligned_malloc(size_t size)
+ساكن فراغ *asan_aligned_malloc(size_t سائيز)
 {
-    AsanAlignedHeader *hdr;
-    uint8_t *base, *ptr;
-    size_t total;
+    Asan_Aligned_سرو *hdr;
+    uint8_t *بنياد_2, *ptr;
+    size_t ڪل;
 
-    if (size > SIZE_MAX - ALIGN - sizeof(*hdr))
-        return NULL;
-    total = size + ALIGN + sizeof(*hdr);
-    base  = malloc(total);
-    if (!base)
-        return NULL;
-    ptr = (uint8_t *)FFALIGN((uintptr_t)base + sizeof(*hdr), ALIGN);
-    hdr = (AsanAlignedHeader *)ptr - 1;
-    hdr->base = base;
-    hdr->size = size;
-    FF_ASAN_POISON(base, ptr - base);
-    FF_ASAN_POISON(ptr + size, base + total - (ptr + size));
-    return ptr;
+    إذا (سائيز > SIZE_MAX - ALIGN - حجم(*hdr))
+        أرجع عدم;
+    ڪل = سائيز + ALIGN + حجم(*hdr);
+    بنياد_2  = يادگيري_ڏيو(ڪل);
+    إذا (!بنياد_2)
+        أرجع عدم;
+    ptr = (uint8_t *)FFALIGN((uintptr_t)بنياد_2 + حجم(*hdr), ALIGN);
+    hdr = (Asan_Aligned_سرو *)ptr - 1;
+    hdr->بنياد_2 = بنياد_2;
+    hdr->سائيز = سائيز;
+    FF_ASAN_POISON(بنياد_2, ptr - بنياد_2);
+    FF_ASAN_POISON(ptr + سائيز, بنياد_2 + ڪل - (ptr + سائيز));
+    أرجع ptr;
 }
 
-static AsanAlignedHeader *asan_aligned_header(void *ptr)
+ساكن Asan_Aligned_سرو *asan_aligned_سرو(فراغ *ptr)
 {
-    AsanAlignedHeader *hdr = (AsanAlignedHeader *)ptr - 1;
-    FF_ASAN_UNPOISON(hdr, sizeof(*hdr));
-    return hdr;
+    Asan_Aligned_سرو *hdr = (Asan_Aligned_سرو *)ptr - 1;
+    FF_ASAN_UNPOISON(hdr, حجم(*hdr));
+    أرجع hdr;
 }
 
-static void asan_aligned_free(void *ptr)
+ساكن فراغ asan_aligned_free(فراغ *ptr)
 {
-    if (ptr)
-        free(asan_aligned_header(ptr)->base);
+    إذا (ptr)
+        حرر(asan_aligned_سرو(ptr)->بنياد_2);
 }
 
-static void *asan_aligned_realloc(void *ptr, size_t size)
+ساكن فراغ *asan_aligned_realloc(فراغ *ptr, size_t سائيز)
 {
-    AsanAlignedHeader *hdr;
-    void *ret;
+    Asan_Aligned_سرو *hdr;
+    فراغ *ret;
 
-    if (!ptr)
-        return asan_aligned_malloc(size);
-    ret = asan_aligned_malloc(size);
-    if (!ret)
-        return NULL;
-    hdr = asan_aligned_header(ptr);
-    memcpy(ret, ptr, FFMIN(size, hdr->size));
-    free(hdr->base);
-    return ret;
+    إذا (!ptr)
+        أرجع asan_aligned_malloc(سائيز);
+    ret = asan_aligned_malloc(سائيز);
+    إذا (!ret)
+        أرجع عدم;
+    hdr = asan_aligned_سرو(ptr);
+    يادگيري_نقل(ret, ptr, FFMIN(سائيز, hdr->سائيز));
+    حرر(hdr->بنياد_2);
+    أرجع ret;
 }
-#else
-#define ASAN_ALIGNED_ALLOC 0
-#endif
+#وإلا
+#وصف_ڪريو ASAN_ALIGNED_ALLOC 0
+#جيڪڏهن_پورو
 
 /* NOTE: if you want to override these functions with your own
  * implementations (not recommended) you have to link libav* as
  * dynamic libraries and remove -Wl,-Bsymbolic from the linker flags.
  * Note that this will cost performance. */
 
-static atomic_size_t max_alloc_size = INT_MAX;
+ساكن atomic_size_t max_alloc_سائيز = وڌ_کان_وڌ_عدد;
 
-void av_max_alloc(size_t max){
-    atomic_store_explicit(&max_alloc_size, max, memory_order_relaxed);
+فراغ av_max_alloc(size_t max){
+    atomic_store_explicit(&max_alloc_سائيز, max, memory_order_relaxed);
 }
 
-static int size_mult(size_t a, size_t b, size_t *r)
+ساكن صحيح سائيز_mult(size_t a, size_t b, size_t *r)
 {
     size_t t;
 
-#if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_mul_overflow)
-    if (__builtin_mul_overflow(a, b, &t))
-        return AVERROR(EINVAL);
-#else
+#إذا (!defined(__INTEL_COMPILER) && AV_GCC_نسخو_AT_گهٽ_کان_گهٽ(5,1)) || AV_HAS_BUILTIN(__builtin_mul_overflow)
+    إذا (__builtin_mul_overflow(a, b, &t))
+        أرجع AVERROR(EINVAL);
+#وإلا
     t = a * b;
     /* Hack inspired from glibc: don't try the division if nelem and elsize
      * are both less than sqrt(SIZE_MAX). */
-    if ((a | b) >= ((size_t)1 << (sizeof(size_t) * 4)) && a && t / a != b)
-        return AVERROR(EINVAL);
-#endif
+    إذا ((a | b) >= ((size_t)1 << (حجم(size_t) * 4)) && a && t / a != b)
+        أرجع AVERROR(EINVAL);
+#جيڪڏهن_پورو
     *r = t;
-    return 0;
+    أرجع 0;
 }
 
-void *av_malloc(size_t size)
+فراغ *av_malloc(size_t سائيز)
 {
-    void *ptr = NULL;
+    فراغ *ptr = عدم;
 
-    if (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
-        return NULL;
+    إذا (سائيز > atomic_load_explicit(&max_alloc_سائيز, memory_order_relaxed))
+        أرجع عدم;
 
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
-        ptr = asan_aligned_malloc(size);
-    else
-        ptr = _aligned_malloc(size, ALIGN);
-#elif HAVE_POSIX_MEMALIGN
-    if (size) //OS X on SDK 10.6 has a broken posix_memalign implementation
-    if (posix_memalign(&ptr, ALIGN, size))
-        ptr = NULL;
-#elif HAVE_ALIGNED_MALLOC
-    ptr = _aligned_malloc(size, ALIGN);
-#elif HAVE_MEMALIGN
-#ifndef __DJGPP__
-    ptr = memalign(ALIGN, size);
-#else
-    ptr = memalign(size, ALIGN);
-#endif
+#إذا ASAN_ALIGNED_ALLOC
+    إذا (asan_aligned_alloc_needed())
+        ptr = asan_aligned_malloc(سائيز);
+    وإلا
+        ptr = _aligned_malloc(سائيز, ALIGN);
+#وإلاإذا HAVE_POSIX_MEMALIGN
+    إذا (سائيز) //OS X on SDK 10.6 has a broken posix_memalign implementation
+    إذا (posix_memalign(&ptr, ALIGN, سائيز))
+        ptr = عدم;
+#وإلاإذا HAVE_ALIGNED_MALLOC
+    ptr = _aligned_malloc(سائيز, ALIGN);
+#وإلاإذا HAVE_MEMALIGN
+#جيڪڏهن_وصف_نه_ٿيل __DJGPP__
+    ptr = memalign(ALIGN, سائيز);
+#وإلا
+    ptr = memalign(سائيز, ALIGN);
+#جيڪڏهن_پورو
     /* Why 64?
      * Indeed, we should align it:
      *   on  4 for 386
@@ -238,263 +238,263 @@ void *av_malloc(size_t size)
      *
      * BTW, malloc seems to do 8-byte alignment by default here.
      */
-#else
-    ptr = malloc(size);
-#endif
-    if(!ptr && !size) {
-        size = 1;
+#وإلا
+    ptr = يادگيري_ڏيو(سائيز);
+#جيڪڏهن_پورو
+    إذا(!ptr && !سائيز) {
+        سائيز = 1;
         ptr= av_malloc(1);
     }
-    if (ptr)
-        poison_memory(ptr, size);
-    return ptr;
+    إذا (ptr)
+        poison_يادگيري(ptr, سائيز);
+    أرجع ptr;
 }
 
-void *av_realloc(void *ptr, size_t size)
+فراغ *av_realloc(فراغ *ptr, size_t سائيز)
 {
-    void *ret;
-    if (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
-        return NULL;
+    فراغ *ret;
+    إذا (سائيز > atomic_load_explicit(&max_alloc_سائيز, memory_order_relaxed))
+        أرجع عدم;
 
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
-        ret = asan_aligned_realloc(ptr, size + !size);
-    else
-        ret = _aligned_realloc(ptr, size + !size, ALIGN);
-#elif HAVE_ALIGNED_MALLOC
-    ret = _aligned_realloc(ptr, size + !size, ALIGN);
-#else
-    ret = realloc(ptr, size + !size);
-#endif
-    if (ret && !ptr)
-        poison_memory(ret, size);
-    return ret;
+#إذا ASAN_ALIGNED_ALLOC
+    إذا (asan_aligned_alloc_needed())
+        ret = asan_aligned_realloc(ptr, سائيز + !سائيز);
+    وإلا
+        ret = _aligned_realloc(ptr, سائيز + !سائيز, ALIGN);
+#وإلاإذا HAVE_ALIGNED_MALLOC
+    ret = _aligned_realloc(ptr, سائيز + !سائيز, ALIGN);
+#وإلا
+    ret = realloc(ptr, سائيز + !سائيز);
+#جيڪڏهن_پورو
+    إذا (ret && !ptr)
+        poison_يادگيري(ret, سائيز);
+    أرجع ret;
 }
 
-void *av_realloc_f(void *ptr, size_t nelem, size_t elsize)
+فراغ *av_realloc_f(فراغ *ptr, size_t nelem, size_t elsize)
 {
-    size_t size;
-    void *r;
+    size_t سائيز;
+    فراغ *r;
 
-    if (size_mult(elsize, nelem, &size)) {
+    إذا (سائيز_mult(elsize, nelem, &سائيز)) {
         av_free(ptr);
-        return NULL;
+        أرجع عدم;
     }
-    r = av_realloc(ptr, size);
-    if (!r)
+    r = av_realloc(ptr, سائيز);
+    إذا (!r)
         av_free(ptr);
-    return r;
+    أرجع r;
 }
 
-int av_reallocp(void *ptr, size_t size)
+صحيح av_reallocp(فراغ *ptr, size_t سائيز)
 {
-    void *val;
+    فراغ *val;
 
-    if (!size) {
+    إذا (!سائيز) {
         av_freep(ptr);
-        return 0;
+        أرجع 0;
     }
 
-    memcpy(&val, ptr, sizeof(val));
-    val = av_realloc(val, size);
+    يادگيري_نقل(&val, ptr, حجم(val));
+    val = av_realloc(val, سائيز);
 
-    if (!val) {
+    إذا (!val) {
         av_freep(ptr);
-        return AVERROR(ENOMEM);
+        أرجع AVERROR(ENOMEM);
     }
 
-    memcpy(ptr, &val, sizeof(val));
-    return 0;
+    يادگيري_نقل(ptr, &val, حجم(val));
+    أرجع 0;
 }
 
-void *av_malloc_array(size_t nmemb, size_t size)
+فراغ *av_malloc_array(size_t nmemb, size_t سائيز)
 {
-    size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_malloc(result);
+    size_t نتيجو;
+    إذا (سائيز_mult(nmemb, سائيز, &نتيجو) < 0)
+        أرجع عدم;
+    أرجع av_malloc(نتيجو);
 }
 
-void *av_realloc_array(void *ptr, size_t nmemb, size_t size)
+فراغ *av_realloc_array(فراغ *ptr, size_t nmemb, size_t سائيز)
 {
-    size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_realloc(ptr, result);
+    size_t نتيجو;
+    إذا (سائيز_mult(nmemb, سائيز, &نتيجو) < 0)
+        أرجع عدم;
+    أرجع av_realloc(ptr, نتيجو);
 }
 
-int av_reallocp_array(void *ptr, size_t nmemb, size_t size)
+صحيح av_reallocp_array(فراغ *ptr, size_t nmemb, size_t سائيز)
 {
-    void *val;
+    فراغ *val;
 
-    memcpy(&val, ptr, sizeof(val));
-    val = av_realloc_f(val, nmemb, size);
-    memcpy(ptr, &val, sizeof(val));
-    if (!val && nmemb && size)
-        return AVERROR(ENOMEM);
+    يادگيري_نقل(&val, ptr, حجم(val));
+    val = av_realloc_f(val, nmemb, سائيز);
+    يادگيري_نقل(ptr, &val, حجم(val));
+    إذا (!val && nmemb && سائيز)
+        أرجع AVERROR(ENOMEM);
 
-    return 0;
+    أرجع 0;
 }
 
-void av_free(void *ptr)
+فراغ av_free(فراغ *ptr)
 {
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
+#إذا ASAN_ALIGNED_ALLOC
+    إذا (asan_aligned_alloc_needed())
         asan_aligned_free(ptr);
-    else
+    وإلا
         _aligned_free(ptr);
-#elif HAVE_ALIGNED_MALLOC
+#وإلاإذا HAVE_ALIGNED_MALLOC
     _aligned_free(ptr);
-#else
-    free(ptr);
-#endif
+#وإلا
+    حرر(ptr);
+#جيڪڏهن_پورو
 }
 
-void av_freep(void *arg)
+فراغ av_freep(فراغ *arg)
 {
-    void *val;
+    فراغ *val;
 
-    memcpy(&val, arg, sizeof(val));
-    memcpy(arg, &(void *){ NULL }, sizeof(val));
+    يادگيري_نقل(&val, arg, حجم(val));
+    يادگيري_نقل(arg, &(فراغ *){ عدم }, حجم(val));
     av_free(val);
 }
 
-void *av_mallocz(size_t size)
+فراغ *av_mallocz(size_t سائيز)
 {
-    void *ptr = av_malloc(size);
-    if (ptr)
-        memset(ptr, 0, size);
-    return ptr;
+    فراغ *ptr = av_malloc(سائيز);
+    إذا (ptr)
+        memset(ptr, 0, سائيز);
+    أرجع ptr;
 }
 
-void *av_calloc(size_t nmemb, size_t size)
+فراغ *av_calloc(size_t nmemb, size_t سائيز)
 {
-    size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_mallocz(result);
+    size_t نتيجو;
+    إذا (سائيز_mult(nmemb, سائيز, &نتيجو) < 0)
+        أرجع عدم;
+    أرجع av_mallocz(نتيجو);
 }
 
-char *av_strdup(const char *s)
+حرف *av_strdup(ثابت حرف *s)
 {
-    char *ptr = NULL;
-    if (s) {
-        size_t len = strlen(s) + 1;
-        ptr = av_realloc(NULL, len);
-        if (ptr)
-            memcpy(ptr, s, len);
+    حرف *ptr = عدم;
+    إذا (s) {
+        size_t len = لڙي_ڊيگهه(s) + 1;
+        ptr = av_realloc(عدم, len);
+        إذا (ptr)
+            يادگيري_نقل(ptr, s, len);
     }
-    return ptr;
+    أرجع ptr;
 }
 
-char *av_strndup(const char *s, size_t len)
+حرف *av_strndup(ثابت حرف *s, size_t len)
 {
-    if (!s)
-        return NULL;
+    إذا (!s)
+        أرجع عدم;
 
-    const char *end = memchr(s, 0, len);
-    if (end)
-        len = end - s;
+    ثابت حرف *پڇاڙي = memchr(s, 0, len);
+    إذا (پڇاڙي)
+        len = پڇاڙي - s;
 
-    char *ret = av_realloc(NULL, len + 1);
-    if (!ret)
-        return NULL;
+    حرف *ret = av_realloc(عدم, len + 1);
+    إذا (!ret)
+        أرجع عدم;
 
-    memcpy(ret, s, len);
+    يادگيري_نقل(ret, s, len);
     ret[len] = 0;
-    return ret;
+    أرجع ret;
 }
 
-void *av_memdup(const void *p, size_t size)
+فراغ *av_memdup(ثابت فراغ *p, size_t سائيز)
 {
-    void *ptr = NULL;
-    if (p) {
-        ptr = av_malloc(size);
-        if (ptr)
-            memcpy(ptr, p, size);
+    فراغ *ptr = عدم;
+    إذا (p) {
+        ptr = av_malloc(سائيز);
+        إذا (ptr)
+            يادگيري_نقل(ptr, p, سائيز);
     }
-    return ptr;
+    أرجع ptr;
 }
 
-int av_dynarray_add_nofree(void *tab_ptr, int *nb_ptr, void *elem)
+صحيح av_dynarray_جوڙيو_nofree(فراغ *tab_ptr, صحيح *nb_ptr, فراغ *elem)
 {
-    void **tab;
-    memcpy(&tab, tab_ptr, sizeof(tab));
+    فراغ **tab;
+    يادگيري_نقل(&tab, tab_ptr, حجم(tab));
 
-    FF_DYNARRAY_ADD(INT_MAX, sizeof(*tab), tab, *nb_ptr, {
+    FF_DYNARRAY_جوڙيو(وڌ_کان_وڌ_عدد, حجم(*tab), tab, *nb_ptr, {
         tab[*nb_ptr] = elem;
-        memcpy(tab_ptr, &tab, sizeof(tab));
+        يادگيري_نقل(tab_ptr, &tab, حجم(tab));
     }, {
-        return AVERROR(ENOMEM);
+        أرجع AVERROR(ENOMEM);
     });
-    return 0;
+    أرجع 0;
 }
 
-void av_dynarray_add(void *tab_ptr, int *nb_ptr, void *elem)
+فراغ av_dynarray_جوڙيو(فراغ *tab_ptr, صحيح *nb_ptr, فراغ *elem)
 {
-    void **tab;
-    memcpy(&tab, tab_ptr, sizeof(tab));
+    فراغ **tab;
+    يادگيري_نقل(&tab, tab_ptr, حجم(tab));
 
-    FF_DYNARRAY_ADD(INT_MAX, sizeof(*tab), tab, *nb_ptr, {
+    FF_DYNARRAY_جوڙيو(وڌ_کان_وڌ_عدد, حجم(*tab), tab, *nb_ptr, {
         tab[*nb_ptr] = elem;
-        memcpy(tab_ptr, &tab, sizeof(tab));
+        يادگيري_نقل(tab_ptr, &tab, حجم(tab));
     }, {
         *nb_ptr = 0;
         av_freep(tab_ptr);
     });
 }
 
-void *av_dynarray2_add(void **tab_ptr, int *nb_ptr, size_t elem_size,
-                       const uint8_t *elem_data)
+فراغ *av_dynarray2_جوڙيو(فراغ **tab_ptr, صحيح *nb_ptr, size_t elem_سائيز,
+                       ثابت uint8_t *elem_معلومات)
 {
-    uint8_t *tab_elem_data = NULL;
+    uint8_t *tab_elem_معلومات = عدم;
 
-    FF_DYNARRAY_ADD(INT_MAX, elem_size, *tab_ptr, *nb_ptr, {
-        tab_elem_data = (uint8_t *)*tab_ptr + (*nb_ptr) * elem_size;
-        if (elem_data)
-            memcpy(tab_elem_data, elem_data, elem_size);
-        else
-            poison_memory(tab_elem_data, elem_size);
+    FF_DYNARRAY_جوڙيو(وڌ_کان_وڌ_عدد, elem_سائيز, *tab_ptr, *nb_ptr, {
+        tab_elem_معلومات = (uint8_t *)*tab_ptr + (*nb_ptr) * elem_سائيز;
+        إذا (elem_معلومات)
+            يادگيري_نقل(tab_elem_معلومات, elem_معلومات, elem_سائيز);
+        وإلا
+            poison_يادگيري(tab_elem_معلومات, elem_سائيز);
     }, {
         av_freep(tab_ptr);
         *nb_ptr = 0;
     });
-    return tab_elem_data;
+    أرجع tab_elem_معلومات;
 }
 
-static void fill16(uint8_t *dst, int len)
+ساكن فراغ fill16(uint8_t *dst, صحيح len)
 {
     uint32_t v = AV_RN16(dst - 2);
 
     v |= v << 16;
 
-    while (len >= 4) {
+    طالما (len >= 4) {
         AV_WN32(dst, v);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    طالما (len--) {
         *dst = dst[-2];
         dst++;
     }
 }
 
-static void fill24(uint8_t *dst, int len)
+ساكن فراغ fill24(uint8_t *dst, صحيح len)
 {
-#if HAVE_BIGENDIAN
+#إذا HAVE_BIGENDIAN
     uint32_t v = AV_RB24(dst - 3);
     uint32_t a = v << 8  | v >> 16;
     uint32_t b = v << 16 | v >> 8;
     uint32_t c = v << 24 | v;
-#else
+#وإلا
     uint32_t v = AV_RL24(dst - 3);
     uint32_t a = v       | v << 24;
     uint32_t b = v >> 8  | v << 16;
     uint32_t c = v >> 16 | v << 8;
-#endif
+#جيڪڏهن_پورو
 
-    while (len >= 12) {
+    طالما (len >= 12) {
         AV_WN32(dst,     a);
         AV_WN32(dst + 4, b);
         AV_WN32(dst + 8, c);
@@ -502,31 +502,31 @@ static void fill24(uint8_t *dst, int len)
         len -= 12;
     }
 
-    if (len >= 4) {
+    إذا (len >= 4) {
         AV_WN32(dst, a);
         dst += 4;
         len -= 4;
     }
 
-    if (len >= 4) {
+    إذا (len >= 4) {
         AV_WN32(dst, b);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    طالما (len--) {
         *dst = dst[-3];
         dst++;
     }
 }
 
-static void fill32(uint8_t *dst, int len)
+ساكن فراغ fill32(uint8_t *dst, صحيح len)
 {
     uint32_t v = AV_RN32(dst - 4);
 
-#if HAVE_FAST_64BIT
+#إذا HAVE_FAST_64_ٻٽو_انگ
     uint64_t v2= v + ((uint64_t)v<<32);
-    while (len >= 32) {
+    طالما (len >= 32) {
         AV_WN64(dst   , v2);
         AV_WN64(dst+ 8, v2);
         AV_WN64(dst+16, v2);
@@ -534,141 +534,141 @@ static void fill32(uint8_t *dst, int len)
         dst += 32;
         len -= 32;
     }
-#endif
+#جيڪڏهن_پورو
 
-    while (len >= 4) {
+    طالما (len >= 4) {
         AV_WN32(dst, v);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    طالما (len--) {
         *dst = dst[-4];
         dst++;
     }
 }
 
-void av_memcpy_backptr(uint8_t *dst, int back, int cnt)
+فراغ av_memcpy_backptr(uint8_t *dst, صحيح پٺ, صحيح cnt)
 {
-    const uint8_t *src = &dst[-back];
-    if (!back)
-        return;
+    ثابت uint8_t *src = &dst[-پٺ];
+    إذا (!پٺ)
+        أرجع;
 
-    if (back == 1) {
+    إذا (پٺ == 1) {
         memset(dst, *src, cnt);
-    } else if (back == 2) {
+    } وإلا إذا (پٺ == 2) {
         fill16(dst, cnt);
-    } else if (back == 3) {
+    } وإلا إذا (پٺ == 3) {
         fill24(dst, cnt);
-    } else if (back == 4) {
+    } وإلا إذا (پٺ == 4) {
         fill32(dst, cnt);
-    } else {
-        if (cnt >= 16) {
-            int blocklen = back;
-            while (cnt > blocklen) {
-                memcpy(dst, src, blocklen);
+    } وإلا {
+        إذا (cnt >= 16) {
+            صحيح blocklen = پٺ;
+            طالما (cnt > blocklen) {
+                يادگيري_نقل(dst, src, blocklen);
                 dst       += blocklen;
                 cnt       -= blocklen;
                 blocklen <<= 1;
             }
-            memcpy(dst, src, cnt);
-            return;
+            يادگيري_نقل(dst, src, cnt);
+            أرجع;
         }
-        if (cnt >= 8) {
+        إذا (cnt >= 8) {
             AV_COPY32U(dst,     src);
             AV_COPY32U(dst + 4, src + 4);
             src += 8;
             dst += 8;
             cnt -= 8;
         }
-        if (cnt >= 4) {
+        إذا (cnt >= 4) {
             AV_COPY32U(dst, src);
             src += 4;
             dst += 4;
             cnt -= 4;
         }
-        if (cnt >= 2) {
+        إذا (cnt >= 2) {
             AV_COPY16U(dst, src);
             src += 2;
             dst += 2;
             cnt -= 2;
         }
-        if (cnt)
+        إذا (cnt)
             *dst = *src;
     }
 }
 
-void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
+فراغ *av_fast_realloc(فراغ *ptr, بنانشان صحيح *سائيز, size_t min_سائيز)
 {
-    size_t max_size;
+    size_t max_سائيز;
 
-    if (min_size <= *size)
-        return ptr;
+    إذا (min_سائيز <= *سائيز)
+        أرجع ptr;
 
-    max_size = atomic_load_explicit(&max_alloc_size, memory_order_relaxed);
+    max_سائيز = atomic_load_explicit(&max_alloc_سائيز, memory_order_relaxed);
     /* *size is an unsigned, so the real maximum is <= UINT_MAX. */
-    max_size = FFMIN(max_size, UINT_MAX);
+    max_سائيز = FFMIN(max_سائيز, UINT_MAX);
 
-    if (min_size > max_size) {
-        *size = 0;
-        return NULL;
+    إذا (min_سائيز > max_سائيز) {
+        *سائيز = 0;
+        أرجع عدم;
     }
 
-    min_size = FFMIN(max_size, FFMAX(min_size + min_size / 16 + 32, min_size));
+    min_سائيز = FFMIN(max_سائيز, FFMAX(min_سائيز + min_سائيز / 16 + 32, min_سائيز));
 
-    ptr = av_realloc(ptr, min_size);
+    ptr = av_realloc(ptr, min_سائيز);
     /* we could set this to the unmodified min_size but this is safer
      * if the user lost the ptr and uses NULL now
      */
-    if (!ptr)
-        min_size = 0;
+    إذا (!ptr)
+        min_سائيز = 0;
 
-    *size = min_size;
+    *سائيز = min_سائيز;
 
-    return ptr;
+    أرجع ptr;
 }
 
-static inline void fast_malloc(void *ptr, unsigned int *size, size_t min_size, int zero_realloc)
+ساكن مضمن فراغ fast_malloc(فراغ *ptr, بنانشان صحيح *سائيز, size_t min_سائيز, صحيح zero_realloc)
 {
-    size_t max_size;
-    void *val;
+    size_t max_سائيز;
+    فراغ *val;
 
-    memcpy(&val, ptr, sizeof(val));
-    if (min_size <= *size) {
-        av_assert0(val || !min_size);
-        return;
+    يادگيري_نقل(&val, ptr, حجم(val));
+    إذا (min_سائيز <= *سائيز) {
+        av_assert0(val || !min_سائيز);
+        أرجع;
     }
 
-    max_size = atomic_load_explicit(&max_alloc_size, memory_order_relaxed);
+    max_سائيز = atomic_load_explicit(&max_alloc_سائيز, memory_order_relaxed);
     /* *size is an unsigned, so the real maximum is <= UINT_MAX. */
-    max_size = FFMIN(max_size, UINT_MAX);
+    max_سائيز = FFMIN(max_سائيز, UINT_MAX);
 
-    if (min_size > max_size) {
+    إذا (min_سائيز > max_سائيز) {
         av_freep(ptr);
-        *size = 0;
-        return;
+        *سائيز = 0;
+        أرجع;
     }
-    min_size = FFMIN(max_size, FFMAX(min_size + min_size / 16 + 32, min_size));
+    min_سائيز = FFMIN(max_سائيز, FFMAX(min_سائيز + min_سائيز / 16 + 32, min_سائيز));
     av_freep(ptr);
-    val = zero_realloc ? av_mallocz(min_size) : av_malloc(min_size);
-    memcpy(ptr, &val, sizeof(val));
-    if (!val)
-        min_size = 0;
-    *size = min_size;
-    return;
+    val = zero_realloc ? av_mallocz(min_سائيز) : av_malloc(min_سائيز);
+    يادگيري_نقل(ptr, &val, حجم(val));
+    إذا (!val)
+        min_سائيز = 0;
+    *سائيز = min_سائيز;
+    أرجع;
 }
 
-void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size)
+فراغ av_fast_malloc(فراغ *ptr, بنانشان صحيح *سائيز, size_t min_سائيز)
 {
-    fast_malloc(ptr, size, min_size, 0);
+    fast_malloc(ptr, سائيز, min_سائيز, 0);
 }
 
-void av_fast_mallocz(void *ptr, unsigned int *size, size_t min_size)
+فراغ av_fast_mallocz(فراغ *ptr, بنانشان صحيح *سائيز, size_t min_سائيز)
 {
-    fast_malloc(ptr, size, min_size, 1);
+    fast_malloc(ptr, سائيز, min_سائيز, 1);
 }
 
-int av_size_mult(size_t a, size_t b, size_t *r)
+صحيح av_سائيز_mult(size_t a, size_t b, size_t *r)
 {
-    return size_mult(a, b, r);
+    أرجع سائيز_mult(a, b, r);
 }

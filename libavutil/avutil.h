@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AVUTIL_H
-#define AVUTIL_AVUTIL_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_AVUTIL_H
+#وصف_ڪريو AVUTIL_AVUTIL_H
 
 /**
  * @file
@@ -167,24 +167,24 @@
 /**
  * Return the LIBAVUTIL_VERSION_INT constant.
  */
-unsigned avutil_version(void);
+بنانشان avutil_نسخو(فراغ);
 
 /**
  * Return an informative version string. This usually is the actual release
  * version number or a git commit description. This string has no fixed format
  * and can change any time. It should never be parsed by code.
  */
-const char *av_version_info(void);
+ثابت حرف *av_نسخو_info(فراغ);
 
 /**
  * Return the libavutil build-time configuration.
  */
-const char *avutil_configuration(void);
+ثابت حرف *avutil_configuration(فراغ);
 
 /**
  * Return the libavutil license.
  */
-const char *avutil_license(void);
+ثابت حرف *avutil_license(فراغ);
 
 /**
  * @}
@@ -195,11 +195,11 @@ const char *avutil_license(void);
  * @brief Media Type
  */
 
-enum AVMediaType {
+تعداد AVMediaType {
     AVMEDIA_TYPE_UNKNOWN = -1,  ///< Usually treated as AVMEDIA_TYPE_DATA
     AVMEDIA_TYPE_VIDEO,
     AVMEDIA_TYPE_AUDIO,
-    AVMEDIA_TYPE_DATA,          ///< Opaque data information usually continuous
+    AVMEDIA_TYPE_معلومات,          ///< Opaque data information usually continuous
     AVMEDIA_TYPE_SUBTITLE,
     AVMEDIA_TYPE_ATTACHMENT,    ///< Opaque data information usually sparse
     AVMEDIA_TYPE_NB
@@ -209,7 +209,7 @@ enum AVMediaType {
  * Return a string describing the media_type enum, NULL if media_type
  * is unknown.
  */
-const char *av_get_media_type_string(enum AVMediaType media_type);
+ثابت حرف *av_get_media_type_string(تعداد AVMediaType media_type);
 
 /**
  * @defgroup lavu_const Constants
@@ -221,12 +221,12 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * @{
  */
 
-#define FF_LAMBDA_SHIFT 7
-#define FF_LAMBDA_SCALE (1<<FF_LAMBDA_SHIFT)
-#define FF_QP2LAMBDA 118 ///< factor to convert from H.263 QP to lambda
-#define FF_LAMBDA_MAX (256*128-1)
+#وصف_ڪريو FF_LAMBDA_سرڪايو 7
+#وصف_ڪريو FF_LAMBDA_SCALE (1<<FF_LAMBDA_سرڪايو)
+#وصف_ڪريو FF_QP2LAMBDA 118 ///< factor to convert from H.263 QP to lambda
+#وصف_ڪريو FF_LAMBDA_MAX (256*128-1)
 
-#define FF_QUALITY_SCALE FF_LAMBDA_SCALE //FIXME maybe remove
+#وصف_ڪريو FF_QUALITY_SCALE FF_LAMBDA_SCALE //FIXME maybe remove
 
 /**
  * @}
@@ -244,24 +244,24 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * either pts or dts.
  */
 
-#define AV_NOPTS_VALUE          ((int64_t)UINT64_C(0x8000000000000000))
+#وصف_ڪريو AV_NOPTS_قدر          ((int64_t)UINT64_C(0x8000000000000000))
 
 /**
  * Internal time base represented as integer
  */
 
-#define AV_TIME_BASE            1000000
+#وصف_ڪريو AV_وقت_بنياد            1000000
 
 /**
  * Internal time base represented as fractional value
  */
 
-#ifdef __cplusplus
+#جيڪڏهن_وصف_ٿيل __cplusplus
 /* ISO C++ forbids compound-literals. */
-#define AV_TIME_BASE_Q          av_make_q(1, AV_TIME_BASE)
-#else
-#define AV_TIME_BASE_Q          (AVRational){1, AV_TIME_BASE}
-#endif
+#وصف_ڪريو AV_وقت_بنياد_Q          av_make_q(1, AV_وقت_بنياد)
+#وإلا
+#وصف_ڪريو AV_وقت_بنياد_Q          (AVRational){1, AV_وقت_بنياد}
+#جيڪڏهن_پورو
 
 /**
  * @}
@@ -273,7 +273,7 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * @{
  */
 
-enum AVPictureType {
+تعداد AVPictureType {
     AV_PICTURE_TYPE_NONE = 0, ///< Undefined
     AV_PICTURE_TYPE_I,     ///< Intra
     AV_PICTURE_TYPE_P,     ///< Predicted
@@ -291,36 +291,36 @@ enum AVPictureType {
  * @param[in] pict_type the picture type @return a single character
  * representing the picture type, '?' if pict_type is unknown
  */
-char av_get_picture_type_char(enum AVPictureType pict_type);
+حرف av_get_picture_type_char(تعداد AVPictureType pict_type);
 
 /**
  * @}
  */
 
-#include "common.h"
-#include "rational.h"
-#include "version.h"
-#include "macros.h"
-#include "mathematics.h"
-#include "log.h"
-#include "pixfmt.h"
+#ضمن "common.h"
+#ضمن "rational.h"
+#ضمن "version.h"
+#ضمن "macros.h"
+#ضمن "mathematics.h"
+#ضمن "log.h"
+#ضمن "pixfmt.h"
 
 /**
  * Return x default pointer in case p is NULL.
  */
-static inline void *av_x_if_null(const void *p, const void *x)
+ساكن مضمن فراغ *av_x_if_null(ثابت فراغ *p, ثابت فراغ *x)
 {
-    return (void *)(intptr_t)(p ? p : x);
+    أرجع (فراغ *)(intptr_t)(p ? p : x);
 }
 
 /**
  * Return the fractional representation of the internal time base.
  */
-AVRational av_get_time_base_q(void);
+AVRational av_get_وقت_بنياد_q(فراغ);
 
-#define AV_FOURCC_MAX_STRING_SIZE 32
+#وصف_ڪريو AV_FOURCC_MAX_STRING_سائيز 32
 
-#define av_fourcc2str(fourcc) av_fourcc_make_string((char[AV_FOURCC_MAX_STRING_SIZE]){0}, fourcc)
+#وصف_ڪريو av_fourcc2str(fourcc) av_fourcc_make_string((حرف[AV_FOURCC_MAX_STRING_سائيز]){0}, fourcc)
 
 /**
  * Fill the provided buffer with a string containing a FourCC (four-character
@@ -330,11 +330,11 @@ AVRational av_get_time_base_q(void);
  * @param fourcc the fourcc to represent
  * @return the buffer in input
  */
-char *av_fourcc_make_string(char *buf, uint32_t fourcc);
+حرف *av_fourcc_make_string(حرف *buf, uint32_t fourcc);
 
 /**
  * @}
  * @}
  */
 
-#endif /* AVUTIL_AVUTIL_H */
+#جيڪڏهن_پورو /* AVUTIL_AVUTIL_H */

@@ -18,33 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include "libavutil/aes_internal.h"
-#include "libavutil/x86/cpu.h"
+#ضمن <stddef.h>
+#ضمن "libavutil/aes_internal.h"
+#ضمن "libavutil/x86/cpu.h"
 
-void ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+فراغ ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                             صحيح ڳڻپ, uint8_t *iv, صحيح ڦيرا);
+فراغ ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                             صحيح ڳڻپ, uint8_t *iv, صحيح ڦيرا);
+فراغ ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                             صحيح ڳڻپ, uint8_t *iv, صحيح ڦيرا);
+فراغ ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                             صحيح ڳڻپ, uint8_t *iv, صحيح ڦيرا);
+فراغ ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                             صحيح ڳڻپ, uint8_t *iv, صحيح ڦيرا);
+فراغ ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                             صحيح ڳڻپ, uint8_t *iv, صحيح ڦيرا);
 
-void ff_init_aes_x86(AVAES *a, int decrypt)
+فراغ ff_init_aes_x86(AVAES *a, صحيح decrypt)
 {
-    int cpu_flags = av_get_cpu_flags();
+    صحيح cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_AESNI(cpu_flags)) {
-        if (a->rounds == 10)
+    إذا (EXTERNAL_AESNI(cpu_flags)) {
+        إذا (a->ڦيرا == 10)
             a->crypt = decrypt ? ff_aes_decrypt_10_aesni : ff_aes_encrypt_10_aesni;
-        else if (a->rounds == 12)
+        وإلا إذا (a->ڦيرا == 12)
             a->crypt = decrypt ? ff_aes_decrypt_12_aesni : ff_aes_encrypt_12_aesni;
-        else if (a->rounds == 14)
+        وإلا إذا (a->ڦيرا == 14)
             a->crypt = decrypt ? ff_aes_decrypt_14_aesni : ff_aes_encrypt_14_aesni;
     }
 }

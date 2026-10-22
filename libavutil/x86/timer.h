@@ -18,33 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_TIMER_H
-#define AVUTIL_X86_TIMER_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_X86_TIMER_H
+#وصف_ڪريو AVUTIL_X86_TIMER_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
-#if HAVE_INLINE_ASM
+#إذا HAVE_INLINE_ASM
 
-#define FF_TIMER_UNITS "decicycles"
-#define AV_READ_TIME read_time
+#وصف_ڪريو FF_TIMER_UNITS "decicycles"
+#وصف_ڪريو AV_READ_وقت read_وقت
 
-static inline uint64_t read_time(void)
+ساكن مضمن uint64_t read_وقت(فراغ)
 {
     uint32_t a, d;
-    __asm__ volatile(
-#if ARCH_X86_64 || defined(__SSE2__)
+    __asm__ متطاير(
+#إذا ARCH_X86_64 || defined(__SSE2__)
                      "lfence \n\t"
-#endif
+#جيڪڏهن_پورو
                      "rdtsc  \n\t"
                      : "=a" (a), "=d" (d));
-    return ((uint64_t)d << 32) + a;
+    أرجع ((uint64_t)d << 32) + a;
 }
 
-#elif HAVE_RDTSC
+#وإلاإذا HAVE_RDTSC
 
-#include <intrin.h>
-#define AV_READ_TIME __rdtsc
+#ضمن <intrin.h>
+#وصف_ڪريو AV_READ_وقت __rdtsc
 
-#endif /* HAVE_INLINE_ASM */
+#جيڪڏهن_پورو /* HAVE_INLINE_ASM */
 
-#endif /* AVUTIL_X86_TIMER_H */
+#جيڪڏهن_پورو /* AVUTIL_X86_TIMER_H */

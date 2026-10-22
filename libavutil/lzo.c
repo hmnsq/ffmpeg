@@ -19,44 +19,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <string.h>
+#ضمن <limits.h>
+#ضمن <stdint.h>
+#ضمن <string.h>
 
-#include "avassert.h"
-#include "intreadwrite.h"
-#include "lzo.h"
-#include "macros.h"
-#include "mem.h"
+#ضمن "avassert.h"
+#ضمن "intreadwrite.h"
+#ضمن "lzo.h"
+#ضمن "macros.h"
+#ضمن "mem.h"
 
 /// Define if we may write up to 12 bytes beyond the output buffer.
-#define OUTBUF_PADDED 1
+#وصف_ڪريو OUTBUF_PADDED 1
 /// Define if we may read up to 8 bytes beyond the input buffer.
-#define INBUF_PADDED 1
+#وصف_ڪريو INBUF_PADDED 1
 
-typedef struct LZOContext {
-    const uint8_t *in, *in_end;
-    uint8_t *out_start, *out, *out_end;
-    int error;
+تعريفنوع بنية LZOContext {
+    ثابت uint8_t *اندريون, *اندريون_پڇاڙي;
+    uint8_t *ٻاهريون_شروعات, *ٻاهريون, *ٻاهريون_پڇاڙي;
+    صحيح error;
 } LZOContext;
 
 /**
  * @brief Reads one byte from the input buffer, avoiding an overrun.
  * @return byte read
  */
-static inline int get_byte(LZOContext *c)
+ساكن مضمن صحيح get_byte(LZOContext *c)
 {
-    if (c->in < c->in_end)
-        return *c->in++;
-    c->error |= AV_LZO_INPUT_DEPLETED;
-    return 1;
+    إذا (c->اندريون < c->اندريون_پڇاڙي)
+        أرجع *c->اندريون++;
+    c->error |= AV_LZO_داخلا_DEPLETED;
+    أرجع 1;
 }
 
-#ifdef INBUF_PADDED
-#define GETB(c) (*(c).in++)
-#else
-#define GETB(c) get_byte(&(c))
-#endif
+#جيڪڏهن_وصف_ٿيل INBUF_PADDED
+#وصف_ڪريو GETB(c) (*(c).اندريون++)
+#وإلا
+#وصف_ڪريو GETB(c) get_byte(&(c))
+#جيڪڏهن_پورو
 
 /**
  * @brief Decodes a length value in the coding used by lzo.
@@ -64,49 +64,49 @@ static inline int get_byte(LZOContext *c)
  * @param mask bits used from x
  * @return decoded length value
  */
-static inline int get_len(LZOContext *c, int x, int mask)
+ساكن مضمن صحيح get_len(LZOContext *c, صحيح x, صحيح نقاب_2)
 {
-    int cnt = x & mask;
-    if (!cnt) {
-        while (!(x = get_byte(c))) {
-            if (cnt >= INT_MAX - 1000) {
+    صحيح cnt = x & نقاب_2;
+    إذا (!cnt) {
+        طالما (!(x = get_byte(c))) {
+            إذا (cnt >= وڌ_کان_وڌ_عدد - 1000) {
                 c->error |= AV_LZO_ERROR;
-                break;
+                اكسر;
             }
             cnt += 255;
         }
-        cnt += mask + x;
+        cnt += نقاب_2 + x;
     }
-    return cnt;
+    أرجع cnt;
 }
 
 /**
  * @brief Copies bytes from input to output buffer with checking.
  * @param cnt number of bytes to copy, must be >= 0
  */
-static inline void copy(LZOContext *c, int cnt)
+ساكن مضمن فراغ copy(LZOContext *c, صحيح cnt)
 {
-    register const uint8_t *src = c->in;
-    register uint8_t *dst       = c->out;
+    سجل ثابت uint8_t *src = c->اندريون;
+    سجل uint8_t *dst       = c->ٻاهريون;
     av_assert0(cnt >= 0);
-    if (cnt > c->in_end - src) {
-        cnt       = FFMAX(c->in_end - src, 0);
-        c->error |= AV_LZO_INPUT_DEPLETED;
+    إذا (cnt > c->اندريون_پڇاڙي - src) {
+        cnt       = FFMAX(c->اندريون_پڇاڙي - src, 0);
+        c->error |= AV_LZO_داخلا_DEPLETED;
     }
-    if (cnt > c->out_end - dst) {
-        cnt       = FFMAX(c->out_end - dst, 0);
-        c->error |= AV_LZO_OUTPUT_FULL;
+    إذا (cnt > c->ٻاهريون_پڇاڙي - dst) {
+        cnt       = FFMAX(c->ٻاهريون_پڇاڙي - dst, 0);
+        c->error |= AV_LZO_OUTPUT_ڀريل;
     }
-#if defined(INBUF_PADDED) && defined(OUTBUF_PADDED)
+#إذا defined(INBUF_PADDED) && defined(OUTBUF_PADDED)
     AV_COPY32U(dst, src);
     src += 4;
     dst += 4;
     cnt -= 4;
-    if (cnt > 0)
-#endif
-    memcpy(dst, src, cnt);
-    c->in  = src + cnt;
-    c->out = dst + cnt;
+    إذا (cnt > 0)
+#جيڪڏهن_پورو
+    يادگيري_نقل(dst, src, cnt);
+    c->اندريون  = src + cnt;
+    c->ٻاهريون = dst + cnt;
 }
 
 /**
@@ -117,91 +117,91 @@ static inline void copy(LZOContext *c, int cnt)
  * cnt > back is valid, this will copy the bytes we just copied,
  * thus creating a repeating pattern with a period length of back.
  */
-static inline void copy_backptr(LZOContext *c, int back, int cnt)
+ساكن مضمن فراغ copy_backptr(LZOContext *c, صحيح پٺ, صحيح cnt)
 {
-    register uint8_t *dst       = c->out;
+    سجل uint8_t *dst       = c->ٻاهريون;
     av_assert0(cnt > 0);
-    if (dst - c->out_start < back) {
+    إذا (dst - c->ٻاهريون_شروعات < پٺ) {
         c->error |= AV_LZO_INVALID_BACKPTR;
-        return;
+        أرجع;
     }
-    if (cnt > c->out_end - dst) {
-        cnt       = FFMAX(c->out_end - dst, 0);
-        c->error |= AV_LZO_OUTPUT_FULL;
+    إذا (cnt > c->ٻاهريون_پڇاڙي - dst) {
+        cnt       = FFMAX(c->ٻاهريون_پڇاڙي - dst, 0);
+        c->error |= AV_LZO_OUTPUT_ڀريل;
     }
-    av_memcpy_backptr(dst, back, cnt);
-    c->out = dst + cnt;
+    av_memcpy_backptr(dst, پٺ, cnt);
+    c->ٻاهريون = dst + cnt;
 }
 
-int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen)
+صحيح av_lzo1x_decode(فراغ *ٻاهريون, صحيح *outlen, ثابت فراغ *اندريون, صحيح *inlen)
 {
-    int state = 0;
-    int x;
+    صحيح state = 0;
+    صحيح x;
     LZOContext c;
-    if (*outlen <= 0 || *inlen <= 0) {
-        int res = 0;
-        if (*outlen <= 0)
-            res |= AV_LZO_OUTPUT_FULL;
-        if (*inlen <= 0)
-            res |= AV_LZO_INPUT_DEPLETED;
-        return res;
+    إذا (*outlen <= 0 || *inlen <= 0) {
+        صحيح res = 0;
+        إذا (*outlen <= 0)
+            res |= AV_LZO_OUTPUT_ڀريل;
+        إذا (*inlen <= 0)
+            res |= AV_LZO_داخلا_DEPLETED;
+        أرجع res;
     }
-    c.in      = in;
-    c.in_end  = (const uint8_t *)in + *inlen;
-    c.out     = c.out_start = out;
-    c.out_end = (uint8_t *)out + *outlen;
+    c.اندريون      = اندريون;
+    c.اندريون_پڇاڙي  = (ثابت uint8_t *)اندريون + *inlen;
+    c.ٻاهريون     = c.ٻاهريون_شروعات = ٻاهريون;
+    c.ٻاهريون_پڇاڙي = (uint8_t *)ٻاهريون + *outlen;
     c.error   = 0;
     x         = GETB(c);
-    if (x > 17) {
+    إذا (x > 17) {
         copy(&c, x - 17);
         x = GETB(c);
-        if (x < 16)
+        إذا (x < 16)
             c.error |= AV_LZO_ERROR;
     }
-    if (c.in > c.in_end)
-        c.error |= AV_LZO_INPUT_DEPLETED;
-    while (!c.error) {
-        int cnt, back;
-        if (x > 15) {
-            if (x > 63) {
+    إذا (c.اندريون > c.اندريون_پڇاڙي)
+        c.error |= AV_LZO_داخلا_DEPLETED;
+    طالما (!c.error) {
+        صحيح cnt, پٺ;
+        إذا (x > 15) {
+            إذا (x > 63) {
                 cnt  = (x >> 5) - 1;
-                back = (GETB(c) << 3) + ((x >> 2) & 7) + 1;
-            } else if (x > 31) {
+                پٺ = (GETB(c) << 3) + ((x >> 2) & 7) + 1;
+            } وإلا إذا (x > 31) {
                 cnt  = get_len(&c, x, 31);
                 x    = GETB(c);
-                back = (GETB(c) << 6) + (x >> 2) + 1;
-            } else {
+                پٺ = (GETB(c) << 6) + (x >> 2) + 1;
+            } وإلا {
                 cnt   = get_len(&c, x, 7);
-                back  = (1 << 14) + ((x & 8) << 11);
+                پٺ  = (1 << 14) + ((x & 8) << 11);
                 x     = GETB(c);
-                back += (GETB(c) << 6) + (x >> 2);
-                if (back == (1 << 14)) {
-                    if (cnt != 1)
+                پٺ += (GETB(c) << 6) + (x >> 2);
+                إذا (پٺ == (1 << 14)) {
+                    إذا (cnt != 1)
                         c.error |= AV_LZO_ERROR;
-                    break;
+                    اكسر;
                 }
             }
-        } else if (!state) {
+        } وإلا إذا (!state) {
             cnt = get_len(&c, x, 15);
             copy(&c, cnt + 3);
             x = GETB(c);
-            if (x > 15)
-                continue;
+            إذا (x > 15)
+                استمر;
             cnt  = 1;
-            back = (1 << 11) + (GETB(c) << 2) + (x >> 2) + 1;
-        } else {
+            پٺ = (1 << 11) + (GETB(c) << 2) + (x >> 2) + 1;
+        } وإلا {
             cnt  = 0;
-            back = (GETB(c) << 2) + (x >> 2) + 1;
+            پٺ = (GETB(c) << 2) + (x >> 2) + 1;
         }
-        copy_backptr(&c, back, cnt + 2);
+        copy_backptr(&c, پٺ, cnt + 2);
         state =
         cnt   = x & 3;
         copy(&c, cnt);
         x = GETB(c);
     }
-    *inlen = c.in_end - c.in;
-    if (c.in > c.in_end)
+    *inlen = c.اندريون_پڇاڙي - c.اندريون;
+    إذا (c.اندريون > c.اندريون_پڇاڙي)
         *inlen = 0;
-    *outlen = c.out_end - c.out;
-    return c.error;
+    *outlen = c.ٻاهريون_پڇاڙي - c.ٻاهريون;
+    أرجع c.error;
 }

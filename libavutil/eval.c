@@ -26,54 +26,54 @@
  * see http://joe.hotchkiss.com/programming/eval/eval.html
  */
 
-#include <float.h>
-#include "attributes.h"
-#include "avassert.h"
-#include "avutil.h"
-#include "common.h"
-#include "eval.h"
-#include "ffmath.h"
-#include "log.h"
-#include "mathematics.h"
-#include "mem.h"
-#include "sfc64.h"
-#include "time.h"
-#include "avstring.h"
-#include "reverse.h"
+#ضمن <float.h>
+#ضمن "attributes.h"
+#ضمن "avassert.h"
+#ضمن "avutil.h"
+#ضمن "common.h"
+#ضمن "eval.h"
+#ضمن "ffmath.h"
+#ضمن "log.h"
+#ضمن "mathematics.h"
+#ضمن "mem.h"
+#ضمن "sfc64.h"
+#ضمن "time.h"
+#ضمن "avstring.h"
+#ضمن "reverse.h"
 
-#define MAX_DEPTH 100
+#وصف_ڪريو MAX_اونهائي 100
 
-typedef struct Parser {
-    const AVClass *class;
-    int stack_index;
-    char *s;
-    const double *const_values;
-    const char * const *const_names;          // NULL terminated
-    double (* const *funcs1)(void *, double a);           // NULL terminated
-    const char * const *func1_names;          // NULL terminated
-    double (* const *funcs2)(void *, double a, double b); // NULL terminated
-    const char * const *func2_names;          // NULL terminated
-    void *opaque;
-    int log_offset;
-    void *log_ctx;
-#define VARS 10
-    double *var;
+تعريفنوع بنية Parser {
+    ثابت AVClass *class;
+    صحيح ڍير_اشاريو;
+    حرف *s;
+    ثابت مزدوج *const_قدرون;
+    ثابت حرف * ثابت *const_نالا;          // NULL terminated
+    مزدوج (* ثابت *funcs1)(فراغ *, مزدوج a);           // NULL terminated
+    ثابت حرف * ثابت *func1_نالا;          // NULL terminated
+    مزدوج (* ثابت *funcs2)(فراغ *, مزدوج a, مزدوج b); // NULL terminated
+    ثابت حرف * ثابت *func2_نالا;          // NULL terminated
+    فراغ *opaque;
+    صحيح log_وٿي;
+    فراغ *log_ctx;
+#وصف_ڪريو VARS 10
+    مزدوج *var;
     FFSFC64 *prng_state;
 } Parser;
 
-static const AVClass eval_class = {
+ساكن ثابت AVClass eval_class = {
     .class_name                = "Eval",
-    .item_name                 = av_default_item_name,
-    .option                    = NULL,
-    .version                   = LIBAVUTIL_VERSION_INT,
-    .log_level_offset_offset   = offsetof(Parser, log_offset),
-    .parent_log_context_offset = offsetof(Parser, log_ctx),
+    .شي_name                 = av_default_شي_name,
+    .option                    = عدم,
+    .نسخو                   = LIBAVUTIL_نسخو_INT,
+    .log_level_وٿي_وٿي   = offsetof(Parser, log_وٿي),
+    .والد_log_context_وٿي = offsetof(Parser, log_ctx),
 };
 
-static const struct {
-    double bin_val;
-    double dec_val;
-    int8_t exp;
+ساكن ثابت بنية {
+    مزدوج bin_val;
+    مزدوج dec_val;
+    int8_t قوت_نما;
 } si_prefixes['z' - 'E' + 1] = {
     ['y'-'E']= { 8.271806125530276749e-25, 1e-24, -24 },
     ['z'-'E']= { 8.4703294725430034e-22, 1e-21, -21 },
@@ -97,9 +97,9 @@ static const struct {
     ['Y'-'E']= { 1.2089258196146292e24, 1e24, 24 },
 };
 
-static const struct {
-    const char *name;
-    double value;
+ساكن ثابت بنية {
+    ثابت حرف *name;
+    مزدوج قدر;
 } constants[] = {
     { "E",   M_E   },
     { "PI",  M_PI  },
@@ -107,749 +107,749 @@ static const struct {
     { "QP2LAMBDA", FF_QP2LAMBDA },
 };
 
-double av_strtod(const char *numstr, char **tail)
+مزدوج av_strtod(ثابت حرف *numstr, حرف **پڇ)
 {
-    double d;
-    char *next;
-    if(numstr[0]=='0' && (numstr[1]|0x20)=='x') {
-        d = strtoul(numstr, &next, 16);
-    } else
-        d = strtod(numstr, &next);
+    مزدوج d;
+    حرف *ايندڙ;
+    إذا(numstr[0]=='0' && (numstr[1]|0x20)=='x') {
+        d = strtoul(numstr, &ايندڙ, 16);
+    } وإلا
+        d = strtod(numstr, &ايندڙ);
     /* if parsing succeeded, check for and interpret postfixes */
-    if (next!=numstr) {
-        if (next[0] == 'd' && next[1] == 'B') {
+    إذا (ايندڙ!=numstr) {
+        إذا (ايندڙ[0] == 'd' && ايندڙ[1] == 'B') {
             /* treat dB as decibels instead of decibytes */
             d = ff_exp10(d / 20);
-            next += 2;
-        } else if (*next >= 'E' && *next <= 'z') {
-            int e= si_prefixes[*next - 'E'].exp;
-            if (e) {
-                if (next[1] == 'i') {
-                    d*= si_prefixes[*next - 'E'].bin_val;
-                    next+=2;
-                } else {
-                    d*= si_prefixes[*next - 'E'].dec_val;
-                    next++;
+            ايندڙ += 2;
+        } وإلا إذا (*ايندڙ >= 'E' && *ايندڙ <= 'z') {
+            صحيح e= si_prefixes[*ايندڙ - 'E'].قوت_نما;
+            إذا (e) {
+                إذا (ايندڙ[1] == 'i') {
+                    d*= si_prefixes[*ايندڙ - 'E'].bin_val;
+                    ايندڙ+=2;
+                } وإلا {
+                    d*= si_prefixes[*ايندڙ - 'E'].dec_val;
+                    ايندڙ++;
                 }
             }
         }
 
-        if (*next=='B') {
+        إذا (*ايندڙ=='B') {
             d*=8;
-            next++;
+            ايندڙ++;
         }
     }
     /* if requested, fill in tail with the position after the last parsed
        character */
-    if (tail)
-        *tail = next;
-    return d;
+    إذا (پڇ)
+        *پڇ = ايندڙ;
+    أرجع d;
 }
 
-#define IS_IDENTIFIER_CHAR(c) ((c) - '0' <= 9U || (c) - 'a' <= 25U || (c) - 'A' <= 25U || (c) == '_')
+#وصف_ڪريو IS_IDENTIFIER_CHAR(c) ((c) - '0' <= 9U || (c) - 'a' <= 25U || (c) - 'A' <= 25U || (c) == '_')
 
-static int strmatch(const char *s, const char *prefix)
+ساكن صحيح strmatch(ثابت حرف *s, ثابت حرف *اڳياڙي)
 {
-    int i;
-    for (i=0; prefix[i]; i++) {
-        if (prefix[i] != s[i]) return 0;
+    صحيح i;
+    لكل (i=0; اڳياڙي[i]; i++) {
+        إذا (اڳياڙي[i] != s[i]) أرجع 0;
     }
     /* return 1 only if the s identifier is terminated */
-    return !IS_IDENTIFIER_CHAR(s[i]);
+    أرجع !IS_IDENTIFIER_CHAR(s[i]);
 }
 
-enum {
-    e_value, e_const, e_func0, e_func1, e_func2,
+تعداد {
+    e_قدر, e_const, e_func0, e_func1, e_func2,
     e_squish, e_gauss, e_ld, e_isnan, e_isinf,
     e_mod, e_max, e_min, e_eq, e_gt, e_gte, e_lte, e_lt,
-    e_pow, e_mul, e_div, e_add,
-    e_last, e_st, e_while, e_taylor, e_root, e_floor, e_ceil, e_trunc, e_round,
-    e_sqrt, e_not, e_random, e_hypot, e_gcd,
+    e_pow, e_mul, e_div, e_جوڙيو,
+    e_آخري, e_st, e_while, e_taylor, e_پاڙ, e_floor, e_ceil, e_trunc, e_ڦيرو,
+    e_sqrt, e_not, e_random, e_hypot, e_وڏو_گڏيل_ونڊيندڙ,
     e_if, e_ifnot, e_print, e_bitand, e_bitor, e_between, e_clip, e_atan2, e_lerp,
     e_sgn, e_randomi
 };
-struct AVExpr {
-    unsigned char type;
-    unsigned char root;
-    short depth;
-    int const_index;
-    double value; // is sign in other types
-    union {
-        double (*func0)(double);
-        double (*func1)(void *, double);
-        double (*func2)(void *, double, double);
+بنية AVExpr {
+    بنانشان حرف type;
+    بنانشان حرف پاڙ;
+    ننڍو اونهائي;
+    صحيح const_اشاريو;
+    مزدوج قدر; // is sign in other types
+    اتحاد {
+        مزدوج (*func0)(مزدوج);
+        مزدوج (*func1)(فراغ *, مزدوج);
+        مزدوج (*func2)(فراغ *, مزدوج, مزدوج);
     } ;
-    struct AVExpr *param[3];
+    بنية AVExpr *param[3];
 };
 
-typedef struct {
+تعريفنوع بنية {
     AVExpr avexpr;
-    double *var;
+    مزدوج *var;
     FFSFC64 *prng_state;
-} AVExprRoot;
+} AVExpr_پاڙ;
 
-static double etime(double v)
+ساكن مزدوج etime(مزدوج v)
 {
-    return av_gettime() * 0.000001;
+    أرجع av_gettime() * 0.000001;
 }
 
-static double eval_expr(Parser *p, AVExpr *e)
+ساكن مزدوج eval_اظهار(Parser *p, AVExpr *e)
 {
-    switch (e->type) {
-        case e_value:  return e->value;
-        case e_const:  return e->value * p->const_values[e->const_index];
-        case e_func0:  return e->value * e->func0(eval_expr(p, e->param[0]));
-        case e_func1:  return e->value * e->func1(p->opaque, eval_expr(p, e->param[0]));
-        case e_func2:  return e->value * e->func2(p->opaque, eval_expr(p, e->param[0]), eval_expr(p, e->param[1]));
-        case e_squish: return e->value/(1+exp(4*eval_expr(p, e->param[0])));
-        case e_gauss: { double d = eval_expr(p, e->param[0]); return e->value * exp(-d*d/2)/sqrt(2*M_PI); }
-        case e_ld:     return e->value * p->var[av_clip(eval_expr(p, e->param[0]), 0, VARS-1)];
-        case e_isnan:  return e->value * !!isnan(eval_expr(p, e->param[0]));
-        case e_isinf:  return e->value * !!isinf(eval_expr(p, e->param[0]));
-        case e_floor:  return e->value * floor(eval_expr(p, e->param[0]));
-        case e_ceil :  return e->value * ceil (eval_expr(p, e->param[0]));
-        case e_trunc:  return e->value * trunc(eval_expr(p, e->param[0]));
-        case e_round:  return e->value * round(eval_expr(p, e->param[0]));
-        case e_sgn:    return e->value * FFDIFFSIGN(eval_expr(p, e->param[0]), 0);
-        case e_sqrt:   return e->value * sqrt (eval_expr(p, e->param[0]));
-        case e_not:    return e->value * (eval_expr(p, e->param[0]) == 0);
-        case e_if:     return e->value * (eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
-                                          e->param[2] ? eval_expr(p, e->param[2]) : 0);
-        case e_ifnot:  return e->value * (!eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
-                                          e->param[2] ? eval_expr(p, e->param[2]) : 0);
-        case e_clip: {
-            double x = eval_expr(p, e->param[0]);
-            double min = eval_expr(p, e->param[1]), max = eval_expr(p, e->param[2]);
-            if (isnan(min) || isnan(max) || isnan(x) || min > max)
-                return NAN;
-            return e->value * av_clipd(x, min, max);
+    بدل (e->type) {
+        حالة e_قدر:  أرجع e->قدر;
+        حالة e_const:  أرجع e->قدر * p->const_قدرون[e->const_اشاريو];
+        حالة e_func0:  أرجع e->قدر * e->func0(eval_اظهار(p, e->param[0]));
+        حالة e_func1:  أرجع e->قدر * e->func1(p->opaque, eval_اظهار(p, e->param[0]));
+        حالة e_func2:  أرجع e->قدر * e->func2(p->opaque, eval_اظهار(p, e->param[0]), eval_اظهار(p, e->param[1]));
+        حالة e_squish: أرجع e->قدر/(1+قوت_نما(4*eval_اظهار(p, e->param[0])));
+        حالة e_gauss: { مزدوج d = eval_اظهار(p, e->param[0]); أرجع e->قدر * قوت_نما(-d*d/2)/جذر(2*M_PI); }
+        حالة e_ld:     أرجع e->قدر * p->var[av_clip(eval_اظهار(p, e->param[0]), 0, VARS-1)];
+        حالة e_isnan:  أرجع e->قدر * !!isnan(eval_اظهار(p, e->param[0]));
+        حالة e_isinf:  أرجع e->قدر * !!isinf(eval_اظهار(p, e->param[0]));
+        حالة e_floor:  أرجع e->قدر * floor(eval_اظهار(p, e->param[0]));
+        حالة e_ceil :  أرجع e->قدر * ceil (eval_اظهار(p, e->param[0]));
+        حالة e_trunc:  أرجع e->قدر * trunc(eval_اظهار(p, e->param[0]));
+        حالة e_ڦيرو:  أرجع e->قدر * round(eval_اظهار(p, e->param[0]));
+        حالة e_sgn:    أرجع e->قدر * FFDIFFSIGN(eval_اظهار(p, e->param[0]), 0);
+        حالة e_sqrt:   أرجع e->قدر * جذر (eval_اظهار(p, e->param[0]));
+        حالة e_not:    أرجع e->قدر * (eval_اظهار(p, e->param[0]) == 0);
+        حالة e_if:     أرجع e->قدر * (eval_اظهار(p, e->param[0]) ? eval_اظهار(p, e->param[1]) :
+                                          e->param[2] ? eval_اظهار(p, e->param[2]) : 0);
+        حالة e_ifnot:  أرجع e->قدر * (!eval_اظهار(p, e->param[0]) ? eval_اظهار(p, e->param[1]) :
+                                          e->param[2] ? eval_اظهار(p, e->param[2]) : 0);
+        حالة e_clip: {
+            مزدوج x = eval_اظهار(p, e->param[0]);
+            مزدوج min = eval_اظهار(p, e->param[1]), max = eval_اظهار(p, e->param[2]);
+            إذا (isnan(min) || isnan(max) || isnan(x) || min > max)
+                أرجع NAN;
+            أرجع e->قدر * av_clipd(x, min, max);
         }
-        case e_between: {
-            double d = eval_expr(p, e->param[0]);
-            return e->value * (d >= eval_expr(p, e->param[1]) &&
-                               d <= eval_expr(p, e->param[2]));
+        حالة e_between: {
+            مزدوج d = eval_اظهار(p, e->param[0]);
+            أرجع e->قدر * (d >= eval_اظهار(p, e->param[1]) &&
+                               d <= eval_اظهار(p, e->param[2]));
         }
-        case e_lerp: {
-            double v0 = eval_expr(p, e->param[0]);
-            double v1 = eval_expr(p, e->param[1]);
-            double f  = eval_expr(p, e->param[2]);
-            return e->value * (v0 + (v1 - v0) * f);
+        حالة e_lerp: {
+            مزدوج v0 = eval_اظهار(p, e->param[0]);
+            مزدوج v1 = eval_اظهار(p, e->param[1]);
+            مزدوج f  = eval_اظهار(p, e->param[2]);
+            أرجع e->قدر * (v0 + (v1 - v0) * f);
         }
-        case e_print: {
-            double x = eval_expr(p, e->param[0]);
-            int level = e->param[1] ? av_clip(eval_expr(p, e->param[1]), INT_MIN, INT_MAX) : AV_LOG_INFO;
+        حالة e_print: {
+            مزدوج x = eval_اظهار(p, e->param[0]);
+            صحيح level = e->param[1] ? av_clip(eval_اظهار(p, e->param[1]), INT_MIN, وڌ_کان_وڌ_عدد) : AV_LOG_INFO;
             av_log(p, level, "%f\n", x);
-            return e->value * x;
+            أرجع e->قدر * x;
         }
 
-#define COMPUTE_NEXT_RANDOM()                                        \
-            int idx = av_clip(eval_expr(p, e->param[0]), 0, VARS-1); \
+#وصف_ڪريو COMPUTE_ايندڙ_RANDOM()                                        \
+            صحيح idx = av_clip(eval_اظهار(p, e->param[0]), 0, VARS-1); \
             FFSFC64 *s = p->prng_state + idx;                        \
             uint64_t r;                                              \
                                                                      \
-            if (!s->counter) {                                       \
+            إذا (!s->counter) {                                       \
                 r = isnan(p->var[idx]) ? 0 : p->var[idx];            \
                 ff_sfc64_init(s, r, r, r, 12);                       \
             }                                                        \
             r = ff_sfc64_get(s);                                     \
             p->var[idx] = r;                                         \
 
-        case e_random: {
-            COMPUTE_NEXT_RANDOM();
-            return r * (1.0/UINT64_MAX);
+        حالة e_random: {
+            COMPUTE_ايندڙ_RANDOM();
+            أرجع r * (1.0/UINT64_MAX);
         }
-        case e_randomi: {
-            double min = eval_expr(p, e->param[1]);
-            double max = eval_expr(p, e->param[2]);
-            COMPUTE_NEXT_RANDOM();
-            return min + (max - min) * r / UINT64_MAX;
+        حالة e_randomi: {
+            مزدوج min = eval_اظهار(p, e->param[1]);
+            مزدوج max = eval_اظهار(p, e->param[2]);
+            COMPUTE_ايندڙ_RANDOM();
+            أرجع min + (max - min) * r / UINT64_MAX;
         }
-        case e_while: {
-            double d = NAN;
-            while (eval_expr(p, e->param[0]))
-                d=eval_expr(p, e->param[1]);
-            return d;
+        حالة e_while: {
+            مزدوج d = NAN;
+            طالما (eval_اظهار(p, e->param[0]))
+                d=eval_اظهار(p, e->param[1]);
+            أرجع d;
         }
-        case e_taylor: {
-            double t = 1, d = 0, v;
-            double x = eval_expr(p, e->param[1]);
-            int id = e->param[2] ? av_clip(eval_expr(p, e->param[2]), 0, VARS-1) : 0;
-            int i;
-            double var0 = p->var[id];
-            for(i=0; i<1000; i++) {
-                double ld = d;
+        حالة e_taylor: {
+            مزدوج t = 1, d = 0, v;
+            مزدوج x = eval_اظهار(p, e->param[1]);
+            صحيح id = e->param[2] ? av_clip(eval_اظهار(p, e->param[2]), 0, VARS-1) : 0;
+            صحيح i;
+            مزدوج var0 = p->var[id];
+            لكل(i=0; i<1000; i++) {
+                مزدوج ld = d;
                 p->var[id] = i;
-                v = eval_expr(p, e->param[0]);
+                v = eval_اظهار(p, e->param[0]);
                 d += t*v;
-                if(ld==d && v)
-                    break;
+                إذا(ld==d && v)
+                    اكسر;
                 t *= x / (i+1);
             }
             p->var[id] = var0;
-            return d;
+            أرجع d;
         }
-        case e_root: {
-            int i, j;
-            double low = -1, high = -1, v, low_v = -DBL_MAX, high_v = DBL_MAX;
-            double var0 = p->var[0];
-            double x_max = eval_expr(p, e->param[1]);
-            for(i=-1; i<1024; i++) {
-                if(i<255) {
-                    p->var[0] = ff_reverse[i&255]*x_max/255;
-                } else {
-                    p->var[0] = x_max*pow(0.9, i-255);
-                    if (i&1) p->var[0] *= -1;
-                    if (i&2) p->var[0] += low;
-                    else     p->var[0] += high;
+        حالة e_پاڙ: {
+            صحيح i, j;
+            مزدوج هيٺيون = -1, مٿاهون = -1, v, هيٺيون_v = -DBL_MAX, مٿاهون_v = DBL_MAX;
+            مزدوج var0 = p->var[0];
+            مزدوج x_max = eval_اظهار(p, e->param[1]);
+            لكل(i=-1; i<1024; i++) {
+                إذا(i<255) {
+                    p->var[0] = ff_ابتو[i&255]*x_max/255;
+                } وإلا {
+                    p->var[0] = x_max*قوت(0.9, i-255);
+                    إذا (i&1) p->var[0] *= -1;
+                    إذا (i&2) p->var[0] += هيٺيون;
+                    وإلا     p->var[0] += مٿاهون;
                 }
-                v = eval_expr(p, e->param[0]);
-                if (v<=0 && v>low_v) {
-                    low    = p->var[0];
-                    low_v  = v;
+                v = eval_اظهار(p, e->param[0]);
+                إذا (v<=0 && v>هيٺيون_v) {
+                    هيٺيون    = p->var[0];
+                    هيٺيون_v  = v;
                 }
-                if (v>=0 && v<high_v) {
-                    high   = p->var[0];
-                    high_v = v;
+                إذا (v>=0 && v<مٿاهون_v) {
+                    مٿاهون   = p->var[0];
+                    مٿاهون_v = v;
                 }
-                if (low>=0 && high>=0){
-                    for (j=0; j<1000; j++) {
-                        p->var[0] = (low+high)*0.5;
-                        if (low == p->var[0] || high == p->var[0])
-                            break;
-                        v = eval_expr(p, e->param[0]);
-                        if (v<=0) low = p->var[0];
-                        if (v>=0) high= p->var[0];
-                        if (isnan(v)) {
-                            low = high = v;
-                            break;
+                إذا (هيٺيون>=0 && مٿاهون>=0){
+                    لكل (j=0; j<1000; j++) {
+                        p->var[0] = (هيٺيون+مٿاهون)*0.5;
+                        إذا (هيٺيون == p->var[0] || مٿاهون == p->var[0])
+                            اكسر;
+                        v = eval_اظهار(p, e->param[0]);
+                        إذا (v<=0) هيٺيون = p->var[0];
+                        إذا (v>=0) مٿاهون= p->var[0];
+                        إذا (isnan(v)) {
+                            هيٺيون = مٿاهون = v;
+                            اكسر;
                         }
                     }
-                    break;
+                    اكسر;
                 }
             }
             p->var[0] = var0;
-            return -low_v<high_v ? low : high;
+            أرجع -هيٺيون_v<مٿاهون_v ? هيٺيون : مٿاهون;
         }
-        default: {
-            double d = eval_expr(p, e->param[0]);
-            double d2 = eval_expr(p, e->param[1]);
-            switch (e->type) {
-                case e_mod: return e->value * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
-                case e_gcd: return e->value * av_gcd(d,d2);
-                case e_max: return e->value * (d >  d2 ?   d : d2);
-                case e_min: return e->value * (d <  d2 ?   d : d2);
-                case e_eq:  return e->value * (d == d2 ? 1.0 : 0.0);
-                case e_gt:  return e->value * (d >  d2 ? 1.0 : 0.0);
-                case e_gte: return e->value * (d >= d2 ? 1.0 : 0.0);
-                case e_lt:  return e->value * (d <  d2 ? 1.0 : 0.0);
-                case e_lte: return e->value * (d <= d2 ? 1.0 : 0.0);
-                case e_pow: return e->value * pow(d, d2);
-                case e_mul: return e->value * (d * d2);
-                case e_div: return e->value * (d2 ? (d / d2) : d * INFINITY);
-                case e_add: return e->value * (d + d2);
-                case e_last:return e->value * d2;
-                case e_st :  {
-                    int index = av_clip(d, 0, VARS-1);
-                    p->prng_state[index].counter = 0;
-                    return e->value * (p->var[index]= d2);
+        افتراضي: {
+            مزدوج d = eval_اظهار(p, e->param[0]);
+            مزدوج d2 = eval_اظهار(p, e->param[1]);
+            بدل (e->type) {
+                حالة e_mod: أرجع e->قدر * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
+                حالة e_وڏو_گڏيل_ونڊيندڙ: أرجع e->قدر * av_وڏو_گڏيل_ونڊيندڙ(d,d2);
+                حالة e_max: أرجع e->قدر * (d >  d2 ?   d : d2);
+                حالة e_min: أرجع e->قدر * (d <  d2 ?   d : d2);
+                حالة e_eq:  أرجع e->قدر * (d == d2 ? 1.0 : 0.0);
+                حالة e_gt:  أرجع e->قدر * (d >  d2 ? 1.0 : 0.0);
+                حالة e_gte: أرجع e->قدر * (d >= d2 ? 1.0 : 0.0);
+                حالة e_lt:  أرجع e->قدر * (d <  d2 ? 1.0 : 0.0);
+                حالة e_lte: أرجع e->قدر * (d <= d2 ? 1.0 : 0.0);
+                حالة e_pow: أرجع e->قدر * قوت(d, d2);
+                حالة e_mul: أرجع e->قدر * (d * d2);
+                حالة e_div: أرجع e->قدر * (d2 ? (d / d2) : d * INFINITY);
+                حالة e_جوڙيو: أرجع e->قدر * (d + d2);
+                حالة e_آخري:أرجع e->قدر * d2;
+                حالة e_st :  {
+                    صحيح اشاريو = av_clip(d, 0, VARS-1);
+                    p->prng_state[اشاريو].counter = 0;
+                    أرجع e->قدر * (p->var[اشاريو]= d2);
                 }
-                case e_hypot:return e->value * hypot(d, d2);
-                case e_atan2:return e->value * atan2(d, d2);
-                case e_bitand: return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d & (long int)d2);
-                case e_bitor:  return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d | (long int)d2);
+                حالة e_hypot:أرجع e->قدر * hypot(d, d2);
+                حالة e_atan2:أرجع e->قدر * atan2(d, d2);
+                حالة e_bitand: أرجع isnan(d) || isnan(d2) ? NAN : e->قدر * ((ڊگهو صحيح)d & (ڊگهو صحيح)d2);
+                حالة e_bitor:  أرجع isnan(d) || isnan(d2) ? NAN : e->قدر * ((ڊگهو صحيح)d | (ڊگهو صحيح)d2);
             }
         }
     }
-    return NAN;
+    أرجع NAN;
 }
 
-static int parse_expr(AVExpr **e, Parser *p);
+ساكن صحيح parse_اظهار(AVExpr **e, Parser *p);
 
-void av_expr_free(AVExpr *e)
+فراغ av_اظهار_free(AVExpr *e)
 {
-    if (!e) return;
-    av_expr_free(e->param[0]);
-    av_expr_free(e->param[1]);
-    av_expr_free(e->param[2]);
-    if (e->root) {
-        AVExprRoot *r = (AVExprRoot*)e;
+    إذا (!e) أرجع;
+    av_اظهار_free(e->param[0]);
+    av_اظهار_free(e->param[1]);
+    av_اظهار_free(e->param[2]);
+    إذا (e->پاڙ) {
+        AVExpr_پاڙ *r = (AVExpr_پاڙ*)e;
         av_freep(&r->var);
         av_freep(&r->prng_state);
     }
     av_freep(&e);
 }
 
-static int parse_primary(AVExpr **e, Parser *p)
+ساكن صحيح parse_primary(AVExpr **e, Parser *p)
 {
-    AVExpr *d = av_mallocz(sizeof(AVExpr));
-    char *next = p->s, *s0 = p->s;
-    int ret, i;
+    AVExpr *d = av_mallocz(حجم(AVExpr));
+    حرف *ايندڙ = p->s, *s0 = p->s;
+    صحيح ret, i;
 
-    if (!d)
-        return AVERROR(ENOMEM);
+    إذا (!d)
+        أرجع AVERROR(ENOMEM);
 
-    /* number */
-    d->value = av_strtod(p->s, &next);
-    if (next != p->s) {
-        d->type = e_value;
-        p->s= next;
+    /*عدد*/
+    d->قدر = av_strtod(p->s, &ايندڙ);
+    إذا (ايندڙ != p->s) {
+        d->type = e_قدر;
+        p->s= ايندڙ;
         *e = d;
-        return 0;
+        أرجع 0;
     }
-    d->value = 1;
+    d->قدر = 1;
 
     /* named constants */
-    for (i=0; p->const_names && p->const_names[i]; i++) {
-        if (strmatch(p->s, p->const_names[i])) {
-            p->s+= strlen(p->const_names[i]);
+    لكل (i=0; p->const_نالا && p->const_نالا[i]; i++) {
+        إذا (strmatch(p->s, p->const_نالا[i])) {
+            p->s+= لڙي_ڊيگهه(p->const_نالا[i]);
             d->type = e_const;
-            d->const_index = i;
+            d->const_اشاريو = i;
             *e = d;
-            return 0;
+            أرجع 0;
         }
     }
-    for (i = 0; i < FF_ARRAY_ELEMS(constants); i++) {
-        if (strmatch(p->s, constants[i].name)) {
-            p->s += strlen(constants[i].name);
-            d->type = e_value;
-            d->value = constants[i].value;
+    لكل (i = 0; i < FF_ARRAY_ELEMS(constants); i++) {
+        إذا (strmatch(p->s, constants[i].name)) {
+            p->s += لڙي_ڊيگهه(constants[i].name);
+            d->type = e_قدر;
+            d->قدر = constants[i].قدر;
             *e = d;
-            return 0;
+            أرجع 0;
         }
     }
 
     p->s= strchr(p->s, '(');
-    if (!p->s) {
+    إذا (!p->s) {
         av_log(p, AV_LOG_ERROR, "Undefined constant or missing '(' in '%s'\n", s0);
-        p->s= next;
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+        p->s= ايندڙ;
+        av_اظهار_free(d);
+        أرجع AVERROR(EINVAL);
     }
     p->s++; // "("
-    if (*next == '(') { // special case do-nothing
+    إذا (*ايندڙ == '(') { // special case do-nothing
         av_freep(&d);
-        if ((ret = parse_expr(&d, p)) < 0)
-            return ret;
-        if (p->s[0] != ')') {
+        إذا ((ret = parse_اظهار(&d, p)) < 0)
+            أرجع ret;
+        إذا (p->s[0] != ')') {
             av_log(p, AV_LOG_ERROR, "Missing ')' in '%s'\n", s0);
-            av_expr_free(d);
-            return AVERROR(EINVAL);
+            av_اظهار_free(d);
+            أرجع AVERROR(EINVAL);
         }
         p->s++; // ")"
         *e = d;
-        return 0;
+        أرجع 0;
     }
-    if ((ret = parse_expr(&(d->param[0]), p)) < 0) {
-        av_expr_free(d);
-        return ret;
+    إذا ((ret = parse_اظهار(&(d->param[0]), p)) < 0) {
+        av_اظهار_free(d);
+        أرجع ret;
     }
-    if (p->s[0]== ',') {
+    إذا (p->s[0]== ',') {
         p->s++; // ","
-        parse_expr(&d->param[1], p);
+        parse_اظهار(&d->param[1], p);
     }
-    if (p->s[0]== ',') {
+    إذا (p->s[0]== ',') {
         p->s++; // ","
-        parse_expr(&d->param[2], p);
+        parse_اظهار(&d->param[2], p);
     }
-    if (p->s[0] != ')') {
+    إذا (p->s[0] != ')') {
         av_log(p, AV_LOG_ERROR, "Missing ')' or too many args in '%s'\n", s0);
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+        av_اظهار_free(d);
+        أرجع AVERROR(EINVAL);
     }
     p->s++; // ")"
 
-    for (int i = 0; i<3; i++)
-        if (d->param[i])
-            d->depth = FFMAX(d->depth, d->param[i]->depth+1);
-    if (d->depth > MAX_DEPTH) {
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+    لكل (صحيح i = 0; i<3; i++)
+        إذا (d->param[i])
+            d->اونهائي = FFMAX(d->اونهائي, d->param[i]->اونهائي+1);
+    إذا (d->اونهائي > MAX_اونهائي) {
+        av_اظهار_free(d);
+        أرجع AVERROR(EINVAL);
     }
 
     d->type = e_func0;
-         if (strmatch(next, "sinh"  )) d->func0 = sinh;
-    else if (strmatch(next, "cosh"  )) d->func0 = cosh;
-    else if (strmatch(next, "tanh"  )) d->func0 = tanh;
-    else if (strmatch(next, "sin"   )) d->func0 = sin;
-    else if (strmatch(next, "cos"   )) d->func0 = cos;
-    else if (strmatch(next, "tan"   )) d->func0 = tan;
-    else if (strmatch(next, "atan"  )) d->func0 = atan;
-    else if (strmatch(next, "asin"  )) d->func0 = asin;
-    else if (strmatch(next, "acos"  )) d->func0 = acos;
-    else if (strmatch(next, "exp"   )) d->func0 = exp;
-    else if (strmatch(next, "log"   )) d->func0 = log;
-    else if (strmatch(next, "abs"   )) d->func0 = fabs;
-    else if (strmatch(next, "time"  )) d->func0 = etime;
-    else if (strmatch(next, "squish")) d->type = e_squish;
-    else if (strmatch(next, "gauss" )) d->type = e_gauss;
-    else if (strmatch(next, "mod"   )) d->type = e_mod;
-    else if (strmatch(next, "max"   )) d->type = e_max;
-    else if (strmatch(next, "min"   )) d->type = e_min;
-    else if (strmatch(next, "eq"    )) d->type = e_eq;
-    else if (strmatch(next, "gte"   )) d->type = e_gte;
-    else if (strmatch(next, "gt"    )) d->type = e_gt;
-    else if (strmatch(next, "lte"   )) d->type = e_lte;
-    else if (strmatch(next, "lt"    )) d->type = e_lt;
-    else if (strmatch(next, "ld"    )) d->type = e_ld;
-    else if (strmatch(next, "isnan" )) d->type = e_isnan;
-    else if (strmatch(next, "isinf" )) d->type = e_isinf;
-    else if (strmatch(next, "st"    )) d->type = e_st;
-    else if (strmatch(next, "while" )) d->type = e_while;
-    else if (strmatch(next, "taylor")) d->type = e_taylor;
-    else if (strmatch(next, "root"  )) d->type = e_root;
-    else if (strmatch(next, "floor" )) d->type = e_floor;
-    else if (strmatch(next, "ceil"  )) d->type = e_ceil;
-    else if (strmatch(next, "trunc" )) d->type = e_trunc;
-    else if (strmatch(next, "round" )) d->type = e_round;
-    else if (strmatch(next, "sqrt"  )) d->type = e_sqrt;
-    else if (strmatch(next, "not"   )) d->type = e_not;
-    else if (strmatch(next, "pow"   )) d->type = e_pow;
-    else if (strmatch(next, "print" )) d->type = e_print;
-    else if (strmatch(next, "random")) d->type = e_random;
-    else if (strmatch(next, "randomi")) d->type = e_randomi;
-    else if (strmatch(next, "hypot" )) d->type = e_hypot;
-    else if (strmatch(next, "gcd"   )) d->type = e_gcd;
-    else if (strmatch(next, "if"    )) d->type = e_if;
-    else if (strmatch(next, "ifnot" )) d->type = e_ifnot;
-    else if (strmatch(next, "bitand")) d->type = e_bitand;
-    else if (strmatch(next, "bitor" )) d->type = e_bitor;
-    else if (strmatch(next, "between"))d->type = e_between;
-    else if (strmatch(next, "clip"  )) d->type = e_clip;
-    else if (strmatch(next, "atan2" )) d->type = e_atan2;
-    else if (strmatch(next, "lerp"  )) d->type = e_lerp;
-    else if (strmatch(next, "sgn"   )) d->type = e_sgn;
-    else {
-        for (i=0; p->func1_names && p->func1_names[i]; i++) {
-            if (strmatch(next, p->func1_names[i])) {
+         إذا (strmatch(ايندڙ, "sinh"  )) d->func0 = sinh;
+    وإلا إذا (strmatch(ايندڙ, "cosh"  )) d->func0 = cosh;
+    وإلا إذا (strmatch(ايندڙ, "tanh"  )) d->func0 = tanh;
+    وإلا إذا (strmatch(ايندڙ, "sin"   )) d->func0 = جيب;
+    وإلا إذا (strmatch(ايندڙ, "cos"   )) d->func0 = جيب_تمام;
+    وإلا إذا (strmatch(ايندڙ, "tan"   )) d->func0 = tan;
+    وإلا إذا (strmatch(ايندڙ, "atan"  )) d->func0 = atan;
+    وإلا إذا (strmatch(ايندڙ, "asin"  )) d->func0 = asin;
+    وإلا إذا (strmatch(ايندڙ, "acos"  )) d->func0 = acos;
+    وإلا إذا (strmatch(ايندڙ, "exp"   )) d->func0 = قوت_نما;
+    وإلا إذا (strmatch(ايندڙ, "log"   )) d->func0 = لاگرٿم;
+    وإلا إذا (strmatch(ايندڙ, "abs"   )) d->func0 = fabs;
+    وإلا إذا (strmatch(ايندڙ, "time"  )) d->func0 = etime;
+    وإلا إذا (strmatch(ايندڙ, "squish")) d->type = e_squish;
+    وإلا إذا (strmatch(ايندڙ, "gauss" )) d->type = e_gauss;
+    وإلا إذا (strmatch(ايندڙ, "mod"   )) d->type = e_mod;
+    وإلا إذا (strmatch(ايندڙ, "max"   )) d->type = e_max;
+    وإلا إذا (strmatch(ايندڙ, "min"   )) d->type = e_min;
+    وإلا إذا (strmatch(ايندڙ, "eq"    )) d->type = e_eq;
+    وإلا إذا (strmatch(ايندڙ, "gte"   )) d->type = e_gte;
+    وإلا إذا (strmatch(ايندڙ, "gt"    )) d->type = e_gt;
+    وإلا إذا (strmatch(ايندڙ, "lte"   )) d->type = e_lte;
+    وإلا إذا (strmatch(ايندڙ, "lt"    )) d->type = e_lt;
+    وإلا إذا (strmatch(ايندڙ, "ld"    )) d->type = e_ld;
+    وإلا إذا (strmatch(ايندڙ, "isnan" )) d->type = e_isnan;
+    وإلا إذا (strmatch(ايندڙ, "isinf" )) d->type = e_isinf;
+    وإلا إذا (strmatch(ايندڙ, "st"    )) d->type = e_st;
+    وإلا إذا (strmatch(ايندڙ, "while" )) d->type = e_while;
+    وإلا إذا (strmatch(ايندڙ, "taylor")) d->type = e_taylor;
+    وإلا إذا (strmatch(ايندڙ, "root"  )) d->type = e_پاڙ;
+    وإلا إذا (strmatch(ايندڙ, "floor" )) d->type = e_floor;
+    وإلا إذا (strmatch(ايندڙ, "ceil"  )) d->type = e_ceil;
+    وإلا إذا (strmatch(ايندڙ, "trunc" )) d->type = e_trunc;
+    وإلا إذا (strmatch(ايندڙ, "round" )) d->type = e_ڦيرو;
+    وإلا إذا (strmatch(ايندڙ, "sqrt"  )) d->type = e_sqrt;
+    وإلا إذا (strmatch(ايندڙ, "not"   )) d->type = e_not;
+    وإلا إذا (strmatch(ايندڙ, "pow"   )) d->type = e_pow;
+    وإلا إذا (strmatch(ايندڙ, "print" )) d->type = e_print;
+    وإلا إذا (strmatch(ايندڙ, "random")) d->type = e_random;
+    وإلا إذا (strmatch(ايندڙ, "randomi")) d->type = e_randomi;
+    وإلا إذا (strmatch(ايندڙ, "hypot" )) d->type = e_hypot;
+    وإلا إذا (strmatch(ايندڙ, "gcd"   )) d->type = e_وڏو_گڏيل_ونڊيندڙ;
+    وإلا إذا (strmatch(ايندڙ, "if"    )) d->type = e_if;
+    وإلا إذا (strmatch(ايندڙ, "ifnot" )) d->type = e_ifnot;
+    وإلا إذا (strmatch(ايندڙ, "bitand")) d->type = e_bitand;
+    وإلا إذا (strmatch(ايندڙ, "bitor" )) d->type = e_bitor;
+    وإلا إذا (strmatch(ايندڙ, "between"))d->type = e_between;
+    وإلا إذا (strmatch(ايندڙ, "clip"  )) d->type = e_clip;
+    وإلا إذا (strmatch(ايندڙ, "atan2" )) d->type = e_atan2;
+    وإلا إذا (strmatch(ايندڙ, "lerp"  )) d->type = e_lerp;
+    وإلا إذا (strmatch(ايندڙ, "sgn"   )) d->type = e_sgn;
+    وإلا {
+        لكل (i=0; p->func1_نالا && p->func1_نالا[i]; i++) {
+            إذا (strmatch(ايندڙ, p->func1_نالا[i])) {
                 d->func1 = p->funcs1[i];
                 d->type = e_func1;
-                d->const_index = i;
+                d->const_اشاريو = i;
                 *e = d;
-                return 0;
+                أرجع 0;
             }
         }
 
-        for (i=0; p->func2_names && p->func2_names[i]; i++) {
-            if (strmatch(next, p->func2_names[i])) {
+        لكل (i=0; p->func2_نالا && p->func2_نالا[i]; i++) {
+            إذا (strmatch(ايندڙ, p->func2_نالا[i])) {
                 d->func2 = p->funcs2[i];
                 d->type = e_func2;
-                d->const_index = i;
+                d->const_اشاريو = i;
                 *e = d;
-                return 0;
+                أرجع 0;
             }
         }
 
         av_log(p, AV_LOG_ERROR, "Unknown function in '%s'\n", s0);
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+        av_اظهار_free(d);
+        أرجع AVERROR(EINVAL);
     }
 
     *e = d;
-    return 0;
+    أرجع 0;
 }
 
-static AVExpr *make_eval_expr(int type, int value, AVExpr *p0, AVExpr *p1)
+ساكن AVExpr *make_eval_اظهار(صحيح type, صحيح قدر, AVExpr *p0, AVExpr *p1)
 {
-    int depth = FFMAX(p0->depth, p1->depth) + 1;
-    if (depth > MAX_DEPTH)
-        return NULL;
-    AVExpr *e = av_mallocz(sizeof(AVExpr));
-    if (!e)
-        return NULL;
+    صحيح اونهائي = FFMAX(p0->اونهائي, p1->اونهائي) + 1;
+    إذا (اونهائي > MAX_اونهائي)
+        أرجع عدم;
+    AVExpr *e = av_mallocz(حجم(AVExpr));
+    إذا (!e)
+        أرجع عدم;
     e->type     =type   ;
-    e->value    =value  ;
+    e->قدر    =قدر  ;
     e->param[0] =p0     ;
     e->param[1] =p1     ;
-    e->depth    = depth;
-    return e;
+    e->اونهائي    = اونهائي;
+    أرجع e;
 }
 
-static int parse_pow(AVExpr **e, Parser *p, int *sign)
+ساكن صحيح parse_pow(AVExpr **e, Parser *p, صحيح *sign)
 {
     *sign= (*p->s == '+') - (*p->s == '-');
     p->s += *sign&1;
-    return parse_primary(e, p);
+    أرجع parse_primary(e, p);
 }
 
-static int parse_dB(AVExpr **e, Parser *p, int *sign)
+ساكن صحيح parse_dB(AVExpr **e, Parser *p, صحيح *sign)
 {
     /* do not filter out the negative sign when parsing a dB value.
        for example, -3dB is not the same as -(3dB) */
-    if (*p->s == '-') {
-        char *next;
-        av_unused double ignored = strtod(p->s, &next);
-        if (next != p->s && next[0] == 'd' && next[1] == 'B') {
+    إذا (*p->s == '-') {
+        حرف *ايندڙ;
+        av_اڻ_استعمال_ٿيل مزدوج ignored = strtod(p->s, &ايندڙ);
+        إذا (ايندڙ != p->s && ايندڙ[0] == 'd' && ايندڙ[1] == 'B') {
             *sign = 0;
-            return parse_primary(e, p);
+            أرجع parse_primary(e, p);
         }
     }
-    return parse_pow(e, p, sign);
+    أرجع parse_pow(e, p, sign);
 }
 
-static int parse_factor(AVExpr **e, Parser *p)
+ساكن صحيح parse_ضرب_ڪندڙ(AVExpr **e, Parser *p)
 {
-    int sign, sign2, ret;
+    صحيح sign, sign2, ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_dB(&e0, p, &sign)) < 0)
-        return ret;
-    while(p->s[0]=='^'){
+    إذا ((ret = parse_dB(&e0, p, &sign)) < 0)
+        أرجع ret;
+    طالما(p->s[0]=='^'){
         e1 = e0;
         p->s++;
-        if ((ret = parse_dB(&e2, p, &sign2)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        إذا ((ret = parse_dB(&e2, p, &sign2)) < 0) {
+            av_اظهار_free(e1);
+            أرجع ret;
         }
-        e0 = make_eval_expr(e_pow, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_اظهار(e_pow, 1, e1, e2);
+        إذا (!e0) {
+            av_اظهار_free(e1);
+            av_اظهار_free(e2);
+            أرجع AVERROR(ENOMEM);
         }
-        if (e0->param[1]) e0->param[1]->value *= (sign2|1);
+        إذا (e0->param[1]) e0->param[1]->قدر *= (sign2|1);
     }
-    if (e0) e0->value *= (sign|1);
+    إذا (e0) e0->قدر *= (sign|1);
 
     *e = e0;
-    return 0;
+    أرجع 0;
 }
 
-static int parse_term(AVExpr **e, Parser *p)
+ساكن صحيح parse_رڪن(AVExpr **e, Parser *p)
 {
-    int ret;
+    صحيح ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_factor(&e0, p)) < 0)
-        return ret;
-    while (p->s[0]=='*' || p->s[0]=='/') {
-        int c= *p->s++;
+    إذا ((ret = parse_ضرب_ڪندڙ(&e0, p)) < 0)
+        أرجع ret;
+    طالما (p->s[0]=='*' || p->s[0]=='/') {
+        صحيح c= *p->s++;
         e1 = e0;
-        if ((ret = parse_factor(&e2, p)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        إذا ((ret = parse_ضرب_ڪندڙ(&e2, p)) < 0) {
+            av_اظهار_free(e1);
+            أرجع ret;
         }
-        e0 = make_eval_expr(c == '*' ? e_mul : e_div, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_اظهار(c == '*' ? e_mul : e_div, 1, e1, e2);
+        إذا (!e0) {
+            av_اظهار_free(e1);
+            av_اظهار_free(e2);
+            أرجع AVERROR(ENOMEM);
         }
     }
     *e = e0;
-    return 0;
+    أرجع 0;
 }
 
-static int parse_subexpr(AVExpr **e, Parser *p)
+ساكن صحيح parse_subexpr(AVExpr **e, Parser *p)
 {
-    int ret;
+    صحيح ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_term(&e0, p)) < 0)
-        return ret;
-    while (*p->s == '+' || *p->s == '-') {
+    إذا ((ret = parse_رڪن(&e0, p)) < 0)
+        أرجع ret;
+    طالما (*p->s == '+' || *p->s == '-') {
         e1 = e0;
-        if ((ret = parse_term(&e2, p)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        إذا ((ret = parse_رڪن(&e2, p)) < 0) {
+            av_اظهار_free(e1);
+            أرجع ret;
         }
-        e0 = make_eval_expr(e_add, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_اظهار(e_جوڙيو, 1, e1, e2);
+        إذا (!e0) {
+            av_اظهار_free(e1);
+            av_اظهار_free(e2);
+            أرجع AVERROR(ENOMEM);
         }
     };
 
     *e = e0;
-    return 0;
+    أرجع 0;
 }
 
-static int parse_expr(AVExpr **e, Parser *p)
+ساكن صحيح parse_اظهار(AVExpr **e, Parser *p)
 {
-    int ret;
+    صحيح ret;
     AVExpr *e0, *e1, *e2;
-    if (p->stack_index <= 0) //protect against stack overflows
-        return AVERROR(EINVAL);
-    p->stack_index--;
+    إذا (p->ڍير_اشاريو <= 0) //protect against stack overflows
+        أرجع AVERROR(EINVAL);
+    p->ڍير_اشاريو--;
 
-    if ((ret = parse_subexpr(&e0, p)) < 0)
-        return ret;
-    while (*p->s == ';') {
+    إذا ((ret = parse_subexpr(&e0, p)) < 0)
+        أرجع ret;
+    طالما (*p->s == ';') {
         p->s++;
         e1 = e0;
-        if ((ret = parse_subexpr(&e2, p)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        إذا ((ret = parse_subexpr(&e2, p)) < 0) {
+            av_اظهار_free(e1);
+            أرجع ret;
         }
-        e0 = make_eval_expr(e_last, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_اظهار(e_آخري, 1, e1, e2);
+        إذا (!e0) {
+            av_اظهار_free(e1);
+            av_اظهار_free(e2);
+            أرجع AVERROR(ENOMEM);
         }
     };
 
-    p->stack_index++;
+    p->ڍير_اشاريو++;
     *e = e0;
-    return 0;
+    أرجع 0;
 }
 
-static int verify_expr(AVExpr *e)
+ساكن صحيح verify_اظهار(AVExpr *e)
 {
-    if (!e) return 0;
-    switch (e->type) {
-        case e_value:
-        case e_const: return 1;
-        case e_func0:
-        case e_func1:
-        case e_squish:
-        case e_ld:
-        case e_gauss:
-        case e_isnan:
-        case e_isinf:
-        case e_floor:
-        case e_ceil:
-        case e_trunc:
-        case e_round:
-        case e_sqrt:
-        case e_not:
-        case e_random:
-        case e_sgn:
-            return verify_expr(e->param[0]) && !e->param[1];
-        case e_print:
-            return verify_expr(e->param[0])
-                   && (!e->param[1] || verify_expr(e->param[1]));
-        case e_if:
-        case e_ifnot:
-        case e_taylor:
-            return verify_expr(e->param[0]) && verify_expr(e->param[1])
-                   && (!e->param[2] || verify_expr(e->param[2]));
-        case e_between:
-        case e_clip:
-        case e_lerp:
-        case e_randomi:
-            return verify_expr(e->param[0]) &&
-                   verify_expr(e->param[1]) &&
-                   verify_expr(e->param[2]);
-        default: return verify_expr(e->param[0]) && verify_expr(e->param[1]) && !e->param[2];
+    إذا (!e) أرجع 0;
+    بدل (e->type) {
+        حالة e_قدر:
+        حالة e_const: أرجع 1;
+        حالة e_func0:
+        حالة e_func1:
+        حالة e_squish:
+        حالة e_ld:
+        حالة e_gauss:
+        حالة e_isnan:
+        حالة e_isinf:
+        حالة e_floor:
+        حالة e_ceil:
+        حالة e_trunc:
+        حالة e_ڦيرو:
+        حالة e_sqrt:
+        حالة e_not:
+        حالة e_random:
+        حالة e_sgn:
+            أرجع verify_اظهار(e->param[0]) && !e->param[1];
+        حالة e_print:
+            أرجع verify_اظهار(e->param[0])
+                   && (!e->param[1] || verify_اظهار(e->param[1]));
+        حالة e_if:
+        حالة e_ifnot:
+        حالة e_taylor:
+            أرجع verify_اظهار(e->param[0]) && verify_اظهار(e->param[1])
+                   && (!e->param[2] || verify_اظهار(e->param[2]));
+        حالة e_between:
+        حالة e_clip:
+        حالة e_lerp:
+        حالة e_randomi:
+            أرجع verify_اظهار(e->param[0]) &&
+                   verify_اظهار(e->param[1]) &&
+                   verify_اظهار(e->param[2]);
+        افتراضي: أرجع verify_اظهار(e->param[0]) && verify_اظهار(e->param[1]) && !e->param[2];
     }
 }
 
-int av_expr_parse(AVExpr **expr, const char *s,
-                  const char * const *const_names,
-                  const char * const *func1_names, double (* const *funcs1)(void *, double),
-                  const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                  int log_offset, void *log_ctx)
+صحيح av_اظهار_parse(AVExpr **اظهار, ثابت حرف *s,
+                  ثابت حرف * ثابت *const_نالا,
+                  ثابت حرف * ثابت *func1_نالا, مزدوج (* ثابت *funcs1)(فراغ *, مزدوج),
+                  ثابت حرف * ثابت *func2_نالا, مزدوج (* ثابت *funcs2)(فراغ *, مزدوج, مزدوج),
+                  صحيح log_وٿي, فراغ *log_ctx)
 {
     Parser p = { 0 };
-    AVExpr *e = NULL;
-    char *w = av_malloc(strlen(s) + 1);
-    char *wp = w;
-    const char *s0 = s;
-    int ret = 0;
+    AVExpr *e = عدم;
+    حرف *w = av_malloc(لڙي_ڊيگهه(s) + 1);
+    حرف *wp = w;
+    ثابت حرف *s0 = s;
+    صحيح ret = 0;
 
-    if (!w)
-        return AVERROR(ENOMEM);
+    إذا (!w)
+        أرجع AVERROR(ENOMEM);
 
-    while (*s)
-        if (!av_isspace(*s++)) *wp++ = s[-1];
+    طالما (*s)
+        إذا (!av_isspace(*s++)) *wp++ = s[-1];
     *wp++ = 0;
 
     p.class      = &eval_class;
-    p.stack_index=100;
+    p.ڍير_اشاريو=100;
     p.s= w;
-    p.const_names = const_names;
+    p.const_نالا = const_نالا;
     p.funcs1      = funcs1;
-    p.func1_names = func1_names;
+    p.func1_نالا = func1_نالا;
     p.funcs2      = funcs2;
-    p.func2_names = func2_names;
-    p.log_offset = log_offset;
+    p.func2_نالا = func2_نالا;
+    p.log_وٿي = log_وٿي;
     p.log_ctx    = log_ctx;
 
-    if ((ret = parse_expr(&e, &p)) < 0)
-        goto end;
-    if (*p.s) {
+    إذا ((ret = parse_اظهار(&e, &p)) < 0)
+        اذهب پڇاڙي;
+    إذا (*p.s) {
         av_log(&p, AV_LOG_ERROR, "Invalid chars '%s' at the end of expression '%s'\n", p.s, s0);
         ret = AVERROR(EINVAL);
-        goto end;
+        اذهب پڇاڙي;
     }
-    if (!verify_expr(e)) {
+    إذا (!verify_اظهار(e)) {
         ret = AVERROR(EINVAL);
-        goto end;
+        اذهب پڇاڙي;
     }
-    AVExprRoot *r = av_realloc(e, sizeof(*r));
-    if (!r) {
+    AVExpr_پاڙ *r = av_realloc(e, حجم(*r));
+    إذا (!r) {
         ret = AVERROR(ENOMEM);
-        goto end;
+        اذهب پڇاڙي;
     }
     e = (AVExpr*)r;
-    e->root = 1;
-    r->var= av_mallocz(sizeof(double) *VARS);
-    r->prng_state = av_mallocz(sizeof(*r->prng_state) *VARS);
-    if (!r->var || !r->prng_state) {
+    e->پاڙ = 1;
+    r->var= av_mallocz(حجم(مزدوج) *VARS);
+    r->prng_state = av_mallocz(حجم(*r->prng_state) *VARS);
+    إذا (!r->var || !r->prng_state) {
         ret = AVERROR(ENOMEM);
-        goto end;
+        اذهب پڇاڙي;
     }
-    *expr = e;
-    e = NULL;
-end:
-    av_expr_free(e);
+    *اظهار = e;
+    e = عدم;
+پڇاڙي:
+    av_اظهار_free(e);
     av_free(w);
-    return ret;
+    أرجع ret;
 }
 
-static int expr_count(AVExpr *e, unsigned *counter, int size, int type)
+ساكن صحيح اظهار_ڳڻپ(AVExpr *e, بنانشان *counter, صحيح سائيز, صحيح type)
 {
-    int i;
+    صحيح i;
 
-    if (!e || !counter || !size)
-        return AVERROR(EINVAL);
+    إذا (!e || !counter || !سائيز)
+        أرجع AVERROR(EINVAL);
 
-    for (i = 0; e->type != type && i < 3 && e->param[i]; i++)
-        expr_count(e->param[i], counter, size, type);
+    لكل (i = 0; e->type != type && i < 3 && e->param[i]; i++)
+        اظهار_ڳڻپ(e->param[i], counter, سائيز, type);
 
-    if (e->type == type && e->const_index < size)
-        counter[e->const_index]++;
+    إذا (e->type == type && e->const_اشاريو < سائيز)
+        counter[e->const_اشاريو]++;
 
-    return 0;
+    أرجع 0;
 }
 
-int av_expr_count_vars(AVExpr *e, unsigned *counter, int size)
+صحيح av_اظهار_ڳڻپ_vars(AVExpr *e, بنانشان *counter, صحيح سائيز)
 {
-    return expr_count(e, counter, size, e_const);
+    أرجع اظهار_ڳڻپ(e, counter, سائيز, e_const);
 }
 
-int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg)
+صحيح av_اظهار_ڳڻپ_func(AVExpr *e, بنانشان *counter, صحيح سائيز, صحيح arg)
 {
-    return expr_count(e, counter, size, ((int[]){e_const, e_func1, e_func2})[arg]);
+    أرجع اظهار_ڳڻپ(e, counter, سائيز, ((صحيح[]){e_const, e_func1, e_func2})[arg]);
 }
 
-double av_expr_eval(AVExpr *e, const double *const_values, void *opaque)
+مزدوج av_اظهار_eval(AVExpr *e, ثابت مزدوج *const_قدرون, فراغ *opaque)
 {
-    av_assert1(e->root);
-    AVExprRoot *r = (AVExprRoot *)e;
+    av_assert1(e->پاڙ);
+    AVExpr_پاڙ *r = (AVExpr_پاڙ *)e;
     Parser p = {
         .class        = &eval_class,
-        .const_values = const_values,
+        .const_قدرون = const_قدرون,
         .opaque       = opaque,
         .var          = r->var,
         .prng_state   = r->prng_state,
     };
 
-    return eval_expr(&p, e);
+    أرجع eval_اظهار(&p, e);
 }
 
-int av_expr_parse_and_eval(double *d, const char *s,
-                           const char * const *const_names, const double *const_values,
-                           const char * const *func1_names, double (* const *funcs1)(void *, double),
-                           const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                           void *opaque, int log_offset, void *log_ctx)
+صحيح av_اظهار_parse_and_eval(مزدوج *d, ثابت حرف *s,
+                           ثابت حرف * ثابت *const_نالا, ثابت مزدوج *const_قدرون,
+                           ثابت حرف * ثابت *func1_نالا, مزدوج (* ثابت *funcs1)(فراغ *, مزدوج),
+                           ثابت حرف * ثابت *func2_نالا, مزدوج (* ثابت *funcs2)(فراغ *, مزدوج, مزدوج),
+                           فراغ *opaque, صحيح log_وٿي, فراغ *log_ctx)
 {
-    AVExpr *e = NULL;
-    int ret = av_expr_parse(&e, s, const_names, func1_names, funcs1, func2_names, funcs2, log_offset, log_ctx);
+    AVExpr *e = عدم;
+    صحيح ret = av_اظهار_parse(&e, s, const_نالا, func1_نالا, funcs1, func2_نالا, funcs2, log_وٿي, log_ctx);
 
-    if (ret < 0) {
+    إذا (ret < 0) {
         *d = NAN;
-        return ret;
+        أرجع ret;
     }
-    *d = av_expr_eval(e, const_values, opaque);
-    av_expr_free(e);
-    return isnan(*d) ? AVERROR(EINVAL) : 0;
+    *d = av_اظهار_eval(e, const_قدرون, opaque);
+    av_اظهار_free(e);
+    أرجع isnan(*d) ? AVERROR(EINVAL) : 0;
 }

@@ -19,30 +19,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LOONGARCH_TIMER_H
-#define AVUTIL_LOONGARCH_TIMER_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_LOONGARCH_TIMER_H
+#وصف_ڪريو AVUTIL_LOONGARCH_TIMER_H
 
-#include <stdint.h>
-#include "config.h"
+#ضمن <stdint.h>
+#ضمن "config.h"
 
-#if HAVE_INLINE_ASM
+#إذا HAVE_INLINE_ASM
 
-#define AV_READ_TIME read_time
+#وصف_ڪريو AV_READ_وقت read_وقت
 
-static inline uint64_t read_time(void)
+ساكن مضمن uint64_t read_وقت(فراغ)
 {
 
-#if ARCH_LOONGARCH64
+#إذا ARCH_LOONGARCH64
     uint64_t a, id;
-    __asm__ volatile ( "rdtime.d  %0, %1" : "=r"(a), "=r"(id) :: );
-    return a;
-#else
+    __asm__ متطاير ( "rdtime.d  %0, %1" : "=r"(a), "=r"(id) :: );
+    أرجع a;
+#وإلا
     uint32_t a, id;
-    __asm__ volatile ( "rdtimel.w  %0, %1" : "=r"(a), "=r"(id) :: );
-    return (uint64_t)a;
-#endif
+    __asm__ متطاير ( "rdtimel.w  %0, %1" : "=r"(a), "=r"(id) :: );
+    أرجع (uint64_t)a;
+#جيڪڏهن_پورو
 }
 
-#endif /* HAVE_INLINE_ASM */
+#جيڪڏهن_پورو /* HAVE_INLINE_ASM */
 
-#endif /* AVUTIL_LOONGARCH_TIMER_H */
+#جيڪڏهن_پورو /* AVUTIL_LOONGARCH_TIMER_H */

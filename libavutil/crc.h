@@ -24,12 +24,12 @@
  * Public header for CRC hash function implementation.
  */
 
-#ifndef AVUTIL_CRC_H
-#define AVUTIL_CRC_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_چڪري_جاچ_H
+#وصف_ڪريو AVUTIL_چڪري_جاچ_H
 
-#include <stdint.h>
-#include <stddef.h>
-#include "attributes.h"
+#ضمن <stdint.h>
+#ضمن <stddef.h>
+#ضمن "attributes.h"
 
 /**
  * @defgroup lavu_crc32 CRC
@@ -43,18 +43,18 @@
  * @{
  */
 
-typedef uint32_t AVCRC;
+تعريفنوع uint32_t AVCRC;
 
-typedef enum {
-    AV_CRC_8_ATM,
-    AV_CRC_16_ANSI,
-    AV_CRC_16_CCITT,
-    AV_CRC_32_IEEE,
-    AV_CRC_32_IEEE_LE,  /*< reversed bitorder version of AV_CRC_32_IEEE */
-    AV_CRC_16_ANSI_LE,  /*< reversed bitorder version of AV_CRC_16_ANSI */
-    AV_CRC_24_IEEE,
-    AV_CRC_8_EBU,
-    AV_CRC_MAX,         /*< Not part of public API! Do not use outside libavutil. */
+تعريفنوع تعداد {
+    AV_چڪري_جاچ_8_ATM,
+    AV_چڪري_جاچ_16_ANSI,
+    AV_چڪري_جاچ_16_CCITT,
+    AV_چڪري_جاچ_32_IEEE,
+    AV_چڪري_جاچ_32_IEEE_LE,  /*< reversed bitorder version of AV_CRC_32_IEEE */
+    AV_چڪري_جاچ_16_ANSI_LE,  /*< reversed bitorder version of AV_CRC_16_ANSI */
+    AV_چڪري_جاچ_24_IEEE,
+    AV_چڪري_جاچ_8_EBU,
+    AV_چڪري_جاچ_MAX,         /*< Not part of public API! Do not use outside libavutil. */
 }AVCRCId;
 
 /**
@@ -73,14 +73,14 @@ typedef enum {
  * @param ctx_size size of ctx in bytes
  * @return <0 on failure
  */
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size);
+صحيح av_چڪري_جاچ_init(AVCRC *ctx, صحيح le, صحيح بٽ, uint32_t poly, صحيح ctx_سائيز);
 
 /**
  * Get an initialized standard CRC table.
  * @param crc_id ID of a standard CRC
  * @return a pointer to the CRC table or NULL on failure
  */
-const AVCRC *av_crc_get_table(AVCRCId crc_id);
+ثابت AVCRC *av_چڪري_جاچ_get_جدول(AVCRCId چڪري_جاچ_id);
 
 /**
  * Calculate the CRC of a block.
@@ -92,11 +92,11 @@ const AVCRC *av_crc_get_table(AVCRCId crc_id);
  *
  * @see av_crc_init() "le" parameter
  */
-uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
-                const uint8_t *buffer, size_t length) av_pure;
+uint32_t av_چڪري_جاچ(ثابت AVCRC *ctx, uint32_t چڪري_جاچ,
+                ثابت uint8_t *بفر, size_t ڊيگهائي) av_خالص;
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_CRC_H */
+#جيڪڏهن_پورو /* AVUTIL_CRC_H */

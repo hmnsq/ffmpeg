@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LZO_H
-#define AVUTIL_LZO_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_LZO_H
+#وصف_ڪريو AVUTIL_LZO_H
 
 /**
  * @defgroup lavu_lzo LZO
@@ -29,22 +29,22 @@
  * @{
  */
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
 /** @name Error flags returned by av_lzo1x_decode
  * @{ */
 /// end of the input buffer reached before decoding finished
-#define AV_LZO_INPUT_DEPLETED  1
+#وصف_ڪريو AV_LZO_داخلا_DEPLETED  1
 /// decoded data did not fit into output buffer
-#define AV_LZO_OUTPUT_FULL     2
+#وصف_ڪريو AV_LZO_OUTPUT_ڀريل     2
 /// a reference to previously decoded data was wrong
-#define AV_LZO_INVALID_BACKPTR 4
+#وصف_ڪريو AV_LZO_INVALID_BACKPTR 4
 /// a non-specific error in the compressed bitstream
-#define AV_LZO_ERROR           8
+#وصف_ڪريو AV_LZO_ERROR           8
 /** @} */
 
-#define AV_LZO_INPUT_PADDING   8
-#define AV_LZO_OUTPUT_PADDING 12
+#وصف_ڪريو AV_LZO_داخلا_PADDING   8
+#وصف_ڪريو AV_LZO_OUTPUT_PADDING 12
 
 /**
  * @brief Decodes LZO 1x compressed data.
@@ -57,10 +57,10 @@
  * Make sure all buffers are appropriately padded, in must provide
  * AV_LZO_INPUT_PADDING, out must provide AV_LZO_OUTPUT_PADDING additional bytes.
  */
-int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen);
+صحيح av_lzo1x_decode(فراغ *ٻاهريون, صحيح *outlen, ثابت فراغ *اندريون, صحيح *inlen);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_LZO_H */
+#جيڪڏهن_پورو /* AVUTIL_LZO_H */

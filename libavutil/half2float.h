@@ -16,42 +16,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HALF2FLOAT_H
-#define AVUTIL_HALF2FLOAT_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_HALF2FLOAT_H
+#وصف_ڪريو AVUTIL_HALF2FLOAT_H
 
-#include <stdint.h>
-#include "intfloat.h"
+#ضمن <stdint.h>
+#ضمن "intfloat.h"
 
-#include "config.h"
+#ضمن "config.h"
 
-typedef struct Half2FloatTables {
-#if HAVE_FAST_FLOAT16
+تعريفنوع بنية Half2FloatTables {
+#إذا HAVE_FAST_FLOAT16
     uint8_t dummy;
-#else
+#وإلا
     uint32_t mantissatable[3072];
     uint32_t exponenttable[64];
     uint16_t offsettable[64];
-#endif
+#جيڪڏهن_پورو
 } Half2FloatTables;
 
-void ff_init_half2float_tables(Half2FloatTables *t);
+فراغ ff_init_half2float_tables(Half2FloatTables *t);
 
-static inline uint32_t half2float(uint16_t h, const Half2FloatTables *t)
+ساكن مضمن uint32_t half2float(uint16_t h, ثابت Half2FloatTables *t)
 {
-#if HAVE_FAST_FLOAT16
-    union {
+#إذا HAVE_FAST_FLOAT16
+    اتحاد {
         _Float16 f;
         uint16_t i;
     } u;
     u.i = h;
-    return av_float2int(u.f);
-#else
+    أرجع av_float2int(u.f);
+#وإلا
     uint32_t f;
 
     f = t->mantissatable[t->offsettable[h >> 10] + (h & 0x3ff)] + t->exponenttable[h >> 10];
 
-    return f;
-#endif
+    أرجع f;
+#جيڪڏهن_پورو
 }
 
-#endif /* AVUTIL_HALF2FLOAT_H */
+#جيڪڏهن_پورو /* AVUTIL_HALF2FLOAT_H */

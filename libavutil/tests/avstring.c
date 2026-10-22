@@ -16,17 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ضمن <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/mem.h"
-#include "libavutil/avstring.h"
+#ضمن "libavutil/common.h"
+#ضمن "libavutil/mem.h"
+#ضمن "libavutil/avstring.h"
 
-int main(void)
+صحيح مکيه(فراغ)
 {
-    int i;
-    char *fullpath, *ptr;
-    static const char * const strings[] = {
+    صحيح i;
+    حرف *fullpath, *ptr;
+    ساكن ثابت حرف * ثابت لڙيون[] = {
         "''",
         "",
         ":",
@@ -54,53 +54,53 @@ int main(void)
         "'\\fo\\o:': blahblah",
         "\\'fo\\o\\:':  foo  '  :blahblah"
     };
-    const char *haystack = "Education consists mainly in what we have unlearned.";
-    const char * const needle[] = {"learned.", "unlearned.", "Unlearned"};
+    ثابت حرف *haystack = "Education consists mainly in what we have unlearned.";
+    ثابت حرف * ثابت needle[] = {"learned.", "unlearned.", "Unlearned"};
 
-    printf("Testing av_get_token()\n");
-    for (i = 0; i < FF_ARRAY_ELEMS(strings); i++) {
-        const char *p = strings[i];
-        char *q;
-        printf("|%s|", p);
+    لکو("Testing av_get_token()\n");
+    لكل (i = 0; i < FF_ARRAY_ELEMS(لڙيون); i++) {
+        ثابت حرف *p = لڙيون[i];
+        حرف *q;
+        لکو("|%s|", p);
         q = av_get_token(&p, ":");
-        printf(" -> |%s|", q);
-        printf(" + |%s|\n", p);
+        لکو(" -> |%s|", q);
+        لکو(" + |%s|\n", p);
         av_free(q);
     }
 
-    printf("Testing av_append_path_component()\n");
-    #define TEST_APPEND_PATH_COMPONENT(path, component, expected) \
-        fullpath = av_append_path_component((path), (component)); \
-        printf("%s = %s\n", fullpath ? fullpath : "(null)", expected); \
+    لکو("Testing av_append_path_component()\n");
+    #وصف_ڪريو TEST_APPEND_رستو_COMPONENT(رستو, component, expected) \
+        fullpath = av_append_رستو_component((رستو), (component)); \
+        لکو("%s = %s\n", fullpath ? fullpath : "(null)", expected); \
         av_free(fullpath);
-    TEST_APPEND_PATH_COMPONENT(NULL, NULL, "(null)")
-    TEST_APPEND_PATH_COMPONENT("path", NULL, "path");
-    TEST_APPEND_PATH_COMPONENT(NULL, "comp", "comp");
-    TEST_APPEND_PATH_COMPONENT("path", "comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path/", "comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path", "/comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path/", "/comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path/path2/", "/comp/comp2", "path/path2/comp/comp2");
+    TEST_APPEND_رستو_COMPONENT(عدم, عدم, "(null)")
+    TEST_APPEND_رستو_COMPONENT("path", عدم, "path");
+    TEST_APPEND_رستو_COMPONENT(عدم, "comp", "comp");
+    TEST_APPEND_رستو_COMPONENT("path", "comp", "path/comp");
+    TEST_APPEND_رستو_COMPONENT("path/", "comp", "path/comp");
+    TEST_APPEND_رستو_COMPONENT("path", "/comp", "path/comp");
+    TEST_APPEND_رستو_COMPONENT("path/", "/comp", "path/comp");
+    TEST_APPEND_رستو_COMPONENT("path/path2/", "/comp/comp2", "path/path2/comp/comp2");
 
     /*Testing av_strnstr()*/
-    #define TEST_STRNSTR(haystack, needle, hay_length, expected) \
-        ptr = av_strnstr(haystack, needle, hay_length); \
-        if (ptr != expected){ \
-            printf("expected: %p, received %p\n", expected, ptr); \
+    #وصف_ڪريو TEST_STRNSTR(haystack, needle, hay_ڊيگهائي, expected) \
+        ptr = av_strnstr(haystack, needle, hay_ڊيگهائي); \
+        إذا (ptr != expected){ \
+            لکو("expected: %p, received %p\n", expected, ptr); \
         }
-    TEST_STRNSTR(haystack, needle [0], strlen(haystack), haystack+44);
-    TEST_STRNSTR(haystack, needle [1], strlen(haystack), haystack+42);
-    TEST_STRNSTR(haystack, needle [2], strlen(haystack), NULL       );
-    TEST_STRNSTR(haystack, strings[1], strlen(haystack), haystack   );
+    TEST_STRNSTR(haystack, needle [0], لڙي_ڊيگهه(haystack), haystack+44);
+    TEST_STRNSTR(haystack, needle [1], لڙي_ڊيگهه(haystack), haystack+42);
+    TEST_STRNSTR(haystack, needle [2], لڙي_ڊيگهه(haystack), عدم       );
+    TEST_STRNSTR(haystack, لڙيون[1], لڙي_ڊيگهه(haystack), haystack   );
 
     /*Testing av_strireplace()*/
-    #define TEST_STRIREPLACE(haystack, needle, expected) \
+    #وصف_ڪريو TEST_STRIREPLACE(haystack, needle, expected) \
         ptr = av_strireplace(haystack, needle, "instead"); \
-        if (ptr == NULL) { \
-            printf("error, received null pointer!\n"); \
-        } else { \
-            if (strcmp(ptr, expected) != 0) \
-                printf( "expected: %s, received: %s\n", expected, ptr); \
+        إذا (ptr == عدم) { \
+            لکو("error, received null pointer!\n"); \
+        } وإلا { \
+            إذا (strcmp(ptr, expected) != 0) \
+                لکو( "expected: %s, received: %s\n", expected, ptr); \
             av_free(ptr); \
         }
 
@@ -109,5 +109,5 @@ int main(void)
     TEST_STRIREPLACE(haystack, needle [2], "Education consists mainly in what we have instead.");
     TEST_STRIREPLACE(haystack, needle [1], "Education consists mainly in what we have instead");
 
-    return 0;
+    أرجع 0;
 }

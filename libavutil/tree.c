@@ -18,74 +18,74 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "log.h"
-#include "mem.h"
-#include "tree.h"
+#ضمن "error.h"
+#ضمن "log.h"
+#ضمن "mem.h"
+#ضمن "tree.h"
 
-typedef struct AVTreeNode {
-    struct AVTreeNode *child[2];
-    void *elem;
-    int state;
-} AVTreeNode;
+تعريفنوع بنية AVTree_ڳنڍ {
+    بنية AVTree_ڳنڍ *ٻار[2];
+    فراغ *elem;
+    صحيح state;
+} AVTree_ڳنڍ;
 
-const int av_tree_node_size = sizeof(AVTreeNode);
+ثابت صحيح av_وڻ_ڳنڍ_سائيز = حجم(AVTree_ڳنڍ);
 
-struct AVTreeNode *av_tree_node_alloc(void)
+بنية AVTree_ڳنڍ *av_وڻ_ڳنڍ_alloc(فراغ)
 {
-    return av_mallocz(sizeof(struct AVTreeNode));
+    أرجع av_mallocz(حجم(بنية AVTree_ڳنڍ));
 }
 
-void *av_tree_find(const AVTreeNode *t, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2])
+فراغ *av_وڻ_ڳوليو(ثابت AVTree_ڳنڍ *t, فراغ *ڪنجي,
+                   صحيح (*cmp)(ثابت فراغ *ڪنجي, ثابت فراغ *b), فراغ *ايندڙ[2])
 {
-    if (t) {
-        unsigned int v = cmp(key, t->elem);
-        if (v) {
-            if (next)
-                next[v >> 31] = t->elem;
-            return av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
-        } else {
-            if (next) {
-                av_tree_find(t->child[0], key, cmp, next);
-                av_tree_find(t->child[1], key, cmp, next);
+    إذا (t) {
+        بنانشان صحيح v = cmp(ڪنجي, t->elem);
+        إذا (v) {
+            إذا (ايندڙ)
+                ايندڙ[v >> 31] = t->elem;
+            أرجع av_وڻ_ڳوليو(t->ٻار[(v >> 31) ^ 1], ڪنجي, cmp, ايندڙ);
+        } وإلا {
+            إذا (ايندڙ) {
+                av_وڻ_ڳوليو(t->ٻار[0], ڪنجي, cmp, ايندڙ);
+                av_وڻ_ڳوليو(t->ٻار[1], ڪنجي, cmp, ايندڙ);
             }
-            return t->elem;
+            أرجع t->elem;
         }
     }
-    return NULL;
+    أرجع عدم;
 }
 
-void *av_tree_insert(AVTreeNode **tp, void *key,
-                     int (*cmp)(const void *key, const void *b), AVTreeNode **next)
+فراغ *av_وڻ_وجهو(AVTree_ڳنڍ **tp, فراغ *ڪنجي,
+                     صحيح (*cmp)(ثابت فراغ *ڪنجي, ثابت فراغ *b), AVTree_ڳنڍ **ايندڙ)
 {
-    AVTreeNode *t = *tp;
-    if (t) {
-        unsigned int v = cmp(t->elem, key);
-        void *ret;
-        if (!v) {
-            if (*next)
-                return t->elem;
-            else if (t->child[0] || t->child[1]) {
-                int i = !t->child[0];
-                void *next_elem[2];
-                av_tree_find(t->child[i], key, cmp, next_elem);
-                key = t->elem = next_elem[i];
+    AVTree_ڳنڍ *t = *tp;
+    إذا (t) {
+        بنانشان صحيح v = cmp(t->elem, ڪنجي);
+        فراغ *ret;
+        إذا (!v) {
+            إذا (*ايندڙ)
+                أرجع t->elem;
+            وإلا إذا (t->ٻار[0] || t->ٻار[1]) {
+                صحيح i = !t->ٻار[0];
+                فراغ *ايندڙ_elem[2];
+                av_وڻ_ڳوليو(t->ٻار[i], ڪنجي, cmp, ايندڙ_elem);
+                ڪنجي = t->elem = ايندڙ_elem[i];
                 v   = -i;
-            } else {
-                *next = t;
-                *tp   = NULL;
-                return NULL;
+            } وإلا {
+                *ايندڙ = t;
+                *tp   = عدم;
+                أرجع عدم;
             }
         }
-        ret = av_tree_insert(&t->child[v >> 31], key, cmp, next);
-        if (!ret) {
-            int i              = (v >> 31) ^ !!*next;
-            AVTreeNode **child = &t->child[i];
+        ret = av_وڻ_وجهو(&t->ٻار[v >> 31], ڪنجي, cmp, ايندڙ);
+        إذا (!ret) {
+            صحيح i              = (v >> 31) ^ !!*ايندڙ;
+            AVTree_ڳنڍ **ٻار = &t->ٻار[i];
             t->state += 2 * i - 1;
 
-            if (!(t->state & 1)) {
-                if (t->state) {
+            إذا (!(t->state & 1)) {
+                إذا (t->state) {
                     /* The following code is equivalent to
                      * if ((*child)->state * 2 == -t->state)
                      *     rotate(child, i ^ 1);
@@ -106,63 +106,63 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                      * }
                      * but such a rotate function is both bigger and slower
                      */
-                    if ((*child)->state * 2 == -t->state) {
-                        *tp                    = (*child)->child[i ^ 1];
-                        (*child)->child[i ^ 1] = (*tp)->child[i];
-                        (*tp)->child[i]        = *child;
-                        *child                 = (*tp)->child[i ^ 1];
-                        (*tp)->child[i ^ 1]    = t;
+                    إذا ((*ٻار)->state * 2 == -t->state) {
+                        *tp                    = (*ٻار)->ٻار[i ^ 1];
+                        (*ٻار)->ٻار[i ^ 1] = (*tp)->ٻار[i];
+                        (*tp)->ٻار[i]        = *ٻار;
+                        *ٻار                 = (*tp)->ٻار[i ^ 1];
+                        (*tp)->ٻار[i ^ 1]    = t;
 
-                        (*tp)->child[0]->state = -((*tp)->state > 0);
-                        (*tp)->child[1]->state = (*tp)->state < 0;
+                        (*tp)->ٻار[0]->state = -((*tp)->state > 0);
+                        (*tp)->ٻار[1]->state = (*tp)->state < 0;
                         (*tp)->state           = 0;
-                    } else {
-                        *tp                 = *child;
-                        *child              = (*child)->child[i ^ 1];
-                        (*tp)->child[i ^ 1] = t;
-                        if ((*tp)->state)
+                    } وإلا {
+                        *tp                 = *ٻار;
+                        *ٻار              = (*ٻار)->ٻار[i ^ 1];
+                        (*tp)->ٻار[i ^ 1] = t;
+                        إذا ((*tp)->state)
                             t->state = 0;
-                        else
+                        وإلا
                             t->state >>= 1;
                         (*tp)->state = -t->state;
                     }
                 }
             }
-            if (!(*tp)->state ^ !!*next)
-                return key;
+            إذا (!(*tp)->state ^ !!*ايندڙ)
+                أرجع ڪنجي;
         }
-        return ret;
-    } else {
-        *tp   = *next;
-        *next = NULL;
-        if (*tp) {
-            (*tp)->elem = key;
-            return NULL;
-        } else
-            return key;
+        أرجع ret;
+    } وإلا {
+        *tp   = *ايندڙ;
+        *ايندڙ = عدم;
+        إذا (*tp) {
+            (*tp)->elem = ڪنجي;
+            أرجع عدم;
+        } وإلا
+            أرجع ڪنجي;
     }
 }
 
-void av_tree_destroy(AVTreeNode *t)
+فراغ av_وڻ_destroy(AVTree_ڳنڍ *t)
 {
-    if (t) {
-        av_tree_destroy(t->child[0]);
-        av_tree_destroy(t->child[1]);
+    إذا (t) {
+        av_وڻ_destroy(t->ٻار[0]);
+        av_وڻ_destroy(t->ٻار[1]);
         av_free(t);
     }
 }
 
-void av_tree_enumerate(AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem))
+فراغ av_وڻ_enumerate(AVTree_ڳنڍ *t, فراغ *opaque,
+                       صحيح (*cmp)(فراغ *opaque, فراغ *elem),
+                       صحيح (*enu)(فراغ *opaque, فراغ *elem))
 {
-    if (t) {
-        int v = cmp ? cmp(opaque, t->elem) : 0;
-        if (v >= 0)
-            av_tree_enumerate(t->child[0], opaque, cmp, enu);
-        if (v == 0)
+    إذا (t) {
+        صحيح v = cmp ? cmp(opaque, t->elem) : 0;
+        إذا (v >= 0)
+            av_وڻ_enumerate(t->ٻار[0], opaque, cmp, enu);
+        إذا (v == 0)
             enu(opaque, t->elem);
-        if (v <= 0)
-            av_tree_enumerate(t->child[1], opaque, cmp, enu);
+        إذا (v <= 0)
+            av_وڻ_enumerate(t->ٻار[1], opaque, cmp, enu);
     }
 }

@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_QSORT_H
-#define AVUTIL_QSORT_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_QSORT_H
+#وصف_ڪريو AVUTIL_QSORT_H
 
-#include "macros.h"
+#ضمن "macros.h"
 
 
 /**
@@ -30,69 +30,69 @@
  * to construct input that requires O(n^2) time but this is very unlikely to
  * happen with non constructed input.
  */
-#define AV_QSORT(p, num, type, cmp) do {\
-    void *stack[64][2];\
-    int sp= 1;\
-    stack[0][0] = p;\
-    stack[0][1] = (p)+(num)-1;\
-    while(sp){\
-        type *start= stack[--sp][0];\
-        type *end  = stack[  sp][1];\
-        while(start < end){\
-            if(start < end-1) {\
-                int checksort=0;\
-                type *right = end-2;\
-                type *left  = start+1;\
-                type *mid = start + ((end-start)>>1);\
-                if(cmp(start, end) > 0) {\
-                    if(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else                    FFSWAP(type, *start, *end);\
-                }else{\
-                    if(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else checksort= 1;\
+#وصف_ڪريو AV_QSORT(p, انگ, type, cmp) افعل {\
+    فراغ *ڍير_2[64][2];\
+    صحيح sp= 1;\
+    ڍير_2[0][0] = p;\
+    ڍير_2[0][1] = (p)+(انگ)-1;\
+    طالما(sp){\
+        type *شروعات= ڍير_2[--sp][0];\
+        type *پڇاڙي  = ڍير_2[  sp][1];\
+        طالما(شروعات < پڇاڙي){\
+            إذا(شروعات < پڇاڙي-1) {\
+                صحيح checksort=0;\
+                type *ساڄو = پڇاڙي-2;\
+                type *کاٻو  = شروعات+1;\
+                type *mid = شروعات + ((پڇاڙي-شروعات)>>1);\
+                إذا(cmp(شروعات, پڇاڙي) > 0) {\
+                    إذا(cmp(  پڇاڙي, mid) > 0) FFSWAP(type, *شروعات, *mid);\
+                    وإلا                    FFSWAP(type, *شروعات, *پڇاڙي);\
+                }وإلا{\
+                    إذا(cmp(شروعات, mid) > 0) FFSWAP(type, *شروعات, *mid);\
+                    وإلا checksort= 1;\
                 }\
-                if(cmp(mid, end) > 0){ \
-                    FFSWAP(type, *mid, *end);\
+                إذا(cmp(mid, پڇاڙي) > 0){ \
+                    FFSWAP(type, *mid, *پڇاڙي);\
                     checksort=0;\
                 }\
-                if(start == end-2) break;\
-                FFSWAP(type, end[-1], *mid);\
-                while(left <= right){\
-                    while(left<=right && cmp(left, end-1) < 0)\
-                        left++;\
-                    while(left<=right && cmp(right, end-1) > 0)\
-                        right--;\
-                    if(left <= right){\
-                        FFSWAP(type, *left, *right);\
-                        left++;\
-                        right--;\
+                إذا(شروعات == پڇاڙي-2) اكسر;\
+                FFSWAP(type, پڇاڙي[-1], *mid);\
+                طالما(کاٻو <= ساڄو){\
+                    طالما(کاٻو<=ساڄو && cmp(کاٻو, پڇاڙي-1) < 0)\
+                        کاٻو++;\
+                    طالما(کاٻو<=ساڄو && cmp(ساڄو, پڇاڙي-1) > 0)\
+                        ساڄو--;\
+                    إذا(کاٻو <= ساڄو){\
+                        FFSWAP(type, *کاٻو, *ساڄو);\
+                        کاٻو++;\
+                        ساڄو--;\
                     }\
                 }\
-                FFSWAP(type, end[-1], *left);\
-                if(checksort && (mid == left-1 || mid == left)){\
-                    mid= start;\
-                    while(mid<end && cmp(mid, mid+1) <= 0)\
+                FFSWAP(type, پڇاڙي[-1], *کاٻو);\
+                إذا(checksort && (mid == کاٻو-1 || mid == کاٻو)){\
+                    mid= شروعات;\
+                    طالما(mid<پڇاڙي && cmp(mid, mid+1) <= 0)\
                         mid++;\
-                    if(mid==end)\
-                        break;\
+                    إذا(mid==پڇاڙي)\
+                        اكسر;\
                 }\
-                if(end-left < left-start){\
-                    stack[sp  ][0]= start;\
-                    stack[sp++][1]= right;\
-                    start = left+1;\
-                }else{\
-                    stack[sp  ][0]= left+1;\
-                    stack[sp++][1]= end;\
-                    end = right;\
+                إذا(پڇاڙي-کاٻو < کاٻو-شروعات){\
+                    ڍير_2[sp  ][0]= شروعات;\
+                    ڍير_2[sp++][1]= ساڄو;\
+                    شروعات = کاٻو+1;\
+                }وإلا{\
+                    ڍير_2[sp  ][0]= کاٻو+1;\
+                    ڍير_2[sp++][1]= پڇاڙي;\
+                    پڇاڙي = ساڄو;\
                 }\
-            }else{\
-                if(cmp(start, end) > 0)\
-                    FFSWAP(type, *start, *end);\
-                break;\
+            }وإلا{\
+                إذا(cmp(شروعات, پڇاڙي) > 0)\
+                    FFSWAP(type, *شروعات, *پڇاڙي);\
+                اكسر;\
             }\
         }\
     }\
-} while (0)
+} طالما (0)
 
 /**
  * Merge sort, this sort requires a temporary buffer and is stable, its worst
@@ -100,23 +100,23 @@
  * @param p     must be a lvalue pointer, this function may exchange it with tmp
  * @param tmp   must be a lvalue pointer, this function may exchange it with p
  */
-#define AV_MSORT(p, tmp, num, type, cmp) do {\
-    unsigned i, j, step;\
-    for(step=1; step<(num); step+=step){\
-        for(i=0; i<(num); i+=2*step){\
-            unsigned a[2] = {i, i+step};\
-            unsigned end = FFMIN(i+2*step, (num));\
-            for(j=i; a[0]<i+step && a[1]<end; j++){\
-                int idx= cmp(p+a[0], p+a[1]) > 0;\
+#وصف_ڪريو AV_MSORT(p, tmp, انگ, type, cmp) افعل {\
+    بنانشان i, j, قدم;\
+    لكل(قدم=1; قدم<(انگ); قدم+=قدم){\
+        لكل(i=0; i<(انگ); i+=2*قدم){\
+            بنانشان a[2] = {i, i+قدم};\
+            بنانشان پڇاڙي = FFMIN(i+2*قدم, (انگ));\
+            لكل(j=i; a[0]<i+قدم && a[1]<پڇاڙي; j++){\
+                صحيح idx= cmp(p+a[0], p+a[1]) > 0;\
                 tmp[j] = p[ a[idx]++ ];\
             }\
-            if(a[0]>=i+step) a[0] = a[1];\
-            for(; j<end; j++){\
+            إذا(a[0]>=i+قدم) a[0] = a[1];\
+            لكل(; j<پڇاڙي; j++){\
                 tmp[j] = p[ a[0]++ ];\
             }\
         }\
         FFSWAP(type*, p, tmp);\
     }\
-} while (0)
+} طالما (0)
 
-#endif /* AVUTIL_QSORT_H */
+#جيڪڏهن_پورو /* AVUTIL_QSORT_H */

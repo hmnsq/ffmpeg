@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_EXECUTOR_H
-#define AVUTIL_EXECUTOR_H
+#جيڪڏهن_وصف_نه_ٿيل AVUTIL_EXECUTOR_H
+#وصف_ڪريو AVUTIL_EXECUTOR_H
 
-typedef struct AVExecutor AVExecutor;
-typedef struct AVTask AVTask;
+تعريفنوع بنية AVExecutor AVExecutor;
+تعريفنوع بنية AVTask AVTask;
 
-struct AVTask {
-    AVTask *next;
+بنية AVTask {
+    AVTask *ايندڙ;
 };
 
-typedef struct AVTaskCallbacks {
-    void *user_data;
+تعريفنوع بنية AVTaskCallbacks {
+    فراغ *user_معلومات;
 
-    int local_context_size;
+    صحيح local_context_سائيز;
 
     // return 1 if a's priority > b's priority
-    int (*priority_higher)(const AVTask *a, const AVTask *b);
+    صحيح (*ترجيح_higher)(ثابت AVTask *a, ثابت AVTask *b);
 
     // task is ready for run
-    int (*ready)(const AVTask *t, void *user_data);
+    صحيح (*ready)(ثابت AVTask *t, فراغ *user_معلومات);
 
     // run the task
-    int (*run)(AVTask *t, void *local_context, void *user_data);
+    صحيح (*لاڳيتو)(AVTask *t, فراغ *local_context, فراغ *user_معلومات);
 } AVTaskCallbacks;
 
 /**
@@ -49,19 +49,19 @@ typedef struct AVTaskCallbacks {
  * @param thread_count worker thread number, 0 for run on caller's thread directly
  * @return return the executor
  */
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *callbacks, int thread_count);
+AVExecutor* av_executor_alloc(ثابت AVTaskCallbacks *callbacks, صحيح thread_ڳڻپ);
 
 /**
  * Free executor
  * @param e  pointer to executor
  */
-void av_executor_free(AVExecutor **e);
+فراغ av_executor_free(AVExecutor **e);
 
 /**
  * Add task to executor
  * @param e pointer to executor
  * @param t pointer to task. If NULL, it will wakeup one work thread
  */
-void av_executor_execute(AVExecutor *e, AVTask *t);
+فراغ av_executor_execute(AVExecutor *e, AVTask *t);
 
-#endif //AVUTIL_EXECUTOR_H
+#جيڪڏهن_پورو //AVUTIL_EXECUTOR_H

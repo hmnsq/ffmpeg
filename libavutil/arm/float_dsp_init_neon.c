@@ -19,41 +19,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "float_dsp_arm.h"
+#ضمن "libavutil/attributes.h"
+#ضمن "libavutil/float_dsp.h"
+#ضمن "float_dsp_arm.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1, int len);
+فراغ ff_ويڪٽر_fmul_neon(عائم *dst, ثابت عائم *src0, ثابت عائم *src1, صحيح len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+فراغ ff_ويڪٽر_fmac_scalar_neon(عائم *dst, ثابت عائم *src, عائم mul,
+                                صحيح len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+فراغ ff_ويڪٽر_fmul_scalar_neon(عائم *dst, ثابت عائم *src, عائم mul,
+                                صحيح len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+فراغ ff_ويڪٽر_fmul_دري_neon(عائم *dst, ثابت عائم *src0,
+                                ثابت عائم *src1, ثابت عائم *win, صحيح len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+فراغ ff_ويڪٽر_fmul_جوڙيو_neon(عائم *dst, ثابت عائم *src0, ثابت عائم *src1,
+                             ثابت عائم *src2, صحيح len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+فراغ ff_ويڪٽر_fmul_ابتو_neon(عائم *dst, ثابت عائم *src0,
+                                 ثابت عائم *src1, صحيح len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+فراغ ff_butterflies_float_neon(عائم *v1, عائم *v2, صحيح len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+عائم ff_scalarproduct_float_neon(ثابت عائم *v1, ثابت عائم *v2, صحيح len);
 
-av_cold void ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
+av_cold فراغ ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
 {
-    fdsp->vector_fmul = ff_vector_fmul_neon;
-    fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_neon;
-    fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_neon;
-    fdsp->vector_fmul_window = ff_vector_fmul_window_neon;
-    fdsp->vector_fmul_add    = ff_vector_fmul_add_neon;
-    fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_neon;
+    fdsp->ويڪٽر_fmul = ff_ويڪٽر_fmul_neon;
+    fdsp->ويڪٽر_fmac_scalar = ff_ويڪٽر_fmac_scalar_neon;
+    fdsp->ويڪٽر_fmul_scalar = ff_ويڪٽر_fmul_scalar_neon;
+    fdsp->ويڪٽر_fmul_دري = ff_ويڪٽر_fmul_دري_neon;
+    fdsp->ويڪٽر_fmul_جوڙيو    = ff_ويڪٽر_fmul_جوڙيو_neon;
+    fdsp->ويڪٽر_fmul_ابتو = ff_ويڪٽر_fmul_ابتو_neon;
     fdsp->butterflies_float = ff_butterflies_float_neon;
     fdsp->scalarproduct_float = ff_scalarproduct_float_neon;
 }

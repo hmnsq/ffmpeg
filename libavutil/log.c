@@ -24,45 +24,45 @@
  * logging functions
  */
 
-#include "config.h"
+#ضمن "config.h"
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if HAVE_IO_H
-#include <io.h>
-#endif
-#include <inttypes.h>
-#include <stdarg.h>
-#include <stdatomic.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "bprint.h"
-#include "common.h"
-#include "internal.h"
-#include "log.h"
-#include "thread.h"
-#include "time.h"
-#include "time_internal.h"
+#إذا HAVE_UNISTD_H
+#ضمن <unistd.h>
+#جيڪڏهن_پورو
+#إذا HAVE_IO_H
+#ضمن <io.h>
+#جيڪڏهن_پورو
+#ضمن <inttypes.h>
+#ضمن <stdarg.h>
+#ضمن <stdatomic.h>
+#ضمن <stdio.h>
+#ضمن <stdlib.h>
+#ضمن <string.h>
+#ضمن "bprint.h"
+#ضمن "common.h"
+#ضمن "internal.h"
+#ضمن "log.h"
+#ضمن "thread.h"
+#ضمن "time.h"
+#ضمن "time_internal.h"
 
-static AVMutex mutex = AV_MUTEX_INITIALIZER;
+ساكن AVMutex mutex = AV_MUTEX_INITIALIZER;
 
-#define LINE_SZ 1024
+#وصف_ڪريو سٽ_SZ 1024
 
-#if HAVE_VALGRIND_VALGRIND_H && CONFIG_VALGRIND_BACKTRACE
-#include <valgrind/valgrind.h>
+#إذا HAVE_VALGRIND_VALGRIND_H && CONFIG_VALGRIND_BACKTRACE
+#ضمن <valgrind/valgrind.h>
 /* this is the log level at which valgrind will output a full backtrace */
-#define BACKTRACE_LOGLEVEL AV_LOG_ERROR
-#endif
+#وصف_ڪريو BACKTRACE_LOGLEVEL AV_LOG_ERROR
+#جيڪڏهن_پورو
 
-static atomic_int av_log_level = AV_LOG_INFO;
-static atomic_int av_log_flags = 0;
+ساكن atomic_int av_log_level = AV_LOG_INFO;
+ساكن atomic_int av_log_flags = 0;
 
-#define NB_LEVELS 8
-#if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
-#include <windows.h>
-static const uint8_t win_color[16 + AV_CLASS_CATEGORY_NB] = {
+#وصف_ڪريو NB_سطحون 8
+#إذا defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
+#ضمن <windows.h>
+ساكن ثابت uint8_t win_color[16 + AV_CLASS_CATEGORY_NB] = {
     [AV_LOG_PANIC  /8] = 12,
     [AV_LOG_FATAL  /8] = 12,
     [AV_LOG_ERROR  /8] = 12,
@@ -72,7 +72,7 @@ static const uint8_t win_color[16 + AV_CLASS_CATEGORY_NB] = {
     [AV_LOG_DEBUG  /8] = 10,
     [AV_LOG_TRACE  /8] = 8,
     [16+AV_CLASS_CATEGORY_NA              ] =  7,
-    [16+AV_CLASS_CATEGORY_INPUT           ] = 13,
+    [16+AV_CLASS_CATEGORY_داخلا           ] = 13,
     [16+AV_CLASS_CATEGORY_OUTPUT          ] =  5,
     [16+AV_CLASS_CATEGORY_MUXER           ] = 13,
     [16+AV_CLASS_CATEGORY_DEMUXER         ] =  5,
@@ -84,18 +84,18 @@ static const uint8_t win_color[16 + AV_CLASS_CATEGORY_NB] = {
     [16+AV_CLASS_CATEGORY_SWRESAMPLER     ] =  7,
     [16+AV_CLASS_CATEGORY_HWDEVICE        ] =  6,
     [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT ] = 13,
-    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT  ] = 5,
+    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_داخلا  ] = 5,
     [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_OUTPUT ] = 13,
-    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT  ] = 5,
+    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_داخلا  ] = 5,
     [16+AV_CLASS_CATEGORY_DEVICE_OUTPUT       ] = 13,
-    [16+AV_CLASS_CATEGORY_DEVICE_INPUT        ] = 5,
+    [16+AV_CLASS_CATEGORY_DEVICE_داخلا        ] = 5,
 };
 
-static int16_t background, attr_orig;
-static HANDLE con;
-#endif
+ساكن int16_t background, attr_orig;
+ساكن HANDLE con;
+#جيڪڏهن_پورو
 
-static const uint32_t color[16 + AV_CLASS_CATEGORY_NB] = {
+ساكن ثابت uint32_t color[16 + AV_CLASS_CATEGORY_NB] = {
     [AV_LOG_PANIC  /8] =  52 << 16 | 196 << 8 | 0x41,
     [AV_LOG_FATAL  /8] = 208 <<  8 | 0x41,
     [AV_LOG_ERROR  /8] = 196 <<  8 | 0x11,
@@ -105,7 +105,7 @@ static const uint32_t color[16 + AV_CLASS_CATEGORY_NB] = {
     [AV_LOG_DEBUG  /8] =  34 <<  8 | 0x02,
     [AV_LOG_TRACE  /8] =  34 <<  8 | 0x07,
     [16+AV_CLASS_CATEGORY_NA              ] = 250 << 8 | 0x09,
-    [16+AV_CLASS_CATEGORY_INPUT           ] = 219 << 8 | 0x15,
+    [16+AV_CLASS_CATEGORY_داخلا           ] = 219 << 8 | 0x15,
     [16+AV_CLASS_CATEGORY_OUTPUT          ] = 201 << 8 | 0x05,
     [16+AV_CLASS_CATEGORY_MUXER           ] = 213 << 8 | 0x15,
     [16+AV_CLASS_CATEGORY_DEMUXER         ] = 207 << 8 | 0x05,
@@ -117,311 +117,311 @@ static const uint32_t color[16 + AV_CLASS_CATEGORY_NB] = {
     [16+AV_CLASS_CATEGORY_SWRESAMPLER     ] = 147 << 8 | 0x14,
     [16+AV_CLASS_CATEGORY_HWDEVICE        ] = 214 << 8 | 0x13,
     [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT ] = 213 << 8 | 0x15,
-    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT  ] = 207 << 8 | 0x05,
+    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_داخلا  ] = 207 << 8 | 0x05,
     [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_OUTPUT ] = 213 << 8 | 0x15,
-    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT  ] = 207 << 8 | 0x05,
+    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_داخلا  ] = 207 << 8 | 0x05,
     [16+AV_CLASS_CATEGORY_DEVICE_OUTPUT       ] = 213 << 8 | 0x15,
-    [16+AV_CLASS_CATEGORY_DEVICE_INPUT        ] = 207 << 8 | 0x05,
+    [16+AV_CLASS_CATEGORY_DEVICE_داخلا        ] = 207 << 8 | 0x05,
 };
 
-static int use_color = -1;
+ساكن صحيح use_color = -1;
 
-#if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
-static void win_console_puts(const char *str)
+#إذا defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
+ساكن فراغ win_console_puts(ثابت حرف *str)
 {
-    const uint8_t *q = str;
-    uint16_t line[LINE_SZ];
+    ثابت uint8_t *q = str;
+    uint16_t سٽ[سٽ_SZ];
 
-    while (*q) {
-        uint16_t *buf = line;
+    طالما (*q) {
+        uint16_t *buf = سٽ;
         DWORD nb_chars = 0;
         DWORD written;
 
-        while (*q && nb_chars < LINE_SZ - 1) {
+        طالما (*q && nb_chars < سٽ_SZ - 1) {
             uint32_t ch;
             uint16_t tmp;
 
-            GET_UTF8(ch, *q ? *q++ : 0, ch = 0xfffd; goto continue_on_invalid;)
+            GET_UTF8(ch, *q ? *q++ : 0, ch = 0xfffd; اذهب continue_on_invalid;)
 continue_on_invalid:
             PUT_UTF16(ch, tmp, *buf++ = tmp; nb_chars++;)
         }
 
-        WriteConsoleW(con, line, nb_chars, &written, NULL);
+        WriteConsoleW(con, سٽ, nb_chars, &written, عدم);
     }
 }
-#endif
+#جيڪڏهن_پورو
 
-static void check_color_terminal(void)
+ساكن فراغ check_color_terminal(فراغ)
 {
-    char *term = getenv("TERM");
+    حرف *رڪن = getenv("TERM");
 
-#if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
-    CONSOLE_SCREEN_BUFFER_INFO con_info;
+#إذا defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
+    CONSOLE_SCREEN_بفر_INFO con_info;
     DWORD dummy;
     con = GetStdHandle(STD_ERROR_HANDLE);
-    if (con != INVALID_HANDLE_VALUE && !GetConsoleMode(con, &dummy))
-        con = INVALID_HANDLE_VALUE;
-    if (con != INVALID_HANDLE_VALUE) {
-        GetConsoleScreenBufferInfo(con, &con_info);
-        attr_orig  = con_info.wAttributes;
+    إذا (con != INVALID_HANDLE_قدر && !Get_Console_گهڻائي(con, &dummy))
+        con = INVALID_HANDLE_قدر;
+    إذا (con != INVALID_HANDLE_قدر) {
+        Get_Console_Screen_بفر_Info(con, &con_info);
+        attr_orig  = con_info.w_خاصيتون;
         background = attr_orig & 0xF0;
     }
-#endif
+#جيڪڏهن_پورو
 
-    if (getenv("AV_LOG_FORCE_NOCOLOR")) {
+    إذا (getenv("AV_LOG_FORCE_NOCOLOR")) {
         use_color = 0;
-    } else if (getenv("AV_LOG_FORCE_COLOR")) {
+    } وإلا إذا (getenv("AV_LOG_FORCE_COLOR")) {
         use_color = 1;
-    } else {
-#if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
-        use_color = (con != INVALID_HANDLE_VALUE);
-#elif HAVE_ISATTY
-        use_color = (term && isatty(2));
-#else
+    } وإلا {
+#إذا defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
+        use_color = (con != INVALID_HANDLE_قدر);
+#وإلاإذا HAVE_ISATTY
+        use_color = (رڪن && isatty(2));
+#وإلا
         use_color = 0;
-#endif
+#جيڪڏهن_پورو
     }
 
-    if (getenv("AV_LOG_FORCE_256COLOR") || term && strstr(term, "256color"))
+    إذا (getenv("AV_LOG_FORCE_256COLOR") || رڪن && لڙي_ڳولا(رڪن, "256color"))
         use_color *= 256;
 }
 
-static void ansi_fputs(int level, int tint, const char *str, int local_use_color)
+ساكن فراغ ansi_fputs(صحيح level, صحيح tint, ثابت حرف *str, صحيح local_use_color)
 {
-    if (local_use_color == 1) {
+    إذا (local_use_color == 1) {
         uint32_t intensity = (color[level] >> 4) & 15;
         uint32_t fg       = color[level] & 15;
-#if defined(_WIN32)
+#إذا defined(_WIN32)
         /* Piped stderr is 8-color ANSI. Linux keeps 0;33m; Windows console
          * already uses win_color 14 (bright yellow), so match that here. */
-        if (level == AV_LOG_WARNING / 8)
+        إذا (level == AV_LOG_WARNING / 8)
             intensity = 1;
-#endif
+#جيڪڏهن_پورو
         fprintf(stderr,
                 "\033[%"PRIu32";3%"PRIu32"m%s\033[0m",
                 intensity, fg, str);
-    } else if (tint && use_color == 256) {
+    } وإلا إذا (tint && use_color == 256) {
         fprintf(stderr,
                 "\033[48;5;%"PRIu32"m\033[38;5;%dm%s\033[0m",
                 (color[level] >> 16) & 0xff,
                 tint,
                 str);
-    } else if (local_use_color == 256) {
+    } وإلا إذا (local_use_color == 256) {
         fprintf(stderr,
                 "\033[48;5;%"PRIu32"m\033[38;5;%"PRIu32"m%s\033[0m",
                 (color[level] >> 16) & 0xff,
                 (color[level] >> 8) & 0xff,
                 str);
-    } else
+    } وإلا
         fputs(str, stderr);
 }
 
-static void colored_fputs(int level, int tint, const char *str)
+ساكن فراغ colored_fputs(صحيح level, صحيح tint, ثابت حرف *str)
 {
-    int local_use_color;
-    if (!*str)
-        return;
+    صحيح local_use_color;
+    إذا (!*str)
+        أرجع;
 
-    if (use_color < 0)
+    إذا (use_color < 0)
         check_color_terminal();
 
-    if (level == AV_LOG_INFO/8) local_use_color = 0;
-    else                        local_use_color = use_color;
+    إذا (level == AV_LOG_INFO/8) local_use_color = 0;
+    وإلا                        local_use_color = use_color;
 
-#if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
-    if (con != INVALID_HANDLE_VALUE) {
-        if (local_use_color)
-            SetConsoleTextAttribute(con, background | win_color[level]);
+#إذا defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
+    إذا (con != INVALID_HANDLE_قدر) {
+        إذا (local_use_color)
+            سيٽ_Console_متن_Attribute(con, background | win_color[level]);
         win_console_puts(str);
-        if (local_use_color)
-            SetConsoleTextAttribute(con, attr_orig);
-    } else {
+        إذا (local_use_color)
+            سيٽ_Console_متن_Attribute(con, attr_orig);
+    } وإلا {
         ansi_fputs(level, tint, str, local_use_color);
     }
-#else
+#وإلا
     ansi_fputs(level, tint, str, local_use_color);
-#endif
+#جيڪڏهن_پورو
 
 }
 
-const char *av_default_item_name(void *ptr)
+ثابت حرف *av_default_شي_name(فراغ *ptr)
 {
-    return (*(AVClass **) ptr)->class_name;
+    أرجع (*(AVClass **) ptr)->class_name;
 }
 
-AVClassCategory av_default_get_category(void *ptr)
+AVClassCategory av_default_get_category(فراغ *ptr)
 {
-    return (*(AVClass **) ptr)->category;
+    أرجع (*(AVClass **) ptr)->category;
 }
 
-static void sanitize(uint8_t *line){
-    while(*line){
-        if(*line < 0x08 || (*line > 0x0D && *line < 0x20))
-            *line='?';
-        line++;
+ساكن فراغ sanitize(uint8_t *سٽ){
+    طالما(*سٽ){
+        إذا(*سٽ < 0x08 || (*سٽ > 0x0D && *سٽ < 0x20))
+            *سٽ='?';
+        سٽ++;
     }
 }
 
-static int get_category(void *ptr){
+ساكن صحيح get_category(فراغ *ptr){
     AVClass *avc = *(AVClass **) ptr;
-    if(    !avc
-        || (avc->version&0xFF)<100
-        ||  avc->version < (51 << 16 | 59 << 8)
-        ||  avc->category >= AV_CLASS_CATEGORY_NB) return AV_CLASS_CATEGORY_NA + 16;
+    إذا(    !avc
+        || (avc->نسخو&0xFF)<100
+        ||  avc->نسخو < (51 << 16 | 59 << 8)
+        ||  avc->category >= AV_CLASS_CATEGORY_NB) أرجع AV_CLASS_CATEGORY_NA + 16;
 
-    if(avc->get_category)
-        return avc->get_category(ptr) + 16;
+    إذا(avc->get_category)
+        أرجع avc->get_category(ptr) + 16;
 
-    return avc->category + 16;
+    أرجع avc->category + 16;
 }
 
-static const char *get_level_str(int level)
+ساكن ثابت حرف *get_level_str(صحيح level)
 {
-    switch (level) {
-    case AV_LOG_QUIET:
-        return "quiet";
-    case AV_LOG_DEBUG:
-        return "debug";
-    case AV_LOG_TRACE:
-        return "trace";
-    case AV_LOG_VERBOSE:
-        return "verbose";
-    case AV_LOG_INFO:
-        return "info";
-    case AV_LOG_WARNING:
-        return "warning";
-    case AV_LOG_ERROR:
-        return "error";
-    case AV_LOG_FATAL:
-        return "fatal";
-    case AV_LOG_PANIC:
-        return "panic";
-    default:
-        return "";
+    بدل (level) {
+    حالة AV_LOG_QUIET:
+        أرجع "quiet";
+    حالة AV_LOG_DEBUG:
+        أرجع "debug";
+    حالة AV_LOG_TRACE:
+        أرجع "trace";
+    حالة AV_LOG_VERBOSE:
+        أرجع "verbose";
+    حالة AV_LOG_INFO:
+        أرجع "info";
+    حالة AV_LOG_WARNING:
+        أرجع "warning";
+    حالة AV_LOG_ERROR:
+        أرجع "error";
+    حالة AV_LOG_FATAL:
+        أرجع "fatal";
+    حالة AV_LOG_PANIC:
+        أرجع "panic";
+    افتراضي:
+        أرجع "";
     }
 }
 
-static const char *item_name(void *obj, const AVClass *cls)
+ساكن ثابت حرف *شي_name(فراغ *obj, ثابت AVClass *cls)
 {
-    return (cls->item_name ? cls->item_name : av_default_item_name)(obj);
+    أرجع (cls->شي_name ? cls->شي_name : av_default_شي_name)(obj);
 }
 
-static void format_date_now(AVBPrint* bp_time, int include_date)
+ساكن فراغ format_date_now(AVBPrint* bp_وقت, صحيح include_date)
 {
-    struct tm *ptm, tmbuf;
-    const int64_t time_us = av_gettime();
-    const int64_t time_ms = time_us / 1000;
-    const time_t time_s   = time_ms / 1000;
-    const int millisec    = time_ms - (time_s * 1000);
-    ptm                   = localtime_r(&time_s, &tmbuf);
-    if (ptm) {
-        if (include_date)
-            av_bprint_strftime(bp_time, "%Y-%m-%d ", ptm);
+    بنية tm *ptm, tmbuf;
+    ثابت int64_t وقت_us = av_gettime();
+    ثابت int64_t وقت_ms = وقت_us / 1000;
+    ثابت time_t وقت_s   = وقت_ms / 1000;
+    ثابت صحيح millisec    = وقت_ms - (وقت_s * 1000);
+    ptm                   = localtime_r(&وقت_s, &tmbuf);
+    إذا (ptm) {
+        إذا (include_date)
+            av_bprint_strftime(bp_وقت, "%Y-%m-%d ", ptm);
 
-        av_bprint_strftime(bp_time, "%H:%M:%S", ptm);
-        av_bprintf(bp_time, ".%03d ", millisec);
+        av_bprint_strftime(bp_وقت, "%H:%M:%S", ptm);
+        av_bprintf(bp_وقت, ".%03d ", millisec);
     }
 }
 
-static void format_line(void *avcl, int level, const char *fmt, va_list vl,
-                        AVBPrint part[5], int *print_prefix, int type[2])
+ساكن فراغ format_سٽ(فراغ *avcl, صحيح level, ثابت حرف *fmt, va_list vl,
+                        AVBPrint part[5], صحيح *print_اڳياڙي, صحيح type[2])
 {
-    AVClass* avc = avcl ? *(AVClass **) avcl : NULL;
-    av_bprint_init(part+0, 0, AV_BPRINT_SIZE_AUTOMATIC);
-    av_bprint_init(part+1, 0, AV_BPRINT_SIZE_AUTOMATIC);
-    av_bprint_init(part+2, 0, AV_BPRINT_SIZE_AUTOMATIC);
+    AVClass* avc = avcl ? *(AVClass **) avcl : عدم;
+    av_bprint_init(part+0, 0, AV_BPRINT_سائيز_AUTOMATIC);
+    av_bprint_init(part+1, 0, AV_BPRINT_سائيز_AUTOMATIC);
+    av_bprint_init(part+2, 0, AV_BPRINT_سائيز_AUTOMATIC);
     av_bprint_init(part+3, 0, 65536);
-    av_bprint_init(part+4, 0, AV_BPRINT_SIZE_AUTOMATIC);
-    int flags = atomic_load_explicit(&av_log_flags, memory_order_relaxed);
+    av_bprint_init(part+4, 0, AV_BPRINT_سائيز_AUTOMATIC);
+    صحيح flags = atomic_load_explicit(&av_log_flags, memory_order_relaxed);
 
-    if(type) type[0] = type[1] = AV_CLASS_CATEGORY_NA + 16;
-    if (*print_prefix && avc) {
-        if (avc->parent_log_context_offset) {
-            AVClass** parent = *(AVClass ***) (((uint8_t *) avcl) +
-                                   avc->parent_log_context_offset);
-            if (parent && *parent) {
+    إذا(type) type[0] = type[1] = AV_CLASS_CATEGORY_NA + 16;
+    إذا (*print_اڳياڙي && avc) {
+        إذا (avc->والد_log_context_وٿي) {
+            AVClass** والد = *(AVClass ***) (((uint8_t *) avcl) +
+                                   avc->والد_log_context_وٿي);
+            إذا (والد && *والد) {
                 av_bprintf(part+0, "[%s @ %p] ",
-                           item_name(parent, *parent), parent);
-                if(type) type[0] = get_category(parent);
+                           شي_name(والد, *والد), والد);
+                إذا(type) type[0] = get_category(والد);
             }
         }
         av_bprintf(part+1, "[%s @ %p] ",
-                   item_name(avcl, avc), avcl);
-        if(type) type[1] = get_category(avcl);
+                   شي_name(avcl, avc), avcl);
+        إذا(type) type[1] = get_category(avcl);
     }
 
-    if (*print_prefix && (level > AV_LOG_QUIET) && (flags & (AV_LOG_PRINT_TIME | AV_LOG_PRINT_DATETIME)))
+    إذا (*print_اڳياڙي && (level > AV_LOG_QUIET) && (flags & (AV_LOG_PRINT_وقت | AV_LOG_PRINT_DATETIME)))
         format_date_now(&part[4], flags & AV_LOG_PRINT_DATETIME);
 
-    if (*print_prefix && (level > AV_LOG_QUIET) && (flags & AV_LOG_PRINT_LEVEL))
+    إذا (*print_اڳياڙي && (level > AV_LOG_QUIET) && (flags & AV_LOG_PRINT_LEVEL))
         av_bprintf(part+2, "[%s] ", get_level_str(level));
 
     av_vbprintf(part+3, fmt, vl);
 
-    if(*part[0].str || *part[1].str || *part[2].str || *part[3].str) {
-        char lastc = part[3].len && part[3].len <= part[3].size ? part[3].str[part[3].len - 1] : 0;
-        *print_prefix = lastc == '\n' || lastc == '\r';
+    إذا(*part[0].str || *part[1].str || *part[2].str || *part[3].str) {
+        حرف lastc = part[3].len && part[3].len <= part[3].سائيز ? part[3].str[part[3].len - 1] : 0;
+        *print_اڳياڙي = lastc == '\n' || lastc == '\r';
     }
 }
 
-void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix)
+فراغ av_log_format_سٽ(فراغ *ptr, صحيح level, ثابت حرف *fmt, va_list vl,
+                        حرف *سٽ, صحيح سٽ_سائيز, صحيح *print_اڳياڙي)
 {
-    av_log_format_line2(ptr, level, fmt, vl, line, line_size, print_prefix);
+    av_log_format_line2(ptr, level, fmt, vl, سٽ, سٽ_سائيز, print_اڳياڙي);
 }
 
-int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix)
+صحيح av_log_format_line2(فراغ *ptr, صحيح level, ثابت حرف *fmt, va_list vl,
+                        حرف *سٽ, صحيح سٽ_سائيز, صحيح *print_اڳياڙي)
 {
     AVBPrint part[5];
-    int ret;
+    صحيح ret;
 
-    format_line(ptr, level, fmt, vl, part, print_prefix, NULL);
-    ret = snprintf(line, line_size, "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
-    av_bprint_finalize(part+3, NULL);
-    return ret;
+    format_سٽ(ptr, level, fmt, vl, part, print_اڳياڙي, عدم);
+    ret = snprintf(سٽ, سٽ_سائيز, "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
+    av_bprint_finalize(part+3, عدم);
+    أرجع ret;
 }
 
-void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
+فراغ av_log_default_callback(فراغ* ptr, صحيح level, ثابت حرف* fmt, va_list vl)
 {
-    static int print_prefix = 1;
-    static int count;
-    static char prev[LINE_SZ];
+    ساكن صحيح print_اڳياڙي = 1;
+    ساكن صحيح ڳڻپ;
+    ساكن حرف prev[سٽ_SZ];
     AVBPrint part[5];
-    char line[LINE_SZ];
-    static int is_atty;
-    int type[2];
-    unsigned tint = 0;
+    حرف سٽ[سٽ_SZ];
+    ساكن صحيح is_atty;
+    صحيح type[2];
+    بنانشان tint = 0;
 
-    if (level >= 0) {
+    إذا (level >= 0) {
         tint = level & 0xff00;
         level &= 0xff;
     }
 
-    if (level > atomic_load_explicit(&av_log_level, memory_order_relaxed))
-        return;
-    ff_mutex_lock(&mutex);
+    إذا (level > atomic_load_explicit(&av_log_level, memory_order_relaxed))
+        أرجع;
+    ff_mutex_تالو(&mutex);
 
-    format_line(ptr, level, fmt, vl, part, &print_prefix, type);
-    snprintf(line, sizeof(line), "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
+    format_سٽ(ptr, level, fmt, vl, part, &print_اڳياڙي, type);
+    snprintf(سٽ, حجم(سٽ), "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
 
-#if HAVE_ISATTY
-    if (!is_atty)
+#إذا HAVE_ISATTY
+    إذا (!is_atty)
         is_atty = isatty(2) ? 1 : -1;
-#endif
+#جيڪڏهن_پورو
 
-    if (print_prefix && (atomic_load_explicit(&av_log_flags, memory_order_relaxed) & AV_LOG_SKIP_REPEATED) && !strcmp(line, prev) &&
-        *line && line[strlen(line) - 1] != '\r'){
-        count++;
-        if (is_atty == 1)
-            fprintf(stderr, "    Last message repeated %d times\r", count);
-        goto end;
+    إذا (print_اڳياڙي && (atomic_load_explicit(&av_log_flags, memory_order_relaxed) & AV_LOG_SKIP_REPEATED) && !strcmp(سٽ, prev) &&
+        *سٽ && سٽ[لڙي_ڊيگهه(سٽ) - 1] != '\r'){
+        ڳڻپ++;
+        إذا (is_atty == 1)
+            fprintf(stderr, "    Last message repeated %d times\r", ڳڻپ);
+        اذهب پڇاڙي;
     }
-    if (count > 0) {
-        fprintf(stderr, "    Last message repeated %d times\n", count);
-        count = 0;
+    إذا (ڳڻپ > 0) {
+        fprintf(stderr, "    Last message repeated %d times\n", ڳڻپ);
+        ڳڻپ = 0;
     }
-    strcpy(prev, line);
+    strcpy(prev, سٽ);
 
     sanitize(part[4].str);
     colored_fputs(7, 0, part[4].str);
@@ -430,22 +430,22 @@ void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
     sanitize(part[1].str);
     colored_fputs(type[1], 0, part[1].str);
     sanitize(part[2].str);
-    colored_fputs(av_clip(level >> 3, 0, NB_LEVELS - 1), tint >> 8, part[2].str);
+    colored_fputs(av_clip(level >> 3, 0, NB_سطحون - 1), tint >> 8, part[2].str);
     sanitize(part[3].str);
-    colored_fputs(av_clip(level >> 3, 0, NB_LEVELS - 1), tint >> 8, part[3].str);
+    colored_fputs(av_clip(level >> 3, 0, NB_سطحون - 1), tint >> 8, part[3].str);
 
-#if CONFIG_VALGRIND_BACKTRACE
-    if (level <= BACKTRACE_LOGLEVEL)
+#إذا CONFIG_VALGRIND_BACKTRACE
+    إذا (level <= BACKTRACE_LOGLEVEL)
         VALGRIND_PRINTF_BACKTRACE("%s", "");
-#endif
-end:
-    av_bprint_finalize(part+3, NULL);
+#جيڪڏهن_پورو
+پڇاڙي:
+    av_bprint_finalize(part+3, عدم);
     ff_mutex_unlock(&mutex);
 }
 
-static void (*_Atomic av_log_callback)(void*, int, const char*, va_list) = av_log_default_callback;
+ساكن فراغ (*_Atomic av_log_callback)(فراغ*, صحيح, ثابت حرف*, va_list) = av_log_default_callback;
 
-void av_log(void* avcl, int level, const char *fmt, ...)
+فراغ av_log(فراغ* avcl, صحيح level, ثابت حرف *fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
@@ -453,7 +453,7 @@ void av_log(void* avcl, int level, const char *fmt, ...)
     va_end(vl);
 }
 
-void av_log_once(void* avcl, int initial_level, int subsequent_level, int *state, const char *fmt, ...)
+فراغ av_log_once(فراغ* avcl, صحيح initial_level, صحيح subsequent_level, صحيح *state, ثابت حرف *fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
@@ -462,71 +462,71 @@ void av_log_once(void* avcl, int initial_level, int subsequent_level, int *state
     *state = 1;
 }
 
-void av_vlog(void* avcl, int level, const char *fmt, va_list vl)
+فراغ av_vlog(فراغ* avcl, صحيح level, ثابت حرف *fmt, va_list vl)
 {
-    AVClass* avc = avcl ? *(AVClass **) avcl : NULL;
-    void (*log_callback)(void*, int, const char*, va_list) =
+    AVClass* avc = avcl ? *(AVClass **) avcl : عدم;
+    فراغ (*log_callback)(فراغ*, صحيح, ثابت حرف*, va_list) =
         atomic_load_explicit(&av_log_callback, memory_order_relaxed);
-    if (avc && avc->version >= (50 << 16 | 15 << 8 | 2) &&
-        avc->log_level_offset_offset && level >= AV_LOG_FATAL)
-        level += *(int *) (((uint8_t *) avcl) + avc->log_level_offset_offset);
-    if (log_callback)
+    إذا (avc && avc->نسخو >= (50 << 16 | 15 << 8 | 2) &&
+        avc->log_level_وٿي_وٿي && level >= AV_LOG_FATAL)
+        level += *(صحيح *) (((uint8_t *) avcl) + avc->log_level_وٿي_وٿي);
+    إذا (log_callback)
         log_callback(avcl, level, fmt, vl);
 }
 
-int av_log_get_level(void)
+صحيح av_log_get_level(فراغ)
 {
-    return atomic_load_explicit(&av_log_level, memory_order_relaxed);
+    أرجع atomic_load_explicit(&av_log_level, memory_order_relaxed);
 }
 
-void av_log_set_level(int level)
+فراغ av_log_سيٽ_level(صحيح level)
 {
     atomic_store_explicit(&av_log_level, level, memory_order_relaxed);
 }
 
-void av_log_set_flags(int arg)
+فراغ av_log_سيٽ_flags(صحيح arg)
 {
     atomic_store_explicit(&av_log_flags, arg, memory_order_relaxed);
 }
 
-int av_log_get_flags(void)
+صحيح av_log_get_flags(فراغ)
 {
-    return atomic_load_explicit(&av_log_flags, memory_order_relaxed);
+    أرجع atomic_load_explicit(&av_log_flags, memory_order_relaxed);
 }
 
-void av_log_set_callback(void (*callback)(void*, int, const char*, va_list))
+فراغ av_log_سيٽ_callback(فراغ (*callback)(فراغ*, صحيح, ثابت حرف*, va_list))
 {
     atomic_store_explicit(&av_log_callback, callback, memory_order_relaxed);
 }
 
-static void missing_feature_sample(int sample, void *avc, const char *msg,
-                                   va_list argument_list)
+ساكن فراغ missing_feature_sample(صحيح sample, فراغ *avc, ثابت حرف *نياپو,
+                                   va_list دليل_list)
 {
-    av_vlog(avc, AV_LOG_WARNING, msg, argument_list);
+    av_vlog(avc, AV_LOG_WARNING, نياپو, دليل_list);
     av_log(avc, AV_LOG_WARNING, " is not implemented. Update your FFmpeg "
            "version to the newest one from Git. If the problem still "
            "occurs, it means that your file has a feature which has not "
            "been implemented.\n");
-    if (sample)
+    إذا (sample)
         av_log(avc, AV_LOG_WARNING, "If you want to help, upload a sample "
                "of this file to https://streams.videolan.org/upload/ "
                "and contact the ffmpeg-devel mailing list. (ffmpeg-devel@ffmpeg.org)\n");
 }
 
-void avpriv_request_sample(void *avc, const char *msg, ...)
+فراغ avpriv_request_sample(فراغ *avc, ثابت حرف *نياپو, ...)
 {
-    va_list argument_list;
+    va_list دليل_list;
 
-    va_start(argument_list, msg);
-    missing_feature_sample(1, avc, msg, argument_list);
-    va_end(argument_list);
+    va_start(دليل_list, نياپو);
+    missing_feature_sample(1, avc, نياپو, دليل_list);
+    va_end(دليل_list);
 }
 
-void avpriv_report_missing_feature(void *avc, const char *msg, ...)
+فراغ avpriv_report_missing_feature(فراغ *avc, ثابت حرف *نياپو, ...)
 {
-    va_list argument_list;
+    va_list دليل_list;
 
-    va_start(argument_list, msg);
-    missing_feature_sample(0, avc, msg, argument_list);
-    va_end(argument_list);
+    va_start(دليل_list, نياپو);
+    missing_feature_sample(0, avc, نياپو, دليل_list);
+    va_end(دليل_list);
 }
