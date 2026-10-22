@@ -16,122 +16,122 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "libavutil/random_seed.h"
-#include "libavutil/lfg.h"
-#include "libavutil/log.h"
-#include "libavutil/mem_internal.h"
-#include "libavutil/aes_ctr.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/random_seed.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/lfg.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/log.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/mem_internal.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/aes_ctr.h"
 
-static const DECLARE_ALIGNED(8, uint8_t, plain)[] = {
+ಸ್ಥಿರ ಧ್ರುವ DECLARE_ALIGNED(8, uint8_t, plain)[] = {
     0x6d, 0x6f, 0x73, 0x74, 0x20, 0x72, 0x61, 0x6e, 0x64, 0x6f,
     0x6d, 0x6f, 0x73, 0x74, 0x20, 0x72, 0x61, 0x6e, 0x64, 0x6f,
     0x6d, 0x6f, 0x73, 0x74, 0x20, 0x72, 0x61, 0x6e, 0x64, 0x6f,
     0x6d, 0x6f, 0x73, 0x74, 0x20, 0x72, 0x61, 0x6e, 0x64, 0x6f
 };
 
-static const DECLARE_ALIGNED(8, uint8_t, encrypted)[] = {
+ಸ್ಥಿರ ಧ್ರುವ DECLARE_ALIGNED(8, uint8_t, encrypted)[] = {
     0x95, 0xcd, 0x9a, 0x8a, 0x83, 0xa2, 0x1a, 0x84, 0x92, 0xed,
     0xd6, 0xf2, 0x57, 0x2f, 0x61, 0x98, 0xbc, 0x20, 0x98, 0xee,
     0x6c, 0xed, 0x53, 0xae, 0x2f, 0xc4, 0x18, 0x7c, 0xeb, 0x62,
     0xbb, 0x3a, 0x71, 0x24, 0x22, 0x8c, 0xd9, 0xfa, 0xee, 0x10
 };
 
-static const DECLARE_ALIGNED(8, uint8_t, fixed_iv)[] = {
+ಸ್ಥಿರ ಧ್ರುವ DECLARE_ALIGNED(8, uint8_t, fixed_iv)[] = {
     0xde, 0xad, 0xbe, 0xef, 0xde, 0xad, 0xbe, 0xef
 };
 
-static const DECLARE_ALIGNED(8, uint8_t, fixed_key)[] = {
+ಸ್ಥಿರ ಧ್ರುವ DECLARE_ALIGNED(8, uint8_t, fixed_ಕೀಲಿ)[] = {
     0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
     0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66
 };
 
-static DECLARE_ALIGNED(8, uint32_t, key)[4];
+ಸ್ಥಿರ DECLARE_ALIGNED(8, uint32_t, ಕೀಲಿ)[4];
 
-static DECLARE_ALIGNED(8, uint8_t, tmp)[40];
+ಸ್ಥಿರ DECLARE_ALIGNED(8, uint8_t, tmp)[40];
 
-int main (void)
+ಪೂರ್ಣಾಙ್ಕ main (ಶೂನ್ಯ)
 {
-    int ret = 1;
+    ಪೂರ್ಣಾಙ್ಕ ret = 1;
     AVLFG lfg;
-    struct AVAESCTR *ae, *ad;
-    const uint8_t *iv, *k;
+    ಸಂರಚನಾ AVAESCTR *ae, *ad;
+    ಧ್ರುವ uint8_t *iv, *k;
 
     av_lfg_init(&lfg, av_get_random_seed());
 
-    for (int i = 0; i < 2; i++) {
+    ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ i = 0; i < 2; i++) {
         ae = av_aes_ctr_alloc();
         ad = av_aes_ctr_alloc();
 
-        if (!ae || !ad)
-            goto ERROR;
+        ಯದಿ (!ae || !ad)
+            ಗಚ್ಛ ERROR;
 
-        if (i)
-            k = fixed_key;
-        else {
+        ಯದಿ (i)
+            k = fixed_ಕೀಲಿ;
+        ಅನ್ಯಥಾ {
             // Note: av_random_bytes() should be used in a real world scenario,
             // but since that function can fail, av_get_random_seed() is used
             // here for the purpose of this test, as its output is sufficient.
-            key[0] = av_get_random_seed();
-            key[1] = av_get_random_seed();
-            key[2] = av_get_random_seed();
-            key[3] = av_get_random_seed();
-            k = (uint8_t *)key;
+            ಕೀಲಿ[0] = av_get_random_seed();
+            ಕೀಲಿ[1] = av_get_random_seed();
+            ಕೀಲಿ[2] = av_get_random_seed();
+            ಕೀಲಿ[3] = av_get_random_seed();
+            k = (uint8_t *)ಕೀಲಿ;
         }
 
-        if (av_aes_ctr_init(ae, k) < 0)
-            goto ERROR;
+        ಯದಿ (av_aes_ctr_init(ae, k) < 0)
+            ಗಚ್ಛ ERROR;
 
-        if (av_aes_ctr_init(ad, k) < 0)
-            goto ERROR;
+        ಯದಿ (av_aes_ctr_init(ad, k) < 0)
+            ಗಚ್ಛ ERROR;
 
-        if (i)
+        ಯದಿ (i)
             av_aes_ctr_set_iv(ae, fixed_iv);
-        else
+        ಅನ್ಯಥಾ
             av_aes_ctr_set_random_iv(ae);
         iv =   av_aes_ctr_get_iv(ae);
         av_aes_ctr_set_full_iv(ad, iv);
 
         uint8_t *dst = tmp;
-        const uint8_t *src = plain;
-        int left = sizeof(plain);
-        while (left > 0) {
-            int count = (av_lfg_get(&lfg) % left) + 1;
-            av_aes_ctr_crypt(ae, dst, src, count);
-            dst += count;
-            src += count;
-            left -= count;
+        ಧ್ರುವ uint8_t *src = plain;
+        ಪೂರ್ಣಾಙ್ಕ ಎಡ = ಪರಿಮಾಣ(plain);
+        ಯಾವತ್ (ಎಡ > 0) {
+            ಪೂರ್ಣಾಙ್ಕ ಎಣಿಕೆ = (av_lfg_get(&lfg) % ಎಡ) + 1;
+            av_aes_ctr_crypt(ae, dst, src, ಎಣಿಕೆ);
+            dst += ಎಣಿಕೆ;
+            src += ಎಣಿಕೆ;
+            ಎಡ -= ಎಣಿಕೆ;
         }
-        if (i && memcmp(tmp, encrypted, sizeof(tmp)) != 0) {
-            av_log(NULL, AV_LOG_ERROR, "test failed\n");
-            goto ERROR;
+        ಯದಿ (i && memcmp(tmp, encrypted, ಪರಿಮಾಣ(tmp)) != 0) {
+            av_log(ರಿಕ್ತ, AV_LOG_ERROR, "test failed\n");
+            ಗಚ್ಛ ERROR;
         }
 
         dst = tmp;
-        left = sizeof(plain);
-        while (left > 0) {
-            int count = (av_lfg_get(&lfg) % left) + 1;
-            av_aes_ctr_crypt(ad, dst, dst, count);
-            dst += count;
-            left -= count;
+        ಎಡ = ಪರಿಮಾಣ(plain);
+        ಯಾವತ್ (ಎಡ > 0) {
+            ಪೂರ್ಣಾಙ್ಕ ಎಣಿಕೆ = (av_lfg_get(&lfg) % ಎಡ) + 1;
+            av_aes_ctr_crypt(ad, dst, dst, ಎಣಿಕೆ);
+            dst += ಎಣಿಕೆ;
+            ಎಡ -= ಎಣಿಕೆ;
         }
 
-        if (memcmp(tmp, plain, sizeof(tmp)) != 0){
-            av_log(NULL, AV_LOG_ERROR, "test failed\n");
-            goto ERROR;
+        ಯದಿ (memcmp(tmp, plain, ಪರಿಮಾಣ(tmp)) != 0){
+            av_log(ರಿಕ್ತ, AV_LOG_ERROR, "test failed\n");
+            ಗಚ್ಛ ERROR;
         }
 
         av_aes_ctr_free(ae);
         av_aes_ctr_free(ad);
-        ae = ad = NULL;
+        ae = ad = ರಿಕ್ತ;
     }
 
-    av_log(NULL, AV_LOG_INFO, "test passed\n");
+    av_log(ರಿಕ್ತ, AV_LOG_INFO, "test passed\n");
     ret = 0;
 
 ERROR:
     av_aes_ctr_free(ae);
     av_aes_ctr_free(ad);
-    return ret;
+    ಪ್ರತ್ಯಾಗಮ ret;
 }

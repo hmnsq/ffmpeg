@@ -21,9 +21,9 @@
 #ifndef AVUTIL_MIPS_GENERIC_MACROS_MSA_H
 #define AVUTIL_MIPS_GENERIC_MACROS_MSA_H
 
-#include <stdint.h>
-#include <msa.h>
-#include <config.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <msa.h>
+#ಅನ್ತರ್ಭಾವ <config.h>
 
 #define ALIGNMENT           16
 #define ALLOC_ALIGNED(align) __attribute__ ((aligned((align) << 1)))
@@ -44,7 +44,7 @@
 #define ST_UW(...) ST_V(v4u32, __VA_ARGS__)
 #define ST_SW(...) ST_V(v4i32, __VA_ARGS__)
 
-#if HAVE_MIPS32R6 || HAVE_MIPS64R6
+#ಯದಿ HAVE_MIPS32R6 || HAVE_MIPS64R6
     #define LH(psrc)                              \
     ( {                                           \
         uint16_t val_lh_m = *(uint16_t *)(psrc);  \
@@ -57,13 +57,13 @@
         val_lw_m;                                 \
     } )
 
-    #if (__mips == 64)
+    #ಯದಿ (__mips == 64)
         #define LD(psrc)                               \
         ( {                                            \
             uint64_t val_ld_m =  *(uint64_t *)(psrc);  \
             val_ld_m;                                  \
         } )
-    #else  // !(__mips == 64)
+    #ಅನ್ಯಥಾ  // !(__mips == 64)
         #define LD(psrc)                                                    \
         ( {                                                                 \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);                        \
@@ -85,13 +85,13 @@
     #define SW(val, pdst)  *(uint32_t *)(pdst) = (val);
     #define SD(val, pdst)  *(uint64_t *)(pdst) = (val);
 
-#else  // !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+#ಅನ್ಯಥಾ  // !HAVE_MIPS32R6 && !HAVE_MIPS64R6
     #define LH(psrc)                                 \
     ( {                                              \
         uint8_t *psrc_lh_m = (uint8_t *) (psrc);     \
         uint16_t val_lh_m;                           \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ ಚಞ್ಚಲ (                           \
             "ulh  %[val_lh_m],  %[psrc_lh_m]  \n\t"  \
                                                      \
             : [val_lh_m] "=r" (val_lh_m)             \
@@ -106,7 +106,7 @@
         uint8_t *psrc_lw_m = (uint8_t *) (psrc);     \
         uint32_t val_lw_m;                           \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ ಚಞ್ಚಲ (                           \
             "lwr %[val_lw_m], 0(%[psrc_lw_m]) \n\t"  \
             "lwl %[val_lw_m], 3(%[psrc_lw_m]) \n\t"  \
                                                      \
@@ -117,13 +117,13 @@
         val_lw_m;                                    \
     } )
 
-    #if (__mips == 64)
+    #ಯದಿ (__mips == 64)
         #define LD(psrc)                                 \
         ( {                                              \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);     \
             uint64_t val_ld_m = 0;                       \
                                                          \
-            __asm__ volatile (                           \
+            __asm__ ಚಞ್ಚಲ (                           \
                 "ldr %[val_ld_m], 0(%[psrc_ld_m]) \n\t"  \
                 "ldl %[val_ld_m], 7(%[psrc_ld_m]) \n\t"  \
                                                          \
@@ -133,7 +133,7 @@
                                                          \
             val_ld_m;                                    \
         } )
-    #else  // !(__mips == 64)
+    #ಅನ್ಯಥಾ  // !(__mips == 64)
         #define LD(psrc)                                                    \
         ( {                                                                 \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);                        \
@@ -156,7 +156,7 @@
         uint8_t *pdst_sh_m = (uint8_t *) (pdst);     \
         uint16_t val_sh_m = (val);                   \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ ಚಞ್ಚಲ (                           \
             "ush  %[val_sh_m],  %[pdst_sh_m]  \n\t"  \
                                                      \
             : [pdst_sh_m] "=m" (*pdst_sh_m)          \
@@ -169,7 +169,7 @@
         uint8_t *pdst_sw_m = (uint8_t *) (pdst);     \
         uint32_t val_sw_m = (val);                   \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ ಚಞ್ಚಲ (                           \
             "usw  %[val_sw_m],  %[pdst_sw_m]  \n\t"  \
                                                      \
             : [pdst_sw_m] "=m" (*pdst_sw_m)          \
@@ -1135,25 +1135,25 @@
                  Outputs - out                (output vector)
                  Return Type - as per RTYPE
 */
-#define INSERT_W2(RTYPE, in0, in1, out)                 \
+#define ಸೇರಿಸು_W2(RTYPE, in0, in1, out)                 \
 {                                                       \
     out = (RTYPE) __msa_insert_w((v4i32) out, 0, in0);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 1, in1);  \
 }
-#define INSERT_W2_UB(...) INSERT_W2(v16u8, __VA_ARGS__)
-#define INSERT_W2_SB(...) INSERT_W2(v16i8, __VA_ARGS__)
+#define ಸೇರಿಸು_W2_UB(...) ಸೇರಿಸು_W2(v16u8, __VA_ARGS__)
+#define ಸೇರಿಸು_W2_SB(...) ಸೇರಿಸು_W2(v16i8, __VA_ARGS__)
 
-#define INSERT_W4(RTYPE, in0, in1, in2, in3, out)       \
+#define ಸೇರಿಸು_W4(RTYPE, in0, in1, in2, in3, out)       \
 {                                                       \
     out = (RTYPE) __msa_insert_w((v4i32) out, 0, in0);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 1, in1);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 2, in2);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 3, in3);  \
 }
-#define INSERT_W4_UB(...) INSERT_W4(v16u8, __VA_ARGS__)
-#define INSERT_W4_SB(...) INSERT_W4(v16i8, __VA_ARGS__)
-#define INSERT_W4_SH(...) INSERT_W4(v8i16, __VA_ARGS__)
-#define INSERT_W4_SW(...) INSERT_W4(v4i32, __VA_ARGS__)
+#define ಸೇರಿಸು_W4_UB(...) ಸೇರಿಸು_W4(v16u8, __VA_ARGS__)
+#define ಸೇರಿಸು_W4_SB(...) ಸೇರಿಸು_W4(v16i8, __VA_ARGS__)
+#define ಸೇರಿಸು_W4_SH(...) ಸೇರಿಸು_W4(v8i16, __VA_ARGS__)
+#define ಸೇರಿಸು_W4_SW(...) ಸೇರಿಸು_W4(v4i32, __VA_ARGS__)
 
 /* Description : Insert specified double word elements from input vectors to 1
                  destination vector
@@ -1161,15 +1161,15 @@
                  Outputs - out           (output vector)
                  Return Type - as per RTYPE
 */
-#define INSERT_D2(RTYPE, in0, in1, out)                 \
+#define ಸೇರಿಸು_D2(RTYPE, in0, in1, out)                 \
 {                                                       \
     out = (RTYPE) __msa_insert_d((v2i64) out, 0, in0);  \
     out = (RTYPE) __msa_insert_d((v2i64) out, 1, in1);  \
 }
-#define INSERT_D2_UB(...) INSERT_D2(v16u8, __VA_ARGS__)
-#define INSERT_D2_SB(...) INSERT_D2(v16i8, __VA_ARGS__)
-#define INSERT_D2_SH(...) INSERT_D2(v8i16, __VA_ARGS__)
-#define INSERT_D2_SD(...) INSERT_D2(v2i64, __VA_ARGS__)
+#define ಸೇರಿಸು_D2_UB(...) ಸೇರಿಸು_D2(v16u8, __VA_ARGS__)
+#define ಸೇರಿಸು_D2_SB(...) ಸೇರಿಸು_D2(v16i8, __VA_ARGS__)
+#define ಸೇರಿಸು_D2_SH(...) ಸೇರಿಸು_D2(v8i16, __VA_ARGS__)
+#define ಸೇರಿಸು_D2_SD(...) ಸೇರಿಸು_D2(v2i64, __VA_ARGS__)
 
 /* Description : Interleave even byte elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -2706,8 +2706,8 @@
                                                                   \
     ILVR_D2_SH(in1, in0, in3, in2, inp0_m, inp1_m)                \
     LW4(pdst, stride,  src0_m, src1_m, src2_m, src3_m);           \
-    INSERT_W2_SB(src0_m, src1_m, dst0_m);                         \
-    INSERT_W2_SB(src2_m, src3_m, dst1_m);                         \
+    ಸೇರಿಸು_W2_SB(src0_m, src1_m, dst0_m);                         \
+    ಸೇರಿಸು_W2_SB(src2_m, src3_m, dst1_m);                         \
     ILVR_B2_SH(zero_m, dst0_m, zero_m, dst1_m, res0_m, res1_m);   \
     ADD2(res0_m, inp0_m, res1_m, inp1_m, res0_m, res1_m);         \
     CLIP_SH2_0_255(res0_m, res1_m);                               \

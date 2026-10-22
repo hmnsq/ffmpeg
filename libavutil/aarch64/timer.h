@@ -21,24 +21,24 @@
 #ifndef AVUTIL_AARCH64_TIMER_H
 #define AVUTIL_AARCH64_TIMER_H
 
-#include <stdint.h>
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#if HAVE_INLINE_ASM
+#ಯದಿ HAVE_INLINE_ASM
 
 #define AV_READ_TIME read_time
 
-static inline uint64_t read_time(void)
+ಸ್ಥಿರ ಅನ್ತಃಸ್ಥ uint64_t read_time(ಶೂನ್ಯ)
 {
     uint64_t cycle_counter;
-    __asm__ volatile(
+    __asm__ ಚಞ್ಚಲ(
         "isb                   \t\n"
         // cntvct_el0 has lower resolution than pmccntr_el0, but is usually
         // accessible from user space by default.
         "mrs %0, cntvct_el0        "
         : "=r"(cycle_counter) :: "memory" );
 
-    return cycle_counter;
+    ಪ್ರತ್ಯಾಗಮ cycle_counter;
 }
 
 #endif /* HAVE_INLINE_ASM */

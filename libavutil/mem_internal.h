@@ -21,15 +21,15 @@
 #ifndef AVUTIL_MEM_INTERNAL_H
 #define AVUTIL_MEM_INTERNAL_H
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 #ifndef _MSC_VER
-#include <stdalign.h>
+#ಅನ್ತರ್ಭಾವ <stdalign.h>
 #endif
 
-#include "attributes.h"
-#include "macros.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
 
 /**
  * @def DECLARE_ALIGNED(n,t,v)
@@ -76,27 +76,27 @@
  * @param v Name of the variable
  */
 
-#if defined(__DJGPP__)
+#ಯದಿ defined(__DJGPP__)
     #define DECLARE_ALIGNED_T(n,t,v)    alignas(FFMIN(n, 16)) t v
     #define DECLARE_ASM_ALIGNED(n,t,v)  alignas(FFMIN(n, 16)) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    alignas(FFMIN(n, 16)) static const t av_used v
-#elif defined(_MSC_VER)
+    #define DECLARE_ASM_CONST(n,t,v)    alignas(FFMIN(n, 16)) ಸ್ಥಿರ ಧ್ರುವ t av_used v
+#ನೋಚೇದ್ಯದಿ defined(_MSC_VER)
     #define DECLARE_ALIGNED_T(n,t,v)    __declspec(align(n)) t v
     #define DECLARE_ASM_ALIGNED(n,t,v)  __declspec(align(n)) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) static const t av_used v
-#else
+    #define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) ಸ್ಥಿರ ಧ್ರುವ t av_used v
+#ಅನ್ಯಥಾ
     #define DECLARE_ALIGNED_T(n,t,v)    alignas(n) t v
     #define DECLARE_ASM_ALIGNED(n,t,v)  alignas(n) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    alignas(n) static const t av_used v
+    #define DECLARE_ASM_CONST(n,t,v)    alignas(n) ಸ್ಥಿರ ಧ್ರುವ t av_used v
 #endif
 
-#if HAVE_SIMD_ALIGN_64
+#ಯದಿ HAVE_SIMD_ALIGN_64
     #define ALIGN_64 64
     #define ALIGN_32 32
-#elif HAVE_SIMD_ALIGN_32
+#ನೋಚೇದ್ಯದಿ HAVE_SIMD_ALIGN_32
     #define ALIGN_64 32
     #define ALIGN_32 32
-#else
+#ಅನ್ಯಥಾ
     #define ALIGN_64 16
     #define ALIGN_32 16
 #endif

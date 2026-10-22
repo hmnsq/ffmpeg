@@ -45,35 +45,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "common.h"
-#include "fixed_dsp.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ "common.h"
+#ಅನ್ತರ್ಭಾವ "fixed_dsp.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
-static void vector_fmul_add_c(int *dst, const int *src0, const int *src1, const int *src2, int len){
-    int i;
+ಸ್ಥಿರ ಶೂನ್ಯ vector_fmul_add_c(ಪೂರ್ಣಾಙ್ಕ *dst, ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ *src0, ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ *src1, ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ *src2, ಪೂರ್ಣಾಙ್ಕ len){
+    ಪೂರ್ಣಾಙ್ಕ i;
     int64_t accu;
 
-    for (i=0; i<len; i++) {
+    ಪ್ರತಿ (i=0; i<len; i++) {
         accu = (int64_t)src0[i] * src1[i];
-        dst[i] = src2[i] + (int)((accu + 0x40000000) >> 31);
+        dst[i] = src2[i] + (ಪೂರ್ಣಾಙ್ಕ)((accu + 0x40000000) >> 31);
     }
 }
 
-static void vector_fmul_reverse_c(int *dst, const int *src0, const int *src1, int len)
+ಸ್ಥಿರ ಶೂನ್ಯ vector_fmul_reverse_c(ಪೂರ್ಣಾಙ್ಕ *dst, ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ *src0, ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ *src1, ಪೂರ್ಣಾಙ್ಕ len)
 {
-    int i;
+    ಪೂರ್ಣಾಙ್ಕ i;
     int64_t accu;
 
     src1 += len-1;
-    for (i=0; i<len; i++) {
+    ಪ್ರತಿ (i=0; i<len; i++) {
         accu = (int64_t)src0[i] * src1[-i];
-        dst[i] = (int)((accu+0x40000000) >> 31);
+        dst[i] = (ಪೂರ್ಣಾಙ್ಕ)((accu+0x40000000) >> 31);
     }
 }
 
-static void vector_fmul_window_scaled_c(int16_t *dst, const int32_t *src0,
-                                       const int32_t *src1, const int32_t *win,
-                                       int len, uint8_t bits)
+ಸ್ಥಿರ ಶೂನ್ಯ vector_fmul_window_scaled_c(int16_t *dst, ಧ್ರುವ int32_t *src0,
+                                       ಧ್ರುವ int32_t *src1, ಧ್ರುವ int32_t *win,
+                                       ಪೂರ್ಣಾಙ್ಕ len, uint8_t bits)
 {
     int32_t s0, s1, wi, wj, i,j, round;
 
@@ -82,7 +82,7 @@ static void vector_fmul_window_scaled_c(int16_t *dst, const int32_t *src0,
     src0+= len;
     round = bits? 1 << (bits-1) : 0;
 
-    for (i=-len, j=len-1; i<0; i++, j--) {
+    ಪ್ರತಿ (i=-len, j=len-1; i<0; i++, j--) {
         s0 = src0[i];
         s1 = src1[j];
         wi = win[i];
@@ -92,9 +92,9 @@ static void vector_fmul_window_scaled_c(int16_t *dst, const int32_t *src0,
     }
 }
 
-static void vector_fmul_window_c(int32_t *dst, const int32_t *src0,
-                                       const int32_t *src1, const int32_t *win,
-                                       int len)
+ಸ್ಥಿರ ಶೂನ್ಯ vector_fmul_window_c(int32_t *dst, ಧ್ರುವ int32_t *src0,
+                                       ಧ್ರುವ int32_t *src1, ಧ್ರುವ int32_t *win,
+                                       ಪೂರ್ಣಾಙ್ಕ len)
 {
     int32_t s0, s1, wi, wj, i, j;
 
@@ -102,7 +102,7 @@ static void vector_fmul_window_c(int32_t *dst, const int32_t *src0,
     win += len;
     src0+= len;
 
-    for (i=-len, j=len-1; i<0; i++, j--) {
+    ಪ್ರತಿ (i=-len, j=len-1; i<0; i++, j--) {
         s0 = src0[i];
         s1 = src1[j];
         wi = win[i];
@@ -112,48 +112,48 @@ static void vector_fmul_window_c(int32_t *dst, const int32_t *src0,
     }
 }
 
-static void vector_fmul_c(int *dst, const int *src0, const int *src1, int len)
+ಸ್ಥಿರ ಶೂನ್ಯ vector_fmul_c(ಪೂರ್ಣಾಙ್ಕ *dst, ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ *src0, ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ *src1, ಪೂರ್ಣಾಙ್ಕ len)
 {
-    int i;
+    ಪೂರ್ಣಾಙ್ಕ i;
     int64_t accu;
 
-    for (i = 0; i < len; i++){
+    ಪ್ರತಿ (i = 0; i < len; i++){
         accu = (int64_t)src0[i] * src1[i];
-        dst[i] = (int)((accu+0x40000000) >> 31);
+        dst[i] = (ಪೂರ್ಣಾಙ್ಕ)((accu+0x40000000) >> 31);
     }
 }
 
-static int scalarproduct_fixed_c(const int *v1, const int *v2, int len)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ scalarproduct_fixed_c(ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ *v1, ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ *v2, ಪೂರ್ಣಾಙ್ಕ len)
 {
     /** p is initialized with 0x40000000 so that the proper rounding will occur
       * at the end */
     int64_t p = 0x40000000;
-    int i;
+    ಪೂರ್ಣಾಙ್ಕ i;
 
-    for (i = 0; i < len; i++)
+    ಪ್ರತಿ (i = 0; i < len; i++)
         p += (int64_t)v1[i] * v2[i];
 
-    return (int)(p >> 31);
+    ಪ್ರತ್ಯಾಗಮ (ಪೂರ್ಣಾಙ್ಕ)(p >> 31);
 }
 
-static void butterflies_fixed_c(int *restrict v1s, int *restrict v2, int len)
+ಸ್ಥಿರ ಶೂನ್ಯ butterflies_fixed_c(ಪೂರ್ಣಾಙ್ಕ *restrict v1s, ಪೂರ್ಣಾಙ್ಕ *restrict v2, ಪೂರ್ಣಾಙ್ಕ len)
 {
-    int i;
-    unsigned int *v1 = v1s;
+    ಪೂರ್ಣಾಙ್ಕ i;
+    unsigned ಪೂರ್ಣಾಙ್ಕ *v1 = v1s;
 
-    for (i = 0; i < len; i++){
-        int t = v1[i] - v2[i];
+    ಪ್ರತಿ (i = 0; i < len; i++){
+        ಪೂರ್ಣಾಙ್ಕ t = v1[i] - v2[i];
         v1[i] += v2[i];
         v2[i] = t;
     }
 }
 
-AVFixedDSPContext * avpriv_alloc_fixed_dsp(int bit_exact)
+AVFixedDSPContext * avpriv_alloc_fixed_dsp(ಪೂರ್ಣಾಙ್ಕ bit_exact)
 {
-    AVFixedDSPContext * fdsp = av_malloc(sizeof(AVFixedDSPContext));
+    AVFixedDSPContext * fdsp = av_malloc(ಪರಿಮಾಣ(AVFixedDSPContext));
 
-    if (!fdsp)
-        return NULL;
+    ಯದಿ (!fdsp)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 
     fdsp->vector_fmul_window_scaled = vector_fmul_window_scaled_c;
     fdsp->vector_fmul_window = vector_fmul_window_c;
@@ -163,11 +163,11 @@ AVFixedDSPContext * avpriv_alloc_fixed_dsp(int bit_exact)
     fdsp->butterflies_fixed = butterflies_fixed_c;
     fdsp->scalarproduct_fixed = scalarproduct_fixed_c;
 
-#if ARCH_RISCV
+#ಯದಿ ARCH_RISCV
     ff_fixed_dsp_init_riscv(fdsp);
-#elif ARCH_X86 && HAVE_X86ASM
+#ನೋಚೇದ್ಯದಿ ARCH_X86 && HAVE_X86ASM
     ff_fixed_dsp_init_x86(fdsp);
 #endif
 
-    return fdsp;
+    ಪ್ರತ್ಯಾಗಮ fdsp;
 }

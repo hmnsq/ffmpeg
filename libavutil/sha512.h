@@ -28,10 +28,10 @@
 #ifndef AVUTIL_SHA512_H
 #define AVUTIL_SHA512_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "attributes.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
 
 /**
  * @defgroup lavu_sha512 SHA-512
@@ -50,14 +50,14 @@
  * @{
  */
 
-extern const int av_sha512_size;
+ಬಾಹ್ಯ ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ av_sha512_size;
 
-struct AVSHA512;
+ಸಂರಚನಾ AVSHA512;
 
 /**
  * Allocate an AVSHA512 context.
  */
-struct AVSHA512 *av_sha512_alloc(void);
+ಸಂರಚನಾ AVSHA512 *av_sha512_alloc(ಶೂನ್ಯ);
 
 /**
  * Initialize SHA-2 512 hashing.
@@ -66,7 +66,7 @@ struct AVSHA512 *av_sha512_alloc(void);
  * @param bits    number of bits in digest (224, 256, 384 or 512 bits)
  * @return        zero if initialization succeeded, -1 otherwise
  */
-int av_sha512_init(struct AVSHA512* context, int bits);
+ಪೂರ್ಣಾಙ್ಕ av_sha512_init(ಸಂರಚನಾ AVSHA512* context, ಪೂರ್ಣಾಙ್ಕ bits);
 
 /**
  * Update hash value.
@@ -75,7 +75,7 @@ int av_sha512_init(struct AVSHA512* context, int bits);
  * @param data    input data to update hash with
  * @param len     input data length
  */
-void av_sha512_update(struct AVSHA512* context, const uint8_t* data, size_t len);
+ಶೂನ್ಯ av_sha512_update(ಸಂರಚನಾ AVSHA512* context, ಧ್ರುವ uint8_t* data, size_t len);
 
 /**
  * Finish hashing and output digest value.
@@ -83,7 +83,7 @@ void av_sha512_update(struct AVSHA512* context, const uint8_t* data, size_t len)
  * @param context hash function context
  * @param digest  buffer where output digest value is stored
  */
-void av_sha512_final(struct AVSHA512* context, uint8_t *digest);
+ಶೂನ್ಯ av_sha512_final(ಸಂರಚನಾ AVSHA512* context, uint8_t *digest);
 
 /**
  * @}

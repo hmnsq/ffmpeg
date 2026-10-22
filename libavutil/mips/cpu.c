@@ -16,29 +16,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "config.h"
-#if defined __linux__ || defined __ANDROID__
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/auxv.h>
-#include "asmdefs.h"
-#include "libavutil/avstring.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu_internal.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಯದಿ defined __linux__ || defined __ANDROID__
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಅನ್ತರ್ಭಾವ <sys/auxv.h>
+#ಅನ್ತರ್ಭಾವ "asmdefs.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/avstring.h"
 #endif
 
-#if defined __linux__ || defined __ANDROID__
+#ಯದಿ defined __linux__ || defined __ANDROID__
 
 #define HWCAP_LOONGSON_CPUCFG (1 << 14)
 
-static int cpucfg_available(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ cpucfg_available(ಶೂನ್ಯ)
 {
-    return ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
+    ಪ್ರತ್ಯಾಗಮ ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
 }
 
 /* Most toolchains have no CPUCFG support yet */
-static uint32_t read_cpucfg(uint32_t reg)
+ಸ್ಥಿರ uint32_t read_cpucfg(uint32_t reg)
 {
         uint32_t __res;
 
@@ -51,7 +51,7 @@ static uint32_t read_cpucfg(uint32_t reg)
                 :"r"(reg)
                 :
                 );
-        return __res;
+        ಪ್ರತ್ಯಾಗಮ __res;
 }
 
 #define LOONGSON_CFG1 0x1
@@ -59,76 +59,76 @@ static uint32_t read_cpucfg(uint32_t reg)
 #define LOONGSON_CFG1_MMI    (1 << 4)
 #define LOONGSON_CFG1_MSA1   (1 << 5)
 
-static int cpu_flags_cpucfg(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ cpu_flags_cpucfg(ಶೂನ್ಯ)
 {
-    int flags = 0;
+    ಪೂರ್ಣಾಙ್ಕ flags = 0;
     uint32_t cfg1 = read_cpucfg(LOONGSON_CFG1);
 
-    if (cfg1 & LOONGSON_CFG1_MMI)
+    ಯದಿ (cfg1 & LOONGSON_CFG1_MMI)
         flags |= AV_CPU_FLAG_MMI;
 
-    if (cfg1 & LOONGSON_CFG1_MSA1)
+    ಯದಿ (cfg1 & LOONGSON_CFG1_MSA1)
         flags |= AV_CPU_FLAG_MSA;
 
-    return flags;
+    ಪ್ರತ್ಯಾಗಮ flags;
 }
 
-static int cpu_flags_cpuinfo(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ cpu_flags_cpuinfo(ಶೂನ್ಯ)
 {
     FILE *f = fopen("/proc/cpuinfo", "r");
-    char buf[200];
-    int flags = 0;
+    ವರ್ಣ buf[200];
+    ಪೂರ್ಣಾಙ್ಕ flags = 0;
 
-    if (!f)
-        return -1;
+    ಯದಿ (!f)
+        ಪ್ರತ್ಯಾಗಮ -1;
 
-    while (fgets(buf, sizeof(buf), f)) {
+    ಯಾವತ್ (fgets(buf, ಪರಿಮಾಣ(buf), f)) {
         /* Legacy kernel may not export MMI in ASEs implemented */
-        if (av_strstart(buf, "cpu model", NULL)) {
-            if (strstr(buf, "Loongson-3 "))
+        ಯದಿ (av_strstart(buf, "cpu model", ರಿಕ್ತ)) {
+            ಯದಿ (strstr(buf, "Loongson-3 "))
                 flags |= AV_CPU_FLAG_MMI;
         }
 
-        if (av_strstart(buf, "ASEs implemented", NULL)) {
-            if (strstr(buf, " loongson-mmi"))
+        ಯದಿ (av_strstart(buf, "ASEs implemented", ರಿಕ್ತ)) {
+            ಯದಿ (strstr(buf, " loongson-mmi"))
                 flags |= AV_CPU_FLAG_MMI;
-            if (strstr(buf, " msa"))
+            ಯದಿ (strstr(buf, " msa"))
                 flags |= AV_CPU_FLAG_MSA;
 
-            break;
+            ಭಙ್ಗ;
         }
     }
     fclose(f);
-    return flags;
+    ಪ್ರತ್ಯಾಗಮ flags;
 }
 #endif
 
-int ff_get_cpu_flags_mips(void)
+ಪೂರ್ಣಾಙ್ಕ ff_get_cpu_flags_mips(ಶೂನ್ಯ)
 {
-#if defined __linux__ || defined __ANDROID__
-    if (cpucfg_available())
-        return cpu_flags_cpucfg();
-    else
-        return cpu_flags_cpuinfo();
-#else
+#ಯದಿ defined __linux__ || defined __ANDROID__
+    ಯದಿ (cpucfg_available())
+        ಪ್ರತ್ಯಾಗಮ cpu_flags_cpucfg();
+    ಅನ್ಯಥಾ
+        ಪ್ರತ್ಯಾಗಮ cpu_flags_cpuinfo();
+#ಅನ್ಯಥಾ
     /* Assume no SIMD ASE supported */
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 #endif
 }
 
-size_t ff_get_cpu_max_align_mips(void)
+size_t ff_get_cpu_max_align_mips(ಶೂನ್ಯ)
 {
-    int flags = av_get_cpu_flags();
+    ಪೂರ್ಣಾಙ್ಕ flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_MSA)
-        return 16;
+    ಯದಿ (flags & AV_CPU_FLAG_MSA)
+        ಪ್ರತ್ಯಾಗಮ 16;
 
     /*
      * MMI itself is 64-bit but quad word load & store
      * needs 128-bit align.
      */
-    if (flags & AV_CPU_FLAG_MMI)
-        return 16;
+    ಯದಿ (flags & AV_CPU_FLAG_MMI)
+        ಪ್ರತ್ಯಾಗಮ 16;
 
-    return 8;
+    ಪ್ರತ್ಯಾಗಮ 8;
 }

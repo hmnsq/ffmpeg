@@ -21,26 +21,26 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <errno.h>
-#include <limits.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <float.h>
+#ಅನ್ತರ್ಭಾವ <errno.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <math.h>
+#ಅನ್ತರ್ಭಾವ <stdarg.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಅನ್ತರ್ಭಾವ <float.h>
 
-#include "avstring.h"
+#ಅನ್ತರ್ಭಾವ "avstring.h"
 
-typedef struct FFFILE {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ FFFILE {
     size_t buf_size;
-    unsigned char *buf;
-    unsigned char *rpos, *rend;
-    unsigned char *shend;
+    unsigned ವರ್ಣ *buf;
+    unsigned ವರ್ಣ *rpos, *rend;
+    unsigned ವರ್ಣ *shend;
     ptrdiff_t shlim, shcnt;
-    void *cookie;
-    size_t (*read)(struct FFFILE *, unsigned char *, size_t);
+    ಶೂನ್ಯ *cookie;
+    size_t (*ಪಠ)(ಸಂರಚನಾ FFFILE *, unsigned ವರ್ಣ *, size_t);
 } FFFILE;
 
 #define SIZE_hh -2
@@ -52,70 +52,70 @@ typedef struct FFFILE {
 
 #define shcnt(f) ((f)->shcnt + ((f)->rpos - (f)->buf))
 
-static int fftoread(FFFILE *f)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ fftoread(FFFILE *f)
 {
     f->rpos = f->rend = f->buf + f->buf_size;
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static size_t ffstring_read(FFFILE *f, unsigned char *buf, size_t len)
+ಸ್ಥಿರ size_t ffstring_read(FFFILE *f, unsigned ವರ್ಣ *buf, size_t len)
 {
-    char *src = f->cookie;
+    ವರ್ಣ *src = f->cookie;
     size_t k = len+256;
-    char *end = memchr(src, 0, k);
+    ವರ್ಣ *end = memchr(src, 0, k);
 
-    if (end) k = end-src;
-    if (k < len) len = k;
+    ಯದಿ (end) k = end-src;
+    ಯದಿ (k < len) len = k;
     memcpy(buf, src, len);
-    f->rpos = (void *)(src+len);
-    f->rend = (void *)(src+k);
+    f->rpos = (ಶೂನ್ಯ *)(src+len);
+    f->rend = (ಶೂನ್ಯ *)(src+k);
     f->cookie = src+k;
 
-    return len;
+    ಪ್ರತ್ಯಾಗಮ len;
 }
 
-static int ffuflow(FFFILE *f)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ ffuflow(FFFILE *f)
 {
-    unsigned char c;
-    if (!fftoread(f) && f->read(f, &c, 1)==1) return c;
-    return EOF;
+    unsigned ವರ್ಣ c;
+    ಯದಿ (!fftoread(f) && f->ಪಠ(f, &c, 1)==1) ಪ್ರತ್ಯಾಗಮ c;
+    ಪ್ರತ್ಯಾಗಮ EOF;
 }
 
-static void ffshlim(FFFILE *f, ptrdiff_t lim)
+ಸ್ಥಿರ ಶೂನ್ಯ ffshlim(FFFILE *f, ptrdiff_t lim)
 {
     f->shlim = lim;
     f->shcnt = f->buf - f->rpos;
     /* If lim is nonzero, rend must be a valid pointer. */
-    if (lim && f->rend - f->rpos > lim)
+    ಯದಿ (lim && f->rend - f->rpos > lim)
         f->shend = f->rpos + lim;
-    else
+    ಅನ್ಯಥಾ
         f->shend = f->rend;
 }
 
-static int ffshgetc(FFFILE *f)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ ffshgetc(FFFILE *f)
 {
-    int c;
+    ಪೂರ್ಣಾಙ್ಕ c;
     ptrdiff_t cnt = shcnt(f);
-    if (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
+    ಯದಿ (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
         f->shcnt = f->buf - f->rpos + cnt;
         f->shend = 0;
-        return EOF;
+        ಪ್ರತ್ಯಾಗಮ EOF;
     }
     cnt++;
-    if (f->shlim && f->rend - f->rpos > f->shlim - cnt)
+    ಯದಿ (f->shlim && f->rend - f->rpos > f->shlim - cnt)
         f->shend = f->rpos + (f->shlim - cnt);
-    else
+    ಅನ್ಯಥಾ
         f->shend = f->rend;
     f->shcnt = f->buf - f->rpos + cnt;
-    if (f->rpos[-1] != c) f->rpos[-1] = c;
-    return c;
+    ಯದಿ (f->rpos[-1] != c) f->rpos[-1] = c;
+    ಪ್ರತ್ಯಾಗಮ c;
 }
 
 #define shlim(f, lim) ffshlim((f), (lim))
 #define shgetc(f) (((f)->rpos < (f)->shend) ? *(f)->rpos++ : ffshgetc(f))
-#define shunget(f) ((f)->shend ? (void)(f)->rpos-- : (void)0)
+#define shunget(f) ((f)->shend ? (ಶೂನ್ಯ)(f)->rpos-- : (ಶೂನ್ಯ)0)
 
-static const unsigned char table[] = { -1,
+ಸ್ಥಿರ ಧ್ರುವ unsigned ವರ್ಣ table[] = { -1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
@@ -134,106 +134,106 @@ static const unsigned char table[] = { -1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 };
 
-static unsigned long long ffintscan(FFFILE *f, unsigned base, int pok, unsigned long long lim)
+ಸ್ಥಿರ unsigned long long ffintscan(FFFILE *f, unsigned base, ಪೂರ್ಣಾಙ್ಕ pok, unsigned long long lim)
 {
-    const unsigned char *val = table+1;
-    int c, neg=0;
+    ಧ್ರುವ unsigned ವರ್ಣ *val = table+1;
+    ಪೂರ್ಣಾಙ್ಕ c, neg=0;
     unsigned x;
     unsigned long long y;
-    if (base > 36 || base == 1) {
+    ಯದಿ (base > 36 || base == 1) {
         errno = EINVAL;
-        return 0;
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
-    while (av_isspace((c=shgetc(f))));
-    if (c=='+' || c=='-') {
+    ಯಾವತ್ (av_isspace((c=shgetc(f))));
+    ಯದಿ (c=='+' || c=='-') {
         neg = -(c=='-');
         c = shgetc(f);
     }
-    if ((base == 0 || base == 16) && c=='0') {
+    ಯದಿ ((base == 0 || base == 16) && c=='0') {
         c = shgetc(f);
-        if ((c|32)=='x') {
+        ಯದಿ ((c|32)=='x') {
             c = shgetc(f);
-            if (val[c]>=16) {
+            ಯದಿ (val[c]>=16) {
                 shunget(f);
-                if (pok) shunget(f);
-                else shlim(f, 0);
-                return 0;
+                ಯದಿ (pok) shunget(f);
+                ಅನ್ಯಥಾ shlim(f, 0);
+                ಪ್ರತ್ಯಾಗಮ 0;
             }
             base = 16;
-        } else if (base == 0) {
+        } ಅನ್ಯಥಾ ಯದಿ (base == 0) {
             base = 8;
         }
-    } else {
-        if (base == 0) base = 10;
-        if (val[c] >= base) {
+    } ಅನ್ಯಥಾ {
+        ಯದಿ (base == 0) base = 10;
+        ಯದಿ (val[c] >= base) {
             shunget(f);
             shlim(f, 0);
             errno = EINVAL;
-            return 0;
+            ಪ್ರತ್ಯಾಗಮ 0;
         }
     }
-    if (base == 10) {
-        for (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
+    ಯದಿ (base == 10) {
+        ಪ್ರತಿ (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
             x = x*10 + (c-'0');
-        for (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
+        ಪ್ರತಿ (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
             y = y*10 + (c-'0');
-        if (c-'0'>=10U) goto done;
-    } else if (!(base & base-1)) {
-        int bs = "\0\1\2\4\7\3\6\5"[(0x17*base)>>5&7];
-        for (x=0; val[c]<base && x<=UINT_MAX/32; c=shgetc(f))
+        ಯದಿ (c-'0'>=10U) ಗಚ್ಛ done;
+    } ಅನ್ಯಥಾ ಯದಿ (!(base & base-1)) {
+        ಪೂರ್ಣಾಙ್ಕ bs = "\0\1\2\4\7\3\6\5"[(0x17*base)>>5&7];
+        ಪ್ರತಿ (x=0; val[c]<base && x<=UINT_MAX/32; c=shgetc(f))
             x = x<<bs | val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX>>bs; c=shgetc(f))
+        ಪ್ರತಿ (y=x; val[c]<base && y<=ULLONG_MAX>>bs; c=shgetc(f))
             y = y<<bs | val[c];
-    } else {
-        for (x=0; val[c]<base && x<=UINT_MAX/36-1; c=shgetc(f))
+    } ಅನ್ಯಥಾ {
+        ಪ್ರತಿ (x=0; val[c]<base && x<=UINT_MAX/36-1; c=shgetc(f))
             x = x*base + val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX/base && base*y<=ULLONG_MAX-val[c]; c=shgetc(f))
+        ಪ್ರತಿ (y=x; val[c]<base && y<=ULLONG_MAX/base && base*y<=ULLONG_MAX-val[c]; c=shgetc(f))
             y = y*base + val[c];
     }
-    if (val[c]<base) {
-        for (; val[c]<base; c=shgetc(f));
+    ಯದಿ (val[c]<base) {
+        ಪ್ರತಿ (; val[c]<base; c=shgetc(f));
         errno = ERANGE;
         y = lim;
-        if (lim&1) neg = 0;
+        ಯದಿ (lim&1) neg = 0;
     }
 done:
     shunget(f);
-    if (y>=lim) {
-        if (!(lim&1) && !neg) {
+    ಯದಿ (y>=lim) {
+        ಯದಿ (!(lim&1) && !neg) {
             errno = ERANGE;
-            return lim-1;
-        } else if (y>lim) {
+            ಪ್ರತ್ಯಾಗಮ lim-1;
+        } ಅನ್ಯಥಾ ಯದಿ (y>lim) {
             errno = ERANGE;
-            return lim;
+            ಪ್ರತ್ಯಾಗಮ lim;
         }
     }
-    return (y^neg)-neg;
+    ಪ್ರತ್ಯಾಗಮ (y^neg)-neg;
 }
 
-static long long scanexp(FFFILE *f, int pok)
+ಸ್ಥಿರ long long scanexp(FFFILE *f, ಪೂರ್ಣಾಙ್ಕ pok)
 {
-    int c;
-    int x;
+    ಪೂರ್ಣಾಙ್ಕ c;
+    ಪೂರ್ಣಾಙ್ಕ x;
     long long y;
-    int neg = 0;
+    ಪೂರ್ಣಾಙ್ಕ neg = 0;
 
     c = shgetc(f);
-    if (c=='+' || c=='-') {
+    ಯದಿ (c=='+' || c=='-') {
         neg = (c=='-');
         c = shgetc(f);
-        if (c-'0'>=10U && pok) shunget(f);
+        ಯದಿ (c-'0'>=10U && pok) shunget(f);
     }
-    if (c-'0'>=10U) {
+    ಯದಿ (c-'0'>=10U) {
         shunget(f);
-        return LLONG_MIN;
+        ಪ್ರತ್ಯಾಗಮ LLONG_MIN;
     }
-    for (x=0; c-'0'<10U && x<INT_MAX/10; c = shgetc(f))
+    ಪ್ರತಿ (x=0; c-'0'<10U && x<INT_MAX/10; c = shgetc(f))
         x = 10*x + (c-'0');
-    for (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
+    ಪ್ರತಿ (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
         y = 10*y + (c-'0');
-    for (; c-'0'<10U; c = shgetc(f));
+    ಪ್ರತಿ (; c-'0'<10U; c = shgetc(f));
     shunget(f);
-    return neg ? -y : y;
+    ಪ್ರತ್ಯಾಗಮ neg ? -y : y;
 }
 
 #define LD_B1B_DIG 2
@@ -241,100 +241,100 @@ static long long scanexp(FFFILE *f, int pok)
 #define KMAX 128
 #define MASK (KMAX-1)
 
-static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
+ಸ್ಥಿರ ದ್ವಿಗುಣ decfloat(FFFILE *f, ಪೂರ್ಣಾಙ್ಕ c, ಪೂರ್ಣಾಙ್ಕ bits, ಪೂರ್ಣಾಙ್ಕ emin, ಪೂರ್ಣಾಙ್ಕ sign, ಪೂರ್ಣಾಙ್ಕ pok)
 {
     uint32_t x[KMAX];
-    static const uint32_t th[] = { LD_B1B_MAX };
-    int i, j, k, a, z;
+    ಸ್ಥಿರ ಧ್ರುವ uint32_t th[] = { LD_B1B_MAX };
+    ಪೂರ್ಣಾಙ್ಕ i, j, k, a, z;
     long long lrp=0, dc=0;
     long long e10=0;
-    int lnz = 0;
-    int gotdig = 0, gotrad = 0;
-    int rp;
-    int e2;
-    int emax = -emin-bits+3;
-    int denormal = 0;
-    double y;
-    double frac=0;
-    double bias=0;
-    static const int p10s[] = { 10, 100, 1000, 10000,
+    ಪೂರ್ಣಾಙ್ಕ lnz = 0;
+    ಪೂರ್ಣಾಙ್ಕ gotdig = 0, gotrad = 0;
+    ಪೂರ್ಣಾಙ್ಕ rp;
+    ಪೂರ್ಣಾಙ್ಕ e2;
+    ಪೂರ್ಣಾಙ್ಕ emax = -emin-bits+3;
+    ಪೂರ್ಣಾಙ್ಕ denormal = 0;
+    ದ್ವಿಗುಣ y;
+    ದ್ವಿಗುಣ frac=0;
+    ದ್ವಿಗುಣ bias=0;
+    ಸ್ಥಿರ ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ p10s[] = { 10, 100, 1000, 10000,
         100000, 1000000, 10000000, 100000000 };
 
     j=0;
     k=0;
 
     /* Don't let leading zeros consume buffer space */
-    for (; c=='0'; c = shgetc(f)) gotdig=1;
-    if (c=='.') {
+    ಪ್ರತಿ (; c=='0'; c = shgetc(f)) gotdig=1;
+    ಯದಿ (c=='.') {
         gotrad = 1;
-        for (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
+        ಪ್ರತಿ (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
     }
 
     x[0] = 0;
-    for (; c-'0'<10U || c=='.'; c = shgetc(f)) {
-        if (c == '.') {
-            if (gotrad) break;
+    ಪ್ರತಿ (; c-'0'<10U || c=='.'; c = shgetc(f)) {
+        ಯದಿ (c == '.') {
+            ಯದಿ (gotrad) ಭಙ್ಗ;
             gotrad = 1;
             lrp = dc;
-        } else if (k < KMAX-3) {
+        } ಅನ್ಯಥಾ ಯದಿ (k < KMAX-3) {
             dc++;
-            if (c!='0') lnz = dc;
-            if (j) x[k] = x[k]*10 + c-'0';
-            else x[k] = c-'0';
-            if (++j==9) {
+            ಯದಿ (c!='0') lnz = dc;
+            ಯದಿ (j) x[k] = x[k]*10 + c-'0';
+            ಅನ್ಯಥಾ x[k] = c-'0';
+            ಯದಿ (++j==9) {
                 k++;
                 j=0;
             }
             gotdig=1;
-        } else {
+        } ಅನ್ಯಥಾ {
             dc++;
-            if (c!='0') {
+            ಯದಿ (c!='0') {
                 lnz = (KMAX-4)*9;
                 x[KMAX-4] |= 1;
             }
         }
     }
-    if (!gotrad) lrp=dc;
+    ಯದಿ (!gotrad) lrp=dc;
 
-    if (gotdig && (c|32)=='e') {
+    ಯದಿ (gotdig && (c|32)=='e') {
         e10 = scanexp(f, pok);
-        if (e10 == LLONG_MIN) {
-            if (pok) {
+        ಯದಿ (e10 == LLONG_MIN) {
+            ಯದಿ (pok) {
                 shunget(f);
-            } else {
+            } ಅನ್ಯಥಾ {
                 shlim(f, 0);
-                return 0;
+                ಪ್ರತ್ಯಾಗಮ 0;
             }
             e10 = 0;
         }
         lrp += e10;
-    } else if (c>=0) {
+    } ಅನ್ಯಥಾ ಯದಿ (c>=0) {
         shunget(f);
     }
-    if (!gotdig) {
+    ಯದಿ (!gotdig) {
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
 
     /* Handle zero specially to avoid nasty special cases later */
-    if (!x[0]) return sign * 0.0;
+    ಯದಿ (!x[0]) ಪ್ರತ್ಯಾಗಮ sign * 0.0;
 
     /* Optimize small integers (w/no exponent) and over/under-flow */
-    if (lrp==dc && dc<10 && (bits>30 || x[0]>>bits==0))
-        return sign * (double)x[0];
-    if (lrp > -emin/2) {
+    ಯದಿ (lrp==dc && dc<10 && (bits>30 || x[0]>>bits==0))
+        ಪ್ರತ್ಯಾಗಮ sign * (ದ್ವಿಗುಣ)x[0];
+    ಯದಿ (lrp > -emin/2) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        ಪ್ರತ್ಯಾಗಮ sign * DBL_MAX * DBL_MAX;
     }
-    if (lrp < emin-2*DBL_MANT_DIG) {
+    ಯದಿ (lrp < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        ಪ್ರತ್ಯಾಗಮ sign * DBL_MIN * DBL_MIN;
     }
 
     /* Align incomplete final B1B digit */
-    if (j) {
-        for (; j<9; j++) x[k]*=10;
+    ಯದಿ (j) {
+        ಪ್ರತಿ (; j<9; j++) x[k]*=10;
         k++;
         j=0;
     }
@@ -345,56 +345,56 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     rp = lrp;
 
     /* Optimize small to mid-size integers (even in exp. notation) */
-    if (lnz<9 && lnz<=rp && rp < 18) {
-        int bitlim;
-        if (rp == 9) return sign * (double)x[0];
-        if (rp < 9) return sign * (double)x[0] / p10s[8-rp];
-        bitlim = bits-3*(int)(rp-9);
-        if (bitlim>30 || x[0]>>bitlim==0)
-            return sign * (double)x[0] * p10s[rp-10];
+    ಯದಿ (lnz<9 && lnz<=rp && rp < 18) {
+        ಪೂರ್ಣಾಙ್ಕ bitlim;
+        ಯದಿ (rp == 9) ಪ್ರತ್ಯಾಗಮ sign * (ದ್ವಿಗುಣ)x[0];
+        ಯದಿ (rp < 9) ಪ್ರತ್ಯಾಗಮ sign * (ದ್ವಿಗುಣ)x[0] / p10s[8-rp];
+        bitlim = bits-3*(ಪೂರ್ಣಾಙ್ಕ)(rp-9);
+        ಯದಿ (bitlim>30 || x[0]>>bitlim==0)
+            ಪ್ರತ್ಯಾಗಮ sign * (ದ್ವಿಗುಣ)x[0] * p10s[rp-10];
     }
 
     /* Drop trailing zeros */
-    for (; !x[z-1]; z--);
+    ಪ್ರತಿ (; !x[z-1]; z--);
 
     /* Align radix point to B1B digit boundary */
-    if (rp % 9) {
-        int rpm9 = rp>=0 ? rp%9 : rp%9+9;
-        int p10 = p10s[8-rpm9];
+    ಯದಿ (rp % 9) {
+        ಪೂರ್ಣಾಙ್ಕ rpm9 = rp>=0 ? rp%9 : rp%9+9;
+        ಪೂರ್ಣಾಙ್ಕ p10 = p10s[8-rpm9];
         uint32_t carry = 0;
-        for (k=a; k!=z; k++) {
+        ಪ್ರತಿ (k=a; k!=z; k++) {
             uint32_t tmp = x[k] % p10;
             x[k] = x[k]/p10 + carry;
             carry = 1000000000/p10 * tmp;
-            if (k==a && !x[k]) {
+            ಯದಿ (k==a && !x[k]) {
                 a = (a+1 & MASK);
                 rp -= 9;
             }
         }
-        if (carry) x[z++] = carry;
+        ಯದಿ (carry) x[z++] = carry;
         rp += 9-rpm9;
     }
 
     /* Upscale until desired number of bits are left of radix point */
-    while (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
+    ಯಾವತ್ (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
         uint32_t carry = 0;
         e2 -= 29;
-        for (k=(z-1 & MASK); ; k=(k-1 & MASK)) {
+        ಪ್ರತಿ (k=(z-1 & MASK); ; k=(k-1 & MASK)) {
             uint64_t tmp = ((uint64_t)x[k] << 29) + carry;
-            if (tmp > 1000000000) {
+            ಯದಿ (tmp > 1000000000) {
                 carry = tmp / 1000000000;
                 x[k] = tmp % 1000000000;
-            } else {
+            } ಅನ್ಯಥಾ {
                 carry = 0;
                 x[k] = tmp;
             }
-            if (k==(z-1 & MASK) && k!=a && !x[k]) z = k;
-            if (k==a) break;
+            ಯದಿ (k==(z-1 & MASK) && k!=a && !x[k]) z = k;
+            ಯದಿ (k==a) ಭಙ್ಗ;
         }
-        if (carry) {
+        ಯದಿ (carry) {
             rp += 9;
             a = (a-1 & MASK);
-            if (a == z) {
+            ಯದಿ (a == z) {
                 z = (z-1 & MASK);
                 x[z-1 & MASK] |= x[z];
             }
@@ -403,56 +403,56 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     }
 
     /* Downscale until exactly number of bits are left of radix point */
-    for (;;) {
+    ಪ್ರತಿ (;;) {
         uint32_t carry = 0;
-        int sh = 1;
-        for (i=0; i<LD_B1B_DIG; i++) {
+        ಪೂರ್ಣಾಙ್ಕ sh = 1;
+        ಪ್ರತಿ (i=0; i<LD_B1B_DIG; i++) {
             k = (a+i & MASK);
-            if (k == z || x[k] < th[i]) {
+            ಯದಿ (k == z || x[k] < th[i]) {
                 i=LD_B1B_DIG;
-                break;
+                ಭಙ್ಗ;
             }
-            if (x[a+i & MASK] > th[i]) break;
+            ಯದಿ (x[a+i & MASK] > th[i]) ಭಙ್ಗ;
         }
-        if (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) break;
+        ಯದಿ (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) ಭಙ್ಗ;
         /* FIXME: find a way to compute optimal sh */
-        if (rp > 9+9*LD_B1B_DIG) sh = 9;
+        ಯದಿ (rp > 9+9*LD_B1B_DIG) sh = 9;
         e2 += sh;
-        for (k=a; k!=z; k=(k+1 & MASK)) {
+        ಪ್ರತಿ (k=a; k!=z; k=(k+1 & MASK)) {
             uint32_t tmp = x[k] & (1<<sh)-1;
             x[k] = (x[k]>>sh) + carry;
             carry = (1000000000>>sh) * tmp;
-            if (k==a && !x[k]) {
+            ಯದಿ (k==a && !x[k]) {
                 a = (a+1 & MASK);
                 i--;
                 rp -= 9;
             }
         }
-        if (carry) {
-            if ((z+1 & MASK) != a) {
+        ಯದಿ (carry) {
+            ಯದಿ ((z+1 & MASK) != a) {
                 x[z] = carry;
                 z = (z+1 & MASK);
-            } else x[z-1 & MASK] |= 1;
+            } ಅನ್ಯಥಾ x[z-1 & MASK] |= 1;
         }
     }
 
     /* Assemble desired bits into floating point variable */
-    for (y=i=0; i<LD_B1B_DIG; i++) {
-        if ((a+i & MASK)==z) x[(z=(z+1 & MASK))-1 & MASK] = 0;
+    ಪ್ರತಿ (y=i=0; i<LD_B1B_DIG; i++) {
+        ಯದಿ ((a+i & MASK)==z) x[(z=(z+1 & MASK))-1 & MASK] = 0;
         y = 1000000000.0L * y + x[a+i & MASK];
     }
 
     y *= sign;
 
     /* Limit precision for denormal results */
-    if (bits > DBL_MANT_DIG+e2-emin) {
+    ಯದಿ (bits > DBL_MANT_DIG+e2-emin) {
         bits = DBL_MANT_DIG+e2-emin;
-        if (bits<0) bits=0;
+        ಯದಿ (bits<0) bits=0;
         denormal = 1;
     }
 
     /* Calculate bias term to force rounding, move out lower bits */
-    if (bits < DBL_MANT_DIG) {
+    ಯದಿ (bits < DBL_MANT_DIG) {
         bias = copysign(scalbn(1, 2*DBL_MANT_DIG-bits-1), y);
         frac = fmod(y, scalbn(1, DBL_MANT_DIG-bits));
         y -= frac;
@@ -460,399 +460,399 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     }
 
     /* Process tail of decimal input so it can affect rounding */
-    if ((a+i & MASK) != z) {
+    ಯದಿ ((a+i & MASK) != z) {
         uint32_t t = x[a+i & MASK];
-        if (t < 500000000 && (t || (a+i+1 & MASK) != z))
+        ಯದಿ (t < 500000000 && (t || (a+i+1 & MASK) != z))
             frac += 0.25*sign;
-        else if (t > 500000000)
+        ಅನ್ಯಥಾ ಯದಿ (t > 500000000)
             frac += 0.75*sign;
-        else if (t == 500000000) {
-            if ((a+i+1 & MASK) == z)
+        ಅನ್ಯಥಾ ಯದಿ (t == 500000000) {
+            ಯದಿ ((a+i+1 & MASK) == z)
                 frac += 0.5*sign;
-            else
+            ಅನ್ಯಥಾ
                 frac += 0.75*sign;
         }
-        if (DBL_MANT_DIG-bits >= 2 && !fmod(frac, 1))
+        ಯದಿ (DBL_MANT_DIG-bits >= 2 && !fmod(frac, 1))
             frac++;
     }
 
     y += frac;
     y -= bias;
 
-    if ((e2+DBL_MANT_DIG & INT_MAX) > emax-5) {
-        if (fabs(y) >= pow(2, DBL_MANT_DIG)) {
-            if (denormal && bits==DBL_MANT_DIG+e2-emin)
+    ಯದಿ ((e2+DBL_MANT_DIG & INT_MAX) > emax-5) {
+        ಯದಿ (fabs(y) >= pow(2, DBL_MANT_DIG)) {
+            ಯದಿ (denormal && bits==DBL_MANT_DIG+e2-emin)
                 denormal = 0;
             y *= 0.5;
             e2++;
         }
-        if (e2+DBL_MANT_DIG>emax || (denormal && frac))
+        ಯದಿ (e2+DBL_MANT_DIG>emax || (denormal && frac))
             errno = ERANGE;
     }
 
-    return scalbn(y, e2);
+    ಪ್ರತ್ಯಾಗಮ scalbn(y, e2);
 }
 
-static double hexfloat(FFFILE *f, int bits, int emin, int sign, int pok)
+ಸ್ಥಿರ ದ್ವಿಗುಣ hexfloat(FFFILE *f, ಪೂರ್ಣಾಙ್ಕ bits, ಪೂರ್ಣಾಙ್ಕ emin, ಪೂರ್ಣಾಙ್ಕ sign, ಪೂರ್ಣಾಙ್ಕ pok)
 {
     uint32_t x = 0;
-    double y = 0;
-    double scale = 1;
-    double bias = 0;
-    int gottail = 0, gotrad = 0, gotdig = 0;
+    ದ್ವಿಗುಣ y = 0;
+    ದ್ವಿಗುಣ scale = 1;
+    ದ್ವಿಗುಣ bias = 0;
+    ಪೂರ್ಣಾಙ್ಕ gottail = 0, gotrad = 0, gotdig = 0;
     long long rp = 0;
     long long dc = 0;
     long long e2 = 0;
-    int d;
-    int c;
+    ಪೂರ್ಣಾಙ್ಕ d;
+    ಪೂರ್ಣಾಙ್ಕ c;
 
     c = shgetc(f);
 
     /* Skip leading zeros */
-    for (; c=='0'; c = shgetc(f))
+    ಪ್ರತಿ (; c=='0'; c = shgetc(f))
         gotdig = 1;
 
-    if (c=='.') {
+    ಯದಿ (c=='.') {
         gotrad = 1;
         c = shgetc(f);
         /* Count zeros after the radix point before significand */
-        for (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
+        ಪ್ರತಿ (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
     }
 
-    for (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
-        if (c=='.') {
-            if (gotrad) break;
+    ಪ್ರತಿ (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
+        ಯದಿ (c=='.') {
+            ಯದಿ (gotrad) ಭಙ್ಗ;
             rp = dc;
             gotrad = 1;
-        } else {
+        } ಅನ್ಯಥಾ {
             gotdig = 1;
-            if (c > '9') d = (c|32)+10-'a';
-            else d = c-'0';
-            if (dc<8) {
+            ಯದಿ (c > '9') d = (c|32)+10-'a';
+            ಅನ್ಯಥಾ d = c-'0';
+            ಯದಿ (dc<8) {
                 x = x*16 + d;
-            } else if (dc < DBL_MANT_DIG/4+1) {
+            } ಅನ್ಯಥಾ ಯದಿ (dc < DBL_MANT_DIG/4+1) {
                 y += d*(scale/=16);
-            } else if (d && !gottail) {
+            } ಅನ್ಯಥಾ ಯದಿ (d && !gottail) {
                 y += 0.5*scale;
                 gottail = 1;
             }
             dc++;
         }
     }
-    if (!gotdig) {
+    ಯದಿ (!gotdig) {
         shunget(f);
-        if (pok) {
+        ಯದಿ (pok) {
             shunget(f);
-            if (gotrad) shunget(f);
-        } else {
+            ಯದಿ (gotrad) shunget(f);
+        } ಅನ್ಯಥಾ {
             shlim(f, 0);
         }
-        return sign * 0.0;
+        ಪ್ರತ್ಯಾಗಮ sign * 0.0;
     }
-    if (!gotrad) rp = dc;
-    while (dc<8) x *= 16, dc++;
-    if ((c|32)=='p') {
+    ಯದಿ (!gotrad) rp = dc;
+    ಯಾವತ್ (dc<8) x *= 16, dc++;
+    ಯದಿ ((c|32)=='p') {
         e2 = scanexp(f, pok);
-        if (e2 == LLONG_MIN) {
-            if (pok) {
+        ಯದಿ (e2 == LLONG_MIN) {
+            ಯದಿ (pok) {
                 shunget(f);
-            } else {
+            } ಅನ್ಯಥಾ {
                 shlim(f, 0);
-                return 0;
+                ಪ್ರತ್ಯಾಗಮ 0;
             }
             e2 = 0;
         }
-    } else {
+    } ಅನ್ಯಥಾ {
         shunget(f);
     }
     e2 += 4*rp - 32;
 
-    if (!x) return sign * 0.0;
-    if (e2 > -emin) {
+    ಯದಿ (!x) ಪ್ರತ್ಯಾಗಮ sign * 0.0;
+    ಯದಿ (e2 > -emin) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        ಪ್ರತ್ಯಾಗಮ sign * DBL_MAX * DBL_MAX;
     }
-    if (e2 < emin-2*DBL_MANT_DIG) {
+    ಯದಿ (e2 < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        ಪ್ರತ್ಯಾಗಮ sign * DBL_MIN * DBL_MIN;
     }
 
-    while (x < 0x80000000) {
-        if (y>=0.5) {
+    ಯಾವತ್ (x < 0x80000000) {
+        ಯದಿ (y>=0.5) {
             x += x + 1;
             y += y - 1;
-        } else {
+        } ಅನ್ಯಥಾ {
             x += x;
             y += y;
         }
         e2--;
     }
 
-    if (bits > 32+e2-emin) {
+    ಯದಿ (bits > 32+e2-emin) {
         bits = 32+e2-emin;
-        if (bits<0) bits=0;
+        ಯದಿ (bits<0) bits=0;
     }
 
-    if (bits < DBL_MANT_DIG)
+    ಯದಿ (bits < DBL_MANT_DIG)
         bias = copysign(scalbn(1, 32+DBL_MANT_DIG-bits-1), sign);
 
-    if (bits<32 && y && !(x&1)) x++, y=0;
+    ಯದಿ (bits<32 && y && !(x&1)) x++, y=0;
 
-    y = bias + sign*(double)x + sign*y;
+    y = bias + sign*(ದ್ವಿಗುಣ)x + sign*y;
     y -= bias;
 
-    if (!y) errno = ERANGE;
+    ಯದಿ (!y) errno = ERANGE;
 
-    return scalbn(y, e2);
+    ಪ್ರತ್ಯಾಗಮ scalbn(y, e2);
 }
 
-static double fffloatscan(FFFILE *f, int prec, int pok)
+ಸ್ಥಿರ ದ್ವಿಗುಣ fffloatscan(FFFILE *f, ಪೂರ್ಣಾಙ್ಕ prec, ಪೂರ್ಣಾಙ್ಕ pok)
 {
-    int sign = 1;
+    ಪೂರ್ಣಾಙ್ಕ sign = 1;
     size_t i;
-    int bits;
-    int emin;
-    int c;
+    ಪೂರ್ಣಾಙ್ಕ bits;
+    ಪೂರ್ಣಾಙ್ಕ emin;
+    ಪೂರ್ಣಾಙ್ಕ c;
 
-    switch (prec) {
-    case 0:
+    ವಿಕಲ್ಪ (prec) {
+    ಪಕ್ಷ 0:
         bits = FLT_MANT_DIG;
         emin = FLT_MIN_EXP-bits;
-        break;
-    case 1:
+        ಭಙ್ಗ;
+    ಪಕ್ಷ 1:
         bits = DBL_MANT_DIG;
         emin = DBL_MIN_EXP-bits;
-        break;
-    case 2:
+        ಭಙ್ಗ;
+    ಪಕ್ಷ 2:
         bits = DBL_MANT_DIG;
         emin = DBL_MIN_EXP-bits;
-        break;
-    default:
-        return 0;
+        ಭಙ್ಗ;
+    ಸ್ವಭಾವ:
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
 
-    while (av_isspace((c = shgetc(f))));
+    ಯಾವತ್ (av_isspace((c = shgetc(f))));
 
-    if (c=='+' || c=='-') {
+    ಯದಿ (c=='+' || c=='-') {
         sign -= 2*(c=='-');
         c = shgetc(f);
     }
 
-    for (i=0; i<8 && (c|32)=="infinity"[i]; i++)
-        if (i<7) c = shgetc(f);
-    if (i==3 || i==8 || (i>3 && pok)) {
-        if (i!=8) {
+    ಪ್ರತಿ (i=0; i<8 && (c|32)=="infinity"[i]; i++)
+        ಯದಿ (i<7) c = shgetc(f);
+    ಯದಿ (i==3 || i==8 || (i>3 && pok)) {
+        ಯದಿ (i!=8) {
             shunget(f);
-            if (pok) for (; i>3; i--) shunget(f);
+            ಯದಿ (pok) ಪ್ರತಿ (; i>3; i--) shunget(f);
         }
-        return sign * INFINITY;
+        ಪ್ರತ್ಯಾಗಮ sign * INFINITY;
     }
-    if (!i) for (i=0; i<3 && (c|32)=="nan"[i]; i++)
-        if (i<2) c = shgetc(f);
-    if (i==3) {
-        if (shgetc(f) != '(') {
+    ಯದಿ (!i) ಪ್ರತಿ (i=0; i<3 && (c|32)=="nan"[i]; i++)
+        ಯದಿ (i<2) c = shgetc(f);
+    ಯದಿ (i==3) {
+        ಯದಿ (shgetc(f) != '(') {
             shunget(f);
-            return NAN;
+            ಪ್ರತ್ಯಾಗಮ NAN;
         }
-        for (i=1; ; i++) {
+        ಪ್ರತಿ (i=1; ; i++) {
             c = shgetc(f);
-            if (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
-                continue;
-            if (c==')') return NAN;
+            ಯದಿ (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
+                ಅನುವರ್ತ;
+            ಯದಿ (c==')') ಪ್ರತ್ಯಾಗಮ NAN;
             shunget(f);
-            if (!pok) {
+            ಯದಿ (!pok) {
                 errno = EINVAL;
                 shlim(f, 0);
-                return 0;
+                ಪ್ರತ್ಯಾಗಮ 0;
             }
-            while (i--) shunget(f);
-            return NAN;
+            ಯಾವತ್ (i--) shunget(f);
+            ಪ್ರತ್ಯಾಗಮ NAN;
         }
     }
 
-    if (i) {
+    ಯದಿ (i) {
         shunget(f);
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
 
-    if (c=='0') {
+    ಯದಿ (c=='0') {
         c = shgetc(f);
-        if ((c|32) == 'x')
-            return hexfloat(f, bits, emin, sign, pok);
+        ಯದಿ ((c|32) == 'x')
+            ಪ್ರತ್ಯಾಗಮ hexfloat(f, bits, emin, sign, pok);
         shunget(f);
         c = '0';
     }
 
-    return decfloat(f, c, bits, emin, sign, pok);
+    ಪ್ರತ್ಯಾಗಮ decfloat(f, c, bits, emin, sign, pok);
 }
 
-static void *arg_n(va_list ap, unsigned int n)
+ಸ್ಥಿರ ಶೂನ್ಯ *arg_n(va_list ap, unsigned ಪೂರ್ಣಾಙ್ಕ n)
 {
-    void *p;
-    unsigned int i;
+    ಶೂನ್ಯ *p;
+    unsigned ಪೂರ್ಣಾಙ್ಕ i;
     va_list ap2;
     va_copy(ap2, ap);
-    for (i=n; i>1; i--) va_arg(ap2, void *);
-    p = va_arg(ap2, void *);
+    ಪ್ರತಿ (i=n; i>1; i--) va_arg(ap2, ಶೂನ್ಯ *);
+    p = va_arg(ap2, ಶೂನ್ಯ *);
     va_end(ap2);
-    return p;
+    ಪ್ರತ್ಯಾಗಮ p;
 }
 
-static void store_int(void *dest, int size, unsigned long long i)
+ಸ್ಥಿರ ಶೂನ್ಯ store_int(ಶೂನ್ಯ *dest, ಪೂರ್ಣಾಙ್ಕ size, unsigned long long i)
 {
-    if (!dest) return;
-    switch (size) {
-    case SIZE_hh:
-        *(char *)dest = i;
-        break;
-    case SIZE_h:
+    ಯದಿ (!dest) ಪ್ರತ್ಯಾಗಮ;
+    ವಿಕಲ್ಪ (size) {
+    ಪಕ್ಷ SIZE_hh:
+        *(ವರ್ಣ *)dest = i;
+        ಭಙ್ಗ;
+    ಪಕ್ಷ SIZE_h:
         *(short *)dest = i;
-        break;
-    case SIZE_def:
-        *(int *)dest = i;
-        break;
-    case SIZE_l:
+        ಭಙ್ಗ;
+    ಪಕ್ಷ SIZE_def:
+        *(ಪೂರ್ಣಾಙ್ಕ *)dest = i;
+        ಭಙ್ಗ;
+    ಪಕ್ಷ SIZE_l:
         *(long *)dest = i;
-        break;
-    case SIZE_ll:
+        ಭಙ್ಗ;
+    ಪಕ್ಷ SIZE_ll:
         *(long long *)dest = i;
-        break;
+        ಭಙ್ಗ;
     }
 }
 
-static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ ff_vfscanf(FFFILE *f, ಧ್ರುವ ವರ್ಣ *fmt, va_list ap)
 {
-    int width;
-    int size;
-    int base;
-    const unsigned char *p;
-    int c, t;
-    char *s;
-    void *dest=NULL;
-    int invert;
-    int matches=0;
+    ಪೂರ್ಣಾಙ್ಕ width;
+    ಪೂರ್ಣಾಙ್ಕ size;
+    ಪೂರ್ಣಾಙ್ಕ base;
+    ಧ್ರುವ unsigned ವರ್ಣ *p;
+    ಪೂರ್ಣಾಙ್ಕ c, t;
+    ವರ್ಣ *s;
+    ಶೂನ್ಯ *dest=ರಿಕ್ತ;
+    ಪೂರ್ಣಾಙ್ಕ invert;
+    ಪೂರ್ಣಾಙ್ಕ matches=0;
     unsigned long long x;
-    double y;
+    ದ್ವಿಗುಣ y;
     ptrdiff_t pos = 0;
-    unsigned char scanset[257];
+    unsigned ವರ್ಣ scanset[257];
     size_t i;
 
-    for (p=(const unsigned char *)fmt; *p; p++) {
+    ಪ್ರತಿ (p=(ಧ್ರುವ unsigned ವರ್ಣ *)fmt; *p; p++) {
 
-        if (av_isspace(*p)) {
-            while (av_isspace(p[1])) p++;
+        ಯದಿ (av_isspace(*p)) {
+            ಯಾವತ್ (av_isspace(p[1])) p++;
             shlim(f, 0);
-            while (av_isspace(shgetc(f)));
+            ಯಾವತ್ (av_isspace(shgetc(f)));
             shunget(f);
             pos += shcnt(f);
-            continue;
+            ಅನುವರ್ತ;
         }
-        if (*p != '%' || p[1] == '%') {
+        ಯದಿ (*p != '%' || p[1] == '%') {
             shlim(f, 0);
-            if (*p == '%') {
+            ಯದಿ (*p == '%') {
                 p++;
-                while (av_isspace((c=shgetc(f))));
-            } else {
+                ಯಾವತ್ (av_isspace((c=shgetc(f))));
+            } ಅನ್ಯಥಾ {
                 c = shgetc(f);
             }
-            if (c!=*p) {
+            ಯದಿ (c!=*p) {
                 shunget(f);
-                if (c<0) goto input_fail;
-                goto match_fail;
+                ಯದಿ (c<0) ಗಚ್ಛ ಒಳಹರಿವು_fail;
+                ಗಚ್ಛ match_fail;
             }
             pos += shcnt(f);
-            continue;
+            ಅನುವರ್ತ;
         }
 
         p++;
-        if (*p=='*') {
+        ಯದಿ (*p=='*') {
             dest = 0; p++;
-        } else if (av_isdigit(*p) && p[1]=='$') {
+        } ಅನ್ಯಥಾ ಯದಿ (av_isdigit(*p) && p[1]=='$') {
             dest = arg_n(ap, *p-'0'); p+=2;
-        } else {
-            dest = va_arg(ap, void *);
+        } ಅನ್ಯಥಾ {
+            dest = va_arg(ap, ಶೂನ್ಯ *);
         }
 
-        for (width=0; av_isdigit(*p); p++) {
+        ಪ್ರತಿ (width=0; av_isdigit(*p); p++) {
             width = 10*width + *p - '0';
         }
 
-        if (*p=='m') {
+        ಯದಿ (*p=='m') {
             s = 0;
             p++;
         }
 
         size = SIZE_def;
-        switch (*p++) {
-        case 'h':
-            if (*p == 'h') p++, size = SIZE_hh;
-            else size = SIZE_h;
-            break;
-        case 'l':
-            if (*p == 'l') p++, size = SIZE_ll;
-            else size = SIZE_l;
-            break;
-        case 'j':
+        ವಿಕಲ್ಪ (*p++) {
+        ಪಕ್ಷ 'h':
+            ಯದಿ (*p == 'h') p++, size = SIZE_hh;
+            ಅನ್ಯಥಾ size = SIZE_h;
+            ಭಙ್ಗ;
+        ಪಕ್ಷ 'l':
+            ಯದಿ (*p == 'l') p++, size = SIZE_ll;
+            ಅನ್ಯಥಾ size = SIZE_l;
+            ಭಙ್ಗ;
+        ಪಕ್ಷ 'j':
             size = SIZE_ll;
-            break;
-        case 'z':
-        case 't':
+            ಭಙ್ಗ;
+        ಪಕ್ಷ 'z':
+        ಪಕ್ಷ 't':
             size = SIZE_l;
-            break;
-        case 'L':
+            ಭಙ್ಗ;
+        ಪಕ್ಷ 'L':
             size = SIZE_L;
-            break;
-        case 'd': case 'i': case 'o': case 'u': case 'x':
-        case 'a': case 'e': case 'f': case 'g':
-        case 'A': case 'E': case 'F': case 'G': case 'X':
-        case 's': case 'c': case '[':
-        case 'S': case 'C':
-        case 'p': case 'n':
+            ಭಙ್ಗ;
+        ಪಕ್ಷ 'd': ಪಕ್ಷ 'i': ಪಕ್ಷ 'o': ಪಕ್ಷ 'u': ಪಕ್ಷ 'x':
+        ಪಕ್ಷ 'a': ಪಕ್ಷ 'e': ಪಕ್ಷ 'f': ಪಕ್ಷ 'g':
+        ಪಕ್ಷ 'A': ಪಕ್ಷ 'E': ಪಕ್ಷ 'F': ಪಕ್ಷ 'G': ಪಕ್ಷ 'X':
+        ಪಕ್ಷ 's': ಪಕ್ಷ 'c': ಪಕ್ಷ '[':
+        ಪಕ್ಷ 'S': ಪಕ್ಷ 'C':
+        ಪಕ್ಷ 'p': ಪಕ್ಷ 'n':
             p--;
-            break;
-        default:
-            goto fmt_fail;
+            ಭಙ್ಗ;
+        ಸ್ವಭಾವ:
+            ಗಚ್ಛ fmt_fail;
         }
 
         t = *p;
 
         /* C or S */
-        if ((t&0x2f) == 3) {
+        ಯದಿ ((t&0x2f) == 3) {
             t |= 32;
             size = SIZE_l;
         }
 
-        switch (t) {
-            case 'c':
-                if (width < 1) width = 1;
-                break;
-            case '[':
-                break;
-            case 'n':
+        ವಿಕಲ್ಪ (t) {
+            ಪಕ್ಷ 'c':
+                ಯದಿ (width < 1) width = 1;
+                ಭಙ್ಗ;
+            ಪಕ್ಷ '[':
+                ಭಙ್ಗ;
+            ಪಕ್ಷ 'n':
                 store_int(dest, size, pos);
                 /* do not increment match count, etc! */
-                continue;
-            default:
+                ಅನುವರ್ತ;
+            ಸ್ವಭಾವ:
                 shlim(f, 0);
-                while (av_isspace(shgetc(f)));
+                ಯಾವತ್ (av_isspace(shgetc(f)));
                 shunget(f);
                 pos += shcnt(f);
         }
 
         shlim(f, width);
-        if (shgetc(f) < 0) goto input_fail;
+        ಯದಿ (shgetc(f) < 0) ಗಚ್ಛ ಒಳಹರಿವು_fail;
         shunget(f);
 
-        switch (t) {
-            case 's':
-            case 'c':
-            case '[':
-                if (t == 'c' || t == 's') {
-                    memset(scanset, -1, sizeof scanset);
+        ವಿಕಲ್ಪ (t) {
+            ಪಕ್ಷ 's':
+            ಪಕ್ಷ 'c':
+            ಪಕ್ಷ '[':
+                ಯದಿ (t == 'c' || t == 's') {
+                    memset(scanset, -1, ಪರಿಮಾಣ scanset);
                     scanset[0] = 0;
-                    if (t == 's') {
+                    ಯದಿ (t == 's') {
                         scanset[1 + '\t'] = 0;
                         scanset[1 + '\n'] = 0;
                         scanset[1 + '\v'] = 0;
@@ -860,110 +860,110 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
                         scanset[1 + '\r'] = 0;
                         scanset[1 + ' ' ] = 0;
                     }
-                } else {
-                    if (*++p == '^') p++, invert = 1;
-                    else invert = 0;
-                    memset(scanset, invert, sizeof scanset);
+                } ಅನ್ಯಥಾ {
+                    ಯದಿ (*++p == '^') p++, invert = 1;
+                    ಅನ್ಯಥಾ invert = 0;
+                    memset(scanset, invert, ಪರಿಮಾಣ scanset);
                     scanset[0] = 0;
-                    if (*p == '-') p++, scanset[1+'-'] = 1-invert;
-                    else if (*p == ']') p++, scanset[1+']'] = 1-invert;
-                    for (; *p != ']'; p++) {
-                        if (!*p) goto fmt_fail;
-                        if (*p=='-' && p[1] && p[1] != ']')
-                            for (c=p++[-1]; c<*p; c++)
+                    ಯದಿ (*p == '-') p++, scanset[1+'-'] = 1-invert;
+                    ಅನ್ಯಥಾ ಯದಿ (*p == ']') p++, scanset[1+']'] = 1-invert;
+                    ಪ್ರತಿ (; *p != ']'; p++) {
+                        ಯದಿ (!*p) ಗಚ್ಛ fmt_fail;
+                        ಯದಿ (*p=='-' && p[1] && p[1] != ']')
+                            ಪ್ರತಿ (c=p++[-1]; c<*p; c++)
                                 scanset[1+c] = 1-invert;
                         scanset[1+*p] = 1-invert;
                     }
                 }
                 s = 0;
                 i = 0;
-                if ((s = dest)) {
-                    while (scanset[(c=shgetc(f))+1])
+                ಯದಿ ((s = dest)) {
+                    ಯಾವತ್ (scanset[(c=shgetc(f))+1])
                         s[i++] = c;
-                } else {
-                    while (scanset[(c=shgetc(f))+1]);
+                } ಅನ್ಯಥಾ {
+                    ಯಾವತ್ (scanset[(c=shgetc(f))+1]);
                 }
                 shunget(f);
-                if (!shcnt(f)) goto match_fail;
-                if (t == 'c' && shcnt(f) != width) goto match_fail;
-                if (t != 'c') {
-                    if (s) s[i] = 0;
+                ಯದಿ (!shcnt(f)) ಗಚ್ಛ match_fail;
+                ಯದಿ (t == 'c' && shcnt(f) != width) ಗಚ್ಛ match_fail;
+                ಯದಿ (t != 'c') {
+                    ಯದಿ (s) s[i] = 0;
                 }
-                break;
-            case 'p':
-            case 'X':
-            case 'x':
+                ಭಙ್ಗ;
+            ಪಕ್ಷ 'p':
+            ಪಕ್ಷ 'X':
+            ಪಕ್ಷ 'x':
                 base = 16;
-                goto int_common;
-            case 'o':
+                ಗಚ್ಛ int_common;
+            ಪಕ್ಷ 'o':
                 base = 8;
-                goto int_common;
-            case 'd':
-            case 'u':
+                ಗಚ್ಛ int_common;
+            ಪಕ್ಷ 'd':
+            ಪಕ್ಷ 'u':
                 base = 10;
-                goto int_common;
-            case 'i':
+                ಗಚ್ಛ int_common;
+            ಪಕ್ಷ 'i':
                 base = 0;
 int_common:
                 x = ffintscan(f, base, 0, ULLONG_MAX);
-                if (!shcnt(f))
-                    goto match_fail;
-                if (t=='p' && dest)
-                    *(void **)dest = (void *)(uintptr_t)x;
-                else
+                ಯದಿ (!shcnt(f))
+                    ಗಚ್ಛ match_fail;
+                ಯದಿ (t=='p' && dest)
+                    *(ಶೂನ್ಯ **)dest = (ಶೂನ್ಯ *)(uintptr_t)x;
+                ಅನ್ಯಥಾ
                     store_int(dest, size, x);
-                break;
-            case 'a': case 'A':
-            case 'e': case 'E':
-            case 'f': case 'F':
-            case 'g': case 'G':
+                ಭಙ್ಗ;
+            ಪಕ್ಷ 'a': ಪಕ್ಷ 'A':
+            ಪಕ್ಷ 'e': ಪಕ್ಷ 'E':
+            ಪಕ್ಷ 'f': ಪಕ್ಷ 'F':
+            ಪಕ್ಷ 'g': ಪಕ್ಷ 'G':
                 y = fffloatscan(f, size, 0);
-                if (!shcnt(f))
-                    goto match_fail;
-                if (dest) {
-                    switch (size) {
-                    case SIZE_def:
-                        *(float *)dest = y;
-                        break;
-                    case SIZE_l:
-                        *(double *)dest = y;
-                        break;
-                    case SIZE_L:
-                        *(double *)dest = y;
-                        break;
+                ಯದಿ (!shcnt(f))
+                    ಗಚ್ಛ match_fail;
+                ಯದಿ (dest) {
+                    ವಿಕಲ್ಪ (size) {
+                    ಪಕ್ಷ SIZE_def:
+                        *(ಭಿನ್ನ *)dest = y;
+                        ಭಙ್ಗ;
+                    ಪಕ್ಷ SIZE_l:
+                        *(ದ್ವಿಗುಣ *)dest = y;
+                        ಭಙ್ಗ;
+                    ಪಕ್ಷ SIZE_L:
+                        *(ದ್ವಿಗುಣ *)dest = y;
+                        ಭಙ್ಗ;
                     }
                 }
-                break;
+                ಭಙ್ಗ;
         }
 
         pos += shcnt(f);
-        if (dest) matches++;
+        ಯದಿ (dest) matches++;
     }
-    if (0) {
+    ಯದಿ (0) {
 fmt_fail:
-input_fail:
-        if (!matches) matches--;
+ಒಳಹರಿವು_fail:
+        ಯದಿ (!matches) matches--;
     }
 match_fail:
-    return matches;
+    ಪ್ರತ್ಯಾಗಮ matches;
 }
 
-static int ff_vsscanf(const char *s, const char *fmt, va_list ap)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ ff_vsscanf(ಧ್ರುವ ವರ್ಣ *s, ಧ್ರುವ ವರ್ಣ *fmt, va_list ap)
 {
     FFFILE f = {
-        .buf = (void *)s, .cookie = (void *)s,
-        .read = ffstring_read,
+        .buf = (ಶೂನ್ಯ *)s, .cookie = (ಶೂನ್ಯ *)s,
+        .ಪಠ = ffstring_read,
     };
 
-    return ff_vfscanf(&f, fmt, ap);
+    ಪ್ರತ್ಯಾಗಮ ff_vfscanf(&f, fmt, ap);
 }
 
-int av_sscanf(const char *string, const char *format, ...)
+ಪೂರ್ಣಾಙ್ಕ av_sscanf(ಧ್ರುವ ವರ್ಣ *string, ಧ್ರುವ ವರ್ಣ *format, ...)
 {
-    int ret;
+    ಪೂರ್ಣಾಙ್ಕ ret;
     va_list ap;
     va_start(ap, format);
     ret = ff_vsscanf(string, format, ap);
     va_end(ap);
-    return ret;
+    ಪ್ರತ್ಯಾಗಮ ret;
 }

@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdarg.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/file.c"
+#ಅನ್ತರ್ಭಾವ "libavutil/log.h"
 
-static int last_log_level = -1;
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ last_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+ಸ್ಥಿರ ಶೂನ್ಯ log_callback(ಶೂನ್ಯ *ctx, ಪೂರ್ಣಾಙ್ಕ level, ಧ್ರುವ ವರ್ಣ *fmt, va_list args)
 {
-    (void)ctx; (void)fmt; (void)args;
+    (ಶೂನ್ಯ)ctx; (ಶೂನ್ಯ)fmt; (ಶೂನ್ಯ)args;
     last_log_level = level;
 }
 
-int main(int argc, char **argv)
+ಪೂರ್ಣಾಙ್ಕ main(ಪೂರ್ಣಾಙ್ಕ argc, ವರ್ಣ **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    ಧ್ರುವ ವರ್ಣ *path = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
     size_t size;
 
     av_log_set_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
+    ಯದಿ (av_file_map(path, &buf, &size, 0, ರಿಕ್ತ) < 0)
+        ಪ್ರತ್ಯಾಗಮ 1;
     av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    ಯದಿ (size == 0)
+        ಪ್ರತ್ಯಾಗಮ 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
+    ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ i = 0; i < 2; i++) {
         last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
+        ಯದಿ (av_file_map("no_such_file_xyz", &buf, &size, i, ರಿಕ್ತ) >= 0) {
             av_file_unmap(buf, size);
-            return 2;
+            ಪ್ರತ್ಯಾಗಮ 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
+        ಯದಿ (last_log_level != AV_LOG_ERROR + i) {
             fprintf(stderr, "expected level %d with offset=%d, got %d\n",
                     AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+            ಪ್ರತ್ಯಾಗಮ 3;
         }
     }
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }

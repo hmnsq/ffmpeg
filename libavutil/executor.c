@@ -18,23 +18,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#include <stdbool.h>
+#ಅನ್ತರ್ಭಾವ <stdbool.h>
 
-#include "mem.h"
-#include "thread.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "thread.h"
 
-#include "executor.h"
+#ಅನ್ತರ್ಭಾವ "executor.h"
 
-#if !HAVE_THREADS
+#ಯದಿ !HAVE_THREADS
 
-#define ExecutorThread  char
+#define ExecutorThread  ವರ್ಣ
 
 #define executor_thread_create(t, a, s, ar)      0
-#define executor_thread_join(t, r)               do {} while(0)
+#define executor_thread_join(t, r)               ಕುರು {} ಯಾವತ್(0)
 
-#else
+#ಅನ್ಯಥಾ
 
 #define ExecutorThread  pthread_t
 
@@ -43,14 +43,14 @@
 
 #endif //!HAVE_THREADS
 
-typedef struct ThreadInfo {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ThreadInfo {
     AVExecutor *e;
     ExecutorThread thread;
 } ThreadInfo;
 
-struct AVExecutor {
+ಸಂರಚನಾ AVExecutor {
     AVTaskCallbacks cb;
-    int thread_count;
+    ಪೂರ್ಣಾಙ್ಕ thread_ಎಣಿಕೆ;
     bool recursive;
 
     ThreadInfo *threads;
@@ -58,79 +58,79 @@ struct AVExecutor {
 
     AVMutex lock;
     AVCond cond;
-    int die;
+    ಪೂರ್ಣಾಙ್ಕ die;
 
     AVTask *tasks;
 };
 
-static AVTask* remove_task(AVTask **prev, AVTask *t)
+ಸ್ಥಿರ AVTask* remove_task(AVTask **prev, AVTask *t)
 {
     *prev  = t->next;
-    t->next = NULL;
-    return t;
+    t->next = ರಿಕ್ತ;
+    ಪ್ರತ್ಯಾಗಮ t;
 }
 
-static void add_task(AVTask **prev, AVTask *t)
+ಸ್ಥಿರ ಶೂನ್ಯ add_task(AVTask **prev, AVTask *t)
 {
     t->next = *prev;
     *prev   = t;
 }
 
-static int run_one_task(AVExecutor *e, void *lc)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ run_one_task(AVExecutor *e, ಶೂನ್ಯ *lc)
 {
     AVTaskCallbacks *cb = &e->cb;
     AVTask **prev;
 
-    for (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_data); prev = &(*prev)->next)
+    ಪ್ರತಿ (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_data); prev = &(*prev)->next)
         /* nothing */;
-    if (*prev) {
+    ಯದಿ (*prev) {
         AVTask *t = remove_task(prev, *prev);
-        if (e->thread_count > 0)
+        ಯದಿ (e->thread_ಎಣಿಕೆ > 0)
             ff_mutex_unlock(&e->lock);
         cb->run(t, lc, cb->user_data);
-        if (e->thread_count > 0)
+        ಯದಿ (e->thread_ಎಣಿಕೆ > 0)
             ff_mutex_lock(&e->lock);
-        return 1;
+        ಪ್ರತ್ಯಾಗಮ 1;
     }
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-#if HAVE_THREADS
-static void *executor_worker_task(void *data)
+#ಯದಿ HAVE_THREADS
+ಸ್ಥಿರ ಶೂನ್ಯ *executor_worker_task(ಶೂನ್ಯ *data)
 {
     ThreadInfo *ti = (ThreadInfo*)data;
     AVExecutor *e  = ti->e;
-    void *lc       = e->local_contexts + (ti - e->threads) * e->cb.local_context_size;
+    ಶೂನ್ಯ *lc       = e->local_contexts + (ti - e->threads) * e->cb.local_context_size;
 
     ff_mutex_lock(&e->lock);
-    while (1) {
-        if (e->die) break;
+    ಯಾವತ್ (1) {
+        ಯದಿ (e->die) ಭಙ್ಗ;
 
-        if (!run_one_task(e, lc)) {
+        ಯದಿ (!run_one_task(e, lc)) {
             //no task in one loop
             ff_cond_wait(&e->cond, &e->lock);
         }
     }
     ff_mutex_unlock(&e->lock);
-    return NULL;
+    ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 }
 #endif
 
-static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
+ಸ್ಥಿರ ಶೂನ್ಯ executor_free(AVExecutor *e, ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ has_lock, ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ has_cond)
 {
-    if (e->thread_count) {
+    ಯದಿ (e->thread_ಎಣಿಕೆ) {
         //signal die
         ff_mutex_lock(&e->lock);
         e->die = 1;
         ff_cond_broadcast(&e->cond);
         ff_mutex_unlock(&e->lock);
 
-        for (int i = 0; i < e->thread_count; i++)
-            executor_thread_join(e->threads[i].thread, NULL);
+        ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ i = 0; i < e->thread_ಎಣಿಕೆ; i++)
+            executor_thread_join(e->threads[i].thread, ರಿಕ್ತ);
     }
-    if (has_cond)
+    ಯದಿ (has_cond)
         ff_cond_destroy(&e->cond);
-    if (has_lock)
+    ಯದಿ (has_lock)
         ff_mutex_destroy(&e->lock);
 
     av_free(e->threads);
@@ -139,82 +139,82 @@ static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
     av_free(e);
 }
 
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, int thread_count)
+AVExecutor* av_executor_alloc(ಧ್ರುವ AVTaskCallbacks *cb, ಪೂರ್ಣಾಙ್ಕ thread_ಎಣಿಕೆ)
 {
     AVExecutor *e;
-    int has_lock = 0, has_cond = 0;
-    if (!cb || !cb->user_data || !cb->ready || !cb->run || !cb->priority_higher)
-        return NULL;
+    ಪೂರ್ಣಾಙ್ಕ has_lock = 0, has_cond = 0;
+    ಯದಿ (!cb || !cb->user_data || !cb->ready || !cb->run || !cb->priority_higher)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 
-    e = av_mallocz(sizeof(*e));
-    if (!e)
-        return NULL;
+    e = av_mallocz(ಪರಿಮಾಣ(*e));
+    ಯದಿ (!e)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
     e->cb = *cb;
 
-    e->local_contexts = av_calloc(FFMAX(thread_count, 1), e->cb.local_context_size);
-    if (!e->local_contexts)
-        goto free_executor;
+    e->local_contexts = av_calloc(FFMAX(thread_ಎಣಿಕೆ, 1), e->cb.local_context_size);
+    ಯದಿ (!e->local_contexts)
+        ಗಚ್ಛ free_executor;
 
-    e->threads = av_calloc(FFMAX(thread_count, 1), sizeof(*e->threads));
-    if (!e->threads)
-        goto free_executor;
+    e->threads = av_calloc(FFMAX(thread_ಎಣಿಕೆ, 1), ಪರಿಮಾಣ(*e->threads));
+    ಯದಿ (!e->threads)
+        ಗಚ್ಛ free_executor;
 
-    if (!thread_count)
-        return e;
+    ಯದಿ (!thread_ಎಣಿಕೆ)
+        ಪ್ರತ್ಯಾಗಮ e;
 
-    has_lock = !ff_mutex_init(&e->lock, NULL);
-    has_cond = !ff_cond_init(&e->cond, NULL);
+    has_lock = !ff_mutex_init(&e->lock, ರಿಕ್ತ);
+    has_cond = !ff_cond_init(&e->cond, ರಿಕ್ತ);
 
-    if (!has_lock || !has_cond)
-        goto free_executor;
+    ಯದಿ (!has_lock || !has_cond)
+        ಗಚ್ಛ free_executor;
 
-    for (/* nothing */; e->thread_count < thread_count; e->thread_count++) {
-        ThreadInfo *ti = e->threads + e->thread_count;
+    ಪ್ರತಿ (/* nothing */; e->thread_ಎಣಿಕೆ < thread_ಎಣಿಕೆ; e->thread_ಎಣಿಕೆ++) {
+        ThreadInfo *ti = e->threads + e->thread_ಎಣಿಕೆ;
         ti->e = e;
-        if (executor_thread_create(&ti->thread, NULL, executor_worker_task, ti))
-            goto free_executor;
+        ಯದಿ (executor_thread_create(&ti->thread, ರಿಕ್ತ, executor_worker_task, ti))
+            ಗಚ್ಛ free_executor;
     }
-    return e;
+    ಪ್ರತ್ಯಾಗಮ e;
 
 free_executor:
     executor_free(e, has_lock, has_cond);
-    return NULL;
+    ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 }
 
-void av_executor_free(AVExecutor **executor)
+ಶೂನ್ಯ av_executor_free(AVExecutor **executor)
 {
-    int thread_count;
+    ಪೂರ್ಣಾಙ್ಕ thread_ಎಣಿಕೆ;
 
-    if (!executor || !*executor)
-        return;
-    thread_count = (*executor)->thread_count;
-    executor_free(*executor, thread_count, thread_count);
-    *executor = NULL;
+    ಯದಿ (!executor || !*executor)
+        ಪ್ರತ್ಯಾಗಮ;
+    thread_ಎಣಿಕೆ = (*executor)->thread_ಎಣಿಕೆ;
+    executor_free(*executor, thread_ಎಣಿಕೆ, thread_ಎಣಿಕೆ);
+    *executor = ರಿಕ್ತ;
 }
 
-void av_executor_execute(AVExecutor *e, AVTask *t)
+ಶೂನ್ಯ av_executor_execute(AVExecutor *e, AVTask *t)
 {
     AVTaskCallbacks *cb = &e->cb;
     AVTask **prev;
 
-    if (e->thread_count)
+    ಯದಿ (e->thread_ಎಣಿಕೆ)
         ff_mutex_lock(&e->lock);
-    if (t) {
-        for (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
+    ಯದಿ (t) {
+        ಪ್ರತಿ (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
             /* nothing */;
         add_task(prev, t);
     }
-    if (e->thread_count) {
+    ಯದಿ (e->thread_ಎಣಿಕೆ) {
         ff_cond_signal(&e->cond);
         ff_mutex_unlock(&e->lock);
     }
 
-    if (!e->thread_count || !HAVE_THREADS) {
-        if (e->recursive)
-            return;
+    ಯದಿ (!e->thread_ಎಣಿಕೆ || !HAVE_THREADS) {
+        ಯದಿ (e->recursive)
+            ಪ್ರತ್ಯಾಗಮ;
         e->recursive = true;
         // We are running in a single-threaded environment, so we must handle all tasks ourselves
-        while (run_one_task(e, e->local_contexts))
+        ಯಾವತ್ (run_one_task(e, e->local_contexts))
             /* nothing */;
         e->recursive = false;
     }

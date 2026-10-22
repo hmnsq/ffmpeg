@@ -16,36 +16,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "mem.h"
-#include "tdrdi.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "tdrdi.h"
 
-AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *out_size)
+AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned ಪೂರ್ಣಾಙ್ಕ nb_displays, size_t *out_size)
 {
-    struct TestStruct {
+    ಸಂರಚನಾ TestStruct {
         AV3DReferenceDisplaysInfo p;
         AV3DReferenceDisplay      b;
     };
-    const size_t entries_offset = offsetof(struct TestStruct, b);
+    ಧ್ರುವ size_t entries_offset = offsetof(ಸಂರಚನಾ TestStruct, b);
     size_t size = entries_offset;
     AV3DReferenceDisplaysInfo *tdrdi;
 
-    if (nb_displays > (SIZE_MAX - size) / sizeof(AV3DReferenceDisplay))
-        return NULL;
-    size += sizeof(AV3DReferenceDisplay) * nb_displays;
+    ಯದಿ (nb_displays > (SIZE_MAX - size) / ಪರಿಮಾಣ(AV3DReferenceDisplay))
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
+    size += ಪರಿಮಾಣ(AV3DReferenceDisplay) * nb_displays;
 
     tdrdi = av_mallocz(size);
-    if (!tdrdi)
-        return NULL;
+    ಯದಿ (!tdrdi)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 
-    tdrdi->num_ref_displays = nb_displays;
-    tdrdi->entry_size       = sizeof(AV3DReferenceDisplay);
+    tdrdi->ಅಂಕೆ_ref_displays = nb_displays;
+    tdrdi->entry_size       = ಪರಿಮಾಣ(AV3DReferenceDisplay);
     tdrdi->entries_offset   = entries_offset;
 
-    if (out_size)
+    ಯದಿ (out_size)
         *out_size = size;
 
-    return tdrdi;
+    ಪ್ರತ್ಯಾಗಮ tdrdi;
 }

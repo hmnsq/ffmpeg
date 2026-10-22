@@ -19,10 +19,10 @@
 #ifndef AVUTIL_VULKAN_LOADER_H
 #define AVUTIL_VULKAN_LOADER_H
 
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "avassert.h"
-#include "vulkan_functions.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "vulkan_functions.h"
 
 /* Macro to turn a function name into a loader struct */
 #define PFN_LOAD_INFO(req_inst, req_dev, ext_flag, name) \
@@ -33,11 +33,11 @@
         ext_flag,                                        \
     },
 
-static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
-                                                int nb_extensions)
+ಸ್ಥಿರ ಅನ್ತಃಸ್ಥ uint64_t ff_vk_extensions_to_mask(ಧ್ರುವ ವರ್ಣ * ಧ್ರುವ *extensions,
+                                                ಪೂರ್ಣಾಙ್ಕ nb_extensions)
 {
-    static const struct ExtensionMap {
-        const char *name;
+    ಸ್ಥಿರ ಧ್ರುವ ಸಂರಚನಾ ExtensionMap {
+        ಧ್ರುವ ವರ್ಣ *name;
         FFVulkanExtensions flag;
     } extension_map[] = {
         /* Instance extensions */
@@ -89,7 +89,7 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
         { VK_KHR_VIDEO_DECODE_VP9_EXTENSION_NAME,          FF_VK_EXT_VIDEO_DECODE_VP9       },
 #endif
         { VK_KHR_VIDEO_DECODE_AV1_EXTENSION_NAME,          FF_VK_EXT_VIDEO_DECODE_AV1       },
-        { VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME,           FF_VK_EXT_PUSH_DESCRIPTOR        },
+        { VK_KHR_ತಳ್ಳು_DESCRIPTOR_EXTENSION_NAME,           FF_VK_EXT_ತಳ್ಳು_DESCRIPTOR        },
 #ifdef VK_KHR_shader_expect_assume
         { VK_KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME,      FF_VK_EXT_EXPECT_ASSUME          },
 #endif
@@ -115,16 +115,16 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
 
     FFVulkanExtensions mask = 0x0;
 
-    for (int i = 0; i < nb_extensions; i++) {
-        for (int j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
-            if (!strcmp(extensions[i], extension_map[j].name)) {
+    ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ i = 0; i < nb_extensions; i++) {
+        ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
+            ಯದಿ (!strcmp(extensions[i], extension_map[j].name)) {
                 mask |= extension_map[j].flag;
-                continue;
+                ಅನುವರ್ತ;
             }
         }
     }
 
-    return mask;
+    ಪ್ರತ್ಯಾಗಮ mask;
 }
 
 /**
@@ -140,16 +140,16 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
  * plus you can be sure that any extensions you've enabled during device
  * initialization will be available.
  */
-static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
+ಸ್ಥಿರ ಅನ್ತಃಸ್ಥ ಪೂರ್ಣಾಙ್ಕ ff_vk_load_functions(AVHWDeviceContext *ctx,
                                        FFVulkanFunctions *vk,
                                        uint64_t extensions_mask,
-                                       int has_inst, int has_dev)
+                                       ಪೂರ್ಣಾಙ್ಕ has_inst, ಪೂರ್ಣಾಙ್ಕ has_dev)
 {
     AVVulkanDeviceContext *hwctx = ctx->hwctx;
 
-    static const struct FunctionLoadInfo {
-        char req_inst;
-        char req_dev;
+    ಸ್ಥಿರ ಧ್ರುವ ಸಂರಚನಾ FunctionLoadInfo {
+        ವರ್ಣ req_inst;
+        ವರ್ಣ req_dev;
         uint16_t struct_offset;
         FFVulkanExtensions ext_flag;
     } vk_load_info[] = {
@@ -161,7 +161,7 @@ static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
     // Concatenate the names to avoid relocations. The resulting string
     // will end with \0\0
 #define FUNC_NAME(req_inst, req_dev, ext_flag, name) "vk"#name"\0"
-    const char *name =
+    ಧ್ರುವ ವರ್ಣ *name =
         FN_LIST(FUNC_NAME)
 #ifdef _WIN32
         FN_LIST_WIN32(FUNC_NAME)
@@ -169,45 +169,45 @@ static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
     ;
 #undef FUNC_NAME
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += strlen(name) + 1, i++) {
-        const struct FunctionLoadInfo *load = &vk_load_info[i];
-        static const char extensions[][4] = { "", "EXT", "KHR" };
+    ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += strlen(name) + 1, i++) {
+        ಧ್ರುವ ಸಂರಚನಾ FunctionLoadInfo *load = &vk_load_info[i];
+        ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ extensions[][4] = { "", "EXT", "KHR" };
         PFN_vkVoidFunction fn;
 
-        if (load->req_dev  && !has_dev)
-            continue;
-        if (load->req_inst && !has_inst)
-            continue;
+        ಯದಿ (load->req_dev  && !has_dev)
+            ಅನುವರ್ತ;
+        ಯದಿ (load->req_inst && !has_inst)
+            ಅನುವರ್ತ;
 
-        for (int j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
-            char ext_name[128];
-            av_unused int n;
+        ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
+            ವರ್ಣ ext_name[128];
+            av_unused ಪೂರ್ಣಾಙ್ಕ n;
 
-            n = snprintf(ext_name, sizeof(ext_name), "%s%s", name, extensions[j]);
-            av_assert1(n < sizeof(ext_name));
+            n = snprintf(ext_name, ಪರಿಮಾಣ(ext_name), "%s%s", name, extensions[j]);
+            av_assert1(n < ಪರಿಮಾಣ(ext_name));
 
-            if (load->req_dev)
+            ಯದಿ (load->req_dev)
                 fn = vk->GetDeviceProcAddr(hwctx->act_dev, ext_name);
-            else if (load->req_inst)
+            ಅನ್ಯಥಾ ಯದಿ (load->req_inst)
                 fn = hwctx->get_proc_addr(hwctx->inst, ext_name);
-            else
-                fn = hwctx->get_proc_addr(NULL, ext_name);
+            ಅನ್ಯಥಾ
+                fn = hwctx->get_proc_addr(ರಿಕ್ತ, ext_name);
 
-            if (fn)
-                break;
+            ಯದಿ (fn)
+                ಭಙ್ಗ;
         }
 
-        if (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
+        ಯದಿ (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
             av_log(ctx, AV_LOG_ERROR, "Loader error, function \"%s\" indicated "
                    "as supported, but got NULL function pointer!\n", name);
-            return AVERROR_EXTERNAL;
+            ಪ್ರತ್ಯಾಗಮ AVERROR_EXTERNAL;
         }
 
         *(PFN_vkVoidFunction *)((uint8_t *)vk + load->struct_offset) = fn;
     }
     av_assert1(*name == '\0');
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
 #endif /* AVUTIL_VULKAN_LOADER_H */

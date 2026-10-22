@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <math.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/mathematics.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/eval.h"
 
-static const double const_values[] = {
+ಸ್ಥಿರ ಧ್ರುವ ದ್ವಿಗುಣ const_ಮೌಲ್ಯಗಳು[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ *ಧ್ರುವ const_names[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+ಪೂರ್ಣಾಙ್ಕ main(ಪೂರ್ಣಾಙ್ಕ argc, ವರ್ಣ **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    ಪೂರ್ಣಾಙ್ಕ i;
+    ದ್ವಿಗುಣ d;
+    ಧ್ರುವ ವರ್ಣ *ಧ್ರುವ *ಅಭಿವ್ಯಕ್ತಿ;
+    ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ *ಧ್ರುವ exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        ರಿಕ್ತ
     };
-    int ret;
+    ಪೂರ್ಣಾಙ್ಕ ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
+    ಪ್ರತಿ (ಅಭಿವ್ಯಕ್ತಿ = exprs; *ಅಭಿವ್ಯಕ್ತಿ; ಅಭಿವ್ಯಕ್ತಿ++) {
+        printf("Evaluating '%s'\n", *ಅಭಿವ್ಯಕ್ತಿ);
+        ret = av_ಅಭಿವ್ಯಕ್ತಿ_parse_and_eval(&d, *ಅಭಿವ್ಯಕ್ತಿ,
+                               const_names, const_ಮೌಲ್ಯಗಳು,
+                               ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, 0, ರಿಕ್ತ);
+        ಯದಿ (isnan(d))
+            printf("'%s' -> nan\n\n", *ಅಭಿವ್ಯಕ್ತಿ);
+        ಅನ್ಯಥಾ
+            printf("'%s' -> %f\n\n", *ಅಭಿವ್ಯಕ್ತಿ, d);
+        ಯದಿ (ret < 0)
             printf("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_ಅಭಿವ್ಯಕ್ತಿ_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_names, const_ಮೌಲ್ಯಗಳು,
+                           ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, 0, ರಿಕ್ತ);
     printf("%f == 12.7\n", d);
-    if (ret < 0)
+    ಯದಿ (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_ಅಭಿವ್ಯಕ್ತಿ_parse_and_eval(&d, "80G/80Gi",
+                           const_names, const_ಮೌಲ್ಯಗಳು,
+                           ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, 0, ರಿಕ್ತ);
     printf("%f == 0.931322575\n", d);
-    if (ret < 0)
+    ಯದಿ (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
+    ಯದಿ (argc > 1 && !strcmp(argv[1], "-t")) {
+        ಪ್ರತಿ (i = 0; i < 1050; i++) {
             START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
+            ret = av_ಅಭಿವ್ಯಕ್ತಿ_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_names, const_ಮೌಲ್ಯಗಳು,
+                                   ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, ರಿಕ್ತ, 0, ರಿಕ್ತ);
+            ಯದಿ (ret < 0)
                 printf("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }

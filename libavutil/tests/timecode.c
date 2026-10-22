@@ -26,34 +26,34 @@
  *   av_timecode_check_frame_rate
  */
 
-#include <stdio.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "libavutil/macros.h"
-#include "libavutil/rational.h"
-#include "libavutil/timecode.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/macros.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/rational.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/timecode.h"
 
-static void test_check_frame_rate(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_check_frame_rate(ಶೂನ್ಯ)
 {
-    static const AVRational rates[] = {
+    ಸ್ಥಿರ ಧ್ರುವ AVRational rates[] = {
         {24, 1}, {25, 1}, {30, 1}, {48, 1}, {50, 1}, {60, 1},
         {100, 1}, {120, 1}, {150, 1},
         {30000, 1001}, {15, 1}, {12, 1},
         {0, 0}, {30, 0},
     };
-    for (int i = 0; i < FF_ARRAY_ELEMS(rates); i++)
+    ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ i = 0; i < FF_ARRAY_ELEMS(rates); i++)
         printf("check_frame_rate %d/%d: %d\n",
-               rates[i].num, rates[i].den,
+               rates[i].ಅಂಕೆ, rates[i].den,
                av_timecode_check_frame_rate(rates[i]));
 }
 
-static void test_init(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_init(ಶೂನ್ಯ)
 {
     AVTimecode tc;
-    static const struct {
+    ಸ್ಥಿರ ಧ್ರುವ ಸಂರಚನಾ {
         AVRational rate;
-        int flags;
-        int start;
+        ಪೂರ್ಣಾಙ್ಕ flags;
+        ಪೂರ್ಣಾಙ್ಕ start;
     } cases[] = {
         { {25, 1}, 0, 0 },
         { {30, 1}, AV_TIMECODE_FLAG_DROPFRAME, 0 },
@@ -64,99 +64,99 @@ static void test_init(void)
         { {25, 1}, AV_TIMECODE_FLAG_ALLOWNEGATIVE, -100 },
     };
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
-        int ret = av_timecode_init(&tc, cases[i].rate, cases[i].flags, cases[i].start, NULL);
+    ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
+        ಪೂರ್ಣಾಙ್ಕ ret = av_timecode_init(&tc, cases[i].rate, cases[i].flags, cases[i].start, ರಿಕ್ತ);
         printf("init %d/%d flags:%d start:%d: ",
-               cases[i].rate.num, cases[i].rate.den, cases[i].flags, cases[i].start);
-        if (ret < 0) {
+               cases[i].rate.ಅಂಕೆ, cases[i].rate.den, cases[i].flags, cases[i].start);
+        ಯದಿ (ret < 0) {
             printf("error\n");
-        } else {
+        } ಅನ್ಯಥಾ {
             printf("ok fps=%d start=%d rate=%d/%d\n",
-                   tc.fps, tc.start, tc.rate.num, tc.rate.den);
+                   tc.fps, tc.start, tc.rate.ಅಂಕೆ, tc.rate.den);
         }
     }
 }
 
-static void test_init_from_components(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_init_from_components(ಶೂನ್ಯ)
 {
     AVTimecode tc;
-    int ret;
+    ಪೂರ್ಣಾಙ್ಕ ret;
 
     ret = av_timecode_init_from_components(&tc, (AVRational){25, 1},
-                                           0, 0, 0, 0, 0, NULL);
+                                           0, 0, 0, 0, 0, ರಿಕ್ತ);
     printf("from_components 25/1 00:00:00:00: %d start=%d\n", ret, tc.start);
 
     ret = av_timecode_init_from_components(&tc, (AVRational){25, 1},
-                                           0, 1, 0, 0, 0, NULL);
+                                           0, 1, 0, 0, 0, ರಿಕ್ತ);
     printf("from_components 25/1 01:00:00:00: %d start=%d\n", ret, tc.start);
 
     ret = av_timecode_init_from_components(&tc, (AVRational){30, 1},
-                                           0, 1, 2, 3, 4, NULL);
+                                           0, 1, 2, 3, 4, ರಿಕ್ತ);
     printf("from_components 30/1 01:02:03:04: %d start=%d\n", ret, tc.start);
 
     ret = av_timecode_init_from_components(&tc, (AVRational){30000, 1001},
                                            AV_TIMECODE_FLAG_DROPFRAME,
-                                           1, 0, 0, 0, NULL);
+                                           1, 0, 0, 0, ರಿಕ್ತ);
     printf("from_components 30000/1001 drop 01:00:00;00: %d start=%d\n",
            ret, tc.start);
 }
 
-static void test_init_from_string(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_init_from_string(ಶೂನ್ಯ)
 {
     AVTimecode tc;
-    int ret;
+    ಪೂರ್ಣಾಙ್ಕ ret;
 
     ret = av_timecode_init_from_string(&tc, (AVRational){30, 1},
-                                       "00:01:02:03", NULL);
+                                       "00:01:02:03", ರಿಕ್ತ);
     printf("from_string 30/1 00:01:02:03: %d drop=%d start=%d\n",
            ret, !!(tc.flags & AV_TIMECODE_FLAG_DROPFRAME), tc.start);
 
     ret = av_timecode_init_from_string(&tc, (AVRational){30000, 1001},
-                                       "00:01:00;02", NULL);
+                                       "00:01:00;02", ರಿಕ್ತ);
     printf("from_string 30000/1001 00:01:00;02: %d drop=%d\n",
            ret, !!(tc.flags & AV_TIMECODE_FLAG_DROPFRAME));
 
     ret = av_timecode_init_from_string(&tc, (AVRational){30000, 1001},
-                                       "01:00:00.00", NULL);
+                                       "01:00:00.00", ರಿಕ್ತ);
     printf("from_string 30000/1001 01:00:00.00: %d drop=%d\n",
            ret, !!(tc.flags & AV_TIMECODE_FLAG_DROPFRAME));
 
     ret = av_timecode_init_from_string(&tc, (AVRational){25, 1},
-                                       "notvalid", NULL);
+                                       "notvalid", ರಿಕ್ತ);
     printf("from_string 25/1 notvalid: %s\n", ret < 0 ? "error" : "ok");
 }
 
-static void test_make_string(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_make_string(ಶೂನ್ಯ)
 {
     AVTimecode tc;
-    char buf[AV_TIMECODE_STR_SIZE];
+    ವರ್ಣ buf[AV_TIMECODE_STR_SIZE];
 
-    av_timecode_init(&tc, (AVRational){25, 1}, 0, 0, NULL);
+    av_timecode_init(&tc, (AVRational){25, 1}, 0, 0, ರಿಕ್ತ);
     printf("make_string 25/1 35: %s\n", av_timecode_make_string(&tc, buf, 35));
     printf("make_string 25/1 0: %s\n", av_timecode_make_string(&tc, buf, 0));
 
-    av_timecode_init(&tc, (AVRational){30, 1}, 0, 0, NULL);
+    av_timecode_init(&tc, (AVRational){30, 1}, 0, 0, ರಿಕ್ತ);
     printf("make_string 30/1 30: %s\n", av_timecode_make_string(&tc, buf, 30));
 
     av_timecode_init(&tc, (AVRational){25, 1},
-                     AV_TIMECODE_FLAG_24HOURSMAX, 0, NULL);
+                     AV_TIMECODE_FLAG_24HOURSMAX, 0, ರಿಕ್ತ);
     printf("make_string 25/1 24hwrap %d: %s\n",
            25 * 3600 * 25, av_timecode_make_string(&tc, buf, 25 * 3600 * 25));
 
     av_timecode_init(&tc, (AVRational){30000, 1001},
-                     AV_TIMECODE_FLAG_DROPFRAME, 0, NULL);
+                     AV_TIMECODE_FLAG_DROPFRAME, 0, ರಿಕ್ತ);
     printf("make_string 30000/1001 drop 0: %s\n",
            av_timecode_make_string(&tc, buf, 0));
 
     av_timecode_init(&tc, (AVRational){25, 1},
-                     AV_TIMECODE_FLAG_ALLOWNEGATIVE, -100, NULL);
+                     AV_TIMECODE_FLAG_ALLOWNEGATIVE, -100, ರಿಕ್ತ);
     printf("make_string 25/1 negative start -100 frame 0: %s\n",
            av_timecode_make_string(&tc, buf, 0));
 }
 
-static void test_make_smpte_tc_string(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_make_smpte_tc_string(ಶೂನ್ಯ)
 {
-    char buf[AV_TIMECODE_STR_SIZE];
+    ವರ್ಣ buf[AV_TIMECODE_STR_SIZE];
     AVTimecode tc;
     uint32_t smpte;
 
@@ -164,16 +164,16 @@ static void test_make_smpte_tc_string(void)
     printf("smpte_tc 30/1 01:02:03:04: %s\n",
            av_timecode_make_smpte_tc_string(buf, smpte, 1));
 
-    av_timecode_init(&tc, (AVRational){25, 1}, 0, 0, NULL);
+    av_timecode_init(&tc, (AVRational){25, 1}, 0, 0, ರಿಕ್ತ);
     smpte = av_timecode_get_smpte_from_framenum(&tc,
                                                  25 * 3600 + 25 * 60 + 25 + 5);
     printf("smpte_from_framenum 25/1 91530: %s\n",
            av_timecode_make_smpte_tc_string(buf, smpte, 1));
 }
 
-static void test_make_smpte_tc_string2(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_make_smpte_tc_string2(ಶೂನ್ಯ)
 {
-    char buf[AV_TIMECODE_STR_SIZE];
+    ವರ್ಣ buf[AV_TIMECODE_STR_SIZE];
     uint32_t smpte;
 
     smpte = av_timecode_get_smpte((AVRational){50, 1}, 0, 0, 0, 0, 0);
@@ -187,9 +187,9 @@ static void test_make_smpte_tc_string2(void)
                                              smpte, 1, 0));
 }
 
-static void test_make_mpeg_tc_string(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_make_mpeg_tc_string(ಶೂನ್ಯ)
 {
-    char buf[AV_TIMECODE_STR_SIZE];
+    ವರ್ಣ buf[AV_TIMECODE_STR_SIZE];
 
     uint32_t tc25 = (1u << 19) | (2u << 13) | (3u << 6) | 4u;
     printf("mpeg_tc 01:02:03:04: %s\n",
@@ -200,11 +200,11 @@ static void test_make_mpeg_tc_string(void)
            av_timecode_make_mpeg_tc_string(buf, tc25_drop));
 }
 
-static void test_adjust_ntsc(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_adjust_ntsc(ಶೂನ್ಯ)
 {
-    static const struct {
-        int framenum;
-        int fps;
+    ಸ್ಥಿರ ಧ್ರುವ ಸಂರಚನಾ {
+        ಪೂರ್ಣಾಙ್ಕ framenum;
+        ಪೂರ್ಣಾಙ್ಕ fps;
     } cases[] = {
         { 0, 30 },
         { 1800, 30 },
@@ -213,7 +213,7 @@ static void test_adjust_ntsc(void)
         { 3600, 60 },
     };
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
+    ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
         printf("adjust_ntsc %d %d: %d\n",
                cases[i].framenum, cases[i].fps,
                av_timecode_adjust_ntsc_framenum2(cases[i].framenum,
@@ -221,10 +221,10 @@ static void test_adjust_ntsc(void)
     }
 }
 
-static void test_get_smpte_roundtrip(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_get_smpte_roundtrip(ಶೂನ್ಯ)
 {
-    char buf[AV_TIMECODE_STR_SIZE];
-    char buf2[AV_TIMECODE_STR_SIZE];
+    ವರ್ಣ buf[AV_TIMECODE_STR_SIZE];
+    ವರ್ಣ buf2[AV_TIMECODE_STR_SIZE];
     uint32_t smpte;
 
     smpte = av_timecode_get_smpte((AVRational){30, 1}, 0, 12, 34, 56, 7);
@@ -262,7 +262,7 @@ static void test_get_smpte_roundtrip(void)
                                              smpte, 0, 0));
 }
 
-int main(void)
+ಪೂರ್ಣಾಙ್ಕ main(ಶೂನ್ಯ)
 {
     test_check_frame_rate();
     test_init();
@@ -274,5 +274,5 @@ int main(void)
     test_make_mpeg_tc_string();
     test_adjust_ntsc();
     test_get_smpte_roundtrip();
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }

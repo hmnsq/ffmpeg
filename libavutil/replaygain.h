@@ -19,14 +19,14 @@
 #ifndef AVUTIL_REPLAYGAIN_H
 #define AVUTIL_REPLAYGAIN_H
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
 /**
  * ReplayGain information (see
  * http://wiki.hydrogenaudio.org/index.php?title=ReplayGain_1.0_specification).
  * The size of this struct is a part of the public ABI.
  */
-typedef struct AVReplayGain {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ AVReplayGain {
     /**
      * Track replay gain in microbels (divide by 100000 to get the value in dB).
      * Should be set to INT32_MIN when unknown.

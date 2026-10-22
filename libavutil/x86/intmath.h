@@ -21,43 +21,43 @@
 #ifndef AVUTIL_X86_INTMATH_H
 #define AVUTIL_X86_INTMATH_H
 
-#include <stdint.h>
-#include <stdlib.h>
-#if HAVE_FAST_CLZ
-#if defined(_MSC_VER)
-#include <intrin.h>
-#elif defined(__INTEL_COMPILER)
-#include <immintrin.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಯದಿ HAVE_FAST_CLZ
+#ಯದಿ defined(_MSC_VER)
+#ಅನ್ತರ್ಭಾವ <intrin.h>
+#ನೋಚೇದ್ಯದಿ defined(__INTEL_COMPILER)
+#ಅನ್ತರ್ಭಾವ <immintrin.h>
 #endif
 #endif
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#if HAVE_FAST_CLZ
-#if (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
-#   if defined(__INTEL_COMPILER)
+#ಯದಿ HAVE_FAST_CLZ
+#ಯದಿ (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
+#   ಯದಿ defined(__INTEL_COMPILER)
 #       define ff_log2(x) (_bit_scan_reverse((x)|1))
-#   else
+#   ಅನ್ಯಥಾ
 #       define ff_log2 ff_log2_x86
-static av_always_inline av_const int ff_log2_x86(unsigned int v)
+ಸ್ಥಿರ av_always_inline av_const ಪೂರ್ಣಾಙ್ಕ ff_log2_x86(unsigned ಪೂರ್ಣಾಙ್ಕ v)
 {
     unsigned long n;
     _BitScanReverse(&n, v|1);
-    return n;
+    ಪ್ರತ್ಯಾಗಮ n;
 }
 #   endif
 #   define ff_log2_16bit av_log2
 
-#if defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
+#ಯದಿ defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
                                   (defined(__BMI__) || !defined(__clang__)))
 #   define ff_ctz(v) _tzcnt_u32(v)
 
-#   if ARCH_X86_64
+#   ಯದಿ ARCH_X86_64
 #       define ff_ctzll(v) _tzcnt_u64(v)
-#   else
+#   ಅನ್ಯಥಾ
 #       define ff_ctzll ff_ctzll_x86
-static av_always_inline av_const int ff_ctzll_x86(long long v)
+ಸ್ಥಿರ av_always_inline av_const ಪೂರ್ಣಾಙ್ಕ ff_ctzll_x86(long long v)
 {
-    return ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
+    ಪ್ರತ್ಯಾಗಮ ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
 }
 #   endif
 #endif /* _MSC_VER */
@@ -66,48 +66,48 @@ static av_always_inline av_const int ff_ctzll_x86(long long v)
 
 #endif /* HAVE_FAST_CLZ */
 
-#if defined(__GNUC__) || defined(__clang__)
+#ಯದಿ defined(__GNUC__) || defined(__clang__)
 
 /* Our generic version of av_popcount is faster than GCC's built-in on
  * CPUs that don't support the popcnt instruction.
  */
-#if defined(__POPCNT__)
+#ಯದಿ defined(__POPCNT__)
     #define av_popcount   __builtin_popcount
-#if ARCH_X86_64
+#ಯದಿ ARCH_X86_64
     #define av_popcount64 __builtin_popcountll
 #endif
 
 #endif /* __POPCNT__ */
 
-#if defined(__BMI2__)
+#ಯದಿ defined(__BMI2__)
 
-#if AV_GCC_VERSION_AT_LEAST(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+#ಯದಿ AV_GCC_VERSION_AT_LEAST(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
+#ಯದಿ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
 #define av_zero_extend av_zero_extend_bmi2
-static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
+ಸ್ಥಿರ av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
 {
-    if (p > 31) abort();
-    return __builtin_ia32_bzhi_si(a, p);
+    ಯದಿ (p > 31) abort();
+    ಪ್ರತ್ಯಾಗಮ __builtin_ia32_bzhi_si(a, p);
 }
-#else
+#ಅನ್ಯಥಾ
 #define av_zero_extend __builtin_ia32_bzhi_si
 #endif
-#elif HAVE_INLINE_ASM
+#ನೋಚೇದ್ಯದಿ HAVE_INLINE_ASM
 /* GCC releases before 5.1.0 have a broken bzhi builtin, so for those we
  * implement it using inline assembly
  */
 #define av_zero_extend av_zero_extend_bmi2
-static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
+ಸ್ಥಿರ av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
 {
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (p > 31) abort();
+#ಯದಿ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    ಯದಿ (p > 31) abort();
 #endif
-    if (av_builtin_constant_p(p))
-        return a & ((1U << p) - 1);
-    else {
+    ಯದಿ (av_builtin_constant_p(p))
+        ಪ್ರತ್ಯಾಗಮ a & ((1U << p) - 1);
+    ಅನ್ಯಥಾ {
         unsigned x;
         __asm__ ("bzhi %2, %1, %0 \n\t" : "=r"(x) : "rm"(a), "r"(p));
-        return x;
+        ಪ್ರತ್ಯಾಗಮ x;
     }
 }
 #endif /* AV_GCC_VERSION_AT_LEAST */

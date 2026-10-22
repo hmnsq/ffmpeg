@@ -25,10 +25,10 @@
 #ifndef AVUTIL_TDRDI_H
 #define AVUTIL_TDRDI_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "libavutil/avassert.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/avassert.h"
 
 /**
  * @defgroup lavu_video_3d_reference_displays_info 3D Reference Displays Information
@@ -40,7 +40,7 @@
  * @{
  */
 
-#define AV_TDRDI_MAX_NUM_REF_DISPLAY 32
+#define AV_TDRDI_MAX_ಅಂಕೆ_REF_DISPLAY 32
 
 /**
  * This structure describes information about the reference display width(s) and reference
@@ -50,7 +50,7 @@
  * @note The struct must be allocated with av_tdrdi_alloc() and
  *       its size is not a part of the public ABI.
  */
-typedef struct AV3DReferenceDisplaysInfo {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ AV3DReferenceDisplaysInfo {
     /**
      * The exponent of the maximum allowable truncation error for
      * {exponent,mantissa}_ref_display_width as given by 2<sup>(-prec_ref_display_width)</sup>.
@@ -75,7 +75,7 @@ typedef struct AV3DReferenceDisplaysInfo {
      * The number of reference displays that are signalled in this struct.
      * Allowed range is 1 to 32, inclusive.
      */
-    uint8_t num_ref_displays;
+    uint8_t ಅಂಕೆ_ref_displays;
 
     /**
      * Offset in bytes from the beginning of this structure at which the array
@@ -97,16 +97,16 @@ typedef struct AV3DReferenceDisplaysInfo {
  * sizeof(AV3DReferenceDisplay) is not a part of the ABI and new fields may be
  * added to it.
 */
-typedef struct AV3DReferenceDisplay {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ AV3DReferenceDisplay {
     /**
      * The ViewId of the left view of a stereo pair corresponding to the n-th reference display.
      */
-    uint16_t left_view_id;
+    uint16_t ಎಡ_view_id;
 
     /**
      * The ViewId of the left view of a stereo pair corresponding to the n-th reference display.
      */
-    uint16_t right_view_id;
+    uint16_t ಬಲ_view_id;
 
     /**
      * The exponent part of the reference display width of the n-th reference display.
@@ -138,14 +138,14 @@ typedef struct AV3DReferenceDisplay {
      * The recommended additional horizontal shift for a stereo pair corresponding to the n-th
      * reference baseline and the n-th reference display.
      */
-    int16_t num_sample_shift;
+    int16_t ಅಂಕೆ_sample_shift;
 } AV3DReferenceDisplay;
 
-static av_always_inline AV3DReferenceDisplay*
-av_tdrdi_get_display(AV3DReferenceDisplaysInfo *tdrdi, unsigned int idx)
+ಸ್ಥಿರ av_always_inline AV3DReferenceDisplay*
+av_tdrdi_get_display(AV3DReferenceDisplaysInfo *tdrdi, unsigned ಪೂರ್ಣಾಙ್ಕ idx)
 {
-    av_assert0(idx < tdrdi->num_ref_displays);
-    return (AV3DReferenceDisplay *)((uint8_t *)tdrdi + tdrdi->entries_offset +
+    av_assert0(idx < tdrdi->ಅಂಕೆ_ref_displays);
+    ಪ್ರತ್ಯಾಗಮ (AV3DReferenceDisplay *)((uint8_t *)tdrdi + tdrdi->entries_offset +
                                     idx * tdrdi->entry_size);
 }
 
@@ -155,7 +155,7 @@ av_tdrdi_get_display(AV3DReferenceDisplaysInfo *tdrdi, unsigned int idx)
  *
  * @return the newly allocated struct or NULL on failure
  */
-AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *size);
+AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned ಪೂರ್ಣಾಙ್ಕ nb_displays, size_t *size);
 
 /**
  * @}

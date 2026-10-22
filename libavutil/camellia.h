@@ -22,7 +22,7 @@
 #ifndef AVUTIL_CAMELLIA_H
 #define AVUTIL_CAMELLIA_H
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
 
 /**
@@ -33,15 +33,15 @@
   * @{
   */
 
-extern const int av_camellia_size;
+ಬಾಹ್ಯ ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ av_camellia_size;
 
-struct AVCAMELLIA;
+ಸಂರಚನಾ AVCAMELLIA;
 
 /**
   * Allocate an AVCAMELLIA context
   * To free the struct: av_free(ptr)
   */
-struct AVCAMELLIA *av_camellia_alloc(void);
+ಸಂರಚನಾ AVCAMELLIA *av_camellia_alloc(ಶೂನ್ಯ);
 
 /**
   * Initialize an AVCAMELLIA context.
@@ -50,7 +50,7 @@ struct AVCAMELLIA *av_camellia_alloc(void);
   * @param key a key of 16, 24, 32 bytes used for encryption/decryption
   * @param key_bits number of keybits: possible are 128, 192, 256
  */
-int av_camellia_init(struct AVCAMELLIA *ctx, const uint8_t *key, int key_bits);
+ಪೂರ್ಣಾಙ್ಕ av_camellia_init(ಸಂರಚನಾ AVCAMELLIA *ctx, ಧ್ರುವ uint8_t *ಕೀಲಿ, ಪೂರ್ಣಾಙ್ಕ ಕೀಲಿ_bits);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context
@@ -62,7 +62,7 @@ int av_camellia_init(struct AVCAMELLIA *ctx, const uint8_t *key, int key_bits);
   * @param iv initialization vector for CBC mode, NULL for ECB mode
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_camellia_crypt(struct AVCAMELLIA *ctx, uint8_t *dst, const uint8_t *src, int count, uint8_t* iv, int decrypt);
+ಶೂನ್ಯ av_camellia_crypt(ಸಂರಚನಾ AVCAMELLIA *ctx, uint8_t *dst, ಧ್ರುವ uint8_t *src, ಪೂರ್ಣಾಙ್ಕ ಎಣಿಕೆ, uint8_t* iv, ಪೂರ್ಣಾಙ್ಕ decrypt);
 
 /**
  * @}

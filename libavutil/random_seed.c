@@ -18,90 +18,90 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
+#ಯದಿ HAVE_UNISTD_H
+#ಅನ್ತರ್ಭಾವ <unistd.h>
 #endif
-#if HAVE_IO_H
-#include <io.h>
+#ಯದಿ HAVE_IO_H
+#ಅನ್ತರ್ಭಾವ <io.h>
 #endif
-#if HAVE_BCRYPT
-#include <windows.h>
-#include <bcrypt.h>
+#ಯದಿ HAVE_BCRYPT
+#ಅನ್ತರ್ಭಾವ <windows.h>
+#ಅನ್ತರ್ಭಾವ <bcrypt.h>
 #endif
-#if CONFIG_GCRYPT
-#include <gcrypt.h>
-#elif CONFIG_OPENSSL
-#include <openssl/rand.h>
+#ಯದಿ CONFIG_GCRYPT
+#ಅನ್ತರ್ಭಾವ <gcrypt.h>
+#ನೋಚೇದ್ಯದಿ CONFIG_OPENSSL
+#ಅನ್ತರ್ಭಾವ <openssl/rand.h>
 #endif
-#include <fcntl.h>
-#include <math.h>
-#include <time.h>
-#include <string.h>
-#include "avassert.h"
-#include "file_open.h"
-#include "internal.h"
-#include "intreadwrite.h"
-#include "timer.h"
-#include "random_seed.h"
-#include "sha.h"
+#ಅನ್ತರ್ಭಾವ <fcntl.h>
+#ಅನ್ತರ್ಭಾವ <math.h>
+#ಅನ್ತರ್ಭಾವ <time.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "file_open.h"
+#ಅನ್ತರ್ಭಾವ "internal.h"
+#ಅನ್ತರ್ಭಾವ "intreadwrite.h"
+#ಅನ್ತರ್ಭಾವ "timer.h"
+#ಅನ್ತರ್ಭಾವ "random_seed.h"
+#ಅನ್ತರ್ಭಾವ "sha.h"
 
 #ifndef TEST
 #define TEST 0
 #endif
 
-static int read_random(uint8_t *dst, size_t len, const char *file)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ read_random(uint8_t *dst, size_t len, ಧ್ರುವ ವರ್ಣ *file)
 {
-#if HAVE_UNISTD_H
+#ಯದಿ HAVE_UNISTD_H
     FILE *fp = avpriv_fopen_utf8(file, "r");
     size_t err;
 
-    if (!fp)
-        return AVERROR_UNKNOWN;
-    setvbuf(fp, NULL, _IONBF, 0);
+    ಯದಿ (!fp)
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
+    setvbuf(fp, ರಿಕ್ತ, _IONBF, 0);
     err = fread(dst, 1, len, fp);
     fclose(fp);
 
-    if (err != len)
-        return AVERROR_UNKNOWN;
+    ಯದಿ (err != len)
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
 
-    return 0;
-#else
-    return AVERROR(ENOSYS);
+    ಪ್ರತ್ಯಾಗಮ 0;
+#ಅನ್ಯಥಾ
+    ಪ್ರತ್ಯಾಗಮ AVERROR(ENOSYS);
 #endif
 }
 
-static uint32_t get_generic_seed(void)
+ಸ್ಥಿರ uint32_t get_generic_seed(ಶೂನ್ಯ)
 {
     uint64_t tmp[120/8];
-    struct AVSHA *sha = (void*)tmp;
+    ಸಂರಚನಾ AVSHA *sha = (ಶೂನ್ಯ*)tmp;
     clock_t last_t  = 0;
     clock_t last_td = 0;
     clock_t init_t = 0;
-    static uint64_t i = 0;
-    static uint32_t buffer[512] = { 0 };
-    unsigned char digest[20];
+    ಸ್ಥಿರ uint64_t i = 0;
+    ಸ್ಥಿರ uint32_t buffer[512] = { 0 };
+    unsigned ವರ್ಣ digest[20];
     uint64_t last_i = i;
-    int repeats[3] = { 0 };
+    ಪೂರ್ಣಾಙ್ಕ repeats[3] = { 0 };
 
-    av_assert0(sizeof(tmp) >= av_sha_size);
+    av_assert0(ಪರಿಮಾಣ(tmp) >= av_sha_size);
 
-    if(TEST){
-        memset(buffer, 0, sizeof(buffer));
+    ಯದಿ(TEST){
+        memset(buffer, 0, ಪರಿಮಾಣ(buffer));
         last_i = i = 0;
-    }else{
+    }ಅನ್ಯಥಾ{
 #ifdef AV_READ_TIME
         buffer[13] ^= AV_READ_TIME();
         buffer[41] ^= AV_READ_TIME()>>32;
 #endif
     }
 
-    for (;;) {
+    ಪ್ರತಿ (;;) {
         clock_t t = clock();
-        int incremented_i = 0;
-        int cur_td = t - last_t;
-        if (last_t + 2*last_td + (CLOCKS_PER_SEC > 1000) < t) {
+        ಪೂರ್ಣಾಙ್ಕ incremented_i = 0;
+        ಪೂರ್ಣಾಙ್ಕ cur_td = t - last_t;
+        ಯದಿ (last_t + 2*last_td + (CLOCKS_PER_SEC > 1000) < t) {
             // If the timer incremented by more than 2*last_td at once,
             // we may e.g. have had a context switch. If the timer resolution
             // is high (CLOCKS_PER_SEC > 1000), require that the timer
@@ -109,7 +109,7 @@ static uint32_t get_generic_seed(void)
             // it is enough that the timer incremented at all.
             buffer[++i & 511] += cur_td % 3294638521U;
             incremented_i = 1;
-        } else if (t != last_t && repeats[0] > 0 && repeats[1] > 0 &&
+        } ಅನ್ಯಥಾ ಯದಿ (t != last_t && repeats[0] > 0 && repeats[1] > 0 &&
                    repeats[2] > 0 && repeats[0] != repeats[1] &&
                    repeats[0] != repeats[2]) {
             // If the timer resolution is high, and we get the same timer
@@ -119,18 +119,18 @@ static uint32_t get_generic_seed(void)
             // and proceed to the next index.
             buffer[++i & 511] += (repeats[0] + repeats[1] + repeats[2]) % 3294638521U;
             incremented_i = 1;
-        } else {
+        } ಅನ್ಯಥಾ {
             buffer[i & 511] = 1664525*buffer[i & 511] + 1013904223 + (cur_td % 3294638521U);
         }
-        if (incremented_i && (t - init_t) >= CLOCKS_PER_SEC>>5) {
-            if (last_i && i - last_i > 4 || i - last_i > 64 || TEST && i - last_i > 8)
-                break;
+        ಯದಿ (incremented_i && (t - init_t) >= CLOCKS_PER_SEC>>5) {
+            ಯದಿ (last_i && i - last_i > 4 || i - last_i > 64 || TEST && i - last_i > 8)
+                ಭಙ್ಗ;
         }
-        if (t == last_t) {
+        ಯದಿ (t == last_t) {
             repeats[0]++;
-        } else {
+        } ಅನ್ಯಥಾ {
             // If we got a new unique number of repeats, update the history.
-            if (repeats[0] != repeats[1]) {
+            ಯದಿ (repeats[0] != repeats[1]) {
                 repeats[2] = repeats[1];
                 repeats[1] = repeats[0];
             }
@@ -138,67 +138,67 @@ static uint32_t get_generic_seed(void)
         }
         last_t = t;
         last_td = cur_td;
-        if (!init_t)
+        ಯದಿ (!init_t)
             init_t = t;
     }
 
-    if(TEST) {
+    ಯದಿ(TEST) {
         buffer[0] = buffer[1] = 0;
-    } else {
+    } ಅನ್ಯಥಾ {
 #ifdef AV_READ_TIME
         buffer[111] += AV_READ_TIME();
 #endif
     }
 
     av_sha_init(sha, 160);
-    av_sha_update(sha, (const uint8_t *)buffer, sizeof(buffer));
+    av_sha_update(sha, (ಧ್ರುವ uint8_t *)buffer, ಪರಿಮಾಣ(buffer));
     av_sha_final(sha, digest);
-    return AV_RB32(digest) + AV_RB32(digest + 16);
+    ಪ್ರತ್ಯಾಗಮ AV_RB32(digest) + AV_RB32(digest + 16);
 }
 
-int av_random_bytes(uint8_t* buf, size_t len)
+ಪೂರ್ಣಾಙ್ಕ av_random_bytes(uint8_t* buf, size_t len)
 {
-    int err;
+    ಪೂರ್ಣಾಙ್ಕ err;
 
-#if HAVE_BCRYPT
+#ಯದಿ HAVE_BCRYPT
     BCRYPT_ALG_HANDLE algo_handle;
     NTSTATUS ret = BCryptOpenAlgorithmProvider(&algo_handle, BCRYPT_RNG_ALGORITHM,
                                                MS_PRIMITIVE_PROVIDER, 0);
-    if (BCRYPT_SUCCESS(ret)) {
+    ಯದಿ (BCRYPT_SUCCESS(ret)) {
         NTSTATUS ret = BCryptGenRandom(algo_handle, (PUCHAR)buf, len, 0);
         BCryptCloseAlgorithmProvider(algo_handle, 0);
-        if (BCRYPT_SUCCESS(ret))
-            return 0;
+        ಯದಿ (BCRYPT_SUCCESS(ret))
+            ಪ್ರತ್ಯಾಗಮ 0;
     }
 #endif
 
-#if HAVE_ARC4RANDOM_BUF
+#ಯದಿ HAVE_ARC4RANDOM_BUF
     arc4random_buf(buf, len);
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 #endif
 
     err = read_random(buf, len, "/dev/urandom");
-    if (!err)
-        return err;
+    ಯದಿ (!err)
+        ಪ್ರತ್ಯಾಗಮ err;
 
-#if CONFIG_GCRYPT
+#ಯದಿ CONFIG_GCRYPT
     gcry_randomize(buf, len, GCRY_VERY_STRONG_RANDOM);
-    return 0;
-#elif CONFIG_OPENSSL
-    if (RAND_bytes(buf, len) == 1)
-        return 0;
-    return AVERROR_EXTERNAL;
-#else
-    return err;
+    ಪ್ರತ್ಯಾಗಮ 0;
+#ನೋಚೇದ್ಯದಿ CONFIG_OPENSSL
+    ಯದಿ (RAND_bytes(buf, len) == 1)
+        ಪ್ರತ್ಯಾಗಮ 0;
+    ಪ್ರತ್ಯಾಗಮ AVERROR_EXTERNAL;
+#ಅನ್ಯಥಾ
+    ಪ್ರತ್ಯಾಗಮ err;
 #endif
 }
 
-uint32_t av_get_random_seed(void)
+uint32_t av_get_random_seed(ಶೂನ್ಯ)
 {
     uint32_t seed;
 
-    if (av_random_bytes((uint8_t *)&seed, sizeof(seed)) < 0)
-        return get_generic_seed();
+    ಯದಿ (av_random_bytes((uint8_t *)&seed, ಪರಿಮಾಣ(seed)) < 0)
+        ಪ್ರತ್ಯಾಗಮ get_generic_seed();
 
-    return seed;
+    ಪ್ರತ್ಯಾಗಮ seed;
 }

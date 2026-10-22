@@ -18,44 +18,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/float_dsp.h"
 
-void ff_vector_fmul_rvv(float *dst, const float *src0, const float *src1,
-                         int len);
-void ff_vector_fmac_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_window_rvv(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
-void ff_vector_fmul_add_rvv(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
-void ff_vector_fmul_reverse_rvv(float *dst, const float *src0,
-                                 const float *src1, int len);
-void ff_butterflies_float_rvv(float *v1, float *v2, int len);
-float ff_scalarproduct_float_rvv(const float *v1, const float *v2, int len);
+ಶೂನ್ಯ ff_vector_fmul_rvv(ಭಿನ್ನ *dst, ಧ್ರುವ ಭಿನ್ನ *src0, ಧ್ರುವ ಭಿನ್ನ *src1,
+                         ಪೂರ್ಣಾಙ್ಕ len);
+ಶೂನ್ಯ ff_vector_fmac_scalar_rvv(ಭಿನ್ನ *dst, ಧ್ರುವ ಭಿನ್ನ *src, ಭಿನ್ನ mul,
+                                ಪೂರ್ಣಾಙ್ಕ len);
+ಶೂನ್ಯ ff_vector_fmul_scalar_rvv(ಭಿನ್ನ *dst, ಧ್ರುವ ಭಿನ್ನ *src, ಭಿನ್ನ mul,
+                                ಪೂರ್ಣಾಙ್ಕ len);
+ಶೂನ್ಯ ff_vector_fmul_window_rvv(ಭಿನ್ನ *dst, ಧ್ರುವ ಭಿನ್ನ *src0,
+                                ಧ್ರುವ ಭಿನ್ನ *src1, ಧ್ರುವ ಭಿನ್ನ *win, ಪೂರ್ಣಾಙ್ಕ len);
+ಶೂನ್ಯ ff_vector_fmul_add_rvv(ಭಿನ್ನ *dst, ಧ್ರುವ ಭಿನ್ನ *src0, ಧ್ರುವ ಭಿನ್ನ *src1,
+                             ಧ್ರುವ ಭಿನ್ನ *src2, ಪೂರ್ಣಾಙ್ಕ len);
+ಶೂನ್ಯ ff_vector_fmul_reverse_rvv(ಭಿನ್ನ *dst, ಧ್ರುವ ಭಿನ್ನ *src0,
+                                 ಧ್ರುವ ಭಿನ್ನ *src1, ಪೂರ್ಣಾಙ್ಕ len);
+ಶೂನ್ಯ ff_butterflies_float_rvv(ಭಿನ್ನ *v1, ಭಿನ್ನ *v2, ಪೂರ್ಣಾಙ್ಕ len);
+ಭಿನ್ನ ff_scalarproduct_float_rvv(ಧ್ರುವ ಭಿನ್ನ *v1, ಧ್ರುವ ಭಿನ್ನ *v2, ಪೂರ್ಣಾಙ್ಕ len);
 
-void ff_vector_dmul_rvv(double *dst, const double *src0, const double *src1,
-                         int len);
-void ff_vector_dmac_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-void ff_vector_dmul_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-double ff_scalarproduct_double_rvv(const double *v1, const double *v2,
+ಶೂನ್ಯ ff_vector_dmul_rvv(ದ್ವಿಗುಣ *dst, ಧ್ರುವ ದ್ವಿಗುಣ *src0, ಧ್ರುವ ದ್ವಿಗುಣ *src1,
+                         ಪೂರ್ಣಾಙ್ಕ len);
+ಶೂನ್ಯ ff_vector_dmac_scalar_rvv(ದ್ವಿಗುಣ *dst, ಧ್ರುವ ದ್ವಿಗುಣ *src, ದ್ವಿಗುಣ mul,
+                                ಪೂರ್ಣಾಙ್ಕ len);
+ಶೂನ್ಯ ff_vector_dmul_scalar_rvv(ದ್ವಿಗುಣ *dst, ಧ್ರುವ ದ್ವಿಗುಣ *src, ದ್ವಿಗುಣ mul,
+                                ಪೂರ್ಣಾಙ್ಕ len);
+ದ್ವಿಗುಣ ff_scalarproduct_double_rvv(ಧ್ರುವ ದ್ವಿಗುಣ *v1, ಧ್ರುವ ದ್ವಿಗುಣ *v2,
                                    size_t len);
 
-av_cold void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
+av_cold ಶೂನ್ಯ ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#ಯದಿ HAVE_RVV
+    ಪೂರ್ಣಾಙ್ಕ flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVB) {
-        if (flags & AV_CPU_FLAG_RVV_F32) {
+    ಯದಿ (flags & AV_CPU_FLAG_RVB) {
+        ಯದಿ (flags & AV_CPU_FLAG_RVV_F32) {
             fdsp->vector_fmul = ff_vector_fmul_rvv;
             fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_rvv;
             fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_rvv;
@@ -66,7 +66,7 @@ av_cold void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
             fdsp->scalarproduct_float = ff_scalarproduct_float_rvv;
         }
 
-        if (flags & AV_CPU_FLAG_RVV_F64) {
+        ಯದಿ (flags & AV_CPU_FLAG_RVV_F64) {
             fdsp->vector_dmul = ff_vector_dmul_rvv;
             fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_rvv;
             fdsp->vector_dmul_scalar = ff_vector_dmul_scalar_rvv;

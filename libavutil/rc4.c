@@ -21,41 +21,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
-#include "rc4.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "rc4.h"
 
-AVRC4 *av_rc4_alloc(void)
+AVRC4 *av_rc4_alloc(ಶೂನ್ಯ)
 {
-    return av_mallocz(sizeof(struct AVRC4));
+    ಪ್ರತ್ಯಾಗಮ av_mallocz(ಪರಿಮಾಣ(ಸಂರಚನಾ AVRC4));
 }
 
-int av_rc4_init(AVRC4 *r, const uint8_t *key, int key_bits, int decrypt) {
-    int i, j;
+ಪೂರ್ಣಾಙ್ಕ av_rc4_init(AVRC4 *r, ಧ್ರುವ uint8_t *ಕೀಲಿ, ಪೂರ್ಣಾಙ್ಕ ಕೀಲಿ_bits, ಪೂರ್ಣಾಙ್ಕ decrypt) {
+    ಪೂರ್ಣಾಙ್ಕ i, j;
     uint8_t y;
     uint8_t *state = r->state;
-    int keylen = key_bits >> 3;
-    if (key_bits & 7)
-        return AVERROR(EINVAL);
-    for (i = 0; i < 256; i++)
+    ಪೂರ್ಣಾಙ್ಕ keylen = ಕೀಲಿ_bits >> 3;
+    ಯದಿ (ಕೀಲಿ_bits & 7)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(EINVAL);
+    ಪ್ರತಿ (i = 0; i < 256; i++)
         state[i] = i;
     y = 0;
     // j is i % keylen
-    for (j = 0, i = 0; i < 256; i++, j++) {
-        if (j == keylen) j = 0;
-        y += state[i] + key[j];
+    ಪ್ರತಿ (j = 0, i = 0; i < 256; i++, j++) {
+        ಯದಿ (j == keylen) j = 0;
+        y += state[i] + ಕೀಲಿ[j];
         FFSWAP(uint8_t, state[i], state[y]);
     }
     r->x = 1;
     r->y = state[1];
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-void av_rc4_crypt(AVRC4 *r, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt) {
+ಶೂನ್ಯ av_rc4_crypt(AVRC4 *r, uint8_t *dst, ಧ್ರುವ uint8_t *src, ಪೂರ್ಣಾಙ್ಕ ಎಣಿಕೆ, uint8_t *iv, ಪೂರ್ಣಾಙ್ಕ decrypt) {
     uint8_t x = r->x, y = r->y;
     uint8_t *state = r->state;
-    while (count-- > 0) {
+    ಯಾವತ್ (ಎಣಿಕೆ-- > 0) {
         uint8_t sum = state[x] + state[y];
         FFSWAP(uint8_t, state[x], state[y]);
         *dst++ = src ? *src++ ^ state[sum] : state[sum];

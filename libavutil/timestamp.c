@@ -16,21 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "timestamp.h"
+#ಅನ್ತರ್ಭಾವ "timestamp.h"
 
-char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb)
+ವರ್ಣ *av_ts_make_time_string2(ವರ್ಣ *buf, int64_t ts, AVRational tb)
 {
-    if (ts == AV_NOPTS_VALUE) {
+    ಯದಿ (ts == AV_NOPTS_ಮೌಲ್ಯ) {
         snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
-    } else {
-        double val = av_q2d(tb) * ts;
-        double log = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
-        int precision = (isfinite(log) && log < 0) ? -log + 5 : 6;
-        int last = snprintf(buf, AV_TS_MAX_STRING_SIZE, "%.*f", precision, val);
+    } ಅನ್ಯಥಾ {
+        ದ್ವಿಗುಣ val = av_q2d(tb) * ts;
+        ದ್ವಿಗುಣ log = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
+        ಪೂರ್ಣಾಙ್ಕ precision = (isfinite(log) && log < 0) ? -log + 5 : 6;
+        ಪೂರ್ಣಾಙ್ಕ last = snprintf(buf, AV_TS_MAX_STRING_SIZE, "%.*f", precision, val);
         last = FFMIN(last, AV_TS_MAX_STRING_SIZE - 1) - 1;
-        for (; last && buf[last] == '0'; last--);
-        for (; last && buf[last] != 'f' && (buf[last] < '0' || buf[0] > '9'); last--);
+        ಪ್ರತಿ (; last && buf[last] == '0'; last--);
+        ಪ್ರತಿ (; last && buf[last] != 'f' && (buf[last] < '0' || buf[0] > '9'); last--);
         buf[last + 1] = '\0';
     }
-    return buf;
+    ಪ್ರತ್ಯಾಗಮ buf;
 }

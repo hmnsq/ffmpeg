@@ -27,8 +27,8 @@
 #ifndef AVUTIL_HASH_H
 #define AVUTIL_HASH_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
 /**
  * @defgroup lavu_hash Hash Functions
@@ -112,7 +112,7 @@
  * initialization, updating, and finalizing.
  */
 
-struct AVHashContext;
+ಸಂರಚನಾ AVHashContext;
 
 /**
  * Allocate a hash context for the algorithm specified by name.
@@ -122,7 +122,7 @@ struct AVHashContext;
  * @note The context is not initialized after a call to this function; you must
  * call av_hash_init() to do so.
  */
-int av_hash_alloc(struct AVHashContext **ctx, const char *name);
+ಪೂರ್ಣಾಙ್ಕ av_hash_alloc(ಸಂರಚನಾ AVHashContext **ctx, ಧ್ರುವ ವರ್ಣ *name);
 
 /**
  * Get the names of available hash algorithms.
@@ -132,12 +132,12 @@ int av_hash_alloc(struct AVHashContext **ctx, const char *name);
  * @param[in] i  Index of the hash algorithm, starting from 0
  * @return       Pointer to a static string or `NULL` if `i` is out of range
  */
-const char *av_hash_names(int i);
+ಧ್ರುವ ವರ್ಣ *av_hash_names(ಪೂರ್ಣಾಙ್ಕ i);
 
 /**
  * Get the name of the algorithm corresponding to the given hash context.
  */
-const char *av_hash_get_name(const struct AVHashContext *ctx);
+ಧ್ರುವ ವರ್ಣ *av_hash_get_name(ಧ್ರುವ ಸಂರಚನಾ AVHashContext *ctx);
 
 /**
  * Maximum value that av_hash_get_size() will currently return.
@@ -164,14 +164,14 @@ const char *av_hash_get_name(const struct AVHashContext *ctx);
  * @param[in]     ctx Hash context
  * @return            Size of the hash value in bytes
  */
-int av_hash_get_size(const struct AVHashContext *ctx);
+ಪೂರ್ಣಾಙ್ಕ av_hash_get_size(ಧ್ರುವ ಸಂರಚನಾ AVHashContext *ctx);
 
 /**
  * Initialize or reset a hash context.
  *
  * @param[in,out] ctx Hash context
  */
-void av_hash_init(struct AVHashContext *ctx);
+ಶೂನ್ಯ av_hash_init(ಸಂರಚನಾ AVHashContext *ctx);
 
 /**
  * Update a hash context with additional data.
@@ -180,7 +180,7 @@ void av_hash_init(struct AVHashContext *ctx);
  * @param[in]     src Data to be added to the hash context
  * @param[in]     len Size of the additional data
  */
-void av_hash_update(struct AVHashContext *ctx, const uint8_t *src, size_t len);
+ಶೂನ್ಯ av_hash_update(ಸಂರಚನಾ AVHashContext *ctx, ಧ್ರುವ uint8_t *src, size_t len);
 
 /**
  * Finalize a hash context and compute the actual hash value.
@@ -196,7 +196,7 @@ void av_hash_update(struct AVHashContext *ctx, const uint8_t *src, size_t len);
  *
  * @see av_hash_final_bin() provides an alternative API
  */
-void av_hash_final(struct AVHashContext *ctx, uint8_t *dst);
+ಶೂನ್ಯ av_hash_final(ಸಂರಚನಾ AVHashContext *ctx, uint8_t *dst);
 
 /**
  * Finalize a hash context and store the actual hash value in a buffer.
@@ -211,7 +211,7 @@ void av_hash_final(struct AVHashContext *ctx, uint8_t *dst);
  * @param[out]    dst  Where the final hash value will be stored
  * @param[in]     size Number of bytes to write to `dst`
  */
-void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, int size);
+ಶೂನ್ಯ av_hash_final_bin(ಸಂರಚನಾ AVHashContext *ctx, uint8_t *dst, ಪೂರ್ಣಾಙ್ಕ size);
 
 /**
  * Finalize a hash context and store the hexadecimal representation of the
@@ -229,7 +229,7 @@ void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, int size);
  * @param[out]    dst  Where the string will be stored
  * @param[in]     size Maximum number of bytes to write to `dst`
  */
-void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, int size);
+ಶೂನ್ಯ av_hash_final_hex(ಸಂರಚನಾ AVHashContext *ctx, uint8_t *dst, ಪೂರ್ಣಾಙ್ಕ size);
 
 /**
  * Finalize a hash context and store the Base64 representation of the
@@ -247,14 +247,14 @@ void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, int size);
  * @param[out]    dst  Where the final hash value will be stored
  * @param[in]     size Maximum number of bytes to write to `dst`
  */
-void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, int size);
+ಶೂನ್ಯ av_hash_final_b64(ಸಂರಚನಾ AVHashContext *ctx, uint8_t *dst, ಪೂರ್ಣಾಙ್ಕ size);
 
 /**
  * Free hash context and set hash context pointer to `NULL`.
  *
  * @param[in,out] ctx  Pointer to hash context
  */
-void av_hash_freep(struct AVHashContext **ctx);
+ಶೂನ್ಯ av_hash_freep(ಸಂರಚನಾ AVHashContext **ctx);
 
 /**
  * @}

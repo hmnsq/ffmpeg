@@ -18,74 +18,74 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stdarg.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಅನ್ತರ್ಭಾವ <time.h>
+#ಅನ್ತರ್ಭಾವ "avstring.h"
+#ಅನ್ತರ್ಭಾವ "bprint.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
 #define av_bprint_room(buf) ((buf)->size - FFMIN((buf)->len, (buf)->size))
 #define av_bprint_is_allocated(buf) ((buf)->str != (buf)->reserved_internal_buffer)
 
-static int av_bprint_alloc(AVBPrint *buf, unsigned room)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ av_bprint_alloc(AVBPrint *buf, unsigned room)
 {
-    char *old_str, *new_str;
+    ವರ್ಣ *old_str, *new_str;
     unsigned min_size, new_size;
 
-    if (buf->size == buf->size_max)
-        return AVERROR(EIO);
-    if (!av_bprint_is_complete(buf))
-        return AVERROR_INVALIDDATA; /* it is already truncated anyway */
+    ಯದಿ (buf->size == buf->size_max)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(EIO);
+    ಯದಿ (!av_bprint_is_complete(buf))
+        ಪ್ರತ್ಯಾಗಮ AVERROR_INVALIDDATA; /* it is already truncated anyway */
     min_size = buf->len + 1 + FFMIN(UINT_MAX - buf->len - 1, room);
     new_size = buf->size > buf->size_max / 2 ? buf->size_max : buf->size * 2;
-    if (new_size < min_size)
+    ಯದಿ (new_size < min_size)
         new_size = FFMIN(buf->size_max, min_size);
-    old_str = av_bprint_is_allocated(buf) ? buf->str : NULL;
+    old_str = av_bprint_is_allocated(buf) ? buf->str : ರಿಕ್ತ;
     new_str = av_realloc(old_str, new_size);
-    if (!new_str)
-        return AVERROR(ENOMEM);
-    if (!old_str)
+    ಯದಿ (!new_str)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
+    ಯದಿ (!old_str)
         memcpy(new_str, buf->str, buf->len + 1);
     buf->str  = new_str;
     buf->size = new_size;
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static void av_bprint_grow(AVBPrint *buf, unsigned extra_len)
+ಸ್ಥಿರ ಶೂನ್ಯ av_bprint_grow(AVBPrint *buf, unsigned extra_len)
 {
     /* arbitrary margin to avoid small overflows */
     extra_len = FFMIN(extra_len, UINT_MAX - 5 - buf->len);
     buf->len += extra_len;
-    if (buf->size)
+    ಯದಿ (buf->size)
         buf->str[FFMIN(buf->len, buf->size - 1)] = 0;
 }
 
-void av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max)
+ಶೂನ್ಯ av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max)
 {
-    unsigned size_auto = (char *)buf + sizeof(*buf) -
+    unsigned size_auto = (ವರ್ಣ *)buf + ಪರಿಮಾಣ(*buf) -
                          buf->reserved_internal_buffer;
 
-    if (size_max == AV_BPRINT_SIZE_AUTOMATIC)
+    ಯದಿ (size_max == AV_BPRINT_SIZE_AUTOMATIC)
         size_max = size_auto;
     buf->str      = buf->reserved_internal_buffer;
     buf->len      = 0;
     buf->size     = FFMIN(size_auto, size_max);
     buf->size_max = size_max;
     *buf->str = 0;
-    if (size_init > buf->size)
+    ಯದಿ (size_init > buf->size)
         av_bprint_alloc(buf, size_init - 1);
 }
 
-void av_bprint_init_for_buffer(AVBPrint *buf, char *buffer, unsigned size)
+ಶೂನ್ಯ av_bprint_init_for_buffer(AVBPrint *buf, ವರ್ಣ *buffer, unsigned size)
 {
-    if (size == 0) {
-        av_bprint_init(buf, 0, AV_BPRINT_SIZE_COUNT_ONLY);
-        return;
+    ಯದಿ (size == 0) {
+        av_bprint_init(buf, 0, AV_BPRINT_SIZE_ಎಣಿಕೆ_ONLY);
+        ಪ್ರತ್ಯಾಗಮ;
     }
 
     buf->str      = buffer;
@@ -95,30 +95,30 @@ void av_bprint_init_for_buffer(AVBPrint *buf, char *buffer, unsigned size)
     *buf->str = 0;
 }
 
-void av_vbprintf(AVBPrint *buf, const char *fmt, va_list vl_arg)
+ಶೂನ್ಯ av_vbprintf(AVBPrint *buf, ಧ್ರುವ ವರ್ಣ *fmt, va_list vl_arg)
 {
     unsigned room;
-    char *dst;
-    int extra_len;
+    ವರ್ಣ *dst;
+    ಪೂರ್ಣಾಙ್ಕ extra_len;
     va_list vl;
 
-    while (1) {
+    ಯಾವತ್ (1) {
         room = av_bprint_room(buf);
-        dst = room ? buf->str + buf->len : NULL;
+        dst = room ? buf->str + buf->len : ರಿಕ್ತ;
         va_copy(vl, vl_arg);
         extra_len = vsnprintf(dst, room, fmt, vl);
         va_end(vl);
-        if (extra_len <= 0)
-            return;
-        if (extra_len < room)
-            break;
-        if (av_bprint_alloc(buf, extra_len))
-            break;
+        ಯದಿ (extra_len <= 0)
+            ಪ್ರತ್ಯಾಗಮ;
+        ಯದಿ (extra_len < room)
+            ಭಙ್ಗ;
+        ಯದಿ (av_bprint_alloc(buf, extra_len))
+            ಭಙ್ಗ;
     }
     av_bprint_grow(buf, extra_len);
 }
 
-void av_bprintf(AVBPrint *buf, const char *fmt, ...)
+ಶೂನ್ಯ av_bprintf(AVBPrint *buf, ಧ್ರುವ ವರ್ಣ *fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
@@ -126,206 +126,206 @@ void av_bprintf(AVBPrint *buf, const char *fmt, ...)
     va_end(vl);
 }
 
-void av_bprint_chars(AVBPrint *buf, char c, unsigned n)
+ಶೂನ್ಯ av_bprint_chars(AVBPrint *buf, ವರ್ಣ c, unsigned n)
 {
     unsigned room, real_n;
 
-    while (1) {
+    ಯಾವತ್ (1) {
         room = av_bprint_room(buf);
-        if (n < room)
-            break;
-        if (av_bprint_alloc(buf, n))
-            break;
+        ಯದಿ (n < room)
+            ಭಙ್ಗ;
+        ಯದಿ (av_bprint_alloc(buf, n))
+            ಭಙ್ಗ;
     }
-    if (room) {
+    ಯದಿ (room) {
         real_n = FFMIN(n, room - 1);
         memset(buf->str + buf->len, c, real_n);
     }
     av_bprint_grow(buf, n);
 }
 
-void av_bprint_append_data(AVBPrint *buf, const char *data, unsigned size)
+ಶೂನ್ಯ av_bprint_append_data(AVBPrint *buf, ಧ್ರುವ ವರ್ಣ *data, unsigned size)
 {
     unsigned room, real_n;
 
-    while (1) {
+    ಯಾವತ್ (1) {
         room = av_bprint_room(buf);
-        if (size < room)
-            break;
-        if (av_bprint_alloc(buf, size))
-            break;
+        ಯದಿ (size < room)
+            ಭಙ್ಗ;
+        ಯದಿ (av_bprint_alloc(buf, size))
+            ಭಙ್ಗ;
     }
-    if (room) {
+    ಯದಿ (room) {
         real_n = FFMIN(size, room - 1);
         memcpy(buf->str + buf->len, data, real_n);
     }
     av_bprint_grow(buf, size);
 }
 
-void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm)
+ಶೂನ್ಯ av_bprint_strftime(AVBPrint *buf, ಧ್ರುವ ವರ್ಣ *fmt, ಧ್ರುವ ಸಂರಚನಾ tm *tm)
 {
     unsigned room;
     size_t l;
     size_t fmt_len = strlen(fmt);
 
-    if (!*fmt)
-        return;
-    while (1) {
+    ಯದಿ (!*fmt)
+        ಪ್ರತ್ಯಾಗಮ;
+    ಯಾವತ್ (1) {
         room = av_bprint_room(buf);
-        if (room && (l = strftime(buf->str + buf->len, room, fmt, tm)))
-            break;
+        ಯದಿ (room && (l = strftime(buf->str + buf->len, room, fmt, tm)))
+            ಭಙ್ಗ;
 
         /* Due to the limitations of strftime() it is not possible to know if
          * the output buffer is too small or the output is empty.
          * However, a 256x output space requirement compared to the format
          * string length is so unlikely we can safely assume empty output. This
          * allows supporting possibly empty format strings like "%p". */
-        if (room >> 8 > fmt_len)
-            break;
+        ಯದಿ (room >> 8 > fmt_len)
+            ಭಙ್ಗ;
 
         /* strftime does not tell us how much room it would need: let us
            retry with twice as much until the buffer is large enough */
         room = !room ? fmt_len + 1 :
                room <= INT_MAX / 2 ? room * 2 : INT_MAX;
-        if (av_bprint_alloc(buf, room)) {
+        ಯದಿ (av_bprint_alloc(buf, room)) {
             /* impossible to grow, try to manage something useful anyway */
             room = av_bprint_room(buf);
-            if (room < 1024) {
+            ಯದಿ (room < 1024) {
                 /* if strftime fails because the buffer has (almost) reached
                    its maximum size, let us try in a local buffer; 1k should
                    be enough to format any real date+time string */
-                char buf2[1024];
-                if ((l = strftime(buf2, sizeof(buf2), fmt, tm))) {
+                ವರ್ಣ buf2[1024];
+                ಯದಿ ((l = strftime(buf2, ಪರಿಮಾಣ(buf2), fmt, tm))) {
                     av_bprintf(buf, "%s", buf2);
-                    return;
+                    ಪ್ರತ್ಯಾಗಮ;
                 }
             }
-            if (room) {
+            ಯದಿ (room) {
                 /* if anything else failed and the buffer is not already
                    truncated, let us add a stock string and force truncation */
-                static const char txt[] = "[truncated strftime output]";
+                ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ txt[] = "[truncated strftime output]";
                 memset(buf->str + buf->len, '!', room);
-                memcpy(buf->str + buf->len, txt, FFMIN(sizeof(txt) - 1, room));
+                memcpy(buf->str + buf->len, txt, FFMIN(ಪರಿಮಾಣ(txt) - 1, room));
                 av_bprint_grow(buf, room); /* force truncation */
             }
-            return;
+            ಪ್ರತ್ಯಾಗಮ;
         }
     }
     av_bprint_grow(buf, l);
 }
 
-void av_bprint_get_buffer(AVBPrint *buf, unsigned size,
-                          unsigned char **mem, unsigned *actual_size)
+ಶೂನ್ಯ av_bprint_get_buffer(AVBPrint *buf, unsigned size,
+                          unsigned ವರ್ಣ **mem, unsigned *actual_size)
 {
-    if (size > av_bprint_room(buf))
+    ಯದಿ (size > av_bprint_room(buf))
         av_bprint_alloc(buf, size);
     *actual_size = av_bprint_room(buf);
-    *mem = *actual_size ? (unsigned char *) (buf->str + buf->len) : NULL;
+    *mem = *actual_size ? (unsigned ವರ್ಣ *) (buf->str + buf->len) : ರಿಕ್ತ;
 }
 
-void av_bprint_clear(AVBPrint *buf)
+ಶೂನ್ಯ av_bprint_clear(AVBPrint *buf)
 {
-    if (buf->len) {
+    ಯದಿ (buf->len) {
         *buf->str = 0;
         buf->len  = 0;
     }
 }
 
-int av_bprint_finalize(AVBPrint *buf, char **ret_str)
+ಪೂರ್ಣಾಙ್ಕ av_bprint_finalize(AVBPrint *buf, ವರ್ಣ **ret_str)
 {
     unsigned real_size = FFMIN(buf->len + 1, buf->size);
-    char *str;
-    int ret = 0;
+    ವರ್ಣ *str;
+    ಪೂರ್ಣಾಙ್ಕ ret = 0;
 
-    if (ret_str) {
-        if (av_bprint_is_allocated(buf)) {
+    ಯದಿ (ret_str) {
+        ಯದಿ (av_bprint_is_allocated(buf)) {
             str = av_realloc(buf->str, real_size);
-            if (!str)
+            ಯದಿ (!str)
                 str = buf->str;
-            buf->str = NULL;
-        } else {
+            buf->str = ರಿಕ್ತ;
+        } ಅನ್ಯಥಾ {
             str = av_memdup(buf->str, real_size);
-            if (!str)
+            ಯದಿ (!str)
                 ret = AVERROR(ENOMEM);
         }
         *ret_str = str;
-    } else {
-        if (av_bprint_is_allocated(buf))
+    } ಅನ್ಯಥಾ {
+        ಯದಿ (av_bprint_is_allocated(buf))
             av_freep(&buf->str);
     }
     buf->size = real_size;
-    return ret;
+    ಪ್ರತ್ಯಾಗಮ ret;
 }
 
 #define WHITESPACES " \n\t\r"
 
-void av_bprint_escape(AVBPrint *dstbuf, const char *src, const char *special_chars,
-                      enum AVEscapeMode mode, int flags)
+ಶೂನ್ಯ av_bprint_escape(AVBPrint *dstbuf, ಧ್ರುವ ವರ್ಣ *src, ಧ್ರುವ ವರ್ಣ *special_chars,
+                      ಗಣನಾ AVEscapeMode mode, ಪೂರ್ಣಾಙ್ಕ flags)
 {
-    const char *src0 = src;
+    ಧ್ರುವ ವರ್ಣ *src0 = src;
 
-    if (mode == AV_ESCAPE_MODE_AUTO)
+    ಯದಿ (mode == AV_ESCAPE_MODE_AUTO)
         mode = AV_ESCAPE_MODE_BACKSLASH; /* TODO: implement a heuristic */
 
-    switch (mode) {
-    case AV_ESCAPE_MODE_QUOTE:
+    ವಿಕಲ್ಪ (mode) {
+    ಪಕ್ಷ AV_ESCAPE_MODE_QUOTE:
         /* enclose the string between '' */
         av_bprint_chars(dstbuf, '\'', 1);
-        for (; *src; src++) {
-            if (*src == '\'')
+        ಪ್ರತಿ (; *src; src++) {
+            ಯದಿ (*src == '\'')
                 av_bprintf(dstbuf, "'\\''");
-            else
+            ಅನ್ಯಥಾ
                 av_bprint_chars(dstbuf, *src, 1);
         }
         av_bprint_chars(dstbuf, '\'', 1);
-        break;
+        ಭಙ್ಗ;
 
-    case AV_ESCAPE_MODE_XML:
+    ಪಕ್ಷ AV_ESCAPE_MODE_XML:
         /* escape XML non-markup character data as per 2.4 by default: */
         /*  [^<&]* - ([^<&]* ']]>' [^<&]*) */
 
         /* additionally, given one of the AV_ESCAPE_FLAG_XML_* flags, */
         /* escape those specific characters as required. */
-        for (; *src; src++) {
-            switch (*src) {
-            case '&' : av_bprintf(dstbuf, "%s", "&amp;");  break;
-            case '<' : av_bprintf(dstbuf, "%s", "&lt;");   break;
-            case '>' : av_bprintf(dstbuf, "%s", "&gt;");   break;
-            case '\'':
-                if (!(flags & AV_ESCAPE_FLAG_XML_SINGLE_QUOTES))
-                    goto XML_DEFAULT_HANDLING;
+        ಪ್ರತಿ (; *src; src++) {
+            ವಿಕಲ್ಪ (*src) {
+            ಪಕ್ಷ '&' : av_bprintf(dstbuf, "%s", "&amp;");  ಭಙ್ಗ;
+            ಪಕ್ಷ '<' : av_bprintf(dstbuf, "%s", "&lt;");   ಭಙ್ಗ;
+            ಪಕ್ಷ '>' : av_bprintf(dstbuf, "%s", "&gt;");   ಭಙ್ಗ;
+            ಪಕ್ಷ '\'':
+                ಯದಿ (!(flags & AV_ESCAPE_FLAG_XML_SINGLE_QUOTES))
+                    ಗಚ್ಛ XML_DEFAULT_HANDLING;
 
                 av_bprintf(dstbuf, "%s", "&apos;");
-                break;
-            case '"' :
-                if (!(flags & AV_ESCAPE_FLAG_XML_DOUBLE_QUOTES))
-                    goto XML_DEFAULT_HANDLING;
+                ಭಙ್ಗ;
+            ಪಕ್ಷ '"' :
+                ಯದಿ (!(flags & AV_ESCAPE_FLAG_XML_DOUBLE_QUOTES))
+                    ಗಚ್ಛ XML_DEFAULT_HANDLING;
 
                 av_bprintf(dstbuf, "%s", "&quot;");
-                break;
+                ಭಙ್ಗ;
 XML_DEFAULT_HANDLING:
-            default: av_bprint_chars(dstbuf, *src, 1);
+            ಸ್ವಭಾವ: av_bprint_chars(dstbuf, *src, 1);
             }
         }
-        break;
+        ಭಙ್ಗ;
 
     /* case AV_ESCAPE_MODE_BACKSLASH or unknown mode */
-    default:
+    ಸ್ವಭಾವ:
         /* \-escape characters */
-        for (; *src; src++) {
-            int is_first_last       = src == src0 || !*(src+1);
-            int is_ws               = !!strchr(WHITESPACES, *src);
-            int is_strictly_special = special_chars && strchr(special_chars, *src);
-            int is_special          =
+        ಪ್ರತಿ (; *src; src++) {
+            ಪೂರ್ಣಾಙ್ಕ is_first_last       = src == src0 || !*(src+1);
+            ಪೂರ್ಣಾಙ್ಕ is_ws               = !!strchr(WHITESPACES, *src);
+            ಪೂರ್ಣಾಙ್ಕ is_strictly_special = special_chars && strchr(special_chars, *src);
+            ಪೂರ್ಣಾಙ್ಕ is_special          =
                 is_strictly_special || strchr("'\\", *src) ||
                 (is_ws && (flags & AV_ESCAPE_FLAG_WHITESPACE));
 
-            if (is_strictly_special ||
+            ಯದಿ (is_strictly_special ||
                 (!(flags & AV_ESCAPE_FLAG_STRICT) &&
                  (is_special || (is_ws && is_first_last))))
                 av_bprint_chars(dstbuf, '\\', 1);
             av_bprint_chars(dstbuf, *src, 1);
         }
-        break;
+        ಭಙ್ಗ;
     }
 }

@@ -19,25 +19,25 @@
 #ifndef AVUTIL_ARM_PIXELUTILS_H
 #define AVUTIL_ARM_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#ಅನ್ತರ್ಭಾವ "cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_armv6(const uint8_t *src1, ptrdiff_t stride1,
-                              const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad8_armv6 (const uint8_t *src1, ptrdiff_t stride1,
-                              const uint8_t *src2, ptrdiff_t stride2);
+ಪೂರ್ಣಾಙ್ಕ ff_pixelutils_sad16_armv6(ಧ್ರುವ uint8_t *src1, ptrdiff_t stride1,
+                              ಧ್ರುವ uint8_t *src2, ptrdiff_t stride2);
+ಪೂರ್ಣಾಙ್ಕ ff_pixelutils_sad8_armv6 (ಧ್ರುವ uint8_t *src1, ptrdiff_t stride1,
+                              ಧ್ರುವ uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_arm(av_pixelutils_sad_fn *sad, int aligned)
+ಸ್ಥಿರ ಅನ್ತಃಸ್ಥ av_cold ಶೂನ್ಯ ff_pixelutils_sad_init_arm(av_pixelutils_sad_fn *sad, ಪೂರ್ಣಾಙ್ಕ aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ಪೂರ್ಣಾಙ್ಕ cpu_flags = av_get_cpu_flags();
 
-    if (have_armv6(cpu_flags)) {
-        if (aligned != 0) {
+    ಯದಿ (have_armv6(cpu_flags)) {
+        ಯದಿ (aligned != 0) {
             sad[2] = ff_pixelutils_sad8_armv6;
             sad[3] = ff_pixelutils_sad16_armv6;
         }

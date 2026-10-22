@@ -24,45 +24,45 @@
  * logging functions
  */
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
+#ಯದಿ HAVE_UNISTD_H
+#ಅನ್ತರ್ಭಾವ <unistd.h>
 #endif
-#if HAVE_IO_H
-#include <io.h>
+#ಯದಿ HAVE_IO_H
+#ಅನ್ತರ್ಭಾವ <io.h>
 #endif
-#include <inttypes.h>
-#include <stdarg.h>
-#include <stdatomic.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "bprint.h"
-#include "common.h"
-#include "internal.h"
-#include "log.h"
-#include "thread.h"
-#include "time.h"
-#include "time_internal.h"
+#ಅನ್ತರ್ಭಾವ <inttypes.h>
+#ಅನ್ತರ್ಭಾವ <stdarg.h>
+#ಅನ್ತರ್ಭಾವ <stdatomic.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಅನ್ತರ್ಭಾವ "bprint.h"
+#ಅನ್ತರ್ಭಾವ "common.h"
+#ಅನ್ತರ್ಭಾವ "internal.h"
+#ಅನ್ತರ್ಭಾವ "log.h"
+#ಅನ್ತರ್ಭಾವ "thread.h"
+#ಅನ್ತರ್ಭಾವ "time.h"
+#ಅನ್ತರ್ಭಾವ "time_internal.h"
 
-static AVMutex mutex = AV_MUTEX_INITIALIZER;
+ಸ್ಥಿರ AVMutex mutex = AV_MUTEX_INITIALIZER;
 
-#define LINE_SZ 1024
+#define ಸಾಲು_SZ 1024
 
-#if HAVE_VALGRIND_VALGRIND_H && CONFIG_VALGRIND_BACKTRACE
-#include <valgrind/valgrind.h>
+#ಯದಿ HAVE_VALGRIND_VALGRIND_H && CONFIG_VALGRIND_BACKTRACE
+#ಅನ್ತರ್ಭಾವ <valgrind/valgrind.h>
 /* this is the log level at which valgrind will output a full backtrace */
 #define BACKTRACE_LOGLEVEL AV_LOG_ERROR
 #endif
 
-static atomic_int av_log_level = AV_LOG_INFO;
-static atomic_int av_log_flags = 0;
+ಸ್ಥಿರ atomic_int av_log_level = AV_LOG_INFO;
+ಸ್ಥಿರ atomic_int av_log_flags = 0;
 
 #define NB_LEVELS 8
-#if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
-#include <windows.h>
-static const uint8_t win_color[16 + AV_CLASS_CATEGORY_NB] = {
+#ಯದಿ defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
+#ಅನ್ತರ್ಭಾವ <windows.h>
+ಸ್ಥಿರ ಧ್ರುವ uint8_t win_color[16 + AV_CLASS_CATEGORY_NB] = {
     [AV_LOG_PANIC  /8] = 12,
     [AV_LOG_FATAL  /8] = 12,
     [AV_LOG_ERROR  /8] = 12,
@@ -72,7 +72,7 @@ static const uint8_t win_color[16 + AV_CLASS_CATEGORY_NB] = {
     [AV_LOG_DEBUG  /8] = 10,
     [AV_LOG_TRACE  /8] = 8,
     [16+AV_CLASS_CATEGORY_NA              ] =  7,
-    [16+AV_CLASS_CATEGORY_INPUT           ] = 13,
+    [16+AV_CLASS_CATEGORY_ಒಳಹರಿವು           ] = 13,
     [16+AV_CLASS_CATEGORY_OUTPUT          ] =  5,
     [16+AV_CLASS_CATEGORY_MUXER           ] = 13,
     [16+AV_CLASS_CATEGORY_DEMUXER         ] =  5,
@@ -84,18 +84,18 @@ static const uint8_t win_color[16 + AV_CLASS_CATEGORY_NB] = {
     [16+AV_CLASS_CATEGORY_SWRESAMPLER     ] =  7,
     [16+AV_CLASS_CATEGORY_HWDEVICE        ] =  6,
     [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT ] = 13,
-    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT  ] = 5,
+    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_ಒಳಹರಿವು  ] = 5,
     [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_OUTPUT ] = 13,
-    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT  ] = 5,
+    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_ಒಳಹರಿವು  ] = 5,
     [16+AV_CLASS_CATEGORY_DEVICE_OUTPUT       ] = 13,
-    [16+AV_CLASS_CATEGORY_DEVICE_INPUT        ] = 5,
+    [16+AV_CLASS_CATEGORY_DEVICE_ಒಳಹರಿವು        ] = 5,
 };
 
-static int16_t background, attr_orig;
-static HANDLE con;
+ಸ್ಥಿರ int16_t background, attr_orig;
+ಸ್ಥಿರ HANDLE con;
 #endif
 
-static const uint32_t color[16 + AV_CLASS_CATEGORY_NB] = {
+ಸ್ಥಿರ ಧ್ರುವ uint32_t color[16 + AV_CLASS_CATEGORY_NB] = {
     [AV_LOG_PANIC  /8] =  52 << 16 | 196 << 8 | 0x41,
     [AV_LOG_FATAL  /8] = 208 <<  8 | 0x41,
     [AV_LOG_ERROR  /8] = 196 <<  8 | 0x11,
@@ -105,7 +105,7 @@ static const uint32_t color[16 + AV_CLASS_CATEGORY_NB] = {
     [AV_LOG_DEBUG  /8] =  34 <<  8 | 0x02,
     [AV_LOG_TRACE  /8] =  34 <<  8 | 0x07,
     [16+AV_CLASS_CATEGORY_NA              ] = 250 << 8 | 0x09,
-    [16+AV_CLASS_CATEGORY_INPUT           ] = 219 << 8 | 0x15,
+    [16+AV_CLASS_CATEGORY_ಒಳಹರಿವು           ] = 219 << 8 | 0x15,
     [16+AV_CLASS_CATEGORY_OUTPUT          ] = 201 << 8 | 0x05,
     [16+AV_CLASS_CATEGORY_MUXER           ] = 213 << 8 | 0x15,
     [16+AV_CLASS_CATEGORY_DEMUXER         ] = 207 << 8 | 0x05,
@@ -117,205 +117,205 @@ static const uint32_t color[16 + AV_CLASS_CATEGORY_NB] = {
     [16+AV_CLASS_CATEGORY_SWRESAMPLER     ] = 147 << 8 | 0x14,
     [16+AV_CLASS_CATEGORY_HWDEVICE        ] = 214 << 8 | 0x13,
     [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT ] = 213 << 8 | 0x15,
-    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT  ] = 207 << 8 | 0x05,
+    [16+AV_CLASS_CATEGORY_DEVICE_VIDEO_ಒಳಹರಿವು  ] = 207 << 8 | 0x05,
     [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_OUTPUT ] = 213 << 8 | 0x15,
-    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT  ] = 207 << 8 | 0x05,
+    [16+AV_CLASS_CATEGORY_DEVICE_AUDIO_ಒಳಹರಿವು  ] = 207 << 8 | 0x05,
     [16+AV_CLASS_CATEGORY_DEVICE_OUTPUT       ] = 213 << 8 | 0x15,
-    [16+AV_CLASS_CATEGORY_DEVICE_INPUT        ] = 207 << 8 | 0x05,
+    [16+AV_CLASS_CATEGORY_DEVICE_ಒಳಹರಿವು        ] = 207 << 8 | 0x05,
 };
 
-static int use_color = -1;
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ use_color = -1;
 
-#if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
-static void win_console_puts(const char *str)
+#ಯದಿ defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
+ಸ್ಥಿರ ಶೂನ್ಯ win_console_puts(ಧ್ರುವ ವರ್ಣ *str)
 {
-    const uint8_t *q = str;
-    uint16_t line[LINE_SZ];
+    ಧ್ರುವ uint8_t *q = str;
+    uint16_t ಸಾಲು[ಸಾಲು_SZ];
 
-    while (*q) {
-        uint16_t *buf = line;
+    ಯಾವತ್ (*q) {
+        uint16_t *buf = ಸಾಲು;
         DWORD nb_chars = 0;
         DWORD written;
 
-        while (*q && nb_chars < LINE_SZ - 1) {
+        ಯಾವತ್ (*q && nb_chars < ಸಾಲು_SZ - 1) {
             uint32_t ch;
             uint16_t tmp;
 
-            GET_UTF8(ch, *q ? *q++ : 0, ch = 0xfffd; goto continue_on_invalid;)
+            GET_UTF8(ch, *q ? *q++ : 0, ch = 0xfffd; ಗಚ್ಛ continue_on_invalid;)
 continue_on_invalid:
             PUT_UTF16(ch, tmp, *buf++ = tmp; nb_chars++;)
         }
 
-        WriteConsoleW(con, line, nb_chars, &written, NULL);
+        WriteConsoleW(con, ಸಾಲು, nb_chars, &written, ರಿಕ್ತ);
     }
 }
 #endif
 
-static void check_color_terminal(void)
+ಸ್ಥಿರ ಶೂನ್ಯ check_color_terminal(ಶೂನ್ಯ)
 {
-    char *term = getenv("TERM");
+    ವರ್ಣ *term = getenv("TERM");
 
-#if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
+#ಯದಿ defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
     CONSOLE_SCREEN_BUFFER_INFO con_info;
     DWORD dummy;
     con = GetStdHandle(STD_ERROR_HANDLE);
-    if (con != INVALID_HANDLE_VALUE && !GetConsoleMode(con, &dummy))
-        con = INVALID_HANDLE_VALUE;
-    if (con != INVALID_HANDLE_VALUE) {
+    ಯದಿ (con != INVALID_HANDLE_ಮೌಲ್ಯ && !GetConsoleMode(con, &dummy))
+        con = INVALID_HANDLE_ಮೌಲ್ಯ;
+    ಯದಿ (con != INVALID_HANDLE_ಮೌಲ್ಯ) {
         GetConsoleScreenBufferInfo(con, &con_info);
         attr_orig  = con_info.wAttributes;
         background = attr_orig & 0xF0;
     }
 #endif
 
-    if (getenv("AV_LOG_FORCE_NOCOLOR")) {
+    ಯದಿ (getenv("AV_LOG_FORCE_NOCOLOR")) {
         use_color = 0;
-    } else if (getenv("AV_LOG_FORCE_COLOR")) {
+    } ಅನ್ಯಥಾ ಯದಿ (getenv("AV_LOG_FORCE_COLOR")) {
         use_color = 1;
-    } else {
-#if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
-        use_color = (con != INVALID_HANDLE_VALUE);
-#elif HAVE_ISATTY
+    } ಅನ್ಯಥಾ {
+#ಯದಿ defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
+        use_color = (con != INVALID_HANDLE_ಮೌಲ್ಯ);
+#ನೋಚೇದ್ಯದಿ HAVE_ISATTY
         use_color = (term && isatty(2));
-#else
+#ಅನ್ಯಥಾ
         use_color = 0;
 #endif
     }
 
-    if (getenv("AV_LOG_FORCE_256COLOR") || term && strstr(term, "256color"))
+    ಯದಿ (getenv("AV_LOG_FORCE_256COLOR") || term && strstr(term, "256color"))
         use_color *= 256;
 }
 
-static void ansi_fputs(int level, int tint, const char *str, int local_use_color)
+ಸ್ಥಿರ ಶೂನ್ಯ ansi_fputs(ಪೂರ್ಣಾಙ್ಕ level, ಪೂರ್ಣಾಙ್ಕ tint, ಧ್ರುವ ವರ್ಣ *str, ಪೂರ್ಣಾಙ್ಕ local_use_color)
 {
-    if (local_use_color == 1) {
+    ಯದಿ (local_use_color == 1) {
         uint32_t intensity = (color[level] >> 4) & 15;
         uint32_t fg       = color[level] & 15;
-#if defined(_WIN32)
+#ಯದಿ defined(_WIN32)
         /* Piped stderr is 8-color ANSI. Linux keeps 0;33m; Windows console
          * already uses win_color 14 (bright yellow), so match that here. */
-        if (level == AV_LOG_WARNING / 8)
+        ಯದಿ (level == AV_LOG_WARNING / 8)
             intensity = 1;
 #endif
         fprintf(stderr,
                 "\033[%"PRIu32";3%"PRIu32"m%s\033[0m",
                 intensity, fg, str);
-    } else if (tint && use_color == 256) {
+    } ಅನ್ಯಥಾ ಯದಿ (tint && use_color == 256) {
         fprintf(stderr,
                 "\033[48;5;%"PRIu32"m\033[38;5;%dm%s\033[0m",
                 (color[level] >> 16) & 0xff,
                 tint,
                 str);
-    } else if (local_use_color == 256) {
+    } ಅನ್ಯಥಾ ಯದಿ (local_use_color == 256) {
         fprintf(stderr,
                 "\033[48;5;%"PRIu32"m\033[38;5;%"PRIu32"m%s\033[0m",
                 (color[level] >> 16) & 0xff,
                 (color[level] >> 8) & 0xff,
                 str);
-    } else
+    } ಅನ್ಯಥಾ
         fputs(str, stderr);
 }
 
-static void colored_fputs(int level, int tint, const char *str)
+ಸ್ಥಿರ ಶೂನ್ಯ colored_fputs(ಪೂರ್ಣಾಙ್ಕ level, ಪೂರ್ಣಾಙ್ಕ tint, ಧ್ರುವ ವರ್ಣ *str)
 {
-    int local_use_color;
-    if (!*str)
-        return;
+    ಪೂರ್ಣಾಙ್ಕ local_use_color;
+    ಯದಿ (!*str)
+        ಪ್ರತ್ಯಾಗಮ;
 
-    if (use_color < 0)
+    ಯದಿ (use_color < 0)
         check_color_terminal();
 
-    if (level == AV_LOG_INFO/8) local_use_color = 0;
-    else                        local_use_color = use_color;
+    ಯದಿ (level == AV_LOG_INFO/8) local_use_color = 0;
+    ಅನ್ಯಥಾ                        local_use_color = use_color;
 
-#if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
-    if (con != INVALID_HANDLE_VALUE) {
-        if (local_use_color)
+#ಯದಿ defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
+    ಯದಿ (con != INVALID_HANDLE_ಮೌಲ್ಯ) {
+        ಯದಿ (local_use_color)
             SetConsoleTextAttribute(con, background | win_color[level]);
         win_console_puts(str);
-        if (local_use_color)
+        ಯದಿ (local_use_color)
             SetConsoleTextAttribute(con, attr_orig);
-    } else {
+    } ಅನ್ಯಥಾ {
         ansi_fputs(level, tint, str, local_use_color);
     }
-#else
+#ಅನ್ಯಥಾ
     ansi_fputs(level, tint, str, local_use_color);
 #endif
 
 }
 
-const char *av_default_item_name(void *ptr)
+ಧ್ರುವ ವರ್ಣ *av_default_item_name(ಶೂನ್ಯ *ptr)
 {
-    return (*(AVClass **) ptr)->class_name;
+    ಪ್ರತ್ಯಾಗಮ (*(AVClass **) ptr)->class_name;
 }
 
-AVClassCategory av_default_get_category(void *ptr)
+AVClassCategory av_default_get_category(ಶೂನ್ಯ *ptr)
 {
-    return (*(AVClass **) ptr)->category;
+    ಪ್ರತ್ಯಾಗಮ (*(AVClass **) ptr)->category;
 }
 
-static void sanitize(uint8_t *line){
-    while(*line){
-        if(*line < 0x08 || (*line > 0x0D && *line < 0x20))
-            *line='?';
-        line++;
+ಸ್ಥಿರ ಶೂನ್ಯ sanitize(uint8_t *ಸಾಲು){
+    ಯಾವತ್(*ಸಾಲು){
+        ಯದಿ(*ಸಾಲು < 0x08 || (*ಸಾಲು > 0x0D && *ಸಾಲು < 0x20))
+            *ಸಾಲು='?';
+        ಸಾಲು++;
     }
 }
 
-static int get_category(void *ptr){
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ get_category(ಶೂನ್ಯ *ptr){
     AVClass *avc = *(AVClass **) ptr;
-    if(    !avc
+    ಯದಿ(    !avc
         || (avc->version&0xFF)<100
         ||  avc->version < (51 << 16 | 59 << 8)
-        ||  avc->category >= AV_CLASS_CATEGORY_NB) return AV_CLASS_CATEGORY_NA + 16;
+        ||  avc->category >= AV_CLASS_CATEGORY_NB) ಪ್ರತ್ಯಾಗಮ AV_CLASS_CATEGORY_NA + 16;
 
-    if(avc->get_category)
-        return avc->get_category(ptr) + 16;
+    ಯದಿ(avc->get_category)
+        ಪ್ರತ್ಯಾಗಮ avc->get_category(ptr) + 16;
 
-    return avc->category + 16;
+    ಪ್ರತ್ಯಾಗಮ avc->category + 16;
 }
 
-static const char *get_level_str(int level)
+ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ *get_level_str(ಪೂರ್ಣಾಙ್ಕ level)
 {
-    switch (level) {
-    case AV_LOG_QUIET:
-        return "quiet";
-    case AV_LOG_DEBUG:
-        return "debug";
-    case AV_LOG_TRACE:
-        return "trace";
-    case AV_LOG_VERBOSE:
-        return "verbose";
-    case AV_LOG_INFO:
-        return "info";
-    case AV_LOG_WARNING:
-        return "warning";
-    case AV_LOG_ERROR:
-        return "error";
-    case AV_LOG_FATAL:
-        return "fatal";
-    case AV_LOG_PANIC:
-        return "panic";
-    default:
-        return "";
+    ವಿಕಲ್ಪ (level) {
+    ಪಕ್ಷ AV_LOG_QUIET:
+        ಪ್ರತ್ಯಾಗಮ "quiet";
+    ಪಕ್ಷ AV_LOG_DEBUG:
+        ಪ್ರತ್ಯಾಗಮ "debug";
+    ಪಕ್ಷ AV_LOG_TRACE:
+        ಪ್ರತ್ಯಾಗಮ "trace";
+    ಪಕ್ಷ AV_LOG_VERBOSE:
+        ಪ್ರತ್ಯಾಗಮ "verbose";
+    ಪಕ್ಷ AV_LOG_INFO:
+        ಪ್ರತ್ಯಾಗಮ "info";
+    ಪಕ್ಷ AV_LOG_WARNING:
+        ಪ್ರತ್ಯಾಗಮ "warning";
+    ಪಕ್ಷ AV_LOG_ERROR:
+        ಪ್ರತ್ಯಾಗಮ "error";
+    ಪಕ್ಷ AV_LOG_FATAL:
+        ಪ್ರತ್ಯಾಗಮ "fatal";
+    ಪಕ್ಷ AV_LOG_PANIC:
+        ಪ್ರತ್ಯಾಗಮ "panic";
+    ಸ್ವಭಾವ:
+        ಪ್ರತ್ಯಾಗಮ "";
     }
 }
 
-static const char *item_name(void *obj, const AVClass *cls)
+ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ *item_name(ಶೂನ್ಯ *obj, ಧ್ರುವ AVClass *cls)
 {
-    return (cls->item_name ? cls->item_name : av_default_item_name)(obj);
+    ಪ್ರತ್ಯಾಗಮ (cls->item_name ? cls->item_name : av_default_item_name)(obj);
 }
 
-static void format_date_now(AVBPrint* bp_time, int include_date)
+ಸ್ಥಿರ ಶೂನ್ಯ format_date_now(AVBPrint* bp_time, ಪೂರ್ಣಾಙ್ಕ include_date)
 {
-    struct tm *ptm, tmbuf;
-    const int64_t time_us = av_gettime();
-    const int64_t time_ms = time_us / 1000;
-    const time_t time_s   = time_ms / 1000;
-    const int millisec    = time_ms - (time_s * 1000);
+    ಸಂರಚನಾ tm *ptm, tmbuf;
+    ಧ್ರುವ int64_t time_us = av_gettime();
+    ಧ್ರುವ int64_t time_ms = time_us / 1000;
+    ಧ್ರುವ time_t time_s   = time_ms / 1000;
+    ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ millisec    = time_ms - (time_s * 1000);
     ptm                   = localtime_r(&time_s, &tmbuf);
-    if (ptm) {
-        if (include_date)
+    ಯದಿ (ptm) {
+        ಯದಿ (include_date)
             av_bprint_strftime(bp_time, "%Y-%m-%d ", ptm);
 
         av_bprint_strftime(bp_time, "%H:%M:%S", ptm);
@@ -323,105 +323,105 @@ static void format_date_now(AVBPrint* bp_time, int include_date)
     }
 }
 
-static void format_line(void *avcl, int level, const char *fmt, va_list vl,
-                        AVBPrint part[5], int *print_prefix, int type[2])
+ಸ್ಥಿರ ಶೂನ್ಯ format_ಸಾಲು(ಶೂನ್ಯ *avcl, ಪೂರ್ಣಾಙ್ಕ level, ಧ್ರುವ ವರ್ಣ *fmt, va_list vl,
+                        AVBPrint part[5], ಪೂರ್ಣಾಙ್ಕ *print_prefix, ಪೂರ್ಣಾಙ್ಕ type[2])
 {
-    AVClass* avc = avcl ? *(AVClass **) avcl : NULL;
+    AVClass* avc = avcl ? *(AVClass **) avcl : ರಿಕ್ತ;
     av_bprint_init(part+0, 0, AV_BPRINT_SIZE_AUTOMATIC);
     av_bprint_init(part+1, 0, AV_BPRINT_SIZE_AUTOMATIC);
     av_bprint_init(part+2, 0, AV_BPRINT_SIZE_AUTOMATIC);
     av_bprint_init(part+3, 0, 65536);
     av_bprint_init(part+4, 0, AV_BPRINT_SIZE_AUTOMATIC);
-    int flags = atomic_load_explicit(&av_log_flags, memory_order_relaxed);
+    ಪೂರ್ಣಾಙ್ಕ flags = atomic_load_explicit(&av_log_flags, memory_order_relaxed);
 
-    if(type) type[0] = type[1] = AV_CLASS_CATEGORY_NA + 16;
-    if (*print_prefix && avc) {
-        if (avc->parent_log_context_offset) {
+    ಯದಿ(type) type[0] = type[1] = AV_CLASS_CATEGORY_NA + 16;
+    ಯದಿ (*print_prefix && avc) {
+        ಯದಿ (avc->parent_log_context_offset) {
             AVClass** parent = *(AVClass ***) (((uint8_t *) avcl) +
                                    avc->parent_log_context_offset);
-            if (parent && *parent) {
+            ಯದಿ (parent && *parent) {
                 av_bprintf(part+0, "[%s @ %p] ",
                            item_name(parent, *parent), parent);
-                if(type) type[0] = get_category(parent);
+                ಯದಿ(type) type[0] = get_category(parent);
             }
         }
         av_bprintf(part+1, "[%s @ %p] ",
                    item_name(avcl, avc), avcl);
-        if(type) type[1] = get_category(avcl);
+        ಯದಿ(type) type[1] = get_category(avcl);
     }
 
-    if (*print_prefix && (level > AV_LOG_QUIET) && (flags & (AV_LOG_PRINT_TIME | AV_LOG_PRINT_DATETIME)))
+    ಯದಿ (*print_prefix && (level > AV_LOG_QUIET) && (flags & (AV_LOG_PRINT_TIME | AV_LOG_PRINT_DATETIME)))
         format_date_now(&part[4], flags & AV_LOG_PRINT_DATETIME);
 
-    if (*print_prefix && (level > AV_LOG_QUIET) && (flags & AV_LOG_PRINT_LEVEL))
+    ಯದಿ (*print_prefix && (level > AV_LOG_QUIET) && (flags & AV_LOG_PRINT_LEVEL))
         av_bprintf(part+2, "[%s] ", get_level_str(level));
 
     av_vbprintf(part+3, fmt, vl);
 
-    if(*part[0].str || *part[1].str || *part[2].str || *part[3].str) {
-        char lastc = part[3].len && part[3].len <= part[3].size ? part[3].str[part[3].len - 1] : 0;
+    ಯದಿ(*part[0].str || *part[1].str || *part[2].str || *part[3].str) {
+        ವರ್ಣ lastc = part[3].len && part[3].len <= part[3].size ? part[3].str[part[3].len - 1] : 0;
         *print_prefix = lastc == '\n' || lastc == '\r';
     }
 }
 
-void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix)
+ಶೂನ್ಯ av_log_format_ಸಾಲು(ಶೂನ್ಯ *ptr, ಪೂರ್ಣಾಙ್ಕ level, ಧ್ರುವ ವರ್ಣ *fmt, va_list vl,
+                        ವರ್ಣ *ಸಾಲು, ಪೂರ್ಣಾಙ್ಕ ಸಾಲು_size, ಪೂರ್ಣಾಙ್ಕ *print_prefix)
 {
-    av_log_format_line2(ptr, level, fmt, vl, line, line_size, print_prefix);
+    av_log_format_line2(ptr, level, fmt, vl, ಸಾಲು, ಸಾಲು_size, print_prefix);
 }
 
-int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix)
+ಪೂರ್ಣಾಙ್ಕ av_log_format_line2(ಶೂನ್ಯ *ptr, ಪೂರ್ಣಾಙ್ಕ level, ಧ್ರುವ ವರ್ಣ *fmt, va_list vl,
+                        ವರ್ಣ *ಸಾಲು, ಪೂರ್ಣಾಙ್ಕ ಸಾಲು_size, ಪೂರ್ಣಾಙ್ಕ *print_prefix)
 {
     AVBPrint part[5];
-    int ret;
+    ಪೂರ್ಣಾಙ್ಕ ret;
 
-    format_line(ptr, level, fmt, vl, part, print_prefix, NULL);
-    ret = snprintf(line, line_size, "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
-    av_bprint_finalize(part+3, NULL);
-    return ret;
+    format_ಸಾಲು(ptr, level, fmt, vl, part, print_prefix, ರಿಕ್ತ);
+    ret = snprintf(ಸಾಲು, ಸಾಲು_size, "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
+    av_bprint_finalize(part+3, ರಿಕ್ತ);
+    ಪ್ರತ್ಯಾಗಮ ret;
 }
 
-void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
+ಶೂನ್ಯ av_log_default_callback(ಶೂನ್ಯ* ptr, ಪೂರ್ಣಾಙ್ಕ level, ಧ್ರುವ ವರ್ಣ* fmt, va_list vl)
 {
-    static int print_prefix = 1;
-    static int count;
-    static char prev[LINE_SZ];
+    ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ print_prefix = 1;
+    ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ ಎಣಿಕೆ;
+    ಸ್ಥಿರ ವರ್ಣ prev[ಸಾಲು_SZ];
     AVBPrint part[5];
-    char line[LINE_SZ];
-    static int is_atty;
-    int type[2];
+    ವರ್ಣ ಸಾಲು[ಸಾಲು_SZ];
+    ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ is_atty;
+    ಪೂರ್ಣಾಙ್ಕ type[2];
     unsigned tint = 0;
 
-    if (level >= 0) {
+    ಯದಿ (level >= 0) {
         tint = level & 0xff00;
         level &= 0xff;
     }
 
-    if (level > atomic_load_explicit(&av_log_level, memory_order_relaxed))
-        return;
+    ಯದಿ (level > atomic_load_explicit(&av_log_level, memory_order_relaxed))
+        ಪ್ರತ್ಯಾಗಮ;
     ff_mutex_lock(&mutex);
 
-    format_line(ptr, level, fmt, vl, part, &print_prefix, type);
-    snprintf(line, sizeof(line), "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
+    format_ಸಾಲು(ptr, level, fmt, vl, part, &print_prefix, type);
+    snprintf(ಸಾಲು, ಪರಿಮಾಣ(ಸಾಲು), "%s%s%s%s", part[0].str, part[1].str, part[2].str, part[3].str);
 
-#if HAVE_ISATTY
-    if (!is_atty)
+#ಯದಿ HAVE_ISATTY
+    ಯದಿ (!is_atty)
         is_atty = isatty(2) ? 1 : -1;
 #endif
 
-    if (print_prefix && (atomic_load_explicit(&av_log_flags, memory_order_relaxed) & AV_LOG_SKIP_REPEATED) && !strcmp(line, prev) &&
-        *line && line[strlen(line) - 1] != '\r'){
-        count++;
-        if (is_atty == 1)
-            fprintf(stderr, "    Last message repeated %d times\r", count);
-        goto end;
+    ಯದಿ (print_prefix && (atomic_load_explicit(&av_log_flags, memory_order_relaxed) & AV_LOG_SKIP_REPEATED) && !strcmp(ಸಾಲು, prev) &&
+        *ಸಾಲು && ಸಾಲು[strlen(ಸಾಲು) - 1] != '\r'){
+        ಎಣಿಕೆ++;
+        ಯದಿ (is_atty == 1)
+            fprintf(stderr, "    Last message repeated %d times\r", ಎಣಿಕೆ);
+        ಗಚ್ಛ end;
     }
-    if (count > 0) {
-        fprintf(stderr, "    Last message repeated %d times\n", count);
-        count = 0;
+    ಯದಿ (ಎಣಿಕೆ > 0) {
+        fprintf(stderr, "    Last message repeated %d times\n", ಎಣಿಕೆ);
+        ಎಣಿಕೆ = 0;
     }
-    strcpy(prev, line);
+    strcpy(prev, ಸಾಲು);
 
     sanitize(part[4].str);
     colored_fputs(7, 0, part[4].str);
@@ -434,18 +434,18 @@ void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
     sanitize(part[3].str);
     colored_fputs(av_clip(level >> 3, 0, NB_LEVELS - 1), tint >> 8, part[3].str);
 
-#if CONFIG_VALGRIND_BACKTRACE
-    if (level <= BACKTRACE_LOGLEVEL)
+#ಯದಿ CONFIG_VALGRIND_BACKTRACE
+    ಯದಿ (level <= BACKTRACE_LOGLEVEL)
         VALGRIND_PRINTF_BACKTRACE("%s", "");
 #endif
 end:
-    av_bprint_finalize(part+3, NULL);
+    av_bprint_finalize(part+3, ರಿಕ್ತ);
     ff_mutex_unlock(&mutex);
 }
 
-static void (*_Atomic av_log_callback)(void*, int, const char*, va_list) = av_log_default_callback;
+ಸ್ಥಿರ ಶೂನ್ಯ (*_Atomic av_log_callback)(ಶೂನ್ಯ*, ಪೂರ್ಣಾಙ್ಕ, ಧ್ರುವ ವರ್ಣ*, va_list) = av_log_default_callback;
 
-void av_log(void* avcl, int level, const char *fmt, ...)
+ಶೂನ್ಯ av_log(ಶೂನ್ಯ* avcl, ಪೂರ್ಣಾಙ್ಕ level, ಧ್ರುವ ವರ್ಣ *fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
@@ -453,7 +453,7 @@ void av_log(void* avcl, int level, const char *fmt, ...)
     va_end(vl);
 }
 
-void av_log_once(void* avcl, int initial_level, int subsequent_level, int *state, const char *fmt, ...)
+ಶೂನ್ಯ av_log_once(ಶೂನ್ಯ* avcl, ಪೂರ್ಣಾಙ್ಕ initial_level, ಪೂರ್ಣಾಙ್ಕ subsequent_level, ಪೂರ್ಣಾಙ್ಕ *state, ಧ್ರುವ ವರ್ಣ *fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
@@ -462,71 +462,71 @@ void av_log_once(void* avcl, int initial_level, int subsequent_level, int *state
     *state = 1;
 }
 
-void av_vlog(void* avcl, int level, const char *fmt, va_list vl)
+ಶೂನ್ಯ av_vlog(ಶೂನ್ಯ* avcl, ಪೂರ್ಣಾಙ್ಕ level, ಧ್ರುವ ವರ್ಣ *fmt, va_list vl)
 {
-    AVClass* avc = avcl ? *(AVClass **) avcl : NULL;
-    void (*log_callback)(void*, int, const char*, va_list) =
+    AVClass* avc = avcl ? *(AVClass **) avcl : ರಿಕ್ತ;
+    ಶೂನ್ಯ (*log_callback)(ಶೂನ್ಯ*, ಪೂರ್ಣಾಙ್ಕ, ಧ್ರುವ ವರ್ಣ*, va_list) =
         atomic_load_explicit(&av_log_callback, memory_order_relaxed);
-    if (avc && avc->version >= (50 << 16 | 15 << 8 | 2) &&
+    ಯದಿ (avc && avc->version >= (50 << 16 | 15 << 8 | 2) &&
         avc->log_level_offset_offset && level >= AV_LOG_FATAL)
-        level += *(int *) (((uint8_t *) avcl) + avc->log_level_offset_offset);
-    if (log_callback)
+        level += *(ಪೂರ್ಣಾಙ್ಕ *) (((uint8_t *) avcl) + avc->log_level_offset_offset);
+    ಯದಿ (log_callback)
         log_callback(avcl, level, fmt, vl);
 }
 
-int av_log_get_level(void)
+ಪೂರ್ಣಾಙ್ಕ av_log_get_level(ಶೂನ್ಯ)
 {
-    return atomic_load_explicit(&av_log_level, memory_order_relaxed);
+    ಪ್ರತ್ಯಾಗಮ atomic_load_explicit(&av_log_level, memory_order_relaxed);
 }
 
-void av_log_set_level(int level)
+ಶೂನ್ಯ av_log_set_level(ಪೂರ್ಣಾಙ್ಕ level)
 {
     atomic_store_explicit(&av_log_level, level, memory_order_relaxed);
 }
 
-void av_log_set_flags(int arg)
+ಶೂನ್ಯ av_log_set_flags(ಪೂರ್ಣಾಙ್ಕ arg)
 {
     atomic_store_explicit(&av_log_flags, arg, memory_order_relaxed);
 }
 
-int av_log_get_flags(void)
+ಪೂರ್ಣಾಙ್ಕ av_log_get_flags(ಶೂನ್ಯ)
 {
-    return atomic_load_explicit(&av_log_flags, memory_order_relaxed);
+    ಪ್ರತ್ಯಾಗಮ atomic_load_explicit(&av_log_flags, memory_order_relaxed);
 }
 
-void av_log_set_callback(void (*callback)(void*, int, const char*, va_list))
+ಶೂನ್ಯ av_log_set_callback(ಶೂನ್ಯ (*callback)(ಶೂನ್ಯ*, ಪೂರ್ಣಾಙ್ಕ, ಧ್ರುವ ವರ್ಣ*, va_list))
 {
     atomic_store_explicit(&av_log_callback, callback, memory_order_relaxed);
 }
 
-static void missing_feature_sample(int sample, void *avc, const char *msg,
+ಸ್ಥಿರ ಶೂನ್ಯ missing_feature_sample(ಪೂರ್ಣಾಙ್ಕ sample, ಶೂನ್ಯ *avc, ಧ್ರುವ ವರ್ಣ *ಸಂದೇಶ,
                                    va_list argument_list)
 {
-    av_vlog(avc, AV_LOG_WARNING, msg, argument_list);
+    av_vlog(avc, AV_LOG_WARNING, ಸಂದೇಶ, argument_list);
     av_log(avc, AV_LOG_WARNING, " is not implemented. Update your FFmpeg "
            "version to the newest one from Git. If the problem still "
            "occurs, it means that your file has a feature which has not "
            "been implemented.\n");
-    if (sample)
+    ಯದಿ (sample)
         av_log(avc, AV_LOG_WARNING, "If you want to help, upload a sample "
                "of this file to https://streams.videolan.org/upload/ "
                "and contact the ffmpeg-devel mailing list. (ffmpeg-devel@ffmpeg.org)\n");
 }
 
-void avpriv_request_sample(void *avc, const char *msg, ...)
+ಶೂನ್ಯ avpriv_request_sample(ಶೂನ್ಯ *avc, ಧ್ರುವ ವರ್ಣ *ಸಂದೇಶ, ...)
 {
     va_list argument_list;
 
-    va_start(argument_list, msg);
-    missing_feature_sample(1, avc, msg, argument_list);
+    va_start(argument_list, ಸಂದೇಶ);
+    missing_feature_sample(1, avc, ಸಂದೇಶ, argument_list);
     va_end(argument_list);
 }
 
-void avpriv_report_missing_feature(void *avc, const char *msg, ...)
+ಶೂನ್ಯ avpriv_report_missing_feature(ಶೂನ್ಯ *avc, ಧ್ರುವ ವರ್ಣ *ಸಂದೇಶ, ...)
 {
     va_list argument_list;
 
-    va_start(argument_list, msg);
-    missing_feature_sample(0, avc, msg, argument_list);
+    va_start(argument_list, ಸಂದೇಶ);
+    missing_feature_sample(0, avc, ಸಂದೇಶ, argument_list);
     va_end(argument_list);
 }

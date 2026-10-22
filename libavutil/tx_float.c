@@ -17,5 +17,5 @@
  */
 
 #define TX_FLOAT
-#include "tx_priv.h"
-#include "tx_template.c"
+#ಅನ್ತರ್ಭಾವ "tx_priv.h"
+#ಅನ್ತರ್ಭಾವ "tx_template.c"

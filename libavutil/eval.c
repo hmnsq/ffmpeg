@@ -26,53 +26,53 @@
  * see http://joe.hotchkiss.com/programming/eval/eval.html
  */
 
-#include <float.h>
-#include "attributes.h"
-#include "avassert.h"
-#include "avutil.h"
-#include "common.h"
-#include "eval.h"
-#include "ffmath.h"
-#include "log.h"
-#include "mathematics.h"
-#include "mem.h"
-#include "sfc64.h"
-#include "time.h"
-#include "avstring.h"
-#include "reverse.h"
+#ಅನ್ತರ್ಭಾವ <float.h>
+#ಅನ್ತರ್ಭಾವ "attributes.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "avutil.h"
+#ಅನ್ತರ್ಭಾವ "common.h"
+#ಅನ್ತರ್ಭಾವ "eval.h"
+#ಅನ್ತರ್ಭಾವ "ffmath.h"
+#ಅನ್ತರ್ಭಾವ "log.h"
+#ಅನ್ತರ್ಭಾವ "mathematics.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "sfc64.h"
+#ಅನ್ತರ್ಭಾವ "time.h"
+#ಅನ್ತರ್ಭಾವ "avstring.h"
+#ಅನ್ತರ್ಭಾವ "reverse.h"
 
 #define MAX_DEPTH 100
 
-typedef struct Parser {
-    const AVClass *class;
-    int stack_index;
-    char *s;
-    const double *const_values;
-    const char * const *const_names;          // NULL terminated
-    double (* const *funcs1)(void *, double a);           // NULL terminated
-    const char * const *func1_names;          // NULL terminated
-    double (* const *funcs2)(void *, double a, double b); // NULL terminated
-    const char * const *func2_names;          // NULL terminated
-    void *opaque;
-    int log_offset;
-    void *log_ctx;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ Parser {
+    ಧ್ರುವ AVClass *class;
+    ಪೂರ್ಣಾಙ್ಕ ರಾಶಿ_index;
+    ವರ್ಣ *s;
+    ಧ್ರುವ ದ್ವಿಗುಣ *const_ಮೌಲ್ಯಗಳು;
+    ಧ್ರುವ ವರ್ಣ * ಧ್ರುವ *const_names;          // NULL terminated
+    ದ್ವಿಗುಣ (* ಧ್ರುವ *funcs1)(ಶೂನ್ಯ *, ದ್ವಿಗುಣ a);           // NULL terminated
+    ಧ್ರುವ ವರ್ಣ * ಧ್ರುವ *func1_names;          // NULL terminated
+    ದ್ವಿಗುಣ (* ಧ್ರುವ *funcs2)(ಶೂನ್ಯ *, ದ್ವಿಗುಣ a, ದ್ವಿಗುಣ b); // NULL terminated
+    ಧ್ರುವ ವರ್ಣ * ಧ್ರುವ *func2_names;          // NULL terminated
+    ಶೂನ್ಯ *opaque;
+    ಪೂರ್ಣಾಙ್ಕ log_offset;
+    ಶೂನ್ಯ *log_ctx;
 #define VARS 10
-    double *var;
+    ದ್ವಿಗುಣ *var;
     FFSFC64 *prng_state;
 } Parser;
 
-static const AVClass eval_class = {
+ಸ್ಥಿರ ಧ್ರುವ AVClass eval_class = {
     .class_name                = "Eval",
     .item_name                 = av_default_item_name,
-    .option                    = NULL,
+    .option                    = ರಿಕ್ತ,
     .version                   = LIBAVUTIL_VERSION_INT,
     .log_level_offset_offset   = offsetof(Parser, log_offset),
     .parent_log_context_offset = offsetof(Parser, log_ctx),
 };
 
-static const struct {
-    double bin_val;
-    double dec_val;
+ಸ್ಥಿರ ಧ್ರುವ ಸಂರಚನಾ {
+    ದ್ವಿಗುಣ bin_val;
+    ದ್ವಿಗುಣ dec_val;
     int8_t exp;
 } si_prefixes['z' - 'E' + 1] = {
     ['y'-'E']= { 8.271806125530276749e-25, 1e-24, -24 },
@@ -97,9 +97,9 @@ static const struct {
     ['Y'-'E']= { 1.2089258196146292e24, 1e24, 24 },
 };
 
-static const struct {
-    const char *name;
-    double value;
+ಸ್ಥಿರ ಧ್ರುವ ಸಂರಚನಾ {
+    ಧ್ರುವ ವರ್ಣ *name;
+    ದ್ವಿಗುಣ ಮೌಲ್ಯ;
 } constants[] = {
     { "E",   M_E   },
     { "PI",  M_PI  },
@@ -107,653 +107,653 @@ static const struct {
     { "QP2LAMBDA", FF_QP2LAMBDA },
 };
 
-double av_strtod(const char *numstr, char **tail)
+ದ್ವಿಗುಣ av_strtod(ಧ್ರುವ ವರ್ಣ *numstr, ವರ್ಣ **tail)
 {
-    double d;
-    char *next;
-    if(numstr[0]=='0' && (numstr[1]|0x20)=='x') {
+    ದ್ವಿಗುಣ d;
+    ವರ್ಣ *next;
+    ಯದಿ(numstr[0]=='0' && (numstr[1]|0x20)=='x') {
         d = strtoul(numstr, &next, 16);
-    } else
+    } ಅನ್ಯಥಾ
         d = strtod(numstr, &next);
     /* if parsing succeeded, check for and interpret postfixes */
-    if (next!=numstr) {
-        if (next[0] == 'd' && next[1] == 'B') {
+    ಯದಿ (next!=numstr) {
+        ಯದಿ (next[0] == 'd' && next[1] == 'B') {
             /* treat dB as decibels instead of decibytes */
             d = ff_exp10(d / 20);
             next += 2;
-        } else if (*next >= 'E' && *next <= 'z') {
-            int e= si_prefixes[*next - 'E'].exp;
-            if (e) {
-                if (next[1] == 'i') {
+        } ಅನ್ಯಥಾ ಯದಿ (*next >= 'E' && *next <= 'z') {
+            ಪೂರ್ಣಾಙ್ಕ e= si_prefixes[*next - 'E'].exp;
+            ಯದಿ (e) {
+                ಯದಿ (next[1] == 'i') {
                     d*= si_prefixes[*next - 'E'].bin_val;
                     next+=2;
-                } else {
+                } ಅನ್ಯಥಾ {
                     d*= si_prefixes[*next - 'E'].dec_val;
                     next++;
                 }
             }
         }
 
-        if (*next=='B') {
+        ಯದಿ (*next=='B') {
             d*=8;
             next++;
         }
     }
     /* if requested, fill in tail with the position after the last parsed
        character */
-    if (tail)
+    ಯದಿ (tail)
         *tail = next;
-    return d;
+    ಪ್ರತ್ಯಾಗಮ d;
 }
 
 #define IS_IDENTIFIER_CHAR(c) ((c) - '0' <= 9U || (c) - 'a' <= 25U || (c) - 'A' <= 25U || (c) == '_')
 
-static int strmatch(const char *s, const char *prefix)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ strmatch(ಧ್ರುವ ವರ್ಣ *s, ಧ್ರುವ ವರ್ಣ *prefix)
 {
-    int i;
-    for (i=0; prefix[i]; i++) {
-        if (prefix[i] != s[i]) return 0;
+    ಪೂರ್ಣಾಙ್ಕ i;
+    ಪ್ರತಿ (i=0; prefix[i]; i++) {
+        ಯದಿ (prefix[i] != s[i]) ಪ್ರತ್ಯಾಗಮ 0;
     }
     /* return 1 only if the s identifier is terminated */
-    return !IS_IDENTIFIER_CHAR(s[i]);
+    ಪ್ರತ್ಯಾಗಮ !IS_IDENTIFIER_CHAR(s[i]);
 }
 
-enum {
-    e_value, e_const, e_func0, e_func1, e_func2,
+ಗಣನಾ {
+    e_ಮೌಲ್ಯ, e_const, e_func0, e_func1, e_func2,
     e_squish, e_gauss, e_ld, e_isnan, e_isinf,
     e_mod, e_max, e_min, e_eq, e_gt, e_gte, e_lte, e_lt,
     e_pow, e_mul, e_div, e_add,
-    e_last, e_st, e_while, e_taylor, e_root, e_floor, e_ceil, e_trunc, e_round,
+    e_last, e_st, e_while, e_taylor, e_ಬೇರು, e_floor, e_ceil, e_trunc, e_round,
     e_sqrt, e_not, e_random, e_hypot, e_gcd,
     e_if, e_ifnot, e_print, e_bitand, e_bitor, e_between, e_clip, e_atan2, e_lerp,
     e_sgn, e_randomi
 };
-struct AVExpr {
-    unsigned char type;
-    unsigned char root;
+ಸಂರಚನಾ AVExpr {
+    unsigned ವರ್ಣ type;
+    unsigned ವರ್ಣ ಬೇರು;
     short depth;
-    int const_index;
-    double value; // is sign in other types
-    union {
-        double (*func0)(double);
-        double (*func1)(void *, double);
-        double (*func2)(void *, double, double);
+    ಪೂರ್ಣಾಙ್ಕ const_index;
+    ದ್ವಿಗುಣ ಮೌಲ್ಯ; // is sign in other types
+    ಸಙ್ಘ {
+        ದ್ವಿಗುಣ (*func0)(ದ್ವಿಗುಣ);
+        ದ್ವಿಗುಣ (*func1)(ಶೂನ್ಯ *, ದ್ವಿಗುಣ);
+        ದ್ವಿಗುಣ (*func2)(ಶೂನ್ಯ *, ದ್ವಿಗುಣ, ದ್ವಿಗುಣ);
     } ;
-    struct AVExpr *param[3];
+    ಸಂರಚನಾ AVExpr *param[3];
 };
 
-typedef struct {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ {
     AVExpr avexpr;
-    double *var;
+    ದ್ವಿಗುಣ *var;
     FFSFC64 *prng_state;
-} AVExprRoot;
+} AVExpr_ಬೇರು;
 
-static double etime(double v)
+ಸ್ಥಿರ ದ್ವಿಗುಣ etime(ದ್ವಿಗುಣ v)
 {
-    return av_gettime() * 0.000001;
+    ಪ್ರತ್ಯಾಗಮ av_gettime() * 0.000001;
 }
 
-static double eval_expr(Parser *p, AVExpr *e)
+ಸ್ಥಿರ ದ್ವಿಗುಣ eval_ಅಭಿವ್ಯಕ್ತಿ(Parser *p, AVExpr *e)
 {
-    switch (e->type) {
-        case e_value:  return e->value;
-        case e_const:  return e->value * p->const_values[e->const_index];
-        case e_func0:  return e->value * e->func0(eval_expr(p, e->param[0]));
-        case e_func1:  return e->value * e->func1(p->opaque, eval_expr(p, e->param[0]));
-        case e_func2:  return e->value * e->func2(p->opaque, eval_expr(p, e->param[0]), eval_expr(p, e->param[1]));
-        case e_squish: return e->value/(1+exp(4*eval_expr(p, e->param[0])));
-        case e_gauss: { double d = eval_expr(p, e->param[0]); return e->value * exp(-d*d/2)/sqrt(2*M_PI); }
-        case e_ld:     return e->value * p->var[av_clip(eval_expr(p, e->param[0]), 0, VARS-1)];
-        case e_isnan:  return e->value * !!isnan(eval_expr(p, e->param[0]));
-        case e_isinf:  return e->value * !!isinf(eval_expr(p, e->param[0]));
-        case e_floor:  return e->value * floor(eval_expr(p, e->param[0]));
-        case e_ceil :  return e->value * ceil (eval_expr(p, e->param[0]));
-        case e_trunc:  return e->value * trunc(eval_expr(p, e->param[0]));
-        case e_round:  return e->value * round(eval_expr(p, e->param[0]));
-        case e_sgn:    return e->value * FFDIFFSIGN(eval_expr(p, e->param[0]), 0);
-        case e_sqrt:   return e->value * sqrt (eval_expr(p, e->param[0]));
-        case e_not:    return e->value * (eval_expr(p, e->param[0]) == 0);
-        case e_if:     return e->value * (eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
-                                          e->param[2] ? eval_expr(p, e->param[2]) : 0);
-        case e_ifnot:  return e->value * (!eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
-                                          e->param[2] ? eval_expr(p, e->param[2]) : 0);
-        case e_clip: {
-            double x = eval_expr(p, e->param[0]);
-            double min = eval_expr(p, e->param[1]), max = eval_expr(p, e->param[2]);
-            if (isnan(min) || isnan(max) || isnan(x) || min > max)
-                return NAN;
-            return e->value * av_clipd(x, min, max);
+    ವಿಕಲ್ಪ (e->type) {
+        ಪಕ್ಷ e_ಮೌಲ್ಯ:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ;
+        ಪಕ್ಷ e_const:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * p->const_ಮೌಲ್ಯಗಳು[e->const_index];
+        ಪಕ್ಷ e_func0:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * e->func0(eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]));
+        ಪಕ್ಷ e_func1:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * e->func1(p->opaque, eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]));
+        ಪಕ್ಷ e_func2:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * e->func2(p->opaque, eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]), eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]));
+        ಪಕ್ಷ e_squish: ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ/(1+exp(4*eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0])));
+        ಪಕ್ಷ e_gauss: { ದ್ವಿಗುಣ d = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]); ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * exp(-d*d/2)/sqrt(2*M_PI); }
+        ಪಕ್ಷ e_ld:     ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * p->var[av_clip(eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]), 0, VARS-1)];
+        ಪಕ್ಷ e_isnan:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * !!isnan(eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]));
+        ಪಕ್ಷ e_isinf:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * !!isinf(eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]));
+        ಪಕ್ಷ e_floor:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * floor(eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]));
+        ಪಕ್ಷ e_ceil :  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * ceil (eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]));
+        ಪಕ್ಷ e_trunc:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * trunc(eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]));
+        ಪಕ್ಷ e_round:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * round(eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]));
+        ಪಕ್ಷ e_sgn:    ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * FFDIFFSIGN(eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]), 0);
+        ಪಕ್ಷ e_sqrt:   ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * sqrt (eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]));
+        ಪಕ್ಷ e_not:    ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]) == 0);
+        ಪಕ್ಷ e_if:     ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]) ? eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]) :
+                                          e->param[2] ? eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[2]) : 0);
+        ಪಕ್ಷ e_ifnot:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (!eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]) ? eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]) :
+                                          e->param[2] ? eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[2]) : 0);
+        ಪಕ್ಷ e_clip: {
+            ದ್ವಿಗುಣ x = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]);
+            ದ್ವಿಗುಣ min = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]), max = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[2]);
+            ಯದಿ (isnan(min) || isnan(max) || isnan(x) || min > max)
+                ಪ್ರತ್ಯಾಗಮ NAN;
+            ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * av_clipd(x, min, max);
         }
-        case e_between: {
-            double d = eval_expr(p, e->param[0]);
-            return e->value * (d >= eval_expr(p, e->param[1]) &&
-                               d <= eval_expr(p, e->param[2]));
+        ಪಕ್ಷ e_between: {
+            ದ್ವಿಗುಣ d = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]);
+            ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d >= eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]) &&
+                               d <= eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[2]));
         }
-        case e_lerp: {
-            double v0 = eval_expr(p, e->param[0]);
-            double v1 = eval_expr(p, e->param[1]);
-            double f  = eval_expr(p, e->param[2]);
-            return e->value * (v0 + (v1 - v0) * f);
+        ಪಕ್ಷ e_lerp: {
+            ದ್ವಿಗುಣ v0 = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]);
+            ದ್ವಿಗುಣ v1 = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]);
+            ದ್ವಿಗುಣ f  = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[2]);
+            ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (v0 + (v1 - v0) * f);
         }
-        case e_print: {
-            double x = eval_expr(p, e->param[0]);
-            int level = e->param[1] ? av_clip(eval_expr(p, e->param[1]), INT_MIN, INT_MAX) : AV_LOG_INFO;
+        ಪಕ್ಷ e_print: {
+            ದ್ವಿಗುಣ x = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]);
+            ಪೂರ್ಣಾಙ್ಕ level = e->param[1] ? av_clip(eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]), INT_MIN, INT_MAX) : AV_LOG_INFO;
             av_log(p, level, "%f\n", x);
-            return e->value * x;
+            ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * x;
         }
 
 #define COMPUTE_NEXT_RANDOM()                                        \
-            int idx = av_clip(eval_expr(p, e->param[0]), 0, VARS-1); \
+            ಪೂರ್ಣಾಙ್ಕ idx = av_clip(eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]), 0, VARS-1); \
             FFSFC64 *s = p->prng_state + idx;                        \
             uint64_t r;                                              \
                                                                      \
-            if (!s->counter) {                                       \
+            ಯದಿ (!s->counter) {                                       \
                 r = isnan(p->var[idx]) ? 0 : p->var[idx];            \
                 ff_sfc64_init(s, r, r, r, 12);                       \
             }                                                        \
             r = ff_sfc64_get(s);                                     \
             p->var[idx] = r;                                         \
 
-        case e_random: {
+        ಪಕ್ಷ e_random: {
             COMPUTE_NEXT_RANDOM();
-            return r * (1.0/UINT64_MAX);
+            ಪ್ರತ್ಯಾಗಮ r * (1.0/UINT64_MAX);
         }
-        case e_randomi: {
-            double min = eval_expr(p, e->param[1]);
-            double max = eval_expr(p, e->param[2]);
+        ಪಕ್ಷ e_randomi: {
+            ದ್ವಿಗುಣ min = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]);
+            ದ್ವಿಗುಣ max = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[2]);
             COMPUTE_NEXT_RANDOM();
-            return min + (max - min) * r / UINT64_MAX;
+            ಪ್ರತ್ಯಾಗಮ min + (max - min) * r / UINT64_MAX;
         }
-        case e_while: {
-            double d = NAN;
-            while (eval_expr(p, e->param[0]))
-                d=eval_expr(p, e->param[1]);
-            return d;
+        ಪಕ್ಷ e_while: {
+            ದ್ವಿಗುಣ d = NAN;
+            ಯಾವತ್ (eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]))
+                d=eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]);
+            ಪ್ರತ್ಯಾಗಮ d;
         }
-        case e_taylor: {
-            double t = 1, d = 0, v;
-            double x = eval_expr(p, e->param[1]);
-            int id = e->param[2] ? av_clip(eval_expr(p, e->param[2]), 0, VARS-1) : 0;
-            int i;
-            double var0 = p->var[id];
-            for(i=0; i<1000; i++) {
-                double ld = d;
+        ಪಕ್ಷ e_taylor: {
+            ದ್ವಿಗುಣ t = 1, d = 0, v;
+            ದ್ವಿಗುಣ x = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]);
+            ಪೂರ್ಣಾಙ್ಕ id = e->param[2] ? av_clip(eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[2]), 0, VARS-1) : 0;
+            ಪೂರ್ಣಾಙ್ಕ i;
+            ದ್ವಿಗುಣ var0 = p->var[id];
+            ಪ್ರತಿ(i=0; i<1000; i++) {
+                ದ್ವಿಗುಣ ld = d;
                 p->var[id] = i;
-                v = eval_expr(p, e->param[0]);
+                v = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]);
                 d += t*v;
-                if(ld==d && v)
-                    break;
+                ಯದಿ(ld==d && v)
+                    ಭಙ್ಗ;
                 t *= x / (i+1);
             }
             p->var[id] = var0;
-            return d;
+            ಪ್ರತ್ಯಾಗಮ d;
         }
-        case e_root: {
-            int i, j;
-            double low = -1, high = -1, v, low_v = -DBL_MAX, high_v = DBL_MAX;
-            double var0 = p->var[0];
-            double x_max = eval_expr(p, e->param[1]);
-            for(i=-1; i<1024; i++) {
-                if(i<255) {
+        ಪಕ್ಷ e_ಬೇರು: {
+            ಪೂರ್ಣಾಙ್ಕ i, j;
+            ದ್ವಿಗುಣ ಕೆಳಗಿನ = -1, ಮೇಲಿನ = -1, v, ಕೆಳಗಿನ_v = -DBL_MAX, ಮೇಲಿನ_v = DBL_MAX;
+            ದ್ವಿಗುಣ var0 = p->var[0];
+            ದ್ವಿಗುಣ x_max = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]);
+            ಪ್ರತಿ(i=-1; i<1024; i++) {
+                ಯದಿ(i<255) {
                     p->var[0] = ff_reverse[i&255]*x_max/255;
-                } else {
+                } ಅನ್ಯಥಾ {
                     p->var[0] = x_max*pow(0.9, i-255);
-                    if (i&1) p->var[0] *= -1;
-                    if (i&2) p->var[0] += low;
-                    else     p->var[0] += high;
+                    ಯದಿ (i&1) p->var[0] *= -1;
+                    ಯದಿ (i&2) p->var[0] += ಕೆಳಗಿನ;
+                    ಅನ್ಯಥಾ     p->var[0] += ಮೇಲಿನ;
                 }
-                v = eval_expr(p, e->param[0]);
-                if (v<=0 && v>low_v) {
-                    low    = p->var[0];
-                    low_v  = v;
+                v = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]);
+                ಯದಿ (v<=0 && v>ಕೆಳಗಿನ_v) {
+                    ಕೆಳಗಿನ    = p->var[0];
+                    ಕೆಳಗಿನ_v  = v;
                 }
-                if (v>=0 && v<high_v) {
-                    high   = p->var[0];
-                    high_v = v;
+                ಯದಿ (v>=0 && v<ಮೇಲಿನ_v) {
+                    ಮೇಲಿನ   = p->var[0];
+                    ಮೇಲಿನ_v = v;
                 }
-                if (low>=0 && high>=0){
-                    for (j=0; j<1000; j++) {
-                        p->var[0] = (low+high)*0.5;
-                        if (low == p->var[0] || high == p->var[0])
-                            break;
-                        v = eval_expr(p, e->param[0]);
-                        if (v<=0) low = p->var[0];
-                        if (v>=0) high= p->var[0];
-                        if (isnan(v)) {
-                            low = high = v;
-                            break;
+                ಯದಿ (ಕೆಳಗಿನ>=0 && ಮೇಲಿನ>=0){
+                    ಪ್ರತಿ (j=0; j<1000; j++) {
+                        p->var[0] = (ಕೆಳಗಿನ+ಮೇಲಿನ)*0.5;
+                        ಯದಿ (ಕೆಳಗಿನ == p->var[0] || ಮೇಲಿನ == p->var[0])
+                            ಭಙ್ಗ;
+                        v = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]);
+                        ಯದಿ (v<=0) ಕೆಳಗಿನ = p->var[0];
+                        ಯದಿ (v>=0) ಮೇಲಿನ= p->var[0];
+                        ಯದಿ (isnan(v)) {
+                            ಕೆಳಗಿನ = ಮೇಲಿನ = v;
+                            ಭಙ್ಗ;
                         }
                     }
-                    break;
+                    ಭಙ್ಗ;
                 }
             }
             p->var[0] = var0;
-            return -low_v<high_v ? low : high;
+            ಪ್ರತ್ಯಾಗಮ -ಕೆಳಗಿನ_v<ಮೇಲಿನ_v ? ಕೆಳಗಿನ : ಮೇಲಿನ;
         }
-        default: {
-            double d = eval_expr(p, e->param[0]);
-            double d2 = eval_expr(p, e->param[1]);
-            switch (e->type) {
-                case e_mod: return e->value * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
-                case e_gcd: return e->value * av_gcd(d,d2);
-                case e_max: return e->value * (d >  d2 ?   d : d2);
-                case e_min: return e->value * (d <  d2 ?   d : d2);
-                case e_eq:  return e->value * (d == d2 ? 1.0 : 0.0);
-                case e_gt:  return e->value * (d >  d2 ? 1.0 : 0.0);
-                case e_gte: return e->value * (d >= d2 ? 1.0 : 0.0);
-                case e_lt:  return e->value * (d <  d2 ? 1.0 : 0.0);
-                case e_lte: return e->value * (d <= d2 ? 1.0 : 0.0);
-                case e_pow: return e->value * pow(d, d2);
-                case e_mul: return e->value * (d * d2);
-                case e_div: return e->value * (d2 ? (d / d2) : d * INFINITY);
-                case e_add: return e->value * (d + d2);
-                case e_last:return e->value * d2;
-                case e_st :  {
-                    int index = av_clip(d, 0, VARS-1);
+        ಸ್ವಭಾವ: {
+            ದ್ವಿಗುಣ d = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[0]);
+            ದ್ವಿಗುಣ d2 = eval_ಅಭಿವ್ಯಕ್ತಿ(p, e->param[1]);
+            ವಿಕಲ್ಪ (e->type) {
+                ಪಕ್ಷ e_mod: ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
+                ಪಕ್ಷ e_gcd: ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * av_gcd(d,d2);
+                ಪಕ್ಷ e_max: ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d >  d2 ?   d : d2);
+                ಪಕ್ಷ e_min: ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d <  d2 ?   d : d2);
+                ಪಕ್ಷ e_eq:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d == d2 ? 1.0 : 0.0);
+                ಪಕ್ಷ e_gt:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d >  d2 ? 1.0 : 0.0);
+                ಪಕ್ಷ e_gte: ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d >= d2 ? 1.0 : 0.0);
+                ಪಕ್ಷ e_lt:  ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d <  d2 ? 1.0 : 0.0);
+                ಪಕ್ಷ e_lte: ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d <= d2 ? 1.0 : 0.0);
+                ಪಕ್ಷ e_pow: ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * pow(d, d2);
+                ಪಕ್ಷ e_mul: ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d * d2);
+                ಪಕ್ಷ e_div: ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d2 ? (d / d2) : d * INFINITY);
+                ಪಕ್ಷ e_add: ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (d + d2);
+                ಪಕ್ಷ e_last:ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * d2;
+                ಪಕ್ಷ e_st :  {
+                    ಪೂರ್ಣಾಙ್ಕ index = av_clip(d, 0, VARS-1);
                     p->prng_state[index].counter = 0;
-                    return e->value * (p->var[index]= d2);
+                    ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * (p->var[index]= d2);
                 }
-                case e_hypot:return e->value * hypot(d, d2);
-                case e_atan2:return e->value * atan2(d, d2);
-                case e_bitand: return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d & (long int)d2);
-                case e_bitor:  return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d | (long int)d2);
+                ಪಕ್ಷ e_hypot:ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * hypot(d, d2);
+                ಪಕ್ಷ e_atan2:ಪ್ರತ್ಯಾಗಮ e->ಮೌಲ್ಯ * atan2(d, d2);
+                ಪಕ್ಷ e_bitand: ಪ್ರತ್ಯಾಗಮ isnan(d) || isnan(d2) ? NAN : e->ಮೌಲ್ಯ * ((long ಪೂರ್ಣಾಙ್ಕ)d & (long ಪೂರ್ಣಾಙ್ಕ)d2);
+                ಪಕ್ಷ e_bitor:  ಪ್ರತ್ಯಾಗಮ isnan(d) || isnan(d2) ? NAN : e->ಮೌಲ್ಯ * ((long ಪೂರ್ಣಾಙ್ಕ)d | (long ಪೂರ್ಣಾಙ್ಕ)d2);
             }
         }
     }
-    return NAN;
+    ಪ್ರತ್ಯಾಗಮ NAN;
 }
 
-static int parse_expr(AVExpr **e, Parser *p);
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ parse_ಅಭಿವ್ಯಕ್ತಿ(AVExpr **e, Parser *p);
 
-void av_expr_free(AVExpr *e)
+ಶೂನ್ಯ av_ಅಭಿವ್ಯಕ್ತಿ_free(AVExpr *e)
 {
-    if (!e) return;
-    av_expr_free(e->param[0]);
-    av_expr_free(e->param[1]);
-    av_expr_free(e->param[2]);
-    if (e->root) {
-        AVExprRoot *r = (AVExprRoot*)e;
+    ಯದಿ (!e) ಪ್ರತ್ಯಾಗಮ;
+    av_ಅಭಿವ್ಯಕ್ತಿ_free(e->param[0]);
+    av_ಅಭಿವ್ಯಕ್ತಿ_free(e->param[1]);
+    av_ಅಭಿವ್ಯಕ್ತಿ_free(e->param[2]);
+    ಯದಿ (e->ಬೇರು) {
+        AVExpr_ಬೇರು *r = (AVExpr_ಬೇರು*)e;
         av_freep(&r->var);
         av_freep(&r->prng_state);
     }
     av_freep(&e);
 }
 
-static int parse_primary(AVExpr **e, Parser *p)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ parse_primary(AVExpr **e, Parser *p)
 {
-    AVExpr *d = av_mallocz(sizeof(AVExpr));
-    char *next = p->s, *s0 = p->s;
-    int ret, i;
+    AVExpr *d = av_mallocz(ಪರಿಮಾಣ(AVExpr));
+    ವರ್ಣ *next = p->s, *s0 = p->s;
+    ಪೂರ್ಣಾಙ್ಕ ret, i;
 
-    if (!d)
-        return AVERROR(ENOMEM);
+    ಯದಿ (!d)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
 
-    /* number */
-    d->value = av_strtod(p->s, &next);
-    if (next != p->s) {
-        d->type = e_value;
+    /*ಸಂಖ್ಯೆ*/
+    d->ಮೌಲ್ಯ = av_strtod(p->s, &next);
+    ಯದಿ (next != p->s) {
+        d->type = e_ಮೌಲ್ಯ;
         p->s= next;
         *e = d;
-        return 0;
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
-    d->value = 1;
+    d->ಮೌಲ್ಯ = 1;
 
     /* named constants */
-    for (i=0; p->const_names && p->const_names[i]; i++) {
-        if (strmatch(p->s, p->const_names[i])) {
+    ಪ್ರತಿ (i=0; p->const_names && p->const_names[i]; i++) {
+        ಯದಿ (strmatch(p->s, p->const_names[i])) {
             p->s+= strlen(p->const_names[i]);
             d->type = e_const;
             d->const_index = i;
             *e = d;
-            return 0;
+            ಪ್ರತ್ಯಾಗಮ 0;
         }
     }
-    for (i = 0; i < FF_ARRAY_ELEMS(constants); i++) {
-        if (strmatch(p->s, constants[i].name)) {
+    ಪ್ರತಿ (i = 0; i < FF_ARRAY_ELEMS(constants); i++) {
+        ಯದಿ (strmatch(p->s, constants[i].name)) {
             p->s += strlen(constants[i].name);
-            d->type = e_value;
-            d->value = constants[i].value;
+            d->type = e_ಮೌಲ್ಯ;
+            d->ಮೌಲ್ಯ = constants[i].ಮೌಲ್ಯ;
             *e = d;
-            return 0;
+            ಪ್ರತ್ಯಾಗಮ 0;
         }
     }
 
     p->s= strchr(p->s, '(');
-    if (!p->s) {
+    ಯದಿ (!p->s) {
         av_log(p, AV_LOG_ERROR, "Undefined constant or missing '(' in '%s'\n", s0);
         p->s= next;
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+        av_ಅಭಿವ್ಯಕ್ತಿ_free(d);
+        ಪ್ರತ್ಯಾಗಮ AVERROR(EINVAL);
     }
     p->s++; // "("
-    if (*next == '(') { // special case do-nothing
+    ಯದಿ (*next == '(') { // special case do-nothing
         av_freep(&d);
-        if ((ret = parse_expr(&d, p)) < 0)
-            return ret;
-        if (p->s[0] != ')') {
+        ಯದಿ ((ret = parse_ಅಭಿವ್ಯಕ್ತಿ(&d, p)) < 0)
+            ಪ್ರತ್ಯಾಗಮ ret;
+        ಯದಿ (p->s[0] != ')') {
             av_log(p, AV_LOG_ERROR, "Missing ')' in '%s'\n", s0);
-            av_expr_free(d);
-            return AVERROR(EINVAL);
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(d);
+            ಪ್ರತ್ಯಾಗಮ AVERROR(EINVAL);
         }
         p->s++; // ")"
         *e = d;
-        return 0;
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
-    if ((ret = parse_expr(&(d->param[0]), p)) < 0) {
-        av_expr_free(d);
-        return ret;
+    ಯದಿ ((ret = parse_ಅಭಿವ್ಯಕ್ತಿ(&(d->param[0]), p)) < 0) {
+        av_ಅಭಿವ್ಯಕ್ತಿ_free(d);
+        ಪ್ರತ್ಯಾಗಮ ret;
     }
-    if (p->s[0]== ',') {
+    ಯದಿ (p->s[0]== ',') {
         p->s++; // ","
-        parse_expr(&d->param[1], p);
+        parse_ಅಭಿವ್ಯಕ್ತಿ(&d->param[1], p);
     }
-    if (p->s[0]== ',') {
+    ಯದಿ (p->s[0]== ',') {
         p->s++; // ","
-        parse_expr(&d->param[2], p);
+        parse_ಅಭಿವ್ಯಕ್ತಿ(&d->param[2], p);
     }
-    if (p->s[0] != ')') {
+    ಯದಿ (p->s[0] != ')') {
         av_log(p, AV_LOG_ERROR, "Missing ')' or too many args in '%s'\n", s0);
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+        av_ಅಭಿವ್ಯಕ್ತಿ_free(d);
+        ಪ್ರತ್ಯಾಗಮ AVERROR(EINVAL);
     }
     p->s++; // ")"
 
-    for (int i = 0; i<3; i++)
-        if (d->param[i])
+    ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ i = 0; i<3; i++)
+        ಯದಿ (d->param[i])
             d->depth = FFMAX(d->depth, d->param[i]->depth+1);
-    if (d->depth > MAX_DEPTH) {
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+    ಯದಿ (d->depth > MAX_DEPTH) {
+        av_ಅಭಿವ್ಯಕ್ತಿ_free(d);
+        ಪ್ರತ್ಯಾಗಮ AVERROR(EINVAL);
     }
 
     d->type = e_func0;
-         if (strmatch(next, "sinh"  )) d->func0 = sinh;
-    else if (strmatch(next, "cosh"  )) d->func0 = cosh;
-    else if (strmatch(next, "tanh"  )) d->func0 = tanh;
-    else if (strmatch(next, "sin"   )) d->func0 = sin;
-    else if (strmatch(next, "cos"   )) d->func0 = cos;
-    else if (strmatch(next, "tan"   )) d->func0 = tan;
-    else if (strmatch(next, "atan"  )) d->func0 = atan;
-    else if (strmatch(next, "asin"  )) d->func0 = asin;
-    else if (strmatch(next, "acos"  )) d->func0 = acos;
-    else if (strmatch(next, "exp"   )) d->func0 = exp;
-    else if (strmatch(next, "log"   )) d->func0 = log;
-    else if (strmatch(next, "abs"   )) d->func0 = fabs;
-    else if (strmatch(next, "time"  )) d->func0 = etime;
-    else if (strmatch(next, "squish")) d->type = e_squish;
-    else if (strmatch(next, "gauss" )) d->type = e_gauss;
-    else if (strmatch(next, "mod"   )) d->type = e_mod;
-    else if (strmatch(next, "max"   )) d->type = e_max;
-    else if (strmatch(next, "min"   )) d->type = e_min;
-    else if (strmatch(next, "eq"    )) d->type = e_eq;
-    else if (strmatch(next, "gte"   )) d->type = e_gte;
-    else if (strmatch(next, "gt"    )) d->type = e_gt;
-    else if (strmatch(next, "lte"   )) d->type = e_lte;
-    else if (strmatch(next, "lt"    )) d->type = e_lt;
-    else if (strmatch(next, "ld"    )) d->type = e_ld;
-    else if (strmatch(next, "isnan" )) d->type = e_isnan;
-    else if (strmatch(next, "isinf" )) d->type = e_isinf;
-    else if (strmatch(next, "st"    )) d->type = e_st;
-    else if (strmatch(next, "while" )) d->type = e_while;
-    else if (strmatch(next, "taylor")) d->type = e_taylor;
-    else if (strmatch(next, "root"  )) d->type = e_root;
-    else if (strmatch(next, "floor" )) d->type = e_floor;
-    else if (strmatch(next, "ceil"  )) d->type = e_ceil;
-    else if (strmatch(next, "trunc" )) d->type = e_trunc;
-    else if (strmatch(next, "round" )) d->type = e_round;
-    else if (strmatch(next, "sqrt"  )) d->type = e_sqrt;
-    else if (strmatch(next, "not"   )) d->type = e_not;
-    else if (strmatch(next, "pow"   )) d->type = e_pow;
-    else if (strmatch(next, "print" )) d->type = e_print;
-    else if (strmatch(next, "random")) d->type = e_random;
-    else if (strmatch(next, "randomi")) d->type = e_randomi;
-    else if (strmatch(next, "hypot" )) d->type = e_hypot;
-    else if (strmatch(next, "gcd"   )) d->type = e_gcd;
-    else if (strmatch(next, "if"    )) d->type = e_if;
-    else if (strmatch(next, "ifnot" )) d->type = e_ifnot;
-    else if (strmatch(next, "bitand")) d->type = e_bitand;
-    else if (strmatch(next, "bitor" )) d->type = e_bitor;
-    else if (strmatch(next, "between"))d->type = e_between;
-    else if (strmatch(next, "clip"  )) d->type = e_clip;
-    else if (strmatch(next, "atan2" )) d->type = e_atan2;
-    else if (strmatch(next, "lerp"  )) d->type = e_lerp;
-    else if (strmatch(next, "sgn"   )) d->type = e_sgn;
-    else {
-        for (i=0; p->func1_names && p->func1_names[i]; i++) {
-            if (strmatch(next, p->func1_names[i])) {
+         ಯದಿ (strmatch(next, "sinh"  )) d->func0 = sinh;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "cosh"  )) d->func0 = cosh;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "tanh"  )) d->func0 = tanh;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "sin"   )) d->func0 = sin;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "cos"   )) d->func0 = cos;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "tan"   )) d->func0 = tan;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "atan"  )) d->func0 = atan;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "asin"  )) d->func0 = asin;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "acos"  )) d->func0 = acos;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "exp"   )) d->func0 = exp;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "log"   )) d->func0 = log;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "abs"   )) d->func0 = fabs;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "time"  )) d->func0 = etime;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "squish")) d->type = e_squish;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "gauss" )) d->type = e_gauss;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "mod"   )) d->type = e_mod;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "max"   )) d->type = e_max;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "min"   )) d->type = e_min;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "eq"    )) d->type = e_eq;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "gte"   )) d->type = e_gte;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "gt"    )) d->type = e_gt;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "lte"   )) d->type = e_lte;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "lt"    )) d->type = e_lt;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "ld"    )) d->type = e_ld;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "isnan" )) d->type = e_isnan;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "isinf" )) d->type = e_isinf;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "st"    )) d->type = e_st;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "while" )) d->type = e_while;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "taylor")) d->type = e_taylor;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "root"  )) d->type = e_ಬೇರು;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "floor" )) d->type = e_floor;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "ceil"  )) d->type = e_ceil;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "trunc" )) d->type = e_trunc;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "round" )) d->type = e_round;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "sqrt"  )) d->type = e_sqrt;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "not"   )) d->type = e_not;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "pow"   )) d->type = e_pow;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "print" )) d->type = e_print;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "random")) d->type = e_random;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "randomi")) d->type = e_randomi;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "hypot" )) d->type = e_hypot;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "gcd"   )) d->type = e_gcd;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "if"    )) d->type = e_if;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "ifnot" )) d->type = e_ifnot;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "bitand")) d->type = e_bitand;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "bitor" )) d->type = e_bitor;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "between"))d->type = e_between;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "clip"  )) d->type = e_clip;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "atan2" )) d->type = e_atan2;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "lerp"  )) d->type = e_lerp;
+    ಅನ್ಯಥಾ ಯದಿ (strmatch(next, "sgn"   )) d->type = e_sgn;
+    ಅನ್ಯಥಾ {
+        ಪ್ರತಿ (i=0; p->func1_names && p->func1_names[i]; i++) {
+            ಯದಿ (strmatch(next, p->func1_names[i])) {
                 d->func1 = p->funcs1[i];
                 d->type = e_func1;
                 d->const_index = i;
                 *e = d;
-                return 0;
+                ಪ್ರತ್ಯಾಗಮ 0;
             }
         }
 
-        for (i=0; p->func2_names && p->func2_names[i]; i++) {
-            if (strmatch(next, p->func2_names[i])) {
+        ಪ್ರತಿ (i=0; p->func2_names && p->func2_names[i]; i++) {
+            ಯದಿ (strmatch(next, p->func2_names[i])) {
                 d->func2 = p->funcs2[i];
                 d->type = e_func2;
                 d->const_index = i;
                 *e = d;
-                return 0;
+                ಪ್ರತ್ಯಾಗಮ 0;
             }
         }
 
         av_log(p, AV_LOG_ERROR, "Unknown function in '%s'\n", s0);
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+        av_ಅಭಿವ್ಯಕ್ತಿ_free(d);
+        ಪ್ರತ್ಯಾಗಮ AVERROR(EINVAL);
     }
 
     *e = d;
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static AVExpr *make_eval_expr(int type, int value, AVExpr *p0, AVExpr *p1)
+ಸ್ಥಿರ AVExpr *make_eval_ಅಭಿವ್ಯಕ್ತಿ(ಪೂರ್ಣಾಙ್ಕ type, ಪೂರ್ಣಾಙ್ಕ ಮೌಲ್ಯ, AVExpr *p0, AVExpr *p1)
 {
-    int depth = FFMAX(p0->depth, p1->depth) + 1;
-    if (depth > MAX_DEPTH)
-        return NULL;
-    AVExpr *e = av_mallocz(sizeof(AVExpr));
-    if (!e)
-        return NULL;
+    ಪೂರ್ಣಾಙ್ಕ depth = FFMAX(p0->depth, p1->depth) + 1;
+    ಯದಿ (depth > MAX_DEPTH)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
+    AVExpr *e = av_mallocz(ಪರಿಮಾಣ(AVExpr));
+    ಯದಿ (!e)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
     e->type     =type   ;
-    e->value    =value  ;
+    e->ಮೌಲ್ಯ    =ಮೌಲ್ಯ  ;
     e->param[0] =p0     ;
     e->param[1] =p1     ;
     e->depth    = depth;
-    return e;
+    ಪ್ರತ್ಯಾಗಮ e;
 }
 
-static int parse_pow(AVExpr **e, Parser *p, int *sign)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ parse_pow(AVExpr **e, Parser *p, ಪೂರ್ಣಾಙ್ಕ *sign)
 {
     *sign= (*p->s == '+') - (*p->s == '-');
     p->s += *sign&1;
-    return parse_primary(e, p);
+    ಪ್ರತ್ಯಾಗಮ parse_primary(e, p);
 }
 
-static int parse_dB(AVExpr **e, Parser *p, int *sign)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ parse_dB(AVExpr **e, Parser *p, ಪೂರ್ಣಾಙ್ಕ *sign)
 {
     /* do not filter out the negative sign when parsing a dB value.
        for example, -3dB is not the same as -(3dB) */
-    if (*p->s == '-') {
-        char *next;
-        av_unused double ignored = strtod(p->s, &next);
-        if (next != p->s && next[0] == 'd' && next[1] == 'B') {
+    ಯದಿ (*p->s == '-') {
+        ವರ್ಣ *next;
+        av_unused ದ್ವಿಗುಣ ignored = strtod(p->s, &next);
+        ಯದಿ (next != p->s && next[0] == 'd' && next[1] == 'B') {
             *sign = 0;
-            return parse_primary(e, p);
+            ಪ್ರತ್ಯಾಗಮ parse_primary(e, p);
         }
     }
-    return parse_pow(e, p, sign);
+    ಪ್ರತ್ಯಾಗಮ parse_pow(e, p, sign);
 }
 
-static int parse_factor(AVExpr **e, Parser *p)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ parse_factor(AVExpr **e, Parser *p)
 {
-    int sign, sign2, ret;
+    ಪೂರ್ಣಾಙ್ಕ sign, sign2, ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_dB(&e0, p, &sign)) < 0)
-        return ret;
-    while(p->s[0]=='^'){
+    ಯದಿ ((ret = parse_dB(&e0, p, &sign)) < 0)
+        ಪ್ರತ್ಯಾಗಮ ret;
+    ಯಾವತ್(p->s[0]=='^'){
         e1 = e0;
         p->s++;
-        if ((ret = parse_dB(&e2, p, &sign2)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        ಯದಿ ((ret = parse_dB(&e2, p, &sign2)) < 0) {
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e1);
+            ಪ್ರತ್ಯಾಗಮ ret;
         }
-        e0 = make_eval_expr(e_pow, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_ಅಭಿವ್ಯಕ್ತಿ(e_pow, 1, e1, e2);
+        ಯದಿ (!e0) {
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e1);
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e2);
+            ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
         }
-        if (e0->param[1]) e0->param[1]->value *= (sign2|1);
+        ಯದಿ (e0->param[1]) e0->param[1]->ಮೌಲ್ಯ *= (sign2|1);
     }
-    if (e0) e0->value *= (sign|1);
+    ಯದಿ (e0) e0->ಮೌಲ್ಯ *= (sign|1);
 
     *e = e0;
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static int parse_term(AVExpr **e, Parser *p)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ parse_term(AVExpr **e, Parser *p)
 {
-    int ret;
+    ಪೂರ್ಣಾಙ್ಕ ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_factor(&e0, p)) < 0)
-        return ret;
-    while (p->s[0]=='*' || p->s[0]=='/') {
-        int c= *p->s++;
+    ಯದಿ ((ret = parse_factor(&e0, p)) < 0)
+        ಪ್ರತ್ಯಾಗಮ ret;
+    ಯಾವತ್ (p->s[0]=='*' || p->s[0]=='/') {
+        ಪೂರ್ಣಾಙ್ಕ c= *p->s++;
         e1 = e0;
-        if ((ret = parse_factor(&e2, p)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        ಯದಿ ((ret = parse_factor(&e2, p)) < 0) {
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e1);
+            ಪ್ರತ್ಯಾಗಮ ret;
         }
-        e0 = make_eval_expr(c == '*' ? e_mul : e_div, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_ಅಭಿವ್ಯಕ್ತಿ(c == '*' ? e_mul : e_div, 1, e1, e2);
+        ಯದಿ (!e0) {
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e1);
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e2);
+            ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
         }
     }
     *e = e0;
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static int parse_subexpr(AVExpr **e, Parser *p)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ parse_subexpr(AVExpr **e, Parser *p)
 {
-    int ret;
+    ಪೂರ್ಣಾಙ್ಕ ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_term(&e0, p)) < 0)
-        return ret;
-    while (*p->s == '+' || *p->s == '-') {
+    ಯದಿ ((ret = parse_term(&e0, p)) < 0)
+        ಪ್ರತ್ಯಾಗಮ ret;
+    ಯಾವತ್ (*p->s == '+' || *p->s == '-') {
         e1 = e0;
-        if ((ret = parse_term(&e2, p)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        ಯದಿ ((ret = parse_term(&e2, p)) < 0) {
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e1);
+            ಪ್ರತ್ಯಾಗಮ ret;
         }
-        e0 = make_eval_expr(e_add, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_ಅಭಿವ್ಯಕ್ತಿ(e_add, 1, e1, e2);
+        ಯದಿ (!e0) {
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e1);
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e2);
+            ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
         }
     };
 
     *e = e0;
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static int parse_expr(AVExpr **e, Parser *p)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ parse_ಅಭಿವ್ಯಕ್ತಿ(AVExpr **e, Parser *p)
 {
-    int ret;
+    ಪೂರ್ಣಾಙ್ಕ ret;
     AVExpr *e0, *e1, *e2;
-    if (p->stack_index <= 0) //protect against stack overflows
-        return AVERROR(EINVAL);
-    p->stack_index--;
+    ಯದಿ (p->ರಾಶಿ_index <= 0) //protect against stack overflows
+        ಪ್ರತ್ಯಾಗಮ AVERROR(EINVAL);
+    p->ರಾಶಿ_index--;
 
-    if ((ret = parse_subexpr(&e0, p)) < 0)
-        return ret;
-    while (*p->s == ';') {
+    ಯದಿ ((ret = parse_subexpr(&e0, p)) < 0)
+        ಪ್ರತ್ಯಾಗಮ ret;
+    ಯಾವತ್ (*p->s == ';') {
         p->s++;
         e1 = e0;
-        if ((ret = parse_subexpr(&e2, p)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        ಯದಿ ((ret = parse_subexpr(&e2, p)) < 0) {
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e1);
+            ಪ್ರತ್ಯಾಗಮ ret;
         }
-        e0 = make_eval_expr(e_last, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_ಅಭಿವ್ಯಕ್ತಿ(e_last, 1, e1, e2);
+        ಯದಿ (!e0) {
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e1);
+            av_ಅಭಿವ್ಯಕ್ತಿ_free(e2);
+            ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
         }
     };
 
-    p->stack_index++;
+    p->ರಾಶಿ_index++;
     *e = e0;
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static int verify_expr(AVExpr *e)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ verify_ಅಭಿವ್ಯಕ್ತಿ(AVExpr *e)
 {
-    if (!e) return 0;
-    switch (e->type) {
-        case e_value:
-        case e_const: return 1;
-        case e_func0:
-        case e_func1:
-        case e_squish:
-        case e_ld:
-        case e_gauss:
-        case e_isnan:
-        case e_isinf:
-        case e_floor:
-        case e_ceil:
-        case e_trunc:
-        case e_round:
-        case e_sqrt:
-        case e_not:
-        case e_random:
-        case e_sgn:
-            return verify_expr(e->param[0]) && !e->param[1];
-        case e_print:
-            return verify_expr(e->param[0])
-                   && (!e->param[1] || verify_expr(e->param[1]));
-        case e_if:
-        case e_ifnot:
-        case e_taylor:
-            return verify_expr(e->param[0]) && verify_expr(e->param[1])
-                   && (!e->param[2] || verify_expr(e->param[2]));
-        case e_between:
-        case e_clip:
-        case e_lerp:
-        case e_randomi:
-            return verify_expr(e->param[0]) &&
-                   verify_expr(e->param[1]) &&
-                   verify_expr(e->param[2]);
-        default: return verify_expr(e->param[0]) && verify_expr(e->param[1]) && !e->param[2];
+    ಯದಿ (!e) ಪ್ರತ್ಯಾಗಮ 0;
+    ವಿಕಲ್ಪ (e->type) {
+        ಪಕ್ಷ e_ಮೌಲ್ಯ:
+        ಪಕ್ಷ e_const: ಪ್ರತ್ಯಾಗಮ 1;
+        ಪಕ್ಷ e_func0:
+        ಪಕ್ಷ e_func1:
+        ಪಕ್ಷ e_squish:
+        ಪಕ್ಷ e_ld:
+        ಪಕ್ಷ e_gauss:
+        ಪಕ್ಷ e_isnan:
+        ಪಕ್ಷ e_isinf:
+        ಪಕ್ಷ e_floor:
+        ಪಕ್ಷ e_ceil:
+        ಪಕ್ಷ e_trunc:
+        ಪಕ್ಷ e_round:
+        ಪಕ್ಷ e_sqrt:
+        ಪಕ್ಷ e_not:
+        ಪಕ್ಷ e_random:
+        ಪಕ್ಷ e_sgn:
+            ಪ್ರತ್ಯಾಗಮ verify_ಅಭಿವ್ಯಕ್ತಿ(e->param[0]) && !e->param[1];
+        ಪಕ್ಷ e_print:
+            ಪ್ರತ್ಯಾಗಮ verify_ಅಭಿವ್ಯಕ್ತಿ(e->param[0])
+                   && (!e->param[1] || verify_ಅಭಿವ್ಯಕ್ತಿ(e->param[1]));
+        ಪಕ್ಷ e_if:
+        ಪಕ್ಷ e_ifnot:
+        ಪಕ್ಷ e_taylor:
+            ಪ್ರತ್ಯಾಗಮ verify_ಅಭಿವ್ಯಕ್ತಿ(e->param[0]) && verify_ಅಭಿವ್ಯಕ್ತಿ(e->param[1])
+                   && (!e->param[2] || verify_ಅಭಿವ್ಯಕ್ತಿ(e->param[2]));
+        ಪಕ್ಷ e_between:
+        ಪಕ್ಷ e_clip:
+        ಪಕ್ಷ e_lerp:
+        ಪಕ್ಷ e_randomi:
+            ಪ್ರತ್ಯಾಗಮ verify_ಅಭಿವ್ಯಕ್ತಿ(e->param[0]) &&
+                   verify_ಅಭಿವ್ಯಕ್ತಿ(e->param[1]) &&
+                   verify_ಅಭಿವ್ಯಕ್ತಿ(e->param[2]);
+        ಸ್ವಭಾವ: ಪ್ರತ್ಯಾಗಮ verify_ಅಭಿವ್ಯಕ್ತಿ(e->param[0]) && verify_ಅಭಿವ್ಯಕ್ತಿ(e->param[1]) && !e->param[2];
     }
 }
 
-int av_expr_parse(AVExpr **expr, const char *s,
-                  const char * const *const_names,
-                  const char * const *func1_names, double (* const *funcs1)(void *, double),
-                  const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                  int log_offset, void *log_ctx)
+ಪೂರ್ಣಾಙ್ಕ av_ಅಭಿವ್ಯಕ್ತಿ_parse(AVExpr **ಅಭಿವ್ಯಕ್ತಿ, ಧ್ರುವ ವರ್ಣ *s,
+                  ಧ್ರುವ ವರ್ಣ * ಧ್ರುವ *const_names,
+                  ಧ್ರುವ ವರ್ಣ * ಧ್ರುವ *func1_names, ದ್ವಿಗುಣ (* ಧ್ರುವ *funcs1)(ಶೂನ್ಯ *, ದ್ವಿಗುಣ),
+                  ಧ್ರುವ ವರ್ಣ * ಧ್ರುವ *func2_names, ದ್ವಿಗುಣ (* ಧ್ರುವ *funcs2)(ಶೂನ್ಯ *, ದ್ವಿಗುಣ, ದ್ವಿಗುಣ),
+                  ಪೂರ್ಣಾಙ್ಕ log_offset, ಶೂನ್ಯ *log_ctx)
 {
     Parser p = { 0 };
-    AVExpr *e = NULL;
-    char *w = av_malloc(strlen(s) + 1);
-    char *wp = w;
-    const char *s0 = s;
-    int ret = 0;
+    AVExpr *e = ರಿಕ್ತ;
+    ವರ್ಣ *w = av_malloc(strlen(s) + 1);
+    ವರ್ಣ *wp = w;
+    ಧ್ರುವ ವರ್ಣ *s0 = s;
+    ಪೂರ್ಣಾಙ್ಕ ret = 0;
 
-    if (!w)
-        return AVERROR(ENOMEM);
+    ಯದಿ (!w)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
 
-    while (*s)
-        if (!av_isspace(*s++)) *wp++ = s[-1];
+    ಯಾವತ್ (*s)
+        ಯದಿ (!av_isspace(*s++)) *wp++ = s[-1];
     *wp++ = 0;
 
     p.class      = &eval_class;
-    p.stack_index=100;
+    p.ರಾಶಿ_index=100;
     p.s= w;
     p.const_names = const_names;
     p.funcs1      = funcs1;
@@ -763,93 +763,93 @@ int av_expr_parse(AVExpr **expr, const char *s,
     p.log_offset = log_offset;
     p.log_ctx    = log_ctx;
 
-    if ((ret = parse_expr(&e, &p)) < 0)
-        goto end;
-    if (*p.s) {
+    ಯದಿ ((ret = parse_ಅಭಿವ್ಯಕ್ತಿ(&e, &p)) < 0)
+        ಗಚ್ಛ end;
+    ಯದಿ (*p.s) {
         av_log(&p, AV_LOG_ERROR, "Invalid chars '%s' at the end of expression '%s'\n", p.s, s0);
         ret = AVERROR(EINVAL);
-        goto end;
+        ಗಚ್ಛ end;
     }
-    if (!verify_expr(e)) {
+    ಯದಿ (!verify_ಅಭಿವ್ಯಕ್ತಿ(e)) {
         ret = AVERROR(EINVAL);
-        goto end;
+        ಗಚ್ಛ end;
     }
-    AVExprRoot *r = av_realloc(e, sizeof(*r));
-    if (!r) {
+    AVExpr_ಬೇರು *r = av_realloc(e, ಪರಿಮಾಣ(*r));
+    ಯದಿ (!r) {
         ret = AVERROR(ENOMEM);
-        goto end;
+        ಗಚ್ಛ end;
     }
     e = (AVExpr*)r;
-    e->root = 1;
-    r->var= av_mallocz(sizeof(double) *VARS);
-    r->prng_state = av_mallocz(sizeof(*r->prng_state) *VARS);
-    if (!r->var || !r->prng_state) {
+    e->ಬೇರು = 1;
+    r->var= av_mallocz(ಪರಿಮಾಣ(ದ್ವಿಗುಣ) *VARS);
+    r->prng_state = av_mallocz(ಪರಿಮಾಣ(*r->prng_state) *VARS);
+    ಯದಿ (!r->var || !r->prng_state) {
         ret = AVERROR(ENOMEM);
-        goto end;
+        ಗಚ್ಛ end;
     }
-    *expr = e;
-    e = NULL;
+    *ಅಭಿವ್ಯಕ್ತಿ = e;
+    e = ರಿಕ್ತ;
 end:
-    av_expr_free(e);
+    av_ಅಭಿವ್ಯಕ್ತಿ_free(e);
     av_free(w);
-    return ret;
+    ಪ್ರತ್ಯಾಗಮ ret;
 }
 
-static int expr_count(AVExpr *e, unsigned *counter, int size, int type)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ ಅಭಿವ್ಯಕ್ತಿ_ಎಣಿಕೆ(AVExpr *e, unsigned *counter, ಪೂರ್ಣಾಙ್ಕ size, ಪೂರ್ಣಾಙ್ಕ type)
 {
-    int i;
+    ಪೂರ್ಣಾಙ್ಕ i;
 
-    if (!e || !counter || !size)
-        return AVERROR(EINVAL);
+    ಯದಿ (!e || !counter || !size)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(EINVAL);
 
-    for (i = 0; e->type != type && i < 3 && e->param[i]; i++)
-        expr_count(e->param[i], counter, size, type);
+    ಪ್ರತಿ (i = 0; e->type != type && i < 3 && e->param[i]; i++)
+        ಅಭಿವ್ಯಕ್ತಿ_ಎಣಿಕೆ(e->param[i], counter, size, type);
 
-    if (e->type == type && e->const_index < size)
+    ಯದಿ (e->type == type && e->const_index < size)
         counter[e->const_index]++;
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-int av_expr_count_vars(AVExpr *e, unsigned *counter, int size)
+ಪೂರ್ಣಾಙ್ಕ av_ಅಭಿವ್ಯಕ್ತಿ_ಎಣಿಕೆ_vars(AVExpr *e, unsigned *counter, ಪೂರ್ಣಾಙ್ಕ size)
 {
-    return expr_count(e, counter, size, e_const);
+    ಪ್ರತ್ಯಾಗಮ ಅಭಿವ್ಯಕ್ತಿ_ಎಣಿಕೆ(e, counter, size, e_const);
 }
 
-int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg)
+ಪೂರ್ಣಾಙ್ಕ av_ಅಭಿವ್ಯಕ್ತಿ_ಎಣಿಕೆ_func(AVExpr *e, unsigned *counter, ಪೂರ್ಣಾಙ್ಕ size, ಪೂರ್ಣಾಙ್ಕ arg)
 {
-    return expr_count(e, counter, size, ((int[]){e_const, e_func1, e_func2})[arg]);
+    ಪ್ರತ್ಯಾಗಮ ಅಭಿವ್ಯಕ್ತಿ_ಎಣಿಕೆ(e, counter, size, ((ಪೂರ್ಣಾಙ್ಕ[]){e_const, e_func1, e_func2})[arg]);
 }
 
-double av_expr_eval(AVExpr *e, const double *const_values, void *opaque)
+ದ್ವಿಗುಣ av_ಅಭಿವ್ಯಕ್ತಿ_eval(AVExpr *e, ಧ್ರುವ ದ್ವಿಗುಣ *const_ಮೌಲ್ಯಗಳು, ಶೂನ್ಯ *opaque)
 {
-    av_assert1(e->root);
-    AVExprRoot *r = (AVExprRoot *)e;
+    av_assert1(e->ಬೇರು);
+    AVExpr_ಬೇರು *r = (AVExpr_ಬೇರು *)e;
     Parser p = {
         .class        = &eval_class,
-        .const_values = const_values,
+        .const_ಮೌಲ್ಯಗಳು = const_ಮೌಲ್ಯಗಳು,
         .opaque       = opaque,
         .var          = r->var,
         .prng_state   = r->prng_state,
     };
 
-    return eval_expr(&p, e);
+    ಪ್ರತ್ಯಾಗಮ eval_ಅಭಿವ್ಯಕ್ತಿ(&p, e);
 }
 
-int av_expr_parse_and_eval(double *d, const char *s,
-                           const char * const *const_names, const double *const_values,
-                           const char * const *func1_names, double (* const *funcs1)(void *, double),
-                           const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                           void *opaque, int log_offset, void *log_ctx)
+ಪೂರ್ಣಾಙ್ಕ av_ಅಭಿವ್ಯಕ್ತಿ_parse_and_eval(ದ್ವಿಗುಣ *d, ಧ್ರುವ ವರ್ಣ *s,
+                           ಧ್ರುವ ವರ್ಣ * ಧ್ರುವ *const_names, ಧ್ರುವ ದ್ವಿಗುಣ *const_ಮೌಲ್ಯಗಳು,
+                           ಧ್ರುವ ವರ್ಣ * ಧ್ರುವ *func1_names, ದ್ವಿಗುಣ (* ಧ್ರುವ *funcs1)(ಶೂನ್ಯ *, ದ್ವಿಗುಣ),
+                           ಧ್ರುವ ವರ್ಣ * ಧ್ರುವ *func2_names, ದ್ವಿಗುಣ (* ಧ್ರುವ *funcs2)(ಶೂನ್ಯ *, ದ್ವಿಗುಣ, ದ್ವಿಗುಣ),
+                           ಶೂನ್ಯ *opaque, ಪೂರ್ಣಾಙ್ಕ log_offset, ಶೂನ್ಯ *log_ctx)
 {
-    AVExpr *e = NULL;
-    int ret = av_expr_parse(&e, s, const_names, func1_names, funcs1, func2_names, funcs2, log_offset, log_ctx);
+    AVExpr *e = ರಿಕ್ತ;
+    ಪೂರ್ಣಾಙ್ಕ ret = av_ಅಭಿವ್ಯಕ್ತಿ_parse(&e, s, const_names, func1_names, funcs1, func2_names, funcs2, log_offset, log_ctx);
 
-    if (ret < 0) {
+    ಯದಿ (ret < 0) {
         *d = NAN;
-        return ret;
+        ಪ್ರತ್ಯಾಗಮ ret;
     }
-    *d = av_expr_eval(e, const_values, opaque);
-    av_expr_free(e);
-    return isnan(*d) ? AVERROR(EINVAL) : 0;
+    *d = av_ಅಭಿವ್ಯಕ್ತಿ_eval(e, const_ಮೌಲ್ಯಗಳು, opaque);
+    av_ಅಭಿವ್ಯಕ್ತಿ_free(e);
+    ಪ್ರತ್ಯಾಗಮ isnan(*d) ? AVERROR(EINVAL) : 0;
 }

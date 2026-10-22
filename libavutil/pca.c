@@ -24,73 +24,73 @@
  * principal component analysis (PCA)
  */
 
-#include "common.h"
-#include "mem.h"
-#include "pca.h"
+#ಅನ್ತರ್ಭಾವ "common.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "pca.h"
 
-typedef struct PCA{
-    int count;
-    int n;
-    double *covariance;
-    double *mean;
-    double *z;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ PCA{
+    ಪೂರ್ಣಾಙ್ಕ ಎಣಿಕೆ;
+    ಪೂರ್ಣಾಙ್ಕ n;
+    ದ್ವಿಗುಣ *covariance;
+    ದ್ವಿಗುಣ *mean;
+    ದ್ವಿಗುಣ *z;
 }PCA;
 
-PCA *ff_pca_init(int n){
+PCA *ff_pca_init(ಪೂರ್ಣಾಙ್ಕ n){
     PCA *pca;
-    if(n<=0)
-        return NULL;
+    ಯದಿ(n<=0)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 
-    pca= av_mallocz(sizeof(*pca));
-    if (!pca)
-        return NULL;
+    pca= av_mallocz(ಪರಿಮಾಣ(*pca));
+    ಯದಿ (!pca)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 
     pca->n= n;
-    pca->z = av_malloc_array(n, sizeof(*pca->z));
-    pca->count=0;
-    pca->covariance= av_calloc(n*n, sizeof(double));
-    pca->mean= av_calloc(n, sizeof(double));
+    pca->z = av_malloc_array(n, ಪರಿಮಾಣ(*pca->z));
+    pca->ಎಣಿಕೆ=0;
+    pca->covariance= av_calloc(n*n, ಪರಿಮಾಣ(ದ್ವಿಗುಣ));
+    pca->mean= av_calloc(n, ಪರಿಮಾಣ(ದ್ವಿಗುಣ));
 
-    if (!pca->z || !pca->covariance || !pca->mean) {
+    ಯದಿ (!pca->z || !pca->covariance || !pca->mean) {
         ff_pca_free(pca);
-        return NULL;
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
     }
 
-    return pca;
+    ಪ್ರತ್ಯಾಗಮ pca;
 }
 
-void ff_pca_free(PCA *pca){
+ಶೂನ್ಯ ff_pca_free(PCA *pca){
     av_freep(&pca->covariance);
     av_freep(&pca->mean);
     av_freep(&pca->z);
     av_free(pca);
 }
 
-void ff_pca_add(PCA *pca, const double *v){
-    int i, j;
-    const int n= pca->n;
+ಶೂನ್ಯ ff_pca_add(PCA *pca, ಧ್ರುವ ದ್ವಿಗುಣ *v){
+    ಪೂರ್ಣಾಙ್ಕ i, j;
+    ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ n= pca->n;
 
-    for(i=0; i<n; i++){
+    ಪ್ರತಿ(i=0; i<n; i++){
         pca->mean[i] += v[i];
-        for(j=i; j<n; j++)
+        ಪ್ರತಿ(j=i; j<n; j++)
             pca->covariance[j + i*n] += v[i]*v[j];
     }
-    pca->count++;
+    pca->ಎಣಿಕೆ++;
 }
 
-int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
-    int i, j, pass;
-    int k=0;
-    const int n= pca->n;
-    double *z = pca->z;
+ಪೂರ್ಣಾಙ್ಕ ff_pca(PCA *pca, ದ್ವಿಗುಣ *eigenvector, ದ್ವಿಗುಣ *eigenvalue){
+    ಪೂರ್ಣಾಙ್ಕ i, j, pass;
+    ಪೂರ್ಣಾಙ್ಕ k=0;
+    ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ n= pca->n;
+    ದ್ವಿಗುಣ *z = pca->z;
 
-    memset(eigenvector, 0, sizeof(double)*n*n);
+    memset(eigenvector, 0, ಪರಿಮಾಣ(ದ್ವಿಗುಣ)*n*n);
 
-    for(j=0; j<n; j++){
-        pca->mean[j] /= pca->count;
+    ಪ್ರತಿ(j=0; j<n; j++){
+        pca->mean[j] /= pca->ಎಣಿಕೆ;
         eigenvector[j + j*n] = 1.0;
-        for(i=0; i<=j; i++){
-            pca->covariance[j + i*n] /= pca->count;
+        ಪ್ರತಿ(i=0; i<=j; i++){
+            pca->covariance[j + i*n] /= pca->ಎಣಿಕೆ;
             pca->covariance[j + i*n] -= pca->mean[i] * pca->mean[j];
             pca->covariance[i + j*n] = pca->covariance[j + i*n];
         }
@@ -98,51 +98,51 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
         z[j]= 0;
     }
 
-    for(pass=0; pass < 50; pass++){
-        double sum=0;
+    ಪ್ರತಿ(pass=0; pass < 50; pass++){
+        ದ್ವಿಗುಣ sum=0;
 
-        for(i=0; i<n; i++)
-            for(j=i+1; j<n; j++)
+        ಪ್ರತಿ(i=0; i<n; i++)
+            ಪ್ರತಿ(j=i+1; j<n; j++)
                 sum += fabs(pca->covariance[j + i*n]);
 
-        if(sum == 0){
-            for(i=0; i<n; i++){
-                double maxvalue= -1;
-                for(j=i; j<n; j++){
-                    if(eigenvalue[j] > maxvalue){
+        ಯದಿ(sum == 0){
+            ಪ್ರತಿ(i=0; i<n; i++){
+                ದ್ವಿಗುಣ maxvalue= -1;
+                ಪ್ರತಿ(j=i; j<n; j++){
+                    ಯದಿ(eigenvalue[j] > maxvalue){
                         maxvalue= eigenvalue[j];
                         k= j;
                     }
                 }
                 eigenvalue[k]= eigenvalue[i];
                 eigenvalue[i]= maxvalue;
-                for(j=0; j<n; j++){
-                    double tmp= eigenvector[k + j*n];
+                ಪ್ರತಿ(j=0; j<n; j++){
+                    ದ್ವಿಗುಣ tmp= eigenvector[k + j*n];
                     eigenvector[k + j*n]= eigenvector[i + j*n];
                     eigenvector[i + j*n]= tmp;
                 }
             }
-            return pass;
+            ಪ್ರತ್ಯಾಗಮ pass;
         }
 
-        for(i=0; i<n; i++){
-            for(j=i+1; j<n; j++){
-                double covar= pca->covariance[j + i*n];
-                double t,c,s,tau,theta, h;
+        ಪ್ರತಿ(i=0; i<n; i++){
+            ಪ್ರತಿ(j=i+1; j<n; j++){
+                ದ್ವಿಗುಣ covar= pca->covariance[j + i*n];
+                ದ್ವಿಗುಣ t,c,s,tau,theta, h;
 
-                if(pass < 3 && fabs(covar) < sum / (5*n*n)) //FIXME why pass < 3
-                    continue;
-                if(fabs(covar) == 0.0) //FIXME should not be needed
-                    continue;
-                if(pass >=3 && fabs((eigenvalue[j]+z[j])/covar) > (1LL<<32) && fabs((eigenvalue[i]+z[i])/covar) > (1LL<<32)){
+                ಯದಿ(pass < 3 && fabs(covar) < sum / (5*n*n)) //FIXME why pass < 3
+                    ಅನುವರ್ತ;
+                ಯದಿ(fabs(covar) == 0.0) //FIXME should not be needed
+                    ಅನುವರ್ತ;
+                ಯದಿ(pass >=3 && fabs((eigenvalue[j]+z[j])/covar) > (1LL<<32) && fabs((eigenvalue[i]+z[i])/covar) > (1LL<<32)){
                     pca->covariance[j + i*n]=0.0;
-                    continue;
+                    ಅನುವರ್ತ;
                 }
 
                 h= (eigenvalue[j]+z[j]) - (eigenvalue[i]+z[i]);
                 theta=0.5*h/covar;
                 t=1.0/(fabs(theta)+sqrt(1.0+theta*theta));
-                if(theta < 0.0) t = -t;
+                ಯದಿ(theta < 0.0) t = -t;
 
                 c=1.0/sqrt(1+t*t);
                 s=t*c;
@@ -151,12 +151,12 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
                 z[j] += t*covar;
 
 #define ROTATE(a,i,j,k,l) {\
-    double g=a[j + i*n];\
-    double h=a[l + k*n];\
+    ದ್ವಿಗುಣ g=a[j + i*n];\
+    ದ್ವಿಗುಣ h=a[l + k*n];\
     a[j + i*n]=g-s*(h+g*tau);\
     a[l + k*n]=h+s*(g-h*tau); }
-                for(k=0; k<n; k++) {
-                    if(k!=i && k!=j){
+                ಪ್ರತಿ(k=0; k<n; k++) {
+                    ಯದಿ(k!=i && k!=j){
                         ROTATE(pca->covariance,FFMIN(k,i),FFMAX(k,i),FFMIN(k,j),FFMAX(k,j))
                     }
                     ROTATE(eigenvector,k,i,k,j)
@@ -164,11 +164,11 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
                 pca->covariance[j + i*n]=0.0;
             }
         }
-        for (i=0; i<n; i++) {
+        ಪ್ರತಿ (i=0; i<n; i++) {
             eigenvalue[i] += z[i];
             z[i]=0.0;
         }
     }
 
-    return -1;
+    ಪ್ರತ್ಯಾಗಮ -1;
 }

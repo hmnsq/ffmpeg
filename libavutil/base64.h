@@ -21,7 +21,7 @@
 #ifndef AVUTIL_BASE64_H
 #define AVUTIL_BASE64_H
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
 /**
  * @defgroup lavu_base64 Base64
@@ -39,7 +39,7 @@
  * @return         number of bytes written, or a negative value in case of
  *                 invalid input
  */
-int av_base64_decode(uint8_t *out, const char *in, int out_size);
+ಪೂರ್ಣಾಙ್ಕ av_base64_decode(uint8_t *out, ಧ್ರುವ ವರ್ಣ *in, ಪೂರ್ಣಾಙ್ಕ out_size);
 
 /**
  * Calculate the output size in bytes needed to decode a base64 string
@@ -57,7 +57,7 @@ int av_base64_decode(uint8_t *out, const char *in, int out_size);
  * @param in_size  size in bytes of the in buffer
  * @return         out or NULL in case of error
  */
-char *av_base64_encode(char *out, int out_size, const uint8_t *in, int in_size);
+ವರ್ಣ *av_base64_encode(ವರ್ಣ *out, ಪೂರ್ಣಾಙ್ಕ out_size, ಧ್ರುವ uint8_t *in, ಪೂರ್ಣಾಙ್ಕ in_size);
 
 /**
  * Calculate the output size needed to base64-encode x bytes to a

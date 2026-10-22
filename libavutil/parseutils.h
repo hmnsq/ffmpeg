@@ -19,9 +19,9 @@
 #ifndef AVUTIL_PARSEUTILS_H
 #define AVUTIL_PARSEUTILS_H
 
-#include <time.h>
+#ಅನ್ತರ್ಭಾವ <time.h>
 
-#include "rational.h"
+#ಅನ್ತರ್ಭಾವ "rational.h"
 
 /**
  * @file
@@ -46,11 +46,11 @@
  * @param[in] log_ctx parent logging context
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx);
+ಪೂರ್ಣಾಙ್ಕ av_parse_ratio(AVRational *q, ಧ್ರುವ ವರ್ಣ *str, ಪೂರ್ಣಾಙ್ಕ max,
+                   ಪೂರ್ಣಾಙ್ಕ log_offset, ಶೂನ್ಯ *log_ctx);
 
 #define av_parse_ratio_quiet(rate, str, max) \
-    av_parse_ratio(rate, str, max, AV_LOG_MAX_OFFSET, NULL)
+    av_parse_ratio(rate, str, max, AV_LOG_MAX_OFFSET, ರಿಕ್ತ)
 
 /**
  * Parse str and put in width_ptr and height_ptr the detected values.
@@ -63,7 +63,7 @@ int av_parse_ratio(AVRational *q, const char *str, int max,
  * width x height or a valid video size abbreviation.
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
+ಪೂರ್ಣಾಙ್ಕ av_parse_video_size(ಪೂರ್ಣಾಙ್ಕ *width_ptr, ಪೂರ್ಣಾಙ್ಕ *height_ptr, ಧ್ರುವ ವರ್ಣ *str);
 
 /**
  * Parse str and store the detected values in *rate.
@@ -74,7 +74,7 @@ int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
  * rate_num / rate_den, a float number or a valid video rate abbreviation
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_rate(AVRational *rate, const char *str);
+ಪೂರ್ಣಾಙ್ಕ av_parse_video_rate(AVRational *rate, ಧ್ರುವ ವರ್ಣ *str);
 
 /**
  * Put the RGBA values that correspond to color_string in rgba_color.
@@ -99,8 +99,8 @@ int av_parse_video_rate(AVRational *rate, const char *str);
  * @return >= 0 in case of success, a negative value in case of
  * failure (for example if color_string cannot be parsed).
  */
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
-                   void *log_ctx);
+ಪೂರ್ಣಾಙ್ಕ av_parse_color(uint8_t *rgba_color, ಧ್ರುವ ವರ್ಣ *color_string, ಪೂರ್ಣಾಙ್ಕ slen,
+                   ಶೂನ್ಯ *log_ctx);
 
 /**
  * Get the name of a color from the internal table of hard-coded named
@@ -113,7 +113,7 @@ int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
  * @param rgb      if not NULL, will point to a 3-elements array with the color value in RGB
  * @return the color name string or NULL if color_idx is not in the array
  */
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
+ಧ್ರುವ ವರ್ಣ *av_get_known_color_name(ಪೂರ್ಣಾಙ್ಕ color_idx, ಧ್ರುವ uint8_t **rgb);
 
 /**
  * Parse timestr and return in *time a corresponding number of
@@ -147,7 +147,7 @@ const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_parse_time(int64_t *timeval, const char *timestr, int duration);
+ಪೂರ್ಣಾಙ್ಕ av_parse_time(int64_t *timeval, ಧ್ರುವ ವರ್ಣ *timestr, ಪೂರ್ಣಾಙ್ಕ duration);
 
 /**
  * Attempt to find a specific tag in a URL.
@@ -155,7 +155,7 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration);
  * syntax: '?tag1=val1&tag2=val2...'. Little URL decoding is done.
  * Return 1 if found.
  */
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info);
+ಪೂರ್ಣಾಙ್ಕ av_find_info_tag(ವರ್ಣ *arg, ಪೂರ್ಣಾಙ್ಕ arg_size, ಧ್ರುವ ವರ್ಣ *tag1, ಧ್ರುವ ವರ್ಣ *info);
 
 /**
  * Simplified version of strptime
@@ -187,11 +187,11 @@ int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info
  *         is consumed the return value points to the null byte at the end of
  *         the string. On failure NULL is returned.
  */
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt);
+ವರ್ಣ *av_small_strptime(ಧ್ರುವ ವರ್ಣ *p, ಧ್ರುವ ವರ್ಣ *fmt, ಸಂರಚನಾ tm *dt);
 
 /**
  * Convert the decomposed UTC time in tm to a time_t value.
  */
-time_t av_timegm(struct tm *tm);
+time_t av_timegm(ಸಂರಚನಾ tm *tm);
 
 #endif /* AVUTIL_PARSEUTILS_H */

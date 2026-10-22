@@ -16,24 +16,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#if !CONFIG_VULKAN
-#include <stddef.h>
-#include "pixfmt.h"
+#ಯದಿ !CONFIG_VULKAN
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ "pixfmt.h"
 
-typedef enum VkFormat VkFormat;
-typedef struct AVVkFrame AVVkFrame;
-const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p);
-AVVkFrame *av_vk_frame_alloc(void);
+ಪ್ರಕಾರನಿರ್ದೇಶ ಗಣನಾ VkFormat VkFormat;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ AVVkFrame AVVkFrame;
+ಧ್ರುವ VkFormat *av_vkfmt_from_pixfmt(ಗಣನಾ AVPixelFormat p);
+AVVkFrame *av_vk_frame_alloc(ಶೂನ್ಯ);
 
-const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p)
+ಧ್ರುವ VkFormat *av_vkfmt_from_pixfmt(ಗಣನಾ AVPixelFormat p)
 {
-    return NULL;
+    ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 }
 
-AVVkFrame *av_vk_frame_alloc(void)
+AVVkFrame *av_vk_frame_alloc(ಶೂನ್ಯ)
 {
-    return NULL;
+    ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 }
 #endif /* CONFIG_VULKAN */

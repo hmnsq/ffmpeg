@@ -18,41 +18,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "avstring.h"
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "video_hint.h"
+#ಅನ್ತರ್ಭಾವ "avstring.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "video_hint.h"
 
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
                                  size_t *out_size)
 {
-    struct TestStruct {
+    ಸಂರಚನಾ TestStruct {
         AVVideoHint hint;
         AVVideoRect rect;
     };
-    const size_t rect_offset = offsetof(struct TestStruct, rect);
+    ಧ್ರುವ size_t rect_offset = offsetof(ಸಂರಚನಾ TestStruct, rect);
     size_t size = rect_offset;
     AVVideoHint *hint;
 
     *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
-    size += sizeof(AVVideoRect) * nb_rects;
+    ಯದಿ (nb_rects > (SIZE_MAX - size) / ಪರಿಮಾಣ(AVVideoRect))
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
+    size += ಪರಿಮಾಣ(AVVideoRect) * nb_rects;
 
     hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    ಯದಿ (!hint)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 
     hint->nb_rects    = nb_rects;
     hint->rect_offset = rect_offset;
-    hint->rect_size   = sizeof(AVVideoRect);
+    hint->rect_size   = ಪರಿಮಾಣ(AVVideoRect);
 
     *out_size = size;
 
-    return hint;
+    ಪ್ರತ್ಯಾಗಮ hint;
 }
 
 AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
@@ -63,19 +63,19 @@ AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
     size_t size = 0;
 
     hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    ಯದಿ (!hint)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 
-    buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    buf = av_buffer_create((uint8_t *)hint, size, ರಿಕ್ತ, ರಿಕ್ತ, 0);
+    ಯದಿ (!buf) {
         av_freep(&hint);
-        return NULL;
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
+    ಯದಿ (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
     }
 
-    return hint;
+    ಪ್ರತ್ಯಾಗಮ hint;
 }

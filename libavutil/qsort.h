@@ -21,7 +21,7 @@
 #ifndef AVUTIL_QSORT_H
 #define AVUTIL_QSORT_H
 
-#include "macros.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
 
 
 /**
@@ -30,69 +30,69 @@
  * to construct input that requires O(n^2) time but this is very unlikely to
  * happen with non constructed input.
  */
-#define AV_QSORT(p, num, type, cmp) do {\
-    void *stack[64][2];\
-    int sp= 1;\
-    stack[0][0] = p;\
-    stack[0][1] = (p)+(num)-1;\
-    while(sp){\
-        type *start= stack[--sp][0];\
-        type *end  = stack[  sp][1];\
-        while(start < end){\
-            if(start < end-1) {\
-                int checksort=0;\
-                type *right = end-2;\
-                type *left  = start+1;\
+#define AV_QSORT(p, ಅಂಕೆ, type, cmp) ಕುರು {\
+    ಶೂನ್ಯ *ರಾಶಿ[64][2];\
+    ಪೂರ್ಣಾಙ್ಕ sp= 1;\
+    ರಾಶಿ[0][0] = p;\
+    ರಾಶಿ[0][1] = (p)+(ಅಂಕೆ)-1;\
+    ಯಾವತ್(sp){\
+        type *start= ರಾಶಿ[--sp][0];\
+        type *end  = ರಾಶಿ[  sp][1];\
+        ಯಾವತ್(start < end){\
+            ಯದಿ(start < end-1) {\
+                ಪೂರ್ಣಾಙ್ಕ checksort=0;\
+                type *ಬಲ = end-2;\
+                type *ಎಡ  = start+1;\
                 type *mid = start + ((end-start)>>1);\
-                if(cmp(start, end) > 0) {\
-                    if(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else                    FFSWAP(type, *start, *end);\
-                }else{\
-                    if(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else checksort= 1;\
+                ಯದಿ(cmp(start, end) > 0) {\
+                    ಯದಿ(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
+                    ಅನ್ಯಥಾ                    FFSWAP(type, *start, *end);\
+                }ಅನ್ಯಥಾ{\
+                    ಯದಿ(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
+                    ಅನ್ಯಥಾ checksort= 1;\
                 }\
-                if(cmp(mid, end) > 0){ \
+                ಯದಿ(cmp(mid, end) > 0){ \
                     FFSWAP(type, *mid, *end);\
                     checksort=0;\
                 }\
-                if(start == end-2) break;\
+                ಯದಿ(start == end-2) ಭಙ್ಗ;\
                 FFSWAP(type, end[-1], *mid);\
-                while(left <= right){\
-                    while(left<=right && cmp(left, end-1) < 0)\
-                        left++;\
-                    while(left<=right && cmp(right, end-1) > 0)\
-                        right--;\
-                    if(left <= right){\
-                        FFSWAP(type, *left, *right);\
-                        left++;\
-                        right--;\
+                ಯಾವತ್(ಎಡ <= ಬಲ){\
+                    ಯಾವತ್(ಎಡ<=ಬಲ && cmp(ಎಡ, end-1) < 0)\
+                        ಎಡ++;\
+                    ಯಾವತ್(ಎಡ<=ಬಲ && cmp(ಬಲ, end-1) > 0)\
+                        ಬಲ--;\
+                    ಯದಿ(ಎಡ <= ಬಲ){\
+                        FFSWAP(type, *ಎಡ, *ಬಲ);\
+                        ಎಡ++;\
+                        ಬಲ--;\
                     }\
                 }\
-                FFSWAP(type, end[-1], *left);\
-                if(checksort && (mid == left-1 || mid == left)){\
+                FFSWAP(type, end[-1], *ಎಡ);\
+                ಯದಿ(checksort && (mid == ಎಡ-1 || mid == ಎಡ)){\
                     mid= start;\
-                    while(mid<end && cmp(mid, mid+1) <= 0)\
+                    ಯಾವತ್(mid<end && cmp(mid, mid+1) <= 0)\
                         mid++;\
-                    if(mid==end)\
-                        break;\
+                    ಯದಿ(mid==end)\
+                        ಭಙ್ಗ;\
                 }\
-                if(end-left < left-start){\
-                    stack[sp  ][0]= start;\
-                    stack[sp++][1]= right;\
-                    start = left+1;\
-                }else{\
-                    stack[sp  ][0]= left+1;\
-                    stack[sp++][1]= end;\
-                    end = right;\
+                ಯದಿ(end-ಎಡ < ಎಡ-start){\
+                    ರಾಶಿ[sp  ][0]= start;\
+                    ರಾಶಿ[sp++][1]= ಬಲ;\
+                    start = ಎಡ+1;\
+                }ಅನ್ಯಥಾ{\
+                    ರಾಶಿ[sp  ][0]= ಎಡ+1;\
+                    ರಾಶಿ[sp++][1]= end;\
+                    end = ಬಲ;\
                 }\
-            }else{\
-                if(cmp(start, end) > 0)\
+            }ಅನ್ಯಥಾ{\
+                ಯದಿ(cmp(start, end) > 0)\
                     FFSWAP(type, *start, *end);\
-                break;\
+                ಭಙ್ಗ;\
             }\
         }\
     }\
-} while (0)
+} ಯಾವತ್ (0)
 
 /**
  * Merge sort, this sort requires a temporary buffer and is stable, its worst
@@ -100,23 +100,23 @@
  * @param p     must be a lvalue pointer, this function may exchange it with tmp
  * @param tmp   must be a lvalue pointer, this function may exchange it with p
  */
-#define AV_MSORT(p, tmp, num, type, cmp) do {\
+#define AV_MSORT(p, tmp, ಅಂಕೆ, type, cmp) ಕುರು {\
     unsigned i, j, step;\
-    for(step=1; step<(num); step+=step){\
-        for(i=0; i<(num); i+=2*step){\
+    ಪ್ರತಿ(step=1; step<(ಅಂಕೆ); step+=step){\
+        ಪ್ರತಿ(i=0; i<(ಅಂಕೆ); i+=2*step){\
             unsigned a[2] = {i, i+step};\
-            unsigned end = FFMIN(i+2*step, (num));\
-            for(j=i; a[0]<i+step && a[1]<end; j++){\
-                int idx= cmp(p+a[0], p+a[1]) > 0;\
+            unsigned end = FFMIN(i+2*step, (ಅಂಕೆ));\
+            ಪ್ರತಿ(j=i; a[0]<i+step && a[1]<end; j++){\
+                ಪೂರ್ಣಾಙ್ಕ idx= cmp(p+a[0], p+a[1]) > 0;\
                 tmp[j] = p[ a[idx]++ ];\
             }\
-            if(a[0]>=i+step) a[0] = a[1];\
-            for(; j<end; j++){\
+            ಯದಿ(a[0]>=i+step) a[0] = a[1];\
+            ಪ್ರತಿ(; j<end; j++){\
                 tmp[j] = p[ a[0]++ ];\
             }\
         }\
         FFSWAP(type*, p, tmp);\
     }\
-} while (0)
+} ಯಾವತ್ (0)
 
 #endif /* AVUTIL_QSORT_H */

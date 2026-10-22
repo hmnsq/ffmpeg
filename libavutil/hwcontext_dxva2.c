@@ -16,55 +16,55 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <windows.h>
+#ಅನ್ತರ್ಭಾವ <windows.h>
 
 #define DXVA2API_USE_BITFIELDS
 #define COBJMACROS
 
-#include <d3d9.h>
-#include <dxva2api.h>
-#include <initguid.h>
+#ಅನ್ತರ್ಭಾವ <d3d9.h>
+#ಅನ್ತರ್ಭಾವ <dxva2api.h>
+#ಅನ್ತರ್ಭಾವ <initguid.h>
 
-#include "avassert.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_dxva2.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "compat/w32dlfcn.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "common.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext_dxva2.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext_internal.h"
+#ಅನ್ತರ್ಭಾವ "imgutils.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "pixdesc.h"
+#ಅನ್ತರ್ಭಾವ "pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "compat/w32dlfcn.h"
 
-typedef IDirect3D9* WINAPI pDirect3DCreate9(UINT);
-typedef HRESULT WINAPI pDirect3DCreate9Ex(UINT, IDirect3D9Ex **);
-typedef HRESULT WINAPI pCreateDeviceManager9(UINT *, IDirect3DDeviceManager9 **);
+ಪ್ರಕಾರನಿರ್ದೇಶ IDirect3D9* WINAPI pDirect3DCreate9(UINT);
+ಪ್ರಕಾರನಿರ್ದೇಶ HRESULT WINAPI pDirect3DCreate9Ex(UINT, IDirect3D9Ex **);
+ಪ್ರಕಾರನಿರ್ದೇಶ HRESULT WINAPI pCreateDeviceManager9(UINT *, IDirect3DDeviceManager9 **);
 
 #define FF_D3DCREATE_FLAGS (D3DCREATE_SOFTWARE_VERTEXPROCESSING | \
                             D3DCREATE_MULTITHREADED | \
                             D3DCREATE_FPU_PRESERVE)
 
-static const D3DPRESENT_PARAMETERS dxva2_present_params = {
+ಸ್ಥಿರ ಧ್ರುವ D3DPRESENT_PARAMETERS dxva2_present_params = {
     .Windowed         = TRUE,
     .BackBufferWidth  = 640,
     .BackBufferHeight = 480,
-    .BackBufferCount  = 0,
+    .Back_Buffer_ಎಣಿಕೆ  = 0,
     .SwapEffect       = D3DSWAPEFFECT_DISCARD,
     .Flags            = D3DPRESENTFLAG_VIDEO,
 };
 
-typedef struct DXVA2Mapping {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ DXVA2Mapping {
     uint32_t palette_dummy[256];
 } DXVA2Mapping;
 
-typedef struct DXVA2FramesContext {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ DXVA2FramesContext {
     /**
      * The public AVDXVA2FramesContext. See hwcontext_dxva2.h for it.
      */
     AVDXVA2FramesContext p;
 
     IDirect3DSurface9 **surfaces_internal;
-    int              nb_surfaces_used;
+    ಪೂರ್ಣಾಙ್ಕ              nb_surfaces_used;
 
     HANDLE  device_handle;
     IDirectXVideoAccelerationService *service;
@@ -72,7 +72,7 @@ typedef struct DXVA2FramesContext {
     D3DFORMAT format;
 } DXVA2FramesContext;
 
-typedef struct DXVA2DevicePriv {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ DXVA2DevicePriv {
     HMODULE d3dlib;
     HMODULE dxva2lib;
 
@@ -82,9 +82,9 @@ typedef struct DXVA2DevicePriv {
     IDirect3DDevice9 *d3d9device;
 } DXVA2DevicePriv;
 
-static const struct {
+ಸ್ಥಿರ ಧ್ರುವ ಸಂರಚನಾ {
     D3DFORMAT d3d_format;
-    enum AVPixelFormat pix_fmt;
+    ಗಣನಾ AVPixelFormat pix_fmt;
 } supported_formats[] = {
     { MKTAG('N', 'V', '1', '2'), AV_PIX_FMT_NV12 },
     { MKTAG('P', '0', '1', '0'), AV_PIX_FMT_P010 },
@@ -106,367 +106,367 @@ static const struct {
 DEFINE_GUID(video_decoder_service,   0xfc51a551, 0xd5e7, 0x11d9, 0xaf, 0x55, 0x00, 0x05, 0x4e, 0x43, 0xff, 0x02);
 DEFINE_GUID(video_processor_service, 0xfc51a552, 0xd5e7, 0x11d9, 0xaf, 0x55, 0x00, 0x05, 0x4e, 0x43, 0xff, 0x02);
 
-static void dxva2_frames_uninit(AVHWFramesContext *ctx)
+ಸ್ಥಿರ ಶೂನ್ಯ dxva2_frames_uninit(AVHWFramesContext *ctx)
 {
     AVDXVA2DeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     DXVA2FramesContext              *s = ctx->hwctx;
     AVDXVA2FramesContext *frames_hwctx = &s->p;
-    int i;
+    ಪೂರ್ಣಾಙ್ಕ i;
 
-    if (frames_hwctx->decoder_to_release)
+    ಯದಿ (frames_hwctx->decoder_to_release)
         IDirectXVideoDecoder_Release(frames_hwctx->decoder_to_release);
 
-    if (s->surfaces_internal) {
-        for (i = 0; i < frames_hwctx->nb_surfaces; i++) {
-            if (s->surfaces_internal[i])
+    ಯದಿ (s->surfaces_internal) {
+        ಪ್ರತಿ (i = 0; i < frames_hwctx->nb_surfaces; i++) {
+            ಯದಿ (s->surfaces_internal[i])
                 IDirect3DSurface9_Release(s->surfaces_internal[i]);
         }
     }
     av_freep(&s->surfaces_internal);
 
-    if (s->service) {
+    ಯದಿ (s->service) {
         IDirectXVideoAccelerationService_Release(s->service);
-        s->service = NULL;
+        s->service = ರಿಕ್ತ;
     }
 
-    if (s->device_handle != INVALID_HANDLE_VALUE) {
+    ಯದಿ (s->device_handle != INVALID_HANDLE_ಮೌಲ್ಯ) {
         IDirect3DDeviceManager9_CloseDeviceHandle(device_hwctx->devmgr, s->device_handle);
-        s->device_handle = INVALID_HANDLE_VALUE;
+        s->device_handle = INVALID_HANDLE_ಮೌಲ್ಯ;
     }
 }
 
-static void dxva2_pool_release_dummy(void *opaque, uint8_t *data)
+ಸ್ಥಿರ ಶೂನ್ಯ dxva2_pool_release_dummy(ಶೂನ್ಯ *opaque, uint8_t *data)
 {
     // important not to free anything here--data is a surface object
     // associated with the call to CreateSurface(), and these surfaces are
     // released in dxva2_frames_uninit()
 }
 
-static AVBufferRef *dxva2_pool_alloc(void *opaque, size_t size)
+ಸ್ಥಿರ AVBufferRef *dxva2_pool_alloc(ಶೂನ್ಯ *opaque, size_t size)
 {
     AVHWFramesContext      *ctx = (AVHWFramesContext*)opaque;
     DXVA2FramesContext       *s = ctx->hwctx;
     AVDXVA2FramesContext *hwctx = &s->p;
 
-    if (s->nb_surfaces_used < hwctx->nb_surfaces) {
+    ಯದಿ (s->nb_surfaces_used < hwctx->nb_surfaces) {
         s->nb_surfaces_used++;
-        return av_buffer_create((uint8_t*)s->surfaces_internal[s->nb_surfaces_used - 1],
-                                sizeof(**hwctx->surfaces), dxva2_pool_release_dummy, 0, 0);
+        ಪ್ರತ್ಯಾಗಮ av_buffer_create((uint8_t*)s->surfaces_internal[s->nb_surfaces_used - 1],
+                                ಪರಿಮಾಣ(**hwctx->surfaces), dxva2_pool_release_dummy, 0, 0);
     }
 
-    return NULL;
+    ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 }
 
-static int dxva2_init_pool(AVHWFramesContext *ctx)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ dxva2_init_pool(AVHWFramesContext *ctx)
 {
     AVDXVA2DeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     DXVA2FramesContext              *s = ctx->hwctx;
     AVDXVA2FramesContext *frames_hwctx = &s->p;
-    int decode = (frames_hwctx->surface_type == DXVA2_VideoDecoderRenderTarget);
+    ಪೂರ್ಣಾಙ್ಕ decode = (frames_hwctx->surface_type == DXVA2_VideoDecoderRenderTarget);
 
-    int i;
+    ಪೂರ್ಣಾಙ್ಕ i;
     HRESULT hr;
 
-    if (ctx->initial_pool_size <= 0)
-        return 0;
+    ಯದಿ (ctx->initial_pool_size <= 0)
+        ಪ್ರತ್ಯಾಗಮ 0;
 
     hr = IDirect3DDeviceManager9_OpenDeviceHandle(device_hwctx->devmgr, &s->device_handle);
-    if (FAILED(hr)) {
+    ಯದಿ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to open device handle\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
     hr = IDirect3DDeviceManager9_GetVideoService(device_hwctx->devmgr,
                                                  s->device_handle,
                                                  decode ? &video_decoder_service : &video_processor_service,
-                                                 (void **)&s->service);
-    if (FAILED(hr)) {
+                                                 (ಶೂನ್ಯ **)&s->service);
+    ಯದಿ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to create the video service\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i].pix_fmt) {
+    ಪ್ರತಿ (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        ಯದಿ (ctx->sw_format == supported_formats[i].pix_fmt) {
             s->format = supported_formats[i].d3d_format;
-            break;
+            ಭಙ್ಗ;
         }
     }
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    ಯದಿ (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported pixel format: %s\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(EINVAL);
+        ಪ್ರತ್ಯಾಗಮ AVERROR(EINVAL);
     }
 
     s->surfaces_internal = av_calloc(ctx->initial_pool_size,
-                                     sizeof(*s->surfaces_internal));
-    if (!s->surfaces_internal)
-        return AVERROR(ENOMEM);
+                                     ಪರಿಮಾಣ(*s->surfaces_internal));
+    ಯದಿ (!s->surfaces_internal)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
 
     hr = IDirectXVideoAccelerationService_CreateSurface(s->service,
                                                         ctx->width, ctx->height,
                                                         ctx->initial_pool_size - 1,
                                                         s->format, D3DPOOL_DEFAULT, 0,
                                                         frames_hwctx->surface_type,
-                                                        s->surfaces_internal, NULL);
-    if (FAILED(hr)) {
+                                                        s->surfaces_internal, ರಿಕ್ತ);
+    ಯದಿ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the surfaces\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
     ffhwframesctx(ctx)->pool_internal =
-        av_buffer_pool_init2(sizeof(*s->surfaces_internal),
-                             ctx, dxva2_pool_alloc, NULL);
-    if (!ffhwframesctx(ctx)->pool_internal)
-        return AVERROR(ENOMEM);
+        av_buffer_pool_init2(ಪರಿಮಾಣ(*s->surfaces_internal),
+                             ctx, dxva2_pool_alloc, ರಿಕ್ತ);
+    ಯದಿ (!ffhwframesctx(ctx)->pool_internal)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
 
     frames_hwctx->surfaces    = s->surfaces_internal;
     frames_hwctx->nb_surfaces = ctx->initial_pool_size;
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static int dxva2_frames_init(AVHWFramesContext *ctx)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ dxva2_frames_init(AVHWFramesContext *ctx)
 {
     DXVA2FramesContext       *s = ctx->hwctx;
     AVDXVA2FramesContext *hwctx = &s->p;
-    int ret;
+    ಪೂರ್ಣಾಙ್ಕ ret;
 
-    if (hwctx->surface_type != DXVA2_VideoDecoderRenderTarget &&
+    ಯದಿ (hwctx->surface_type != DXVA2_VideoDecoderRenderTarget &&
         hwctx->surface_type != DXVA2_VideoProcessorRenderTarget) {
         av_log(ctx, AV_LOG_ERROR, "Unknown surface type: %lu\n",
                hwctx->surface_type);
-        return AVERROR(EINVAL);
+        ಪ್ರತ್ಯಾಗಮ AVERROR(EINVAL);
     }
 
-    s->device_handle = INVALID_HANDLE_VALUE;
+    s->device_handle = INVALID_HANDLE_ಮೌಲ್ಯ;
 
     /* init the frame pool if the caller didn't provide one */
-    if (!ctx->pool) {
+    ಯದಿ (!ctx->pool) {
         ret = dxva2_init_pool(ctx);
-        if (ret < 0) {
+        ಯದಿ (ret < 0) {
             av_log(ctx, AV_LOG_ERROR, "Error creating an internal frame pool\n");
-            return ret;
+            ಪ್ರತ್ಯಾಗಮ ret;
         }
     }
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static int dxva2_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ dxva2_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
 {
     frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    ಯದಿ (!frame->buf[0])
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
 
     frame->data[3] = frame->buf[0]->data;
     frame->format  = AV_PIX_FMT_DXVA2_VLD;
     frame->width   = ctx->width;
     frame->height  = ctx->height;
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static int dxva2_transfer_get_formats(AVHWFramesContext *ctx,
-                                      enum AVHWFrameTransferDirection dir,
-                                      enum AVPixelFormat **formats)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ dxva2_transfer_get_formats(AVHWFramesContext *ctx,
+                                      ಗಣನಾ AVHWFrameTransferDirection dir,
+                                      ಗಣನಾ AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
+    ಗಣನಾ AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, ಪರಿಮಾಣ(*fmts));
+    ಯದಿ (!fmts)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static void dxva2_unmap_frame(AVHWFramesContext *ctx, HWMapDescriptor *hwmap)
+ಸ್ಥಿರ ಶೂನ್ಯ dxva2_unmap_frame(AVHWFramesContext *ctx, HWMapDescriptor *hwmap)
 {
     IDirect3DSurface9 *surface = (IDirect3DSurface9*)hwmap->source->data[3];
     IDirect3DSurface9_UnlockRect(surface);
     av_freep(&hwmap->priv);
 }
 
-static int dxva2_map_frame(AVHWFramesContext *ctx, AVFrame *dst, const AVFrame *src,
-                           int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ dxva2_map_frame(AVHWFramesContext *ctx, AVFrame *dst, ಧ್ರುವ AVFrame *src,
+                           ಪೂರ್ಣಾಙ್ಕ flags)
 {
     IDirect3DSurface9 *surface = (IDirect3DSurface9*)src->data[3];
     DXVA2Mapping      *map;
     D3DSURFACE_DESC    surfaceDesc;
     D3DLOCKED_RECT     LockedRect;
     HRESULT            hr;
-    int i, err, nb_planes;
-    int lock_flags = 0;
+    ಪೂರ್ಣಾಙ್ಕ i, err, nb_planes;
+    ಪೂರ್ಣಾಙ್ಕ lock_flags = 0;
 
-    nb_planes = av_pix_fmt_count_planes(dst->format);
+    nb_planes = av_pix_fmt_ಎಣಿಕೆ_planes(dst->format);
 
     hr = IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
-    if (FAILED(hr)) {
+    ಯದಿ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error getting a surface description\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
-    if (!(flags & AV_HWFRAME_MAP_WRITE))
+    ಯದಿ (!(flags & AV_HWFRAME_MAP_WRITE))
         lock_flags |= D3DLOCK_READONLY;
-    if (flags & AV_HWFRAME_MAP_OVERWRITE)
+    ಯದಿ (flags & AV_HWFRAME_MAP_OVERWRITE)
         lock_flags |= D3DLOCK_DISCARD;
 
-    hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, lock_flags);
-    if (FAILED(hr)) {
+    hr = IDirect3DSurface9_LockRect(surface, &LockedRect, ರಿಕ್ತ, lock_flags);
+    ಯದಿ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Unable to lock DXVA2 surface\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
-    map = av_mallocz(sizeof(*map));
-    if (!map) {
+    map = av_mallocz(ಪರಿಮಾಣ(*map));
+    ಯದಿ (!map) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        ಗಚ್ಛ fail;
     }
 
     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
                                 dxva2_unmap_frame, map);
-    if (err < 0) {
+    ಯದಿ (err < 0) {
         av_freep(&map);
-        goto fail;
+        ಗಚ್ಛ fail;
     }
 
-    for (i = 0; i < nb_planes; i++)
+    ಪ್ರತಿ (i = 0; i < nb_planes; i++)
         dst->linesize[i] = LockedRect.Pitch;
 
     av_image_fill_pointers(dst->data, dst->format, surfaceDesc.Height,
                            (uint8_t*)LockedRect.pBits, dst->linesize);
 
-    if (dst->format == AV_PIX_FMT_PAL8)
+    ಯದಿ (dst->format == AV_PIX_FMT_PAL8)
         dst->data[1] = (uint8_t*)map->palette_dummy;
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 fail:
     IDirect3DSurface9_UnlockRect(surface);
-    return err;
+    ಪ್ರತ್ಯಾಗಮ err;
 }
 
-static int dxva2_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
-                                  const AVFrame *src)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ dxva2_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
+                                  ಧ್ರುವ AVFrame *src)
 {
     AVFrame *map;
-    int ret;
+    ಪೂರ್ಣಾಙ್ಕ ret;
 
-    if (src->format != ctx->sw_format)
-        return AVERROR(ENOSYS);
+    ಯದಿ (src->format != ctx->sw_format)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOSYS);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    ಯದಿ (!map)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
     map->format = dst->format;
 
     ret = dxva2_map_frame(ctx, map, dst, AV_HWFRAME_MAP_WRITE | AV_HWFRAME_MAP_OVERWRITE);
-    if (ret < 0)
-        goto fail;
+    ಯದಿ (ret < 0)
+        ಗಚ್ಛ fail;
 
     av_image_copy2(map->data, map->linesize, src->data, src->linesize,
                    ctx->sw_format, src->width, src->height);
 
 fail:
     av_frame_free(&map);
-    return ret;
+    ಪ್ರತ್ಯಾಗಮ ret;
 }
 
-static int dxva2_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
-                                    const AVFrame *src)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ dxva2_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
+                                    ಧ್ರುವ AVFrame *src)
 {
     AVFrame *map;
     ptrdiff_t src_linesize[4], dst_linesize[4];
-    int ret, i;
+    ಪೂರ್ಣಾಙ್ಕ ret, i;
 
-    if (dst->format != ctx->sw_format)
-        return AVERROR(ENOSYS);
+    ಯದಿ (dst->format != ctx->sw_format)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOSYS);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    ಯದಿ (!map)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
     map->format = dst->format;
 
     ret = dxva2_map_frame(ctx, map, src, AV_HWFRAME_MAP_READ);
-    if (ret < 0)
-        goto fail;
+    ಯದಿ (ret < 0)
+        ಗಚ್ಛ fail;
 
-    for (i = 0; i < 4; i++) {
+    ಪ್ರತಿ (i = 0; i < 4; i++) {
         dst_linesize[i] = dst->linesize[i];
         src_linesize[i] = map->linesize[i];
     }
-    av_image_copy_uc_from(dst->data, dst_linesize, (const uint8_t **)map->data, src_linesize,
+    av_image_copy_uc_from(dst->data, dst_linesize, (ಧ್ರುವ uint8_t **)map->data, src_linesize,
                           ctx->sw_format, src->width, src->height);
 fail:
     av_frame_free(&map);
-    return ret;
+    ಪ್ರತ್ಯಾಗಮ ret;
 }
 
-static int dxva2_map_from(AVHWFramesContext *ctx,
-                          AVFrame *dst, const AVFrame *src, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ dxva2_map_from(AVHWFramesContext *ctx,
+                          AVFrame *dst, ಧ್ರುವ AVFrame *src, ಪೂರ್ಣಾಙ್ಕ flags)
 {
-    int err;
+    ಪೂರ್ಣಾಙ್ಕ err;
 
-    if (dst->format != AV_PIX_FMT_NONE && dst->format != ctx->sw_format)
-        return AVERROR(ENOSYS);
+    ಯದಿ (dst->format != AV_PIX_FMT_NONE && dst->format != ctx->sw_format)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOSYS);
     dst->format = ctx->sw_format;
 
     err = dxva2_map_frame(ctx, dst, src, flags);
-    if (err < 0)
-        return err;
+    ಯದಿ (err < 0)
+        ಪ್ರತ್ಯಾಗಮ err;
 
     err = av_frame_copy_props(dst, src);
-    if (err < 0)
-        return err;
+    ಯದಿ (err < 0)
+        ಪ್ರತ್ಯಾಗಮ err;
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static void dxva2_device_free(AVHWDeviceContext *ctx)
+ಸ್ಥಿರ ಶೂನ್ಯ dxva2_device_free(AVHWDeviceContext *ctx)
 {
     AVDXVA2DeviceContext *hwctx = ctx->hwctx;
     DXVA2DevicePriv       *priv = ctx->user_opaque;
 
-    if (hwctx->devmgr && priv->device_handle != INVALID_HANDLE_VALUE)
+    ಯದಿ (hwctx->devmgr && priv->device_handle != INVALID_HANDLE_ಮೌಲ್ಯ)
         IDirect3DDeviceManager9_CloseDeviceHandle(hwctx->devmgr, priv->device_handle);
 
-    if (hwctx->devmgr)
+    ಯದಿ (hwctx->devmgr)
         IDirect3DDeviceManager9_Release(hwctx->devmgr);
 
-    if (priv->d3d9device)
+    ಯದಿ (priv->d3d9device)
         IDirect3DDevice9_Release(priv->d3d9device);
 
-    if (priv->d3d9)
+    ಯದಿ (priv->d3d9)
         IDirect3D9_Release(priv->d3d9);
 
-    if (priv->d3dlib)
+    ಯದಿ (priv->d3dlib)
         dlclose(priv->d3dlib);
 
-    if (priv->dxva2lib)
+    ಯದಿ (priv->dxva2lib)
         dlclose(priv->dxva2lib);
 
     av_freep(&ctx->user_opaque);
 }
 
-static int dxva2_device_create9(AVHWDeviceContext *ctx, UINT adapter)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ dxva2_device_create9(AVHWDeviceContext *ctx, UINT adapter)
 {
     DXVA2DevicePriv *priv = ctx->user_opaque;
     D3DPRESENT_PARAMETERS d3dpp = dxva2_present_params;
     D3DDISPLAYMODE d3ddm;
     HRESULT hr;
     pDirect3DCreate9 *createD3D = (pDirect3DCreate9 *)dlsym(priv->d3dlib, "Direct3DCreate9");
-    if (!createD3D) {
+    ಯದಿ (!createD3D) {
         av_log(ctx, AV_LOG_ERROR, "Failed to locate Direct3DCreate9\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
     priv->d3d9 = createD3D(D3D_SDK_VERSION);
-    if (!priv->d3d9) {
+    ಯದಿ (!priv->d3d9) {
         av_log(ctx, AV_LOG_ERROR, "Failed to create IDirect3D object\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
     IDirect3D9_GetAdapterDisplayMode(priv->d3d9, adapter, &d3ddm);
@@ -476,128 +476,128 @@ static int dxva2_device_create9(AVHWDeviceContext *ctx, UINT adapter)
     hr = IDirect3D9_CreateDevice(priv->d3d9, adapter, D3DDEVTYPE_HAL, GetDesktopWindow(),
                                  FF_D3DCREATE_FLAGS,
                                  &d3dpp, &priv->d3d9device);
-    if (FAILED(hr)) {
+    ಯದಿ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static int dxva2_device_create9ex(AVHWDeviceContext *ctx, UINT adapter)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ dxva2_device_create9ex(AVHWDeviceContext *ctx, UINT adapter)
 {
     DXVA2DevicePriv *priv = ctx->user_opaque;
     D3DPRESENT_PARAMETERS d3dpp = dxva2_present_params;
     D3DDISPLAYMODEEX modeex = {0};
-    IDirect3D9Ex *d3d9ex = NULL;
-    IDirect3DDevice9Ex *exdev = NULL;
+    IDirect3D9Ex *d3d9ex = ರಿಕ್ತ;
+    IDirect3DDevice9Ex *exdev = ರಿಕ್ತ;
     HRESULT hr;
     pDirect3DCreate9Ex *createD3DEx = (pDirect3DCreate9Ex *)dlsym(priv->d3dlib, "Direct3DCreate9Ex");
-    if (!createD3DEx)
-        return AVERROR(ENOSYS);
+    ಯದಿ (!createD3DEx)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOSYS);
 
     hr = createD3DEx(D3D_SDK_VERSION, &d3d9ex);
-    if (FAILED(hr))
-        return AVERROR_UNKNOWN;
+    ಯದಿ (FAILED(hr))
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
 
-    modeex.Size = sizeof(D3DDISPLAYMODEEX);
-    hr = IDirect3D9Ex_GetAdapterDisplayModeEx(d3d9ex, adapter, &modeex, NULL);
-    if (FAILED(hr)) {
+    modeex.Size = ಪರಿಮಾಣ(D3DDISPLAYMODEEX);
+    hr = IDirect3D9Ex_GetAdapterDisplayModeEx(d3d9ex, adapter, &modeex, ರಿಕ್ತ);
+    ಯದಿ (FAILED(hr)) {
         IDirect3D9Ex_Release(d3d9ex);
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
     d3dpp.BackBufferFormat = modeex.Format;
 
     hr = IDirect3D9Ex_CreateDeviceEx(d3d9ex, adapter, D3DDEVTYPE_HAL, GetDesktopWindow(),
                                      FF_D3DCREATE_FLAGS,
-                                     &d3dpp, NULL, &exdev);
-    if (FAILED(hr)) {
+                                     &d3dpp, ರಿಕ್ತ, &exdev);
+    ಯದಿ (FAILED(hr)) {
         IDirect3D9Ex_Release(d3d9ex);
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
     av_log(ctx, AV_LOG_VERBOSE, "Using D3D9Ex device.\n");
     priv->d3d9 = (IDirect3D9 *)d3d9ex;
     priv->d3d9device = (IDirect3DDevice9 *)exdev;
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-static int dxva2_device_create(AVHWDeviceContext *ctx, const char *device,
-                               AVDictionary *opts, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ dxva2_device_create(AVHWDeviceContext *ctx, ಧ್ರುವ ವರ್ಣ *device,
+                               AVDictionary *opts, ಪೂರ್ಣಾಙ್ಕ flags)
 {
     AVDXVA2DeviceContext *hwctx = ctx->hwctx;
     DXVA2DevicePriv *priv;
-    pCreateDeviceManager9 *createDeviceManager = NULL;
+    pCreateDeviceManager9 *createDeviceManager = ರಿಕ್ತ;
     unsigned resetToken = 0;
     UINT adapter = D3DADAPTER_DEFAULT;
     HRESULT hr;
-    int err;
+    ಪೂರ್ಣಾಙ್ಕ err;
 
-    if (device)
+    ಯದಿ (device)
         adapter = atoi(device);
 
-    priv = av_mallocz(sizeof(*priv));
-    if (!priv)
-        return AVERROR(ENOMEM);
+    priv = av_mallocz(ಪರಿಮಾಣ(*priv));
+    ಯದಿ (!priv)
+        ಪ್ರತ್ಯಾಗಮ AVERROR(ENOMEM);
 
     ctx->user_opaque = priv;
-    ctx->free        = dxva2_device_free;
+    ctx->ಮುಕ್ತ        = dxva2_device_free;
 
-    priv->device_handle = INVALID_HANDLE_VALUE;
+    priv->device_handle = INVALID_HANDLE_ಮೌಲ್ಯ;
 
     priv->d3dlib = dlopen("d3d9.dll", 0);
-    if (!priv->d3dlib) {
+    ಯದಿ (!priv->d3dlib) {
         av_log(ctx, AV_LOG_ERROR, "Failed to load D3D9 library\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
     priv->dxva2lib = dlopen("dxva2.dll", 0);
-    if (!priv->dxva2lib) {
+    ಯದಿ (!priv->dxva2lib) {
         av_log(ctx, AV_LOG_ERROR, "Failed to load DXVA2 library\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
     createDeviceManager = (pCreateDeviceManager9 *)dlsym(priv->dxva2lib,
                                                          "DXVA2CreateDirect3DDeviceManager9");
-    if (!createDeviceManager) {
+    ಯದಿ (!createDeviceManager) {
         av_log(ctx, AV_LOG_ERROR, "Failed to locate DXVA2CreateDirect3DDeviceManager9\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
-    if (dxva2_device_create9ex(ctx, adapter) < 0) {
+    ಯದಿ (dxva2_device_create9ex(ctx, adapter) < 0) {
         // Retry with "classic" d3d9
         err = dxva2_device_create9(ctx, adapter);
-        if (err < 0)
-            return err;
+        ಯದಿ (err < 0)
+            ಪ್ರತ್ಯಾಗಮ err;
     }
 
     hr = createDeviceManager(&resetToken, &hwctx->devmgr);
-    if (FAILED(hr)) {
+    ಯದಿ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device manager\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
     hr = IDirect3DDeviceManager9_ResetDevice(hwctx->devmgr, priv->d3d9device, resetToken);
-    if (FAILED(hr)) {
+    ಯದಿ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to bind Direct3D device to device manager\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
     hr = IDirect3DDeviceManager9_OpenDeviceHandle(hwctx->devmgr, &priv->device_handle);
-    if (FAILED(hr)) {
+    ಯದಿ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to open device handle\n");
-        return AVERROR_UNKNOWN;
+        ಪ್ರತ್ಯಾಗಮ AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
 }
 
-const HWContextType ff_hwcontext_type_dxva2 = {
+ಧ್ರುವ HWContextType ff_hwcontext_type_dxva2 = {
     .type                 = AV_HWDEVICE_TYPE_DXVA2,
     .name                 = "DXVA2",
 
-    .device_hwctx_size    = sizeof(AVDXVA2DeviceContext),
-    .frames_hwctx_size    = sizeof(DXVA2FramesContext),
+    .device_hwctx_size    = ಪರಿಮಾಣ(AVDXVA2DeviceContext),
+    .frames_hwctx_size    = ಪರಿಮಾಣ(DXVA2FramesContext),
 
     .device_create        = dxva2_device_create,
     .frames_init          = dxva2_frames_init,
@@ -608,5 +608,5 @@ const HWContextType ff_hwcontext_type_dxva2 = {
     .transfer_data_from   = dxva2_transfer_data_from,
     .map_from             = dxva2_map_from,
 
-    .pix_fmts             = (const enum AVPixelFormat[]){ AV_PIX_FMT_DXVA2_VLD, AV_PIX_FMT_NONE },
+    .pix_fmts             = (ಧ್ರುವ ಗಣನಾ AVPixelFormat[]){ AV_PIX_FMT_DXVA2_VLD, AV_PIX_FMT_NONE },
 };

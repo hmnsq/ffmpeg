@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "buffer.h"
-#include "frame.h"
-#include "mem.h"
-#include "video_enc_params.h"
+#ಅನ್ತರ್ಭಾವ "buffer.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(ಗಣನಾ AVVideoEncParamsType type,
+                                            unsigned ಪೂರ್ಣಾಙ್ಕ nb_blocks, size_t *out_size)
 {
-    struct TestStruct {
+    ಸಂರಚನಾ TestStruct {
         AVVideoEncParams   p;
         AVVideoBlockParams b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
+    ಧ್ರುವ size_t blocks_offset = offsetof(ಸಂರಚನಾ TestStruct, b);
     size_t size = blocks_offset;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    ಯದಿ (nb_blocks > (SIZE_MAX - size) / ಪರಿಮಾಣ(AVVideoBlockParams))
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
+    size += ಪರಿಮಾಣ(AVVideoBlockParams) * nb_blocks;
 
     par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    ಯದಿ (!par)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
 
     par->type          = type;
     par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
+    par->block_size    = ಪರಿಮಾಣ(AVVideoBlockParams);
     par->blocks_offset = blocks_offset;
 
-    if (out_size)
+    ಯದಿ (out_size)
         *out_size = size;
 
-    return par;
+    ಪ್ರತ್ಯಾಗಮ par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_data(AVFrame *frame, ಗಣನಾ AVVideoEncParamsType type,
+                                     unsigned ಪೂರ್ಣಾಙ್ಕ nb_blocks)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
     size_t size;
 
     par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    ಯದಿ (!par)
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
+    buf = av_buffer_create((uint8_t *)par, size, ರಿಕ್ತ, ರಿಕ್ತ, 0);
+    ಯದಿ (!buf) {
         av_freep(&par);
-        return NULL;
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
+    ಯದಿ (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        ಪ್ರತ್ಯಾಗಮ ರಿಕ್ತ;
     }
 
-    return par;
+    ಪ್ರತ್ಯಾಗಮ par;
 }

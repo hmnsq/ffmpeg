@@ -29,7 +29,7 @@
 
 #define SCALEBITS 10
 #define ONE_HALF  (1 << (SCALEBITS - 1))
-#define FIX(x)    ((int) ((x) * (1<<SCALEBITS) + 0.5))
+#define FIX(x)    ((ಪೂರ್ಣಾಙ್ಕ) ((x) * (1<<SCALEBITS) + 0.5))
 
 #define YUV_TO_RGB1_CCIR(cb1, cr1)\
 {\
@@ -87,11 +87,11 @@
  cm[(((y) - 128) * FIX(127.0/112.0) + (ONE_HALF + (128 << SCALEBITS))) >> SCALEBITS]
 
 /* NOTE: the clamp is really necessary! */
-static inline int C_JPEG_TO_CCIR(int y) {
+ಸ್ಥಿರ ಅನ್ತಃಸ್ಥ ಪೂರ್ಣಾಙ್ಕ C_JPEG_TO_CCIR(ಪೂರ್ಣಾಙ್ಕ y) {
     y = (((y - 128) * FIX(112.0/127.0) + (ONE_HALF + (128 << SCALEBITS))) >> SCALEBITS);
-    if (y < 16)
+    ಯದಿ (y < 16)
         y = 16;
-    return y;
+    ಪ್ರತ್ಯಾಗಮ y;
 }
 
 

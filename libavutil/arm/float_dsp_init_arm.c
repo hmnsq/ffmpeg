@@ -16,17 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "cpu.h"
-#include "float_dsp_arm.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/float_dsp.h"
+#ಅನ್ತರ್ಭಾವ "cpu.h"
+#ಅನ್ತರ್ಭಾವ "float_dsp_arm.h"
 
-av_cold void ff_float_dsp_init_arm(AVFloatDSPContext *fdsp)
+av_cold ಶೂನ್ಯ ff_float_dsp_init_arm(AVFloatDSPContext *fdsp)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ಪೂರ್ಣಾಙ್ಕ cpu_flags = av_get_cpu_flags();
 
-    if (have_vfp(cpu_flags))
+    ಯದಿ (have_vfp(cpu_flags))
         ff_float_dsp_init_vfp(fdsp, cpu_flags);
-    if (have_neon(cpu_flags))
+    ಯದಿ (have_neon(cpu_flags))
         ff_float_dsp_init_neon(fdsp);
 }

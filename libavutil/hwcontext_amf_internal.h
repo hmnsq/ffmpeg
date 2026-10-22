@@ -19,23 +19,23 @@
 
 #ifndef AVUTIL_HWCONTEXT_AMF_INTERNAL_H
 #define AVUTIL_HWCONTEXT_AMF_INTERNAL_H
-#include <AMF/core/Factory.h>
-#include <AMF/core/Context.h>
+#ಅನ್ತರ್ಭಾವ <AMF/core/Factory.h>
+#ಅನ್ತರ್ಭಾವ <AMF/core/Context.h>
 
 /**
 * Error handling helper
 */
-#define AMF_RETURN_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#define AMF_RETURN_IF_FALSE(avctx, exp, ret_ಮೌಲ್ಯ, /*message,*/ ...) \
+    ಯದಿ (!(exp)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        return ret_value; \
+        ಪ್ರತ್ಯಾಗಮ ret_ಮೌಲ್ಯ; \
     }
 
-#define AMF_GOTO_FAIL_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#define AMF_GOTO_FAIL_IF_FALSE(avctx, exp, ret_ಮೌಲ್ಯ, /*message,*/ ...) \
+    ಯದಿ (!(exp)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        ret = ret_value; \
-        goto fail; \
+        ret = ret_ಮೌಲ್ಯ; \
+        ಗಚ್ಛ fail; \
     }
 
 #define AMF_TIME_BASE_Q          (AVRational){1, AMF_SECOND}
