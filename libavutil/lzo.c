@@ -19,42 +19,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <string.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <string.h>
 
-#include "avassert.h"
-#include "intreadwrite.h"
-#include "lzo.h"
-#include "macros.h"
-#include "mem.h"
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव "intreadwrite.h"
+#अन्तर्भाव "lzo.h"
+#अन्तर्भाव "macros.h"
+#अन्तर्भाव "mem.h"
 
 /// Define if we may write up to 12 bytes beyond the output buffer.
 #define OUTBUF_PADDED 1
 /// Define if we may read up to 8 bytes beyond the input buffer.
 #define INBUF_PADDED 1
 
-typedef struct LZOContext {
-    const uint8_t *in, *in_end;
+प्रकारनिर्देश संरचना LZOContext {
+    ध्रुव uint8_t *in, *in_end;
     uint8_t *out_start, *out, *out_end;
-    int error;
+    पूर्णाङ्क error;
 } LZOContext;
 
 /**
  * @brief Reads one byte from the input buffer, avoiding an overrun.
  * @return byte read
  */
-static inline int get_byte(LZOContext *c)
+स्थिर अन्तःस्थ पूर्णाङ्क get_byte(LZOContext *c)
 {
-    if (c->in < c->in_end)
-        return *c->in++;
-    c->error |= AV_LZO_INPUT_DEPLETED;
-    return 1;
+    यदि (c->in < c->in_end)
+        प्रत्यागम *c->in++;
+    c->error |= AV_LZO_निवेश_DEPLETED;
+    प्रत्यागम 1;
 }
 
 #ifdef INBUF_PADDED
 #define GETB(c) (*(c).in++)
-#else
+#अन्यथा
 #define GETB(c) get_byte(&(c))
 #endif
 
@@ -64,45 +64,45 @@ static inline int get_byte(LZOContext *c)
  * @param mask bits used from x
  * @return decoded length value
  */
-static inline int get_len(LZOContext *c, int x, int mask)
+स्थिर अन्तःस्थ पूर्णाङ्क get_len(LZOContext *c, पूर्णाङ्क x, पूर्णाङ्क mask)
 {
-    int cnt = x & mask;
-    if (!cnt) {
-        while (!(x = get_byte(c))) {
-            if (cnt >= INT_MAX - 1000) {
+    पूर्णाङ्क cnt = x & mask;
+    यदि (!cnt) {
+        यावत् (!(x = get_byte(c))) {
+            यदि (cnt >= INT_MAX - 1000) {
                 c->error |= AV_LZO_ERROR;
-                break;
+                भङ्ग;
             }
             cnt += 255;
         }
         cnt += mask + x;
     }
-    return cnt;
+    प्रत्यागम cnt;
 }
 
 /**
  * @brief Copies bytes from input to output buffer with checking.
  * @param cnt number of bytes to copy, must be >= 0
  */
-static inline void copy(LZOContext *c, int cnt)
+स्थिर अन्तःस्थ शून्य copy(LZOContext *c, पूर्णाङ्क cnt)
 {
-    register const uint8_t *src = c->in;
-    register uint8_t *dst       = c->out;
+    पञ्जिका ध्रुव uint8_t *src = c->in;
+    पञ्जिका uint8_t *dst       = c->out;
     av_assert0(cnt >= 0);
-    if (cnt > c->in_end - src) {
+    यदि (cnt > c->in_end - src) {
         cnt       = FFMAX(c->in_end - src, 0);
-        c->error |= AV_LZO_INPUT_DEPLETED;
+        c->error |= AV_LZO_निवेश_DEPLETED;
     }
-    if (cnt > c->out_end - dst) {
+    यदि (cnt > c->out_end - dst) {
         cnt       = FFMAX(c->out_end - dst, 0);
         c->error |= AV_LZO_OUTPUT_FULL;
     }
-#if defined(INBUF_PADDED) && defined(OUTBUF_PADDED)
+#यदि defined(INBUF_PADDED) && defined(OUTBUF_PADDED)
     AV_COPY32U(dst, src);
     src += 4;
     dst += 4;
     cnt -= 4;
-    if (cnt > 0)
+    यदि (cnt > 0)
 #endif
     memcpy(dst, src, cnt);
     c->in  = src + cnt;
@@ -117,15 +117,15 @@ static inline void copy(LZOContext *c, int cnt)
  * cnt > back is valid, this will copy the bytes we just copied,
  * thus creating a repeating pattern with a period length of back.
  */
-static inline void copy_backptr(LZOContext *c, int back, int cnt)
+स्थिर अन्तःस्थ शून्य copy_backptr(LZOContext *c, पूर्णाङ्क back, पूर्णाङ्क cnt)
 {
-    register uint8_t *dst       = c->out;
+    पञ्जिका uint8_t *dst       = c->out;
     av_assert0(cnt > 0);
-    if (dst - c->out_start < back) {
+    यदि (dst - c->out_start < back) {
         c->error |= AV_LZO_INVALID_BACKPTR;
-        return;
+        प्रत्यागम;
     }
-    if (cnt > c->out_end - dst) {
+    यदि (cnt > c->out_end - dst) {
         cnt       = FFMAX(c->out_end - dst, 0);
         c->error |= AV_LZO_OUTPUT_FULL;
     }
@@ -133,63 +133,63 @@ static inline void copy_backptr(LZOContext *c, int back, int cnt)
     c->out = dst + cnt;
 }
 
-int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen)
+पूर्णाङ्क av_lzo1x_decode(शून्य *out, पूर्णाङ्क *outlen, ध्रुव शून्य *in, पूर्णाङ्क *inlen)
 {
-    int state = 0;
-    int x;
+    पूर्णाङ्क state = 0;
+    पूर्णाङ्क x;
     LZOContext c;
-    if (*outlen <= 0 || *inlen <= 0) {
-        int res = 0;
-        if (*outlen <= 0)
+    यदि (*outlen <= 0 || *inlen <= 0) {
+        पूर्णाङ्क res = 0;
+        यदि (*outlen <= 0)
             res |= AV_LZO_OUTPUT_FULL;
-        if (*inlen <= 0)
-            res |= AV_LZO_INPUT_DEPLETED;
-        return res;
+        यदि (*inlen <= 0)
+            res |= AV_LZO_निवेश_DEPLETED;
+        प्रत्यागम res;
     }
     c.in      = in;
-    c.in_end  = (const uint8_t *)in + *inlen;
+    c.in_end  = (ध्रुव uint8_t *)in + *inlen;
     c.out     = c.out_start = out;
     c.out_end = (uint8_t *)out + *outlen;
     c.error   = 0;
     x         = GETB(c);
-    if (x > 17) {
+    यदि (x > 17) {
         copy(&c, x - 17);
         x = GETB(c);
-        if (x < 16)
+        यदि (x < 16)
             c.error |= AV_LZO_ERROR;
     }
-    if (c.in > c.in_end)
-        c.error |= AV_LZO_INPUT_DEPLETED;
-    while (!c.error) {
-        int cnt, back;
-        if (x > 15) {
-            if (x > 63) {
+    यदि (c.in > c.in_end)
+        c.error |= AV_LZO_निवेश_DEPLETED;
+    यावत् (!c.error) {
+        पूर्णाङ्क cnt, back;
+        यदि (x > 15) {
+            यदि (x > 63) {
                 cnt  = (x >> 5) - 1;
                 back = (GETB(c) << 3) + ((x >> 2) & 7) + 1;
-            } else if (x > 31) {
+            } अन्यथा यदि (x > 31) {
                 cnt  = get_len(&c, x, 31);
                 x    = GETB(c);
                 back = (GETB(c) << 6) + (x >> 2) + 1;
-            } else {
+            } अन्यथा {
                 cnt   = get_len(&c, x, 7);
                 back  = (1 << 14) + ((x & 8) << 11);
                 x     = GETB(c);
                 back += (GETB(c) << 6) + (x >> 2);
-                if (back == (1 << 14)) {
-                    if (cnt != 1)
+                यदि (back == (1 << 14)) {
+                    यदि (cnt != 1)
                         c.error |= AV_LZO_ERROR;
-                    break;
+                    भङ्ग;
                 }
             }
-        } else if (!state) {
+        } अन्यथा यदि (!state) {
             cnt = get_len(&c, x, 15);
             copy(&c, cnt + 3);
             x = GETB(c);
-            if (x > 15)
-                continue;
+            यदि (x > 15)
+                अनुवर्त;
             cnt  = 1;
             back = (1 << 11) + (GETB(c) << 2) + (x >> 2) + 1;
-        } else {
+        } अन्यथा {
             cnt  = 0;
             back = (GETB(c) << 2) + (x >> 2) + 1;
         }
@@ -200,8 +200,8 @@ int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen)
         x = GETB(c);
     }
     *inlen = c.in_end - c.in;
-    if (c.in > c.in_end)
+    यदि (c.in > c.in_end)
         *inlen = 0;
     *outlen = c.out_end - c.out;
-    return c.error;
+    प्रत्यागम c.error;
 }

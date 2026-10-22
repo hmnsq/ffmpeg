@@ -24,33 +24,33 @@
  * Audio FIFO
  */
 
-#include <limits.h>
-#include <stddef.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <stddef.h>
 
-#include "audio_fifo.h"
-#include "error.h"
-#include "fifo.h"
-#include "macros.h"
-#include "mem.h"
-#include "samplefmt.h"
+#अन्तर्भाव "audio_fifo.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "fifo.h"
+#अन्तर्भाव "macros.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "samplefmt.h"
 
-struct AVAudioFifo {
+संरचना AVAudioFifo {
     AVFifo **buf;                   /**< single buffer for interleaved, per-channel buffers for planar */
-    int nb_buffers;                 /**< number of buffers */
-    int nb_samples;                 /**< number of samples currently in the FIFO */
-    int allocated_samples;          /**< current allocated size, in samples */
+    पूर्णाङ्क nb_buffers;                 /**< number of buffers */
+    पूर्णाङ्क nb_samples;                 /**< number of samples currently in the FIFO */
+    पूर्णाङ्क allocated_samples;          /**< current allocated size, in samples */
 
-    int channels;                   /**< number of channels */
-    enum AVSampleFormat sample_fmt; /**< sample format */
-    int sample_size;                /**< size, in bytes, of one sample in a buffer */
+    पूर्णाङ्क channels;                   /**< number of channels */
+    गणना AVSampleFormat sample_fmt; /**< sample format */
+    पूर्णाङ्क sample_size;                /**< size, in bytes, of one sample in a buffer */
 };
 
-void av_audio_fifo_free(AVAudioFifo *af)
+शून्य av_audio_fifo_free(AVAudioFifo *af)
 {
-    if (af) {
-        if (af->buf) {
-            int i;
-            for (i = 0; i < af->nb_buffers; i++) {
+    यदि (af) {
+        यदि (af->buf) {
+            पूर्णाङ्क i;
+            प्रति (i = 0; i < af->nb_buffers; i++) {
                 av_fifo_freep2(&af->buf[i]);
             }
             av_freep(&af->buf);
@@ -59,172 +59,172 @@ void av_audio_fifo_free(AVAudioFifo *af)
     }
 }
 
-AVAudioFifo *av_audio_fifo_alloc(enum AVSampleFormat sample_fmt, int channels,
-                                 int nb_samples)
+AVAudioFifo *av_audio_fifo_alloc(गणना AVSampleFormat sample_fmt, पूर्णाङ्क channels,
+                                 पूर्णाङ्क nb_samples)
 {
     AVAudioFifo *af;
-    int buf_size, i;
+    पूर्णाङ्क buf_size, i;
 
     /* get channel buffer size (also validates parameters) */
-    if (av_samples_get_buffer_size(&buf_size, channels, nb_samples, sample_fmt, 1) < 0)
-        return NULL;
+    यदि (av_samples_get_buffer_size(&buf_size, channels, nb_samples, sample_fmt, 1) < 0)
+        प्रत्यागम रिक्त;
 
-    af = av_mallocz(sizeof(*af));
-    if (!af)
-        return NULL;
+    af = av_mallocz(परिमाण(*af));
+    यदि (!af)
+        प्रत्यागम रिक्त;
 
     af->channels    = channels;
     af->sample_fmt  = sample_fmt;
     af->sample_size = buf_size / nb_samples;
     af->nb_buffers  = av_sample_fmt_is_planar(sample_fmt) ? channels : 1;
 
-    af->buf = av_calloc(af->nb_buffers, sizeof(*af->buf));
-    if (!af->buf)
-        goto error;
+    af->buf = av_calloc(af->nb_buffers, परिमाण(*af->buf));
+    यदि (!af->buf)
+        गच्छ error;
 
-    for (i = 0; i < af->nb_buffers; i++) {
+    प्रति (i = 0; i < af->nb_buffers; i++) {
         af->buf[i] = av_fifo_alloc2(buf_size, 1, 0);
-        if (!af->buf[i])
-            goto error;
+        यदि (!af->buf[i])
+            गच्छ error;
     }
     af->allocated_samples = nb_samples;
 
-    return af;
+    प्रत्यागम af;
 
 error:
     av_audio_fifo_free(af);
-    return NULL;
+    प्रत्यागम रिक्त;
 }
 
-int av_audio_fifo_realloc(AVAudioFifo *af, int nb_samples)
+पूर्णाङ्क av_audio_fifo_realloc(AVAudioFifo *af, पूर्णाङ्क nb_samples)
 {
-    const size_t cur_size = av_fifo_can_read (af->buf[0]) +
+    ध्रुव size_t cur_size = av_fifo_can_read (af->buf[0]) +
                             av_fifo_can_write(af->buf[0]);
-    int i, ret, buf_size;
+    पूर्णाङ्क i, ret, buf_size;
 
-    if ((ret = av_samples_get_buffer_size(&buf_size, af->channels, nb_samples,
+    यदि ((ret = av_samples_get_buffer_size(&buf_size, af->channels, nb_samples,
                                           af->sample_fmt, 1)) < 0)
-        return ret;
+        प्रत्यागम ret;
 
-    if (buf_size > cur_size) {
-        for (i = 0; i < af->nb_buffers; i++) {
-            if ((ret = av_fifo_grow2(af->buf[i], buf_size - cur_size)) < 0)
-                return ret;
+    यदि (buf_size > cur_size) {
+        प्रति (i = 0; i < af->nb_buffers; i++) {
+            यदि ((ret = av_fifo_grow2(af->buf[i], buf_size - cur_size)) < 0)
+                प्रत्यागम ret;
         }
     }
     af->allocated_samples = nb_samples;
-    return 0;
+    प्रत्यागम 0;
 }
 
-int av_audio_fifo_write(AVAudioFifo *af, void * const *data, int nb_samples)
+पूर्णाङ्क av_audio_fifo_write(AVAudioFifo *af, शून्य * ध्रुव *data, पूर्णाङ्क nb_samples)
 {
-    int i, ret, size;
+    पूर्णाङ्क i, ret, size;
 
     /* automatically reallocate buffers if needed */
-    if (av_audio_fifo_space(af) < nb_samples) {
-        int current_size = av_audio_fifo_size(af);
+    यदि (av_audio_fifo_space(af) < nb_samples) {
+        पूर्णाङ्क current_size = av_audio_fifo_size(af);
         /* check for integer overflow in new size calculation */
-        if (INT_MAX / 2 - current_size < nb_samples)
-            return AVERROR(EINVAL);
+        यदि (INT_MAX / 2 - current_size < nb_samples)
+            प्रत्यागम AVERROR(EINVAL);
         /* reallocate buffers */
-        if ((ret = av_audio_fifo_realloc(af, 2 * (current_size + nb_samples))) < 0)
-            return ret;
+        यदि ((ret = av_audio_fifo_realloc(af, 2 * (current_size + nb_samples))) < 0)
+            प्रत्यागम ret;
     }
 
     size = nb_samples * af->sample_size;
-    for (i = 0; i < af->nb_buffers; i++) {
+    प्रति (i = 0; i < af->nb_buffers; i++) {
         ret = av_fifo_write(af->buf[i], data[i], size);
-        if (ret < 0)
-            return AVERROR_BUG;
+        यदि (ret < 0)
+            प्रत्यागम AVERROR_BUG;
     }
     af->nb_samples += nb_samples;
 
-    return nb_samples;
+    प्रत्यागम nb_samples;
 }
 
-int av_audio_fifo_peek(const AVAudioFifo *af, void * const *data, int nb_samples)
+पूर्णाङ्क av_audio_fifo_peek(ध्रुव AVAudioFifo *af, शून्य * ध्रुव *data, पूर्णाङ्क nb_samples)
 {
-    return av_audio_fifo_peek_at(af, data, nb_samples, 0);
+    प्रत्यागम av_audio_fifo_peek_at(af, data, nb_samples, 0);
 }
 
-int av_audio_fifo_peek_at(const AVAudioFifo *af, void * const *data,
-                          int nb_samples, int offset)
+पूर्णाङ्क av_audio_fifo_peek_at(ध्रुव AVAudioFifo *af, शून्य * ध्रुव *data,
+                          पूर्णाङ्क nb_samples, पूर्णाङ्क offset)
 {
-    int i, ret, size;
+    पूर्णाङ्क i, ret, size;
 
-    if (offset < 0 || offset >= af->nb_samples)
-        return AVERROR(EINVAL);
-    if (nb_samples < 0)
-        return AVERROR(EINVAL);
+    यदि (offset < 0 || offset >= af->nb_samples)
+        प्रत्यागम AVERROR(EINVAL);
+    यदि (nb_samples < 0)
+        प्रत्यागम AVERROR(EINVAL);
     nb_samples = FFMIN(nb_samples, af->nb_samples);
-    if (!nb_samples)
-        return 0;
-    if (offset > af->nb_samples - nb_samples)
-        return AVERROR(EINVAL);
+    यदि (!nb_samples)
+        प्रत्यागम 0;
+    यदि (offset > af->nb_samples - nb_samples)
+        प्रत्यागम AVERROR(EINVAL);
 
     offset *= af->sample_size;
     size = nb_samples * af->sample_size;
-    for (i = 0; i < af->nb_buffers; i++) {
-        if ((ret = av_fifo_peek(af->buf[i], data[i], size, offset)) < 0)
-            return AVERROR_BUG;
+    प्रति (i = 0; i < af->nb_buffers; i++) {
+        यदि ((ret = av_fifo_peek(af->buf[i], data[i], size, offset)) < 0)
+            प्रत्यागम AVERROR_BUG;
     }
 
-    return nb_samples;
+    प्रत्यागम nb_samples;
 }
 
-int av_audio_fifo_read(AVAudioFifo *af, void * const *data, int nb_samples)
+पूर्णाङ्क av_audio_fifo_read(AVAudioFifo *af, शून्य * ध्रुव *data, पूर्णाङ्क nb_samples)
 {
-    int i, size;
+    पूर्णाङ्क i, size;
 
-    if (nb_samples < 0)
-        return AVERROR(EINVAL);
+    यदि (nb_samples < 0)
+        प्रत्यागम AVERROR(EINVAL);
     nb_samples = FFMIN(nb_samples, af->nb_samples);
-    if (!nb_samples)
-        return 0;
+    यदि (!nb_samples)
+        प्रत्यागम 0;
 
     size = nb_samples * af->sample_size;
-    for (i = 0; i < af->nb_buffers; i++) {
-        if (av_fifo_read(af->buf[i], data[i], size) < 0)
-            return AVERROR_BUG;
+    प्रति (i = 0; i < af->nb_buffers; i++) {
+        यदि (av_fifo_read(af->buf[i], data[i], size) < 0)
+            प्रत्यागम AVERROR_BUG;
     }
     af->nb_samples -= nb_samples;
 
-    return nb_samples;
+    प्रत्यागम nb_samples;
 }
 
-int av_audio_fifo_drain(AVAudioFifo *af, int nb_samples)
+पूर्णाङ्क av_audio_fifo_drain(AVAudioFifo *af, पूर्णाङ्क nb_samples)
 {
-    int i, size;
+    पूर्णाङ्क i, size;
 
-    if (nb_samples < 0)
-        return AVERROR(EINVAL);
+    यदि (nb_samples < 0)
+        प्रत्यागम AVERROR(EINVAL);
     nb_samples = FFMIN(nb_samples, af->nb_samples);
 
-    if (nb_samples) {
+    यदि (nb_samples) {
         size = nb_samples * af->sample_size;
-        for (i = 0; i < af->nb_buffers; i++)
+        प्रति (i = 0; i < af->nb_buffers; i++)
             av_fifo_drain2(af->buf[i], size);
         af->nb_samples -= nb_samples;
     }
-    return 0;
+    प्रत्यागम 0;
 }
 
-void av_audio_fifo_reset(AVAudioFifo *af)
+शून्य av_audio_fifo_reset(AVAudioFifo *af)
 {
-    int i;
+    पूर्णाङ्क i;
 
-    for (i = 0; i < af->nb_buffers; i++)
+    प्रति (i = 0; i < af->nb_buffers; i++)
         av_fifo_reset2(af->buf[i]);
 
     af->nb_samples = 0;
 }
 
-int av_audio_fifo_size(AVAudioFifo *af)
+पूर्णाङ्क av_audio_fifo_size(AVAudioFifo *af)
 {
-    return af->nb_samples;
+    प्रत्यागम af->nb_samples;
 }
 
-int av_audio_fifo_space(AVAudioFifo *af)
+पूर्णाङ्क av_audio_fifo_space(AVAudioFifo *af)
 {
-    return af->allocated_samples - af->nb_samples;
+    प्रत्यागम af->allocated_samples - af->nb_samples;
 }

@@ -16,113 +16,113 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/mem_internal.h"
-#include "libavutil/timer.h"
+#अन्तर्भाव "libavutil/mem_internal.h"
+#अन्तर्भाव "libavutil/timer.h"
 
-#include "libavutil/des.c"
+#अन्तर्भाव "libavutil/des.c"
 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <string.h>
 
-#include "libavutil/time.h"
+#अन्तर्भाव "libavutil/time.h"
 
-static uint64_t rand64(void)
+स्थिर uint64_t rand64(शून्य)
 {
     uint64_t r = rand();
     r = (r << 32) | rand();
-    return r;
+    प्रत्यागम r;
 }
 
-static const uint8_t test_key[] = { 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0 };
-static const DECLARE_ALIGNED(8, uint8_t, plain)[] = { 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10 };
-static const DECLARE_ALIGNED(8, uint8_t, crypt_ref)[] = { 0x4a, 0xb6, 0x5b, 0x3d, 0x4b, 0x06, 0x15, 0x18 };
-static DECLARE_ALIGNED(8, uint8_t, tmp)[8];
-static DECLARE_ALIGNED(8, uint8_t, large_buffer)[10002][8];
-static const uint8_t cbc_key[] = {
+स्थिर ध्रुव uint8_t test_कुंजी[] = { 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0 };
+स्थिर ध्रुव DECLARE_ALIGNED(8, uint8_t, plain)[] = { 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10 };
+स्थिर ध्रुव DECLARE_ALIGNED(8, uint8_t, crypt_ref)[] = { 0x4a, 0xb6, 0x5b, 0x3d, 0x4b, 0x06, 0x15, 0x18 };
+स्थिर DECLARE_ALIGNED(8, uint8_t, tmp)[8];
+स्थिर DECLARE_ALIGNED(8, uint8_t, large_buffer)[10002][8];
+स्थिर ध्रुव uint8_t cbc_कुंजी[] = {
     0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef,
     0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01,
     0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23
 };
 
-static int run_test(int cbc, int decrypt)
+स्थिर पूर्णाङ्क run_test(पूर्णाङ्क cbc, पूर्णाङ्क decrypt)
 {
     AVDES d;
-    int delay = cbc && !decrypt ? 2 : 1;
+    पूर्णाङ्क delay = cbc && !decrypt ? 2 : 1;
     uint64_t res;
     AV_WB64(large_buffer[0], 0x4e6f772069732074ULL);
     AV_WB64(large_buffer[1], 0x1234567890abcdefULL);
     AV_WB64(tmp,             0x1234567890abcdefULL);
-    av_des_init(&d, cbc_key, 192, decrypt);
-    av_des_crypt(&d, large_buffer[delay], large_buffer[0], 10000, cbc ? tmp : NULL, decrypt);
+    av_des_init(&d, cbc_कुंजी, 192, decrypt);
+    av_des_crypt(&d, large_buffer[delay], large_buffer[0], 10000, cbc ? tmp : रिक्त, decrypt);
     res = AV_RB64(large_buffer[9999 + delay]);
-    if (cbc) {
-        if (decrypt)
-            return res == 0xc5cecf63ecec514cULL;
-        else
-            return res == 0xcb191f85d1ed8439ULL;
-    } else {
-        if (decrypt)
-            return res == 0x8325397644091a0aULL;
-        else
-            return res == 0xdd17e8b8b437d232ULL;
+    यदि (cbc) {
+        यदि (decrypt)
+            प्रत्यागम res == 0xc5cecf63ecec514cULL;
+        अन्यथा
+            प्रत्यागम res == 0xcb191f85d1ed8439ULL;
+    } अन्यथा {
+        यदि (decrypt)
+            प्रत्यागम res == 0x8325397644091a0aULL;
+        अन्यथा
+            प्रत्यागम res == 0xdd17e8b8b437d232ULL;
     }
 }
 
-union word_byte {
+सङ्घ word_byte {
     uint64_t word;
     uint8_t byte[8];
 };
 
-int main(void)
+पूर्णाङ्क main(शून्य)
 {
     AVDES d;
-    int i;
-    union word_byte key[3], data, ct;
+    पूर्णाङ्क i;
+    सङ्घ word_byte कुंजी[3], data, ct;
     uint64_t roundkeys[16];
     srand(av_gettime());
-    key[0].word = AV_RB64(test_key);
+    कुंजी[0].word = AV_RB64(test_कुंजी);
     data.word   = AV_RB64(plain);
-    gen_roundkeys(roundkeys, key[0].word);
-    if (des_encdec(data.word, roundkeys, 0) != AV_RB64(crypt_ref)) {
+    gen_roundkeys(roundkeys, कुंजी[0].word);
+    यदि (des_encdec(data.word, roundkeys, 0) != AV_RB64(crypt_ref)) {
         printf("Test 1 failed\n");
-        return 1;
+        प्रत्यागम 1;
     }
-    av_des_init(&d, test_key, 64, 0);
-    av_des_crypt(&d, tmp, plain, 1, NULL, 0);
-    if (memcmp(tmp, crypt_ref, sizeof(crypt_ref))) {
+    av_des_init(&d, test_कुंजी, 64, 0);
+    av_des_crypt(&d, tmp, plain, 1, रिक्त, 0);
+    यदि (memcmp(tmp, crypt_ref, परिमाण(crypt_ref))) {
         printf("Public API decryption failed\n");
-        return 1;
+        प्रत्यागम 1;
     }
-    if (!run_test(0, 0) || !run_test(0, 1) || !run_test(1, 0) || !run_test(1, 1)) {
+    यदि (!run_test(0, 0) || !run_test(0, 1) || !run_test(1, 0) || !run_test(1, 1)) {
         printf("Partial Monte-Carlo test failed\n");
-        return 1;
+        प्रत्यागम 1;
     }
-    for (i = 0; i < 1000; i++) {
-        key[0].word = rand64();
-        key[1].word = rand64();
-        key[2].word = rand64();
+    प्रति (i = 0; i < 1000; i++) {
+        कुंजी[0].word = rand64();
+        कुंजी[1].word = rand64();
+        कुंजी[2].word = rand64();
         data.word   = rand64();
-        av_des_init(&d, key[0].byte, 192, 0);
-        av_des_crypt(&d, ct.byte, data.byte, 1, NULL, 0);
-        av_des_init(&d, key[0].byte, 192, 1);
-        av_des_crypt(&d, ct.byte, ct.byte, 1, NULL, 1);
-        if (ct.word != data.word) {
+        av_des_init(&d, कुंजी[0].byte, 192, 0);
+        av_des_crypt(&d, ct.byte, data.byte, 1, रिक्त, 0);
+        av_des_init(&d, कुंजी[0].byte, 192, 1);
+        av_des_crypt(&d, ct.byte, ct.byte, 1, रिक्त, 1);
+        यदि (ct.word != data.word) {
             printf("Test 2 failed\n");
-            return 1;
+            प्रत्यागम 1;
         }
     }
 #ifdef GENTABLES
     printf("static const uint32_t S_boxes_P_shuffle[8][64] = {\n");
-    for (i = 0; i < 8; i++) {
-        int j;
+    प्रति (i = 0; i < 8; i++) {
+        पूर्णाङ्क j;
         printf("    {");
-        for (j = 0; j < 64; j++) {
+        प्रति (j = 0; j < 64; j++) {
             uint32_t v = S_boxes[i][j >> 1];
             v   = j & 1 ? v >> 4 : v & 0xf;
             v <<= 28 - 4 * i;
-            v   = shuffle(v, P_shuffle, sizeof(P_shuffle));
+            v   = shuffle(v, P_shuffle, परिमाण(P_shuffle));
             printf((j & 7) == 0 ? "\n    " : " ");
             printf("0x%08X,", v);
         }
@@ -130,5 +130,5 @@ int main(void)
     }
     printf("};\n");
 #endif
-    return 0;
+    प्रत्यागम 0;
 }
