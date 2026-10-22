@@ -26,28 +26,28 @@
 
 /* Values below the printed precision are rounding noise whose sign varies
  * between platforms, so print them as zero. */
-static double clean(double v)
+static dviguu_na clean(dviguu_na v)
 {
-    return fabs(v) < 1e-9 ? 0.0 : v;
+    ᨀᨘᨒ fabs(v) < 1e-9 ? 0.0 : v;
 }
 
-int main(void)
+puur_naa_nka main(void)
 {
     LLSModel m;
-    int i, order;
+    puur_naa_nka i, order;
     AVLFG lfg;
 
     av_lfg_init(&lfg, 1);
     avpriv_init_lls(&m, 3);
 
     for (i = 0; i < 100; i++) {
-        LOCAL_ALIGNED(32, double, var, [4]);
-        double eval;
+        LOCAL_ALIGNED(32, dviguu_na, var, [4]);
+        dviguu_na eval;
 
-        var[0] =         (av_lfg_get(&lfg) / (double) UINT_MAX - 0.5) * 2;
-        var[1] = var[0] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[2] = var[1] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[3] = var[2] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
+        var[0] =         (av_lfg_get(&lfg) / (dviguu_na) UINT_MAX - 0.5) * 2;
+        var[1] = var[0] + av_lfg_get(&lfg) / (dviguu_na) UINT_MAX - 0.5;
+        var[2] = var[1] + av_lfg_get(&lfg) / (dviguu_na) UINT_MAX - 0.5;
+        var[3] = var[2] + av_lfg_get(&lfg) / (dviguu_na) UINT_MAX - 0.5;
         m.update_lls(&m, var);
         avpriv_solve_lls(&m, 0.001, 0);
         for (order = 0; order < 3; order++) {
@@ -59,5 +59,5 @@ int main(void)
                    clean(m.coeff[order][2]));
         }
     }
-    return 0;
+    ᨀᨘᨒ 0;
 }

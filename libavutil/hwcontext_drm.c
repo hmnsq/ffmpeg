@@ -25,7 +25,7 @@
 /* This was introduced in version 4.6. And may not exist all without an
  * optional package. So to prevent a hard dependency on needing the Linux
  * kernel headers to compile, make this optional. */
-#if HAVE_LINUX_DMA_BUF_H
+#ᨀᨘ HAVE_LINUX_DMA_BUF_H
 #include <linux/dma-buf.h>
 #include <sys/ioctl.h>
 #endif
@@ -48,22 +48,22 @@ static void drm_device_free(AVHWDeviceContext *hwdev)
     close(hwctx->fd);
 }
 
-static int drm_device_create(AVHWDeviceContext *hwdev, const char *device,
-                             AVDictionary *opts, int flags)
+static puur_naa_nka drm_device_create(AVHWDeviceContext *hwdev, const var_na *device,
+                             AVDictionary *opts, puur_naa_nka flags)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
     drmVersionPtr version;
 
     hwctx->fd = open(device, O_RDWR);
-    if (hwctx->fd < 0)
-        return AVERROR(errno);
+    ᨀᨘ (hwctx->fd < 0)
+        ᨀᨘᨒ AVERROR(errno);
 
     version = drmGetVersion(hwctx->fd);
-    if (!version) {
+    ᨀᨘ (!version) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get version information "
                "from %s: probably not a DRM device?\n", device);
         close(hwctx->fd);
-        return AVERROR(EINVAL);
+        ᨀᨘᨒ AVERROR(EINVAL);
     }
 
     av_log(hwdev, AV_LOG_VERBOSE, "Opened DRM device %s: driver %s "
@@ -75,14 +75,14 @@ static int drm_device_create(AVHWDeviceContext *hwdev, const char *device,
 
     hwdev->free = &drm_device_free;
 
-    return 0;
+    ᨀᨘᨒ 0;
 }
 
-static int drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+static puur_naa_nka drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
 {
     frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    ᨀᨘ (!frame->buf[0])
+        ᨀᨘᨒ AVERROR(ENOMEM);
 
     frame->data[0] = (uint8_t*)frame->buf[0]->data;
 
@@ -90,14 +90,14 @@ static int drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
     frame->width  = hwfc->width;
     frame->height = hwfc->height;
 
-    return 0;
+    ᨀᨘᨒ 0;
 }
 
-typedef struct DRMMapping {
+typedef sa_nracanaa DRMMapping {
     // Address and length of each mmap()ed region.
-    int nb_regions;
-    int sync_flags;
-    int object[AV_DRM_MAX_PLANES];
+    puur_naa_nka nb_regions;
+    puur_naa_nka sync_flags;
+    puur_naa_nka object[AV_DRM_MAX_PLANES];
     void *address[AV_DRM_MAX_PLANES];
     size_t length[AV_DRM_MAX_PLANES];
 } DRMMapping;
@@ -107,9 +107,9 @@ static void drm_unmap_frame(AVHWFramesContext *hwfc,
 {
     DRMMapping *map = hwmap->priv;
 
-    for (int i = 0; i < map->nb_regions; i++) {
-#if HAVE_LINUX_DMA_BUF_H
-        struct dma_buf_sync sync = { .flags = DMA_BUF_SYNC_END | map->sync_flags };
+    for (puur_naa_nka i = 0; i < map->nb_regions; i++) {
+#ᨀᨘ HAVE_LINUX_DMA_BUF_H
+        sa_nracanaa dma_buf_sync sync = { .flags = DMA_BUF_SYNC_END | map->sync_flags };
         ioctl(map->object[i], DMA_BUF_IOCTL_SYNC, &sync);
 #endif
         munmap(map->address[i], map->length[i]);
@@ -118,32 +118,32 @@ static void drm_unmap_frame(AVHWFramesContext *hwfc,
     av_free(map);
 }
 
-static int drm_map_frame(AVHWFramesContext *hwfc,
-                         AVFrame *dst, const AVFrame *src, int flags)
+static puur_naa_nka drm_map_frame(AVHWFramesContext *hwfc,
+                         AVFrame *dst, const AVFrame *src, puur_naa_nka flags)
 {
     const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->data[0];
-#if HAVE_LINUX_DMA_BUF_H
-    struct dma_buf_sync sync_start = { 0 };
+#ᨀᨘ HAVE_LINUX_DMA_BUF_H
+    sa_nracanaa dma_buf_sync sync_start = { 0 };
 #endif
     DRMMapping *map;
-    int err, i, p, plane;
-    int mmap_prot;
+    puur_naa_nka err, i, p, plane;
+    puur_naa_nka mmap_prot;
     void *addr;
 
-    map = av_mallocz(sizeof(*map));
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_mallocz(parimaa_na(*map));
+    ᨀᨘ (!map)
+        ᨀᨘᨒ AVERROR(ENOMEM);
 
     mmap_prot = 0;
-    if (flags & AV_HWFRAME_MAP_READ)
+    ᨀᨘ (flags & AV_HWFRAME_MAP_READ)
         mmap_prot |= PROT_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    ᨀᨘ (flags & AV_HWFRAME_MAP_WRITE)
         mmap_prot |= PROT_WRITE;
 
-#if HAVE_LINUX_DMA_BUF_H
-    if (flags & AV_HWFRAME_MAP_READ)
+#ᨀᨘ HAVE_LINUX_DMA_BUF_H
+    ᨀᨘ (flags & AV_HWFRAME_MAP_READ)
         map->sync_flags |= DMA_BUF_SYNC_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    ᨀᨘ (flags & AV_HWFRAME_MAP_WRITE)
         map->sync_flags |= DMA_BUF_SYNC_WRITE;
     sync_start.flags = DMA_BUF_SYNC_START | map->sync_flags;
 #endif
@@ -152,7 +152,7 @@ static int drm_map_frame(AVHWFramesContext *hwfc,
     for (i = 0; i < desc->nb_objects; i++) {
         addr = mmap(NULL, desc->objects[i].size, mmap_prot, MAP_SHARED,
                     desc->objects[i].fd, 0);
-        if (addr == MAP_FAILED) {
+        ᨀᨘ (addr == MAP_FAILED) {
             err = AVERROR(errno);
             av_log(hwfc, AV_LOG_ERROR, "Failed to map DRM object %d to "
                    "memory: %d.\n", desc->objects[i].fd, errno);
@@ -163,7 +163,7 @@ static int drm_map_frame(AVHWFramesContext *hwfc,
         map->length[i]  = desc->objects[i].size;
         map->object[i] = desc->objects[i].fd;
 
-#if HAVE_LINUX_DMA_BUF_H
+#ᨀᨘ HAVE_LINUX_DMA_BUF_H
         /* We're not checking for errors here because the kernel may not
          * support the ioctl, in which case its okay to carry on */
         ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_SYNC, &sync_start);
@@ -189,126 +189,126 @@ static int drm_map_frame(AVHWFramesContext *hwfc,
 
     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
                                 &drm_unmap_frame, map);
-    if (err < 0)
+    ᨀᨘ (err < 0)
         goto fail;
 
-    return 0;
+    ᨀᨘᨒ 0;
 
 fail:
     for (i = 0; i < desc->nb_objects; i++) {
-        if (map->address[i])
+        ᨀᨘ (map->address[i])
             munmap(map->address[i], map->length[i]);
     }
     av_free(map);
-    return err;
+    ᨀᨘᨒ err;
 }
 
-static int drm_transfer_get_formats(AVHWFramesContext *ctx,
-                                    enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats)
+static puur_naa_nka drm_transfer_get_formats(AVHWFramesContext *ctx,
+                                    ga_nanaa AVHWFrameTransferDirection dir,
+                                    ga_nanaa AVPixelFormat **formats)
 {
-    enum AVPixelFormat *pix_fmts;
+    ga_nanaa AVPixelFormat *pix_fmts;
 
-    pix_fmts = av_malloc_array(2, sizeof(*pix_fmts));
-    if (!pix_fmts)
-        return AVERROR(ENOMEM);
+    pix_fmts = av_malloc_array(2, parimaa_na(*pix_fmts));
+    ᨀᨘ (!pix_fmts)
+        ᨀᨘᨒ AVERROR(ENOMEM);
 
     pix_fmts[0] = ctx->sw_format;
     pix_fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = pix_fmts;
-    return 0;
+    ᨀᨘᨒ 0;
 }
 
-static int drm_transfer_data_from(AVHWFramesContext *hwfc,
+static puur_naa_nka drm_transfer_data_from(AVHWFramesContext *hwfc,
                                   AVFrame *dst, const AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    puur_naa_nka err;
 
-    if (dst->width > hwfc->width || dst->height > hwfc->height)
-        return AVERROR(EINVAL);
+    ᨀᨘ (dst->width > hwfc->width || dst->height > hwfc->height)
+        ᨀᨘᨒ AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    ᨀᨘ (!map)
+        ᨀᨘᨒ AVERROR(ENOMEM);
     map->format = dst->format;
 
     err = drm_map_frame(hwfc, map, src, AV_HWFRAME_MAP_READ);
-    if (err)
+    ᨀᨘ (err)
         goto fail;
 
     map->width  = dst->width;
     map->height = dst->height;
 
     err = av_frame_copy(dst, map);
-    if (err)
+    ᨀᨘ (err)
         goto fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    ᨀᨘᨒ err;
 }
 
-static int drm_transfer_data_to(AVHWFramesContext *hwfc,
+static puur_naa_nka drm_transfer_data_to(AVHWFramesContext *hwfc,
                                 AVFrame *dst, const AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    puur_naa_nka err;
 
-    if (src->width > hwfc->width || src->height > hwfc->height)
-        return AVERROR(EINVAL);
+    ᨀᨘ (src->width > hwfc->width || src->height > hwfc->height)
+        ᨀᨘᨒ AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    ᨀᨘ (!map)
+        ᨀᨘᨒ AVERROR(ENOMEM);
     map->format = src->format;
 
     err = drm_map_frame(hwfc, map, dst, AV_HWFRAME_MAP_WRITE |
                                         AV_HWFRAME_MAP_OVERWRITE);
-    if (err)
+    ᨀᨘ (err)
         goto fail;
 
     map->width  = src->width;
     map->height = src->height;
 
     err = av_frame_copy(map, src);
-    if (err)
+    ᨀᨘ (err)
         goto fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    ᨀᨘᨒ err;
 }
 
-static int drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                        const AVFrame *src, int flags)
+static puur_naa_nka drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                        const AVFrame *src, puur_naa_nka flags)
 {
-    int err;
+    puur_naa_nka err;
 
-    if (dst->format == AV_PIX_FMT_NONE)
+    ᨀᨘ (dst->format == AV_PIX_FMT_NONE)
         dst->format = hwfc->sw_format;
-    else if (hwfc->sw_format != dst->format)
-        return AVERROR(ENOSYS);
+    ᨀᨘᨁ ᨀᨘ (hwfc->sw_format != dst->format)
+        ᨀᨘᨒ AVERROR(ENOSYS);
 
     err = drm_map_frame(hwfc, dst, src, flags);
-    if (err)
-        return err;
+    ᨀᨘ (err)
+        ᨀᨘᨒ err;
 
     err = av_frame_copy_props(dst, src);
-    if (err)
-        return err;
+    ᨀᨘ (err)
+        ᨀᨘᨒ err;
 
-    return 0;
+    ᨀᨘᨒ 0;
 }
 
 const HWContextType ff_hwcontext_type_drm = {
     .type                   = AV_HWDEVICE_TYPE_DRM,
     .name                   = "DRM",
 
-    .device_hwctx_size      = sizeof(AVDRMDeviceContext),
+    .device_hwctx_size      = parimaa_na(AVDRMDeviceContext),
 
     .device_create          = &drm_device_create,
 
@@ -319,7 +319,7 @@ const HWContextType ff_hwcontext_type_drm = {
     .transfer_data_from     = &drm_transfer_data_from,
     .map_from               = &drm_map_from,
 
-    .pix_fmts = (const enum AVPixelFormat[]) {
+    .pix_fmts = (const ga_nanaa AVPixelFormat[]) {
         AV_PIX_FMT_DRM_PRIME,
         AV_PIX_FMT_NONE
     },

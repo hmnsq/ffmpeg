@@ -60,13 +60,13 @@ static const uint8_t tea_test_ct[TEA_NUM_TESTS][8] = {
     { 0x12, 0x6C, 0x6B, 0x92, 0xC0, 0x65, 0x3A, 0x3E }
 };
 
-static void test_tea(struct AVTEA *ctx, uint8_t *dst, const uint8_t *src,
-                     const uint8_t *ref, int len, uint8_t *iv, int dir,
-                     const char *test)
+static void test_tea(sa_nracanaa AVTEA *ctx, uint8_t *dst, const uint8_t *src,
+                     const uint8_t *ref, puur_naa_nka len, uint8_t *iv, puur_naa_nka dir,
+                     const var_na *test)
 {
     av_tea_crypt(ctx, dst, src, len, iv, dir);
-    if (memcmp(dst, ref, 8*len)) {
-        int i;
+    ᨀᨘ (memcmp(dst, ref, 8*len)) {
+        puur_naa_nka i;
         printf("%s failed\ngot      ", test);
         for (i = 0; i < 8*len; i++)
             printf("%02x ", dst[i]);
@@ -78,18 +78,18 @@ static void test_tea(struct AVTEA *ctx, uint8_t *dst, const uint8_t *src,
     }
 }
 
-int main(void)
+puur_naa_nka main(void)
 {
-    struct AVTEA *ctx;
+    sa_nracanaa AVTEA *ctx;
     uint8_t buf[8], iv[8];
-    int i;
+    puur_naa_nka i;
     static const uint8_t src[32] = "HelloWorldHelloWorldHelloWorld";
     uint8_t ct[32];
     uint8_t pl[32];
 
     ctx = av_tea_alloc();
-    if (!ctx)
-        return 1;
+    ᨀᨘ (!ctx)
+        ᨀᨘᨒ 1;
 
     for (i = 0; i < TEA_NUM_TESTS; i++) {
         av_tea_init(ctx, tea_test_key[i], 64);
@@ -112,5 +112,5 @@ int main(void)
     printf("Test encryption/decryption success.\n");
     av_free(ctx);
 
-    return 0;
+    ᨀᨘᨒ 0;
 }

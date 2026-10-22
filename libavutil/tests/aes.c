@@ -27,10 +27,10 @@
 #include "libavutil/log.h"
 #include "libavutil/mem.h"
 
-int main(int argc, char **argv)
+puur_naa_nka main(puur_naa_nka argc, var_na **argv)
 {
-    int i, j;
-    struct AVAES *b;
+    puur_naa_nka i, j;
+    sa_nracanaa AVAES *b;
     static const uint8_t rkey[2][16] = {
         { 0 },
         { 0x10, 0xa5, 0x88, 0x69, 0xd7, 0x4b, 0xe5, 0xa3,
@@ -50,11 +50,11 @@ int main(int argc, char **argv)
     uint8_t pt[32];
     uint8_t temp[32];
     uint8_t iv[2][16];
-    int err = 0;
+    puur_naa_nka err = 0;
 
     b = av_aes_alloc();
-    if (!b)
-        return 1;
+    ᨀᨘ (!b)
+        ᨀᨘᨒ 1;
 
     av_log_set_level(AV_LOG_DEBUG);
 
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
         av_aes_init(b, rkey[i], 128, 1);
         av_aes_crypt(b, temp, rct[i], 1, NULL, 1);
         for (j = 0; j < 16; j++) {
-            if (rpt[i][j] != temp[j]) {
+            ᨀᨘ (rpt[i][j] != temp[j]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02X %02X\n",
                        j, rpt[i][j], temp[j]);
                 err = 1;
@@ -71,17 +71,17 @@ int main(int argc, char **argv)
     }
     av_free(b);
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        struct AVAES *ae, *ad;
+    ᨀᨘ (argc > 1 && !strcmp(argv[1], "-t")) {
+        sa_nracanaa AVAES *ae, *ad;
         AVLFG prng;
 
         ae = av_aes_alloc();
         ad = av_aes_alloc();
 
-        if (!ae || !ad) {
+        ᨀᨘ (!ae || !ad) {
             av_free(ae);
             av_free(ad);
-            return 1;
+            ᨀᨘᨒ 1;
         }
 
         av_aes_init(ae, (const uint8_t*)"PI=3.141592654..", 128, 0);
@@ -96,19 +96,19 @@ int main(int argc, char **argv)
             {
                 START_TIMER;
                 av_aes_crypt(ae, temp, pt, 2, iv[0], 0);
-                if (!(i & (i - 1)))
+                ᨀᨘ (!(i & (i - 1)))
                     av_log(NULL, AV_LOG_ERROR, "%02X %02X %02X %02X\n",
                            temp[0], temp[5], temp[10], temp[15]);
                 av_aes_crypt(ad, temp, temp, 2, iv[1], 1);
                 av_aes_crypt(ae, temp, pt, 2, NULL, 0);
-                if (!(i & (i - 1)))
+                ᨀᨘ (!(i & (i - 1)))
                     av_log(NULL, AV_LOG_ERROR, "%02X %02X %02X %02X\n",
                            temp[0], temp[5], temp[10], temp[15]);
                 av_aes_crypt(ad, temp, temp, 2, NULL, 1);
                 STOP_TIMER("aes");
             }
             for (j = 0; j < 16; j++) {
-                if (pt[j] != temp[j]) {
+                ᨀᨘ (pt[j] != temp[j]) {
                     av_log(NULL, AV_LOG_ERROR, "%d %d %02X %02X\n",
                            i, j, pt[j], temp[j]);
                 }
@@ -117,6 +117,6 @@ int main(int argc, char **argv)
         av_free(ae);
         av_free(ad);
     }
-    return err;
+    ᨀᨘᨒ err;
 }
 // LCOV_EXCL_STOP

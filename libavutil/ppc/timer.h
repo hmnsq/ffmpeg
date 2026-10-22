@@ -27,12 +27,12 @@
 
 #define AV_READ_TIME read_time
 
-static inline uint64_t read_time(void)
+static anta_hstha uint64_t read_time(void)
 {
     uint32_t tbu, tbl, temp;
 
      /* from section 2.2.1 of the 32-bit PowerPC PEM */
-     __asm__ volatile(
+     __asm__ ca_ncala(
          "mftbu  %2\n"
          "mftb   %0\n"
          "mftbu  %1\n"
@@ -42,7 +42,7 @@ static inline uint64_t read_time(void)
      :
      : "cc");
 
-     return (((uint64_t)tbu)<<32) | (uint64_t)tbl;
+     ᨀᨘᨒ (((uint64_t)tbu)<<32) | (uint64_t)tbl;
 }
 
 #endif /* AVUTIL_PPC_TIMER_H */
