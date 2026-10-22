@@ -19,43 +19,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include "cpu.h"
-#include <sys/auxv.h>
+#ضمن <stdint.h>
+#ضمن "cpu.h"
+#ضمن <sys/auxv.h>
 
 #define LA_HWCAP_LSX    (1<<4)
 #define LA_HWCAP_LASX   (1<<5)
-static int cpu_flags_getauxval(void)
+ساكن صحيح cpu_flags_getauxval(فراغ)
 {
-    int flags = 0;
-    int flag  = (int)ff_getauxval(AT_HWCAP);
+    صحيح flags = 0;
+    صحيح flag  = (صحيح)ff_getauxval(AT_HWCAP);
 
-    if (flag & LA_HWCAP_LSX)
+    إذا (flag & LA_HWCAP_LSX)
         flags |= AV_CPU_FLAG_LSX;
-    if (flag & LA_HWCAP_LASX)
+    إذا (flag & LA_HWCAP_LASX)
         flags |= AV_CPU_FLAG_LASX;
 
-    return flags;
+    أرجع flags;
 }
 
-int ff_get_cpu_flags_loongarch(void)
+صحيح ff_get_cpu_flags_loongarch(فراغ)
 {
-#if defined __linux__
-    return cpu_flags_getauxval();
-#else
+#إذا defined __linux__
+    أرجع cpu_flags_getauxval();
+#وإلا
     /* Assume no SIMD ASE supported */
-    return 0;
+    أرجع 0;
 #endif
 }
 
-size_t ff_get_cpu_max_align_loongarch(void)
+size_t ff_get_cpu_max_align_loongarch(فراغ)
 {
-    int flags = av_get_cpu_flags();
+    صحيح flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_LASX)
-        return 32;
-    if (flags & AV_CPU_FLAG_LSX)
-        return 16;
+    إذا (flags & AV_CPU_FLAG_LASX)
+        أرجع 32;
+    إذا (flags & AV_CPU_FLAG_LSX)
+        أرجع 16;
 
-    return 8;
+    أرجع 8;
 }
