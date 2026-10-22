@@ -24,20 +24,20 @@
  * @author Ryan Martell <rdm4@martellventures.com> (with lots of Michael)
  */
 
-#include <limits.h>
-#include <stddef.h>
+#ضمن <limits.h>
+#ضمن <stddef.h>
 
-#include "base64.h"
-#include "base64_internal.h"
-#include "error.h"
+#ضمن "base64.h"
+#ضمن "base64_internal.h"
+#ضمن "error.h"
 
-#if ARCH_AARCH64
-#include "libavutil/aarch64/cpu.h"
-#include "libavutil/aarch64/base64.h"
+#ܐܢ ARCH_AARCH64
+#ضمن "libavutil/aarch64/cpu.h"
+#ضمن "libavutil/aarch64/base64.h"
 #endif
 
 /* ---------------- private code */
-static const uint8_t map2[256] =
+ساكن ثابت uint8_t map2[256] =
 {
     0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -76,27 +76,27 @@ static const uint8_t map2[256] =
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
 };
 
-#define BASE64_DEC_STEP(i) do { \
+#define BASE64_DEC_STEP(i) ܥܒܕ { \
     bits = map2[in[i]]; \
-    if (bits & 0x80) \
-        goto out ## i; \
+    ܐܢ (bits & 0x80) \
+        اذهب out ## i; \
     v = i ? (v << 6) + bits : bits; \
-} while(0)
+} ܟܡܐ(0)
 
-int av_base64_decode(uint8_t *out, const char *in_str, int out_size)
+صحيح av_base64_decode(uint8_t *out, ثابت حرف *in_str, صحيح out_size)
 {
     uint8_t *dst = out;
     uint8_t *end;
     // no sign extension
-    const uint8_t *in = in_str;
+    ثابت uint8_t *in = in_str;
     unsigned bits = 0xff;
     unsigned v;
 
-    if (!out)
-        goto validity_check;
+    ܐܢ (!out)
+        اذهب validity_check;
 
     end = out + out_size;
-    while (end - dst > 3) {
+    ܟܡܐ (end - dst > 3) {
         BASE64_DEC_STEP(0);
         BASE64_DEC_STEP(1);
         BASE64_DEC_STEP(2);
@@ -107,20 +107,20 @@ int av_base64_decode(uint8_t *out, const char *in_str, int out_size)
         dst += 3;
         in += 4;
     }
-    if (end - dst) {
+    ܐܢ (end - dst) {
         BASE64_DEC_STEP(0);
         BASE64_DEC_STEP(1);
         BASE64_DEC_STEP(2);
         BASE64_DEC_STEP(3);
         *dst++ = v >> 16;
-        if (end - dst)
+        ܐܢ (end - dst)
             *dst++ = v >> 8;
-        if (end - dst)
+        ܐܢ (end - dst)
             *dst++ = v;
         in += 4;
     }
 validity_check:
-    while (1) {
+    ܟܡܐ (1) {
         BASE64_DEC_STEP(0);
         in++;
         BASE64_DEC_STEP(0);
@@ -132,15 +132,15 @@ validity_check:
     }
 
 out3:
-    if (end - dst)
+    ܐܢ (end - dst)
         *dst++ = v >> 10;
     v <<= 2;
 out2:
-    if (end - dst)
+    ܐܢ (end - dst)
         *dst++ = v >> 4;
 out1:
 out0:
-    return bits & 1 ? AVERROR_INVALIDDATA : out ? dst - out : 0;
+    ܦܢܐ bits & 1 ? AVERROR_INVALIDDATA : out ? dst - out : 0;
 }
 
 /*****************************************************************************
@@ -149,18 +149,18 @@ out0:
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-char *av_base64_encode(char *out, int out_size, const uint8_t *in, int in_size)
+حرف *av_base64_encode(حرف *out, صحيح out_size, ثابت uint8_t *in, صحيح in_size)
 {
-    static const char b64[] =
+    ساكن ثابت حرف b64[] =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    if (in_size >= UINT_MAX / 4 ||
+    ܐܢ (in_size >= UINT_MAX / 4 ||
         out_size < AV_BASE64_SIZE(in_size))
-        return NULL;
-#if ARCH_AARCH64
-    if (in_size >= 48 && have_neon(av_get_cpu_flags())) {
-        return ff_base64_encode_neon(out, in, in_size, b64);
+        ܦܢܐ عدم;
+#ܐܢ ARCH_AARCH64
+    ܐܢ (in_size >= 48 && have_neon(av_get_cpu_flags())) {
+        ܦܢܐ ff_base64_encode_neon(out, in, in_size, b64);
     }
 #endif
-    return ff_base64_encode_c(out, in, in_size, b64);
+    ܦܢܐ ff_base64_encode_c(out, in, in_size, b64);
 }

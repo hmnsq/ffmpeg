@@ -19,11 +19,11 @@
 #ifndef AVUTIL_OBJC_H
 #define AVUTIL_OBJC_H
 
-#include <Foundation/Foundation.h>
+#ضمن <Foundation/Foundation.h>
 
-static inline void ff_objc_release(NSObject **obj)
+ساكن مضمن فراغ ff_objc_release(NSObject **obj)
 {
-    if (*obj) {
+    ܐܢ (*obj) {
         [*obj release];
         *obj = nil;
     }

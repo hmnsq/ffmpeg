@@ -16,75 +16,75 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include "cpu.h"
-#include "internal.h"
-#include "slicethread.h"
-#include "mem.h"
-#include "thread.h"
-#include "avassert.h"
+#ضمن <stdatomic.h>
+#ضمن "cpu.h"
+#ضمن "internal.h"
+#ضمن "slicethread.h"
+#ضمن "mem.h"
+#ضمن "thread.h"
+#ضمن "avassert.h"
 
 #define MAX_AUTO_THREADS 16
 
-#if HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
+#ܐܢ HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
 
-typedef struct WorkerContext {
+تعريفنوع بنية WorkerContext {
     AVSliceThread   *ctx;
     pthread_mutex_t mutex;
     pthread_cond_t  cond;
     pthread_t       thread;
-    int             done;
+    صحيح             done;
 } WorkerContext;
 
-struct AVSliceThread {
+بنية AVSliceThread {
     WorkerContext   *workers;
-    int             nb_threads;
-    int             nb_active_threads;
-    int             nb_jobs;
+    صحيح             nb_threads;
+    صحيح             nb_active_threads;
+    صحيح             nb_jobs;
 
     atomic_uint     first_job;
     atomic_uint     current_job;
     pthread_mutex_t done_mutex;
     pthread_cond_t  done_cond;
-    int             done;
-    int             finished;
+    صحيح             done;
+    صحيح             finished;
     atomic_int      error;
 
-    void            *priv;
-    int            (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads);
-    int            (*main_func)(void *priv);
+    فراغ            *priv;
+    صحيح            (*worker_func)(فراغ *priv, صحيح jobnr, صحيح threadnr, صحيح nb_jobs, صحيح nb_threads);
+    صحيح            (*main_func)(فراغ *priv);
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
-    void           (*worker_func_v1)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads);
-    void           (*main_func_v1)(void *priv);
-    void            *priv_v1;
+#ܐܢ LIBAVUTIL_VERSION_MAJOR < 62
+    فراغ           (*worker_func_v1)(فراغ *priv, صحيح jobnr, صحيح threadnr, صحيح nb_jobs, صحيح nb_threads);
+    فراغ           (*main_func_v1)(فراغ *priv);
+    فراغ            *priv_v1;
 #endif
 };
 
-static int run_jobs(AVSliceThread *ctx)
+ساكن صحيح run_jobs(AVSliceThread *ctx)
 {
     unsigned nb_jobs    = ctx->nb_jobs;
     unsigned nb_active_threads = ctx->nb_active_threads;
     unsigned first_job    = atomic_fetch_add_explicit(&ctx->first_job, 1, memory_order_acq_rel);
     unsigned current_job  = first_job;
 
-    do {
-        int ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
-        if (ret)
-            continue;
+    ܥܒܕ {
+        صحيح ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
+        ܐܢ (ret)
+            استمر;
         ret = ctx->worker_func(ctx->priv, current_job, first_job, nb_jobs, nb_active_threads);
-        if (ret) {
-            int prev = 0;
+        ܐܢ (ret) {
+            صحيح prev = 0;
             atomic_compare_exchange_strong_explicit(&ctx->error, &prev, ret,
                                                     memory_order_relaxed,
                                                     memory_order_relaxed);
         }
-    } while ((current_job = atomic_fetch_add_explicit(&ctx->current_job, 1, memory_order_acq_rel)) < nb_jobs);
+    } ܟܡܐ ((current_job = atomic_fetch_add_explicit(&ctx->current_job, 1, memory_order_acq_rel)) < nb_jobs);
 
-    return current_job == nb_jobs + nb_active_threads - 1;
+    ܦܢܐ current_job == nb_jobs + nb_active_threads - 1;
 }
 
-static void *attribute_align_arg thread_worker(void *v)
+ساكن فراغ *attribute_align_arg thread_worker(فراغ *v)
 {
     WorkerContext *w = v;
     AVSliceThread *ctx = w->ctx;
@@ -92,17 +92,17 @@ static void *attribute_align_arg thread_worker(void *v)
     pthread_mutex_lock(&w->mutex);
     pthread_cond_signal(&w->cond);
 
-    while (1) {
+    ܟܡܐ (1) {
         w->done = 1;
-        while (w->done)
+        ܟܡܐ (w->done)
             pthread_cond_wait(&w->cond, &w->mutex);
 
-        if (ctx->finished) {
+        ܐܢ (ctx->finished) {
             pthread_mutex_unlock(&w->mutex);
-            return NULL;
+            ܦܢܐ عدم;
         }
 
-        if (run_jobs(ctx)) {
+        ܐܢ (run_jobs(ctx)) {
             pthread_mutex_lock(&ctx->done_mutex);
             ctx->done = 1;
             pthread_cond_signal(&ctx->done_cond);
@@ -112,35 +112,35 @@ static void *attribute_align_arg thread_worker(void *v)
 }
 
 av_cold
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads)
+صحيح avpriv_slicethread_create2(AVSliceThread **pctx, فراغ *priv,
+                               صحيح (*worker_func)(فراغ *priv, صحيح jobnr, صحيح threadnr, صحيح nb_jobs, صحيح nb_threads),
+                               صحيح (*main_func)(فراغ *priv),
+                               صحيح nb_threads)
 {
     AVSliceThread *ctx;
-    int nb_workers, i;
-    int ret;
+    صحيح nb_workers, i;
+    صحيح ret;
 
     av_assert0(nb_threads >= 0);
-    if (!nb_threads) {
-        int nb_cpus = av_cpu_count();
-        if (nb_cpus > 1)
+    ܐܢ (!nb_threads) {
+        صحيح nb_cpus = av_cpu_count();
+        ܐܢ (nb_cpus > 1)
             nb_threads = FFMIN(nb_cpus + 1, MAX_AUTO_THREADS);
-        else
+        ܐܚܪܢܐ
             nb_threads = 1;
     }
 
     nb_workers = nb_threads;
-    if (!main_func)
+    ܐܢ (!main_func)
         nb_workers--;
 
-    *pctx = ctx = av_mallocz(sizeof(*ctx));
-    if (!ctx)
-        return AVERROR(ENOMEM);
+    *pctx = ctx = av_mallocz(حجم(*ctx));
+    ܐܢ (!ctx)
+        ܦܢܐ AVERROR(ENOMEM);
 
-    if (nb_workers && !(ctx->workers = av_calloc(nb_workers, sizeof(*ctx->workers)))) {
+    ܐܢ (nb_workers && !(ctx->workers = av_calloc(nb_workers, حجم(*ctx->workers)))) {
         av_freep(pctx);
-        return AVERROR(ENOMEM);
+        ܦܢܐ AVERROR(ENOMEM);
     }
 
     ctx->priv        = priv;
@@ -153,59 +153,59 @@ int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
 
     atomic_init(&ctx->first_job, 0);
     atomic_init(&ctx->current_job, 0);
-    ret = pthread_mutex_init(&ctx->done_mutex, NULL);
-    if (ret) {
+    ret = pthread_mutex_init(&ctx->done_mutex, عدم);
+    ܐܢ (ret) {
         av_freep(&ctx->workers);
         av_freep(pctx);
-        return AVERROR(ret);
+        ܦܢܐ AVERROR(ret);
     }
-    ret = pthread_cond_init(&ctx->done_cond, NULL);
-    if (ret) {
+    ret = pthread_cond_init(&ctx->done_cond, عدم);
+    ܐܢ (ret) {
         ctx->nb_threads = main_func ? 0 : 1;
         avpriv_slicethread_free(pctx);
-        return AVERROR(ret);
+        ܦܢܐ AVERROR(ret);
     }
     ctx->done        = 0;
 
-    for (i = 0; i < nb_workers; i++) {
+    لكل (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
         w->ctx = ctx;
-        ret = pthread_mutex_init(&w->mutex, NULL);
-        if (ret) {
+        ret = pthread_mutex_init(&w->mutex, عدم);
+        ܐܢ (ret) {
             ctx->nb_threads = main_func ? i : i + 1;
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            ܦܢܐ AVERROR(ret);
         }
-        ret = pthread_cond_init(&w->cond, NULL);
-        if (ret) {
+        ret = pthread_cond_init(&w->cond, عدم);
+        ܐܢ (ret) {
             pthread_mutex_destroy(&w->mutex);
             ctx->nb_threads = main_func ? i : i + 1;
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            ܦܢܐ AVERROR(ret);
         }
         pthread_mutex_lock(&w->mutex);
         w->done = 0;
 
-        if (ret = pthread_create(&w->thread, NULL, thread_worker, w)) {
+        ܐܢ (ret = pthread_create(&w->thread, عدم, thread_worker, w)) {
             ctx->nb_threads = main_func ? i : i + 1;
             pthread_mutex_unlock(&w->mutex);
             pthread_cond_destroy(&w->cond);
             pthread_mutex_destroy(&w->mutex);
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            ܦܢܐ AVERROR(ret);
         }
 
-        while (!w->done)
+        ܟܡܐ (!w->done)
             pthread_cond_wait(&w->cond, &w->mutex);
         pthread_mutex_unlock(&w->mutex);
     }
 
-    return nb_threads;
+    ܦܢܐ nb_threads;
 }
 
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main)
+صحيح avpriv_slicethread_execute2(AVSliceThread *ctx, صحيح nb_jobs, صحيح execute_main)
 {
-    int nb_workers, i, is_last = 0, ret = 0;
+    صحيح nb_workers, i, is_last = 0, ret = 0;
 
     av_assert0(nb_jobs > 0);
     ctx->nb_jobs           = nb_jobs;
@@ -214,10 +214,10 @@ int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_mai
     atomic_store_explicit(&ctx->first_job, 0, memory_order_relaxed);
     atomic_store_explicit(&ctx->current_job, ctx->nb_active_threads, memory_order_relaxed);
     nb_workers             = ctx->nb_active_threads;
-    if (!ctx->main_func || !execute_main)
+    ܐܢ (!ctx->main_func || !execute_main)
         nb_workers--;
 
-    for (i = 0; i < nb_workers; i++) {
+    لكل (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
         pthread_mutex_lock(&w->mutex);
         w->done = 0;
@@ -225,39 +225,39 @@ int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_mai
         pthread_mutex_unlock(&w->mutex);
     }
 
-    if (ctx->main_func && execute_main) {
+    ܐܢ (ctx->main_func && execute_main) {
         ret = ctx->main_func(ctx->priv);
-    } else
+    } ܐܚܪܢܐ
         is_last = run_jobs(ctx);
 
-    if (!is_last) {
+    ܐܢ (!is_last) {
         pthread_mutex_lock(&ctx->done_mutex);
-        while (!ctx->done)
+        ܟܡܐ (!ctx->done)
             pthread_cond_wait(&ctx->done_cond, &ctx->done_mutex);
         ctx->done = 0;
         pthread_mutex_unlock(&ctx->done_mutex);
     }
 
-    if (!ret)
+    ܐܢ (!ret)
         ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
 
-    return ret;
+    ܦܢܐ ret;
 }
 
-av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
+av_cold فراغ avpriv_slicethread_free(AVSliceThread **pctx)
 {
     AVSliceThread *ctx = *pctx;
-    int nb_workers, i;
+    صحيح nb_workers, i;
 
-    if (!ctx)
-        return;
+    ܐܢ (!ctx)
+        ܦܢܐ;
 
     nb_workers = ctx->nb_threads;
-    if (!ctx->main_func)
+    ܐܢ (!ctx->main_func)
         nb_workers--;
 
     ctx->finished = 1;
-    for (i = 0; i < nb_workers; i++) {
+    لكل (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
         pthread_mutex_lock(&w->mutex);
         w->done = 0;
@@ -265,9 +265,9 @@ av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
         pthread_mutex_unlock(&w->mutex);
     }
 
-    for (i = 0; i < nb_workers; i++) {
+    لكل (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
-        pthread_join(w->thread, NULL);
+        pthread_join(w->thread, عدم);
         pthread_cond_destroy(&w->cond);
         pthread_mutex_destroy(&w->mutex);
     }
@@ -282,80 +282,80 @@ av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
  * Backwards compatibility wrapper for the deprecated avpriv_ slicethread API.
  */
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#ܐܢ LIBAVUTIL_VERSION_MAJOR < 62
 
-static int wrapper_worker(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads)
+ساكن صحيح wrapper_worker(فراغ *priv, صحيح jobnr, صحيح threadnr, صحيح nb_jobs, صحيح nb_threads)
 {
     AVSliceThread *ctx = priv;
     ctx->worker_func_v1(ctx->priv_v1, jobnr, threadnr, nb_jobs, nb_threads);
-    return 0;
+    ܦܢܐ 0;
 }
 
-static int wrapper_main(void *priv)
+ساكن صحيح wrapper_main(فراغ *priv)
 {
     AVSliceThread *ctx = priv;
     ctx->main_func_v1(ctx->priv_v1);
-    return 0;
+    ܦܢܐ 0;
 }
 
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                              void (*main_func)(void *priv),
-                              int nb_threads)
+صحيح avpriv_slicethread_create(AVSliceThread **pctx, فراغ *priv,
+                              فراغ (*worker_func)(فراغ *priv, صحيح jobnr, صحيح threadnr, صحيح nb_jobs, صحيح nb_threads),
+                              فراغ (*main_func)(فراغ *priv),
+                              صحيح nb_threads)
 {
-    int ret = avpriv_slicethread_create2(pctx, NULL, wrapper_worker,
-                                         main_func ? wrapper_main : NULL,
+    صحيح ret = avpriv_slicethread_create2(pctx, عدم, wrapper_worker,
+                                         main_func ? wrapper_main : عدم,
                                          nb_threads);
-    if (ret < 0)
-        return ret;
+    ܐܢ (ret < 0)
+        ܦܢܐ ret;
 
     (*pctx)->priv           = *pctx;
     (*pctx)->priv_v1        = priv;
     (*pctx)->worker_func_v1 = worker_func;
     (*pctx)->main_func_v1   = main_func;
-    return ret;
+    ܦܢܐ ret;
 }
 
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main)
+فراغ avpriv_slicethread_execute(AVSliceThread *ctx, صحيح nb_jobs, صحيح execute_main)
 {
     avpriv_slicethread_execute2(ctx, nb_jobs, execute_main);
 }
 
 #endif /* LIBAVUTIL_VERSION_MAJOR < 62 */
 
-#else /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
+#ܐܚܪܢܐ /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
 
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads)
+صحيح avpriv_slicethread_create2(AVSliceThread **pctx, فراغ *priv,
+                               صحيح (*worker_func)(فراغ *priv, صحيح jobnr, صحيح threadnr, صحيح nb_jobs, صحيح nb_threads),
+                               صحيح (*main_func)(فراغ *priv),
+                               صحيح nb_threads)
 {
-    *pctx = NULL;
-    return AVERROR(ENOSYS);
+    *pctx = عدم;
+    ܦܢܐ AVERROR(ENOSYS);
 }
 
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main)
+صحيح avpriv_slicethread_execute2(AVSliceThread *ctx, صحيح nb_jobs, صحيح execute_main)
 {
     av_assert0(0);
 }
 
-void avpriv_slicethread_free(AVSliceThread **pctx)
+فراغ avpriv_slicethread_free(AVSliceThread **pctx)
 {
     av_assert0(!pctx || !*pctx);
 }
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#ܐܢ LIBAVUTIL_VERSION_MAJOR < 62
 
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                              void (*main_func)(void *priv),
-                              int nb_threads)
+صحيح avpriv_slicethread_create(AVSliceThread **pctx, فراغ *priv,
+                              فراغ (*worker_func)(فراغ *priv, صحيح jobnr, صحيح threadnr, صحيح nb_jobs, صحيح nb_threads),
+                              فراغ (*main_func)(فراغ *priv),
+                              صحيح nb_threads)
 {
-    *pctx = NULL;
-    return AVERROR(ENOSYS);
+    *pctx = عدم;
+    ܦܢܐ AVERROR(ENOSYS);
 }
 
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main)
+فراغ avpriv_slicethread_execute(AVSliceThread *ctx, صحيح nb_jobs, صحيح execute_main)
 {
     av_assert0(0);
 }

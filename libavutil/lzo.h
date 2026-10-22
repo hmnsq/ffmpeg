@@ -29,7 +29,7 @@
  * @{
  */
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
 /** @name Error flags returned by av_lzo1x_decode
  * @{ */
@@ -57,7 +57,7 @@
  * Make sure all buffers are appropriately padded, in must provide
  * AV_LZO_INPUT_PADDING, out must provide AV_LZO_OUTPUT_PADDING additional bytes.
  */
-int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen);
+صحيح av_lzo1x_decode(فراغ *out, صحيح *outlen, ثابت فراغ *in, صحيح *inlen);
 
 /**
  * @}

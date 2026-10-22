@@ -19,88 +19,88 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+#ضمن <limits.h>
+#ضمن <stdarg.h>
+#ضمن <stdint.h>
+#ضمن <stdio.h>
+#ضمن <string.h>
 
-#include "config.h"
-#include "mem.h"
-#include "avassert.h"
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
+#ضمن "config.h"
+#ضمن "mem.h"
+#ضمن "avassert.h"
+#ضمن "avstring.h"
+#ضمن "bprint.h"
+#ضمن "error.h"
+#ضمن "macros.h"
 
-int av_strstart(const char *str, const char *pfx, const char **ptr)
+صحيح av_strstart(ثابت حرف *str, ثابت حرف *pfx, ثابت حرف **ptr)
 {
-    while (*pfx && *pfx == *str) {
+    ܟܡܐ (*pfx && *pfx == *str) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    ܐܢ (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    ܦܢܐ !*pfx;
 }
 
-int av_stristart(const char *str, const char *pfx, const char **ptr)
+صحيح av_stristart(ثابت حرف *str, ثابت حرف *pfx, ثابت حرف **ptr)
 {
-    while (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
+    ܟܡܐ (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    ܐܢ (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    ܦܢܐ !*pfx;
 }
 
-char *av_stristr(const char *s1, const char *s2)
+حرف *av_stristr(ثابت حرف *s1, ثابت حرف *s2)
 {
-    if (!*s2)
-        return (char*)(intptr_t)s1;
+    ܐܢ (!*s2)
+        ܦܢܐ (حرف*)(intptr_t)s1;
 
-    do
-        if (av_stristart(s1, s2, NULL))
-            return (char*)(intptr_t)s1;
-    while (*s1++);
+    ܥܒܕ
+        ܐܢ (av_stristart(s1, s2, عدم))
+            ܦܢܐ (حرف*)(intptr_t)s1;
+    ܟܡܐ (*s1++);
 
-    return NULL;
+    ܦܢܐ عدم;
 }
 
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length)
+حرف *av_strnstr(ثابت حرف *haystack, ثابت حرف *needle, size_t hay_length)
 {
     size_t needle_len = strlen(needle);
-    if (!needle_len)
-        return (char*)haystack;
-    while (hay_length >= needle_len) {
+    ܐܢ (!needle_len)
+        ܦܢܐ (حرف*)haystack;
+    ܟܡܐ (hay_length >= needle_len) {
         hay_length--;
-        if (!memcmp(haystack, needle, needle_len))
-            return (char*)haystack;
+        ܐܢ (!memcmp(haystack, needle, needle_len))
+            ܦܢܐ (حرف*)haystack;
         haystack++;
     }
-    return NULL;
+    ܦܢܐ عدم;
 }
 
-size_t av_strlcpy(char *dst, const char *src, size_t size)
+size_t av_strlcpy(حرف *dst, ثابت حرف *src, size_t size)
 {
     size_t len = 0;
-    while (++len < size && *src)
+    ܟܡܐ (++len < size && *src)
         *dst++ = *src++;
-    if (len <= size)
+    ܐܢ (len <= size)
         *dst = 0;
-    return len + strlen(src) - 1;
+    ܦܢܐ len + strlen(src) - 1;
 }
 
-size_t av_strlcat(char *dst, const char *src, size_t size)
+size_t av_strlcat(حرف *dst, ثابت حرف *src, size_t size)
 {
     size_t len = strlen(dst);
-    if (size <= len + 1)
-        return len + strlen(src);
-    return len + av_strlcpy(dst + len, src, size - len);
+    ܐܢ (size <= len + 1)
+        ܦܢܐ len + strlen(src);
+    ܦܢܐ len + av_strlcpy(dst + len, src, size - len);
 }
 
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
+size_t av_strlcatf(حرف *dst, size_t size, ثابت حرف *fmt, ...)
 {
     size_t len = strlen(dst);
     va_list vl;
@@ -109,299 +109,299 @@ size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
     len += vsnprintf(dst + len, size > len ? size - len : 0, fmt, vl);
     va_end(vl);
 
-    return len;
+    ܦܢܐ len;
 }
 
-char *av_asprintf(const char *fmt, ...)
+حرف *av_asprintf(ثابت حرف *fmt, ...)
 {
-    char *p = NULL;
+    حرف *p = عدم;
     va_list va;
-    int len;
+    صحيح len;
 
     va_start(va, fmt);
-    len = vsnprintf(NULL, 0, fmt, va);
+    len = vsnprintf(عدم, 0, fmt, va);
     va_end(va);
-    if (len < 0)
-        goto end;
+    ܐܢ (len < 0)
+        اذهب end;
 
     p = av_malloc(len + 1);
-    if (!p)
-        goto end;
+    ܐܢ (!p)
+        اذهب end;
 
     va_start(va, fmt);
     len = vsnprintf(p, len + 1, fmt, va);
     va_end(va);
-    if (len < 0)
+    ܐܢ (len < 0)
         av_freep(&p);
 
 end:
-    return p;
+    ܦܢܐ p;
 }
 
 #define WHITESPACES " \n\t\r"
 
-char *av_get_token(const char **buf, const char *term)
+حرف *av_get_token(ثابت حرف **buf, ثابت حرف *term)
 {
-    char *out     = av_realloc(NULL, strlen(*buf) + 1);
-    char *ret     = out, *end = out;
-    const char *p = *buf;
-    if (!out)
-        return NULL;
+    حرف *out     = av_realloc(عدم, strlen(*buf) + 1);
+    حرف *ret     = out, *end = out;
+    ثابت حرف *p = *buf;
+    ܐܢ (!out)
+        ܦܢܐ عدم;
     p += strspn(p, WHITESPACES);
 
-    while (*p && !strspn(p, term)) {
-        char c = *p++;
-        if (c == '\\' && *p) {
+    ܟܡܐ (*p && !strspn(p, term)) {
+        حرف c = *p++;
+        ܐܢ (c == '\\' && *p) {
             *out++ = *p++;
             end    = out;
-        } else if (c == '\'') {
-            while (*p && *p != '\'')
+        } ܐܚܪܢܐ ܐܢ (c == '\'') {
+            ܟܡܐ (*p && *p != '\'')
                 *out++ = *p++;
-            if (*p) {
+            ܐܢ (*p) {
                 p++;
                 end = out;
             }
-        } else {
+        } ܐܚܪܢܐ {
             *out++ = c;
         }
     }
 
-    do
+    ܥܒܕ
         *out-- = 0;
-    while (out >= end && strspn(out, WHITESPACES));
+    ܟܡܐ (out >= end && strspn(out, WHITESPACES));
 
     *buf = p;
 
-    char *small_ret = av_realloc(ret, out - ret + 2);
-    return small_ret ? small_ret : ret;
+    حرف *small_ret = av_realloc(ret, out - ret + 2);
+    ܦܢܐ small_ret ? small_ret : ret;
 }
 
-char *av_strtok(char *s, const char *delim, char **saveptr)
+حرف *av_strtok(حرف *s, ثابت حرف *delim, حرف **saveptr)
 {
-    char *tok;
+    حرف *tok;
 
-    if (!s && !(s = *saveptr))
-        return NULL;
+    ܐܢ (!s && !(s = *saveptr))
+        ܦܢܐ عدم;
 
     /* skip leading delimiters */
     s += strspn(s, delim);
 
     /* s now points to the first non delimiter char, or to the end of the string */
-    if (!*s) {
-        *saveptr = NULL;
-        return NULL;
+    ܐܢ (!*s) {
+        *saveptr = عدم;
+        ܦܢܐ عدم;
     }
     tok = s++;
 
     /* skip non delimiters */
     s += strcspn(s, delim);
-    if (*s) {
+    ܐܢ (*s) {
         *s = 0;
         *saveptr = s+1;
-    } else {
-        *saveptr = NULL;
+    } ܐܚܪܢܐ {
+        *saveptr = عدم;
     }
 
-    return tok;
+    ܦܢܐ tok;
 }
 
-int av_strcasecmp(const char *a, const char *b)
+صحيح av_strcasecmp(ثابت حرف *a, ثابت حرف *b)
 {
     uint8_t c1, c2;
-    do {
+    ܥܒܕ {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (c1 && c1 == c2);
-    return c1 - c2;
+    } ܟܡܐ (c1 && c1 == c2);
+    ܦܢܐ c1 - c2;
 }
 
-int av_strncasecmp(const char *a, const char *b, size_t n)
+صحيح av_strncasecmp(ثابت حرف *a, ثابت حرف *b, size_t n)
 {
     uint8_t c1, c2;
-    if (n <= 0)
-        return 0;
-    do {
+    ܐܢ (n <= 0)
+        ܦܢܐ 0;
+    ܥܒܕ {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (--n && c1 && c1 == c2);
-    return c1 - c2;
+    } ܟܡܐ (--n && c1 && c1 == c2);
+    ܦܢܐ c1 - c2;
 }
 
-char *av_strireplace(const char *str, const char *from, const char *to)
+حرف *av_strireplace(ثابت حرف *str, ثابت حرف *from, ثابت حرف *to)
 {
-    char *ret = NULL;
-    const char *pstr2, *pstr = str;
+    حرف *ret = عدم;
+    ثابت حرف *pstr2, *pstr = str;
     size_t tolen = strlen(to), fromlen = strlen(from);
     AVBPrint pbuf;
 
-    if (!fromlen)
-        return av_strdup(str);
+    ܐܢ (!fromlen)
+        ܦܢܐ av_strdup(str);
 
     av_bprint_init(&pbuf, 1, AV_BPRINT_SIZE_UNLIMITED);
-    while ((pstr2 = av_stristr(pstr, from))) {
+    ܟܡܐ ((pstr2 = av_stristr(pstr, from))) {
         av_bprint_append_data(&pbuf, pstr, pstr2 - pstr);
         pstr = pstr2 + fromlen;
         av_bprint_append_data(&pbuf, to, tolen);
     }
     av_bprint_append_data(&pbuf, pstr, strlen(pstr));
-    if (!av_bprint_is_complete(&pbuf)) {
-        av_bprint_finalize(&pbuf, NULL);
-    } else {
+    ܐܢ (!av_bprint_is_complete(&pbuf)) {
+        av_bprint_finalize(&pbuf, عدم);
+    } ܐܚܪܢܐ {
         av_bprint_finalize(&pbuf, &ret);
     }
 
-    return ret;
+    ܦܢܐ ret;
 }
 
-const char *av_basename(const char *path)
+ثابت حرف *av_basename(ثابت حرف *path)
 {
-    if (!path || *path == '\0')
-        return ".";
+    ܐܢ (!path || *path == '\0')
+        ܦܢܐ ".";
 
-    const char *p = strrchr(path, '/');
-#if HAVE_DOS_PATHS
-    const char *q = strrchr(path, '\\');
-    const char *d = strchr(path, ':');
+    ثابت حرف *p = strrchr(path, '/');
+#ܐܢ HAVE_DOS_PATHS
+    ثابت حرف *q = strrchr(path, '\\');
+    ثابت حرف *d = strchr(path, ':');
     p = FFMAX3(p, q, d);
 #endif
 
-    if (!p)
-        return path;
+    ܐܢ (!p)
+        ܦܢܐ path;
 
-    return p + 1;
+    ܦܢܐ p + 1;
 }
 
-const char *av_dirname(char *path)
+ثابت حرف *av_dirname(حرف *path)
 {
-    char *p = path ? strrchr(path, '/') : NULL;
+    حرف *p = path ? strrchr(path, '/') : عدم;
 
-#if HAVE_DOS_PATHS
-    char *q = path ? strrchr(path, '\\') : NULL;
-    char *d = path ? strchr(path, ':')  : NULL;
+#ܐܢ HAVE_DOS_PATHS
+    حرف *q = path ? strrchr(path, '\\') : عدم;
+    حرف *d = path ? strchr(path, ':')  : عدم;
 
     d = d ? d + 1 : d;
 
     p = FFMAX3(p, q, d);
 #endif
 
-    if (!p)
-        return ".";
+    ܐܢ (!p)
+        ܦܢܐ ".";
 
     *p = '\0';
 
-    return path;
+    ܦܢܐ path;
 }
 
-char *av_append_path_component(const char *path, const char *component)
+حرف *av_append_path_component(ثابت حرف *path, ثابت حرف *component)
 {
     size_t p_len, c_len;
-    char *fullpath;
+    حرف *fullpath;
 
-    if (!path)
-        return av_strdup(component);
-    if (!component)
-        return av_strdup(path);
+    ܐܢ (!path)
+        ܦܢܐ av_strdup(component);
+    ܐܢ (!component)
+        ܦܢܐ av_strdup(path);
 
     p_len = strlen(path);
     c_len = strlen(component);
-    if (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
-        return NULL;
+    ܐܢ (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
+        ܦܢܐ عدم;
     fullpath = av_malloc(p_len + c_len + 2);
-    if (fullpath) {
-        if (p_len) {
+    ܐܢ (fullpath) {
+        ܐܢ (p_len) {
             av_strlcpy(fullpath, path, p_len + 1);
-            if (c_len) {
-                if (fullpath[p_len - 1] != '/' && component[0] != '/')
+            ܐܢ (c_len) {
+                ܐܢ (fullpath[p_len - 1] != '/' && component[0] != '/')
                     fullpath[p_len++] = '/';
-                else if (fullpath[p_len - 1] == '/' && component[0] == '/')
+                ܐܚܪܢܐ ܐܢ (fullpath[p_len - 1] == '/' && component[0] == '/')
                     p_len--;
             }
         }
         av_strlcpy(&fullpath[p_len], component, c_len + 1);
         fullpath[p_len + c_len] = 0;
     }
-    return fullpath;
+    ܦܢܐ fullpath;
 }
 
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags)
+صحيح av_escape(حرف **dst, ثابت حرف *src, ثابت حرف *special_chars,
+              تعداد AVEscapeMode mode, صحيح flags)
 {
     AVBPrint dstbuf;
-    int ret;
+    صحيح ret;
 
     av_bprint_init(&dstbuf, 1, INT_MAX); /* (int)dstbuf.len must be >= 0 */
     av_bprint_escape(&dstbuf, src, special_chars, mode, flags);
 
-    if (!av_bprint_is_complete(&dstbuf)) {
-        av_bprint_finalize(&dstbuf, NULL);
-        return AVERROR(ENOMEM);
+    ܐܢ (!av_bprint_is_complete(&dstbuf)) {
+        av_bprint_finalize(&dstbuf, عدم);
+        ܦܢܐ AVERROR(ENOMEM);
     }
-    if ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
-        return ret;
-    return dstbuf.len;
+    ܐܢ ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
+        ܦܢܐ ret;
+    ܦܢܐ dstbuf.len;
 }
 
-int av_match_name(const char *name, const char *names)
+صحيح av_match_name(ثابت حرف *name, ثابت حرف *names)
 {
-    const char *p;
+    ثابت حرف *p;
     size_t len, namelen;
 
-    if (!name || !names)
-        return 0;
+    ܐܢ (!name || !names)
+        ܦܢܐ 0;
 
     namelen = strlen(name);
-    while (*names) {
-        int negate = '-' == *names;
+    ܟܡܐ (*names) {
+        صحيح negate = '-' == *names;
         p = strchr(names, ',');
-        if (!p)
+        ܐܢ (!p)
             p = names + strlen(names);
         names += negate;
         len = FFMAX(p - names, namelen);
-        if (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
-            return !negate;
+        ܐܢ (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
+            ܦܢܐ !negate;
         names = p + (*p == ',');
     }
-    return 0;
+    ܦܢܐ 0;
 }
 
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags)
+صحيح av_utf8_decode(int32_t *codep, ثابت uint8_t **bufp, ثابت uint8_t *buf_end,
+                   unsigned صحيح flags)
 {
-    const uint8_t *p = *bufp;
+    ثابت uint8_t *p = *bufp;
     uint32_t top;
     uint64_t code;
-    int ret = 0, tail_len;
+    صحيح ret = 0, tail_len;
     uint32_t overlong_encoding_mins[6] = {
         0x00000000, 0x00000080, 0x00000800, 0x00010000, 0x00200000, 0x04000000,
     };
 
-    if (p >= buf_end)
-        return 0;
+    ܐܢ (p >= buf_end)
+        ܦܢܐ 0;
 
     code = *p++;
 
     /* first sequence byte starts with 10, or is 1111-1110 or 1111-1111,
        which is not admitted */
-    if ((code & 0xc0) == 0x80 || code >= 0xFE) {
+    ܐܢ ((code & 0xc0) == 0x80 || code >= 0xFE) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        اذهب end;
     }
     top = (code & 128) >> 1;
 
     tail_len = 0;
-    while (code & top) {
-        int tmp;
+    ܟܡܐ (code & top) {
+        صحيح tmp;
         tail_len++;
-        if (p >= buf_end) {
+        ܐܢ (p >= buf_end) {
             (*bufp) ++;
-            return AVERROR(EILSEQ); /* incomplete sequence */
+            ܦܢܐ AVERROR(EILSEQ); /* incomplete sequence */
         }
 
         /* we assume the byte to be in the form 10xx-xxxx */
         tmp = *p++ - 128;   /* strip leading 1 */
-        if (tmp>>6) {
+        ܐܢ (tmp>>6) {
             (*bufp) ++;
-            return AVERROR(EILSEQ);
+            ܦܢܐ AVERROR(EILSEQ);
         }
         code = (code<<6) + tmp;
         top <<= 5;
@@ -410,54 +410,54 @@ int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
 
     /* check for overlong encodings */
     av_assert0(tail_len <= 5);
-    if (code < overlong_encoding_mins[tail_len]) {
+    ܐܢ (code < overlong_encoding_mins[tail_len]) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        اذهب end;
     }
 
-    if (code >= 1U<<31) {
+    ܐܢ (code >= 1U<<31) {
         ret = AVERROR(EILSEQ);  /* out-of-range value */
-        goto end;
+        اذهب end;
     }
 
     *codep = code;
 
-    if (code > 0x10FFFF &&
+    ܐܢ (code > 0x10FFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES))
         ret = AVERROR(EILSEQ);
-    if (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
+    ܐܢ (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
         flags & AV_UTF8_FLAG_EXCLUDE_XML_INVALID_CONTROL_CODES)
         ret = AVERROR(EILSEQ);
-    if (code >= 0xD800 && code <= 0xDFFF &&
+    ܐܢ (code >= 0xD800 && code <= 0xDFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_SURROGATES))
         ret = AVERROR(EILSEQ);
-    if ((code == 0xFFFE || code == 0xFFFF) &&
+    ܐܢ ((code == 0xFFFE || code == 0xFFFF) &&
         !(flags & AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS))
         ret = AVERROR(EILSEQ);
 
 end:
     *bufp = p;
-    return ret;
+    ܦܢܐ ret;
 }
 
-int av_match_list(const char *name, const char *list, char separator)
+صحيح av_match_list(ثابت حرف *name, ثابت حرف *list, حرف separator)
 {
-    const char *p, *q;
+    ثابت حرف *p, *q;
 
-    for (p = name; p && *p; ) {
-        for (q = list; q && *q; ) {
-            int k;
-            for (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
-                if (k && (!p[k] || p[k] == separator))
-                    return 1;
+    لكل (p = name; p && *p; ) {
+        لكل (q = list; q && *q; ) {
+            صحيح k;
+            لكل (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
+                ܐܢ (k && (!p[k] || p[k] == separator))
+                    ܦܢܐ 1;
             q = strchr(q, separator);
-            if(q)
+            ܐܢ(q)
                 q++;
         }
         p = strchr(p, separator);
-        if (p)
+        ܐܢ (p)
             p++;
     }
 
-    return 0;
+    ܦܢܐ 0;
 }

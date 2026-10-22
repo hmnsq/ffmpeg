@@ -21,9 +21,9 @@
 #ifndef AVUTIL_MIPS_GENERIC_MACROS_MSA_H
 #define AVUTIL_MIPS_GENERIC_MACROS_MSA_H
 
-#include <stdint.h>
-#include <msa.h>
-#include <config.h>
+#ضمن <stdint.h>
+#ضمن <msa.h>
+#ضمن <config.h>
 
 #define ALIGNMENT           16
 #define ALLOC_ALIGNED(align) __attribute__ ((aligned((align) << 1)))
@@ -44,7 +44,7 @@
 #define ST_UW(...) ST_V(v4u32, __VA_ARGS__)
 #define ST_SW(...) ST_V(v4i32, __VA_ARGS__)
 
-#if HAVE_MIPS32R6 || HAVE_MIPS64R6
+#ܐܢ HAVE_MIPS32R6 || HAVE_MIPS64R6
     #define LH(psrc)                              \
     ( {                                           \
         uint16_t val_lh_m = *(uint16_t *)(psrc);  \
@@ -57,13 +57,13 @@
         val_lw_m;                                 \
     } )
 
-    #if (__mips == 64)
+    #ܐܢ (__mips == 64)
         #define LD(psrc)                               \
         ( {                                            \
             uint64_t val_ld_m =  *(uint64_t *)(psrc);  \
             val_ld_m;                                  \
         } )
-    #else  // !(__mips == 64)
+    #ܐܚܪܢܐ  // !(__mips == 64)
         #define LD(psrc)                                                    \
         ( {                                                                 \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);                        \
@@ -85,13 +85,13 @@
     #define SW(val, pdst)  *(uint32_t *)(pdst) = (val);
     #define SD(val, pdst)  *(uint64_t *)(pdst) = (val);
 
-#else  // !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+#ܐܚܪܢܐ  // !HAVE_MIPS32R6 && !HAVE_MIPS64R6
     #define LH(psrc)                                 \
     ( {                                              \
         uint8_t *psrc_lh_m = (uint8_t *) (psrc);     \
         uint16_t val_lh_m;                           \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ متطاير (                           \
             "ulh  %[val_lh_m],  %[psrc_lh_m]  \n\t"  \
                                                      \
             : [val_lh_m] "=r" (val_lh_m)             \
@@ -106,7 +106,7 @@
         uint8_t *psrc_lw_m = (uint8_t *) (psrc);     \
         uint32_t val_lw_m;                           \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ متطاير (                           \
             "lwr %[val_lw_m], 0(%[psrc_lw_m]) \n\t"  \
             "lwl %[val_lw_m], 3(%[psrc_lw_m]) \n\t"  \
                                                      \
@@ -117,13 +117,13 @@
         val_lw_m;                                    \
     } )
 
-    #if (__mips == 64)
+    #ܐܢ (__mips == 64)
         #define LD(psrc)                                 \
         ( {                                              \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);     \
             uint64_t val_ld_m = 0;                       \
                                                          \
-            __asm__ volatile (                           \
+            __asm__ متطاير (                           \
                 "ldr %[val_ld_m], 0(%[psrc_ld_m]) \n\t"  \
                 "ldl %[val_ld_m], 7(%[psrc_ld_m]) \n\t"  \
                                                          \
@@ -133,7 +133,7 @@
                                                          \
             val_ld_m;                                    \
         } )
-    #else  // !(__mips == 64)
+    #ܐܚܪܢܐ  // !(__mips == 64)
         #define LD(psrc)                                                    \
         ( {                                                                 \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);                        \
@@ -156,7 +156,7 @@
         uint8_t *pdst_sh_m = (uint8_t *) (pdst);     \
         uint16_t val_sh_m = (val);                   \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ متطاير (                           \
             "ush  %[val_sh_m],  %[pdst_sh_m]  \n\t"  \
                                                      \
             : [pdst_sh_m] "=m" (*pdst_sh_m)          \
@@ -169,7 +169,7 @@
         uint8_t *pdst_sw_m = (uint8_t *) (pdst);     \
         uint32_t val_sw_m = (val);                   \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ متطاير (                           \
             "usw  %[val_sw_m],  %[pdst_sw_m]  \n\t"  \
                                                      \
             : [pdst_sw_m] "=m" (*pdst_sw_m)          \

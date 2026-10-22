@@ -20,23 +20,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_d3d12va_internal.h"
-#include "hwcontext_d3d12va.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "thread.h"
-#include "compat/w32dlfcn.h"
-#include <dxgi1_3.h>
+#ضمن "config.h"
+#ضمن "common.h"
+#ضمن "hwcontext.h"
+#ضمن "hwcontext_internal.h"
+#ضمن "hwcontext_d3d12va_internal.h"
+#ضمن "hwcontext_d3d12va.h"
+#ضمن "imgutils.h"
+#ضمن "mem.h"
+#ضمن "pixdesc.h"
+#ضمن "pixfmt.h"
+#ضمن "thread.h"
+#ضمن "compat/w32dlfcn.h"
+#ضمن <dxgi1_3.h>
 
-typedef HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY2)(UINT Flags, REFIID riid, void **ppFactory);
+تعريفنوع HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY2)(UINT Flags, REFIID riid, فراغ **ppFactory);
 
-typedef struct D3D12VAFramesContext {
+تعريفنوع بنية D3D12VAFramesContext {
     /**
      * The public AVD3D12VAFramesContext. See hwcontext_d3d12va.h for it.
      */
@@ -49,10 +49,10 @@ typedef struct D3D12VAFramesContext {
     ID3D12GraphicsCommandList *command_list;
     AVD3D12VASyncContext       sync_ctx;
     UINT                       luma_component_size;
-    int                        nb_surfaces_used;
+    صحيح                        nb_surfaces_used;
 } D3D12VAFramesContext;
 
-typedef struct D3D12VADevicePriv {
+تعريفنوع بنية D3D12VADevicePriv {
     /**
      * The public AVD3D12VADeviceContext. See hwcontext_d3d12va.h for it.
      */
@@ -64,49 +64,49 @@ typedef struct D3D12VADevicePriv {
     PFN_D3D12_GET_DEBUG_INTERFACE get_debug_interface;
 } D3D12VADevicePriv;
 
-static const struct {
+ساكن ثابت بنية {
     DXGI_FORMAT d3d_format;
-    enum AVPixelFormat pix_fmt;
+    تعداد AVPixelFormat pix_fmt;
 } supported_formats[] = {
     { DXGI_FORMAT_NV12, AV_PIX_FMT_NV12 },
     { DXGI_FORMAT_P010, AV_PIX_FMT_P010 },
     { DXGI_FORMAT_P016, AV_PIX_FMT_P012 },
 };
 
-static void d3d12va_default_lock(void *ctx)
+ساكن فراغ d3d12va_default_lock(فراغ *ctx)
 {
     WaitForSingleObjectEx(ctx, INFINITE, FALSE);
 }
 
-static void d3d12va_default_unlock(void *ctx)
+ساكن فراغ d3d12va_default_unlock(فراغ *ctx)
 {
     ReleaseMutex(ctx);
 }
 
-static int d3d12va_fence_completion(AVD3D12VASyncContext *psync_ctx)
+ساكن صحيح d3d12va_fence_completion(AVD3D12VASyncContext *psync_ctx)
 {
     uint64_t completion = ID3D12Fence_GetCompletedValue(psync_ctx->fence);
-    if (completion < psync_ctx->fence_value) {
-        if (FAILED(ID3D12Fence_SetEventOnCompletion(psync_ctx->fence, psync_ctx->fence_value, psync_ctx->event)))
-            return AVERROR(EINVAL);
+    ܐܢ (completion < psync_ctx->fence_value) {
+        ܐܢ (FAILED(ID3D12Fence_SetEventOnCompletion(psync_ctx->fence, psync_ctx->fence_value, psync_ctx->event)))
+            ܦܢܐ AVERROR(EINVAL);
 
         WaitForSingleObjectEx(psync_ctx->event, INFINITE, FALSE);
     }
 
-    return 0;
+    ܦܢܐ 0;
 }
 
-static inline int d3d12va_wait_queue_idle(AVD3D12VASyncContext *psync_ctx, ID3D12CommandQueue *command_queue)
+ساكن مضمن صحيح d3d12va_wait_queue_idle(AVD3D12VASyncContext *psync_ctx, ID3D12CommandQueue *command_queue)
 {
     DX_CHECK(ID3D12CommandQueue_Signal(command_queue, psync_ctx->fence, ++psync_ctx->fence_value));
-    return d3d12va_fence_completion(psync_ctx);
+    ܦܢܐ d3d12va_fence_completion(psync_ctx);
 
 fail:
-    return AVERROR(EINVAL);
+    ܦܢܐ AVERROR(EINVAL);
 }
 
-static int d3d12va_create_staging_buffer_resource(AVHWFramesContext *ctx, D3D12_RESOURCE_STATES states,
-                                                  ID3D12Resource **ppResource, int download)
+ساكن صحيح d3d12va_create_staging_buffer_resource(AVHWFramesContext *ctx, D3D12_RESOURCE_STATES states,
+                                                  ID3D12Resource **ppResource, صحيح download)
 {
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D12VAFramesContext   *s            = ctx->hwctx;
@@ -124,16 +124,16 @@ static int d3d12va_create_staging_buffer_resource(AVHWFramesContext *ctx, D3D12_
         .Flags              = D3D12_RESOURCE_FLAG_NONE,
     };
 
-    if (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, D3D12_HEAP_FLAG_NONE, &desc,
-        states, NULL, &IID_ID3D12Resource, (void **)ppResource))) {
+    ܐܢ (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, D3D12_HEAP_FLAG_NONE, &desc,
+        states, عدم, &IID_ID3D12Resource, (فراغ **)ppResource))) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the staging buffer resource\n");
-        return AVERROR_UNKNOWN;
+        ܦܢܐ AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ܦܢܐ 0;
 }
 
-static int d3d12va_create_helper_objects(AVHWFramesContext *ctx)
+ساكن صحيح d3d12va_create_helper_objects(AVHWFramesContext *ctx)
 {
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D12VAFramesContext   *s            = ctx->hwctx;
@@ -149,38 +149,38 @@ static int d3d12va_create_helper_objects(AVHWFramesContext *ctx)
                                      D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * ctx->height;
 
     DX_CHECK(ID3D12Device_CreateFence(device_hwctx->device, 0, D3D12_FENCE_FLAG_NONE,
-                                      &IID_ID3D12Fence, (void **)&s->sync_ctx.fence));
+                                      &IID_ID3D12Fence, (فراغ **)&s->sync_ctx.fence));
 
-    s->sync_ctx.event = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if (!s->sync_ctx.event)
-        goto fail;
+    s->sync_ctx.event = CreateEvent(عدم, FALSE, FALSE, عدم);
+    ܐܢ (!s->sync_ctx.event)
+        اذهب fail;
 
     DX_CHECK(ID3D12Device_CreateCommandQueue(device_hwctx->device, &queue_desc,
-             &IID_ID3D12CommandQueue, (void **)&s->command_queue));
+             &IID_ID3D12CommandQueue, (فراغ **)&s->command_queue));
 
     DX_CHECK(ID3D12Device_CreateCommandAllocator(device_hwctx->device, queue_desc.Type,
-             &IID_ID3D12CommandAllocator, (void **)&s->command_allocator));
+             &IID_ID3D12CommandAllocator, (فراغ **)&s->command_allocator));
 
     DX_CHECK(ID3D12Device_CreateCommandList(device_hwctx->device, 0, queue_desc.Type,
-             s->command_allocator, NULL, &IID_ID3D12GraphicsCommandList, (void **)&s->command_list));
+             s->command_allocator, عدم, &IID_ID3D12GraphicsCommandList, (فراغ **)&s->command_list));
 
     DX_CHECK(ID3D12GraphicsCommandList_Close(s->command_list));
 
     ID3D12CommandQueue_ExecuteCommandLists(s->command_queue, 1, (ID3D12CommandList **)&s->command_list);
 
-    return d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
+    ܦܢܐ d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
 
 fail:
-    return AVERROR(EINVAL);
+    ܦܢܐ AVERROR(EINVAL);
 }
 
-static void d3d12va_frames_uninit(AVHWFramesContext *ctx)
+ساكن فراغ d3d12va_frames_uninit(AVHWFramesContext *ctx)
 {
     D3D12VAFramesContext   *s     = ctx->hwctx;
     AVD3D12VAFramesContext *hwctx = ctx->hwctx;
 
     D3D12_OBJECT_RELEASE(s->sync_ctx.fence);
-    if (s->sync_ctx.event)
+    ܐܢ (s->sync_ctx.event)
         CloseHandle(s->sync_ctx.event);
 
     D3D12_OBJECT_RELEASE(s->staging_download_buffer);
@@ -189,56 +189,56 @@ static void d3d12va_frames_uninit(AVHWFramesContext *ctx)
     D3D12_OBJECT_RELEASE(s->command_list);
     D3D12_OBJECT_RELEASE(s->command_queue);
 
-    if (hwctx->texture_array)
+    ܐܢ (hwctx->texture_array)
         D3D12_OBJECT_RELEASE(hwctx->texture_array);
 }
 
-static int d3d12va_frames_get_constraints(AVHWDeviceContext *ctx, const void *hwconfig, AVHWFramesConstraints *constraints)
+ساكن صحيح d3d12va_frames_get_constraints(AVHWDeviceContext *ctx, ثابت فراغ *hwconfig, AVHWFramesConstraints *constraints)
 {
     HRESULT hr;
-    int nb_sw_formats = 0;
+    صحيح nb_sw_formats = 0;
     AVD3D12VADeviceContext *device_hwctx = ctx->hwctx;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_formats) + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    حجم(*constraints->valid_sw_formats));
+    ܐܢ (!constraints->valid_sw_formats)
+        ܦܢܐ AVERROR(ENOMEM);
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
         D3D12_FEATURE_DATA_FORMAT_SUPPORT format_support = { supported_formats[i].d3d_format };
-        hr = ID3D12Device_CheckFeatureSupport(device_hwctx->device, D3D12_FEATURE_FORMAT_SUPPORT, &format_support, sizeof(format_support));
-        if (SUCCEEDED(hr) && (format_support.Support1 & D3D12_FORMAT_SUPPORT1_TEXTURE2D))
+        hr = ID3D12Device_CheckFeatureSupport(device_hwctx->device, D3D12_FEATURE_FORMAT_SUPPORT, &format_support, حجم(format_support));
+        ܐܢ (SUCCEEDED(hr) && (format_support.Support1 & D3D12_FORMAT_SUPPORT1_TEXTURE2D))
             constraints->valid_sw_formats[nb_sw_formats++] = supported_formats[i].pix_fmt;
     }
     constraints->valid_sw_formats[nb_sw_formats] = AV_PIX_FMT_NONE;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, حجم(*constraints->valid_hw_formats));
+    ܐܢ (!constraints->valid_hw_formats)
+        ܦܢܐ AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_D3D12;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    ܦܢܐ 0;
 }
 
-static void free_texture(void *opaque, uint8_t *data)
+ساكن فراغ free_texture(فراغ *opaque, uint8_t *data)
 {
     AVD3D12VAFrame *frame = (AVD3D12VAFrame *)data;
 
-    if (!(frame->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY))
+    ܐܢ (!(frame->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY))
         D3D12_OBJECT_RELEASE(frame->texture);
 
     D3D12_OBJECT_RELEASE(frame->sync_ctx.fence);
-    if (frame->sync_ctx.event)
+    ܐܢ (frame->sync_ctx.event)
         CloseHandle(frame->sync_ctx.event);
 
     av_freep(&data);
 }
 
-static AVBufferRef *d3d12va_pool_alloc_texture_array(AVHWFramesContext *ctx)
+ساكن AVBufferRef *d3d12va_pool_alloc_texture_array(AVHWFramesContext *ctx)
 {
-    AVD3D12VAFrame         *frame  = av_mallocz(sizeof(*frame));
+    AVD3D12VAFrame         *frame  = av_mallocz(حجم(*frame));
     D3D12VAFramesContext   *s     = ctx->hwctx;
     AVD3D12VAFramesContext *hwctx = ctx->hwctx;
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
@@ -247,32 +247,32 @@ static AVBufferRef *d3d12va_pool_alloc_texture_array(AVHWFramesContext *ctx)
     frame->flags |= AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY;
 
     DX_CHECK(ID3D12Device_CreateFence(device_hwctx->device, 0, D3D12_FENCE_FLAG_NONE,
-                                      &IID_ID3D12Fence, (void **)&frame->sync_ctx.fence));
-    frame->sync_ctx.event = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if (!frame->sync_ctx.event)
-        goto fail;
+                                      &IID_ID3D12Fence, (فراغ **)&frame->sync_ctx.fence));
+    frame->sync_ctx.event = CreateEvent(عدم, FALSE, FALSE, عدم);
+    ܐܢ (!frame->sync_ctx.event)
+        اذهب fail;
 
-    if (s->nb_surfaces_used >= ctx->initial_pool_size) {
+    ܐܢ (s->nb_surfaces_used >= ctx->initial_pool_size) {
         av_log(ctx, AV_LOG_ERROR, "Static surface pool size exceeded.\n");
-        goto fail;
+        اذهب fail;
     }
 
     frame->texture = hwctx->texture_array;
     frame->subresource_index = s->nb_surfaces_used;
 
-    buf = av_buffer_create((uint8_t *)frame, sizeof(*frame), free_texture, NULL, 0);
+    buf = av_buffer_create((uint8_t *)frame, حجم(*frame), free_texture, عدم, 0);
 
-    if (!buf)
-        goto fail;
+    ܐܢ (!buf)
+        اذهب fail;
 
     s->nb_surfaces_used++;
-    return buf;
+    ܦܢܐ buf;
 fail:
-    free_texture(NULL, (uint8_t *)frame);
-    return NULL;
+    free_texture(عدم, (uint8_t *)frame);
+    ܦܢܐ عدم;
 }
 
-static AVBufferRef *d3d12va_pool_alloc(void *opaque, size_t size)
+ساكن AVBufferRef *d3d12va_pool_alloc(فراغ *opaque, size_t size)
 {
     AVHWFramesContext      *ctx          = (AVHWFramesContext *)opaque;
     AVD3D12VAFramesContext *hwctx        = ctx->hwctx;
@@ -281,8 +281,8 @@ static AVBufferRef *d3d12va_pool_alloc(void *opaque, size_t size)
     AVBufferRef *buf;
     AVD3D12VAFrame *frame;
 
-    if (ctx->initial_pool_size > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY)
-        return d3d12va_pool_alloc_texture_array(ctx);
+    ܐܢ (ctx->initial_pool_size > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY)
+        ܦܢܐ d3d12va_pool_alloc_texture_array(ctx);
 
     D3D12_HEAP_PROPERTIES props = { .Type = D3D12_HEAP_TYPE_DEFAULT };
     D3D12_RESOURCE_DESC desc = {
@@ -298,35 +298,35 @@ static AVBufferRef *d3d12va_pool_alloc(void *opaque, size_t size)
         .Flags            = hwctx->resource_flags,
     };
 
-    frame = av_mallocz(sizeof(AVD3D12VAFrame));
-    if (!frame)
-        return NULL;
+    frame = av_mallocz(حجم(AVD3D12VAFrame));
+    ܐܢ (!frame)
+        ܦܢܐ عدم;
 
-    if (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
-        D3D12_RESOURCE_STATE_COMMON, NULL, &IID_ID3D12Resource, (void **)&frame->texture))) {
+    ܐܢ (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
+        D3D12_RESOURCE_STATE_COMMON, عدم, &IID_ID3D12Resource, (فراغ **)&frame->texture))) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the texture\n");
-        goto fail;
+        اذهب fail;
     }
 
     DX_CHECK(ID3D12Device_CreateFence(device_hwctx->device, 0, D3D12_FENCE_FLAG_NONE,
-                                      &IID_ID3D12Fence, (void **)&frame->sync_ctx.fence));
+                                      &IID_ID3D12Fence, (فراغ **)&frame->sync_ctx.fence));
 
-    frame->sync_ctx.event = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if (!frame->sync_ctx.event)
-        goto fail;
+    frame->sync_ctx.event = CreateEvent(عدم, FALSE, FALSE, عدم);
+    ܐܢ (!frame->sync_ctx.event)
+        اذهب fail;
 
-    buf = av_buffer_create((uint8_t *)frame, sizeof(*frame), free_texture, NULL, 0);
-    if (!buf)
-        goto fail;
+    buf = av_buffer_create((uint8_t *)frame, حجم(*frame), free_texture, عدم, 0);
+    ܐܢ (!buf)
+        اذهب fail;
 
-    return buf;
+    ܦܢܐ buf;
 
 fail:
-    free_texture(NULL, (uint8_t *)frame);
-    return NULL;
+    free_texture(عدم, (uint8_t *)frame);
+    ܦܢܐ عدم;
 }
 
-static int d3d12va_texture_array_init(AVHWFramesContext *ctx)
+ساكن صحيح d3d12va_texture_array_init(AVHWFramesContext *ctx)
 {
     AVD3D12VAFramesContext *hwctx        = ctx->hwctx;
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
@@ -346,112 +346,112 @@ static int d3d12va_texture_array_init(AVHWFramesContext *ctx)
         .Flags            = hwctx->resource_flags,
     };
 
-    if (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
-        D3D12_RESOURCE_STATE_COMMON, NULL, &IID_ID3D12Resource, (void **)&hwctx->texture_array))) {
+    ܐܢ (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
+        D3D12_RESOURCE_STATE_COMMON, عدم, &IID_ID3D12Resource, (فراغ **)&hwctx->texture_array))) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the texture array\n");
-        return AVERROR(EINVAL);
+        ܦܢܐ AVERROR(EINVAL);
     }
-    return 0;
+    ܦܢܐ 0;
 }
 
-static int d3d12va_frames_init(AVHWFramesContext *ctx)
+ساكن صحيح d3d12va_frames_init(AVHWFramesContext *ctx)
 {
     AVD3D12VAFramesContext *hwctx        = ctx->hwctx;
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
-    int i;
+    صحيح i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i].pix_fmt) {
-            if (hwctx->format != DXGI_FORMAT_UNKNOWN &&
+    لكل (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        ܐܢ (ctx->sw_format == supported_formats[i].pix_fmt) {
+            ܐܢ (hwctx->format != DXGI_FORMAT_UNKNOWN &&
                 hwctx->format != supported_formats[i].d3d_format)
                 av_log(ctx, AV_LOG_WARNING, "Incompatible DXGI format provided by user, will be overided\n");
             hwctx->format = supported_formats[i].d3d_format;
-            break;
+            اكسر;
         }
     }
 
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    ܐܢ (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported pixel format: %s\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(EINVAL);
+        ܦܢܐ AVERROR(EINVAL);
     }
 
     hwctx->resource_flags |= device_hwctx->resource_flags;
     hwctx->heap_flags     |= device_hwctx->heap_flags;
 
-    if (ctx->initial_pool_size > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY) {
-        int err = d3d12va_texture_array_init(ctx);
-        if (err < 0)
-            return err;
+    ܐܢ (ctx->initial_pool_size > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY) {
+        صحيح err = d3d12va_texture_array_init(ctx);
+        ܐܢ (err < 0)
+            ܦܢܐ err;
     }
 
-    ffhwframesctx(ctx)->pool_internal = av_buffer_pool_init2(sizeof(AVD3D12VAFrame),
-        ctx, d3d12va_pool_alloc, NULL);
+    ffhwframesctx(ctx)->pool_internal = av_buffer_pool_init2(حجم(AVD3D12VAFrame),
+        ctx, d3d12va_pool_alloc, عدم);
 
-    if (!ffhwframesctx(ctx)->pool_internal)
-        return AVERROR(ENOMEM);
+    ܐܢ (!ffhwframesctx(ctx)->pool_internal)
+        ܦܢܐ AVERROR(ENOMEM);
 
-    return 0;
+    ܦܢܐ 0;
 }
 
-static int d3d12va_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+ساكن صحيح d3d12va_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
 {
-    int ret;
+    صحيح ret;
 
     frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    ܐܢ (!frame->buf[0])
+        ܦܢܐ AVERROR(ENOMEM);
 
-    ret = av_image_fill_arrays(frame->data, frame->linesize, NULL,
+    ret = av_image_fill_arrays(frame->data, frame->linesize, عدم,
                                ctx->sw_format, ctx->width, ctx->height,
                                D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
-    if (ret < 0)
-        return ret;
+    ܐܢ (ret < 0)
+        ܦܢܐ ret;
 
     frame->data[0] = frame->buf[0]->data;
     frame->format  = AV_PIX_FMT_D3D12;
     frame->width   = ctx->width;
     frame->height  = ctx->height;
 
-    return 0;
+    ܦܢܐ 0;
 }
 
-static int d3d12va_transfer_get_formats(AVHWFramesContext *ctx,
-                                        enum AVHWFrameTransferDirection dir,
-                                        enum AVPixelFormat **formats)
+ساكن صحيح d3d12va_transfer_get_formats(AVHWFramesContext *ctx,
+                                        تعداد AVHWFrameTransferDirection dir,
+                                        تعداد AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
+    تعداد AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, حجم(*fmts));
+    ܐܢ (!fmts)
+        ܦܢܐ AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    ܦܢܐ 0;
 }
 
-static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src)
+ساكن صحيح d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
+                                 ثابت AVFrame *src)
 {
     AVD3D12VADeviceContext *hwctx        = ctx->device_ctx->hwctx;
     D3D12VAFramesContext   *s            = ctx->hwctx;
     AVD3D12VAFramesContext *frames_hwctx = &s->p;
 
-    int ret;
-    int download = src->format == AV_PIX_FMT_D3D12;
-    const AVFrame *frame = download ? src : dst;
-    const AVFrame *other = download ? dst : src;
+    صحيح ret;
+    صحيح download = src->format == AV_PIX_FMT_D3D12;
+    ثابت AVFrame *frame = download ? src : dst;
+    ثابت AVFrame *other = download ? dst : src;
 
     AVD3D12VAFrame *f = (AVD3D12VAFrame *)frame->data[0];
     ID3D12Resource *texture = (ID3D12Resource *)f->texture;
 
     uint8_t *mapped_data;
     uint8_t *data[4];
-    int linesizes[4];
+    صحيح linesizes[4];
 
     D3D12_TEXTURE_COPY_LOCATION staging_y_location  = { 0 };
     D3D12_TEXTURE_COPY_LOCATION staging_uv_location = { 0 };
@@ -479,18 +479,18 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
         },
     };
 
-    if (frame->hw_frames_ctx->data != (uint8_t *)ctx || other->format != ctx->sw_format)
-        return AVERROR(EINVAL);
+    ܐܢ (frame->hw_frames_ctx->data != (uint8_t *)ctx || other->format != ctx->sw_format)
+        ܦܢܐ AVERROR(EINVAL);
 
     hwctx->lock(hwctx->lock_ctx);
 
-    if (!s->command_queue) {
+    ܐܢ (!s->command_queue) {
         ret = d3d12va_create_helper_objects(ctx);
-        if (ret < 0)
-            goto fail;
+        ܐܢ (ret < 0)
+            اذهب fail;
     }
 
-    for (int i = 0; i < 4; i++)
+    لكل (صحيح i = 0; i < 4; i++)
         linesizes[i] = FFALIGN(frame->width * (frames_hwctx->format != DXGI_FORMAT_NV12 ? 2 : 1),
                                D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
@@ -526,14 +526,14 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
 
     DX_CHECK(ID3D12CommandAllocator_Reset(s->command_allocator));
 
-    DX_CHECK(ID3D12GraphicsCommandList_Reset(s->command_list, s->command_allocator, NULL));
+    DX_CHECK(ID3D12GraphicsCommandList_Reset(s->command_list, s->command_allocator, عدم));
 
-    if (download) {
-        if (!s->staging_download_buffer) {
+    ܐܢ (download) {
+        ܐܢ (!s->staging_download_buffer) {
             ret = d3d12va_create_staging_buffer_resource(ctx, D3D12_RESOURCE_STATE_COPY_DEST,
                                                          &s->staging_download_buffer, 1);
-            if (ret < 0) {
-                goto fail;
+            ܐܢ (ret < 0) {
+                اذهب fail;
             }
         }
 
@@ -543,11 +543,11 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
 
         ID3D12GraphicsCommandList_CopyTextureRegion(s->command_list,
                                                     &staging_y_location, 0, 0, 0,
-                                                    &texture_y_location, NULL);
+                                                    &texture_y_location, عدم);
 
         ID3D12GraphicsCommandList_CopyTextureRegion(s->command_list,
                                                     &staging_uv_location, 0, 0, 0,
-                                                    &texture_uv_location, NULL);
+                                                    &texture_uv_location, عدم);
 
         barrier.Transition.StateBefore = barrier.Transition.StateAfter;
         barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COMMON;
@@ -560,44 +560,44 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
         ID3D12CommandQueue_ExecuteCommandLists(s->command_queue, 1, (ID3D12CommandList **)&s->command_list);
 
         ret = d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
-        if (ret < 0)
-            goto fail;
+        ܐܢ (ret < 0)
+            اذهب fail;
 
-        DX_CHECK(ID3D12Resource_Map(s->staging_download_buffer, 0, NULL, (void **)&mapped_data));
+        DX_CHECK(ID3D12Resource_Map(s->staging_download_buffer, 0, عدم, (فراغ **)&mapped_data));
         av_image_fill_pointers(data, ctx->sw_format, ctx->height, mapped_data, linesizes);
 
         av_image_copy2(dst->data, dst->linesize, data, linesizes,
                        ctx->sw_format, ctx->width, ctx->height);
 
-        ID3D12Resource_Unmap(s->staging_download_buffer, 0, NULL);
-    } else {
-        if (!s->staging_upload_buffer) {
+        ID3D12Resource_Unmap(s->staging_download_buffer, 0, عدم);
+    } ܐܚܪܢܐ {
+        ܐܢ (!s->staging_upload_buffer) {
             ret = d3d12va_create_staging_buffer_resource(ctx, D3D12_RESOURCE_STATE_GENERIC_READ,
                                                         &s->staging_upload_buffer, 0);
-            if (ret < 0) {
-                goto fail;
+            ܐܢ (ret < 0) {
+                اذهب fail;
             }
         }
 
         staging_y_location.pResource = staging_uv_location.pResource = s->staging_upload_buffer;
 
-        DX_CHECK(ID3D12Resource_Map(s->staging_upload_buffer, 0, NULL, (void **)&mapped_data));
+        DX_CHECK(ID3D12Resource_Map(s->staging_upload_buffer, 0, عدم, (فراغ **)&mapped_data));
         av_image_fill_pointers(data, ctx->sw_format, ctx->height, mapped_data, linesizes);
 
         av_image_copy2(data, linesizes, src->data, src->linesize,
                        ctx->sw_format, ctx->width, ctx->height);
 
-        ID3D12Resource_Unmap(s->staging_upload_buffer, 0, NULL);
+        ID3D12Resource_Unmap(s->staging_upload_buffer, 0, عدم);
 
         ID3D12GraphicsCommandList_ResourceBarrier(s->command_list, 1, &barrier);
 
         ID3D12GraphicsCommandList_CopyTextureRegion(s->command_list,
                                                     &texture_y_location, 0, 0, 0,
-                                                    &staging_y_location, NULL);
+                                                    &staging_y_location, عدم);
 
         ID3D12GraphicsCommandList_CopyTextureRegion(s->command_list,
                                                     &texture_uv_location, 0, 0, 0,
-                                                    &staging_uv_location, NULL);
+                                                    &staging_uv_location, عدم);
 
         barrier.Transition.StateBefore = barrier.Transition.StateAfter;
         barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COMMON;
@@ -608,125 +608,125 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
         ID3D12CommandQueue_ExecuteCommandLists(s->command_queue, 1, (ID3D12CommandList **)&s->command_list);
 
         ret = d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
-        if (ret < 0)
-            goto fail;
+        ܐܢ (ret < 0)
+            اذهب fail;
     }
 
     hwctx->unlock(hwctx->lock_ctx);
 
-    return 0;
+    ܦܢܐ 0;
 
 fail:
     hwctx->unlock(hwctx->lock_ctx);
-    return AVERROR(EINVAL);
+    ܦܢܐ AVERROR(EINVAL);
 }
 
-static int d3d12va_load_functions(AVHWDeviceContext *hwdev)
+ساكن صحيح d3d12va_load_functions(AVHWDeviceContext *hwdev)
 {
     D3D12VADevicePriv *priv = hwdev->hwctx;
 
-#if !HAVE_UWP
+#ܐܢ !HAVE_UWP
     priv->d3d12lib = dlopen("d3d12.dll", 0);
     priv->dxgilib  = dlopen("dxgi.dll", 0);
 
-    if (!priv->d3d12lib || !priv->dxgilib)
-        goto fail;
+    ܐܢ (!priv->d3d12lib || !priv->dxgilib)
+        اذهب fail;
 
     priv->create_device = (PFN_D3D12_CREATE_DEVICE)GetProcAddress(priv->d3d12lib, "D3D12CreateDevice");
-    if (!priv->create_device)
-        goto fail;
+    ܐܢ (!priv->create_device)
+        اذهب fail;
 
     priv->create_dxgi_factory2 = (PFN_CREATE_DXGI_FACTORY2)GetProcAddress(priv->dxgilib, "CreateDXGIFactory2");
-    if (!priv->create_dxgi_factory2)
-        goto fail;
+    ܐܢ (!priv->create_dxgi_factory2)
+        اذهب fail;
 
     priv->get_debug_interface  = (PFN_D3D12_GET_DEBUG_INTERFACE)GetProcAddress(priv->d3d12lib, "D3D12GetDebugInterface");
-#else
+#ܐܚܪܢܐ
     priv->create_device        = (PFN_D3D12_CREATE_DEVICE) D3D12CreateDevice;
     priv->create_dxgi_factory2 = (PFN_CREATE_DXGI_FACTORY2) CreateDXGIFactory2;
     priv->get_debug_interface  = (PFN_D3D12_GET_DEBUG_INTERFACE) D3D12GetDebugInterface;
 #endif
-    return 0;
+    ܦܢܐ 0;
 
-#if !HAVE_UWP
+#ܐܢ !HAVE_UWP
 fail:
     av_log(hwdev, AV_LOG_ERROR, "Failed to load D3D12 library or its functions\n");
-    return AVERROR_UNKNOWN;
+    ܦܢܐ AVERROR_UNKNOWN;
 #endif
 }
 
-static void d3d12va_device_free(AVHWDeviceContext *hwdev)
+ساكن فراغ d3d12va_device_free(AVHWDeviceContext *hwdev)
 {
     D3D12VADevicePriv      *priv = hwdev->hwctx;
     AVD3D12VADeviceContext *ctx  = &priv->p;
 
     D3D12_OBJECT_RELEASE(ctx->device);
 
-    if (priv->d3d12lib)
+    ܐܢ (priv->d3d12lib)
         dlclose(priv->d3d12lib);
 
-    if (priv->dxgilib)
+    ܐܢ (priv->dxgilib)
         dlclose(priv->dxgilib);
 }
 
-static int d3d12va_device_init(AVHWDeviceContext *hwdev)
+ساكن صحيح d3d12va_device_init(AVHWDeviceContext *hwdev)
 {
     AVD3D12VADeviceContext *ctx = hwdev->hwctx;
 
-    if (!ctx->lock) {
-        ctx->lock_ctx = CreateMutex(NULL, 0, NULL);
-        if (ctx->lock_ctx == INVALID_HANDLE_VALUE) {
-            av_log(NULL, AV_LOG_ERROR, "Failed to create a mutex\n");
-            return AVERROR(EINVAL);
+    ܐܢ (!ctx->lock) {
+        ctx->lock_ctx = CreateMutex(عدم, 0, عدم);
+        ܐܢ (ctx->lock_ctx == INVALID_HANDLE_VALUE) {
+            av_log(عدم, AV_LOG_ERROR, "Failed to create a mutex\n");
+            ܦܢܐ AVERROR(EINVAL);
         }
         ctx->lock   = d3d12va_default_lock;
         ctx->unlock = d3d12va_default_unlock;
     }
 
-    if (!ctx->video_device)
-        DX_CHECK(ID3D12Device_QueryInterface(ctx->device, &IID_ID3D12VideoDevice, (void **)&ctx->video_device));
+    ܐܢ (!ctx->video_device)
+        DX_CHECK(ID3D12Device_QueryInterface(ctx->device, &IID_ID3D12VideoDevice, (فراغ **)&ctx->video_device));
 
-    return 0;
+    ܦܢܐ 0;
 
 fail:
-    return AVERROR(EINVAL);
+    ܦܢܐ AVERROR(EINVAL);
 }
 
-static void d3d12va_device_uninit(AVHWDeviceContext *hwdev)
+ساكن فراغ d3d12va_device_uninit(AVHWDeviceContext *hwdev)
 {
     AVD3D12VADeviceContext *device_hwctx = hwdev->hwctx;
 
     D3D12_OBJECT_RELEASE(device_hwctx->video_device);
 
-    if (device_hwctx->lock == d3d12va_default_lock) {
+    ܐܢ (device_hwctx->lock == d3d12va_default_lock) {
         CloseHandle(device_hwctx->lock_ctx);
         device_hwctx->lock_ctx = INVALID_HANDLE_VALUE;
-        device_hwctx->lock = NULL;
+        device_hwctx->lock = عدم;
     }
 }
 
-static int d3d12va_device_create(AVHWDeviceContext *hwdev, const char *device,
-                                 AVDictionary *opts, int flags)
+ساكن صحيح d3d12va_device_create(AVHWDeviceContext *hwdev, ثابت حرف *device,
+                                 AVDictionary *opts, صحيح flags)
 {
     D3D12VADevicePriv      *priv = hwdev->hwctx;
     AVD3D12VADeviceContext *ctx  = &priv->p;
 
     HRESULT hr;
     UINT create_flags = 0;
-    IDXGIAdapter *pAdapter = NULL;
+    IDXGIAdapter *pAdapter = عدم;
 
-    int ret;
-    int is_debug = !!av_dict_get(opts, "debug", NULL, 0);
+    صحيح ret;
+    صحيح is_debug = !!av_dict_get(opts, "debug", عدم, 0);
 
-    hwdev->free = d3d12va_device_free;
+    hwdev->حرر = d3d12va_device_free;
 
     ret = d3d12va_load_functions(hwdev);
-    if (ret < 0)
-        return ret;
+    ܐܢ (ret < 0)
+        ܦܢܐ ret;
 
-    if (is_debug) {
+    ܐܢ (is_debug) {
         ID3D12Debug *pDebug;
-        if (priv->get_debug_interface && SUCCEEDED(priv->get_debug_interface(&IID_ID3D12Debug, (void **)&pDebug))) {
+        ܐܢ (priv->get_debug_interface && SUCCEEDED(priv->get_debug_interface(&IID_ID3D12Debug, (فراغ **)&pDebug))) {
             create_flags |= DXGI_CREATE_FACTORY_DEBUG;
             ID3D12Debug_EnableDebugLayer(pDebug);
             D3D12_OBJECT_RELEASE(pDebug);
@@ -734,52 +734,52 @@ static int d3d12va_device_create(AVHWDeviceContext *hwdev, const char *device,
         }
     }
 
-    if (!ctx->device) {
-        IDXGIFactory2 *pDXGIFactory = NULL;
+    ܐܢ (!ctx->device) {
+        IDXGIFactory2 *pDXGIFactory = عدم;
 
-        hr = priv->create_dxgi_factory2(create_flags, &IID_IDXGIFactory2, (void **)&pDXGIFactory);
-        if (SUCCEEDED(hr)) {
-            int adapter = device ? atoi(device) : 0;
-            if (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
-                pAdapter = NULL;
+        hr = priv->create_dxgi_factory2(create_flags, &IID_IDXGIFactory2, (فراغ **)&pDXGIFactory);
+        ܐܢ (SUCCEEDED(hr)) {
+            صحيح adapter = device ? atoi(device) : 0;
+            ܐܢ (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
+                pAdapter = عدم;
             IDXGIFactory2_Release(pDXGIFactory);
         }
 
-        if (pAdapter) {
+        ܐܢ (pAdapter) {
             DXGI_ADAPTER_DESC desc;
             hr = IDXGIAdapter2_GetDesc(pAdapter, &desc);
-            if (!FAILED(hr)) {
+            ܐܢ (!FAILED(hr)) {
                 av_log(hwdev, AV_LOG_INFO, "Using device %04x:%04x (%ls).\n",
                        desc.VendorId, desc.DeviceId, desc.Description);
             }
         }
 
-        hr = priv->create_device((IUnknown *)pAdapter, D3D_FEATURE_LEVEL_12_0, &IID_ID3D12Device, (void **)&ctx->device);
+        hr = priv->create_device((IUnknown *)pAdapter, D3D_FEATURE_LEVEL_12_0, &IID_ID3D12Device, (فراغ **)&ctx->device);
         D3D12_OBJECT_RELEASE(pAdapter);
-        if (FAILED(hr)) {
+        ܐܢ (FAILED(hr)) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to create Direct 3D 12 device (%lx)\n", (long)hr);
-            return AVERROR_UNKNOWN;
+            ܦܢܐ AVERROR_UNKNOWN;
         }
     }
 
-    if (av_dict_get(opts, "UAV", NULL, 0))
+    ܐܢ (av_dict_get(opts, "UAV", عدم, 0))
         ctx->resource_flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
-    if (av_dict_get(opts, "RTV", NULL, 0))
+    ܐܢ (av_dict_get(opts, "RTV", عدم, 0))
         ctx->resource_flags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
-    if (av_dict_get(opts, "SHARED", NULL, 0))
+    ܐܢ (av_dict_get(opts, "SHARED", عدم, 0))
         ctx->heap_flags |= D3D12_HEAP_FLAG_SHARED;
 
-    return 0;
+    ܦܢܐ 0;
 }
 
-const HWContextType ff_hwcontext_type_d3d12va = {
+ثابت HWContextType ff_hwcontext_type_d3d12va = {
     .type                   = AV_HWDEVICE_TYPE_D3D12VA,
     .name                   = "D3D12VA",
 
-    .device_hwctx_size      = sizeof(D3D12VADevicePriv),
-    .frames_hwctx_size      = sizeof(D3D12VAFramesContext),
+    .device_hwctx_size      = حجم(D3D12VADevicePriv),
+    .frames_hwctx_size      = حجم(D3D12VAFramesContext),
 
     .device_create          = d3d12va_device_create,
     .device_init            = d3d12va_device_init,
@@ -792,5 +792,5 @@ const HWContextType ff_hwcontext_type_d3d12va = {
     .transfer_data_to       = d3d12va_transfer_data,
     .transfer_data_from     = d3d12va_transfer_data,
 
-    .pix_fmts               = (const enum AVPixelFormat[]){ AV_PIX_FMT_D3D12, AV_PIX_FMT_NONE },
+    .pix_fmts               = (ثابت تعداد AVPixelFormat[]){ AV_PIX_FMT_D3D12, AV_PIX_FMT_NONE },
 };

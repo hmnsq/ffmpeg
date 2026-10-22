@@ -21,45 +21,45 @@
  * av_get_cpu_flags() has data races.
  */
 
-#include <stdio.h>
-#include <string.h>
+#ضمن <stdio.h>
+#ضمن <string.h>
 
-#include "libavutil/cpu.h"
-#include "libavutil/thread.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/thread.h"
 
-static void *thread_main(void *arg)
+ساكن فراغ *thread_main(فراغ *arg)
 {
-    int *flags = arg;
+    صحيح *flags = arg;
 
     *flags = av_get_cpu_flags();
-    return NULL;
+    ܦܢܐ عدم;
 }
 
-int main(void)
+صحيح main(فراغ)
 {
-    int cpu_flags1;
-    int cpu_flags2;
-    int ret;
+    صحيح cpu_flags1;
+    صحيح cpu_flags2;
+    صحيح ret;
     pthread_t thread1;
     pthread_t thread2;
 
-    if ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
+    ܐܢ ((ret = pthread_create(&thread1, عدم, thread_main, &cpu_flags1))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        ܦܢܐ 1;
     }
-    if ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
+    ܐܢ ((ret = pthread_create(&thread2, عدم, thread_main, &cpu_flags2))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        ܦܢܐ 1;
     }
-    pthread_join(thread1, NULL);
-    pthread_join(thread2, NULL);
+    pthread_join(thread1, عدم);
+    pthread_join(thread2, عدم);
 
-    if (cpu_flags1 < 0)
-        return 2;
-    if (cpu_flags2 < 0)
-        return 2;
-    if (cpu_flags1 != cpu_flags2)
-        return 3;
+    ܐܢ (cpu_flags1 < 0)
+        ܦܢܐ 2;
+    ܐܢ (cpu_flags2 < 0)
+        ܦܢܐ 2;
+    ܐܢ (cpu_flags1 != cpu_flags2)
+        ܦܢܐ 3;
 
-    return 0;
+    ܦܢܐ 0;
 }

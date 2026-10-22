@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avassert.h"
-#include "buffer.h"
-#include "common.h"
-#include "dict.h"
-#include "frame.h"
-#include "mem.h"
-#include "side_data.h"
+#ضمن "avassert.h"
+#ضمن "buffer.h"
+#ضمن "common.h"
+#ضمن "dict.h"
+#ضمن "frame.h"
+#ضمن "mem.h"
+#ضمن "side_data.h"
 
-static const AVSideDataDescriptor sd_props[] = {
+ساكن ثابت AVSideDataDescriptor sd_props[] = {
     [AV_FRAME_DATA_PANSCAN]                     = { "AVPanScan",                                    AV_SIDE_DATA_PROP_SIZE_DEPENDENT },
     [AV_FRAME_DATA_A53_CC]                      = { "ATSC A53 Part 4 Closed Captions" },
     [AV_FRAME_DATA_MATRIXENCODING]              = { "AVMatrixEncoding",                             AV_SIDE_DATA_PROP_CHANNEL_DEPENDENT },
@@ -66,21 +66,21 @@ static const AVSideDataDescriptor sd_props[] = {
     [AV_FRAME_DATA_GAIN_MAP_PARAMS]             = { "Gain map parameters",                          AV_SIDE_DATA_PROP_GLOBAL | AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
 };
 
-const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType type)
+ثابت AVSideDataDescriptor *av_frame_side_data_desc(تعداد AVFrameSideDataType type)
 {
     unsigned t = type;
-    if (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
-        return &sd_props[t];
-    return NULL;
+    ܐܢ (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
+        ܦܢܐ &sd_props[t];
+    ܦܢܐ عدم;
 }
 
-const char *av_frame_side_data_name(enum AVFrameSideDataType type)
+ثابت حرف *av_frame_side_data_name(تعداد AVFrameSideDataType type)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
-    return desc ? desc->name : NULL;
+    ثابت AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
+    ܦܢܐ desc ? desc->name : عدم;
 }
 
-static void free_side_data_entry(AVFrameSideData **ptr_sd)
+ساكن فراغ free_side_data_entry(AVFrameSideData **ptr_sd)
 {
     AVFrameSideData *sd = *ptr_sd;
 
@@ -89,46 +89,30 @@ static void free_side_data_entry(AVFrameSideData **ptr_sd)
     av_freep(ptr_sd);
 }
 
-static void remove_side_data_by_entry(AVFrameSideData ***sd, int *nb_sd,
-                                      const AVFrameSideData *target)
+ساكن فراغ remove_side_data_by_entry(AVFrameSideData ***sd, صحيح *nb_sd,
+                                      ثابت AVFrameSideData *target)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    لكل (صحيح i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
-        if (entry != target)
-            continue;
+        ܐܢ (entry != target)
+            استمر;
 
         free_side_data_entry(&entry);
 
         ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
         (*nb_sd)--;
 
-        return;
+        ܦܢܐ;
     }
 }
 
-void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
-                               enum AVFrameSideDataType type)
+فراغ av_frame_side_data_remove(AVFrameSideData ***sd, صحيح *nb_sd,
+                               تعداد AVFrameSideDataType type)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    لكل (صحيح i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
-        if (entry->type != type)
-            continue;
-
-        free_side_data_entry(&entry);
-
-        ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
-        (*nb_sd)--;
-    }
-}
-
-void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
-                                        int props)
-{
-    for (int i = *nb_sd - 1; i >= 0; i--) {
-        AVFrameSideData *entry = ((*sd)[i]);
-        const AVSideDataDescriptor *desc = av_frame_side_data_desc(entry->type);
-        if (!desc || !(desc->props & props))
-            continue;
+        ܐܢ (entry->type != type)
+            استمر;
 
         free_side_data_entry(&entry);
 
@@ -137,35 +121,51 @@ void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
     }
 }
 
-void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd)
+فراغ av_frame_side_data_remove_by_props(AVFrameSideData ***sd, صحيح *nb_sd,
+                                        صحيح props)
 {
-    for (int i = 0; i < *nb_sd; i++)
+    لكل (صحيح i = *nb_sd - 1; i >= 0; i--) {
+        AVFrameSideData *entry = ((*sd)[i]);
+        ثابت AVSideDataDescriptor *desc = av_frame_side_data_desc(entry->type);
+        ܐܢ (!desc || !(desc->props & props))
+            استمر;
+
+        free_side_data_entry(&entry);
+
+        ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
+        (*nb_sd)--;
+    }
+}
+
+فراغ av_frame_side_data_free(AVFrameSideData ***sd, صحيح *nb_sd)
+{
+    لكل (صحيح i = 0; i < *nb_sd; i++)
         free_side_data_entry(&((*sd)[i]));
     *nb_sd = 0;
 
     av_freep(sd);
 }
 
-static AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
-                                                   int *nb_sd,
-                                                   enum AVFrameSideDataType type,
+ساكن AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
+                                                   صحيح *nb_sd,
+                                                   تعداد AVFrameSideDataType type,
                                                    AVBufferRef *buf, uint8_t *data,
                                                    size_t size)
 {
     AVFrameSideData *ret, **tmp;
 
     // *nb_sd + 1 needs to fit into an int and a size_t.
-    if ((unsigned)*nb_sd >= FFMIN(INT_MAX, SIZE_MAX))
-        return NULL;
+    ܐܢ ((unsigned)*nb_sd >= FFMIN(INT_MAX, SIZE_MAX))
+        ܦܢܐ عدم;
 
-    tmp = av_realloc_array(*sd, *nb_sd + 1, sizeof(**sd));
-    if (!tmp)
-        return NULL;
+    tmp = av_realloc_array(*sd, *nb_sd + 1, حجم(**sd));
+    ܐܢ (!tmp)
+        ܦܢܐ عدم;
     *sd = tmp;
 
-    ret = av_mallocz(sizeof(*ret));
-    if (!ret)
-        return NULL;
+    ret = av_mallocz(حجم(*ret));
+    ܐܢ (!ret)
+        ܦܢܐ عدم;
 
     ret->buf = buf;
     ret->data = data;
@@ -174,149 +174,149 @@ static AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
 
     (*sd)[(*nb_sd)++] = ret;
 
-    return ret;
+    ܦܢܐ ret;
 }
 
 AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
-                                                 enum AVFrameSideDataType type,
+                                                 صحيح *nb_sd,
+                                                 تعداد AVFrameSideDataType type,
                                                  AVBufferRef *buf)
 {
-    if (!buf)
-        return NULL;
+    ܐܢ (!buf)
+        ܦܢܐ عدم;
 
-    return add_side_data_from_buf_ext(sd, nb_sd, type, buf, buf->data, buf->size);
+    ܦܢܐ add_side_data_from_buf_ext(sd, nb_sd, type, buf, buf->data, buf->size);
 }
 
-static AVFrameSideData *replace_side_data_from_buf(AVFrameSideData *dst,
-                                                   AVBufferRef *buf, int flags)
+ساكن AVFrameSideData *replace_side_data_from_buf(AVFrameSideData *dst,
+                                                   AVBufferRef *buf, صحيح flags)
 {
-    if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-        return NULL;
+    ܐܢ (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
+        ܦܢܐ عدم;
 
     av_dict_free(&dst->metadata);
     av_buffer_unref(&dst->buf);
     dst->buf  = buf;
     dst->data = buf->data;
     dst->size = buf->size;
-    return dst;
+    ܦܢܐ dst;
 }
 
-AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        size_t size, unsigned int flags)
+AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, صحيح *nb_sd,
+                                        تعداد AVFrameSideDataType type,
+                                        size_t size, unsigned صحيح flags)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
+    ثابت AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
     AVBufferRef     *buf = av_buffer_alloc(size);
-    AVFrameSideData *ret = NULL;
+    AVFrameSideData *ret = عدم;
 
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    ܐܢ (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    ܐܢ ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (ret = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
         ret = replace_side_data_from_buf(ret, buf, flags);
-        if (!ret)
+        ܐܢ (!ret)
             av_buffer_unref(&buf);
-        return ret;
+        ܦܢܐ ret;
     }
 
     ret = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
-    if (!ret)
+    ܐܢ (!ret)
         av_buffer_unref(&buf);
 
-    return ret;
+    ܦܢܐ ret;
 }
 
-AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        AVBufferRef **pbuf, unsigned int flags)
+AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, صحيح *nb_sd,
+                                        تعداد AVFrameSideDataType type,
+                                        AVBufferRef **pbuf, unsigned صحيح flags)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
-    AVFrameSideData *sd_dst  = NULL;
+    ثابت AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
+    AVFrameSideData *sd_dst  = عدم;
     AVBufferRef *buf = *pbuf;
 
-    if ((flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF) && !(buf = av_buffer_ref(*pbuf)))
-        return NULL;
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    ܐܢ ((flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF) && !(buf = av_buffer_ref(*pbuf)))
+        ܦܢܐ عدم;
+    ܐܢ (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    ܐܢ ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
         sd_dst = replace_side_data_from_buf(sd_dst, buf, flags);
-    } else
+    } ܐܚܪܢܐ
         sd_dst = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
 
-    if (sd_dst && !(flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
-        *pbuf = NULL;
-    else if (!sd_dst && (flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
+    ܐܢ (sd_dst && !(flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
+        *pbuf = عدم;
+    ܐܚܪܢܐ ܐܢ (!sd_dst && (flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
         av_buffer_unref(&buf);
-    return sd_dst;
+    ܦܢܐ sd_dst;
 }
 
-int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
-                             const AVFrameSideData *src, unsigned int flags)
+صحيح av_frame_side_data_clone(AVFrameSideData ***sd, صحيح *nb_sd,
+                             ثابت AVFrameSideData *src, unsigned صحيح flags)
 {
-    const AVSideDataDescriptor *desc;
-    AVBufferRef     *buf    = NULL;
-    AVFrameSideData *sd_dst = NULL;
-    int              ret    = AVERROR_BUG;
+    ثابت AVSideDataDescriptor *desc;
+    AVBufferRef     *buf    = عدم;
+    AVFrameSideData *sd_dst = عدم;
+    صحيح              ret    = AVERROR_BUG;
 
-    if (!sd || !src || !nb_sd || (*nb_sd && !*sd))
-        return AVERROR(EINVAL);
+    ܐܢ (!sd || !src || !nb_sd || (*nb_sd && !*sd))
+        ܦܢܐ AVERROR(EINVAL);
 
     desc = av_frame_side_data_desc(src->type);
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    ܐܢ (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, src->type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    ܐܢ ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, src->type))) {
-        AVDictionary *dict = NULL;
+        AVDictionary *dict = عدم;
 
-        if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-            return AVERROR(EEXIST);
+        ܐܢ (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
+            ܦܢܐ AVERROR(EEXIST);
 
         ret = av_dict_copy(&dict, src->metadata, 0);
-        if (ret < 0)
-            return ret;
+        ܐܢ (ret < 0)
+            ܦܢܐ ret;
 
         ret = av_buffer_replace(&sd_dst->buf, src->buf);
-        if (ret < 0) {
+        ܐܢ (ret < 0) {
             av_dict_free(&dict);
-            return ret;
+            ܦܢܐ ret;
         }
 
         av_dict_free(&sd_dst->metadata);
         sd_dst->metadata = dict;
         sd_dst->data     = src->data;
         sd_dst->size     = src->size;
-        return 0;
+        ܦܢܐ 0;
     }
 
     buf = av_buffer_ref(src->buf);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    ܐܢ (!buf)
+        ܦܢܐ AVERROR(ENOMEM);
 
     sd_dst = add_side_data_from_buf_ext(sd, nb_sd, src->type, buf,
                                         src->data, src->size);
-    if (!sd_dst) {
+    ܐܢ (!sd_dst) {
         av_buffer_unref(&buf);
-        return AVERROR(ENOMEM);
+        ܦܢܐ AVERROR(ENOMEM);
     }
 
     ret = av_dict_copy(&sd_dst->metadata, src->metadata, 0);
-    if (ret < 0) {
+    ܐܢ (ret < 0) {
         remove_side_data_by_entry(sd, nb_sd, sd_dst);
-        return ret;
+        ܦܢܐ ret;
     }
 
-    return 0;
+    ܦܢܐ 0;
 }
 
-const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *sd,
-                                                const int nb_sd,
-                                                enum AVFrameSideDataType type)
+ثابت AVFrameSideData *av_frame_side_data_get_c(ثابت AVFrameSideData * ثابت *sd,
+                                                ثابت صحيح nb_sd,
+                                                تعداد AVFrameSideDataType type)
 {
-    for (int i = 0; i < nb_sd; i++) {
-        if (sd[i]->type == type)
-            return sd[i];
+    لكل (صحيح i = 0; i < nb_sd; i++) {
+        ܐܢ (sd[i]->type == type)
+            ܦܢܐ sd[i];
     }
-    return NULL;
+    ܦܢܐ عدم;
 }
