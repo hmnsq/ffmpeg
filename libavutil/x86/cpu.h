@@ -19,8 +19,8 @@
 #ifndef AVUTIL_X86_CPU_H
 #define AVUTIL_X86_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#अन्तर्भाव "libavutil/cpu.h"
+#अन्तर्भाव "libavutil/cpu_internal.h"
 
 #define X86_MMX(flags)              CPUEXT(flags, MMX)
 #define X86_MMXEXT(flags)           CPUEXT(flags, MMXEXT)
@@ -100,8 +100,8 @@
 #define INLINE_AVX2(flags)          CPUEXT_SUFFIX(flags, _INLINE, AVX2)
 #define INLINE_AESNI(flags)         CPUEXT_SUFFIX(flags, _INLINE, AESNI)
 
-void ff_cpu_cpuid(int index, int *eax, int *ebx, int *ecx, int *edx);
-void ff_cpu_xgetbv(int op, int *eax, int *edx);
-int  ff_cpu_cpuid_test(void);
+शून्य ff_cpu_cpuid(पूर्णाङ्क index, पूर्णाङ्क *eax, पूर्णाङ्क *ebx, पूर्णाङ्क *ecx, पूर्णाङ्क *edx);
+शून्य ff_cpu_xgetbv(पूर्णाङ्क op, पूर्णाङ्क *eax, पूर्णाङ्क *edx);
+पूर्णाङ्क  ff_cpu_cpuid_test(शून्य);
 
 #endif /* AVUTIL_X86_CPU_H */
