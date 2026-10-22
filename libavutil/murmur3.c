@@ -18,91 +18,91 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
-#include "mem.h"
-#include "intreadwrite.h"
-#include "murmur3.h"
+#شامل <stddef.h>
+#شامل <stdint.h>
+#شامل <string.h>
+#شامل "mem.h"
+#شامل "intreadwrite.h"
+#شامل "murmur3.h"
 
-typedef struct AVMurMur3 {
+تعریفنوع ساختار AVMurMur3 {
     uint64_t h1, h2;
     uint8_t state[16];
-    int state_pos;
+    صحیح state_pos;
     uint64_t len;
 } AVMurMur3;
 
-AVMurMur3 *av_murmur3_alloc(void)
+AVMurMur3 *av_murmur3_alloc(تهی)
 {
-    return av_mallocz(sizeof(AVMurMur3));
+    بازگشت av_mallocz(اندازه(AVMurMur3));
 }
 
-void av_murmur3_init_seeded(AVMurMur3 *c, uint64_t seed)
+تهی av_murmur3_init_seeded(AVMurMur3 *c, uint64_t seed)
 {
-    memset(c, 0, sizeof(*c));
+    memset(c, 0, اندازه(*c));
     c->h1 = c->h2 = seed;
 }
 
-void av_murmur3_init(AVMurMur3 *c)
+تهی av_murmur3_init(AVMurMur3 *c)
 {
     // arbitrary random number as seed
     av_murmur3_init_seeded(c, 0x725acc55daddca55);
 }
 
-static const uint64_t c1 = UINT64_C(0x87c37b91114253d5);
-static const uint64_t c2 = UINT64_C(0x4cf5ad432745937f);
+ایستا ثابت uint64_t c1 = UINT64_C(0x87c37b91114253d5);
+ایستا ثابت uint64_t c2 = UINT64_C(0x4cf5ad432745937f);
 
 #define ROT(a, b) (((a) << (b)) | ((a) >> (64 - (b))))
 
-static uint64_t inline get_k1(const uint8_t *src)
+ایستا uint64_t درونخطی get_k1(ثابت uint8_t *src)
 {
     uint64_t k = AV_RL64(src);
     k *= c1;
     k = ROT(k, 31);
     k *= c2;
-    return k;
+    بازگشت k;
 }
 
-static inline uint64_t get_k2(const uint8_t *src)
+ایستا درونخطی uint64_t get_k2(ثابت uint8_t *src)
 {
     uint64_t k = AV_RL64(src + 8);
     k *= c2;
     k = ROT(k, 33);
     k *= c1;
-    return k;
+    بازگشت k;
 }
 
-static inline uint64_t update_h1(uint64_t k, uint64_t h1, uint64_t h2)
+ایستا درونخطی uint64_t update_h1(uint64_t k, uint64_t h1, uint64_t h2)
 {
     k ^= h1;
     k = ROT(k, 27);
     k += h2;
     k *= 5;
     k += 0x52dce729;
-    return k;
+    بازگشت k;
 }
 
-static inline uint64_t update_h2(uint64_t k, uint64_t h1, uint64_t h2)
+ایستا درونخطی uint64_t update_h2(uint64_t k, uint64_t h1, uint64_t h2)
 {
     k ^= h2;
     k = ROT(k, 31);
     k += h1;
     k *= 5;
     k += 0x38495ab5;
-    return k;
+    بازگشت k;
 }
 
-void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
+تهی av_murmur3_update(AVMurMur3 *c, ثابت uint8_t *src, size_t len)
 {
-    const uint8_t *end;
+    ثابت uint8_t *end;
     uint64_t h1 = c->h1, h2 = c->h2;
     uint64_t k1, k2;
-    if (len <= 0) return;
+    اگر (len <= 0) بازگشت;
     c->len += len;
-    if (c->state_pos > 0) {
-        while (c->state_pos < 16) {
+    اگر (c->state_pos > 0) {
+        وقتی (c->state_pos < 16) {
             c->state[c->state_pos++] = *src++;
-            if (--len <= 0) return;
+            اگر (--len <= 0) بازگشت;
         }
         c->state_pos = 0;
         k1 = get_k1(c->state);
@@ -112,7 +112,7 @@ void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
     }
 
     end = src + (len & ~15);
-    while (src < end) {
+    وقتی (src < end) {
         // These could be done sequentially instead
         // of interleaved, but like this is over 10% faster
         k1 = get_k1(src);
@@ -125,26 +125,26 @@ void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
     c->h2 = h2;
 
     len &= 15;
-    if (len > 0) {
+    اگر (len > 0) {
         memcpy(c->state, src, len);
         c->state_pos = len;
     }
 }
 
-static inline uint64_t fmix(uint64_t k)
+ایستا درونخطی uint64_t fmix(uint64_t k)
 {
     k ^= k >> 33;
     k *= UINT64_C(0xff51afd7ed558ccd);
     k ^= k >> 33;
     k *= UINT64_C(0xc4ceb9fe1a85ec53);
     k ^= k >> 33;
-    return k;
+    بازگشت k;
 }
 
-void av_murmur3_final(AVMurMur3 *c, uint8_t dst[16])
+تهی av_murmur3_final(AVMurMur3 *c, uint8_t dst[16])
 {
     uint64_t h1 = c->h1, h2 = c->h2;
-    memset(c->state + c->state_pos, 0, sizeof(c->state) - c->state_pos);
+    memset(c->state + c->state_pos, 0, اندازه(c->state) - c->state_pos);
     h1 ^= get_k1(c->state) ^ c->len;
     h2 ^= get_k2(c->state) ^ c->len;
     h1 += h2;

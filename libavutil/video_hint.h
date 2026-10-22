@@ -21,17 +21,17 @@
 #ifndef AVUTIL_VIDEO_HINT_H
 #define AVUTIL_VIDEO_HINT_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "libavutil/avassert.h"
-#include "libavutil/frame.h"
+#شامل <stddef.h>
+#شامل <stdint.h>
+#شامل "libavutil/avassert.h"
+#شامل "libavutil/frame.h"
 
-typedef struct AVVideoRect {
+تعریفنوع ساختار AVVideoRect {
     uint32_t x, y;
     uint32_t width, height;
 } AVVideoRect;
 
-typedef enum AVVideoHintType {
+تعریفنوع شمارش AVVideoHintType {
     /* rectangled delimit the constant areas (unchanged), default is changed */
     AV_VIDEO_HINT_TYPE_CONSTANT,
 
@@ -39,7 +39,7 @@ typedef enum AVVideoHintType {
     AV_VIDEO_HINT_TYPE_CHANGED,
 } AVVideoHintType;
 
-typedef struct AVVideoHint {
+تعریفنوع ساختار AVVideoHint {
     /**
      * Number of AVVideoRect present.
      *
@@ -63,14 +63,14 @@ typedef struct AVVideoHint {
     AVVideoHintType type;
 } AVVideoHint;
 
-static av_always_inline AVVideoRect *
-av_video_hint_rects(const AVVideoHint *hints) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
+ایستا av_always_inline AVVideoRect *
+av_video_hint_rects(ثابت AVVideoHint *hints) {
+    بازگشت (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
 }
 
-static av_always_inline AVVideoRect *
-av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
+ایستا av_always_inline AVVideoRect *
+av_video_hint_get_rect(ثابت AVVideoHint *hints, size_t idx) {
+    بازگشت (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
 }
 
 /**

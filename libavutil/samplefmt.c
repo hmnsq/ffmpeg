@@ -16,24 +16,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
-#include "samplefmt.h"
+#شامل "error.h"
+#شامل "macros.h"
+#شامل "mem.h"
+#شامل "samplefmt.h"
 
-#include <limits.h>
-#include <stdio.h>
-#include <string.h>
+#شامل <limits.h>
+#شامل <stdio.h>
+#شامل <string.h>
 
-typedef struct SampleFmtInfo {
-    char name[8];
-    int bits;
-    int planar;
-    enum AVSampleFormat altform; ///< planar<->packed alternative form
+تعریفنوع ساختار SampleFmtInfo {
+    نویسه name[8];
+    صحیح bits;
+    صحیح planar;
+    شمارش AVSampleFormat altform; ///< planar<->packed alternative form
 } SampleFmtInfo;
 
 /** this table gives more information about formats */
-static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
+ایستا ثابت SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
     [AV_SAMPLE_FMT_U8]   = { .name =   "u8", .bits =  8, .planar = 0, .altform = AV_SAMPLE_FMT_U8P  },
     [AV_SAMPLE_FMT_S16]  = { .name =  "s16", .bits = 16, .planar = 0, .altform = AV_SAMPLE_FMT_S16P },
     [AV_SAMPLE_FMT_S32]  = { .name =  "s32", .bits = 32, .planar = 0, .altform = AV_SAMPLE_FMT_S32P },
@@ -49,221 +49,221 @@ static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
     [AV_SAMPLE_FMT_DSD]  = { .name =  "dsd", .bits =  8, .planar = 0, .altform = AV_SAMPLE_FMT_DSD  },
 };
 
-const char *av_get_sample_fmt_name(enum AVSampleFormat sample_fmt)
+ثابت نویسه *av_get_sample_fmt_name(شمارش AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return NULL;
-    return sample_fmt_info[sample_fmt].name;
+    اگر (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        بازگشت پوچ;
+    بازگشت sample_fmt_info[sample_fmt].name;
 }
 
-enum AVSampleFormat av_get_sample_fmt(const char *name)
+شمارش AVSampleFormat av_get_sample_fmt(ثابت نویسه *name)
 {
-    int i;
+    صحیح i;
 
-    for (i = 0; i < AV_SAMPLE_FMT_NB; i++)
-        if (!strcmp(sample_fmt_info[i].name, name))
-            return i;
-    return AV_SAMPLE_FMT_NONE;
+    برای (i = 0; i < AV_SAMPLE_FMT_NB; i++)
+        اگر (!strcmp(sample_fmt_info[i].name, name))
+            بازگشت i;
+    بازگشت AV_SAMPLE_FMT_NONE;
 }
 
-enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int planar)
+شمارش AVSampleFormat av_get_alt_sample_fmt(شمارش AVSampleFormat sample_fmt, صحیح planar)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar == planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    اگر (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        بازگشت AV_SAMPLE_FMT_NONE;
+    اگر (sample_fmt_info[sample_fmt].planar == planar)
+        بازگشت sample_fmt;
+    بازگشت sample_fmt_info[sample_fmt].altform;
 }
 
-enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt)
+شمارش AVSampleFormat av_get_packed_sample_fmt(شمارش AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt_info[sample_fmt].altform;
-    return sample_fmt;
+    اگر (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        بازگشت AV_SAMPLE_FMT_NONE;
+    اگر (sample_fmt_info[sample_fmt].planar)
+        بازگشت sample_fmt_info[sample_fmt].altform;
+    بازگشت sample_fmt;
 }
 
-enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt)
+شمارش AVSampleFormat av_get_planar_sample_fmt(شمارش AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    اگر (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        بازگشت AV_SAMPLE_FMT_NONE;
+    اگر (sample_fmt_info[sample_fmt].planar)
+        بازگشت sample_fmt;
+    بازگشت sample_fmt_info[sample_fmt].altform;
 }
 
-char *av_get_sample_fmt_string (char *buf, int buf_size, enum AVSampleFormat sample_fmt)
+نویسه *av_get_sample_fmt_string (نویسه *buf, صحیح buf_size, شمارش AVSampleFormat sample_fmt)
 {
     /* print header */
-    if (sample_fmt < 0)
+    اگر (sample_fmt < 0)
         snprintf(buf, buf_size, "name  " " depth");
-    else if (sample_fmt < AV_SAMPLE_FMT_NB) {
+    وگرنه اگر (sample_fmt < AV_SAMPLE_FMT_NB) {
         SampleFmtInfo info = sample_fmt_info[sample_fmt];
         snprintf (buf, buf_size, "%-6s" "   %2d ", info.name, info.bits);
     }
 
-    return buf;
+    بازگشت buf;
 }
 
-int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt)
+صحیح av_get_bytes_per_sample(شمارش AVSampleFormat sample_fmt)
 {
-     return sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
+     بازگشت sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
         0 : sample_fmt_info[sample_fmt].bits >> 3;
 }
 
-int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt)
+صحیح av_sample_fmt_is_planar(شمارش AVSampleFormat sample_fmt)
 {
-     if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-         return 0;
-     return sample_fmt_info[sample_fmt].planar;
+     اگر (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+         بازگشت 0;
+     بازگشت sample_fmt_info[sample_fmt].planar;
 }
 
-int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
-                               enum AVSampleFormat sample_fmt, int align)
+صحیح av_samples_get_buffer_size(صحیح *linesize, صحیح nb_channels, صحیح nb_samples,
+                               شمارش AVSampleFormat sample_fmt, صحیح align)
 {
-    int line_size;
-    int sample_size = av_get_bytes_per_sample(sample_fmt);
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
+    صحیح سطر_size;
+    صحیح sample_size = av_get_bytes_per_sample(sample_fmt);
+    صحیح planar      = av_sample_fmt_is_planar(sample_fmt);
 
     /* validate parameter ranges */
-    if (!sample_size || nb_samples <= 0 || nb_channels <= 0)
-        return AVERROR(EINVAL);
+    اگر (!sample_size || nb_samples <= 0 || nb_channels <= 0)
+        بازگشت AVERROR(EINVAL);
 
     /* auto-select alignment if not specified */
-    if (!align) {
-        if (nb_samples > INT_MAX - 31)
-            return AVERROR(EINVAL);
+    اگر (!align) {
+        اگر (nb_samples > INT_MAX - 31)
+            بازگشت AVERROR(EINVAL);
         align = 1;
         nb_samples = FFALIGN(nb_samples, 32);
     }
 
     /* check for integer overflow */
-    if (nb_channels > INT_MAX / align ||
+    اگر (nb_channels > INT_MAX / align ||
         (int64_t)nb_channels * nb_samples > (INT_MAX - (align * nb_channels)) / sample_size)
-        return AVERROR(EINVAL);
+        بازگشت AVERROR(EINVAL);
 
-    line_size = planar ? FFALIGN(nb_samples * sample_size,               align) :
+    سطر_size = planar ? FFALIGN(nb_samples * sample_size,               align) :
                          FFALIGN(nb_samples * sample_size * nb_channels, align);
-    if (linesize)
-        *linesize = line_size;
+    اگر (linesize)
+        *linesize = سطر_size;
 
-    return planar ? line_size * nb_channels : line_size;
+    بازگشت planar ? سطر_size * nb_channels : سطر_size;
 }
 
-int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
-                           const uint8_t *buf, int nb_channels, int nb_samples,
-                           enum AVSampleFormat sample_fmt, int align)
+صحیح av_samples_fill_arrays(uint8_t **audio_data, صحیح *linesize,
+                           ثابت uint8_t *buf, صحیح nb_channels, صحیح nb_samples,
+                           شمارش AVSampleFormat sample_fmt, صحیح align)
 {
-    int ch, planar, buf_size, line_size;
+    صحیح ch, planar, buf_size, سطر_size;
 
     planar   = av_sample_fmt_is_planar(sample_fmt);
-    buf_size = av_samples_get_buffer_size(&line_size, nb_channels, nb_samples,
+    buf_size = av_samples_get_buffer_size(&سطر_size, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (buf_size < 0)
-        return buf_size;
+    اگر (buf_size < 0)
+        بازگشت buf_size;
 
-    if (linesize)
-        *linesize = line_size;
+    اگر (linesize)
+        *linesize = سطر_size;
 
     memset(audio_data, 0, planar
-                          ? sizeof(*audio_data) * nb_channels
-                          : sizeof(*audio_data));
+                          ? اندازه(*audio_data) * nb_channels
+                          : اندازه(*audio_data));
 
-    if (!buf)
-        return buf_size;
+    اگر (!buf)
+        بازگشت buf_size;
 
     audio_data[0] = (uint8_t *)buf;
-    for (ch = 1; planar && ch < nb_channels; ch++)
-        audio_data[ch] = audio_data[ch-1] + line_size;
+    برای (ch = 1; planar && ch < nb_channels; ch++)
+        audio_data[ch] = audio_data[ch-1] + سطر_size;
 
-    return buf_size;
+    بازگشت buf_size;
 }
 
-int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
-                     int nb_samples, enum AVSampleFormat sample_fmt, int align)
+صحیح av_samples_alloc(uint8_t **audio_data, صحیح *linesize, صحیح nb_channels,
+                     صحیح nb_samples, شمارش AVSampleFormat sample_fmt, صحیح align)
 {
     uint8_t *buf;
-    int size = av_samples_get_buffer_size(NULL, nb_channels, nb_samples,
+    صحیح size = av_samples_get_buffer_size(پوچ, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (size < 0)
-        return size;
+    اگر (size < 0)
+        بازگشت size;
 
     buf = av_malloc(size);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    اگر (!buf)
+        بازگشت AVERROR(ENOMEM);
 
     size = av_samples_fill_arrays(audio_data, linesize, buf, nb_channels,
                                   nb_samples, sample_fmt, align);
-    if (size < 0) {
+    اگر (size < 0) {
         av_free(buf);
-        return size;
+        بازگشت size;
     }
 
     av_samples_set_silence(audio_data, 0, nb_samples, nb_channels, sample_fmt);
 
-    return size;
+    بازگشت size;
 }
 
-int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int nb_channels,
-                                       int nb_samples, enum AVSampleFormat sample_fmt, int align)
+صحیح av_samples_alloc_array_and_samples(uint8_t ***audio_data, صحیح *linesize, صحیح nb_channels,
+                                       صحیح nb_samples, شمارش AVSampleFormat sample_fmt, صحیح align)
 {
-    int ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
+    صحیح ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
 
-    *audio_data = av_calloc(nb_planes, sizeof(**audio_data));
-    if (!*audio_data)
-        return AVERROR(ENOMEM);
+    *audio_data = av_calloc(nb_planes, اندازه(**audio_data));
+    اگر (!*audio_data)
+        بازگشت AVERROR(ENOMEM);
     ret = av_samples_alloc(*audio_data, linesize, nb_channels,
                            nb_samples, sample_fmt, align);
-    if (ret < 0)
+    اگر (ret < 0)
         av_freep(audio_data);
-    return ret;
+    بازگشت ret;
 }
 
-int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
-                    int src_offset, int nb_samples, int nb_channels,
-                    enum AVSampleFormat sample_fmt)
+صحیح av_samples_copy(uint8_t * ثابت *dst, uint8_t * ثابت *src, صحیح dst_offset,
+                    صحیح src_offset, صحیح nb_samples, صحیح nb_channels,
+                    شمارش AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int i;
+    صحیح planar      = av_sample_fmt_is_planar(sample_fmt);
+    صحیح planes      = planar ? nb_channels : 1;
+    صحیح block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    صحیح data_size   = nb_samples * block_align;
+    صحیح i;
 
     dst_offset *= block_align;
     src_offset *= block_align;
 
-    if((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= data_size) {
-        for (i = 0; i < planes; i++)
+    اگر((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= data_size) {
+        برای (i = 0; i < planes; i++)
             memcpy(dst[i] + dst_offset, src[i] + src_offset, data_size);
-    } else {
-        for (i = 0; i < planes; i++)
+    } وگرنه {
+        برای (i = 0; i < planes; i++)
             memmove(dst[i] + dst_offset, src[i] + src_offset, data_size);
     }
 
-    return 0;
+    بازگشت 0;
 }
 
-int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_samples,
-                           int nb_channels, enum AVSampleFormat sample_fmt)
+صحیح av_samples_set_silence(uint8_t * ثابت *audio_data, صحیح offset, صحیح nb_samples,
+                           صحیح nb_channels, شمارش AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int fill_char, i;
+    صحیح planar      = av_sample_fmt_is_planar(sample_fmt);
+    صحیح planes      = planar ? nb_channels : 1;
+    صحیح block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    صحیح data_size   = nb_samples * block_align;
+    صحیح fill_char, i;
 
-    if (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
+    اگر (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
         fill_char = 0x80;
-    else if (sample_fmt == AV_SAMPLE_FMT_DSD)
+    وگرنه اگر (sample_fmt == AV_SAMPLE_FMT_DSD)
         fill_char = 0x69; // only ultrasonic tones, filtered out on playback
-    else
+    وگرنه
         fill_char = 0x00;
 
     offset *= block_align;
 
-    for (i = 0; i < planes; i++)
+    برای (i = 0; i < planes; i++)
         memset(audio_data[i] + offset, fill_char, data_size);
 
-    return 0;
+    بازگشت 0;
 }

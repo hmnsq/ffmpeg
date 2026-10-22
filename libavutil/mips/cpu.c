@@ -16,29 +16,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "config.h"
-#if defined __linux__ || defined __ANDROID__
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/auxv.h>
-#include "asmdefs.h"
-#include "libavutil/avstring.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/cpu_internal.h"
+#شامل "config.h"
+#اگر defined __linux__ || defined __ANDROID__
+#شامل <stdint.h>
+#شامل <stdio.h>
+#شامل <string.h>
+#شامل <sys/auxv.h>
+#شامل "asmdefs.h"
+#شامل "libavutil/avstring.h"
 #endif
 
-#if defined __linux__ || defined __ANDROID__
+#اگر defined __linux__ || defined __ANDROID__
 
 #define HWCAP_LOONGSON_CPUCFG (1 << 14)
 
-static int cpucfg_available(void)
+ایستا صحیح cpucfg_available(تهی)
 {
-    return ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
+    بازگشت ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
 }
 
 /* Most toolchains have no CPUCFG support yet */
-static uint32_t read_cpucfg(uint32_t reg)
+ایستا uint32_t read_cpucfg(uint32_t reg)
 {
         uint32_t __res;
 
@@ -51,7 +51,7 @@ static uint32_t read_cpucfg(uint32_t reg)
                 :"r"(reg)
                 :
                 );
-        return __res;
+        بازگشت __res;
 }
 
 #define LOONGSON_CFG1 0x1
@@ -59,76 +59,76 @@ static uint32_t read_cpucfg(uint32_t reg)
 #define LOONGSON_CFG1_MMI    (1 << 4)
 #define LOONGSON_CFG1_MSA1   (1 << 5)
 
-static int cpu_flags_cpucfg(void)
+ایستا صحیح cpu_flags_cpucfg(تهی)
 {
-    int flags = 0;
+    صحیح flags = 0;
     uint32_t cfg1 = read_cpucfg(LOONGSON_CFG1);
 
-    if (cfg1 & LOONGSON_CFG1_MMI)
+    اگر (cfg1 & LOONGSON_CFG1_MMI)
         flags |= AV_CPU_FLAG_MMI;
 
-    if (cfg1 & LOONGSON_CFG1_MSA1)
+    اگر (cfg1 & LOONGSON_CFG1_MSA1)
         flags |= AV_CPU_FLAG_MSA;
 
-    return flags;
+    بازگشت flags;
 }
 
-static int cpu_flags_cpuinfo(void)
+ایستا صحیح cpu_flags_cpuinfo(تهی)
 {
     FILE *f = fopen("/proc/cpuinfo", "r");
-    char buf[200];
-    int flags = 0;
+    نویسه buf[200];
+    صحیح flags = 0;
 
-    if (!f)
-        return -1;
+    اگر (!f)
+        بازگشت -1;
 
-    while (fgets(buf, sizeof(buf), f)) {
+    وقتی (fgets(buf, اندازه(buf), f)) {
         /* Legacy kernel may not export MMI in ASEs implemented */
-        if (av_strstart(buf, "cpu model", NULL)) {
-            if (strstr(buf, "Loongson-3 "))
+        اگر (av_strstart(buf, "cpu model", پوچ)) {
+            اگر (strstr(buf, "Loongson-3 "))
                 flags |= AV_CPU_FLAG_MMI;
         }
 
-        if (av_strstart(buf, "ASEs implemented", NULL)) {
-            if (strstr(buf, " loongson-mmi"))
+        اگر (av_strstart(buf, "ASEs implemented", پوچ)) {
+            اگر (strstr(buf, " loongson-mmi"))
                 flags |= AV_CPU_FLAG_MMI;
-            if (strstr(buf, " msa"))
+            اگر (strstr(buf, " msa"))
                 flags |= AV_CPU_FLAG_MSA;
 
-            break;
+            بشکن;
         }
     }
     fclose(f);
-    return flags;
+    بازگشت flags;
 }
 #endif
 
-int ff_get_cpu_flags_mips(void)
+صحیح ff_get_cpu_flags_mips(تهی)
 {
-#if defined __linux__ || defined __ANDROID__
-    if (cpucfg_available())
-        return cpu_flags_cpucfg();
-    else
-        return cpu_flags_cpuinfo();
-#else
+#اگر defined __linux__ || defined __ANDROID__
+    اگر (cpucfg_available())
+        بازگشت cpu_flags_cpucfg();
+    وگرنه
+        بازگشت cpu_flags_cpuinfo();
+#وگرنه
     /* Assume no SIMD ASE supported */
-    return 0;
+    بازگشت 0;
 #endif
 }
 
-size_t ff_get_cpu_max_align_mips(void)
+size_t ff_get_cpu_max_align_mips(تهی)
 {
-    int flags = av_get_cpu_flags();
+    صحیح flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_MSA)
-        return 16;
+    اگر (flags & AV_CPU_FLAG_MSA)
+        بازگشت 16;
 
     /*
      * MMI itself is 64-bit but quad word load & store
      * needs 128-bit align.
      */
-    if (flags & AV_CPU_FLAG_MMI)
-        return 16;
+    اگر (flags & AV_CPU_FLAG_MMI)
+        بازگشت 16;
 
-    return 8;
+    بازگشت 8;
 }

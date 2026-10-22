@@ -20,27 +20,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/attributes.h"
-#include "libavutil/lls.h"
-#include "libavutil/x86/cpu.h"
+#شامل "libavutil/attributes.h"
+#شامل "libavutil/lls.h"
+#شامل "libavutil/x86/cpu.h"
 
-void ff_update_lls_sse2(LLSModel *m, const double *var);
-void ff_update_lls_avx(LLSModel *m, const double *var);
-void ff_update_lls_fma3(LLSModel *m, const double *var);
-double ff_evaluate_lls_sse2(LLSModel *m, const double *var, int order);
+تهی ff_update_lls_sse2(LLSModel *m, ثابت دوگانه *var);
+تهی ff_update_lls_avx(LLSModel *m, ثابت دوگانه *var);
+تهی ff_update_lls_fma3(LLSModel *m, ثابت دوگانه *var);
+دوگانه ff_evaluate_lls_sse2(LLSModel *m, ثابت دوگانه *var, صحیح order);
 
-av_cold void ff_init_lls_x86(LLSModel *m)
+av_cold تهی ff_init_lls_x86(LLSModel *m)
 {
-    int cpu_flags = av_get_cpu_flags();
-    if (EXTERNAL_SSE2(cpu_flags)) {
+    صحیح cpu_flags = av_get_cpu_flags();
+    اگر (EXTERNAL_SSE2(cpu_flags)) {
         m->update_lls = ff_update_lls_sse2;
-        if (m->indep_count >= 4)
+        اگر (m->indep_شمار >= 4)
             m->evaluate_lls = ff_evaluate_lls_sse2;
     }
-    if (EXTERNAL_AVX_FAST(cpu_flags)) {
+    اگر (EXTERNAL_AVX_FAST(cpu_flags)) {
         m->update_lls = ff_update_lls_avx;
     }
-    if (EXTERNAL_FMA3_FAST(cpu_flags)) {
+    اگر (EXTERNAL_FMA3_FAST(cpu_flags)) {
         m->update_lls = ff_update_lls_fma3;
     }
 }

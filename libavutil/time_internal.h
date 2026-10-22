@@ -19,29 +19,29 @@
 #ifndef AVUTIL_TIME_INTERNAL_H
 #define AVUTIL_TIME_INTERNAL_H
 
-#include <time.h>
-#include "config.h"
+#شامل <time.h>
+#شامل "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
-static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
+#اگر !HAVE_GMTIME_R && !defined(gmtime_r)
+ایستا درونخطی ساختار tm *ff_gmtime_r(ثابت time_t* clock, ساختار tm *result)
 {
-    struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
+    ساختار tm *ptr = gmtime(clock);
+    اگر (!ptr)
+        بازگشت پوچ;
     *result = *ptr;
-    return result;
+    بازگشت result;
 }
 #define gmtime_r ff_gmtime_r
 #endif
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
-static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
+#اگر !HAVE_LOCALTIME_R && !defined(localtime_r)
+ایستا درونخطی ساختار tm *ff_localtime_r(ثابت time_t* clock, ساختار tm *result)
 {
-    struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
+    ساختار tm *ptr = localtime(clock);
+    اگر (!ptr)
+        بازگشت پوچ;
     *result = *ptr;
-    return result;
+    بازگشت result;
 }
 #define localtime_r ff_localtime_r
 #endif

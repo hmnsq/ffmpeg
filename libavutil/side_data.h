@@ -19,12 +19,12 @@
 #ifndef AVUTIL_SIDE_DATA_H
 #define AVUTIL_SIDE_DATA_H
 
-#include "buffer.h"
-#include "frame.h"
+#شامل "buffer.h"
+#شامل "frame.h"
 
 AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
-                                                 enum AVFrameSideDataType type,
+                                                 صحیح *nb_sd,
+                                                 شمارش AVFrameSideDataType type,
                                                  AVBufferRef *buf);
 
 #endif // AVUTIL_SIDE_DATA_H

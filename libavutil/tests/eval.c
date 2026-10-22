@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#شامل "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#شامل <math.h>
+#شامل <stdio.h>
+#شامل <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#شامل "libavutil/mathematics.h"
+#شامل "libavutil/eval.h"
 
-static const double const_values[] = {
+ایستا ثابت دوگانه const_مقادیر[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+ایستا ثابت نویسه *ثابت const_names[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+صحیح اصلی(صحیح argc, نویسه **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    صحیح i;
+    دوگانه d;
+    ثابت نویسه *ثابت *عبارت;
+    ایستا ثابت نویسه *ثابت exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        پوچ
     };
-    int ret;
+    صحیح ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
+    برای (عبارت = exprs; *عبارت; عبارت++) {
+        printf("Evaluating '%s'\n", *عبارت);
+        ret = av_عبارت_parse_and_eval(&d, *عبارت,
+                               const_names, const_مقادیر,
+                               پوچ, پوچ, پوچ, پوچ, پوچ, 0, پوچ);
+        اگر (isnan(d))
+            printf("'%s' -> nan\n\n", *عبارت);
+        وگرنه
+            printf("'%s' -> %f\n\n", *عبارت, d);
+        اگر (ret < 0)
             printf("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_عبارت_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_names, const_مقادیر,
+                           پوچ, پوچ, پوچ, پوچ, پوچ, 0, پوچ);
     printf("%f == 12.7\n", d);
-    if (ret < 0)
+    اگر (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_عبارت_parse_and_eval(&d, "80G/80Gi",
+                           const_names, const_مقادیر,
+                           پوچ, پوچ, پوچ, پوچ, پوچ, 0, پوچ);
     printf("%f == 0.931322575\n", d);
-    if (ret < 0)
+    اگر (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
+    اگر (argc > 1 && !strcmp(argv[1], "-t")) {
+        برای (i = 0; i < 1050; i++) {
             START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
+            ret = av_عبارت_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_names, const_مقادیر,
+                                   پوچ, پوچ, پوچ, پوچ, پوچ, 0, پوچ);
+            اگر (ret < 0)
                 printf("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    بازگشت 0;
 }

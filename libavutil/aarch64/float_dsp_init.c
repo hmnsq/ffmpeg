@@ -19,43 +19,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#شامل <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
-#include "cpu.h"
+#شامل "libavutil/attributes.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/float_dsp.h"
+#شامل "cpu.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1,
-                         int len);
+تهی ff_vector_fmul_neon(اعشاری *dst, ثابت اعشاری *src0, ثابت اعشاری *src1,
+                         صحیح len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+تهی ff_vector_fmac_scalar_neon(اعشاری *dst, ثابت اعشاری *src, اعشاری mul,
+                                صحیح len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+تهی ff_vector_fmul_scalar_neon(اعشاری *dst, ثابت اعشاری *src, اعشاری mul,
+                                صحیح len);
 
-void ff_vector_dmul_scalar_neon(double *dst, const double *src, double mul,
-                                int len);
+تهی ff_vector_dmul_scalar_neon(دوگانه *dst, ثابت دوگانه *src, دوگانه mul,
+                                صحیح len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+تهی ff_vector_fmul_window_neon(اعشاری *dst, ثابت اعشاری *src0,
+                                ثابت اعشاری *src1, ثابت اعشاری *win, صحیح len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+تهی ff_vector_fmul_add_neon(اعشاری *dst, ثابت اعشاری *src0, ثابت اعشاری *src1,
+                             ثابت اعشاری *src2, صحیح len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+تهی ff_vector_fmul_reverse_neon(اعشاری *dst, ثابت اعشاری *src0,
+                                 ثابت اعشاری *src1, صحیح len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+تهی ff_butterflies_float_neon(اعشاری *v1, اعشاری *v2, صحیح len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+اعشاری ff_scalarproduct_float_neon(ثابت اعشاری *v1, ثابت اعشاری *v2, صحیح len);
 
-av_cold void ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp)
+av_cold تهی ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp)
 {
-    int cpu_flags = av_get_cpu_flags();
+    صحیح cpu_flags = av_get_cpu_flags();
 
-    if (have_neon(cpu_flags)) {
+    اگر (have_neon(cpu_flags)) {
         fdsp->butterflies_float   = ff_butterflies_float_neon;
         fdsp->scalarproduct_float = ff_scalarproduct_float_neon;
         fdsp->vector_dmul_scalar  = ff_vector_dmul_scalar_neon;

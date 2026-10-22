@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avassert.h"
-#include "buffer.h"
-#include "common.h"
-#include "dict.h"
-#include "frame.h"
-#include "mem.h"
-#include "side_data.h"
+#شامل "avassert.h"
+#شامل "buffer.h"
+#شامل "common.h"
+#شامل "dict.h"
+#شامل "frame.h"
+#شامل "mem.h"
+#شامل "side_data.h"
 
-static const AVSideDataDescriptor sd_props[] = {
+ایستا ثابت AVSideDataDescriptor sd_props[] = {
     [AV_FRAME_DATA_PANSCAN]                     = { "AVPanScan",                                    AV_SIDE_DATA_PROP_SIZE_DEPENDENT },
     [AV_FRAME_DATA_A53_CC]                      = { "ATSC A53 Part 4 Closed Captions" },
     [AV_FRAME_DATA_MATRIXENCODING]              = { "AVMatrixEncoding",                             AV_SIDE_DATA_PROP_CHANNEL_DEPENDENT },
@@ -66,21 +66,21 @@ static const AVSideDataDescriptor sd_props[] = {
     [AV_FRAME_DATA_GAIN_MAP_PARAMS]             = { "Gain map parameters",                          AV_SIDE_DATA_PROP_GLOBAL | AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
 };
 
-const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType type)
+ثابت AVSideDataDescriptor *av_frame_side_data_desc(شمارش AVFrameSideDataType type)
 {
     unsigned t = type;
-    if (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
-        return &sd_props[t];
-    return NULL;
+    اگر (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
+        بازگشت &sd_props[t];
+    بازگشت پوچ;
 }
 
-const char *av_frame_side_data_name(enum AVFrameSideDataType type)
+ثابت نویسه *av_frame_side_data_name(شمارش AVFrameSideDataType type)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
-    return desc ? desc->name : NULL;
+    ثابت AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
+    بازگشت desc ? desc->name : پوچ;
 }
 
-static void free_side_data_entry(AVFrameSideData **ptr_sd)
+ایستا تهی free_side_data_entry(AVFrameSideData **ptr_sd)
 {
     AVFrameSideData *sd = *ptr_sd;
 
@@ -89,46 +89,30 @@ static void free_side_data_entry(AVFrameSideData **ptr_sd)
     av_freep(ptr_sd);
 }
 
-static void remove_side_data_by_entry(AVFrameSideData ***sd, int *nb_sd,
-                                      const AVFrameSideData *target)
+ایستا تهی remove_side_data_by_entry(AVFrameSideData ***sd, صحیح *nb_sd,
+                                      ثابت AVFrameSideData *target)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    برای (صحیح i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
-        if (entry != target)
-            continue;
+        اگر (entry != target)
+            ادامه;
 
         free_side_data_entry(&entry);
 
         ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
         (*nb_sd)--;
 
-        return;
+        بازگشت;
     }
 }
 
-void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
-                               enum AVFrameSideDataType type)
+تهی av_frame_side_data_remove(AVFrameSideData ***sd, صحیح *nb_sd,
+                               شمارش AVFrameSideDataType type)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    برای (صحیح i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
-        if (entry->type != type)
-            continue;
-
-        free_side_data_entry(&entry);
-
-        ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
-        (*nb_sd)--;
-    }
-}
-
-void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
-                                        int props)
-{
-    for (int i = *nb_sd - 1; i >= 0; i--) {
-        AVFrameSideData *entry = ((*sd)[i]);
-        const AVSideDataDescriptor *desc = av_frame_side_data_desc(entry->type);
-        if (!desc || !(desc->props & props))
-            continue;
+        اگر (entry->type != type)
+            ادامه;
 
         free_side_data_entry(&entry);
 
@@ -137,35 +121,51 @@ void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
     }
 }
 
-void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd)
+تهی av_frame_side_data_remove_by_props(AVFrameSideData ***sd, صحیح *nb_sd,
+                                        صحیح props)
 {
-    for (int i = 0; i < *nb_sd; i++)
+    برای (صحیح i = *nb_sd - 1; i >= 0; i--) {
+        AVFrameSideData *entry = ((*sd)[i]);
+        ثابت AVSideDataDescriptor *desc = av_frame_side_data_desc(entry->type);
+        اگر (!desc || !(desc->props & props))
+            ادامه;
+
+        free_side_data_entry(&entry);
+
+        ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
+        (*nb_sd)--;
+    }
+}
+
+تهی av_frame_side_data_free(AVFrameSideData ***sd, صحیح *nb_sd)
+{
+    برای (صحیح i = 0; i < *nb_sd; i++)
         free_side_data_entry(&((*sd)[i]));
     *nb_sd = 0;
 
     av_freep(sd);
 }
 
-static AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
-                                                   int *nb_sd,
-                                                   enum AVFrameSideDataType type,
+ایستا AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
+                                                   صحیح *nb_sd,
+                                                   شمارش AVFrameSideDataType type,
                                                    AVBufferRef *buf, uint8_t *data,
                                                    size_t size)
 {
     AVFrameSideData *ret, **tmp;
 
     // *nb_sd + 1 needs to fit into an int and a size_t.
-    if ((unsigned)*nb_sd >= FFMIN(INT_MAX, SIZE_MAX))
-        return NULL;
+    اگر ((unsigned)*nb_sd >= FFMIN(INT_MAX, SIZE_MAX))
+        بازگشت پوچ;
 
-    tmp = av_realloc_array(*sd, *nb_sd + 1, sizeof(**sd));
-    if (!tmp)
-        return NULL;
+    tmp = av_realloc_array(*sd, *nb_sd + 1, اندازه(**sd));
+    اگر (!tmp)
+        بازگشت پوچ;
     *sd = tmp;
 
-    ret = av_mallocz(sizeof(*ret));
-    if (!ret)
-        return NULL;
+    ret = av_mallocz(اندازه(*ret));
+    اگر (!ret)
+        بازگشت پوچ;
 
     ret->buf = buf;
     ret->data = data;
@@ -174,149 +174,149 @@ static AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
 
     (*sd)[(*nb_sd)++] = ret;
 
-    return ret;
+    بازگشت ret;
 }
 
 AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
-                                                 enum AVFrameSideDataType type,
+                                                 صحیح *nb_sd,
+                                                 شمارش AVFrameSideDataType type,
                                                  AVBufferRef *buf)
 {
-    if (!buf)
-        return NULL;
+    اگر (!buf)
+        بازگشت پوچ;
 
-    return add_side_data_from_buf_ext(sd, nb_sd, type, buf, buf->data, buf->size);
+    بازگشت add_side_data_from_buf_ext(sd, nb_sd, type, buf, buf->data, buf->size);
 }
 
-static AVFrameSideData *replace_side_data_from_buf(AVFrameSideData *dst,
-                                                   AVBufferRef *buf, int flags)
+ایستا AVFrameSideData *replace_side_data_from_buf(AVFrameSideData *dst,
+                                                   AVBufferRef *buf, صحیح flags)
 {
-    if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-        return NULL;
+    اگر (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
+        بازگشت پوچ;
 
     av_dict_free(&dst->metadata);
     av_buffer_unref(&dst->buf);
     dst->buf  = buf;
     dst->data = buf->data;
     dst->size = buf->size;
-    return dst;
+    بازگشت dst;
 }
 
-AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        size_t size, unsigned int flags)
+AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, صحیح *nb_sd,
+                                        شمارش AVFrameSideDataType type,
+                                        size_t size, unsigned صحیح flags)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
+    ثابت AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
     AVBufferRef     *buf = av_buffer_alloc(size);
-    AVFrameSideData *ret = NULL;
+    AVFrameSideData *ret = پوچ;
 
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    اگر (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    اگر ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (ret = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
         ret = replace_side_data_from_buf(ret, buf, flags);
-        if (!ret)
+        اگر (!ret)
             av_buffer_unref(&buf);
-        return ret;
+        بازگشت ret;
     }
 
     ret = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
-    if (!ret)
+    اگر (!ret)
         av_buffer_unref(&buf);
 
-    return ret;
+    بازگشت ret;
 }
 
-AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        AVBufferRef **pbuf, unsigned int flags)
+AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, صحیح *nb_sd,
+                                        شمارش AVFrameSideDataType type,
+                                        AVBufferRef **pbuf, unsigned صحیح flags)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
-    AVFrameSideData *sd_dst  = NULL;
+    ثابت AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
+    AVFrameSideData *sd_dst  = پوچ;
     AVBufferRef *buf = *pbuf;
 
-    if ((flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF) && !(buf = av_buffer_ref(*pbuf)))
-        return NULL;
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    اگر ((flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF) && !(buf = av_buffer_ref(*pbuf)))
+        بازگشت پوچ;
+    اگر (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    اگر ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
         sd_dst = replace_side_data_from_buf(sd_dst, buf, flags);
-    } else
+    } وگرنه
         sd_dst = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
 
-    if (sd_dst && !(flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
-        *pbuf = NULL;
-    else if (!sd_dst && (flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
+    اگر (sd_dst && !(flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
+        *pbuf = پوچ;
+    وگرنه اگر (!sd_dst && (flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
         av_buffer_unref(&buf);
-    return sd_dst;
+    بازگشت sd_dst;
 }
 
-int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
-                             const AVFrameSideData *src, unsigned int flags)
+صحیح av_frame_side_data_clone(AVFrameSideData ***sd, صحیح *nb_sd,
+                             ثابت AVFrameSideData *src, unsigned صحیح flags)
 {
-    const AVSideDataDescriptor *desc;
-    AVBufferRef     *buf    = NULL;
-    AVFrameSideData *sd_dst = NULL;
-    int              ret    = AVERROR_BUG;
+    ثابت AVSideDataDescriptor *desc;
+    AVBufferRef     *buf    = پوچ;
+    AVFrameSideData *sd_dst = پوچ;
+    صحیح              ret    = AVERROR_BUG;
 
-    if (!sd || !src || !nb_sd || (*nb_sd && !*sd))
-        return AVERROR(EINVAL);
+    اگر (!sd || !src || !nb_sd || (*nb_sd && !*sd))
+        بازگشت AVERROR(EINVAL);
 
     desc = av_frame_side_data_desc(src->type);
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    اگر (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, src->type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    اگر ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, src->type))) {
-        AVDictionary *dict = NULL;
+        AVDictionary *dict = پوچ;
 
-        if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-            return AVERROR(EEXIST);
+        اگر (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
+            بازگشت AVERROR(EEXIST);
 
         ret = av_dict_copy(&dict, src->metadata, 0);
-        if (ret < 0)
-            return ret;
+        اگر (ret < 0)
+            بازگشت ret;
 
         ret = av_buffer_replace(&sd_dst->buf, src->buf);
-        if (ret < 0) {
+        اگر (ret < 0) {
             av_dict_free(&dict);
-            return ret;
+            بازگشت ret;
         }
 
         av_dict_free(&sd_dst->metadata);
         sd_dst->metadata = dict;
         sd_dst->data     = src->data;
         sd_dst->size     = src->size;
-        return 0;
+        بازگشت 0;
     }
 
     buf = av_buffer_ref(src->buf);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    اگر (!buf)
+        بازگشت AVERROR(ENOMEM);
 
     sd_dst = add_side_data_from_buf_ext(sd, nb_sd, src->type, buf,
                                         src->data, src->size);
-    if (!sd_dst) {
+    اگر (!sd_dst) {
         av_buffer_unref(&buf);
-        return AVERROR(ENOMEM);
+        بازگشت AVERROR(ENOMEM);
     }
 
     ret = av_dict_copy(&sd_dst->metadata, src->metadata, 0);
-    if (ret < 0) {
+    اگر (ret < 0) {
         remove_side_data_by_entry(sd, nb_sd, sd_dst);
-        return ret;
+        بازگشت ret;
     }
 
-    return 0;
+    بازگشت 0;
 }
 
-const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *sd,
-                                                const int nb_sd,
-                                                enum AVFrameSideDataType type)
+ثابت AVFrameSideData *av_frame_side_data_get_c(ثابت AVFrameSideData * ثابت *sd,
+                                                ثابت صحیح nb_sd,
+                                                شمارش AVFrameSideDataType type)
 {
-    for (int i = 0; i < nb_sd; i++) {
-        if (sd[i]->type == type)
-            return sd[i];
+    برای (صحیح i = 0; i < nb_sd; i++) {
+        اگر (sd[i]->type == type)
+            بازگشت sd[i];
     }
-    return NULL;
+    بازگشت پوچ;
 }

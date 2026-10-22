@@ -19,11 +19,11 @@
 #ifndef AVUTIL_OBJC_H
 #define AVUTIL_OBJC_H
 
-#include <Foundation/Foundation.h>
+#شامل <Foundation/Foundation.h>
 
-static inline void ff_objc_release(NSObject **obj)
+ایستا درونخطی تهی ff_objc_release(NSObject **obj)
 {
-    if (*obj) {
+    اگر (*obj) {
         [*obj release];
         *obj = nil;
     }

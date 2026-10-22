@@ -19,23 +19,23 @@
 #ifndef AVUTIL_HWCONTEXT_INTERNAL_H
 #define AVUTIL_HWCONTEXT_INTERNAL_H
 
-#include <stddef.h>
+#شامل <stddef.h>
 
-#include "buffer.h"
-#include "hwcontext.h"
-#include "thread.h"
-#include "frame.h"
-#include "pixfmt.h"
+#شامل "buffer.h"
+#شامل "hwcontext.h"
+#شامل "thread.h"
+#شامل "frame.h"
+#شامل "pixfmt.h"
 
-typedef struct HWContextType {
-    enum AVHWDeviceType type;
-    const char         *name;
+تعریفنوع ساختار HWContextType {
+    شمارش AVHWDeviceType type;
+    ثابت نویسه         *name;
 
     /**
      * An array of pixel formats supported by the AVHWFramesContext instances
      * Terminated by AV_PIX_FMT_NONE.
      */
-    const enum AVPixelFormat *pix_fmts;
+    ثابت شمارش AVPixelFormat *pix_fmts;
 
     /**
      * size of the public hardware-specific context,
@@ -55,23 +55,23 @@ typedef struct HWContextType {
      */
     size_t             frames_hwctx_size;
 
-    int              (*device_create)(AVHWDeviceContext *ctx, const char *device,
-                                      AVDictionary *opts, int flags);
-    int              (*device_derive)(AVHWDeviceContext *dst_ctx,
+    صحیح              (*device_create)(AVHWDeviceContext *ctx, ثابت نویسه *device,
+                                      AVDictionary *opts, صحیح flags);
+    صحیح              (*device_derive)(AVHWDeviceContext *dst_ctx,
                                       AVHWDeviceContext *src_ctx,
-                                      AVDictionary *opts, int flags);
+                                      AVDictionary *opts, صحیح flags);
 
-    int              (*device_init)(AVHWDeviceContext *ctx);
-    void             (*device_uninit)(AVHWDeviceContext *ctx);
+    صحیح              (*device_init)(AVHWDeviceContext *ctx);
+    تهی             (*device_uninit)(AVHWDeviceContext *ctx);
 
-    int              (*frames_get_constraints)(AVHWDeviceContext *ctx,
-                                               const void *hwconfig,
+    صحیح              (*frames_get_constraints)(AVHWDeviceContext *ctx,
+                                               ثابت تهی *hwconfig,
                                                AVHWFramesConstraints *constraints);
 
-    int              (*frames_init)(AVHWFramesContext *ctx);
-    void             (*frames_uninit)(AVHWFramesContext *ctx);
+    صحیح              (*frames_init)(AVHWFramesContext *ctx);
+    تهی             (*frames_uninit)(AVHWFramesContext *ctx);
 
-    int              (*frames_get_buffer)(AVHWFramesContext *ctx, AVFrame *frame);
+    صحیح              (*frames_get_buffer)(AVHWFramesContext *ctx, AVFrame *frame);
 
     /**
      * Allocate a buffer of size bytes for av_hwframe_get_transfer_buffer(),
@@ -79,33 +79,33 @@ typedef struct HWContextType {
      *
      * @param device_ref the AVBufferRef of the AVHWDeviceContext
      */
-    AVBufferRef     *(*transfer_buffer_alloc)(void *device_ref, size_t size);
-    int              (*transfer_get_formats)(AVHWFramesContext *ctx,
-                                             enum AVHWFrameTransferDirection dir,
-                                             enum AVPixelFormat **formats);
-    int              (*transfer_data_to)(AVHWFramesContext *ctx, AVFrame *dst,
-                                         const AVFrame *src);
-    int              (*transfer_data_from)(AVHWFramesContext *ctx, AVFrame *dst,
-                                           const AVFrame *src);
+    AVBufferRef     *(*transfer_buffer_alloc)(تهی *device_ref, size_t size);
+    صحیح              (*transfer_get_formats)(AVHWFramesContext *ctx,
+                                             شمارش AVHWFrameTransferDirection dir,
+                                             شمارش AVPixelFormat **formats);
+    صحیح              (*transfer_data_to)(AVHWFramesContext *ctx, AVFrame *dst,
+                                         ثابت AVFrame *src);
+    صحیح              (*transfer_data_from)(AVHWFramesContext *ctx, AVFrame *dst,
+                                           ثابت AVFrame *src);
 
-    int              (*map_to)(AVHWFramesContext *ctx, AVFrame *dst,
-                               const AVFrame *src, int flags);
-    int              (*map_from)(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src, int flags);
+    صحیح              (*map_to)(AVHWFramesContext *ctx, AVFrame *dst,
+                               ثابت AVFrame *src, صحیح flags);
+    صحیح              (*map_from)(AVHWFramesContext *ctx, AVFrame *dst,
+                                 ثابت AVFrame *src, صحیح flags);
 
-    int              (*frames_derive_to)(AVHWFramesContext *dst_ctx,
-                                         AVHWFramesContext *src_ctx, int flags);
-    int              (*frames_derive_from)(AVHWFramesContext *dst_ctx,
-                                           AVHWFramesContext *src_ctx, int flags);
+    صحیح              (*frames_derive_to)(AVHWFramesContext *dst_ctx,
+                                         AVHWFramesContext *src_ctx, صحیح flags);
+    صحیح              (*frames_derive_from)(AVHWFramesContext *dst_ctx,
+                                           AVHWFramesContext *src_ctx, صحیح flags);
 } HWContextType;
 
-typedef struct FFHWFramesContext {
+تعریفنوع ساختار FFHWFramesContext {
     /**
      * The public AVHWFramesContext. See hwcontext.h for it.
      */
     AVHWFramesContext p;
 
-    const HWContextType *hw_type;
+    ثابت HWContextType *hw_type;
 
     AVBufferPool *pool_internal;
 
@@ -126,15 +126,15 @@ typedef struct FFHWFramesContext {
      * Flags to apply to the mapping from the source to the derived
      * frame context when trying to allocate in the derived context.
      */
-    int source_allocation_map_flags;
+    صحیح source_allocation_map_flags;
 } FFHWFramesContext;
 
-static inline FFHWFramesContext *ffhwframesctx(AVHWFramesContext *ctx)
+ایستا درونخطی FFHWFramesContext *ffhwframesctx(AVHWFramesContext *ctx)
 {
-    return (FFHWFramesContext*)ctx;
+    بازگشت (FFHWFramesContext*)ctx;
 }
 
-typedef struct HWMapDescriptor {
+تعریفنوع ساختار HWMapDescriptor {
     /**
      * A reference to the original source of the mapping.
      */
@@ -148,39 +148,39 @@ typedef struct HWMapDescriptor {
     /**
      * Unmap function.
      */
-    void (*unmap)(AVHWFramesContext *ctx,
-                  struct HWMapDescriptor *hwmap);
+    تهی (*unmap)(AVHWFramesContext *ctx,
+                  ساختار HWMapDescriptor *hwmap);
     /**
      * Hardware-specific private data associated with the mapping.
      */
-    void          *priv;
+    تهی          *priv;
 } HWMapDescriptor;
 
-int ff_hwframe_map_create(AVBufferRef *hwframe_ref,
-                          AVFrame *dst, const AVFrame *src,
-                          void (*unmap)(AVHWFramesContext *ctx,
+صحیح ff_hwframe_map_create(AVBufferRef *hwframe_ref,
+                          AVFrame *dst, ثابت AVFrame *src,
+                          تهی (*unmap)(AVHWFramesContext *ctx,
                                         HWMapDescriptor *hwmap),
-                          void *priv);
+                          تهی *priv);
 
 /**
  * Replace the current hwmap of dst with the one from src, used for indirect
  * mappings like VAAPI->(DRM)->OpenCL/Vulkan where a direct interop is missing
  */
-int ff_hwframe_map_replace(AVFrame *dst, const AVFrame *src);
+صحیح ff_hwframe_map_replace(AVFrame *dst, ثابت AVFrame *src);
 
-extern const HWContextType ff_hwcontext_type_cuda;
-extern const HWContextType ff_hwcontext_type_d3d11va;
-extern const HWContextType ff_hwcontext_type_d3d12va;
-extern const HWContextType ff_hwcontext_type_drm;
-extern const HWContextType ff_hwcontext_type_dxva2;
-extern const HWContextType ff_hwcontext_type_opencl;
-extern const HWContextType ff_hwcontext_type_qsv;
-extern const HWContextType ff_hwcontext_type_vaapi;
-extern const HWContextType ff_hwcontext_type_vdpau;
-extern const HWContextType ff_hwcontext_type_videotoolbox;
-extern const HWContextType ff_hwcontext_type_mediacodec;
-extern const HWContextType ff_hwcontext_type_vulkan;
-extern const HWContextType ff_hwcontext_type_amf;
-extern const HWContextType ff_hwcontext_type_oh;
+بیرونی ثابت HWContextType ff_hwcontext_type_cuda;
+بیرونی ثابت HWContextType ff_hwcontext_type_d3d11va;
+بیرونی ثابت HWContextType ff_hwcontext_type_d3d12va;
+بیرونی ثابت HWContextType ff_hwcontext_type_drm;
+بیرونی ثابت HWContextType ff_hwcontext_type_dxva2;
+بیرونی ثابت HWContextType ff_hwcontext_type_opencl;
+بیرونی ثابت HWContextType ff_hwcontext_type_qsv;
+بیرونی ثابت HWContextType ff_hwcontext_type_vaapi;
+بیرونی ثابت HWContextType ff_hwcontext_type_vdpau;
+بیرونی ثابت HWContextType ff_hwcontext_type_videotoolbox;
+بیرونی ثابت HWContextType ff_hwcontext_type_mediacodec;
+بیرونی ثابت HWContextType ff_hwcontext_type_vulkan;
+بیرونی ثابت HWContextType ff_hwcontext_type_amf;
+بیرونی ثابت HWContextType ff_hwcontext_type_oh;
 
 #endif /* AVUTIL_HWCONTEXT_INTERNAL_H */

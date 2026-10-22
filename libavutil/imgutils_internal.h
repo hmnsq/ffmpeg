@@ -19,16 +19,16 @@
 #ifndef AVUTIL_IMGUTILS_INTERNAL_H
 #define AVUTIL_IMGUTILS_INTERNAL_H
 
-#include <stddef.h>
-#include <stdint.h>
+#شامل <stddef.h>
+#شامل <stdint.h>
 
-#include "pixfmt.h"
+#شامل "pixfmt.h"
 
-int avpriv_set_systematic_pal2(uint32_t pal[256], enum AVPixelFormat pix_fmt);
+صحیح avpriv_set_systematic_pal2(uint32_t pal[256], شمارش AVPixelFormat pix_fmt);
 
-int ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
-                                    const uint8_t *src, ptrdiff_t src_linesize,
-                                    ptrdiff_t bytewidth, int height);
+صحیح ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
+                                    ثابت uint8_t *src, ptrdiff_t src_linesize,
+                                    ptrdiff_t bytewidth, صحیح height);
 
 
 #endif /* AVUTIL_IMGUTILS_INTERNAL_H */

@@ -26,19 +26,19 @@
 #ifndef AVUTIL_BSWAP_H
 #define AVUTIL_BSWAP_H
 
-#include <stdint.h>
-#include "libavutil/avconfig.h"
-#include "attributes.h"
+#شامل <stdint.h>
+#شامل "libavutil/avconfig.h"
+#شامل "attributes.h"
 
 #ifdef HAVE_AV_CONFIG_H
 
-#include "config.h"
+#شامل "config.h"
 
-#if ARCH_ARM
+#اگر ARCH_ARM
 #   include "arm/bswap.h"
-#elif ARCH_RISCV
+#وگرنهاگر ARCH_RISCV
 #   include "riscv/bswap.h"
-#elif ARCH_X86
+#وگرنهاگر ARCH_X86
 #   include "x86/bswap.h"
 #endif
 
@@ -51,31 +51,31 @@
 #define AV_BSWAPC(s, x) AV_BSWAP##s##C(x)
 
 #ifndef av_bswap16
-static av_always_inline av_const uint16_t av_bswap16(uint16_t x)
+ایستا av_always_inline av_const uint16_t av_bswap16(uint16_t x)
 {
     x= (x>>8) | (x<<8);
-    return x;
+    بازگشت x;
 }
 #endif
 
 #ifndef av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+ایستا av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return AV_BSWAP32C(x);
+    بازگشت AV_BSWAP32C(x);
 }
 #endif
 
 #ifndef av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+ایستا درونخطی uint64_t av_const av_bswap64(uint64_t x)
 {
-    return (uint64_t)av_bswap32((uint32_t)x) << 32 | av_bswap32((uint32_t)(x >> 32));
+    بازگشت (uint64_t)av_bswap32((uint32_t)x) << 32 | av_bswap32((uint32_t)(x >> 32));
 }
 #endif
 
 // be2ne ... big-endian to native-endian
 // le2ne ... little-endian to native-endian
 
-#if AV_HAVE_BIGENDIAN
+#اگر AV_HAVE_BIGENDIAN
 #define av_be2ne16(x) (x)
 #define av_be2ne32(x) (x)
 #define av_be2ne64(x) (x)
@@ -84,7 +84,7 @@ static inline uint64_t av_const av_bswap64(uint64_t x)
 #define av_le2ne64(x) av_bswap64(x)
 #define AV_BE2NEC(s, x) (x)
 #define AV_LE2NEC(s, x) AV_BSWAPC(s, x)
-#else
+#وگرنه
 #define av_be2ne16(x) av_bswap16(x)
 #define av_be2ne32(x) av_bswap32(x)
 #define av_be2ne64(x) av_bswap64(x)

@@ -16,73 +16,73 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "avutil.h"
-#include "avassert.h"
+#شامل "config.h"
+#شامل "avutil.h"
+#شامل "avassert.h"
 
 /**
  * @file
  * various utility functions
  */
 
-const char *av_get_media_type_string(enum AVMediaType media_type)
+ثابت نویسه *av_get_media_type_string(شمارش AVMediaType media_type)
 {
-    switch (media_type) {
-    case AVMEDIA_TYPE_VIDEO:      return "video";
-    case AVMEDIA_TYPE_AUDIO:      return "audio";
-    case AVMEDIA_TYPE_DATA:       return "data";
-    case AVMEDIA_TYPE_SUBTITLE:   return "subtitle";
-    case AVMEDIA_TYPE_ATTACHMENT: return "attachment";
-    default:                      return NULL;
+    انتخاب (media_type) {
+    حالت AVMEDIA_TYPE_VIDEO:      بازگشت "video";
+    حالت AVMEDIA_TYPE_AUDIO:      بازگشت "audio";
+    حالت AVMEDIA_TYPE_DATA:       بازگشت "data";
+    حالت AVMEDIA_TYPE_SUBTITLE:   بازگشت "subtitle";
+    حالت AVMEDIA_TYPE_ATTACHMENT: بازگشت "attachment";
+    پیشفرض:                      بازگشت پوچ;
     }
 }
 
-char av_get_picture_type_char(enum AVPictureType pict_type)
+نویسه av_get_picture_type_char(شمارش AVPictureType pict_type)
 {
-    switch (pict_type) {
-    case AV_PICTURE_TYPE_I:  return 'I';
-    case AV_PICTURE_TYPE_P:  return 'P';
-    case AV_PICTURE_TYPE_B:  return 'B';
-    case AV_PICTURE_TYPE_S:  return 'S';
-    case AV_PICTURE_TYPE_SI: return 'i';
-    case AV_PICTURE_TYPE_SP: return 'p';
-    case AV_PICTURE_TYPE_BI: return 'b';
-    default:                 return '?';
+    انتخاب (pict_type) {
+    حالت AV_PICTURE_TYPE_I:  بازگشت 'I';
+    حالت AV_PICTURE_TYPE_P:  بازگشت 'P';
+    حالت AV_PICTURE_TYPE_B:  بازگشت 'B';
+    حالت AV_PICTURE_TYPE_S:  بازگشت 'S';
+    حالت AV_PICTURE_TYPE_SI: بازگشت 'i';
+    حالت AV_PICTURE_TYPE_SP: بازگشت 'p';
+    حالت AV_PICTURE_TYPE_BI: بازگشت 'b';
+    پیشفرض:                 بازگشت '?';
     }
 }
 
-char *av_fourcc_make_string(char *buf, uint32_t fourcc)
+نویسه *av_fourcc_make_string(نویسه *buf, uint32_t fourcc)
 {
-    int i;
-    char *orig_buf = buf;
+    صحیح i;
+    نویسه *orig_buf = buf;
     size_t buf_size = AV_FOURCC_MAX_STRING_SIZE;
 
-    for (i = 0; i < 4; i++) {
-        const int c = fourcc & 0xff;
-        const int print_chr = (c >= '0' && c <= '9') ||
+    برای (i = 0; i < 4; i++) {
+        ثابت صحیح c = fourcc & 0xff;
+        ثابت صحیح print_chr = (c >= '0' && c <= '9') ||
                               (c >= 'a' && c <= 'z') ||
                               (c >= 'A' && c <= 'Z') ||
                               (c && strchr(". -_", c));
-        const int len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
-        if (len < 0)
-            break;
+        ثابت صحیح len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
+        اگر (len < 0)
+            بشکن;
         buf += len;
         buf_size = buf_size > len ? buf_size - len : 0;
         fourcc >>= 8;
     }
 
-    return orig_buf;
+    بازگشت orig_buf;
 }
 
-AVRational av_get_time_base_q(void)
+AVRational av_get_time_base_q(تهی)
 {
-    return (AVRational){1, AV_TIME_BASE};
+    بازگشت (AVRational){1, AV_TIME_BASE};
 }
-#if FF_API_ASSERT_FPU
-void av_assert0_fpu(void) {
-#if HAVE_MMX_INLINE
+#اگر FF_API_ASSERT_FPU
+تهی av_assert0_fpu(تهی) {
+#اگر HAVE_MMX_INLINE
     uint16_t state[14];
-     __asm__ volatile (
+     __asm__ فرار (
         "fstenv %0 \n\t"
         : "+m" (state)
         :

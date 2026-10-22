@@ -18,17 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
+#شامل <stddef.h>
+#شامل <stdint.h>
+#شامل <string.h>
 
-#include "mastering_display_metadata.h"
-#include "mem.h"
+#شامل "mastering_display_metadata.h"
+#شامل "mem.h"
 
-static void get_defaults(AVMasteringDisplayMetadata *mastering)
+ایستا تهی get_defaults(AVMasteringDisplayMetadata *mastering)
 {
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 2; j++)
+    برای (صحیح i = 0; i < 3; i++)
+        برای (صحیح j = 0; j < 2; j++)
             mastering->display_primaries[i][j] = (AVRational) { 0, 1 };
     mastering->white_point[0] =
     mastering->white_point[1] =
@@ -36,59 +36,59 @@ static void get_defaults(AVMasteringDisplayMetadata *mastering)
     mastering->max_luminance  = (AVRational) { 0, 1 };
 }
 
-AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(void)
+AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(تهی)
 {
-    return av_mastering_display_metadata_alloc_size(NULL);
+    بازگشت av_mastering_display_metadata_alloc_size(پوچ);
 }
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc_size(size_t *size)
 {
-    AVMasteringDisplayMetadata *mastering = av_mallocz(sizeof(AVMasteringDisplayMetadata));
+    AVMasteringDisplayMetadata *mastering = av_mallocz(اندازه(AVMasteringDisplayMetadata));
 
-    if (size)
-        *size = mastering ? sizeof(*mastering) : 0;
+    اگر (size)
+        *size = mastering ? اندازه(*mastering) : 0;
 
-    if (!mastering)
-        return NULL;
+    اگر (!mastering)
+        بازگشت پوچ;
 
     get_defaults(mastering);
 
-    return mastering;
+    بازگشت mastering;
 }
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_MASTERING_DISPLAY_METADATA,
-                                                        sizeof(AVMasteringDisplayMetadata));
-    if (!side_data)
-        return NULL;
+                                                        اندازه(AVMasteringDisplayMetadata));
+    اگر (!side_data)
+        بازگشت پوچ;
 
-    memset(side_data->data, 0, sizeof(AVMasteringDisplayMetadata));
+    memset(side_data->data, 0, اندازه(AVMasteringDisplayMetadata));
     get_defaults((AVMasteringDisplayMetadata *)side_data->data);
 
-    return (AVMasteringDisplayMetadata *)side_data->data;
+    بازگشت (AVMasteringDisplayMetadata *)side_data->data;
 }
 
 AVContentLightMetadata *av_content_light_metadata_alloc(size_t *size)
 {
-    AVContentLightMetadata *metadata = av_mallocz(sizeof(AVContentLightMetadata));
+    AVContentLightMetadata *metadata = av_mallocz(اندازه(AVContentLightMetadata));
 
-    if (size)
-        *size = metadata ? sizeof(*metadata) : 0;
+    اگر (size)
+        *size = metadata ? اندازه(*metadata) : 0;
 
-    return metadata;
+    بازگشت metadata;
 }
 
 AVContentLightMetadata *av_content_light_metadata_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                                                        sizeof(AVContentLightMetadata));
-    if (!side_data)
-        return NULL;
+                                                        اندازه(AVContentLightMetadata));
+    اگر (!side_data)
+        بازگشت پوچ;
 
-    memset(side_data->data, 0, sizeof(AVContentLightMetadata));
+    memset(side_data->data, 0, اندازه(AVContentLightMetadata));
 
-    return (AVContentLightMetadata *)side_data->data;
+    بازگشت (AVContentLightMetadata *)side_data->data;
 }

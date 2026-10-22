@@ -30,36 +30,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
+#شامل <stdint.h>
+#شامل <string.h>
 
-#include "bswap.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "md5.h"
+#شامل "bswap.h"
+#شامل "intreadwrite.h"
+#شامل "macros.h"
+#شامل "mem.h"
+#شامل "md5.h"
 
-typedef struct AVMD5 {
+تعریفنوع ساختار AVMD5 {
     uint64_t len;
     uint8_t  block[64];
     uint32_t ABCD[4];
 } AVMD5;
 
-const int av_md5_size = sizeof(AVMD5);
+ثابت صحیح av_md5_size = اندازه(AVMD5);
 
-struct AVMD5 *av_md5_alloc(void)
+ساختار AVMD5 *av_md5_alloc(تهی)
 {
-    return av_mallocz(sizeof(struct AVMD5));
+    بازگشت av_mallocz(اندازه(ساختار AVMD5));
 }
 
-static const uint8_t S[4][4] = {
+ایستا ثابت uint8_t S[4][4] = {
     { 7, 12, 17, 22 },  /* round 1 */
     { 5,  9, 14, 20 },  /* round 2 */
     { 4, 11, 16, 23 },  /* round 3 */
     { 6, 10, 15, 21 }   /* round 4 */
 };
 
-static const uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
+ایستا ثابت uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,   /* round 1 */
     0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
     0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
@@ -82,39 +82,39 @@ static const uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
 };
 
 #define CORE(i, a, b, c, d)                                             \
-    do {                                                                \
+    انجامبده {                                                                \
         t  = S[i >> 4][i & 3];                                          \
         a += T[i];                                                      \
                                                                         \
-        if (i < 32) {                                                   \
-            if (i < 16)                                                 \
+        اگر (i < 32) {                                                   \
+            اگر (i < 16)                                                 \
                 a += (d ^ (b & (c ^ d)))  + AV_RL32(X+(       i  & 15));\
-            else                                                        \
+            وگرنه                                                        \
                 a += ((d & b) | (~d & c)) + AV_RL32(X+((1 + 5*i) & 15));\
-        } else {                                                        \
-            if (i < 48)                                                 \
+        } وگرنه {                                                        \
+            اگر (i < 48)                                                 \
                 a += (b ^ c ^ d)          + AV_RL32(X+((5 + 3*i) & 15));\
-            else                                                        \
+            وگرنه                                                        \
                 a += (c ^ (b | ~d))       + AV_RL32(X+((    7*i) & 15));\
         }                                                               \
         a = b + (a << t | a >> (32 - t));                               \
-    } while (0)
+    } وقتی (0)
 
-static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
+ایستا تهی body(uint32_t ABCD[4], ثابت uint8_t *src, size_t nblocks)
 {
-    const uint32_t *X;
+    ثابت uint32_t *X;
     uint32_t a, b, c, d, t;
 
-    for (size_t n = 0; n < nblocks; n++) {
+    برای (size_t n = 0; n < nblocks; n++) {
         a = ABCD[3];
         b = ABCD[2];
         c = ABCD[1];
         d = ABCD[0];
 
-        X = (const uint32_t *)src + n * 16;
+        X = (ثابت uint32_t *)src + n * 16;
 
-#if CONFIG_SMALL
-        for (int i = 0; i < 64; i++) {
+#اگر CONFIG_SMALL
+        برای (صحیح i = 0; i < 64; i++) {
             CORE(i, a, b, c, d);
             t = d;
             d = c;
@@ -122,7 +122,7 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
             b = a;
             a = t;
         }
-#else
+#وگرنه
 #define CORE2(i)                                                        \
         CORE(i, a, b, c, d); CORE((i + 1), d, a, b, c);                 \
         CORE((i + 2), c, d, a, b); CORE((i + 3), b, c, d, a)
@@ -140,7 +140,7 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
     }
 }
 
-void av_md5_init(AVMD5 *ctx)
+تهی av_md5_init(AVMD5 *ctx)
 {
     ctx->len     = 0;
 
@@ -150,57 +150,57 @@ void av_md5_init(AVMD5 *ctx)
     ctx->ABCD[3] = 0x67452301;
 }
 
-void av_md5_update(AVMD5 *ctx, const uint8_t *src, size_t len)
+تهی av_md5_update(AVMD5 *ctx, ثابت uint8_t *src, size_t len)
 {
-    const uint8_t *end;
-    int j;
+    ثابت uint8_t *end;
+    صحیح j;
 
     j         = ctx->len & 63;
     ctx->len += len;
 
-    if (j) {
-        int cnt = FFMIN(len, 64 - j);
+    اگر (j) {
+        صحیح cnt = FFMIN(len, 64 - j);
         memcpy(ctx->block + j, src, cnt);
         src += cnt;
         len -= cnt;
-        if (j + cnt < 64)
-            return;
+        اگر (j + cnt < 64)
+            بازگشت;
         body(ctx->ABCD, ctx->block, 1);
     }
 
     end = src + (len & ~63);
-    if (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
-       while (src < end) {
+    اگر (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
+       وقتی (src < end) {
            memcpy(ctx->block, src, 64);
            body(ctx->ABCD, ctx->block, 1);
            src += 64;
         }
-    } else {
+    } وگرنه {
         size_t nblocks = len / 64;
         body(ctx->ABCD, src, nblocks);
         src = end;
     }
     len &= 63;
-    if (len > 0)
+    اگر (len > 0)
         memcpy(ctx->block, src, len);
 }
 
-void av_md5_final(AVMD5 *ctx, uint8_t *dst)
+تهی av_md5_final(AVMD5 *ctx, uint8_t *dst)
 {
-    int i;
+    صحیح i;
     uint64_t finalcount = av_le2ne64(ctx->len << 3);
 
     av_md5_update(ctx, "\200", 1);
-    while ((ctx->len & 63) != 56)
+    وقتی ((ctx->len & 63) != 56)
         av_md5_update(ctx, "", 1);
 
     av_md5_update(ctx, (uint8_t *) &finalcount, 8);
 
-    for (i = 0; i < 4; i++)
+    برای (i = 0; i < 4; i++)
         AV_WL32(dst + 4 * i, ctx->ABCD[3 - i]);
 }
 
-void av_md5_sum(uint8_t *dst, const uint8_t *src, size_t len)
+تهی av_md5_sum(uint8_t *dst, ثابت uint8_t *src, size_t len)
 {
     AVMD5 ctx;
 

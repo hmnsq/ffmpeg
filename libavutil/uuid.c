@@ -60,69 +60,69 @@
  * @author Zane van Iperen <zane@zanevaniperen.com>
  */
 
-#include "attributes_internal.h"
-#include "uuid.h"
-#include "error.h"
-#include "avstring.h"
+#شامل "attributes_internal.h"
+#شامل "uuid.h"
+#شامل "error.h"
+#شامل "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+صحیح av_uuid_parse(ثابت نویسه *in, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    اگر (strlen(in) != 36)
+        بازگشت AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    بازگشت av_uuid_parse_range(in, in + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+ایستا صحیح xdigit_to_int(نویسه c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    اگر (c >= 'a' && c <= 'f')
+        بازگشت c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    اگر (c >= '0' && c <= '9')
+        بازگشت c - '0';
 
-    return -1;
+    بازگشت -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+صحیح av_uuid_parse_range(ثابت نویسه *in_start, ثابت نویسه *in_end, AVUUID uu)
 {
-    int i;
-    const char *cp;
+    صحیح i;
+    ثابت نویسه *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    اگر ((in_end - in_start) != 36)
+        بازگشت AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    برای (i = 0, cp = in_start; i < 16; i++) {
+        صحیح hi;
+        صحیح lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        اگر (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
         hi = xdigit_to_int(*cp++);
         lo = xdigit_to_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        اگر (hi == -1 || lo == -1)
+            بازگشت AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    بازگشت 0;
 }
 
-static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
+ایستا attribute_nonstring ثابت نویسه hexdigits_lower[16] = "0123456789abcdef";
 
-void av_uuid_unparse(const AVUUID uuid, char *out)
+تهی av_uuid_unparse(ثابت AVUUID uuid, نویسه *out)
 {
-    char *p = out;
+    نویسه *p = out;
 
-    for (int i = 0; i < 16; i++) {
+    برای (صحیح i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        اگر (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
@@ -133,10 +133,10 @@ void av_uuid_unparse(const AVUUID uuid, char *out)
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+صحیح av_uuid_urn_parse(ثابت نویسه *in, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    اگر (av_stristr(in, "urn:uuid:") != in)
+        بازگشت AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    بازگشت av_uuid_parse(in + 9, uu);
 }

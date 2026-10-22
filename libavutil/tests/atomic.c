@@ -24,20 +24,20 @@
  * long long before printing, and no pointer values are printed.
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdatomic.h>
+#شامل <limits.h>
+#شامل <stdint.h>
+#شامل <stdio.h>
+#شامل <stdatomic.h>
 
-static int called;
+ایستا صحیح called;
 
-static void callback(void)
+ایستا تهی callback(تهی)
 {
     called++;
 }
 
 #define TEST(A, T, name, V1, V2)                                             \
-do {                                                                         \
+انجامبده {                                                                         \
     A object = 0;                                                            \
     T expected, r;                                                           \
     atomic_store(&object, (T)(V1));                                          \
@@ -58,39 +58,39 @@ do {                                                                         \
     r = atomic_compare_exchange_strong(&object, &expected, (T)(V2));         \
     printf(name " cas       %lld %lld\n",                                    \
            (long long)r, (long long)expected);                               \
-    do {                                                                     \
+    انجامبده {                                                                     \
         r = atomic_compare_exchange_weak(&object, &expected, (T)(V1));       \
-    } while (!r);                                                            \
+    } وقتی (!r);                                                            \
     printf(name " cas weak  %lld %lld %lld\n",                               \
            (long long)r, (long long)expected,                                \
            (long long)atomic_load(&object));                                 \
-} while (0)
+} وقتی (0)
 
-int main(void)
+صحیح اصلی(تهی)
 {
     _Bool _Atomic b = 0;
     _Bool be;
     atomic_uint u32 = 0;
     atomic_ullong u64 = 0;
     atomic_uchar u8 = 0;
-    int x = 42;
-    int *_Atomic p = NULL;
-    int *pe;
-    void (*_Atomic fp)(void) = NULL;
-    const int *const arr[2] = { &x, NULL };
-    const int *const *_Atomic lst = NULL;
+    صحیح x = 42;
+    صحیح *_Atomic p = پوچ;
+    صحیح *pe;
+    تهی (*_Atomic fp)(تهی) = پوچ;
+    ثابت صحیح *ثابت arr[2] = { &x, پوچ };
+    ثابت صحیح *ثابت *_Atomic lst = پوچ;
     atomic_flag f = ATOMIC_FLAG_INIT;
     long long old;
-    int r1, r2, r3;
-    void (*loaded_callback)(void);
+    صحیح r1, r2, r3;
+    تهی (*loaded_callback)(تهی);
 
-    TEST(atomic_char, char,         "char",         97, 122);
-    TEST(atomic_schar, signed char,        "schar",        -5, 42);
-    TEST(atomic_uchar, unsigned char,        "uchar",        200, 42);
+    TEST(atomic_char, نویسه,         "char",         97, 122);
+    TEST(atomic_schar, signed نویسه,        "schar",        -5, 42);
+    TEST(atomic_uchar, unsigned نویسه,        "uchar",        200, 42);
     TEST(atomic_short, short,        "short",        -30000, 42);
     TEST(atomic_ushort, unsigned short,       "ushort",       60000, 42);
-    TEST(atomic_int, int,          "int",          -2000000000, 2000000000);
-    TEST(atomic_uint, unsigned int,         "uint",         4000000000u, 7u);
+    TEST(atomic_int, صحیح,          "int",          -2000000000, 2000000000);
+    TEST(atomic_uint, unsigned صحیح,         "uint",         4000000000u, 7u);
     TEST(atomic_long, long,         "long",         -2000000000L, 2000000000L);
     TEST(atomic_ulong, unsigned long,        "ulong",        4000000000UL, 7UL);
     TEST(atomic_llong, long long,        "llong",        -9007199254740993LL, 9007199254740993LL);
@@ -130,15 +130,15 @@ int main(void)
     r2 = atomic_exchange(&b, 0);
     r3 = atomic_compare_exchange_strong(&b, &be, 2);
     printf("bool       %d %d %d %d %d\n", r1, r2, r3,
-           (int)be, (int)atomic_load(&b));
+           (صحیح)be, (صحیح)atomic_load(&b));
 
     /* object pointers */
     atomic_store_explicit(&p, &x, memory_order_relaxed);
-    pe = NULL;
+    pe = پوچ;
     r1 = atomic_load_explicit(&p, memory_order_relaxed) == &x;
-    r2 = atomic_compare_exchange_strong(&p, &pe, NULL);
+    r2 = atomic_compare_exchange_strong(&p, &pe, پوچ);
     printf("ptr        %d %d %d\n", r1, r2, pe == &x);
-    printf("ptr exch   %d\n", atomic_exchange(&p, NULL) == &x);
+    printf("ptr exch   %d\n", atomic_exchange(&p, پوچ) == &x);
 
     /* function pointers, as in the log callback */
     atomic_store_explicit(&fp, callback, memory_order_relaxed);
@@ -146,7 +146,7 @@ int main(void)
     loaded_callback();
 
     /* pointers to const, as in the device lists */
-    const int *const *l;
+    ثابت صحیح *ثابت *l;
     atomic_store_explicit(&lst, arr, memory_order_relaxed);
     l = atomic_load_explicit(&lst, memory_order_relaxed);
     printf("lst        %d %d\n", l == arr, **l == x);
@@ -159,13 +159,13 @@ int main(void)
     printf("called     %d\n", called);
 
     {
-        int _Atomic i = 0;
+        صحیح _Atomic i = 0;
         atomic_init(&i, 43);
-        printf("init       %d\n", (int)atomic_load(&i));
+        printf("init       %d\n", (صحیح)atomic_load(&i));
     }
     atomic_thread_fence(memory_order_seq_cst);
     atomic_signal_fence(memory_order_acquire);
-    printf("kill_dep   %d\n", (int)kill_dependency(1));
+    printf("kill_dep   %d\n", (صحیح)kill_dependency(1));
 
-    return 0;
+    بازگشت 0;
 }

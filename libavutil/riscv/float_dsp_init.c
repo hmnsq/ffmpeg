@@ -18,44 +18,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#شامل <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
+#شامل "config.h"
+#شامل "libavutil/attributes.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/float_dsp.h"
 
-void ff_vector_fmul_rvv(float *dst, const float *src0, const float *src1,
-                         int len);
-void ff_vector_fmac_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_window_rvv(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
-void ff_vector_fmul_add_rvv(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
-void ff_vector_fmul_reverse_rvv(float *dst, const float *src0,
-                                 const float *src1, int len);
-void ff_butterflies_float_rvv(float *v1, float *v2, int len);
-float ff_scalarproduct_float_rvv(const float *v1, const float *v2, int len);
+تهی ff_vector_fmul_rvv(اعشاری *dst, ثابت اعشاری *src0, ثابت اعشاری *src1,
+                         صحیح len);
+تهی ff_vector_fmac_scalar_rvv(اعشاری *dst, ثابت اعشاری *src, اعشاری mul,
+                                صحیح len);
+تهی ff_vector_fmul_scalar_rvv(اعشاری *dst, ثابت اعشاری *src, اعشاری mul,
+                                صحیح len);
+تهی ff_vector_fmul_window_rvv(اعشاری *dst, ثابت اعشاری *src0,
+                                ثابت اعشاری *src1, ثابت اعشاری *win, صحیح len);
+تهی ff_vector_fmul_add_rvv(اعشاری *dst, ثابت اعشاری *src0, ثابت اعشاری *src1,
+                             ثابت اعشاری *src2, صحیح len);
+تهی ff_vector_fmul_reverse_rvv(اعشاری *dst, ثابت اعشاری *src0,
+                                 ثابت اعشاری *src1, صحیح len);
+تهی ff_butterflies_float_rvv(اعشاری *v1, اعشاری *v2, صحیح len);
+اعشاری ff_scalarproduct_float_rvv(ثابت اعشاری *v1, ثابت اعشاری *v2, صحیح len);
 
-void ff_vector_dmul_rvv(double *dst, const double *src0, const double *src1,
-                         int len);
-void ff_vector_dmac_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-void ff_vector_dmul_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-double ff_scalarproduct_double_rvv(const double *v1, const double *v2,
+تهی ff_vector_dmul_rvv(دوگانه *dst, ثابت دوگانه *src0, ثابت دوگانه *src1,
+                         صحیح len);
+تهی ff_vector_dmac_scalar_rvv(دوگانه *dst, ثابت دوگانه *src, دوگانه mul,
+                                صحیح len);
+تهی ff_vector_dmul_scalar_rvv(دوگانه *dst, ثابت دوگانه *src, دوگانه mul,
+                                صحیح len);
+دوگانه ff_scalarproduct_double_rvv(ثابت دوگانه *v1, ثابت دوگانه *v2,
                                    size_t len);
 
-av_cold void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
+av_cold تهی ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#اگر HAVE_RVV
+    صحیح flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVB) {
-        if (flags & AV_CPU_FLAG_RVV_F32) {
+    اگر (flags & AV_CPU_FLAG_RVB) {
+        اگر (flags & AV_CPU_FLAG_RVV_F32) {
             fdsp->vector_fmul = ff_vector_fmul_rvv;
             fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_rvv;
             fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_rvv;
@@ -66,7 +66,7 @@ av_cold void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
             fdsp->scalarproduct_float = ff_scalarproduct_float_rvv;
         }
 
-        if (flags & AV_CPU_FLAG_RVV_F64) {
+        اگر (flags & AV_CPU_FLAG_RVV_F64) {
             fdsp->vector_dmul = ff_vector_dmul_rvv;
             fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_rvv;
             fdsp->vector_dmul_scalar = ff_vector_dmul_scalar_rvv;

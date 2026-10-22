@@ -19,13 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#شامل <string.h>
 
-#include "camellia.h"
-#include "error.h"
-#include "intreadwrite.h"
-#include "mem.h"
-#include "attributes.h"
+#شامل "camellia.h"
+#شامل "error.h"
+#شامل "intreadwrite.h"
+#شامل "mem.h"
+#شامل "attributes.h"
 
 #define LR32(x,c) ((x) << (c) | (x) >> (32 - (c)))
 #define RR32(x,c) ((x) >> (c) | (x) << (32 - (c)))
@@ -41,16 +41,16 @@
 #define Sigma5  0x10E527FADE682D1D
 #define Sigma6  0xB05688C2B3E6C1FD
 
-static uint64_t SP[8][256];
+ایستا uint64_t SP[8][256];
 
-typedef struct AVCAMELLIA {
+تعریفنوع ساختار AVCAMELLIA {
     uint64_t Kw[4];
     uint64_t Ke[6];
     uint64_t K[24];
-    int key_bits;
+    صحیح کلید_bits;
 } AVCAMELLIA;
 
-static const uint8_t SBOX1[256] = {
+ایستا ثابت uint8_t SBOX1[256] = {
 112, 130,  44, 236, 179,  39, 192, 229, 228, 133,  87,  53, 234,  12, 174,  65,
  35, 239, 107, 147,  69,  25, 165,  33, 237,  14,  79,  78,  29, 101, 146, 189,
 134, 184, 175, 143, 124, 235,  31, 206,  62,  48, 220,  95,  94, 197,  11,  26,
@@ -69,7 +69,7 @@ static const uint8_t SBOX1[256] = {
  64,  40, 211, 123, 187, 201,  67, 193,  21, 227, 173, 244, 119, 199, 128, 158
 };
 
-static const uint8_t SBOX2[256] = {
+ایستا ثابت uint8_t SBOX2[256] = {
 224,   5,  88, 217, 103,  78, 129, 203, 201,  11, 174, 106, 213,  24,  93, 130,
  70, 223, 214,  39, 138,  50,  75,  66, 219,  28, 158, 156,  58, 202,  37, 123,
  13, 113,  95,  31, 248, 215,  62, 157, 124,  96, 185, 190, 188, 139,  22,  52,
@@ -88,7 +88,7 @@ static const uint8_t SBOX2[256] = {
 128,  80, 167, 246, 119, 147, 134, 131,  42, 199,  91, 233, 238, 143,   1,  61
 };
 
-static const uint8_t SBOX3[256] = {
+ایستا ثابت uint8_t SBOX3[256] = {
  56,  65,  22, 118, 217, 147,  96, 242, 114, 194, 171, 154, 117,   6,  87, 160,
 145, 247, 181, 201, 162, 140, 210, 144, 246,   7, 167,  39, 142, 178,  73, 222,
  67,  92, 215, 199,  62, 245, 143, 103,  31,  24, 110, 175,  47, 226, 133,  13,
@@ -107,7 +107,7 @@ static const uint8_t SBOX3[256] = {
  32,  20, 233, 189, 221, 228, 161, 224, 138, 241, 214, 122, 187, 227,  64,  79
 };
 
-static const uint8_t SBOX4[256] = {
+ایستا ثابت uint8_t SBOX4[256] = {
 112,  44, 179, 192, 228,  87, 234, 174,  35, 107,  69, 165, 237,  79,  29, 146,
 134, 175, 124,  31,  62, 220,  94,  11, 166,  57, 213,  93, 217,  90,  81, 108,
 139, 154, 251, 176, 116,  43, 240, 132, 223, 203,  52, 118, 109, 169, 209,   4,
@@ -126,32 +126,32 @@ static const uint8_t SBOX4[256] = {
   7,  85, 238,  10,  73, 104,  56, 164,  40, 123, 201, 193, 227, 244, 199, 158
 };
 
-const int av_camellia_size = sizeof(AVCAMELLIA);
+ثابت صحیح av_camellia_size = اندازه(AVCAMELLIA);
 
-static void LR128(uint64_t d[2], const uint64_t K[2], int x)
+ایستا تهی LR128(uint64_t d[2], ثابت uint64_t K[2], صحیح x)
 {
-    int i = 0;
-    if (64 <= x && x < 128) {
+    صحیح i = 0;
+    اگر (64 <= x && x < 128) {
         i = 1;
         x -= 64;
     }
-    if (x <= 0 || x >= 128) {
+    اگر (x <= 0 || x >= 128) {
         d[0] = K[i];
         d[1] = K[!i];
-        return;
+        بازگشت;
     }
     d[0] = (K[i] << x | K[!i] >> (64 - x));
     d[1] = (K[!i] << x | K[i] >> (64 - x));
 }
 
-static uint64_t F(uint64_t F_IN, uint64_t KE)
+ایستا uint64_t F(uint64_t F_IN, uint64_t KE)
 {
     KE ^= F_IN;
     F_IN=SP[0][KE >> 56]^SP[1][(KE >> 48) & MASK8]^SP[2][(KE >> 40) & MASK8]^SP[3][(KE >> 32) & MASK8]^SP[4][(KE >> 24) & MASK8]^SP[5][(KE >> 16) & MASK8]^SP[6][(KE >> 8) & MASK8]^SP[7][KE & MASK8];
-    return F_IN;
+    بازگشت F_IN;
 }
 
-static uint64_t FL(uint64_t FL_IN, uint64_t KE)
+ایستا uint64_t FL(uint64_t FL_IN, uint64_t KE)
 {
     uint32_t x1, x2, k1, k2;
     x1 = FL_IN >> 32;
@@ -160,10 +160,10 @@ static uint64_t FL(uint64_t FL_IN, uint64_t KE)
     k2 = KE & MASK32;
     x2 = x2 ^ LR32((x1 & k1), 1);
     x1 = x1 ^ (x2 | k2);
-    return ((uint64_t)x1 << 32) | (uint64_t)x2;
+    بازگشت ((uint64_t)x1 << 32) | (uint64_t)x2;
 }
 
-static uint64_t FLINV(uint64_t FLINV_IN, uint64_t KE)
+ایستا uint64_t FLINV(uint64_t FLINV_IN, uint64_t KE)
 {
     uint32_t x1, x2, k1, k2;
     x1 = FLINV_IN >> 32;
@@ -172,22 +172,22 @@ static uint64_t FLINV(uint64_t FLINV_IN, uint64_t KE)
     k2 = KE & MASK32;
     x1 = x1 ^ (x2 | k2);
     x2 = x2 ^ LR32((x1 & k1), 1);
-    return ((uint64_t)x1 << 32) | (uint64_t)x2;
+    بازگشت ((uint64_t)x1 << 32) | (uint64_t)x2;
 }
 
-static const uint8_t shifts[2][12] = {
+ایستا ثابت uint8_t shifts[2][12] = {
     {0, 15, 15, 45, 45, 60, 94, 94, 111},
     {0, 15, 15, 30, 45, 45, 60, 60,  77, 94, 94, 111}
 };
 
-static const uint8_t vars[2][12] = {
+ایستا ثابت uint8_t vars[2][12] = {
     {2, 0, 2, 0, 2, 2, 0, 2, 0},
     {3, 1, 2, 3, 0, 2, 1, 3, 0, 1, 2, 0}
 };
 
-static void generate_round_keys(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], uint64_t Ka[2], uint64_t Kb[2])
+ایستا تهی generate_round_کلیدها(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], uint64_t Ka[2], uint64_t Kb[2])
 {
-    int i;
+    صحیح i;
     uint64_t *Kd[4], d[2];
     Kd[0] = Kl;
     Kd[1] = Kr;
@@ -195,8 +195,8 @@ static void generate_round_keys(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], 
     Kd[3] = Kb;
     cs->Kw[0] = Kl[0];
     cs->Kw[1] = Kl[1];
-    if (cs->key_bits == 128) {
-        for (i = 0; i < 9; i++) {
+    اگر (cs->کلید_bits == 128) {
+        برای (i = 0; i < 9; i++) {
             LR128(d, Kd[vars[0][i]], shifts[0][i]);
             cs->K[2*i] = d[0];
             cs->K[2*i+1] = d[1];
@@ -212,8 +212,8 @@ static void generate_round_keys(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], 
         LR128(d, Kd[2], 111);
         cs->Kw[2] = d[0];
         cs->Kw[3] = d[1];
-    } else {
-        for (i = 0; i < 12; i++) {
+    } وگرنه {
+        برای (i = 0; i < 12; i++) {
             LR128(d, Kd[vars[1][i]], shifts[1][i]);
             cs->K[2*i] = d[0];
             cs->K[2*i+1] = d[1];
@@ -233,7 +233,7 @@ static void generate_round_keys(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], 
     }
 }
 
-static void camellia_encrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src)
+ایستا تهی camellia_encrypt(AVCAMELLIA *cs, uint8_t *dst, ثابت uint8_t *src)
 {
     uint64_t D1, D2;
     D1 = AV_RB64(src);
@@ -262,7 +262,7 @@ static void camellia_encrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src)
     D1 ^= F(D2, cs->K[15]);
     D2 ^= F(D1, cs->K[16]);
     D1 ^= F(D2, cs->K[17]);
-    if (cs->key_bits != 128) {
+    اگر (cs->کلید_bits != 128) {
         D1 = FL(D1, cs->Ke[4]);
         D2 = FLINV(D2, cs->Ke[5]);
         D2 ^= F(D1, cs->K[18]);
@@ -278,14 +278,14 @@ static void camellia_encrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src)
     AV_WB64(dst + 8, D1);
 }
 
-static void camellia_decrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src, uint8_t *iv)
+ایستا تهی camellia_decrypt(AVCAMELLIA *cs, uint8_t *dst, ثابت uint8_t *src, uint8_t *iv)
 {
     uint64_t D1, D2;
     D1 = AV_RB64(src);
     D2 = AV_RB64(src + 8);
     D1 ^= cs->Kw[2];
     D2 ^= cs->Kw[3];
-    if (cs->key_bits != 128) {
+    اگر (cs->کلید_bits != 128) {
         D2 ^= F(D1, cs->K[23]);
         D1 ^= F(D2, cs->K[22]);
         D2 ^= F(D1, cs->K[21]);
@@ -319,7 +319,7 @@ static void camellia_decrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src, u
     D1 ^= F(D2, cs->K[0]);
     D2 ^= cs->Kw[0];
     D1 ^= cs->Kw[1];
-    if (iv) {
+    اگر (iv) {
         D2 ^= AV_RB64(iv);
         D1 ^= AV_RB64(iv + 8);
         memcpy(iv, src, 16);
@@ -328,11 +328,11 @@ static void camellia_decrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src, u
     AV_WB64(dst + 8, D1);
 }
 
-static void computeSP(void)
+ایستا تهی computeSP(تهی)
 {
     uint64_t z;
-    int i;
-    for (i = 0; i < 256; i++) {
+    صحیح i;
+    برای (i = 0; i < 256; i++) {
         z = SBOX1[i];
         SP[0][i] = (z << 56) ^ (z << 48) ^ (z << 40) ^ (z << 24) ^ z;
         SP[7][i] = (z << 56) ^ (z << 48) ^ (z << 40) ^ (z << 24) ^ (z << 16) ^ (z << 8);
@@ -348,28 +348,28 @@ static void computeSP(void)
     }
 }
 
-struct AVCAMELLIA *av_camellia_alloc(void)
+ساختار AVCAMELLIA *av_camellia_alloc(تهی)
 {
-    return av_mallocz(sizeof(struct AVCAMELLIA));
+    بازگشت av_mallocz(اندازه(ساختار AVCAMELLIA));
 }
 
-av_cold int av_camellia_init(AVCAMELLIA *cs, const uint8_t *key, int key_bits)
+av_cold صحیح av_camellia_init(AVCAMELLIA *cs, ثابت uint8_t *کلید, صحیح کلید_bits)
 {
     uint64_t Kl[2], Kr[2], Ka[2], Kb[2];
     uint64_t D1, D2;
-    if (key_bits != 128 && key_bits != 192 && key_bits != 256)
-        return AVERROR(EINVAL);
-    memset(Kb, 0, sizeof(Kb));
-    memset(Kr, 0, sizeof(Kr));
-    cs->key_bits = key_bits;
-    Kl[0] = AV_RB64(key);
-    Kl[1] = AV_RB64(key + 8);
-    if (key_bits == 192) {
-        Kr[0] = AV_RB64(key + 16);
+    اگر (کلید_bits != 128 && کلید_bits != 192 && کلید_bits != 256)
+        بازگشت AVERROR(EINVAL);
+    memset(Kb, 0, اندازه(Kb));
+    memset(Kr, 0, اندازه(Kr));
+    cs->کلید_bits = کلید_bits;
+    Kl[0] = AV_RB64(کلید);
+    Kl[1] = AV_RB64(کلید + 8);
+    اگر (کلید_bits == 192) {
+        Kr[0] = AV_RB64(کلید + 16);
         Kr[1] = ~Kr[0];
-    } else if (key_bits == 256) {
-        Kr[0] = AV_RB64(key + 16);
-        Kr[1] = AV_RB64(key + 24);
+    } وگرنه اگر (کلید_bits == 256) {
+        Kr[0] = AV_RB64(کلید + 16);
+        Kr[1] = AV_RB64(کلید + 24);
     }
     computeSP();
     D1 = Kl[0] ^ Kr[0];
@@ -382,7 +382,7 @@ av_cold int av_camellia_init(AVCAMELLIA *cs, const uint8_t *key, int key_bits)
     D1 ^= F(D2, Sigma4);
     Ka[0] = D1;
     Ka[1] = D2;
-    if (key_bits != 128) {
+    اگر (کلید_bits != 128) {
         D1 = Ka[0] ^ Kr[0];
         D2 = Ka[1] ^ Kr[1];
         D2 ^= F(D1, Sigma5);
@@ -390,23 +390,23 @@ av_cold int av_camellia_init(AVCAMELLIA *cs, const uint8_t *key, int key_bits)
         Kb[0] = D1;
         Kb[1] = D2;
     }
-    generate_round_keys(cs, Kl, Kr, Ka, Kb);
-    return 0;
+    generate_round_کلیدها(cs, Kl, Kr, Ka, Kb);
+    بازگشت 0;
 }
 
-void av_camellia_crypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt)
+تهی av_camellia_crypt(AVCAMELLIA *cs, uint8_t *dst, ثابت uint8_t *src, صحیح شمار, uint8_t *iv, صحیح decrypt)
 {
-    int i;
-    while (count--) {
-        if (decrypt) {
+    صحیح i;
+    وقتی (شمار--) {
+        اگر (decrypt) {
             camellia_decrypt(cs, dst, src, iv);
-        } else {
-            if (iv) {
-                for (i = 0; i < 16; i++)
+        } وگرنه {
+            اگر (iv) {
+                برای (i = 0; i < 16; i++)
                     dst[i] = src[i] ^ iv[i];
                 camellia_encrypt(cs, dst, dst);
                 memcpy(iv, dst, 16);
-            } else {
+            } وگرنه {
                 camellia_encrypt(cs, dst, src);
             }
         }

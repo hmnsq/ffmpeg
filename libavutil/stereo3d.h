@@ -27,9 +27,9 @@
 #ifndef AVUTIL_STEREO3D_H
 #define AVUTIL_STEREO3D_H
 
-#include <stdint.h>
+#شامل <stdint.h>
 
-#include "frame.h"
+#شامل "frame.h"
 
 /**
  * @defgroup lavu_video_stereo3d Stereo3D types and functions
@@ -45,7 +45,7 @@
 /**
  * List of possible 3D Types
  */
-enum AVStereo3DType {
+شمارش AVStereo3DType {
     /**
      * Video is not stereoscopic (and metadata has to be there).
      */
@@ -123,7 +123,7 @@ enum AVStereo3DType {
      *    ...
      * @endcode
      */
-    AV_STEREO3D_LINES,
+    AV_STEREO3_D_سطرها,
 
     /**
      * Views are packed per column.
@@ -146,7 +146,7 @@ enum AVStereo3DType {
 /**
  * List of possible view types.
  */
-enum AVStereo3DView {
+شمارش AVStereo3DView {
     /**
      * Frame contains two packed views.
      */
@@ -155,12 +155,12 @@ enum AVStereo3DView {
     /**
      * Frame contains only the left view.
      */
-    AV_STEREO3D_VIEW_LEFT,
+    AV_STEREO3_D_VIEW_چپ,
 
     /**
      * Frame contains only the right view.
      */
-    AV_STEREO3D_VIEW_RIGHT,
+    AV_STEREO3_D_VIEW_راست,
 
     /**
      * Content is unspecified.
@@ -171,7 +171,7 @@ enum AVStereo3DView {
 /**
  * List of possible primary eyes.
  */
-enum AVStereo3DPrimaryEye {
+شمارش AVStereo3DPrimaryEye {
     /**
      * Neither eye.
      */
@@ -180,12 +180,12 @@ enum AVStereo3DPrimaryEye {
     /**
      * Left eye.
      */
-    AV_PRIMARY_EYE_LEFT,
+    AV_PRIMARY_EYE_چپ,
 
     /**
      * Right eye
      */
-    AV_PRIMARY_EYE_RIGHT,
+    AV_PRIMARY_EYE_راست,
 };
 
 /**
@@ -200,26 +200,26 @@ enum AVStereo3DPrimaryEye {
  * @note The struct must be allocated with av_stereo3d_alloc() and
  *       its size is not a part of the public ABI.
  */
-typedef struct AVStereo3D {
+تعریفنوع ساختار AVStereo3D {
     /**
      * How views are packed within the video.
      */
-    enum AVStereo3DType type;
+    شمارش AVStereo3DType type;
 
     /**
      * Additional information about the frame packing.
      */
-    int flags;
+    صحیح flags;
 
     /**
      * Determines which views are packed.
      */
-    enum AVStereo3DView view;
+    شمارش AVStereo3DView view;
 
     /**
      * Which eye is the primary eye when rendering in 2D.
      */
-    enum AVStereo3DPrimaryEye primary_eye;
+    شمارش AVStereo3DPrimaryEye primary_eye;
 
     /**
      * The distance between the centres of the lenses of the camera system,
@@ -245,7 +245,7 @@ typedef struct AVStereo3D {
  *
  * @return An AVStereo3D filled with default values or NULL on failure.
  */
-AVStereo3D *av_stereo3d_alloc(void);
+AVStereo3D *av_stereo3d_alloc(تهی);
 
 /**
  * Allocate an AVStereo3D structure and set its fields to default values.
@@ -271,7 +271,7 @@ AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame);
  *
  * @return The name of the stereo3d value, or "unknown".
  */
-const char *av_stereo3d_type_name(unsigned int type);
+ثابت نویسه *av_stereo3d_type_name(unsigned صحیح type);
 
 /**
  * Get the AVStereo3DType form a human-readable name.
@@ -280,7 +280,7 @@ const char *av_stereo3d_type_name(unsigned int type);
  *
  * @return The AVStereo3DType value, or -1 if not found.
  */
-int av_stereo3d_from_name(const char *name);
+صحیح av_stereo3d_from_name(ثابت نویسه *name);
 
 /**
  * Provide a human-readable name of a given stereo3d view.
@@ -289,7 +289,7 @@ int av_stereo3d_from_name(const char *name);
  *
  * @return The name of the stereo3d view value, or "unknown".
  */
-const char *av_stereo3d_view_name(unsigned int view);
+ثابت نویسه *av_stereo3d_view_name(unsigned صحیح view);
 
 /**
  * Get the AVStereo3DView form a human-readable name.
@@ -298,7 +298,7 @@ const char *av_stereo3d_view_name(unsigned int view);
  *
  * @return The AVStereo3DView value, or -1 if not found.
  */
-int av_stereo3d_view_from_name(const char *name);
+صحیح av_stereo3d_view_from_name(ثابت نویسه *name);
 
 /**
  * Provide a human-readable name of a given stereo3d primary eye.
@@ -307,7 +307,7 @@ int av_stereo3d_view_from_name(const char *name);
  *
  * @return The name of the stereo3d primary eye value, or "unknown".
  */
-const char *av_stereo3d_primary_eye_name(unsigned int eye);
+ثابت نویسه *av_stereo3d_primary_eye_name(unsigned صحیح eye);
 
 /**
  * Get the AVStereo3DPrimaryEye form a human-readable name.
@@ -316,7 +316,7 @@ const char *av_stereo3d_primary_eye_name(unsigned int eye);
  *
  * @return The AVStereo3DPrimaryEye value, or -1 if not found.
  */
-int av_stereo3d_primary_eye_from_name(const char *name);
+صحیح av_stereo3d_primary_eye_from_name(ثابت نویسه *name);
 
 /**
  * @}

@@ -21,12 +21,12 @@
 #ifndef AVUTIL_PPC_INTREADWRITE_H
 #define AVUTIL_PPC_INTREADWRITE_H
 
-#include <stdint.h>
-#include "config.h"
+#شامل <stdint.h>
+#شامل "config.h"
 
-#if HAVE_XFORM_ASM
+#اگر HAVE_XFORM_ASM
 
-#if HAVE_BIGENDIAN
+#اگر HAVE_BIGENDIAN
 #define AV_RL16 av_read_bswap16
 #define AV_WL16 av_write_bswap16
 #define AV_RL32 av_read_bswap32
@@ -34,7 +34,7 @@
 #define AV_RL64 av_read_bswap64
 #define AV_WL64 av_write_bswap64
 
-#else
+#وگرنه
 #define AV_RB16 av_read_bswap16
 #define AV_WB16 av_write_bswap16
 #define AV_RB32 av_read_bswap32
@@ -44,59 +44,59 @@
 
 #endif
 
-static av_always_inline uint16_t av_read_bswap16(const void *p)
+ایستا av_always_inline uint16_t av_read_bswap16(ثابت تهی *p)
 {
     uint16_t v;
-    __asm__ ("lhbrx   %0, %y1" : "=r"(v) : "Z"(*(const uint16_t*)p));
-    return v;
+    __asm__ ("lhbrx   %0, %y1" : "=r"(v) : "Z"(*(ثابت uint16_t*)p));
+    بازگشت v;
 }
 
-static av_always_inline void av_write_bswap16(void *p, uint16_t v)
+ایستا av_always_inline تهی av_write_bswap16(تهی *p, uint16_t v)
 {
     __asm__ ("sthbrx  %1, %y0" : "=Z"(*(uint16_t*)p) : "r"(v));
 }
 
-static av_always_inline uint32_t av_read_bswap32(const void *p)
+ایستا av_always_inline uint32_t av_read_bswap32(ثابت تهی *p)
 {
     uint32_t v;
-    __asm__ ("lwbrx   %0, %y1" : "=r"(v) : "Z"(*(const uint32_t*)p));
-    return v;
+    __asm__ ("lwbrx   %0, %y1" : "=r"(v) : "Z"(*(ثابت uint32_t*)p));
+    بازگشت v;
 }
 
-static av_always_inline void av_write_bswap32(void *p, uint32_t v)
+ایستا av_always_inline تهی av_write_bswap32(تهی *p, uint32_t v)
 {
     __asm__ ("stwbrx  %1, %y0" : "=Z"(*(uint32_t*)p) : "r"(v));
 }
 
-#if HAVE_LDBRX
+#اگر HAVE_LDBRX
 
-static av_always_inline uint64_t av_read_bswap64(const void *p)
+ایستا av_always_inline uint64_t av_read_bswap64(ثابت تهی *p)
 {
     uint64_t v;
-    __asm__ ("ldbrx   %0, %y1" : "=r"(v) : "Z"(*(const uint64_t*)p));
-    return v;
+    __asm__ ("ldbrx   %0, %y1" : "=r"(v) : "Z"(*(ثابت uint64_t*)p));
+    بازگشت v;
 }
 
-static av_always_inline void av_write_bswap64(void *p, uint64_t v)
+ایستا av_always_inline تهی av_write_bswap64(تهی *p, uint64_t v)
 {
     __asm__ ("stdbrx  %1, %y0" : "=Z"(*(uint64_t*)p) : "r"(v));
 }
 
-#else
+#وگرنه
 
-static av_always_inline uint64_t av_read_bswap64(const void *p)
+ایستا av_always_inline uint64_t av_read_bswap64(ثابت تهی *p)
 {
-    union { uint64_t v; uint32_t hl[2]; } v;
+    اجتماع { uint64_t v; uint32_t hl[2]; } v;
     __asm__ ("lwbrx   %0, %y2  \n\t"
              "lwbrx   %1, %y3  \n\t"
              : "=&r"(v.hl[1]), "=r"(v.hl[0])
-             : "Z"(*(const uint32_t*)p), "Z"(*((const uint32_t*)p+1)));
-    return v.v;
+             : "Z"(*(ثابت uint32_t*)p), "Z"(*((ثابت uint32_t*)p+1)));
+    بازگشت v.v;
 }
 
-static av_always_inline void av_write_bswap64(void *p, uint64_t v)
+ایستا av_always_inline تهی av_write_bswap64(تهی *p, uint64_t v)
 {
-    union { uint64_t v; uint32_t hl[2]; } vv = { v };
+    اجتماع { uint64_t v; uint32_t hl[2]; } vv = { v };
     __asm__ ("stwbrx  %2, %y0  \n\t"
              "stwbrx  %3, %y1  \n\t"
              : "=Z"(*(uint32_t*)p), "=Z"(*((uint32_t*)p+1))

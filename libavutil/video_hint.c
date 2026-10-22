@@ -18,41 +18,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#شامل <string.h>
 
-#include "avstring.h"
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "video_hint.h"
+#شامل "avstring.h"
+#شامل "frame.h"
+#شامل "macros.h"
+#شامل "mem.h"
+#شامل "video_hint.h"
 
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
                                  size_t *out_size)
 {
-    struct TestStruct {
+    ساختار TestStruct {
         AVVideoHint hint;
         AVVideoRect rect;
     };
-    const size_t rect_offset = offsetof(struct TestStruct, rect);
+    ثابت size_t rect_offset = offsetof(ساختار TestStruct, rect);
     size_t size = rect_offset;
     AVVideoHint *hint;
 
     *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
-    size += sizeof(AVVideoRect) * nb_rects;
+    اگر (nb_rects > (SIZE_MAX - size) / اندازه(AVVideoRect))
+        بازگشت پوچ;
+    size += اندازه(AVVideoRect) * nb_rects;
 
     hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    اگر (!hint)
+        بازگشت پوچ;
 
     hint->nb_rects    = nb_rects;
     hint->rect_offset = rect_offset;
-    hint->rect_size   = sizeof(AVVideoRect);
+    hint->rect_size   = اندازه(AVVideoRect);
 
     *out_size = size;
 
-    return hint;
+    بازگشت hint;
 }
 
 AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
@@ -63,19 +63,19 @@ AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
     size_t size = 0;
 
     hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    اگر (!hint)
+        بازگشت پوچ;
 
-    buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    buf = av_buffer_create((uint8_t *)hint, size, پوچ, پوچ, 0);
+    اگر (!buf) {
         av_freep(&hint);
-        return NULL;
+        بازگشت پوچ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
+    اگر (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        بازگشت پوچ;
     }
 
-    return hint;
+    بازگشت hint;
 }

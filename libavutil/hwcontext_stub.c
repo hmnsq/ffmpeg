@@ -16,24 +16,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#شامل "config.h"
 
-#if !CONFIG_VULKAN
-#include <stddef.h>
-#include "pixfmt.h"
+#اگر !CONFIG_VULKAN
+#شامل <stddef.h>
+#شامل "pixfmt.h"
 
-typedef enum VkFormat VkFormat;
-typedef struct AVVkFrame AVVkFrame;
-const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p);
-AVVkFrame *av_vk_frame_alloc(void);
+تعریفنوع شمارش VkFormat VkFormat;
+تعریفنوع ساختار AVVkFrame AVVkFrame;
+ثابت VkFormat *av_vkfmt_from_pixfmt(شمارش AVPixelFormat p);
+AVVkFrame *av_vk_frame_alloc(تهی);
 
-const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p)
+ثابت VkFormat *av_vkfmt_from_pixfmt(شمارش AVPixelFormat p)
 {
-    return NULL;
+    بازگشت پوچ;
 }
 
-AVVkFrame *av_vk_frame_alloc(void)
+AVVkFrame *av_vk_frame_alloc(تهی)
 {
-    return NULL;
+    بازگشت پوچ;
 }
 #endif /* CONFIG_VULKAN */

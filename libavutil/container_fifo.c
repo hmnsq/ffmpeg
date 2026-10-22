@@ -16,63 +16,63 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avassert.h"
-#include "container_fifo.h"
-#include "error.h"
-#include "fifo.h"
-#include "frame.h"
-#include "mem.h"
-#include "refstruct.h"
+#شامل "avassert.h"
+#شامل "container_fifo.h"
+#شامل "error.h"
+#شامل "fifo.h"
+#شامل "frame.h"
+#شامل "mem.h"
+#شامل "refstruct.h"
 
-struct AVContainerFifo {
+ساختار AVContainerFifo {
     AVFifo             *fifo;
     AVRefStructPool    *pool;
 
-    void               *opaque;
-    void*             (*container_alloc)(void *opaque);
-    void              (*container_reset)(void *opaque, void *obj);
-    void              (*container_free) (void *opaque, void *obj);
-    int               (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags);
+    تهی               *opaque;
+    تهی*             (*container_alloc)(تهی *opaque);
+    تهی              (*container_reset)(تهی *opaque, تهی *obj);
+    تهی              (*container_free) (تهی *opaque, تهی *obj);
+    صحیح               (*fifo_transfer)  (تهی *opaque, تهی *dst, تهی *src, unsigned flags);
 
 };
 
-static int container_fifo_init_entry(AVRefStructOpaque opaque, void *obj)
+ایستا صحیح container_fifo_init_entry(AVRefStructOpaque opaque, تهی *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    void **pobj = obj;
+    تهی **pobj = obj;
 
     *pobj = cf->container_alloc(cf->opaque);
-    if (!*pobj)
-        return AVERROR(ENOMEM);
+    اگر (!*pobj)
+        بازگشت AVERROR(ENOMEM);
 
-    return 0;
+    بازگشت 0;
 }
 
-static void container_fifo_reset_entry(AVRefStructOpaque opaque, void *obj)
+ایستا تهی container_fifo_reset_entry(AVRefStructOpaque opaque, تهی *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    cf->container_reset(cf->opaque, *(void**)obj);
+    cf->container_reset(cf->opaque, *(تهی**)obj);
 }
 
-static void container_fifo_free_entry(AVRefStructOpaque opaque, void *obj)
+ایستا تهی container_fifo_free_entry(AVRefStructOpaque opaque, تهی *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    cf->container_free(cf->opaque, *(void**)obj);
+    cf->container_free(cf->opaque, *(تهی**)obj);
 }
 
 AVContainerFifo*
-av_container_fifo_alloc(void *opaque,
-                        void* (*container_alloc)(void *opaque),
-                        void  (*container_reset)(void *opaque, void *obj),
-                        void  (*container_free) (void *opaque, void *obj),
-                        int   (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags),
+av_container_fifo_alloc(تهی *opaque,
+                        تهی* (*container_alloc)(تهی *opaque),
+                        تهی  (*container_reset)(تهی *opaque, تهی *obj),
+                        تهی  (*container_free) (تهی *opaque, تهی *obj),
+                        صحیح   (*fifo_transfer)  (تهی *opaque, تهی *dst, تهی *src, unsigned flags),
                         unsigned flags)
 {
     AVContainerFifo *cf;
 
-    cf = av_mallocz(sizeof(*cf));
-    if (!cf)
-        return NULL;
+    cf = av_mallocz(اندازه(*cf));
+    اگر (!cf)
+        بازگشت پوچ;
 
     cf->opaque          = opaque;
     cf->container_alloc = container_alloc;
@@ -80,36 +80,36 @@ av_container_fifo_alloc(void *opaque,
     cf->container_free  = container_free;
     cf->fifo_transfer   = fifo_transfer;
 
-    cf->fifo = av_fifo_alloc2(1, sizeof(void*), AV_FIFO_FLAG_AUTO_GROW);
-    if (!cf->fifo)
-        goto fail;
+    cf->fifo = av_fifo_alloc2(1, اندازه(تهی*), AV_FIFO_FLAG_AUTO_GROW);
+    اگر (!cf->fifo)
+        برو fail;
 
-    cf->pool = av_refstruct_pool_alloc_ext(sizeof(void*), 0, cf,
+    cf->pool = av_refstruct_pool_alloc_ext(اندازه(تهی*), 0, cf,
                                            container_fifo_init_entry,
                                            container_fifo_reset_entry,
                                            container_fifo_free_entry,
-                                           NULL);
-    if (!cf->pool)
-        goto fail;
+                                           پوچ);
+    اگر (!cf->pool)
+        برو fail;
 
-    return cf;
+    بازگشت cf;
 fail:
     av_container_fifo_free(&cf);
-    return NULL;
+    بازگشت پوچ;
 }
 
-void av_container_fifo_free(AVContainerFifo **pcf)
+تهی av_container_fifo_free(AVContainerFifo **pcf)
 {
     AVContainerFifo *cf;
 
-    if (!*pcf)
-        return;
+    اگر (!*pcf)
+        بازگشت;
 
     cf = *pcf;
 
-    if (cf->fifo) {
-        void *obj;
-        while (av_fifo_read(cf->fifo, &obj, 1) >= 0)
+    اگر (cf->fifo) {
+        تهی *obj;
+        وقتی (av_fifo_read(cf->fifo, &obj, 1) >= 0)
             av_refstruct_unref(&obj);
         av_fifo_freep2(&cf->fifo);
     }
@@ -119,101 +119,101 @@ void av_container_fifo_free(AVContainerFifo **pcf)
     av_freep(pcf);
 }
 
-int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags)
+صحیح av_container_fifo_read(AVContainerFifo *cf, تهی *obj, unsigned flags)
 {
-    void **psrc;
-    int ret;
+    تهی **psrc;
+    صحیح ret;
 
     ret = av_fifo_read(cf->fifo, &psrc, 1);
-    if (ret < 0)
-        return ret;
+    اگر (ret < 0)
+        بازگشت ret;
 
     ret = cf->fifo_transfer(cf->opaque, obj, *psrc, flags);
     av_refstruct_unref(&psrc);
 
-    return ret;
+    بازگشت ret;
 }
 
-int av_container_fifo_peek(AVContainerFifo *cf, void **pdst, size_t offset)
+صحیح av_container_fifo_peek(AVContainerFifo *cf, تهی **pdst, size_t offset)
 {
-    void **pobj;
-    int ret;
+    تهی **pobj;
+    صحیح ret;
 
     ret = av_fifo_peek(cf->fifo, &pobj, 1, offset);
-    if (ret < 0)
-        return ret;
+    اگر (ret < 0)
+        بازگشت ret;
 
     *pdst = *pobj;
 
-    return 0;
+    بازگشت 0;
 }
 
-void av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems)
+تهی av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems)
 {
     av_assert0(nb_elems <= av_fifo_can_read(cf->fifo));
-    while (nb_elems--) {
-        void **pobj;
-        int ret = av_fifo_read(cf->fifo, &pobj, 1);
+    وقتی (nb_elems--) {
+        تهی **pobj;
+        صحیح ret = av_fifo_read(cf->fifo, &pobj, 1);
         av_assert0(ret >= 0);
         av_refstruct_unref(&pobj);
     }
 }
 
-int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags)
+صحیح av_container_fifo_write(AVContainerFifo *cf, تهی *obj, unsigned flags)
 {
-    void **pdst;
-    int ret;
+    تهی **pdst;
+    صحیح ret;
 
     pdst = av_refstruct_pool_get(cf->pool);
-    if (!pdst)
-        return AVERROR(ENOMEM);
+    اگر (!pdst)
+        بازگشت AVERROR(ENOMEM);
 
     ret = cf->fifo_transfer(cf->opaque, *pdst, obj, flags);
-    if (ret < 0)
-        goto fail;
+    اگر (ret < 0)
+        برو fail;
 
     ret = av_fifo_write(cf->fifo, &pdst, 1);
-    if (ret < 0)
-        goto fail;
+    اگر (ret < 0)
+        برو fail;
 
-    return 0;
+    بازگشت 0;
 fail:
     av_refstruct_unref(&pdst);
-    return ret;
+    بازگشت ret;
 }
 
-size_t av_container_fifo_can_read(const AVContainerFifo *cf)
+size_t av_container_fifo_can_read(ثابت AVContainerFifo *cf)
 {
-    return av_fifo_can_read(cf->fifo);
+    بازگشت av_fifo_can_read(cf->fifo);
 }
 
-static void *frame_alloc(void *opaque)
+ایستا تهی *frame_alloc(تهی *opaque)
 {
-    return av_frame_alloc();
+    بازگشت av_frame_alloc();
 }
 
-static void frame_reset(void *opaque, void *obj)
+ایستا تهی frame_reset(تهی *opaque, تهی *obj)
 {
     av_frame_unref(obj);
 }
 
-static void frame_free(void *opaque, void *obj)
+ایستا تهی frame_free(تهی *opaque, تهی *obj)
 {
     AVFrame *frame = obj;
     av_frame_free(&frame);
 }
 
-static int frame_transfer(void *opaque, void *dst, void *src, unsigned flags)
+ایستا صحیح frame_transfer(تهی *opaque, تهی *dst, تهی *src, unsigned flags)
 {
-    if (flags & AV_CONTAINER_FIFO_FLAG_REF)
-        return av_frame_ref(dst, src);
+    اگر (flags & AV_CONTAINER_FIFO_FLAG_REF)
+        بازگشت av_frame_ref(dst, src);
 
     av_frame_move_ref(dst, src);
-    return 0;
+    بازگشت 0;
 }
 
 AVContainerFifo *av_container_fifo_alloc_avframe(unsigned flags)
 {
-    return av_container_fifo_alloc(NULL, frame_alloc, frame_reset, frame_free,
+    بازگشت av_container_fifo_alloc(پوچ, frame_alloc, frame_reset, frame_free,
                                    frame_transfer, 0);
 }

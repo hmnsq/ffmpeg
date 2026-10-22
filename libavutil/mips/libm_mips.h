@@ -53,21 +53,21 @@
 #ifndef AVUTIL_MIPS_LIBM_MIPS_H
 #define AVUTIL_MIPS_LIBM_MIPS_H
 
-#include <math.h>
+#شامل <math.h>
 
-#include "libavutil/attributes.h"
+#شامل "libavutil/attributes.h"
 
-static av_always_inline av_const long int lrintf_mips(float x)
+ایستا av_always_inline av_const long صحیح lrintf_mips(اعشاری x)
 {
-    register int ret_int;
+    ثبات صحیح ret_int;
 
-    __asm__ volatile (
+    __asm__ فرار (
         "cvt.w.s    %[x],       %[x]    \n\t"
         "mfc1       %[ret_int], %[x]    \n\t"
 
         :[x]"+f"(x), [ret_int]"=r"(ret_int)
     );
-    return ret_int;
+    بازگشت ret_int;
 }
 
 #undef lrintf

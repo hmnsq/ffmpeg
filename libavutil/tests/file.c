@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#شامل <stdarg.h>
+#شامل <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#شامل "libavutil/file.c"
+#شامل "libavutil/log.h"
 
-static int last_log_level = -1;
+ایستا صحیح last_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+ایستا تهی log_callback(تهی *ctx, صحیح level, ثابت نویسه *fmt, va_list args)
 {
-    (void)ctx; (void)fmt; (void)args;
+    (تهی)ctx; (تهی)fmt; (تهی)args;
     last_log_level = level;
 }
 
-int main(int argc, char **argv)
+صحیح اصلی(صحیح argc, نویسه **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    ثابت نویسه *path = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
     size_t size;
 
     av_log_set_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
+    اگر (av_file_map(path, &buf, &size, 0, پوچ) < 0)
+        بازگشت 1;
     av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    اگر (size == 0)
+        بازگشت 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
+    برای (صحیح i = 0; i < 2; i++) {
         last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
+        اگر (av_file_map("no_such_file_xyz", &buf, &size, i, پوچ) >= 0) {
             av_file_unmap(buf, size);
-            return 2;
+            بازگشت 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
+        اگر (last_log_level != AV_LOG_ERROR + i) {
             fprintf(stderr, "expected level %d with offset=%d, got %d\n",
                     AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+            بازگشت 3;
         }
     }
 
-    return 0;
+    بازگشت 0;
 }

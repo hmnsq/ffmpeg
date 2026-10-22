@@ -19,24 +19,24 @@
 #ifndef AVUTIL_TX_H
 #define AVUTIL_TX_H
 
-#include <stdint.h>
-#include <stddef.h>
+#شامل <stdint.h>
+#شامل <stddef.h>
 
-typedef struct AVTXContext AVTXContext;
+تعریفنوع ساختار AVTXContext AVTXContext;
 
-typedef struct AVComplexFloat {
-    float re, im;
+تعریفنوع ساختار AVComplexFloat {
+    اعشاری re, im;
 } AVComplexFloat;
 
-typedef struct AVComplexDouble {
-    double re, im;
+تعریفنوع ساختار AVComplexDouble {
+    دوگانه re, im;
 } AVComplexDouble;
 
-typedef struct AVComplexInt32 {
+تعریفنوع ساختار AVComplexInt32 {
     int32_t re, im;
 } AVComplexInt32;
 
-enum AVTXType {
+شمارش AVTXType {
     /**
      * Standard complex to complex FFT with sample data type of AVComplexFloat,
      * AVComplexDouble or AVComplexInt32, for each respective variant.
@@ -148,12 +148,12 @@ enum AVTXType {
  * architecture unless the AV_TX_UNALIGNED flag was set in av_tx_init().
  * The stride must follow the constraints the transform type has specified.
  */
-typedef void (*av_tx_fn)(AVTXContext *s, void *out, void *in, ptrdiff_t stride);
+تعریفنوع تهی (*av_tx_fn)(AVTXContext *s, تهی *out, تهی *in, ptrdiff_t stride);
 
 /**
  * Flags for av_tx_init()
  */
-enum AVTXFlags {
+شمارش AVTXFlags {
     /**
      * Allows for in-place transformations, where input == output.
      * May be unsupported or slower for some transform types.
@@ -199,12 +199,12 @@ enum AVTXFlags {
  *
  * @return 0 on success, negative error code on failure
  */
-int av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
-               int inv, int len, const void *scale, uint64_t flags);
+صحیح av_tx_init(AVTXContext **ctx, av_tx_fn *tx, شمارش AVTXType type,
+               صحیح inv, صحیح len, ثابت تهی *scale, uint64_t flags);
 
 /**
  * Frees a context and sets *ctx to NULL, does nothing when *ctx == NULL.
  */
-void av_tx_uninit(AVTXContext **ctx);
+تهی av_tx_uninit(AVTXContext **ctx);
 
 #endif /* AVUTIL_TX_H */

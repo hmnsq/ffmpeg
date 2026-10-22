@@ -22,39 +22,39 @@
 #ifndef AVUTIL_PIXDESC_H
 #define AVUTIL_PIXDESC_H
 
-#include <inttypes.h>
+#شامل <inttypes.h>
 
-#include "attributes.h"
-#include "pixfmt.h"
+#شامل "attributes.h"
+#شامل "pixfmt.h"
 
-typedef struct AVComponentDescriptor {
+تعریفنوع ساختار AVComponentDescriptor {
     /**
      * Which of the 4 planes contains the component.
      */
-    int plane;
+    صحیح plane;
 
     /**
      * Number of elements between 2 horizontally consecutive pixels.
      * Elements are bits for bitstream formats, bytes otherwise.
      */
-    int step;
+    صحیح step;
 
     /**
      * Number of elements before the component of the first pixel.
      * Elements are bits for bitstream formats, bytes otherwise.
      */
-    int offset;
+    صحیح offset;
 
     /**
      * Number of least significant bits that must be shifted away
      * to get the value.
      */
-    int shift;
+    صحیح shift;
 
     /**
      * Number of bits in the component.
      */
-    int depth;
+    صحیح depth;
 } AVComponentDescriptor;
 
 /**
@@ -66,8 +66,8 @@ typedef struct AVComponentDescriptor {
  *       and all the YUV variants) AVPixFmtDescriptor just stores how values
  *       are stored not what these values represent.
  */
-typedef struct AVPixFmtDescriptor {
-    const char *name;
+تعریفنوع ساختار AVPixFmtDescriptor {
+    ثابت نویسه *name;
     uint8_t nb_components;  ///< The number of components each pixel has, (1-4)
 
     /**
@@ -107,7 +107,7 @@ typedef struct AVPixFmtDescriptor {
     /**
      * Alternative comma-separated names.
      */
-    const char *alias;
+    ثابت نویسه *alias;
 } AVPixFmtDescriptor;
 
 /**
@@ -171,19 +171,19 @@ typedef struct AVPixFmtDescriptor {
  * used for storing the pixel information, that is padding bits are
  * not counted.
  */
-int av_get_bits_per_pixel(const AVPixFmtDescriptor *pixdesc);
+صحیح av_get_bits_per_pixel(ثابت AVPixFmtDescriptor *pixdesc);
 
 /**
  * Return the number of bits per pixel for the pixel format
  * described by pixdesc, including any padding or unused bits.
  */
-int av_get_padded_bits_per_pixel(const AVPixFmtDescriptor *pixdesc);
+صحیح av_get_padded_bits_per_pixel(ثابت AVPixFmtDescriptor *pixdesc);
 
 /**
  * @return a pixel format descriptor for provided pixel format or NULL if
  * this pixel format is unknown.
  */
-const AVPixFmtDescriptor *av_pix_fmt_desc_get(enum AVPixelFormat pix_fmt);
+ثابت AVPixFmtDescriptor *av_pix_fmt_desc_get(شمارش AVPixelFormat pix_fmt);
 
 /**
  * Iterate over all pixel format descriptors known to libavutil.
@@ -192,13 +192,13 @@ const AVPixFmtDescriptor *av_pix_fmt_desc_get(enum AVPixelFormat pix_fmt);
  *
  * @return next descriptor or NULL after the last descriptor
  */
-const AVPixFmtDescriptor *av_pix_fmt_desc_next(const AVPixFmtDescriptor *prev);
+ثابت AVPixFmtDescriptor *av_pix_fmt_desc_next(ثابت AVPixFmtDescriptor *prev);
 
 /**
  * @return an AVPixelFormat id described by desc, or AV_PIX_FMT_NONE if desc
  * is not a valid pointer to a pixel format descriptor.
  */
-enum AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc);
+شمارش AVPixelFormat av_pix_fmt_desc_get_id(ثابت AVPixFmtDescriptor *desc);
 
 /**
  * Utility function to access log2_chroma_w log2_chroma_h from
@@ -210,64 +210,64 @@ enum AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc);
  *
  * @return 0 on success, AVERROR(ENOSYS) on invalid or unknown pixel format
  */
-int av_pix_fmt_get_chroma_sub_sample(enum AVPixelFormat pix_fmt,
-                                     int *h_shift, int *v_shift);
+صحیح av_pix_fmt_get_chroma_sub_sample(شمارش AVPixelFormat pix_fmt,
+                                     صحیح *h_shift, صحیح *v_shift);
 
 /**
  * @return number of planes in pix_fmt, a negative AVERROR if pix_fmt is not a
  * valid pixel format.
  */
-int av_pix_fmt_count_planes(enum AVPixelFormat pix_fmt);
+صحیح av_pix_fmt_شمار_planes(شمارش AVPixelFormat pix_fmt);
 
 /**
  * @return the name for provided color range or NULL if unknown.
  */
-const char *av_color_range_name(enum AVColorRange range);
+ثابت نویسه *av_color_range_name(شمارش AVColorRange range);
 
 /**
  * @return the AVColorRange value for name or an AVError if not found.
  */
-int av_color_range_from_name(const char *name);
+صحیح av_color_range_from_name(ثابت نویسه *name);
 
 /**
  * @return the name for provided color primaries or NULL if unknown.
  */
-const char *av_color_primaries_name(enum AVColorPrimaries primaries);
+ثابت نویسه *av_color_primaries_name(شمارش AVColorPrimaries primaries);
 
 /**
  * @return the AVColorPrimaries value for name or an AVError if not found.
  */
-int av_color_primaries_from_name(const char *name);
+صحیح av_color_primaries_from_name(ثابت نویسه *name);
 
 /**
  * @return the name for provided color transfer or NULL if unknown.
  */
-const char *av_color_transfer_name(enum AVColorTransferCharacteristic transfer);
+ثابت نویسه *av_color_transfer_name(شمارش AVColorTransferCharacteristic transfer);
 
 /**
  * @return the AVColorTransferCharacteristic value for name or an AVError if not found.
  */
-int av_color_transfer_from_name(const char *name);
+صحیح av_color_transfer_from_name(ثابت نویسه *name);
 
 /**
  * @return the name for provided color space or NULL if unknown.
  */
-const char *av_color_space_name(enum AVColorSpace space);
+ثابت نویسه *av_color_space_name(شمارش AVColorSpace space);
 
 /**
  * @return the AVColorSpace value for name or an AVError if not found.
  */
-int av_color_space_from_name(const char *name);
+صحیح av_color_space_from_name(ثابت نویسه *name);
 
 /**
  * @return the name for provided chroma location or NULL if unknown.
  */
-const char *av_chroma_location_name(enum AVChromaLocation location);
+ثابت نویسه *av_chroma_location_name(شمارش AVChromaLocation location);
 
 /**
  * @return the AVChromaLocation value for name or an AVError if not found.
  */
-int av_chroma_location_from_name(const char *name);
+صحیح av_chroma_location_from_name(ثابت نویسه *name);
 
 /**
  * Converts AVChromaLocation to swscale x/y chroma position.
@@ -278,7 +278,7 @@ int av_chroma_location_from_name(const char *name);
  * @param xpos  horizontal chroma sample position
  * @param ypos  vertical   chroma sample position
  */
-int av_chroma_location_enum_to_pos(int *xpos, int *ypos, enum AVChromaLocation pos);
+صحیح av_chroma_location_enum_to_pos(صحیح *xpos, صحیح *ypos, شمارش AVChromaLocation pos);
 
 /**
  * Converts swscale x/y chroma position to AVChromaLocation.
@@ -289,17 +289,17 @@ int av_chroma_location_enum_to_pos(int *xpos, int *ypos, enum AVChromaLocation p
  * @param xpos  horizontal chroma sample position
  * @param ypos  vertical   chroma sample position
  */
-enum AVChromaLocation av_chroma_location_pos_to_enum(int xpos, int ypos);
+شمارش AVChromaLocation av_chroma_location_pos_to_enum(صحیح xpos, صحیح ypos);
 
 /**
  * @return the name for provided alpha mode or NULL if unknown.
  */
-const char *av_alpha_mode_name(enum AVAlphaMode mode);
+ثابت نویسه *av_alpha_mode_name(شمارش AVAlphaMode mode);
 
 /**
  * @return the AVAlphaMode value for name or an AVError if not found.
  */
-enum AVAlphaMode av_alpha_mode_from_name(const char *name);
+شمارش AVAlphaMode av_alpha_mode_from_name(ثابت نویسه *name);
 
 /**
  * Return the pixel format corresponding to name.
@@ -312,7 +312,7 @@ enum AVAlphaMode av_alpha_mode_from_name(const char *name);
  *
  * Finally if no pixel format has been found, returns AV_PIX_FMT_NONE.
  */
-enum AVPixelFormat av_get_pix_fmt(const char *name);
+شمارش AVPixelFormat av_get_pix_fmt(ثابت نویسه *name);
 
 /**
  * Return the short name for a pixel format, NULL in case pix_fmt is
@@ -320,7 +320,7 @@ enum AVPixelFormat av_get_pix_fmt(const char *name);
  *
  * @see av_get_pix_fmt(), av_get_pix_fmt_string()
  */
-const char *av_get_pix_fmt_name(enum AVPixelFormat pix_fmt);
+ثابت نویسه *av_get_pix_fmt_name(شمارش AVPixelFormat pix_fmt);
 
 /**
  * Print in buf the string corresponding to the pixel format with
@@ -332,8 +332,8 @@ const char *av_get_pix_fmt_name(enum AVPixelFormat pix_fmt);
  * corresponding info string, or a negative value to print the
  * corresponding header.
  */
-char *av_get_pix_fmt_string(char *buf, int buf_size,
-                            enum AVPixelFormat pix_fmt);
+نویسه *av_get_pix_fmt_string(نویسه *buf, صحیح buf_size,
+                            شمارش AVPixelFormat pix_fmt);
 
 /**
  * Read a line from an image, and write the values of the
@@ -352,14 +352,14 @@ char *av_get_pix_fmt_string(char *buf, int buf_size,
  * data[0]. The behavior is undefined if the format is not paletted.
  * @param dst_element_size size of elements in dst array (2 or 4 byte)
  */
-void av_read_image_line2(void *dst, const uint8_t *data[4],
-                        const int linesize[4], const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w, int read_pal_component,
-                        int dst_element_size);
+تهی av_read_image_line2(تهی *dst, ثابت uint8_t *data[4],
+                        ثابت صحیح linesize[4], ثابت AVPixFmtDescriptor *desc,
+                        صحیح x, صحیح y, صحیح c, صحیح w, صحیح read_pal_component,
+                        صحیح dst_element_size);
 
-void av_read_image_line(uint16_t *dst, const uint8_t *data[4],
-                        const int linesize[4], const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w, int read_pal_component);
+تهی av_read_image_سطر(uint16_t *dst, ثابت uint8_t *data[4],
+                        ثابت صحیح linesize[4], ثابت AVPixFmtDescriptor *desc,
+                        صحیح x, صحیح y, صحیح c, صحیح w, صحیح read_pal_component);
 
 /**
  * Write the values from src to the pixel format component c of an
@@ -376,13 +376,13 @@ void av_read_image_line(uint16_t *dst, const uint8_t *data[4],
  * values to write to the image line
  * @param src_element_size size of elements in src array (2 or 4 byte)
  */
-void av_write_image_line2(const void *src, uint8_t *data[4],
-                         const int linesize[4], const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w, int src_element_size);
+تهی av_write_image_line2(ثابت تهی *src, uint8_t *data[4],
+                         ثابت صحیح linesize[4], ثابت AVPixFmtDescriptor *desc,
+                         صحیح x, صحیح y, صحیح c, صحیح w, صحیح src_element_size);
 
-void av_write_image_line(const uint16_t *src, uint8_t *data[4],
-                         const int linesize[4], const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w);
+تهی av_write_image_سطر(ثابت uint16_t *src, uint8_t *data[4],
+                         ثابت صحیح linesize[4], ثابت AVPixFmtDescriptor *desc,
+                         صحیح x, صحیح y, صحیح c, صحیح w);
 
 /**
  * Utility function to swap the endianness of a pixel format.
@@ -392,7 +392,7 @@ void av_write_image_line(const uint16_t *src, uint8_t *data[4],
  * @return pixel format with swapped endianness if it exists,
  * otherwise AV_PIX_FMT_NONE
  */
-enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt);
+شمارش AVPixelFormat av_pix_fmt_swap_endianness(شمارش AVPixelFormat pix_fmt);
 
 #define FF_LOSS_RESOLUTION        0x0001 /**< loss due to resolution change */
 #define FF_LOSS_DEPTH             0x0002 /**< loss due to color depth change */
@@ -422,9 +422,9 @@ enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt);
  * @return Combination of flags informing you what kind of losses will occur
  * (maximum loss for an invalid dst_pix_fmt).
  */
-int av_get_pix_fmt_loss(enum AVPixelFormat dst_pix_fmt,
-                        enum AVPixelFormat src_pix_fmt,
-                        int has_alpha);
+صحیح av_get_pix_fmt_loss(شمارش AVPixelFormat dst_pix_fmt,
+                        شمارش AVPixelFormat src_pix_fmt,
+                        صحیح has_alpha);
 
 /**
  * Compute what kind of losses will occur when converting from one specific
@@ -444,7 +444,7 @@ int av_get_pix_fmt_loss(enum AVPixelFormat dst_pix_fmt,
  * @return Combination of flags informing you what kind of losses will occur
  * (maximum loss for an invalid dst_pix_fmt).
  */
-enum AVPixelFormat av_find_best_pix_fmt_of_2(enum AVPixelFormat dst_pix_fmt1, enum AVPixelFormat dst_pix_fmt2,
-                                             enum AVPixelFormat src_pix_fmt, int has_alpha, int *loss_ptr);
+شمارش AVPixelFormat av_find_best_pix_fmt_of_2(شمارش AVPixelFormat dst_pix_fmt1, شمارش AVPixelFormat dst_pix_fmt2,
+                                             شمارش AVPixelFormat src_pix_fmt, صحیح has_alpha, صحیح *loss_ptr);
 
 #endif /* AVUTIL_PIXDESC_H */

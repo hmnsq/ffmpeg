@@ -16,37 +16,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "detection_bbox.h"
-#include "mem.h"
+#شامل "detection_bbox.h"
+#شامل "mem.h"
 
 AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size)
 {
     size_t size;
-    struct BBoxContext {
+    ساختار BBoxContext {
         AVDetectionBBoxHeader header;
         AVDetectionBBox boxes;
     };
-    const size_t bboxes_offset = offsetof(struct BBoxContext, boxes);
-    const size_t bbox_size = sizeof(AVDetectionBBox);
+    ثابت size_t bboxes_offset = offsetof(ساختار BBoxContext, boxes);
+    ثابت size_t bbox_size = اندازه(AVDetectionBBox);
     AVDetectionBBoxHeader *header;
 
     size = bboxes_offset;
-    if (nb_bboxes > (SIZE_MAX - size) / bbox_size)
-        return NULL;
+    اگر (nb_bboxes > (SIZE_MAX - size) / bbox_size)
+        بازگشت پوچ;
     size += bbox_size * nb_bboxes;
 
     header = av_mallocz(size);
-    if (!header)
-        return NULL;
+    اگر (!header)
+        بازگشت پوچ;
 
     header->nb_bboxes     = nb_bboxes;
     header->bbox_size     = bbox_size;
     header->bboxes_offset = bboxes_offset;
 
-    if (out_size)
+    اگر (out_size)
         *out_size = size;
 
-    return header;
+    بازگشت header;
 }
 
 AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes)
@@ -56,18 +56,18 @@ AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32
     size_t size;
 
     header = av_detection_bbox_alloc(nb_bboxes, &size);
-    if (!header)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)header, size, NULL, NULL, 0);
-    if (!buf) {
+    اگر (!header)
+        بازگشت پوچ;
+    buf = av_buffer_create((uint8_t *)header, size, پوچ, پوچ, 0);
+    اگر (!buf) {
         av_freep(&header);
-        return NULL;
+        بازگشت پوچ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
+    اگر (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        بازگشت پوچ;
     }
 
-    return header;
+    بازگشت header;
 }

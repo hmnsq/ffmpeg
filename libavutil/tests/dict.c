@@ -18,49 +18,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/mem.h"
+#شامل "libavutil/mem.h"
 
-#include "libavutil/dict.c"
+#شامل "libavutil/dict.c"
 
-static const AVDictionaryEntry *dict_iterate(const AVDictionary *m,
-                                             const AVDictionaryEntry *prev)
+ایستا ثابت AVDictionaryEntry *dict_iterate(ثابت AVDictionary *m,
+                                             ثابت AVDictionaryEntry *prev)
 {
-    const AVDictionaryEntry *dict_get = av_dict_get(m, "", prev, AV_DICT_IGNORE_SUFFIX);
-    const AVDictionaryEntry *dict_iterate = av_dict_iterate(m, prev);
+    ثابت AVDictionaryEntry *dict_get = av_dict_get(m, "", prev, AV_DICT_IGNORE_SUFFIX);
+    ثابت AVDictionaryEntry *dict_iterate = av_dict_iterate(m, prev);
 
-    if (dict_get != dict_iterate) {
+    اگر (dict_get != dict_iterate) {
 #define GET(entry, mem) ((entry) ? (entry)->mem : "N/A")
         printf("Iterating with av_dict_iterate() yields a different result "
                "than iterating with av_dict_get() and AV_DICT_IGNORE_SUFFIX "
                "(prev: %p, key %s; av_dict_iterate() %p, key %s, value %s; "
                "av_dict_get() %p, key %s, value %s)\n",
-               prev, GET(prev, key),
-               dict_iterate, GET(dict_iterate, key), GET(dict_iterate, value),
-               dict_get, GET(dict_get, key), GET(dict_get, value));
+               prev, GET(prev, کلید),
+               dict_iterate, GET(dict_iterate, کلید), GET(dict_iterate, مقدار),
+               dict_get, GET(dict_get, کلید), GET(dict_get, مقدار));
 #undef GET
     }
-    return dict_iterate;
+    بازگشت dict_iterate;
 }
 
-static void print_dict(const AVDictionary *m)
+ایستا تهی print_dict(ثابت AVDictionary *m)
 {
-    const AVDictionaryEntry *t = NULL;
-    const char *sep = "";
-    while ((t = dict_iterate(m, t))) {
-        printf("%s%s %s", sep, t->key, t->value);
+    ثابت AVDictionaryEntry *t = پوچ;
+    ثابت نویسه *sep = "";
+    وقتی ((t = dict_iterate(m, t))) {
+        printf("%s%s %s", sep, t->کلید, t->مقدار);
         sep = "   ";
     }
     printf("\n");
 }
 
-static void test_separators(const AVDictionary *m, const char pair, const char val)
+ایستا تهی test_separators(ثابت AVDictionary *m, ثابت نویسه pair, ثابت نویسه val)
 {
-    AVDictionary *dict = NULL;
-    char pairs[] = {pair , '\0'};
-    char vals[]  = {val, '\0'};
+    AVDictionary *dict = پوچ;
+    نویسه pairs[] = {pair , '\0'};
+    نویسه vals[]  = {val, '\0'};
 
-    char *buffer = NULL;
-    int ret;
+    نویسه *buffer = پوچ;
+    صحیح ret;
 
     av_dict_copy(&dict, m, 0);
     print_dict(dict);
@@ -74,11 +74,11 @@ static void test_separators(const AVDictionary *m, const char pair, const char v
     av_dict_free(&dict);
 }
 
-int main(void)
+صحیح اصلی(تهی)
 {
-    AVDictionary *dict = NULL;
-    const AVDictionaryEntry *e;
-    char *buffer = NULL;
+    AVDictionary *dict = پوچ;
+    ثابت AVDictionaryEntry *e;
+    نویسه *buffer = پوچ;
 
     printf("Testing av_dict_get_string() and av_dict_parse_string()\n");
     av_dict_get_string(dict, &buffer, '=', ',');
@@ -108,63 +108,63 @@ int main(void)
     printf("\nTesting av_dict_set()\n");
     av_dict_set(&dict, "a", "a", 0);
     av_dict_set(&dict, "b", av_strdup("b"), AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set(&dict, av_strdup("c"), "c", AV_DICT_DONT_STRDUP_KEY);
-    av_dict_set(&dict, av_strdup("d"), av_strdup("d"), AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    av_dict_set(&dict, av_strdup("c"), "c", AV_DICT_DONT_STRDUP_کلید);
+    av_dict_set(&dict, av_strdup("d"), av_strdup("d"), AV_DICT_DONT_STRDUP_کلید | AV_DICT_DONT_STRDUP_VAL);
     av_dict_set(&dict, "e", "e", AV_DICT_DONT_OVERWRITE);
     av_dict_set(&dict, "e", "f", AV_DICT_DONT_OVERWRITE);
     av_dict_set(&dict, "f", "f", 0);
-    av_dict_set(&dict, "f", NULL, 0);
+    av_dict_set(&dict, "f", پوچ, 0);
     av_dict_set(&dict, "ff", "f", 0);
     av_dict_set(&dict, "ff", "f", AV_DICT_APPEND);
-    if (av_dict_get(dict, NULL, NULL, 0))
+    اگر (av_dict_get(dict, پوچ, پوچ, 0))
         printf("av_dict_get() does not correctly handle NULL key.\n");
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("%s %s\n", e->key, e->value);
+    e = پوچ;
+    وقتی ((e = dict_iterate(dict, e)))
+        printf("%s %s\n", e->کلید, e->مقدار);
     av_dict_free(&dict);
 
-    if (av_dict_set(&dict, NULL, "a", 0) >= 0 ||
-        av_dict_set(&dict, NULL, "b", 0) >= 0 ||
-        av_dict_set(&dict, NULL, NULL, AV_DICT_DONT_STRDUP_KEY) >= 0 ||
-        av_dict_set(&dict, NULL, av_strdup("b"), AV_DICT_DONT_STRDUP_VAL) >= 0 ||
-        av_dict_count(dict))
+    اگر (av_dict_set(&dict, پوچ, "a", 0) >= 0 ||
+        av_dict_set(&dict, پوچ, "b", 0) >= 0 ||
+        av_dict_set(&dict, پوچ, پوچ, AV_DICT_DONT_STRDUP_کلید) >= 0 ||
+        av_dict_set(&dict, پوچ, av_strdup("b"), AV_DICT_DONT_STRDUP_VAL) >= 0 ||
+        av_dict_شمار(dict))
         printf("av_dict_set does not correctly handle NULL key\n");
 
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("'%s' '%s'\n", e->key, e->value);
+    e = پوچ;
+    وقتی ((e = dict_iterate(dict, e)))
+        printf("'%s' '%s'\n", e->کلید, e->مقدار);
     av_dict_free(&dict);
 
 
     //valgrind sensible test
     printf("\nTesting av_dict_set_int()\n");
     av_dict_set_int(&dict, "1", 1, AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set_int(&dict, av_strdup("2"), 2, AV_DICT_DONT_STRDUP_KEY);
-    av_dict_set_int(&dict, av_strdup("3"), 3, AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    av_dict_set_int(&dict, av_strdup("2"), 2, AV_DICT_DONT_STRDUP_کلید);
+    av_dict_set_int(&dict, av_strdup("3"), 3, AV_DICT_DONT_STRDUP_کلید | AV_DICT_DONT_STRDUP_VAL);
     av_dict_set_int(&dict, "4", 4, 0);
     av_dict_set_int(&dict, "5", 5, AV_DICT_DONT_OVERWRITE);
     av_dict_set_int(&dict, "5", 6, AV_DICT_DONT_OVERWRITE);
     av_dict_set_int(&dict, "12", 1, 0);
     av_dict_set_int(&dict, "12", 2, AV_DICT_APPEND);
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("%s %s\n", e->key, e->value);
+    e = پوچ;
+    وقتی ((e = dict_iterate(dict, e)))
+        printf("%s %s\n", e->کلید, e->مقدار);
     av_dict_free(&dict);
 
     //valgrind sensible test
     printf("\nTesting av_dict_set() with existing AVDictionaryEntry.key as key\n");
-    if (av_dict_set(&dict, "key", "old", 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    if (av_dict_set(&dict, e->key, "new val OK", 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    printf("%s\n", e->value);
-    if (av_dict_set(&dict, e->key, e->value, 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    printf("%s\n", e->value);
+    اگر (av_dict_set(&dict, "key", "old", 0) < 0)
+        بازگشت 1;
+    e = av_dict_get(dict, "key", پوچ, 0);
+    اگر (av_dict_set(&dict, e->کلید, "new val OK", 0) < 0)
+        بازگشت 1;
+    e = av_dict_get(dict, "key", پوچ, 0);
+    printf("%s\n", e->مقدار);
+    اگر (av_dict_set(&dict, e->کلید, e->مقدار, 0) < 0)
+        بازگشت 1;
+    e = av_dict_get(dict, "key", پوچ, 0);
+    printf("%s\n", e->مقدار);
     av_dict_free(&dict);
 
-    return 0;
+    بازگشت 0;
 }

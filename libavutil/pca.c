@@ -24,73 +24,73 @@
  * principal component analysis (PCA)
  */
 
-#include "common.h"
-#include "mem.h"
-#include "pca.h"
+#شامل "common.h"
+#شامل "mem.h"
+#شامل "pca.h"
 
-typedef struct PCA{
-    int count;
-    int n;
-    double *covariance;
-    double *mean;
-    double *z;
+تعریفنوع ساختار PCA{
+    صحیح شمار;
+    صحیح n;
+    دوگانه *covariance;
+    دوگانه *mean;
+    دوگانه *z;
 }PCA;
 
-PCA *ff_pca_init(int n){
+PCA *ff_pca_init(صحیح n){
     PCA *pca;
-    if(n<=0)
-        return NULL;
+    اگر(n<=0)
+        بازگشت پوچ;
 
-    pca= av_mallocz(sizeof(*pca));
-    if (!pca)
-        return NULL;
+    pca= av_mallocz(اندازه(*pca));
+    اگر (!pca)
+        بازگشت پوچ;
 
     pca->n= n;
-    pca->z = av_malloc_array(n, sizeof(*pca->z));
-    pca->count=0;
-    pca->covariance= av_calloc(n*n, sizeof(double));
-    pca->mean= av_calloc(n, sizeof(double));
+    pca->z = av_malloc_array(n, اندازه(*pca->z));
+    pca->شمار=0;
+    pca->covariance= av_calloc(n*n, اندازه(دوگانه));
+    pca->mean= av_calloc(n, اندازه(دوگانه));
 
-    if (!pca->z || !pca->covariance || !pca->mean) {
+    اگر (!pca->z || !pca->covariance || !pca->mean) {
         ff_pca_free(pca);
-        return NULL;
+        بازگشت پوچ;
     }
 
-    return pca;
+    بازگشت pca;
 }
 
-void ff_pca_free(PCA *pca){
+تهی ff_pca_free(PCA *pca){
     av_freep(&pca->covariance);
     av_freep(&pca->mean);
     av_freep(&pca->z);
     av_free(pca);
 }
 
-void ff_pca_add(PCA *pca, const double *v){
-    int i, j;
-    const int n= pca->n;
+تهی ff_pca_add(PCA *pca, ثابت دوگانه *v){
+    صحیح i, j;
+    ثابت صحیح n= pca->n;
 
-    for(i=0; i<n; i++){
+    برای(i=0; i<n; i++){
         pca->mean[i] += v[i];
-        for(j=i; j<n; j++)
+        برای(j=i; j<n; j++)
             pca->covariance[j + i*n] += v[i]*v[j];
     }
-    pca->count++;
+    pca->شمار++;
 }
 
-int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
-    int i, j, pass;
-    int k=0;
-    const int n= pca->n;
-    double *z = pca->z;
+صحیح ff_pca(PCA *pca, دوگانه *eigenvector, دوگانه *eigenvalue){
+    صحیح i, j, pass;
+    صحیح k=0;
+    ثابت صحیح n= pca->n;
+    دوگانه *z = pca->z;
 
-    memset(eigenvector, 0, sizeof(double)*n*n);
+    memset(eigenvector, 0, اندازه(دوگانه)*n*n);
 
-    for(j=0; j<n; j++){
-        pca->mean[j] /= pca->count;
+    برای(j=0; j<n; j++){
+        pca->mean[j] /= pca->شمار;
         eigenvector[j + j*n] = 1.0;
-        for(i=0; i<=j; i++){
-            pca->covariance[j + i*n] /= pca->count;
+        برای(i=0; i<=j; i++){
+            pca->covariance[j + i*n] /= pca->شمار;
             pca->covariance[j + i*n] -= pca->mean[i] * pca->mean[j];
             pca->covariance[i + j*n] = pca->covariance[j + i*n];
         }
@@ -98,51 +98,51 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
         z[j]= 0;
     }
 
-    for(pass=0; pass < 50; pass++){
-        double sum=0;
+    برای(pass=0; pass < 50; pass++){
+        دوگانه sum=0;
 
-        for(i=0; i<n; i++)
-            for(j=i+1; j<n; j++)
+        برای(i=0; i<n; i++)
+            برای(j=i+1; j<n; j++)
                 sum += fabs(pca->covariance[j + i*n]);
 
-        if(sum == 0){
-            for(i=0; i<n; i++){
-                double maxvalue= -1;
-                for(j=i; j<n; j++){
-                    if(eigenvalue[j] > maxvalue){
+        اگر(sum == 0){
+            برای(i=0; i<n; i++){
+                دوگانه maxvalue= -1;
+                برای(j=i; j<n; j++){
+                    اگر(eigenvalue[j] > maxvalue){
                         maxvalue= eigenvalue[j];
                         k= j;
                     }
                 }
                 eigenvalue[k]= eigenvalue[i];
                 eigenvalue[i]= maxvalue;
-                for(j=0; j<n; j++){
-                    double tmp= eigenvector[k + j*n];
+                برای(j=0; j<n; j++){
+                    دوگانه tmp= eigenvector[k + j*n];
                     eigenvector[k + j*n]= eigenvector[i + j*n];
                     eigenvector[i + j*n]= tmp;
                 }
             }
-            return pass;
+            بازگشت pass;
         }
 
-        for(i=0; i<n; i++){
-            for(j=i+1; j<n; j++){
-                double covar= pca->covariance[j + i*n];
-                double t,c,s,tau,theta, h;
+        برای(i=0; i<n; i++){
+            برای(j=i+1; j<n; j++){
+                دوگانه covar= pca->covariance[j + i*n];
+                دوگانه t,c,s,tau,theta, h;
 
-                if(pass < 3 && fabs(covar) < sum / (5*n*n)) //FIXME why pass < 3
-                    continue;
-                if(fabs(covar) == 0.0) //FIXME should not be needed
-                    continue;
-                if(pass >=3 && fabs((eigenvalue[j]+z[j])/covar) > (1LL<<32) && fabs((eigenvalue[i]+z[i])/covar) > (1LL<<32)){
+                اگر(pass < 3 && fabs(covar) < sum / (5*n*n)) //FIXME why pass < 3
+                    ادامه;
+                اگر(fabs(covar) == 0.0) //FIXME should not be needed
+                    ادامه;
+                اگر(pass >=3 && fabs((eigenvalue[j]+z[j])/covar) > (1LL<<32) && fabs((eigenvalue[i]+z[i])/covar) > (1LL<<32)){
                     pca->covariance[j + i*n]=0.0;
-                    continue;
+                    ادامه;
                 }
 
                 h= (eigenvalue[j]+z[j]) - (eigenvalue[i]+z[i]);
                 theta=0.5*h/covar;
                 t=1.0/(fabs(theta)+sqrt(1.0+theta*theta));
-                if(theta < 0.0) t = -t;
+                اگر(theta < 0.0) t = -t;
 
                 c=1.0/sqrt(1+t*t);
                 s=t*c;
@@ -151,12 +151,12 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
                 z[j] += t*covar;
 
 #define ROTATE(a,i,j,k,l) {\
-    double g=a[j + i*n];\
-    double h=a[l + k*n];\
+    دوگانه g=a[j + i*n];\
+    دوگانه h=a[l + k*n];\
     a[j + i*n]=g-s*(h+g*tau);\
     a[l + k*n]=h+s*(g-h*tau); }
-                for(k=0; k<n; k++) {
-                    if(k!=i && k!=j){
+                برای(k=0; k<n; k++) {
+                    اگر(k!=i && k!=j){
                         ROTATE(pca->covariance,FFMIN(k,i),FFMAX(k,i),FFMIN(k,j),FFMAX(k,j))
                     }
                     ROTATE(eigenvector,k,i,k,j)
@@ -164,11 +164,11 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
                 pca->covariance[j + i*n]=0.0;
             }
         }
-        for (i=0; i<n; i++) {
+        برای (i=0; i<n; i++) {
             eigenvalue[i] += z[i];
             z[i]=0.0;
         }
     }
 
-    return -1;
+    بازگشت -1;
 }

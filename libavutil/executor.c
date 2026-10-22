@@ -18,23 +18,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#شامل "config.h"
 
-#include <stdbool.h>
+#شامل <stdbool.h>
 
-#include "mem.h"
-#include "thread.h"
+#شامل "mem.h"
+#شامل "thread.h"
 
-#include "executor.h"
+#شامل "executor.h"
 
-#if !HAVE_THREADS
+#اگر !HAVE_THREADS
 
-#define ExecutorThread  char
+#define ExecutorThread  نویسه
 
 #define executor_thread_create(t, a, s, ar)      0
-#define executor_thread_join(t, r)               do {} while(0)
+#define executor_thread_join(t, r)               انجامبده {} وقتی(0)
 
-#else
+#وگرنه
 
 #define ExecutorThread  pthread_t
 
@@ -43,14 +43,14 @@
 
 #endif //!HAVE_THREADS
 
-typedef struct ThreadInfo {
+تعریفنوع ساختار ThreadInfo {
     AVExecutor *e;
     ExecutorThread thread;
 } ThreadInfo;
 
-struct AVExecutor {
+ساختار AVExecutor {
     AVTaskCallbacks cb;
-    int thread_count;
+    صحیح thread_شمار;
     bool recursive;
 
     ThreadInfo *threads;
@@ -58,79 +58,79 @@ struct AVExecutor {
 
     AVMutex lock;
     AVCond cond;
-    int die;
+    صحیح die;
 
     AVTask *tasks;
 };
 
-static AVTask* remove_task(AVTask **prev, AVTask *t)
+ایستا AVTask* remove_task(AVTask **prev, AVTask *t)
 {
     *prev  = t->next;
-    t->next = NULL;
-    return t;
+    t->next = پوچ;
+    بازگشت t;
 }
 
-static void add_task(AVTask **prev, AVTask *t)
+ایستا تهی add_task(AVTask **prev, AVTask *t)
 {
     t->next = *prev;
     *prev   = t;
 }
 
-static int run_one_task(AVExecutor *e, void *lc)
+ایستا صحیح run_one_task(AVExecutor *e, تهی *lc)
 {
     AVTaskCallbacks *cb = &e->cb;
     AVTask **prev;
 
-    for (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_data); prev = &(*prev)->next)
+    برای (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_data); prev = &(*prev)->next)
         /* nothing */;
-    if (*prev) {
+    اگر (*prev) {
         AVTask *t = remove_task(prev, *prev);
-        if (e->thread_count > 0)
+        اگر (e->thread_شمار > 0)
             ff_mutex_unlock(&e->lock);
         cb->run(t, lc, cb->user_data);
-        if (e->thread_count > 0)
+        اگر (e->thread_شمار > 0)
             ff_mutex_lock(&e->lock);
-        return 1;
+        بازگشت 1;
     }
-    return 0;
+    بازگشت 0;
 }
 
-#if HAVE_THREADS
-static void *executor_worker_task(void *data)
+#اگر HAVE_THREADS
+ایستا تهی *executor_worker_task(تهی *data)
 {
     ThreadInfo *ti = (ThreadInfo*)data;
     AVExecutor *e  = ti->e;
-    void *lc       = e->local_contexts + (ti - e->threads) * e->cb.local_context_size;
+    تهی *lc       = e->local_contexts + (ti - e->threads) * e->cb.local_context_size;
 
     ff_mutex_lock(&e->lock);
-    while (1) {
-        if (e->die) break;
+    وقتی (1) {
+        اگر (e->die) بشکن;
 
-        if (!run_one_task(e, lc)) {
+        اگر (!run_one_task(e, lc)) {
             //no task in one loop
             ff_cond_wait(&e->cond, &e->lock);
         }
     }
     ff_mutex_unlock(&e->lock);
-    return NULL;
+    بازگشت پوچ;
 }
 #endif
 
-static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
+ایستا تهی executor_free(AVExecutor *e, ثابت صحیح has_lock, ثابت صحیح has_cond)
 {
-    if (e->thread_count) {
+    اگر (e->thread_شمار) {
         //signal die
         ff_mutex_lock(&e->lock);
         e->die = 1;
         ff_cond_broadcast(&e->cond);
         ff_mutex_unlock(&e->lock);
 
-        for (int i = 0; i < e->thread_count; i++)
-            executor_thread_join(e->threads[i].thread, NULL);
+        برای (صحیح i = 0; i < e->thread_شمار; i++)
+            executor_thread_join(e->threads[i].thread, پوچ);
     }
-    if (has_cond)
+    اگر (has_cond)
         ff_cond_destroy(&e->cond);
-    if (has_lock)
+    اگر (has_lock)
         ff_mutex_destroy(&e->lock);
 
     av_free(e->threads);
@@ -139,82 +139,82 @@ static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
     av_free(e);
 }
 
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, int thread_count)
+AVExecutor* av_executor_alloc(ثابت AVTaskCallbacks *cb, صحیح thread_شمار)
 {
     AVExecutor *e;
-    int has_lock = 0, has_cond = 0;
-    if (!cb || !cb->user_data || !cb->ready || !cb->run || !cb->priority_higher)
-        return NULL;
+    صحیح has_lock = 0, has_cond = 0;
+    اگر (!cb || !cb->user_data || !cb->ready || !cb->run || !cb->priority_higher)
+        بازگشت پوچ;
 
-    e = av_mallocz(sizeof(*e));
-    if (!e)
-        return NULL;
+    e = av_mallocz(اندازه(*e));
+    اگر (!e)
+        بازگشت پوچ;
     e->cb = *cb;
 
-    e->local_contexts = av_calloc(FFMAX(thread_count, 1), e->cb.local_context_size);
-    if (!e->local_contexts)
-        goto free_executor;
+    e->local_contexts = av_calloc(FFMAX(thread_شمار, 1), e->cb.local_context_size);
+    اگر (!e->local_contexts)
+        برو free_executor;
 
-    e->threads = av_calloc(FFMAX(thread_count, 1), sizeof(*e->threads));
-    if (!e->threads)
-        goto free_executor;
+    e->threads = av_calloc(FFMAX(thread_شمار, 1), اندازه(*e->threads));
+    اگر (!e->threads)
+        برو free_executor;
 
-    if (!thread_count)
-        return e;
+    اگر (!thread_شمار)
+        بازگشت e;
 
-    has_lock = !ff_mutex_init(&e->lock, NULL);
-    has_cond = !ff_cond_init(&e->cond, NULL);
+    has_lock = !ff_mutex_init(&e->lock, پوچ);
+    has_cond = !ff_cond_init(&e->cond, پوچ);
 
-    if (!has_lock || !has_cond)
-        goto free_executor;
+    اگر (!has_lock || !has_cond)
+        برو free_executor;
 
-    for (/* nothing */; e->thread_count < thread_count; e->thread_count++) {
-        ThreadInfo *ti = e->threads + e->thread_count;
+    برای (/* nothing */; e->thread_شمار < thread_شمار; e->thread_شمار++) {
+        ThreadInfo *ti = e->threads + e->thread_شمار;
         ti->e = e;
-        if (executor_thread_create(&ti->thread, NULL, executor_worker_task, ti))
-            goto free_executor;
+        اگر (executor_thread_create(&ti->thread, پوچ, executor_worker_task, ti))
+            برو free_executor;
     }
-    return e;
+    بازگشت e;
 
 free_executor:
     executor_free(e, has_lock, has_cond);
-    return NULL;
+    بازگشت پوچ;
 }
 
-void av_executor_free(AVExecutor **executor)
+تهی av_executor_free(AVExecutor **executor)
 {
-    int thread_count;
+    صحیح thread_شمار;
 
-    if (!executor || !*executor)
-        return;
-    thread_count = (*executor)->thread_count;
-    executor_free(*executor, thread_count, thread_count);
-    *executor = NULL;
+    اگر (!executor || !*executor)
+        بازگشت;
+    thread_شمار = (*executor)->thread_شمار;
+    executor_free(*executor, thread_شمار, thread_شمار);
+    *executor = پوچ;
 }
 
-void av_executor_execute(AVExecutor *e, AVTask *t)
+تهی av_executor_execute(AVExecutor *e, AVTask *t)
 {
     AVTaskCallbacks *cb = &e->cb;
     AVTask **prev;
 
-    if (e->thread_count)
+    اگر (e->thread_شمار)
         ff_mutex_lock(&e->lock);
-    if (t) {
-        for (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
+    اگر (t) {
+        برای (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
             /* nothing */;
         add_task(prev, t);
     }
-    if (e->thread_count) {
+    اگر (e->thread_شمار) {
         ff_cond_signal(&e->cond);
         ff_mutex_unlock(&e->lock);
     }
 
-    if (!e->thread_count || !HAVE_THREADS) {
-        if (e->recursive)
-            return;
+    اگر (!e->thread_شمار || !HAVE_THREADS) {
+        اگر (e->recursive)
+            بازگشت;
         e->recursive = true;
         // We are running in a single-threaded environment, so we must handle all tasks ourselves
-        while (run_one_task(e, e->local_contexts))
+        وقتی (run_one_task(e, e->local_contexts))
             /* nothing */;
         e->recursive = false;
     }

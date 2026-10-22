@@ -23,171 +23,171 @@
  * audio channel layout utility functions
  */
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
+#شامل <stdint.h>
+#شامل <stdlib.h>
+#شامل <string.h>
 
-#include "avassert.h"
-#include "channel_layout.h"
-#include "bprint.h"
-#include "common.h"
-#include "error.h"
-#include "attributes.h"
-#include "macros.h"
-#include "mem.h"
-#include "opt.h"
+#شامل "avassert.h"
+#شامل "channel_layout.h"
+#شامل "bprint.h"
+#شامل "common.h"
+#شامل "error.h"
+#شامل "attributes.h"
+#شامل "macros.h"
+#شامل "mem.h"
+#شامل "opt.h"
 
 #define CHAN_IS_AMBI(x) ((x) >= AV_CHAN_AMBISONIC_BASE &&\
                          (x) <= AV_CHAN_AMBISONIC_END)
 
-struct channel_name {
-    const char *name;
-    const char *description;
+ساختار channel_name {
+    ثابت نویسه *name;
+    ثابت نویسه *description;
 };
 
-static const struct channel_name channel_names[] = {
-    [AV_CHAN_FRONT_LEFT           ] = { "FL",        "front left"            },
-    [AV_CHAN_FRONT_RIGHT          ] = { "FR",        "front right"           },
+ایستا ثابت ساختار channel_name channel_names[] = {
+    [AV_CHAN_FRONT_چپ           ] = { "FL",        "front left"            },
+    [AV_CHAN_FRONT_راست          ] = { "FR",        "front right"           },
     [AV_CHAN_FRONT_CENTER         ] = { "FC",        "front center"          },
-    [AV_CHAN_LOW_FREQUENCY        ] = { "LFE",       "low frequency"         },
-    [AV_CHAN_BACK_LEFT            ] = { "BL",        "back left"             },
-    [AV_CHAN_BACK_RIGHT           ] = { "BR",        "back right"            },
-    [AV_CHAN_FRONT_LEFT_OF_CENTER ] = { "FLC",       "front left-of-center"  },
-    [AV_CHAN_FRONT_RIGHT_OF_CENTER] = { "FRC",       "front right-of-center" },
+    [AV_CHAN_کم_FREQUENCY        ] = { "LFE",       "low frequency"         },
+    [AV_CHAN_BACK_چپ            ] = { "BL",        "back left"             },
+    [AV_CHAN_BACK_راست           ] = { "BR",        "back right"            },
+    [AV_CHAN_FRONT_چپ_OF_CENTER ] = { "FLC",       "front left-of-center"  },
+    [AV_CHAN_FRONT_راست_OF_CENTER] = { "FRC",       "front right-of-center" },
     [AV_CHAN_BACK_CENTER          ] = { "BC",        "back center"           },
-    [AV_CHAN_SIDE_LEFT            ] = { "SL",        "side left"             },
-    [AV_CHAN_SIDE_RIGHT           ] = { "SR",        "side right"            },
-    [AV_CHAN_TOP_CENTER           ] = { "TC",        "top center"            },
-    [AV_CHAN_TOP_FRONT_LEFT       ] = { "TFL",       "top front left"        },
-    [AV_CHAN_TOP_FRONT_CENTER     ] = { "TFC",       "top front center"      },
-    [AV_CHAN_TOP_FRONT_RIGHT      ] = { "TFR",       "top front right"       },
-    [AV_CHAN_TOP_BACK_LEFT        ] = { "TBL",       "top back left"         },
-    [AV_CHAN_TOP_BACK_CENTER      ] = { "TBC",       "top back center"       },
-    [AV_CHAN_TOP_BACK_RIGHT       ] = { "TBR",       "top back right"        },
-    [AV_CHAN_STEREO_LEFT          ] = { "DL",        "downmix left"          },
-    [AV_CHAN_STEREO_RIGHT         ] = { "DR",        "downmix right"         },
-    [AV_CHAN_WIDE_LEFT            ] = { "WL",        "wide left"             },
-    [AV_CHAN_WIDE_RIGHT           ] = { "WR",        "wide right"            },
-    [AV_CHAN_SURROUND_DIRECT_LEFT ] = { "SDL",       "surround direct left"  },
-    [AV_CHAN_SURROUND_DIRECT_RIGHT] = { "SDR",       "surround direct right" },
-    [AV_CHAN_LOW_FREQUENCY_2      ] = { "LFE2",      "low frequency 2"       },
-    [AV_CHAN_TOP_SIDE_LEFT        ] = { "TSL",       "top side left"         },
-    [AV_CHAN_TOP_SIDE_RIGHT       ] = { "TSR",       "top side right"        },
+    [AV_CHAN_SIDE_چپ            ] = { "SL",        "side left"             },
+    [AV_CHAN_SIDE_راست           ] = { "SR",        "side right"            },
+    [AV_CHAN_بالاترین_CENTER           ] = { "TC",        "top center"            },
+    [AV_CHAN_بالاترین_FRONT_چپ       ] = { "TFL",       "top front left"        },
+    [AV_CHAN_بالاترین_FRONT_CENTER     ] = { "TFC",       "top front center"      },
+    [AV_CHAN_بالاترین_FRONT_راست      ] = { "TFR",       "top front right"       },
+    [AV_CHAN_بالاترین_BACK_چپ        ] = { "TBL",       "top back left"         },
+    [AV_CHAN_بالاترین_BACK_CENTER      ] = { "TBC",       "top back center"       },
+    [AV_CHAN_بالاترین_BACK_راست       ] = { "TBR",       "top back right"        },
+    [AV_CHAN_STEREO_چپ          ] = { "DL",        "downmix left"          },
+    [AV_CHAN_STEREO_راست         ] = { "DR",        "downmix right"         },
+    [AV_CHAN_WIDE_چپ            ] = { "WL",        "wide left"             },
+    [AV_CHAN_WIDE_راست           ] = { "WR",        "wide right"            },
+    [AV_CHAN_SURROUND_DIRECT_چپ ] = { "SDL",       "surround direct left"  },
+    [AV_CHAN_SURROUND_DIRECT_راست] = { "SDR",       "surround direct right" },
+    [AV_CHAN_کم_FREQUENCY_2      ] = { "LFE2",      "low frequency 2"       },
+    [AV_CHAN_بالاترین_SIDE_چپ        ] = { "TSL",       "top side left"         },
+    [AV_CHAN_بالاترین_SIDE_راست       ] = { "TSR",       "top side right"        },
     [AV_CHAN_BOTTOM_FRONT_CENTER  ] = { "BFC",       "bottom front center"   },
-    [AV_CHAN_BOTTOM_FRONT_LEFT    ] = { "BFL",       "bottom front left"     },
-    [AV_CHAN_BOTTOM_FRONT_RIGHT   ] = { "BFR",       "bottom front right"    },
-    [AV_CHAN_SIDE_SURROUND_LEFT   ] = { "SSL",       "side surround left"    },
-    [AV_CHAN_SIDE_SURROUND_RIGHT  ] = { "SSR",       "side surround right"   },
-    [AV_CHAN_TOP_SURROUND_LEFT    ] = { "TTL",       "top surround left"     },
-    [AV_CHAN_TOP_SURROUND_RIGHT   ] = { "TTR",       "top surround right"    },
-    [AV_CHAN_BINAURAL_LEFT        ] = { "BIL",       "binaural left"         },
-    [AV_CHAN_BINAURAL_RIGHT       ] = { "BIR",       "binaural right"        },
+    [AV_CHAN_BOTTOM_FRONT_چپ    ] = { "BFL",       "bottom front left"     },
+    [AV_CHAN_BOTTOM_FRONT_راست   ] = { "BFR",       "bottom front right"    },
+    [AV_CHAN_SIDE_SURROUND_چپ   ] = { "SSL",       "side surround left"    },
+    [AV_CHAN_SIDE_SURROUND_راست  ] = { "SSR",       "side surround right"   },
+    [AV_CHAN_بالاترین_SURROUND_چپ    ] = { "TTL",       "top surround left"     },
+    [AV_CHAN_بالاترین_SURROUND_راست   ] = { "TTR",       "top surround right"    },
+    [AV_CHAN_BINAURAL_چپ        ] = { "BIL",       "binaural left"         },
+    [AV_CHAN_BINAURAL_راست       ] = { "BIR",       "binaural right"        },
 };
 
-void av_channel_name_bprint(AVBPrint *bp, enum AVChannel channel_id)
+تهی av_channel_name_bprint(AVBPrint *bp, شمارش AVChannel channel_id)
 {
-    if (channel_id >= AV_CHAN_AMBISONIC_BASE &&
+    اگر (channel_id >= AV_CHAN_AMBISONIC_BASE &&
         channel_id <= AV_CHAN_AMBISONIC_END)
         av_bprintf(bp, "AMBI%d", channel_id - AV_CHAN_AMBISONIC_BASE);
-    else if ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
+    وگرنه اگر ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
              channel_names[channel_id].name)
         av_bprintf(bp, "%s", channel_names[channel_id].name);
-    else if (channel_id == AV_CHAN_NONE)
+    وگرنه اگر (channel_id == AV_CHAN_NONE)
         av_bprintf(bp, "NONE");
-    else if (channel_id == AV_CHAN_UNKNOWN)
+    وگرنه اگر (channel_id == AV_CHAN_UNKNOWN)
         av_bprintf(bp, "UNK");
-    else if (channel_id == AV_CHAN_UNUSED)
+    وگرنه اگر (channel_id == AV_CHAN_UNUSED)
         av_bprintf(bp, "UNSD");
-    else
+    وگرنه
         av_bprintf(bp, "USR%d", channel_id);
 }
 
-int av_channel_name(char *buf, size_t buf_size, enum AVChannel channel_id)
+صحیح av_channel_name(نویسه *buf, size_t buf_size, شمارش AVChannel channel_id)
 {
     AVBPrint bp;
 
-    if (!buf && buf_size)
-        return AVERROR(EINVAL);
+    اگر (!buf && buf_size)
+        بازگشت AVERROR(EINVAL);
 
     av_bprint_init_for_buffer(&bp, buf, buf_size);
     av_channel_name_bprint(&bp, channel_id);
 
-    if (bp.len >= INT_MAX)
-        return AVERROR(ERANGE);
-    return bp.len + 1;
+    اگر (bp.len >= INT_MAX)
+        بازگشت AVERROR(ERANGE);
+    بازگشت bp.len + 1;
 }
 
-void av_channel_description_bprint(AVBPrint *bp, enum AVChannel channel_id)
+تهی av_channel_description_bprint(AVBPrint *bp, شمارش AVChannel channel_id)
 {
-    if (channel_id >= AV_CHAN_AMBISONIC_BASE &&
+    اگر (channel_id >= AV_CHAN_AMBISONIC_BASE &&
         channel_id <= AV_CHAN_AMBISONIC_END)
         av_bprintf(bp, "ambisonic ACN %d", channel_id - AV_CHAN_AMBISONIC_BASE);
-    else if ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
+    وگرنه اگر ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
              channel_names[channel_id].description)
         av_bprintf(bp, "%s", channel_names[channel_id].description);
-    else if (channel_id == AV_CHAN_NONE)
+    وگرنه اگر (channel_id == AV_CHAN_NONE)
         av_bprintf(bp, "none");
-    else if (channel_id == AV_CHAN_UNKNOWN)
+    وگرنه اگر (channel_id == AV_CHAN_UNKNOWN)
         av_bprintf(bp, "unknown");
-    else if (channel_id == AV_CHAN_UNUSED)
+    وگرنه اگر (channel_id == AV_CHAN_UNUSED)
         av_bprintf(bp, "unused");
-    else
+    وگرنه
         av_bprintf(bp, "user %d", channel_id);
 }
 
-int av_channel_description(char *buf, size_t buf_size, enum AVChannel channel_id)
+صحیح av_channel_description(نویسه *buf, size_t buf_size, شمارش AVChannel channel_id)
 {
     AVBPrint bp;
 
-    if (!buf && buf_size)
-        return AVERROR(EINVAL);
+    اگر (!buf && buf_size)
+        بازگشت AVERROR(EINVAL);
 
     av_bprint_init_for_buffer(&bp, buf, buf_size);
     av_channel_description_bprint(&bp, channel_id);
 
-    if (bp.len >= INT_MAX)
-        return AVERROR(ERANGE);
-    return bp.len + 1;
+    اگر (bp.len >= INT_MAX)
+        بازگشت AVERROR(ERANGE);
+    بازگشت bp.len + 1;
 }
 
-enum AVChannel av_channel_from_string(const char *str)
+شمارش AVChannel av_channel_from_string(ثابت نویسه *str)
 {
-    int i;
-    char *endptr = (char *)str;
-    enum AVChannel id = AV_CHAN_NONE;
+    صحیح i;
+    نویسه *endptr = (نویسه *)str;
+    شمارش AVChannel id = AV_CHAN_NONE;
 
-    if (!strncmp(str, "AMBI", 4)) {
-        i = strtol(str + 4, NULL, 0);
-        if (i < 0 || i > AV_CHAN_AMBISONIC_END - AV_CHAN_AMBISONIC_BASE)
-            return AV_CHAN_NONE;
-        return AV_CHAN_AMBISONIC_BASE + i;
+    اگر (!strncmp(str, "AMBI", 4)) {
+        i = strtol(str + 4, پوچ, 0);
+        اگر (i < 0 || i > AV_CHAN_AMBISONIC_END - AV_CHAN_AMBISONIC_BASE)
+            بازگشت AV_CHAN_NONE;
+        بازگشت AV_CHAN_AMBISONIC_BASE + i;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(channel_names); i++) {
-        if (channel_names[i].name && !strcmp(str, channel_names[i].name))
-            return i;
+    برای (i = 0; i < FF_ARRAY_ELEMS(channel_names); i++) {
+        اگر (channel_names[i].name && !strcmp(str, channel_names[i].name))
+            بازگشت i;
     }
-    if (!strcmp(str, "UNK"))
-        return AV_CHAN_UNKNOWN;
-    if (!strcmp(str, "UNSD"))
-        return AV_CHAN_UNUSED;
+    اگر (!strcmp(str, "UNK"))
+        بازگشت AV_CHAN_UNKNOWN;
+    اگر (!strcmp(str, "UNSD"))
+        بازگشت AV_CHAN_UNUSED;
 
-    if (!strncmp(str, "USR", 3)) {
-        const char *p = str + 3;
+    اگر (!strncmp(str, "USR", 3)) {
+        ثابت نویسه *p = str + 3;
         id = strtol(p, &endptr, 0);
     }
-    if (id >= 0 && !*endptr)
-        return id;
+    اگر (id >= 0 && !*endptr)
+        بازگشت id;
 
-    return AV_CHAN_NONE;
+    بازگشت AV_CHAN_NONE;
 }
 
-struct channel_layout_name {
-    const char *name;
+ساختار channel_layout_name {
+    ثابت نویسه *name;
     AVChannelLayout layout;
 };
 
-static const struct channel_layout_name channel_layout_map[] = {
+ایستا ثابت ساختار channel_layout_name channel_layout_map[] = {
     { "mono",           AV_CHANNEL_LAYOUT_MONO                },
     { "stereo",         AV_CHANNEL_LAYOUT_STEREO              },
     { "2.1",            AV_CHANNEL_LAYOUT_2POINT1             },
@@ -232,75 +232,75 @@ static const struct channel_layout_name channel_layout_map[] = {
     { "22.2",           AV_CHANNEL_LAYOUT_22POINT2,           },
 };
 
-int av_channel_layout_custom_init(AVChannelLayout *channel_layout, int nb_channels)
+صحیح av_channel_layout_custom_init(AVChannelLayout *channel_layout, صحیح nb_channels)
 {
     AVChannelCustom *map;
 
-    if (nb_channels <= 0)
-        return AVERROR(EINVAL);
+    اگر (nb_channels <= 0)
+        بازگشت AVERROR(EINVAL);
 
-    map = av_calloc(nb_channels, sizeof(*channel_layout->u.map));
-    if (!map)
-        return AVERROR(ENOMEM);
-    for (int i = 0; i < nb_channels; i++)
+    map = av_calloc(nb_channels, اندازه(*channel_layout->u.map));
+    اگر (!map)
+        بازگشت AVERROR(ENOMEM);
+    برای (صحیح i = 0; i < nb_channels; i++)
         map[i].id = AV_CHAN_UNKNOWN;
 
     channel_layout->order       = AV_CHANNEL_ORDER_CUSTOM;
     channel_layout->nb_channels = nb_channels;
     channel_layout->u.map       = map;
 
-    return 0;
+    بازگشت 0;
 }
 
-int av_channel_layout_from_mask(AVChannelLayout *channel_layout,
+صحیح av_channel_layout_from_mask(AVChannelLayout *channel_layout,
                                 uint64_t mask)
 {
-    if (!mask)
-        return AVERROR(EINVAL);
+    اگر (!mask)
+        بازگشت AVERROR(EINVAL);
 
     channel_layout->order       = AV_CHANNEL_ORDER_NATIVE;
     channel_layout->nb_channels = av_popcount64(mask);
     channel_layout->u.mask      = mask;
 
-    return 0;
+    بازگشت 0;
 }
 
-static int parse_channel_list(AVChannelLayout *ch_layout, const char *str)
+ایستا صحیح parse_channel_list(AVChannelLayout *ch_layout, ثابت نویسه *str)
 {
-    int ret;
-    int nb_channels = 0;
-    AVChannelCustom *map = NULL;
+    صحیح ret;
+    صحیح nb_channels = 0;
+    AVChannelCustom *map = پوچ;
     AVChannelCustom custom = {0};
 
-    while (*str) {
-        char *channel, *chname;
-        ret = av_opt_get_key_value(&str, "@", "+", AV_OPT_FLAG_IMPLICIT_KEY, &channel, &chname);
-        if (ret < 0) {
+    وقتی (*str) {
+        نویسه *channel, *chname;
+        ret = av_opt_get_کلید_مقدار(&str, "@", "+", AV_OPT_FLAG_IMPLICIT_کلید, &channel, &chname);
+        اگر (ret < 0) {
             av_freep(&map);
-            return ret;
+            بازگشت ret;
         }
-        if (*str)
+        اگر (*str)
             str++; // skip separator
-        if (!channel) {
+        اگر (!channel) {
             channel = chname;
-            chname = NULL;
+            chname = پوچ;
         }
-        av_strlcpy(custom.name, chname ? chname : "", sizeof(custom.name));
+        av_strlcpy(custom.name, chname ? chname : "", اندازه(custom.name));
         custom.id = av_channel_from_string(channel);
         av_free(channel);
         av_free(chname);
-        if (custom.id == AV_CHAN_NONE) {
+        اگر (custom.id == AV_CHAN_NONE) {
             av_freep(&map);
-            return AVERROR(EINVAL);
+            بازگشت AVERROR(EINVAL);
         }
 
-        av_dynarray2_add((void **)&map, &nb_channels, sizeof(custom), (void *)&custom);
-        if (!map)
-            return AVERROR(ENOMEM);
+        av_dynarray2_add((تهی **)&map, &nb_channels, اندازه(custom), (تهی *)&custom);
+        اگر (!map)
+            بازگشت AVERROR(ENOMEM);
     }
 
-    if (!nb_channels)
-        return AVERROR(EINVAL);
+    اگر (!nb_channels)
+        بازگشت AVERROR(EINVAL);
 
     ch_layout->order = AV_CHANNEL_ORDER_CUSTOM;
     ch_layout->u.map = map;
@@ -309,249 +309,249 @@ static int parse_channel_list(AVChannelLayout *ch_layout, const char *str)
     ret = av_channel_layout_retype(ch_layout, 0, AV_CHANNEL_LAYOUT_RETYPE_FLAG_CANONICAL);
     av_assert0(ret == 0);
 
-    return 0;
+    بازگشت 0;
 }
 
-int av_channel_layout_from_string(AVChannelLayout *channel_layout,
-                                  const char *str)
+صحیح av_channel_layout_from_string(AVChannelLayout *channel_layout,
+                                  ثابت نویسه *str)
 {
-    int i, matches, ret;
-    int channels = 0, nb_channels = 0;
-    char *chlist, *end;
+    صحیح i, matches, ret;
+    صحیح channels = 0, nb_channels = 0;
+    نویسه *chlist, *end;
     uint64_t mask = 0;
 
     /* channel layout names */
-    for (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++) {
-        if (channel_layout_map[i].name && !strcmp(str, channel_layout_map[i].name)) {
+    برای (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++) {
+        اگر (channel_layout_map[i].name && !strcmp(str, channel_layout_map[i].name)) {
             *channel_layout = channel_layout_map[i].layout;
-            return 0;
+            بازگشت 0;
         }
     }
 
     /* This function is a channel layout initializer, so we have to
      * zero-initialize before we start setting fields individually. */
-    memset(channel_layout, 0, sizeof(*channel_layout));
+    memset(channel_layout, 0, اندازه(*channel_layout));
 
     /* ambisonic */
-    if (!strncmp(str, "ambisonic ", 10)) {
-        const char *p = str + 10;
-        char *endptr;
+    اگر (!strncmp(str, "ambisonic ", 10)) {
+        ثابت نویسه *p = str + 10;
+        نویسه *endptr;
         AVChannelLayout extra = {0};
-        int order;
+        صحیح order;
 
         order = strtol(p, &endptr, 0);
-        if (order < 0 || order + 1  > INT_MAX / (order + 1) ||
+        اگر (order < 0 || order + 1  > INT_MAX / (order + 1) ||
             (*endptr && *endptr != '+'))
-            return AVERROR(EINVAL);
+            بازگشت AVERROR(EINVAL);
 
         channel_layout->order       = AV_CHANNEL_ORDER_AMBISONIC;
         channel_layout->nb_channels = (order + 1) * (order + 1);
 
-        if (*endptr) {
+        اگر (*endptr) {
             ret = av_channel_layout_from_string(&extra, endptr + 1);
-            if (ret < 0)
-                return ret;
-            if (extra.nb_channels >= INT_MAX - channel_layout->nb_channels) {
+            اگر (ret < 0)
+                بازگشت ret;
+            اگر (extra.nb_channels >= INT_MAX - channel_layout->nb_channels) {
                 av_channel_layout_uninit(&extra);
-                return AVERROR(EINVAL);
+                بازگشت AVERROR(EINVAL);
             }
 
-            if (extra.order == AV_CHANNEL_ORDER_NATIVE) {
+            اگر (extra.order == AV_CHANNEL_ORDER_NATIVE) {
                 channel_layout->u.mask = extra.u.mask;
-            } else {
+            } وگرنه {
                 channel_layout->order = AV_CHANNEL_ORDER_CUSTOM;
                 channel_layout->u.map =
                     av_calloc(channel_layout->nb_channels + extra.nb_channels,
-                              sizeof(*channel_layout->u.map));
-                if (!channel_layout->u.map) {
+                              اندازه(*channel_layout->u.map));
+                اگر (!channel_layout->u.map) {
                     av_channel_layout_uninit(&extra);
-                    return AVERROR(ENOMEM);
+                    بازگشت AVERROR(ENOMEM);
                 }
 
-                for (i = 0; i < channel_layout->nb_channels; i++)
+                برای (i = 0; i < channel_layout->nb_channels; i++)
                     channel_layout->u.map[i].id = AV_CHAN_AMBISONIC_BASE + i;
-                for (i = 0; i < extra.nb_channels; i++) {
-                    enum AVChannel ch = av_channel_layout_channel_from_index(&extra, i);
-                    if (CHAN_IS_AMBI(ch)) {
+                برای (i = 0; i < extra.nb_channels; i++) {
+                    شمارش AVChannel ch = av_channel_layout_channel_from_index(&extra, i);
+                    اگر (CHAN_IS_AMBI(ch)) {
                         av_channel_layout_uninit(channel_layout);
                         av_channel_layout_uninit(&extra);
-                        return AVERROR(EINVAL);
+                        بازگشت AVERROR(EINVAL);
                     }
                     channel_layout->u.map[channel_layout->nb_channels + i].id = ch;
-                    if (extra.order == AV_CHANNEL_ORDER_CUSTOM &&
+                    اگر (extra.order == AV_CHANNEL_ORDER_CUSTOM &&
                         extra.u.map[i].name[0])
                         av_strlcpy(channel_layout->u.map[channel_layout->nb_channels + i].name,
                                    extra.u.map[i].name,
-                                   sizeof(channel_layout->u.map[channel_layout->nb_channels + i].name));
+                                   اندازه(channel_layout->u.map[channel_layout->nb_channels + i].name));
                 }
             }
             channel_layout->nb_channels += extra.nb_channels;
             av_channel_layout_uninit(&extra);
         }
 
-        return 0;
+        بازگشت 0;
     }
 
     chlist = av_strdup(str);
-    if (!chlist)
-        return AVERROR(ENOMEM);
+    اگر (!chlist)
+        بازگشت AVERROR(ENOMEM);
 
     /* channel names */
     matches = av_sscanf(str, "%d channels (%[^)]", &nb_channels, chlist);
     ret = parse_channel_list(channel_layout, chlist);
     av_freep(&chlist);
-    if (ret < 0 && ret != AVERROR(EINVAL))
-        return ret;
+    اگر (ret < 0 && ret != AVERROR(EINVAL))
+        بازگشت ret;
 
-    if (ret >= 0) {
-        const char *end_par = strchr(str, ')');
-        if (matches == 2 && (nb_channels != channel_layout->nb_channels || !end_par || *++end_par)) {
+    اگر (ret >= 0) {
+        ثابت نویسه *end_par = strchr(str, ')');
+        اگر (matches == 2 && (nb_channels != channel_layout->nb_channels || !end_par || *++end_par)) {
             av_channel_layout_uninit(channel_layout);
-            return AVERROR(EINVAL);
+            بازگشت AVERROR(EINVAL);
         }
-        return 0;
+        بازگشت 0;
     }
 
     errno = 0;
     mask = strtoull(str, &end, 0);
 
     /* channel layout mask */
-    if (!errno && !*end && !strchr(str, '-') && mask) {
+    اگر (!errno && !*end && !strchr(str, '-') && mask) {
         av_channel_layout_from_mask(channel_layout, mask);
-        return 0;
+        بازگشت 0;
     }
 
     errno = 0;
     channels = strtol(str, &end, 10);
 
     /* number of channels */
-    if (!errno && !strcmp(end, "c") && channels > 0) {
+    اگر (!errno && !strcmp(end, "c") && channels > 0) {
         av_channel_layout_default(channel_layout, channels);
-        if (channel_layout->order == AV_CHANNEL_ORDER_NATIVE)
-            return 0;
+        اگر (channel_layout->order == AV_CHANNEL_ORDER_NATIVE)
+            بازگشت 0;
     }
 
     /* number of unordered channels */
-    if (!errno && (!strcmp(end, "C") || !strcmp(end, " channels"))
+    اگر (!errno && (!strcmp(end, "C") || !strcmp(end, " channels"))
         && channels > 0) {
         channel_layout->order = AV_CHANNEL_ORDER_UNSPEC;
         channel_layout->nb_channels = channels;
-        return 0;
+        بازگشت 0;
     }
 
-    return AVERROR(EINVAL);
+    بازگشت AVERROR(EINVAL);
 }
 
-void av_channel_layout_uninit(AVChannelLayout *channel_layout)
+تهی av_channel_layout_uninit(AVChannelLayout *channel_layout)
 {
-    if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM)
+    اگر (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM)
         av_freep(&channel_layout->u.map);
-    memset(channel_layout, 0, sizeof(*channel_layout));
+    memset(channel_layout, 0, اندازه(*channel_layout));
 }
 
-int av_channel_layout_copy(AVChannelLayout *dst, const AVChannelLayout *src)
+صحیح av_channel_layout_copy(AVChannelLayout *dst, ثابت AVChannelLayout *src)
 {
     av_channel_layout_uninit(dst);
     *dst = *src;
-    if (src->order == AV_CHANNEL_ORDER_CUSTOM) {
-        dst->u.map = av_malloc_array(src->nb_channels, sizeof(*dst->u.map));
-        if (!dst->u.map)
-            return AVERROR(ENOMEM);
-        memcpy(dst->u.map, src->u.map, src->nb_channels * sizeof(*src->u.map));
+    اگر (src->order == AV_CHANNEL_ORDER_CUSTOM) {
+        dst->u.map = av_malloc_array(src->nb_channels, اندازه(*dst->u.map));
+        اگر (!dst->u.map)
+            بازگشت AVERROR(ENOMEM);
+        memcpy(dst->u.map, src->u.map, src->nb_channels * اندازه(*src->u.map));
     }
-    return 0;
+    بازگشت 0;
 }
 
-static int64_t masked_description(const AVChannelLayout *channel_layout, int start_channel)
+ایستا int64_t masked_description(ثابت AVChannelLayout *channel_layout, صحیح start_channel)
 {
     uint64_t mask = 0;
-    for (int i = start_channel; i < channel_layout->nb_channels; i++) {
-        enum AVChannel ch = channel_layout->u.map[i].id;
-        if (ch >= 0 && ch < 63 && mask < (1ULL << ch))
+    برای (صحیح i = start_channel; i < channel_layout->nb_channels; i++) {
+        شمارش AVChannel ch = channel_layout->u.map[i].id;
+        اگر (ch >= 0 && ch < 63 && mask < (1ULL << ch))
             mask |= (1ULL << ch);
-        else
-            return AVERROR(EINVAL);
+        وگرنه
+            بازگشت AVERROR(EINVAL);
     }
-    return mask;
+    بازگشت mask;
 }
 
-static int has_channel_names(const AVChannelLayout *channel_layout)
+ایستا صحیح has_channel_names(ثابت AVChannelLayout *channel_layout)
 {
-    if (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
-        return 0;
-    for (int i = 0; i < channel_layout->nb_channels; i++)
-        if (channel_layout->u.map[i].name[0])
-            return 1;
-    return 0;
+    اگر (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
+        بازگشت 0;
+    برای (صحیح i = 0; i < channel_layout->nb_channels; i++)
+        اگر (channel_layout->u.map[i].name[0])
+            بازگشت 1;
+    بازگشت 0;
 }
 
-int av_channel_layout_ambisonic_order(const AVChannelLayout *channel_layout)
+صحیح av_channel_layout_ambisonic_order(ثابت AVChannelLayout *channel_layout)
 {
-    int i, highest_ambi, order;
+    صحیح i, highest_ambi, order;
 
-    if (channel_layout->order != AV_CHANNEL_ORDER_AMBISONIC &&
+    اگر (channel_layout->order != AV_CHANNEL_ORDER_AMBISONIC &&
         channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
-        return AVERROR(EINVAL);
+        بازگشت AVERROR(EINVAL);
 
     highest_ambi = -1;
-    if (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC)
+    اگر (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC)
         highest_ambi = channel_layout->nb_channels - av_popcount64(channel_layout->u.mask) - 1;
-    else {
-        const AVChannelCustom *map = channel_layout->u.map;
+    وگرنه {
+        ثابت AVChannelCustom *map = channel_layout->u.map;
         av_assert0(channel_layout->order == AV_CHANNEL_ORDER_CUSTOM);
 
-        for (i = 0; i < channel_layout->nb_channels; i++) {
-            int is_ambi = CHAN_IS_AMBI(map[i].id);
+        برای (i = 0; i < channel_layout->nb_channels; i++) {
+            صحیح is_ambi = CHAN_IS_AMBI(map[i].id);
 
             /* ambisonic following non-ambisonic */
-            if (i > 0 && is_ambi && !CHAN_IS_AMBI(map[i - 1].id))
-                return AVERROR(EINVAL);
+            اگر (i > 0 && is_ambi && !CHAN_IS_AMBI(map[i - 1].id))
+                بازگشت AVERROR(EINVAL);
 
             /* non-default ordering */
-            if (is_ambi && map[i].id - AV_CHAN_AMBISONIC_BASE != i)
-                return AVERROR(EINVAL);
+            اگر (is_ambi && map[i].id - AV_CHAN_AMBISONIC_BASE != i)
+                بازگشت AVERROR(EINVAL);
 
-            if (CHAN_IS_AMBI(map[i].id))
+            اگر (CHAN_IS_AMBI(map[i].id))
                 highest_ambi = i;
         }
     }
     /* no ambisonic channels*/
-    if (highest_ambi < 0)
-        return AVERROR(EINVAL);
+    اگر (highest_ambi < 0)
+        بازگشت AVERROR(EINVAL);
 
     order = floor(sqrt(highest_ambi));
     /* incomplete order - some harmonics are missing */
-    if ((order + 1) * (order + 1) != highest_ambi + 1)
-        return AVERROR(EINVAL);
+    اگر ((order + 1) * (order + 1) != highest_ambi + 1)
+        بازگشت AVERROR(EINVAL);
 
-    return order;
+    بازگشت order;
 }
 
-static enum AVChannelOrder canonical_order(AVChannelLayout *channel_layout)
+ایستا شمارش AVChannelOrder canonical_order(AVChannelLayout *channel_layout)
 {
-    int has_known_channel = 0;
-    int order;
+    صحیح has_known_channel = 0;
+    صحیح order;
 
-    if (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
-        return channel_layout->order;
+    اگر (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
+        بازگشت channel_layout->order;
 
-    if (has_channel_names(channel_layout))
-        return AV_CHANNEL_ORDER_CUSTOM;
+    اگر (has_channel_names(channel_layout))
+        بازگشت AV_CHANNEL_ORDER_CUSTOM;
 
-    for (int i = 0; i < channel_layout->nb_channels && !has_known_channel; i++)
-        if (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN)
+    برای (صحیح i = 0; i < channel_layout->nb_channels && !has_known_channel; i++)
+        اگر (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN)
             has_known_channel = 1;
-    if (!has_known_channel)
-        return AV_CHANNEL_ORDER_UNSPEC;
+    اگر (!has_known_channel)
+        بازگشت AV_CHANNEL_ORDER_UNSPEC;
 
-    if (masked_description(channel_layout, 0) > 0)
-        return AV_CHANNEL_ORDER_NATIVE;
+    اگر (masked_description(channel_layout, 0) > 0)
+        بازگشت AV_CHANNEL_ORDER_NATIVE;
 
     order = av_channel_layout_ambisonic_order(channel_layout);
-    if (order >= 0 && masked_description(channel_layout, (order + 1) * (order + 1)) >= 0)
-        return AV_CHANNEL_ORDER_AMBISONIC;
+    اگر (order >= 0 && masked_description(channel_layout, (order + 1) * (order + 1)) >= 0)
+        بازگشت AV_CHANNEL_ORDER_AMBISONIC;
 
-    return AV_CHANNEL_ORDER_CUSTOM;
+    بازگشت AV_CHANNEL_ORDER_CUSTOM;
 }
 
 /**
@@ -559,32 +559,32 @@ static enum AVChannelOrder canonical_order(AVChannelLayout *channel_layout)
  * extra non-diegetic channels at the end, write its string description in bp.
  * Return a negative error code otherwise.
  */
-static int try_describe_ambisonic(AVBPrint *bp, const AVChannelLayout *channel_layout)
+ایستا صحیح try_describe_ambisonic(AVBPrint *bp, ثابت AVChannelLayout *channel_layout)
 {
-    int nb_ambi_channels;
-    int order = av_channel_layout_ambisonic_order(channel_layout);
-    if (order < 0)
-        return order;
+    صحیح nb_ambi_channels;
+    صحیح order = av_channel_layout_ambisonic_order(channel_layout);
+    اگر (order < 0)
+        بازگشت order;
 
     av_bprintf(bp, "ambisonic %d", order);
 
     /* extra channels present */
     nb_ambi_channels = (order + 1) * (order + 1);
-    if (nb_ambi_channels < channel_layout->nb_channels) {
+    اگر (nb_ambi_channels < channel_layout->nb_channels) {
         AVChannelLayout extra = { 0 };
 
-        if (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC) {
+        اگر (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC) {
             extra.order       = AV_CHANNEL_ORDER_NATIVE;
             extra.nb_channels = av_popcount64(channel_layout->u.mask);
             extra.u.mask      = channel_layout->u.mask;
-        } else {
+        } وگرنه {
             int64_t mask;
-            if (!has_channel_names(channel_layout) &&
+            اگر (!has_channel_names(channel_layout) &&
                 (mask = masked_description(channel_layout, nb_ambi_channels)) > 0) {
                 extra.order       = AV_CHANNEL_ORDER_NATIVE;
                 extra.nb_channels = av_popcount64(mask);
                 extra.u.mask      = mask;
-            } else {
+            } وگرنه {
                 extra.order       = AV_CHANNEL_ORDER_CUSTOM;
                 extra.nb_channels = channel_layout->nb_channels - nb_ambi_channels;
                 extra.u.map       = channel_layout->u.map + nb_ambi_channels;
@@ -596,386 +596,386 @@ static int try_describe_ambisonic(AVBPrint *bp, const AVChannelLayout *channel_l
         /* Not calling uninit here on extra because we don't own the u.map pointer */
     }
 
-    return 0;
+    بازگشت 0;
 }
 
-int av_channel_layout_describe_bprint(const AVChannelLayout *channel_layout,
+صحیح av_channel_layout_describe_bprint(ثابت AVChannelLayout *channel_layout,
                                       AVBPrint *bp)
 {
-    int i;
+    صحیح i;
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_NATIVE:
-        for (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
-            if (channel_layout->u.mask == channel_layout_map[i].layout.u.mask) {
+    انتخاب (channel_layout->order) {
+    حالت AV_CHANNEL_ORDER_NATIVE:
+        برای (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
+            اگر (channel_layout->u.mask == channel_layout_map[i].layout.u.mask) {
                 av_bprintf(bp, "%s", channel_layout_map[i].name);
-                return 0;
+                بازگشت 0;
             }
         av_fallthrough;
-    case AV_CHANNEL_ORDER_CUSTOM:
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+    حالت AV_CHANNEL_ORDER_CUSTOM:
+        اگر (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             int64_t mask;
-            int res = try_describe_ambisonic(bp, channel_layout);
-            if (res >= 0)
-                return 0;
-            if (!has_channel_names(channel_layout) &&
+            صحیح res = try_describe_ambisonic(bp, channel_layout);
+            اگر (res >= 0)
+                بازگشت 0;
+            اگر (!has_channel_names(channel_layout) &&
                 (mask = masked_description(channel_layout, 0)) > 0) {
                 AVChannelLayout native = { .order       = AV_CHANNEL_ORDER_NATIVE,
                                            .nb_channels = av_popcount64(mask),
                                            .u.mask      = mask };
-                return av_channel_layout_describe_bprint(&native, bp);
+                بازگشت av_channel_layout_describe_bprint(&native, bp);
             }
         }
-        if (channel_layout->nb_channels)
+        اگر (channel_layout->nb_channels)
             av_bprintf(bp, "%d channels (", channel_layout->nb_channels);
-        for (i = 0; i < channel_layout->nb_channels; i++) {
-            enum AVChannel ch = av_channel_layout_channel_from_index(channel_layout, i);
+        برای (i = 0; i < channel_layout->nb_channels; i++) {
+            شمارش AVChannel ch = av_channel_layout_channel_from_index(channel_layout, i);
 
-            if (i)
+            اگر (i)
                 av_bprintf(bp, "+");
             av_channel_name_bprint(bp, ch);
-            if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM &&
+            اگر (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM &&
                 channel_layout->u.map[i].name[0])
                 av_bprintf(bp, "@%s", channel_layout->u.map[i].name);
         }
-        if (channel_layout->nb_channels) {
+        اگر (channel_layout->nb_channels) {
             av_bprintf(bp, ")");
-            return 0;
+            بازگشت 0;
         }
         av_fallthrough;
-    case AV_CHANNEL_ORDER_UNSPEC:
+    حالت AV_CHANNEL_ORDER_UNSPEC:
         av_bprintf(bp, "%d channels", channel_layout->nb_channels);
-        return 0;
-    case AV_CHANNEL_ORDER_AMBISONIC:
-        return try_describe_ambisonic(bp, channel_layout);
-    default:
-        return AVERROR(EINVAL);
+        بازگشت 0;
+    حالت AV_CHANNEL_ORDER_AMBISONIC:
+        بازگشت try_describe_ambisonic(bp, channel_layout);
+    پیشفرض:
+        بازگشت AVERROR(EINVAL);
     }
 }
 
-int av_channel_layout_describe(const AVChannelLayout *channel_layout,
-                               char *buf, size_t buf_size)
+صحیح av_channel_layout_describe(ثابت AVChannelLayout *channel_layout,
+                               نویسه *buf, size_t buf_size)
 {
     AVBPrint bp;
-    int ret;
+    صحیح ret;
 
-    if (!buf && buf_size)
-        return AVERROR(EINVAL);
+    اگر (!buf && buf_size)
+        بازگشت AVERROR(EINVAL);
 
     av_bprint_init_for_buffer(&bp, buf, buf_size);
     ret = av_channel_layout_describe_bprint(channel_layout, &bp);
-    if (ret < 0)
-        return ret;
+    اگر (ret < 0)
+        بازگشت ret;
 
-    if (bp.len >= INT_MAX)
-        return AVERROR(ERANGE);
-    return bp.len + 1;
+    اگر (bp.len >= INT_MAX)
+        بازگشت AVERROR(ERANGE);
+    بازگشت bp.len + 1;
 }
 
-enum AVChannel
-av_channel_layout_channel_from_index(const AVChannelLayout *channel_layout,
-                                     unsigned int idx)
+شمارش AVChannel
+av_channel_layout_channel_from_index(ثابت AVChannelLayout *channel_layout,
+                                     unsigned صحیح idx)
 {
-    int i;
+    صحیح i;
 
-    if (idx >= channel_layout->nb_channels)
-        return AV_CHAN_NONE;
+    اگر (idx >= channel_layout->nb_channels)
+        بازگشت AV_CHAN_NONE;
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_CUSTOM:
-        return channel_layout->u.map[idx].id;
-    case AV_CHANNEL_ORDER_AMBISONIC: {
-        int ambi_channels = channel_layout->nb_channels - av_popcount64(channel_layout->u.mask);
-        if (idx < ambi_channels)
-            return AV_CHAN_AMBISONIC_BASE + idx;
+    انتخاب (channel_layout->order) {
+    حالت AV_CHANNEL_ORDER_CUSTOM:
+        بازگشت channel_layout->u.map[idx].id;
+    حالت AV_CHANNEL_ORDER_AMBISONIC: {
+        صحیح ambi_channels = channel_layout->nb_channels - av_popcount64(channel_layout->u.mask);
+        اگر (idx < ambi_channels)
+            بازگشت AV_CHAN_AMBISONIC_BASE + idx;
         idx -= ambi_channels;
         }
         av_fallthrough;
-    case AV_CHANNEL_ORDER_NATIVE:
-        for (i = 0; i < 64; i++) {
-            if ((1ULL << i) & channel_layout->u.mask && !idx--)
-                return i;
+    حالت AV_CHANNEL_ORDER_NATIVE:
+        برای (i = 0; i < 64; i++) {
+            اگر ((1ULL << i) & channel_layout->u.mask && !idx--)
+                بازگشت i;
         }
         av_fallthrough;
-    default:
-        return AV_CHAN_NONE;
+    پیشفرض:
+        بازگشت AV_CHAN_NONE;
     }
 }
 
-enum AVChannel
-av_channel_layout_channel_from_string(const AVChannelLayout *channel_layout,
-                                      const char *str)
+شمارش AVChannel
+av_channel_layout_channel_from_string(ثابت AVChannelLayout *channel_layout,
+                                      ثابت نویسه *str)
 {
-    int index = av_channel_layout_index_from_string(channel_layout, str);
+    صحیح index = av_channel_layout_index_from_string(channel_layout, str);
 
-    if (index < 0)
-        return AV_CHAN_NONE;
+    اگر (index < 0)
+        بازگشت AV_CHAN_NONE;
 
-    return av_channel_layout_channel_from_index(channel_layout, index);
+    بازگشت av_channel_layout_channel_from_index(channel_layout, index);
 }
 
-int av_channel_layout_index_from_channel(const AVChannelLayout *channel_layout,
-                                         enum AVChannel channel)
+صحیح av_channel_layout_index_from_channel(ثابت AVChannelLayout *channel_layout,
+                                         شمارش AVChannel channel)
 {
-    int i;
+    صحیح i;
 
-    if (channel == AV_CHAN_NONE)
-        return AVERROR(EINVAL);
+    اگر (channel == AV_CHAN_NONE)
+        بازگشت AVERROR(EINVAL);
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_CUSTOM:
-        for (i = 0; i < channel_layout->nb_channels; i++)
-            if (channel_layout->u.map[i].id == channel)
-                return i;
-        return AVERROR(EINVAL);
-    case AV_CHANNEL_ORDER_AMBISONIC:
-    case AV_CHANNEL_ORDER_NATIVE: {
+    انتخاب (channel_layout->order) {
+    حالت AV_CHANNEL_ORDER_CUSTOM:
+        برای (i = 0; i < channel_layout->nb_channels; i++)
+            اگر (channel_layout->u.map[i].id == channel)
+                بازگشت i;
+        بازگشت AVERROR(EINVAL);
+    حالت AV_CHANNEL_ORDER_AMBISONIC:
+    حالت AV_CHANNEL_ORDER_NATIVE: {
         uint64_t mask = channel_layout->u.mask;
-        int ambi_channels = channel_layout->nb_channels - av_popcount64(mask);
-        if (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC &&
+        صحیح ambi_channels = channel_layout->nb_channels - av_popcount64(mask);
+        اگر (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC &&
             channel >= AV_CHAN_AMBISONIC_BASE) {
-            if (channel - AV_CHAN_AMBISONIC_BASE >= ambi_channels)
-                return AVERROR(EINVAL);
-            return channel - AV_CHAN_AMBISONIC_BASE;
+            اگر (channel - AV_CHAN_AMBISONIC_BASE >= ambi_channels)
+                بازگشت AVERROR(EINVAL);
+            بازگشت channel - AV_CHAN_AMBISONIC_BASE;
         }
-        if ((unsigned)channel > 63 || !(mask & (1ULL << channel)))
-            return AVERROR(EINVAL);
+        اگر ((unsigned)channel > 63 || !(mask & (1ULL << channel)))
+            بازگشت AVERROR(EINVAL);
         mask &= (1ULL << channel) - 1;
-        return av_popcount64(mask) + ambi_channels;
+        بازگشت av_popcount64(mask) + ambi_channels;
         }
-    default:
-        return AVERROR(EINVAL);
+    پیشفرض:
+        بازگشت AVERROR(EINVAL);
     }
 }
 
-int av_channel_layout_index_from_string(const AVChannelLayout *channel_layout,
-                                        const char *str)
+صحیح av_channel_layout_index_from_string(ثابت AVChannelLayout *channel_layout,
+                                        ثابت نویسه *str)
 {
-    const char *chname;
-    enum AVChannel ch = AV_CHAN_NONE;
+    ثابت نویسه *chname;
+    شمارش AVChannel ch = AV_CHAN_NONE;
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_CUSTOM:
+    انتخاب (channel_layout->order) {
+    حالت AV_CHANNEL_ORDER_CUSTOM:
         chname = strstr(str, "@");
-        if (chname) {
-            char buf[16];
+        اگر (chname) {
+            نویسه buf[16];
             chname++;
-            av_strlcpy(buf, str, FFMIN(sizeof(buf), chname - str));
-            if (!*chname)
-                chname = NULL;
+            av_strlcpy(buf, str, FFMIN(اندازه(buf), chname - str));
+            اگر (!*chname)
+                chname = پوچ;
             ch = av_channel_from_string(buf);
-            if (ch == AV_CHAN_NONE && *buf)
-                return AVERROR(EINVAL);
+            اگر (ch == AV_CHAN_NONE && *buf)
+                بازگشت AVERROR(EINVAL);
         }
-        for (int i = 0; chname && i < channel_layout->nb_channels; i++) {
-            if (!strcmp(chname, channel_layout->u.map[i].name) &&
+        برای (صحیح i = 0; chname && i < channel_layout->nb_channels; i++) {
+            اگر (!strcmp(chname, channel_layout->u.map[i].name) &&
                 (ch == AV_CHAN_NONE || ch == channel_layout->u.map[i].id))
-                return i;
+                بازگشت i;
         }
         av_fallthrough;
-    case AV_CHANNEL_ORDER_AMBISONIC:
-    case AV_CHANNEL_ORDER_NATIVE:
+    حالت AV_CHANNEL_ORDER_AMBISONIC:
+    حالت AV_CHANNEL_ORDER_NATIVE:
         ch = av_channel_from_string(str);
-        if (ch == AV_CHAN_NONE)
-            return AVERROR(EINVAL);
-        return av_channel_layout_index_from_channel(channel_layout, ch);
+        اگر (ch == AV_CHAN_NONE)
+            بازگشت AVERROR(EINVAL);
+        بازگشت av_channel_layout_index_from_channel(channel_layout, ch);
     }
 
-    return AVERROR(EINVAL);
+    بازگشت AVERROR(EINVAL);
 }
 
-int av_channel_layout_check(const AVChannelLayout *channel_layout)
+صحیح av_channel_layout_check(ثابت AVChannelLayout *channel_layout)
 {
-    if (channel_layout->nb_channels <= 0)
-        return 0;
+    اگر (channel_layout->nb_channels <= 0)
+        بازگشت 0;
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_NATIVE:
-        return av_popcount64(channel_layout->u.mask) == channel_layout->nb_channels;
-    case AV_CHANNEL_ORDER_CUSTOM:
-        if (!channel_layout->u.map)
-            return 0;
-        for (int i = 0; i < channel_layout->nb_channels; i++) {
-            if (channel_layout->u.map[i].id == AV_CHAN_NONE)
-                return 0;
+    انتخاب (channel_layout->order) {
+    حالت AV_CHANNEL_ORDER_NATIVE:
+        بازگشت av_popcount64(channel_layout->u.mask) == channel_layout->nb_channels;
+    حالت AV_CHANNEL_ORDER_CUSTOM:
+        اگر (!channel_layout->u.map)
+            بازگشت 0;
+        برای (صحیح i = 0; i < channel_layout->nb_channels; i++) {
+            اگر (channel_layout->u.map[i].id == AV_CHAN_NONE)
+                بازگشت 0;
         }
-        return 1;
-    case AV_CHANNEL_ORDER_AMBISONIC:
+        بازگشت 1;
+    حالت AV_CHANNEL_ORDER_AMBISONIC:
         /* If non-diegetic channels are present, ensure they are taken into account */
-        return av_popcount64(channel_layout->u.mask) < channel_layout->nb_channels;
-    case AV_CHANNEL_ORDER_UNSPEC:
-        return 1;
-    default:
-        return 0;
+        بازگشت av_popcount64(channel_layout->u.mask) < channel_layout->nb_channels;
+    حالت AV_CHANNEL_ORDER_UNSPEC:
+        بازگشت 1;
+    پیشفرض:
+        بازگشت 0;
     }
 }
 
-int av_channel_layout_compare(const AVChannelLayout *chl, const AVChannelLayout *chl1)
+صحیح av_channel_layout_compare(ثابت AVChannelLayout *chl, ثابت AVChannelLayout *chl1)
 {
-    int i;
+    صحیح i;
 
     /* different channel counts -> not equal */
-    if (chl->nb_channels != chl1->nb_channels)
-        return 1;
+    اگر (chl->nb_channels != chl1->nb_channels)
+        بازگشت 1;
 
     /* if only one is unspecified -> not equal */
-    if ((chl->order  == AV_CHANNEL_ORDER_UNSPEC) !=
+    اگر ((chl->order  == AV_CHANNEL_ORDER_UNSPEC) !=
         (chl1->order == AV_CHANNEL_ORDER_UNSPEC))
-        return 1;
+        بازگشت 1;
     /* both are unspecified -> equal */
-    else if (chl->order == AV_CHANNEL_ORDER_UNSPEC)
-        return 0;
+    وگرنه اگر (chl->order == AV_CHANNEL_ORDER_UNSPEC)
+        بازگشت 0;
 
     /* can compare masks directly */
-    if ((chl->order == AV_CHANNEL_ORDER_NATIVE ||
+    اگر ((chl->order == AV_CHANNEL_ORDER_NATIVE ||
          chl->order == AV_CHANNEL_ORDER_AMBISONIC) &&
         chl->order == chl1->order)
-        return chl->u.mask != chl1->u.mask;
+        بازگشت chl->u.mask != chl1->u.mask;
 
     /* compare channel by channel */
-    for (i = 0; i < chl->nb_channels; i++)
-        if (av_channel_layout_channel_from_index(chl,  i) !=
+    برای (i = 0; i < chl->nb_channels; i++)
+        اگر (av_channel_layout_channel_from_index(chl,  i) !=
             av_channel_layout_channel_from_index(chl1, i))
-            return 1;
-    return 0;
+            بازگشت 1;
+    بازگشت 0;
 }
 
-void av_channel_layout_default(AVChannelLayout *ch_layout, int nb_channels)
+تهی av_channel_layout_default(AVChannelLayout *ch_layout, صحیح nb_channels)
 {
-    int i;
-    for (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
-        if (nb_channels == channel_layout_map[i].layout.nb_channels) {
+    صحیح i;
+    برای (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
+        اگر (nb_channels == channel_layout_map[i].layout.nb_channels) {
             *ch_layout = channel_layout_map[i].layout;
-            return;
+            بازگشت;
         }
 
     ch_layout->order       = AV_CHANNEL_ORDER_UNSPEC;
     ch_layout->nb_channels = nb_channels;
 }
 
-const AVChannelLayout *av_channel_layout_standard(void **opaque)
+ثابت AVChannelLayout *av_channel_layout_standard(تهی **opaque)
 {
     uintptr_t i = (uintptr_t)*opaque;
-    const AVChannelLayout *ch_layout = NULL;
+    ثابت AVChannelLayout *ch_layout = پوچ;
 
-    if (i < FF_ARRAY_ELEMS(channel_layout_map)) {
+    اگر (i < FF_ARRAY_ELEMS(channel_layout_map)) {
         ch_layout = &channel_layout_map[i].layout;
-        *opaque = (void*)(i + 1);
+        *opaque = (تهی*)(i + 1);
     }
 
-    return ch_layout;
+    بازگشت ch_layout;
 }
 
-uint64_t av_channel_layout_subset(const AVChannelLayout *channel_layout,
+uint64_t av_channel_layout_subset(ثابت AVChannelLayout *channel_layout,
                                   uint64_t mask)
 {
     uint64_t ret = 0;
-    int i;
+    صحیح i;
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_NATIVE:
-    case AV_CHANNEL_ORDER_AMBISONIC:
-        return channel_layout->u.mask & mask;
-    case AV_CHANNEL_ORDER_CUSTOM:
-        for (i = 0; i < 64; i++)
-            if (mask & (1ULL << i) && av_channel_layout_index_from_channel(channel_layout, i) >= 0)
+    انتخاب (channel_layout->order) {
+    حالت AV_CHANNEL_ORDER_NATIVE:
+    حالت AV_CHANNEL_ORDER_AMBISONIC:
+        بازگشت channel_layout->u.mask & mask;
+    حالت AV_CHANNEL_ORDER_CUSTOM:
+        برای (i = 0; i < 64; i++)
+            اگر (mask & (1ULL << i) && av_channel_layout_index_from_channel(channel_layout, i) >= 0)
                 ret |= (1ULL << i);
-        break;
+        بشکن;
     }
 
-    return ret;
+    بازگشت ret;
 }
 
-int av_channel_layout_retype(AVChannelLayout *channel_layout, enum AVChannelOrder order, int flags)
+صحیح av_channel_layout_retype(AVChannelLayout *channel_layout, شمارش AVChannelOrder order, صحیح flags)
 {
-    int allow_lossy = !(flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_LOSSLESS);
-    int lossy;
+    صحیح allow_lossy = !(flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_LOSSLESS);
+    صحیح lossy;
 
-    if (!av_channel_layout_check(channel_layout))
-        return AVERROR(EINVAL);
+    اگر (!av_channel_layout_check(channel_layout))
+        بازگشت AVERROR(EINVAL);
 
-    if (flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_CANONICAL)
+    اگر (flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_CANONICAL)
         order = canonical_order(channel_layout);
 
-    if (channel_layout->order == order)
-        return 0;
+    اگر (channel_layout->order == order)
+        بازگشت 0;
 
-    switch (order) {
-    case AV_CHANNEL_ORDER_UNSPEC: {
-        int nb_channels = channel_layout->nb_channels;
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+    انتخاب (order) {
+    حالت AV_CHANNEL_ORDER_UNSPEC: {
+        صحیح nb_channels = channel_layout->nb_channels;
+        اگر (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             lossy = 0;
-            for (int i = 0; i < nb_channels; i++) {
-                if (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN || channel_layout->u.map[i].name[0]) {
+            برای (صحیح i = 0; i < nb_channels; i++) {
+                اگر (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN || channel_layout->u.map[i].name[0]) {
                     lossy = 1;
-                    break;
+                    بشکن;
                 }
             }
-        } else {
+        } وگرنه {
             lossy = 1;
         }
-        if (!lossy || allow_lossy) {
-            void *opaque = channel_layout->opaque;
+        اگر (!lossy || allow_lossy) {
+            تهی *opaque = channel_layout->opaque;
             av_channel_layout_uninit(channel_layout);
             channel_layout->order       = AV_CHANNEL_ORDER_UNSPEC;
             channel_layout->nb_channels = nb_channels;
             channel_layout->opaque      = opaque;
-            return lossy;
+            بازگشت lossy;
         }
-        return AVERROR(ENOSYS);
+        بازگشت AVERROR(ENOSYS);
         }
-    case AV_CHANNEL_ORDER_NATIVE:
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+    حالت AV_CHANNEL_ORDER_NATIVE:
+        اگر (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             int64_t mask = masked_description(channel_layout, 0);
-            if (mask < 0)
-                return AVERROR(ENOSYS);
+            اگر (mask < 0)
+                بازگشت AVERROR(ENOSYS);
             lossy = has_channel_names(channel_layout);
-            if (!lossy || allow_lossy) {
-                void *opaque = channel_layout->opaque;
+            اگر (!lossy || allow_lossy) {
+                تهی *opaque = channel_layout->opaque;
                 av_channel_layout_uninit(channel_layout);
                 av_channel_layout_from_mask(channel_layout, mask);
                 channel_layout->opaque = opaque;
-                return lossy;
+                بازگشت lossy;
             }
         }
-        return AVERROR(ENOSYS);
-    case AV_CHANNEL_ORDER_CUSTOM: {
+        بازگشت AVERROR(ENOSYS);
+    حالت AV_CHANNEL_ORDER_CUSTOM: {
         AVChannelLayout custom = { 0 };
-        int ret = av_channel_layout_custom_init(&custom, channel_layout->nb_channels);
-        void *opaque = channel_layout->opaque;
-        if (ret < 0)
-            return ret;
-        if (channel_layout->order != AV_CHANNEL_ORDER_UNSPEC)
-            for (int i = 0; i < channel_layout->nb_channels; i++)
+        صحیح ret = av_channel_layout_custom_init(&custom, channel_layout->nb_channels);
+        تهی *opaque = channel_layout->opaque;
+        اگر (ret < 0)
+            بازگشت ret;
+        اگر (channel_layout->order != AV_CHANNEL_ORDER_UNSPEC)
+            برای (صحیح i = 0; i < channel_layout->nb_channels; i++)
                 custom.u.map[i].id = av_channel_layout_channel_from_index(channel_layout, i);
         av_channel_layout_uninit(channel_layout);
         *channel_layout = custom;
         channel_layout->opaque = opaque;
-        return 0;
+        بازگشت 0;
         }
-    case AV_CHANNEL_ORDER_AMBISONIC:
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+    حالت AV_CHANNEL_ORDER_AMBISONIC:
+        اگر (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             int64_t mask;
-            int nb_channels = channel_layout->nb_channels;
-            int amb_order = av_channel_layout_ambisonic_order(channel_layout);
-            if (amb_order < 0)
-                return AVERROR(ENOSYS);
+            صحیح nb_channels = channel_layout->nb_channels;
+            صحیح amb_order = av_channel_layout_ambisonic_order(channel_layout);
+            اگر (amb_order < 0)
+                بازگشت AVERROR(ENOSYS);
             mask = masked_description(channel_layout, (amb_order + 1) * (amb_order + 1));
-            if (mask < 0)
-                return AVERROR(ENOSYS);
+            اگر (mask < 0)
+                بازگشت AVERROR(ENOSYS);
             lossy = has_channel_names(channel_layout);
-            if (!lossy || allow_lossy) {
-                void *opaque = channel_layout->opaque;
+            اگر (!lossy || allow_lossy) {
+                تهی *opaque = channel_layout->opaque;
                 av_channel_layout_uninit(channel_layout);
                 channel_layout->order       = AV_CHANNEL_ORDER_AMBISONIC;
                 channel_layout->nb_channels = nb_channels;
                 channel_layout->u.mask      = mask;
                 channel_layout->opaque      = opaque;
-                return lossy;
+                بازگشت lossy;
             }
         }
-        return AVERROR(ENOSYS);
-    default:
-        return AVERROR(EINVAL);
+        بازگشت AVERROR(ENOSYS);
+    پیشفرض:
+        بازگشت AVERROR(EINVAL);
     }
 }

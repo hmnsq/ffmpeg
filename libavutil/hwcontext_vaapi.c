@@ -16,25 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#شامل "config.h"
 
-#if HAVE_VAAPI_WIN32
+#اگر HAVE_VAAPI_WIN32
 #   include <windows.h>
 #define COBJMACROS
 #   include <initguid.h>
 #   include <dxgi1_2.h>
 #   include "compat/w32dlfcn.h"
 #   include <va/va_win32.h>
-typedef HRESULT (WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, void **ppFactory);
+تعریفنوع HRESULT (WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, تهی **ppFactory);
 #endif
-#if HAVE_VAAPI_X11
+#اگر HAVE_VAAPI_X11
 #   include <va/va_x11.h>
 #endif
-#if HAVE_VAAPI_DRM
+#اگر HAVE_VAAPI_DRM
 #   include <va/va_drm.h>
 #endif
 
-#if CONFIG_LIBDRM
+#اگر CONFIG_LIBDRM
 #   include <va/va_drmcommon.h>
 #   include <xf86drm.h>
 #   include <drm_fourcc.h>
@@ -43,39 +43,39 @@ typedef HRESULT (WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, void **ppFactory)
 #   endif
 #endif
 
-#include <fcntl.h>
-#if HAVE_UNISTD_H
+#شامل <fcntl.h>
+#اگر HAVE_UNISTD_H
 #   include <unistd.h>
 #endif
 
 
-#include "avassert.h"
-#include "buffer.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_drm.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_vaapi.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
+#شامل "avassert.h"
+#شامل "buffer.h"
+#شامل "common.h"
+#شامل "hwcontext.h"
+#شامل "hwcontext_drm.h"
+#شامل "hwcontext_internal.h"
+#شامل "hwcontext_vaapi.h"
+#شامل "mem.h"
+#شامل "pixdesc.h"
+#شامل "pixfmt.h"
 
 
-typedef struct VAAPIDevicePriv {
-#if HAVE_VAAPI_X11
+تعریفنوع ساختار VAAPIDevicePriv {
+#اگر HAVE_VAAPI_X11
     Display *x11_display;
 #endif
 
-    int drm_fd;
+    صحیح drm_fd;
 } VAAPIDevicePriv;
 
-typedef struct VAAPISurfaceFormat {
-    enum AVPixelFormat pix_fmt;
+تعریفنوع ساختار VAAPISurfaceFormat {
+    شمارش AVPixelFormat pix_fmt;
     VAImageFormat image_format;
-    unsigned int fourcc;
+    unsigned صحیح fourcc;
 } VAAPISurfaceFormat;
 
-typedef struct VAAPIDeviceContext {
+تعریفنوع ساختار VAAPIDeviceContext {
     /**
      * The public AVVAAPIDeviceContext. See hwcontext_vaapi.h for it.
      */
@@ -83,10 +83,10 @@ typedef struct VAAPIDeviceContext {
 
     // Surface formats which can be used with this device.
     VAAPISurfaceFormat *formats;
-    int              nb_formats;
+    صحیح              nb_formats;
 } VAAPIDeviceContext;
 
-typedef struct VAAPIFramesContext {
+تعریفنوع ساختار VAAPIFramesContext {
     /**
      * The public AVVAAPIFramesContext. See hwcontext_vaapi.h for it.
      */
@@ -94,28 +94,28 @@ typedef struct VAAPIFramesContext {
 
     // Surface attributes set at create time.
     VASurfaceAttrib *attributes;
-    int           nb_attributes;
+    صحیح           nb_attributes;
     // RT format of the underlying surface (Intel driver ignores this anyway).
-    unsigned int rt_format;
+    unsigned صحیح rt_format;
     // Whether vaDeriveImage works.
-    int derive_works;
+    صحیح derive_works;
     // Caches whether VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME_2 is unsupported for
     // surface imports.
-    int prime_2_import_unsupported;
+    صحیح اول_2_import_unsupported;
 } VAAPIFramesContext;
 
-typedef struct VAAPIMapping {
+تعریفنوع ساختار VAAPIMapping {
     // Handle to the derived or copied image which is mapped.
     VAImage image;
     // The mapping flags actually used.
-    int flags;
+    صحیح flags;
 } VAAPIMapping;
 
-typedef struct VAAPIFormat {
-    unsigned int fourcc;
-    unsigned int rt_format;
-    enum AVPixelFormat pix_fmt;
-    int chroma_planes_swapped;
+تعریفنوع ساختار VAAPIFormat {
+    unsigned صحیح fourcc;
+    unsigned صحیح rt_format;
+    شمارش AVPixelFormat pix_fmt;
+    صحیح chroma_planes_swapped;
 } VAAPIFormatDescriptor;
 
 #define MAP(va, rt, av, swap_uv) { \
@@ -126,7 +126,7 @@ typedef struct VAAPIFormat {
     }
 // The map fourcc <-> pix_fmt isn't bijective because of the annoying U/V
 // plane swap cases.  The frame handling below tries to hide these.
-static const VAAPIFormatDescriptor vaapi_format_map[] = {
+ایستا ثابت VAAPIFormatDescriptor vaapi_format_map[] = {
     MAP(NV12, YUV420,  NV12,    0),
 #ifdef VA_FOURCC_I420
     MAP(I420, YUV420,  YUV420P, 0),
@@ -184,201 +184,201 @@ static const VAAPIFormatDescriptor vaapi_format_map[] = {
 };
 #undef MAP
 
-static const VAAPIFormatDescriptor *
-    vaapi_format_from_fourcc(unsigned int fourcc)
+ایستا ثابت VAAPIFormatDescriptor *
+    vaapi_format_from_fourcc(unsigned صحیح fourcc)
 {
-    int i;
-    for (i = 0; i < FF_ARRAY_ELEMS(vaapi_format_map); i++)
-        if (vaapi_format_map[i].fourcc == fourcc)
-            return &vaapi_format_map[i];
-    return NULL;
+    صحیح i;
+    برای (i = 0; i < FF_ARRAY_ELEMS(vaapi_format_map); i++)
+        اگر (vaapi_format_map[i].fourcc == fourcc)
+            بازگشت &vaapi_format_map[i];
+    بازگشت پوچ;
 }
 
-static const VAAPIFormatDescriptor *
-    vaapi_format_from_pix_fmt(enum AVPixelFormat pix_fmt, const VAAPIFormatDescriptor *prev)
+ایستا ثابت VAAPIFormatDescriptor *
+    vaapi_format_from_pix_fmt(شمارش AVPixelFormat pix_fmt, ثابت VAAPIFormatDescriptor *prev)
 {
-    const VAAPIFormatDescriptor *end = &vaapi_format_map[FF_ARRAY_ELEMS(vaapi_format_map)];
-    if (!prev)
+    ثابت VAAPIFormatDescriptor *end = &vaapi_format_map[FF_ARRAY_ELEMS(vaapi_format_map)];
+    اگر (!prev)
         prev = vaapi_format_map;
-    else
+    وگرنه
         prev++;
 
-    for (; prev < end; prev++)
-        if (prev->pix_fmt == pix_fmt)
-            return prev;
-    return NULL;
+    برای (; prev < end; prev++)
+        اگر (prev->pix_fmt == pix_fmt)
+            بازگشت prev;
+    بازگشت پوچ;
 }
 
-static enum AVPixelFormat vaapi_pix_fmt_from_fourcc(unsigned int fourcc)
+ایستا شمارش AVPixelFormat vaapi_pix_fmt_from_fourcc(unsigned صحیح fourcc)
 {
-    const VAAPIFormatDescriptor *desc;
+    ثابت VAAPIFormatDescriptor *desc;
     desc = vaapi_format_from_fourcc(fourcc);
-    if (desc)
-        return desc->pix_fmt;
-    else
-        return AV_PIX_FMT_NONE;
+    اگر (desc)
+        بازگشت desc->pix_fmt;
+    وگرنه
+        بازگشت AV_PIX_FMT_NONE;
 }
 
-static int vaapi_get_img_desc_and_format(AVHWDeviceContext *hwdev,
-                                  enum AVPixelFormat pix_fmt,
-                                  const VAAPIFormatDescriptor **_desc,
+ایستا صحیح vaapi_get_img_desc_and_format(AVHWDeviceContext *hwdev,
+                                  شمارش AVPixelFormat pix_fmt,
+                                  ثابت VAAPIFormatDescriptor **_desc,
                                   VAImageFormat **image_format)
 {
     VAAPIDeviceContext *ctx = hwdev->hwctx;
-    const VAAPIFormatDescriptor *desc = NULL;
-    int i;
+    ثابت VAAPIFormatDescriptor *desc = پوچ;
+    صحیح i;
 
-    while ((desc = vaapi_format_from_pix_fmt(pix_fmt, desc))) {
-        for (i = 0; i < ctx->nb_formats; i++) {
-            if (ctx->formats[i].fourcc == desc->fourcc) {
-                if (_desc)
+    وقتی ((desc = vaapi_format_from_pix_fmt(pix_fmt, desc))) {
+        برای (i = 0; i < ctx->nb_formats; i++) {
+            اگر (ctx->formats[i].fourcc == desc->fourcc) {
+                اگر (_desc)
                     *_desc = desc;
-                if (image_format)
+                اگر (image_format)
                     *image_format = &ctx->formats[i].image_format;
-                return 0;
+                بازگشت 0;
             }
         }
     }
 
-    return AVERROR(ENOSYS);
+    بازگشت AVERROR(ENOSYS);
 }
 
-static int vaapi_get_image_format(AVHWDeviceContext *hwdev,
-                                  enum AVPixelFormat pix_fmt,
+ایستا صحیح vaapi_get_image_format(AVHWDeviceContext *hwdev,
+                                  شمارش AVPixelFormat pix_fmt,
                                   VAImageFormat **image_format)
 {
-    if (!image_format)
-        return AVERROR(EINVAL);
-    return vaapi_get_img_desc_and_format(hwdev, pix_fmt, NULL, image_format);
+    اگر (!image_format)
+        بازگشت AVERROR(EINVAL);
+    بازگشت vaapi_get_img_desc_and_format(hwdev, pix_fmt, پوچ, image_format);
 }
 
-static int vaapi_frames_get_constraints(AVHWDeviceContext *hwdev,
-                                        const void *hwconfig,
+ایستا صحیح vaapi_frames_get_constraints(AVHWDeviceContext *hwdev,
+                                        ثابت تهی *hwconfig,
                                         AVHWFramesConstraints *constraints)
 {
     VAAPIDeviceContext *ctx = hwdev->hwctx;
     AVVAAPIDeviceContext *hwctx = &ctx->p;
-    const AVVAAPIHWConfig *config = hwconfig;
-    VASurfaceAttrib *attr_list = NULL;
+    ثابت AVVAAPIHWConfig *config = hwconfig;
+    VASurfaceAttrib *attr_list = پوچ;
     VAStatus vas;
-    enum AVPixelFormat pix_fmt;
-    unsigned int fourcc;
-    int err, i, j, attr_count, pix_fmt_count;
+    شمارش AVPixelFormat pix_fmt;
+    unsigned صحیح fourcc;
+    صحیح err, i, j, attr_شمار, pix_fmt_شمار;
 
-    if (config &&
+    اگر (config &&
         !(hwctx->driver_quirks & AV_VAAPI_DRIVER_QUIRK_SURFACE_ATTRIBUTES)) {
-        attr_count = 0;
+        attr_شمار = 0;
         vas = vaQuerySurfaceAttributes(hwctx->display, config->config_id,
-                                       0, &attr_count);
-        if (vas != VA_STATUS_SUCCESS) {
+                                       0, &attr_شمار);
+        اگر (vas != VA_STATUS_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query surface attributes: "
                    "%d (%s).\n", vas, vaErrorStr(vas));
             err = AVERROR(ENOSYS);
-            goto fail;
+            برو fail;
         }
 
-        attr_list = av_malloc(attr_count * sizeof(*attr_list));
-        if (!attr_list) {
+        attr_list = av_malloc(attr_شمار * اندازه(*attr_list));
+        اگر (!attr_list) {
             err = AVERROR(ENOMEM);
-            goto fail;
+            برو fail;
         }
 
         vas = vaQuerySurfaceAttributes(hwctx->display, config->config_id,
-                                       attr_list, &attr_count);
-        if (vas != VA_STATUS_SUCCESS) {
+                                       attr_list, &attr_شمار);
+        اگر (vas != VA_STATUS_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query surface attributes: "
                    "%d (%s).\n", vas, vaErrorStr(vas));
             err = AVERROR(ENOSYS);
-            goto fail;
+            برو fail;
         }
 
-        pix_fmt_count = 0;
-        for (i = 0; i < attr_count; i++) {
-            switch (attr_list[i].type) {
-            case VASurfaceAttribPixelFormat:
-                fourcc = attr_list[i].value.value.i;
+        pix_fmt_شمار = 0;
+        برای (i = 0; i < attr_شمار; i++) {
+            انتخاب (attr_list[i].type) {
+            حالت VASurfaceAttribPixelFormat:
+                fourcc = attr_list[i].مقدار.مقدار.i;
                 pix_fmt = vaapi_pix_fmt_from_fourcc(fourcc);
-                if (pix_fmt != AV_PIX_FMT_NONE) {
-                    ++pix_fmt_count;
-                } else {
+                اگر (pix_fmt != AV_PIX_FMT_NONE) {
+                    ++pix_fmt_شمار;
+                } وگرنه {
                     // Something unsupported - ignore.
                 }
-                break;
-            case VASurfaceAttribMinWidth:
-                constraints->min_width  = attr_list[i].value.value.i;
-                break;
-            case VASurfaceAttribMinHeight:
-                constraints->min_height = attr_list[i].value.value.i;
-                break;
-            case VASurfaceAttribMaxWidth:
-                constraints->max_width  = attr_list[i].value.value.i;
-                break;
-            case VASurfaceAttribMaxHeight:
-                constraints->max_height = attr_list[i].value.value.i;
-                break;
+                بشکن;
+            حالت VASurfaceAttribMinWidth:
+                constraints->min_width  = attr_list[i].مقدار.مقدار.i;
+                بشکن;
+            حالت VASurfaceAttribMinHeight:
+                constraints->min_height = attr_list[i].مقدار.مقدار.i;
+                بشکن;
+            حالت VASurfaceAttribMaxWidth:
+                constraints->max_width  = attr_list[i].مقدار.مقدار.i;
+                بشکن;
+            حالت VASurfaceAttribMaxHeight:
+                constraints->max_height = attr_list[i].مقدار.مقدار.i;
+                بشکن;
             }
         }
-        if (pix_fmt_count == 0) {
+        اگر (pix_fmt_شمار == 0) {
             // Nothing usable found.  Presumably there exists something which
             // works, so leave the set null to indicate unknown.
-            constraints->valid_sw_formats = NULL;
-        } else {
-            constraints->valid_sw_formats = av_malloc_array(pix_fmt_count + 1,
-                                                            sizeof(pix_fmt));
-            if (!constraints->valid_sw_formats) {
+            constraints->valid_sw_formats = پوچ;
+        } وگرنه {
+            constraints->valid_sw_formats = av_malloc_array(pix_fmt_شمار + 1,
+                                                            اندازه(pix_fmt));
+            اگر (!constraints->valid_sw_formats) {
                 err = AVERROR(ENOMEM);
-                goto fail;
+                برو fail;
             }
 
-            for (i = j = 0; i < attr_count; i++) {
-                int k;
+            برای (i = j = 0; i < attr_شمار; i++) {
+                صحیح k;
 
-                if (attr_list[i].type != VASurfaceAttribPixelFormat)
-                    continue;
-                fourcc = attr_list[i].value.value.i;
+                اگر (attr_list[i].type != VASurfaceAttribPixelFormat)
+                    ادامه;
+                fourcc = attr_list[i].مقدار.مقدار.i;
                 pix_fmt = vaapi_pix_fmt_from_fourcc(fourcc);
 
-                if (pix_fmt == AV_PIX_FMT_NONE)
-                    continue;
+                اگر (pix_fmt == AV_PIX_FMT_NONE)
+                    ادامه;
 
-                for (k = 0; k < j; k++) {
-                    if (constraints->valid_sw_formats[k] == pix_fmt)
-                        break;
+                برای (k = 0; k < j; k++) {
+                    اگر (constraints->valid_sw_formats[k] == pix_fmt)
+                        بشکن;
                 }
 
-                if (k == j)
+                اگر (k == j)
                     constraints->valid_sw_formats[j++] = pix_fmt;
             }
             constraints->valid_sw_formats[j] = AV_PIX_FMT_NONE;
         }
-    } else {
+    } وگرنه {
         // No configuration supplied.
         // Return the full set of image formats known by the implementation.
         constraints->valid_sw_formats = av_malloc_array(ctx->nb_formats + 1,
-                                                        sizeof(pix_fmt));
-        if (!constraints->valid_sw_formats) {
+                                                        اندازه(pix_fmt));
+        اگر (!constraints->valid_sw_formats) {
             err = AVERROR(ENOMEM);
-            goto fail;
+            برو fail;
         }
-        for (i = j = 0; i < ctx->nb_formats; i++) {
-            int k;
+        برای (i = j = 0; i < ctx->nb_formats; i++) {
+            صحیح k;
 
-            for (k = 0; k < j; k++) {
-                if (constraints->valid_sw_formats[k] == ctx->formats[i].pix_fmt)
-                    break;
+            برای (k = 0; k < j; k++) {
+                اگر (constraints->valid_sw_formats[k] == ctx->formats[i].pix_fmt)
+                    بشکن;
             }
 
-            if (k == j)
+            اگر (k == j)
                 constraints->valid_sw_formats[j++] = ctx->formats[i].pix_fmt;
         }
 
         constraints->valid_sw_formats[j] = AV_PIX_FMT_NONE;
     }
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(pix_fmt));
-    if (!constraints->valid_hw_formats) {
+    constraints->valid_hw_formats = av_malloc_array(2, اندازه(pix_fmt));
+    اگر (!constraints->valid_hw_formats) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        برو fail;
     }
     constraints->valid_hw_formats[0] = AV_PIX_FMT_VAAPI;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
@@ -386,15 +386,15 @@ static int vaapi_frames_get_constraints(AVHWDeviceContext *hwdev,
     err = 0;
 fail:
     av_freep(&attr_list);
-    return err;
+    بازگشت err;
 }
 
-static const struct {
-    const char *friendly_name;
-    const char *match_string;
-    unsigned int quirks;
+ایستا ثابت ساختار {
+    ثابت نویسه *friendly_name;
+    ثابت نویسه *match_string;
+    unsigned صحیح quirks;
 } vaapi_driver_quirks_table[] = {
-#if !VA_CHECK_VERSION(1, 0, 0)
+#اگر !VA_CHECK_VERSION(1, 0, 0)
     // The i965 driver did not conform before version 2.0.
     {
         "Intel i965 (Quick Sync)",
@@ -414,46 +414,46 @@ static const struct {
     },
 };
 
-static int vaapi_device_init(AVHWDeviceContext *hwdev)
+ایستا صحیح vaapi_device_init(AVHWDeviceContext *hwdev)
 {
     VAAPIDeviceContext *ctx = hwdev->hwctx;
     AVVAAPIDeviceContext *hwctx = &ctx->p;
-    VAImageFormat *image_list = NULL;
+    VAImageFormat *image_list = پوچ;
     VAStatus vas;
-    const char *vendor_string;
-    int err, i, image_count;
-    enum AVPixelFormat pix_fmt;
-    unsigned int fourcc;
+    ثابت نویسه *vendor_string;
+    صحیح err, i, image_شمار;
+    شمارش AVPixelFormat pix_fmt;
+    unsigned صحیح fourcc;
 
-    image_count = vaMaxNumImageFormats(hwctx->display);
-    if (image_count <= 0) {
+    image_شمار = va_Max_رقم_Image_Formats(hwctx->display);
+    اگر (image_شمار <= 0) {
         err = AVERROR(EIO);
-        goto fail;
+        برو fail;
     }
-    image_list = av_malloc(image_count * sizeof(*image_list));
-    if (!image_list) {
+    image_list = av_malloc(image_شمار * اندازه(*image_list));
+    اگر (!image_list) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        برو fail;
     }
-    vas = vaQueryImageFormats(hwctx->display, image_list, &image_count);
-    if (vas != VA_STATUS_SUCCESS) {
+    vas = vaQueryImageFormats(hwctx->display, image_list, &image_شمار);
+    اگر (vas != VA_STATUS_SUCCESS) {
         err = AVERROR(EIO);
-        goto fail;
+        برو fail;
     }
 
-    ctx->formats  = av_malloc(image_count * sizeof(*ctx->formats));
-    if (!ctx->formats) {
+    ctx->formats  = av_malloc(image_شمار * اندازه(*ctx->formats));
+    اگر (!ctx->formats) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        برو fail;
     }
     ctx->nb_formats = 0;
-    for (i = 0; i < image_count; i++) {
+    برای (i = 0; i < image_شمار; i++) {
         fourcc  = image_list[i].fourcc;
         pix_fmt = vaapi_pix_fmt_from_fourcc(fourcc);
-        if (pix_fmt == AV_PIX_FMT_NONE) {
+        اگر (pix_fmt == AV_PIX_FMT_NONE) {
             av_log(hwdev, AV_LOG_DEBUG, "Format %#x -> unknown.\n",
                    fourcc);
-        } else {
+        } وگرنه {
             av_log(hwdev, AV_LOG_DEBUG, "Format %#x -> %s.\n",
                    fourcc, av_get_pix_fmt_name(pix_fmt));
             ctx->formats[ctx->nb_formats].pix_fmt      = pix_fmt;
@@ -464,18 +464,18 @@ static int vaapi_device_init(AVHWDeviceContext *hwdev)
     }
 
     vendor_string = vaQueryVendorString(hwctx->display);
-    if (vendor_string)
+    اگر (vendor_string)
         av_log(hwdev, AV_LOG_VERBOSE, "VAAPI driver: %s.\n", vendor_string);
 
-    if (hwctx->driver_quirks & AV_VAAPI_DRIVER_QUIRK_USER_SET) {
+    اگر (hwctx->driver_quirks & AV_VAAPI_DRIVER_QUIRK_USER_SET) {
         av_log(hwdev, AV_LOG_VERBOSE, "Using quirks set by user (%#x).\n",
                hwctx->driver_quirks);
-    } else {
+    } وگرنه {
         // Detect the driver in use and set quirk flags if necessary.
         hwctx->driver_quirks = 0;
-        if (vendor_string) {
-            for (i = 0; i < FF_ARRAY_ELEMS(vaapi_driver_quirks_table); i++) {
-                if (strstr(vendor_string,
+        اگر (vendor_string) {
+            برای (i = 0; i < FF_ARRAY_ELEMS(vaapi_driver_quirks_table); i++) {
+                اگر (strstr(vendor_string,
                            vaapi_driver_quirks_table[i].match_string)) {
                     av_log(hwdev, AV_LOG_VERBOSE, "Matched driver string "
                            "as known nonstandard driver \"%s\", setting "
@@ -484,35 +484,35 @@ static int vaapi_device_init(AVHWDeviceContext *hwdev)
                            vaapi_driver_quirks_table[i].quirks);
                     hwctx->driver_quirks |=
                         vaapi_driver_quirks_table[i].quirks;
-                    break;
+                    بشکن;
                 }
             }
-            if (!(i < FF_ARRAY_ELEMS(vaapi_driver_quirks_table))) {
+            اگر (!(i < FF_ARRAY_ELEMS(vaapi_driver_quirks_table))) {
                 av_log(hwdev, AV_LOG_VERBOSE, "Driver not found in known "
                        "nonstandard list, using standard behaviour.\n");
             }
-        } else {
+        } وگرنه {
             av_log(hwdev, AV_LOG_VERBOSE, "Driver has no vendor string, "
                    "assuming standard behaviour.\n");
         }
     }
 
     av_free(image_list);
-    return 0;
+    بازگشت 0;
 fail:
     av_freep(&ctx->formats);
     av_free(image_list);
-    return err;
+    بازگشت err;
 }
 
-static void vaapi_device_uninit(AVHWDeviceContext *hwdev)
+ایستا تهی vaapi_device_uninit(AVHWDeviceContext *hwdev)
 {
     VAAPIDeviceContext *ctx = hwdev->hwctx;
 
     av_freep(&ctx->formats);
 }
 
-static void vaapi_buffer_free(void *opaque, uint8_t *data)
+ایستا تهی vaapi_buffer_free(تهی *opaque, uint8_t *data)
 {
     AVHWFramesContext     *hwfc = opaque;
     AVVAAPIDeviceContext *hwctx = hwfc->device_ctx->hwctx;
@@ -522,13 +522,13 @@ static void vaapi_buffer_free(void *opaque, uint8_t *data)
     surface_id = (VASurfaceID)(uintptr_t)data;
 
     vas = vaDestroySurfaces(hwctx->display, &surface_id, 1);
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to destroy surface %#x: "
                "%d (%s).\n", surface_id, vas, vaErrorStr(vas));
     }
 }
 
-static AVBufferRef *vaapi_pool_alloc(void *opaque, size_t size)
+ایستا AVBufferRef *vaapi_pool_alloc(تهی *opaque, size_t size)
 {
     AVHWFramesContext     *hwfc = opaque;
     VAAPIFramesContext     *ctx = hwfc->hwctx;
@@ -538,30 +538,30 @@ static AVBufferRef *vaapi_pool_alloc(void *opaque, size_t size)
     VAStatus vas;
     AVBufferRef *ref;
 
-    if (hwfc->initial_pool_size > 0 &&
+    اگر (hwfc->initial_pool_size > 0 &&
         avfc->nb_surfaces >= hwfc->initial_pool_size)
-        return NULL;
+        بازگشت پوچ;
 
     vas = vaCreateSurfaces(hwctx->display, ctx->rt_format,
                            hwfc->width, hwfc->height,
                            &surface_id, 1,
                            ctx->attributes, ctx->nb_attributes);
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to create surface: "
                "%d (%s).\n", vas, vaErrorStr(vas));
-        return NULL;
+        بازگشت پوچ;
     }
     av_log(hwfc, AV_LOG_DEBUG, "Created surface %#x.\n", surface_id);
 
     ref = av_buffer_create((uint8_t*)(uintptr_t)surface_id,
-                           sizeof(surface_id), &vaapi_buffer_free,
+                           اندازه(surface_id), &vaapi_buffer_free,
                            hwfc, AV_BUFFER_FLAG_READONLY);
-    if (!ref) {
+    اگر (!ref) {
         vaDestroySurfaces(hwctx->display, &surface_id, 1);
-        return NULL;
+        بازگشت پوچ;
     }
 
-    if (hwfc->initial_pool_size > 0) {
+    اگر (hwfc->initial_pool_size > 0) {
         // This is a fixed-size pool, so we must still be in the initial
         // allocation sequence.
         av_assert0(avfc->nb_surfaces < hwfc->initial_pool_size);
@@ -569,163 +569,163 @@ static AVBufferRef *vaapi_pool_alloc(void *opaque, size_t size)
         ++avfc->nb_surfaces;
     }
 
-    return ref;
+    بازگشت ref;
 }
 
-static int vaapi_frames_init(AVHWFramesContext *hwfc)
+ایستا صحیح vaapi_frames_init(AVHWFramesContext *hwfc)
 {
     VAAPIFramesContext     *ctx = hwfc->hwctx;
     AVVAAPIFramesContext  *avfc = &ctx->p;
     AVVAAPIDeviceContext *hwctx = hwfc->device_ctx->hwctx;
-    const VAAPIFormatDescriptor *desc = NULL;
-    VAImageFormat *expected_format = NULL;
-    AVBufferRef *test_surface = NULL;
+    ثابت VAAPIFormatDescriptor *desc = پوچ;
+    VAImageFormat *expected_format = پوچ;
+    AVBufferRef *test_surface = پوچ;
     VASurfaceID test_surface_id;
     VAImage test_image;
     VAStatus vas;
-    int err, i;
+    صحیح err, i;
 
     err = vaapi_get_img_desc_and_format(hwfc->device_ctx, hwfc->sw_format,
                                         &desc, &expected_format);
-    if (err < 0) {
+    اگر (err < 0) {
         // Use a relaxed check when pool exist. It can be an external pool.
-        if (!hwfc->pool || !vaapi_format_from_pix_fmt(hwfc->sw_format, NULL)) {
+        اگر (!hwfc->pool || !vaapi_format_from_pix_fmt(hwfc->sw_format, پوچ)) {
             av_log(hwfc, AV_LOG_ERROR, "Unsupported format: %s.\n",
                    av_get_pix_fmt_name(hwfc->sw_format));
-            return AVERROR(EINVAL);
+            بازگشت AVERROR(EINVAL);
         }
     }
 
-    if (!hwfc->pool) {
-        if (!(hwctx->driver_quirks & AV_VAAPI_DRIVER_QUIRK_SURFACE_ATTRIBUTES)) {
-            int need_memory_type = !(hwctx->driver_quirks & AV_VAAPI_DRIVER_QUIRK_ATTRIB_MEMTYPE);
-            int need_pixel_format = 1;
-            for (i = 0; i < avfc->nb_attributes; i++) {
-                if (avfc->attributes[i].type == VASurfaceAttribMemoryType)
+    اگر (!hwfc->pool) {
+        اگر (!(hwctx->driver_quirks & AV_VAAPI_DRIVER_QUIRK_SURFACE_ATTRIBUTES)) {
+            صحیح need_memory_type = !(hwctx->driver_quirks & AV_VAAPI_DRIVER_QUIRK_ATTRIB_MEMTYPE);
+            صحیح need_pixel_format = 1;
+            برای (i = 0; i < avfc->nb_attributes; i++) {
+                اگر (avfc->attributes[i].type == VASurfaceAttribMemoryType)
                     need_memory_type  = 0;
-                if (avfc->attributes[i].type == VASurfaceAttribPixelFormat)
+                اگر (avfc->attributes[i].type == VASurfaceAttribPixelFormat)
                     need_pixel_format = 0;
             }
             ctx->nb_attributes =
                 avfc->nb_attributes + need_memory_type + need_pixel_format;
 
             ctx->attributes = av_malloc(ctx->nb_attributes *
-                                        sizeof(*ctx->attributes));
-            if (!ctx->attributes) {
+                                        اندازه(*ctx->attributes));
+            اگر (!ctx->attributes) {
                 err = AVERROR(ENOMEM);
-                goto fail;
+                برو fail;
             }
 
-            for (i = 0; i < avfc->nb_attributes; i++)
+            برای (i = 0; i < avfc->nb_attributes; i++)
                 ctx->attributes[i] = avfc->attributes[i];
-            if (need_memory_type) {
+            اگر (need_memory_type) {
                 ctx->attributes[i++] = (VASurfaceAttrib) {
                     .type          = VASurfaceAttribMemoryType,
                     .flags         = VA_SURFACE_ATTRIB_SETTABLE,
-                    .value.type    = VAGenericValueTypeInteger,
-                    .value.value.i = VA_SURFACE_ATTRIB_MEM_TYPE_VA,
+                    .مقدار.type    = VAGeneric_مقدار_Type_Integer,
+                    .مقدار.مقدار.i = VA_SURFACE_ATTRIB_MEM_TYPE_VA,
                 };
             }
-            if (need_pixel_format) {
+            اگر (need_pixel_format) {
                 ctx->attributes[i++] = (VASurfaceAttrib) {
                     .type          = VASurfaceAttribPixelFormat,
                     .flags         = VA_SURFACE_ATTRIB_SETTABLE,
-                    .value.type    = VAGenericValueTypeInteger,
-                    .value.value.i = desc->fourcc,
+                    .مقدار.type    = VAGeneric_مقدار_Type_Integer,
+                    .مقدار.مقدار.i = desc->fourcc,
                 };
             }
             av_assert0(i == ctx->nb_attributes);
-        } else {
-            ctx->attributes = NULL;
+        } وگرنه {
+            ctx->attributes = پوچ;
             ctx->nb_attributes = 0;
         }
 
         ctx->rt_format = desc->rt_format;
 
-        if (hwfc->initial_pool_size > 0) {
+        اگر (hwfc->initial_pool_size > 0) {
             // This pool will be usable as a render target, so we need to store
             // all of the surface IDs somewhere that vaCreateContext() calls
             // will be able to access them.
             avfc->nb_surfaces = 0;
             avfc->surface_ids = av_malloc(hwfc->initial_pool_size *
-                                          sizeof(*avfc->surface_ids));
-            if (!avfc->surface_ids) {
+                                          اندازه(*avfc->surface_ids));
+            اگر (!avfc->surface_ids) {
                 err = AVERROR(ENOMEM);
-                goto fail;
+                برو fail;
             }
-        } else {
+        } وگرنه {
             // This pool allows dynamic sizing, and will not be usable as a
             // render target.
             avfc->nb_surfaces = 0;
-            avfc->surface_ids = NULL;
+            avfc->surface_ids = پوچ;
         }
 
         ffhwframesctx(hwfc)->pool_internal =
-            av_buffer_pool_init2(sizeof(VASurfaceID), hwfc,
-                                 &vaapi_pool_alloc, NULL);
-        if (!ffhwframesctx(hwfc)->pool_internal) {
+            av_buffer_pool_init2(اندازه(VASurfaceID), hwfc,
+                                 &vaapi_pool_alloc, پوچ);
+        اگر (!ffhwframesctx(hwfc)->pool_internal) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to create VAAPI surface pool.\n");
             err = AVERROR(ENOMEM);
-            goto fail;
+            برو fail;
         }
     }
 
     // Allocate a single surface to test whether vaDeriveImage() is going
     // to work for the specific configuration.
-    if (hwfc->pool) {
+    اگر (hwfc->pool) {
         test_surface = av_buffer_pool_get(hwfc->pool);
-        if (!test_surface) {
+        اگر (!test_surface) {
             av_log(hwfc, AV_LOG_ERROR, "Unable to allocate a surface from "
                    "user-configured buffer pool.\n");
             err = AVERROR(ENOMEM);
-            goto fail;
+            برو fail;
         }
-    } else {
+    } وگرنه {
         test_surface = av_buffer_pool_get(ffhwframesctx(hwfc)->pool_internal);
-        if (!test_surface) {
+        اگر (!test_surface) {
             av_log(hwfc, AV_LOG_ERROR, "Unable to allocate a surface from "
                    "internal buffer pool.\n");
             err = AVERROR(ENOMEM);
-            goto fail;
+            برو fail;
         }
     }
     test_surface_id = (VASurfaceID)(uintptr_t)test_surface->data;
 
     ctx->derive_works = 0;
-    if (expected_format) {
+    اگر (expected_format) {
         vas = vaDeriveImage(hwctx->display, test_surface_id, &test_image);
-        if (vas == VA_STATUS_SUCCESS) {
-            if (expected_format->fourcc == test_image.format.fourcc) {
+        اگر (vas == VA_STATUS_SUCCESS) {
+            اگر (expected_format->fourcc == test_image.format.fourcc) {
                 av_log(hwfc, AV_LOG_DEBUG, "Direct mapping possible.\n");
                 ctx->derive_works = 1;
-            } else {
+            } وگرنه {
                 av_log(hwfc, AV_LOG_DEBUG, "Direct mapping disabled: "
                        "derived image format %08x does not match "
                        "expected format %08x.\n",
                        expected_format->fourcc, test_image.format.fourcc);
             }
             vaDestroyImage(hwctx->display, test_image.image_id);
-        } else {
+        } وگرنه {
             av_log(hwfc, AV_LOG_DEBUG, "Direct mapping disabled: "
                    "deriving image does not work: "
                    "%d (%s).\n", vas, vaErrorStr(vas));
         }
-    } else {
+    } وگرنه {
         av_log(hwfc, AV_LOG_DEBUG, "Direct mapping disabled: "
                "image format is not supported.\n");
     }
 
     av_buffer_unref(&test_surface);
-    return 0;
+    بازگشت 0;
 
 fail:
     av_buffer_unref(&test_surface);
     av_freep(&avfc->surface_ids);
     av_freep(&ctx->attributes);
-    return err;
+    بازگشت err;
 }
 
-static void vaapi_frames_uninit(AVHWFramesContext *hwfc)
+ایستا تهی vaapi_frames_uninit(AVHWFramesContext *hwfc)
 {
     VAAPIFramesContext    *ctx = hwfc->hwctx;
     AVVAAPIFramesContext *avfc = &ctx->p;
@@ -734,57 +734,57 @@ static void vaapi_frames_uninit(AVHWFramesContext *hwfc)
     av_freep(&ctx->attributes);
 }
 
-static int vaapi_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+ایستا صحیح vaapi_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
 {
     frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    اگر (!frame->buf[0])
+        بازگشت AVERROR(ENOMEM);
 
     frame->data[3] = frame->buf[0]->data;
     frame->format  = AV_PIX_FMT_VAAPI;
     frame->width   = hwfc->width;
     frame->height  = hwfc->height;
 
-    return 0;
+    بازگشت 0;
 }
 
-static int vaapi_transfer_get_formats(AVHWFramesContext *hwfc,
-                                      enum AVHWFrameTransferDirection dir,
-                                      enum AVPixelFormat **formats)
+ایستا صحیح vaapi_transfer_get_formats(AVHWFramesContext *hwfc,
+                                      شمارش AVHWFrameTransferDirection dir,
+                                      شمارش AVPixelFormat **formats)
 {
     VAAPIDeviceContext *ctx = hwfc->device_ctx->hwctx;
-    enum AVPixelFormat *pix_fmts;
-    int i, k, sw_format_available;
+    شمارش AVPixelFormat *pix_fmts;
+    صحیح i, k, sw_format_available;
 
     sw_format_available = 0;
-    for (i = 0; i < ctx->nb_formats; i++) {
-        if (ctx->formats[i].pix_fmt == hwfc->sw_format)
+    برای (i = 0; i < ctx->nb_formats; i++) {
+        اگر (ctx->formats[i].pix_fmt == hwfc->sw_format)
             sw_format_available = 1;
     }
 
-    pix_fmts = av_malloc((ctx->nb_formats + 1) * sizeof(*pix_fmts));
-    if (!pix_fmts)
-        return AVERROR(ENOMEM);
+    pix_fmts = av_malloc((ctx->nb_formats + 1) * اندازه(*pix_fmts));
+    اگر (!pix_fmts)
+        بازگشت AVERROR(ENOMEM);
 
-    if (sw_format_available) {
+    اگر (sw_format_available) {
         pix_fmts[0] = hwfc->sw_format;
         k = 1;
-    } else {
+    } وگرنه {
         k = 0;
     }
-    for (i = 0; i < ctx->nb_formats; i++) {
-        if (ctx->formats[i].pix_fmt == hwfc->sw_format)
-            continue;
+    برای (i = 0; i < ctx->nb_formats; i++) {
+        اگر (ctx->formats[i].pix_fmt == hwfc->sw_format)
+            ادامه;
         av_assert0(k < ctx->nb_formats);
         pix_fmts[k++] = ctx->formats[i].pix_fmt;
     }
     pix_fmts[k] = AV_PIX_FMT_NONE;
 
     *formats = pix_fmts;
-    return 0;
+    بازگشت 0;
 }
 
-static void vaapi_unmap_frame(AVHWFramesContext *hwfc,
+ایستا تهی vaapi_unmap_frame(AVHWFramesContext *hwfc,
                               HWMapDescriptor *hwmap)
 {
     AVVAAPIDeviceContext *hwctx = hwfc->device_ctx->hwctx;
@@ -796,24 +796,24 @@ static void vaapi_unmap_frame(AVHWFramesContext *hwfc,
     av_log(hwfc, AV_LOG_DEBUG, "Unmap surface %#x.\n", surface_id);
 
     vas = vaUnmapBuffer(hwctx->display, map->image.buf);
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to unmap image from surface "
                "%#x: %d (%s).\n", surface_id, vas, vaErrorStr(vas));
     }
 
-    if ((map->flags & AV_HWFRAME_MAP_WRITE) &&
+    اگر ((map->flags & AV_HWFRAME_MAP_WRITE) &&
         !(map->flags & AV_HWFRAME_MAP_DIRECT)) {
         vas = vaPutImage(hwctx->display, surface_id, map->image.image_id,
                          0, 0, hwfc->width, hwfc->height,
                          0, 0, hwfc->width, hwfc->height);
-        if (vas != VA_STATUS_SUCCESS) {
+        اگر (vas != VA_STATUS_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to write image to surface "
                    "%#x: %d (%s).\n", surface_id, vas, vaErrorStr(vas));
         }
     }
 
     vas = vaDestroyImage(hwctx->display, map->image.image_id);
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to destroy image from surface "
                "%#x: %d (%s).\n", surface_id, vas, vaErrorStr(vas));
     }
@@ -821,54 +821,54 @@ static void vaapi_unmap_frame(AVHWFramesContext *hwfc,
     av_free(map);
 }
 
-static int vaapi_map_frame(AVHWFramesContext *hwfc,
-                           AVFrame *dst, const AVFrame *src, int flags)
+ایستا صحیح vaapi_map_frame(AVHWFramesContext *hwfc,
+                           AVFrame *dst, ثابت AVFrame *src, صحیح flags)
 {
     AVVAAPIDeviceContext *hwctx = hwfc->device_ctx->hwctx;
     VAAPIFramesContext *ctx = hwfc->hwctx;
     VASurfaceID surface_id;
-    const VAAPIFormatDescriptor *desc;
+    ثابت VAAPIFormatDescriptor *desc;
     VAImageFormat *image_format;
     VAAPIMapping *map;
     VAStatus vas;
-    void *address = NULL;
-    int err, i;
-#if VA_CHECK_VERSION(1, 21, 0)
+    تهی *address = پوچ;
+    صحیح err, i;
+#اگر VA_CHECK_VERSION(1, 21, 0)
     uint32_t vaflags = 0;
 #endif
 
     surface_id = (VASurfaceID)(uintptr_t)src->data[3];
     av_log(hwfc, AV_LOG_DEBUG, "Map surface %#x.\n", surface_id);
 
-    if (!ctx->derive_works && (flags & AV_HWFRAME_MAP_DIRECT)) {
+    اگر (!ctx->derive_works && (flags & AV_HWFRAME_MAP_DIRECT)) {
         // Requested direct mapping but it is not possible.
-        return AVERROR(EINVAL);
+        بازگشت AVERROR(EINVAL);
     }
-    if (dst->format == AV_PIX_FMT_NONE)
+    اگر (dst->format == AV_PIX_FMT_NONE)
         dst->format = hwfc->sw_format;
-    if (dst->format != hwfc->sw_format && (flags & AV_HWFRAME_MAP_DIRECT)) {
+    اگر (dst->format != hwfc->sw_format && (flags & AV_HWFRAME_MAP_DIRECT)) {
         // Requested direct mapping but the formats do not match.
-        return AVERROR(EINVAL);
+        بازگشت AVERROR(EINVAL);
     }
 
     err = vaapi_get_image_format(hwfc->device_ctx, dst->format, &image_format);
-    if (err < 0) {
+    اگر (err < 0) {
         // Requested format is not a valid output format.
-        return err;
+        بازگشت err;
     }
 
-    map = av_malloc(sizeof(*map));
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_malloc(اندازه(*map));
+    اگر (!map)
+        بازگشت AVERROR(ENOMEM);
     map->flags = flags;
     map->image.image_id = VA_INVALID_ID;
 
     vas = vaSyncSurface(hwctx->display, surface_id);
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to sync surface "
                "%#x: %d (%s).\n", surface_id, vas, vaErrorStr(vas));
         err = AVERROR(EIO);
-        goto fail;
+        برو fail;
     }
 
     // The memory which we map using derive need not be connected to the CPU
@@ -878,184 +878,184 @@ static int vaapi_map_frame(AVHWFramesContext *hwfc,
     // faster with a copy routine which is aware of the limitation, but we
     // assume for now that the user is not aware of that and would therefore
     // prefer not to be given direct-mapped memory if they request read access.
-    if (ctx->derive_works && dst->format == hwfc->sw_format &&
+    اگر (ctx->derive_works && dst->format == hwfc->sw_format &&
         ((flags & AV_HWFRAME_MAP_DIRECT) || !(flags & AV_HWFRAME_MAP_READ))) {
         vas = vaDeriveImage(hwctx->display, surface_id, &map->image);
-        if (vas != VA_STATUS_SUCCESS) {
+        اگر (vas != VA_STATUS_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to derive image from "
                    "surface %#x: %d (%s).\n",
                    surface_id, vas, vaErrorStr(vas));
             err = AVERROR(EIO);
-            goto fail;
+            برو fail;
         }
-        if (map->image.format.fourcc != image_format->fourcc) {
+        اگر (map->image.format.fourcc != image_format->fourcc) {
             av_log(hwfc, AV_LOG_ERROR, "Derive image of surface %#x "
                    "is in wrong format: expected %#08x, got %#08x.\n",
                    surface_id, image_format->fourcc, map->image.format.fourcc);
             err = AVERROR(EIO);
-            goto fail;
+            برو fail;
         }
         map->flags |= AV_HWFRAME_MAP_DIRECT;
-    } else {
+    } وگرنه {
         vas = vaCreateImage(hwctx->display, image_format,
                             hwfc->width, hwfc->height, &map->image);
-        if (vas != VA_STATUS_SUCCESS) {
+        اگر (vas != VA_STATUS_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to create image for "
                    "surface %#x: %d (%s).\n",
                    surface_id, vas, vaErrorStr(vas));
             err = AVERROR(EIO);
-            goto fail;
+            برو fail;
         }
-        if (!(flags & AV_HWFRAME_MAP_OVERWRITE)) {
+        اگر (!(flags & AV_HWFRAME_MAP_OVERWRITE)) {
             vas = vaGetImage(hwctx->display, surface_id, 0, 0,
                              hwfc->width, hwfc->height, map->image.image_id);
-            if (vas != VA_STATUS_SUCCESS) {
+            اگر (vas != VA_STATUS_SUCCESS) {
                 av_log(hwfc, AV_LOG_ERROR, "Failed to read image from "
                        "surface %#x: %d (%s).\n",
                        surface_id, vas, vaErrorStr(vas));
                 err = AVERROR(EIO);
-                goto fail;
+                برو fail;
             }
         }
     }
 
-#if VA_CHECK_VERSION(1, 21, 0)
-    if (flags & AV_HWFRAME_MAP_READ)
+#اگر VA_CHECK_VERSION(1, 21, 0)
+    اگر (flags & AV_HWFRAME_MAP_READ)
         vaflags |= VA_MAPBUFFER_FLAG_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    اگر (flags & AV_HWFRAME_MAP_WRITE)
         vaflags |= VA_MAPBUFFER_FLAG_WRITE;
     // On drivers not implementing vaMapBuffer2 libva calls vaMapBuffer instead.
     vas = vaMapBuffer2(hwctx->display, map->image.buf, &address, vaflags);
-#else
+#وگرنه
     vas = vaMapBuffer(hwctx->display, map->image.buf, &address);
 #endif
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to map image from surface "
                "%#x: %d (%s).\n", surface_id, vas, vaErrorStr(vas));
         err = AVERROR(EIO);
-        goto fail;
+        برو fail;
     }
 
     err = ff_hwframe_map_create(src->hw_frames_ctx,
                                 dst, src, &vaapi_unmap_frame, map);
-    if (err < 0)
-        goto fail;
+    اگر (err < 0)
+        برو fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    for (i = 0; i < map->image.num_planes; i++) {
+    برای (i = 0; i < map->image.رقم_planes; i++) {
         dst->data[i] = (uint8_t*)address + map->image.offsets[i];
         dst->linesize[i] = map->image.pitches[i];
     }
 
     desc = vaapi_format_from_fourcc(map->image.format.fourcc);
-    if (desc && desc->chroma_planes_swapped) {
+    اگر (desc && desc->chroma_planes_swapped) {
         // Chroma planes are YVU rather than YUV, so swap them.
         FFSWAP(uint8_t*, dst->data[1], dst->data[2]);
     }
 
-    return 0;
+    بازگشت 0;
 
 fail:
-    if (map) {
-        if (address)
+    اگر (map) {
+        اگر (address)
             vaUnmapBuffer(hwctx->display, map->image.buf);
-        if (map->image.image_id != VA_INVALID_ID)
+        اگر (map->image.image_id != VA_INVALID_ID)
             vaDestroyImage(hwctx->display, map->image.image_id);
         av_free(map);
     }
-    return err;
+    بازگشت err;
 }
 
-static int vaapi_transfer_data_from(AVHWFramesContext *hwfc,
-                                    AVFrame *dst, const AVFrame *src)
+ایستا صحیح vaapi_transfer_data_from(AVHWFramesContext *hwfc,
+                                    AVFrame *dst, ثابت AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    صحیح err;
 
-    if (dst->width > hwfc->width || dst->height > hwfc->height)
-        return AVERROR(EINVAL);
+    اگر (dst->width > hwfc->width || dst->height > hwfc->height)
+        بازگشت AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    اگر (!map)
+        بازگشت AVERROR(ENOMEM);
     map->format = dst->format;
 
     err = vaapi_map_frame(hwfc, map, src, AV_HWFRAME_MAP_READ);
-    if (err)
-        goto fail;
+    اگر (err)
+        برو fail;
 
     map->width  = dst->width;
     map->height = dst->height;
 
     err = av_frame_copy(dst, map);
-    if (err)
-        goto fail;
+    اگر (err)
+        برو fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    بازگشت err;
 }
 
-static int vaapi_transfer_data_to(AVHWFramesContext *hwfc,
-                                  AVFrame *dst, const AVFrame *src)
+ایستا صحیح vaapi_transfer_data_to(AVHWFramesContext *hwfc,
+                                  AVFrame *dst, ثابت AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    صحیح err;
 
-    if (src->width > hwfc->width || src->height > hwfc->height)
-        return AVERROR(EINVAL);
+    اگر (src->width > hwfc->width || src->height > hwfc->height)
+        بازگشت AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    اگر (!map)
+        بازگشت AVERROR(ENOMEM);
     map->format = src->format;
 
     err = vaapi_map_frame(hwfc, map, dst, AV_HWFRAME_MAP_WRITE | AV_HWFRAME_MAP_OVERWRITE);
-    if (err)
-        goto fail;
+    اگر (err)
+        برو fail;
 
     map->width  = src->width;
     map->height = src->height;
 
     err = av_frame_copy(map, src);
-    if (err)
-        goto fail;
+    اگر (err)
+        برو fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    بازگشت err;
 }
 
-static int vaapi_map_to_memory(AVHWFramesContext *hwfc, AVFrame *dst,
-                               const AVFrame *src, int flags)
+ایستا صحیح vaapi_map_to_memory(AVHWFramesContext *hwfc, AVFrame *dst,
+                               ثابت AVFrame *src, صحیح flags)
 {
-    int err;
+    صحیح err;
 
     err = vaapi_map_frame(hwfc, dst, src, flags);
-    if (err)
-        return err;
+    اگر (err)
+        بازگشت err;
 
     err = av_frame_copy_props(dst, src);
-    if (err)
-        return err;
+    اگر (err)
+        بازگشت err;
 
-    return 0;
+    بازگشت 0;
 }
 
-#if CONFIG_LIBDRM
+#اگر CONFIG_LIBDRM
 
 #define DRM_MAP(va, layers, ...) { \
         VA_FOURCC_ ## va, \
         layers, \
         { __VA_ARGS__ } \
     }
-static const struct {
+ایستا ثابت ساختار {
     uint32_t va_fourcc;
-    int   nb_layer_formats;
+    صحیح   nb_layer_formats;
     uint32_t layer_formats[AV_DRM_MAX_PLANES];
 } vaapi_drm_format_map[] = {
 #ifdef DRM_FORMAT_R8
@@ -1063,10 +1063,10 @@ static const struct {
     DRM_MAP(NV12, 2, DRM_FORMAT_R8,  DRM_FORMAT_GR88),
 #endif
     DRM_MAP(NV12, 1, DRM_FORMAT_NV12),
-#if defined(VA_FOURCC_P010) && defined(DRM_FORMAT_R16)
+#اگر defined(VA_FOURCC_P010) && defined(DRM_FORMAT_R16)
     DRM_MAP(P010, 2, DRM_FORMAT_R16, DRM_FORMAT_RG1616),
 #endif
-#if defined(VA_FOURCC_P012) && defined(DRM_FORMAT_R16)
+#اگر defined(VA_FOURCC_P012) && defined(DRM_FORMAT_R16)
     DRM_MAP(P012, 2, DRM_FORMAT_R16, DRM_FORMAT_RG1616),
 #endif
     DRM_MAP(BGRA, 1, DRM_FORMAT_ARGB8888),
@@ -1079,22 +1079,22 @@ static const struct {
 #endif
     DRM_MAP(ARGB, 1, DRM_FORMAT_BGRA8888),
     DRM_MAP(XRGB, 1, DRM_FORMAT_BGRX8888),
-#if defined(VA_FOURCC_XYUV) && defined(DRM_FORMAT_XYUV8888)
+#اگر defined(VA_FOURCC_XYUV) && defined(DRM_FORMAT_XYUV8888)
     DRM_MAP(XYUV, 1, DRM_FORMAT_XYUV8888),
 #endif
-#if defined(VA_FOURCC_Y412) && defined(DRM_FORMAT_XVYU2101010)
+#اگر defined(VA_FOURCC_Y412) && defined(DRM_FORMAT_XVYU2101010)
     DRM_MAP(Y410, 1, DRM_FORMAT_XVYU2101010),
 #endif
-#if defined(VA_FOURCC_Y412) && defined(DRM_FORMAT_XVYU12_16161616)
+#اگر defined(VA_FOURCC_Y412) && defined(DRM_FORMAT_XVYU12_16161616)
     DRM_MAP(Y412, 1, DRM_FORMAT_XVYU12_16161616),
 #endif
-#if defined(VA_FOURCC_X2R10G10B10) && defined(DRM_FORMAT_XRGB2101010)
+#اگر defined(VA_FOURCC_X2R10G10B10) && defined(DRM_FORMAT_XRGB2101010)
     DRM_MAP(X2R10G10B10, 1, DRM_FORMAT_XRGB2101010),
 #endif
 };
 #undef DRM_MAP
 
-static void vaapi_unmap_from_drm(AVHWFramesContext *dst_fc,
+ایستا تهی vaapi_unmap_from_drm(AVHWFramesContext *dst_fc,
                                  HWMapDescriptor *hwmap)
 {
     AVVAAPIDeviceContext *dst_dev = dst_fc->device_ctx->hwctx;
@@ -1106,70 +1106,70 @@ static void vaapi_unmap_from_drm(AVHWFramesContext *dst_fc,
     vaDestroySurfaces(dst_dev->display, &surface_id, 1);
 }
 
-static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
-                              const AVFrame *src, int flags)
+ایستا صحیح vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
+                              ثابت AVFrame *src, صحیح flags)
 {
-#if VA_CHECK_VERSION(1, 1, 0)
+#اگر VA_CHECK_VERSION(1, 1, 0)
     VAAPIFramesContext    *src_vafc = src_fc->hwctx;
-    int use_prime2;
-#else
-    int k;
+    صحیح use_prime2;
+#وگرنه
+    صحیح k;
 #endif
     AVHWFramesContext      *dst_fc =
         (AVHWFramesContext*)dst->hw_frames_ctx->data;
     AVVAAPIDeviceContext  *dst_dev = dst_fc->device_ctx->hwctx;
-    const AVDRMFrameDescriptor *desc;
-    const VAAPIFormatDescriptor *format_desc;
+    ثابت AVDRMFrameDescriptor *desc;
+    ثابت VAAPIFormatDescriptor *format_desc;
     VASurfaceID surface_id;
     VAStatus vas = VA_STATUS_SUCCESS;
     uint32_t va_fourcc;
-    int err, i, j;
+    صحیح err, i, j;
 
-#if !VA_CHECK_VERSION(1, 1, 0)
+#اگر !VA_CHECK_VERSION(1, 1, 0)
     unsigned long buffer_handle;
     VASurfaceAttribExternalBuffers buffer_desc;
     VASurfaceAttrib attrs[2] = {
         {
             .type  = VASurfaceAttribMemoryType,
             .flags = VA_SURFACE_ATTRIB_SETTABLE,
-            .value.type    = VAGenericValueTypeInteger,
-            .value.value.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME,
+            .مقدار.type    = VAGeneric_مقدار_Type_Integer,
+            .مقدار.مقدار.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_اول,
         },
         {
             .type  = VASurfaceAttribExternalBufferDescriptor,
             .flags = VA_SURFACE_ATTRIB_SETTABLE,
-            .value.type    = VAGenericValueTypePointer,
-            .value.value.p = &buffer_desc,
+            .مقدار.type    = VAGeneric_مقدار_Type_Pointer,
+            .مقدار.مقدار.p = &buffer_desc,
         }
     };
 #endif
 
     desc = (AVDRMFrameDescriptor*)src->data[0];
 
-    if (desc->nb_objects != 1) {
+    اگر (desc->nb_objects != 1) {
         av_log(dst_fc, AV_LOG_ERROR, "VAAPI can only map frames "
                "made from a single DRM object.\n");
-        return AVERROR(EINVAL);
+        بازگشت AVERROR(EINVAL);
     }
 
     va_fourcc = 0;
-    for (i = 0; i < FF_ARRAY_ELEMS(vaapi_drm_format_map); i++) {
-        if (desc->nb_layers != vaapi_drm_format_map[i].nb_layer_formats)
-            continue;
-        for (j = 0; j < desc->nb_layers; j++) {
-            if (desc->layers[j].format !=
+    برای (i = 0; i < FF_ARRAY_ELEMS(vaapi_drm_format_map); i++) {
+        اگر (desc->nb_layers != vaapi_drm_format_map[i].nb_layer_formats)
+            ادامه;
+        برای (j = 0; j < desc->nb_layers; j++) {
+            اگر (desc->layers[j].format !=
                 vaapi_drm_format_map[i].layer_formats[j])
-                break;
+                بشکن;
         }
-        if (j != desc->nb_layers)
-            continue;
+        اگر (j != desc->nb_layers)
+            ادامه;
         va_fourcc = vaapi_drm_format_map[i].va_fourcc;
-        break;
+        بشکن;
     }
-    if (!va_fourcc) {
+    اگر (!va_fourcc) {
         av_log(dst_fc, AV_LOG_ERROR, "DRM format not supported "
                "by VAAPI.\n");
-        return AVERROR(EINVAL);
+        بازگشت AVERROR(EINVAL);
     }
 
     av_log(dst_fc, AV_LOG_DEBUG, "Map DRM object %d to VAAPI as "
@@ -1178,53 +1178,53 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
     format_desc = vaapi_format_from_fourcc(va_fourcc);
     av_assert0(format_desc);
 
-#if VA_CHECK_VERSION(1, 1, 0)
-    use_prime2 = !src_vafc->prime_2_import_unsupported &&
+#اگر VA_CHECK_VERSION(1, 1, 0)
+    use_prime2 = !src_vafc->اول_2_import_unsupported &&
                  desc->objects[0].format_modifier != DRM_FORMAT_MOD_INVALID;
-    if (use_prime2) {
-        VADRMPRIMESurfaceDescriptor prime_desc;
-        VASurfaceAttrib prime_attrs[2] = {
+    اگر (use_prime2) {
+        VADRMPRIMESurfaceDescriptor اول_desc;
+        VASurfaceAttrib اول_attrs[2] = {
             {
                 .type  = VASurfaceAttribMemoryType,
                 .flags = VA_SURFACE_ATTRIB_SETTABLE,
-                .value.type    = VAGenericValueTypeInteger,
-                .value.value.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME_2,
+                .مقدار.type    = VAGeneric_مقدار_Type_Integer,
+                .مقدار.مقدار.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_اول_2,
             },
             {
                 .type  = VASurfaceAttribExternalBufferDescriptor,
                 .flags = VA_SURFACE_ATTRIB_SETTABLE,
-                .value.type    = VAGenericValueTypePointer,
-                .value.value.p = &prime_desc,
+                .مقدار.type    = VAGeneric_مقدار_Type_Pointer,
+                .مقدار.مقدار.p = &اول_desc,
             }
         };
-        prime_desc.fourcc = va_fourcc;
-        prime_desc.width = src_fc->width;
-        prime_desc.height = src_fc->height;
-        prime_desc.num_objects = desc->nb_objects;
-        for (i = 0; i < desc->nb_objects; ++i) {
-            prime_desc.objects[i].fd = desc->objects[i].fd;
-            prime_desc.objects[i].size = desc->objects[i].size;
-            prime_desc.objects[i].drm_format_modifier =
+        اول_desc.fourcc = va_fourcc;
+        اول_desc.width = src_fc->width;
+        اول_desc.height = src_fc->height;
+        اول_desc.رقم_objects = desc->nb_objects;
+        برای (i = 0; i < desc->nb_objects; ++i) {
+            اول_desc.objects[i].fd = desc->objects[i].fd;
+            اول_desc.objects[i].size = desc->objects[i].size;
+            اول_desc.objects[i].drm_format_modifier =
                     desc->objects[i].format_modifier;
         }
 
-        prime_desc.num_layers = desc->nb_layers;
-        for (i = 0; i < desc->nb_layers; ++i) {
-            prime_desc.layers[i].drm_format = desc->layers[i].format;
-            prime_desc.layers[i].num_planes = desc->layers[i].nb_planes;
-            for (j = 0; j < desc->layers[i].nb_planes; ++j) {
-                prime_desc.layers[i].object_index[j] =
+        اول_desc.رقم_layers = desc->nb_layers;
+        برای (i = 0; i < desc->nb_layers; ++i) {
+            اول_desc.layers[i].drm_format = desc->layers[i].format;
+            اول_desc.layers[i].رقم_planes = desc->layers[i].nb_planes;
+            برای (j = 0; j < desc->layers[i].nb_planes; ++j) {
+                اول_desc.layers[i].object_index[j] =
                         desc->layers[i].planes[j].object_index;
-                prime_desc.layers[i].offset[j] = desc->layers[i].planes[j].offset;
-                prime_desc.layers[i].pitch[j] = desc->layers[i].planes[j].pitch;
+                اول_desc.layers[i].offset[j] = desc->layers[i].planes[j].offset;
+                اول_desc.layers[i].pitch[j] = desc->layers[i].planes[j].pitch;
             }
 
-            if (format_desc->chroma_planes_swapped &&
+            اگر (format_desc->chroma_planes_swapped &&
                 desc->layers[i].nb_planes == 3) {
-                FFSWAP(uint32_t, prime_desc.layers[i].pitch[1],
-                    prime_desc.layers[i].pitch[2]);
-                FFSWAP(uint32_t, prime_desc.layers[i].offset[1],
-                    prime_desc.layers[i].offset[2]);
+                FFSWAP(uint32_t, اول_desc.layers[i].pitch[1],
+                    اول_desc.layers[i].pitch[2]);
+                FFSWAP(uint32_t, اول_desc.layers[i].offset[1],
+                    اول_desc.layers[i].offset[2]);
             }
         }
 
@@ -1236,27 +1236,27 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
          */
         vas = vaCreateSurfaces(dst_dev->display, format_desc->rt_format,
                                src->width, src->height, &surface_id, 1,
-                               prime_attrs, FF_ARRAY_ELEMS(prime_attrs));
-        if (vas != VA_STATUS_SUCCESS)
-            src_vafc->prime_2_import_unsupported = 1;
+                               اول_attrs, FF_ARRAY_ELEMS(اول_attrs));
+        اگر (vas != VA_STATUS_SUCCESS)
+            src_vafc->اول_2_import_unsupported = 1;
     }
 
-    if (!use_prime2 || vas != VA_STATUS_SUCCESS) {
-        int k;
+    اگر (!use_prime2 || vas != VA_STATUS_SUCCESS) {
+        صحیح k;
         uintptr_t buffer_handle;
         VASurfaceAttribExternalBuffers buffer_desc;
         VASurfaceAttrib buffer_attrs[2] = {
             {
                 .type  = VASurfaceAttribMemoryType,
                 .flags = VA_SURFACE_ATTRIB_SETTABLE,
-                .value.type    = VAGenericValueTypeInteger,
-                .value.value.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME,
+                .مقدار.type    = VAGeneric_مقدار_Type_Integer,
+                .مقدار.مقدار.i = VA_SURFACE_ATTRIB_MEM_TYPE_DRM_اول,
             },
             {
                 .type  = VASurfaceAttribExternalBufferDescriptor,
                 .flags = VA_SURFACE_ATTRIB_SETTABLE,
-                .value.type    = VAGenericValueTypePointer,
-                .value.value.p = &buffer_desc,
+                .مقدار.type    = VAGeneric_مقدار_Type_Pointer,
+                .مقدار.مقدار.p = &buffer_desc,
             }
         };
 
@@ -1266,21 +1266,21 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
         buffer_desc.height       = src_fc->height;
         buffer_desc.data_size    = desc->objects[0].size;
         buffer_desc.buffers      = &buffer_handle;
-        buffer_desc.num_buffers  = 1;
+        buffer_desc.رقم_buffers  = 1;
         buffer_desc.flags        = 0;
 
         k = 0;
-        for (i = 0; i < desc->nb_layers; i++) {
-            for (j = 0; j < desc->layers[i].nb_planes; j++) {
+        برای (i = 0; i < desc->nb_layers; i++) {
+            برای (j = 0; j < desc->layers[i].nb_planes; j++) {
                 buffer_desc.pitches[k] = desc->layers[i].planes[j].pitch;
                 buffer_desc.offsets[k] = desc->layers[i].planes[j].offset;
                 ++k;
             }
         }
-        buffer_desc.num_planes = k;
+        buffer_desc.رقم_planes = k;
 
-        if (format_desc->chroma_planes_swapped &&
-            buffer_desc.num_planes == 3) {
+        اگر (format_desc->chroma_planes_swapped &&
+            buffer_desc.رقم_planes == 3) {
             FFSWAP(uint32_t, buffer_desc.pitches[1], buffer_desc.pitches[2]);
             FFSWAP(uint32_t, buffer_desc.offsets[1], buffer_desc.offsets[2]);
         }
@@ -1290,28 +1290,28 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
                                &surface_id, 1,
                                buffer_attrs, FF_ARRAY_ELEMS(buffer_attrs));
     }
-#else
+#وگرنه
     buffer_handle = desc->objects[0].fd;
     buffer_desc.pixel_format = va_fourcc;
     buffer_desc.width        = src_fc->width;
     buffer_desc.height       = src_fc->height;
     buffer_desc.data_size    = desc->objects[0].size;
     buffer_desc.buffers      = &buffer_handle;
-    buffer_desc.num_buffers  = 1;
+    buffer_desc.رقم_buffers  = 1;
     buffer_desc.flags        = 0;
 
     k = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
-        for (j = 0; j < desc->layers[i].nb_planes; j++) {
+    برای (i = 0; i < desc->nb_layers; i++) {
+        برای (j = 0; j < desc->layers[i].nb_planes; j++) {
             buffer_desc.pitches[k] = desc->layers[i].planes[j].pitch;
             buffer_desc.offsets[k] = desc->layers[i].planes[j].offset;
             ++k;
         }
     }
-    buffer_desc.num_planes = k;
+    buffer_desc.رقم_planes = k;
 
-    if (format_desc->chroma_planes_swapped &&
-        buffer_desc.num_planes == 3) {
+    اگر (format_desc->chroma_planes_swapped &&
+        buffer_desc.رقم_planes == 3) {
         FFSWAP(uint32_t, buffer_desc.pitches[1], buffer_desc.pitches[2]);
         FFSWAP(uint32_t, buffer_desc.offsets[1], buffer_desc.offsets[2]);
     }
@@ -1321,18 +1321,18 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
                            &surface_id, 1,
                            attrs, FF_ARRAY_ELEMS(attrs));
 #endif
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to create surface from DRM "
                "object: %d (%s).\n", vas, vaErrorStr(vas));
-        return AVERROR(EIO);
+        بازگشت AVERROR(EIO);
     }
     av_log(dst_fc, AV_LOG_DEBUG, "Create surface %#x.\n", surface_id);
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &vaapi_unmap_from_drm,
-                                (void*)(uintptr_t)surface_id);
-    if (err < 0)
-        return err;
+                                (تهی*)(uintptr_t)surface_id);
+    اگر (err < 0)
+        بازگشت err;
 
     dst->width   = src->width;
     dst->height  = src->height;
@@ -1341,80 +1341,80 @@ static int vaapi_map_from_drm(AVHWFramesContext *src_fc, AVFrame *dst,
     av_log(dst_fc, AV_LOG_DEBUG, "Mapped DRM object %d to "
            "surface %#x.\n", desc->objects[0].fd, surface_id);
 
-    return 0;
+    بازگشت 0;
 }
 
-#if VA_CHECK_VERSION(1, 1, 0)
-static void vaapi_unmap_to_drm_esh(AVHWFramesContext *hwfc,
+#اگر VA_CHECK_VERSION(1, 1, 0)
+ایستا تهی vaapi_unmap_to_drm_esh(AVHWFramesContext *hwfc,
                                    HWMapDescriptor *hwmap)
 {
     AVDRMFrameDescriptor *drm_desc = hwmap->priv;
-    int i;
+    صحیح i;
 
-    for (i = 0; i < drm_desc->nb_objects; i++)
+    برای (i = 0; i < drm_desc->nb_objects; i++)
         close(drm_desc->objects[i].fd);
 
     av_freep(&drm_desc);
 }
 
-static int vaapi_map_to_drm_esh(AVHWFramesContext *hwfc, AVFrame *dst,
-                                const AVFrame *src, int flags)
+ایستا صحیح vaapi_map_to_drm_esh(AVHWFramesContext *hwfc, AVFrame *dst,
+                                ثابت AVFrame *src, صحیح flags)
 {
     AVVAAPIDeviceContext *hwctx = hwfc->device_ctx->hwctx;
     VASurfaceID surface_id;
     VAStatus vas;
     VADRMPRIMESurfaceDescriptor va_desc;
-    AVDRMFrameDescriptor *drm_desc = NULL;
+    AVDRMFrameDescriptor *drm_desc = پوچ;
     uint32_t export_flags;
-    int err, i, j;
+    صحیح err, i, j;
 
     surface_id = (VASurfaceID)(uintptr_t)src->data[3];
 
     export_flags = VA_EXPORT_SURFACE_SEPARATE_LAYERS;
-    if (flags & AV_HWFRAME_MAP_READ) {
+    اگر (flags & AV_HWFRAME_MAP_READ) {
         export_flags |= VA_EXPORT_SURFACE_READ_ONLY;
 
         vas = vaSyncSurface(hwctx->display, surface_id);
-        if (vas != VA_STATUS_SUCCESS) {
+        اگر (vas != VA_STATUS_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to sync surface "
                    "%#x: %d (%s).\n", surface_id, vas, vaErrorStr(vas));
-            return AVERROR(EIO);
+            بازگشت AVERROR(EIO);
         }
     }
 
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    اگر (flags & AV_HWFRAME_MAP_WRITE)
         export_flags |= VA_EXPORT_SURFACE_WRITE_ONLY;
 
     vas = vaExportSurfaceHandle(hwctx->display, surface_id,
-                                VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME_2,
+                                VA_SURFACE_ATTRIB_MEM_TYPE_DRM_اول_2,
                                 export_flags, &va_desc);
-    if (vas != VA_STATUS_SUCCESS) {
-        if (vas == VA_STATUS_ERROR_UNIMPLEMENTED)
-            return AVERROR(ENOSYS);
+    اگر (vas != VA_STATUS_SUCCESS) {
+        اگر (vas == VA_STATUS_ERROR_UNIMPLEMENTED)
+            بازگشت AVERROR(ENOSYS);
         av_log(hwfc, AV_LOG_ERROR, "Failed to export surface %#x: "
                "%d (%s).\n", surface_id, vas, vaErrorStr(vas));
-        return AVERROR(EIO);
+        بازگشت AVERROR(EIO);
     }
 
-    drm_desc = av_mallocz(sizeof(*drm_desc));
-    if (!drm_desc) {
+    drm_desc = av_mallocz(اندازه(*drm_desc));
+    اگر (!drm_desc) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        برو fail;
     }
 
     // By some bizarre coincidence, these structures are very similar...
-    drm_desc->nb_objects = va_desc.num_objects;
-    for (i = 0; i < va_desc.num_objects; i++) {
+    drm_desc->nb_objects = va_desc.رقم_objects;
+    برای (i = 0; i < va_desc.رقم_objects; i++) {
         drm_desc->objects[i].fd   = va_desc.objects[i].fd;
         drm_desc->objects[i].size = va_desc.objects[i].size;
         drm_desc->objects[i].format_modifier =
             va_desc.objects[i].drm_format_modifier;
     }
-    drm_desc->nb_layers = va_desc.num_layers;
-    for (i = 0; i < va_desc.num_layers; i++) {
+    drm_desc->nb_layers = va_desc.رقم_layers;
+    برای (i = 0; i < va_desc.رقم_layers; i++) {
         drm_desc->layers[i].format    = va_desc.layers[i].drm_format;
-        drm_desc->layers[i].nb_planes = va_desc.layers[i].num_planes;
-        for (j = 0; j < va_desc.layers[i].num_planes; j++) {
+        drm_desc->layers[i].nb_planes = va_desc.layers[i].رقم_planes;
+        برای (j = 0; j < va_desc.layers[i].رقم_planes; j++) {
             drm_desc->layers[i].planes[j].object_index =
                 va_desc.layers[i].object_index[j];
             drm_desc->layers[i].planes[j].offset =
@@ -1426,32 +1426,32 @@ static int vaapi_map_to_drm_esh(AVHWFramesContext *hwfc, AVFrame *dst,
 
     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
                                 &vaapi_unmap_to_drm_esh, drm_desc);
-    if (err < 0)
-        goto fail;
+    اگر (err < 0)
+        برو fail;
 
     dst->width   = src->width;
     dst->height  = src->height;
     dst->data[0] = (uint8_t*)drm_desc;
 
-    return 0;
+    بازگشت 0;
 
 fail:
-    for (i = 0; i < va_desc.num_objects; i++)
+    برای (i = 0; i < va_desc.رقم_objects; i++)
         close(va_desc.objects[i].fd);
     av_freep(&drm_desc);
-    return err;
+    بازگشت err;
 }
 #endif
 
-#if VA_CHECK_VERSION(0, 36, 0)
-typedef struct VAAPIDRMImageBufferMapping {
+#اگر VA_CHECK_VERSION(0, 36, 0)
+تعریفنوع ساختار VAAPIDRMImageBufferMapping {
     VAImage      image;
     VABufferInfo buffer_info;
 
     AVDRMFrameDescriptor drm_desc;
 } VAAPIDRMImageBufferMapping;
 
-static void vaapi_unmap_to_drm_abh(AVHWFramesContext *hwfc,
+ایستا تهی vaapi_unmap_to_drm_abh(AVHWFramesContext *hwfc,
                                   HWMapDescriptor *hwmap)
 {
     AVVAAPIDeviceContext *hwctx = hwfc->device_ctx->hwctx;
@@ -1467,7 +1467,7 @@ static void vaapi_unmap_to_drm_abh(AVHWFramesContext *hwfc,
     // so we shouldn't close them separately.
 
     vas = vaReleaseBufferHandle(hwctx->display, mapping->image.buf);
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to release buffer "
                "handle of image %#x (derived from surface %#x): "
                "%d (%s).\n", mapping->image.buf, surface_id,
@@ -1475,7 +1475,7 @@ static void vaapi_unmap_to_drm_abh(AVHWFramesContext *hwfc,
     }
 
     vas = vaDestroyImage(hwctx->display, mapping->image.image_id);
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to destroy image "
                "derived from surface %#x: %d (%s).\n",
                surface_id, vas, vaErrorStr(vas));
@@ -1484,60 +1484,60 @@ static void vaapi_unmap_to_drm_abh(AVHWFramesContext *hwfc,
     av_free(mapping);
 }
 
-static int vaapi_map_to_drm_abh(AVHWFramesContext *hwfc, AVFrame *dst,
-                                const AVFrame *src, int flags)
+ایستا صحیح vaapi_map_to_drm_abh(AVHWFramesContext *hwfc, AVFrame *dst,
+                                ثابت AVFrame *src, صحیح flags)
 {
     AVVAAPIDeviceContext *hwctx = hwfc->device_ctx->hwctx;
-    VAAPIDRMImageBufferMapping *mapping = NULL;
+    VAAPIDRMImageBufferMapping *mapping = پوچ;
     VASurfaceID surface_id;
     VAStatus vas;
-    int err, i, p;
+    صحیح err, i, p;
 
     surface_id = (VASurfaceID)(uintptr_t)src->data[3];
     av_log(hwfc, AV_LOG_DEBUG, "Map VAAPI surface %#x to DRM.\n",
            surface_id);
 
-    mapping = av_mallocz(sizeof(*mapping));
-    if (!mapping)
-        return AVERROR(ENOMEM);
+    mapping = av_mallocz(اندازه(*mapping));
+    اگر (!mapping)
+        بازگشت AVERROR(ENOMEM);
 
     vas = vaDeriveImage(hwctx->display, surface_id,
                         &mapping->image);
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to derive image from "
                "surface %#x: %d (%s).\n",
                surface_id, vas, vaErrorStr(vas));
         err = AVERROR(EIO);
-        goto fail;
+        برو fail;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(vaapi_drm_format_map); i++) {
-        if (vaapi_drm_format_map[i].va_fourcc ==
+    برای (i = 0; i < FF_ARRAY_ELEMS(vaapi_drm_format_map); i++) {
+        اگر (vaapi_drm_format_map[i].va_fourcc ==
             mapping->image.format.fourcc)
-            break;
+            بشکن;
     }
-    if (i >= FF_ARRAY_ELEMS(vaapi_drm_format_map)) {
+    اگر (i >= FF_ARRAY_ELEMS(vaapi_drm_format_map)) {
         av_log(hwfc, AV_LOG_ERROR, "No matching DRM format for "
                "VAAPI format %#x.\n", mapping->image.format.fourcc);
         err = AVERROR(EINVAL);
-        goto fail_derived;
+        برو fail_derived;
     }
 
     mapping->buffer_info.mem_type =
-        VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME;
+        VA_SURFACE_ATTRIB_MEM_TYPE_DRM_اول;
 
     mapping->drm_desc.nb_layers =
         vaapi_drm_format_map[i].nb_layer_formats;
-    if (mapping->drm_desc.nb_layers > 1) {
-        if (mapping->drm_desc.nb_layers != mapping->image.num_planes) {
+    اگر (mapping->drm_desc.nb_layers > 1) {
+        اگر (mapping->drm_desc.nb_layers != mapping->image.رقم_planes) {
             av_log(hwfc, AV_LOG_ERROR, "Image properties do not match "
                    "expected format: got %d planes, but expected %d.\n",
-                   mapping->image.num_planes, mapping->drm_desc.nb_layers);
+                   mapping->image.رقم_planes, mapping->drm_desc.nb_layers);
             err = AVERROR(EINVAL);
-            goto fail_derived;
+            برو fail_derived;
         }
 
-        for(p = 0; p < mapping->drm_desc.nb_layers; p++) {
+        برای(p = 0; p < mapping->drm_desc.nb_layers; p++) {
             mapping->drm_desc.layers[p] = (AVDRMLayerDescriptor) {
                 .format    = vaapi_drm_format_map[i].layer_formats[p],
                 .nb_planes = 1,
@@ -1548,11 +1548,11 @@ static int vaapi_map_to_drm_abh(AVHWFramesContext *hwfc, AVFrame *dst,
                 },
             };
         }
-    } else {
+    } وگرنه {
         mapping->drm_desc.layers[0].format =
             vaapi_drm_format_map[i].layer_formats[0];
-        mapping->drm_desc.layers[0].nb_planes = mapping->image.num_planes;
-        for (p = 0; p < mapping->image.num_planes; p++) {
+        mapping->drm_desc.layers[0].nb_planes = mapping->image.رقم_planes;
+        برای (p = 0; p < mapping->image.رقم_planes; p++) {
             mapping->drm_desc.layers[0].planes[p] = (AVDRMPlaneDescriptor) {
                 .object_index = 0,
                 .offset       = mapping->image.offsets[p],
@@ -1563,13 +1563,13 @@ static int vaapi_map_to_drm_abh(AVHWFramesContext *hwfc, AVFrame *dst,
 
     vas = vaAcquireBufferHandle(hwctx->display, mapping->image.buf,
                                 &mapping->buffer_info);
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to get buffer "
                "handle from image %#x (derived from surface %#x): "
                "%d (%s).\n", mapping->image.buf, surface_id,
                vas, vaErrorStr(vas));
         err = AVERROR(EIO);
-        goto fail_derived;
+        برو fail_derived;
     }
 
     av_log(hwfc, AV_LOG_DEBUG, "DRM PRIME fd is %"PRIdPTR".\n",
@@ -1586,14 +1586,14 @@ static int vaapi_map_to_drm_abh(AVHWFramesContext *hwfc, AVFrame *dst,
     err = ff_hwframe_map_create(src->hw_frames_ctx,
                                 dst, src, &vaapi_unmap_to_drm_abh,
                                 mapping);
-    if (err < 0)
-        goto fail_mapped;
+    اگر (err < 0)
+        برو fail_mapped;
 
     dst->data[0] = (uint8_t*)&mapping->drm_desc;
     dst->width   = src->width;
     dst->height  = src->height;
 
-    return 0;
+    بازگشت 0;
 
 fail_mapped:
     vaReleaseBufferHandle(hwctx->display, mapping->image.buf);
@@ -1601,83 +1601,83 @@ fail_derived:
     vaDestroyImage(hwctx->display, mapping->image.image_id);
 fail:
     av_freep(&mapping);
-    return err;
+    بازگشت err;
 }
 #endif
 
-static int vaapi_map_to_drm(AVHWFramesContext *hwfc, AVFrame *dst,
-                            const AVFrame *src, int flags)
+ایستا صحیح vaapi_map_to_drm(AVHWFramesContext *hwfc, AVFrame *dst,
+                            ثابت AVFrame *src, صحیح flags)
 {
-#if VA_CHECK_VERSION(1, 1, 0)
-    int err;
+#اگر VA_CHECK_VERSION(1, 1, 0)
+    صحیح err;
     err = vaapi_map_to_drm_esh(hwfc, dst, src, flags);
-    if (err != AVERROR(ENOSYS))
-        return err;
+    اگر (err != AVERROR(ENOSYS))
+        بازگشت err;
 #endif
-#if VA_CHECK_VERSION(0, 36, 0)
-    return vaapi_map_to_drm_abh(hwfc, dst, src, flags);
+#اگر VA_CHECK_VERSION(0, 36, 0)
+    بازگشت vaapi_map_to_drm_abh(hwfc, dst, src, flags);
 #endif
-    return AVERROR(ENOSYS);
+    بازگشت AVERROR(ENOSYS);
 }
 
 #endif /* CONFIG_LIBDRM */
 
-static int vaapi_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
-                        const AVFrame *src, int flags)
+ایستا صحیح vaapi_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
+                        ثابت AVFrame *src, صحیح flags)
 {
-    switch (src->format) {
-#if CONFIG_LIBDRM
-    case AV_PIX_FMT_DRM_PRIME:
-        return vaapi_map_from_drm(hwfc, dst, src, flags);
+    انتخاب (src->format) {
+#اگر CONFIG_LIBDRM
+    حالت AV_PIX_FMT_DRM_اول:
+        بازگشت vaapi_map_from_drm(hwfc, dst, src, flags);
 #endif
-    default:
-        return AVERROR(ENOSYS);
+    پیشفرض:
+        بازگشت AVERROR(ENOSYS);
     }
 }
 
-static int vaapi_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                          const AVFrame *src, int flags)
+ایستا صحیح vaapi_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                          ثابت AVFrame *src, صحیح flags)
 {
-    switch (dst->format) {
-#if CONFIG_LIBDRM
-    case AV_PIX_FMT_DRM_PRIME:
-        return vaapi_map_to_drm(hwfc, dst, src, flags);
+    انتخاب (dst->format) {
+#اگر CONFIG_LIBDRM
+    حالت AV_PIX_FMT_DRM_اول:
+        بازگشت vaapi_map_to_drm(hwfc, dst, src, flags);
 #endif
-    default:
-        return vaapi_map_to_memory(hwfc, dst, src, flags);
+    پیشفرض:
+        بازگشت vaapi_map_to_memory(hwfc, dst, src, flags);
     }
 }
 
-static void vaapi_device_free(AVHWDeviceContext *ctx)
+ایستا تهی vaapi_device_free(AVHWDeviceContext *ctx)
 {
     AVVAAPIDeviceContext *hwctx = ctx->hwctx;
     VAAPIDevicePriv      *priv  = ctx->user_opaque;
 
-    if (hwctx->display)
+    اگر (hwctx->display)
         vaTerminate(hwctx->display);
 
-#if HAVE_VAAPI_X11
-    if (priv->x11_display)
+#اگر HAVE_VAAPI_X11
+    اگر (priv->x11_display)
         XCloseDisplay(priv->x11_display);
 #endif
 
-#if HAVE_VAAPI_DRM
-    if (priv->drm_fd >= 0)
+#اگر HAVE_VAAPI_DRM
+    اگر (priv->drm_fd >= 0)
         close(priv->drm_fd);
 #endif
 
     av_freep(&priv);
 }
 
-#if CONFIG_VAAPI_1
-static void vaapi_device_log_error(void *context, const char *message)
+#اگر CONFIG_VAAPI_1
+ایستا تهی vaapi_device_log_error(تهی *context, ثابت نویسه *message)
 {
     AVHWDeviceContext *ctx = context;
 
     av_log(ctx, AV_LOG_ERROR, "libva: %s", message);
 }
 
-static void vaapi_device_log_info(void *context, const char *message)
+ایستا تهی vaapi_device_log_info(تهی *context, ثابت نویسه *message)
 {
     AVHWDeviceContext *ctx = context;
 
@@ -1685,14 +1685,14 @@ static void vaapi_device_log_info(void *context, const char *message)
 }
 #endif
 
-static int vaapi_device_connect(AVHWDeviceContext *ctx,
+ایستا صحیح vaapi_device_connect(AVHWDeviceContext *ctx,
                                 VADisplay display)
 {
     AVVAAPIDeviceContext *hwctx = ctx->hwctx;
-    int major, minor;
+    صحیح major, minor;
     VAStatus vas;
 
-#if CONFIG_VAAPI_1
+#اگر CONFIG_VAAPI_1
     vaSetErrorCallback(display, &vaapi_device_log_error, ctx);
     vaSetInfoCallback (display, &vaapi_device_log_info,  ctx);
 #endif
@@ -1700,195 +1700,195 @@ static int vaapi_device_connect(AVHWDeviceContext *ctx,
     hwctx->display = display;
 
     vas = vaInitialize(display, &major, &minor);
-    if (vas != VA_STATUS_SUCCESS) {
+    اگر (vas != VA_STATUS_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Failed to initialise VAAPI "
                "connection: %d (%s).\n", vas, vaErrorStr(vas));
-        return AVERROR(EIO);
+        بازگشت AVERROR(EIO);
     }
     av_log(ctx, AV_LOG_VERBOSE, "Initialised VAAPI connection: "
            "version %d.%d\n", major, minor);
 
-    return 0;
+    بازگشت 0;
 }
 
-static int vaapi_device_create(AVHWDeviceContext *ctx, const char *device,
-                               AVDictionary *opts, int flags)
+ایستا صحیح vaapi_device_create(AVHWDeviceContext *ctx, ثابت نویسه *device,
+                               AVDictionary *opts, صحیح flags)
 {
     VAAPIDevicePriv *priv;
-    VADisplay display = NULL;
-    const AVDictionaryEntry *ent;
-    int try_drm, try_x11, try_win32, try_all av_unused;
+    VADisplay display = پوچ;
+    ثابت AVDictionaryEntry *ent;
+    صحیح try_drm, try_x11, try_win32, try_all av_unused;
 
-    priv = av_mallocz(sizeof(*priv));
-    if (!priv)
-        return AVERROR(ENOMEM);
+    priv = av_mallocz(اندازه(*priv));
+    اگر (!priv)
+        بازگشت AVERROR(ENOMEM);
 
     priv->drm_fd = -1;
 
     ctx->user_opaque = priv;
-    ctx->free        = vaapi_device_free;
+    ctx->آزاد        = vaapi_device_free;
 
-    ent = av_dict_get(opts, "connection_type", NULL, 0);
-    if (ent) {
+    ent = av_dict_get(opts, "connection_type", پوچ, 0);
+    اگر (ent) {
         try_all = try_drm = try_x11 = try_win32 = 0;
-        if (!strcmp(ent->value, "drm")) {
+        اگر (!strcmp(ent->مقدار, "drm")) {
             try_drm = 1;
-        } else if (!strcmp(ent->value, "x11")) {
+        } وگرنه اگر (!strcmp(ent->مقدار, "x11")) {
             try_x11 = 1;
-        } else if (!strcmp(ent->value, "win32")) {
+        } وگرنه اگر (!strcmp(ent->مقدار, "win32")) {
             try_win32 = 1;
-        } else {
+        } وگرنه {
             av_log(ctx, AV_LOG_ERROR, "Invalid connection type %s.\n",
-                   ent->value);
-            return AVERROR(EINVAL);
+                   ent->مقدار);
+            بازگشت AVERROR(EINVAL);
         }
-    } else {
+    } وگرنه {
         try_all = 1;
         try_drm = HAVE_VAAPI_DRM;
         try_x11 = HAVE_VAAPI_X11;
         try_win32 = HAVE_VAAPI_WIN32;
     }
 
-#if HAVE_VAAPI_DRM
-    while (!display && try_drm) {
+#اگر HAVE_VAAPI_DRM
+    وقتی (!display && try_drm) {
         // If the device is specified, try to open it as a DRM device node.
         // If not, look for a usable render node, possibly restricted to those
         // using a specified kernel driver.
-        int loglevel = try_all ? AV_LOG_VERBOSE : AV_LOG_ERROR;
-        if (device) {
+        صحیح loglevel = try_all ? AV_LOG_VERBOSE : AV_LOG_ERROR;
+        اگر (device) {
             priv->drm_fd = open(device, O_RDWR);
-            if (priv->drm_fd < 0) {
+            اگر (priv->drm_fd < 0) {
                 av_log(ctx, loglevel, "Failed to open %s as "
                        "DRM device node.\n", device);
-                break;
+                بشکن;
             }
-        } else {
-            char path[64];
-            int n, max_devices = 8;
-#if CONFIG_LIBDRM
+        } وگرنه {
+            نویسه path[64];
+            صحیح n, max_devices = 8;
+#اگر CONFIG_LIBDRM
             drmVersion *info;
-            const AVDictionaryEntry *kernel_driver;
-            const AVDictionaryEntry *vendor_id;
-            kernel_driver = av_dict_get(opts, "kernel_driver", NULL, 0);
-            vendor_id = av_dict_get(opts, "vendor_id", NULL, 0);
+            ثابت AVDictionaryEntry *kernel_driver;
+            ثابت AVDictionaryEntry *vendor_id;
+            kernel_driver = av_dict_get(opts, "kernel_driver", پوچ, 0);
+            vendor_id = av_dict_get(opts, "vendor_id", پوچ, 0);
 #endif
-            for (n = 0; n < max_devices; n++) {
-                snprintf(path, sizeof(path),
+            برای (n = 0; n < max_devices; n++) {
+                snprintf(path, اندازه(path),
                          "/dev/dri/renderD%d", 128 + n);
                 priv->drm_fd = open(path, O_RDWR);
-                if (priv->drm_fd < 0) {
-                    if (errno == ENOENT) {
-                        if (n != max_devices - 1) {
+                اگر (priv->drm_fd < 0) {
+                    اگر (errno == ENOENT) {
+                        اگر (n != max_devices - 1) {
                             av_log(ctx, AV_LOG_VERBOSE,
                                    "No render device %s, try next device for "
                                    "DRM render node.\n", path);
-                            continue;
+                            ادامه;
                         }
 
                         av_log(ctx, AV_LOG_VERBOSE, "No available render device "
                                "for DRM render node.\n");
-                    } else
+                    } وگرنه
                         av_log(ctx, AV_LOG_VERBOSE, "Cannot open "
                                "DRM render node for device %d.\n", n);
-                    break;
+                    بشکن;
                 }
-#if CONFIG_LIBDRM
+#اگر CONFIG_LIBDRM
                 info = drmGetVersion(priv->drm_fd);
-                if (!info) {
+                اگر (!info) {
                     av_log(ctx, AV_LOG_VERBOSE,
                            "Failed to get DRM version for device %d.\n", n);
                     close(priv->drm_fd);
                     priv->drm_fd = -1;
-                    continue;
+                    ادامه;
                 }
-                if (kernel_driver) {
-                    if (strcmp(kernel_driver->value, info->name)) {
+                اگر (kernel_driver) {
+                    اگر (strcmp(kernel_driver->مقدار, info->name)) {
                         av_log(ctx, AV_LOG_VERBOSE, "Ignoring device %d "
                                "with non-matching kernel driver (%s).\n",
                                n, info->name);
                         drmFreeVersion(info);
                         close(priv->drm_fd);
                         priv->drm_fd = -1;
-                        continue;
+                        ادامه;
                     }
                     av_log(ctx, AV_LOG_VERBOSE, "Trying to use "
                            "DRM render node for device %d, "
                            "with matching kernel driver (%s).\n",
                            n, info->name);
                     drmFreeVersion(info);
-                    break;
+                    بشکن;
                 // drmGetVersion() ensures |info->name| is 0-terminated.
-                } else if (!strcmp(info->name, "vgem")) {
+                } وگرنه اگر (!strcmp(info->name, "vgem")) {
                     av_log(ctx, AV_LOG_VERBOSE,
                            "Skipping vgem node for device %d.\n", n);
                     drmFreeVersion(info);
                     close(priv->drm_fd);
                     priv->drm_fd = -1;
-                    continue;
-                } else if (vendor_id) {
+                    ادامه;
+                } وگرنه اگر (vendor_id) {
                     drmDevicePtr device;
-                    char drm_vendor[8];
-                    if (drmGetDevice(priv->drm_fd, &device)) {
+                    نویسه drm_vendor[8];
+                    اگر (drmGetDevice(priv->drm_fd, &device)) {
                         av_log(ctx, AV_LOG_VERBOSE,
                                "Failed to get DRM device info for device %d.\n", n);
                         close(priv->drm_fd);
                         priv->drm_fd = -1;
                         drmFreeVersion(info);
-                        continue;
+                        ادامه;
                     }
 
-                    snprintf(drm_vendor, sizeof(drm_vendor), "0x%x", device->deviceinfo.pci->vendor_id);
-                    if (strcmp(vendor_id->value, drm_vendor)) {
+                    snprintf(drm_vendor, اندازه(drm_vendor), "0x%x", device->deviceinfo.pci->vendor_id);
+                    اگر (strcmp(vendor_id->مقدار, drm_vendor)) {
                         av_log(ctx, AV_LOG_VERBOSE, "Ignoring device %d "
                                "with non-matching vendor id (%s).\n",
-                               n, vendor_id->value);
+                               n, vendor_id->مقدار);
                         drmFreeDevice(&device);
                         close(priv->drm_fd);
                         priv->drm_fd = -1;
                         drmFreeVersion(info);
-                        continue;
+                        ادامه;
                     }
                     av_log(ctx, AV_LOG_VERBOSE, "Trying to use "
                            "DRM render node for device %d, "
                            "with matching vendor id (%s).\n",
-                           n, vendor_id->value);
+                           n, vendor_id->مقدار);
                     drmFreeDevice(&device);
                     drmFreeVersion(info);
-                    break;
+                    بشکن;
                 }
                 drmFreeVersion(info);
 #endif
                 av_log(ctx, AV_LOG_VERBOSE, "Trying to use "
                        "DRM render node for device %d.\n", n);
-                break;
+                بشکن;
             }
-            if (n >= max_devices)
-                break;
+            اگر (n >= max_devices)
+                بشکن;
         }
 
         display = vaGetDisplayDRM(priv->drm_fd);
-        if (!display) {
+        اگر (!display) {
             av_log(ctx, AV_LOG_VERBOSE, "Cannot open a VA display "
                    "from DRM device %s.\n", device);
-            return AVERROR_EXTERNAL;
+            بازگشت AVERROR_EXTERNAL;
         }
-        break;
+        بشکن;
     }
 #endif
 
-#if HAVE_VAAPI_X11
-    if (!display && try_x11) {
+#اگر HAVE_VAAPI_X11
+    اگر (!display && try_x11) {
         // Try to open the device as an X11 display.
         priv->x11_display = XOpenDisplay(device);
-        if (!priv->x11_display) {
+        اگر (!priv->x11_display) {
             av_log(ctx, AV_LOG_VERBOSE, "Cannot open X11 display "
                    "%s.\n", XDisplayName(device));
-        } else {
+        } وگرنه {
             display = vaGetDisplay(priv->x11_display);
-            if (!display) {
+            اگر (!display) {
                 av_log(ctx, AV_LOG_ERROR, "Cannot open a VA display "
                        "from X11 display %s.\n", XDisplayName(device));
-                return AVERROR_UNKNOWN;
+                بازگشت AVERROR_UNKNOWN;
             }
 
             av_log(ctx, AV_LOG_VERBOSE, "Opened VA display via "
@@ -1897,61 +1897,61 @@ static int vaapi_device_create(AVHWDeviceContext *ctx, const char *device,
     }
 #endif
 
-#if HAVE_VAAPI_WIN32
-    if (!display && try_win32) {
+#اگر HAVE_VAAPI_WIN32
+    اگر (!display && try_win32) {
         // Try to create a display from the specified device, if any.
-        if (!device) {
-            display = vaGetDisplayWin32(NULL);
-        } else {
-            IDXGIFactory2 *pDXGIFactory = NULL;
-            IDXGIAdapter *pAdapter = NULL;
-#if !HAVE_UWP
+        اگر (!device) {
+            display = vaGetDisplayWin32(پوچ);
+        } وگرنه {
+            IDXGIFactory2 *pDXGIFactory = پوچ;
+            IDXGIAdapter *pAdapter = پوچ;
+#اگر !HAVE_UWP
             HANDLE dxgi = dlopen("dxgi.dll", 0);
-            if (!dxgi) {
+            اگر (!dxgi) {
                 av_log(ctx, AV_LOG_ERROR, "Failed to load dxgi.dll\n");
-                return AVERROR_UNKNOWN;
+                بازگشت AVERROR_UNKNOWN;
             }
             PFN_CREATE_DXGI_FACTORY pfnCreateDXGIFactory =
                 (PFN_CREATE_DXGI_FACTORY)dlsym(dxgi, "CreateDXGIFactory");
-            if (!pfnCreateDXGIFactory) {
+            اگر (!pfnCreateDXGIFactory) {
                 av_log(ctx, AV_LOG_ERROR, "CreateDXGIFactory load failed\n");
                 dlclose(dxgi);
-                return AVERROR_UNKNOWN;
+                بازگشت AVERROR_UNKNOWN;
             }
-#else
+#وگرنه
             // In UWP (which lacks LoadLibrary), CreateDXGIFactory isn't
             // available, only CreateDXGIFactory1
             PFN_CREATE_DXGI_FACTORY pfnCreateDXGIFactory =
                 (PFN_CREATE_DXGI_FACTORY)CreateDXGIFactory1;
 #endif
-            if (SUCCEEDED(pfnCreateDXGIFactory(&IID_IDXGIFactory2,
-                                              (void **)&pDXGIFactory))) {
-                int adapter = atoi(device);
-                if (SUCCEEDED(IDXGIFactory2_EnumAdapters(pDXGIFactory,
+            اگر (SUCCEEDED(pfnCreateDXGIFactory(&IID_IDXGIFactory2,
+                                              (تهی **)&pDXGIFactory))) {
+                صحیح adapter = atoi(device);
+                اگر (SUCCEEDED(IDXGIFactory2_EnumAdapters(pDXGIFactory,
                                                          adapter,
                                                          &pAdapter))) {
                     DXGI_ADAPTER_DESC desc;
-                    if (SUCCEEDED(IDXGIAdapter2_GetDesc(pAdapter, &desc))) {
+                    اگر (SUCCEEDED(IDXGIAdapter2_GetDesc(pAdapter, &desc))) {
                         av_log(ctx, AV_LOG_INFO,
                               "Using device %04x:%04x (%ls) - LUID %lu %ld.\n",
                               desc.VendorId, desc.DeviceId, desc.Description,
-                              desc.AdapterLuid.LowPart,
-                              desc.AdapterLuid.HighPart);
+                              desc.AdapterLuid.کم_Part,
+                              desc.AdapterLuid.بالا_Part);
                         display = vaGetDisplayWin32(&desc.AdapterLuid);
                     }
                     IDXGIAdapter_Release(pAdapter);
                 }
                 IDXGIFactory2_Release(pDXGIFactory);
             }
-#if !HAVE_UWP
+#اگر !HAVE_UWP
             dlclose(dxgi);
 #endif
         }
 
-        if (!display) {
+        اگر (!display) {
             av_log(ctx, AV_LOG_ERROR, "Cannot open a VA display "
                     "from Win32 display.\n");
-            return AVERROR_UNKNOWN;
+            بازگشت AVERROR_UNKNOWN;
         }
 
         av_log(ctx, AV_LOG_VERBOSE, "Opened VA display via "
@@ -1959,131 +1959,131 @@ static int vaapi_device_create(AVHWDeviceContext *ctx, const char *device,
     }
 #endif
 
-    if (!display) {
-        if (device)
+    اگر (!display) {
+        اگر (device)
             av_log(ctx, AV_LOG_ERROR, "No VA display found for "
                    "device %s.\n", device);
-        else
+        وگرنه
             av_log(ctx, AV_LOG_ERROR, "No VA display found for "
                    "any default device.\n");
-        return AVERROR(EINVAL);
+        بازگشت AVERROR(EINVAL);
     }
 
-    ent = av_dict_get(opts, "driver", NULL, 0);
-    if (ent) {
-#if VA_CHECK_VERSION(0, 38, 0)
+    ent = av_dict_get(opts, "driver", پوچ, 0);
+    اگر (ent) {
+#اگر VA_CHECK_VERSION(0, 38, 0)
         VAStatus vas;
-        vas = vaSetDriverName(display, ent->value);
-        if (vas != VA_STATUS_SUCCESS) {
+        vas = vaSetDriverName(display, ent->مقدار);
+        اگر (vas != VA_STATUS_SUCCESS) {
             av_log(ctx, AV_LOG_ERROR, "Failed to set driver name to "
-                   "%s: %d (%s).\n", ent->value, vas, vaErrorStr(vas));
+                   "%s: %d (%s).\n", ent->مقدار, vas, vaErrorStr(vas));
             vaTerminate(display);
-            return AVERROR_EXTERNAL;
+            بازگشت AVERROR_EXTERNAL;
         }
-#else
+#وگرنه
         av_log(ctx, AV_LOG_WARNING, "Driver name setting is not "
                "supported with this VAAPI version.\n");
 #endif
     }
 
-    return vaapi_device_connect(ctx, display);
+    بازگشت vaapi_device_connect(ctx, display);
 }
 
-static int vaapi_device_derive(AVHWDeviceContext *ctx,
+ایستا صحیح vaapi_device_derive(AVHWDeviceContext *ctx,
                                AVHWDeviceContext *src_ctx,
-                               AVDictionary *opts, int flags)
+                               AVDictionary *opts, صحیح flags)
 {
-#if HAVE_VAAPI_DRM
-    if (src_ctx->type == AV_HWDEVICE_TYPE_DRM) {
+#اگر HAVE_VAAPI_DRM
+    اگر (src_ctx->type == AV_HWDEVICE_TYPE_DRM) {
         AVDRMDeviceContext *src_hwctx = src_ctx->hwctx;
         VADisplay *display;
         VAAPIDevicePriv *priv;
-        int fd;
+        صحیح fd;
 
-        if (src_hwctx->fd < 0) {
+        اگر (src_hwctx->fd < 0) {
             av_log(ctx, AV_LOG_ERROR, "DRM instance requires an associated "
                    "device to derive a VA display from.\n");
-            return AVERROR(EINVAL);
+            بازگشت AVERROR(EINVAL);
         }
 
-#if CONFIG_LIBDRM
+#اگر CONFIG_LIBDRM
         {
-            int node_type = drmGetNodeTypeFromFd(src_hwctx->fd);
-            char *render_node;
-            if (node_type < 0) {
+            صحیح گره_type = drm_Get_گره_Type_From_Fd(src_hwctx->fd);
+            نویسه *render_گره;
+            اگر (گره_type < 0) {
                 av_log(ctx, AV_LOG_ERROR, "DRM instance fd does not appear "
                        "to refer to a DRM device.\n");
-                return AVERROR(EINVAL);
+                بازگشت AVERROR(EINVAL);
             }
-            if (node_type == DRM_NODE_RENDER) {
+            اگر (گره_type == DRM_گره_RENDER) {
                 fd = src_hwctx->fd;
-            } else {
-                render_node = drmGetRenderDeviceNameFromFd(src_hwctx->fd);
-                if (!render_node) {
+            } وگرنه {
+                render_گره = drmGetRenderDeviceNameFromFd(src_hwctx->fd);
+                اگر (!render_گره) {
                     av_log(ctx, AV_LOG_VERBOSE, "Using non-render node "
                            "because the device does not have an "
                            "associated render node.\n");
                     fd = src_hwctx->fd;
-                } else {
-                    fd = open(render_node, O_RDWR);
-                    if (fd < 0) {
+                } وگرنه {
+                    fd = open(render_گره, O_RDWR);
+                    اگر (fd < 0) {
                         av_log(ctx, AV_LOG_VERBOSE, "Using non-render node "
                                "because the associated render node "
                                "could not be opened.\n");
                         fd = src_hwctx->fd;
-                    } else {
+                    } وگرنه {
                         av_log(ctx, AV_LOG_VERBOSE, "Using render node %s "
                                "in place of non-render DRM device.\n",
-                               render_node);
+                               render_گره);
                     }
-                    free(render_node);
+                    آزاد(render_گره);
                 }
             }
         }
-#else
+#وگرنه
         fd = src_hwctx->fd;
 #endif
 
-        priv = av_mallocz(sizeof(*priv));
-        if (!priv) {
-            if (fd != src_hwctx->fd) {
+        priv = av_mallocz(اندازه(*priv));
+        اگر (!priv) {
+            اگر (fd != src_hwctx->fd) {
                 // The fd was opened in this function.
                 close(fd);
             }
-            return AVERROR(ENOMEM);
+            بازگشت AVERROR(ENOMEM);
         }
 
-        if (fd == src_hwctx->fd) {
+        اگر (fd == src_hwctx->fd) {
             // The fd is inherited from the source context and we are holding
             // a reference to that, we don't want to close it from here.
             priv->drm_fd = -1;
-        } else {
+        } وگرنه {
             priv->drm_fd = fd;
         }
 
         ctx->user_opaque = priv;
-        ctx->free        = &vaapi_device_free;
+        ctx->آزاد        = &vaapi_device_free;
 
         display = vaGetDisplayDRM(fd);
-        if (!display) {
+        اگر (!display) {
             av_log(ctx, AV_LOG_ERROR, "Failed to open a VA display from "
                    "DRM device.\n");
-            return AVERROR(EIO);
+            بازگشت AVERROR(EIO);
         }
 
-        return vaapi_device_connect(ctx, display);
+        بازگشت vaapi_device_connect(ctx, display);
     }
 #endif
-    return AVERROR(ENOSYS);
+    بازگشت AVERROR(ENOSYS);
 }
 
-const HWContextType ff_hwcontext_type_vaapi = {
+ثابت HWContextType ff_hwcontext_type_vaapi = {
     .type                   = AV_HWDEVICE_TYPE_VAAPI,
     .name                   = "VAAPI",
 
-    .device_hwctx_size      = sizeof(VAAPIDeviceContext),
-    .device_hwconfig_size   = sizeof(AVVAAPIHWConfig),
-    .frames_hwctx_size      = sizeof(VAAPIFramesContext),
+    .device_hwctx_size      = اندازه(VAAPIDeviceContext),
+    .device_hwconfig_size   = اندازه(AVVAAPIHWConfig),
+    .frames_hwctx_size      = اندازه(VAAPIFramesContext),
 
     .device_create          = &vaapi_device_create,
     .device_derive          = &vaapi_device_derive,
@@ -2099,7 +2099,7 @@ const HWContextType ff_hwcontext_type_vaapi = {
     .map_to                 = &vaapi_map_to,
     .map_from               = &vaapi_map_from,
 
-    .pix_fmts = (const enum AVPixelFormat[]) {
+    .pix_fmts = (ثابت شمارش AVPixelFormat[]) {
         AV_PIX_FMT_VAAPI,
         AV_PIX_FMT_NONE
     },

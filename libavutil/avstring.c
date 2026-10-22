@@ -19,88 +19,88 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+#شامل <limits.h>
+#شامل <stdarg.h>
+#شامل <stdint.h>
+#شامل <stdio.h>
+#شامل <string.h>
 
-#include "config.h"
-#include "mem.h"
-#include "avassert.h"
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
+#شامل "config.h"
+#شامل "mem.h"
+#شامل "avassert.h"
+#شامل "avstring.h"
+#شامل "bprint.h"
+#شامل "error.h"
+#شامل "macros.h"
 
-int av_strstart(const char *str, const char *pfx, const char **ptr)
+صحیح av_strstart(ثابت نویسه *str, ثابت نویسه *pfx, ثابت نویسه **ptr)
 {
-    while (*pfx && *pfx == *str) {
+    وقتی (*pfx && *pfx == *str) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    اگر (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    بازگشت !*pfx;
 }
 
-int av_stristart(const char *str, const char *pfx, const char **ptr)
+صحیح av_stristart(ثابت نویسه *str, ثابت نویسه *pfx, ثابت نویسه **ptr)
 {
-    while (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
+    وقتی (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    اگر (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    بازگشت !*pfx;
 }
 
-char *av_stristr(const char *s1, const char *s2)
+نویسه *av_stristr(ثابت نویسه *s1, ثابت نویسه *s2)
 {
-    if (!*s2)
-        return (char*)(intptr_t)s1;
+    اگر (!*s2)
+        بازگشت (نویسه*)(intptr_t)s1;
 
-    do
-        if (av_stristart(s1, s2, NULL))
-            return (char*)(intptr_t)s1;
-    while (*s1++);
+    انجامبده
+        اگر (av_stristart(s1, s2, پوچ))
+            بازگشت (نویسه*)(intptr_t)s1;
+    وقتی (*s1++);
 
-    return NULL;
+    بازگشت پوچ;
 }
 
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length)
+نویسه *av_strnstr(ثابت نویسه *haystack, ثابت نویسه *needle, size_t hay_length)
 {
     size_t needle_len = strlen(needle);
-    if (!needle_len)
-        return (char*)haystack;
-    while (hay_length >= needle_len) {
+    اگر (!needle_len)
+        بازگشت (نویسه*)haystack;
+    وقتی (hay_length >= needle_len) {
         hay_length--;
-        if (!memcmp(haystack, needle, needle_len))
-            return (char*)haystack;
+        اگر (!memcmp(haystack, needle, needle_len))
+            بازگشت (نویسه*)haystack;
         haystack++;
     }
-    return NULL;
+    بازگشت پوچ;
 }
 
-size_t av_strlcpy(char *dst, const char *src, size_t size)
+size_t av_strlcpy(نویسه *dst, ثابت نویسه *src, size_t size)
 {
     size_t len = 0;
-    while (++len < size && *src)
+    وقتی (++len < size && *src)
         *dst++ = *src++;
-    if (len <= size)
+    اگر (len <= size)
         *dst = 0;
-    return len + strlen(src) - 1;
+    بازگشت len + strlen(src) - 1;
 }
 
-size_t av_strlcat(char *dst, const char *src, size_t size)
+size_t av_strlcat(نویسه *dst, ثابت نویسه *src, size_t size)
 {
     size_t len = strlen(dst);
-    if (size <= len + 1)
-        return len + strlen(src);
-    return len + av_strlcpy(dst + len, src, size - len);
+    اگر (size <= len + 1)
+        بازگشت len + strlen(src);
+    بازگشت len + av_strlcpy(dst + len, src, size - len);
 }
 
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
+size_t av_strlcatf(نویسه *dst, size_t size, ثابت نویسه *fmt, ...)
 {
     size_t len = strlen(dst);
     va_list vl;
@@ -109,355 +109,355 @@ size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
     len += vsnprintf(dst + len, size > len ? size - len : 0, fmt, vl);
     va_end(vl);
 
-    return len;
+    بازگشت len;
 }
 
-char *av_asprintf(const char *fmt, ...)
+نویسه *av_asprintf(ثابت نویسه *fmt, ...)
 {
-    char *p = NULL;
+    نویسه *p = پوچ;
     va_list va;
-    int len;
+    صحیح len;
 
     va_start(va, fmt);
-    len = vsnprintf(NULL, 0, fmt, va);
+    len = vsnprintf(پوچ, 0, fmt, va);
     va_end(va);
-    if (len < 0)
-        goto end;
+    اگر (len < 0)
+        برو end;
 
     p = av_malloc(len + 1);
-    if (!p)
-        goto end;
+    اگر (!p)
+        برو end;
 
     va_start(va, fmt);
     len = vsnprintf(p, len + 1, fmt, va);
     va_end(va);
-    if (len < 0)
+    اگر (len < 0)
         av_freep(&p);
 
 end:
-    return p;
+    بازگشت p;
 }
 
 #define WHITESPACES " \n\t\r"
 
-char *av_get_token(const char **buf, const char *term)
+نویسه *av_get_token(ثابت نویسه **buf, ثابت نویسه *term)
 {
-    char *out     = av_realloc(NULL, strlen(*buf) + 1);
-    char *ret     = out, *end = out;
-    const char *p = *buf;
-    if (!out)
-        return NULL;
+    نویسه *out     = av_realloc(پوچ, strlen(*buf) + 1);
+    نویسه *ret     = out, *end = out;
+    ثابت نویسه *p = *buf;
+    اگر (!out)
+        بازگشت پوچ;
     p += strspn(p, WHITESPACES);
 
-    while (*p && !strspn(p, term)) {
-        char c = *p++;
-        if (c == '\\' && *p) {
+    وقتی (*p && !strspn(p, term)) {
+        نویسه c = *p++;
+        اگر (c == '\\' && *p) {
             *out++ = *p++;
             end    = out;
-        } else if (c == '\'') {
-            while (*p && *p != '\'')
+        } وگرنه اگر (c == '\'') {
+            وقتی (*p && *p != '\'')
                 *out++ = *p++;
-            if (*p) {
+            اگر (*p) {
                 p++;
                 end = out;
             }
-        } else {
+        } وگرنه {
             *out++ = c;
         }
     }
 
-    do
+    انجامبده
         *out-- = 0;
-    while (out >= end && strspn(out, WHITESPACES));
+    وقتی (out >= end && strspn(out, WHITESPACES));
 
     *buf = p;
 
-    char *small_ret = av_realloc(ret, out - ret + 2);
-    return small_ret ? small_ret : ret;
+    نویسه *small_ret = av_realloc(ret, out - ret + 2);
+    بازگشت small_ret ? small_ret : ret;
 }
 
-char *av_strtok(char *s, const char *delim, char **saveptr)
+نویسه *av_strtok(نویسه *s, ثابت نویسه *delim, نویسه **saveptr)
 {
-    char *tok;
+    نویسه *tok;
 
-    if (!s && !(s = *saveptr))
-        return NULL;
+    اگر (!s && !(s = *saveptr))
+        بازگشت پوچ;
 
     /* skip leading delimiters */
     s += strspn(s, delim);
 
     /* s now points to the first non delimiter char, or to the end of the string */
-    if (!*s) {
-        *saveptr = NULL;
-        return NULL;
+    اگر (!*s) {
+        *saveptr = پوچ;
+        بازگشت پوچ;
     }
     tok = s++;
 
     /* skip non delimiters */
     s += strcspn(s, delim);
-    if (*s) {
+    اگر (*s) {
         *s = 0;
         *saveptr = s+1;
-    } else {
-        *saveptr = NULL;
+    } وگرنه {
+        *saveptr = پوچ;
     }
 
-    return tok;
+    بازگشت tok;
 }
 
-int av_strcasecmp(const char *a, const char *b)
+صحیح av_strcasecmp(ثابت نویسه *a, ثابت نویسه *b)
 {
     uint8_t c1, c2;
-    do {
+    انجامبده {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (c1 && c1 == c2);
-    return c1 - c2;
+    } وقتی (c1 && c1 == c2);
+    بازگشت c1 - c2;
 }
 
-int av_strncasecmp(const char *a, const char *b, size_t n)
+صحیح av_strncasecmp(ثابت نویسه *a, ثابت نویسه *b, size_t n)
 {
     uint8_t c1, c2;
-    if (n <= 0)
-        return 0;
-    do {
+    اگر (n <= 0)
+        بازگشت 0;
+    انجامبده {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (--n && c1 && c1 == c2);
-    return c1 - c2;
+    } وقتی (--n && c1 && c1 == c2);
+    بازگشت c1 - c2;
 }
 
-char *av_strireplace(const char *str, const char *from, const char *to)
+نویسه *av_strireplace(ثابت نویسه *str, ثابت نویسه *from, ثابت نویسه *to)
 {
-    char *ret = NULL;
-    const char *pstr2, *pstr = str;
+    نویسه *ret = پوچ;
+    ثابت نویسه *pstr2, *pstr = str;
     size_t tolen = strlen(to), fromlen = strlen(from);
     AVBPrint pbuf;
 
-    if (!fromlen)
-        return av_strdup(str);
+    اگر (!fromlen)
+        بازگشت av_strdup(str);
 
     av_bprint_init(&pbuf, 1, AV_BPRINT_SIZE_UNLIMITED);
-    while ((pstr2 = av_stristr(pstr, from))) {
+    وقتی ((pstr2 = av_stristr(pstr, from))) {
         av_bprint_append_data(&pbuf, pstr, pstr2 - pstr);
         pstr = pstr2 + fromlen;
         av_bprint_append_data(&pbuf, to, tolen);
     }
     av_bprint_append_data(&pbuf, pstr, strlen(pstr));
-    if (!av_bprint_is_complete(&pbuf)) {
-        av_bprint_finalize(&pbuf, NULL);
-    } else {
+    اگر (!av_bprint_is_complete(&pbuf)) {
+        av_bprint_finalize(&pbuf, پوچ);
+    } وگرنه {
         av_bprint_finalize(&pbuf, &ret);
     }
 
-    return ret;
+    بازگشت ret;
 }
 
-const char *av_basename(const char *path)
+ثابت نویسه *av_basename(ثابت نویسه *path)
 {
-    if (!path || *path == '\0')
-        return ".";
+    اگر (!path || *path == '\0')
+        بازگشت ".";
 
-    const char *p = strrchr(path, '/');
-#if HAVE_DOS_PATHS
-    const char *q = strrchr(path, '\\');
-    const char *d = strchr(path, ':');
+    ثابت نویسه *p = strrchr(path, '/');
+#اگر HAVE_DOS_PATHS
+    ثابت نویسه *q = strrchr(path, '\\');
+    ثابت نویسه *d = strchr(path, ':');
     p = FFMAX3(p, q, d);
 #endif
 
-    if (!p)
-        return path;
+    اگر (!p)
+        بازگشت path;
 
-    return p + 1;
+    بازگشت p + 1;
 }
 
-const char *av_dirname(char *path)
+ثابت نویسه *av_dirname(نویسه *path)
 {
-    char *p = path ? strrchr(path, '/') : NULL;
+    نویسه *p = path ? strrchr(path, '/') : پوچ;
 
-#if HAVE_DOS_PATHS
-    char *q = path ? strrchr(path, '\\') : NULL;
-    char *d = path ? strchr(path, ':')  : NULL;
+#اگر HAVE_DOS_PATHS
+    نویسه *q = path ? strrchr(path, '\\') : پوچ;
+    نویسه *d = path ? strchr(path, ':')  : پوچ;
 
     d = d ? d + 1 : d;
 
     p = FFMAX3(p, q, d);
 #endif
 
-    if (!p)
-        return ".";
+    اگر (!p)
+        بازگشت ".";
 
     *p = '\0';
 
-    return path;
+    بازگشت path;
 }
 
-char *av_append_path_component(const char *path, const char *component)
+نویسه *av_append_path_component(ثابت نویسه *path, ثابت نویسه *component)
 {
     size_t p_len, c_len;
-    char *fullpath;
+    نویسه *fullpath;
 
-    if (!path)
-        return av_strdup(component);
-    if (!component)
-        return av_strdup(path);
+    اگر (!path)
+        بازگشت av_strdup(component);
+    اگر (!component)
+        بازگشت av_strdup(path);
 
     p_len = strlen(path);
     c_len = strlen(component);
-    if (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
-        return NULL;
+    اگر (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
+        بازگشت پوچ;
     fullpath = av_malloc(p_len + c_len + 2);
-    if (fullpath) {
-        if (p_len) {
+    اگر (fullpath) {
+        اگر (p_len) {
             av_strlcpy(fullpath, path, p_len + 1);
-            if (c_len) {
-                if (fullpath[p_len - 1] != '/' && component[0] != '/')
+            اگر (c_len) {
+                اگر (fullpath[p_len - 1] != '/' && component[0] != '/')
                     fullpath[p_len++] = '/';
-                else if (fullpath[p_len - 1] == '/' && component[0] == '/')
+                وگرنه اگر (fullpath[p_len - 1] == '/' && component[0] == '/')
                     p_len--;
             }
         }
         av_strlcpy(&fullpath[p_len], component, c_len + 1);
         fullpath[p_len + c_len] = 0;
     }
-    return fullpath;
+    بازگشت fullpath;
 }
 
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags)
+صحیح av_escape(نویسه **dst, ثابت نویسه *src, ثابت نویسه *special_chars,
+              شمارش AVEscapeMode mode, صحیح flags)
 {
     AVBPrint dstbuf;
-    int ret;
+    صحیح ret;
 
     av_bprint_init(&dstbuf, 1, INT_MAX); /* (int)dstbuf.len must be >= 0 */
     av_bprint_escape(&dstbuf, src, special_chars, mode, flags);
 
-    if (!av_bprint_is_complete(&dstbuf)) {
-        av_bprint_finalize(&dstbuf, NULL);
-        return AVERROR(ENOMEM);
+    اگر (!av_bprint_is_complete(&dstbuf)) {
+        av_bprint_finalize(&dstbuf, پوچ);
+        بازگشت AVERROR(ENOMEM);
     }
-    if ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
-        return ret;
-    return dstbuf.len;
+    اگر ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
+        بازگشت ret;
+    بازگشت dstbuf.len;
 }
 
-int av_match_name(const char *name, const char *names)
+صحیح av_match_name(ثابت نویسه *name, ثابت نویسه *names)
 {
-    const char *p;
+    ثابت نویسه *p;
     size_t len, namelen;
 
-    if (!name || !names)
-        return 0;
+    اگر (!name || !names)
+        بازگشت 0;
 
     namelen = strlen(name);
-    while (*names) {
-        int negate = '-' == *names;
+    وقتی (*names) {
+        صحیح negate = '-' == *names;
         p = strchr(names, ',');
-        if (!p)
+        اگر (!p)
             p = names + strlen(names);
         names += negate;
         len = FFMAX(p - names, namelen);
-        if (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
-            return !negate;
+        اگر (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
+            بازگشت !negate;
         names = p + (*p == ',');
     }
-    return 0;
+    بازگشت 0;
 }
 
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags)
+صحیح av_utf8_decode(int32_t *codep, ثابت uint8_t **bufp, ثابت uint8_t *buf_end,
+                   unsigned صحیح flags)
 {
-    const uint8_t *p = *bufp;
-    uint32_t top;
+    ثابت uint8_t *p = *bufp;
+    uint32_t بالاترین;
     uint64_t code;
-    int ret = 0, tail_len;
+    صحیح ret = 0, tail_len;
     uint32_t overlong_encoding_mins[6] = {
         0x00000000, 0x00000080, 0x00000800, 0x00010000, 0x00200000, 0x04000000,
     };
 
-    if (p >= buf_end)
-        return 0;
+    اگر (p >= buf_end)
+        بازگشت 0;
 
     code = *p++;
 
     /* first sequence byte starts with 10, or is 1111-1110 or 1111-1111,
        which is not admitted */
-    if ((code & 0xc0) == 0x80 || code >= 0xFE) {
+    اگر ((code & 0xc0) == 0x80 || code >= 0xFE) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        برو end;
     }
-    top = (code & 128) >> 1;
+    بالاترین = (code & 128) >> 1;
 
     tail_len = 0;
-    while (code & top) {
-        int tmp;
+    وقتی (code & بالاترین) {
+        صحیح tmp;
         tail_len++;
-        if (p >= buf_end) {
+        اگر (p >= buf_end) {
             (*bufp) ++;
-            return AVERROR(EILSEQ); /* incomplete sequence */
+            بازگشت AVERROR(EILSEQ); /* incomplete sequence */
         }
 
         /* we assume the byte to be in the form 10xx-xxxx */
         tmp = *p++ - 128;   /* strip leading 1 */
-        if (tmp>>6) {
+        اگر (tmp>>6) {
             (*bufp) ++;
-            return AVERROR(EILSEQ);
+            بازگشت AVERROR(EILSEQ);
         }
         code = (code<<6) + tmp;
-        top <<= 5;
+        بالاترین <<= 5;
     }
-    code &= (top << 1) - 1;
+    code &= (بالاترین << 1) - 1;
 
     /* check for overlong encodings */
     av_assert0(tail_len <= 5);
-    if (code < overlong_encoding_mins[tail_len]) {
+    اگر (code < overlong_encoding_mins[tail_len]) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        برو end;
     }
 
-    if (code >= 1U<<31) {
+    اگر (code >= 1U<<31) {
         ret = AVERROR(EILSEQ);  /* out-of-range value */
-        goto end;
+        برو end;
     }
 
     *codep = code;
 
-    if (code > 0x10FFFF &&
+    اگر (code > 0x10FFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES))
         ret = AVERROR(EILSEQ);
-    if (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
+    اگر (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
         flags & AV_UTF8_FLAG_EXCLUDE_XML_INVALID_CONTROL_CODES)
         ret = AVERROR(EILSEQ);
-    if (code >= 0xD800 && code <= 0xDFFF &&
+    اگر (code >= 0xD800 && code <= 0xDFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_SURROGATES))
         ret = AVERROR(EILSEQ);
-    if ((code == 0xFFFE || code == 0xFFFF) &&
+    اگر ((code == 0xFFFE || code == 0xFFFF) &&
         !(flags & AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS))
         ret = AVERROR(EILSEQ);
 
 end:
     *bufp = p;
-    return ret;
+    بازگشت ret;
 }
 
-int av_match_list(const char *name, const char *list, char separator)
+صحیح av_match_list(ثابت نویسه *name, ثابت نویسه *list, نویسه separator)
 {
-    const char *p, *q;
+    ثابت نویسه *p, *q;
 
-    for (p = name; p && *p; ) {
-        for (q = list; q && *q; ) {
-            int k;
-            for (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
-                if (k && (!p[k] || p[k] == separator))
-                    return 1;
+    برای (p = name; p && *p; ) {
+        برای (q = list; q && *q; ) {
+            صحیح k;
+            برای (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
+                اگر (k && (!p[k] || p[k] == separator))
+                    بازگشت 1;
             q = strchr(q, separator);
-            if(q)
+            اگر(q)
                 q++;
         }
         p = strchr(p, separator);
-        if (p)
+        اگر (p)
             p++;
     }
 
-    return 0;
+    بازگشت 0;
 }

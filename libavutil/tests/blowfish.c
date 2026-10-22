@@ -16,19 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#شامل <stdint.h>
+#شامل <stdio.h>
+#شامل <stdlib.h>
+#شامل <string.h>
 
-#include "libavutil/attributes_internal.h"
-#include "libavutil/mem.h"
-#include "libavutil/blowfish.h"
+#شامل "libavutil/attributes_internal.h"
+#شامل "libavutil/mem.h"
+#شامل "libavutil/blowfish.h"
 
-#define NUM_VARIABLE_KEY_TESTS 34
+#define رقم_VARIABLE_کلید_TESTS 34
 
 /* plaintext bytes -- left halves */
-static const uint32_t plaintext_l[NUM_VARIABLE_KEY_TESTS] = {
+ایستا ثابت uint32_t plaintext_l[رقم_VARIABLE_کلید_TESTS] = {
     0x00000000, 0xFFFFFFFF, 0x10000000, 0x11111111, 0x11111111,
     0x01234567, 0x00000000, 0x01234567, 0x01A1D6D0, 0x5CD54CA8,
     0x0248D438, 0x51454B58, 0x42FD4430, 0x059B5E08, 0x0756D8E0,
@@ -39,7 +39,7 @@ static const uint32_t plaintext_l[NUM_VARIABLE_KEY_TESTS] = {
 };
 
 /* plaintext bytes -- right halves */
-static const uint32_t plaintext_r[NUM_VARIABLE_KEY_TESTS] = {
+ایستا ثابت uint32_t plaintext_r[رقم_VARIABLE_کلید_TESTS] = {
     0x00000000, 0xFFFFFFFF, 0x00000001, 0x11111111, 0x11111111,
     0x89ABCDEF, 0x00000000, 0x89ABCDEF, 0x39776742, 0x3DEF57DA,
     0x06F67172, 0x2DDF440A, 0x59577FA2, 0x51CF143A, 0x774761D2,
@@ -50,7 +50,7 @@ static const uint32_t plaintext_r[NUM_VARIABLE_KEY_TESTS] = {
 };
 
 /* key bytes for variable key tests */
-static const uint8_t variable_key[NUM_VARIABLE_KEY_TESTS][8] = {
+ایستا ثابت uint8_t variable_کلید[رقم_VARIABLE_کلید_TESTS][8] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
     { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF },
     { 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
@@ -88,7 +88,7 @@ static const uint8_t variable_key[NUM_VARIABLE_KEY_TESTS][8] = {
 };
 
 /* ciphertext bytes -- left halves */
-static const uint32_t ciphertext_l[NUM_VARIABLE_KEY_TESTS] = {
+ایستا ثابت uint32_t ciphertext_l[رقم_VARIABLE_کلید_TESTS] = {
     0x4EF99745, 0x51866FD5, 0x7D856F9A, 0x2466DD87, 0x61F9C380,
     0x7D0CC630, 0x4EF99745, 0x0ACEAB0F, 0x59C68245, 0xB1B8CC0B,
     0x1730E577, 0xA25E7856, 0x353882B1, 0x48F4D088, 0x432193B7,
@@ -99,7 +99,7 @@ static const uint32_t ciphertext_l[NUM_VARIABLE_KEY_TESTS] = {
 };
 
 /* ciphertext bytes -- right halves */
-static const uint32_t ciphertext_r[NUM_VARIABLE_KEY_TESTS] = {
+ایستا ثابت uint32_t ciphertext_r[رقم_VARIABLE_کلید_TESTS] = {
     0x6198DD78, 0xB85ECB8A, 0x613063F2, 0x8B963C9D, 0x2281B096,
     0xAFDA1EC7, 0x6198DD78, 0xC6A0A28D, 0xEB05282B, 0x250F09A0,
     0x8BEA1DA4, 0xCF2651EB, 0x09CE8F1A, 0x4C379918, 0x8951FC98,
@@ -110,56 +110,56 @@ static const uint32_t ciphertext_r[NUM_VARIABLE_KEY_TESTS] = {
 };
 
 /* plaintext bytes */
-static attribute_nonstring const uint8_t plaintext[8] = "BLOWFISH";
+ایستا attribute_nonstring ثابت uint8_t plaintext[8] = "BLOWFISH";
 
-static attribute_nonstring const uint8_t plaintext2[16] = "BLOWFISHBLOWFISH";
+ایستا attribute_nonstring ثابت uint8_t plaintext2[16] = "BLOWFISHBLOWFISH";
 
 /* ciphertext bytes */
-static const uint8_t ciphertext[8] = {
+ایستا ثابت uint8_t ciphertext[8] = {
     0x32, 0x4E, 0xD0, 0xFE, 0xF4, 0x13, 0xA2, 0x03
 };
 
-static const uint8_t ciphertext2[16] = {
+ایستا ثابت uint8_t ciphertext2[16] = {
     0x53, 0x00, 0x40, 0x06, 0x63, 0xf2, 0x1d, 0x99,
     0x3b, 0x9b, 0x27, 0x64, 0x46, 0xfd, 0x20, 0xc1,
 };
 
 #define IV "blowfish"
 
-static void test_blowfish(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                          const uint8_t *ref, int len, uint8_t *iv, int dir,
-                          const char *test)
+ایستا تهی test_blowfish(AVBlowfish *ctx, uint8_t *dst, ثابت uint8_t *src,
+                          ثابت uint8_t *ref, صحیح len, uint8_t *iv, صحیح dir,
+                          ثابت نویسه *test)
 {
     av_blowfish_crypt(ctx, dst, src, len, iv, dir);
-    if (memcmp(dst, ref, 8*len)) {
-        int i;
+    اگر (memcmp(dst, ref, 8*len)) {
+        صحیح i;
         printf("%s failed\ngot      ", test);
-        for (i = 0; i < 8*len; i++)
+        برای (i = 0; i < 8*len; i++)
             printf("%02x ", dst[i]);
         printf("\nexpected ");
-        for (i = 0; i < 8*len; i++)
+        برای (i = 0; i < 8*len; i++)
             printf("%02x ", ref[i]);
         printf("\n");
         exit(1);
     }
 }
 
-int main(void)
+صحیح اصلی(تهی)
 {
-    uint32_t tmptext_l[NUM_VARIABLE_KEY_TESTS];
-    uint32_t tmptext_r[NUM_VARIABLE_KEY_TESTS];
+    uint32_t tmptext_l[رقم_VARIABLE_کلید_TESTS];
+    uint32_t tmptext_r[رقم_VARIABLE_کلید_TESTS];
     uint8_t tmp[16], iv[8];
-    int i;
+    صحیح i;
     AVBlowfish *ctx = av_blowfish_alloc();
-    if (!ctx)
-        return 1;
+    اگر (!ctx)
+        بازگشت 1;
 
     av_blowfish_init(ctx, "abcdefghijklmnopqrstuvwxyz", 26);
 
-    test_blowfish(ctx, tmp, plaintext, ciphertext, 1, NULL, 0, "encryption");
-    test_blowfish(ctx, tmp, ciphertext, plaintext, 1, NULL, 1, "decryption");
-    test_blowfish(ctx, tmp, tmp, ciphertext, 1, NULL, 0, "Inplace encryption");
-    test_blowfish(ctx, tmp, tmp, plaintext,  1, NULL, 1, "Inplace decryption");
+    test_blowfish(ctx, tmp, plaintext, ciphertext, 1, پوچ, 0, "encryption");
+    test_blowfish(ctx, tmp, ciphertext, plaintext, 1, پوچ, 1, "decryption");
+    test_blowfish(ctx, tmp, tmp, ciphertext, 1, پوچ, 0, "Inplace encryption");
+    test_blowfish(ctx, tmp, tmp, plaintext,  1, پوچ, 1, "Inplace decryption");
     memcpy(iv, IV, 8);
     test_blowfish(ctx, tmp, plaintext2, ciphertext2, 2, iv, 0, "CBC encryption");
     memcpy(iv, IV, 8);
@@ -169,26 +169,26 @@ int main(void)
     memcpy(iv, IV, 8);
     test_blowfish(ctx, tmp, tmp, plaintext2,  2, iv, 1, "Inplace CBC decryption");
 
-    memcpy(tmptext_l, plaintext_l, sizeof(*plaintext_l) * NUM_VARIABLE_KEY_TESTS);
-    memcpy(tmptext_r, plaintext_r, sizeof(*plaintext_r) * NUM_VARIABLE_KEY_TESTS);
+    memcpy(tmptext_l, plaintext_l, اندازه(*plaintext_l) * رقم_VARIABLE_کلید_TESTS);
+    memcpy(tmptext_r, plaintext_r, اندازه(*plaintext_r) * رقم_VARIABLE_کلید_TESTS);
 
-    for (i = 0; i < NUM_VARIABLE_KEY_TESTS; i++) {
-        av_blowfish_init(ctx, variable_key[i], 8);
+    برای (i = 0; i < رقم_VARIABLE_کلید_TESTS; i++) {
+        av_blowfish_init(ctx, variable_کلید[i], 8);
 
         av_blowfish_crypt_ecb(ctx, &tmptext_l[i], &tmptext_r[i], 0);
-        if (tmptext_l[i] != ciphertext_l[i] || tmptext_r[i] != ciphertext_r[i]) {
+        اگر (tmptext_l[i] != ciphertext_l[i] || tmptext_r[i] != ciphertext_r[i]) {
             printf("Test encryption failed.\n");
-            return 2;
+            بازگشت 2;
         }
 
         av_blowfish_crypt_ecb(ctx, &tmptext_l[i], &tmptext_r[i], 1);
-        if (tmptext_l[i] != plaintext_l[i] || tmptext_r[i] != plaintext_r[i]) {
+        اگر (tmptext_l[i] != plaintext_l[i] || tmptext_r[i] != plaintext_r[i]) {
             printf("Test decryption failed.\n");
-            return 3;
+            بازگشت 3;
         }
     }
     printf("Test encryption/decryption success.\n");
     av_free(ctx);
 
-    return 0;
+    بازگشت 0;
 }

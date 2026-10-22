@@ -21,9 +21,9 @@
 #ifndef AVUTIL_AES_H
 #define AVUTIL_AES_H
 
-#include <stdint.h>
+#شامل <stdint.h>
 
-#include "attributes.h"
+#شامل "attributes.h"
 
 /**
  * @defgroup lavu_aes AES
@@ -31,14 +31,14 @@
  * @{
  */
 
-extern const int av_aes_size;
+بیرونی ثابت صحیح av_aes_size;
 
-struct AVAES;
+ساختار AVAES;
 
 /**
  * Allocate an AVAES context.
  */
-struct AVAES *av_aes_alloc(void);
+ساختار AVAES *av_aes_alloc(تهی);
 
 /**
  * Initialize an AVAES context.
@@ -48,7 +48,7 @@ struct AVAES *av_aes_alloc(void);
  * @param key_bits 128, 192 or 256
  * @param decrypt 0 for encryption, 1 for decryption
  */
-int av_aes_init(struct AVAES *a, const uint8_t *key, int key_bits, int decrypt);
+صحیح av_aes_init(ساختار AVAES *a, ثابت uint8_t *کلید, صحیح کلید_bits, صحیح decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -60,7 +60,7 @@ int av_aes_init(struct AVAES *a, const uint8_t *key, int key_bits, int decrypt);
  * @param iv initialization vector for CBC mode, if NULL then ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_aes_crypt(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+تهی av_aes_crypt(ساختار AVAES *a, uint8_t *dst, ثابت uint8_t *src, صحیح شمار, uint8_t *iv, صحیح decrypt);
 
 /**
  * @}

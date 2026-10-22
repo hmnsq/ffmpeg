@@ -18,9 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "downmix_info.h"
-#include "frame.h"
-#include "mem.h"
+#شامل "downmix_info.h"
+#شامل "frame.h"
+#شامل "mem.h"
 
 AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame)
 {
@@ -28,58 +28,58 @@ AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame)
 
     side_data = av_frame_get_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO);
 
-    if (!side_data) {
+    اگر (!side_data) {
         side_data = av_frame_new_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO,
-                                           sizeof(AVDownmixInfo));
-        if (side_data)
-            memset(side_data->data, 0, sizeof(AVDownmixInfo));
+                                           اندازه(AVDownmixInfo));
+        اگر (side_data)
+            memset(side_data->data, 0, اندازه(AVDownmixInfo));
     }
 
-    if (!side_data)
-        return NULL;
+    اگر (!side_data)
+        بازگشت پوچ;
 
-    return (AVDownmixInfo*)side_data->data;
+    بازگشت (AVDownmixInfo*)side_data->data;
 }
 
 #define MAX_CHANNELS 64
 
-static const int type_map[] = {
+ایستا ثابت صحیح type_map[] = {
     [AV_DOWNMIX_TYPE_UNKNOWN] = 0,
     [AV_DOWNMIX_TYPE_LORO]    = 2,
     [AV_DOWNMIX_TYPE_LTRT]    = 2,
     [AV_DOWNMIX_TYPE_DPLII]   = 2,
 };
 
-AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size)
+AVDownmixMatrix *av_downmix_matrix_alloc(شمارش AVDownmixType type,
+                                         صحیح in_ch_شمار, size_t *out_size)
 {
-    struct TestStruct {
+    ساختار TestStruct {
         AVDownmixMatrix p;
         AVDownmixCoeff  b;
     };
-    const size_t coeffs_offset = offsetof(struct TestStruct, b);
+    ثابت size_t coeffs_offset = offsetof(ساختار TestStruct, b);
     size_t size = coeffs_offset;
-    unsigned int nb_coeffs;
+    unsigned صحیح nb_coeffs;
     AVDownmixMatrix *dc;
 
-    if ((unsigned)type >= FF_ARRAY_ELEMS(type_map) ||
-        (unsigned)in_ch_count > MAX_CHANNELS)
-        return NULL;
+    اگر ((unsigned)type >= FF_ARRAY_ELEMS(type_map) ||
+        (unsigned)in_ch_شمار > MAX_CHANNELS)
+        بازگشت پوچ;
 
-    nb_coeffs = type_map[type] * in_ch_count;
-    size += sizeof(AVDownmixCoeff) * nb_coeffs;
+    nb_coeffs = type_map[type] * in_ch_شمار;
+    size += اندازه(AVDownmixCoeff) * nb_coeffs;
 
     dc = av_mallocz(size);
-    if (!dc)
-        return NULL;
+    اگر (!dc)
+        بازگشت پوچ;
 
     dc->downmix_type  = type;
     dc->nb_coeffs     = nb_coeffs;
-    dc->in_ch_count   = in_ch_count;
+    dc->in_ch_شمار   = in_ch_شمار;
     dc->coeffs_offset = coeffs_offset;
 
-    if (out_size)
+    اگر (out_size)
         *out_size = size;
 
-    return dc;
+    بازگشت dc;
 }

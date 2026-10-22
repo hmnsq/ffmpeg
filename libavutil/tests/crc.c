@@ -16,16 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#شامل <stdint.h>
+#شامل <stdio.h>
 
-#include "libavutil/crc.h"
+#شامل "libavutil/crc.h"
 
-int main(void)
+صحیح اصلی(تهی)
 {
     uint8_t buf[1999];
-    int i;
-    static const unsigned p[7][3] = {
+    صحیح i;
+    ایستا ثابت unsigned p[7][3] = {
         { AV_CRC_32_IEEE_LE, 0xEDB88320, 0x3D5CDD04 },
         { AV_CRC_32_IEEE   , 0x04C11DB7, 0xC0F5BAE0 },
         { AV_CRC_24_IEEE   , 0x864CFB  , 0xB704CE   },
@@ -34,14 +34,14 @@ int main(void)
         { AV_CRC_8_ATM     , 0x07      , 0xE3       },
         { AV_CRC_8_EBU     , 0x1D      , 0xD6       },
     };
-    const AVCRC *ctx;
+    ثابت AVCRC *ctx;
 
-    for (i = 0; i < sizeof(buf); i++)
+    برای (i = 0; i < اندازه(buf); i++)
         buf[i] = i + i * i;
 
-    for (i = 0; i < 7; i++) {
+    برای (i = 0; i < 7; i++) {
         ctx = av_crc_get_table(p[i][0]);
-        printf("crc %08X = %X\n", p[i][1], av_crc(ctx, 0, buf, sizeof(buf)));
+        printf("crc %08X = %X\n", p[i][1], av_crc(ctx, 0, buf, اندازه(buf)));
     }
-    return 0;
+    بازگشت 0;
 }

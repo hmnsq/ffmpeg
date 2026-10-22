@@ -38,10 +38,10 @@
  * @brief A check macro used by D3D12 functions highly frequently
  */
 #define DX_CHECK(hr)                              \
-    do {                                          \
-        if (FAILED(hr))                           \
-            goto fail;                            \
-    } while (0)
+    انجامبده {                                          \
+        اگر (FAILED(hr))                           \
+            برو fail;                            \
+    } وقتی (0)
 
 /**
  * @def D3D12_OBJECT_RELEASE
@@ -49,11 +49,11 @@
  * @brief A release macro used by D3D12 objects highly frequently
  */
 #define D3D12_OBJECT_RELEASE(pInterface)              \
-    do {                                              \
-        if (pInterface) {                             \
+    انجامبده {                                              \
+        اگر (pInterface) {                             \
             IUnknown_Release((IUnknown *)pInterface); \
-            pInterface = NULL;                        \
+            pInterface = پوچ;                        \
         }                                             \
-    } while (0)
+    } وقتی (0)
 
 #endif /* AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H */

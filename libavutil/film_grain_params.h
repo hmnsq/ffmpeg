@@ -19,9 +19,9 @@
 #ifndef AVUTIL_FILM_GRAIN_PARAMS_H
 #define AVUTIL_FILM_GRAIN_PARAMS_H
 
-#include "frame.h"
+#شامل "frame.h"
 
-enum AVFilmGrainParamsType {
+شمارش AVFilmGrainParamsType {
     AV_FILM_GRAIN_PARAMS_NONE = 0,
 
     /**
@@ -41,37 +41,37 @@ enum AVFilmGrainParamsType {
  * @note The struct must be allocated as part of AVFilmGrainParams using
  *       av_film_grain_params_alloc(). Its size is not a part of the public ABI.
  */
-typedef struct AVFilmGrainAOMParams {
+تعریفنوع ساختار AVFilmGrainAOMParams {
     /**
      * Number of points, and the scale and value for each point of the
      * piecewise linear scaling function for the uma plane.
      */
-    int num_y_points;
+    صحیح رقم_y_points;
     uint8_t y_points[14][2 /* value, scaling */];
 
     /**
      * Signals whether to derive the chroma scaling function from the luma.
      * Not equivalent to copying the luma values and scales.
      */
-    int chroma_scaling_from_luma;
+    صحیح chroma_scaling_from_luma;
 
     /**
      * If chroma_scaling_from_luma is set to 0, signals the chroma scaling
      * function parameters.
      */
-    int num_uv_points[2 /* cb, cr */];
+    صحیح رقم_uv_points[2 /* cb, cr */];
     uint8_t uv_points[2 /* cb, cr */][10][2 /* value, scaling */];
 
     /**
      * Specifies the shift applied to the chroma components. For AV1, its within
      * [8; 11] and determines the range and quantization of the film grain.
      */
-    int scaling_shift;
+    صحیح scaling_shift;
 
     /**
      * Specifies the auto-regression lag.
      */
-    int ar_coeff_lag;
+    صحیح ar_coeff_lag;
 
     /**
      * Luma auto-regression coefficients. The number of coefficients is given by
@@ -90,36 +90,36 @@ typedef struct AVFilmGrainAOMParams {
      * 7, 8 and so on represent a range of [-2, 2), [-1, 1), [-0.5, 0.5) and
      * so on. For AV1 must be between 6 and 9.
      */
-    int ar_coeff_shift;
+    صحیح ar_coeff_shift;
 
     /**
      * Signals the down shift applied to the generated gaussian numbers during
      * synthesis.
      */
-    int grain_scale_shift;
+    صحیح grain_scale_shift;
 
     /**
      * Specifies the luma/chroma multipliers for the index to the component
      * scaling function.
      */
-    int uv_mult[2 /* cb, cr */];
-    int uv_mult_luma[2 /* cb, cr */];
+    صحیح uv_mult[2 /* cb, cr */];
+    صحیح uv_mult_luma[2 /* cb, cr */];
 
     /**
      * Offset used for component scaling function. For AV1 its a 9-bit value
      * with a range [-256, 255]
      */
-    int uv_offset[2 /* cb, cr */];
+    صحیح uv_offset[2 /* cb, cr */];
 
     /**
      * Signals whether to overlap film grain blocks.
      */
-    int overlap_flag;
+    صحیح overlap_flag;
 
     /**
      * Signals to clip to limited color levels after film grain application.
      */
-    int limit_output_range;
+    صحیح limit_output_range;
 } AVFilmGrainAOMParams;
 
 /**
@@ -129,12 +129,12 @@ typedef struct AVFilmGrainAOMParams {
  * @note The struct must be allocated as part of AVFilmGrainParams using
  *       av_film_grain_params_alloc(). Its size is not a part of the public ABI.
  */
-typedef struct AVFilmGrainH274Params {
+تعریفنوع ساختار AVFilmGrainH274Params {
     /**
      * Specifies the film grain simulation mode.
      * 0 = Frequency filtering, 1 = Auto-regression
      */
-    int model_id;
+    صحیح model_id;
 
     /**
      * Specifies the blending mode used to blend the simulated film grain
@@ -142,29 +142,29 @@ typedef struct AVFilmGrainH274Params {
      *
      * 0 = Additive, 1 = Multiplicative
      */
-    int blending_mode_id;
+    صحیح blending_mode_id;
 
     /**
      * Specifies a scale factor used in the film grain characterization equations.
      */
-    int log2_scale_factor;
+    صحیح log2_scale_factor;
 
     /**
      * Indicates if the modelling of film grain for a given component is present.
      */
-    int component_model_present[3 /* y, cb, cr */];
+    صحیح component_model_present[3 /* y, cb, cr */];
 
     /**
      * Specifies the number of intensity intervals for which a specific set of
      * model values has been estimated, with a range of [1, 256].
      */
-    uint16_t num_intensity_intervals[3 /* y, cb, cr */];
+    uint16_t رقم_intensity_intervals[3 /* y, cb, cr */];
 
     /**
      * Specifies the number of model values present for each intensity interval
      * in which the film grain has been modelled, with a range of [1, 6].
      */
-    uint8_t num_model_values[3 /* y, cb, cr */];
+    uint8_t رقم_model_مقادیر[3 /* y, cb, cr */];
 
     /**
      * Specifies the lower ounds of each intensity interval for whichthe set of
@@ -187,7 +187,7 @@ typedef struct AVFilmGrainH274Params {
      *     For comp_model_value[y], the range of values is [-2^(bit_depth_luma - 1), 2^(bit_depth_luma - 1) - 1]
      *     For comp_model_value[cb..cr], the range of values is [-2^(bit_depth_chroma - 1), 2^(bit_depth_chroma - 1) - 1]
      */
-    int16_t comp_model_value[3 /* y, cb, cr */][256 /* intensity interval */][6 /* model value */];
+    int16_t comp_model_مقدار[3 /* y, cb, cr */][256 /* intensity interval */][6 /* model value */];
 } AVFilmGrainH274Params;
 
 /**
@@ -198,11 +198,11 @@ typedef struct AVFilmGrainH274Params {
  * @note The struct must be allocated with av_film_grain_params_alloc() and
  *       its size is not a part of the public ABI.
  */
-typedef struct AVFilmGrainParams {
+تعریفنوع ساختار AVFilmGrainParams {
     /**
      * Specifies the codec for which this structure is valid.
      */
-    enum AVFilmGrainParamsType type;
+    شمارش AVFilmGrainParamsType type;
 
     /**
      * Seed to use for the synthesis process, if the codec allows for it.
@@ -217,33 +217,33 @@ typedef struct AVFilmGrainParams {
      * any restrictions.
      */
 
-    int width, height;
+    صحیح width, height;
 
     /**
      * Intended subsampling ratio, or 0 for luma-only streams.
      */
-    int subsampling_x, subsampling_y;
+    صحیح subsampling_x, subsampling_y;
 
     /**
      * Intended video signal characteristics.
      */
-    enum AVColorRange                  color_range;
-    enum AVColorPrimaries              color_primaries;
-    enum AVColorTransferCharacteristic color_trc;
-    enum AVColorSpace                  color_space;
+    شمارش AVColorRange                  color_range;
+    شمارش AVColorPrimaries              color_primaries;
+    شمارش AVColorTransferCharacteristic color_trc;
+    شمارش AVColorSpace                  color_space;
 
     /**
      * Intended bit depth, or 0 for unknown/unspecified.
      */
-    int bit_depth_luma;
-    int bit_depth_chroma;
+    صحیح bit_depth_luma;
+    صحیح bit_depth_chroma;
 
     /**
      * Additional fields may be added both here and in any structure included.
      * If a codec's film grain structure differs slightly over another
      * codec's, fields within may change meaning depending on the type.
      */
-    union {
+    اجتماع {
         AVFilmGrainAOMParams aom;
         AVFilmGrainH274Params h274;
     } codec;
@@ -277,6 +277,6 @@ AVFilmGrainParams *av_film_grain_params_create_side_data(AVFrame *frame);
  * greater chroma resolution than the frame. Users should take care to
  * correctly adjust the chroma grain frequency to the frame.
  */
-const AVFilmGrainParams *av_film_grain_params_select(const AVFrame *frame);
+ثابت AVFilmGrainParams *av_film_grain_params_select(ثابت AVFrame *frame);
 
 #endif /* AVUTIL_FILM_GRAIN_PARAMS_H */

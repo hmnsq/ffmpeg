@@ -19,9 +19,9 @@
 #ifndef AVUTIL_MOTION_VECTOR_H
 #define AVUTIL_MOTION_VECTOR_H
 
-#include <stdint.h>
+#شامل <stdint.h>
 
-typedef struct AVMotionVector {
+تعریفنوع ساختار AVMotionVector {
     /**
      * Where the current macroblock comes from; negative value when it comes
      * from the past, positive value when it comes from the future.

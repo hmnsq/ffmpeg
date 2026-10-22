@@ -19,124 +19,124 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "mem.h"
+#شامل "config.h"
+#شامل "attributes.h"
+#شامل "float_dsp.h"
+#شامل "mem.h"
 
-static void vector_fmul_c(float *dst, const float *src0, const float *src1,
-                          int len)
+ایستا تهی vector_fmul_c(اعشاری *dst, ثابت اعشاری *src0, ثابت اعشاری *src1,
+                          صحیح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحیح i;
+    برای (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_dmul_c(double *dst, const double *src0, const double *src1,
-                          int len)
+ایستا تهی vector_dmul_c(دوگانه *dst, ثابت دوگانه *src0, ثابت دوگانه *src1,
+                          صحیح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحیح i;
+    برای (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_fmac_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+ایستا تهی vector_fmac_scalar_c(اعشاری *dst, ثابت اعشاری *src, اعشاری mul,
+                                 صحیح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحیح i;
+    برای (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_dmac_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+ایستا تهی vector_dmac_scalar_c(دوگانه *dst, ثابت دوگانه *src, دوگانه mul,
+                                 صحیح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحیح i;
+    برای (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_fmul_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+ایستا تهی vector_fmul_scalar_c(اعشاری *dst, ثابت اعشاری *src, اعشاری mul,
+                                 صحیح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحیح i;
+    برای (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_dmul_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+ایستا تهی vector_dmul_scalar_c(دوگانه *dst, ثابت دوگانه *src, دوگانه mul,
+                                 صحیح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحیح i;
+    برای (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_fmul_window_c(float *dst, const float *src0,
-                                 const float *src1, const float *win, int len)
+ایستا تهی vector_fmul_window_c(اعشاری *dst, ثابت اعشاری *src0,
+                                 ثابت اعشاری *src1, ثابت اعشاری *win, صحیح len)
 {
-    int i, j;
+    صحیح i, j;
 
     dst  += len;
     win  += len;
     src0 += len;
 
-    for (i = -len, j = len - 1; i < 0; i++, j--) {
-        float s0 = src0[i];
-        float s1 = src1[j];
-        float wi = win[i];
-        float wj = win[j];
+    برای (i = -len, j = len - 1; i < 0; i++, j--) {
+        اعشاری s0 = src0[i];
+        اعشاری s1 = src1[j];
+        اعشاری wi = win[i];
+        اعشاری wj = win[j];
         dst[i] = s0 * wj - s1 * wi;
         dst[j] = s0 * wi + s1 * wj;
     }
 }
 
-static void vector_fmul_add_c(float *dst, const float *src0, const float *src1,
-                              const float *src2, int len){
-    int i;
+ایستا تهی vector_fmul_add_c(اعشاری *dst, ثابت اعشاری *src0, ثابت اعشاری *src1,
+                              ثابت اعشاری *src2, صحیح len){
+    صحیح i;
 
-    for (i = 0; i < len; i++)
+    برای (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i] + src2[i];
 }
 
-static void vector_fmul_reverse_c(float *dst, const float *src0,
-                                  const float *src1, int len)
+ایستا تهی vector_fmul_reverse_c(اعشاری *dst, ثابت اعشاری *src0,
+                                  ثابت اعشاری *src1, صحیح len)
 {
-    int i;
+    صحیح i;
 
     src1 += len-1;
-    for (i = 0; i < len; i++)
+    برای (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[-i];
 }
 
-static void butterflies_float_c(float *restrict v1, float *restrict v2,
-                                int len)
+ایستا تهی butterflies_float_c(اعشاری *restrict v1, اعشاری *restrict v2,
+                                صحیح len)
 {
-    int i;
+    صحیح i;
 
-    for (i = 0; i < len; i++) {
-        float t = v1[i] - v2[i];
+    برای (i = 0; i < len; i++) {
+        اعشاری t = v1[i] - v2[i];
         v1[i] += v2[i];
         v2[i] = t;
     }
 }
 
-double ff_scalarproduct_double_c(const double *v1, const double *v2,
+دوگانه ff_scalarproduct_double_c(ثابت دوگانه *v1, ثابت دوگانه *v2,
                                  size_t len)
 {
-    double p = 0.0;
+    دوگانه p = 0.0;
 
-    for (size_t i = 0; i < len; i++)
+    برای (size_t i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    بازگشت p;
 }
 
-av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
+av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(صحیح bit_exact)
 {
-    AVFloatDSPContext *fdsp = av_mallocz(sizeof(AVFloatDSPContext));
-    if (!fdsp)
-        return NULL;
+    AVFloatDSPContext *fdsp = av_mallocz(اندازه(AVFloatDSPContext));
+    اگر (!fdsp)
+        بازگشت پوچ;
 
     fdsp->vector_fmul = vector_fmul_c;
     fdsp->vector_dmul = vector_dmul_c;
@@ -151,18 +151,18 @@ av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
     fdsp->scalarproduct_float = ff_scalarproduct_float_c;
     fdsp->scalarproduct_double = ff_scalarproduct_double_c;
 
-#if ARCH_AARCH64
+#اگر ARCH_AARCH64
     ff_float_dsp_init_aarch64(fdsp);
-#elif ARCH_ARM
+#وگرنهاگر ARCH_ARM
     ff_float_dsp_init_arm(fdsp);
-#elif ARCH_PPC
+#وگرنهاگر ARCH_PPC
     ff_float_dsp_init_ppc(fdsp, bit_exact);
-#elif ARCH_RISCV
+#وگرنهاگر ARCH_RISCV
     ff_float_dsp_init_riscv(fdsp);
-#elif ARCH_X86 && HAVE_X86ASM
+#وگرنهاگر ARCH_X86 && HAVE_X86ASM
     ff_float_dsp_init_x86(fdsp);
-#elif ARCH_MIPS
+#وگرنهاگر ARCH_MIPS
     ff_float_dsp_init_mips(fdsp);
 #endif
-    return fdsp;
+    بازگشت fdsp;
 }

@@ -16,41 +16,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#شامل <limits.h>
+#شامل <stdio.h>
 
-#include "libavutil/internal.h"
-#include "libavutil/lfg.h"
-#include "libavutil/lls.h"
-#include "libavutil/mem_internal.h"
+#شامل "libavutil/internal.h"
+#شامل "libavutil/lfg.h"
+#شامل "libavutil/lls.h"
+#شامل "libavutil/mem_internal.h"
 
 /* Values below the printed precision are rounding noise whose sign varies
  * between platforms, so print them as zero. */
-static double clean(double v)
+ایستا دوگانه clean(دوگانه v)
 {
-    return fabs(v) < 1e-9 ? 0.0 : v;
+    بازگشت fabs(v) < 1e-9 ? 0.0 : v;
 }
 
-int main(void)
+صحیح اصلی(تهی)
 {
     LLSModel m;
-    int i, order;
+    صحیح i, order;
     AVLFG lfg;
 
     av_lfg_init(&lfg, 1);
     avpriv_init_lls(&m, 3);
 
-    for (i = 0; i < 100; i++) {
-        LOCAL_ALIGNED(32, double, var, [4]);
-        double eval;
+    برای (i = 0; i < 100; i++) {
+        LOCAL_ALIGNED(32, دوگانه, var, [4]);
+        دوگانه eval;
 
-        var[0] =         (av_lfg_get(&lfg) / (double) UINT_MAX - 0.5) * 2;
-        var[1] = var[0] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[2] = var[1] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[3] = var[2] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
+        var[0] =         (av_lfg_get(&lfg) / (دوگانه) UINT_MAX - 0.5) * 2;
+        var[1] = var[0] + av_lfg_get(&lfg) / (دوگانه) UINT_MAX - 0.5;
+        var[2] = var[1] + av_lfg_get(&lfg) / (دوگانه) UINT_MAX - 0.5;
+        var[3] = var[2] + av_lfg_get(&lfg) / (دوگانه) UINT_MAX - 0.5;
         m.update_lls(&m, var);
         avpriv_solve_lls(&m, 0.001, 0);
-        for (order = 0; order < 3; order++) {
+        برای (order = 0; order < 3; order++) {
             eval = m.evaluate_lls(&m, var + 1, order);
             printf("real:%9f order:%d pred:%9f var:%f coeffs:%f %9f %9f\n",
                    var[0], order, eval,
@@ -59,5 +59,5 @@ int main(void)
                    clean(m.coeff[order][2]));
         }
     }
-    return 0;
+    بازگشت 0;
 }

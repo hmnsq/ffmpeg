@@ -19,22 +19,22 @@
 #ifndef AVUTIL_MIPS_PIXELUTILS_H
 #define AVUTIL_MIPS_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#شامل <stddef.h>
+#شامل <stdint.h>
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#شامل "cpu.h"
+#شامل "libavutil/attributes.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_msa(const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
+صحیح ff_pixelutils_sad16_msa(ثابت uint8_t *src1, ptrdiff_t stride1,
+                            ثابت uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, int aligned)
+ایستا درونخطی av_cold تهی ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, صحیح aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    صحیح cpu_flags = av_get_cpu_flags();
 
-    if (have_msa(cpu_flags)) {
+    اگر (have_msa(cpu_flags)) {
         sad[3] = ff_pixelutils_sad16_msa;
     }
 }

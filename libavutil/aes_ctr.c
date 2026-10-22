@@ -19,49 +19,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#شامل <string.h>
 
-#include "aes_ctr.h"
-#include "aes.h"
-#include "aes_internal.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "random_seed.h"
+#شامل "aes_ctr.h"
+#شامل "aes.h"
+#شامل "aes_internal.h"
+#شامل "intreadwrite.h"
+#شامل "macros.h"
+#شامل "mem.h"
+#شامل "random_seed.h"
 
 #define AES_BLOCK_SIZE (16)
 
-typedef struct AVAESCTR {
+تعریفنوع ساختار AVAESCTR {
     DECLARE_ALIGNED(8, uint8_t, counter)[AES_BLOCK_SIZE];
     DECLARE_ALIGNED(8, uint8_t, encrypted_counter)[AES_BLOCK_SIZE];
-    int block_offset;
+    صحیح block_offset;
     AVAES aes;
 } AVAESCTR;
 
-struct AVAESCTR *av_aes_ctr_alloc(void)
+ساختار AVAESCTR *av_aes_ctr_alloc(تهی)
 {
-    return av_mallocz(sizeof(struct AVAESCTR));
+    بازگشت av_mallocz(اندازه(ساختار AVAESCTR));
 }
 
-void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv)
+تهی av_aes_ctr_set_iv(ساختار AVAESCTR *a, ثابت uint8_t* iv)
 {
     memcpy(a->counter, iv, AES_CTR_IV_SIZE);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
+    memset(a->counter + AES_CTR_IV_SIZE, 0, اندازه(a->counter) - AES_CTR_IV_SIZE);
     a->block_offset = 0;
 }
 
-void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv)
+تهی av_aes_ctr_set_full_iv(ساختار AVAESCTR *a, ثابت uint8_t* iv)
 {
-    memcpy(a->counter, iv, sizeof(a->counter));
+    memcpy(a->counter, iv, اندازه(a->counter));
     a->block_offset = 0;
 }
 
-const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a)
+ثابت uint8_t* av_aes_ctr_get_iv(ساختار AVAESCTR *a)
 {
-    return a->counter;
+    بازگشت a->counter;
 }
 
-void av_aes_ctr_set_random_iv(struct AVAESCTR *a)
+تهی av_aes_ctr_set_random_iv(ساختار AVAESCTR *a)
 {
     uint32_t iv[2];
 
@@ -71,65 +71,65 @@ void av_aes_ctr_set_random_iv(struct AVAESCTR *a)
     av_aes_ctr_set_iv(a, (uint8_t*)iv);
 }
 
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key)
+صحیح av_aes_ctr_init(ساختار AVAESCTR *a, ثابت uint8_t *کلید)
 {
-    av_aes_init(&a->aes, key, 128, 0);
+    av_aes_init(&a->aes, کلید, 128, 0);
 
-    memset(a->counter, 0, sizeof(a->counter));
+    memset(a->counter, 0, اندازه(a->counter));
     a->block_offset = 0;
 
-    return 0;
+    بازگشت 0;
 }
 
-void av_aes_ctr_free(struct AVAESCTR *a)
+تهی av_aes_ctr_free(ساختار AVAESCTR *a)
 {
     av_free(a);
 }
 
-static inline void av_aes_ctr_increment_be64(uint8_t* counter)
+ایستا درونخطی تهی av_aes_ctr_increment_be64(uint8_t* counter)
 {
     uint64_t c = AV_RB64A(counter) + 1;
     AV_WB64A(counter, c);
 }
 
-void av_aes_ctr_increment_iv(struct AVAESCTR *a)
+تهی av_aes_ctr_increment_iv(ساختار AVAESCTR *a)
 {
     av_aes_ctr_increment_be64(a->counter);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
+    memset(a->counter + AES_CTR_IV_SIZE, 0, اندازه(a->counter) - AES_CTR_IV_SIZE);
     a->block_offset = 0;
 }
 
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int count)
+تهی av_aes_ctr_crypt(ساختار AVAESCTR *a, uint8_t *dst, ثابت uint8_t *src, صحیح شمار)
 {
-    if (a->block_offset && count > 0) {
-        int left = FFMIN(count, AES_BLOCK_SIZE - a->block_offset);
-        for (int len = 0; len < left; len++)
+    اگر (a->block_offset && شمار > 0) {
+        صحیح چپ = FFMIN(شمار, AES_BLOCK_SIZE - a->block_offset);
+        برای (صحیح len = 0; len < چپ; len++)
             dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
         a->block_offset &= AES_BLOCK_SIZE - 1;
-        dst += left;
-        src += left;
-        count -= left;
+        dst += چپ;
+        src += چپ;
+        شمار -= چپ;
     }
 
-    while (count >= AES_BLOCK_SIZE) {
-        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
+    وقتی (شمار >= AES_BLOCK_SIZE) {
+        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, پوچ, 0);
         av_aes_ctr_increment_be64(a->counter + 8);
-#if HAVE_FAST_64BIT
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 8)
+#اگر HAVE_FAST_64BIT
+        برای (صحیح len = 0; len < AES_BLOCK_SIZE; len += 8)
             AV_WN64(&dst[len], AV_RN64(&src[len]) ^ AV_RN64A(&a->encrypted_counter[len]));
-#else
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 4)
+#وگرنه
+        برای (صحیح len = 0; len < AES_BLOCK_SIZE; len += 4)
             AV_WN32(&dst[len], AV_RN32(&src[len]) ^ AV_RN32A(&a->encrypted_counter[len]));
 #endif
         dst += AES_BLOCK_SIZE;
         src += AES_BLOCK_SIZE;
-        count -= AES_BLOCK_SIZE;
+        شمار -= AES_BLOCK_SIZE;
     }
 
-    if (count > 0) {
-        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
+    اگر (شمار > 0) {
+        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, پوچ, 0);
         av_aes_ctr_increment_be64(a->counter + 8);
-        for (int len = 0; len < count; len++)
+        برای (صحیح len = 0; len < شمار; len++)
             dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
     }
 }

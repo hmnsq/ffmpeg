@@ -19,8 +19,8 @@
 #ifndef AVUTIL_PPC_CPU_H
 #define AVUTIL_PPC_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/cpu_internal.h"
 
 #define PPC_ALTIVEC(flags) CPUEXT(flags, ALTIVEC)
 #define PPC_VSX(flags) CPUEXT(flags, VSX)

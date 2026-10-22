@@ -19,66 +19,66 @@
 #ifndef AVUTIL_GETENV_UTF8_H
 #define AVUTIL_GETENV_UTF8_H
 
-#include <stdlib.h>
+#شامل <stdlib.h>
 
-#include "config.h"
-#include "mem.h"
+#شامل "config.h"
+#شامل "mem.h"
 
-#if HAVE_GETENV && defined(_WIN32)
+#اگر HAVE_GETENV && defined(_WIN32)
 
-#include "libavutil/wchar_filename.h"
+#شامل "libavutil/wchar_filename.h"
 
-static inline char *getenv_utf8(const char *varname)
+ایستا درونخطی نویسه *getenv_utf8(ثابت نویسه *varname)
 {
     wchar_t *varname_w, *var_w;
-    char *var;
+    نویسه *var;
 
-    if (utf8towchar(varname, &varname_w))
-        return NULL;
-    if (!varname_w)
-        return NULL;
+    اگر (utf8towchar(varname, &varname_w))
+        بازگشت پوچ;
+    اگر (!varname_w)
+        بازگشت پوچ;
 
     var_w = _wgetenv(varname_w);
     av_free(varname_w);
 
-    if (!var_w)
-        return NULL;
-    if (wchartoutf8(var_w, &var))
-        return NULL;
+    اگر (!var_w)
+        بازگشت پوچ;
+    اگر (wchartoutf8(var_w, &var))
+        بازگشت پوچ;
 
-    return var;
+    بازگشت var;
 
     // No CP_ACP fallback compared to other *_utf8() functions:
     // non UTF-8 strings must not be returned.
 }
 
-static inline void freeenv_utf8(char *var)
+ایستا درونخطی تهی freeenv_utf8(نویسه *var)
 {
     av_free(var);
 }
 
-static inline char *getenv_dup(const char *varname)
+ایستا درونخطی نویسه *getenv_dup(ثابت نویسه *varname)
 {
-    return getenv_utf8(varname);
+    بازگشت getenv_utf8(varname);
 }
 
-#else
+#وگرنه
 
-static inline char *getenv_utf8(const char *varname)
+ایستا درونخطی نویسه *getenv_utf8(ثابت نویسه *varname)
 {
-    return getenv(varname);
+    بازگشت getenv(varname);
 }
 
-static inline void freeenv_utf8(char *var)
+ایستا درونخطی تهی freeenv_utf8(نویسه *var)
 {
 }
 
-static inline char *getenv_dup(const char *varname)
+ایستا درونخطی نویسه *getenv_dup(ثابت نویسه *varname)
 {
-    char *var = getenv(varname);
-    if (!var)
-        return NULL;
-    return av_strdup(var);
+    نویسه *var = getenv(varname);
+    اگر (!var)
+        بازگشت پوچ;
+    بازگشت av_strdup(var);
 }
 
 #endif // HAVE_GETENV && defined(_WIN32)

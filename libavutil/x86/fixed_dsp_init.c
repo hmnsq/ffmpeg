@@ -16,18 +16,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/fixed_dsp.h"
-#include "cpu.h"
+#شامل "libavutil/attributes.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/fixed_dsp.h"
+#شامل "cpu.h"
 
-void ff_butterflies_fixed_sse2(int *restrict src0, int *restrict src1, int len);
+تهی ff_butterflies_fixed_sse2(صحیح *restrict src0, صحیح *restrict src1, صحیح len);
 
-av_cold void ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp)
+av_cold تهی ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp)
 {
-    int cpu_flags = av_get_cpu_flags();
+    صحیح cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_SSE2(cpu_flags)) {
+    اگر (EXTERNAL_SSE2(cpu_flags)) {
         fdsp->butterflies_fixed = ff_butterflies_fixed_sse2;
     }
 }
