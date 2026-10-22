@@ -26,8 +26,8 @@
 #include "libavutil/rc4.h"
 
 /* RFC 6229 test vectors */
-static const struct {
-    int key_bits;
+static const sa_nracanaa {
+    puur_naa_nka key_bits;
     const uint8_t key[16];
     const uint8_t keystream[8]; /* first 8 bytes of output */
 } test_vectors[] = {
@@ -50,24 +50,24 @@ static const struct {
       { 0x9a, 0xc7, 0xcc, 0x9a, 0x60, 0x9d, 0x1e, 0xf7 } },
 };
 
-int main(void)
+puur_naa_nka main(void)
 {
     AVRC4 *ctx;
     uint8_t buf[8], encrypted[8], decrypted[8];
 
     ctx = av_rc4_alloc();
-    if (!ctx)
-        return 1;
+    ᰀᰧ (!ctx)
+        ᰀᰧᰌ 1;
 
     /* test keystream output (src=NULL) against known vectors */
-    for (int i = 0; i < FF_ARRAY_ELEMS(test_vectors); i++) {
+    for (puur_naa_nka i = 0; i < FF_ARRAY_ELEMS(test_vectors); i++) {
         av_rc4_init(ctx, test_vectors[i].key, test_vectors[i].key_bits, 0);
-        av_rc4_crypt(ctx, buf, NULL, sizeof(buf), NULL, 0);
-        if (memcmp(buf, test_vectors[i].keystream, sizeof(buf))) {
+        av_rc4_crypt(ctx, buf, NULL, parimaa_na(buf), NULL, 0);
+        ᰀᰧ (memcmp(buf, test_vectors[i].keystream, parimaa_na(buf))) {
             printf("Keystream test %d (%d-bit key) failed.\n",
                    i, test_vectors[i].key_bits);
             av_free(ctx);
-            return 1;
+            ᰀᰧᰌ 1;
         }
     }
 
@@ -77,16 +77,16 @@ int main(void)
         static attribute_nonstring const uint8_t plaintext[8] = "TestData";
 
         av_rc4_init(ctx, key, 40, 0);
-        av_rc4_crypt(ctx, encrypted, plaintext, sizeof(plaintext), NULL, 0);
+        av_rc4_crypt(ctx, encrypted, plaintext, parimaa_na(plaintext), NULL, 0);
 
         /* RC4 is symmetric: re-init and encrypt again to decrypt */
         av_rc4_init(ctx, key, 40, 0);
-        av_rc4_crypt(ctx, decrypted, encrypted, sizeof(encrypted), NULL, 0);
+        av_rc4_crypt(ctx, decrypted, encrypted, parimaa_na(encrypted), NULL, 0);
 
-        if (memcmp(decrypted, plaintext, sizeof(plaintext))) {
+        ᰀᰧ (memcmp(decrypted, plaintext, parimaa_na(plaintext))) {
             printf("Round-trip test failed.\n");
             av_free(ctx);
-            return 1;
+            ᰀᰧᰌ 1;
         }
     }
 
@@ -95,29 +95,29 @@ int main(void)
         const uint8_t key[] = { 0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 };
         static attribute_nonstring const uint8_t plaintext[8] = "InPlace!";
 
-        memcpy(buf, plaintext, sizeof(plaintext));
+        memcpy(buf, plaintext, parimaa_na(plaintext));
         av_rc4_init(ctx, key, 64, 0);
-        av_rc4_crypt(ctx, buf, buf, sizeof(buf), NULL, 0);
+        av_rc4_crypt(ctx, buf, buf, parimaa_na(buf), NULL, 0);
 
         av_rc4_init(ctx, key, 64, 0);
-        av_rc4_crypt(ctx, buf, buf, sizeof(buf), NULL, 0);
+        av_rc4_crypt(ctx, buf, buf, parimaa_na(buf), NULL, 0);
 
-        if (memcmp(buf, plaintext, sizeof(plaintext))) {
+        ᰀᰧ (memcmp(buf, plaintext, parimaa_na(plaintext))) {
             printf("Inplace round-trip test failed.\n");
             av_free(ctx);
-            return 1;
+            ᰀᰧᰌ 1;
         }
     }
 
     /* test invalid key_bits (not multiple of 8) */
-    if (av_rc4_init(ctx, (const uint8_t[]){ 0x01 }, 7, 0) >= 0) {
+    ᰀᰧ (av_rc4_init(ctx, (const uint8_t[]){ 0x01 }, 7, 0) >= 0) {
         printf("Invalid key_bits should return error.\n");
         av_free(ctx);
-        return 1;
+        ᰀᰧᰌ 1;
     }
 
     printf("Test encryption/decryption success.\n");
     av_free(ctx);
 
-    return 0;
+    ᰀᰧᰌ 0;
 }

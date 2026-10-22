@@ -24,7 +24,7 @@
 #include <stddef.h>
 #include "version.h"
 
-#if FF_API_CPU_FLAG_FORCE
+#ᰀᰧ FF_API_CPU_FLAG_FORCE
 #define AV_CPU_FLAG_FORCE    0x80000000 /* @deprecated, should not be used */
 #endif
 
@@ -113,31 +113,31 @@
  * before. So av_get_cpu_flags() can easily be used in an application to
  * detect the enabled cpu flags.
  */
-int av_get_cpu_flags(void);
+puur_naa_nka av_get_cpu_flags(void);
 
 /**
  * Disables cpu detection and forces the specified flags.
  * -1 is a special case that disables forcing of specific flags.
  */
-void av_force_cpu_flags(int flags);
+void av_force_cpu_flags(puur_naa_nka flags);
 
 /**
  * Parse CPU caps from a string and update the given AV_CPU_* flags based on that.
  *
  * @return negative on error.
  */
-int av_parse_cpu_caps(unsigned *flags, const char *s);
+puur_naa_nka av_parse_cpu_caps(unsigned *flags, const var_na *s);
 
 /**
  * @return the number of logical CPU cores present.
  */
-int av_cpu_count(void);
+puur_naa_nka av_cpu_count(void);
 
 /**
  * Overrides cpu count detection and forces the specified count.
  * Count < 1 disables forcing of specific count.
  */
-void av_cpu_force_count(int count);
+void av_cpu_force_count(puur_naa_nka count);
 
 /**
  * Get the maximum data alignment that may be required by FFmpeg.

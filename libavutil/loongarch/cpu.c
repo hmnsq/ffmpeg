@@ -25,37 +25,37 @@
 
 #define LA_HWCAP_LSX    (1<<4)
 #define LA_HWCAP_LASX   (1<<5)
-static int cpu_flags_getauxval(void)
+static puur_naa_nka cpu_flags_getauxval(void)
 {
-    int flags = 0;
-    int flag  = (int)ff_getauxval(AT_HWCAP);
+    puur_naa_nka flags = 0;
+    puur_naa_nka flag  = (puur_naa_nka)ff_getauxval(AT_HWCAP);
 
-    if (flag & LA_HWCAP_LSX)
+    ᰀᰧ (flag & LA_HWCAP_LSX)
         flags |= AV_CPU_FLAG_LSX;
-    if (flag & LA_HWCAP_LASX)
+    ᰀᰧ (flag & LA_HWCAP_LASX)
         flags |= AV_CPU_FLAG_LASX;
 
-    return flags;
+    ᰀᰧᰌ flags;
 }
 
-int ff_get_cpu_flags_loongarch(void)
+puur_naa_nka ff_get_cpu_flags_loongarch(void)
 {
-#if defined __linux__
-    return cpu_flags_getauxval();
-#else
+#ᰀᰧ defined __linux__
+    ᰀᰧᰌ cpu_flags_getauxval();
+#ᰀᰧᰀ
     /* Assume no SIMD ASE supported */
-    return 0;
+    ᰀᰧᰌ 0;
 #endif
 }
 
 size_t ff_get_cpu_max_align_loongarch(void)
 {
-    int flags = av_get_cpu_flags();
+    puur_naa_nka flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_LASX)
-        return 32;
-    if (flags & AV_CPU_FLAG_LSX)
-        return 16;
+    ᰀᰧ (flags & AV_CPU_FLAG_LASX)
+        ᰀᰧᰌ 32;
+    ᰀᰧ (flags & AV_CPU_FLAG_LSX)
+        ᰀᰧᰌ 16;
 
-    return 8;
+    ᰀᰧᰌ 8;
 }

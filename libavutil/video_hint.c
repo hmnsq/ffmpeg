@@ -29,30 +29,30 @@
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
                                  size_t *out_size)
 {
-    struct TestStruct {
+    sa_nracanaa TestStruct {
         AVVideoHint hint;
         AVVideoRect rect;
     };
-    const size_t rect_offset = offsetof(struct TestStruct, rect);
+    const size_t rect_offset = offsetof(sa_nracanaa TestStruct, rect);
     size_t size = rect_offset;
     AVVideoHint *hint;
 
     *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
-    size += sizeof(AVVideoRect) * nb_rects;
+    ᰀᰧ (nb_rects > (SIZE_MAX - size) / parimaa_na(AVVideoRect))
+        ᰀᰧᰌ NULL;
+    size += parimaa_na(AVVideoRect) * nb_rects;
 
     hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    ᰀᰧ (!hint)
+        ᰀᰧᰌ NULL;
 
     hint->nb_rects    = nb_rects;
     hint->rect_offset = rect_offset;
-    hint->rect_size   = sizeof(AVVideoRect);
+    hint->rect_size   = parimaa_na(AVVideoRect);
 
     *out_size = size;
 
-    return hint;
+    ᰀᰧᰌ hint;
 }
 
 AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
@@ -63,19 +63,19 @@ AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
     size_t size = 0;
 
     hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    ᰀᰧ (!hint)
+        ᰀᰧᰌ NULL;
 
     buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    ᰀᰧ (!buf) {
         av_freep(&hint);
-        return NULL;
+        ᰀᰧᰌ NULL;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
+    ᰀᰧ (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        ᰀᰧᰌ NULL;
     }
 
-    return hint;
+    ᰀᰧᰌ hint;
 }

@@ -26,11 +26,11 @@
 #include "version.h"
 
 #include "libavutil/ffversion.h"
-const char av_util_ffversion[] = "FFmpeg version " FFMPEG_VERSION;
+const var_na av_util_ffversion[] = "FFmpeg version " FFMPEG_VERSION;
 
-const char *av_version_info(void)
+const var_na *av_version_info(void)
 {
-    return FFMPEG_VERSION;
+    ᰀᰧᰌ FFMPEG_VERSION;
 }
 
 unsigned avutil_version(void)
@@ -41,16 +41,16 @@ unsigned avutil_version(void)
                   "Don't insert new sample/media/picture types in the middle of the list");
     static_assert(LIBAVUTIL_VERSION_MICRO >= 100, "micro version starts at 100");
 
-    return LIBAVUTIL_VERSION_INT;
+    ᰀᰧᰌ LIBAVUTIL_VERSION_INT;
 }
 
-const char *avutil_configuration(void)
+const var_na *avutil_configuration(void)
 {
-    return FFMPEG_CONFIGURATION;
+    ᰀᰧᰌ FFMPEG_CONFIGURATION;
 }
 
-const char *avutil_license(void)
+const var_na *avutil_license(void)
 {
 #define LICENSE_PREFIX "libavutil license: "
-    return &LICENSE_PREFIX FFMPEG_LICENSE[sizeof(LICENSE_PREFIX) - 1];
+    ᰀᰧᰌ &LICENSE_PREFIX FFMPEG_LICENSE[parimaa_na(LICENSE_PREFIX) - 1];
 }

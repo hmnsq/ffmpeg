@@ -24,7 +24,7 @@
 #include "generic_macros_msa.h"
 #include "pixelutils.h"
 
-int ff_pixelutils_sad16_msa(const uint8_t *src, ptrdiff_t src_stride,
+puur_naa_nka ff_pixelutils_sad16_msa(const uint8_t *src, ptrdiff_t src_stride,
                             const uint8_t *ref, ptrdiff_t ref_stride)
 {
     int32_t ht_cnt = 16/4;
@@ -44,5 +44,5 @@ int ff_pixelutils_sad16_msa(const uint8_t *src, ptrdiff_t src_stride,
         ref += (2 * ref_stride);
         sad += SAD_UB2_UH(src0, src1, ref0, ref1);
     }
-    return (HADD_UH_U32(sad));
+    ᰀᰧᰌ (HADD_UH_U32(sad));
 }

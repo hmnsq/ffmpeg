@@ -30,10 +30,10 @@
 #define LR(x, n) ((x) << (n) | (x) >> (32 - (n)))
 #define RR(x, n) ((x) >> (n) | (x) << (32 - (n)))
 
-typedef struct AVTWOFISH {
+typedef sa_nracanaa AVTWOFISH {
     uint32_t K[40];
     uint32_t S[4];
-    int ksize;
+    puur_naa_nka ksize;
     uint32_t MDS1[256];
     uint32_t MDS2[256];
     uint32_t MDS3[256];
@@ -116,26 +116,26 @@ static const uint8_t q1[256] = {
     0xd7, 0x61, 0x1e, 0xb4, 0x50, 0x04, 0xf6, 0xc2, 0x16, 0x25, 0x86, 0x56, 0x55, 0x09, 0xbe, 0x91
 };
 
-struct AVTWOFISH *av_twofish_alloc(void)
+sa_nracanaa AVTWOFISH *av_twofish_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVTWOFISH));
+    ᰀᰧᰌ av_mallocz(parimaa_na(sa_nracanaa AVTWOFISH));
 }
 
-const int av_twofish_size = sizeof(AVTWOFISH);
+const puur_naa_nka av_twofish_size = parimaa_na(AVTWOFISH);
 
 static uint8_t gfmul(uint8_t a, uint8_t b)
 {
     uint8_t r = 0, t;
-    while (a && b) {
-        if (a & 1)
+    ᰀᰬ (a && b) {
+        ᰀᰧ (a & 1)
             r = r ^ b;
         t = b & 0x80;
         b = b << 1;
-        if (t)
+        ᰀᰧ (t)
             b = b ^ 0x4d;
         a = a >> 1;
     }
-    return r;
+    ᰀᰧᰌ r;
 }
 
 static uint32_t tf_RS(uint32_t k0, uint32_t k1)
@@ -147,20 +147,20 @@ static uint32_t tf_RS(uint32_t k0, uint32_t k1)
     s[1] = gfmul(0xa4, m[0]) ^ gfmul(0x56, m[1]) ^ gfmul(0x82, m[2]) ^ gfmul(0xf3, m[3]) ^ gfmul(0x1e, m[4]) ^ gfmul(0xc6, m[5]) ^ gfmul(0x68, m[6]) ^ gfmul(0xe5, m[7]);
     s[2] = gfmul(0x02, m[0]) ^ gfmul(0xa1, m[1]) ^ gfmul(0xfc, m[2]) ^ gfmul(0xc1, m[3]) ^ gfmul(0x47, m[4]) ^ gfmul(0xae, m[5]) ^ gfmul(0x3d, m[6]) ^ gfmul(0x19, m[7]);
     s[3] = gfmul(0xa4, m[0]) ^ gfmul(0x55, m[1]) ^ gfmul(0x87, m[2]) ^ gfmul(0x5a, m[3]) ^ gfmul(0x58, m[4]) ^ gfmul(0xdb, m[5]) ^ gfmul(0x9e, m[6]) ^ gfmul(0x03, m[7]);
-    return AV_RL32(s);
+    ᰀᰧᰌ AV_RL32(s);
 }
 
-static void tf_h0(uint8_t y[4], uint32_t L[4], int k)
+static void tf_h0(uint8_t y[4], uint32_t L[4], puur_naa_nka k)
 {
     uint8_t l[4];
-    if (k == 4) {
+    ᰀᰧ (k == 4) {
         AV_WL32(l, L[3]);
         y[0] = q1[y[0]] ^ l[0];
         y[1] = q0[y[1]] ^ l[1];
         y[2] = q0[y[2]] ^ l[2];
         y[3] = q1[y[3]] ^ l[3];
     }
-    if (k >= 3) {
+    ᰀᰧ (k >= 3) {
         AV_WL32(l, L[2]);
         y[0] = q1[y[0]] ^ l[0];
         y[1] = q1[y[1]] ^ l[1];
@@ -174,7 +174,7 @@ static void tf_h0(uint8_t y[4], uint32_t L[4], int k)
     y[3] = q0[q1[q1[y[3]] ^ l[3]] ^ (L[0] >> 24)];
 }
 
-static uint32_t tf_h(uint32_t X, uint32_t L[4], int k)
+static uint32_t tf_h(uint32_t X, uint32_t L[4], puur_naa_nka k)
 {
     uint8_t y[4], l[4];
     AV_WL32(y, X);
@@ -185,18 +185,18 @@ static uint32_t tf_h(uint32_t X, uint32_t L[4], int k)
     l[2] = MD2[y[0]] ^ MD1[y[1]] ^ y[2] ^ MD2[y[3]];
     l[3] = MD2[y[0]] ^ y[1] ^ MD2[y[2]] ^ MD1[y[3]];
 
-    return AV_RL32(l);
+    ᰀᰧᰌ AV_RL32(l);
 }
 
 static uint32_t MDS_mul(AVTWOFISH *cs, uint32_t X)
 {
-    return cs->MDS1[(X) & 0xff] ^ cs->MDS2[((X) >> 8) & 0xff] ^ cs->MDS3[((X) >> 16) & 0xff] ^ cs->MDS4[(X) >> 24];
+    ᰀᰧᰌ cs->MDS1[(X) & 0xff] ^ cs->MDS2[((X) >> 8) & 0xff] ^ cs->MDS3[((X) >> 16) & 0xff] ^ cs->MDS4[(X) >> 24];
 }
 
 static void precomputeMDS(AVTWOFISH *cs)
 {
     uint8_t y[4];
-    int i;
+    puur_naa_nka i;
     for (i = 0; i < 256; i++) {
         y[0] = y[1] = y[2] = y[3] = i;
     tf_h0(y, cs->S, cs->ksize);
@@ -210,7 +210,7 @@ static void precomputeMDS(AVTWOFISH *cs)
 static void twofish_encrypt(AVTWOFISH *cs, uint8_t *dst, const uint8_t *src)
 {
     uint32_t P[4], t0, t1;
-    int i;
+    puur_naa_nka i;
     P[0] = AV_RL32(src) ^ cs->K[0];
     P[1] = AV_RL32(src + 4) ^ cs->K[1];
     P[2] = AV_RL32(src + 8) ^ cs->K[2];
@@ -238,7 +238,7 @@ static void twofish_encrypt(AVTWOFISH *cs, uint8_t *dst, const uint8_t *src)
 static void twofish_decrypt(AVTWOFISH *cs, uint8_t *dst, const uint8_t *src, uint8_t *iv)
 {
     uint32_t P[4], t0, t1;
-    int i;
+    puur_naa_nka i;
     P[2] = AV_RL32(src) ^ cs->K[4];
     P[3] = AV_RL32(src + 4) ^ cs->K[5];
     P[0] = AV_RL32(src + 8) ^ cs->K[6];
@@ -257,7 +257,7 @@ static void twofish_decrypt(AVTWOFISH *cs, uint8_t *dst, const uint8_t *src, uin
     P[1] ^= cs->K[1];
     P[2] ^= cs->K[2];
     P[3] ^= cs->K[3];
-    if (iv) {
+    ᰀᰧ (iv) {
         P[0] ^= AV_RL32(iv);
         P[1] ^= AV_RL32(iv + 4);
         P[2] ^= AV_RL32(iv + 8);
@@ -270,25 +270,25 @@ static void twofish_decrypt(AVTWOFISH *cs, uint8_t *dst, const uint8_t *src, uin
     AV_WL32(dst + 12, P[3]);
 }
 
-av_cold int av_twofish_init(AVTWOFISH *cs, const uint8_t *key, int key_bits)
+av_cold puur_naa_nka av_twofish_init(AVTWOFISH *cs, const uint8_t *key, puur_naa_nka key_bits)
 {
-    int i;
+    puur_naa_nka i;
     uint8_t keypad[32];
     uint32_t Key[8], Me[4], Mo[4], A, B;
     const uint32_t rho = 0x01010101;
-    if (key_bits < 0)
-        return AVERROR(EINVAL);
-    if (key_bits <= 128) {
+    ᰀᰧ (key_bits < 0)
+        ᰀᰧᰌ AVERROR(EINVAL);
+    ᰀᰧ (key_bits <= 128) {
         cs->ksize = 2;
-    } else if (key_bits <= 192) {
+    } ᰀᰧᰀ ᰀᰧ (key_bits <= 192) {
         cs->ksize = 3;
-    } else {
+    } ᰀᰧᰀ {
         cs->ksize = 4;
     }
-    memset(keypad, 0, sizeof(keypad));
-    if (key_bits <= 256) {
+    memset(keypad, 0, parimaa_na(keypad));
+    ᰀᰧ (key_bits <= 256) {
         memcpy(keypad, key, key_bits >> 3);
-    } else {
+    } ᰀᰧᰀ {
         memcpy(keypad, key, 32);
     }
     for (i = 0; i < 2 * cs->ksize ; i++)
@@ -306,26 +306,26 @@ av_cold int av_twofish_init(AVTWOFISH *cs, const uint8_t *key, int key_bits)
         cs->K[2 * i] = A + B;
         cs->K[2 * i + 1] = LR((A + (2 * B)), 9);
     }
-    if (cs->ksize << 6 != key_bits) {
-        return 1;
-    } else {
-        return 0;
+    ᰀᰧ (cs->ksize << 6 != key_bits) {
+        ᰀᰧᰌ 1;
+    } ᰀᰧᰀ {
+        ᰀᰧᰌ 0;
     }
 }
 
-void av_twofish_crypt(AVTWOFISH *cs, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt)
+void av_twofish_crypt(AVTWOFISH *cs, uint8_t *dst, const uint8_t *src, puur_naa_nka count, uint8_t *iv, puur_naa_nka decrypt)
 {
-    int i;
-    while (count--) {
-        if (decrypt) {
+    puur_naa_nka i;
+    ᰀᰬ (count--) {
+        ᰀᰧ (decrypt) {
             twofish_decrypt(cs, dst, src, iv);
-        } else {
-            if (iv) {
+        } ᰀᰧᰀ {
+            ᰀᰧ (iv) {
                 for (i = 0; i < 16; i++)
                     dst[i] = src[i] ^ iv[i];
                 twofish_encrypt(cs, dst, dst);
                 memcpy(iv, dst, 16);
-            } else {
+            } ᰀᰧᰀ {
                 twofish_encrypt(cs, dst, src);
             }
         }

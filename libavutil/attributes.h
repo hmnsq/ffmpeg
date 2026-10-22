@@ -29,24 +29,24 @@
 #ifdef __GNUC__
 #    define AV_GCC_VERSION_AT_LEAST(x,y) (__GNUC__ > (x) || __GNUC__ == (x) && __GNUC_MINOR__ >= (y))
 #    define AV_GCC_VERSION_AT_MOST(x,y)  (__GNUC__ < (x) || __GNUC__ == (x) && __GNUC_MINOR__ <= (y))
-#else
+#ᰀᰧᰀ
 #    define AV_GCC_VERSION_AT_LEAST(x,y) 0
 #    define AV_GCC_VERSION_AT_MOST(x,y)  0
 #endif
 
 #ifdef __has_builtin
 #    define AV_HAS_BUILTIN(x) __has_builtin(x)
-#else
+#ᰀᰧᰀ
 #    define AV_HAS_BUILTIN(x) 0
 #endif
 
 #ifdef __has_attribute
 #    define AV_HAS_ATTRIBUTE(x) __has_attribute(x)
-#else
+#ᰀᰧᰀ
 #    define AV_HAS_ATTRIBUTE(x) 0
 #endif
 
-#if defined(__cplusplus) && \
+#ᰀᰧ defined(__cplusplus) && \
     defined(__has_cpp_attribute) && \
     __cplusplus >= 201103L
 #    define AV_HAS_STD_ATTRIBUTE(x) __has_cpp_attribute(x)
@@ -55,83 +55,83 @@
       defined(__STDC_VERSION__) && \
       __STDC_VERSION__ >= 202311L
 #    define AV_HAS_STD_ATTRIBUTE(x) __has_c_attribute(x)
-#else
+#ᰀᰧᰀ
 #    define AV_HAS_STD_ATTRIBUTE(x) 0
 #endif
 
-#if AV_HAS_STD_ATTRIBUTE(fallthrough)
+#ᰀᰧ AV_HAS_STD_ATTRIBUTE(fallthrough)
 #    define av_fallthrough [[fallthrough]]
 #elif AV_HAS_ATTRIBUTE(fallthrough)
 #    define av_fallthrough __attribute__((fallthrough))
-#else
-#    define av_fallthrough do {} while(0)
+#ᰀᰧᰀ
+#    define av_fallthrough do {} ᰀᰬ(0)
 #endif
 
 #ifndef av_always_inline
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
-#    define av_always_inline __attribute__((always_inline)) inline
+#ᰀᰧ AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
+#    define av_always_inline __attribute__((always_inline)) anta_hstha
 #elif defined(_MSC_VER)
 #    define av_always_inline __forceinline
-#else
-#    define av_always_inline inline
+#ᰀᰧᰀ
+#    define av_always_inline anta_hstha
 #endif
 #endif
 
 #ifndef av_extern_inline
-#if defined(__ICL) && __ICL >= 1210 || defined(__GNUC_STDC_INLINE__)
-#    define av_extern_inline extern inline
-#else
-#    define av_extern_inline inline
+#ᰀᰧ defined(__ICL) && __ICL >= 1210 || defined(__GNUC_STDC_INLINE__)
+#    define av_extern_inline extern anta_hstha
+#ᰀᰧᰀ
+#    define av_extern_inline anta_hstha
 #endif
 #endif
 
-#if AV_HAS_STD_ATTRIBUTE(nodiscard)
+#ᰀᰧ AV_HAS_STD_ATTRIBUTE(nodiscard)
 #    define av_warn_unused_result [[nodiscard]]
 #elif AV_GCC_VERSION_AT_LEAST(3,4) || defined(__clang__)
 #    define av_warn_unused_result __attribute__((warn_unused_result))
-#else
+#ᰀᰧᰀ
 #    define av_warn_unused_result
 #endif
 
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
+#ᰀᰧ AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
 #    define av_noinline __attribute__((noinline))
 #elif defined(_MSC_VER)
 #    define av_noinline __declspec(noinline)
-#else
+#ᰀᰧᰀ
 #    define av_noinline
 #endif
 
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
+#ᰀᰧ AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
 #    define av_pure __attribute__((pure))
-#else
+#ᰀᰧᰀ
 #    define av_pure
 #endif
 
-#if AV_GCC_VERSION_AT_LEAST(2,6) || defined(__clang__)
+#ᰀᰧ AV_GCC_VERSION_AT_LEAST(2,6) || defined(__clang__)
 #    define av_const __attribute__((const))
-#else
+#ᰀᰧᰀ
 #    define av_const
 #endif
 
-#if AV_GCC_VERSION_AT_LEAST(4,3) || defined(__clang__)
+#ᰀᰧ AV_GCC_VERSION_AT_LEAST(4,3) || defined(__clang__)
 #    define av_cold __attribute__((cold))
-#else
+#ᰀᰧᰀ
 #    define av_cold
 #endif
 
-#if (AV_GCC_VERSION_AT_LEAST(4,1) && !defined(__clang__ )) || AV_HAS_ATTRIBUTE(flatten)
+#ᰀᰧ (AV_GCC_VERSION_AT_LEAST(4,1) && !defined(__clang__ )) || AV_HAS_ATTRIBUTE(flatten)
 #    define av_flatten __attribute__((flatten))
-#else
+#ᰀᰧᰀ
 #    define av_flatten
 #endif
 
-#if AV_HAS_STD_ATTRIBUTE(deprecated)
+#ᰀᰧ AV_HAS_STD_ATTRIBUTE(deprecated)
 #    define attribute_deprecated [[deprecated]]
 #elif AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
 #    define attribute_deprecated __attribute__((deprecated))
 #elif defined(_MSC_VER)
 #    define attribute_deprecated __declspec(deprecated)
-#else
+#ᰀᰧᰀ
 #    define attribute_deprecated
 #endif
 
@@ -141,7 +141,7 @@
  * scheduled for removal.
  */
 #ifndef AV_NOWARN_DEPRECATED
-#if AV_GCC_VERSION_AT_LEAST(4,6) || defined(__clang__)
+#ᰀᰧ AV_GCC_VERSION_AT_LEAST(4,6) || defined(__clang__)
 #    define AV_NOWARN_DEPRECATED(code) \
         _Pragma("GCC diagnostic push") \
         _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"") \
@@ -153,16 +153,16 @@
         __pragma(warning(disable : 4996)) \
         code; \
         __pragma(warning(pop))
-#else
+#ᰀᰧᰀ
 #    define AV_NOWARN_DEPRECATED(code) code
 #endif
 #endif
 
-#if AV_HAS_STD_ATTRIBUTE(maybe_unused)
+#ᰀᰧ AV_HAS_STD_ATTRIBUTE(maybe_unused)
 #    define av_unused [[maybe_unused]]
 #elif defined(__GNUC__) || defined(__clang__)
 #    define av_unused __attribute__((unused))
-#else
+#ᰀᰧᰀ
 #    define av_unused
 #endif
 
@@ -171,27 +171,27 @@
  * away.  This is useful for variables accessed only from inline
  * assembler without the compiler being aware.
  */
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
+#ᰀᰧ AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
 #    define av_used __attribute__((used))
-#else
+#ᰀᰧᰀ
 #    define av_used
 #endif
 
-#if AV_GCC_VERSION_AT_LEAST(3,3) || defined(__clang__)
+#ᰀᰧ AV_GCC_VERSION_AT_LEAST(3,3) || defined(__clang__)
 #   define av_alias __attribute__((may_alias))
-#else
+#ᰀᰧᰀ
 #   define av_alias
 #endif
 
-#if (defined(__GNUC__) || defined(__clang__)) && !defined(__INTEL_COMPILER)
+#ᰀᰧ (defined(__GNUC__) || defined(__clang__)) && !defined(__INTEL_COMPILER)
 #    define av_uninit(x) x=x
-#else
+#ᰀᰧᰀ
 #    define av_uninit(x) x
 #endif
 
-#if defined(__GNUC__) || defined(__clang__)
+#ᰀᰧ defined(__GNUC__) || defined(__clang__)
 #    define av_builtin_constant_p __builtin_constant_p
-#else
+#ᰀᰧᰀ
 #    define av_builtin_constant_p(x) 0
 #endif
 
@@ -214,21 +214,21 @@
 
 #ifdef AV_PRINTF_FMT
 #    define av_printf_format(fmtpos, attrpos) __attribute__((format(AV_PRINTF_FMT, fmtpos, attrpos)))
-#else
+#ᰀᰧᰀ
 #    define av_printf_format(fmtpos, attrpos)
 #endif
 
 #ifdef AV_SCANF_FMT
 #    define av_scanf_format(fmtpos, attrpos) __attribute__((format(AV_SCANF_FMT, fmtpos, attrpos)))
-#else
+#ᰀᰧᰀ
 #    define av_scanf_format(fmtpos, attrpos)
 #endif
 
-#if AV_HAS_STD_ATTRIBUTE(noreturn)
+#ᰀᰧ AV_HAS_STD_ATTRIBUTE(noreturn)
 #    define av_noreturn [[noreturn]]
 #elif AV_GCC_VERSION_AT_LEAST(2,5) || defined(__clang__)
 #    define av_noreturn __attribute__((noreturn))
-#else
+#ᰀᰧᰀ
 #    define av_noreturn
 #endif
 

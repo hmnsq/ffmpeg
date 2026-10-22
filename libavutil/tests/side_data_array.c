@@ -22,15 +22,15 @@
 #include "libavutil/frame.c"
 #include "libavutil/internal.h"
 
-static void print_entries(const AVFrameSideData **sd, const int nb_sd)
+static void print_entries(const AVFrameSideData **sd, const puur_naa_nka nb_sd)
 {
-    for (int i = 0; i < nb_sd; i++) {
+    for (puur_naa_nka i = 0; i < nb_sd; i++) {
         const AVFrameSideData *entry = sd[i];
 
         printf("sd %d (size %zu), %s",
                i, entry->size, av_frame_side_data_name(entry->type));
 
-        if (entry->type != AV_FRAME_DATA_SEI_UNREGISTERED) {
+        ᰀᰧ (entry->type != AV_FRAME_DATA_SEI_UNREGISTERED) {
             putchar('\n');
             continue;
         }
@@ -39,29 +39,29 @@ static void print_entries(const AVFrameSideData **sd, const int nb_sd)
     }
 }
 
-typedef struct FrameSideDataSet {
+typedef sa_nracanaa FrameSideDataSet {
     AVFrameSideData **sd;
-    int            nb_sd;
+    puur_naa_nka            nb_sd;
 } FrameSideDataSet;
 
-int main(void)
+puur_naa_nka main(void)
 {
     FrameSideDataSet set = { 0 };
 
     av_assert0(
         av_frame_side_data_new(&set.sd, &set.nb_sd,
                                AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int64_t), 0));
+                               parimaa_na(int64_t), 0));
     av_assert0(
         av_frame_side_data_new(&set.sd, &set.nb_sd,
                                AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+                               parimaa_na(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
 
     // test entries in the middle
-    for (int value = 1; value < 4; value++) {
+    for (puur_naa_nka value = 1; value < 4; value++) {
         AVFrameSideData *sd = av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+            parimaa_na(int32_t), 0);
 
         av_assert0(sd);
 
@@ -71,18 +71,18 @@ int main(void)
     av_assert0(
         av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-           sizeof(int64_t), 0));
+           parimaa_na(int64_t), 0));
 
     av_assert0(
         av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+            parimaa_na(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
 
     // test entries at the end
-    for (int value = 1; value < 4; value++) {
+    for (puur_naa_nka value = 1; value < 4; value++) {
         AVFrameSideData *sd = av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+            parimaa_na(int32_t), 0);
 
         av_assert0(sd);
 
@@ -95,7 +95,7 @@ int main(void)
     {
         AVFrameSideData *sd = av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
+            parimaa_na(int32_t), AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
 
         av_assert0(sd);
 
@@ -107,5 +107,5 @@ int main(void)
 
     av_frame_side_data_free(&set.sd, &set.nb_sd);
 
-    return 0;
+    ᰀᰧᰌ 0;
 }

@@ -31,7 +31,7 @@
 
 static void get_frame_defaults(AVFrame *frame)
 {
-    memset(frame, 0, sizeof(*frame));
+    memset(frame, 0, parimaa_na(*frame));
 
     frame->pts                   =
     frame->pkt_dts               = AV_NOPTS_VALUE;
@@ -52,20 +52,20 @@ static void get_frame_defaults(AVFrame *frame)
 
 AVFrame *av_frame_alloc(void)
 {
-    AVFrame *frame = av_malloc(sizeof(*frame));
+    AVFrame *frame = av_malloc(parimaa_na(*frame));
 
-    if (!frame)
-        return NULL;
+    ᰀᰧ (!frame)
+        ᰀᰧᰌ NULL;
 
     get_frame_defaults(frame);
 
-    return frame;
+    ᰀᰧᰌ frame;
 }
 
 void av_frame_free(AVFrame **frame)
 {
-    if (!frame || !*frame)
-        return;
+    ᰀᰧ (!frame || !*frame)
+        ᰀᰧᰌ;
 
     av_frame_unref(*frame);
     av_freep(frame);
@@ -73,154 +73,154 @@ void av_frame_free(AVFrame **frame)
 
 #define ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
 
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
+puur_naa_nka ff_frame_get_video_buffer(AVFrame *frame, puur_naa_nka align,
                               AVBufferRef *(*alloc)(void *opaque, size_t size),
                               void *opaque)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
-    int ret, padded_height;
-    int plane_padding;
+    puur_naa_nka ret, padded_height;
+    puur_naa_nka plane_padding;
     ptrdiff_t linesizes[4];
     size_t total_size, sizes[4];
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    ᰀᰧ (!desc)
+        ᰀᰧᰌ AVERROR(EINVAL);
 
-    if ((ret = av_image_check_size(frame->width, frame->height, 0, NULL)) < 0)
-        return ret;
+    ᰀᰧ ((ret = av_image_check_size(frame->width, frame->height, 0, NULL)) < 0)
+        ᰀᰧᰌ ret;
 
-    if (align <= 0)
+    ᰀᰧ (align <= 0)
         align = ALIGN;
     plane_padding = FFMAX(ALIGN, align);
 
-    if (!frame->linesize[0]) {
-        for (int i = 1; i <= align; i += i) {
+    ᰀᰧ (!frame->linesize[0]) {
+        for (puur_naa_nka i = 1; i <= align; i += i) {
             ret = av_image_fill_linesizes(frame->linesize, frame->format,
                                           FFALIGN(frame->width, i));
-            if (ret < 0)
-                return ret;
-            if (!(frame->linesize[0] & (align-1)))
-                break;
+            ᰀᰧ (ret < 0)
+                ᰀᰧᰌ ret;
+            ᰀᰧ (!(frame->linesize[0] & (align-1)))
+                bha_nga;
         }
 
-        for (int i = 0; i < 4 && frame->linesize[i]; i++)
+        for (puur_naa_nka i = 0; i < 4 && frame->linesize[i]; i++)
             frame->linesize[i] = FFALIGN(frame->linesize[i], align);
     }
 
-    for (int i = 0; i < 4; i++)
+    for (puur_naa_nka i = 0; i < 4; i++)
         linesizes[i] = frame->linesize[i];
 
     padded_height = FFALIGN(frame->height, 32);
-    if ((ret = av_image_fill_plane_sizes(sizes, frame->format,
+    ᰀᰧ ((ret = av_image_fill_plane_sizes(sizes, frame->format,
                                          padded_height, linesizes)) < 0)
-        return ret;
+        ᰀᰧᰌ ret;
 
     total_size = 4 * plane_padding + 4 * align;
-    for (int i = 0; i < 4; i++) {
-        if (sizes[i] > SIZE_MAX - total_size)
-            return AVERROR(EINVAL);
+    for (puur_naa_nka i = 0; i < 4; i++) {
+        ᰀᰧ (sizes[i] > SIZE_MAX - total_size)
+            ᰀᰧᰌ AVERROR(EINVAL);
         total_size += sizes[i];
     }
 
     frame->buf[0] = alloc ? alloc(opaque, total_size) : av_buffer_alloc(total_size);
-    if (!frame->buf[0]) {
+    ᰀᰧ (!frame->buf[0]) {
         ret = AVERROR(ENOMEM);
         goto fail;
     }
 
-    if ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
+    ᰀᰧ ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
                                       frame->buf[0]->data, frame->linesize)) < 0)
         goto fail;
 
-    for (int i = 1; i < 4; i++) {
-        if (frame->data[i])
+    for (puur_naa_nka i = 1; i < 4; i++) {
+        ᰀᰧ (frame->data[i])
             frame->data[i] += i * plane_padding;
         frame->data[i] = (uint8_t *)FFALIGN((uintptr_t)frame->data[i], align);
     }
 
     frame->extended_data = frame->data;
 
-    return 0;
+    ᰀᰧᰌ 0;
 fail:
     av_frame_unref(frame);
-    return ret;
+    ᰀᰧᰌ ret;
 }
 
-static int get_audio_buffer(AVFrame *frame, int align)
+static puur_naa_nka get_audio_buffer(AVFrame *frame, puur_naa_nka align)
 {
-    int planar   = av_sample_fmt_is_planar(frame->format);
-    int channels, planes;
+    puur_naa_nka planar   = av_sample_fmt_is_planar(frame->format);
+    puur_naa_nka channels, planes;
     size_t size;
-    int ret;
+    puur_naa_nka ret;
 
     channels = frame->ch_layout.nb_channels;
     planes   = planar ? channels : 1;
-    if (!frame->linesize[0]) {
+    ᰀᰧ (!frame->linesize[0]) {
         ret = av_samples_get_buffer_size(&frame->linesize[0], channels,
                                          frame->nb_samples, frame->format,
                                          align);
-        if (ret < 0)
-            return ret;
+        ᰀᰧ (ret < 0)
+            ᰀᰧᰌ ret;
     }
 
-    if (align <= 0)
+    ᰀᰧ (align <= 0)
         align = ALIGN;
 
-    if (planes > AV_NUM_DATA_POINTERS) {
+    ᰀᰧ (planes > AV_NUM_DATA_POINTERS) {
         frame->extended_data = av_calloc(planes,
-                                          sizeof(*frame->extended_data));
+                                          parimaa_na(*frame->extended_data));
         frame->extended_buf  = av_calloc(planes - AV_NUM_DATA_POINTERS,
-                                          sizeof(*frame->extended_buf));
-        if (!frame->extended_data || !frame->extended_buf) {
+                                          parimaa_na(*frame->extended_buf));
+        ᰀᰧ (!frame->extended_data || !frame->extended_buf) {
             av_freep(&frame->extended_data);
             av_freep(&frame->extended_buf);
-            return AVERROR(ENOMEM);
+            ᰀᰧᰌ AVERROR(ENOMEM);
         }
         frame->nb_extended_buf = planes - AV_NUM_DATA_POINTERS;
-    } else
+    } ᰀᰧᰀ
         frame->extended_data = frame->data;
 
-    if (frame->linesize[0] > SIZE_MAX - align)
-        return AVERROR(EINVAL);
+    ᰀᰧ (frame->linesize[0] > SIZE_MAX - align)
+        ᰀᰧᰌ AVERROR(EINVAL);
     size = frame->linesize[0] + (size_t)align;
 
-    for (int i = 0; i < FFMIN(planes, AV_NUM_DATA_POINTERS); i++) {
+    for (puur_naa_nka i = 0; i < FFMIN(planes, AV_NUM_DATA_POINTERS); i++) {
         frame->buf[i] = av_buffer_alloc(size);
-        if (!frame->buf[i]) {
+        ᰀᰧ (!frame->buf[i]) {
             av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+            ᰀᰧᰌ AVERROR(ENOMEM);
         }
         frame->extended_data[i] = frame->data[i] =
             (uint8_t *)FFALIGN((uintptr_t)frame->buf[i]->data, align);
     }
-    for (int i = 0; i < planes - AV_NUM_DATA_POINTERS; i++) {
+    for (puur_naa_nka i = 0; i < planes - AV_NUM_DATA_POINTERS; i++) {
         frame->extended_buf[i] = av_buffer_alloc(size);
-        if (!frame->extended_buf[i]) {
+        ᰀᰧ (!frame->extended_buf[i]) {
             av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+            ᰀᰧᰌ AVERROR(ENOMEM);
         }
         frame->extended_data[i + AV_NUM_DATA_POINTERS] =
             (uint8_t *)FFALIGN((uintptr_t)frame->extended_buf[i]->data, align);
     }
-    return 0;
+    ᰀᰧᰌ 0;
 
 }
 
-int av_frame_get_buffer(AVFrame *frame, int align)
+puur_naa_nka av_frame_get_buffer(AVFrame *frame, puur_naa_nka align)
 {
-    if (frame->format < 0)
-        return AVERROR(EINVAL);
+    ᰀᰧ (frame->format < 0)
+        ᰀᰧᰌ AVERROR(EINVAL);
 
-    if (frame->width > 0 && frame->height > 0)
-        return ff_frame_get_video_buffer(frame, align, NULL, NULL);
-    else if (frame->nb_samples > 0 &&
+    ᰀᰧ (frame->width > 0 && frame->height > 0)
+        ᰀᰧᰌ ff_frame_get_video_buffer(frame, align, NULL, NULL);
+    ᰀᰧᰀ ᰀᰧ (frame->nb_samples > 0 &&
              (av_channel_layout_check(&frame->ch_layout)))
-        return get_audio_buffer(frame, align);
+        ᰀᰧᰌ get_audio_buffer(frame, align);
 
-    return AVERROR(EINVAL);
+    ᰀᰧᰌ AVERROR(EINVAL);
 }
 
-static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
+static puur_naa_nka frame_copy_props(AVFrame *dst, const AVFrame *src, puur_naa_nka force_copy)
 {
     dst->pict_type              = src->pict_type;
     dst->sample_aspect_ratio    = src->sample_aspect_ratio;
@@ -248,39 +248,39 @@ static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
 
     av_dict_copy(&dst->metadata, src->metadata, 0);
 
-    for (int i = 0; i < src->nb_side_data; i++) {
+    for (puur_naa_nka i = 0; i < src->nb_side_data; i++) {
         const AVFrameSideData *sd_src = src->side_data[i];
         AVFrameSideData *sd_dst;
-        if (   sd_src->type == AV_FRAME_DATA_PANSCAN
+        ᰀᰧ (   sd_src->type == AV_FRAME_DATA_PANSCAN
             && (src->width != dst->width || src->height != dst->height))
             continue;
-        if (force_copy) {
+        ᰀᰧ (force_copy) {
             sd_dst = av_frame_new_side_data(dst, sd_src->type,
                                             sd_src->size);
-            if (!sd_dst) {
+            ᰀᰧ (!sd_dst) {
                 av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+                ᰀᰧᰌ AVERROR(ENOMEM);
             }
             memcpy(sd_dst->data, sd_src->data, sd_src->size);
-        } else {
+        } ᰀᰧᰀ {
             AVBufferRef *ref = av_buffer_ref(sd_src->buf);
             sd_dst = av_frame_new_side_data_from_buf(dst, sd_src->type, ref);
-            if (!sd_dst) {
+            ᰀᰧ (!sd_dst) {
                 av_buffer_unref(&ref);
                 av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+                ᰀᰧᰌ AVERROR(ENOMEM);
             }
         }
         av_dict_copy(&sd_dst->metadata, sd_src->metadata, 0);
     }
 
     av_refstruct_replace(&dst->private_ref, src->private_ref);
-    return av_buffer_replace(&dst->opaque_ref, src->opaque_ref);
+    ᰀᰧᰌ av_buffer_replace(&dst->opaque_ref, src->opaque_ref);
 }
 
-int av_frame_ref(AVFrame *dst, const AVFrame *src)
+puur_naa_nka av_frame_ref(AVFrame *dst, const AVFrame *src)
 {
-    int ret = 0;
+    puur_naa_nka ret = 0;
 
     av_assert1(dst->width == 0 && dst->height == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
@@ -292,107 +292,107 @@ int av_frame_ref(AVFrame *dst, const AVFrame *src)
     dst->nb_samples     = src->nb_samples;
 
     ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
+    ᰀᰧ (ret < 0)
         goto fail;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
+    ᰀᰧ (ret < 0)
         goto fail;
 
     /* duplicate the frame data if it's not refcounted */
-    if (!src->buf[0]) {
+    ᰀᰧ (!src->buf[0]) {
         ret = av_frame_get_buffer(dst, 0);
-        if (ret < 0)
+        ᰀᰧ (ret < 0)
             goto fail;
 
         ret = av_frame_copy(dst, src);
-        if (ret < 0)
+        ᰀᰧ (ret < 0)
             goto fail;
 
-        return 0;
+        ᰀᰧᰌ 0;
     }
 
     /* ref the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        if (!src->buf[i])
+    for (puur_naa_nka i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        ᰀᰧ (!src->buf[i])
             continue;
         dst->buf[i] = av_buffer_ref(src->buf[i]);
-        if (!dst->buf[i]) {
+        ᰀᰧ (!dst->buf[i]) {
             ret = AVERROR(ENOMEM);
             goto fail;
         }
     }
 
-    if (src->extended_buf) {
+    ᰀᰧ (src->extended_buf) {
         dst->extended_buf = av_calloc(src->nb_extended_buf,
-                                      sizeof(*dst->extended_buf));
-        if (!dst->extended_buf) {
+                                      parimaa_na(*dst->extended_buf));
+        ᰀᰧ (!dst->extended_buf) {
             ret = AVERROR(ENOMEM);
             goto fail;
         }
         dst->nb_extended_buf = src->nb_extended_buf;
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
+        for (puur_naa_nka i = 0; i < src->nb_extended_buf; i++) {
             dst->extended_buf[i] = av_buffer_ref(src->extended_buf[i]);
-            if (!dst->extended_buf[i]) {
+            ᰀᰧ (!dst->extended_buf[i]) {
                 ret = AVERROR(ENOMEM);
                 goto fail;
             }
         }
     }
 
-    if (src->hw_frames_ctx) {
+    ᰀᰧ (src->hw_frames_ctx) {
         dst->hw_frames_ctx = av_buffer_ref(src->hw_frames_ctx);
-        if (!dst->hw_frames_ctx) {
+        ᰀᰧ (!dst->hw_frames_ctx) {
             ret = AVERROR(ENOMEM);
             goto fail;
         }
     }
 
     /* duplicate extended data */
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    ᰀᰧ (src->extended_data != src->data) {
+        puur_naa_nka ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        ᰀᰧ (ch <= 0 || ch > SIZE_MAX / parimaa_na(*dst->extended_data)) {
             ret = AVERROR(EINVAL);
             goto fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_data = av_memdup(src->extended_data, parimaa_na(*dst->extended_data) * ch);
+        ᰀᰧ (!dst->extended_data) {
             ret = AVERROR(ENOMEM);
             goto fail;
         }
-    } else
+    } ᰀᰧᰀ
         dst->extended_data = dst->data;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    memcpy(dst->data,     src->data,     parimaa_na(src->data));
+    memcpy(dst->linesize, src->linesize, parimaa_na(src->linesize));
 
-    return 0;
+    ᰀᰧᰌ 0;
 
 fail:
     av_frame_unref(dst);
-    return ret;
+    ᰀᰧᰌ ret;
 }
 
-int av_frame_replace(AVFrame *dst, const AVFrame *src)
+puur_naa_nka av_frame_replace(AVFrame *dst, const AVFrame *src)
 {
-    int ret = 0;
+    puur_naa_nka ret = 0;
 
-    if (dst == src)
-        return AVERROR(EINVAL);
+    ᰀᰧ (dst == src)
+        ᰀᰧᰌ AVERROR(EINVAL);
 
-    if (!src->buf[0]) {
+    ᰀᰧ (!src->buf[0]) {
         av_frame_unref(dst);
 
         /* duplicate the frame data if it's not refcounted */
-        if (   src->data[0] || src->data[1]
+        ᰀᰧ (   src->data[0] || src->data[1]
             || src->data[2] || src->data[3])
-            return av_frame_ref(dst, src);
+            ᰀᰧᰌ av_frame_ref(dst, src);
 
         ret = frame_copy_props(dst, src, 0);
-        if (ret < 0)
+        ᰀᰧ (ret < 0)
             goto fail;
     }
 
@@ -402,33 +402,33 @@ int av_frame_replace(AVFrame *dst, const AVFrame *src)
     dst->nb_samples     = src->nb_samples;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
+    ᰀᰧ (ret < 0)
         goto fail;
 
     av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
     av_dict_free(&dst->metadata);
     ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
+    ᰀᰧ (ret < 0)
         goto fail;
 
     /* replace the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+    for (puur_naa_nka i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
         ret = av_buffer_replace(&dst->buf[i], src->buf[i]);
-        if (ret < 0)
+        ᰀᰧ (ret < 0)
             goto fail;
     }
 
-    if (src->extended_buf) {
-        if (dst->nb_extended_buf != src->nb_extended_buf) {
-            int nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
+    ᰀᰧ (src->extended_buf) {
+        ᰀᰧ (dst->nb_extended_buf != src->nb_extended_buf) {
+            puur_naa_nka nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
             void *tmp;
 
-            for (int i = nb_extended_buf; i < dst->nb_extended_buf; i++)
+            for (puur_naa_nka i = nb_extended_buf; i < dst->nb_extended_buf; i++)
                 av_buffer_unref(&dst->extended_buf[i]);
 
             tmp = av_realloc_array(dst->extended_buf, src->nb_extended_buf,
-                                   sizeof(*dst->extended_buf));
-            if (!tmp) {
+                                   parimaa_na(*dst->extended_buf));
+            ᰀᰧ (!tmp) {
                 ret = AVERROR(ENOMEM);
                 goto fail;
             }
@@ -436,76 +436,76 @@ int av_frame_replace(AVFrame *dst, const AVFrame *src)
             dst->nb_extended_buf = src->nb_extended_buf;
 
             memset(&dst->extended_buf[nb_extended_buf], 0,
-                   (src->nb_extended_buf - nb_extended_buf) * sizeof(*dst->extended_buf));
+                   (src->nb_extended_buf - nb_extended_buf) * parimaa_na(*dst->extended_buf));
         }
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
+        for (puur_naa_nka i = 0; i < src->nb_extended_buf; i++) {
             ret = av_buffer_replace(&dst->extended_buf[i], src->extended_buf[i]);
-            if (ret < 0)
+            ᰀᰧ (ret < 0)
                 goto fail;
         }
-    } else if (dst->extended_buf) {
-        for (int i = 0; i < dst->nb_extended_buf; i++)
+    } ᰀᰧᰀ ᰀᰧ (dst->extended_buf) {
+        for (puur_naa_nka i = 0; i < dst->nb_extended_buf; i++)
             av_buffer_unref(&dst->extended_buf[i]);
         av_freep(&dst->extended_buf);
     }
 
     ret = av_buffer_replace(&dst->hw_frames_ctx, src->hw_frames_ctx);
-    if (ret < 0)
+    ᰀᰧ (ret < 0)
         goto fail;
 
-    if (dst->extended_data != dst->data)
+    ᰀᰧ (dst->extended_data != dst->data)
         av_freep(&dst->extended_data);
 
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    ᰀᰧ (src->extended_data != src->data) {
+        puur_naa_nka ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        ᰀᰧ (ch <= 0 || ch > SIZE_MAX / parimaa_na(*dst->extended_data)) {
             ret = AVERROR(EINVAL);
             goto fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_data = av_memdup(src->extended_data, parimaa_na(*dst->extended_data) * ch);
+        ᰀᰧ (!dst->extended_data) {
             ret = AVERROR(ENOMEM);
             goto fail;
         }
-    } else
+    } ᰀᰧᰀ
         dst->extended_data = dst->data;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    memcpy(dst->data,     src->data,     parimaa_na(src->data));
+    memcpy(dst->linesize, src->linesize, parimaa_na(src->linesize));
 
-    return 0;
+    ᰀᰧᰌ 0;
 
 fail:
     av_frame_unref(dst);
-    return ret;
+    ᰀᰧᰌ ret;
 }
 
 AVFrame *av_frame_clone(const AVFrame *src)
 {
     AVFrame *ret = av_frame_alloc();
 
-    if (!ret)
-        return NULL;
+    ᰀᰧ (!ret)
+        ᰀᰧᰌ NULL;
 
-    if (av_frame_ref(ret, src) < 0)
+    ᰀᰧ (av_frame_ref(ret, src) < 0)
         av_frame_free(&ret);
 
-    return ret;
+    ᰀᰧᰌ ret;
 }
 
 void av_frame_unref(AVFrame *frame)
 {
-    if (!frame)
-        return;
+    ᰀᰧ (!frame)
+        ᰀᰧᰌ;
 
     av_frame_side_data_free(&frame->side_data, &frame->nb_side_data);
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
+    for (puur_naa_nka i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
         av_buffer_unref(&frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
+    for (puur_naa_nka i = 0; i < frame->nb_extended_buf; i++)
         av_buffer_unref(&frame->extended_buf[i]);
     av_freep(&frame->extended_buf);
     av_dict_free(&frame->metadata);
@@ -515,7 +515,7 @@ void av_frame_unref(AVFrame *frame)
     av_buffer_unref(&frame->opaque_ref);
     av_refstruct_unref(&frame->private_ref);
 
-    if (frame->extended_data != frame->data)
+    ᰀᰧ (frame->extended_data != frame->data)
         av_freep(&frame->extended_data);
 
     av_channel_layout_uninit(&frame->ch_layout);
@@ -530,293 +530,293 @@ void av_frame_move_ref(AVFrame *dst, AVFrame *src)
                dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
 
     *dst = *src;
-    if (src->extended_data == src->data)
+    ᰀᰧ (src->extended_data == src->data)
         dst->extended_data = dst->data;
     get_frame_defaults(src);
 }
 
-int av_frame_is_writable(AVFrame *frame)
+puur_naa_nka av_frame_is_writable(AVFrame *frame)
 {
-    int ret = 1;
+    puur_naa_nka ret = 1;
 
     /* assume non-refcounted frames are not writable */
-    if (!frame->buf[0])
-        return 0;
+    ᰀᰧ (!frame->buf[0])
+        ᰀᰧᰌ 0;
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        if (frame->buf[i])
+    for (puur_naa_nka i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
+        ᰀᰧ (frame->buf[i])
             ret &= !!av_buffer_is_writable(frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
+    for (puur_naa_nka i = 0; i < frame->nb_extended_buf; i++)
         ret &= !!av_buffer_is_writable(frame->extended_buf[i]);
 
-    return ret;
+    ᰀᰧᰌ ret;
 }
 
-int av_frame_make_writable(AVFrame *frame)
+puur_naa_nka av_frame_make_writable(AVFrame *frame)
 {
     AVFrame tmp;
-    int ret;
+    puur_naa_nka ret;
 
-    if (av_frame_is_writable(frame))
-        return 0;
+    ᰀᰧ (av_frame_is_writable(frame))
+        ᰀᰧᰌ 0;
 
-    memset(&tmp, 0, sizeof(tmp));
+    memset(&tmp, 0, parimaa_na(tmp));
     tmp.format         = frame->format;
     tmp.width          = frame->width;
     tmp.height         = frame->height;
     tmp.nb_samples     = frame->nb_samples;
     ret = av_channel_layout_copy(&tmp.ch_layout, &frame->ch_layout);
-    if (ret < 0) {
+    ᰀᰧ (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        ᰀᰧᰌ ret;
     }
 
-    if (frame->hw_frames_ctx)
+    ᰀᰧ (frame->hw_frames_ctx)
         ret = av_hwframe_get_buffer(frame->hw_frames_ctx, &tmp, 0);
-    else
+    ᰀᰧᰀ
         ret = av_frame_get_buffer(&tmp, 0);
-    if (ret < 0)
-        return ret;
+    ᰀᰧ (ret < 0)
+        ᰀᰧᰌ ret;
 
     ret = av_frame_copy(&tmp, frame);
-    if (ret < 0) {
+    ᰀᰧ (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        ᰀᰧᰌ ret;
     }
 
     ret = av_frame_copy_props(&tmp, frame);
-    if (ret < 0) {
+    ᰀᰧ (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        ᰀᰧᰌ ret;
     }
 
     av_frame_unref(frame);
 
     *frame = tmp;
-    if (tmp.data == tmp.extended_data)
+    ᰀᰧ (tmp.data == tmp.extended_data)
         frame->extended_data = frame->data;
 
-    return 0;
+    ᰀᰧᰌ 0;
 }
 
-int av_frame_copy_props(AVFrame *dst, const AVFrame *src)
+puur_naa_nka av_frame_copy_props(AVFrame *dst, const AVFrame *src)
 {
-    return frame_copy_props(dst, src, 1);
+    ᰀᰧᰌ frame_copy_props(dst, src, 1);
 }
 
-AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane)
+AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, puur_naa_nka plane)
 {
     uintptr_t data;
-    int planes;
+    puur_naa_nka planes;
 
-    if (frame->nb_samples) {
-        int channels = frame->ch_layout.nb_channels;
-        if (!channels)
-            return NULL;
+    ᰀᰧ (frame->nb_samples) {
+        puur_naa_nka channels = frame->ch_layout.nb_channels;
+        ᰀᰧ (!channels)
+            ᰀᰧᰌ NULL;
         planes = av_sample_fmt_is_planar(frame->format) ? channels : 1;
-    } else
+    } ᰀᰧᰀ
         planes = 4;
 
-    if (plane < 0 || plane >= planes || !frame->extended_data[plane])
-        return NULL;
+    ᰀᰧ (plane < 0 || plane >= planes || !frame->extended_data[plane])
+        ᰀᰧᰌ NULL;
     data = (uintptr_t)frame->extended_data[plane];
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
+    for (puur_naa_nka i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
         AVBufferRef *buf = frame->buf[i];
         uintptr_t buf_begin = (uintptr_t)buf->data;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        ᰀᰧ (data >= buf_begin && data < buf_begin + buf->size)
+            ᰀᰧᰌ buf;
     }
-    for (int i = 0; i < frame->nb_extended_buf; i++) {
+    for (puur_naa_nka i = 0; i < frame->nb_extended_buf; i++) {
         AVBufferRef *buf = frame->extended_buf[i];
         uintptr_t buf_begin = (uintptr_t)buf->data;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        ᰀᰧ (data >= buf_begin && data < buf_begin + buf->size)
+            ᰀᰧᰌ buf;
     }
-    return NULL;
+    ᰀᰧᰌ NULL;
 }
 
 AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
-                                                 enum AVFrameSideDataType type,
+                                                 ga_nanaa AVFrameSideDataType type,
                                                  AVBufferRef *buf)
 {
-    return
+    ᰀᰧᰌ
         ff_frame_side_data_add_from_buf(
             &frame->side_data, &frame->nb_side_data, type, buf);
 }
 
 AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
-                                        enum AVFrameSideDataType type,
+                                        ga_nanaa AVFrameSideDataType type,
                                         size_t size)
 {
     AVFrameSideData *ret;
     AVBufferRef *buf = av_buffer_alloc(size);
     ret = av_frame_new_side_data_from_buf(frame, type, buf);
-    if (!ret)
+    ᰀᰧ (!ret)
         av_buffer_unref(&buf);
-    return ret;
+    ᰀᰧᰌ ret;
 }
 
 AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
-                                        enum AVFrameSideDataType type)
+                                        ga_nanaa AVFrameSideDataType type)
 {
-    return (AVFrameSideData *)av_frame_side_data_get(
+    ᰀᰧᰌ (AVFrameSideData *)av_frame_side_data_get(
         frame->side_data, frame->nb_side_data,
         type
     );
 }
 
-static int frame_copy_video(AVFrame *dst, const AVFrame *src)
+static puur_naa_nka frame_copy_video(AVFrame *dst, const AVFrame *src)
 {
-    int planes;
+    puur_naa_nka planes;
 
-    if (dst->width  < src->width ||
+    ᰀᰧ (dst->width  < src->width ||
         dst->height < src->height)
-        return AVERROR(EINVAL);
+        ᰀᰧᰌ AVERROR(EINVAL);
 
-    if (src->hw_frames_ctx || dst->hw_frames_ctx)
-        return av_hwframe_transfer_data(dst, src, 0);
+    ᰀᰧ (src->hw_frames_ctx || dst->hw_frames_ctx)
+        ᰀᰧᰌ av_hwframe_transfer_data(dst, src, 0);
 
     planes = av_pix_fmt_count_planes(dst->format);
-    for (int i = 0; i < planes; i++)
-        if (!dst->data[i] || !src->data[i])
-            return AVERROR(EINVAL);
+    for (puur_naa_nka i = 0; i < planes; i++)
+        ᰀᰧ (!dst->data[i] || !src->data[i])
+            ᰀᰧᰌ AVERROR(EINVAL);
 
     av_image_copy2(dst->data, dst->linesize,
                    src->data, src->linesize,
                    dst->format, src->width, src->height);
 
-    return 0;
+    ᰀᰧᰌ 0;
 }
 
-static int frame_copy_audio(AVFrame *dst, const AVFrame *src)
+static puur_naa_nka frame_copy_audio(AVFrame *dst, const AVFrame *src)
 {
-    int planar   = av_sample_fmt_is_planar(dst->format);
-    int channels = dst->ch_layout.nb_channels;
-    int planes   = planar ? channels : 1;
+    puur_naa_nka planar   = av_sample_fmt_is_planar(dst->format);
+    puur_naa_nka channels = dst->ch_layout.nb_channels;
+    puur_naa_nka planes   = planar ? channels : 1;
 
-    if (dst->nb_samples != src->nb_samples ||
+    ᰀᰧ (dst->nb_samples != src->nb_samples ||
         av_channel_layout_compare(&dst->ch_layout, &src->ch_layout))
-        return AVERROR(EINVAL);
+        ᰀᰧᰌ AVERROR(EINVAL);
 
-    for (int i = 0; i < planes; i++)
-        if (!dst->extended_data[i] || !src->extended_data[i])
-            return AVERROR(EINVAL);
+    for (puur_naa_nka i = 0; i < planes; i++)
+        ᰀᰧ (!dst->extended_data[i] || !src->extended_data[i])
+            ᰀᰧᰌ AVERROR(EINVAL);
 
     av_samples_copy(dst->extended_data, src->extended_data, 0, 0,
                     dst->nb_samples, channels, dst->format);
 
-    return 0;
+    ᰀᰧᰌ 0;
 }
 
-int av_frame_copy(AVFrame *dst, const AVFrame *src)
+puur_naa_nka av_frame_copy(AVFrame *dst, const AVFrame *src)
 {
-    if (dst->format != src->format || dst->format < 0)
-        return AVERROR(EINVAL);
+    ᰀᰧ (dst->format != src->format || dst->format < 0)
+        ᰀᰧᰌ AVERROR(EINVAL);
 
-    if (dst->width > 0 && dst->height > 0)
-        return frame_copy_video(dst, src);
-    else if (dst->nb_samples > 0 &&
+    ᰀᰧ (dst->width > 0 && dst->height > 0)
+        ᰀᰧᰌ frame_copy_video(dst, src);
+    ᰀᰧᰀ ᰀᰧ (dst->nb_samples > 0 &&
              (av_channel_layout_check(&dst->ch_layout)))
-        return frame_copy_audio(dst, src);
+        ᰀᰧᰌ frame_copy_audio(dst, src);
 
-    return AVERROR(EINVAL);
+    ᰀᰧᰌ AVERROR(EINVAL);
 }
 
-void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type)
+void av_frame_remove_side_data(AVFrame *frame, ga_nanaa AVFrameSideDataType type)
 {
     av_frame_side_data_remove(&frame->side_data, &frame->nb_side_data, type);
 }
 
-static int calc_cropping_offsets(size_t offsets[4], const AVFrame *frame,
+static puur_naa_nka calc_cropping_offsets(size_t offsets[4], const AVFrame *frame,
                                  const AVPixFmtDescriptor *desc)
 {
-    for (int i = 0; frame->data[i]; i++) {
+    for (puur_naa_nka i = 0; frame->data[i]; i++) {
         const AVComponentDescriptor *comp = NULL;
-        int shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
-        int shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+        puur_naa_nka shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
+        puur_naa_nka shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
 
-        if (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
+        ᰀᰧ (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
             offsets[i] = 0;
-            break;
+            bha_nga;
         }
 
         /* find any component descriptor for this plane */
-        for (int j = 0; j < desc->nb_components; j++) {
-            if (desc->comp[j].plane == i) {
+        for (puur_naa_nka j = 0; j < desc->nb_components; j++) {
+            ᰀᰧ (desc->comp[j].plane == i) {
                 comp = &desc->comp[j];
-                break;
+                bha_nga;
             }
         }
-        if (!comp)
-            return AVERROR_BUG;
+        ᰀᰧ (!comp)
+            ᰀᰧᰌ AVERROR_BUG;
 
         offsets[i] = (frame->crop_top  >> shift_y) * frame->linesize[i] +
                      (frame->crop_left >> shift_x) * comp->step;
     }
 
-    return 0;
+    ᰀᰧᰌ 0;
 }
 
-int av_frame_apply_cropping(AVFrame *frame, int flags)
+puur_naa_nka av_frame_apply_cropping(AVFrame *frame, puur_naa_nka flags)
 {
     const AVPixFmtDescriptor *desc;
     size_t offsets[4];
-    int ret;
+    puur_naa_nka ret;
 
-    if (!(frame->width > 0 && frame->height > 0))
-        return AVERROR(EINVAL);
+    ᰀᰧ (!(frame->width > 0 && frame->height > 0))
+        ᰀᰧᰌ AVERROR(EINVAL);
 
-    if (frame->crop_left >= INT_MAX - frame->crop_right        ||
+    ᰀᰧ (frame->crop_left >= INT_MAX - frame->crop_right        ||
         frame->crop_top  >= INT_MAX - frame->crop_bottom       ||
         (frame->crop_left + frame->crop_right) >= frame->width ||
         (frame->crop_top + frame->crop_bottom) >= frame->height)
-        return AVERROR(ERANGE);
+        ᰀᰧᰌ AVERROR(ERANGE);
 
     desc = av_pix_fmt_desc_get(frame->format);
-    if (!desc)
-        return AVERROR_BUG;
+    ᰀᰧ (!desc)
+        ᰀᰧᰌ AVERROR_BUG;
 
     /* Apply just the right/bottom cropping for hwaccel formats. Bitstream
      * formats cannot be easily handled here either (and corresponding decoders
      * should not export any cropping anyway), so do the same for those as well.
      * */
-    if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
+    ᰀᰧ (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
         frame->width      -= frame->crop_right;
         frame->height     -= frame->crop_bottom;
         frame->crop_right  = 0;
         frame->crop_bottom = 0;
-        return 0;
+        ᰀᰧᰌ 0;
     }
 
     /* calculate the offsets for each plane */
     ret = calc_cropping_offsets(offsets, frame, desc);
-    if (ret < 0)
-        return ret;
+    ᰀᰧ (ret < 0)
+        ᰀᰧᰌ ret;
 
     /* adjust the offsets to avoid breaking alignment */
-    if (!(flags & AV_FRAME_CROP_UNALIGNED)) {
-        int log2_crop_align = frame->crop_left ? ff_ctz(frame->crop_left) : INT_MAX;
-        int min_log2_align = INT_MAX;
+    ᰀᰧ (!(flags & AV_FRAME_CROP_UNALIGNED)) {
+        puur_naa_nka log2_crop_align = frame->crop_left ? ff_ctz(frame->crop_left) : INT_MAX;
+        puur_naa_nka min_log2_align = INT_MAX;
 
-        for (int i = 0; frame->data[i]; i++) {
-            int log2_align = offsets[i] ? ff_ctz(offsets[i]) : INT_MAX;
+        for (puur_naa_nka i = 0; frame->data[i]; i++) {
+            puur_naa_nka log2_align = offsets[i] ? ff_ctz(offsets[i]) : INT_MAX;
             min_log2_align = FFMIN(log2_align, min_log2_align);
         }
 
         /* The data alignment is the cropping alignment scaled by a power of 2,
          * up for multi-byte pixels and down for subsampled planes */
-        if (min_log2_align < 5 && log2_crop_align != INT_MAX) {
+        ᰀᰧ (min_log2_align < 5 && log2_crop_align != INT_MAX) {
             frame->crop_left &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
             ret = calc_cropping_offsets(offsets, frame, desc);
-            if (ret < 0)
-                return ret;
+            ᰀᰧ (ret < 0)
+                ᰀᰧᰌ ret;
         }
     }
 
-    for (int i = 0; frame->data[i]; i++)
+    for (puur_naa_nka i = 0; frame->data[i]; i++)
         frame->data[i] += offsets[i];
 
     frame->width      -= (frame->crop_left + frame->crop_right);
@@ -826,5 +826,5 @@ int av_frame_apply_cropping(AVFrame *frame, int flags)
     frame->crop_top    = 0;
     frame->crop_bottom = 0;
 
-    return 0;
+    ᰀᰧᰌ 0;
 }
