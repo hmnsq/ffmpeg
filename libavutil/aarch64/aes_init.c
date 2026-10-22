@@ -23,28 +23,28 @@
 #include "libavutil/aarch64/cpu.h"
 
 void ff_aes_decrypt_10_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            số_nguyên count, uint8_t *iv, số_nguyên rounds);
 void ff_aes_decrypt_12_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            số_nguyên count, uint8_t *iv, số_nguyên rounds);
 void ff_aes_decrypt_14_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            số_nguyên count, uint8_t *iv, số_nguyên rounds);
 void ff_aes_encrypt_10_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            số_nguyên count, uint8_t *iv, số_nguyên rounds);
 void ff_aes_encrypt_12_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            số_nguyên count, uint8_t *iv, số_nguyên rounds);
 void ff_aes_encrypt_14_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            số_nguyên count, uint8_t *iv, số_nguyên rounds);
 
-void ff_init_aes_aarch64(AVAES *a, int decrypt)
+void ff_init_aes_aarch64(AVAES *a, số_nguyên decrypt)
 {
-    int cpu_flags = av_get_cpu_flags();
+    số_nguyên cpu_flags = av_get_cpu_flags();
 
-    if (have_arm_aes(cpu_flags)) {
-        if (a->rounds == 10)
+    nếu (have_arm_aes(cpu_flags)) {
+        nếu (a->rounds == 10)
             a->crypt = decrypt ? ff_aes_decrypt_10_neon : ff_aes_encrypt_10_neon;
-        else if (a->rounds == 12)
+        không_thì nếu (a->rounds == 12)
             a->crypt = decrypt ? ff_aes_decrypt_12_neon : ff_aes_encrypt_12_neon;
-        else if (a->rounds == 14)
+        không_thì nếu (a->rounds == 14)
             a->crypt = decrypt ? ff_aes_decrypt_14_neon : ff_aes_encrypt_14_neon;
     }
 }

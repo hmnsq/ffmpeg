@@ -69,30 +69,30 @@ TX_DECL_FN(fft_sr_asm, avx2)
 TX_DECL_FN(fft_pfa_15xM_asm, avx2)
 
 #define DECL_INIT_FN(basis, interleave)                                        \
-static av_cold int b ##basis## _i ##interleave(AVTXContext *s,                 \
+static av_cold số_nguyên b ##basis## _i ##interleave(AVTXContext *s,                 \
                                                const FFTXCodelet *cd,          \
                                                uint64_t flags,                 \
                                                FFTXCodeletOptions *opts,       \
-                                               int len, int inv,               \
+                                               số_nguyên len, số_nguyên inv,               \
                                                const void *scale)              \
 {                                                                              \
     ff_tx_init_tabs_float(len);                                                \
-    if (cd->max_len == 2)                                                      \
-        return ff_tx_gen_ptwo_revtab(s, opts);                                 \
-    else                                                                       \
-        return ff_tx_gen_split_radix_parity_revtab(s, len, inv, opts,          \
+    nếu (cd->max_len == 2)                                                      \
+        trả_về ff_tx_gen_ptwo_revtab(s, opts);                                 \
+    không_thì                                                                       \
+        trả_về ff_tx_gen_split_radix_parity_revtab(s, len, inv, opts,          \
                                                    basis, interleave);         \
 }
 
 DECL_INIT_FN(8, 0)
 DECL_INIT_FN(8, 2)
 
-#if ARCH_X86_64
-static av_cold int factor_init(AVTXContext *s, const FFTXCodelet *cd,
+#nếu ARCH_X86_64
+static av_cold số_nguyên factor_init(AVTXContext *s, const FFTXCodelet *cd,
                                uint64_t flags, FFTXCodeletOptions *opts,
-                               int len, int inv, const void *scale)
+                               số_nguyên len, số_nguyên inv, const void *scale)
 {
-    int ret;
+    số_nguyên ret;
 
     /* The transformations below are performed in the gather domain,
      * so override the option and let the infrastructure convert the map
@@ -101,45 +101,45 @@ static av_cold int factor_init(AVTXContext *s, const FFTXCodelet *cd,
 
     TX_TAB(ff_tx_init_tabs)(len);
 
-    if (len == 15)
+    nếu (len == 15)
         ret = ff_tx_gen_pfa_input_map(s, &sub_opts, 3, 5);
-    else
+    không_thì
         ret = ff_tx_gen_default_map(s, &sub_opts);
 
-    if (ret < 0)
-        return ret;
+    nếu (ret < 0)
+        trả_về ret;
 
-    if (len == 15) {
-        int cnt = 0, tmp[15];
+    nếu (len == 15) {
+        số_nguyên cnt = 0, tmp[15];
 
         /* Special permutation to simplify loads in the pre-permuted version */
         memcpy(tmp, s->map, 15*sizeof(*tmp));
-        for (int i = 1; i < 15; i += 3) {
+        cho (số_nguyên i = 1; i < 15; i += 3) {
             s->map[cnt] = tmp[i];
             cnt++;
         }
-        for (int i = 2; i < 15; i += 3) {
+        cho (số_nguyên i = 2; i < 15; i += 3) {
             s->map[cnt] = tmp[i];
             cnt++;
         }
-        for (int i = 0; i < 15; i += 3) {
+        cho (số_nguyên i = 0; i < 15; i += 3) {
             s->map[cnt] = tmp[i];
             cnt++;
         }
-        memmove(&s->map[7], &s->map[6], 4*sizeof(int));
-        memmove(&s->map[3], &s->map[1], 4*sizeof(int));
+        memmove(&s->map[7], &s->map[6], 4*sizeof(số_nguyên));
+        memmove(&s->map[3], &s->map[1], 4*sizeof(số_nguyên));
         s->map[1] = tmp[2];
         s->map[2] = tmp[0];
     }
 
-    return 0;
+    trả_về 0;
 }
 
-static av_cold int m_inv_init(AVTXContext *s, const FFTXCodelet *cd,
+static av_cold số_nguyên m_inv_init(AVTXContext *s, const FFTXCodelet *cd,
                               uint64_t flags, FFTXCodeletOptions *opts,
-                              int len, int inv, const void *scale)
+                              số_nguyên len, số_nguyên inv, const void *scale)
 {
-    int ret;
+    số_nguyên ret;
     FFTXCodeletOptions sub_opts = { .map_dir = FF_TX_MAP_GATHER };
 
     s->scale_d = *((SCALE_TYPE *)scale);
@@ -150,34 +150,34 @@ static av_cold int m_inv_init(AVTXContext *s, const FFTXCodelet *cd,
     flags |=  FF_TX_PRESHUFFLE;   /* This function handles the permute step */
     flags |=  FF_TX_ASM_CALL;     /* We want an assembly function, not C */
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
+    nếu ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
                                 inv, scale)))
-        return ret;
+        trả_về ret;
 
     s->map = av_malloc(len*sizeof(*s->map));
-    if (!s->map)
-        return AVERROR(ENOMEM);
+    nếu (!s->map)
+        trả_về AVERROR(ENOMEM);
 
     memcpy(s->map, s->sub->map, (len >> 1)*sizeof(*s->map));
     /* Invert lookup table for unstrided path */
-    for (int i = 0; i < (len >> 1); i++)
+    cho (số_nguyên i = 0; i < (len >> 1); i++)
        s->map[(len >> 1) + s->map[i]] = i;
 
-    if ((ret = ff_tx_mdct_gen_exp_float(s, s->map)))
-        return ret;
+    nếu ((ret = ff_tx_mdct_gen_exp_float(s, s->map)))
+        trả_về ret;
 
-    return 0;
+    trả_về 0;
 }
 
-static av_cold int fft_pfa_init(AVTXContext *s,
+static av_cold số_nguyên fft_pfa_init(AVTXContext *s,
                                 const FFTXCodelet *cd,
                                 uint64_t flags,
                                 FFTXCodeletOptions *opts,
-                                int len, int inv,
+                                số_nguyên len, số_nguyên inv,
                                 const void *scale)
 {
-    int ret;
-    int sub_len = len / cd->factors[0];
+    số_nguyên ret;
+    số_nguyên sub_len = len / cd->factors[0];
     FFTXCodeletOptions sub_opts = { .map_dir = FF_TX_MAP_SCATTER };
 
     flags &= ~FF_TX_OUT_OF_PLACE; /* We want the subtransform to be */
@@ -185,48 +185,48 @@ static av_cold int fft_pfa_init(AVTXContext *s,
     flags |=  FF_TX_PRESHUFFLE;   /* This function handles the permute step */
     flags |=  FF_TX_ASM_CALL;     /* We want an assembly function, not C */
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
+    nếu ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                 sub_len, inv, scale)))
-        return ret;
+        trả_về ret;
 
-    if ((ret = ff_tx_gen_compound_mapping(s, opts, s->inv, cd->factors[0], sub_len)))
-        return ret;
+    nếu ((ret = ff_tx_gen_compound_mapping(s, opts, s->inv, cd->factors[0], sub_len)))
+        trả_về ret;
 
-    if (cd->factors[0] == 15) {
-        int tmp[15];
+    nếu (cd->factors[0] == 15) {
+        số_nguyên tmp[15];
 
         /* Our 15-point transform is also a compound one, so embed its input map */
         TX_EMBED_INPUT_PFA_MAP(s->map, len, 3, 5);
 
         /* Special permutation to simplify loads in the pre-permuted version */
-        for (int k = 0; k < s->sub[0].len; k++) {
-            int cnt = 0;
+        cho (số_nguyên k = 0; k < s->sub[0].len; k++) {
+            số_nguyên cnt = 0;
             memcpy(tmp, &s->map[k*15], 15*sizeof(*tmp));
-            for (int i = 1; i < 15; i += 3) {
+            cho (số_nguyên i = 1; i < 15; i += 3) {
                 s->map[k*15 + cnt] = tmp[i];
                 cnt++;
             }
-            for (int i = 2; i < 15; i += 3) {
+            cho (số_nguyên i = 2; i < 15; i += 3) {
                 s->map[k*15 + cnt] = tmp[i];
                 cnt++;
             }
-            for (int i = 0; i < 15; i += 3) {
+            cho (số_nguyên i = 0; i < 15; i += 3) {
                 s->map[k*15 + cnt] = tmp[i];
                 cnt++;
             }
-            memmove(&s->map[k*15 + 7], &s->map[k*15 + 6], 4*sizeof(int));
-            memmove(&s->map[k*15 + 3], &s->map[k*15 + 1], 4*sizeof(int));
+            memmove(&s->map[k*15 + 7], &s->map[k*15 + 6], 4*sizeof(số_nguyên));
+            memmove(&s->map[k*15 + 3], &s->map[k*15 + 1], 4*sizeof(số_nguyên));
             s->map[k*15 + 1] = tmp[2];
             s->map[k*15 + 2] = tmp[0];
         }
     }
 
-    if (!(s->tmp = av_malloc(len*sizeof(*s->tmp))))
-        return AVERROR(ENOMEM);
+    nếu (!(s->tmp = av_malloc(len*sizeof(*s->tmp))))
+        trả_về AVERROR(ENOMEM);
 
     TX_TAB(ff_tx_init_tabs)(len / sub_len);
 
-    return 0;
+    trả_về 0;
 }
 #endif
 
@@ -262,7 +262,7 @@ const FFTXCodelet * const ff_tx_codelet_list_float_x86[] = {
     TX_DEF(fft16_ns, FFT, 16, 16, 2, 0, 352, b8_i2, fma3, FMA3, AV_TX_INPLACE | FF_TX_PRESHUFFLE,
            AV_CPU_FLAG_AVXSLOW),
 
-#if ARCH_X86_64
+#nếu ARCH_X86_64
     TX_DEF(fft32,    FFT, 32, 32, 2, 0, 256, b8_i2, avx,  AVX,  AV_TX_INPLACE, AV_CPU_FLAG_AVXSLOW),
     TX_DEF(fft32_asm, FFT, 32, 32, 2, 0, 320, b8_i2, avx,  AVX,
            AV_TX_INPLACE | FF_TX_PRESHUFFLE | FF_TX_ASM_CALL, AV_CPU_FLAG_AVXSLOW),

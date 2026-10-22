@@ -29,7 +29,7 @@
 
 #include <stdint.h>
 
-#if defined(_ABI64) && _MIPS_SIM == _ABI64
+#nếu defined(_ABI64) && _MIPS_SIM == _ABI64
 # define mips_reg       int64_t
 # define PTRSIZE        " 8 "
 # define PTRLOG         " 3 "
@@ -42,7 +42,7 @@
 # define PTR_SRA        "dsra "
 # define PTR_SRL        "dsrl "
 # define PTR_SLL        "dsll "
-#else
+#không_thì
 # define mips_reg       int32_t
 # define PTRSIZE        " 4 "
 # define PTRLOG         " 2 "

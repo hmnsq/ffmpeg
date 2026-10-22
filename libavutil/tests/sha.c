@@ -21,30 +21,30 @@
 #include "libavutil/mem.h"
 #include "libavutil/sha.h"
 
-int main(void)
+số_nguyên main(void)
 {
-    int i, j, k;
+    số_nguyên i, j, k;
     struct AVSHA *ctx;
     unsigned char digest[32];
-    static const int lengths[3] = { 160, 224, 256 };
+    static const số_nguyên lengths[3] = { 160, 224, 256 };
 
     ctx = av_sha_alloc();
-    if (!ctx)
-        return 1;
+    nếu (!ctx)
+        trả_về 1;
 
-    for (j = 0; j < 3; j++) {
+    cho (j = 0; j < 3; j++) {
         printf("Testing SHA-%d\n", lengths[j]);
-        for (k = 0; k < 3; k++) {
+        cho (k = 0; k < 3; k++) {
             av_sha_init(ctx, lengths[j]);
-            if (k == 0)
+            nếu (k == 0)
                 av_sha_update(ctx, "abc", 3);
-            else if (k == 1)
+            không_thì nếu (k == 1)
                 av_sha_update(ctx, "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq", 56);
-            else
-                for (i = 0; i < 1000*1000; i++)
+            không_thì
+                cho (i = 0; i < 1000*1000; i++)
                     av_sha_update(ctx, "a", 1);
             av_sha_final(ctx, digest);
-            for (i = 0; i < lengths[j] >> 3; i++)
+            cho (i = 0; i < lengths[j] >> 3; i++)
                 printf("%02X", digest[i]);
             putchar('\n');
         }
@@ -71,5 +71,5 @@ int main(void)
     }
     av_free(ctx);
 
-    return 0;
+    trả_về 0;
 }

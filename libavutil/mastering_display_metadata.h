@@ -59,12 +59,12 @@ typedef struct AVMasteringDisplayMetadata {
     /**
      * Flag indicating whether the display primaries (and white point) are set.
      */
-    int has_primaries;
+    số_nguyên has_primaries;
 
     /**
      * Flag indicating whether the luminance (min_ and max_) have been set.
      */
-    int has_luminance;
+    số_nguyên has_luminance;
 
 } AVMasteringDisplayMetadata;
 

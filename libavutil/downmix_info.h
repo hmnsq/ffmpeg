@@ -123,12 +123,12 @@ typedef struct AVDownmixMatrix {
     /**
      * Input channel count.
      */
-    int in_ch_count;
+    số_nguyên in_ch_count;
 
     /**
      * Amount of coefficients in the matrix.
      */
-    unsigned int nb_coeffs;
+    unsigned số_nguyên nb_coeffs;
 
     /**
      * Offset in bytes from the beginning of this structure at which the array
@@ -151,10 +151,10 @@ typedef double AVDownmixCoeff;
  * @ref AVDownmixMatrix.downmix_type "downmix_type" - 1.
  */
 static av_always_inline AVDownmixCoeff*
-av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
+av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned số_nguyên out, unsigned số_nguyên in)
 {
     AVDownmixCoeff *coeff = (AVDownmixCoeff *)((uint8_t *)dm + dm->coeffs_offset);
-    return &coeff[in + dm->in_ch_count * out];
+    trả_về &coeff[in + dm->in_ch_count * out];
 }
 
 /**
@@ -167,7 +167,7 @@ av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
  * written here.
  */
 AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size);
+                                         số_nguyên in_ch_count, size_t *out_size);
 
 /**
  * @}

@@ -27,14 +27,14 @@
 
 #include "executor.h"
 
-#if !HAVE_THREADS
+#nếu !HAVE_THREADS
 
 #define ExecutorThread  char
 
 #define executor_thread_create(t, a, s, ar)      0
-#define executor_thread_join(t, r)               do {} while(0)
+#define executor_thread_join(t, r)               do {} trong_khi(0)
 
-#else
+#không_thì
 
 #define ExecutorThread  pthread_t
 
@@ -50,7 +50,7 @@ typedef struct ThreadInfo {
 
 struct AVExecutor {
     AVTaskCallbacks cb;
-    int thread_count;
+    số_nguyên thread_count;
     bool recursive;
 
     ThreadInfo *threads;
@@ -58,7 +58,7 @@ struct AVExecutor {
 
     AVMutex lock;
     AVCond cond;
-    int die;
+    số_nguyên die;
 
     AVTask *tasks;
 };
@@ -67,7 +67,7 @@ static AVTask* remove_task(AVTask **prev, AVTask *t)
 {
     *prev  = t->next;
     t->next = NULL;
-    return t;
+    trả_về t;
 }
 
 static void add_task(AVTask **prev, AVTask *t)
@@ -76,26 +76,26 @@ static void add_task(AVTask **prev, AVTask *t)
     *prev   = t;
 }
 
-static int run_one_task(AVExecutor *e, void *lc)
+static số_nguyên run_one_task(AVExecutor *e, void *lc)
 {
     AVTaskCallbacks *cb = &e->cb;
     AVTask **prev;
 
-    for (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_data); prev = &(*prev)->next)
+    cho (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_data); prev = &(*prev)->next)
         /* nothing */;
-    if (*prev) {
+    nếu (*prev) {
         AVTask *t = remove_task(prev, *prev);
-        if (e->thread_count > 0)
+        nếu (e->thread_count > 0)
             ff_mutex_unlock(&e->lock);
         cb->run(t, lc, cb->user_data);
-        if (e->thread_count > 0)
+        nếu (e->thread_count > 0)
             ff_mutex_lock(&e->lock);
-        return 1;
+        trả_về 1;
     }
-    return 0;
+    trả_về 0;
 }
 
-#if HAVE_THREADS
+#nếu HAVE_THREADS
 static void *executor_worker_task(void *data)
 {
     ThreadInfo *ti = (ThreadInfo*)data;
@@ -103,34 +103,34 @@ static void *executor_worker_task(void *data)
     void *lc       = e->local_contexts + (ti - e->threads) * e->cb.local_context_size;
 
     ff_mutex_lock(&e->lock);
-    while (1) {
-        if (e->die) break;
+    trong_khi (1) {
+        nếu (e->die) break;
 
-        if (!run_one_task(e, lc)) {
+        nếu (!run_one_task(e, lc)) {
             //no task in one loop
             ff_cond_wait(&e->cond, &e->lock);
         }
     }
     ff_mutex_unlock(&e->lock);
-    return NULL;
+    trả_về NULL;
 }
 #endif
 
-static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
+static void executor_free(AVExecutor *e, const số_nguyên has_lock, const số_nguyên has_cond)
 {
-    if (e->thread_count) {
+    nếu (e->thread_count) {
         //signal die
         ff_mutex_lock(&e->lock);
         e->die = 1;
         ff_cond_broadcast(&e->cond);
         ff_mutex_unlock(&e->lock);
 
-        for (int i = 0; i < e->thread_count; i++)
+        cho (số_nguyên i = 0; i < e->thread_count; i++)
             executor_thread_join(e->threads[i].thread, NULL);
     }
-    if (has_cond)
+    nếu (has_cond)
         ff_cond_destroy(&e->cond);
-    if (has_lock)
+    nếu (has_lock)
         ff_mutex_destroy(&e->lock);
 
     av_free(e->threads);
@@ -139,54 +139,54 @@ static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
     av_free(e);
 }
 
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, int thread_count)
+AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, số_nguyên thread_count)
 {
     AVExecutor *e;
-    int has_lock = 0, has_cond = 0;
-    if (!cb || !cb->user_data || !cb->ready || !cb->run || !cb->priority_higher)
-        return NULL;
+    số_nguyên has_lock = 0, has_cond = 0;
+    nếu (!cb || !cb->user_data || !cb->ready || !cb->run || !cb->priority_higher)
+        trả_về NULL;
 
     e = av_mallocz(sizeof(*e));
-    if (!e)
-        return NULL;
+    nếu (!e)
+        trả_về NULL;
     e->cb = *cb;
 
     e->local_contexts = av_calloc(FFMAX(thread_count, 1), e->cb.local_context_size);
-    if (!e->local_contexts)
+    nếu (!e->local_contexts)
         goto free_executor;
 
     e->threads = av_calloc(FFMAX(thread_count, 1), sizeof(*e->threads));
-    if (!e->threads)
+    nếu (!e->threads)
         goto free_executor;
 
-    if (!thread_count)
-        return e;
+    nếu (!thread_count)
+        trả_về e;
 
     has_lock = !ff_mutex_init(&e->lock, NULL);
     has_cond = !ff_cond_init(&e->cond, NULL);
 
-    if (!has_lock || !has_cond)
+    nếu (!has_lock || !has_cond)
         goto free_executor;
 
-    for (/* nothing */; e->thread_count < thread_count; e->thread_count++) {
+    cho (/* nothing */; e->thread_count < thread_count; e->thread_count++) {
         ThreadInfo *ti = e->threads + e->thread_count;
         ti->e = e;
-        if (executor_thread_create(&ti->thread, NULL, executor_worker_task, ti))
+        nếu (executor_thread_create(&ti->thread, NULL, executor_worker_task, ti))
             goto free_executor;
     }
-    return e;
+    trả_về e;
 
 free_executor:
     executor_free(e, has_lock, has_cond);
-    return NULL;
+    trả_về NULL;
 }
 
 void av_executor_free(AVExecutor **executor)
 {
-    int thread_count;
+    số_nguyên thread_count;
 
-    if (!executor || !*executor)
-        return;
+    nếu (!executor || !*executor)
+        trả_về;
     thread_count = (*executor)->thread_count;
     executor_free(*executor, thread_count, thread_count);
     *executor = NULL;
@@ -197,24 +197,24 @@ void av_executor_execute(AVExecutor *e, AVTask *t)
     AVTaskCallbacks *cb = &e->cb;
     AVTask **prev;
 
-    if (e->thread_count)
+    nếu (e->thread_count)
         ff_mutex_lock(&e->lock);
-    if (t) {
-        for (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
+    nếu (t) {
+        cho (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
             /* nothing */;
         add_task(prev, t);
     }
-    if (e->thread_count) {
+    nếu (e->thread_count) {
         ff_cond_signal(&e->cond);
         ff_mutex_unlock(&e->lock);
     }
 
-    if (!e->thread_count || !HAVE_THREADS) {
-        if (e->recursive)
-            return;
+    nếu (!e->thread_count || !HAVE_THREADS) {
+        nếu (e->recursive)
+            trả_về;
         e->recursive = true;
         // We are running in a single-threaded environment, so we must handle all tasks ourselves
-        while (run_one_task(e, e->local_contexts))
+        trong_khi (run_one_task(e, e->local_contexts))
             /* nothing */;
         e->recursive = false;
     }

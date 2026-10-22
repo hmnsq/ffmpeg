@@ -39,104 +39,104 @@ TX_DECL_FN(fft_pfa_15xM, neon)
 TX_DECL_FN(fft_pfa_15xM_ns, neon)
 TX_DECL_FN(mdct_inv, neon)
 
-static av_cold int neon_init(AVTXContext *s, const FFTXCodelet *cd,
+static av_cold số_nguyên neon_init(AVTXContext *s, const FFTXCodelet *cd,
                              uint64_t flags, FFTXCodeletOptions *opts,
-                             int len, int inv, const void *scale)
+                             số_nguyên len, số_nguyên inv, const void *scale)
 {
     ff_tx_init_tabs_float(len);
-    if (cd->max_len == 2)
-        return ff_tx_gen_ptwo_revtab(s, opts);
-    else
-        return ff_tx_gen_split_radix_parity_revtab(s, len, inv, opts, 8, 0);
+    nếu (cd->max_len == 2)
+        trả_về ff_tx_gen_ptwo_revtab(s, opts);
+    không_thì
+        trả_về ff_tx_gen_split_radix_parity_revtab(s, len, inv, opts, 8, 0);
 }
 
 /* Reorder one 15-point map so the loads in the pre-permuted assembly path
  * become simple contiguous chunks. Mirrors the x86 FFT15 init. */
-static void fft15_permute_map(int *map)
+static void fft15_permute_map(số_nguyên *map)
 {
-    int cnt = 0, tmp[15];
+    số_nguyên cnt = 0, tmp[15];
     memcpy(tmp, map, 15*sizeof(*tmp));
-    for (int i = 1; i < 15; i += 3)
+    cho (số_nguyên i = 1; i < 15; i += 3)
         map[cnt++] = tmp[i];
-    for (int i = 2; i < 15; i += 3)
+    cho (số_nguyên i = 2; i < 15; i += 3)
         map[cnt++] = tmp[i];
-    for (int i = 0; i < 15; i += 3)
+    cho (số_nguyên i = 0; i < 15; i += 3)
         map[cnt++] = tmp[i];
-    memmove(&map[7], &map[6], 4*sizeof(int));
-    memmove(&map[3], &map[1], 4*sizeof(int));
+    memmove(&map[7], &map[6], 4*sizeof(số_nguyên));
+    memmove(&map[3], &map[1], 4*sizeof(số_nguyên));
     map[1] = tmp[2];
     map[2] = tmp[0];
 }
 
-static av_cold int fft15_init(AVTXContext *s, const FFTXCodelet *cd,
+static av_cold số_nguyên fft15_init(AVTXContext *s, const FFTXCodelet *cd,
                               uint64_t flags, FFTXCodeletOptions *opts,
-                              int len, int inv, const void *scale)
+                              số_nguyên len, số_nguyên inv, const void *scale)
 {
-    int ret;
+    số_nguyên ret;
     FFTXCodeletOptions sub_opts = { .map_dir = FF_TX_MAP_GATHER };
 
     ff_tx_init_tabs_float(len);
 
-    if ((ret = ff_tx_gen_pfa_input_map(s, &sub_opts, 3, 5)) < 0)
-        return ret;
+    nếu ((ret = ff_tx_gen_pfa_input_map(s, &sub_opts, 3, 5)) < 0)
+        trả_về ret;
 
     fft15_permute_map(s->map);
 
-    return 0;
+    trả_về 0;
 }
 
 /* 15xM prime-factor FFT: M inlined 15-point transforms followed by 15 calls to
  * a power-of-two subtransform. Mirrors the x86 fft_pfa_15xM, but the aarch64
  * ABI lets us call the subtransform normally, so no FF_TX_ASM_CALL is needed. */
-static av_cold int fft_pfa_init(AVTXContext *s, const FFTXCodelet *cd,
+static av_cold số_nguyên fft_pfa_init(AVTXContext *s, const FFTXCodelet *cd,
                                 uint64_t flags, FFTXCodeletOptions *opts,
-                                int len, int inv, const void *scale)
+                                số_nguyên len, số_nguyên inv, const void *scale)
 {
-    int ret;
-    int sub_len = len / cd->factors[0];
+    số_nguyên ret;
+    số_nguyên sub_len = len / cd->factors[0];
     FFTXCodeletOptions sub_opts = { .map_dir = FF_TX_MAP_SCATTER };
 
     flags &= ~FF_TX_OUT_OF_PLACE; /* We want the subtransform to be */
     flags |=  AV_TX_INPLACE;      /* in-place */
     flags |=  FF_TX_PRESHUFFLE;   /* This function handles the permute step */
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
+    nếu ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                 sub_len, inv, scale)))
-        return ret;
+        trả_về ret;
 
-    if ((ret = ff_tx_gen_compound_mapping(s, opts, s->inv,
+    nếu ((ret = ff_tx_gen_compound_mapping(s, opts, s->inv,
                                           cd->factors[0], sub_len)))
-        return ret;
+        trả_về ret;
 
     /* The 15-point transform is itself a compound one, so embed its input map
      * and apply the same load-friendly reorder used by fft15_init. */
     TX_EMBED_INPUT_PFA_MAP(s->map, len, 3, 5);
-    for (int k = 0; k < sub_len; k++)
+    cho (số_nguyên k = 0; k < sub_len; k++)
         fft15_permute_map(&s->map[k*15]);
 
-    if (!(s->tmp = av_malloc(len*sizeof(*s->tmp))))
-        return AVERROR(ENOMEM);
+    nếu (!(s->tmp = av_malloc(len*sizeof(*s->tmp))))
+        trả_về AVERROR(ENOMEM);
 
     ff_tx_init_tabs_float(len / sub_len);
 
-    return 0;
+    trả_về 0;
 }
 
 /* Inverse MDCT: a pre-rotation, an in-place len/2 complex FFT, and a
  * post-rotation. Mirrors the generic ff_tx_mdct_init / x86 m_inv_init, but the
  * subtransform is called with a normal blr (no FF_TX_ASM_CALL on aarch64). */
-static av_cold int mdct_inv_init(AVTXContext *s, const FFTXCodelet *cd,
+static av_cold số_nguyên mdct_inv_init(AVTXContext *s, const FFTXCodelet *cd,
                                  uint64_t flags, FFTXCodeletOptions *opts,
-                                 int len, int inv, const void *scale)
+                                 số_nguyên len, số_nguyên inv, const void *scale)
 {
-    int ret;
+    số_nguyên ret;
     FFTXCodeletOptions sub_opts = { .map_dir = FF_TX_MAP_GATHER };
 
     /* The pre-rotation processes two output complex at a time, so len/2 must
      * be even.  Real codecs always satisfy this; bail out otherwise so the
      * generic C MDCT is used. */
-    if (len & 3)
-        return AVERROR(ENOSYS);
+    nếu (len & 3)
+        trả_về AVERROR(ENOSYS);
 
     s->scale_d = *((const float *)scale);
     s->scale_f = s->scale_d;
@@ -145,32 +145,32 @@ static av_cold int mdct_inv_init(AVTXContext *s, const FFTXCodelet *cd,
     flags |=  AV_TX_INPLACE;
     flags |=  FF_TX_PRESHUFFLE;   /* This function handles the permute step */
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
+    nếu ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
                                 inv, scale)))
-        return ret;
+        trả_về ret;
 
     /* The map holds the gather map (first half, used by the strided
      * pre-rotation) followed by its inverse (second half): the contiguous
      * stride==4 path reads the input in order and scatters output complex i
      * to position s->map[len2 + j], where j is the contiguous input index. */
     s->map = av_malloc(len*sizeof(*s->map));
-    if (!s->map)
-        return AVERROR(ENOMEM);
+    nếu (!s->map)
+        trả_về AVERROR(ENOMEM);
 
     memcpy(s->map, s->sub->map, (len >> 1)*sizeof(*s->map));
 
-    if ((ret = ff_tx_mdct_gen_exp_float(s, s->map)))
-        return ret;
+    nếu ((ret = ff_tx_mdct_gen_exp_float(s, s->map)))
+        trả_về ret;
 
     /* Invert the gather map for the contiguous path (before doubling). */
-    for (int i = 0; i < (len >> 1); i++)
+    cho (số_nguyên i = 0; i < (len >> 1); i++)
         s->map[(len >> 1) + s->map[i]] = i;
 
     /* Pre-double the gather-map indices (saves a shift in the strided path). */
-    for (int i = 0; i < (len >> 1); i++)
+    cho (số_nguyên i = 0; i < (len >> 1); i++)
         s->map[i] <<= 1;
 
-    return 0;
+    trả_về 0;
 }
 
 const FFTXCodelet * const ff_tx_codelet_list_float_aarch64[] = {

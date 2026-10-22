@@ -29,37 +29,37 @@
 
 static void *thread_main(void *arg)
 {
-    int *flags = arg;
+    số_nguyên *flags = arg;
 
     *flags = av_get_cpu_flags();
-    return NULL;
+    trả_về NULL;
 }
 
-int main(void)
+số_nguyên main(void)
 {
-    int cpu_flags1;
-    int cpu_flags2;
-    int ret;
+    số_nguyên cpu_flags1;
+    số_nguyên cpu_flags2;
+    số_nguyên ret;
     pthread_t thread1;
     pthread_t thread2;
 
-    if ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
+    nếu ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        trả_về 1;
     }
-    if ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
+    nếu ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        trả_về 1;
     }
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
 
-    if (cpu_flags1 < 0)
-        return 2;
-    if (cpu_flags2 < 0)
-        return 2;
-    if (cpu_flags1 != cpu_flags2)
-        return 3;
+    nếu (cpu_flags1 < 0)
+        trả_về 2;
+    nếu (cpu_flags2 < 0)
+        trả_về 2;
+    nếu (cpu_flags1 != cpu_flags2)
+        trả_về 3;
 
-    return 0;
+    trả_về 0;
 }

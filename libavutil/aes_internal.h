@@ -36,11 +36,11 @@ typedef struct AVAES {
     // overwrites state, which does not matter (see also commit ba554c0).
     DECLARE_ALIGNED(16, av_aes_block, round_key)[15];
     DECLARE_ALIGNED(16, av_aes_block, state)[2];
-    int rounds;
-    void (*crypt)(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int rounds);
+    số_nguyên rounds;
+    void (*crypt)(struct AVAES *a, uint8_t *dst, const uint8_t *src, số_nguyên count, uint8_t *iv, số_nguyên rounds);
 } AVAES;
 
-void ff_init_aes_x86(AVAES *a, int decrypt);
-void ff_init_aes_aarch64(AVAES *a, int decrypt);
+void ff_init_aes_x86(AVAES *a, số_nguyên decrypt);
+void ff_init_aes_aarch64(AVAES *a, số_nguyên decrypt);
 
 #endif /* AVUTIL_AES_INTERNAL_H */

@@ -25,7 +25,7 @@
 #include "libavutil/mathematics.h"
 #include "libavutil/rational.h"
 
-int main(void)
+số_nguyên main(void)
 {
     int64_t last;
 
@@ -42,7 +42,7 @@ int main(void)
         {  -6,   4,  2 },
         {   6,  -4,  2 },
     };
-    for (int i = 0; i < FF_ARRAY_ELEMS(gcd_tests); i++)
+    cho (số_nguyên i = 0; i < FF_ARRAY_ELEMS(gcd_tests); i++)
         printf("gcd(%"PRId64", %"PRId64") = %"PRId64" %s\n",
                gcd_tests[i].a, gcd_tests[i].b,
                av_gcd(gcd_tests[i].a, gcd_tests[i].b),
@@ -74,7 +74,7 @@ int main(void)
         { -7,  1,  2, AV_ROUND_UP,       -3 },
         {  6,  1,  2, AV_ROUND_NEAR_INF,  3 },
     };
-    for (int i = 0; i < FF_ARRAY_ELEMS(rnd_tests); i++) {
+    cho (số_nguyên i = 0; i < FF_ARRAY_ELEMS(rnd_tests); i++) {
         int64_t r = av_rescale_rnd(rnd_tests[i].a, rnd_tests[i].b,
                                    rnd_tests[i].c, rnd_tests[i].rnd);
         printf("rescale_rnd(%"PRId64", %"PRId64", %"PRId64", %d) = %"PRId64" %s\n",
@@ -137,14 +137,14 @@ int main(void)
     /* av_rescale_delta */
     printf("\nTesting av_rescale_delta()\n");
     last = AV_NOPTS_VALUE;
-    for (int i = 0; i < 4; i++)
+    cho (số_nguyên i = 0; i < 4; i++)
         printf("delta step %d: %"PRId64"\n", i,
                av_rescale_delta((AVRational){1, 48000}, i * 1024,
                                 (AVRational){1, 48000}, 1024,
                                 &last, (AVRational){1, 44100}));
     /* trigger clip-based path: use different in_tb and fs_tb */
     last = AV_NOPTS_VALUE;
-    for (int i = 0; i < 4; i++)
+    cho (số_nguyên i = 0; i < 4; i++)
         printf("delta clip %d: %"PRId64"\n", i,
                av_rescale_delta((AVRational){1, 44100}, i * 940,
                                 (AVRational){1, 48000}, 1024,
@@ -164,12 +164,12 @@ int main(void)
     /* repeated addition: verify no rounding error accumulation */
     {
         int64_t ts = 0;
-        for (int i = 0; i < 10000; i++)
+        cho (số_nguyên i = 0; i < 10000; i++)
             ts = av_add_stable((AVRational){1, 48000}, ts, (AVRational){1, 48000}, 1024);
         printf("add_stable 10000x1024 at 1/48000: %"PRId64" (expected %"PRId64") %s\n",
                ts, (int64_t)10000 * 1024,
                ts == (int64_t)10000 * 1024 ? "OK" : "FAIL");
     }
 
-    return 0;
+    trả_về 0;
 }

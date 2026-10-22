@@ -104,7 +104,7 @@ enum {
     ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + sizeof(DESC) - 1,
 #define NOTHING(CODE, CODE2, DESC)
     AVERROR_LIST(OFFSET, NOTHING)
-#if !HAVE_STRERROR_R
+#nếu !HAVE_STRERROR_R
     STRERROR_LIST(OFFSET)
 #endif
 };
@@ -112,40 +112,40 @@ enum {
 #define STRING(CODE, DESC) DESC "\0"
 static const char error_stringtable[] =
     AVERROR_LIST(STRING, NOTHING)
-#if !HAVE_STRERROR_R
+#nếu !HAVE_STRERROR_R
     STRERROR_LIST(STRING)
 #endif
 ;
 
 static const struct ErrorEntry {
-    int num;
+    số_nguyên num;
     unsigned offset;
 } error_entries[] = {
 #define ENTRY(CODE, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE ## _OFFSET },
 #define ENTRY2(CODE, CODE2, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE2 ## _OFFSET },
     AVERROR_LIST(ENTRY, ENTRY2)
-#if !HAVE_STRERROR_R
+#nếu !HAVE_STRERROR_R
 #undef ENTRY
 #define ENTRY(CODE, DESC) { .num = AVERROR(CODE), .offset = ERROR_ ## CODE ## _OFFSET },
     STRERROR_LIST(ENTRY)
 #endif
 };
 
-int av_strerror(int errnum, char *errbuf, size_t errbuf_size)
+số_nguyên av_strerror(số_nguyên errnum, char *errbuf, size_t errbuf_size)
 {
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
-        if (errnum == error_entries[i].num) {
+    cho (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
+        nếu (errnum == error_entries[i].num) {
             av_strlcpy(errbuf, error_stringtable + error_entries[i].offset, errbuf_size);
-            return 0;
+            trả_về 0;
         }
     }
-#if HAVE_STRERROR_R
-    int ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
-#else
-    int ret = -1;
+#nếu HAVE_STRERROR_R
+    số_nguyên ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
+#không_thì
+    số_nguyên ret = -1;
 #endif
-    if (ret < 0)
+    nếu (ret < 0)
         snprintf(errbuf, errbuf_size, "Error number %d occurred", errnum);
 
-    return ret;
+    trả_về ret;
 }

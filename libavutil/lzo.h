@@ -57,7 +57,7 @@
  * Make sure all buffers are appropriately padded, in must provide
  * AV_LZO_INPUT_PADDING, out must provide AV_LZO_OUTPUT_PADDING additional bytes.
  */
-int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen);
+số_nguyên av_lzo1x_decode(void *out, số_nguyên *outlen, const void *in, số_nguyên *inlen);
 
 /**
  * @}

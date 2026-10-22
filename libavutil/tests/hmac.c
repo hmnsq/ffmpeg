@@ -21,24 +21,24 @@
 #include <stdio.h>
 #include <string.h>
 
-static void test(AVHMAC *hmac, const uint8_t *key, int keylen,
-                 const uint8_t *data, int datalen)
+static void test(AVHMAC *hmac, const uint8_t *key, số_nguyên keylen,
+                 const uint8_t *data, số_nguyên datalen)
 {
     uint8_t buf[MAX_HASHLEN];
-    int out, i;
+    số_nguyên out, i;
     // Some of the test vectors are strings, where sizeof() includes the
     // trailing null byte - remove that.
-    if (!key[keylen - 1])
+    nếu (!key[keylen - 1])
         keylen--;
-    if (!data[datalen - 1])
+    nếu (!data[datalen - 1])
         datalen--;
     out = av_hmac_calc(hmac, data, datalen, key, keylen, buf, sizeof(buf));
-    for (i = 0; i < out; i++)
+    cho (i = 0; i < out; i++)
         printf("%02x", buf[i]);
     printf("\n");
 }
 
-int main(void)
+số_nguyên main(void)
 {
     uint8_t key1[20], key3[131], data3[50];
     AVHMAC *hmac;
@@ -56,10 +56,10 @@ int main(void)
     memset(data3, 0xdd, sizeof(data3));
 
     /* MD5, SHA-1 */
-    for (i = AV_HMAC_MD5; i <= AV_HMAC_SHA1; i++) {
+    cho (i = AV_HMAC_MD5; i <= AV_HMAC_SHA1; i++) {
         hmac = av_hmac_alloc(i);
-        if (!hmac)
-            return 1;
+        nếu (!hmac)
+            trả_về 1;
         // RFC 2202 test vectors
         test(hmac, key1, hmac->hashlen, data1, sizeof(data1));
         test(hmac, key2, sizeof(key2),  data2, sizeof(data2));
@@ -70,10 +70,10 @@ int main(void)
     }
 
     /* SHA-2 */
-    for (i = AV_HMAC_SHA224; i <= AV_HMAC_SHA512; i++) {
+    cho (i = AV_HMAC_SHA224; i <= AV_HMAC_SHA512; i++) {
         hmac = av_hmac_alloc(i);
-        if (!hmac)
-            return 1;
+        nếu (!hmac)
+            trả_về 1;
         // RFC 4231 test vectors
         test(hmac, key1, sizeof(key1), data1, sizeof(data1));
         test(hmac, key2, sizeof(key2), data2, sizeof(data2));
@@ -83,5 +83,5 @@ int main(void)
         av_hmac_free(hmac);
     }
 
-    return 0;
+    trả_về 0;
 }

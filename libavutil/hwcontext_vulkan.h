@@ -19,7 +19,7 @@
 #ifndef AVUTIL_HWCONTEXT_VULKAN_H
 #define AVUTIL_HWCONTEXT_VULKAN_H
 
-#if defined(_WIN32) && !defined(VK_USE_PLATFORM_WIN32_KHR)
+#nếu defined(_WIN32) && !defined(VK_USE_PLATFORM_WIN32_KHR)
 #define VK_USE_PLATFORM_WIN32_KHR
 #endif
 #include <vulkan/vulkan.h>
@@ -32,9 +32,9 @@ typedef struct AVVkFrame AVVkFrame;
 
 typedef struct AVVulkanDeviceQueueFamily {
     /* Queue family index */
-    int idx;
+    số_nguyên idx;
     /* Number of queues in the queue family in use */
-    int num;
+    số_nguyên num;
     /* Queue family capabilities. Must be non-zero.
      * Flags may be removed to indicate the queue family may not be used
      * for a given purpose. */
@@ -101,7 +101,7 @@ typedef struct AVVulkanDeviceContext {
      * that FFmpeg may use if enabled.
      */
     const char * const *enabled_inst_extensions;
-    int nb_enabled_inst_extensions;
+    số_nguyên nb_enabled_inst_extensions;
 
     /**
      * Enabled device extensions. By default, VK_KHR_external_memory_fd,
@@ -114,9 +114,9 @@ typedef struct AVVulkanDeviceContext {
      * that FFmpeg may use if enabled.
      */
     const char * const *enabled_dev_extensions;
-    int nb_enabled_dev_extensions;
+    số_nguyên nb_enabled_dev_extensions;
 
-#if FF_API_VULKAN_SYNC_QUEUES
+#nếu FF_API_VULKAN_SYNC_QUEUES
     /**
      * Locks a queue, preventing other threads from submitting any command
      * buffers to this queue.
@@ -146,7 +146,7 @@ typedef struct AVVulkanDeviceContext {
      * this list until they're removed after deprecation.
      */
     AVVulkanDeviceQueueFamily qf[64];
-    int nb_qf;
+    số_nguyên nb_qf;
 
     /* Queue creation flags, for vkGetDeviceQueue2. */
     VkDeviceQueueCreateFlags queue_flags;
@@ -234,7 +234,7 @@ typedef struct AVVulkanFramesContext {
     /**
      * Number of layers each image will have.
      */
-    int nb_layers;
+    số_nguyên nb_layers;
 
     /**
      * Locks a frame, preventing other threads from changing frame properties.
@@ -343,13 +343,13 @@ const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p);
  * may use if enabled.
  * @note Must be freed via av_free()
  */
-const char **av_vk_get_optional_instance_extensions(int *count);
+const char **av_vk_get_optional_instance_extensions(số_nguyên *count);
 
 /**
  * Returns an array of optional Vulkan device extensions that FFmpeg
  * may use if enabled.
  * @note Must be freed via av_free()
  */
-const char **av_vk_get_optional_device_extensions(int *count);
+const char **av_vk_get_optional_device_extensions(số_nguyên *count);
 
 #endif /* AVUTIL_HWCONTEXT_VULKAN_H */

@@ -32,43 +32,43 @@ static const uint8_t test_key_id_2[] = {0x31, 0x32, 0x33, 0x34};
 static const uint8_t test_system_id[] = {0x41, 0x42, 0x43};
 static const uint8_t test_data[] = {0x51, 0x52};
 
-static int compare_encryption_info(const AVEncryptionInfo *a, const AVEncryptionInfo *b) {
-    if (!a || !b || a->scheme != b->scheme || a->crypt_byte_block != b->crypt_byte_block ||
+static số_nguyên compare_encryption_info(const AVEncryptionInfo *a, const AVEncryptionInfo *b) {
+    nếu (!a || !b || a->scheme != b->scheme || a->crypt_byte_block != b->crypt_byte_block ||
         a->skip_byte_block != b->skip_byte_block || a->key_id_size != b->key_id_size ||
         a->iv_size != b->iv_size || a->subsample_count != b->subsample_count)
-        return 1;
+        trả_về 1;
 
-    if (memcmp(a->key_id, b->key_id, a->key_id_size) != 0 ||
+    nếu (memcmp(a->key_id, b->key_id, a->key_id_size) != 0 ||
         memcmp(a->iv, b->iv, a->iv_size) != 0 ||
         memcmp(a->subsamples, b->subsamples, a->subsample_count * sizeof(a->subsamples[0])))
-        return 1;
+        trả_về 1;
 
-    return 0;
+    trả_về 0;
 }
 
-static int compare_encryption_init_info(const AVEncryptionInitInfo *a, const AVEncryptionInitInfo *b) {
-    if (!a || !b || a->system_id_size != b->system_id_size ||
+static số_nguyên compare_encryption_init_info(const AVEncryptionInitInfo *a, const AVEncryptionInitInfo *b) {
+    nếu (!a || !b || a->system_id_size != b->system_id_size ||
         a->num_key_ids != b->num_key_ids || a->key_id_size != b->key_id_size ||
         a->data_size != b->data_size)
-        return 1;
+        trả_về 1;
 
-    if (memcmp(a->system_id, b->system_id, a->system_id_size) != 0 ||
+    nếu (memcmp(a->system_id, b->system_id, a->system_id_size) != 0 ||
         memcmp(a->data, b->data, a->data_size) != 0)
-        return 1;
+        trả_về 1;
 
-    for (uint32_t i = 0; i < a->num_key_ids; i++) {
-        if (memcmp(a->key_ids[i], b->key_ids[i], a->key_id_size) != 0)
-            return 1;
+    cho (uint32_t i = 0; i < a->num_key_ids; i++) {
+        nếu (memcmp(a->key_ids[i], b->key_ids[i], a->key_id_size) != 0)
+            trả_về 1;
     }
 
-    if (a->next || b->next) {
-        if (!a->next || !b->next)
-            return 1;
-        if (compare_encryption_init_info(a->next, b->next) != 0)
-            return 1;
+    nếu (a->next || b->next) {
+        nếu (!a->next || !b->next)
+            trả_về 1;
+        nếu (compare_encryption_init_info(a->next, b->next) != 0)
+            trả_về 1;
     }
 
-    return 0;
+    trả_về 0;
 }
 
 static void run_encryption_info_test(void)
@@ -135,7 +135,7 @@ static AVEncryptionInitInfo *create_init_info(void)
     memcpy(info->key_ids[1], test_key_id_2, sizeof(test_key_id_2));
     memcpy(info->data, test_data, sizeof(test_data));
 
-    return info;
+    trả_về info;
 }
 
 static void run_encryption_init_info_test(void)
@@ -143,7 +143,7 @@ static void run_encryption_init_info_test(void)
     AVEncryptionInitInfo *info, *copy;
     uint8_t *side_data, *appended;
     size_t side_data_size, appended_size;
-    unsigned int allocated_size = 0;
+    unsigned số_nguyên allocated_size = 0;
 
     info = create_init_info();
 
@@ -177,9 +177,9 @@ static void run_encryption_init_info_test(void)
     av_encryption_init_info_free(info);
 }
 
-int main(int argc, char **argv)
+số_nguyên main(số_nguyên argc, char **argv)
 {
     run_encryption_info_test();
     run_encryption_init_info_test();
-    return 0;
+    trả_về 0;
 }

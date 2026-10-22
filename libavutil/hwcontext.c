@@ -31,46 +31,46 @@
 #include "pixfmt.h"
 
 static const HWContextType * const hw_table[] = {
-#if CONFIG_CUDA
+#nếu CONFIG_CUDA
     &ff_hwcontext_type_cuda,
 #endif
-#if CONFIG_D3D11VA
+#nếu CONFIG_D3D11VA
     &ff_hwcontext_type_d3d11va,
 #endif
-#if CONFIG_D3D12VA
+#nếu CONFIG_D3D12VA
     &ff_hwcontext_type_d3d12va,
 #endif
-#if CONFIG_LIBDRM
+#nếu CONFIG_LIBDRM
     &ff_hwcontext_type_drm,
 #endif
-#if CONFIG_DXVA2
+#nếu CONFIG_DXVA2
     &ff_hwcontext_type_dxva2,
 #endif
-#if CONFIG_OPENCL
+#nếu CONFIG_OPENCL
     &ff_hwcontext_type_opencl,
 #endif
-#if CONFIG_QSV
+#nếu CONFIG_QSV
     &ff_hwcontext_type_qsv,
 #endif
-#if CONFIG_VAAPI
+#nếu CONFIG_VAAPI
     &ff_hwcontext_type_vaapi,
 #endif
-#if CONFIG_VDPAU
+#nếu CONFIG_VDPAU
     &ff_hwcontext_type_vdpau,
 #endif
-#if CONFIG_VIDEOTOOLBOX
+#nếu CONFIG_VIDEOTOOLBOX
     &ff_hwcontext_type_videotoolbox,
 #endif
-#if CONFIG_MEDIACODEC
+#nếu CONFIG_MEDIACODEC
     &ff_hwcontext_type_mediacodec,
 #endif
-#if CONFIG_VULKAN
+#nếu CONFIG_VULKAN
     &ff_hwcontext_type_vulkan,
 #endif
-#if CONFIG_AMF
+#nếu CONFIG_AMF
     &ff_hwcontext_type_amf,
 #endif
-#if CONFIG_OHCODEC
+#nếu CONFIG_OHCODEC
     &ff_hwcontext_type_oh,
 #endif
     NULL,
@@ -110,42 +110,42 @@ typedef struct FFHWDeviceContext {
 
 enum AVHWDeviceType av_hwdevice_find_type_by_name(const char *name)
 {
-    int type;
-    for (type = 0; type < FF_ARRAY_ELEMS(hw_type_names); type++) {
-        if (hw_type_names[type] && !strcmp(hw_type_names[type], name))
-            return type;
+    số_nguyên type;
+    cho (type = 0; type < FF_ARRAY_ELEMS(hw_type_names); type++) {
+        nếu (hw_type_names[type] && !strcmp(hw_type_names[type], name))
+            trả_về type;
     }
-    return AV_HWDEVICE_TYPE_NONE;
+    trả_về AV_HWDEVICE_TYPE_NONE;
 }
 
 const char *av_hwdevice_get_type_name(enum AVHWDeviceType type)
 {
-    if (type > AV_HWDEVICE_TYPE_NONE &&
+    nếu (type > AV_HWDEVICE_TYPE_NONE &&
         type < FF_ARRAY_ELEMS(hw_type_names))
-        return hw_type_names[type];
-    else
-        return NULL;
+        trả_về hw_type_names[type];
+    không_thì
+        trả_về NULL;
 }
 
 enum AVHWDeviceType av_hwdevice_iterate_types(enum AVHWDeviceType prev)
 {
     enum AVHWDeviceType next;
-    int i, set = 0;
-    for (i = 0; hw_table[i]; i++) {
-        if (prev != AV_HWDEVICE_TYPE_NONE && hw_table[i]->type <= prev)
+    số_nguyên i, set = 0;
+    cho (i = 0; hw_table[i]; i++) {
+        nếu (prev != AV_HWDEVICE_TYPE_NONE && hw_table[i]->type <= prev)
             continue;
-        if (!set || hw_table[i]->type < next) {
+        nếu (!set || hw_table[i]->type < next) {
             next = hw_table[i]->type;
             set = 1;
         }
     }
-    return set ? next : AV_HWDEVICE_TYPE_NONE;
+    trả_về set ? next : AV_HWDEVICE_TYPE_NONE;
 }
 
 static const char *hwdevice_ctx_get_name(void *ptr)
 {
     FFHWDeviceContext *ctx = ptr;
-    return ctx->hw_type->name;
+    trả_về ctx->hw_type->name;
 }
 
 static const AVClass hwdevice_ctx_class = {
@@ -162,10 +162,10 @@ static void hwdevice_ctx_free(void *opaque, uint8_t *data)
 
     /* uninit might still want access the hw context and the user
      * free() callback might destroy it, so uninit has to be called first */
-    if (ctxi->hw_type->device_uninit)
+    nếu (ctxi->hw_type->device_uninit)
         ctxi->hw_type->device_uninit(ctx);
 
-    if (ctx->free)
+    nếu (ctx->free)
         ctx->free(ctx);
 
     av_buffer_unref(&ctxi->source_device);
@@ -180,32 +180,32 @@ AVBufferRef *av_hwdevice_ctx_alloc(enum AVHWDeviceType type)
     AVHWDeviceContext *ctx;
     AVBufferRef *buf;
     const HWContextType *hw_type = NULL;
-    int i;
+    số_nguyên i;
 
-    for (i = 0; hw_table[i]; i++) {
-        if (hw_table[i]->type == type) {
+    cho (i = 0; hw_table[i]; i++) {
+        nếu (hw_table[i]->type == type) {
             hw_type = hw_table[i];
             break;
         }
     }
-    if (!hw_type)
-        return NULL;
+    nếu (!hw_type)
+        trả_về NULL;
 
     ctxi = av_mallocz(sizeof(*ctxi));
-    if (!ctxi)
-        return NULL;
+    nếu (!ctxi)
+        trả_về NULL;
     ctx = &ctxi->p;
 
-    if (hw_type->device_hwctx_size) {
+    nếu (hw_type->device_hwctx_size) {
         ctx->hwctx = av_mallocz(hw_type->device_hwctx_size);
-        if (!ctx->hwctx)
+        nếu (!ctx->hwctx)
             goto fail;
     }
 
     buf = av_buffer_create((uint8_t*)ctx, sizeof(*ctx),
                            hwdevice_ctx_free, NULL,
                            AV_BUFFER_FLAG_READONLY);
-    if (!buf)
+    nếu (!buf)
         goto fail;
 
     ctx->type     = type;
@@ -213,24 +213,24 @@ AVBufferRef *av_hwdevice_ctx_alloc(enum AVHWDeviceType type)
 
     ctxi->hw_type = hw_type;
 
-    return buf;
+    trả_về buf;
 
 fail:
     av_freep(&ctx->hwctx);
     av_freep(&ctx);
-    return NULL;
+    trả_về NULL;
 }
 
-int av_hwdevice_ctx_init(AVBufferRef *ref)
+số_nguyên av_hwdevice_ctx_init(AVBufferRef *ref)
 {
     FFHWDeviceContext *ctxi = (FFHWDeviceContext*)ref->data;
     AVHWDeviceContext *ctx  = &ctxi->p;
-    int ret = 0;
+    số_nguyên ret = 0;
 
-    if (ctxi->hw_type->device_init)
+    nếu (ctxi->hw_type->device_init)
         ret = ctxi->hw_type->device_init(ctx);
 
-    return ret;
+    trả_về ret;
 }
 
 static const AVClass hwframe_ctx_class = {
@@ -244,16 +244,16 @@ static void hwframe_ctx_free(void *opaque, uint8_t *data)
     FFHWFramesContext *ctxi = (FFHWFramesContext*)data;
     AVHWFramesContext *ctx  = &ctxi->p;
 
-    if (ctxi->pool_internal)
+    nếu (ctxi->pool_internal)
         av_buffer_pool_uninit(&ctxi->pool_internal);
 
     av_buffer_pool_uninit(&ctxi->transfer_pool);
     ff_mutex_destroy(&ctxi->transfer_pool_lock);
 
-    if (ctxi->hw_type->frames_uninit)
+    nếu (ctxi->hw_type->frames_uninit)
         ctxi->hw_type->frames_uninit(ctx);
 
-    if (ctx->free)
+    nếu (ctx->free)
         ctx->free(ctx);
 
     av_buffer_unref(&ctxi->source_frames);
@@ -273,29 +273,29 @@ AVBufferRef *av_hwframe_ctx_alloc(AVBufferRef *device_ref_in)
     AVBufferRef *buf, *device_ref = NULL;
 
     ctxi = av_mallocz(sizeof(*ctxi));
-    if (!ctxi)
-        return NULL;
+    nếu (!ctxi)
+        trả_về NULL;
     ctx  = &ctxi->p;
 
-    if (ff_mutex_init(&ctxi->transfer_pool_lock, NULL)) {
+    nếu (ff_mutex_init(&ctxi->transfer_pool_lock, NULL)) {
         av_free(ctxi);
-        return NULL;
+        trả_về NULL;
     }
 
-    if (hw_type->frames_hwctx_size) {
+    nếu (hw_type->frames_hwctx_size) {
         ctx->hwctx = av_mallocz(hw_type->frames_hwctx_size);
-        if (!ctx->hwctx)
+        nếu (!ctx->hwctx)
             goto fail;
     }
 
     device_ref = av_buffer_ref(device_ref_in);
-    if (!device_ref)
+    nếu (!device_ref)
         goto fail;
 
     buf = av_buffer_create((uint8_t*)ctx, sizeof(*ctx),
                            hwframe_ctx_free, NULL,
                            AV_BUFFER_FLAG_READONLY);
-    if (!buf)
+    nếu (!buf)
         goto fail;
 
     ctx->av_class   = &hwframe_ctx_class;
@@ -306,103 +306,103 @@ AVBufferRef *av_hwframe_ctx_alloc(AVBufferRef *device_ref_in)
 
     ctxi->hw_type = hw_type;
 
-    return buf;
+    trả_về buf;
 
 fail:
     av_buffer_unref(&device_ref);
     ff_mutex_destroy(&ctxi->transfer_pool_lock);
     av_freep(&ctx->hwctx);
     av_freep(&ctx);
-    return NULL;
+    trả_về NULL;
 }
 
-static int hwframe_pool_prealloc(AVBufferRef *ref)
+static số_nguyên hwframe_pool_prealloc(AVBufferRef *ref)
 {
     AVHWFramesContext *ctx = (AVHWFramesContext*)ref->data;
     AVFrame **frames;
-    int i, ret = 0;
+    số_nguyên i, ret = 0;
 
     frames = av_calloc(ctx->initial_pool_size, sizeof(*frames));
-    if (!frames)
-        return AVERROR(ENOMEM);
+    nếu (!frames)
+        trả_về AVERROR(ENOMEM);
 
-    for (i = 0; i < ctx->initial_pool_size; i++) {
+    cho (i = 0; i < ctx->initial_pool_size; i++) {
         frames[i] = av_frame_alloc();
-        if (!frames[i])
+        nếu (!frames[i])
             goto fail;
 
         ret = av_hwframe_get_buffer(ref, frames[i], 0);
-        if (ret < 0)
+        nếu (ret < 0)
             goto fail;
     }
 
 fail:
-    for (i = 0; i < ctx->initial_pool_size; i++)
+    cho (i = 0; i < ctx->initial_pool_size; i++)
         av_frame_free(&frames[i]);
     av_freep(&frames);
 
-    return ret;
+    trả_về ret;
 }
 
-int av_hwframe_ctx_init(AVBufferRef *ref)
+số_nguyên av_hwframe_ctx_init(AVBufferRef *ref)
 {
     FFHWFramesContext *ctxi = (FFHWFramesContext*)ref->data;
     AVHWFramesContext *ctx  = &ctxi->p;
     const enum AVPixelFormat *pix_fmt;
-    int ret;
+    số_nguyên ret;
 
-    if (ctxi->source_frames) {
+    nếu (ctxi->source_frames) {
         /* A derived frame context is already initialised. */
-        return 0;
+        trả_về 0;
     }
 
     /* validate the pixel format */
-    for (pix_fmt = ctxi->hw_type->pix_fmts; *pix_fmt != AV_PIX_FMT_NONE; pix_fmt++) {
-        if (*pix_fmt == ctx->format)
+    cho (pix_fmt = ctxi->hw_type->pix_fmts; *pix_fmt != AV_PIX_FMT_NONE; pix_fmt++) {
+        nếu (*pix_fmt == ctx->format)
             break;
     }
-    if (*pix_fmt == AV_PIX_FMT_NONE) {
+    nếu (*pix_fmt == AV_PIX_FMT_NONE) {
         av_log(ctx, AV_LOG_ERROR,
                "The hardware pixel format '%s' is not supported by the device type '%s'\n",
                av_get_pix_fmt_name(ctx->format), ctxi->hw_type->name);
-        return AVERROR(ENOSYS);
+        trả_về AVERROR(ENOSYS);
     }
 
     /* validate the dimensions */
     ret = av_image_check_size(ctx->width, ctx->height, 0, ctx);
-    if (ret < 0)
-        return ret;
+    nếu (ret < 0)
+        trả_về ret;
 
     /* format-specific init */
-    if (ctxi->hw_type->frames_init) {
+    nếu (ctxi->hw_type->frames_init) {
         ret = ctxi->hw_type->frames_init(ctx);
-        if (ret < 0)
-            return ret;
+        nếu (ret < 0)
+            trả_về ret;
     }
 
-    if (ctxi->pool_internal && !ctx->pool)
+    nếu (ctxi->pool_internal && !ctx->pool)
         ctx->pool = ctxi->pool_internal;
 
     /* preallocate the frames in the pool, if requested */
-    if (ctx->initial_pool_size > 0) {
+    nếu (ctx->initial_pool_size > 0) {
         ret = hwframe_pool_prealloc(ref);
-        if (ret < 0)
-            return ret;
+        nếu (ret < 0)
+            trả_về ret;
     }
 
-    return 0;
+    trả_về 0;
 }
 
-int av_hwframe_transfer_get_formats(AVBufferRef *hwframe_ref,
+số_nguyên av_hwframe_transfer_get_formats(AVBufferRef *hwframe_ref,
                                     enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats, int flags)
+                                    enum AVPixelFormat **formats, số_nguyên flags)
 {
     FFHWFramesContext *ctxi = (FFHWFramesContext*)hwframe_ref->data;
 
-    if (!ctxi->hw_type->transfer_get_formats)
-        return AVERROR(ENOSYS);
+    nếu (!ctxi->hw_type->transfer_get_formats)
+        trả_về AVERROR(ENOSYS);
 
-    return ctxi->hw_type->transfer_get_formats(&ctxi->p, dir, formats);
+    trả_về ctxi->hw_type->transfer_get_formats(&ctxi->p, dir, formats);
 }
 
 static void transfer_pool_free(void *opaque)
@@ -417,7 +417,7 @@ static AVBufferRef *transfer_buffer_alloc(void *opaque, size_t size)
     AVBufferRef *buf = NULL;
 
     ff_mutex_lock(&ctxi->transfer_pool_lock);
-    if (ctxi->transfer_pool_size != size) {
+    nếu (ctxi->transfer_pool_size != size) {
         /* buffers of the hardware context type need the device to be freed */
         AVBufferRef *device_ref = ctxi->hw_type->transfer_buffer_alloc ?
                                   av_buffer_ref(ctxi->p.device_ref) : NULL;
@@ -429,47 +429,47 @@ static AVBufferRef *transfer_buffer_alloc(void *opaque, size_t size)
                                  transfer_pool_free) :
             av_buffer_pool_init(size, NULL);
         ctxi->transfer_pool_size = ctxi->transfer_pool ? size : 0;
-        if (!ctxi->transfer_pool)
+        nếu (!ctxi->transfer_pool)
             av_buffer_unref(&device_ref);
     }
-    if (ctxi->transfer_pool)
+    nếu (ctxi->transfer_pool)
         buf = av_buffer_pool_get(ctxi->transfer_pool);
     ff_mutex_unlock(&ctxi->transfer_pool_lock);
 
-    return buf ? buf : av_buffer_alloc(size);
+    trả_về buf ? buf : av_buffer_alloc(size);
 }
 
-int av_hwframe_get_transfer_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame)
+số_nguyên av_hwframe_get_transfer_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame)
 {
-    return ff_frame_get_video_buffer(frame, 0, transfer_buffer_alloc,
+    trả_về ff_frame_get_video_buffer(frame, 0, transfer_buffer_alloc,
                                      hwframe_ctx->data);
 }
 
-static int transfer_data_alloc(AVFrame *dst, const AVFrame *src, int flags)
+static số_nguyên transfer_data_alloc(AVFrame *dst, const AVFrame *src, số_nguyên flags)
 {
     AVHWFramesContext *ctx;
     AVFrame *frame_tmp;
-    int ret = 0;
+    số_nguyên ret = 0;
 
-    if (!src->hw_frames_ctx)
-        return AVERROR(EINVAL);
+    nếu (!src->hw_frames_ctx)
+        trả_về AVERROR(EINVAL);
     ctx = (AVHWFramesContext*)src->hw_frames_ctx->data;
 
     frame_tmp = av_frame_alloc();
-    if (!frame_tmp)
-        return AVERROR(ENOMEM);
+    nếu (!frame_tmp)
+        trả_về AVERROR(ENOMEM);
 
     /* if the format is set, use that
      * otherwise pick the first supported one */
-    if (dst->format >= 0) {
+    nếu (dst->format >= 0) {
         frame_tmp->format = dst->format;
-    } else {
+    } không_thì {
         enum AVPixelFormat *formats;
 
         ret = av_hwframe_transfer_get_formats(src->hw_frames_ctx,
                                               AV_HWFRAME_TRANSFER_DIRECTION_FROM,
                                               &formats, 0);
-        if (ret < 0)
+        nếu (ret < 0)
             goto fail;
         frame_tmp->format = formats[0];
         av_freep(&formats);
@@ -478,11 +478,11 @@ static int transfer_data_alloc(AVFrame *dst, const AVFrame *src, int flags)
     frame_tmp->height = ctx->height;
 
     ret = av_hwframe_get_transfer_buffer(src->hw_frames_ctx, frame_tmp);
-    if (ret < 0)
+    nếu (ret < 0)
         goto fail;
 
     ret = av_hwframe_transfer_data(frame_tmp, src, flags);
-    if (ret < 0)
+    nếu (ret < 0)
         goto fail;
 
     frame_tmp->width  = src->width;
@@ -492,15 +492,15 @@ static int transfer_data_alloc(AVFrame *dst, const AVFrame *src, int flags)
 
 fail:
     av_frame_free(&frame_tmp);
-    return ret;
+    trả_về ret;
 }
 
-int av_hwframe_transfer_data(AVFrame *dst, const AVFrame *src, int flags)
+số_nguyên av_hwframe_transfer_data(AVFrame *dst, const AVFrame *src, số_nguyên flags)
 {
-    int ret;
+    số_nguyên ret;
 
-    if (!dst->buf[0])
-        return transfer_data_alloc(dst, src, flags);
+    nếu (!dst->buf[0])
+        trả_về transfer_data_alloc(dst, src, flags);
 
     /*
      * Hardware -> Hardware Transfer.
@@ -508,121 +508,121 @@ int av_hwframe_transfer_data(AVFrame *dst, const AVFrame *src, int flags)
      * function could be provided by either the src or dst, depending on
      * the specific combination of hardware.
      */
-    if (src->hw_frames_ctx && dst->hw_frames_ctx) {
+    nếu (src->hw_frames_ctx && dst->hw_frames_ctx) {
         FFHWFramesContext *src_ctx =
             (FFHWFramesContext*)src->hw_frames_ctx->data;
         FFHWFramesContext *dst_ctx =
             (FFHWFramesContext*)dst->hw_frames_ctx->data;
 
-        if (src_ctx->source_frames) {
+        nếu (src_ctx->source_frames) {
             av_log(src_ctx, AV_LOG_ERROR,
                    "A device with a derived frame context cannot be used as "
                    "the source of a HW -> HW transfer.");
-            return AVERROR(ENOSYS);
+            trả_về AVERROR(ENOSYS);
         }
 
-        if (dst_ctx->source_frames) {
+        nếu (dst_ctx->source_frames) {
             av_log(src_ctx, AV_LOG_ERROR,
                    "A device with a derived frame context cannot be used as "
                    "the destination of a HW -> HW transfer.");
-            return AVERROR(ENOSYS);
+            trả_về AVERROR(ENOSYS);
         }
 
         ret = AVERROR(ENOSYS);
-        if (src_ctx->hw_type->transfer_data_from)
+        nếu (src_ctx->hw_type->transfer_data_from)
             ret = src_ctx->hw_type->transfer_data_from(&src_ctx->p, dst, src);
-        if (ret == AVERROR(ENOSYS) && dst_ctx->hw_type->transfer_data_to)
+        nếu (ret == AVERROR(ENOSYS) && dst_ctx->hw_type->transfer_data_to)
             ret = dst_ctx->hw_type->transfer_data_to(&dst_ctx->p, dst, src);
-        if (ret < 0)
-            return ret;
-    } else {
-        if (src->hw_frames_ctx) {
+        nếu (ret < 0)
+            trả_về ret;
+    } không_thì {
+        nếu (src->hw_frames_ctx) {
             FFHWFramesContext *ctx = (FFHWFramesContext*)src->hw_frames_ctx->data;
 
-            if (!ctx->hw_type->transfer_data_from)
-                return AVERROR(ENOSYS);
+            nếu (!ctx->hw_type->transfer_data_from)
+                trả_về AVERROR(ENOSYS);
 
             ret = ctx->hw_type->transfer_data_from(&ctx->p, dst, src);
-            if (ret < 0)
-                return ret;
-        } else if (dst->hw_frames_ctx) {
+            nếu (ret < 0)
+                trả_về ret;
+        } không_thì nếu (dst->hw_frames_ctx) {
             FFHWFramesContext *ctx = (FFHWFramesContext*)dst->hw_frames_ctx->data;
 
-            if (!ctx->hw_type->transfer_data_to)
-                return AVERROR(ENOSYS);
+            nếu (!ctx->hw_type->transfer_data_to)
+                trả_về AVERROR(ENOSYS);
 
             ret = ctx->hw_type->transfer_data_to(&ctx->p, dst, src);
-            if (ret < 0)
-                return ret;
-        } else {
-            return AVERROR(ENOSYS);
+            nếu (ret < 0)
+                trả_về ret;
+        } không_thì {
+            trả_về AVERROR(ENOSYS);
         }
     }
-    return 0;
+    trả_về 0;
 }
 
-int av_hwframe_get_buffer(AVBufferRef *hwframe_ref, AVFrame *frame, int flags)
+số_nguyên av_hwframe_get_buffer(AVBufferRef *hwframe_ref, AVFrame *frame, số_nguyên flags)
 {
     FFHWFramesContext *ctxi = (FFHWFramesContext*)hwframe_ref->data;
     AVHWFramesContext *ctx  = &ctxi->p;
-    int ret;
+    số_nguyên ret;
 
-    if (ctxi->source_frames) {
+    nếu (ctxi->source_frames) {
         // This is a derived frame context, so we allocate in the source
         // and map the frame immediately.
         AVFrame *src_frame;
 
         frame->format = ctx->format;
         frame->hw_frames_ctx = av_buffer_ref(hwframe_ref);
-        if (!frame->hw_frames_ctx)
-            return AVERROR(ENOMEM);
+        nếu (!frame->hw_frames_ctx)
+            trả_về AVERROR(ENOMEM);
 
         src_frame = av_frame_alloc();
-        if (!src_frame)
-            return AVERROR(ENOMEM);
+        nếu (!src_frame)
+            trả_về AVERROR(ENOMEM);
 
         ret = av_hwframe_get_buffer(ctxi->source_frames,
                                     src_frame, 0);
-        if (ret < 0) {
+        nếu (ret < 0) {
             av_frame_free(&src_frame);
-            return ret;
+            trả_về ret;
         }
 
         ret = av_hwframe_map(frame, src_frame,
                              ctxi->source_allocation_map_flags);
-        if (ret) {
+        nếu (ret) {
             av_log(ctx, AV_LOG_ERROR, "Failed to map frame into derived "
                    "frame context: %d.\n", ret);
             av_frame_free(&src_frame);
-            return ret;
+            trả_về ret;
         }
 
         // Free the source frame immediately - the mapped frame still
         // contains a reference to it.
         av_frame_free(&src_frame);
 
-        return 0;
+        trả_về 0;
     }
 
-    if (!ctxi->hw_type->frames_get_buffer)
-        return AVERROR(ENOSYS);
+    nếu (!ctxi->hw_type->frames_get_buffer)
+        trả_về AVERROR(ENOSYS);
 
-    if (!ctx->pool)
-        return AVERROR(EINVAL);
+    nếu (!ctx->pool)
+        trả_về AVERROR(EINVAL);
 
     frame->hw_frames_ctx = av_buffer_ref(hwframe_ref);
-    if (!frame->hw_frames_ctx)
-        return AVERROR(ENOMEM);
+    nếu (!frame->hw_frames_ctx)
+        trả_về AVERROR(ENOMEM);
 
     ret = ctxi->hw_type->frames_get_buffer(ctx, frame);
-    if (ret < 0) {
+    nếu (ret < 0) {
         av_buffer_unref(&frame->hw_frames_ctx);
-        return ret;
+        trả_về ret;
     }
 
     frame->extended_data = frame->data;
 
-    return 0;
+    trả_về 0;
 }
 
 void *av_hwdevice_hwconfig_alloc(AVBufferRef *ref)
@@ -630,10 +630,10 @@ void *av_hwdevice_hwconfig_alloc(AVBufferRef *ref)
     FFHWDeviceContext *ctx = (FFHWDeviceContext*)ref->data;
     const HWContextType  *hw_type = ctx->hw_type;
 
-    if (hw_type->device_hwconfig_size == 0)
-        return NULL;
+    nếu (hw_type->device_hwconfig_size == 0)
+        trả_về NULL;
 
-    return av_mallocz(hw_type->device_hwconfig_size);
+    trả_về av_mallocz(hw_type->device_hwconfig_size);
 }
 
 AVHWFramesConstraints *av_hwdevice_get_hwframe_constraints(AVBufferRef *ref,
@@ -643,84 +643,84 @@ AVHWFramesConstraints *av_hwdevice_get_hwframe_constraints(AVBufferRef *ref,
     const HWContextType  *hw_type = ctx->hw_type;
     AVHWFramesConstraints *constraints;
 
-    if (!hw_type->frames_get_constraints)
-        return NULL;
+    nếu (!hw_type->frames_get_constraints)
+        trả_về NULL;
 
     constraints = av_mallocz(sizeof(*constraints));
-    if (!constraints)
-        return NULL;
+    nếu (!constraints)
+        trả_về NULL;
 
     constraints->min_width = constraints->min_height = 0;
     constraints->max_width = constraints->max_height = INT_MAX;
 
-    if (hw_type->frames_get_constraints(&ctx->p, hwconfig, constraints) >= 0) {
-        return constraints;
-    } else {
+    nếu (hw_type->frames_get_constraints(&ctx->p, hwconfig, constraints) >= 0) {
+        trả_về constraints;
+    } không_thì {
         av_hwframe_constraints_free(&constraints);
-        return NULL;
+        trả_về NULL;
     }
 }
 
 void av_hwframe_constraints_free(AVHWFramesConstraints **constraints)
 {
-    if (*constraints) {
+    nếu (*constraints) {
         av_freep(&(*constraints)->valid_hw_formats);
         av_freep(&(*constraints)->valid_sw_formats);
     }
     av_freep(constraints);
 }
 
-int av_hwdevice_ctx_create(AVBufferRef **pdevice_ref, enum AVHWDeviceType type,
-                           const char *device, AVDictionary *opts, int flags)
+số_nguyên av_hwdevice_ctx_create(AVBufferRef **pdevice_ref, enum AVHWDeviceType type,
+                           const char *device, AVDictionary *opts, số_nguyên flags)
 {
     AVBufferRef *device_ref = NULL;
     FFHWDeviceContext *device_ctx;
-    int ret = 0;
+    số_nguyên ret = 0;
 
     device_ref = av_hwdevice_ctx_alloc(type);
-    if (!device_ref) {
+    nếu (!device_ref) {
         ret = AVERROR(ENOMEM);
         goto fail;
     }
     device_ctx = (FFHWDeviceContext*)device_ref->data;
 
-    if (!device_ctx->hw_type->device_create) {
+    nếu (!device_ctx->hw_type->device_create) {
         ret = AVERROR(ENOSYS);
         goto fail;
     }
 
     ret = device_ctx->hw_type->device_create(&device_ctx->p, device,
                                              opts, flags);
-    if (ret < 0)
+    nếu (ret < 0)
         goto fail;
 
     ret = av_hwdevice_ctx_init(device_ref);
-    if (ret < 0)
+    nếu (ret < 0)
         goto fail;
 
     *pdevice_ref = device_ref;
-    return 0;
+    trả_về 0;
 fail:
     av_buffer_unref(&device_ref);
     *pdevice_ref = NULL;
-    return ret;
+    trả_về ret;
 }
 
-int av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ref_ptr,
+số_nguyên av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ref_ptr,
                                         enum AVHWDeviceType type,
                                         AVBufferRef *src_ref,
-                                        AVDictionary *options, int flags)
+                                        AVDictionary *options, số_nguyên flags)
 {
     AVBufferRef *dst_ref = NULL, *tmp_ref;
     FFHWDeviceContext *dst_ctx;
-    int ret = 0;
+    số_nguyên ret = 0;
 
     tmp_ref = src_ref;
-    while (tmp_ref) {
+    trong_khi (tmp_ref) {
         FFHWDeviceContext *tmp_ctx = (FFHWDeviceContext*)tmp_ref->data;
-        if (tmp_ctx->p.type == type) {
+        nếu (tmp_ctx->p.type == type) {
             dst_ref = av_buffer_ref(tmp_ref);
-            if (!dst_ref) {
+            nếu (!dst_ref) {
                 ret = AVERROR(ENOMEM);
                 goto fail;
             }
@@ -730,31 +730,31 @@ int av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ref_ptr,
     }
 
     dst_ref = av_hwdevice_ctx_alloc(type);
-    if (!dst_ref) {
+    nếu (!dst_ref) {
         ret = AVERROR(ENOMEM);
         goto fail;
     }
     dst_ctx = (FFHWDeviceContext*)dst_ref->data;
 
     tmp_ref = src_ref;
-    while (tmp_ref) {
+    trong_khi (tmp_ref) {
         FFHWDeviceContext *tmp_ctx = (FFHWDeviceContext*)tmp_ref->data;
-        if (dst_ctx->hw_type->device_derive) {
+        nếu (dst_ctx->hw_type->device_derive) {
             ret = dst_ctx->hw_type->device_derive(&dst_ctx->p,
                                                   &tmp_ctx->p,
                                                   options, flags);
-            if (ret == 0) {
+            nếu (ret == 0) {
                 dst_ctx->source_device = av_buffer_ref(src_ref);
-                if (!dst_ctx->source_device) {
+                nếu (!dst_ctx->source_device) {
                     ret = AVERROR(ENOMEM);
                     goto fail;
                 }
                 ret = av_hwdevice_ctx_init(dst_ref);
-                if (ret < 0)
+                nếu (ret < 0)
                     goto fail;
                 goto done;
             }
-            if (ret != AVERROR(ENOSYS))
+            nếu (ret != AVERROR(ENOSYS))
                 goto fail;
         }
         tmp_ref = tmp_ctx->source_device;
@@ -765,19 +765,19 @@ int av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ref_ptr,
 
 done:
     *dst_ref_ptr = dst_ref;
-    return 0;
+    trả_về 0;
 
 fail:
     av_buffer_unref(&dst_ref);
     *dst_ref_ptr = NULL;
-    return ret;
+    trả_về ret;
 }
 
-int av_hwdevice_ctx_create_derived(AVBufferRef **dst_ref_ptr,
+số_nguyên av_hwdevice_ctx_create_derived(AVBufferRef **dst_ref_ptr,
                                    enum AVHWDeviceType type,
-                                   AVBufferRef *src_ref, int flags)
+                                   AVBufferRef *src_ref, số_nguyên flags)
 {
-    return av_hwdevice_ctx_create_derived_opts(dst_ref_ptr, type, src_ref,
+    trả_về av_hwdevice_ctx_create_derived_opts(dst_ref_ptr, type, src_ref,
                                                NULL, flags);
 }
 
@@ -786,7 +786,7 @@ static void ff_hwframe_unmap(void *opaque, uint8_t *data)
     HWMapDescriptor *hwmap = (HWMapDescriptor*)data;
     AVHWFramesContext *ctx = opaque;
 
-    if (hwmap->unmap)
+    nếu (hwmap->unmap)
         hwmap->unmap(ctx, hwmap);
 
     av_frame_free(&hwmap->source);
@@ -796,7 +796,7 @@ static void ff_hwframe_unmap(void *opaque, uint8_t *data)
     av_free(hwmap);
 }
 
-int ff_hwframe_map_create(AVBufferRef *hwframe_ref,
+số_nguyên ff_hwframe_map_create(AVBufferRef *hwframe_ref,
                           AVFrame *dst, const AVFrame *src,
                           void (*unmap)(AVHWFramesContext *ctx,
                                         HWMapDescriptor *hwmap),
@@ -804,25 +804,25 @@ int ff_hwframe_map_create(AVBufferRef *hwframe_ref,
 {
     AVHWFramesContext *ctx = (AVHWFramesContext*)hwframe_ref->data;
     HWMapDescriptor *hwmap;
-    int ret;
+    số_nguyên ret;
 
     hwmap = av_mallocz(sizeof(*hwmap));
-    if (!hwmap) {
+    nếu (!hwmap) {
         ret = AVERROR(ENOMEM);
         goto fail;
     }
 
     hwmap->source = av_frame_alloc();
-    if (!hwmap->source) {
+    nếu (!hwmap->source) {
         ret = AVERROR(ENOMEM);
         goto fail;
     }
     ret = av_frame_ref(hwmap->source, src);
-    if (ret < 0)
+    nếu (ret < 0)
         goto fail;
 
     hwmap->hw_frames_ctx = av_buffer_ref(hwframe_ref);
-    if (!hwmap->hw_frames_ctx) {
+    nếu (!hwmap->hw_frames_ctx) {
         ret = AVERROR(ENOMEM);
         goto fail;
     }
@@ -832,34 +832,34 @@ int ff_hwframe_map_create(AVBufferRef *hwframe_ref,
 
     dst->buf[0] = av_buffer_create((uint8_t*)hwmap, sizeof(*hwmap),
                                    &ff_hwframe_unmap, ctx, 0);
-    if (!dst->buf[0]) {
+    nếu (!dst->buf[0]) {
         ret = AVERROR(ENOMEM);
         goto fail;
     }
 
-    return 0;
+    trả_về 0;
 
 fail:
-    if (hwmap) {
+    nếu (hwmap) {
         av_buffer_unref(&hwmap->hw_frames_ctx);
         av_frame_free(&hwmap->source);
     }
     av_free(hwmap);
-    return ret;
+    trả_về ret;
 }
 
-int av_hwframe_map(AVFrame *dst, const AVFrame *src, int flags)
+số_nguyên av_hwframe_map(AVFrame *dst, const AVFrame *src, số_nguyên flags)
 {
     AVBufferRef    *orig_dst_frames = dst->hw_frames_ctx;
     enum AVPixelFormat orig_dst_fmt = dst->format;
     HWMapDescriptor *hwmap;
-    int ret;
+    số_nguyên ret;
 
-    if (src->hw_frames_ctx && dst->hw_frames_ctx) {
+    nếu (src->hw_frames_ctx && dst->hw_frames_ctx) {
         FFHWFramesContext *src_frames = (FFHWFramesContext*)src->hw_frames_ctx->data;
         FFHWFramesContext *dst_frames = (FFHWFramesContext*)dst->hw_frames_ctx->data;
 
-        if ((src_frames == dst_frames &&
+        nếu ((src_frames == dst_frames &&
              src->format == dst_frames->p.sw_format &&
              dst->format == dst_frames->p.format) ||
             (src_frames->source_frames &&
@@ -869,45 +869,45 @@ int av_hwframe_map(AVFrame *dst, const AVFrame *src, int flags)
             // do anything here other than fill in the original frame,
             // because the real unmap will be invoked when the last
             // reference to the mapped frame disappears.
-            if (!src->buf[0]) {
+            nếu (!src->buf[0]) {
                 av_log(src_frames, AV_LOG_ERROR, "Invalid mapping "
                        "found when attempting unmap.\n");
-                return AVERROR(EINVAL);
+                trả_về AVERROR(EINVAL);
             }
             hwmap = (HWMapDescriptor*)src->buf[0]->data;
-            return av_frame_replace(dst, hwmap->source);
+            trả_về av_frame_replace(dst, hwmap->source);
         }
     }
 
-    if (src->hw_frames_ctx) {
+    nếu (src->hw_frames_ctx) {
         FFHWFramesContext *src_frames = (FFHWFramesContext*)src->hw_frames_ctx->data;
 
-        if (src_frames->p.format == src->format &&
+        nếu (src_frames->p.format == src->format &&
             src_frames->hw_type->map_from) {
             ret = src_frames->hw_type->map_from(&src_frames->p,
                                                 dst, src, flags);
-            if (ret >= 0)
-                return ret;
-            else if (ret != AVERROR(ENOSYS))
+            nếu (ret >= 0)
+                trả_về ret;
+            không_thì nếu (ret != AVERROR(ENOSYS))
                 goto fail;
         }
     }
 
-    if (dst->hw_frames_ctx) {
+    nếu (dst->hw_frames_ctx) {
         FFHWFramesContext *dst_frames = (FFHWFramesContext*)dst->hw_frames_ctx->data;
 
-        if (dst_frames->p.format == dst->format &&
+        nếu (dst_frames->p.format == dst->format &&
             dst_frames->hw_type->map_to) {
             ret = dst_frames->hw_type->map_to(&dst_frames->p,
                                               dst, src, flags);
-            if (ret >= 0)
-                return ret;
-            else if (ret != AVERROR(ENOSYS))
+            nếu (ret >= 0)
+                trả_về ret;
+            không_thì nếu (ret != AVERROR(ENOSYS))
                 goto fail;
         }
     }
 
-    return AVERROR(ENOSYS);
+    trả_về AVERROR(ENOSYS);
 
 fail:
     // if the caller provided dst frames context, it should be preserved
@@ -923,41 +923,41 @@ fail:
     dst->hw_frames_ctx = orig_dst_frames;
     dst->format        = orig_dst_fmt;
 
-    return ret;
+    trả_về ret;
 }
 
-int av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
+số_nguyên av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
                                   enum AVPixelFormat format,
                                   AVBufferRef *derived_device_ctx,
                                   AVBufferRef *source_frame_ctx,
-                                  int flags)
+                                  số_nguyên flags)
 {
     AVBufferRef   *dst_ref = NULL;
     FFHWFramesContext *dsti = NULL;
     FFHWFramesContext *srci = (FFHWFramesContext*)source_frame_ctx->data;
     AVHWFramesContext *dst, *src = &srci->p;
-    int ret;
+    số_nguyên ret;
 
-    if (srci->source_frames) {
+    nếu (srci->source_frames) {
         AVHWFramesContext *src_src =
             (AVHWFramesContext*)srci->source_frames->data;
         AVHWDeviceContext *dst_dev =
             (AVHWDeviceContext*)derived_device_ctx->data;
 
-        if (src_src->device_ctx == dst_dev) {
+        nếu (src_src->device_ctx == dst_dev) {
             // This is actually an unmapping, so we just return a
             // reference to the source frame context.
             *derived_frame_ctx = av_buffer_ref(srci->source_frames);
-            if (!*derived_frame_ctx) {
+            nếu (!*derived_frame_ctx) {
                 ret = AVERROR(ENOMEM);
                 goto fail;
             }
-            return 0;
+            trả_về 0;
         }
     }
 
     dst_ref = av_hwframe_ctx_alloc(derived_device_ctx);
-    if (!dst_ref) {
+    nếu (!dst_ref) {
         ret = AVERROR(ENOMEM);
         goto fail;
     }
@@ -971,7 +971,7 @@ int av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
     dst->height    = src->height;
 
     dsti->source_frames = av_buffer_ref(source_frame_ctx);
-    if (!dsti->source_frames) {
+    nếu (!dsti->source_frames) {
         ret = AVERROR(ENOMEM);
         goto fail;
     }
@@ -983,28 +983,28 @@ int av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
                  AV_HWFRAME_MAP_DIRECT);
 
     ret = AVERROR(ENOSYS);
-    if (srci->hw_type->frames_derive_from)
+    nếu (srci->hw_type->frames_derive_from)
         ret = srci->hw_type->frames_derive_from(dst, src, flags);
-    if (ret == AVERROR(ENOSYS) &&
+    nếu (ret == AVERROR(ENOSYS) &&
         dsti->hw_type->frames_derive_to)
         ret = dsti->hw_type->frames_derive_to(dst, src, flags);
-    if (ret == AVERROR(ENOSYS))
+    nếu (ret == AVERROR(ENOSYS))
         ret = 0;
-    if (ret)
+    nếu (ret)
         goto fail;
 
     *derived_frame_ctx = dst_ref;
-    return 0;
+    trả_về 0;
 
 fail:
-    if (dsti)
+    nếu (dsti)
         av_buffer_unref(&dsti->source_frames);
     av_buffer_unref(&dst_ref);
-    return ret;
+    trả_về ret;
 }
 
-int ff_hwframe_map_replace(AVFrame *dst, const AVFrame *src)
+số_nguyên ff_hwframe_map_replace(AVFrame *dst, const AVFrame *src)
 {
     HWMapDescriptor *hwmap = (HWMapDescriptor*)dst->buf[0]->data;
-    return av_frame_replace(hwmap->source, src);
+    trả_về av_frame_replace(hwmap->source, src);
 }

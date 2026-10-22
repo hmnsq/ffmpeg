@@ -38,13 +38,13 @@ double av_display_rotation_get(const int32_t matrix[9])
     scale[0] = hypot(CONV_FP(matrix[0]), CONV_FP(matrix[3]));
     scale[1] = hypot(CONV_FP(matrix[1]), CONV_FP(matrix[4]));
 
-    if (scale[0] == 0.0 || scale[1] == 0.0)
-        return NAN;
+    nếu (scale[0] == 0.0 || scale[1] == 0.0)
+        trả_về NAN;
 
     rotation = atan2(CONV_FP(matrix[1]) / scale[1],
                      CONV_FP(matrix[0]) / scale[0]) * 180 / M_PI;
 
-    return -rotation;
+    trả_về -rotation;
 }
 
 void av_display_rotation_set(int32_t matrix[9], double angle)
@@ -62,12 +62,12 @@ void av_display_rotation_set(int32_t matrix[9], double angle)
     matrix[8] = 1 << 30;
 }
 
-void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip)
+void av_display_matrix_flip(int32_t matrix[9], số_nguyên hflip, số_nguyên vflip)
 {
-    int i;
-    const int flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
+    số_nguyên i;
+    const số_nguyên flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
 
-    if (hflip || vflip)
-        for (i = 0; i < 9; i++)
+    nếu (hflip || vflip)
+        cho (i = 0; i < 9; i++)
             matrix[i] *= flip[i % 3];
 }

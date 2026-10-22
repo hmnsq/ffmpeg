@@ -22,17 +22,17 @@
 #define AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
 
 void ff_vector_fmul_altivec(float *dst, const float *src0,
-                            const float *src1, int len);
+                            const float *src1, số_nguyên len);
 
 void ff_vector_fmul_window_altivec(float *dst, const float *src0,
                                    const float *src1, const float *win,
-                                   int len);
+                                   số_nguyên len);
 
 void ff_vector_fmul_add_altivec(float *dst, const float *src0,
                                 const float *src1, const float *src2,
-                                int len);
+                                số_nguyên len);
 
 void ff_vector_fmul_reverse_altivec(float *dst, const float *src0,
-                                    const float *src1, int len);
+                                    const float *src1, số_nguyên len);
 
 #endif /* AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H */

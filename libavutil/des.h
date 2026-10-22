@@ -32,7 +32,7 @@
 
 typedef struct AVDES {
     uint64_t round_keys[3][16];
-    int triple_des;
+    số_nguyên triple_des;
 } AVDES;
 
 /**
@@ -49,7 +49,7 @@ AVDES *av_des_alloc(void);
  * @param decrypt 0 for encryption/CBC-MAC, 1 for decryption
  * @return zero on success, negative value otherwise
  */
-int av_des_init(struct AVDES *d, const uint8_t *key, int key_bits, int decrypt);
+số_nguyên av_des_init(struct AVDES *d, const uint8_t *key, số_nguyên key_bits, số_nguyên decrypt);
 
 /**
  * @brief Encrypts / decrypts using the DES algorithm.
@@ -62,7 +62,7 @@ int av_des_init(struct AVDES *d, const uint8_t *key, int key_bits, int decrypt);
  *           must be 8-byte aligned
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_des_crypt(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+void av_des_crypt(struct AVDES *d, uint8_t *dst, const uint8_t *src, số_nguyên count, uint8_t *iv, số_nguyên decrypt);
 
 /**
  * @brief Calculates CBC-MAC using the DES algorithm.
@@ -72,7 +72,7 @@ void av_des_crypt(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count, 
  * @param src source array, can be equal to dst, must be 8-byte aligned, may be NULL
  * @param count number of 8 byte blocks
  */
-void av_des_mac(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count);
+void av_des_mac(struct AVDES *d, uint8_t *dst, const uint8_t *src, số_nguyên count);
 
 /**
  * @}

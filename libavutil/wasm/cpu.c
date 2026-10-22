@@ -22,20 +22,20 @@
 
 #include "libavutil/cpu_internal.h"
 
-int ff_get_cpu_flags_wasm(void)
+số_nguyên ff_get_cpu_flags_wasm(void)
 {
-    int flags = 0;
-#if HAVE_SIMD128
+    số_nguyên flags = 0;
+#nếu HAVE_SIMD128
     flags |= AV_CPU_FLAG_SIMD128;
 #endif
-    return flags;
+    trả_về flags;
 }
 
 size_t ff_get_cpu_max_align_wasm(void)
 {
-#if HAVE_SIMD128
-    return 16;
-#else
-    return 8;
+#nếu HAVE_SIMD128
+    trả_về 16;
+#không_thì
+    trả_về 8;
 #endif
 }

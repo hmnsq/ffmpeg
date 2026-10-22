@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <stdatomic.h>
 
-static int called;
+static số_nguyên called;
 
 static void callback(void)
 {
@@ -60,28 +60,28 @@ do {                                                                         \
            (long long)r, (long long)expected);                               \
     do {                                                                     \
         r = atomic_compare_exchange_weak(&object, &expected, (T)(V1));       \
-    } while (!r);                                                            \
+    } trong_khi (!r);                                                            \
     printf(name " cas weak  %lld %lld %lld\n",                               \
            (long long)r, (long long)expected,                                \
            (long long)atomic_load(&object));                                 \
-} while (0)
+} trong_khi (0)
 
-int main(void)
+số_nguyên main(void)
 {
     _Bool _Atomic b = 0;
     _Bool be;
     atomic_uint u32 = 0;
     atomic_ullong u64 = 0;
     atomic_uchar u8 = 0;
-    int x = 42;
-    int *_Atomic p = NULL;
-    int *pe;
+    số_nguyên x = 42;
+    số_nguyên *_Atomic p = NULL;
+    số_nguyên *pe;
     void (*_Atomic fp)(void) = NULL;
-    const int *const arr[2] = { &x, NULL };
-    const int *const *_Atomic lst = NULL;
+    const số_nguyên *const arr[2] = { &x, NULL };
+    const số_nguyên *const *_Atomic lst = NULL;
     atomic_flag f = ATOMIC_FLAG_INIT;
     long long old;
-    int r1, r2, r3;
+    số_nguyên r1, r2, r3;
     void (*loaded_callback)(void);
 
     TEST(atomic_char, char,         "char",         97, 122);
@@ -89,8 +89,8 @@ int main(void)
     TEST(atomic_uchar, unsigned char,        "uchar",        200, 42);
     TEST(atomic_short, short,        "short",        -30000, 42);
     TEST(atomic_ushort, unsigned short,       "ushort",       60000, 42);
-    TEST(atomic_int, int,          "int",          -2000000000, 2000000000);
-    TEST(atomic_uint, unsigned int,         "uint",         4000000000u, 7u);
+    TEST(atomic_int, số_nguyên,          "int",          -2000000000, 2000000000);
+    TEST(atomic_uint, unsigned số_nguyên,         "uint",         4000000000u, 7u);
     TEST(atomic_long, long,         "long",         -2000000000L, 2000000000L);
     TEST(atomic_ulong, unsigned long,        "ulong",        4000000000UL, 7UL);
     TEST(atomic_llong, long long,        "llong",        -9007199254740993LL, 9007199254740993LL);
@@ -130,7 +130,7 @@ int main(void)
     r2 = atomic_exchange(&b, 0);
     r3 = atomic_compare_exchange_strong(&b, &be, 2);
     printf("bool       %d %d %d %d %d\n", r1, r2, r3,
-           (int)be, (int)atomic_load(&b));
+           (số_nguyên)be, (số_nguyên)atomic_load(&b));
 
     /* object pointers */
     atomic_store_explicit(&p, &x, memory_order_relaxed);
@@ -146,7 +146,7 @@ int main(void)
     loaded_callback();
 
     /* pointers to const, as in the device lists */
-    const int *const *l;
+    const số_nguyên *const *l;
     atomic_store_explicit(&lst, arr, memory_order_relaxed);
     l = atomic_load_explicit(&lst, memory_order_relaxed);
     printf("lst        %d %d\n", l == arr, **l == x);
@@ -159,13 +159,13 @@ int main(void)
     printf("called     %d\n", called);
 
     {
-        int _Atomic i = 0;
+        số_nguyên _Atomic i = 0;
         atomic_init(&i, 43);
-        printf("init       %d\n", (int)atomic_load(&i));
+        printf("init       %d\n", (số_nguyên)atomic_load(&i));
     }
     atomic_thread_fence(memory_order_seq_cst);
     atomic_signal_fence(memory_order_acquire);
-    printf("kill_dep   %d\n", (int)kill_dependency(1));
+    printf("kill_dep   %d\n", (số_nguyên)kill_dependency(1));
 
-    return 0;
+    trả_về 0;
 }

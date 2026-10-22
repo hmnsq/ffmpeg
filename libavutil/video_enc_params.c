@@ -25,7 +25,7 @@
 #include "video_enc_params.h"
 
 AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+                                            unsigned số_nguyên nb_blocks, size_t *out_size)
 {
     struct TestStruct {
         AVVideoEncParams   p;
@@ -35,46 +35,46 @@ AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
     size_t size = blocks_offset;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
+    nếu (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
+        trả_về NULL;
     size += sizeof(AVVideoBlockParams) * nb_blocks;
 
     par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    nếu (!par)
+        trả_về NULL;
 
     par->type          = type;
     par->nb_blocks     = nb_blocks;
     par->block_size    = sizeof(AVVideoBlockParams);
     par->blocks_offset = blocks_offset;
 
-    if (out_size)
+    nếu (out_size)
         *out_size = size;
 
-    return par;
+    trả_về par;
 }
 
 AVVideoEncParams*
 av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+                                     unsigned số_nguyên nb_blocks)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
     size_t size;
 
     par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
+    nếu (!par)
+        trả_về NULL;
     buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    nếu (!buf) {
         av_freep(&par);
-        return NULL;
+        trả_về NULL;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
+    nếu (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        trả_về NULL;
     }
 
-    return par;
+    trả_về par;
 }

@@ -354,7 +354,7 @@ AVDynamicHDRPlus *av_dynamic_hdr_plus_create_side_data(AVFrame *frame);
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
+số_nguyên av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
                                  size_t size);
 
 #define AV_HDR_PLUS_MAX_PAYLOAD_SIZE 907
@@ -375,7 +375,7 @@ int av_dynamic_hdr_plus_from_t35(AVDynamicHDRPlus *s, const uint8_t *data,
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t *size);
+số_nguyên av_dynamic_hdr_plus_to_t35(const AVDynamicHDRPlus *s, uint8_t **data, size_t *size);
 
 /**
  * This struct represents dynamic metadata for color volume transform as
@@ -459,7 +459,7 @@ AVDynamicHDRSmpte2094App5* av_dynamic_hdr_smpte2094_app5_create_side_data(AVFram
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5* s, const uint8_t* data,
+số_nguyên av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5* s, const uint8_t* data,
                                            size_t size);
 
 /**
@@ -478,7 +478,7 @@ int av_dynamic_hdr_smpte2094_app5_from_t35(AVDynamicHDRSmpte2094App5* s, const u
  *
  * @return >= 0 on success. Otherwise, returns the appropriate AVERROR.
  */
-int av_dynamic_hdr_smpte2094_app5_to_t35(const AVDynamicHDRSmpte2094App5* s, uint8_t** data,
+số_nguyên av_dynamic_hdr_smpte2094_app5_to_t35(const AVDynamicHDRSmpte2094App5* s, uint8_t** data,
                                          size_t* size);
 
 #endif /* AVUTIL_HDR_DYNAMIC_METADATA_H */

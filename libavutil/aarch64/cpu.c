@@ -20,7 +20,7 @@
 #include "libavutil/cpu_internal.h"
 #include "config.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#nếu HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
 #include <stdint.h>
 #include <sys/auxv.h>
 
@@ -36,74 +36,74 @@
 #define HWCAP2_AARCH64_SME_I16I64 (1 << 24)
 #define HWCAP2_AARCH64_SME2   (1ULL << 37)
 
-static int detect_flags(void)
+static số_nguyên detect_flags(void)
 {
-    int flags = 0;
+    số_nguyên flags = 0;
 
     unsigned long hwcap = ff_getauxval(AT_HWCAP);
     unsigned long hwcap2 = ff_getauxval(AT_HWCAP2);
 
-    if (hwcap & HWCAP_AARCH64_AES)
+    nếu (hwcap & HWCAP_AARCH64_AES)
         flags |= AV_CPU_FLAG_ARM_AES;
-    if (hwcap & HWCAP_AARCH64_PMULL)
+    nếu (hwcap & HWCAP_AARCH64_PMULL)
         flags |= AV_CPU_FLAG_PMULL;
-    if (hwcap & HWCAP_AARCH64_SHA3)
+    nếu (hwcap & HWCAP_AARCH64_SHA3)
         flags |= AV_CPU_FLAG_EOR3;
-    if (hwcap & HWCAP_AARCH64_CRC32)
+    nếu (hwcap & HWCAP_AARCH64_CRC32)
         flags |= AV_CPU_FLAG_ARM_CRC;
-    if (hwcap & HWCAP_AARCH64_ASIMDDP)
+    nếu (hwcap & HWCAP_AARCH64_ASIMDDP)
         flags |= AV_CPU_FLAG_DOTPROD;
-    if (hwcap & HWCAP_AARCH64_SVE)
+    nếu (hwcap & HWCAP_AARCH64_SVE)
         flags |= AV_CPU_FLAG_SVE;
-    if (hwcap2 & HWCAP2_AARCH64_SVE2)
+    nếu (hwcap2 & HWCAP2_AARCH64_SVE2)
         flags |= AV_CPU_FLAG_SVE2;
-    if (hwcap2 & HWCAP2_AARCH64_I8MM)
+    nếu (hwcap2 & HWCAP2_AARCH64_I8MM)
         flags |= AV_CPU_FLAG_I8MM;
-    if (hwcap2 & HWCAP2_AARCH64_SME)
+    nếu (hwcap2 & HWCAP2_AARCH64_SME)
         flags |= AV_CPU_FLAG_SME;
-    if (hwcap2 & HWCAP2_AARCH64_SME_I16I64)
+    nếu (hwcap2 & HWCAP2_AARCH64_SME_I16I64)
         flags |= AV_CPU_FLAG_SME_I16I64;
-    if (hwcap2 & HWCAP2_AARCH64_SME2)
+    nếu (hwcap2 & HWCAP2_AARCH64_SME2)
         flags |= AV_CPU_FLAG_SME2;
 
-    return flags;
+    trả_về flags;
 }
 
 #elif defined(__APPLE__) && HAVE_SYSCTLBYNAME
 #include <sys/sysctl.h>
 
-static int have_feature(const char *feature) {
+static số_nguyên have_feature(const char *feature) {
     uint32_t value = 0;
     size_t size = sizeof(value);
-    if (!sysctlbyname(feature, &value, &size, NULL, 0))
-        return value;
-    return 0;
+    nếu (!sysctlbyname(feature, &value, &size, NULL, 0))
+        trả_về value;
+    trả_về 0;
 }
 
-static int detect_flags(void)
+static số_nguyên detect_flags(void)
 {
-    int flags = 0;
+    số_nguyên flags = 0;
 
-    if (have_feature("hw.optional.arm.FEAT_DotProd"))
+    nếu (have_feature("hw.optional.arm.FEAT_DotProd"))
         flags |= AV_CPU_FLAG_DOTPROD;
-    if (have_feature("hw.optional.arm.FEAT_I8MM"))
+    nếu (have_feature("hw.optional.arm.FEAT_I8MM"))
         flags |= AV_CPU_FLAG_I8MM;
-    if (have_feature("hw.optional.arm.FEAT_SME"))
+    nếu (have_feature("hw.optional.arm.FEAT_SME"))
         flags |= AV_CPU_FLAG_SME;
-    if (have_feature("hw.optional.arm.FEAT_SME_I16I64"))
+    nếu (have_feature("hw.optional.arm.FEAT_SME_I16I64"))
         flags |= AV_CPU_FLAG_SME_I16I64;
-    if (have_feature("hw.optional.armv8_crc32"))
+    nếu (have_feature("hw.optional.armv8_crc32"))
         flags |= AV_CPU_FLAG_ARM_CRC;
-    if (have_feature("hw.optional.arm.FEAT_AES"))
+    nếu (have_feature("hw.optional.arm.FEAT_AES"))
         flags |= AV_CPU_FLAG_ARM_AES;
-    if (have_feature("hw.optional.arm.FEAT_PMULL"))
+    nếu (have_feature("hw.optional.arm.FEAT_PMULL"))
         flags |= AV_CPU_FLAG_PMULL;
-    if (have_feature("hw.optional.armv8_2_sha3"))
+    nếu (have_feature("hw.optional.armv8_2_sha3"))
         flags |= AV_CPU_FLAG_EOR3;
-    if (have_feature("hw.optional.arm.FEAT_SME2"))
+    nếu (have_feature("hw.optional.arm.FEAT_SME2"))
         flags |= AV_CPU_FLAG_SME2;
 
-    return flags;
+    trả_về flags;
 }
 
 #elif defined(__OpenBSD__)
@@ -112,12 +112,12 @@ static int detect_flags(void)
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-static int detect_flags(void)
+static số_nguyên detect_flags(void)
 {
-    int flags = 0;
+    số_nguyên flags = 0;
 
 #ifdef CPU_ID_AA64ISAR0
-    int mib[2];
+    số_nguyên mib[2];
     uint64_t isar0;
     uint64_t isar1;
     size_t len;
@@ -125,95 +125,95 @@ static int detect_flags(void)
     mib[0] = CTL_MACHDEP;
     mib[1] = CPU_ID_AA64ISAR0;
     len = sizeof(isar0);
-    if (sysctl(mib, 2, &isar0, &len, NULL, 0) != -1) {
-        if (ID_AA64ISAR0_DP(isar0) >= ID_AA64ISAR0_DP_IMPL)
+    nếu (sysctl(mib, 2, &isar0, &len, NULL, 0) != -1) {
+        nếu (ID_AA64ISAR0_DP(isar0) >= ID_AA64ISAR0_DP_IMPL)
             flags |= AV_CPU_FLAG_DOTPROD;
-        if (ID_AA64ISAR0_CRC32(isar0) >= ID_AA64ISAR0_CRC32_BASE)
+        nếu (ID_AA64ISAR0_CRC32(isar0) >= ID_AA64ISAR0_CRC32_BASE)
             flags |= AV_CPU_FLAG_ARM_CRC;
-        if (ID_AA64ISAR0_AES(isar0) >= ID_AA64ISAR0_AES_BASE)
+        nếu (ID_AA64ISAR0_AES(isar0) >= ID_AA64ISAR0_AES_BASE)
             flags |= AV_CPU_FLAG_ARM_AES;
-        if (ID_AA64ISAR0_AES(isar0) >= ID_AA64ISAR0_AES_PMULL)
+        nếu (ID_AA64ISAR0_AES(isar0) >= ID_AA64ISAR0_AES_PMULL)
             flags |= AV_CPU_FLAG_PMULL;
-        if (ID_AA64ISAR0_SHA3(isar0) >= ID_AA64ISAR0_SHA3_IMPL)
+        nếu (ID_AA64ISAR0_SHA3(isar0) >= ID_AA64ISAR0_SHA3_IMPL)
             flags |= AV_CPU_FLAG_EOR3;
     }
 
     mib[0] = CTL_MACHDEP;
     mib[1] = CPU_ID_AA64ISAR1;
     len = sizeof(isar1);
-    if (sysctl(mib, 2, &isar1, &len, NULL, 0) != -1) {
+    nếu (sysctl(mib, 2, &isar1, &len, NULL, 0) != -1) {
 #ifdef ID_AA64ISAR1_I8MM_IMPL
-        if (ID_AA64ISAR1_I8MM(isar1) >= ID_AA64ISAR1_I8MM_IMPL)
+        nếu (ID_AA64ISAR1_I8MM(isar1) >= ID_AA64ISAR1_I8MM_IMPL)
             flags |= AV_CPU_FLAG_I8MM;
 #endif
     }
 #endif
 
-    return flags;
+    trả_về flags;
 }
 
 #elif defined(_WIN32)
 #include <windows.h>
 
-static int detect_flags(void)
+static số_nguyên detect_flags(void)
 {
-    int flags = 0;
+    số_nguyên flags = 0;
 #ifdef PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE))
+    nếu (IsProcessorFeaturePresent(PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE))
         flags |= AV_CPU_FLAG_ARM_CRC;
 #endif
 #ifdef PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE)) {
+    nếu (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE)) {
         flags |= AV_CPU_FLAG_ARM_AES;
         flags |= AV_CPU_FLAG_PMULL;
     }
 #endif
 #ifdef PF_ARM_SHA3_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SHA3_INSTRUCTIONS_AVAILABLE))
+    nếu (IsProcessorFeaturePresent(PF_ARM_SHA3_INSTRUCTIONS_AVAILABLE))
         flags |= AV_CPU_FLAG_EOR3;
 #endif
 #ifdef PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE))
+    nếu (IsProcessorFeaturePresent(PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE))
         flags |= AV_CPU_FLAG_DOTPROD;
 #endif
 #ifdef PF_ARM_V82_I8MM_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V82_I8MM_INSTRUCTIONS_AVAILABLE))
+    nếu (IsProcessorFeaturePresent(PF_ARM_V82_I8MM_INSTRUCTIONS_AVAILABLE))
         flags |= AV_CPU_FLAG_I8MM;
 #endif
 #ifdef PF_ARM_SVE_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SVE_INSTRUCTIONS_AVAILABLE))
+    nếu (IsProcessorFeaturePresent(PF_ARM_SVE_INSTRUCTIONS_AVAILABLE))
         flags |= AV_CPU_FLAG_SVE;
 #endif
 #ifdef PF_ARM_SVE2_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SVE2_INSTRUCTIONS_AVAILABLE))
+    nếu (IsProcessorFeaturePresent(PF_ARM_SVE2_INSTRUCTIONS_AVAILABLE))
         flags |= AV_CPU_FLAG_SVE2;
 #endif
 #ifdef PF_ARM_SME_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SME_INSTRUCTIONS_AVAILABLE))
+    nếu (IsProcessorFeaturePresent(PF_ARM_SME_INSTRUCTIONS_AVAILABLE))
         flags |= AV_CPU_FLAG_SME;
 #endif
 #ifdef PF_ARM_SME_I16I64_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SME_I16I64_INSTRUCTIONS_AVAILABLE))
+    nếu (IsProcessorFeaturePresent(PF_ARM_SME_I16I64_INSTRUCTIONS_AVAILABLE))
         flags |= AV_CPU_FLAG_SME_I16I64;
 #endif
 #ifdef PF_ARM_SME2_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SME2_INSTRUCTIONS_AVAILABLE))
+    nếu (IsProcessorFeaturePresent(PF_ARM_SME2_INSTRUCTIONS_AVAILABLE))
         flags |= AV_CPU_FLAG_SME2;
 #endif
-    return flags;
+    trả_về flags;
 }
-#else
+#không_thì
 
-static int detect_flags(void)
+static số_nguyên detect_flags(void)
 {
-    return 0;
+    trả_về 0;
 }
 
 #endif
 
-int ff_get_cpu_flags_aarch64(void)
+số_nguyên ff_get_cpu_flags_aarch64(void)
 {
-    int flags = AV_CPU_FLAG_ARMV8 * HAVE_ARMV8 |
+    số_nguyên flags = AV_CPU_FLAG_ARMV8 * HAVE_ARMV8 |
                 AV_CPU_FLAG_NEON  * HAVE_NEON;
 
 #ifdef __ARM_FEATURE_DOTPROD
@@ -250,15 +250,15 @@ int ff_get_cpu_flags_aarch64(void)
 
     flags |= detect_flags();
 
-    return flags;
+    trả_về flags;
 }
 
 size_t ff_get_cpu_max_align_aarch64(void)
 {
-    int flags = av_get_cpu_flags();
+    số_nguyên flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_NEON)
-        return 16;
+    nếu (flags & AV_CPU_FLAG_NEON)
+        trả_về 16;
 
-    return 8;
+    trả_về 8;
 }

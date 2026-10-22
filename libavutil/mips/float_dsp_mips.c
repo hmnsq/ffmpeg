@@ -55,17 +55,17 @@
 #include "libavutil/float_dsp.h"
 #include "libavutil/mips/asmdefs.h"
 
-#if HAVE_INLINE_ASM && HAVE_MIPSFPU
-#if !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+#nếu HAVE_INLINE_ASM && HAVE_MIPSFPU
+#nếu !HAVE_MIPS32R6 && !HAVE_MIPS64R6
 static void vector_fmul_mips(float *dst, const float *src0, const float *src1,
-                             int len)
+                             số_nguyên len)
 {
-    int i;
+    số_nguyên i;
 
-    if (len & 3) {
-        for (i = 0; i < len; i++)
+    nếu (len & 3) {
+        cho (i = 0; i < len; i++)
             dst[i] = src0[i] * src1[i];
-    } else {
+    } không_thì {
         float *d     = (float *)dst;
         float *d_end = d + len;
         float *s0    = (float *)src0;
@@ -109,7 +109,7 @@ static void vector_fmul_mips(float *dst, const float *src0, const float *src1,
 }
 
 static void vector_fmul_scalar_mips(float *dst, const float *src, float mul,
-                                 int len)
+                                 số_nguyên len)
 {
     float temp0, temp1, temp2, temp3;
     float *local_src = (float*)src;
@@ -146,7 +146,7 @@ static void vector_fmul_scalar_mips(float *dst, const float *src, float mul,
 }
 
 static void vector_fmul_window_mips(float *dst, const float *src0,
-                                    const float *src1, const float *win, int len)
+                                    const float *src1, const float *win, số_nguyên len)
 {
     float * dst_j, *win_j, *src0_i, *src1_j, *dst_i, *win_i;
     float temp, temp1, temp2, temp3;
@@ -225,12 +225,12 @@ static void vector_fmul_window_mips(float *dst, const float *src0,
 }
 
 static void butterflies_float_mips(float *restrict v1, float *restrict v2,
-                                int len)
+                                số_nguyên len)
 {
     float temp0, temp1, temp2, temp3, temp4;
     float temp5, temp6, temp7, temp8, temp9;
     float temp10, temp11, temp12, temp13, temp14, temp15;
-    int pom;
+    số_nguyên pom;
     pom = (len >> 2)-1;
 
     /* loop unrolled 4 times */
@@ -302,12 +302,12 @@ static void butterflies_float_mips(float *restrict v1, float *restrict v2,
     );
 }
 
-static void vector_fmul_reverse_mips(float *dst, const float *src0, const float *src1, int len){
-    int i;
+static void vector_fmul_reverse_mips(float *dst, const float *src0, const float *src1, số_nguyên len){
+    số_nguyên i;
     float temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;
     src1 += len-1;
 
-    for(i=0; i<(len>>2); i++)
+    cho(i=0; i<(len>>2); i++)
     {
         /* loop unrolled 4 times */
         __asm__ volatile(
@@ -344,8 +344,8 @@ static void vector_fmul_reverse_mips(float *dst, const float *src0, const float 
 #endif /* HAVE_INLINE_ASM && HAVE_MIPSFPU */
 
 void ff_float_dsp_init_mips(AVFloatDSPContext *fdsp) {
-#if HAVE_INLINE_ASM && HAVE_MIPSFPU
-#if !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+#nếu HAVE_INLINE_ASM && HAVE_MIPSFPU
+#nếu !HAVE_MIPS32R6 && !HAVE_MIPS64R6
     fdsp->vector_fmul = vector_fmul_mips;
     fdsp->vector_fmul_scalar  = vector_fmul_scalar_mips;
     fdsp->vector_fmul_window = vector_fmul_window_mips;

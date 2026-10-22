@@ -20,7 +20,7 @@
 
 /* errno descriptions depend on the C library, so those are only looked up */
 static const struct {
-    int num;
+    số_nguyên num;
     const char *tag;
 } ffmpeg_codes[] = {
 #define ERROR_TAG(CODE, DESC)         { AVERROR_ ## CODE, #CODE },
@@ -28,20 +28,20 @@ static const struct {
     AVERROR_LIST(ERROR_TAG, ERROR_TAG2)
 };
 
-static const int errno_codes[] = {
+static const số_nguyên errno_codes[] = {
 #define ERRNO_CODE(CODE, DESC) AVERROR(CODE),
     STRERROR_LIST(ERRNO_CODE)
 };
 
-int main(void)
+số_nguyên main(void)
 {
     char buf[AV_ERROR_MAX_STRING_SIZE];
-    int ret = 0;
+    số_nguyên ret = 0;
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
-        int num = ffmpeg_codes[i].num;
+    cho (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
+        số_nguyên num = ffmpeg_codes[i].num;
 
-        if (av_strerror(num, buf, sizeof(buf)) < 0) {
+        nếu (av_strerror(num, buf, sizeof(buf)) < 0) {
             printf("%d: lookup failed [%s]\n", num, ffmpeg_codes[i].tag);
             ret = 1;
             continue;
@@ -49,12 +49,12 @@ int main(void)
         printf("%d: %s [%s]\n", num, buf, ffmpeg_codes[i].tag);
     }
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
-        if (av_strerror(errno_codes[i], buf, sizeof(buf)) < 0) {
+    cho (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
+        nếu (av_strerror(errno_codes[i], buf, sizeof(buf)) < 0) {
             printf("errno %d: lookup failed\n", AVUNERROR(errno_codes[i]));
             ret = 1;
         }
     }
 
-    return ret;
+    trả_về ret;
 }

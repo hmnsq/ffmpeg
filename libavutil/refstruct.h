@@ -94,7 +94,7 @@ static inline
 void *av_refstruct_alloc_ext(size_t size, unsigned flags, void *opaque,
                              void (*free_cb)(AVRefStructOpaque opaque, void *obj))
 {
-    return av_refstruct_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
+    trả_về av_refstruct_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
                                     free_cb);
 }
 
@@ -104,7 +104,7 @@ void *av_refstruct_alloc_ext(size_t size, unsigned flags, void *opaque,
 static inline
 void *av_refstruct_allocz(size_t size)
 {
-    return av_refstruct_alloc_ext(size, 0, NULL, NULL);
+    trả_về av_refstruct_alloc_ext(size, 0, NULL, NULL);
 }
 
 /**
@@ -153,7 +153,7 @@ void av_refstruct_replace(void *dstp, const void *src);
  * @param obj A pointer to an object managed via this API.
  * @return 1 if the reference count of obj is 1; 0 otherwise.
  */
-int av_refstruct_exclusive(const void *obj);
+số_nguyên av_refstruct_exclusive(const void *obj);
 
 /**
  * AVRefStructPool is an API for a thread-safe pool of objects managed
@@ -243,7 +243,7 @@ AVRefStructPool *av_refstruct_pool_alloc(size_t size, unsigned flags);
  */
 AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
                                                AVRefStructOpaque opaque,
-                                               int  (*init_cb)(AVRefStructOpaque opaque, void *obj),
+                                               số_nguyên  (*init_cb)(AVRefStructOpaque opaque, void *obj),
                                                void (*reset_cb)(AVRefStructOpaque opaque, void *obj),
                                                void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj),
                                                void (*free_cb)(AVRefStructOpaque opaque));
@@ -257,12 +257,12 @@ AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
 static inline
 AVRefStructPool *av_refstruct_pool_alloc_ext(size_t size, unsigned flags,
                                              void *opaque,
-                                             int  (*init_cb)(AVRefStructOpaque opaque, void *obj),
+                                             số_nguyên  (*init_cb)(AVRefStructOpaque opaque, void *obj),
                                              void (*reset_cb)(AVRefStructOpaque opaque, void *obj),
                                              void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj),
                                              void (*free_cb)(AVRefStructOpaque opaque))
 {
-    return av_refstruct_pool_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
+    trả_về av_refstruct_pool_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
                                          init_cb, reset_cb, free_entry_cb, free_cb);
 }
 

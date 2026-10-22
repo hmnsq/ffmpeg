@@ -34,7 +34,7 @@
 
 typedef struct Set {
     AVFrameSideData **sd;
-    int            nb_sd;
+    số_nguyên            nb_sd;
 } Set;
 
 /* Every entry below carries a payload laid out as AVFrameSideDataType
@@ -42,7 +42,7 @@ typedef struct Set {
  * reads the buffer back. The small number that identifies an entry in the
  * reference output therefore lives in the metadata dictionary, which
  * av_frame_side_data_clone() copies along with the buffer. */
-static void set_marker(AVFrameSideData *sd, int marker)
+static void set_marker(AVFrameSideData *sd, số_nguyên marker)
 {
     char value[16];
 
@@ -51,7 +51,7 @@ static void set_marker(AVFrameSideData *sd, int marker)
 }
 
 static AVFrameSideData *new_entry(Set *s, enum AVFrameSideDataType type,
-                                  const void *payload, size_t size, int marker)
+                                  const void *payload, size_t size, số_nguyên marker)
 {
     AVFrameSideData *sd = av_frame_side_data_new(&s->sd, &s->nb_sd, type,
                                                  size, 0);
@@ -59,7 +59,7 @@ static AVFrameSideData *new_entry(Set *s, enum AVFrameSideDataType type,
     av_assert0(sd && sd->size == size);
     memcpy(sd->data, payload, size);
     set_marker(sd, marker);
-    return sd;
+    trả_về sd;
 }
 
 static AVBufferRef *payload_buffer(const void *payload, size_t size)
@@ -68,20 +68,20 @@ static AVBufferRef *payload_buffer(const void *payload, size_t size)
 
     av_assert0(buf);
     memcpy(buf->data, payload, size);
-    return buf;
+    trả_về buf;
 }
 
 static const char *entry_marker(const AVFrameSideData *sd)
 {
     const AVDictionaryEntry *e = av_dict_get(sd->metadata, "marker", NULL, 0);
 
-    return e ? e->value : "none";
+    trả_về e ? e->value : "none";
 }
 
 static void print_set(const char *label, const Set *s)
 {
     printf("%s: n=%d\n", label, s->nb_sd);
-    for (int i = 0; i < s->nb_sd; i++)
+    cho (số_nguyên i = 0; i < s->nb_sd; i++)
         printf("  [%d] %s marker=%s\n", i,
                av_frame_side_data_name(s->sd[i]->type),
                entry_marker(s->sd[i]));
@@ -95,19 +95,19 @@ static void print_lookup(const char *label, const Set *s,
                          const enum AVFrameSideDataType *types, size_t nb_types)
 {
     printf("%s: n=%d\n", label, s->nb_sd);
-    for (size_t i = 0; i < nb_types; i++) {
+    cho (size_t i = 0; i < nb_types; i++) {
         const AVFrameSideData *sd =
             av_frame_side_data_get(s->sd, s->nb_sd, types[i]);
         const char *name = av_frame_side_data_name(types[i]);
 
-        if (sd)
+        nếu (sd)
             printf("    %s: marker=%s\n", name, entry_marker(sd));
-        else
+        không_thì
             printf("    %s: absent\n", name);
     }
 }
 
-int main(void)
+số_nguyên main(void)
 {
     /* desc / name accessors. */
     printf("Testing av_frame_side_data_desc() / av_frame_side_data_name()\n");
@@ -118,7 +118,7 @@ int main(void)
         AV_FRAME_DATA_DOWNMIX_INFO,                /* PROP_CHANNEL_DEPENDENT */
         AV_FRAME_DATA_SEI_UNREGISTERED,            /* PROP_MULTI */
     };
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(known); i++) {
+    cho (size_t i = 0; i < FF_ARRAY_ELEMS(known); i++) {
         const AVSideDataDescriptor *d = av_frame_side_data_desc(known[i]);
         const char *n = av_frame_side_data_name(known[i]);
         /* Compare content: the API only promises a string identifying the
@@ -233,8 +233,8 @@ int main(void)
     /* Clone: copy remaining entry into a second set. */
     printf("\nTesting av_frame_side_data_clone()\n");
     Set dst = { 0 };
-    if (set.nb_sd > 0) {
-        int ret = av_frame_side_data_clone(&dst.sd, &dst.nb_sd,
+    nếu (set.nb_sd > 0) {
+        số_nguyên ret = av_frame_side_data_clone(&dst.sd, &dst.nb_sd,
                                            set.sd[0], 0);
         printf("  clone into empty: ret=%d nb=%d marker=%s\n", ret, dst.nb_sd,
                dst.nb_sd ? entry_marker(dst.sd[0]) : "none");
@@ -266,7 +266,7 @@ int main(void)
                                    &buf, AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
         printf("  add (move): added=%s pbuf_nulled=%s\n",
                sd_added ? "yes" : "no", buf == NULL ? "yes" : "no");
-        if (sd_added)
+        nếu (sd_added)
             set_marker(sd_added, 999);
 
         /* NEW_REF: the caller retains its reference. */
@@ -276,8 +276,8 @@ int main(void)
                                           AV_FRAME_SIDE_DATA_FLAG_NEW_REF);
         printf("  add (NEW_REF): added=%s caller_ref_kept=%s nb_mvs=%d\n",
                sd_added ? "yes" : "no", keep ? "yes" : "no",
-               sd_added ? (int)(sd_added->size / sizeof(AVMotionVector)) : -1);
-        if (sd_added)
+               sd_added ? (số_nguyên)(sd_added->size / sizeof(AVMotionVector)) : -1);
+        nếu (sd_added)
             set_marker(sd_added, 42);
         av_buffer_unref(&keep);
 
@@ -288,7 +288,7 @@ int main(void)
         sd_added = av_frame_side_data_add(&dst.sd, &dst.nb_sd,
                                           AV_FRAME_DATA_DISPLAYMATRIX, &repl,
                                           AV_FRAME_SIDE_DATA_FLAG_REPLACE);
-        if (sd_added)
+        nếu (sd_added)
             set_marker(sd_added, 1234);
         {
             const AVFrameSideData *after =
@@ -307,9 +307,9 @@ int main(void)
     /* clone with UNIQUE: existing same-type entry is removed first. dst
      * already has a set.sd[0]->type entry from the REPLACE clone above. */
     printf("\nTesting av_frame_side_data_clone() UNIQUE\n");
-    if (set.nb_sd > 0) {
-        int before = dst.nb_sd;
-        int ret = av_frame_side_data_clone(&dst.sd, &dst.nb_sd, set.sd[0],
+    nếu (set.nb_sd > 0) {
+        số_nguyên before = dst.nb_sd;
+        số_nguyên ret = av_frame_side_data_clone(&dst.sd, &dst.nb_sd, set.sd[0],
                                            AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
         printf("  clone UNIQUE: ret=%d before=%d after=%d\n",
                ret, before, dst.nb_sd);
@@ -324,5 +324,5 @@ int main(void)
     av_free(stereo3d);
     av_free(spherical);
 
-    return 0;
+    trả_về 0;
 }

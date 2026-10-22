@@ -23,7 +23,7 @@
 #include "frame.h"
 
 AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
+                                                 số_nguyên *nb_sd,
                                                  enum AVFrameSideDataType type,
                                                  AVBufferRef *buf);
 

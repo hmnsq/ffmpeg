@@ -26,32 +26,32 @@
 #include "libavutil/mem.h"
 #include "libavutil/sha512.h"
 
-int main(void)
+số_nguyên main(void)
 {
-    int i, j, k;
+    số_nguyên i, j, k;
     struct AVSHA512 *ctx;
     unsigned char digest[64];
-    static const int lengths[4] = { 224, 256, 384, 512 };
+    static const số_nguyên lengths[4] = { 224, 256, 384, 512 };
 
     ctx = av_sha512_alloc();
-    if (!ctx)
-        return 1;
+    nếu (!ctx)
+        trả_về 1;
 
-    for (j = 0; j < 4; j++) {
-        if (j < 2) printf("Testing SHA-512/%d\n", lengths[j]);
-        else       printf("Testing SHA-%d\n", lengths[j]);
-        for (k = 0; k < 3; k++) {
+    cho (j = 0; j < 4; j++) {
+        nếu (j < 2) printf("Testing SHA-512/%d\n", lengths[j]);
+        không_thì       printf("Testing SHA-%d\n", lengths[j]);
+        cho (k = 0; k < 3; k++) {
             av_sha512_init(ctx, lengths[j]);
-            if (k == 0)
+            nếu (k == 0)
                 av_sha512_update(ctx, "abc", 3);
-            else if (k == 1)
+            không_thì nếu (k == 1)
                 av_sha512_update(ctx, "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmn"
                                        "hijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu", 112);
-            else
-                for (i = 0; i < 1000*1000; i++)
+            không_thì
+                cho (i = 0; i < 1000*1000; i++)
                     av_sha512_update(ctx, "a", 1);
             av_sha512_final(ctx, digest);
-            for (i = 0; i < lengths[j] >> 3; i++)
+            cho (i = 0; i < lengths[j] >> 3; i++)
                 printf("%02X", digest[i]);
             putchar('\n');
         }
@@ -86,5 +86,5 @@ int main(void)
     }
     av_free(ctx);
 
-    return 0;
+    trả_về 0;
 }

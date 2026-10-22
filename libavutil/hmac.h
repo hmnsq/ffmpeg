@@ -58,7 +58,7 @@ void av_hmac_free(AVHMAC *ctx);
  * @param key    The authentication key
  * @param keylen The length of the key, in bytes
  */
-void av_hmac_init(AVHMAC *ctx, const uint8_t *key, unsigned int keylen);
+void av_hmac_init(AVHMAC *ctx, const uint8_t *key, unsigned số_nguyên keylen);
 
 /**
  * Hash data with the HMAC.
@@ -66,7 +66,7 @@ void av_hmac_init(AVHMAC *ctx, const uint8_t *key, unsigned int keylen);
  * @param data The data to hash
  * @param len  The length of the data, in bytes
  */
-void av_hmac_update(AVHMAC *ctx, const uint8_t *data, unsigned int len);
+void av_hmac_update(AVHMAC *ctx, const uint8_t *data, unsigned số_nguyên len);
 
 /**
  * Finish hashing and output the HMAC digest.
@@ -75,7 +75,7 @@ void av_hmac_update(AVHMAC *ctx, const uint8_t *data, unsigned int len);
  * @param outlen The length of the out buffer, in bytes
  * @return       The number of bytes written to out, or a negative error code.
  */
-int av_hmac_final(AVHMAC *ctx, uint8_t *out, unsigned int outlen);
+số_nguyên av_hmac_final(AVHMAC *ctx, uint8_t *out, unsigned số_nguyên outlen);
 
 /**
  * Hash an array of data with a key.
@@ -88,9 +88,9 @@ int av_hmac_final(AVHMAC *ctx, uint8_t *out, unsigned int outlen);
  * @param outlen The length of the out buffer, in bytes
  * @return       The number of bytes written to out, or a negative error code.
  */
-int av_hmac_calc(AVHMAC *ctx, const uint8_t *data, unsigned int len,
-                 const uint8_t *key, unsigned int keylen,
-                 uint8_t *out, unsigned int outlen);
+số_nguyên av_hmac_calc(AVHMAC *ctx, const uint8_t *data, unsigned số_nguyên len,
+                 const uint8_t *key, unsigned số_nguyên keylen,
+                 uint8_t *out, unsigned số_nguyên outlen);
 
 /**
  * @}

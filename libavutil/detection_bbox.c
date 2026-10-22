@@ -31,22 +31,22 @@ AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_s
     AVDetectionBBoxHeader *header;
 
     size = bboxes_offset;
-    if (nb_bboxes > (SIZE_MAX - size) / bbox_size)
-        return NULL;
+    nếu (nb_bboxes > (SIZE_MAX - size) / bbox_size)
+        trả_về NULL;
     size += bbox_size * nb_bboxes;
 
     header = av_mallocz(size);
-    if (!header)
-        return NULL;
+    nếu (!header)
+        trả_về NULL;
 
     header->nb_bboxes     = nb_bboxes;
     header->bbox_size     = bbox_size;
     header->bboxes_offset = bboxes_offset;
 
-    if (out_size)
+    nếu (out_size)
         *out_size = size;
 
-    return header;
+    trả_về header;
 }
 
 AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes)
@@ -56,18 +56,18 @@ AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32
     size_t size;
 
     header = av_detection_bbox_alloc(nb_bboxes, &size);
-    if (!header)
-        return NULL;
+    nếu (!header)
+        trả_về NULL;
     buf = av_buffer_create((uint8_t *)header, size, NULL, NULL, 0);
-    if (!buf) {
+    nếu (!buf) {
         av_freep(&header);
-        return NULL;
+        trả_về NULL;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
+    nếu (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        trả_về NULL;
     }
 
-    return header;
+    trả_về header;
 }

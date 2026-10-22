@@ -27,20 +27,20 @@
 void ff_update_lls_sse2(LLSModel *m, const double *var);
 void ff_update_lls_avx(LLSModel *m, const double *var);
 void ff_update_lls_fma3(LLSModel *m, const double *var);
-double ff_evaluate_lls_sse2(LLSModel *m, const double *var, int order);
+double ff_evaluate_lls_sse2(LLSModel *m, const double *var, số_nguyên order);
 
 av_cold void ff_init_lls_x86(LLSModel *m)
 {
-    int cpu_flags = av_get_cpu_flags();
-    if (EXTERNAL_SSE2(cpu_flags)) {
+    số_nguyên cpu_flags = av_get_cpu_flags();
+    nếu (EXTERNAL_SSE2(cpu_flags)) {
         m->update_lls = ff_update_lls_sse2;
-        if (m->indep_count >= 4)
+        nếu (m->indep_count >= 4)
             m->evaluate_lls = ff_evaluate_lls_sse2;
     }
-    if (EXTERNAL_AVX_FAST(cpu_flags)) {
+    nếu (EXTERNAL_AVX_FAST(cpu_flags)) {
         m->update_lls = ff_update_lls_avx;
     }
-    if (EXTERNAL_FMA3_FAST(cpu_flags)) {
+    nếu (EXTERNAL_FMA3_FAST(cpu_flags)) {
         m->update_lls = ff_update_lls_fma3;
     }
 }

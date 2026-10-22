@@ -22,15 +22,15 @@
 #include "libavutil/frame.c"
 #include "libavutil/internal.h"
 
-static void print_entries(const AVFrameSideData **sd, const int nb_sd)
+static void print_entries(const AVFrameSideData **sd, const số_nguyên nb_sd)
 {
-    for (int i = 0; i < nb_sd; i++) {
+    cho (số_nguyên i = 0; i < nb_sd; i++) {
         const AVFrameSideData *entry = sd[i];
 
         printf("sd %d (size %zu), %s",
                i, entry->size, av_frame_side_data_name(entry->type));
 
-        if (entry->type != AV_FRAME_DATA_SEI_UNREGISTERED) {
+        nếu (entry->type != AV_FRAME_DATA_SEI_UNREGISTERED) {
             putchar('\n');
             continue;
         }
@@ -41,10 +41,10 @@ static void print_entries(const AVFrameSideData **sd, const int nb_sd)
 
 typedef struct FrameSideDataSet {
     AVFrameSideData **sd;
-    int            nb_sd;
+    số_nguyên            nb_sd;
 } FrameSideDataSet;
 
-int main(void)
+số_nguyên main(void)
 {
     FrameSideDataSet set = { 0 };
 
@@ -58,7 +58,7 @@ int main(void)
                                sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
 
     // test entries in the middle
-    for (int value = 1; value < 4; value++) {
+    cho (số_nguyên value = 1; value < 4; value++) {
         AVFrameSideData *sd = av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
             sizeof(int32_t), 0);
@@ -79,7 +79,7 @@ int main(void)
             sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
 
     // test entries at the end
-    for (int value = 1; value < 4; value++) {
+    cho (số_nguyên value = 1; value < 4; value++) {
         AVFrameSideData *sd = av_frame_side_data_new(
             &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
             sizeof(int32_t), 0);
@@ -107,5 +107,5 @@ int main(void)
 
     av_frame_side_data_free(&set.sd, &set.nb_sd);
 
-    return 0;
+    trả_về 0;
 }

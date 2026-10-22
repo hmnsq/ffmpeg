@@ -31,7 +31,7 @@
  * @{
  */
 
-extern const int av_aes_size;
+extern const số_nguyên av_aes_size;
 
 struct AVAES;
 
@@ -48,7 +48,7 @@ struct AVAES *av_aes_alloc(void);
  * @param key_bits 128, 192 or 256
  * @param decrypt 0 for encryption, 1 for decryption
  */
-int av_aes_init(struct AVAES *a, const uint8_t *key, int key_bits, int decrypt);
+số_nguyên av_aes_init(struct AVAES *a, const uint8_t *key, số_nguyên key_bits, số_nguyên decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -60,7 +60,7 @@ int av_aes_init(struct AVAES *a, const uint8_t *key, int key_bits, int decrypt);
  * @param iv initialization vector for CBC mode, if NULL then ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_aes_crypt(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+void av_aes_crypt(struct AVAES *a, uint8_t *dst, const uint8_t *src, số_nguyên count, uint8_t *iv, số_nguyên decrypt);
 
 /**
  * @}

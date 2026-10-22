@@ -23,10 +23,10 @@
 #include <stdarg.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#if HAVE_UNISTD_H
+#nếu HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#if HAVE_IO_H
+#nếu HAVE_IO_H
 #include <io.h>
 #endif
 
@@ -40,39 +40,39 @@
 #include <errno.h>
 #include "wchar_filename.h"
 
-static int win32_open(const char *filename_utf8, int oflag, int pmode)
+static số_nguyên win32_open(const char *filename_utf8, số_nguyên oflag, số_nguyên pmode)
 {
-    int fd;
+    số_nguyên fd;
     wchar_t *filename_w;
 
     /* convert UTF-8 to wide chars */
-    if (get_extended_win32_path(filename_utf8, &filename_w))
-        return -1;
-    if (!filename_w)
+    nếu (get_extended_win32_path(filename_utf8, &filename_w))
+        trả_về -1;
+    nếu (!filename_w)
         goto fallback;
 
     fd = _wsopen(filename_w, oflag, SH_DENYNO, pmode);
     av_freep(&filename_w);
 
-    if (fd != -1 || (oflag & O_CREAT))
-        return fd;
+    nếu (fd != -1 || (oflag & O_CREAT))
+        trả_về fd;
 
 fallback:
     /* filename may be in CP_ACP */
-    return _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
+    trả_về _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
 }
 #define open win32_open
 #endif
 
-int avpriv_open(const char *filename, int flags, ...)
+số_nguyên avpriv_open(const char *filename, số_nguyên flags, ...)
 {
-    int fd;
-    unsigned int mode = 0;
+    số_nguyên fd;
+    unsigned số_nguyên mode = 0;
     va_list ap;
 
     va_start(ap, flags);
-    if (flags & O_CREAT)
-        mode = va_arg(ap, unsigned int);
+    nếu (flags & O_CREAT)
+        mode = va_arg(ap, unsigned số_nguyên);
     va_end(ap);
 
 #ifdef O_CLOEXEC
@@ -83,19 +83,19 @@ int avpriv_open(const char *filename, int flags, ...)
 #endif
 
     fd = open(filename, flags, mode);
-#if HAVE_FCNTL
-    if (fd != -1) {
-        if (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
+#nếu HAVE_FCNTL
+    nếu (fd != -1) {
+        nếu (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
             av_log(NULL, AV_LOG_DEBUG, "Failed to set close on exec\n");
     }
 #endif
 
-    return fd;
+    trả_về fd;
 }
 
 typedef struct FileLogContext {
     const AVClass *class;
-    int   log_offset;
+    số_nguyên   log_offset;
     void *log_ctx;
 } FileLogContext;
 
@@ -108,28 +108,28 @@ static const AVClass file_log_ctx_class = {
     .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
 };
 
-int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *log_ctx)
+số_nguyên avpriv_tempfile(const char *prefix, char **filename, số_nguyên log_offset, void *log_ctx)
 {
     FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int fd = -1;
-#if HAVE_MKSTEMP
+    số_nguyên fd = -1;
+#nếu HAVE_MKSTEMP
     size_t len = strlen(prefix) + 12; /* room for "/tmp/" and "XXXXXX\0" */
     *filename  = av_malloc(len);
 #elif HAVE_TEMPNAM
     void *ptr= tempnam(NULL, prefix);
-    if(!ptr)
+    nếu(!ptr)
         ptr= tempnam(".", prefix);
     *filename = av_strdup(ptr);
     free(ptr);
-#else
-    return AVERROR(ENOSYS);
+#không_thì
+    trả_về AVERROR(ENOSYS);
 #endif
     /* -----common section-----*/
-    if (!*filename) {
+    nếu (!*filename) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot allocate file name\n");
-        return AVERROR(ENOMEM);
+        trả_về AVERROR(ENOMEM);
     }
-#if !HAVE_MKSTEMP
+#nếu !HAVE_MKSTEMP
 #   ifndef O_BINARY
 #       define O_BINARY 0
 #   endif
@@ -137,30 +137,30 @@ int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *l
 #       define O_EXCL 0
 #   endif
     fd = open(*filename, O_RDWR | O_BINARY | O_CREAT | O_EXCL, 0600);
-#else
+#không_thì
     snprintf(*filename, len, "/tmp/%sXXXXXX", prefix);
     fd = mkstemp(*filename);
-#if defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
-    if (fd < 0) {
+#nếu defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
+    nếu (fd < 0) {
         snprintf(*filename, len, "./%sXXXXXX", prefix);
         fd = mkstemp(*filename);
     }
 #endif
 #endif
     /* -----common section-----*/
-    if (fd < 0) {
-        int err = AVERROR(errno);
+    nếu (fd < 0) {
+        số_nguyên err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot open temporary file %s\n", *filename);
         av_freep(filename);
-        return err;
+        trả_về err;
     }
-    return fd; /* success */
+    trả_về fd; /* success */
 }
 
 FILE *avpriv_fopen_utf8(const char *path, const char *mode)
 {
-    int fd;
-    int access;
+    số_nguyên fd;
+    số_nguyên access;
     const char *m = mode;
 
     switch (*m++) {
@@ -169,24 +169,24 @@ FILE *avpriv_fopen_utf8(const char *path, const char *mode)
     case 'a': access = O_CREAT|O_WRONLY|O_APPEND; break;
     default :
         errno = EINVAL;
-        return NULL;
+        trả_về NULL;
     }
-    while (*m) {
-        if (*m == '+') {
+    trong_khi (*m) {
+        nếu (*m == '+') {
             access &= ~(O_RDONLY | O_WRONLY);
             access |= O_RDWR;
-        } else if (*m == 'b') {
+        } không_thì nếu (*m == 'b') {
 #ifdef O_BINARY
             access |= O_BINARY;
 #endif
-        } else if (*m) {
+        } không_thì nếu (*m) {
             errno = EINVAL;
-            return NULL;
+            trả_về NULL;
         }
         m++;
     }
     fd = avpriv_open(path, access, 0666);
-    if (fd == -1)
-        return NULL;
-    return fdopen(fd, mode);
+    nếu (fd == -1)
+        trả_về NULL;
+    trả_về fdopen(fd, mode);
 }

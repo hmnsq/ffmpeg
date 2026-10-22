@@ -25,78 +25,78 @@
 #include "libavutil/log.h"
 #include "libavutil/mem.h"
 
-static int check(AVTreeNode *t)
+static số_nguyên check(AVTreeNode *t)
 {
-    if (t) {
-        int left  = check(t->child[0]);
-        int right = check(t->child[1]);
+    nếu (t) {
+        số_nguyên left  = check(t->child[0]);
+        số_nguyên right = check(t->child[1]);
 
-        if (left > 999 || right > 999)
-            return 1000;
-        if (right - left != t->state)
-            return 1000;
-        if (t->state > 1 || t->state < -1)
-            return 1000;
-        return FFMAX(left, right) + 1;
+        nếu (left > 999 || right > 999)
+            trả_về 1000;
+        nếu (right - left != t->state)
+            trả_về 1000;
+        nếu (t->state > 1 || t->state < -1)
+            trả_về 1000;
+        trả_về FFMAX(left, right) + 1;
     }
-    return 0;
+    trả_về 0;
 }
 
-static void print(AVTreeNode *t, int depth)
+static void print(AVTreeNode *t, số_nguyên depth)
 {
-    int i;
-    for (i = 0; i < depth * 4; i++)
+    số_nguyên i;
+    cho (i = 0; i < depth * 4; i++)
         av_log(NULL, AV_LOG_ERROR, " ");
-    if (t) {
+    nếu (t) {
         av_log(NULL, AV_LOG_ERROR, "Node %p %2d %p\n", t, t->state, t->elem);
         print(t->child[0], depth + 1);
         print(t->child[1], depth + 1);
-    } else
+    } không_thì
         av_log(NULL, AV_LOG_ERROR, "NULL\n");
 }
 
-static int cmp(const void *a, const void *b)
+static số_nguyên cmp(const void *a, const void *b)
 {
-    return (const uint8_t *) a - (const uint8_t *) b;
+    trả_về (const uint8_t *) a - (const uint8_t *) b;
 }
 
-int main(int argc, char **argv)
+số_nguyên main(số_nguyên argc, char **argv)
 {
-    int i;
+    số_nguyên i;
     void *k;
     AVTreeNode *root = NULL, *node = NULL;
     AVLFG prng;
-    int log_level = argc <= 1 ? AV_LOG_INFO : atoi(argv[1]);
+    số_nguyên log_level = argc <= 1 ? AV_LOG_INFO : atoi(argv[1]);
 
     av_log_set_level(log_level);
 
     av_lfg_init(&prng, 1);
 
-    for (i = 0; i < 10000; i++) {
+    cho (i = 0; i < 10000; i++) {
         intptr_t j = av_lfg_get(&prng) % 86294;
 
-        if (check(root) > 999) {
+        nếu (check(root) > 999) {
             av_log(NULL, AV_LOG_ERROR, "FATAL error %d\n", i);
             print(root, 0);
-            return 1;
+            trả_về 1;
         }
-        av_log(NULL, AV_LOG_DEBUG, "inserting %4d\n", (int)j);
+        av_log(NULL, AV_LOG_DEBUG, "inserting %4d\n", (số_nguyên)j);
 
-        if (!node)
+        nếu (!node)
             node = av_tree_node_alloc();
-        if (!node) {
+        nếu (!node) {
             av_log(NULL, AV_LOG_ERROR, "Memory allocation failure.\n");
-            return 1;
+            trả_về 1;
         }
         av_tree_insert(&root, (void *)(j + 1), cmp, &node);
 
         j = av_lfg_get(&prng) % 86294;
         {
             AVTreeNode *node2 = NULL;
-            av_log(NULL, AV_LOG_DEBUG, "removing %4d\n", (int)j);
+            av_log(NULL, AV_LOG_DEBUG, "removing %4d\n", (số_nguyên)j);
             av_tree_insert(&root, (void *)(j + 1), cmp, &node2);
             k = av_tree_find(root, (void *)(j + 1), cmp, NULL);
-            if (k)
+            nếu (k)
                 av_log(NULL, AV_LOG_ERROR, "removal failure %d\n", i);
             av_free(node2);
         }
@@ -105,5 +105,5 @@ int main(int argc, char **argv)
 
     av_tree_destroy(root);
 
-    return 0;
+    trả_về 0;
 }

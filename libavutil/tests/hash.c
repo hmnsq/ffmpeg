@@ -26,19 +26,19 @@
 #define SRC_BUF_SIZE 64
 #define DST_BUF_SIZE (AV_HASH_MAX_SIZE * 8)
 
-int main(void)
+số_nguyên main(void)
 {
    struct AVHashContext *ctx = NULL;
-   int i, j, numhashes = 0;
+   số_nguyên i, j, numhashes = 0;
    static const uint8_t src[SRC_BUF_SIZE] = { 0 };
    uint8_t dst[DST_BUF_SIZE];
 
-   while (av_hash_names(numhashes))
+   trong_khi (av_hash_names(numhashes))
        numhashes++;
 
-   for (i = 0; i < numhashes; i++) {
-       if (av_hash_alloc(&ctx, av_hash_names(i)) < 0)
-           return 1;
+   cho (i = 0; i < numhashes; i++) {
+       nếu (av_hash_alloc(&ctx, av_hash_names(i)) < 0)
+           trả_về 1;
 
        av_hash_init(ctx);
        av_hash_update(ctx, src, SRC_BUF_SIZE);
@@ -50,7 +50,7 @@ int main(void)
        av_hash_update(ctx, src, SRC_BUF_SIZE);
        av_hash_final_bin(ctx, dst, DST_BUF_SIZE);
        printf("%s bin:", av_hash_get_name(ctx));
-       for (j = 0; j < av_hash_get_size(ctx); j++) {
+       cho (j = 0; j < av_hash_get_size(ctx); j++) {
            printf(" %#x", dst[j]);
        }
        printf("\n");
@@ -61,5 +61,5 @@ int main(void)
        printf("%s b64: %s\n", av_hash_get_name(ctx), dst);
        av_hash_freep(&ctx);
    }
-   return 0;
+   trả_về 0;
 }

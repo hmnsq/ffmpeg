@@ -50,7 +50,7 @@
  * @{
  */
 
-extern const int av_sha512_size;
+extern const số_nguyên av_sha512_size;
 
 struct AVSHA512;
 
@@ -66,7 +66,7 @@ struct AVSHA512 *av_sha512_alloc(void);
  * @param bits    number of bits in digest (224, 256, 384 or 512 bits)
  * @return        zero if initialization succeeded, -1 otherwise
  */
-int av_sha512_init(struct AVSHA512* context, int bits);
+số_nguyên av_sha512_init(struct AVSHA512* context, số_nguyên bits);
 
 /**
  * Update hash value.
