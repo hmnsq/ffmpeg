@@ -16,94 +16,94 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/tree.c"
+#अन्तर्भाव "libavutil/tree.c"
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
-#include "libavutil/common.h"
-#include "libavutil/lfg.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
+#अन्तर्भाव "libavutil/common.h"
+#अन्तर्भाव "libavutil/lfg.h"
+#अन्तर्भाव "libavutil/log.h"
+#अन्तर्भाव "libavutil/mem.h"
 
-static int check(AVTreeNode *t)
+स्थिर पूर्णाङ्क check(AVTree_ग्रन्थिः *t)
 {
-    if (t) {
-        int left  = check(t->child[0]);
-        int right = check(t->child[1]);
+    यदि (t) {
+        पूर्णाङ्क वामः  = check(t->child[0]);
+        पूर्णाङ्क दक्षिणः = check(t->child[1]);
 
-        if (left > 999 || right > 999)
-            return 1000;
-        if (right - left != t->state)
-            return 1000;
-        if (t->state > 1 || t->state < -1)
-            return 1000;
-        return FFMAX(left, right) + 1;
+        यदि (वामः > 999 || दक्षिणः > 999)
+            प्रत्यागम 1000;
+        यदि (दक्षिणः - वामः != t->state)
+            प्रत्यागम 1000;
+        यदि (t->state > 1 || t->state < -1)
+            प्रत्यागम 1000;
+        प्रत्यागम FFMAX(वामः, दक्षिणः) + 1;
     }
-    return 0;
+    प्रत्यागम 0;
 }
 
-static void print(AVTreeNode *t, int depth)
+स्थिर शून्य print(AVTree_ग्रन्थिः *t, पूर्णाङ्क गभीरता)
 {
-    int i;
-    for (i = 0; i < depth * 4; i++)
-        av_log(NULL, AV_LOG_ERROR, " ");
-    if (t) {
-        av_log(NULL, AV_LOG_ERROR, "Node %p %2d %p\n", t, t->state, t->elem);
-        print(t->child[0], depth + 1);
-        print(t->child[1], depth + 1);
-    } else
-        av_log(NULL, AV_LOG_ERROR, "NULL\n");
+    पूर्णाङ्क i;
+    प्रति (i = 0; i < गभीरता * 4; i++)
+        av_log(रिक्त, AV_LOG_ERROR, " ");
+    यदि (t) {
+        av_log(रिक्त, AV_LOG_ERROR, "Node %p %2d %p\n", t, t->state, t->elem);
+        print(t->child[0], गभीरता + 1);
+        print(t->child[1], गभीरता + 1);
+    } अन्यथा
+        av_log(रिक्त, AV_LOG_ERROR, "NULL\n");
 }
 
-static int cmp(const void *a, const void *b)
+स्थिर पूर्णाङ्क cmp(ध्रुव शून्य *a, ध्रुव शून्य *b)
 {
-    return (const uint8_t *) a - (const uint8_t *) b;
+    प्रत्यागम (ध्रुव uint8_t *) a - (ध्रुव uint8_t *) b;
 }
 
-int main(int argc, char **argv)
+पूर्णाङ्क मुख्यम्(पूर्णाङ्क argc, वर्ण **argv)
 {
-    int i;
-    void *k;
-    AVTreeNode *root = NULL, *node = NULL;
+    पूर्णाङ्क i;
+    शून्य *k;
+    AVTree_ग्रन्थिः *मूलम् = रिक्त, *ग्रन्थिः = रिक्त;
     AVLFG prng;
-    int log_level = argc <= 1 ? AV_LOG_INFO : atoi(argv[1]);
+    पूर्णाङ्क log_level = argc <= 1 ? AV_LOG_INFO : atoi(argv[1]);
 
-    av_log_set_level(log_level);
+    av_log_समुच्चयः_level(log_level);
 
     av_lfg_init(&prng, 1);
 
-    for (i = 0; i < 10000; i++) {
+    प्रति (i = 0; i < 10000; i++) {
         intptr_t j = av_lfg_get(&prng) % 86294;
 
-        if (check(root) > 999) {
-            av_log(NULL, AV_LOG_ERROR, "FATAL error %d\n", i);
-            print(root, 0);
-            return 1;
+        यदि (check(मूलम्) > 999) {
+            av_log(रिक्त, AV_LOG_ERROR, "FATAL error %d\n", i);
+            print(मूलम्, 0);
+            प्रत्यागम 1;
         }
-        av_log(NULL, AV_LOG_DEBUG, "inserting %4d\n", (int)j);
+        av_log(रिक्त, AV_LOG_DEBUG, "inserting %4d\n", (पूर्णाङ्क)j);
 
-        if (!node)
-            node = av_tree_node_alloc();
-        if (!node) {
-            av_log(NULL, AV_LOG_ERROR, "Memory allocation failure.\n");
-            return 1;
+        यदि (!ग्रन्थिः)
+            ग्रन्थिः = av_वृक्षः_ग्रन्थिः_alloc();
+        यदि (!ग्रन्थिः) {
+            av_log(रिक्त, AV_LOG_ERROR, "Memory allocation failure.\n");
+            प्रत्यागम 1;
         }
-        av_tree_insert(&root, (void *)(j + 1), cmp, &node);
+        av_वृक्षः_निवेशय(&मूलम्, (शून्य *)(j + 1), cmp, &ग्रन्थिः);
 
         j = av_lfg_get(&prng) % 86294;
         {
-            AVTreeNode *node2 = NULL;
-            av_log(NULL, AV_LOG_DEBUG, "removing %4d\n", (int)j);
-            av_tree_insert(&root, (void *)(j + 1), cmp, &node2);
-            k = av_tree_find(root, (void *)(j + 1), cmp, NULL);
-            if (k)
-                av_log(NULL, AV_LOG_ERROR, "removal failure %d\n", i);
+            AVTree_ग्रन्थिः *node2 = रिक्त;
+            av_log(रिक्त, AV_LOG_DEBUG, "removing %4d\n", (पूर्णाङ्क)j);
+            av_वृक्षः_निवेशय(&मूलम्, (शून्य *)(j + 1), cmp, &node2);
+            k = av_वृक्षः_find(मूलम्, (शून्य *)(j + 1), cmp, रिक्त);
+            यदि (k)
+                av_log(रिक्त, AV_LOG_ERROR, "removal failure %d\n", i);
             av_free(node2);
         }
     }
-    av_free(node);
+    av_free(ग्रन्थिः);
 
-    av_tree_destroy(root);
+    av_वृक्षः_destroy(मूलम्);
 
-    return 0;
+    प्रत्यागम 0;
 }

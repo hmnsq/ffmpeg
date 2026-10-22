@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MOTION_VECTOR_H
-#define AVUTIL_MOTION_VECTOR_H
+#यदि_अपरिभाषितम् AVUTIL_MOTION_सदिशम्_H
+#परिभाषय AVUTIL_MOTION_सदिशम्_H
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
-typedef struct AVMotionVector {
+प्रकारनिर्देश संरचना AVMotion_सदिशम् {
     /**
      * Where the current macroblock comes from; negative value when it comes
      * from the past, positive value when it comes from the future.
@@ -52,6 +52,6 @@ typedef struct AVMotionVector {
      */
     int32_t motion_x, motion_y;
     uint16_t motion_scale;
-} AVMotionVector;
+} AVMotion_सदिशम्;
 
-#endif /* AVUTIL_MOTION_VECTOR_H */
+#यदि_अन्तः /* AVUTIL_MOTION_VECTOR_H */

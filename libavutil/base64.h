@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BASE64_H
-#define AVUTIL_BASE64_H
+#यदि_अपरिभाषितम् AVUTIL_BASE64_H
+#परिभाषय AVUTIL_BASE64_H
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
 /**
  * @defgroup lavu_base64 Base64
@@ -39,13 +39,13 @@
  * @return         number of bytes written, or a negative value in case of
  *                 invalid input
  */
-int av_base64_decode(uint8_t *out, const char *in, int out_size);
+पूर्णाङ्क av_base64_decode(uint8_t *बहिर्गमनम्, ध्रुव वर्ण *अन्तर्, पूर्णाङ्क बहिर्गमनम्_आकार);
 
 /**
  * Calculate the output size in bytes needed to decode a base64 string
  * with length x to a data buffer.
  */
-#define AV_BASE64_DECODE_SIZE(x) ((x) * 3LL / 4)
+#परिभाषय AV_BASE64_DECODE_आकार(x) ((x) * 3LL / 4)
 
 /**
  * Encode data to base64 and null-terminate.
@@ -57,16 +57,16 @@ int av_base64_decode(uint8_t *out, const char *in, int out_size);
  * @param in_size  size in bytes of the in buffer
  * @return         out or NULL in case of error
  */
-char *av_base64_encode(char *out, int out_size, const uint8_t *in, int in_size);
+वर्ण *av_base64_encode(वर्ण *बहिर्गमनम्, पूर्णाङ्क बहिर्गमनम्_आकार, ध्रुव uint8_t *अन्तर्, पूर्णाङ्क अन्तर्_आकार);
 
 /**
  * Calculate the output size needed to base64-encode x bytes to a
  * null-terminated string.
  */
-#define AV_BASE64_SIZE(x)  (((x)+2) / 3 * 4 + 1)
+#परिभाषय AV_BASE64_आकार(x)  (((x)+2) / 3 * 4 + 1)
 
  /**
   * @}
   */
 
-#endif /* AVUTIL_BASE64_H */
+#यदि_अन्तः /* AVUTIL_BASE64_H */

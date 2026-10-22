@@ -18,30 +18,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "raw_color_params.h"
-#include "mem.h"
+#अन्तर्भाव "raw_color_params.h"
+#अन्तर्भाव "mem.h"
 
-AVRawColorParams *av_raw_color_params_alloc(size_t *size)
+AVRawColorParams *av_raw_color_params_alloc(size_t *आकार)
 {
-    AVRawColorParams *p = av_mallocz(sizeof(AVRawColorParams));
-    if (!p)
-        return NULL;
+    AVRawColorParams *p = av_mallocz(परिमाण(AVRawColorParams));
+    यदि (!p)
+        प्रत्यागम रिक्त;
 
-    if (size)
-        *size = sizeof(*p);
+    यदि (आकार)
+        *आकार = परिमाण(*p);
 
-    return p;
+    प्रत्यागम p;
 }
 
-AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame)
+AVRawColorParams *av_raw_color_params_create_side_दत्त(AVFrame *frame)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame, AV_FRAME_DATA_RAW_COLOR_PARAMS,
-                               sizeof(AVRawColorParams));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_दत्त *side_दत्त =
+        av_frame_new_side_दत्त(frame, AV_FRAME_दत्त_RAW_COLOR_PARAMS,
+                               परिमाण(AVRawColorParams));
+    यदि (!side_दत्त)
+        प्रत्यागम रिक्त;
 
-    memset(side_data->data, 0, side_data->size);
+    स्मृतिं_पूरय(side_दत्त->दत्त, 0, side_दत्त->आकार);
 
-    return (AVRawColorParams *)side_data->data;
+    प्रत्यागम (AVRawColorParams *)side_दत्त->दत्त;
 }

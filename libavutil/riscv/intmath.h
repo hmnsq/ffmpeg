@@ -18,249 +18,249 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_INTMATH_H
-#define AVUTIL_RISCV_INTMATH_H
+#यदि_अपरिभाषितम् AVUTIL_RISCV_INTMATH_H
+#परिभाषय AVUTIL_RISCV_INTMATH_H
 
-#include <stdint.h>
-#include <math.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <math.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/riscv/cpu.h"
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "libavutil/attributes.h"
+#अन्तर्भाव "libavutil/riscv/cpu.h"
 
 /*
  * The compiler is forced to sign-extend the result anyhow, so it is faster to
  * compute it explicitly and use it.
  */
-#define av_clip_int8 av_clip_int8_rvi
-static av_always_inline av_const int8_t av_clip_int8_rvi(int a)
+#परिभाषय av_clip_int8 av_clip_int8_rvi
+स्थिर av_always_inline av_const int8_t av_clip_int8_rvi(पूर्णाङ्क a)
 {
-    union { uint8_t u; int8_t s; } u = { .u = a };
+    सङ्घ { uint8_t u; int8_t s; } u = { .u = a };
 
-    if (a != u.s)
+    यदि (a != u.s)
         a = ((a >> 31) ^ 0x7F);
-    return a;
+    प्रत्यागम a;
 }
 
-#define av_clip_int16 av_clip_int16_rvi
-static av_always_inline av_const int16_t av_clip_int16_rvi(int a)
+#परिभाषय av_clip_int16 av_clip_int16_rvi
+स्थिर av_always_inline av_const int16_t av_clip_int16_rvi(पूर्णाङ्क a)
 {
-    union { uint16_t u; int16_t s; } u = { .u = a };
+    सङ्घ { uint16_t u; int16_t s; } u = { .u = a };
 
-    if (a != u.s)
+    यदि (a != u.s)
         a = ((a >> 31) ^ 0x7FFF);
-    return a;
+    प्रत्यागम a;
 }
 
-#define av_clipl_int32 av_clipl_int32_rvi
-static av_always_inline av_const int32_t av_clipl_int32_rvi(int64_t a)
+#परिभाषय av_clipl_int32 av_clipl_int32_rvi
+स्थिर av_always_inline av_const int32_t av_clipl_int32_rvi(int64_t a)
 {
-    union { uint32_t u; int32_t s; } u = { .u = a };
+    सङ्घ { uint32_t u; int32_t s; } u = { .u = a };
 
-    if (a != u.s)
+    यदि (a != u.s)
         a = ((a >> 63) ^ 0x7FFFFFFF);
-    return a;
+    प्रत्यागम a;
 }
 
-#define av_clip_intp2 av_clip_intp2_rvi
-static av_always_inline av_const int av_clip_intp2_rvi(int a, int p)
+#परिभाषय av_clip_intp2 av_clip_intp2_rvi
+स्थिर av_always_inline av_const पूर्णाङ्क av_clip_intp2_rvi(पूर्णाङ्क a, पूर्णाङ्क p)
 {
-    const int shift = 31 - p;
-    int b = ((int)(((unsigned)a) << shift)) >> shift;
+    ध्रुव पूर्णाङ्क सरणम् = 31 - p;
+    पूर्णाङ्क b = ((पूर्णाङ्क)(((अचिह्नित)a) << सरणम्)) >> सरणम्;
 
-    if (a != b)
+    यदि (a != b)
         b = (a >> 31) ^ ((1 << p) - 1);
-    return b;
+    प्रत्यागम b;
 }
 
-#if defined (__riscv_f) || defined (__riscv_zfinx)
-#define av_clipf av_clipf_rvf
-static av_always_inline av_const float av_clipf_rvf(float a, float min,
-                                                    float max)
+#यदि defined (__riscv_f) || defined (__riscv_zfinx)
+#परिभाषय av_clipf av_clipf_rvf
+स्थिर av_always_inline av_const भिन्न av_clipf_rvf(भिन्न a, भिन्न min,
+                                                    भिन्न max)
 {
-    return fminf(fmaxf(a, min), max);
+    प्रत्यागम fminf(fmaxf(a, min), max);
 }
-#endif
+#यदि_अन्तः
 
-#if defined (__riscv_d) || defined (__riscv_zdinx)
-#define av_clipd av_clipd_rvd
-static av_always_inline av_const double av_clipd_rvd(double a, double min,
-                                                     double max)
+#यदि defined (__riscv_d) || defined (__riscv_zdinx)
+#परिभाषय av_clipd av_clipd_rvd
+स्थिर av_always_inline av_const द्विगुण av_clipd_rvd(द्विगुण a, द्विगुण min,
+                                                     द्विगुण max)
 {
-    return fmin(fmax(a, min), max);
+    प्रत्यागम fmin(fmax(a, min), max);
 }
-#endif
+#यदि_अन्तः
 
-#if defined (__GNUC__) || defined (__clang__)
-static inline av_const int ff_ctz_rv(int x)
+#यदि defined (__GNUC__) || defined (__clang__)
+स्थिर अन्तःस्थ av_const पूर्णाङ्क ff_ctz_rv(पूर्णाङ्क x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#यदि HAVE_RV && !defined(__riscv_zbb)
+    यदि (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णाङ्क y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#यदि __riscv_xlen >= 64
             "ctzw    %0, %1\n"
-#else
+#अन्यथा
             "ctz     %0, %1\n"
-#endif
+#यदि_अन्तः
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        यदि (y > 32)
             __builtin_unreachable();
-        return y;
+        प्रत्यागम y;
     }
-#endif
-    return __builtin_ctz(x);
+#यदि_अन्तः
+    प्रत्यागम __builtin_ctz(x);
 }
-#define ff_ctz ff_ctz_rv
+#परिभाषय ff_ctz ff_ctz_rv
 
-static inline av_const int ff_ctzll_rv(long long x)
+स्थिर अन्तःस्थ av_const पूर्णाङ्क ff_ctzll_rv(दीर्घ दीर्घ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
-    if (!__builtin_constant_p(x) &&
+#यदि HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
+    यदि (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णाङ्क y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "ctz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        यदि (y > 64)
             __builtin_unreachable();
-        return y;
+        प्रत्यागम y;
     }
-#endif
-    return __builtin_ctzll(x);
+#यदि_अन्तः
+    प्रत्यागम __builtin_ctzll(x);
 }
-#define ff_ctzll ff_ctzll_rv
+#परिभाषय ff_ctzll ff_ctzll_rv
 
-static inline av_const int ff_clz_rv(int x)
+स्थिर अन्तःस्थ av_const पूर्णाङ्क ff_clz_rv(पूर्णाङ्क x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#यदि HAVE_RV && !defined(__riscv_zbb)
+    यदि (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णाङ्क y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#यदि __riscv_xlen >= 64
             "clzw    %0, %1\n"
-#else
+#अन्यथा
             "clz     %0, %1\n"
-#endif
+#यदि_अन्तः
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        यदि (y > 32)
             __builtin_unreachable();
-        return y;
+        प्रत्यागम y;
     }
-#endif
-    return __builtin_clz(x);
+#यदि_अन्तः
+    प्रत्यागम __builtin_clz(x);
 }
-#define ff_clz ff_clz_rv
+#परिभाषय ff_clz ff_clz_rv
 
-#if __riscv_xlen == 64
-static inline av_const int ff_clzll_rv(long long x)
+#यदि __riscv_xlen == 64
+स्थिर अन्तःस्थ av_const पूर्णाङ्क ff_clzll_rv(दीर्घ दीर्घ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#यदि HAVE_RV && !defined(__riscv_zbb)
+    यदि (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णाङ्क y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "clz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        यदि (y > 64)
             __builtin_unreachable();
-        return y;
+        प्रत्यागम y;
     }
-#endif
-    return __builtin_clzll(x);
+#यदि_अन्तः
+    प्रत्यागम __builtin_clzll(x);
 }
-#define ff_clz ff_clz_rv
-#endif
+#परिभाषय ff_clz ff_clz_rv
+#यदि_अन्तः
 
-static inline av_const int ff_log2_rv(unsigned int x)
+स्थिर अन्तःस्थ av_const पूर्णाङ्क ff_log2_rv(अचिह्नित पूर्णाङ्क x)
 {
-    return 31 - ff_clz_rv(x | 1);
+    प्रत्यागम 31 - ff_clz_rv(x | 1);
 }
-#define ff_log2 ff_log2_rv
-#define ff_log2_16bit ff_log2_rv
+#परिभाषय ff_log2 ff_log2_rv
+#परिभाषय ff_log2_16bit ff_log2_rv
 
-static inline av_const int av_popcount_rv(unsigned int x)
+स्थिर अन्तःस्थ av_const पूर्णाङ्क av_popcount_rv(अचिह्नित पूर्णाङ्क x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#यदि HAVE_RV && !defined(__riscv_zbb)
+    यदि (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णाङ्क y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#यदि __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#अन्यथा
             "cpop    %0, %1\n"
-#endif
+#यदि_अन्तः
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        यदि (y > 32)
             __builtin_unreachable();
-        return y;
+        प्रत्यागम y;
     }
-#endif
-    return __builtin_popcount(x);
+#यदि_अन्तः
+    प्रत्यागम __builtin_popcount(x);
 }
-#define av_popcount av_popcount_rv
+#परिभाषय av_popcount av_popcount_rv
 
-static inline av_const int av_popcount64_rv(uint64_t x)
+स्थिर अन्तःस्थ av_const पूर्णाङ्क av_popcount64_rv(uint64_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
-    if (!__builtin_constant_p(x) &&
+#यदि HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
+    यदि (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णाङ्क y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "cpop    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        यदि (y > 64)
             __builtin_unreachable();
-        return y;
+        प्रत्यागम y;
     }
-#endif
-    return __builtin_popcountl(x);
+#यदि_अन्तः
+    प्रत्यागम __builtin_popcountl(x);
 }
-#define av_popcount64 av_popcount64_rv
+#परिभाषय av_popcount64 av_popcount64_rv
 
-static inline av_const int av_parity_rv(unsigned int x)
+स्थिर अन्तःस्थ av_const पूर्णाङ्क av_parity_rv(अचिह्नित पूर्णाङ्क x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#यदि HAVE_RV && !defined(__riscv_zbb)
+    यदि (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णाङ्क y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#यदि __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#अन्यथा
             "cpop    %0, %1\n"
-#endif
+#यदि_अन्तः
             ".option pop" : "=r" (y) : "r" (x));
-        return y & 1;
+        प्रत्यागम y & 1;
     }
-#endif
-    return __builtin_parity(x);
+#यदि_अन्तः
+    प्रत्यागम __builtin_parity(x);
 }
-#define av_parity av_parity_rv
-#endif
+#परिभाषय av_parity av_parity_rv
+#यदि_अन्तः
 
-#endif /* AVUTIL_RISCV_INTMATH_H */
+#यदि_अन्तः /* AVUTIL_RISCV_INTMATH_H */

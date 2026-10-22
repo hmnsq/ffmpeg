@@ -21,653 +21,653 @@
  * misc image utilities
  */
 
-#include "avassert.h"
-#include "common.h"
-#include "imgutils.h"
-#include "imgutils_internal.h"
-#include "intreadwrite.h"
-#include "log.h"
-#include "mathematics.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "rational.h"
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव "common.h"
+#अन्तर्भाव "imgutils.h"
+#अन्तर्भाव "imgutils_internal.h"
+#अन्तर्भाव "intreadwrite.h"
+#अन्तर्भाव "log.h"
+#अन्तर्भाव "mathematics.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "pixdesc.h"
+#अन्तर्भाव "rational.h"
 
-void av_image_fill_max_pixsteps(int max_pixsteps[4], int max_pixstep_comps[4],
-                                const AVPixFmtDescriptor *pixdesc)
+शून्य av_image_fill_max_pixsteps(पूर्णाङ्क max_pixsteps[4], पूर्णाङ्क max_pixstep_comps[4],
+                                ध्रुव AVPixFmtDescriptor *pixdesc)
 {
-    int i;
-    memset(max_pixsteps, 0, 4*sizeof(max_pixsteps[0]));
-    if (max_pixstep_comps)
-        memset(max_pixstep_comps, 0, 4*sizeof(max_pixstep_comps[0]));
+    पूर्णाङ्क i;
+    स्मृतिं_पूरय(max_pixsteps, 0, 4*परिमाण(max_pixsteps[0]));
+    यदि (max_pixstep_comps)
+        स्मृतिं_पूरय(max_pixstep_comps, 0, 4*परिमाण(max_pixstep_comps[0]));
 
-    for (i = 0; i < 4; i++) {
-        const AVComponentDescriptor *comp = &(pixdesc->comp[i]);
-        if (comp->step > max_pixsteps[comp->plane]) {
-            max_pixsteps[comp->plane] = comp->step;
-            if (max_pixstep_comps)
+    प्रति (i = 0; i < 4; i++) {
+        ध्रुव AVComponentDescriptor *comp = &(pixdesc->comp[i]);
+        यदि (comp->चरणः > max_pixsteps[comp->plane]) {
+            max_pixsteps[comp->plane] = comp->चरणः;
+            यदि (max_pixstep_comps)
                 max_pixstep_comps[comp->plane] = i;
         }
     }
 }
 
-static inline
-int image_get_linesize(int width, int plane,
-                       int max_step, int max_step_comp,
-                       const AVPixFmtDescriptor *desc)
+स्थिर अन्तःस्थ
+पूर्णाङ्क image_get_linesize(पूर्णाङ्क विस्तारः, पूर्णाङ्क plane,
+                       पूर्णाङ्क max_चरणः, पूर्णाङ्क max_चरणः_comp,
+                       ध्रुव AVPixFmtDescriptor *desc)
 {
-    int s, shifted_w, linesize;
+    पूर्णाङ्क s, shifted_w, linesize;
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    यदि (!desc)
+        प्रत्यागम AVERROR(EINVAL);
 
-    if (width < 0)
-        return AVERROR(EINVAL);
-    s = (max_step_comp == 1 || max_step_comp == 2) ? desc->log2_chroma_w : 0;
-    shifted_w = AV_CEIL_RSHIFT(width, s);
-    if (shifted_w && max_step > INT_MAX / shifted_w)
-        return AVERROR(EINVAL);
-    linesize = max_step * shifted_w;
+    यदि (विस्तारः < 0)
+        प्रत्यागम AVERROR(EINVAL);
+    s = (max_चरणः_comp == 1 || max_चरणः_comp == 2) ? desc->log2_chroma_w : 0;
+    shifted_w = AV_CEIL_RSHIFT(विस्तारः, s);
+    यदि (shifted_w && max_चरणः > अधिकतम_पूर्णाङ्कः / shifted_w)
+        प्रत्यागम AVERROR(EINVAL);
+    linesize = max_चरणः * shifted_w;
 
-    if (desc->flags & AV_PIX_FMT_FLAG_BITSTREAM)
+    यदि (desc->flags & AV_PIX_FMT_FLAG_BITSTREAM)
         linesize = (linesize >> 3) + !!(linesize & 7);
-    return linesize;
+    प्रत्यागम linesize;
 }
 
-int av_image_get_linesize(enum AVPixelFormat pix_fmt, int width, int plane)
+पूर्णाङ्क av_image_get_linesize(गणना AVPixelFormat pix_fmt, पूर्णाङ्क विस्तारः, पूर्णाङ्क plane)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int max_step     [4];       /* max pixel step for each plane */
-    int max_step_comp[4];       /* the component for each plane which has the max pixel step */
+    ध्रुव AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    पूर्णाङ्क max_चरणः     [4];       /* max pixel step for each plane */
+    पूर्णाङ्क max_चरणः_comp[4];       /* the component for each plane which has the max pixel step */
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    यदि (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        प्रत्यागम AVERROR(EINVAL);
 
-    av_image_fill_max_pixsteps(max_step, max_step_comp, desc);
-    return image_get_linesize(width, plane, max_step[plane], max_step_comp[plane], desc);
+    av_image_fill_max_pixsteps(max_चरणः, max_चरणः_comp, desc);
+    प्रत्यागम image_get_linesize(विस्तारः, plane, max_चरणः[plane], max_चरणः_comp[plane], desc);
 }
 
-int av_image_fill_linesizes(int linesizes[4], enum AVPixelFormat pix_fmt, int width)
+पूर्णाङ्क av_image_fill_linesizes(पूर्णाङ्क linesizes[4], गणना AVPixelFormat pix_fmt, पूर्णाङ्क विस्तारः)
 {
-    int i, ret;
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int max_step     [4];       /* max pixel step for each plane */
-    int max_step_comp[4];       /* the component for each plane which has the max pixel step */
+    पूर्णाङ्क i, ret;
+    ध्रुव AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    पूर्णाङ्क max_चरणः     [4];       /* max pixel step for each plane */
+    पूर्णाङ्क max_चरणः_comp[4];       /* the component for each plane which has the max pixel step */
 
-    memset(linesizes, 0, 4*sizeof(linesizes[0]));
+    स्मृतिं_पूरय(linesizes, 0, 4*परिमाण(linesizes[0]));
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    यदि (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        प्रत्यागम AVERROR(EINVAL);
 
-    av_image_fill_max_pixsteps(max_step, max_step_comp, desc);
-    for (i = 0; i < 4; i++) {
-        if ((ret = image_get_linesize(width, i, max_step[i], max_step_comp[i], desc)) < 0)
-            return ret;
+    av_image_fill_max_pixsteps(max_चरणः, max_चरणः_comp, desc);
+    प्रति (i = 0; i < 4; i++) {
+        यदि ((ret = image_get_linesize(विस्तारः, i, max_चरणः[i], max_चरणः_comp[i], desc)) < 0)
+            प्रत्यागम ret;
         linesizes[i] = ret;
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-int av_image_fill_plane_sizes(size_t sizes[4], enum AVPixelFormat pix_fmt,
-                              int height, const ptrdiff_t linesizes[4])
+पूर्णाङ्क av_image_fill_plane_sizes(size_t sizes[4], गणना AVPixelFormat pix_fmt,
+                              पूर्णाङ्क height, ध्रुव ptrdiff_t linesizes[4])
 {
-    int i, has_plane[4] = { 0 };
+    पूर्णाङ्क i, has_plane[4] = { 0 };
 
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    memset(sizes    , 0, sizeof(sizes[0])*4);
+    ध्रुव AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    स्मृतिं_पूरय(sizes    , 0, परिमाण(sizes[0])*4);
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    यदि (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        प्रत्यागम AVERROR(EINVAL);
 
-    if (linesizes[0] > SIZE_MAX / height)
-        return AVERROR(EINVAL);
+    यदि (linesizes[0] > SIZE_MAX / height)
+        प्रत्यागम AVERROR(EINVAL);
     sizes[0] = linesizes[0] * (size_t)height;
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+    यदि (desc->flags & AV_PIX_FMT_FLAG_PAL) {
         sizes[1] = 256 * 4; /* palette is stored here as 256 32 bits words */
-        return 0;
+        प्रत्यागम 0;
     }
 
-    for (i = 0; i < 4; i++)
+    प्रति (i = 0; i < 4; i++)
         has_plane[desc->comp[i].plane] = 1;
 
-    for (i = 1; i < 4 && has_plane[i]; i++) {
-        int h, s = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    प्रति (i = 1; i < 4 && has_plane[i]; i++) {
+        पूर्णाङ्क h, s = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
         h = AV_CEIL_RSHIFT(height, s);
-        if (linesizes[i] > SIZE_MAX / h)
-            return AVERROR(EINVAL);
+        यदि (linesizes[i] > SIZE_MAX / h)
+            प्रत्यागम AVERROR(EINVAL);
         sizes[i] = (size_t)h * linesizes[i];
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-int av_image_fill_pointers(uint8_t *data[4], enum AVPixelFormat pix_fmt, int height,
-                           uint8_t *ptr, const int linesizes[4])
+पूर्णाङ्क av_image_fill_सूचकाः(uint8_t *दत्त[4], गणना AVPixelFormat pix_fmt, पूर्णाङ्क height,
+                           uint8_t *ptr, ध्रुव पूर्णाङ्क linesizes[4])
 {
-    int i, ret;
+    पूर्णाङ्क i, ret;
     ptrdiff_t linesizes1[4];
     size_t sizes[4];
 
-    memset(data     , 0, sizeof(data[0])*4);
+    स्मृतिं_पूरय(दत्त     , 0, परिमाण(दत्त[0])*4);
 
-    for (i = 0; i < 4; i++)
+    प्रति (i = 0; i < 4; i++)
         linesizes1[i] = linesizes[i];
 
     ret = av_image_fill_plane_sizes(sizes, pix_fmt, height, linesizes1);
-    if (ret < 0)
-        return ret;
+    यदि (ret < 0)
+        प्रत्यागम ret;
 
     ret = 0;
-    for (i = 0; i < 4; i++) {
-        if (sizes[i] > INT_MAX - ret)
-            return AVERROR(EINVAL);
+    प्रति (i = 0; i < 4; i++) {
+        यदि (sizes[i] > अधिकतम_पूर्णाङ्कः - ret)
+            प्रत्यागम AVERROR(EINVAL);
         ret += sizes[i];
     }
 
-    if (!ptr)
-        return ret;
+    यदि (!ptr)
+        प्रत्यागम ret;
 
-    data[0] = ptr;
-    for (i = 1; i < 4 && sizes[i]; i++)
-        data[i] = data[i - 1] + sizes[i - 1];
+    दत्त[0] = ptr;
+    प्रति (i = 1; i < 4 && sizes[i]; i++)
+        दत्त[i] = दत्त[i - 1] + sizes[i - 1];
 
-    return ret;
+    प्रत्यागम ret;
 }
 
-int avpriv_set_systematic_pal2(uint32_t pal[256], enum AVPixelFormat pix_fmt)
+पूर्णाङ्क avpriv_समुच्चयः_systematic_pal2(uint32_t pal[256], गणना AVPixelFormat pix_fmt)
 {
-    int i;
+    पूर्णाङ्क i;
 
-    for (i = 0; i < 256; i++) {
-        int r, g, b;
+    प्रति (i = 0; i < 256; i++) {
+        पूर्णाङ्क r, g, b;
 
-        switch (pix_fmt) {
-        case AV_PIX_FMT_RGB8:
+        विकल्प (pix_fmt) {
+        पक्ष AV_PIX_FMT_RGB8:
             r = (i>>5    )*36;
             g = ((i>>2)&7)*36;
             b = (i&3     )*85;
-            break;
-        case AV_PIX_FMT_BGR8:
+            भङ्ग;
+        पक्ष AV_PIX_FMT_BGR8:
             b = (i>>6    )*85;
             g = ((i>>3)&7)*36;
             r = (i&7     )*36;
-            break;
-        case AV_PIX_FMT_RGB4_BYTE:
+            भङ्ग;
+        पक्ष AV_PIX_FMT_RGB4_BYTE:
             r = (i>>3    )*255;
             g = ((i>>1)&3)*85;
             b = (i&1     )*255;
-            break;
-        case AV_PIX_FMT_BGR4_BYTE:
+            भङ्ग;
+        पक्ष AV_PIX_FMT_BGR4_BYTE:
             b = (i>>3    )*255;
             g = ((i>>1)&3)*85;
             r = (i&1     )*255;
-            break;
-        case AV_PIX_FMT_GRAY8:
+            भङ्ग;
+        पक्ष AV_PIX_FMT_GRAY8:
             r = b = g = i;
-            break;
-        default:
-            return AVERROR(EINVAL);
+            भङ्ग;
+        स्वभाव:
+            प्रत्यागम AVERROR(EINVAL);
         }
         pal[i] = b + (g << 8) + (r << 16) + (0xFFU << 24);
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-int av_image_alloc(uint8_t *pointers[4], int linesizes[4],
-                   int w, int h, enum AVPixelFormat pix_fmt, int align)
+पूर्णाङ्क av_image_alloc(uint8_t *सूचकाः[4], पूर्णाङ्क linesizes[4],
+                   पूर्णाङ्क w, पूर्णाङ्क h, गणना AVPixelFormat pix_fmt, पूर्णाङ्क align)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int i, ret;
+    ध्रुव AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    पूर्णाङ्क i, ret;
     ptrdiff_t linesizes1[4];
-    size_t total_size, sizes[4];
+    size_t योग_आकार, sizes[4];
     uint8_t *buf;
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    यदि (!desc)
+        प्रत्यागम AVERROR(EINVAL);
 
-    if ((ret = av_image_check_size(w, h, 0, NULL)) < 0)
-        return ret;
-    if ((ret = av_image_fill_linesizes(linesizes, pix_fmt, align>7 ? FFALIGN(w, 8) : w)) < 0)
-        return ret;
+    यदि ((ret = av_image_check_आकार(w, h, 0, रिक्त)) < 0)
+        प्रत्यागम ret;
+    यदि ((ret = av_image_fill_linesizes(linesizes, pix_fmt, align>7 ? FFALIGN(w, 8) : w)) < 0)
+        प्रत्यागम ret;
 
-    for (i = 0; i < 4; i++) {
+    प्रति (i = 0; i < 4; i++) {
         linesizes[i] = FFALIGN(linesizes[i], align);
         linesizes1[i] = linesizes[i];
     }
 
-    if ((ret = av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1)) < 0)
-        return ret;
-    total_size = align;
-    for (i = 0; i < 4; i++) {
-        if (total_size > SIZE_MAX - sizes[i])
-            return AVERROR(EINVAL);
-        total_size += sizes[i];
+    यदि ((ret = av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1)) < 0)
+        प्रत्यागम ret;
+    योग_आकार = align;
+    प्रति (i = 0; i < 4; i++) {
+        यदि (योग_आकार > SIZE_MAX - sizes[i])
+            प्रत्यागम AVERROR(EINVAL);
+        योग_आकार += sizes[i];
     }
-    buf = av_malloc(total_size);
-    if (!buf)
-        return AVERROR(ENOMEM);
-    if ((ret = av_image_fill_pointers(pointers, pix_fmt, h, buf, linesizes)) < 0) {
+    buf = av_malloc(योग_आकार);
+    यदि (!buf)
+        प्रत्यागम AVERROR(ENOMEM);
+    यदि ((ret = av_image_fill_सूचकाः(सूचकाः, pix_fmt, h, buf, linesizes)) < 0) {
         av_free(buf);
-        return ret;
+        प्रत्यागम ret;
     }
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
-        avpriv_set_systematic_pal2((uint32_t*)pointers[1], pix_fmt);
-        if (align < 4) {
-            av_log(NULL, AV_LOG_ERROR, "Formats with a palette require a minimum alignment of 4\n");
+    यदि (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+        avpriv_समुच्चयः_systematic_pal2((uint32_t*)सूचकाः[1], pix_fmt);
+        यदि (align < 4) {
+            av_log(रिक्त, AV_LOG_ERROR, "Formats with a palette require a minimum alignment of 4\n");
             av_free(buf);
-            return AVERROR(EINVAL);
+            प्रत्यागम AVERROR(EINVAL);
         }
     }
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL && pointers[1] &&
-        pointers[1] - pointers[0] > linesizes[0] * h) {
+    यदि (desc->flags & AV_PIX_FMT_FLAG_PAL && सूचकाः[1] &&
+        सूचकाः[1] - सूचकाः[0] > linesizes[0] * h) {
         /* zero-initialize the padding before the palette */
-        memset(pointers[0] + linesizes[0] * h, 0,
-               pointers[1] - pointers[0] - linesizes[0] * h);
+        स्मृतिं_पूरय(सूचकाः[0] + linesizes[0] * h, 0,
+               सूचकाः[1] - सूचकाः[0] - linesizes[0] * h);
     }
 
-    return ret;
+    प्रत्यागम ret;
 }
 
-typedef struct ImgUtils {
-    const AVClass *class;
-    int   log_offset;
-    void *log_ctx;
+प्रकारनिर्देश संरचना ImgUtils {
+    ध्रुव AVClass *class;
+    पूर्णाङ्क   log_विस्थापनम्;
+    शून्य *log_ctx;
 } ImgUtils;
 
-static const AVClass imgutils_class = {
+स्थिर ध्रुव AVClass imgutils_class = {
     .class_name                = "IMGUTILS",
     .item_name                 = av_default_item_name,
-    .option                    = NULL,
-    .version                   = LIBAVUTIL_VERSION_INT,
-    .log_level_offset_offset   = offsetof(ImgUtils, log_offset),
-    .parent_log_context_offset = offsetof(ImgUtils, log_ctx),
+    .option                    = रिक्त,
+    .संस्करणम्                   = LIBAVUTIL_संस्करणम्_INT,
+    .log_level_विस्थापनम्_विस्थापनम्   = offsetof(ImgUtils, log_विस्थापनम्),
+    .parent_log_context_विस्थापनम् = offsetof(ImgUtils, log_ctx),
 };
 
-int av_image_check_size2(unsigned int w, unsigned int h, int64_t max_pixels, enum AVPixelFormat pix_fmt, int log_offset, void *log_ctx)
+पूर्णाङ्क av_image_check_size2(अचिह्नित पूर्णाङ्क w, अचिह्नित पूर्णाङ्क h, int64_t max_pixels, गणना AVPixelFormat pix_fmt, पूर्णाङ्क log_विस्थापनम्, शून्य *log_ctx)
 {
     ImgUtils imgutils = {
         .class      = &imgutils_class,
-        .log_offset = log_offset,
+        .log_विस्थापनम् = log_विस्थापनम्,
         .log_ctx    = log_ctx,
     };
     int64_t stride = av_image_get_linesize(pix_fmt, w, 0);
-    if (stride <= 0)
+    यदि (stride <= 0)
         stride = 8LL*w;
     stride += 128*8;
 
-    if (w==0 || h==0 || w > INT32_MAX || h > INT32_MAX || stride >= INT_MAX || stride*(h + 128ULL) >= INT_MAX) {
+    यदि (w==0 || h==0 || w > INT32_MAX || h > INT32_MAX || stride >= अधिकतम_पूर्णाङ्कः || stride*(h + 128ULL) >= अधिकतम_पूर्णाङ्कः) {
         av_log(&imgutils, AV_LOG_ERROR, "Picture size %ux%u is invalid\n", w, h);
-        return AVERROR(EINVAL);
+        प्रत्यागम AVERROR(EINVAL);
     }
 
-    if (max_pixels < INT64_MAX) {
-        if (w*(int64_t)h > max_pixels) {
+    यदि (max_pixels < INT64_MAX) {
+        यदि (w*(int64_t)h > max_pixels) {
             av_log(&imgutils, AV_LOG_ERROR,
                     "Picture size %ux%u exceeds specified max pixel count %"PRId64", see the documentation if you wish to increase it\n",
                     w, h, max_pixels);
-            return AVERROR(EINVAL);
+            प्रत्यागम AVERROR(EINVAL);
         }
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-int av_image_check_size(unsigned int w, unsigned int h, int log_offset, void *log_ctx)
+पूर्णाङ्क av_image_check_आकार(अचिह्नित पूर्णाङ्क w, अचिह्नित पूर्णाङ्क h, पूर्णाङ्क log_विस्थापनम्, शून्य *log_ctx)
 {
-    return av_image_check_size2(w, h, INT64_MAX, AV_PIX_FMT_NONE, log_offset, log_ctx);
+    प्रत्यागम av_image_check_size2(w, h, INT64_MAX, AV_PIX_FMT_NONE, log_विस्थापनम्, log_ctx);
 }
 
-int av_image_check_sar(unsigned int w, unsigned int h, AVRational sar)
+पूर्णाङ्क av_image_check_sar(अचिह्नित पूर्णाङ्क w, अचिह्नित पूर्णाङ्क h, AVRational sar)
 {
     int64_t scaled_dim;
 
-    if (sar.den <= 0 || sar.num < 0)
-        return AVERROR(EINVAL);
+    यदि (sar.den <= 0 || sar.अङ्कः < 0)
+        प्रत्यागम AVERROR(EINVAL);
 
-    if (!sar.num || sar.num == sar.den)
-        return 0;
+    यदि (!sar.अङ्कः || sar.अङ्कः == sar.den)
+        प्रत्यागम 0;
 
-    if (sar.num < sar.den)
-        scaled_dim = av_rescale_rnd(w, sar.num, sar.den, AV_ROUND_ZERO);
-    else
-        scaled_dim = av_rescale_rnd(h, sar.den, sar.num, AV_ROUND_ZERO);
+    यदि (sar.अङ्कः < sar.den)
+        scaled_dim = av_rescale_rnd(w, sar.अङ्कः, sar.den, AV_आवर्तनम्_ZERO);
+    अन्यथा
+        scaled_dim = av_rescale_rnd(h, sar.den, sar.अङ्कः, AV_आवर्तनम्_ZERO);
 
-    if (scaled_dim > 0)
-        return 0;
+    यदि (scaled_dim > 0)
+        प्रत्यागम 0;
 
-    return AVERROR(EINVAL);
+    प्रत्यागम AVERROR(EINVAL);
 }
 
-static void image_copy_plane(uint8_t       *dst, ptrdiff_t dst_linesize,
-                             const uint8_t *src, ptrdiff_t src_linesize,
-                             ptrdiff_t bytewidth, int height)
+स्थिर शून्य image_copy_plane(uint8_t       *dst, ptrdiff_t dst_linesize,
+                             ध्रुव uint8_t *src, ptrdiff_t src_linesize,
+                             ptrdiff_t bytewidth, पूर्णाङ्क height)
 {
-    if (!dst || !src)
-        return;
+    यदि (!dst || !src)
+        प्रत्यागम;
     av_assert0(FFABS(src_linesize) >= bytewidth);
     av_assert0(FFABS(dst_linesize) >= bytewidth);
-    for (;height > 0; height--) {
-        memcpy(dst, src, bytewidth);
+    प्रति (;height > 0; height--) {
+        स्मृतिं_प्रतिलिख(dst, src, bytewidth);
         dst += dst_linesize;
         src += src_linesize;
     }
 }
 
-void av_image_copy_plane_uc_from(uint8_t *dst, ptrdiff_t dst_linesize,
-                                 const uint8_t *src, ptrdiff_t src_linesize,
-                                 ptrdiff_t bytewidth, int height)
+शून्य av_image_copy_plane_uc_from(uint8_t *dst, ptrdiff_t dst_linesize,
+                                 ध्रुव uint8_t *src, ptrdiff_t src_linesize,
+                                 ptrdiff_t bytewidth, पूर्णाङ्क height)
 {
-    int ret = -1;
+    पूर्णाङ्क ret = -1;
 
-#if ARCH_X86 && HAVE_X86ASM
+#यदि ARCH_X86 && HAVE_X86ASM
     ret = ff_image_copy_plane_uc_from_x86(dst, dst_linesize, src, src_linesize,
                                           bytewidth, height);
-#endif
+#यदि_अन्तः
 
-    if (ret < 0)
+    यदि (ret < 0)
         image_copy_plane(dst, dst_linesize, src, src_linesize, bytewidth, height);
 }
 
-void av_image_copy_plane(uint8_t       *dst, int dst_linesize,
-                         const uint8_t *src, int src_linesize,
-                         int bytewidth, int height)
+शून्य av_image_copy_plane(uint8_t       *dst, पूर्णाङ्क dst_linesize,
+                         ध्रुव uint8_t *src, पूर्णाङ्क src_linesize,
+                         पूर्णाङ्क bytewidth, पूर्णाङ्क height)
 {
     image_copy_plane(dst, dst_linesize, src, src_linesize, bytewidth, height);
 }
 
-static void image_copy(uint8_t *const dst_data[4], const ptrdiff_t dst_linesizes[4],
-                       const uint8_t *const src_data[4], const ptrdiff_t src_linesizes[4],
-                       enum AVPixelFormat pix_fmt, int width, int height,
-                       void (*copy_plane)(uint8_t *, ptrdiff_t, const uint8_t *,
-                                          ptrdiff_t, ptrdiff_t, int))
+स्थिर शून्य image_copy(uint8_t *ध्रुव dst_दत्त[4], ध्रुव ptrdiff_t dst_linesizes[4],
+                       ध्रुव uint8_t *ध्रुव src_दत्त[4], ध्रुव ptrdiff_t src_linesizes[4],
+                       गणना AVPixelFormat pix_fmt, पूर्णाङ्क विस्तारः, पूर्णाङ्क height,
+                       शून्य (*copy_plane)(uint8_t *, ptrdiff_t, ध्रुव uint8_t *,
+                                          ptrdiff_t, ptrdiff_t, पूर्णाङ्क))
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    ध्रुव AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return;
+    यदि (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        प्रत्यागम;
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
-        copy_plane(dst_data[0], dst_linesizes[0],
-                   src_data[0], src_linesizes[0],
-                   width, height);
+    यदि (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+        copy_plane(dst_दत्त[0], dst_linesizes[0],
+                   src_दत्त[0], src_linesizes[0],
+                   विस्तारः, height);
         /* copy the palette */
-        if ((desc->flags & AV_PIX_FMT_FLAG_PAL) || (dst_data[1] && src_data[1]))
-            memcpy(dst_data[1], src_data[1], 4*256);
-    } else {
-        int i, planes_nb = 0;
+        यदि ((desc->flags & AV_PIX_FMT_FLAG_PAL) || (dst_दत्त[1] && src_दत्त[1]))
+            स्मृतिं_प्रतिलिख(dst_दत्त[1], src_दत्त[1], 4*256);
+    } अन्यथा {
+        पूर्णाङ्क i, planes_nb = 0;
 
-        for (i = 0; i < desc->nb_components; i++)
+        प्रति (i = 0; i < desc->nb_components; i++)
             planes_nb = FFMAX(planes_nb, desc->comp[i].plane + 1);
 
-        for (i = 0; i < planes_nb; i++) {
-            int h = height;
-            ptrdiff_t bwidth = av_image_get_linesize(pix_fmt, width, i);
-            if (bwidth < 0) {
-                av_log(NULL, AV_LOG_ERROR, "av_image_get_linesize failed\n");
-                return;
+        प्रति (i = 0; i < planes_nb; i++) {
+            पूर्णाङ्क h = height;
+            ptrdiff_t bwidth = av_image_get_linesize(pix_fmt, विस्तारः, i);
+            यदि (bwidth < 0) {
+                av_log(रिक्त, AV_LOG_ERROR, "av_image_get_linesize failed\n");
+                प्रत्यागम;
             }
-            if (i == 1 || i == 2) {
+            यदि (i == 1 || i == 2) {
                 h = AV_CEIL_RSHIFT(height, desc->log2_chroma_h);
             }
-            copy_plane(dst_data[i], dst_linesizes[i],
-                       src_data[i], src_linesizes[i],
+            copy_plane(dst_दत्त[i], dst_linesizes[i],
+                       src_दत्त[i], src_linesizes[i],
                        bwidth, h);
         }
     }
 }
 
-void av_image_copy(uint8_t *const dst_data[4], const int dst_linesizes[4],
-                   const uint8_t * const src_data[4], const int src_linesizes[4],
-                   enum AVPixelFormat pix_fmt, int width, int height)
+शून्य av_image_copy(uint8_t *ध्रुव dst_दत्त[4], ध्रुव पूर्णाङ्क dst_linesizes[4],
+                   ध्रुव uint8_t * ध्रुव src_दत्त[4], ध्रुव पूर्णाङ्क src_linesizes[4],
+                   गणना AVPixelFormat pix_fmt, पूर्णाङ्क विस्तारः, पूर्णाङ्क height)
 {
     ptrdiff_t dst_linesizes1[4], src_linesizes1[4];
-    int i;
+    पूर्णाङ्क i;
 
-    for (i = 0; i < 4; i++) {
+    प्रति (i = 0; i < 4; i++) {
         dst_linesizes1[i] = dst_linesizes[i];
         src_linesizes1[i] = src_linesizes[i];
     }
 
-    image_copy(dst_data, dst_linesizes1, src_data, src_linesizes1, pix_fmt,
-               width, height, image_copy_plane);
+    image_copy(dst_दत्त, dst_linesizes1, src_दत्त, src_linesizes1, pix_fmt,
+               विस्तारः, height, image_copy_plane);
 }
 
-void av_image_copy_uc_from(uint8_t * const dst_data[4], const ptrdiff_t dst_linesizes[4],
-                           const uint8_t * const src_data[4], const ptrdiff_t src_linesizes[4],
-                           enum AVPixelFormat pix_fmt, int width, int height)
+शून्य av_image_copy_uc_from(uint8_t * ध्रुव dst_दत्त[4], ध्रुव ptrdiff_t dst_linesizes[4],
+                           ध्रुव uint8_t * ध्रुव src_दत्त[4], ध्रुव ptrdiff_t src_linesizes[4],
+                           गणना AVPixelFormat pix_fmt, पूर्णाङ्क विस्तारः, पूर्णाङ्क height)
 {
-    image_copy(dst_data, dst_linesizes, src_data, src_linesizes, pix_fmt,
-               width, height, av_image_copy_plane_uc_from);
+    image_copy(dst_दत्त, dst_linesizes, src_दत्त, src_linesizes, pix_fmt,
+               विस्तारः, height, av_image_copy_plane_uc_from);
 }
 
-int av_image_fill_arrays(uint8_t *dst_data[4], int dst_linesize[4],
-                         const uint8_t *src, enum AVPixelFormat pix_fmt,
-                         int width, int height, int align)
+पूर्णाङ्क av_image_fill_arrays(uint8_t *dst_दत्त[4], पूर्णाङ्क dst_linesize[4],
+                         ध्रुव uint8_t *src, गणना AVPixelFormat pix_fmt,
+                         पूर्णाङ्क विस्तारः, पूर्णाङ्क height, पूर्णाङ्क align)
 {
-    int ret, i;
+    पूर्णाङ्क ret, i;
 
-    ret = av_image_check_size(width, height, 0, NULL);
-    if (ret < 0)
-        return ret;
+    ret = av_image_check_आकार(विस्तारः, height, 0, रिक्त);
+    यदि (ret < 0)
+        प्रत्यागम ret;
 
-    ret = av_image_fill_linesizes(dst_linesize, pix_fmt, width);
-    if (ret < 0)
-        return ret;
+    ret = av_image_fill_linesizes(dst_linesize, pix_fmt, विस्तारः);
+    यदि (ret < 0)
+        प्रत्यागम ret;
 
-    for (i = 0; i < 4; i++)
+    प्रति (i = 0; i < 4; i++)
         dst_linesize[i] = FFALIGN(dst_linesize[i], align);
 
-    return av_image_fill_pointers(dst_data, pix_fmt, height, (uint8_t *)src, dst_linesize);
+    प्रत्यागम av_image_fill_सूचकाः(dst_दत्त, pix_fmt, height, (uint8_t *)src, dst_linesize);
 }
 
-int av_image_get_buffer_size(enum AVPixelFormat pix_fmt,
-                             int width, int height, int align)
+पूर्णाङ्क av_image_get_बफर_आकार(गणना AVPixelFormat pix_fmt,
+                             पूर्णाङ्क विस्तारः, पूर्णाङ्क height, पूर्णाङ्क align)
 {
-    int ret, i;
-    int linesize[4];
+    पूर्णाङ्क ret, i;
+    पूर्णाङ्क linesize[4];
     ptrdiff_t aligned_linesize[4];
     size_t sizes[4];
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    if (!desc)
-        return AVERROR(EINVAL);
+    ध्रुव AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    यदि (!desc)
+        प्रत्यागम AVERROR(EINVAL);
 
-    ret = av_image_check_size(width, height, 0, NULL);
-    if (ret < 0)
-        return ret;
+    ret = av_image_check_आकार(विस्तारः, height, 0, रिक्त);
+    यदि (ret < 0)
+        प्रत्यागम ret;
 
-    ret = av_image_fill_linesizes(linesize, pix_fmt, width);
-    if (ret < 0)
-        return ret;
+    ret = av_image_fill_linesizes(linesize, pix_fmt, विस्तारः);
+    यदि (ret < 0)
+        प्रत्यागम ret;
 
-    for (i = 0; i < 4; i++)
+    प्रति (i = 0; i < 4; i++)
         aligned_linesize[i] = FFALIGN(linesize[i], align);
 
     ret = av_image_fill_plane_sizes(sizes, pix_fmt, height, aligned_linesize);
-    if (ret < 0)
-        return ret;
+    यदि (ret < 0)
+        प्रत्यागम ret;
 
     ret = 0;
-    for (i = 0; i < 4; i++) {
-        if (sizes[i] > INT_MAX - ret)
-            return AVERROR(EINVAL);
+    प्रति (i = 0; i < 4; i++) {
+        यदि (sizes[i] > अधिकतम_पूर्णाङ्कः - ret)
+            प्रत्यागम AVERROR(EINVAL);
         ret += sizes[i];
     }
-    return ret;
+    प्रत्यागम ret;
 }
 
-int av_image_copy_to_buffer(uint8_t *dst, int dst_size,
-                            const uint8_t * const src_data[4],
-                            const int src_linesize[4],
-                            enum AVPixelFormat pix_fmt,
-                            int width, int height, int align)
+पूर्णाङ्क av_image_copy_गन्तव्यम्_बफर(uint8_t *dst, पूर्णाङ्क dst_आकार,
+                            ध्रुव uint8_t * ध्रुव src_दत्त[4],
+                            ध्रुव पूर्णाङ्क src_linesize[4],
+                            गणना AVPixelFormat pix_fmt,
+                            पूर्णाङ्क विस्तारः, पूर्णाङ्क height, पूर्णाङ्क align)
 {
-    int i, j, nb_planes = 0, linesize[4];
-    int size = av_image_get_buffer_size(pix_fmt, width, height, align);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int ret;
+    पूर्णाङ्क i, j, nb_planes = 0, linesize[4];
+    पूर्णाङ्क आकार = av_image_get_बफर_आकार(pix_fmt, विस्तारः, height, align);
+    ध्रुव AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    पूर्णाङ्क ret;
 
-    if (size > dst_size || size < 0 || !desc)
-        return AVERROR(EINVAL);
+    यदि (आकार > dst_आकार || आकार < 0 || !desc)
+        प्रत्यागम AVERROR(EINVAL);
 
-    for (i = 0; i < desc->nb_components; i++)
+    प्रति (i = 0; i < desc->nb_components; i++)
         nb_planes = FFMAX(desc->comp[i].plane, nb_planes);
 
     nb_planes++;
 
-    ret = av_image_fill_linesizes(linesize, pix_fmt, width);
+    ret = av_image_fill_linesizes(linesize, pix_fmt, विस्तारः);
     av_assert0(ret >= 0); // was checked previously
 
-    for (i = 0; i < nb_planes; i++) {
-        int h, shift = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
-        const uint8_t *src = src_data[i];
-        h = AV_CEIL_RSHIFT(height, shift);
+    प्रति (i = 0; i < nb_planes; i++) {
+        पूर्णाङ्क h, सरणम् = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+        ध्रुव uint8_t *src = src_दत्त[i];
+        h = AV_CEIL_RSHIFT(height, सरणम्);
 
-        for (j = 0; j < h; j++) {
-            memcpy(dst, src, linesize[i]);
+        प्रति (j = 0; j < h; j++) {
+            स्मृतिं_प्रतिलिख(dst, src, linesize[i]);
             dst += FFALIGN(linesize[i], align);
             src += src_linesize[i];
         }
     }
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+    यदि (desc->flags & AV_PIX_FMT_FLAG_PAL) {
         uint32_t *d32 = (uint32_t *)dst;
 
-        for (i = 0; i<256; i++)
-            AV_WL32(d32 + i, AV_RN32(src_data[1] + 4*i));
+        प्रति (i = 0; i<256; i++)
+            AV_WL32(d32 + i, AV_RN32(src_दत्त[1] + 4*i));
     }
 
-    return size;
+    प्रत्यागम आकार;
 }
 
 // Fill dst[0..dst_size] with the bytes in clear[0..clear_size]. The clear
 // bytes are repeated until dst_size is reached. If dst_size is unaligned (i.e.
 // dst_size%clear_size!=0), the remaining data will be filled with the beginning
 // of the clear data only.
-static void memset_bytes(uint8_t *dst, size_t dst_size, uint8_t *clear,
-                         size_t clear_size)
+स्थिर शून्य memset_अष्टकानि(uint8_t *dst, size_t dst_आकार, uint8_t *clear,
+                         size_t clear_आकार)
 {
-    int same = 1;
-    int i;
+    पूर्णाङ्क same = 1;
+    पूर्णाङ्क i;
 
-    if (!clear_size)
-        return;
+    यदि (!clear_आकार)
+        प्रत्यागम;
 
     // Reduce to memset() if possible.
-    for (i = 0; i < clear_size; i++) {
-        if (clear[i] != clear[0]) {
+    प्रति (i = 0; i < clear_आकार; i++) {
+        यदि (clear[i] != clear[0]) {
             same = 0;
-            break;
+            भङ्ग;
         }
     }
-    if (same)
-        clear_size = 1;
+    यदि (same)
+        clear_आकार = 1;
 
-    if (clear_size == 1) {
-        memset(dst, clear[0], dst_size);
-    } else {
-        if (clear_size > dst_size)
-            clear_size = dst_size;
-        memcpy(dst, clear, clear_size);
-        av_memcpy_backptr(dst + clear_size, clear_size, dst_size - clear_size);
+    यदि (clear_आकार == 1) {
+        स्मृतिं_पूरय(dst, clear[0], dst_आकार);
+    } अन्यथा {
+        यदि (clear_आकार > dst_आकार)
+            clear_आकार = dst_आकार;
+        स्मृतिं_प्रतिलिख(dst, clear, clear_आकार);
+        av_memcpy_backptr(dst + clear_आकार, clear_आकार, dst_आकार - clear_आकार);
     }
 }
 
 // Maximum size in bytes of a plane element (usually a pixel, or multiple pixels
 // if it's a subsampled packed format).
-#define MAX_BLOCK_SIZE 32
+#परिभाषय MAX_खण्डम्_आकार 32
 
-int av_image_fill_color(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
-                        enum AVPixelFormat pix_fmt, const uint32_t color[4],
-                        int width, int height, int flags)
+पूर्णाङ्क av_image_fill_color(uint8_t * ध्रुव dst_दत्त[4], ध्रुव ptrdiff_t dst_linesize[4],
+                        गणना AVPixelFormat pix_fmt, ध्रुव uint32_t color[4],
+                        पूर्णाङ्क विस्तारः, पूर्णाङ्क height, पूर्णाङ्क flags)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int nb_planes = av_pix_fmt_count_planes(pix_fmt);
+    ध्रुव AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    पूर्णाङ्क nb_planes = av_pix_fmt_गणनम्_planes(pix_fmt);
     // A pixel or a group of pixels on each plane, with a value that represents the color.
     // Consider e.g. AV_PIX_FMT_UYVY422 for non-trivial cases.
-    uint8_t clear_block[4][MAX_BLOCK_SIZE] = {{0}}; // clear padding with 0
-    int clear_block_size[4] = {0};
-    ptrdiff_t plane_line_bytes[4] = {0};
-    int bitstream;
-    int plane, c;
+    uint8_t clear_खण्डम्[4][MAX_खण्डम्_आकार] = {{0}}; // clear padding with 0
+    पूर्णाङ्क clear_खण्डम्_आकार[4] = {0};
+    ptrdiff_t plane_पङ्क्तिः_अष्टकानि[4] = {0};
+    पूर्णाङ्क bitstream;
+    पूर्णाङ्क plane, c;
 
-    if (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    यदि (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        प्रत्यागम AVERROR(EINVAL);
 
     bitstream = !!(desc->flags & AV_PIX_FMT_FLAG_BITSTREAM);
 
-    for (c = 0; c < desc->nb_components; c++) {
-        const AVComponentDescriptor comp = desc->comp[c];
+    प्रति (c = 0; c < desc->nb_components; c++) {
+        ध्रुव AVComponentDescriptor comp = desc->comp[c];
 
         // We try to operate on entire non-subsampled pixel groups (for
         // AV_PIX_FMT_UYVY422 this would mean two consecutive pixels).
-        clear_block_size[comp.plane] = FFMAX(clear_block_size[comp.plane], comp.step);
+        clear_खण्डम्_आकार[comp.plane] = FFMAX(clear_खण्डम्_आकार[comp.plane], comp.चरणः);
 
-        if (clear_block_size[comp.plane] > MAX_BLOCK_SIZE)
-            return AVERROR(EINVAL);
+        यदि (clear_खण्डम्_आकार[comp.plane] > MAX_खण्डम्_आकार)
+            प्रत्यागम AVERROR(EINVAL);
     }
 
     // Create a byte array for clearing 1 pixel (sometimes several pixels).
-    for (c = 0; c < desc->nb_components; c++) {
-        const AVComponentDescriptor comp = desc->comp[c];
+    प्रति (c = 0; c < desc->nb_components; c++) {
+        ध्रुव AVComponentDescriptor comp = desc->comp[c];
         // (Multiple pixels happen e.g. with AV_PIX_FMT_UYVY422.)
-        int w = (bitstream ? 8 : 1) * clear_block_size[comp.plane] / comp.step;
-        uint8_t *c_data[4];
-        const int c_linesize[4] = {0};
-        uint32_t src_array[MAX_BLOCK_SIZE];
-        int x;
+        पूर्णाङ्क w = (bitstream ? 8 : 1) * clear_खण्डम्_आकार[comp.plane] / comp.चरणः;
+        uint8_t *c_दत्त[4];
+        ध्रुव पूर्णाङ्क c_linesize[4] = {0};
+        uint32_t src_array[MAX_खण्डम्_आकार];
+        पूर्णाङ्क x;
 
-        if (comp.depth > 32)
-            return AVERROR(EINVAL);
-        if (w < 1)
-            return AVERROR(EINVAL);
+        यदि (comp.गभीरता > 32)
+            प्रत्यागम AVERROR(EINVAL);
+        यदि (w < 1)
+            प्रत्यागम AVERROR(EINVAL);
 
-        for (x = 0; x < w; x++)
+        प्रति (x = 0; x < w; x++)
             src_array[x] = color[c];
 
-        for (x = 0; x < 4; x++)
-            c_data[x] = &clear_block[x][0];
+        प्रति (x = 0; x < 4; x++)
+            c_दत्त[x] = &clear_खण्डम्[x][0];
 
-        av_write_image_line2(src_array, c_data, c_linesize, desc, 0, 0, c, w, 4);
+        av_write_image_line2(src_array, c_दत्त, c_linesize, desc, 0, 0, c, w, 4);
     }
 
-    for (plane = 0; plane < nb_planes; plane++) {
-        plane_line_bytes[plane] = av_image_get_linesize(pix_fmt, width, plane);
-        if (plane_line_bytes[plane] < 0)
-            return AVERROR(EINVAL);
+    प्रति (plane = 0; plane < nb_planes; plane++) {
+        plane_पङ्क्तिः_अष्टकानि[plane] = av_image_get_linesize(pix_fmt, विस्तारः, plane);
+        यदि (plane_पङ्क्तिः_अष्टकानि[plane] < 0)
+            प्रत्यागम AVERROR(EINVAL);
     }
 
-    if (!dst_data)
-        return 0;
+    यदि (!dst_दत्त)
+        प्रत्यागम 0;
 
-    for (plane = 0; plane < nb_planes; plane++) {
-        size_t bytewidth = plane_line_bytes[plane];
-        uint8_t *data = dst_data[plane];
-        int chroma_div = plane == 1 || plane == 2 ? desc->log2_chroma_h : 0;
-        int plane_h = AV_CEIL_RSHIFT(height, chroma_div);
+    प्रति (plane = 0; plane < nb_planes; plane++) {
+        size_t bytewidth = plane_पङ्क्तिः_अष्टकानि[plane];
+        uint8_t *दत्त = dst_दत्त[plane];
+        पूर्णाङ्क chroma_div = plane == 1 || plane == 2 ? desc->log2_chroma_h : 0;
+        पूर्णाङ्क plane_h = AV_CEIL_RSHIFT(height, chroma_div);
 
-        for (; plane_h > 0; plane_h--) {
-            memset_bytes(data, bytewidth, &clear_block[plane][0], clear_block_size[plane]);
-            data += dst_linesize[plane];
+        प्रति (; plane_h > 0; plane_h--) {
+            memset_अष्टकानि(दत्त, bytewidth, &clear_खण्डम्[plane][0], clear_खण्डम्_आकार[plane]);
+            दत्त += dst_linesize[plane];
         }
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-int av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
-                        enum AVPixelFormat pix_fmt, enum AVColorRange range,
-                        int width, int height)
+पूर्णाङ्क av_image_fill_black(uint8_t * ध्रुव dst_दत्त[4], ध्रुव ptrdiff_t dst_linesize[4],
+                        गणना AVPixelFormat pix_fmt, गणना AVColorRange range,
+                        पूर्णाङ्क विस्तारः, पूर्णाङ्क height)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int nb_planes = av_pix_fmt_count_planes(pix_fmt);
-    int rgb, xyz, pal, limited, alpha, fltp;
+    ध्रुव AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    पूर्णाङ्क nb_planes = av_pix_fmt_गणनम्_planes(pix_fmt);
+    पूर्णाङ्क rgb, xyz, pal, limited, alpha, fltp;
     uint32_t colors[4] = {0};
 
-    if (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    यदि (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        प्रत्यागम AVERROR(EINVAL);
 
     rgb = !!(desc->flags & AV_PIX_FMT_FLAG_RGB);
     xyz = !!(desc->flags & AV_PIX_FMT_FLAG_XYZ);
@@ -676,42 +676,42 @@ int av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesiz
     alpha = !pal && !!(desc->flags & AV_PIX_FMT_FLAG_ALPHA);
     fltp = !!(desc->flags & AV_PIX_FMT_FLAG_FLOAT);
 
-    for (int c = 0; c < desc->nb_components; c++) {
-        const AVComponentDescriptor comp = desc->comp[c];
+    प्रति (पूर्णाङ्क c = 0; c < desc->nb_components; c++) {
+        ध्रुव AVComponentDescriptor comp = desc->comp[c];
         uint32_t color = 0;
 
-        if (comp.depth > 32)
-            return AVERROR(EINVAL);
+        यदि (comp.गभीरता > 32)
+            प्रत्यागम AVERROR(EINVAL);
 
-        if (pix_fmt == AV_PIX_FMT_MONOWHITE) {
+        यदि (pix_fmt == AV_PIX_FMT_MONOWHITE) {
             color = 1;
-        } else if (c + 1 == desc->nb_components && alpha) {
+        } अन्यथा यदि (c + 1 == desc->nb_components && alpha) {
             // (Assume even limited YUV uses full range alpha.)
-            if (fltp) {
-                if (comp.depth != 16 && comp.depth != 32)
-                    return AVERROR(EINVAL);
-                color = (comp.depth == 16 ? 0x3C00 : 0x3F800000); // 1.0
-             } else {
-                color = (comp.depth == 32 ? 0 : (1 << comp.depth)) - 1;
+            यदि (fltp) {
+                यदि (comp.गभीरता != 16 && comp.गभीरता != 32)
+                    प्रत्यागम AVERROR(EINVAL);
+                color = (comp.गभीरता == 16 ? 0x3C00 : 0x3F800000); // 1.0
+             } अन्यथा {
+                color = (comp.गभीरता == 32 ? 0 : (1 << comp.गभीरता)) - 1;
              }
-        } else if (c == 0 && limited && comp.depth > 1) {
-            if (comp.depth < 8 || (fltp && comp.depth != 16 && comp.depth != 32))
-                return AVERROR(EINVAL);
-            if (fltp)
-                color = (comp.depth == 16 ? 0x2C00 : 0x3D800000); // 0.0625
-            else
-                color = 16 << (comp.depth - 8);
-        } else if ((c == 1 || c == 2) && !rgb && !xyz) {
-            if (comp.depth < 8 || fltp && comp.depth != 16 && comp.depth != 32)
-                return AVERROR(EINVAL);
-            if (fltp)
-                color = (comp.depth == 16 ? 0x3800 : 0x3F000000); // 0.5
-            else
-                color = 128 << (comp.depth - 8);
+        } अन्यथा यदि (c == 0 && limited && comp.गभीरता > 1) {
+            यदि (comp.गभीरता < 8 || (fltp && comp.गभीरता != 16 && comp.गभीरता != 32))
+                प्रत्यागम AVERROR(EINVAL);
+            यदि (fltp)
+                color = (comp.गभीरता == 16 ? 0x2C00 : 0x3D800000); // 0.0625
+            अन्यथा
+                color = 16 << (comp.गभीरता - 8);
+        } अन्यथा यदि ((c == 1 || c == 2) && !rgb && !xyz) {
+            यदि (comp.गभीरता < 8 || fltp && comp.गभीरता != 16 && comp.गभीरता != 32)
+                प्रत्यागम AVERROR(EINVAL);
+            यदि (fltp)
+                color = (comp.गभीरता == 16 ? 0x3800 : 0x3F000000); // 0.5
+            अन्यथा
+                color = 128 << (comp.गभीरता - 8);
         }
 
         colors[c] = color;
     }
 
-    return av_image_fill_color(dst_data, dst_linesize, pix_fmt, colors, width, height, 0);
+    प्रत्यागम av_image_fill_color(dst_दत्त, dst_linesize, pix_fmt, colors, विस्तारः, height, 0);
 }

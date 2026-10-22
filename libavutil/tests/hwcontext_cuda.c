@@ -16,125 +16,125 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdatomic.h>
-#include <stdio.h>
-#include <string.h>
+#अन्तर्भाव <inttypes.h>
+#अन्तर्भाव <stdatomic.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <string.h>
 
-#include "libavutil/adler32.h"
-#include "libavutil/hwcontext.h"
-#include "libavutil/hwcontext_cuda_internal.h"
-#include "libavutil/imgutils.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixfmt.h"
-#include "libavutil/time.h"
+#अन्तर्भाव "libavutil/adler32.h"
+#अन्तर्भाव "libavutil/hwcontext.h"
+#अन्तर्भाव "libavutil/hwcontext_cuda_internal.h"
+#अन्तर्भाव "libavutil/imgutils.h"
+#अन्तर्भाव "libavutil/log.h"
+#अन्तर्भाव "libavutil/mem.h"
+#अन्तर्भाव "libavutil/pixdesc.h"
+#अन्तर्भाव "libavutil/pixfmt.h"
+#अन्तर्भाव "libavutil/time.h"
 
-static void vflip(AVFrame *frame, const AVPixFmtDescriptor *desc)
+स्थिर शून्य vflip(AVFrame *frame, ध्रुव AVPixFmtDescriptor *desc)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->data) && frame->data[i]; i++) {
-        int shift = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    प्रति (पूर्णाङ्क i = 0; i < FF_ARRAY_ELEMS(frame->दत्त) && frame->दत्त[i]; i++) {
+        पूर्णाङ्क सरणम् = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
 
-        frame->data[i]    += (AV_CEIL_RSHIFT(frame->height, shift) - 1) * frame->linesize[i];
+        frame->दत्त[i]    += (AV_CEIL_RSHIFT(frame->height, सरणम्) - 1) * frame->linesize[i];
         frame->linesize[i] = -frame->linesize[i];
     }
 }
 
-static int test_format(AVBufferRef *device_ref, enum AVPixelFormat fmt,
-                       int flip_upload, int flip_download)
+स्थिर पूर्णाङ्क test_format(AVBufferRef *device_ref, गणना AVPixelFormat fmt,
+                       पूर्णाङ्क flip_upload, पूर्णाङ्क flip_download)
 {
-    AVBufferRef *frames_ref = NULL;
+    AVBufferRef *चौकटाः_ref = रिक्त;
     AVHWFramesContext *hwfc;
-    AVFrame *sw_frame = NULL, *hw_frame = NULL, *download = NULL;
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
-    int ret;
+    AVFrame *sw_frame = रिक्त, *hw_frame = रिक्त, *download = रिक्त;
+    ध्रुव AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
+    पूर्णाङ्क ret;
 
-    frames_ref = av_hwframe_ctx_alloc(device_ref);
-    if (!frames_ref) {
+    चौकटाः_ref = av_hwframe_ctx_alloc(device_ref);
+    यदि (!चौकटाः_ref) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        गच्छ fail;
     }
 
-    hwfc = (AVHWFramesContext *)frames_ref->data;
+    hwfc = (AVHWFramesContext *)चौकटाः_ref->दत्त;
     hwfc->format    = AV_PIX_FMT_CUDA;
     hwfc->sw_format = fmt;
-    hwfc->width     = 64;
+    hwfc->विस्तारः     = 64;
     hwfc->height    = 64;
 
-    ret = av_hwframe_ctx_init(frames_ref);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_ctx_init(चौकटाः_ref);
+    यदि (ret < 0)
+        गच्छ fail;
 
     sw_frame = av_frame_alloc();
     hw_frame = av_frame_alloc();
     download = av_frame_alloc();
-    if (!sw_frame || !hw_frame || !download) {
+    यदि (!sw_frame || !hw_frame || !download) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        गच्छ fail;
     }
 
     sw_frame->format = fmt;
-    sw_frame->width  = 64;
+    sw_frame->विस्तारः  = 64;
     sw_frame->height = 64;
-    ret = av_frame_get_buffer(sw_frame, 0);
-    if (ret < 0)
-        goto fail;
-    if (flip_upload)
+    ret = av_frame_get_बफर(sw_frame, 0);
+    यदि (ret < 0)
+        गच्छ fail;
+    यदि (flip_upload)
         vflip(sw_frame, desc);
 
     {
-        int linesizes[4];
+        पूर्णाङ्क linesizes[4];
         av_image_fill_linesizes(linesizes, fmt, 64);
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(sw_frame->data) && sw_frame->data[i]; i++) {
-            int shift = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
-            int h = AV_CEIL_RSHIFT(64, shift);
+        प्रति (पूर्णाङ्क i = 0; i < FF_ARRAY_ELEMS(sw_frame->दत्त) && sw_frame->दत्त[i]; i++) {
+            पूर्णाङ्क सरणम् = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
+            पूर्णाङ्क h = AV_CEIL_RSHIFT(64, सरणम्);
 
-            for (int y = 0; y < h; y++)
-                for (int x = 0; x < linesizes[i]; x++)
-                    sw_frame->data[i][y * sw_frame->linesize[i] + x] =
+            प्रति (पूर्णाङ्क y = 0; y < h; y++)
+                प्रति (पूर्णाङ्क x = 0; x < linesizes[i]; x++)
+                    sw_frame->दत्त[i][y * sw_frame->linesize[i] + x] =
                         (uint8_t)(x + y * 3 + i * 17);
         }
     }
 
-    ret = av_hwframe_get_buffer(frames_ref, hw_frame, 0);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_get_बफर(चौकटाः_ref, hw_frame, 0);
+    यदि (ret < 0)
+        गच्छ fail;
 
-    ret = av_hwframe_transfer_data(hw_frame, sw_frame, 0);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_transfer_दत्त(hw_frame, sw_frame, 0);
+    यदि (ret < 0)
+        गच्छ fail;
 
     download->format = fmt;
-    download->width  = 64;
+    download->विस्तारः  = 64;
     download->height = 64;
-    ret = av_frame_get_buffer(download, 0);
-    if (ret < 0)
-        goto fail;
-    if (flip_download)
+    ret = av_frame_get_बफर(download, 0);
+    यदि (ret < 0)
+        गच्छ fail;
+    यदि (flip_download)
         vflip(download, desc);
 
-    ret = av_hwframe_transfer_data(download, hw_frame, 0);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_transfer_दत्त(download, hw_frame, 0);
+    यदि (ret < 0)
+        गच्छ fail;
 
     {
-        int linesizes[4];
+        पूर्णाङ्क linesizes[4];
         av_image_fill_linesizes(linesizes, fmt, 64);
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(download->data) && download->data[i]; i++) {
-            int shift = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
-            int h = AV_CEIL_RSHIFT(64, shift);
+        प्रति (पूर्णाङ्क i = 0; i < FF_ARRAY_ELEMS(download->दत्त) && download->दत्त[i]; i++) {
+            पूर्णाङ्क सरणम् = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
+            पूर्णाङ्क h = AV_CEIL_RSHIFT(64, सरणम्);
 
-            for (int y = 0; y < h; y++) {
-                if (memcmp(sw_frame->data[i] + y * sw_frame->linesize[i],
-                           download->data[i] + y * download->linesize[i],
+            प्रति (पूर्णाङ्क y = 0; y < h; y++) {
+                यदि (memcmp(sw_frame->दत्त[i] + y * sw_frame->linesize[i],
+                           download->दत्त[i] + y * download->linesize[i],
                            linesizes[i])) {
-                    printf("fail: %-16s plane %d row %d mismatch\n",
+                    प्रारूप_लिख("fail: %-16s plane %d row %d mismatch\n",
                            av_get_pix_fmt_name(fmt), i, y);
                     ret = AVERROR(EINVAL);
-                    goto fail;
+                    गच्छ fail;
                 }
             }
         }
@@ -144,151 +144,151 @@ fail:
     av_frame_free(&sw_frame);
     av_frame_free(&hw_frame);
     av_frame_free(&download);
-    av_buffer_unref(&frames_ref);
-    return ret;
+    av_बफर_unref(&चौकटाः_ref);
+    प्रत्यागम ret;
 }
 
-static atomic_int source_overwritten;
+स्थिर atomic_int source_overwritten;
 
 /* Hold the stream until the source was overwritten, at most 100 ms. */
-static void CUDAAPI hold_stream(CUstream stream, CUresult status, void *opaque)
+स्थिर शून्य CUDAAPI hold_प्रवाहः(CUstream प्रवाहः, CUresult स्थितिः, शून्य *opaque)
 {
     int64_t start = av_gettime_relative();
-    while (!atomic_load(&source_overwritten) && av_gettime_relative() - start < 100000);
+    यावत् (!atomic_load(&source_overwritten) && av_gettime_relative() - start < 100000);
 }
 
 /* Reuse the memory of an uploaded transfer buffer while the stream is still
  * busy, the upload must not see the new contents. */
-static int test_source_reuse(AVBufferRef *device_ref)
+स्थिर पूर्णाङ्क test_source_reuse(AVBufferRef *device_ref)
 {
-    AVCUDADeviceContext *hwctx = ((AVHWDeviceContext *)device_ref->data)->hwctx;
-    CudaFunctions *cu = hwctx->internal->cuda_dl;
-    AVBufferRef *frames_ref = av_hwframe_ctx_alloc(device_ref);
+    AVCUDADeviceContext *hwctx = ((AVHWDeviceContext *)device_ref->दत्त)->hwctx;
+    CudaFunctions *cu = hwctx->आन्तरिकम्->cuda_dl;
+    AVBufferRef *चौकटाः_ref = av_hwframe_ctx_alloc(device_ref);
     AVFrame *sw_frame = av_frame_alloc(), *hw_frame = av_frame_alloc();
     AVFrame *download = av_frame_alloc();
     AVHWFramesContext *hwfc;
     CUcontext dummy;
     AVAdler checksum = 1;
-    int ret = AVERROR(ENOMEM);
+    पूर्णाङ्क ret = AVERROR(ENOMEM);
 
-    if (!frames_ref || !sw_frame || !hw_frame || !download)
-        goto fail;
+    यदि (!चौकटाः_ref || !sw_frame || !hw_frame || !download)
+        गच्छ fail;
 
-    hwfc = (AVHWFramesContext *)frames_ref->data;
+    hwfc = (AVHWFramesContext *)चौकटाः_ref->दत्त;
     hwfc->format    = AV_PIX_FMT_CUDA;
     hwfc->sw_format = AV_PIX_FMT_GRAY8;
-    hwfc->width     = 64;
+    hwfc->विस्तारः     = 64;
     hwfc->height    = 64;
-    if ((ret = av_hwframe_ctx_init(frames_ref)) < 0 ||
-        (ret = av_hwframe_get_buffer(frames_ref, hw_frame, 0)) < 0)
-        goto fail;
+    यदि ((ret = av_hwframe_ctx_init(चौकटाः_ref)) < 0 ||
+        (ret = av_hwframe_get_बफर(चौकटाः_ref, hw_frame, 0)) < 0)
+        गच्छ fail;
 
-    for (int value = 0x11; value <= 0x22; value += 0x11) {
+    प्रति (पूर्णाङ्क मानम् = 0x11; मानम् <= 0x22; मानम् += 0x11) {
         av_frame_unref(sw_frame);
         sw_frame->format = AV_PIX_FMT_GRAY8;
-        sw_frame->width  = 64;
+        sw_frame->विस्तारः  = 64;
         sw_frame->height = 64;
-        if ((ret = av_hwframe_get_transfer_buffer(frames_ref, sw_frame)) < 0)
-            goto fail;
-        for (int y = 0; y < 64; y++)
-            memset(sw_frame->data[0] + y * sw_frame->linesize[0], value, 64);
-        if (value == 0x22) {
+        यदि ((ret = av_hwframe_get_transfer_बफर(चौकटाः_ref, sw_frame)) < 0)
+            गच्छ fail;
+        प्रति (पूर्णाङ्क y = 0; y < 64; y++)
+            स्मृतिं_पूरय(sw_frame->दत्त[0] + y * sw_frame->linesize[0], मानम्, 64);
+        यदि (मानम् == 0x22) {
             atomic_store(&source_overwritten, 1);
-            break;
+            भङ्ग;
         }
 
         ret = AVERROR_EXTERNAL;
-        if (cu->cuCtxPushCurrent(hwctx->cuda_ctx) != CUDA_SUCCESS)
-            goto fail;
-        if (cu->cuStreamAddCallback(hwctx->stream, hold_stream, NULL, 0) == CUDA_SUCCESS)
+        यदि (cu->cu_Ctx_प्रक्षिप_Current(hwctx->cuda_ctx) != CUDA_SUCCESS)
+            गच्छ fail;
+        यदि (cu->cu_प्रवाहः_सङ्कलय_Callback(hwctx->प्रवाहः, hold_प्रवाहः, रिक्त, 0) == CUDA_SUCCESS)
             ret = 0;
-        cu->cuCtxPopCurrent(&dummy);
-        if (ret < 0)
-            goto fail;
+        cu->cu_Ctx_निष्कासय_Current(&dummy);
+        यदि (ret < 0)
+            गच्छ fail;
 
-        if ((ret = av_hwframe_transfer_data(hw_frame, sw_frame, 0)) < 0)
-            goto fail;
+        यदि ((ret = av_hwframe_transfer_दत्त(hw_frame, sw_frame, 0)) < 0)
+            गच्छ fail;
     }
 
-    if ((ret = av_hwframe_transfer_data(download, hw_frame, 0)) < 0)
-        goto fail;
-    for (int y = 0; y < 64; y++)
+    यदि ((ret = av_hwframe_transfer_दत्त(download, hw_frame, 0)) < 0)
+        गच्छ fail;
+    प्रति (पूर्णाङ्क y = 0; y < 64; y++)
         checksum = av_adler32_update(checksum,
-                                     download->data[0] + y * download->linesize[0], 64);
+                                     download->दत्त[0] + y * download->linesize[0], 64);
     fprintf(stderr, "source reuse checksum: %08"PRIx32"\n", checksum);
 
 fail:
     av_frame_free(&sw_frame);
     av_frame_free(&hw_frame);
     av_frame_free(&download);
-    av_buffer_unref(&frames_ref);
-    return ret;
+    av_बफर_unref(&चौकटाः_ref);
+    प्रत्यागम ret;
 }
 
 /* Verify that an unsupported sw_format is refused at init time. Returns 0 when
  * the format is correctly rejected, and an error when it is wrongly accepted. */
-static int test_rejected(AVBufferRef *device_ref, enum AVPixelFormat fmt)
+स्थिर पूर्णाङ्क test_rejected(AVBufferRef *device_ref, गणना AVPixelFormat fmt)
 {
-    AVBufferRef *frames_ref = av_hwframe_ctx_alloc(device_ref);
+    AVBufferRef *चौकटाः_ref = av_hwframe_ctx_alloc(device_ref);
     AVHWFramesContext *hwfc;
-    int ret;
+    पूर्णाङ्क ret;
 
-    if (!frames_ref)
-        return AVERROR(ENOMEM);
+    यदि (!चौकटाः_ref)
+        प्रत्यागम AVERROR(ENOMEM);
 
-    hwfc = (AVHWFramesContext *)frames_ref->data;
+    hwfc = (AVHWFramesContext *)चौकटाः_ref->दत्त;
     hwfc->format    = AV_PIX_FMT_CUDA;
     hwfc->sw_format = fmt;
-    hwfc->width     = 64;
+    hwfc->विस्तारः     = 64;
     hwfc->height    = 64;
 
     /* Init is expected to fail; silence the resulting error log. */
-    av_log_set_level(AV_LOG_QUIET);
-    ret = av_hwframe_ctx_init(frames_ref);
-    av_log_set_level(AV_LOG_INFO);
+    av_log_समुच्चयः_level(AV_LOG_QUIET);
+    ret = av_hwframe_ctx_init(चौकटाः_ref);
+    av_log_समुच्चयः_level(AV_LOG_INFO);
 
-    av_buffer_unref(&frames_ref);
+    av_बफर_unref(&चौकटाः_ref);
 
-    return ret >= 0 ? AVERROR(EINVAL) : 0;
+    प्रत्यागम ret >= 0 ? AVERROR(EINVAL) : 0;
 }
 
-int main(void)
+पूर्णाङ्क मुख्यम्(शून्य)
 {
-    AVBufferRef *device_ref = NULL;
-    enum AVPixelFormat fmt;
-    int ret, failures = 0, total = 0;
+    AVBufferRef *device_ref = रिक्त;
+    गणना AVPixelFormat fmt;
+    पूर्णाङ्क ret, failures = 0, योग_2 = 0;
 
-    ret = av_hwdevice_ctx_create(&device_ref, AV_HWDEVICE_TYPE_CUDA, NULL, NULL, 0);
-    if (ret < 0) {
+    ret = av_hwdevice_ctx_create(&device_ref, AV_HWDEVICE_TYPE_CUDA, रिक्त, रिक्त, 0);
+    यदि (ret < 0) {
         /* CONFIG_CUDA only requires the ffnvcodec headers and a dynamic
          * loader; a FATE host that compiled CUDA support need not have an
          * NVIDIA GPU or usable driver. Skip cleanly in that case so that
          * make fate does not fail for an unavailable test environment. A real
          * transfer mismatch below still returns a nonzero exit status. */
         fprintf(stderr, "No CUDA device available, skipping.\n");
-        return 0;
+        प्रत्यागम 0;
     }
 
-    for (fmt = 0; fmt < AV_PIX_FMT_NB; fmt++) {
-        const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
-        if (!desc || (desc->flags & AV_PIX_FMT_FLAG_HWACCEL))
-            continue;
+    प्रति (fmt = 0; fmt < AV_PIX_FMT_NB; fmt++) {
+        ध्रुव AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
+        यदि (!desc || (desc->flags & AV_PIX_FMT_FLAG_HWACCEL))
+            अनुवर्त;
 
-        total++;
+        योग_2++;
         /* Palette formats must be refused rather than silently dropping the
          * palette across a transfer; every other format must round-trip. */
-        if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
-            if (test_rejected(device_ref, fmt) < 0) {
-                printf("fail: %-16s wrongly accepted\n",
+        यदि (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+            यदि (test_rejected(device_ref, fmt) < 0) {
+                प्रारूप_लिख("fail: %-16s wrongly accepted\n",
                        av_get_pix_fmt_name(fmt));
                 failures++;
             }
-        } else {
+        } अन्यथा {
             ret = 0;
-            for (int flip = 0; flip < 4 && ret >= 0; flip++)
+            प्रति (पूर्णाङ्क flip = 0; flip < 4 && ret >= 0; flip++)
                 ret = test_format(device_ref, fmt, flip & 1, flip & 2);
-            if (ret < 0) {
-                printf("fail: %-16s %s\n",
+            यदि (ret < 0) {
+                प्रारूप_लिख("fail: %-16s %s\n",
                        av_get_pix_fmt_name(fmt),
                        av_err2str(ret));
                 failures++;
@@ -296,19 +296,19 @@ int main(void)
         }
     }
 
-    total++;
+    योग_2++;
     ret = test_source_reuse(device_ref);
-    if (ret < 0) {
-        printf("fail: source reuse %s\n", av_err2str(ret));
+    यदि (ret < 0) {
+        प्रारूप_लिख("fail: source reuse %s\n", av_err2str(ret));
         failures++;
     }
 
-    av_buffer_unref(&device_ref);
+    av_बफर_unref(&device_ref);
 
-    if (failures)
-        printf("%d / %d tests failed.\n", failures, total);
-    else
-        printf("%d tests passed.\n", total);
+    यदि (failures)
+        प्रारूप_लिख("%d / %d tests failed.\n", failures, योग_2);
+    अन्यथा
+        प्रारूप_लिख("%d tests passed.\n", योग_2);
 
-    return !!failures;
+    प्रत्यागम !!failures;
 }

@@ -18,28 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "hdr_dynamic_vivid_metadata.h"
-#include "mem.h"
+#अन्तर्भाव "hdr_dynamic_vivid_metadata.h"
+#अन्तर्भाव "mem.h"
 
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *size)
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *आकार)
 {
-    AVDynamicHDRVivid *hdr_vivid = av_mallocz(sizeof(AVDynamicHDRVivid));
+    AVDynamicHDRVivid *hdr_vivid = av_mallocz(परिमाण(AVDynamicHDRVivid));
 
-    if (size)
-        *size = hdr_vivid ? sizeof(*hdr_vivid) : 0;
+    यदि (आकार)
+        *आकार = hdr_vivid ? परिमाण(*hdr_vivid) : 0;
 
-    return hdr_vivid;
+    प्रत्यागम hdr_vivid;
 }
 
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_data(AVFrame *frame)
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_दत्त(AVFrame *frame)
 {
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_DYNAMIC_HDR_VIVID,
-                                                        sizeof(AVDynamicHDRVivid));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_दत्त *side_दत्त = av_frame_new_side_दत्त(frame,
+                                                        AV_FRAME_दत्त_DYNAMIC_HDR_VIVID,
+                                                        परिमाण(AVDynamicHDRVivid));
+    यदि (!side_दत्त)
+        प्रत्यागम रिक्त;
 
-    memset(side_data->data, 0, sizeof(AVDynamicHDRVivid));
+    स्मृतिं_पूरय(side_दत्त->दत्त, 0, परिमाण(AVDynamicHDRVivid));
 
-    return (AVDynamicHDRVivid *)side_data->data;
+    प्रत्यागम (AVDynamicHDRVivid *)side_दत्त->दत्त;
 }

@@ -16,10 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_VAAPI_H
-#define AVUTIL_HWCONTEXT_VAAPI_H
+#यदि_अपरिभाषितम् AVUTIL_HWCONTEXT_VAAPI_H
+#परिभाषय AVUTIL_HWCONTEXT_VAAPI_H
 
-#include <va/va.h>
+#अन्तर्भाव <va/va.h>
 
 /**
  * @file
@@ -33,12 +33,12 @@
  * with the data pointer set to a VASurfaceID.
  */
 
-enum {
+गणना {
     /**
      * The quirks field has been set by the user and should not be detected
      * automatically by av_hwdevice_ctx_init().
      */
-    AV_VAAPI_DRIVER_QUIRK_USER_SET = (1 << 0),
+    AV_VAAPI_DRIVER_QUIRK_USER_समुच्चयः = (1 << 0),
     /**
      * The driver does not destroy parameter buffers when they are used by
      * vaRenderPicture().  Additional code will be required to destroy them
@@ -57,7 +57,7 @@ enum {
      * The surface allocation code will never pass them to surface allocation,
      * and the results of the vaQuerySurfaceAttributes() call will be faked.
      */
-    AV_VAAPI_DRIVER_QUIRK_SURFACE_ATTRIBUTES = (1 << 3),
+    AV_VAAPI_DRIVER_QUIRK_SURFACE_गुणाः = (1 << 3),
 };
 
 /**
@@ -65,7 +65,7 @@ enum {
  *
  * Allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVVAAPIDeviceContext {
+प्रकारनिर्देश संरचना AVVAAPIDeviceContext {
     /**
      * The VADisplay handle, to be filled by the user.
      */
@@ -77,7 +77,7 @@ typedef struct AVVAAPIDeviceContext {
      * may need to refer to this field when performing any later
      * operations using VAAPI with the same VADisplay.
      */
-    unsigned int driver_quirks;
+    अचिह्नित पूर्णाङ्क driver_quirks;
 } AVVAAPIDeviceContext;
 
 /**
@@ -85,13 +85,13 @@ typedef struct AVVAAPIDeviceContext {
  *
  * Allocated as AVHWFramesContext.hwctx.
  */
-typedef struct AVVAAPIFramesContext {
+प्रकारनिर्देश संरचना AVVAAPIFramesContext {
     /**
      * Set by the user to apply surface attributes to all surfaces in
      * the frame pool.  If null, default settings are used.
      */
-    VASurfaceAttrib *attributes;
-    int           nb_attributes;
+    VASurfaceAttrib *गुणाः;
+    पूर्णाङ्क           nb_गुणाः;
     /**
      * The surfaces IDs of all surfaces in the pool after creation.
      * Only valid if AVHWFramesContext.initial_pool_size was positive.
@@ -99,7 +99,7 @@ typedef struct AVVAAPIFramesContext {
      * vaCreateContext().
      */
     VASurfaceID     *surface_ids;
-    int           nb_surfaces;
+    पूर्णाङ्क           nb_surfaces;
 } AVVAAPIFramesContext;
 
 /**
@@ -107,11 +107,11 @@ typedef struct AVVAAPIFramesContext {
  *
  * Allocated with av_hwdevice_hwconfig_alloc().
  */
-typedef struct AVVAAPIHWConfig {
+प्रकारनिर्देश संरचना AVVAAPIHWConfig {
     /**
      * ID of a VAAPI pipeline configuration.
      */
     VAConfigID config_id;
 } AVVAAPIHWConfig;
 
-#endif /* AVUTIL_HWCONTEXT_VAAPI_H */
+#यदि_अन्तः /* AVUTIL_HWCONTEXT_VAAPI_H */

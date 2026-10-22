@@ -23,12 +23,12 @@
  * high precision timer, useful to profile code
  */
 
-#ifndef AVUTIL_TIMER_H
-#define AVUTIL_TIMER_H
+#यदि_अपरिभाषितम् AVUTIL_TIMER_H
+#परिभाषय AVUTIL_TIMER_H
 
-#include "config.h"
+#अन्तर्भाव "config.h"
 
-#if CONFIG_LINUX_PERF
+#यदि CONFIG_LINUX_PERF
 # ifndef _GNU_SOURCE
 #  define _GNU_SOURCE
 # endif
@@ -36,91 +36,91 @@
 # include <sys/ioctl.h>
 # include <asm/unistd.h>
 # include <linux/perf_event.h>
-#endif
+#यदि_अन्तः
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <inttypes.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <inttypes.h>
 
-#if CONFIG_MACOS_KPERF
-#include "macos_kperf.h"
-#endif
+#यदि CONFIG_MACOS_KPERF
+#अन्तर्भाव "macos_kperf.h"
+#यदि_अन्तः
 
-#if HAVE_MACH_ABSOLUTE_TIME
-#include <mach/mach_time.h>
-#elif HAVE_CLOCK_GETTIME
-#include <time.h>
-#endif
+#यदि HAVE_MACH_ABSOLUTE_TIME
+#अन्तर्भाव <mach/mach_time.h>
+#नोचेद्यदि HAVE_CLOCK_GETTIME
+#अन्तर्भाव <time.h>
+#यदि_अन्तः
 
-#include "common.h"
-#include "log.h"
+#अन्तर्भाव "common.h"
+#अन्तर्भाव "log.h"
 
-#if   ARCH_AARCH64
+#यदि   ARCH_AARCH64
 #   include "aarch64/timer.h"
-#elif ARCH_PPC
+#नोचेद्यदि ARCH_PPC
 #   include "ppc/timer.h"
-#elif ARCH_X86
+#नोचेद्यदि ARCH_X86
 #   include "x86/timer.h"
-#elif ARCH_LOONGARCH
+#नोचेद्यदि ARCH_LOONGARCH
 #   include "loongarch/timer.h"
-#endif
+#यदि_अन्तः
 
-#if !defined(AV_READ_TIME)
-#   if HAVE_GETHRTIME
+#यदि !defined(AV_READ_TIME)
+#   यदि HAVE_GETHRTIME
 #       define AV_READ_TIME gethrtime
 #   elif HAVE_MACH_ABSOLUTE_TIME
 #       define AV_READ_TIME mach_absolute_time
 #   elif HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
-        static inline int64_t ff_read_time(void)
+        स्थिर अन्तःस्थ int64_t ff_read_time(शून्य)
         {
-            struct timespec ts;
+            संरचना timespec ts;
             clock_gettime(CLOCK_MONOTONIC, &ts);
-            return ts.tv_sec * INT64_C(1000000000) + ts.tv_nsec;
+            प्रत्यागम ts.tv_sec * INT64_C(1000000000) + ts.tv_nsec;
         }
 #       define AV_READ_TIME ff_read_time
 #       define FF_TIMER_UNITS "ns"
 #   endif
-#endif
+#यदि_अन्तः
 
-#ifndef FF_TIMER_UNITS
+#यदि_अपरिभाषितम् FF_TIMER_UNITS
 #   define FF_TIMER_UNITS "UNITS"
-#endif
+#यदि_अन्तः
 
-#define TIMER_REPORT(id, tdiff)                                           \
+#परिभाषय TIMER_REPORT(id, tdiff)                                           \
     {                                                                     \
-        static uint64_t tsum   = 0;                                       \
-        static int tcount      = 0;                                       \
-        static int tskip_count = 0;                                       \
-        static int thistogram[32] = {0};                                  \
+        स्थिर uint64_t tsum   = 0;                                       \
+        स्थिर पूर्णाङ्क tcount      = 0;                                       \
+        स्थिर पूर्णाङ्क tskip_गणनम् = 0;                                       \
+        स्थिर पूर्णाङ्क thistogram[32] = {0};                                  \
         thistogram[av_log2(tdiff)]++;                                     \
-        if (tcount < 2                ||                                  \
+        यदि (tcount < 2                ||                                  \
             (tdiff) < 8 * tsum / tcount ||                                \
             (tdiff) < 2000) {                                             \
             tsum += (tdiff);                                              \
             tcount++;                                                     \
-        } else                                                            \
-            tskip_count++;                                                \
-        if (((tcount + tskip_count) & (tcount + tskip_count - 1)) == 0) { \
-            int i;                                                        \
-            av_log(NULL, AV_LOG_ERROR,                                    \
+        } अन्यथा                                                            \
+            tskip_गणनम्++;                                                \
+        यदि (((tcount + tskip_गणनम्) & (tcount + tskip_गणनम् - 1)) == 0) { \
+            पूर्णाङ्क i;                                                        \
+            av_log(रिक्त, AV_LOG_ERROR,                                    \
                    "%7" PRIu64 " " FF_TIMER_UNITS " in %s,%8d runs,%7d skips",\
-                   tsum * 10 / tcount, id, tcount, tskip_count);          \
-            for (i = 0; i < 32; i++)                                      \
-                av_log(NULL, AV_LOG_VERBOSE, " %2d", av_log2(2*thistogram[i]));\
-            av_log(NULL, AV_LOG_ERROR, "\n");                             \
+                   tsum * 10 / tcount, id, tcount, tskip_गणनम्);          \
+            प्रति (i = 0; i < 32; i++)                                      \
+                av_log(रिक्त, AV_LOG_VERBOSE, " %2d", av_log2(2*thistogram[i]));\
+            av_log(रिक्त, AV_LOG_ERROR, "\n");                             \
         }                                                                 \
     }
 
-#if CONFIG_LINUX_PERF
+#यदि CONFIG_LINUX_PERF
 
-#define START_TIMER                                                         \
-    static int linux_perf_fd = -1;                                          \
+#परिभाषय START_TIMER                                                         \
+    स्थिर पूर्णाङ्क linux_perf_fd = -1;                                          \
     uint64_t tperf;                                                         \
-    if (linux_perf_fd == -1) {                                              \
-        struct perf_event_attr attr = {                                     \
+    यदि (linux_perf_fd == -1) {                                              \
+        संरचना perf_event_attr attr = {                                     \
             .type           = PERF_TYPE_HARDWARE,                           \
-            .size           = sizeof(struct perf_event_attr),               \
-            .config         = PERF_COUNT_HW_CPU_CYCLES,                     \
+            .आकार           = परिमाण(संरचना perf_event_attr),               \
+            .config         = PERF_गणनम्_HW_CPU_आवृत्तयः,                     \
             .disabled       = 1,                                            \
             .exclude_kernel = 1,                                            \
             .exclude_hv     = 1,                                            \
@@ -128,41 +128,41 @@
         linux_perf_fd = syscall(__NR_perf_event_open, &attr,                \
                                 0, -1, -1, 0);                              \
     }                                                                       \
-    if (linux_perf_fd == -1) {                                              \
-        av_log(NULL, AV_LOG_ERROR, "perf_event_open failed: %s\n",          \
+    यदि (linux_perf_fd == -1) {                                              \
+        av_log(रिक्त, AV_LOG_ERROR, "perf_event_open failed: %s\n",          \
                av_err2str(AVERROR(errno)));                                 \
-    } else {                                                                \
+    } अन्यथा {                                                                \
         ioctl(linux_perf_fd, PERF_EVENT_IOC_RESET, 0);                      \
         ioctl(linux_perf_fd, PERF_EVENT_IOC_ENABLE, 0);                     \
     }
 
-#define STOP_TIMER(id)                                                      \
+#परिभाषय STOP_TIMER(id)                                                      \
     ioctl(linux_perf_fd, PERF_EVENT_IOC_DISABLE, 0);                        \
-    if (read(linux_perf_fd, &tperf, sizeof(tperf)) != sizeof(tperf))        \
+    यदि (पठ(linux_perf_fd, &tperf, परिमाण(tperf)) != परिमाण(tperf))        \
         tperf = 0;                                                          \
     TIMER_REPORT(id, tperf)
 
-#elif CONFIG_MACOS_KPERF
+#नोचेद्यदि CONFIG_MACOS_KPERF
 
-#define START_TIMER                                                         \
+#परिभाषय START_TIMER                                                         \
     uint64_t tperf;                                                         \
     ff_kperf_init();                                                        \
-    tperf = ff_kperf_cycles();
+    tperf = ff_kperf_आवृत्तयः();
 
-#define STOP_TIMER(id)                                                      \
-    TIMER_REPORT(id, ff_kperf_cycles() - tperf);
+#परिभाषय STOP_TIMER(id)                                                      \
+    TIMER_REPORT(id, ff_kperf_आवृत्तयः() - tperf);
 
-#elif defined(AV_READ_TIME)
-#define START_TIMER                             \
+#नोचेद्यदि defined(AV_READ_TIME)
+#परिभाषय START_TIMER                             \
     uint64_t tend;                              \
     uint64_t tstart = AV_READ_TIME();           \
 
-#define STOP_TIMER(id)                                                    \
+#परिभाषय STOP_TIMER(id)                                                    \
     tend = AV_READ_TIME();                                                \
     TIMER_REPORT(id, tend - tstart)
-#else
-#define START_TIMER
-#define STOP_TIMER(id) { }
-#endif
+#अन्यथा
+#परिभाषय START_TIMER
+#परिभाषय STOP_TIMER(id) { }
+#यदि_अन्तः
 
-#endif /* AVUTIL_TIMER_H */
+#यदि_अन्तः /* AVUTIL_TIMER_H */

@@ -49,10 +49,10 @@ INIT_XMM sse2
 %define movdqa movaps
 cglobal update_lls, 2,5,8, ctx, var, i, j, covar2
     %define covarq ctxq
-    mov     id, [ctxq + LLSModel.indep_count]
+    चालय     id, [ctxq + LLSModel.indep_count]
     lea   varq, [varq + iq*8]
     neg     iq
-    mov covar2q, covarq
+    चालय covar2q, covarq
 .loopi:
     ; Compute all 3 pairwise products of a 2x2 block that lies on the diagonal
     mova    m1, [varq + iq*8]
@@ -67,7 +67,7 @@ cglobal update_lls, 2,5,8, ctx, var, i, j, covar2
     ADDPD_MEM COVAR(-2,0), m0
     ADDPD_MEM COVAR(-2,1), m1
     lea     jq, [iq + 2]
-    cmp     jd, -2
+    तुलय     jd, -2
     jg .skip4x4
 .loop4x4:
     ; Compute all 16 pairwise products of a 4x4 block
@@ -89,9 +89,9 @@ cglobal update_lls, 2,5,8, ctx, var, i, j, covar2
     ADDPD_MEM COVAR(2,2), m2
     ADDPD_MEM COVAR(2,3), m3
     mova    m3, [varq + jq*8 + 32]
-    add covarq, 32
-    add     jq, 4
-    cmp     jd, -2
+    योजय covarq, 32
+    योजय     jq, 4
+    तुलय     jd, -2
     jle .loop4x4
 .skip4x4:
     test    jd, jd
@@ -105,13 +105,13 @@ cglobal update_lls, 2,5,8, ctx, var, i, j, covar2
     ADDPD_MEM COVAR(0,2), m6
     ADDPD_MEM COVAR(0,3), m7
 .skip2x4:
-    add     iq, 4
-    add covar2q, 4*COVAR_STRIDE+32
-    cmp     id, -2
+    योजय     iq, 4
+    योजय covar2q, 4*COVAR_STRIDE+32
+    तुलय     id, -2
     jle .loopi
     test    id, id
-    jg .ret
-    mov     jq, iq
+    jg .प्रत्यागच्छ
+    चालय     jq, iq
     %define covarq covar2q
 .loop2x1:
     movsd   m0, [varq + iq*8]
@@ -119,16 +119,16 @@ cglobal update_lls, 2,5,8, ctx, var, i, j, covar2
     mulpd   m0, [varq + jq*8]
     ADDPD_MEM COVAR(0,0), m0
     inc     iq
-    add covarq, COVAR_STRIDE
+    योजय covarq, COVAR_STRIDE
     test    id, id
     jle .loop2x1
-.ret:
+.प्रत्यागच्छ:
     RET
 
 %macro UPDATE_LLS 0
 cglobal update_lls, 3,6,8, ctx, var, count, i, j, count2
     %define covarq ctxq
-    mov  countd, [ctxq + LLSModel.indep_count]
+    चालय  countd, [ctxq + LLSModel.indep_count]
     lea count2d, [countq-2]
     xor     id, id
 .loopi:
@@ -161,7 +161,7 @@ cglobal update_lls, 3,6,8, ctx, var, count, i, j, count2
     ADDPD_MEM COVAR(iq+2,3), xmm3
 %endif ; cpuflag(fma3)
     lea     jd, [iq + 4]
-    cmp     jd, count2d
+    तुलय     jd, count2d
     jg .skip4x4
 .loop4x4:
     ; Compute all 16 pairwise products of a 4x4 block
@@ -188,11 +188,11 @@ cglobal update_lls, 3,6,8, ctx, var, count, i, j, count2
     ADDPD_MEM COVAR(jq,2), ymm2
     ADDPD_MEM COVAR(jq,3), ymm3
 %endif ; cpuflag(fma3)
-    add     jd, 4
-    cmp     jd, count2d
+    योजय     jd, 4
+    तुलय     jd, count2d
     jle .loop4x4
 .skip4x4:
-    cmp     jd, countd
+    तुलय     jd, countd
     jg .skip2x4
     mova    xmm3, [varq + jq*8]
 %if cpuflag(fma3)
@@ -218,13 +218,13 @@ cglobal update_lls, 3,6,8, ctx, var, count, i, j, count2
     ADDPD_MEM COVAR(jq,3), xmm3
 %endif ; cpuflag(fma3)
 .skip2x4:
-    add     id, 4
-    add covarq, 4*COVAR_STRIDE
-    cmp     id, count2d
+    योजय     id, 4
+    योजय covarq, 4*COVAR_STRIDE
+    तुलय     id, count2d
     jle .loopi
-    cmp     id, countd
-    jg .ret
-    mov     jd, id
+    तुलय     id, countd
+    jg .प्रत्यागच्छ
+    चालय     jd, id
 .loop2x1:
     vmovddup xmm0, [varq + iq*8]
 %if cpuflag(fma3)
@@ -236,10 +236,10 @@ cglobal update_lls, 3,6,8, ctx, var, count, i, j, count2
     ADDPD_MEM COVAR(jq,0), xmm0
 %endif ; cpuflag(fma3)
     inc     id
-    add covarq, COVAR_STRIDE
-    cmp     id, countd
+    योजय covarq, COVAR_STRIDE
+    तुलय     id, countd
     jle .loop2x1
-.ret:
+.प्रत्यागच्छ:
     RET
 %endmacro ; UPDATE_LLS
 
@@ -259,7 +259,7 @@ cglobal evaluate_lls, 3,4,2, ctx, var, order, i
     ; Load halves rather than movu to avoid store-forwarding stalls, since the
     ; input was initialized immediately prior to this function using scalar math.
     %define coefsq ctxq
-    mov     id, orderd
+    चालय     id, orderd
     imul    orderd, MAX_VARS
     lea     coefsq, [ctxq + LLSModel.coeff + orderq*8]
     movsd   m0, [varq]
@@ -268,13 +268,13 @@ cglobal evaluate_lls, 3,4,2, ctx, var, order, i
     lea coefsq, [coefsq + iq*8]
     lea   varq, [varq + iq*8]
     neg     iq
-    add     iq, 2
+    योजय     iq, 2
 .loop:
     movsd   m1, [varq + iq*8]
     movhpd  m1, [varq + iq*8 + 8]
     mulpd   m1, [coefsq + iq*8]
     addpd   m0, m1
-    add     iq, 2
+    योजय     iq, 2
     jl .loop
     jg .skip1
     movsd   m1, [varq + iq*8]

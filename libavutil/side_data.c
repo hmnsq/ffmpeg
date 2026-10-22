@@ -16,307 +16,307 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avassert.h"
-#include "buffer.h"
-#include "common.h"
-#include "dict.h"
-#include "frame.h"
-#include "mem.h"
-#include "side_data.h"
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव "buffer.h"
+#अन्तर्भाव "common.h"
+#अन्तर्भाव "dict.h"
+#अन्तर्भाव "frame.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "side_data.h"
 
-static const AVSideDataDescriptor sd_props[] = {
-    [AV_FRAME_DATA_PANSCAN]                     = { "AVPanScan",                                    AV_SIDE_DATA_PROP_SIZE_DEPENDENT },
-    [AV_FRAME_DATA_A53_CC]                      = { "ATSC A53 Part 4 Closed Captions" },
-    [AV_FRAME_DATA_MATRIXENCODING]              = { "AVMatrixEncoding",                             AV_SIDE_DATA_PROP_CHANNEL_DEPENDENT },
-    [AV_FRAME_DATA_DOWNMIX_INFO]                = { "Metadata relevant to a downmix procedure",     AV_SIDE_DATA_PROP_CHANNEL_DEPENDENT },
-    [AV_FRAME_DATA_AFD]                         = { "Active format description" },
-    [AV_FRAME_DATA_MOTION_VECTORS]              = { "Motion vectors",                               AV_SIDE_DATA_PROP_SIZE_DEPENDENT },
-    [AV_FRAME_DATA_SKIP_SAMPLES]                = { "Skip samples" },
-    [AV_FRAME_DATA_GOP_TIMECODE]                = { "GOP timecode" },
-    [AV_FRAME_DATA_S12M_TIMECODE]               = { "SMPTE 12-1 timecode" },
-    [AV_FRAME_DATA_DYNAMIC_HDR_PLUS]            = { "HDR Dynamic Metadata SMPTE2094-40 (HDR10+)",   AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
-    [AV_FRAME_DATA_DYNAMIC_HDR_VIVID]           = { "HDR Dynamic Metadata CUVA 005.1 2021 (Vivid)", AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
-    [AV_FRAME_DATA_DYNAMIC_HDR_SMPTE_2094_APP5] = { "HDR Dynamic Metadata SMPTE2094-50",            AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
-    [AV_FRAME_DATA_REGIONS_OF_INTEREST]         = { "Regions Of Interest",                          AV_SIDE_DATA_PROP_SIZE_DEPENDENT },
-    [AV_FRAME_DATA_VIDEO_ENC_PARAMS]            = { "Video encoding parameters" },
-    [AV_FRAME_DATA_FILM_GRAIN_PARAMS]           = { "Film grain parameters" },
-    [AV_FRAME_DATA_DETECTION_BBOXES]            = { "Bounding boxes for object detection and classification", AV_SIDE_DATA_PROP_SIZE_DEPENDENT },
-    [AV_FRAME_DATA_DOVI_RPU_BUFFER]             = { "Dolby Vision RPU Data",                        AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
-    [AV_FRAME_DATA_DOVI_METADATA]               = { "Dolby Vision Metadata",                        AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
-    [AV_FRAME_DATA_LCEVC]                       = { "LCEVC NAL data",                               AV_SIDE_DATA_PROP_SIZE_DEPENDENT },
-    [AV_FRAME_DATA_VIEW_ID]                     = { "View ID" },
-    [AV_FRAME_DATA_STEREO3D]                    = { "Stereo 3D",                                    AV_SIDE_DATA_PROP_GLOBAL },
-    [AV_FRAME_DATA_REPLAYGAIN]                  = { "AVReplayGain",                                 AV_SIDE_DATA_PROP_GLOBAL },
-    [AV_FRAME_DATA_DISPLAYMATRIX]               = { "3x3 displaymatrix",                            AV_SIDE_DATA_PROP_GLOBAL },
-    [AV_FRAME_DATA_AUDIO_SERVICE_TYPE]          = { "Audio service type",                           AV_SIDE_DATA_PROP_GLOBAL },
-    [AV_FRAME_DATA_MASTERING_DISPLAY_METADATA]  = { "Mastering display metadata",                   AV_SIDE_DATA_PROP_GLOBAL | AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
-    [AV_FRAME_DATA_CONTENT_LIGHT_LEVEL]         = { "Content light level metadata",                 AV_SIDE_DATA_PROP_GLOBAL | AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
-    [AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT] = { "Ambient viewing environment",                  AV_SIDE_DATA_PROP_GLOBAL },
-    [AV_FRAME_DATA_SPHERICAL]                   = { "Spherical Mapping",                            AV_SIDE_DATA_PROP_GLOBAL | AV_SIDE_DATA_PROP_SIZE_DEPENDENT },
-    [AV_FRAME_DATA_ICC_PROFILE]                 = { "ICC profile",                                  AV_SIDE_DATA_PROP_GLOBAL | AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
-    [AV_FRAME_DATA_EXIF]                        = { "EXIF metadata",                                AV_SIDE_DATA_PROP_GLOBAL },
-    [AV_FRAME_DATA_SEI_UNREGISTERED]            = { "H.26[45] User Data Unregistered SEI message",  AV_SIDE_DATA_PROP_MULTI },
-    [AV_FRAME_DATA_VIDEO_HINT]                  = { "Encoding video hint",                          AV_SIDE_DATA_PROP_SIZE_DEPENDENT },
-    [AV_FRAME_DATA_3D_REFERENCE_DISPLAYS]       = { "3D Reference Displays Information",            AV_SIDE_DATA_PROP_GLOBAL },
-    [AV_FRAME_DATA_IAMF_MIX_GAIN_PARAM]         = { "IAMF Mix Gain Parameter Data" },
-    [AV_FRAME_DATA_IAMF_DEMIXING_INFO_PARAM]    = { "IAMF Demixing Info Parameter Data",            AV_SIDE_DATA_PROP_CHANNEL_DEPENDENT },
-    [AV_FRAME_DATA_IAMF_RECON_GAIN_INFO_PARAM]  = { "IAMF Recon Gain Info Parameter Data" },
-    [AV_FRAME_DATA_RAW_COLOR_PARAMS]            = { "RAW camera color parameters",                  AV_SIDE_DATA_PROP_GLOBAL | AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
-    [AV_FRAME_DATA_DOWNMIX_MATRIX]              = { "Downmix Matrix",                               AV_SIDE_DATA_PROP_CHANNEL_DEPENDENT },
-    [AV_FRAME_DATA_GAIN_MAP_PARAMS]             = { "Gain map parameters",                          AV_SIDE_DATA_PROP_GLOBAL | AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
+स्थिर ध्रुव AVSide_दत्त_Descriptor sd_props[] = {
+    [AV_FRAME_दत्त_PANSCAN]                     = { "AVPanScan",                                    AV_SIDE_दत्त_PROP_आकार_DEPENDENT },
+    [AV_FRAME_दत्त_A53_CC]                      = { "ATSC A53 Part 4 Closed Captions" },
+    [AV_FRAME_दत्त_MATRIXENCODING]              = { "AVMatrixEncoding",                             AV_SIDE_दत्त_PROP_CHANNEL_DEPENDENT },
+    [AV_FRAME_दत्त_DOWNMIX_INFO]                = { "Metadata relevant to a downmix procedure",     AV_SIDE_दत्त_PROP_CHANNEL_DEPENDENT },
+    [AV_FRAME_दत्त_AFD]                         = { "Active format description" },
+    [AV_FRAME_दत्त_MOTION_VECTORS]              = { "Motion vectors",                               AV_SIDE_दत्त_PROP_आकार_DEPENDENT },
+    [AV_FRAME_दत्त_SKIP_SAMPLES]                = { "Skip samples" },
+    [AV_FRAME_दत्त_GOP_TIMECODE]                = { "GOP timecode" },
+    [AV_FRAME_दत्त_S12_M_TIMECODE]               = { "SMPTE 12-1 timecode" },
+    [AV_FRAME_दत्त_DYNAMIC_HDR_PLUS]            = { "HDR Dynamic Metadata SMPTE2094-40 (HDR10+)",   AV_SIDE_दत्त_PROP_COLOR_DEPENDENT },
+    [AV_FRAME_दत्त_DYNAMIC_HDR_VIVID]           = { "HDR Dynamic Metadata CUVA 005.1 2021 (Vivid)", AV_SIDE_दत्त_PROP_COLOR_DEPENDENT },
+    [AV_FRAME_दत्त_DYNAMIC_HDR_SMPTE_2094_APP5] = { "HDR Dynamic Metadata SMPTE2094-50",            AV_SIDE_दत्त_PROP_COLOR_DEPENDENT },
+    [AV_FRAME_दत्त_REGIONS_सम्बन्धि_INTEREST]         = { "Regions Of Interest",                          AV_SIDE_दत्त_PROP_आकार_DEPENDENT },
+    [AV_FRAME_दत्त_VIDEO_ENC_PARAMS]            = { "Video encoding parameters" },
+    [AV_FRAME_दत्त_FILM_GRAIN_PARAMS]           = { "Film grain parameters" },
+    [AV_FRAME_दत्त_DETECTION_BBOXES]            = { "Bounding boxes for object detection and classification", AV_SIDE_दत्त_PROP_आकार_DEPENDENT },
+    [AV_FRAME_दत्त_DOVI_RPU_बफर]             = { "Dolby Vision RPU Data",                        AV_SIDE_दत्त_PROP_COLOR_DEPENDENT },
+    [AV_FRAME_दत्त_DOVI_METADATA]               = { "Dolby Vision Metadata",                        AV_SIDE_दत्त_PROP_COLOR_DEPENDENT },
+    [AV_FRAME_दत्त_LCEVC]                       = { "LCEVC NAL data",                               AV_SIDE_दत्त_PROP_आकार_DEPENDENT },
+    [AV_FRAME_दत्त_VIEW_ID]                     = { "View ID" },
+    [AV_FRAME_दत्त_STEREO3_D]                    = { "Stereo 3D",                                    AV_SIDE_दत्त_PROP_GLOBAL },
+    [AV_FRAME_दत्त_REPLAYGAIN]                  = { "AVReplayGain",                                 AV_SIDE_दत्त_PROP_GLOBAL },
+    [AV_FRAME_दत्त_DISPLAYMATRIX]               = { "3x3 displaymatrix",                            AV_SIDE_दत्त_PROP_GLOBAL },
+    [AV_FRAME_दत्त_AUDIO_SERVICE_TYPE]          = { "Audio service type",                           AV_SIDE_दत्त_PROP_GLOBAL },
+    [AV_FRAME_दत्त_MASTERING_DISPLAY_METADATA]  = { "Mastering display metadata",                   AV_SIDE_दत्त_PROP_GLOBAL | AV_SIDE_दत्त_PROP_COLOR_DEPENDENT },
+    [AV_FRAME_दत्त_CONTENT_LIGHT_LEVEL]         = { "Content light level metadata",                 AV_SIDE_दत्त_PROP_GLOBAL | AV_SIDE_दत्त_PROP_COLOR_DEPENDENT },
+    [AV_FRAME_दत्त_AMBIENT_VIEWING_ENVIRONMENT] = { "Ambient viewing environment",                  AV_SIDE_दत्त_PROP_GLOBAL },
+    [AV_FRAME_दत्त_SPHERICAL]                   = { "Spherical Mapping",                            AV_SIDE_दत्त_PROP_GLOBAL | AV_SIDE_दत्त_PROP_आकार_DEPENDENT },
+    [AV_FRAME_दत्त_ICC_PROFILE]                 = { "ICC profile",                                  AV_SIDE_दत्त_PROP_GLOBAL | AV_SIDE_दत्त_PROP_COLOR_DEPENDENT },
+    [AV_FRAME_दत्त_EXIF]                        = { "EXIF metadata",                                AV_SIDE_दत्त_PROP_GLOBAL },
+    [AV_FRAME_दत्त_SEI_UNREGISTERED]            = { "H.26[45] User Data Unregistered SEI message",  AV_SIDE_दत्त_PROP_MULTI },
+    [AV_FRAME_दत्त_VIDEO_HINT]                  = { "Encoding video hint",                          AV_SIDE_दत्त_PROP_आकार_DEPENDENT },
+    [AV_FRAME_दत्त_3_D_REFERENCE_DISPLAYS]       = { "3D Reference Displays Information",            AV_SIDE_दत्त_PROP_GLOBAL },
+    [AV_FRAME_दत्त_IAMF_MIX_GAIN_PARAM]         = { "IAMF Mix Gain Parameter Data" },
+    [AV_FRAME_दत्त_IAMF_DEMIXING_INFO_PARAM]    = { "IAMF Demixing Info Parameter Data",            AV_SIDE_दत्त_PROP_CHANNEL_DEPENDENT },
+    [AV_FRAME_दत्त_IAMF_RECON_GAIN_INFO_PARAM]  = { "IAMF Recon Gain Info Parameter Data" },
+    [AV_FRAME_दत्त_RAW_COLOR_PARAMS]            = { "RAW camera color parameters",                  AV_SIDE_दत्त_PROP_GLOBAL | AV_SIDE_दत्त_PROP_COLOR_DEPENDENT },
+    [AV_FRAME_दत्त_DOWNMIX_MATRIX]              = { "Downmix Matrix",                               AV_SIDE_दत्त_PROP_CHANNEL_DEPENDENT },
+    [AV_FRAME_दत्त_GAIN_MAP_PARAMS]             = { "Gain map parameters",                          AV_SIDE_दत्त_PROP_GLOBAL | AV_SIDE_दत्त_PROP_COLOR_DEPENDENT },
 };
 
-const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType type)
+ध्रुव AVSide_दत्त_Descriptor *av_frame_side_दत्त_desc(गणना AVFrame_Side_दत्त_Type type)
 {
-    unsigned t = type;
-    if (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
-        return &sd_props[t];
-    return NULL;
+    अचिह्नित t = type;
+    यदि (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
+        प्रत्यागम &sd_props[t];
+    प्रत्यागम रिक्त;
 }
 
-const char *av_frame_side_data_name(enum AVFrameSideDataType type)
+ध्रुव वर्ण *av_frame_side_दत्त_name(गणना AVFrame_Side_दत्त_Type type)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
-    return desc ? desc->name : NULL;
+    ध्रुव AVSide_दत्त_Descriptor *desc = av_frame_side_दत्त_desc(type);
+    प्रत्यागम desc ? desc->name : रिक्त;
 }
 
-static void free_side_data_entry(AVFrameSideData **ptr_sd)
+स्थिर शून्य free_side_दत्त_प्रविष्टिः(AVFrame_Side_दत्त **ptr_sd)
 {
-    AVFrameSideData *sd = *ptr_sd;
+    AVFrame_Side_दत्त *sd = *ptr_sd;
 
-    av_buffer_unref(&sd->buf);
+    av_बफर_unref(&sd->buf);
     av_dict_free(&sd->metadata);
     av_freep(ptr_sd);
 }
 
-static void remove_side_data_by_entry(AVFrameSideData ***sd, int *nb_sd,
-                                      const AVFrameSideData *target)
+स्थिर शून्य remove_side_दत्त_by_प्रविष्टिः(AVFrame_Side_दत्त ***sd, पूर्णाङ्क *nb_sd,
+                                      ध्रुव AVFrame_Side_दत्त *target)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
-        AVFrameSideData *entry = ((*sd)[i]);
-        if (entry != target)
-            continue;
+    प्रति (पूर्णाङ्क i = *nb_sd - 1; i >= 0; i--) {
+        AVFrame_Side_दत्त *प्रविष्टिः = ((*sd)[i]);
+        यदि (प्रविष्टिः != target)
+            अनुवर्त;
 
-        free_side_data_entry(&entry);
+        free_side_दत्त_प्रविष्टिः(&प्रविष्टिः);
 
         ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
         (*nb_sd)--;
 
-        return;
+        प्रत्यागम;
     }
 }
 
-void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
-                               enum AVFrameSideDataType type)
+शून्य av_frame_side_दत्त_remove(AVFrame_Side_दत्त ***sd, पूर्णाङ्क *nb_sd,
+                               गणना AVFrame_Side_दत्त_Type type)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
-        AVFrameSideData *entry = ((*sd)[i]);
-        if (entry->type != type)
-            continue;
+    प्रति (पूर्णाङ्क i = *nb_sd - 1; i >= 0; i--) {
+        AVFrame_Side_दत्त *प्रविष्टिः = ((*sd)[i]);
+        यदि (प्रविष्टिः->type != type)
+            अनुवर्त;
 
-        free_side_data_entry(&entry);
-
-        ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
-        (*nb_sd)--;
-    }
-}
-
-void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
-                                        int props)
-{
-    for (int i = *nb_sd - 1; i >= 0; i--) {
-        AVFrameSideData *entry = ((*sd)[i]);
-        const AVSideDataDescriptor *desc = av_frame_side_data_desc(entry->type);
-        if (!desc || !(desc->props & props))
-            continue;
-
-        free_side_data_entry(&entry);
+        free_side_दत्त_प्रविष्टिः(&प्रविष्टिः);
 
         ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
         (*nb_sd)--;
     }
 }
 
-void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd)
+शून्य av_frame_side_दत्त_remove_by_props(AVFrame_Side_दत्त ***sd, पूर्णाङ्क *nb_sd,
+                                        पूर्णाङ्क props)
 {
-    for (int i = 0; i < *nb_sd; i++)
-        free_side_data_entry(&((*sd)[i]));
+    प्रति (पूर्णाङ्क i = *nb_sd - 1; i >= 0; i--) {
+        AVFrame_Side_दत्त *प्रविष्टिः = ((*sd)[i]);
+        ध्रुव AVSide_दत्त_Descriptor *desc = av_frame_side_दत्त_desc(प्रविष्टिः->type);
+        यदि (!desc || !(desc->props & props))
+            अनुवर्त;
+
+        free_side_दत्त_प्रविष्टिः(&प्रविष्टिः);
+
+        ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
+        (*nb_sd)--;
+    }
+}
+
+शून्य av_frame_side_दत्त_free(AVFrame_Side_दत्त ***sd, पूर्णाङ्क *nb_sd)
+{
+    प्रति (पूर्णाङ्क i = 0; i < *nb_sd; i++)
+        free_side_दत्त_प्रविष्टिः(&((*sd)[i]));
     *nb_sd = 0;
 
     av_freep(sd);
 }
 
-static AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
-                                                   int *nb_sd,
-                                                   enum AVFrameSideDataType type,
-                                                   AVBufferRef *buf, uint8_t *data,
-                                                   size_t size)
+स्थिर AVFrame_Side_दत्त *सङ्कलय_side_दत्त_from_buf_ext(AVFrame_Side_दत्त ***sd,
+                                                   पूर्णाङ्क *nb_sd,
+                                                   गणना AVFrame_Side_दत्त_Type type,
+                                                   AVBufferRef *buf, uint8_t *दत्त,
+                                                   size_t आकार)
 {
-    AVFrameSideData *ret, **tmp;
+    AVFrame_Side_दत्त *ret, **tmp;
 
     // *nb_sd + 1 needs to fit into an int and a size_t.
-    if ((unsigned)*nb_sd >= FFMIN(INT_MAX, SIZE_MAX))
-        return NULL;
+    यदि ((अचिह्नित)*nb_sd >= FFMIN(अधिकतम_पूर्णाङ्कः, SIZE_MAX))
+        प्रत्यागम रिक्त;
 
-    tmp = av_realloc_array(*sd, *nb_sd + 1, sizeof(**sd));
-    if (!tmp)
-        return NULL;
+    tmp = av_realloc_array(*sd, *nb_sd + 1, परिमाण(**sd));
+    यदि (!tmp)
+        प्रत्यागम रिक्त;
     *sd = tmp;
 
-    ret = av_mallocz(sizeof(*ret));
-    if (!ret)
-        return NULL;
+    ret = av_mallocz(परिमाण(*ret));
+    यदि (!ret)
+        प्रत्यागम रिक्त;
 
     ret->buf = buf;
-    ret->data = data;
-    ret->size = size;
+    ret->दत्त = दत्त;
+    ret->आकार = आकार;
     ret->type = type;
 
     (*sd)[(*nb_sd)++] = ret;
 
-    return ret;
+    प्रत्यागम ret;
 }
 
-AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
-                                                 enum AVFrameSideDataType type,
+AVFrame_Side_दत्त *ff_frame_side_दत्त_सङ्कलय_from_buf(AVFrame_Side_दत्त ***sd,
+                                                 पूर्णाङ्क *nb_sd,
+                                                 गणना AVFrame_Side_दत्त_Type type,
                                                  AVBufferRef *buf)
 {
-    if (!buf)
-        return NULL;
+    यदि (!buf)
+        प्रत्यागम रिक्त;
 
-    return add_side_data_from_buf_ext(sd, nb_sd, type, buf, buf->data, buf->size);
+    प्रत्यागम सङ्कलय_side_दत्त_from_buf_ext(sd, nb_sd, type, buf, buf->दत्त, buf->आकार);
 }
 
-static AVFrameSideData *replace_side_data_from_buf(AVFrameSideData *dst,
-                                                   AVBufferRef *buf, int flags)
+स्थिर AVFrame_Side_दत्त *replace_side_दत्त_from_buf(AVFrame_Side_दत्त *dst,
+                                                   AVBufferRef *buf, पूर्णाङ्क flags)
 {
-    if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-        return NULL;
+    यदि (!(flags & AV_FRAME_SIDE_दत्त_FLAG_REPLACE))
+        प्रत्यागम रिक्त;
 
     av_dict_free(&dst->metadata);
-    av_buffer_unref(&dst->buf);
+    av_बफर_unref(&dst->buf);
     dst->buf  = buf;
-    dst->data = buf->data;
-    dst->size = buf->size;
-    return dst;
+    dst->दत्त = buf->दत्त;
+    dst->आकार = buf->आकार;
+    प्रत्यागम dst;
 }
 
-AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        size_t size, unsigned int flags)
+AVFrame_Side_दत्त *av_frame_side_दत्त_new(AVFrame_Side_दत्त ***sd, पूर्णाङ्क *nb_sd,
+                                        गणना AVFrame_Side_दत्त_Type type,
+                                        size_t आकार, अचिह्नित पूर्णाङ्क flags)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
-    AVBufferRef     *buf = av_buffer_alloc(size);
-    AVFrameSideData *ret = NULL;
+    ध्रुव AVSide_दत्त_Descriptor *desc = av_frame_side_दत्त_desc(type);
+    AVBufferRef     *buf = av_बफर_alloc(आकार);
+    AVFrame_Side_दत्त *ret = रिक्त;
 
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
-        av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
-        (ret = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
-        ret = replace_side_data_from_buf(ret, buf, flags);
-        if (!ret)
-            av_buffer_unref(&buf);
-        return ret;
+    यदि (flags & AV_FRAME_SIDE_दत्त_FLAG_UNIQUE)
+        av_frame_side_दत्त_remove(sd, nb_sd, type);
+    यदि ((!desc || !(desc->props & AV_SIDE_दत्त_PROP_MULTI)) &&
+        (ret = (AVFrame_Side_दत्त *)av_frame_side_दत्त_get(*sd, *nb_sd, type))) {
+        ret = replace_side_दत्त_from_buf(ret, buf, flags);
+        यदि (!ret)
+            av_बफर_unref(&buf);
+        प्रत्यागम ret;
     }
 
-    ret = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
-    if (!ret)
-        av_buffer_unref(&buf);
+    ret = ff_frame_side_दत्त_सङ्कलय_from_buf(sd, nb_sd, type, buf);
+    यदि (!ret)
+        av_बफर_unref(&buf);
 
-    return ret;
+    प्रत्यागम ret;
 }
 
-AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        AVBufferRef **pbuf, unsigned int flags)
+AVFrame_Side_दत्त *av_frame_side_दत्त_सङ्कलय(AVFrame_Side_दत्त ***sd, पूर्णाङ्क *nb_sd,
+                                        गणना AVFrame_Side_दत्त_Type type,
+                                        AVBufferRef **pbuf, अचिह्नित पूर्णाङ्क flags)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
-    AVFrameSideData *sd_dst  = NULL;
+    ध्रुव AVSide_दत्त_Descriptor *desc = av_frame_side_दत्त_desc(type);
+    AVFrame_Side_दत्त *sd_dst  = रिक्त;
     AVBufferRef *buf = *pbuf;
 
-    if ((flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF) && !(buf = av_buffer_ref(*pbuf)))
-        return NULL;
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
-        av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
-        (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
-        sd_dst = replace_side_data_from_buf(sd_dst, buf, flags);
-    } else
-        sd_dst = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
+    यदि ((flags & AV_FRAME_SIDE_दत्त_FLAG_NEW_REF) && !(buf = av_बफर_ref(*pbuf)))
+        प्रत्यागम रिक्त;
+    यदि (flags & AV_FRAME_SIDE_दत्त_FLAG_UNIQUE)
+        av_frame_side_दत्त_remove(sd, nb_sd, type);
+    यदि ((!desc || !(desc->props & AV_SIDE_दत्त_PROP_MULTI)) &&
+        (sd_dst = (AVFrame_Side_दत्त *)av_frame_side_दत्त_get(*sd, *nb_sd, type))) {
+        sd_dst = replace_side_दत्त_from_buf(sd_dst, buf, flags);
+    } अन्यथा
+        sd_dst = ff_frame_side_दत्त_सङ्कलय_from_buf(sd, nb_sd, type, buf);
 
-    if (sd_dst && !(flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
-        *pbuf = NULL;
-    else if (!sd_dst && (flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
-        av_buffer_unref(&buf);
-    return sd_dst;
+    यदि (sd_dst && !(flags & AV_FRAME_SIDE_दत्त_FLAG_NEW_REF))
+        *pbuf = रिक्त;
+    अन्यथा यदि (!sd_dst && (flags & AV_FRAME_SIDE_दत्त_FLAG_NEW_REF))
+        av_बफर_unref(&buf);
+    प्रत्यागम sd_dst;
 }
 
-int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
-                             const AVFrameSideData *src, unsigned int flags)
+पूर्णाङ्क av_frame_side_दत्त_clone(AVFrame_Side_दत्त ***sd, पूर्णाङ्क *nb_sd,
+                             ध्रुव AVFrame_Side_दत्त *src, अचिह्नित पूर्णाङ्क flags)
 {
-    const AVSideDataDescriptor *desc;
-    AVBufferRef     *buf    = NULL;
-    AVFrameSideData *sd_dst = NULL;
-    int              ret    = AVERROR_BUG;
+    ध्रुव AVSide_दत्त_Descriptor *desc;
+    AVBufferRef     *buf    = रिक्त;
+    AVFrame_Side_दत्त *sd_dst = रिक्त;
+    पूर्णाङ्क              ret    = AVERROR_BUG;
 
-    if (!sd || !src || !nb_sd || (*nb_sd && !*sd))
-        return AVERROR(EINVAL);
+    यदि (!sd || !src || !nb_sd || (*nb_sd && !*sd))
+        प्रत्यागम AVERROR(EINVAL);
 
-    desc = av_frame_side_data_desc(src->type);
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
-        av_frame_side_data_remove(sd, nb_sd, src->type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
-        (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, src->type))) {
-        AVDictionary *dict = NULL;
+    desc = av_frame_side_दत्त_desc(src->type);
+    यदि (flags & AV_FRAME_SIDE_दत्त_FLAG_UNIQUE)
+        av_frame_side_दत्त_remove(sd, nb_sd, src->type);
+    यदि ((!desc || !(desc->props & AV_SIDE_दत्त_PROP_MULTI)) &&
+        (sd_dst = (AVFrame_Side_दत्त *)av_frame_side_दत्त_get(*sd, *nb_sd, src->type))) {
+        AVDictionary *dict = रिक्त;
 
-        if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-            return AVERROR(EEXIST);
+        यदि (!(flags & AV_FRAME_SIDE_दत्त_FLAG_REPLACE))
+            प्रत्यागम AVERROR(EEXIST);
 
         ret = av_dict_copy(&dict, src->metadata, 0);
-        if (ret < 0)
-            return ret;
+        यदि (ret < 0)
+            प्रत्यागम ret;
 
-        ret = av_buffer_replace(&sd_dst->buf, src->buf);
-        if (ret < 0) {
+        ret = av_बफर_replace(&sd_dst->buf, src->buf);
+        यदि (ret < 0) {
             av_dict_free(&dict);
-            return ret;
+            प्रत्यागम ret;
         }
 
         av_dict_free(&sd_dst->metadata);
         sd_dst->metadata = dict;
-        sd_dst->data     = src->data;
-        sd_dst->size     = src->size;
-        return 0;
+        sd_dst->दत्त     = src->दत्त;
+        sd_dst->आकार     = src->आकार;
+        प्रत्यागम 0;
     }
 
-    buf = av_buffer_ref(src->buf);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    buf = av_बफर_ref(src->buf);
+    यदि (!buf)
+        प्रत्यागम AVERROR(ENOMEM);
 
-    sd_dst = add_side_data_from_buf_ext(sd, nb_sd, src->type, buf,
-                                        src->data, src->size);
-    if (!sd_dst) {
-        av_buffer_unref(&buf);
-        return AVERROR(ENOMEM);
+    sd_dst = सङ्कलय_side_दत्त_from_buf_ext(sd, nb_sd, src->type, buf,
+                                        src->दत्त, src->आकार);
+    यदि (!sd_dst) {
+        av_बफर_unref(&buf);
+        प्रत्यागम AVERROR(ENOMEM);
     }
 
     ret = av_dict_copy(&sd_dst->metadata, src->metadata, 0);
-    if (ret < 0) {
-        remove_side_data_by_entry(sd, nb_sd, sd_dst);
-        return ret;
+    यदि (ret < 0) {
+        remove_side_दत्त_by_प्रविष्टिः(sd, nb_sd, sd_dst);
+        प्रत्यागम ret;
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *sd,
-                                                const int nb_sd,
-                                                enum AVFrameSideDataType type)
+ध्रुव AVFrame_Side_दत्त *av_frame_side_दत्त_get_c(ध्रुव AVFrame_Side_दत्त * ध्रुव *sd,
+                                                ध्रुव पूर्णाङ्क nb_sd,
+                                                गणना AVFrame_Side_दत्त_Type type)
 {
-    for (int i = 0; i < nb_sd; i++) {
-        if (sd[i]->type == type)
-            return sd[i];
+    प्रति (पूर्णाङ्क i = 0; i < nb_sd; i++) {
+        यदि (sd[i]->type == type)
+            प्रत्यागम sd[i];
     }
-    return NULL;
+    प्रत्यागम रिक्त;
 }

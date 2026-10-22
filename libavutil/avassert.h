@@ -24,56 +24,56 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_AVASSERT_H
-#define AVUTIL_AVASSERT_H
+#यदि_अपरिभाषितम् AVUTIL_AVASSERT_H
+#परिभाषय AVUTIL_AVASSERT_H
 
-#include <stdlib.h>
-#ifdef HAVE_AV_CONFIG_H
+#अन्तर्भाव <stdlib.h>
+#यदि_परिभाषितम् HAVE_AV_CONFIG_H
 #   include "config.h"
-#endif
-#include "attributes.h"
-#include "log.h"
-#include "macros.h"
-#include "version.h"
+#यदि_अन्तः
+#अन्तर्भाव "attributes.h"
+#अन्तर्भाव "log.h"
+#अन्तर्भाव "macros.h"
+#अन्तर्भाव "version.h"
 
 /**
  * assert() equivalent, that is always enabled.
  */
-#define av_assert0(cond) do {                                           \
-    if (!(cond)) {                                                      \
-        av_log(NULL, AV_LOG_PANIC, "Assertion %s failed at %s:%d\n",    \
+#परिभाषय av_assert0(cond) कुरु {                                           \
+    यदि (!(cond)) {                                                      \
+        av_log(रिक्त, AV_LOG_PANIC, "Assertion %s failed at %s:%d\n",    \
                AV_STRINGIFY(cond), __FILE__, __LINE__);                 \
         abort();                                                        \
     }                                                                   \
-} while (0)
+} यावत् (0)
 
 
 /**
  * assert() equivalent, that does not lie in speed critical code.
  * These asserts() thus can be enabled without fearing speed loss.
  */
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 0
-#define av_assert1(cond) av_assert0(cond)
-#else
-#define av_assert1(cond) ((void)0)
-#endif
+#यदि defined(ASSERT_LEVEL) && ASSERT_LEVEL > 0
+#परिभाषय av_assert1(cond) av_assert0(cond)
+#अन्यथा
+#परिभाषय av_assert1(cond) ((शून्य)0)
+#यदि_अन्तः
 
 
 /**
  * assert() equivalent, that does lie in speed critical code.
  */
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
-#define av_assert2(cond) av_assert0(cond)
-#else
-#define av_assert2(cond) ((void)0)
-#endif
+#यदि defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
+#परिभाषय av_assert2(cond) av_assert0(cond)
+#अन्यथा
+#परिभाषय av_assert2(cond) ((शून्य)0)
+#यदि_अन्तः
 
-#if FF_API_ASSERT_FPU
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
-#define av_assert2_fpu() av_assert0_fpu()
-#else
-#define av_assert2_fpu() ((void)0)
-#endif
+#यदि FF_API_ASSERT_FPU
+#यदि defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
+#परिभाषय av_assert2_fpu() av_assert0_fpu()
+#अन्यथा
+#परिभाषय av_assert2_fpu() ((शून्य)0)
+#यदि_अन्तः
 /**
  * Assert that floating point operations can be executed.
  *
@@ -81,8 +81,8 @@
  * @deprecated without replacement
  */
 attribute_deprecated
-void av_assert0_fpu(void);
-#endif
+शून्य av_assert0_fpu(शून्य);
+#यदि_अन्तः
 
 /**
  * Asserts that are used as compiler optimization hints depending
@@ -95,31 +95,31 @@ void av_assert0_fpu(void);
  * The condition used with av_assume() should not have side-effects
  * and should be visible to the compiler.
  */
-#if defined(ASSERT_LEVEL) ? ASSERT_LEVEL > 0 : !defined(HAVE_AV_CONFIG_H) && !defined(NDEBUG)
-#define av_unreachable(msg)                                             \
-do {                                                                    \
-    av_log(NULL, AV_LOG_PANIC,                                          \
+#यदि defined(ASSERT_LEVEL) ? ASSERT_LEVEL > 0 : !defined(HAVE_AV_CONFIG_H) && !defined(NDEBUG)
+#परिभाषय av_unreachable(सन्देशः)                                             \
+कुरु {                                                                    \
+    av_log(रिक्त, AV_LOG_PANIC,                                          \
            "Reached supposedly unreachable code at %s:%d: %s\n",        \
-           __FILE__, __LINE__, msg);                                    \
+           __FILE__, __LINE__, सन्देशः);                                    \
     abort();                                                            \
-} while (0)
-#define av_assume(cond) av_assert0(cond)
-#else
-#if AV_GCC_VERSION_AT_LEAST(4, 5) || AV_HAS_BUILTIN(__builtin_unreachable)
-#define av_unreachable(msg) __builtin_unreachable()
-#elif  defined(_MSC_VER)
-#define av_unreachable(msg) __assume(0)
-#elif __STDC_VERSION__ >= 202311L
-#include <stddef.h>
-#define av_unreachable(msg) unreachable()
-#else
-#define av_unreachable(msg) ((void)0)
-#endif
+} यावत् (0)
+#परिभाषय av_assume(cond) av_assert0(cond)
+#अन्यथा
+#यदि AV_GCC_संस्करणम्_AT_न्यूनतमम्(4, 5) || AV_HAS_BUILTIN(__builtin_unreachable)
+#परिभाषय av_unreachable(सन्देशः) __builtin_unreachable()
+#नोचेद्यदि  defined(_MSC_VER)
+#परिभाषय av_unreachable(सन्देशः) __assume(0)
+#नोचेद्यदि __STDC_VERSION__ >= 202311L
+#अन्तर्भाव <stddef.h>
+#परिभाषय av_unreachable(सन्देशः) unreachable()
+#अन्यथा
+#परिभाषय av_unreachable(सन्देशः) ((शून्य)0)
+#यदि_अन्तः
 
-#define av_assume(cond) do { \
-    if (!(cond))             \
+#परिभाषय av_assume(cond) कुरु { \
+    यदि (!(cond))             \
         av_unreachable();    \
-} while (0)
-#endif
+} यावत् (0)
+#यदि_अन्तः
 
-#endif /* AVUTIL_AVASSERT_H */
+#यदि_अन्तः /* AVUTIL_AVASSERT_H */

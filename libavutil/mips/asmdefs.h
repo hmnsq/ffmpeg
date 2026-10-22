@@ -24,12 +24,12 @@
  * assembly (rather than from within .s files).
  */
 
-#ifndef AVUTIL_MIPS_ASMDEFS_H
-#define AVUTIL_MIPS_ASMDEFS_H
+#यदि_अपरिभाषितम् AVUTIL_MIPS_ASMDEFS_H
+#परिभाषय AVUTIL_MIPS_ASMDEFS_H
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
-#if defined(_ABI64) && _MIPS_SIM == _ABI64
+#यदि defined(_ABI64) && _MIPS_SIM == _ABI64
 # define mips_reg       int64_t
 # define PTRSIZE        " 8 "
 # define PTRLOG         " 3 "
@@ -42,7 +42,7 @@
 # define PTR_SRA        "dsra "
 # define PTR_SRL        "dsrl "
 # define PTR_SLL        "dsll "
-#else
+#अन्यथा
 # define mips_reg       int32_t
 # define PTRSIZE        " 4 "
 # define PTRLOG         " 2 "
@@ -55,7 +55,7 @@
 # define PTR_SRA        "sra "
 # define PTR_SRL        "srl "
 # define PTR_SLL        "sll "
-#endif
+#यदि_अन्तः
 
 /*
  * parse_r var, r - Helper assembler macro for parsing register names.
@@ -79,7 +79,7 @@
  */
 
 /* Match an individual register number and assign to \var */
-#define _IFC_REG(n)                                \
+#परिभाषय _IFC_REG(n)                                \
         ".ifc        \\r, $" #n "\n\t"             \
         "\\var        = " #n "\n\t"                \
         ".endif\n\t"
@@ -100,9 +100,9 @@ __asm__(".macro        parse_r var r\n\t"
         ".endm");
 
 /* General union structure for clang adaption */
-union mmi_intfloat64 {
+सङ्घ mmi_intfloat64 {
     int64_t i;
-    double  f;
+    द्विगुण  f;
 };
 
-#endif /* AVCODEC_MIPS_ASMDEFS_H */
+#यदि_अन्तः /* AVCODEC_MIPS_ASMDEFS_H */

@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_D3D11VA_H
-#define AVUTIL_HWCONTEXT_D3D11VA_H
+#यदि_अपरिभाषितम् AVUTIL_HWCONTEXT_D3D11VA_H
+#परिभाषय AVUTIL_HWCONTEXT_D3D11VA_H
 
 /**
  * @file
@@ -36,13 +36,13 @@
  * code will try to load various supported D3D debugging layers.
  */
 
-#include <d3d11.h>
-#include <stdint.h>
+#अन्तर्भाव <d3d11.h>
+#अन्तर्भाव <stdint.h>
 
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVD3D11VADeviceContext {
+प्रकारनिर्देश संरचना AVD3D11VADeviceContext {
     /**
      * Device used for texture creation and access. This can also be used to
      * set the libavcodec decoding device.
@@ -91,9 +91,9 @@ typedef struct AVD3D11VADeviceContext {
      * The underlying lock must be recursive. lock_ctx is for free use by the
      * locking implementation.
      */
-    void (*lock)(void *lock_ctx);
-    void (*unlock)(void *lock_ctx);
-    void *lock_ctx;
+    शून्य (*तालकम्)(शून्य *तालकम्_ctx);
+    शून्य (*unlock)(शून्य *तालकम्_ctx);
+    शून्य *तालकम्_ctx;
     /**
      * D3D11_TEXTURE2D_DESC.BindFlags to be applied to D3D11 resources allocated
      * for frames using this device context.
@@ -124,7 +124,7 @@ typedef struct AVD3D11VADeviceContext {
  * This has no use outside of custom allocation, and AVFrame AVBufferRef do not
  * necessarily point to an instance of this struct.
  */
-typedef struct AVD3D11FrameDescriptor {
+प्रकारनिर्देश संरचना AVD3D11FrameDescriptor {
     /**
      * The texture in which the frame is located. The reference count is
      * managed by the AVBufferRef, and destroying the reference will release
@@ -140,13 +140,13 @@ typedef struct AVD3D11FrameDescriptor {
      *
      * Normally stored in AVFrame.data[1] (cast from intptr_t).
      */
-    intptr_t index;
+    intptr_t सूचकांक;
 } AVD3D11FrameDescriptor;
 
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVD3D11VAFramesContext {
+प्रकारनिर्देश संरचना AVD3D11VAFramesContext {
     /**
      * The canonical texture used for pool allocation. If this is set to NULL
      * on init, the hwframes implementation will allocate and set an array
@@ -196,4 +196,4 @@ typedef struct AVD3D11VAFramesContext {
     AVD3D11FrameDescriptor *texture_infos;
 } AVD3D11VAFramesContext;
 
-#endif /* AVUTIL_HWCONTEXT_D3D11VA_H */
+#यदि_अन्तः /* AVUTIL_HWCONTEXT_D3D11VA_H */

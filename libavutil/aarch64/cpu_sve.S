@@ -25,5 +25,5 @@ ENABLE_SVE
 
 function ff_aarch64_sve_length, export=1
         cntb            x0
-        ret
+        प्रत्यागच्छ
 endfunc

@@ -18,90 +18,90 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#अन्तर्भाव "config.h"
 
-#include <stddef.h>
-#include <stdint.h>
-#include <time.h>
-#if HAVE_GETTIMEOFDAY
-#include <sys/time.h>
-#endif
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if HAVE_WINDOWS_H
-#include <windows.h>
-#endif
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <time.h>
+#यदि HAVE_GETTIMEOFDAY
+#अन्तर्भाव <sys/time.h>
+#यदि_अन्तः
+#यदि HAVE_UNISTD_H
+#अन्तर्भाव <unistd.h>
+#यदि_अन्तः
+#यदि HAVE_WINDOWS_H
+#अन्तर्भाव <windows.h>
+#यदि_अन्तः
 
-#include "time.h"
-#include "error.h"
-#include "mathematics.h"
+#अन्तर्भाव "time.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "mathematics.h"
 
-int64_t av_gettime(void)
+int64_t av_gettime(शून्य)
 {
-#if HAVE_GETTIMEOFDAY
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    return (int64_t)tv.tv_sec * 1000000 + tv.tv_usec;
-#elif HAVE_GETSYSTEMTIMEASFILETIME
+#यदि HAVE_GETTIMEOFDAY
+    संरचना timeval tv;
+    gettimeofday(&tv, रिक्त);
+    प्रत्यागम (int64_t)tv.tv_sec * 1000000 + tv.tv_usec;
+#नोचेद्यदि HAVE_GETSYSTEMTIMEASFILETIME
     FILETIME ft;
     int64_t t;
     GetSystemTimeAsFileTime(&ft);
-    t = (int64_t)ft.dwHighDateTime << 32 | ft.dwLowDateTime;
-    return t / 10 - 11644473600000000; /* Jan 1, 1601 */
-#else
-    return -1;
-#endif
+    t = (int64_t)ft.dw_उच्चः_Date_Time << 32 | ft.dw_नीचः_Date_Time;
+    प्रत्यागम t / 10 - 11644473600000000; /* Jan 1, 1601 */
+#अन्यथा
+    प्रत्यागम -1;
+#यदि_अन्तः
 }
 
-int64_t av_gettime_relative(void)
+int64_t av_gettime_relative(शून्य)
 {
-#if HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
-#ifdef __APPLE__
-    if (&clock_gettime)
-#endif
+#यदि HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
+#यदि_परिभाषितम् __APPLE__
+    यदि (&clock_gettime)
+#यदि_अन्तः
     {
-        struct timespec ts;
+        संरचना timespec ts;
         clock_gettime(CLOCK_MONOTONIC, &ts);
-        return (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
+        प्रत्यागम (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
     }
-#elif defined(_WIN32)
+#नोचेद्यदि defined(_WIN32)
     LARGE_INTEGER freq;
-    LARGE_INTEGER counter;
+    LARGE_INTEGER गणक;
     QueryPerformanceFrequency(&freq);
-    QueryPerformanceCounter(&counter);
-    return av_rescale(counter.QuadPart, 1000000, freq.QuadPart);
-#endif
-    return av_gettime() + 42 * 60 * 60 * INT64_C(1000000);
+    Query_Performance_गणक(&गणक);
+    प्रत्यागम av_rescale(गणक.QuadPart, 1000000, freq.QuadPart);
+#यदि_अन्तः
+    प्रत्यागम av_gettime() + 42 * 60 * 60 * INT64_C(1000000);
 }
 
-int av_gettime_relative_is_monotonic(void)
+पूर्णाङ्क av_gettime_relative_is_monotonic(शून्य)
 {
-#if HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
-#ifdef __APPLE__
-    if (!&clock_gettime)
-        return 0;
-#endif
-    return 1;
-#elif defined(_WIN32)
-    return 1;
-#else
-    return 0;
-#endif
+#यदि HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
+#यदि_परिभाषितम् __APPLE__
+    यदि (!&clock_gettime)
+        प्रत्यागम 0;
+#यदि_अन्तः
+    प्रत्यागम 1;
+#नोचेद्यदि defined(_WIN32)
+    प्रत्यागम 1;
+#अन्यथा
+    प्रत्यागम 0;
+#यदि_अन्तः
 }
 
-int av_usleep(unsigned usec)
+पूर्णाङ्क av_usleep(अचिह्नित usec)
 {
-#if HAVE_NANOSLEEP
-    struct timespec ts = { usec / 1000000, usec % 1000000 * 1000 };
-    while (nanosleep(&ts, &ts) < 0 && errno == EINTR);
-    return 0;
-#elif HAVE_USLEEP
-    return usleep(usec);
-#elif HAVE_SLEEP
+#यदि HAVE_NANOSLEEP
+    संरचना timespec ts = { usec / 1000000, usec % 1000000 * 1000 };
+    यावत् (nanosleep(&ts, &ts) < 0 && errno == EINTR);
+    प्रत्यागम 0;
+#नोचेद्यदि HAVE_USLEEP
+    प्रत्यागम usleep(usec);
+#नोचेद्यदि HAVE_SLEEP
     Sleep(usec / 1000);
-    return 0;
-#else
-    return AVERROR(ENOSYS);
-#endif
+    प्रत्यागम 0;
+#अन्यथा
+    प्रत्यागम AVERROR(ENOSYS);
+#यदि_अन्तः
 }

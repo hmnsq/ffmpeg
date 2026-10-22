@@ -16,113 +16,113 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdio.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/macros.h"
-#include "libavutil/mem.h"
-#include "libavutil/video_hint.h"
+#अन्तर्भाव "libavutil/frame.h"
+#अन्तर्भाव "libavutil/macros.h"
+#अन्तर्भाव "libavutil/mem.h"
+#अन्तर्भाव "libavutil/video_hint.h"
 
-int main(void)
+पूर्णाङ्क मुख्यम्(शून्य)
 {
     AVVideoHint *hint;
     AVVideoRect *rect;
     AVFrame *frame;
-    size_t size;
+    size_t आकार;
 
-    static const size_t alloc_counts[] = { 0, 1, 4 };
+    स्थिर ध्रुव size_t alloc_counts[] = { 0, 1, 4 };
 
     /* av_video_hint_alloc - various counts */
-    printf("Testing av_video_hint_alloc()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
+    प्रारूप_लिख("Testing av_video_hint_alloc()\n");
+    प्रति (पूर्णाङ्क i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
         size_t nb = alloc_counts[i];
-        hint = av_video_hint_alloc(nb, &size);
-        if (hint) {
-            printf("alloc %zu: OK, nb_rects=%zu, size>0=%s\n",
-                   nb, hint->nb_rects, size > 0 ? "yes" : "no");
+        hint = av_video_hint_alloc(nb, &आकार);
+        यदि (hint) {
+            प्रारूप_लिख("alloc %zu: OK, nb_rects=%zu, size>0=%s\n",
+                   nb, hint->nb_rects, आकार > 0 ? "yes" : "no");
             av_free(hint);
-        } else {
-            printf("alloc %zu: FAIL\n", nb);
+        } अन्यथा {
+            प्रारूप_लिख("alloc %zu: FAIL\n", nb);
         }
     }
 
     /* pointer consistency and write/read back */
-    printf("\nTesting av_video_hint_get_rect()\n");
-    hint = av_video_hint_alloc(3, &size);
-    if (hint) {
+    प्रारूप_लिख("\nTesting av_video_hint_get_rect()\n");
+    hint = av_video_hint_alloc(3, &आकार);
+    यदि (hint) {
         /* verify av_video_hint_rects points to first rect */
         rect = av_video_hint_rects(hint);
-        if ((uint8_t *)rect != (uint8_t *)hint + hint->rect_offset)
-            printf("rects: pointer inconsistent with rect_offset\n");
+        यदि ((uint8_t *)rect != (uint8_t *)hint + hint->rect_विस्थापनम्)
+            प्रारूप_लिख("rects: pointer inconsistent with rect_offset\n");
 
-        for (int i = 0; i < 3; i++) {
+        प्रति (पूर्णाङ्क i = 0; i < 3; i++) {
             rect = av_video_hint_get_rect(hint, i);
-            if ((uint8_t *)rect != (uint8_t *)hint + hint->rect_offset +
-                                   (size_t)i * hint->rect_size)
-                printf("rect %d: pointer inconsistent with rect_offset/rect_size\n", i);
+            यदि ((uint8_t *)rect != (uint8_t *)hint + hint->rect_विस्थापनम् +
+                                   (size_t)i * hint->rect_आकार)
+                प्रारूप_लिख("rect %d: pointer inconsistent with rect_offset/rect_size\n", i);
             rect->x = i * 100;
             rect->y = i * 200;
-            rect->width = 64 + i;
+            rect->विस्तारः = 64 + i;
             rect->height = 48 + i;
         }
-        for (int i = 0; i < 3; i++) {
+        प्रति (पूर्णाङ्क i = 0; i < 3; i++) {
             rect = av_video_hint_get_rect(hint, i);
-            printf("rect %d: x=%u y=%u w=%u h=%u\n",
-                   i, rect->x, rect->y, rect->width, rect->height);
+            प्रारूप_लिख("rect %d: x=%u y=%u w=%u h=%u\n",
+                   i, rect->x, rect->y, rect->विस्तारः, rect->height);
         }
 
         av_free(hint);
     }
 
     /* type field */
-    printf("\nTesting type field\n");
-    hint = av_video_hint_alloc(1, &size);
-    if (hint) {
+    प्रारूप_लिख("\nTesting type field\n");
+    hint = av_video_hint_alloc(1, &आकार);
+    यदि (hint) {
         hint->type = AV_VIDEO_HINT_TYPE_CONSTANT;
-        printf("constant: type=%d\n", hint->type);
-        hint->type = AV_VIDEO_HINT_TYPE_CHANGED;
-        printf("changed: type=%d\n", hint->type);
+        प्रारूप_लिख("constant: type=%d\n", hint->type);
+        hint->type = AV_VIDEO_HINT_TYPE_परिवर्तितम्;
+        प्रारूप_लिख("changed: type=%d\n", hint->type);
         av_free(hint);
     }
 
     /* av_video_hint_create_side_data */
-    printf("\nTesting av_video_hint_create_side_data()\n");
+    प्रारूप_लिख("\nTesting av_video_hint_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
-        hint = av_video_hint_create_side_data(frame, 2);
-        if (hint) {
-            printf("side_data: OK, nb_rects=%zu\n", hint->nb_rects);
+    यदि (frame) {
+        hint = av_video_hint_create_side_दत्त(frame, 2);
+        यदि (hint) {
+            प्रारूप_लिख("side_data: OK, nb_rects=%zu\n", hint->nb_rects);
             rect = av_video_hint_get_rect(hint, 0);
             rect->x = 10;
             rect->y = 20;
-            rect->width = 320;
+            rect->विस्तारः = 320;
             rect->height = 240;
             rect = av_video_hint_get_rect(hint, 0);
-            printf("side_data rect 0: x=%u y=%u\n", rect->x, rect->y);
-        } else {
-            printf("side_data: FAIL\n");
+            प्रारूप_लिख("side_data rect 0: x=%u y=%u\n", rect->x, rect->y);
+        } अन्यथा {
+            प्रारूप_लिख("side_data: FAIL\n");
         }
         av_frame_free(&frame);
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    प्रारूप_लिख("\nTesting OOM paths\n");
     av_max_alloc(1);
-    hint = av_video_hint_alloc(1, &size);
-    printf("alloc OOM: %s\n", hint ? "FAIL" : "OK");
+    hint = av_video_hint_alloc(1, &आकार);
+    प्रारूप_लिख("alloc OOM: %s\n", hint ? "FAIL" : "OK");
     av_free(hint);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(अधिकतम_पूर्णाङ्कः);
 
     frame = av_frame_alloc();
-    if (frame) {
+    यदि (frame) {
         av_max_alloc(1);
-        hint = av_video_hint_create_side_data(frame, 1);
-        printf("side_data OOM: %s\n", hint ? "FAIL" : "OK");
-        av_max_alloc(INT_MAX);
+        hint = av_video_hint_create_side_दत्त(frame, 1);
+        प्रारूप_लिख("side_data OOM: %s\n", hint ? "FAIL" : "OK");
+        av_max_alloc(अधिकतम_पूर्णाङ्कः);
         av_frame_free(&frame);
     }
 
-    return 0;
+    प्रत्यागम 0;
 }

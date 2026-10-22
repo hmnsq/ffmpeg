@@ -24,12 +24,12 @@ SECTION .text
 
 INIT_XMM sse4
 cglobal image_copy_plane_uc_from, 6, 7, 4, dst, dst_linesize, src, src_linesize, bw, height, rowpos
-    add dstq, bwq
-    add srcq, bwq
+    योजय dstq, bwq
+    योजय srcq, bwq
     neg bwq
 
 .row_start:
-    mov rowposq, bwq
+    चालय rowposq, bwq
 
 .loop:
     movntdqa m0, [srcq + rowposq + 0 * mmsize]
@@ -42,11 +42,11 @@ cglobal image_copy_plane_uc_from, 6, 7, 4, dst, dst_linesize, src, src_linesize,
     mova [dstq + rowposq + 2 * mmsize], m2
     mova [dstq + rowposq + 3 * mmsize], m3
 
-    add rowposq, 4 * mmsize
+    योजय rowposq, 4 * mmsize
     jnz .loop
 
-    add srcq, src_linesizeq
-    add dstq, dst_linesizeq
+    योजय srcq, src_linesizeq
+    योजय dstq, dst_linesizeq
     dec heightd
     jnz .row_start
 

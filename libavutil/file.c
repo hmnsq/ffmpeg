@@ -16,189 +16,189 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "error.h"
-#include "file.h"
-#include "file_open.h"
-#include "internal.h"
-#include "log.h"
-#include "mem.h"
-#include <fcntl.h>
-#include <sys/stat.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if HAVE_IO_H
-#include <io.h>
-#endif
-#if HAVE_MMAP
-#include <sys/mman.h>
-#elif HAVE_MAPVIEWOFFILE
-#include <windows.h>
-#endif
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "file.h"
+#अन्तर्भाव "file_open.h"
+#अन्तर्भाव "internal.h"
+#अन्तर्भाव "log.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव <fcntl.h>
+#अन्तर्भाव <sys/stat.h>
+#यदि HAVE_UNISTD_H
+#अन्तर्भाव <unistd.h>
+#यदि_अन्तः
+#यदि HAVE_IO_H
+#अन्तर्भाव <io.h>
+#यदि_अन्तः
+#यदि HAVE_MMAP
+#अन्तर्भाव <sys/mman.h>
+#नोचेद्यदि HAVE_MAPVIEWOFFILE
+#अन्तर्भाव <windows.h>
+#यदि_अन्तः
 
-#ifdef _WIN32
+#यदि_परिभाषितम् _WIN32
 /* struct stat has a 32 bit st_size with the Windows SDK, use the 64 bit variants */
-#undef stat
-#undef fstat
-#define stat  _stat64
-#define fstat _fstat64
-#endif
+#अपरिभाषय stat
+#अपरिभाषय fstat
+#परिभाषय stat  _stat64
+#परिभाषय fstat _fstat64
+#यदि_अन्तः
 
-typedef struct FileLogContext {
-    const AVClass *class;
-    int   log_offset;
-    void *log_ctx;
+प्रकारनिर्देश संरचना FileLogContext {
+    ध्रुव AVClass *class;
+    पूर्णाङ्क   log_विस्थापनम्;
+    शून्य *log_ctx;
 } FileLogContext;
 
-static const AVClass file_log_ctx_class = {
+स्थिर ध्रुव AVClass file_log_ctx_class = {
     .class_name                = "FILE",
     .item_name                 = av_default_item_name,
-    .option                    = NULL,
-    .version                   = LIBAVUTIL_VERSION_INT,
-    .log_level_offset_offset   = offsetof(FileLogContext, log_offset),
-    .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
+    .option                    = रिक्त,
+    .संस्करणम्                   = LIBAVUTIL_संस्करणम्_INT,
+    .log_level_विस्थापनम्_विस्थापनम्   = offsetof(FileLogContext, log_विस्थापनम्),
+    .parent_log_context_विस्थापनम् = offsetof(FileLogContext, log_ctx),
 };
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
+#यदि HAVE_MMAP || HAVE_MAPVIEWOFFILE
 /* Map the first size bytes of the file, as a private copy or shared and
  * writable. The shared mapping extends the file to size, on Windows the
  * mapping object does it. */
-static int map_file(int fd, size_t size, int shared, void **ptr)
+स्थिर पूर्णाङ्क map_file(पूर्णाङ्क fd, size_t आकार, पूर्णाङ्क shared, शून्य **ptr)
 {
-#if HAVE_MMAP
-    if (shared) {
-        struct stat st;
-        if (fstat(fd, &st) < 0)
-            return AVERROR(errno);
-        if (st.st_size < size && ftruncate(fd, size) < 0)
-            return AVERROR(errno);
+#यदि HAVE_MMAP
+    यदि (shared) {
+        संरचना stat st;
+        यदि (fstat(fd, &st) < 0)
+            प्रत्यागम AVERROR(errno);
+        यदि (st.st_आकार < आकार && ftruncate(fd, आकार) < 0)
+            प्रत्यागम AVERROR(errno);
     }
 
-    void *map = mmap(NULL, size, PROT_READ | PROT_WRITE,
-                     shared ? MAP_SHARED : MAP_PRIVATE, fd, 0);
-    if (map == MAP_FAILED)
-        return AVERROR(errno);
-#else
+    शून्य *map = mmap(रिक्त, आकार, PROT_READ | PROT_WRITE,
+                     shared ? MAP_SHARED : MAP_वैयक्तिकम्, fd, 0);
+    यदि (map == MAP_FAILED)
+        प्रत्यागम AVERROR(errno);
+#अन्यथा
     HANDLE fh = (HANDLE)_get_osfhandle(fd);
-    if (fh == INVALID_HANDLE_VALUE)
-        return AVERROR(EBADF);
+    यदि (fh == INVALID_HANDLE_मानम्)
+        प्रत्यागम AVERROR(EBADF);
 
-    HANDLE mh = CreateFileMapping(fh, NULL,
+    HANDLE mh = CreateFileMapping(fh, रिक्त,
                                   shared ? PAGE_READWRITE : PAGE_READONLY,
-                                  (uint64_t)size >> 32, size, NULL);
-    if (!mh)
-        return AVERROR(EIO);
+                                  (uint64_t)आकार >> 32, आकार, रिक्त);
+    यदि (!mh)
+        प्रत्यागम AVERROR(EIO);
 
-    void *map = MapViewOfFile(mh, shared ? FILE_MAP_ALL_ACCESS : FILE_MAP_COPY,
-                              0, 0, size);
+    शून्य *map = Map_View_सम्बन्धि_File(mh, shared ? FILE_MAP_ALL_ACCESS : FILE_MAP_COPY,
+                              0, 0, आकार);
     CloseHandle(mh);
-    if (!map)
-        return AVERROR(EIO);
-#endif
+    यदि (!map)
+        प्रत्यागम AVERROR(EIO);
+#यदि_अन्तः
 
     *ptr = map;
-    return 0;
+    प्रत्यागम 0;
 }
 
-static void unmap_file(void *ptr, size_t size)
+स्थिर शून्य unmap_file(शून्य *ptr, size_t आकार)
 {
-#if HAVE_MMAP
-    munmap(ptr, size);
-#else
-    UnmapViewOfFile(ptr);
-#endif
+#यदि HAVE_MMAP
+    munmap(ptr, आकार);
+#अन्यथा
+    Unmap_View_सम्बन्धि_File(ptr);
+#यदि_अन्तः
 }
-#endif
+#यदि_अन्तः
 
-int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
-                int log_offset, void *log_ctx)
+पूर्णाङ्क av_file_map(ध्रुव वर्ण *filename, uint8_t **bufptr, size_t *आकार,
+                पूर्णाङ्क log_विस्थापनम्, शून्य *log_ctx)
 {
-    FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int err, fd = avpriv_open(filename, O_RDONLY);
-    struct stat st;
-    av_unused void *ptr;
-    *bufptr = NULL;
-    *size = 0;
+    FileLogContext file_log_ctx = { &file_log_ctx_class, log_विस्थापनम्, log_ctx };
+    पूर्णाङ्क err, fd = avpriv_open(filename, O_RDONLY);
+    संरचना stat st;
+    av_अप्रयुक्तम् शून्य *ptr;
+    *bufptr = रिक्त;
+    *आकार = 0;
 
-    if (fd < 0) {
+    यदि (fd < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot read file '%s': %s\n", filename, av_err2str(err));
-        return err;
+        प्रत्यागम err;
     }
 
-    if (fstat(fd, &st) < 0) {
+    यदि (fstat(fd, &st) < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Error occurred in fstat(): %s\n", av_err2str(err));
         close(fd);
-        return err;
+        प्रत्यागम err;
     }
 
-    if (st.st_size > SIZE_MAX) {
+    यदि (st.st_आकार > SIZE_MAX) {
         av_log(&file_log_ctx, AV_LOG_ERROR,
                "File size for file '%s' is too big\n", filename);
         close(fd);
-        return AVERROR(EINVAL);
+        प्रत्यागम AVERROR(EINVAL);
     }
-    *size = st.st_size;
+    *आकार = st.st_आकार;
 
-    if (!*size) {
-        *bufptr = NULL;
-        goto out;
+    यदि (!*आकार) {
+        *bufptr = रिक्त;
+        गच्छ बहिर्गमनम्;
     }
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    err = map_file(fd, *size, 0, &ptr);
-    if (err < 0) {
+#यदि HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    err = map_file(fd, *आकार, 0, &ptr);
+    यदि (err < 0) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot map file '%s': %s\n", filename, av_err2str(err));
         close(fd);
-        *size = 0;
-        return err;
+        *आकार = 0;
+        प्रत्यागम err;
     }
     *bufptr = ptr;
-#else
-    *bufptr = av_malloc(*size);
-    if (!*bufptr) {
+#अन्यथा
+    *bufptr = av_malloc(*आकार);
+    यदि (!*bufptr) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Memory allocation error occurred\n");
         close(fd);
-        *size = 0;
-        return AVERROR(ENOMEM);
+        *आकार = 0;
+        प्रत्यागम AVERROR(ENOMEM);
     }
-    read(fd, *bufptr, *size);
-#endif
+    पठ(fd, *bufptr, *आकार);
+#यदि_अन्तः
 
-out:
+बहिर्गमनम्:
     close(fd);
-    return 0;
+    प्रत्यागम 0;
 }
 
-void av_file_unmap(uint8_t *bufptr, size_t size)
+शून्य av_file_unmap(uint8_t *bufptr, size_t आकार)
 {
-    if (!size || !bufptr)
-        return;
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    unmap_file(bufptr, size);
-#else
+    यदि (!आकार || !bufptr)
+        प्रत्यागम;
+#यदि HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    unmap_file(bufptr, आकार);
+#अन्यथा
     av_free(bufptr);
-#endif
+#यदि_अन्तः
 }
 
-int av_file_map_shared(int fd, size_t size, void **bufptr)
+पूर्णाङ्क av_file_map_shared(पूर्णाङ्क fd, size_t आकार, शून्य **bufptr)
 {
-    *bufptr = NULL;
-    if (!size)
-        return AVERROR(EINVAL);
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    return map_file(fd, size, 1, bufptr);
-#else
-    return AVERROR(ENOSYS);
-#endif
+    *bufptr = रिक्त;
+    यदि (!आकार)
+        प्रत्यागम AVERROR(EINVAL);
+#यदि HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    प्रत्यागम map_file(fd, आकार, 1, bufptr);
+#अन्यथा
+    प्रत्यागम AVERROR(ENOSYS);
+#यदि_अन्तः
 }
 
-void av_file_unmap_shared(void *bufptr, size_t size)
+शून्य av_file_unmap_shared(शून्य *bufptr, size_t आकार)
 {
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    if (size && bufptr)
-        unmap_file(bufptr, size);
-#endif
+#यदि HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    यदि (आकार && bufptr)
+        unmap_file(bufptr, आकार);
+#यदि_अन्तः
 }

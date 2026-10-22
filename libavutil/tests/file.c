@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#अन्तर्भाव <stdarg.h>
+#अन्तर्भाव <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#अन्तर्भाव "libavutil/file.c"
+#अन्तर्भाव "libavutil/log.h"
 
-static int last_log_level = -1;
+स्थिर पूर्णाङ्क चरमः_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+स्थिर शून्य log_callback(शून्य *ctx, पूर्णाङ्क level, ध्रुव वर्ण *fmt, va_list तर्काः)
 {
-    (void)ctx; (void)fmt; (void)args;
-    last_log_level = level;
+    (शून्य)ctx; (शून्य)fmt; (शून्य)तर्काः;
+    चरमः_log_level = level;
 }
 
-int main(int argc, char **argv)
+पूर्णाङ्क मुख्यम्(पूर्णाङ्क argc, वर्ण **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    ध्रुव वर्ण *मार्गः = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
-    size_t size;
+    size_t आकार;
 
-    av_log_set_callback(log_callback);
+    av_log_समुच्चयः_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
-    av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    यदि (av_file_map(मार्गः, &buf, &आकार, 0, रिक्त) < 0)
+        प्रत्यागम 1;
+    av_file_unmap(buf, आकार);
+    यदि (आकार == 0)
+        प्रत्यागम 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
-        last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
-            av_file_unmap(buf, size);
-            return 2;
+    प्रति (पूर्णाङ्क i = 0; i < 2; i++) {
+        चरमः_log_level = -1;
+        यदि (av_file_map("no_such_file_xyz", &buf, &आकार, i, रिक्त) >= 0) {
+            av_file_unmap(buf, आकार);
+            प्रत्यागम 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
+        यदि (चरमः_log_level != AV_LOG_ERROR + i) {
             fprintf(stderr, "expected level %d with offset=%d, got %d\n",
-                    AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+                    AV_LOG_ERROR + i, i, चरमः_log_level);
+            प्रत्यागम 3;
         }
     }
 
-    return 0;
+    प्रत्यागम 0;
 }

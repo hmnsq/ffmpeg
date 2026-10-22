@@ -23,12 +23,12 @@
  * CGA/EGA/VGA ROM font data
  */
 
-#ifndef AVUTIL_XGA_FONT_DATA_H
-#define AVUTIL_XGA_FONT_DATA_H
+#यदि_अपरिभाषितम् AVUTIL_XGA_FONT_दत्त_H
+#परिभाषय AVUTIL_XGA_FONT_दत्त_H
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
-const uint8_t *avpriv_cga_font_get(void);
-const uint8_t *avpriv_vga16_font_get(void);
+ध्रुव uint8_t *avpriv_cga_font_get(शून्य);
+ध्रुव uint8_t *avpriv_vga16_font_get(शून्य);
 
-#endif /* AVUTIL_XGA_FONT_DATA_H */
+#यदि_अन्तः /* AVUTIL_XGA_FONT_DATA_H */

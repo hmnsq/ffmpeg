@@ -79,7 +79,7 @@ ELF     .eabi_attribute 10, 0           @ suppress Tag_FP_arch
         .syntax unified
 T       .thumb
 ELF     .eabi_attribute 25, 1           @ Tag_ABI_align_preserved
-ELF     .section .note.GNU-stack,"",%progbits @ Mark stack as non-executable
+ELF     .खण्डः .note.GNU-stack,"",%progbits @ Mark stack as non-executable
 
 .macro  function name, export=0, align=2
         .set            .Lpic_idx, 0
@@ -101,7 +101,7 @@ FUNC    .endfunc
         .text
         .align          \align
     .if \export
-        .global EXTERN_ASM\name
+        .वैश्विक EXTERN_ASM\name
 ELF     .type   EXTERN_ASM\name, %function
 FUNC    .func   EXTERN_ASM\name
 TFUNC   .thumb_func EXTERN_ASM\name
@@ -121,14 +121,14 @@ ELF     .size   \name, . - \name
     .endm
 #if HAVE_SECTION_DATA_REL_RO
 .if \relocate
-        .section        .data.rel.ro
+        .खण्डः        .data.rel.ro
 .else
-        .section        .rodata
+        .खण्डः        .rodata
 .endif
 #elif defined(_WIN32)
-        .section        .rdata
+        .खण्डः        .rdata
 #elif !defined(__MACH__)
-        .section        .rodata
+        .खण्डः        .rodata
 #else
         .const_data
 #endif
@@ -138,7 +138,7 @@ ELF     .size   \name, . - \name
 
 #if !HAVE_ARMV6T2_EXTERNAL
 .macro  movw    rd, val
-        mov             \rd, \val &  255
+        चालय             \rd, \val &  255
         orr             \rd, \val & ~255
 .endm
 #endif
@@ -182,10 +182,10 @@ ELF     .size   \name, . - \name
 .Lpic\@:
     .if \indir
 A       ldr             \rd, [pc, \rd]
-T       add             \rd, pc
+T       योजय             \rd, pc
 T       ldr             \rd, [\rd]
     .else
-        add             \rd, pc
+        योजय             \rd, pc
     .endif
         def_pic         \val - (.Lpic\@ + (8 >> CONFIG_THUMB)), .Lpicoff\@
 .endm
@@ -239,118 +239,118 @@ T       ldr             \rd, [\rd]
 .endm
 
 .macro  add_sh          rd,  rn,  rm,  sh:vararg
-A       add             \rd, \rn, \rm, \sh
-T       mov             \rm, \rm, \sh
-T       add             \rd, \rn, \rm
+A       योजय             \rd, \rn, \rm, \sh
+T       चालय             \rm, \rm, \sh
+T       योजय             \rd, \rn, \rm
 .endm
 
 .macro  ldr_pre         rt,  rn,  rm:vararg
 A       ldr             \rt, [\rn, \rm]!
-T       add             \rn, \rn, \rm
+T       योजय             \rn, \rn, \rm
 T       ldr             \rt, [\rn]
 .endm
 
 .macro  ldr_dpre        rt,  rn,  rm:vararg
 A       ldr             \rt, [\rn, -\rm]!
-T       sub             \rn, \rn, \rm
+T       वियोजय             \rn, \rn, \rm
 T       ldr             \rt, [\rn]
 .endm
 
 .macro  ldr_nreg        rt,  rn,  rm:vararg
 A       ldr             \rt, [\rn, -\rm]
-T       sub             \rt, \rn, \rm
+T       वियोजय             \rt, \rn, \rm
 T       ldr             \rt, [\rt]
 .endm
 
 .macro  ldr_post        rt,  rn,  rm:vararg
 A       ldr             \rt, [\rn], \rm
 T       ldr             \rt, [\rn]
-T       add             \rn, \rn, \rm
+T       योजय             \rn, \rn, \rm
 .endm
 
 .macro  ldrc_pre        cc,  rt,  rn,  rm:vararg
 A       ldr\cc          \rt, [\rn, \rm]!
 T       itt             \cc
-T       add\cc          \rn, \rn, \rm
+T       योजय\cc          \rn, \rn, \rm
 T       ldr\cc          \rt, [\rn]
 .endm
 
 .macro  ldrd_reg        rt,  rt2, rn,  rm
 A       ldrd            \rt, \rt2, [\rn, \rm]
-T       add             \rt, \rn, \rm
+T       योजय             \rt, \rn, \rm
 T       ldrd            \rt, \rt2, [\rt]
 .endm
 
 .macro  ldrd_post       rt,  rt2, rn,  rm
 A       ldrd            \rt, \rt2, [\rn], \rm
 T       ldrd            \rt, \rt2, [\rn]
-T       add             \rn, \rn, \rm
+T       योजय             \rn, \rn, \rm
 .endm
 
 .macro  ldrh_pre        rt,  rn,  rm
 A       ldrh            \rt, [\rn, \rm]!
-T       add             \rn, \rn, \rm
+T       योजय             \rn, \rn, \rm
 T       ldrh            \rt, [\rn]
 .endm
 
 .macro  ldrh_dpre       rt,  rn,  rm
 A       ldrh            \rt, [\rn, -\rm]!
-T       sub             \rn, \rn, \rm
+T       वियोजय             \rn, \rn, \rm
 T       ldrh            \rt, [\rn]
 .endm
 
 .macro  ldrh_post       rt,  rn,  rm
 A       ldrh            \rt, [\rn], \rm
 T       ldrh            \rt, [\rn]
-T       add             \rn, \rn, \rm
+T       योजय             \rn, \rn, \rm
 .endm
 
 .macro  ldrb_post       rt,  rn,  rm
 A       ldrb            \rt, [\rn], \rm
 T       ldrb            \rt, [\rn]
-T       add             \rn, \rn, \rm
+T       योजय             \rn, \rn, \rm
 .endm
 
 .macro  str_post       rt,  rn,  rm:vararg
 A       str             \rt, [\rn], \rm
 T       str             \rt, [\rn]
-T       add             \rn, \rn, \rm
+T       योजय             \rn, \rn, \rm
 .endm
 
 .macro  strb_post       rt,  rn,  rm:vararg
 A       strb            \rt, [\rn], \rm
 T       strb            \rt, [\rn]
-T       add             \rn, \rn, \rm
+T       योजय             \rn, \rn, \rm
 .endm
 
 .macro  strd_post       rt,  rt2, rn,  rm
 A       strd            \rt, \rt2, [\rn], \rm
 T       strd            \rt, \rt2, [\rn]
-T       add             \rn, \rn, \rm
+T       योजय             \rn, \rn, \rm
 .endm
 
 .macro  strh_pre        rt,  rn,  rm
 A       strh            \rt, [\rn, \rm]!
-T       add             \rn, \rn, \rm
+T       योजय             \rn, \rn, \rm
 T       strh            \rt, [\rn]
 .endm
 
 .macro  strh_dpre       rt,  rn,  rm
 A       strh            \rt, [\rn, -\rm]!
-T       sub             \rn, \rn, \rm
+T       वियोजय             \rn, \rn, \rm
 T       strh            \rt, [\rn]
 .endm
 
 .macro  strh_post       rt,  rn,  rm
 A       strh            \rt, [\rn], \rm
 T       strh            \rt, [\rn]
-T       add             \rn, \rn, \rm
+T       योजय             \rn, \rn, \rm
 .endm
 
 .macro  strh_dpost       rt,  rn,  rm
 A       strh            \rt, [\rn], -\rm
 T       strh            \rt, [\rn]
-T       sub             \rn, \rn, \rm
+T       वियोजय             \rn, \rn, \rm
 .endm
 
 #if HAVE_VFP_ARGS

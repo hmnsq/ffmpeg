@@ -36,11 +36,11 @@ function ff_vector_fmul_neon, export=1
         st1             {v16.4s, v17.4s}, [x0], #32
         st1             {v18.4s, v19.4s}, [x0], #32
         b.ne            1b
-        ret
+        प्रत्यागच्छ
 endfunc
 
 function ff_vector_fmac_scalar_neon, export=1
-        mov             x3,  #-32
+        चालय             x3,  #-32
 1:      subs            w2,  w2,  #16
         ld1             {v16.4s, v17.4s}, [x0], #32
         ld1             {v18.4s, v19.4s}, [x0], x3
@@ -53,11 +53,11 @@ function ff_vector_fmac_scalar_neon, export=1
         st1             {v16.4s, v17.4s}, [x0], #32
         st1             {v18.4s, v19.4s}, [x0], #32
         b.ne            1b
-        ret
+        प्रत्यागच्छ
 endfunc
 
 function ff_vector_fmul_scalar_neon, export=1
-        mov             w4,  #15
+        चालय             w4,  #15
         bics            w3,  w2,  w4
         dup             v16.4s, v0.s[0]
         b.eq            3f
@@ -81,7 +81,7 @@ function ff_vector_fmul_scalar_neon, export=1
         st1             {v0.4s}, [x0], #16
         subs            w2,  w2,  #4
         b.gt            3b
-4:      ret
+4:      प्रत्यागच्छ
 endfunc
 
 function ff_vector_dmul_scalar_neon, export=1
@@ -97,17 +97,17 @@ function ff_vector_dmul_scalar_neon, export=1
         ld1             {v0.2d, v1.2d}, [x1], #32
         st1             {v2.2d, v3.2d}, [x0], #32
         b.gt            1b
-        ret
+        प्रत्यागच्छ
 endfunc
 
 function ff_vector_fmul_window_neon, export=1
         sxtw            x4,  w4                 // len
-        sub             x2,  x2,  #8
-        sub             x5,  x4,  #2
-        add             x2,  x2,  x5, lsl #2    // src1 + 4 * (len - 4)
-        add             x6,  x3,  x5, lsl #3    // win  + 8 * (len - 2)
-        add             x5,  x0,  x5, lsl #3    // dst  + 8 * (len - 2)
-        mov             x7,  #-16
+        वियोजय             x2,  x2,  #8
+        वियोजय             x5,  x4,  #2
+        योजय             x2,  x2,  x5, lsl #2    // src1 + 4 * (len - 4)
+        योजय             x6,  x3,  x5, lsl #3    // win  + 8 * (len - 2)
+        योजय             x5,  x0,  x5, lsl #3    // dst  + 8 * (len - 2)
+        चालय             x7,  #-16
         ld1             {v0.4s},  [x1], #16     // s0
         ld1             {v2.4s},  [x3], #16     // wi
         ld1             {v1.4s},  [x2], x7      // s1
@@ -134,7 +134,7 @@ function ff_vector_fmul_window_neon, export=1
         fmls            v16.4s, v4.4s,  v2.4s  // s0 * wj_r - s1_r * wi
         st1             {v17.4s}, [x5], x7
         st1             {v16.4s}, [x0], #16
-        ret
+        प्रत्यागच्छ
 endfunc
 
 function ff_vector_fmul_add_neon, export=1
@@ -151,14 +151,14 @@ function ff_vector_fmul_add_neon, export=1
         ld1             {v4.4s, v5.4s},  [x3], #32
         b               1b
 2:      st1             {v4.4s, v5.4s},  [x0], #32
-        ret
+        प्रत्यागच्छ
 endfunc
 
 function ff_vector_fmul_reverse_neon, export=1
         sxtw            x3,  w3
-        add             x2,  x2,  x3,  lsl #2
-        sub             x2,  x2,  #32
-        mov             x4, #-32
+        योजय             x2,  x2,  x3,  lsl #2
+        वियोजय             x2,  x2,  #32
+        चालय             x4, #-32
         ld1             {v2.4s, v3.4s},  [x2], x4
         ld1             {v0.4s, v1.4s},  [x1], #32
 1:      subs            x3,  x3,  #8
@@ -174,7 +174,7 @@ function ff_vector_fmul_reverse_neon, export=1
         st1             {v16.4s, v17.4s},  [x0], #32
         b               1b
 2:      st1             {v16.4s, v17.4s},  [x0], #32
-        ret
+        प्रत्यागच्छ
 endfunc
 
 function ff_butterflies_float_neon, export=1
@@ -197,7 +197,7 @@ function ff_butterflies_float_neon, export=1
         fadd            v3.4s,   v0.4s,  v1.4s
         st1             {v2.4s}, [x1]
         st1             {v3.4s}, [x0]
-3:      ret
+3:      प्रत्यागच्छ
 endfunc
 
 function ff_scalarproduct_float_neon, export=1
@@ -231,5 +231,5 @@ function ff_scalarproduct_float_neon, export=1
         fadd            v2.4s, v2.4s, v4.4s
         faddp           v0.4s, v2.4s, v2.4s
         faddp           s0, v0.2s
-        ret
+        प्रत्यागच्छ
 endfunc

@@ -23,83 +23,83 @@
  * byte swapping routines
  */
 
-#ifndef AVUTIL_BSWAP_H
-#define AVUTIL_BSWAP_H
+#यदि_अपरिभाषितम् AVUTIL_BSWAP_H
+#परिभाषय AVUTIL_BSWAP_H
 
-#include <stdint.h>
-#include "libavutil/avconfig.h"
-#include "attributes.h"
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव "libavutil/avconfig.h"
+#अन्तर्भाव "attributes.h"
 
-#ifdef HAVE_AV_CONFIG_H
+#यदि_परिभाषितम् HAVE_AV_CONFIG_H
 
-#include "config.h"
+#अन्तर्भाव "config.h"
 
-#if ARCH_ARM
+#यदि ARCH_ARM
 #   include "arm/bswap.h"
-#elif ARCH_RISCV
+#नोचेद्यदि ARCH_RISCV
 #   include "riscv/bswap.h"
-#elif ARCH_X86
+#नोचेद्यदि ARCH_X86
 #   include "x86/bswap.h"
-#endif
+#यदि_अन्तः
 
-#endif /* HAVE_AV_CONFIG_H */
+#यदि_अन्तः /* HAVE_AV_CONFIG_H */
 
-#define AV_BSWAP16C(x) (((x) << 8 & 0xff00)  | ((x) >> 8 & 0x00ff))
-#define AV_BSWAP32C(x) (AV_BSWAP16C(x) << 16 | AV_BSWAP16C((x) >> 16))
-#define AV_BSWAP64C(x) (AV_BSWAP32C(x) << 32 | AV_BSWAP32C((x) >> 32))
+#परिभाषय AV_BSWAP16C(x) (((x) << 8 & 0xff00)  | ((x) >> 8 & 0x00ff))
+#परिभाषय AV_BSWAP32C(x) (AV_BSWAP16C(x) << 16 | AV_BSWAP16C((x) >> 16))
+#परिभाषय AV_BSWAP64C(x) (AV_BSWAP32C(x) << 32 | AV_BSWAP32C((x) >> 32))
 
-#define AV_BSWAPC(s, x) AV_BSWAP##s##C(x)
+#परिभाषय AV_BSWAPC(s, x) AV_BSWAP##s##C(x)
 
-#ifndef av_bswap16
-static av_always_inline av_const uint16_t av_bswap16(uint16_t x)
+#यदि_अपरिभाषितम् av_bswap16
+स्थिर av_always_inline av_const uint16_t av_bswap16(uint16_t x)
 {
     x= (x>>8) | (x<<8);
-    return x;
+    प्रत्यागम x;
 }
-#endif
+#यदि_अन्तः
 
-#ifndef av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+#यदि_अपरिभाषितम् av_bswap32
+स्थिर av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return AV_BSWAP32C(x);
+    प्रत्यागम AV_BSWAP32C(x);
 }
-#endif
+#यदि_अन्तः
 
-#ifndef av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+#यदि_अपरिभाषितम् av_bswap64
+स्थिर अन्तःस्थ uint64_t av_const av_bswap64(uint64_t x)
 {
-    return (uint64_t)av_bswap32((uint32_t)x) << 32 | av_bswap32((uint32_t)(x >> 32));
+    प्रत्यागम (uint64_t)av_bswap32((uint32_t)x) << 32 | av_bswap32((uint32_t)(x >> 32));
 }
-#endif
+#यदि_अन्तः
 
 // be2ne ... big-endian to native-endian
 // le2ne ... little-endian to native-endian
 
-#if AV_HAVE_BIGENDIAN
-#define av_be2ne16(x) (x)
-#define av_be2ne32(x) (x)
-#define av_be2ne64(x) (x)
-#define av_le2ne16(x) av_bswap16(x)
-#define av_le2ne32(x) av_bswap32(x)
-#define av_le2ne64(x) av_bswap64(x)
-#define AV_BE2NEC(s, x) (x)
-#define AV_LE2NEC(s, x) AV_BSWAPC(s, x)
-#else
-#define av_be2ne16(x) av_bswap16(x)
-#define av_be2ne32(x) av_bswap32(x)
-#define av_be2ne64(x) av_bswap64(x)
-#define av_le2ne16(x) (x)
-#define av_le2ne32(x) (x)
-#define av_le2ne64(x) (x)
-#define AV_BE2NEC(s, x) AV_BSWAPC(s, x)
-#define AV_LE2NEC(s, x) (x)
-#endif
+#यदि AV_HAVE_BIGENDIAN
+#परिभाषय av_be2ne16(x) (x)
+#परिभाषय av_be2ne32(x) (x)
+#परिभाषय av_be2ne64(x) (x)
+#परिभाषय av_le2ne16(x) av_bswap16(x)
+#परिभाषय av_le2ne32(x) av_bswap32(x)
+#परिभाषय av_le2ne64(x) av_bswap64(x)
+#परिभाषय AV_BE2NEC(s, x) (x)
+#परिभाषय AV_LE2NEC(s, x) AV_BSWAPC(s, x)
+#अन्यथा
+#परिभाषय av_be2ne16(x) av_bswap16(x)
+#परिभाषय av_be2ne32(x) av_bswap32(x)
+#परिभाषय av_be2ne64(x) av_bswap64(x)
+#परिभाषय av_le2ne16(x) (x)
+#परिभाषय av_le2ne32(x) (x)
+#परिभाषय av_le2ne64(x) (x)
+#परिभाषय AV_BE2NEC(s, x) AV_BSWAPC(s, x)
+#परिभाषय AV_LE2NEC(s, x) (x)
+#यदि_अन्तः
 
-#define AV_BE2NE16C(x) AV_BE2NEC(16, x)
-#define AV_BE2NE32C(x) AV_BE2NEC(32, x)
-#define AV_BE2NE64C(x) AV_BE2NEC(64, x)
-#define AV_LE2NE16C(x) AV_LE2NEC(16, x)
-#define AV_LE2NE32C(x) AV_LE2NEC(32, x)
-#define AV_LE2NE64C(x) AV_LE2NEC(64, x)
+#परिभाषय AV_BE2NE16C(x) AV_BE2NEC(16, x)
+#परिभाषय AV_BE2NE32C(x) AV_BE2NEC(32, x)
+#परिभाषय AV_BE2NE64C(x) AV_BE2NEC(64, x)
+#परिभाषय AV_LE2NE16C(x) AV_LE2NEC(16, x)
+#परिभाषय AV_LE2NE32C(x) AV_LE2NEC(32, x)
+#परिभाषय AV_LE2NE64C(x) AV_LE2NEC(64, x)
 
-#endif /* AVUTIL_BSWAP_H */
+#यदि_अन्तः /* AVUTIL_BSWAP_H */

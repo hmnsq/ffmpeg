@@ -30,8 +30,8 @@ SECTION .text
 INIT_XMM sse2
 cglobal butterflies_fixed, 3,3,3, src0, src1, len
     shl       lend, 2
-    add      src0q, lenq
-    add      src1q, lenq
+    योजय      src0q, lenq
+    योजय      src1q, lenq
     neg       lenq
 
 align 16
@@ -43,6 +43,6 @@ align 16
     psubd       m2, m1
     mova        [src0q + lenq], m0
     mova        [src1q + lenq], m2
-    add       lenq, mmsize
+    योजय       lenq, mmsize
     jl .loop
     RET

@@ -16,55 +16,55 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_SANITIZER_H
-#define AVUTIL_SANITIZER_H
+#यदि_अपरिभाषितम् AVUTIL_SANITIZER_H
+#परिभाषय AVUTIL_SANITIZER_H
 
-#include "config.h"
+#अन्तर्भाव "config.h"
 
-#if defined(__has_feature)
-#if __has_feature(address_sanitizer)
-#define HAVE_ASAN 1
-#endif
-#if __has_feature(memory_sanitizer)
-#define HAVE_MSAN 1
-#endif
-#if __has_feature(undefined_behavior_sanitizer)
-#define HAVE_UBSAN 1
-#endif
-#endif
-#if defined(__SANITIZE_ADDRESS__)
-#undef  HAVE_ASAN
-#define HAVE_ASAN 1
-#endif
-#ifndef HAVE_ASAN
-#define HAVE_ASAN 0
-#endif
-#ifndef HAVE_MSAN
-#define HAVE_MSAN 0
-#endif
-#ifndef HAVE_UBSAN
-#define HAVE_UBSAN 0
-#endif
+#यदि defined(__has_feature)
+#यदि __has_feature(स्थानाङ्कः_sanitizer)
+#परिभाषय HAVE_ASAN 1
+#यदि_अन्तः
+#यदि __has_feature(स्मृतिः_sanitizer)
+#परिभाषय HAVE_MSAN 1
+#यदि_अन्तः
+#यदि __has_feature(undefined_behavior_sanitizer)
+#परिभाषय HAVE_UBSAN 1
+#यदि_अन्तः
+#यदि_अन्तः
+#यदि defined(__SANITIZE_ADDRESS__)
+#अपरिभाषय  HAVE_ASAN
+#परिभाषय HAVE_ASAN 1
+#यदि_अन्तः
+#यदि_अपरिभाषितम् HAVE_ASAN
+#परिभाषय HAVE_ASAN 0
+#यदि_अन्तः
+#यदि_अपरिभाषितम् HAVE_MSAN
+#परिभाषय HAVE_MSAN 0
+#यदि_अन्तः
+#यदि_अपरिभाषितम् HAVE_UBSAN
+#परिभाषय HAVE_UBSAN 0
+#यदि_अन्तः
 
 /* Mark allocated memory that nothing may touch until it is unpoisoned. */
-#if HAVE_ASAN
-#include <sanitizer/asan_interface.h>
-#define FF_ASAN_POISON(ptr, size)   __asan_poison_memory_region(ptr, size)
-#define FF_ASAN_UNPOISON(ptr, size) __asan_unpoison_memory_region(ptr, size)
-#else
-#define FF_ASAN_POISON(ptr, size)   ((void)(ptr), (void)(size))
-#define FF_ASAN_UNPOISON(ptr, size) ((void)(ptr), (void)(size))
-#endif
+#यदि HAVE_ASAN
+#अन्तर्भाव <sanitizer/asan_interface.h>
+#परिभाषय FF_ASAN_POISON(ptr, आकार)   __asan_poison_memory_region(ptr, आकार)
+#परिभाषय FF_ASAN_UNPOISON(ptr, आकार) __asan_unpoison_memory_region(ptr, आकार)
+#अन्यथा
+#परिभाषय FF_ASAN_POISON(ptr, आकार)   ((शून्य)(ptr), (शून्य)(आकार))
+#परिभाषय FF_ASAN_UNPOISON(ptr, आकार) ((शून्य)(ptr), (शून्य)(आकार))
+#यदि_अन्तः
 
 /* Mark memory as uninitialized. */
-#if HAVE_MSAN
-#include <sanitizer/msan_interface.h>
-#define FF_MEM_UNDEFINED(ptr, size) __msan_allocated_memory(ptr, size)
-#elif CONFIG_MEMORY_POISONING && HAVE_VALGRIND_MEMCHECK_H
-#include <valgrind/memcheck.h>
-#define FF_MEM_UNDEFINED(ptr, size) VALGRIND_MAKE_MEM_UNDEFINED(ptr, size)
-#else
-#define FF_MEM_UNDEFINED(ptr, size) ((void)(ptr), (void)(size))
-#endif
+#यदि HAVE_MSAN
+#अन्तर्भाव <sanitizer/msan_interface.h>
+#परिभाषय FF_MEM_UNDEFINED(ptr, आकार) __msan_allocated_memory(ptr, आकार)
+#नोचेद्यदि CONFIG_स्मृतिः_POISONING && HAVE_VALGRIND_MEMCHECK_H
+#अन्तर्भाव <valgrind/memcheck.h>
+#परिभाषय FF_MEM_UNDEFINED(ptr, आकार) VALGRIND_MAKE_MEM_UNDEFINED(ptr, आकार)
+#अन्यथा
+#परिभाषय FF_MEM_UNDEFINED(ptr, आकार) ((शून्य)(ptr), (शून्य)(आकार))
+#यदि_अन्तः
 
-#endif /* AVUTIL_SANITIZER_H */
+#यदि_अन्तः /* AVUTIL_SANITIZER_H */

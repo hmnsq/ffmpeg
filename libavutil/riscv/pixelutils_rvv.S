@@ -23,7 +23,7 @@
 .macro pix_abs_ret
         vsetivli        zero, 1, e32, m1, ta, ma
         vmv.x.s         a0, v0
-        ret
+        प्रत्यागच्छ
 .endm
 
 func ff_pixelutils_sad16_rvv, zve32x
@@ -37,11 +37,11 @@ func ff_pixelutils_sad16_rvv, zve32x
         vle8.v          v12, (a2)
         addi            a4, a4, -1
         vwsubu.vv       v16, v4, v12
-        add             a0, a0, a1
+        योजय             a0, a0, a1
         vwsubu.vv       v20, v12, v4
         vsetvli         zero, zero, e16, m2, tu, ma
         vmax.vv         v16, v16, v20
-        add             a2, a2, a3
+        योजय             a2, a2, a3
         vwredsum.vs     v0, v16, v0
         bnez            a4, 1b
 
@@ -59,11 +59,11 @@ func ff_pixelutils_sad8_rvv, zve32x
         vle8.v          v12, (a2)
         addi            a4, a4, -1
         vwsubu.vv       v16, v4, v12
-        add             a0, a0, a1
+        योजय             a0, a0, a1
         vwsubu.vv       v20, v12, v4
         vsetvli         zero, zero, e16, m1, tu, ma
         vmax.vv         v16, v16, v20
-        add             a2, a2, a3
+        योजय             a2, a2, a3
         vwredsum.vs     v0, v16, v0
         bnez            a4, 1b
 

@@ -18,94 +18,94 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include "libavutil/frame.c"
-#include "libavutil/internal.h"
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव "libavutil/frame.c"
+#अन्तर्भाव "libavutil/internal.h"
 
-static void print_entries(const AVFrameSideData **sd, const int nb_sd)
+स्थिर शून्य print_entries(ध्रुव AVFrame_Side_दत्त **sd, ध्रुव पूर्णाङ्क nb_sd)
 {
-    for (int i = 0; i < nb_sd; i++) {
-        const AVFrameSideData *entry = sd[i];
+    प्रति (पूर्णाङ्क i = 0; i < nb_sd; i++) {
+        ध्रुव AVFrame_Side_दत्त *प्रविष्टिः = sd[i];
 
-        printf("sd %d (size %zu), %s",
-               i, entry->size, av_frame_side_data_name(entry->type));
+        प्रारूप_लिख("sd %d (size %zu), %s",
+               i, प्रविष्टिः->आकार, av_frame_side_दत्त_name(प्रविष्टिः->type));
 
-        if (entry->type != AV_FRAME_DATA_SEI_UNREGISTERED) {
-            putchar('\n');
-            continue;
+        यदि (प्रविष्टिः->type != AV_FRAME_दत्त_SEI_UNREGISTERED) {
+            अक्षरं_लिख('\n');
+            अनुवर्त;
         }
 
-        printf(": %d\n", *(int32_t *)entry->data);
+        प्रारूप_लिख(": %d\n", *(int32_t *)प्रविष्टिः->दत्त);
     }
 }
 
-typedef struct FrameSideDataSet {
-    AVFrameSideData **sd;
-    int            nb_sd;
-} FrameSideDataSet;
+प्रकारनिर्देश संरचना Frame_Side_दत्त_समुच्चयः {
+    AVFrame_Side_दत्त **sd;
+    पूर्णाङ्क            nb_sd;
+} Frame_Side_दत्त_समुच्चयः;
 
-int main(void)
+पूर्णाङ्क मुख्यम्(शून्य)
 {
-    FrameSideDataSet set = { 0 };
+    Frame_Side_दत्त_समुच्चयः समुच्चयः = { 0 };
 
     av_assert0(
-        av_frame_side_data_new(&set.sd, &set.nb_sd,
-                               AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int64_t), 0));
+        av_frame_side_दत्त_new(&समुच्चयः.sd, &समुच्चयः.nb_sd,
+                               AV_FRAME_दत्त_CONTENT_LIGHT_LEVEL,
+                               परिमाण(int64_t), 0));
     av_assert0(
-        av_frame_side_data_new(&set.sd, &set.nb_sd,
-                               AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+        av_frame_side_दत्त_new(&समुच्चयः.sd, &समुच्चयः.nb_sd,
+                               AV_FRAME_दत्त_CONTENT_LIGHT_LEVEL,
+                               परिमाण(int32_t), AV_FRAME_SIDE_दत्त_FLAG_REPLACE));
 
     // test entries in the middle
-    for (int value = 1; value < 4; value++) {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+    प्रति (पूर्णाङ्क मानम् = 1; मानम् < 4; मानम्++) {
+        AVFrame_Side_दत्त *sd = av_frame_side_दत्त_new(
+            &समुच्चयः.sd, &समुच्चयः.nb_sd, AV_FRAME_दत्त_SEI_UNREGISTERED,
+            परिमाण(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value;
+        *(int32_t *)sd->दत्त = मानम्;
     }
 
     av_assert0(
-        av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-           sizeof(int64_t), 0));
+        av_frame_side_दत्त_new(
+            &समुच्चयः.sd, &समुच्चयः.nb_sd, AV_FRAME_दत्त_SPHERICAL,
+           परिमाण(int64_t), 0));
 
     av_assert0(
-        av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+        av_frame_side_दत्त_new(
+            &समुच्चयः.sd, &समुच्चयः.nb_sd, AV_FRAME_दत्त_SPHERICAL,
+            परिमाण(int32_t), AV_FRAME_SIDE_दत्त_FLAG_REPLACE));
 
     // test entries at the end
-    for (int value = 1; value < 4; value++) {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+    प्रति (पूर्णाङ्क मानम् = 1; मानम् < 4; मानम्++) {
+        AVFrame_Side_दत्त *sd = av_frame_side_दत्त_new(
+            &समुच्चयः.sd, &समुच्चयः.nb_sd, AV_FRAME_दत्त_SEI_UNREGISTERED,
+            परिमाण(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value + 3;
+        *(int32_t *)sd->दत्त = मानम् + 3;
     }
 
-    puts("Initial addition results with duplicates:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    पङ्क्तिं_लिख("Initial addition results with duplicates:");
+    print_entries((ध्रुव AVFrame_Side_दत्त **)समुच्चयः.sd, समुच्चयः.nb_sd);
 
     {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
+        AVFrame_Side_दत्त *sd = av_frame_side_दत्त_new(
+            &समुच्चयः.sd, &समुच्चयः.nb_sd, AV_FRAME_दत्त_SEI_UNREGISTERED,
+            परिमाण(int32_t), AV_FRAME_SIDE_दत्त_FLAG_UNIQUE);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = 1337;
+        *(int32_t *)sd->दत्त = 1337;
     }
 
-    puts("\nFinal state after a single 'no-duplicates' addition:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    पङ्क्तिं_लिख("\nFinal state after a single 'no-duplicates' addition:");
+    print_entries((ध्रुव AVFrame_Side_दत्त **)समुच्चयः.sd, समुच्चयः.nb_sd);
 
-    av_frame_side_data_free(&set.sd, &set.nb_sd);
+    av_frame_side_दत्त_free(&समुच्चयः.sd, &समुच्चयः.nb_sd);
 
-    return 0;
+    प्रत्यागम 0;
 }

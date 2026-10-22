@@ -16,41 +16,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FLOAT2HALF_H
-#define AVUTIL_FLOAT2HALF_H
+#यदि_अपरिभाषितम् AVUTIL_FLOAT2HALF_H
+#परिभाषय AVUTIL_FLOAT2HALF_H
 
-#include <stdint.h>
-#include "intfloat.h"
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव "intfloat.h"
 
-#include "config.h"
+#अन्तर्भाव "config.h"
 
-typedef struct Float2HalfTables {
-#if HAVE_FAST_FLOAT16
+प्रकारनिर्देश संरचना Float2HalfTables {
+#यदि HAVE_FAST_FLOAT16
     uint8_t dummy;
-#else
+#अन्यथा
     uint16_t basetable[512];
     uint8_t shifttable[512];
-#endif
+#यदि_अन्तः
 } Float2HalfTables;
 
-void ff_init_float2half_tables(Float2HalfTables *t);
+शून्य ff_init_float2half_tables(Float2HalfTables *t);
 
-static inline uint16_t float2half(uint32_t f, const Float2HalfTables *t)
+स्थिर अन्तःस्थ uint16_t float2half(uint32_t f, ध्रुव Float2HalfTables *t)
 {
-#if HAVE_FAST_FLOAT16
-    union {
+#यदि HAVE_FAST_FLOAT16
+    सङ्घ {
         _Float16 f;
         uint16_t i;
     } u;
     u.f = av_int2float(f);
-    return u.i;
-#else
+    प्रत्यागम u.i;
+#अन्यथा
     uint16_t h;
 
     h = t->basetable[(f >> 23) & 0x1ff] + ((f & 0x007fffff) >> t->shifttable[(f >> 23) & 0x1ff]);
 
-    return h;
-#endif
+    प्रत्यागम h;
+#यदि_अन्तः
 }
 
-#endif /* AVUTIL_FLOAT2HALF_H */
+#यदि_अन्तः /* AVUTIL_FLOAT2HALF_H */

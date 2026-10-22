@@ -49,8 +49,8 @@ ENABLE_ARM_AES
 function ff_aes_\op\()rypt_\rounds\()_neon, export=1
         cbz             w3, 3f
         ubfiz           x3, x3, #4, #32 // x3 = w3 << 4
-        add             x2, x2, x3
-        add             x1, x1, x3
+        योजय             x2, x2, x3
+        योजय             x1, x1, x3
         neg             x3, x3
         movi            v1.2d, #0
   .if \rounds == 14
@@ -96,7 +96,7 @@ function ff_aes_\op\()rypt_\rounds\()_neon, export=1
         eor             v0.16b, v0.16b, v17.16b
         cbz             x4, 2f
   .ifc \op, enc
-        mov             v1.16b, v0.16b
+        चालय             v1.16b, v0.16b
   .else
         eor             v0.16b, v0.16b, v1.16b
         ldr             q1, [x2, x3]
@@ -112,7 +112,7 @@ function ff_aes_\op\()rypt_\rounds\()_neon, export=1
         str             q0, [x4]
   .endif
 3:
-        ret
+        प्रत्यागच्छ
 endfunc
 .endm
 

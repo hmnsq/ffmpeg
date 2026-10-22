@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BASE64_INTERNAL_H
-#define AVUTIL_BASE64_INTERNAL_H
+#यदि_अपरिभाषितम् AVUTIL_BASE64_आन्तरिकम्_H
+#परिभाषय AVUTIL_BASE64_आन्तरिकम्_H
 
-#include <stdint.h>
-#include "intreadwrite.h"
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव "intreadwrite.h"
 
 /*****************************************************************************
 * b64_encode: Stolen from VLC's http.c.
@@ -30,37 +30,37 @@
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-static inline char *ff_base64_encode_c(char *out, const uint8_t *in, int in_size, const char *b64)
+स्थिर अन्तःस्थ वर्ण *ff_base64_encode_c(वर्ण *बहिर्गमनम्, ध्रुव uint8_t *अन्तर्, पूर्णाङ्क अन्तर्_आकार, ध्रुव वर्ण *b64)
 {
-    char *ret, *dst;
-    unsigned i_bits = 0;
-    int i_shift = 0;
-    int bytes_remaining = in_size;
+    वर्ण *ret, *dst;
+    अचिह्नित i_द्वयङ्काः = 0;
+    पूर्णाङ्क i_सरणम् = 0;
+    पूर्णाङ्क अष्टकानि_remaining = अन्तर्_आकार;
 
-    ret = dst = out;
-    while (bytes_remaining > 3) {
-        i_bits = AV_RB32(in);
-        in += 3; bytes_remaining -= 3;
-        *dst++ = b64[ i_bits>>26        ];
-        *dst++ = b64[(i_bits>>20) & 0x3F];
-        *dst++ = b64[(i_bits>>14) & 0x3F];
-        *dst++ = b64[(i_bits>>8 ) & 0x3F];
+    ret = dst = बहिर्गमनम्;
+    यावत् (अष्टकानि_remaining > 3) {
+        i_द्वयङ्काः = AV_RB32(अन्तर्);
+        अन्तर् += 3; अष्टकानि_remaining -= 3;
+        *dst++ = b64[ i_द्वयङ्काः>>26        ];
+        *dst++ = b64[(i_द्वयङ्काः>>20) & 0x3F];
+        *dst++ = b64[(i_द्वयङ्काः>>14) & 0x3F];
+        *dst++ = b64[(i_द्वयङ्काः>>8 ) & 0x3F];
     }
-    i_bits = 0;
-    while (bytes_remaining) {
-        i_bits = (i_bits << 8) + *in++;
-        bytes_remaining--;
-        i_shift += 8;
+    i_द्वयङ्काः = 0;
+    यावत् (अष्टकानि_remaining) {
+        i_द्वयङ्काः = (i_द्वयङ्काः << 8) + *अन्तर्++;
+        अष्टकानि_remaining--;
+        i_सरणम् += 8;
     }
-    while (i_shift > 0) {
-        *dst++ = b64[(i_bits << 6 >> i_shift) & 0x3f];
-        i_shift -= 6;
+    यावत् (i_सरणम् > 0) {
+        *dst++ = b64[(i_द्वयङ्काः << 6 >> i_सरणम्) & 0x3f];
+        i_सरणम् -= 6;
     }
-    while ((dst - ret) & 3)
+    यावत् ((dst - ret) & 3)
         *dst++ = '=';
     *dst = '\0';
 
-    return ret;
+    प्रत्यागम ret;
 }
 
-#endif /* AVUTIL_BASE64_INTERNAL_H */
+#यदि_अन्तः /* AVUTIL_BASE64_INTERNAL_H */

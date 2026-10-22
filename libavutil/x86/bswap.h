@@ -21,59 +21,59 @@
  * byte swapping routines
  */
 
-#ifndef AVUTIL_X86_BSWAP_H
-#define AVUTIL_X86_BSWAP_H
+#यदि_अपरिभाषितम् AVUTIL_X86_BSWAP_H
+#परिभाषय AVUTIL_X86_BSWAP_H
 
-#include <stdint.h>
-#if defined(_MSC_VER)
-#include <stdlib.h>
-#include <intrin.h>
-#endif
-#include "config.h"
-#include "libavutil/attributes.h"
+#अन्तर्भाव <stdint.h>
+#यदि defined(_MSC_VER)
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <intrin.h>
+#यदि_अन्तः
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "libavutil/attributes.h"
 
-#if defined(_MSC_VER)
+#यदि defined(_MSC_VER)
 
-#define av_bswap16 av_bswap16
-static av_always_inline av_const uint16_t av_bswap16(uint16_t x)
+#परिभाषय av_bswap16 av_bswap16
+स्थिर av_always_inline av_const uint16_t av_bswap16(uint16_t x)
 {
-    return _rotr16(x, 8);
+    प्रत्यागम _rotr16(x, 8);
 }
 
-#define av_bswap32 av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+#परिभाषय av_bswap32 av_bswap32
+स्थिर av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return _byteswap_ulong(x);
+    प्रत्यागम _byteswap_ulong(x);
 }
 
-#if ARCH_X86_64
-#define av_bswap64 av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+#यदि ARCH_X86_64
+#परिभाषय av_bswap64 av_bswap64
+स्थिर अन्तःस्थ uint64_t av_const av_bswap64(uint64_t x)
 {
-    return _byteswap_uint64(x);
+    प्रत्यागम _byteswap_uint64(x);
 }
-#endif
+#यदि_अन्तः
 
 
-#elif HAVE_INLINE_ASM
+#नोचेद्यदि HAVE_INLINE_ASM
 
-#ifdef __INTEL_COMPILER
-#define av_bswap32 av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+#यदि_परिभाषितम् __INTEL_COMPILER
+#परिभाषय av_bswap32 av_bswap32
+स्थिर av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
     __asm__("bswap   %0" : "+r" (x));
-    return x;
+    प्रत्यागम x;
 }
 
-#if ARCH_X86_64
-#define av_bswap64 av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+#यदि ARCH_X86_64
+#परिभाषय av_bswap64 av_bswap64
+स्थिर अन्तःस्थ uint64_t av_const av_bswap64(uint64_t x)
 {
     __asm__("bswap  %0": "=r" (x) : "0" (x));
-    return x;
+    प्रत्यागम x;
 }
-#endif
-#endif /* __INTEL_COMPILER */
+#यदि_अन्तः
+#यदि_अन्तः /* __INTEL_COMPILER */
 
-#endif /* HAVE_INLINE_ASM */
-#endif /* AVUTIL_X86_BSWAP_H */
+#यदि_अन्तः /* HAVE_INLINE_ASM */
+#यदि_अन्तः /* AVUTIL_X86_BSWAP_H */

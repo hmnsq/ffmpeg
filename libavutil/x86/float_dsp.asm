@@ -46,7 +46,7 @@ ALIGN 16
 %assign a a+2
 %endrep
 
-    sub       lenq, 64
+    वियोजय       lenq, 64
     jge       .loop
     RET
 %endmacro
@@ -79,7 +79,7 @@ ALIGN 16
     movaps    [dstq + lenq + 2*mmsize], m2
     movaps    [dstq + lenq + 3*mmsize], m3
 
-    sub       lenq, mmsize*4
+    वियोजय       lenq, mmsize*4
     jge       .loop
     RET
 %endmacro
@@ -99,7 +99,7 @@ VECTOR_DMUL
 %if UNIX64
 cglobal vector_fmac_scalar, 3,3,5, dst, src, len
 %else
-cglobal vector_fmac_scalar, 4,4,5, dst, src, mul, len
+cglobal vector_fmac_scalar, 4,4,5, dst, src, गुणय, len
 %endif
 %if ARCH_X86_32
     VBROADCASTSS m0, mulm
@@ -139,7 +139,7 @@ cglobal vector_fmac_scalar, 4,4,5, dst, src, mul, len
     mova  [dstq+lenq+2*mmsize], m3
     mova  [dstq+lenq+3*mmsize], m4
 %endif ; mmsize
-    sub    lenq, 64
+    वियोजय    lenq, 64
     jge .loop
     RET
 %endmacro
@@ -163,7 +163,7 @@ VECTOR_FMAC_SCALAR
 %if UNIX64
 cglobal vector_fmul_scalar, 3,3,2, dst, src, len
 %else
-cglobal vector_fmul_scalar, 4,4,3, dst, src, mul, len
+cglobal vector_fmul_scalar, 4,4,3, dst, src, गुणय, len
 %endif
 %if ARCH_X86_32
     movss    m0, mulm
@@ -176,7 +176,7 @@ cglobal vector_fmul_scalar, 4,4,3, dst, src, mul, len
     mova     m1, [srcq+lenq]
     mulps    m1, m0
     mova  [dstq+lenq], m1
-    sub    lenq, mmsize
+    वियोजय    lenq, mmsize
     jge .loop
     RET
 %endmacro
@@ -191,14 +191,14 @@ VECTOR_FMUL_SCALAR
 
 %macro VECTOR_DMAC_SCALAR 0
 %if ARCH_X86_32
-cglobal vector_dmac_scalar, 2,4,5, dst, src, mul, len, lenaddr
-    mov          lenq, lenaddrm
+cglobal vector_dmac_scalar, 2,4,5, dst, src, गुणय, len, lenaddr
+    चालय          lenq, lenaddrm
     VBROADCASTSD m0, mulm
 %else
 %if UNIX64
 cglobal vector_dmac_scalar, 3,3,5, dst, src, len
 %else
-cglobal vector_dmac_scalar, 4,4,5, dst, src, mul, len
+cglobal vector_dmac_scalar, 4,4,5, dst, src, गुणय, len
     SWAP 0, 2
 %endif
     movlhps     xm0, xm0
@@ -231,7 +231,7 @@ cglobal vector_dmac_scalar, 4,4,5, dst, src, mul, len
     movaps [dstq+lenq+1*mmsize], m2
     movaps [dstq+lenq+2*mmsize], m3
     movaps [dstq+lenq+3*mmsize], m4
-    sub    lenq, mmsize*4
+    वियोजय    lenq, mmsize*4
     jge .loop
     RET
 %endmacro
@@ -254,12 +254,12 @@ VECTOR_DMAC_SCALAR
 
 %macro VECTOR_DMUL_SCALAR 0
 %if ARCH_X86_32
-cglobal vector_dmul_scalar, 3,4,3, dst, src, mul, len, lenaddr
-    mov          lenq, lenaddrm
+cglobal vector_dmul_scalar, 3,4,3, dst, src, गुणय, len, lenaddr
+    चालय          lenq, lenaddrm
 %elif UNIX64
 cglobal vector_dmul_scalar, 3,3,3, dst, src, len
 %else
-cglobal vector_dmul_scalar, 4,4,3, dst, src, mul, len
+cglobal vector_dmul_scalar, 4,4,3, dst, src, गुणय, len
 %endif
 %if ARCH_X86_32
     VBROADCASTSD   m0, mulm
@@ -278,7 +278,7 @@ cglobal vector_dmul_scalar, 4,4,3, dst, src, mul, len
     mulpd          m2, m0, [srcq+lenq+mmsize]
     movaps [dstq+lenq       ], m1
     movaps [dstq+lenq+mmsize], m2
-    sub          lenq, 2*mmsize
+    वियोजय          lenq, 2*mmsize
     jge .loop
     RET
 %endmacro
@@ -298,9 +298,9 @@ INIT_XMM sse
 cglobal vector_fmul_window, 5, 6, 6, dst, src0, src1, win, len, len1
     shl     lend, 2
     lea    len1q, [lenq - mmsize]
-    add    src0q, lenq
-    add     dstq, lenq
-    add     winq, lenq
+    योजय    src0q, lenq
+    योजय     dstq, lenq
+    योजय     winq, lenq
     neg     lenq
 .loop:
     mova      m0, [winq  + lenq]
@@ -320,8 +320,8 @@ cglobal vector_fmul_window, 5, 6, 6, dst, src0, src1, win, len, len1
     shufps    m2, m2, 0x1b
     mova      [dstq + lenq], m1
     mova      [dstq + len1q], m2
-    sub       len1q, mmsize
-    add       lenq,  mmsize
+    वियोजय       len1q, mmsize
+    योजय       lenq,  mmsize
     jl .loop
     RET
 
@@ -350,7 +350,7 @@ ALIGN 16
     mova    [dstq + lenq], m0
     mova    [dstq + lenq + mmsize], m1
 
-    sub     lenq,   2*mmsize
+    वियोजय     lenq,   2*mmsize
     jge     .loop
     RET
 %endmacro
@@ -398,8 +398,8 @@ ALIGN 16
     mulps   m1, m1, [src0q + lenq]
     movaps  [dstq + lenq + mmsize], m0
     movaps  [dstq + lenq], m1
-    add     src1q, 2*mmsize
-    sub     lenq,  2*mmsize
+    योजय     src1q, 2*mmsize
+    वियोजय     lenq,  2*mmsize
     jge     .loop
     RET
 %endmacro
@@ -419,15 +419,15 @@ VECTOR_FMUL_REVERSE
 INIT_XMM sse
 cglobal scalarproduct_float, 3,3,2, v1, v2, offset
     shl   offsetd, 2
-    add       v1q, offsetq
-    add       v2q, offsetq
+    योजय       v1q, offsetq
+    योजय       v2q, offsetq
     neg   offsetq
     xorps    xmm0, xmm0
 .loop:
     movaps   xmm1, [v1q+offsetq]
     mulps    xmm1, [v2q+offsetq]
     addps    xmm0, xmm1
-    add   offsetq, 16
+    योजय   offsetq, 16
     js .loop
     movhlps  xmm1, xmm0
     addps    xmm0, xmm1
@@ -445,13 +445,13 @@ cglobal scalarproduct_float, 3,5,8, v1, v2, size, len, offset
     xor   offsetq, offsetq
     xorps      m0, m0, m0
     shl     sized, 2
-    mov      lenq, sizeq
-    cmp      lenq, 32
+    चालय      lenq, sizeq
+    तुलय      lenq, 32
     jl   .l16
-    cmp      lenq, 64
+    तुलय      lenq, 64
     jl   .l32
     xorps    m1, m1, m1
-    cmp      lenq, 128
+    तुलय      lenq, 128
     jl   .l64
     and    lenq, ~127
     xorps    m2, m2, m2
@@ -465,21 +465,21 @@ cglobal scalarproduct_float, 3,5,8, v1, v2, size, len, offset
     fmaddps  m1, m5, [v2q+offsetq + 32], m1
     fmaddps  m2, m6, [v2q+offsetq + 64], m2
     fmaddps  m3, m7, [v2q+offsetq + 96], m3
-    add   offsetq, 128
-    cmp   offsetq, lenq
+    योजय   offsetq, 128
+    तुलय   offsetq, lenq
     jl .loop128
     addps    m0, m0, m2
     addps    m1, m1, m3
-    mov      lenq, sizeq
+    चालय      lenq, sizeq
     and      lenq, 127
-    cmp      lenq, 64
+    तुलय      lenq, 64
     jge .l64
     addps    m0, m0, m1
-    cmp      lenq, 32
+    तुलय      lenq, 32
     jge .l32
     vextractf128 xmm2, m0, 1
     addps    xmm0, xmm2
-    cmp      lenq, 16
+    तुलय      lenq, 16
     jge .l16
     movhlps  xmm1, xmm0
     addps    xmm0, xmm1
@@ -493,23 +493,23 @@ cglobal scalarproduct_float, 3,5,8, v1, v2, size, len, offset
     RET
 .l64:
     and    lenq, ~63
-    add    lenq, offsetq
+    योजय    lenq, offsetq
 .loop64:
     movups   m4, [v1q+offsetq]
     movups   m5, [v1q+offsetq + 32]
     fmaddps  m0, m4, [v2q+offsetq], m0
     fmaddps  m1, m5, [v2q+offsetq + 32], m1
-    add   offsetq, 64
-    cmp   offsetq, lenq
+    योजय   offsetq, 64
+    तुलय   offsetq, lenq
     jl .loop64
     addps    m0, m0, m1
-    mov      lenq, sizeq
+    चालय      lenq, sizeq
     and      lenq, 63
-    cmp      lenq, 32
+    तुलय      lenq, 32
     jge .l32
     vextractf128 xmm2, m0, 1
     addps    xmm0, xmm2
-    cmp      lenq, 16
+    तुलय      lenq, 16
     jge .l16
     movhlps  xmm1, xmm0
     addps    xmm0, xmm1
@@ -523,18 +523,18 @@ cglobal scalarproduct_float, 3,5,8, v1, v2, size, len, offset
     RET
 .l32:
     and    lenq, ~31
-    add    lenq, offsetq
+    योजय    lenq, offsetq
 .loop32:
     movups   m4, [v1q+offsetq]
     fmaddps  m0, m4, [v2q+offsetq], m0
-    add   offsetq, 32
-    cmp   offsetq, lenq
+    योजय   offsetq, 32
+    तुलय   offsetq, lenq
     jl .loop32
     vextractf128 xmm2, m0, 1
     addps    xmm0, xmm2
-    mov      lenq, sizeq
+    चालय      lenq, sizeq
     and      lenq, 31
-    cmp      lenq, 16
+    तुलय      lenq, 16
     jge .l16
     movhlps  xmm1, xmm0
     addps    xmm0, xmm1
@@ -548,13 +548,13 @@ cglobal scalarproduct_float, 3,5,8, v1, v2, size, len, offset
     RET
 .l16:
     and    lenq, ~15
-    add    lenq, offsetq
+    योजय    lenq, offsetq
 .loop16:
     movaps   xmm1, [v1q+offsetq]
     mulps    xmm1, [v2q+offsetq]
     addps    xmm0, xmm1
-    add   offsetq, 16
-    cmp   offsetq, lenq
+    योजय   offsetq, 16
+    तुलय   offsetq, lenq
     jl .loop16
     movhlps  xmm1, xmm0
     addps    xmm0, xmm1
@@ -573,8 +573,8 @@ cglobal scalarproduct_float, 3,5,8, v1, v2, size, len, offset
 %macro SCALARPRODUCT_DOUBLE 0
 cglobal scalarproduct_double, 3,3,8, v1, v2, offset
     shl offsetq, 3
-    add     v1q, offsetq
-    add     v2q, offsetq
+    योजय     v1q, offsetq
+    योजय     v2q, offsetq
     neg offsetq
     xorpd    m0, m0
     xorpd    m1, m1
@@ -594,7 +594,7 @@ align 16
     addpd    m1, m5
     addpd    m2, m6
     addpd    m3, m7
-    add offsetq, mmsize*4
+    योजय offsetq, mmsize*4
     jl .loop
     addpd    m0, m1
     addpd    m2, m3
@@ -625,8 +625,8 @@ SCALARPRODUCT_DOUBLE
 INIT_XMM sse
 cglobal butterflies_float, 3,3,3, src0, src1, len
     shl       lend, 2
-    add      src0q, lenq
-    add      src1q, lenq
+    योजय      src0q, lenq
+    योजय      src1q, lenq
     neg       lenq
 .loop:
     mova        m0, [src0q + lenq]
@@ -635,6 +635,6 @@ cglobal butterflies_float, 3,3,3, src0, src1, len
     addps       m0, m0, m1
     mova        [src1q + lenq], m2
     mova        [src0q + lenq], m0
-    add       lenq, mmsize
+    योजय       lenq, mmsize
     jl .loop
     RET

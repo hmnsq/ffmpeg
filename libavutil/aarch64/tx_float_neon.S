@@ -67,7 +67,7 @@ endconst
 .if \discont == 1
         ldp             q\dst1\(), q\dst2\(), [\src\()]
         ldp             q\dst3\(), q\dst4\(), [\src\(), #32]
-        add             \src\(), \src\(), #64
+        योजय             \src\(), \src\(), #64
 .else
         ld1             { v\dst1\().4s, v\dst2\().4s, v\dst3\().4s, v\dst4\().4s }, [\src], #64
 .endif
@@ -77,16 +77,16 @@ endconst
         ldp             w14, w15, [x4, #16]
         ldp             w16, w17, [x4, #24]
 
-        add             x4, x4, #32
+        योजय             x4, x4, #32
 
         ldr             d\dst1, [\src, x10, lsl #3]
-        add             x11, \src, x11, lsl #3
+        योजय             x11, \src, x11, lsl #3
         ldr             d\dst2, [\src, x12, lsl #3]
-        add             x13, \src, x13, lsl #3
+        योजय             x13, \src, x13, lsl #3
         ldr             d\dst3, [\src, x14, lsl #3]
-        add             x15, \src, x15, lsl #3
+        योजय             x15, \src, x15, lsl #3
         ldr             d\dst4, [\src, x16, lsl #3]
-        add             x17, \src, x17, lsl #3
+        योजय             x17, \src, x17, lsl #3
 
         ld1             { v\dst1\().d }[1], [x11]
         ld1             { v\dst2\().d }[1], [x13]
@@ -104,14 +104,14 @@ endconst
         zip2            \o0\().2d, v16.2d, \e0\().2d
         zip1            v17.2d, v16.2d, \e0\().2d
 
-        mov             \o0\().d[1], v18.d[1]
+        चालय             \o0\().d[1], v18.d[1]
 
         fadd            \e0\().4s, v17.4s, \o0\().4s         // a1,2 b1,4
         fsub            v16.4s,    v17.4s, \o0\().4s         // a3,4 b3,2
 
-        mov             \o0\().16b, v16.16b                  // Swap once again...
-        mov             \o0\().s[3], \e0\().s[3]
-        mov             \e0\().s[3], v16.s[3]
+        चालय             \o0\().16b, v16.16b                  // Swap once again...
+        चालय             \o0\().s[3], \e0\().s[3]
+        चालय             \e0\().s[3], v16.s[3]
 
 .if \standalone == 0
         uzp2            \o0\().2d, \e0\().2d, \o0\().2d
@@ -137,8 +137,8 @@ endconst
         fneg            \t3\().4s, \t4\().4s
         fneg            \t4\().4s, \t5\().4s
 
-        mov             \o0\().s[3], \t3\().s[3]
-        mov             \o1\().s[3], \t4\().s[3]
+        चालय             \o0\().s[3], \t3\().s[3]
+        चालय             \o1\().s[3], \t4\().s[3]
 
         zip1            \t1\().2d, \t0\().2d, \e0\().2d                     // t1,2 r1,2
         zip1            \t3\().2d, \t2\().2d, \e1\().2d                     // t1,2 r1,2
@@ -174,7 +174,7 @@ endconst
         rev64           \t4\().4s,  \t4\().4s
 
         ext             \t2\().16b, \o0\().16b, \t4\().16b, #8      // o0[0,1], o1[3,2]
-        mov             \o0\().d[1], \t4\().d[1]                    // o0[3, 4]; o1[1, 4]
+        चालय             \o0\().d[1], \t4\().d[1]                    // o0[3, 4]; o1[1, 4]
 
         fsub            \e1\().4s, \o0\().4s, \t2\().4s             // s34, g43
         fadd            \t2\().4s, \o0\().4s, \t2\().4s             // s12, g12
@@ -229,8 +229,8 @@ endconst
         ext             v19.16b, v18.16b, v22.16b, #8
         ext             v17.16b, v16.16b, v21.16b, #8
 
-        mov             v18.d[1], v22.d[1]
-        mov             v21.d[0], v16.d[0]
+        चालय             v18.d[1], v22.d[1]
+        चालय             v21.d[0], v16.d[0]
 
         fadd            v22.4s, v18.4s, v19.4s                   // s12, g12
         fsub            v19.4s, v18.4s, v19.4s                   // s34, g43
@@ -332,8 +332,8 @@ endconst
         fmul            \t1\().4s, \o2\().4s, \t6\().4s          // s[4567] * mult
         fmul            \t0\().4s, \o0\().4s, \t6\().4s          // s[0123] * mult
 
-        mov             \o1\().16b, \t3\().16b
-        mov             \o2\().16b, \t1\().16b
+        चालय             \o1\().16b, \t3\().16b
+        चालय             \o2\().16b, \t1\().16b
 
         fsub            \t3\().4s, \t3\().4s, \t2\().4s          // y34, u34
         fsub            \t1\().4s, \t1\().4s, \t0\().4s          // w34, x34
@@ -361,12 +361,12 @@ function ff_tx_fft2_float_neon, export=1
         ld2r            { v0.2d, v1.2d }, [x2]
 
         fneg            v2.2s, v1.2s
-        mov             v2.d[1], v1.d[0]
+        चालय             v2.d[1], v1.d[0]
 
         fsub            v2.4s, v0.4s, v2.4s
 
         st1             { v2.4s }, [x1]
-        ret
+        प्रत्यागच्छ
 endfunc
 
 .macro FFT4_FN name, inv
@@ -374,15 +374,15 @@ function ff_tx_fft4_\name\()_float_neon, export=1
         ld1             {v0.4s, v1.4s}, [x2]
 
 .if \inv == 1
-        mov             v2.d[0], v0.d[1]
-        mov             v0.d[1], v1.d[1]
-        mov             v1.d[1], v2.d[0]
+        चालय             v2.d[0], v0.d[1]
+        चालय             v0.d[1], v1.d[1]
+        चालय             v1.d[1], v2.d[0]
 .endif
 
         FFT4            v0, v1, 1
 
         st1             { v0.4s, v1.4s }, [x1]
-        ret
+        प्रत्यागच्छ
 endfunc
 .endm
 
@@ -403,7 +403,7 @@ function ff_tx_fft8_\name\()_neon, export=1
         zip2            v19.2d, v1.2d, v3.2d
         st1             { v16.4s, v17.4s, v18.4s, v19.4s }, [x1]
 
-        ret
+        प्रत्यागच्छ
 endfunc
 .endm
 
@@ -431,7 +431,7 @@ function ff_tx_fft16_\name\()_neon, export=1
         zip2            v27.2d, v3.2d, v7.2d
         st1             { v24.4s, v25.4s, v26.4s, v27.4s }, [x1]
 
-        ret
+        प्रत्यागच्छ
 endfunc
 .endm
 
@@ -471,15 +471,15 @@ endconst
         ldp             w15, w16, [x4, #20]     // lut[5,6]
 
         ldr             d0, [x2, x10, lsl #3]
-        add             x10, x2, x11, lsl #3
-        add             x12, x2, x12, lsl #3
+        योजय             x10, x2, x11, lsl #3
+        योजय             x12, x2, x12, lsl #3
         ld1             { v0.d }[1], [x10]
         ld1r            { v1.2d }, [x12]
 
         ldr             d2, [x2, x13, lsl #3]
-        add             x13, x2, x14, lsl #3
+        योजय             x13, x2, x14, lsl #3
         ldr             d3, [x2, x15, lsl #3]
-        add             x15, x2, x16, lsl #3
+        योजय             x15, x2, x16, lsl #3
         ld1             { v2.d }[1], [x13]
         ld1             { v3.d }[1], [x15]
 
@@ -488,17 +488,17 @@ endconst
         ldp             w14, w15, [x4, #44]     // lut[11,12]
         ldp             w16, w17, [x4, #52]     // lut[13,14]
 .if \advance == 1
-        add             x4, x4, #60
+        योजय             x4, x4, #60
 .endif
 
         ldr             d4, [x2, x10, lsl #3]
-        add             x10, x2, x11, lsl #3
+        योजय             x10, x2, x11, lsl #3
         ldr             d5, [x2, x12, lsl #3]
-        add             x12, x2, x13, lsl #3
+        योजय             x12, x2, x13, lsl #3
         ldr             d6, [x2, x14, lsl #3]
-        add             x14, x2, x15, lsl #3
+        योजय             x14, x2, x15, lsl #3
         ldr             d7, [x2, x16, lsl #3]
-        add             x16, x2, x17, lsl #3
+        योजय             x16, x2, x17, lsl #3
         ld1             { v4.d }[1], [x10]
         ld1             { v5.d }[1], [x12]
         ld1             { v6.d }[1], [x14]
@@ -512,11 +512,11 @@ endconst
 // provides x6/x7 = stride*3/*5.
 .macro FFT15_CORE hoist_strides=0
 .if \hoist_strides == 0
-        add             x6, x3, x3, lsl #1                  // stride*3
-        add             x7, x3, x3, lsl #2                  // stride*5
+        योजय             x6, x3, x3, lsl #1                  // stride*3
+        योजय             x7, x3, x3, lsl #2                  // stride*5
 .endif
-        add             x8, x1, x7                          // &out[5]
-        add             x9, x8, x7                          // &out[10]
+        योजय             x8, x1, x7                          // &out[5]
+        योजय             x9, x8, x7                          // &out[10]
 
         // 4x parallel 3pt over in[3..14] (the in[11..14] -+ signs are folded
         // into the twiddles: k = in[11..14] + Q4 -+ Q0), interleaved with the
@@ -579,7 +579,7 @@ endconst
         // r = t*v29 + swap(t)*v10, v10's +- giving r[3] += t[2]/r[2] -= t[3]
         // in half-swapped order. Accumulates are spread out for the A53
         ext             v16.16b, v22.16b, v22.16b, #8         // (t1, t0)
-        mov             v6.16b,  v0.16b                       // m0 = dc[0]
+        चालय             v6.16b,  v0.16b                       // m0 = dc[0]
         ext             v17.16b, v21.16b, v21.16b, #8         // (t2, t3)
         fmul            v7.4s,  v21.4s, v29.4s                // (r3, r2)
         fmla            v6.4s,  v22.4s, v25.4s                // m0 += t[0,1]*r_lo
@@ -616,28 +616,28 @@ endconst
         fsub            v5.4s,  v19.4s, v20.4s                // (out11, out8)
         fadd            v4.4s,  v19.4s, v20.4s                // (out14, out2)
 
-        add             x10, x1, x6, lsl #1                   // &out[6]
-        add             x11, x1, x6                           // &out[3]
+        योजय             x10, x1, x6, lsl #1                   // &out[6]
+        योजय             x11, x1, x6                           // &out[3]
         st1             { v7.d }[0], [x10]
         st1             { v7.d }[1], [x11]
-        add             x12, x8, x3, lsl #2                   // &out[9]
-        add             x13, x1, x6, lsl #2                   // &out[12]
+        योजय             x12, x8, x3, lsl #2                   // &out[9]
+        योजय             x13, x1, x6, lsl #2                   // &out[12]
         st1             { v6.d }[0], [x12]
         st1             { v6.d }[1], [x13]
-        add             x10, x1, x3                           // &out[1]
-        add             x11, x9, x6                           // &out[13]
+        योजय             x10, x1, x3                           // &out[1]
+        योजय             x11, x9, x6                           // &out[13]
         st1             { v23.d }[0], [x10]
         st1             { v23.d }[1], [x11]
-        add             x12, x1, x3, lsl #2                   // &out[4]
-        add             x13, x8, x3, lsl #1                   // &out[7]
+        योजय             x12, x1, x3, lsl #2                   // &out[4]
+        योजय             x13, x8, x3, lsl #1                   // &out[7]
         st1             { v22.d }[0], [x12]
         st1             { v22.d }[1], [x13]
-        add             x10, x9, x3                           // &out[11]
-        add             x11, x1, x3, lsl #3                   // &out[8]
+        योजय             x10, x9, x3                           // &out[11]
+        योजय             x11, x1, x3, lsl #3                   // &out[8]
         st1             { v5.d }[0], [x10]
         st1             { v5.d }[1], [x11]
-        add             x12, x9, x3, lsl #2                   // &out[14]
-        add             x13, x1, x3, lsl #1                   // &out[2]
+        योजय             x12, x9, x3, lsl #2                   // &out[14]
+        योजय             x13, x1, x3, lsl #1                   // &out[2]
         st1             { v4.d }[0], [x12]
         st1             { v4.d }[1], [x13]
 .endm
@@ -664,7 +664,7 @@ function ff_tx_fft15_\name\()_neon, export=1
 
         ldr             d10, [sp, #16]
         ldp             d8,  d9,  [sp], #32
-        ret
+        प्रत्यागच्छ
 endfunc
 .endm
 
@@ -674,13 +674,13 @@ FFT15_FN ns_float, 1
 // 15xM PFA (len = 15*M, M a power of two), like the x86 fft_pfa_15xM:
 // dim1 = M 15pt transforms scattered into s->tmp at sub_map[i], spaced M
 // apart; dim2 = 15 in-place M-pt subtransforms (plain blr, the uniform ABI
-// needs no asm-call variant); post = out[i*stride] = s->tmp[out_map[i]].
-// AVTXContext offsets: len=0, map=8, tmp=24, sub=32, fn[0]=40.
+// needs no asm-आह्वान variant); post = out[i*stride] = s->tmp[out_map[i]].
+// AVTXContext offsets: len=0, map=8, tmp=24, वियोजय=32, fn[0]=40.
 .macro PFA_15_FN name, no_perm
 function ff_tx_fft_pfa_15xM_\name\()_neon, export=1
         AARCH64_SIGN_LINK_REGISTER
         stp             x29, x30, [sp, #-128]!
-        mov             x29, sp
+        चालय             x29, sp
         stp             x19, x20, [sp, #16]
         stp             x21, x22, [sp, #32]
         stp             x23, x24, [sp, #48]
@@ -689,13 +689,13 @@ function ff_tx_fft_pfa_15xM_\name\()_neon, export=1
         stp             d8,  d9,  [sp, #96]
         str             d10, [sp, #112]
 
-        mov             x25, x0                     // root context
-        mov             x26, x1                     // user out
-        mov             x27, x3                     // user stride (bytes)
+        चालय             x25, x0                     // root context
+        चालय             x26, x1                     // user out
+        चालय             x27, x3                     // user stride (bytes)
 
         ldr             w19, [x0, #0]               // len = 15*M
         ldr             x20, [x0, #24]              // s->tmp
-        ldr             x23, [x0, #32]              // s->sub
+        ldr             x23, [x0, #32]              // s->वियोजय
         ldr             w24, [x23, #0]              // M
         ldr             x28, [x23, #8]              // sub_map
         lsl             x3,  x24, #3                // M*8 = 15pt output stride
@@ -709,36 +709,36 @@ function ff_tx_fft_pfa_15xM_\name\()_neon, export=1
         ld1             { v24.4s }, [x5]
         LOAD_SUBADD
         FFT15_DERIVE_CONSTS
-        add             x6,  x3, x3, lsl #1         // stride*3
-        add             x7,  x3, x3, lsl #2         // stride*5
+        योजय             x6,  x3, x3, lsl #1         // stride*3
+        योजय             x7,  x3, x3, lsl #2         // stride*5
 1:
         ldr             w10, [x28], #4              // sub_map[i]
-        add             x1,  x20, x10, lsl #3
+        योजय             x1,  x20, x10, lsl #3
         FFT15_LOAD      \no_perm, advance=1
         FFT15_CORE      hoist_strides=1
         subs            w19, w19, #15
         b.gt            1b
 
         ldr             x28, [x25, #40]             // ctx->fn[0]
-        mov             x21, x20                    // column base
-        mov             w19, #15
+        चालय             x21, x20                    // column base
+        चालय             w19, #15
 2:
-        mov             x0,  x23
-        mov             x1,  x21
-        mov             x2,  x21
-        mov             x3,  #8
+        चालय             x0,  x23
+        चालय             x1,  x21
+        चालय             x2,  x21
+        चालय             x3,  #8
         blr             x28                         // M-point FFT, in-place
-        add             x21, x21, x24, lsl #3
+        योजय             x21, x21, x24, lsl #3
         subs            w19, w19, #1
         b.gt            2b
 
         // out[i*stride] = s->tmp[out_map[i]], unrolled by 4 (len % 60 == 0)
         ldr             w19, [x25, #0]              // len
         ldr             x22, [x25, #8]              // s->map
-        add             x22, x22, x19, lsl #2       // out_map = map + len
-        mov             x10, x26
+        योजय             x22, x22, x19, lsl #2       // out_map = map + len
+        चालय             x10, x26
         lsl             x11, x27, #1                // 2*stride
-        add             x12, x27, x11               // 3*stride
+        योजय             x12, x27, x11               // 3*stride
 3:
         ldp             w13, w14, [x22], #8         // out_map[i,   i+1]
         ldp             w15, w16, [x22], #8         // out_map[i+2, i+3]
@@ -750,7 +750,7 @@ function ff_tx_fft_pfa_15xM_\name\()_neon, export=1
         str             d1,  [x10, x27]
         str             d2,  [x10, x11]
         str             d3,  [x10, x12]
-        add             x10, x10, x11, lsl #1
+        योजय             x10, x10, x11, lsl #1
         subs            w19, w19, #4
         b.gt            3b
 
@@ -763,7 +763,7 @@ function ff_tx_fft_pfa_15xM_\name\()_neon, export=1
         ldr             d10, [sp, #112]
         ldp             x29, x30, [sp], #128
         AARCH64_VALIDATE_LINK_REGISTER
-        ret
+        प्रत्यागच्छ
 endfunc
 .endm
 
@@ -775,35 +775,35 @@ PFA_15_FN ns_float, 1
 // Where ld2 can split the re/im planes the multiplies are planar and fused
 // (fmul + fmls/fmla); the gather and the odd tail use interleaved pairs
 // (trn1/trn2 broadcast, rev64 swap, the v31 fmla).
-// AVTXContext offsets: len=0, map=8 (doubled in init), exp=16, sub=32, fn=40.
+// AVTXContext offsets: len=0, map=8 (doubled in init), exp=16, वियोजय=32, fn=40.
 function ff_tx_mdct_inv_float_neon, export=1
         AARCH64_SIGN_LINK_REGISTER
         stp             x29, x30, [sp, #-48]!
-        mov             x29, sp
+        चालय             x29, sp
         stp             x19, x20, [sp, #16]
         stp             x21, x22, [sp, #32]
 
-        mov             x19, x1                     // z
-        mov             x20, x0                     // ctx
+        चालय             x19, x1                     // z
+        चालय             x20, x0                     // ctx
         ldr             w21, [x0, #0]               // N
         ldr             x22, [x0, #16]              // exp
         ldr             x4,  [x0, #8]               // map (doubled)
 
         LOAD_SUBADD
 
-        sub             x5,  x21, #1
+        वियोजय             x5,  x21, #1
         madd            x14, x5,  x3,  x2           // in2 = in + (N-1)*stride
         lsr             w7,  w21, #1                // len2
 
-        cmp             x3,  #4                     // contiguous input and
+        तुलय             x3,  #4                     // contiguous input and
         b.ne            6f                          // len2 % 4 == 0 takes the
         tst             w21, #7                     // single-sweep path
         b.eq            3f
 
 6:
         // pre-rotation via gather: z[i] = (in2[-k], in1[k])*exp[i], 2 cx/iter
-        mov             x13, x19
-        mov             x15, x22
+        चालय             x13, x19
+        चालय             x15, x22
 1:
         ldp             w5,  w6,  [x4], #8          // k0, k1
         madd            x8,  x5,  x3,  x2           // &in[k0]      (im0)
@@ -832,22 +832,22 @@ function ff_tx_mdct_inv_float_neon, export=1
         // with low res (outputs p'-1, p', p' = len2-1-p), scattered through
         // the inverse map (2nd half of s->map) with the natural twiddles
 3:
-        add             x15, x22, x21, lsl #2       // exp + len2          (asc)
-        add             x4,  x4,  x21, lsl #1       // map + len2          (asc)
-        sub             x10, x14, #12               // &in[N-4]            (desc)
-        add             x12, x15, x21, lsl #2
-        sub             x12, x12, #16               // exp + (N-2)         (desc)
-        add             x13, x4,  x21, lsl #1
-        sub             x13, x13, #8                // map + (N-2)         (desc)
+        योजय             x15, x22, x21, lsl #2       // exp + len2          (asc)
+        योजय             x4,  x4,  x21, lsl #1       // map + len2          (asc)
+        वियोजय             x10, x14, #12               // &in[N-4]            (desc)
+        योजय             x12, x15, x21, lsl #2
+        वियोजय             x12, x12, #16               // exp + (N-2)         (desc)
+        योजय             x13, x4,  x21, lsl #1
+        वियोजय             x13, x13, #8                // map + (N-2)         (desc)
 5:
         ld2             { v6.2s, v7.2s }, [x2], #16  // (im_p, im_p1) (re_p', re_p'm1)
         ld2             { v16.2s, v17.2s }, [x10]    // (im_p'm1, im_p') (re_p1, re_p)
-        sub             x10, x10, #16
+        वियोजय             x10, x10, #16
         rev64           v17.2s, v17.2s              // (re_p, re_p1)
         ld2             { v1.2s, v2.2s }, [x15], #16 // A: er, ei
         rev64           v7.2s, v7.2s                // (re_p'm1, re_p')
         ld2             { v3.2s, v4.2s }, [x12]      // B: er, ei
-        sub             x12, x12, #16
+        वियोजय             x12, x12, #16
         fmul            v5.2s,  v17.2s, v1.2s       // A: re*er
         fmul            v18.2s, v17.2s, v2.2s       // A: re*ei
         fmul            v19.2s, v7.2s,  v3.2s       // B: re*er
@@ -862,7 +862,7 @@ function ff_tx_mdct_inv_float_neon, export=1
         str             d0,  [x19, w16, uxtw #3]
         str             d1,  [x19, w17, uxtw #3]
         ldp             w16, w17, [x13]             // inv_map[p'-1, p']
-        sub             x13, x13, #8
+        वियोजय             x13, x13, #8
         zip1            v2.2s,  v19.2s, v20.2s      // z_p'm1
         zip2            v3.2s,  v19.2s, v20.2s      // z_p'
         str             d2,  [x19, w16, uxtw #3]
@@ -872,21 +872,21 @@ function ff_tx_mdct_inv_float_neon, export=1
 
 4:
         ldr             x5,  [x20, #40]             // fn[0]
-        ldr             x0,  [x20, #32]             // sub[0]
-        mov             x1,  x19
-        mov             x2,  x19
-        mov             x3,  #8
+        ldr             x0,  [x20, #32]             // वियोजय[0]
+        चालय             x1,  x19
+        चालय             x2,  x19
+        चालय             x3,  #8
         blr             x5                          // N/2pt FFT, in-place
 
         // post-rotation over symmetric pairs (i0 = len4+i, i1 = len4-1-i),
         // 2 pairs/iter, planes ld2-split: r = swap(z)*swap(e), the im parts
         // crossing partners (z[i0] = (r_i0.re, r_i1.im) and vice versa), so
         // each side stores its re plane zipped with the other's reversed ims
-        add             x15, x22, x21, lsl #2       // exp_post = exp + len2
-        add             x8,  x19, x21, lsl #1       // p_i0 = z + len4
-        sub             x9,  x8,  #16               // p_i1 = z + len4 - 2
-        add             x10, x15, x21, lsl #1       // e_i0 = exp_post + len4
-        sub             x11, x10, #16               // e_i1 = exp_post + len4 - 2
+        योजय             x15, x22, x21, lsl #2       // exp_post = exp + len2
+        योजय             x8,  x19, x21, lsl #1       // p_i0 = z + len4
+        वियोजय             x9,  x8,  #16               // p_i1 = z + len4 - 2
+        योजय             x10, x15, x21, lsl #1       // e_i0 = exp_post + len4
+        वियोजय             x11, x10, #16               // e_i1 = exp_post + len4 - 2
         lsr             w7,  w21, #2                // len4
         lsr             w6,  w7,  #1                // pairs of pairs
         cbz             w6,  8f                     // N == 4: lone middle pair
@@ -895,7 +895,7 @@ function ff_tx_mdct_inv_float_neon, export=1
         ld2             { v2.2s, v3.2s }, [x9]       // z desc (i1-1, i1)
         ld2             { v4.2s, v5.2s }, [x10], #16 // e asc: er, ei
         ld2             { v6.2s, v7.2s }, [x11]      // e desc
-        sub             x11, x11, #16
+        वियोजय             x11, x11, #16
         fmul            v16.2s, v1.2s, v5.2s        // asc:  z.im*e.im
         fmul            v18.2s, v1.2s, v4.2s        // asc:  z.im*e.re
         fmul            v20.2s, v3.2s, v7.2s        // desc: z.im*e.im
@@ -910,7 +910,7 @@ function ff_tx_mdct_inv_float_neon, export=1
         zip1            v2.4s, v20.4s, v18.4s       // (z[i1-1], z[i1])
         st1             { v0.4s }, [x8], #16
         st1             { v2.4s }, [x9]
-        sub             x9,  x9,  #16
+        वियोजय             x9,  x9,  #16
         subs            w6,  w6,  #1
         b.gt            2b
 8:
@@ -918,8 +918,8 @@ function ff_tx_mdct_inv_float_neon, export=1
         // x8/x10 already point at it; x9/x11 sit one complex below their slot.
         tbz             w7,  #0, 9f
         LOAD_SUBADD     // v31 (clobbered by the FFT)
-        add             x9,  x9,  #8
-        add             x11, x11, #8
+        योजय             x9,  x9,  #8
+        योजय             x11, x11, #8
         ldr             d0,  [x8]                   // z[i0]
         ld1             { v0.d }[1], [x9]           // v0 = (z[i0], z[i1])
         ldr             d1,  [x10]                  // exp[i0]
@@ -931,7 +931,7 @@ function ff_tx_mdct_inv_float_neon, export=1
         fmul            v6.4s, v4.4s, v3.4s         // a.re*b
         fmul            v7.4s, v5.4s, v1.4s         // a.im*b_swap (b_swap = orig exp)
         fmla            v6.4s, v7.4s, v31.4s        // v6 = (r0.re, r0.im, r1.re, r1.im)
-        mov             v16.16b, v6.16b
+        चालय             v16.16b, v6.16b
         ins             v16.s[1], v6.s[3]           // (r0.re, r1.im, r1.re, r1.im)
         ins             v16.s[3], v6.s[1]           // (r0.re, r1.im, r1.re, r0.im)
         st1             { v16.d }[0], [x8]          // z[i0] = (r0.re, r1.im)
@@ -941,18 +941,18 @@ function ff_tx_mdct_inv_float_neon, export=1
         ldp             x21, x22, [sp, #32]
         ldp             x29, x30, [sp], #48
         AARCH64_VALIDATE_LINK_REGISTER
-        ret
+        प्रत्यागच्छ
 endfunc
 
 .macro SETUP_SR_RECOMB len, re, im, dec
         ldr             w5, =(\len - 4*7)
         movrel          \re, X(ff_tx_tab_\len\()_float)
-        add             \im, \re, x5
-        mov             \dec, #-32
+        योजय             \im, \re, x5
+        चालय             \dec, #-32
 
 .if \len > 32
-        mov             x21, #2*\len
-        add             x22, x21, x21, lsl #1
+        चालय             x21, #2*\len
+        योजय             x22, x21, x21, lsl #1
 .endif
 .endm
 
@@ -1212,16 +1212,16 @@ endfunc
         fsub            \e3\().4s, \e3\().4s, \t1\().4s
 .endif
 
-        mov             \t1\().16b, \o0\().16b
+        चालय             \t1\().16b, \o0\().16b
 
         fsub            \o0\().4s, \e0\().4s, \t1\().4s
         fadd            \e0\().4s, \e0\().4s, \t1\().4s
 .endm
 
 .macro SR_COMBINE_4 len, part, off
-        add             x10, x1, x21
-        add             x11, x1, x21, lsl #1
-        add             x12, x1, x22
+        योजय             x10, x1, x21
+        योजय             x11, x1, x21, lsl #1
+        योजय             x12, x1, x22
 
         ldp             q0,  q1,  [x1,  #((0 + \part)*32 + \off)]
         ldp             q4,  q5,  [x1,  #((2 + \part)*32 + \off)]
@@ -1249,9 +1249,9 @@ endfunc
 .endm
 
 .macro SR_COMBINE_FULL len, off=0
-        add             x10, x1, x21
-        add             x11, x1, x21, lsl #1
-        add             x12, x1, x22
+        योजय             x10, x1, x21
+        योजय             x11, x1, x21, lsl #1
+        योजय             x12, x1, x22
 
         SR_COMBINE_4    \len, 0, \off
         SR_COMBINE_4    \len, 1, \off
@@ -1260,10 +1260,10 @@ endfunc
 .endm
 
 .macro SR_COMBINE_D2 part, off
-        add             x10,  x1, #((\part)*32 + \off)
-        add             x11, x14, #((\part)*32 + \off)
-        add             x12, x15, #((\part)*32 + \off)
-        add             x13, x16, #((\part)*32 + \off)
+        योजय             x10,  x1, #((\part)*32 + \off)
+        योजय             x11, x14, #((\part)*32 + \off)
+        योजय             x12, x15, #((\part)*32 + \off)
+        योजय             x13, x16, #((\part)*32 + \off)
 
         ldp             q0,  q1,  [x10]
         ldp             q4,  q5,  [x10, #(2*32)]
@@ -1346,9 +1346,9 @@ endfunc
 .endm
 
 .macro SR_COMBINE_DINT off=0
-        add             x14, x1, x21
-        add             x15, x1, x21, lsl #1
-        add             x16, x1, x22
+        योजय             x14, x1, x21
+        योजय             x15, x1, x21, lsl #1
+        योजय             x16, x1, x22
 
         SR_COMBINE_D2   0, \off
         SR_COMBINE_D2   4, \off
@@ -1406,7 +1406,7 @@ function ff_tx_fft32_\name\()_neon, export=1
         ldp             d8,  d9,  [sp, #16*3]
         ldp             d14, d15, [sp], #16*4
 
-        ret
+        प्रत्यागच्छ
 endfunc
 .endm
 
@@ -1415,9 +1415,9 @@ FFT32_FN ns_float, 1
 
 .macro cmp_imm reg, imm
 .if \imm >= 4096
-        cmp             \reg, #((\imm)/4096), lsl #12
+        तुलय             \reg, #((\imm)/4096), lsl #12
 .else
-        cmp             \reg, #(\imm)
+        तुलय             \reg, #(\imm)
 .endif
 .endm
 
@@ -1425,17 +1425,17 @@ FFT32_FN ns_float, 1
 \len:
         AARCH64_SIGN_LINK_REGISTER
         stp             x20, x30, [sp, #-16]!
-        mov             w20, #(\len/4)
-        mov             x5, #((\len*4) - (\len/1))
-        add             x1, x1, x5
+        चालय             w20, #(\len/4)
+        चालय             x5, #((\len*4) - (\len/1))
+        योजय             x1, x1, x5
         bl              32b
-        mov             x5, #((\len*2) - (\len/2))
-        add             x1, x1, x5
+        चालय             x5, #((\len*2) - (\len/2))
+        योजय             x1, x1, x5
         bl              32b
         ldp             x20, x30, [sp], #16
         AARCH64_VALIDATE_LINK_REGISTER
         ldr             w5, =(\len*6 + \len/2)
-        sub             x1, x1, x5
+        वियोजय             x1, x1, x5
 
         SETUP_SR_RECOMB \len, x7, x8, x9
 
@@ -1443,16 +1443,16 @@ FFT32_FN ns_float, 1
         cmp_imm         w19, \len
         b.eq            0f
 
-        mov             w5, #(\len/128)
+        चालय             w5, #(\len/128)
 \len\()5:
         SR_COMBINE_FULL \len
-        add             x1, x1, 8*32
+        योजय             x1, x1, 8*32
         subs            w5, w5, 1
         b.gt            \len\()5b
 
         cmp_imm         w20, \len
         b.gt            \next\()f
-        ret
+        प्रत्यागच्छ
 .endif
 .endm
 
@@ -1465,8 +1465,8 @@ function ff_tx_fft_sr_\name\()_neon, export=1
         stp             d14, d15, [sp, #16*2]
         stp             x19, x20, [sp, #16]
 
-        ldr             w19, [x0, #0] // global target
-        mov             w20, w19      // local length
+        ldr             w19, [x0, #0] // वैश्विक target
+        चालय             w20, w19      // local length
 
         LOAD_SUBADD
         SETUP_LUT       \no_perm
@@ -1491,7 +1491,7 @@ function ff_tx_fft_sr_\name\()_neon, export=1
         stp             q10, q11, [x1, #32*5]
         stp             q14, q15, [x1, #32*7]
 
-        cmp             w20, #32
+        तुलय             w20, #32
         b.gt            64f
 
         stp             q0,  q1,  [x1, #32*0]
@@ -1499,7 +1499,7 @@ function ff_tx_fft_sr_\name\()_neon, export=1
         stp             q8,  q9,  [x1, #32*4]
         stp             q12, q13, [x1, #32*6]
 
-        ret
+        प्रत्यागच्छ
 64:
         SETUP_SR_RECOMB 64, x7, x8, x9
 
@@ -1520,7 +1520,7 @@ function ff_tx_fft_sr_\name\()_neon, export=1
         ext             v26.16b, v26.16b, v26.16b, #8
         ext             v27.16b, v27.16b, v27.16b, #8
 
-        cmp             w19, #64
+        तुलय             w19, #64
         b.eq            2f // custom deinterleave
 
         // TODO: investigate doing the 2 combines like in deinterleave
@@ -1565,111 +1565,111 @@ function ff_tx_fft_sr_\name\()_neon, export=1
         stp             q14, q15, [x1, #32*13]
         stp             q22, q23, [x1, #32*15]
 
-        cmp             w20, #64
+        तुलय             w20, #64
         b.gt            128f
-        ret
+        प्रत्यागच्छ
 128:
         AARCH64_SIGN_LINK_REGISTER
         stp             x20, x30, [sp, #-16]!
-        mov             w20, #32
-        add             x1, x1, #16*32
+        चालय             w20, #32
+        योजय             x1, x1, #16*32
         bl              32b
-        add             x1, x1, #8*32
+        योजय             x1, x1, #8*32
         bl              32b
         ldp             x20, x30, [sp], #16
         AARCH64_VALIDATE_LINK_REGISTER
-        sub             x1, x1, #24*32
+        वियोजय             x1, x1, #24*32
 
         SETUP_SR_RECOMB 128, x7, x8, x9
 
-        cmp             w19, #128
+        तुलय             w19, #128
         b.eq            0f
 
         SR_COMBINE_FULL 128
 
-        cmp             w20, #128
+        तुलय             w20, #128
         b.gt            256f
-        ret
+        प्रत्यागच्छ
 256:
         AARCH64_SIGN_LINK_REGISTER
         stp             x20, x30, [sp, #-16]!
-        mov             w20, #64
-        add             x1, x1, #32*32
+        चालय             w20, #64
+        योजय             x1, x1, #32*32
         bl              32b
-        add             x1, x1, #16*32
+        योजय             x1, x1, #16*32
         bl              32b
         ldp             x20, x30, [sp], #16
         AARCH64_VALIDATE_LINK_REGISTER
-        sub             x1, x1, #48*32
+        वियोजय             x1, x1, #48*32
 
         SETUP_SR_RECOMB 256, x7, x8, x9
 
-        cmp             w19, #256
+        तुलय             w19, #256
         b.eq            0f
 
         SR_COMBINE_FULL 256
         SR_COMBINE_FULL 256, 8*32
 
-        cmp             w20, #256
+        तुलय             w20, #256
         b.gt            512f
-        ret
+        प्रत्यागच्छ
 512:
         AARCH64_SIGN_LINK_REGISTER
         stp             x20, x30, [sp, #-16]!
-        mov             w20, #128
-        add             x1, x1, #64*32
+        चालय             w20, #128
+        योजय             x1, x1, #64*32
         bl              32b
-        add             x1, x1, #32*32
+        योजय             x1, x1, #32*32
         bl              32b
         ldp             x20, x30, [sp], #16
         AARCH64_VALIDATE_LINK_REGISTER
-        sub             x1, x1, #96*32
+        वियोजय             x1, x1, #96*32
 
         SETUP_SR_RECOMB 512, x7, x8, x9
 
-        cmp             w19, #512
+        तुलय             w19, #512
         b.eq            0f
 
-        mov             x5, 4
+        चालय             x5, 4
 5125:
         SR_COMBINE_FULL 512
-        add             x1, x1, 8*32
+        योजय             x1, x1, 8*32
         subs            w5, w5, 1
         b.gt            5125b
 
-        cmp             w20, #512
+        तुलय             w20, #512
         b.gt            1024f
 
-        ret
+        प्रत्यागच्छ
 1024:
         AARCH64_SIGN_LINK_REGISTER
         stp             x20, x30, [sp, #-16]!
-        mov             w20, #256
-        add             x1, x1, #96*32
+        चालय             w20, #256
+        योजय             x1, x1, #96*32
         bl              32b
-        add             x1, x1, #64*32
+        योजय             x1, x1, #64*32
         bl              32b
         ldp             x20, x30, [sp], #16
         AARCH64_VALIDATE_LINK_REGISTER
-        mov             x5, #192*32
-        sub             x1, x1, x5
+        चालय             x5, #192*32
+        वियोजय             x1, x1, x5
 
         SETUP_SR_RECOMB 1024, x7, x8, x9
 
-        cmp             w19, #1024
+        तुलय             w19, #1024
         b.eq            0f
 
-        mov             w5, 8
+        चालय             w5, 8
 10245:
         SR_COMBINE_FULL 1024
-        add             x1, x1, 8*32
+        योजय             x1, x1, 8*32
         subs            w5, w5, 1
         b.gt            10245b
 
-        cmp             w20, #1024
+        तुलय             w20, #1024
         b.gt            2048f
 
-        ret
+        प्रत्यागच्छ
 
 SR_TRANSFORM_DEF        2048, 4096
 SR_TRANSFORM_DEF        4096, 8192
@@ -1681,7 +1681,7 @@ SR_TRANSFORM_DEF        131072
 
 0: // general deinterleave loop
         SR_COMBINE_DINT
-        add             x1, x1, #32*8
+        योजय             x1, x1, #32*8
         subs            w19, w19, #32*4
         b.gt            0b
 
@@ -1692,11 +1692,11 @@ SR_TRANSFORM_DEF        131072
         ldp             d8,  d9,  [sp, #16*5]
         ldp             x21, x22, [sp], #16*6
 
-        ret
+        प्रत्यागच्छ
 
 2: // special case for 64 point deinterleave
-        mov             x10, v23.d[0]
-        mov             x11, v23.d[1]
+        चालय             x10, v23.d[0]
+        चालय             x11, v23.d[1]
 
         SR_COMBINE_LITE v0,  v1,  v8,  v9,  \
                         v2,  v3,  v16, v17, \
@@ -1718,12 +1718,12 @@ SR_TRANSFORM_DEF        131072
         zip1            v29.2d, v9.2d, v21.2d
         zip2            v30.2d, v9.2d, v21.2d
 
-        mov             v20.16b, v5.16b
-        mov             v21.16b, v7.16b
-        mov             x12, x1
-        add             x13, x1, #32* 4
-        add             x14, x1, #32* 8
-        add             x15, x1, #32*12
+        चालय             v20.16b, v5.16b
+        चालय             v21.16b, v7.16b
+        चालय             x12, x1
+        योजय             x13, x1, #32* 4
+        योजय             x14, x1, #32* 8
+        योजय             x15, x1, #32*12
 
         zip1            v4.2d,  v2.2d, v6.2d
         zip2            v5.2d,  v2.2d, v6.2d
@@ -1744,8 +1744,8 @@ SR_TRANSFORM_DEF        131072
         st1             {  v4.4s,  v5.4s,  v6.4s,  v7.4s }, [x14], #64  // 32* 8...9
         st1             {  v0.4s,  v1.4s,  v2.4s,  v3.4s }, [x15], #64  // 32*12..13
 
-        mov             v23.d[0], x10
-        mov             v23.d[1], x11
+        चालय             v23.d[0], x10
+        चालय             v23.d[1], x11
 
         ldp             q6,  q7, [x1, #32*3]
         ldp             q16, q17, [x1, #32*7]
@@ -1786,7 +1786,7 @@ SR_TRANSFORM_DEF        131072
         ldp             d8,  d9,  [sp, #16*5]
         ldp             x21, x22, [sp], #16*6
 
-        ret
+        प्रत्यागच्छ
 endfunc
 .endm
 

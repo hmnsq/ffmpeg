@@ -32,9 +32,9 @@
         sw      t0, -4(\out)
 1:
         andi    t3, \count, -8
-        add     \count, \count, \out
+        योजय     \count, \count, \out
         beqz    t3, 3f
-        add     t3, t3, \out
+        योजय     t3, t3, \out
 2:      /* 2 elements (64 bits) at a time on a 64-bit boundary */
         ld      t0,  (\in)
         addi    \out, \out, 8
@@ -60,6 +60,6 @@
         srli    t0, t0, __riscv_xlen - 32
         sw      t0, -4(\out)
 5:
-        ret
+        प्रत्यागच्छ
         .endm
 #endif

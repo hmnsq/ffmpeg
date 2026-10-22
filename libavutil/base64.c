@@ -24,20 +24,20 @@
  * @author Ryan Martell <rdm4@martellventures.com> (with lots of Michael)
  */
 
-#include <limits.h>
-#include <stddef.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <stddef.h>
 
-#include "base64.h"
-#include "base64_internal.h"
-#include "error.h"
+#अन्तर्भाव "base64.h"
+#अन्तर्भाव "base64_internal.h"
+#अन्तर्भाव "error.h"
 
-#if ARCH_AARCH64
-#include "libavutil/aarch64/cpu.h"
-#include "libavutil/aarch64/base64.h"
-#endif
+#यदि ARCH_AARCH64
+#अन्तर्भाव "libavutil/aarch64/cpu.h"
+#अन्तर्भाव "libavutil/aarch64/base64.h"
+#यदि_अन्तः
 
 /* ---------------- private code */
-static const uint8_t map2[256] =
+स्थिर ध्रुव uint8_t map2[256] =
 {
     0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -76,71 +76,71 @@ static const uint8_t map2[256] =
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
 };
 
-#define BASE64_DEC_STEP(i) do { \
-    bits = map2[in[i]]; \
-    if (bits & 0x80) \
-        goto out ## i; \
-    v = i ? (v << 6) + bits : bits; \
-} while(0)
+#परिभाषय BASE64_DEC_चरणः(i) कुरु { \
+    द्वयङ्काः = map2[अन्तर्[i]]; \
+    यदि (द्वयङ्काः & 0x80) \
+        गच्छ बहिर्गमनम् ## i; \
+    v = i ? (v << 6) + द्वयङ्काः : द्वयङ्काः; \
+} यावत्(0)
 
-int av_base64_decode(uint8_t *out, const char *in_str, int out_size)
+पूर्णाङ्क av_base64_decode(uint8_t *बहिर्गमनम्, ध्रुव वर्ण *अन्तर्_str, पूर्णाङ्क बहिर्गमनम्_आकार)
 {
-    uint8_t *dst = out;
-    uint8_t *end;
+    uint8_t *dst = बहिर्गमनम्;
+    uint8_t *अन्तः_2;
     // no sign extension
-    const uint8_t *in = in_str;
-    unsigned bits = 0xff;
-    unsigned v;
+    ध्रुव uint8_t *अन्तर् = अन्तर्_str;
+    अचिह्नित द्वयङ्काः = 0xff;
+    अचिह्नित v;
 
-    if (!out)
-        goto validity_check;
+    यदि (!बहिर्गमनम्)
+        गच्छ validity_check;
 
-    end = out + out_size;
-    while (end - dst > 3) {
-        BASE64_DEC_STEP(0);
-        BASE64_DEC_STEP(1);
-        BASE64_DEC_STEP(2);
-        BASE64_DEC_STEP(3);
+    अन्तः_2 = बहिर्गमनम् + बहिर्गमनम्_आकार;
+    यावत् (अन्तः_2 - dst > 3) {
+        BASE64_DEC_चरणः(0);
+        BASE64_DEC_चरणः(1);
+        BASE64_DEC_चरणः(2);
+        BASE64_DEC_चरणः(3);
         // Using AV_WB32 directly confuses compiler
         v = av_be2ne32(v << 8);
         AV_WN32(dst, v);
         dst += 3;
-        in += 4;
+        अन्तर् += 4;
     }
-    if (end - dst) {
-        BASE64_DEC_STEP(0);
-        BASE64_DEC_STEP(1);
-        BASE64_DEC_STEP(2);
-        BASE64_DEC_STEP(3);
+    यदि (अन्तः_2 - dst) {
+        BASE64_DEC_चरणः(0);
+        BASE64_DEC_चरणः(1);
+        BASE64_DEC_चरणः(2);
+        BASE64_DEC_चरणः(3);
         *dst++ = v >> 16;
-        if (end - dst)
+        यदि (अन्तः_2 - dst)
             *dst++ = v >> 8;
-        if (end - dst)
+        यदि (अन्तः_2 - dst)
             *dst++ = v;
-        in += 4;
+        अन्तर् += 4;
     }
 validity_check:
-    while (1) {
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
+    यावत् (1) {
+        BASE64_DEC_चरणः(0);
+        अन्तर्++;
+        BASE64_DEC_चरणः(0);
+        अन्तर्++;
+        BASE64_DEC_चरणः(0);
+        अन्तर्++;
+        BASE64_DEC_चरणः(0);
+        अन्तर्++;
     }
 
 out3:
-    if (end - dst)
+    यदि (अन्तः_2 - dst)
         *dst++ = v >> 10;
     v <<= 2;
 out2:
-    if (end - dst)
+    यदि (अन्तः_2 - dst)
         *dst++ = v >> 4;
 out1:
 out0:
-    return bits & 1 ? AVERROR_INVALIDDATA : out ? dst - out : 0;
+    प्रत्यागम द्वयङ्काः & 1 ? AVERROR_INVALIDDATA : बहिर्गमनम् ? dst - बहिर्गमनम् : 0;
 }
 
 /*****************************************************************************
@@ -149,18 +149,18 @@ out0:
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-char *av_base64_encode(char *out, int out_size, const uint8_t *in, int in_size)
+वर्ण *av_base64_encode(वर्ण *बहिर्गमनम्, पूर्णाङ्क बहिर्गमनम्_आकार, ध्रुव uint8_t *अन्तर्, पूर्णाङ्क अन्तर्_आकार)
 {
-    static const char b64[] =
+    स्थिर ध्रुव वर्ण b64[] =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    if (in_size >= UINT_MAX / 4 ||
-        out_size < AV_BASE64_SIZE(in_size))
-        return NULL;
-#if ARCH_AARCH64
-    if (in_size >= 48 && have_neon(av_get_cpu_flags())) {
-        return ff_base64_encode_neon(out, in, in_size, b64);
+    यदि (अन्तर्_आकार >= UINT_MAX / 4 ||
+        बहिर्गमनम्_आकार < AV_BASE64_आकार(अन्तर्_आकार))
+        प्रत्यागम रिक्त;
+#यदि ARCH_AARCH64
+    यदि (अन्तर्_आकार >= 48 && have_neon(av_get_cpu_flags())) {
+        प्रत्यागम ff_base64_encode_neon(बहिर्गमनम्, अन्तर्, अन्तर्_आकार, b64);
     }
-#endif
-    return ff_base64_encode_c(out, in, in_size, b64);
+#यदि_अन्तः
+    प्रत्यागम ff_base64_encode_c(बहिर्गमनम्, अन्तर्, अन्तर्_आकार, b64);
 }

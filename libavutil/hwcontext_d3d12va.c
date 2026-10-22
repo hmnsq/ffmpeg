@@ -20,39 +20,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_d3d12va_internal.h"
-#include "hwcontext_d3d12va.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "thread.h"
-#include "compat/w32dlfcn.h"
-#include <dxgi1_3.h>
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "common.h"
+#अन्तर्भाव "hwcontext.h"
+#अन्तर्भाव "hwcontext_internal.h"
+#अन्तर्भाव "hwcontext_d3d12va_internal.h"
+#अन्तर्भाव "hwcontext_d3d12va.h"
+#अन्तर्भाव "imgutils.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "pixdesc.h"
+#अन्तर्भाव "pixfmt.h"
+#अन्तर्भाव "thread.h"
+#अन्तर्भाव "compat/w32dlfcn.h"
+#अन्तर्भाव <dxgi1_3.h>
 
-typedef HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY2)(UINT Flags, REFIID riid, void **ppFactory);
+प्रकारनिर्देश HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY2)(UINT Flags, REFIID riid, शून्य **ppFactory);
 
-typedef struct D3D12VAFramesContext {
+प्रकारनिर्देश संरचना D3D12VAFramesContext {
     /**
      * The public AVD3D12VAFramesContext. See hwcontext_d3d12va.h for it.
      */
     AVD3D12VAFramesContext p;
 
-    ID3D12Resource            *staging_download_buffer;
-    ID3D12Resource            *staging_upload_buffer;
+    ID3D12Resource            *staging_download_बफर;
+    ID3D12Resource            *staging_upload_बफर;
     ID3D12CommandQueue        *command_queue;
     ID3D12CommandAllocator    *command_allocator;
     ID3D12GraphicsCommandList *command_list;
     AVD3D12VASyncContext       sync_ctx;
-    UINT                       luma_component_size;
-    int                        nb_surfaces_used;
+    UINT                       luma_component_आकार;
+    पूर्णाङ्क                        nb_surfaces_प्रयुक्तम्;
 } D3D12VAFramesContext;
 
-typedef struct D3D12VADevicePriv {
+प्रकारनिर्देश संरचना D3D12VADevicePriv {
     /**
      * The public AVD3D12VADeviceContext. See hwcontext_d3d12va.h for it.
      */
@@ -64,181 +64,181 @@ typedef struct D3D12VADevicePriv {
     PFN_D3D12_GET_DEBUG_INTERFACE get_debug_interface;
 } D3D12VADevicePriv;
 
-static const struct {
+स्थिर ध्रुव संरचना {
     DXGI_FORMAT d3d_format;
-    enum AVPixelFormat pix_fmt;
+    गणना AVPixelFormat pix_fmt;
 } supported_formats[] = {
     { DXGI_FORMAT_NV12, AV_PIX_FMT_NV12 },
     { DXGI_FORMAT_P010, AV_PIX_FMT_P010 },
     { DXGI_FORMAT_P016, AV_PIX_FMT_P012 },
 };
 
-static void d3d12va_default_lock(void *ctx)
+स्थिर शून्य d3d12va_default_तालकम्(शून्य *ctx)
 {
     WaitForSingleObjectEx(ctx, INFINITE, FALSE);
 }
 
-static void d3d12va_default_unlock(void *ctx)
+स्थिर शून्य d3d12va_default_unlock(शून्य *ctx)
 {
     ReleaseMutex(ctx);
 }
 
-static int d3d12va_fence_completion(AVD3D12VASyncContext *psync_ctx)
+स्थिर पूर्णाङ्क d3d12va_fence_completion(AVD3D12VASyncContext *psync_ctx)
 {
-    uint64_t completion = ID3D12Fence_GetCompletedValue(psync_ctx->fence);
-    if (completion < psync_ctx->fence_value) {
-        if (FAILED(ID3D12Fence_SetEventOnCompletion(psync_ctx->fence, psync_ctx->fence_value, psync_ctx->event)))
-            return AVERROR(EINVAL);
+    uint64_t completion = ID3_D12_Fence_Get_Completed_मानम्(psync_ctx->fence);
+    यदि (completion < psync_ctx->fence_मानम्) {
+        यदि (FAILED(ID3_D12_Fence_समुच्चयः_Event_On_Completion(psync_ctx->fence, psync_ctx->fence_मानम्, psync_ctx->event)))
+            प्रत्यागम AVERROR(EINVAL);
 
         WaitForSingleObjectEx(psync_ctx->event, INFINITE, FALSE);
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-static inline int d3d12va_wait_queue_idle(AVD3D12VASyncContext *psync_ctx, ID3D12CommandQueue *command_queue)
+स्थिर अन्तःस्थ पूर्णाङ्क d3d12va_wait_queue_idle(AVD3D12VASyncContext *psync_ctx, ID3D12CommandQueue *command_queue)
 {
-    DX_CHECK(ID3D12CommandQueue_Signal(command_queue, psync_ctx->fence, ++psync_ctx->fence_value));
-    return d3d12va_fence_completion(psync_ctx);
+    DX_CHECK(ID3D12CommandQueue_Signal(command_queue, psync_ctx->fence, ++psync_ctx->fence_मानम्));
+    प्रत्यागम d3d12va_fence_completion(psync_ctx);
 
 fail:
-    return AVERROR(EINVAL);
+    प्रत्यागम AVERROR(EINVAL);
 }
 
-static int d3d12va_create_staging_buffer_resource(AVHWFramesContext *ctx, D3D12_RESOURCE_STATES states,
-                                                  ID3D12Resource **ppResource, int download)
+स्थिर पूर्णाङ्क d3d12va_create_staging_बफर_resource(AVHWFramesContext *ctx, D3_D12_RESOURCE_अवस्थाः अवस्थाः,
+                                                  ID3D12Resource **ppResource, पूर्णाङ्क download)
 {
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D12VAFramesContext   *s            = ctx->hwctx;
     D3D12_HEAP_PROPERTIES props = { .Type = download ? D3D12_HEAP_TYPE_READBACK : D3D12_HEAP_TYPE_UPLOAD };
     D3D12_RESOURCE_DESC desc = {
-        .Dimension          = D3D12_RESOURCE_DIMENSION_BUFFER,
+        .Dimension          = D3_D12_RESOURCE_DIMENSION_बफर,
         .Alignment          = 0,
-        .Width              = s->luma_component_size + (s->luma_component_size >> 1),
+        .विस्तारः_2              = s->luma_component_आकार + (s->luma_component_आकार >> 1),
         .Height             = 1,
-        .DepthOrArraySize   = 1,
-        .MipLevels          = 1,
+        .गभीरता_Or_Array_आकार   = 1,
+        .Mip_स्तराः          = 1,
         .Format             = DXGI_FORMAT_UNKNOWN,
-        .SampleDesc         = { .Count = 1, .Quality = 0 },
+        .SampleDesc         = { .गणनम्_2 = 1, .Quality = 0 },
         .Layout             = D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
         .Flags              = D3D12_RESOURCE_FLAG_NONE,
     };
 
-    if (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, D3D12_HEAP_FLAG_NONE, &desc,
-        states, NULL, &IID_ID3D12Resource, (void **)ppResource))) {
+    यदि (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, D3D12_HEAP_FLAG_NONE, &desc,
+        अवस्थाः, रिक्त, &IID_ID3D12Resource, (शून्य **)ppResource))) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the staging buffer resource\n");
-        return AVERROR_UNKNOWN;
+        प्रत्यागम AVERROR_UNKNOWN;
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-static int d3d12va_create_helper_objects(AVHWFramesContext *ctx)
+स्थिर पूर्णाङ्क d3d12va_create_helper_objects(AVHWFramesContext *ctx)
 {
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D12VAFramesContext   *s            = ctx->hwctx;
-    AVD3D12VAFramesContext *frames_hwctx = &s->p;
+    AVD3D12VAFramesContext *चौकटाः_hwctx = &s->p;
 
     D3D12_COMMAND_QUEUE_DESC queue_desc = {
         .Type     = D3D12_COMMAND_LIST_TYPE_COPY,
-        .Priority = 0,
-        .NodeMask = 0,
+        .प्राथमिकता = 0,
+        .ग्रन्थिः_आवरणम् = 0,
     };
 
-    s->luma_component_size = FFALIGN(ctx->width * (frames_hwctx->format != DXGI_FORMAT_NV12 ? 2 : 1),
-                                     D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * ctx->height;
+    s->luma_component_आकार = FFALIGN(ctx->विस्तारः * (चौकटाः_hwctx->format != DXGI_FORMAT_NV12 ? 2 : 1),
+                                     D3_D12_TEXTURE_दत्त_PITCH_ALIGNMENT) * ctx->height;
 
     DX_CHECK(ID3D12Device_CreateFence(device_hwctx->device, 0, D3D12_FENCE_FLAG_NONE,
-                                      &IID_ID3D12Fence, (void **)&s->sync_ctx.fence));
+                                      &IID_ID3D12Fence, (शून्य **)&s->sync_ctx.fence));
 
-    s->sync_ctx.event = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if (!s->sync_ctx.event)
-        goto fail;
+    s->sync_ctx.event = CreateEvent(रिक्त, FALSE, FALSE, रिक्त);
+    यदि (!s->sync_ctx.event)
+        गच्छ fail;
 
     DX_CHECK(ID3D12Device_CreateCommandQueue(device_hwctx->device, &queue_desc,
-             &IID_ID3D12CommandQueue, (void **)&s->command_queue));
+             &IID_ID3D12CommandQueue, (शून्य **)&s->command_queue));
 
     DX_CHECK(ID3D12Device_CreateCommandAllocator(device_hwctx->device, queue_desc.Type,
-             &IID_ID3D12CommandAllocator, (void **)&s->command_allocator));
+             &IID_ID3D12CommandAllocator, (शून्य **)&s->command_allocator));
 
     DX_CHECK(ID3D12Device_CreateCommandList(device_hwctx->device, 0, queue_desc.Type,
-             s->command_allocator, NULL, &IID_ID3D12GraphicsCommandList, (void **)&s->command_list));
+             s->command_allocator, रिक्त, &IID_ID3D12GraphicsCommandList, (शून्य **)&s->command_list));
 
     DX_CHECK(ID3D12GraphicsCommandList_Close(s->command_list));
 
     ID3D12CommandQueue_ExecuteCommandLists(s->command_queue, 1, (ID3D12CommandList **)&s->command_list);
 
-    return d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
+    प्रत्यागम d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
 
 fail:
-    return AVERROR(EINVAL);
+    प्रत्यागम AVERROR(EINVAL);
 }
 
-static void d3d12va_frames_uninit(AVHWFramesContext *ctx)
+स्थिर शून्य d3d12va_चौकटाः_uninit(AVHWFramesContext *ctx)
 {
     D3D12VAFramesContext   *s     = ctx->hwctx;
     AVD3D12VAFramesContext *hwctx = ctx->hwctx;
 
     D3D12_OBJECT_RELEASE(s->sync_ctx.fence);
-    if (s->sync_ctx.event)
+    यदि (s->sync_ctx.event)
         CloseHandle(s->sync_ctx.event);
 
-    D3D12_OBJECT_RELEASE(s->staging_download_buffer);
-    D3D12_OBJECT_RELEASE(s->staging_upload_buffer);
+    D3D12_OBJECT_RELEASE(s->staging_download_बफर);
+    D3D12_OBJECT_RELEASE(s->staging_upload_बफर);
     D3D12_OBJECT_RELEASE(s->command_allocator);
     D3D12_OBJECT_RELEASE(s->command_list);
     D3D12_OBJECT_RELEASE(s->command_queue);
 
-    if (hwctx->texture_array)
+    यदि (hwctx->texture_array)
         D3D12_OBJECT_RELEASE(hwctx->texture_array);
 }
 
-static int d3d12va_frames_get_constraints(AVHWDeviceContext *ctx, const void *hwconfig, AVHWFramesConstraints *constraints)
+स्थिर पूर्णाङ्क d3d12va_चौकटाः_get_constraints(AVHWDeviceContext *ctx, ध्रुव शून्य *hwconfig, AVHWFramesConstraints *constraints)
 {
     HRESULT hr;
-    int nb_sw_formats = 0;
+    पूर्णाङ्क nb_sw_formats = 0;
     AVD3D12VADeviceContext *device_hwctx = ctx->hwctx;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_formats) + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    परिमाण(*constraints->valid_sw_formats));
+    यदि (!constraints->valid_sw_formats)
+        प्रत्यागम AVERROR(ENOMEM);
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        D3D12_FEATURE_DATA_FORMAT_SUPPORT format_support = { supported_formats[i].d3d_format };
-        hr = ID3D12Device_CheckFeatureSupport(device_hwctx->device, D3D12_FEATURE_FORMAT_SUPPORT, &format_support, sizeof(format_support));
-        if (SUCCEEDED(hr) && (format_support.Support1 & D3D12_FORMAT_SUPPORT1_TEXTURE2D))
+    प्रति (पूर्णाङ्क i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        D3_D12_FEATURE_दत्त_FORMAT_SUPPORT format_support = { supported_formats[i].d3d_format };
+        hr = ID3D12Device_CheckFeatureSupport(device_hwctx->device, D3D12_FEATURE_FORMAT_SUPPORT, &format_support, परिमाण(format_support));
+        यदि (SUCCEEDED(hr) && (format_support.Support1 & D3D12_FORMAT_SUPPORT1_TEXTURE2D))
             constraints->valid_sw_formats[nb_sw_formats++] = supported_formats[i].pix_fmt;
     }
     constraints->valid_sw_formats[nb_sw_formats] = AV_PIX_FMT_NONE;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, परिमाण(*constraints->valid_hw_formats));
+    यदि (!constraints->valid_hw_formats)
+        प्रत्यागम AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_D3D12;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-static void free_texture(void *opaque, uint8_t *data)
+स्थिर शून्य free_texture(शून्य *opaque, uint8_t *दत्त)
 {
-    AVD3D12VAFrame *frame = (AVD3D12VAFrame *)data;
+    AVD3D12VAFrame *frame = (AVD3D12VAFrame *)दत्त;
 
-    if (!(frame->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY))
+    यदि (!(frame->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY))
         D3D12_OBJECT_RELEASE(frame->texture);
 
     D3D12_OBJECT_RELEASE(frame->sync_ctx.fence);
-    if (frame->sync_ctx.event)
+    यदि (frame->sync_ctx.event)
         CloseHandle(frame->sync_ctx.event);
 
-    av_freep(&data);
+    av_freep(&दत्त);
 }
 
-static AVBufferRef *d3d12va_pool_alloc_texture_array(AVHWFramesContext *ctx)
+स्थिर AVBufferRef *d3d12va_pool_alloc_texture_array(AVHWFramesContext *ctx)
 {
-    AVD3D12VAFrame         *frame  = av_mallocz(sizeof(*frame));
+    AVD3D12VAFrame         *frame  = av_mallocz(परिमाण(*frame));
     D3D12VAFramesContext   *s     = ctx->hwctx;
     AVD3D12VAFramesContext *hwctx = ctx->hwctx;
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
@@ -247,32 +247,32 @@ static AVBufferRef *d3d12va_pool_alloc_texture_array(AVHWFramesContext *ctx)
     frame->flags |= AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY;
 
     DX_CHECK(ID3D12Device_CreateFence(device_hwctx->device, 0, D3D12_FENCE_FLAG_NONE,
-                                      &IID_ID3D12Fence, (void **)&frame->sync_ctx.fence));
-    frame->sync_ctx.event = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if (!frame->sync_ctx.event)
-        goto fail;
+                                      &IID_ID3D12Fence, (शून्य **)&frame->sync_ctx.fence));
+    frame->sync_ctx.event = CreateEvent(रिक्त, FALSE, FALSE, रिक्त);
+    यदि (!frame->sync_ctx.event)
+        गच्छ fail;
 
-    if (s->nb_surfaces_used >= ctx->initial_pool_size) {
+    यदि (s->nb_surfaces_प्रयुक्तम् >= ctx->initial_pool_आकार) {
         av_log(ctx, AV_LOG_ERROR, "Static surface pool size exceeded.\n");
-        goto fail;
+        गच्छ fail;
     }
 
     frame->texture = hwctx->texture_array;
-    frame->subresource_index = s->nb_surfaces_used;
+    frame->subresource_सूचकांक = s->nb_surfaces_प्रयुक्तम्;
 
-    buf = av_buffer_create((uint8_t *)frame, sizeof(*frame), free_texture, NULL, 0);
+    buf = av_बफर_create((uint8_t *)frame, परिमाण(*frame), free_texture, रिक्त, 0);
 
-    if (!buf)
-        goto fail;
+    यदि (!buf)
+        गच्छ fail;
 
-    s->nb_surfaces_used++;
-    return buf;
+    s->nb_surfaces_प्रयुक्तम्++;
+    प्रत्यागम buf;
 fail:
-    free_texture(NULL, (uint8_t *)frame);
-    return NULL;
+    free_texture(रिक्त, (uint8_t *)frame);
+    प्रत्यागम रिक्त;
 }
 
-static AVBufferRef *d3d12va_pool_alloc(void *opaque, size_t size)
+स्थिर AVBufferRef *d3d12va_pool_alloc(शून्य *opaque, size_t आकार)
 {
     AVHWFramesContext      *ctx          = (AVHWFramesContext *)opaque;
     AVD3D12VAFramesContext *hwctx        = ctx->hwctx;
@@ -281,52 +281,52 @@ static AVBufferRef *d3d12va_pool_alloc(void *opaque, size_t size)
     AVBufferRef *buf;
     AVD3D12VAFrame *frame;
 
-    if (ctx->initial_pool_size > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY)
-        return d3d12va_pool_alloc_texture_array(ctx);
+    यदि (ctx->initial_pool_आकार > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY)
+        प्रत्यागम d3d12va_pool_alloc_texture_array(ctx);
 
     D3D12_HEAP_PROPERTIES props = { .Type = D3D12_HEAP_TYPE_DEFAULT };
     D3D12_RESOURCE_DESC desc = {
         .Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D,
         .Alignment        = 0,
-        .Width            = ctx->width,
+        .विस्तारः_2            = ctx->विस्तारः,
         .Height           = ctx->height,
-        .DepthOrArraySize = 1,
-        .MipLevels        = 1,
+        .गभीरता_Or_Array_आकार = 1,
+        .Mip_स्तराः        = 1,
         .Format           = hwctx->format,
-        .SampleDesc       = {.Count = 1, .Quality = 0 },
+        .SampleDesc       = {.गणनम्_2 = 1, .Quality = 0 },
         .Layout           = D3D12_TEXTURE_LAYOUT_UNKNOWN,
         .Flags            = hwctx->resource_flags,
     };
 
-    frame = av_mallocz(sizeof(AVD3D12VAFrame));
-    if (!frame)
-        return NULL;
+    frame = av_mallocz(परिमाण(AVD3D12VAFrame));
+    यदि (!frame)
+        प्रत्यागम रिक्त;
 
-    if (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
-        D3D12_RESOURCE_STATE_COMMON, NULL, &IID_ID3D12Resource, (void **)&frame->texture))) {
+    यदि (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
+        D3D12_RESOURCE_STATE_COMMON, रिक्त, &IID_ID3D12Resource, (शून्य **)&frame->texture))) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the texture\n");
-        goto fail;
+        गच्छ fail;
     }
 
     DX_CHECK(ID3D12Device_CreateFence(device_hwctx->device, 0, D3D12_FENCE_FLAG_NONE,
-                                      &IID_ID3D12Fence, (void **)&frame->sync_ctx.fence));
+                                      &IID_ID3D12Fence, (शून्य **)&frame->sync_ctx.fence));
 
-    frame->sync_ctx.event = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if (!frame->sync_ctx.event)
-        goto fail;
+    frame->sync_ctx.event = CreateEvent(रिक्त, FALSE, FALSE, रिक्त);
+    यदि (!frame->sync_ctx.event)
+        गच्छ fail;
 
-    buf = av_buffer_create((uint8_t *)frame, sizeof(*frame), free_texture, NULL, 0);
-    if (!buf)
-        goto fail;
+    buf = av_बफर_create((uint8_t *)frame, परिमाण(*frame), free_texture, रिक्त, 0);
+    यदि (!buf)
+        गच्छ fail;
 
-    return buf;
+    प्रत्यागम buf;
 
 fail:
-    free_texture(NULL, (uint8_t *)frame);
-    return NULL;
+    free_texture(रिक्त, (uint8_t *)frame);
+    प्रत्यागम रिक्त;
 }
 
-static int d3d12va_texture_array_init(AVHWFramesContext *ctx)
+स्थिर पूर्णाङ्क d3d12va_texture_array_init(AVHWFramesContext *ctx)
 {
     AVD3D12VAFramesContext *hwctx        = ctx->hwctx;
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
@@ -336,136 +336,136 @@ static int d3d12va_texture_array_init(AVHWFramesContext *ctx)
     D3D12_RESOURCE_DESC desc = {
         .Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D,
         .Alignment        = 0,
-        .Width            = ctx->width,
+        .विस्तारः_2            = ctx->विस्तारः,
         .Height           = ctx->height,
-        .DepthOrArraySize = ctx->initial_pool_size,
-        .MipLevels        = 1,
+        .गभीरता_Or_Array_आकार = ctx->initial_pool_आकार,
+        .Mip_स्तराः        = 1,
         .Format           = hwctx->format,
-        .SampleDesc       = {.Count = 1, .Quality = 0 },
+        .SampleDesc       = {.गणनम्_2 = 1, .Quality = 0 },
         .Layout           = D3D12_TEXTURE_LAYOUT_UNKNOWN,
         .Flags            = hwctx->resource_flags,
     };
 
-    if (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
-        D3D12_RESOURCE_STATE_COMMON, NULL, &IID_ID3D12Resource, (void **)&hwctx->texture_array))) {
+    यदि (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
+        D3D12_RESOURCE_STATE_COMMON, रिक्त, &IID_ID3D12Resource, (शून्य **)&hwctx->texture_array))) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the texture array\n");
-        return AVERROR(EINVAL);
+        प्रत्यागम AVERROR(EINVAL);
     }
-    return 0;
+    प्रत्यागम 0;
 }
 
-static int d3d12va_frames_init(AVHWFramesContext *ctx)
+स्थिर पूर्णाङ्क d3d12va_चौकटाः_init(AVHWFramesContext *ctx)
 {
     AVD3D12VAFramesContext *hwctx        = ctx->hwctx;
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
-    int i;
+    पूर्णाङ्क i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i].pix_fmt) {
-            if (hwctx->format != DXGI_FORMAT_UNKNOWN &&
+    प्रति (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        यदि (ctx->sw_format == supported_formats[i].pix_fmt) {
+            यदि (hwctx->format != DXGI_FORMAT_UNKNOWN &&
                 hwctx->format != supported_formats[i].d3d_format)
                 av_log(ctx, AV_LOG_WARNING, "Incompatible DXGI format provided by user, will be overided\n");
             hwctx->format = supported_formats[i].d3d_format;
-            break;
+            भङ्ग;
         }
     }
 
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    यदि (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported pixel format: %s\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(EINVAL);
+        प्रत्यागम AVERROR(EINVAL);
     }
 
     hwctx->resource_flags |= device_hwctx->resource_flags;
     hwctx->heap_flags     |= device_hwctx->heap_flags;
 
-    if (ctx->initial_pool_size > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY) {
-        int err = d3d12va_texture_array_init(ctx);
-        if (err < 0)
-            return err;
+    यदि (ctx->initial_pool_आकार > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY) {
+        पूर्णाङ्क err = d3d12va_texture_array_init(ctx);
+        यदि (err < 0)
+            प्रत्यागम err;
     }
 
-    ffhwframesctx(ctx)->pool_internal = av_buffer_pool_init2(sizeof(AVD3D12VAFrame),
-        ctx, d3d12va_pool_alloc, NULL);
+    ffhwframesctx(ctx)->pool_आन्तरिकम् = av_बफर_pool_init2(परिमाण(AVD3D12VAFrame),
+        ctx, d3d12va_pool_alloc, रिक्त);
 
-    if (!ffhwframesctx(ctx)->pool_internal)
-        return AVERROR(ENOMEM);
+    यदि (!ffhwframesctx(ctx)->pool_आन्तरिकम्)
+        प्रत्यागम AVERROR(ENOMEM);
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-static int d3d12va_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+स्थिर पूर्णाङ्क d3d12va_get_बफर(AVHWFramesContext *ctx, AVFrame *frame)
 {
-    int ret;
+    पूर्णाङ्क ret;
 
-    frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    frame->buf[0] = av_बफर_pool_get(ctx->pool);
+    यदि (!frame->buf[0])
+        प्रत्यागम AVERROR(ENOMEM);
 
-    ret = av_image_fill_arrays(frame->data, frame->linesize, NULL,
-                               ctx->sw_format, ctx->width, ctx->height,
-                               D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
-    if (ret < 0)
-        return ret;
+    ret = av_image_fill_arrays(frame->दत्त, frame->linesize, रिक्त,
+                               ctx->sw_format, ctx->विस्तारः, ctx->height,
+                               D3_D12_TEXTURE_दत्त_PITCH_ALIGNMENT);
+    यदि (ret < 0)
+        प्रत्यागम ret;
 
-    frame->data[0] = frame->buf[0]->data;
+    frame->दत्त[0] = frame->buf[0]->दत्त;
     frame->format  = AV_PIX_FMT_D3D12;
-    frame->width   = ctx->width;
+    frame->विस्तारः   = ctx->विस्तारः;
     frame->height  = ctx->height;
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-static int d3d12va_transfer_get_formats(AVHWFramesContext *ctx,
-                                        enum AVHWFrameTransferDirection dir,
-                                        enum AVPixelFormat **formats)
+स्थिर पूर्णाङ्क d3d12va_transfer_get_formats(AVHWFramesContext *ctx,
+                                        गणना AVHWFrameTransferDirection dir,
+                                        गणना AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
+    गणना AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, परिमाण(*fmts));
+    यदि (!fmts)
+        प्रत्यागम AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src)
+स्थिर पूर्णाङ्क d3d12va_transfer_दत्त(AVHWFramesContext *ctx, AVFrame *dst,
+                                 ध्रुव AVFrame *src)
 {
     AVD3D12VADeviceContext *hwctx        = ctx->device_ctx->hwctx;
     D3D12VAFramesContext   *s            = ctx->hwctx;
-    AVD3D12VAFramesContext *frames_hwctx = &s->p;
+    AVD3D12VAFramesContext *चौकटाः_hwctx = &s->p;
 
-    int ret;
-    int download = src->format == AV_PIX_FMT_D3D12;
-    const AVFrame *frame = download ? src : dst;
-    const AVFrame *other = download ? dst : src;
+    पूर्णाङ्क ret;
+    पूर्णाङ्क download = src->format == AV_PIX_FMT_D3D12;
+    ध्रुव AVFrame *frame = download ? src : dst;
+    ध्रुव AVFrame *other = download ? dst : src;
 
-    AVD3D12VAFrame *f = (AVD3D12VAFrame *)frame->data[0];
+    AVD3D12VAFrame *f = (AVD3D12VAFrame *)frame->दत्त[0];
     ID3D12Resource *texture = (ID3D12Resource *)f->texture;
 
-    uint8_t *mapped_data;
-    uint8_t *data[4];
-    int linesizes[4];
+    uint8_t *mapped_दत्त;
+    uint8_t *दत्त[4];
+    पूर्णाङ्क linesizes[4];
 
     D3D12_TEXTURE_COPY_LOCATION staging_y_location  = { 0 };
     D3D12_TEXTURE_COPY_LOCATION staging_uv_location = { 0 };
 
     D3D12_TEXTURE_COPY_LOCATION texture_y_location = {
         .pResource        = texture,
-        .Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX,
-        .SubresourceIndex = 0,
+        .Type             = D3_D12_TEXTURE_COPY_TYPE_SUBRESOURCE_सूचकांक,
+        .Subresource_सूचकांक = 0,
     };
 
     D3D12_TEXTURE_COPY_LOCATION texture_uv_location = {
         .pResource        = texture,
-        .Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX,
-        .SubresourceIndex = 1,
+        .Type             = D3_D12_TEXTURE_COPY_TYPE_SUBRESOURCE_सूचकांक,
+        .Subresource_सूचकांक = 1,
     };
 
     D3D12_RESOURCE_BARRIER barrier = {
@@ -479,31 +479,31 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
         },
     };
 
-    if (frame->hw_frames_ctx->data != (uint8_t *)ctx || other->format != ctx->sw_format)
-        return AVERROR(EINVAL);
+    यदि (frame->hw_चौकटाः_ctx->दत्त != (uint8_t *)ctx || other->format != ctx->sw_format)
+        प्रत्यागम AVERROR(EINVAL);
 
-    hwctx->lock(hwctx->lock_ctx);
+    hwctx->तालकम्(hwctx->तालकम्_ctx);
 
-    if (!s->command_queue) {
+    यदि (!s->command_queue) {
         ret = d3d12va_create_helper_objects(ctx);
-        if (ret < 0)
-            goto fail;
+        यदि (ret < 0)
+            गच्छ fail;
     }
 
-    for (int i = 0; i < 4; i++)
-        linesizes[i] = FFALIGN(frame->width * (frames_hwctx->format != DXGI_FORMAT_NV12 ? 2 : 1),
-                               D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+    प्रति (पूर्णाङ्क i = 0; i < 4; i++)
+        linesizes[i] = FFALIGN(frame->विस्तारः * (चौकटाः_hwctx->format != DXGI_FORMAT_NV12 ? 2 : 1),
+                               D3_D12_TEXTURE_दत्त_PITCH_ALIGNMENT);
 
     staging_y_location = (D3D12_TEXTURE_COPY_LOCATION) {
         .Type      = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT,
         .PlacedFootprint = {
-            .Offset = 0,
+            .विस्थापनम्_4 = 0,
             .Footprint = {
-                .Format   = frames_hwctx->format != DXGI_FORMAT_NV12 ?
+                .Format   = चौकटाः_hwctx->format != DXGI_FORMAT_NV12 ?
                                                     DXGI_FORMAT_R16_UNORM : DXGI_FORMAT_R8_UNORM,
-                .Width    = ctx->width,
+                .विस्तारः_2    = ctx->विस्तारः,
                 .Height   = ctx->height,
-                .Depth    = 1,
+                .गभीरता_2    = 1,
                 .RowPitch = linesizes[0],
             },
         },
@@ -512,13 +512,13 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
     staging_uv_location = (D3D12_TEXTURE_COPY_LOCATION) {
         .Type      = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT,
         .PlacedFootprint = {
-            .Offset = s->luma_component_size,
+            .विस्थापनम्_4 = s->luma_component_आकार,
             .Footprint = {
-                .Format   = frames_hwctx->format != DXGI_FORMAT_NV12 ?
+                .Format   = चौकटाः_hwctx->format != DXGI_FORMAT_NV12 ?
                                                     DXGI_FORMAT_R16G16_UNORM : DXGI_FORMAT_R8G8_UNORM,
-                .Width    = ctx->width  >> 1,
+                .विस्तारः_2    = ctx->विस्तारः  >> 1,
                 .Height   = ctx->height >> 1,
-                .Depth    = 1,
+                .गभीरता_2    = 1,
                 .RowPitch = linesizes[0],
             },
         },
@@ -526,28 +526,28 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
 
     DX_CHECK(ID3D12CommandAllocator_Reset(s->command_allocator));
 
-    DX_CHECK(ID3D12GraphicsCommandList_Reset(s->command_list, s->command_allocator, NULL));
+    DX_CHECK(ID3D12GraphicsCommandList_Reset(s->command_list, s->command_allocator, रिक्त));
 
-    if (download) {
-        if (!s->staging_download_buffer) {
-            ret = d3d12va_create_staging_buffer_resource(ctx, D3D12_RESOURCE_STATE_COPY_DEST,
-                                                         &s->staging_download_buffer, 1);
-            if (ret < 0) {
-                goto fail;
+    यदि (download) {
+        यदि (!s->staging_download_बफर) {
+            ret = d3d12va_create_staging_बफर_resource(ctx, D3D12_RESOURCE_STATE_COPY_DEST,
+                                                         &s->staging_download_बफर, 1);
+            यदि (ret < 0) {
+                गच्छ fail;
             }
         }
 
-        staging_y_location.pResource = staging_uv_location.pResource = s->staging_download_buffer;
+        staging_y_location.pResource = staging_uv_location.pResource = s->staging_download_बफर;
 
         ID3D12GraphicsCommandList_ResourceBarrier(s->command_list, 1, &barrier);
 
         ID3D12GraphicsCommandList_CopyTextureRegion(s->command_list,
                                                     &staging_y_location, 0, 0, 0,
-                                                    &texture_y_location, NULL);
+                                                    &texture_y_location, रिक्त);
 
         ID3D12GraphicsCommandList_CopyTextureRegion(s->command_list,
                                                     &staging_uv_location, 0, 0, 0,
-                                                    &texture_uv_location, NULL);
+                                                    &texture_uv_location, रिक्त);
 
         barrier.Transition.StateBefore = barrier.Transition.StateAfter;
         barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COMMON;
@@ -555,49 +555,49 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
 
         DX_CHECK(ID3D12GraphicsCommandList_Close(s->command_list));
 
-        DX_CHECK(ID3D12CommandQueue_Wait(s->command_queue, f->sync_ctx.fence, f->sync_ctx.fence_value));
+        DX_CHECK(ID3D12CommandQueue_Wait(s->command_queue, f->sync_ctx.fence, f->sync_ctx.fence_मानम्));
 
         ID3D12CommandQueue_ExecuteCommandLists(s->command_queue, 1, (ID3D12CommandList **)&s->command_list);
 
         ret = d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
-        if (ret < 0)
-            goto fail;
+        यदि (ret < 0)
+            गच्छ fail;
 
-        DX_CHECK(ID3D12Resource_Map(s->staging_download_buffer, 0, NULL, (void **)&mapped_data));
-        av_image_fill_pointers(data, ctx->sw_format, ctx->height, mapped_data, linesizes);
+        DX_CHECK(ID3D12Resource_Map(s->staging_download_बफर, 0, रिक्त, (शून्य **)&mapped_दत्त));
+        av_image_fill_सूचकाः(दत्त, ctx->sw_format, ctx->height, mapped_दत्त, linesizes);
 
-        av_image_copy2(dst->data, dst->linesize, data, linesizes,
-                       ctx->sw_format, ctx->width, ctx->height);
+        av_image_copy2(dst->दत्त, dst->linesize, दत्त, linesizes,
+                       ctx->sw_format, ctx->विस्तारः, ctx->height);
 
-        ID3D12Resource_Unmap(s->staging_download_buffer, 0, NULL);
-    } else {
-        if (!s->staging_upload_buffer) {
-            ret = d3d12va_create_staging_buffer_resource(ctx, D3D12_RESOURCE_STATE_GENERIC_READ,
-                                                        &s->staging_upload_buffer, 0);
-            if (ret < 0) {
-                goto fail;
+        ID3D12Resource_Unmap(s->staging_download_बफर, 0, रिक्त);
+    } अन्यथा {
+        यदि (!s->staging_upload_बफर) {
+            ret = d3d12va_create_staging_बफर_resource(ctx, D3D12_RESOURCE_STATE_GENERIC_READ,
+                                                        &s->staging_upload_बफर, 0);
+            यदि (ret < 0) {
+                गच्छ fail;
             }
         }
 
-        staging_y_location.pResource = staging_uv_location.pResource = s->staging_upload_buffer;
+        staging_y_location.pResource = staging_uv_location.pResource = s->staging_upload_बफर;
 
-        DX_CHECK(ID3D12Resource_Map(s->staging_upload_buffer, 0, NULL, (void **)&mapped_data));
-        av_image_fill_pointers(data, ctx->sw_format, ctx->height, mapped_data, linesizes);
+        DX_CHECK(ID3D12Resource_Map(s->staging_upload_बफर, 0, रिक्त, (शून्य **)&mapped_दत्त));
+        av_image_fill_सूचकाः(दत्त, ctx->sw_format, ctx->height, mapped_दत्त, linesizes);
 
-        av_image_copy2(data, linesizes, src->data, src->linesize,
-                       ctx->sw_format, ctx->width, ctx->height);
+        av_image_copy2(दत्त, linesizes, src->दत्त, src->linesize,
+                       ctx->sw_format, ctx->विस्तारः, ctx->height);
 
-        ID3D12Resource_Unmap(s->staging_upload_buffer, 0, NULL);
+        ID3D12Resource_Unmap(s->staging_upload_बफर, 0, रिक्त);
 
         ID3D12GraphicsCommandList_ResourceBarrier(s->command_list, 1, &barrier);
 
         ID3D12GraphicsCommandList_CopyTextureRegion(s->command_list,
                                                     &texture_y_location, 0, 0, 0,
-                                                    &staging_y_location, NULL);
+                                                    &staging_y_location, रिक्त);
 
         ID3D12GraphicsCommandList_CopyTextureRegion(s->command_list,
                                                     &texture_uv_location, 0, 0, 0,
-                                                    &staging_uv_location, NULL);
+                                                    &staging_uv_location, रिक्त);
 
         barrier.Transition.StateBefore = barrier.Transition.StateAfter;
         barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COMMON;
@@ -608,125 +608,125 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
         ID3D12CommandQueue_ExecuteCommandLists(s->command_queue, 1, (ID3D12CommandList **)&s->command_list);
 
         ret = d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
-        if (ret < 0)
-            goto fail;
+        यदि (ret < 0)
+            गच्छ fail;
     }
 
-    hwctx->unlock(hwctx->lock_ctx);
+    hwctx->unlock(hwctx->तालकम्_ctx);
 
-    return 0;
+    प्रत्यागम 0;
 
 fail:
-    hwctx->unlock(hwctx->lock_ctx);
-    return AVERROR(EINVAL);
+    hwctx->unlock(hwctx->तालकम्_ctx);
+    प्रत्यागम AVERROR(EINVAL);
 }
 
-static int d3d12va_load_functions(AVHWDeviceContext *hwdev)
+स्थिर पूर्णाङ्क d3d12va_आरोपय_functions(AVHWDeviceContext *hwdev)
 {
     D3D12VADevicePriv *priv = hwdev->hwctx;
 
-#if !HAVE_UWP
+#यदि !HAVE_UWP
     priv->d3d12lib = dlopen("d3d12.dll", 0);
     priv->dxgilib  = dlopen("dxgi.dll", 0);
 
-    if (!priv->d3d12lib || !priv->dxgilib)
-        goto fail;
+    यदि (!priv->d3d12lib || !priv->dxgilib)
+        गच्छ fail;
 
-    priv->create_device = (PFN_D3D12_CREATE_DEVICE)GetProcAddress(priv->d3d12lib, "D3D12CreateDevice");
-    if (!priv->create_device)
-        goto fail;
+    priv->create_device = (PFN_D3D12_CREATE_DEVICE)Get_Proc_स्थानाङ्कः(priv->d3d12lib, "D3D12CreateDevice");
+    यदि (!priv->create_device)
+        गच्छ fail;
 
-    priv->create_dxgi_factory2 = (PFN_CREATE_DXGI_FACTORY2)GetProcAddress(priv->dxgilib, "CreateDXGIFactory2");
-    if (!priv->create_dxgi_factory2)
-        goto fail;
+    priv->create_dxgi_factory2 = (PFN_CREATE_DXGI_FACTORY2)Get_Proc_स्थानाङ्कः(priv->dxgilib, "CreateDXGIFactory2");
+    यदि (!priv->create_dxgi_factory2)
+        गच्छ fail;
 
-    priv->get_debug_interface  = (PFN_D3D12_GET_DEBUG_INTERFACE)GetProcAddress(priv->d3d12lib, "D3D12GetDebugInterface");
-#else
+    priv->get_debug_interface  = (PFN_D3D12_GET_DEBUG_INTERFACE)Get_Proc_स्थानाङ्कः(priv->d3d12lib, "D3D12GetDebugInterface");
+#अन्यथा
     priv->create_device        = (PFN_D3D12_CREATE_DEVICE) D3D12CreateDevice;
     priv->create_dxgi_factory2 = (PFN_CREATE_DXGI_FACTORY2) CreateDXGIFactory2;
     priv->get_debug_interface  = (PFN_D3D12_GET_DEBUG_INTERFACE) D3D12GetDebugInterface;
-#endif
-    return 0;
+#यदि_अन्तः
+    प्रत्यागम 0;
 
-#if !HAVE_UWP
+#यदि !HAVE_UWP
 fail:
     av_log(hwdev, AV_LOG_ERROR, "Failed to load D3D12 library or its functions\n");
-    return AVERROR_UNKNOWN;
-#endif
+    प्रत्यागम AVERROR_UNKNOWN;
+#यदि_अन्तः
 }
 
-static void d3d12va_device_free(AVHWDeviceContext *hwdev)
+स्थिर शून्य d3d12va_device_free(AVHWDeviceContext *hwdev)
 {
     D3D12VADevicePriv      *priv = hwdev->hwctx;
     AVD3D12VADeviceContext *ctx  = &priv->p;
 
     D3D12_OBJECT_RELEASE(ctx->device);
 
-    if (priv->d3d12lib)
+    यदि (priv->d3d12lib)
         dlclose(priv->d3d12lib);
 
-    if (priv->dxgilib)
+    यदि (priv->dxgilib)
         dlclose(priv->dxgilib);
 }
 
-static int d3d12va_device_init(AVHWDeviceContext *hwdev)
+स्थिर पूर्णाङ्क d3d12va_device_init(AVHWDeviceContext *hwdev)
 {
     AVD3D12VADeviceContext *ctx = hwdev->hwctx;
 
-    if (!ctx->lock) {
-        ctx->lock_ctx = CreateMutex(NULL, 0, NULL);
-        if (ctx->lock_ctx == INVALID_HANDLE_VALUE) {
-            av_log(NULL, AV_LOG_ERROR, "Failed to create a mutex\n");
-            return AVERROR(EINVAL);
+    यदि (!ctx->तालकम्) {
+        ctx->तालकम्_ctx = CreateMutex(रिक्त, 0, रिक्त);
+        यदि (ctx->तालकम्_ctx == INVALID_HANDLE_मानम्) {
+            av_log(रिक्त, AV_LOG_ERROR, "Failed to create a mutex\n");
+            प्रत्यागम AVERROR(EINVAL);
         }
-        ctx->lock   = d3d12va_default_lock;
+        ctx->तालकम्   = d3d12va_default_तालकम्;
         ctx->unlock = d3d12va_default_unlock;
     }
 
-    if (!ctx->video_device)
-        DX_CHECK(ID3D12Device_QueryInterface(ctx->device, &IID_ID3D12VideoDevice, (void **)&ctx->video_device));
+    यदि (!ctx->video_device)
+        DX_CHECK(ID3D12Device_QueryInterface(ctx->device, &IID_ID3D12VideoDevice, (शून्य **)&ctx->video_device));
 
-    return 0;
+    प्रत्यागम 0;
 
 fail:
-    return AVERROR(EINVAL);
+    प्रत्यागम AVERROR(EINVAL);
 }
 
-static void d3d12va_device_uninit(AVHWDeviceContext *hwdev)
+स्थिर शून्य d3d12va_device_uninit(AVHWDeviceContext *hwdev)
 {
     AVD3D12VADeviceContext *device_hwctx = hwdev->hwctx;
 
     D3D12_OBJECT_RELEASE(device_hwctx->video_device);
 
-    if (device_hwctx->lock == d3d12va_default_lock) {
-        CloseHandle(device_hwctx->lock_ctx);
-        device_hwctx->lock_ctx = INVALID_HANDLE_VALUE;
-        device_hwctx->lock = NULL;
+    यदि (device_hwctx->तालकम् == d3d12va_default_तालकम्) {
+        CloseHandle(device_hwctx->तालकम्_ctx);
+        device_hwctx->तालकम्_ctx = INVALID_HANDLE_मानम्;
+        device_hwctx->तालकम् = रिक्त;
     }
 }
 
-static int d3d12va_device_create(AVHWDeviceContext *hwdev, const char *device,
-                                 AVDictionary *opts, int flags)
+स्थिर पूर्णाङ्क d3d12va_device_create(AVHWDeviceContext *hwdev, ध्रुव वर्ण *device,
+                                 AVDictionary *opts, पूर्णाङ्क flags)
 {
     D3D12VADevicePriv      *priv = hwdev->hwctx;
     AVD3D12VADeviceContext *ctx  = &priv->p;
 
     HRESULT hr;
     UINT create_flags = 0;
-    IDXGIAdapter *pAdapter = NULL;
+    IDXGIAdapter *pAdapter = रिक्त;
 
-    int ret;
-    int is_debug = !!av_dict_get(opts, "debug", NULL, 0);
+    पूर्णाङ्क ret;
+    पूर्णाङ्क is_debug = !!av_dict_get(opts, "debug", रिक्त, 0);
 
-    hwdev->free = d3d12va_device_free;
+    hwdev->मुक्त = d3d12va_device_free;
 
-    ret = d3d12va_load_functions(hwdev);
-    if (ret < 0)
-        return ret;
+    ret = d3d12va_आरोपय_functions(hwdev);
+    यदि (ret < 0)
+        प्रत्यागम ret;
 
-    if (is_debug) {
+    यदि (is_debug) {
         ID3D12Debug *pDebug;
-        if (priv->get_debug_interface && SUCCEEDED(priv->get_debug_interface(&IID_ID3D12Debug, (void **)&pDebug))) {
+        यदि (priv->get_debug_interface && SUCCEEDED(priv->get_debug_interface(&IID_ID3D12Debug, (शून्य **)&pDebug))) {
             create_flags |= DXGI_CREATE_FACTORY_DEBUG;
             ID3D12Debug_EnableDebugLayer(pDebug);
             D3D12_OBJECT_RELEASE(pDebug);
@@ -734,63 +734,63 @@ static int d3d12va_device_create(AVHWDeviceContext *hwdev, const char *device,
         }
     }
 
-    if (!ctx->device) {
-        IDXGIFactory2 *pDXGIFactory = NULL;
+    यदि (!ctx->device) {
+        IDXGIFactory2 *pDXGIFactory = रिक्त;
 
-        hr = priv->create_dxgi_factory2(create_flags, &IID_IDXGIFactory2, (void **)&pDXGIFactory);
-        if (SUCCEEDED(hr)) {
-            int adapter = device ? atoi(device) : 0;
-            if (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
-                pAdapter = NULL;
+        hr = priv->create_dxgi_factory2(create_flags, &IID_IDXGIFactory2, (शून्य **)&pDXGIFactory);
+        यदि (SUCCEEDED(hr)) {
+            पूर्णाङ्क adapter = device ? atoi(device) : 0;
+            यदि (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
+                pAdapter = रिक्त;
             IDXGIFactory2_Release(pDXGIFactory);
         }
 
-        if (pAdapter) {
+        यदि (pAdapter) {
             DXGI_ADAPTER_DESC desc;
             hr = IDXGIAdapter2_GetDesc(pAdapter, &desc);
-            if (!FAILED(hr)) {
+            यदि (!FAILED(hr)) {
                 av_log(hwdev, AV_LOG_INFO, "Using device %04x:%04x (%ls).\n",
                        desc.VendorId, desc.DeviceId, desc.Description);
             }
         }
 
-        hr = priv->create_device((IUnknown *)pAdapter, D3D_FEATURE_LEVEL_12_0, &IID_ID3D12Device, (void **)&ctx->device);
+        hr = priv->create_device((IUnknown *)pAdapter, D3D_FEATURE_LEVEL_12_0, &IID_ID3D12Device, (शून्य **)&ctx->device);
         D3D12_OBJECT_RELEASE(pAdapter);
-        if (FAILED(hr)) {
-            av_log(hwdev, AV_LOG_ERROR, "Failed to create Direct 3D 12 device (%lx)\n", (long)hr);
-            return AVERROR_UNKNOWN;
+        यदि (FAILED(hr)) {
+            av_log(hwdev, AV_LOG_ERROR, "Failed to create Direct 3D 12 device (%lx)\n", (दीर्घ)hr);
+            प्रत्यागम AVERROR_UNKNOWN;
         }
     }
 
-    if (av_dict_get(opts, "UAV", NULL, 0))
+    यदि (av_dict_get(opts, "UAV", रिक्त, 0))
         ctx->resource_flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
-    if (av_dict_get(opts, "RTV", NULL, 0))
+    यदि (av_dict_get(opts, "RTV", रिक्त, 0))
         ctx->resource_flags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
-    if (av_dict_get(opts, "SHARED", NULL, 0))
+    यदि (av_dict_get(opts, "SHARED", रिक्त, 0))
         ctx->heap_flags |= D3D12_HEAP_FLAG_SHARED;
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-const HWContextType ff_hwcontext_type_d3d12va = {
+ध्रुव HWContextType ff_hwcontext_type_d3d12va = {
     .type                   = AV_HWDEVICE_TYPE_D3D12VA,
     .name                   = "D3D12VA",
 
-    .device_hwctx_size      = sizeof(D3D12VADevicePriv),
-    .frames_hwctx_size      = sizeof(D3D12VAFramesContext),
+    .device_hwctx_आकार      = परिमाण(D3D12VADevicePriv),
+    .चौकटाः_hwctx_आकार      = परिमाण(D3D12VAFramesContext),
 
     .device_create          = d3d12va_device_create,
     .device_init            = d3d12va_device_init,
     .device_uninit          = d3d12va_device_uninit,
-    .frames_get_constraints = d3d12va_frames_get_constraints,
-    .frames_init            = d3d12va_frames_init,
-    .frames_uninit          = d3d12va_frames_uninit,
-    .frames_get_buffer      = d3d12va_get_buffer,
+    .चौकटाः_get_constraints = d3d12va_चौकटाः_get_constraints,
+    .चौकटाः_init            = d3d12va_चौकटाः_init,
+    .चौकटाः_uninit          = d3d12va_चौकटाः_uninit,
+    .चौकटाः_get_बफर      = d3d12va_get_बफर,
     .transfer_get_formats   = d3d12va_transfer_get_formats,
-    .transfer_data_to       = d3d12va_transfer_data,
-    .transfer_data_from     = d3d12va_transfer_data,
+    .transfer_दत्त_गन्तव्यम्       = d3d12va_transfer_दत्त,
+    .transfer_दत्त_from     = d3d12va_transfer_दत्त,
 
-    .pix_fmts               = (const enum AVPixelFormat[]){ AV_PIX_FMT_D3D12, AV_PIX_FMT_NONE },
+    .pix_fmts               = (ध्रुव गणना AVPixelFormat[]){ AV_PIX_FMT_D3D12, AV_PIX_FMT_NONE },
 };

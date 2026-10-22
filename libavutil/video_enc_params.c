@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdint.h>
 
-#include "buffer.h"
-#include "frame.h"
-#include "mem.h"
-#include "video_enc_params.h"
+#अन्तर्भाव "buffer.h"
+#अन्तर्भाव "frame.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(गणना AVVideoEncParamsType type,
+                                            अचिह्नित पूर्णाङ्क nb_खण्डानि, size_t *बहिर्गमनम्_आकार)
 {
-    struct TestStruct {
+    संरचना TestStruct {
         AVVideoEncParams   p;
-        AVVideoBlockParams b;
+        AVVideo_खण्डम्_Params b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
-    size_t size = blocks_offset;
+    ध्रुव size_t खण्डानि_विस्थापनम् = offsetof(संरचना TestStruct, b);
+    size_t आकार = खण्डानि_विस्थापनम्;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    यदि (nb_खण्डानि > (SIZE_MAX - आकार) / परिमाण(AVVideo_खण्डम्_Params))
+        प्रत्यागम रिक्त;
+    आकार += परिमाण(AVVideo_खण्डम्_Params) * nb_खण्डानि;
 
-    par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    par = av_mallocz(आकार);
+    यदि (!par)
+        प्रत्यागम रिक्त;
 
     par->type          = type;
-    par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
-    par->blocks_offset = blocks_offset;
+    par->nb_खण्डानि     = nb_खण्डानि;
+    par->खण्डम्_आकार    = परिमाण(AVVideo_खण्डम्_Params);
+    par->खण्डानि_विस्थापनम् = खण्डानि_विस्थापनम्;
 
-    if (out_size)
-        *out_size = size;
+    यदि (बहिर्गमनम्_आकार)
+        *बहिर्गमनम्_आकार = आकार;
 
-    return par;
+    प्रत्यागम par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_दत्त(AVFrame *frame, गणना AVVideoEncParamsType type,
+                                     अचिह्नित पूर्णाङ्क nb_खण्डानि)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
-    size_t size;
+    size_t आकार;
 
-    par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    par = av_video_enc_params_alloc(type, nb_खण्डानि, &आकार);
+    यदि (!par)
+        प्रत्यागम रिक्त;
+    buf = av_बफर_create((uint8_t *)par, आकार, रिक्त, रिक्त, 0);
+    यदि (!buf) {
         av_freep(&par);
-        return NULL;
+        प्रत्यागम रिक्त;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    यदि (!av_frame_new_side_दत्त_from_buf(frame, AV_FRAME_दत्त_VIDEO_ENC_PARAMS, buf)) {
+        av_बफर_unref(&buf);
+        प्रत्यागम रिक्त;
     }
 
-    return par;
+    प्रत्यागम par;
 }

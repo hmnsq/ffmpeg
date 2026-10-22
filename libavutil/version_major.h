@@ -16,10 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_VERSION_MAJOR_H
-#define AVUTIL_VERSION_MAJOR_H
+#यदि_अपरिभाषितम् AVUTIL_संस्करणम्_MAJOR_H
+#परिभाषय AVUTIL_संस्करणम्_MAJOR_H
 
 /* This file is intentionally empty; it's only kept to fulfill make
  * dependencies for ffbuild/libversion.sh. It is not installed. */
 
-#endif /* AVUTIL_VERSION_MAJOR_H */
+#यदि_अन्तः /* AVUTIL_VERSION_MAJOR_H */

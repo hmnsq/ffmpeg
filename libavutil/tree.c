@@ -18,74 +18,74 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "log.h"
-#include "mem.h"
-#include "tree.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "log.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "tree.h"
 
-typedef struct AVTreeNode {
-    struct AVTreeNode *child[2];
-    void *elem;
-    int state;
-} AVTreeNode;
+प्रकारनिर्देश संरचना AVTree_ग्रन्थिः {
+    संरचना AVTree_ग्रन्थिः *child[2];
+    शून्य *elem;
+    पूर्णाङ्क state;
+} AVTree_ग्रन्थिः;
 
-const int av_tree_node_size = sizeof(AVTreeNode);
+ध्रुव पूर्णाङ्क av_वृक्षः_ग्रन्थिः_आकार = परिमाण(AVTree_ग्रन्थिः);
 
-struct AVTreeNode *av_tree_node_alloc(void)
+संरचना AVTree_ग्रन्थिः *av_वृक्षः_ग्रन्थिः_alloc(शून्य)
 {
-    return av_mallocz(sizeof(struct AVTreeNode));
+    प्रत्यागम av_mallocz(परिमाण(संरचना AVTree_ग्रन्थिः));
 }
 
-void *av_tree_find(const AVTreeNode *t, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2])
+शून्य *av_वृक्षः_find(ध्रुव AVTree_ग्रन्थिः *t, शून्य *कुञ्चिका,
+                   पूर्णाङ्क (*cmp)(ध्रुव शून्य *कुञ्चिका, ध्रुव शून्य *b), शून्य *अग्र[2])
 {
-    if (t) {
-        unsigned int v = cmp(key, t->elem);
-        if (v) {
-            if (next)
-                next[v >> 31] = t->elem;
-            return av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
-        } else {
-            if (next) {
-                av_tree_find(t->child[0], key, cmp, next);
-                av_tree_find(t->child[1], key, cmp, next);
+    यदि (t) {
+        अचिह्नित पूर्णाङ्क v = cmp(कुञ्चिका, t->elem);
+        यदि (v) {
+            यदि (अग्र)
+                अग्र[v >> 31] = t->elem;
+            प्रत्यागम av_वृक्षः_find(t->child[(v >> 31) ^ 1], कुञ्चिका, cmp, अग्र);
+        } अन्यथा {
+            यदि (अग्र) {
+                av_वृक्षः_find(t->child[0], कुञ्चिका, cmp, अग्र);
+                av_वृक्षः_find(t->child[1], कुञ्चिका, cmp, अग्र);
             }
-            return t->elem;
+            प्रत्यागम t->elem;
         }
     }
-    return NULL;
+    प्रत्यागम रिक्त;
 }
 
-void *av_tree_insert(AVTreeNode **tp, void *key,
-                     int (*cmp)(const void *key, const void *b), AVTreeNode **next)
+शून्य *av_वृक्षः_निवेशय(AVTree_ग्रन्थिः **tp, शून्य *कुञ्चिका,
+                     पूर्णाङ्क (*cmp)(ध्रुव शून्य *कुञ्चिका, ध्रुव शून्य *b), AVTree_ग्रन्थिः **अग्र)
 {
-    AVTreeNode *t = *tp;
-    if (t) {
-        unsigned int v = cmp(t->elem, key);
-        void *ret;
-        if (!v) {
-            if (*next)
-                return t->elem;
-            else if (t->child[0] || t->child[1]) {
-                int i = !t->child[0];
-                void *next_elem[2];
-                av_tree_find(t->child[i], key, cmp, next_elem);
-                key = t->elem = next_elem[i];
+    AVTree_ग्रन्थिः *t = *tp;
+    यदि (t) {
+        अचिह्नित पूर्णाङ्क v = cmp(t->elem, कुञ्चिका);
+        शून्य *ret;
+        यदि (!v) {
+            यदि (*अग्र)
+                प्रत्यागम t->elem;
+            अन्यथा यदि (t->child[0] || t->child[1]) {
+                पूर्णाङ्क i = !t->child[0];
+                शून्य *अग्र_elem[2];
+                av_वृक्षः_find(t->child[i], कुञ्चिका, cmp, अग्र_elem);
+                कुञ्चिका = t->elem = अग्र_elem[i];
                 v   = -i;
-            } else {
-                *next = t;
-                *tp   = NULL;
-                return NULL;
+            } अन्यथा {
+                *अग्र = t;
+                *tp   = रिक्त;
+                प्रत्यागम रिक्त;
             }
         }
-        ret = av_tree_insert(&t->child[v >> 31], key, cmp, next);
-        if (!ret) {
-            int i              = (v >> 31) ^ !!*next;
-            AVTreeNode **child = &t->child[i];
+        ret = av_वृक्षः_निवेशय(&t->child[v >> 31], कुञ्चिका, cmp, अग्र);
+        यदि (!ret) {
+            पूर्णाङ्क i              = (v >> 31) ^ !!*अग्र;
+            AVTree_ग्रन्थिः **child = &t->child[i];
             t->state += 2 * i - 1;
 
-            if (!(t->state & 1)) {
-                if (t->state) {
+            यदि (!(t->state & 1)) {
+                यदि (t->state) {
                     /* The following code is equivalent to
                      * if ((*child)->state * 2 == -t->state)
                      *     rotate(child, i ^ 1);
@@ -106,7 +106,7 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                      * }
                      * but such a rotate function is both bigger and slower
                      */
-                    if ((*child)->state * 2 == -t->state) {
+                    यदि ((*child)->state * 2 == -t->state) {
                         *tp                    = (*child)->child[i ^ 1];
                         (*child)->child[i ^ 1] = (*tp)->child[i];
                         (*tp)->child[i]        = *child;
@@ -116,53 +116,53 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                         (*tp)->child[0]->state = -((*tp)->state > 0);
                         (*tp)->child[1]->state = (*tp)->state < 0;
                         (*tp)->state           = 0;
-                    } else {
+                    } अन्यथा {
                         *tp                 = *child;
                         *child              = (*child)->child[i ^ 1];
                         (*tp)->child[i ^ 1] = t;
-                        if ((*tp)->state)
+                        यदि ((*tp)->state)
                             t->state = 0;
-                        else
+                        अन्यथा
                             t->state >>= 1;
                         (*tp)->state = -t->state;
                     }
                 }
             }
-            if (!(*tp)->state ^ !!*next)
-                return key;
+            यदि (!(*tp)->state ^ !!*अग्र)
+                प्रत्यागम कुञ्चिका;
         }
-        return ret;
-    } else {
-        *tp   = *next;
-        *next = NULL;
-        if (*tp) {
-            (*tp)->elem = key;
-            return NULL;
-        } else
-            return key;
+        प्रत्यागम ret;
+    } अन्यथा {
+        *tp   = *अग्र;
+        *अग्र = रिक्त;
+        यदि (*tp) {
+            (*tp)->elem = कुञ्चिका;
+            प्रत्यागम रिक्त;
+        } अन्यथा
+            प्रत्यागम कुञ्चिका;
     }
 }
 
-void av_tree_destroy(AVTreeNode *t)
+शून्य av_वृक्षः_destroy(AVTree_ग्रन्थिः *t)
 {
-    if (t) {
-        av_tree_destroy(t->child[0]);
-        av_tree_destroy(t->child[1]);
+    यदि (t) {
+        av_वृक्षः_destroy(t->child[0]);
+        av_वृक्षः_destroy(t->child[1]);
         av_free(t);
     }
 }
 
-void av_tree_enumerate(AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem))
+शून्य av_वृक्षः_enumerate(AVTree_ग्रन्थिः *t, शून्य *opaque,
+                       पूर्णाङ्क (*cmp)(शून्य *opaque, शून्य *elem),
+                       पूर्णाङ्क (*enu)(शून्य *opaque, शून्य *elem))
 {
-    if (t) {
-        int v = cmp ? cmp(opaque, t->elem) : 0;
-        if (v >= 0)
-            av_tree_enumerate(t->child[0], opaque, cmp, enu);
-        if (v == 0)
+    यदि (t) {
+        पूर्णाङ्क v = cmp ? cmp(opaque, t->elem) : 0;
+        यदि (v >= 0)
+            av_वृक्षः_enumerate(t->child[0], opaque, cmp, enu);
+        यदि (v == 0)
             enu(opaque, t->elem);
-        if (v <= 0)
-            av_tree_enumerate(t->child[1], opaque, cmp, enu);
+        यदि (v <= 0)
+            av_वृक्षः_enumerate(t->child[1], opaque, cmp, enu);
     }
 }

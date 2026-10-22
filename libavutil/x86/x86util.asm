@@ -921,9 +921,9 @@
 ; on such files. Emit a dummy byte in a section with IMAGE_SCN_LNK_REMOVE flag
 ; to work around these issues. Sections like that are dropped by the linker.
 %ifidn __OUTPUT_FORMAT__,win64
-    section .x86util info
+    खण्डः .x86util info
         db 0
 %elifidn __OUTPUT_FORMAT__,win32
-    section .x86util info
+    खण्डः .x86util info
         db 0
 %endif

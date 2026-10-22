@@ -29,37 +29,37 @@ SECTION .text
 ; void ff_cpu_cpuid(int index, int *eax, int *ebx, int *ecx, int *edx)
 ;-----------------------------------------------------------------------------
 cglobal cpu_cpuid, 5,7
-    push rbx
-    push  r4
-    push  r3
-    push  r2
-    push  r1
-    mov  eax, r0d
+    निक्षिप rbx
+    निक्षिप  r4
+    निक्षिप  r3
+    निक्षिप  r2
+    निक्षिप  r1
+    चालय  eax, r0d
     xor  ecx, ecx
     cpuid
-    pop   r4
-    mov [r4], eax
-    pop   r4
-    mov [r4], ebx
-    pop   r4
-    mov [r4], ecx
-    pop   r4
-    mov [r4], edx
-    pop  rbx
+    उद्धर   r4
+    चालय [r4], eax
+    उद्धर   r4
+    चालय [r4], ebx
+    उद्धर   r4
+    चालय [r4], ecx
+    उद्धर   r4
+    चालय [r4], edx
+    उद्धर  rbx
     RET
 
 ;-----------------------------------------------------------------------------
 ; void ff_cpu_xgetbv(int op, int *eax, int *edx)
 ;-----------------------------------------------------------------------------
 cglobal cpu_xgetbv, 3,7
-    push  r2
-    push  r1
-    mov  ecx, r0d
+    निक्षिप  r2
+    निक्षिप  r1
+    चालय  ecx, r0d
     xgetbv
-    pop   r4
-    mov [r4], eax
-    pop   r4
-    mov [r4], edx
+    उद्धर   r4
+    चालय [r4], eax
+    उद्धर   r4
+    चालय [r4], edx
     RET
 
 %if ARCH_X86_64 == 0
@@ -69,23 +69,23 @@ cglobal cpu_xgetbv, 3,7
 ;-----------------------------------------------------------------------------
 cglobal cpu_cpuid_test
     pushfd
-    push    ebx
-    push    ebp
-    push    esi
-    push    edi
+    निक्षिप    ebx
+    निक्षिप    ebp
+    निक्षिप    esi
+    निक्षिप    edi
     pushfd
-    pop     eax
-    mov     ebx, eax
+    उद्धर     eax
+    चालय     ebx, eax
     xor     eax, 0x200000
-    push    eax
+    निक्षिप    eax
     popfd
     pushfd
-    pop     eax
+    उद्धर     eax
     xor     eax, ebx
-    pop     edi
-    pop     esi
-    pop     ebp
-    pop     ebx
+    उद्धर     edi
+    उद्धर     esi
+    उद्धर     ebp
+    उद्धर     ebx
     popfd
-    ret
+    प्रत्यागच्छ
 %endif

@@ -140,7 +140,7 @@ DISABLE_SME2
 /* Support macros for
  *   - Armv8.3-A Pointer Authentication and
  *   - Armv8.5-A Branch Target Identification
- * features which require emitting a .note.gnu.property section with the
+ * features which require emitting a .note.gnu.property खण्डः with the
  * appropriate architecture-dependent feature bits set.
  *
  * |AARCH64_SIGN_LINK_REGISTER| and |AARCH64_VALIDATE_LINK_REGISTER| expand to
@@ -151,27 +151,27 @@ DISABLE_SME2
  * with |AARCH64_VALIDATE_LINK_REGISTER| before RET. The SP register must also
  * have the same value at the two points. For example:
  *
- *   .global f
+ *   .वैश्विक f
  *   f:
  *     AARCH64_SIGN_LINK_REGISTER
  *     stp x29, x30, [sp, #-96]!
- *     mov x29, sp
+ *     चालय x29, sp
  *     ...
  *     ldp x29, x30, [sp], #96
  *     AARCH64_VALIDATE_LINK_REGISTER
- *     ret
+ *     प्रत्यागच्छ
  *
  * |AARCH64_VALID_CALL_TARGET| expands to BTI 'c'. Either it, or
  * |AARCH64_SIGN_LINK_REGISTER|, must be used at every point that may be an
- * indirect call target. In particular, all symbols exported from a file must
+ * indirect आह्वान target. In particular, all symbols exported from a file must
  * begin with one of these macros. For example, a leaf function that does not
  * save LR can instead use |AARCH64_VALID_CALL_TARGET|:
  *
  *   .globl return_zero
  *   return_zero:
  *     AARCH64_VALID_CALL_TARGET
- *     mov x0, #0
- *     ret
+ *     चालय x0, #0
+ *     प्रत्यागच्छ
  *
  * A non-leaf function which does not immediately save LR may need both macros
  * because |AARCH64_SIGN_LINK_REGISTER| appears late. For example, the function
@@ -180,19 +180,19 @@ DISABLE_SME2
  *   .globl with_early_jump
  *   with_early_jump:
  *     AARCH64_VALID_CALL_TARGET
- *     cmp x0, #128
+ *     तुलय x0, #128
  *     b.lt .Lwith_early_jump_128
  *     AARCH64_SIGN_LINK_REGISTER
  *     stp x29, x30, [sp, #-96]!
- *     mov x29, sp
+ *     चालय x29, sp
  *     ...
  *     ldp x29, x30, [sp], #96
  *     AARCH64_VALIDATE_LINK_REGISTER
- *     ret
+ *     प्रत्यागच्छ
  *
  *  .Lwith_early_jump_128:
  *     ...
- *     ret
+ *     प्रत्यागच्छ
  *
  * These annotations are only required with indirect calls. Private symbols that
  * are only the target of direct calls do not require annotations. Also note
@@ -272,7 +272,7 @@ FUNC    .endfunc
         .text
         .align          \align
     .if \export
-        .global EXTERN_ASM\name
+        .वैश्विक EXTERN_ASM\name
 ELF     .type   EXTERN_ASM\name, %function
 FUNC    .func   EXTERN_ASM\name
 EXTERN_ASM\name:
@@ -295,14 +295,14 @@ ELF     .size   \name, . - \name
     .endm
 #if HAVE_SECTION_DATA_REL_RO
 .if \relocate
-        .section        .data.rel.ro
+        .खण्डः        .data.rel.ro
 .else
-        .section        .rodata
+        .खण्डः        .rodata
 .endif
 #elif defined(_WIN32)
-        .section        .rdata
+        .खण्डः        .rdata
 #elif !defined(__MACH__)
-        .section        .rodata
+        .खण्डः        .rodata
 #else
         .const_data
 #endif
@@ -314,20 +314,20 @@ ELF     .size   \name, . - \name
 #if CONFIG_PIC && defined(__APPLE__)
     .if \offset < 0
         adrp            \rd, \val@PAGE
-        add             \rd, \rd, \val@PAGEOFF
-        sub             \rd, \rd, -(\offset)
+        योजय             \rd, \rd, \val@PAGEOFF
+        वियोजय             \rd, \rd, -(\offset)
     .else
         adrp            \rd, \val+(\offset)@PAGE
-        add             \rd, \rd, \val+(\offset)@PAGEOFF
+        योजय             \rd, \rd, \val+(\offset)@PAGEOFF
     .endif
 #elif CONFIG_PIC && defined(_WIN32)
     .if \offset < 0
         adrp            \rd, \val
-        add             \rd, \rd, :lo12:\val
-        sub             \rd, \rd, -(\offset)
+        योजय             \rd, \rd, :lo12:\val
+        वियोजय             \rd, \rd, -(\offset)
     .else
         adrp            \rd, \val+(\offset)
-        add             \rd, \rd, :lo12:\val+(\offset)
+        योजय             \rd, \rd, :lo12:\val+(\offset)
     .endif
 #elif CONFIG_PIC
 #   if __has_feature(hwaddress_sanitizer)
@@ -335,7 +335,7 @@ ELF     .size   \name, . - \name
 #   else
         adrp            \rd, \val+(\offset)
 #   endif
-        add             \rd, \rd, :lo12:\val+(\offset)
+        योजय             \rd, \rd, :lo12:\val+(\offset)
 #else
         ldr             \rd, =\val+\offset
 #endif
@@ -352,7 +352,7 @@ ELF     .size   \name, . - \name
 .macro sme_entry
         AARCH64_SIGN_LINK_REGISTER
         stp             x29, x30, [sp, #-80]!
-        mov             x29, sp
+        चालय             x29, sp
         stp             d8,  d9,  [sp, #16]
         stp             d10, d11, [sp, #32]
         stp             d12, d13, [sp, #48]

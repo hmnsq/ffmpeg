@@ -172,7 +172,7 @@
     %if %0 == 2
         %define r%1m  %2d
         %define r%1mp %2
-    %elif ARCH_X86_64 ; memory
+    %elif ARCH_X86_64 ;स्मृतिः
         %define r%1m [rstk + stack_offset + %3]
         %define r%1mp qword r %+ %1 %+ m
     %else
@@ -240,11 +240,11 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
 %if ARCH_X86_64
     lea %1, [%2]
 %elif PIC
-    call $+5 ; special-cased to not affect the RSB on most CPU:s
-    pop %1
-    add %1, (%2)-$+1
+    आह्वान $+5 ; special-cased to not affect the RSB on most CPU:s
+    उद्धर %1
+    योजय %1, (%2)-$+1
 %else
-    mov %1, %2
+    चालय %1, %2
 %endif
 %endmacro
 
@@ -259,14 +259,14 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
 %endmacro
 
 %macro PUSH 1
-    push %1
+    निक्षिप %1
     %ifidn rstk, rsp
         %assign stack_offset stack_offset+gprsize
     %endif
 %endmacro
 
 %macro POP 1
-    pop %1
+    उद्धर %1
     %ifidn rstk, rsp
         %assign stack_offset stack_offset-gprsize
     %endif
@@ -284,7 +284,7 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
 %macro POP_IF_USED 1-*
     %rep %0
         %if %1 < regs_used
-            pop r%1
+            उद्धर r%1
         %endif
         %rotate 1
     %endrep
@@ -293,21 +293,21 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
 %macro LOAD_IF_USED 1-*
     %rep %0
         %if %1 < num_args
-            mov r%1, r %+ %1 %+ mp
+            चालय r%1, r %+ %1 %+ mp
         %endif
         %rotate 1
     %endrep
 %endmacro
 
 %macro SUB 2
-    sub %1, %2
+    वियोजय %1, %2
     %ifidn %1, rstk
         %assign stack_offset stack_offset+(%2)
     %endif
 %endmacro
 
 %macro ADD 2
-    add %1, %2
+    योजय %1, %2
     %ifidn %1, rstk
         %assign stack_offset stack_offset-(%2)
     %endif
@@ -315,7 +315,7 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
 
 %macro movifnidn 2
     %ifnidn %1, %2
-        mov %1, %2
+        चालय %1, %2
     %endif
 %endmacro
 
@@ -390,7 +390,7 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
     %if STACK_PROBE_SIZE
         %assign %%i STACK_PROBE_SIZE
         %rep %1 / STACK_PROBE_SIZE
-            mov eax, [rsp-%%i]
+            चालय eax, [rsp-%%i]
             %assign %%i %%i+STACK_PROBE_SIZE
         %endrep
     %endif
@@ -447,9 +447,9 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
                 %endif
                 %assign stack_size_padded stack_size + ((%%pad + required_stack_alignment-1) & ~(required_stack_alignment-1))
                 PROBE_STACK stack_size_padded
-                mov rstk, rsp
+                चालय rstk, rsp
                 and rsp, ~(required_stack_alignment-1)
-                sub rsp, stack_size_padded
+                वियोजय rsp, stack_size_padded
                 movifnidn rstkm, rstk
             %endif
             WIN64_PUSH_XMM
@@ -590,9 +590,9 @@ DECLARE_REG 14, R13, 120
     %endif
     %if stack_size_padded > 0
         %if stack_size > 0 && required_stack_alignment > STACK_ALIGNMENT
-            mov rsp, rstkm
+            चालय rsp, rstkm
         %else
-            add rsp, stack_size_padded
+            योजय rsp, stack_size_padded
             %assign %%pad_size stack_size_padded
         %endif
     %endif
@@ -663,9 +663,9 @@ DECLARE_REG 14, R13, 72
 %macro RET 0
     %if stack_size_padded > 0
         %if required_stack_alignment > STACK_ALIGNMENT
-            mov rsp, rstkm
+            चालय rsp, rstkm
         %else
-            add rsp, stack_size_padded
+            योजय rsp, stack_size_padded
         %endif
     %endif
     POP_IF_USED 14, 13, 12, 11, 10, 9
@@ -727,9 +727,9 @@ DECLARE_ARG 7, 8, 9, 10, 11, 12, 13, 14
 %macro RET 0
     %if stack_size_padded > 0
         %if required_stack_alignment > STACK_ALIGNMENT
-            mov rsp, rstkm
+            चालय rsp, rstkm
         %else
-            add rsp, stack_size_padded
+            योजय rsp, stack_size_padded
         %endif
     %endif
     POP_IF_USED 6, 5, 4, 3
@@ -766,7 +766,7 @@ DECLARE_ARG 7, 8, 9, 10, 11, 12, 13, 14
     %if has_epilogue || cpuflag(ssse3)
         RET
     %else
-        rep ret
+        rep प्रत्यागच्छ
     %endif
     annotate_function_size
 %endmacro
@@ -776,7 +776,7 @@ DECLARE_ARG 7, 8, 9, 10, 11, 12, 13, 14
     %if notcpuflag(ssse3)
         times ((last_branch_adr-$)>>31)+1 rep ; times 1 iff $ == last_branch_adr.
     %endif
-    ret
+    प्रत्यागच्छ
     annotate_function_size
 %endmacro
 
@@ -797,10 +797,10 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
 
 %macro TAIL_CALL 1-2 1 ; callee, is_nonadjacent
     %if has_epilogue
-        call %1
+        आह्वान %1
         RET
     %elif %2
-        jmp %1
+        कूर्द %1
     %endif
     annotate_function_size
 %endmacro
@@ -838,14 +838,14 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
     %xdefine current_function_section __SECT__
     %if FORMAT_ELF
         %if %1
-            global %2:function hidden
+            वैश्विक %2:function hidden
         %else
-            global %2:function
+            वैश्विक %2:function
         %endif
     %elif FORMAT_MACHO && HAVE_PRIVATE_EXTERN && %1
-        global %2:private_extern
+        वैश्विक %2:private_extern
     %else
-        global %2
+        वैश्विक %2
     %endif
     align function_align
     %2:
@@ -863,11 +863,11 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
 ; Create a global symbol from a local label with the correct name mangling and type
 %macro cglobal_label 1
     %if FORMAT_ELF
-        global current_function %+ %1:function hidden
+        वैश्विक current_function %+ %1:function hidden
     %elif FORMAT_MACHO && HAVE_PRIVATE_EXTERN
-        global current_function %+ %1:private_extern
+        वैश्विक current_function %+ %1:private_extern
     %else
-        global current_function %+ %1
+        वैश्विक current_function %+ %1
     %endif
     %1:
 %endmacro
@@ -890,11 +890,11 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
 %macro const 1-2+
     %xdefine %1 mangle(private_prefix %+ _ %+ %1)
     %if FORMAT_ELF
-        global %1:data hidden
+        वैश्विक %1:data hidden
     %elif FORMAT_MACHO && HAVE_PRIVATE_EXTERN
-        global %1:private_extern
+        वैश्विक %1:private_extern
     %else
-        global %1
+        वैश्विक %1
     %endif
     %1: %2
 %endmacro
@@ -1269,11 +1269,11 @@ INIT_XMM
 %endmacro
 
 ; Append cpuflags to the callee's name iff the appended name is known and the plain name isn't
-%macro call 1
+%macro आह्वान 1
     %ifid %1
         call_internal %1 %+ SUFFIX, %1
     %else
-        call %1
+        आह्वान %1
     %endif
 %endmacro
 %macro call_internal 2
@@ -1283,32 +1283,32 @@ INIT_XMM
             %xdefine %%i %1
         %endif
     %endif
-    call %%i
+    आह्वान %%i
     LOAD_MM_PERMUTATION %%i
 %endmacro
 
 ; Substitutions that reduce instruction size but are functionally equivalent
-%macro add 2
+%macro योजय 2
     %ifnum %2
         %if %2==128
-            sub %1, -128
+            वियोजय %1, -128
         %else
-            add %1, %2
+            योजय %1, %2
         %endif
     %else
-        add %1, %2
+        योजय %1, %2
     %endif
 %endmacro
 
-%macro sub 2
+%macro वियोजय 2
     %ifnum %2
         %if %2==128
-            add %1, -128
+            योजय %1, -128
         %else
-            sub %1, %2
+            वियोजय %1, %2
         %endif
     %else
-        sub %1, %2
+        वियोजय %1, %2
     %endif
 %endmacro
 
@@ -1891,7 +1891,7 @@ FMA_INSTR pmadcswd, pmaddwd, paddd
 ; FMA3 is only possible if dst is the same as one of the src registers.
 ; Either src2 or src3 can be a memory operand.
 %macro FMA4_INSTR 2-*
-    %push fma4_instr
+    %निक्षिप fma4_instr
     %xdefine %$prefix %1
     %rep %0 - 1
         %macro %$prefix%2 4-6 %$prefix, %2
@@ -1916,7 +1916,7 @@ FMA_INSTR pmadcswd, pmaddwd, paddd
         %endmacro
         %rotate 1
     %endrep
-    %pop
+    %उद्धर
 %endmacro
 
 FMA4_INSTR fmadd,    pd, ps, sd, ss

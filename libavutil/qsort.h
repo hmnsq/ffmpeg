@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_QSORT_H
-#define AVUTIL_QSORT_H
+#यदि_अपरिभाषितम् AVUTIL_QSORT_H
+#परिभाषय AVUTIL_QSORT_H
 
-#include "macros.h"
+#अन्तर्भाव "macros.h"
 
 
 /**
@@ -30,69 +30,69 @@
  * to construct input that requires O(n^2) time but this is very unlikely to
  * happen with non constructed input.
  */
-#define AV_QSORT(p, num, type, cmp) do {\
-    void *stack[64][2];\
-    int sp= 1;\
-    stack[0][0] = p;\
-    stack[0][1] = (p)+(num)-1;\
-    while(sp){\
-        type *start= stack[--sp][0];\
-        type *end  = stack[  sp][1];\
-        while(start < end){\
-            if(start < end-1) {\
-                int checksort=0;\
-                type *right = end-2;\
-                type *left  = start+1;\
-                type *mid = start + ((end-start)>>1);\
-                if(cmp(start, end) > 0) {\
-                    if(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else                    FFSWAP(type, *start, *end);\
-                }else{\
-                    if(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else checksort= 1;\
+#परिभाषय AV_QSORT(p, अङ्कः, type, cmp) कुरु {\
+    शून्य *राशिः[64][2];\
+    पूर्णाङ्क sp= 1;\
+    राशिः[0][0] = p;\
+    राशिः[0][1] = (p)+(अङ्कः)-1;\
+    यावत्(sp){\
+        type *start= राशिः[--sp][0];\
+        type *अन्तः_2  = राशिः[  sp][1];\
+        यावत्(start < अन्तः_2){\
+            यदि(start < अन्तः_2-1) {\
+                पूर्णाङ्क checksort=0;\
+                type *दक्षिणः = अन्तः_2-2;\
+                type *वामः  = start+1;\
+                type *mid = start + ((अन्तः_2-start)>>1);\
+                यदि(cmp(start, अन्तः_2) > 0) {\
+                    यदि(cmp(  अन्तः_2, mid) > 0) FFSWAP(type, *start, *mid);\
+                    अन्यथा                    FFSWAP(type, *start, *अन्तः_2);\
+                }अन्यथा{\
+                    यदि(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
+                    अन्यथा checksort= 1;\
                 }\
-                if(cmp(mid, end) > 0){ \
-                    FFSWAP(type, *mid, *end);\
+                यदि(cmp(mid, अन्तः_2) > 0){ \
+                    FFSWAP(type, *mid, *अन्तः_2);\
                     checksort=0;\
                 }\
-                if(start == end-2) break;\
-                FFSWAP(type, end[-1], *mid);\
-                while(left <= right){\
-                    while(left<=right && cmp(left, end-1) < 0)\
-                        left++;\
-                    while(left<=right && cmp(right, end-1) > 0)\
-                        right--;\
-                    if(left <= right){\
-                        FFSWAP(type, *left, *right);\
-                        left++;\
-                        right--;\
+                यदि(start == अन्तः_2-2) भङ्ग;\
+                FFSWAP(type, अन्तः_2[-1], *mid);\
+                यावत्(वामः <= दक्षिणः){\
+                    यावत्(वामः<=दक्षिणः && cmp(वामः, अन्तः_2-1) < 0)\
+                        वामः++;\
+                    यावत्(वामः<=दक्षिणः && cmp(दक्षिणः, अन्तः_2-1) > 0)\
+                        दक्षिणः--;\
+                    यदि(वामः <= दक्षिणः){\
+                        FFSWAP(type, *वामः, *दक्षिणः);\
+                        वामः++;\
+                        दक्षिणः--;\
                     }\
                 }\
-                FFSWAP(type, end[-1], *left);\
-                if(checksort && (mid == left-1 || mid == left)){\
+                FFSWAP(type, अन्तः_2[-1], *वामः);\
+                यदि(checksort && (mid == वामः-1 || mid == वामः)){\
                     mid= start;\
-                    while(mid<end && cmp(mid, mid+1) <= 0)\
+                    यावत्(mid<अन्तः_2 && cmp(mid, mid+1) <= 0)\
                         mid++;\
-                    if(mid==end)\
-                        break;\
+                    यदि(mid==अन्तः_2)\
+                        भङ्ग;\
                 }\
-                if(end-left < left-start){\
-                    stack[sp  ][0]= start;\
-                    stack[sp++][1]= right;\
-                    start = left+1;\
-                }else{\
-                    stack[sp  ][0]= left+1;\
-                    stack[sp++][1]= end;\
-                    end = right;\
+                यदि(अन्तः_2-वामः < वामः-start){\
+                    राशिः[sp  ][0]= start;\
+                    राशिः[sp++][1]= दक्षिणः;\
+                    start = वामः+1;\
+                }अन्यथा{\
+                    राशिः[sp  ][0]= वामः+1;\
+                    राशिः[sp++][1]= अन्तः_2;\
+                    अन्तः_2 = दक्षिणः;\
                 }\
-            }else{\
-                if(cmp(start, end) > 0)\
-                    FFSWAP(type, *start, *end);\
-                break;\
+            }अन्यथा{\
+                यदि(cmp(start, अन्तः_2) > 0)\
+                    FFSWAP(type, *start, *अन्तः_2);\
+                भङ्ग;\
             }\
         }\
     }\
-} while (0)
+} यावत् (0)
 
 /**
  * Merge sort, this sort requires a temporary buffer and is stable, its worst
@@ -100,23 +100,23 @@
  * @param p     must be a lvalue pointer, this function may exchange it with tmp
  * @param tmp   must be a lvalue pointer, this function may exchange it with p
  */
-#define AV_MSORT(p, tmp, num, type, cmp) do {\
-    unsigned i, j, step;\
-    for(step=1; step<(num); step+=step){\
-        for(i=0; i<(num); i+=2*step){\
-            unsigned a[2] = {i, i+step};\
-            unsigned end = FFMIN(i+2*step, (num));\
-            for(j=i; a[0]<i+step && a[1]<end; j++){\
-                int idx= cmp(p+a[0], p+a[1]) > 0;\
+#परिभाषय AV_MSORT(p, tmp, अङ्कः, type, cmp) कुरु {\
+    अचिह्नित i, j, चरणः;\
+    प्रति(चरणः=1; चरणः<(अङ्कः); चरणः+=चरणः){\
+        प्रति(i=0; i<(अङ्कः); i+=2*चरणः){\
+            अचिह्नित a[2] = {i, i+चरणः};\
+            अचिह्नित अन्तः_2 = FFMIN(i+2*चरणः, (अङ्कः));\
+            प्रति(j=i; a[0]<i+चरणः && a[1]<अन्तः_2; j++){\
+                पूर्णाङ्क idx= cmp(p+a[0], p+a[1]) > 0;\
                 tmp[j] = p[ a[idx]++ ];\
             }\
-            if(a[0]>=i+step) a[0] = a[1];\
-            for(; j<end; j++){\
+            यदि(a[0]>=i+चरणः) a[0] = a[1];\
+            प्रति(; j<अन्तः_2; j++){\
                 tmp[j] = p[ a[0]++ ];\
             }\
         }\
         FFSWAP(type*, p, tmp);\
     }\
-} while (0)
+} यावत् (0)
 
-#endif /* AVUTIL_QSORT_H */
+#यदि_अन्तः /* AVUTIL_QSORT_H */

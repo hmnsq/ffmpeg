@@ -69,7 +69,7 @@ NOVFP   acc .req r2
 VFP     vdup.32         q15, d0[0]
 NOVFP   vdup.32         q15, r2
         bics            r12, len, #15
-        mov             acc, r0
+        चालय             acc, r0
         beq             3f
         vld1.32         {q0},     [r1,:128]!
         vld1.32         {q8},     [acc,:128]!
@@ -148,14 +148,14 @@ NOVFP   vdup.32         q8,  r2
 endfunc
 
 function ff_vector_fmul_window_neon, export=1
-        push            {r4,r5,lr}
+        निक्षिप            {r4,r5,lr}
         ldr             lr,  [sp, #12]
-        sub             r2,  r2,  #8
-        sub             r5,  lr,  #2
-        add             r2,  r2,  r5, lsl #2
-        add             r4,  r3,  r5, lsl #3
-        add             ip,  r0,  r5, lsl #3
-        mov             r5,  #-16
+        वियोजय             r2,  r2,  #8
+        वियोजय             r5,  lr,  #2
+        योजय             r2,  r2,  r5, lsl #2
+        योजय             r4,  r3,  r5, lsl #3
+        योजय             ip,  r0,  r5, lsl #3
+        चालय             r5,  #-16
         vld1.32         {d0,d1},  [r1,:128]!
         vld1.32         {d2,d3},  [r2,:128], r5
         vld1.32         {d4,d5},  [r3,:128]!
@@ -191,7 +191,7 @@ function ff_vector_fmul_window_neon, export=1
         vswp            d22, d23
         vst1.32         {d20,d21},[r0,:128]!
         vst1.32         {d22,d23},[ip,:128], r5
-        pop             {r4,r5,pc}
+        उद्धर             {r4,r5,pc}
 endfunc
 
 function ff_vector_fmul_add_neon, export=1
@@ -222,9 +222,9 @@ function ff_vector_fmul_add_neon, export=1
 endfunc
 
 function ff_vector_fmul_reverse_neon, export=1
-        add             r2,  r2,  r3,  lsl #2
-        sub             r2,  r2,  #32
-        mov             r12, #-32
+        योजय             r2,  r2,  r3,  lsl #2
+        वियोजय             r2,  r2,  #32
+        चालय             r12, #-32
         vld1.32         {q0-q1},  [r1,:128]!
         vld1.32         {q2-q3},  [r2,:128], r12
 1:      pld             [r1, #32]

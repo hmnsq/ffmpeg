@@ -19,445 +19,445 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <stdarg.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <string.h>
 
-#include "config.h"
-#include "mem.h"
-#include "avassert.h"
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव "avstring.h"
+#अन्तर्भाव "bprint.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "macros.h"
 
-int av_strstart(const char *str, const char *pfx, const char **ptr)
+पूर्णाङ्क av_strstart(ध्रुव वर्ण *str, ध्रुव वर्ण *pfx, ध्रुव वर्ण **ptr)
 {
-    while (*pfx && *pfx == *str) {
+    यावत् (*pfx && *pfx == *str) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    यदि (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    प्रत्यागम !*pfx;
 }
 
-int av_stristart(const char *str, const char *pfx, const char **ptr)
+पूर्णाङ्क av_stristart(ध्रुव वर्ण *str, ध्रुव वर्ण *pfx, ध्रुव वर्ण **ptr)
 {
-    while (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
+    यावत् (*pfx && av_toupper((अचिह्नित)*pfx) == av_toupper((अचिह्नित)*str)) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    यदि (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    प्रत्यागम !*pfx;
 }
 
-char *av_stristr(const char *s1, const char *s2)
+वर्ण *av_stristr(ध्रुव वर्ण *s1, ध्रुव वर्ण *s2)
 {
-    if (!*s2)
-        return (char*)(intptr_t)s1;
+    यदि (!*s2)
+        प्रत्यागम (वर्ण*)(intptr_t)s1;
 
-    do
-        if (av_stristart(s1, s2, NULL))
-            return (char*)(intptr_t)s1;
-    while (*s1++);
+    कुरु
+        यदि (av_stristart(s1, s2, रिक्त))
+            प्रत्यागम (वर्ण*)(intptr_t)s1;
+    यावत् (*s1++);
 
-    return NULL;
+    प्रत्यागम रिक्त;
 }
 
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length)
+वर्ण *av_strnstr(ध्रुव वर्ण *haystack, ध्रुव वर्ण *needle, size_t hay_दीर्घता)
 {
-    size_t needle_len = strlen(needle);
-    if (!needle_len)
-        return (char*)haystack;
-    while (hay_length >= needle_len) {
-        hay_length--;
-        if (!memcmp(haystack, needle, needle_len))
-            return (char*)haystack;
+    size_t needle_len = वाक्यदैर्घ्यम्(needle);
+    यदि (!needle_len)
+        प्रत्यागम (वर्ण*)haystack;
+    यावत् (hay_दीर्घता >= needle_len) {
+        hay_दीर्घता--;
+        यदि (!memcmp(haystack, needle, needle_len))
+            प्रत्यागम (वर्ण*)haystack;
         haystack++;
     }
-    return NULL;
+    प्रत्यागम रिक्त;
 }
 
-size_t av_strlcpy(char *dst, const char *src, size_t size)
+size_t av_strlcpy(वर्ण *dst, ध्रुव वर्ण *src, size_t आकार)
 {
     size_t len = 0;
-    while (++len < size && *src)
+    यावत् (++len < आकार && *src)
         *dst++ = *src++;
-    if (len <= size)
+    यदि (len <= आकार)
         *dst = 0;
-    return len + strlen(src) - 1;
+    प्रत्यागम len + वाक्यदैर्घ्यम्(src) - 1;
 }
 
-size_t av_strlcat(char *dst, const char *src, size_t size)
+size_t av_strlcat(वर्ण *dst, ध्रुव वर्ण *src, size_t आकार)
 {
-    size_t len = strlen(dst);
-    if (size <= len + 1)
-        return len + strlen(src);
-    return len + av_strlcpy(dst + len, src, size - len);
+    size_t len = वाक्यदैर्घ्यम्(dst);
+    यदि (आकार <= len + 1)
+        प्रत्यागम len + वाक्यदैर्घ्यम्(src);
+    प्रत्यागम len + av_strlcpy(dst + len, src, आकार - len);
 }
 
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
+size_t av_strlcatf(वर्ण *dst, size_t आकार, ध्रुव वर्ण *fmt, ...)
 {
-    size_t len = strlen(dst);
+    size_t len = वाक्यदैर्घ्यम्(dst);
     va_list vl;
 
     va_start(vl, fmt);
-    len += vsnprintf(dst + len, size > len ? size - len : 0, fmt, vl);
+    len += vsnprintf(dst + len, आकार > len ? आकार - len : 0, fmt, vl);
     va_end(vl);
 
-    return len;
+    प्रत्यागम len;
 }
 
-char *av_asprintf(const char *fmt, ...)
+वर्ण *av_asprintf(ध्रुव वर्ण *fmt, ...)
 {
-    char *p = NULL;
+    वर्ण *p = रिक्त;
     va_list va;
-    int len;
+    पूर्णाङ्क len;
 
     va_start(va, fmt);
-    len = vsnprintf(NULL, 0, fmt, va);
+    len = vsnprintf(रिक्त, 0, fmt, va);
     va_end(va);
-    if (len < 0)
-        goto end;
+    यदि (len < 0)
+        गच्छ अन्तः_2;
 
     p = av_malloc(len + 1);
-    if (!p)
-        goto end;
+    यदि (!p)
+        गच्छ अन्तः_2;
 
     va_start(va, fmt);
     len = vsnprintf(p, len + 1, fmt, va);
     va_end(va);
-    if (len < 0)
+    यदि (len < 0)
         av_freep(&p);
 
-end:
-    return p;
+अन्तः_2:
+    प्रत्यागम p;
 }
 
-#define WHITESPACES " \n\t\r"
+#परिभाषय WHITESPACES " \n\t\r"
 
-char *av_get_token(const char **buf, const char *term)
+वर्ण *av_get_token(ध्रुव वर्ण **buf, ध्रुव वर्ण *पदांशः)
 {
-    char *out     = av_realloc(NULL, strlen(*buf) + 1);
-    char *ret     = out, *end = out;
-    const char *p = *buf;
-    if (!out)
-        return NULL;
+    वर्ण *बहिर्गमनम्     = av_realloc(रिक्त, वाक्यदैर्घ्यम्(*buf) + 1);
+    वर्ण *ret     = बहिर्गमनम्, *अन्तः_2 = बहिर्गमनम्;
+    ध्रुव वर्ण *p = *buf;
+    यदि (!बहिर्गमनम्)
+        प्रत्यागम रिक्त;
     p += strspn(p, WHITESPACES);
 
-    while (*p && !strspn(p, term)) {
-        char c = *p++;
-        if (c == '\\' && *p) {
-            *out++ = *p++;
-            end    = out;
-        } else if (c == '\'') {
-            while (*p && *p != '\'')
-                *out++ = *p++;
-            if (*p) {
+    यावत् (*p && !strspn(p, पदांशः)) {
+        वर्ण c = *p++;
+        यदि (c == '\\' && *p) {
+            *बहिर्गमनम्++ = *p++;
+            अन्तः_2    = बहिर्गमनम्;
+        } अन्यथा यदि (c == '\'') {
+            यावत् (*p && *p != '\'')
+                *बहिर्गमनम्++ = *p++;
+            यदि (*p) {
                 p++;
-                end = out;
+                अन्तः_2 = बहिर्गमनम्;
             }
-        } else {
-            *out++ = c;
+        } अन्यथा {
+            *बहिर्गमनम्++ = c;
         }
     }
 
-    do
-        *out-- = 0;
-    while (out >= end && strspn(out, WHITESPACES));
+    कुरु
+        *बहिर्गमनम्-- = 0;
+    यावत् (बहिर्गमनम् >= अन्तः_2 && strspn(बहिर्गमनम्, WHITESPACES));
 
     *buf = p;
 
-    char *small_ret = av_realloc(ret, out - ret + 2);
-    return small_ret ? small_ret : ret;
+    वर्ण *small_ret = av_realloc(ret, बहिर्गमनम् - ret + 2);
+    प्रत्यागम small_ret ? small_ret : ret;
 }
 
-char *av_strtok(char *s, const char *delim, char **saveptr)
+वर्ण *av_strtok(वर्ण *s, ध्रुव वर्ण *delim, वर्ण **saveptr)
 {
-    char *tok;
+    वर्ण *tok;
 
-    if (!s && !(s = *saveptr))
-        return NULL;
+    यदि (!s && !(s = *saveptr))
+        प्रत्यागम रिक्त;
 
     /* skip leading delimiters */
     s += strspn(s, delim);
 
     /* s now points to the first non delimiter char, or to the end of the string */
-    if (!*s) {
-        *saveptr = NULL;
-        return NULL;
+    यदि (!*s) {
+        *saveptr = रिक्त;
+        प्रत्यागम रिक्त;
     }
     tok = s++;
 
     /* skip non delimiters */
     s += strcspn(s, delim);
-    if (*s) {
+    यदि (*s) {
         *s = 0;
         *saveptr = s+1;
-    } else {
-        *saveptr = NULL;
+    } अन्यथा {
+        *saveptr = रिक्त;
     }
 
-    return tok;
+    प्रत्यागम tok;
 }
 
-int av_strcasecmp(const char *a, const char *b)
+पूर्णाङ्क av_strcasecmp(ध्रुव वर्ण *a, ध्रुव वर्ण *b)
 {
     uint8_t c1, c2;
-    do {
+    कुरु {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (c1 && c1 == c2);
-    return c1 - c2;
+    } यावत् (c1 && c1 == c2);
+    प्रत्यागम c1 - c2;
 }
 
-int av_strncasecmp(const char *a, const char *b, size_t n)
+पूर्णाङ्क av_strncasecmp(ध्रुव वर्ण *a, ध्रुव वर्ण *b, size_t n)
 {
     uint8_t c1, c2;
-    if (n <= 0)
-        return 0;
-    do {
+    यदि (n <= 0)
+        प्रत्यागम 0;
+    कुरु {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (--n && c1 && c1 == c2);
-    return c1 - c2;
+    } यावत् (--n && c1 && c1 == c2);
+    प्रत्यागम c1 - c2;
 }
 
-char *av_strireplace(const char *str, const char *from, const char *to)
+वर्ण *av_strireplace(ध्रुव वर्ण *str, ध्रुव वर्ण *from, ध्रुव वर्ण *गन्तव्यम्)
 {
-    char *ret = NULL;
-    const char *pstr2, *pstr = str;
-    size_t tolen = strlen(to), fromlen = strlen(from);
+    वर्ण *ret = रिक्त;
+    ध्रुव वर्ण *pstr2, *pstr = str;
+    size_t tolen = वाक्यदैर्घ्यम्(गन्तव्यम्), fromlen = वाक्यदैर्घ्यम्(from);
     AVBPrint pbuf;
 
-    if (!fromlen)
-        return av_strdup(str);
+    यदि (!fromlen)
+        प्रत्यागम av_strdup(str);
 
-    av_bprint_init(&pbuf, 1, AV_BPRINT_SIZE_UNLIMITED);
-    while ((pstr2 = av_stristr(pstr, from))) {
-        av_bprint_append_data(&pbuf, pstr, pstr2 - pstr);
+    av_bprint_init(&pbuf, 1, AV_BPRINT_आकार_UNLIMITED);
+    यावत् ((pstr2 = av_stristr(pstr, from))) {
+        av_bprint_append_दत्त(&pbuf, pstr, pstr2 - pstr);
         pstr = pstr2 + fromlen;
-        av_bprint_append_data(&pbuf, to, tolen);
+        av_bprint_append_दत्त(&pbuf, गन्तव्यम्, tolen);
     }
-    av_bprint_append_data(&pbuf, pstr, strlen(pstr));
-    if (!av_bprint_is_complete(&pbuf)) {
-        av_bprint_finalize(&pbuf, NULL);
-    } else {
+    av_bprint_append_दत्त(&pbuf, pstr, वाक्यदैर्घ्यम्(pstr));
+    यदि (!av_bprint_is_complete(&pbuf)) {
+        av_bprint_finalize(&pbuf, रिक्त);
+    } अन्यथा {
         av_bprint_finalize(&pbuf, &ret);
     }
 
-    return ret;
+    प्रत्यागम ret;
 }
 
-const char *av_basename(const char *path)
+ध्रुव वर्ण *av_basename(ध्रुव वर्ण *मार्गः)
 {
-    if (!path || *path == '\0')
-        return ".";
+    यदि (!मार्गः || *मार्गः == '\0')
+        प्रत्यागम ".";
 
-    const char *p = strrchr(path, '/');
-#if HAVE_DOS_PATHS
-    const char *q = strrchr(path, '\\');
-    const char *d = strchr(path, ':');
+    ध्रुव वर्ण *p = strrchr(मार्गः, '/');
+#यदि HAVE_DOS_PATHS
+    ध्रुव वर्ण *q = strrchr(मार्गः, '\\');
+    ध्रुव वर्ण *d = strchr(मार्गः, ':');
     p = FFMAX3(p, q, d);
-#endif
+#यदि_अन्तः
 
-    if (!p)
-        return path;
+    यदि (!p)
+        प्रत्यागम मार्गः;
 
-    return p + 1;
+    प्रत्यागम p + 1;
 }
 
-const char *av_dirname(char *path)
+ध्रुव वर्ण *av_dirname(वर्ण *मार्गः)
 {
-    char *p = path ? strrchr(path, '/') : NULL;
+    वर्ण *p = मार्गः ? strrchr(मार्गः, '/') : रिक्त;
 
-#if HAVE_DOS_PATHS
-    char *q = path ? strrchr(path, '\\') : NULL;
-    char *d = path ? strchr(path, ':')  : NULL;
+#यदि HAVE_DOS_PATHS
+    वर्ण *q = मार्गः ? strrchr(मार्गः, '\\') : रिक्त;
+    वर्ण *d = मार्गः ? strchr(मार्गः, ':')  : रिक्त;
 
     d = d ? d + 1 : d;
 
     p = FFMAX3(p, q, d);
-#endif
+#यदि_अन्तः
 
-    if (!p)
-        return ".";
+    यदि (!p)
+        प्रत्यागम ".";
 
     *p = '\0';
 
-    return path;
+    प्रत्यागम मार्गः;
 }
 
-char *av_append_path_component(const char *path, const char *component)
+वर्ण *av_append_मार्गः_component(ध्रुव वर्ण *मार्गः, ध्रुव वर्ण *component)
 {
     size_t p_len, c_len;
-    char *fullpath;
+    वर्ण *fullpath;
 
-    if (!path)
-        return av_strdup(component);
-    if (!component)
-        return av_strdup(path);
+    यदि (!मार्गः)
+        प्रत्यागम av_strdup(component);
+    यदि (!component)
+        प्रत्यागम av_strdup(मार्गः);
 
-    p_len = strlen(path);
-    c_len = strlen(component);
-    if (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
-        return NULL;
+    p_len = वाक्यदैर्घ्यम्(मार्गः);
+    c_len = वाक्यदैर्घ्यम्(component);
+    यदि (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
+        प्रत्यागम रिक्त;
     fullpath = av_malloc(p_len + c_len + 2);
-    if (fullpath) {
-        if (p_len) {
-            av_strlcpy(fullpath, path, p_len + 1);
-            if (c_len) {
-                if (fullpath[p_len - 1] != '/' && component[0] != '/')
+    यदि (fullpath) {
+        यदि (p_len) {
+            av_strlcpy(fullpath, मार्गः, p_len + 1);
+            यदि (c_len) {
+                यदि (fullpath[p_len - 1] != '/' && component[0] != '/')
                     fullpath[p_len++] = '/';
-                else if (fullpath[p_len - 1] == '/' && component[0] == '/')
+                अन्यथा यदि (fullpath[p_len - 1] == '/' && component[0] == '/')
                     p_len--;
             }
         }
         av_strlcpy(&fullpath[p_len], component, c_len + 1);
         fullpath[p_len + c_len] = 0;
     }
-    return fullpath;
+    प्रत्यागम fullpath;
 }
 
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags)
+पूर्णाङ्क av_escape(वर्ण **dst, ध्रुव वर्ण *src, ध्रुव वर्ण *special_chars,
+              गणना AVEscape_बहुलकम् बहुलकम्, पूर्णाङ्क flags)
 {
     AVBPrint dstbuf;
-    int ret;
+    पूर्णाङ्क ret;
 
-    av_bprint_init(&dstbuf, 1, INT_MAX); /* (int)dstbuf.len must be >= 0 */
-    av_bprint_escape(&dstbuf, src, special_chars, mode, flags);
+    av_bprint_init(&dstbuf, 1, अधिकतम_पूर्णाङ्कः); /* (int)dstbuf.len must be >= 0 */
+    av_bprint_escape(&dstbuf, src, special_chars, बहुलकम्, flags);
 
-    if (!av_bprint_is_complete(&dstbuf)) {
-        av_bprint_finalize(&dstbuf, NULL);
-        return AVERROR(ENOMEM);
+    यदि (!av_bprint_is_complete(&dstbuf)) {
+        av_bprint_finalize(&dstbuf, रिक्त);
+        प्रत्यागम AVERROR(ENOMEM);
     }
-    if ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
-        return ret;
-    return dstbuf.len;
+    यदि ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
+        प्रत्यागम ret;
+    प्रत्यागम dstbuf.len;
 }
 
-int av_match_name(const char *name, const char *names)
+पूर्णाङ्क av_मेलनम्_name(ध्रुव वर्ण *name, ध्रुव वर्ण *नामानि)
 {
-    const char *p;
+    ध्रुव वर्ण *p;
     size_t len, namelen;
 
-    if (!name || !names)
-        return 0;
+    यदि (!name || !नामानि)
+        प्रत्यागम 0;
 
-    namelen = strlen(name);
-    while (*names) {
-        int negate = '-' == *names;
-        p = strchr(names, ',');
-        if (!p)
-            p = names + strlen(names);
-        names += negate;
-        len = FFMAX(p - names, namelen);
-        if (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
-            return !negate;
-        names = p + (*p == ',');
+    namelen = वाक्यदैर्घ्यम्(name);
+    यावत् (*नामानि) {
+        पूर्णाङ्क negate = '-' == *नामानि;
+        p = strchr(नामानि, ',');
+        यदि (!p)
+            p = नामानि + वाक्यदैर्घ्यम्(नामानि);
+        नामानि += negate;
+        len = FFMAX(p - नामानि, namelen);
+        यदि (!av_strncasecmp(name, नामानि, len) || !वाक्ये_तुलय("ALL", नामानि, FFMAX(3, p - नामानि)))
+            प्रत्यागम !negate;
+        नामानि = p + (*p == ',');
     }
-    return 0;
+    प्रत्यागम 0;
 }
 
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags)
+पूर्णाङ्क av_utf8_decode(int32_t *codep, ध्रुव uint8_t **bufp, ध्रुव uint8_t *buf_अन्तः,
+                   अचिह्नित पूर्णाङ्क flags)
 {
-    const uint8_t *p = *bufp;
-    uint32_t top;
-    uint64_t code;
-    int ret = 0, tail_len;
+    ध्रुव uint8_t *p = *bufp;
+    uint32_t शिखरम्;
+    uint64_t संहिता;
+    पूर्णाङ्क ret = 0, पुच्छ_len;
     uint32_t overlong_encoding_mins[6] = {
         0x00000000, 0x00000080, 0x00000800, 0x00010000, 0x00200000, 0x04000000,
     };
 
-    if (p >= buf_end)
-        return 0;
+    यदि (p >= buf_अन्तः)
+        प्रत्यागम 0;
 
-    code = *p++;
+    संहिता = *p++;
 
     /* first sequence byte starts with 10, or is 1111-1110 or 1111-1111,
        which is not admitted */
-    if ((code & 0xc0) == 0x80 || code >= 0xFE) {
+    यदि ((संहिता & 0xc0) == 0x80 || संहिता >= 0xFE) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        गच्छ अन्तः_2;
     }
-    top = (code & 128) >> 1;
+    शिखरम् = (संहिता & 128) >> 1;
 
-    tail_len = 0;
-    while (code & top) {
-        int tmp;
-        tail_len++;
-        if (p >= buf_end) {
+    पुच्छ_len = 0;
+    यावत् (संहिता & शिखरम्) {
+        पूर्णाङ्क tmp;
+        पुच्छ_len++;
+        यदि (p >= buf_अन्तः) {
             (*bufp) ++;
-            return AVERROR(EILSEQ); /* incomplete sequence */
+            प्रत्यागम AVERROR(EILSEQ); /* incomplete sequence */
         }
 
         /* we assume the byte to be in the form 10xx-xxxx */
         tmp = *p++ - 128;   /* strip leading 1 */
-        if (tmp>>6) {
+        यदि (tmp>>6) {
             (*bufp) ++;
-            return AVERROR(EILSEQ);
+            प्रत्यागम AVERROR(EILSEQ);
         }
-        code = (code<<6) + tmp;
-        top <<= 5;
+        संहिता = (संहिता<<6) + tmp;
+        शिखरम् <<= 5;
     }
-    code &= (top << 1) - 1;
+    संहिता &= (शिखरम् << 1) - 1;
 
     /* check for overlong encodings */
-    av_assert0(tail_len <= 5);
-    if (code < overlong_encoding_mins[tail_len]) {
+    av_assert0(पुच्छ_len <= 5);
+    यदि (संहिता < overlong_encoding_mins[पुच्छ_len]) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        गच्छ अन्तः_2;
     }
 
-    if (code >= 1U<<31) {
+    यदि (संहिता >= 1U<<31) {
         ret = AVERROR(EILSEQ);  /* out-of-range value */
-        goto end;
+        गच्छ अन्तः_2;
     }
 
-    *codep = code;
+    *codep = संहिता;
 
-    if (code > 0x10FFFF &&
+    यदि (संहिता > 0x10FFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES))
         ret = AVERROR(EILSEQ);
-    if (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
+    यदि (संहिता < 0x20 && संहिता != 0x9 && संहिता != 0xA && संहिता != 0xD &&
         flags & AV_UTF8_FLAG_EXCLUDE_XML_INVALID_CONTROL_CODES)
         ret = AVERROR(EILSEQ);
-    if (code >= 0xD800 && code <= 0xDFFF &&
+    यदि (संहिता >= 0xD800 && संहिता <= 0xDFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_SURROGATES))
         ret = AVERROR(EILSEQ);
-    if ((code == 0xFFFE || code == 0xFFFF) &&
+    यदि ((संहिता == 0xFFFE || संहिता == 0xFFFF) &&
         !(flags & AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS))
         ret = AVERROR(EILSEQ);
 
-end:
+अन्तः_2:
     *bufp = p;
-    return ret;
+    प्रत्यागम ret;
 }
 
-int av_match_list(const char *name, const char *list, char separator)
+पूर्णाङ्क av_मेलनम्_list(ध्रुव वर्ण *name, ध्रुव वर्ण *list, वर्ण separator)
 {
-    const char *p, *q;
+    ध्रुव वर्ण *p, *q;
 
-    for (p = name; p && *p; ) {
-        for (q = list; q && *q; ) {
-            int k;
-            for (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
-                if (k && (!p[k] || p[k] == separator))
-                    return 1;
+    प्रति (p = name; p && *p; ) {
+        प्रति (q = list; q && *q; ) {
+            पूर्णाङ्क k;
+            प्रति (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
+                यदि (k && (!p[k] || p[k] == separator))
+                    प्रत्यागम 1;
             q = strchr(q, separator);
-            if(q)
+            यदि(q)
                 q++;
         }
         p = strchr(p, separator);
-        if (p)
+        यदि (p)
             p++;
     }
 
-    return 0;
+    प्रत्यागम 0;
 }

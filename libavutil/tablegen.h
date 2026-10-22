@@ -21,35 +21,35 @@
  * Compatibility libm for table generation files
  */
 
-#ifndef AVUTIL_TABLEGEN_H
-#define AVUTIL_TABLEGEN_H
+#यदि_अपरिभाषितम् AVUTIL_TABLEGEN_H
+#परिभाषय AVUTIL_TABLEGEN_H
 
-#include <math.h>
+#अन्तर्भाव <math.h>
 
 // we lack some functions on all host platforms, and we don't care about
 // performance and/or strict ISO C semantics as it's performed at build time
-static inline double ff_cbrt(double x)
+स्थिर अन्तःस्थ द्विगुण ff_cbrt(द्विगुण x)
 {
-    return x < 0 ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
+    प्रत्यागम x < 0 ? -घातः(-x, 1.0 / 3.0) : घातः(x, 1.0 / 3.0);
 }
-#define cbrt ff_cbrt
+#परिभाषय cbrt ff_cbrt
 
-static inline double ff_rint(double x)
+स्थिर अन्तःस्थ द्विगुण ff_rint(द्विगुण x)
 {
-    return x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
+    प्रत्यागम x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
 }
-#define rint ff_rint
+#परिभाषय rint ff_rint
 
-static inline long long ff_llrint(double x)
+स्थिर अन्तःस्थ दीर्घ दीर्घ ff_llrint(द्विगुण x)
 {
-    return rint(x);
+    प्रत्यागम rint(x);
 }
-#define llrint ff_llrint
+#परिभाषय llrint ff_llrint
 
-static inline long ff_lrint(double x)
+स्थिर अन्तःस्थ दीर्घ ff_lrint(द्विगुण x)
 {
-    return rint(x);
+    प्रत्यागम rint(x);
 }
-#define lrint ff_lrint
+#परिभाषय lrint ff_lrint
 
-#endif /* AVUTIL_TABLEGEN_H */
+#यदि_अन्तः /* AVUTIL_TABLEGEN_H */

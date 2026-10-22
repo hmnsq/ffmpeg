@@ -27,5 +27,5 @@ function ff_aarch64_sme_length, export=1
         smstart
         cntb            x0
         smstop
-        ret
+        प्रत्यागच्छ
 endfunc

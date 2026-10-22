@@ -16,58 +16,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "detection_bbox.h"
-#include "mem.h"
+#अन्तर्भाव "detection_bbox.h"
+#अन्तर्भाव "mem.h"
 
-AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size)
+AVDetection_BBox_शीर्षकम् *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *बहिर्गमनम्_आकार)
 {
-    size_t size;
-    struct BBoxContext {
-        AVDetectionBBoxHeader header;
+    size_t आकार;
+    संरचना BBoxContext {
+        AVDetection_BBox_शीर्षकम् शीर्षकम्;
         AVDetectionBBox boxes;
     };
-    const size_t bboxes_offset = offsetof(struct BBoxContext, boxes);
-    const size_t bbox_size = sizeof(AVDetectionBBox);
-    AVDetectionBBoxHeader *header;
+    ध्रुव size_t bboxes_विस्थापनम् = offsetof(संरचना BBoxContext, boxes);
+    ध्रुव size_t bbox_आकार = परिमाण(AVDetectionBBox);
+    AVDetection_BBox_शीर्षकम् *शीर्षकम्;
 
-    size = bboxes_offset;
-    if (nb_bboxes > (SIZE_MAX - size) / bbox_size)
-        return NULL;
-    size += bbox_size * nb_bboxes;
+    आकार = bboxes_विस्थापनम्;
+    यदि (nb_bboxes > (SIZE_MAX - आकार) / bbox_आकार)
+        प्रत्यागम रिक्त;
+    आकार += bbox_आकार * nb_bboxes;
 
-    header = av_mallocz(size);
-    if (!header)
-        return NULL;
+    शीर्षकम् = av_mallocz(आकार);
+    यदि (!शीर्षकम्)
+        प्रत्यागम रिक्त;
 
-    header->nb_bboxes     = nb_bboxes;
-    header->bbox_size     = bbox_size;
-    header->bboxes_offset = bboxes_offset;
+    शीर्षकम्->nb_bboxes     = nb_bboxes;
+    शीर्षकम्->bbox_आकार     = bbox_आकार;
+    शीर्षकम्->bboxes_विस्थापनम् = bboxes_विस्थापनम्;
 
-    if (out_size)
-        *out_size = size;
+    यदि (बहिर्गमनम्_आकार)
+        *बहिर्गमनम्_आकार = आकार;
 
-    return header;
+    प्रत्यागम शीर्षकम्;
 }
 
-AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes)
+AVDetection_BBox_शीर्षकम् *av_detection_bbox_create_side_दत्त(AVFrame *frame, uint32_t nb_bboxes)
 {
     AVBufferRef         *buf;
-    AVDetectionBBoxHeader *header;
-    size_t size;
+    AVDetection_BBox_शीर्षकम् *शीर्षकम्;
+    size_t आकार;
 
-    header = av_detection_bbox_alloc(nb_bboxes, &size);
-    if (!header)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)header, size, NULL, NULL, 0);
-    if (!buf) {
-        av_freep(&header);
-        return NULL;
+    शीर्षकम् = av_detection_bbox_alloc(nb_bboxes, &आकार);
+    यदि (!शीर्षकम्)
+        प्रत्यागम रिक्त;
+    buf = av_बफर_create((uint8_t *)शीर्षकम्, आकार, रिक्त, रिक्त, 0);
+    यदि (!buf) {
+        av_freep(&शीर्षकम्);
+        प्रत्यागम रिक्त;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    यदि (!av_frame_new_side_दत्त_from_buf(frame, AV_FRAME_दत्त_DETECTION_BBOXES, buf)) {
+        av_बफर_unref(&buf);
+        प्रत्यागम रिक्त;
     }
 
-    return header;
+    प्रत्यागम शीर्षकम्;
 }

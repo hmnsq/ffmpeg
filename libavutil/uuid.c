@@ -60,83 +60,83 @@
  * @author Zane van Iperen <zane@zanevaniperen.com>
  */
 
-#include "attributes_internal.h"
-#include "uuid.h"
-#include "error.h"
-#include "avstring.h"
+#अन्तर्भाव "attributes_internal.h"
+#अन्तर्भाव "uuid.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+पूर्णाङ्क av_uuid_parse(ध्रुव वर्ण *अन्तर्, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    यदि (वाक्यदैर्घ्यम्(अन्तर्) != 36)
+        प्रत्यागम AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    प्रत्यागम av_uuid_parse_range(अन्तर्, अन्तर् + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+स्थिर पूर्णाङ्क xdigit_गन्तव्यम्_int(वर्ण c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    यदि (c >= 'a' && c <= 'f')
+        प्रत्यागम c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    यदि (c >= '0' && c <= '9')
+        प्रत्यागम c - '0';
 
-    return -1;
+    प्रत्यागम -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+पूर्णाङ्क av_uuid_parse_range(ध्रुव वर्ण *अन्तर्_start, ध्रुव वर्ण *अन्तर्_अन्तः, AVUUID uu)
 {
-    int i;
-    const char *cp;
+    पूर्णाङ्क i;
+    ध्रुव वर्ण *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    यदि ((अन्तर्_अन्तः - अन्तर्_start) != 36)
+        प्रत्यागम AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    प्रति (i = 0, cp = अन्तर्_start; i < 16; i++) {
+        पूर्णाङ्क hi;
+        पूर्णाङ्क lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        यदि (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
-        hi = xdigit_to_int(*cp++);
-        lo = xdigit_to_int(*cp++);
+        hi = xdigit_गन्तव्यम्_int(*cp++);
+        lo = xdigit_गन्तव्यम्_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        यदि (hi == -1 || lo == -1)
+            प्रत्यागम AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
+स्थिर attribute_nonstring ध्रुव वर्ण hexdigits_अधस्तनम्[16] = "0123456789abcdef";
 
-void av_uuid_unparse(const AVUUID uuid, char *out)
+शून्य av_uuid_unparse(ध्रुव AVUUID uuid, वर्ण *बहिर्गमनम्)
 {
-    char *p = out;
+    वर्ण *p = बहिर्गमनम्;
 
-    for (int i = 0; i < 16; i++) {
+    प्रति (पूर्णाङ्क i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        यदि (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
-        *p++ = hexdigits_lower[tmp >> 4];
-        *p++ = hexdigits_lower[tmp & 15];
+        *p++ = hexdigits_अधस्तनम्[tmp >> 4];
+        *p++ = hexdigits_अधस्तनम्[tmp & 15];
     }
 
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+पूर्णाङ्क av_uuid_urn_parse(ध्रुव वर्ण *अन्तर्, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    यदि (av_stristr(अन्तर्, "urn:uuid:") != अन्तर्)
+        प्रत्यागम AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    प्रत्यागम av_uuid_parse(अन्तर् + 9, uu);
 }

@@ -19,41 +19,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "float_dsp_arm.h"
+#अन्तर्भाव "libavutil/attributes.h"
+#अन्तर्भाव "libavutil/float_dsp.h"
+#अन्तर्भाव "float_dsp_arm.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1, int len);
+शून्य ff_सदिशम्_fmul_neon(भिन्न *dst, ध्रुव भिन्न *src0, ध्रुव भिन्न *src1, पूर्णाङ्क len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+शून्य ff_सदिशम्_fmac_scalar_neon(भिन्न *dst, ध्रुव भिन्न *src, भिन्न mul,
+                                पूर्णाङ्क len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+शून्य ff_सदिशम्_fmul_scalar_neon(भिन्न *dst, ध्रुव भिन्न *src, भिन्न mul,
+                                पूर्णाङ्क len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+शून्य ff_सदिशम्_fmul_गवाक्षः_neon(भिन्न *dst, ध्रुव भिन्न *src0,
+                                ध्रुव भिन्न *src1, ध्रुव भिन्न *win, पूर्णाङ्क len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+शून्य ff_सदिशम्_fmul_सङ्कलय_neon(भिन्न *dst, ध्रुव भिन्न *src0, ध्रुव भिन्न *src1,
+                             ध्रुव भिन्न *src2, पूर्णाङ्क len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+शून्य ff_सदिशम्_fmul_reverse_neon(भिन्न *dst, ध्रुव भिन्न *src0,
+                                 ध्रुव भिन्न *src1, पूर्णाङ्क len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+शून्य ff_butterflies_float_neon(भिन्न *v1, भिन्न *v2, पूर्णाङ्क len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+भिन्न ff_scalarproduct_float_neon(ध्रुव भिन्न *v1, ध्रुव भिन्न *v2, पूर्णाङ्क len);
 
-av_cold void ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
+av_cold शून्य ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
 {
-    fdsp->vector_fmul = ff_vector_fmul_neon;
-    fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_neon;
-    fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_neon;
-    fdsp->vector_fmul_window = ff_vector_fmul_window_neon;
-    fdsp->vector_fmul_add    = ff_vector_fmul_add_neon;
-    fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_neon;
+    fdsp->सदिशम्_fmul = ff_सदिशम्_fmul_neon;
+    fdsp->सदिशम्_fmac_scalar = ff_सदिशम्_fmac_scalar_neon;
+    fdsp->सदिशम्_fmul_scalar = ff_सदिशम्_fmul_scalar_neon;
+    fdsp->सदिशम्_fmul_गवाक्षः = ff_सदिशम्_fmul_गवाक्षः_neon;
+    fdsp->सदिशम्_fmul_सङ्कलय    = ff_सदिशम्_fmul_सङ्कलय_neon;
+    fdsp->सदिशम्_fmul_reverse = ff_सदिशम्_fmul_reverse_neon;
     fdsp->butterflies_float = ff_butterflies_float_neon;
     fdsp->scalarproduct_float = ff_scalarproduct_float_neon;
 }

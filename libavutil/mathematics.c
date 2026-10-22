@@ -23,205 +23,205 @@
  * miscellaneous math routines and tables
  */
 
-#include <stdint.h>
-#include <limits.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <limits.h>
 
-#include "avutil.h"
-#include "mathematics.h"
-#include "libavutil/intmath.h"
-#include "libavutil/common.h"
-#include "avassert.h"
+#अन्तर्भाव "avutil.h"
+#अन्तर्भाव "mathematics.h"
+#अन्तर्भाव "libavutil/intmath.h"
+#अन्तर्भाव "libavutil/common.h"
+#अन्तर्भाव "avassert.h"
 
 /* Stein's binary GCD algorithm:
  * https://en.wikipedia.org/wiki/Binary_GCD_algorithm */
 int64_t av_gcd(int64_t a, int64_t b) {
-    int za, zb, k;
+    पूर्णाङ्क za, zb, k;
     int64_t u, v;
-    if (a == 0)
-        return b;
-    if (b == 0)
-        return a;
+    यदि (a == 0)
+        प्रत्यागम b;
+    यदि (b == 0)
+        प्रत्यागम a;
     za = ff_ctzll(a);
     zb = ff_ctzll(b);
     k  = FFMIN(za, zb);
     u = llabs(a >> za);
     v = llabs(b >> zb);
-    while (u != v) {
-        if (u > v)
+    यावत् (u != v) {
+        यदि (u > v)
             FFSWAP(int64_t, v, u);
         v -= u;
         v >>= ff_ctzll(v);
     }
-    return (uint64_t)u << k;
+    प्रत्यागम (uint64_t)u << k;
 }
 
-int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, enum AVRounding rnd)
+int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, गणना AVRounding rnd)
 {
     int64_t r = 0;
     av_assert2(c > 0);
     av_assert2(b >=0);
-    av_assert2((unsigned)(rnd&~AV_ROUND_PASS_MINMAX)<=5 && (rnd&~AV_ROUND_PASS_MINMAX)!=4);
+    av_assert2((अचिह्नित)(rnd&~AV_आवर्तनम्_PASS_MINMAX)<=5 && (rnd&~AV_आवर्तनम्_PASS_MINMAX)!=4);
 
-    if (c <= 0 || b < 0 || !((unsigned)(rnd&~AV_ROUND_PASS_MINMAX)<=5 && (rnd&~AV_ROUND_PASS_MINMAX)!=4))
-        return INT64_MIN;
+    यदि (c <= 0 || b < 0 || !((अचिह्नित)(rnd&~AV_आवर्तनम्_PASS_MINMAX)<=5 && (rnd&~AV_आवर्तनम्_PASS_MINMAX)!=4))
+        प्रत्यागम INT64_MIN;
 
-    if (rnd & AV_ROUND_PASS_MINMAX) {
-        if (a == INT64_MIN || a == INT64_MAX)
-            return a;
-        rnd -= AV_ROUND_PASS_MINMAX;
+    यदि (rnd & AV_आवर्तनम्_PASS_MINMAX) {
+        यदि (a == INT64_MIN || a == INT64_MAX)
+            प्रत्यागम a;
+        rnd -= AV_आवर्तनम्_PASS_MINMAX;
     }
 
-    if (a < 0)
-        return -(uint64_t)av_rescale_rnd(-FFMAX(a, -INT64_MAX), b, c, rnd ^ ((rnd >> 1) & 1));
+    यदि (a < 0)
+        प्रत्यागम -(uint64_t)av_rescale_rnd(-FFMAX(a, -INT64_MAX), b, c, rnd ^ ((rnd >> 1) & 1));
 
-    if (rnd == AV_ROUND_NEAR_INF)
+    यदि (rnd == AV_आवर्तनम्_NEAR_INF)
         r = c / 2;
-    else if (rnd & 1)
+    अन्यथा यदि (rnd & 1)
         r = c - 1;
 
-    if (b <= INT_MAX && c <= INT_MAX) {
-        if (a <= INT_MAX)
-            return (a * b + r) / c;
-        else {
+    यदि (b <= अधिकतम_पूर्णाङ्कः && c <= अधिकतम_पूर्णाङ्कः) {
+        यदि (a <= अधिकतम_पूर्णाङ्कः)
+            प्रत्यागम (a * b + r) / c;
+        अन्यथा {
             int64_t ad = a / c;
             int64_t a2 = (a % c * b + r) / c;
-            if (ad >= INT32_MAX && b && ad > (INT64_MAX - a2) / b)
-                return INT64_MIN;
-            return ad * b + a2;
+            यदि (ad >= INT32_MAX && b && ad > (INT64_MAX - a2) / b)
+                प्रत्यागम INT64_MIN;
+            प्रत्यागम ad * b + a2;
         }
-    } else {
-#if 1
+    } अन्यथा {
+#यदि 1
         uint64_t a0  = a & 0xFFFFFFFF;
         uint64_t a1  = a >> 32;
         uint64_t b0  = b & 0xFFFFFFFF;
         uint64_t b1  = b >> 32;
         uint64_t t1  = a0 * b1 + a1 * b0;
         uint64_t t1a = t1 << 32;
-        int i;
+        पूर्णाङ्क i;
 
         a0  = a0 * b0 + t1a;
         a1  = a1 * b1 + (t1 >> 32) + (a0 < t1a);
         a0 += r;
         a1 += a0 < r;
 
-        for (i = 63; i >= 0; i--) {
+        प्रति (i = 63; i >= 0; i--) {
             a1 += a1 + ((a0 >> i) & 1);
             t1 += t1;
-            if (c <= a1) {
+            यदि (c <= a1) {
                 a1 -= c;
                 t1++;
             }
         }
-        if (t1 > INT64_MAX)
-            return INT64_MIN;
-        return t1;
-#else
+        यदि (t1 > INT64_MAX)
+            प्रत्यागम INT64_MIN;
+        प्रत्यागम t1;
+#अन्यथा
         /* reference code doing (a*b + r) / c, requires libavutil/integer.h */
         AVInteger ai;
         ai = av_mul_i(av_int2i(a), av_int2i(b));
-        ai = av_add_i(ai, av_int2i(r));
+        ai = av_सङ्कलय_i(ai, av_int2i(r));
 
-        return av_i2int(av_div_i(ai, av_int2i(c)));
-#endif
+        प्रत्यागम av_i2int(av_div_i(ai, av_int2i(c)));
+#यदि_अन्तः
     }
 }
 
 int64_t av_rescale(int64_t a, int64_t b, int64_t c)
 {
-    return av_rescale_rnd(a, b, c, AV_ROUND_NEAR_INF);
+    प्रत्यागम av_rescale_rnd(a, b, c, AV_आवर्तनम्_NEAR_INF);
 }
 
 int64_t av_rescale_q_rnd(int64_t a, AVRational bq, AVRational cq,
-                         enum AVRounding rnd)
+                         गणना AVRounding rnd)
 {
-    int64_t b = bq.num * (int64_t)cq.den;
-    int64_t c = cq.num * (int64_t)bq.den;
-    return av_rescale_rnd(a, b, c, rnd);
+    int64_t b = bq.अङ्कः * (int64_t)cq.den;
+    int64_t c = cq.अङ्कः * (int64_t)bq.den;
+    प्रत्यागम av_rescale_rnd(a, b, c, rnd);
 }
 
 int64_t av_rescale_q(int64_t a, AVRational bq, AVRational cq)
 {
-    return av_rescale_q_rnd(a, bq, cq, AV_ROUND_NEAR_INF);
+    प्रत्यागम av_rescale_q_rnd(a, bq, cq, AV_आवर्तनम्_NEAR_INF);
 }
 
-int av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b)
+पूर्णाङ्क av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b)
 {
-    int64_t a = tb_a.num * (int64_t)tb_b.den;
-    int64_t b = tb_b.num * (int64_t)tb_a.den;
-    if ((FFABS64U(ts_a)|a|FFABS64U(ts_b)|b) <= INT_MAX)
-        return (ts_a*a > ts_b*b) - (ts_a*a < ts_b*b);
-    if (av_rescale_rnd(ts_a, a, b, AV_ROUND_DOWN) < ts_b)
-        return -1;
-    if (av_rescale_rnd(ts_b, b, a, AV_ROUND_DOWN) < ts_a)
-        return 1;
-    return 0;
+    int64_t a = tb_a.अङ्कः * (int64_t)tb_b.den;
+    int64_t b = tb_b.अङ्कः * (int64_t)tb_a.den;
+    यदि ((FFABS64U(ts_a)|a|FFABS64U(ts_b)|b) <= अधिकतम_पूर्णाङ्कः)
+        प्रत्यागम (ts_a*a > ts_b*b) - (ts_a*a < ts_b*b);
+    यदि (av_rescale_rnd(ts_a, a, b, AV_आवर्तनम्_अधस्तात्) < ts_b)
+        प्रत्यागम -1;
+    यदि (av_rescale_rnd(ts_b, b, a, AV_आवर्तनम्_अधस्तात्) < ts_a)
+        प्रत्यागम 1;
+    प्रत्यागम 0;
 }
 
 int64_t av_compare_mod(uint64_t a, uint64_t b, uint64_t mod)
 {
     int64_t c = (a - b) & (mod - 1);
-    if (c > (mod >> 1))
+    यदि (c > (mod >> 1))
         c -= mod;
-    return c;
+    प्रत्यागम c;
 }
 
-int64_t av_rescale_delta(AVRational in_tb, int64_t in_ts,  AVRational fs_tb, int duration, int64_t *last, AVRational out_tb){
+int64_t av_rescale_delta(AVRational अन्तर्_tb, int64_t अन्तर्_ts,  AVRational fs_tb, पूर्णाङ्क duration, int64_t *चरमः, AVRational बहिर्गमनम्_tb){
     int64_t a, b, this;
 
-    av_assert0(in_ts != AV_NOPTS_VALUE);
+    av_assert0(अन्तर्_ts != AV_NOPTS_मानम्);
     av_assert0(duration >= 0);
 
-    if (*last == AV_NOPTS_VALUE || !duration || in_tb.num*(int64_t)out_tb.den <= out_tb.num*(int64_t)in_tb.den) {
-simple_round:
-        *last = av_rescale_q(in_ts, in_tb, fs_tb) + duration;
-        return av_rescale_q(in_ts, in_tb, out_tb);
+    यदि (*चरमः == AV_NOPTS_मानम् || !duration || अन्तर्_tb.अङ्कः*(int64_t)बहिर्गमनम्_tb.den <= बहिर्गमनम्_tb.अङ्कः*(int64_t)अन्तर्_tb.den) {
+simple_आवर्तनम्:
+        *चरमः = av_rescale_q(अन्तर्_ts, अन्तर्_tb, fs_tb) + duration;
+        प्रत्यागम av_rescale_q(अन्तर्_ts, अन्तर्_tb, बहिर्गमनम्_tb);
     }
 
-    a =  av_rescale_q_rnd(2*in_ts-1, in_tb, fs_tb, AV_ROUND_DOWN)   >>1;
-    b = (av_rescale_q_rnd(2*in_ts+1, in_tb, fs_tb, AV_ROUND_UP  )+1)>>1;
-    if (*last < 2*a - b || *last > 2*b - a)
-        goto simple_round;
+    a =  av_rescale_q_rnd(2*अन्तर्_ts-1, अन्तर्_tb, fs_tb, AV_आवर्तनम्_अधस्तात्)   >>1;
+    b = (av_rescale_q_rnd(2*अन्तर्_ts+1, अन्तर्_tb, fs_tb, AV_आवर्तनम्_ऊर्ध्वम्  )+1)>>1;
+    यदि (*चरमः < 2*a - b || *चरमः > 2*b - a)
+        गच्छ simple_आवर्तनम्;
 
-    this = av_clip64(*last, a, b);
-    *last = this + duration;
+    this = av_clip64(*चरमः, a, b);
+    *चरमः = this + duration;
 
-    return av_rescale_q(this, fs_tb, out_tb);
+    प्रत्यागम av_rescale_q(this, fs_tb, बहिर्गमनम्_tb);
 }
 
-int64_t av_add_stable(AVRational ts_tb, int64_t ts, AVRational inc_tb, int64_t inc)
+int64_t av_सङ्कलय_stable(AVRational ts_tb, int64_t ts, AVRational inc_tb, int64_t inc)
 {
     int64_t m, d;
 
-    if (inc != 1)
+    यदि (inc != 1)
         inc_tb = av_mul_q(inc_tb, (AVRational) {inc, 1});
 
-    m = inc_tb.num * (int64_t)ts_tb.den;
-    d = inc_tb.den * (int64_t)ts_tb.num;
+    m = inc_tb.अङ्कः * (int64_t)ts_tb.den;
+    d = inc_tb.den * (int64_t)ts_tb.अङ्कः;
 
-    if (m % d == 0 && ts <= INT64_MAX - m / d)
-        return ts + m / d;
-    if (m < d)
-        return ts;
+    यदि (m % d == 0 && ts <= INT64_MAX - m / d)
+        प्रत्यागम ts + m / d;
+    यदि (m < d)
+        प्रत्यागम ts;
 
     {
         int64_t old = av_rescale_q(ts, ts_tb, inc_tb);
         int64_t old_ts = av_rescale_q(old, inc_tb, ts_tb);
 
-        if (old == INT64_MAX || old == AV_NOPTS_VALUE || old_ts == AV_NOPTS_VALUE)
-            return ts;
+        यदि (old == INT64_MAX || old == AV_NOPTS_मानम् || old_ts == AV_NOPTS_मानम्)
+            प्रत्यागम ts;
 
-        return av_sat_add64(av_rescale_q(old + 1, inc_tb, ts_tb), ts - old_ts);
+        प्रत्यागम av_sat_add64(av_rescale_q(old + 1, inc_tb, ts_tb), ts - old_ts);
     }
 }
 
-static inline double eval_poly(const double *coeff, int size, double x) {
-    double sum = coeff[size-1];
-    int i;
-    for (i = size-2; i >= 0; --i) {
-        sum *= x;
-        sum += coeff[i];
+स्थिर अन्तःस्थ द्विगुण eval_poly(ध्रुव द्विगुण *coeff, पूर्णाङ्क आकार, द्विगुण x) {
+    द्विगुण योग = coeff[आकार-1];
+    पूर्णाङ्क i;
+    प्रति (i = आकार-2; i >= 0; --i) {
+        योग *= x;
+        योग += coeff[i];
     }
-    return sum;
+    प्रत्यागम योग;
 }
 
 /**
@@ -254,11 +254,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
  */
 
-double av_bessel_i0(double x) {
+द्विगुण av_bessel_i0(द्विगुण x) {
 // Modified Bessel function of the first kind of order zero
 // minimax rational approximations on intervals, see
 // Blair and Edwards, Chalk River Report AECL-4928, 1974
-    static const double p1[] = {
+    स्थिर ध्रुव द्विगुण p1[] = {
         -2.2335582639474375249e+15,
         -5.5050369673018427753e+14,
         -3.2940087627407749166e+13,
@@ -275,7 +275,7 @@ double av_bessel_i0(double x) {
         -1.5982226675653184646e-14,
         -5.2487866627945699800e-18,
     };
-    static const double q1[] = {
+    स्थिर ध्रुव द्विगुण q1[] = {
         -2.2335582639474375245e+15,
          7.8858692566751002988e+12,
         -1.2207067397808979846e+10,
@@ -283,7 +283,7 @@ double av_bessel_i0(double x) {
         -4.8527560179962773045e+03,
          1.0,
     };
-    static const double p2[] = {
+    स्थिर ध्रुव द्विगुण p2[] = {
         -2.2210262233306573296e-04,
          1.3067392038106924055e-02,
         -4.4700805721174453923e-01,
@@ -292,7 +292,7 @@ double av_bessel_i0(double x) {
          3.1611322818701131207e+01,
         -9.6090021968656180000e+00,
     };
-    static const double q2[] = {
+    स्थिर ध्रुव द्विगुण q2[] = {
         -5.5194330231005480228e-04,
          3.2547697594819615062e-02,
         -1.1151759188741312645e+00,
@@ -302,18 +302,18 @@ double av_bessel_i0(double x) {
         -3.1446690275135491500e+01,
         1.0,
     };
-    double y, r, factor;
-    if (x == 0)
-        return 1.0;
+    द्विगुण y, r, गुणकः;
+    यदि (x == 0)
+        प्रत्यागम 1.0;
     x = fabs(x);
-    if (x <= 15) {
+    यदि (x <= 15) {
         y = x * x;
-        return eval_poly(p1, FF_ARRAY_ELEMS(p1), y) / eval_poly(q1, FF_ARRAY_ELEMS(q1), y);
+        प्रत्यागम eval_poly(p1, FF_ARRAY_ELEMS(p1), y) / eval_poly(q1, FF_ARRAY_ELEMS(q1), y);
     }
-    else {
+    अन्यथा {
         y = 1 / x - 1.0 / 15;
         r = eval_poly(p2, FF_ARRAY_ELEMS(p2), y) / eval_poly(q2, FF_ARRAY_ELEMS(q2), y);
-        factor = exp(x) / sqrt(x);
-        return factor * r;
+        गुणकः = घातांकः(x) / वर्गमूलम्(x);
+        प्रत्यागम गुणकः * r;
     }
 }

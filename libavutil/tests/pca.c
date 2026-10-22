@@ -19,33 +19,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/pca.c"
-#include "libavutil/lfg.h"
+#अन्तर्भाव "libavutil/pca.c"
+#अन्तर्भाव "libavutil/lfg.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
 
-int main(void){
+पूर्णाङ्क मुख्यम्(शून्य){
     PCA *pca;
-    int i, j, k;
-#define LEN 8
-    double eigenvector[LEN*LEN];
-    double eigenvalue[LEN];
+    पूर्णाङ्क i, j, k;
+#परिभाषय LEN 8
+    द्विगुण eigenvector[LEN*LEN];
+    द्विगुण eigenvalue[LEN];
     AVLFG prng;
 
     av_lfg_init(&prng, 1);
 
     pca= ff_pca_init(LEN);
 
-    for(i=0; i<9000000; i++){
-        double v[2*LEN+100];
+    प्रति(i=0; i<9000000; i++){
+        द्विगुण v[2*LEN+100];
 //        double sum=0;
-        int pos = av_lfg_get(&prng) % LEN;
-        int v2  = (int)(av_lfg_get(&prng) % 101) - 50;
-        v[0]    = (int)(av_lfg_get(&prng) % 101) - 50;
-        for(j=1; j<8; j++){
-            if(j<=pos) v[j]= v[0];
-            else       v[j]= v2;
+        पूर्णाङ्क pos = av_lfg_get(&prng) % LEN;
+        पूर्णाङ्क v2  = (पूर्णाङ्क)(av_lfg_get(&prng) % 101) - 50;
+        v[0]    = (पूर्णाङ्क)(av_lfg_get(&prng) % 101) - 50;
+        प्रति(j=1; j<8; j++){
+            यदि(j<=pos) v[j]= v[0];
+            अन्यथा       v[j]= v2;
 //            sum += v[j];
         }
 /*        for(j=0; j<LEN; j++){
@@ -56,47 +56,47 @@ int main(void){
             v[j] -= sum/LEN;
         }*/
 //        lbt1(v+100,v+100,LEN);
-        ff_pca_add(pca, v);
+        ff_pca_सङ्कलय(pca, v);
     }
 
 
     ff_pca(pca, eigenvector, eigenvalue);
-    for(i=0; i<LEN; i++){
-        pca->count= 1;
-        pca->mean[i]= 0;
+    प्रति(i=0; i<LEN; i++){
+        pca->गणनम्= 1;
+        pca->माध्यम्[i]= 0;
 
 //        (0.5^|x|)^2 = 0.5^2|x| = 0.25^|x|
 
 
 //        pca.covariance[i + i*LEN]= pow(0.5, fabs
-        for(j=i; j<LEN; j++){
-            printf("%f ", pca->covariance[i + j*LEN]);
+        प्रति(j=i; j<LEN; j++){
+            प्रारूप_लिख("%f ", pca->covariance[i + j*LEN]);
         }
-        printf("\n");
+        प्रारूप_लिख("\n");
     }
 
-    for(i=0; i<LEN; i++){
-        double v[LEN];
-        double error=0;
-        memset(v, 0, sizeof(v));
-        for(j=0; j<LEN; j++){
-            for(k=0; k<LEN; k++){
+    प्रति(i=0; i<LEN; i++){
+        द्विगुण v[LEN];
+        द्विगुण error=0;
+        स्मृतिं_पूरय(v, 0, परिमाण(v));
+        प्रति(j=0; j<LEN; j++){
+            प्रति(k=0; k<LEN; k++){
                 v[j] += pca->covariance[FFMIN(k,j) + FFMAX(k,j)*LEN] * eigenvector[i + k*LEN];
             }
             v[j] /= eigenvalue[i];
             error += fabs(v[j] - eigenvector[i + j*LEN]);
         }
-        printf("%f ", error);
+        प्रारूप_लिख("%f ", error);
     }
-    printf("\n");
+    प्रारूप_लिख("\n");
 
-    for(i=0; i<LEN; i++){
-        for(j=0; j<LEN; j++){
-            printf("%9.6f ", eigenvector[i + j*LEN]);
+    प्रति(i=0; i<LEN; i++){
+        प्रति(j=0; j<LEN; j++){
+            प्रारूप_लिख("%9.6f ", eigenvector[i + j*LEN]);
         }
-        printf("  %9.1f %f\n", eigenvalue[i], eigenvalue[i]/eigenvalue[0]);
+        प्रारूप_लिख("  %9.1f %f\n", eigenvalue[i], eigenvalue[i]/eigenvalue[0]);
     }
 
     ff_pca_free(pca);
-    return 0;
+    प्रत्यागम 0;
 }

@@ -18,31 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PPC_TIMER_H
-#define AVUTIL_PPC_TIMER_H
+#यदि_अपरिभाषितम् AVUTIL_PPC_TIMER_H
+#परिभाषय AVUTIL_PPC_TIMER_H
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
-#include "config.h"
+#अन्तर्भाव "config.h"
 
-#define AV_READ_TIME read_time
+#परिभाषय AV_READ_TIME read_time
 
-static inline uint64_t read_time(void)
+स्थिर अन्तःस्थ uint64_t read_time(शून्य)
 {
-    uint32_t tbu, tbl, temp;
+    uint32_t tbu, tbl, अस्थायी;
 
      /* from section 2.2.1 of the 32-bit PowerPC PEM */
-     __asm__ volatile(
+     __asm__ चञ्चल(
          "mftbu  %2\n"
          "mftb   %0\n"
          "mftbu  %1\n"
          "cmpw   %2,%1\n"
          "bne    $-0x10\n"
-     : "=r"(tbl), "=r"(tbu), "=r"(temp)
+     : "=r"(tbl), "=r"(tbu), "=r"(अस्थायी)
      :
      : "cc");
 
-     return (((uint64_t)tbu)<<32) | (uint64_t)tbl;
+     प्रत्यागम (((uint64_t)tbu)<<32) | (uint64_t)tbl;
 }
 
-#endif /* AVUTIL_PPC_TIMER_H */
+#यदि_अन्तः /* AVUTIL_PPC_TIMER_H */

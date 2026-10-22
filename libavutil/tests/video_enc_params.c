@@ -16,23 +16,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/mem.h"
-#include "libavutil/video_enc_params.h"
+#अन्तर्भाव "libavutil/frame.h"
+#अन्तर्भाव "libavutil/mem.h"
+#अन्तर्भाव "libavutil/video_enc_params.h"
 
-int main(void)
+पूर्णाङ्क मुख्यम्(शून्य)
 {
     AVVideoEncParams *par;
-    AVVideoBlockParams *block;
+    AVVideo_खण्डम्_Params *खण्डम्;
     AVFrame *frame;
-    size_t size;
+    size_t आकार;
 
-    static const struct {
-        enum AVVideoEncParamsType type;
-        const char *name;
+    स्थिर ध्रुव संरचना {
+        गणना AVVideoEncParamsType type;
+        ध्रुव वर्ण *name;
     } types[] = {
         { AV_VIDEO_ENC_PARAMS_VP9,   "VP9"   },
         { AV_VIDEO_ENC_PARAMS_H264,  "H264"  },
@@ -40,91 +40,91 @@ int main(void)
     };
 
     /* av_video_enc_params_alloc - each type with blocks */
-    printf("Testing av_video_enc_params_alloc()\n");
-    for (int i = 0; i < 3; i++) {
-        par = av_video_enc_params_alloc(types[i].type, 4, &size);
-        if (par) {
-            printf("%s: OK, type=%d, nb_blocks=%u, size>0=%s\n",
-                   types[i].name, par->type, par->nb_blocks,
-                   size > 0 ? "yes" : "no");
+    प्रारूप_लिख("Testing av_video_enc_params_alloc()\n");
+    प्रति (पूर्णाङ्क i = 0; i < 3; i++) {
+        par = av_video_enc_params_alloc(types[i].type, 4, &आकार);
+        यदि (par) {
+            प्रारूप_लिख("%s: OK, type=%d, nb_blocks=%u, size>0=%s\n",
+                   types[i].name, par->type, par->nb_खण्डानि,
+                   आकार > 0 ? "yes" : "no");
             av_free(par);
-        } else {
-            printf("%s: FAIL\n", types[i].name);
+        } अन्यथा {
+            प्रारूप_लिख("%s: FAIL\n", types[i].name);
         }
     }
 
     /* zero blocks */
-    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_VP9, 0, &size);
-    if (par) {
-        printf("zero blocks: OK, nb_blocks=%u\n", par->nb_blocks);
+    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_VP9, 0, &आकार);
+    यदि (par) {
+        प्रारूप_लिख("zero blocks: OK, nb_blocks=%u\n", par->nb_खण्डानि);
         av_free(par);
-    } else {
-        printf("zero blocks: FAIL\n");
+    } अन्यथा {
+        प्रारूप_लिख("zero blocks: FAIL\n");
     }
 
     /* alloc without size */
-    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 1, NULL);
-    printf("alloc (no size): %s\n", par ? "OK" : "FAIL");
+    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 1, रिक्त);
+    प्रारूप_लिख("alloc (no size): %s\n", par ? "OK" : "FAIL");
     av_free(par);
 
     /* av_video_enc_params_block - write and read back */
-    printf("\nTesting av_video_enc_params_block()\n");
-    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 3, NULL);
-    if (par) {
+    प्रारूप_लिख("\nTesting av_video_enc_params_block()\n");
+    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 3, रिक्त);
+    यदि (par) {
         par->qp = 26;
         par->delta_qp[0][0] = -2;
         par->delta_qp[0][1] = -1;
-        printf("frame qp=%d, delta_qp[0]={%d,%d}\n",
+        प्रारूप_लिख("frame qp=%d, delta_qp[0]={%d,%d}\n",
                par->qp, par->delta_qp[0][0], par->delta_qp[0][1]);
 
-        for (int i = 0; i < 3; i++) {
-            block = av_video_enc_params_block(par, i);
-            if ((uint8_t *)block != (uint8_t *)par + par->blocks_offset +
-                                    (size_t)i * par->block_size)
-                printf("block %d: pointer inconsistent with blocks_offset/block_size\n", i);
-            block->src_x = i * 16;
-            block->src_y = i * 16;
-            block->w = 16;
-            block->h = 16;
-            block->delta_qp = i - 1;
+        प्रति (पूर्णाङ्क i = 0; i < 3; i++) {
+            खण्डम् = av_video_enc_params_खण्डम्(par, i);
+            यदि ((uint8_t *)खण्डम् != (uint8_t *)par + par->खण्डानि_विस्थापनम् +
+                                    (size_t)i * par->खण्डम्_आकार)
+                प्रारूप_लिख("block %d: pointer inconsistent with blocks_offset/block_size\n", i);
+            खण्डम्->src_x = i * 16;
+            खण्डम्->src_y = i * 16;
+            खण्डम्->w = 16;
+            खण्डम्->h = 16;
+            खण्डम्->delta_qp = i - 1;
         }
-        for (int i = 0; i < 3; i++) {
-            block = av_video_enc_params_block(par, i);
-            printf("block %d: src=(%d,%d) size=%dx%d delta_qp=%d\n",
-                   i, block->src_x, block->src_y,
-                   block->w, block->h, block->delta_qp);
+        प्रति (पूर्णाङ्क i = 0; i < 3; i++) {
+            खण्डम् = av_video_enc_params_खण्डम्(par, i);
+            प्रारूप_लिख("block %d: src=(%d,%d) size=%dx%d delta_qp=%d\n",
+                   i, खण्डम्->src_x, खण्डम्->src_y,
+                   खण्डम्->w, खण्डम्->h, खण्डम्->delta_qp);
         }
         av_free(par);
     }
 
     /* av_video_enc_params_create_side_data */
-    printf("\nTesting av_video_enc_params_create_side_data()\n");
+    प्रारूप_लिख("\nTesting av_video_enc_params_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
-        par = av_video_enc_params_create_side_data(frame,
+    यदि (frame) {
+        par = av_video_enc_params_create_side_दत्त(frame,
                   AV_VIDEO_ENC_PARAMS_VP9, 2);
-        if (par) {
-            printf("side_data: OK, type=%d, nb_blocks=%u\n",
-                   par->type, par->nb_blocks);
-            block = av_video_enc_params_block(par, 0);
-            block->delta_qp = 5;
-            block = av_video_enc_params_block(par, 0);
-            printf("side_data block 0: delta_qp=%d\n", block->delta_qp);
-        } else {
-            printf("side_data: FAIL\n");
+        यदि (par) {
+            प्रारूप_लिख("side_data: OK, type=%d, nb_blocks=%u\n",
+                   par->type, par->nb_खण्डानि);
+            खण्डम् = av_video_enc_params_खण्डम्(par, 0);
+            खण्डम्->delta_qp = 5;
+            खण्डम् = av_video_enc_params_खण्डम्(par, 0);
+            प्रारूप_लिख("side_data block 0: delta_qp=%d\n", खण्डम्->delta_qp);
+        } अन्यथा {
+            प्रारूप_लिख("side_data: FAIL\n");
         }
         av_frame_free(&frame);
     }
 
     /* NONE type */
-    printf("\nTesting NONE type\n");
-    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_NONE, 0, &size);
-    if (par) {
-        printf("NONE: OK, type=%d\n", par->type);
+    प्रारूप_लिख("\nTesting NONE type\n");
+    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_NONE, 0, &आकार);
+    यदि (par) {
+        प्रारूप_लिख("NONE: OK, type=%d\n", par->type);
         av_free(par);
-    } else {
-        printf("NONE: FAIL\n");
+    } अन्यथा {
+        प्रारूप_लिख("NONE: FAIL\n");
     }
 
-    return 0;
+    प्रत्यागम 0;
 }

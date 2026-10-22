@@ -24,11 +24,11 @@
  * Timecode helpers header
  */
 
-#ifndef AVUTIL_TIMECODE_INTERNAL_H
-#define AVUTIL_TIMECODE_INTERNAL_H
+#यदि_अपरिभाषितम् AVUTIL_TIMECODE_आन्तरिकम्_H
+#परिभाषय AVUTIL_TIMECODE_आन्तरिकम्_H
 
-#include <stdint.h>
-#include "rational.h"
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव "rational.h"
 
 /**
  * Convert SMPTE 12M binary representation to sei info.
@@ -45,7 +45,7 @@
  * @param skip_field prevent the use of a field flag when it is known the field
  *                   bit is arbitrary (e.g. because it is used as PC flag)
  */
-void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned *ss, unsigned *ff,
-                           AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field);
+शून्य ff_timecode_समुच्चयः_smpte(अचिह्नित *drop, अचिह्नित *hh, अचिह्नित *mm, अचिह्नित *ss, अचिह्नित *ff,
+                           AVRational दरः, uint32_t tcsmpte, पूर्णाङ्क prevent_df, पूर्णाङ्क skip_क्षेत्रम्);
 
-#endif /* AVUTIL_TIMECODE_INTERNAL_H */
+#यदि_अन्तः /* AVUTIL_TIMECODE_INTERNAL_H */

@@ -18,43 +18,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "ambient_viewing_environment.h"
-#include "mem.h"
+#अन्तर्भाव "ambient_viewing_environment.h"
+#अन्तर्भाव "mem.h"
 
-static void get_defaults(AVAmbientViewingEnvironment *env)
+स्थिर शून्य get_defaults(AVAmbientViewingEnvironment *env)
 {
     env->ambient_illuminance =
     env->ambient_light_x     =
     env->ambient_light_y     = (AVRational) { 0, 1 };
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *आकार)
 {
     AVAmbientViewingEnvironment *env =
-        av_mallocz(sizeof(AVAmbientViewingEnvironment));
+        av_mallocz(परिमाण(AVAmbientViewingEnvironment));
 
-    if (size)
-        *size = env ? sizeof(*env) : 0;
+    यदि (आकार)
+        *आकार = env ? परिमाण(*env) : 0;
 
-    if (!env)
-        return NULL;
+    यदि (!env)
+        प्रत्यागम रिक्त;
 
     get_defaults(env);
 
-    return env;
+    प्रत्यागम env;
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_दत्त(AVFrame *frame)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame,
-                               AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
-                               sizeof(AVAmbientViewingEnvironment));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_दत्त *side_दत्त =
+        av_frame_new_side_दत्त(frame,
+                               AV_FRAME_दत्त_AMBIENT_VIEWING_ENVIRONMENT,
+                               परिमाण(AVAmbientViewingEnvironment));
+    यदि (!side_दत्त)
+        प्रत्यागम रिक्त;
 
-    memset(side_data->data, 0, side_data->size);
-    get_defaults((AVAmbientViewingEnvironment *)side_data->data);
+    स्मृतिं_पूरय(side_दत्त->दत्त, 0, side_दत्त->आकार);
+    get_defaults((AVAmbientViewingEnvironment *)side_दत्त->दत्त);
 
-    return (AVAmbientViewingEnvironment *)side_data->data;
+    प्रत्यागम (AVAmbientViewingEnvironment *)side_दत्त->दत्त;
 }

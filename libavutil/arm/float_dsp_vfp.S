@@ -83,13 +83,13 @@ DST1    .req    v2
 WIN1    .req    v3
 OLDFPSCR .req   ip
 
-        push    {v1-v3,lr}
+        निक्षिप    {v1-v3,lr}
         ldr     LEN, [sp, #4*4+0]
         vpush   {s16-s31}
         fmrx    OLDFPSCR, FPSCR
-        add     DST1, DST0, LEN, lsl #3
-        add     SRC1, SRC1, LEN, lsl #2
-        add     WIN1, WIN0, LEN, lsl #3
+        योजय     DST1, DST0, LEN, lsl #3
+        योजय     SRC1, SRC1, LEN, lsl #2
+        योजय     WIN1, WIN0, LEN, lsl #3
 
         tst     LEN, #7
         beq     4f                          @ common case: len is a multiple of 8
@@ -259,7 +259,7 @@ OLDFPSCR .req   ip
 7:
         fmxr    FPSCR, OLDFPSCR
         vpop    {s16-s31}
-        pop     {v1-v3,pc}
+        उद्धर     {v1-v3,pc}
 
         .unreq  DST0
         .unreq  SRC0
@@ -279,7 +279,7 @@ endfunc
 @                                 const float *src1, int len)
 function ff_vector_fmul_reverse_vfp, export=1
         vpush           {d8-d15}
-        add             r2,  r2,  r3, lsl #2
+        योजय             r2,  r2,  r3, lsl #2
         vldmdb          r2!, {s0-s3}
         vldmia          r1!, {s8-s11}
         vldmdb          r2!, {s4-s7}

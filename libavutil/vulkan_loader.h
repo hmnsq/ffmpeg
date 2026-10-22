@@ -16,16 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_VULKAN_LOADER_H
-#define AVUTIL_VULKAN_LOADER_H
+#यदि_अपरिभाषितम् AVUTIL_VULKAN_LOADER_H
+#परिभाषय AVUTIL_VULKAN_LOADER_H
 
-#include <stdio.h>
+#अन्तर्भाव <stdio.h>
 
-#include "avassert.h"
-#include "vulkan_functions.h"
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव "vulkan_functions.h"
 
 /* Macro to turn a function name into a loader struct */
-#define PFN_LOAD_INFO(req_inst, req_dev, ext_flag, name) \
+#परिभाषय PFN_आरोपय_INFO(req_inst, req_dev, ext_flag, name) \
     {                                                    \
         req_inst,                                        \
         req_dev,                                         \
@@ -33,25 +33,25 @@
         ext_flag,                                        \
     },
 
-static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
-                                                int nb_extensions)
+स्थिर अन्तःस्थ uint64_t ff_vk_extensions_गन्तव्यम्_आवरणम्(ध्रुव वर्ण * ध्रुव *extensions,
+                                                पूर्णाङ्क nb_extensions)
 {
-    static const struct ExtensionMap {
-        const char *name;
+    स्थिर ध्रुव संरचना ExtensionMap {
+        ध्रुव वर्ण *name;
         FFVulkanExtensions flag;
     } extension_map[] = {
         /* Instance extensions */
         { VK_EXT_DEBUG_UTILS_EXTENSION_NAME,                         FF_VK_EXT_DEBUG_UTILS            },
 
         /* Device extensions */
-#ifdef VK_KHR_shader_relaxed_extended_instruction
+#यदि_परिभाषितम् VK_KHR_shader_relaxed_extended_instruction
         { VK_KHR_SHADER_RELAXED_EXTENDED_INSTRUCTION_EXTENSION_NAME, FF_VK_EXT_RELAXED_EXTENDED_INSTR },
-#endif
-        { VK_EXT_EXTERNAL_MEMORY_DMA_BUF_EXTENSION_NAME,   FF_VK_EXT_EXTERNAL_DMABUF_MEMORY },
+#यदि_अन्तः
+        { VK_EXT_EXTERNAL_स्मृतिः_DMA_BUF_EXTENSION_NAME,   FF_VK_EXT_EXTERNAL_DMABUF_स्मृतिः },
         { VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME, FF_VK_EXT_DRM_MODIFIER_FLAGS     },
-        { VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME,        FF_VK_EXT_EXTERNAL_FD_MEMORY     },
+        { VK_KHR_EXTERNAL_स्मृतिः_FD_EXTENSION_NAME,        FF_VK_EXT_EXTERNAL_FD_स्मृतिः     },
         { VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,     FF_VK_EXT_EXTERNAL_FD_SEM        },
-        { VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME,      FF_VK_EXT_EXTERNAL_HOST_MEMORY   },
+        { VK_EXT_EXTERNAL_स्मृतिः_HOST_EXTENSION_NAME,      FF_VK_EXT_EXTERNAL_HOST_स्मृतिः   },
         { VK_EXT_DEBUG_UTILS_EXTENSION_NAME,               FF_VK_EXT_DEBUG_UTILS            },
         { VK_EXT_PHYSICAL_DEVICE_DRM_EXTENSION_NAME,       FF_VK_EXT_DEVICE_DRM             },
         { VK_EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME,       FF_VK_EXT_ATOMIC_FLOAT           },
@@ -60,24 +60,24 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
         { VK_EXT_SHADER_OBJECT_EXTENSION_NAME,             FF_VK_EXT_SHADER_OBJECT          },
         { VK_KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME,    FF_VK_EXT_SUBGROUP_ROTATE        },
         { VK_EXT_HOST_IMAGE_COPY_EXTENSION_NAME,           FF_VK_EXT_HOST_IMAGE_COPY        },
-        { VK_KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME, FF_VK_EXT_EXPLICIT_MEM_LAYOUT },
-#ifdef VK_EXT_shader_long_vector
-        { VK_EXT_SHADER_LONG_VECTOR_EXTENSION_NAME,               FF_VK_EXT_LONG_VECTOR         },
-#endif
-#ifdef VK_EXT_shader_replicated_composites
+        { VK_KHR_WORKGROUP_स्मृतिः_EXPLICIT_LAYOUT_EXTENSION_NAME, FF_VK_EXT_EXPLICIT_MEM_LAYOUT },
+#यदि_परिभाषितम् VK_EXT_shader_long_सदिशम्
+        { VK_EXT_SHADER_LONG_सदिशम्_EXTENSION_NAME,               FF_VK_EXT_LONG_सदिशम्         },
+#यदि_अन्तः
+#यदि_परिभाषितम् VK_EXT_shader_replicated_composites
         { VK_EXT_SHADER_REPLICATED_COMPOSITES_EXTENSION_NAME, FF_VK_EXT_REPLICATED_COMPOSITES   },
-#endif
-#ifdef VK_EXT_zero_initialize_device_memory
-        { VK_EXT_ZERO_INITIALIZE_DEVICE_MEMORY_EXTENSION_NAME, FF_VK_EXT_ZERO_INITIALIZE    },
-#endif
+#यदि_अन्तः
+#यदि_परिभाषितम् VK_EXT_zero_initialize_device_स्मृतिः
+        { VK_EXT_ZERO_INITIALIZE_DEVICE_स्मृतिः_EXTENSION_NAME, FF_VK_EXT_ZERO_INITIALIZE    },
+#यदि_अन्तः
         { VK_KHR_VIDEO_MAINTENANCE_1_EXTENSION_NAME,       FF_VK_EXT_VIDEO_MAINTENANCE_1    },
-#ifdef VK_KHR_video_maintenance2
+#यदि_परिभाषितम् VK_KHR_video_maintenance2
         { VK_KHR_VIDEO_MAINTENANCE_2_EXTENSION_NAME,       FF_VK_EXT_VIDEO_MAINTENANCE_2    },
-#endif
-#ifdef _WIN32
-        { VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME,     FF_VK_EXT_EXTERNAL_WIN32_MEMORY  },
+#यदि_अन्तः
+#यदि_परिभाषितम् _WIN32
+        { VK_KHR_EXTERNAL_स्मृतिः_WIN32_EXTENSION_NAME,     FF_VK_EXT_EXTERNAL_WIN32_स्मृतिः  },
         { VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,  FF_VK_EXT_EXTERNAL_WIN32_SEM     },
-#endif
+#यदि_अन्तः
         { VK_KHR_VIDEO_QUEUE_EXTENSION_NAME,               FF_VK_EXT_VIDEO_QUEUE            },
         { VK_KHR_VIDEO_ENCODE_QUEUE_EXTENSION_NAME,        FF_VK_EXT_VIDEO_ENCODE_QUEUE     },
         { VK_KHR_VIDEO_DECODE_QUEUE_EXTENSION_NAME,        FF_VK_EXT_VIDEO_DECODE_QUEUE     },
@@ -85,46 +85,46 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
         { VK_KHR_VIDEO_DECODE_H264_EXTENSION_NAME,         FF_VK_EXT_VIDEO_DECODE_H264      },
         { VK_KHR_VIDEO_ENCODE_H265_EXTENSION_NAME,         FF_VK_EXT_VIDEO_ENCODE_H265      },
         { VK_KHR_VIDEO_DECODE_H265_EXTENSION_NAME,         FF_VK_EXT_VIDEO_DECODE_H265      },
-#ifdef VK_KHR_video_decode_vp9
+#यदि_परिभाषितम् VK_KHR_video_decode_vp9
         { VK_KHR_VIDEO_DECODE_VP9_EXTENSION_NAME,          FF_VK_EXT_VIDEO_DECODE_VP9       },
-#endif
+#यदि_अन्तः
         { VK_KHR_VIDEO_DECODE_AV1_EXTENSION_NAME,          FF_VK_EXT_VIDEO_DECODE_AV1       },
-        { VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME,           FF_VK_EXT_PUSH_DESCRIPTOR        },
-#ifdef VK_KHR_shader_expect_assume
+        { VK_KHR_प्रक्षिप_DESCRIPTOR_EXTENSION_NAME,           FF_VK_EXT_प्रक्षिप_DESCRIPTOR        },
+#यदि_परिभाषितम् VK_KHR_shader_expect_assume
         { VK_KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME,      FF_VK_EXT_EXPECT_ASSUME          },
-#endif
-#ifdef VK_KHR_shader_maximal_reconvergence
+#यदि_अन्तः
+#यदि_परिभाषितम् VK_KHR_shader_maximal_reconvergence
         { VK_KHR_SHADER_MAXIMAL_RECONVERGENCE_EXTENSION_NAME, FF_VK_EXT_MAXIMAL_RECONVERGENCE },
-#endif
-#ifdef VK_KHR_maintenance9
+#यदि_अन्तः
+#यदि_परिभाषितम् VK_KHR_maintenance9
         { VK_KHR_MAINTENANCE_9_EXTENSION_NAME,             FF_VK_EXT_MAINTENANCE_9          },
-#endif
-#ifdef VK_KHR_unified_image_layouts
+#यदि_अन्तः
+#यदि_परिभाषितम् VK_KHR_unified_image_layouts
         { VK_KHR_UNIFIED_IMAGE_LAYOUTS_EXTENSION_NAME,     FF_VK_EXT_UNIFIED_IMAGE_LAYOUTS  },
-#endif
-#ifdef VK_KHR_video_encode_av1
+#यदि_अन्तः
+#यदि_परिभाषितम् VK_KHR_video_encode_av1
         { VK_KHR_VIDEO_ENCODE_AV1_EXTENSION_NAME,          FF_VK_EXT_VIDEO_ENCODE_AV1       },
-#endif
-#ifdef VK_KHR_internally_synchronized_queues
-        { VK_KHR_INTERNALLY_SYNCHRONIZED_QUEUES_EXTENSION_NAME, FF_VK_EXT_INTERNAL_QUEUE_SYNC   },
-#endif
-#ifdef VK_KHR_maintenance11
+#यदि_अन्तः
+#यदि_परिभाषितम् VK_KHR_internally_synchronized_queues
+        { VK_KHR_INTERNALLY_SYNCHRONIZED_QUEUES_EXTENSION_NAME, FF_VK_EXT_आन्तरिकम्_QUEUE_SYNC   },
+#यदि_अन्तः
+#यदि_परिभाषितम् VK_KHR_maintenance11
         { VK_KHR_MAINTENANCE_11_EXTENSION_NAME,            FF_VK_EXT_MAINTENANCE_11         },
-#endif
+#यदि_अन्तः
     };
 
-    FFVulkanExtensions mask = 0x0;
+    FFVulkanExtensions आवरणम्_2 = 0x0;
 
-    for (int i = 0; i < nb_extensions; i++) {
-        for (int j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
-            if (!strcmp(extensions[i], extension_map[j].name)) {
-                mask |= extension_map[j].flag;
-                continue;
+    प्रति (पूर्णाङ्क i = 0; i < nb_extensions; i++) {
+        प्रति (पूर्णाङ्क j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
+            यदि (!वाक्यं_तुलय(extensions[i], extension_map[j].name)) {
+                आवरणम्_2 |= extension_map[j].flag;
+                अनुवर्त;
             }
         }
     }
 
-    return mask;
+    प्रत्यागम आवरणम्_2;
 }
 
 /**
@@ -140,74 +140,74 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
  * plus you can be sure that any extensions you've enabled during device
  * initialization will be available.
  */
-static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
+स्थिर अन्तःस्थ पूर्णाङ्क ff_vk_आरोपय_functions(AVHWDeviceContext *ctx,
                                        FFVulkanFunctions *vk,
-                                       uint64_t extensions_mask,
-                                       int has_inst, int has_dev)
+                                       uint64_t extensions_आवरणम्,
+                                       पूर्णाङ्क has_inst, पूर्णाङ्क has_dev)
 {
     AVVulkanDeviceContext *hwctx = ctx->hwctx;
 
-    static const struct FunctionLoadInfo {
-        char req_inst;
-        char req_dev;
-        uint16_t struct_offset;
+    स्थिर ध्रुव संरचना Function_आरोपय_Info {
+        वर्ण req_inst;
+        वर्ण req_dev;
+        uint16_t struct_विस्थापनम्;
         FFVulkanExtensions ext_flag;
-    } vk_load_info[] = {
-        FN_LIST(PFN_LOAD_INFO)
-#ifdef _WIN32
-        FN_LIST_WIN32(PFN_LOAD_INFO)
-#endif
+    } vk_आरोपय_info[] = {
+        FN_LIST(PFN_आरोपय_INFO)
+#यदि_परिभाषितम् _WIN32
+        FN_LIST_WIN32(PFN_आरोपय_INFO)
+#यदि_अन्तः
     };
     // Concatenate the names to avoid relocations. The resulting string
     // will end with \0\0
-#define FUNC_NAME(req_inst, req_dev, ext_flag, name) "vk"#name"\0"
-    const char *name =
+#परिभाषय FUNC_NAME(req_inst, req_dev, ext_flag, name) "vk"#name"\0"
+    ध्रुव वर्ण *name =
         FN_LIST(FUNC_NAME)
-#ifdef _WIN32
+#यदि_परिभाषितम् _WIN32
         FN_LIST_WIN32(FUNC_NAME)
-#endif
+#यदि_अन्तः
     ;
-#undef FUNC_NAME
+#अपरिभाषय FUNC_NAME
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += strlen(name) + 1, i++) {
-        const struct FunctionLoadInfo *load = &vk_load_info[i];
-        static const char extensions[][4] = { "", "EXT", "KHR" };
+    प्रति (पूर्णाङ्क i = 0; i < FF_ARRAY_ELEMS(vk_आरोपय_info); name += वाक्यदैर्घ्यम्(name) + 1, i++) {
+        ध्रुव संरचना Function_आरोपय_Info *आरोपय = &vk_आरोपय_info[i];
+        स्थिर ध्रुव वर्ण extensions[][4] = { "", "EXT", "KHR" };
         PFN_vkVoidFunction fn;
 
-        if (load->req_dev  && !has_dev)
-            continue;
-        if (load->req_inst && !has_inst)
-            continue;
+        यदि (आरोपय->req_dev  && !has_dev)
+            अनुवर्त;
+        यदि (आरोपय->req_inst && !has_inst)
+            अनुवर्त;
 
-        for (int j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
-            char ext_name[128];
-            av_unused int n;
+        प्रति (पूर्णाङ्क j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
+            वर्ण ext_name[128];
+            av_अप्रयुक्तम् पूर्णाङ्क n;
 
-            n = snprintf(ext_name, sizeof(ext_name), "%s%s", name, extensions[j]);
-            av_assert1(n < sizeof(ext_name));
+            n = snprintf(ext_name, परिमाण(ext_name), "%s%s", name, extensions[j]);
+            av_assert1(n < परिमाण(ext_name));
 
-            if (load->req_dev)
+            यदि (आरोपय->req_dev)
                 fn = vk->GetDeviceProcAddr(hwctx->act_dev, ext_name);
-            else if (load->req_inst)
+            अन्यथा यदि (आरोपय->req_inst)
                 fn = hwctx->get_proc_addr(hwctx->inst, ext_name);
-            else
-                fn = hwctx->get_proc_addr(NULL, ext_name);
+            अन्यथा
+                fn = hwctx->get_proc_addr(रिक्त, ext_name);
 
-            if (fn)
-                break;
+            यदि (fn)
+                भङ्ग;
         }
 
-        if (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
+        यदि (!fn && ((extensions_आवरणम् &~ FF_VK_EXT_NO_FLAG) & आरोपय->ext_flag)) {
             av_log(ctx, AV_LOG_ERROR, "Loader error, function \"%s\" indicated "
                    "as supported, but got NULL function pointer!\n", name);
-            return AVERROR_EXTERNAL;
+            प्रत्यागम AVERROR_EXTERNAL;
         }
 
-        *(PFN_vkVoidFunction *)((uint8_t *)vk + load->struct_offset) = fn;
+        *(PFN_vkVoidFunction *)((uint8_t *)vk + आरोपय->struct_विस्थापनम्) = fn;
     }
     av_assert1(*name == '\0');
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-#endif /* AVUTIL_VULKAN_LOADER_H */
+#यदि_अन्तः /* AVUTIL_VULKAN_LOADER_H */

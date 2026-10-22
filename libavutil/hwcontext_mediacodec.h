@@ -16,21 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_MEDIACODEC_H
-#define AVUTIL_HWCONTEXT_MEDIACODEC_H
+#यदि_अपरिभाषितम् AVUTIL_HWCONTEXT_MEDIACODEC_H
+#परिभाषय AVUTIL_HWCONTEXT_MEDIACODEC_H
 
 /**
  * MediaCodec details.
  *
  * Allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVMediaCodecDeviceContext {
+प्रकारनिर्देश संरचना AVMediaCodecDeviceContext {
     /**
      * android/view/Surface handle, to be filled by the user.
      *
      * This is the default surface used by decoders on this device.
      */
-    void *surface;
+    शून्य *surface;
 
     /**
      * Pointer to ANativeWindow.
@@ -42,7 +42,7 @@ typedef struct AVMediaCodecDeviceContext {
      * It can be used as output surface for decoder and input surface for
      * encoder.
      */
-    void *native_window;
+    शून्य *native_गवाक्षः;
 
     /**
      * Enable createPersistentInputSurface automatically.
@@ -55,7 +55,7 @@ typedef struct AVMediaCodecDeviceContext {
      * via:
      *   -init_hw_device mediacodec=mediacodec,create_window=1
      */
-    int create_window;
+    पूर्णाङ्क create_गवाक्षः;
 } AVMediaCodecDeviceContext;
 
-#endif /* AVUTIL_HWCONTEXT_MEDIACODEC_H */
+#यदि_अन्तः /* AVUTIL_HWCONTEXT_MEDIACODEC_H */

@@ -91,49 +91,49 @@ SECTION .text
 
 %macro MEMCPY_0_15 6
 ; %1 dst ; %2 src ; %3 len ; %4, %5 temp gpr register; %6 done label
-    cmp %3, 8
+    तुलय %3, 8
     jae .between_8_15
-    cmp %3, 4
+    तुलय %3, 4
     jae .between_4_7
-    cmp %3, 1
+    तुलय %3, 1
     ja .between_2_3
     jb %6
-    mov  %4b, [%2]
-    mov [%1], %4b
-    jmp %6
+    चालय  %4b, [%2]
+    चालय [%1], %4b
+    कूर्द %6
 
 .between_8_15:
 %if ARCH_X86_64
-    mov           %4q, [%2]
-    mov           %5q, [%2 + %3 - 8]
-    mov          [%1], %4q
-    mov [%1 + %3 - 8], %5q
-    jmp %6
+    चालय           %4q, [%2]
+    चालय           %5q, [%2 + %3 - 8]
+    चालय          [%1], %4q
+    चालय [%1 + %3 - 8], %5q
+    कूर्द %6
 %else
     xor            %5, %5
 .copy4b:
-        mov       %4d, [%2 + %5]
-        mov [%1 + %5], %4d
-        add        %5, 4
+        चालय       %4d, [%2 + %5]
+        चालय [%1 + %5], %4d
+        योजय        %5, 4
         lea        %4, [%5 + 4]
-        cmp        %4, %3
+        तुलय        %4, %3
         jb        .copy4b
 
-    mov           %4d, [%2 + %3 - 4]
-    mov [%1 + %3 - 4], %4d
-    jmp %6
+    चालय           %4d, [%2 + %3 - 4]
+    चालय [%1 + %3 - 4], %4d
+    कूर्द %6
 %endif
 .between_4_7:
-    mov           %4d, [%2]
-    mov           %5d, [%2 + %3 - 4]
-    mov          [%1], %4d
-    mov [%1 + %3 - 4], %5d
-    jmp %6
+    चालय           %4d, [%2]
+    चालय           %5d, [%2 + %3 - 4]
+    चालय          [%1], %4d
+    चालय [%1 + %3 - 4], %5d
+    कूर्द %6
 .between_2_3:
-    mov           %4w, [%2]
-    mov           %5w, [%2 + %3 - 2]
-    mov          [%1], %4w
-    mov [%1 + %3 - 2], %5w
+    चालय           %4w, [%2]
+    चालय           %5w, [%2 + %3 - 2]
+    चालय          [%1], %4w
+    चालय [%1 + %3 - 2], %5w
     ; fall through, %6 label is expected to be next instruction
 %endmacro
 
@@ -160,9 +160,9 @@ cglobal crc,    4, 6, 7+4*ARCH_X86_64, 0x10
     movd   m4, r1d
 %if ARCH_X86_32
     ; skip 4x unrolled loop due to only 8 XMM reg being available in X86_32
-    jmp   .less_than_64bytes
+    कूर्द   .less_than_64bytes
 %else
-    cmp    r3, 64
+    तुलय    r3, 64
     jb    .less_than_64bytes
     movu   m1, [r2 +  0]
     movu   m3, [r2 + 16]
@@ -175,8 +175,8 @@ cglobal crc,    4, 6, 7+4*ARCH_X86_64, 0x10
     pshufb m2, m10
     pshufb m3, m10
 %endif
-    mov    r4, 64
-    cmp    r3, 128
+    चालय    r4, 64
+    तुलय    r3, 128
     jb    .reduce_4x_to_1
     movu   m4, [CTX]
 
@@ -195,9 +195,9 @@ cglobal crc,    4, 6, 7+4*ARCH_X86_64, 0x10
         FOLD_SINGLE m5, m3, m4, m7
         FOLD_SINGLE m5, m2, m4, m8
         FOLD_SINGLE m5, m0, m4, m9
-        add         r4, 64
+        योजय         r4, 64
         lea         r5, [r4 + 64]
-        cmp         r5, r3
+        तुलय         r5, r3
         jbe        .fold_4x_loop
 
 .reduce_4x_to_1:
@@ -209,7 +209,7 @@ cglobal crc,    4, 6, 7+4*ARCH_X86_64, 0x10
 
 .fold_1x_pre:
     lea  r5, [r4 + 16]
-    cmp  r5, r3
+    तुलय  r5, r3
     ja  .partial_block
 
 .fold_1x_loop:
@@ -218,13 +218,13 @@ cglobal crc,    4, 6, 7+4*ARCH_X86_64, 0x10
         pshufb      m2, m10
 %endif
         FOLD_SINGLE m5, m1, m4, m2
-        add         r4, 16
+        योजय         r4, 16
         lea         r5, [r4 + 16]
-        cmp         r5, r3
+        तुलय         r5, r3
         jbe        .fold_1x_loop
 
 .partial_block:
-    cmp         r4, r3
+    तुलय         r4, r3
     jae        .reduce_128_to_64
     movu        m2, [r2 + r3 - 16]
     and         r3, 0xf
@@ -254,16 +254,16 @@ cglobal crc,    4, 6, 7+4*ARCH_X86_64, 0x10
     RET
 
 .less_than_64bytes:
-    cmp    r3, 16
+    तुलय    r3, 16
     jb    .less_than_16bytes
     movu   m1, [r2]
     pxor   m1, m4
 %if %1 == 0
     pshufb m1, m10
 %endif
-    mov    r4, 16
+    चालय    r4, 16
     movu   m4, [CTX + 16]
-    jmp   .fold_1x_pre
+    कूर्द   .fold_1x_pre
 
 .less_than_16bytes:
     pxor           m1, m1
@@ -273,13 +273,13 @@ cglobal crc,    4, 6, 7+4*ARCH_X86_64, 0x10
 .memcpy_done:
     movu           m1, [rsp]
     pxor           m1, m4
-    cmp            r3, 5
+    तुलय            r3, 5
     jb            .less_than_5bytes
     XMM_SHIFT_LEFT m1, (16 - r3), m2, r4
 %if %1 == 0
     pshufb         m1, m10
 %endif
-    jmp           .reduce_128_to_64
+    कूर्द           .reduce_128_to_64
 
 .less_than_5bytes:
 %if %1 == 0
@@ -289,7 +289,7 @@ cglobal crc,    4, 6, 7+4*ARCH_X86_64, 0x10
 %else
     XMM_SHIFT_LEFT m1, (8 - r3), m2, r4
 %endif
-    jmp .reduce_64_to_32
+    कूर्द .reduce_64_to_32
 
 %endmacro
 

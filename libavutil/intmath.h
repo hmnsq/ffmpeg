@@ -18,91 +18,91 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_INTMATH_H
-#define AVUTIL_INTMATH_H
+#यदि_अपरिभाषितम् AVUTIL_INTMATH_H
+#परिभाषय AVUTIL_INTMATH_H
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
-#include "config.h"
-#include "attributes.h"
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "attributes.h"
 
-#if ARCH_ARM
+#यदि ARCH_ARM
 #   include "arm/intmath.h"
-#elif ARCH_RISCV
+#नोचेद्यदि ARCH_RISCV
 #   include "riscv/intmath.h"
-#elif ARCH_X86
+#नोचेद्यदि ARCH_X86
 #   include "x86/intmath.h"
-#endif
+#यदि_अन्तः
 
-#if HAVE_FAST_CLZ
-#if defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz)
-#ifndef ff_log2
+#यदि HAVE_FAST_CLZ
+#यदि defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz)
+#यदि_अपरिभाषितम् ff_log2
 #   define ff_log2(x) (31 - __builtin_clz((x)|1))
 #   ifndef ff_log2_16bit
 #      define ff_log2_16bit av_log2
 #   endif
-#endif /* ff_log2 */
-#endif /* defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz) */
-#endif
+#यदि_अन्तः /* ff_log2 */
+#यदि_अन्तः /* defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz) */
+#यदि_अन्तः
 
-extern const uint8_t ff_log2_tab[256];
+बाह्य ध्रुव uint8_t ff_log2_tab[256];
 
-#ifndef ff_log2
-#define ff_log2 ff_log2_c
-static av_always_inline av_const int ff_log2_c(unsigned int v)
+#यदि_अपरिभाषितम् ff_log2
+#परिभाषय ff_log2 ff_log2_c
+स्थिर av_always_inline av_const पूर्णाङ्क ff_log2_c(अचिह्नित पूर्णाङ्क v)
 {
-    int n = 0;
-    if (v & 0xffff0000) {
+    पूर्णाङ्क n = 0;
+    यदि (v & 0xffff0000) {
         v >>= 16;
         n += 16;
     }
-    if (v & 0xff00) {
+    यदि (v & 0xff00) {
         v >>= 8;
         n += 8;
     }
     n += ff_log2_tab[v];
 
-    return n;
+    प्रत्यागम n;
 }
-#endif
+#यदि_अन्तः
 
-#ifndef ff_log2_16bit
-#define ff_log2_16bit ff_log2_16bit_c
-static av_always_inline av_const int ff_log2_16bit_c(unsigned int v)
+#यदि_अपरिभाषितम् ff_log2_16bit
+#परिभाषय ff_log2_16bit ff_log2_16bit_c
+स्थिर av_always_inline av_const पूर्णाङ्क ff_log2_16bit_c(अचिह्नित पूर्णाङ्क v)
 {
-    int n = 0;
-    if (v & 0xff00) {
+    पूर्णाङ्क n = 0;
+    यदि (v & 0xff00) {
         v >>= 8;
         n += 8;
     }
     n += ff_log2_tab[v];
 
-    return n;
+    प्रत्यागम n;
 }
-#endif
+#यदि_अन्तः
 
-#define av_log2       ff_log2
-#define av_log2_16bit ff_log2_16bit
+#परिभाषय av_log2       ff_log2
+#परिभाषय av_log2_16bit ff_log2_16bit
 
 /**
  * @addtogroup lavu_math
  * @{
  */
 
-#if HAVE_FAST_CLZ
-#if !defined(ff_ctz) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_ctz))
-#define ff_ctz(v) __builtin_ctz(v)
-#endif
-#if !defined(ff_ctzll) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_ctzll))
-#define ff_ctzll(v) __builtin_ctzll(v)
-#endif
-#if !defined(ff_clz) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz))
-#define ff_clz(v) __builtin_clz(v)
-#endif
-#endif
+#यदि HAVE_FAST_CLZ
+#यदि !defined(ff_ctz) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_ctz))
+#परिभाषय ff_ctz(v) __builtin_ctz(v)
+#यदि_अन्तः
+#यदि !defined(ff_ctzll) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_ctzll))
+#परिभाषय ff_ctzll(v) __builtin_ctzll(v)
+#यदि_अन्तः
+#यदि !defined(ff_clz) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz))
+#परिभाषय ff_clz(v) __builtin_clz(v)
+#यदि_अन्तः
+#यदि_अन्तः
 
-#ifndef ff_ctz
-#define ff_ctz ff_ctz_c
+#यदि_अपरिभाषितम् ff_ctz
+#परिभाषय ff_ctz ff_ctz_c
 /**
  * Trailing zero bit count.
  *
@@ -111,54 +111,54 @@ static av_always_inline av_const int ff_log2_16bit_c(unsigned int v)
  */
 /* We use the De-Bruijn method outlined in:
  * http://supertech.csail.mit.edu/papers/debruijn.pdf. */
-static av_always_inline av_const int ff_ctz_c(int v)
+स्थिर av_always_inline av_const पूर्णाङ्क ff_ctz_c(पूर्णाङ्क v)
 {
-    static const uint8_t debruijn_ctz32[32] = {
+    स्थिर ध्रुव uint8_t debruijn_ctz32[32] = {
         0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
         31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
     };
-    return debruijn_ctz32[(uint32_t)((v & -(uint32_t)v) * 0x077CB531U) >> 27];
+    प्रत्यागम debruijn_ctz32[(uint32_t)((v & -(uint32_t)v) * 0x077CB531U) >> 27];
 }
-#endif
+#यदि_अन्तः
 
-#ifndef ff_ctzll
-#define ff_ctzll ff_ctzll_c
+#यदि_अपरिभाषितम् ff_ctzll
+#परिभाषय ff_ctzll ff_ctzll_c
 /* We use the De-Bruijn method outlined in:
  * http://supertech.csail.mit.edu/papers/debruijn.pdf. */
-static av_always_inline av_const int ff_ctzll_c(long long v)
+स्थिर av_always_inline av_const पूर्णाङ्क ff_ctzll_c(दीर्घ दीर्घ v)
 {
-    static const uint8_t debruijn_ctz64[64] = {
+    स्थिर ध्रुव uint8_t debruijn_ctz64[64] = {
         0, 1, 2, 53, 3, 7, 54, 27, 4, 38, 41, 8, 34, 55, 48, 28,
         62, 5, 39, 46, 44, 42, 22, 9, 24, 35, 59, 56, 49, 18, 29, 11,
         63, 52, 6, 26, 37, 40, 33, 47, 61, 45, 43, 21, 23, 58, 17, 10,
         51, 25, 36, 32, 60, 20, 57, 16, 50, 31, 19, 15, 30, 14, 13, 12
     };
-    return debruijn_ctz64[(uint64_t)((v & -(uint64_t)v) * 0x022FDD63CC95386DU) >> 58];
+    प्रत्यागम debruijn_ctz64[(uint64_t)((v & -(uint64_t)v) * 0x022FDD63CC95386DU) >> 58];
 }
-#endif
+#यदि_अन्तः
 
-#ifndef ff_clz
-#define ff_clz ff_clz_c
-static av_always_inline av_const unsigned ff_clz_c(unsigned x)
+#यदि_अपरिभाषितम् ff_clz
+#परिभाषय ff_clz ff_clz_c
+स्थिर av_always_inline av_const अचिह्नित ff_clz_c(अचिह्नित x)
 {
-    unsigned i = sizeof(x) * 8;
+    अचिह्नित i = परिमाण(x) * 8;
 
-    while (x) {
+    यावत् (x) {
         x >>= 1;
         i--;
     }
 
-    return i;
+    प्रत्यागम i;
 }
-#endif
+#यदि_अन्तः
 
-#if defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_parity)
-#ifndef av_parity
-#define av_parity __builtin_parity
-#endif
-#endif
+#यदि defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_parity)
+#यदि_अपरिभाषितम् av_parity
+#परिभाषय av_parity __builtin_parity
+#यदि_अन्तः
+#यदि_अन्तः
 
 /**
  * @}
  */
-#endif /* AVUTIL_INTMATH_H */
+#यदि_अन्तः /* AVUTIL_INTMATH_H */

@@ -18,33 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_TIMER_H
-#define AVUTIL_X86_TIMER_H
+#यदि_अपरिभाषितम् AVUTIL_X86_TIMER_H
+#परिभाषय AVUTIL_X86_TIMER_H
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
-#if HAVE_INLINE_ASM
+#यदि HAVE_INLINE_ASM
 
-#define FF_TIMER_UNITS "decicycles"
-#define AV_READ_TIME read_time
+#परिभाषय FF_TIMER_UNITS "decicycles"
+#परिभाषय AV_READ_TIME read_time
 
-static inline uint64_t read_time(void)
+स्थिर अन्तःस्थ uint64_t read_time(शून्य)
 {
     uint32_t a, d;
-    __asm__ volatile(
-#if ARCH_X86_64 || defined(__SSE2__)
+    __asm__ चञ्चल(
+#यदि ARCH_X86_64 || defined(__SSE2__)
                      "lfence \n\t"
-#endif
+#यदि_अन्तः
                      "rdtsc  \n\t"
                      : "=a" (a), "=d" (d));
-    return ((uint64_t)d << 32) + a;
+    प्रत्यागम ((uint64_t)d << 32) + a;
 }
 
-#elif HAVE_RDTSC
+#नोचेद्यदि HAVE_RDTSC
 
-#include <intrin.h>
-#define AV_READ_TIME __rdtsc
+#अन्तर्भाव <intrin.h>
+#परिभाषय AV_READ_TIME __rdtsc
 
-#endif /* HAVE_INLINE_ASM */
+#यदि_अन्तः /* HAVE_INLINE_ASM */
 
-#endif /* AVUTIL_X86_TIMER_H */
+#यदि_अन्तः /* AVUTIL_X86_TIMER_H */

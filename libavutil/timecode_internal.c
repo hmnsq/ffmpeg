@@ -19,19 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "timecode_internal.h"
+#अन्तर्भाव "timecode_internal.h"
 
-static unsigned bcd2uint(uint8_t bcd)
+स्थिर अचिह्नित bcd2uint(uint8_t bcd)
 {
-   unsigned low  = bcd & 0xf;
-   unsigned high = bcd >> 4;
-   if (low > 9 || high > 9)
-       return 0;
-   return low + 10*high;
+   अचिह्नित नीचः  = bcd & 0xf;
+   अचिह्नित उच्चः = bcd >> 4;
+   यदि (नीचः > 9 || उच्चः > 9)
+       प्रत्यागम 0;
+   प्रत्यागम नीचः + 10*उच्चः;
 }
 
-void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned *ss, unsigned *ff,
-                           AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field)
+शून्य ff_timecode_समुच्चयः_smpte(अचिह्नित *drop, अचिह्नित *hh, अचिह्नित *mm, अचिह्नित *ss, अचिह्नित *ff,
+                           AVRational दरः, uint32_t tcsmpte, पूर्णाङ्क prevent_df, पूर्णाङ्क skip_क्षेत्रम्)
 {
     *hh   = bcd2uint(tcsmpte     & 0x3f);    // 6-bit hours
     *mm   = bcd2uint(tcsmpte>>8  & 0x7f);    // 7-bit minutes
@@ -39,12 +39,12 @@ void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned 
     *ff   = bcd2uint(tcsmpte>>24 & 0x3f);    // 6-bit frames
     *drop = tcsmpte & 1<<30 && !prevent_df;  // 1-bit drop if not arbitrary bit
 
-    if (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
+    यदि (av_cmp_q(दरः, (AVRational) {30, 1}) == 1) {
         *ff <<= 1;
-        if (!skip_field) {
-            if (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
+        यदि (!skip_क्षेत्रम्) {
+            यदि (av_cmp_q(दरः, (AVRational) {50, 1}) == 0)
                 *ff += !!(tcsmpte & 1 << 7);
-            else
+            अन्यथा
                 *ff += !!(tcsmpte & 1 << 23);
         }
     }

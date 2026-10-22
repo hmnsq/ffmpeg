@@ -26,13 +26,13 @@ function ff_base64_encode_neon, export=1
         // w2 - int in_size
         // x3 - const char *tbl
         uxtw            x2, w2
-        cmp             x2, #48
-        add             x4, x2, x1 // end = src + in_size
-        mov             x5, x0     // dst = out
+        तुलय             x2, #48
+        योजय             x4, x2, x1 // end = src + in_size
+        चालय             x5, x0     // dst = out
         b.lt            2f         // skip NEON loop
         ld1             { v0.16b - v3.16b }, [x3]
         movi            v4.16b, #63
-        sub             x6, x4, #48
+        वियोजय             x6, x4, #48
 
 1: // NEON 48bytes loop
         ld3             { v5.16b - v7.16b }, [x1], #48
@@ -45,15 +45,15 @@ function ff_base64_encode_neon, export=1
         sli             v17.16b, v6.16b, #2
         tbl             v21.16b, { v0.16b, v1.16b, v2.16b, v3.16b }, v5.16b
         and             v16.16b, v16.16b, v4.16b
-        cmp             x1, x6
+        तुलय             x1, x6
         tbl             v19.16b, { v0.16b, v1.16b, v2.16b, v3.16b }, v16.16b
         and             v17.16b, v17.16b, v4.16b
         tbl             v20.16b, { v0.16b, v1.16b, v2.16b, v3.16b }, v17.16b
         st4             { v18.16b - v21.16b }, [x5], #64
         b.ls            1b // NEON 48bytes loop
 
-        sub             x6, x4, #24
-        cmp             x1, x6
+        वियोजय             x6, x4, #24
+        तुलय             x1, x6
         b.gt            2f
 
         // process 24 bytes using half width vector
@@ -72,8 +72,8 @@ function ff_base64_encode_neon, export=1
         tbl             v20.8b, { v0.16b, v1.16b, v2.16b, v3.16b }, v17.8b
         st4             { v18.8b - v21.8b }, [x5], #32
 2: // skip NEON loop
-        sub             x6, x4, #4
-        cmp             x1, x6
+        वियोजय             x6, x4, #4
+        तुलय             x1, x6
         b.gt            4f // <4 bytes tail
 
 3: // 4bytes available loop
@@ -87,7 +87,7 @@ function ff_base64_encode_neon, export=1
         ubfx            x11, x7, #8, #6
         ldrb            w14, [x3, x10]
         orr             w12, w12, w13, lsl #8
-        cmp             x1, x6
+        तुलय             x1, x6
         ldrb            w15, [x3, x11]
         orr             w12, w12, w14, lsl #16
         orr             w12, w12, w15, lsl #24
@@ -95,15 +95,15 @@ function ff_base64_encode_neon, export=1
         b.ls            3b // 4bytes available loop
 
 4: // <4 bytes tail
-        sub             x6, x4, x1
-        cmp             x6, #3
+        वियोजय             x6, x4, x1
+        तुलय             x6, #3
         b.eq            7f
-        cmp             x6, #2
+        तुलय             x6, #2
         b.eq            6f
-        cmp             x6, #1
+        तुलय             x6, #1
         b.eq            5f
         strb            wzr, [x5]
-        ret
+        प्रत्यागच्छ
 
 5:
         // 1 byte input remaining, 2 bytes padding needed
@@ -117,7 +117,7 @@ function ff_base64_encode_neon, export=1
         orr             w10, w10, w9, lsl #8
         str             w10, [x5]
         strb            wzr, [x5, #4]
-        ret
+        प्रत्यागच्छ
 
 6:
         // 2 bytes input remaining, 1 byte padding needed
@@ -136,7 +136,7 @@ function ff_base64_encode_neon, export=1
         orr             w15, w15, w13, lsl #8
         str             w15, [x5]
         strb            wzr, [x5, #4]
-        ret
+        प्रत्यागच्छ
 
 7:
         // 3 bytes input remaining, no padding needed
@@ -158,5 +158,5 @@ function ff_base64_encode_neon, export=1
         orr             w10, w10, w13, lsl #24
         str             w10, [x5]
         strb            wzr, [x5, #4]
-        ret
+        प्रत्यागच्छ
 endfunc

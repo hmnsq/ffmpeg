@@ -15,188 +15,188 @@
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-#include "config.h"
+#अन्तर्भाव "config.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <inttypes.h>
-#include "libavutil/mem.h"
-#include "libavutil/audio_fifo.c"
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <inttypes.h>
+#अन्तर्भाव "libavutil/mem.h"
+#अन्तर्भाव "libavutil/audio_fifo.c"
 
-#define MAX_CHANNELS    32
+#परिभाषय MAX_CHANNELS    32
 
 
-typedef struct TestStruct {
-    const enum AVSampleFormat format;
-    const int nb_ch;
-    void const *data_planes[MAX_CHANNELS];
-    const int nb_samples_pch;
+प्रकारनिर्देश संरचना TestStruct {
+    ध्रुव गणना AVSampleFormat format;
+    ध्रुव पूर्णाङ्क nb_ch;
+    शून्य ध्रुव *दत्त_planes[MAX_CHANNELS];
+    ध्रुव पूर्णाङ्क nb_samples_pch;
 } TestStruct;
 
-static const uint8_t data_U8 [] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11                        };
-static const int16_t data_S16[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11                        };
-static const float   data_FLT[] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0};
+स्थिर ध्रुव uint8_t दत्त_U8 [] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11                        };
+स्थिर ध्रुव int16_t दत्त_S16[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11                        };
+स्थिर ध्रुव भिन्न   दत्त_FLT[] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0};
 
-static const TestStruct test_struct[] = {
-    {.format = AV_SAMPLE_FMT_U8   , .nb_ch = 1, .data_planes = {data_U8 ,             }, .nb_samples_pch = 12},
-    {.format = AV_SAMPLE_FMT_U8P  , .nb_ch = 2, .data_planes = {data_U8 , data_U8 +6, }, .nb_samples_pch = 6 },
-    {.format = AV_SAMPLE_FMT_S16  , .nb_ch = 1, .data_planes = {data_S16,             }, .nb_samples_pch = 12},
-    {.format = AV_SAMPLE_FMT_S16P , .nb_ch = 2, .data_planes = {data_S16, data_S16+6, }, .nb_samples_pch = 6 },
-    {.format = AV_SAMPLE_FMT_FLT  , .nb_ch = 1, .data_planes = {data_FLT,             }, .nb_samples_pch = 12},
-    {.format = AV_SAMPLE_FMT_FLTP , .nb_ch = 2, .data_planes = {data_FLT, data_FLT+6, }, .nb_samples_pch = 6 }
+स्थिर ध्रुव TestStruct test_struct[] = {
+    {.format = AV_SAMPLE_FMT_U8   , .nb_ch = 1, .दत्त_planes = {दत्त_U8 ,             }, .nb_samples_pch = 12},
+    {.format = AV_SAMPLE_FMT_U8P  , .nb_ch = 2, .दत्त_planes = {दत्त_U8 , दत्त_U8 +6, }, .nb_samples_pch = 6 },
+    {.format = AV_SAMPLE_FMT_S16  , .nb_ch = 1, .दत्त_planes = {दत्त_S16,             }, .nb_samples_pch = 12},
+    {.format = AV_SAMPLE_FMT_S16P , .nb_ch = 2, .दत्त_planes = {दत्त_S16, दत्त_S16+6, }, .nb_samples_pch = 6 },
+    {.format = AV_SAMPLE_FMT_FLT  , .nb_ch = 1, .दत्त_planes = {दत्त_FLT,             }, .nb_samples_pch = 12},
+    {.format = AV_SAMPLE_FMT_FLTP , .nb_ch = 2, .दत्त_planes = {दत्त_FLT, दत्त_FLT+6, }, .nb_samples_pch = 6 }
 };
 
-static void free_data_planes(AVAudioFifo *afifo, void **output_data)
+स्थिर शून्य free_दत्त_planes(AVAudioFifo *afifo, शून्य **output_दत्त)
 {
-    int i;
-    for (i = 0; i < afifo->nb_buffers; ++i){
-        av_freep(&output_data[i]);
+    पूर्णाङ्क i;
+    प्रति (i = 0; i < afifo->nb_buffers; ++i){
+        av_freep(&output_दत्त[i]);
     }
-    av_freep(&output_data);
+    av_freep(&output_दत्त);
 }
 
-static void ERROR(const char *str)
+स्थिर शून्य ERROR(ध्रुव वर्ण *str)
 {
     fprintf(stderr, "%s\n", str);
-    exit(1);
+    निर्गच्छ(1);
 }
 
-static void print_audio_bytes(const TestStruct *test_sample, void **data_planes, int nb_samples)
+स्थिर शून्य print_audio_अष्टकानि(ध्रुव TestStruct *test_sample, शून्य **दत्त_planes, पूर्णाङ्क nb_samples)
 {
-    int p, b, f;
-    int byte_offset      = av_get_bytes_per_sample(test_sample->format);
-    int buffers          = av_sample_fmt_is_planar(test_sample->format)
+    पूर्णाङ्क p, b, f;
+    पूर्णाङ्क byte_विस्थापनम्      = av_get_अष्टकानि_प्रत्येकम्_sample(test_sample->format);
+    पूर्णाङ्क buffers          = av_sample_fmt_is_planar(test_sample->format)
                                          ? test_sample->nb_ch : 1;
-    int line_size        = (buffers > 1) ? nb_samples * byte_offset
-                                         : nb_samples * byte_offset * test_sample->nb_ch;
-    for (p = 0; p < buffers; ++p){
-        for(b = 0; b < line_size; b+=byte_offset){
-            for (f = 0; f < byte_offset; f++){
-                int order = !HAVE_BIGENDIAN ? (byte_offset - f - 1) : f;
-                printf("%02x", *((uint8_t*)data_planes[p] + b + order));
+    पूर्णाङ्क पङ्क्तिः_आकार        = (buffers > 1) ? nb_samples * byte_विस्थापनम्
+                                         : nb_samples * byte_विस्थापनम् * test_sample->nb_ch;
+    प्रति (p = 0; p < buffers; ++p){
+        प्रति(b = 0; b < पङ्क्तिः_आकार; b+=byte_विस्थापनम्){
+            प्रति (f = 0; f < byte_विस्थापनम्; f++){
+                पूर्णाङ्क क्रमः = !HAVE_BIGENDIAN ? (byte_विस्थापनम् - f - 1) : f;
+                प्रारूप_लिख("%02x", *((uint8_t*)दत्त_planes[p] + b + क्रमः));
             }
-            if (b + byte_offset < line_size)
-                putchar(' ');
+            यदि (b + byte_विस्थापनम् < पङ्क्तिः_आकार)
+                अक्षरं_लिख(' ');
         }
-        putchar('\n');
+        अक्षरं_लिख('\n');
     }
 }
 
-static int read_samples_from_audio_fifo(AVAudioFifo* afifo, void ***output, int nb_samples)
+स्थिर पूर्णाङ्क read_samples_from_audio_fifo(AVAudioFifo* afifo, शून्य ***output, पूर्णाङ्क nb_samples)
 {
-    int i;
-    int samples        = FFMIN(nb_samples, afifo->nb_samples);
-    int tot_elements   = !av_sample_fmt_is_planar(afifo->sample_fmt)
+    पूर्णाङ्क i;
+    पूर्णाङ्क samples        = FFMIN(nb_samples, afifo->nb_samples);
+    पूर्णाङ्क tot_elements   = !av_sample_fmt_is_planar(afifo->sample_fmt)
                          ? samples : afifo->channels * samples;
-    void **data_planes = av_malloc_array(afifo->nb_buffers, sizeof(void*));
-    if (!data_planes)
+    शून्य **दत्त_planes = av_malloc_array(afifo->nb_buffers, परिमाण(शून्य*));
+    यदि (!दत्त_planes)
         ERROR("failed to allocate memory!");
-    if (*output)
-        free_data_planes(afifo, *output);
-    *output            = data_planes;
+    यदि (*output)
+        free_दत्त_planes(afifo, *output);
+    *output            = दत्त_planes;
 
-    for (i = 0; i < afifo->nb_buffers; ++i){
-        data_planes[i] = av_malloc_array(tot_elements, afifo->sample_size);
-        if (!data_planes[i])
+    प्रति (i = 0; i < afifo->nb_buffers; ++i){
+        दत्त_planes[i] = av_malloc_array(tot_elements, afifo->sample_आकार);
+        यदि (!दत्त_planes[i])
             ERROR("failed to allocate memory!");
     }
 
-    return av_audio_fifo_read(afifo, *output, nb_samples);
+    प्रत्यागम av_audio_fifo_read(afifo, *output, nb_samples);
 }
 
-static int write_samples_to_audio_fifo(AVAudioFifo* afifo, const TestStruct *test_sample,
-                                       int nb_samples, int offset)
+स्थिर पूर्णाङ्क write_samples_गन्तव्यम्_audio_fifo(AVAudioFifo* afifo, ध्रुव TestStruct *test_sample,
+                                       पूर्णाङ्क nb_samples, पूर्णाङ्क विस्थापनम्)
 {
-    int offset_size, i;
-    void *data_planes[MAX_CHANNELS];
+    पूर्णाङ्क विस्थापनम्_आकार, i;
+    शून्य *दत्त_planes[MAX_CHANNELS];
 
-    if(nb_samples > test_sample->nb_samples_pch - offset){
-        return 0;
+    यदि(nb_samples > test_sample->nb_samples_pch - विस्थापनम्){
+        प्रत्यागम 0;
     }
-    if(offset >= test_sample->nb_samples_pch){
-        return 0;
+    यदि(विस्थापनम् >= test_sample->nb_samples_pch){
+        प्रत्यागम 0;
     }
-    offset_size  = offset * afifo->sample_size;
+    विस्थापनम्_आकार  = विस्थापनम् * afifo->sample_आकार;
 
-    for (i = 0; i < afifo->nb_buffers ; ++i){
-        data_planes[i] = (uint8_t*)test_sample->data_planes[i] + offset_size;
+    प्रति (i = 0; i < afifo->nb_buffers ; ++i){
+        दत्त_planes[i] = (uint8_t*)test_sample->दत्त_planes[i] + विस्थापनम्_आकार;
     }
 
-    return av_audio_fifo_write(afifo, data_planes, nb_samples);
+    प्रत्यागम av_audio_fifo_write(afifo, दत्त_planes, nb_samples);
 }
 
-static void test_function(const TestStruct *test_sample)
+स्थिर शून्य test_function(ध्रुव TestStruct *test_sample)
 {
-    int ret, i;
-    void **output_data  = NULL;
+    पूर्णाङ्क ret, i;
+    शून्य **output_दत्त  = रिक्त;
     AVAudioFifo *afifo  = av_audio_fifo_alloc(test_sample->format, test_sample->nb_ch,
                                             test_sample->nb_samples_pch);
-    if (!afifo) {
+    यदि (!afifo) {
         ERROR("ERROR: av_audio_fifo_alloc returned NULL!");
     }
-    ret = write_samples_to_audio_fifo(afifo, test_sample, test_sample->nb_samples_pch, 0);
-    if (ret < 0){
+    ret = write_samples_गन्तव्यम्_audio_fifo(afifo, test_sample, test_sample->nb_samples_pch, 0);
+    यदि (ret < 0){
         ERROR("ERROR: av_audio_fifo_write failed!");
     }
-    printf("written: %d\n", ret);
+    प्रारूप_लिख("written: %d\n", ret);
 
-    ret = write_samples_to_audio_fifo(afifo, test_sample, test_sample->nb_samples_pch, 0);
-    if (ret < 0){
+    ret = write_samples_गन्तव्यम्_audio_fifo(afifo, test_sample, test_sample->nb_samples_pch, 0);
+    यदि (ret < 0){
         ERROR("ERROR: av_audio_fifo_write failed!");
     }
-    printf("written: %d\n", ret);
-    printf("remaining samples in audio_fifo: %d\n\n", av_audio_fifo_size(afifo));
+    प्रारूप_लिख("written: %d\n", ret);
+    प्रारूप_लिख("remaining samples in audio_fifo: %d\n\n", av_audio_fifo_आकार(afifo));
 
-    ret = read_samples_from_audio_fifo(afifo, &output_data, test_sample->nb_samples_pch);
-    if (ret < 0){
+    ret = read_samples_from_audio_fifo(afifo, &output_दत्त, test_sample->nb_samples_pch);
+    यदि (ret < 0){
         ERROR("ERROR: av_audio_fifo_read failed!");
     }
-    printf("read: %d\n", ret);
-    print_audio_bytes(test_sample, output_data, ret);
-    printf("remaining samples in audio_fifo: %d\n\n", av_audio_fifo_size(afifo));
+    प्रारूप_लिख("read: %d\n", ret);
+    print_audio_अष्टकानि(test_sample, output_दत्त, ret);
+    प्रारूप_लिख("remaining samples in audio_fifo: %d\n\n", av_audio_fifo_आकार(afifo));
 
     /* test av_audio_fifo_peek */
-    ret = av_audio_fifo_peek(afifo, output_data, afifo->nb_samples);
-    if (ret < 0){
+    ret = av_audio_fifo_peek(afifo, output_दत्त, afifo->nb_samples);
+    यदि (ret < 0){
         ERROR("ERROR: av_audio_fifo_peek failed!");
     }
-    printf("peek:\n");
-    print_audio_bytes(test_sample, output_data, ret);
-    printf("\n");
+    प्रारूप_लिख("peek:\n");
+    print_audio_अष्टकानि(test_sample, output_दत्त, ret);
+    प्रारूप_लिख("\n");
 
     /* test av_audio_fifo_peek_at */
-    printf("peek_at:\n");
-    for (i = 0; i < afifo->nb_samples; ++i){
-        ret = av_audio_fifo_peek_at(afifo, output_data, 1, i);
-        if (ret < 0){
+    प्रारूप_लिख("peek_at:\n");
+    प्रति (i = 0; i < afifo->nb_samples; ++i){
+        ret = av_audio_fifo_peek_at(afifo, output_दत्त, 1, i);
+        यदि (ret < 0){
             ERROR("ERROR: av_audio_fifo_peek_at failed!");
         }
-        printf("%d:\n", i);
-        print_audio_bytes(test_sample, output_data, ret);
+        प्रारूप_लिख("%d:\n", i);
+        print_audio_अष्टकानि(test_sample, output_दत्त, ret);
     }
-    printf("\n");
+    प्रारूप_लिख("\n");
 
     /* test av_audio_fifo_drain */
     ret = av_audio_fifo_drain(afifo, afifo->nb_samples);
-    if (ret < 0){
+    यदि (ret < 0){
         ERROR("ERROR: av_audio_fifo_drain failed!");
     }
-    if (afifo->nb_samples){
+    यदि (afifo->nb_samples){
         ERROR("drain failed to flush all samples in audio_fifo!");
     }
 
     /* deallocate */
-    free_data_planes(afifo, output_data);
+    free_दत्त_planes(afifo, output_दत्त);
     av_audio_fifo_free(afifo);
 }
 
-int main(void)
+पूर्णाङ्क मुख्यम्(शून्य)
 {
-    int t, tests = sizeof(test_struct)/sizeof(test_struct[0]);
+    पूर्णाङ्क t, tests = परिमाण(test_struct)/परिमाण(test_struct[0]);
 
-    for (t = 0; t < tests; ++t){
-        printf("\nTEST: %d\n\n", t+1);
+    प्रति (t = 0; t < tests; ++t){
+        प्रारूप_लिख("\nTEST: %d\n\n", t+1);
         test_function(&test_struct[t]);
     }
-    return 0;
+    प्रत्यागम 0;
 }

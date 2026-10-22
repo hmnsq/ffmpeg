@@ -21,59 +21,59 @@
  * misc parsing utilities
  */
 
-#include <time.h>
+#अन्तर्भाव <time.h>
 
-#include "avstring.h"
-#include "avutil.h"
-#include "common.h"
-#include "eval.h"
-#include "log.h"
-#include "random_seed.h"
-#include "time_internal.h"
-#include "parseutils.h"
-#include "time.h"
+#अन्तर्भाव "avstring.h"
+#अन्तर्भाव "avutil.h"
+#अन्तर्भाव "common.h"
+#अन्तर्भाव "eval.h"
+#अन्तर्भाव "log.h"
+#अन्तर्भाव "random_seed.h"
+#अन्तर्भाव "time_internal.h"
+#अन्तर्भाव "parseutils.h"
+#अन्तर्भाव "time.h"
 
-#ifdef TEST
+#यदि_परिभाषितम् TEST
 
-#define av_get_random_seed av_get_random_seed_deterministic
-static uint32_t av_get_random_seed_deterministic(void);
+#परिभाषय av_get_random_बीजम् av_get_random_बीजम्_deterministic
+स्थिर uint32_t av_get_random_बीजम्_deterministic(शून्य);
 
-#define av_gettime() 1331972053200000
+#परिभाषय av_gettime() 1331972053200000
 
-#endif
+#यदि_अन्तः
 
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx)
+पूर्णाङ्क av_parse_अनुपातः(AVRational *q, ध्रुव वर्ण *str, पूर्णाङ्क max,
+                   पूर्णाङ्क log_विस्थापनम्, शून्य *log_ctx)
 {
-    char c;
-    int ret;
+    वर्ण c;
+    पूर्णाङ्क ret;
 
-    if (sscanf(str, "%d:%d%c", &q->num, &q->den, &c) != 2) {
-        double d;
-        ret = av_expr_parse_and_eval(&d, str, NULL, NULL,
-                                     NULL, NULL, NULL, NULL,
-                                     NULL, log_offset, log_ctx);
-        if (ret < 0)
-            return ret;
+    यदि (वाक्यात्_पठ(str, "%d:%d%c", &q->अङ्कः, &q->den, &c) != 2) {
+        द्विगुण d;
+        ret = av_व्यञ्जकम्_parse_and_eval(&d, str, रिक्त, रिक्त,
+                                     रिक्त, रिक्त, रिक्त, रिक्त,
+                                     रिक्त, log_विस्थापनम्, log_ctx);
+        यदि (ret < 0)
+            प्रत्यागम ret;
         *q = av_d2q(d, max);
-    } else {
-        av_reduce(&q->num, &q->den, q->num, q->den, max);
+    } अन्यथा {
+        av_reduce(&q->अङ्कः, &q->den, q->अङ्कः, q->den, max);
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-typedef struct VideoSizeAbbr {
-    const char *abbr;
-    int width, height;
-} VideoSizeAbbr;
+प्रकारनिर्देश संरचना Video_आकार_Abbr {
+    ध्रुव वर्ण *abbr;
+    पूर्णाङ्क विस्तारः, height;
+} Video_आकार_Abbr;
 
-typedef struct VideoRateAbbr {
-    const char *abbr;
-    AVRational rate;
-} VideoRateAbbr;
+प्रकारनिर्देश संरचना Video_दरः_Abbr {
+    ध्रुव वर्ण *abbr;
+    AVRational दरः;
+} Video_दरः_Abbr;
 
-static const VideoSizeAbbr video_size_abbrs[] = {
+स्थिर ध्रुव Video_आकार_Abbr video_आकार_abbrs[] = {
     { "ntsc",      720, 480 },
     { "pal",       720, 576 },
     { "qntsc",     352, 240 }, /* VCD compliant NTSC */
@@ -131,7 +131,7 @@ static const VideoSizeAbbr video_size_abbrs[] = {
     { "uhd4320",  7680,4320 },
 };
 
-static const VideoRateAbbr video_rate_abbrs[]= {
+स्थिर ध्रुव Video_दरः_Abbr video_दरः_abbrs[]= {
     { "ntsc",      { 30000, 1001 } },
     { "pal",       {    25,    1 } },
     { "qntsc",     { 30000, 1001 } }, /* VCD compliant NTSC */
@@ -142,71 +142,71 @@ static const VideoRateAbbr video_rate_abbrs[]= {
     { "ntsc-film", { 24000, 1001 } },
 };
 
-static const char *months[12] = {
+स्थिर ध्रुव वर्ण *months[12] = {
     "january", "february", "march", "april", "may", "june", "july", "august",
     "september", "october", "november", "december"
 };
 
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str)
+पूर्णाङ्क av_parse_video_आकार(पूर्णाङ्क *विस्तारः_ptr, पूर्णाङ्क *height_ptr, ध्रुव वर्ण *str)
 {
-    int i;
-    int n = FF_ARRAY_ELEMS(video_size_abbrs);
-    const char *p;
-    int width = 0, height = 0;
+    पूर्णाङ्क i;
+    पूर्णाङ्क n = FF_ARRAY_ELEMS(video_आकार_abbrs);
+    ध्रुव वर्ण *p;
+    पूर्णाङ्क विस्तारः = 0, height = 0;
 
-    for (i = 0; i < n; i++) {
-        if (!strcmp(video_size_abbrs[i].abbr, str)) {
-            width  = video_size_abbrs[i].width;
-            height = video_size_abbrs[i].height;
-            break;
+    प्रति (i = 0; i < n; i++) {
+        यदि (!वाक्यं_तुलय(video_आकार_abbrs[i].abbr, str)) {
+            विस्तारः  = video_आकार_abbrs[i].विस्तारः;
+            height = video_आकार_abbrs[i].height;
+            भङ्ग;
         }
     }
-    if (i == n) {
-        width = strtol(str, (void*)&p, 10);
-        if (*p)
+    यदि (i == n) {
+        विस्तारः = strtol(str, (शून्य*)&p, 10);
+        यदि (*p)
             p++;
-        height = strtol(p, (void*)&p, 10);
+        height = strtol(p, (शून्य*)&p, 10);
 
         /* trailing extraneous data detected, like in 123x345foobar */
-        if (*p)
-            return AVERROR(EINVAL);
+        यदि (*p)
+            प्रत्यागम AVERROR(EINVAL);
     }
-    if (width <= 0 || height <= 0)
-        return AVERROR(EINVAL);
-    *width_ptr  = width;
+    यदि (विस्तारः <= 0 || height <= 0)
+        प्रत्यागम AVERROR(EINVAL);
+    *विस्तारः_ptr  = विस्तारः;
     *height_ptr = height;
-    return 0;
+    प्रत्यागम 0;
 }
 
-int av_parse_video_rate(AVRational *rate, const char *arg)
+पूर्णाङ्क av_parse_video_दरः(AVRational *दरः, ध्रुव वर्ण *arg)
 {
-    int i, ret;
-    int n = FF_ARRAY_ELEMS(video_rate_abbrs);
+    पूर्णाङ्क i, ret;
+    पूर्णाङ्क n = FF_ARRAY_ELEMS(video_दरः_abbrs);
 
     /* First, we check our abbreviation table */
-    for (i = 0; i < n; ++i)
-        if (!strcmp(video_rate_abbrs[i].abbr, arg)) {
-            *rate = video_rate_abbrs[i].rate;
-            return 0;
+    प्रति (i = 0; i < n; ++i)
+        यदि (!वाक्यं_तुलय(video_दरः_abbrs[i].abbr, arg)) {
+            *दरः = video_दरः_abbrs[i].दरः;
+            प्रत्यागम 0;
         }
 
     /* Then, we try to parse it as fraction */
-    if ((ret = av_parse_ratio_quiet(rate, arg, 1001000)) < 0)
-        return ret;
-    if (!rate->num || !rate->den)
-        if ((ret = av_parse_ratio_quiet(rate, arg, INT_MAX)) < 0)
-            return ret;
-    if (rate->num <= 0 || rate->den <= 0)
-        return AVERROR(EINVAL);
-    return 0;
+    यदि ((ret = av_parse_अनुपातः_quiet(दरः, arg, 1001000)) < 0)
+        प्रत्यागम ret;
+    यदि (!दरः->अङ्कः || !दरः->den)
+        यदि ((ret = av_parse_अनुपातः_quiet(दरः, arg, अधिकतम_पूर्णाङ्कः)) < 0)
+            प्रत्यागम ret;
+    यदि (दरः->अङ्कः <= 0 || दरः->den <= 0)
+        प्रत्यागम AVERROR(EINVAL);
+    प्रत्यागम 0;
 }
 
-typedef struct ColorEntry {
-    const char *name;            ///< a string representing the name of the color
+प्रकारनिर्देश संरचना Color_प्रविष्टिः {
+    ध्रुव वर्ण *name;            ///< a string representing the name of the color
     uint8_t     rgb_color[3];    ///< RGB values for the color
-} ColorEntry;
+} Color_प्रविष्टिः;
 
-static const ColorEntry color_table[] = {
+स्थिर ध्रुव Color_प्रविष्टिः color_सारणी[] = {
     { "AliceBlue",            { 0xF0, 0xF8, 0xFF } },
     { "AntiqueWhite",         { 0xFA, 0xEB, 0xD7 } },
     { "Aqua",                 { 0x00, 0xFF, 0xFF } },
@@ -349,234 +349,234 @@ static const ColorEntry color_table[] = {
     { "YellowGreen",          { 0x9A, 0xCD, 0x32 } },
 };
 
-static int color_table_compare(const void *lhs, const void *rhs)
+स्थिर पूर्णाङ्क color_सारणी_compare(ध्रुव शून्य *lhs, ध्रुव शून्य *rhs)
 {
-    return av_strcasecmp(lhs, ((const ColorEntry *)rhs)->name);
+    प्रत्यागम av_strcasecmp(lhs, ((ध्रुव Color_प्रविष्टिः *)rhs)->name);
 }
 
-#define ALPHA_SEP '@'
+#परिभाषय ALPHA_SEP '@'
 
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
-                   void *log_ctx)
+पूर्णाङ्क av_parse_color(uint8_t *rgba_color, ध्रुव वर्ण *color_string, पूर्णाङ्क slen,
+                   शून्य *log_ctx)
 {
-    char *tail, color_string2[128];
-    const ColorEntry *entry;
-    int len, hex_offset = 0;
+    वर्ण *पुच्छ, color_string2[128];
+    ध्रुव Color_प्रविष्टिः *प्रविष्टिः;
+    पूर्णाङ्क len, hex_विस्थापनम् = 0;
 
-    if (color_string[0] == '#') {
-        hex_offset = 1;
-    } else if (!strncmp(color_string, "0x", 2))
-        hex_offset = 2;
+    यदि (color_string[0] == '#') {
+        hex_विस्थापनम् = 1;
+    } अन्यथा यदि (!वाक्ये_तुलय(color_string, "0x", 2))
+        hex_विस्थापनम् = 2;
 
-    if (slen < 0)
-        slen = strlen(color_string);
-    av_strlcpy(color_string2, color_string + hex_offset,
-               FFMIN(slen-hex_offset+1, sizeof(color_string2)));
-    if ((tail = strchr(color_string2, ALPHA_SEP)))
-        *tail++ = 0;
-    len = strlen(color_string2);
+    यदि (slen < 0)
+        slen = वाक्यदैर्घ्यम्(color_string);
+    av_strlcpy(color_string2, color_string + hex_विस्थापनम्,
+               FFMIN(slen-hex_विस्थापनम्+1, परिमाण(color_string2)));
+    यदि ((पुच्छ = strchr(color_string2, ALPHA_SEP)))
+        *पुच्छ++ = 0;
+    len = वाक्यदैर्घ्यम्(color_string2);
     rgba_color[3] = 255;
 
-    if (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
-        int rgba = av_get_random_seed();
+    यदि (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
+        पूर्णाङ्क rgba = av_get_random_बीजम्();
         rgba_color[0] = rgba >> 24;
         rgba_color[1] = rgba >> 16;
         rgba_color[2] = rgba >> 8;
         rgba_color[3] = rgba;
-    } else if (hex_offset ||
+    } अन्यथा यदि (hex_विस्थापनम् ||
                strspn(color_string2, "0123456789ABCDEFabcdef") == len) {
-        char *tail;
-        unsigned int rgba = strtoul(color_string2, &tail, 16);
+        वर्ण *पुच्छ;
+        अचिह्नित पूर्णाङ्क rgba = strtoul(color_string2, &पुच्छ, 16);
 
-        if (*tail || (len != 6 && len != 8)) {
+        यदि (*पुच्छ || (len != 6 && len != 8)) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid 0xRRGGBB[AA] color string: '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            प्रत्यागम AVERROR(EINVAL);
         }
-        if (len == 8) {
+        यदि (len == 8) {
             rgba_color[3] = rgba;
             rgba >>= 8;
         }
         rgba_color[0] = rgba >> 16;
         rgba_color[1] = rgba >> 8;
         rgba_color[2] = rgba;
-    } else {
-        entry = bsearch(color_string2,
-                        color_table,
-                        FF_ARRAY_ELEMS(color_table),
-                        sizeof(ColorEntry),
-                        color_table_compare);
-        if (!entry) {
+    } अन्यथा {
+        प्रविष्टिः = bsearch(color_string2,
+                        color_सारणी,
+                        FF_ARRAY_ELEMS(color_सारणी),
+                        परिमाण(Color_प्रविष्टिः),
+                        color_सारणी_compare);
+        यदि (!प्रविष्टिः) {
             av_log(log_ctx, AV_LOG_ERROR, "Cannot find color '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            प्रत्यागम AVERROR(EINVAL);
         }
-        memcpy(rgba_color, entry->rgb_color, 3);
+        स्मृतिं_प्रतिलिख(rgba_color, प्रविष्टिः->rgb_color, 3);
     }
 
-    if (tail) {
-        double alpha;
-        const char *alpha_string = tail;
-        if (!strncmp(alpha_string, "0x", 2)) {
-            alpha = strtoul(alpha_string, &tail, 16);
-        } else {
-            double norm_alpha = strtod(alpha_string, &tail);
-            if (norm_alpha < 0.0 || norm_alpha > 1.0)
+    यदि (पुच्छ) {
+        द्विगुण alpha;
+        ध्रुव वर्ण *alpha_string = पुच्छ;
+        यदि (!वाक्ये_तुलय(alpha_string, "0x", 2)) {
+            alpha = strtoul(alpha_string, &पुच्छ, 16);
+        } अन्यथा {
+            द्विगुण norm_alpha = strtod(alpha_string, &पुच्छ);
+            यदि (norm_alpha < 0.0 || norm_alpha > 1.0)
                 alpha = 256;
-            else
+            अन्यथा
                 alpha = 255 * norm_alpha;
         }
 
-        if (tail == alpha_string || *tail || alpha > 255 || alpha < 0) {
+        यदि (पुच्छ == alpha_string || *पुच्छ || alpha > 255 || alpha < 0) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid alpha value specifier '%s' in '%s'\n",
                    alpha_string, color_string);
-            return AVERROR(EINVAL);
+            प्रत्यागम AVERROR(EINVAL);
         }
         rgba_color[3] = alpha;
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgbp)
+ध्रुव वर्ण *av_get_ज्ञातम्_color_name(पूर्णाङ्क color_idx, ध्रुव uint8_t **rgbp)
 {
-    const ColorEntry *color;
+    ध्रुव Color_प्रविष्टिः *color;
 
-    if ((unsigned)color_idx >= FF_ARRAY_ELEMS(color_table))
-        return NULL;
+    यदि ((अचिह्नित)color_idx >= FF_ARRAY_ELEMS(color_सारणी))
+        प्रत्यागम रिक्त;
 
-    color = &color_table[color_idx];
-    if (rgbp)
+    color = &color_सारणी[color_idx];
+    यदि (rgbp)
         *rgbp = color->rgb_color;
 
-    return color->name;
+    प्रत्यागम color->name;
 }
 
 /* get a positive number between n_min and n_max, for a maximum length
    of len_max. Return -1 if error. */
-static int date_get_num(const char **pp,
-                        int n_min, int n_max, int len_max)
+स्थिर पूर्णाङ्क date_get_अङ्कः(ध्रुव वर्ण **pp,
+                        पूर्णाङ्क n_min, पूर्णाङ्क n_max, पूर्णाङ्क len_max)
 {
-    int i, val, c;
-    const char *p;
+    पूर्णाङ्क i, val, c;
+    ध्रुव वर्ण *p;
 
     p = *pp;
     val = 0;
-    for(i = 0; i < len_max; i++) {
+    प्रति(i = 0; i < len_max; i++) {
         c = *p;
-        if (!av_isdigit(c))
-            break;
+        यदि (!av_isdigit(c))
+            भङ्ग;
         val = (val * 10) + c - '0';
         p++;
     }
     /* no number read ? */
-    if (p == *pp)
-        return -1;
-    if (val < n_min || val > n_max)
-        return -1;
+    यदि (p == *pp)
+        प्रत्यागम -1;
+    यदि (val < n_min || val > n_max)
+        प्रत्यागम -1;
     *pp = p;
-    return val;
+    प्रत्यागम val;
 }
 
-static int date_get_month(const char **pp) {
-    int i = 0;
-    for (; i < 12; i++) {
-        if (!av_strncasecmp(*pp, months[i], 3)) {
-            const char *mo_full = months[i] + 3;
-            int len = strlen(mo_full);
+स्थिर पूर्णाङ्क date_get_month(ध्रुव वर्ण **pp) {
+    पूर्णाङ्क i = 0;
+    प्रति (; i < 12; i++) {
+        यदि (!av_strncasecmp(*pp, months[i], 3)) {
+            ध्रुव वर्ण *mo_पूर्णम् = months[i] + 3;
+            पूर्णाङ्क len = वाक्यदैर्घ्यम्(mo_पूर्णम्);
             *pp += 3;
-            if (len > 0 && !av_strncasecmp(*pp, mo_full, len))
+            यदि (len > 0 && !av_strncasecmp(*pp, mo_पूर्णम्, len))
                 *pp += len;
-            return i;
+            प्रत्यागम i;
         }
     }
-    return -1;
+    प्रत्यागम -1;
 }
 
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt)
+वर्ण *av_small_strptime(ध्रुव वर्ण *p, ध्रुव वर्ण *fmt, संरचना tm *dt)
 {
-    int c, val;
+    पूर्णाङ्क c, val;
 
-    while((c = *fmt++)) {
-        if (c != '%') {
-            if (av_isspace(c))
-                for (; *p && av_isspace(*p); p++);
-            else if (*p != c)
-                return NULL;
-            else p++;
-            continue;
+    यावत्((c = *fmt++)) {
+        यदि (c != '%') {
+            यदि (av_isspace(c))
+                प्रति (; *p && av_isspace(*p); p++);
+            अन्यथा यदि (*p != c)
+                प्रत्यागम रिक्त;
+            अन्यथा p++;
+            अनुवर्त;
         }
 
         c = *fmt++;
-        switch(c) {
-        case 'H':
-        case 'J':
-            val = date_get_num(&p, 0, c == 'H' ? 23 : INT_MAX, c == 'H' ? 2 : 4);
+        विकल्प(c) {
+        पक्ष 'H':
+        पक्ष 'J':
+            val = date_get_अङ्कः(&p, 0, c == 'H' ? 23 : अधिकतम_पूर्णाङ्कः, c == 'H' ? 2 : 4);
 
-            if (val == -1)
-                return NULL;
+            यदि (val == -1)
+                प्रत्यागम रिक्त;
             dt->tm_hour = val;
-            break;
-        case 'M':
-            val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            भङ्ग;
+        पक्ष 'M':
+            val = date_get_अङ्कः(&p, 0, 59, 2);
+            यदि (val == -1)
+                प्रत्यागम रिक्त;
             dt->tm_min = val;
-            break;
-        case 'S':
-            val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            भङ्ग;
+        पक्ष 'S':
+            val = date_get_अङ्कः(&p, 0, 59, 2);
+            यदि (val == -1)
+                प्रत्यागम रिक्त;
             dt->tm_sec = val;
-            break;
-        case 'Y':
-            val = date_get_num(&p, 0, 9999, 4);
-            if (val == -1)
-                return NULL;
+            भङ्ग;
+        पक्ष 'Y':
+            val = date_get_अङ्कः(&p, 0, 9999, 4);
+            यदि (val == -1)
+                प्रत्यागम रिक्त;
             dt->tm_year = val - 1900;
-            break;
-        case 'm':
-            val = date_get_num(&p, 1, 12, 2);
-            if (val == -1)
-                return NULL;
+            भङ्ग;
+        पक्ष 'm':
+            val = date_get_अङ्कः(&p, 1, 12, 2);
+            यदि (val == -1)
+                प्रत्यागम रिक्त;
             dt->tm_mon = val - 1;
-            break;
-        case 'd':
-            val = date_get_num(&p, 1, 31, 2);
-            if (val == -1)
-                return NULL;
+            भङ्ग;
+        पक्ष 'd':
+            val = date_get_अङ्कः(&p, 1, 31, 2);
+            यदि (val == -1)
+                प्रत्यागम रिक्त;
             dt->tm_mday = val;
-            break;
-        case 'T':
+            भङ्ग;
+        पक्ष 'T':
             p = av_small_strptime(p, "%H:%M:%S", dt);
-            if (!p)
-                return NULL;
-            break;
-        case 'b':
-        case 'B':
-        case 'h':
+            यदि (!p)
+                प्रत्यागम रिक्त;
+            भङ्ग;
+        पक्ष 'b':
+        पक्ष 'B':
+        पक्ष 'h':
             val = date_get_month(&p);
-            if (val == -1)
-                return NULL;
+            यदि (val == -1)
+                प्रत्यागम रिक्त;
             dt->tm_mon = val;
-            break;
-        case '%':
-            if (*p++ != '%')
-                return NULL;
-            break;
-        default:
-            return NULL;
+            भङ्ग;
+        पक्ष '%':
+            यदि (*p++ != '%')
+                प्रत्यागम रिक्त;
+            भङ्ग;
+        स्वभाव:
+            प्रत्यागम रिक्त;
         }
     }
 
-    return (char*)p;
+    प्रत्यागम (वर्ण*)p;
 }
 
-time_t av_timegm(struct tm *tm)
+time_t av_timegm(संरचना tm *tm)
 {
     time_t t;
 
-    int y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
+    पूर्णाङ्क y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
 
-    if (m < 3) {
+    यदि (m < 3) {
         m += 12;
         y--;
     }
@@ -586,147 +586,147 @@ time_t av_timegm(struct tm *tm)
 
     t += 3600 * tm->tm_hour + 60 * tm->tm_min + tm->tm_sec;
 
-    return t;
+    प्रत्यागम t;
 }
 
-int av_parse_time(int64_t *timeval, const char *timestr, int duration)
+पूर्णाङ्क av_parse_time(int64_t *timeval, ध्रुव वर्ण *timestr, पूर्णाङ्क duration)
 {
-    const char *p, *q;
+    ध्रुव वर्ण *p, *q;
     int64_t t, now64;
     time_t now;
-    struct tm dt = { 0 }, tmbuf;
-    int today = 0, negative = 0, microseconds = 0, suffix = 1000000;
-    int i;
-    static const char * const date_fmt[] = {
+    संरचना tm dt = { 0 }, tmbuf;
+    पूर्णाङ्क today = 0, negative = 0, microseconds = 0, suffix = 1000000;
+    पूर्णाङ्क i;
+    स्थिर ध्रुव वर्ण * ध्रुव date_fmt[] = {
         "%Y - %m - %d",
         "%Y%m%d",
     };
-    static const char * const time_fmt[] = {
+    स्थिर ध्रुव वर्ण * ध्रुव time_fmt[] = {
         "%H:%M:%S",
         "%H%M%S",
     };
-    static const char * const tz_fmt[] = {
+    स्थिर ध्रुव वर्ण * ध्रुव tz_fmt[] = {
         "%H:%M",
         "%H%M",
         "%H",
     };
 
     p = timestr;
-    q = NULL;
+    q = रिक्त;
     *timeval = INT64_MIN;
-    if (!duration) {
+    यदि (!duration) {
         now64 = av_gettime();
         now = now64 / 1000000;
 
-        if (!av_strcasecmp(timestr, "now")) {
+        यदि (!av_strcasecmp(timestr, "now")) {
             *timeval = now64;
-            return 0;
+            प्रत्यागम 0;
         }
 
         /* parse the year-month-day part */
-        for (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
+        प्रति (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
             q = av_small_strptime(p, date_fmt[i], &dt);
-            if (q)
-                break;
+            यदि (q)
+                भङ्ग;
         }
 
         /* if the year-month-day part is missing, then take the
          * current year-month-day time */
-        if (!q) {
+        यदि (!q) {
             today = 1;
             q = p;
         }
         p = q;
 
-        if (*p == 'T' || *p == 't')
+        यदि (*p == 'T' || *p == 't')
             p++;
-        else
-            while (av_isspace(*p))
+        अन्यथा
+            यावत् (av_isspace(*p))
                 p++;
 
         /* parse the hour-minute-second part */
-        for (i = 0; i < FF_ARRAY_ELEMS(time_fmt); i++) {
+        प्रति (i = 0; i < FF_ARRAY_ELEMS(time_fmt); i++) {
             q = av_small_strptime(p, time_fmt[i], &dt);
-            if (q)
-                break;
+            यदि (q)
+                भङ्ग;
         }
-    } else {
+    } अन्यथा {
         /* parse timestr as a duration */
-        if (p[0] == '-') {
+        यदि (p[0] == '-') {
             negative = 1;
             ++p;
         }
         /* parse timestr as HH:MM:SS */
         q = av_small_strptime(p, "%J:%M:%S", &dt);
-        if (!q) {
+        यदि (!q) {
             /* parse timestr as MM:SS */
             q = av_small_strptime(p, "%M:%S", &dt);
             dt.tm_hour = 0;
         }
-        if (!q) {
-            char *o;
+        यदि (!q) {
+            वर्ण *o;
             /* parse timestr as S+ */
             errno = 0;
             t = strtoll(p, &o, 10);
-            if (o == p) /* the parsing didn't succeed */
-                return AVERROR(EINVAL);
-            if (errno == ERANGE)
-                return AVERROR(ERANGE);
+            यदि (o == p) /* the parsing didn't succeed */
+                प्रत्यागम AVERROR(EINVAL);
+            यदि (errno == ERANGE)
+                प्रत्यागम AVERROR(ERANGE);
             q = o;
-        } else {
+        } अन्यथा {
             t = dt.tm_hour * 3600 + dt.tm_min * 60 + dt.tm_sec;
         }
     }
 
     /* Now we have all the fields that we can get */
-    if (!q)
-        return AVERROR(EINVAL);
+    यदि (!q)
+        प्रत्यागम AVERROR(EINVAL);
 
     /* parse the .m... part */
-    if (*q == '.') {
-        int n;
+    यदि (*q == '.') {
+        पूर्णाङ्क n;
         q++;
-        for (n = 100000; n >= 1; n /= 10, q++) {
-            if (!av_isdigit(*q))
-                break;
+        प्रति (n = 100000; n >= 1; n /= 10, q++) {
+            यदि (!av_isdigit(*q))
+                भङ्ग;
             microseconds += n * (*q - '0');
         }
-        while (av_isdigit(*q))
+        यावत् (av_isdigit(*q))
             q++;
     }
 
-    if (duration) {
-        if (q[0] == 'm' && q[1] == 's') {
+    यदि (duration) {
+        यदि (q[0] == 'm' && q[1] == 's') {
             suffix = 1000;
             microseconds /= 1000;
             q += 2;
-        } else if (q[0] == 'u' && q[1] == 's') {
+        } अन्यथा यदि (q[0] == 'u' && q[1] == 's') {
             suffix = 1;
             microseconds = 0;
             q += 2;
-        } else if (*q == 's')
+        } अन्यथा यदि (*q == 's')
             q++;
-    } else {
-        int is_utc = *q == 'Z' || *q == 'z';
-        int tzoffset = 0;
+    } अन्यथा {
+        पूर्णाङ्क is_utc = *q == 'Z' || *q == 'z';
+        पूर्णाङ्क tzoffset = 0;
         q += is_utc;
-        if (!today && !is_utc && (*q == '+' || *q == '-')) {
-            struct tm tz = { 0 };
-            int sign = (*q == '+' ? -1 : 1);
+        यदि (!today && !is_utc && (*q == '+' || *q == '-')) {
+            संरचना tm tz = { 0 };
+            पूर्णाङ्क sign = (*q == '+' ? -1 : 1);
             q++;
             p = q;
-            for (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
+            प्रति (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
                 q = av_small_strptime(p, tz_fmt[i], &tz);
-                if (q)
-                    break;
+                यदि (q)
+                    भङ्ग;
             }
-            if (!q)
-                return AVERROR(EINVAL);
+            यदि (!q)
+                प्रत्यागम AVERROR(EINVAL);
             tzoffset = sign * (tz.tm_hour * 60 + tz.tm_min) * 60;
             is_utc = 1;
         }
-        if (today) { /* fill in today's date */
-            struct tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
+        यदि (today) { /* fill in today's date */
+            संरचना tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
             dt2.tm_hour = dt.tm_hour;
             dt2.tm_min  = dt.tm_min;
             dt2.tm_sec  = dt.tm_sec;
@@ -738,56 +738,56 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration)
     }
 
     /* Check that we are at the end of the string */
-    if (*q)
-        return AVERROR(EINVAL);
+    यदि (*q)
+        प्रत्यागम AVERROR(EINVAL);
 
-    if (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
-        return AVERROR(ERANGE);
+    यदि (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
+        प्रत्यागम AVERROR(ERANGE);
     t *= suffix;
-    if (INT64_MAX - microseconds < t)
-        return AVERROR(ERANGE);
+    यदि (INT64_MAX - microseconds < t)
+        प्रत्यागम AVERROR(ERANGE);
     t += microseconds;
-    if (t == INT64_MIN && negative)
-        return AVERROR(ERANGE);
+    यदि (t == INT64_MIN && negative)
+        प्रत्यागम AVERROR(ERANGE);
     *timeval = negative ? -t : t;
-    return 0;
+    प्रत्यागम 0;
 }
 
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info)
+पूर्णाङ्क av_find_info_चिह्नकम्(वर्ण *arg, पूर्णाङ्क arg_आकार, ध्रुव वर्ण *tag1, ध्रुव वर्ण *info)
 {
-    const char *p;
-    char tag[128], *q;
+    ध्रुव वर्ण *p;
+    वर्ण चिह्नकम्[128], *q;
 
     p = info;
-    if (*p == '?')
+    यदि (*p == '?')
         p++;
-    for(;;) {
-        q = tag;
-        while (*p != '\0' && *p != '=' && *p != '&') {
-            if ((q - tag) < sizeof(tag) - 1)
+    प्रति(;;) {
+        q = चिह्नकम्;
+        यावत् (*p != '\0' && *p != '=' && *p != '&') {
+            यदि ((q - चिह्नकम्) < परिमाण(चिह्नकम्) - 1)
                 *q++ = *p;
             p++;
         }
         *q = '\0';
         q = arg;
-        if (*p == '=') {
+        यदि (*p == '=') {
             p++;
-            while (*p != '&' && *p != '\0') {
-                if ((q - arg) < arg_size - 1) {
-                    if (*p == '+')
+            यावत् (*p != '&' && *p != '\0') {
+                यदि ((q - arg) < arg_आकार - 1) {
+                    यदि (*p == '+')
                         *q++ = ' ';
-                    else
+                    अन्यथा
                         *q++ = *p;
                 }
                 p++;
             }
         }
         *q = '\0';
-        if (!strcmp(tag, tag1))
-            return 1;
-        if (*p != '&')
-            break;
+        यदि (!वाक्यं_तुलय(चिह्नकम्, tag1))
+            प्रत्यागम 1;
+        यदि (*p != '&')
+            भङ्ग;
         p++;
     }
-    return 0;
+    प्रत्यागम 0;
 }

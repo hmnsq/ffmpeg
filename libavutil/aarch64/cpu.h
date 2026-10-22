@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AARCH64_CPU_H
-#define AVUTIL_AARCH64_CPU_H
+#यदि_अपरिभाषितम् AVUTIL_AARCH64_CPU_H
+#परिभाषय AVUTIL_AARCH64_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#अन्तर्भाव "libavutil/cpu.h"
+#अन्तर्भाव "libavutil/cpu_internal.h"
 
-#define have_armv8(flags)   CPUEXT(flags, ARMV8)
-#define have_neon(flags)    CPUEXT(flags, NEON)
-#define have_vfp(flags)     CPUEXT(flags, VFP)
-#define have_arm_crc(flags) CPUEXT(flags, ARM_CRC)
-#define have_arm_aes(flags) CPUEXT(flags, ARM_AES)
-#define have_pmull(flags)   CPUEXT(flags, PMULL)
-#define have_eor3(flags)    CPUEXT(flags, EOR3)
-#define have_dotprod(flags) CPUEXT(flags, DOTPROD)
-#define have_i8mm(flags)    CPUEXT(flags, I8MM)
-#define have_sve(flags)     CPUEXT(flags, SVE)
-#define have_sve2(flags)    CPUEXT(flags, SVE2)
-#define have_sme(flags)     CPUEXT(flags, SME)
-#define have_sme_i16i64(flags) CPUEXT(flags, SME_I16I64)
-#define have_sme2(flags)    CPUEXT(flags, SME2)
+#परिभाषय have_armv8(flags)   CPUEXT(flags, ARMV8)
+#परिभाषय have_neon(flags)    CPUEXT(flags, NEON)
+#परिभाषय have_vfp(flags)     CPUEXT(flags, VFP)
+#परिभाषय have_arm_crc(flags) CPUEXT(flags, ARM_CRC)
+#परिभाषय have_arm_aes(flags) CPUEXT(flags, ARM_AES)
+#परिभाषय have_pmull(flags)   CPUEXT(flags, PMULL)
+#परिभाषय have_eor3(flags)    CPUEXT(flags, EOR3)
+#परिभाषय have_dotprod(flags) CPUEXT(flags, DOTPROD)
+#परिभाषय have_i8mm(flags)    CPUEXT(flags, I8MM)
+#परिभाषय have_sve(flags)     CPUEXT(flags, SVE)
+#परिभाषय have_sve2(flags)    CPUEXT(flags, SVE2)
+#परिभाषय have_sme(flags)     CPUEXT(flags, SME)
+#परिभाषय have_sme_i16i64(flags) CPUEXT(flags, SME_I16I64)
+#परिभाषय have_sme2(flags)    CPUEXT(flags, SME2)
 
-#if HAVE_SVE
-int ff_aarch64_sve_length(void);
-#endif
+#यदि HAVE_SVE
+पूर्णाङ्क ff_aarch64_sve_दीर्घता(शून्य);
+#यदि_अन्तः
 
-#if HAVE_SME
-int ff_aarch64_sme_length(void);
-#endif
+#यदि HAVE_SME
+पूर्णाङ्क ff_aarch64_sme_दीर्घता(शून्य);
+#यदि_अन्तः
 
-#endif /* AVUTIL_AARCH64_CPU_H */
+#यदि_अन्तः /* AVUTIL_AARCH64_CPU_H */

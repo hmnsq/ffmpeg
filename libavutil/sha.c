@@ -21,75 +21,75 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#अन्तर्भाव <string.h>
 
-#include "config.h"
-#include "attributes.h"
-#include "bswap.h"
-#include "error.h"
-#include "sha.h"
-#include "intreadwrite.h"
-#include "mem.h"
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "attributes.h"
+#अन्तर्भाव "bswap.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "sha.h"
+#अन्तर्भाव "intreadwrite.h"
+#अन्तर्भाव "mem.h"
 
 /** hash context */
-typedef struct AVSHA {
+प्रकारनिर्देश संरचना AVSHA {
     uint8_t  digest_len;  ///< digest length in 32-bit words
-    uint64_t count;       ///< number of bytes in buffer
-    uint8_t  buffer[64];  ///< 512-bit buffer of input values used in hash updating
+    uint64_t गणनम्;       ///< number of bytes in buffer
+    uint8_t  बफर[64];  ///< 512-bit buffer of input values used in hash updating
     uint32_t state[8];    ///< current hash value
     /** function used to update hash for 512-bit input block */
-    void     (*transform)(uint32_t *state, const uint8_t buffer[64]);
+    शून्य     (*transform)(uint32_t *state, ध्रुव uint8_t बफर[64]);
 } AVSHA;
 
-const int av_sha_size = sizeof(AVSHA);
+ध्रुव पूर्णाङ्क av_sha_आकार = परिमाण(AVSHA);
 
-struct AVSHA *av_sha_alloc(void)
+संरचना AVSHA *av_sha_alloc(शून्य)
 {
-    return av_mallocz(sizeof(struct AVSHA));
+    प्रत्यागम av_mallocz(परिमाण(संरचना AVSHA));
 }
 
-#define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
+#परिभाषय rol(मानम्, द्वयङ्काः) (((मानम्) << (द्वयङ्काः)) | ((मानम्) >> (32 - (द्वयङ्काः))))
 
 /* (R0+R1), R2, R3, R4 are the different operations used in SHA1 */
-#define blk0(i) (block[i] = AV_RB32(buffer + 4 * (i)))
-#define blk(i)  (block[i] = rol(block[(i)-3] ^ block[(i)-8] ^ block[(i)-14] ^ block[(i)-16], 1))
+#परिभाषय blk0(i) (खण्डम्[i] = AV_RB32(बफर + 4 * (i)))
+#परिभाषय blk(i)  (खण्डम्[i] = rol(खण्डम्[(i)-3] ^ खण्डम्[(i)-8] ^ खण्डम्[(i)-14] ^ खण्डम्[(i)-16], 1))
 
-#define R0(v,w,x,y,z,i) z += (((w)&((x)^(y)))^(y))       + blk0(i) + 0x5A827999 + rol(v, 5); w = rol(w, 30);
-#define R1(v,w,x,y,z,i) z += (((w)&((x)^(y)))^(y))       + blk (i) + 0x5A827999 + rol(v, 5); w = rol(w, 30);
-#define R2(v,w,x,y,z,i) z += ( (w)^(x)       ^(y))       + blk (i) + 0x6ED9EBA1 + rol(v, 5); w = rol(w, 30);
-#define R3(v,w,x,y,z,i) z += ((((w)|(x))&(y))|((w)&(x))) + blk (i) + 0x8F1BBCDC + rol(v, 5); w = rol(w, 30);
-#define R4(v,w,x,y,z,i) z += ( (w)^(x)       ^(y))       + blk (i) + 0xCA62C1D6 + rol(v, 5); w = rol(w, 30);
+#परिभाषय R0(v,w,x,y,z,i) z += (((w)&((x)^(y)))^(y))       + blk0(i) + 0x5A827999 + rol(v, 5); w = rol(w, 30);
+#परिभाषय R1(v,w,x,y,z,i) z += (((w)&((x)^(y)))^(y))       + blk (i) + 0x5A827999 + rol(v, 5); w = rol(w, 30);
+#परिभाषय R2(v,w,x,y,z,i) z += ( (w)^(x)       ^(y))       + blk (i) + 0x6ED9EBA1 + rol(v, 5); w = rol(w, 30);
+#परिभाषय R3(v,w,x,y,z,i) z += ((((w)|(x))&(y))|((w)&(x))) + blk (i) + 0x8F1BBCDC + rol(v, 5); w = rol(w, 30);
+#परिभाषय R4(v,w,x,y,z,i) z += ( (w)^(x)       ^(y))       + blk (i) + 0xCA62C1D6 + rol(v, 5); w = rol(w, 30);
 
 /* Hash a single 512-bit block. This is the core of the algorithm. */
 
-static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
+स्थिर शून्य sha1_transform(uint32_t state[5], ध्रुव uint8_t बफर[64])
 {
-    uint32_t block[80];
-    unsigned int i, a, b, c, d, e;
+    uint32_t खण्डम्[80];
+    अचिह्नित पूर्णाङ्क i, a, b, c, d, e;
 
     a = state[0];
     b = state[1];
     c = state[2];
     d = state[3];
     e = state[4];
-#if CONFIG_SMALL
-    for (i = 0; i < 80; i++) {
-        int t;
-        if (i < 16)
-            t = AV_RB32(buffer + 4 * i);
-        else
-            t = rol(block[i-3] ^ block[i-8] ^ block[i-14] ^ block[i-16], 1);
-        block[i] = t;
+#यदि CONFIG_SMALL
+    प्रति (i = 0; i < 80; i++) {
+        पूर्णाङ्क t;
+        यदि (i < 16)
+            t = AV_RB32(बफर + 4 * i);
+        अन्यथा
+            t = rol(खण्डम्[i-3] ^ खण्डम्[i-8] ^ खण्डम्[i-14] ^ खण्डम्[i-16], 1);
+        खण्डम्[i] = t;
         t += e + rol(a, 5);
-        if (i < 40) {
-            if (i < 20)
+        यदि (i < 40) {
+            यदि (i < 20)
                 t += ((b&(c^d))^d)     + 0x5A827999;
-            else
+            अन्यथा
                 t += ( b^c     ^d)     + 0x6ED9EBA1;
-        } else {
-            if (i < 60)
+        } अन्यथा {
+            यदि (i < 60)
                 t += (((b|c)&d)|(b&c)) + 0x8F1BBCDC;
-            else
+            अन्यथा
                 t += ( b^c     ^d)     + 0xCA62C1D6;
         }
         e = d;
@@ -98,9 +98,9 @@ static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
         b = a;
         a = t;
     }
-#else
+#अन्यथा
 
-#define R1_0 \
+#परिभाषय R1_0 \
     R0(a, b, c, d, e, 0 + i); \
     R0(e, a, b, c, d, 1 + i); \
     R0(d, e, a, b, c, 2 + i); \
@@ -116,7 +116,7 @@ static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
     R1(c, d, e, a, b, 18);
     R1(b, c, d, e, a, 19);
 
-#define R1_20 \
+#परिभाषय R1_20 \
     R2(a, b, c, d, e, 0 + i); \
     R2(e, a, b, c, d, 1 + i); \
     R2(d, e, a, b, c, 2 + i); \
@@ -127,7 +127,7 @@ static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
     i = 20;
     R1_20; R1_20; R1_20; R1_20;
 
-#define R1_40 \
+#परिभाषय R1_40 \
     R3(a, b, c, d, e, 0 + i); \
     R3(e, a, b, c, d, 1 + i); \
     R3(d, e, a, b, c, 2 + i); \
@@ -137,7 +137,7 @@ static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
 
     R1_40; R1_40; R1_40; R1_40;
 
-#define R1_60 \
+#परिभाषय R1_60 \
     R4(a, b, c, d, e, 0 + i); \
     R4(e, a, b, c, d, 1 + i); \
     R4(d, e, a, b, c, 2 + i); \
@@ -146,7 +146,7 @@ static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
     i += 5
 
     R1_60; R1_60; R1_60; R1_60;
-#endif
+#यदि_अन्तः
     state[0] += a;
     state[1] += b;
     state[2] += c;
@@ -154,7 +154,7 @@ static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
     state[4] += e;
 }
 
-static const uint32_t K256[64] = {
+स्थिर ध्रुव uint32_t K256[64] = {
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
     0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -174,36 +174,36 @@ static const uint32_t K256[64] = {
 };
 
 
-#define Ch(x,y,z)   (((x) & ((y) ^ (z))) ^ (z))
-#define Maj(z,y,x)  ((((x) | (y)) & (z)) | ((x) & (y)))
+#परिभाषय Ch(x,y,z)   (((x) & ((y) ^ (z))) ^ (z))
+#परिभाषय Maj(z,y,x)  ((((x) | (y)) & (z)) | ((x) & (y)))
 
-#define Sigma0_256(x)   (rol((x), 30) ^ rol((x), 19) ^ rol((x), 10))
-#define Sigma1_256(x)   (rol((x), 26) ^ rol((x), 21) ^ rol((x),  7))
-#define sigma0_256(x)   (rol((x), 25) ^ rol((x), 14) ^ ((x) >> 3))
-#define sigma1_256(x)   (rol((x), 15) ^ rol((x), 13) ^ ((x) >> 10))
+#परिभाषय Sigma0_256(x)   (rol((x), 30) ^ rol((x), 19) ^ rol((x), 10))
+#परिभाषय Sigma1_256(x)   (rol((x), 26) ^ rol((x), 21) ^ rol((x),  7))
+#परिभाषय sigma0_256(x)   (rol((x), 25) ^ rol((x), 14) ^ ((x) >> 3))
+#परिभाषय sigma1_256(x)   (rol((x), 15) ^ rol((x), 13) ^ ((x) >> 10))
 
-#undef blk
-#define blk(i)  (block[i] = block[i - 16] + sigma0_256(block[i - 15]) + \
-                            sigma1_256(block[i - 2]) + block[i - 7])
+#अपरिभाषय blk
+#परिभाषय blk(i)  (खण्डम्[i] = खण्डम्[i - 16] + sigma0_256(खण्डम्[i - 15]) + \
+                            sigma1_256(खण्डम्[i - 2]) + खण्डम्[i - 7])
 
-#define ROUND256(a,b,c,d,e,f,g,h)   \
+#परिभाषय ROUND256(a,b,c,d,e,f,g,h)   \
     T1 += (h) + Sigma1_256(e) + Ch((e), (f), (g)) + K256[i]; \
     (d) += T1; \
     (h) = T1 + Sigma0_256(a) + Maj((a), (b), (c)); \
     i++
 
-#define ROUND256_0_TO_15(a,b,c,d,e,f,g,h)   \
+#परिभाषय ROUND256_0_गन्तव्यम्_15(a,b,c,d,e,f,g,h)   \
     T1 = blk0(i); \
     ROUND256(a,b,c,d,e,f,g,h)
 
-#define ROUND256_16_TO_63(a,b,c,d,e,f,g,h)   \
+#परिभाषय ROUND256_16_गन्तव्यम्_63(a,b,c,d,e,f,g,h)   \
     T1 = blk(i); \
     ROUND256(a,b,c,d,e,f,g,h)
 
-static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
+स्थिर शून्य sha256_transform(uint32_t *state, ध्रुव uint8_t बफर[64])
 {
-    unsigned int i, a, b, c, d, e, f, g, h;
-    uint32_t block[64];
+    अचिह्नित पूर्णाङ्क i, a, b, c, d, e, f, g, h;
+    uint32_t खण्डम्[64];
     uint32_t T1;
 
     a = state[0];
@@ -214,12 +214,12 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
     f = state[5];
     g = state[6];
     h = state[7];
-#if CONFIG_SMALL
-    for (i = 0; i < 64; i++) {
+#यदि CONFIG_SMALL
+    प्रति (i = 0; i < 64; i++) {
         uint32_t T2;
-        if (i < 16)
+        यदि (i < 16)
             T1 = blk0(i);
-        else
+        अन्यथा
             T1 = blk(i);
         T1 += h + Sigma1_256(e) + Ch(e, f, g) + K256[i];
         T2 = Sigma0_256(a) + Maj(a, b, c);
@@ -232,34 +232,34 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
         b = a;
         a = T1 + T2;
     }
-#else
+#अन्यथा
 
     i = 0;
-#define R256_0 \
-    ROUND256_0_TO_15(a, b, c, d, e, f, g, h); \
-    ROUND256_0_TO_15(h, a, b, c, d, e, f, g); \
-    ROUND256_0_TO_15(g, h, a, b, c, d, e, f); \
-    ROUND256_0_TO_15(f, g, h, a, b, c, d, e); \
-    ROUND256_0_TO_15(e, f, g, h, a, b, c, d); \
-    ROUND256_0_TO_15(d, e, f, g, h, a, b, c); \
-    ROUND256_0_TO_15(c, d, e, f, g, h, a, b); \
-    ROUND256_0_TO_15(b, c, d, e, f, g, h, a)
+#परिभाषय R256_0 \
+    ROUND256_0_गन्तव्यम्_15(a, b, c, d, e, f, g, h); \
+    ROUND256_0_गन्तव्यम्_15(h, a, b, c, d, e, f, g); \
+    ROUND256_0_गन्तव्यम्_15(g, h, a, b, c, d, e, f); \
+    ROUND256_0_गन्तव्यम्_15(f, g, h, a, b, c, d, e); \
+    ROUND256_0_गन्तव्यम्_15(e, f, g, h, a, b, c, d); \
+    ROUND256_0_गन्तव्यम्_15(d, e, f, g, h, a, b, c); \
+    ROUND256_0_गन्तव्यम्_15(c, d, e, f, g, h, a, b); \
+    ROUND256_0_गन्तव्यम्_15(b, c, d, e, f, g, h, a)
 
     R256_0; R256_0;
 
-#define R256_16 \
-    ROUND256_16_TO_63(a, b, c, d, e, f, g, h); \
-    ROUND256_16_TO_63(h, a, b, c, d, e, f, g); \
-    ROUND256_16_TO_63(g, h, a, b, c, d, e, f); \
-    ROUND256_16_TO_63(f, g, h, a, b, c, d, e); \
-    ROUND256_16_TO_63(e, f, g, h, a, b, c, d); \
-    ROUND256_16_TO_63(d, e, f, g, h, a, b, c); \
-    ROUND256_16_TO_63(c, d, e, f, g, h, a, b); \
-    ROUND256_16_TO_63(b, c, d, e, f, g, h, a)
+#परिभाषय R256_16 \
+    ROUND256_16_गन्तव्यम्_63(a, b, c, d, e, f, g, h); \
+    ROUND256_16_गन्तव्यम्_63(h, a, b, c, d, e, f, g); \
+    ROUND256_16_गन्तव्यम्_63(g, h, a, b, c, d, e, f); \
+    ROUND256_16_गन्तव्यम्_63(f, g, h, a, b, c, d, e); \
+    ROUND256_16_गन्तव्यम्_63(e, f, g, h, a, b, c, d); \
+    ROUND256_16_गन्तव्यम्_63(d, e, f, g, h, a, b, c); \
+    ROUND256_16_गन्तव्यम्_63(c, d, e, f, g, h, a, b); \
+    ROUND256_16_गन्तव्यम्_63(b, c, d, e, f, g, h, a)
 
     R256_16; R256_16; R256_16;
     R256_16; R256_16; R256_16;
-#endif
+#यदि_अन्तः
     state[0] += a;
     state[1] += b;
     state[2] += c;
@@ -271,19 +271,19 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
 }
 
 
-av_cold int av_sha_init(AVSHA *ctx, int bits)
+av_cold पूर्णाङ्क av_sha_init(AVSHA *ctx, पूर्णाङ्क द्वयङ्काः)
 {
-    ctx->digest_len = bits >> 5;
-    switch (bits) {
-    case 160: // SHA-1
+    ctx->digest_len = द्वयङ्काः >> 5;
+    विकल्प (द्वयङ्काः) {
+    पक्ष 160: // SHA-1
         ctx->state[0] = 0x67452301;
         ctx->state[1] = 0xEFCDAB89;
         ctx->state[2] = 0x98BADCFE;
         ctx->state[3] = 0x10325476;
         ctx->state[4] = 0xC3D2E1F0;
         ctx->transform = sha1_transform;
-        break;
-    case 224: // SHA-224
+        भङ्ग;
+    पक्ष 224: // SHA-224
         ctx->state[0] = 0xC1059ED8;
         ctx->state[1] = 0x367CD507;
         ctx->state[2] = 0x3070DD17;
@@ -293,8 +293,8 @@ av_cold int av_sha_init(AVSHA *ctx, int bits)
         ctx->state[6] = 0x64F98FA7;
         ctx->state[7] = 0xBEFA4FA4;
         ctx->transform = sha256_transform;
-        break;
-    case 256: // SHA-256
+        भङ्ग;
+    पक्ष 256: // SHA-256
         ctx->state[0] = 0x6A09E667;
         ctx->state[1] = 0xBB67AE85;
         ctx->state[2] = 0x3C6EF372;
@@ -304,55 +304,55 @@ av_cold int av_sha_init(AVSHA *ctx, int bits)
         ctx->state[6] = 0x1F83D9AB;
         ctx->state[7] = 0x5BE0CD19;
         ctx->transform = sha256_transform;
-        break;
-    default:
-        return AVERROR(EINVAL);
+        भङ्ग;
+    स्वभाव:
+        प्रत्यागम AVERROR(EINVAL);
     }
-    ctx->count = 0;
-    return 0;
+    ctx->गणनम् = 0;
+    प्रत्यागम 0;
 }
 
-void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len)
+शून्य av_sha_update(संरचना AVSHA *ctx, ध्रुव uint8_t *दत्त, size_t len)
 {
-    unsigned int j;
+    अचिह्नित पूर्णाङ्क j;
     size_t i;
 
-    j = ctx->count & 63;
-    ctx->count += len;
-#if CONFIG_SMALL
-    for (i = 0; i < len; i++) {
-        ctx->buffer[j++] = data[i];
-        if (64 == j) {
-            ctx->transform(ctx->state, ctx->buffer);
+    j = ctx->गणनम् & 63;
+    ctx->गणनम् += len;
+#यदि CONFIG_SMALL
+    प्रति (i = 0; i < len; i++) {
+        ctx->बफर[j++] = दत्त[i];
+        यदि (64 == j) {
+            ctx->transform(ctx->state, ctx->बफर);
             j = 0;
         }
     }
-#else
-    if (len >= 64 - j) {
-        const uint8_t *end;
-        memcpy(&ctx->buffer[j], data, (i = 64 - j));
-        ctx->transform(ctx->state, ctx->buffer);
-        data += i;
+#अन्यथा
+    यदि (len >= 64 - j) {
+        ध्रुव uint8_t *अन्तः_2;
+        स्मृतिं_प्रतिलिख(&ctx->बफर[j], दत्त, (i = 64 - j));
+        ctx->transform(ctx->state, ctx->बफर);
+        दत्त += i;
         len  -= i;
-        end   = data + (len & ~63);
+        अन्तः_2   = दत्त + (len & ~63);
         len   = len % 64;
-        for (; data < end; data += 64)
-            ctx->transform(ctx->state, data);
+        प्रति (; दत्त < अन्तः_2; दत्त += 64)
+            ctx->transform(ctx->state, दत्त);
         j = 0;
     }
-    memcpy(&ctx->buffer[j], data, len);
-#endif
+    स्मृतिं_प्रतिलिख(&ctx->बफर[j], दत्त, len);
+#यदि_अन्तः
 }
 
-void av_sha_final(AVSHA* ctx, uint8_t *digest)
+शून्य av_sha_final(AVSHA* ctx, uint8_t *digest)
 {
-    int i;
-    uint64_t finalcount = av_be2ne64(ctx->count << 3);
+    पूर्णाङ्क i;
+    uint64_t finalcount = av_be2ne64(ctx->गणनम् << 3);
 
     av_sha_update(ctx, "\200", 1);
-    while ((ctx->count & 63) != 56)
+    यावत् ((ctx->गणनम् & 63) != 56)
         av_sha_update(ctx, "", 1);
     av_sha_update(ctx, (uint8_t *)&finalcount, 8); /* Should cause a transform() */
-    for (i = 0; i < ctx->digest_len; i++)
+    प्रति (i = 0; i < ctx->digest_len; i++)
         AV_WB32(digest + i*4, ctx->state[i]);
 }

@@ -16,40 +16,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdio.h>
 
-#include "libavutil/md5.h"
+#अन्तर्भाव "libavutil/md5.h"
 
-static void print_md5(uint8_t *md5)
+स्थिर शून्य print_md5(uint8_t *md5)
 {
-    int i;
-    for (i = 0; i < 16; i++)
-        printf("%02x", md5[i]);
-    printf("\n");
+    पूर्णाङ्क i;
+    प्रति (i = 0; i < 16; i++)
+        प्रारूप_लिख("%02x", md5[i]);
+    प्रारूप_लिख("\n");
 }
 
-int main(void)
+पूर्णाङ्क मुख्यम्(शून्य)
 {
     uint8_t md5val[16];
-    int i;
+    पूर्णाङ्क i;
 
-    uint8_t in[1000];
+    uint8_t अन्तर्[1000];
 
-    for (i = 0; i < 1000; i++)
-        in[i] = i * i;
-    av_md5_sum(md5val, in, 1000);
+    प्रति (i = 0; i < 1000; i++)
+        अन्तर्[i] = i * i;
+    av_md5_योग(md5val, अन्तर्, 1000);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 63);
+    av_md5_योग(md5val, अन्तर्, 63);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 64);
+    av_md5_योग(md5val, अन्तर्, 64);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 65);
+    av_md5_योग(md5val, अन्तर्, 65);
     print_md5(md5val);
-    for (i = 0; i < 1000; i++)
-        in[i] = i % 127;
-    av_md5_sum(md5val, in, 999);
+    प्रति (i = 0; i < 1000; i++)
+        अन्तर्[i] = i % 127;
+    av_md5_योग(md5val, अन्तर्, 999);
     print_md5(md5val);
 
-    return 0;
+    प्रत्यागम 0;
 }

@@ -18,98 +18,98 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_SOFTFLOAT_IEEE754_H
-#define AVUTIL_SOFTFLOAT_IEEE754_H
+#यदि_अपरिभाषितम् AVUTIL_SOFTFLOAT_IEEE754_H
+#परिभाषय AVUTIL_SOFTFLOAT_IEEE754_H
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
-#define EXP_BIAS 127
-#define MANT_BITS 23
+#परिभाषय EXP_BIAS 127
+#परिभाषय MANT_द्वयङ्काः 23
 
-typedef struct SoftFloat_IEEE754 {
+प्रकारनिर्देश संरचना SoftFloat_IEEE754 {
     int32_t sign;
     uint64_t mant;
-    int32_t  exp;
+    int32_t  घातांकः;
 } SoftFloat_IEEE754;
 
-static const SoftFloat_IEEE754 FLOAT_0 = {0, 0, -126};
-static const SoftFloat_IEEE754 FLOAT_1 = {0, 0,    0};
+स्थिर ध्रुव SoftFloat_IEEE754 FLOAT_0 = {0, 0, -126};
+स्थिर ध्रुव SoftFloat_IEEE754 FLOAT_1 = {0, 0,    0};
 
 /** Normalize the softfloat as defined by IEEE 754 single-recision floating
  *  point specification
  */
-static inline SoftFloat_IEEE754 av_normalize_sf_ieee754(SoftFloat_IEEE754 sf) {
-    while( sf.mant >= 0x1000000UL ) {
-        sf.exp++;
+स्थिर अन्तःस्थ SoftFloat_IEEE754 av_normalize_sf_ieee754(SoftFloat_IEEE754 sf) {
+    यावत्( sf.mant >= 0x1000000UL ) {
+        sf.घातांकः++;
         sf.mant >>= 1;
     }
     sf.mant &= 0x007fffffUL;
-    return sf;
+    प्रत्यागम sf;
 }
 
 /** Convert integer to softfloat.
  *  @return softfloat with value n * 2^e
  */
-static inline SoftFloat_IEEE754 av_int2sf_ieee754(int64_t n, int e) {
-    int sign = 0;
+स्थिर अन्तःस्थ SoftFloat_IEEE754 av_int2sf_ieee754(int64_t n, पूर्णाङ्क e) {
+    पूर्णाङ्क sign = 0;
 
-    if (n < 0) {
+    यदि (n < 0) {
         sign = 1;
         n    *= -1;
     }
-    return av_normalize_sf_ieee754((SoftFloat_IEEE754) {sign, n << MANT_BITS, 0 + e});
+    प्रत्यागम av_normalize_sf_ieee754((SoftFloat_IEEE754) {sign, n << MANT_द्वयङ्काः, 0 + e});
 }
 
 /** Make a softfloat out of the bitstream. Assumes the bits are in the form as defined
  *  by the IEEE 754 spec.
  */
-static inline SoftFloat_IEEE754 av_bits2sf_ieee754(uint32_t n) {
-    return ((SoftFloat_IEEE754) { (n & 0x80000000UL) >> 31, (n & 0x7FFFFFUL), (int8_t)((n & 0x7F800000UL) >> 23)});
+स्थिर अन्तःस्थ SoftFloat_IEEE754 av_bits2sf_ieee754(uint32_t n) {
+    प्रत्यागम ((SoftFloat_IEEE754) { (n & 0x80000000UL) >> 31, (n & 0x7FFFFFUL), (int8_t)((n & 0x7F800000UL) >> 23)});
 }
 
 /** Convert the softfloat to integer
  */
-static inline int av_sf2int_ieee754(SoftFloat_IEEE754 a) {
-    if(a.exp >= 0) return a.mant <<  a.exp ;
-    else           return a.mant >>(-a.exp);
+स्थिर अन्तःस्थ पूर्णाङ्क av_sf2int_ieee754(SoftFloat_IEEE754 a) {
+    यदि(a.घातांकः >= 0) प्रत्यागम a.mant <<  a.घातांकः ;
+    अन्यथा           प्रत्यागम a.mant >>(-a.घातांकः);
 }
 
 /** Divide a by b. b should not be zero.
  *  @return normalized result
  */
-static inline SoftFloat_IEEE754 av_div_sf_ieee754(SoftFloat_IEEE754 a, SoftFloat_IEEE754 b) {
-    int32_t mant, exp, sign;
+स्थिर अन्तःस्थ SoftFloat_IEEE754 av_div_sf_ieee754(SoftFloat_IEEE754 a, SoftFloat_IEEE754 b) {
+    int32_t mant, घातांकः, sign;
     a    = av_normalize_sf_ieee754(a);
     b    = av_normalize_sf_ieee754(b);
     sign = a.sign ^ b.sign;
-    mant = ((((uint64_t) (a.mant | 0x00800000UL)) << MANT_BITS) / (b.mant| 0x00800000UL));
-    exp  = a.exp - b.exp;
-    return av_normalize_sf_ieee754((SoftFloat_IEEE754) {sign, mant, exp});
+    mant = ((((uint64_t) (a.mant | 0x00800000UL)) << MANT_द्वयङ्काः) / (b.mant| 0x00800000UL));
+    घातांकः  = a.घातांकः - b.घातांकः;
+    प्रत्यागम av_normalize_sf_ieee754((SoftFloat_IEEE754) {sign, mant, घातांकः});
 }
 
 /** Multiply a with b
  *  #return normalized result
  */
-static inline SoftFloat_IEEE754 av_mul_sf_ieee754(SoftFloat_IEEE754 a, SoftFloat_IEEE754 b) {
-    int32_t sign, mant, exp;
+स्थिर अन्तःस्थ SoftFloat_IEEE754 av_mul_sf_ieee754(SoftFloat_IEEE754 a, SoftFloat_IEEE754 b) {
+    int32_t sign, mant, घातांकः;
     a    = av_normalize_sf_ieee754(a);
     b    = av_normalize_sf_ieee754(b);
     sign = a.sign ^ b.sign;
-    mant = (((uint64_t)(a.mant|0x00800000UL) * (uint64_t)(b.mant|0x00800000UL))>>MANT_BITS);
-    exp  = a.exp + b.exp;
-    return av_normalize_sf_ieee754((SoftFloat_IEEE754) {sign, mant, exp});
+    mant = (((uint64_t)(a.mant|0x00800000UL) * (uint64_t)(b.mant|0x00800000UL))>>MANT_द्वयङ्काः);
+    घातांकः  = a.घातांकः + b.घातांकः;
+    प्रत्यागम av_normalize_sf_ieee754((SoftFloat_IEEE754) {sign, mant, घातांकः});
 }
 
 /** Compare a with b strictly
  *  @returns 1 if the a and b are equal, 0 otherwise.
  */
-static inline int av_cmp_sf_ieee754(SoftFloat_IEEE754 a, SoftFloat_IEEE754 b) {
+स्थिर अन्तःस्थ पूर्णाङ्क av_cmp_sf_ieee754(SoftFloat_IEEE754 a, SoftFloat_IEEE754 b) {
     a = av_normalize_sf_ieee754(a);
     b = av_normalize_sf_ieee754(b);
-    if (a.sign != b.sign) return 0;
-    if (a.mant != b.mant) return 0;
-    if (a.exp  != b.exp ) return 0;
-    return 1;
+    यदि (a.sign != b.sign) प्रत्यागम 0;
+    यदि (a.mant != b.mant) प्रत्यागम 0;
+    यदि (a.घातांकः  != b.घातांकः ) प्रत्यागम 0;
+    प्रत्यागम 1;
 }
 
-#endif /*AVUTIL_SOFTFLOAT_IEEE754_H*/
+#यदि_अन्तः /*AVUTIL_SOFTFLOAT_IEEE754_H*/

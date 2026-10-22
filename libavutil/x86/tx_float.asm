@@ -54,13 +54,13 @@ cextern tab_ %+ i %+ _float ; ff_tab_i_float...
 cextern tab_53_float
 
 struc AVTXContext
-    .len:          resd 1 ; Length
+    .len:          resd 1 ;दीर्घता
     .inv           resd 1 ; Inverse flag
     .map:           ptr 1 ; Lookup table(s)
     .exp:           ptr 1 ; Exponentiation factors
     .tmp:           ptr 1 ; Temporary data
 
-    .sub:           ptr 1 ; Subcontexts
+    .वियोजय:           ptr 1 ; Subcontexts
     .fn:            ptr 4 ; Subcontext functions
     .nb_sub:       resd 1 ; Subcontext count
 
@@ -115,16 +115,16 @@ SECTION .text
     movupd xmm%6, [%3 + %4] ; float mov since vgatherdpd is a float instruction
     vgatherdpd %1, [%2 + xmm%6*8], %7 ; must use separate registers for args
 %else
-    mov      %5d, [%3 + %4 + 0]
+    चालय      %5d, [%3 + %4 + 0]
     movsd  xmm%1, [%2 + %5q*8]
 %if sizeof%1 > 16 && %0 > 5
-    mov      %5d, [%3 + %4 + 8]
+    चालय      %5d, [%3 + %4 + 8]
     movsd  xmm%6, [%2 + %5q*8]
 %endif
-    mov      %5d, [%3 + %4 + 4]
+    चालय      %5d, [%3 + %4 + 4]
     movhps xmm%1, [%2 + %5q*8]
 %if sizeof%1 > 16 && %0 > 5
-    mov      %5d, [%3 + %4 + 12]
+    चालय      %5d, [%3 + %4 + 12]
     movhps xmm%6, [%2 + %5q*8]
     vinsertf128 %1, %1, xmm%6, 1
 %endif
@@ -816,7 +816,7 @@ cglobal fft2_asm_float, 0, 0, 0, ctx, out, in, stride
     movaps m0, [inq]
     FFT2 m0, m1
     movaps [outq], m0
-    ret
+    प्रत्यागच्छ
 
 cglobal fft2_float, 4, 4, 2, ctx, out, in, stride
     movaps m0, [inq]
@@ -849,7 +849,7 @@ cglobal fft4_ %+ %1 %+ _float, 4, 4, 3, ctx, out, in, stride
     movaps [outq + 1*mmsize], m0
 
 %if %3
-    ret
+    प्रत्यागच्छ
 %else
     RET
 %endif
@@ -870,7 +870,7 @@ cglobal fft8_asm_float, 0, 0, 0, ctx, out, in, stride, tmp
     movaps m3, [inq + 3*mmsize]
 %else
 cglobal fft8_float, 4, 4, 6, ctx, out, in, tmp
-    mov ctxq, [ctxq + AVTXContext.map]
+    चालय ctxq, [ctxq + AVTXContext.map]
     LOAD64_LUT m0, inq, ctxq, (mmsize/2)*0, tmpq
     LOAD64_LUT m1, inq, ctxq, (mmsize/2)*1, tmpq
     LOAD64_LUT m2, inq, ctxq, (mmsize/2)*2, tmpq
@@ -890,14 +890,14 @@ cglobal fft8_float, 4, 4, 6, ctx, out, in, tmp
     movups [outq + 3*mmsize], m1
 
 %if %1
-    ret
+    प्रत्यागच्छ
 %else
     RET
 %endif
 
 %if %1
 cglobal fft8_ns_float, 4, 5, 6, ctx, out, in, stride, tmp
-    call mangle(ff_tx_fft8_asm_float_sse3)
+    आह्वान mangle(ff_tx_fft8_asm_float_sse3)
     RET
 %endif
 %endmacro
@@ -913,7 +913,7 @@ cglobal fft8_asm_float, 0, 0, 0, ctx, out, in, stride, tmp
     movaps m1, [inq + 1*mmsize]
 %else
 cglobal fft8_float, 4, 4, 4, ctx, out, in, tmp
-    mov ctxq, [ctxq + AVTXContext.map]
+    चालय ctxq, [ctxq + AVTXContext.map]
     LOAD64_LUT m0, inq, ctxq, (mmsize/2)*0, tmpq, m2
     LOAD64_LUT m1, inq, ctxq, (mmsize/2)*1, tmpq, m3
 %endif
@@ -930,14 +930,14 @@ cglobal fft8_float, 4, 4, 4, ctx, out, in, tmp
     vextractf128 [outq + 16*3], m0, 1
 
 %if %1
-    ret
+    प्रत्यागच्छ
 %else
     RET
 %endif
 
 %if %1
 cglobal fft8_ns_float, 4, 5, 4, ctx, out, in, stride, tmp
-    call mangle(ff_tx_fft8_asm_float_avx)
+    आह्वान mangle(ff_tx_fft8_asm_float_avx)
     RET
 %endif
 %endmacro
@@ -955,7 +955,7 @@ cglobal fft16_asm_float, 0, 0, 0, ctx, out, in, stride, tmp
     movaps m3, [inq + 3*mmsize]
 %else
 cglobal fft16_float, 4, 4, 8, ctx, out, in, tmp
-    mov ctxq, [ctxq + AVTXContext.map]
+    चालय ctxq, [ctxq + AVTXContext.map]
     LOAD64_LUT m0, inq, ctxq, (mmsize/2)*0, tmpq, m4
     LOAD64_LUT m1, inq, ctxq, (mmsize/2)*1, tmpq, m5
     LOAD64_LUT m2, inq, ctxq, (mmsize/2)*2, tmpq, m6
@@ -979,14 +979,14 @@ cglobal fft16_float, 4, 4, 8, ctx, out, in, tmp
     vextractf128 [outq + 16*7], m1, 1
 
 %if %2
-    ret
+    प्रत्यागच्छ
 %else
     RET
 %endif
 
 %if %2
 cglobal fft16_ns_float, 4, 5, 8, ctx, out, in, stride, tmp
-    call mangle(ff_tx_fft16_asm_float_ %+ %1)
+    आह्वान mangle(ff_tx_fft16_asm_float_ %+ %1)
     RET
 %endif
 %endmacro
@@ -1006,7 +1006,7 @@ cglobal fft32_asm_float, 0, 0, 0, ctx, out, in, stride, tmp
     movaps m7, [inq + 7*mmsize]
 %else
 cglobal fft32_float, 4, 4, 16, ctx, out, in, tmp
-    mov ctxq, [ctxq + AVTXContext.map]
+    चालय ctxq, [ctxq + AVTXContext.map]
     LOAD64_LUT m4, inq, ctxq, (mmsize/2)*4, tmpq,  m8, m12
     LOAD64_LUT m5, inq, ctxq, (mmsize/2)*5, tmpq,  m9, m13
     LOAD64_LUT m6, inq, ctxq, (mmsize/2)*6, tmpq, m10, m14
@@ -1063,14 +1063,14 @@ cglobal fft32_float, 4, 4, 16, ctx, out, in, tmp
     vextractf128 [outq + 16*15],  m5, 1
 
 %if %2
-    ret
+    प्रत्यागच्छ
 %else
     RET
 %endif
 
 %if %2
 cglobal fft32_ns_float, 4, 5, 16, ctx, out, in, stride, tmp
-    call mangle(ff_tx_fft32_asm_float_ %+ %1)
+    आह्वान mangle(ff_tx_fft32_asm_float_ %+ %1)
     RET
 %endif
 %endmacro
@@ -1086,37 +1086,37 @@ FFT32_FN fma3, 1
 ALIGN 16
 .%1 %+ pt:
     PUSH lenq
-    mov lenq, (%1/4)
+    चालय lenq, (%1/4)
 
-    add outq, (%1*4) - (%1/1)
-    call .32pt
+    योजय outq, (%1*4) - (%1/1)
+    आह्वान .32pt
 
-    add outq, (%1*2) - (%1/2) ; the synth loops also increment outq
-    call .32pt
+    योजय outq, (%1*2) - (%1/2) ; the synth loops also increment outq
+    आह्वान .32pt
 
     POP lenq
-    sub outq, (%1*4) + (%1*2) + (%1/2)
+    वियोजय outq, (%1*4) + (%1*2) + (%1/2)
 
     lea rtabq, [tab_ %+ %1 %+ _float]
     lea itabq, [tab_ %+ %1 %+ _float + %1 - 4*7]
 
 %if %0 > 1
-    cmp tgtq, %1
+    तुलय tgtq, %1
     je .deinterleave
 
-    mov tmpq, %1
+    चालय tmpq, %1
 
 .synth_ %+ %1:
     SPLIT_RADIX_LOAD_COMBINE_FULL 2*%1, 6*%1, 0, 0, 0
-    add outq, 8*mmsize
-    add rtabq, 4*mmsize
-    sub itabq, 4*mmsize
-    sub tmpq, 4*mmsize
+    योजय outq, 8*mmsize
+    योजय rtabq, 4*mmsize
+    वियोजय itabq, 4*mmsize
+    वियोजय tmpq, 4*mmsize
     jg .synth_ %+ %1
 
-    cmp lenq, %1
+    तुलय lenq, %1
     jg %2 ; can't do math here, nasm doesn't get it
-    ret
+    प्रत्यागच्छ
 %endif
 %endmacro
 
@@ -1127,9 +1127,9 @@ cglobal fft_sr_asm_float, 0, 0, 0, ctx, out, in, stride, len, lut, itab, rtab, t
 %else
 cglobal fft_sr_float, 4, 10, 16, 272, ctx, out, in, stride, len, lut, itab, rtab, tgt, tmp
     movsxd lenq, dword [ctxq + AVTXContext.len]
-    mov lutq, [ctxq + AVTXContext.map]
+    चालय lutq, [ctxq + AVTXContext.map]
 %endif
-    mov tgtq, lenq
+    चालय tgtq, lenq
 
 ; Bottom-most/32-point transform ===============================================
 ALIGN 16
@@ -1174,11 +1174,11 @@ ALIGN 16
     movaps [outq + 7*mmsize], m7
 
 %if %2
-    add inq, 8*mmsize
+    योजय inq, 8*mmsize
 %else
-    add lutq, (mmsize/2)*8
+    योजय lutq, (mmsize/2)*8
 %endif
-    cmp lenq, 32
+    तुलय lenq, 32
     jg .64pt
 
     movaps [outq + 0*mmsize], m0
@@ -1186,7 +1186,7 @@ ALIGN 16
     movaps [outq + 4*mmsize], m4
     movaps [outq + 6*mmsize], m6
 
-    ret
+    प्रत्यागच्छ
 
 ; 64-point transform ===========================================================
 ALIGN 16
@@ -1240,143 +1240,143 @@ ALIGN 16
     vperm2f128 tw_o, tw_o, [tab_64_float + 64 - 4*7], 0x23
 
 %if %2
-    add inq, 8*mmsize
+    योजय inq, 8*mmsize
 %else
-    add lutq, (mmsize/2)*8
+    योजय lutq, (mmsize/2)*8
 %endif
-    cmp tgtq, 64
+    तुलय tgtq, 64
     je .64pt_deint
 
     SPLIT_RADIX_COMBINE_64
 
-    cmp lenq, 64
+    तुलय lenq, 64
     jg .128pt
-    ret
+    प्रत्यागच्छ
 
 ; 128-point transform ==========================================================
 ALIGN 16
 .128pt:
     PUSH lenq
-    mov lenq, 32
+    चालय lenq, 32
 
-    add outq, 16*mmsize
-    call .32pt
+    योजय outq, 16*mmsize
+    आह्वान .32pt
 
-    add outq, 8*mmsize
-    call .32pt
+    योजय outq, 8*mmsize
+    आह्वान .32pt
 
     POP lenq
-    sub outq, 24*mmsize
+    वियोजय outq, 24*mmsize
 
     lea rtabq, [tab_128_float]
     lea itabq, [tab_128_float + 128 - 4*7]
 
-    cmp tgtq, 128
+    तुलय tgtq, 128
     je .deinterleave
 
     SPLIT_RADIX_LOAD_COMBINE_FULL 2*128, 6*128
 
-    cmp lenq, 128
+    तुलय lenq, 128
     jg .256pt
-    ret
+    प्रत्यागच्छ
 
 ; 256-point transform ==========================================================
 ALIGN 16
 .256pt:
     PUSH lenq
-    mov lenq, 64
+    चालय lenq, 64
 
-    add outq, 32*mmsize
-    call .32pt
+    योजय outq, 32*mmsize
+    आह्वान .32pt
 
-    add outq, 16*mmsize
-    call .32pt
+    योजय outq, 16*mmsize
+    आह्वान .32pt
 
     POP lenq
-    sub outq, 48*mmsize
+    वियोजय outq, 48*mmsize
 
     lea rtabq, [tab_256_float]
     lea itabq, [tab_256_float + 256 - 4*7]
 
-    cmp tgtq, 256
+    तुलय tgtq, 256
     je .deinterleave
 
     SPLIT_RADIX_LOAD_COMBINE_FULL 2*256, 6*256
     SPLIT_RADIX_LOAD_COMBINE_FULL 2*256, 6*256, 8*mmsize, 4*mmsize, -4*mmsize
 
-    cmp lenq, 256
+    तुलय lenq, 256
     jg .512pt
-    ret
+    प्रत्यागच्छ
 
 ; 512-point transform ==========================================================
 ALIGN 16
 .512pt:
     PUSH lenq
-    mov lenq, 128
+    चालय lenq, 128
 
-    add outq, 64*mmsize
-    call .32pt
+    योजय outq, 64*mmsize
+    आह्वान .32pt
 
-    add outq, 32*mmsize
-    call .32pt
+    योजय outq, 32*mmsize
+    आह्वान .32pt
 
     POP lenq
-    sub outq, 96*mmsize
+    वियोजय outq, 96*mmsize
 
     lea rtabq, [tab_512_float]
     lea itabq, [tab_512_float + 512 - 4*7]
 
-    cmp tgtq, 512
+    तुलय tgtq, 512
     je .deinterleave
 
-    mov tmpq, 4
+    चालय tmpq, 4
 
 .synth_512:
     SPLIT_RADIX_LOAD_COMBINE_FULL 2*512, 6*512
-    add outq, 8*mmsize
-    add rtabq, 4*mmsize
-    sub itabq, 4*mmsize
-    sub tmpq, 1
+    योजय outq, 8*mmsize
+    योजय rtabq, 4*mmsize
+    वियोजय itabq, 4*mmsize
+    वियोजय tmpq, 1
     jg .synth_512
 
-    cmp lenq, 512
+    तुलय lenq, 512
     jg .1024pt
-    ret
+    प्रत्यागच्छ
 
 ; 1024-point transform ==========================================================
 ALIGN 16
 .1024pt:
     PUSH lenq
-    mov lenq, 256
+    चालय lenq, 256
 
-    add outq, 96*mmsize
-    call .32pt
+    योजय outq, 96*mmsize
+    आह्वान .32pt
 
-    add outq, 64*mmsize
-    call .32pt
+    योजय outq, 64*mmsize
+    आह्वान .32pt
 
     POP lenq
-    sub outq, 192*mmsize
+    वियोजय outq, 192*mmsize
 
     lea rtabq, [tab_1024_float]
     lea itabq, [tab_1024_float + 1024 - 4*7]
 
-    cmp tgtq, 1024
+    तुलय tgtq, 1024
     je .deinterleave
 
-    mov tmpq, 8
+    चालय tmpq, 8
 
 .synth_1024:
     SPLIT_RADIX_LOAD_COMBINE_FULL 2*1024, 6*1024
-    add outq, 8*mmsize
-    add rtabq, 4*mmsize
-    sub itabq, 4*mmsize
-    sub tmpq, 1
+    योजय outq, 8*mmsize
+    योजय rtabq, 4*mmsize
+    वियोजय itabq, 4*mmsize
+    वियोजय tmpq, 1
     jg .synth_1024
 
-    cmp lenq, 1024
+    तुलय lenq, 1024
     jg .2048pt
-    ret
+    प्रत्यागच्छ
 
 ; 2048 to 131072-point transforms ==============================================
 FFT_SPLIT_RADIX_DEF 2048,  .4096pt
@@ -1394,24 +1394,24 @@ FFT_SPLIT_RADIX_DEF 131072
 %if %2
     PUSH strideq
 %endif
-    mov tgtq, lenq
+    चालय tgtq, lenq
     imul tmpq, lenq, 2
     lea strideq, [4*lenq + tmpq]
 
 .synth_deinterleave:
     SPLIT_RADIX_COMBINE_DEINTERLEAVE_FULL tmpq, strideq
-    add outq, 8*mmsize
-    add rtabq, 4*mmsize
-    sub itabq, 4*mmsize
-    sub tgtq, 4*mmsize
+    योजय outq, 8*mmsize
+    योजय rtabq, 4*mmsize
+    वियोजय itabq, 4*mmsize
+    वियोजय tgtq, 4*mmsize
     jg .synth_deinterleave
 
 %if %2
     POP strideq
-    sub outq, tmpq
+    वियोजय outq, tmpq
     neg tmpq
     lea inq, [inq + tmpq*4]
-    ret
+    प्रत्यागच्छ
 %else
     RET
 %endif
@@ -1492,8 +1492,8 @@ FFT_SPLIT_RADIX_DEF 131072
     vextractf128 [outq + 15*mmsize + 16], tx2_e1, 1
 
 %if %2
-    sub inq, 16*mmsize
-    ret
+    वियोजय inq, 16*mmsize
+    प्रत्यागच्छ
 %else
     RET
 %endif
@@ -1501,9 +1501,9 @@ FFT_SPLIT_RADIX_DEF 131072
 %if %2
 cglobal fft_sr_ns_float, 4, 10, 16, 272, ctx, out, in, tmp, len, lut, itab, rtab, tgt, off
     movsxd lenq, dword [ctxq + AVTXContext.len]
-    mov lutq, [ctxq + AVTXContext.map]
+    चालय lutq, [ctxq + AVTXContext.map]
 
-    call mangle(ff_tx_fft_sr_asm_float_ %+ %1)
+    आह्वान mangle(ff_tx_fft_sr_asm_float_ %+ %1)
     RET
 %endif
 %endmacro
@@ -1520,7 +1520,7 @@ FFT_SPLIT_RADIX_FN avx2, 1
 %macro FFT15_FN 2
 INIT_YMM avx2
 cglobal fft15_ %+ %2, 4, 10, 16, ctx, out, in, stride, len, lut, tmp, tgt5, stride3, stride5
-    mov lutq, [ctxq + AVTXContext.map]
+    चालय lutq, [ctxq + AVTXContext.map]
 
     imul stride3q, strideq, 3
     imul stride5q, strideq, 5
@@ -1542,7 +1542,7 @@ cglobal fft15_ %+ %2, 4, 10, 16, ctx, out, in, stride, len, lut, tmp, tgt5, stri
     LOAD64_LUT  m2, inq, lutq, (mmsize/2)*0 + 12, tmpq, m6, m7
     LOAD64_LUT  m3, inq, lutq, (mmsize/2)*1 + 12, tmpq, m14, m15
     LOAD64_LUT  m4, inq, lutq, (mmsize/2)*2 + 12, tmpq, m6, m7
-    mov tmpd, [lutq + 8]
+    चालय tmpd, [lutq + 8]
     movddup xm5, [inq + tmpq*8]
 %endif
 
@@ -1585,15 +1585,15 @@ INIT_YMM %1
 cglobal mdct_inv_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, exp, t1, t2, t3, \
                                         t4, t5, btmp
     movsxd lenq, dword [ctxq + AVTXContext.len]
-    mov expq, [ctxq + AVTXContext.exp]
+    चालय expq, [ctxq + AVTXContext.exp]
 
     lea t1d, [lend - 1]
     imul t1d, strided
 
-    mov btmpq, ctxq                    ; backup original context
-    mov lutq, [ctxq + AVTXContext.map] ; load map
+    चालय btmpq, ctxq                    ; backup original context
+    चालय lutq, [ctxq + AVTXContext.map] ; load map
 
-    cmp strideq, 4
+    तुलय strideq, 4
     je .stride4
 
     shl strideq, 1
@@ -1602,7 +1602,7 @@ cglobal mdct_inv_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, exp, t1,
     movd xm5, t1d
     vpbroadcastd m5, xm5             ; offset splatted
 
-    mov t2q, outq                    ; don't modify the original output
+    चालय t2q, outq                    ; don't modify the original output
     pcmpeqd m15, m15                 ; set all bits to 1
 
 .stridex_pre:
@@ -1639,12 +1639,12 @@ cglobal mdct_inv_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, exp, t1,
     movups [t2q + 0*mmsize], m10
     movups [t2q + 1*mmsize], m11
 
-    add expq, mmsize*2
-    add lutq, mmsize
-    add t2q, mmsize*2
-    sub lenq, mmsize/2
+    योजय expq, mmsize*2
+    योजय lutq, mmsize
+    योजय t2q, mmsize*2
+    वियोजय lenq, mmsize/2
     jg .stridex_pre
-    jmp .transform
+    कूर्द .transform
 
 .stride4:
     lea expq, [expq + lenq*4]
@@ -1700,31 +1700,31 @@ cglobal mdct_inv_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, exp, t1,
     movlps [outq + t3q*8],     xm6
     movhps [outq + t4q*8],     xm6
 
-    add lutq, mmsize/2
-    add expq, mmsize
-    add inq, mmsize
-    sub t1q, mmsize
-    sub t2q, mmsize
+    योजय lutq, mmsize/2
+    योजय expq, mmsize
+    योजय inq, mmsize
+    वियोजय t1q, mmsize
+    वियोजय t2q, mmsize
     jge .stride4_pre
 
 .transform:
-    mov strideq, 2*4
-    mov t4q, ctxq                      ; backup original context
-    mov t5q, [ctxq + AVTXContext.fn]   ; subtransform's jump point
-    mov ctxq, [ctxq + AVTXContext.sub]
-    mov lutq, [ctxq + AVTXContext.map]
+    चालय strideq, 2*4
+    चालय t4q, ctxq                      ; backup original context
+    चालय t5q, [ctxq + AVTXContext.fn]   ; subtransform's jump point
+    चालय ctxq, [ctxq + AVTXContext.वियोजय]
+    चालय lutq, [ctxq + AVTXContext.map]
     movsxd lenq, dword [ctxq + AVTXContext.len]
 
-    mov inq, outq                    ; in-place transform
-    call t5q                         ; call the FFT
+    चालय inq, outq                    ; in-place transform
+    आह्वान t5q                         ; call the FFT
 
-    mov ctxq, t4q                    ; restore original context
+    चालय ctxq, t4q                    ; restore original context
     movsxd lenq, dword [ctxq + AVTXContext.len]
-    mov expq, [ctxq + AVTXContext.exp]
+    चालय expq, [ctxq + AVTXContext.exp]
     lea expq, [expq + lenq*4]
 
-    xor t1q, t1q                     ; low
-    lea t2q, [lenq*4 - mmsize]       ; high
+    xor t1q, t1q                     ;नीचः
+    lea t2q, [lenq*4 - mmsize]       ;उच्चः
 
 .post:
     movaps m2, [expq + t2q]          ; tab h
@@ -1755,9 +1755,9 @@ cglobal mdct_inv_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, exp, t1,
     movups [outq + t2q], m0
     movups [outq + t1q], m1
 
-    add t1q, mmsize
-    sub t2q, mmsize
-    sub lenq, mmsize/2
+    योजय t1q, mmsize
+    वियोजय t2q, mmsize
+    वियोजय lenq, mmsize/2
     jg .post
 
     RET
@@ -1787,18 +1787,18 @@ cglobal fft_pfa_15xM_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, buf,
 
     PUSH strideq
 
-    mov btmpq, outq
+    चालय btmpq, outq
 
-    mov outq, [ctxq + AVTXContext.tmp]
+    चालय outq, [ctxq + AVTXContext.tmp]
 %if !%2
     movsxd lenq, dword [ctxq + AVTXContext.len]
-    mov lutq, [ctxq + AVTXContext.map]
+    चालय lutq, [ctxq + AVTXContext.map]
 %endif
 
     ; Load stride (second transform's length) and second transform's LUT
-    mov tmpq, [ctxq + AVTXContext.sub]
+    चालय tmpq, [ctxq + AVTXContext.वियोजय]
     movsxd strideq, dword [tmpq + AVTXContext.len]
-    mov mapq, [tmpq + AVTXContext.map]
+    चालय mapq, [tmpq + AVTXContext.map]
 
     shl strideq, 3
     imul stride3q, strideq, 3
@@ -1811,7 +1811,7 @@ cglobal fft_pfa_15xM_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, buf,
     movaps m8, [s15_perm]
 
 .dim1:
-    mov tmpd, [mapq]
+    चालय tmpd, [mapq]
     lea tgtq, [outq + tmpq*8]
 
 %if %2
@@ -1825,7 +1825,7 @@ cglobal fft_pfa_15xM_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, buf,
     LOAD64_LUT  m2, inq, lutq, (mmsize/2)*0 + 12, tmpq, m6, m7
     LOAD64_LUT  m3, inq, lutq, (mmsize/2)*1 + 12, tmpq, m14, m15
     LOAD64_LUT  m4, inq, lutq, (mmsize/2)*2 + 12, tmpq, m6, m7
-    mov tmpd, [lutq + 8]
+    चालय tmpd, [lutq + 8]
     movddup xm5, [inq + tmpq*8]     ; in[2].reimreim
 %endif
 
@@ -1856,41 +1856,41 @@ cglobal fft_pfa_15xM_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, buf,
     movhps [tmpq  + strideq*4],  xm5
 
 %if %2
-    add inq, mmsize*3 + 24
+    योजय inq, mmsize*3 + 24
 %else
-    add lutq, (mmsize/2)*3 + 12
+    योजय lutq, (mmsize/2)*3 + 12
 %endif
-    add mapq, 4
-    sub lenq, 15
+    योजय mapq, 4
+    वियोजय lenq, 15
     jg .dim1
 
     ; Second transform setup
-    mov stride5q, ctxq                              ; backup original context
+    चालय stride5q, ctxq                              ; backup original context
     movsxd stride3q, dword [ctxq + AVTXContext.len] ; full length
-    mov tgt5q, [ctxq + AVTXContext.fn]              ; subtransform's jump point
+    चालय tgt5q, [ctxq + AVTXContext.fn]              ; subtransform's jump point
 
-    mov inq, outq                                   ; in-place transform
-    mov ctxq, [ctxq + AVTXContext.sub]              ; load subtransform's context
-    mov lutq, [ctxq + AVTXContext.map]              ; load subtransform's map
+    चालय inq, outq                                   ; in-place transform
+    चालय ctxq, [ctxq + AVTXContext.वियोजय]              ; load subtransform's context
+    चालय lutq, [ctxq + AVTXContext.map]              ; load subtransform's map
     movsxd lenq, dword [ctxq + AVTXContext.len]     ; load subtransform's length
 
     vzeroupper
 
 .dim2:
-    call tgt5q                                      ; call the FFT
+    आह्वान tgt5q                                      ; call the FFT
     lea inq,  [inq  + lenq*8]
     lea outq, [outq + lenq*8]
-    sub stride3q, lenq
+    वियोजय stride3q, lenq
     jg .dim2
 
-    mov ctxq, stride5q                              ; restore original context
-    mov lutq, [ctxq + AVTXContext.map]
-    mov inq,  [ctxq + AVTXContext.tmp]
+    चालय ctxq, stride5q                              ; restore original context
+    चालय lutq, [ctxq + AVTXContext.map]
+    चालय inq,  [ctxq + AVTXContext.tmp]
     movsxd lenq, dword [ctxq + AVTXContext.len]     ; full length
 
     lea stride3q, [lutq + lenq*4]                   ; second part of the LUT
-    mov stride5q, lenq
-    mov tgt5q, btmpq
+    चालय stride5q, lenq
+    चालय tgt5q, btmpq
     POP strideq
     lea tmpq, [strideq + 2*strideq]
 
@@ -1903,18 +1903,18 @@ cglobal fft_pfa_15xM_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, buf,
     movhps [tgt5q + tmpq], xm1
 
     lea tgt5q, [tgt5q + 4*strideq]
-    add stride3q, mmsize/2
-    sub stride5q, mmsize/8
+    योजय stride3q, mmsize/2
+    वियोजय stride5q, mmsize/8
     jg .post
 
 %if %2
-    mov outq, btmpq
+    चालय outq, btmpq
     POP btmpq
     POP stride5q
     POP stride3q
     POP tgt5q
     POP inq
-    ret
+    प्रत्यागच्छ
 %else
     RET
 %endif
@@ -1923,9 +1923,9 @@ cglobal fft_pfa_15xM_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, buf,
 cglobal fft_pfa_15xM_ns_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, buf, map, tgt, tmp, \
                                                tgt5, stride3, stride5, btmp
     movsxd lenq, dword [ctxq + AVTXContext.len]
-    mov lutq, [ctxq + AVTXContext.map]
+    चालय lutq, [ctxq + AVTXContext.map]
 
-    call mangle(ff_tx_fft_pfa_15xM_asm_float)
+    आह्वान mangle(ff_tx_fft_pfa_15xM_asm_float)
     RET
 %endif
 %endmacro

@@ -16,123 +16,123 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "libavutil/common.h"
-#include "libavutil/fifo.h"
-#include "libavutil/lfg.h"
-#include "libavutil/random_seed.h"
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव "libavutil/common.h"
+#अन्तर्भाव "libavutil/fifo.h"
+#अन्तर्भाव "libavutil/lfg.h"
+#अन्तर्भाव "libavutil/random_seed.h"
 
-typedef struct CBState {
-    unsigned int read_idx;
-    unsigned int write_idx;
-    unsigned int to_process;
-    unsigned int offset;
+प्रकारनिर्देश संरचना CBState {
+    अचिह्नित पूर्णाङ्क read_idx;
+    अचिह्नित पूर्णाङ्क write_idx;
+    अचिह्नित पूर्णाङ्क गन्तव्यम्_process;
+    अचिह्नित पूर्णाङ्क विस्थापनम्;
 } CBState;
 
-static int read_cb(void *opaque, void *buf, size_t *nb_elems)
+स्थिर पूर्णाङ्क read_cb(शून्य *opaque, शून्य *buf, size_t *nb_elems)
 {
     CBState  *s = opaque;
-    unsigned *b = buf;
+    अचिह्नित *b = buf;
 
-    *nb_elems = FFMIN(*nb_elems, s->to_process);
+    *nb_elems = FFMIN(*nb_elems, s->गन्तव्यम्_process);
 
-    for (unsigned i = 0; i < *nb_elems; i++)
-        if (b[i] != s->read_idx + s->offset + i) {
-            printf("Mismatch at idx %u offset %u i %u\n",
-                   s->read_idx, s->offset, i);
-            return AVERROR_BUG;
+    प्रति (अचिह्नित i = 0; i < *nb_elems; i++)
+        यदि (b[i] != s->read_idx + s->विस्थापनम् + i) {
+            प्रारूप_लिख("Mismatch at idx %u offset %u i %u\n",
+                   s->read_idx, s->विस्थापनम्, i);
+            प्रत्यागम AVERROR_BUG;
         }
 
-    s->offset     += *nb_elems;
-    s->to_process -= *nb_elems;
+    s->विस्थापनम्     += *nb_elems;
+    s->गन्तव्यम्_process -= *nb_elems;
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-static int write_cb(void *opaque, void *buf, size_t *nb_elems)
+स्थिर पूर्णाङ्क write_cb(शून्य *opaque, शून्य *buf, size_t *nb_elems)
 {
     CBState  *s = opaque;
-    unsigned *b = buf;
+    अचिह्नित *b = buf;
 
-    *nb_elems = FFMIN(*nb_elems, s->to_process);
+    *nb_elems = FFMIN(*nb_elems, s->गन्तव्यम्_process);
 
-    for (unsigned i = 0; i < *nb_elems; i++)
+    प्रति (अचिह्नित i = 0; i < *nb_elems; i++)
         b[i] = s->write_idx + i;
 
     s->write_idx  += *nb_elems;
-    s->to_process -= *nb_elems;
+    s->गन्तव्यम्_process -= *nb_elems;
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-int main(void)
+पूर्णाङ्क मुख्यम्(शून्य)
 {
     /* create a FIFO buffer */
-    AVFifo *fifo = av_fifo_alloc2(13, sizeof(int), 0);
-    int i, j, n, *p;
+    AVFifo *fifo = av_fifo_alloc2(13, परिमाण(पूर्णाङ्क), 0);
+    पूर्णाङ्क i, j, n, *p;
 
     /* fill data */
-    for (i = 0; av_fifo_can_write(fifo); i++)
+    प्रति (i = 0; av_fifo_can_write(fifo); i++)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    प्रति (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        प्रारूप_लिख("%d: %d\n", i, j);
     }
-    printf("\n");
+    प्रारूप_लिख("\n");
 
     /* generic peek at FIFO */
 
     n = av_fifo_can_read(fifo);
-    p = malloc(n * av_fifo_elem_size(fifo));
-    if (p == NULL) {
+    p = स्मृतिं_देहि(n * av_fifo_elem_आकार(fifo));
+    यदि (p == रिक्त) {
         fprintf(stderr, "failed to allocate memory.\n");
-        exit(1);
+        निर्गच्छ(1);
     }
 
-    (void) av_fifo_peek(fifo, p, n, 0);
+    (शून्य) av_fifo_peek(fifo, p, n, 0);
 
     /* read data at p */
-    for(i = 0; i < n; ++i)
-        printf("%d: %d\n", i, p[i]);
+    प्रति(i = 0; i < n; ++i)
+        प्रारूप_लिख("%d: %d\n", i, p[i]);
 
-    putchar('\n');
+    अक्षरं_लिख('\n');
 
     /* read data */
-    for (i = 0; av_fifo_can_read(fifo); i++) {
+    प्रति (i = 0; av_fifo_can_read(fifo); i++) {
         av_fifo_read(fifo, &j, 1);
-        printf(i == 0 ? "%d" : " %d", j);
+        प्रारूप_लिख(i == 0 ? "%d" : " %d", j);
     }
-    printf("\n");
+    प्रारूप_लिख("\n");
 
     /* fill data */
-    for (i = 0; av_fifo_can_write(fifo); i++)
+    प्रति (i = 0; av_fifo_can_write(fifo); i++)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    प्रति (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        प्रारूप_लिख("%d: %d\n", i, j);
     }
-    putchar('\n');
+    अक्षरं_लिख('\n');
 
     /* test fifo_grow */
-    (void) av_fifo_grow2(fifo, 15);
+    (शून्य) av_fifo_grow2(fifo, 15);
 
     /* fill data */
     n = av_fifo_can_read(fifo);
-    for (i = n; av_fifo_can_write(fifo); ++i)
+    प्रति (i = n; av_fifo_can_write(fifo); ++i)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    प्रति (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        प्रारूप_लिख("%d: %d\n", i, j);
     }
 
     av_fifo_freep2(&fifo);
@@ -140,58 +140,58 @@ int main(void)
     /* test randomly-sized write/read/peek with a callback */
     {
         CBState        s = { 0 };
-        uint32_t    seed = av_get_random_seed();
+        uint32_t    बीजम् = av_get_random_बीजम्();
 
         AVLFG lfg;
-        int ret;
+        पूर्णाङ्क ret;
 
-        av_lfg_init(&lfg, seed);
+        av_lfg_init(&lfg, बीजम्);
 
-        fifo = av_fifo_alloc2(1, sizeof(unsigned), AV_FIFO_FLAG_AUTO_GROW);
+        fifo = av_fifo_alloc2(1, परिमाण(अचिह्नित), AV_FIFO_FLAG_AUTO_GROW);
 
-        for (i = 0; i < 32; i++) {
+        प्रति (i = 0; i < 32; i++) {
             size_t       nb_elems = 16;
-            unsigned   to_process = av_lfg_get(&lfg) % nb_elems;
+            अचिह्नित   गन्तव्यम्_process = av_lfg_get(&lfg) % nb_elems;
 
-            s.to_process = to_process;
+            s.गन्तव्यम्_process = गन्तव्यम्_process;
 
             ret = av_fifo_write_from_cb(fifo, write_cb, &s, &nb_elems);
-            if (ret < 0 || s.to_process || nb_elems != to_process) {
-                printf("FIFO write fail; seed %"PRIu32"\n", seed);
-                return 1;
+            यदि (ret < 0 || s.गन्तव्यम्_process || nb_elems != गन्तव्यम्_process) {
+                प्रारूप_लिख("FIFO write fail; seed %"PRIu32"\n", बीजम्);
+                प्रत्यागम 1;
             }
 
             nb_elems = av_fifo_can_read(fifo);
-            if (nb_elems > 1) {
-                s.offset     = av_lfg_get(&lfg) % (nb_elems - 1);
-                nb_elems    -= s.offset;
+            यदि (nb_elems > 1) {
+                s.विस्थापनम्     = av_lfg_get(&lfg) % (nb_elems - 1);
+                nb_elems    -= s.विस्थापनम्;
 
-                s.to_process = av_lfg_get(&lfg) % nb_elems;
-                to_process   = s.to_process;
+                s.गन्तव्यम्_process = av_lfg_get(&lfg) % nb_elems;
+                गन्तव्यम्_process   = s.गन्तव्यम्_process;
 
-                ret = av_fifo_peek_to_cb(fifo, read_cb, &s, &nb_elems, s.offset);
-                if (ret < 0 || s.to_process || nb_elems != to_process) {
-                    printf("FIFO peek fail; seed %"PRIu32"\n", seed);
-                    return 1;
+                ret = av_fifo_peek_गन्तव्यम्_cb(fifo, read_cb, &s, &nb_elems, s.विस्थापनम्);
+                यदि (ret < 0 || s.गन्तव्यम्_process || nb_elems != गन्तव्यम्_process) {
+                    प्रारूप_लिख("FIFO peek fail; seed %"PRIu32"\n", बीजम्);
+                    प्रत्यागम 1;
                 }
             }
 
             nb_elems     = av_fifo_can_read(fifo);
-            to_process   = nb_elems ? av_lfg_get(&lfg) % nb_elems : 0;
-            s.to_process = to_process;
-            s.offset     = 0;
+            गन्तव्यम्_process   = nb_elems ? av_lfg_get(&lfg) % nb_elems : 0;
+            s.गन्तव्यम्_process = गन्तव्यम्_process;
+            s.विस्थापनम्     = 0;
 
-            ret = av_fifo_read_to_cb(fifo, read_cb, &s, &nb_elems);
-            if (ret < 0 || s.to_process || to_process != nb_elems) {
-                printf("FIFO read fail; seed %"PRIu32"\n", seed);
-                return 1;
+            ret = av_fifo_read_गन्तव्यम्_cb(fifo, read_cb, &s, &nb_elems);
+            यदि (ret < 0 || s.गन्तव्यम्_process || गन्तव्यम्_process != nb_elems) {
+                प्रारूप_लिख("FIFO read fail; seed %"PRIu32"\n", बीजम्);
+                प्रत्यागम 1;
             }
-            s.read_idx += s.offset;
+            s.read_idx += s.विस्थापनम्;
         }
     }
 
     av_fifo_freep2(&fifo);
-    free(p);
+    मुक्त(p);
 
-    return 0;
+    प्रत्यागम 0;
 }

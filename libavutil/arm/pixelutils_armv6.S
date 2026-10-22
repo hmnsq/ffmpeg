@@ -21,10 +21,10 @@
 #include "asm.S"
 
 function ff_pixelutils_sad16_armv6, export=1
-        push            {r4-r10, lr}
-        mov             r12, #0
-        mov             r10, #16
-        mov             lr,  #0
+        निक्षिप            {r4-r10, lr}
+        चालय             r12, #0
+        चालय             r10, #16
+        चालय             lr,  #0
         ldm             r0,  {r4-r7}
         ldr             r8,  [r2]
 1:
@@ -39,22 +39,22 @@ function ff_pixelutils_sad16_armv6, export=1
         subs            r10,  r10,  #1
         usada8          lr,  r7,  r9,  lr
         beq             2f
-        add             r0,  r0,  r1
+        योजय             r0,  r0,  r1
         ldm             r0,  {r4-r7}
-        add             r2,  r2,  r3
+        योजय             r2,  r2,  r3
         ldr             r8,  [r2]
         b               1b
 2:
-        add             r0,  r12, lr
-        pop             {r4-r10, pc}
+        योजय             r0,  r12, lr
+        उद्धर             {r4-r10, pc}
 endfunc
 
 function ff_pixelutils_sad8_armv6, export=1
         pld             [r2, r3]
-        push            {r4-r10, lr}
-        mov             r10, #8
-        mov             r12,  #0
-        mov             lr,  #0
+        निक्षिप            {r4-r10, lr}
+        चालय             r10, #8
+        चालय             r12,  #0
+        चालय             lr,  #0
         ldrd_post       r4,  r5,  r0,  r1
 1:
         subs            r10, r10, #2
@@ -75,6 +75,6 @@ function ff_pixelutils_sad8_armv6, export=1
 2:
         usada8          r12,  r8,  r6,  r12
         usada8          lr,  r9,  r7,  lr
-        add             r0,  r12,  lr
-        pop             {r4-r10, pc}
+        योजय             r0,  r12,  lr
+        उद्धर             {r4-r10, pc}
 endfunc

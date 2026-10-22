@@ -27,7 +27,7 @@ function ff_pixelutils_sad16_neon, export=1
         // x3           ptrdiff_t stride2
         movi            v16.8h, #0                  // clear result accumulator
         movi            v17.8h, #0                  // clear result accumulator
-        mov             w4, 16
+        चालय             w4, 16
 1:
         ld1             {v0.16b}, [x0], x1          // load pix1
         ld1             {v4.16b}, [x2], x3          // load pix2
@@ -49,10 +49,10 @@ function ff_pixelutils_sad16_neon, export=1
 
         b.gt            1b                          // if h > 0, loop
 
-        add             v16.8h, v16.8h, v17.8h
-        uaddlv          s16, v16.8h                 // add up everything in v16 accumulator
+        योजय             v16.8h, v16.8h, v17.8h
+        uaddlv          s16, v16.8h                 // योजय up everything in v16 accumulator
         fmov            w0, s16                     // copy result to general purpose register
-        ret
+        प्रत्यागच्छ
 endfunc
 
 function ff_pixelutils_sad8_neon, export=1
@@ -62,7 +62,7 @@ function ff_pixelutils_sad8_neon, export=1
         // x3           ptrdiff_t stride2
 
         movi            v30.8h, #0
-        mov             w4, 8
+        चालय             w4, 8
 
 // make 4 iterations at once
 1:
@@ -84,7 +84,7 @@ function ff_pixelutils_sad8_neon, export=1
         uaddlv          s20, v30.8h                     // Add up vector
         fmov            w0, s20
 
-        ret
+        प्रत्यागच्छ
 endfunc
 
 function ff_pixelutils_sad32_neon, export=1
@@ -96,7 +96,7 @@ function ff_pixelutils_sad32_neon, export=1
         movi            v17.8h, #0                  // clear result accumulator
         movi            v18.8h, #0                  // clear result accumulator
         movi            v19.8h, #0                  // clear result accumulator
-        mov             w4, 32
+        चालय             w4, 32
 1:
         ld1             {v0.16b, v1.16b}, [x0], x1  // load pix1
         ld1             {v4.16b, v5.16b}, [x2], x3  // load pix2
@@ -126,10 +126,10 @@ function ff_pixelutils_sad32_neon, export=1
 
         b.gt            1b                          // if h > 0, loop
 
-        add             v16.8h, v16.8h, v17.8h
-        add             v18.8h, v18.8h, v19.8h
-        add             v16.8h, v16.8h, v18.8h
-        uaddlv          s16, v16.8h                 // add up everything in v16 accumulator
+        योजय             v16.8h, v16.8h, v17.8h
+        योजय             v18.8h, v18.8h, v19.8h
+        योजय             v16.8h, v16.8h, v18.8h
+        uaddlv          s16, v16.8h                 // योजय up everything in v16 accumulator
         fmov            w0, s16                     // copy result to general purpose register
-        ret
+        प्रत्यागच्छ
 endfunc

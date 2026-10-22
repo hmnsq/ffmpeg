@@ -17,8 +17,8 @@
  */
 
 
-#ifndef AVUTIL_HWCONTEXT_DXVA2_H
-#define AVUTIL_HWCONTEXT_DXVA2_H
+#यदि_अपरिभाषितम् AVUTIL_HWCONTEXT_DXVA2_H
+#परिभाषय AVUTIL_HWCONTEXT_DXVA2_H
 
 /**
  * @file
@@ -30,20 +30,20 @@
  * with the data pointer set to a pointer to IDirect3DSurface9.
  */
 
-#include <d3d9.h>
-#include <dxva2api.h>
+#अन्तर्भाव <d3d9.h>
+#अन्तर्भाव <dxva2api.h>
 
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVDXVA2DeviceContext {
+प्रकारनिर्देश संरचना AVDXVA2DeviceContext {
     IDirect3DDeviceManager9 *devmgr;
 } AVDXVA2DeviceContext;
 
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVDXVA2FramesContext {
+प्रकारनिर्देश संरचना AVDXVA2_चौकटाः_Context {
     /**
      * The surface type (e.g. DXVA2_VideoProcessorRenderTarget or
      * DXVA2_VideoDecoderRenderTarget). Must be set by the caller.
@@ -56,7 +56,7 @@ typedef struct AVDXVA2FramesContext {
      * libavutil.
      */
     IDirect3DSurface9 **surfaces;
-    int              nb_surfaces;
+    पूर्णाङ्क              nb_surfaces;
 
     /**
      * Certain drivers require the decoder to be destroyed before the surfaces.
@@ -69,7 +69,7 @@ typedef struct AVDXVA2FramesContext {
      * This is for convenience only. Some code uses other methods to manage the
      * decoder reference.
      */
-    IDirectXVideoDecoder *decoder_to_release;
-} AVDXVA2FramesContext;
+    IDirectXVideoDecoder *decoder_गन्तव्यम्_release;
+} AVDXVA2_चौकटाः_Context;
 
-#endif /* AVUTIL_HWCONTEXT_DXVA2_H */
+#यदि_अन्तः /* AVUTIL_HWCONTEXT_DXVA2_H */

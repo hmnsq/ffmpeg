@@ -16,11 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_DYNARRAY_H
-#define AVUTIL_DYNARRAY_H
+#यदि_अपरिभाषितम् AVUTIL_DYNARRAY_H
+#परिभाषय AVUTIL_DYNARRAY_H
 
-#include "log.h"
-#include "mem.h"
+#अन्तर्भाव "log.h"
+#अन्तर्भाव "mem.h"
 
 /**
  * Add an element to a dynamic array.
@@ -42,29 +42,29 @@
  *                     array and size are not changed; the statement can end
  *                     with a return or a goto
  */
-#define FF_DYNARRAY_ADD(av_size_max, av_elt_size, av_array, av_size, \
+#परिभाषय FF_DYNARRAY_सङ्कलय(av_आकार_max, av_elt_आकार, av_array, av_आकार, \
                         av_success, av_failure) \
-    do { \
-        size_t av_size_new = (av_size); \
-        if (!((av_size) & ((av_size) - 1))) { \
-            av_size_new = (av_size) ? (av_size) << 1 : 1; \
-            if (av_size_new > (av_size_max) / (av_elt_size)) { \
-                av_size_new = 0; \
-            } else { \
-                void *av_array_new = \
-                    av_realloc((av_array), av_size_new * (av_elt_size)); \
-                if (!av_array_new) \
-                    av_size_new = 0; \
-                else \
+    कुरु { \
+        size_t av_आकार_new = (av_आकार); \
+        यदि (!((av_आकार) & ((av_आकार) - 1))) { \
+            av_आकार_new = (av_आकार) ? (av_आकार) << 1 : 1; \
+            यदि (av_आकार_new > (av_आकार_max) / (av_elt_आकार)) { \
+                av_आकार_new = 0; \
+            } अन्यथा { \
+                शून्य *av_array_new = \
+                    av_realloc((av_array), av_आकार_new * (av_elt_आकार)); \
+                यदि (!av_array_new) \
+                    av_आकार_new = 0; \
+                अन्यथा \
                     (av_array) = av_array_new; \
             } \
         } \
-        if (av_size_new) { \
+        यदि (av_आकार_new) { \
             { av_success } \
-            (av_size)++; \
-        } else { \
+            (av_आकार)++; \
+        } अन्यथा { \
             av_failure \
         } \
-    } while (0)
+    } यावत् (0)
 
-#endif /* AVUTIL_DYNARRAY_H */
+#यदि_अन्तः /* AVUTIL_DYNARRAY_H */

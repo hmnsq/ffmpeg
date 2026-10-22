@@ -35,5 +35,5 @@ func ff_lls_update_covariance_rvv, zve64d, zbb
         addi          a0, a0, (36 + 1) * 8 # 1 row + 1 element
         bnez          a2, 1b
 
-        ret
+        प्रत्यागच्छ
 endfunc

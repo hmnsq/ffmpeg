@@ -50,21 +50,21 @@
 
         .macro func sym, exts:vararg
             .text
-            .option push
+            .option निक्षिप
             archadd \exts
 
-            .global \sym
+            .वैश्विक \sym
             .hidden \sym
             .type   \sym, %function
-            .option push
+            .option निक्षिप
             .option norvc
             .align  2
             \sym:
-            .option pop
+            .option उद्धर
 
             .macro endfunc
                 .size   \sym, . - \sym
-                .option pop
+                .option उद्धर
                 .previous
                 .purgem endfunc
             .endm
@@ -207,7 +207,7 @@
         csrr    \rd, vlenb
         clz     \tmp, \tmp
         clz     \rd, \rd
-        sub     \rd, \rd, \tmp
+        वियोजय     \rd, \rd, \tmp
         max     \rd, \rd, zero // VLMUL must be >= VSEW - VSEW_MAX
         .if     vsew < VSEW_MAX
         addi    \rd, \rd, vsew - VSEW_MAX

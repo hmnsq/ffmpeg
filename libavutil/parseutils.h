@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PARSEUTILS_H
-#define AVUTIL_PARSEUTILS_H
+#यदि_अपरिभाषितम् AVUTIL_PARSEUTILS_H
+#परिभाषय AVUTIL_PARSEUTILS_H
 
-#include <time.h>
+#अन्तर्भाव <time.h>
 
-#include "rational.h"
+#अन्तर्भाव "rational.h"
 
 /**
  * @file
@@ -46,11 +46,11 @@
  * @param[in] log_ctx parent logging context
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx);
+पूर्णाङ्क av_parse_अनुपातः(AVRational *q, ध्रुव वर्ण *str, पूर्णाङ्क max,
+                   पूर्णाङ्क log_विस्थापनम्, शून्य *log_ctx);
 
-#define av_parse_ratio_quiet(rate, str, max) \
-    av_parse_ratio(rate, str, max, AV_LOG_MAX_OFFSET, NULL)
+#परिभाषय av_parse_अनुपातः_quiet(दरः, str, max) \
+    av_parse_अनुपातः(दरः, str, max, AV_LOG_MAX_विस्थापनम्, रिक्त)
 
 /**
  * Parse str and put in width_ptr and height_ptr the detected values.
@@ -63,7 +63,7 @@ int av_parse_ratio(AVRational *q, const char *str, int max,
  * width x height or a valid video size abbreviation.
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
+पूर्णाङ्क av_parse_video_आकार(पूर्णाङ्क *विस्तारः_ptr, पूर्णाङ्क *height_ptr, ध्रुव वर्ण *str);
 
 /**
  * Parse str and store the detected values in *rate.
@@ -74,7 +74,7 @@ int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
  * rate_num / rate_den, a float number or a valid video rate abbreviation
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_rate(AVRational *rate, const char *str);
+पूर्णाङ्क av_parse_video_दरः(AVRational *दरः, ध्रुव वर्ण *str);
 
 /**
  * Put the RGBA values that correspond to color_string in rgba_color.
@@ -99,8 +99,8 @@ int av_parse_video_rate(AVRational *rate, const char *str);
  * @return >= 0 in case of success, a negative value in case of
  * failure (for example if color_string cannot be parsed).
  */
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
-                   void *log_ctx);
+पूर्णाङ्क av_parse_color(uint8_t *rgba_color, ध्रुव वर्ण *color_string, पूर्णाङ्क slen,
+                   शून्य *log_ctx);
 
 /**
  * Get the name of a color from the internal table of hard-coded named
@@ -113,7 +113,7 @@ int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
  * @param rgb      if not NULL, will point to a 3-elements array with the color value in RGB
  * @return the color name string or NULL if color_idx is not in the array
  */
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
+ध्रुव वर्ण *av_get_ज्ञातम्_color_name(पूर्णाङ्क color_idx, ध्रुव uint8_t **rgb);
 
 /**
  * Parse timestr and return in *time a corresponding number of
@@ -147,7 +147,7 @@ const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_parse_time(int64_t *timeval, const char *timestr, int duration);
+पूर्णाङ्क av_parse_time(int64_t *timeval, ध्रुव वर्ण *timestr, पूर्णाङ्क duration);
 
 /**
  * Attempt to find a specific tag in a URL.
@@ -155,7 +155,7 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration);
  * syntax: '?tag1=val1&tag2=val2...'. Little URL decoding is done.
  * Return 1 if found.
  */
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info);
+पूर्णाङ्क av_find_info_चिह्नकम्(वर्ण *arg, पूर्णाङ्क arg_आकार, ध्रुव वर्ण *tag1, ध्रुव वर्ण *info);
 
 /**
  * Simplified version of strptime
@@ -187,11 +187,11 @@ int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info
  *         is consumed the return value points to the null byte at the end of
  *         the string. On failure NULL is returned.
  */
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt);
+वर्ण *av_small_strptime(ध्रुव वर्ण *p, ध्रुव वर्ण *fmt, संरचना tm *dt);
 
 /**
  * Convert the decomposed UTC time in tm to a time_t value.
  */
-time_t av_timegm(struct tm *tm);
+time_t av_timegm(संरचना tm *tm);
 
-#endif /* AVUTIL_PARSEUTILS_H */
+#यदि_अन्तः /* AVUTIL_PARSEUTILS_H */

@@ -29,11 +29,11 @@ SECTION .text
 %macro AES_CRYPT 2
 cglobal aes_%1rypt_%2, 5, 5, 2
     test     r3d, r3d
-    je .ret
+    je .प्रत्यागच्छ
     shl      r3d, 4
-    add       r0, 0x70
-    add       r2, r3
-    add       r1, r3
+    योजय       r0, 0x70
+    योजय       r2, r3
+    योजय       r1, r3
     neg       r3
     pxor      m1, m1
     test      r4, r4
@@ -73,16 +73,16 @@ cglobal aes_%1rypt_%2, 5, 5, 2
 %endif
 .noiv:
     movu [r1+r3], m0
-    add       r3, 16
+    योजय       r3, 16
     jl .block
     test      r4, r4
-    je .ret
+    je .प्रत्यागच्छ
 %ifidn %1, dec
     movu    [r4], m1
 %else
     movu    [r4], m0
 %endif
-.ret:
+.प्रत्यागच्छ:
     REP_RET
 %endmacro
 

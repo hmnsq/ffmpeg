@@ -16,16 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_VIDEO_ENC_PARAMS_H
-#define AVUTIL_VIDEO_ENC_PARAMS_H
+#यदि_अपरिभाषितम् AVUTIL_VIDEO_ENC_PARAMS_H
+#परिभाषय AVUTIL_VIDEO_ENC_PARAMS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdint.h>
 
-#include "libavutil/avassert.h"
-#include "libavutil/frame.h"
+#अन्तर्भाव "libavutil/avassert.h"
+#अन्तर्भाव "libavutil/frame.h"
 
-enum AVVideoEncParamsType {
+गणना AVVideoEncParamsType {
     AV_VIDEO_ENC_PARAMS_NONE = -1,
     /**
      * VP9 stores:
@@ -70,7 +70,7 @@ enum AVVideoEncParamsType {
  * with an optional array of per-block AVVideoBlockParams descriptors.
  * Must be allocated with av_video_enc_params_alloc().
  */
-typedef struct AVVideoEncParams {
+प्रकारनिर्देश संरचना AVVideoEncParams {
     /**
      * Number of blocks in the array.
      *
@@ -78,21 +78,21 @@ typedef struct AVVideoEncParams {
      * the values of blocks_offset / block_size are unspecified and should not
      * be accessed.
      */
-    unsigned int nb_blocks;
+    अचिह्नित पूर्णाङ्क nb_खण्डानि;
     /**
      * Offset in bytes from the beginning of this structure at which the array
      * of blocks starts.
      */
-    size_t blocks_offset;
+    size_t खण्डानि_विस्थापनम्;
     /*
      * Size of each block in bytes. May not match sizeof(AVVideoBlockParams).
      */
-    size_t block_size;
+    size_t खण्डम्_आकार;
 
     /**
      * Type of the parameters (the codec they are used with).
      */
-    enum AVVideoEncParamsType type;
+    गणना AVVideoEncParamsType type;
 
     /**
      * Base quantisation parameter for the frame. The final quantiser for a
@@ -117,34 +117,34 @@ typedef struct AVVideoEncParams {
  * sizeof(AVVideoBlockParams) is not a part of the ABI and new fields may be
  * added to it.
  */
-typedef struct AVVideoBlockParams {
+प्रकारनिर्देश संरचना AVVideo_खण्डम्_Params {
     /**
      * Distance in luma pixels from the top-left corner of the visible frame
      * to the top-left corner of the block.
      * Can be negative if top/right padding is present on the coded frame.
      */
-    int src_x, src_y;
+    पूर्णाङ्क src_x, src_y;
     /**
      * Width and height of the block in luma pixels.
      */
-    int w, h;
+    पूर्णाङ्क w, h;
 
     /**
      * Difference between this block's final quantization parameter and the
      * corresponding per-frame value.
      */
     int32_t delta_qp;
-} AVVideoBlockParams;
+} AVVideo_खण्डम्_Params;
 
 /**
  * Get the block at the specified {@code idx}. Must be between 0 and nb_blocks - 1.
  */
-static av_always_inline AVVideoBlockParams*
-av_video_enc_params_block(AVVideoEncParams *par, unsigned int idx)
+स्थिर av_always_inline AVVideo_खण्डम्_Params*
+av_video_enc_params_खण्डम्(AVVideoEncParams *par, अचिह्नित पूर्णाङ्क idx)
 {
-    av_assert0(idx < par->nb_blocks);
-    return (AVVideoBlockParams *)((uint8_t *)par + par->blocks_offset +
-                                  idx * par->block_size);
+    av_assert0(idx < par->nb_खण्डानि);
+    प्रत्यागम (AVVideo_खण्डम्_Params *)((uint8_t *)par + par->खण्डानि_विस्थापनम् +
+                                  idx * par->खण्डम्_आकार);
 }
 
 /**
@@ -155,8 +155,8 @@ av_video_enc_params_block(AVVideoEncParams *par, unsigned int idx)
  * @param out_size if non-NULL, the size in bytes of the resulting data array is
  * written here.
  */
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size);
+AVVideoEncParams *av_video_enc_params_alloc(गणना AVVideoEncParamsType type,
+                                            अचिह्नित पूर्णाङ्क nb_खण्डानि, size_t *बहिर्गमनम्_आकार);
 
 /**
  * Allocates memory for AVEncodeInfoFrame plus an array of
@@ -165,7 +165,7 @@ AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
  * and initializes the variables.
  */
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks);
+av_video_enc_params_create_side_दत्त(AVFrame *frame, गणना AVVideoEncParamsType type,
+                                     अचिह्नित पूर्णाङ्क nb_खण्डानि);
 
-#endif /* AVUTIL_VIDEO_ENC_PARAMS_H */
+#यदि_अन्तः /* AVUTIL_VIDEO_ENC_PARAMS_H */

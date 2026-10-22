@@ -16,27 +16,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define TEST
-#include "libavutil/parseutils.c"
+#परिभाषय TEST
+#अन्तर्भाव "libavutil/parseutils.c"
 
-#include <stdint.h>
-#include <stdio.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/log.h"
-#include "libavutil/rational.h"
+#अन्तर्भाव "libavutil/common.h"
+#अन्तर्भाव "libavutil/log.h"
+#अन्तर्भाव "libavutil/rational.h"
 
-static uint32_t randomv = MKTAG('L','A','V','U');
+स्थिर uint32_t randomv = MKTAG('L','A','V','U');
 
-static uint32_t av_get_random_seed_deterministic(void)
+स्थिर uint32_t av_get_random_बीजम्_deterministic(शून्य)
 {
-    return randomv = randomv * 1664525 + 1013904223;
+    प्रत्यागम randomv = randomv * 1664525 + 1013904223;
 }
 
-static void test_av_parse_video_rate(void)
+स्थिर शून्य test_av_parse_video_दरः(शून्य)
 {
-    int i;
-    static const char *const rates[] = {
+    पूर्णाङ्क i;
+    स्थिर ध्रुव वर्ण *ध्रुव rates[] = {
         "-inf",
         "inf",
         "nan",
@@ -64,20 +64,20 @@ static void test_av_parse_video_rate(void)
         " -21332.2324   ",
     };
 
-    for (i = 0; i < FF_ARRAY_ELEMS(rates); i++) {
-        int ret;
+    प्रति (i = 0; i < FF_ARRAY_ELEMS(rates); i++) {
+        पूर्णाङ्क ret;
         AVRational q = { 0, 0 };
-        ret = av_parse_video_rate(&q, rates[i]);
-        printf("'%s' -> %d/%d %s\n",
-               rates[i], q.num, q.den, ret ? "ERROR" : "OK");
+        ret = av_parse_video_दरः(&q, rates[i]);
+        प्रारूप_लिख("'%s' -> %d/%d %s\n",
+               rates[i], q.अङ्कः, q.den, ret ? "ERROR" : "OK");
     }
 }
 
-static void test_av_parse_color(void)
+स्थिर शून्य test_av_parse_color(शून्य)
 {
-    int i;
+    पूर्णाङ्क i;
     uint8_t rgba[4];
-    static const char *const color_names[] = {
+    स्थिर ध्रुव वर्ण *ध्रुव color_नामानि[] = {
         "bikeshed",
         "RaNdOm",
         "foo",
@@ -116,23 +116,23 @@ static void test_av_parse_color(void)
         "red@-0.0",
     };
 
-    av_log_set_level(AV_LOG_DEBUG);
+    av_log_समुच्चयः_level(AV_LOG_DEBUG);
 
-    for (i = 0;  i < FF_ARRAY_ELEMS(color_names); i++) {
-        if (av_parse_color(rgba, color_names[i], -1, NULL) >= 0)
-            printf("%s -> R(%d) G(%d) B(%d) A(%d)\n",
-                   color_names[i], rgba[0], rgba[1], rgba[2], rgba[3]);
-        else
-            printf("%s -> error\n", color_names[i]);
+    प्रति (i = 0;  i < FF_ARRAY_ELEMS(color_नामानि); i++) {
+        यदि (av_parse_color(rgba, color_नामानि[i], -1, रिक्त) >= 0)
+            प्रारूप_लिख("%s -> R(%d) G(%d) B(%d) A(%d)\n",
+                   color_नामानि[i], rgba[0], rgba[1], rgba[2], rgba[3]);
+        अन्यथा
+            प्रारूप_लिख("%s -> error\n", color_नामानि[i]);
     }
 }
 
-static void test_av_small_strptime(void)
+स्थिर शून्य test_av_small_strptime(शून्य)
 {
-    int i;
-    struct tm tm = { 0 };
-    struct fmt_timespec_entry {
-        const char *fmt, *timespec;
+    पूर्णाङ्क i;
+    संरचना tm tm = { 0 };
+    संरचना fmt_timespec_प्रविष्टिः {
+        ध्रुव वर्ण *fmt, *timespec;
     } fmt_timespec_entries[] = {
         { "%Y-%m-%d",                    "2012-12-21" },
         { "%Y - %m - %d",                "2012-12-21" },
@@ -147,30 +147,30 @@ static void test_av_small_strptime(void)
         { "  %Y - %B - %d %H : %M : %S", "   2012 - January -  21   20 : 12 : 21" },
     };
 
-    av_log_set_level(AV_LOG_DEBUG);
-    for (i = 0;  i < FF_ARRAY_ELEMS(fmt_timespec_entries); i++) {
-        char *p;
-        struct fmt_timespec_entry *e = &fmt_timespec_entries[i];
-        printf("fmt:'%s' spec:'%s' -> ", e->fmt, e->timespec);
+    av_log_समुच्चयः_level(AV_LOG_DEBUG);
+    प्रति (i = 0;  i < FF_ARRAY_ELEMS(fmt_timespec_entries); i++) {
+        वर्ण *p;
+        संरचना fmt_timespec_प्रविष्टिः *e = &fmt_timespec_entries[i];
+        प्रारूप_लिख("fmt:'%s' spec:'%s' -> ", e->fmt, e->timespec);
         p = av_small_strptime(e->timespec, e->fmt, &tm);
-        if (p) {
-            printf("%04d-%02d-%2d %02d:%02d:%02d\n",
+        यदि (p) {
+            प्रारूप_लिख("%04d-%02d-%2d %02d:%02d:%02d\n",
                    1900+tm.tm_year, tm.tm_mon+1, tm.tm_mday,
                    tm.tm_hour, tm.tm_min, tm.tm_sec);
-        } else {
-            printf("error\n");
+        } अन्यथा {
+            प्रारूप_लिख("error\n");
         }
     }
 }
 
-static void test_av_parse_time(void)
+स्थिर शून्य test_av_parse_time(शून्य)
 {
-    int i;
+    पूर्णाङ्क i;
     int64_t tv;
     time_t tvi;
-    struct tm *tm;
-    static char tzstr[] = "TZ=CET-1";
-    static const char * const time_string[] = {
+    संरचना tm *tm;
+    स्थिर वर्ण tzstr[] = "TZ=CET-1";
+    स्थिर ध्रुव वर्ण * ध्रुव time_string[] = {
         "now",
         "12:35:46",
         "2000-12-20 0:02:47.5z",
@@ -179,7 +179,7 @@ static void test_av_parse_time(void)
         "2000-12-12 1:35:46+05:30",
         "2002-12-12 22:30:40-02",
     };
-    static const char * const duration_string[] = {
+    स्थिर ध्रुव वर्ण * ध्रुव duration_string[] = {
         "2:34:56.79",
         "-1:23:45.67",
         "42.1729",
@@ -191,81 +191,81 @@ static void test_av_parse_time(void)
         "9223372036854775808us",
     };
 
-    av_log_set_level(AV_LOG_DEBUG);
+    av_log_समुच्चयः_level(AV_LOG_DEBUG);
     putenv(tzstr);
-    printf("(now is 2012-03-17 09:14:13.2 +0100, local time is UTC+1)\n");
-    for (i = 0;  i < FF_ARRAY_ELEMS(time_string); i++) {
-        printf("%-24s -> ", time_string[i]);
-        if (av_parse_time(&tv, time_string[i], 0)) {
-            printf("error\n");
-        } else {
+    प्रारूप_लिख("(now is 2012-03-17 09:14:13.2 +0100, local time is UTC+1)\n");
+    प्रति (i = 0;  i < FF_ARRAY_ELEMS(time_string); i++) {
+        प्रारूप_लिख("%-24s -> ", time_string[i]);
+        यदि (av_parse_time(&tv, time_string[i], 0)) {
+            प्रारूप_लिख("error\n");
+        } अन्यथा {
             tvi = tv / 1000000;
             tm = gmtime(&tvi);
-            printf("%14"PRIi64".%06d = %04d-%02d-%02dT%02d:%02d:%02dZ\n",
-                   tv / 1000000, (int)(tv % 1000000),
+            प्रारूप_लिख("%14"PRIi64".%06d = %04d-%02d-%02dT%02d:%02d:%02dZ\n",
+                   tv / 1000000, (पूर्णाङ्क)(tv % 1000000),
                    tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
                    tm->tm_hour, tm->tm_min, tm->tm_sec);
         }
     }
-    for (i = 0;  i < FF_ARRAY_ELEMS(duration_string); i++) {
-        printf("%-24s -> ", duration_string[i]);
-        if (av_parse_time(&tv, duration_string[i], 1)) {
-            printf("error\n");
-        } else {
-            printf("%+21"PRIi64"\n", tv);
+    प्रति (i = 0;  i < FF_ARRAY_ELEMS(duration_string); i++) {
+        प्रारूप_लिख("%-24s -> ", duration_string[i]);
+        यदि (av_parse_time(&tv, duration_string[i], 1)) {
+            प्रारूप_लिख("error\n");
+        } अन्यथा {
+            प्रारूप_लिख("%+21"PRIi64"\n", tv);
         }
     }
 }
 
-static void test_av_get_known_color_name(void)
+स्थिर शून्य test_av_get_ज्ञातम्_color_name(शून्य)
 {
-    int i;
-    const uint8_t *rgba;
-    const char *color;
+    पूर्णाङ्क i;
+    ध्रुव uint8_t *rgba;
+    ध्रुव वर्ण *color;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_table); ++i) {
-        color = av_get_known_color_name(i, &rgba);
-        if (color)
-            printf("%s -> R(%d) G(%d) B(%d) A(%d)\n",
+    प्रति (i = 0; i < FF_ARRAY_ELEMS(color_सारणी); ++i) {
+        color = av_get_ज्ञातम्_color_name(i, &rgba);
+        यदि (color)
+            प्रारूप_लिख("%s -> R(%d) G(%d) B(%d) A(%d)\n",
                     color, rgba[0], rgba[1], rgba[2], rgba[3]);
-        else
-            printf("Color ID: %d not found\n", i);
+        अन्यथा
+            प्रारूप_लिख("Color ID: %d not found\n", i);
     }
 }
 
-static void test_av_find_info_tag(void)
+स्थिर शून्य test_av_find_info_चिह्नकम्(शून्य)
 {
-    static const char args[] = "?tag1=val1&tag2=val2&tag3=val3&tag41=value 41&tag42=random1";
-    static const char *tags[] = {"tag1", "tag2", "tag3", "tag4", "tag41", "41", "random1"};
-    char buff[16];
-    int i;
+    स्थिर ध्रुव वर्ण तर्काः[] = "?tag1=val1&tag2=val2&tag3=val3&tag41=value 41&tag42=random1";
+    स्थिर ध्रुव वर्ण *चिह्नकानि[] = {"tag1", "tag2", "tag3", "tag4", "tag41", "41", "random1"};
+    वर्ण buff[16];
+    पूर्णाङ्क i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(tags); ++i) {
-        if (av_find_info_tag(buff, sizeof(buff), tags[i], args))
-            printf("%d. %s found: %s\n", i, tags[i], buff);
-        else
-            printf("%d. %s not found\n", i, tags[i]);
+    प्रति (i = 0; i < FF_ARRAY_ELEMS(चिह्नकानि); ++i) {
+        यदि (av_find_info_चिह्नकम्(buff, परिमाण(buff), चिह्नकानि[i], तर्काः))
+            प्रारूप_लिख("%d. %s found: %s\n", i, चिह्नकानि[i], buff);
+        अन्यथा
+            प्रारूप_लिख("%d. %s not found\n", i, चिह्नकानि[i]);
     }
 }
 
-int main(void)
+पूर्णाङ्क मुख्यम्(शून्य)
 {
-    printf("Testing av_parse_video_rate()\n");
-    test_av_parse_video_rate();
+    प्रारूप_लिख("Testing av_parse_video_rate()\n");
+    test_av_parse_video_दरः();
 
-    printf("\nTesting av_parse_color()\n");
+    प्रारूप_लिख("\nTesting av_parse_color()\n");
     test_av_parse_color();
 
-    printf("\nTesting av_small_strptime()\n");
+    प्रारूप_लिख("\nTesting av_small_strptime()\n");
     test_av_small_strptime();
 
-    printf("\nTesting av_parse_time()\n");
+    प्रारूप_लिख("\nTesting av_parse_time()\n");
     test_av_parse_time();
 
-    printf("\nTesting av_get_known_color_name()\n");
-    test_av_get_known_color_name();
+    प्रारूप_लिख("\nTesting av_get_known_color_name()\n");
+    test_av_get_ज्ञातम्_color_name();
 
-    printf("\nTesting av_find_info_tag()\n");
-    test_av_find_info_tag();
-    return 0;
+    प्रारूप_लिख("\nTesting av_find_info_tag()\n");
+    test_av_find_info_चिह्नकम्();
+    प्रत्यागम 0;
 }

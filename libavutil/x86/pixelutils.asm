@@ -92,17 +92,17 @@ cglobal pixelutils_sad_16x16, 4,4,5, src1, stride1, src2, stride2
 %macro SAD_XMM_16x16 1
 INIT_XMM sse2
 cglobal pixelutils_sad_%1_16x16, 4,4,3, src1, stride1, src2, stride2
-    mov%1       m2, [src2q]
+    चालय%1       m2, [src2q]
     psadbw      m2, [src1q]
-    mov%1       m1, [src2q + stride2q]
+    चालय%1       m1, [src2q + stride2q]
     psadbw      m1, [src1q + stride1q]
     paddw       m2, m1
 %rep 7
     lea         src1q, [src1q + 2*stride1q]
     lea         src2q, [src2q + 2*stride2q]
-    mov%1       m0, [src2q]
+    चालय%1       m0, [src2q]
     psadbw      m0, [src1q]
-    mov%1       m1, [src2q + stride2q]
+    चालय%1       m1, [src2q + stride2q]
     psadbw      m1, [src1q + stride1q]
     paddw       m2, m0
     paddw       m2, m1
@@ -164,8 +164,8 @@ SAD_XMM_16x16 u
 %endmacro
 
 %macro PROCESS_SAD_32x4 1
-    mov%1   m1,  [r2]
-    mov%1   m2,  [r2 + 16]
+    चालय%1   m1,  [r2]
+    चालय%1   m2,  [r2 + 16]
     psadbw  m1,  [r0]
     psadbw  m2,  [r0 + 16]
     paddd   m1,  m2
@@ -173,8 +173,8 @@ SAD_XMM_16x16 u
     lea     r2,  [r2 + r3]
     lea     r0,  [r0 + r1]
 
-    mov%1   m1,  [r2]
-    mov%1   m2,  [r2 + 16]
+    चालय%1   m1,  [r2]
+    चालय%1   m2,  [r2 + 16]
     psadbw  m1,  [r0]
     psadbw  m2,  [r0 + 16]
     paddd   m1,  m2
@@ -182,8 +182,8 @@ SAD_XMM_16x16 u
     lea     r2,  [r2 + r3]
     lea     r0,  [r0 + r1]
 
-    mov%1   m1,  [r2]
-    mov%1   m2,  [r2 + 16]
+    चालय%1   m1,  [r2]
+    चालय%1   m2,  [r2 + 16]
     psadbw  m1,  [r0]
     psadbw  m2,  [r0 + 16]
     paddd   m1,  m2
@@ -191,8 +191,8 @@ SAD_XMM_16x16 u
     lea     r2,  [r2 + r3]
     lea     r0,  [r0 + r1]
 
-    mov%1   m1,  [r2]
-    mov%1   m2,  [r2 + 16]
+    चालय%1   m1,  [r2]
+    चालय%1   m2,  [r2 + 16]
     psadbw  m1,  [r0]
     psadbw  m2,  [r0 + 16]
     paddd   m1,  m2
@@ -208,7 +208,7 @@ SAD_XMM_16x16 u
 INIT_XMM sse2
 cglobal pixelutils_sad_32x32, 4,5,5, src1, stride1, src2, stride2
     pxor  m0,  m0
-    mov   r4d, 4
+    चालय   r4d, 4
 .loop:
     PROCESS_SAD_32x4_U
     PROCESS_SAD_32x4_U
@@ -228,7 +228,7 @@ cglobal pixelutils_sad_32x32, 4,5,5, src1, stride1, src2, stride2
 INIT_XMM sse2
 cglobal pixelutils_sad_%1_32x32, 4,5,3, src1, stride1, src2, stride2
     pxor  m0,  m0
-    mov   r4d, 4
+    चालय   r4d, 4
 .loop:
     PROCESS_SAD_32x4 %1
     PROCESS_SAD_32x4 %1
@@ -252,7 +252,7 @@ SAD_XMM_32x32 u
 INIT_YMM avx2
 cglobal pixelutils_sad_32x32, 4,7,3, src1, stride1, src2, stride2
     pxor           m0, m0
-    mov            r4d, 32/4
+    चालय            r4d, 32/4
     lea            r5, [stride1q * 3]
     lea            r6, [stride2q * 3]
 

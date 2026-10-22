@@ -18,45 +18,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include "libavutil/display.c"
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव "libavutil/display.c"
 
-static void print_matrix(int32_t matrix[9])
+स्थिर शून्य print_matrix(int32_t matrix[9])
 {
-    int i, j;
+    पूर्णाङ्क i, j;
 
-    for (i = 0; i < 3; ++i) {
-        for (j = 0; j < 3 - 1; ++j)
-            printf("%d ", matrix[i*3 + j]);
+    प्रति (i = 0; i < 3; ++i) {
+        प्रति (j = 0; j < 3 - 1; ++j)
+            प्रारूप_लिख("%d ", matrix[i*3 + j]);
 
-        printf("%d\n", matrix[i*3 + j]);
+        प्रारूप_लिख("%d\n", matrix[i*3 + j]);
     }
 }
 
-int main(void)
+पूर्णाङ्क मुख्यम्(शून्य)
 {
     int32_t matrix[9];
 
     // Set the matrix to 90 degrees
-    av_display_rotation_set(matrix, 90);
+    av_display_rotation_समुच्चयः(matrix, 90);
     print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    प्रारूप_लिख("degrees: %f\n", av_display_rotation_get(matrix));
 
     // Set the matrix to -45 degrees
-    av_display_rotation_set(matrix, -45);
+    av_display_rotation_समुच्चयः(matrix, -45);
     print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    प्रारूप_लिख("degrees: %f\n", av_display_rotation_get(matrix));
 
     // flip horizontal
     av_display_matrix_flip(matrix, 1, 0);
     print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    प्रारूप_लिख("degrees: %f\n", av_display_rotation_get(matrix));
 
     // flip vertical
     av_display_matrix_flip(matrix, 0, 1);
     print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    प्रारूप_लिख("degrees: %f\n", av_display_rotation_get(matrix));
 
-    return 0;
+    प्रत्यागम 0;
 
 }

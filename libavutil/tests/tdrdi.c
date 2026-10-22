@@ -16,77 +16,77 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdio.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdio.h>
 
-#include "libavutil/mem.h"
-#include "libavutil/tdrdi.h"
+#अन्तर्भाव "libavutil/mem.h"
+#अन्तर्भाव "libavutil/tdrdi.h"
 
-int main(void)
+पूर्णाङ्क मुख्यम्(शून्य)
 {
     AV3DReferenceDisplaysInfo *tdrdi;
     AV3DReferenceDisplay *display;
-    size_t size;
+    size_t आकार;
 
     /* av_tdrdi_alloc with 1 display */
-    printf("Testing av_tdrdi_alloc()\n");
-    tdrdi = av_tdrdi_alloc(1, &size);
-    if (tdrdi) {
-        printf("alloc 1: size>0=%s, num_ref_displays=%u\n",
-               size > 0 ? "yes" : "no", tdrdi->num_ref_displays);
+    प्रारूप_लिख("Testing av_tdrdi_alloc()\n");
+    tdrdi = av_tdrdi_alloc(1, &आकार);
+    यदि (tdrdi) {
+        प्रारूप_लिख("alloc 1: size>0=%s, num_ref_displays=%u\n",
+               आकार > 0 ? "yes" : "no", tdrdi->अङ्कः_ref_displays);
 
         display = av_tdrdi_get_display(tdrdi, 0);
         /* pointer consistency check */
-        if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset)
-            printf("display 0: pointer inconsistent with entries_offset\n");
+        यदि ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_विस्थापनम्)
+            प्रारूप_लिख("display 0: pointer inconsistent with entries_offset\n");
 
         /* write and read back */
-        display->exponent_ref_display_width = 3;
-        display->mantissa_ref_display_width = 100;
-        display->left_view_id = 0;
-        display->right_view_id = 1;
+        display->exponent_ref_display_विस्तारः = 3;
+        display->mantissa_ref_display_विस्तारः = 100;
+        display->वामः_view_id = 0;
+        display->दक्षिणः_view_id = 1;
         display = av_tdrdi_get_display(tdrdi, 0);
-        printf("display 0: width_exp=%u width_man=%u left=%u right=%u\n",
-               display->exponent_ref_display_width,
-               display->mantissa_ref_display_width,
-               display->left_view_id, display->right_view_id);
+        प्रारूप_लिख("display 0: width_exp=%u width_man=%u left=%u right=%u\n",
+               display->exponent_ref_display_विस्तारः,
+               display->mantissa_ref_display_विस्तारः,
+               display->वामः_view_id, display->दक्षिणः_view_id);
         av_free(tdrdi);
     }
 
     /* alloc with multiple displays */
-    printf("\nTesting multiple displays\n");
-    tdrdi = av_tdrdi_alloc(3, &size);
-    if (tdrdi) {
-        printf("alloc 3: num_ref_displays=%u\n", tdrdi->num_ref_displays);
-        for (int i = 0; i < 3; i++) {
+    प्रारूप_लिख("\nTesting multiple displays\n");
+    tdrdi = av_tdrdi_alloc(3, &आकार);
+    यदि (tdrdi) {
+        प्रारूप_लिख("alloc 3: num_ref_displays=%u\n", tdrdi->अङ्कः_ref_displays);
+        प्रति (पूर्णाङ्क i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
             /* verify stride consistency */
-            if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset +
-                                      (size_t)i * tdrdi->entry_size)
-                printf("display %d: pointer inconsistent\n", i);
-            display->exponent_ref_display_width = i + 1;
+            यदि ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_विस्थापनम् +
+                                      (size_t)i * tdrdi->प्रविष्टिः_आकार)
+                प्रारूप_लिख("display %d: pointer inconsistent\n", i);
+            display->exponent_ref_display_विस्तारः = i + 1;
         }
-        for (int i = 0; i < 3; i++) {
+        प्रति (पूर्णाङ्क i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
-            printf("display %d: width_exp=%u\n", i,
-                   display->exponent_ref_display_width);
+            प्रारूप_लिख("display %d: width_exp=%u\n", i,
+                   display->exponent_ref_display_विस्तारः);
         }
         av_free(tdrdi);
     }
 
     /* alloc with NULL size */
-    tdrdi = av_tdrdi_alloc(1, NULL);
-    printf("\nalloc (no size): %s\n", tdrdi ? "OK" : "FAIL");
+    tdrdi = av_tdrdi_alloc(1, रिक्त);
+    प्रारूप_लिख("\nalloc (no size): %s\n", tdrdi ? "OK" : "FAIL");
     av_free(tdrdi);
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    प्रारूप_लिख("\nTesting OOM paths\n");
     av_max_alloc(1);
-    tdrdi = av_tdrdi_alloc(1, &size);
-    printf("alloc OOM: %s\n", tdrdi ? "FAIL" : "OK");
+    tdrdi = av_tdrdi_alloc(1, &आकार);
+    प्रारूप_लिख("alloc OOM: %s\n", tdrdi ? "FAIL" : "OK");
     av_free(tdrdi);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(अधिकतम_पूर्णाङ्कः);
 
-    return 0;
+    प्रत्यागम 0;
 }
