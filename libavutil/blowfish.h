@@ -49,7 +49,7 @@ AVBlowfish *av_blowfish_alloc(void);
  * @param key a key
  * @param key_len length of the key
  */
-void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
+void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, цео key_len);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -60,7 +60,7 @@ void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
  * @param decrypt 0 for encryption, 1 for decryption
  */
 void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
-                           int decrypt);
+                           цео decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -73,7 +73,7 @@ void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
  * @param decrypt 0 for encryption, 1 for decryption
  */
 void av_blowfish_crypt(struct AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                       int count, uint8_t *iv, int decrypt);
+                       цео count, uint8_t *iv, цео decrypt);
 
 /**
  * @}

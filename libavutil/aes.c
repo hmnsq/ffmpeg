@@ -32,11 +32,11 @@
 #include "mem.h"
 #include "thread.h"
 
-const int av_aes_size= sizeof(AVAES);
+const цео av_aes_size= sizeof(AVAES);
 
 struct AVAES *av_aes_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVAES));
+    врати av_mallocz(sizeof(struct AVAES));
 }
 
 static const uint8_t rcon[10] = {
@@ -45,17 +45,17 @@ static const uint8_t rcon[10] = {
 
 static uint8_t     sbox[256];
 static uint8_t inv_sbox[256];
-#if CONFIG_SMALL
+#ако CONFIG_SMALL
 static uint32_t enc_multbl[1][256];
 static uint32_t dec_multbl[1][256];
-#else
+#инако
 static uint32_t enc_multbl[4][256];
 static uint32_t dec_multbl[4][256];
 #endif
 
-#if HAVE_BIGENDIAN
+#ако HAVE_BIGENDIAN
 #   define ROT(x, s) (((x) >> (s)) | ((x) << (32-(s))))
-#else
+#инако
 #   define ROT(x, s) (((x) << (s)) | ((x) >> (32-(s))))
 #endif
 
@@ -80,7 +80,7 @@ static inline void addkey_d(uint8_t *dst, const av_aes_block *src,
     AV_WN64(dst + 8, src->u64[1] ^ round_key->u64[1]);
 }
 
-static void subshift(av_aes_block s0[2], int s, const uint8_t *box)
+static void subshift(av_aes_block s0[2], цео s, const uint8_t *box)
 {
     unsigned char *s1_dst = (unsigned char*)s0[0].u8 + 3 - s;
     const unsigned char *s1_src = s1_dst + sizeof(*s0);
@@ -105,16 +105,16 @@ static void subshift(av_aes_block s0[2], int s, const uint8_t *box)
     s3_dst[ 4] = box[s3_src[ 0]];
 }
 
-static inline int mix_core(uint32_t multbl[][256], int a, int b, int c, int d)
+static inline цео mix_core(uint32_t multbl[][256], цео a, цео b, цео c, цео d)
 {
-#if CONFIG_SMALL
-    return multbl[0][a] ^ ROT(multbl[0][b], 8) ^ ROT(multbl[0][c], 16) ^ ROT(multbl[0][d], 24);
-#else
-    return multbl[0][a] ^ multbl[1][b] ^ multbl[2][c] ^ multbl[3][d];
+#ако CONFIG_SMALL
+    врати multbl[0][a] ^ ROT(multbl[0][b], 8) ^ ROT(multbl[0][c], 16) ^ ROT(multbl[0][d], 24);
+#инако
+    врати multbl[0][a] ^ multbl[1][b] ^ multbl[2][c] ^ multbl[3][d];
 #endif
 }
 
-static inline void mix(av_aes_block state[2], uint32_t multbl[][256], int s1, int s3)
+static inline void mix(av_aes_block state[2], uint32_t multbl[][256], цео s1, цео s3)
 {
     uint8_t (*src)[4] = state[1].u8x4;
     state[0].u32[0] = mix_core(multbl, src[0][0], src[s1    ][1], src[2][2], src[s3    ][3]);
@@ -123,12 +123,12 @@ static inline void mix(av_aes_block state[2], uint32_t multbl[][256], int s1, in
     state[0].u32[3] = mix_core(multbl, src[3][0], src[s1 - 1][1], src[1][2], src[s3 - 1][3]);
 }
 
-static inline void aes_crypt(AVAES *a, int s, const uint8_t *sbox_arg,
+static inline void aes_crypt(AVAES *a, цео s, const uint8_t *sbox_arg,
                          uint32_t multbl[][256])
 {
-    int r;
+    цео r;
 
-    for (r = a->rounds - 1; r > 0; r--) {
+    за (r = a->rounds - 1; r > 0; r--) {
         mix(a->state, multbl, 3 - s, 1 + s);
         addkey(&a->state[1], &a->state[0], &a->round_key[r]);
     }
@@ -137,15 +137,15 @@ static inline void aes_crypt(AVAES *a, int s, const uint8_t *sbox_arg,
 }
 
 static void aes_encrypt(AVAES *a, uint8_t *dst, const uint8_t *src,
-                        int count, uint8_t *iv, int rounds)
+                        цео count, uint8_t *iv, цео rounds)
 {
-    while (count--) {
+    док (count--) {
         addkey_s(&a->state[1], src, &a->round_key[rounds]);
-        if (iv)
+        ако (iv)
             addkey_s(&a->state[1], iv, &a->state[1]);
         aes_crypt(a, 2, sbox, enc_multbl);
         addkey_d(dst, &a->state[0], &a->round_key[0]);
-        if (iv)
+        ако (iv)
             memcpy(iv, dst, 16);
         src += 16;
         dst += 16;
@@ -153,12 +153,12 @@ static void aes_encrypt(AVAES *a, uint8_t *dst, const uint8_t *src,
 }
 
 static void aes_decrypt(AVAES *a, uint8_t *dst, const uint8_t *src,
-                        int count, uint8_t *iv, int rounds)
+                        цео count, uint8_t *iv, цео rounds)
 {
-    while (count--) {
+    док (count--) {
         addkey_s(&a->state[1], src, &a->round_key[rounds]);
         aes_crypt(a, 0, inv_sbox, dec_multbl);
-        if (iv) {
+        ако (iv) {
             addkey_s(&a->state[0], iv, &a->state[0]);
             memcpy(iv, src, 16);
         }
@@ -169,28 +169,28 @@ static void aes_decrypt(AVAES *a, uint8_t *dst, const uint8_t *src,
 }
 
 void av_aes_crypt(AVAES *a, uint8_t *dst, const uint8_t *src,
-                  int count, uint8_t *iv, int decrypt)
+                  цео count, uint8_t *iv, цео decrypt)
 {
     a->crypt(a, dst, src, count, iv, a->rounds);
 }
 
-static void init_multbl2(uint32_t tbl[][256], const int c[4],
+static void init_multbl2(uint32_t tbl[][256], const цео c[4],
                          const uint8_t *log8, const uint8_t *alog8,
                          const uint8_t *sbox_arg)
 {
-    int i;
+    цео i;
 
-    for (i = 0; i < 256; i++) {
-        int x = sbox_arg[i];
-        if (x) {
-            int k, l, m, n;
+    за (i = 0; i < 256; i++) {
+        цео x = sbox_arg[i];
+        ако (x) {
+            цео k, l, m, n;
             x = log8[x];
             k = alog8[x + log8[c[0]]];
             l = alog8[x + log8[c[1]]];
             m = alog8[x + log8[c[2]]];
             n = alog8[x + log8[c[3]]];
             tbl[0][i] = AV_NE(MKBETAG(k, l, m, n), MKTAG(k, l, m, n));
-#if !CONFIG_SMALL
+#ако !CONFIG_SMALL
             tbl[1][i] = ROT(tbl[0][i], 8);
             tbl[2][i] = ROT(tbl[0][i], 16);
             tbl[3][i] = ROT(tbl[0][i], 24);
@@ -205,39 +205,39 @@ static av_cold void aes_init_static(void)
 {
     uint8_t log8[256];
     uint8_t alog8[512];
-    int i, j = 1;
+    цео i, j = 1;
 
-    for (i = 0; i < 255; i++) {
+    за (i = 0; i < 255; i++) {
         alog8[i] = alog8[i + 255] = j;
         log8[j] = i;
         j ^= j + j;
-        if (j > 255)
+        ако (j > 255)
             j ^= 0x11B;
     }
-    for (i = 0; i < 256; i++) {
+    за (i = 0; i < 256; i++) {
         j = i ? alog8[255 - log8[i]] : 0;
         j ^= (j << 1) ^ (j << 2) ^ (j << 3) ^ (j << 4);
         j = (j ^ (j >> 8) ^ 99) & 255;
         inv_sbox[j] = i;
         sbox[i]     = j;
     }
-    init_multbl2(dec_multbl, (const int[4]) { 0xe, 0x9, 0xd, 0xb },
+    init_multbl2(dec_multbl, (const цео[4]) { 0xe, 0x9, 0xd, 0xb },
                  log8, alog8, inv_sbox);
-    init_multbl2(enc_multbl, (const int[4]) { 0x2, 0x1, 0x1, 0x3 },
+    init_multbl2(enc_multbl, (const цео[4]) { 0x2, 0x1, 0x1, 0x3 },
                  log8, alog8, sbox);
 }
 
 // this is based on the reference AES code by Paulo Barreto and Vincent Rijmen
-int av_aes_init(AVAES *a, const uint8_t *key, int key_bits, int decrypt)
+цео av_aes_init(AVAES *a, const uint8_t *key, цео key_bits, цео decrypt)
 {
-    int i, j, t, rconpointer = 0;
+    цео i, j, t, rconpointer = 0;
     uint8_t tk[8][4];
-    int KC = key_bits >> 5;
-    int rounds = KC + 6;
+    цео KC = key_bits >> 5;
+    цео rounds = KC + 6;
 
     a->rounds = rounds;
     a->crypt = decrypt ? aes_decrypt : aes_encrypt;
-#if ARCH_X86 && HAVE_X86ASM && HAVE_AESNI_EXTERNAL
+#ако ARCH_X86 && HAVE_X86ASM && HAVE_AESNI_EXTERNAL
     ff_init_aes_x86(a, decrypt);
 #elif ARCH_AARCH64 && HAVE_ARM_AES
     ff_init_aes_aarch64(a, decrypt);
@@ -245,41 +245,41 @@ int av_aes_init(AVAES *a, const uint8_t *key, int key_bits, int decrypt)
 
     ff_thread_once(&aes_static_init, aes_init_static);
 
-    if (key_bits != 128 && key_bits != 192 && key_bits != 256)
-        return AVERROR(EINVAL);
+    ако (key_bits != 128 && key_bits != 192 && key_bits != 256)
+        врати AVERROR(EINVAL);
 
     memcpy(tk, key, KC * 4);
     memcpy(a->round_key[0].u8, key, KC * 4);
 
-    for (t = KC * 4; t < (rounds + 1) * 16; t += KC * 4) {
-        for (i = 0; i < 4; i++)
+    за (t = KC * 4; t < (rounds + 1) * 16; t += KC * 4) {
+        за (i = 0; i < 4; i++)
             tk[0][i] ^= sbox[tk[KC - 1][(i + 1) & 3]];
         tk[0][0] ^= rcon[rconpointer++];
 
-        for (j = 1; j < KC; j++) {
-            if (KC != 8 || j != KC >> 1)
-                for (i = 0; i < 4; i++)
+        за (j = 1; j < KC; j++) {
+            ако (KC != 8 || j != KC >> 1)
+                за (i = 0; i < 4; i++)
                     tk[j][i] ^= tk[j - 1][i];
-            else
-                for (i = 0; i < 4; i++)
+            инако
+                за (i = 0; i < 4; i++)
                     tk[j][i] ^= sbox[tk[j - 1][i]];
         }
 
         memcpy((unsigned char*)a->round_key + t, tk, KC * 4);
     }
 
-    if (decrypt) {
-        for (i = 1; i < rounds; i++) {
+    ако (decrypt) {
+        за (i = 1; i < rounds; i++) {
             av_aes_block tmp[3];
             tmp[2] = a->round_key[i];
             subshift(&tmp[1], 0, sbox);
             mix(tmp, dec_multbl, 1, 3);
             a->round_key[i] = tmp[0];
         }
-    } else {
-        for (i = 0; i < (rounds + 1) >> 1; i++)
+    } инако {
+        за (i = 0; i < (rounds + 1) >> 1; i++)
             FFSWAP(av_aes_block, a->round_key[i], a->round_key[rounds - i]);
     }
 
-    return 0;
+    врати 0;
 }

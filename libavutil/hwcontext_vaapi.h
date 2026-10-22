@@ -77,7 +77,7 @@ typedef struct AVVAAPIDeviceContext {
      * may need to refer to this field when performing any later
      * operations using VAAPI with the same VADisplay.
      */
-    unsigned int driver_quirks;
+    unsigned цео driver_quirks;
 } AVVAAPIDeviceContext;
 
 /**
@@ -91,7 +91,7 @@ typedef struct AVVAAPIFramesContext {
      * the frame pool.  If null, default settings are used.
      */
     VASurfaceAttrib *attributes;
-    int           nb_attributes;
+    цео           nb_attributes;
     /**
      * The surfaces IDs of all surfaces in the pool after creation.
      * Only valid if AVHWFramesContext.initial_pool_size was positive.
@@ -99,7 +99,7 @@ typedef struct AVVAAPIFramesContext {
      * vaCreateContext().
      */
     VASurfaceID     *surface_ids;
-    int           nb_surfaces;
+    цео           nb_surfaces;
 } AVVAAPIFramesContext;
 
 /**

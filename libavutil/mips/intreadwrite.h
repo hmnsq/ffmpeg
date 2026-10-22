@@ -24,7 +24,7 @@
 #include <stdint.h>
 #include "config.h"
 
-#if ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6
+#ако ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6
 
 #define AV_RN32 AV_RN32
 static av_always_inline uint32_t AV_RN32(const void *p)
@@ -38,7 +38,7 @@ static av_always_inline uint32_t AV_RN32(const void *p)
              "lwr %0, %2  \n\t"
              : "=&r"(v)
              : "m"(*pl), "m"(*pr));
-    return v;
+    врати v;
 }
 
 #endif /* ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6 */

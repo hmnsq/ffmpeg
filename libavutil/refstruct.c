@@ -37,9 +37,9 @@
 #define REFSTRUCT_CHECKED (ASSERT_LEVEL >= 1)
 #endif
 
-#if REFSTRUCT_CHECKED
+#ако REFSTRUCT_CHECKED
 #define ff_assert(cond) av_assert0(cond)
-#else
+#инако
 #define ff_assert(cond) ((void)0)
 #endif
 
@@ -48,7 +48,7 @@
 
 #ifndef _MSC_VER
 #define REFCOUNT_OFFSET FFALIGN(sizeof(RefCount), FFMAX(ALIGN_64, _Alignof(max_align_t)))
-#else
+#инако
 #define REFCOUNT_OFFSET FFALIGN(sizeof(RefCount), ALIGN_64)
 #endif
 
@@ -63,7 +63,7 @@ typedef struct RefCount {
     void (*free_cb)(AVRefStructOpaque opaque, void *obj);
     void (*free)(void *ref);
 
-#if REFSTRUCT_CHECKED
+#ако REFSTRUCT_CHECKED
     uint64_t cookie;
 #endif
 } RefCount;
@@ -72,19 +72,19 @@ static RefCount *get_refcount(void *obj)
 {
     RefCount *ref = (RefCount*)((char*)obj - REFCOUNT_OFFSET);
     ff_assert(ref->cookie == REFSTRUCT_COOKIE);
-    return ref;
+    врати ref;
 }
 
 static const RefCount *cget_refcount(const void *obj)
 {
     const RefCount *ref = (const RefCount*)((const char*)obj - REFCOUNT_OFFSET);
     ff_assert(ref->cookie == REFSTRUCT_COOKIE);
-    return ref;
+    врати ref;
 }
 
 static void *get_userdata(void *buf)
 {
-    return (char*)buf + REFCOUNT_OFFSET;
+    врати (char*)buf + REFCOUNT_OFFSET;
 }
 
 static void refcount_init(RefCount *ref, AVRefStructOpaque opaque,
@@ -95,7 +95,7 @@ static void refcount_init(RefCount *ref, AVRefStructOpaque opaque,
     ref->free_cb = free_cb;
     ref->free    = av_free;
 
-#if REFSTRUCT_CHECKED
+#ако REFSTRUCT_CHECKED
     ref->cookie  = REFSTRUCT_COOKIE;
 #endif
 }
@@ -105,17 +105,17 @@ void *av_refstruct_alloc_ext_c(size_t size, unsigned flags, AVRefStructOpaque op
 {
     void *buf, *obj;
 
-    if (size > SIZE_MAX - REFCOUNT_OFFSET)
-        return NULL;
+    ако (size > SIZE_MAX - REFCOUNT_OFFSET)
+        врати NULL;
     buf = av_malloc(size + REFCOUNT_OFFSET);
-    if (!buf)
-        return NULL;
+    ако (!buf)
+        врати NULL;
     refcount_init(buf, opaque, free_cb);
     obj = get_userdata(buf);
-    if (!(flags & AV_REFSTRUCT_FLAG_NO_ZEROING))
+    ако (!(flags & AV_REFSTRUCT_FLAG_NO_ZEROING))
         memset(obj, 0, size);
 
-    return obj;
+    врати obj;
 }
 
 void av_refstruct_unref(void *objp)
@@ -124,18 +124,18 @@ void av_refstruct_unref(void *objp)
     RefCount *ref;
 
     memcpy(&obj, objp, sizeof(obj));
-    if (!obj)
-        return;
+    ако (!obj)
+        врати;
     memcpy(objp, &(void *){ NULL }, sizeof(obj));
 
     ref = get_refcount(obj);
-    if (atomic_fetch_sub_explicit(&ref->refcount, 1, memory_order_acq_rel) == 1) {
-        if (ref->free_cb)
+    ако (atomic_fetch_sub_explicit(&ref->refcount, 1, memory_order_acq_rel) == 1) {
+        ако (ref->free_cb)
             ref->free_cb(ref->opaque, obj);
         ref->free(ref);
     }
 
-    return;
+    врати;
 }
 
 void *av_refstruct_ref(void *obj)
@@ -144,7 +144,7 @@ void *av_refstruct_ref(void *obj)
 
     atomic_fetch_add_explicit(&ref->refcount, 1, memory_order_relaxed);
 
-    return obj;
+    врати obj;
 }
 
 const void *av_refstruct_ref_c(const void *obj)
@@ -155,7 +155,7 @@ const void *av_refstruct_ref_c(const void *obj)
 
     atomic_fetch_add_explicit(&ref->refcount, 1, memory_order_relaxed);
 
-    return obj;
+    врати obj;
 }
 
 void av_refstruct_replace(void *dstp, const void *src)
@@ -163,33 +163,33 @@ void av_refstruct_replace(void *dstp, const void *src)
     const void *dst;
     memcpy(&dst, dstp, sizeof(dst));
 
-    if (src == dst)
-        return;
+    ако (src == dst)
+        врати;
     av_refstruct_unref(dstp);
-    if (src) {
+    ако (src) {
         dst = av_refstruct_ref_c(src);
         memcpy(dstp, &dst, sizeof(dst));
     }
 }
 
-int av_refstruct_exclusive(const void *obj)
+цео av_refstruct_exclusive(const void *obj)
 {
     const RefCount *ref = cget_refcount(obj);
     /* Casting const away here is safe, because it is a load.
      * It is necessary because atomic_load_explicit() does not
      * accept const atomics in C11 (see also N1807). */
-    return atomic_load_explicit((atomic_uintptr_t*)&ref->refcount, memory_order_acquire) == 1;
+    врати atomic_load_explicit((atomic_uintptr_t*)&ref->refcount, memory_order_acquire) == 1;
 }
 
 struct AVRefStructPool {
     size_t size;
     AVRefStructOpaque opaque;
-    int  (*init_cb)(AVRefStructOpaque opaque, void *obj);
+    цео  (*init_cb)(AVRefStructOpaque opaque, void *obj);
     void (*reset_cb)(AVRefStructOpaque opaque, void *obj);
     void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj);
     void (*free_cb)(AVRefStructOpaque opaque);
 
-    int uninited;
+    цео uninited;
     unsigned entry_flags;
     unsigned pool_flags;
 
@@ -209,16 +209,16 @@ struct AVRefStructPool {
 static void pool_free(AVRefStructPool *pool)
 {
     ff_mutex_destroy(&pool->mutex);
-    if (pool->free_cb)
+    ако (pool->free_cb)
         pool->free_cb(pool->opaque);
     av_free(get_refcount(pool));
 }
 
 static void pool_free_entry(AVRefStructPool *pool, RefCount *ref)
 {
-    if (!pool->free_entry_cb)
+    ако (!pool->free_entry_cb)
         FF_ASAN_UNPOISON(get_userdata(ref), pool->size);
-    if (pool->free_entry_cb)
+    ако (pool->free_entry_cb)
         pool->free_entry_cb(pool->opaque, get_userdata(ref));
     av_free(ref);
 }
@@ -229,11 +229,11 @@ static void pool_return_entry(void *ref_)
     AVRefStructPool *pool = ref->opaque.nc;
 
     ff_mutex_lock(&pool->mutex);
-    if (!pool->uninited) {
+    ако (!pool->uninited) {
         /* An entry with an entry free callback owns allocations while it
          * rests in the pool. LeakSanitizer does not follow pointers stored
          * in poisoned memory, so such entries stay addressable. */
-        if (!pool->free_entry_cb)
+        ако (!pool->free_entry_cb)
             FF_ASAN_POISON(get_userdata(ref), pool->size);
         ref->opaque.nc = pool->available_entries;
         pool->available_entries = ref;
@@ -241,10 +241,10 @@ static void pool_return_entry(void *ref_)
     }
     ff_mutex_unlock(&pool->mutex);
 
-    if (ref)
+    ако (ref)
         pool_free_entry(pool, ref);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+    ако (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
         pool_free(pool);
 }
 
@@ -255,7 +255,7 @@ static void pool_reset_entry(AVRefStructOpaque opaque, void *entry)
     pool->reset_cb(pool->opaque, entry);
 }
 
-static int refstruct_pool_get_ext(void *datap, AVRefStructPool *pool)
+static цео refstruct_pool_get_ext(void *datap, AVRefStructPool *pool)
 {
     void *ret = NULL;
 
@@ -263,16 +263,16 @@ static int refstruct_pool_get_ext(void *datap, AVRefStructPool *pool)
 
     ff_mutex_lock(&pool->mutex);
     ff_assert(!pool->uninited);
-    if (pool->available_entries) {
+    ако (pool->available_entries) {
         RefCount *ref = pool->available_entries;
         ret = get_userdata(ref);
-        if (!pool->free_entry_cb)
+        ако (!pool->free_entry_cb)
             FF_ASAN_UNPOISON(ret, pool->size);
         /* Entries are zeroed once at allocation and a user may rely on never
          * written parts staying zero, so only a pool that never zeroes and
          * keeps no state through callbacks gets its reused entries marked
          * undefined. */
-        if ((pool->entry_flags & AV_REFSTRUCT_FLAG_NO_ZEROING) &&
+        ако ((pool->entry_flags & AV_REFSTRUCT_FLAG_NO_ZEROING) &&
             !(pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME) &&
             !pool->init_cb && !pool->reset_cb && !pool->free_entry_cb)
             FF_MEM_UNDEFINED(ret, pool->size);
@@ -282,41 +282,41 @@ static int refstruct_pool_get_ext(void *datap, AVRefStructPool *pool)
     }
     ff_mutex_unlock(&pool->mutex);
 
-    if (!ret) {
+    ако (!ret) {
         RefCount *ref;
         ret = av_refstruct_alloc_ext(pool->size, pool->entry_flags, pool,
                                      pool->reset_cb ? pool_reset_entry : NULL);
-        if (!ret)
-            return AVERROR(ENOMEM);
+        ако (!ret)
+            врати AVERROR(ENOMEM);
         ref = get_refcount(ret);
         ref->free = pool_return_entry;
-        if (pool->init_cb) {
-            int err = pool->init_cb(pool->opaque, ret);
-            if (err < 0) {
-                if (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_RESET_ON_INIT_ERROR)
+        ако (pool->init_cb) {
+            цео err = pool->init_cb(pool->opaque, ret);
+            ако (err < 0) {
+                ако (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_RESET_ON_INIT_ERROR)
                     pool->reset_cb(pool->opaque, ret);
-                if (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_FREE_ON_INIT_ERROR)
+                ако (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_FREE_ON_INIT_ERROR)
                     pool->free_entry_cb(pool->opaque, ret);
                 av_free(ref);
-                return err;
+                врати err;
             }
         }
     }
     atomic_fetch_add_explicit(&pool->refcount, 1, memory_order_relaxed);
 
-    if (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME)
+    ако (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME)
         memset(ret, 0, pool->size);
 
     memcpy(datap, &ret, sizeof(ret));
 
-    return 0;
+    врати 0;
 }
 
 void *av_refstruct_pool_get(AVRefStructPool *pool)
 {
     void *ret;
     refstruct_pool_get_ext(&ret, pool);
-    return ret;
+    врати ret;
 }
 
 /**
@@ -327,7 +327,7 @@ void *av_refstruct_pool_get(AVRefStructPool *pool)
 static void pool_unref(void *ref)
 {
     AVRefStructPool *pool = get_userdata(ref);
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+    ако (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
         pool_free(pool);
 }
 
@@ -343,7 +343,7 @@ static void refstruct_pool_uninit(AVRefStructOpaque unused, void *obj)
     pool->available_entries = NULL;
     ff_mutex_unlock(&pool->mutex);
 
-    while (entry) {
+    док (entry) {
         void *next = entry->opaque.nc;
         pool_free_entry(pool, entry);
         entry = next;
@@ -352,22 +352,22 @@ static void refstruct_pool_uninit(AVRefStructOpaque unused, void *obj)
 
 AVRefStructPool *av_refstruct_pool_alloc(size_t size, unsigned flags)
 {
-    return av_refstruct_pool_alloc_ext(size, flags, NULL, NULL, NULL, NULL, NULL);
+    врати av_refstruct_pool_alloc_ext(size, flags, NULL, NULL, NULL, NULL, NULL);
 }
 
 AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
                                                AVRefStructOpaque opaque,
-                                               int  (*init_cb)(AVRefStructOpaque opaque, void *obj),
+                                               цео  (*init_cb)(AVRefStructOpaque opaque, void *obj),
                                                void (*reset_cb)(AVRefStructOpaque opaque, void *obj),
                                                void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj),
                                                void (*free_cb)(AVRefStructOpaque opaque))
 {
     AVRefStructPool *pool = av_refstruct_alloc_ext(sizeof(*pool), 0, NULL,
                                                    refstruct_pool_uninit);
-    int err;
+    цео err;
 
-    if (!pool)
-        return NULL;
+    ако (!pool)
+        врати NULL;
     get_refcount(pool)->free = pool_unref;
 
     pool->size          = size;
@@ -379,13 +379,13 @@ AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
 #define COMMON_FLAGS AV_REFSTRUCT_POOL_FLAG_NO_ZEROING
     pool->entry_flags   = flags & COMMON_FLAGS;
     // Filter out nonsense combinations to avoid checks later.
-    if (!pool->reset_cb)
+    ако (!pool->reset_cb)
         flags &= ~AV_REFSTRUCT_POOL_FLAG_RESET_ON_INIT_ERROR;
-    if (!pool->free_entry_cb)
+    ако (!pool->free_entry_cb)
         flags &= ~AV_REFSTRUCT_POOL_FLAG_FREE_ON_INIT_ERROR;
     pool->pool_flags    = flags;
 
-    if (flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME) {
+    ако (flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME) {
         // We will zero the buffer before every use, so zeroing
         // upon allocating the buffer is unnecessary.
         pool->entry_flags |= AV_REFSTRUCT_FLAG_NO_ZEROING;
@@ -394,11 +394,11 @@ AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
     atomic_init(&pool->refcount, 1);
 
     err = ff_mutex_init(&pool->mutex, NULL);
-    if (err) {
+    ако (err) {
         // Don't call av_refstruct_uninit() on pool, as it hasn't been properly
         // set up and is just a POD right now.
         av_free(get_refcount(pool));
-        return NULL;
+        врати NULL;
     }
-    return pool;
+    врати pool;
 }

@@ -26,7 +26,7 @@
 
 #include "avutil.h"
 
-#if defined(__cplusplus) && !defined(__STDC_FORMAT_MACROS) && !defined(PRId64)
+#ако defined(__cplusplus) && !defined(__STDC_FORMAT_MACROS) && !defined(PRId64)
 #error missing -D__STDC_FORMAT_MACROS / #define __STDC_FORMAT_MACROS
 #endif
 
@@ -42,9 +42,9 @@
  */
 static inline char *av_ts_make_string(char *buf, int64_t ts)
 {
-    if (ts == AV_NOPTS_VALUE) snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
-    else                      snprintf(buf, AV_TS_MAX_STRING_SIZE, "%" PRId64, ts);
-    return buf;
+    ако (ts == AV_NOPTS_VALUE) snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
+    инако                      snprintf(buf, AV_TS_MAX_STRING_SIZE, "%" PRId64, ts);
+    врати buf;
 }
 
 /**
@@ -73,7 +73,7 @@ char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb);
 static inline char *av_ts_make_time_string(char *buf, int64_t ts,
                                            const AVRational *tb)
 {
-    return av_ts_make_time_string2(buf, ts, *tb);
+    врати av_ts_make_time_string2(buf, ts, *tb);
 }
 
 /**

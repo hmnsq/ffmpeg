@@ -149,7 +149,7 @@ typedef struct AVD3D12VAFrame {
      * In texture array mode, this specifies the array slice index.
      * When texture array mode is not used, this value is always 0.
      */
-    int subresource_index;
+    цео subresource_index;
 
     /**
      * The sync context for the texture

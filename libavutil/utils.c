@@ -28,59 +28,59 @@
 const char *av_get_media_type_string(enum AVMediaType media_type)
 {
     switch (media_type) {
-    case AVMEDIA_TYPE_VIDEO:      return "video";
-    case AVMEDIA_TYPE_AUDIO:      return "audio";
-    case AVMEDIA_TYPE_DATA:       return "data";
-    case AVMEDIA_TYPE_SUBTITLE:   return "subtitle";
-    case AVMEDIA_TYPE_ATTACHMENT: return "attachment";
-    default:                      return NULL;
+    case AVMEDIA_TYPE_VIDEO:      врати "video";
+    case AVMEDIA_TYPE_AUDIO:      врати "audio";
+    case AVMEDIA_TYPE_DATA:       врати "data";
+    case AVMEDIA_TYPE_SUBTITLE:   врати "subtitle";
+    case AVMEDIA_TYPE_ATTACHMENT: врати "attachment";
+    default:                      врати NULL;
     }
 }
 
 char av_get_picture_type_char(enum AVPictureType pict_type)
 {
     switch (pict_type) {
-    case AV_PICTURE_TYPE_I:  return 'I';
-    case AV_PICTURE_TYPE_P:  return 'P';
-    case AV_PICTURE_TYPE_B:  return 'B';
-    case AV_PICTURE_TYPE_S:  return 'S';
-    case AV_PICTURE_TYPE_SI: return 'i';
-    case AV_PICTURE_TYPE_SP: return 'p';
-    case AV_PICTURE_TYPE_BI: return 'b';
-    default:                 return '?';
+    case AV_PICTURE_TYPE_I:  врати 'I';
+    case AV_PICTURE_TYPE_P:  врати 'P';
+    case AV_PICTURE_TYPE_B:  врати 'B';
+    case AV_PICTURE_TYPE_S:  врати 'S';
+    case AV_PICTURE_TYPE_SI: врати 'i';
+    case AV_PICTURE_TYPE_SP: врати 'p';
+    case AV_PICTURE_TYPE_BI: врати 'b';
+    default:                 врати '?';
     }
 }
 
 char *av_fourcc_make_string(char *buf, uint32_t fourcc)
 {
-    int i;
+    цео i;
     char *orig_buf = buf;
     size_t buf_size = AV_FOURCC_MAX_STRING_SIZE;
 
-    for (i = 0; i < 4; i++) {
-        const int c = fourcc & 0xff;
-        const int print_chr = (c >= '0' && c <= '9') ||
+    за (i = 0; i < 4; i++) {
+        const цео c = fourcc & 0xff;
+        const цео print_chr = (c >= '0' && c <= '9') ||
                               (c >= 'a' && c <= 'z') ||
                               (c >= 'A' && c <= 'Z') ||
                               (c && strchr(". -_", c));
-        const int len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
-        if (len < 0)
+        const цео len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
+        ако (len < 0)
             break;
         buf += len;
         buf_size = buf_size > len ? buf_size - len : 0;
         fourcc >>= 8;
     }
 
-    return orig_buf;
+    врати orig_buf;
 }
 
 AVRational av_get_time_base_q(void)
 {
-    return (AVRational){1, AV_TIME_BASE};
+    врати (AVRational){1, AV_TIME_BASE};
 }
-#if FF_API_ASSERT_FPU
+#ако FF_API_ASSERT_FPU
 void av_assert0_fpu(void) {
-#if HAVE_MMX_INLINE
+#ако HAVE_MMX_INLINE
     uint16_t state[14];
      __asm__ volatile (
         "fstenv %0 \n\t"

@@ -26,7 +26,7 @@
 #include "libavutil/log.h"
 #include "libavutil/mem.h"
 
-int main(int argc, char** argv)
+цео main(цео argc, char** argv)
 {
 
     static const uint8_t Key[3][16] = {
@@ -46,27 +46,27 @@ int main(int argc, char** argv)
     };
     static const uint8_t iv[8] = {0xee, 0xa9, 0xd0, 0xa2, 0x49, 0xfd, 0x3b, 0xa6};
     static uint8_t rpt2[2][16];
-    int i, j, err = 0;
-    static const int key_bits[3] = {128, 80, 40};
+    цео i, j, err = 0;
+    static const цео key_bits[3] = {128, 80, 40};
     uint8_t temp[8];
     struct AVCAST5 *cs;
     cs = av_cast5_alloc();
-    if (!cs)
-        return 1;
-    for (j = 0; j < 3; j++){
+    ако (!cs)
+        врати 1;
+    за (j = 0; j < 3; j++){
 
         av_cast5_init(cs, Key[j], key_bits[j]);
         av_cast5_crypt(cs, temp, rpt, 1, 0);
-        for (i = 0;i < 8; i++){
-            if (rct[j][i] != temp[i]){
+        за (i = 0;i < 8; i++){
+            ако (rct[j][i] != temp[i]){
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rct[j][i], temp[i]);
                 err = 1;
             }
         }
 
         av_cast5_crypt(cs, temp, rct[j], 1, 1);
-        for (i =0; i < 8; i++) {
-            if (rpt[i] != temp[i]) {
+        за (i =0; i < 8; i++) {
+            ако (rpt[i] != temp[i]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rpt[i], temp[i]);
                 err = 1;
             }
@@ -74,34 +74,34 @@ int main(int argc, char** argv)
     }
     memcpy(rpt2[0], Key[0], 16);
     memcpy(rpt2[1], Key[0], 16);
-    for (i = 0; i < 1000000; i++){
+    за (i = 0; i < 1000000; i++){
         av_cast5_init(cs, rpt2[1], 128);
         av_cast5_crypt(cs, rpt2[0], rpt2[0], 2, 0);
         av_cast5_init(cs, rpt2[0], 128);
         av_cast5_crypt(cs, rpt2[1], rpt2[1], 2, 0);
     }
-    for (j = 0; j < 2; j++) {
-        for (i = 0; i < 16; i++) {
-            if (rct2[j][i] != rpt2[j][i]) {
+    за (j = 0; j < 2; j++) {
+        за (i = 0; i < 16; i++) {
+            ако (rct2[j][i] != rpt2[j][i]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rct2[j][i], rpt2[j][i]);
                 err = 1;
             }
         }
     }
-    for (j = 0; j < 3; j++) {
+    за (j = 0; j < 3; j++) {
 
         av_cast5_init(cs, Key[j], key_bits[j]);
         memcpy(temp, iv, 8);
         av_cast5_crypt2(cs, rpt2[0], rct2[0], 2, temp, 0);
         memcpy(temp, iv, 8);
         av_cast5_crypt2(cs, rpt2[0], rpt2[0], 2, temp, 1);
-        for (i = 0; i < 16; i++) {
-            if (rct2[0][i] != rpt2[0][i]) {
+        за (i = 0; i < 16; i++) {
+            ако (rct2[0][i] != rpt2[0][i]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rct2[0][i], rpt2[0][i]);
                 err = 1;
             }
         }
     }
     av_free(cs);
-    return err;
+    врати err;
 }

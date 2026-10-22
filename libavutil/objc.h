@@ -23,7 +23,7 @@
 
 static inline void ff_objc_release(NSObject **obj)
 {
-    if (*obj) {
+    ако (*obj) {
         [*obj release];
         *obj = nil;
     }

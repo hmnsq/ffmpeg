@@ -36,67 +36,67 @@ typedef struct MediaCodecDeviceContext {
 } MediaCodecDeviceContext;
 
 
-static int mc_device_create(AVHWDeviceContext *ctx, const char *device,
-                            AVDictionary *opts, int flags)
+static цео mc_device_create(AVHWDeviceContext *ctx, const char *device,
+                            AVDictionary *opts, цео flags)
 {
     const AVDictionaryEntry *entry = NULL;
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = &s->ctx;
 
-    if (device && device[0]) {
+    ако (device && device[0]) {
         av_log(ctx, AV_LOG_ERROR, "Device selection unsupported.\n");
-        return AVERROR_UNKNOWN;
+        врати AVERROR_UNKNOWN;
     }
 
-    while ((entry = av_dict_iterate(opts, entry))) {
-        if (!strcmp(entry->key, "create_window"))
+    док ((entry = av_dict_iterate(opts, entry))) {
+        ако (!strcmp(entry->key, "create_window"))
             dev->create_window = atoi(entry->value);
     }
 
     av_log(ctx, AV_LOG_DEBUG, "%s createPersistentInputSurface\n",
             dev->create_window ? "Enable" : "Disable");
 
-    return 0;
+    врати 0;
 }
 
-static int mc_device_init(AVHWDeviceContext *ctx)
+static цео mc_device_init(AVHWDeviceContext *ctx)
 {
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = (AVMediaCodecDeviceContext *)s;
     ANativeWindow *native_window = NULL;
 
-    if (dev->surface)
-        return 0;
+    ако (dev->surface)
+        врати 0;
 
-    if (dev->native_window)
-        return 0;
+    ако (dev->native_window)
+        врати 0;
 
     // For backward compatibility, don't return error for a dummy
     // AVHWDeviceContext without surface or native_window.
-    if (!dev->create_window)
-        return 0;
+    ако (!dev->create_window)
+        врати 0;
 
     s->libmedia = dlopen("libmediandk.so", RTLD_NOW);
-    if (!s->libmedia)
-        return AVERROR_UNKNOWN;
+    ако (!s->libmedia)
+        врати AVERROR_UNKNOWN;
 
     s->create_surface = dlsym(s->libmedia, "AMediaCodec_createPersistentInputSurface");
-    if (!s->create_surface)
-        return AVERROR_UNKNOWN;
+    ако (!s->create_surface)
+        врати AVERROR_UNKNOWN;
 
     s->create_surface(&native_window);
     dev->native_window = native_window;
-    return 0;
+    врати 0;
 }
 
 static void mc_device_uninit(AVHWDeviceContext *ctx)
 {
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = ctx->hwctx;
-    if (!s->libmedia)
-        return;
+    ако (!s->libmedia)
+        врати;
 
-    if (dev->native_window) {
+    ако (dev->native_window) {
         ANativeWindow_release(dev->native_window);
         dev->native_window = NULL;
     }

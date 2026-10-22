@@ -257,7 +257,7 @@ enum AVChannelOrder {
 #define AV_CH_LAYOUT_STEREO_DOWNMIX    (AV_CH_STEREO_LEFT|AV_CH_STEREO_RIGHT)
 #define AV_CH_LAYOUT_22POINT2          (AV_CH_LAYOUT_9POINT1POINT6|AV_CH_BACK_CENTER|AV_CH_LOW_FREQUENCY_2|AV_CH_TOP_FRONT_CENTER|AV_CH_TOP_CENTER|AV_CH_TOP_BACK_CENTER|AV_CH_BOTTOM_FRONT_CENTER|AV_CH_BOTTOM_FRONT_LEFT|AV_CH_BOTTOM_FRONT_RIGHT)
 
-#if FF_API_CHANNEL_LAYOUT_BACK
+#ако FF_API_CHANNEL_LAYOUT_BACK
 /*
  * The following layout masks are deprecated and will be removed in
  * an upcoming major bump.
@@ -337,7 +337,7 @@ typedef struct AVChannelLayout {
     /**
      * Number of channels in this layout. Mandatory field.
      */
-    int nb_channels;
+    цео nb_channels;
 
     /**
      * Details about which channels are present in this layout.
@@ -445,7 +445,7 @@ typedef struct AVChannelLayout {
 #define AV_CHANNEL_LAYOUT_STEREO_DOWNMIX    AV_CHANNEL_LAYOUT_MASK(2,  AV_CH_LAYOUT_STEREO_DOWNMIX)
 #define AV_CHANNEL_LAYOUT_22POINT2          AV_CHANNEL_LAYOUT_MASK(24, AV_CH_LAYOUT_22POINT2)
 
-#if FF_API_CHANNEL_LAYOUT_BACK
+#ако FF_API_CHANNEL_LAYOUT_BACK
 /*
  * The following layouts are deprecated and will be removed in
  * an upcoming major bump.
@@ -476,7 +476,7 @@ struct AVBPrint;
  *         on failure. If the returned value is bigger than buf_size, then the
  *         string was truncated.
  */
-int av_channel_name(char *buf, size_t buf_size, enum AVChannel channel);
+цео av_channel_name(char *buf, size_t buf_size, enum AVChannel channel);
 
 /**
  * bprint variant of av_channel_name().
@@ -495,7 +495,7 @@ void av_channel_name_bprint(struct AVBPrint *bp, enum AVChannel channel_id);
  *         on failure. If the returned value is bigger than buf_size, then the
  *         string was truncated.
  */
-int av_channel_description(char *buf, size_t buf_size, enum AVChannel channel);
+цео av_channel_description(char *buf, size_t buf_size, enum AVChannel channel);
 
 /**
  * bprint variant of av_channel_description().
@@ -527,7 +527,7 @@ enum AVChannel av_channel_from_string(const char *name);
  *         AVERROR(EINVAL) if the number of channels <= 0
  *         AVERROR(ENOMEM) if the channel map could not be allocated
  */
-int av_channel_layout_custom_init(AVChannelLayout *channel_layout, int nb_channels);
+цео av_channel_layout_custom_init(AVChannelLayout *channel_layout, цео nb_channels);
 
 /**
  * Initialize a native channel layout from a bitmask indicating which channels
@@ -539,7 +539,7 @@ int av_channel_layout_custom_init(AVChannelLayout *channel_layout, int nb_channe
  * @return 0 on success
  *         AVERROR(EINVAL) for invalid mask values
  */
-int av_channel_layout_from_mask(AVChannelLayout *channel_layout, uint64_t mask);
+цео av_channel_layout_from_mask(AVChannelLayout *channel_layout, uint64_t mask);
 
 /**
  * Initialize a channel layout from a given string description.
@@ -562,7 +562,7 @@ int av_channel_layout_from_mask(AVChannelLayout *channel_layout, uint64_t mask);
  *         AVERROR(EINVAL) if an invalid channel layout string was provided
  *         AVERROR(ENOMEM) if there was not enough memory
  */
-int av_channel_layout_from_string(AVChannelLayout *channel_layout,
+цео av_channel_layout_from_string(AVChannelLayout *channel_layout,
                                   const char *str);
 
 /**
@@ -571,7 +571,7 @@ int av_channel_layout_from_string(AVChannelLayout *channel_layout,
  * @param ch_layout the layout structure to be initialized
  * @param nb_channels number of channels
  */
-void av_channel_layout_default(AVChannelLayout *ch_layout, int nb_channels);
+void av_channel_layout_default(AVChannelLayout *ch_layout, цео nb_channels);
 
 /**
  * Iterate over all standard channel layouts.
@@ -602,7 +602,7 @@ void av_channel_layout_uninit(AVChannelLayout *channel_layout);
  * @param src source channel layout
  * @return 0 on success, a negative AVERROR on error.
  */
-int av_channel_layout_copy(AVChannelLayout *dst, const AVChannelLayout *src);
+цео av_channel_layout_copy(AVChannelLayout *dst, const AVChannelLayout *src);
 
 /**
  * Get a human-readable string describing the channel layout properties.
@@ -617,7 +617,7 @@ int av_channel_layout_copy(AVChannelLayout *dst, const AVChannelLayout *src);
  *         on failure. If the returned value is bigger than buf_size, then the
  *         string was truncated.
  */
-int av_channel_layout_describe(const AVChannelLayout *channel_layout,
+цео av_channel_layout_describe(const AVChannelLayout *channel_layout,
                                char *buf, size_t buf_size);
 
 /**
@@ -626,7 +626,7 @@ int av_channel_layout_describe(const AVChannelLayout *channel_layout,
  * @note the string will be appended to the bprint buffer.
  * @return 0 on success, or a negative AVERROR value on failure.
  */
-int av_channel_layout_describe_bprint(const AVChannelLayout *channel_layout,
+цео av_channel_layout_describe_bprint(const AVChannelLayout *channel_layout,
                                       struct AVBPrint *bp);
 
 /**
@@ -639,7 +639,7 @@ int av_channel_layout_describe_bprint(const AVChannelLayout *channel_layout,
  *         unspecified)
  */
 enum AVChannel
-av_channel_layout_channel_from_index(const AVChannelLayout *channel_layout, unsigned int idx);
+av_channel_layout_channel_from_index(const AVChannelLayout *channel_layout, unsigned цео idx);
 
 /**
  * Get the index of a given channel in a channel layout. In case multiple
@@ -650,7 +650,7 @@ av_channel_layout_channel_from_index(const AVChannelLayout *channel_layout, unsi
  * @return index of channel in channel_layout on success or a negative number if
  *         channel is not present in channel_layout.
  */
-int av_channel_layout_index_from_channel(const AVChannelLayout *channel_layout,
+цео av_channel_layout_index_from_channel(const AVChannelLayout *channel_layout,
                                          enum AVChannel channel);
 
 /**
@@ -665,7 +665,7 @@ int av_channel_layout_index_from_channel(const AVChannelLayout *channel_layout,
  * @return a channel index described by the given string, or a negative AVERROR
  *         value.
  */
-int av_channel_layout_index_from_string(const AVChannelLayout *channel_layout,
+цео av_channel_layout_index_from_string(const AVChannelLayout *channel_layout,
                                         const char *name);
 
 /**
@@ -703,7 +703,7 @@ uint64_t av_channel_layout_subset(const AVChannelLayout *channel_layout,
  * @param channel_layout input channel layout
  * @return 1 if channel_layout is valid, 0 otherwise.
  */
-int av_channel_layout_check(const AVChannelLayout *channel_layout);
+цео av_channel_layout_check(const AVChannelLayout *channel_layout);
 
 /**
  * Check whether two channel layouts are semantically the same, i.e. the same
@@ -718,7 +718,7 @@ int av_channel_layout_check(const AVChannelLayout *channel_layout);
  * @return 0 if chl and chl1 are equal, 1 if they are not equal. A negative
  *         AVERROR code if one or both are invalid.
  */
-int av_channel_layout_compare(const AVChannelLayout *chl, const AVChannelLayout *chl1);
+цео av_channel_layout_compare(const AVChannelLayout *chl, const AVChannelLayout *chl1);
 
 /**
  * Return the order if the layout is n-th order standard-order ambisonic.
@@ -728,7 +728,7 @@ int av_channel_layout_compare(const AVChannelLayout *chl, const AVChannelLayout 
  * @param channel_layout input channel layout
  * @return the order of the layout, a negative error code otherwise.
  */
-int av_channel_layout_ambisonic_order(const AVChannelLayout *channel_layout);
+цео av_channel_layout_ambisonic_order(const AVChannelLayout *channel_layout);
 
 /**
  * The conversion must be lossless.
@@ -775,7 +775,7 @@ int av_channel_layout_ambisonic_order(const AVChannelLayout *channel_layout);
  *           lossy and AV_CHANNEL_LAYOUT_RETYPE_FLAG_LOSSLESS was specified)
  *         AVERROR(EINVAL), AVERROR(ENOMEM) on error
  */
-int av_channel_layout_retype(AVChannelLayout *channel_layout, enum AVChannelOrder order, int flags);
+цео av_channel_layout_retype(AVChannelLayout *channel_layout, enum AVChannelOrder order, цео flags);
 
 /**
  * @}

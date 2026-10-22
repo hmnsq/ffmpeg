@@ -34,12 +34,12 @@
 static void check_pixfmt_descriptors(void)
 {
     const AVPixFmtDescriptor *d, *last = NULL;
-    int i;
+    цео i;
 
-    for (i = AV_PIX_FMT_NONE, d = NULL; i++, d = av_pix_fmt_desc_next(d);) {
+    за (i = AV_PIX_FMT_NONE, d = NULL; i++, d = av_pix_fmt_desc_next(d);) {
         uint8_t fill[4][8 + 6 + 3] = {{ 0 }};
         uint8_t *data[4] = { fill[0], fill[1], fill[2], fill[3] };
-        int linesize[4] = { 0, 0, 0, 0 };
+        цео linesize[4] = { 0, 0, 0, 0 };
         uint16_t tmp[2];
 
         av_assert0(d->name && d->name[0]);
@@ -56,17 +56,17 @@ static void check_pixfmt_descriptors(void)
         av_assert0(i == av_pix_fmt_desc_get_id(d));
         av_assert0(!last || last + 1 == d);
 
-        for (int j = 0; j < FF_ARRAY_ELEMS(d->comp); j++) {
+        за (цео j = 0; j < FF_ARRAY_ELEMS(d->comp); j++) {
             const AVComponentDescriptor *c = &d->comp[j];
-            if (!c->depth) {
+            ако (!c->depth) {
                 continue;
             }
-            if (d->flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+            ако (d->flags & AV_PIX_FMT_FLAG_BITSTREAM) {
                 av_assert0(c->step >= c->depth);
-            } else {
+            } инако {
                 av_assert0(8*c->step >= c->depth);
             }
-            if (d->flags & AV_PIX_FMT_FLAG_BAYER)
+            ако (d->flags & AV_PIX_FMT_FLAG_BAYER)
                 continue;
             av_read_image_line(tmp, (void*)data, linesize, d, 0, 0, j, 2, 0);
             av_assert0(tmp[0] == 0 && tmp[1] == 0);
@@ -78,12 +78,12 @@ static void check_pixfmt_descriptors(void)
     av_assert0(i == AV_PIX_FMT_NB);
 }
 
-static int run_single_test(const char *test,
+static цео run_single_test(const char *test,
                            const uint8_t *block1, ptrdiff_t stride1,
                            const uint8_t *block2, ptrdiff_t stride2,
-                           int align, int n)
+                           цео align, цео n)
 {
-    int out, ref;
+    цео out, ref;
     av_pixelutils_sad_fn f_ref = sad_c[n - 1];
     av_pixelutils_sad_fn f_out = av_pixelutils_get_sad_fn(n, n, align, NULL);
 
@@ -99,32 +99,32 @@ static int run_single_test(const char *test,
            out == ref ? "OK" : "FAIL",
            align ? 'A' : 'U', align == 2 ? 'A' : 'U',
            test, 1<<n, 1<<n, out, ref);
-    return out != ref;
+    врати out != ref;
 }
 
-static int run_test(const char *test,
+static цео run_test(const char *test,
                     const uint8_t *b1, const uint8_t *b2)
 {
-    int i, a, ret = 0;
+    цео i, a, ret = 0;
 
-    for (a = 0; a < 3; a++) {
-        for (i = 1; i <= FF_ARRAY_ELEMS(sad_c); i++) {
-            int r = run_single_test(test, b1, W1, b2, W2, a, i);
-            if (r)
+    за (a = 0; a < 3; a++) {
+        за (i = 1; i <= FF_ARRAY_ELEMS(sad_c); i++) {
+            цео r = run_single_test(test, b1, W1, b2, W2, a, i);
+            ако (r)
                 ret = r;
         }
     }
-    return ret;
+    врати ret;
 }
 
-int main(void)
+цео main(void)
 {
-    int i, align, ret;
+    цео i, align, ret;
     uint8_t *buf1 = av_malloc(W1*H1);
     uint8_t *buf2 = av_malloc(W2*H2);
     uint32_t state = 0;
 
-    if (!buf1 || !buf2) {
+    ако (!buf1 || !buf2) {
         fprintf(stderr, "malloc failure\n");
         ret = 1;
         goto end;
@@ -133,38 +133,38 @@ int main(void)
     check_pixfmt_descriptors();
 
 #define RANDOM_INIT(buf, size) do {             \
-    int k;                                      \
-    for (k = 0; k < size; k++) {                \
+    цео k;                                      \
+    за (k = 0; k < size; k++) {                \
         state = state * 1664525 + 1013904223;   \
         buf[k] = state>>24;                     \
     }                                           \
-} while (0)
+} док (0)
 
     /* Normal test with different strides */
     RANDOM_INIT(buf1, W1*H1);
     RANDOM_INIT(buf2, W2*H2);
     ret = run_test("random", buf1, buf2);
-    if (ret < 0)
+    ако (ret < 0)
         goto end;
 
     /* Check for maximum SAD */
     memset(buf1, 0xff, W1*H1);
     memset(buf2, 0x00, W2*H2);
     ret = run_test("max", buf1, buf2);
-    if (ret < 0)
+    ако (ret < 0)
         goto end;
 
     /* Check for minimum SAD */
     memset(buf1, 0x90, W1*H1);
     memset(buf2, 0x90, W2*H2);
     ret = run_test("min", buf1, buf2);
-    if (ret < 0)
+    ако (ret < 0)
         goto end;
 
     /* Exact buffer sizes, to check for overreads */
-    for (i = 1; i <= 5; i++) {
-        for (align = 0; align < 3; align++) {
-            int size1, size2;
+    за (i = 1; i <= 5; i++) {
+        за (align = 0; align < 3; align++) {
+            цео size1, size2;
 
             av_freep(&buf1);
             av_freep(&buf2);
@@ -179,7 +179,7 @@ int main(void)
 
             buf1 = av_malloc(size1);
             buf2 = av_malloc(size2);
-            if (!buf1 || !buf2) {
+            ако (!buf1 || !buf2) {
                 fprintf(stderr, "malloc failure\n");
                 ret = 1;
                 goto end;
@@ -187,7 +187,7 @@ int main(void)
             RANDOM_INIT(buf1, size1);
             RANDOM_INIT(buf2, size2);
             ret = run_single_test("small", buf1, 1<<i, buf2, 1<<i, align, i);
-            if (ret < 0)
+            ако (ret < 0)
                 goto end;
         }
     }
@@ -195,5 +195,5 @@ int main(void)
 end:
     av_free(buf1);
     av_free(buf2);
-    return ret;
+    врати ret;
 }

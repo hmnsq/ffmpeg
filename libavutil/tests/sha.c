@@ -21,30 +21,30 @@
 #include "libavutil/mem.h"
 #include "libavutil/sha.h"
 
-int main(void)
+цео main(void)
 {
-    int i, j, k;
+    цео i, j, k;
     struct AVSHA *ctx;
     unsigned char digest[32];
-    static const int lengths[3] = { 160, 224, 256 };
+    static const цео lengths[3] = { 160, 224, 256 };
 
     ctx = av_sha_alloc();
-    if (!ctx)
-        return 1;
+    ако (!ctx)
+        врати 1;
 
-    for (j = 0; j < 3; j++) {
+    за (j = 0; j < 3; j++) {
         printf("Testing SHA-%d\n", lengths[j]);
-        for (k = 0; k < 3; k++) {
+        за (k = 0; k < 3; k++) {
             av_sha_init(ctx, lengths[j]);
-            if (k == 0)
+            ако (k == 0)
                 av_sha_update(ctx, "abc", 3);
-            else if (k == 1)
+            инако ако (k == 1)
                 av_sha_update(ctx, "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq", 56);
-            else
-                for (i = 0; i < 1000*1000; i++)
+            инако
+                за (i = 0; i < 1000*1000; i++)
                     av_sha_update(ctx, "a", 1);
             av_sha_final(ctx, digest);
-            for (i = 0; i < lengths[j] >> 3; i++)
+            за (i = 0; i < lengths[j] >> 3; i++)
                 printf("%02X", digest[i]);
             putchar('\n');
         }
@@ -71,5 +71,5 @@ int main(void)
     }
     av_free(ctx);
 
-    return 0;
+    врати 0;
 }

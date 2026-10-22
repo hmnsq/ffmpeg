@@ -48,7 +48,7 @@ struct AVAESCTR *av_aes_ctr_alloc(void);
  * @param a The AVAESCTR context to initialize
  * @param key encryption key, must have a length of AES_CTR_KEY_SIZE
  */
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key);
+цео av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key);
 
 /**
  * Release an AVAESCTR context.
@@ -65,7 +65,7 @@ void av_aes_ctr_free(struct AVAESCTR *a);
  * @param src source array, can be equal to dst
  * @param size the size of src and dst
  */
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int size);
+void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, цео size);
 
 /**
  * Get the current iv

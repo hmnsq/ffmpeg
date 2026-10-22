@@ -25,13 +25,13 @@
 #include "libavutil/mem.h"
 #include "libavutil/samplefmt.h"
 
-int main(void)
+цео main(void)
 {
     char buf[64];
 
     /* av_get_sample_fmt_name and av_get_sample_fmt round-trip */
     printf("Testing name/format round-trip\n");
-    for (int i = 0; i < AV_SAMPLE_FMT_NB; i++) {
+    за (цео i = 0; i < AV_SAMPLE_FMT_NB; i++) {
         const char *name = av_get_sample_fmt_name(i);
         enum AVSampleFormat fmt = av_get_sample_fmt(name);
         printf("%2d: name=%-5s roundtrip=%s\n", i, name, fmt == i ? "OK" : "FAIL");
@@ -44,19 +44,19 @@ int main(void)
 
     /* av_get_bytes_per_sample */
     printf("\nTesting av_get_bytes_per_sample()\n");
-    for (int i = 0; i < AV_SAMPLE_FMT_NB; i++)
+    за (цео i = 0; i < AV_SAMPLE_FMT_NB; i++)
         printf("%s: %d\n", av_get_sample_fmt_name(i), av_get_bytes_per_sample(i));
     printf("NONE: %d\n", av_get_bytes_per_sample(AV_SAMPLE_FMT_NONE));
 
     /* av_sample_fmt_is_planar */
     printf("\nTesting av_sample_fmt_is_planar()\n");
-    for (int i = 0; i < AV_SAMPLE_FMT_NB; i++)
+    за (цео i = 0; i < AV_SAMPLE_FMT_NB; i++)
         printf("%s: %d\n", av_get_sample_fmt_name(i), av_sample_fmt_is_planar(i));
     printf("NONE: %d\n", av_sample_fmt_is_planar(AV_SAMPLE_FMT_NONE));
 
     /* av_get_packed_sample_fmt and av_get_planar_sample_fmt */
     printf("\nTesting packed/planar conversions\n");
-    for (int i = 0; i < AV_SAMPLE_FMT_NB; i++) {
+    за (цео i = 0; i < AV_SAMPLE_FMT_NB; i++) {
         enum AVSampleFormat packed = av_get_packed_sample_fmt(i);
         enum AVSampleFormat planar = av_get_planar_sample_fmt(i);
         printf("%s: packed=%-4s planar=%s\n",
@@ -67,7 +67,7 @@ int main(void)
 
     /* av_get_alt_sample_fmt */
     printf("\nTesting av_get_alt_sample_fmt()\n");
-    for (int i = 0; i < AV_SAMPLE_FMT_NB; i++) {
+    за (цео i = 0; i < AV_SAMPLE_FMT_NB; i++) {
         enum AVSampleFormat alt_packed = av_get_alt_sample_fmt(i, 0);
         enum AVSampleFormat alt_planar = av_get_alt_sample_fmt(i, 1);
         printf("%s: alt_packed=%-4s alt_planar=%s\n",
@@ -80,7 +80,7 @@ int main(void)
     printf("\nTesting av_get_sample_fmt_string()\n");
     av_get_sample_fmt_string(buf, sizeof(buf), -1);
     printf("header: %s\n", buf);
-    for (int i = 0; i < AV_SAMPLE_FMT_NB; i++) {
+    за (цео i = 0; i < AV_SAMPLE_FMT_NB; i++) {
         av_get_sample_fmt_string(buf, sizeof(buf), i);
         printf("%s\n", buf);
     }
@@ -88,7 +88,7 @@ int main(void)
     /* av_samples_get_buffer_size */
     printf("\nTesting av_samples_get_buffer_size()\n");
     {
-        int linesize;
+        цео linesize;
         printf("2ch 1024smp s16: %d\n",
                av_samples_get_buffer_size(NULL, 2, 1024, AV_SAMPLE_FMT_S16, 1));
         printf("2ch 1024smp s16p: %d\n",
@@ -105,7 +105,7 @@ int main(void)
     printf("\nTesting av_samples_alloc()\n");
     {
         uint8_t *data[8] = { 0 };
-        int linesize, ret;
+        цео linesize, ret;
 
         ret = av_samples_alloc(data, &linesize, 2, 1024, AV_SAMPLE_FMT_S16, 0);
         printf("alloc 2ch s16: ret=%d linesize=%d data[0]=%s\n",
@@ -123,14 +123,14 @@ int main(void)
     printf("\nTesting av_samples_alloc_array_and_samples()\n");
     {
         uint8_t **data = NULL;
-        int linesize, ret;
+        цео linesize, ret;
 
         ret = av_samples_alloc_array_and_samples(&data, &linesize, 2, 1024,
                                                   AV_SAMPLE_FMT_S16P, 0);
         printf("alloc_array 2ch s16p: ret=%d linesize=%d data[0]=%s data[1]=%s\n",
                ret > 0, linesize,
                data[0] ? "set" : "null", data[1] ? "set" : "null");
-        if (data)
+        ако (data)
             av_freep(&data[0]);
         av_freep(&data);
     }
@@ -139,11 +139,11 @@ int main(void)
     printf("\nTesting av_samples_copy()\n");
     {
         uint8_t *src[1] = { 0 }, *dst[1] = { 0 };
-        int linesize;
+        цео linesize;
 
         av_samples_alloc(src, &linesize, 1, 4, AV_SAMPLE_FMT_S16, 1);
         av_samples_alloc(dst, &linesize, 1, 4, AV_SAMPLE_FMT_S16, 1);
-        if (src[0] && dst[0]) {
+        ако (src[0] && dst[0]) {
             memset(src[0], 0xAB, 8);
             av_samples_copy(dst, src, 0, 0, 4, 1, AV_SAMPLE_FMT_S16);
             printf("copy: %s\n", memcmp(src[0], dst[0], 8) == 0 ? "OK" : "FAIL");
@@ -157,7 +157,7 @@ int main(void)
     {
         uint8_t *data[8] = { 0 };
         uint8_t **array_data = NULL;
-        int linesize, ret;
+        цео linesize, ret;
 
         av_max_alloc(1);
 
@@ -177,32 +177,32 @@ int main(void)
     printf("\nTesting av_samples_set_silence()\n");
     {
         uint8_t *data[1] = { 0 };
-        int linesize;
+        цео linesize;
 
         av_samples_alloc(data, &linesize, 1, 4, AV_SAMPLE_FMT_S16, 1);
-        if (data[0]) {
+        ако (data[0]) {
             memset(data[0], 0xFF, 8);
             av_samples_set_silence(data, 0, 4, 1, AV_SAMPLE_FMT_S16);
             /* silence for s16 is zero */
-            int silent = 1;
-            for (int i = 0; i < 8; i++)
-                if (data[0][i] != 0) silent = 0;
+            цео silent = 1;
+            за (цео i = 0; i < 8; i++)
+                ако (data[0][i] != 0) silent = 0;
             printf("silence s16: %s\n", silent ? "OK" : "FAIL");
         }
         av_freep(&data[0]);
 
         av_samples_alloc(data, &linesize, 1, 4, AV_SAMPLE_FMT_U8, 1);
-        if (data[0]) {
+        ако (data[0]) {
             memset(data[0], 0xFF, 4);
             av_samples_set_silence(data, 0, 4, 1, AV_SAMPLE_FMT_U8);
             /* silence for u8 is 0x80 */
-            int silent = 1;
-            for (int i = 0; i < 4; i++)
-                if (data[0][i] != 0x80) silent = 0;
+            цео silent = 1;
+            за (цео i = 0; i < 4; i++)
+                ако (data[0][i] != 0x80) silent = 0;
             printf("silence u8: %s\n", silent ? "OK" : "FAIL");
         }
         av_freep(&data[0]);
     }
 
-    return 0;
+    врати 0;
 }

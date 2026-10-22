@@ -26,19 +26,19 @@
 #define SRC_BUF_SIZE 64
 #define DST_BUF_SIZE (AV_HASH_MAX_SIZE * 8)
 
-int main(void)
+цео main(void)
 {
    struct AVHashContext *ctx = NULL;
-   int i, j, numhashes = 0;
+   цео i, j, numhashes = 0;
    static const uint8_t src[SRC_BUF_SIZE] = { 0 };
    uint8_t dst[DST_BUF_SIZE];
 
-   while (av_hash_names(numhashes))
+   док (av_hash_names(numhashes))
        numhashes++;
 
-   for (i = 0; i < numhashes; i++) {
-       if (av_hash_alloc(&ctx, av_hash_names(i)) < 0)
-           return 1;
+   за (i = 0; i < numhashes; i++) {
+       ако (av_hash_alloc(&ctx, av_hash_names(i)) < 0)
+           врати 1;
 
        av_hash_init(ctx);
        av_hash_update(ctx, src, SRC_BUF_SIZE);
@@ -50,7 +50,7 @@ int main(void)
        av_hash_update(ctx, src, SRC_BUF_SIZE);
        av_hash_final_bin(ctx, dst, DST_BUF_SIZE);
        printf("%s bin:", av_hash_get_name(ctx));
-       for (j = 0; j < av_hash_get_size(ctx); j++) {
+       за (j = 0; j < av_hash_get_size(ctx); j++) {
            printf(" %#x", dst[j]);
        }
        printf("\n");
@@ -61,5 +61,5 @@ int main(void)
        printf("%s b64: %s\n", av_hash_get_name(ctx), dst);
        av_hash_freep(&ctx);
    }
-   return 0;
+   врати 0;
 }

@@ -25,18 +25,18 @@
 #include <dlfcn.h>
 
 #define KPERF_LIST                                             \
-    F(int, kpc_get_counting, void)                             \
-    F(int, kpc_force_all_ctrs_set, int)                        \
-    F(int, kpc_set_counting, uint32_t)                         \
-    F(int, kpc_set_thread_counting, uint32_t)                  \
-    F(int, kpc_set_config, uint32_t, void *)                   \
-    F(int, kpc_get_config, uint32_t, void *)                   \
-    F(int, kpc_set_period, uint32_t, void *)                   \
-    F(int, kpc_get_period, uint32_t, void *)                   \
+    F(цео, kpc_get_counting, void)                             \
+    F(цео, kpc_force_all_ctrs_set, цео)                        \
+    F(цео, kpc_set_counting, uint32_t)                         \
+    F(цео, kpc_set_thread_counting, uint32_t)                  \
+    F(цео, kpc_set_config, uint32_t, void *)                   \
+    F(цео, kpc_get_config, uint32_t, void *)                   \
+    F(цео, kpc_set_period, uint32_t, void *)                   \
+    F(цео, kpc_get_period, uint32_t, void *)                   \
     F(uint32_t, kpc_get_counter_count, uint32_t)               \
     F(uint32_t, kpc_get_config_count, uint32_t)                \
-    F(int, kperf_sample_get, int *)                            \
-    F(int, kpc_get_thread_counters, int, unsigned int, void *)
+    F(цео, kperf_sample_get, цео *)                            \
+    F(цео, kpc_get_thread_counters, цео, unsigned цео, void *)
 
 #define F(ret, name, ...)                                      \
     typedef ret name##proc(__VA_ARGS__);                       \
@@ -109,9 +109,9 @@ uint64_t ff_kperf_cycles(void)
 {
     uint64_t counters[KPC_MAX_COUNTERS];
 
-    if (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
-        return -1;
+    ако (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
+        врати -1;
     }
 
-    return counters[0];
+    врати counters[0];
 }

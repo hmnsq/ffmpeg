@@ -121,7 +121,7 @@ CFStringRef av_map_videotoolbox_color_trc_from_av(enum AVColorTransferCharacteri
  *
  * Returns < 0 in case of an error.
  */
-int av_vt_pixbuf_set_attachments(void *log_ctx,
+цео av_vt_pixbuf_set_attachments(void *log_ctx,
                                  CVPixelBufferRef pixbuf, const struct AVFrame *src);
 
 #endif /* AVUTIL_HWCONTEXT_VIDEOTOOLBOX_H */

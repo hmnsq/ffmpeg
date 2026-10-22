@@ -27,8 +27,8 @@
 
 static void get_defaults(AVMasteringDisplayMetadata *mastering)
 {
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 2; j++)
+    за (цео i = 0; i < 3; i++)
+        за (цео j = 0; j < 2; j++)
             mastering->display_primaries[i][j] = (AVRational) { 0, 1 };
     mastering->white_point[0] =
     mastering->white_point[1] =
@@ -38,22 +38,22 @@ static void get_defaults(AVMasteringDisplayMetadata *mastering)
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(void)
 {
-    return av_mastering_display_metadata_alloc_size(NULL);
+    врати av_mastering_display_metadata_alloc_size(NULL);
 }
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc_size(size_t *size)
 {
     AVMasteringDisplayMetadata *mastering = av_mallocz(sizeof(AVMasteringDisplayMetadata));
 
-    if (size)
+    ако (size)
         *size = mastering ? sizeof(*mastering) : 0;
 
-    if (!mastering)
-        return NULL;
+    ако (!mastering)
+        врати NULL;
 
     get_defaults(mastering);
 
-    return mastering;
+    врати mastering;
 }
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_data(AVFrame *frame)
@@ -61,23 +61,23 @@ AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_data(AVFra
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_MASTERING_DISPLAY_METADATA,
                                                         sizeof(AVMasteringDisplayMetadata));
-    if (!side_data)
-        return NULL;
+    ако (!side_data)
+        врати NULL;
 
     memset(side_data->data, 0, sizeof(AVMasteringDisplayMetadata));
     get_defaults((AVMasteringDisplayMetadata *)side_data->data);
 
-    return (AVMasteringDisplayMetadata *)side_data->data;
+    врати (AVMasteringDisplayMetadata *)side_data->data;
 }
 
 AVContentLightMetadata *av_content_light_metadata_alloc(size_t *size)
 {
     AVContentLightMetadata *metadata = av_mallocz(sizeof(AVContentLightMetadata));
 
-    if (size)
+    ако (size)
         *size = metadata ? sizeof(*metadata) : 0;
 
-    return metadata;
+    врати metadata;
 }
 
 AVContentLightMetadata *av_content_light_metadata_create_side_data(AVFrame *frame)
@@ -85,10 +85,10 @@ AVContentLightMetadata *av_content_light_metadata_create_side_data(AVFrame *fram
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
                                                         sizeof(AVContentLightMetadata));
-    if (!side_data)
-        return NULL;
+    ако (!side_data)
+        врати NULL;
 
     memset(side_data->data, 0, sizeof(AVContentLightMetadata));
 
-    return (AVContentLightMetadata *)side_data->data;
+    врати (AVContentLightMetadata *)side_data->data;
 }

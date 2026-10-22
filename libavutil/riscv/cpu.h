@@ -34,13 +34,13 @@ extern attribute_visibility_hidden bool ff_rv_zbb_supported;
 static inline av_const bool ff_rv_zbb_support(void)
 {
 #ifndef __riscv_zbb
-    return ff_rv_zbb_supported;
-#else
-    return true;
+    врати ff_rv_zbb_supported;
+#инако
+    врати true;
 #endif
 }
 
-#if HAVE_RVV
+#ако HAVE_RVV
 /**
  * Returns the vector size in bytes (always a power of two and at least 4).
  * This is undefined behaviour if vectors are not implemented.
@@ -54,27 +54,27 @@ static inline av_const size_t ff_get_rv_vlenb(void)
         ".option arch, +v\n"
         "    csrr %0, vlenb\n"
         ".option pop\n" : "=r" (vlenb));
-    return vlenb;
+    врати vlenb;
 }
 
 /**
  * Checks that the vector bit-size is at least the given value.
  * This is potentially undefined behaviour if vectors are not implemented.
  */
-static inline av_const bool ff_rv_vlen_least(unsigned int bits)
+static inline av_const bool ff_rv_vlen_least(unsigned цео bits)
 {
 #ifdef __riscv_v_min_vlen
-    if (bits <= __riscv_v_min_vlen)
-        return true;
-#else
+    ако (bits <= __riscv_v_min_vlen)
+        врати true;
+#инако
     /*
      * Vector lengths smaller than 128 bits are only possible in embedded cases
      * and cannot be run-time detected, so we can assume 128 bits at least.
      */
-    if (bits <= 128)
-        return true;
+    ако (bits <= 128)
+        врати true;
 #endif
-    return bits <= (8 * ff_get_rv_vlenb());
+    врати bits <= (8 * ff_get_rv_vlenb());
 }
 #endif
 #endif /* HAVE_RVV */

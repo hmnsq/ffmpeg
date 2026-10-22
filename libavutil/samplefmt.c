@@ -27,8 +27,8 @@
 
 typedef struct SampleFmtInfo {
     char name[8];
-    int bits;
-    int planar;
+    цео bits;
+    цео planar;
     enum AVSampleFormat altform; ///< planar<->packed alternative form
 } SampleFmtInfo;
 
@@ -51,219 +51,219 @@ static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
 
 const char *av_get_sample_fmt_name(enum AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return NULL;
-    return sample_fmt_info[sample_fmt].name;
+    ако (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        врати NULL;
+    врати sample_fmt_info[sample_fmt].name;
 }
 
 enum AVSampleFormat av_get_sample_fmt(const char *name)
 {
-    int i;
+    цео i;
 
-    for (i = 0; i < AV_SAMPLE_FMT_NB; i++)
-        if (!strcmp(sample_fmt_info[i].name, name))
-            return i;
-    return AV_SAMPLE_FMT_NONE;
+    за (i = 0; i < AV_SAMPLE_FMT_NB; i++)
+        ако (!strcmp(sample_fmt_info[i].name, name))
+            врати i;
+    врати AV_SAMPLE_FMT_NONE;
 }
 
-enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int planar)
+enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, цео planar)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar == planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    ако (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        врати AV_SAMPLE_FMT_NONE;
+    ако (sample_fmt_info[sample_fmt].planar == planar)
+        врати sample_fmt;
+    врати sample_fmt_info[sample_fmt].altform;
 }
 
 enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt_info[sample_fmt].altform;
-    return sample_fmt;
+    ако (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        врати AV_SAMPLE_FMT_NONE;
+    ако (sample_fmt_info[sample_fmt].planar)
+        врати sample_fmt_info[sample_fmt].altform;
+    врати sample_fmt;
 }
 
 enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    ако (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        врати AV_SAMPLE_FMT_NONE;
+    ако (sample_fmt_info[sample_fmt].planar)
+        врати sample_fmt;
+    врати sample_fmt_info[sample_fmt].altform;
 }
 
-char *av_get_sample_fmt_string (char *buf, int buf_size, enum AVSampleFormat sample_fmt)
+char *av_get_sample_fmt_string (char *buf, цео buf_size, enum AVSampleFormat sample_fmt)
 {
     /* print header */
-    if (sample_fmt < 0)
+    ако (sample_fmt < 0)
         snprintf(buf, buf_size, "name  " " depth");
-    else if (sample_fmt < AV_SAMPLE_FMT_NB) {
+    инако ако (sample_fmt < AV_SAMPLE_FMT_NB) {
         SampleFmtInfo info = sample_fmt_info[sample_fmt];
         snprintf (buf, buf_size, "%-6s" "   %2d ", info.name, info.bits);
     }
 
-    return buf;
+    врати buf;
 }
 
-int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt)
+цео av_get_bytes_per_sample(enum AVSampleFormat sample_fmt)
 {
-     return sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
+     врати sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
         0 : sample_fmt_info[sample_fmt].bits >> 3;
 }
 
-int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt)
+цео av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt)
 {
-     if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-         return 0;
-     return sample_fmt_info[sample_fmt].planar;
+     ако (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+         врати 0;
+     врати sample_fmt_info[sample_fmt].planar;
 }
 
-int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
-                               enum AVSampleFormat sample_fmt, int align)
+цео av_samples_get_buffer_size(цео *linesize, цео nb_channels, цео nb_samples,
+                               enum AVSampleFormat sample_fmt, цео align)
 {
-    int line_size;
-    int sample_size = av_get_bytes_per_sample(sample_fmt);
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
+    цео line_size;
+    цео sample_size = av_get_bytes_per_sample(sample_fmt);
+    цео planar      = av_sample_fmt_is_planar(sample_fmt);
 
     /* validate parameter ranges */
-    if (!sample_size || nb_samples <= 0 || nb_channels <= 0)
-        return AVERROR(EINVAL);
+    ако (!sample_size || nb_samples <= 0 || nb_channels <= 0)
+        врати AVERROR(EINVAL);
 
     /* auto-select alignment if not specified */
-    if (!align) {
-        if (nb_samples > INT_MAX - 31)
-            return AVERROR(EINVAL);
+    ако (!align) {
+        ако (nb_samples > INT_MAX - 31)
+            врати AVERROR(EINVAL);
         align = 1;
         nb_samples = FFALIGN(nb_samples, 32);
     }
 
     /* check for integer overflow */
-    if (nb_channels > INT_MAX / align ||
+    ако (nb_channels > INT_MAX / align ||
         (int64_t)nb_channels * nb_samples > (INT_MAX - (align * nb_channels)) / sample_size)
-        return AVERROR(EINVAL);
+        врати AVERROR(EINVAL);
 
     line_size = planar ? FFALIGN(nb_samples * sample_size,               align) :
                          FFALIGN(nb_samples * sample_size * nb_channels, align);
-    if (linesize)
+    ако (linesize)
         *linesize = line_size;
 
-    return planar ? line_size * nb_channels : line_size;
+    врати planar ? line_size * nb_channels : line_size;
 }
 
-int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
-                           const uint8_t *buf, int nb_channels, int nb_samples,
-                           enum AVSampleFormat sample_fmt, int align)
+цео av_samples_fill_arrays(uint8_t **audio_data, цео *linesize,
+                           const uint8_t *buf, цео nb_channels, цео nb_samples,
+                           enum AVSampleFormat sample_fmt, цео align)
 {
-    int ch, planar, buf_size, line_size;
+    цео ch, planar, buf_size, line_size;
 
     planar   = av_sample_fmt_is_planar(sample_fmt);
     buf_size = av_samples_get_buffer_size(&line_size, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (buf_size < 0)
-        return buf_size;
+    ако (buf_size < 0)
+        врати buf_size;
 
-    if (linesize)
+    ако (linesize)
         *linesize = line_size;
 
     memset(audio_data, 0, planar
                           ? sizeof(*audio_data) * nb_channels
                           : sizeof(*audio_data));
 
-    if (!buf)
-        return buf_size;
+    ако (!buf)
+        врати buf_size;
 
     audio_data[0] = (uint8_t *)buf;
-    for (ch = 1; planar && ch < nb_channels; ch++)
+    за (ch = 1; planar && ch < nb_channels; ch++)
         audio_data[ch] = audio_data[ch-1] + line_size;
 
-    return buf_size;
+    врати buf_size;
 }
 
-int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
-                     int nb_samples, enum AVSampleFormat sample_fmt, int align)
+цео av_samples_alloc(uint8_t **audio_data, цео *linesize, цео nb_channels,
+                     цео nb_samples, enum AVSampleFormat sample_fmt, цео align)
 {
     uint8_t *buf;
-    int size = av_samples_get_buffer_size(NULL, nb_channels, nb_samples,
+    цео size = av_samples_get_buffer_size(NULL, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (size < 0)
-        return size;
+    ако (size < 0)
+        врати size;
 
     buf = av_malloc(size);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    ако (!buf)
+        врати AVERROR(ENOMEM);
 
     size = av_samples_fill_arrays(audio_data, linesize, buf, nb_channels,
                                   nb_samples, sample_fmt, align);
-    if (size < 0) {
+    ако (size < 0) {
         av_free(buf);
-        return size;
+        врати size;
     }
 
     av_samples_set_silence(audio_data, 0, nb_samples, nb_channels, sample_fmt);
 
-    return size;
+    врати size;
 }
 
-int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int nb_channels,
-                                       int nb_samples, enum AVSampleFormat sample_fmt, int align)
+цео av_samples_alloc_array_and_samples(uint8_t ***audio_data, цео *linesize, цео nb_channels,
+                                       цео nb_samples, enum AVSampleFormat sample_fmt, цео align)
 {
-    int ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
+    цео ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
 
     *audio_data = av_calloc(nb_planes, sizeof(**audio_data));
-    if (!*audio_data)
-        return AVERROR(ENOMEM);
+    ако (!*audio_data)
+        врати AVERROR(ENOMEM);
     ret = av_samples_alloc(*audio_data, linesize, nb_channels,
                            nb_samples, sample_fmt, align);
-    if (ret < 0)
+    ако (ret < 0)
         av_freep(audio_data);
-    return ret;
+    врати ret;
 }
 
-int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
-                    int src_offset, int nb_samples, int nb_channels,
+цео av_samples_copy(uint8_t * const *dst, uint8_t * const *src, цео dst_offset,
+                    цео src_offset, цео nb_samples, цео nb_channels,
                     enum AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int i;
+    цео planar      = av_sample_fmt_is_planar(sample_fmt);
+    цео planes      = planar ? nb_channels : 1;
+    цео block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    цео data_size   = nb_samples * block_align;
+    цео i;
 
     dst_offset *= block_align;
     src_offset *= block_align;
 
-    if((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= data_size) {
-        for (i = 0; i < planes; i++)
+    ако((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= data_size) {
+        за (i = 0; i < planes; i++)
             memcpy(dst[i] + dst_offset, src[i] + src_offset, data_size);
-    } else {
-        for (i = 0; i < planes; i++)
+    } инако {
+        за (i = 0; i < planes; i++)
             memmove(dst[i] + dst_offset, src[i] + src_offset, data_size);
     }
 
-    return 0;
+    врати 0;
 }
 
-int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_samples,
-                           int nb_channels, enum AVSampleFormat sample_fmt)
+цео av_samples_set_silence(uint8_t * const *audio_data, цео offset, цео nb_samples,
+                           цео nb_channels, enum AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int fill_char, i;
+    цео planar      = av_sample_fmt_is_planar(sample_fmt);
+    цео planes      = planar ? nb_channels : 1;
+    цео block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    цео data_size   = nb_samples * block_align;
+    цео fill_char, i;
 
-    if (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
+    ако (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
         fill_char = 0x80;
-    else if (sample_fmt == AV_SAMPLE_FMT_DSD)
+    инако ако (sample_fmt == AV_SAMPLE_FMT_DSD)
         fill_char = 0x69; // only ultrasonic tones, filtered out on playback
-    else
+    инако
         fill_char = 0x00;
 
     offset *= block_align;
 
-    for (i = 0; i < planes; i++)
+    за (i = 0; i < planes; i++)
         memset(audio_data[i] + offset, fill_char, data_size);
 
-    return 0;
+    врати 0;
 }
