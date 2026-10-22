@@ -30,215 +30,215 @@
 #include "bprint.h"
 
 struct AVDictionary {
-    int count;
+    ціле count;
     AVDictionaryEntry *elems;
-    int duplicate_keys;
+    ціле duplicate_keys;
 };
 
-int av_dict_count(const AVDictionary *m)
+ціле av_dict_count(const AVDictionary *m)
 {
-    return m ? m->count : 0;
+    повернути m ? m->count : 0;
 }
 
 const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
                                          const AVDictionaryEntry *prev)
 {
-    int i = 0;
+    ціле i = 0;
 
-    if (!m)
-        return NULL;
+    якщо (!m)
+        повернути NULL;
 
-    if (prev)
+    якщо (prev)
         i = prev - m->elems + 1;
 
     av_assert2(i >= 0);
-    if (i >= m->count)
-        return NULL;
+    якщо (i >= m->count)
+        повернути NULL;
 
-    return &m->elems[i];
+    повернути &m->elems[i];
 }
 
 AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags)
+                               const AVDictionaryEntry *prev, ціле flags)
 {
     const AVDictionaryEntry *entry = prev;
-    unsigned int j;
+    unsigned ціле j;
 
-    if (!key)
-        return NULL;
+    якщо (!key)
+        повернути NULL;
 
-    while ((entry = av_dict_iterate(m, entry))) {
+    поки ((entry = av_dict_iterate(m, entry))) {
         const char *s = entry->key;
-        if (flags & AV_DICT_MATCH_CASE)
-            for (j = 0; s[j] == key[j] && key[j]; j++)
+        якщо (flags & AV_DICT_MATCH_CASE)
+            для (j = 0; s[j] == key[j] && key[j]; j++)
                 ;
-        else
-            for (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
+        інакше
+            для (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
                 ;
-        if (key[j])
+        якщо (key[j])
             continue;
-        if (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
+        якщо (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
             continue;
-        return (AVDictionaryEntry *)entry;
+        повернути (AVDictionaryEntry *)entry;
     }
-    return NULL;
+    повернути NULL;
 }
 
-int av_dict_set(AVDictionary **pm, const char *key, const char *value,
-                int flags)
+ціле av_dict_set(AVDictionary **pm, const char *key, const char *value,
+                ціле flags)
 {
     AVDictionary *m = *pm;
     AVDictionaryEntry *tag = NULL;
     char *copy_key = NULL, *copy_value = NULL;
-    int err;
+    ціле err;
 
-    if (flags & AV_DICT_DONT_STRDUP_VAL)
+    якщо (flags & AV_DICT_DONT_STRDUP_VAL)
         copy_value = (void *)value;
-    else if (value)
+    інакше якщо (value)
         copy_value = av_strdup(value);
-    if (!key) {
+    якщо (!key) {
         err = AVERROR(EINVAL);
         goto err_out;
     }
-    if (flags & AV_DICT_DONT_STRDUP_KEY)
+    якщо (flags & AV_DICT_DONT_STRDUP_KEY)
         copy_key = (void *)key;
-    else
+    інакше
         copy_key = av_strdup(key);
-    if (!copy_key || (value && !copy_value))
+    якщо (!copy_key || (value && !copy_value))
         goto enomem;
 
-    if (!(flags & AV_DICT_MULTIKEY)) {
+    якщо (!(flags & AV_DICT_MULTIKEY)) {
         tag = av_dict_get(m, key, NULL, flags);
-    } else if (flags & AV_DICT_DEDUP) {
-        while ((tag = av_dict_get(m, key, tag, flags))) {
-            if ((!value && !tag->value) ||
+    } інакше якщо (flags & AV_DICT_DEDUP) {
+        поки ((tag = av_dict_get(m, key, tag, flags))) {
+            якщо ((!value && !tag->value) ||
                 (value && tag->value && !strcmp(value, tag->value))) {
                 av_free(copy_key);
                 av_free(copy_value);
-                return 0;
+                повернути 0;
             }
         }
     }
-    if (!m)
+    якщо (!m)
         m = *pm = av_mallocz(sizeof(*m));
-    if (!m)
+    якщо (!m)
         goto enomem;
 
-    if (tag) {
-        if (flags & AV_DICT_DONT_OVERWRITE) {
+    якщо (tag) {
+        якщо (flags & AV_DICT_DONT_OVERWRITE) {
             av_free(copy_key);
             av_free(copy_value);
-            return 0;
+            повернути 0;
         }
-        if (copy_value && flags & AV_DICT_APPEND) {
+        якщо (copy_value && flags & AV_DICT_APPEND) {
             size_t oldlen = strlen(tag->value);
             size_t new_part_len = strlen(copy_value);
             size_t len = oldlen + new_part_len + 1;
             char *newval = av_realloc(tag->value, len);
-            if (!newval)
+            якщо (!newval)
                 goto enomem;
             memcpy(newval + oldlen, copy_value, new_part_len + 1);
             av_freep(&copy_value);
             copy_value = newval;
-        } else
+        } інакше
             av_free(tag->value);
         av_free(tag->key);
         *tag = m->elems[--m->count];
-    } else if (copy_value) {
+    } інакше якщо (copy_value) {
         AVDictionaryEntry *tmp = av_realloc_array(m->elems,
                                                   m->count + 1, sizeof(*m->elems));
-        if (!tmp)
+        якщо (!tmp)
             goto enomem;
         m->elems = tmp;
     }
-    if (copy_value) {
+    якщо (copy_value) {
         m->elems[m->count].key = copy_key;
         m->elems[m->count].value = copy_value;
         m->count++;
-        if (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
+        якщо (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
             m->duplicate_keys = 1;
-    } else {
+    } інакше {
         err = 0;
         goto end;
     }
 
-    return 0;
+    повернути 0;
 
 enomem:
     err = AVERROR(ENOMEM);
 err_out:
     av_free(copy_value);
 end:
-    if (m && !m->count) {
+    якщо (m && !m->count) {
         av_freep(&m->elems);
         av_freep(pm);
     }
     av_free(copy_key);
-    return err;
+    повернути err;
 }
 
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
-                int flags)
+ціле av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
+                ціле flags)
 {
     char valuestr[22];
     snprintf(valuestr, sizeof(valuestr), "%"PRId64, value);
     flags &= ~AV_DICT_DONT_STRDUP_VAL;
-    return av_dict_set(pm, key, valuestr, flags);
+    повернути av_dict_set(pm, key, valuestr, flags);
 }
 
-static int parse_key_value_pair(AVDictionary **pm, const char **buf,
+static ціле parse_key_value_pair(AVDictionary **pm, const char **buf,
                                 const char *key_val_sep, const char *pairs_sep,
-                                int flags)
+                                ціле flags)
 {
     char *key = av_get_token(buf, key_val_sep);
     char *val = NULL;
-    int ret;
+    ціле ret;
 
-    if (key && *key && strspn(*buf, key_val_sep)) {
+    якщо (key && *key && strspn(*buf, key_val_sep)) {
         (*buf)++;
         val = av_get_token(buf, pairs_sep);
     }
 
-    if (key && *key && val && *val)
+    якщо (key && *key && val && *val)
         ret = av_dict_set(pm, key, val, flags);
-    else
+    інакше
         ret = AVERROR(EINVAL);
 
     av_freep(&key);
     av_freep(&val);
 
-    return ret;
+    повернути ret;
 }
 
-int av_dict_parse_string(AVDictionary **pm, const char *str,
+ціле av_dict_parse_string(AVDictionary **pm, const char *str,
                          const char *key_val_sep, const char *pairs_sep,
-                         int flags)
+                         ціле flags)
 {
-    int ret;
+    ціле ret;
 
-    if (!str)
-        return 0;
+    якщо (!str)
+        повернути 0;
 
     /* ignore STRDUP flags */
     flags &= ~(AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
 
-    while (*str) {
-        if ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
-            return ret;
+    поки (*str) {
+        якщо ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
+            повернути ret;
 
-        if (*str)
+        якщо (*str)
             str++;
     }
 
-    return 0;
+    повернути 0;
 }
 
 void av_dict_free(AVDictionary **pm)
 {
     AVDictionary *m = *pm;
 
-    if (m) {
-        while (m->count--) {
+    якщо (m) {
+        поки (m->count--) {
             av_freep(&m->elems[m->count].key);
             av_freep(&m->elems[m->count].value);
         }
@@ -247,66 +247,66 @@ void av_dict_free(AVDictionary **pm)
     av_freep(pm);
 }
 
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags)
+ціле av_dict_copy(AVDictionary **dst, const AVDictionary *src, ціле flags)
 {
     const AVDictionaryEntry *t = NULL;
 
-    if (!*dst && src && src->count && !src->duplicate_keys &&
+    якщо (!*dst && src && src->count && !src->duplicate_keys &&
         !(flags & AV_DICT_IGNORE_SUFFIX)) {
         AVDictionary *m = av_mallocz(sizeof(*m));
-        if (!m)
-            return AVERROR(ENOMEM);
+        якщо (!m)
+            повернути AVERROR(ENOMEM);
         m->elems = av_calloc(src->count, sizeof(*m->elems));
-        if (!m->elems) {
+        якщо (!m->elems) {
             av_free(m);
-            return AVERROR(ENOMEM);
+            повернути AVERROR(ENOMEM);
         }
         *dst = m;
-        for (int i = 0; i < src->count; i++) {
+        для (ціле i = 0; i < src->count; i++) {
             m->elems[i].key   = av_strdup(src->elems[i].key);
             m->elems[i].value = av_strdup(src->elems[i].value);
             m->count++;
-            if (!m->elems[i].key || !m->elems[i].value) {
+            якщо (!m->elems[i].key || !m->elems[i].value) {
                 av_dict_free(dst);
-                return AVERROR(ENOMEM);
+                повернути AVERROR(ENOMEM);
             }
         }
-        return 0;
+        повернути 0;
     }
 
-    while ((t = av_dict_iterate(src, t))) {
-        int ret = av_dict_set(dst, t->key, t->value, flags);
-        if (ret < 0)
-            return ret;
+    поки ((t = av_dict_iterate(src, t))) {
+        ціле ret = av_dict_set(dst, t->key, t->value, flags);
+        якщо (ret < 0)
+            повернути ret;
     }
 
-    return 0;
+    повернути 0;
 }
 
-int av_dict_get_string(const AVDictionary *m, char **buffer,
+ціле av_dict_get_string(const AVDictionary *m, char **buffer,
                        const char key_val_sep, const char pairs_sep)
 {
     const AVDictionaryEntry *t = NULL;
     AVBPrint bprint;
-    int cnt = 0;
+    ціле cnt = 0;
     char special_chars[] = {pairs_sep, key_val_sep, '\0'};
 
-    if (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
+    якщо (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
         pairs_sep == '\\' || key_val_sep == '\\')
-        return AVERROR(EINVAL);
+        повернути AVERROR(EINVAL);
 
-    if (!av_dict_count(m)) {
+    якщо (!av_dict_count(m)) {
         *buffer = av_strdup("");
-        return *buffer ? 0 : AVERROR(ENOMEM);
+        повернути *buffer ? 0 : AVERROR(ENOMEM);
     }
 
     av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
-    while ((t = av_dict_iterate(m, t))) {
-        if (cnt++)
+    поки ((t = av_dict_iterate(m, t))) {
+        якщо (cnt++)
             av_bprint_append_data(&bprint, &pairs_sep, 1);
         av_bprint_escape(&bprint, t->key, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
         av_bprint_append_data(&bprint, &key_val_sep, 1);
         av_bprint_escape(&bprint, t->value, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
     }
-    return av_bprint_finalize(&bprint, buffer);
+    повернути av_bprint_finalize(&bprint, buffer);
 }

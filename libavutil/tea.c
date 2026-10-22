@@ -29,31 +29,31 @@
 
 typedef struct AVTEA {
     uint32_t key[16];
-    int rounds;
+    ціле rounds;
 } AVTEA;
 
 struct AVTEA *av_tea_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVTEA));
+    повернути av_mallocz(sizeof(struct AVTEA));
 }
 
-const int av_tea_size = sizeof(AVTEA);
+const ціле av_tea_size = sizeof(AVTEA);
 
-void av_tea_init(AVTEA *ctx, const uint8_t key[16], int rounds)
+void av_tea_init(AVTEA *ctx, const uint8_t key[16], ціле rounds)
 {
-    int i;
+    ціле i;
 
-    for (i = 0; i < 4; i++)
+    для (i = 0; i < 4; i++)
         ctx->key[i] = AV_RB32(key + (i << 2));
 
     ctx->rounds = rounds;
 }
 
 static void tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, const uint8_t *src,
-                          int decrypt, uint8_t *iv)
+                          ціле decrypt, uint8_t *iv)
 {
     uint32_t v0, v1;
-    int rounds = ctx->rounds;
+    ціле rounds = ctx->rounds;
     uint32_t k0, k1, k2, k3;
     k0 = ctx->key[0];
     k1 = ctx->key[1];
@@ -63,25 +63,25 @@ static void tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, const uint8_t *src,
     v0 = AV_RB32(src);
     v1 = AV_RB32(src + 4);
 
-    if (decrypt) {
-        int i;
+    якщо (decrypt) {
+        ціле i;
         uint32_t delta = 0x9E3779B9U, sum = delta * (rounds / 2);
 
-        for (i = 0; i < rounds / 2; i++) {
+        для (i = 0; i < rounds / 2; i++) {
             v1 -= ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
             v0 -= ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
             sum -= delta;
         }
-        if (iv) {
+        якщо (iv) {
             v0 ^= AV_RB32(iv);
             v1 ^= AV_RB32(iv + 4);
             memcpy(iv, src, 8);
         }
-    } else {
-        int i;
+    } інакше {
+        ціле i;
         uint32_t sum = 0, delta = 0x9E3779B9U;
 
-        for (i = 0; i < rounds / 2; i++) {
+        для (i = 0; i < rounds / 2; i++) {
             sum += delta;
             v0 += ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
             v1 += ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
@@ -92,26 +92,26 @@ static void tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, const uint8_t *src,
     AV_WB32(dst + 4, v1);
 }
 
-void av_tea_crypt(AVTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
-                  uint8_t *iv, int decrypt)
+void av_tea_crypt(AVTEA *ctx, uint8_t *dst, const uint8_t *src, ціле count,
+                  uint8_t *iv, ціле decrypt)
 {
-    int i;
+    ціле i;
 
-    if (decrypt) {
-        while (count--) {
+    якщо (decrypt) {
+        поки (count--) {
             tea_crypt_ecb(ctx, dst, src, decrypt, iv);
 
             src   += 8;
             dst   += 8;
         }
-    } else {
-        while (count--) {
-            if (iv) {
-                for (i = 0; i < 8; i++)
+    } інакше {
+        поки (count--) {
+            якщо (iv) {
+                для (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];
                 tea_crypt_ecb(ctx, dst, dst, decrypt, NULL);
                 memcpy(iv, dst, 8);
-            } else {
+            } інакше {
                 tea_crypt_ecb(ctx, dst, src, decrypt, NULL);
             }
             src   += 8;

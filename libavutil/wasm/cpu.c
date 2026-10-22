@@ -22,20 +22,20 @@
 
 #include "libavutil/cpu_internal.h"
 
-int ff_get_cpu_flags_wasm(void)
+ціле ff_get_cpu_flags_wasm(void)
 {
-    int flags = 0;
-#if HAVE_SIMD128
+    ціле flags = 0;
+#якщо HAVE_SIMD128
     flags |= AV_CPU_FLAG_SIMD128;
 #endif
-    return flags;
+    повернути flags;
 }
 
 size_t ff_get_cpu_max_align_wasm(void)
 {
-#if HAVE_SIMD128
-    return 16;
-#else
-    return 8;
+#якщо HAVE_SIMD128
+    повернути 16;
+#інакше
+    повернути 8;
 #endif
 }

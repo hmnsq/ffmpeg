@@ -23,13 +23,13 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <time.h>
-#if HAVE_GETTIMEOFDAY
+#якщо HAVE_GETTIMEOFDAY
 #include <sys/time.h>
 #endif
-#if HAVE_UNISTD_H
+#якщо HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#if HAVE_WINDOWS_H
+#якщо HAVE_WINDOWS_H
 #include <windows.h>
 #endif
 
@@ -39,69 +39,69 @@
 
 int64_t av_gettime(void)
 {
-#if HAVE_GETTIMEOFDAY
+#якщо HAVE_GETTIMEOFDAY
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    return (int64_t)tv.tv_sec * 1000000 + tv.tv_usec;
+    повернути (int64_t)tv.tv_sec * 1000000 + tv.tv_usec;
 #elif HAVE_GETSYSTEMTIMEASFILETIME
     FILETIME ft;
     int64_t t;
     GetSystemTimeAsFileTime(&ft);
     t = (int64_t)ft.dwHighDateTime << 32 | ft.dwLowDateTime;
-    return t / 10 - 11644473600000000; /* Jan 1, 1601 */
-#else
-    return -1;
+    повернути t / 10 - 11644473600000000; /* Jan 1, 1601 */
+#інакше
+    повернути -1;
 #endif
 }
 
 int64_t av_gettime_relative(void)
 {
-#if HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
+#якщо HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
 #ifdef __APPLE__
-    if (&clock_gettime)
+    якщо (&clock_gettime)
 #endif
     {
         struct timespec ts;
         clock_gettime(CLOCK_MONOTONIC, &ts);
-        return (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
+        повернути (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
     }
 #elif defined(_WIN32)
     LARGE_INTEGER freq;
     LARGE_INTEGER counter;
     QueryPerformanceFrequency(&freq);
     QueryPerformanceCounter(&counter);
-    return av_rescale(counter.QuadPart, 1000000, freq.QuadPart);
+    повернути av_rescale(counter.QuadPart, 1000000, freq.QuadPart);
 #endif
-    return av_gettime() + 42 * 60 * 60 * INT64_C(1000000);
+    повернути av_gettime() + 42 * 60 * 60 * INT64_C(1000000);
 }
 
-int av_gettime_relative_is_monotonic(void)
+ціле av_gettime_relative_is_monotonic(void)
 {
-#if HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
+#якщо HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
 #ifdef __APPLE__
-    if (!&clock_gettime)
-        return 0;
+    якщо (!&clock_gettime)
+        повернути 0;
 #endif
-    return 1;
+    повернути 1;
 #elif defined(_WIN32)
-    return 1;
-#else
-    return 0;
+    повернути 1;
+#інакше
+    повернути 0;
 #endif
 }
 
-int av_usleep(unsigned usec)
+ціле av_usleep(unsigned usec)
 {
-#if HAVE_NANOSLEEP
+#якщо HAVE_NANOSLEEP
     struct timespec ts = { usec / 1000000, usec % 1000000 * 1000 };
-    while (nanosleep(&ts, &ts) < 0 && errno == EINTR);
-    return 0;
+    поки (nanosleep(&ts, &ts) < 0 && errno == EINTR);
+    повернути 0;
 #elif HAVE_USLEEP
-    return usleep(usec);
+    повернути usleep(usec);
 #elif HAVE_SLEEP
     Sleep(usec / 1000);
-    return 0;
-#else
-    return AVERROR(ENOSYS);
+    повернути 0;
+#інакше
+    повернути AVERROR(ENOSYS);
 #endif
 }

@@ -24,11 +24,11 @@
 
 #include "pixfmt.h"
 
-int avpriv_set_systematic_pal2(uint32_t pal[256], enum AVPixelFormat pix_fmt);
+ціле avpriv_set_systematic_pal2(uint32_t pal[256], enum AVPixelFormat pix_fmt);
 
-int ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
+ціле ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
                                     const uint8_t *src, ptrdiff_t src_linesize,
-                                    ptrdiff_t bytewidth, int height);
+                                    ptrdiff_t bytewidth, ціле height);
 
 
 #endif /* AVUTIL_IMGUTILS_INTERNAL_H */

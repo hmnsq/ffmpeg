@@ -51,46 +51,46 @@ static const SoftFloat FLOAT_MIN        = { 0x20000000,   MIN_EXP};
  */
 static inline av_const double av_sf2double(SoftFloat v) {
     v.exp -= ONE_BITS +1;
-    return ldexp(v.mant, v.exp);
+    повернути ldexp(v.mant, v.exp);
 }
 
 static av_const SoftFloat av_normalize_sf(SoftFloat a){
-    if(a.mant){
-#if 1
-        while((a.mant + 0x1FFFFFFFU)<0x3FFFFFFFU){
+    якщо(a.mant){
+#якщо 1
+        поки((a.mant + 0x1FFFFFFFU)<0x3FFFFFFFU){
             a.mant += a.mant;
             a.exp  -= 1;
         }
-#else
-        int s=ONE_BITS - av_log2(FFABS(a.mant));
+#інакше
+        ціле s=ONE_BITS - av_log2(FFABS(a.mant));
         a.exp   -= s;
         a.mant <<= s;
 #endif
-        if(a.exp < MIN_EXP){
+        якщо(a.exp < MIN_EXP){
             a.exp = MIN_EXP;
             a.mant= 0;
         }
-    }else{
+    }інакше{
         a.exp= MIN_EXP;
     }
-    return a;
+    повернути a;
 }
 
 static inline av_const SoftFloat av_normalize1_sf(SoftFloat a){
-#if 1
-    if((int32_t)(a.mant + 0x40000000U) <= 0){
+#якщо 1
+    якщо((int32_t)(a.mant + 0x40000000U) <= 0){
         a.exp++;
         a.mant>>=1;
     }
     av_assert2(a.mant < 0x40000000 && a.mant > -0x40000000);
     av_assert2(a.exp <= MAX_EXP);
-    return a;
+    повернути a;
 #elif 1
-    int t= a.mant + 0x40000000 < 0;
-    return (SoftFloat){ a.mant>>t, a.exp+t};
-#else
-    int t= (a.mant + 0x3FFFFFFFU)>>31;
-    return (SoftFloat){a.mant>>t, a.exp+t};
+    ціле t= a.mant + 0x40000000 < 0;
+    повернути (SoftFloat){ a.mant>>t, a.exp+t};
+#інакше
+    ціле t= (a.mant + 0x3FFFFFFFU)>>31;
+    повернути (SoftFloat){a.mant>>t, a.exp+t};
 #endif
 }
 
@@ -104,9 +104,9 @@ static inline av_const SoftFloat av_mul_sf(SoftFloat a, SoftFloat b){
     av_assert2((int32_t)((a.mant * (int64_t)b.mant) >> ONE_BITS) == (a.mant * (int64_t)b.mant) >> ONE_BITS);
     a.mant = (a.mant * (int64_t)b.mant) >> ONE_BITS;
     a = av_normalize1_sf((SoftFloat){a.mant, a.exp - 1});
-    if (!a.mant || a.exp < MIN_EXP)
-        return FLOAT_0;
-    return a;
+    якщо (!a.mant || a.exp < MIN_EXP)
+        повернути FLOAT_0;
+    повернути a;
 }
 
 /**
@@ -118,15 +118,15 @@ static inline av_const SoftFloat av_div_sf(SoftFloat a, SoftFloat b){
     temp /= b.mant;
     a.exp -= b.exp;
     a.mant = temp;
-    while (a.mant != temp) {
+    поки (a.mant != temp) {
         temp /= 2;
         a.exp--;
         a.mant = temp;
     }
     a = av_normalize1_sf(a);
-    if (!a.mant || a.exp < MIN_EXP)
-        return FLOAT_0;
-    return a;
+    якщо (!a.mant || a.exp < MIN_EXP)
+        повернути FLOAT_0;
+    повернути a;
 }
 
 /**
@@ -135,43 +135,43 @@ static inline av_const SoftFloat av_div_sf(SoftFloat a, SoftFloat b){
  *          > 0 if the first is greater
  *            0 if they are equal
  */
-static inline av_const int av_cmp_sf(SoftFloat a, SoftFloat b){
-    int t= a.exp - b.exp;
-    if      (t <-31) return                  -  b.mant      ;
-    else if (t <  0) return (a.mant >> (-t)) -  b.mant      ;
-    else if (t < 32) return  a.mant          - (b.mant >> t);
-    else             return  a.mant                         ;
+static inline av_const ціле av_cmp_sf(SoftFloat a, SoftFloat b){
+    ціле t= a.exp - b.exp;
+    якщо      (t <-31) повернути                  -  b.mant      ;
+    інакше якщо (t <  0) повернути (a.mant >> (-t)) -  b.mant      ;
+    інакше якщо (t < 32) повернути  a.mant          - (b.mant >> t);
+    інакше             повернути  a.mant                         ;
 }
 
 /**
  * Compares two SoftFloats.
  * @returns 1 if a is greater than b, 0 otherwise
  */
-static inline av_const int av_gt_sf(SoftFloat a, SoftFloat b)
+static inline av_const ціле av_gt_sf(SoftFloat a, SoftFloat b)
 {
-    int t= a.exp - b.exp;
-    if      (t <-31) return 0                >  b.mant      ;
-    else if (t <  0) return (a.mant >> (-t)) >  b.mant      ;
-    else if (t < 32) return  a.mant          > (b.mant >> t);
-    else             return  a.mant          >  0           ;
+    ціле t= a.exp - b.exp;
+    якщо      (t <-31) повернути 0                >  b.mant      ;
+    інакше якщо (t <  0) повернути (a.mant >> (-t)) >  b.mant      ;
+    інакше якщо (t < 32) повернути  a.mant          > (b.mant >> t);
+    інакше             повернути  a.mant          >  0           ;
 }
 
 /**
  * @returns the sum of 2 SoftFloats.
  */
 static inline av_const SoftFloat av_add_sf(SoftFloat a, SoftFloat b){
-    int t= a.exp - b.exp;
-    if      (t <-31) return b;
-    else if (t <  0) return av_normalize_sf(av_normalize1_sf((SoftFloat){ b.mant + (a.mant >> (-t)), b.exp}));
-    else if (t < 32) return av_normalize_sf(av_normalize1_sf((SoftFloat){ a.mant + (b.mant >>   t ), a.exp}));
-    else             return a;
+    ціле t= a.exp - b.exp;
+    якщо      (t <-31) повернути b;
+    інакше якщо (t <  0) повернути av_normalize_sf(av_normalize1_sf((SoftFloat){ b.mant + (a.mant >> (-t)), b.exp}));
+    інакше якщо (t < 32) повернути av_normalize_sf(av_normalize1_sf((SoftFloat){ a.mant + (b.mant >>   t ), a.exp}));
+    інакше             повернути a;
 }
 
 /**
  * @returns the difference of 2 SoftFloats.
  */
 static inline av_const SoftFloat av_sub_sf(SoftFloat a, SoftFloat b){
-    return av_add_sf(a, (SoftFloat){ -b.mant, b.exp});
+    повернути av_add_sf(a, (SoftFloat){ -b.mant, b.exp});
 }
 
 //FIXME log, exp, pow
@@ -182,23 +182,23 @@ static inline av_const SoftFloat av_sub_sf(SoftFloat a, SoftFloat b){
  * SoftFloat.
  * @returns a SoftFloat with value v * 2^-frac_bits
  */
-static inline av_const SoftFloat av_int2sf(int v, int frac_bits){
-    int exp_offset = 0;
-    if(v <= INT_MIN + 1){
+static inline av_const SoftFloat av_int2sf(ціле v, ціле frac_bits){
+    ціле exp_offset = 0;
+    якщо(v <= INT_MIN + 1){
         exp_offset = 1;
         v>>=1;
     }
-    return av_normalize_sf(av_normalize1_sf((SoftFloat){v, ONE_BITS + 1 - frac_bits + exp_offset}));
+    повернути av_normalize_sf(av_normalize1_sf((SoftFloat){v, ONE_BITS + 1 - frac_bits + exp_offset}));
 }
 
 /**
  * Converts a SoftFloat to an integer.
  * Rounding is to -inf.
  */
-static inline av_const int av_sf2int(SoftFloat v, int frac_bits){
+static inline av_const ціле av_sf2int(SoftFloat v, ціле frac_bits){
     v.exp += frac_bits - (ONE_BITS + 1);
-    if(v.exp >= 0) return v.mant <<  v.exp ;
-    else           return v.mant >>(-v.exp);
+    якщо(v.exp >= 0) повернути v.mant <<  v.exp ;
+    інакше           повернути v.mant >>(-v.exp);
 }
 
 /**
@@ -206,32 +206,32 @@ static inline av_const int av_sf2int(SoftFloat v, int frac_bits){
  */
 static av_always_inline SoftFloat av_sqrt_sf(SoftFloat val)
 {
-    int tabIndex, rem;
+    ціле tabIndex, rem;
 
-    if (val.mant == 0)
+    якщо (val.mant == 0)
         val.exp = MIN_EXP;
-    else if (val.mant < 0)
+    інакше якщо (val.mant < 0)
         abort();
-    else
+    інакше
     {
         tabIndex = (val.mant - 0x20000000) >> 20;
 
         rem = val.mant & 0xFFFFF;
-        val.mant  = (int)(((int64_t)av_sqrttbl_sf[tabIndex] * (0x100000 - rem) +
+        val.mant  = (ціле)(((int64_t)av_sqrttbl_sf[tabIndex] * (0x100000 - rem) +
                            (int64_t)av_sqrttbl_sf[tabIndex + 1] * rem +
                            0x80000) >> 20);
-        val.mant = (int)(((int64_t)av_sqr_exp_multbl_sf[val.exp & 1] * val.mant +
+        val.mant = (ціле)(((int64_t)av_sqr_exp_multbl_sf[val.exp & 1] * val.mant +
                           0x10000000) >> 29);
 
-        if (val.mant < 0x40000000)
+        якщо (val.mant < 0x40000000)
             val.exp -= 2;
-        else
+        інакше
             val.mant >>= 1;
 
         val.exp = (val.exp >> 1) + 1;
     }
 
-    return val;
+    повернути val;
 }
 
 /**
@@ -241,11 +241,11 @@ static av_always_inline SoftFloat av_sqrt_sf(SoftFloat val)
  * @param s pointer to where   sine in units of (1<<30) is returned
  * @param c pointer to where cosine in units of (1<<30) is returned
  */
-av_unused static void av_sincos_sf(int a, int *s, int *c)
+av_unused static void av_sincos_sf(ціле a, ціле *s, ціле *c)
 {
-    int idx, sign;
-    int sv, cv;
-    int st, ct;
+    ціле idx, sign;
+    ціле sv, cv;
+    ціле st, ct;
 
     idx = a >> 26;
     sign = (int32_t)((unsigned)idx << 27) >> 31;
@@ -261,9 +261,9 @@ av_unused static void av_sincos_sf(int a, int *s, int *c)
     ct = av_costbl_2_sf[idx & 0x1f];
     st = av_sintbl_2_sf[idx & 0x1f];
 
-    idx = (int)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
+    idx = (ціле)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
 
-    sv = (int)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
+    sv = (ціле)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
 
     cv = idx;
 
@@ -271,23 +271,23 @@ av_unused static void av_sincos_sf(int a, int *s, int *c)
     ct = av_costbl_3_sf[idx & 0x1f];
     st = av_sintbl_3_sf[idx & 0x1f];
 
-    idx = (int)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
+    idx = (ціле)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
 
-    sv = (int)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
+    sv = (ціле)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
     cv = idx;
 
     idx = a >> 11;
 
-    ct = (int)(((int64_t)av_costbl_4_sf[idx & 0x1f] * (0x800 - (a & 0x7ff)) +
+    ct = (ціле)(((int64_t)av_costbl_4_sf[idx & 0x1f] * (0x800 - (a & 0x7ff)) +
                 (int64_t)av_costbl_4_sf[(idx & 0x1f)+1]*(a & 0x7ff) +
                 0x400) >> 11);
-    st = (int)(((int64_t)av_sintbl_4_sf[idx & 0x1f] * (0x800 - (a & 0x7ff)) +
+    st = (ціле)(((int64_t)av_sintbl_4_sf[idx & 0x1f] * (0x800 - (a & 0x7ff)) +
                 (int64_t)av_sintbl_4_sf[(idx & 0x1f) + 1] * (a & 0x7ff) +
                 0x400) >> 11);
 
-    *c = (int)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
+    *c = (ціле)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
 
-    *s = (int)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
+    *s = (ціле)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
 }
 
 #endif /* AVUTIL_SOFTFLOAT_H */

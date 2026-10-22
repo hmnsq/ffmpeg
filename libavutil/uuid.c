@@ -65,52 +65,52 @@
 #include "error.h"
 #include "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+ціле av_uuid_parse(const char *in, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    якщо (strlen(in) != 36)
+        повернути AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    повернути av_uuid_parse_range(in, in + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+static ціле xdigit_to_int(char c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    якщо (c >= 'a' && c <= 'f')
+        повернути c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    якщо (c >= '0' && c <= '9')
+        повернути c - '0';
 
-    return -1;
+    повернути -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+ціле av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
 {
-    int i;
+    ціле i;
     const char *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    якщо ((in_end - in_start) != 36)
+        повернути AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    для (i = 0, cp = in_start; i < 16; i++) {
+        ціле hi;
+        ціле lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        якщо (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
         hi = xdigit_to_int(*cp++);
         lo = xdigit_to_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        якщо (hi == -1 || lo == -1)
+            повернути AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    повернути 0;
 }
 
 static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
@@ -119,10 +119,10 @@ void av_uuid_unparse(const AVUUID uuid, char *out)
 {
     char *p = out;
 
-    for (int i = 0; i < 16; i++) {
+    для (ціле i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        якщо (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
@@ -133,10 +133,10 @@ void av_uuid_unparse(const AVUUID uuid, char *out)
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+ціле av_uuid_urn_parse(const char *in, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    якщо (av_stristr(in, "urn:uuid:") != in)
+        повернути AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    повернути av_uuid_parse(in + 9, uu);
 }

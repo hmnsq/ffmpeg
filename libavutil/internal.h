@@ -26,7 +26,7 @@
 #ifndef AVUTIL_INTERNAL_H
 #define AVUTIL_INTERNAL_H
 
-#if !defined(DEBUG) && !defined(NDEBUG)
+#якщо !defined(DEBUG) && !defined(NDEBUG)
 #    define NDEBUG
 #endif
 
@@ -45,29 +45,29 @@
 #include "macros.h"
 
 #ifndef attribute_align_arg
-#if ARCH_X86_32 && defined(__GNUC__)
+#якщо ARCH_X86_32 && defined(__GNUC__)
 #    define attribute_align_arg __attribute__((force_align_arg_pointer))
-#else
+#інакше
 #    define attribute_align_arg
 #endif
 #endif
 
-#if HAVE_MIPSFPU && HAVE_INLINE_ASM
+#якщо HAVE_MIPSFPU && HAVE_INLINE_ASM
 #   include "mips/libm_mips.h"
 #endif
 
-#if HAVE_PRAGMA_DEPRECATED
-#    if defined(__ICL) || defined (__INTEL_COMPILER)
+#якщо HAVE_PRAGMA_DEPRECATED
+#    якщо defined(__ICL) || defined (__INTEL_COMPILER)
 #        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:1478))
 #        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
 #    elif defined(_MSC_VER)
 #        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:4996))
 #        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
-#    else
+#    інакше
 #        define FF_DISABLE_DEPRECATION_WARNINGS _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #        define FF_ENABLE_DEPRECATION_WARNINGS  _Pragma("GCC diagnostic pop")
 #    endif
-#else
+#інакше
 #    define FF_DISABLE_DEPRECATION_WARNINGS
 #    define FF_ENABLE_DEPRECATION_WARNINGS
 #endif
@@ -91,9 +91,9 @@
  * Return NULL if CONFIG_SMALL is true, otherwise the argument
  * without modification. Used to disable the definition of strings.
  */
-#if CONFIG_SMALL
+#якщо CONFIG_SMALL
 #   define NULL_IF_CONFIG_SMALL(x) NULL
-#else
+#інакше
 #   define NULL_IF_CONFIG_SMALL(x) x
 #endif
 
@@ -120,37 +120,37 @@ void avpriv_request_sample(void *avc,
 
 #ifdef DEBUG
 #   define ff_dlog(ctx, ...) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__)
-#else
-#   define ff_dlog(ctx, ...) do { if (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } while (0)
+#інакше
+#   define ff_dlog(ctx, ...) do { якщо (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } поки (0)
 #endif
 
 #ifdef TRACE
 #   define ff_tlog(ctx, ...) av_log(ctx, AV_LOG_TRACE, __VA_ARGS__)
-#else
-#   define ff_tlog(ctx, ...) do { } while(0)
+#інакше
+#   define ff_tlog(ctx, ...) do { } поки(0)
 #endif
 
 // For debugging we use signed operations so overflows can be detected (by ubsan)
 // For production we use unsigned so there are no undefined operations
 #ifdef CHECKED
-#define SUINT   int
+#define SUINT   ціле
 #define SUINT32 int32_t
-#else
+#інакше
 #define SUINT   unsigned
 #define SUINT32 uint32_t
 #endif
 
-static av_always_inline av_const int avpriv_mirror(int x, int w)
+static av_always_inline av_const ціле avpriv_mirror(ціле x, ціле w)
 {
-    if (!w)
-        return 0;
+    якщо (!w)
+        повернути 0;
 
-    while ((unsigned)x > (unsigned)w) {
+    поки ((unsigned)x > (unsigned)w) {
         x = -x;
-        if (x < 0)
+        якщо (x < 0)
             x += 2 * w;
     }
-    return x;
+    повернути x;
 }
 
 #endif /* AVUTIL_INTERNAL_H */

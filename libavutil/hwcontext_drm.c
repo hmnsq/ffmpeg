@@ -25,7 +25,7 @@
 /* This was introduced in version 4.6. And may not exist all without an
  * optional package. So to prevent a hard dependency on needing the Linux
  * kernel headers to compile, make this optional. */
-#if HAVE_LINUX_DMA_BUF_H
+#якщо HAVE_LINUX_DMA_BUF_H
 #include <linux/dma-buf.h>
 #include <sys/ioctl.h>
 #endif
@@ -48,22 +48,22 @@ static void drm_device_free(AVHWDeviceContext *hwdev)
     close(hwctx->fd);
 }
 
-static int drm_device_create(AVHWDeviceContext *hwdev, const char *device,
-                             AVDictionary *opts, int flags)
+static ціле drm_device_create(AVHWDeviceContext *hwdev, const char *device,
+                             AVDictionary *opts, ціле flags)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
     drmVersionPtr version;
 
     hwctx->fd = open(device, O_RDWR);
-    if (hwctx->fd < 0)
-        return AVERROR(errno);
+    якщо (hwctx->fd < 0)
+        повернути AVERROR(errno);
 
     version = drmGetVersion(hwctx->fd);
-    if (!version) {
+    якщо (!version) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get version information "
                "from %s: probably not a DRM device?\n", device);
         close(hwctx->fd);
-        return AVERROR(EINVAL);
+        повернути AVERROR(EINVAL);
     }
 
     av_log(hwdev, AV_LOG_VERBOSE, "Opened DRM device %s: driver %s "
@@ -75,14 +75,14 @@ static int drm_device_create(AVHWDeviceContext *hwdev, const char *device,
 
     hwdev->free = &drm_device_free;
 
-    return 0;
+    повернути 0;
 }
 
-static int drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+static ціле drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
 {
     frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    якщо (!frame->buf[0])
+        повернути AVERROR(ENOMEM);
 
     frame->data[0] = (uint8_t*)frame->buf[0]->data;
 
@@ -90,14 +90,14 @@ static int drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
     frame->width  = hwfc->width;
     frame->height = hwfc->height;
 
-    return 0;
+    повернути 0;
 }
 
 typedef struct DRMMapping {
     // Address and length of each mmap()ed region.
-    int nb_regions;
-    int sync_flags;
-    int object[AV_DRM_MAX_PLANES];
+    ціле nb_regions;
+    ціле sync_flags;
+    ціле object[AV_DRM_MAX_PLANES];
     void *address[AV_DRM_MAX_PLANES];
     size_t length[AV_DRM_MAX_PLANES];
 } DRMMapping;
@@ -107,8 +107,8 @@ static void drm_unmap_frame(AVHWFramesContext *hwfc,
 {
     DRMMapping *map = hwmap->priv;
 
-    for (int i = 0; i < map->nb_regions; i++) {
-#if HAVE_LINUX_DMA_BUF_H
+    для (ціле i = 0; i < map->nb_regions; i++) {
+#якщо HAVE_LINUX_DMA_BUF_H
         struct dma_buf_sync sync = { .flags = DMA_BUF_SYNC_END | map->sync_flags };
         ioctl(map->object[i], DMA_BUF_IOCTL_SYNC, &sync);
 #endif
@@ -118,41 +118,41 @@ static void drm_unmap_frame(AVHWFramesContext *hwfc,
     av_free(map);
 }
 
-static int drm_map_frame(AVHWFramesContext *hwfc,
-                         AVFrame *dst, const AVFrame *src, int flags)
+static ціле drm_map_frame(AVHWFramesContext *hwfc,
+                         AVFrame *dst, const AVFrame *src, ціле flags)
 {
     const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->data[0];
-#if HAVE_LINUX_DMA_BUF_H
+#якщо HAVE_LINUX_DMA_BUF_H
     struct dma_buf_sync sync_start = { 0 };
 #endif
     DRMMapping *map;
-    int err, i, p, plane;
-    int mmap_prot;
+    ціле err, i, p, plane;
+    ціле mmap_prot;
     void *addr;
 
     map = av_mallocz(sizeof(*map));
-    if (!map)
-        return AVERROR(ENOMEM);
+    якщо (!map)
+        повернути AVERROR(ENOMEM);
 
     mmap_prot = 0;
-    if (flags & AV_HWFRAME_MAP_READ)
+    якщо (flags & AV_HWFRAME_MAP_READ)
         mmap_prot |= PROT_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    якщо (flags & AV_HWFRAME_MAP_WRITE)
         mmap_prot |= PROT_WRITE;
 
-#if HAVE_LINUX_DMA_BUF_H
-    if (flags & AV_HWFRAME_MAP_READ)
+#якщо HAVE_LINUX_DMA_BUF_H
+    якщо (flags & AV_HWFRAME_MAP_READ)
         map->sync_flags |= DMA_BUF_SYNC_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    якщо (flags & AV_HWFRAME_MAP_WRITE)
         map->sync_flags |= DMA_BUF_SYNC_WRITE;
     sync_start.flags = DMA_BUF_SYNC_START | map->sync_flags;
 #endif
 
     av_assert0(desc->nb_objects <= AV_DRM_MAX_PLANES);
-    for (i = 0; i < desc->nb_objects; i++) {
+    для (i = 0; i < desc->nb_objects; i++) {
         addr = mmap(NULL, desc->objects[i].size, mmap_prot, MAP_SHARED,
                     desc->objects[i].fd, 0);
-        if (addr == MAP_FAILED) {
+        якщо (addr == MAP_FAILED) {
             err = AVERROR(errno);
             av_log(hwfc, AV_LOG_ERROR, "Failed to map DRM object %d to "
                    "memory: %d.\n", desc->objects[i].fd, errno);
@@ -163,7 +163,7 @@ static int drm_map_frame(AVHWFramesContext *hwfc,
         map->length[i]  = desc->objects[i].size;
         map->object[i] = desc->objects[i].fd;
 
-#if HAVE_LINUX_DMA_BUF_H
+#якщо HAVE_LINUX_DMA_BUF_H
         /* We're not checking for errors here because the kernel may not
          * support the ioctl, in which case its okay to carry on */
         ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_SYNC, &sync_start);
@@ -172,9 +172,9 @@ static int drm_map_frame(AVHWFramesContext *hwfc,
     map->nb_regions = i;
 
     plane = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
+    для (i = 0; i < desc->nb_layers; i++) {
         const AVDRMLayerDescriptor *layer = &desc->layers[i];
-        for (p = 0; p < layer->nb_planes; p++) {
+        для (p = 0; p < layer->nb_planes; p++) {
             dst->data[plane] =
                 (uint8_t*)map->address[layer->planes[p].object_index] +
                                        layer->planes[p].offset;
@@ -189,119 +189,119 @@ static int drm_map_frame(AVHWFramesContext *hwfc,
 
     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
                                 &drm_unmap_frame, map);
-    if (err < 0)
+    якщо (err < 0)
         goto fail;
 
-    return 0;
+    повернути 0;
 
 fail:
-    for (i = 0; i < desc->nb_objects; i++) {
-        if (map->address[i])
+    для (i = 0; i < desc->nb_objects; i++) {
+        якщо (map->address[i])
             munmap(map->address[i], map->length[i]);
     }
     av_free(map);
-    return err;
+    повернути err;
 }
 
-static int drm_transfer_get_formats(AVHWFramesContext *ctx,
+static ціле drm_transfer_get_formats(AVHWFramesContext *ctx,
                                     enum AVHWFrameTransferDirection dir,
                                     enum AVPixelFormat **formats)
 {
     enum AVPixelFormat *pix_fmts;
 
     pix_fmts = av_malloc_array(2, sizeof(*pix_fmts));
-    if (!pix_fmts)
-        return AVERROR(ENOMEM);
+    якщо (!pix_fmts)
+        повернути AVERROR(ENOMEM);
 
     pix_fmts[0] = ctx->sw_format;
     pix_fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = pix_fmts;
-    return 0;
+    повернути 0;
 }
 
-static int drm_transfer_data_from(AVHWFramesContext *hwfc,
+static ціле drm_transfer_data_from(AVHWFramesContext *hwfc,
                                   AVFrame *dst, const AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    ціле err;
 
-    if (dst->width > hwfc->width || dst->height > hwfc->height)
-        return AVERROR(EINVAL);
+    якщо (dst->width > hwfc->width || dst->height > hwfc->height)
+        повернути AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    якщо (!map)
+        повернути AVERROR(ENOMEM);
     map->format = dst->format;
 
     err = drm_map_frame(hwfc, map, src, AV_HWFRAME_MAP_READ);
-    if (err)
+    якщо (err)
         goto fail;
 
     map->width  = dst->width;
     map->height = dst->height;
 
     err = av_frame_copy(dst, map);
-    if (err)
+    якщо (err)
         goto fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    повернути err;
 }
 
-static int drm_transfer_data_to(AVHWFramesContext *hwfc,
+static ціле drm_transfer_data_to(AVHWFramesContext *hwfc,
                                 AVFrame *dst, const AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    ціле err;
 
-    if (src->width > hwfc->width || src->height > hwfc->height)
-        return AVERROR(EINVAL);
+    якщо (src->width > hwfc->width || src->height > hwfc->height)
+        повернути AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    якщо (!map)
+        повернути AVERROR(ENOMEM);
     map->format = src->format;
 
     err = drm_map_frame(hwfc, map, dst, AV_HWFRAME_MAP_WRITE |
                                         AV_HWFRAME_MAP_OVERWRITE);
-    if (err)
+    якщо (err)
         goto fail;
 
     map->width  = src->width;
     map->height = src->height;
 
     err = av_frame_copy(map, src);
-    if (err)
+    якщо (err)
         goto fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    повернути err;
 }
 
-static int drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                        const AVFrame *src, int flags)
+static ціле drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                        const AVFrame *src, ціле flags)
 {
-    int err;
+    ціле err;
 
-    if (dst->format == AV_PIX_FMT_NONE)
+    якщо (dst->format == AV_PIX_FMT_NONE)
         dst->format = hwfc->sw_format;
-    else if (hwfc->sw_format != dst->format)
-        return AVERROR(ENOSYS);
+    інакше якщо (hwfc->sw_format != dst->format)
+        повернути AVERROR(ENOSYS);
 
     err = drm_map_frame(hwfc, dst, src, flags);
-    if (err)
-        return err;
+    якщо (err)
+        повернути err;
 
     err = av_frame_copy_props(dst, src);
-    if (err)
-        return err;
+    якщо (err)
+        повернути err;
 
-    return 0;
+    повернути 0;
 }
 
 const HWContextType ff_hwcontext_type_drm = {

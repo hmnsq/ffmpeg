@@ -34,27 +34,27 @@ child_type *av_iamf_ ## parent_name ## _add_ ## child_name(parent_type *parent_n
 {                                                                                                          \
     child_type **child_name ## suffix, *child_name;                                                        \
                                                                                                            \
-    if (parent_name->nb_## child_name ## suffix == UINT_MAX)                                               \
-        return NULL;                                                                                       \
+    якщо (parent_name->nb_## child_name ## suffix == UINT_MAX)                                               \
+        повернути NULL;                                                                                       \
                                                                                                            \
     child_name ## suffix = av_realloc_array(parent_name->child_name ## suffix,                             \
                                             parent_name->nb_## child_name ## suffix + 1,                   \
                                             sizeof(*parent_name->child_name ## suffix));                   \
-    if (!child_name ## suffix)                                                                             \
-        return NULL;                                                                                       \
+    якщо (!child_name ## suffix)                                                                             \
+        повернути NULL;                                                                                       \
                                                                                                            \
     parent_name->child_name ## suffix = child_name ## suffix;                                              \
                                                                                                            \
     child_name = parent_name->child_name ## suffix[parent_name->nb_## child_name ## suffix]                \
                = av_mallocz(sizeof(*child_name));                                                          \
-    if (!child_name)                                                                                       \
-        return NULL;                                                                                       \
+    якщо (!child_name)                                                                                       \
+        повернути NULL;                                                                                       \
                                                                                                            \
     child_name->av_class = &child_name ## _class;                                                          \
     av_opt_set_defaults(child_name);                                                                       \
     parent_name->nb_## child_name ## suffix++;                                                             \
                                                                                                            \
-    return child_name;                                                                                     \
+    повернути child_name;                                                                                     \
 }
 
 #define FLAGS AV_OPT_FLAG_ENCODING_PARAM
@@ -138,9 +138,9 @@ static const AVClass *param_definition_child_iterate(void **opaque)
         break;
     }
 
-    if (ret)
+    якщо (ret)
         *opaque = (void*)(i + 1);
-    return ret;
+    повернути ret;
 }
 
 static const AVClass param_definition_class = {
@@ -153,11 +153,11 @@ static const AVClass param_definition_class = {
 
 const AVClass *av_iamf_param_definition_get_class(void)
 {
-    return &param_definition_class;
+    повернути &param_definition_class;
 }
 
 AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinitionType type,
-                                                      unsigned int nb_subblocks, size_t *out_size)
+                                                      unsigned ціле nb_subblocks, size_t *out_size)
 {
 
     struct MixGainStruct {
@@ -190,17 +190,17 @@ AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinition
         subblock_size = sizeof(AVIAMFReconGain);
         break;
     default:
-        return NULL;
+        повернути NULL;
     }
 
     size = subblocks_offset;
-    if (nb_subblocks > (SIZE_MAX - size) / subblock_size)
-        return NULL;
+    якщо (nb_subblocks > (SIZE_MAX - size) / subblock_size)
+        повернути NULL;
     size += subblock_size * nb_subblocks;
 
     par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    якщо (!par)
+        повернути NULL;
 
     par->av_class = &param_definition_class;
     av_opt_set_defaults(par);
@@ -210,7 +210,7 @@ AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinition
     par->subblock_size = subblock_size;
     par->subblocks_offset = subblocks_offset;
 
-    for (int i = 0; i < nb_subblocks; i++) {
+    для (ціле i = 0; i < nb_subblocks; i++) {
         void *subblock = av_iamf_param_definition_get_subblock(par, i);
 
         switch (type) {
@@ -228,10 +228,10 @@ AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinition
         }
     }
 
-    if (out_size)
+    якщо (out_size)
         *out_size = size;
 
-    return par;
+    повернути par;
 }
 
 //
@@ -300,12 +300,12 @@ static const AVClass *audio_element_child_iterate(void **opaque)
     uintptr_t i = (uintptr_t)*opaque;
     const AVClass *ret = NULL;
 
-    if (!i)
+    якщо (!i)
         ret = &layer_class;
 
-    if (ret)
+    якщо (ret)
         *opaque = (void*)(i + 1);
-    return ret;
+    повернути ret;
 }
 
 static const AVClass audio_element_class = {
@@ -318,19 +318,19 @@ static const AVClass audio_element_class = {
 
 const AVClass *av_iamf_audio_element_get_class(void)
 {
-    return &audio_element_class;
+    повернути &audio_element_class;
 }
 
 AVIAMFAudioElement *av_iamf_audio_element_alloc(void)
 {
     AVIAMFAudioElement *audio_element = av_mallocz(sizeof(*audio_element));
 
-    if (audio_element) {
+    якщо (audio_element) {
         audio_element->av_class = &audio_element_class;
         av_opt_set_defaults(audio_element);
     }
 
-    return audio_element;
+    повернути audio_element;
 }
 
 IAMF_ADD_FUNC_TEMPLATE(AVIAMFAudioElement, audio_element, AVIAMFLayer, layer, s)
@@ -339,10 +339,10 @@ void av_iamf_audio_element_free(AVIAMFAudioElement **paudio_element)
 {
     AVIAMFAudioElement *audio_element = *paudio_element;
 
-    if (!audio_element)
-        return;
+    якщо (!audio_element)
+        повернути;
 
-    for (int i = 0; i < audio_element->nb_layers; i++) {
+    для (ціле i = 0; i < audio_element->nb_layers; i++) {
         AVIAMFLayer *layer = audio_element->layers[i];
         av_opt_free(layer);
         av_free(layer->demixing_matrix);
@@ -376,10 +376,10 @@ static const AVOption submix_element_options[] = {
 static void *submix_element_child_next(void *obj, void *prev)
 {
     AVIAMFSubmixElement *submix_element = obj;
-    if (!prev)
-        return submix_element->element_mix_config;
+    якщо (!prev)
+        повернути submix_element->element_mix_config;
 
-    return NULL;
+    повернути NULL;
 }
 
 static const AVClass *submix_element_child_iterate(void **opaque)
@@ -387,12 +387,12 @@ static const AVClass *submix_element_child_iterate(void **opaque)
     uintptr_t i = (uintptr_t)*opaque;
     const AVClass *ret = NULL;
 
-    if (!i)
+    якщо (!i)
         ret = &param_definition_class;
 
-    if (ret)
+    якщо (ret)
         *opaque = (void*)(i + 1);
-    return ret;
+    повернути ret;
 }
 
 static const AVClass element_class = {
@@ -444,10 +444,10 @@ static const AVOption submix_presentation_options[] = {
 static void *submix_presentation_child_next(void *obj, void *prev)
 {
     AVIAMFSubmix *sub_mix = obj;
-    if (!prev)
-        return sub_mix->output_mix_config;
+    якщо (!prev)
+        повернути sub_mix->output_mix_config;
 
-    return NULL;
+    повернути NULL;
 }
 
 static const AVClass *submix_presentation_child_iterate(void **opaque)
@@ -469,9 +469,9 @@ static const AVClass *submix_presentation_child_iterate(void **opaque)
         break;
     }
 
-    if (ret)
+    якщо (ret)
         *opaque = (void*)(i + 1);
-    return ret;
+    повернути ret;
 }
 
 static const AVClass submix_class = {
@@ -498,12 +498,12 @@ static const AVClass *mix_presentation_child_iterate(void **opaque)
     uintptr_t i = (uintptr_t)*opaque;
     const AVClass *ret = NULL;
 
-    if (!i)
+    якщо (!i)
         ret = &submix_class;
 
-    if (ret)
+    якщо (ret)
         *opaque = (void*)(i + 1);
-    return ret;
+    повернути ret;
 }
 
 static const AVClass mix_presentation_class = {
@@ -516,19 +516,19 @@ static const AVClass mix_presentation_class = {
 
 const AVClass *av_iamf_mix_presentation_get_class(void)
 {
-    return &mix_presentation_class;
+    повернути &mix_presentation_class;
 }
 
 AVIAMFMixPresentation *av_iamf_mix_presentation_alloc(void)
 {
     AVIAMFMixPresentation *mix_presentation = av_mallocz(sizeof(*mix_presentation));
 
-    if (mix_presentation) {
+    якщо (mix_presentation) {
         mix_presentation->av_class = &mix_presentation_class;
         av_opt_set_defaults(mix_presentation);
     }
 
-    return mix_presentation;
+    повернути mix_presentation;
 }
 
 IAMF_ADD_FUNC_TEMPLATE(AVIAMFMixPresentation, mix_presentation, AVIAMFSubmix, submix, es)
@@ -537,19 +537,19 @@ void av_iamf_mix_presentation_free(AVIAMFMixPresentation **pmix_presentation)
 {
     AVIAMFMixPresentation *mix_presentation = *pmix_presentation;
 
-    if (!mix_presentation)
-        return;
+    якщо (!mix_presentation)
+        повернути;
 
-    for (int i = 0; i < mix_presentation->nb_submixes; i++) {
+    для (ціле i = 0; i < mix_presentation->nb_submixes; i++) {
         AVIAMFSubmix *sub_mix = mix_presentation->submixes[i];
-        for (int j = 0; j < sub_mix->nb_elements; j++) {
+        для (ціле j = 0; j < sub_mix->nb_elements; j++) {
             AVIAMFSubmixElement *submix_element = sub_mix->elements[j];
             av_opt_free(submix_element);
             av_free(submix_element->element_mix_config);
             av_free(submix_element);
         }
         av_free(sub_mix->elements);
-        for (int j = 0; j < sub_mix->nb_layouts; j++) {
+        для (ціле j = 0; j < sub_mix->nb_layouts; j++) {
             AVIAMFSubmixLayout *submix_layout = sub_mix->layouts[j];
             av_opt_free(submix_layout);
             av_free(submix_layout);

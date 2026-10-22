@@ -86,100 +86,100 @@ static const struct channel_name channel_names[] = {
 
 void av_channel_name_bprint(AVBPrint *bp, enum AVChannel channel_id)
 {
-    if (channel_id >= AV_CHAN_AMBISONIC_BASE &&
+    якщо (channel_id >= AV_CHAN_AMBISONIC_BASE &&
         channel_id <= AV_CHAN_AMBISONIC_END)
         av_bprintf(bp, "AMBI%d", channel_id - AV_CHAN_AMBISONIC_BASE);
-    else if ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
+    інакше якщо ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
              channel_names[channel_id].name)
         av_bprintf(bp, "%s", channel_names[channel_id].name);
-    else if (channel_id == AV_CHAN_NONE)
+    інакше якщо (channel_id == AV_CHAN_NONE)
         av_bprintf(bp, "NONE");
-    else if (channel_id == AV_CHAN_UNKNOWN)
+    інакше якщо (channel_id == AV_CHAN_UNKNOWN)
         av_bprintf(bp, "UNK");
-    else if (channel_id == AV_CHAN_UNUSED)
+    інакше якщо (channel_id == AV_CHAN_UNUSED)
         av_bprintf(bp, "UNSD");
-    else
+    інакше
         av_bprintf(bp, "USR%d", channel_id);
 }
 
-int av_channel_name(char *buf, size_t buf_size, enum AVChannel channel_id)
+ціле av_channel_name(char *buf, size_t buf_size, enum AVChannel channel_id)
 {
     AVBPrint bp;
 
-    if (!buf && buf_size)
-        return AVERROR(EINVAL);
+    якщо (!buf && buf_size)
+        повернути AVERROR(EINVAL);
 
     av_bprint_init_for_buffer(&bp, buf, buf_size);
     av_channel_name_bprint(&bp, channel_id);
 
-    if (bp.len >= INT_MAX)
-        return AVERROR(ERANGE);
-    return bp.len + 1;
+    якщо (bp.len >= INT_MAX)
+        повернути AVERROR(ERANGE);
+    повернути bp.len + 1;
 }
 
 void av_channel_description_bprint(AVBPrint *bp, enum AVChannel channel_id)
 {
-    if (channel_id >= AV_CHAN_AMBISONIC_BASE &&
+    якщо (channel_id >= AV_CHAN_AMBISONIC_BASE &&
         channel_id <= AV_CHAN_AMBISONIC_END)
         av_bprintf(bp, "ambisonic ACN %d", channel_id - AV_CHAN_AMBISONIC_BASE);
-    else if ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
+    інакше якщо ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
              channel_names[channel_id].description)
         av_bprintf(bp, "%s", channel_names[channel_id].description);
-    else if (channel_id == AV_CHAN_NONE)
+    інакше якщо (channel_id == AV_CHAN_NONE)
         av_bprintf(bp, "none");
-    else if (channel_id == AV_CHAN_UNKNOWN)
+    інакше якщо (channel_id == AV_CHAN_UNKNOWN)
         av_bprintf(bp, "unknown");
-    else if (channel_id == AV_CHAN_UNUSED)
+    інакше якщо (channel_id == AV_CHAN_UNUSED)
         av_bprintf(bp, "unused");
-    else
+    інакше
         av_bprintf(bp, "user %d", channel_id);
 }
 
-int av_channel_description(char *buf, size_t buf_size, enum AVChannel channel_id)
+ціле av_channel_description(char *buf, size_t buf_size, enum AVChannel channel_id)
 {
     AVBPrint bp;
 
-    if (!buf && buf_size)
-        return AVERROR(EINVAL);
+    якщо (!buf && buf_size)
+        повернути AVERROR(EINVAL);
 
     av_bprint_init_for_buffer(&bp, buf, buf_size);
     av_channel_description_bprint(&bp, channel_id);
 
-    if (bp.len >= INT_MAX)
-        return AVERROR(ERANGE);
-    return bp.len + 1;
+    якщо (bp.len >= INT_MAX)
+        повернути AVERROR(ERANGE);
+    повернути bp.len + 1;
 }
 
 enum AVChannel av_channel_from_string(const char *str)
 {
-    int i;
+    ціле i;
     char *endptr = (char *)str;
     enum AVChannel id = AV_CHAN_NONE;
 
-    if (!strncmp(str, "AMBI", 4)) {
+    якщо (!strncmp(str, "AMBI", 4)) {
         i = strtol(str + 4, NULL, 0);
-        if (i < 0 || i > AV_CHAN_AMBISONIC_END - AV_CHAN_AMBISONIC_BASE)
-            return AV_CHAN_NONE;
-        return AV_CHAN_AMBISONIC_BASE + i;
+        якщо (i < 0 || i > AV_CHAN_AMBISONIC_END - AV_CHAN_AMBISONIC_BASE)
+            повернути AV_CHAN_NONE;
+        повернути AV_CHAN_AMBISONIC_BASE + i;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(channel_names); i++) {
-        if (channel_names[i].name && !strcmp(str, channel_names[i].name))
-            return i;
+    для (i = 0; i < FF_ARRAY_ELEMS(channel_names); i++) {
+        якщо (channel_names[i].name && !strcmp(str, channel_names[i].name))
+            повернути i;
     }
-    if (!strcmp(str, "UNK"))
-        return AV_CHAN_UNKNOWN;
-    if (!strcmp(str, "UNSD"))
-        return AV_CHAN_UNUSED;
+    якщо (!strcmp(str, "UNK"))
+        повернути AV_CHAN_UNKNOWN;
+    якщо (!strcmp(str, "UNSD"))
+        повернути AV_CHAN_UNUSED;
 
-    if (!strncmp(str, "USR", 3)) {
+    якщо (!strncmp(str, "USR", 3)) {
         const char *p = str + 3;
         id = strtol(p, &endptr, 0);
     }
-    if (id >= 0 && !*endptr)
-        return id;
+    якщо (id >= 0 && !*endptr)
+        повернути id;
 
-    return AV_CHAN_NONE;
+    повернути AV_CHAN_NONE;
 }
 
 struct channel_layout_name {
@@ -232,56 +232,56 @@ static const struct channel_layout_name channel_layout_map[] = {
     { "22.2",           AV_CHANNEL_LAYOUT_22POINT2,           },
 };
 
-int av_channel_layout_custom_init(AVChannelLayout *channel_layout, int nb_channels)
+ціле av_channel_layout_custom_init(AVChannelLayout *channel_layout, ціле nb_channels)
 {
     AVChannelCustom *map;
 
-    if (nb_channels <= 0)
-        return AVERROR(EINVAL);
+    якщо (nb_channels <= 0)
+        повернути AVERROR(EINVAL);
 
     map = av_calloc(nb_channels, sizeof(*channel_layout->u.map));
-    if (!map)
-        return AVERROR(ENOMEM);
-    for (int i = 0; i < nb_channels; i++)
+    якщо (!map)
+        повернути AVERROR(ENOMEM);
+    для (ціле i = 0; i < nb_channels; i++)
         map[i].id = AV_CHAN_UNKNOWN;
 
     channel_layout->order       = AV_CHANNEL_ORDER_CUSTOM;
     channel_layout->nb_channels = nb_channels;
     channel_layout->u.map       = map;
 
-    return 0;
+    повернути 0;
 }
 
-int av_channel_layout_from_mask(AVChannelLayout *channel_layout,
+ціле av_channel_layout_from_mask(AVChannelLayout *channel_layout,
                                 uint64_t mask)
 {
-    if (!mask)
-        return AVERROR(EINVAL);
+    якщо (!mask)
+        повернути AVERROR(EINVAL);
 
     channel_layout->order       = AV_CHANNEL_ORDER_NATIVE;
     channel_layout->nb_channels = av_popcount64(mask);
     channel_layout->u.mask      = mask;
 
-    return 0;
+    повернути 0;
 }
 
-static int parse_channel_list(AVChannelLayout *ch_layout, const char *str)
+static ціле parse_channel_list(AVChannelLayout *ch_layout, const char *str)
 {
-    int ret;
-    int nb_channels = 0;
+    ціле ret;
+    ціле nb_channels = 0;
     AVChannelCustom *map = NULL;
     AVChannelCustom custom = {0};
 
-    while (*str) {
+    поки (*str) {
         char *channel, *chname;
         ret = av_opt_get_key_value(&str, "@", "+", AV_OPT_FLAG_IMPLICIT_KEY, &channel, &chname);
-        if (ret < 0) {
+        якщо (ret < 0) {
             av_freep(&map);
-            return ret;
+            повернути ret;
         }
-        if (*str)
+        якщо (*str)
             str++; // skip separator
-        if (!channel) {
+        якщо (!channel) {
             channel = chname;
             chname = NULL;
         }
@@ -289,18 +289,18 @@ static int parse_channel_list(AVChannelLayout *ch_layout, const char *str)
         custom.id = av_channel_from_string(channel);
         av_free(channel);
         av_free(chname);
-        if (custom.id == AV_CHAN_NONE) {
+        якщо (custom.id == AV_CHAN_NONE) {
             av_freep(&map);
-            return AVERROR(EINVAL);
+            повернути AVERROR(EINVAL);
         }
 
         av_dynarray2_add((void **)&map, &nb_channels, sizeof(custom), (void *)&custom);
-        if (!map)
-            return AVERROR(ENOMEM);
+        якщо (!map)
+            повернути AVERROR(ENOMEM);
     }
 
-    if (!nb_channels)
-        return AVERROR(EINVAL);
+    якщо (!nb_channels)
+        повернути AVERROR(EINVAL);
 
     ch_layout->order = AV_CHANNEL_ORDER_CUSTOM;
     ch_layout->u.map = map;
@@ -309,22 +309,22 @@ static int parse_channel_list(AVChannelLayout *ch_layout, const char *str)
     ret = av_channel_layout_retype(ch_layout, 0, AV_CHANNEL_LAYOUT_RETYPE_FLAG_CANONICAL);
     av_assert0(ret == 0);
 
-    return 0;
+    повернути 0;
 }
 
-int av_channel_layout_from_string(AVChannelLayout *channel_layout,
+ціле av_channel_layout_from_string(AVChannelLayout *channel_layout,
                                   const char *str)
 {
-    int i, matches, ret;
-    int channels = 0, nb_channels = 0;
+    ціле i, matches, ret;
+    ціле channels = 0, nb_channels = 0;
     char *chlist, *end;
     uint64_t mask = 0;
 
     /* channel layout names */
-    for (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++) {
-        if (channel_layout_map[i].name && !strcmp(str, channel_layout_map[i].name)) {
+    для (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++) {
+        якщо (channel_layout_map[i].name && !strcmp(str, channel_layout_map[i].name)) {
             *channel_layout = channel_layout_map[i].layout;
-            return 0;
+            повернути 0;
         }
     }
 
@@ -333,52 +333,52 @@ int av_channel_layout_from_string(AVChannelLayout *channel_layout,
     memset(channel_layout, 0, sizeof(*channel_layout));
 
     /* ambisonic */
-    if (!strncmp(str, "ambisonic ", 10)) {
+    якщо (!strncmp(str, "ambisonic ", 10)) {
         const char *p = str + 10;
         char *endptr;
         AVChannelLayout extra = {0};
-        int order;
+        ціле order;
 
         order = strtol(p, &endptr, 0);
-        if (order < 0 || order + 1  > INT_MAX / (order + 1) ||
+        якщо (order < 0 || order + 1  > INT_MAX / (order + 1) ||
             (*endptr && *endptr != '+'))
-            return AVERROR(EINVAL);
+            повернути AVERROR(EINVAL);
 
         channel_layout->order       = AV_CHANNEL_ORDER_AMBISONIC;
         channel_layout->nb_channels = (order + 1) * (order + 1);
 
-        if (*endptr) {
+        якщо (*endptr) {
             ret = av_channel_layout_from_string(&extra, endptr + 1);
-            if (ret < 0)
-                return ret;
-            if (extra.nb_channels >= INT_MAX - channel_layout->nb_channels) {
+            якщо (ret < 0)
+                повернути ret;
+            якщо (extra.nb_channels >= INT_MAX - channel_layout->nb_channels) {
                 av_channel_layout_uninit(&extra);
-                return AVERROR(EINVAL);
+                повернути AVERROR(EINVAL);
             }
 
-            if (extra.order == AV_CHANNEL_ORDER_NATIVE) {
+            якщо (extra.order == AV_CHANNEL_ORDER_NATIVE) {
                 channel_layout->u.mask = extra.u.mask;
-            } else {
+            } інакше {
                 channel_layout->order = AV_CHANNEL_ORDER_CUSTOM;
                 channel_layout->u.map =
                     av_calloc(channel_layout->nb_channels + extra.nb_channels,
                               sizeof(*channel_layout->u.map));
-                if (!channel_layout->u.map) {
+                якщо (!channel_layout->u.map) {
                     av_channel_layout_uninit(&extra);
-                    return AVERROR(ENOMEM);
+                    повернути AVERROR(ENOMEM);
                 }
 
-                for (i = 0; i < channel_layout->nb_channels; i++)
+                для (i = 0; i < channel_layout->nb_channels; i++)
                     channel_layout->u.map[i].id = AV_CHAN_AMBISONIC_BASE + i;
-                for (i = 0; i < extra.nb_channels; i++) {
+                для (i = 0; i < extra.nb_channels; i++) {
                     enum AVChannel ch = av_channel_layout_channel_from_index(&extra, i);
-                    if (CHAN_IS_AMBI(ch)) {
+                    якщо (CHAN_IS_AMBI(ch)) {
                         av_channel_layout_uninit(channel_layout);
                         av_channel_layout_uninit(&extra);
-                        return AVERROR(EINVAL);
+                        повернути AVERROR(EINVAL);
                     }
                     channel_layout->u.map[channel_layout->nb_channels + i].id = ch;
-                    if (extra.order == AV_CHANNEL_ORDER_CUSTOM &&
+                    якщо (extra.order == AV_CHANNEL_ORDER_CUSTOM &&
                         extra.u.map[i].name[0])
                         av_strlcpy(channel_layout->u.map[channel_layout->nb_channels + i].name,
                                    extra.u.map[i].name,
@@ -389,169 +389,169 @@ int av_channel_layout_from_string(AVChannelLayout *channel_layout,
             av_channel_layout_uninit(&extra);
         }
 
-        return 0;
+        повернути 0;
     }
 
     chlist = av_strdup(str);
-    if (!chlist)
-        return AVERROR(ENOMEM);
+    якщо (!chlist)
+        повернути AVERROR(ENOMEM);
 
     /* channel names */
     matches = av_sscanf(str, "%d channels (%[^)]", &nb_channels, chlist);
     ret = parse_channel_list(channel_layout, chlist);
     av_freep(&chlist);
-    if (ret < 0 && ret != AVERROR(EINVAL))
-        return ret;
+    якщо (ret < 0 && ret != AVERROR(EINVAL))
+        повернути ret;
 
-    if (ret >= 0) {
+    якщо (ret >= 0) {
         const char *end_par = strchr(str, ')');
-        if (matches == 2 && (nb_channels != channel_layout->nb_channels || !end_par || *++end_par)) {
+        якщо (matches == 2 && (nb_channels != channel_layout->nb_channels || !end_par || *++end_par)) {
             av_channel_layout_uninit(channel_layout);
-            return AVERROR(EINVAL);
+            повернути AVERROR(EINVAL);
         }
-        return 0;
+        повернути 0;
     }
 
     errno = 0;
     mask = strtoull(str, &end, 0);
 
     /* channel layout mask */
-    if (!errno && !*end && !strchr(str, '-') && mask) {
+    якщо (!errno && !*end && !strchr(str, '-') && mask) {
         av_channel_layout_from_mask(channel_layout, mask);
-        return 0;
+        повернути 0;
     }
 
     errno = 0;
     channels = strtol(str, &end, 10);
 
     /* number of channels */
-    if (!errno && !strcmp(end, "c") && channels > 0) {
+    якщо (!errno && !strcmp(end, "c") && channels > 0) {
         av_channel_layout_default(channel_layout, channels);
-        if (channel_layout->order == AV_CHANNEL_ORDER_NATIVE)
-            return 0;
+        якщо (channel_layout->order == AV_CHANNEL_ORDER_NATIVE)
+            повернути 0;
     }
 
     /* number of unordered channels */
-    if (!errno && (!strcmp(end, "C") || !strcmp(end, " channels"))
+    якщо (!errno && (!strcmp(end, "C") || !strcmp(end, " channels"))
         && channels > 0) {
         channel_layout->order = AV_CHANNEL_ORDER_UNSPEC;
         channel_layout->nb_channels = channels;
-        return 0;
+        повернути 0;
     }
 
-    return AVERROR(EINVAL);
+    повернути AVERROR(EINVAL);
 }
 
 void av_channel_layout_uninit(AVChannelLayout *channel_layout)
 {
-    if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM)
+    якщо (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM)
         av_freep(&channel_layout->u.map);
     memset(channel_layout, 0, sizeof(*channel_layout));
 }
 
-int av_channel_layout_copy(AVChannelLayout *dst, const AVChannelLayout *src)
+ціле av_channel_layout_copy(AVChannelLayout *dst, const AVChannelLayout *src)
 {
     av_channel_layout_uninit(dst);
     *dst = *src;
-    if (src->order == AV_CHANNEL_ORDER_CUSTOM) {
+    якщо (src->order == AV_CHANNEL_ORDER_CUSTOM) {
         dst->u.map = av_malloc_array(src->nb_channels, sizeof(*dst->u.map));
-        if (!dst->u.map)
-            return AVERROR(ENOMEM);
+        якщо (!dst->u.map)
+            повернути AVERROR(ENOMEM);
         memcpy(dst->u.map, src->u.map, src->nb_channels * sizeof(*src->u.map));
     }
-    return 0;
+    повернути 0;
 }
 
-static int64_t masked_description(const AVChannelLayout *channel_layout, int start_channel)
+static int64_t masked_description(const AVChannelLayout *channel_layout, ціле start_channel)
 {
     uint64_t mask = 0;
-    for (int i = start_channel; i < channel_layout->nb_channels; i++) {
+    для (ціле i = start_channel; i < channel_layout->nb_channels; i++) {
         enum AVChannel ch = channel_layout->u.map[i].id;
-        if (ch >= 0 && ch < 63 && mask < (1ULL << ch))
+        якщо (ch >= 0 && ch < 63 && mask < (1ULL << ch))
             mask |= (1ULL << ch);
-        else
-            return AVERROR(EINVAL);
+        інакше
+            повернути AVERROR(EINVAL);
     }
-    return mask;
+    повернути mask;
 }
 
-static int has_channel_names(const AVChannelLayout *channel_layout)
+static ціле has_channel_names(const AVChannelLayout *channel_layout)
 {
-    if (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
-        return 0;
-    for (int i = 0; i < channel_layout->nb_channels; i++)
-        if (channel_layout->u.map[i].name[0])
-            return 1;
-    return 0;
+    якщо (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
+        повернути 0;
+    для (ціле i = 0; i < channel_layout->nb_channels; i++)
+        якщо (channel_layout->u.map[i].name[0])
+            повернути 1;
+    повернути 0;
 }
 
-int av_channel_layout_ambisonic_order(const AVChannelLayout *channel_layout)
+ціле av_channel_layout_ambisonic_order(const AVChannelLayout *channel_layout)
 {
-    int i, highest_ambi, order;
+    ціле i, highest_ambi, order;
 
-    if (channel_layout->order != AV_CHANNEL_ORDER_AMBISONIC &&
+    якщо (channel_layout->order != AV_CHANNEL_ORDER_AMBISONIC &&
         channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
-        return AVERROR(EINVAL);
+        повернути AVERROR(EINVAL);
 
     highest_ambi = -1;
-    if (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC)
+    якщо (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC)
         highest_ambi = channel_layout->nb_channels - av_popcount64(channel_layout->u.mask) - 1;
-    else {
+    інакше {
         const AVChannelCustom *map = channel_layout->u.map;
         av_assert0(channel_layout->order == AV_CHANNEL_ORDER_CUSTOM);
 
-        for (i = 0; i < channel_layout->nb_channels; i++) {
-            int is_ambi = CHAN_IS_AMBI(map[i].id);
+        для (i = 0; i < channel_layout->nb_channels; i++) {
+            ціле is_ambi = CHAN_IS_AMBI(map[i].id);
 
             /* ambisonic following non-ambisonic */
-            if (i > 0 && is_ambi && !CHAN_IS_AMBI(map[i - 1].id))
-                return AVERROR(EINVAL);
+            якщо (i > 0 && is_ambi && !CHAN_IS_AMBI(map[i - 1].id))
+                повернути AVERROR(EINVAL);
 
             /* non-default ordering */
-            if (is_ambi && map[i].id - AV_CHAN_AMBISONIC_BASE != i)
-                return AVERROR(EINVAL);
+            якщо (is_ambi && map[i].id - AV_CHAN_AMBISONIC_BASE != i)
+                повернути AVERROR(EINVAL);
 
-            if (CHAN_IS_AMBI(map[i].id))
+            якщо (CHAN_IS_AMBI(map[i].id))
                 highest_ambi = i;
         }
     }
     /* no ambisonic channels*/
-    if (highest_ambi < 0)
-        return AVERROR(EINVAL);
+    якщо (highest_ambi < 0)
+        повернути AVERROR(EINVAL);
 
     order = floor(sqrt(highest_ambi));
     /* incomplete order - some harmonics are missing */
-    if ((order + 1) * (order + 1) != highest_ambi + 1)
-        return AVERROR(EINVAL);
+    якщо ((order + 1) * (order + 1) != highest_ambi + 1)
+        повернути AVERROR(EINVAL);
 
-    return order;
+    повернути order;
 }
 
 static enum AVChannelOrder canonical_order(AVChannelLayout *channel_layout)
 {
-    int has_known_channel = 0;
-    int order;
+    ціле has_known_channel = 0;
+    ціле order;
 
-    if (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
-        return channel_layout->order;
+    якщо (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
+        повернути channel_layout->order;
 
-    if (has_channel_names(channel_layout))
-        return AV_CHANNEL_ORDER_CUSTOM;
+    якщо (has_channel_names(channel_layout))
+        повернути AV_CHANNEL_ORDER_CUSTOM;
 
-    for (int i = 0; i < channel_layout->nb_channels && !has_known_channel; i++)
-        if (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN)
+    для (ціле i = 0; i < channel_layout->nb_channels && !has_known_channel; i++)
+        якщо (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN)
             has_known_channel = 1;
-    if (!has_known_channel)
-        return AV_CHANNEL_ORDER_UNSPEC;
+    якщо (!has_known_channel)
+        повернути AV_CHANNEL_ORDER_UNSPEC;
 
-    if (masked_description(channel_layout, 0) > 0)
-        return AV_CHANNEL_ORDER_NATIVE;
+    якщо (masked_description(channel_layout, 0) > 0)
+        повернути AV_CHANNEL_ORDER_NATIVE;
 
     order = av_channel_layout_ambisonic_order(channel_layout);
-    if (order >= 0 && masked_description(channel_layout, (order + 1) * (order + 1)) >= 0)
-        return AV_CHANNEL_ORDER_AMBISONIC;
+    якщо (order >= 0 && masked_description(channel_layout, (order + 1) * (order + 1)) >= 0)
+        повернути AV_CHANNEL_ORDER_AMBISONIC;
 
-    return AV_CHANNEL_ORDER_CUSTOM;
+    повернути AV_CHANNEL_ORDER_CUSTOM;
 }
 
 /**
@@ -559,32 +559,32 @@ static enum AVChannelOrder canonical_order(AVChannelLayout *channel_layout)
  * extra non-diegetic channels at the end, write its string description in bp.
  * Return a negative error code otherwise.
  */
-static int try_describe_ambisonic(AVBPrint *bp, const AVChannelLayout *channel_layout)
+static ціле try_describe_ambisonic(AVBPrint *bp, const AVChannelLayout *channel_layout)
 {
-    int nb_ambi_channels;
-    int order = av_channel_layout_ambisonic_order(channel_layout);
-    if (order < 0)
-        return order;
+    ціле nb_ambi_channels;
+    ціле order = av_channel_layout_ambisonic_order(channel_layout);
+    якщо (order < 0)
+        повернути order;
 
     av_bprintf(bp, "ambisonic %d", order);
 
     /* extra channels present */
     nb_ambi_channels = (order + 1) * (order + 1);
-    if (nb_ambi_channels < channel_layout->nb_channels) {
+    якщо (nb_ambi_channels < channel_layout->nb_channels) {
         AVChannelLayout extra = { 0 };
 
-        if (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC) {
+        якщо (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC) {
             extra.order       = AV_CHANNEL_ORDER_NATIVE;
             extra.nb_channels = av_popcount64(channel_layout->u.mask);
             extra.u.mask      = channel_layout->u.mask;
-        } else {
+        } інакше {
             int64_t mask;
-            if (!has_channel_names(channel_layout) &&
+            якщо (!has_channel_names(channel_layout) &&
                 (mask = masked_description(channel_layout, nb_ambi_channels)) > 0) {
                 extra.order       = AV_CHANNEL_ORDER_NATIVE;
                 extra.nb_channels = av_popcount64(mask);
                 extra.u.mask      = mask;
-            } else {
+            } інакше {
                 extra.order       = AV_CHANNEL_ORDER_CUSTOM;
                 extra.nb_channels = channel_layout->nb_channels - nb_ambi_channels;
                 extra.u.map       = channel_layout->u.map + nb_ambi_channels;
@@ -596,109 +596,109 @@ static int try_describe_ambisonic(AVBPrint *bp, const AVChannelLayout *channel_l
         /* Not calling uninit here on extra because we don't own the u.map pointer */
     }
 
-    return 0;
+    повернути 0;
 }
 
-int av_channel_layout_describe_bprint(const AVChannelLayout *channel_layout,
+ціле av_channel_layout_describe_bprint(const AVChannelLayout *channel_layout,
                                       AVBPrint *bp)
 {
-    int i;
+    ціле i;
 
     switch (channel_layout->order) {
     case AV_CHANNEL_ORDER_NATIVE:
-        for (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
-            if (channel_layout->u.mask == channel_layout_map[i].layout.u.mask) {
+        для (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
+            якщо (channel_layout->u.mask == channel_layout_map[i].layout.u.mask) {
                 av_bprintf(bp, "%s", channel_layout_map[i].name);
-                return 0;
+                повернути 0;
             }
         av_fallthrough;
     case AV_CHANNEL_ORDER_CUSTOM:
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+        якщо (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             int64_t mask;
-            int res = try_describe_ambisonic(bp, channel_layout);
-            if (res >= 0)
-                return 0;
-            if (!has_channel_names(channel_layout) &&
+            ціле res = try_describe_ambisonic(bp, channel_layout);
+            якщо (res >= 0)
+                повернути 0;
+            якщо (!has_channel_names(channel_layout) &&
                 (mask = masked_description(channel_layout, 0)) > 0) {
                 AVChannelLayout native = { .order       = AV_CHANNEL_ORDER_NATIVE,
                                            .nb_channels = av_popcount64(mask),
                                            .u.mask      = mask };
-                return av_channel_layout_describe_bprint(&native, bp);
+                повернути av_channel_layout_describe_bprint(&native, bp);
             }
         }
-        if (channel_layout->nb_channels)
+        якщо (channel_layout->nb_channels)
             av_bprintf(bp, "%d channels (", channel_layout->nb_channels);
-        for (i = 0; i < channel_layout->nb_channels; i++) {
+        для (i = 0; i < channel_layout->nb_channels; i++) {
             enum AVChannel ch = av_channel_layout_channel_from_index(channel_layout, i);
 
-            if (i)
+            якщо (i)
                 av_bprintf(bp, "+");
             av_channel_name_bprint(bp, ch);
-            if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM &&
+            якщо (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM &&
                 channel_layout->u.map[i].name[0])
                 av_bprintf(bp, "@%s", channel_layout->u.map[i].name);
         }
-        if (channel_layout->nb_channels) {
+        якщо (channel_layout->nb_channels) {
             av_bprintf(bp, ")");
-            return 0;
+            повернути 0;
         }
         av_fallthrough;
     case AV_CHANNEL_ORDER_UNSPEC:
         av_bprintf(bp, "%d channels", channel_layout->nb_channels);
-        return 0;
+        повернути 0;
     case AV_CHANNEL_ORDER_AMBISONIC:
-        return try_describe_ambisonic(bp, channel_layout);
+        повернути try_describe_ambisonic(bp, channel_layout);
     default:
-        return AVERROR(EINVAL);
+        повернути AVERROR(EINVAL);
     }
 }
 
-int av_channel_layout_describe(const AVChannelLayout *channel_layout,
+ціле av_channel_layout_describe(const AVChannelLayout *channel_layout,
                                char *buf, size_t buf_size)
 {
     AVBPrint bp;
-    int ret;
+    ціле ret;
 
-    if (!buf && buf_size)
-        return AVERROR(EINVAL);
+    якщо (!buf && buf_size)
+        повернути AVERROR(EINVAL);
 
     av_bprint_init_for_buffer(&bp, buf, buf_size);
     ret = av_channel_layout_describe_bprint(channel_layout, &bp);
-    if (ret < 0)
-        return ret;
+    якщо (ret < 0)
+        повернути ret;
 
-    if (bp.len >= INT_MAX)
-        return AVERROR(ERANGE);
-    return bp.len + 1;
+    якщо (bp.len >= INT_MAX)
+        повернути AVERROR(ERANGE);
+    повернути bp.len + 1;
 }
 
 enum AVChannel
 av_channel_layout_channel_from_index(const AVChannelLayout *channel_layout,
-                                     unsigned int idx)
+                                     unsigned ціле idx)
 {
-    int i;
+    ціле i;
 
-    if (idx >= channel_layout->nb_channels)
-        return AV_CHAN_NONE;
+    якщо (idx >= channel_layout->nb_channels)
+        повернути AV_CHAN_NONE;
 
     switch (channel_layout->order) {
     case AV_CHANNEL_ORDER_CUSTOM:
-        return channel_layout->u.map[idx].id;
+        повернути channel_layout->u.map[idx].id;
     case AV_CHANNEL_ORDER_AMBISONIC: {
-        int ambi_channels = channel_layout->nb_channels - av_popcount64(channel_layout->u.mask);
-        if (idx < ambi_channels)
-            return AV_CHAN_AMBISONIC_BASE + idx;
+        ціле ambi_channels = channel_layout->nb_channels - av_popcount64(channel_layout->u.mask);
+        якщо (idx < ambi_channels)
+            повернути AV_CHAN_AMBISONIC_BASE + idx;
         idx -= ambi_channels;
         }
         av_fallthrough;
     case AV_CHANNEL_ORDER_NATIVE:
-        for (i = 0; i < 64; i++) {
-            if ((1ULL << i) & channel_layout->u.mask && !idx--)
-                return i;
+        для (i = 0; i < 64; i++) {
+            якщо ((1ULL << i) & channel_layout->u.mask && !idx--)
+                повернути i;
         }
         av_fallthrough;
     default:
-        return AV_CHAN_NONE;
+        повернути AV_CHAN_NONE;
     }
 }
 
@@ -706,49 +706,49 @@ enum AVChannel
 av_channel_layout_channel_from_string(const AVChannelLayout *channel_layout,
                                       const char *str)
 {
-    int index = av_channel_layout_index_from_string(channel_layout, str);
+    ціле index = av_channel_layout_index_from_string(channel_layout, str);
 
-    if (index < 0)
-        return AV_CHAN_NONE;
+    якщо (index < 0)
+        повернути AV_CHAN_NONE;
 
-    return av_channel_layout_channel_from_index(channel_layout, index);
+    повернути av_channel_layout_channel_from_index(channel_layout, index);
 }
 
-int av_channel_layout_index_from_channel(const AVChannelLayout *channel_layout,
+ціле av_channel_layout_index_from_channel(const AVChannelLayout *channel_layout,
                                          enum AVChannel channel)
 {
-    int i;
+    ціле i;
 
-    if (channel == AV_CHAN_NONE)
-        return AVERROR(EINVAL);
+    якщо (channel == AV_CHAN_NONE)
+        повернути AVERROR(EINVAL);
 
     switch (channel_layout->order) {
     case AV_CHANNEL_ORDER_CUSTOM:
-        for (i = 0; i < channel_layout->nb_channels; i++)
-            if (channel_layout->u.map[i].id == channel)
-                return i;
-        return AVERROR(EINVAL);
+        для (i = 0; i < channel_layout->nb_channels; i++)
+            якщо (channel_layout->u.map[i].id == channel)
+                повернути i;
+        повернути AVERROR(EINVAL);
     case AV_CHANNEL_ORDER_AMBISONIC:
     case AV_CHANNEL_ORDER_NATIVE: {
         uint64_t mask = channel_layout->u.mask;
-        int ambi_channels = channel_layout->nb_channels - av_popcount64(mask);
-        if (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC &&
+        ціле ambi_channels = channel_layout->nb_channels - av_popcount64(mask);
+        якщо (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC &&
             channel >= AV_CHAN_AMBISONIC_BASE) {
-            if (channel - AV_CHAN_AMBISONIC_BASE >= ambi_channels)
-                return AVERROR(EINVAL);
-            return channel - AV_CHAN_AMBISONIC_BASE;
+            якщо (channel - AV_CHAN_AMBISONIC_BASE >= ambi_channels)
+                повернути AVERROR(EINVAL);
+            повернути channel - AV_CHAN_AMBISONIC_BASE;
         }
-        if ((unsigned)channel > 63 || !(mask & (1ULL << channel)))
-            return AVERROR(EINVAL);
+        якщо ((unsigned)channel > 63 || !(mask & (1ULL << channel)))
+            повернути AVERROR(EINVAL);
         mask &= (1ULL << channel) - 1;
-        return av_popcount64(mask) + ambi_channels;
+        повернути av_popcount64(mask) + ambi_channels;
         }
     default:
-        return AVERROR(EINVAL);
+        повернути AVERROR(EINVAL);
     }
 }
 
-int av_channel_layout_index_from_string(const AVChannelLayout *channel_layout,
+ціле av_channel_layout_index_from_string(const AVChannelLayout *channel_layout,
                                         const char *str)
 {
     const char *chname;
@@ -757,96 +757,96 @@ int av_channel_layout_index_from_string(const AVChannelLayout *channel_layout,
     switch (channel_layout->order) {
     case AV_CHANNEL_ORDER_CUSTOM:
         chname = strstr(str, "@");
-        if (chname) {
+        якщо (chname) {
             char buf[16];
             chname++;
             av_strlcpy(buf, str, FFMIN(sizeof(buf), chname - str));
-            if (!*chname)
+            якщо (!*chname)
                 chname = NULL;
             ch = av_channel_from_string(buf);
-            if (ch == AV_CHAN_NONE && *buf)
-                return AVERROR(EINVAL);
+            якщо (ch == AV_CHAN_NONE && *buf)
+                повернути AVERROR(EINVAL);
         }
-        for (int i = 0; chname && i < channel_layout->nb_channels; i++) {
-            if (!strcmp(chname, channel_layout->u.map[i].name) &&
+        для (ціле i = 0; chname && i < channel_layout->nb_channels; i++) {
+            якщо (!strcmp(chname, channel_layout->u.map[i].name) &&
                 (ch == AV_CHAN_NONE || ch == channel_layout->u.map[i].id))
-                return i;
+                повернути i;
         }
         av_fallthrough;
     case AV_CHANNEL_ORDER_AMBISONIC:
     case AV_CHANNEL_ORDER_NATIVE:
         ch = av_channel_from_string(str);
-        if (ch == AV_CHAN_NONE)
-            return AVERROR(EINVAL);
-        return av_channel_layout_index_from_channel(channel_layout, ch);
+        якщо (ch == AV_CHAN_NONE)
+            повернути AVERROR(EINVAL);
+        повернути av_channel_layout_index_from_channel(channel_layout, ch);
     }
 
-    return AVERROR(EINVAL);
+    повернути AVERROR(EINVAL);
 }
 
-int av_channel_layout_check(const AVChannelLayout *channel_layout)
+ціле av_channel_layout_check(const AVChannelLayout *channel_layout)
 {
-    if (channel_layout->nb_channels <= 0)
-        return 0;
+    якщо (channel_layout->nb_channels <= 0)
+        повернути 0;
 
     switch (channel_layout->order) {
     case AV_CHANNEL_ORDER_NATIVE:
-        return av_popcount64(channel_layout->u.mask) == channel_layout->nb_channels;
+        повернути av_popcount64(channel_layout->u.mask) == channel_layout->nb_channels;
     case AV_CHANNEL_ORDER_CUSTOM:
-        if (!channel_layout->u.map)
-            return 0;
-        for (int i = 0; i < channel_layout->nb_channels; i++) {
-            if (channel_layout->u.map[i].id == AV_CHAN_NONE)
-                return 0;
+        якщо (!channel_layout->u.map)
+            повернути 0;
+        для (ціле i = 0; i < channel_layout->nb_channels; i++) {
+            якщо (channel_layout->u.map[i].id == AV_CHAN_NONE)
+                повернути 0;
         }
-        return 1;
+        повернути 1;
     case AV_CHANNEL_ORDER_AMBISONIC:
         /* If non-diegetic channels are present, ensure they are taken into account */
-        return av_popcount64(channel_layout->u.mask) < channel_layout->nb_channels;
+        повернути av_popcount64(channel_layout->u.mask) < channel_layout->nb_channels;
     case AV_CHANNEL_ORDER_UNSPEC:
-        return 1;
+        повернути 1;
     default:
-        return 0;
+        повернути 0;
     }
 }
 
-int av_channel_layout_compare(const AVChannelLayout *chl, const AVChannelLayout *chl1)
+ціле av_channel_layout_compare(const AVChannelLayout *chl, const AVChannelLayout *chl1)
 {
-    int i;
+    ціле i;
 
     /* different channel counts -> not equal */
-    if (chl->nb_channels != chl1->nb_channels)
-        return 1;
+    якщо (chl->nb_channels != chl1->nb_channels)
+        повернути 1;
 
     /* if only one is unspecified -> not equal */
-    if ((chl->order  == AV_CHANNEL_ORDER_UNSPEC) !=
+    якщо ((chl->order  == AV_CHANNEL_ORDER_UNSPEC) !=
         (chl1->order == AV_CHANNEL_ORDER_UNSPEC))
-        return 1;
+        повернути 1;
     /* both are unspecified -> equal */
-    else if (chl->order == AV_CHANNEL_ORDER_UNSPEC)
-        return 0;
+    інакше якщо (chl->order == AV_CHANNEL_ORDER_UNSPEC)
+        повернути 0;
 
     /* can compare masks directly */
-    if ((chl->order == AV_CHANNEL_ORDER_NATIVE ||
+    якщо ((chl->order == AV_CHANNEL_ORDER_NATIVE ||
          chl->order == AV_CHANNEL_ORDER_AMBISONIC) &&
         chl->order == chl1->order)
-        return chl->u.mask != chl1->u.mask;
+        повернути chl->u.mask != chl1->u.mask;
 
     /* compare channel by channel */
-    for (i = 0; i < chl->nb_channels; i++)
-        if (av_channel_layout_channel_from_index(chl,  i) !=
+    для (i = 0; i < chl->nb_channels; i++)
+        якщо (av_channel_layout_channel_from_index(chl,  i) !=
             av_channel_layout_channel_from_index(chl1, i))
-            return 1;
-    return 0;
+            повернути 1;
+    повернути 0;
 }
 
-void av_channel_layout_default(AVChannelLayout *ch_layout, int nb_channels)
+void av_channel_layout_default(AVChannelLayout *ch_layout, ціле nb_channels)
 {
-    int i;
-    for (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
-        if (nb_channels == channel_layout_map[i].layout.nb_channels) {
+    ціле i;
+    для (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
+        якщо (nb_channels == channel_layout_map[i].layout.nb_channels) {
             *ch_layout = channel_layout_map[i].layout;
-            return;
+            повернути;
         }
 
     ch_layout->order       = AV_CHANNEL_ORDER_UNSPEC;
@@ -858,124 +858,124 @@ const AVChannelLayout *av_channel_layout_standard(void **opaque)
     uintptr_t i = (uintptr_t)*opaque;
     const AVChannelLayout *ch_layout = NULL;
 
-    if (i < FF_ARRAY_ELEMS(channel_layout_map)) {
+    якщо (i < FF_ARRAY_ELEMS(channel_layout_map)) {
         ch_layout = &channel_layout_map[i].layout;
         *opaque = (void*)(i + 1);
     }
 
-    return ch_layout;
+    повернути ch_layout;
 }
 
 uint64_t av_channel_layout_subset(const AVChannelLayout *channel_layout,
                                   uint64_t mask)
 {
     uint64_t ret = 0;
-    int i;
+    ціле i;
 
     switch (channel_layout->order) {
     case AV_CHANNEL_ORDER_NATIVE:
     case AV_CHANNEL_ORDER_AMBISONIC:
-        return channel_layout->u.mask & mask;
+        повернути channel_layout->u.mask & mask;
     case AV_CHANNEL_ORDER_CUSTOM:
-        for (i = 0; i < 64; i++)
-            if (mask & (1ULL << i) && av_channel_layout_index_from_channel(channel_layout, i) >= 0)
+        для (i = 0; i < 64; i++)
+            якщо (mask & (1ULL << i) && av_channel_layout_index_from_channel(channel_layout, i) >= 0)
                 ret |= (1ULL << i);
         break;
     }
 
-    return ret;
+    повернути ret;
 }
 
-int av_channel_layout_retype(AVChannelLayout *channel_layout, enum AVChannelOrder order, int flags)
+ціле av_channel_layout_retype(AVChannelLayout *channel_layout, enum AVChannelOrder order, ціле flags)
 {
-    int allow_lossy = !(flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_LOSSLESS);
-    int lossy;
+    ціле allow_lossy = !(flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_LOSSLESS);
+    ціле lossy;
 
-    if (!av_channel_layout_check(channel_layout))
-        return AVERROR(EINVAL);
+    якщо (!av_channel_layout_check(channel_layout))
+        повернути AVERROR(EINVAL);
 
-    if (flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_CANONICAL)
+    якщо (flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_CANONICAL)
         order = canonical_order(channel_layout);
 
-    if (channel_layout->order == order)
-        return 0;
+    якщо (channel_layout->order == order)
+        повернути 0;
 
     switch (order) {
     case AV_CHANNEL_ORDER_UNSPEC: {
-        int nb_channels = channel_layout->nb_channels;
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+        ціле nb_channels = channel_layout->nb_channels;
+        якщо (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             lossy = 0;
-            for (int i = 0; i < nb_channels; i++) {
-                if (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN || channel_layout->u.map[i].name[0]) {
+            для (ціле i = 0; i < nb_channels; i++) {
+                якщо (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN || channel_layout->u.map[i].name[0]) {
                     lossy = 1;
                     break;
                 }
             }
-        } else {
+        } інакше {
             lossy = 1;
         }
-        if (!lossy || allow_lossy) {
+        якщо (!lossy || allow_lossy) {
             void *opaque = channel_layout->opaque;
             av_channel_layout_uninit(channel_layout);
             channel_layout->order       = AV_CHANNEL_ORDER_UNSPEC;
             channel_layout->nb_channels = nb_channels;
             channel_layout->opaque      = opaque;
-            return lossy;
+            повернути lossy;
         }
-        return AVERROR(ENOSYS);
+        повернути AVERROR(ENOSYS);
         }
     case AV_CHANNEL_ORDER_NATIVE:
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+        якщо (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             int64_t mask = masked_description(channel_layout, 0);
-            if (mask < 0)
-                return AVERROR(ENOSYS);
+            якщо (mask < 0)
+                повернути AVERROR(ENOSYS);
             lossy = has_channel_names(channel_layout);
-            if (!lossy || allow_lossy) {
+            якщо (!lossy || allow_lossy) {
                 void *opaque = channel_layout->opaque;
                 av_channel_layout_uninit(channel_layout);
                 av_channel_layout_from_mask(channel_layout, mask);
                 channel_layout->opaque = opaque;
-                return lossy;
+                повернути lossy;
             }
         }
-        return AVERROR(ENOSYS);
+        повернути AVERROR(ENOSYS);
     case AV_CHANNEL_ORDER_CUSTOM: {
         AVChannelLayout custom = { 0 };
-        int ret = av_channel_layout_custom_init(&custom, channel_layout->nb_channels);
+        ціле ret = av_channel_layout_custom_init(&custom, channel_layout->nb_channels);
         void *opaque = channel_layout->opaque;
-        if (ret < 0)
-            return ret;
-        if (channel_layout->order != AV_CHANNEL_ORDER_UNSPEC)
-            for (int i = 0; i < channel_layout->nb_channels; i++)
+        якщо (ret < 0)
+            повернути ret;
+        якщо (channel_layout->order != AV_CHANNEL_ORDER_UNSPEC)
+            для (ціле i = 0; i < channel_layout->nb_channels; i++)
                 custom.u.map[i].id = av_channel_layout_channel_from_index(channel_layout, i);
         av_channel_layout_uninit(channel_layout);
         *channel_layout = custom;
         channel_layout->opaque = opaque;
-        return 0;
+        повернути 0;
         }
     case AV_CHANNEL_ORDER_AMBISONIC:
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+        якщо (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             int64_t mask;
-            int nb_channels = channel_layout->nb_channels;
-            int amb_order = av_channel_layout_ambisonic_order(channel_layout);
-            if (amb_order < 0)
-                return AVERROR(ENOSYS);
+            ціле nb_channels = channel_layout->nb_channels;
+            ціле amb_order = av_channel_layout_ambisonic_order(channel_layout);
+            якщо (amb_order < 0)
+                повернути AVERROR(ENOSYS);
             mask = masked_description(channel_layout, (amb_order + 1) * (amb_order + 1));
-            if (mask < 0)
-                return AVERROR(ENOSYS);
+            якщо (mask < 0)
+                повернути AVERROR(ENOSYS);
             lossy = has_channel_names(channel_layout);
-            if (!lossy || allow_lossy) {
+            якщо (!lossy || allow_lossy) {
                 void *opaque = channel_layout->opaque;
                 av_channel_layout_uninit(channel_layout);
                 channel_layout->order       = AV_CHANNEL_ORDER_AMBISONIC;
                 channel_layout->nb_channels = nb_channels;
                 channel_layout->u.mask      = mask;
                 channel_layout->opaque      = opaque;
-                return lossy;
+                повернути lossy;
             }
         }
-        return AVERROR(ENOSYS);
+        повернути AVERROR(ENOSYS);
     default:
-        return AVERROR(EINVAL);
+        повернути AVERROR(EINVAL);
     }
 }

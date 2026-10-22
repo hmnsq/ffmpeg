@@ -41,11 +41,11 @@ typedef struct AVSHA {
     void     (*transform)(uint32_t *state, const uint8_t buffer[64]);
 } AVSHA;
 
-const int av_sha_size = sizeof(AVSHA);
+const ціле av_sha_size = sizeof(AVSHA);
 
 struct AVSHA *av_sha_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVSHA));
+    повернути av_mallocz(sizeof(struct AVSHA));
 }
 
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
@@ -65,31 +65,31 @@ struct AVSHA *av_sha_alloc(void)
 static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
 {
     uint32_t block[80];
-    unsigned int i, a, b, c, d, e;
+    unsigned ціле i, a, b, c, d, e;
 
     a = state[0];
     b = state[1];
     c = state[2];
     d = state[3];
     e = state[4];
-#if CONFIG_SMALL
-    for (i = 0; i < 80; i++) {
-        int t;
-        if (i < 16)
+#якщо CONFIG_SMALL
+    для (i = 0; i < 80; i++) {
+        ціле t;
+        якщо (i < 16)
             t = AV_RB32(buffer + 4 * i);
-        else
+        інакше
             t = rol(block[i-3] ^ block[i-8] ^ block[i-14] ^ block[i-16], 1);
         block[i] = t;
         t += e + rol(a, 5);
-        if (i < 40) {
-            if (i < 20)
+        якщо (i < 40) {
+            якщо (i < 20)
                 t += ((b&(c^d))^d)     + 0x5A827999;
-            else
+            інакше
                 t += ( b^c     ^d)     + 0x6ED9EBA1;
-        } else {
-            if (i < 60)
+        } інакше {
+            якщо (i < 60)
                 t += (((b|c)&d)|(b&c)) + 0x8F1BBCDC;
-            else
+            інакше
                 t += ( b^c     ^d)     + 0xCA62C1D6;
         }
         e = d;
@@ -98,7 +98,7 @@ static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
         b = a;
         a = t;
     }
-#else
+#інакше
 
 #define R1_0 \
     R0(a, b, c, d, e, 0 + i); \
@@ -202,7 +202,7 @@ static const uint32_t K256[64] = {
 
 static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
 {
-    unsigned int i, a, b, c, d, e, f, g, h;
+    unsigned ціле i, a, b, c, d, e, f, g, h;
     uint32_t block[64];
     uint32_t T1;
 
@@ -214,12 +214,12 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
     f = state[5];
     g = state[6];
     h = state[7];
-#if CONFIG_SMALL
-    for (i = 0; i < 64; i++) {
+#якщо CONFIG_SMALL
+    для (i = 0; i < 64; i++) {
         uint32_t T2;
-        if (i < 16)
+        якщо (i < 16)
             T1 = blk0(i);
-        else
+        інакше
             T1 = blk(i);
         T1 += h + Sigma1_256(e) + Ch(e, f, g) + K256[i];
         T2 = Sigma0_256(a) + Maj(a, b, c);
@@ -232,7 +232,7 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
         b = a;
         a = T1 + T2;
     }
-#else
+#інакше
 
     i = 0;
 #define R256_0 \
@@ -271,7 +271,7 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
 }
 
 
-av_cold int av_sha_init(AVSHA *ctx, int bits)
+av_cold ціле av_sha_init(AVSHA *ctx, ціле bits)
 {
     ctx->digest_len = bits >> 5;
     switch (bits) {
@@ -306,29 +306,29 @@ av_cold int av_sha_init(AVSHA *ctx, int bits)
         ctx->transform = sha256_transform;
         break;
     default:
-        return AVERROR(EINVAL);
+        повернути AVERROR(EINVAL);
     }
     ctx->count = 0;
-    return 0;
+    повернути 0;
 }
 
 void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len)
 {
-    unsigned int j;
+    unsigned ціле j;
     size_t i;
 
     j = ctx->count & 63;
     ctx->count += len;
-#if CONFIG_SMALL
-    for (i = 0; i < len; i++) {
+#якщо CONFIG_SMALL
+    для (i = 0; i < len; i++) {
         ctx->buffer[j++] = data[i];
-        if (64 == j) {
+        якщо (64 == j) {
             ctx->transform(ctx->state, ctx->buffer);
             j = 0;
         }
     }
-#else
-    if (len >= 64 - j) {
+#інакше
+    якщо (len >= 64 - j) {
         const uint8_t *end;
         memcpy(&ctx->buffer[j], data, (i = 64 - j));
         ctx->transform(ctx->state, ctx->buffer);
@@ -336,7 +336,7 @@ void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len)
         len  -= i;
         end   = data + (len & ~63);
         len   = len % 64;
-        for (; data < end; data += 64)
+        для (; data < end; data += 64)
             ctx->transform(ctx->state, data);
         j = 0;
     }
@@ -346,13 +346,13 @@ void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len)
 
 void av_sha_final(AVSHA* ctx, uint8_t *digest)
 {
-    int i;
+    ціле i;
     uint64_t finalcount = av_be2ne64(ctx->count << 3);
 
     av_sha_update(ctx, "\200", 1);
-    while ((ctx->count & 63) != 56)
+    поки ((ctx->count & 63) != 56)
         av_sha_update(ctx, "", 1);
     av_sha_update(ctx, (uint8_t *)&finalcount, 8); /* Should cause a transform() */
-    for (i = 0; i < ctx->digest_len; i++)
+    для (i = 0; i < ctx->digest_len; i++)
         AV_WB32(digest + i*4, ctx->state[i]);
 }

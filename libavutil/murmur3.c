@@ -28,13 +28,13 @@
 typedef struct AVMurMur3 {
     uint64_t h1, h2;
     uint8_t state[16];
-    int state_pos;
+    ціле state_pos;
     uint64_t len;
 } AVMurMur3;
 
 AVMurMur3 *av_murmur3_alloc(void)
 {
-    return av_mallocz(sizeof(AVMurMur3));
+    повернути av_mallocz(sizeof(AVMurMur3));
 }
 
 void av_murmur3_init_seeded(AVMurMur3 *c, uint64_t seed)
@@ -60,7 +60,7 @@ static uint64_t inline get_k1(const uint8_t *src)
     k *= c1;
     k = ROT(k, 31);
     k *= c2;
-    return k;
+    повернути k;
 }
 
 static inline uint64_t get_k2(const uint8_t *src)
@@ -69,7 +69,7 @@ static inline uint64_t get_k2(const uint8_t *src)
     k *= c2;
     k = ROT(k, 33);
     k *= c1;
-    return k;
+    повернути k;
 }
 
 static inline uint64_t update_h1(uint64_t k, uint64_t h1, uint64_t h2)
@@ -79,7 +79,7 @@ static inline uint64_t update_h1(uint64_t k, uint64_t h1, uint64_t h2)
     k += h2;
     k *= 5;
     k += 0x52dce729;
-    return k;
+    повернути k;
 }
 
 static inline uint64_t update_h2(uint64_t k, uint64_t h1, uint64_t h2)
@@ -89,7 +89,7 @@ static inline uint64_t update_h2(uint64_t k, uint64_t h1, uint64_t h2)
     k += h1;
     k *= 5;
     k += 0x38495ab5;
-    return k;
+    повернути k;
 }
 
 void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
@@ -97,12 +97,12 @@ void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
     const uint8_t *end;
     uint64_t h1 = c->h1, h2 = c->h2;
     uint64_t k1, k2;
-    if (len <= 0) return;
+    якщо (len <= 0) повернути;
     c->len += len;
-    if (c->state_pos > 0) {
-        while (c->state_pos < 16) {
+    якщо (c->state_pos > 0) {
+        поки (c->state_pos < 16) {
             c->state[c->state_pos++] = *src++;
-            if (--len <= 0) return;
+            якщо (--len <= 0) повернути;
         }
         c->state_pos = 0;
         k1 = get_k1(c->state);
@@ -112,7 +112,7 @@ void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
     }
 
     end = src + (len & ~15);
-    while (src < end) {
+    поки (src < end) {
         // These could be done sequentially instead
         // of interleaved, but like this is over 10% faster
         k1 = get_k1(src);
@@ -125,7 +125,7 @@ void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
     c->h2 = h2;
 
     len &= 15;
-    if (len > 0) {
+    якщо (len > 0) {
         memcpy(c->state, src, len);
         c->state_pos = len;
     }
@@ -138,7 +138,7 @@ static inline uint64_t fmix(uint64_t k)
     k ^= k >> 33;
     k *= UINT64_C(0xc4ceb9fe1a85ec53);
     k ^= k >> 33;
-    return k;
+    повернути k;
 }
 
 void av_murmur3_final(AVMurMur3 *c, uint8_t dst[16])

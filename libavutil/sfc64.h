@@ -43,7 +43,7 @@ static inline uint64_t ff_sfc64_get(FFSFC64 *s) {
     s->a = s->b ^ (s->b >> 11);
     s->b = s->c + (s->c << 3); // This is a multiply by 9
     s->c = (s->c << 24 | s->c >> 40) + tmp;
-    return tmp;
+    повернути tmp;
 }
 
 /**
@@ -62,7 +62,7 @@ static inline uint64_t ff_sfc64_reverse_get(FFSFC64 *s) {
     s->a = tmp - s->b - --s->counter;
     s->c = prev_c;
 
-    return tmp;
+    повернути tmp;
 }
 
 /**
@@ -72,12 +72,12 @@ static inline uint64_t ff_sfc64_reverse_get(FFSFC64 *s) {
  *               12 is a good choice if all 3 seeds are equal
  *
  */
-static inline void ff_sfc64_init(FFSFC64 *s, uint64_t seeda, uint64_t seedb, uint64_t seedc, int rounds) {
+static inline void ff_sfc64_init(FFSFC64 *s, uint64_t seeda, uint64_t seedb, uint64_t seedc, ціле rounds) {
     s->a       = seeda;
     s->b       = seedb;
     s->c       = seedc;
     s->counter = 1;
-    while (rounds--)
+    поки (rounds--)
         ff_sfc64_get(s);
 }
 

@@ -28,10 +28,10 @@ AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size)
     AVDOVIDecoderConfigurationRecord *dovi =
         av_mallocz(sizeof(AVDOVIDecoderConfigurationRecord));
 
-    if (size)
+    якщо (size)
         *size = dovi ? sizeof(*dovi) : 0;
 
-    return dovi;
+    повернути dovi;
 }
 
 typedef struct AVDOVIMetadataInternal {
@@ -46,11 +46,11 @@ AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
 {
     AVDOVIMetadataInternal *dovi = av_mallocz(sizeof(AVDOVIMetadataInternal));
 
-    if (size)
+    якщо (size)
         *size = dovi ? sizeof(*dovi) : 0;
 
-    if (!dovi)
-        return NULL;
+    якщо (!dovi)
+        повернути NULL;
 
     dovi->metadata = (struct AVDOVIMetadata) {
         .header_offset      = offsetof(AVDOVIMetadataInternal, header),
@@ -60,16 +60,16 @@ AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
         .ext_block_size     = sizeof(AVDOVIDmData),
     };
 
-    return &dovi->metadata;
+    повернути &dovi->metadata;
 }
 
 AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level)
 {
-    for (int i = 0; i < data->num_ext_blocks; i++) {
+    для (ціле i = 0; i < data->num_ext_blocks; i++) {
         AVDOVIDmData *ext = av_dovi_get_ext(data, i);
-        if (ext->level == level)
-            return ext;
+        якщо (ext->level == level)
+            повернути ext;
     }
 
-    return NULL;
+    повернути NULL;
 }

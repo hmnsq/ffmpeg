@@ -29,37 +29,37 @@
 
 static void *thread_main(void *arg)
 {
-    int *flags = arg;
+    ціле *flags = arg;
 
     *flags = av_get_cpu_flags();
-    return NULL;
+    повернути NULL;
 }
 
-int main(void)
+ціле main(void)
 {
-    int cpu_flags1;
-    int cpu_flags2;
-    int ret;
+    ціле cpu_flags1;
+    ціле cpu_flags2;
+    ціле ret;
     pthread_t thread1;
     pthread_t thread2;
 
-    if ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
+    якщо ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        повернути 1;
     }
-    if ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
+    якщо ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        повернути 1;
     }
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
 
-    if (cpu_flags1 < 0)
-        return 2;
-    if (cpu_flags2 < 0)
-        return 2;
-    if (cpu_flags1 != cpu_flags2)
-        return 3;
+    якщо (cpu_flags1 < 0)
+        повернути 2;
+    якщо (cpu_flags2 < 0)
+        повернути 2;
+    якщо (cpu_flags1 != cpu_flags2)
+        повернути 3;
 
-    return 0;
+    повернути 0;
 }

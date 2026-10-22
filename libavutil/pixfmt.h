@@ -511,9 +511,9 @@ enum AVPixelFormat {
     AV_PIX_FMT_NB         ///< number of pixel formats, DO NOT USE THIS if you want to link with shared libav* because the number of formats might differ between versions
 };
 
-#if AV_HAVE_BIGENDIAN
+#якщо AV_HAVE_BIGENDIAN
 #   define AV_PIX_FMT_NE(be, le) AV_PIX_FMT_##be
-#else
+#інакше
 #   define AV_PIX_FMT_NE(be, le) AV_PIX_FMT_##le
 #endif
 

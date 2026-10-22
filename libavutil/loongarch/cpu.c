@@ -25,37 +25,37 @@
 
 #define LA_HWCAP_LSX    (1<<4)
 #define LA_HWCAP_LASX   (1<<5)
-static int cpu_flags_getauxval(void)
+static ціле cpu_flags_getauxval(void)
 {
-    int flags = 0;
-    int flag  = (int)ff_getauxval(AT_HWCAP);
+    ціле flags = 0;
+    ціле flag  = (ціле)ff_getauxval(AT_HWCAP);
 
-    if (flag & LA_HWCAP_LSX)
+    якщо (flag & LA_HWCAP_LSX)
         flags |= AV_CPU_FLAG_LSX;
-    if (flag & LA_HWCAP_LASX)
+    якщо (flag & LA_HWCAP_LASX)
         flags |= AV_CPU_FLAG_LASX;
 
-    return flags;
+    повернути flags;
 }
 
-int ff_get_cpu_flags_loongarch(void)
+ціле ff_get_cpu_flags_loongarch(void)
 {
-#if defined __linux__
-    return cpu_flags_getauxval();
-#else
+#якщо defined __linux__
+    повернути cpu_flags_getauxval();
+#інакше
     /* Assume no SIMD ASE supported */
-    return 0;
+    повернути 0;
 #endif
 }
 
 size_t ff_get_cpu_max_align_loongarch(void)
 {
-    int flags = av_get_cpu_flags();
+    ціле flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_LASX)
-        return 32;
-    if (flags & AV_CPU_FLAG_LSX)
-        return 16;
+    якщо (flags & AV_CPU_FLAG_LASX)
+        повернути 32;
+    якщо (flags & AV_CPU_FLAG_LSX)
+        повернути 16;
 
-    return 8;
+    повернути 8;
 }

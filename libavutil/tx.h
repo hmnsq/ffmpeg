@@ -199,8 +199,8 @@ enum AVTXFlags {
  *
  * @return 0 on success, negative error code on failure
  */
-int av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
-               int inv, int len, const void *scale, uint64_t flags);
+ціле av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
+               ціле inv, ціле len, const void *scale, uint64_t flags);
 
 /**
  * Frees a context and sets *ctx to NULL, does nothing when *ctx == NULL.

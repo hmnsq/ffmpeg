@@ -25,78 +25,78 @@
 #include "libavutil/log.h"
 #include "libavutil/mem.h"
 
-static int check(AVTreeNode *t)
+static ціле check(AVTreeNode *t)
 {
-    if (t) {
-        int left  = check(t->child[0]);
-        int right = check(t->child[1]);
+    якщо (t) {
+        ціле left  = check(t->child[0]);
+        ціле right = check(t->child[1]);
 
-        if (left > 999 || right > 999)
-            return 1000;
-        if (right - left != t->state)
-            return 1000;
-        if (t->state > 1 || t->state < -1)
-            return 1000;
-        return FFMAX(left, right) + 1;
+        якщо (left > 999 || right > 999)
+            повернути 1000;
+        якщо (right - left != t->state)
+            повернути 1000;
+        якщо (t->state > 1 || t->state < -1)
+            повернути 1000;
+        повернути FFMAX(left, right) + 1;
     }
-    return 0;
+    повернути 0;
 }
 
-static void print(AVTreeNode *t, int depth)
+static void print(AVTreeNode *t, ціле depth)
 {
-    int i;
-    for (i = 0; i < depth * 4; i++)
+    ціле i;
+    для (i = 0; i < depth * 4; i++)
         av_log(NULL, AV_LOG_ERROR, " ");
-    if (t) {
+    якщо (t) {
         av_log(NULL, AV_LOG_ERROR, "Node %p %2d %p\n", t, t->state, t->elem);
         print(t->child[0], depth + 1);
         print(t->child[1], depth + 1);
-    } else
+    } інакше
         av_log(NULL, AV_LOG_ERROR, "NULL\n");
 }
 
-static int cmp(const void *a, const void *b)
+static ціле cmp(const void *a, const void *b)
 {
-    return (const uint8_t *) a - (const uint8_t *) b;
+    повернути (const uint8_t *) a - (const uint8_t *) b;
 }
 
-int main(int argc, char **argv)
+ціле main(ціле argc, char **argv)
 {
-    int i;
+    ціле i;
     void *k;
     AVTreeNode *root = NULL, *node = NULL;
     AVLFG prng;
-    int log_level = argc <= 1 ? AV_LOG_INFO : atoi(argv[1]);
+    ціле log_level = argc <= 1 ? AV_LOG_INFO : atoi(argv[1]);
 
     av_log_set_level(log_level);
 
     av_lfg_init(&prng, 1);
 
-    for (i = 0; i < 10000; i++) {
+    для (i = 0; i < 10000; i++) {
         intptr_t j = av_lfg_get(&prng) % 86294;
 
-        if (check(root) > 999) {
+        якщо (check(root) > 999) {
             av_log(NULL, AV_LOG_ERROR, "FATAL error %d\n", i);
             print(root, 0);
-            return 1;
+            повернути 1;
         }
-        av_log(NULL, AV_LOG_DEBUG, "inserting %4d\n", (int)j);
+        av_log(NULL, AV_LOG_DEBUG, "inserting %4d\n", (ціле)j);
 
-        if (!node)
+        якщо (!node)
             node = av_tree_node_alloc();
-        if (!node) {
+        якщо (!node) {
             av_log(NULL, AV_LOG_ERROR, "Memory allocation failure.\n");
-            return 1;
+            повернути 1;
         }
         av_tree_insert(&root, (void *)(j + 1), cmp, &node);
 
         j = av_lfg_get(&prng) % 86294;
         {
             AVTreeNode *node2 = NULL;
-            av_log(NULL, AV_LOG_DEBUG, "removing %4d\n", (int)j);
+            av_log(NULL, AV_LOG_DEBUG, "removing %4d\n", (ціле)j);
             av_tree_insert(&root, (void *)(j + 1), cmp, &node2);
             k = av_tree_find(root, (void *)(j + 1), cmp, NULL);
-            if (k)
+            якщо (k)
                 av_log(NULL, AV_LOG_ERROR, "removal failure %d\n", i);
             av_free(node2);
         }
@@ -105,5 +105,5 @@ int main(int argc, char **argv)
 
     av_tree_destroy(root);
 
-    return 0;
+    повернути 0;
 }

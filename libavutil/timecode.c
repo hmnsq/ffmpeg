@@ -33,51 +33,51 @@
 #include "log.h"
 #include "error.h"
 
-int av_timecode_adjust_ntsc_framenum2(int framenum, int fps)
+ціле av_timecode_adjust_ntsc_framenum2(ціле framenum, ціле fps)
 {
     /* only works for multiples of NTSC 29.97 */
-    int drop_frames = 0;
-    int d, m, frames_per_10mins;
+    ціле drop_frames = 0;
+    ціле d, m, frames_per_10mins;
 
-    if (fps && fps % 30 == 0) {
+    якщо (fps && fps % 30 == 0) {
         drop_frames = fps / 30 * 2;
         frames_per_10mins = fps / 30 * 17982;
-    } else
-        return framenum;
+    } інакше
+        повернути framenum;
 
     d = framenum / frames_per_10mins;
     m = framenum % frames_per_10mins;
 
-    return framenum + 9U * drop_frames * d + drop_frames * ((m - drop_frames) / (frames_per_10mins / 10));
+    повернути framenum + 9U * drop_frames * d + drop_frames * ((m - drop_frames) / (frames_per_10mins / 10));
 }
 
-uint32_t av_timecode_get_smpte_from_framenum(const AVTimecode *tc, int framenum)
+uint32_t av_timecode_get_smpte_from_framenum(const AVTimecode *tc, ціле framenum)
 {
     unsigned fps = tc->fps;
-    int drop = !!(tc->flags & AV_TIMECODE_FLAG_DROPFRAME);
-    int hh, mm, ss, ff;
+    ціле drop = !!(tc->flags & AV_TIMECODE_FLAG_DROPFRAME);
+    ціле hh, mm, ss, ff;
 
     framenum += tc->start;
-    if (drop)
+    якщо (drop)
         framenum = av_timecode_adjust_ntsc_framenum2(framenum, tc->fps);
     ff = framenum % fps;
     ss = framenum / fps      % 60;
     mm = framenum / (fps*60LL) % 60;
     hh = framenum / (fps*3600LL) % 24;
-    return av_timecode_get_smpte(tc->rate, drop, hh, mm, ss, ff);
+    повернути av_timecode_get_smpte(tc->rate, drop, hh, mm, ss, ff);
 }
 
-uint32_t av_timecode_get_smpte(AVRational rate, int drop, int hh, int mm, int ss, int ff)
+uint32_t av_timecode_get_smpte(AVRational rate, ціле drop, ціле hh, ціле mm, ціле ss, ціле ff)
 {
     uint32_t tc = 0;
 
     /* For SMPTE 12-M timecodes, frame count is a special case if > 30 FPS.
        See SMPTE ST 12-1:2014 Sec 12.1 for more info. */
-    if (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
-        if (ff % 2 == 1) {
-            if (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
+    якщо (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
+        якщо (ff % 2 == 1) {
+            якщо (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
                 tc |= (1 << 7);
-            else
+            інакше
                 tc |= (1 << 23);
         }
         ff /= 2;
@@ -98,20 +98,20 @@ uint32_t av_timecode_get_smpte(AVRational rate, int drop, int hh, int mm, int ss
     tc |= (hh / 10) << 4;
     tc |= (hh % 10);
 
-    return tc;
+    повернути tc;
 }
 
-char *av_timecode_make_string(const AVTimecode *tc, char *buf, int framenum_arg)
+char *av_timecode_make_string(const AVTimecode *tc, char *buf, ціле framenum_arg)
 {
     unsigned fps = tc->fps;
-    int drop = tc->flags & AV_TIMECODE_FLAG_DROPFRAME;
-    int hh, mm, ss, ff, ff_len, neg = 0;
+    ціле drop = tc->flags & AV_TIMECODE_FLAG_DROPFRAME;
+    ціле hh, mm, ss, ff, ff_len, neg = 0;
     int64_t framenum = framenum_arg;
 
     framenum += tc->start;
-    if (drop)
+    якщо (drop)
         framenum = av_timecode_adjust_ntsc_framenum2(framenum, fps);
-    if (framenum < 0) {
+    якщо (framenum < 0) {
         framenum = -framenum;
         neg = tc->flags & AV_TIMECODE_FLAG_ALLOWNEGATIVE;
     }
@@ -119,29 +119,29 @@ char *av_timecode_make_string(const AVTimecode *tc, char *buf, int framenum_arg)
     ss = framenum / fps        % 60;
     mm = framenum / (fps*60LL) % 60;
     hh = framenum / (fps*3600LL);
-    if (tc->flags & AV_TIMECODE_FLAG_24HOURSMAX)
+    якщо (tc->flags & AV_TIMECODE_FLAG_24HOURSMAX)
         hh = hh % 24;
     ff_len = fps > 10000 ? 5 : fps > 1000 ? 4 : fps > 100 ? 3 : fps > 10 ? 2 : 1;
     snprintf(buf, AV_TIMECODE_STR_SIZE, "%s%02d:%02d:%02d%c%0*d",
              neg ? "-" : "",
              hh, mm, ss, drop ? ';' : ':', ff_len, ff);
-    return buf;
+    повернути buf;
 }
 
-char *av_timecode_make_smpte_tc_string2(char *buf, AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field)
+char *av_timecode_make_smpte_tc_string2(char *buf, AVRational rate, uint32_t tcsmpte, ціле prevent_df, ціле skip_field)
 {
     unsigned hh, mm, ss, ff, drop;
     ff_timecode_set_smpte(&drop, &hh, &mm, &ss, &ff, rate, tcsmpte, prevent_df, skip_field);
 
     snprintf(buf, AV_TIMECODE_STR_SIZE, "%02u:%02u:%02u%c%02u",
              hh, mm, ss, drop ? ';' : ':', ff);
-    return buf;
+    повернути buf;
 
 }
 
-char *av_timecode_make_smpte_tc_string(char *buf, uint32_t tcsmpte, int prevent_df)
+char *av_timecode_make_smpte_tc_string(char *buf, uint32_t tcsmpte, ціле prevent_df)
 {
-    return av_timecode_make_smpte_tc_string2(buf, (AVRational){30, 1}, tcsmpte, prevent_df, 1);
+    повернути av_timecode_make_smpte_tc_string2(buf, (AVRational){30, 1}, tcsmpte, prevent_df, 1);
 }
 
 char *av_timecode_make_mpeg_tc_string(char *buf, uint32_t tc25bit)
@@ -153,64 +153,64 @@ char *av_timecode_make_mpeg_tc_string(char *buf, uint32_t tc25bit)
              tc25bit>>6  & 0x3f,              // 6-bit seconds
              tc25bit     & 1<<24 ? ';' : ':', // 1-bit drop flag
              tc25bit     & 0x3f);             // 6-bit frames
-    return buf;
+    повернути buf;
 }
 
-static int check_fps(int fps)
+static ціле check_fps(ціле fps)
 {
-    int i;
-    static const int supported_fps[] = {
+    ціле i;
+    static const ціле supported_fps[] = {
         24, 25, 30, 48, 50, 60, 100, 120, 150,
     };
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_fps); i++)
-        if (fps == supported_fps[i])
-            return 0;
-    return -1;
+    для (i = 0; i < FF_ARRAY_ELEMS(supported_fps); i++)
+        якщо (fps == supported_fps[i])
+            повернути 0;
+    повернути -1;
 }
 
-static int check_timecode(void *log_ctx, AVTimecode *tc)
+static ціле check_timecode(void *log_ctx, AVTimecode *tc)
 {
-    if ((int)tc->fps <= 0) {
+    якщо ((ціле)tc->fps <= 0) {
         av_log(log_ctx, AV_LOG_ERROR, "Valid timecode frame rate must be specified. Minimum value is 1\n");
-        return AVERROR(EINVAL);
+        повернути AVERROR(EINVAL);
     }
-    if ((tc->flags & AV_TIMECODE_FLAG_DROPFRAME) && tc->fps % 30 != 0) {
+    якщо ((tc->flags & AV_TIMECODE_FLAG_DROPFRAME) && tc->fps % 30 != 0) {
         av_log(log_ctx, AV_LOG_ERROR, "Drop frame is only allowed with multiples of 30000/1001 FPS\n");
-        return AVERROR(EINVAL);
+        повернути AVERROR(EINVAL);
     }
-    if (check_fps(tc->fps) < 0) {
+    якщо (check_fps(tc->fps) < 0) {
         av_log(log_ctx, AV_LOG_WARNING, "Using non-standard frame rate %d/%d\n",
                tc->rate.num, tc->rate.den);
     }
-    return 0;
+    повернути 0;
 }
 
-static int fps_from_frame_rate(AVRational rate)
+static ціле fps_from_frame_rate(AVRational rate)
 {
-    if (!rate.den || !rate.num)
-        return -1;
-    return (rate.num + rate.den/2LL) / rate.den;
+    якщо (!rate.den || !rate.num)
+        повернути -1;
+    повернути (rate.num + rate.den/2LL) / rate.den;
 }
 
-int av_timecode_check_frame_rate(AVRational rate)
+ціле av_timecode_check_frame_rate(AVRational rate)
 {
-    return check_fps(fps_from_frame_rate(rate));
+    повернути check_fps(fps_from_frame_rate(rate));
 }
 
-int av_timecode_init(AVTimecode *tc, AVRational rate, int flags, int frame_start, void *log_ctx)
+ціле av_timecode_init(AVTimecode *tc, AVRational rate, ціле flags, ціле frame_start, void *log_ctx)
 {
     memset(tc, 0, sizeof(*tc));
     tc->start = frame_start;
     tc->flags = flags;
     tc->rate  = rate;
     tc->fps   = fps_from_frame_rate(rate);
-    return check_timecode(log_ctx, tc);
+    повернути check_timecode(log_ctx, tc);
 }
 
-int av_timecode_init_from_components(AVTimecode *tc, AVRational rate, int flags, int hh, int mm, int ss, int ff, void *log_ctx)
+ціле av_timecode_init_from_components(AVTimecode *tc, AVRational rate, ціле flags, ціле hh, ціле mm, ціле ss, ціле ff, void *log_ctx)
 {
-    int ret;
+    ціле ret;
     int64_t s;
 
     memset(tc, 0, sizeof(*tc));
@@ -219,36 +219,36 @@ int av_timecode_init_from_components(AVTimecode *tc, AVRational rate, int flags,
     tc->fps   = fps_from_frame_rate(rate);
 
     ret = check_timecode(log_ctx, tc);
-    if (ret < 0)
-        return ret;
+    якщо (ret < 0)
+        повернути ret;
 
     s = hh*3600LL + mm*60LL + ss;
-    if (s != (int32_t)s)
-        return AVERROR(EINVAL);
+    якщо (s != (int32_t)s)
+        повернути AVERROR(EINVAL);
 
     s = s * tc->fps + ff;
-    if (s != (int32_t)s)
-        return AVERROR(EINVAL);
+    якщо (s != (int32_t)s)
+        повернути AVERROR(EINVAL);
     tc->start = s;
 
-    if (tc->flags & AV_TIMECODE_FLAG_DROPFRAME) { /* adjust frame number */
-        int tmins = 60*hh + mm;
+    якщо (tc->flags & AV_TIMECODE_FLAG_DROPFRAME) { /* adjust frame number */
+        ціле tmins = 60*hh + mm;
         tc->start -= (tc->fps / 30 * 2) * (tmins - tmins/10);
     }
-    return 0;
+    повернути 0;
 }
 
-int av_timecode_init_from_string(AVTimecode *tc, AVRational rate, const char *str, void *log_ctx)
+ціле av_timecode_init_from_string(AVTimecode *tc, AVRational rate, const char *str, void *log_ctx)
 {
     char c;
-    int hh, mm, ss, ff, flags;
+    ціле hh, mm, ss, ff, flags;
 
-    if (sscanf(str, "%d:%d:%d%c%d", &hh, &mm, &ss, &c, &ff) != 5) {
+    якщо (sscanf(str, "%d:%d:%d%c%d", &hh, &mm, &ss, &c, &ff) != 5) {
         av_log(log_ctx, AV_LOG_ERROR, "Unable to parse timecode, "
                                       "syntax: hh:mm:ss[:;.]ff\n");
-        return AVERROR_INVALIDDATA;
+        повернути AVERROR_INVALIDDATA;
     }
     flags = c != ':' ? AV_TIMECODE_FLAG_DROPFRAME : 0; // drop if ';', '.', ...
 
-    return av_timecode_init_from_components(tc, rate, flags, hh, mm, ss, ff, log_ctx);
+    повернути av_timecode_init_from_components(tc, rate, flags, hh, mm, ss, ff, log_ctx);
 }

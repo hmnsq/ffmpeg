@@ -209,7 +209,7 @@ typedef struct AVStereo3D {
     /**
      * Additional information about the frame packing.
      */
-    int flags;
+    ціле flags;
 
     /**
      * Determines which views are packed.
@@ -271,7 +271,7 @@ AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame);
  *
  * @return The name of the stereo3d value, or "unknown".
  */
-const char *av_stereo3d_type_name(unsigned int type);
+const char *av_stereo3d_type_name(unsigned ціле type);
 
 /**
  * Get the AVStereo3DType form a human-readable name.
@@ -280,7 +280,7 @@ const char *av_stereo3d_type_name(unsigned int type);
  *
  * @return The AVStereo3DType value, or -1 if not found.
  */
-int av_stereo3d_from_name(const char *name);
+ціле av_stereo3d_from_name(const char *name);
 
 /**
  * Provide a human-readable name of a given stereo3d view.
@@ -289,7 +289,7 @@ int av_stereo3d_from_name(const char *name);
  *
  * @return The name of the stereo3d view value, or "unknown".
  */
-const char *av_stereo3d_view_name(unsigned int view);
+const char *av_stereo3d_view_name(unsigned ціле view);
 
 /**
  * Get the AVStereo3DView form a human-readable name.
@@ -298,7 +298,7 @@ const char *av_stereo3d_view_name(unsigned int view);
  *
  * @return The AVStereo3DView value, or -1 if not found.
  */
-int av_stereo3d_view_from_name(const char *name);
+ціле av_stereo3d_view_from_name(const char *name);
 
 /**
  * Provide a human-readable name of a given stereo3d primary eye.
@@ -307,7 +307,7 @@ int av_stereo3d_view_from_name(const char *name);
  *
  * @return The name of the stereo3d primary eye value, or "unknown".
  */
-const char *av_stereo3d_primary_eye_name(unsigned int eye);
+const char *av_stereo3d_primary_eye_name(unsigned ціле eye);
 
 /**
  * Get the AVStereo3DPrimaryEye form a human-readable name.
@@ -316,7 +316,7 @@ const char *av_stereo3d_primary_eye_name(unsigned int eye);
  *
  * @return The AVStereo3DPrimaryEye value, or -1 if not found.
  */
-int av_stereo3d_primary_eye_from_name(const char *name);
+ціле av_stereo3d_primary_eye_from_name(const char *name);
 
 /**
  * @}

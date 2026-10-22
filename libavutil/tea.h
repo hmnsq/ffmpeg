@@ -32,7 +32,7 @@
  * @{
  */
 
-extern const int av_tea_size;
+extern const ціле av_tea_size;
 
 struct AVTEA;
 
@@ -49,7 +49,7 @@ struct AVTEA *av_tea_alloc(void);
  * @param key a key of 16 bytes used for encryption/decryption
  * @param rounds the number of rounds in TEA (64 is the "standard")
  */
-void av_tea_init(struct AVTEA *ctx, const uint8_t key[16], int rounds);
+void av_tea_init(struct AVTEA *ctx, const uint8_t key[16], ціле rounds);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -62,7 +62,7 @@ void av_tea_init(struct AVTEA *ctx, const uint8_t key[16], int rounds);
  * @param decrypt 0 for encryption, 1 for decryption
  */
 void av_tea_crypt(struct AVTEA *ctx, uint8_t *dst, const uint8_t *src,
-                  int count, uint8_t *iv, int decrypt);
+                  ціле count, uint8_t *iv, ціле decrypt);
 
 /**
  * @}

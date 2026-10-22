@@ -28,22 +28,22 @@ AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame)
 
     side_data = av_frame_get_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO);
 
-    if (!side_data) {
+    якщо (!side_data) {
         side_data = av_frame_new_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO,
                                            sizeof(AVDownmixInfo));
-        if (side_data)
+        якщо (side_data)
             memset(side_data->data, 0, sizeof(AVDownmixInfo));
     }
 
-    if (!side_data)
-        return NULL;
+    якщо (!side_data)
+        повернути NULL;
 
-    return (AVDownmixInfo*)side_data->data;
+    повернути (AVDownmixInfo*)side_data->data;
 }
 
 #define MAX_CHANNELS 64
 
-static const int type_map[] = {
+static const ціле type_map[] = {
     [AV_DOWNMIX_TYPE_UNKNOWN] = 0,
     [AV_DOWNMIX_TYPE_LORO]    = 2,
     [AV_DOWNMIX_TYPE_LTRT]    = 2,
@@ -51,7 +51,7 @@ static const int type_map[] = {
 };
 
 AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size)
+                                         ціле in_ch_count, size_t *out_size)
 {
     struct TestStruct {
         AVDownmixMatrix p;
@@ -59,27 +59,27 @@ AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
     };
     const size_t coeffs_offset = offsetof(struct TestStruct, b);
     size_t size = coeffs_offset;
-    unsigned int nb_coeffs;
+    unsigned ціле nb_coeffs;
     AVDownmixMatrix *dc;
 
-    if ((unsigned)type >= FF_ARRAY_ELEMS(type_map) ||
+    якщо ((unsigned)type >= FF_ARRAY_ELEMS(type_map) ||
         (unsigned)in_ch_count > MAX_CHANNELS)
-        return NULL;
+        повернути NULL;
 
     nb_coeffs = type_map[type] * in_ch_count;
     size += sizeof(AVDownmixCoeff) * nb_coeffs;
 
     dc = av_mallocz(size);
-    if (!dc)
-        return NULL;
+    якщо (!dc)
+        повернути NULL;
 
     dc->downmix_type  = type;
     dc->nb_coeffs     = nb_coeffs;
     dc->in_ch_count   = in_ch_count;
     dc->coeffs_offset = coeffs_offset;
 
-    if (out_size)
+    якщо (out_size)
         *out_size = size;
 
-    return dc;
+    повернути dc;
 }

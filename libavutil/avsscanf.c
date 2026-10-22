@@ -52,10 +52,10 @@ typedef struct FFFILE {
 
 #define shcnt(f) ((f)->shcnt + ((f)->rpos - (f)->buf))
 
-static int fftoread(FFFILE *f)
+static ціле fftoread(FFFILE *f)
 {
     f->rpos = f->rend = f->buf + f->buf_size;
-    return 0;
+    повернути 0;
 }
 
 static size_t ffstring_read(FFFILE *f, unsigned char *buf, size_t len)
@@ -64,21 +64,21 @@ static size_t ffstring_read(FFFILE *f, unsigned char *buf, size_t len)
     size_t k = len+256;
     char *end = memchr(src, 0, k);
 
-    if (end) k = end-src;
-    if (k < len) len = k;
+    якщо (end) k = end-src;
+    якщо (k < len) len = k;
     memcpy(buf, src, len);
     f->rpos = (void *)(src+len);
     f->rend = (void *)(src+k);
     f->cookie = src+k;
 
-    return len;
+    повернути len;
 }
 
-static int ffuflow(FFFILE *f)
+static ціле ffuflow(FFFILE *f)
 {
     unsigned char c;
-    if (!fftoread(f) && f->read(f, &c, 1)==1) return c;
-    return EOF;
+    якщо (!fftoread(f) && f->read(f, &c, 1)==1) повернути c;
+    повернути EOF;
 }
 
 static void ffshlim(FFFILE *f, ptrdiff_t lim)
@@ -86,29 +86,29 @@ static void ffshlim(FFFILE *f, ptrdiff_t lim)
     f->shlim = lim;
     f->shcnt = f->buf - f->rpos;
     /* If lim is nonzero, rend must be a valid pointer. */
-    if (lim && f->rend - f->rpos > lim)
+    якщо (lim && f->rend - f->rpos > lim)
         f->shend = f->rpos + lim;
-    else
+    інакше
         f->shend = f->rend;
 }
 
-static int ffshgetc(FFFILE *f)
+static ціле ffshgetc(FFFILE *f)
 {
-    int c;
+    ціле c;
     ptrdiff_t cnt = shcnt(f);
-    if (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
+    якщо (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
         f->shcnt = f->buf - f->rpos + cnt;
         f->shend = 0;
-        return EOF;
+        повернути EOF;
     }
     cnt++;
-    if (f->shlim && f->rend - f->rpos > f->shlim - cnt)
+    якщо (f->shlim && f->rend - f->rpos > f->shlim - cnt)
         f->shend = f->rpos + (f->shlim - cnt);
-    else
+    інакше
         f->shend = f->rend;
     f->shcnt = f->buf - f->rpos + cnt;
-    if (f->rpos[-1] != c) f->rpos[-1] = c;
-    return c;
+    якщо (f->rpos[-1] != c) f->rpos[-1] = c;
+    повернути c;
 }
 
 #define shlim(f, lim) ffshlim((f), (lim))
@@ -134,106 +134,106 @@ static const unsigned char table[] = { -1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 };
 
-static unsigned long long ffintscan(FFFILE *f, unsigned base, int pok, unsigned long long lim)
+static unsigned long long ffintscan(FFFILE *f, unsigned base, ціле pok, unsigned long long lim)
 {
     const unsigned char *val = table+1;
-    int c, neg=0;
+    ціле c, neg=0;
     unsigned x;
     unsigned long long y;
-    if (base > 36 || base == 1) {
+    якщо (base > 36 || base == 1) {
         errno = EINVAL;
-        return 0;
+        повернути 0;
     }
-    while (av_isspace((c=shgetc(f))));
-    if (c=='+' || c=='-') {
+    поки (av_isspace((c=shgetc(f))));
+    якщо (c=='+' || c=='-') {
         neg = -(c=='-');
         c = shgetc(f);
     }
-    if ((base == 0 || base == 16) && c=='0') {
+    якщо ((base == 0 || base == 16) && c=='0') {
         c = shgetc(f);
-        if ((c|32)=='x') {
+        якщо ((c|32)=='x') {
             c = shgetc(f);
-            if (val[c]>=16) {
+            якщо (val[c]>=16) {
                 shunget(f);
-                if (pok) shunget(f);
-                else shlim(f, 0);
-                return 0;
+                якщо (pok) shunget(f);
+                інакше shlim(f, 0);
+                повернути 0;
             }
             base = 16;
-        } else if (base == 0) {
+        } інакше якщо (base == 0) {
             base = 8;
         }
-    } else {
-        if (base == 0) base = 10;
-        if (val[c] >= base) {
+    } інакше {
+        якщо (base == 0) base = 10;
+        якщо (val[c] >= base) {
             shunget(f);
             shlim(f, 0);
             errno = EINVAL;
-            return 0;
+            повернути 0;
         }
     }
-    if (base == 10) {
-        for (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
+    якщо (base == 10) {
+        для (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
             x = x*10 + (c-'0');
-        for (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
+        для (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
             y = y*10 + (c-'0');
-        if (c-'0'>=10U) goto done;
-    } else if (!(base & base-1)) {
-        int bs = "\0\1\2\4\7\3\6\5"[(0x17*base)>>5&7];
-        for (x=0; val[c]<base && x<=UINT_MAX/32; c=shgetc(f))
+        якщо (c-'0'>=10U) goto done;
+    } інакше якщо (!(base & base-1)) {
+        ціле bs = "\0\1\2\4\7\3\6\5"[(0x17*base)>>5&7];
+        для (x=0; val[c]<base && x<=UINT_MAX/32; c=shgetc(f))
             x = x<<bs | val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX>>bs; c=shgetc(f))
+        для (y=x; val[c]<base && y<=ULLONG_MAX>>bs; c=shgetc(f))
             y = y<<bs | val[c];
-    } else {
-        for (x=0; val[c]<base && x<=UINT_MAX/36-1; c=shgetc(f))
+    } інакше {
+        для (x=0; val[c]<base && x<=UINT_MAX/36-1; c=shgetc(f))
             x = x*base + val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX/base && base*y<=ULLONG_MAX-val[c]; c=shgetc(f))
+        для (y=x; val[c]<base && y<=ULLONG_MAX/base && base*y<=ULLONG_MAX-val[c]; c=shgetc(f))
             y = y*base + val[c];
     }
-    if (val[c]<base) {
-        for (; val[c]<base; c=shgetc(f));
+    якщо (val[c]<base) {
+        для (; val[c]<base; c=shgetc(f));
         errno = ERANGE;
         y = lim;
-        if (lim&1) neg = 0;
+        якщо (lim&1) neg = 0;
     }
 done:
     shunget(f);
-    if (y>=lim) {
-        if (!(lim&1) && !neg) {
+    якщо (y>=lim) {
+        якщо (!(lim&1) && !neg) {
             errno = ERANGE;
-            return lim-1;
-        } else if (y>lim) {
+            повернути lim-1;
+        } інакше якщо (y>lim) {
             errno = ERANGE;
-            return lim;
+            повернути lim;
         }
     }
-    return (y^neg)-neg;
+    повернути (y^neg)-neg;
 }
 
-static long long scanexp(FFFILE *f, int pok)
+static long long scanexp(FFFILE *f, ціле pok)
 {
-    int c;
-    int x;
+    ціле c;
+    ціле x;
     long long y;
-    int neg = 0;
+    ціле neg = 0;
 
     c = shgetc(f);
-    if (c=='+' || c=='-') {
+    якщо (c=='+' || c=='-') {
         neg = (c=='-');
         c = shgetc(f);
-        if (c-'0'>=10U && pok) shunget(f);
+        якщо (c-'0'>=10U && pok) shunget(f);
     }
-    if (c-'0'>=10U) {
+    якщо (c-'0'>=10U) {
         shunget(f);
-        return LLONG_MIN;
+        повернути LLONG_MIN;
     }
-    for (x=0; c-'0'<10U && x<INT_MAX/10; c = shgetc(f))
+    для (x=0; c-'0'<10U && x<INT_MAX/10; c = shgetc(f))
         x = 10*x + (c-'0');
-    for (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
+    для (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
         y = 10*y + (c-'0');
-    for (; c-'0'<10U; c = shgetc(f));
+    для (; c-'0'<10U; c = shgetc(f));
     shunget(f);
-    return neg ? -y : y;
+    повернути neg ? -y : y;
 }
 
 #define LD_B1B_DIG 2
@@ -241,100 +241,100 @@ static long long scanexp(FFFILE *f, int pok)
 #define KMAX 128
 #define MASK (KMAX-1)
 
-static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
+static double decfloat(FFFILE *f, ціле c, ціле bits, ціле emin, ціле sign, ціле pok)
 {
     uint32_t x[KMAX];
     static const uint32_t th[] = { LD_B1B_MAX };
-    int i, j, k, a, z;
+    ціле i, j, k, a, z;
     long long lrp=0, dc=0;
     long long e10=0;
-    int lnz = 0;
-    int gotdig = 0, gotrad = 0;
-    int rp;
-    int e2;
-    int emax = -emin-bits+3;
-    int denormal = 0;
+    ціле lnz = 0;
+    ціле gotdig = 0, gotrad = 0;
+    ціле rp;
+    ціле e2;
+    ціле emax = -emin-bits+3;
+    ціле denormal = 0;
     double y;
     double frac=0;
     double bias=0;
-    static const int p10s[] = { 10, 100, 1000, 10000,
+    static const ціле p10s[] = { 10, 100, 1000, 10000,
         100000, 1000000, 10000000, 100000000 };
 
     j=0;
     k=0;
 
     /* Don't let leading zeros consume buffer space */
-    for (; c=='0'; c = shgetc(f)) gotdig=1;
-    if (c=='.') {
+    для (; c=='0'; c = shgetc(f)) gotdig=1;
+    якщо (c=='.') {
         gotrad = 1;
-        for (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
+        для (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
     }
 
     x[0] = 0;
-    for (; c-'0'<10U || c=='.'; c = shgetc(f)) {
-        if (c == '.') {
-            if (gotrad) break;
+    для (; c-'0'<10U || c=='.'; c = shgetc(f)) {
+        якщо (c == '.') {
+            якщо (gotrad) break;
             gotrad = 1;
             lrp = dc;
-        } else if (k < KMAX-3) {
+        } інакше якщо (k < KMAX-3) {
             dc++;
-            if (c!='0') lnz = dc;
-            if (j) x[k] = x[k]*10 + c-'0';
-            else x[k] = c-'0';
-            if (++j==9) {
+            якщо (c!='0') lnz = dc;
+            якщо (j) x[k] = x[k]*10 + c-'0';
+            інакше x[k] = c-'0';
+            якщо (++j==9) {
                 k++;
                 j=0;
             }
             gotdig=1;
-        } else {
+        } інакше {
             dc++;
-            if (c!='0') {
+            якщо (c!='0') {
                 lnz = (KMAX-4)*9;
                 x[KMAX-4] |= 1;
             }
         }
     }
-    if (!gotrad) lrp=dc;
+    якщо (!gotrad) lrp=dc;
 
-    if (gotdig && (c|32)=='e') {
+    якщо (gotdig && (c|32)=='e') {
         e10 = scanexp(f, pok);
-        if (e10 == LLONG_MIN) {
-            if (pok) {
+        якщо (e10 == LLONG_MIN) {
+            якщо (pok) {
                 shunget(f);
-            } else {
+            } інакше {
                 shlim(f, 0);
-                return 0;
+                повернути 0;
             }
             e10 = 0;
         }
         lrp += e10;
-    } else if (c>=0) {
+    } інакше якщо (c>=0) {
         shunget(f);
     }
-    if (!gotdig) {
+    якщо (!gotdig) {
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        повернути 0;
     }
 
     /* Handle zero specially to avoid nasty special cases later */
-    if (!x[0]) return sign * 0.0;
+    якщо (!x[0]) повернути sign * 0.0;
 
     /* Optimize small integers (w/no exponent) and over/under-flow */
-    if (lrp==dc && dc<10 && (bits>30 || x[0]>>bits==0))
-        return sign * (double)x[0];
-    if (lrp > -emin/2) {
+    якщо (lrp==dc && dc<10 && (bits>30 || x[0]>>bits==0))
+        повернути sign * (double)x[0];
+    якщо (lrp > -emin/2) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        повернути sign * DBL_MAX * DBL_MAX;
     }
-    if (lrp < emin-2*DBL_MANT_DIG) {
+    якщо (lrp < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        повернути sign * DBL_MIN * DBL_MIN;
     }
 
     /* Align incomplete final B1B digit */
-    if (j) {
-        for (; j<9; j++) x[k]*=10;
+    якщо (j) {
+        для (; j<9; j++) x[k]*=10;
         k++;
         j=0;
     }
@@ -345,56 +345,56 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     rp = lrp;
 
     /* Optimize small to mid-size integers (even in exp. notation) */
-    if (lnz<9 && lnz<=rp && rp < 18) {
-        int bitlim;
-        if (rp == 9) return sign * (double)x[0];
-        if (rp < 9) return sign * (double)x[0] / p10s[8-rp];
-        bitlim = bits-3*(int)(rp-9);
-        if (bitlim>30 || x[0]>>bitlim==0)
-            return sign * (double)x[0] * p10s[rp-10];
+    якщо (lnz<9 && lnz<=rp && rp < 18) {
+        ціле bitlim;
+        якщо (rp == 9) повернути sign * (double)x[0];
+        якщо (rp < 9) повернути sign * (double)x[0] / p10s[8-rp];
+        bitlim = bits-3*(ціле)(rp-9);
+        якщо (bitlim>30 || x[0]>>bitlim==0)
+            повернути sign * (double)x[0] * p10s[rp-10];
     }
 
     /* Drop trailing zeros */
-    for (; !x[z-1]; z--);
+    для (; !x[z-1]; z--);
 
     /* Align radix point to B1B digit boundary */
-    if (rp % 9) {
-        int rpm9 = rp>=0 ? rp%9 : rp%9+9;
-        int p10 = p10s[8-rpm9];
+    якщо (rp % 9) {
+        ціле rpm9 = rp>=0 ? rp%9 : rp%9+9;
+        ціле p10 = p10s[8-rpm9];
         uint32_t carry = 0;
-        for (k=a; k!=z; k++) {
+        для (k=a; k!=z; k++) {
             uint32_t tmp = x[k] % p10;
             x[k] = x[k]/p10 + carry;
             carry = 1000000000/p10 * tmp;
-            if (k==a && !x[k]) {
+            якщо (k==a && !x[k]) {
                 a = (a+1 & MASK);
                 rp -= 9;
             }
         }
-        if (carry) x[z++] = carry;
+        якщо (carry) x[z++] = carry;
         rp += 9-rpm9;
     }
 
     /* Upscale until desired number of bits are left of radix point */
-    while (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
+    поки (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
         uint32_t carry = 0;
         e2 -= 29;
-        for (k=(z-1 & MASK); ; k=(k-1 & MASK)) {
+        для (k=(z-1 & MASK); ; k=(k-1 & MASK)) {
             uint64_t tmp = ((uint64_t)x[k] << 29) + carry;
-            if (tmp > 1000000000) {
+            якщо (tmp > 1000000000) {
                 carry = tmp / 1000000000;
                 x[k] = tmp % 1000000000;
-            } else {
+            } інакше {
                 carry = 0;
                 x[k] = tmp;
             }
-            if (k==(z-1 & MASK) && k!=a && !x[k]) z = k;
-            if (k==a) break;
+            якщо (k==(z-1 & MASK) && k!=a && !x[k]) z = k;
+            якщо (k==a) break;
         }
-        if (carry) {
+        якщо (carry) {
             rp += 9;
             a = (a-1 & MASK);
-            if (a == z) {
+            якщо (a == z) {
                 z = (z-1 & MASK);
                 x[z-1 & MASK] |= x[z];
             }
@@ -403,56 +403,56 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     }
 
     /* Downscale until exactly number of bits are left of radix point */
-    for (;;) {
+    для (;;) {
         uint32_t carry = 0;
-        int sh = 1;
-        for (i=0; i<LD_B1B_DIG; i++) {
+        ціле sh = 1;
+        для (i=0; i<LD_B1B_DIG; i++) {
             k = (a+i & MASK);
-            if (k == z || x[k] < th[i]) {
+            якщо (k == z || x[k] < th[i]) {
                 i=LD_B1B_DIG;
                 break;
             }
-            if (x[a+i & MASK] > th[i]) break;
+            якщо (x[a+i & MASK] > th[i]) break;
         }
-        if (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) break;
+        якщо (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) break;
         /* FIXME: find a way to compute optimal sh */
-        if (rp > 9+9*LD_B1B_DIG) sh = 9;
+        якщо (rp > 9+9*LD_B1B_DIG) sh = 9;
         e2 += sh;
-        for (k=a; k!=z; k=(k+1 & MASK)) {
+        для (k=a; k!=z; k=(k+1 & MASK)) {
             uint32_t tmp = x[k] & (1<<sh)-1;
             x[k] = (x[k]>>sh) + carry;
             carry = (1000000000>>sh) * tmp;
-            if (k==a && !x[k]) {
+            якщо (k==a && !x[k]) {
                 a = (a+1 & MASK);
                 i--;
                 rp -= 9;
             }
         }
-        if (carry) {
-            if ((z+1 & MASK) != a) {
+        якщо (carry) {
+            якщо ((z+1 & MASK) != a) {
                 x[z] = carry;
                 z = (z+1 & MASK);
-            } else x[z-1 & MASK] |= 1;
+            } інакше x[z-1 & MASK] |= 1;
         }
     }
 
     /* Assemble desired bits into floating point variable */
-    for (y=i=0; i<LD_B1B_DIG; i++) {
-        if ((a+i & MASK)==z) x[(z=(z+1 & MASK))-1 & MASK] = 0;
+    для (y=i=0; i<LD_B1B_DIG; i++) {
+        якщо ((a+i & MASK)==z) x[(z=(z+1 & MASK))-1 & MASK] = 0;
         y = 1000000000.0L * y + x[a+i & MASK];
     }
 
     y *= sign;
 
     /* Limit precision for denormal results */
-    if (bits > DBL_MANT_DIG+e2-emin) {
+    якщо (bits > DBL_MANT_DIG+e2-emin) {
         bits = DBL_MANT_DIG+e2-emin;
-        if (bits<0) bits=0;
+        якщо (bits<0) bits=0;
         denormal = 1;
     }
 
     /* Calculate bias term to force rounding, move out lower bits */
-    if (bits < DBL_MANT_DIG) {
+    якщо (bits < DBL_MANT_DIG) {
         bias = copysign(scalbn(1, 2*DBL_MANT_DIG-bits-1), y);
         frac = fmod(y, scalbn(1, DBL_MANT_DIG-bits));
         y -= frac;
@@ -460,159 +460,159 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     }
 
     /* Process tail of decimal input so it can affect rounding */
-    if ((a+i & MASK) != z) {
+    якщо ((a+i & MASK) != z) {
         uint32_t t = x[a+i & MASK];
-        if (t < 500000000 && (t || (a+i+1 & MASK) != z))
+        якщо (t < 500000000 && (t || (a+i+1 & MASK) != z))
             frac += 0.25*sign;
-        else if (t > 500000000)
+        інакше якщо (t > 500000000)
             frac += 0.75*sign;
-        else if (t == 500000000) {
-            if ((a+i+1 & MASK) == z)
+        інакше якщо (t == 500000000) {
+            якщо ((a+i+1 & MASK) == z)
                 frac += 0.5*sign;
-            else
+            інакше
                 frac += 0.75*sign;
         }
-        if (DBL_MANT_DIG-bits >= 2 && !fmod(frac, 1))
+        якщо (DBL_MANT_DIG-bits >= 2 && !fmod(frac, 1))
             frac++;
     }
 
     y += frac;
     y -= bias;
 
-    if ((e2+DBL_MANT_DIG & INT_MAX) > emax-5) {
-        if (fabs(y) >= pow(2, DBL_MANT_DIG)) {
-            if (denormal && bits==DBL_MANT_DIG+e2-emin)
+    якщо ((e2+DBL_MANT_DIG & INT_MAX) > emax-5) {
+        якщо (fabs(y) >= pow(2, DBL_MANT_DIG)) {
+            якщо (denormal && bits==DBL_MANT_DIG+e2-emin)
                 denormal = 0;
             y *= 0.5;
             e2++;
         }
-        if (e2+DBL_MANT_DIG>emax || (denormal && frac))
+        якщо (e2+DBL_MANT_DIG>emax || (denormal && frac))
             errno = ERANGE;
     }
 
-    return scalbn(y, e2);
+    повернути scalbn(y, e2);
 }
 
-static double hexfloat(FFFILE *f, int bits, int emin, int sign, int pok)
+static double hexfloat(FFFILE *f, ціле bits, ціле emin, ціле sign, ціле pok)
 {
     uint32_t x = 0;
     double y = 0;
     double scale = 1;
     double bias = 0;
-    int gottail = 0, gotrad = 0, gotdig = 0;
+    ціле gottail = 0, gotrad = 0, gotdig = 0;
     long long rp = 0;
     long long dc = 0;
     long long e2 = 0;
-    int d;
-    int c;
+    ціле d;
+    ціле c;
 
     c = shgetc(f);
 
     /* Skip leading zeros */
-    for (; c=='0'; c = shgetc(f))
+    для (; c=='0'; c = shgetc(f))
         gotdig = 1;
 
-    if (c=='.') {
+    якщо (c=='.') {
         gotrad = 1;
         c = shgetc(f);
         /* Count zeros after the radix point before significand */
-        for (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
+        для (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
     }
 
-    for (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
-        if (c=='.') {
-            if (gotrad) break;
+    для (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
+        якщо (c=='.') {
+            якщо (gotrad) break;
             rp = dc;
             gotrad = 1;
-        } else {
+        } інакше {
             gotdig = 1;
-            if (c > '9') d = (c|32)+10-'a';
-            else d = c-'0';
-            if (dc<8) {
+            якщо (c > '9') d = (c|32)+10-'a';
+            інакше d = c-'0';
+            якщо (dc<8) {
                 x = x*16 + d;
-            } else if (dc < DBL_MANT_DIG/4+1) {
+            } інакше якщо (dc < DBL_MANT_DIG/4+1) {
                 y += d*(scale/=16);
-            } else if (d && !gottail) {
+            } інакше якщо (d && !gottail) {
                 y += 0.5*scale;
                 gottail = 1;
             }
             dc++;
         }
     }
-    if (!gotdig) {
+    якщо (!gotdig) {
         shunget(f);
-        if (pok) {
+        якщо (pok) {
             shunget(f);
-            if (gotrad) shunget(f);
-        } else {
+            якщо (gotrad) shunget(f);
+        } інакше {
             shlim(f, 0);
         }
-        return sign * 0.0;
+        повернути sign * 0.0;
     }
-    if (!gotrad) rp = dc;
-    while (dc<8) x *= 16, dc++;
-    if ((c|32)=='p') {
+    якщо (!gotrad) rp = dc;
+    поки (dc<8) x *= 16, dc++;
+    якщо ((c|32)=='p') {
         e2 = scanexp(f, pok);
-        if (e2 == LLONG_MIN) {
-            if (pok) {
+        якщо (e2 == LLONG_MIN) {
+            якщо (pok) {
                 shunget(f);
-            } else {
+            } інакше {
                 shlim(f, 0);
-                return 0;
+                повернути 0;
             }
             e2 = 0;
         }
-    } else {
+    } інакше {
         shunget(f);
     }
     e2 += 4*rp - 32;
 
-    if (!x) return sign * 0.0;
-    if (e2 > -emin) {
+    якщо (!x) повернути sign * 0.0;
+    якщо (e2 > -emin) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        повернути sign * DBL_MAX * DBL_MAX;
     }
-    if (e2 < emin-2*DBL_MANT_DIG) {
+    якщо (e2 < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        повернути sign * DBL_MIN * DBL_MIN;
     }
 
-    while (x < 0x80000000) {
-        if (y>=0.5) {
+    поки (x < 0x80000000) {
+        якщо (y>=0.5) {
             x += x + 1;
             y += y - 1;
-        } else {
+        } інакше {
             x += x;
             y += y;
         }
         e2--;
     }
 
-    if (bits > 32+e2-emin) {
+    якщо (bits > 32+e2-emin) {
         bits = 32+e2-emin;
-        if (bits<0) bits=0;
+        якщо (bits<0) bits=0;
     }
 
-    if (bits < DBL_MANT_DIG)
+    якщо (bits < DBL_MANT_DIG)
         bias = copysign(scalbn(1, 32+DBL_MANT_DIG-bits-1), sign);
 
-    if (bits<32 && y && !(x&1)) x++, y=0;
+    якщо (bits<32 && y && !(x&1)) x++, y=0;
 
     y = bias + sign*(double)x + sign*y;
     y -= bias;
 
-    if (!y) errno = ERANGE;
+    якщо (!y) errno = ERANGE;
 
-    return scalbn(y, e2);
+    повернути scalbn(y, e2);
 }
 
-static double fffloatscan(FFFILE *f, int prec, int pok)
+static double fffloatscan(FFFILE *f, ціле prec, ціле pok)
 {
-    int sign = 1;
+    ціле sign = 1;
     size_t i;
-    int bits;
-    int emin;
-    int c;
+    ціле bits;
+    ціле emin;
+    ціле c;
 
     switch (prec) {
     case 0:
@@ -628,81 +628,81 @@ static double fffloatscan(FFFILE *f, int prec, int pok)
         emin = DBL_MIN_EXP-bits;
         break;
     default:
-        return 0;
+        повернути 0;
     }
 
-    while (av_isspace((c = shgetc(f))));
+    поки (av_isspace((c = shgetc(f))));
 
-    if (c=='+' || c=='-') {
+    якщо (c=='+' || c=='-') {
         sign -= 2*(c=='-');
         c = shgetc(f);
     }
 
-    for (i=0; i<8 && (c|32)=="infinity"[i]; i++)
-        if (i<7) c = shgetc(f);
-    if (i==3 || i==8 || (i>3 && pok)) {
-        if (i!=8) {
+    для (i=0; i<8 && (c|32)=="infinity"[i]; i++)
+        якщо (i<7) c = shgetc(f);
+    якщо (i==3 || i==8 || (i>3 && pok)) {
+        якщо (i!=8) {
             shunget(f);
-            if (pok) for (; i>3; i--) shunget(f);
+            якщо (pok) для (; i>3; i--) shunget(f);
         }
-        return sign * INFINITY;
+        повернути sign * INFINITY;
     }
-    if (!i) for (i=0; i<3 && (c|32)=="nan"[i]; i++)
-        if (i<2) c = shgetc(f);
-    if (i==3) {
-        if (shgetc(f) != '(') {
+    якщо (!i) для (i=0; i<3 && (c|32)=="nan"[i]; i++)
+        якщо (i<2) c = shgetc(f);
+    якщо (i==3) {
+        якщо (shgetc(f) != '(') {
             shunget(f);
-            return NAN;
+            повернути NAN;
         }
-        for (i=1; ; i++) {
+        для (i=1; ; i++) {
             c = shgetc(f);
-            if (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
+            якщо (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
                 continue;
-            if (c==')') return NAN;
+            якщо (c==')') повернути NAN;
             shunget(f);
-            if (!pok) {
+            якщо (!pok) {
                 errno = EINVAL;
                 shlim(f, 0);
-                return 0;
+                повернути 0;
             }
-            while (i--) shunget(f);
-            return NAN;
+            поки (i--) shunget(f);
+            повернути NAN;
         }
     }
 
-    if (i) {
+    якщо (i) {
         shunget(f);
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        повернути 0;
     }
 
-    if (c=='0') {
+    якщо (c=='0') {
         c = shgetc(f);
-        if ((c|32) == 'x')
-            return hexfloat(f, bits, emin, sign, pok);
+        якщо ((c|32) == 'x')
+            повернути hexfloat(f, bits, emin, sign, pok);
         shunget(f);
         c = '0';
     }
 
-    return decfloat(f, c, bits, emin, sign, pok);
+    повернути decfloat(f, c, bits, emin, sign, pok);
 }
 
-static void *arg_n(va_list ap, unsigned int n)
+static void *arg_n(va_list ap, unsigned ціле n)
 {
     void *p;
-    unsigned int i;
+    unsigned ціле i;
     va_list ap2;
     va_copy(ap2, ap);
-    for (i=n; i>1; i--) va_arg(ap2, void *);
+    для (i=n; i>1; i--) va_arg(ap2, void *);
     p = va_arg(ap2, void *);
     va_end(ap2);
-    return p;
+    повернути p;
 }
 
-static void store_int(void *dest, int size, unsigned long long i)
+static void store_int(void *dest, ціле size, unsigned long long i)
 {
-    if (!dest) return;
+    якщо (!dest) повернути;
     switch (size) {
     case SIZE_hh:
         *(char *)dest = i;
@@ -711,7 +711,7 @@ static void store_int(void *dest, int size, unsigned long long i)
         *(short *)dest = i;
         break;
     case SIZE_def:
-        *(int *)dest = i;
+        *(ціле *)dest = i;
         break;
     case SIZE_l:
         *(long *)dest = i;
@@ -722,44 +722,44 @@ static void store_int(void *dest, int size, unsigned long long i)
     }
 }
 
-static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
+static ціле ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
 {
-    int width;
-    int size;
-    int base;
+    ціле width;
+    ціле size;
+    ціле base;
     const unsigned char *p;
-    int c, t;
+    ціле c, t;
     char *s;
     void *dest=NULL;
-    int invert;
-    int matches=0;
+    ціле invert;
+    ціле matches=0;
     unsigned long long x;
     double y;
     ptrdiff_t pos = 0;
     unsigned char scanset[257];
     size_t i;
 
-    for (p=(const unsigned char *)fmt; *p; p++) {
+    для (p=(const unsigned char *)fmt; *p; p++) {
 
-        if (av_isspace(*p)) {
-            while (av_isspace(p[1])) p++;
+        якщо (av_isspace(*p)) {
+            поки (av_isspace(p[1])) p++;
             shlim(f, 0);
-            while (av_isspace(shgetc(f)));
+            поки (av_isspace(shgetc(f)));
             shunget(f);
             pos += shcnt(f);
             continue;
         }
-        if (*p != '%' || p[1] == '%') {
+        якщо (*p != '%' || p[1] == '%') {
             shlim(f, 0);
-            if (*p == '%') {
+            якщо (*p == '%') {
                 p++;
-                while (av_isspace((c=shgetc(f))));
-            } else {
+                поки (av_isspace((c=shgetc(f))));
+            } інакше {
                 c = shgetc(f);
             }
-            if (c!=*p) {
+            якщо (c!=*p) {
                 shunget(f);
-                if (c<0) goto input_fail;
+                якщо (c<0) goto input_fail;
                 goto match_fail;
             }
             pos += shcnt(f);
@@ -767,19 +767,19 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
         }
 
         p++;
-        if (*p=='*') {
+        якщо (*p=='*') {
             dest = 0; p++;
-        } else if (av_isdigit(*p) && p[1]=='$') {
+        } інакше якщо (av_isdigit(*p) && p[1]=='$') {
             dest = arg_n(ap, *p-'0'); p+=2;
-        } else {
+        } інакше {
             dest = va_arg(ap, void *);
         }
 
-        for (width=0; av_isdigit(*p); p++) {
+        для (width=0; av_isdigit(*p); p++) {
             width = 10*width + *p - '0';
         }
 
-        if (*p=='m') {
+        якщо (*p=='m') {
             s = 0;
             p++;
         }
@@ -787,12 +787,12 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
         size = SIZE_def;
         switch (*p++) {
         case 'h':
-            if (*p == 'h') p++, size = SIZE_hh;
-            else size = SIZE_h;
+            якщо (*p == 'h') p++, size = SIZE_hh;
+            інакше size = SIZE_h;
             break;
         case 'l':
-            if (*p == 'l') p++, size = SIZE_ll;
-            else size = SIZE_l;
+            якщо (*p == 'l') p++, size = SIZE_ll;
+            інакше size = SIZE_l;
             break;
         case 'j':
             size = SIZE_ll;
@@ -819,14 +819,14 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
         t = *p;
 
         /* C or S */
-        if ((t&0x2f) == 3) {
+        якщо ((t&0x2f) == 3) {
             t |= 32;
             size = SIZE_l;
         }
 
         switch (t) {
             case 'c':
-                if (width < 1) width = 1;
+                якщо (width < 1) width = 1;
                 break;
             case '[':
                 break;
@@ -836,23 +836,23 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
                 continue;
             default:
                 shlim(f, 0);
-                while (av_isspace(shgetc(f)));
+                поки (av_isspace(shgetc(f)));
                 shunget(f);
                 pos += shcnt(f);
         }
 
         shlim(f, width);
-        if (shgetc(f) < 0) goto input_fail;
+        якщо (shgetc(f) < 0) goto input_fail;
         shunget(f);
 
         switch (t) {
             case 's':
             case 'c':
             case '[':
-                if (t == 'c' || t == 's') {
+                якщо (t == 'c' || t == 's') {
                     memset(scanset, -1, sizeof scanset);
                     scanset[0] = 0;
-                    if (t == 's') {
+                    якщо (t == 's') {
                         scanset[1 + '\t'] = 0;
                         scanset[1 + '\n'] = 0;
                         scanset[1 + '\v'] = 0;
@@ -860,34 +860,34 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
                         scanset[1 + '\r'] = 0;
                         scanset[1 + ' ' ] = 0;
                     }
-                } else {
-                    if (*++p == '^') p++, invert = 1;
-                    else invert = 0;
+                } інакше {
+                    якщо (*++p == '^') p++, invert = 1;
+                    інакше invert = 0;
                     memset(scanset, invert, sizeof scanset);
                     scanset[0] = 0;
-                    if (*p == '-') p++, scanset[1+'-'] = 1-invert;
-                    else if (*p == ']') p++, scanset[1+']'] = 1-invert;
-                    for (; *p != ']'; p++) {
-                        if (!*p) goto fmt_fail;
-                        if (*p=='-' && p[1] && p[1] != ']')
-                            for (c=p++[-1]; c<*p; c++)
+                    якщо (*p == '-') p++, scanset[1+'-'] = 1-invert;
+                    інакше якщо (*p == ']') p++, scanset[1+']'] = 1-invert;
+                    для (; *p != ']'; p++) {
+                        якщо (!*p) goto fmt_fail;
+                        якщо (*p=='-' && p[1] && p[1] != ']')
+                            для (c=p++[-1]; c<*p; c++)
                                 scanset[1+c] = 1-invert;
                         scanset[1+*p] = 1-invert;
                     }
                 }
                 s = 0;
                 i = 0;
-                if ((s = dest)) {
-                    while (scanset[(c=shgetc(f))+1])
+                якщо ((s = dest)) {
+                    поки (scanset[(c=shgetc(f))+1])
                         s[i++] = c;
-                } else {
-                    while (scanset[(c=shgetc(f))+1]);
+                } інакше {
+                    поки (scanset[(c=shgetc(f))+1]);
                 }
                 shunget(f);
-                if (!shcnt(f)) goto match_fail;
-                if (t == 'c' && shcnt(f) != width) goto match_fail;
-                if (t != 'c') {
-                    if (s) s[i] = 0;
+                якщо (!shcnt(f)) goto match_fail;
+                якщо (t == 'c' && shcnt(f) != width) goto match_fail;
+                якщо (t != 'c') {
+                    якщо (s) s[i] = 0;
                 }
                 break;
             case 'p':
@@ -906,11 +906,11 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
                 base = 0;
 int_common:
                 x = ffintscan(f, base, 0, ULLONG_MAX);
-                if (!shcnt(f))
+                якщо (!shcnt(f))
                     goto match_fail;
-                if (t=='p' && dest)
+                якщо (t=='p' && dest)
                     *(void **)dest = (void *)(uintptr_t)x;
-                else
+                інакше
                     store_int(dest, size, x);
                 break;
             case 'a': case 'A':
@@ -918,9 +918,9 @@ int_common:
             case 'f': case 'F':
             case 'g': case 'G':
                 y = fffloatscan(f, size, 0);
-                if (!shcnt(f))
+                якщо (!shcnt(f))
                     goto match_fail;
-                if (dest) {
+                якщо (dest) {
                     switch (size) {
                     case SIZE_def:
                         *(float *)dest = y;
@@ -937,33 +937,33 @@ int_common:
         }
 
         pos += shcnt(f);
-        if (dest) matches++;
+        якщо (dest) matches++;
     }
-    if (0) {
+    якщо (0) {
 fmt_fail:
 input_fail:
-        if (!matches) matches--;
+        якщо (!matches) matches--;
     }
 match_fail:
-    return matches;
+    повернути matches;
 }
 
-static int ff_vsscanf(const char *s, const char *fmt, va_list ap)
+static ціле ff_vsscanf(const char *s, const char *fmt, va_list ap)
 {
     FFFILE f = {
         .buf = (void *)s, .cookie = (void *)s,
         .read = ffstring_read,
     };
 
-    return ff_vfscanf(&f, fmt, ap);
+    повернути ff_vfscanf(&f, fmt, ap);
 }
 
-int av_sscanf(const char *string, const char *format, ...)
+ціле av_sscanf(const char *string, const char *format, ...)
 {
-    int ret;
+    ціле ret;
     va_list ap;
     va_start(ap, format);
     ret = ff_vsscanf(string, format, ap);
     va_end(ap);
-    return ret;
+    повернути ret;
 }
