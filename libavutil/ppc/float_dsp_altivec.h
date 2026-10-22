@@ -21,18 +21,18 @@
 #ifndef AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
 #define AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
 
-void ff_vector_fmul_altivec(float *dst, const float *src0,
-                            const float *src1, int len);
+শূন্য ff_vector_fmul_altivec(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                            ধ্রুবক দশমিক *src1, পূর্ণসংখ্যা len);
 
-void ff_vector_fmul_window_altivec(float *dst, const float *src0,
-                                   const float *src1, const float *win,
-                                   int len);
+শূন্য ff_vector_fmul_window_altivec(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                                   ধ্রুবক দশমিক *src1, ধ্রুবক দশমিক *win,
+                                   পূর্ণসংখ্যা len);
 
-void ff_vector_fmul_add_altivec(float *dst, const float *src0,
-                                const float *src1, const float *src2,
-                                int len);
+শূন্য ff_vector_fmul_add_altivec(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                                ধ্রুবক দশমিক *src1, ধ্রুবক দশমিক *src2,
+                                পূর্ণসংখ্যা len);
 
-void ff_vector_fmul_reverse_altivec(float *dst, const float *src0,
-                                    const float *src1, int len);
+শূন্য ff_vector_fmul_reverse_altivec(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                                    ধ্রুবক দশমিক *src1, পূর্ণসংখ্যা len);
 
 #endif /* AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H */

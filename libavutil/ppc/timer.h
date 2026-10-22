@@ -21,28 +21,28 @@
 #ifndef AVUTIL_PPC_TIMER_H
 #define AVUTIL_PPC_TIMER_H
 
-#include <stdint.h>
+#অন্তর্ভাব <stdint.h>
 
-#include "config.h"
+#অন্তর্ভাব "config.h"
 
 #define AV_READ_TIME read_time
 
-static inline uint64_t read_time(void)
+স্থির অন্তঃরেখ uint64_t read_time(শূন্য)
 {
-    uint32_t tbu, tbl, temp;
+    uint32_t tbu, tbl, অস্থায়ী;
 
      /* from section 2.2.1 of the 32-bit PowerPC PEM */
-     __asm__ volatile(
+     __asm__ অস্থির(
          "mftbu  %2\n"
          "mftb   %0\n"
          "mftbu  %1\n"
          "cmpw   %2,%1\n"
          "bne    $-0x10\n"
-     : "=r"(tbl), "=r"(tbu), "=r"(temp)
+     : "=r"(tbl), "=r"(tbu), "=r"(অস্থায়ী)
      :
      : "cc");
 
-     return (((uint64_t)tbu)<<32) | (uint64_t)tbl;
+     ফেরত (((uint64_t)tbu)<<32) | (uint64_t)tbl;
 }
 
 #endif /* AVUTIL_PPC_TIMER_H */

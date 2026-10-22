@@ -19,14 +19,14 @@
 #ifndef AVUTIL_PIXELUTILS_H
 #define AVUTIL_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#অন্তর্ভাব <stddef.h>
+#অন্তর্ভাব <stdint.h>
 
 /**
  * Sum of abs(src1[x] - src2[x])
  */
-typedef int (*av_pixelutils_sad_fn)(const uint8_t *src1, ptrdiff_t stride1,
-                                    const uint8_t *src2, ptrdiff_t stride2);
+প্রকারলেখ পূর্ণসংখ্যা (*av_pixelutils_sad_fn)(ধ্রুবক uint8_t *src1, ptrdiff_t stride1,
+                                    ধ্রুবক uint8_t *src2, ptrdiff_t stride2);
 
 /**
  * Get a potentially optimized pointer to a Sum-of-absolute-differences
@@ -45,7 +45,7 @@ typedef int (*av_pixelutils_sad_fn)(const uint8_t *src1, ptrdiff_t stride1,
  * @return a pointer to the SAD function or NULL in case of error (because of
  *         invalid parameters)
  */
-av_pixelutils_sad_fn av_pixelutils_get_sad_fn(int w_bits, int h_bits,
-                                              int aligned, void *log_ctx);
+av_pixelutils_sad_fn av_pixelutils_get_sad_fn(পূর্ণসংখ্যা w_bits, পূর্ণসংখ্যা h_bits,
+                                              পূর্ণসংখ্যা aligned, শূন্য *log_ctx);
 
 #endif /* AVUTIL_PIXELUTILS_H */

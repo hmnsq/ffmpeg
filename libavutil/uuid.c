@@ -60,69 +60,69 @@
  * @author Zane van Iperen <zane@zanevaniperen.com>
  */
 
-#include "attributes_internal.h"
-#include "uuid.h"
-#include "error.h"
-#include "avstring.h"
+#অন্তর্ভাব "attributes_internal.h"
+#অন্তর্ভাব "uuid.h"
+#অন্তর্ভাব "error.h"
+#অন্তর্ভাব "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+পূর্ণসংখ্যা av_uuid_parse(ধ্রুবক অক্ষর *in, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    যদি (strlen(in) != 36)
+        ফেরত AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    ফেরত av_uuid_parse_range(in, in + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+স্থির পূর্ণসংখ্যা xdigit_to_int(অক্ষর c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    যদি (c >= 'a' && c <= 'f')
+        ফেরত c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    যদি (c >= '0' && c <= '9')
+        ফেরত c - '0';
 
-    return -1;
+    ফেরত -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+পূর্ণসংখ্যা av_uuid_parse_range(ধ্রুবক অক্ষর *in_start, ধ্রুবক অক্ষর *in_end, AVUUID uu)
 {
-    int i;
-    const char *cp;
+    পূর্ণসংখ্যা i;
+    ধ্রুবক অক্ষর *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    যদি ((in_end - in_start) != 36)
+        ফেরত AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    জন্য (i = 0, cp = in_start; i < 16; i++) {
+        পূর্ণসংখ্যা hi;
+        পূর্ণসংখ্যা lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        যদি (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
         hi = xdigit_to_int(*cp++);
         lo = xdigit_to_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        যদি (hi == -1 || lo == -1)
+            ফেরত AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    ফেরত 0;
 }
 
-static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
+স্থির attribute_nonstring ধ্রুবক অক্ষর hexdigits_lower[16] = "0123456789abcdef";
 
-void av_uuid_unparse(const AVUUID uuid, char *out)
+শূন্য av_uuid_unparse(ধ্রুবক AVUUID uuid, অক্ষর *out)
 {
-    char *p = out;
+    অক্ষর *p = out;
 
-    for (int i = 0; i < 16; i++) {
+    জন্য (পূর্ণসংখ্যা i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        যদি (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
@@ -133,10 +133,10 @@ void av_uuid_unparse(const AVUUID uuid, char *out)
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+পূর্ণসংখ্যা av_uuid_urn_parse(ধ্রুবক অক্ষর *in, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    যদি (av_stristr(in, "urn:uuid:") != in)
+        ফেরত AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    ফেরত av_uuid_parse(in + 9, uu);
 }

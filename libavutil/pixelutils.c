@@ -16,50 +16,50 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
+#অন্তর্ভাব <stddef.h>
 
-#include "config.h"
-#include "pixelutils.h"
+#অন্তর্ভাব "config.h"
+#অন্তর্ভাব "pixelutils.h"
 
-#if CONFIG_PIXELUTILS
-#include <stdlib.h>
-#include <string.h>
+#যদি CONFIG_PIXELUTILS
+#অন্তর্ভাব <stdlib.h>
+#অন্তর্ভাব <string.h>
 
-#include "attributes.h"
-#include "macros.h"
+#অন্তর্ভাব "attributes.h"
+#অন্তর্ভাব "macros.h"
 
-#if ARCH_AARCH64 && HAVE_NEON
-#include "aarch64/pixelutils.h"
-#elif ARCH_ARM && HAVE_ARMV6
-#include "arm/pixelutils.h"
-#elif ARCH_MIPS && HAVE_MSA
-#include "mips/pixelutils.h"
-#elif ARCH_RISCV
-#include "riscv/pixelutils.h"
-#elif ARCH_X86 && HAVE_X86ASM
-#include "x86/pixelutils.h"
+#যদি ARCH_AARCH64 && HAVE_NEON
+#অন্তর্ভাব "aarch64/pixelutils.h"
+#নতুবা_যদি ARCH_ARM && HAVE_ARMV6
+#অন্তর্ভাব "arm/pixelutils.h"
+#নতুবা_যদি ARCH_MIPS && HAVE_MSA
+#অন্তর্ভাব "mips/pixelutils.h"
+#নতুবা_যদি ARCH_RISCV
+#অন্তর্ভাব "riscv/pixelutils.h"
+#নতুবা_যদি ARCH_X86 && HAVE_X86ASM
+#অন্তর্ভাব "x86/pixelutils.h"
 #endif
 
-static av_always_inline int sad_wxh(const uint8_t *src1, ptrdiff_t stride1,
-                                    const uint8_t *src2, ptrdiff_t stride2,
-                                    int w, int h)
+স্থির av_always_inline পূর্ণসংখ্যা sad_wxh(ধ্রুবক uint8_t *src1, ptrdiff_t stride1,
+                                    ধ্রুবক uint8_t *src2, ptrdiff_t stride2,
+                                    পূর্ণসংখ্যা w, পূর্ণসংখ্যা h)
 {
-    int x, y, sum = 0;
+    পূর্ণসংখ্যা x, y, যোগ = 0;
 
-    for (y = 0; y < h; y++) {
-        for (x = 0; x < w; x++)
-            sum += abs(src1[x] - src2[x]);
+    জন্য (y = 0; y < h; y++) {
+        জন্য (x = 0; x < w; x++)
+            যোগ += abs(src1[x] - src2[x]);
         src1 += stride1;
         src2 += stride2;
     }
-    return sum;
+    ফেরত যোগ;
 }
 
-#define DECLARE_BLOCK_FUNCTIONS(size)                                               \
-static int block_sad_##size##x##size##_c(const uint8_t *src1, ptrdiff_t stride1,    \
-                                         const uint8_t *src2, ptrdiff_t stride2)    \
+#define DECLARE_BLOCK_FUNCTIONS(আকার_2)                                               \
+স্থির পূর্ণসংখ্যা block_sad_##size##x##size##_c(ধ্রুবক uint8_t *src1, ptrdiff_t stride1,    \
+                                         ধ্রুবক uint8_t *src2, ptrdiff_t stride2)    \
 {                                                                                   \
-    return sad_wxh(src1, stride1, src2, stride2, size, size);                       \
+    ফেরত sad_wxh(src1, stride1, src2, stride2, আকার_2, আকার_2);                       \
 }
 
 DECLARE_BLOCK_FUNCTIONS(2)
@@ -68,46 +68,46 @@ DECLARE_BLOCK_FUNCTIONS(8)
 DECLARE_BLOCK_FUNCTIONS(16)
 DECLARE_BLOCK_FUNCTIONS(32)
 
-static const av_pixelutils_sad_fn sad_c[] = {
+স্থির ধ্রুবক av_pixelutils_sad_fn sad_c[] = {
     block_sad_2x2_c,
     block_sad_4x4_c,
     block_sad_8x8_c,
     block_sad_16x16_c,
     block_sad_32x32_c,
 };
-#else
-#include "log.h"
+#অন্যথা
+#অন্তর্ভাব "log.h"
 #endif /* CONFIG_PIXELUTILS */
 
-av_pixelutils_sad_fn av_pixelutils_get_sad_fn(int w_bits, int h_bits, int aligned, void *log_ctx)
+av_pixelutils_sad_fn av_pixelutils_get_sad_fn(পূর্ণসংখ্যা w_bits, পূর্ণসংখ্যা h_bits, পূর্ণসংখ্যা aligned, শূন্য *log_ctx)
 {
-#if !CONFIG_PIXELUTILS
+#যদি !CONFIG_PIXELUTILS
     av_log(log_ctx, AV_LOG_ERROR, "pixelutils support is required "
            "but libavutil is not compiled with it\n");
-    return NULL;
-#else
+    ফেরত ফাঁকা;
+#অন্যথা
     av_pixelutils_sad_fn sad[FF_ARRAY_ELEMS(sad_c)];
 
-    memcpy(sad, sad_c, sizeof(sad));
+    memcpy(sad, sad_c, আকার(sad));
 
-    if (w_bits < 1 || w_bits > FF_ARRAY_ELEMS(sad) ||
+    যদি (w_bits < 1 || w_bits > FF_ARRAY_ELEMS(sad) ||
         h_bits < 1 || h_bits > FF_ARRAY_ELEMS(sad))
-        return NULL;
-    if (w_bits != h_bits) // only squared sad for now
-        return NULL;
+        ফেরত ফাঁকা;
+    যদি (w_bits != h_bits) // only squared sad for now
+        ফেরত ফাঁকা;
 
-#if ARCH_AARCH64 && HAVE_NEON
+#যদি ARCH_AARCH64 && HAVE_NEON
     ff_pixelutils_sad_init_aarch64(sad, aligned);
-#elif ARCH_ARM
+#নতুবা_যদি ARCH_ARM
     ff_pixelutils_sad_init_arm(sad, aligned);
-#elif ARCH_MIPS && HAVE_MSA
+#নতুবা_যদি ARCH_MIPS && HAVE_MSA
     ff_pixelutils_sad_init_mips(sad, aligned);
-#elif ARCH_RISCV
+#নতুবা_যদি ARCH_RISCV
     ff_pixelutils_init_riscv(sad, aligned);
-#elif ARCH_X86 && HAVE_X86ASM
+#নতুবা_যদি ARCH_X86 && HAVE_X86ASM
     ff_pixelutils_sad_init_x86(sad, aligned);
 #endif
 
-    return sad[w_bits - 1];
+    ফেরত sad[w_bits - 1];
 #endif
 }

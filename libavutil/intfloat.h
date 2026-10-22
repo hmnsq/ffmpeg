@@ -21,57 +21,57 @@
 #ifndef AVUTIL_INTFLOAT_H
 #define AVUTIL_INTFLOAT_H
 
-#include <stdint.h>
-#include "attributes.h"
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব "attributes.h"
 
-union av_intfloat32 {
+সংঘ av_intfloat32 {
     uint32_t i;
-    float    f;
+    দশমিক    f;
 };
 
-union av_intfloat64 {
+সংঘ av_intfloat64 {
     uint64_t i;
-    double   f;
+    দ্বিগুণ   f;
 };
 
 /**
  * Reinterpret a 32-bit integer as a float.
  */
-static av_always_inline float av_int2float(uint32_t i)
+স্থির av_always_inline দশমিক av_int2float(uint32_t i)
 {
-    union av_intfloat32 v;
+    সংঘ av_intfloat32 v;
     v.i = i;
-    return v.f;
+    ফেরত v.f;
 }
 
 /**
  * Reinterpret a float as a 32-bit integer.
  */
-static av_always_inline uint32_t av_float2int(float f)
+স্থির av_always_inline uint32_t av_float2int(দশমিক f)
 {
-    union av_intfloat32 v;
+    সংঘ av_intfloat32 v;
     v.f = f;
-    return v.i;
+    ফেরত v.i;
 }
 
 /**
  * Reinterpret a 64-bit integer as a double.
  */
-static av_always_inline double av_int2double(uint64_t i)
+স্থির av_always_inline দ্বিগুণ av_int2double(uint64_t i)
 {
-    union av_intfloat64 v;
+    সংঘ av_intfloat64 v;
     v.i = i;
-    return v.f;
+    ফেরত v.f;
 }
 
 /**
  * Reinterpret a double as a 64-bit integer.
  */
-static av_always_inline uint64_t av_double2int(double f)
+স্থির av_always_inline uint64_t av_double2int(দ্বিগুণ f)
 {
-    union av_intfloat64 v;
+    সংঘ av_intfloat64 v;
     v.f = f;
-    return v.i;
+    ফেরত v.i;
 }
 
 #endif /* AVUTIL_INTFLOAT_H */

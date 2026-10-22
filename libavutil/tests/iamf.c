@@ -16,42 +16,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#অন্তর্ভাব <stdio.h>
 
-#include "libavutil/iamf.h"
-#include "libavutil/log.h"
-#include "libavutil/opt.h"
+#অন্তর্ভাব "libavutil/iamf.h"
+#অন্তর্ভাব "libavutil/log.h"
+#অন্তর্ভাব "libavutil/opt.h"
 
-static void print_class_tree(const AVClass *class, int depth)
+স্থির শূন্য print_class_বৃক্ষ(ধ্রুবক AVClass *class, পূর্ণসংখ্যা depth)
 {
-    const AVClass *child;
-    void *iter = NULL;
+    ধ্রুবক AVClass *child;
+    শূন্য *iter = ফাঁকা;
 
     printf("%*s%s\n", depth * 2, "", class->class_name);
-    if (depth >= 8)
-        return;
-    while ((child = av_opt_child_class_iterate(class, &iter)))
-        print_class_tree(child, depth + 1);
+    যদি (depth >= 8)
+        ফেরত;
+    যখন ((child = av_opt_child_class_iterate(class, &iter)))
+        print_class_বৃক্ষ(child, depth + 1);
 }
 
-static void find_option(const AVClass *class, const char *name)
+স্থির শূন্য find_option(ধ্রুবক AVClass *class, ধ্রুবক অক্ষর *name)
 {
-    const AVOption *o = av_opt_find2(&class, name, NULL, 0,
-                                     AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ,
-                                     NULL);
+    ধ্রুবক AVOption *o = av_opt_find2(&class, name, ফাঁকা, 0,
+                                     AV_OPT_অনুসন্ধান_CHILDREN | AV_OPT_অনুসন্ধান_FAKE_OBJ,
+                                     ফাঁকা);
     printf("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
 }
 
-int main(void)
+পূর্ণসংখ্যা প্রধান(শূন্য)
 {
-    const AVClass *audio_element = av_iamf_audio_element_get_class();
-    const AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
-    const AVClass *param_definition = av_iamf_param_definition_get_class();
+    ধ্রুবক AVClass *audio_element = av_iamf_audio_element_get_class();
+    ধ্রুবক AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
+    ধ্রুবক AVClass *param_definition = av_iamf_param_definition_get_class();
 
     printf("Testing av_opt_child_class_iterate()\n");
-    print_class_tree(audio_element, 0);
-    print_class_tree(mix_presentation, 0);
-    print_class_tree(param_definition, 0);
+    print_class_বৃক্ষ(audio_element, 0);
+    print_class_বৃক্ষ(mix_presentation, 0);
+    print_class_বৃক্ষ(param_definition, 0);
 
     printf("\nTesting av_opt_find2() with AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ\n");
     find_option(audio_element, "default_w");
@@ -64,5 +64,5 @@ int main(void)
     find_option(param_definition, "parameter_rate");
     find_option(param_definition, "subblock_duration");
 
-    return 0;
+    ফেরত 0;
 }

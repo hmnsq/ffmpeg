@@ -18,83 +18,83 @@
 
 // LCOV_EXCL_START
 
-#include "libavutil/timer.h"
+#অন্তর্ভাব "libavutil/timer.h"
 
-#include <stdint.h>
-#include <stdio.h>
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/base64.h"
+#অন্তর্ভাব "libavutil/common.h"
+#অন্তর্ভাব "libavutil/base64.h"
 
-#define MAX_DATA_SIZE    1024
-#define MAX_ENCODED_SIZE 2048
+#define MAX_তথ্য_আকার    1024
+#define MAX_ENCODED_আকার 2048
 
-static int test_encode_decode(const uint8_t *data, unsigned int data_size,
-                              const char *encoded_ref)
+স্থির পূর্ণসংখ্যা test_encode_decode(ধ্রুবক uint8_t *তথ্য, unsigned পূর্ণসংখ্যা তথ্য_আকার,
+                              ধ্রুবক অক্ষর *encoded_ref)
 {
-    char  encoded[MAX_ENCODED_SIZE];
-    uint8_t data2[MAX_DATA_SIZE];
-    int data2_size, max_data2_size = MAX_DATA_SIZE;
+    অক্ষর  encoded[MAX_ENCODED_আকার];
+    uint8_t data2[MAX_তথ্য_আকার];
+    পূর্ণসংখ্যা data2_আকার, max_data2_আকার = MAX_তথ্য_আকার;
 
-    if (!av_base64_encode(encoded, MAX_ENCODED_SIZE, data, data_size)) {
+    যদি (!av_base64_encode(encoded, MAX_ENCODED_আকার, তথ্য, তথ্য_আকার)) {
         printf("Failed: cannot encode the input data\n");
-        return 1;
+        ফেরত 1;
     }
-    if (encoded_ref && strcmp(encoded, encoded_ref)) {
+    যদি (encoded_ref && strcmp(encoded, encoded_ref)) {
         printf("Failed: encoded string differs from reference\n"
                "Encoded:\n%s\nReference:\n%s\n", encoded, encoded_ref);
-        return 1;
+        ফেরত 1;
     }
 
-    if ((data2_size = av_base64_decode(data2, encoded, max_data2_size)) != data_size) {
+    যদি ((data2_আকার = av_base64_decode(data2, encoded, max_data2_আকার)) != তথ্য_আকার) {
         printf("Failed: cannot decode the encoded string\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ফেরত 1;
     }
-    if ((data2_size = av_base64_decode(data2, encoded, data_size)) != data_size) {
+    যদি ((data2_আকার = av_base64_decode(data2, encoded, তথ্য_আকার)) != তথ্য_আকার) {
         printf("Failed: cannot decode with minimal buffer\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ফেরত 1;
     }
-    if (memcmp(data2, data, data_size)) {
+    যদি (memcmp(data2, তথ্য, তথ্য_আকার)) {
         printf("Failed: encoded/decoded data differs from original data\n");
-        return 1;
+        ফেরত 1;
     }
-    if (av_base64_decode(NULL, encoded, 0) != 0) {
+    যদি (av_base64_decode(ফাঁকা, encoded, 0) != 0) {
         printf("Failed: decode to NULL buffer\n");
-        return 1;
+        ফেরত 1;
     }
-    if (data_size > 0 && (data2_size = av_base64_decode(data2, encoded, data_size - 1)) != data_size - 1) {
+    যদি (তথ্য_আকার > 0 && (data2_আকার = av_base64_decode(data2, encoded, তথ্য_আকার - 1)) != তথ্য_আকার - 1) {
         printf("Failed: out of array write\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ফেরত 1;
     }
-    if (data_size > 1 && (data2_size = av_base64_decode(data2, encoded, data_size - 2)) != data_size - 2) {
+    যদি (তথ্য_আকার > 1 && (data2_আকার = av_base64_decode(data2, encoded, তথ্য_আকার - 2)) != তথ্য_আকার - 2) {
         printf("Failed: out of array write\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ফেরত 1;
     }
-    if (strlen(encoded)) {
-        char *end = strchr(encoded, '=');
-        if (!end)
+    যদি (strlen(encoded)) {
+        অক্ষর *end = strchr(encoded, '=');
+        যদি (!end)
             end = encoded + strlen(encoded) - 1;
         *end = '%';
-        if (av_base64_decode(NULL, encoded, 0) >= 0) {
+        যদি (av_base64_decode(ফাঁকা, encoded, 0) >= 0) {
             printf("Failed: error detection\n");
-            return 1;
+            ফেরত 1;
         }
     }
 
     printf("Passed!\n");
-    return 0;
+    ফেরত 0;
 }
 
-int main(int argc, char ** argv)
+পূর্ণসংখ্যা প্রধান(পূর্ণসংখ্যা argc, অক্ষর ** argv)
 {
-    int i, error_count = 0;
-    struct test {
-        const uint8_t *data;
-        const char *encoded_ref;
+    পূর্ণসংখ্যা i, error_গুনতি = 0;
+    কাঠামো test {
+        ধ্রুবক uint8_t *তথ্য;
+        ধ্রুবক অক্ষর *encoded_ref;
     } tests[] = {
         { "",        ""},
         { "1",       "MQ=="},
@@ -105,36 +105,36 @@ int main(int argc, char ** argv)
         { "666666",  "NjY2NjY2"},
         { "abc:def", "YWJjOmRlZg=="},
     };
-    char in[1024], out[2048];
+    অক্ষর in[1024], out[2048];
 
     printf("Encoding/decoding tests\n");
-    for (i = 0; i < FF_ARRAY_ELEMS(tests); i++)
-        error_count += test_encode_decode(tests[i].data, strlen(tests[i].data), tests[i].encoded_ref);
+    জন্য (i = 0; i < FF_ARRAY_ELEMS(tests); i++)
+        error_গুনতি += test_encode_decode(tests[i].তথ্য, strlen(tests[i].তথ্য), tests[i].encoded_ref);
 
-    if (argc>1 && !strcmp(argv[1], "-t")) {
-        memset(in, 123, sizeof(in));
-        for(i=0; i<10000; i++){
+    যদি (argc>1 && !strcmp(argv[1], "-t")) {
+        memset(in, 123, আকার(in));
+        জন্য(i=0; i<10000; i++){
             START_TIMER
-            av_base64_encode(out, sizeof(out), in, sizeof(in));
+            av_base64_encode(out, আকার(out), in, আকার(in));
             STOP_TIMER("encode")
         }
-        for(i=0; i<10000; i++){
+        জন্য(i=0; i<10000; i++){
             START_TIMER
-            av_base64_decode(in, out, sizeof(in));
+            av_base64_decode(in, out, আকার(in));
             STOP_TIMER("decode")
         }
 
-        for(i=0; i<10000; i++){
+        জন্য(i=0; i<10000; i++){
             START_TIMER
-            av_base64_decode(NULL, out, 0);
+            av_base64_decode(ফাঁকা, out, 0);
             STOP_TIMER("syntax check")
         }
     }
 
-    if (error_count)
-        printf("Error Count: %d.\n", error_count);
+    যদি (error_গুনতি)
+        printf("Error Count: %d.\n", error_গুনতি);
 
-    return !!error_count;
+    ফেরত !!error_গুনতি;
 }
 
 // LCOV_EXCL_STOP

@@ -27,10 +27,10 @@
 #ifndef AVUTIL_BPRINT_H
 #define AVUTIL_BPRINT_H
 
-#include <stdarg.h>
+#অন্তর্ভাব <stdarg.h>
 
-#include "attributes.h"
-#include "avstring.h"
+#অন্তর্ভাব "attributes.h"
+#অন্তর্ভাব "avstring.h"
 
 /**
  * @defgroup lavu_avbprint AVBPrint
@@ -45,11 +45,11 @@
  * This helps ensuring binary compatibility with future versions.
  */
 
-#define FF_PAD_STRUCTURE(name, size, ...) \
-struct ff_pad_helper_##name { __VA_ARGS__ }; \
-typedef struct name { \
+#define FF_PAD_STRUCTURE(name, আকার_2, ...) \
+কাঠামো ff_pad_helper_##name { __VA_ARGS__ }; \
+প্রকারলেখ কাঠামো name { \
     __VA_ARGS__ \
-    char reserved_padding[size - sizeof(struct ff_pad_helper_##name)]; \
+    অক্ষর reserved_padding[আকার_2 - আকার(কাঠামো ff_pad_helper_##name)]; \
 } name;
 
 /**
@@ -91,11 +91,11 @@ typedef struct name { \
  */
 
 FF_PAD_STRUCTURE(AVBPrint, 1024,
-    char *str;         /**< string so far */
+    অক্ষর *str;         /**< string so far */
     unsigned len;      /**< length so far */
-    unsigned size;     /**< allocated memory */
-    unsigned size_max; /**< maximum allocated memory */
-    char reserved_internal_buffer[1];
+    unsigned আকার_2;     /**< allocated memory */
+    unsigned আকার_max; /**< maximum allocated memory */
+    অক্ষর reserved_internal_বাফার[1];
 )
 
 /**
@@ -108,21 +108,21 @@ FF_PAD_STRUCTURE(AVBPrint, 1024,
 /**
  * Buffer will be reallocated as necessary, with an amortized linear cost.
  */
-#define AV_BPRINT_SIZE_UNLIMITED  ((unsigned)-1)
+#define AV_BPRINT_আকার_UNLIMITED  ((unsigned)-1)
 /**
  * Use the exact size available in the AVBPrint structure itself.
  *
  * Thus ensuring no dynamic memory allocation. The internal buffer is large
  * enough to hold a reasonable paragraph of text, such as the current paragraph.
  */
-#define AV_BPRINT_SIZE_AUTOMATIC  1
+#define AV_BPRINT_আকার_AUTOMATIC  1
 /**
  * Do not write anything to the buffer, only calculate the total length.
  *
  * The write operations can then possibly be repeated in a buffer with
  * exactly the necessary size (using `size_init = size_max = AVBPrint.len + 1`).
  */
-#define AV_BPRINT_SIZE_COUNT_ONLY 0
+#define AV_BPRINT_আকার_গুনতি_ONLY 0
 /** @} */
 
 /**
@@ -138,7 +138,7 @@ FF_PAD_STRUCTURE(AVBPrint, 1024,
  *                   - `-1` is converted to `UINT_MAX`, the largest limit possible.
  *                   Check also `AV_BPRINT_SIZE_*` macros.
  */
-void av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max);
+শূন্য av_bprint_init(AVBPrint *buf, unsigned আকার_init, unsigned আকার_max);
 
 /**
  * Init a print buffer using a pre-existing buffer.
@@ -152,22 +152,22 @@ void av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max);
  * @param buffer  byte buffer to use for the string data
  * @param size    size of buffer
  */
-void av_bprint_init_for_buffer(AVBPrint *buf, char *buffer, unsigned size);
+শূন্য av_bprint_init_for_বাফার(AVBPrint *buf, অক্ষর *বাফার, unsigned আকার_2);
 
 /**
  * Append a formatted string to a print buffer.
  */
-void av_bprintf(AVBPrint *buf, const char *fmt, ...) av_printf_format(2, 3);
+শূন্য av_bprintf(AVBPrint *buf, ধ্রুবক অক্ষর *fmt, ...) av_printf_format(2, 3);
 
 /**
  * Append a formatted string to a print buffer.
  */
-void av_vbprintf(AVBPrint *buf, const char *fmt, va_list vl_arg);
+শূন্য av_vbprintf(AVBPrint *buf, ধ্রুবক অক্ষর *fmt, va_list vl_arg);
 
 /**
  * Append char c n times to a print buffer.
  */
-void av_bprint_chars(AVBPrint *buf, char c, unsigned n);
+শূন্য av_bprint_chars(AVBPrint *buf, অক্ষর c, unsigned n);
 
 /**
  * Append data to a print buffer.
@@ -176,9 +176,9 @@ void av_bprint_chars(AVBPrint *buf, char c, unsigned n);
  * @param data pointer to data
  * @param size size of data
  */
-void av_bprint_append_data(AVBPrint *buf, const char *data, unsigned size);
+শূন্য av_bprint_append_তথ্য(AVBPrint *buf, ধ্রুবক অক্ষর *তথ্য, unsigned আকার_2);
 
-struct tm;
+কাঠামো tm;
 /**
  * Append a formatted date and time to a print buffer.
  *
@@ -190,7 +190,7 @@ struct tm;
  * produce poor results if the format string expands to a very long text and
  * the bprint buffer is near the limit stated by the size_max option.
  */
-void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm);
+শূন্য av_bprint_strftime(AVBPrint *buf, ধ্রুবক অক্ষর *fmt, ধ্রুবক কাঠামো tm *tm);
 
 /**
  * Allocate bytes in the buffer for external use.
@@ -201,13 +201,13 @@ void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm);
  * @param[out] actual_size  size of the memory area after allocation;
  *                          can be larger or smaller than size
  */
-void av_bprint_get_buffer(AVBPrint *buf, unsigned size,
-                          unsigned char **mem, unsigned *actual_size);
+শূন্য av_bprint_get_বাফার(AVBPrint *buf, unsigned আকার_2,
+                          unsigned অক্ষর **mem, unsigned *actual_আকার);
 
 /**
  * Reset the string to "" but keep internal allocated data.
  */
-void av_bprint_clear(AVBPrint *buf);
+শূন্য av_bprint_clear(AVBPrint *buf);
 
 /**
  * Test if the print buffer is complete (not truncated).
@@ -215,9 +215,9 @@ void av_bprint_clear(AVBPrint *buf);
  * It may have been truncated due to a memory allocation failure
  * or the size_max limit (compare size and size_max if necessary).
  */
-static inline int av_bprint_is_complete(const AVBPrint *buf)
+স্থির অন্তঃরেখ পূর্ণসংখ্যা av_bprint_is_complete(ধ্রুবক AVBPrint *buf)
 {
-    return buf->len < buf->size;
+    ফেরত buf->len < buf->আকার_2;
 }
 
 /**
@@ -231,7 +231,7 @@ static inline int av_bprint_is_complete(const AVBPrint *buf)
  *                    if NULL, the buffer is discarded and freed
  * @return  0 for success or error code (probably AVERROR(ENOMEM))
  */
-int av_bprint_finalize(AVBPrint *buf, char **ret_str);
+পূর্ণসংখ্যা av_bprint_finalize(AVBPrint *buf, অক্ষর **ret_str);
 
 /**
  * Escape the content in src and append it to dstbuf.
@@ -246,8 +246,8 @@ int av_bprint_finalize(AVBPrint *buf, char **ret_str);
  *                      notice.
  * @param flags         flags which control how to escape, see AV_ESCAPE_FLAG_* macros
  */
-void av_bprint_escape(AVBPrint *dstbuf, const char *src, const char *special_chars,
-                      enum AVEscapeMode mode, int flags);
+শূন্য av_bprint_escape(AVBPrint *dstbuf, ধ্রুবক অক্ষর *src, ধ্রুবক অক্ষর *special_chars,
+                      গণনা AVEscapeMode mode, পূর্ণসংখ্যা flags);
 
 /** @} */
 

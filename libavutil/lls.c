@@ -25,96 +25,96 @@
  * linear least squares model
  */
 
-#include <math.h>
-#include <string.h>
+#অন্তর্ভাব <math.h>
+#অন্তর্ভাব <string.h>
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "lls.h"
+#অন্তর্ভাব "config.h"
+#অন্তর্ভাব "attributes.h"
+#অন্তর্ভাব "float_dsp.h"
+#অন্তর্ভাব "lls.h"
 
-static void update_lls(LLSModel *m, const double *var)
+স্থির শূন্য update_lls(LLSModel *m, ধ্রুবক দ্বিগুণ *var)
 {
-    int i, j;
+    পূর্ণসংখ্যা i, j;
 
-    for (i = 0; i <= m->indep_count; i++) {
-        for (j = i; j <= m->indep_count; j++) {
+    জন্য (i = 0; i <= m->indep_গুনতি; i++) {
+        জন্য (j = i; j <= m->indep_গুনতি; j++) {
             m->covariance[i][j] += var[i] * var[j];
         }
     }
 }
 
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
+শূন্য avpriv_solve_lls(LLSModel *m, দ্বিগুণ threshold, unsigned short min_order)
 {
-    int i, j, k;
-    double (*factor)[MAX_VARS_ALIGN] = (void *) &m->covariance[1][0];
-    double (*covar) [MAX_VARS_ALIGN] = (void *) &m->covariance[1][1];
-    double *covar_y                = m->covariance[0];
-    int count                      = m->indep_count;
+    পূর্ণসংখ্যা i, j, k;
+    দ্বিগুণ (*factor)[MAX_VARS_ALIGN] = (শূন্য *) &m->covariance[1][0];
+    দ্বিগুণ (*covar) [MAX_VARS_ALIGN] = (শূন্য *) &m->covariance[1][1];
+    দ্বিগুণ *covar_y                = m->covariance[0];
+    পূর্ণসংখ্যা গুনতি                      = m->indep_গুনতি;
 
-    for (i = 0; i < count; i++) {
-        for (j = i; j < count; j++) {
-            double sum = covar[i][j];
+    জন্য (i = 0; i < গুনতি; i++) {
+        জন্য (j = i; j < গুনতি; j++) {
+            দ্বিগুণ যোগ = covar[i][j];
 
-            for (k = 0; k <= i-1; k++)
-                sum -= factor[i][k] * factor[j][k];
+            জন্য (k = 0; k <= i-1; k++)
+                যোগ -= factor[i][k] * factor[j][k];
 
-            if (i == j) {
-                if (sum < threshold)
-                    sum = 1.0;
-                factor[i][i] = sqrt(sum);
-            } else {
-                factor[j][i] = sum / factor[i][i];
+            যদি (i == j) {
+                যদি (যোগ < threshold)
+                    যোগ = 1.0;
+                factor[i][i] = sqrt(যোগ);
+            } অন্যথা {
+                factor[j][i] = যোগ / factor[i][i];
             }
         }
     }
 
-    for (i = 0; i < count; i++) {
-        double sum = covar_y[i + 1];
+    জন্য (i = 0; i < গুনতি; i++) {
+        দ্বিগুণ যোগ = covar_y[i + 1];
 
-        for (k = 0; k <= i-1; k++)
-            sum -= factor[i][k] * m->coeff[0][k];
+        জন্য (k = 0; k <= i-1; k++)
+            যোগ -= factor[i][k] * m->coeff[0][k];
 
-        m->coeff[0][i] = sum / factor[i][i];
+        m->coeff[0][i] = যোগ / factor[i][i];
     }
 
-    for (j = count - 1; j >= min_order; j--) {
-        for (i = j; i >= 0; i--) {
-            double sum = m->coeff[0][i];
+    জন্য (j = গুনতি - 1; j >= min_order; j--) {
+        জন্য (i = j; i >= 0; i--) {
+            দ্বিগুণ যোগ = m->coeff[0][i];
 
-            for (k = i + 1; k <= j; k++)
-                sum -= factor[k][i] * m->coeff[j][k];
+            জন্য (k = i + 1; k <= j; k++)
+                যোগ -= factor[k][i] * m->coeff[j][k];
 
-            m->coeff[j][i] = sum / factor[i][i];
+            m->coeff[j][i] = যোগ / factor[i][i];
         }
 
         m->variance[j] = covar_y[0];
 
-        for (i = 0; i <= j; i++) {
-            double sum = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
+        জন্য (i = 0; i <= j; i++) {
+            দ্বিগুণ যোগ = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
 
-            for (k = 0; k < i; k++)
-                sum += 2 * m->coeff[j][k] * covar[k][i];
+            জন্য (k = 0; k < i; k++)
+                যোগ += 2 * m->coeff[j][k] * covar[k][i];
 
-            m->variance[j] += m->coeff[j][i] * sum;
+            m->variance[j] += m->coeff[j][i] * যোগ;
         }
     }
 }
 
-static double evaluate_lls(LLSModel *m, const double *param, int order)
+স্থির দ্বিগুণ evaluate_lls(LLSModel *m, ধ্রুবক দ্বিগুণ *param, পূর্ণসংখ্যা order)
 {
-    return ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
+    ফেরত ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
 }
 
-av_cold void avpriv_init_lls(LLSModel *m, int indep_count)
+av_cold শূন্য avpriv_init_lls(LLSModel *m, পূর্ণসংখ্যা indep_গুনতি)
 {
-    memset(m, 0, sizeof(LLSModel));
-    m->indep_count = indep_count;
+    memset(m, 0, আকার(LLSModel));
+    m->indep_গুনতি = indep_গুনতি;
     m->update_lls = update_lls;
     m->evaluate_lls = evaluate_lls;
-#if ARCH_RISCV
+#যদি ARCH_RISCV
     ff_init_lls_riscv(m);
-#elif ARCH_X86 && HAVE_X86ASM
+#নতুবা_যদি ARCH_X86 && HAVE_X86ASM
     ff_init_lls_x86(m);
 #endif
 }

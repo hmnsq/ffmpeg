@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#অন্তর্ভাব <string.h>
 
-#include "encryption_info.h"
-#include "error.h"
-#include "mem.h"
-#include "intreadwrite.h"
+#অন্তর্ভাব "encryption_info.h"
+#অন্তর্ভাব "error.h"
+#অন্তর্ভাব "mem.h"
+#অন্তর্ভাব "intreadwrite.h"
 
 #define FF_ENCRYPTION_INFO_EXTRA 24
 
@@ -39,127 +39,127 @@
 //   u32be bytes_of_protected_data
 // }[subsample_count]
 
-AVEncryptionInfo *av_encryption_info_alloc(uint32_t subsample_count, uint32_t key_id_size, uint32_t iv_size)
+AVEncryptionInfo *av_encryption_info_alloc(uint32_t subsample_গুনতি, uint32_t চাবি_id_আকার, uint32_t iv_আকার)
 {
     AVEncryptionInfo *info;
 
-    info = av_mallocz(sizeof(*info));
-    if (!info)
-        return NULL;
+    info = av_mallocz(আকার(*info));
+    যদি (!info)
+        ফেরত ফাঁকা;
 
-    info->key_id = av_mallocz(key_id_size);
-    info->key_id_size = key_id_size;
-    info->iv = av_mallocz(iv_size);
-    info->iv_size = iv_size;
-    info->subsamples = av_calloc(subsample_count, sizeof(*info->subsamples));
-    info->subsample_count = subsample_count;
+    info->চাবি_id = av_mallocz(চাবি_id_আকার);
+    info->চাবি_id_আকার = চাবি_id_আকার;
+    info->iv = av_mallocz(iv_আকার);
+    info->iv_আকার = iv_আকার;
+    info->subsamples = av_calloc(subsample_গুনতি, আকার(*info->subsamples));
+    info->subsample_গুনতি = subsample_গুনতি;
 
     // Allow info->subsamples to be NULL if there are no subsamples.
-    if (!info->key_id || !info->iv || (!info->subsamples && subsample_count)) {
+    যদি (!info->চাবি_id || !info->iv || (!info->subsamples && subsample_গুনতি)) {
         av_encryption_info_free(info);
-        return NULL;
+        ফেরত ফাঁকা;
     }
 
-    return info;
+    ফেরত info;
 }
 
-AVEncryptionInfo *av_encryption_info_clone(const AVEncryptionInfo *info)
+AVEncryptionInfo *av_encryption_info_clone(ধ্রুবক AVEncryptionInfo *info)
 {
     AVEncryptionInfo *ret;
 
-    ret = av_encryption_info_alloc(info->subsample_count, info->key_id_size, info->iv_size);
-    if (!ret)
-        return NULL;
+    ret = av_encryption_info_alloc(info->subsample_গুনতি, info->চাবি_id_আকার, info->iv_আকার);
+    যদি (!ret)
+        ফেরত ফাঁকা;
 
     ret->scheme = info->scheme;
     ret->crypt_byte_block = info->crypt_byte_block;
     ret->skip_byte_block = info->skip_byte_block;
-    memcpy(ret->iv, info->iv, info->iv_size);
-    memcpy(ret->key_id, info->key_id, info->key_id_size);
-    memcpy(ret->subsamples, info->subsamples, sizeof(*info->subsamples) * info->subsample_count);
-    return ret;
+    memcpy(ret->iv, info->iv, info->iv_আকার);
+    memcpy(ret->চাবি_id, info->চাবি_id, info->চাবি_id_আকার);
+    memcpy(ret->subsamples, info->subsamples, আকার(*info->subsamples) * info->subsample_গুনতি);
+    ফেরত ret;
 }
 
-void av_encryption_info_free(AVEncryptionInfo *info)
+শূন্য av_encryption_info_free(AVEncryptionInfo *info)
 {
-    if (info) {
-        av_free(info->key_id);
+    যদি (info) {
+        av_free(info->চাবি_id);
         av_free(info->iv);
         av_free(info->subsamples);
         av_free(info);
     }
 }
 
-AVEncryptionInfo *av_encryption_info_get_side_data(const uint8_t* buffer, size_t size)
+AVEncryptionInfo *av_encryption_info_get_side_তথ্য(ধ্রুবক uint8_t* বাফার, size_t আকার_2)
 {
     AVEncryptionInfo *info;
-    uint64_t key_id_size, iv_size, subsample_count, i;
+    uint64_t চাবি_id_আকার, iv_আকার, subsample_গুনতি, i;
 
-    if (!buffer || size < FF_ENCRYPTION_INFO_EXTRA)
-        return NULL;
+    যদি (!বাফার || আকার_2 < FF_ENCRYPTION_INFO_EXTRA)
+        ফেরত ফাঁকা;
 
-    key_id_size = AV_RB32(buffer + 12);
-    iv_size = AV_RB32(buffer + 16);
-    subsample_count = AV_RB32(buffer + 20);
+    চাবি_id_আকার = AV_RB32(বাফার + 12);
+    iv_আকার = AV_RB32(বাফার + 16);
+    subsample_গুনতি = AV_RB32(বাফার + 20);
 
-    if (size < FF_ENCRYPTION_INFO_EXTRA + key_id_size + iv_size + subsample_count * 8)
-        return NULL;
+    যদি (আকার_2 < FF_ENCRYPTION_INFO_EXTRA + চাবি_id_আকার + iv_আকার + subsample_গুনতি * 8)
+        ফেরত ফাঁকা;
 
-    info = av_encryption_info_alloc(subsample_count, key_id_size, iv_size);
-    if (!info)
-        return NULL;
+    info = av_encryption_info_alloc(subsample_গুনতি, চাবি_id_আকার, iv_আকার);
+    যদি (!info)
+        ফেরত ফাঁকা;
 
-    info->scheme = AV_RB32(buffer);
-    info->crypt_byte_block = AV_RB32(buffer + 4);
-    info->skip_byte_block = AV_RB32(buffer + 8);
-    memcpy(info->key_id, buffer + 24, key_id_size);
-    memcpy(info->iv, buffer + key_id_size + 24, iv_size);
+    info->scheme = AV_RB32(বাফার);
+    info->crypt_byte_block = AV_RB32(বাফার + 4);
+    info->skip_byte_block = AV_RB32(বাফার + 8);
+    memcpy(info->চাবি_id, বাফার + 24, চাবি_id_আকার);
+    memcpy(info->iv, বাফার + চাবি_id_আকার + 24, iv_আকার);
 
-    buffer += key_id_size + iv_size + 24;
-    for (i = 0; i < subsample_count; i++) {
-        info->subsamples[i].bytes_of_clear_data = AV_RB32(buffer);
-        info->subsamples[i].bytes_of_protected_data = AV_RB32(buffer + 4);
-        buffer += 8;
+    বাফার += চাবি_id_আকার + iv_আকার + 24;
+    জন্য (i = 0; i < subsample_গুনতি; i++) {
+        info->subsamples[i].bytes_of_clear_তথ্য = AV_RB32(বাফার);
+        info->subsamples[i].bytes_of_protected_তথ্য = AV_RB32(বাফার + 4);
+        বাফার += 8;
     }
 
-    return info;
+    ফেরত info;
 }
 
-uint8_t *av_encryption_info_add_side_data(const AVEncryptionInfo *info, size_t *size)
+uint8_t *av_encryption_info_add_side_তথ্য(ধ্রুবক AVEncryptionInfo *info, size_t *আকার_2)
 {
-    uint8_t *buffer, *cur_buffer;
+    uint8_t *বাফার, *cur_বাফার;
     uint32_t i;
 
-    if (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA < info->key_id_size ||
-        UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->key_id_size < info->iv_size ||
-        (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->key_id_size - info->iv_size) / 8 < info->subsample_count) {
-        return NULL;
+    যদি (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA < info->চাবি_id_আকার ||
+        UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->চাবি_id_আকার < info->iv_আকার ||
+        (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->চাবি_id_আকার - info->iv_আকার) / 8 < info->subsample_গুনতি) {
+        ফেরত ফাঁকা;
     }
 
-    *size = FF_ENCRYPTION_INFO_EXTRA + info->key_id_size + info->iv_size +
-            (info->subsample_count * 8);
-    cur_buffer = buffer = av_malloc(*size);
-    if (!buffer)
-        return NULL;
+    *আকার_2 = FF_ENCRYPTION_INFO_EXTRA + info->চাবি_id_আকার + info->iv_আকার +
+            (info->subsample_গুনতি * 8);
+    cur_বাফার = বাফার = av_malloc(*আকার_2);
+    যদি (!বাফার)
+        ফেরত ফাঁকা;
 
-    AV_WB32(cur_buffer,      info->scheme);
-    AV_WB32(cur_buffer +  4, info->crypt_byte_block);
-    AV_WB32(cur_buffer +  8, info->skip_byte_block);
-    AV_WB32(cur_buffer + 12, info->key_id_size);
-    AV_WB32(cur_buffer + 16, info->iv_size);
-    AV_WB32(cur_buffer + 20, info->subsample_count);
-    cur_buffer += 24;
-    memcpy(cur_buffer, info->key_id, info->key_id_size);
-    cur_buffer += info->key_id_size;
-    memcpy(cur_buffer, info->iv, info->iv_size);
-    cur_buffer += info->iv_size;
-    for (i = 0; i < info->subsample_count; i++) {
-        AV_WB32(cur_buffer, info->subsamples[i].bytes_of_clear_data);
-        AV_WB32(cur_buffer + 4, info->subsamples[i].bytes_of_protected_data);
-        cur_buffer += 8;
+    AV_WB32(cur_বাফার,      info->scheme);
+    AV_WB32(cur_বাফার +  4, info->crypt_byte_block);
+    AV_WB32(cur_বাফার +  8, info->skip_byte_block);
+    AV_WB32(cur_বাফার + 12, info->চাবি_id_আকার);
+    AV_WB32(cur_বাফার + 16, info->iv_আকার);
+    AV_WB32(cur_বাফার + 20, info->subsample_গুনতি);
+    cur_বাফার += 24;
+    memcpy(cur_বাফার, info->চাবি_id, info->চাবি_id_আকার);
+    cur_বাফার += info->চাবি_id_আকার;
+    memcpy(cur_বাফার, info->iv, info->iv_আকার);
+    cur_বাফার += info->iv_আকার;
+    জন্য (i = 0; i < info->subsample_গুনতি; i++) {
+        AV_WB32(cur_বাফার, info->subsamples[i].bytes_of_clear_তথ্য);
+        AV_WB32(cur_বাফার + 4, info->subsamples[i].bytes_of_protected_তথ্য);
+        cur_বাফার += 8;
     }
 
-    return buffer;
+    ফেরত বাফার;
 }
 
 // The format of the AVEncryptionInitInfo side data:
@@ -177,185 +177,185 @@ uint8_t *av_encryption_info_add_side_data(const AVEncryptionInfo *info, size_t *
 #define FF_ENCRYPTION_INIT_INFO_EXTRA 16
 
 AVEncryptionInitInfo *av_encryption_init_info_alloc(
-    uint32_t system_id_size, uint32_t num_key_ids, uint32_t key_id_size, uint32_t data_size)
+    uint32_t system_id_আকার, uint32_t অঙ্ক_চাবি_ids, uint32_t চাবি_id_আকার, uint32_t তথ্য_আকার)
 {
     AVEncryptionInitInfo *info;
     uint32_t i;
 
-    if (num_key_ids && !key_id_size)
-        return NULL;
+    যদি (অঙ্ক_চাবি_ids && !চাবি_id_আকার)
+        ফেরত ফাঁকা;
 
-    info = av_mallocz(sizeof(*info));
-    if (!info)
-        return NULL;
+    info = av_mallocz(আকার(*info));
+    যদি (!info)
+        ফেরত ফাঁকা;
 
-    info->system_id = av_mallocz(system_id_size);
-    info->system_id_size = system_id_size;
-    info->key_ids = key_id_size ? av_calloc(num_key_ids, sizeof(*info->key_ids)) : NULL;
-    info->num_key_ids = num_key_ids;
-    info->key_id_size = key_id_size;
-    info->data = av_mallocz(data_size);
-    info->data_size = data_size;
+    info->system_id = av_mallocz(system_id_আকার);
+    info->system_id_আকার = system_id_আকার;
+    info->চাবি_ids = চাবি_id_আকার ? av_calloc(অঙ্ক_চাবি_ids, আকার(*info->চাবি_ids)) : ফাঁকা;
+    info->অঙ্ক_চাবি_ids = অঙ্ক_চাবি_ids;
+    info->চাবি_id_আকার = চাবি_id_আকার;
+    info->তথ্য = av_mallocz(তথ্য_আকার);
+    info->তথ্য_আকার = তথ্য_আকার;
 
     // Allow pointers to be NULL if the size is 0.
-    if ((!info->system_id && system_id_size) || (!info->data && data_size) ||
-        (!info->key_ids && num_key_ids && key_id_size)) {
+    যদি ((!info->system_id && system_id_আকার) || (!info->তথ্য && তথ্য_আকার) ||
+        (!info->চাবি_ids && অঙ্ক_চাবি_ids && চাবি_id_আকার)) {
         av_encryption_init_info_free(info);
-        return NULL;
+        ফেরত ফাঁকা;
     }
 
-    if (key_id_size) {
-        for (i = 0; i < num_key_ids; i++) {
-            info->key_ids[i] = av_mallocz(key_id_size);
-            if (!info->key_ids[i]) {
+    যদি (চাবি_id_আকার) {
+        জন্য (i = 0; i < অঙ্ক_চাবি_ids; i++) {
+            info->চাবি_ids[i] = av_mallocz(চাবি_id_আকার);
+            যদি (!info->চাবি_ids[i]) {
                 av_encryption_init_info_free(info);
-                return NULL;
+                ফেরত ফাঁকা;
             }
         }
     }
 
-    return info;
+    ফেরত info;
 }
 
-void av_encryption_init_info_free(AVEncryptionInitInfo *info)
+শূন্য av_encryption_init_info_free(AVEncryptionInitInfo *info)
 {
-    while (info) {
-        AVEncryptionInitInfo *next = info->next;
+    যখন (info) {
+        AVEncryptionInitInfo *পরবর্তী = info->পরবর্তী;
         uint32_t i;
 
-        for (i = 0; i < info->num_key_ids; i++) {
-            av_free(info->key_ids[i]);
+        জন্য (i = 0; i < info->অঙ্ক_চাবি_ids; i++) {
+            av_free(info->চাবি_ids[i]);
         }
         av_free(info->system_id);
-        av_free(info->key_ids);
-        av_free(info->data);
+        av_free(info->চাবি_ids);
+        av_free(info->তথ্য);
         av_free(info);
 
-        info = next;
+        info = পরবর্তী;
     }
 }
 
-AVEncryptionInitInfo *av_encryption_init_info_get_side_data(
-    const uint8_t *side_data, size_t side_data_size)
+AVEncryptionInitInfo *av_encryption_init_info_get_side_তথ্য(
+    ধ্রুবক uint8_t *side_তথ্য, size_t side_তথ্য_আকার)
 {
     // |ret| tracks the front of the list, |info| tracks the back.
-    AVEncryptionInitInfo *ret = NULL, *info, *temp_info;
-    uint64_t system_id_size, num_key_ids, key_id_size, data_size, i, j;
-    uint64_t init_info_count;
+    AVEncryptionInitInfo *ret = ফাঁকা, *info, *অস্থায়ী_info;
+    uint64_t system_id_আকার, অঙ্ক_চাবি_ids, চাবি_id_আকার, তথ্য_আকার, i, j;
+    uint64_t init_info_গুনতি;
 
-    if (!side_data || side_data_size < 4)
-        return NULL;
+    যদি (!side_তথ্য || side_তথ্য_আকার < 4)
+        ফেরত ফাঁকা;
 
-    init_info_count = AV_RB32(side_data);
-    side_data += 4;
-    side_data_size -= 4;
-    for (i = 0; i < init_info_count; i++) {
-        if (side_data_size < FF_ENCRYPTION_INIT_INFO_EXTRA) {
+    init_info_গুনতি = AV_RB32(side_তথ্য);
+    side_তথ্য += 4;
+    side_তথ্য_আকার -= 4;
+    জন্য (i = 0; i < init_info_গুনতি; i++) {
+        যদি (side_তথ্য_আকার < FF_ENCRYPTION_INIT_INFO_EXTRA) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            ফেরত ফাঁকা;
         }
 
-        system_id_size = AV_RB32(side_data);
-        num_key_ids = AV_RB32(side_data + 4);
-        key_id_size = AV_RB32(side_data + 8);
-        data_size = AV_RB32(side_data + 12);
+        system_id_আকার = AV_RB32(side_তথ্য);
+        অঙ্ক_চাবি_ids = AV_RB32(side_তথ্য + 4);
+        চাবি_id_আকার = AV_RB32(side_তথ্য + 8);
+        তথ্য_আকার = AV_RB32(side_তথ্য + 12);
 
         // UINT32_MAX + UINT32_MAX + UINT32_MAX * UINT32_MAX == UINT64_MAX
-        if (side_data_size - FF_ENCRYPTION_INIT_INFO_EXTRA < system_id_size + data_size + num_key_ids * key_id_size) {
+        যদি (side_তথ্য_আকার - FF_ENCRYPTION_INIT_INFO_EXTRA < system_id_আকার + তথ্য_আকার + অঙ্ক_চাবি_ids * চাবি_id_আকার) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            ফেরত ফাঁকা;
         }
-        side_data += FF_ENCRYPTION_INIT_INFO_EXTRA;
-        side_data_size -= FF_ENCRYPTION_INIT_INFO_EXTRA;
+        side_তথ্য += FF_ENCRYPTION_INIT_INFO_EXTRA;
+        side_তথ্য_আকার -= FF_ENCRYPTION_INIT_INFO_EXTRA;
 
-        temp_info = av_encryption_init_info_alloc(system_id_size, num_key_ids, key_id_size, data_size);
-        if (!temp_info) {
+        অস্থায়ী_info = av_encryption_init_info_alloc(system_id_আকার, অঙ্ক_চাবি_ids, চাবি_id_আকার, তথ্য_আকার);
+        যদি (!অস্থায়ী_info) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            ফেরত ফাঁকা;
         }
-        if (i == 0) {
-            info = ret = temp_info;
-        } else {
-            info->next = temp_info;
-            info = temp_info;
+        যদি (i == 0) {
+            info = ret = অস্থায়ী_info;
+        } অন্যথা {
+            info->পরবর্তী = অস্থায়ী_info;
+            info = অস্থায়ী_info;
         }
 
-        memcpy(info->system_id, side_data, system_id_size);
-        side_data += system_id_size;
-        side_data_size -= system_id_size;
-        for (j = 0; j < num_key_ids; j++) {
-            memcpy(info->key_ids[j], side_data, key_id_size);
-            side_data += key_id_size;
-            side_data_size -= key_id_size;
+        memcpy(info->system_id, side_তথ্য, system_id_আকার);
+        side_তথ্য += system_id_আকার;
+        side_তথ্য_আকার -= system_id_আকার;
+        জন্য (j = 0; j < অঙ্ক_চাবি_ids; j++) {
+            memcpy(info->চাবি_ids[j], side_তথ্য, চাবি_id_আকার);
+            side_তথ্য += চাবি_id_আকার;
+            side_তথ্য_আকার -= চাবি_id_আকার;
         }
-        memcpy(info->data, side_data, data_size);
-        side_data += data_size;
-        side_data_size -= data_size;
+        memcpy(info->তথ্য, side_তথ্য, তথ্য_আকার);
+        side_তথ্য += তথ্য_আকার;
+        side_তথ্য_আকার -= তথ্য_আকার;
     }
 
-    return ret;
+    ফেরত ret;
 }
 
-int av_encryption_init_info_append_side_data(uint8_t **side_data, size_t *side_data_size,
-                                             unsigned int *allocated_size,
-                                             const AVEncryptionInitInfo *info)
+পূর্ণসংখ্যা av_encryption_init_info_append_side_তথ্য(uint8_t **side_তথ্য, size_t *side_তথ্য_আকার,
+                                             unsigned পূর্ণসংখ্যা *allocated_আকার,
+                                             ধ্রুবক AVEncryptionInitInfo *info)
 {
-    const AVEncryptionInitInfo *cur_info;
-    uint8_t *buffer, *cur_buffer;
+    ধ্রুবক AVEncryptionInitInfo *cur_info;
+    uint8_t *বাফার, *cur_বাফার;
     uint32_t i;
-    uint64_t init_info_count    = *side_data ? AV_RB32(*side_data) : 0;
-    size_t   old_side_data_size = *side_data ? *side_data_size : 4;
-    uint64_t new_side_data_size = old_side_data_size;
+    uint64_t init_info_গুনতি    = *side_তথ্য ? AV_RB32(*side_তথ্য) : 0;
+    size_t   old_side_তথ্য_আকার = *side_তথ্য ? *side_তথ্য_আকার : 4;
+    uint64_t new_side_তথ্য_আকার = old_side_তথ্য_আকার;
 
-    for (cur_info = info; cur_info; cur_info = cur_info->next) {
-        new_side_data_size += (uint64_t)FF_ENCRYPTION_INIT_INFO_EXTRA + cur_info->system_id_size + cur_info->data_size;
-        if (init_info_count == UINT32_MAX || new_side_data_size > UINT32_MAX)
-            return AVERROR(EINVAL);
-        init_info_count++;
+    জন্য (cur_info = info; cur_info; cur_info = cur_info->পরবর্তী) {
+        new_side_তথ্য_আকার += (uint64_t)FF_ENCRYPTION_INIT_INFO_EXTRA + cur_info->system_id_আকার + cur_info->তথ্য_আকার;
+        যদি (init_info_গুনতি == UINT32_MAX || new_side_তথ্য_আকার > UINT32_MAX)
+            ফেরত AVERROR(EINVAL);
+        init_info_গুনতি++;
 
-        if (cur_info->num_key_ids) {
-            new_side_data_size += (uint64_t)cur_info->num_key_ids * cur_info->key_id_size;
-            if (new_side_data_size > UINT32_MAX)
-                return AVERROR(EINVAL);
+        যদি (cur_info->অঙ্ক_চাবি_ids) {
+            new_side_তথ্য_আকার += (uint64_t)cur_info->অঙ্ক_চাবি_ids * cur_info->চাবি_id_আকার;
+            যদি (new_side_তথ্য_আকার > UINT32_MAX)
+                ফেরত AVERROR(EINVAL);
         }
     }
 
-    buffer = av_fast_realloc(*side_data, allocated_size, new_side_data_size);
-    if (!buffer)
-        return AVERROR(ENOMEM);
+    বাফার = av_fast_realloc(*side_তথ্য, allocated_আকার, new_side_তথ্য_আকার);
+    যদি (!বাফার)
+        ফেরত AVERROR(ENOMEM);
 
-    AV_WB32(buffer, init_info_count);
-    cur_buffer = buffer + old_side_data_size;
-    for (cur_info = info; cur_info; cur_info = cur_info->next) {
-        AV_WB32(cur_buffer,      cur_info->system_id_size);
-        AV_WB32(cur_buffer +  4, cur_info->num_key_ids);
-        AV_WB32(cur_buffer +  8, cur_info->key_id_size);
-        AV_WB32(cur_buffer + 12, cur_info->data_size);
-        cur_buffer += 16;
+    AV_WB32(বাফার, init_info_গুনতি);
+    cur_বাফার = বাফার + old_side_তথ্য_আকার;
+    জন্য (cur_info = info; cur_info; cur_info = cur_info->পরবর্তী) {
+        AV_WB32(cur_বাফার,      cur_info->system_id_আকার);
+        AV_WB32(cur_বাফার +  4, cur_info->অঙ্ক_চাবি_ids);
+        AV_WB32(cur_বাফার +  8, cur_info->চাবি_id_আকার);
+        AV_WB32(cur_বাফার + 12, cur_info->তথ্য_আকার);
+        cur_বাফার += 16;
 
-        memcpy(cur_buffer, cur_info->system_id, cur_info->system_id_size);
-        cur_buffer += cur_info->system_id_size;
-        for (i = 0; i < cur_info->num_key_ids; i++) {
-            memcpy(cur_buffer, cur_info->key_ids[i], cur_info->key_id_size);
-            cur_buffer += cur_info->key_id_size;
+        memcpy(cur_বাফার, cur_info->system_id, cur_info->system_id_আকার);
+        cur_বাফার += cur_info->system_id_আকার;
+        জন্য (i = 0; i < cur_info->অঙ্ক_চাবি_ids; i++) {
+            memcpy(cur_বাফার, cur_info->চাবি_ids[i], cur_info->চাবি_id_আকার);
+            cur_বাফার += cur_info->চাবি_id_আকার;
         }
-        if (cur_info->data_size > 0) {
-            memcpy(cur_buffer, cur_info->data, cur_info->data_size);
-            cur_buffer += cur_info->data_size;
+        যদি (cur_info->তথ্য_আকার > 0) {
+            memcpy(cur_বাফার, cur_info->তথ্য, cur_info->তথ্য_আকার);
+            cur_বাফার += cur_info->তথ্য_আকার;
         }
     }
 
-    *side_data      = buffer;
-    *side_data_size = new_side_data_size;
-    return 0;
+    *side_তথ্য      = বাফার;
+    *side_তথ্য_আকার = new_side_তথ্য_আকার;
+    ফেরত 0;
 }
 
-uint8_t *av_encryption_init_info_add_side_data(const AVEncryptionInitInfo *info, size_t *side_data_size)
+uint8_t *av_encryption_init_info_add_side_তথ্য(ধ্রুবক AVEncryptionInitInfo *info, size_t *side_তথ্য_আকার)
 {
-    uint8_t *side_data = NULL;
-    unsigned int allocated_size = 0;
+    uint8_t *side_তথ্য = ফাঁকা;
+    unsigned পূর্ণসংখ্যা allocated_আকার = 0;
 
-    if (av_encryption_init_info_append_side_data(&side_data, side_data_size, &allocated_size, info) < 0)
-        return NULL;
-    return side_data;
+    যদি (av_encryption_init_info_append_side_তথ্য(&side_তথ্য, side_তথ্য_আকার, &allocated_আকার, info) < 0)
+        ফেরত ফাঁকা;
+    ফেরত side_তথ্য;
 }

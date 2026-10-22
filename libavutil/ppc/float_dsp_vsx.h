@@ -21,18 +21,18 @@
 #ifndef AVUTIL_PPC_FLOAT_DSP_VSX_H
 #define AVUTIL_PPC_FLOAT_DSP_VSX_H
 
-void ff_vector_fmul_vsx(float *dst, const float *src0,
-                        const float *src1, int len);
+শূন্য ff_vector_fmul_vsx(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                        ধ্রুবক দশমিক *src1, পূর্ণসংখ্যা len);
 
-void ff_vector_fmul_window_vsx(float *dst, const float *src0,
-                               const float *src1, const float *win,
-                               int len);
+শূন্য ff_vector_fmul_window_vsx(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                               ধ্রুবক দশমিক *src1, ধ্রুবক দশমিক *win,
+                               পূর্ণসংখ্যা len);
 
-void ff_vector_fmul_add_vsx(float *dst, const float *src0,
-                            const float *src1, const float *src2,
-                            int len);
+শূন্য ff_vector_fmul_add_vsx(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                            ধ্রুবক দশমিক *src1, ধ্রুবক দশমিক *src2,
+                            পূর্ণসংখ্যা len);
 
-void ff_vector_fmul_reverse_vsx(float *dst, const float *src0,
-                                const float *src1, int len);
+শূন্য ff_vector_fmul_reverse_vsx(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                                ধ্রুবক দশমিক *src1, পূর্ণসংখ্যা len);
 
 #endif /* AVUTIL_PPC_FLOAT_DSP_VSX_H */

@@ -19,8 +19,8 @@
 #ifndef AVUTIL_AARCH64_BASE64_H
 #define AVUTIL_AARCH64_BASE64_H
 
-#include <stdint.h>
+#অন্তর্ভাব <stdint.h>
 
-char *ff_base64_encode_neon(char *out, const uint8_t *in, int in_size, const char *tbl);
+অক্ষর *ff_base64_encode_neon(অক্ষর *out, ধ্রুবক uint8_t *in, পূর্ণসংখ্যা in_আকার, ধ্রুবক অক্ষর *tbl);
 
 #endif /* AVUTIL_AARCH64_BASE64_H */

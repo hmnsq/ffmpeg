@@ -16,47 +16,47 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#অন্তর্ভাব <stdio.h>
 
-#include "libavutil/csp.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixfmt.h"
+#অন্তর্ভাব "libavutil/csp.h"
+#অন্তর্ভাব "libavutil/pixdesc.h"
+#অন্তর্ভাব "libavutil/pixfmt.h"
 
-static void print_cie(const char *label, AVCIExy xy)
+স্থির শূন্য print_cie(ধ্রুবক অক্ষর *label, AVCIExy xy)
 {
     printf("  %s=(%d/%d, %d/%d)\n", label,
-           xy.x.num, xy.x.den, xy.y.num, xy.y.den);
+           xy.x.অঙ্ক, xy.x.den, xy.y.অঙ্ক, xy.y.den);
 }
 
-static int cie_eq(AVCIExy a, AVCIExy b)
+স্থির পূর্ণসংখ্যা cie_eq(AVCIExy a, AVCIExy b)
 {
-    return av_cmp_q(a.x, b.x) == 0 && av_cmp_q(a.y, b.y) == 0;
+    ফেরত av_cmp_q(a.x, b.x) == 0 && av_cmp_q(a.y, b.y) == 0;
 }
 
-static int desc_eq(const AVColorPrimariesDesc *a, const AVColorPrimariesDesc *b)
+স্থির পূর্ণসংখ্যা desc_eq(ধ্রুবক AVColorPrimariesDesc *a, ধ্রুবক AVColorPrimariesDesc *b)
 {
-    return cie_eq(a->wp,     b->wp)     &&
+    ফেরত cie_eq(a->wp,     b->wp)     &&
            cie_eq(a->prim.r, b->prim.r) &&
            cie_eq(a->prim.g, b->prim.g) &&
            cie_eq(a->prim.b, b->prim.b);
 }
 
-int main(void)
+পূর্ণসংখ্যা প্রধান(শূন্য)
 {
     /* av_csp_luma_coeffs_from_avcsp: iterate every defined colorspace */
     printf("Testing av_csp_luma_coeffs_from_avcsp()\n");
-    for (enum AVColorSpace csp = 0; csp < AVCOL_SPC_NB; csp++) {
-        const AVLumaCoefficients *c = av_csp_luma_coeffs_from_avcsp(csp);
-        const char *name = av_color_space_name(csp);
-        if (!c) {
+    জন্য (গণনা AVColorSpace csp = 0; csp < AVCOL_SPC_NB; csp++) {
+        ধ্রুবক AVLumaCoefficients *c = av_csp_luma_coeffs_from_avcsp(csp);
+        ধ্রুবক অক্ষর *name = av_color_space_name(csp);
+        যদি (!c) {
             printf("csp=%-16s -> NULL\n", name ? name : "?");
-            continue;
+            চালু;
         }
         printf("csp=%-16s -> cr=%d/%d cg=%d/%d cb=%d/%d\n",
                name ? name : "?",
-               c->cr.num, c->cr.den,
-               c->cg.num, c->cg.den,
-               c->cb.num, c->cb.den);
+               c->cr.অঙ্ক, c->cr.den,
+               c->cg.অঙ্ক, c->cg.den,
+               c->cb.অঙ্ক, c->cb.den);
     }
     /* out-of-range enum */
     printf("csp=AVCOL_SPC_NB         -> %s\n",
@@ -64,20 +64,20 @@ int main(void)
 
     /* av_csp_primaries_desc_from_id + av_csp_primaries_id_from_desc */
     printf("\nTesting av_csp_primaries_desc_from_id() round trip\n");
-    for (enum AVColorPrimaries prm = 0; prm < AVCOL_PRI_EXT_NB; prm++) {
-        const AVColorPrimariesDesc *d;
-        const AVColorPrimariesDesc *d_back;
-        enum AVColorPrimaries back;
-        const char *name, *back_name, *status;
+    জন্য (গণনা AVColorPrimaries prm = 0; prm < AVCOL_PRI_EXT_NB; prm++) {
+        ধ্রুবক AVColorPrimariesDesc *d;
+        ধ্রুবক AVColorPrimariesDesc *d_back;
+        গণনা AVColorPrimaries back;
+        ধ্রুবক অক্ষর *name, *back_name, *status;
 
-        if (prm == AVCOL_PRI_NB)
+        যদি (prm == AVCOL_PRI_NB)
             prm = AVCOL_PRI_EXT_BASE;
 
         d    = av_csp_primaries_desc_from_id(prm);
         name = av_color_primaries_name(prm);
-        if (!d) {
+        যদি (!d) {
             printf("prm=%-16s -> NULL\n", name ? name : "?");
-            continue;
+            চালু;
         }
         printf("prm=%-16s ->\n", name ? name : "?");
         print_cie("wp ", d->wp);
@@ -93,10 +93,10 @@ int main(void)
         back      = av_csp_primaries_id_from_desc(d);
         d_back    = av_csp_primaries_desc_from_id(back);
         back_name = av_color_primaries_name(back);
-        if (back == AVCOL_PRI_UNSPECIFIED)
+        যদি (back == AVCOL_PRI_UNSPECIFIED)
             status = prm >= AVCOL_PRI_EXT_BASE ? "ext-no-base-match"
                                                : "MISMATCH";
-        else
+        অন্যথা
             status = d_back && desc_eq(d, d_back) ? "OK" : "MISMATCH";
         printf("  round-trip id=%-16s desc=%s\n",
                back_name ? back_name : "?", status);
@@ -115,7 +115,7 @@ int main(void)
                 .b = { { 0, 1 }, { 0, 1 } },
             },
         };
-        enum AVColorPrimaries back = av_csp_primaries_id_from_desc(&garbage);
+        গণনা AVColorPrimaries back = av_csp_primaries_id_from_desc(&garbage);
         printf("garbage desc -> %s (expect AVCOL_PRI_UNSPECIFIED)\n",
                av_color_primaries_name(back) ? av_color_primaries_name(back) : "?");
     }
@@ -123,11 +123,11 @@ int main(void)
     /* av_csp_approximate_trc_gamma + av_csp_approximate_eotf_gamma:
      * both return values from static tables, so output is bitexact. */
     printf("\nTesting av_csp_approximate_{trc,eotf}_gamma()\n");
-    for (enum AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
-        const char *name;
-        double g_trc, g_eotf;
+    জন্য (গণনা AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
+        ধ্রুবক অক্ষর *name;
+        দ্বিগুণ g_trc, g_eotf;
 
-        if (trc == AVCOL_TRC_NB)
+        যদি (trc == AVCOL_TRC_NB)
             trc = AVCOL_TRC_EXT_BASE;
 
         name   = av_color_transfer_name(trc);
@@ -141,5 +141,5 @@ int main(void)
            av_csp_approximate_trc_gamma(AVCOL_TRC_NB),
            av_csp_approximate_eotf_gamma(AVCOL_TRC_NB));
 
-    return 0;
+    ফেরত 0;
 }

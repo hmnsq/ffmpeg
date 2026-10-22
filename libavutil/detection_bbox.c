@@ -16,58 +16,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "detection_bbox.h"
-#include "mem.h"
+#অন্তর্ভাব "detection_bbox.h"
+#অন্তর্ভাব "mem.h"
 
-AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size)
+AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_আকার)
 {
-    size_t size;
-    struct BBoxContext {
+    size_t আকার_2;
+    কাঠামো BBoxContext {
         AVDetectionBBoxHeader header;
         AVDetectionBBox boxes;
     };
-    const size_t bboxes_offset = offsetof(struct BBoxContext, boxes);
-    const size_t bbox_size = sizeof(AVDetectionBBox);
+    ধ্রুবক size_t bboxes_offset = offsetof(কাঠামো BBoxContext, boxes);
+    ধ্রুবক size_t bbox_আকার = আকার(AVDetectionBBox);
     AVDetectionBBoxHeader *header;
 
-    size = bboxes_offset;
-    if (nb_bboxes > (SIZE_MAX - size) / bbox_size)
-        return NULL;
-    size += bbox_size * nb_bboxes;
+    আকার_2 = bboxes_offset;
+    যদি (nb_bboxes > (SIZE_MAX - আকার_2) / bbox_আকার)
+        ফেরত ফাঁকা;
+    আকার_2 += bbox_আকার * nb_bboxes;
 
-    header = av_mallocz(size);
-    if (!header)
-        return NULL;
+    header = av_mallocz(আকার_2);
+    যদি (!header)
+        ফেরত ফাঁকা;
 
     header->nb_bboxes     = nb_bboxes;
-    header->bbox_size     = bbox_size;
+    header->bbox_আকার     = bbox_আকার;
     header->bboxes_offset = bboxes_offset;
 
-    if (out_size)
-        *out_size = size;
+    যদি (out_আকার)
+        *out_আকার = আকার_2;
 
-    return header;
+    ফেরত header;
 }
 
-AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes)
+AVDetectionBBoxHeader *av_detection_bbox_create_side_তথ্য(AVFrame *frame, uint32_t nb_bboxes)
 {
     AVBufferRef         *buf;
     AVDetectionBBoxHeader *header;
-    size_t size;
+    size_t আকার_2;
 
-    header = av_detection_bbox_alloc(nb_bboxes, &size);
-    if (!header)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)header, size, NULL, NULL, 0);
-    if (!buf) {
+    header = av_detection_bbox_alloc(nb_bboxes, &আকার_2);
+    যদি (!header)
+        ফেরত ফাঁকা;
+    buf = av_বাফার_create((uint8_t *)header, আকার_2, ফাঁকা, ফাঁকা, 0);
+    যদি (!buf) {
         av_freep(&header);
-        return NULL;
+        ফেরত ফাঁকা;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    যদি (!av_frame_new_side_তথ্য_from_buf(frame, AV_FRAME_তথ্য_DETECTION_BBOXES, buf)) {
+        av_বাফার_unref(&buf);
+        ফেরত ফাঁকা;
     }
 
-    return header;
+    ফেরত header;
 }

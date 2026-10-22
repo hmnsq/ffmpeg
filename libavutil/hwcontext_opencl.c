@@ -18,73 +18,73 @@
 
 #define CL_USE_DEPRECATED_OPENCL_1_2_APIS
 
-#include <string.h>
+#অন্তর্ভাব <string.h>
 
-#include "config.h"
+#অন্তর্ভাব "config.h"
 
-#include "avassert.h"
-#include "avstring.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_opencl.h"
-#include "mem.h"
-#include "pixdesc.h"
+#অন্তর্ভাব "avassert.h"
+#অন্তর্ভাব "avstring.h"
+#অন্তর্ভাব "common.h"
+#অন্তর্ভাব "hwcontext.h"
+#অন্তর্ভাব "hwcontext_internal.h"
+#অন্তর্ভাব "hwcontext_opencl.h"
+#অন্তর্ভাব "mem.h"
+#অন্তর্ভাব "pixdesc.h"
 
-#if HAVE_OPENCL_VAAPI_BEIGNET
-#include <unistd.h>
-#include <va/va.h>
-#include <va/va_drmcommon.h>
-#include <CL/cl_intel.h>
-#include "hwcontext_vaapi.h"
+#যদি HAVE_OPENCL_VAAPI_BEIGNET
+#অন্তর্ভাব <unistd.h>
+#অন্তর্ভাব <va/va.h>
+#অন্তর্ভাব <va/va_drmcommon.h>
+#অন্তর্ভাব <CL/cl_intel.h>
+#অন্তর্ভাব "hwcontext_vaapi.h"
 #endif
 
-#if HAVE_OPENCL_DRM_BEIGNET
-#include <unistd.h>
-#include <CL/cl_intel.h>
-#include "hwcontext_drm.h"
+#যদি HAVE_OPENCL_DRM_BEIGNET
+#অন্তর্ভাব <unistd.h>
+#অন্তর্ভাব <CL/cl_intel.h>
+#অন্তর্ভাব "hwcontext_drm.h"
 #endif
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-#if CONFIG_LIBMFX
-#include <mfxstructures.h>
+#যদি HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#যদি CONFIG_LIBMFX
+#অন্তর্ভাব <mfxstructures.h>
 #endif
-#include <va/va.h>
-#include <CL/cl_va_api_media_sharing_intel.h>
-#include "hwcontext_vaapi.h"
+#অন্তর্ভাব <va/va.h>
+#অন্তর্ভাব <CL/cl_va_api_media_sharing_intel.h>
+#অন্তর্ভাব "hwcontext_vaapi.h"
 #endif
 
-#if HAVE_OPENCL_DXVA2
+#যদি HAVE_OPENCL_DXVA2
 #define COBJMACROS
-#include <CL/cl_dx9_media_sharing.h>
-#include <dxva2api.h>
-#include "hwcontext_dxva2.h"
+#অন্তর্ভাব <CL/cl_dx9_media_sharing.h>
+#অন্তর্ভাব <dxva2api.h>
+#অন্তর্ভাব "hwcontext_dxva2.h"
 #endif
 
-#if HAVE_OPENCL_D3D11
-#include <CL/cl_d3d11.h>
-#include "hwcontext_d3d11va.h"
+#যদি HAVE_OPENCL_D3D11
+#অন্তর্ভাব <CL/cl_d3d11.h>
+#অন্তর্ভাব "hwcontext_d3d11va.h"
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
-#include <CL/cl_ext.h>
-#include <drm_fourcc.h>
-#include "hwcontext_drm.h"
+#যদি HAVE_OPENCL_DRM_ARM
+#অন্তর্ভাব <CL/cl_ext.h>
+#অন্তর্ভাব <drm_fourcc.h>
+#অন্তর্ভাব "hwcontext_drm.h"
 #endif
 
-#if HAVE_OPENCL_VIDEOTOOLBOX
-#include <OpenCL/cl_gl_ext.h>
-#include <VideoToolbox/VideoToolbox.h>
+#যদি HAVE_OPENCL_VIDEOTOOLBOX
+#অন্তর্ভাব <OpenCL/cl_gl_ext.h>
+#অন্তর্ভাব <VideoToolbox/VideoToolbox.h>
 #endif
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA && CONFIG_LIBMFX
-extern int ff_qsv_get_surface_base_handle(mfxFrameSurface1 *surf,
-                                          enum AVHWDeviceType base_dev_typ,
-                                          void **base_handle);
+#যদি HAVE_OPENCL_VAAPI_INTEL_MEDIA && CONFIG_LIBMFX
+বাহ্যিক পূর্ণসংখ্যা ff_qsv_get_surface_base_handle(mfxFrameSurface1 *surf,
+                                          গণনা AVHWDeviceType base_dev_typ,
+                                          শূন্য **base_handle);
 #endif
 
 
-typedef struct OpenCLDeviceContext {
+প্রকারলেখ কাঠামো OpenCLDeviceContext {
     /**
      * The public AVOpenCLDeviceContext. See hwcontext_opencl.h for it.
      */
@@ -100,13 +100,13 @@ typedef struct OpenCLDeviceContext {
     cl_platform_id platform_id;
 
     // Platform/device-specific functions.
-#if HAVE_OPENCL_DRM_BEIGNET
-    int beignet_drm_mapping_usable;
+#যদি HAVE_OPENCL_DRM_BEIGNET
+    পূর্ণসংখ্যা beignet_drm_mapping_usable;
     clCreateImageFromFdINTEL_fn clCreateImageFromFdINTEL;
 #endif
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-    int qsv_mapping_usable;
+#যদি HAVE_OPENCL_VAAPI_INTEL_MEDIA
+    পূর্ণসংখ্যা qsv_mapping_usable;
     clCreateFromVA_APIMediaSurfaceINTEL_fn
         clCreateFromVA_APIMediaSurfaceINTEL;
     clEnqueueAcquireVA_APIMediaSurfacesINTEL_fn
@@ -115,8 +115,8 @@ typedef struct OpenCLDeviceContext {
         clEnqueueReleaseVA_APIMediaSurfacesINTEL;
 #endif
 
-#if HAVE_OPENCL_DXVA2
-    int dxva2_mapping_usable;
+#যদি HAVE_OPENCL_DXVA2
+    পূর্ণসংখ্যা dxva2_mapping_usable;
     cl_dx9_media_adapter_type_khr dx9_media_adapter_type;
 
     clCreateFromDX9MediaSurfaceKHR_fn
@@ -127,8 +127,8 @@ typedef struct OpenCLDeviceContext {
         clEnqueueReleaseDX9MediaSurfacesKHR;
 #endif
 
-#if HAVE_OPENCL_D3D11
-    int d3d11_mapping_usable;
+#যদি HAVE_OPENCL_D3D11
+    পূর্ণসংখ্যা d3d11_mapping_usable;
     clCreateFromD3D11Texture2DKHR_fn
         clCreateFromD3D11Texture2DKHR;
     clEnqueueAcquireD3D11ObjectsKHR_fn
@@ -137,12 +137,12 @@ typedef struct OpenCLDeviceContext {
         clEnqueueReleaseD3D11ObjectsKHR;
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
-    int drm_arm_mapping_usable;
+#যদি HAVE_OPENCL_DRM_ARM
+    পূর্ণসংখ্যা drm_arm_mapping_usable;
 #endif
 } OpenCLDeviceContext;
 
-typedef struct OpenCLFramesContext {
+প্রকারলেখ কাঠামো OpenCLFramesContext {
     /**
      * The public AVOpenCLFramesContext. See hwcontext_opencl.h for it.
      */
@@ -154,39 +154,39 @@ typedef struct OpenCLFramesContext {
     // device.
     cl_command_queue command_queue;
 
-#if HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
+#যদি HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
     // For mapping APIs which have separate creation and acquire/release
     // steps, this stores the OpenCL memory objects corresponding to each
     // frame.
-    int                   nb_mapped_frames;
+    পূর্ণসংখ্যা                   nb_mapped_frames;
     AVOpenCLFrameDescriptor *mapped_frames;
 #endif
 } OpenCLFramesContext;
 
 
-static void CL_CALLBACK opencl_error_callback(const char *errinfo,
-                                              const void *private_info,
+স্থির শূন্য CL_CALLBACK opencl_error_callback(ধ্রুবক অক্ষর *errinfo,
+                                              ধ্রুবক শূন্য *private_info,
                                               size_t cb,
-                                              void *user_data)
+                                              শূন্য *user_তথ্য)
 {
-    AVHWDeviceContext *ctx = user_data;
+    AVHWDeviceContext *ctx = user_তথ্য;
     av_log(ctx, AV_LOG_ERROR, "OpenCL error: %s\n", errinfo);
 }
 
-static void opencl_device_free(AVHWDeviceContext *hwdev)
+স্থির শূন্য opencl_device_free(AVHWDeviceContext *hwdev)
 {
     AVOpenCLDeviceContext *hwctx = hwdev->hwctx;
     cl_int cle;
 
     cle = clReleaseContext(hwctx->context);
-    if (cle != CL_SUCCESS) {
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to release OpenCL "
                "context: %d.\n", cle);
     }
 }
 
-static struct {
-    const char *key;
+স্থির কাঠামো {
+    ধ্রুবক অক্ষর *চাবি;
     cl_platform_info name;
 } opencl_platform_params[] = {
     { "platform_profile",    CL_PLATFORM_PROFILE    },
@@ -196,8 +196,8 @@ static struct {
     { "platform_extensions", CL_PLATFORM_EXTENSIONS },
 };
 
-static struct {
-    const char *key;
+স্থির কাঠামো {
+    ধ্রুবক অক্ষর *চাবি;
     cl_device_info name;
 } opencl_device_params[] = {
     { "device_name",         CL_DEVICE_NAME         },
@@ -208,8 +208,8 @@ static struct {
     { "device_extensions",   CL_DEVICE_EXTENSIONS   },
 };
 
-static struct {
-    const char *key;
+স্থির কাঠামো {
+    ধ্রুবক অক্ষর *চাবি;
     cl_device_type type;
 } opencl_device_types[] = {
     { "cpu",         CL_DEVICE_TYPE_CPU         },
@@ -220,370 +220,370 @@ static struct {
     { "all",         CL_DEVICE_TYPE_ALL         },
 };
 
-static char *opencl_get_platform_string(cl_platform_id platform_id,
-                                        cl_platform_info key)
+স্থির অক্ষর *opencl_get_platform_string(cl_platform_id platform_id,
+                                        cl_platform_info চাবি)
 {
-    char *str;
-    size_t size;
+    অক্ষর *str;
+    size_t আকার_2;
     cl_int cle;
-    cle = clGetPlatformInfo(platform_id, key, 0, NULL, &size);
-    if (cle != CL_SUCCESS)
-        return NULL;
-    str = av_malloc(size);
-    if (!str)
-        return NULL;
-    cle = clGetPlatformInfo(platform_id, key, size, str, &size);
-    if (cle != CL_SUCCESS) {
+    cle = clGetPlatformInfo(platform_id, চাবি, 0, ফাঁকা, &আকার_2);
+    যদি (cle != CL_SUCCESS)
+        ফেরত ফাঁকা;
+    str = av_malloc(আকার_2);
+    যদি (!str)
+        ফেরত ফাঁকা;
+    cle = clGetPlatformInfo(platform_id, চাবি, আকার_2, str, &আকার_2);
+    যদি (cle != CL_SUCCESS) {
         av_free(str);
-        return NULL;
+        ফেরত ফাঁকা;
     }
-    av_assert0(strlen(str) + 1 == size);
-    return str;
+    av_assert0(strlen(str) + 1 == আকার_2);
+    ফেরত str;
 }
 
-static char *opencl_get_device_string(cl_device_id device_id,
-                                      cl_device_info key)
+স্থির অক্ষর *opencl_get_device_string(cl_device_id device_id,
+                                      cl_device_info চাবি)
 {
-    char *str;
-    size_t size;
+    অক্ষর *str;
+    size_t আকার_2;
     cl_int cle;
-    cle = clGetDeviceInfo(device_id, key, 0, NULL, &size);
-    if (cle != CL_SUCCESS)
-        return NULL;
-    str = av_malloc(size);
-    if (!str)
-        return NULL;
-    cle = clGetDeviceInfo(device_id, key, size, str, &size);
-    if (cle != CL_SUCCESS) {
+    cle = clGetDeviceInfo(device_id, চাবি, 0, ফাঁকা, &আকার_2);
+    যদি (cle != CL_SUCCESS)
+        ফেরত ফাঁকা;
+    str = av_malloc(আকার_2);
+    যদি (!str)
+        ফেরত ফাঁকা;
+    cle = clGetDeviceInfo(device_id, চাবি, আকার_2, str, &আকার_2);
+    যদি (cle != CL_SUCCESS) {
         av_free(str);
-        return NULL;
+        ফেরত ফাঁকা;
     }
-    av_assert0(strlen(str) + 1== size);
-    return str;
+    av_assert0(strlen(str) + 1== আকার_2);
+    ফেরত str;
 }
 
-static int opencl_check_platform_extension(cl_platform_id platform_id,
-                                           const char *name)
+স্থির পূর্ণসংখ্যা opencl_check_platform_extension(cl_platform_id platform_id,
+                                           ধ্রুবক অক্ষর *name)
 {
-    char *str;
-    int found = 0;
+    অক্ষর *str;
+    পূর্ণসংখ্যা found = 0;
     str = opencl_get_platform_string(platform_id,
                                      CL_PLATFORM_EXTENSIONS);
-    if (str && strstr(str, name))
+    যদি (str && strstr(str, name))
         found = 1;
     av_free(str);
-    return found;
+    ফেরত found;
 }
 
-static int opencl_check_device_extension(cl_device_id device_id,
-                                         const char *name)
+স্থির পূর্ণসংখ্যা opencl_check_device_extension(cl_device_id device_id,
+                                         ধ্রুবক অক্ষর *name)
 {
-    char *str;
-    int found = 0;
+    অক্ষর *str;
+    পূর্ণসংখ্যা found = 0;
     str = opencl_get_device_string(device_id,
                                    CL_DEVICE_EXTENSIONS);
-    if (str && strstr(str, name))
+    যদি (str && strstr(str, name))
         found = 1;
     av_free(str);
-    return found;
+    ফেরত found;
 }
 
-av_unused static int opencl_check_extension(AVHWDeviceContext *hwdev,
-                                            const char *name)
+av_unused স্থির পূর্ণসংখ্যা opencl_check_extension(AVHWDeviceContext *hwdev,
+                                            ধ্রুবক অক্ষর *name)
 {
     OpenCLDeviceContext    *priv = hwdev->hwctx;
     AVOpenCLDeviceContext *hwctx = &priv->p;
 
-    if (opencl_check_platform_extension(priv->platform_id, name)) {
+    যদি (opencl_check_platform_extension(priv->platform_id, name)) {
         av_log(hwdev, AV_LOG_DEBUG,
                "%s found as platform extension.\n", name);
-        return 1;
+        ফেরত 1;
     }
 
-    if (opencl_check_device_extension(hwctx->device_id, name)) {
+    যদি (opencl_check_device_extension(hwctx->device_id, name)) {
         av_log(hwdev, AV_LOG_DEBUG,
                "%s found as device extension.\n", name);
-        return 1;
+        ফেরত 1;
     }
 
-    return 0;
+    ফেরত 0;
 }
 
-static int opencl_enumerate_platforms(AVHWDeviceContext *hwdev,
+স্থির পূর্ণসংখ্যা opencl_enumerate_platforms(AVHWDeviceContext *hwdev,
                                       cl_uint *nb_platforms,
                                       cl_platform_id **platforms,
-                                      void *context)
+                                      শূন্য *context)
 {
     cl_int cle;
 
-    cle = clGetPlatformIDs(0, NULL, nb_platforms);
-    if (cle != CL_SUCCESS) {
+    cle = clGetPlatformIDs(0, ফাঁকা, nb_platforms);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of "
                "OpenCL platforms: %d.\n", cle);
-        return AVERROR(ENODEV);
+        ফেরত AVERROR(ENODEV);
     }
     av_log(hwdev, AV_LOG_DEBUG, "%u OpenCL platforms found.\n",
            *nb_platforms);
 
-    *platforms = av_malloc_array(*nb_platforms, sizeof(**platforms));
-    if (!*platforms)
-        return AVERROR(ENOMEM);
+    *platforms = av_malloc_array(*nb_platforms, আকার(**platforms));
+    যদি (!*platforms)
+        ফেরত AVERROR(ENOMEM);
 
-    cle = clGetPlatformIDs(*nb_platforms, *platforms, NULL);
-    if (cle != CL_SUCCESS) {
+    cle = clGetPlatformIDs(*nb_platforms, *platforms, ফাঁকা);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of OpenCL "
                "platforms: %d.\n", cle);
         av_freep(platforms);
-        return AVERROR(ENODEV);
+        ফেরত AVERROR(ENODEV);
     }
 
-    return 0;
+    ফেরত 0;
 }
 
-static int opencl_filter_platform(AVHWDeviceContext *hwdev,
+স্থির পূর্ণসংখ্যা opencl_filter_platform(AVHWDeviceContext *hwdev,
                                   cl_platform_id platform_id,
-                                  const char *platform_name,
-                                  void *context)
+                                  ধ্রুবক অক্ষর *platform_name,
+                                  শূন্য *context)
 {
     AVDictionary *opts = context;
-    const AVDictionaryEntry *param;
-    char *str;
-    int i, ret = 0;
+    ধ্রুবক AVDictionaryEntry *param;
+    অক্ষর *str;
+    পূর্ণসংখ্যা i, ret = 0;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(opencl_platform_params); i++) {
-        param = av_dict_get(opts, opencl_platform_params[i].key,
-                            NULL, 0);
-        if (!param)
-            continue;
+    জন্য (i = 0; i < FF_ARRAY_ELEMS(opencl_platform_params); i++) {
+        param = av_dict_get(opts, opencl_platform_params[i].চাবি,
+                            ফাঁকা, 0);
+        যদি (!param)
+            চালু;
 
         str = opencl_get_platform_string(platform_id,
                                          opencl_platform_params[i].name);
-        if (!str) {
+        যদি (!str) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query %s "
                    "of platform \"%s\".\n",
-                   opencl_platform_params[i].key, platform_name);
-            return AVERROR_UNKNOWN;
+                   opencl_platform_params[i].চাবি, platform_name);
+            ফেরত AVERROR_UNKNOWN;
         }
-        if (!av_stristr(str, param->value)) {
+        যদি (!av_stristr(str, param->মান)) {
             av_log(hwdev, AV_LOG_DEBUG, "%s does not match (\"%s\").\n",
-                   param->key, str);
+                   param->চাবি, str);
             ret = 1;
         }
         av_free(str);
     }
 
-    return ret;
+    ফেরত ret;
 }
 
-static int opencl_enumerate_devices(AVHWDeviceContext *hwdev,
+স্থির পূর্ণসংখ্যা opencl_enumerate_devices(AVHWDeviceContext *hwdev,
                                     cl_platform_id platform_id,
-                                    const char *platform_name,
+                                    ধ্রুবক অক্ষর *platform_name,
                                     cl_uint *nb_devices,
                                     cl_device_id **devices,
-                                    void *context)
+                                    শূন্য *context)
 {
     cl_int cle;
 
     cle = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL,
-                         0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+                         0, ফাঁকা, nb_devices);
+    যদি (cle == CL_DEVICE_NOT_FOUND) {
         av_log(hwdev, AV_LOG_DEBUG, "No devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        ফেরত 0;
+    } অন্যথা যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR(ENODEV);
+        ফেরত AVERROR(ENODEV);
     }
     av_log(hwdev, AV_LOG_DEBUG, "%u OpenCL devices found on "
            "platform \"%s\".\n", *nb_devices, platform_name);
 
-    *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    *devices = av_malloc_array(*nb_devices, আকার(**devices));
+    যদি (!*devices)
+        ফেরত AVERROR(ENOMEM);
 
     cle = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL,
-                         *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+                         *nb_devices, *devices, ফাঁকা);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR(ENODEV);
+        ফেরত AVERROR(ENODEV);
     }
 
-    return 0;
+    ফেরত 0;
 }
 
-static int opencl_filter_device(AVHWDeviceContext *hwdev,
+স্থির পূর্ণসংখ্যা opencl_filter_device(AVHWDeviceContext *hwdev,
                                 cl_device_id device_id,
-                                const char *device_name,
-                                void *context)
+                                ধ্রুবক অক্ষর *device_name,
+                                শূন্য *context)
 {
     AVDictionary *opts = context;
-    const AVDictionaryEntry *param;
-    char *str;
-    int i, ret = 0;
+    ধ্রুবক AVDictionaryEntry *param;
+    অক্ষর *str;
+    পূর্ণসংখ্যা i, ret = 0;
 
-    param = av_dict_get(opts, "device_type", NULL, 0);
-    if (param) {
+    param = av_dict_get(opts, "device_type", ফাঁকা, 0);
+    যদি (param) {
         cl_device_type match_type = 0, device_type;
         cl_int cle;
 
-        for (i = 0; i < FF_ARRAY_ELEMS(opencl_device_types); i++) {
-            if (!strcmp(opencl_device_types[i].key, param->value)) {
+        জন্য (i = 0; i < FF_ARRAY_ELEMS(opencl_device_types); i++) {
+            যদি (!strcmp(opencl_device_types[i].চাবি, param->মান)) {
                 match_type = opencl_device_types[i].type;
-                break;
+                বিরতি;
             }
         }
-        if (!match_type) {
+        যদি (!match_type) {
             av_log(hwdev, AV_LOG_ERROR, "Unknown device type %s.\n",
-                   param->value);
-            return AVERROR(EINVAL);
+                   param->মান);
+            ফেরত AVERROR(EINVAL);
         }
 
         cle = clGetDeviceInfo(device_id, CL_DEVICE_TYPE,
-                              sizeof(device_type), &device_type, NULL);
-        if (cle != CL_SUCCESS) {
+                              আকার(device_type), &device_type, ফাঁকা);
+        যদি (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query device type "
                    "of device \"%s\".\n", device_name);
-            return AVERROR_UNKNOWN;
+            ফেরত AVERROR_UNKNOWN;
         }
 
-        if (!(device_type & match_type)) {
+        যদি (!(device_type & match_type)) {
             av_log(hwdev, AV_LOG_DEBUG, "device_type does not match.\n");
-            return 1;
+            ফেরত 1;
         }
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(opencl_device_params); i++) {
-        param = av_dict_get(opts, opencl_device_params[i].key,
-                            NULL, 0);
-        if (!param)
-            continue;
+    জন্য (i = 0; i < FF_ARRAY_ELEMS(opencl_device_params); i++) {
+        param = av_dict_get(opts, opencl_device_params[i].চাবি,
+                            ফাঁকা, 0);
+        যদি (!param)
+            চালু;
 
         str = opencl_get_device_string(device_id,
                                        opencl_device_params[i].name);
-        if (!str) {
+        যদি (!str) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query %s "
                    "of device \"%s\".\n",
-                   opencl_device_params[i].key, device_name);
-            return AVERROR_UNKNOWN;
+                   opencl_device_params[i].চাবি, device_name);
+            ফেরত AVERROR_UNKNOWN;
         }
-        if (!av_stristr(str, param->value)) {
+        যদি (!av_stristr(str, param->মান)) {
             av_log(hwdev, AV_LOG_DEBUG, "%s does not match (\"%s\").\n",
-                   param->key, str);
+                   param->চাবি, str);
             ret = 1;
         }
         av_free(str);
     }
 
-    return ret;
+    ফেরত ret;
 }
 
-typedef struct OpenCLDeviceSelector {
-    int platform_index;
-    int device_index;
-    void *context;
-    int (*enumerate_platforms)(AVHWDeviceContext *hwdev,
+প্রকারলেখ কাঠামো OpenCLDeviceSelector {
+    পূর্ণসংখ্যা platform_সূচক;
+    পূর্ণসংখ্যা device_সূচক;
+    শূন্য *context;
+    পূর্ণসংখ্যা (*enumerate_platforms)(AVHWDeviceContext *hwdev,
                                cl_uint *nb_platforms,
                                cl_platform_id **platforms,
-                               void *context);
-    int (*filter_platform)    (AVHWDeviceContext *hwdev,
+                               শূন্য *context);
+    পূর্ণসংখ্যা (*filter_platform)    (AVHWDeviceContext *hwdev,
                                cl_platform_id platform_id,
-                               const char *platform_name,
-                               void *context);
-    int (*enumerate_devices)  (AVHWDeviceContext *hwdev,
+                               ধ্রুবক অক্ষর *platform_name,
+                               শূন্য *context);
+    পূর্ণসংখ্যা (*enumerate_devices)  (AVHWDeviceContext *hwdev,
                                cl_platform_id platform_id,
-                               const char *platform_name,
+                               ধ্রুবক অক্ষর *platform_name,
                                cl_uint *nb_devices,
                                cl_device_id **devices,
-                               void *context);
-    int (*filter_device)      (AVHWDeviceContext *hwdev,
+                               শূন্য *context);
+    পূর্ণসংখ্যা (*filter_device)      (AVHWDeviceContext *hwdev,
                                cl_device_id device_id,
-                               const char *device_name,
-                               void *context);
+                               ধ্রুবক অক্ষর *device_name,
+                               শূন্য *context);
 } OpenCLDeviceSelector;
 
-static int opencl_device_create_internal(AVHWDeviceContext *hwdev,
-                                         const OpenCLDeviceSelector *selector,
+স্থির পূর্ণসংখ্যা opencl_device_create_internal(AVHWDeviceContext *hwdev,
+                                         ধ্রুবক OpenCLDeviceSelector *selector,
                                          cl_context_properties *props)
 {
     cl_uint      nb_platforms;
-    cl_platform_id *platforms = NULL;
+    cl_platform_id *platforms = ফাঁকা;
     cl_platform_id  platform_id;
     cl_uint      nb_devices;
-    cl_device_id   *devices = NULL;
+    cl_device_id   *devices = ফাঁকা;
     AVOpenCLDeviceContext *hwctx = hwdev->hwctx;
     cl_int cle;
     cl_context_properties default_props[3];
-    char *platform_name_src = NULL,
-         *device_name_src   = NULL;
-    int err, found, p, d;
+    অক্ষর *platform_name_src = ফাঁকা,
+         *device_name_src   = ফাঁকা;
+    পূর্ণসংখ্যা err, found, p, d;
 
     av_assert0(selector->enumerate_platforms &&
                selector->enumerate_devices);
 
     err = selector->enumerate_platforms(hwdev, &nb_platforms, &platforms,
                                         selector->context);
-    if (err)
-        return err;
+    যদি (err)
+        ফেরত err;
 
     found = 0;
-    for (p = 0; p < nb_platforms; p++) {
-        const char *platform_name;
+    জন্য (p = 0; p < nb_platforms; p++) {
+        ধ্রুবক অক্ষর *platform_name;
 
-        if (selector->platform_index >= 0 &&
-            selector->platform_index != p)
-            continue;
+        যদি (selector->platform_সূচক >= 0 &&
+            selector->platform_সূচক != p)
+            চালু;
 
         av_freep(&platform_name_src);
         platform_name_src = opencl_get_platform_string(platforms[p],
                                                            CL_PLATFORM_NAME);
-        if (platform_name_src)
+        যদি (platform_name_src)
             platform_name = platform_name_src;
-        else
+        অন্যথা
             platform_name = "Unknown Platform";
 
-        if (selector->filter_platform) {
+        যদি (selector->filter_platform) {
             err = selector->filter_platform(hwdev, platforms[p],
                                             platform_name,
                                             selector->context);
-            if (err < 0)
-                goto fail;
-            if (err > 0)
-                continue;
+            যদি (err < 0)
+                যাও fail;
+            যদি (err > 0)
+                চালু;
         }
 
         err = selector->enumerate_devices(hwdev, platforms[p], platform_name,
                                           &nb_devices, &devices,
                                           selector->context);
-        if (err < 0)
-            continue;
+        যদি (err < 0)
+            চালু;
 
-        for (d = 0; d < nb_devices; d++) {
-            const char *device_name;
+        জন্য (d = 0; d < nb_devices; d++) {
+            ধ্রুবক অক্ষর *device_name;
 
-            if (selector->device_index >= 0 &&
-                selector->device_index != d)
-                continue;
+            যদি (selector->device_সূচক >= 0 &&
+                selector->device_সূচক != d)
+                চালু;
 
             av_freep(&device_name_src);
             device_name_src = opencl_get_device_string(devices[d],
                                                            CL_DEVICE_NAME);
-            if (device_name_src)
+            যদি (device_name_src)
                 device_name = device_name_src;
-            else
+            অন্যথা
                 device_name = "Unknown Device";
 
-            if (selector->filter_device) {
+            যদি (selector->filter_device) {
                 err = selector->filter_device(hwdev, devices[d],
                                               device_name,
                                               selector->context);
-                if (err < 0)
-                    goto fail;
-                if (err > 0)
-                    continue;
+                যদি (err < 0)
+                    যাও fail;
+                যদি (err > 0)
+                    চালু;
             }
 
             av_log(hwdev, AV_LOG_VERBOSE, "%d.%d: %s / %s\n", p, d,
@@ -597,37 +597,37 @@ static int opencl_device_create_internal(AVHWDeviceContext *hwdev,
         av_freep(&devices);
     }
 
-    if (found == 0) {
+    যদি (found == 0) {
         av_log(hwdev, AV_LOG_ERROR, "No matching devices found.\n");
         err = AVERROR(ENODEV);
-        goto fail;
+        যাও fail;
     }
-    if (found > 1) {
+    যদি (found > 1) {
         av_log(hwdev, AV_LOG_ERROR, "More than one matching device found.\n");
         err = AVERROR(ENODEV);
-        goto fail;
+        যাও fail;
     }
 
-    if (!props) {
+    যদি (!props) {
         props = default_props;
         default_props[0] = CL_CONTEXT_PLATFORM;
         default_props[1] = (intptr_t)platform_id;
         default_props[2] = 0;
-    } else {
-        if (props[0] == CL_CONTEXT_PLATFORM && props[1] == 0)
+    } অন্যথা {
+        যদি (props[0] == CL_CONTEXT_PLATFORM && props[1] == 0)
             props[1] = (intptr_t)platform_id;
     }
 
     hwctx->context = clCreateContext(props, 1, &hwctx->device_id,
                                      &opencl_error_callback, hwdev, &cle);
-    if (!hwctx->context) {
+    যদি (!hwctx->context) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to create OpenCL context: "
                "%d.\n", cle);
         err = AVERROR(ENODEV);
-        goto fail;
+        যাও fail;
     }
 
-    hwdev->free = &opencl_device_free;
+    hwdev->মুক্ত = &opencl_device_free;
 
     err = 0;
 fail:
@@ -635,11 +635,11 @@ fail:
     av_freep(&device_name_src);
     av_freep(&platforms);
     av_freep(&devices);
-    return err;
+    ফেরত err;
 }
 
-static int opencl_device_create(AVHWDeviceContext *hwdev, const char *device,
-                                AVDictionary *opts, int flags)
+স্থির পূর্ণসংখ্যা opencl_device_create(AVHWDeviceContext *hwdev, ধ্রুবক অক্ষর *device,
+                                AVDictionary *opts, পূর্ণসংখ্যা flags)
 {
     OpenCLDeviceSelector selector = {
         .context = opts,
@@ -649,152 +649,152 @@ static int opencl_device_create(AVHWDeviceContext *hwdev, const char *device,
         .filter_device       = &opencl_filter_device,
     };
 
-    if (device && device[0]) {
+    যদি (device && device[0]) {
         // Match one or both indices for platform and device.
-        int d = -1, p = -1, ret;
-        if (device[0] == '.')
+        পূর্ণসংখ্যা d = -1, p = -1, ret;
+        যদি (device[0] == '.')
             ret = sscanf(device, ".%d", &d);
-        else
+        অন্যথা
             ret = sscanf(device, "%d.%d", &p, &d);
-        if (ret < 1) {
+        যদি (ret < 1) {
             av_log(hwdev, AV_LOG_ERROR, "Invalid OpenCL platform/device "
                    "index specification \"%s\".\n", device);
-            return AVERROR(EINVAL);
+            ফেরত AVERROR(EINVAL);
         }
-        selector.platform_index = p;
-        selector.device_index   = d;
-    } else {
-        selector.platform_index = -1;
-        selector.device_index   = -1;
+        selector.platform_সূচক = p;
+        selector.device_সূচক   = d;
+    } অন্যথা {
+        selector.platform_সূচক = -1;
+        selector.device_সূচক   = -1;
     }
 
-    return opencl_device_create_internal(hwdev, &selector, NULL);
+    ফেরত opencl_device_create_internal(hwdev, &selector, ফাঁকা);
 }
 
-static int opencl_device_init(AVHWDeviceContext *hwdev)
+স্থির পূর্ণসংখ্যা opencl_device_init(AVHWDeviceContext *hwdev)
 {
     OpenCLDeviceContext    *priv = hwdev->hwctx;
     AVOpenCLDeviceContext *hwctx = &priv->p;
     cl_int cle;
 
-    if (hwctx->command_queue) {
+    যদি (hwctx->command_queue) {
         cle = clRetainCommandQueue(hwctx->command_queue);
-        if (cle != CL_SUCCESS) {
+        যদি (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to retain external "
                    "command queue: %d.\n", cle);
-            return AVERROR(EIO);
+            ফেরত AVERROR(EIO);
         }
         priv->command_queue = hwctx->command_queue;
-    } else {
+    } অন্যথা {
         priv->command_queue = clCreateCommandQueue(hwctx->context,
                                                    hwctx->device_id,
                                                    0, &cle);
-        if (!priv->command_queue) {
+        যদি (!priv->command_queue) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to create internal "
                    "command queue: %d.\n", cle);
-            return AVERROR(EIO);
+            ফেরত AVERROR(EIO);
         }
     }
 
     cle = clGetDeviceInfo(hwctx->device_id, CL_DEVICE_PLATFORM,
-                          sizeof(priv->platform_id), &priv->platform_id,
-                          NULL);
-    if (cle != CL_SUCCESS) {
+                          আকার(priv->platform_id), &priv->platform_id,
+                          ফাঁকা);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to determine the OpenCL "
                "platform containing the device.\n");
-        return AVERROR(EIO);
+        ফেরত AVERROR(EIO);
     }
 
-#define CL_FUNC(name, desc) do {                                \
-        if (fail)                                               \
-            break;                                              \
+#define CL_FUNC(name, desc) করো {                                \
+        যদি (fail)                                               \
+            বিরতি;                                              \
         priv->name = clGetExtensionFunctionAddressForPlatform(  \
             priv->platform_id, #name);                          \
-        if (!priv->name) {                                      \
+        যদি (!priv->name) {                                      \
             av_log(hwdev, AV_LOG_VERBOSE,                       \
                    desc " function not found (%s).\n", #name);  \
             fail = 1;                                           \
-        } else {                                                \
+        } অন্যথা {                                                \
             av_log(hwdev, AV_LOG_VERBOSE,                       \
                    desc " function found (%s).\n", #name);      \
         }                                                       \
-    } while (0)
+    } যখন (0)
 
-#if HAVE_OPENCL_DRM_BEIGNET
+#যদি HAVE_OPENCL_DRM_BEIGNET
     {
-        int fail = 0;
+        পূর্ণসংখ্যা fail = 0;
 
         CL_FUNC(clCreateImageFromFdINTEL,
                 "Beignet DRM to OpenCL image mapping");
 
-        if (fail) {
+        যদি (fail) {
             av_log(hwdev, AV_LOG_WARNING, "Beignet DRM to OpenCL "
                    "mapping not usable.\n");
             priv->beignet_drm_mapping_usable = 0;
-        } else {
+        } অন্যথা {
             priv->beignet_drm_mapping_usable = 1;
         }
     }
 #endif
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#যদি HAVE_OPENCL_VAAPI_INTEL_MEDIA
     {
-        size_t props_size;
-        cl_context_properties *props = NULL;
+        size_t props_আকার;
+        cl_context_properties *props = ফাঁকা;
         VADisplay va_display;
-        const char *va_ext = "cl_intel_va_api_media_sharing";
-        int i, fail = 0;
+        ধ্রুবক অক্ষর *va_ext = "cl_intel_va_api_media_sharing";
+        পূর্ণসংখ্যা i, fail = 0;
 
-        if (!opencl_check_extension(hwdev, va_ext)) {
+        যদি (!opencl_check_extension(hwdev, va_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for QSV to OpenCL mapping.\n", va_ext);
-            goto no_qsv;
+            যাও no_qsv;
         }
 
         cle = clGetContextInfo(hwctx->context, CL_CONTEXT_PROPERTIES,
-                               0, NULL, &props_size);
-        if (cle != CL_SUCCESS) {
+                               0, ফাঁকা, &props_আকার);
+        যদি (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_VERBOSE, "Failed to get context "
                    "properties: %d.\n", cle);
-            goto no_qsv;
+            যাও no_qsv;
         }
-        if (props_size == 0) {
+        যদি (props_আকার == 0) {
             av_log(hwdev, AV_LOG_VERBOSE, "Media sharing must be "
                    "enabled on context creation to use QSV to "
                    "OpenCL mapping.\n");
-            goto no_qsv;
+            যাও no_qsv;
         }
 
-        props = av_malloc(props_size);
-        if (!props)
-            return AVERROR(ENOMEM);
+        props = av_malloc(props_আকার);
+        যদি (!props)
+            ফেরত AVERROR(ENOMEM);
 
         cle = clGetContextInfo(hwctx->context, CL_CONTEXT_PROPERTIES,
-                               props_size, props, NULL);
-        if (cle != CL_SUCCESS) {
+                               props_আকার, props, ফাঁকা);
+        যদি (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_VERBOSE, "Failed to get context "
                    "properties: %d.\n", cle);
-            goto no_qsv;
+            যাও no_qsv;
         }
 
-        va_display = NULL;
-        for (i = 0; i < (props_size / sizeof(*props) - 1); i++) {
-            if (props[i] == CL_CONTEXT_VA_API_DISPLAY_INTEL) {
+        va_display = ফাঁকা;
+        জন্য (i = 0; i < (props_আকার / আকার(*props) - 1); i++) {
+            যদি (props[i] == CL_CONTEXT_VA_API_DISPLAY_INTEL) {
                 va_display = (VADisplay)(intptr_t)props[i+1];
-                break;
+                বিরতি;
             }
         }
-        if (!va_display) {
+        যদি (!va_display) {
             av_log(hwdev, AV_LOG_VERBOSE, "Media sharing must be "
                    "enabled on context creation to use QSV to "
                    "OpenCL mapping.\n");
-            goto no_qsv;
+            যাও no_qsv;
         }
-        if (!vaDisplayIsValid(va_display)) {
+        যদি (!vaDisplayIsValid(va_display)) {
             av_log(hwdev, AV_LOG_VERBOSE, "A valid VADisplay is "
                    "required on context creation to use QSV to "
                    "OpenCL mapping.\n");
-            goto no_qsv;
+            যাও no_qsv;
         }
 
         CL_FUNC(clCreateFromVA_APIMediaSurfaceINTEL,
@@ -804,21 +804,21 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
         CL_FUNC(clEnqueueReleaseVA_APIMediaSurfacesINTEL,
                 "Intel QSV in OpenCL release");
 
-        if (fail) {
+        যদি (fail) {
         no_qsv:
             av_log(hwdev, AV_LOG_WARNING, "QSV to OpenCL mapping "
                    "not usable.\n");
             priv->qsv_mapping_usable = 0;
-        } else {
+        } অন্যথা {
             priv->qsv_mapping_usable = 1;
         }
         av_free(props);
     }
 #endif
 
-#if HAVE_OPENCL_DXVA2
+#যদি HAVE_OPENCL_DXVA2
     {
-        int fail = 0;
+        পূর্ণসংখ্যা fail = 0;
 
         CL_FUNC(clCreateFromDX9MediaSurfaceKHR,
                 "DXVA2 to OpenCL mapping");
@@ -827,28 +827,28 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
         CL_FUNC(clEnqueueReleaseDX9MediaSurfacesKHR,
                 "DXVA2 in OpenCL release");
 
-        if (fail) {
+        যদি (fail) {
             av_log(hwdev, AV_LOG_WARNING, "DXVA2 to OpenCL mapping "
                    "not usable.\n");
             priv->dxva2_mapping_usable = 0;
-        } else {
+        } অন্যথা {
             priv->dx9_media_adapter_type = CL_ADAPTER_D3D9EX_KHR;
             priv->dxva2_mapping_usable = 1;
         }
     }
 #endif
 
-#if HAVE_OPENCL_D3D11
+#যদি HAVE_OPENCL_D3D11
     {
-        const char *d3d11_ext = "cl_khr_d3d11_sharing";
-        const char *nv12_ext  = "cl_intel_d3d11_nv12_media_sharing";
-        int fail = 0;
+        ধ্রুবক অক্ষর *d3d11_ext = "cl_khr_d3d11_sharing";
+        ধ্রুবক অক্ষর *nv12_ext  = "cl_intel_d3d11_nv12_media_sharing";
+        পূর্ণসংখ্যা fail = 0;
 
-        if (!opencl_check_extension(hwdev, d3d11_ext)) {
+        যদি (!opencl_check_extension(hwdev, d3d11_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for D3D11 to OpenCL mapping.\n", d3d11_ext);
             fail = 1;
-        } else if (!opencl_check_extension(hwdev, nv12_ext)) {
+        } অন্যথা যদি (!opencl_check_extension(hwdev, nv12_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension may be "
                    "required for D3D11 to OpenCL mapping.\n", nv12_ext);
             // Not fatal.
@@ -861,29 +861,29 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
         CL_FUNC(clEnqueueReleaseD3D11ObjectsKHR,
                 "D3D11 in OpenCL release");
 
-        if (fail) {
+        যদি (fail) {
             av_log(hwdev, AV_LOG_WARNING, "D3D11 to OpenCL mapping "
                    "not usable.\n");
             priv->d3d11_mapping_usable = 0;
-        } else {
+        } অন্যথা {
             priv->d3d11_mapping_usable = 1;
         }
     }
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
+#যদি HAVE_OPENCL_DRM_ARM
     {
-        const char *drm_arm_ext = "cl_arm_import_memory";
-        const char *image_ext   = "cl_khr_image2d_from_buffer";
-        int fail = 0;
+        ধ্রুবক অক্ষর *drm_arm_ext = "cl_arm_import_memory";
+        ধ্রুবক অক্ষর *image_ext   = "cl_khr_image2d_from_buffer";
+        পূর্ণসংখ্যা fail = 0;
 
-        if (!opencl_check_extension(hwdev, drm_arm_ext)) {
+        যদি (!opencl_check_extension(hwdev, drm_arm_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for DRM to OpenCL mapping on ARM.\n",
                    drm_arm_ext);
             fail = 1;
         }
-        if (!opencl_check_extension(hwdev, image_ext)) {
+        যদি (!opencl_check_extension(hwdev, image_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for DRM to OpenCL mapping on ARM.\n",
                    image_ext);
@@ -892,11 +892,11 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
 
         // clImportMemoryARM() is linked statically.
 
-        if (fail) {
+        যদি (fail) {
             av_log(hwdev, AV_LOG_WARNING, "DRM to OpenCL mapping on ARM "
                    "not usable.\n");
             priv->drm_arm_mapping_usable = 0;
-        } else {
+        } অন্যথা {
             priv->drm_arm_mapping_usable = 1;
         }
     }
@@ -904,49 +904,49 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
 
 #undef CL_FUNC
 
-    return 0;
+    ফেরত 0;
 }
 
-static void opencl_device_uninit(AVHWDeviceContext *hwdev)
+স্থির শূন্য opencl_device_uninit(AVHWDeviceContext *hwdev)
 {
     OpenCLDeviceContext *priv = hwdev->hwctx;
     cl_int cle;
 
-    if (priv->command_queue) {
+    যদি (priv->command_queue) {
         cle = clReleaseCommandQueue(priv->command_queue);
-        if (cle != CL_SUCCESS) {
+        যদি (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to release internal "
                    "command queue reference: %d.\n", cle);
         }
-        priv->command_queue = NULL;
+        priv->command_queue = ফাঁকা;
     }
 }
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-static int opencl_filter_intel_media_vaapi_platform(AVHWDeviceContext *hwdev,
+#যদি HAVE_OPENCL_VAAPI_INTEL_MEDIA
+স্থির পূর্ণসংখ্যা opencl_filter_intel_media_vaapi_platform(AVHWDeviceContext *hwdev,
                                                     cl_platform_id platform_id,
-                                                    const char *platform_name,
-                                                    void *context)
+                                                    ধ্রুবক অক্ষর *platform_name,
+                                                    শূন্য *context)
 {
     // This doesn't exist as a platform extension, so just test whether
     // the function we will use for device enumeration exists.
 
-    if (!clGetExtensionFunctionAddressForPlatform(platform_id,
+    যদি (!clGetExtensionFunctionAddressForPlatform(platform_id,
             "clGetDeviceIDsFromVA_APIMediaAdapterINTEL")) {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not export the "
                "VAAPI device enumeration function.\n", platform_name);
-        return 1;
-    } else {
-        return 0;
+        ফেরত 1;
+    } অন্যথা {
+        ফেরত 0;
     }
 }
 
-static int opencl_enumerate_intel_media_vaapi_devices(AVHWDeviceContext *hwdev,
+স্থির পূর্ণসংখ্যা opencl_enumerate_intel_media_vaapi_devices(AVHWDeviceContext *hwdev,
                                                       cl_platform_id platform_id,
-                                                      const char *platform_name,
+                                                      ধ্রুবক অক্ষর *platform_name,
                                                       cl_uint *nb_devices,
                                                       cl_device_id **devices,
-                                                      void *context)
+                                                      শূন্য *context)
 {
     VADisplay va_display = context;
     clGetDeviceIDsFromVA_APIMediaAdapterINTEL_fn
@@ -956,83 +956,83 @@ static int opencl_enumerate_intel_media_vaapi_devices(AVHWDeviceContext *hwdev,
     clGetDeviceIDsFromVA_APIMediaAdapterINTEL =
         clGetExtensionFunctionAddressForPlatform(platform_id,
             "clGetDeviceIDsFromVA_APIMediaAdapterINTEL");
-    if (!clGetDeviceIDsFromVA_APIMediaAdapterINTEL) {
+    যদি (!clGetDeviceIDsFromVA_APIMediaAdapterINTEL) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get address of "
                "clGetDeviceIDsFromVA_APIMediaAdapterINTEL().\n");
-        return AVERROR_UNKNOWN;
+        ফেরত AVERROR_UNKNOWN;
     }
 
     cle = clGetDeviceIDsFromVA_APIMediaAdapterINTEL(
         platform_id, CL_VA_API_DISPLAY_INTEL, va_display,
-        CL_PREFERRED_DEVICES_FOR_VA_API_INTEL, 0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+        CL_PREFERRED_DEVICES_FOR_VA_API_INTEL, 0, ফাঁকা, nb_devices);
+    যদি (cle == CL_DEVICE_NOT_FOUND) {
         av_log(hwdev, AV_LOG_DEBUG, "No VAAPI-supporting devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        ফেরত 0;
+    } অন্যথা যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR_UNKNOWN;
+        ফেরত AVERROR_UNKNOWN;
     }
 
-    *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    *devices = av_malloc_array(*nb_devices, আকার(**devices));
+    যদি (!*devices)
+        ফেরত AVERROR(ENOMEM);
 
     cle = clGetDeviceIDsFromVA_APIMediaAdapterINTEL(
         platform_id, CL_VA_API_DISPLAY_INTEL, va_display,
-        CL_PREFERRED_DEVICES_FOR_VA_API_INTEL, *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+        CL_PREFERRED_DEVICES_FOR_VA_API_INTEL, *nb_devices, *devices, ফাঁকা);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of VAAPI-supporting "
                "devices on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR_UNKNOWN;
+        ফেরত AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ফেরত 0;
 }
 
-static int opencl_filter_intel_media_vaapi_device(AVHWDeviceContext *hwdev,
+স্থির পূর্ণসংখ্যা opencl_filter_intel_media_vaapi_device(AVHWDeviceContext *hwdev,
                                                   cl_device_id device_id,
-                                                  const char *device_name,
-                                                  void *context)
+                                                  ধ্রুবক অক্ষর *device_name,
+                                                  শূন্য *context)
 {
-    const char *va_ext = "cl_intel_va_api_media_sharing";
+    ধ্রুবক অক্ষর *va_ext = "cl_intel_va_api_media_sharing";
 
-    if (opencl_check_device_extension(device_id, va_ext)) {
-        return 0;
-    } else {
+    যদি (opencl_check_device_extension(device_id, va_ext)) {
+        ফেরত 0;
+    } অন্যথা {
         av_log(hwdev, AV_LOG_DEBUG, "Device %s does not support the "
                "%s extension.\n", device_name, va_ext);
-        return 1;
+        ফেরত 1;
     }
 }
 #endif
 
-#if HAVE_OPENCL_DXVA2
-static int opencl_filter_dxva2_platform(AVHWDeviceContext *hwdev,
+#যদি HAVE_OPENCL_DXVA2
+স্থির পূর্ণসংখ্যা opencl_filter_dxva2_platform(AVHWDeviceContext *hwdev,
                                         cl_platform_id platform_id,
-                                        const char *platform_name,
-                                        void *context)
+                                        ধ্রুবক অক্ষর *platform_name,
+                                        শূন্য *context)
 {
-    const char *dx9_ext = "cl_khr_dx9_media_sharing";
+    ধ্রুবক অক্ষর *dx9_ext = "cl_khr_dx9_media_sharing";
 
-    if (opencl_check_platform_extension(platform_id, dx9_ext)) {
-        return 0;
-    } else {
+    যদি (opencl_check_platform_extension(platform_id, dx9_ext)) {
+        ফেরত 0;
+    } অন্যথা {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not support the "
                "%s extension.\n", platform_name, dx9_ext);
-        return 1;
+        ফেরত 1;
     }
 }
 
-static int opencl_enumerate_dxva2_devices(AVHWDeviceContext *hwdev,
+স্থির পূর্ণসংখ্যা opencl_enumerate_dxva2_devices(AVHWDeviceContext *hwdev,
                                           cl_platform_id platform_id,
-                                          const char *platform_name,
+                                          ধ্রুবক অক্ষর *platform_name,
                                           cl_uint *nb_devices,
                                           cl_device_id **devices,
-                                          void *context)
+                                          শূন্য *context)
 {
     IDirect3DDevice9 *device = context;
     clGetDeviceIDsFromDX9MediaAdapterKHR_fn
@@ -1043,69 +1043,69 @@ static int opencl_enumerate_dxva2_devices(AVHWDeviceContext *hwdev,
     clGetDeviceIDsFromDX9MediaAdapterKHR =
         clGetExtensionFunctionAddressForPlatform(platform_id,
             "clGetDeviceIDsFromDX9MediaAdapterKHR");
-    if (!clGetDeviceIDsFromDX9MediaAdapterKHR) {
+    যদি (!clGetDeviceIDsFromDX9MediaAdapterKHR) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get address of "
                "clGetDeviceIDsFromDX9MediaAdapterKHR().\n");
-        return AVERROR_UNKNOWN;
+        ফেরত AVERROR_UNKNOWN;
     }
 
     cle = clGetDeviceIDsFromDX9MediaAdapterKHR(
-        platform_id, 1, &media_adapter_type, (void**)&device,
+        platform_id, 1, &media_adapter_type, (শূন্য**)&device,
         CL_PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
-        0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+        0, ফাঁকা, nb_devices);
+    যদি (cle == CL_DEVICE_NOT_FOUND) {
         av_log(hwdev, AV_LOG_DEBUG, "No DXVA2-supporting devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        ফেরত 0;
+    } অন্যথা যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR_UNKNOWN;
+        ফেরত AVERROR_UNKNOWN;
     }
 
-    *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    *devices = av_malloc_array(*nb_devices, আকার(**devices));
+    যদি (!*devices)
+        ফেরত AVERROR(ENOMEM);
 
     cle = clGetDeviceIDsFromDX9MediaAdapterKHR(
-        platform_id, 1, &media_adapter_type, (void**)&device,
+        platform_id, 1, &media_adapter_type, (শূন্য**)&device,
         CL_PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
-        *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+        *nb_devices, *devices, ফাঁকা);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of DXVA2-supporting "
                "devices on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR_UNKNOWN;
+        ফেরত AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ফেরত 0;
 }
 #endif
 
-#if HAVE_OPENCL_D3D11
-static int opencl_filter_d3d11_platform(AVHWDeviceContext *hwdev,
+#যদি HAVE_OPENCL_D3D11
+স্থির পূর্ণসংখ্যা opencl_filter_d3d11_platform(AVHWDeviceContext *hwdev,
                                         cl_platform_id platform_id,
-                                        const char *platform_name,
-                                        void *context)
+                                        ধ্রুবক অক্ষর *platform_name,
+                                        শূন্য *context)
 {
-    const char *d3d11_ext = "cl_khr_d3d11_sharing";
+    ধ্রুবক অক্ষর *d3d11_ext = "cl_khr_d3d11_sharing";
 
-    if (opencl_check_platform_extension(platform_id, d3d11_ext)) {
-        return 0;
-    } else {
+    যদি (opencl_check_platform_extension(platform_id, d3d11_ext)) {
+        ফেরত 0;
+    } অন্যথা {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not support the "
                "%s extension.\n", platform_name, d3d11_ext);
-        return 1;
+        ফেরত 1;
     }
 }
 
-static int opencl_enumerate_d3d11_devices(AVHWDeviceContext *hwdev,
+স্থির পূর্ণসংখ্যা opencl_enumerate_d3d11_devices(AVHWDeviceContext *hwdev,
                                           cl_platform_id platform_id,
-                                          const char *platform_name,
+                                          ধ্রুবক অক্ষর *platform_name,
                                           cl_uint *nb_devices,
                                           cl_device_id **devices,
-                                          void *context)
+                                          শূন্য *context)
 {
     ID3D11Device *device = context;
     clGetDeviceIDsFromD3D11KHR_fn clGetDeviceIDsFromD3D11KHR;
@@ -1114,147 +1114,147 @@ static int opencl_enumerate_d3d11_devices(AVHWDeviceContext *hwdev,
     clGetDeviceIDsFromD3D11KHR =
         clGetExtensionFunctionAddressForPlatform(platform_id,
             "clGetDeviceIDsFromD3D11KHR");
-    if (!clGetDeviceIDsFromD3D11KHR) {
+    যদি (!clGetDeviceIDsFromD3D11KHR) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get address of "
                "clGetDeviceIDsFromD3D11KHR().\n");
-        return AVERROR_UNKNOWN;
+        ফেরত AVERROR_UNKNOWN;
     }
 
     cle = clGetDeviceIDsFromD3D11KHR(platform_id,
                                      CL_D3D11_DEVICE_KHR, device,
                                      CL_PREFERRED_DEVICES_FOR_D3D11_KHR,
-                                     0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+                                     0, ফাঁকা, nb_devices);
+    যদি (cle == CL_DEVICE_NOT_FOUND) {
         av_log(hwdev, AV_LOG_DEBUG, "No D3D11-supporting devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        ফেরত 0;
+    } অন্যথা যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR_UNKNOWN;
+        ফেরত AVERROR_UNKNOWN;
     }
 
-    *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    *devices = av_malloc_array(*nb_devices, আকার(**devices));
+    যদি (!*devices)
+        ফেরত AVERROR(ENOMEM);
 
     cle = clGetDeviceIDsFromD3D11KHR(platform_id,
                                      CL_D3D11_DEVICE_KHR, device,
                                      CL_PREFERRED_DEVICES_FOR_D3D11_KHR,
-                                     *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+                                     *nb_devices, *devices, ফাঁকা);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of D3D11-supporting "
                "devices on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR_UNKNOWN;
+        ফেরত AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ফেরত 0;
 }
 #endif
 
-#if HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
-static int opencl_filter_gpu_device(AVHWDeviceContext *hwdev,
+#যদি HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
+স্থির পূর্ণসংখ্যা opencl_filter_gpu_device(AVHWDeviceContext *hwdev,
                                     cl_device_id device_id,
-                                    const char *device_name,
-                                    void *context)
+                                    ধ্রুবক অক্ষর *device_name,
+                                    শূন্য *context)
 {
     cl_device_type device_type;
     cl_int cle;
 
     cle = clGetDeviceInfo(device_id, CL_DEVICE_TYPE,
-                          sizeof(device_type), &device_type, NULL);
-    if (cle != CL_SUCCESS) {
+                          আকার(device_type), &device_type, ফাঁকা);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query device type "
                "of device \"%s\".\n", device_name);
-        return AVERROR_UNKNOWN;
+        ফেরত AVERROR_UNKNOWN;
     }
-    if (!(device_type & CL_DEVICE_TYPE_GPU)) {
+    যদি (!(device_type & CL_DEVICE_TYPE_GPU)) {
         av_log(hwdev, AV_LOG_DEBUG, "Device %s skipped (not GPU).\n",
                device_name);
-        return 1;
+        ফেরত 1;
     }
 
-    return 0;
+    ফেরত 0;
 }
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
-static int opencl_filter_drm_arm_platform(AVHWDeviceContext *hwdev,
+#যদি HAVE_OPENCL_DRM_ARM
+স্থির পূর্ণসংখ্যা opencl_filter_drm_arm_platform(AVHWDeviceContext *hwdev,
                                           cl_platform_id platform_id,
-                                          const char *platform_name,
-                                          void *context)
+                                          ধ্রুবক অক্ষর *platform_name,
+                                          শূন্য *context)
 {
-    const char *drm_arm_ext = "cl_arm_import_memory";
+    ধ্রুবক অক্ষর *drm_arm_ext = "cl_arm_import_memory";
 
-    if (opencl_check_platform_extension(platform_id, drm_arm_ext)) {
-        return 0;
-    } else {
+    যদি (opencl_check_platform_extension(platform_id, drm_arm_ext)) {
+        ফেরত 0;
+    } অন্যথা {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not support the "
                "%s extension.\n", platform_name, drm_arm_ext);
-        return 1;
+        ফেরত 1;
     }
 }
 
-static int opencl_filter_drm_arm_device(AVHWDeviceContext *hwdev,
+স্থির পূর্ণসংখ্যা opencl_filter_drm_arm_device(AVHWDeviceContext *hwdev,
                                         cl_device_id device_id,
-                                        const char *device_name,
-                                        void *context)
+                                        ধ্রুবক অক্ষর *device_name,
+                                        শূন্য *context)
 {
-    const char *drm_arm_ext = "cl_arm_import_memory";
+    ধ্রুবক অক্ষর *drm_arm_ext = "cl_arm_import_memory";
 
-    if (opencl_check_device_extension(device_id, drm_arm_ext)) {
-        return 0;
-    } else {
+    যদি (opencl_check_device_extension(device_id, drm_arm_ext)) {
+        ফেরত 0;
+    } অন্যথা {
         av_log(hwdev, AV_LOG_DEBUG, "Device %s does not support the "
                "%s extension.\n", device_name, drm_arm_ext);
-        return 1;
+        ফেরত 1;
     }
 }
 #endif
 
-static int opencl_device_derive(AVHWDeviceContext *hwdev,
+স্থির পূর্ণসংখ্যা opencl_device_derive(AVHWDeviceContext *hwdev,
                                 AVHWDeviceContext *src_ctx, AVDictionary *opts,
-                                int flags)
+                                পূর্ণসংখ্যা flags)
 {
-    int err;
-    switch (src_ctx->type) {
+    পূর্ণসংখ্যা err;
+    নির্বাচন (src_ctx->type) {
 
-#if HAVE_OPENCL_DRM_BEIGNET
-    case AV_HWDEVICE_TYPE_DRM:
-    case AV_HWDEVICE_TYPE_VAAPI:
+#যদি HAVE_OPENCL_DRM_BEIGNET
+    ক্ষেত্র AV_HWDEVICE_TYPE_DRM:
+    ক্ষেত্র AV_HWDEVICE_TYPE_VAAPI:
         {
             // Surface mapping works via DRM PRIME fds with no special
             // initialisation required in advance.  This just finds the
             // Beignet ICD by name.
-            AVDictionary *selector_opts = NULL;
+            AVDictionary *selector_opts = ফাঁকা;
 
             err = av_dict_set(&selector_opts, "platform_vendor", "Intel", 0);
-            if (err >= 0)
+            যদি (err >= 0)
                 err = av_dict_set(&selector_opts, "platform_version", "beignet", 0);
-            if (err >= 0) {
+            যদি (err >= 0) {
                 OpenCLDeviceSelector selector = {
-                    .platform_index      = -1,
-                    .device_index        = 0,
+                    .platform_সূচক      = -1,
+                    .device_সূচক        = 0,
                     .context             = selector_opts,
                     .enumerate_platforms = &opencl_enumerate_platforms,
                     .filter_platform     = &opencl_filter_platform,
                     .enumerate_devices   = &opencl_enumerate_devices,
-                    .filter_device       = NULL,
+                    .filter_device       = ফাঁকা,
                 };
-                err = opencl_device_create_internal(hwdev, &selector, NULL);
+                err = opencl_device_create_internal(hwdev, &selector, ফাঁকা);
             }
             av_dict_free(&selector_opts);
         }
-        break;
+        বিরতি;
 #endif
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#যদি HAVE_OPENCL_VAAPI_INTEL_MEDIA
         // The generic code automatically attempts to derive from all
         // ancestors of the given device, so we can ignore QSV devices here
         // and just consider the inner VAAPI device it was derived from.
-    case AV_HWDEVICE_TYPE_VAAPI:
+    ক্ষেত্র AV_HWDEVICE_TYPE_VAAPI:
         {
             AVVAAPIDeviceContext *src_hwctx = src_ctx->hwctx;
             cl_context_properties props[7] = {
@@ -1267,8 +1267,8 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
                 0,
             };
             OpenCLDeviceSelector selector = {
-                .platform_index      = -1,
-                .device_index        = -1,
+                .platform_সূচক      = -1,
+                .device_সূচক        = -1,
                 .context             = src_hwctx->display,
                 .enumerate_platforms = &opencl_enumerate_platforms,
                 .filter_platform     = &opencl_filter_intel_media_vaapi_platform,
@@ -1278,11 +1278,11 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
 
             err = opencl_device_create_internal(hwdev, &selector, props);
         }
-        break;
+        বিরতি;
 #endif
 
-#if HAVE_OPENCL_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
+#যদি HAVE_OPENCL_DXVA2
+    ক্ষেত্র AV_HWDEVICE_TYPE_DXVA2:
         {
             AVDXVA2DeviceContext *src_hwctx = src_ctx->hwctx;
             IDirect3DDevice9 *device;
@@ -1291,17 +1291,17 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
 
             hr = IDirect3DDeviceManager9_OpenDeviceHandle(src_hwctx->devmgr,
                                                           &device_handle);
-            if (FAILED(hr)) {
+            যদি (FAILED(hr)) {
                 av_log(hwdev, AV_LOG_ERROR, "Failed to open device handle "
                        "for Direct3D9 device: %lx.\n", (unsigned long)hr);
                 err = AVERROR_UNKNOWN;
-                break;
+                বিরতি;
             }
 
             hr = IDirect3DDeviceManager9_LockDevice(src_hwctx->devmgr,
                                                     device_handle,
                                                     &device, FALSE);
-            if (SUCCEEDED(hr)) {
+            যদি (SUCCEEDED(hr)) {
                 cl_context_properties props[5] = {
                     CL_CONTEXT_PLATFORM,
                     0,
@@ -1310,8 +1310,8 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
                     0,
                 };
                 OpenCLDeviceSelector selector = {
-                    .platform_index      = -1,
-                    .device_index        = -1,
+                    .platform_সূচক      = -1,
+                    .device_সূচক        = -1,
                     .context             = device,
                     .enumerate_platforms = &opencl_enumerate_platforms,
                     .filter_platform     = &opencl_filter_dxva2_platform,
@@ -1323,7 +1323,7 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
 
                 IDirect3DDeviceManager9_UnlockDevice(src_hwctx->devmgr,
                                                      device_handle, FALSE);
-            } else {
+            } অন্যথা {
                 av_log(hwdev, AV_LOG_ERROR, "Failed to lock device handle "
                        "for Direct3D9 device: %lx.\n", (unsigned long)hr);
                 err = AVERROR_UNKNOWN;
@@ -1332,11 +1332,11 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
             IDirect3DDeviceManager9_CloseDeviceHandle(src_hwctx->devmgr,
                                                       device_handle);
         }
-        break;
+        বিরতি;
 #endif
 
-#if HAVE_OPENCL_D3D11
-    case AV_HWDEVICE_TYPE_D3D11VA:
+#যদি HAVE_OPENCL_D3D11
+    ক্ষেত্র AV_HWDEVICE_TYPE_D3D11VA:
         {
             AVD3D11VADeviceContext *src_hwctx = src_ctx->hwctx;
             cl_context_properties props[5] = {
@@ -1347,8 +1347,8 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
                 0,
             };
             OpenCLDeviceSelector selector = {
-                .platform_index      = -1,
-                .device_index        = -1,
+                .platform_সূচক      = -1,
+                .device_সূচক        = -1,
                 .context             = src_hwctx->device,
                 .enumerate_platforms = &opencl_enumerate_platforms,
                 .filter_platform     = &opencl_filter_d3d11_platform,
@@ -1358,95 +1358,95 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
 
             err = opencl_device_create_internal(hwdev, &selector, props);
         }
-        break;
+        বিরতি;
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
-    case AV_HWDEVICE_TYPE_DRM:
+#যদি HAVE_OPENCL_DRM_ARM
+    ক্ষেত্র AV_HWDEVICE_TYPE_DRM:
         {
             OpenCLDeviceSelector selector = {
-                .platform_index      = -1,
-                .device_index        = -1,
-                .context             = NULL,
+                .platform_সূচক      = -1,
+                .device_সূচক        = -1,
+                .context             = ফাঁকা,
                 .enumerate_platforms = &opencl_enumerate_platforms,
                 .filter_platform     = &opencl_filter_drm_arm_platform,
                 .enumerate_devices   = &opencl_enumerate_devices,
                 .filter_device       = &opencl_filter_drm_arm_device,
             };
 
-            err = opencl_device_create_internal(hwdev, &selector, NULL);
+            err = opencl_device_create_internal(hwdev, &selector, ফাঁকা);
         }
-        break;
+        বিরতি;
 #endif
 
-#if HAVE_OPENCL_VIDEOTOOLBOX
-    case AV_HWDEVICE_TYPE_VIDEOTOOLBOX:
-        err = opencl_device_create(hwdev, NULL, NULL, 0);
-        break;
+#যদি HAVE_OPENCL_VIDEOTOOLBOX
+    ক্ষেত্র AV_HWDEVICE_TYPE_VIDEOTOOLBOX:
+        err = opencl_device_create(hwdev, ফাঁকা, ফাঁকা, 0);
+        বিরতি;
 #endif
 
-    default:
+    পূর্বনির্ধারিত:
         err = AVERROR(ENOSYS);
-        break;
+        বিরতি;
     }
 
-    return err;
+    ফেরত err;
 }
 
-static int opencl_get_plane_format(enum AVPixelFormat pixfmt,
-                                   int plane, int width, int height,
+স্থির পূর্ণসংখ্যা opencl_get_plane_format(গণনা AVPixelFormat pixfmt,
+                                   পূর্ণসংখ্যা plane, পূর্ণসংখ্যা width, পূর্ণসংখ্যা height,
                                    cl_image_format *image_format,
                                    cl_image_desc *image_desc)
 {
-    const AVPixFmtDescriptor *desc;
-    const AVComponentDescriptor *comp;
-    int channels = 0, order = 0, depth = 0, step = 0;
-    int wsub, hsub, alpha;
-    int c;
+    ধ্রুবক AVPixFmtDescriptor *desc;
+    ধ্রুবক AVComponentDescriptor *comp;
+    পূর্ণসংখ্যা channels = 0, order = 0, depth = 0, step = 0;
+    পূর্ণসংখ্যা wsub, hsub, alpha;
+    পূর্ণসংখ্যা c;
 
-    if (plane >= AV_NUM_DATA_POINTERS)
-        return AVERROR(ENOENT);
+    যদি (plane >= AV_অঙ্ক_তথ্য_POINTERS)
+        ফেরত AVERROR(ENOENT);
 
     desc = av_pix_fmt_desc_get(pixfmt);
 
     // Only normal images are allowed.
-    if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM |
+    যদি (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM |
                        AV_PIX_FMT_FLAG_HWACCEL   |
                        AV_PIX_FMT_FLAG_PAL))
-        return AVERROR(EINVAL);
+        ফেরত AVERROR(EINVAL);
 
     wsub = 1 << desc->log2_chroma_w;
     hsub = 1 << desc->log2_chroma_h;
     // Subsampled components must be exact.
-    if (width & wsub - 1 || height & hsub - 1)
-        return AVERROR(EINVAL);
+    যদি (width & wsub - 1 || height & hsub - 1)
+        ফেরত AVERROR(EINVAL);
 
-    for (c = 0; c < desc->nb_components; c++) {
+    জন্য (c = 0; c < desc->nb_components; c++) {
         comp = &desc->comp[c];
-        if (comp->plane != plane)
-            continue;
+        যদি (comp->plane != plane)
+            চালু;
         // The step size must be a power of two.
-        if (comp->step != 1 && comp->step != 2 &&
+        যদি (comp->step != 1 && comp->step != 2 &&
             comp->step != 4 && comp->step != 8)
-            return AVERROR(EINVAL);
+            ফেরত AVERROR(EINVAL);
         // The bits in each component must be packed in the
         // most-significant-bits of the relevant bytes.
-        if (comp->shift + comp->depth != 8 &&
+        যদি (comp->shift + comp->depth != 8 &&
             comp->shift + comp->depth != 16 &&
             comp->shift + comp->depth != 32)
-            return AVERROR(EINVAL);
+            ফেরত AVERROR(EINVAL);
         // The depth must not vary between components.
-        if (depth && comp->depth != depth)
-            return AVERROR(EINVAL);
+        যদি (depth && comp->depth != depth)
+            ফেরত AVERROR(EINVAL);
         // If a single data element crosses multiple bytes then
         // it must match the native endianness.
-        if (comp->depth > 8 &&
+        যদি (comp->depth > 8 &&
             HAVE_BIGENDIAN == !(desc->flags & AV_PIX_FMT_FLAG_BE))
-            return AVERROR(EINVAL);
+            ফেরত AVERROR(EINVAL);
         // A single data element must not contain multiple samples
         // from the same component.
-        if (step && comp->step != step)
-            return AVERROR(EINVAL);
+        যদি (step && comp->step != step)
+            ফেরত AVERROR(EINVAL);
 
         depth = comp->depth;
         order = order * 10 + comp->offset / ((depth + 7) / 8) + 1;
@@ -1455,37 +1455,37 @@ static int opencl_get_plane_format(enum AVPixelFormat pixfmt,
                  c == desc->nb_components - 1);
         ++channels;
     }
-    if (channels == 0)
-        return AVERROR(ENOENT);
+    যদি (channels == 0)
+        ফেরত AVERROR(ENOENT);
 
-    memset(image_format, 0, sizeof(*image_format));
-    memset(image_desc,   0, sizeof(*image_desc));
+    memset(image_format, 0, আকার(*image_format));
+    memset(image_desc,   0, আকার(*image_desc));
     image_desc->image_type = CL_MEM_OBJECT_IMAGE2D;
 
-    if (plane == 0 || alpha) {
+    যদি (plane == 0 || alpha) {
         image_desc->image_width     = width;
         image_desc->image_height    = height;
         image_desc->image_row_pitch = step * width;
-    } else {
+    } অন্যথা {
         image_desc->image_width     = width  / wsub;
         image_desc->image_height    = height / hsub;
         image_desc->image_row_pitch = step * width / wsub;
     }
 
-    if (depth <= 8) {
-        image_format->image_channel_data_type = CL_UNORM_INT8;
-    } else {
-        if (depth <= 16)
-            image_format->image_channel_data_type = CL_UNORM_INT16;
-        else if (depth == 32)
-            image_format->image_channel_data_type = CL_FLOAT;
-        else
-            return AVERROR(EINVAL);
+    যদি (depth <= 8) {
+        image_format->image_channel_তথ্য_type = CL_UNORM_INT8;
+    } অন্যথা {
+        যদি (depth <= 16)
+            image_format->image_channel_তথ্য_type = CL_UNORM_INT16;
+        অন্যথা যদি (depth == 32)
+            image_format->image_channel_তথ্য_type = CL_FLOAT;
+        অন্যথা
+            ফেরত AVERROR(EINVAL);
     }
 
 #define CHANNEL_ORDER(order, type) \
-    case order: image_format->image_channel_order = type; break;
-    switch (order) {
+    ক্ষেত্র order: image_format->image_channel_order = type; বিরতি;
+    নির্বাচন (order) {
         CHANNEL_ORDER(1,    CL_R);
         CHANNEL_ORDER(12,   CL_RG);
         CHANNEL_ORDER(1234, CL_RGBA);
@@ -1494,40 +1494,40 @@ static int opencl_get_plane_format(enum AVPixelFormat pixfmt,
 #ifdef CL_ABGR
         CHANNEL_ORDER(4321, CL_ABGR);
 #endif
-    default:
-        return AVERROR(EINVAL);
+    পূর্বনির্ধারিত:
+        ফেরত AVERROR(EINVAL);
     }
 #undef CHANNEL_ORDER
 
-    return 0;
+    ফেরত 0;
 }
 
-static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
-                                         const void *hwconfig,
+স্থির পূর্ণসংখ্যা opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
+                                         ধ্রুবক শূন্য *hwconfig,
                                          AVHWFramesConstraints *constraints)
 {
     AVOpenCLDeviceContext *hwctx = hwdev->hwctx;
     cl_uint nb_image_formats;
-    cl_image_format *image_formats = NULL;
+    cl_image_format *image_formats = ফাঁকা;
     cl_int cle;
-    enum AVPixelFormat pix_fmt;
-    int err, pix_fmts_found;
+    গণনা AVPixelFormat pix_fmt;
+    পূর্ণসংখ্যা err, pix_fmts_found;
     size_t max_width, max_height;
 
     cle = clGetDeviceInfo(hwctx->device_id, CL_DEVICE_IMAGE2D_MAX_WIDTH,
-                          sizeof(max_width), &max_width, NULL);
-    if (cle != CL_SUCCESS) {
+                          আকার(max_width), &max_width, ফাঁকা);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query maximum "
                "supported image width: %d.\n", cle);
-    } else {
+    } অন্যথা {
         constraints->max_width = max_width;
     }
     cle = clGetDeviceInfo(hwctx->device_id, CL_DEVICE_IMAGE2D_MAX_HEIGHT,
-                          sizeof(max_height), &max_height, NULL);
-    if (cle != CL_SUCCESS) {
+                          আকার(max_height), &max_height, ফাঁকা);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query maximum "
                "supported image height: %d.\n", cle);
-    } else {
+    } অন্যথা {
         constraints->max_height = max_height;
     }
     av_log(hwdev, AV_LOG_DEBUG, "Maximum supported image size %dx%d.\n",
@@ -1536,75 +1536,75 @@ static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
     cle = clGetSupportedImageFormats(hwctx->context,
                                      CL_MEM_READ_WRITE,
                                      CL_MEM_OBJECT_IMAGE2D,
-                                     0, NULL, &nb_image_formats);
-    if (cle != CL_SUCCESS) {
+                                     0, ফাঁকা, &nb_image_formats);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query supported "
                "image formats: %d.\n", cle);
         err = AVERROR(ENOSYS);
-        goto fail;
+        যাও fail;
     }
-    if (nb_image_formats == 0) {
+    যদি (nb_image_formats == 0) {
         av_log(hwdev, AV_LOG_ERROR, "No image support in OpenCL "
                "driver (zero supported image formats).\n");
         err = AVERROR(ENOSYS);
-        goto fail;
+        যাও fail;
     }
 
     image_formats =
-        av_malloc_array(nb_image_formats, sizeof(*image_formats));
-    if (!image_formats) {
+        av_malloc_array(nb_image_formats, আকার(*image_formats));
+    যদি (!image_formats) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        যাও fail;
     }
 
     cle = clGetSupportedImageFormats(hwctx->context,
                                      CL_MEM_READ_WRITE,
                                      CL_MEM_OBJECT_IMAGE2D,
                                      nb_image_formats,
-                                     image_formats, NULL);
-    if (cle != CL_SUCCESS) {
+                                     image_formats, ফাঁকা);
+    যদি (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query supported "
                "image formats: %d.\n", cle);
         err = AVERROR(ENOSYS);
-        goto fail;
+        যাও fail;
     }
 
     pix_fmts_found = 0;
-    for (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++) {
+    জন্য (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++) {
         cl_image_format image_format;
         cl_image_desc   image_desc;
-        int plane, i;
+        পূর্ণসংখ্যা plane, i;
 
-        for (plane = 0;; plane++) {
+        জন্য (plane = 0;; plane++) {
             err = opencl_get_plane_format(pix_fmt, plane, 0, 0,
                                           &image_format,
                                           &image_desc);
-            if (err < 0)
-                break;
+            যদি (err < 0)
+                বিরতি;
 
-            for (i = 0; i < nb_image_formats; i++) {
-                if (image_formats[i].image_channel_order ==
+            জন্য (i = 0; i < nb_image_formats; i++) {
+                যদি (image_formats[i].image_channel_order ==
                     image_format.image_channel_order &&
-                    image_formats[i].image_channel_data_type ==
-                    image_format.image_channel_data_type)
-                    break;
+                    image_formats[i].image_channel_তথ্য_type ==
+                    image_format.image_channel_তথ্য_type)
+                    বিরতি;
             }
-            if (i == nb_image_formats) {
+            যদি (i == nb_image_formats) {
                 err = AVERROR(EINVAL);
-                break;
+                বিরতি;
             }
         }
-        if (err != AVERROR(ENOENT))
-            continue;
+        যদি (err != AVERROR(ENOENT))
+            চালু;
 
         av_log(hwdev, AV_LOG_DEBUG, "Format %s supported.\n",
                av_get_pix_fmt_name(pix_fmt));
 
         err = av_reallocp_array(&constraints->valid_sw_formats,
                                 pix_fmts_found + 2,
-                                sizeof(*constraints->valid_sw_formats));
-        if (err < 0)
-            goto fail;
+                                আকার(*constraints->valid_sw_formats));
+        যদি (err < 0)
+            যাও fail;
         constraints->valid_sw_formats[pix_fmts_found] = pix_fmt;
         constraints->valid_sw_formats[pix_fmts_found + 1] =
             AV_PIX_FMT_NONE;
@@ -1614,31 +1614,31 @@ static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
     av_freep(&image_formats);
 
     constraints->valid_hw_formats =
-        av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats) {
+        av_malloc_array(2, আকার(*constraints->valid_hw_formats));
+    যদি (!constraints->valid_hw_formats) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        যাও fail;
     }
     constraints->valid_hw_formats[0] = AV_PIX_FMT_OPENCL;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    ফেরত 0;
 
 fail:
     av_freep(&image_formats);
-    return err;
+    ফেরত err;
 }
 
-static void opencl_pool_free(void *opaque, uint8_t *data)
+স্থির শূন্য opencl_pool_free(শূন্য *opaque, uint8_t *তথ্য)
 {
     AVHWFramesContext       *hwfc = opaque;
-    AVOpenCLFrameDescriptor *desc = (AVOpenCLFrameDescriptor*)data;
+    AVOpenCLFrameDescriptor *desc = (AVOpenCLFrameDescriptor*)তথ্য;
     cl_int cle;
-    int p;
+    পূর্ণসংখ্যা p;
 
-    for (p = 0; p < desc->nb_planes; p++) {
+    জন্য (p = 0; p < desc->nb_planes; p++) {
         cle = clReleaseMemObject(desc->planes[p]);
-        if (cle != CL_SUCCESS) {
+        যদি (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to release plane %d: "
                    "%d.\n", p, cle);
         }
@@ -1647,7 +1647,7 @@ static void opencl_pool_free(void *opaque, uint8_t *data)
     av_free(desc);
 }
 
-static AVBufferRef *opencl_pool_alloc(void *opaque, size_t size)
+স্থির AVBufferRef *opencl_pool_alloc(শূন্য *opaque, size_t আকার_2)
 {
     AVHWFramesContext      *hwfc = opaque;
     AVOpenCLDeviceContext *hwctx = hwfc->device_ctx->hwctx;
@@ -1656,32 +1656,32 @@ static AVBufferRef *opencl_pool_alloc(void *opaque, size_t size)
     cl_mem image;
     cl_image_format image_format;
     cl_image_desc   image_desc;
-    int err, p;
+    পূর্ণসংখ্যা err, p;
     AVBufferRef *ref;
 
-    desc = av_mallocz(sizeof(*desc));
-    if (!desc)
-        return NULL;
+    desc = av_mallocz(আকার(*desc));
+    যদি (!desc)
+        ফেরত ফাঁকা;
 
-    for (p = 0;; p++) {
+    জন্য (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
                                       hwfc->width, hwfc->height,
                                       &image_format, &image_desc);
-        if (err == AVERROR(ENOENT))
-            break;
-        if (err < 0)
-            goto fail;
+        যদি (err == AVERROR(ENOENT))
+            বিরতি;
+        যদি (err < 0)
+            যাও fail;
 
         // For generic image objects, the pitch is determined by the
         // implementation.
         image_desc.image_row_pitch = 0;
 
         image = clCreateImage(hwctx->context, CL_MEM_READ_WRITE,
-                              &image_format, &image_desc, NULL, &cle);
-        if (!image) {
+                              &image_format, &image_desc, ফাঁকা, &cle);
+        যদি (!image) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to create image for "
                    "plane %d: %d.\n", p, cle);
-            goto fail;
+            যাও fail;
         }
 
         desc->planes[p] = image;
@@ -1689,21 +1689,21 @@ static AVBufferRef *opencl_pool_alloc(void *opaque, size_t size)
 
     desc->nb_planes = p;
 
-    ref = av_buffer_create((uint8_t*)desc, sizeof(*desc),
+    ref = av_বাফার_create((uint8_t*)desc, আকার(*desc),
                            &opencl_pool_free, hwfc, 0);
-    if (!ref)
-        goto fail;
+    যদি (!ref)
+        যাও fail;
 
-    return ref;
+    ফেরত ref;
 
 fail:
-    for (p = 0; desc->planes[p]; p++)
+    জন্য (p = 0; desc->planes[p]; p++)
         clReleaseMemObject(desc->planes[p]);
     av_free(desc);
-    return NULL;
+    ফেরত ফাঁকা;
 }
 
-static int opencl_frames_init_command_queue(AVHWFramesContext *hwfc)
+স্থির পূর্ণসংখ্যা opencl_frames_init_command_queue(AVHWFramesContext *hwfc)
 {
     OpenCLFramesContext    *priv = hwfc->hwctx;
     AVOpenCLFramesContext *hwctx = &priv->p;
@@ -1713,40 +1713,40 @@ static int opencl_frames_init_command_queue(AVHWFramesContext *hwfc)
     priv->command_queue = hwctx->command_queue ? hwctx->command_queue
                                                : devpriv->command_queue;
     cle = clRetainCommandQueue(priv->command_queue);
-    if (cle != CL_SUCCESS) {
+    যদি (cle != CL_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to retain frame "
                "command queue: %d.\n", cle);
-        return AVERROR(EIO);
+        ফেরত AVERROR(EIO);
     }
 
-    return 0;
+    ফেরত 0;
 }
 
-static int opencl_frames_init(AVHWFramesContext *hwfc)
+স্থির পূর্ণসংখ্যা opencl_frames_init(AVHWFramesContext *hwfc)
 {
-    if (!hwfc->pool) {
+    যদি (!hwfc->pool) {
         ffhwframesctx(hwfc)->pool_internal =
-            av_buffer_pool_init2(sizeof(cl_mem), hwfc,
-                                 &opencl_pool_alloc, NULL);
-        if (!ffhwframesctx(hwfc)->pool_internal)
-            return AVERROR(ENOMEM);
+            av_বাফার_pool_init2(আকার(cl_mem), hwfc,
+                                 &opencl_pool_alloc, ফাঁকা);
+        যদি (!ffhwframesctx(hwfc)->pool_internal)
+            ফেরত AVERROR(ENOMEM);
     }
 
-    return opencl_frames_init_command_queue(hwfc);
+    ফেরত opencl_frames_init_command_queue(hwfc);
 }
 
-static void opencl_frames_uninit(AVHWFramesContext *hwfc)
+স্থির শূন্য opencl_frames_uninit(AVHWFramesContext *hwfc)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     cl_int cle;
 
-#if HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
-    int i, p;
-    for (i = 0; i < priv->nb_mapped_frames; i++) {
+#যদি HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
+    পূর্ণসংখ্যা i, p;
+    জন্য (i = 0; i < priv->nb_mapped_frames; i++) {
         AVOpenCLFrameDescriptor *desc = &priv->mapped_frames[i];
-        for (p = 0; p < desc->nb_planes; p++) {
+        জন্য (p = 0; p < desc->nb_planes; p++) {
             cle = clReleaseMemObject(desc->planes[p]);
-            if (cle != CL_SUCCESS) {
+            যদি (cle != CL_SUCCESS) {
                 av_log(hwfc, AV_LOG_ERROR, "Failed to release mapped "
                        "frame object (frame %d plane %d): %d.\n",
                        i, p, cle);
@@ -1756,80 +1756,80 @@ static void opencl_frames_uninit(AVHWFramesContext *hwfc)
     av_freep(&priv->mapped_frames);
 #endif
 
-    if (priv->command_queue) {
+    যদি (priv->command_queue) {
         cle = clReleaseCommandQueue(priv->command_queue);
-        if (cle != CL_SUCCESS) {
+        যদি (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to release frame "
                    "command queue: %d.\n", cle);
         }
-        priv->command_queue = NULL;
+        priv->command_queue = ফাঁকা;
     }
 }
 
-static int opencl_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+স্থির পূর্ণসংখ্যা opencl_get_বাফার(AVHWFramesContext *hwfc, AVFrame *frame)
 {
     AVOpenCLFrameDescriptor *desc;
-    int p;
+    পূর্ণসংখ্যা p;
 
-    frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    frame->buf[0] = av_বাফার_pool_get(hwfc->pool);
+    যদি (!frame->buf[0])
+        ফেরত AVERROR(ENOMEM);
 
-    desc = (AVOpenCLFrameDescriptor*)frame->buf[0]->data;
+    desc = (AVOpenCLFrameDescriptor*)frame->buf[0]->তথ্য;
 
-    for (p = 0; p < desc->nb_planes; p++)
-        frame->data[p] = (uint8_t*)desc->planes[p];
+    জন্য (p = 0; p < desc->nb_planes; p++)
+        frame->তথ্য[p] = (uint8_t*)desc->planes[p];
 
     frame->format  = AV_PIX_FMT_OPENCL;
     frame->width   = hwfc->width;
     frame->height  = hwfc->height;
 
-    return 0;
+    ফেরত 0;
 }
 
-static int opencl_transfer_get_formats(AVHWFramesContext *hwfc,
-                                       enum AVHWFrameTransferDirection dir,
-                                       enum AVPixelFormat **formats)
+স্থির পূর্ণসংখ্যা opencl_transfer_get_formats(AVHWFramesContext *hwfc,
+                                       গণনা AVHWFrameTransferDirection dir,
+                                       গণনা AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
+    গণনা AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, আকার(*fmts));
+    যদি (!fmts)
+        ফেরত AVERROR(ENOMEM);
 
     fmts[0] = hwfc->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
-    return 0;
+    ফেরত 0;
 }
 
-static int opencl_wait_events(AVHWFramesContext *hwfc,
-                              cl_event *events, int nb_events)
+স্থির পূর্ণসংখ্যা opencl_wait_events(AVHWFramesContext *hwfc,
+                              cl_event *events, পূর্ণসংখ্যা nb_events)
 {
     cl_int cle;
-    int i;
+    পূর্ণসংখ্যা i;
 
     cle = clWaitForEvents(nb_events, events);
-    if (cle != CL_SUCCESS) {
+    যদি (cle != CL_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to wait for event "
                "completion: %d.\n", cle);
-        return AVERROR(EIO);
+        ফেরত AVERROR(EIO);
     }
 
-    for (i = 0; i < nb_events; i++) {
+    জন্য (i = 0; i < nb_events; i++) {
         cle = clReleaseEvent(events[i]);
-        if (cle != CL_SUCCESS) {
+        যদি (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to release "
                    "event: %d.\n", cle);
         }
     }
 
-    return 0;
+    ফেরত 0;
 }
 
-static int opencl_transfer_data_from(AVHWFramesContext *hwfc,
-                                     AVFrame *dst, const AVFrame *src)
+স্থির পূর্ণসংখ্যা opencl_transfer_তথ্য_from(AVHWFramesContext *hwfc,
+                                     AVFrame *dst, ধ্রুবক AVFrame *src)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     cl_image_format image_format;
@@ -1837,27 +1837,27 @@ static int opencl_transfer_data_from(AVHWFramesContext *hwfc,
     cl_int cle;
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3];
-    cl_event events[AV_NUM_DATA_POINTERS];
-    int err, p;
+    cl_event events[AV_অঙ্ক_তথ্য_POINTERS];
+    পূর্ণসংখ্যা err, p;
 
-    if (dst->format != hwfc->sw_format)
-        return AVERROR(EINVAL);
+    যদি (dst->format != hwfc->sw_format)
+        ফেরত AVERROR(EINVAL);
 
-    for (p = 0;; p++) {
+    জন্য (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
                                       src->width, src->height,
                                       &image_format, &image_desc);
-        if (err < 0) {
-            if (err == AVERROR(ENOENT))
+        যদি (err < 0) {
+            যদি (err == AVERROR(ENOENT))
                 err = 0;
-            break;
+            বিরতি;
         }
 
-        if (!dst->data[p]) {
+        যদি (!dst->তথ্য[p]) {
             av_log(hwfc, AV_LOG_ERROR, "Plane %d missing on "
                    "destination frame for transfer.\n", p);
             err = AVERROR(EINVAL);
-            break;
+            বিরতি;
         }
 
         region[0] = image_desc.image_width;
@@ -1865,26 +1865,26 @@ static int opencl_transfer_data_from(AVHWFramesContext *hwfc,
         region[2] = 1;
 
         cle = clEnqueueReadImage(priv->command_queue,
-                                 (cl_mem)src->data[p],
+                                 (cl_mem)src->তথ্য[p],
                                  CL_FALSE, origin, region,
                                  dst->linesize[p], 0,
-                                 dst->data[p],
-                                 0, NULL, &events[p]);
-        if (cle != CL_SUCCESS) {
+                                 dst->তথ্য[p],
+                                 0, ফাঁকা, &events[p]);
+        যদি (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to enqueue read of "
                    "OpenCL image plane %d: %d.\n", p, cle);
             err = AVERROR(EIO);
-            break;
+            বিরতি;
         }
     }
 
     opencl_wait_events(hwfc, events, p);
 
-    return err;
+    ফেরত err;
 }
 
-static int opencl_transfer_data_to(AVHWFramesContext *hwfc,
-                                   AVFrame *dst, const AVFrame *src)
+স্থির পূর্ণসংখ্যা opencl_transfer_তথ্য_to(AVHWFramesContext *hwfc,
+                                   AVFrame *dst, ধ্রুবক AVFrame *src)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     cl_image_format image_format;
@@ -1892,27 +1892,27 @@ static int opencl_transfer_data_to(AVHWFramesContext *hwfc,
     cl_int cle;
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3];
-    cl_event events[AV_NUM_DATA_POINTERS];
-    int err, p;
+    cl_event events[AV_অঙ্ক_তথ্য_POINTERS];
+    পূর্ণসংখ্যা err, p;
 
-    if (src->format != hwfc->sw_format)
-        return AVERROR(EINVAL);
+    যদি (src->format != hwfc->sw_format)
+        ফেরত AVERROR(EINVAL);
 
-    for (p = 0;; p++) {
+    জন্য (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
                                       src->width, src->height,
                                       &image_format, &image_desc);
-        if (err < 0) {
-            if (err == AVERROR(ENOENT))
+        যদি (err < 0) {
+            যদি (err == AVERROR(ENOENT))
                 err = 0;
-            break;
+            বিরতি;
         }
 
-        if (!src->data[p]) {
+        যদি (!src->তথ্য[p]) {
             av_log(hwfc, AV_LOG_ERROR, "Plane %d missing on "
                    "source frame for transfer.\n", p);
             err = AVERROR(EINVAL);
-            break;
+            বিরতি;
         }
 
         region[0] = image_desc.image_width;
@@ -1920,49 +1920,49 @@ static int opencl_transfer_data_to(AVHWFramesContext *hwfc,
         region[2] = 1;
 
         cle = clEnqueueWriteImage(priv->command_queue,
-                                  (cl_mem)dst->data[p],
+                                  (cl_mem)dst->তথ্য[p],
                                   CL_FALSE, origin, region,
                                   src->linesize[p], 0,
-                                  src->data[p],
-                                  0, NULL, &events[p]);
-        if (cle != CL_SUCCESS) {
+                                  src->তথ্য[p],
+                                  0, ফাঁকা, &events[p]);
+        যদি (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to enqueue write of "
                    "OpenCL image plane %d: %d.\n", p, cle);
             err = AVERROR(EIO);
-            break;
+            বিরতি;
         }
     }
 
     opencl_wait_events(hwfc, events, p);
 
-    return err;
+    ফেরত err;
 }
 
-typedef struct OpenCLMapping {
+প্রকারলেখ কাঠামো OpenCLMapping {
     // The mapped addresses for each plane.
     // The destination frame is not available when we unmap, so these
     // need to be stored separately.
-    void *address[AV_NUM_DATA_POINTERS];
+    শূন্য *address[AV_অঙ্ক_তথ্য_POINTERS];
 } OpenCLMapping;
 
-static void opencl_unmap_frame(AVHWFramesContext *hwfc,
+স্থির শূন্য opencl_unmap_frame(AVHWFramesContext *hwfc,
                                HWMapDescriptor *hwmap)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     OpenCLMapping *map = hwmap->priv;
-    cl_event events[AV_NUM_DATA_POINTERS];
-    int p, e;
+    cl_event events[AV_অঙ্ক_তথ্য_POINTERS];
+    পূর্ণসংখ্যা p, e;
     cl_int cle;
 
-    for (p = e = 0; p < FF_ARRAY_ELEMS(map->address); p++) {
-        if (!map->address[p])
-            break;
+    জন্য (p = e = 0; p < FF_ARRAY_ELEMS(map->address); p++) {
+        যদি (!map->address[p])
+            বিরতি;
 
         cle = clEnqueueUnmapMemObject(priv->command_queue,
-                                      (cl_mem)hwmap->source->data[p],
+                                      (cl_mem)hwmap->source->তথ্য[p],
                                       map->address[p],
-                                      0, NULL, &events[e]);
-        if (cle != CL_SUCCESS) {
+                                      0, ফাঁকা, &events[e]);
+        যদি (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to unmap OpenCL "
                    "image plane %d: %d.\n", p, cle);
         }
@@ -1974,8 +1974,8 @@ static void opencl_unmap_frame(AVHWFramesContext *hwfc,
     av_free(map);
 }
 
-static int opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
-                            const AVFrame *src, int flags)
+স্থির পূর্ণসংখ্যা opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
+                            ধ্রুবক AVFrame *src, পূর্ণসংখ্যা flags)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     cl_map_flags map_flags;
@@ -1986,36 +1986,36 @@ static int opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3];
     size_t row_pitch;
-    cl_event events[AV_NUM_DATA_POINTERS];
-    int err, p;
+    cl_event events[AV_অঙ্ক_তথ্য_POINTERS];
+    পূর্ণসংখ্যা err, p;
 
     av_assert0(hwfc->sw_format == dst->format);
 
-    if (flags & AV_HWFRAME_MAP_OVERWRITE &&
+    যদি (flags & AV_HWFRAME_MAP_OVERWRITE &&
         !(flags & AV_HWFRAME_MAP_READ)) {
         // This is mutually exclusive with the read/write flags, so
         // there is no way to map with read here.
         map_flags = CL_MAP_WRITE_INVALIDATE_REGION;
-    } else {
+    } অন্যথা {
         map_flags = 0;
-        if (flags & AV_HWFRAME_MAP_READ)
+        যদি (flags & AV_HWFRAME_MAP_READ)
             map_flags |= CL_MAP_READ;
-        if (flags & AV_HWFRAME_MAP_WRITE)
+        যদি (flags & AV_HWFRAME_MAP_WRITE)
             map_flags |= CL_MAP_WRITE;
     }
 
-    map = av_mallocz(sizeof(*map));
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_mallocz(আকার(*map));
+    যদি (!map)
+        ফেরত AVERROR(ENOMEM);
 
-    for (p = 0;; p++) {
+    জন্য (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
                                       src->width, src->height,
                                       &image_format, &image_desc);
-        if (err == AVERROR(ENOENT))
-            break;
-        if (err < 0)
-            goto fail;
+        যদি (err == AVERROR(ENOENT))
+            বিরতি;
+        যদি (err < 0)
+            যাও fail;
 
         region[0] = image_desc.image_width;
         region[1] = image_desc.image_height;
@@ -2023,72 +2023,72 @@ static int opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
 
         map->address[p] =
             clEnqueueMapImage(priv->command_queue,
-                              (cl_mem)src->data[p],
+                              (cl_mem)src->তথ্য[p],
                               CL_FALSE, map_flags, origin, region,
-                              &row_pitch, NULL, 0, NULL,
+                              &row_pitch, ফাঁকা, 0, ফাঁকা,
                               &events[p], &cle);
-        if (!map->address[p]) {
+        যদি (!map->address[p]) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to map OpenCL "
                    "image plane %d: %d.\n", p, cle);
             err = AVERROR(EIO);
-            goto fail;
+            যাও fail;
         }
 
-        dst->data[p] = map->address[p];
+        dst->তথ্য[p] = map->address[p];
         dst->linesize[p] = row_pitch;
 
         av_log(hwfc, AV_LOG_DEBUG, "Map plane %d (%p -> %p).\n",
-               p, src->data[p], dst->data[p]);
+               p, src->তথ্য[p], dst->তথ্য[p]);
     }
 
     err = opencl_wait_events(hwfc, events, p);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
                                 &opencl_unmap_frame, map);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    ফেরত 0;
 
 fail:
-    for (p = 0; p < AV_NUM_DATA_POINTERS; p++) {
-        if (!map->address[p])
-            break;
+    জন্য (p = 0; p < AV_অঙ্ক_তথ্য_POINTERS; p++) {
+        যদি (!map->address[p])
+            বিরতি;
         clEnqueueUnmapMemObject(priv->command_queue,
-                                (cl_mem)src->data[p],
+                                (cl_mem)src->তথ্য[p],
                                 map->address[p],
-                                0, NULL, &events[p]);
+                                0, ফাঁকা, &events[p]);
     }
-    if (p > 0)
+    যদি (p > 0)
         opencl_wait_events(hwfc, events, p);
     av_freep(&map);
-    return err;
+    ফেরত err;
 }
 
-#if HAVE_OPENCL_DRM_BEIGNET
+#যদি HAVE_OPENCL_DRM_BEIGNET
 
-typedef struct DRMBeignetToOpenCLMapping {
+প্রকারলেখ কাঠামো DRMBeignetToOpenCLMapping {
     AVFrame              *drm_frame;
     AVDRMFrameDescriptor *drm_desc;
 
     AVOpenCLFrameDescriptor frame;
 } DRMBeignetToOpenCLMapping;
 
-static void opencl_unmap_from_drm_beignet(AVHWFramesContext *dst_fc,
+স্থির শূন্য opencl_unmap_from_drm_beignet(AVHWFramesContext *dst_fc,
                                           HWMapDescriptor *hwmap)
 {
     DRMBeignetToOpenCLMapping *mapping = hwmap->priv;
     cl_int cle;
-    int i;
+    পূর্ণসংখ্যা i;
 
-    for (i = 0; i < mapping->frame.nb_planes; i++) {
+    জন্য (i = 0; i < mapping->frame.nb_planes; i++) {
         cle = clReleaseMemObject(mapping->frame.planes[i]);
-        if (cle != CL_SUCCESS) {
+        যদি (cle != CL_SUCCESS) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to release CL image "
                    "of plane %d of DRM frame: %d.\n", i, cle);
         }
@@ -2097,34 +2097,34 @@ static void opencl_unmap_from_drm_beignet(AVHWFramesContext *dst_fc,
     av_free(mapping);
 }
 
-static int opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
-                                       AVFrame *dst, const AVFrame *src,
-                                       int flags)
+স্থির পূর্ণসংখ্যা opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
+                                       AVFrame *dst, ধ্রুবক AVFrame *src,
+                                       পূর্ণসংখ্যা flags)
 {
     OpenCLDeviceContext    *priv = dst_fc->device_ctx->hwctx;
     AVOpenCLDeviceContext *hwctx = &priv->p;
     DRMBeignetToOpenCLMapping *mapping;
-    const AVDRMFrameDescriptor *desc;
+    ধ্রুবক AVDRMFrameDescriptor *desc;
     cl_int cle;
-    int err, i, j, p;
+    পূর্ণসংখ্যা err, i, j, p;
 
-    desc = (const AVDRMFrameDescriptor*)src->data[0];
+    desc = (ধ্রুবক AVDRMFrameDescriptor*)src->তথ্য[0];
 
-    mapping = av_mallocz(sizeof(*mapping));
-    if (!mapping)
-        return AVERROR(ENOMEM);
+    mapping = av_mallocz(আকার(*mapping));
+    যদি (!mapping)
+        ফেরত AVERROR(ENOMEM);
 
     p = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
-        const AVDRMLayerDescriptor *layer = &desc->layers[i];
-        for (j = 0; j < layer->nb_planes; j++) {
-            const AVDRMPlaneDescriptor *plane = &layer->planes[j];
-            const AVDRMObjectDescriptor *object =
-                &desc->objects[plane->object_index];
+    জন্য (i = 0; i < desc->nb_layers; i++) {
+        ধ্রুবক AVDRMLayerDescriptor *layer = &desc->layers[i];
+        জন্য (j = 0; j < layer->nb_planes; j++) {
+            ধ্রুবক AVDRMPlaneDescriptor *plane = &layer->planes[j];
+            ধ্রুবক AVDRMObjectDescriptor *object =
+                &desc->objects[plane->object_সূচক];
 
             cl_import_image_info_intel image_info = {
                 .fd        = object->fd,
-                .size      = object->size,
+                .আকার_2      = object->আকার_2,
                 .type      = CL_MEM_OBJECT_IMAGE2D,
                 .offset    = plane->offset,
                 .row_pitch = plane->pitch,
@@ -2135,11 +2135,11 @@ static int opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
                                           src->width, src->height,
                                           &image_info.fmt,
                                           &image_desc);
-            if (err < 0) {
+            যদি (err < 0) {
                 av_log(dst_fc, AV_LOG_ERROR, "DRM frame layer %d "
                        "plane %d is not representable in OpenCL: %d.\n",
                        i, j, err);
-                goto fail;
+                যাও fail;
             }
             image_info.width  = image_desc.image_width;
             image_info.height = image_desc.image_height;
@@ -2147,15 +2147,15 @@ static int opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
             mapping->frame.planes[p] =
                 priv->clCreateImageFromFdINTEL(hwctx->context,
                                                &image_info, &cle);
-            if (!mapping->frame.planes[p]) {
+            যদি (!mapping->frame.planes[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL image "
                        "from layer %d plane %d of DRM frame: %d.\n",
                        i, j, cle);
                 err = AVERROR(EIO);
-                goto fail;
+                যাও fail;
             }
 
-            dst->data[p] = (uint8_t*)mapping->frame.planes[p];
+            dst->তথ্য[p] = (uint8_t*)mapping->frame.planes[p];
             mapping->frame.nb_planes = ++p;
         }
     }
@@ -2163,73 +2163,73 @@ static int opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &opencl_unmap_from_drm_beignet,
                                 mapping);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    ফেরত 0;
 
 fail:
-    for (p = 0; p < mapping->frame.nb_planes; p++) {
-        if (mapping->frame.planes[p])
+    জন্য (p = 0; p < mapping->frame.nb_planes; p++) {
+        যদি (mapping->frame.planes[p])
             clReleaseMemObject(mapping->frame.planes[p]);
     }
     av_free(mapping);
-    memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    memset(dst->তথ্য, 0, আকার(dst->তথ্য));
+    ফেরত err;
 }
 
-#if HAVE_OPENCL_VAAPI_BEIGNET
+#যদি HAVE_OPENCL_VAAPI_BEIGNET
 
-static int opencl_map_from_vaapi(AVHWFramesContext *dst_fc,
-                                 AVFrame *dst, const AVFrame *src,
-                                 int flags)
+স্থির পূর্ণসংখ্যা opencl_map_from_vaapi(AVHWFramesContext *dst_fc,
+                                 AVFrame *dst, ধ্রুবক AVFrame *src,
+                                 পূর্ণসংখ্যা flags)
 {
     AVFrame *tmp;
-    int err;
+    পূর্ণসংখ্যা err;
 
     tmp = av_frame_alloc();
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    যদি (!tmp)
+        ফেরত AVERROR(ENOMEM);
 
-    tmp->format = AV_PIX_FMT_DRM_PRIME;
+    tmp->format = AV_PIX_FMT_DRM_মৌলিক;
 
     err = av_hwframe_map(tmp, src, flags);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
     err = opencl_map_from_drm_beignet(dst_fc, dst, tmp, flags);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
     err = ff_hwframe_map_replace(dst, src);
 
 fail:
     av_frame_free(&tmp);
-    return err;
+    ফেরত err;
 }
 
 #endif /* HAVE_OPENCL_VAAPI_BEIGNET */
 #endif /* HAVE_OPENCL_DRM_BEIGNET */
 
-static inline cl_mem_flags opencl_mem_flags_for_mapping(int map_flags)
+স্থির অন্তঃরেখ cl_mem_flags opencl_mem_flags_for_mapping(পূর্ণসংখ্যা map_flags)
 {
-    if ((map_flags & AV_HWFRAME_MAP_READ) &&
+    যদি ((map_flags & AV_HWFRAME_MAP_READ) &&
         (map_flags & AV_HWFRAME_MAP_WRITE))
-        return CL_MEM_READ_WRITE;
-    else if (map_flags & AV_HWFRAME_MAP_READ)
-        return CL_MEM_READ_ONLY;
-    else if (map_flags & AV_HWFRAME_MAP_WRITE)
-        return CL_MEM_WRITE_ONLY;
-    else
-        return 0;
+        ফেরত CL_MEM_READ_WRITE;
+    অন্যথা যদি (map_flags & AV_HWFRAME_MAP_READ)
+        ফেরত CL_MEM_READ_ONLY;
+    অন্যথা যদি (map_flags & AV_HWFRAME_MAP_WRITE)
+        ফেরত CL_MEM_WRITE_ONLY;
+    অন্যথা
+        ফেরত 0;
 }
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#যদি HAVE_OPENCL_VAAPI_INTEL_MEDIA
 
-static void opencl_unmap_from_qsv(AVHWFramesContext *dst_fc,
+স্থির শূন্য opencl_unmap_from_qsv(AVHWFramesContext *dst_fc,
                                   HWMapDescriptor *hwmap)
 {
     AVOpenCLFrameDescriptor    *desc = hwmap->priv;
@@ -2237,23 +2237,23 @@ static void opencl_unmap_from_qsv(AVHWFramesContext *dst_fc,
     OpenCLFramesContext *frames_priv = dst_fc->hwctx;
     cl_event event;
     cl_int cle;
-    int p;
+    পূর্ণসংখ্যা p;
 
     av_log(dst_fc, AV_LOG_DEBUG, "Unmap QSV/VAAPI surface from OpenCL.\n");
 
     cle = device_priv->clEnqueueReleaseVA_APIMediaSurfacesINTEL(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+        0, ফাঁকা, &event);
+    যদি (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to release surface "
                "handles: %d.\n", cle);
     }
 
     opencl_wait_events(dst_fc, &event, 1);
 
-    for (p = 0; p < desc->nb_planes; p++) {
+    জন্য (p = 0; p < desc->nb_planes; p++) {
         cle = clReleaseMemObject(desc->planes[p]);
-        if (cle != CL_SUCCESS) {
+        যদি (cle != CL_SUCCESS) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to release CL "
                    "image of plane %d of QSV/VAAPI surface: %d\n",
                    p, cle);
@@ -2263,11 +2263,11 @@ static void opencl_unmap_from_qsv(AVHWFramesContext *dst_fc,
     av_free(desc);
 }
 
-static int opencl_map_from_qsv(AVHWFramesContext *dst_fc, AVFrame *dst,
-                               const AVFrame *src, int flags)
+স্থির পূর্ণসংখ্যা opencl_map_from_qsv(AVHWFramesContext *dst_fc, AVFrame *dst,
+                               ধ্রুবক AVFrame *src, পূর্ণসংখ্যা flags)
 {
     AVHWFramesContext *src_fc =
-        (AVHWFramesContext*)src->hw_frames_ctx->data;
+        (AVHWFramesContext*)src->hw_frames_ctx->তথ্য;
     OpenCLDeviceContext *device_priv = dst_fc->device_ctx->hwctx;
     AVOpenCLDeviceContext   *dst_dev = &device_priv->p;
     OpenCLFramesContext *frames_priv = dst_fc->hwctx;
@@ -2276,94 +2276,94 @@ static int opencl_map_from_qsv(AVHWFramesContext *dst_fc, AVFrame *dst,
     cl_mem_flags cl_flags;
     cl_event event;
     cl_int cle;
-    int err, p;
+    পূর্ণসংখ্যা err, p;
 
-#if CONFIG_LIBMFX
-    if (src->format == AV_PIX_FMT_QSV) {
-        void *base_handle;
-        mfxFrameSurface1 *mfx_surface = (mfxFrameSurface1*)src->data[3];
+#যদি CONFIG_LIBMFX
+    যদি (src->format == AV_PIX_FMT_QSV) {
+        শূন্য *base_handle;
+        mfxFrameSurface1 *mfx_surface = (mfxFrameSurface1*)src->তথ্য[3];
         err = ff_qsv_get_surface_base_handle(mfx_surface,
                                              AV_HWDEVICE_TYPE_VAAPI,
                                              &base_handle);
-        if (err < 0)
-            return err;
+        যদি (err < 0)
+            ফেরত err;
         va_surface = *(VASurfaceID *)base_handle;
-    } else
+    } অন্যথা
 #endif
-        if (src->format == AV_PIX_FMT_VAAPI) {
-        va_surface = (VASurfaceID)(uintptr_t)src->data[3];
-    } else {
-        return AVERROR(ENOSYS);
+        যদি (src->format == AV_PIX_FMT_VAAPI) {
+        va_surface = (VASurfaceID)(uintptr_t)src->তথ্য[3];
+    } অন্যথা {
+        ফেরত AVERROR(ENOSYS);
     }
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    যদি (!cl_flags)
+        ফেরত AVERROR(EINVAL);
 
     av_log(src_fc, AV_LOG_DEBUG, "Map QSV/VAAPI surface %#x to "
            "OpenCL.\n", va_surface);
 
-    desc = av_mallocz(sizeof(*desc));
-    if (!desc)
-        return AVERROR(ENOMEM);
+    desc = av_mallocz(আকার(*desc));
+    যদি (!desc)
+        ফেরত AVERROR(ENOMEM);
 
     // The cl_intel_va_api_media_sharing extension only supports NV12
     // surfaces, so for now there are always exactly two planes.
     desc->nb_planes = 2;
 
-    for (p = 0; p < desc->nb_planes; p++) {
+    জন্য (p = 0; p < desc->nb_planes; p++) {
         desc->planes[p] =
             device_priv->clCreateFromVA_APIMediaSurfaceINTEL(
                 dst_dev->context, cl_flags, &va_surface, p, &cle);
-        if (!desc->planes[p]) {
+        যদি (!desc->planes[p]) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL "
                    "image from plane %d of QSV/VAAPI surface "
                    "%#x: %d.\n", p, va_surface, cle);
             err = AVERROR(EIO);
-            goto fail;
+            যাও fail;
         }
 
-        dst->data[p] = (uint8_t*)desc->planes[p];
+        dst->তথ্য[p] = (uint8_t*)desc->planes[p];
     }
 
     cle = device_priv->clEnqueueAcquireVA_APIMediaSurfacesINTEL(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+        0, ফাঁকা, &event);
+    যদি (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to acquire surface "
                "handles: %d.\n", cle);
         err = AVERROR(EIO);
-        goto fail;
+        যাও fail;
     }
 
     err = opencl_wait_events(dst_fc, &event, 1);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &opencl_unmap_from_qsv, desc);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    ফেরত 0;
 
 fail:
-    for (p = 0; p < desc->nb_planes; p++)
-        if (desc->planes[p])
+    জন্য (p = 0; p < desc->nb_planes; p++)
+        যদি (desc->planes[p])
             clReleaseMemObject(desc->planes[p]);
     av_freep(&desc);
-    memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    memset(dst->তথ্য, 0, আকার(dst->তথ্য));
+    ফেরত err;
 }
 
 #endif
 
-#if HAVE_OPENCL_DXVA2
+#যদি HAVE_OPENCL_DXVA2
 
-static void opencl_unmap_from_dxva2(AVHWFramesContext *dst_fc,
+স্থির শূন্য opencl_unmap_from_dxva2(AVHWFramesContext *dst_fc,
                                     HWMapDescriptor *hwmap)
 {
     AVOpenCLFrameDescriptor    *desc = hwmap->priv;
@@ -2376,82 +2376,82 @@ static void opencl_unmap_from_dxva2(AVHWFramesContext *dst_fc,
 
     cle = device_priv->clEnqueueReleaseDX9MediaSurfacesKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+        0, ফাঁকা, &event);
+    যদি (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to release surface "
                "handle: %d.\n", cle);
-        return;
+        ফেরত;
     }
 
     opencl_wait_events(dst_fc, &event, 1);
 }
 
-static int opencl_map_from_dxva2(AVHWFramesContext *dst_fc, AVFrame *dst,
-                                 const AVFrame *src, int flags)
+স্থির পূর্ণসংখ্যা opencl_map_from_dxva2(AVHWFramesContext *dst_fc, AVFrame *dst,
+                                 ধ্রুবক AVFrame *src, পূর্ণসংখ্যা flags)
 {
     AVHWFramesContext *src_fc =
-        (AVHWFramesContext*)src->hw_frames_ctx->data;
+        (AVHWFramesContext*)src->hw_frames_ctx->তথ্য;
     AVDXVA2FramesContext  *src_hwctx = src_fc->hwctx;
     OpenCLDeviceContext *device_priv = dst_fc->device_ctx->hwctx;
     OpenCLFramesContext *frames_priv = dst_fc->hwctx;
     AVOpenCLFrameDescriptor *desc;
     cl_event event;
     cl_int cle;
-    int err, i;
+    পূর্ণসংখ্যা err, i;
 
     av_log(dst_fc, AV_LOG_DEBUG, "Map DXVA2 surface %p to "
-           "OpenCL.\n", src->data[3]);
+           "OpenCL.\n", src->তথ্য[3]);
 
-    for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-        if (src_hwctx->surfaces[i] == (IDirect3DSurface9*)src->data[3])
-            break;
+    জন্য (i = 0; i < src_hwctx->nb_surfaces; i++) {
+        যদি (src_hwctx->surfaces[i] == (IDirect3DSurface9*)src->তথ্য[3])
+            বিরতি;
     }
-    if (i >= src_hwctx->nb_surfaces) {
+    যদি (i >= src_hwctx->nb_surfaces) {
         av_log(dst_fc, AV_LOG_ERROR, "Trying to map from a surface which "
                "is not in the mapped frames context.\n");
-        return AVERROR(EINVAL);
+        ফেরত AVERROR(EINVAL);
     }
 
     desc = &frames_priv->mapped_frames[i];
 
     cle = device_priv->clEnqueueAcquireDX9MediaSurfacesKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+        0, ফাঁকা, &event);
+    যদি (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to acquire surface "
                "handle: %d.\n", cle);
-        return AVERROR(EIO);
+        ফেরত AVERROR(EIO);
     }
 
     err = opencl_wait_events(dst_fc, &event, 1);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
-    for (i = 0; i < desc->nb_planes; i++)
-        dst->data[i] = (uint8_t*)desc->planes[i];
+    জন্য (i = 0; i < desc->nb_planes; i++)
+        dst->তথ্য[i] = (uint8_t*)desc->planes[i];
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &opencl_unmap_from_dxva2, desc);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    ফেরত 0;
 
 fail:
     cle = device_priv->clEnqueueReleaseDX9MediaSurfacesKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle == CL_SUCCESS)
+        0, ফাঁকা, &event);
+    যদি (cle == CL_SUCCESS)
         opencl_wait_events(dst_fc, &event, 1);
-    memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    memset(dst->তথ্য, 0, আকার(dst->তথ্য));
+    ফেরত err;
 }
 
-static int opencl_frames_derive_from_dxva2(AVHWFramesContext *dst_fc,
-                                           AVHWFramesContext *src_fc, int flags)
+স্থির পূর্ণসংখ্যা opencl_frames_derive_from_dxva2(AVHWFramesContext *dst_fc,
+                                           AVHWFramesContext *src_fc, পূর্ণসংখ্যা flags)
 {
     AVDXVA2FramesContext  *src_hwctx = src_fc->hwctx;
     OpenCLDeviceContext *device_priv = dst_fc->device_ctx->hwctx;
@@ -2459,76 +2459,76 @@ static int opencl_frames_derive_from_dxva2(AVHWFramesContext *dst_fc,
     OpenCLFramesContext *frames_priv = dst_fc->hwctx;
     cl_mem_flags cl_flags;
     cl_int cle;
-    int err, i, p, nb_planes;
+    পূর্ণসংখ্যা err, i, p, nb_planes;
 
-    if (src_fc->sw_format != AV_PIX_FMT_NV12) {
+    যদি (src_fc->sw_format != AV_PIX_FMT_NV12) {
         av_log(dst_fc, AV_LOG_ERROR, "Only NV12 textures are supported "
                "for DXVA2 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        ফেরত AVERROR(EINVAL);
     }
     nb_planes = 2;
 
-    if (src_fc->initial_pool_size == 0) {
+    যদি (src_fc->initial_pool_আকার == 0) {
         av_log(dst_fc, AV_LOG_ERROR, "Only fixed-size pools are supported "
                "for DXVA2 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        ফেরত AVERROR(EINVAL);
     }
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    যদি (!cl_flags)
+        ফেরত AVERROR(EINVAL);
 
     frames_priv->nb_mapped_frames = src_hwctx->nb_surfaces;
 
     frames_priv->mapped_frames =
         av_calloc(frames_priv->nb_mapped_frames,
-                  sizeof(*frames_priv->mapped_frames));
-    if (!frames_priv->mapped_frames)
-        return AVERROR(ENOMEM);
+                  আকার(*frames_priv->mapped_frames));
+    যদি (!frames_priv->mapped_frames)
+        ফেরত AVERROR(ENOMEM);
 
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
+    জন্য (i = 0; i < frames_priv->nb_mapped_frames; i++) {
         AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
         cl_dx9_surface_info_khr surface_info = {
             .resource      = src_hwctx->surfaces[i],
-            .shared_handle = NULL,
+            .shared_handle = ফাঁকা,
         };
         desc->nb_planes = nb_planes;
-        for (p = 0; p < nb_planes; p++) {
+        জন্য (p = 0; p < nb_planes; p++) {
             desc->planes[p] =
                 device_priv->clCreateFromDX9MediaSurfaceKHR(
                     dst_dev->context, cl_flags,
                     device_priv->dx9_media_adapter_type,
                     &surface_info, p, &cle);
-            if (!desc->planes[p]) {
+            যদি (!desc->planes[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL "
                        "image from plane %d of DXVA2 surface %d: %d.\n",
                        p, i, cle);
                 err = AVERROR(EIO);
-                goto fail;
+                যাও fail;
             }
         }
     }
 
-    return 0;
+    ফেরত 0;
 
 fail:
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
+    জন্য (i = 0; i < frames_priv->nb_mapped_frames; i++) {
         AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
-        for (p = 0; p < desc->nb_planes; p++) {
-            if (desc->planes[p])
+        জন্য (p = 0; p < desc->nb_planes; p++) {
+            যদি (desc->planes[p])
                 clReleaseMemObject(desc->planes[p]);
         }
     }
     av_freep(&frames_priv->mapped_frames);
     frames_priv->nb_mapped_frames = 0;
-    return err;
+    ফেরত err;
 }
 
 #endif
 
-#if HAVE_OPENCL_D3D11
+#যদি HAVE_OPENCL_D3D11
 
-static void opencl_unmap_from_d3d11(AVHWFramesContext *dst_fc,
+স্থির শূন্য opencl_unmap_from_d3d11(AVHWFramesContext *dst_fc,
                                     HWMapDescriptor *hwmap)
 {
     AVOpenCLFrameDescriptor    *desc = hwmap->priv;
@@ -2539,8 +2539,8 @@ static void opencl_unmap_from_d3d11(AVHWFramesContext *dst_fc,
 
     cle = device_priv->clEnqueueReleaseD3D11ObjectsKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+        0, ফাঁকা, &event);
+    যদি (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to release surface "
                "handle: %d.\n", cle);
     }
@@ -2548,66 +2548,66 @@ static void opencl_unmap_from_d3d11(AVHWFramesContext *dst_fc,
     opencl_wait_events(dst_fc, &event, 1);
 }
 
-static int opencl_map_from_d3d11(AVHWFramesContext *dst_fc, AVFrame *dst,
-                                 const AVFrame *src, int flags)
+স্থির পূর্ণসংখ্যা opencl_map_from_d3d11(AVHWFramesContext *dst_fc, AVFrame *dst,
+                                 ধ্রুবক AVFrame *src, পূর্ণসংখ্যা flags)
 {
     OpenCLDeviceContext  *device_priv = dst_fc->device_ctx->hwctx;
     OpenCLFramesContext  *frames_priv = dst_fc->hwctx;
     AVOpenCLFrameDescriptor *desc;
     cl_event event;
     cl_int cle;
-    int err, index, i;
+    পূর্ণসংখ্যা err, সূচক, i;
 
-    index = (intptr_t)src->data[1];
-    if (index >= frames_priv->nb_mapped_frames) {
+    সূচক = (intptr_t)src->তথ্য[1];
+    যদি (সূচক >= frames_priv->nb_mapped_frames) {
         av_log(dst_fc, AV_LOG_ERROR, "Texture array index out of range for "
-               "mapping: %d >= %d.\n", index, frames_priv->nb_mapped_frames);
-        return AVERROR(EINVAL);
+               "mapping: %d >= %d.\n", সূচক, frames_priv->nb_mapped_frames);
+        ফেরত AVERROR(EINVAL);
     }
 
     av_log(dst_fc, AV_LOG_DEBUG, "Map D3D11 texture %d to OpenCL.\n",
-           index);
+           সূচক);
 
-    desc = &frames_priv->mapped_frames[index];
+    desc = &frames_priv->mapped_frames[সূচক];
 
     cle = device_priv->clEnqueueAcquireD3D11ObjectsKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+        0, ফাঁকা, &event);
+    যদি (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to acquire surface "
                "handle: %d.\n", cle);
-        return AVERROR(EIO);
+        ফেরত AVERROR(EIO);
     }
 
     err = opencl_wait_events(dst_fc, &event, 1);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
-    for (i = 0; i < desc->nb_planes; i++)
-        dst->data[i] = (uint8_t*)desc->planes[i];
+    জন্য (i = 0; i < desc->nb_planes; i++)
+        dst->তথ্য[i] = (uint8_t*)desc->planes[i];
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &opencl_unmap_from_d3d11, desc);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    ফেরত 0;
 
 fail:
     cle = device_priv->clEnqueueReleaseD3D11ObjectsKHR(
         frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle == CL_SUCCESS)
+        0, ফাঁকা, &event);
+    যদি (cle == CL_SUCCESS)
         opencl_wait_events(dst_fc, &event, 1);
-    memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    memset(dst->তথ্য, 0, আকার(dst->তথ্য));
+    ফেরত err;
 }
 
-static int opencl_frames_derive_from_d3d11(AVHWFramesContext *dst_fc,
-                                           AVHWFramesContext *src_fc, int flags)
+স্থির পূর্ণসংখ্যা opencl_frames_derive_from_d3d11(AVHWFramesContext *dst_fc,
+                                           AVHWFramesContext *src_fc, পূর্ণসংখ্যা flags)
 {
     AVD3D11VAFramesContext *src_hwctx = src_fc->hwctx;
     OpenCLDeviceContext  *device_priv = dst_fc->device_ctx->hwctx;
@@ -2615,127 +2615,127 @@ static int opencl_frames_derive_from_d3d11(AVHWFramesContext *dst_fc,
     OpenCLFramesContext  *frames_priv = dst_fc->hwctx;
     cl_mem_flags cl_flags;
     cl_int cle;
-    int err, i, p, nb_planes;
+    পূর্ণসংখ্যা err, i, p, nb_planes;
 
-    if (src_fc->sw_format != AV_PIX_FMT_NV12) {
+    যদি (src_fc->sw_format != AV_PIX_FMT_NV12) {
         av_log(dst_fc, AV_LOG_ERROR, "Only NV12 textures are supported "
                "for D3D11 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        ফেরত AVERROR(EINVAL);
     }
     nb_planes = 2;
 
-    if (src_fc->initial_pool_size == 0) {
+    যদি (src_fc->initial_pool_আকার == 0) {
         av_log(dst_fc, AV_LOG_ERROR, "Only fixed-size pools are supported "
                "for D3D11 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        ফেরত AVERROR(EINVAL);
     }
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    যদি (!cl_flags)
+        ফেরত AVERROR(EINVAL);
 
-    frames_priv->nb_mapped_frames = src_fc->initial_pool_size;
+    frames_priv->nb_mapped_frames = src_fc->initial_pool_আকার;
 
     frames_priv->mapped_frames =
         av_calloc(frames_priv->nb_mapped_frames,
-                  sizeof(*frames_priv->mapped_frames));
-    if (!frames_priv->mapped_frames)
-        return AVERROR(ENOMEM);
+                  আকার(*frames_priv->mapped_frames));
+    যদি (!frames_priv->mapped_frames)
+        ফেরত AVERROR(ENOMEM);
 
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
+    জন্য (i = 0; i < frames_priv->nb_mapped_frames; i++) {
         AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
         desc->nb_planes = nb_planes;
-        for (p = 0; p < nb_planes; p++) {
+        জন্য (p = 0; p < nb_planes; p++) {
             UINT subresource = 2 * i + p;
 
             desc->planes[p] =
                 device_priv->clCreateFromD3D11Texture2DKHR(
                     dst_dev->context, cl_flags, src_hwctx->texture,
                     subresource, &cle);
-            if (!desc->planes[p]) {
+            যদি (!desc->planes[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL "
                        "image from plane %d of D3D texture "
                        "index %d (subresource %u): %d.\n",
-                       p, i, (unsigned int)subresource, cle);
+                       p, i, (unsigned পূর্ণসংখ্যা)subresource, cle);
                 err = AVERROR(EIO);
-                goto fail;
+                যাও fail;
             }
         }
     }
 
-    return 0;
+    ফেরত 0;
 
 fail:
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
+    জন্য (i = 0; i < frames_priv->nb_mapped_frames; i++) {
         AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
-        for (p = 0; p < desc->nb_planes; p++) {
-            if (desc->planes[p])
+        জন্য (p = 0; p < desc->nb_planes; p++) {
+            যদি (desc->planes[p])
                 clReleaseMemObject(desc->planes[p]);
         }
     }
     av_freep(&frames_priv->mapped_frames);
     frames_priv->nb_mapped_frames = 0;
-    return err;
+    ফেরত err;
 }
 
 #endif
 
-#if HAVE_OPENCL_DRM_ARM
+#যদি HAVE_OPENCL_DRM_ARM
 
-typedef struct DRMARMtoOpenCLMapping {
-    int nb_objects;
+প্রকারলেখ কাঠামো DRMARMtoOpenCLMapping {
+    পূর্ণসংখ্যা nb_objects;
     cl_mem object_buffers[AV_DRM_MAX_PLANES];
-    int nb_planes;
+    পূর্ণসংখ্যা nb_planes;
     cl_mem plane_images[AV_DRM_MAX_PLANES];
 } DRMARMtoOpenCLMapping;
 
-static void opencl_unmap_from_drm_arm(AVHWFramesContext *dst_fc,
+স্থির শূন্য opencl_unmap_from_drm_arm(AVHWFramesContext *dst_fc,
                                       HWMapDescriptor *hwmap)
 {
     DRMARMtoOpenCLMapping *mapping = hwmap->priv;
-    int i;
+    পূর্ণসংখ্যা i;
 
-    for (i = 0; i < mapping->nb_planes; i++)
+    জন্য (i = 0; i < mapping->nb_planes; i++)
         clReleaseMemObject(mapping->plane_images[i]);
 
-    for (i = 0; i < mapping->nb_objects; i++)
+    জন্য (i = 0; i < mapping->nb_objects; i++)
         clReleaseMemObject(mapping->object_buffers[i]);
 
     av_free(mapping);
 }
 
-static int opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
-                                   const AVFrame *src, int flags)
+স্থির পূর্ণসংখ্যা opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
+                                   ধ্রুবক AVFrame *src, পূর্ণসংখ্যা flags)
 {
     AVHWFramesContext *src_fc =
-        (AVHWFramesContext*)src->hw_frames_ctx->data;
+        (AVHWFramesContext*)src->hw_frames_ctx->তথ্য;
     AVOpenCLDeviceContext *dst_dev = dst_fc->device_ctx->hwctx;
-    const AVDRMFrameDescriptor *desc;
-    DRMARMtoOpenCLMapping *mapping = NULL;
+    ধ্রুবক AVDRMFrameDescriptor *desc;
+    DRMARMtoOpenCLMapping *mapping = ফাঁকা;
     cl_mem_flags cl_flags;
-    const cl_import_properties_arm props[3] = {
+    ধ্রুবক cl_import_properties_arm props[3] = {
         CL_IMPORT_TYPE_ARM, CL_IMPORT_TYPE_DMA_BUF_ARM, 0,
     };
     cl_int cle;
-    int err, i, j;
+    পূর্ণসংখ্যা err, i, j;
 
-    desc = (const AVDRMFrameDescriptor*)src->data[0];
+    desc = (ধ্রুবক AVDRMFrameDescriptor*)src->তথ্য[0];
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    যদি (!cl_flags)
+        ফেরত AVERROR(EINVAL);
 
-    mapping = av_mallocz(sizeof(*mapping));
-    if (!mapping)
-        return AVERROR(ENOMEM);
+    mapping = av_mallocz(আকার(*mapping));
+    যদি (!mapping)
+        ফেরত AVERROR(ENOMEM);
 
     mapping->nb_objects = desc->nb_objects;
-    for (i = 0; i < desc->nb_objects; i++) {
-        int fd = desc->objects[i].fd;
+    জন্য (i = 0; i < desc->nb_objects; i++) {
+        পূর্ণসংখ্যা fd = desc->objects[i].fd;
 
         av_log(dst_fc, AV_LOG_DEBUG, "Map DRM PRIME fd %d to OpenCL.\n", fd);
 
-        if (desc->objects[i].format_modifier) {
+        যদি (desc->objects[i].format_modifier) {
             av_log(dst_fc, AV_LOG_DEBUG, "Warning: object %d fd %d has "
                    "nonzero format modifier %"PRId64", result may not "
                    "be as expected.\n", i, fd,
@@ -2744,130 +2744,130 @@ static int opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
 
         mapping->object_buffers[i] =
             clImportMemoryARM(dst_dev->context, cl_flags, props,
-                              &fd, desc->objects[i].size, &cle);
-        if (!mapping->object_buffers[i]) {
+                              &fd, desc->objects[i].আকার_2, &cle);
+        যদি (!mapping->object_buffers[i]) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL buffer "
                    "from object %d (fd %d, size %zu) of DRM frame: %d.\n",
-                   i, fd, desc->objects[i].size, cle);
+                   i, fd, desc->objects[i].আকার_2, cle);
             err = AVERROR(EIO);
-            goto fail;
+            যাও fail;
         }
     }
 
     mapping->nb_planes = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
-        const AVDRMLayerDescriptor *layer = &desc->layers[i];
+    জন্য (i = 0; i < desc->nb_layers; i++) {
+        ধ্রুবক AVDRMLayerDescriptor *layer = &desc->layers[i];
 
-        for (j = 0; j < layer->nb_planes; j++) {
-            const AVDRMPlaneDescriptor *plane = &layer->planes[j];
-            cl_mem plane_buffer;
+        জন্য (j = 0; j < layer->nb_planes; j++) {
+            ধ্রুবক AVDRMPlaneDescriptor *plane = &layer->planes[j];
+            cl_mem plane_বাফার;
             cl_image_format image_format;
             cl_image_desc   image_desc;
-            cl_buffer_region region;
-            int p = mapping->nb_planes;
+            cl_বাফার_region region;
+            পূর্ণসংখ্যা p = mapping->nb_planes;
 
             err = opencl_get_plane_format(src_fc->sw_format, p,
                                           src_fc->width, src_fc->height,
                                           &image_format, &image_desc);
-            if (err < 0) {
+            যদি (err < 0) {
                 av_log(dst_fc, AV_LOG_ERROR, "Invalid plane %d (DRM "
                        "layer %d plane %d): %d.\n", p, i, j, err);
-                goto fail;
+                যাও fail;
             }
 
             region.origin = plane->offset;
-            region.size   = image_desc.image_row_pitch *
+            region.আকার_2   = image_desc.image_row_pitch *
                             image_desc.image_height;
 
-            plane_buffer =
-                clCreateSubBuffer(mapping->object_buffers[plane->object_index],
+            plane_বাফার =
+                cl_Create_Sub_বাফার(mapping->object_buffers[plane->object_সূচক],
                                   cl_flags,
-                                  CL_BUFFER_CREATE_TYPE_REGION,
+                                  CL_বাফার_CREATE_TYPE_REGION,
                                   &region, &cle);
-            if (!plane_buffer) {
+            যদি (!plane_বাফার) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create sub-buffer "
                        "for plane %d: %d.\n", p, cle);
                 err = AVERROR(EIO);
-                goto fail;
+                যাও fail;
             }
 
-            image_desc.buffer = plane_buffer;
+            image_desc.বাফার = plane_বাফার;
 
             mapping->plane_images[p] =
                 clCreateImage(dst_dev->context, cl_flags,
-                              &image_format, &image_desc, NULL, &cle);
+                              &image_format, &image_desc, ফাঁকা, &cle);
 
             // Unreference the sub-buffer immediately - we don't need it
             // directly and a reference is held by the image.
-            clReleaseMemObject(plane_buffer);
+            clReleaseMemObject(plane_বাফার);
 
-            if (!mapping->plane_images[p]) {
+            যদি (!mapping->plane_images[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create image "
                        "for plane %d: %d.\n", p, cle);
                 err = AVERROR(EIO);
-                goto fail;
+                যাও fail;
             }
 
             ++mapping->nb_planes;
         }
     }
 
-    for (i = 0; i < mapping->nb_planes; i++)
-        dst->data[i] = (uint8_t*)mapping->plane_images[i];
+    জন্য (i = 0; i < mapping->nb_planes; i++)
+        dst->তথ্য[i] = (uint8_t*)mapping->plane_images[i];
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &opencl_unmap_from_drm_arm, mapping);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
     dst->width  = src->width;
     dst->height = src->height;
 
-    return 0;
+    ফেরত 0;
 
 fail:
-    for (i = 0; i < mapping->nb_planes; i++) {
+    জন্য (i = 0; i < mapping->nb_planes; i++) {
         clReleaseMemObject(mapping->plane_images[i]);
     }
-    for (i = 0; i < mapping->nb_objects; i++) {
-        if (mapping->object_buffers[i])
+    জন্য (i = 0; i < mapping->nb_objects; i++) {
+        যদি (mapping->object_buffers[i])
             clReleaseMemObject(mapping->object_buffers[i]);
     }
     av_free(mapping);
-    memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    memset(dst->তথ্য, 0, আকার(dst->তথ্য));
+    ফেরত err;
 }
 
 #endif
 
-#if HAVE_OPENCL_VIDEOTOOLBOX
+#যদি HAVE_OPENCL_VIDEOTOOLBOX
 
-static void opencl_unmap_from_vt(AVHWFramesContext *hwfc,
+স্থির শূন্য opencl_unmap_from_vt(AVHWFramesContext *hwfc,
                                  HWMapDescriptor *hwmap)
 {
     uint8_t *desc = hwmap->priv;
     opencl_pool_free(hwfc, desc);
 }
 
-static int opencl_map_from_vt(AVHWFramesContext *dst_fc, AVFrame *dst,
-                              const AVFrame *src, int flags)
+স্থির পূর্ণসংখ্যা opencl_map_from_vt(AVHWFramesContext *dst_fc, AVFrame *dst,
+                              ধ্রুবক AVFrame *src, পূর্ণসংখ্যা flags)
 {
-    CVPixelBufferRef pixbuf = (CVPixelBufferRef) src->data[3];
-    IOSurfaceRef io_surface_ref = CVPixelBufferGetIOSurface(pixbuf);
+    CVPixel_বাফার_Ref pixbuf = (CVPixel_বাফার_Ref) src->তথ্য[3];
+    IOSurfaceRef io_surface_ref = CVPixel_বাফার_Get_IOSurface(pixbuf);
     cl_int err = 0;
-    AVOpenCLFrameDescriptor *desc = NULL;
+    AVOpenCLFrameDescriptor *desc = ফাঁকা;
     AVOpenCLDeviceContext *dst_dev = dst_fc->device_ctx->hwctx;
 
-    if (!io_surface_ref) {
+    যদি (!io_surface_ref) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to get IOSurfaceRef\n");
-        return AVERROR_EXTERNAL;
+        ফেরত AVERROR_EXTERNAL;
     }
 
-    desc = av_mallocz(sizeof(*desc));
-    if (!desc)
-        return AVERROR(ENOMEM);
+    desc = av_mallocz(আকার(*desc));
+    যদি (!desc)
+        ফেরত AVERROR(ENOMEM);
 
-    for (int p = 0;; p++) {
+    জন্য (পূর্ণসংখ্যা p = 0;; p++) {
         cl_image_format image_format;
         cl_image_desc image_desc;
         cl_iosurface_properties_APPLE props[] = {
@@ -2879,175 +2879,175 @@ static int opencl_map_from_vt(AVHWFramesContext *dst_fc, AVFrame *dst,
         err = opencl_get_plane_format(dst_fc->sw_format, p,
                                       src->width, src->height,
                                       &image_format, &image_desc);
-        if (err == AVERROR(ENOENT))
-            break;
-        if (err < 0)
-            goto fail;
+        যদি (err == AVERROR(ENOENT))
+            বিরতি;
+        যদি (err < 0)
+            যাও fail;
 
         desc->planes[p] = clCreateImageFromIOSurfaceWithPropertiesAPPLE(dst_dev->context,
                                                     opencl_mem_flags_for_mapping(flags),
                                                     &image_format, &image_desc,
                                                     props, &err);
-        if (!desc->planes[p]) {
+        যদি (!desc->planes[p]) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to create image from IOSurfaceRef\n");
             err = AVERROR(EIO);
-            goto fail;
+            যাও fail;
         }
         desc->nb_planes++;
     }
 
-    for (int i = 0; i < desc->nb_planes; i++)
-        dst->data[i] = (uint8_t *) desc->planes[i];
+    জন্য (পূর্ণসংখ্যা i = 0; i < desc->nb_planes; i++)
+        dst->তথ্য[i] = (uint8_t *) desc->planes[i];
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 opencl_unmap_from_vt, desc);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
     dst->width = src->width;
     dst->height = src->height;
 
-    return 0;
+    ফেরত 0;
 
 fail:
-    for (int i = 0; i < desc->nb_planes; i++)
+    জন্য (পূর্ণসংখ্যা i = 0; i < desc->nb_planes; i++)
         clReleaseMemObject(desc->planes[i]);
     av_freep(&desc);
-    return err;
+    ফেরত err;
 }
 
 #endif
 
-static int opencl_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                           const AVFrame *src, int flags)
+স্থির পূর্ণসংখ্যা opencl_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                           ধ্রুবক AVFrame *src, পূর্ণসংখ্যা flags)
 {
     av_assert0(src->format == AV_PIX_FMT_OPENCL);
-    if (hwfc->sw_format != dst->format)
-        return AVERROR(ENOSYS);
-    return opencl_map_frame(hwfc, dst, src, flags);
+    যদি (hwfc->sw_format != dst->format)
+        ফেরত AVERROR(ENOSYS);
+    ফেরত opencl_map_frame(hwfc, dst, src, flags);
 }
 
-static int opencl_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
-                         const AVFrame *src, int flags)
+স্থির পূর্ণসংখ্যা opencl_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
+                         ধ্রুবক AVFrame *src, পূর্ণসংখ্যা flags)
 {
     av_unused OpenCLDeviceContext *priv = hwfc->device_ctx->hwctx;
     av_assert0(dst->format == AV_PIX_FMT_OPENCL);
-    switch (src->format) {
-#if HAVE_OPENCL_DRM_BEIGNET
-    case AV_PIX_FMT_DRM_PRIME:
-        if (priv->beignet_drm_mapping_usable)
-            return opencl_map_from_drm_beignet(hwfc, dst, src, flags);
-        break;
+    নির্বাচন (src->format) {
+#যদি HAVE_OPENCL_DRM_BEIGNET
+    ক্ষেত্র AV_PIX_FMT_DRM_মৌলিক:
+        যদি (priv->beignet_drm_mapping_usable)
+            ফেরত opencl_map_from_drm_beignet(hwfc, dst, src, flags);
+        বিরতি;
 #endif
-#if HAVE_OPENCL_VAAPI_BEIGNET
-    case AV_PIX_FMT_VAAPI:
-        if (priv->beignet_drm_mapping_usable)
-            return opencl_map_from_vaapi(hwfc, dst, src, flags);
-        break;
+#যদি HAVE_OPENCL_VAAPI_BEIGNET
+    ক্ষেত্র AV_PIX_FMT_VAAPI:
+        যদি (priv->beignet_drm_mapping_usable)
+            ফেরত opencl_map_from_vaapi(hwfc, dst, src, flags);
+        বিরতি;
 #endif
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-    case AV_PIX_FMT_QSV:
-    case AV_PIX_FMT_VAAPI:
-        if (priv->qsv_mapping_usable)
-            return opencl_map_from_qsv(hwfc, dst, src, flags);
-        break;
+#যদি HAVE_OPENCL_VAAPI_INTEL_MEDIA
+    ক্ষেত্র AV_PIX_FMT_QSV:
+    ক্ষেত্র AV_PIX_FMT_VAAPI:
+        যদি (priv->qsv_mapping_usable)
+            ফেরত opencl_map_from_qsv(hwfc, dst, src, flags);
+        বিরতি;
 #endif
-#if HAVE_OPENCL_DXVA2
-    case AV_PIX_FMT_DXVA2_VLD:
-        if (priv->dxva2_mapping_usable)
-            return opencl_map_from_dxva2(hwfc, dst, src, flags);
-        break;
+#যদি HAVE_OPENCL_DXVA2
+    ক্ষেত্র AV_PIX_FMT_DXVA2_VLD:
+        যদি (priv->dxva2_mapping_usable)
+            ফেরত opencl_map_from_dxva2(hwfc, dst, src, flags);
+        বিরতি;
 #endif
-#if HAVE_OPENCL_D3D11
-    case AV_PIX_FMT_D3D11:
-        if (priv->d3d11_mapping_usable)
-            return opencl_map_from_d3d11(hwfc, dst, src, flags);
-        break;
+#যদি HAVE_OPENCL_D3D11
+    ক্ষেত্র AV_PIX_FMT_D3D11:
+        যদি (priv->d3d11_mapping_usable)
+            ফেরত opencl_map_from_d3d11(hwfc, dst, src, flags);
+        বিরতি;
 #endif
-#if HAVE_OPENCL_DRM_ARM
-    case AV_PIX_FMT_DRM_PRIME:
-        if (priv->drm_arm_mapping_usable)
-            return opencl_map_from_drm_arm(hwfc, dst, src, flags);
-        break;
+#যদি HAVE_OPENCL_DRM_ARM
+    ক্ষেত্র AV_PIX_FMT_DRM_মৌলিক:
+        যদি (priv->drm_arm_mapping_usable)
+            ফেরত opencl_map_from_drm_arm(hwfc, dst, src, flags);
+        বিরতি;
 #endif
-#if HAVE_OPENCL_VIDEOTOOLBOX
-    case AV_PIX_FMT_VIDEOTOOLBOX:
-        return opencl_map_from_vt(hwfc, dst, src, flags);
+#যদি HAVE_OPENCL_VIDEOTOOLBOX
+    ক্ষেত্র AV_PIX_FMT_VIDEOTOOLBOX:
+        ফেরত opencl_map_from_vt(hwfc, dst, src, flags);
 #endif
     }
-    return AVERROR(ENOSYS);
+    ফেরত AVERROR(ENOSYS);
 }
 
-static int opencl_frames_derive_to(AVHWFramesContext *dst_fc,
-                                   AVHWFramesContext *src_fc, int flags)
+স্থির পূর্ণসংখ্যা opencl_frames_derive_to(AVHWFramesContext *dst_fc,
+                                   AVHWFramesContext *src_fc, পূর্ণসংখ্যা flags)
 {
     av_unused OpenCLDeviceContext *priv = dst_fc->device_ctx->hwctx;
-    switch (src_fc->device_ctx->type) {
-#if HAVE_OPENCL_DRM_BEIGNET
-    case AV_HWDEVICE_TYPE_DRM:
-        if (!priv->beignet_drm_mapping_usable)
-            return AVERROR(ENOSYS);
-        break;
+    নির্বাচন (src_fc->device_ctx->type) {
+#যদি HAVE_OPENCL_DRM_BEIGNET
+    ক্ষেত্র AV_HWDEVICE_TYPE_DRM:
+        যদি (!priv->beignet_drm_mapping_usable)
+            ফেরত AVERROR(ENOSYS);
+        বিরতি;
 #endif
-#if HAVE_OPENCL_VAAPI_BEIGNET
-    case AV_HWDEVICE_TYPE_VAAPI:
-        if (!priv->beignet_drm_mapping_usable)
-            return AVERROR(ENOSYS);
-        break;
+#যদি HAVE_OPENCL_VAAPI_BEIGNET
+    ক্ষেত্র AV_HWDEVICE_TYPE_VAAPI:
+        যদি (!priv->beignet_drm_mapping_usable)
+            ফেরত AVERROR(ENOSYS);
+        বিরতি;
 #endif
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-    case AV_HWDEVICE_TYPE_QSV:
-    case AV_HWDEVICE_TYPE_VAAPI:
-        if (!priv->qsv_mapping_usable)
-            return AVERROR(ENOSYS);
-        break;
+#যদি HAVE_OPENCL_VAAPI_INTEL_MEDIA
+    ক্ষেত্র AV_HWDEVICE_TYPE_QSV:
+    ক্ষেত্র AV_HWDEVICE_TYPE_VAAPI:
+        যদি (!priv->qsv_mapping_usable)
+            ফেরত AVERROR(ENOSYS);
+        বিরতি;
 #endif
-#if HAVE_OPENCL_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
-        if (!priv->dxva2_mapping_usable)
-            return AVERROR(ENOSYS);
+#যদি HAVE_OPENCL_DXVA2
+    ক্ষেত্র AV_HWDEVICE_TYPE_DXVA2:
+        যদি (!priv->dxva2_mapping_usable)
+            ফেরত AVERROR(ENOSYS);
         {
-            int err;
+            পূর্ণসংখ্যা err;
             err = opencl_frames_derive_from_dxva2(dst_fc, src_fc, flags);
-            if (err < 0)
-                return err;
+            যদি (err < 0)
+                ফেরত err;
         }
-        break;
+        বিরতি;
 #endif
-#if HAVE_OPENCL_D3D11
-    case AV_HWDEVICE_TYPE_D3D11VA:
-        if (!priv->d3d11_mapping_usable)
-            return AVERROR(ENOSYS);
+#যদি HAVE_OPENCL_D3D11
+    ক্ষেত্র AV_HWDEVICE_TYPE_D3D11VA:
+        যদি (!priv->d3d11_mapping_usable)
+            ফেরত AVERROR(ENOSYS);
         {
-            int err;
+            পূর্ণসংখ্যা err;
             err = opencl_frames_derive_from_d3d11(dst_fc, src_fc, flags);
-            if (err < 0)
-                return err;
+            যদি (err < 0)
+                ফেরত err;
         }
-        break;
+        বিরতি;
 #endif
-#if HAVE_OPENCL_DRM_ARM
-    case AV_HWDEVICE_TYPE_DRM:
-        if (!priv->drm_arm_mapping_usable)
-            return AVERROR(ENOSYS);
-        break;
+#যদি HAVE_OPENCL_DRM_ARM
+    ক্ষেত্র AV_HWDEVICE_TYPE_DRM:
+        যদি (!priv->drm_arm_mapping_usable)
+            ফেরত AVERROR(ENOSYS);
+        বিরতি;
 #endif
-#if HAVE_OPENCL_VIDEOTOOLBOX
-    case AV_HWDEVICE_TYPE_VIDEOTOOLBOX:
-        break;
+#যদি HAVE_OPENCL_VIDEOTOOLBOX
+    ক্ষেত্র AV_HWDEVICE_TYPE_VIDEOTOOLBOX:
+        বিরতি;
 #endif
-    default:
-        return AVERROR(ENOSYS);
+    পূর্বনির্ধারিত:
+        ফেরত AVERROR(ENOSYS);
     }
-    return opencl_frames_init_command_queue(dst_fc);
+    ফেরত opencl_frames_init_command_queue(dst_fc);
 }
 
-const HWContextType ff_hwcontext_type_opencl = {
+ধ্রুবক HWContextType ff_hwcontext_type_opencl = {
     .type                   = AV_HWDEVICE_TYPE_OPENCL,
     .name                   = "OpenCL",
 
-    .device_hwctx_size      = sizeof(OpenCLDeviceContext),
-    .frames_hwctx_size      = sizeof(OpenCLFramesContext),
+    .device_hwctx_আকার      = আকার(OpenCLDeviceContext),
+    .frames_hwctx_আকার      = আকার(OpenCLFramesContext),
 
     .device_create          = &opencl_device_create,
     .device_derive          = &opencl_device_derive,
@@ -3057,17 +3057,17 @@ const HWContextType ff_hwcontext_type_opencl = {
     .frames_get_constraints = &opencl_frames_get_constraints,
     .frames_init            = &opencl_frames_init,
     .frames_uninit          = &opencl_frames_uninit,
-    .frames_get_buffer      = &opencl_get_buffer,
+    .frames_get_বাফার      = &opencl_get_বাফার,
 
     .transfer_get_formats   = &opencl_transfer_get_formats,
-    .transfer_data_to       = &opencl_transfer_data_to,
-    .transfer_data_from     = &opencl_transfer_data_from,
+    .transfer_তথ্য_to       = &opencl_transfer_তথ্য_to,
+    .transfer_তথ্য_from     = &opencl_transfer_তথ্য_from,
 
     .map_from               = &opencl_map_from,
     .map_to                 = &opencl_map_to,
     .frames_derive_to       = &opencl_frames_derive_to,
 
-    .pix_fmts = (const enum AVPixelFormat[]) {
+    .pix_fmts = (ধ্রুবক গণনা AVPixelFormat[]) {
         AV_PIX_FMT_OPENCL,
         AV_PIX_FMT_NONE
     },

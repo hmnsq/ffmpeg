@@ -18,146 +18,146 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
-#include <string.h>
+#অন্তর্ভাব <inttypes.h>
+#অন্তর্ভাব <stdio.h>
+#অন্তর্ভাব <string.h>
 
-#include "libavutil/bprint.h"
-#include "libavutil/channel_layout.h"
-#include "libavutil/error.h"
-#include "libavutil/macros.h"
-#include "libavutil/mem.h"
+#অন্তর্ভাব "libavutil/bprint.h"
+#অন্তর্ভাব "libavutil/channel_layout.h"
+#অন্তর্ভাব "libavutil/error.h"
+#অন্তর্ভাব "libavutil/macros.h"
+#অন্তর্ভাব "libavutil/mem.h"
 
 #define BPRINT_ARGS1(bp, ...)     (bp), __VA_ARGS__
 #define BPRINT_ARGS0(bp, ...)     __VA_ARGS__, (bp)
-#define ORD_ARGS1(str, size, ...) (str), (size), __VA_ARGS__
-#define ORD_ARGS0(str, size, ...) __VA_ARGS__, (str), (size)
+#define ORD_ARGS1(str, আকার_2, ...) (str), (আকার_2), __VA_ARGS__
+#define ORD_ARGS0(str, আকার_2, ...) __VA_ARGS__, (str), (আকার_2)
 
 // This macro presumes the AVBPrint to have been cleared before usage.
-#define CMP_BPRINT_AND_NONBPRINT(bp, func_name, ARG_ORDER, ...) do {       \
-    char *str;                                                             \
-    int size;                                                              \
+#define CMP_BPRINT_AND_NONBPRINT(bp, func_name, ARG_ORDER, ...) করো {       \
+    অক্ষর *str;                                                             \
+    পূর্ণসংখ্যা আকার_2;                                                              \
     func_name ## _bprint(BPRINT_ARGS ## ARG_ORDER((bp), __VA_ARGS__));     \
-    if (strlen((bp)->str) != (bp)->len) {                                  \
+    যদি (strlen((bp)->str) != (bp)->len) {                                  \
         printf("strlen of AVBPrint-string returned by "#func_name"_bprint" \
                " differs from AVBPrint.len: %zu vs. %u\n",                 \
                strlen((bp)->str), (bp)->len);                              \
-        break;                                                             \
+        বিরতি;                                                             \
     }                                                                      \
-    size = func_name(ORD_ARGS ## ARG_ORDER(NULL, 0, __VA_ARGS__));         \
-    if (size <= 0) {                                                       \
-        printf(#func_name " returned %d\n", size);                         \
-        break;                                                             \
+    আকার_2 = func_name(ORD_ARGS ## ARG_ORDER(ফাঁকা, 0, __VA_ARGS__));         \
+    যদি (আকার_2 <= 0) {                                                       \
+        printf(#func_name " returned %d\n", আকার_2);                         \
+        বিরতি;                                                             \
     }                                                                      \
-    if ((bp)->len != size - 1) {                                           \
+    যদি ((bp)->len != আকার_2 - 1) {                                           \
         printf("Return value %d of " #func_name " inconsistent with length"\
                " %u obtained from corresponding bprint version\n",         \
-               size, (bp)->len);                                           \
-        break;                                                             \
+               আকার_2, (bp)->len);                                           \
+        বিরতি;                                                             \
     }                                                                      \
-    str = av_malloc(size);                                                 \
-    if (!str) {                                                            \
-        printf("string of size %d could not be allocated.\n", size);       \
-        break;                                                             \
+    str = av_malloc(আকার_2);                                                 \
+    যদি (!str) {                                                            \
+        printf("string of size %d could not be allocated.\n", আকার_2);       \
+        বিরতি;                                                             \
     }                                                                      \
-    size = func_name(ORD_ARGS ## ARG_ORDER(str, size, __VA_ARGS__));       \
-    if (size <= 0 || (bp)->len != size - 1) {                              \
+    আকার_2 = func_name(ORD_ARGS ## ARG_ORDER(str, আকার_2, __VA_ARGS__));       \
+    যদি (আকার_2 <= 0 || (bp)->len != আকার_2 - 1) {                              \
         printf("Return value %d of " #func_name " inconsistent with length"\
-               " %d obtained in first pass.\n", size, (bp)->len);          \
+               " %d obtained in first pass.\n", আকার_2, (bp)->len);          \
         av_free(str);                                                      \
-        break;                                                             \
+        বিরতি;                                                             \
     }                                                                      \
-    if (strcmp(str, (bp)->str)) {                                          \
+    যদি (strcmp(str, (bp)->str)) {                                          \
         printf("Ordinary and _bprint versions of "#func_name" disagree: "  \
                "'%s' vs. '%s'\n", str, (bp)->str);                         \
         av_free(str);                                                      \
-        break;                                                             \
+        বিরতি;                                                             \
     }                                                                      \
     av_free(str);                                                          \
-    } while (0)
+    } যখন (0)
 
 
-static void channel_name(AVBPrint *bp, enum AVChannel channel)
+স্থির শূন্য channel_name(AVBPrint *bp, গণনা AVChannel channel)
 {
     av_bprint_clear(bp);
     CMP_BPRINT_AND_NONBPRINT(bp, av_channel_name, 1, channel);
 }
 
-static void channel_description(AVBPrint *bp, enum AVChannel channel)
+স্থির শূন্য channel_description(AVBPrint *bp, গণনা AVChannel channel)
 {
     av_bprint_clear(bp);
     CMP_BPRINT_AND_NONBPRINT(bp, av_channel_description, 1, channel);
 }
 
-static void channel_layout_from_mask(AVChannelLayout *layout,
+স্থির শূন্য channel_layout_from_mask(AVChannelLayout *layout,
                                      AVBPrint *bp, uint64_t channel_layout)
 {
     av_channel_layout_uninit(layout);
     av_bprint_clear(bp);
-    if (!av_channel_layout_from_mask(layout, channel_layout) &&
+    যদি (!av_channel_layout_from_mask(layout, channel_layout) &&
          av_channel_layout_check(layout))
         CMP_BPRINT_AND_NONBPRINT(bp, av_channel_layout_describe, 0, layout);
-    else
+    অন্যথা
         av_bprintf(bp, "fail");
 }
 
-static void channel_layout_from_string(AVChannelLayout *layout,
-                                       AVBPrint *bp, const char *channel_layout)
+স্থির শূন্য channel_layout_from_string(AVChannelLayout *layout,
+                                       AVBPrint *bp, ধ্রুবক অক্ষর *channel_layout)
 {
     av_channel_layout_uninit(layout);
     av_bprint_clear(bp);
-    if (!av_channel_layout_from_string(layout, channel_layout) &&
+    যদি (!av_channel_layout_from_string(layout, channel_layout) &&
          av_channel_layout_check(layout))
         CMP_BPRINT_AND_NONBPRINT(bp, av_channel_layout_describe, 0, layout);
-    else
+    অন্যথা
         av_bprintf(bp, "fail");
 }
 
-static const char* channel_order_names[]  = {"UNSPEC", "NATIVE", "CUSTOM", "AMBI"};
+স্থির ধ্রুবক অক্ষর* channel_order_names[]  = {"UNSPEC", "NATIVE", "CUSTOM", "AMBI"};
 
-static void describe_type(AVBPrint *bp, AVChannelLayout *layout)
+স্থির শূন্য describe_type(AVBPrint *bp, AVChannelLayout *layout)
 {
-    if ((unsigned)layout->order < FF_ARRAY_ELEMS(channel_order_names)) {
+    যদি ((unsigned)layout->order < FF_ARRAY_ELEMS(channel_order_names)) {
         av_bprintf(bp, "%-6s (", channel_order_names[layout->order]);
         av_channel_layout_describe_bprint(layout, bp);
         av_bprintf(bp, ")");
-    } else {
+    } অন্যথা {
         av_bprintf(bp, "???");
     }
 }
 
-static const char *channel_layout_retype(AVChannelLayout *layout, AVBPrint *bp, const char *channel_layout)
+স্থির ধ্রুবক অক্ষর *channel_layout_retype(AVChannelLayout *layout, AVBPrint *bp, ধ্রুবক অক্ষর *channel_layout)
 {
     av_channel_layout_uninit(layout);
     av_bprint_clear(bp);
-    if (!av_channel_layout_from_string(layout, channel_layout) &&
+    যদি (!av_channel_layout_from_string(layout, channel_layout) &&
         av_channel_layout_check(layout)) {
         describe_type(bp, layout);
-        for (int i = 0; i < FF_CHANNEL_ORDER_NB; i++) {
-            int ret;
+        জন্য (পূর্ণসংখ্যা i = 0; i < FF_CHANNEL_ORDER_NB; i++) {
+            পূর্ণসংখ্যা ret;
             AVChannelLayout copy = {0};
             av_bprintf(bp, "\n ");
-            if (av_channel_layout_copy(&copy, layout) < 0)
-                return "nomem";
+            যদি (av_channel_layout_copy(&copy, layout) < 0)
+                ফেরত "nomem";
             ret = av_channel_layout_retype(&copy, i, 0);
-            if (ret < 0 && (copy.order != layout->order || av_channel_layout_compare(&copy, layout)))
+            যদি (ret < 0 && (copy.order != layout->order || av_channel_layout_compare(&copy, layout)))
                 av_bprintf(bp, "failed to keep existing layout on failure");
-            if (ret >= 0 && copy.order != i)
+            যদি (ret >= 0 && copy.order != i)
                 av_bprintf(bp, "returned success but did not change order");
-            if (ret == AVERROR(ENOSYS)) {
+            যদি (ret == AVERROR(ENOSYS)) {
                 av_bprintf(bp, " != %s", channel_order_names[i]);
-            } else if (ret < 0) {
+            } অন্যথা যদি (ret < 0) {
                 av_bprintf(bp, "FAIL");
-            } else {
+            } অন্যথা {
                 av_bprintf(bp, " %s ", ret ? "~~" : "==");
                 describe_type(bp, &copy);
             }
             av_channel_layout_uninit(&copy);
         }
-    } else {
+    } অন্যথা {
         av_bprintf(bp, "fail");
     }
-    return bp->str;
+    ফেরত bp->str;
 }
 
 #define CHANNEL_NAME(x)                                                    \
@@ -176,11 +176,11 @@ static const char *channel_layout_retype(AVChannelLayout *layout, AVBPrint *bp, 
 
 #define CHANNEL_LAYOUT_FROM_STRING(x)                                      \
     channel_layout_from_string(&layout, &bp, (x));                         \
-    printf("With \"%s\":%*s %32s\n", x, strlen(x) > 32 ? 0 : 32 - (int)strlen(x), "", bp.str);
+    printf("With \"%s\":%*s %32s\n", x, strlen(x) > 32 ? 0 : 32 - (পূর্ণসংখ্যা)strlen(x), "", bp.str);
 
-#define CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(l, x)                            \
-    ret = av_channel_layout_channel_from_index(&layout, x);                \
-    if (ret < 0)                                                           \
+#define CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(l, x)                            \
+    ret = av_channel_layout_channel_from_সূচক(&layout, x);                \
+    যদি (ret < 0)                                                           \
         ret = -1;                                                          \
     printf("On \"%s\" layout with %2d: %8d\n", l,  x, ret)
 
@@ -188,44 +188,44 @@ static const char *channel_layout_retype(AVChannelLayout *layout, AVBPrint *bp, 
     mask = av_channel_layout_subset(&layout, x);                           \
     printf("On \"%s\" layout with %-22s 0x%"PRIx64"\n", l, xstr, mask)
 
-#define CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(l, x)                            \
-    ret = av_channel_layout_index_from_channel(&layout, x);                \
-    if (ret < 0)                                                           \
+#define CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(l, x)                            \
+    ret = av_channel_layout_সূচক_from_channel(&layout, x);                \
+    যদি (ret < 0)                                                           \
         ret = -1;                                                          \
     printf("On \"%s\" layout with %-23s %3d\n", l, AV_STRINGIFY(x)":", ret)
 
 #define CHANNEL_LAYOUT_CHANNEL_FROM_STRING(l, x)                           \
     ret = av_channel_layout_channel_from_string(&layout, x);               \
-    if (ret < 0)                                                           \
+    যদি (ret < 0)                                                           \
         ret = -1;                                                          \
     printf("On \"%s\" layout with %-21s %3d\n", bp.str, AV_STRINGIFY(x)":", ret);
 
-#define CHANNEL_LAYOUT_INDEX_FROM_STRING(l, x)                             \
-    ret = av_channel_layout_index_from_string(&layout, x);                 \
-    if (ret < 0)                                                           \
+#define CHANNEL_LAYOUT_সূচক_FROM_STRING(l, x)                             \
+    ret = av_channel_layout_সূচক_from_string(&layout, x);                 \
+    যদি (ret < 0)                                                           \
         ret = -1;                                                          \
     printf("On \"%s\" layout with %-20s %3d\n", l, AV_STRINGIFY(x)":", ret);
 
-int main(void)
+পূর্ণসংখ্যা প্রধান(শূন্য)
 {
-    const AVChannelLayout *playout;
+    ধ্রুবক AVChannelLayout *playout;
     AVChannelLayout layout = { 0 }, layout2 = { 0 };
     AVBPrint bp;
-    void *iter = NULL;
+    শূন্য *iter = ফাঁকা;
     uint64_t mask;
-    int ret;
+    পূর্ণসংখ্যা ret;
 
-    av_bprint_init(&bp, 64, AV_BPRINT_SIZE_AUTOMATIC);
+    av_bprint_init(&bp, 64, AV_BPRINT_আকার_AUTOMATIC);
 
     printf("Testing av_channel_layout_standard\n");
-    while (playout = av_channel_layout_standard(&iter)) {
+    যখন (playout = av_channel_layout_standard(&iter)) {
         av_channel_layout_describe_bprint(playout, &bp);
         printf("%-14s ", bp.str);
         av_bprint_clear(&bp);
-        for (int i = 0; i < 63; i++) {
-            int idx = av_channel_layout_index_from_channel(playout, i);
-            if (idx >= 0) {
-                if (idx)
+        জন্য (পূর্ণসংখ্যা i = 0; i < 63; i++) {
+            পূর্ণসংখ্যা idx = av_channel_layout_সূচক_from_channel(playout, i);
+            যদি (idx >= 0) {
+                যদি (idx)
                     av_bprintf(&bp, "+");
                 av_channel_name_bprint(&bp, i);
             }
@@ -235,15 +235,15 @@ int main(void)
     }
 
     printf("\nTesting av_channel_name\n");
-    CHANNEL_NAME(AV_CHAN_FRONT_LEFT);
-    CHANNEL_NAME(AV_CHAN_FRONT_RIGHT);
+    CHANNEL_NAME(AV_CHAN_FRONT_বাম);
+    CHANNEL_NAME(AV_CHAN_FRONT_ডান);
     CHANNEL_NAME(63);
     CHANNEL_NAME(AV_CHAN_AMBISONIC_BASE);
     CHANNEL_NAME(AV_CHAN_AMBISONIC_END);
 
     printf("Testing av_channel_description\n");
-    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_LEFT);
-    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_RIGHT);
+    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_বাম);
+    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_ডান);
     CHANNEL_DESCRIPTION(63);
     CHANNEL_DESCRIPTION(AV_CHAN_AMBISONIC_BASE);
     CHANNEL_DESCRIPTION(AV_CHAN_AMBISONIC_END);
@@ -280,22 +280,22 @@ int main(void)
     printf("With AV_CH_LAYOUT_5POINT1: %25s\n", bp.str);
 
     printf("\nTesting av_channel_layout_channel_from_index\n");
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 0);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 1);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 2);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 3);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 4);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 5);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 6);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 0);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 1);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 2);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 3);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 4);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 5);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 6);
 
     printf("\nTesting av_channel_layout_index_from_channel\n");
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_LEFT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_RIGHT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_CENTER);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_LOW_FREQUENCY);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_LEFT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_RIGHT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_বাম);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_ডান);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_CENTER);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_নিচের_FREQUENCY);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_বাম);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_ডান);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
 
     printf("\nTesting av_channel_layout_channel_from_string\n");
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "FL");
@@ -310,13 +310,13 @@ int main(void)
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "FL@Foo");
 
     printf("\nTesting av_channel_layout_index_from_string\n");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FL");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FR");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FC");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "LFE");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "SL");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "SR");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "BC");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "FL");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "FR");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "FC");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "LFE");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "SL");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "SR");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "BC");
 
     printf("\nTesting av_channel_layout_subset\n");
     CHANNEL_LAYOUT_SUBSET(bp.str, "AV_CH_LAYOUT_STEREO:",  AV_CH_LAYOUT_STEREO);
@@ -354,24 +354,24 @@ int main(void)
     CHANNEL_LAYOUT_FROM_STRING("FR+FL@Foo+USR63@Foo");
 
     ret = av_channel_layout_copy(&layout2, &layout);
-    if (ret < 0) {
+    যদি (ret < 0) {
         printf("Copying channel layout \"FR+FL@Foo+USR63@Foo\" failed; "
                "ret %d\n", ret);
     }
     ret = av_channel_layout_compare(&layout, &layout2);
-    if (ret)
+    যদি (ret)
         printf("Channel layout and its copy compare unequal; ret: %d\n", ret);
 
     printf("\nTesting av_channel_layout_index_from_string\n");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FR");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FL");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "USR63");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "Foo");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "@Foo");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FR@Foo");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FL@Foo");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "USR63@Foo");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "BC");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "FR");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "FL");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "USR63");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "Foo");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "@Foo");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "FR@Foo");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "FL@Foo");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "USR63@Foo");
+    CHANNEL_LAYOUT_সূচক_FROM_STRING(bp.str, "BC");
 
     printf("\nTesting av_channel_layout_channel_from_string\n");
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "FR");
@@ -385,16 +385,16 @@ int main(void)
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "BC");
 
     printf("\nTesting av_channel_layout_index_from_channel\n");
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_RIGHT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_LEFT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, 63);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_ডান);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_বাম);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, 63);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
 
     printf("\nTesting av_channel_layout_channel_from_index\n");
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 0);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 1);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 2);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 3);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 0);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 1);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 2);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 3);
 
     printf("\nTesting av_channel_layout_subset\n");
     CHANNEL_LAYOUT_SUBSET(bp.str, "AV_CH_LAYOUT_STEREO:", AV_CH_LAYOUT_STEREO);
@@ -407,16 +407,16 @@ int main(void)
     CHANNEL_LAYOUT_FROM_STRING("ambisonic 2+stereo");
 
     printf("\nTesting av_channel_layout_index_from_channel\n");
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_AMBISONIC_BASE);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_LEFT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_RIGHT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_AMBISONIC_BASE);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_বাম);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_ডান);
+    CHANNEL_LAYOUT_সূচক_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
 
     printf("\nTesting av_channel_layout_channel_from_index\n");
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 0);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 9);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 10);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 11);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 0);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 9);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 10);
+    CHANNEL_LAYOUT_CHANNEL_FROM_সূচক(bp.str, 11);
 
     printf("\nTesting av_channel_layout_subset\n");
     CHANNEL_LAYOUT_SUBSET(bp.str, "AV_CH_LAYOUT_STEREO:", AV_CH_LAYOUT_STEREO);
@@ -427,18 +427,18 @@ int main(void)
 
     printf("\nTesting av_channel_layout_retype\n");
     {
-        const char* layouts[] = {
+        ধ্রুবক অক্ষর* layouts[] = {
             "FL@Boo",
             "stereo",
             "FR+FL",
             "ambisonic 2+stereo",
             "2C",
-            NULL
+            ফাঁকা
         };
-        for (int i = 0; layouts[i]; i++)
+        জন্য (পূর্ণসংখ্যা i = 0; layouts[i]; i++)
             printf("With \"%s\": %s\n", layouts[i], channel_layout_retype(&layout, &bp, layouts[i]));
     }
-    av_bprint_finalize(&bp, NULL);
+    av_bprint_finalize(&bp, ফাঁকা);
 
-    return 0;
+    ফেরত 0;
 }

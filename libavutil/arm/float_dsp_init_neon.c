@@ -19,34 +19,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#অন্তর্ভাব <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "float_dsp_arm.h"
+#অন্তর্ভাব "libavutil/attributes.h"
+#অন্তর্ভাব "libavutil/float_dsp.h"
+#অন্তর্ভাব "float_dsp_arm.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1, int len);
+শূন্য ff_vector_fmul_neon(দশমিক *dst, ধ্রুবক দশমিক *src0, ধ্রুবক দশমিক *src1, পূর্ণসংখ্যা len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+শূন্য ff_vector_fmac_scalar_neon(দশমিক *dst, ধ্রুবক দশমিক *src, দশমিক mul,
+                                পূর্ণসংখ্যা len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+শূন্য ff_vector_fmul_scalar_neon(দশমিক *dst, ধ্রুবক দশমিক *src, দশমিক mul,
+                                পূর্ণসংখ্যা len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+শূন্য ff_vector_fmul_window_neon(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                                ধ্রুবক দশমিক *src1, ধ্রুবক দশমিক *win, পূর্ণসংখ্যা len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+শূন্য ff_vector_fmul_add_neon(দশমিক *dst, ধ্রুবক দশমিক *src0, ধ্রুবক দশমিক *src1,
+                             ধ্রুবক দশমিক *src2, পূর্ণসংখ্যা len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+শূন্য ff_vector_fmul_reverse_neon(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                                 ধ্রুবক দশমিক *src1, পূর্ণসংখ্যা len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+শূন্য ff_butterflies_float_neon(দশমিক *v1, দশমিক *v2, পূর্ণসংখ্যা len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+দশমিক ff_scalarproduct_float_neon(ধ্রুবক দশমিক *v1, ধ্রুবক দশমিক *v2, পূর্ণসংখ্যা len);
 
-av_cold void ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
+av_cold শূন্য ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
 {
     fdsp->vector_fmul = ff_vector_fmul_neon;
     fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_neon;

@@ -151,7 +151,7 @@ DISABLE_SME2
  * with |AARCH64_VALIDATE_LINK_REGISTER| before RET. The SP register must also
  * have the same value at the two points. For example:
  *
- *   .global f
+ *   .বৈশ্বিক f
  *   f:
  *     AARCH64_SIGN_LINK_REGISTER
  *     stp x29, x30, [sp, #-96]!
@@ -163,7 +163,7 @@ DISABLE_SME2
  *
  * |AARCH64_VALID_CALL_TARGET| expands to BTI 'c'. Either it, or
  * |AARCH64_SIGN_LINK_REGISTER|, must be used at every point that may be an
- * indirect call target. In particular, all symbols exported from a file must
+ * indirect ডাকো target. In particular, all symbols exported from a file must
  * begin with one of these macros. For example, a leaf function that does not
  * save LR can instead use |AARCH64_VALID_CALL_TARGET|:
  *
@@ -272,7 +272,7 @@ FUNC    .endfunc
         .text
         .align          \align
     .if \export
-        .global EXTERN_ASM\name
+        .বৈশ্বিক EXTERN_ASM\name
 ELF     .type   EXTERN_ASM\name, %function
 FUNC    .func   EXTERN_ASM\name
 EXTERN_ASM\name:

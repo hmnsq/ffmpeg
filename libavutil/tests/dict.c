@@ -18,72 +18,72 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/mem.h"
+#অন্তর্ভাব "libavutil/mem.h"
 
-#include "libavutil/dict.c"
+#অন্তর্ভাব "libavutil/dict.c"
 
-static const AVDictionaryEntry *dict_iterate(const AVDictionary *m,
-                                             const AVDictionaryEntry *prev)
+স্থির ধ্রুবক AVDictionaryEntry *dict_iterate(ধ্রুবক AVDictionary *m,
+                                             ধ্রুবক AVDictionaryEntry *পূর্ব)
 {
-    const AVDictionaryEntry *dict_get = av_dict_get(m, "", prev, AV_DICT_IGNORE_SUFFIX);
-    const AVDictionaryEntry *dict_iterate = av_dict_iterate(m, prev);
+    ধ্রুবক AVDictionaryEntry *dict_get = av_dict_get(m, "", পূর্ব, AV_DICT_IGNORE_SUFFIX);
+    ধ্রুবক AVDictionaryEntry *dict_iterate = av_dict_iterate(m, পূর্ব);
 
-    if (dict_get != dict_iterate) {
+    যদি (dict_get != dict_iterate) {
 #define GET(entry, mem) ((entry) ? (entry)->mem : "N/A")
         printf("Iterating with av_dict_iterate() yields a different result "
                "than iterating with av_dict_get() and AV_DICT_IGNORE_SUFFIX "
                "(prev: %p, key %s; av_dict_iterate() %p, key %s, value %s; "
                "av_dict_get() %p, key %s, value %s)\n",
-               prev, GET(prev, key),
-               dict_iterate, GET(dict_iterate, key), GET(dict_iterate, value),
-               dict_get, GET(dict_get, key), GET(dict_get, value));
+               পূর্ব, GET(পূর্ব, চাবি),
+               dict_iterate, GET(dict_iterate, চাবি), GET(dict_iterate, মান),
+               dict_get, GET(dict_get, চাবি), GET(dict_get, মান));
 #undef GET
     }
-    return dict_iterate;
+    ফেরত dict_iterate;
 }
 
-static void print_dict(const AVDictionary *m)
+স্থির শূন্য print_dict(ধ্রুবক AVDictionary *m)
 {
-    const AVDictionaryEntry *t = NULL;
-    const char *sep = "";
-    while ((t = dict_iterate(m, t))) {
-        printf("%s%s %s", sep, t->key, t->value);
+    ধ্রুবক AVDictionaryEntry *t = ফাঁকা;
+    ধ্রুবক অক্ষর *sep = "";
+    যখন ((t = dict_iterate(m, t))) {
+        printf("%s%s %s", sep, t->চাবি, t->মান);
         sep = "   ";
     }
     printf("\n");
 }
 
-static void test_separators(const AVDictionary *m, const char pair, const char val)
+স্থির শূন্য test_separators(ধ্রুবক AVDictionary *m, ধ্রুবক অক্ষর pair, ধ্রুবক অক্ষর val)
 {
-    AVDictionary *dict = NULL;
-    char pairs[] = {pair , '\0'};
-    char vals[]  = {val, '\0'};
+    AVDictionary *dict = ফাঁকা;
+    অক্ষর pairs[] = {pair , '\0'};
+    অক্ষর vals[]  = {val, '\0'};
 
-    char *buffer = NULL;
-    int ret;
+    অক্ষর *বাফার = ফাঁকা;
+    পূর্ণসংখ্যা ret;
 
     av_dict_copy(&dict, m, 0);
     print_dict(dict);
-    av_dict_get_string(dict, &buffer, val, pair);
-    printf("%s\n", buffer);
+    av_dict_get_string(dict, &বাফার, val, pair);
+    printf("%s\n", বাফার);
     av_dict_free(&dict);
-    ret = av_dict_parse_string(&dict, buffer, vals, pairs, 0);
+    ret = av_dict_parse_string(&dict, বাফার, vals, pairs, 0);
     printf("ret %d\n", ret);
-    av_freep(&buffer);
+    av_freep(&বাফার);
     print_dict(dict);
     av_dict_free(&dict);
 }
 
-int main(void)
+পূর্ণসংখ্যা প্রধান(শূন্য)
 {
-    AVDictionary *dict = NULL;
-    const AVDictionaryEntry *e;
-    char *buffer = NULL;
+    AVDictionary *dict = ফাঁকা;
+    ধ্রুবক AVDictionaryEntry *e;
+    অক্ষর *বাফার = ফাঁকা;
 
     printf("Testing av_dict_get_string() and av_dict_parse_string()\n");
-    av_dict_get_string(dict, &buffer, '=', ',');
-    printf("%s\n", buffer);
-    av_freep(&buffer);
+    av_dict_get_string(dict, &বাফার, '=', ',');
+    printf("%s\n", বাফার);
+    av_freep(&বাফার);
     av_dict_set(&dict, "aaa", "aaa", 0);
     av_dict_set(&dict, "b,b", "bbb", 0);
     av_dict_set(&dict, "c=c", "ccc", 0);
@@ -108,63 +108,63 @@ int main(void)
     printf("\nTesting av_dict_set()\n");
     av_dict_set(&dict, "a", "a", 0);
     av_dict_set(&dict, "b", av_strdup("b"), AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set(&dict, av_strdup("c"), "c", AV_DICT_DONT_STRDUP_KEY);
-    av_dict_set(&dict, av_strdup("d"), av_strdup("d"), AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    av_dict_set(&dict, av_strdup("c"), "c", AV_DICT_DONT_STRDUP_চাবি);
+    av_dict_set(&dict, av_strdup("d"), av_strdup("d"), AV_DICT_DONT_STRDUP_চাবি | AV_DICT_DONT_STRDUP_VAL);
     av_dict_set(&dict, "e", "e", AV_DICT_DONT_OVERWRITE);
     av_dict_set(&dict, "e", "f", AV_DICT_DONT_OVERWRITE);
     av_dict_set(&dict, "f", "f", 0);
-    av_dict_set(&dict, "f", NULL, 0);
+    av_dict_set(&dict, "f", ফাঁকা, 0);
     av_dict_set(&dict, "ff", "f", 0);
     av_dict_set(&dict, "ff", "f", AV_DICT_APPEND);
-    if (av_dict_get(dict, NULL, NULL, 0))
+    যদি (av_dict_get(dict, ফাঁকা, ফাঁকা, 0))
         printf("av_dict_get() does not correctly handle NULL key.\n");
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("%s %s\n", e->key, e->value);
+    e = ফাঁকা;
+    যখন ((e = dict_iterate(dict, e)))
+        printf("%s %s\n", e->চাবি, e->মান);
     av_dict_free(&dict);
 
-    if (av_dict_set(&dict, NULL, "a", 0) >= 0 ||
-        av_dict_set(&dict, NULL, "b", 0) >= 0 ||
-        av_dict_set(&dict, NULL, NULL, AV_DICT_DONT_STRDUP_KEY) >= 0 ||
-        av_dict_set(&dict, NULL, av_strdup("b"), AV_DICT_DONT_STRDUP_VAL) >= 0 ||
-        av_dict_count(dict))
+    যদি (av_dict_set(&dict, ফাঁকা, "a", 0) >= 0 ||
+        av_dict_set(&dict, ফাঁকা, "b", 0) >= 0 ||
+        av_dict_set(&dict, ফাঁকা, ফাঁকা, AV_DICT_DONT_STRDUP_চাবি) >= 0 ||
+        av_dict_set(&dict, ফাঁকা, av_strdup("b"), AV_DICT_DONT_STRDUP_VAL) >= 0 ||
+        av_dict_গুনতি(dict))
         printf("av_dict_set does not correctly handle NULL key\n");
 
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("'%s' '%s'\n", e->key, e->value);
+    e = ফাঁকা;
+    যখন ((e = dict_iterate(dict, e)))
+        printf("'%s' '%s'\n", e->চাবি, e->মান);
     av_dict_free(&dict);
 
 
     //valgrind sensible test
     printf("\nTesting av_dict_set_int()\n");
     av_dict_set_int(&dict, "1", 1, AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set_int(&dict, av_strdup("2"), 2, AV_DICT_DONT_STRDUP_KEY);
-    av_dict_set_int(&dict, av_strdup("3"), 3, AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    av_dict_set_int(&dict, av_strdup("2"), 2, AV_DICT_DONT_STRDUP_চাবি);
+    av_dict_set_int(&dict, av_strdup("3"), 3, AV_DICT_DONT_STRDUP_চাবি | AV_DICT_DONT_STRDUP_VAL);
     av_dict_set_int(&dict, "4", 4, 0);
     av_dict_set_int(&dict, "5", 5, AV_DICT_DONT_OVERWRITE);
     av_dict_set_int(&dict, "5", 6, AV_DICT_DONT_OVERWRITE);
     av_dict_set_int(&dict, "12", 1, 0);
     av_dict_set_int(&dict, "12", 2, AV_DICT_APPEND);
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("%s %s\n", e->key, e->value);
+    e = ফাঁকা;
+    যখন ((e = dict_iterate(dict, e)))
+        printf("%s %s\n", e->চাবি, e->মান);
     av_dict_free(&dict);
 
     //valgrind sensible test
     printf("\nTesting av_dict_set() with existing AVDictionaryEntry.key as key\n");
-    if (av_dict_set(&dict, "key", "old", 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    if (av_dict_set(&dict, e->key, "new val OK", 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    printf("%s\n", e->value);
-    if (av_dict_set(&dict, e->key, e->value, 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    printf("%s\n", e->value);
+    যদি (av_dict_set(&dict, "key", "old", 0) < 0)
+        ফেরত 1;
+    e = av_dict_get(dict, "key", ফাঁকা, 0);
+    যদি (av_dict_set(&dict, e->চাবি, "new val OK", 0) < 0)
+        ফেরত 1;
+    e = av_dict_get(dict, "key", ফাঁকা, 0);
+    printf("%s\n", e->মান);
+    যদি (av_dict_set(&dict, e->চাবি, e->মান, 0) < 0)
+        ফেরত 1;
+    e = av_dict_get(dict, "key", ফাঁকা, 0);
+    printf("%s\n", e->মান);
     av_dict_free(&dict);
 
-    return 0;
+    ফেরত 0;
 }

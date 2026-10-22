@@ -16,25 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "error.h"
-#include "file.h"
-#include "file_open.h"
-#include "internal.h"
-#include "log.h"
-#include "mem.h"
-#include <fcntl.h>
-#include <sys/stat.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
+#অন্তর্ভাব "config.h"
+#অন্তর্ভাব "error.h"
+#অন্তর্ভাব "file.h"
+#অন্তর্ভাব "file_open.h"
+#অন্তর্ভাব "internal.h"
+#অন্তর্ভাব "log.h"
+#অন্তর্ভাব "mem.h"
+#অন্তর্ভাব <fcntl.h>
+#অন্তর্ভাব <sys/stat.h>
+#যদি HAVE_UNISTD_H
+#অন্তর্ভাব <unistd.h>
 #endif
-#if HAVE_IO_H
-#include <io.h>
+#যদি HAVE_IO_H
+#অন্তর্ভাব <io.h>
 #endif
-#if HAVE_MMAP
-#include <sys/mman.h>
-#elif HAVE_MAPVIEWOFFILE
-#include <windows.h>
+#যদি HAVE_MMAP
+#অন্তর্ভাব <sys/mman.h>
+#নতুবা_যদি HAVE_MAPVIEWOFFILE
+#অন্তর্ভাব <windows.h>
 #endif
 
 #ifdef _WIN32
@@ -45,160 +45,160 @@
 #define fstat _fstat64
 #endif
 
-typedef struct FileLogContext {
-    const AVClass *class;
-    int   log_offset;
-    void *log_ctx;
+প্রকারলেখ কাঠামো FileLogContext {
+    ধ্রুবক AVClass *class;
+    পূর্ণসংখ্যা   log_offset;
+    শূন্য *log_ctx;
 } FileLogContext;
 
-static const AVClass file_log_ctx_class = {
+স্থির ধ্রুবক AVClass file_log_ctx_class = {
     .class_name                = "FILE",
     .item_name                 = av_default_item_name,
-    .option                    = NULL,
+    .option                    = ফাঁকা,
     .version                   = LIBAVUTIL_VERSION_INT,
     .log_level_offset_offset   = offsetof(FileLogContext, log_offset),
     .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
 };
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
+#যদি HAVE_MMAP || HAVE_MAPVIEWOFFILE
 /* Map the first size bytes of the file, as a private copy or shared and
  * writable. The shared mapping extends the file to size, on Windows the
  * mapping object does it. */
-static int map_file(int fd, size_t size, int shared, void **ptr)
+স্থির পূর্ণসংখ্যা map_file(পূর্ণসংখ্যা fd, size_t আকার_2, পূর্ণসংখ্যা shared, শূন্য **ptr)
 {
-#if HAVE_MMAP
-    if (shared) {
-        struct stat st;
-        if (fstat(fd, &st) < 0)
-            return AVERROR(errno);
-        if (st.st_size < size && ftruncate(fd, size) < 0)
-            return AVERROR(errno);
+#যদি HAVE_MMAP
+    যদি (shared) {
+        কাঠামো stat st;
+        যদি (fstat(fd, &st) < 0)
+            ফেরত AVERROR(errno);
+        যদি (st.st_আকার < আকার_2 && ftruncate(fd, আকার_2) < 0)
+            ফেরত AVERROR(errno);
     }
 
-    void *map = mmap(NULL, size, PROT_READ | PROT_WRITE,
+    শূন্য *map = mmap(ফাঁকা, আকার_2, PROT_READ | PROT_WRITE,
                      shared ? MAP_SHARED : MAP_PRIVATE, fd, 0);
-    if (map == MAP_FAILED)
-        return AVERROR(errno);
-#else
+    যদি (map == MAP_FAILED)
+        ফেরত AVERROR(errno);
+#অন্যথা
     HANDLE fh = (HANDLE)_get_osfhandle(fd);
-    if (fh == INVALID_HANDLE_VALUE)
-        return AVERROR(EBADF);
+    যদি (fh == INVALID_HANDLE_মান)
+        ফেরত AVERROR(EBADF);
 
-    HANDLE mh = CreateFileMapping(fh, NULL,
+    HANDLE mh = CreateFileMapping(fh, ফাঁকা,
                                   shared ? PAGE_READWRITE : PAGE_READONLY,
-                                  (uint64_t)size >> 32, size, NULL);
-    if (!mh)
-        return AVERROR(EIO);
+                                  (uint64_t)আকার_2 >> 32, আকার_2, ফাঁকা);
+    যদি (!mh)
+        ফেরত AVERROR(EIO);
 
-    void *map = MapViewOfFile(mh, shared ? FILE_MAP_ALL_ACCESS : FILE_MAP_COPY,
-                              0, 0, size);
+    শূন্য *map = MapViewOfFile(mh, shared ? FILE_MAP_ALL_ACCESS : FILE_MAP_COPY,
+                              0, 0, আকার_2);
     CloseHandle(mh);
-    if (!map)
-        return AVERROR(EIO);
+    যদি (!map)
+        ফেরত AVERROR(EIO);
 #endif
 
     *ptr = map;
-    return 0;
+    ফেরত 0;
 }
 
-static void unmap_file(void *ptr, size_t size)
+স্থির শূন্য unmap_file(শূন্য *ptr, size_t আকার_2)
 {
-#if HAVE_MMAP
-    munmap(ptr, size);
-#else
+#যদি HAVE_MMAP
+    munmap(ptr, আকার_2);
+#অন্যথা
     UnmapViewOfFile(ptr);
 #endif
 }
 #endif
 
-int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
-                int log_offset, void *log_ctx)
+পূর্ণসংখ্যা av_file_map(ধ্রুবক অক্ষর *filename, uint8_t **bufptr, size_t *আকার_2,
+                পূর্ণসংখ্যা log_offset, শূন্য *log_ctx)
 {
     FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int err, fd = avpriv_open(filename, O_RDONLY);
-    struct stat st;
-    av_unused void *ptr;
-    *bufptr = NULL;
-    *size = 0;
+    পূর্ণসংখ্যা err, fd = avpriv_open(filename, O_RDONLY);
+    কাঠামো stat st;
+    av_unused শূন্য *ptr;
+    *bufptr = ফাঁকা;
+    *আকার_2 = 0;
 
-    if (fd < 0) {
+    যদি (fd < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot read file '%s': %s\n", filename, av_err2str(err));
-        return err;
+        ফেরত err;
     }
 
-    if (fstat(fd, &st) < 0) {
+    যদি (fstat(fd, &st) < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Error occurred in fstat(): %s\n", av_err2str(err));
         close(fd);
-        return err;
+        ফেরত err;
     }
 
-    if (st.st_size > SIZE_MAX) {
+    যদি (st.st_আকার > SIZE_MAX) {
         av_log(&file_log_ctx, AV_LOG_ERROR,
                "File size for file '%s' is too big\n", filename);
         close(fd);
-        return AVERROR(EINVAL);
+        ফেরত AVERROR(EINVAL);
     }
-    *size = st.st_size;
+    *আকার_2 = st.st_আকার;
 
-    if (!*size) {
-        *bufptr = NULL;
-        goto out;
+    যদি (!*আকার_2) {
+        *bufptr = ফাঁকা;
+        যাও out;
     }
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    err = map_file(fd, *size, 0, &ptr);
-    if (err < 0) {
+#যদি HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    err = map_file(fd, *আকার_2, 0, &ptr);
+    যদি (err < 0) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot map file '%s': %s\n", filename, av_err2str(err));
         close(fd);
-        *size = 0;
-        return err;
+        *আকার_2 = 0;
+        ফেরত err;
     }
     *bufptr = ptr;
-#else
-    *bufptr = av_malloc(*size);
-    if (!*bufptr) {
+#অন্যথা
+    *bufptr = av_malloc(*আকার_2);
+    যদি (!*bufptr) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Memory allocation error occurred\n");
         close(fd);
-        *size = 0;
-        return AVERROR(ENOMEM);
+        *আকার_2 = 0;
+        ফেরত AVERROR(ENOMEM);
     }
-    read(fd, *bufptr, *size);
+    পঠ(fd, *bufptr, *আকার_2);
 #endif
 
 out:
     close(fd);
-    return 0;
+    ফেরত 0;
 }
 
-void av_file_unmap(uint8_t *bufptr, size_t size)
+শূন্য av_file_unmap(uint8_t *bufptr, size_t আকার_2)
 {
-    if (!size || !bufptr)
-        return;
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    unmap_file(bufptr, size);
-#else
+    যদি (!আকার_2 || !bufptr)
+        ফেরত;
+#যদি HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    unmap_file(bufptr, আকার_2);
+#অন্যথা
     av_free(bufptr);
 #endif
 }
 
-int av_file_map_shared(int fd, size_t size, void **bufptr)
+পূর্ণসংখ্যা av_file_map_shared(পূর্ণসংখ্যা fd, size_t আকার_2, শূন্য **bufptr)
 {
-    *bufptr = NULL;
-    if (!size)
-        return AVERROR(EINVAL);
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    return map_file(fd, size, 1, bufptr);
-#else
-    return AVERROR(ENOSYS);
+    *bufptr = ফাঁকা;
+    যদি (!আকার_2)
+        ফেরত AVERROR(EINVAL);
+#যদি HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    ফেরত map_file(fd, আকার_2, 1, bufptr);
+#অন্যথা
+    ফেরত AVERROR(ENOSYS);
 #endif
 }
 
-void av_file_unmap_shared(void *bufptr, size_t size)
+শূন্য av_file_unmap_shared(শূন্য *bufptr, size_t আকার_2)
 {
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    if (size && bufptr)
-        unmap_file(bufptr, size);
+#যদি HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    যদি (আকার_2 && bufptr)
+        unmap_file(bufptr, আকার_2);
 #endif
 }

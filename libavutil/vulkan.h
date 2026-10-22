@@ -21,69 +21,69 @@
 
 #define VK_NO_PROTOTYPES
 
-#include <stdatomic.h>
+#অন্তর্ভাব <stdatomic.h>
 
-#include "refstruct.h"
+#অন্তর্ভাব "refstruct.h"
 
-#include "thread.h"
-#include "pixdesc.h"
-#include "hwcontext.h"
-#include "vulkan_functions.h"
-#include "hwcontext_vulkan.h"
-#include "avassert.h"
-#include "intreadwrite.h"
+#অন্তর্ভাব "thread.h"
+#অন্তর্ভাব "pixdesc.h"
+#অন্তর্ভাব "hwcontext.h"
+#অন্তর্ভাব "vulkan_functions.h"
+#অন্তর্ভাব "hwcontext_vulkan.h"
+#অন্তর্ভাব "avassert.h"
+#অন্তর্ভাব "intreadwrite.h"
 
 /* Helper, pretty much every Vulkan return value needs to be checked */
 #define RET(x)                                                                 \
-    do {                                                                       \
-        if ((err = (x)) < 0)                                                   \
-            goto fail;                                                         \
-    } while (0)
+    করো {                                                                       \
+        যদি ((err = (x)) < 0)                                                   \
+            যাও fail;                                                         \
+    } যখন (0)
 
 /* Convenience macros for specialization lists */
 #define SPEC_LIST_MAX 256
-#define SPEC_LIST_CREATE(name, max_length, max_size)           \
-    av_assert1((max_length) < (SPEC_LIST_MAX - 3));            \
-    uint8_t name##_data[(max_size) + 3*sizeof(uint32_t)];      \
-    VkSpecializationMapEntry name##_entries[(max_length) + 3]; \
+#define SPEC_LIST_CREATE(name, max_দৈর্ঘ্য, max_আকার)           \
+    av_assert1((max_দৈর্ঘ্য) < (SPEC_LIST_MAX - 3));            \
+    uint8_t name##_data[(max_আকার) + 3*আকার(uint32_t)];      \
+    VkSpecializationMapEntry name##_entries[(max_দৈর্ঘ্য) + 3]; \
     VkSpecializationInfo name##_info = {                       \
         .pMapEntries = name##_entries,                         \
-        .pData = name##_data,                                  \
+        .p_তথ্য = name##_data,                                  \
     };                                                         \
     VkSpecializationInfo *name = &name##_info;
 
 #define SPEC_LIST_ADD(name, idx, val_bits, val)                \
-do {                                                           \
-    unsigned int name##_cnt = name->mapEntryCount;             \
-    size_t name##_off = name->dataSize;                        \
-    uint8_t *name##_dp = (uint8_t *)name->pData;               \
-    void *name##_ep = (void *)&name->pMapEntries[name##_cnt];  \
+করো {                                                           \
+    unsigned পূর্ণসংখ্যা name##_cnt = name->map_Entry_গুনতি;             \
+    size_t name##_off = name->তথ্য_আকার_2;                        \
+    uint8_t *name##_dp = (uint8_t *)name->p_তথ্য;               \
+    শূন্য *name##_ep = (শূন্য *)&name->pMapEntries[name##_cnt];  \
     AV_WN(val_bits, name##_dp + name##_off, (val));            \
     VkSpecializationMapEntry name##_new_entry = {              \
         .constantID = (idx),                                   \
         .offset = name##_off,                                  \
-        .size = val_bits >> 3,                                 \
+        .আকার_2 = val_bits >> 3,                                 \
     };                                                         \
     memcpy(name##_ep, &name##_new_entry,                       \
-           sizeof(VkSpecializationMapEntry));                  \
-    name->dataSize = name##_off + (val_bits >> 3);             \
-    name->mapEntryCount = name##_cnt + 1;                      \
-} while (0)
+           আকার(VkSpecializationMapEntry));                  \
+    name->তথ্য_আকার_2 = name##_off + (val_bits >> 3);             \
+    name->map_Entry_গুনতি = name##_cnt + 1;                      \
+} যখন (0)
 
 #define DUP_SAMPLER(x) { x, x, x, x }
 
 #define FF_VK_MAX_DESCRIPTOR_SETS 4
 #define FF_VK_MAX_DESCRIPTOR_BINDINGS 16
 #define FF_VK_MAX_DESCRIPTOR_TYPES 16
-#define FF_VK_MAX_PUSH_CONSTS 4
+#define FF_VK_MAX_ঠেলো_CONSTS 4
 #define FF_VK_MAX_SHADERS 16
 
-typedef struct FFVulkanDescriptorSetBinding {
-    const char         *name;
+প্রকারলেখ কাঠামো FFVulkanDescriptorSetBinding {
+    ধ্রুবক অক্ষর         *name;
     VkDescriptorType    type;
-    const char         *mem_layout;  /* Storage images (rgba8, etc.) and buffers (std430, etc.) */
-    const char         *mem_quali;   /* readonly, writeonly, etc. */
-    const char         *buf_content; /* For buffers */
+    ধ্রুবক অক্ষর         *mem_layout;  /* Storage images (rgba8, etc.) and buffers (std430, etc.) */
+    ধ্রুবক অক্ষর         *mem_quali;   /* readonly, writeonly, etc. */
+    ধ্রুবক অক্ষর         *buf_content; /* For buffers */
     uint32_t            dimensions;  /* Needed for e.g. sampler%iD */
     uint32_t            elems;       /* 0 - scalar, 1 or more - vector */
     VkShaderStageFlags  stages;
@@ -91,11 +91,11 @@ typedef struct FFVulkanDescriptorSetBinding {
     VkSampler           samplers[4]; /* Sampler to use for all elems */
 } FFVulkanDescriptorSetBinding;
 
-typedef struct FFVkBuffer {
-    VkBuffer buf;
+প্রকারলেখ কাঠামো FFVk_বাফার {
+    Vk_বাফার buf;
     VkDeviceMemory mem;
     VkMemoryPropertyFlagBits flags;
-    size_t size;
+    size_t আকার_2;
     VkDeviceAddress address;
 
     /* Only valid when allocated via ff_vk_get_pooled_buffer with HOST_VISIBLE or
@@ -109,81 +109,81 @@ typedef struct FFVkBuffer {
 
     /* If host mapping, reference to the backing host memory buffer */
     AVBufferRef *host_ref;
-} FFVkBuffer;
+} FFVk_বাফার;
 
 /* Fixed dependency limits per exec context (with room to spare) */
 #define FF_VK_EXEC_MAX_FRAME_DEPS 64
 #define FF_VK_EXEC_MAX_BUF_DEPS 256
 #define FF_VK_EXEC_MAX_SW_FRAME_DEPS 16
-#define FF_VK_EXEC_MAX_SEM_OPS (FF_VK_EXEC_MAX_FRAME_DEPS*AV_NUM_DATA_POINTERS)
+#define FF_VK_EXEC_MAX_SEM_OPS (FF_VK_EXEC_MAX_FRAME_DEPS*AV_অঙ্ক_তথ্য_POINTERS)
 
 /* Default number of in-flight execution contexts per pool */
 #define FF_VK_DEFAULT_EXEC_CONTEXTS 4
 
-typedef struct FFVkExecObjDep {
+প্রকারলেখ কাঠামো FFVkExecObjDep {
     uint64_t obj;
     VkObjectType type;
 } FFVkExecObjDep;
 
-typedef struct FFVkExecContext {
+প্রকারলেখ কাঠামো FFVkExecContext {
     uint32_t idx;
-    const struct FFVkExecPool *parent;
+    ধ্রুবক কাঠামো FFVkExecPool *parent;
 
     /* Set on submission; pool-rolling users check and clear it to tell
      * contexts with uncollected results apart from fresh ones */
-    int had_submission;
+    পূর্ণসংখ্যা had_submission;
 
     /* Queue for the execution context */
     VkQueue queue;
-    int qf;
-    int qi;
+    পূর্ণসংখ্যা qf;
+    পূর্ণসংখ্যা qi;
 
     /* Command buffer for the context */
-    VkCommandBuffer buf;
+    Vk_Command_বাফার buf;
 
     /* Busy (claimed or executing) while the counter is below sem_value;
      * signalled by the submission, or by ff_vk_exec_discard() */
     VkSemaphore sem;
-    uint64_t sem_value;
+    uint64_t sem_মান;
 
     /* Briefly guards the dependency lists; the busy state is carried by the
      * semaphore above */
     pthread_mutex_t lock;
 
     /* Opaque data, untouched, free to use by users */
-    void *opaque;
+    শূন্য *opaque;
 
-    void *query_data;
-    int query_idx;
+    শূন্য *query_তথ্য;
+    পূর্ণসংখ্যা query_idx;
 
     /* Buffer dependencies */
     AVBufferRef *buf_deps[FF_VK_EXEC_MAX_BUF_DEPS];
-    int nb_buf_deps;
+    পূর্ণসংখ্যা nb_buf_deps;
 
     /* AVRefStruct object dependencies */
-    void *refstruct_deps[FF_VK_EXEC_MAX_BUF_DEPS];
-    int nb_refstruct_deps;
+    শূন্য *refstruct_deps[FF_VK_EXEC_MAX_BUF_DEPS];
+    পূর্ণসংখ্যা nb_refstruct_deps;
 
     /* Raw Vulkan object dependencies, destroyed on release */
     FFVkExecObjDep obj_deps[FF_VK_EXEC_MAX_BUF_DEPS];
-    int nb_obj_deps;
+    পূর্ণসংখ্যা nb_obj_deps;
 
     /* Frame dependencies */
     AVFrame *frame_deps[FF_VK_EXEC_MAX_FRAME_DEPS];
-    int nb_frame_deps;
+    পূর্ণসংখ্যা nb_frame_deps;
 
     /* Software frame dependencies */
     AVFrame *sw_frame_deps[FF_VK_EXEC_MAX_SW_FRAME_DEPS];
-    int nb_sw_frame_deps;
+    পূর্ণসংখ্যা nb_sw_frame_deps;
 
     VkSemaphoreSubmitInfo sem_wait[FF_VK_EXEC_MAX_SEM_OPS];
-    int sem_wait_cnt;
+    পূর্ণসংখ্যা sem_wait_cnt;
 
     VkSemaphoreSubmitInfo sem_sig[FF_VK_EXEC_MAX_SEM_OPS];
-    int sem_sig_cnt;
+    পূর্ণসংখ্যা sem_sig_cnt;
 
     uint64_t *sem_sig_val_dst[FF_VK_EXEC_MAX_SEM_OPS];
-    int sem_sig_val_dst_cnt;
+    পূর্ণসংখ্যা sem_sig_val_dst_cnt;
 
     uint8_t frame_locked[FF_VK_EXEC_MAX_FRAME_DEPS];
     VkAccessFlagBits access_dst[FF_VK_EXEC_MAX_FRAME_DEPS];
@@ -192,38 +192,38 @@ typedef struct FFVkExecContext {
     uint8_t frame_update[FF_VK_EXEC_MAX_FRAME_DEPS];
 } FFVkExecContext;
 
-typedef struct FFVulkanDescriptorSet {
+প্রকারলেখ কাঠামো FFVulkanDescriptorSet {
     /* Descriptor buffer */
-    VkDeviceSize layout_size;
-    VkDeviceSize aligned_size; /* descriptorBufferOffsetAlignment */
-    VkBufferUsageFlags usage;
+    Vk_Device_আকার layout_আকার;
+    Vk_Device_আকার aligned_আকার; /* descriptorBufferOffsetAlignment */
+    Vk_বাফার_Usage_Flags usage;
 
     VkDescriptorSetLayoutBinding binding[FF_VK_MAX_DESCRIPTOR_BINDINGS];
-    VkDeviceSize binding_offset[FF_VK_MAX_DESCRIPTOR_BINDINGS];
+    Vk_Device_আকার binding_offset[FF_VK_MAX_DESCRIPTOR_BINDINGS];
 
-    int nb_bindings;
+    পূর্ণসংখ্যা nb_bindings;
 
     /* Descriptor set is shared between all submissions */
-    int singular;
+    পূর্ণসংখ্যা singular;
 } FFVulkanDescriptorSet;
 
-typedef struct FFVulkanShader {
+প্রকারলেখ কাঠামো FFVulkanShader {
     /* Name for id/debugging purposes */
-    const char *name;
+    ধ্রুবক অক্ষর *name;
 
     /* Whether shader is precompiled or not */
-    int precompiled;
+    পূর্ণসংখ্যা precompiled;
     VkSpecializationInfo *specialization_info;
 
     /* Compute shader local group sizes */
-    uint32_t lg_size[3];
+    uint32_t lg_আকার[3];
 
     /* Shader bind point/type */
     VkPipelineStageFlags stage;
     VkPipelineBindPoint bind_point;
 
     /* Creation info */
-    VkPipelineShaderStageRequiredSubgroupSizeCreateInfo subgroup_info;
+    Vk_Pipeline_Shader_Stage_Required_Subgroup_আকার_Create_Info subgroup_info;
 
     VkPipeline pipeline;
 
@@ -231,67 +231,67 @@ typedef struct FFVulkanShader {
     VkPipelineLayout pipeline_layout;
 
     /* Push consts */
-    VkPushConstantRange push_consts[FF_VK_MAX_PUSH_CONSTS];
-    int push_consts_num;
+    Vk_ঠেলো_Constant_Range ঠেলো_consts[FF_VK_MAX_ঠেলো_CONSTS];
+    পূর্ণসংখ্যা ঠেলো_consts_অঙ্ক;
 
     /* Descriptor sets */
     FFVulkanDescriptorSet desc_set[FF_VK_MAX_DESCRIPTOR_SETS];
-    int nb_descriptor_sets;
+    পূর্ণসংখ্যা nb_descriptor_sets;
 
     /* Descriptors */
     VkDescriptorSetLayout desc_layout[FF_VK_MAX_DESCRIPTOR_SETS];
 
     /* Descriptor pool */
-    int use_push;
-    VkDescriptorPoolSize desc_pool_size[FF_VK_MAX_DESCRIPTOR_TYPES];
-    int nb_desc_pool_size;
+    পূর্ণসংখ্যা use_ঠেলো;
+    Vk_Descriptor_Pool_আকার desc_pool_আকার[FF_VK_MAX_DESCRIPTOR_TYPES];
+    পূর্ণসংখ্যা nb_desc_pool_আকার;
 } FFVulkanShader;
 
-typedef struct FFVulkanDescriptorSetData {
+প্রকারলেখ কাঠামো FFVulkan_Descriptor_Set_তথ্য {
     /* Descriptor buffer */
-    FFVkBuffer buf;
+    FFVk_বাফার buf;
     uint8_t *desc_mem;
-} FFVulkanDescriptorSetData;
+} FFVulkan_Descriptor_Set_তথ্য;
 
-typedef struct FFVulkanShaderData {
+প্রকারলেখ কাঠামো FFVulkan_Shader_তথ্য {
     /* Shader to which this data belongs to */
     FFVulkanShader *shd;
-    int nb_descriptor_sets;
+    পূর্ণসংখ্যা nb_descriptor_sets;
 
     /* Descriptor buffer */
-    FFVulkanDescriptorSetData desc_set_buf[FF_VK_MAX_DESCRIPTOR_SETS];
-    VkDescriptorBufferBindingInfoEXT desc_bind[FF_VK_MAX_DESCRIPTOR_SETS];
+    FFVulkan_Descriptor_Set_তথ্য desc_set_buf[FF_VK_MAX_DESCRIPTOR_SETS];
+    Vk_Descriptor_বাফার_Binding_Info_EXT desc_bind[FF_VK_MAX_DESCRIPTOR_SETS];
 
     /* Descriptor pools */
     VkDescriptorSet *desc_sets;
     VkDescriptorPool desc_pool;
-} FFVulkanShaderData;
+} FFVulkan_Shader_তথ্য;
 
-typedef struct FFVkExecPool {
+প্রকারলেখ কাঠামো FFVkExecPool {
     FFVkExecContext *contexts;
     atomic_uint_least64_t idx;
 
     VkCommandPool *cmd_buf_pools;
-    VkCommandBuffer *cmd_bufs;
-    int pool_size;
+    Vk_Command_বাফার *cmd_bufs;
+    পূর্ণসংখ্যা pool_আকার;
 
     VkQueryPool query_pool;
-    void *query_data;
-    int query_results;
-    int query_statuses;
-    int query_64bit;
-    int query_status_stride;
-    int nb_queries;
-    size_t qd_size;
+    শূন্য *query_তথ্য;
+    পূর্ণসংখ্যা query_results;
+    পূর্ণসংখ্যা query_statuses;
+    পূর্ণসংখ্যা query_64bit;
+    পূর্ণসংখ্যা query_status_stride;
+    পূর্ণসংখ্যা nb_queries;
+    size_t qd_আকার;
 
     /* Registered shaders' data */
-    FFVulkanShaderData reg_shd[FF_VK_MAX_SHADERS];
-    int nb_reg_shd;
+    FFVulkan_Shader_তথ্য reg_shd[FF_VK_MAX_SHADERS];
+    পূর্ণসংখ্যা nb_reg_shd;
 } FFVkExecPool;
 
-typedef struct FFVulkanContext {
-    const AVClass *class;
-    void *log_parent;
+প্রকারলেখ কাঠামো FFVulkanContext {
+    ধ্রুবক AVClass *class;
+    শূন্য *log_parent;
 
     FFVulkanFunctions     vkfn;
     FFVulkanExtensions    extensions;
@@ -300,21 +300,21 @@ typedef struct FFVulkanContext {
     VkPhysicalDeviceDriverProperties driver_props;
     VkPhysicalDeviceMemoryProperties mprops;
     VkPhysicalDeviceExternalMemoryHostPropertiesEXT hprops;
-    VkPhysicalDeviceDescriptorBufferPropertiesEXT desc_buf_props;
-    VkPhysicalDeviceSubgroupSizeControlProperties subgroup_props;
+    Vk_Physical_Device_Descriptor_বাফার_Properties_EXT desc_buf_props;
+    Vk_Physical_Device_Subgroup_আকার_Control_Properties subgroup_props;
     VkPhysicalDeviceCooperativeMatrixPropertiesKHR coop_matrix_props;
-    VkPhysicalDevicePushDescriptorPropertiesKHR push_desc_props;
+    Vk_Physical_Device_ঠেলো_Descriptor_Properties_KHR ঠেলো_desc_props;
     VkPhysicalDeviceOpticalFlowPropertiesNV optical_flow_props;
 #ifdef VK_EXT_shader_long_vector
     VkPhysicalDeviceShaderLongVectorPropertiesEXT long_vector_props;
 #endif
-    VkQueueFamilyQueryResultStatusPropertiesKHR *query_props;
+    Vk_Queue_Family_Query_ফলাফল_Status_Properties_KHR *query_props;
     VkQueueFamilyVideoPropertiesKHR *video_props;
 #ifdef VK_KHR_maintenance9
     VkQueueFamilyOwnershipTransferPropertiesKHR *ownership_props;
 #endif
     VkQueueFamilyProperties2 *qf_props;
-    int tot_nb_qfs;
+    পূর্ণসংখ্যা tot_nb_qfs;
     VkPhysicalDeviceHostImageCopyPropertiesEXT host_image_props;
     VkImageLayout *host_image_copy_layouts;
 
@@ -339,76 +339,76 @@ typedef struct FFVulkanContext {
     AVHWDeviceContext     *device;
     AVVulkanDeviceContext *hwctx;
 
-    AVBufferRef           *input_frames_ref;
+    AVBufferRef           *প্রবেশ_frames_ref;
     AVBufferRef           *frames_ref;
     AVHWFramesContext     *frames;
     AVVulkanFramesContext *hwfc;
 
     uint32_t               qfs[64];
-    int                    nb_qfs;
+    পূর্ণসংখ্যা                    nb_qfs;
 
     /* Properties */
-    int                 output_width;
-    int                output_height;
-    enum AVPixelFormat output_format;
-    enum AVPixelFormat  input_format;
+    পূর্ণসংখ্যা                 output_width;
+    পূর্ণসংখ্যা                output_height;
+    গণনা AVPixelFormat output_format;
+    গণনা AVPixelFormat  প্রবেশ_format;
 } FFVulkanContext;
 
-static inline int ff_vk_count_images(AVVkFrame *f)
+স্থির অন্তঃরেখ পূর্ণসংখ্যা ff_vk_গুনতি_images(AVVkFrame *f)
 {
-    int cnt = 0;
-    while (cnt < FF_ARRAY_ELEMS(f->img) && f->img[cnt])
+    পূর্ণসংখ্যা cnt = 0;
+    যখন (cnt < FF_ARRAY_ELEMS(f->img) && f->img[cnt])
         cnt++;
 
-    return cnt;
+    ফেরত cnt;
 }
 
-static inline const void *ff_vk_find_struct(const void *chain, VkStructureType stype)
+স্থির অন্তঃরেখ ধ্রুবক শূন্য *ff_vk_find_struct(ধ্রুবক শূন্য *chain, VkStructureType stype)
 {
-    const VkBaseInStructure *in = chain;
-    while (in) {
-        if (in->sType == stype)
-            return in;
+    ধ্রুবক VkBaseInStructure *in = chain;
+    যখন (in) {
+        যদি (in->sType == stype)
+            ফেরত in;
 
-        in = in->pNext;
+        in = in->p_পরবর্তী;
     }
 
-    return NULL;
+    ফেরত ফাঁকা;
 }
 
-static inline void ff_vk_link_struct(void *chain, const void *in)
+স্থির অন্তঃরেখ শূন্য ff_vk_link_struct(শূন্য *chain, ধ্রুবক শূন্য *in)
 {
     VkBaseOutStructure *out = chain;
-    while (out->pNext)
-        out = out->pNext;
+    যখন (out->p_পরবর্তী)
+        out = out->p_পরবর্তী;
 
-    out->pNext = (void *)in;
+    out->p_পরবর্তী = (শূন্য *)in;
 }
 
 #define FF_VK_STRUCT_EXT(CTX, BASE, STRUCT_P, EXT_FLAG, TYPE) \
-    do {                                                      \
-        if ((EXT_FLAG == FF_VK_EXT_NO_FLAG) ||                \
+    করো {                                                      \
+        যদি ((EXT_FLAG == FF_VK_EXT_NO_FLAG) ||                \
             ((CTX)->extensions & EXT_FLAG)) {                 \
             (STRUCT_P)->sType = TYPE;                         \
             ff_vk_link_struct(BASE, STRUCT_P);                \
         }                                                     \
-    } while (0)
+    } যখন (0)
 
 /* Identity mapping - r = r, b = b, g = g, a = a */
-extern const VkComponentMapping ff_comp_identity_map;
+বাহ্যিক ধ্রুবক VkComponentMapping ff_comp_identity_map;
 
 /**
  * Initializes the AVClass, in case this context is not used
  * as the main user's context.
  * May use either a frames context reference, or a device context reference.
  */
-int ff_vk_init(FFVulkanContext *s, void *log_parent,
+পূর্ণসংখ্যা ff_vk_init(FFVulkanContext *s, শূন্য *log_parent,
                AVBufferRef *device_ref, AVBufferRef *frames_ref);
 
 /**
  * Converts Vulkan return values to strings
  */
-const char *ff_vk_ret2str(VkResult res);
+ধ্রুবক অক্ষর *ff_vk_ret2str(Vk_ফলাফল res);
 
 /**
  * Map between usage and features.
@@ -419,23 +419,23 @@ VkFormatFeatureFlagBits2 ff_vk_map_usage_to_feats(VkImageUsageFlags usage);
 /**
  * Returns 1 if pixfmt is a usable RGB format.
  */
-int ff_vk_mt_is_np_rgb(enum AVPixelFormat pix_fmt);
+পূর্ণসংখ্যা ff_vk_mt_is_np_rgb(গণনা AVPixelFormat pix_fmt);
 
 /**
  * Since storage images may not be swizzled, we have to do this in the
  * shader itself. This fills in a lookup table to do it.
  */
-void ff_vk_set_perm(enum AVPixelFormat pix_fmt, int lut[4], int inv);
+শূন্য ff_vk_set_perm(গণনা AVPixelFormat pix_fmt, পূর্ণসংখ্যা lut[4], পূর্ণসংখ্যা inv);
 
 /**
  * Get the aspect flag for a plane from an image.
  */
-VkImageAspectFlags ff_vk_aspect_flag(AVFrame *f, int p);
+VkImageAspectFlags ff_vk_aspect_flag(AVFrame *f, পূর্ণসংখ্যা p);
 
 /**
  * Returns the format to use for images in shaders.
  */
-enum FFVkShaderRepFormat {
+গণনা FFVkShaderRepFormat {
     /* Native format with no conversion. May require casting. */
     FF_VK_REP_NATIVE = 0,
     /* Float conversion of the native format. */
@@ -445,19 +445,19 @@ enum FFVkShaderRepFormat {
     /* Unsigned integer version of the native format */
     FF_VK_REP_UINT,
 };
-const char *ff_vk_shader_rep_fmt(enum AVPixelFormat pix_fmt,
-                                 enum FFVkShaderRepFormat rep_fmt);
+ধ্রুবক অক্ষর *ff_vk_shader_rep_fmt(গণনা AVPixelFormat pix_fmt,
+                                 গণনা FFVkShaderRepFormat rep_fmt);
 
 /**
  * Returns the view format for the given representation of fmt, or
  * VK_FORMAT_UNDEFINED if there is none.
  */
-VkFormat ff_vk_map_fmt_to_rep(VkFormat fmt, enum FFVkShaderRepFormat rep_fmt);
+VkFormat ff_vk_map_fmt_to_rep(VkFormat fmt, গণনা FFVkShaderRepFormat rep_fmt);
 
 /**
  * Loads props/mprops/driver_props
  */
-int ff_vk_load_props(FFVulkanContext *s);
+পূর্ণসংখ্যা ff_vk_load_props(FFVulkanContext *s);
 
 /**
  * Chooses an appropriate QF.
@@ -473,11 +473,11 @@ AVVulkanDeviceQueueFamily *ff_vk_qf_find(FFVulkanContext *s,
  * ff_vk_exec_pool_init_desc() MUST be called if ff_vk_exec_descriptor_set_add()
  * has been called.
  */
-int ff_vk_exec_pool_init(FFVulkanContext *s, AVVulkanDeviceQueueFamily *qf,
-                         FFVkExecPool *pool, int nb_contexts,
-                         int nb_queries, VkQueryType query_type, int query_64bit,
-                         const void *query_create_pnext);
-void ff_vk_exec_pool_free(FFVulkanContext *s, FFVkExecPool *pool);
+পূর্ণসংখ্যা ff_vk_exec_pool_init(FFVulkanContext *s, AVVulkanDeviceQueueFamily *qf,
+                         FFVkExecPool *pool, পূর্ণসংখ্যা nb_contexts,
+                         পূর্ণসংখ্যা nb_queries, VkQueryType query_type, পূর্ণসংখ্যা query_64bit,
+                         ধ্রুবক শূন্য *query_create_pnext);
+শূন্য ff_vk_exec_pool_free(FFVulkanContext *s, FFVkExecPool *pool);
 
 /**
  * Retrieve an execution pool. Threadsafe.
@@ -489,17 +489,17 @@ FFVkExecContext *ff_vk_exec_get(FFVulkanContext *s, FFVkExecPool *pool);
  * 64_BIT and WITH_STATUS flags are ignored as 64_BIT must be specified via
  * query_64bit in ff_vk_exec_pool_init() and WITH_STATUS is always enabled.
  */
-VkResult ff_vk_exec_get_query(FFVulkanContext *s, FFVkExecContext *e,
-                              void **data, VkQueryResultFlagBits flags);
+Vk_ফলাফল ff_vk_exec_get_query(FFVulkanContext *s, FFVkExecContext *e,
+                              শূন্য **তথ্য, Vk_Query_ফলাফল_Flag_Bits flags);
 
 /**
  * Start/submit/wait an execution.
  * ff_vk_exec_start() always waits on a submission, so using ff_vk_exec_wait()
  * is not necessary (unless using it is just better).
  */
-int ff_vk_exec_start(FFVulkanContext *s, FFVkExecContext *e);
-int ff_vk_exec_submit(FFVulkanContext *s, FFVkExecContext *e);
-void ff_vk_exec_wait(FFVulkanContext *s, FFVkExecContext *e);
+পূর্ণসংখ্যা ff_vk_exec_start(FFVulkanContext *s, FFVkExecContext *e);
+পূর্ণসংখ্যা ff_vk_exec_submit(FFVulkanContext *s, FFVkExecContext *e);
+শূন্য ff_vk_exec_wait(FFVulkanContext *s, FFVkExecContext *e);
 
 /**
  * Execution dependency management.
@@ -516,102 +516,102 @@ void ff_vk_exec_wait(FFVulkanContext *s, FFVkExecContext *e);
 
 /* Takes a new reference to an AVRefStruct-managed object, held until the
  * execution's dependencies are released. */
-void ff_vk_exec_add_dep_refstruct(FFVulkanContext *s, FFVkExecContext *e,
-                                  void *obj);
+শূন্য ff_vk_exec_add_dep_refstruct(FFVulkanContext *s, FFVkExecContext *e,
+                                  শূন্য *obj);
 
 /* Moves the caller's reference into the execution's dependencies, given a
  * pointer to it; a duplicate of an already-tracked object is released. */
-void ff_vk_exec_move_dep_refstruct(FFVulkanContext *s, FFVkExecContext *e,
-                                   void *obj);
+শূন্য ff_vk_exec_move_dep_refstruct(FFVulkanContext *s, FFVkExecContext *e,
+                                   শূন্য *obj);
 
 /* Takes ownership of a raw Vulkan object, destroyed when the execution's
  * dependencies are released. */
-void ff_vk_exec_add_dep_obj(FFVulkanContext *s, FFVkExecContext *e,
+শূন্য ff_vk_exec_add_dep_obj(FFVulkanContext *s, FFVkExecContext *e,
                             VkObjectType type, uint64_t obj);
 
-void ff_vk_exec_add_dep_wait_sem(FFVulkanContext *s, FFVkExecContext *e,
+শূন্য ff_vk_exec_add_dep_wait_sem(FFVulkanContext *s, FFVkExecContext *e,
                                  VkSemaphore sem, uint64_t val,
                                  VkPipelineStageFlagBits2 stage);
-void ff_vk_exec_add_dep_signal_sem(FFVulkanContext *s, FFVkExecContext *e,
+শূন্য ff_vk_exec_add_dep_signal_sem(FFVulkanContext *s, FFVkExecContext *e,
                                    VkSemaphore sem, uint64_t val,
                                    VkPipelineStageFlagBits2 stage);
-void ff_vk_exec_add_dep_bool_sem(FFVulkanContext *s, FFVkExecContext *e,
-                                 VkSemaphore *sem, int nb,
+শূন্য ff_vk_exec_add_dep_bool_sem(FFVulkanContext *s, FFVkExecContext *e,
+                                 VkSemaphore *sem, পূর্ণসংখ্যা nb,
                                  VkPipelineStageFlagBits2 stage,
-                                 int wait); /* Ownership transferred if !wait */
-int ff_vk_exec_add_dep_frame(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
+                                 পূর্ণসংখ্যা wait); /* Ownership transferred if !wait */
+পূর্ণসংখ্যা ff_vk_exec_add_dep_frame(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
                              VkPipelineStageFlagBits2 wait_stage,
                              VkPipelineStageFlagBits2 signal_stage);
-int ff_vk_exec_add_dep_sw_frame(FFVulkanContext *s, FFVkExecContext *e,
+পূর্ণসংখ্যা ff_vk_exec_add_dep_sw_frame(FFVulkanContext *s, FFVkExecContext *e,
                                 AVFrame *f);
-void ff_vk_exec_update_frame(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
+শূন্য ff_vk_exec_update_frame(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
                              VkImageMemoryBarrier2 *bar, uint32_t *nb_img_bar);
-int ff_vk_exec_mirror_sem_value(FFVulkanContext *s, FFVkExecContext *e,
+পূর্ণসংখ্যা ff_vk_exec_mirror_sem_মান(FFVulkanContext *s, FFVkExecContext *e,
                                 VkSemaphore *dst, uint64_t *dst_val,
                                 AVFrame *f);
-void ff_vk_exec_discard(FFVulkanContext *s, FFVkExecContext *e);
+শূন্য ff_vk_exec_discard(FFVulkanContext *s, FFVkExecContext *e);
 
 /**
  * Create a single imageview for a given plane.
  */
-int ff_vk_create_imageview(FFVulkanContext *s,
+পূর্ণসংখ্যা ff_vk_create_imageview(FFVulkanContext *s,
                            VkImageView *img_view, VkImageAspectFlags *aspect,
-                           AVFrame *f, int plane, enum FFVkShaderRepFormat rep_fmt);
+                           AVFrame *f, পূর্ণসংখ্যা plane, গণনা FFVkShaderRepFormat rep_fmt);
 
 /* Refcounted set of image views; stashes destruction handles to be context-free */
-typedef struct FFVkImageViews {
-    int nb_views;
+প্রকারলেখ কাঠামো FFVkImageViews {
+    পূর্ণসংখ্যা nb_views;
 
     VkDevice dev;
-    const VkAllocationCallbacks *alloc;
+    ধ্রুবক VkAllocationCallbacks *alloc;
     PFN_vkDestroyImageView destroy_image_view;
 
-    VkImageView views[AV_NUM_DATA_POINTERS];
+    VkImageView views[AV_অঙ্ক_তথ্য_POINTERS];
 } FFVkImageViews;
 
 /**
  * Allocate a reference-counted set of image views, zero-initialized for the
  * caller to create.
  */
-FFVkImageViews *ff_vk_imageviews_alloc(FFVulkanContext *s, int nb_views);
+FFVkImageViews *ff_vk_imageviews_alloc(FFVulkanContext *s, পূর্ণসংখ্যা nb_views);
 
 /**
  * Create an imageview and add it as a dependency to an execution.
  */
-int ff_vk_create_imageviews(FFVulkanContext *s, FFVkExecContext *e,
-                            VkImageView views[AV_NUM_DATA_POINTERS],
-                            AVFrame *f, enum FFVkShaderRepFormat rep_fmt);
+পূর্ণসংখ্যা ff_vk_create_imageviews(FFVulkanContext *s, FFVkExecContext *e,
+                            VkImageView views[AV_অঙ্ক_তথ্য_POINTERS],
+                            AVFrame *f, গণনা FFVkShaderRepFormat rep_fmt);
 
 /**
  * Same as ff_vk_create_imageviews(), but with an explicit view format for
  * each plane, which must be compatible with the format of the image.
  */
-int ff_vk_create_imageviews_fmt(FFVulkanContext *s, FFVkExecContext *e,
-                                VkImageView views[AV_NUM_DATA_POINTERS],
+পূর্ণসংখ্যা ff_vk_create_imageviews_fmt(FFVulkanContext *s, FFVkExecContext *e,
+                                VkImageView views[AV_অঙ্ক_তথ্য_POINTERS],
                                 AVFrame *f,
-                                const VkFormat fmts[AV_NUM_DATA_POINTERS]);
+                                ধ্রুবক VkFormat fmts[AV_অঙ্ক_তথ্য_POINTERS]);
 
 #define ff_vk_buf_barrier(dst, vkb, s_stage, s_access, s_access2,              \
                           d_stage, d_access, d_access2, offs, bsz)             \
-    do {                                                                       \
-        dst = (VkBufferMemoryBarrier2) {                                       \
-            .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2,                \
+    করো {                                                                       \
+        dst = (Vk_বাফার_Memory_Barrier2) {                                       \
+            .sType = VK_STRUCTURE_TYPE_বাফার_MEMORY_BARRIER_2,                \
             .srcStageMask = VK_PIPELINE_STAGE_2_ ##s_stage,                    \
             .srcAccessMask = VK_ACCESS_2_ ##s_access |                         \
                              VK_ACCESS_2_ ##s_access2,                         \
             .dstStageMask = VK_PIPELINE_STAGE_2_ ##d_stage,                    \
             .dstAccessMask = VK_ACCESS_2_ ##d_access |                         \
                              VK_ACCESS_2_ ##d_access2,                         \
-            .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,                    \
-            .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,                    \
-            .buffer = vkb->buf,                                                \
+            .src_Queue_Family_সূচক = VK_QUEUE_FAMILY_IGNORED,                    \
+            .dst_Queue_Family_সূচক = VK_QUEUE_FAMILY_IGNORED,                    \
+            .বাফার = vkb->buf,                                                \
             .offset = offs,                                                    \
-            .size = bsz                                                        \
+            .আকার_2 = bsz                                                        \
         };                                                                     \
-    } while(0)
+    } যখন(0)
 
-void ff_vk_frame_barrier(FFVulkanContext *s, FFVkExecContext *e,
-                         AVFrame *pic, VkImageMemoryBarrier2 *bar, int *nb_bar,
+শূন্য ff_vk_frame_barrier(FFVulkanContext *s, FFVkExecContext *e,
+                         AVFrame *pic, VkImageMemoryBarrier2 *bar, পূর্ণসংখ্যা *nb_bar,
                          VkPipelineStageFlags2 src_stage,
                          VkPipelineStageFlags2 dst_stage,
                          VkAccessFlagBits2     new_access,
@@ -625,143 +625,143 @@ void ff_vk_frame_barrier(FFVulkanContext *s, FFVkExecContext *e,
  * Create a standalone internal-use image: exclusive sharing, dedicated
  * memory. Not for interop or mapping.
  */
-int ff_vk_image_create(FFVulkanContext *s, VkImage *img, VkDeviceMemory *mem,
-                       int width, int height, VkFormat format, int nb_layers,
+পূর্ণসংখ্যা ff_vk_image_create(FFVulkanContext *s, VkImage *img, VkDeviceMemory *mem,
+                       পূর্ণসংখ্যা width, পূর্ণসংখ্যা height, VkFormat format, পূর্ণসংখ্যা nb_layers,
                        VkImageTiling tiling, VkImageUsageFlags usage,
-                       VkImageCreateFlags flags, void *create_pnext);
+                       VkImageCreateFlags flags, শূন্য *create_pnext);
 
 /**
  * Free an image created by ff_vk_image_create(); all GPU use must have
  * completed.
  */
-void ff_vk_image_free(FFVulkanContext *s, VkImage *img, VkDeviceMemory *mem);
+শূন্য ff_vk_image_free(FFVulkanContext *s, VkImage *img, VkDeviceMemory *mem);
 
-int ff_vk_alloc_mem(FFVulkanContext *s, VkMemoryRequirements *req,
-                    VkMemoryPropertyFlagBits req_flags, void *alloc_extension,
+পূর্ণসংখ্যা ff_vk_alloc_mem(FFVulkanContext *s, VkMemoryRequirements *req,
+                    VkMemoryPropertyFlagBits req_flags, শূন্য *alloc_extension,
                     VkMemoryPropertyFlagBits *mem_flags, VkDeviceMemory *mem);
-int ff_vk_create_buf(FFVulkanContext *s, FFVkBuffer *buf, size_t size,
-                     void *pNext, void *alloc_pNext,
-                     VkBufferUsageFlags usage, VkMemoryPropertyFlagBits flags);
+পূর্ণসংখ্যা ff_vk_create_buf(FFVulkanContext *s, FFVk_বাফার *buf, size_t আকার_2,
+                     শূন্য *p_পরবর্তী, শূন্য *alloc_p_পরবর্তী,
+                     Vk_বাফার_Usage_Flags usage, VkMemoryPropertyFlagBits flags);
 
 /**
  * Flush or invalidate a single buffer, with a given size and offset.
  */
-int ff_vk_flush_buffer(FFVulkanContext *s, FFVkBuffer *buf,
-                       VkDeviceSize offset, VkDeviceSize mem_size,
-                       int flush);
+পূর্ণসংখ্যা ff_vk_flush_বাফার(FFVulkanContext *s, FFVk_বাফার *buf,
+                       Vk_Device_আকার offset, Vk_Device_আকার mem_আকার,
+                       পূর্ণসংখ্যা flush);
 
 /**
  * Buffer management code.
  */
-int ff_vk_map_buffers(FFVulkanContext *s, FFVkBuffer **buf, uint8_t *mem[],
-                      int nb_buffers, int invalidate);
-int ff_vk_unmap_buffers(FFVulkanContext *s, FFVkBuffer **buf, int nb_buffers,
-                        int flush);
+পূর্ণসংখ্যা ff_vk_map_buffers(FFVulkanContext *s, FFVk_বাফার **buf, uint8_t *mem[],
+                      পূর্ণসংখ্যা nb_buffers, পূর্ণসংখ্যা invalidate);
+পূর্ণসংখ্যা ff_vk_unmap_buffers(FFVulkanContext *s, FFVk_বাফার **buf, পূর্ণসংখ্যা nb_buffers,
+                        পূর্ণসংখ্যা flush);
 
-static inline int ff_vk_map_buffer(FFVulkanContext *s, FFVkBuffer *buf, uint8_t **mem,
-                                   int invalidate)
+স্থির অন্তঃরেখ পূর্ণসংখ্যা ff_vk_map_বাফার(FFVulkanContext *s, FFVk_বাফার *buf, uint8_t **mem,
+                                   পূর্ণসংখ্যা invalidate)
 {
-    return ff_vk_map_buffers(s, (FFVkBuffer *[]){ buf }, mem,
+    ফেরত ff_vk_map_buffers(s, (FFVk_বাফার *[]){ buf }, mem,
                              1, invalidate);
 }
 
-static inline int ff_vk_unmap_buffer(FFVulkanContext *s, FFVkBuffer *buf, int flush)
+স্থির অন্তঃরেখ পূর্ণসংখ্যা ff_vk_unmap_বাফার(FFVulkanContext *s, FFVk_বাফার *buf, পূর্ণসংখ্যা flush)
 {
-    return ff_vk_unmap_buffers(s, (FFVkBuffer *[]){ buf }, 1, flush);
+    ফেরত ff_vk_unmap_buffers(s, (FFVk_বাফার *[]){ buf }, 1, flush);
 }
 
-void ff_vk_free_buf(FFVulkanContext *s, FFVkBuffer *buf);
+শূন্য ff_vk_free_buf(FFVulkanContext *s, FFVk_বাফার *buf);
 
 /** Initialize a pool and create AVBufferRefs containing FFVkBuffer.
  * Threadsafe to use. Buffers are automatically mapped on creation if
  * VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT is set in mem_props. Users should
  * synchronize access themselvesd. Mainly meant for device-local buffers. */
-int ff_vk_get_pooled_buffer(FFVulkanContext *ctx, AVRefStructPool **buf_pool,
-                            FFVkBuffer **buf, VkBufferUsageFlags usage,
-                            void *create_pNext, size_t size,
+পূর্ণসংখ্যা ff_vk_get_pooled_বাফার(FFVulkanContext *ctx, AVRefStructPool **buf_pool,
+                            FFVk_বাফার **buf, Vk_বাফার_Usage_Flags usage,
+                            শূন্য *create_p_পরবর্তী, size_t আকার_2,
                             VkMemoryPropertyFlagBits mem_props);
 
 /** Maps a system RAM buffer into a Vulkan buffer.
  * References the source buffer. Imports size bytes starting at src_data,
  * rounded up to the host-pointer import alignment and clamped to the end
  * of src_buf. */
-int ff_vk_host_map_buffer(FFVulkanContext *s, FFVkBuffer **dst,
-                          uint8_t *src_data, VkDeviceSize size,
-                          const AVBufferRef *src_buf,
-                          VkBufferUsageFlags usage);
+পূর্ণসংখ্যা ff_vk_host_map_বাফার(FFVulkanContext *s, FFVk_বাফার **dst,
+                          uint8_t *src_তথ্য, Vk_Device_আকার আকার_2,
+                          ধ্রুবক AVBufferRef *src_buf,
+                          Vk_বাফার_Usage_Flags usage);
 
 /**
  * Create a sampler.
  */
-int ff_vk_init_sampler(FFVulkanContext *s, VkSampler *sampler,
-                       int unnorm_coords, VkFilter filt);
+পূর্ণসংখ্যা ff_vk_init_sampler(FFVulkanContext *s, VkSampler *sampler,
+                       পূর্ণসংখ্যা unnorm_coords, VkFilter filt);
 
 /**
  * Initialize a shader object.
  * If spec is non-null, it must have been created with SPEC_LIST_CREATE().
  * The IDs for the workgroup size must be 253, 254, 255.
  */
-int ff_vk_shader_load(FFVulkanShader *shd,
+পূর্ণসংখ্যা ff_vk_shader_load(FFVulkanShader *shd,
                       VkPipelineStageFlags stage, VkSpecializationInfo *spec,
-                      uint32_t wg_size[3], uint32_t required_subgroup_size);
+                      uint32_t wg_আকার[3], uint32_t required_subgroup_আকার);
 
 /**
  * Link a shader into an executable.
  */
-int ff_vk_shader_link(FFVulkanContext *s, FFVulkanShader *shd,
-                      const char *spirv, size_t spirv_len,
-                      const char *entrypoint);
+পূর্ণসংখ্যা ff_vk_shader_link(FFVulkanContext *s, FFVulkanShader *shd,
+                      ধ্রুবক অক্ষর *spirv, size_t spirv_len,
+                      ধ্রুবক অক্ষর *entrypoint);
 
 /**
  * Add/update push constants for execution.
  */
-int ff_vk_shader_add_push_const(FFVulkanShader *shd, int offset, int size,
+পূর্ণসংখ্যা ff_vk_shader_add_ঠেলো_const(FFVulkanShader *shd, পূর্ণসংখ্যা offset, পূর্ণসংখ্যা আকার_2,
                                 VkShaderStageFlagBits stage);
 
 /**
  * Add descriptor to a shader. Must be called before shader init.
  */
-void ff_vk_shader_add_descriptor_set(FFVulkanContext *s, FFVulkanShader *shd,
-                                     const FFVulkanDescriptorSetBinding *desc, int nb,
-                                     int singular);
+শূন্য ff_vk_shader_add_descriptor_set(FFVulkanContext *s, FFVulkanShader *shd,
+                                     ধ্রুবক FFVulkanDescriptorSetBinding *desc, পূর্ণসংখ্যা nb,
+                                     পূর্ণসংখ্যা singular);
 
 /**
  * Register a shader with an exec pool.
  * Pool may be NULL if all descriptor sets are read-only.
  */
-int ff_vk_shader_register_exec(FFVulkanContext *s, FFVkExecPool *pool,
+পূর্ণসংখ্যা ff_vk_shader_register_exec(FFVulkanContext *s, FFVkExecPool *pool,
                                FFVulkanShader *shd);
 
 /**
  * Bind a shader.
  */
-void ff_vk_exec_bind_shader(FFVulkanContext *s, FFVkExecContext *e,
-                            const FFVulkanShader *shd);
+শূন্য ff_vk_exec_bind_shader(FFVulkanContext *s, FFVkExecContext *e,
+                            ধ্রুবক FFVulkanShader *shd);
 
 /**
  * Update push constant in a shader.
  * Must be called before binding the shader.
  */
-void ff_vk_shader_update_push_const(FFVulkanContext *s, FFVkExecContext *e,
+শূন্য ff_vk_shader_update_ঠেলো_const(FFVulkanContext *s, FFVkExecContext *e,
                                     FFVulkanShader *shd,
                                     VkShaderStageFlagBits stage,
-                                    int offset, size_t size, void *src);
+                                    পূর্ণসংখ্যা offset, size_t আকার_2, শূন্য *src);
 
 /**
  * Update a descriptor in a buffer with a buffer.
  * Must be called before binding the shader.
  */
-int ff_vk_shader_update_desc_buffer(FFVulkanContext *s, FFVkExecContext *e,
+পূর্ণসংখ্যা ff_vk_shader_update_desc_বাফার(FFVulkanContext *s, FFVkExecContext *e,
                                     FFVulkanShader *shd,
-                                    int set, int bind, int elem,
-                                    FFVkBuffer *buf, VkDeviceSize offset, VkDeviceSize len,
+                                    পূর্ণসংখ্যা set, পূর্ণসংখ্যা bind, পূর্ণসংখ্যা elem,
+                                    FFVk_বাফার *buf, Vk_Device_আকার offset, Vk_Device_আকার len,
                                     VkFormat fmt);
 
 /**
  * Sets an image descriptor for specified shader and binding.
  */
-int ff_vk_shader_update_img(FFVulkanContext *s, FFVkExecContext *e,
-                            FFVulkanShader *shd, int set, int bind, int offs,
+পূর্ণসংখ্যা ff_vk_shader_update_img(FFVulkanContext *s, FFVkExecContext *e,
+                            FFVulkanShader *shd, পূর্ণসংখ্যা set, পূর্ণসংখ্যা bind, পূর্ণসংখ্যা offs,
                             VkImageView view, VkImageLayout layout,
                             VkSampler sampler);
 
@@ -769,19 +769,19 @@ int ff_vk_shader_update_img(FFVulkanContext *s, FFVkExecContext *e,
  * Update a descriptor in a buffer with an image array..
  * Must be called before binding the shader.
  */
-void ff_vk_shader_update_img_array(FFVulkanContext *s, FFVkExecContext *e,
+শূন্য ff_vk_shader_update_img_array(FFVulkanContext *s, FFVkExecContext *e,
                                    FFVulkanShader *shd, AVFrame *f,
-                                   VkImageView *views, int set, int binding,
+                                   VkImageView *views, পূর্ণসংখ্যা set, পূর্ণসংখ্যা binding,
                                    VkImageLayout layout, VkSampler sampler);
 
 /**
  * Free a shader.
  */
-void ff_vk_shader_free(FFVulkanContext *s, FFVulkanShader *shd);
+শূন্য ff_vk_shader_free(FFVulkanContext *s, FFVulkanShader *shd);
 
 /**
  * Frees main context.
  */
-void ff_vk_uninit(FFVulkanContext *s);
+শূন্য ff_vk_uninit(FFVulkanContext *s);
 
 #endif /* AVUTIL_VULKAN_H */

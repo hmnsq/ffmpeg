@@ -18,58 +18,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#অন্তর্ভাব <string.h>
 
-#include "dovi_meta.h"
-#include "mem.h"
+#অন্তর্ভাব "dovi_meta.h"
+#অন্তর্ভাব "mem.h"
 
-AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size)
+AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *আকার_2)
 {
     AVDOVIDecoderConfigurationRecord *dovi =
-        av_mallocz(sizeof(AVDOVIDecoderConfigurationRecord));
+        av_mallocz(আকার(AVDOVIDecoderConfigurationRecord));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    যদি (আকার_2)
+        *আকার_2 = dovi ? আকার(*dovi) : 0;
 
-    return dovi;
+    ফেরত dovi;
 }
 
-typedef struct AVDOVIMetadataInternal {
+প্রকারলেখ কাঠামো AVDOVIMetadataInternal {
     AVDOVIMetadata metadata;
-    AVDOVIRpuDataHeader header;
+    AVDOVIRpu_তথ্য_Header header;
     AVDOVIDataMapping mapping;
     AVDOVIColorMetadata color;
-    AVDOVIDmData ext_blocks[AV_DOVI_MAX_EXT_BLOCKS];
+    AVDOVIDm_তথ্য ext_blocks[AV_DOVI_MAX_EXT_BLOCKS];
 } AVDOVIMetadataInternal;
 
-AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
+AVDOVIMetadata *av_dovi_metadata_alloc(size_t *আকার_2)
 {
-    AVDOVIMetadataInternal *dovi = av_mallocz(sizeof(AVDOVIMetadataInternal));
+    AVDOVIMetadataInternal *dovi = av_mallocz(আকার(AVDOVIMetadataInternal));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    যদি (আকার_2)
+        *আকার_2 = dovi ? আকার(*dovi) : 0;
 
-    if (!dovi)
-        return NULL;
+    যদি (!dovi)
+        ফেরত ফাঁকা;
 
-    dovi->metadata = (struct AVDOVIMetadata) {
+    dovi->metadata = (কাঠামো AVDOVIMetadata) {
         .header_offset      = offsetof(AVDOVIMetadataInternal, header),
         .mapping_offset     = offsetof(AVDOVIMetadataInternal, mapping),
         .color_offset       = offsetof(AVDOVIMetadataInternal, color),
         .ext_block_offset   = offsetof(AVDOVIMetadataInternal, ext_blocks),
-        .ext_block_size     = sizeof(AVDOVIDmData),
+        .ext_block_আকার     = আকার(AVDOVIDm_তথ্য),
     };
 
-    return &dovi->metadata;
+    ফেরত &dovi->metadata;
 }
 
-AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level)
+AVDOVIDm_তথ্য *av_dovi_find_level(ধ্রুবক AVDOVIMetadata *তথ্য, uint8_t level)
 {
-    for (int i = 0; i < data->num_ext_blocks; i++) {
-        AVDOVIDmData *ext = av_dovi_get_ext(data, i);
-        if (ext->level == level)
-            return ext;
+    জন্য (পূর্ণসংখ্যা i = 0; i < তথ্য->অঙ্ক_ext_blocks; i++) {
+        AVDOVIDm_তথ্য *ext = av_dovi_get_ext(তথ্য, i);
+        যদি (ext->level == level)
+            ফেরত ext;
     }
 
-    return NULL;
+    ফেরত ফাঁকা;
 }

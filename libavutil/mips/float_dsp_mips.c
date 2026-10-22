@@ -51,30 +51,30 @@
  * Reference: libavutil/float_dsp.c
  */
 
-#include "config.h"
-#include "libavutil/float_dsp.h"
-#include "libavutil/mips/asmdefs.h"
+#অন্তর্ভাব "config.h"
+#অন্তর্ভাব "libavutil/float_dsp.h"
+#অন্তর্ভাব "libavutil/mips/asmdefs.h"
 
-#if HAVE_INLINE_ASM && HAVE_MIPSFPU
-#if !HAVE_MIPS32R6 && !HAVE_MIPS64R6
-static void vector_fmul_mips(float *dst, const float *src0, const float *src1,
-                             int len)
+#যদি HAVE_INLINE_ASM && HAVE_MIPSFPU
+#যদি !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+স্থির শূন্য vector_fmul_mips(দশমিক *dst, ধ্রুবক দশমিক *src0, ধ্রুবক দশমিক *src1,
+                             পূর্ণসংখ্যা len)
 {
-    int i;
+    পূর্ণসংখ্যা i;
 
-    if (len & 3) {
-        for (i = 0; i < len; i++)
+    যদি (len & 3) {
+        জন্য (i = 0; i < len; i++)
             dst[i] = src0[i] * src1[i];
-    } else {
-        float *d     = (float *)dst;
-        float *d_end = d + len;
-        float *s0    = (float *)src0;
-        float *s1    = (float *)src1;
+    } অন্যথা {
+        দশমিক *d     = (দশমিক *)dst;
+        দশমিক *d_end = d + len;
+        দশমিক *s0    = (দশমিক *)src0;
+        দশমিক *s1    = (দশমিক *)src1;
 
-        float src0_0, src0_1, src0_2, src0_3;
-        float src1_0, src1_1, src1_2, src1_3;
+        দশমিক src0_0, src0_1, src0_2, src0_3;
+        দশমিক src1_0, src1_1, src1_2, src1_3;
 
-        __asm__ volatile (
+        __asm__ অস্থির (
             "1:                                         \n\t"
             "lwc1   %[src0_0],  0(%[s0])                \n\t"
             "lwc1   %[src1_0],  0(%[s1])                \n\t"
@@ -108,15 +108,15 @@ static void vector_fmul_mips(float *dst, const float *src0, const float *src1,
     }
 }
 
-static void vector_fmul_scalar_mips(float *dst, const float *src, float mul,
-                                 int len)
+স্থির শূন্য vector_fmul_scalar_mips(দশমিক *dst, ধ্রুবক দশমিক *src, দশমিক mul,
+                                 পূর্ণসংখ্যা len)
 {
-    float temp0, temp1, temp2, temp3;
-    float *local_src = (float*)src;
-    float *end = local_src + len;
+    দশমিক temp0, temp1, temp2, temp3;
+    দশমিক *local_src = (দশমিক*)src;
+    দশমিক *end = local_src + len;
 
     /* loop unrolled 4 times */
-    __asm__ volatile(
+    __asm__ অস্থির(
         ".set    push                             \n\t"
         ".set    noreorder                        \n\t"
     "1:                                           \n\t"
@@ -145,25 +145,25 @@ static void vector_fmul_scalar_mips(float *dst, const float *src, float mul,
     );
 }
 
-static void vector_fmul_window_mips(float *dst, const float *src0,
-                                    const float *src1, const float *win, int len)
+স্থির শূন্য vector_fmul_window_mips(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                                    ধ্রুবক দশমিক *src1, ধ্রুবক দশমিক *win, পূর্ণসংখ্যা len)
 {
-    float * dst_j, *win_j, *src0_i, *src1_j, *dst_i, *win_i;
-    float temp, temp1, temp2, temp3;
-    float s0, s01, s1, s11;
-    float wi, wi1, wi2, wi3;
-    float wj, wj1, wj2, wj3;
-    const float * lp_end = win + len;
+    দশমিক * dst_j, *win_j, *src0_i, *src1_j, *dst_i, *win_i;
+    দশমিক অস্থায়ী, temp1, temp2, temp3;
+    দশমিক s0, s01, s1, s11;
+    দশমিক wi, wi1, wi2, wi3;
+    দশমিক wj, wj1, wj2, wj3;
+    ধ্রুবক দশমিক * lp_end = win + len;
 
-    win_i  = (float *)win;
-    win_j  = (float *)(win + 2 * len -1);
-    src1_j = (float *)(src1 + len - 1);
-    src0_i = (float *)src0;
-    dst_i  = (float *)dst;
-    dst_j  = (float *)(dst + 2 * len -1);
+    win_i  = (দশমিক *)win;
+    win_j  = (দশমিক *)(win + 2 * len -1);
+    src1_j = (দশমিক *)(src1 + len - 1);
+    src0_i = (দশমিক *)src0;
+    dst_i  = (দশমিক *)dst;
+    dst_j  = (দশমিক *)(dst + 2 * len -1);
 
     /* loop unrolled 4 times */
-    __asm__ volatile (
+    __asm__ অস্থির (
         "1:"
         "lwc1    %[s1],     0(%[src1_j])                \n\t"
         "lwc1    %[wi],     0(%[win_i])                 \n\t"
@@ -212,7 +212,7 @@ static void vector_fmul_window_mips(float *dst, const float *src0,
         PTR_ADDIU "%[dst_i],16                          \n\t"
         PTR_ADDIU "%[dst_j],-16                         \n\t"
         "bne     %[win_i], %[lp_end], 1b                \n\t"
-        : [temp]"=&f"(temp), [temp1]"=&f"(temp1), [temp2]"=&f"(temp2),
+        : [অস্থায়ী]"=&f"(অস্থায়ী), [temp1]"=&f"(temp1), [temp2]"=&f"(temp2),
           [temp3]"=&f"(temp3), [src0_i]"+r"(src0_i), [win_i]"+r"(win_i),
           [src1_j]"+r"(src1_j), [win_j]"+r"(win_j), [dst_i]"+r"(dst_i),
           [dst_j]"+r"(dst_j), [s0] "=&f"(s0), [s01]"=&f"(s01), [s1] "=&f"(s1),
@@ -224,17 +224,17 @@ static void vector_fmul_window_mips(float *dst, const float *src0,
     );
 }
 
-static void butterflies_float_mips(float *restrict v1, float *restrict v2,
-                                int len)
+স্থির শূন্য butterflies_float_mips(দশমিক *restrict v1, দশমিক *restrict v2,
+                                পূর্ণসংখ্যা len)
 {
-    float temp0, temp1, temp2, temp3, temp4;
-    float temp5, temp6, temp7, temp8, temp9;
-    float temp10, temp11, temp12, temp13, temp14, temp15;
-    int pom;
+    দশমিক temp0, temp1, temp2, temp3, temp4;
+    দশমিক temp5, temp6, temp7, temp8, temp9;
+    দশমিক temp10, temp11, temp12, temp13, temp14, temp15;
+    পূর্ণসংখ্যা pom;
     pom = (len >> 2)-1;
 
     /* loop unrolled 4 times */
-    __asm__ volatile (
+    __asm__ অস্থির (
         "lwc1     %[temp0],    0(%[v1])                 \n\t"
         "lwc1     %[temp1],    4(%[v1])                 \n\t"
         "lwc1     %[temp2],    8(%[v1])                 \n\t"
@@ -302,15 +302,15 @@ static void butterflies_float_mips(float *restrict v1, float *restrict v2,
     );
 }
 
-static void vector_fmul_reverse_mips(float *dst, const float *src0, const float *src1, int len){
-    int i;
-    float temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;
+স্থির শূন্য vector_fmul_reverse_mips(দশমিক *dst, ধ্রুবক দশমিক *src0, ধ্রুবক দশমিক *src1, পূর্ণসংখ্যা len){
+    পূর্ণসংখ্যা i;
+    দশমিক temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;
     src1 += len-1;
 
-    for(i=0; i<(len>>2); i++)
+    জন্য(i=0; i<(len>>2); i++)
     {
         /* loop unrolled 4 times */
-        __asm__ volatile(
+        __asm__ অস্থির(
             "lwc1      %[temp0],     0(%[src0])                 \n\t"
             "lwc1      %[temp1],     0(%[src1])                 \n\t"
             "lwc1      %[temp2],     4(%[src0])                 \n\t"
@@ -343,9 +343,9 @@ static void vector_fmul_reverse_mips(float *dst, const float *src0, const float 
 #endif /* !HAVE_MIPS32R6 && !HAVE_MIPS64R6 */
 #endif /* HAVE_INLINE_ASM && HAVE_MIPSFPU */
 
-void ff_float_dsp_init_mips(AVFloatDSPContext *fdsp) {
-#if HAVE_INLINE_ASM && HAVE_MIPSFPU
-#if !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+শূন্য ff_float_dsp_init_mips(AVFloatDSPContext *fdsp) {
+#যদি HAVE_INLINE_ASM && HAVE_MIPSFPU
+#যদি !HAVE_MIPS32R6 && !HAVE_MIPS64R6
     fdsp->vector_fmul = vector_fmul_mips;
     fdsp->vector_fmul_scalar  = vector_fmul_scalar_mips;
     fdsp->vector_fmul_window = vector_fmul_window_mips;

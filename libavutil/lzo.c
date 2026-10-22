@@ -19,42 +19,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <string.h>
+#অন্তর্ভাব <limits.h>
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব <string.h>
 
-#include "avassert.h"
-#include "intreadwrite.h"
-#include "lzo.h"
-#include "macros.h"
-#include "mem.h"
+#অন্তর্ভাব "avassert.h"
+#অন্তর্ভাব "intreadwrite.h"
+#অন্তর্ভাব "lzo.h"
+#অন্তর্ভাব "macros.h"
+#অন্তর্ভাব "mem.h"
 
 /// Define if we may write up to 12 bytes beyond the output buffer.
 #define OUTBUF_PADDED 1
 /// Define if we may read up to 8 bytes beyond the input buffer.
 #define INBUF_PADDED 1
 
-typedef struct LZOContext {
-    const uint8_t *in, *in_end;
+প্রকারলেখ কাঠামো LZOContext {
+    ধ্রুবক uint8_t *in, *in_end;
     uint8_t *out_start, *out, *out_end;
-    int error;
+    পূর্ণসংখ্যা error;
 } LZOContext;
 
 /**
  * @brief Reads one byte from the input buffer, avoiding an overrun.
  * @return byte read
  */
-static inline int get_byte(LZOContext *c)
+স্থির অন্তঃরেখ পূর্ণসংখ্যা get_byte(LZOContext *c)
 {
-    if (c->in < c->in_end)
-        return *c->in++;
-    c->error |= AV_LZO_INPUT_DEPLETED;
-    return 1;
+    যদি (c->in < c->in_end)
+        ফেরত *c->in++;
+    c->error |= AV_LZO_প্রবেশ_DEPLETED;
+    ফেরত 1;
 }
 
 #ifdef INBUF_PADDED
 #define GETB(c) (*(c).in++)
-#else
+#অন্যথা
 #define GETB(c) get_byte(&(c))
 #endif
 
@@ -64,45 +64,45 @@ static inline int get_byte(LZOContext *c)
  * @param mask bits used from x
  * @return decoded length value
  */
-static inline int get_len(LZOContext *c, int x, int mask)
+স্থির অন্তঃরেখ পূর্ণসংখ্যা get_len(LZOContext *c, পূর্ণসংখ্যা x, পূর্ণসংখ্যা mask)
 {
-    int cnt = x & mask;
-    if (!cnt) {
-        while (!(x = get_byte(c))) {
-            if (cnt >= INT_MAX - 1000) {
+    পূর্ণসংখ্যা cnt = x & mask;
+    যদি (!cnt) {
+        যখন (!(x = get_byte(c))) {
+            যদি (cnt >= INT_MAX - 1000) {
                 c->error |= AV_LZO_ERROR;
-                break;
+                বিরতি;
             }
             cnt += 255;
         }
         cnt += mask + x;
     }
-    return cnt;
+    ফেরত cnt;
 }
 
 /**
  * @brief Copies bytes from input to output buffer with checking.
  * @param cnt number of bytes to copy, must be >= 0
  */
-static inline void copy(LZOContext *c, int cnt)
+স্থির অন্তঃরেখ শূন্য copy(LZOContext *c, পূর্ণসংখ্যা cnt)
 {
-    register const uint8_t *src = c->in;
-    register uint8_t *dst       = c->out;
+    নিবন্ধ ধ্রুবক uint8_t *src = c->in;
+    নিবন্ধ uint8_t *dst       = c->out;
     av_assert0(cnt >= 0);
-    if (cnt > c->in_end - src) {
+    যদি (cnt > c->in_end - src) {
         cnt       = FFMAX(c->in_end - src, 0);
-        c->error |= AV_LZO_INPUT_DEPLETED;
+        c->error |= AV_LZO_প্রবেশ_DEPLETED;
     }
-    if (cnt > c->out_end - dst) {
+    যদি (cnt > c->out_end - dst) {
         cnt       = FFMAX(c->out_end - dst, 0);
         c->error |= AV_LZO_OUTPUT_FULL;
     }
-#if defined(INBUF_PADDED) && defined(OUTBUF_PADDED)
+#যদি defined(INBUF_PADDED) && defined(OUTBUF_PADDED)
     AV_COPY32U(dst, src);
     src += 4;
     dst += 4;
     cnt -= 4;
-    if (cnt > 0)
+    যদি (cnt > 0)
 #endif
     memcpy(dst, src, cnt);
     c->in  = src + cnt;
@@ -117,15 +117,15 @@ static inline void copy(LZOContext *c, int cnt)
  * cnt > back is valid, this will copy the bytes we just copied,
  * thus creating a repeating pattern with a period length of back.
  */
-static inline void copy_backptr(LZOContext *c, int back, int cnt)
+স্থির অন্তঃরেখ শূন্য copy_backptr(LZOContext *c, পূর্ণসংখ্যা back, পূর্ণসংখ্যা cnt)
 {
-    register uint8_t *dst       = c->out;
+    নিবন্ধ uint8_t *dst       = c->out;
     av_assert0(cnt > 0);
-    if (dst - c->out_start < back) {
+    যদি (dst - c->out_start < back) {
         c->error |= AV_LZO_INVALID_BACKPTR;
-        return;
+        ফেরত;
     }
-    if (cnt > c->out_end - dst) {
+    যদি (cnt > c->out_end - dst) {
         cnt       = FFMAX(c->out_end - dst, 0);
         c->error |= AV_LZO_OUTPUT_FULL;
     }
@@ -133,63 +133,63 @@ static inline void copy_backptr(LZOContext *c, int back, int cnt)
     c->out = dst + cnt;
 }
 
-int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen)
+পূর্ণসংখ্যা av_lzo1x_decode(শূন্য *out, পূর্ণসংখ্যা *outlen, ধ্রুবক শূন্য *in, পূর্ণসংখ্যা *inlen)
 {
-    int state = 0;
-    int x;
+    পূর্ণসংখ্যা state = 0;
+    পূর্ণসংখ্যা x;
     LZOContext c;
-    if (*outlen <= 0 || *inlen <= 0) {
-        int res = 0;
-        if (*outlen <= 0)
+    যদি (*outlen <= 0 || *inlen <= 0) {
+        পূর্ণসংখ্যা res = 0;
+        যদি (*outlen <= 0)
             res |= AV_LZO_OUTPUT_FULL;
-        if (*inlen <= 0)
-            res |= AV_LZO_INPUT_DEPLETED;
-        return res;
+        যদি (*inlen <= 0)
+            res |= AV_LZO_প্রবেশ_DEPLETED;
+        ফেরত res;
     }
     c.in      = in;
-    c.in_end  = (const uint8_t *)in + *inlen;
+    c.in_end  = (ধ্রুবক uint8_t *)in + *inlen;
     c.out     = c.out_start = out;
     c.out_end = (uint8_t *)out + *outlen;
     c.error   = 0;
     x         = GETB(c);
-    if (x > 17) {
+    যদি (x > 17) {
         copy(&c, x - 17);
         x = GETB(c);
-        if (x < 16)
+        যদি (x < 16)
             c.error |= AV_LZO_ERROR;
     }
-    if (c.in > c.in_end)
-        c.error |= AV_LZO_INPUT_DEPLETED;
-    while (!c.error) {
-        int cnt, back;
-        if (x > 15) {
-            if (x > 63) {
+    যদি (c.in > c.in_end)
+        c.error |= AV_LZO_প্রবেশ_DEPLETED;
+    যখন (!c.error) {
+        পূর্ণসংখ্যা cnt, back;
+        যদি (x > 15) {
+            যদি (x > 63) {
                 cnt  = (x >> 5) - 1;
                 back = (GETB(c) << 3) + ((x >> 2) & 7) + 1;
-            } else if (x > 31) {
+            } অন্যথা যদি (x > 31) {
                 cnt  = get_len(&c, x, 31);
                 x    = GETB(c);
                 back = (GETB(c) << 6) + (x >> 2) + 1;
-            } else {
+            } অন্যথা {
                 cnt   = get_len(&c, x, 7);
                 back  = (1 << 14) + ((x & 8) << 11);
                 x     = GETB(c);
                 back += (GETB(c) << 6) + (x >> 2);
-                if (back == (1 << 14)) {
-                    if (cnt != 1)
+                যদি (back == (1 << 14)) {
+                    যদি (cnt != 1)
                         c.error |= AV_LZO_ERROR;
-                    break;
+                    বিরতি;
                 }
             }
-        } else if (!state) {
+        } অন্যথা যদি (!state) {
             cnt = get_len(&c, x, 15);
             copy(&c, cnt + 3);
             x = GETB(c);
-            if (x > 15)
-                continue;
+            যদি (x > 15)
+                চালু;
             cnt  = 1;
             back = (1 << 11) + (GETB(c) << 2) + (x >> 2) + 1;
-        } else {
+        } অন্যথা {
             cnt  = 0;
             back = (GETB(c) << 2) + (x >> 2) + 1;
         }
@@ -200,8 +200,8 @@ int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen)
         x = GETB(c);
     }
     *inlen = c.in_end - c.in;
-    if (c.in > c.in_end)
+    যদি (c.in > c.in_end)
         *inlen = 0;
     *outlen = c.out_end - c.out;
-    return c.error;
+    ফেরত c.error;
 }

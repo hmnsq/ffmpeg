@@ -19,124 +19,124 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "mem.h"
+#অন্তর্ভাব "config.h"
+#অন্তর্ভাব "attributes.h"
+#অন্তর্ভাব "float_dsp.h"
+#অন্তর্ভাব "mem.h"
 
-static void vector_fmul_c(float *dst, const float *src0, const float *src1,
-                          int len)
+স্থির শূন্য vector_fmul_c(দশমিক *dst, ধ্রুবক দশমিক *src0, ধ্রুবক দশমিক *src1,
+                          পূর্ণসংখ্যা len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    পূর্ণসংখ্যা i;
+    জন্য (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_dmul_c(double *dst, const double *src0, const double *src1,
-                          int len)
+স্থির শূন্য vector_dmul_c(দ্বিগুণ *dst, ধ্রুবক দ্বিগুণ *src0, ধ্রুবক দ্বিগুণ *src1,
+                          পূর্ণসংখ্যা len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    পূর্ণসংখ্যা i;
+    জন্য (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_fmac_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+স্থির শূন্য vector_fmac_scalar_c(দশমিক *dst, ধ্রুবক দশমিক *src, দশমিক mul,
+                                 পূর্ণসংখ্যা len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    পূর্ণসংখ্যা i;
+    জন্য (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_dmac_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+স্থির শূন্য vector_dmac_scalar_c(দ্বিগুণ *dst, ধ্রুবক দ্বিগুণ *src, দ্বিগুণ mul,
+                                 পূর্ণসংখ্যা len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    পূর্ণসংখ্যা i;
+    জন্য (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_fmul_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+স্থির শূন্য vector_fmul_scalar_c(দশমিক *dst, ধ্রুবক দশমিক *src, দশমিক mul,
+                                 পূর্ণসংখ্যা len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    পূর্ণসংখ্যা i;
+    জন্য (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_dmul_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+স্থির শূন্য vector_dmul_scalar_c(দ্বিগুণ *dst, ধ্রুবক দ্বিগুণ *src, দ্বিগুণ mul,
+                                 পূর্ণসংখ্যা len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    পূর্ণসংখ্যা i;
+    জন্য (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_fmul_window_c(float *dst, const float *src0,
-                                 const float *src1, const float *win, int len)
+স্থির শূন্য vector_fmul_window_c(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                                 ধ্রুবক দশমিক *src1, ধ্রুবক দশমিক *win, পূর্ণসংখ্যা len)
 {
-    int i, j;
+    পূর্ণসংখ্যা i, j;
 
     dst  += len;
     win  += len;
     src0 += len;
 
-    for (i = -len, j = len - 1; i < 0; i++, j--) {
-        float s0 = src0[i];
-        float s1 = src1[j];
-        float wi = win[i];
-        float wj = win[j];
+    জন্য (i = -len, j = len - 1; i < 0; i++, j--) {
+        দশমিক s0 = src0[i];
+        দশমিক s1 = src1[j];
+        দশমিক wi = win[i];
+        দশমিক wj = win[j];
         dst[i] = s0 * wj - s1 * wi;
         dst[j] = s0 * wi + s1 * wj;
     }
 }
 
-static void vector_fmul_add_c(float *dst, const float *src0, const float *src1,
-                              const float *src2, int len){
-    int i;
+স্থির শূন্য vector_fmul_add_c(দশমিক *dst, ধ্রুবক দশমিক *src0, ধ্রুবক দশমিক *src1,
+                              ধ্রুবক দশমিক *src2, পূর্ণসংখ্যা len){
+    পূর্ণসংখ্যা i;
 
-    for (i = 0; i < len; i++)
+    জন্য (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i] + src2[i];
 }
 
-static void vector_fmul_reverse_c(float *dst, const float *src0,
-                                  const float *src1, int len)
+স্থির শূন্য vector_fmul_reverse_c(দশমিক *dst, ধ্রুবক দশমিক *src0,
+                                  ধ্রুবক দশমিক *src1, পূর্ণসংখ্যা len)
 {
-    int i;
+    পূর্ণসংখ্যা i;
 
     src1 += len-1;
-    for (i = 0; i < len; i++)
+    জন্য (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[-i];
 }
 
-static void butterflies_float_c(float *restrict v1, float *restrict v2,
-                                int len)
+স্থির শূন্য butterflies_float_c(দশমিক *restrict v1, দশমিক *restrict v2,
+                                পূর্ণসংখ্যা len)
 {
-    int i;
+    পূর্ণসংখ্যা i;
 
-    for (i = 0; i < len; i++) {
-        float t = v1[i] - v2[i];
+    জন্য (i = 0; i < len; i++) {
+        দশমিক t = v1[i] - v2[i];
         v1[i] += v2[i];
         v2[i] = t;
     }
 }
 
-double ff_scalarproduct_double_c(const double *v1, const double *v2,
+দ্বিগুণ ff_scalarproduct_double_c(ধ্রুবক দ্বিগুণ *v1, ধ্রুবক দ্বিগুণ *v2,
                                  size_t len)
 {
-    double p = 0.0;
+    দ্বিগুণ p = 0.0;
 
-    for (size_t i = 0; i < len; i++)
+    জন্য (size_t i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    ফেরত p;
 }
 
-av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
+av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(পূর্ণসংখ্যা bit_exact)
 {
-    AVFloatDSPContext *fdsp = av_mallocz(sizeof(AVFloatDSPContext));
-    if (!fdsp)
-        return NULL;
+    AVFloatDSPContext *fdsp = av_mallocz(আকার(AVFloatDSPContext));
+    যদি (!fdsp)
+        ফেরত ফাঁকা;
 
     fdsp->vector_fmul = vector_fmul_c;
     fdsp->vector_dmul = vector_dmul_c;
@@ -151,18 +151,18 @@ av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
     fdsp->scalarproduct_float = ff_scalarproduct_float_c;
     fdsp->scalarproduct_double = ff_scalarproduct_double_c;
 
-#if ARCH_AARCH64
+#যদি ARCH_AARCH64
     ff_float_dsp_init_aarch64(fdsp);
-#elif ARCH_ARM
+#নতুবা_যদি ARCH_ARM
     ff_float_dsp_init_arm(fdsp);
-#elif ARCH_PPC
+#নতুবা_যদি ARCH_PPC
     ff_float_dsp_init_ppc(fdsp, bit_exact);
-#elif ARCH_RISCV
+#নতুবা_যদি ARCH_RISCV
     ff_float_dsp_init_riscv(fdsp);
-#elif ARCH_X86 && HAVE_X86ASM
+#নতুবা_যদি ARCH_X86 && HAVE_X86ASM
     ff_float_dsp_init_x86(fdsp);
-#elif ARCH_MIPS
+#নতুবা_যদি ARCH_MIPS
     ff_float_dsp_init_mips(fdsp);
 #endif
-    return fdsp;
+    ফেরত fdsp;
 }

@@ -18,107 +18,107 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
+#অন্তর্ভাব <limits.h>
+#অন্তর্ভাব <stdarg.h>
+#অন্তর্ভাব <stdio.h>
+#অন্তর্ভাব <string.h>
+#অন্তর্ভাব <time.h>
+#অন্তর্ভাব "avstring.h"
+#অন্তর্ভাব "bprint.h"
+#অন্তর্ভাব "error.h"
+#অন্তর্ভাব "macros.h"
+#অন্তর্ভাব "mem.h"
 
-#define av_bprint_room(buf) ((buf)->size - FFMIN((buf)->len, (buf)->size))
-#define av_bprint_is_allocated(buf) ((buf)->str != (buf)->reserved_internal_buffer)
+#define av_bprint_room(buf) ((buf)->আকার_2 - FFMIN((buf)->len, (buf)->আকার_2))
+#define av_bprint_is_allocated(buf) ((buf)->str != (buf)->reserved_internal_বাফার)
 
-static int av_bprint_alloc(AVBPrint *buf, unsigned room)
+স্থির পূর্ণসংখ্যা av_bprint_alloc(AVBPrint *buf, unsigned room)
 {
-    char *old_str, *new_str;
-    unsigned min_size, new_size;
+    অক্ষর *old_str, *new_str;
+    unsigned min_আকার, new_আকার;
 
-    if (buf->size == buf->size_max)
-        return AVERROR(EIO);
-    if (!av_bprint_is_complete(buf))
-        return AVERROR_INVALIDDATA; /* it is already truncated anyway */
-    min_size = buf->len + 1 + FFMIN(UINT_MAX - buf->len - 1, room);
-    new_size = buf->size > buf->size_max / 2 ? buf->size_max : buf->size * 2;
-    if (new_size < min_size)
-        new_size = FFMIN(buf->size_max, min_size);
-    old_str = av_bprint_is_allocated(buf) ? buf->str : NULL;
-    new_str = av_realloc(old_str, new_size);
-    if (!new_str)
-        return AVERROR(ENOMEM);
-    if (!old_str)
+    যদি (buf->আকার_2 == buf->আকার_max)
+        ফেরত AVERROR(EIO);
+    যদি (!av_bprint_is_complete(buf))
+        ফেরত AVERROR_INVALIDDATA; /* it is already truncated anyway */
+    min_আকার = buf->len + 1 + FFMIN(UINT_MAX - buf->len - 1, room);
+    new_আকার = buf->আকার_2 > buf->আকার_max / 2 ? buf->আকার_max : buf->আকার_2 * 2;
+    যদি (new_আকার < min_আকার)
+        new_আকার = FFMIN(buf->আকার_max, min_আকার);
+    old_str = av_bprint_is_allocated(buf) ? buf->str : ফাঁকা;
+    new_str = av_realloc(old_str, new_আকার);
+    যদি (!new_str)
+        ফেরত AVERROR(ENOMEM);
+    যদি (!old_str)
         memcpy(new_str, buf->str, buf->len + 1);
     buf->str  = new_str;
-    buf->size = new_size;
-    return 0;
+    buf->আকার_2 = new_আকার;
+    ফেরত 0;
 }
 
-static void av_bprint_grow(AVBPrint *buf, unsigned extra_len)
+স্থির শূন্য av_bprint_grow(AVBPrint *buf, unsigned extra_len)
 {
     /* arbitrary margin to avoid small overflows */
     extra_len = FFMIN(extra_len, UINT_MAX - 5 - buf->len);
     buf->len += extra_len;
-    if (buf->size)
-        buf->str[FFMIN(buf->len, buf->size - 1)] = 0;
+    যদি (buf->আকার_2)
+        buf->str[FFMIN(buf->len, buf->আকার_2 - 1)] = 0;
 }
 
-void av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max)
+শূন্য av_bprint_init(AVBPrint *buf, unsigned আকার_init, unsigned আকার_max)
 {
-    unsigned size_auto = (char *)buf + sizeof(*buf) -
-                         buf->reserved_internal_buffer;
+    unsigned আকার_auto = (অক্ষর *)buf + আকার(*buf) -
+                         buf->reserved_internal_বাফার;
 
-    if (size_max == AV_BPRINT_SIZE_AUTOMATIC)
-        size_max = size_auto;
-    buf->str      = buf->reserved_internal_buffer;
+    যদি (আকার_max == AV_BPRINT_আকার_AUTOMATIC)
+        আকার_max = আকার_auto;
+    buf->str      = buf->reserved_internal_বাফার;
     buf->len      = 0;
-    buf->size     = FFMIN(size_auto, size_max);
-    buf->size_max = size_max;
+    buf->আকার_2     = FFMIN(আকার_auto, আকার_max);
+    buf->আকার_max = আকার_max;
     *buf->str = 0;
-    if (size_init > buf->size)
-        av_bprint_alloc(buf, size_init - 1);
+    যদি (আকার_init > buf->আকার_2)
+        av_bprint_alloc(buf, আকার_init - 1);
 }
 
-void av_bprint_init_for_buffer(AVBPrint *buf, char *buffer, unsigned size)
+শূন্য av_bprint_init_for_বাফার(AVBPrint *buf, অক্ষর *বাফার, unsigned আকার_2)
 {
-    if (size == 0) {
-        av_bprint_init(buf, 0, AV_BPRINT_SIZE_COUNT_ONLY);
-        return;
+    যদি (আকার_2 == 0) {
+        av_bprint_init(buf, 0, AV_BPRINT_আকার_গুনতি_ONLY);
+        ফেরত;
     }
 
-    buf->str      = buffer;
+    buf->str      = বাফার;
     buf->len      = 0;
-    buf->size     = size;
-    buf->size_max = size;
+    buf->আকার_2     = আকার_2;
+    buf->আকার_max = আকার_2;
     *buf->str = 0;
 }
 
-void av_vbprintf(AVBPrint *buf, const char *fmt, va_list vl_arg)
+শূন্য av_vbprintf(AVBPrint *buf, ধ্রুবক অক্ষর *fmt, va_list vl_arg)
 {
     unsigned room;
-    char *dst;
-    int extra_len;
+    অক্ষর *dst;
+    পূর্ণসংখ্যা extra_len;
     va_list vl;
 
-    while (1) {
+    যখন (1) {
         room = av_bprint_room(buf);
-        dst = room ? buf->str + buf->len : NULL;
+        dst = room ? buf->str + buf->len : ফাঁকা;
         va_copy(vl, vl_arg);
         extra_len = vsnprintf(dst, room, fmt, vl);
         va_end(vl);
-        if (extra_len <= 0)
-            return;
-        if (extra_len < room)
-            break;
-        if (av_bprint_alloc(buf, extra_len))
-            break;
+        যদি (extra_len <= 0)
+            ফেরত;
+        যদি (extra_len < room)
+            বিরতি;
+        যদি (av_bprint_alloc(buf, extra_len))
+            বিরতি;
     }
     av_bprint_grow(buf, extra_len);
 }
 
-void av_bprintf(AVBPrint *buf, const char *fmt, ...)
+শূন্য av_bprintf(AVBPrint *buf, ধ্রুবক অক্ষর *fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
@@ -126,206 +126,206 @@ void av_bprintf(AVBPrint *buf, const char *fmt, ...)
     va_end(vl);
 }
 
-void av_bprint_chars(AVBPrint *buf, char c, unsigned n)
+শূন্য av_bprint_chars(AVBPrint *buf, অক্ষর c, unsigned n)
 {
     unsigned room, real_n;
 
-    while (1) {
+    যখন (1) {
         room = av_bprint_room(buf);
-        if (n < room)
-            break;
-        if (av_bprint_alloc(buf, n))
-            break;
+        যদি (n < room)
+            বিরতি;
+        যদি (av_bprint_alloc(buf, n))
+            বিরতি;
     }
-    if (room) {
+    যদি (room) {
         real_n = FFMIN(n, room - 1);
         memset(buf->str + buf->len, c, real_n);
     }
     av_bprint_grow(buf, n);
 }
 
-void av_bprint_append_data(AVBPrint *buf, const char *data, unsigned size)
+শূন্য av_bprint_append_তথ্য(AVBPrint *buf, ধ্রুবক অক্ষর *তথ্য, unsigned আকার_2)
 {
     unsigned room, real_n;
 
-    while (1) {
+    যখন (1) {
         room = av_bprint_room(buf);
-        if (size < room)
-            break;
-        if (av_bprint_alloc(buf, size))
-            break;
+        যদি (আকার_2 < room)
+            বিরতি;
+        যদি (av_bprint_alloc(buf, আকার_2))
+            বিরতি;
     }
-    if (room) {
-        real_n = FFMIN(size, room - 1);
-        memcpy(buf->str + buf->len, data, real_n);
+    যদি (room) {
+        real_n = FFMIN(আকার_2, room - 1);
+        memcpy(buf->str + buf->len, তথ্য, real_n);
     }
-    av_bprint_grow(buf, size);
+    av_bprint_grow(buf, আকার_2);
 }
 
-void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm)
+শূন্য av_bprint_strftime(AVBPrint *buf, ধ্রুবক অক্ষর *fmt, ধ্রুবক কাঠামো tm *tm)
 {
     unsigned room;
     size_t l;
     size_t fmt_len = strlen(fmt);
 
-    if (!*fmt)
-        return;
-    while (1) {
+    যদি (!*fmt)
+        ফেরত;
+    যখন (1) {
         room = av_bprint_room(buf);
-        if (room && (l = strftime(buf->str + buf->len, room, fmt, tm)))
-            break;
+        যদি (room && (l = strftime(buf->str + buf->len, room, fmt, tm)))
+            বিরতি;
 
         /* Due to the limitations of strftime() it is not possible to know if
          * the output buffer is too small or the output is empty.
          * However, a 256x output space requirement compared to the format
          * string length is so unlikely we can safely assume empty output. This
          * allows supporting possibly empty format strings like "%p". */
-        if (room >> 8 > fmt_len)
-            break;
+        যদি (room >> 8 > fmt_len)
+            বিরতি;
 
         /* strftime does not tell us how much room it would need: let us
            retry with twice as much until the buffer is large enough */
         room = !room ? fmt_len + 1 :
                room <= INT_MAX / 2 ? room * 2 : INT_MAX;
-        if (av_bprint_alloc(buf, room)) {
+        যদি (av_bprint_alloc(buf, room)) {
             /* impossible to grow, try to manage something useful anyway */
             room = av_bprint_room(buf);
-            if (room < 1024) {
+            যদি (room < 1024) {
                 /* if strftime fails because the buffer has (almost) reached
                    its maximum size, let us try in a local buffer; 1k should
                    be enough to format any real date+time string */
-                char buf2[1024];
-                if ((l = strftime(buf2, sizeof(buf2), fmt, tm))) {
+                অক্ষর buf2[1024];
+                যদি ((l = strftime(buf2, আকার(buf2), fmt, tm))) {
                     av_bprintf(buf, "%s", buf2);
-                    return;
+                    ফেরত;
                 }
             }
-            if (room) {
+            যদি (room) {
                 /* if anything else failed and the buffer is not already
                    truncated, let us add a stock string and force truncation */
-                static const char txt[] = "[truncated strftime output]";
+                স্থির ধ্রুবক অক্ষর txt[] = "[truncated strftime output]";
                 memset(buf->str + buf->len, '!', room);
-                memcpy(buf->str + buf->len, txt, FFMIN(sizeof(txt) - 1, room));
+                memcpy(buf->str + buf->len, txt, FFMIN(আকার(txt) - 1, room));
                 av_bprint_grow(buf, room); /* force truncation */
             }
-            return;
+            ফেরত;
         }
     }
     av_bprint_grow(buf, l);
 }
 
-void av_bprint_get_buffer(AVBPrint *buf, unsigned size,
-                          unsigned char **mem, unsigned *actual_size)
+শূন্য av_bprint_get_বাফার(AVBPrint *buf, unsigned আকার_2,
+                          unsigned অক্ষর **mem, unsigned *actual_আকার)
 {
-    if (size > av_bprint_room(buf))
-        av_bprint_alloc(buf, size);
-    *actual_size = av_bprint_room(buf);
-    *mem = *actual_size ? (unsigned char *) (buf->str + buf->len) : NULL;
+    যদি (আকার_2 > av_bprint_room(buf))
+        av_bprint_alloc(buf, আকার_2);
+    *actual_আকার = av_bprint_room(buf);
+    *mem = *actual_আকার ? (unsigned অক্ষর *) (buf->str + buf->len) : ফাঁকা;
 }
 
-void av_bprint_clear(AVBPrint *buf)
+শূন্য av_bprint_clear(AVBPrint *buf)
 {
-    if (buf->len) {
+    যদি (buf->len) {
         *buf->str = 0;
         buf->len  = 0;
     }
 }
 
-int av_bprint_finalize(AVBPrint *buf, char **ret_str)
+পূর্ণসংখ্যা av_bprint_finalize(AVBPrint *buf, অক্ষর **ret_str)
 {
-    unsigned real_size = FFMIN(buf->len + 1, buf->size);
-    char *str;
-    int ret = 0;
+    unsigned real_আকার = FFMIN(buf->len + 1, buf->আকার_2);
+    অক্ষর *str;
+    পূর্ণসংখ্যা ret = 0;
 
-    if (ret_str) {
-        if (av_bprint_is_allocated(buf)) {
-            str = av_realloc(buf->str, real_size);
-            if (!str)
+    যদি (ret_str) {
+        যদি (av_bprint_is_allocated(buf)) {
+            str = av_realloc(buf->str, real_আকার);
+            যদি (!str)
                 str = buf->str;
-            buf->str = NULL;
-        } else {
-            str = av_memdup(buf->str, real_size);
-            if (!str)
+            buf->str = ফাঁকা;
+        } অন্যথা {
+            str = av_memdup(buf->str, real_আকার);
+            যদি (!str)
                 ret = AVERROR(ENOMEM);
         }
         *ret_str = str;
-    } else {
-        if (av_bprint_is_allocated(buf))
+    } অন্যথা {
+        যদি (av_bprint_is_allocated(buf))
             av_freep(&buf->str);
     }
-    buf->size = real_size;
-    return ret;
+    buf->আকার_2 = real_আকার;
+    ফেরত ret;
 }
 
 #define WHITESPACES " \n\t\r"
 
-void av_bprint_escape(AVBPrint *dstbuf, const char *src, const char *special_chars,
-                      enum AVEscapeMode mode, int flags)
+শূন্য av_bprint_escape(AVBPrint *dstbuf, ধ্রুবক অক্ষর *src, ধ্রুবক অক্ষর *special_chars,
+                      গণনা AVEscapeMode mode, পূর্ণসংখ্যা flags)
 {
-    const char *src0 = src;
+    ধ্রুবক অক্ষর *src0 = src;
 
-    if (mode == AV_ESCAPE_MODE_AUTO)
+    যদি (mode == AV_ESCAPE_MODE_AUTO)
         mode = AV_ESCAPE_MODE_BACKSLASH; /* TODO: implement a heuristic */
 
-    switch (mode) {
-    case AV_ESCAPE_MODE_QUOTE:
+    নির্বাচন (mode) {
+    ক্ষেত্র AV_ESCAPE_MODE_QUOTE:
         /* enclose the string between '' */
         av_bprint_chars(dstbuf, '\'', 1);
-        for (; *src; src++) {
-            if (*src == '\'')
+        জন্য (; *src; src++) {
+            যদি (*src == '\'')
                 av_bprintf(dstbuf, "'\\''");
-            else
+            অন্যথা
                 av_bprint_chars(dstbuf, *src, 1);
         }
         av_bprint_chars(dstbuf, '\'', 1);
-        break;
+        বিরতি;
 
-    case AV_ESCAPE_MODE_XML:
+    ক্ষেত্র AV_ESCAPE_MODE_XML:
         /* escape XML non-markup character data as per 2.4 by default: */
         /*  [^<&]* - ([^<&]* ']]>' [^<&]*) */
 
         /* additionally, given one of the AV_ESCAPE_FLAG_XML_* flags, */
         /* escape those specific characters as required. */
-        for (; *src; src++) {
-            switch (*src) {
-            case '&' : av_bprintf(dstbuf, "%s", "&amp;");  break;
-            case '<' : av_bprintf(dstbuf, "%s", "&lt;");   break;
-            case '>' : av_bprintf(dstbuf, "%s", "&gt;");   break;
-            case '\'':
-                if (!(flags & AV_ESCAPE_FLAG_XML_SINGLE_QUOTES))
-                    goto XML_DEFAULT_HANDLING;
+        জন্য (; *src; src++) {
+            নির্বাচন (*src) {
+            ক্ষেত্র '&' : av_bprintf(dstbuf, "%s", "&amp;");  বিরতি;
+            ক্ষেত্র '<' : av_bprintf(dstbuf, "%s", "&lt;");   বিরতি;
+            ক্ষেত্র '>' : av_bprintf(dstbuf, "%s", "&gt;");   বিরতি;
+            ক্ষেত্র '\'':
+                যদি (!(flags & AV_ESCAPE_FLAG_XML_SINGLE_QUOTES))
+                    যাও XML_DEFAULT_HANDLING;
 
                 av_bprintf(dstbuf, "%s", "&apos;");
-                break;
-            case '"' :
-                if (!(flags & AV_ESCAPE_FLAG_XML_DOUBLE_QUOTES))
-                    goto XML_DEFAULT_HANDLING;
+                বিরতি;
+            ক্ষেত্র '"' :
+                যদি (!(flags & AV_ESCAPE_FLAG_XML_DOUBLE_QUOTES))
+                    যাও XML_DEFAULT_HANDLING;
 
                 av_bprintf(dstbuf, "%s", "&quot;");
-                break;
+                বিরতি;
 XML_DEFAULT_HANDLING:
-            default: av_bprint_chars(dstbuf, *src, 1);
+            পূর্বনির্ধারিত: av_bprint_chars(dstbuf, *src, 1);
             }
         }
-        break;
+        বিরতি;
 
     /* case AV_ESCAPE_MODE_BACKSLASH or unknown mode */
-    default:
+    পূর্বনির্ধারিত:
         /* \-escape characters */
-        for (; *src; src++) {
-            int is_first_last       = src == src0 || !*(src+1);
-            int is_ws               = !!strchr(WHITESPACES, *src);
-            int is_strictly_special = special_chars && strchr(special_chars, *src);
-            int is_special          =
+        জন্য (; *src; src++) {
+            পূর্ণসংখ্যা is_first_last       = src == src0 || !*(src+1);
+            পূর্ণসংখ্যা is_ws               = !!strchr(WHITESPACES, *src);
+            পূর্ণসংখ্যা is_strictly_special = special_chars && strchr(special_chars, *src);
+            পূর্ণসংখ্যা is_special          =
                 is_strictly_special || strchr("'\\", *src) ||
                 (is_ws && (flags & AV_ESCAPE_FLAG_WHITESPACE));
 
-            if (is_strictly_special ||
+            যদি (is_strictly_special ||
                 (!(flags & AV_ESCAPE_FLAG_STRICT) &&
                  (is_special || (is_ws && is_first_last))))
                 av_bprint_chars(dstbuf, '\\', 1);
             av_bprint_chars(dstbuf, *src, 1);
         }
-        break;
+        বিরতি;
     }
 }

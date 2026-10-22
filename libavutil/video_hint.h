@@ -21,17 +21,17 @@
 #ifndef AVUTIL_VIDEO_HINT_H
 #define AVUTIL_VIDEO_HINT_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "libavutil/avassert.h"
-#include "libavutil/frame.h"
+#অন্তর্ভাব <stddef.h>
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব "libavutil/avassert.h"
+#অন্তর্ভাব "libavutil/frame.h"
 
-typedef struct AVVideoRect {
+প্রকারলেখ কাঠামো AVVideoRect {
     uint32_t x, y;
     uint32_t width, height;
 } AVVideoRect;
 
-typedef enum AVVideoHintType {
+প্রকারলেখ গণনা AVVideoHintType {
     /* rectangled delimit the constant areas (unchanged), default is changed */
     AV_VIDEO_HINT_TYPE_CONSTANT,
 
@@ -39,7 +39,7 @@ typedef enum AVVideoHintType {
     AV_VIDEO_HINT_TYPE_CHANGED,
 } AVVideoHintType;
 
-typedef struct AVVideoHint {
+প্রকারলেখ কাঠামো AVVideoHint {
     /**
      * Number of AVVideoRect present.
      *
@@ -58,19 +58,19 @@ typedef struct AVVideoHint {
     /**
      * Size in bytes of AVVideoRect.
      */
-    size_t rect_size;
+    size_t rect_আকার;
 
     AVVideoHintType type;
 } AVVideoHint;
 
-static av_always_inline AVVideoRect *
-av_video_hint_rects(const AVVideoHint *hints) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
+স্থির av_always_inline AVVideoRect *
+av_video_hint_rects(ধ্রুবক AVVideoHint *hints) {
+    ফেরত (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
 }
 
-static av_always_inline AVVideoRect *
-av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
+স্থির av_always_inline AVVideoRect *
+av_video_hint_get_rect(ধ্রুবক AVVideoHint *hints, size_t idx) {
+    ফেরত (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_আকার);
 }
 
 /**
@@ -94,13 +94,13 @@ av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
  *         av_free()) on success, NULL on memory allocation failure
  */
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
-                                 size_t *out_size);
+                                 size_t *out_আকার);
 
 /**
  * Same as av_video_hint_alloc(), except newly-allocated AVVideoHint is attached
  * as side data of type AV_FRAME_DATA_VIDEO_HINT_INFO to frame.
  */
-AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
+AVVideoHint *av_video_hint_create_side_তথ্য(AVFrame *frame,
                                             size_t nb_rects);
 
 

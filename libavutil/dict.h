@@ -30,7 +30,7 @@
 #ifndef AVUTIL_DICT_H
 #define AVUTIL_DICT_H
 
-#include <stdint.h>
+#অন্তর্ভাব <stdint.h>
 
 /**
  * @addtogroup lavu_dict AVDictionary
@@ -74,7 +74,7 @@
 #define AV_DICT_MATCH_CASE      1   /**< Only get an entry with exact-case key match. Only relevant in av_dict_get(). */
 #define AV_DICT_IGNORE_SUFFIX   2   /**< Return first entry in a dictionary whose first part corresponds to the search key,
                                          ignoring the suffix of the found key string. Only relevant in av_dict_get(). */
-#define AV_DICT_DONT_STRDUP_KEY 4   /**< Take ownership of a key that's been
+#define AV_DICT_DONT_STRDUP_চাবি 4   /**< Take ownership of a key that's been
                                          allocated with av_malloc() or another memory allocation function. */
 #define AV_DICT_DONT_STRDUP_VAL 8   /**< Take ownership of a value that's been
                                          allocated with av_malloc() or another memory allocation function. */
@@ -87,12 +87,12 @@
  * @}
  */
 
-typedef struct AVDictionaryEntry {
-    char *key;
-    char *value;
+প্রকারলেখ কাঠামো AVDictionaryEntry {
+    অক্ষর *চাবি;
+    অক্ষর *মান;
 } AVDictionaryEntry;
 
-typedef struct AVDictionary AVDictionary;
+প্রকারলেখ কাঠামো AVDictionary AVDictionary;
 
 /**
  * Get a dictionary entry with matching key.
@@ -108,8 +108,8 @@ typedef struct AVDictionary AVDictionary;
  *
  * @return      Found entry or NULL in case no matching entry was found in the dictionary
  */
-AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags);
+AVDictionaryEntry *av_dict_get(ধ্রুবক AVDictionary *m, ধ্রুবক অক্ষর *চাবি,
+                               ধ্রুবক AVDictionaryEntry *পূর্ব, পূর্ণসংখ্যা flags);
 
 /**
  * Iterate over a dictionary
@@ -135,8 +135,8 @@ AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
  * @retval AVDictionaryEntry* The next element in the dictionary
  * @retval NULL               No more elements in the dictionary
  */
-const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
-                                         const AVDictionaryEntry *prev);
+ধ্রুবক AVDictionaryEntry *av_dict_iterate(ধ্রুবক AVDictionary *m,
+                                         ধ্রুবক AVDictionaryEntry *পূর্ব);
 
 /**
  * Get number of entries in dictionary.
@@ -144,7 +144,7 @@ const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
  * @param m dictionary
  * @return  number of entries in dictionary
  */
-int av_dict_count(const AVDictionary *m);
+পূর্ণসংখ্যা av_dict_গুনতি(ধ্রুবক AVDictionary *m);
 
 /**
  * Set the given entry in *pm, overwriting an existing entry.
@@ -163,7 +163,7 @@ int av_dict_count(const AVDictionary *m);
  *
  * @return          >= 0 on success otherwise an error code <0
  */
-int av_dict_set(AVDictionary **pm, const char *key, const char *value, int flags);
+পূর্ণসংখ্যা av_dict_set(AVDictionary **pm, ধ্রুবক অক্ষর *চাবি, ধ্রুবক অক্ষর *মান, পূর্ণসংখ্যা flags);
 
 /**
  * Convenience wrapper for av_dict_set() that converts the value to a string
@@ -171,7 +171,7 @@ int av_dict_set(AVDictionary **pm, const char *key, const char *value, int flags
  *
  * Note: If ::AV_DICT_DONT_STRDUP_KEY is set, key will be freed on error.
  */
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value, int flags);
+পূর্ণসংখ্যা av_dict_set_int(AVDictionary **pm, ধ্রুবক অক্ষর *চাবি, int64_t মান, পূর্ণসংখ্যা flags);
 
 /**
  * Parse the key/value pairs list and add the parsed entries to a dictionary.
@@ -190,9 +190,9 @@ int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value, int flags
  *
  * @return             0 on success, negative AVERROR code on failure
  */
-int av_dict_parse_string(AVDictionary **pm, const char *str,
-                         const char *key_val_sep, const char *pairs_sep,
-                         int flags);
+পূর্ণসংখ্যা av_dict_parse_string(AVDictionary **pm, ধ্রুবক অক্ষর *str,
+                         ধ্রুবক অক্ষর *চাবি_val_sep, ধ্রুবক অক্ষর *pairs_sep,
+                         পূর্ণসংখ্যা flags);
 
 /**
  * Copy entries from one AVDictionary struct into another.
@@ -207,13 +207,13 @@ int av_dict_parse_string(AVDictionary **pm, const char *str,
  * @return 0 on success, negative AVERROR code on failure. If dst was allocated
  *           by this function, callers should free the associated memory.
  */
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags);
+পূর্ণসংখ্যা av_dict_copy(AVDictionary **dst, ধ্রুবক AVDictionary *src, পূর্ণসংখ্যা flags);
 
 /**
  * Free all the memory allocated for an AVDictionary struct
  * and all keys and values.
  */
-void av_dict_free(AVDictionary **m);
+শূন্য av_dict_free(AVDictionary **m);
 
 /**
  * Get dictionary entries as a string.
@@ -232,8 +232,8 @@ void av_dict_free(AVDictionary **m);
  *
  * @return                   >= 0 on success, negative on error
  */
-int av_dict_get_string(const AVDictionary *m, char **buffer,
-                       const char key_val_sep, const char pairs_sep);
+পূর্ণসংখ্যা av_dict_get_string(ধ্রুবক AVDictionary *m, অক্ষর **বাফার,
+                       ধ্রুবক অক্ষর চাবি_val_sep, ধ্রুবক অক্ষর pairs_sep);
 
 /**
  * @}

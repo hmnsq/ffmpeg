@@ -19,70 +19,70 @@
 #ifndef AVUTIL_ZLIB_UTILS_H
 #define AVUTIL_ZLIB_UTILS_H
 
-#include <stdint.h>
-#include "log.h"
-#include "error.h"
-#include "mem.h"
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব "log.h"
+#অন্তর্ভাব "error.h"
+#অন্তর্ভাব "mem.h"
 
-#include <zlib.h>
-#define CHUNK_SIZE 1024 * 64
+#অন্তর্ভাব <zlib.h>
+#define CHUNK_আকার 1024 * 64
 
-static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
-                                 const uint8_t *src, int src_len)
+স্থির অন্তঃরেখ পূর্ণসংখ্যা ff_zlib_expand(শূন্য *ctx, uint8_t **out, size_t *out_len,
+                                 ধ্রুবক uint8_t *src, পূর্ণসংখ্যা src_len)
 {
-    int ret;
+    পূর্ণসংখ্যা ret;
 
     z_stream stream = { 0 };
-    if (inflateInit2(&stream, 32 + 15) != Z_OK) {
+    যদি (inflateInit2(&stream, 32 + 15) != Z_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error during zlib initialisation: %s\n",
-               stream.msg);
-        return AVERROR(ENOSYS);
+               stream.বার্তা);
+        ফেরত AVERROR(ENOSYS);
     }
 
-    uint64_t buf_size = CHUNK_SIZE * 4;
-    uint8_t *buf = av_realloc(NULL, buf_size);
-    if (!buf) {
+    uint64_t buf_আকার = CHUNK_আকার * 4;
+    uint8_t *buf = av_realloc(ফাঁকা, buf_আকার);
+    যদি (!buf) {
         inflateEnd(&stream);
-        return AVERROR(ENOMEM);
+        ফেরত AVERROR(ENOMEM);
     }
 
-    stream.next_in = src;
+    stream.পরবর্তী_in = src;
     stream.avail_in = src_len;
 
-    do {
-        stream.avail_out = buf_size - stream.total_out;
-        stream.next_out = buf + stream.total_out;
+    করো {
+        stream.avail_out = buf_আকার - stream.যোগ_out;
+        stream.পরবর্তী_out = buf + stream.যোগ_out;
 
         ret = inflate(&stream, Z_FINISH);
-        if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
+        যদি (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
             av_log(ctx, AV_LOG_ERROR, "zlib inflate error(%d): %s\n",
-                   ret, stream.msg);
+                   ret, stream.বার্তা);
             inflateEnd(&stream);
             av_free(buf);
-            return AVERROR(EINVAL);
+            ফেরত AVERROR(EINVAL);
         }
 
-        if (stream.avail_out == 0) {
-            buf_size += CHUNK_SIZE;
-            uint8_t *tmp = av_realloc(buf, buf_size);
-            if (!tmp) {
+        যদি (stream.avail_out == 0) {
+            buf_আকার += CHUNK_আকার;
+            uint8_t *tmp = av_realloc(buf, buf_আকার);
+            যদি (!tmp) {
                 inflateEnd(&stream);
                 av_free(buf);
-                return AVERROR(ENOMEM);
+                ফেরত AVERROR(ENOMEM);
             }
             buf = tmp;
         }
-    } while (ret != Z_STREAM_END);
+    } যখন (ret != Z_STREAM_END);
 
     // NULL-terminate string
     // there is guaranteed to be space for this, due to condition in loop
-    buf[stream.total_out] = 0;
+    buf[stream.যোগ_out] = 0;
 
     inflateEnd(&stream);
 
     *out = buf;
-    *out_len = stream.total_out;
+    *out_len = stream.যোগ_out;
 
-    return 0;
+    ফেরত 0;
 }
 #endif /* AVUTIL_ZLIB_UTILS_H */

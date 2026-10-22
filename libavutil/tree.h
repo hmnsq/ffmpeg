@@ -24,10 +24,10 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_TREE_H
-#define AVUTIL_TREE_H
+#ifndef AVUTIL_বৃক্ষ_H
+#define AVUTIL_বৃক্ষ_H
 
-#include "attributes.h"
+#অন্তর্ভাব "attributes.h"
 
 /**
  * @addtogroup lavu_tree AVTree
@@ -41,13 +41,13 @@
  */
 
 
-struct AVTreeNode;
-extern const int av_tree_node_size;
+কাঠামো AVTree_গ্রন্থি;
+বাহ্যিক ধ্রুবক পূর্ণসংখ্যা av_বৃক্ষ_গ্রন্থি_আকার;
 
 /**
  * Allocate an AVTreeNode.
  */
-struct AVTreeNode *av_tree_node_alloc(void);
+কাঠামো AVTree_গ্রন্থি *av_বৃক্ষ_গ্রন্থি_alloc(শূন্য);
 
 /**
  * Find an element.
@@ -63,8 +63,8 @@ struct AVTreeNode *av_tree_node_alloc(void);
  * @return An element with cmp(key, elem) == 0 or NULL if no such element
  *         exists in the tree.
  */
-void *av_tree_find(const struct AVTreeNode *root, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2]);
+শূন্য *av_বৃক্ষ_find(ধ্রুবক কাঠামো AVTree_গ্রন্থি *মূল, শূন্য *চাবি,
+                   পূর্ণসংখ্যা (*cmp)(ধ্রুবক শূন্য *চাবি, ধ্রুবক শূন্য *b), শূন্য *পরবর্তী[2]);
 
 /**
  * Insert or remove an element.
@@ -110,11 +110,11 @@ void *av_tree_find(const struct AVTreeNode *root, void *key,
  *         Which one it is depends on the tree state and the implementation. You
  *         should make no assumptions that it's one or the other in the code.
  */
-void *av_tree_insert(struct AVTreeNode **rootp, void *key,
-                     int (*cmp)(const void *key, const void *b),
-                     struct AVTreeNode **next);
+শূন্য *av_বৃক্ষ_ঢোকাও(কাঠামো AVTree_গ্রন্থি **rootp, শূন্য *চাবি,
+                     পূর্ণসংখ্যা (*cmp)(ধ্রুবক শূন্য *চাবি, ধ্রুবক শূন্য *b),
+                     কাঠামো AVTree_গ্রন্থি **পরবর্তী);
 
-void av_tree_destroy(struct AVTreeNode *t);
+শূন্য av_বৃক্ষ_destroy(কাঠামো AVTree_গ্রন্থি *t);
 
 /**
  * Apply enu(opaque, &elem) to all the elements in the tree in a given range.
@@ -126,9 +126,9 @@ void av_tree_destroy(struct AVTreeNode *t);
  * @note The cmp function should use the same ordering used to construct the
  *       tree.
  */
-void av_tree_enumerate(struct AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem));
+শূন্য av_বৃক্ষ_enumerate(কাঠামো AVTree_গ্রন্থি *t, শূন্য *opaque,
+                       পূর্ণসংখ্যা (*cmp)(শূন্য *opaque, শূন্য *elem),
+                       পূর্ণসংখ্যা (*enu)(শূন্য *opaque, শূন্য *elem));
 
 /**
  * @}

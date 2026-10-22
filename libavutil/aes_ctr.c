@@ -19,49 +19,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#অন্তর্ভাব <string.h>
 
-#include "aes_ctr.h"
-#include "aes.h"
-#include "aes_internal.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "random_seed.h"
+#অন্তর্ভাব "aes_ctr.h"
+#অন্তর্ভাব "aes.h"
+#অন্তর্ভাব "aes_internal.h"
+#অন্তর্ভাব "intreadwrite.h"
+#অন্তর্ভাব "macros.h"
+#অন্তর্ভাব "mem.h"
+#অন্তর্ভাব "random_seed.h"
 
-#define AES_BLOCK_SIZE (16)
+#define AES_BLOCK_আকার (16)
 
-typedef struct AVAESCTR {
-    DECLARE_ALIGNED(8, uint8_t, counter)[AES_BLOCK_SIZE];
-    DECLARE_ALIGNED(8, uint8_t, encrypted_counter)[AES_BLOCK_SIZE];
-    int block_offset;
+প্রকারলেখ কাঠামো AVAESCTR {
+    DECLARE_ALIGNED(8, uint8_t, গণক)[AES_BLOCK_আকার];
+    DECLARE_ALIGNED(8, uint8_t, encrypted_গণক)[AES_BLOCK_আকার];
+    পূর্ণসংখ্যা block_offset;
     AVAES aes;
 } AVAESCTR;
 
-struct AVAESCTR *av_aes_ctr_alloc(void)
+কাঠামো AVAESCTR *av_aes_ctr_alloc(শূন্য)
 {
-    return av_mallocz(sizeof(struct AVAESCTR));
+    ফেরত av_mallocz(আকার(কাঠামো AVAESCTR));
 }
 
-void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv)
+শূন্য av_aes_ctr_set_iv(কাঠামো AVAESCTR *a, ধ্রুবক uint8_t* iv)
 {
-    memcpy(a->counter, iv, AES_CTR_IV_SIZE);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
+    memcpy(a->গণক, iv, AES_CTR_IV_আকার);
+    memset(a->গণক + AES_CTR_IV_আকার, 0, আকার(a->গণক) - AES_CTR_IV_আকার);
     a->block_offset = 0;
 }
 
-void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv)
+শূন্য av_aes_ctr_set_full_iv(কাঠামো AVAESCTR *a, ধ্রুবক uint8_t* iv)
 {
-    memcpy(a->counter, iv, sizeof(a->counter));
+    memcpy(a->গণক, iv, আকার(a->গণক));
     a->block_offset = 0;
 }
 
-const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a)
+ধ্রুবক uint8_t* av_aes_ctr_get_iv(কাঠামো AVAESCTR *a)
 {
-    return a->counter;
+    ফেরত a->গণক;
 }
 
-void av_aes_ctr_set_random_iv(struct AVAESCTR *a)
+শূন্য av_aes_ctr_set_random_iv(কাঠামো AVAESCTR *a)
 {
     uint32_t iv[2];
 
@@ -71,65 +71,65 @@ void av_aes_ctr_set_random_iv(struct AVAESCTR *a)
     av_aes_ctr_set_iv(a, (uint8_t*)iv);
 }
 
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key)
+পূর্ণসংখ্যা av_aes_ctr_init(কাঠামো AVAESCTR *a, ধ্রুবক uint8_t *চাবি)
 {
-    av_aes_init(&a->aes, key, 128, 0);
+    av_aes_init(&a->aes, চাবি, 128, 0);
 
-    memset(a->counter, 0, sizeof(a->counter));
+    memset(a->গণক, 0, আকার(a->গণক));
     a->block_offset = 0;
 
-    return 0;
+    ফেরত 0;
 }
 
-void av_aes_ctr_free(struct AVAESCTR *a)
+শূন্য av_aes_ctr_free(কাঠামো AVAESCTR *a)
 {
     av_free(a);
 }
 
-static inline void av_aes_ctr_increment_be64(uint8_t* counter)
+স্থির অন্তঃরেখ শূন্য av_aes_ctr_increment_be64(uint8_t* গণক)
 {
-    uint64_t c = AV_RB64A(counter) + 1;
-    AV_WB64A(counter, c);
+    uint64_t c = AV_RB64A(গণক) + 1;
+    AV_WB64A(গণক, c);
 }
 
-void av_aes_ctr_increment_iv(struct AVAESCTR *a)
+শূন্য av_aes_ctr_increment_iv(কাঠামো AVAESCTR *a)
 {
-    av_aes_ctr_increment_be64(a->counter);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
+    av_aes_ctr_increment_be64(a->গণক);
+    memset(a->গণক + AES_CTR_IV_আকার, 0, আকার(a->গণক) - AES_CTR_IV_আকার);
     a->block_offset = 0;
 }
 
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int count)
+শূন্য av_aes_ctr_crypt(কাঠামো AVAESCTR *a, uint8_t *dst, ধ্রুবক uint8_t *src, পূর্ণসংখ্যা গুনতি)
 {
-    if (a->block_offset && count > 0) {
-        int left = FFMIN(count, AES_BLOCK_SIZE - a->block_offset);
-        for (int len = 0; len < left; len++)
-            dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
-        a->block_offset &= AES_BLOCK_SIZE - 1;
-        dst += left;
-        src += left;
-        count -= left;
+    যদি (a->block_offset && গুনতি > 0) {
+        পূর্ণসংখ্যা বাম = FFMIN(গুনতি, AES_BLOCK_আকার - a->block_offset);
+        জন্য (পূর্ণসংখ্যা len = 0; len < বাম; len++)
+            dst[len] = src[len] ^ a->encrypted_গণক[a->block_offset++];
+        a->block_offset &= AES_BLOCK_আকার - 1;
+        dst += বাম;
+        src += বাম;
+        গুনতি -= বাম;
     }
 
-    while (count >= AES_BLOCK_SIZE) {
-        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
-        av_aes_ctr_increment_be64(a->counter + 8);
-#if HAVE_FAST_64BIT
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 8)
-            AV_WN64(&dst[len], AV_RN64(&src[len]) ^ AV_RN64A(&a->encrypted_counter[len]));
-#else
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 4)
-            AV_WN32(&dst[len], AV_RN32(&src[len]) ^ AV_RN32A(&a->encrypted_counter[len]));
+    যখন (গুনতি >= AES_BLOCK_আকার) {
+        av_aes_crypt(&a->aes, a->encrypted_গণক, a->গণক, 1, ফাঁকা, 0);
+        av_aes_ctr_increment_be64(a->গণক + 8);
+#যদি HAVE_FAST_64BIT
+        জন্য (পূর্ণসংখ্যা len = 0; len < AES_BLOCK_আকার; len += 8)
+            AV_WN64(&dst[len], AV_RN64(&src[len]) ^ AV_RN64A(&a->encrypted_গণক[len]));
+#অন্যথা
+        জন্য (পূর্ণসংখ্যা len = 0; len < AES_BLOCK_আকার; len += 4)
+            AV_WN32(&dst[len], AV_RN32(&src[len]) ^ AV_RN32A(&a->encrypted_গণক[len]));
 #endif
-        dst += AES_BLOCK_SIZE;
-        src += AES_BLOCK_SIZE;
-        count -= AES_BLOCK_SIZE;
+        dst += AES_BLOCK_আকার;
+        src += AES_BLOCK_আকার;
+        গুনতি -= AES_BLOCK_আকার;
     }
 
-    if (count > 0) {
-        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
-        av_aes_ctr_increment_be64(a->counter + 8);
-        for (int len = 0; len < count; len++)
-            dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
+    যদি (গুনতি > 0) {
+        av_aes_crypt(&a->aes, a->encrypted_গণক, a->গণক, 1, ফাঁকা, 0);
+        av_aes_ctr_increment_be64(a->গণক + 8);
+        জন্য (পূর্ণসংখ্যা len = 0; len < গুনতি; len++)
+            dst[len] = src[len] ^ a->encrypted_গণক[a->block_offset++];
     }
 }

@@ -18,33 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include "libavutil/aes_internal.h"
-#include "libavutil/x86/cpu.h"
+#অন্তর্ভাব <stddef.h>
+#অন্তর্ভাব "libavutil/aes_internal.h"
+#অন্তর্ভাব "libavutil/x86/cpu.h"
 
-void ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+শূন্য ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, ধ্রুবক uint8_t *src,
+                             পূর্ণসংখ্যা গুনতি, uint8_t *iv, পূর্ণসংখ্যা rounds);
+শূন্য ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, ধ্রুবক uint8_t *src,
+                             পূর্ণসংখ্যা গুনতি, uint8_t *iv, পূর্ণসংখ্যা rounds);
+শূন্য ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, ধ্রুবক uint8_t *src,
+                             পূর্ণসংখ্যা গুনতি, uint8_t *iv, পূর্ণসংখ্যা rounds);
+শূন্য ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, ধ্রুবক uint8_t *src,
+                             পূর্ণসংখ্যা গুনতি, uint8_t *iv, পূর্ণসংখ্যা rounds);
+শূন্য ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, ধ্রুবক uint8_t *src,
+                             পূর্ণসংখ্যা গুনতি, uint8_t *iv, পূর্ণসংখ্যা rounds);
+শূন্য ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, ধ্রুবক uint8_t *src,
+                             পূর্ণসংখ্যা গুনতি, uint8_t *iv, পূর্ণসংখ্যা rounds);
 
-void ff_init_aes_x86(AVAES *a, int decrypt)
+শূন্য ff_init_aes_x86(AVAES *a, পূর্ণসংখ্যা decrypt)
 {
-    int cpu_flags = av_get_cpu_flags();
+    পূর্ণসংখ্যা cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_AESNI(cpu_flags)) {
-        if (a->rounds == 10)
+    যদি (EXTERNAL_AESNI(cpu_flags)) {
+        যদি (a->rounds == 10)
             a->crypt = decrypt ? ff_aes_decrypt_10_aesni : ff_aes_encrypt_10_aesni;
-        else if (a->rounds == 12)
+        অন্যথা যদি (a->rounds == 12)
             a->crypt = decrypt ? ff_aes_decrypt_12_aesni : ff_aes_encrypt_12_aesni;
-        else if (a->rounds == 14)
+        অন্যথা যদি (a->rounds == 14)
             a->crypt = decrypt ? ff_aes_decrypt_14_aesni : ff_aes_encrypt_14_aesni;
     }
 }

@@ -16,25 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <string.h>
+#অন্তর্ভাব <stdio.h>
+#অন্তর্ভাব <string.h>
 
-#include "libavutil/avassert.h"
-#include "libavutil/buffer.h"
-#include "libavutil/dict.h"
-#include "libavutil/display.h"
-#include "libavutil/downmix_info.h"
-#include "libavutil/error.h"
-#include "libavutil/frame.h"
-#include "libavutil/macros.h"
-#include "libavutil/mem.h"
-#include "libavutil/motion_vector.h"
-#include "libavutil/spherical.h"
-#include "libavutil/stereo3d.h"
+#অন্তর্ভাব "libavutil/avassert.h"
+#অন্তর্ভাব "libavutil/buffer.h"
+#অন্তর্ভাব "libavutil/dict.h"
+#অন্তর্ভাব "libavutil/display.h"
+#অন্তর্ভাব "libavutil/downmix_info.h"
+#অন্তর্ভাব "libavutil/error.h"
+#অন্তর্ভাব "libavutil/frame.h"
+#অন্তর্ভাব "libavutil/macros.h"
+#অন্তর্ভাব "libavutil/mem.h"
+#অন্তর্ভাব "libavutil/motion_vector.h"
+#অন্তর্ভাব "libavutil/spherical.h"
+#অন্তর্ভাব "libavutil/stereo3d.h"
 
-typedef struct Set {
-    AVFrameSideData **sd;
-    int            nb_sd;
+প্রকারলেখ কাঠামো Set {
+    AVFrame_Side_তথ্য **sd;
+    পূর্ণসংখ্যা            nb_sd;
 } Set;
 
 /* Every entry below carries a payload laid out as AVFrameSideDataType
@@ -42,48 +42,48 @@ typedef struct Set {
  * reads the buffer back. The small number that identifies an entry in the
  * reference output therefore lives in the metadata dictionary, which
  * av_frame_side_data_clone() copies along with the buffer. */
-static void set_marker(AVFrameSideData *sd, int marker)
+স্থির শূন্য set_marker(AVFrame_Side_তথ্য *sd, পূর্ণসংখ্যা marker)
 {
-    char value[16];
+    অক্ষর মান[16];
 
-    snprintf(value, sizeof(value), "%d", marker);
-    av_assert0(av_dict_set(&sd->metadata, "marker", value, 0) >= 0);
+    snprintf(মান, আকার(মান), "%d", marker);
+    av_assert0(av_dict_set(&sd->metadata, "marker", মান, 0) >= 0);
 }
 
-static AVFrameSideData *new_entry(Set *s, enum AVFrameSideDataType type,
-                                  const void *payload, size_t size, int marker)
+স্থির AVFrame_Side_তথ্য *new_entry(Set *s, গণনা AVFrame_Side_তথ্য_Type type,
+                                  ধ্রুবক শূন্য *payload, size_t আকার_2, পূর্ণসংখ্যা marker)
 {
-    AVFrameSideData *sd = av_frame_side_data_new(&s->sd, &s->nb_sd, type,
-                                                 size, 0);
+    AVFrame_Side_তথ্য *sd = av_frame_side_তথ্য_new(&s->sd, &s->nb_sd, type,
+                                                 আকার_2, 0);
 
-    av_assert0(sd && sd->size == size);
-    memcpy(sd->data, payload, size);
+    av_assert0(sd && sd->আকার_2 == আকার_2);
+    memcpy(sd->তথ্য, payload, আকার_2);
     set_marker(sd, marker);
-    return sd;
+    ফেরত sd;
 }
 
-static AVBufferRef *payload_buffer(const void *payload, size_t size)
+স্থির AVBufferRef *payload_বাফার(ধ্রুবক শূন্য *payload, size_t আকার_2)
 {
-    AVBufferRef *buf = av_buffer_alloc(size);
+    AVBufferRef *buf = av_বাফার_alloc(আকার_2);
 
     av_assert0(buf);
-    memcpy(buf->data, payload, size);
-    return buf;
+    memcpy(buf->তথ্য, payload, আকার_2);
+    ফেরত buf;
 }
 
-static const char *entry_marker(const AVFrameSideData *sd)
+স্থির ধ্রুবক অক্ষর *entry_marker(ধ্রুবক AVFrame_Side_তথ্য *sd)
 {
-    const AVDictionaryEntry *e = av_dict_get(sd->metadata, "marker", NULL, 0);
+    ধ্রুবক AVDictionaryEntry *e = av_dict_get(sd->metadata, "marker", ফাঁকা, 0);
 
-    return e ? e->value : "none";
+    ফেরত e ? e->মান : "none";
 }
 
-static void print_set(const char *label, const Set *s)
+স্থির শূন্য print_set(ধ্রুবক অক্ষর *label, ধ্রুবক Set *s)
 {
     printf("%s: n=%d\n", label, s->nb_sd);
-    for (int i = 0; i < s->nb_sd; i++)
+    জন্য (পূর্ণসংখ্যা i = 0; i < s->nb_sd; i++)
         printf("  [%d] %s marker=%s\n", i,
-               av_frame_side_data_name(s->sd[i]->type),
+               av_frame_side_তথ্য_name(s->sd[i]->type),
                entry_marker(s->sd[i]));
 }
 
@@ -91,36 +91,36 @@ static void print_set(const char *label, const Set *s)
  * documented to drop the matching entries, not to keep the survivors where
  * they were, so printing by index would tie the reference to the current habit
  * of moving the last entry into the freed slot. */
-static void print_lookup(const char *label, const Set *s,
-                         const enum AVFrameSideDataType *types, size_t nb_types)
+স্থির শূন্য print_lookup(ধ্রুবক অক্ষর *label, ধ্রুবক Set *s,
+                         ধ্রুবক গণনা AVFrame_Side_তথ্য_Type *types, size_t nb_types)
 {
     printf("%s: n=%d\n", label, s->nb_sd);
-    for (size_t i = 0; i < nb_types; i++) {
-        const AVFrameSideData *sd =
-            av_frame_side_data_get(s->sd, s->nb_sd, types[i]);
-        const char *name = av_frame_side_data_name(types[i]);
+    জন্য (size_t i = 0; i < nb_types; i++) {
+        ধ্রুবক AVFrame_Side_তথ্য *sd =
+            av_frame_side_তথ্য_get(s->sd, s->nb_sd, types[i]);
+        ধ্রুবক অক্ষর *name = av_frame_side_তথ্য_name(types[i]);
 
-        if (sd)
+        যদি (sd)
             printf("    %s: marker=%s\n", name, entry_marker(sd));
-        else
+        অন্যথা
             printf("    %s: absent\n", name);
     }
 }
 
-int main(void)
+পূর্ণসংখ্যা প্রধান(শূন্য)
 {
     /* desc / name accessors. */
     printf("Testing av_frame_side_data_desc() / av_frame_side_data_name()\n");
-    static const enum AVFrameSideDataType known[] = {
-        AV_FRAME_DATA_STEREO3D,                    /* PROP_GLOBAL */
-        AV_FRAME_DATA_DYNAMIC_HDR_PLUS,            /* PROP_COLOR_DEPENDENT */
-        AV_FRAME_DATA_SPHERICAL,                   /* PROP_GLOBAL|SIZE_DEPENDENT */
-        AV_FRAME_DATA_DOWNMIX_INFO,                /* PROP_CHANNEL_DEPENDENT */
-        AV_FRAME_DATA_SEI_UNREGISTERED,            /* PROP_MULTI */
+    স্থির ধ্রুবক গণনা AVFrame_Side_তথ্য_Type known[] = {
+        AV_FRAME_তথ্য_STEREO3_D,                    /* PROP_GLOBAL */
+        AV_FRAME_তথ্য_DYNAMIC_HDR_PLUS,            /* PROP_COLOR_DEPENDENT */
+        AV_FRAME_তথ্য_SPHERICAL,                   /* PROP_GLOBAL|SIZE_DEPENDENT */
+        AV_FRAME_তথ্য_DOWNMIX_INFO,                /* PROP_CHANNEL_DEPENDENT */
+        AV_FRAME_তথ্য_SEI_UNREGISTERED,            /* PROP_MULTI */
     };
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(known); i++) {
-        const AVSideDataDescriptor *d = av_frame_side_data_desc(known[i]);
-        const char *n = av_frame_side_data_name(known[i]);
+    জন্য (size_t i = 0; i < FF_ARRAY_ELEMS(known); i++) {
+        ধ্রুবক AVSide_তথ্য_Descriptor *d = av_frame_side_তথ্য_desc(known[i]);
+        ধ্রুবক অক্ষর *n = av_frame_side_তথ্য_name(known[i]);
         /* Compare content: the API only promises a string identifying the
          * type, not the descriptor's own pointer. */
         printf("  type=%d name_match=%s props=0x%x\n", known[i],
@@ -130,17 +130,17 @@ int main(void)
 
     /* Invalid / unmapped types must return NULL (sd_props gap). */
     {
-        enum AVFrameSideDataType bad = (enum AVFrameSideDataType)-1;
+        গণনা AVFrame_Side_তথ্য_Type bad = (গণনা AVFrame_Side_তথ্য_Type)-1;
         printf("  invalid type desc=%s name=%s\n",
-               av_frame_side_data_desc(bad) ? "non-null" : "null",
-               av_frame_side_data_name(bad) ? "non-null" : "null");
+               av_frame_side_তথ্য_desc(bad) ? "non-null" : "null",
+               av_frame_side_তথ্য_name(bad) ? "non-null" : "null");
     }
 
     /* Payloads. The two structs are allocated through their public
      * allocators because their sizes are not part of the public ABI. */
-    size_t stereo3d_size, spherical_size;
-    AVStereo3D         *stereo3d  = av_stereo3d_alloc_size(&stereo3d_size);
-    AVSphericalMapping *spherical = av_spherical_alloc(&spherical_size);
+    size_t stereo3d_আকার, spherical_আকার;
+    AVStereo3D         *stereo3d  = av_stereo3d_alloc_আকার(&stereo3d_আকার);
+    AVSphericalMapping *spherical = av_spherical_alloc(&spherical_আকার);
     /* 16 bytes of uuid_iso_iec_11578 followed by user_data_payload_byte. */
     uint8_t udu[16 + 8] = {
         0x9a, 0x21, 0xf3, 0x4d, 0x6b, 0x1c, 0x47, 0x8e,
@@ -171,7 +171,7 @@ int main(void)
 
     stereo3d->type        = AV_STEREO3D_SIDEBYSIDE;
     stereo3d->view        = AV_STEREO3D_VIEW_PACKED;
-    stereo3d->primary_eye = AV_PRIMARY_EYE_LEFT;
+    stereo3d->primary_eye = AV_PRIMARY_EYE_বাম;
     stereo3d->baseline    = 65000;
 
     spherical->projection = AV_SPHERICAL_EQUIRECTANGULAR;
@@ -181,76 +181,76 @@ int main(void)
 
     /* Populate a set with several types, one of them MULTI. */
     Set set = { 0 };
-    new_entry(&set, AV_FRAME_DATA_STEREO3D, stereo3d, stereo3d_size, 100);
-    new_entry(&set, AV_FRAME_DATA_DOWNMIX_INFO, &downmix, sizeof(downmix),
+    new_entry(&set, AV_FRAME_তথ্য_STEREO3_D, stereo3d, stereo3d_আকার, 100);
+    new_entry(&set, AV_FRAME_তথ্য_DOWNMIX_INFO, &downmix, আকার(downmix),
               200);
-    new_entry(&set, AV_FRAME_DATA_SEI_UNREGISTERED, udu, sizeof(udu), 1);
-    udu[sizeof(udu) - 1] = '2';
-    new_entry(&set, AV_FRAME_DATA_SEI_UNREGISTERED, udu, sizeof(udu), 2);
-    new_entry(&set, AV_FRAME_DATA_SPHERICAL, spherical, spherical_size, 300);
+    new_entry(&set, AV_FRAME_তথ্য_SEI_UNREGISTERED, udu, আকার(udu), 1);
+    udu[আকার(udu) - 1] = '2';
+    new_entry(&set, AV_FRAME_তথ্য_SEI_UNREGISTERED, udu, আকার(udu), 2);
+    new_entry(&set, AV_FRAME_তথ্য_SPHERICAL, spherical, spherical_আকার, 300);
     /* Entries are appended, so this dump is the insertion order by
      * construction and shows both MULTI entries. */
     print_set("\nInitial set", &set);
 
     /* Types probed by every dump below. */
-    static const enum AVFrameSideDataType probed[] = {
-        AV_FRAME_DATA_STEREO3D,
-        AV_FRAME_DATA_DOWNMIX_INFO,
-        AV_FRAME_DATA_SEI_UNREGISTERED,
-        AV_FRAME_DATA_SPHERICAL,
-        AV_FRAME_DATA_DISPLAYMATRIX,
-        AV_FRAME_DATA_MOTION_VECTORS,
+    স্থির ধ্রুবক গণনা AVFrame_Side_তথ্য_Type probed[] = {
+        AV_FRAME_তথ্য_STEREO3_D,
+        AV_FRAME_তথ্য_DOWNMIX_INFO,
+        AV_FRAME_তথ্য_SEI_UNREGISTERED,
+        AV_FRAME_তথ্য_SPHERICAL,
+        AV_FRAME_তথ্য_DISPLAYMATRIX,
+        AV_FRAME_তথ্য_MOTION_VECTORS,
     };
 
     /* get / get_c: present and missing types. */
     printf("\nTesting av_frame_side_data_get()\n");
     {
-        const AVFrameSideData *got =
-            av_frame_side_data_get(set.sd, set.nb_sd, AV_FRAME_DATA_STEREO3D);
+        ধ্রুবক AVFrame_Side_তথ্য *got =
+            av_frame_side_তথ্য_get(set.sd, set.nb_sd, AV_FRAME_তথ্য_STEREO3_D);
         printf("  stereo3d: %s marker=%s payload_match=%s\n",
                got ? "found" : "missing", got ? entry_marker(got) : "none",
-               got && got->size == stereo3d_size &&
-               !memcmp(got->data, stereo3d, stereo3d_size) ? "yes" : "no");
-        got = av_frame_side_data_get(set.sd, set.nb_sd,
-                                     AV_FRAME_DATA_MASTERING_DISPLAY_METADATA);
+               got && got->আকার_2 == stereo3d_আকার &&
+               !memcmp(got->তথ্য, stereo3d, stereo3d_আকার) ? "yes" : "no");
+        got = av_frame_side_তথ্য_get(set.sd, set.nb_sd,
+                                     AV_FRAME_তথ্য_MASTERING_DISPLAY_METADATA);
         printf("  mastering (absent): %s\n", got ? "FAIL" : "null");
     }
 
     /* remove by type clears all matching entries (including duplicates). */
     printf("\nTesting av_frame_side_data_remove()\n");
-    av_frame_side_data_remove(&set.sd, &set.nb_sd,
-                              AV_FRAME_DATA_SEI_UNREGISTERED);
+    av_frame_side_তথ্য_remove(&set.sd, &set.nb_sd,
+                              AV_FRAME_তথ্য_SEI_UNREGISTERED);
     print_lookup("  after remove SEI_UNREGISTERED", &set,
                  probed, FF_ARRAY_ELEMS(probed));
 
     /* remove_by_props: PROP_GLOBAL drops STEREO3D and SPHERICAL. */
     printf("\nTesting av_frame_side_data_remove_by_props()\n");
-    av_frame_side_data_remove_by_props(&set.sd, &set.nb_sd,
-                                       AV_SIDE_DATA_PROP_GLOBAL);
+    av_frame_side_তথ্য_remove_by_props(&set.sd, &set.nb_sd,
+                                       AV_SIDE_তথ্য_PROP_GLOBAL);
     print_lookup("  after remove_by_props(GLOBAL)", &set,
                  probed, FF_ARRAY_ELEMS(probed));
 
     /* Clone: copy remaining entry into a second set. */
     printf("\nTesting av_frame_side_data_clone()\n");
     Set dst = { 0 };
-    if (set.nb_sd > 0) {
-        int ret = av_frame_side_data_clone(&dst.sd, &dst.nb_sd,
+    যদি (set.nb_sd > 0) {
+        পূর্ণসংখ্যা ret = av_frame_side_তথ্য_clone(&dst.sd, &dst.nb_sd,
                                            set.sd[0], 0);
         printf("  clone into empty: ret=%d nb=%d marker=%s\n", ret, dst.nb_sd,
                dst.nb_sd ? entry_marker(dst.sd[0]) : "none");
 
         /* Same type again without REPLACE must fail with EEXIST. */
-        ret = av_frame_side_data_clone(&dst.sd, &dst.nb_sd, set.sd[0], 0);
+        ret = av_frame_side_তথ্য_clone(&dst.sd, &dst.nb_sd, set.sd[0], 0);
         printf("  clone duplicate no REPLACE: ret==AVERROR(EEXIST)=%s\n",
                ret == AVERROR(EEXIST) ? "yes" : "no");
 
         /* With REPLACE, clone replaces the existing entry in place. */
-        ret = av_frame_side_data_clone(&dst.sd, &dst.nb_sd, set.sd[0],
-                                       AV_FRAME_SIDE_DATA_FLAG_REPLACE);
+        ret = av_frame_side_তথ্য_clone(&dst.sd, &dst.nb_sd, set.sd[0],
+                                       AV_FRAME_SIDE_তথ্য_FLAG_REPLACE);
         printf("  clone REPLACE: ret=%d nb=%d\n", ret, dst.nb_sd);
 
         /* Invalid args. */
-        ret = av_frame_side_data_clone(NULL, &dst.nb_sd, set.sd[0], 0);
+        ret = av_frame_side_তথ্য_clone(ফাঁকা, &dst.nb_sd, set.sd[0], 0);
         printf("  clone NULL sd: ret==AVERROR(EINVAL)=%s\n",
                ret == AVERROR(EINVAL) ? "yes" : "no");
     }
@@ -258,48 +258,48 @@ int main(void)
     /* add: buffer ownership transfer and NEW_REF. */
     printf("\nTesting av_frame_side_data_add()\n");
     {
-        AVBufferRef *buf = payload_buffer(displaymatrix, sizeof(displaymatrix));
+        AVBufferRef *buf = payload_বাফার(displaymatrix, আকার(displaymatrix));
 
-        AVFrameSideData *sd_added =
-            av_frame_side_data_add(&dst.sd, &dst.nb_sd,
-                                   AV_FRAME_DATA_DISPLAYMATRIX,
-                                   &buf, AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
+        AVFrame_Side_তথ্য *sd_added =
+            av_frame_side_তথ্য_add(&dst.sd, &dst.nb_sd,
+                                   AV_FRAME_তথ্য_DISPLAYMATRIX,
+                                   &buf, AV_FRAME_SIDE_তথ্য_FLAG_UNIQUE);
         printf("  add (move): added=%s pbuf_nulled=%s\n",
-               sd_added ? "yes" : "no", buf == NULL ? "yes" : "no");
-        if (sd_added)
+               sd_added ? "yes" : "no", buf == ফাঁকা ? "yes" : "no");
+        যদি (sd_added)
             set_marker(sd_added, 999);
 
         /* NEW_REF: the caller retains its reference. */
-        AVBufferRef *keep = payload_buffer(mvs, sizeof(mvs));
-        sd_added = av_frame_side_data_add(&dst.sd, &dst.nb_sd,
-                                          AV_FRAME_DATA_MOTION_VECTORS, &keep,
-                                          AV_FRAME_SIDE_DATA_FLAG_NEW_REF);
+        AVBufferRef *keep = payload_বাফার(mvs, আকার(mvs));
+        sd_added = av_frame_side_তথ্য_add(&dst.sd, &dst.nb_sd,
+                                          AV_FRAME_তথ্য_MOTION_VECTORS, &keep,
+                                          AV_FRAME_SIDE_তথ্য_FLAG_NEW_REF);
         printf("  add (NEW_REF): added=%s caller_ref_kept=%s nb_mvs=%d\n",
                sd_added ? "yes" : "no", keep ? "yes" : "no",
-               sd_added ? (int)(sd_added->size / sizeof(AVMotionVector)) : -1);
-        if (sd_added)
+               sd_added ? (পূর্ণসংখ্যা)(sd_added->আকার_2 / আকার(AVMotionVector)) : -1);
+        যদি (sd_added)
             set_marker(sd_added, 42);
-        av_buffer_unref(&keep);
+        av_বাফার_unref(&keep);
 
         /* REPLACE on existing entry: same type, payload swaps in place. */
         int32_t replacement[9];
         av_display_rotation_set(replacement, 180.0);
-        AVBufferRef *repl = payload_buffer(replacement, sizeof(replacement));
-        sd_added = av_frame_side_data_add(&dst.sd, &dst.nb_sd,
-                                          AV_FRAME_DATA_DISPLAYMATRIX, &repl,
-                                          AV_FRAME_SIDE_DATA_FLAG_REPLACE);
-        if (sd_added)
+        AVBufferRef *repl = payload_বাফার(replacement, আকার(replacement));
+        sd_added = av_frame_side_তথ্য_add(&dst.sd, &dst.nb_sd,
+                                          AV_FRAME_তথ্য_DISPLAYMATRIX, &repl,
+                                          AV_FRAME_SIDE_তথ্য_FLAG_REPLACE);
+        যদি (sd_added)
             set_marker(sd_added, 1234);
         {
-            const AVFrameSideData *after =
-                av_frame_side_data_get(dst.sd, dst.nb_sd,
-                                       AV_FRAME_DATA_DISPLAYMATRIX);
+            ধ্রুবক AVFrame_Side_তথ্য *after =
+                av_frame_side_তথ্য_get(dst.sd, dst.nb_sd,
+                                       AV_FRAME_তথ্য_DISPLAYMATRIX);
             printf("  add (REPLACE existing): added=%s marker=%s"
                    " payload_match=%s\n",
                    sd_added ? "yes" : "no",
                    after ? entry_marker(after) : "none",
-                   after && after->size == sizeof(replacement) &&
-                   !memcmp(after->data, replacement, sizeof(replacement)) ?
+                   after && after->আকার_2 == আকার(replacement) &&
+                   !memcmp(after->তথ্য, replacement, আকার(replacement)) ?
                    "yes" : "no");
         }
     }
@@ -307,22 +307,22 @@ int main(void)
     /* clone with UNIQUE: existing same-type entry is removed first. dst
      * already has a set.sd[0]->type entry from the REPLACE clone above. */
     printf("\nTesting av_frame_side_data_clone() UNIQUE\n");
-    if (set.nb_sd > 0) {
-        int before = dst.nb_sd;
-        int ret = av_frame_side_data_clone(&dst.sd, &dst.nb_sd, set.sd[0],
-                                           AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
+    যদি (set.nb_sd > 0) {
+        পূর্ণসংখ্যা before = dst.nb_sd;
+        পূর্ণসংখ্যা ret = av_frame_side_তথ্য_clone(&dst.sd, &dst.nb_sd, set.sd[0],
+                                           AV_FRAME_SIDE_তথ্য_FLAG_UNIQUE);
         printf("  clone UNIQUE: ret=%d before=%d after=%d\n",
                ret, before, dst.nb_sd);
     }
 
     print_lookup("\nFinal dst", &dst, probed, FF_ARRAY_ELEMS(probed));
 
-    av_frame_side_data_free(&dst.sd, &dst.nb_sd);
-    av_frame_side_data_free(&set.sd, &set.nb_sd);
+    av_frame_side_তথ্য_free(&dst.sd, &dst.nb_sd);
+    av_frame_side_তথ্য_free(&set.sd, &set.nb_sd);
     printf("\nfree: set_nb=%d dst_nb=%d\n", set.nb_sd, dst.nb_sd);
 
     av_free(stereo3d);
     av_free(spherical);
 
-    return 0;
+    ফেরত 0;
 }

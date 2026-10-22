@@ -18,28 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "hdr_dynamic_vivid_metadata.h"
-#include "mem.h"
+#অন্তর্ভাব "hdr_dynamic_vivid_metadata.h"
+#অন্তর্ভাব "mem.h"
 
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *size)
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *আকার_2)
 {
-    AVDynamicHDRVivid *hdr_vivid = av_mallocz(sizeof(AVDynamicHDRVivid));
+    AVDynamicHDRVivid *hdr_vivid = av_mallocz(আকার(AVDynamicHDRVivid));
 
-    if (size)
-        *size = hdr_vivid ? sizeof(*hdr_vivid) : 0;
+    যদি (আকার_2)
+        *আকার_2 = hdr_vivid ? আকার(*hdr_vivid) : 0;
 
-    return hdr_vivid;
+    ফেরত hdr_vivid;
 }
 
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_data(AVFrame *frame)
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_তথ্য(AVFrame *frame)
 {
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_DYNAMIC_HDR_VIVID,
-                                                        sizeof(AVDynamicHDRVivid));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_তথ্য *side_তথ্য = av_frame_new_side_তথ্য(frame,
+                                                        AV_FRAME_তথ্য_DYNAMIC_HDR_VIVID,
+                                                        আকার(AVDynamicHDRVivid));
+    যদি (!side_তথ্য)
+        ফেরত ফাঁকা;
 
-    memset(side_data->data, 0, sizeof(AVDynamicHDRVivid));
+    memset(side_তথ্য->তথ্য, 0, আকার(AVDynamicHDRVivid));
 
-    return (AVDynamicHDRVivid *)side_data->data;
+    ফেরত (AVDynamicHDRVivid *)side_তথ্য->তথ্য;
 }

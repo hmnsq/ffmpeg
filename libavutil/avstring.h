@@ -21,9 +21,9 @@
 #ifndef AVUTIL_AVSTRING_H
 #define AVUTIL_AVSTRING_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "attributes.h"
+#অন্তর্ভাব <stddef.h>
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব "attributes.h"
 
 /**
  * @addtogroup lavu_string
@@ -39,7 +39,7 @@
  * @param ptr updated if the prefix is matched inside str
  * @return non-zero if the prefix matches, zero otherwise
  */
-int av_strstart(const char *str, const char *pfx, const char **ptr);
+পূর্ণসংখ্যা av_strstart(ধ্রুবক অক্ষর *str, ধ্রুবক অক্ষর *pfx, ধ্রুবক অক্ষর **ptr);
 
 /**
  * Return non-zero if pfx is a prefix of str independent of case. If
@@ -51,7 +51,7 @@ int av_strstart(const char *str, const char *pfx, const char **ptr);
  * @param ptr updated if the prefix is matched inside str
  * @return non-zero if the prefix matches, zero otherwise
  */
-int av_stristart(const char *str, const char *pfx, const char **ptr);
+পূর্ণসংখ্যা av_stristart(ধ্রুবক অক্ষর *str, ধ্রুবক অক্ষর *pfx, ধ্রুবক অক্ষর **ptr);
 
 /**
  * Locate the first case-independent occurrence in the string haystack
@@ -65,7 +65,7 @@ int av_stristart(const char *str, const char *pfx, const char **ptr);
  * @return         pointer to the located match within haystack
  *                 or a null pointer if no match
  */
-char *av_stristr(const char *haystack, const char *needle);
+অক্ষর *av_stristr(ধ্রুবক অক্ষর *haystack, ধ্রুবক অক্ষর *needle);
 
 /**
  * Locate the first occurrence of the string needle in the string haystack
@@ -80,7 +80,7 @@ char *av_stristr(const char *haystack, const char *needle);
  * @return           pointer to the located match within haystack
  *                   or a null pointer if no match
  */
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length);
+অক্ষর *av_strnstr(ধ্রুবক অক্ষর *haystack, ধ্রুবক অক্ষর *needle, size_t hay_দৈর্ঘ্য);
 
 /**
  * Copy the string src to dst, but no more than size - 1 bytes, and
@@ -97,7 +97,7 @@ char *av_strnstr(const char *haystack, const char *needle, size_t hay_length);
  * _must_ be a properly 0-terminated string, otherwise this will read beyond
  * the end of the buffer and possibly crash.
  */
-size_t av_strlcpy(char *dst, const char *src, size_t size);
+size_t av_strlcpy(অক্ষর *dst, ধ্রুবক অক্ষর *src, size_t আকার_2);
 
 /**
  * Append the string src to the string dst, but to a total length of
@@ -115,7 +115,7 @@ size_t av_strlcpy(char *dst, const char *src, size_t size);
  * absolutely _must_ be a properly 0-terminated strings, otherwise this
  * will read beyond the end of the buffer and possibly crash.
  */
-size_t av_strlcat(char *dst, const char *src, size_t size);
+size_t av_strlcat(অক্ষর *dst, ধ্রুবক অক্ষর *src, size_t আকার_2);
 
 /**
  * Append output to a string, according to a format. Never write out of
@@ -129,7 +129,7 @@ size_t av_strlcat(char *dst, const char *src, size_t size);
  * @return the length of the string that would have been generated
  *  if enough space had been available
  */
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...) av_printf_format(3, 4);
+size_t av_strlcatf(অক্ষর *dst, size_t আকার_2, ধ্রুবক অক্ষর *fmt, ...) av_printf_format(3, 4);
 
 /**
  * Get the count of continuous non zero chars starting from the beginning.
@@ -138,12 +138,12 @@ size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...) av_printf_forma
  * @param len maximum number of characters to check in the string, that
  *            is the maximum value which is returned by the function
  */
-static inline size_t av_strnlen(const char *s, size_t len)
+স্থির অন্তঃরেখ size_t av_strnlen(ধ্রুবক অক্ষর *s, size_t len)
 {
     size_t i;
-    for (i = 0; i < len && s[i]; i++)
+    জন্য (i = 0; i < len && s[i]; i++)
         ;
-    return i;
+    ফেরত i;
 }
 
 /**
@@ -154,7 +154,7 @@ static inline size_t av_strnlen(const char *s, size_t len)
  * @return the allocated string
  * @note You have to free the string yourself with av_free().
  */
-char *av_asprintf(const char *fmt, ...) av_printf_format(1, 2);
+অক্ষর *av_asprintf(ধ্রুবক অক্ষর *fmt, ...) av_printf_format(1, 2);
 
 /**
  * Unescape the given string until a non escaped terminating char,
@@ -170,7 +170,7 @@ char *av_asprintf(const char *fmt, ...) av_printf_format(1, 2);
  * @return the malloced unescaped string, which must be av_freed by
  * the user, NULL in case of allocation failure
  */
-char *av_get_token(const char **buf, const char *term);
+অক্ষর *av_get_token(ধ্রুবক অক্ষর **buf, ধ্রুবক অক্ষর *term);
 
 /**
  * Split the string into several tokens which can be accessed by
@@ -194,79 +194,79 @@ char *av_get_token(const char **buf, const char *term);
  * first delimiter found, or to NULL if the string was terminated
  * @return the found token, or NULL when no token is found
  */
-char *av_strtok(char *s, const char *delim, char **saveptr);
+অক্ষর *av_strtok(অক্ষর *s, ধ্রুবক অক্ষর *delim, অক্ষর **saveptr);
 
 /**
  * Locale-independent conversion of ASCII isdigit.
  */
-static inline av_const int av_isdigit(int c)
+স্থির অন্তঃরেখ av_const পূর্ণসংখ্যা av_isdigit(পূর্ণসংখ্যা c)
 {
-    return c >= '0' && c <= '9';
+    ফেরত c >= '0' && c <= '9';
 }
 
 /**
  * Locale-independent conversion of ASCII isgraph.
  */
-static inline av_const int av_isgraph(int c)
+স্থির অন্তঃরেখ av_const পূর্ণসংখ্যা av_isgraph(পূর্ণসংখ্যা c)
 {
-    return c > 32 && c < 127;
+    ফেরত c > 32 && c < 127;
 }
 
 /**
  * Locale-independent conversion of ASCII isspace.
  */
-static inline av_const int av_isspace(int c)
+স্থির অন্তঃরেখ av_const পূর্ণসংখ্যা av_isspace(পূর্ণসংখ্যা c)
 {
-    return c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
+    ফেরত c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
            c == '\v';
 }
 
 /**
  * Locale-independent conversion of ASCII characters to uppercase.
  */
-static inline av_const int av_toupper(int c)
+স্থির অন্তঃরেখ av_const পূর্ণসংখ্যা av_toupper(পূর্ণসংখ্যা c)
 {
-    if (c >= 'a' && c <= 'z')
+    যদি (c >= 'a' && c <= 'z')
         c ^= 0x20;
-    return c;
+    ফেরত c;
 }
 
 /**
  * Locale-independent conversion of ASCII characters to lowercase.
  */
-static inline av_const int av_tolower(int c)
+স্থির অন্তঃরেখ av_const পূর্ণসংখ্যা av_tolower(পূর্ণসংখ্যা c)
 {
-    if (c >= 'A' && c <= 'Z')
+    যদি (c >= 'A' && c <= 'Z')
         c ^= 0x20;
-    return c;
+    ফেরত c;
 }
 
 /**
  * Locale-independent conversion of ASCII isxdigit.
  */
-static inline av_const int av_isxdigit(int c)
+স্থির অন্তঃরেখ av_const পূর্ণসংখ্যা av_isxdigit(পূর্ণসংখ্যা c)
 {
     c = av_tolower(c);
-    return av_isdigit(c) || (c >= 'a' && c <= 'f');
+    ফেরত av_isdigit(c) || (c >= 'a' && c <= 'f');
 }
 
 /**
  * Locale-independent case-insensitive compare.
  * @note This means only ASCII-range characters are case-insensitive
  */
-int av_strcasecmp(const char *a, const char *b);
+পূর্ণসংখ্যা av_strcasecmp(ধ্রুবক অক্ষর *a, ধ্রুবক অক্ষর *b);
 
 /**
  * Locale-independent case-insensitive compare.
  * @note This means only ASCII-range characters are case-insensitive
  */
-int av_strncasecmp(const char *a, const char *b, size_t n);
+পূর্ণসংখ্যা av_strncasecmp(ধ্রুবক অক্ষর *a, ধ্রুবক অক্ষর *b, size_t n);
 
 /**
  * Locale-independent strings replace.
  * @note This means only ASCII-range characters are replaced.
  */
-char *av_strireplace(const char *str, const char *from, const char *to);
+অক্ষর *av_strireplace(ধ্রুবক অক্ষর *str, ধ্রুবক অক্ষর *from, ধ্রুবক অক্ষর *to);
 
 /**
  * Thread safe basename.
@@ -276,7 +276,7 @@ char *av_strireplace(const char *str, const char *from, const char *to);
  * If path is a NULL pointer or points to an empty string, a pointer
  * to a string "." is returned.
  */
-const char *av_basename(const char *path);
+ধ্রুবক অক্ষর *av_basename(ধ্রুবক অক্ষর *path);
 
 /**
  * Thread safe dirname.
@@ -286,7 +286,7 @@ const char *av_basename(const char *path);
  * to a string "." is returned.
  * @note the function may modify the contents of the path, so copies should be passed.
  */
-const char *av_dirname(char *path);
+ধ্রুবক অক্ষর *av_dirname(অক্ষর *path);
 
 /**
  * Match instances of a name in a comma-separated list of names.
@@ -299,7 +299,7 @@ const char *av_dirname(char *path);
  * @param names List of names.
  * @return 1 on match, 0 otherwise.
  */
-int av_match_name(const char *name, const char *names);
+পূর্ণসংখ্যা av_match_name(ধ্রুবক অক্ষর *name, ধ্রুবক অক্ষর *names);
 
 /**
  * Append path component to the existing path.
@@ -309,9 +309,9 @@ int av_match_name(const char *name, const char *names);
  * @param component component to be appended
  * @return new path or NULL on error.
  */
-char *av_append_path_component(const char *path, const char *component);
+অক্ষর *av_append_path_component(ধ্রুবক অক্ষর *path, ধ্রুবক অক্ষর *component);
 
-enum AVEscapeMode {
+গণনা AVEscapeMode {
     AV_ESCAPE_MODE_AUTO,      ///< Use auto-selected escaping mode.
     AV_ESCAPE_MODE_BACKSLASH, ///< Use backslash escaping.
     AV_ESCAPE_MODE_QUOTE,     ///< Use single-quote escaping.
@@ -364,9 +364,9 @@ enum AVEscapeMode {
  * @return the length of the allocated string, or a negative error code in case of error
  * @see av_bprint_escape()
  */
-av_warn_unused_result
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags);
+av_warn_unused_ফলাফল
+পূর্ণসংখ্যা av_escape(অক্ষর **dst, ধ্রুবক অক্ষর *src, ধ্রুবক অক্ষর *special_chars,
+              গণনা AVEscapeMode mode, পূর্ণসংখ্যা flags);
 
 #define AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES          1 ///< accept codepoints over 0x10FFFF
 #define AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS             2 ///< accept non-characters - 0xFFFE and 0xFFFF
@@ -404,22 +404,22 @@ int av_escape(char **dst, const char *src, const char *special_chars,
  * @return >= 0 in case a sequence was successfully read, a negative
  * value in case of invalid sequence
  */
-av_warn_unused_result
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags);
+av_warn_unused_ফলাফল
+পূর্ণসংখ্যা av_utf8_decode(int32_t *codep, ধ্রুবক uint8_t **bufp, ধ্রুবক uint8_t *buf_end,
+                   unsigned পূর্ণসংখ্যা flags);
 
 /**
  * Check if a name is in a list.
  * @returns 0 if not found, or the 1 based index where it has been found in the
  *            list.
  */
-int av_match_list(const char *name, const char *list, char separator);
+পূর্ণসংখ্যা av_match_list(ধ্রুবক অক্ষর *name, ধ্রুবক অক্ষর *list, অক্ষর separator);
 
 /**
  * See libc sscanf manual for more information.
  * Locale-independent sscanf implementation.
  */
-int av_sscanf(const char *string, const char *format, ...) av_scanf_format(2, 3);
+পূর্ণসংখ্যা av_sscanf(ধ্রুবক অক্ষর *string, ধ্রুবক অক্ষর *format, ...) av_scanf_format(2, 3);
 
 /**
  * @}

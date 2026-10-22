@@ -22,11 +22,11 @@
 #ifndef AVUTIL_CHANNEL_LAYOUT_H
 #define AVUTIL_CHANNEL_LAYOUT_H
 
-#include <stdint.h>
-#include <stdlib.h>
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব <stdlib.h>
 
-#include "version.h"
-#include "attributes.h"
+#অন্তর্ভাব "version.h"
+#অন্তর্ভাব "attributes.h"
 
 /**
  * @file
@@ -44,48 +44,48 @@
  * @{
  */
 
-enum AVChannel {
+গণনা AVChannel {
     /// Invalid channel index
     AV_CHAN_NONE = -1,
-    AV_CHAN_FRONT_LEFT,
-    AV_CHAN_FRONT_RIGHT,
+    AV_CHAN_FRONT_বাম,
+    AV_CHAN_FRONT_ডান,
     AV_CHAN_FRONT_CENTER,
-    AV_CHAN_LOW_FREQUENCY,
-    AV_CHAN_BACK_LEFT,
-    AV_CHAN_BACK_RIGHT,
-    AV_CHAN_FRONT_LEFT_OF_CENTER,
-    AV_CHAN_FRONT_RIGHT_OF_CENTER,
+    AV_CHAN_নিচের_FREQUENCY,
+    AV_CHAN_BACK_বাম,
+    AV_CHAN_BACK_ডান,
+    AV_CHAN_FRONT_বাম_OF_CENTER,
+    AV_CHAN_FRONT_ডান_OF_CENTER,
     AV_CHAN_BACK_CENTER,
-    AV_CHAN_SIDE_LEFT,
-    AV_CHAN_SIDE_RIGHT,
-    AV_CHAN_TOP_CENTER,
-    AV_CHAN_TOP_FRONT_LEFT,
-    AV_CHAN_TOP_FRONT_CENTER,
-    AV_CHAN_TOP_FRONT_RIGHT,
-    AV_CHAN_TOP_BACK_LEFT,
-    AV_CHAN_TOP_BACK_CENTER,
-    AV_CHAN_TOP_BACK_RIGHT,
+    AV_CHAN_SIDE_বাম,
+    AV_CHAN_SIDE_ডান,
+    AV_CHAN_শীর্ষ_CENTER,
+    AV_CHAN_শীর্ষ_FRONT_বাম,
+    AV_CHAN_শীর্ষ_FRONT_CENTER,
+    AV_CHAN_শীর্ষ_FRONT_ডান,
+    AV_CHAN_শীর্ষ_BACK_বাম,
+    AV_CHAN_শীর্ষ_BACK_CENTER,
+    AV_CHAN_শীর্ষ_BACK_ডান,
     /** Stereo downmix. */
-    AV_CHAN_STEREO_LEFT = 29,
+    AV_CHAN_STEREO_বাম = 29,
     /** See above. */
-    AV_CHAN_STEREO_RIGHT,
-    AV_CHAN_WIDE_LEFT,
-    AV_CHAN_WIDE_RIGHT,
-    AV_CHAN_SURROUND_DIRECT_LEFT,
-    AV_CHAN_SURROUND_DIRECT_RIGHT,
-    AV_CHAN_LOW_FREQUENCY_2,
-    AV_CHAN_TOP_SIDE_LEFT,
-    AV_CHAN_TOP_SIDE_RIGHT,
+    AV_CHAN_STEREO_ডান,
+    AV_CHAN_WIDE_বাম,
+    AV_CHAN_WIDE_ডান,
+    AV_CHAN_SURROUND_DIRECT_বাম,
+    AV_CHAN_SURROUND_DIRECT_ডান,
+    AV_CHAN_নিচের_FREQUENCY_2,
+    AV_CHAN_শীর্ষ_SIDE_বাম,
+    AV_CHAN_শীর্ষ_SIDE_ডান,
     AV_CHAN_BOTTOM_FRONT_CENTER,
-    AV_CHAN_BOTTOM_FRONT_LEFT,
-    AV_CHAN_BOTTOM_FRONT_RIGHT,
-    AV_CHAN_SIDE_SURROUND_LEFT,     ///<  +90 degrees, Lss, SiL
-    AV_CHAN_SIDE_SURROUND_RIGHT,    ///<  -90 degrees, Rss, SiR
-    AV_CHAN_TOP_SURROUND_LEFT,      ///< +110 degrees, Lvs, TpLS
-    AV_CHAN_TOP_SURROUND_RIGHT,     ///< -110 degrees, Rvs, TpRS
+    AV_CHAN_BOTTOM_FRONT_বাম,
+    AV_CHAN_BOTTOM_FRONT_ডান,
+    AV_CHAN_SIDE_SURROUND_বাম,     ///<  +90 degrees, Lss, SiL
+    AV_CHAN_SIDE_SURROUND_ডান,    ///<  -90 degrees, Rss, SiR
+    AV_CHAN_শীর্ষ_SURROUND_বাম,      ///< +110 degrees, Lvs, TpLS
+    AV_CHAN_শীর্ষ_SURROUND_ডান,     ///< -110 degrees, Rvs, TpRS
 
-    AV_CHAN_BINAURAL_LEFT = 61,
-    AV_CHAN_BINAURAL_RIGHT,
+    AV_CHAN_BINAURAL_বাম = 61,
+    AV_CHAN_BINAURAL_ডান,
 
     /** Channel is empty can be safely skipped. */
     AV_CHAN_UNUSED = 0x200,
@@ -111,7 +111,7 @@ enum AVChannel {
     AV_CHAN_AMBISONIC_END  = 0x7ff,
 };
 
-enum AVChannelOrder {
+গণনা AVChannelOrder {
     /**
      * Only the channel count is specified, without any further information
      * about the channel order.
@@ -172,42 +172,42 @@ enum AVChannelOrder {
  *
  * @{
  */
-#define AV_CH_FRONT_LEFT             (1ULL << AV_CHAN_FRONT_LEFT           )
-#define AV_CH_FRONT_RIGHT            (1ULL << AV_CHAN_FRONT_RIGHT          )
+#define AV_CH_FRONT_বাম             (1ULL << AV_CHAN_FRONT_বাম           )
+#define AV_CH_FRONT_ডান            (1ULL << AV_CHAN_FRONT_ডান          )
 #define AV_CH_FRONT_CENTER           (1ULL << AV_CHAN_FRONT_CENTER         )
-#define AV_CH_LOW_FREQUENCY          (1ULL << AV_CHAN_LOW_FREQUENCY        )
-#define AV_CH_BACK_LEFT              (1ULL << AV_CHAN_BACK_LEFT            )
-#define AV_CH_BACK_RIGHT             (1ULL << AV_CHAN_BACK_RIGHT           )
-#define AV_CH_FRONT_LEFT_OF_CENTER   (1ULL << AV_CHAN_FRONT_LEFT_OF_CENTER )
-#define AV_CH_FRONT_RIGHT_OF_CENTER  (1ULL << AV_CHAN_FRONT_RIGHT_OF_CENTER)
+#define AV_CH_নিচের_FREQUENCY          (1ULL << AV_CHAN_নিচের_FREQUENCY        )
+#define AV_CH_BACK_বাম              (1ULL << AV_CHAN_BACK_বাম            )
+#define AV_CH_BACK_ডান             (1ULL << AV_CHAN_BACK_ডান           )
+#define AV_CH_FRONT_বাম_OF_CENTER   (1ULL << AV_CHAN_FRONT_বাম_OF_CENTER )
+#define AV_CH_FRONT_ডান_OF_CENTER  (1ULL << AV_CHAN_FRONT_ডান_OF_CENTER)
 #define AV_CH_BACK_CENTER            (1ULL << AV_CHAN_BACK_CENTER          )
-#define AV_CH_SIDE_LEFT              (1ULL << AV_CHAN_SIDE_LEFT            )
-#define AV_CH_SIDE_RIGHT             (1ULL << AV_CHAN_SIDE_RIGHT           )
-#define AV_CH_TOP_CENTER             (1ULL << AV_CHAN_TOP_CENTER           )
-#define AV_CH_TOP_FRONT_LEFT         (1ULL << AV_CHAN_TOP_FRONT_LEFT       )
-#define AV_CH_TOP_FRONT_CENTER       (1ULL << AV_CHAN_TOP_FRONT_CENTER     )
-#define AV_CH_TOP_FRONT_RIGHT        (1ULL << AV_CHAN_TOP_FRONT_RIGHT      )
-#define AV_CH_TOP_BACK_LEFT          (1ULL << AV_CHAN_TOP_BACK_LEFT        )
-#define AV_CH_TOP_BACK_CENTER        (1ULL << AV_CHAN_TOP_BACK_CENTER      )
-#define AV_CH_TOP_BACK_RIGHT         (1ULL << AV_CHAN_TOP_BACK_RIGHT       )
-#define AV_CH_STEREO_LEFT            (1ULL << AV_CHAN_STEREO_LEFT          )
-#define AV_CH_STEREO_RIGHT           (1ULL << AV_CHAN_STEREO_RIGHT         )
-#define AV_CH_WIDE_LEFT              (1ULL << AV_CHAN_WIDE_LEFT            )
-#define AV_CH_WIDE_RIGHT             (1ULL << AV_CHAN_WIDE_RIGHT           )
-#define AV_CH_SURROUND_DIRECT_LEFT   (1ULL << AV_CHAN_SURROUND_DIRECT_LEFT )
-#define AV_CH_SURROUND_DIRECT_RIGHT  (1ULL << AV_CHAN_SURROUND_DIRECT_RIGHT)
-#define AV_CH_LOW_FREQUENCY_2        (1ULL << AV_CHAN_LOW_FREQUENCY_2      )
-#define AV_CH_TOP_SIDE_LEFT          (1ULL << AV_CHAN_TOP_SIDE_LEFT        )
-#define AV_CH_TOP_SIDE_RIGHT         (1ULL << AV_CHAN_TOP_SIDE_RIGHT       )
+#define AV_CH_SIDE_বাম              (1ULL << AV_CHAN_SIDE_বাম            )
+#define AV_CH_SIDE_ডান             (1ULL << AV_CHAN_SIDE_ডান           )
+#define AV_CH_শীর্ষ_CENTER             (1ULL << AV_CHAN_শীর্ষ_CENTER           )
+#define AV_CH_শীর্ষ_FRONT_বাম         (1ULL << AV_CHAN_শীর্ষ_FRONT_বাম       )
+#define AV_CH_শীর্ষ_FRONT_CENTER       (1ULL << AV_CHAN_শীর্ষ_FRONT_CENTER     )
+#define AV_CH_শীর্ষ_FRONT_ডান        (1ULL << AV_CHAN_শীর্ষ_FRONT_ডান      )
+#define AV_CH_শীর্ষ_BACK_বাম          (1ULL << AV_CHAN_শীর্ষ_BACK_বাম        )
+#define AV_CH_শীর্ষ_BACK_CENTER        (1ULL << AV_CHAN_শীর্ষ_BACK_CENTER      )
+#define AV_CH_শীর্ষ_BACK_ডান         (1ULL << AV_CHAN_শীর্ষ_BACK_ডান       )
+#define AV_CH_STEREO_বাম            (1ULL << AV_CHAN_STEREO_বাম          )
+#define AV_CH_STEREO_ডান           (1ULL << AV_CHAN_STEREO_ডান         )
+#define AV_CH_WIDE_বাম              (1ULL << AV_CHAN_WIDE_বাম            )
+#define AV_CH_WIDE_ডান             (1ULL << AV_CHAN_WIDE_ডান           )
+#define AV_CH_SURROUND_DIRECT_বাম   (1ULL << AV_CHAN_SURROUND_DIRECT_বাম )
+#define AV_CH_SURROUND_DIRECT_ডান  (1ULL << AV_CHAN_SURROUND_DIRECT_ডান)
+#define AV_CH_নিচের_FREQUENCY_2        (1ULL << AV_CHAN_নিচের_FREQUENCY_2      )
+#define AV_CH_শীর্ষ_SIDE_বাম          (1ULL << AV_CHAN_শীর্ষ_SIDE_বাম        )
+#define AV_CH_শীর্ষ_SIDE_ডান         (1ULL << AV_CHAN_শীর্ষ_SIDE_ডান       )
 #define AV_CH_BOTTOM_FRONT_CENTER    (1ULL << AV_CHAN_BOTTOM_FRONT_CENTER  )
-#define AV_CH_BOTTOM_FRONT_LEFT      (1ULL << AV_CHAN_BOTTOM_FRONT_LEFT    )
-#define AV_CH_BOTTOM_FRONT_RIGHT     (1ULL << AV_CHAN_BOTTOM_FRONT_RIGHT   )
-#define AV_CH_SIDE_SURROUND_LEFT     (1ULL << AV_CHAN_SIDE_SURROUND_LEFT   )
-#define AV_CH_SIDE_SURROUND_RIGHT    (1ULL << AV_CHAN_SIDE_SURROUND_RIGHT  )
-#define AV_CH_TOP_SURROUND_LEFT      (1ULL << AV_CHAN_TOP_SURROUND_LEFT    )
-#define AV_CH_TOP_SURROUND_RIGHT     (1ULL << AV_CHAN_TOP_SURROUND_RIGHT   )
-#define AV_CH_BINAURAL_LEFT          (1ULL << AV_CHAN_BINAURAL_LEFT        )
-#define AV_CH_BINAURAL_RIGHT         (1ULL << AV_CHAN_BINAURAL_RIGHT       )
+#define AV_CH_BOTTOM_FRONT_বাম      (1ULL << AV_CHAN_BOTTOM_FRONT_বাম    )
+#define AV_CH_BOTTOM_FRONT_ডান     (1ULL << AV_CHAN_BOTTOM_FRONT_ডান   )
+#define AV_CH_SIDE_SURROUND_বাম     (1ULL << AV_CHAN_SIDE_SURROUND_বাম   )
+#define AV_CH_SIDE_SURROUND_ডান    (1ULL << AV_CHAN_SIDE_SURROUND_ডান  )
+#define AV_CH_শীর্ষ_SURROUND_বাম      (1ULL << AV_CHAN_শীর্ষ_SURROUND_বাম    )
+#define AV_CH_শীর্ষ_SURROUND_ডান     (1ULL << AV_CHAN_শীর্ষ_SURROUND_ডান   )
+#define AV_CH_BINAURAL_বাম          (1ULL << AV_CHAN_BINAURAL_বাম        )
+#define AV_CH_BINAURAL_ডান         (1ULL << AV_CHAN_BINAURAL_ডান       )
 
 /**
  * @}
@@ -215,49 +215,49 @@ enum AVChannelOrder {
  * @{
  * */
 #define AV_CH_LAYOUT_MONO              (AV_CH_FRONT_CENTER)
-#define AV_CH_LAYOUT_STEREO            (AV_CH_FRONT_LEFT|AV_CH_FRONT_RIGHT)
-#define AV_CH_LAYOUT_2POINT1           (AV_CH_LAYOUT_STEREO|AV_CH_LOW_FREQUENCY)
+#define AV_CH_LAYOUT_STEREO            (AV_CH_FRONT_বাম|AV_CH_FRONT_ডান)
+#define AV_CH_LAYOUT_2POINT1           (AV_CH_LAYOUT_STEREO|AV_CH_নিচের_FREQUENCY)
 #define AV_CH_LAYOUT_2_1               (AV_CH_LAYOUT_STEREO|AV_CH_BACK_CENTER)
 #define AV_CH_LAYOUT_SURROUND          (AV_CH_LAYOUT_STEREO|AV_CH_FRONT_CENTER)
-#define AV_CH_LAYOUT_3POINT1           (AV_CH_LAYOUT_SURROUND|AV_CH_LOW_FREQUENCY)
+#define AV_CH_LAYOUT_3POINT1           (AV_CH_LAYOUT_SURROUND|AV_CH_নিচের_FREQUENCY)
 #define AV_CH_LAYOUT_4POINT0           (AV_CH_LAYOUT_SURROUND|AV_CH_BACK_CENTER)
-#define AV_CH_LAYOUT_4POINT1           (AV_CH_LAYOUT_4POINT0|AV_CH_LOW_FREQUENCY)
-#define AV_CH_LAYOUT_2_2               (AV_CH_LAYOUT_STEREO|AV_CH_SIDE_LEFT|AV_CH_SIDE_RIGHT)
-#define AV_CH_LAYOUT_QUAD              (AV_CH_LAYOUT_STEREO|AV_CH_BACK_LEFT|AV_CH_BACK_RIGHT)
-#define AV_CH_LAYOUT_5POINT0           (AV_CH_LAYOUT_SURROUND|AV_CH_SIDE_LEFT|AV_CH_SIDE_RIGHT)
-#define AV_CH_LAYOUT_5POINT1           (AV_CH_LAYOUT_5POINT0|AV_CH_LOW_FREQUENCY)
-#define AV_CH_LAYOUT_5POINT0_BACK      (AV_CH_LAYOUT_SURROUND|AV_CH_BACK_LEFT|AV_CH_BACK_RIGHT)
-#define AV_CH_LAYOUT_5POINT1_BACK      (AV_CH_LAYOUT_5POINT0_BACK|AV_CH_LOW_FREQUENCY)
+#define AV_CH_LAYOUT_4POINT1           (AV_CH_LAYOUT_4POINT0|AV_CH_নিচের_FREQUENCY)
+#define AV_CH_LAYOUT_2_2               (AV_CH_LAYOUT_STEREO|AV_CH_SIDE_বাম|AV_CH_SIDE_ডান)
+#define AV_CH_LAYOUT_QUAD              (AV_CH_LAYOUT_STEREO|AV_CH_BACK_বাম|AV_CH_BACK_ডান)
+#define AV_CH_LAYOUT_5POINT0           (AV_CH_LAYOUT_SURROUND|AV_CH_SIDE_বাম|AV_CH_SIDE_ডান)
+#define AV_CH_LAYOUT_5POINT1           (AV_CH_LAYOUT_5POINT0|AV_CH_নিচের_FREQUENCY)
+#define AV_CH_LAYOUT_5POINT0_BACK      (AV_CH_LAYOUT_SURROUND|AV_CH_BACK_বাম|AV_CH_BACK_ডান)
+#define AV_CH_LAYOUT_5POINT1_BACK      (AV_CH_LAYOUT_5POINT0_BACK|AV_CH_নিচের_FREQUENCY)
 #define AV_CH_LAYOUT_6POINT0           (AV_CH_LAYOUT_5POINT0|AV_CH_BACK_CENTER)
-#define AV_CH_LAYOUT_6POINT0_FRONT     (AV_CH_LAYOUT_2_2|AV_CH_FRONT_LEFT_OF_CENTER|AV_CH_FRONT_RIGHT_OF_CENTER)
+#define AV_CH_LAYOUT_6POINT0_FRONT     (AV_CH_LAYOUT_2_2|AV_CH_FRONT_বাম_OF_CENTER|AV_CH_FRONT_ডান_OF_CENTER)
 #define AV_CH_LAYOUT_HEXAGONAL         (AV_CH_LAYOUT_5POINT0_BACK|AV_CH_BACK_CENTER)
-#define AV_CH_LAYOUT_3POINT1POINT2     (AV_CH_LAYOUT_3POINT1|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT)
+#define AV_CH_LAYOUT_3POINT1POINT2     (AV_CH_LAYOUT_3POINT1|AV_CH_শীর্ষ_FRONT_বাম|AV_CH_শীর্ষ_FRONT_ডান)
 #define AV_CH_LAYOUT_6POINT1           (AV_CH_LAYOUT_5POINT1|AV_CH_BACK_CENTER)
 #define AV_CH_LAYOUT_6POINT1_BACK      (AV_CH_LAYOUT_5POINT1_BACK|AV_CH_BACK_CENTER)
-#define AV_CH_LAYOUT_6POINT1_FRONT     (AV_CH_LAYOUT_6POINT0_FRONT|AV_CH_LOW_FREQUENCY)
-#define AV_CH_LAYOUT_7POINT0           (AV_CH_LAYOUT_5POINT0|AV_CH_BACK_LEFT|AV_CH_BACK_RIGHT)
-#define AV_CH_LAYOUT_7POINT0_FRONT     (AV_CH_LAYOUT_5POINT0|AV_CH_FRONT_LEFT_OF_CENTER|AV_CH_FRONT_RIGHT_OF_CENTER)
-#define AV_CH_LAYOUT_7POINT1           (AV_CH_LAYOUT_5POINT1|AV_CH_BACK_LEFT|AV_CH_BACK_RIGHT)
-#define AV_CH_LAYOUT_7POINT1_WIDE      (AV_CH_LAYOUT_5POINT1|AV_CH_FRONT_LEFT_OF_CENTER|AV_CH_FRONT_RIGHT_OF_CENTER)
-#define AV_CH_LAYOUT_7POINT1_WIDE_BACK (AV_CH_LAYOUT_5POINT1_BACK|AV_CH_FRONT_LEFT_OF_CENTER|AV_CH_FRONT_RIGHT_OF_CENTER)
-#define AV_CH_LAYOUT_5POINT1POINT2     (AV_CH_LAYOUT_5POINT1|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT)
-#define AV_CH_LAYOUT_5POINT1POINT2_BACK (AV_CH_LAYOUT_5POINT1_BACK|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT)
-#define AV_CH_LAYOUT_OCTAGONAL         (AV_CH_LAYOUT_5POINT0|AV_CH_BACK_LEFT|AV_CH_BACK_CENTER|AV_CH_BACK_RIGHT)
-#define AV_CH_LAYOUT_CUBE              (AV_CH_LAYOUT_QUAD|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT|AV_CH_TOP_BACK_LEFT|AV_CH_TOP_BACK_RIGHT)
-#define AV_CH_LAYOUT_5POINT1POINT4     (AV_CH_LAYOUT_5POINT1POINT2|AV_CH_TOP_BACK_LEFT|AV_CH_TOP_BACK_RIGHT)
-#define AV_CH_LAYOUT_5POINT1POINT6     (AV_CH_LAYOUT_5POINT1POINT4|AV_CH_TOP_FRONT_CENTER|AV_CH_TOP_CENTER)
-#define AV_CH_LAYOUT_7POINT1POINT2     (AV_CH_LAYOUT_7POINT1|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT)
-#define AV_CH_LAYOUT_7POINT1POINT4     (AV_CH_LAYOUT_7POINT1POINT2|AV_CH_TOP_BACK_LEFT|AV_CH_TOP_BACK_RIGHT)
-#define AV_CH_LAYOUT_7POINT1POINT6     (AV_CH_LAYOUT_7POINT1POINT4|AV_CH_TOP_FRONT_CENTER|AV_CH_TOP_CENTER)
-#define AV_CH_LAYOUT_7POINT2POINT3     (AV_CH_LAYOUT_7POINT1POINT2|AV_CH_TOP_BACK_CENTER|AV_CH_LOW_FREQUENCY_2)
-#define AV_CH_LAYOUT_9POINT1POINT4     (AV_CH_LAYOUT_7POINT1POINT4|AV_CH_FRONT_LEFT_OF_CENTER|AV_CH_FRONT_RIGHT_OF_CENTER)
-#define AV_CH_LAYOUT_9POINT1POINT6     (AV_CH_LAYOUT_9POINT1POINT4|AV_CH_TOP_SIDE_LEFT|AV_CH_TOP_SIDE_RIGHT)
-#define AV_CH_LAYOUT_HEXADECAGONAL     (AV_CH_LAYOUT_OCTAGONAL|AV_CH_WIDE_LEFT|AV_CH_WIDE_RIGHT|AV_CH_TOP_BACK_LEFT|AV_CH_TOP_BACK_RIGHT|AV_CH_TOP_BACK_CENTER|AV_CH_TOP_FRONT_CENTER|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT)
-#define AV_CH_LAYOUT_BINAURAL          (AV_CH_BINAURAL_LEFT|AV_CH_BINAURAL_RIGHT)
-#define AV_CH_LAYOUT_STEREO_DOWNMIX    (AV_CH_STEREO_LEFT|AV_CH_STEREO_RIGHT)
-#define AV_CH_LAYOUT_22POINT2          (AV_CH_LAYOUT_9POINT1POINT6|AV_CH_BACK_CENTER|AV_CH_LOW_FREQUENCY_2|AV_CH_TOP_FRONT_CENTER|AV_CH_TOP_CENTER|AV_CH_TOP_BACK_CENTER|AV_CH_BOTTOM_FRONT_CENTER|AV_CH_BOTTOM_FRONT_LEFT|AV_CH_BOTTOM_FRONT_RIGHT)
+#define AV_CH_LAYOUT_6POINT1_FRONT     (AV_CH_LAYOUT_6POINT0_FRONT|AV_CH_নিচের_FREQUENCY)
+#define AV_CH_LAYOUT_7POINT0           (AV_CH_LAYOUT_5POINT0|AV_CH_BACK_বাম|AV_CH_BACK_ডান)
+#define AV_CH_LAYOUT_7POINT0_FRONT     (AV_CH_LAYOUT_5POINT0|AV_CH_FRONT_বাম_OF_CENTER|AV_CH_FRONT_ডান_OF_CENTER)
+#define AV_CH_LAYOUT_7POINT1           (AV_CH_LAYOUT_5POINT1|AV_CH_BACK_বাম|AV_CH_BACK_ডান)
+#define AV_CH_LAYOUT_7POINT1_WIDE      (AV_CH_LAYOUT_5POINT1|AV_CH_FRONT_বাম_OF_CENTER|AV_CH_FRONT_ডান_OF_CENTER)
+#define AV_CH_LAYOUT_7POINT1_WIDE_BACK (AV_CH_LAYOUT_5POINT1_BACK|AV_CH_FRONT_বাম_OF_CENTER|AV_CH_FRONT_ডান_OF_CENTER)
+#define AV_CH_LAYOUT_5POINT1POINT2     (AV_CH_LAYOUT_5POINT1|AV_CH_শীর্ষ_FRONT_বাম|AV_CH_শীর্ষ_FRONT_ডান)
+#define AV_CH_LAYOUT_5POINT1POINT2_BACK (AV_CH_LAYOUT_5POINT1_BACK|AV_CH_শীর্ষ_FRONT_বাম|AV_CH_শীর্ষ_FRONT_ডান)
+#define AV_CH_LAYOUT_OCTAGONAL         (AV_CH_LAYOUT_5POINT0|AV_CH_BACK_বাম|AV_CH_BACK_CENTER|AV_CH_BACK_ডান)
+#define AV_CH_LAYOUT_CUBE              (AV_CH_LAYOUT_QUAD|AV_CH_শীর্ষ_FRONT_বাম|AV_CH_শীর্ষ_FRONT_ডান|AV_CH_শীর্ষ_BACK_বাম|AV_CH_শীর্ষ_BACK_ডান)
+#define AV_CH_LAYOUT_5POINT1POINT4     (AV_CH_LAYOUT_5POINT1POINT2|AV_CH_শীর্ষ_BACK_বাম|AV_CH_শীর্ষ_BACK_ডান)
+#define AV_CH_LAYOUT_5POINT1POINT6     (AV_CH_LAYOUT_5POINT1POINT4|AV_CH_শীর্ষ_FRONT_CENTER|AV_CH_শীর্ষ_CENTER)
+#define AV_CH_LAYOUT_7POINT1POINT2     (AV_CH_LAYOUT_7POINT1|AV_CH_শীর্ষ_FRONT_বাম|AV_CH_শীর্ষ_FRONT_ডান)
+#define AV_CH_LAYOUT_7POINT1POINT4     (AV_CH_LAYOUT_7POINT1POINT2|AV_CH_শীর্ষ_BACK_বাম|AV_CH_শীর্ষ_BACK_ডান)
+#define AV_CH_LAYOUT_7POINT1POINT6     (AV_CH_LAYOUT_7POINT1POINT4|AV_CH_শীর্ষ_FRONT_CENTER|AV_CH_শীর্ষ_CENTER)
+#define AV_CH_LAYOUT_7POINT2POINT3     (AV_CH_LAYOUT_7POINT1POINT2|AV_CH_শীর্ষ_BACK_CENTER|AV_CH_নিচের_FREQUENCY_2)
+#define AV_CH_LAYOUT_9POINT1POINT4     (AV_CH_LAYOUT_7POINT1POINT4|AV_CH_FRONT_বাম_OF_CENTER|AV_CH_FRONT_ডান_OF_CENTER)
+#define AV_CH_LAYOUT_9POINT1POINT6     (AV_CH_LAYOUT_9POINT1POINT4|AV_CH_শীর্ষ_SIDE_বাম|AV_CH_শীর্ষ_SIDE_ডান)
+#define AV_CH_LAYOUT_HEXADECAGONAL     (AV_CH_LAYOUT_OCTAGONAL|AV_CH_WIDE_বাম|AV_CH_WIDE_ডান|AV_CH_শীর্ষ_BACK_বাম|AV_CH_শীর্ষ_BACK_ডান|AV_CH_শীর্ষ_BACK_CENTER|AV_CH_শীর্ষ_FRONT_CENTER|AV_CH_শীর্ষ_FRONT_বাম|AV_CH_শীর্ষ_FRONT_ডান)
+#define AV_CH_LAYOUT_BINAURAL          (AV_CH_BINAURAL_বাম|AV_CH_BINAURAL_ডান)
+#define AV_CH_LAYOUT_STEREO_DOWNMIX    (AV_CH_STEREO_বাম|AV_CH_STEREO_ডান)
+#define AV_CH_LAYOUT_22POINT2          (AV_CH_LAYOUT_9POINT1POINT6|AV_CH_BACK_CENTER|AV_CH_নিচের_FREQUENCY_2|AV_CH_শীর্ষ_FRONT_CENTER|AV_CH_শীর্ষ_CENTER|AV_CH_শীর্ষ_BACK_CENTER|AV_CH_BOTTOM_FRONT_CENTER|AV_CH_BOTTOM_FRONT_বাম|AV_CH_BOTTOM_FRONT_ডান)
 
-#if FF_API_CHANNEL_LAYOUT_BACK
+#যদি FF_API_CHANNEL_LAYOUT_BACK
 /*
  * The following layout masks are deprecated and will be removed in
  * an upcoming major bump.
@@ -265,14 +265,14 @@ enum AVChannelOrder {
 #define AV_CH_LAYOUT_5POINT1POINT4_BACK AV_CH_LAYOUT_5POINT1POINT4
 #define AV_CH_LAYOUT_7POINT1POINT4_BACK AV_CH_LAYOUT_7POINT1POINT4
 #define AV_CH_LAYOUT_9POINT1POINT4_BACK AV_CH_LAYOUT_9POINT1POINT4
-#define AV_CH_LAYOUT_7POINT1_TOP_BACK AV_CH_LAYOUT_5POINT1POINT2_BACK
+#define AV_CH_LAYOUT_7_POINT1_শীর্ষ_BACK AV_CH_LAYOUT_5POINT1POINT2_BACK
 #endif
 
 /**
  * @}
  */
 
-enum AVMatrixEncoding {
+গণনা AVMatrixEncoding {
     AV_MATRIX_ENCODING_NONE,
     AV_MATRIX_ENCODING_DOLBY,
     AV_MATRIX_ENCODING_DPLII,
@@ -291,10 +291,10 @@ enum AVMatrixEncoding {
  *
  * No new fields may be added to it without a major version bump.
  */
-typedef struct AVChannelCustom {
-    enum AVChannel id;
-    char name[16];
-    void *opaque;
+প্রকারলেখ কাঠামো AVChannelCustom {
+    গণনা AVChannel id;
+    অক্ষর name[16];
+    শূন্য *opaque;
 } AVChannelCustom;
 
 /**
@@ -327,24 +327,24 @@ typedef struct AVChannelCustom {
  * No new fields may be added to it without a major version bump, except for
  * new elements of the union fitting in sizeof(uint64_t).
  */
-typedef struct AVChannelLayout {
+প্রকারলেখ কাঠামো AVChannelLayout {
     /**
      * Channel order used in this layout.
      * This is a mandatory field.
      */
-    enum AVChannelOrder order;
+    গণনা AVChannelOrder order;
 
     /**
      * Number of channels in this layout. Mandatory field.
      */
-    int nb_channels;
+    পূর্ণসংখ্যা nb_channels;
 
     /**
      * Details about which channels are present in this layout.
      * For AV_CHANNEL_ORDER_UNSPEC, this field is undefined and must not be
      * used.
      */
-    union {
+    সংঘ {
         /**
          * This member must be used for AV_CHANNEL_ORDER_NATIVE, and may be used
          * for AV_CHANNEL_ORDER_AMBISONIC to signal non-diegetic channels.
@@ -384,7 +384,7 @@ typedef struct AVChannelLayout {
     /**
      * For some private data of the user.
      */
-    void *opaque;
+    শূন্য *opaque;
 } AVChannelLayout;
 
 /**
@@ -396,7 +396,7 @@ typedef struct AVChannelLayout {
     { /* .order */ AV_CHANNEL_ORDER_NATIVE, \
       /* .nb_channels */  (nb), \
       /* .u.mask */ { m }, \
-      /* .opaque */ NULL }
+      /* .opaque */ ফাঁকা }
 
 /**
  * @name Common pre-defined channel layouts
@@ -445,7 +445,7 @@ typedef struct AVChannelLayout {
 #define AV_CHANNEL_LAYOUT_STEREO_DOWNMIX    AV_CHANNEL_LAYOUT_MASK(2,  AV_CH_LAYOUT_STEREO_DOWNMIX)
 #define AV_CHANNEL_LAYOUT_22POINT2          AV_CHANNEL_LAYOUT_MASK(24, AV_CH_LAYOUT_22POINT2)
 
-#if FF_API_CHANNEL_LAYOUT_BACK
+#যদি FF_API_CHANNEL_LAYOUT_BACK
 /*
  * The following layouts are deprecated and will be removed in
  * an upcoming major bump.
@@ -453,17 +453,17 @@ typedef struct AVChannelLayout {
 #define AV_CHANNEL_LAYOUT_5POINT1POINT4_BACK AV_CHANNEL_LAYOUT_5POINT1POINT4
 #define AV_CHANNEL_LAYOUT_7POINT1POINT4_BACK AV_CHANNEL_LAYOUT_7POINT1POINT4
 #define AV_CHANNEL_LAYOUT_9POINT1POINT4_BACK AV_CHANNEL_LAYOUT_9POINT1POINT4
-#define AV_CHANNEL_LAYOUT_7POINT1_TOP_BACK  AV_CHANNEL_LAYOUT_5POINT1POINT2_BACK
+#define AV_CHANNEL_LAYOUT_7_POINT1_শীর্ষ_BACK  AV_CHANNEL_LAYOUT_5POINT1POINT2_BACK
 #endif
 
 #define AV_CHANNEL_LAYOUT_AMBISONIC_FIRST_ORDER \
     { /* .order */ AV_CHANNEL_ORDER_AMBISONIC, \
       /* .nb_channels */ 4, \
       /* .u.mask */ { 0 }, \
-      /* .opaque */ NULL }
+      /* .opaque */ ফাঁকা }
 /** @} */
 
-struct AVBPrint;
+কাঠামো AVBPrint;
 
 /**
  * Get a human readable string in an abbreviated form describing a given channel.
@@ -476,14 +476,14 @@ struct AVBPrint;
  *         on failure. If the returned value is bigger than buf_size, then the
  *         string was truncated.
  */
-int av_channel_name(char *buf, size_t buf_size, enum AVChannel channel);
+পূর্ণসংখ্যা av_channel_name(অক্ষর *buf, size_t buf_আকার, গণনা AVChannel channel);
 
 /**
  * bprint variant of av_channel_name().
  *
  * @note the string will be appended to the bprint buffer.
  */
-void av_channel_name_bprint(struct AVBPrint *bp, enum AVChannel channel_id);
+শূন্য av_channel_name_bprint(কাঠামো AVBPrint *bp, গণনা AVChannel channel_id);
 
 /**
  * Get a human readable string describing a given channel.
@@ -495,14 +495,14 @@ void av_channel_name_bprint(struct AVBPrint *bp, enum AVChannel channel_id);
  *         on failure. If the returned value is bigger than buf_size, then the
  *         string was truncated.
  */
-int av_channel_description(char *buf, size_t buf_size, enum AVChannel channel);
+পূর্ণসংখ্যা av_channel_description(অক্ষর *buf, size_t buf_আকার, গণনা AVChannel channel);
 
 /**
  * bprint variant of av_channel_description().
  *
  * @note the string will be appended to the bprint buffer.
  */
-void av_channel_description_bprint(struct AVBPrint *bp, enum AVChannel channel_id);
+শূন্য av_channel_description_bprint(কাঠামো AVBPrint *bp, গণনা AVChannel channel_id);
 
 /**
  * This is the inverse function of @ref av_channel_name().
@@ -510,7 +510,7 @@ void av_channel_description_bprint(struct AVBPrint *bp, enum AVChannel channel_i
  * @return the channel with the given name
  *         AV_CHAN_NONE when name does not identify a known channel
  */
-enum AVChannel av_channel_from_string(const char *name);
+গণনা AVChannel av_channel_from_string(ধ্রুবক অক্ষর *name);
 
 /**
  * Initialize a custom channel layout with the specified number of channels.
@@ -527,7 +527,7 @@ enum AVChannel av_channel_from_string(const char *name);
  *         AVERROR(EINVAL) if the number of channels <= 0
  *         AVERROR(ENOMEM) if the channel map could not be allocated
  */
-int av_channel_layout_custom_init(AVChannelLayout *channel_layout, int nb_channels);
+পূর্ণসংখ্যা av_channel_layout_custom_init(AVChannelLayout *channel_layout, পূর্ণসংখ্যা nb_channels);
 
 /**
  * Initialize a native channel layout from a bitmask indicating which channels
@@ -539,7 +539,7 @@ int av_channel_layout_custom_init(AVChannelLayout *channel_layout, int nb_channe
  * @return 0 on success
  *         AVERROR(EINVAL) for invalid mask values
  */
-int av_channel_layout_from_mask(AVChannelLayout *channel_layout, uint64_t mask);
+পূর্ণসংখ্যা av_channel_layout_from_mask(AVChannelLayout *channel_layout, uint64_t mask);
 
 /**
  * Initialize a channel layout from a given string description.
@@ -562,8 +562,8 @@ int av_channel_layout_from_mask(AVChannelLayout *channel_layout, uint64_t mask);
  *         AVERROR(EINVAL) if an invalid channel layout string was provided
  *         AVERROR(ENOMEM) if there was not enough memory
  */
-int av_channel_layout_from_string(AVChannelLayout *channel_layout,
-                                  const char *str);
+পূর্ণসংখ্যা av_channel_layout_from_string(AVChannelLayout *channel_layout,
+                                  ধ্রুবক অক্ষর *str);
 
 /**
  * Get the default channel layout for a given number of channels.
@@ -571,7 +571,7 @@ int av_channel_layout_from_string(AVChannelLayout *channel_layout,
  * @param ch_layout the layout structure to be initialized
  * @param nb_channels number of channels
  */
-void av_channel_layout_default(AVChannelLayout *ch_layout, int nb_channels);
+শূন্য av_channel_layout_default(AVChannelLayout *ch_layout, পূর্ণসংখ্যা nb_channels);
 
 /**
  * Iterate over all standard channel layouts.
@@ -582,7 +582,7 @@ void av_channel_layout_default(AVChannelLayout *ch_layout, int nb_channels);
  * @return the standard channel layout or NULL when the iteration is
  *         finished
  */
-const AVChannelLayout *av_channel_layout_standard(void **opaque);
+ধ্রুবক AVChannelLayout *av_channel_layout_standard(শূন্য **opaque);
 
 /**
  * Free any allocated data in the channel layout and reset the channel
@@ -590,7 +590,7 @@ const AVChannelLayout *av_channel_layout_standard(void **opaque);
  *
  * @param channel_layout the layout structure to be uninitialized
  */
-void av_channel_layout_uninit(AVChannelLayout *channel_layout);
+শূন্য av_channel_layout_uninit(AVChannelLayout *channel_layout);
 
 /**
  * Make a copy of a channel layout. This differs from just assigning src to dst
@@ -602,7 +602,7 @@ void av_channel_layout_uninit(AVChannelLayout *channel_layout);
  * @param src source channel layout
  * @return 0 on success, a negative AVERROR on error.
  */
-int av_channel_layout_copy(AVChannelLayout *dst, const AVChannelLayout *src);
+পূর্ণসংখ্যা av_channel_layout_copy(AVChannelLayout *dst, ধ্রুবক AVChannelLayout *src);
 
 /**
  * Get a human-readable string describing the channel layout properties.
@@ -617,8 +617,8 @@ int av_channel_layout_copy(AVChannelLayout *dst, const AVChannelLayout *src);
  *         on failure. If the returned value is bigger than buf_size, then the
  *         string was truncated.
  */
-int av_channel_layout_describe(const AVChannelLayout *channel_layout,
-                               char *buf, size_t buf_size);
+পূর্ণসংখ্যা av_channel_layout_describe(ধ্রুবক AVChannelLayout *channel_layout,
+                               অক্ষর *buf, size_t buf_আকার);
 
 /**
  * bprint variant of av_channel_layout_describe().
@@ -626,8 +626,8 @@ int av_channel_layout_describe(const AVChannelLayout *channel_layout,
  * @note the string will be appended to the bprint buffer.
  * @return 0 on success, or a negative AVERROR value on failure.
  */
-int av_channel_layout_describe_bprint(const AVChannelLayout *channel_layout,
-                                      struct AVBPrint *bp);
+পূর্ণসংখ্যা av_channel_layout_describe_bprint(ধ্রুবক AVChannelLayout *channel_layout,
+                                      কাঠামো AVBPrint *bp);
 
 /**
  * Get the channel with the given index in a channel layout.
@@ -638,8 +638,8 @@ int av_channel_layout_describe_bprint(const AVChannelLayout *channel_layout,
  *         AV_CHAN_NONE on failure (if idx is not valid or the channel order is
  *         unspecified)
  */
-enum AVChannel
-av_channel_layout_channel_from_index(const AVChannelLayout *channel_layout, unsigned int idx);
+গণনা AVChannel
+av_channel_layout_channel_from_সূচক(ধ্রুবক AVChannelLayout *channel_layout, unsigned পূর্ণসংখ্যা idx);
 
 /**
  * Get the index of a given channel in a channel layout. In case multiple
@@ -650,8 +650,8 @@ av_channel_layout_channel_from_index(const AVChannelLayout *channel_layout, unsi
  * @return index of channel in channel_layout on success or a negative number if
  *         channel is not present in channel_layout.
  */
-int av_channel_layout_index_from_channel(const AVChannelLayout *channel_layout,
-                                         enum AVChannel channel);
+পূর্ণসংখ্যা av_channel_layout_সূচক_from_channel(ধ্রুবক AVChannelLayout *channel_layout,
+                                         গণনা AVChannel channel);
 
 /**
  * Get the index in a channel layout of a channel described by the given string.
@@ -665,8 +665,8 @@ int av_channel_layout_index_from_channel(const AVChannelLayout *channel_layout,
  * @return a channel index described by the given string, or a negative AVERROR
  *         value.
  */
-int av_channel_layout_index_from_string(const AVChannelLayout *channel_layout,
-                                        const char *name);
+পূর্ণসংখ্যা av_channel_layout_সূচক_from_string(ধ্রুবক AVChannelLayout *channel_layout,
+                                        ধ্রুবক অক্ষর *name);
 
 /**
  * Get a channel described by the given string.
@@ -680,9 +680,9 @@ int av_channel_layout_index_from_string(const AVChannelLayout *channel_layout,
  *         or AV_CHAN_NONE on failure (if the string is not valid or the channel
  *         order is unspecified)
  */
-enum AVChannel
-av_channel_layout_channel_from_string(const AVChannelLayout *channel_layout,
-                                      const char *name);
+গণনা AVChannel
+av_channel_layout_channel_from_string(ধ্রুবক AVChannelLayout *channel_layout,
+                                      ধ্রুবক অক্ষর *name);
 
 /**
  * Find out what channels from a given set are present in a channel layout,
@@ -693,7 +693,7 @@ av_channel_layout_channel_from_string(const AVChannelLayout *channel_layout,
  * @return a bitfield representing all the channels from mask that are present
  *         in channel_layout
  */
-uint64_t av_channel_layout_subset(const AVChannelLayout *channel_layout,
+uint64_t av_channel_layout_subset(ধ্রুবক AVChannelLayout *channel_layout,
                                   uint64_t mask);
 
 /**
@@ -703,7 +703,7 @@ uint64_t av_channel_layout_subset(const AVChannelLayout *channel_layout,
  * @param channel_layout input channel layout
  * @return 1 if channel_layout is valid, 0 otherwise.
  */
-int av_channel_layout_check(const AVChannelLayout *channel_layout);
+পূর্ণসংখ্যা av_channel_layout_check(ধ্রুবক AVChannelLayout *channel_layout);
 
 /**
  * Check whether two channel layouts are semantically the same, i.e. the same
@@ -718,7 +718,7 @@ int av_channel_layout_check(const AVChannelLayout *channel_layout);
  * @return 0 if chl and chl1 are equal, 1 if they are not equal. A negative
  *         AVERROR code if one or both are invalid.
  */
-int av_channel_layout_compare(const AVChannelLayout *chl, const AVChannelLayout *chl1);
+পূর্ণসংখ্যা av_channel_layout_compare(ধ্রুবক AVChannelLayout *chl, ধ্রুবক AVChannelLayout *chl1);
 
 /**
  * Return the order if the layout is n-th order standard-order ambisonic.
@@ -728,7 +728,7 @@ int av_channel_layout_compare(const AVChannelLayout *chl, const AVChannelLayout 
  * @param channel_layout input channel layout
  * @return the order of the layout, a negative error code otherwise.
  */
-int av_channel_layout_ambisonic_order(const AVChannelLayout *channel_layout);
+পূর্ণসংখ্যা av_channel_layout_ambisonic_order(ধ্রুবক AVChannelLayout *channel_layout);
 
 /**
  * The conversion must be lossless.
@@ -775,7 +775,7 @@ int av_channel_layout_ambisonic_order(const AVChannelLayout *channel_layout);
  *           lossy and AV_CHANNEL_LAYOUT_RETYPE_FLAG_LOSSLESS was specified)
  *         AVERROR(EINVAL), AVERROR(ENOMEM) on error
  */
-int av_channel_layout_retype(AVChannelLayout *channel_layout, enum AVChannelOrder order, int flags);
+পূর্ণসংখ্যা av_channel_layout_retype(AVChannelLayout *channel_layout, গণনা AVChannelOrder order, পূর্ণসংখ্যা flags);
 
 /**
  * @}

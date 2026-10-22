@@ -16,24 +16,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
-#include "samplefmt.h"
+#অন্তর্ভাব "error.h"
+#অন্তর্ভাব "macros.h"
+#অন্তর্ভাব "mem.h"
+#অন্তর্ভাব "samplefmt.h"
 
-#include <limits.h>
-#include <stdio.h>
-#include <string.h>
+#অন্তর্ভাব <limits.h>
+#অন্তর্ভাব <stdio.h>
+#অন্তর্ভাব <string.h>
 
-typedef struct SampleFmtInfo {
-    char name[8];
-    int bits;
-    int planar;
-    enum AVSampleFormat altform; ///< planar<->packed alternative form
+প্রকারলেখ কাঠামো SampleFmtInfo {
+    অক্ষর name[8];
+    পূর্ণসংখ্যা bits;
+    পূর্ণসংখ্যা planar;
+    গণনা AVSampleFormat altform; ///< planar<->packed alternative form
 } SampleFmtInfo;
 
 /** this table gives more information about formats */
-static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
+স্থির ধ্রুবক SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
     [AV_SAMPLE_FMT_U8]   = { .name =   "u8", .bits =  8, .planar = 0, .altform = AV_SAMPLE_FMT_U8P  },
     [AV_SAMPLE_FMT_S16]  = { .name =  "s16", .bits = 16, .planar = 0, .altform = AV_SAMPLE_FMT_S16P },
     [AV_SAMPLE_FMT_S32]  = { .name =  "s32", .bits = 32, .planar = 0, .altform = AV_SAMPLE_FMT_S32P },
@@ -49,221 +49,221 @@ static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
     [AV_SAMPLE_FMT_DSD]  = { .name =  "dsd", .bits =  8, .planar = 0, .altform = AV_SAMPLE_FMT_DSD  },
 };
 
-const char *av_get_sample_fmt_name(enum AVSampleFormat sample_fmt)
+ধ্রুবক অক্ষর *av_get_sample_fmt_name(গণনা AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return NULL;
-    return sample_fmt_info[sample_fmt].name;
+    যদি (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ফেরত ফাঁকা;
+    ফেরত sample_fmt_info[sample_fmt].name;
 }
 
-enum AVSampleFormat av_get_sample_fmt(const char *name)
+গণনা AVSampleFormat av_get_sample_fmt(ধ্রুবক অক্ষর *name)
 {
-    int i;
+    পূর্ণসংখ্যা i;
 
-    for (i = 0; i < AV_SAMPLE_FMT_NB; i++)
-        if (!strcmp(sample_fmt_info[i].name, name))
-            return i;
-    return AV_SAMPLE_FMT_NONE;
+    জন্য (i = 0; i < AV_SAMPLE_FMT_NB; i++)
+        যদি (!strcmp(sample_fmt_info[i].name, name))
+            ফেরত i;
+    ফেরত AV_SAMPLE_FMT_NONE;
 }
 
-enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int planar)
+গণনা AVSampleFormat av_get_alt_sample_fmt(গণনা AVSampleFormat sample_fmt, পূর্ণসংখ্যা planar)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar == planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    যদি (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ফেরত AV_SAMPLE_FMT_NONE;
+    যদি (sample_fmt_info[sample_fmt].planar == planar)
+        ফেরত sample_fmt;
+    ফেরত sample_fmt_info[sample_fmt].altform;
 }
 
-enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt)
+গণনা AVSampleFormat av_get_packed_sample_fmt(গণনা AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt_info[sample_fmt].altform;
-    return sample_fmt;
+    যদি (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ফেরত AV_SAMPLE_FMT_NONE;
+    যদি (sample_fmt_info[sample_fmt].planar)
+        ফেরত sample_fmt_info[sample_fmt].altform;
+    ফেরত sample_fmt;
 }
 
-enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt)
+গণনা AVSampleFormat av_get_planar_sample_fmt(গণনা AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    যদি (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ফেরত AV_SAMPLE_FMT_NONE;
+    যদি (sample_fmt_info[sample_fmt].planar)
+        ফেরত sample_fmt;
+    ফেরত sample_fmt_info[sample_fmt].altform;
 }
 
-char *av_get_sample_fmt_string (char *buf, int buf_size, enum AVSampleFormat sample_fmt)
+অক্ষর *av_get_sample_fmt_string (অক্ষর *buf, পূর্ণসংখ্যা buf_আকার, গণনা AVSampleFormat sample_fmt)
 {
     /* print header */
-    if (sample_fmt < 0)
-        snprintf(buf, buf_size, "name  " " depth");
-    else if (sample_fmt < AV_SAMPLE_FMT_NB) {
+    যদি (sample_fmt < 0)
+        snprintf(buf, buf_আকার, "name  " " depth");
+    অন্যথা যদি (sample_fmt < AV_SAMPLE_FMT_NB) {
         SampleFmtInfo info = sample_fmt_info[sample_fmt];
-        snprintf (buf, buf_size, "%-6s" "   %2d ", info.name, info.bits);
+        snprintf (buf, buf_আকার, "%-6s" "   %2d ", info.name, info.bits);
     }
 
-    return buf;
+    ফেরত buf;
 }
 
-int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt)
+পূর্ণসংখ্যা av_get_bytes_per_sample(গণনা AVSampleFormat sample_fmt)
 {
-     return sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
+     ফেরত sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
         0 : sample_fmt_info[sample_fmt].bits >> 3;
 }
 
-int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt)
+পূর্ণসংখ্যা av_sample_fmt_is_planar(গণনা AVSampleFormat sample_fmt)
 {
-     if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-         return 0;
-     return sample_fmt_info[sample_fmt].planar;
+     যদি (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+         ফেরত 0;
+     ফেরত sample_fmt_info[sample_fmt].planar;
 }
 
-int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
-                               enum AVSampleFormat sample_fmt, int align)
+পূর্ণসংখ্যা av_samples_get_বাফার_আকার(পূর্ণসংখ্যা *linesize, পূর্ণসংখ্যা nb_channels, পূর্ণসংখ্যা nb_samples,
+                               গণনা AVSampleFormat sample_fmt, পূর্ণসংখ্যা align)
 {
-    int line_size;
-    int sample_size = av_get_bytes_per_sample(sample_fmt);
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
+    পূর্ণসংখ্যা সারি_আকার;
+    পূর্ণসংখ্যা sample_আকার = av_get_bytes_per_sample(sample_fmt);
+    পূর্ণসংখ্যা planar      = av_sample_fmt_is_planar(sample_fmt);
 
     /* validate parameter ranges */
-    if (!sample_size || nb_samples <= 0 || nb_channels <= 0)
-        return AVERROR(EINVAL);
+    যদি (!sample_আকার || nb_samples <= 0 || nb_channels <= 0)
+        ফেরত AVERROR(EINVAL);
 
     /* auto-select alignment if not specified */
-    if (!align) {
-        if (nb_samples > INT_MAX - 31)
-            return AVERROR(EINVAL);
+    যদি (!align) {
+        যদি (nb_samples > INT_MAX - 31)
+            ফেরত AVERROR(EINVAL);
         align = 1;
         nb_samples = FFALIGN(nb_samples, 32);
     }
 
     /* check for integer overflow */
-    if (nb_channels > INT_MAX / align ||
-        (int64_t)nb_channels * nb_samples > (INT_MAX - (align * nb_channels)) / sample_size)
-        return AVERROR(EINVAL);
+    যদি (nb_channels > INT_MAX / align ||
+        (int64_t)nb_channels * nb_samples > (INT_MAX - (align * nb_channels)) / sample_আকার)
+        ফেরত AVERROR(EINVAL);
 
-    line_size = planar ? FFALIGN(nb_samples * sample_size,               align) :
-                         FFALIGN(nb_samples * sample_size * nb_channels, align);
-    if (linesize)
-        *linesize = line_size;
+    সারি_আকার = planar ? FFALIGN(nb_samples * sample_আকার,               align) :
+                         FFALIGN(nb_samples * sample_আকার * nb_channels, align);
+    যদি (linesize)
+        *linesize = সারি_আকার;
 
-    return planar ? line_size * nb_channels : line_size;
+    ফেরত planar ? সারি_আকার * nb_channels : সারি_আকার;
 }
 
-int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
-                           const uint8_t *buf, int nb_channels, int nb_samples,
-                           enum AVSampleFormat sample_fmt, int align)
+পূর্ণসংখ্যা av_samples_fill_arrays(uint8_t **audio_তথ্য, পূর্ণসংখ্যা *linesize,
+                           ধ্রুবক uint8_t *buf, পূর্ণসংখ্যা nb_channels, পূর্ণসংখ্যা nb_samples,
+                           গণনা AVSampleFormat sample_fmt, পূর্ণসংখ্যা align)
 {
-    int ch, planar, buf_size, line_size;
+    পূর্ণসংখ্যা ch, planar, buf_আকার, সারি_আকার;
 
     planar   = av_sample_fmt_is_planar(sample_fmt);
-    buf_size = av_samples_get_buffer_size(&line_size, nb_channels, nb_samples,
+    buf_আকার = av_samples_get_বাফার_আকার(&সারি_আকার, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (buf_size < 0)
-        return buf_size;
+    যদি (buf_আকার < 0)
+        ফেরত buf_আকার;
 
-    if (linesize)
-        *linesize = line_size;
+    যদি (linesize)
+        *linesize = সারি_আকার;
 
-    memset(audio_data, 0, planar
-                          ? sizeof(*audio_data) * nb_channels
-                          : sizeof(*audio_data));
+    memset(audio_তথ্য, 0, planar
+                          ? আকার(*audio_তথ্য) * nb_channels
+                          : আকার(*audio_তথ্য));
 
-    if (!buf)
-        return buf_size;
+    যদি (!buf)
+        ফেরত buf_আকার;
 
-    audio_data[0] = (uint8_t *)buf;
-    for (ch = 1; planar && ch < nb_channels; ch++)
-        audio_data[ch] = audio_data[ch-1] + line_size;
+    audio_তথ্য[0] = (uint8_t *)buf;
+    জন্য (ch = 1; planar && ch < nb_channels; ch++)
+        audio_তথ্য[ch] = audio_তথ্য[ch-1] + সারি_আকার;
 
-    return buf_size;
+    ফেরত buf_আকার;
 }
 
-int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
-                     int nb_samples, enum AVSampleFormat sample_fmt, int align)
+পূর্ণসংখ্যা av_samples_alloc(uint8_t **audio_তথ্য, পূর্ণসংখ্যা *linesize, পূর্ণসংখ্যা nb_channels,
+                     পূর্ণসংখ্যা nb_samples, গণনা AVSampleFormat sample_fmt, পূর্ণসংখ্যা align)
 {
     uint8_t *buf;
-    int size = av_samples_get_buffer_size(NULL, nb_channels, nb_samples,
+    পূর্ণসংখ্যা আকার_2 = av_samples_get_বাফার_আকার(ফাঁকা, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (size < 0)
-        return size;
+    যদি (আকার_2 < 0)
+        ফেরত আকার_2;
 
-    buf = av_malloc(size);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    buf = av_malloc(আকার_2);
+    যদি (!buf)
+        ফেরত AVERROR(ENOMEM);
 
-    size = av_samples_fill_arrays(audio_data, linesize, buf, nb_channels,
+    আকার_2 = av_samples_fill_arrays(audio_তথ্য, linesize, buf, nb_channels,
                                   nb_samples, sample_fmt, align);
-    if (size < 0) {
+    যদি (আকার_2 < 0) {
         av_free(buf);
-        return size;
+        ফেরত আকার_2;
     }
 
-    av_samples_set_silence(audio_data, 0, nb_samples, nb_channels, sample_fmt);
+    av_samples_set_silence(audio_তথ্য, 0, nb_samples, nb_channels, sample_fmt);
 
-    return size;
+    ফেরত আকার_2;
 }
 
-int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int nb_channels,
-                                       int nb_samples, enum AVSampleFormat sample_fmt, int align)
+পূর্ণসংখ্যা av_samples_alloc_array_and_samples(uint8_t ***audio_তথ্য, পূর্ণসংখ্যা *linesize, পূর্ণসংখ্যা nb_channels,
+                                       পূর্ণসংখ্যা nb_samples, গণনা AVSampleFormat sample_fmt, পূর্ণসংখ্যা align)
 {
-    int ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
+    পূর্ণসংখ্যা ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
 
-    *audio_data = av_calloc(nb_planes, sizeof(**audio_data));
-    if (!*audio_data)
-        return AVERROR(ENOMEM);
-    ret = av_samples_alloc(*audio_data, linesize, nb_channels,
+    *audio_তথ্য = av_calloc(nb_planes, আকার(**audio_তথ্য));
+    যদি (!*audio_তথ্য)
+        ফেরত AVERROR(ENOMEM);
+    ret = av_samples_alloc(*audio_তথ্য, linesize, nb_channels,
                            nb_samples, sample_fmt, align);
-    if (ret < 0)
-        av_freep(audio_data);
-    return ret;
+    যদি (ret < 0)
+        av_freep(audio_তথ্য);
+    ফেরত ret;
 }
 
-int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
-                    int src_offset, int nb_samples, int nb_channels,
-                    enum AVSampleFormat sample_fmt)
+পূর্ণসংখ্যা av_samples_copy(uint8_t * ধ্রুবক *dst, uint8_t * ধ্রুবক *src, পূর্ণসংখ্যা dst_offset,
+                    পূর্ণসংখ্যা src_offset, পূর্ণসংখ্যা nb_samples, পূর্ণসংখ্যা nb_channels,
+                    গণনা AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int i;
+    পূর্ণসংখ্যা planar      = av_sample_fmt_is_planar(sample_fmt);
+    পূর্ণসংখ্যা planes      = planar ? nb_channels : 1;
+    পূর্ণসংখ্যা block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    পূর্ণসংখ্যা তথ্য_আকার   = nb_samples * block_align;
+    পূর্ণসংখ্যা i;
 
     dst_offset *= block_align;
     src_offset *= block_align;
 
-    if((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= data_size) {
-        for (i = 0; i < planes; i++)
-            memcpy(dst[i] + dst_offset, src[i] + src_offset, data_size);
-    } else {
-        for (i = 0; i < planes; i++)
-            memmove(dst[i] + dst_offset, src[i] + src_offset, data_size);
+    যদি((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= তথ্য_আকার) {
+        জন্য (i = 0; i < planes; i++)
+            memcpy(dst[i] + dst_offset, src[i] + src_offset, তথ্য_আকার);
+    } অন্যথা {
+        জন্য (i = 0; i < planes; i++)
+            memmove(dst[i] + dst_offset, src[i] + src_offset, তথ্য_আকার);
     }
 
-    return 0;
+    ফেরত 0;
 }
 
-int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_samples,
-                           int nb_channels, enum AVSampleFormat sample_fmt)
+পূর্ণসংখ্যা av_samples_set_silence(uint8_t * ধ্রুবক *audio_তথ্য, পূর্ণসংখ্যা offset, পূর্ণসংখ্যা nb_samples,
+                           পূর্ণসংখ্যা nb_channels, গণনা AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int fill_char, i;
+    পূর্ণসংখ্যা planar      = av_sample_fmt_is_planar(sample_fmt);
+    পূর্ণসংখ্যা planes      = planar ? nb_channels : 1;
+    পূর্ণসংখ্যা block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    পূর্ণসংখ্যা তথ্য_আকার   = nb_samples * block_align;
+    পূর্ণসংখ্যা fill_char, i;
 
-    if (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
+    যদি (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
         fill_char = 0x80;
-    else if (sample_fmt == AV_SAMPLE_FMT_DSD)
+    অন্যথা যদি (sample_fmt == AV_SAMPLE_FMT_DSD)
         fill_char = 0x69; // only ultrasonic tones, filtered out on playback
-    else
+    অন্যথা
         fill_char = 0x00;
 
     offset *= block_align;
 
-    for (i = 0; i < planes; i++)
-        memset(audio_data[i] + offset, fill_char, data_size);
+    জন্য (i = 0; i < planes; i++)
+        memset(audio_তথ্য[i] + offset, fill_char, তথ্য_আকার);
 
-    return 0;
+    ফেরত 0;
 }

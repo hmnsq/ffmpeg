@@ -21,28 +21,28 @@
 #ifndef AVUTIL_X86_TIMER_H
 #define AVUTIL_X86_TIMER_H
 
-#include <stdint.h>
+#অন্তর্ভাব <stdint.h>
 
-#if HAVE_INLINE_ASM
+#যদি HAVE_INLINE_ASM
 
 #define FF_TIMER_UNITS "decicycles"
 #define AV_READ_TIME read_time
 
-static inline uint64_t read_time(void)
+স্থির অন্তঃরেখ uint64_t read_time(শূন্য)
 {
     uint32_t a, d;
-    __asm__ volatile(
-#if ARCH_X86_64 || defined(__SSE2__)
+    __asm__ অস্থির(
+#যদি ARCH_X86_64 || defined(__SSE2__)
                      "lfence \n\t"
 #endif
                      "rdtsc  \n\t"
                      : "=a" (a), "=d" (d));
-    return ((uint64_t)d << 32) + a;
+    ফেরত ((uint64_t)d << 32) + a;
 }
 
-#elif HAVE_RDTSC
+#নতুবা_যদি HAVE_RDTSC
 
-#include <intrin.h>
+#অন্তর্ভাব <intrin.h>
 #define AV_READ_TIME __rdtsc
 
 #endif /* HAVE_INLINE_ASM */

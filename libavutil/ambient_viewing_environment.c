@@ -18,43 +18,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "ambient_viewing_environment.h"
-#include "mem.h"
+#অন্তর্ভাব "ambient_viewing_environment.h"
+#অন্তর্ভাব "mem.h"
 
-static void get_defaults(AVAmbientViewingEnvironment *env)
+স্থির শূন্য get_defaults(AVAmbientViewingEnvironment *env)
 {
     env->ambient_illuminance =
     env->ambient_light_x     =
     env->ambient_light_y     = (AVRational) { 0, 1 };
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *আকার_2)
 {
     AVAmbientViewingEnvironment *env =
-        av_mallocz(sizeof(AVAmbientViewingEnvironment));
+        av_mallocz(আকার(AVAmbientViewingEnvironment));
 
-    if (size)
-        *size = env ? sizeof(*env) : 0;
+    যদি (আকার_2)
+        *আকার_2 = env ? আকার(*env) : 0;
 
-    if (!env)
-        return NULL;
+    যদি (!env)
+        ফেরত ফাঁকা;
 
     get_defaults(env);
 
-    return env;
+    ফেরত env;
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_তথ্য(AVFrame *frame)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame,
-                               AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
-                               sizeof(AVAmbientViewingEnvironment));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_তথ্য *side_তথ্য =
+        av_frame_new_side_তথ্য(frame,
+                               AV_FRAME_তথ্য_AMBIENT_VIEWING_ENVIRONMENT,
+                               আকার(AVAmbientViewingEnvironment));
+    যদি (!side_তথ্য)
+        ফেরত ফাঁকা;
 
-    memset(side_data->data, 0, side_data->size);
-    get_defaults((AVAmbientViewingEnvironment *)side_data->data);
+    memset(side_তথ্য->তথ্য, 0, side_তথ্য->আকার_2);
+    get_defaults((AVAmbientViewingEnvironment *)side_তথ্য->তথ্য);
 
-    return (AVAmbientViewingEnvironment *)side_data->data;
+    ফেরত (AVAmbientViewingEnvironment *)side_তথ্য->তথ্য;
 }

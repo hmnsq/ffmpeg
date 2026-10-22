@@ -18,23 +18,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#অন্তর্ভাব "config.h"
 
-#include <stdbool.h>
+#অন্তর্ভাব <stdbool.h>
 
-#include "mem.h"
-#include "thread.h"
+#অন্তর্ভাব "mem.h"
+#অন্তর্ভাব "thread.h"
 
-#include "executor.h"
+#অন্তর্ভাব "executor.h"
 
-#if !HAVE_THREADS
+#যদি !HAVE_THREADS
 
-#define ExecutorThread  char
+#define ExecutorThread  অক্ষর
 
 #define executor_thread_create(t, a, s, ar)      0
-#define executor_thread_join(t, r)               do {} while(0)
+#define executor_thread_join(t, r)               করো {} যখন(0)
 
-#else
+#অন্যথা
 
 #define ExecutorThread  pthread_t
 
@@ -43,14 +43,14 @@
 
 #endif //!HAVE_THREADS
 
-typedef struct ThreadInfo {
+প্রকারলেখ কাঠামো ThreadInfo {
     AVExecutor *e;
     ExecutorThread thread;
 } ThreadInfo;
 
-struct AVExecutor {
+কাঠামো AVExecutor {
     AVTaskCallbacks cb;
-    int thread_count;
+    পূর্ণসংখ্যা thread_গুনতি;
     bool recursive;
 
     ThreadInfo *threads;
@@ -58,79 +58,79 @@ struct AVExecutor {
 
     AVMutex lock;
     AVCond cond;
-    int die;
+    পূর্ণসংখ্যা die;
 
     AVTask *tasks;
 };
 
-static AVTask* remove_task(AVTask **prev, AVTask *t)
+স্থির AVTask* remove_task(AVTask **পূর্ব, AVTask *t)
 {
-    *prev  = t->next;
-    t->next = NULL;
-    return t;
+    *পূর্ব  = t->পরবর্তী;
+    t->পরবর্তী = ফাঁকা;
+    ফেরত t;
 }
 
-static void add_task(AVTask **prev, AVTask *t)
+স্থির শূন্য add_task(AVTask **পূর্ব, AVTask *t)
 {
-    t->next = *prev;
-    *prev   = t;
+    t->পরবর্তী = *পূর্ব;
+    *পূর্ব   = t;
 }
 
-static int run_one_task(AVExecutor *e, void *lc)
+স্থির পূর্ণসংখ্যা run_one_task(AVExecutor *e, শূন্য *lc)
 {
     AVTaskCallbacks *cb = &e->cb;
-    AVTask **prev;
+    AVTask **পূর্ব;
 
-    for (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_data); prev = &(*prev)->next)
+    জন্য (পূর্ব = &e->tasks; *পূর্ব && !cb->ready(*পূর্ব, cb->user_তথ্য); পূর্ব = &(*পূর্ব)->পরবর্তী)
         /* nothing */;
-    if (*prev) {
-        AVTask *t = remove_task(prev, *prev);
-        if (e->thread_count > 0)
+    যদি (*পূর্ব) {
+        AVTask *t = remove_task(পূর্ব, *পূর্ব);
+        যদি (e->thread_গুনতি > 0)
             ff_mutex_unlock(&e->lock);
-        cb->run(t, lc, cb->user_data);
-        if (e->thread_count > 0)
+        cb->run(t, lc, cb->user_তথ্য);
+        যদি (e->thread_গুনতি > 0)
             ff_mutex_lock(&e->lock);
-        return 1;
+        ফেরত 1;
     }
-    return 0;
+    ফেরত 0;
 }
 
-#if HAVE_THREADS
-static void *executor_worker_task(void *data)
+#যদি HAVE_THREADS
+স্থির শূন্য *executor_worker_task(শূন্য *তথ্য)
 {
-    ThreadInfo *ti = (ThreadInfo*)data;
+    ThreadInfo *ti = (ThreadInfo*)তথ্য;
     AVExecutor *e  = ti->e;
-    void *lc       = e->local_contexts + (ti - e->threads) * e->cb.local_context_size;
+    শূন্য *lc       = e->local_contexts + (ti - e->threads) * e->cb.local_context_আকার;
 
     ff_mutex_lock(&e->lock);
-    while (1) {
-        if (e->die) break;
+    যখন (1) {
+        যদি (e->die) বিরতি;
 
-        if (!run_one_task(e, lc)) {
+        যদি (!run_one_task(e, lc)) {
             //no task in one loop
             ff_cond_wait(&e->cond, &e->lock);
         }
     }
     ff_mutex_unlock(&e->lock);
-    return NULL;
+    ফেরত ফাঁকা;
 }
 #endif
 
-static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
+স্থির শূন্য executor_free(AVExecutor *e, ধ্রুবক পূর্ণসংখ্যা has_lock, ধ্রুবক পূর্ণসংখ্যা has_cond)
 {
-    if (e->thread_count) {
+    যদি (e->thread_গুনতি) {
         //signal die
         ff_mutex_lock(&e->lock);
         e->die = 1;
         ff_cond_broadcast(&e->cond);
         ff_mutex_unlock(&e->lock);
 
-        for (int i = 0; i < e->thread_count; i++)
-            executor_thread_join(e->threads[i].thread, NULL);
+        জন্য (পূর্ণসংখ্যা i = 0; i < e->thread_গুনতি; i++)
+            executor_thread_join(e->threads[i].thread, ফাঁকা);
     }
-    if (has_cond)
+    যদি (has_cond)
         ff_cond_destroy(&e->cond);
-    if (has_lock)
+    যদি (has_lock)
         ff_mutex_destroy(&e->lock);
 
     av_free(e->threads);
@@ -139,82 +139,82 @@ static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
     av_free(e);
 }
 
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, int thread_count)
+AVExecutor* av_executor_alloc(ধ্রুবক AVTaskCallbacks *cb, পূর্ণসংখ্যা thread_গুনতি)
 {
     AVExecutor *e;
-    int has_lock = 0, has_cond = 0;
-    if (!cb || !cb->user_data || !cb->ready || !cb->run || !cb->priority_higher)
-        return NULL;
+    পূর্ণসংখ্যা has_lock = 0, has_cond = 0;
+    যদি (!cb || !cb->user_তথ্য || !cb->ready || !cb->run || !cb->priority_higher)
+        ফেরত ফাঁকা;
 
-    e = av_mallocz(sizeof(*e));
-    if (!e)
-        return NULL;
+    e = av_mallocz(আকার(*e));
+    যদি (!e)
+        ফেরত ফাঁকা;
     e->cb = *cb;
 
-    e->local_contexts = av_calloc(FFMAX(thread_count, 1), e->cb.local_context_size);
-    if (!e->local_contexts)
-        goto free_executor;
+    e->local_contexts = av_calloc(FFMAX(thread_গুনতি, 1), e->cb.local_context_আকার);
+    যদি (!e->local_contexts)
+        যাও free_executor;
 
-    e->threads = av_calloc(FFMAX(thread_count, 1), sizeof(*e->threads));
-    if (!e->threads)
-        goto free_executor;
+    e->threads = av_calloc(FFMAX(thread_গুনতি, 1), আকার(*e->threads));
+    যদি (!e->threads)
+        যাও free_executor;
 
-    if (!thread_count)
-        return e;
+    যদি (!thread_গুনতি)
+        ফেরত e;
 
-    has_lock = !ff_mutex_init(&e->lock, NULL);
-    has_cond = !ff_cond_init(&e->cond, NULL);
+    has_lock = !ff_mutex_init(&e->lock, ফাঁকা);
+    has_cond = !ff_cond_init(&e->cond, ফাঁকা);
 
-    if (!has_lock || !has_cond)
-        goto free_executor;
+    যদি (!has_lock || !has_cond)
+        যাও free_executor;
 
-    for (/* nothing */; e->thread_count < thread_count; e->thread_count++) {
-        ThreadInfo *ti = e->threads + e->thread_count;
+    জন্য (/* nothing */; e->thread_গুনতি < thread_গুনতি; e->thread_গুনতি++) {
+        ThreadInfo *ti = e->threads + e->thread_গুনতি;
         ti->e = e;
-        if (executor_thread_create(&ti->thread, NULL, executor_worker_task, ti))
-            goto free_executor;
+        যদি (executor_thread_create(&ti->thread, ফাঁকা, executor_worker_task, ti))
+            যাও free_executor;
     }
-    return e;
+    ফেরত e;
 
 free_executor:
     executor_free(e, has_lock, has_cond);
-    return NULL;
+    ফেরত ফাঁকা;
 }
 
-void av_executor_free(AVExecutor **executor)
+শূন্য av_executor_free(AVExecutor **executor)
 {
-    int thread_count;
+    পূর্ণসংখ্যা thread_গুনতি;
 
-    if (!executor || !*executor)
-        return;
-    thread_count = (*executor)->thread_count;
-    executor_free(*executor, thread_count, thread_count);
-    *executor = NULL;
+    যদি (!executor || !*executor)
+        ফেরত;
+    thread_গুনতি = (*executor)->thread_গুনতি;
+    executor_free(*executor, thread_গুনতি, thread_গুনতি);
+    *executor = ফাঁকা;
 }
 
-void av_executor_execute(AVExecutor *e, AVTask *t)
+শূন্য av_executor_execute(AVExecutor *e, AVTask *t)
 {
     AVTaskCallbacks *cb = &e->cb;
-    AVTask **prev;
+    AVTask **পূর্ব;
 
-    if (e->thread_count)
+    যদি (e->thread_গুনতি)
         ff_mutex_lock(&e->lock);
-    if (t) {
-        for (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
+    যদি (t) {
+        জন্য (পূর্ব = &e->tasks; *পূর্ব && cb->priority_higher(*পূর্ব, t); পূর্ব = &(*পূর্ব)->পরবর্তী)
             /* nothing */;
-        add_task(prev, t);
+        add_task(পূর্ব, t);
     }
-    if (e->thread_count) {
+    যদি (e->thread_গুনতি) {
         ff_cond_signal(&e->cond);
         ff_mutex_unlock(&e->lock);
     }
 
-    if (!e->thread_count || !HAVE_THREADS) {
-        if (e->recursive)
-            return;
+    যদি (!e->thread_গুনতি || !HAVE_THREADS) {
+        যদি (e->recursive)
+            ফেরত;
         e->recursive = true;
         // We are running in a single-threaded environment, so we must handle all tasks ourselves
-        while (run_one_task(e, e->local_contexts))
+        যখন (run_one_task(e, e->local_contexts))
             /* nothing */;
         e->recursive = false;
     }

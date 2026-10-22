@@ -16,36 +16,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#অন্তর্ভাব <stddef.h>
+#অন্তর্ভাব <stdint.h>
 
-#include "mem.h"
-#include "tdrdi.h"
+#অন্তর্ভাব "mem.h"
+#অন্তর্ভাব "tdrdi.h"
 
-AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *out_size)
+AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned পূর্ণসংখ্যা nb_displays, size_t *out_আকার)
 {
-    struct TestStruct {
+    কাঠামো TestStruct {
         AV3DReferenceDisplaysInfo p;
         AV3DReferenceDisplay      b;
     };
-    const size_t entries_offset = offsetof(struct TestStruct, b);
-    size_t size = entries_offset;
+    ধ্রুবক size_t entries_offset = offsetof(কাঠামো TestStruct, b);
+    size_t আকার_2 = entries_offset;
     AV3DReferenceDisplaysInfo *tdrdi;
 
-    if (nb_displays > (SIZE_MAX - size) / sizeof(AV3DReferenceDisplay))
-        return NULL;
-    size += sizeof(AV3DReferenceDisplay) * nb_displays;
+    যদি (nb_displays > (SIZE_MAX - আকার_2) / আকার(AV3DReferenceDisplay))
+        ফেরত ফাঁকা;
+    আকার_2 += আকার(AV3DReferenceDisplay) * nb_displays;
 
-    tdrdi = av_mallocz(size);
-    if (!tdrdi)
-        return NULL;
+    tdrdi = av_mallocz(আকার_2);
+    যদি (!tdrdi)
+        ফেরত ফাঁকা;
 
-    tdrdi->num_ref_displays = nb_displays;
-    tdrdi->entry_size       = sizeof(AV3DReferenceDisplay);
+    tdrdi->অঙ্ক_ref_displays = nb_displays;
+    tdrdi->entry_আকার       = আকার(AV3DReferenceDisplay);
     tdrdi->entries_offset   = entries_offset;
 
-    if (out_size)
-        *out_size = size;
+    যদি (out_আকার)
+        *out_আকার = আকার_2;
 
-    return tdrdi;
+    ফেরত tdrdi;
 }

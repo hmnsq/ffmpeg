@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#অন্তর্ভাব "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#অন্তর্ভাব <math.h>
+#অন্তর্ভাব <stdio.h>
+#অন্তর্ভাব <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#অন্তর্ভাব "libavutil/mathematics.h"
+#অন্তর্ভাব "libavutil/eval.h"
 
-static const double const_values[] = {
+স্থির ধ্রুবক দ্বিগুণ const_মানসমূহ[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+স্থির ধ্রুবক অক্ষর *ধ্রুবক const_names[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+পূর্ণসংখ্যা প্রধান(পূর্ণসংখ্যা argc, অক্ষর **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    পূর্ণসংখ্যা i;
+    দ্বিগুণ d;
+    ধ্রুবক অক্ষর *ধ্রুবক *রাশিমালা;
+    স্থির ধ্রুবক অক্ষর *ধ্রুবক exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        ফাঁকা
     };
-    int ret;
+    পূর্ণসংখ্যা ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
+    জন্য (রাশিমালা = exprs; *রাশিমালা; রাশিমালা++) {
+        printf("Evaluating '%s'\n", *রাশিমালা);
+        ret = av_রাশিমালা_parse_and_eval(&d, *রাশিমালা,
+                               const_names, const_মানসমূহ,
+                               ফাঁকা, ফাঁকা, ফাঁকা, ফাঁকা, ফাঁকা, 0, ফাঁকা);
+        যদি (isnan(d))
+            printf("'%s' -> nan\n\n", *রাশিমালা);
+        অন্যথা
+            printf("'%s' -> %f\n\n", *রাশিমালা, d);
+        যদি (ret < 0)
             printf("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_রাশিমালা_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_names, const_মানসমূহ,
+                           ফাঁকা, ফাঁকা, ফাঁকা, ফাঁকা, ফাঁকা, 0, ফাঁকা);
     printf("%f == 12.7\n", d);
-    if (ret < 0)
+    যদি (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_রাশিমালা_parse_and_eval(&d, "80G/80Gi",
+                           const_names, const_মানসমূহ,
+                           ফাঁকা, ফাঁকা, ফাঁকা, ফাঁকা, ফাঁকা, 0, ফাঁকা);
     printf("%f == 0.931322575\n", d);
-    if (ret < 0)
+    যদি (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
+    যদি (argc > 1 && !strcmp(argv[1], "-t")) {
+        জন্য (i = 0; i < 1050; i++) {
             START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
+            ret = av_রাশিমালা_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_names, const_মানসমূহ,
+                                   ফাঁকা, ফাঁকা, ফাঁকা, ফাঁকা, ফাঁকা, 0, ফাঁকা);
+            যদি (ret < 0)
                 printf("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    ফেরত 0;
 }

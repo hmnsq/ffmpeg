@@ -18,94 +18,94 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include "libavutil/frame.c"
-#include "libavutil/internal.h"
+#অন্তর্ভাব <stdio.h>
+#অন্তর্ভাব "libavutil/frame.c"
+#অন্তর্ভাব "libavutil/internal.h"
 
-static void print_entries(const AVFrameSideData **sd, const int nb_sd)
+স্থির শূন্য print_entries(ধ্রুবক AVFrame_Side_তথ্য **sd, ধ্রুবক পূর্ণসংখ্যা nb_sd)
 {
-    for (int i = 0; i < nb_sd; i++) {
-        const AVFrameSideData *entry = sd[i];
+    জন্য (পূর্ণসংখ্যা i = 0; i < nb_sd; i++) {
+        ধ্রুবক AVFrame_Side_তথ্য *entry = sd[i];
 
         printf("sd %d (size %zu), %s",
-               i, entry->size, av_frame_side_data_name(entry->type));
+               i, entry->আকার_2, av_frame_side_তথ্য_name(entry->type));
 
-        if (entry->type != AV_FRAME_DATA_SEI_UNREGISTERED) {
+        যদি (entry->type != AV_FRAME_তথ্য_SEI_UNREGISTERED) {
             putchar('\n');
-            continue;
+            চালু;
         }
 
-        printf(": %d\n", *(int32_t *)entry->data);
+        printf(": %d\n", *(int32_t *)entry->তথ্য);
     }
 }
 
-typedef struct FrameSideDataSet {
-    AVFrameSideData **sd;
-    int            nb_sd;
-} FrameSideDataSet;
+প্রকারলেখ কাঠামো Frame_Side_তথ্য_Set {
+    AVFrame_Side_তথ্য **sd;
+    পূর্ণসংখ্যা            nb_sd;
+} Frame_Side_তথ্য_Set;
 
-int main(void)
+পূর্ণসংখ্যা প্রধান(শূন্য)
 {
-    FrameSideDataSet set = { 0 };
+    Frame_Side_তথ্য_Set set = { 0 };
 
     av_assert0(
-        av_frame_side_data_new(&set.sd, &set.nb_sd,
-                               AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int64_t), 0));
+        av_frame_side_তথ্য_new(&set.sd, &set.nb_sd,
+                               AV_FRAME_তথ্য_CONTENT_LIGHT_LEVEL,
+                               আকার(int64_t), 0));
     av_assert0(
-        av_frame_side_data_new(&set.sd, &set.nb_sd,
-                               AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+        av_frame_side_তথ্য_new(&set.sd, &set.nb_sd,
+                               AV_FRAME_তথ্য_CONTENT_LIGHT_LEVEL,
+                               আকার(int32_t), AV_FRAME_SIDE_তথ্য_FLAG_REPLACE));
 
     // test entries in the middle
-    for (int value = 1; value < 4; value++) {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+    জন্য (পূর্ণসংখ্যা মান = 1; মান < 4; মান++) {
+        AVFrame_Side_তথ্য *sd = av_frame_side_তথ্য_new(
+            &set.sd, &set.nb_sd, AV_FRAME_তথ্য_SEI_UNREGISTERED,
+            আকার(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value;
+        *(int32_t *)sd->তথ্য = মান;
     }
 
     av_assert0(
-        av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-           sizeof(int64_t), 0));
+        av_frame_side_তথ্য_new(
+            &set.sd, &set.nb_sd, AV_FRAME_তথ্য_SPHERICAL,
+           আকার(int64_t), 0));
 
     av_assert0(
-        av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+        av_frame_side_তথ্য_new(
+            &set.sd, &set.nb_sd, AV_FRAME_তথ্য_SPHERICAL,
+            আকার(int32_t), AV_FRAME_SIDE_তথ্য_FLAG_REPLACE));
 
     // test entries at the end
-    for (int value = 1; value < 4; value++) {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+    জন্য (পূর্ণসংখ্যা মান = 1; মান < 4; মান++) {
+        AVFrame_Side_তথ্য *sd = av_frame_side_তথ্য_new(
+            &set.sd, &set.nb_sd, AV_FRAME_তথ্য_SEI_UNREGISTERED,
+            আকার(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value + 3;
+        *(int32_t *)sd->তথ্য = মান + 3;
     }
 
     puts("Initial addition results with duplicates:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    print_entries((ধ্রুবক AVFrame_Side_তথ্য **)set.sd, set.nb_sd);
 
     {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
+        AVFrame_Side_তথ্য *sd = av_frame_side_তথ্য_new(
+            &set.sd, &set.nb_sd, AV_FRAME_তথ্য_SEI_UNREGISTERED,
+            আকার(int32_t), AV_FRAME_SIDE_তথ্য_FLAG_UNIQUE);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = 1337;
+        *(int32_t *)sd->তথ্য = 1337;
     }
 
     puts("\nFinal state after a single 'no-duplicates' addition:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    print_entries((ধ্রুবক AVFrame_Side_তথ্য **)set.sd, set.nb_sd);
 
-    av_frame_side_data_free(&set.sd, &set.nb_sd);
+    av_frame_side_তথ্য_free(&set.sd, &set.nb_sd);
 
-    return 0;
+    ফেরত 0;
 }

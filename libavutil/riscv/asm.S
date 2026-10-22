@@ -53,7 +53,7 @@
             .option push
             archadd \exts
 
-            .global \sym
+            .বৈশ্বিক \sym
             .hidden \sym
             .type   \sym, %function
             .option push

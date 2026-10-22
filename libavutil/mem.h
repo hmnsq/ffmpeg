@@ -27,10 +27,10 @@
 #ifndef AVUTIL_MEM_H
 #define AVUTIL_MEM_H
 
-#include <stddef.h>
-#include <stdint.h>
+#অন্তর্ভাব <stddef.h>
+#অন্তর্ভাব <stdint.h>
 
-#include "attributes.h"
+#অন্তর্ভাব "attributes.h"
 
 /**
  * @addtogroup lavu_mem
@@ -65,9 +65,9 @@
  * @see <a href="https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-g_t_0040code_007bmalloc_007d-function-attribute-3251">Function attribute `malloc` in GCC's documentation</a>
  */
 
-#if AV_GCC_VERSION_AT_LEAST(3,1) || AV_HAS_ATTRIBUTE(__malloc__)
+#যদি AV_GCC_VERSION_AT_LEAST(3,1) || AV_HAS_ATTRIBUTE(__malloc__)
     #define av_malloc_attrib __attribute__((__malloc__))
-#else
+#অন্যথা
     #define av_malloc_attrib
 #endif
 
@@ -86,10 +86,10 @@
  * @see <a href="https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-g_t_0040code_007balloc_005fsize_007d-function-attribute-3220">Function attribute `alloc_size` in GCC's documentation</a>
  */
 
-#if AV_GCC_VERSION_AT_LEAST(4,3) || AV_HAS_ATTRIBUTE(alloc_size)
-    #define av_alloc_size(...) __attribute__((alloc_size(__VA_ARGS__)))
-#else
-    #define av_alloc_size(...)
+#যদি AV_GCC_VERSION_AT_LEAST(4,3) || AV_HAS_ATTRIBUTE(alloc_আকার)
+    #define av_alloc_আকার(...) __attribute__((alloc_আকার(__VA_ARGS__)))
+#অন্যথা
+    #define av_alloc_আকার(...)
 #endif
 
 /**
@@ -116,7 +116,7 @@
  *         be allocated
  * @see av_mallocz()
  */
-void *av_malloc(size_t size) av_malloc_attrib av_alloc_size(1);
+শূন্য *av_malloc(size_t আকার_2) av_malloc_attrib av_alloc_আকার(1);
 
 /**
  * Allocate a memory block with alignment suitable for all memory accesses
@@ -127,7 +127,7 @@ void *av_malloc(size_t size) av_malloc_attrib av_alloc_size(1);
  * @return Pointer to the allocated block, or `NULL` if it cannot be allocated
  * @see av_malloc()
  */
-void *av_mallocz(size_t size) av_malloc_attrib av_alloc_size(1);
+শূন্য *av_mallocz(size_t আকার_2) av_malloc_attrib av_alloc_আকার(1);
 
 /**
  * Allocate a memory block for an array with av_malloc().
@@ -140,7 +140,7 @@ void *av_mallocz(size_t size) av_malloc_attrib av_alloc_size(1);
  *         be allocated
  * @see av_malloc()
  */
-av_alloc_size(1, 2) void *av_malloc_array(size_t nmemb, size_t size);
+av_alloc_আকার(1, 2) শূন্য *av_malloc_array(size_t nmemb, size_t আকার_2);
 
 /**
  * Allocate a memory block for an array with av_mallocz().
@@ -155,7 +155,7 @@ av_alloc_size(1, 2) void *av_malloc_array(size_t nmemb, size_t size);
  * @see av_mallocz()
  * @see av_malloc_array()
  */
-void *av_calloc(size_t nmemb, size_t size) av_malloc_attrib av_alloc_size(1, 2);
+শূন্য *av_calloc(size_t nmemb, size_t আকার_2) av_malloc_attrib av_alloc_আকার(1, 2);
 
 /**
  * Allocate, reallocate, or free a block of memory.
@@ -177,7 +177,7 @@ void *av_calloc(size_t nmemb, size_t size) av_malloc_attrib av_alloc_size(1, 2);
  * @see av_fast_realloc()
  * @see av_reallocp()
  */
-void *av_realloc(void *ptr, size_t size) av_alloc_size(2);
+শূন্য *av_realloc(শূন্য *ptr, size_t আকার_2) av_alloc_আকার(2);
 
 /**
  * Allocate, reallocate, or free a block of memory through a pointer to a
@@ -198,8 +198,8 @@ void *av_realloc(void *ptr, size_t size) av_alloc_size(2);
  * @warning Unlike av_malloc(), the allocated memory is not guaranteed to be
  *          correctly aligned.
  */
-av_warn_unused_result
-int av_reallocp(void *ptr, size_t size);
+av_warn_unused_ফলাফল
+পূর্ণসংখ্যা av_reallocp(শূন্য *ptr, size_t আকার_2);
 
 /**
  * Allocate, reallocate, or free a block of memory.
@@ -216,7 +216,7 @@ int av_reallocp(void *ptr, size_t size);
  *   @endcode
  *   pattern.
  */
-void *av_realloc_f(void *ptr, size_t nelem, size_t elsize);
+শূন্য *av_realloc_f(শূন্য *ptr, size_t nelem, size_t elsize);
 
 /**
  * Allocate, reallocate, or free an array.
@@ -236,7 +236,7 @@ void *av_realloc_f(void *ptr, size_t nelem, size_t elsize);
  *          nmemb is zero.
  * @see av_reallocp_array()
  */
-av_alloc_size(2, 3) void *av_realloc_array(void *ptr, size_t nmemb, size_t size);
+av_alloc_আকার(2, 3) শূন্য *av_realloc_array(শূন্য *ptr, size_t nmemb, size_t আকার_2);
 
 /**
  * Allocate, reallocate an array through a pointer to a pointer.
@@ -254,7 +254,7 @@ av_alloc_size(2, 3) void *av_realloc_array(void *ptr, size_t nmemb, size_t size)
  * @warning Unlike av_malloc(), the allocated memory is not guaranteed to be
  *          correctly aligned. *ptr must be freed after even if nmemb is zero.
  */
-int av_reallocp_array(void *ptr, size_t nmemb, size_t size);
+পূর্ণসংখ্যা av_reallocp_array(শূন্য *ptr, size_t nmemb, size_t আকার_2);
 
 /**
  * Reallocate the given buffer if it is not large enough, otherwise do nothing.
@@ -288,7 +288,7 @@ int av_reallocp_array(void *ptr, size_t nmemb, size_t size);
  * @see av_realloc()
  * @see av_fast_malloc()
  */
-void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size);
+শূন্য *av_fast_realloc(শূন্য *ptr, unsigned পূর্ণসংখ্যা *আকার_2, size_t min_আকার);
 
 /**
  * Allocate a buffer, reusing the given one if large enough.
@@ -319,7 +319,7 @@ void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size);
  * @see av_realloc()
  * @see av_fast_mallocz()
  */
-void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size);
+শূন্য av_fast_malloc(শূন্য *ptr, unsigned পূর্ণসংখ্যা *আকার_2, size_t min_আকার);
 
 /**
  * Allocate and clear a buffer, reusing the given one if large enough.
@@ -339,7 +339,7 @@ void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size);
  * @param[in]     min_size Desired minimal size of buffer `*ptr`
  * @see av_fast_malloc()
  */
-void av_fast_mallocz(void *ptr, unsigned int *size, size_t min_size);
+শূন্য av_fast_mallocz(শূন্য *ptr, unsigned পূর্ণসংখ্যা *আকার_2, size_t min_আকার);
 
 /**
  * Free a memory block which has been allocated with a function of av_malloc()
@@ -352,7 +352,7 @@ void av_fast_mallocz(void *ptr, unsigned int *size, size_t min_size);
  *       behind dangling pointers.
  * @see av_freep()
  */
-void av_free(void *ptr);
+শূন্য av_free(শূন্য *ptr);
 
 /**
  * Free a memory block which has been allocated with a function of av_malloc()
@@ -375,7 +375,7 @@ void av_free(void *ptr);
  * @note `*ptr = NULL` is safe and leads to no action.
  * @see av_free()
  */
-void av_freep(void *ptr);
+শূন্য av_freep(শূন্য *ptr);
 
 /**
  * Duplicate a string.
@@ -385,7 +385,7 @@ void av_freep(void *ptr);
  *         copy of `s` or `NULL` if the string cannot be allocated
  * @see av_strndup()
  */
-char *av_strdup(const char *s) av_malloc_attrib;
+অক্ষর *av_strdup(ধ্রুবক অক্ষর *s) av_malloc_attrib;
 
 /**
  * Duplicate a substring of a string.
@@ -396,7 +396,7 @@ char *av_strdup(const char *s) av_malloc_attrib;
  * @return Pointer to a newly-allocated string containing a
  *         substring of `s` or `NULL` if the string cannot be allocated
  */
-char *av_strndup(const char *s, size_t len) av_malloc_attrib;
+অক্ষর *av_strndup(ধ্রুবক অক্ষর *s, size_t len) av_malloc_attrib;
 
 /**
  * Duplicate a buffer with av_malloc().
@@ -406,7 +406,7 @@ char *av_strndup(const char *s, size_t len) av_malloc_attrib;
  * @return Pointer to a newly allocated buffer containing a
  *         copy of `p` or `NULL` if the buffer cannot be allocated
  */
-void *av_memdup(const void *p, size_t size);
+শূন্য *av_memdup(ধ্রুবক শূন্য *p, size_t আকার_2);
 
 /**
  * Overlapping memcpy() implementation.
@@ -419,7 +419,7 @@ void *av_memdup(const void *p, size_t size);
  * @note `cnt > back` is valid, this will copy the bytes we just copied,
  *       thus creating a repeating pattern with a period length of `back`.
  */
-void av_memcpy_backptr(uint8_t *dst, int back, int cnt);
+শূন্য av_memcpy_backptr(uint8_t *dst, পূর্ণসংখ্যা back, পূর্ণসংখ্যা cnt);
 
 /**
  * @}
@@ -521,7 +521,7 @@ void av_memcpy_backptr(uint8_t *dst, int back, int cnt);
  * @param[in]     elem    Element to add
  * @see av_dynarray_add_nofree(), av_dynarray2_add()
  */
-void av_dynarray_add(void *tab_ptr, int *nb_ptr, void *elem);
+শূন্য av_dynarray_add(শূন্য *tab_ptr, পূর্ণসংখ্যা *nb_ptr, শূন্য *elem);
 
 /**
  * Add an element to a dynamic array.
@@ -533,8 +533,8 @@ void av_dynarray_add(void *tab_ptr, int *nb_ptr, void *elem);
  * @return >=0 on success, negative otherwise
  * @see av_dynarray_add(), av_dynarray2_add()
  */
-av_warn_unused_result
-int av_dynarray_add_nofree(void *tab_ptr, int *nb_ptr, void *elem);
+av_warn_unused_ফলাফল
+পূর্ণসংখ্যা av_dynarray_add_nofree(শূন্য *tab_ptr, পূর্ণসংখ্যা *nb_ptr, শূন্য *elem);
 
 /**
  * Add an element of size `elem_size` to a dynamic array.
@@ -559,8 +559,8 @@ int av_dynarray_add_nofree(void *tab_ptr, int *nb_ptr, void *elem);
  *         space
  * @see av_dynarray_add(), av_dynarray_add_nofree()
  */
-void *av_dynarray2_add(void **tab_ptr, int *nb_ptr, size_t elem_size,
-                       const uint8_t *elem_data);
+শূন্য *av_dynarray2_add(শূন্য **tab_ptr, পূর্ণসংখ্যা *nb_ptr, size_t elem_আকার,
+                       ধ্রুবক uint8_t *elem_তথ্য);
 
 /**
  * @}
@@ -582,7 +582,7 @@ void *av_dynarray2_add(void **tab_ptr, int *nb_ptr, size_t elem_size,
  * @param[out] r   Pointer to the result of the operation
  * @return 0 on success, AVERROR(EINVAL) on overflow
  */
-int av_size_mult(size_t a, size_t b, size_t *r);
+পূর্ণসংখ্যা av_আকার_mult(size_t a, size_t b, size_t *r);
 
 /**
  * Set the maximum size that may be allocated in one block.
@@ -597,7 +597,7 @@ int av_size_mult(size_t a, size_t b, size_t *r);
  * @warning Exercise extreme caution when using this function. Don't touch
  *          this if you do not understand the full consequence of doing so.
  */
-void av_max_alloc(size_t max);
+শূন্য av_max_alloc(size_t max);
 
 /**
  * @}

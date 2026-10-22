@@ -19,8 +19,8 @@
 #ifndef AVUTIL_DYNARRAY_H
 #define AVUTIL_DYNARRAY_H
 
-#include "log.h"
-#include "mem.h"
+#অন্তর্ভাব "log.h"
+#অন্তর্ভাব "mem.h"
 
 /**
  * Add an element to a dynamic array.
@@ -42,29 +42,29 @@
  *                     array and size are not changed; the statement can end
  *                     with a return or a goto
  */
-#define FF_DYNARRAY_ADD(av_size_max, av_elt_size, av_array, av_size, \
+#define FF_DYNARRAY_ADD(av_আকার_max, av_elt_আকার, av_array, av_আকার, \
                         av_success, av_failure) \
-    do { \
-        size_t av_size_new = (av_size); \
-        if (!((av_size) & ((av_size) - 1))) { \
-            av_size_new = (av_size) ? (av_size) << 1 : 1; \
-            if (av_size_new > (av_size_max) / (av_elt_size)) { \
-                av_size_new = 0; \
-            } else { \
-                void *av_array_new = \
-                    av_realloc((av_array), av_size_new * (av_elt_size)); \
-                if (!av_array_new) \
-                    av_size_new = 0; \
-                else \
+    করো { \
+        size_t av_আকার_new = (av_আকার); \
+        যদি (!((av_আকার) & ((av_আকার) - 1))) { \
+            av_আকার_new = (av_আকার) ? (av_আকার) << 1 : 1; \
+            যদি (av_আকার_new > (av_আকার_max) / (av_elt_আকার)) { \
+                av_আকার_new = 0; \
+            } অন্যথা { \
+                শূন্য *av_array_new = \
+                    av_realloc((av_array), av_আকার_new * (av_elt_আকার)); \
+                যদি (!av_array_new) \
+                    av_আকার_new = 0; \
+                অন্যথা \
                     (av_array) = av_array_new; \
             } \
         } \
-        if (av_size_new) { \
+        যদি (av_আকার_new) { \
             { av_success } \
-            (av_size)++; \
-        } else { \
+            (av_আকার)++; \
+        } অন্যথা { \
             av_failure \
         } \
-    } while (0)
+    } যখন (0)
 
 #endif /* AVUTIL_DYNARRAY_H */

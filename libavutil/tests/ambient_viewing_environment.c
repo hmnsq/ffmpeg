@@ -16,53 +16,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#অন্তর্ভাব <limits.h>
+#অন্তর্ভাব <stdio.h>
 
-#include "libavutil/ambient_viewing_environment.h"
-#include "libavutil/frame.h"
-#include "libavutil/mem.h"
+#অন্তর্ভাব "libavutil/ambient_viewing_environment.h"
+#অন্তর্ভাব "libavutil/frame.h"
+#অন্তর্ভাব "libavutil/mem.h"
 
-static void print_env(const AVAmbientViewingEnvironment *env)
+স্থির শূন্য print_env(ধ্রুবক AVAmbientViewingEnvironment *env)
 {
     printf("illuminance=%d/%d, light_x=%d/%d, light_y=%d/%d\n",
-           env->ambient_illuminance.num, env->ambient_illuminance.den,
-           env->ambient_light_x.num,     env->ambient_light_x.den,
-           env->ambient_light_y.num,     env->ambient_light_y.den);
+           env->ambient_illuminance.অঙ্ক, env->ambient_illuminance.den,
+           env->ambient_light_x.অঙ্ক,     env->ambient_light_x.den,
+           env->ambient_light_y.অঙ্ক,     env->ambient_light_y.den);
 }
 
-int main(void)
+পূর্ণসংখ্যা প্রধান(শূন্য)
 {
     AVAmbientViewingEnvironment *env;
     AVFrame *frame;
-    size_t size = 0;
+    size_t আকার_2 = 0;
 
     /* av_ambient_viewing_environment_alloc with size out-param */
     printf("Testing av_ambient_viewing_environment_alloc(&size)\n");
-    env = av_ambient_viewing_environment_alloc(&size);
-    if (env) {
-        printf("alloc: OK, size_set=%s\n", size == sizeof(*env) ? "yes" : "no");
+    env = av_ambient_viewing_environment_alloc(&আকার_2);
+    যদি (env) {
+        printf("alloc: OK, size_set=%s\n", আকার_2 == আকার(*env) ? "yes" : "no");
         print_env(env);
         av_free(env);
-    } else {
+    } অন্যথা {
         printf("alloc: FAIL\n");
     }
 
     /* av_ambient_viewing_environment_alloc with NULL size */
     printf("\nTesting av_ambient_viewing_environment_alloc(NULL)\n");
-    env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
+    env = av_ambient_viewing_environment_alloc(ফাঁকা);
+    যদি (env) {
         printf("alloc(NULL): OK\n");
         print_env(env);
         av_free(env);
-    } else {
+    } অন্যথা {
         printf("alloc(NULL): FAIL\n");
     }
 
     /* write and read back */
     printf("\nTesting write/read back\n");
-    env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
+    env = av_ambient_viewing_environment_alloc(ফাঁকা);
+    যদি (env) {
         env->ambient_illuminance = (AVRational){ 314, 10 };
         env->ambient_light_x     = (AVRational){ 15635, 50000 };
         env->ambient_light_y     = (AVRational){ 16450, 50000 };
@@ -73,12 +73,12 @@ int main(void)
     /* av_ambient_viewing_environment_create_side_data */
     printf("\nTesting av_ambient_viewing_environment_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
-        env = av_ambient_viewing_environment_create_side_data(frame);
-        if (env) {
+    যদি (frame) {
+        env = av_ambient_viewing_environment_create_side_তথ্য(frame);
+        যদি (env) {
             printf("side_data: OK\n");
             print_env(env);
-        } else {
+        } অন্যথা {
             printf("side_data: FAIL\n");
         }
         av_frame_free(&frame);
@@ -87,22 +87,22 @@ int main(void)
     /* OOM paths via av_max_alloc */
     printf("\nTesting OOM paths\n");
     av_max_alloc(1);
-    env = av_ambient_viewing_environment_alloc(&size);
+    env = av_ambient_viewing_environment_alloc(&আকার_2);
     printf("alloc OOM: %s\n", env ? "FAIL" : "OK");
     av_free(env);
-    env = av_ambient_viewing_environment_alloc(NULL);
+    env = av_ambient_viewing_environment_alloc(ফাঁকা);
     printf("alloc(NULL) OOM: %s\n", env ? "FAIL" : "OK");
     av_free(env);
     av_max_alloc(INT_MAX);
 
     frame = av_frame_alloc();
-    if (frame) {
+    যদি (frame) {
         av_max_alloc(1);
-        env = av_ambient_viewing_environment_create_side_data(frame);
+        env = av_ambient_viewing_environment_create_side_তথ্য(frame);
         printf("side_data OOM: %s\n", env ? "FAIL" : "OK");
         av_max_alloc(INT_MAX);
         av_frame_free(&frame);
     }
 
-    return 0;
+    ফেরত 0;
 }

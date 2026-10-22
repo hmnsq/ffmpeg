@@ -18,22 +18,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
+#অন্তর্ভাব <inttypes.h>
+#অন্তর্ভাব <stdio.h>
 
-#include "libavutil/intreadwrite.h"
-#include "libavutil/mem.h"
-#include "libavutil/murmur3.h"
+#অন্তর্ভাব "libavutil/intreadwrite.h"
+#অন্তর্ভাব "libavutil/mem.h"
+#অন্তর্ভাব "libavutil/murmur3.h"
 
-int main(void)
+পূর্ণসংখ্যা প্রধান(শূন্য)
 {
-    int i;
-    uint8_t hash_result[16] = {0};
-    struct AVMurMur3 *ctx = av_murmur3_alloc();
-#if 1
+    পূর্ণসংখ্যা i;
+    uint8_t hash_ফলাফল[16] = {0};
+    কাঠামো AVMurMur3 *ctx = av_murmur3_alloc();
+#যদি 1
     uint8_t in[256] = {0};
     uint8_t *hashes = av_mallocz(256 * 16);
-    for (i = 0; i < 256; i++)
+    জন্য (i = 0; i < 256; i++)
     {
         in[i] = i;
         av_murmur3_init_seeded(ctx, 256 - i);
@@ -43,19 +43,19 @@ int main(void)
     }
     av_murmur3_init_seeded(ctx, 0);
     av_murmur3_update(ctx, hashes, 256 * 16);
-    av_murmur3_final(ctx, hash_result);
+    av_murmur3_final(ctx, hash_ফলাফল);
     av_free(hashes);
     av_freep(&ctx);
-    printf("result: 0x%"PRIx64" 0x%"PRIx64"\n", AV_RL64(hash_result), AV_RL64(hash_result + 8));
+    printf("result: 0x%"PRIx64" 0x%"PRIx64"\n", AV_RL64(hash_ফলাফল), AV_RL64(hash_ফলাফল + 8));
     // official reference value is 32 bit
-    return AV_RL32(hash_result) != 0x6384ba69;
-#else
+    ফেরত AV_RL32(hash_ফলাফল) != 0x6384ba69;
+#অন্যথা
     uint8_t *in = av_mallocz(512*1024);
     av_murmur3_init(ctx);
-    for (i = 0; i < 40*1024; i++)
+    জন্য (i = 0; i < 40*1024; i++)
         av_murmur3_update(ctx, in, 512*1024);
-    av_murmur3_final(ctx, hash_result);
+    av_murmur3_final(ctx, hash_ফলাফল);
     av_free(in);
-    return hash_result[0];
+    ফেরত hash_ফলাফল[0];
 #endif
 }

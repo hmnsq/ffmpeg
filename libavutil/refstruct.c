@@ -16,19 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include <stdint.h>
-#include <string.h>
+#অন্তর্ভাব <stdatomic.h>
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব <string.h>
 
-#include "refstruct.h"
-#include "sanitizer.h"
+#অন্তর্ভাব "refstruct.h"
+#অন্তর্ভাব "sanitizer.h"
 
-#include "avassert.h"
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
-#include "mem_internal.h"
-#include "thread.h"
+#অন্তর্ভাব "avassert.h"
+#অন্তর্ভাব "error.h"
+#অন্তর্ভাব "macros.h"
+#অন্তর্ভাব "mem.h"
+#অন্তর্ভাব "mem_internal.h"
+#অন্তর্ভাব "thread.h"
 
 #ifndef REFSTRUCT_CHECKED
 #ifndef ASSERT_LEVEL
@@ -37,22 +37,22 @@
 #define REFSTRUCT_CHECKED (ASSERT_LEVEL >= 1)
 #endif
 
-#if REFSTRUCT_CHECKED
+#যদি REFSTRUCT_CHECKED
 #define ff_assert(cond) av_assert0(cond)
-#else
-#define ff_assert(cond) ((void)0)
+#অন্যথা
+#define ff_assert(cond) ((শূন্য)0)
 #endif
 
 #define REFSTRUCT_COOKIE AV_NE((uint64_t)MKBETAG('R', 'e', 'f', 'S') << 32 | MKBETAG('t', 'r', 'u', 'c'), \
                                MKTAG('R', 'e', 'f', 'S') | (uint64_t)MKTAG('t', 'r', 'u', 'c') << 32)
 
 #ifndef _MSC_VER
-#define REFCOUNT_OFFSET FFALIGN(sizeof(RefCount), FFMAX(ALIGN_64, _Alignof(max_align_t)))
-#else
-#define REFCOUNT_OFFSET FFALIGN(sizeof(RefCount), ALIGN_64)
+#define REFCOUNT_OFFSET FFALIGN(আকার(Ref_গুনতি), FFMAX(ALIGN_64, _Alignof(max_align_t)))
+#অন্যথা
+#define REFCOUNT_OFFSET FFALIGN(আকার(Ref_গুনতি), ALIGN_64)
 #endif
 
-typedef struct RefCount {
+প্রকারলেখ কাঠামো Ref_গুনতি {
     /**
      * An uintptr_t is big enough to hold the address of every reference,
      * so no overflow can happen when incrementing the refcount as long as
@@ -60,136 +60,136 @@ typedef struct RefCount {
      */
     atomic_uintptr_t  refcount;
     AVRefStructOpaque opaque;
-    void (*free_cb)(AVRefStructOpaque opaque, void *obj);
-    void (*free)(void *ref);
+    শূন্য (*free_cb)(AVRefStructOpaque opaque, শূন্য *obj);
+    শূন্য (*মুক্ত)(শূন্য *ref);
 
-#if REFSTRUCT_CHECKED
+#যদি REFSTRUCT_CHECKED
     uint64_t cookie;
 #endif
-} RefCount;
+} Ref_গুনতি;
 
-static RefCount *get_refcount(void *obj)
+স্থির Ref_গুনতি *get_refcount(শূন্য *obj)
 {
-    RefCount *ref = (RefCount*)((char*)obj - REFCOUNT_OFFSET);
+    Ref_গুনতি *ref = (Ref_গুনতি*)((অক্ষর*)obj - REFCOUNT_OFFSET);
     ff_assert(ref->cookie == REFSTRUCT_COOKIE);
-    return ref;
+    ফেরত ref;
 }
 
-static const RefCount *cget_refcount(const void *obj)
+স্থির ধ্রুবক Ref_গুনতি *cget_refcount(ধ্রুবক শূন্য *obj)
 {
-    const RefCount *ref = (const RefCount*)((const char*)obj - REFCOUNT_OFFSET);
+    ধ্রুবক Ref_গুনতি *ref = (ধ্রুবক Ref_গুনতি*)((ধ্রুবক অক্ষর*)obj - REFCOUNT_OFFSET);
     ff_assert(ref->cookie == REFSTRUCT_COOKIE);
-    return ref;
+    ফেরত ref;
 }
 
-static void *get_userdata(void *buf)
+স্থির শূন্য *get_userdata(শূন্য *buf)
 {
-    return (char*)buf + REFCOUNT_OFFSET;
+    ফেরত (অক্ষর*)buf + REFCOUNT_OFFSET;
 }
 
-static void refcount_init(RefCount *ref, AVRefStructOpaque opaque,
-                          void (*free_cb)(AVRefStructOpaque opaque, void *obj))
+স্থির শূন্য refcount_init(Ref_গুনতি *ref, AVRefStructOpaque opaque,
+                          শূন্য (*free_cb)(AVRefStructOpaque opaque, শূন্য *obj))
 {
     atomic_init(&ref->refcount, 1);
     ref->opaque  = opaque;
     ref->free_cb = free_cb;
-    ref->free    = av_free;
+    ref->মুক্ত    = av_free;
 
-#if REFSTRUCT_CHECKED
+#যদি REFSTRUCT_CHECKED
     ref->cookie  = REFSTRUCT_COOKIE;
 #endif
 }
 
-void *av_refstruct_alloc_ext_c(size_t size, unsigned flags, AVRefStructOpaque opaque,
-                               void (*free_cb)(AVRefStructOpaque opaque, void *obj))
+শূন্য *av_refstruct_alloc_ext_c(size_t আকার_2, unsigned flags, AVRefStructOpaque opaque,
+                               শূন্য (*free_cb)(AVRefStructOpaque opaque, শূন্য *obj))
 {
-    void *buf, *obj;
+    শূন্য *buf, *obj;
 
-    if (size > SIZE_MAX - REFCOUNT_OFFSET)
-        return NULL;
-    buf = av_malloc(size + REFCOUNT_OFFSET);
-    if (!buf)
-        return NULL;
+    যদি (আকার_2 > SIZE_MAX - REFCOUNT_OFFSET)
+        ফেরত ফাঁকা;
+    buf = av_malloc(আকার_2 + REFCOUNT_OFFSET);
+    যদি (!buf)
+        ফেরত ফাঁকা;
     refcount_init(buf, opaque, free_cb);
     obj = get_userdata(buf);
-    if (!(flags & AV_REFSTRUCT_FLAG_NO_ZEROING))
-        memset(obj, 0, size);
+    যদি (!(flags & AV_REFSTRUCT_FLAG_NO_ZEROING))
+        memset(obj, 0, আকার_2);
 
-    return obj;
+    ফেরত obj;
 }
 
-void av_refstruct_unref(void *objp)
+শূন্য av_refstruct_unref(শূন্য *objp)
 {
-    void *obj;
-    RefCount *ref;
+    শূন্য *obj;
+    Ref_গুনতি *ref;
 
-    memcpy(&obj, objp, sizeof(obj));
-    if (!obj)
-        return;
-    memcpy(objp, &(void *){ NULL }, sizeof(obj));
+    memcpy(&obj, objp, আকার(obj));
+    যদি (!obj)
+        ফেরত;
+    memcpy(objp, &(শূন্য *){ ফাঁকা }, আকার(obj));
 
     ref = get_refcount(obj);
-    if (atomic_fetch_sub_explicit(&ref->refcount, 1, memory_order_acq_rel) == 1) {
-        if (ref->free_cb)
+    যদি (atomic_fetch_sub_explicit(&ref->refcount, 1, memory_order_acq_rel) == 1) {
+        যদি (ref->free_cb)
             ref->free_cb(ref->opaque, obj);
-        ref->free(ref);
+        ref->মুক্ত(ref);
     }
 
-    return;
+    ফেরত;
 }
 
-void *av_refstruct_ref(void *obj)
+শূন্য *av_refstruct_ref(শূন্য *obj)
 {
-    RefCount *ref = get_refcount(obj);
+    Ref_গুনতি *ref = get_refcount(obj);
 
     atomic_fetch_add_explicit(&ref->refcount, 1, memory_order_relaxed);
 
-    return obj;
+    ফেরত obj;
 }
 
-const void *av_refstruct_ref_c(const void *obj)
+ধ্রুবক শূন্য *av_refstruct_ref_c(ধ্রুবক শূন্য *obj)
 {
     /* Casting const away here is fine, as it is only supposed
      * to apply to the user's data and not our bookkeeping data. */
-    RefCount *ref = get_refcount((void*)obj);
+    Ref_গুনতি *ref = get_refcount((শূন্য*)obj);
 
     atomic_fetch_add_explicit(&ref->refcount, 1, memory_order_relaxed);
 
-    return obj;
+    ফেরত obj;
 }
 
-void av_refstruct_replace(void *dstp, const void *src)
+শূন্য av_refstruct_replace(শূন্য *dstp, ধ্রুবক শূন্য *src)
 {
-    const void *dst;
-    memcpy(&dst, dstp, sizeof(dst));
+    ধ্রুবক শূন্য *dst;
+    memcpy(&dst, dstp, আকার(dst));
 
-    if (src == dst)
-        return;
+    যদি (src == dst)
+        ফেরত;
     av_refstruct_unref(dstp);
-    if (src) {
+    যদি (src) {
         dst = av_refstruct_ref_c(src);
-        memcpy(dstp, &dst, sizeof(dst));
+        memcpy(dstp, &dst, আকার(dst));
     }
 }
 
-int av_refstruct_exclusive(const void *obj)
+পূর্ণসংখ্যা av_refstruct_exclusive(ধ্রুবক শূন্য *obj)
 {
-    const RefCount *ref = cget_refcount(obj);
+    ধ্রুবক Ref_গুনতি *ref = cget_refcount(obj);
     /* Casting const away here is safe, because it is a load.
      * It is necessary because atomic_load_explicit() does not
      * accept const atomics in C11 (see also N1807). */
-    return atomic_load_explicit((atomic_uintptr_t*)&ref->refcount, memory_order_acquire) == 1;
+    ফেরত atomic_load_explicit((atomic_uintptr_t*)&ref->refcount, memory_order_acquire) == 1;
 }
 
-struct AVRefStructPool {
-    size_t size;
+কাঠামো AVRefStructPool {
+    size_t আকার_2;
     AVRefStructOpaque opaque;
-    int  (*init_cb)(AVRefStructOpaque opaque, void *obj);
-    void (*reset_cb)(AVRefStructOpaque opaque, void *obj);
-    void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj);
-    void (*free_cb)(AVRefStructOpaque opaque);
+    পূর্ণসংখ্যা  (*init_cb)(AVRefStructOpaque opaque, শূন্য *obj);
+    শূন্য (*reset_cb)(AVRefStructOpaque opaque, শূন্য *obj);
+    শূন্য (*free_entry_cb)(AVRefStructOpaque opaque, শূন্য *obj);
+    শূন্য (*free_cb)(AVRefStructOpaque opaque);
 
-    int uninited;
+    পূর্ণসংখ্যা uninited;
     unsigned entry_flags;
     unsigned pool_flags;
 
@@ -202,121 +202,121 @@ struct AVRefStructPool {
      * While the entries are in use, the opaque is a pointer
      * to the corresponding AVRefStructPool.
      */
-    RefCount *available_entries;
+    Ref_গুনতি *available_entries;
     AVMutex mutex;
 };
 
-static void pool_free(AVRefStructPool *pool)
+স্থির শূন্য pool_free(AVRefStructPool *pool)
 {
     ff_mutex_destroy(&pool->mutex);
-    if (pool->free_cb)
+    যদি (pool->free_cb)
         pool->free_cb(pool->opaque);
     av_free(get_refcount(pool));
 }
 
-static void pool_free_entry(AVRefStructPool *pool, RefCount *ref)
+স্থির শূন্য pool_free_entry(AVRefStructPool *pool, Ref_গুনতি *ref)
 {
-    if (!pool->free_entry_cb)
-        FF_ASAN_UNPOISON(get_userdata(ref), pool->size);
-    if (pool->free_entry_cb)
+    যদি (!pool->free_entry_cb)
+        FF_ASAN_UNPOISON(get_userdata(ref), pool->আকার_2);
+    যদি (pool->free_entry_cb)
         pool->free_entry_cb(pool->opaque, get_userdata(ref));
     av_free(ref);
 }
 
-static void pool_return_entry(void *ref_)
+স্থির শূন্য pool_return_entry(শূন্য *ref_)
 {
-    RefCount *ref = ref_;
+    Ref_গুনতি *ref = ref_;
     AVRefStructPool *pool = ref->opaque.nc;
 
     ff_mutex_lock(&pool->mutex);
-    if (!pool->uninited) {
+    যদি (!pool->uninited) {
         /* An entry with an entry free callback owns allocations while it
          * rests in the pool. LeakSanitizer does not follow pointers stored
          * in poisoned memory, so such entries stay addressable. */
-        if (!pool->free_entry_cb)
-            FF_ASAN_POISON(get_userdata(ref), pool->size);
+        যদি (!pool->free_entry_cb)
+            FF_ASAN_POISON(get_userdata(ref), pool->আকার_2);
         ref->opaque.nc = pool->available_entries;
         pool->available_entries = ref;
-        ref = NULL;
+        ref = ফাঁকা;
     }
     ff_mutex_unlock(&pool->mutex);
 
-    if (ref)
+    যদি (ref)
         pool_free_entry(pool, ref);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+    যদি (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
         pool_free(pool);
 }
 
-static void pool_reset_entry(AVRefStructOpaque opaque, void *entry)
+স্থির শূন্য pool_reset_entry(AVRefStructOpaque opaque, শূন্য *entry)
 {
     AVRefStructPool *pool = opaque.nc;
 
     pool->reset_cb(pool->opaque, entry);
 }
 
-static int refstruct_pool_get_ext(void *datap, AVRefStructPool *pool)
+স্থির পূর্ণসংখ্যা refstruct_pool_get_ext(শূন্য *datap, AVRefStructPool *pool)
 {
-    void *ret = NULL;
+    শূন্য *ret = ফাঁকা;
 
-    memcpy(datap, &(void *){ NULL }, sizeof(void*));
+    memcpy(datap, &(শূন্য *){ ফাঁকা }, আকার(শূন্য*));
 
     ff_mutex_lock(&pool->mutex);
     ff_assert(!pool->uninited);
-    if (pool->available_entries) {
-        RefCount *ref = pool->available_entries;
+    যদি (pool->available_entries) {
+        Ref_গুনতি *ref = pool->available_entries;
         ret = get_userdata(ref);
-        if (!pool->free_entry_cb)
-            FF_ASAN_UNPOISON(ret, pool->size);
+        যদি (!pool->free_entry_cb)
+            FF_ASAN_UNPOISON(ret, pool->আকার_2);
         /* Entries are zeroed once at allocation and a user may rely on never
          * written parts staying zero, so only a pool that never zeroes and
          * keeps no state through callbacks gets its reused entries marked
          * undefined. */
-        if ((pool->entry_flags & AV_REFSTRUCT_FLAG_NO_ZEROING) &&
+        যদি ((pool->entry_flags & AV_REFSTRUCT_FLAG_NO_ZEROING) &&
             !(pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME) &&
             !pool->init_cb && !pool->reset_cb && !pool->free_entry_cb)
-            FF_MEM_UNDEFINED(ret, pool->size);
+            FF_MEM_UNDEFINED(ret, pool->আকার_2);
         pool->available_entries = ref->opaque.nc;
         ref->opaque.nc = pool;
         atomic_init(&ref->refcount, 1);
     }
     ff_mutex_unlock(&pool->mutex);
 
-    if (!ret) {
-        RefCount *ref;
-        ret = av_refstruct_alloc_ext(pool->size, pool->entry_flags, pool,
-                                     pool->reset_cb ? pool_reset_entry : NULL);
-        if (!ret)
-            return AVERROR(ENOMEM);
+    যদি (!ret) {
+        Ref_গুনতি *ref;
+        ret = av_refstruct_alloc_ext(pool->আকার_2, pool->entry_flags, pool,
+                                     pool->reset_cb ? pool_reset_entry : ফাঁকা);
+        যদি (!ret)
+            ফেরত AVERROR(ENOMEM);
         ref = get_refcount(ret);
-        ref->free = pool_return_entry;
-        if (pool->init_cb) {
-            int err = pool->init_cb(pool->opaque, ret);
-            if (err < 0) {
-                if (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_RESET_ON_INIT_ERROR)
+        ref->মুক্ত = pool_return_entry;
+        যদি (pool->init_cb) {
+            পূর্ণসংখ্যা err = pool->init_cb(pool->opaque, ret);
+            যদি (err < 0) {
+                যদি (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_RESET_ON_INIT_ERROR)
                     pool->reset_cb(pool->opaque, ret);
-                if (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_FREE_ON_INIT_ERROR)
+                যদি (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_FREE_ON_INIT_ERROR)
                     pool->free_entry_cb(pool->opaque, ret);
                 av_free(ref);
-                return err;
+                ফেরত err;
             }
         }
     }
     atomic_fetch_add_explicit(&pool->refcount, 1, memory_order_relaxed);
 
-    if (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME)
-        memset(ret, 0, pool->size);
+    যদি (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME)
+        memset(ret, 0, pool->আকার_2);
 
-    memcpy(datap, &ret, sizeof(ret));
+    memcpy(datap, &ret, আকার(ret));
 
-    return 0;
+    ফেরত 0;
 }
 
-void *av_refstruct_pool_get(AVRefStructPool *pool)
+শূন্য *av_refstruct_pool_get(AVRefStructPool *pool)
 {
-    void *ret;
+    শূন্য *ret;
     refstruct_pool_get_ext(&ret, pool);
-    return ret;
+    ফেরত ret;
 }
 
 /**
@@ -324,53 +324,53 @@ void *av_refstruct_pool_get(AVRefStructPool *pool)
  * could currently be merged; they are only separate functions
  * in case we would ever introduce weak references.
  */
-static void pool_unref(void *ref)
+স্থির শূন্য pool_unref(শূন্য *ref)
 {
     AVRefStructPool *pool = get_userdata(ref);
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+    যদি (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
         pool_free(pool);
 }
 
-static void refstruct_pool_uninit(AVRefStructOpaque unused, void *obj)
+স্থির শূন্য refstruct_pool_uninit(AVRefStructOpaque unused, শূন্য *obj)
 {
     AVRefStructPool *pool = obj;
-    RefCount *entry;
+    Ref_গুনতি *entry;
 
     ff_mutex_lock(&pool->mutex);
     ff_assert(!pool->uninited);
     pool->uninited = 1;
     entry = pool->available_entries;
-    pool->available_entries = NULL;
+    pool->available_entries = ফাঁকা;
     ff_mutex_unlock(&pool->mutex);
 
-    while (entry) {
-        void *next = entry->opaque.nc;
+    যখন (entry) {
+        শূন্য *পরবর্তী = entry->opaque.nc;
         pool_free_entry(pool, entry);
-        entry = next;
+        entry = পরবর্তী;
     }
 }
 
-AVRefStructPool *av_refstruct_pool_alloc(size_t size, unsigned flags)
+AVRefStructPool *av_refstruct_pool_alloc(size_t আকার_2, unsigned flags)
 {
-    return av_refstruct_pool_alloc_ext(size, flags, NULL, NULL, NULL, NULL, NULL);
+    ফেরত av_refstruct_pool_alloc_ext(আকার_2, flags, ফাঁকা, ফাঁকা, ফাঁকা, ফাঁকা, ফাঁকা);
 }
 
-AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
+AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t আকার_2, unsigned flags,
                                                AVRefStructOpaque opaque,
-                                               int  (*init_cb)(AVRefStructOpaque opaque, void *obj),
-                                               void (*reset_cb)(AVRefStructOpaque opaque, void *obj),
-                                               void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj),
-                                               void (*free_cb)(AVRefStructOpaque opaque))
+                                               পূর্ণসংখ্যা  (*init_cb)(AVRefStructOpaque opaque, শূন্য *obj),
+                                               শূন্য (*reset_cb)(AVRefStructOpaque opaque, শূন্য *obj),
+                                               শূন্য (*free_entry_cb)(AVRefStructOpaque opaque, শূন্য *obj),
+                                               শূন্য (*free_cb)(AVRefStructOpaque opaque))
 {
-    AVRefStructPool *pool = av_refstruct_alloc_ext(sizeof(*pool), 0, NULL,
+    AVRefStructPool *pool = av_refstruct_alloc_ext(আকার(*pool), 0, ফাঁকা,
                                                    refstruct_pool_uninit);
-    int err;
+    পূর্ণসংখ্যা err;
 
-    if (!pool)
-        return NULL;
-    get_refcount(pool)->free = pool_unref;
+    যদি (!pool)
+        ফেরত ফাঁকা;
+    get_refcount(pool)->মুক্ত = pool_unref;
 
-    pool->size          = size;
+    pool->আকার_2          = আকার_2;
     pool->opaque        = opaque;
     pool->init_cb       = init_cb;
     pool->reset_cb      = reset_cb;
@@ -379,13 +379,13 @@ AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
 #define COMMON_FLAGS AV_REFSTRUCT_POOL_FLAG_NO_ZEROING
     pool->entry_flags   = flags & COMMON_FLAGS;
     // Filter out nonsense combinations to avoid checks later.
-    if (!pool->reset_cb)
+    যদি (!pool->reset_cb)
         flags &= ~AV_REFSTRUCT_POOL_FLAG_RESET_ON_INIT_ERROR;
-    if (!pool->free_entry_cb)
+    যদি (!pool->free_entry_cb)
         flags &= ~AV_REFSTRUCT_POOL_FLAG_FREE_ON_INIT_ERROR;
     pool->pool_flags    = flags;
 
-    if (flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME) {
+    যদি (flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME) {
         // We will zero the buffer before every use, so zeroing
         // upon allocating the buffer is unnecessary.
         pool->entry_flags |= AV_REFSTRUCT_FLAG_NO_ZEROING;
@@ -393,12 +393,12 @@ AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
 
     atomic_init(&pool->refcount, 1);
 
-    err = ff_mutex_init(&pool->mutex, NULL);
-    if (err) {
+    err = ff_mutex_init(&pool->mutex, ফাঁকা);
+    যদি (err) {
         // Don't call av_refstruct_uninit() on pool, as it hasn't been properly
         // set up and is just a POD right now.
         av_free(get_refcount(pool));
-        return NULL;
+        ফেরত ফাঁকা;
     }
-    return pool;
+    ফেরত pool;
 }

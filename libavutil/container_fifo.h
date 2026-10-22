@@ -19,16 +19,16 @@
 #ifndef AVUTIL_CONTAINER_FIFO_H
 #define AVUTIL_CONTAINER_FIFO_H
 
-#include <stddef.h>
+#অন্তর্ভাব <stddef.h>
 
 /**
  * AVContainerFifo is a FIFO for "containers" - dynamically allocated reusable
  * structs (e.g. AVFrame or AVPacket). AVContainerFifo uses an internal pool of
  * such containers to avoid allocating and freeing them repeatedly.
  */
-typedef struct AVContainerFifo AVContainerFifo;
+প্রকারলেখ কাঠামো AVContainerFifo AVContainerFifo;
 
-enum AVContainerFifoFlags {
+গণনা AVContainerFifoFlags {
     /**
      * Signal to av_container_fifo_write() that it should make a new reference
      * to data in src rather than consume its contents.
@@ -62,11 +62,11 @@ enum AVContainerFifoFlags {
  * @return newly allocated AVContainerFifo, or NULL on failure
  */
 AVContainerFifo*
-av_container_fifo_alloc(void *opaque,
-                        void* (*container_alloc)(void *opaque),
-                        void  (*container_reset)(void *opaque, void *obj),
-                        void  (*container_free) (void *opaque, void *obj),
-                        int   (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags),
+av_container_fifo_alloc(শূন্য *opaque,
+                        শূন্য* (*container_alloc)(শূন্য *opaque),
+                        শূন্য  (*container_reset)(শূন্য *opaque, শূন্য *obj),
+                        শূন্য  (*container_free) (শূন্য *opaque, শূন্য *obj),
+                        পূর্ণসংখ্যা   (*fifo_transfer)  (শূন্য *opaque, শূন্য *dst, শূন্য *src, unsigned flags),
                         unsigned flags);
 
 /**
@@ -79,7 +79,7 @@ AVContainerFifo *av_container_fifo_alloc_avframe(unsigned flags);
 /**
  * Free a AVContainerFifo and everything in it.
  */
-void av_container_fifo_free(AVContainerFifo **cf);
+শূন্য av_container_fifo_free(AVContainerFifo **cf);
 
 /**
  * Write the contents of obj to the FIFO.
@@ -87,7 +87,7 @@ void av_container_fifo_free(AVContainerFifo **cf);
  * The fifo_transfer() callback previously provided to av_container_fifo_alloc()
  * will be called with obj as src in order to perform the actual transfer.
  */
-int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags);
+পূর্ণসংখ্যা av_container_fifo_write(AVContainerFifo *cf, শূন্য *obj, unsigned flags);
 
 /**
  * Read the next available object from the FIFO into obj.
@@ -95,7 +95,7 @@ int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags);
  * The fifo_read() callback previously provided to av_container_fifo_alloc()
  * will be called with obj as dst in order to perform the actual transfer.
  */
-int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags);
+পূর্ণসংখ্যা av_container_fifo_read(AVContainerFifo *cf, শূন্য *obj, unsigned flags);
 
 /**
  * Access objects stored in the FIFO without retrieving them. The
@@ -112,7 +112,7 @@ int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags);
  * @retval 0 success, a pointer was written into pobj
  * @retval AVERROR(EINVAL) invalid offset value
  */
-int av_container_fifo_peek(AVContainerFifo *cf, void **pobj, size_t offset);
+পূর্ণসংখ্যা av_container_fifo_peek(AVContainerFifo *cf, শূন্য **pobj, size_t offset);
 
 /**
  * Discard the specified number of elements from the FIFO.
@@ -120,11 +120,11 @@ int av_container_fifo_peek(AVContainerFifo *cf, void **pobj, size_t offset);
  * @param nb_elems number of elements to discard, MUST NOT be larger than
  *                 av_fifo_can_read(f)
  */
-void av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems);
+শূন্য av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems);
 
 /**
  * @return number of objects available for reading
  */
-size_t av_container_fifo_can_read(const AVContainerFifo *cf);
+size_t av_container_fifo_can_read(ধ্রুবক AVContainerFifo *cf);
 
 #endif // AVCODEC_CONTAINER_FIFO_H

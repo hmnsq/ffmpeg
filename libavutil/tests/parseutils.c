@@ -17,26 +17,26 @@
  */
 
 #define TEST
-#include "libavutil/parseutils.c"
+#অন্তর্ভাব "libavutil/parseutils.c"
 
-#include <stdint.h>
-#include <stdio.h>
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/log.h"
-#include "libavutil/rational.h"
+#অন্তর্ভাব "libavutil/common.h"
+#অন্তর্ভাব "libavutil/log.h"
+#অন্তর্ভাব "libavutil/rational.h"
 
-static uint32_t randomv = MKTAG('L','A','V','U');
+স্থির uint32_t randomv = MKTAG('L','A','V','U');
 
-static uint32_t av_get_random_seed_deterministic(void)
+স্থির uint32_t av_get_random_seed_deterministic(শূন্য)
 {
-    return randomv = randomv * 1664525 + 1013904223;
+    ফেরত randomv = randomv * 1664525 + 1013904223;
 }
 
-static void test_av_parse_video_rate(void)
+স্থির শূন্য test_av_parse_video_rate(শূন্য)
 {
-    int i;
-    static const char *const rates[] = {
+    পূর্ণসংখ্যা i;
+    স্থির ধ্রুবক অক্ষর *ধ্রুবক rates[] = {
         "-inf",
         "inf",
         "nan",
@@ -64,20 +64,20 @@ static void test_av_parse_video_rate(void)
         " -21332.2324   ",
     };
 
-    for (i = 0; i < FF_ARRAY_ELEMS(rates); i++) {
-        int ret;
+    জন্য (i = 0; i < FF_ARRAY_ELEMS(rates); i++) {
+        পূর্ণসংখ্যা ret;
         AVRational q = { 0, 0 };
         ret = av_parse_video_rate(&q, rates[i]);
         printf("'%s' -> %d/%d %s\n",
-               rates[i], q.num, q.den, ret ? "ERROR" : "OK");
+               rates[i], q.অঙ্ক, q.den, ret ? "ERROR" : "OK");
     }
 }
 
-static void test_av_parse_color(void)
+স্থির শূন্য test_av_parse_color(শূন্য)
 {
-    int i;
+    পূর্ণসংখ্যা i;
     uint8_t rgba[4];
-    static const char *const color_names[] = {
+    স্থির ধ্রুবক অক্ষর *ধ্রুবক color_names[] = {
         "bikeshed",
         "RaNdOm",
         "foo",
@@ -118,21 +118,21 @@ static void test_av_parse_color(void)
 
     av_log_set_level(AV_LOG_DEBUG);
 
-    for (i = 0;  i < FF_ARRAY_ELEMS(color_names); i++) {
-        if (av_parse_color(rgba, color_names[i], -1, NULL) >= 0)
+    জন্য (i = 0;  i < FF_ARRAY_ELEMS(color_names); i++) {
+        যদি (av_parse_color(rgba, color_names[i], -1, ফাঁকা) >= 0)
             printf("%s -> R(%d) G(%d) B(%d) A(%d)\n",
                    color_names[i], rgba[0], rgba[1], rgba[2], rgba[3]);
-        else
+        অন্যথা
             printf("%s -> error\n", color_names[i]);
     }
 }
 
-static void test_av_small_strptime(void)
+স্থির শূন্য test_av_small_strptime(শূন্য)
 {
-    int i;
-    struct tm tm = { 0 };
-    struct fmt_timespec_entry {
-        const char *fmt, *timespec;
+    পূর্ণসংখ্যা i;
+    কাঠামো tm tm = { 0 };
+    কাঠামো fmt_timespec_entry {
+        ধ্রুবক অক্ষর *fmt, *timespec;
     } fmt_timespec_entries[] = {
         { "%Y-%m-%d",                    "2012-12-21" },
         { "%Y - %m - %d",                "2012-12-21" },
@@ -148,29 +148,29 @@ static void test_av_small_strptime(void)
     };
 
     av_log_set_level(AV_LOG_DEBUG);
-    for (i = 0;  i < FF_ARRAY_ELEMS(fmt_timespec_entries); i++) {
-        char *p;
-        struct fmt_timespec_entry *e = &fmt_timespec_entries[i];
+    জন্য (i = 0;  i < FF_ARRAY_ELEMS(fmt_timespec_entries); i++) {
+        অক্ষর *p;
+        কাঠামো fmt_timespec_entry *e = &fmt_timespec_entries[i];
         printf("fmt:'%s' spec:'%s' -> ", e->fmt, e->timespec);
         p = av_small_strptime(e->timespec, e->fmt, &tm);
-        if (p) {
+        যদি (p) {
             printf("%04d-%02d-%2d %02d:%02d:%02d\n",
                    1900+tm.tm_year, tm.tm_mon+1, tm.tm_mday,
                    tm.tm_hour, tm.tm_min, tm.tm_sec);
-        } else {
+        } অন্যথা {
             printf("error\n");
         }
     }
 }
 
-static void test_av_parse_time(void)
+স্থির শূন্য test_av_parse_time(শূন্য)
 {
-    int i;
+    পূর্ণসংখ্যা i;
     int64_t tv;
     time_t tvi;
-    struct tm *tm;
-    static char tzstr[] = "TZ=CET-1";
-    static const char * const time_string[] = {
+    কাঠামো tm *tm;
+    স্থির অক্ষর tzstr[] = "TZ=CET-1";
+    স্থির ধ্রুবক অক্ষর * ধ্রুবক time_string[] = {
         "now",
         "12:35:46",
         "2000-12-20 0:02:47.5z",
@@ -179,7 +179,7 @@ static void test_av_parse_time(void)
         "2000-12-12 1:35:46+05:30",
         "2002-12-12 22:30:40-02",
     };
-    static const char * const duration_string[] = {
+    স্থির ধ্রুবক অক্ষর * ধ্রুবক duration_string[] = {
         "2:34:56.79",
         "-1:23:45.67",
         "42.1729",
@@ -194,61 +194,61 @@ static void test_av_parse_time(void)
     av_log_set_level(AV_LOG_DEBUG);
     putenv(tzstr);
     printf("(now is 2012-03-17 09:14:13.2 +0100, local time is UTC+1)\n");
-    for (i = 0;  i < FF_ARRAY_ELEMS(time_string); i++) {
+    জন্য (i = 0;  i < FF_ARRAY_ELEMS(time_string); i++) {
         printf("%-24s -> ", time_string[i]);
-        if (av_parse_time(&tv, time_string[i], 0)) {
+        যদি (av_parse_time(&tv, time_string[i], 0)) {
             printf("error\n");
-        } else {
+        } অন্যথা {
             tvi = tv / 1000000;
             tm = gmtime(&tvi);
             printf("%14"PRIi64".%06d = %04d-%02d-%02dT%02d:%02d:%02dZ\n",
-                   tv / 1000000, (int)(tv % 1000000),
+                   tv / 1000000, (পূর্ণসংখ্যা)(tv % 1000000),
                    tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
                    tm->tm_hour, tm->tm_min, tm->tm_sec);
         }
     }
-    for (i = 0;  i < FF_ARRAY_ELEMS(duration_string); i++) {
+    জন্য (i = 0;  i < FF_ARRAY_ELEMS(duration_string); i++) {
         printf("%-24s -> ", duration_string[i]);
-        if (av_parse_time(&tv, duration_string[i], 1)) {
+        যদি (av_parse_time(&tv, duration_string[i], 1)) {
             printf("error\n");
-        } else {
+        } অন্যথা {
             printf("%+21"PRIi64"\n", tv);
         }
     }
 }
 
-static void test_av_get_known_color_name(void)
+স্থির শূন্য test_av_get_known_color_name(শূন্য)
 {
-    int i;
-    const uint8_t *rgba;
-    const char *color;
+    পূর্ণসংখ্যা i;
+    ধ্রুবক uint8_t *rgba;
+    ধ্রুবক অক্ষর *color;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_table); ++i) {
+    জন্য (i = 0; i < FF_ARRAY_ELEMS(color_table); ++i) {
         color = av_get_known_color_name(i, &rgba);
-        if (color)
+        যদি (color)
             printf("%s -> R(%d) G(%d) B(%d) A(%d)\n",
                     color, rgba[0], rgba[1], rgba[2], rgba[3]);
-        else
+        অন্যথা
             printf("Color ID: %d not found\n", i);
     }
 }
 
-static void test_av_find_info_tag(void)
+স্থির শূন্য test_av_find_info_tag(শূন্য)
 {
-    static const char args[] = "?tag1=val1&tag2=val2&tag3=val3&tag41=value 41&tag42=random1";
-    static const char *tags[] = {"tag1", "tag2", "tag3", "tag4", "tag41", "41", "random1"};
-    char buff[16];
-    int i;
+    স্থির ধ্রুবক অক্ষর args[] = "?tag1=val1&tag2=val2&tag3=val3&tag41=value 41&tag42=random1";
+    স্থির ধ্রুবক অক্ষর *tags[] = {"tag1", "tag2", "tag3", "tag4", "tag41", "41", "random1"};
+    অক্ষর buff[16];
+    পূর্ণসংখ্যা i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(tags); ++i) {
-        if (av_find_info_tag(buff, sizeof(buff), tags[i], args))
+    জন্য (i = 0; i < FF_ARRAY_ELEMS(tags); ++i) {
+        যদি (av_find_info_tag(buff, আকার(buff), tags[i], args))
             printf("%d. %s found: %s\n", i, tags[i], buff);
-        else
+        অন্যথা
             printf("%d. %s not found\n", i, tags[i]);
     }
 }
 
-int main(void)
+পূর্ণসংখ্যা প্রধান(শূন্য)
 {
     printf("Testing av_parse_video_rate()\n");
     test_av_parse_video_rate();
@@ -267,5 +267,5 @@ int main(void)
 
     printf("\nTesting av_find_info_tag()\n");
     test_av_find_info_tag();
-    return 0;
+    ফেরত 0;
 }

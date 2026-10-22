@@ -16,54 +16,54 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#অন্তর্ভাব "config.h"
 
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#অন্তর্ভাব <fcntl.h>
+#অন্তর্ভাব <sys/mman.h>
+#অন্তর্ভাব <unistd.h>
 
 /* This was introduced in version 4.6. And may not exist all without an
  * optional package. So to prevent a hard dependency on needing the Linux
  * kernel headers to compile, make this optional. */
-#if HAVE_LINUX_DMA_BUF_H
-#include <linux/dma-buf.h>
-#include <sys/ioctl.h>
+#যদি HAVE_LINUX_DMA_BUF_H
+#অন্তর্ভাব <linux/dma-buf.h>
+#অন্তর্ভাব <sys/ioctl.h>
 #endif
 
-#include <drm.h>
-#include <xf86drm.h>
+#অন্তর্ভাব <drm.h>
+#অন্তর্ভাব <xf86drm.h>
 
-#include "avassert.h"
-#include "hwcontext.h"
-#include "hwcontext_drm.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "mem.h"
+#অন্তর্ভাব "avassert.h"
+#অন্তর্ভাব "hwcontext.h"
+#অন্তর্ভাব "hwcontext_drm.h"
+#অন্তর্ভাব "hwcontext_internal.h"
+#অন্তর্ভাব "imgutils.h"
+#অন্তর্ভাব "mem.h"
 
 
-static void drm_device_free(AVHWDeviceContext *hwdev)
+স্থির শূন্য drm_device_free(AVHWDeviceContext *hwdev)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
 
     close(hwctx->fd);
 }
 
-static int drm_device_create(AVHWDeviceContext *hwdev, const char *device,
-                             AVDictionary *opts, int flags)
+স্থির পূর্ণসংখ্যা drm_device_create(AVHWDeviceContext *hwdev, ধ্রুবক অক্ষর *device,
+                             AVDictionary *opts, পূর্ণসংখ্যা flags)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
     drmVersionPtr version;
 
     hwctx->fd = open(device, O_RDWR);
-    if (hwctx->fd < 0)
-        return AVERROR(errno);
+    যদি (hwctx->fd < 0)
+        ফেরত AVERROR(errno);
 
     version = drmGetVersion(hwctx->fd);
-    if (!version) {
+    যদি (!version) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get version information "
                "from %s: probably not a DRM device?\n", device);
         close(hwctx->fd);
-        return AVERROR(EINVAL);
+        ফেরত AVERROR(EINVAL);
     }
 
     av_log(hwdev, AV_LOG_VERBOSE, "Opened DRM device %s: driver %s "
@@ -73,97 +73,97 @@ static int drm_device_create(AVHWDeviceContext *hwdev, const char *device,
 
     drmFreeVersion(version);
 
-    hwdev->free = &drm_device_free;
+    hwdev->মুক্ত = &drm_device_free;
 
-    return 0;
+    ফেরত 0;
 }
 
-static int drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+স্থির পূর্ণসংখ্যা drm_get_বাফার(AVHWFramesContext *hwfc, AVFrame *frame)
 {
-    frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    frame->buf[0] = av_বাফার_pool_get(hwfc->pool);
+    যদি (!frame->buf[0])
+        ফেরত AVERROR(ENOMEM);
 
-    frame->data[0] = (uint8_t*)frame->buf[0]->data;
+    frame->তথ্য[0] = (uint8_t*)frame->buf[0]->তথ্য;
 
-    frame->format = AV_PIX_FMT_DRM_PRIME;
+    frame->format = AV_PIX_FMT_DRM_মৌলিক;
     frame->width  = hwfc->width;
     frame->height = hwfc->height;
 
-    return 0;
+    ফেরত 0;
 }
 
-typedef struct DRMMapping {
+প্রকারলেখ কাঠামো DRMMapping {
     // Address and length of each mmap()ed region.
-    int nb_regions;
-    int sync_flags;
-    int object[AV_DRM_MAX_PLANES];
-    void *address[AV_DRM_MAX_PLANES];
-    size_t length[AV_DRM_MAX_PLANES];
+    পূর্ণসংখ্যা nb_regions;
+    পূর্ণসংখ্যা sync_flags;
+    পূর্ণসংখ্যা object[AV_DRM_MAX_PLANES];
+    শূন্য *address[AV_DRM_MAX_PLANES];
+    size_t দৈর্ঘ্য[AV_DRM_MAX_PLANES];
 } DRMMapping;
 
-static void drm_unmap_frame(AVHWFramesContext *hwfc,
+স্থির শূন্য drm_unmap_frame(AVHWFramesContext *hwfc,
                             HWMapDescriptor *hwmap)
 {
     DRMMapping *map = hwmap->priv;
 
-    for (int i = 0; i < map->nb_regions; i++) {
-#if HAVE_LINUX_DMA_BUF_H
-        struct dma_buf_sync sync = { .flags = DMA_BUF_SYNC_END | map->sync_flags };
+    জন্য (পূর্ণসংখ্যা i = 0; i < map->nb_regions; i++) {
+#যদি HAVE_LINUX_DMA_BUF_H
+        কাঠামো dma_buf_sync sync = { .flags = DMA_BUF_SYNC_END | map->sync_flags };
         ioctl(map->object[i], DMA_BUF_IOCTL_SYNC, &sync);
 #endif
-        munmap(map->address[i], map->length[i]);
+        munmap(map->address[i], map->দৈর্ঘ্য[i]);
     }
 
     av_free(map);
 }
 
-static int drm_map_frame(AVHWFramesContext *hwfc,
-                         AVFrame *dst, const AVFrame *src, int flags)
+স্থির পূর্ণসংখ্যা drm_map_frame(AVHWFramesContext *hwfc,
+                         AVFrame *dst, ধ্রুবক AVFrame *src, পূর্ণসংখ্যা flags)
 {
-    const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->data[0];
-#if HAVE_LINUX_DMA_BUF_H
-    struct dma_buf_sync sync_start = { 0 };
+    ধ্রুবক AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->তথ্য[0];
+#যদি HAVE_LINUX_DMA_BUF_H
+    কাঠামো dma_buf_sync sync_start = { 0 };
 #endif
     DRMMapping *map;
-    int err, i, p, plane;
-    int mmap_prot;
-    void *addr;
+    পূর্ণসংখ্যা err, i, p, plane;
+    পূর্ণসংখ্যা mmap_prot;
+    শূন্য *addr;
 
-    map = av_mallocz(sizeof(*map));
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_mallocz(আকার(*map));
+    যদি (!map)
+        ফেরত AVERROR(ENOMEM);
 
     mmap_prot = 0;
-    if (flags & AV_HWFRAME_MAP_READ)
+    যদি (flags & AV_HWFRAME_MAP_READ)
         mmap_prot |= PROT_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    যদি (flags & AV_HWFRAME_MAP_WRITE)
         mmap_prot |= PROT_WRITE;
 
-#if HAVE_LINUX_DMA_BUF_H
-    if (flags & AV_HWFRAME_MAP_READ)
+#যদি HAVE_LINUX_DMA_BUF_H
+    যদি (flags & AV_HWFRAME_MAP_READ)
         map->sync_flags |= DMA_BUF_SYNC_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    যদি (flags & AV_HWFRAME_MAP_WRITE)
         map->sync_flags |= DMA_BUF_SYNC_WRITE;
     sync_start.flags = DMA_BUF_SYNC_START | map->sync_flags;
 #endif
 
     av_assert0(desc->nb_objects <= AV_DRM_MAX_PLANES);
-    for (i = 0; i < desc->nb_objects; i++) {
-        addr = mmap(NULL, desc->objects[i].size, mmap_prot, MAP_SHARED,
+    জন্য (i = 0; i < desc->nb_objects; i++) {
+        addr = mmap(ফাঁকা, desc->objects[i].আকার_2, mmap_prot, MAP_SHARED,
                     desc->objects[i].fd, 0);
-        if (addr == MAP_FAILED) {
+        যদি (addr == MAP_FAILED) {
             err = AVERROR(errno);
             av_log(hwfc, AV_LOG_ERROR, "Failed to map DRM object %d to "
                    "memory: %d.\n", desc->objects[i].fd, errno);
-            goto fail;
+            যাও fail;
         }
 
         map->address[i] = addr;
-        map->length[i]  = desc->objects[i].size;
+        map->দৈর্ঘ্য[i]  = desc->objects[i].আকার_2;
         map->object[i] = desc->objects[i].fd;
 
-#if HAVE_LINUX_DMA_BUF_H
+#যদি HAVE_LINUX_DMA_BUF_H
         /* We're not checking for errors here because the kernel may not
          * support the ioctl, in which case its okay to carry on */
         ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_SYNC, &sync_start);
@@ -172,11 +172,11 @@ static int drm_map_frame(AVHWFramesContext *hwfc,
     map->nb_regions = i;
 
     plane = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
-        const AVDRMLayerDescriptor *layer = &desc->layers[i];
-        for (p = 0; p < layer->nb_planes; p++) {
-            dst->data[plane] =
-                (uint8_t*)map->address[layer->planes[p].object_index] +
+    জন্য (i = 0; i < desc->nb_layers; i++) {
+        ধ্রুবক AVDRMLayerDescriptor *layer = &desc->layers[i];
+        জন্য (p = 0; p < layer->nb_planes; p++) {
+            dst->তথ্য[plane] =
+                (uint8_t*)map->address[layer->planes[p].object_সূচক] +
                                        layer->planes[p].offset;
             dst->linesize[plane] =     layer->planes[p].pitch;
             ++plane;
@@ -189,138 +189,138 @@ static int drm_map_frame(AVHWFramesContext *hwfc,
 
     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
                                 &drm_unmap_frame, map);
-    if (err < 0)
-        goto fail;
+    যদি (err < 0)
+        যাও fail;
 
-    return 0;
+    ফেরত 0;
 
 fail:
-    for (i = 0; i < desc->nb_objects; i++) {
-        if (map->address[i])
-            munmap(map->address[i], map->length[i]);
+    জন্য (i = 0; i < desc->nb_objects; i++) {
+        যদি (map->address[i])
+            munmap(map->address[i], map->দৈর্ঘ্য[i]);
     }
     av_free(map);
-    return err;
+    ফেরত err;
 }
 
-static int drm_transfer_get_formats(AVHWFramesContext *ctx,
-                                    enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats)
+স্থির পূর্ণসংখ্যা drm_transfer_get_formats(AVHWFramesContext *ctx,
+                                    গণনা AVHWFrameTransferDirection dir,
+                                    গণনা AVPixelFormat **formats)
 {
-    enum AVPixelFormat *pix_fmts;
+    গণনা AVPixelFormat *pix_fmts;
 
-    pix_fmts = av_malloc_array(2, sizeof(*pix_fmts));
-    if (!pix_fmts)
-        return AVERROR(ENOMEM);
+    pix_fmts = av_malloc_array(2, আকার(*pix_fmts));
+    যদি (!pix_fmts)
+        ফেরত AVERROR(ENOMEM);
 
     pix_fmts[0] = ctx->sw_format;
     pix_fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = pix_fmts;
-    return 0;
+    ফেরত 0;
 }
 
-static int drm_transfer_data_from(AVHWFramesContext *hwfc,
-                                  AVFrame *dst, const AVFrame *src)
+স্থির পূর্ণসংখ্যা drm_transfer_তথ্য_from(AVHWFramesContext *hwfc,
+                                  AVFrame *dst, ধ্রুবক AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    পূর্ণসংখ্যা err;
 
-    if (dst->width > hwfc->width || dst->height > hwfc->height)
-        return AVERROR(EINVAL);
+    যদি (dst->width > hwfc->width || dst->height > hwfc->height)
+        ফেরত AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    যদি (!map)
+        ফেরত AVERROR(ENOMEM);
     map->format = dst->format;
 
     err = drm_map_frame(hwfc, map, src, AV_HWFRAME_MAP_READ);
-    if (err)
-        goto fail;
+    যদি (err)
+        যাও fail;
 
     map->width  = dst->width;
     map->height = dst->height;
 
     err = av_frame_copy(dst, map);
-    if (err)
-        goto fail;
+    যদি (err)
+        যাও fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    ফেরত err;
 }
 
-static int drm_transfer_data_to(AVHWFramesContext *hwfc,
-                                AVFrame *dst, const AVFrame *src)
+স্থির পূর্ণসংখ্যা drm_transfer_তথ্য_to(AVHWFramesContext *hwfc,
+                                AVFrame *dst, ধ্রুবক AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    পূর্ণসংখ্যা err;
 
-    if (src->width > hwfc->width || src->height > hwfc->height)
-        return AVERROR(EINVAL);
+    যদি (src->width > hwfc->width || src->height > hwfc->height)
+        ফেরত AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    যদি (!map)
+        ফেরত AVERROR(ENOMEM);
     map->format = src->format;
 
     err = drm_map_frame(hwfc, map, dst, AV_HWFRAME_MAP_WRITE |
                                         AV_HWFRAME_MAP_OVERWRITE);
-    if (err)
-        goto fail;
+    যদি (err)
+        যাও fail;
 
     map->width  = src->width;
     map->height = src->height;
 
     err = av_frame_copy(map, src);
-    if (err)
-        goto fail;
+    যদি (err)
+        যাও fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    ফেরত err;
 }
 
-static int drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                        const AVFrame *src, int flags)
+স্থির পূর্ণসংখ্যা drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                        ধ্রুবক AVFrame *src, পূর্ণসংখ্যা flags)
 {
-    int err;
+    পূর্ণসংখ্যা err;
 
-    if (dst->format == AV_PIX_FMT_NONE)
+    যদি (dst->format == AV_PIX_FMT_NONE)
         dst->format = hwfc->sw_format;
-    else if (hwfc->sw_format != dst->format)
-        return AVERROR(ENOSYS);
+    অন্যথা যদি (hwfc->sw_format != dst->format)
+        ফেরত AVERROR(ENOSYS);
 
     err = drm_map_frame(hwfc, dst, src, flags);
-    if (err)
-        return err;
+    যদি (err)
+        ফেরত err;
 
     err = av_frame_copy_props(dst, src);
-    if (err)
-        return err;
+    যদি (err)
+        ফেরত err;
 
-    return 0;
+    ফেরত 0;
 }
 
-const HWContextType ff_hwcontext_type_drm = {
+ধ্রুবক HWContextType ff_hwcontext_type_drm = {
     .type                   = AV_HWDEVICE_TYPE_DRM,
     .name                   = "DRM",
 
-    .device_hwctx_size      = sizeof(AVDRMDeviceContext),
+    .device_hwctx_আকার      = আকার(AVDRMDeviceContext),
 
     .device_create          = &drm_device_create,
 
-    .frames_get_buffer      = &drm_get_buffer,
+    .frames_get_বাফার      = &drm_get_বাফার,
 
     .transfer_get_formats   = &drm_transfer_get_formats,
-    .transfer_data_to       = &drm_transfer_data_to,
-    .transfer_data_from     = &drm_transfer_data_from,
+    .transfer_তথ্য_to       = &drm_transfer_তথ্য_to,
+    .transfer_তথ্য_from     = &drm_transfer_তথ্য_from,
     .map_from               = &drm_map_from,
 
-    .pix_fmts = (const enum AVPixelFormat[]) {
-        AV_PIX_FMT_DRM_PRIME,
+    .pix_fmts = (ধ্রুবক গণনা AVPixelFormat[]) {
+        AV_PIX_FMT_DRM_মৌলিক,
         AV_PIX_FMT_NONE
     },
 };

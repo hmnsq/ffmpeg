@@ -18,37 +18,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
-#include <stdint.h>
+#অন্তর্ভাব <assert.h>
+#অন্তর্ভাব <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/lls.h"
+#অন্তর্ভাব "config.h"
+#অন্তর্ভাব "libavutil/attributes.h"
+#অন্তর্ভাব "libavutil/cpu.h"
+#অন্তর্ভাব "libavutil/riscv/cpu.h"
+#অন্তর্ভাব "libavutil/lls.h"
 
-void ff_lls_update_covariance_rvv(double covar[][36], const double *var,
-                                  int count);
-double ff_scalarproduct_double_rvv(const double *, const double *, size_t);
+শূন্য ff_lls_update_covariance_rvv(দ্বিগুণ covar[][36], ধ্রুবক দ্বিগুণ *var,
+                                  পূর্ণসংখ্যা গুনতি);
+দ্বিগুণ ff_scalarproduct_double_rvv(ধ্রুবক দ্বিগুণ *, ধ্রুবক দ্বিগুণ *, size_t);
 
-static void ff_lls_update_rvv(struct LLSModel *m, const double *var)
+স্থির শূন্য ff_lls_update_rvv(কাঠামো LLSModel *m, ধ্রুবক দ্বিগুণ *var)
 {
-    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_count + 1);
+    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_গুনতি + 1);
 }
 
-static double ff_lls_evaluate_rvv(struct LLSModel *m, const double *var,
-                                  int order)
+স্থির দ্বিগুণ ff_lls_evaluate_rvv(কাঠামো LLSModel *m, ধ্রুবক দ্বিগুণ *var,
+                                  পূর্ণসংখ্যা order)
 {
-    return ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
+    ফেরত ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
 }
 
-av_cold void ff_init_lls_riscv(LLSModel *m)
+av_cold শূন্য ff_init_lls_riscv(LLSModel *m)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#যদি HAVE_RVV
+    পূর্ণসংখ্যা flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
-        if (ff_get_rv_vlenb() > m->indep_count)
+    যদি ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
+        যদি (ff_get_rv_vlenb() > m->indep_গুনতি)
             m->update_lls = ff_lls_update_rvv;
         m->evaluate_lls = ff_lls_evaluate_rvv;
     }

@@ -47,9 +47,9 @@
 #ifndef AVUTIL_SOFTFLOAT_TABLES_H
 #define AVUTIL_SOFTFLOAT_TABLES_H
 
-#include <stdint.h>
+#অন্তর্ভাব <stdint.h>
 
-static const int32_t av_sqrttbl_sf[512+1] = { /*  sqrt(x), 0.5<=x<1 */
+স্থির ধ্রুবক int32_t av_sqrttbl_sf[512+1] = { /*  sqrt(x), 0.5<=x<1 */
    0x2d413ccd,0x2d4c8bb3,0x2d57d7c6,0x2d63210a,
    0x2d6e677f,0x2d79ab2a,0x2d84ec0b,0x2d902a23,
    0x2d9b6578,0x2da69e08,0x2db1d3d6,0x2dbd06e6,
@@ -181,18 +181,18 @@ static const int32_t av_sqrttbl_sf[512+1] = { /*  sqrt(x), 0.5<=x<1 */
    0x3fffffff,
 };
 
-static const int32_t av_sqr_exp_multbl_sf[2] = {
+স্থির ধ্রুবক int32_t av_sqr_exp_multbl_sf[2] = {
    0x20000000,0x2d413ccd,
 };
 
-static const int32_t av_costbl_1_sf[16] = {
+স্থির ধ্রুবক int32_t av_costbl_1_sf[16] = {
    0x40000000,0x3ec52fa0,0x3b20d79e,0x3536cc52,
    0x2d413ccd,0x238e7673,0x187de2a7,0x0c7c5c1e,
    0x00000000,0xf383a3e3,0xe7821d5a,0xdc71898e,
    0xd2bec334,0xcac933af,0xc4df2863,0xc13ad061,
 };
 
-static const int32_t av_costbl_2_sf[32] = {
+স্থির ধ্রুবক int32_t av_costbl_2_sf[32] = {
    0x40000000,0x3fffb10b,0x3ffec42d,0x3ffd3969,
    0x3ffb10c1,0x3ff84a3c,0x3ff4e5e0,0x3ff0e3b6,
    0x3fec43c7,0x3fe7061f,0x3fe12acb,0x3fdab1d9,
@@ -203,7 +203,7 @@ static const int32_t av_costbl_2_sf[32] = {
    0x3f0ec9f5,0x3efd4c54,0x3eeb3347,0x3ed87efc,
 };
 
-static const int32_t av_sintbl_2_sf[32] = {
+স্থির ধ্রুবক int32_t av_sintbl_2_sf[32] = {
    0x00000000,0x006487c4,0x00c90e90,0x012d936c,
    0x0192155f,0x01f69373,0x025b0caf,0x02bf801a,
    0x0323ecbe,0x038851a2,0x03ecadcf,0x0451004d,
@@ -214,7 +214,7 @@ static const int32_t av_sintbl_2_sf[32] = {
    0x0af10a22,0x0b540982,0x0bb6ecef,0x0c19b374,
 };
 
-static const int32_t av_costbl_3_sf[32] = {
+স্থির ধ্রুবক int32_t av_costbl_3_sf[32] = {
    0x40000000,0x3fffffec,0x3fffffb1,0x3fffff4e,
    0x3ffffec4,0x3ffffe13,0x3ffffd39,0x3ffffc39,
    0x3ffffb11,0x3ffff9c1,0x3ffff84a,0x3ffff6ac,
@@ -225,7 +225,7 @@ static const int32_t av_costbl_3_sf[32] = {
    0x3fffc38c,0x3fffbf27,0x3fffba9b,0x3fffb5e7,
 };
 
-static const int32_t av_sintbl_3_sf[32] = {
+স্থির ধ্রুবক int32_t av_sintbl_3_sf[32] = {
    0x00000000,0x0003243f,0x0006487f,0x00096cbe,
    0x000c90fe,0x000fb53d,0x0012d97c,0x0015fdbb,
    0x001921fb,0x001c463a,0x001f6a79,0x00228eb8,
@@ -236,7 +236,7 @@ static const int32_t av_sintbl_3_sf[32] = {
    0x0057f6d4,0x005b1b10,0x005e3f4c,0x00616388,
 };
 
-static const int32_t av_costbl_4_sf[33] = {
+স্থির ধ্রুবক int32_t av_costbl_4_sf[33] = {
    0x40000000,0x40000000,0x40000000,0x40000000,
    0x40000000,0x40000000,0x3fffffff,0x3fffffff,
    0x3fffffff,0x3ffffffe,0x3ffffffe,0x3ffffffe,
@@ -248,7 +248,7 @@ static const int32_t av_costbl_4_sf[33] = {
    0x3fffffec,
 };
 
-static const int32_t av_sintbl_4_sf[33] = {
+স্থির ধ্রুবক int32_t av_sintbl_4_sf[33] = {
    0x00000000,0x00001922,0x00003244,0x00004b66,
    0x00006488,0x00007daa,0x000096cc,0x0000afee,
    0x0000c910,0x0000e232,0x0000fb54,0x00011476,
