@@ -18,33 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include "libavutil/aes_internal.h"
-#include "libavutil/aarch64/cpu.h"
+#ضمن <stddef.h>
+#ضمن "libavutil/aes_internal.h"
+#ضمن "libavutil/aarch64/cpu.h"
 
-void ff_aes_decrypt_10_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_12_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_14_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_10_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_12_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_14_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+فراغ ff_aes_decrypt_10_neon(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                            صحيح count, uint8_t *iv, صحيح rounds);
+فراغ ff_aes_decrypt_12_neon(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                            صحيح count, uint8_t *iv, صحيح rounds);
+فراغ ff_aes_decrypt_14_neon(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                            صحيح count, uint8_t *iv, صحيح rounds);
+فراغ ff_aes_encrypt_10_neon(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                            صحيح count, uint8_t *iv, صحيح rounds);
+فراغ ff_aes_encrypt_12_neon(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                            صحيح count, uint8_t *iv, صحيح rounds);
+فراغ ff_aes_encrypt_14_neon(AVAES *a, uint8_t *dst, ثابت uint8_t *src,
+                            صحيح count, uint8_t *iv, صحيح rounds);
 
-void ff_init_aes_aarch64(AVAES *a, int decrypt)
+فراغ ff_init_aes_aarch64(AVAES *a, صحيح decrypt)
 {
-    int cpu_flags = av_get_cpu_flags();
+    صحيح cpu_flags = av_get_cpu_flags();
 
-    if (have_arm_aes(cpu_flags)) {
-        if (a->rounds == 10)
+    𐤀𐤌 (have_arm_aes(cpu_flags)) {
+        𐤀𐤌 (a->rounds == 10)
             a->crypt = decrypt ? ff_aes_decrypt_10_neon : ff_aes_encrypt_10_neon;
-        else if (a->rounds == 12)
+        وإلا 𐤀𐤌 (a->rounds == 12)
             a->crypt = decrypt ? ff_aes_decrypt_12_neon : ff_aes_encrypt_12_neon;
-        else if (a->rounds == 14)
+        وإلا 𐤀𐤌 (a->rounds == 14)
             a->crypt = decrypt ? ff_aes_decrypt_14_neon : ff_aes_encrypt_14_neon;
     }
 }

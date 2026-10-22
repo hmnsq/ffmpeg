@@ -24,12 +24,12 @@
 #ifndef AVUTIL_MIPS_MMIUTILS_H
 #define AVUTIL_MIPS_MMIUTILS_H
 
-#include "config.h"
+#ضمن "config.h"
 
-#include "libavutil/mem_internal.h"
-#include "libavutil/mips/asmdefs.h"
+#ضمن "libavutil/mem_internal.h"
+#ضمن "libavutil/mips/asmdefs.h"
 
-#if !HAVE_LOONGSON_MMI_MNEMONICS
+#𐤀𐤌 !HAVE_LOONGSON_MMI_MNEMONICS
 /* GNU binutils lacks Loongson's names for these MMI instructions */
 __asm__(".macro pxor  d, s, t\n\txor  \\d, \\s, \\t\n\t.endm\n"
         ".macro pand  d, s, t\n\tand  \\d, \\s, \\t\n\t.endm\n"
@@ -51,7 +51,7 @@ __asm__(".macro pxor  d, s, t\n\txor  \\d, \\s, \\t\n\t.endm\n"
 #define DECLARE_VAR_ADDRT
 #define RESTRICT_ASM_ADDRT
 
-#if HAVE_LOONGSON2
+#𐤀𐤌 HAVE_LOONGSON2
 
 #define MMI_LWX(reg, addr, stride, bias)                                    \
     ".set noat                                                 \n\t"   \
@@ -153,7 +153,7 @@ __asm__(".macro pxor  d, s, t\n\txor  \\d, \\s, \\t\n\t.endm\n"
     "sdc1       "#fp1",     "#bias"("#addr")                        \n\t"   \
     "sdc1       "#fp2",   8+"#bias"("#addr")                        \n\t"
 
-#elif HAVE_LOONGSON3 /* !HAVE_LOONGSON2 */
+#وإلاإذا HAVE_LOONGSON3 /* !HAVE_LOONGSON2 */
 
 #define MMI_LWX(reg, addr, stride, bias)                                    \
     "gslwx      "#reg",     "#bias"("#addr", "#stride")             \n\t"
@@ -170,7 +170,7 @@ __asm__(".macro pxor  d, s, t\n\txor  \\d, \\s, \\t\n\t.endm\n"
 #define MMI_LWC1(fp, addr, bias)                                            \
     "lwc1       "#fp",      "#bias"("#addr")                        \n\t"
 
-#if _MIPS_SIM == _ABIO32 /* workaround for 3A2000 gslwlc1 bug */
+#𐤀𐤌 _MIPS_SIM == _ABIO32 /* workaround for 3A2000 gslwlc1 bug */
 
 #define MMI_LWLRC1(fp, addr, bias, off)                                     \
     ".set noat                                                 \n\t"   \
@@ -179,7 +179,7 @@ __asm__(".macro pxor  d, s, t\n\txor  \\d, \\s, \\t\n\t.endm\n"
     "mtc1       $at,   "#fp"                                   \n\t"   \
     ".set at                                                   \n\t"
 
-#else /* _MIPS_SIM != _ABIO32 */
+#وإلا /* _MIPS_SIM != _ABIO32 */
 
 #define DECLARE_VAR_LOW32
 #define RESTRICT_ASM_LOW32
@@ -243,9 +243,9 @@ __asm__(".macro pxor  d, s, t\n\txor  \\d, \\s, \\t\n\t.endm\n"
  * to take advantage of quad word load/store.
  */
 #define BACKUP_REG \
-  LOCAL_ALIGNED_16(double, temp_backup_reg, [8]);               \
-  if (_MIPS_SIM == _ABI64)                                      \
-    __asm__ volatile (                                          \
+  LOCAL_ALIGNED_16(مزدوج, temp_backup_reg, [8]);               \
+  𐤀𐤌 (_MIPS_SIM == _ABI64)                                      \
+    __asm__ متطاير (                                          \
       MMI_SQC1($f25, $f24, %[temp], 0x00)                       \
       MMI_SQC1($f27, $f26, %[temp], 0x10)                       \
       MMI_SQC1($f29, $f28, %[temp], 0x20)                       \
@@ -254,8 +254,8 @@ __asm__(".macro pxor  d, s, t\n\txor  \\d, \\s, \\t\n\t.endm\n"
       : [temp]"r"(temp_backup_reg)                              \
       : "memory"                                                \
     );                                                          \
-  else                                                          \
-    __asm__ volatile (                                          \
+  وإلا                                                          \
+    __asm__ متطاير (                                          \
       MMI_SQC1($f22, $f20, %[temp], 0x10)                       \
       MMI_SQC1($f26, $f24, %[temp], 0x10)                       \
       MMI_SQC1($f30, $f28, %[temp], 0x20)                       \
@@ -268,8 +268,8 @@ __asm__(".macro pxor  d, s, t\n\txor  \\d, \\s, \\t\n\t.endm\n"
  * recover register
  */
 #define RECOVER_REG \
-  if (_MIPS_SIM == _ABI64)                                      \
-    __asm__ volatile (                                          \
+  𐤀𐤌 (_MIPS_SIM == _ABI64)                                      \
+    __asm__ متطاير (                                          \
       MMI_LQC1($f25, $f24, %[temp], 0x00)                       \
       MMI_LQC1($f27, $f26, %[temp], 0x10)                       \
       MMI_LQC1($f29, $f28, %[temp], 0x20)                       \
@@ -278,8 +278,8 @@ __asm__(".macro pxor  d, s, t\n\txor  \\d, \\s, \\t\n\t.endm\n"
       : [temp]"r"(temp_backup_reg)                              \
       : "memory"                                                \
     );                                                          \
-  else                                                          \
-    __asm__ volatile (                                          \
+  وإلا                                                          \
+    __asm__ متطاير (                                          \
       MMI_LQC1($f22, $f20, %[temp], 0x10)                       \
       MMI_LQC1($f26, $f24, %[temp], 0x10)                       \
       MMI_LQC1($f30, $f28, %[temp], 0x20)                       \

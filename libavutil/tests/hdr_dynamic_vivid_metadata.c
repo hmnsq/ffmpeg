@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#ضمن <limits.h>
+#ضمن <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/hdr_dynamic_vivid_metadata.h"
-#include "libavutil/mem.h"
+#ضمن "libavutil/frame.h"
+#ضمن "libavutil/hdr_dynamic_vivid_metadata.h"
+#ضمن "libavutil/mem.h"
 
-int main(void)
+صحيح main(فراغ)
 {
     AVDynamicHDRVivid *vivid;
     AVFrame *frame;
@@ -32,7 +32,7 @@ int main(void)
     /* av_dynamic_hdr_vivid_alloc */
     printf("Testing av_dynamic_hdr_vivid_alloc()\n");
     vivid = av_dynamic_hdr_vivid_alloc(&size);
-    if (vivid) {
+    𐤀𐤌 (vivid) {
         printf("alloc: OK, size>0=%s\n", size > 0 ? "yes" : "no");
         printf("defaults: system_start_code=%u, num_windows=%u\n",
                vivid->system_start_code, vivid->num_windows);
@@ -59,21 +59,21 @@ int main(void)
     }
 
     /* alloc with NULL size */
-    vivid = av_dynamic_hdr_vivid_alloc(NULL);
+    vivid = av_dynamic_hdr_vivid_alloc(عدم);
     printf("alloc (no size): %s\n", vivid ? "OK" : "FAIL");
     av_free(vivid);
 
     /* av_dynamic_hdr_vivid_create_side_data */
     printf("\nTesting av_dynamic_hdr_vivid_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    𐤀𐤌 (frame) {
         vivid = av_dynamic_hdr_vivid_create_side_data(frame);
-        if (vivid) {
+        𐤀𐤌 (vivid) {
             printf("side_data: OK\n");
             vivid->system_start_code = 0x02;
             printf("side_data write: system_start_code=%u\n",
                    vivid->system_start_code);
-        } else {
+        } وإلا {
             printf("side_data: FAIL\n");
         }
         av_frame_free(&frame);
@@ -88,7 +88,7 @@ int main(void)
     av_max_alloc(INT_MAX);
 
     frame = av_frame_alloc();
-    if (frame) {
+    𐤀𐤌 (frame) {
         av_max_alloc(1);
         vivid = av_dynamic_hdr_vivid_create_side_data(frame);
         printf("side_data OOM: %s\n", vivid ? "FAIL" : "OK");
@@ -96,5 +96,5 @@ int main(void)
         av_frame_free(&frame);
     }
 
-    return 0;
+    أرجع 0;
 }

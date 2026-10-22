@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdio.h>
+#ضمن <limits.h>
+#ضمن <stdint.h>
+#ضمن <stdio.h>
 
-#include "libavutil/mem.h"
-#include "libavutil/tdrdi.h"
+#ضمن "libavutil/mem.h"
+#ضمن "libavutil/tdrdi.h"
 
-int main(void)
+صحيح main(فراغ)
 {
     AV3DReferenceDisplaysInfo *tdrdi;
     AV3DReferenceDisplay *display;
@@ -32,13 +32,13 @@ int main(void)
     /* av_tdrdi_alloc with 1 display */
     printf("Testing av_tdrdi_alloc()\n");
     tdrdi = av_tdrdi_alloc(1, &size);
-    if (tdrdi) {
+    𐤀𐤌 (tdrdi) {
         printf("alloc 1: size>0=%s, num_ref_displays=%u\n",
                size > 0 ? "yes" : "no", tdrdi->num_ref_displays);
 
         display = av_tdrdi_get_display(tdrdi, 0);
         /* pointer consistency check */
-        if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset)
+        𐤀𐤌 ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset)
             printf("display 0: pointer inconsistent with entries_offset\n");
 
         /* write and read back */
@@ -57,17 +57,17 @@ int main(void)
     /* alloc with multiple displays */
     printf("\nTesting multiple displays\n");
     tdrdi = av_tdrdi_alloc(3, &size);
-    if (tdrdi) {
+    𐤀𐤌 (tdrdi) {
         printf("alloc 3: num_ref_displays=%u\n", tdrdi->num_ref_displays);
-        for (int i = 0; i < 3; i++) {
+        لكل (صحيح i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
             /* verify stride consistency */
-            if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset +
+            𐤀𐤌 ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset +
                                       (size_t)i * tdrdi->entry_size)
                 printf("display %d: pointer inconsistent\n", i);
             display->exponent_ref_display_width = i + 1;
         }
-        for (int i = 0; i < 3; i++) {
+        لكل (صحيح i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
             printf("display %d: width_exp=%u\n", i,
                    display->exponent_ref_display_width);
@@ -76,7 +76,7 @@ int main(void)
     }
 
     /* alloc with NULL size */
-    tdrdi = av_tdrdi_alloc(1, NULL);
+    tdrdi = av_tdrdi_alloc(1, عدم);
     printf("\nalloc (no size): %s\n", tdrdi ? "OK" : "FAIL");
     av_free(tdrdi);
 
@@ -88,5 +88,5 @@ int main(void)
     av_free(tdrdi);
     av_max_alloc(INT_MAX);
 
-    return 0;
+    أرجع 0;
 }

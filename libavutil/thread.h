@@ -22,117 +22,117 @@
 #ifndef AVUTIL_THREAD_H
 #define AVUTIL_THREAD_H
 
-#include "config.h"
+#ضمن "config.h"
 
-#if HAVE_PRCTL
-#include <sys/prctl.h>
-#elif (HAVE_PTHREAD_SETNAME_NP || HAVE_PTHREAD_SET_NAME_NP) && HAVE_PTHREAD_NP_H
-#include <pthread_np.h>
+#𐤀𐤌 HAVE_PRCTL
+#ضمن <sys/prctl.h>
+#وإلاإذا (HAVE_PTHREAD_SETNAME_NP || HAVE_PTHREAD_SET_NAME_NP) && HAVE_PTHREAD_NP_H
+#ضمن <pthread_np.h>
 #endif
 
-#include "error.h"
+#ضمن "error.h"
 
-#if HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
+#𐤀𐤌 HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
 
-#if HAVE_PTHREADS
-#include <pthread.h>
+#𐤀𐤌 HAVE_PTHREADS
+#ضمن <pthread.h>
 
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
+#𐤀𐤌 defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
 
-#include <stdlib.h>
+#ضمن <stdlib.h>
 
-#include "log.h"
-#include "macros.h"
+#ضمن "log.h"
+#ضمن "macros.h"
 
-#define ASSERT_PTHREAD_ABORT(func, ret) do {                            \
-    char errbuf[AV_ERROR_MAX_STRING_SIZE] = "";                         \
-    av_log(NULL, AV_LOG_FATAL, AV_STRINGIFY(func)                       \
+#define ASSERT_PTHREAD_ABORT(func, ret) 𐤐𐤏𐤋 {                            \
+    حرف errbuf[AV_ERROR_MAX_STRING_SIZE] = "";                         \
+    av_log(عدم, AV_LOG_FATAL, AV_STRINGIFY(func)                       \
            " failed with error: %s\n",                                  \
            av_make_error_string(errbuf, AV_ERROR_MAX_STRING_SIZE,       \
                                 AVERROR(ret)));                         \
     abort();                                                            \
-} while (0)
+} طالما (0)
 
-#define ASSERT_PTHREAD_NORET(func, ...) do {                            \
-    int ret = func(__VA_ARGS__);                                        \
-    if (ret)                                                            \
+#define ASSERT_PTHREAD_NORET(func, ...) 𐤐𐤏𐤋 {                            \
+    صحيح ret = func(__VA_ARGS__);                                        \
+    𐤀𐤌 (ret)                                                            \
         ASSERT_PTHREAD_ABORT(func, ret);                                \
-} while (0)
+} طالما (0)
 
-#define ASSERT_PTHREAD(func, ...) do {                                  \
+#define ASSERT_PTHREAD(func, ...) 𐤐𐤏𐤋 {                                  \
     ASSERT_PTHREAD_NORET(func, __VA_ARGS__);                            \
-    return 0;                                                           \
-} while (0)
+    أرجع 0;                                                           \
+} طالما (0)
 
-static inline int strict_pthread_join(pthread_t thread, void **value_ptr)
+ساكن مضمن صحيح strict_pthread_join(pthread_t thread, فراغ **value_ptr)
 {
     ASSERT_PTHREAD(pthread_join, thread, value_ptr);
 }
 
-static inline int strict_pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)
+ساكن مضمن صحيح strict_pthread_mutex_init(pthread_mutex_t *mutex, ثابت pthread_mutexattr_t *attr)
 {
-    if (attr) {
+    𐤀𐤌 (attr) {
         ASSERT_PTHREAD_NORET(pthread_mutex_init, mutex, attr);
-    } else {
+    } وإلا {
         pthread_mutexattr_t local_attr;
         ASSERT_PTHREAD_NORET(pthread_mutexattr_init, &local_attr);
         ASSERT_PTHREAD_NORET(pthread_mutexattr_settype, &local_attr, PTHREAD_MUTEX_ERRORCHECK);
         ASSERT_PTHREAD_NORET(pthread_mutex_init, mutex, &local_attr);
         ASSERT_PTHREAD_NORET(pthread_mutexattr_destroy, &local_attr);
     }
-    return 0;
+    أرجع 0;
 }
 
-static inline int strict_pthread_mutex_destroy(pthread_mutex_t *mutex)
+ساكن مضمن صحيح strict_pthread_mutex_destroy(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_destroy, mutex);
 }
 
-static inline int strict_pthread_mutex_lock(pthread_mutex_t *mutex)
+ساكن مضمن صحيح strict_pthread_mutex_lock(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_lock, mutex);
 }
 
-static inline int strict_pthread_mutex_unlock(pthread_mutex_t *mutex)
+ساكن مضمن صحيح strict_pthread_mutex_unlock(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_unlock, mutex);
 }
 
-static inline int strict_pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr)
+ساكن مضمن صحيح strict_pthread_cond_init(pthread_cond_t *cond, ثابت pthread_condattr_t *attr)
 {
     ASSERT_PTHREAD(pthread_cond_init, cond, attr);
 }
 
-static inline int strict_pthread_cond_destroy(pthread_cond_t *cond)
+ساكن مضمن صحيح strict_pthread_cond_destroy(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_destroy, cond);
 }
 
-static inline int strict_pthread_cond_signal(pthread_cond_t *cond)
+ساكن مضمن صحيح strict_pthread_cond_signal(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_signal, cond);
 }
 
-static inline int strict_pthread_cond_broadcast(pthread_cond_t *cond)
+ساكن مضمن صحيح strict_pthread_cond_broadcast(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_broadcast, cond);
 }
 
-static inline int strict_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
+ساكن مضمن صحيح strict_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_cond_wait, cond, mutex);
 }
 
-static inline int strict_pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
-                                                const struct timespec *abstime)
+ساكن مضمن صحيح strict_pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
+                                                ثابت بنية timespec *abstime)
 {
-    int ret = pthread_cond_timedwait(cond, mutex, abstime);
-    if (ret && ret != ETIMEDOUT)
+    صحيح ret = pthread_cond_timedwait(cond, mutex, abstime);
+    𐤀𐤌 (ret && ret != ETIMEDOUT)
         ASSERT_PTHREAD_ABORT(pthread_cond_timedwait, ret);
-    return ret;
+    أرجع ret;
 }
 
-static inline int strict_pthread_once(pthread_once_t *once_control, void (*init_routine)(void))
+ساكن مضمن صحيح strict_pthread_once(pthread_once_t *once_control, فراغ (*init_routine)(فراغ))
 {
     ASSERT_PTHREAD(pthread_once, once_control, init_routine);
 }
@@ -151,10 +151,10 @@ static inline int strict_pthread_once(pthread_once_t *once_control, void (*init_
 #define pthread_once           strict_pthread_once
 #endif
 
-#elif HAVE_OS2THREADS
-#include "compat/os2threads.h"
-#else
-#include "compat/w32pthreads.h"
+#وإلاإذا HAVE_OS2THREADS
+#ضمن "compat/os2threads.h"
+#وإلا
+#ضمن "compat/w32pthreads.h"
 #endif
 
 #define AVMutex pthread_mutex_t
@@ -179,63 +179,63 @@ static inline int strict_pthread_once(pthread_once_t *once_control, void (*init_
 
 #define ff_thread_once(control, routine) pthread_once(control, routine)
 
-#else
+#وإلا
 
-#define AVMutex char
+#define AVMutex حرف
 #define AV_MUTEX_INITIALIZER 0
 
-static inline int ff_mutex_init(AVMutex *mutex, const void *attr){ return 0; }
-static inline int ff_mutex_lock(AVMutex *mutex){ return 0; }
-static inline int ff_mutex_unlock(AVMutex *mutex){ return 0; }
-static inline int ff_mutex_destroy(AVMutex *mutex){ return 0; }
+ساكن مضمن صحيح ff_mutex_init(AVMutex *mutex, ثابت فراغ *attr){ أرجع 0; }
+ساكن مضمن صحيح ff_mutex_lock(AVMutex *mutex){ أرجع 0; }
+ساكن مضمن صحيح ff_mutex_unlock(AVMutex *mutex){ أرجع 0; }
+ساكن مضمن صحيح ff_mutex_destroy(AVMutex *mutex){ أرجع 0; }
 
-#define AVCond char
+#define AVCond حرف
 
-static inline int ff_cond_init(AVCond *cond, const void *attr){ return 0; }
-static inline int ff_cond_destroy(AVCond *cond){ return 0; }
-static inline int ff_cond_signal(AVCond *cond){ return 0; }
-static inline int ff_cond_broadcast(AVCond *cond){ return 0; }
-static inline int ff_cond_wait(AVCond *cond, AVMutex *mutex){ return 0; }
-static inline int ff_cond_timedwait(AVCond *cond, AVMutex *mutex,
-                                    const void *abstime){ return 0; }
+ساكن مضمن صحيح ff_cond_init(AVCond *cond, ثابت فراغ *attr){ أرجع 0; }
+ساكن مضمن صحيح ff_cond_destroy(AVCond *cond){ أرجع 0; }
+ساكن مضمن صحيح ff_cond_signal(AVCond *cond){ أرجع 0; }
+ساكن مضمن صحيح ff_cond_broadcast(AVCond *cond){ أرجع 0; }
+ساكن مضمن صحيح ff_cond_wait(AVCond *cond, AVMutex *mutex){ أرجع 0; }
+ساكن مضمن صحيح ff_cond_timedwait(AVCond *cond, AVMutex *mutex,
+                                    ثابت فراغ *abstime){ أرجع 0; }
 
-#define AVOnce char
+#define AVOnce حرف
 #define AV_ONCE_INIT 0
 
-static inline int ff_thread_once(char *control, void (*routine)(void))
+ساكن مضمن صحيح ff_thread_once(حرف *control, فراغ (*routine)(فراغ))
 {
-    if (!*control) {
+    𐤀𐤌 (!*control) {
         routine();
         *control = 1;
     }
-    return 0;
+    أرجع 0;
 }
 
 #endif
 
-static inline int ff_thread_setname(const char *name)
+ساكن مضمن صحيح ff_thread_setname(ثابت حرف *name)
 {
-    int ret = 0;
+    صحيح ret = 0;
 
-#if HAVE_PRCTL
+#𐤀𐤌 HAVE_PRCTL
     ret = AVERROR(prctl(PR_SET_NAME, name));
-#elif HAVE_PTHREAD_SETNAME_NP
-#if defined(__APPLE__)
+#وإلاإذا HAVE_PTHREAD_SETNAME_NP
+#𐤀𐤌 defined(__APPLE__)
     ret = AVERROR(pthread_setname_np(name));
-#elif defined(__NetBSD__)
+#وإلاإذا defined(__NetBSD__)
     ret = AVERROR(pthread_setname_np(pthread_self(), "%s", name));
-#else
+#وإلا
     ret = AVERROR(pthread_setname_np(pthread_self(), name));
 #endif
-#elif HAVE_PTHREAD_SET_NAME_NP
+#وإلاإذا HAVE_PTHREAD_SET_NAME_NP
     pthread_set_name_np(pthread_self(), name);
-#elif HAVE_W32THREADS
+#وإلاإذا HAVE_W32THREADS
     ret = win32_thread_setname(name);
-#else
+#وإلا
     ret = AVERROR(ENOSYS);
 #endif
 
-    return ret;
+    أرجع ret;
 }
 
 #endif /* AVUTIL_THREAD_H */

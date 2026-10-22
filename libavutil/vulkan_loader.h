@@ -19,10 +19,10 @@
 #ifndef AVUTIL_VULKAN_LOADER_H
 #define AVUTIL_VULKAN_LOADER_H
 
-#include <stdio.h>
+#ضمن <stdio.h>
 
-#include "avassert.h"
-#include "vulkan_functions.h"
+#ضمن "avassert.h"
+#ضمن "vulkan_functions.h"
 
 /* Macro to turn a function name into a loader struct */
 #define PFN_LOAD_INFO(req_inst, req_dev, ext_flag, name) \
@@ -33,11 +33,11 @@
         ext_flag,                                        \
     },
 
-static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
-                                                int nb_extensions)
+ساكن مضمن uint64_t ff_vk_extensions_to_mask(ثابت حرف * ثابت *extensions,
+                                                صحيح nb_extensions)
 {
-    static const struct ExtensionMap {
-        const char *name;
+    ساكن ثابت بنية ExtensionMap {
+        ثابت حرف *name;
         FFVulkanExtensions flag;
     } extension_map[] = {
         /* Instance extensions */
@@ -115,16 +115,16 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
 
     FFVulkanExtensions mask = 0x0;
 
-    for (int i = 0; i < nb_extensions; i++) {
-        for (int j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
-            if (!strcmp(extensions[i], extension_map[j].name)) {
+    لكل (صحيح i = 0; i < nb_extensions; i++) {
+        لكل (صحيح j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
+            𐤀𐤌 (!strcmp(extensions[i], extension_map[j].name)) {
                 mask |= extension_map[j].flag;
-                continue;
+                استمر;
             }
         }
     }
 
-    return mask;
+    أرجع mask;
 }
 
 /**
@@ -140,16 +140,16 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
  * plus you can be sure that any extensions you've enabled during device
  * initialization will be available.
  */
-static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
+ساكن مضمن صحيح ff_vk_load_functions(AVHWDeviceContext *ctx,
                                        FFVulkanFunctions *vk,
                                        uint64_t extensions_mask,
-                                       int has_inst, int has_dev)
+                                       صحيح has_inst, صحيح has_dev)
 {
     AVVulkanDeviceContext *hwctx = ctx->hwctx;
 
-    static const struct FunctionLoadInfo {
-        char req_inst;
-        char req_dev;
+    ساكن ثابت بنية FunctionLoadInfo {
+        حرف req_inst;
+        حرف req_dev;
         uint16_t struct_offset;
         FFVulkanExtensions ext_flag;
     } vk_load_info[] = {
@@ -161,7 +161,7 @@ static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
     // Concatenate the names to avoid relocations. The resulting string
     // will end with \0\0
 #define FUNC_NAME(req_inst, req_dev, ext_flag, name) "vk"#name"\0"
-    const char *name =
+    ثابت حرف *name =
         FN_LIST(FUNC_NAME)
 #ifdef _WIN32
         FN_LIST_WIN32(FUNC_NAME)
@@ -169,45 +169,45 @@ static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
     ;
 #undef FUNC_NAME
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += strlen(name) + 1, i++) {
-        const struct FunctionLoadInfo *load = &vk_load_info[i];
-        static const char extensions[][4] = { "", "EXT", "KHR" };
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += strlen(name) + 1, i++) {
+        ثابت بنية FunctionLoadInfo *load = &vk_load_info[i];
+        ساكن ثابت حرف extensions[][4] = { "", "EXT", "KHR" };
         PFN_vkVoidFunction fn;
 
-        if (load->req_dev  && !has_dev)
-            continue;
-        if (load->req_inst && !has_inst)
-            continue;
+        𐤀𐤌 (load->req_dev  && !has_dev)
+            استمر;
+        𐤀𐤌 (load->req_inst && !has_inst)
+            استمر;
 
-        for (int j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
-            char ext_name[128];
-            av_unused int n;
+        لكل (صحيح j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
+            حرف ext_name[128];
+            av_unused صحيح n;
 
-            n = snprintf(ext_name, sizeof(ext_name), "%s%s", name, extensions[j]);
-            av_assert1(n < sizeof(ext_name));
+            n = snprintf(ext_name, حجم(ext_name), "%s%s", name, extensions[j]);
+            av_assert1(n < حجم(ext_name));
 
-            if (load->req_dev)
+            𐤀𐤌 (load->req_dev)
                 fn = vk->GetDeviceProcAddr(hwctx->act_dev, ext_name);
-            else if (load->req_inst)
+            وإلا 𐤀𐤌 (load->req_inst)
                 fn = hwctx->get_proc_addr(hwctx->inst, ext_name);
-            else
-                fn = hwctx->get_proc_addr(NULL, ext_name);
+            وإلا
+                fn = hwctx->get_proc_addr(عدم, ext_name);
 
-            if (fn)
-                break;
+            𐤀𐤌 (fn)
+                اكسر;
         }
 
-        if (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
+        𐤀𐤌 (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
             av_log(ctx, AV_LOG_ERROR, "Loader error, function \"%s\" indicated "
                    "as supported, but got NULL function pointer!\n", name);
-            return AVERROR_EXTERNAL;
+            أرجع AVERROR_EXTERNAL;
         }
 
         *(PFN_vkVoidFunction *)((uint8_t *)vk + load->struct_offset) = fn;
     }
     av_assert1(*name == '\0');
 
-    return 0;
+    أرجع 0;
 }
 
 #endif /* AVUTIL_VULKAN_LOADER_H */

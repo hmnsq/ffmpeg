@@ -18,12 +18,12 @@
 
 #undef _GNU_SOURCE
 #define _XOPEN_SOURCE 600 /* XSI-compliant version of strerror_r */
-#include <stdio.h>
-#include <string.h>
-#include "config.h"
-#include "avstring.h"
-#include "error.h"
-#include "macros.h"
+#ضمن <stdio.h>
+#ضمن <string.h>
+#ضمن "config.h"
+#ضمن "avstring.h"
+#ضمن "error.h"
+#ضمن "macros.h"
 
 #define AVERROR_INPUT_AND_OUTPUT_CHANGED (AVERROR_INPUT_CHANGED | AVERROR_OUTPUT_CHANGED)
 
@@ -98,54 +98,54 @@
     E(ESRCH,             "No such process")                                  \
     E(EXDEV,             "Cross-device link")                                \
 
-enum {
+تعداد {
 #define OFFSET(CODE, DESC)     \
     ERROR_ ## CODE ## _OFFSET, \
-    ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + sizeof(DESC) - 1,
+    ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + حجم(DESC) - 1,
 #define NOTHING(CODE, CODE2, DESC)
     AVERROR_LIST(OFFSET, NOTHING)
-#if !HAVE_STRERROR_R
+#𐤀𐤌 !HAVE_STRERROR_R
     STRERROR_LIST(OFFSET)
 #endif
 };
 
 #define STRING(CODE, DESC) DESC "\0"
-static const char error_stringtable[] =
+ساكن ثابت حرف error_stringtable[] =
     AVERROR_LIST(STRING, NOTHING)
-#if !HAVE_STRERROR_R
+#𐤀𐤌 !HAVE_STRERROR_R
     STRERROR_LIST(STRING)
 #endif
 ;
 
-static const struct ErrorEntry {
-    int num;
+ساكن ثابت بنية ErrorEntry {
+    صحيح num;
     unsigned offset;
 } error_entries[] = {
 #define ENTRY(CODE, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE ## _OFFSET },
 #define ENTRY2(CODE, CODE2, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE2 ## _OFFSET },
     AVERROR_LIST(ENTRY, ENTRY2)
-#if !HAVE_STRERROR_R
+#𐤀𐤌 !HAVE_STRERROR_R
 #undef ENTRY
 #define ENTRY(CODE, DESC) { .num = AVERROR(CODE), .offset = ERROR_ ## CODE ## _OFFSET },
     STRERROR_LIST(ENTRY)
 #endif
 };
 
-int av_strerror(int errnum, char *errbuf, size_t errbuf_size)
+صحيح av_strerror(صحيح errnum, حرف *errbuf, size_t errbuf_size)
 {
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
-        if (errnum == error_entries[i].num) {
+    لكل (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
+        𐤀𐤌 (errnum == error_entries[i].num) {
             av_strlcpy(errbuf, error_stringtable + error_entries[i].offset, errbuf_size);
-            return 0;
+            أرجع 0;
         }
     }
-#if HAVE_STRERROR_R
-    int ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
-#else
-    int ret = -1;
+#𐤀𐤌 HAVE_STRERROR_R
+    صحيح ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
+#وإلا
+    صحيح ret = -1;
 #endif
-    if (ret < 0)
+    𐤀𐤌 (ret < 0)
         snprintf(errbuf, errbuf_size, "Error number %d occurred", errnum);
 
-    return ret;
+    أرجع ret;
 }

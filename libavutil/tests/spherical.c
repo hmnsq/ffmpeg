@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ضمن <stdio.h>
 
-#include "libavutil/mem.h"
-#include "libavutil/spherical.h"
+#ضمن "libavutil/mem.h"
+#ضمن "libavutil/spherical.h"
 
-int main(void)
+صحيح main(فراغ)
 {
     AVSphericalMapping *map;
     size_t size;
@@ -29,45 +29,45 @@ int main(void)
     /* av_spherical_alloc with size output */
     printf("Testing av_spherical_alloc()\n");
     map = av_spherical_alloc(&size);
-    if (map) {
+    𐤀𐤌 (map) {
         printf("alloc: OK, size>0=%s, default projection=%d\n",
                size > 0 ? "yes" : "no", map->projection);
         av_free(map);
-    } else {
+    } وإلا {
         printf("alloc: FAIL\n");
     }
 
     /* av_spherical_alloc without size */
-    map = av_spherical_alloc(NULL);
+    map = av_spherical_alloc(عدم);
     printf("alloc (no size): %s\n", map ? "OK" : "FAIL");
     av_free(map);
 
     /* av_spherical_projection_name - all valid projections */
     printf("\nTesting av_spherical_projection_name()\n");
-    for (int i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++)
+    لكل (صحيح i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++)
         printf("projection %d: %s\n", i, av_spherical_projection_name(i));
     printf("out of range: %s\n", av_spherical_projection_name(100));
 
     /* av_spherical_from_name - all valid names */
     printf("\nTesting av_spherical_from_name()\n");
-    for (int i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++) {
-        const char *name = av_spherical_projection_name(i);
+    لكل (صحيح i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++) {
+        ثابت حرف *name = av_spherical_projection_name(i);
         printf("%s: %d\n", name, av_spherical_from_name(name));
     }
     printf("nonexistent: %d\n", av_spherical_from_name("nonexistent"));
 
     /* projection name round-trip */
     printf("\nTesting projection name round-trip\n");
-    for (int i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++) {
-        const char *name = av_spherical_projection_name(i);
-        int rt = av_spherical_from_name(name);
+    لكل (صحيح i = 0; i <= AV_SPHERICAL_PARAMETRIC_IMMERSIVE; i++) {
+        ثابت حرف *name = av_spherical_projection_name(i);
+        صحيح rt = av_spherical_from_name(name);
         printf("roundtrip %d (%s): %s\n", i, name, rt == i ? "OK" : "FAIL");
     }
 
     /* av_spherical_tile_bounds - no bounds (full frame) */
     printf("\nTesting av_spherical_tile_bounds()\n");
-    map = av_spherical_alloc(NULL);
-    if (map) {
+    map = av_spherical_alloc(عدم);
+    𐤀𐤌 (map) {
         size_t left, top, right, bottom;
 
         map->projection = AV_SPHERICAL_EQUIRECTANGULAR_TILE;
@@ -103,5 +103,5 @@ int main(void)
         av_free(map);
     }
 
-    return 0;
+    أرجع 0;
 }

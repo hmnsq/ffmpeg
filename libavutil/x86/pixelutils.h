@@ -19,58 +19,58 @@
 #ifndef AVUTIL_X86_PIXELUTILS_H
 #define AVUTIL_X86_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ضمن <stddef.h>
+#ضمن <stdint.h>
 
-#include "config.h"
+#ضمن "config.h"
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/pixelutils.h"
+#ضمن "cpu.h"
+#ضمن "libavutil/attributes.h"
+#ضمن "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad_8x8_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                               const uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad_8x8_sse2(ثابت uint8_t *src1, ptrdiff_t stride1,
+                               ثابت uint8_t *src2, ptrdiff_t stride2);
 
-int ff_pixelutils_sad_16x16_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                 const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad_a_16x16_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                   const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad_u_16x16_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                   const uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad_16x16_sse2(ثابت uint8_t *src1, ptrdiff_t stride1,
+                                 ثابت uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad_a_16x16_sse2(ثابت uint8_t *src1, ptrdiff_t stride1,
+                                   ثابت uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad_u_16x16_sse2(ثابت uint8_t *src1, ptrdiff_t stride1,
+                                   ثابت uint8_t *src2, ptrdiff_t stride2);
 
-int ff_pixelutils_sad_32x32_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                 const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad_a_32x32_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                   const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad_u_32x32_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                   const uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad_32x32_sse2(ثابت uint8_t *src1, ptrdiff_t stride1,
+                                 ثابت uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad_a_32x32_sse2(ثابت uint8_t *src1, ptrdiff_t stride1,
+                                   ثابت uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad_u_32x32_sse2(ثابت uint8_t *src1, ptrdiff_t stride1,
+                                   ثابت uint8_t *src2, ptrdiff_t stride2);
 
-int ff_pixelutils_sad_32x32_avx2(const uint8_t *src1, ptrdiff_t stride1,
-                                 const uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad_32x32_avx2(ثابت uint8_t *src1, ptrdiff_t stride1,
+                                 ثابت uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_x86(av_pixelutils_sad_fn *sad, int aligned)
+ساكن مضمن av_cold فراغ ff_pixelutils_sad_init_x86(av_pixelutils_sad_fn *sad, صحيح aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    صحيح cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_SSE2(cpu_flags)) {
+    𐤀𐤌 (EXTERNAL_SSE2(cpu_flags)) {
         sad[2] = ff_pixelutils_sad_8x8_sse2;
-        switch (aligned) {
-        case 0: sad[3] = ff_pixelutils_sad_16x16_sse2;   break; // src1 unaligned, src2 unaligned
-        case 1: sad[3] = ff_pixelutils_sad_u_16x16_sse2; break; // src1   aligned, src2 unaligned
-        case 2: sad[3] = ff_pixelutils_sad_a_16x16_sse2; break; // src1   aligned, src2   aligned
+        بدل (aligned) {
+        حالة 0: sad[3] = ff_pixelutils_sad_16x16_sse2;   اكسر; // src1 unaligned, src2 unaligned
+        حالة 1: sad[3] = ff_pixelutils_sad_u_16x16_sse2; اكسر; // src1   aligned, src2 unaligned
+        حالة 2: sad[3] = ff_pixelutils_sad_a_16x16_sse2; اكسر; // src1   aligned, src2   aligned
         }
     }
 
-    if (EXTERNAL_SSE2(cpu_flags)) {
-        switch (aligned) {
-        case 0: sad[4] = ff_pixelutils_sad_32x32_sse2;   break; // src1 unaligned, src2 unaligned
-        case 1: sad[4] = ff_pixelutils_sad_u_32x32_sse2; break; // src1   aligned, src2 unaligned
-        case 2: sad[4] = ff_pixelutils_sad_a_32x32_sse2; break; // src1   aligned, src2   aligned
+    𐤀𐤌 (EXTERNAL_SSE2(cpu_flags)) {
+        بدل (aligned) {
+        حالة 0: sad[4] = ff_pixelutils_sad_32x32_sse2;   اكسر; // src1 unaligned, src2 unaligned
+        حالة 1: sad[4] = ff_pixelutils_sad_u_32x32_sse2; اكسر; // src1   aligned, src2 unaligned
+        حالة 2: sad[4] = ff_pixelutils_sad_a_32x32_sse2; اكسر; // src1   aligned, src2   aligned
         }
     }
 
-#if HAVE_AVX2_EXTERNAL
-    if (EXTERNAL_AVX2_FAST(cpu_flags)) {
+#𐤀𐤌 HAVE_AVX2_EXTERNAL
+    𐤀𐤌 (EXTERNAL_AVX2_FAST(cpu_flags)) {
         sad[4] = ff_pixelutils_sad_32x32_avx2;
     }
 #endif
