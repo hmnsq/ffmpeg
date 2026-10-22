@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_QSORT_H
-#define AVUTIL_QSORT_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_QSORT_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_QSORT_H
 
-#include "macros.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
 
 
 /**
@@ -30,69 +30,69 @@
  * to construct input that requires O(n^2) time but this is very unlikely to
  * happen with non constructed input.
  */
-#define AV_QSORT(p, num, type, cmp) do {\
-    void *stack[64][2];\
-    int sp= 1;\
-    stack[0][0] = p;\
-    stack[0][1] = (p)+(num)-1;\
-    while(sp){\
-        type *start= stack[--sp][0];\
-        type *end  = stack[  sp][1];\
-        while(start < end){\
-            if(start < end-1) {\
-                int checksort=0;\
-                type *right = end-2;\
-                type *left  = start+1;\
-                type *mid = start + ((end-start)>>1);\
-                if(cmp(start, end) > 0) {\
-                    if(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else                    FFSWAP(type, *start, *end);\
-                }else{\
-                    if(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else checksort= 1;\
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_QSORT(p, ಅಂಕೆ, type, cmp) ಮಾಡು {\
+    ಶೂನ್ಯ *ರಾಶಿ_2[64][2];\
+    ಪೂರ್ಣಾಂಕ sp= 1;\
+    ರಾಶಿ_2[0][0] = p;\
+    ರಾಶಿ_2[0][1] = (p)+(ಅಂಕೆ)-1;\
+    ಆಗ(sp){\
+        type *ಆರಂಭ= ರಾಶಿ_2[--sp][0];\
+        type *ಕೊನೆ  = ರಾಶಿ_2[  sp][1];\
+        ಆಗ(ಆರಂಭ < ಕೊನೆ){\
+            ಆದರೆ(ಆರಂಭ < ಕೊನೆ-1) {\
+                ಪೂರ್ಣಾಂಕ checksort=0;\
+                type *ಬಲ = ಕೊನೆ-2;\
+                type *ಎಡ  = ಆರಂಭ+1;\
+                type *mid = ಆರಂಭ + ((ಕೊನೆ-ಆರಂಭ)>>1);\
+                ಆದರೆ(cmp(ಆರಂಭ, ಕೊನೆ) > 0) {\
+                    ಆದರೆ(cmp(  ಕೊನೆ, mid) > 0) FFSWAP(type, *ಆರಂಭ, *mid);\
+                    ಇಲ್ಲದಿದ್ದರೆ                    FFSWAP(type, *ಆರಂಭ, *ಕೊನೆ);\
+                }ಇಲ್ಲದಿದ್ದರೆ{\
+                    ಆದರೆ(cmp(ಆರಂಭ, mid) > 0) FFSWAP(type, *ಆರಂಭ, *mid);\
+                    ಇಲ್ಲದಿದ್ದರೆ checksort= 1;\
                 }\
-                if(cmp(mid, end) > 0){ \
-                    FFSWAP(type, *mid, *end);\
+                ಆದರೆ(cmp(mid, ಕೊನೆ) > 0){ \
+                    FFSWAP(type, *mid, *ಕೊನೆ);\
                     checksort=0;\
                 }\
-                if(start == end-2) break;\
-                FFSWAP(type, end[-1], *mid);\
-                while(left <= right){\
-                    while(left<=right && cmp(left, end-1) < 0)\
-                        left++;\
-                    while(left<=right && cmp(right, end-1) > 0)\
-                        right--;\
-                    if(left <= right){\
-                        FFSWAP(type, *left, *right);\
-                        left++;\
-                        right--;\
+                ಆದರೆ(ಆರಂಭ == ಕೊನೆ-2) ನಿಲ್ಲಿಸು;\
+                FFSWAP(type, ಕೊನೆ[-1], *mid);\
+                ಆಗ(ಎಡ <= ಬಲ){\
+                    ಆಗ(ಎಡ<=ಬಲ && cmp(ಎಡ, ಕೊನೆ-1) < 0)\
+                        ಎಡ++;\
+                    ಆಗ(ಎಡ<=ಬಲ && cmp(ಬಲ, ಕೊನೆ-1) > 0)\
+                        ಬಲ--;\
+                    ಆದರೆ(ಎಡ <= ಬಲ){\
+                        FFSWAP(type, *ಎಡ, *ಬಲ);\
+                        ಎಡ++;\
+                        ಬಲ--;\
                     }\
                 }\
-                FFSWAP(type, end[-1], *left);\
-                if(checksort && (mid == left-1 || mid == left)){\
-                    mid= start;\
-                    while(mid<end && cmp(mid, mid+1) <= 0)\
+                FFSWAP(type, ಕೊನೆ[-1], *ಎಡ);\
+                ಆದರೆ(checksort && (mid == ಎಡ-1 || mid == ಎಡ)){\
+                    mid= ಆರಂಭ;\
+                    ಆಗ(mid<ಕೊನೆ && cmp(mid, mid+1) <= 0)\
                         mid++;\
-                    if(mid==end)\
-                        break;\
+                    ಆದರೆ(mid==ಕೊನೆ)\
+                        ನಿಲ್ಲಿಸು;\
                 }\
-                if(end-left < left-start){\
-                    stack[sp  ][0]= start;\
-                    stack[sp++][1]= right;\
-                    start = left+1;\
-                }else{\
-                    stack[sp  ][0]= left+1;\
-                    stack[sp++][1]= end;\
-                    end = right;\
+                ಆದರೆ(ಕೊನೆ-ಎಡ < ಎಡ-ಆರಂಭ){\
+                    ರಾಶಿ_2[sp  ][0]= ಆರಂಭ;\
+                    ರಾಶಿ_2[sp++][1]= ಬಲ;\
+                    ಆರಂಭ = ಎಡ+1;\
+                }ಇಲ್ಲದಿದ್ದರೆ{\
+                    ರಾಶಿ_2[sp  ][0]= ಎಡ+1;\
+                    ರಾಶಿ_2[sp++][1]= ಕೊನೆ;\
+                    ಕೊನೆ = ಬಲ;\
                 }\
-            }else{\
-                if(cmp(start, end) > 0)\
-                    FFSWAP(type, *start, *end);\
-                break;\
+            }ಇಲ್ಲದಿದ್ದರೆ{\
+                ಆದರೆ(cmp(ಆರಂಭ, ಕೊನೆ) > 0)\
+                    FFSWAP(type, *ಆರಂಭ, *ಕೊನೆ);\
+                ನಿಲ್ಲಿಸು;\
             }\
         }\
     }\
-} while (0)
+} ಆಗ (0)
 
 /**
  * Merge sort, this sort requires a temporary buffer and is stable, its worst
@@ -100,23 +100,23 @@
  * @param p     must be a lvalue pointer, this function may exchange it with tmp
  * @param tmp   must be a lvalue pointer, this function may exchange it with p
  */
-#define AV_MSORT(p, tmp, num, type, cmp) do {\
-    unsigned i, j, step;\
-    for(step=1; step<(num); step+=step){\
-        for(i=0; i<(num); i+=2*step){\
-            unsigned a[2] = {i, i+step};\
-            unsigned end = FFMIN(i+2*step, (num));\
-            for(j=i; a[0]<i+step && a[1]<end; j++){\
-                int idx= cmp(p+a[0], p+a[1]) > 0;\
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_MSORT(p, tmp, ಅಂಕೆ, type, cmp) ಮಾಡು {\
+    ಚಿಹ್ನೆರಹಿತ i, j, ಹೆಜ್ಜೆ;\
+    ಗಾಗಿ(ಹೆಜ್ಜೆ=1; ಹೆಜ್ಜೆ<(ಅಂಕೆ); ಹೆಜ್ಜೆ+=ಹೆಜ್ಜೆ){\
+        ಗಾಗಿ(i=0; i<(ಅಂಕೆ); i+=2*ಹೆಜ್ಜೆ){\
+            ಚಿಹ್ನೆರಹಿತ a[2] = {i, i+ಹೆಜ್ಜೆ};\
+            ಚಿಹ್ನೆರಹಿತ ಕೊನೆ = FFMIN(i+2*ಹೆಜ್ಜೆ, (ಅಂಕೆ));\
+            ಗಾಗಿ(j=i; a[0]<i+ಹೆಜ್ಜೆ && a[1]<ಕೊನೆ; j++){\
+                ಪೂರ್ಣಾಂಕ idx= cmp(p+a[0], p+a[1]) > 0;\
                 tmp[j] = p[ a[idx]++ ];\
             }\
-            if(a[0]>=i+step) a[0] = a[1];\
-            for(; j<end; j++){\
+            ಆದರೆ(a[0]>=i+ಹೆಜ್ಜೆ) a[0] = a[1];\
+            ಗಾಗಿ(; j<ಕೊನೆ; j++){\
                 tmp[j] = p[ a[0]++ ];\
             }\
         }\
         FFSWAP(type*, p, tmp);\
     }\
-} while (0)
+} ಆಗ (0)
 
-#endif /* AVUTIL_QSORT_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_QSORT_H */

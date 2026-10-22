@@ -18,18 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MEM_INTERNAL_H
-#define AVUTIL_MEM_INTERNAL_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_MEM_ಆಂತರಿಕ_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_MEM_ಆಂತರಿಕ_H
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#include <stdint.h>
-#ifndef _MSC_VER
-#include <stdalign.h>
-#endif
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ _MSC_VER
+#ಅನ್ತರ್ಭಾವ <stdalign.h>
+#ಆದರೆ_ಅಂತ್ಯ
 
-#include "attributes.h"
-#include "macros.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
 
 /**
  * @def DECLARE_ALIGNED(n,t,v)
@@ -76,61 +76,61 @@
  * @param v Name of the variable
  */
 
-#if defined(__DJGPP__)
-    #define DECLARE_ALIGNED_T(n,t,v)    alignas(FFMIN(n, 16)) t v
-    #define DECLARE_ASM_ALIGNED(n,t,v)  alignas(FFMIN(n, 16)) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    alignas(FFMIN(n, 16)) static const t av_used v
-#elif defined(_MSC_VER)
-    #define DECLARE_ALIGNED_T(n,t,v)    __declspec(align(n)) t v
-    #define DECLARE_ASM_ALIGNED(n,t,v)  __declspec(align(n)) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) static const t av_used v
-#else
-    #define DECLARE_ALIGNED_T(n,t,v)    alignas(n) t v
-    #define DECLARE_ASM_ALIGNED(n,t,v)  alignas(n) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    alignas(n) static const t av_used v
-#endif
+#ಆದರೆ defined(__DJGPP__)
+    #ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ALIGNED_T(n,t,v)    alignas(FFMIN(n, 16)) t v
+    #ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ASM_ALIGNED(n,t,v)  alignas(FFMIN(n, 16)) t av_ಬಳಸಿದ v
+    #ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ASM_CONST(n,t,v)    alignas(FFMIN(n, 16)) ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ t av_ಬಳಸಿದ v
+#ಅಥವಾಆದರೆ defined(_MSC_VER)
+    #ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ALIGNED_T(n,t,v)    __declspec(align(n)) t v
+    #ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ASM_ALIGNED(n,t,v)  __declspec(align(n)) t av_ಬಳಸಿದ v
+    #ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ t av_ಬಳಸಿದ v
+#ಇಲ್ಲದಿದ್ದರೆ
+    #ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ALIGNED_T(n,t,v)    alignas(n) t v
+    #ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ASM_ALIGNED(n,t,v)  alignas(n) t av_ಬಳಸಿದ v
+    #ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ASM_CONST(n,t,v)    alignas(n) ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ t av_ಬಳಸಿದ v
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if HAVE_SIMD_ALIGN_64
-    #define ALIGN_64 64
-    #define ALIGN_32 32
-#elif HAVE_SIMD_ALIGN_32
-    #define ALIGN_64 32
-    #define ALIGN_32 32
-#else
-    #define ALIGN_64 16
-    #define ALIGN_32 16
-#endif
+#ಆದರೆ HAVE_SIMD_ALIGN_64
+    #ವ್ಯಾಖ್ಯಾನಿಸು ALIGN_64 64
+    #ವ್ಯಾಖ್ಯಾನಿಸು ALIGN_32 32
+#ಅಥವಾಆದರೆ HAVE_SIMD_ALIGN_32
+    #ವ್ಯಾಖ್ಯಾನಿಸು ALIGN_64 32
+    #ವ್ಯಾಖ್ಯಾನಿಸು ALIGN_32 32
+#ಇಲ್ಲದಿದ್ದರೆ
+    #ವ್ಯಾಖ್ಯಾನಿಸು ALIGN_64 16
+    #ವ್ಯಾಖ್ಯಾನಿಸು ALIGN_32 16
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define DECLARE_ALIGNED(n,t,v) DECLARE_ALIGNED_V(n,t,v)
+#ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ALIGNED(n,t,v) DECLARE_ALIGNED_V(n,t,v)
 
 // Macro needs to be double-wrapped in order to expand
 // possible other macros being passed for n.
-#define DECLARE_ALIGNED_V(n,t,v) DECLARE_ALIGNED_##n(t,v)
+#ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ALIGNED_V(n,t,v) DECLARE_ALIGNED_##n(t,v)
 
-#define DECLARE_ALIGNED_4(t,v)  DECLARE_ALIGNED_T(       4, t, v)
-#define DECLARE_ALIGNED_8(t,v)  DECLARE_ALIGNED_T(       8, t, v)
-#define DECLARE_ALIGNED_16(t,v) DECLARE_ALIGNED_T(      16, t, v)
-#define DECLARE_ALIGNED_32(t,v) DECLARE_ALIGNED_T(ALIGN_32, t, v)
-#define DECLARE_ALIGNED_64(t,v) DECLARE_ALIGNED_T(ALIGN_64, t, v)
+#ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ALIGNED_4(t,v)  DECLARE_ALIGNED_T(       4, t, v)
+#ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ALIGNED_8(t,v)  DECLARE_ALIGNED_T(       8, t, v)
+#ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ALIGNED_16(t,v) DECLARE_ALIGNED_T(      16, t, v)
+#ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ALIGNED_32(t,v) DECLARE_ALIGNED_T(ALIGN_32, t, v)
+#ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ALIGNED_64(t,v) DECLARE_ALIGNED_T(ALIGN_64, t, v)
 
 // Some broken preprocessors need a second expansion
 // to be forced to tokenize __VA_ARGS__
-#define E1(x) x
+#ವ್ಯಾಖ್ಯಾನಿಸು E1(x) x
 
-#define LOCAL_ALIGNED_D(a, t, v, s, o, ...)             \
+#ವ್ಯಾಖ್ಯಾನಿಸು LOCAL_ALIGNED_D(a, t, v, s, o, ...)             \
     DECLARE_ALIGNED(a, t, la_##v) s o;                  \
     t (*v) o = la_##v
 
-#define LOCAL_ALIGNED(a, t, v, ...) LOCAL_ALIGNED_##a(t, v, __VA_ARGS__)
+#ವ್ಯಾಖ್ಯಾನಿಸು LOCAL_ALIGNED(a, t, v, ...) LOCAL_ALIGNED_##a(t, v, __VA_ARGS__)
 
-#define LOCAL_ALIGNED_4(t, v, ...) E1(LOCAL_ALIGNED_D(4, t, v, __VA_ARGS__,,))
+#ವ್ಯಾಖ್ಯಾನಿಸು LOCAL_ALIGNED_4(t, v, ...) E1(LOCAL_ALIGNED_D(4, t, v, __VA_ARGS__,,))
 
-#define LOCAL_ALIGNED_8(t, v, ...) E1(LOCAL_ALIGNED_D(8, t, v, __VA_ARGS__,,))
+#ವ್ಯಾಖ್ಯಾನಿಸು LOCAL_ALIGNED_8(t, v, ...) E1(LOCAL_ALIGNED_D(8, t, v, __VA_ARGS__,,))
 
-#define LOCAL_ALIGNED_16(t, v, ...) E1(LOCAL_ALIGNED_D(16, t, v, __VA_ARGS__,,))
+#ವ್ಯಾಖ್ಯಾನಿಸು LOCAL_ALIGNED_16(t, v, ...) E1(LOCAL_ALIGNED_D(16, t, v, __VA_ARGS__,,))
 
-#define LOCAL_ALIGNED_32(t, v, ...) E1(LOCAL_ALIGNED_D(32, t, v, __VA_ARGS__,,))
+#ವ್ಯಾಖ್ಯಾನಿಸು LOCAL_ALIGNED_32(t, v, ...) E1(LOCAL_ALIGNED_D(32, t, v, __VA_ARGS__,,))
 
-#define LOCAL_ALIGNED_64(t, v, ...) E1(LOCAL_ALIGNED_D(64, t, v, __VA_ARGS__,,))
+#ವ್ಯಾಖ್ಯಾನಿಸು LOCAL_ALIGNED_64(t, v, ...) E1(LOCAL_ALIGNED_D(64, t, v, __VA_ARGS__,,))
 
-#endif /* AVUTIL_MEM_INTERNAL_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_MEM_INTERNAL_H */

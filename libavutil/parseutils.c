@@ -21,59 +21,59 @@
  * misc parsing utilities
  */
 
-#include <time.h>
+#ಅನ್ತರ್ಭಾವ <time.h>
 
-#include "avstring.h"
-#include "avutil.h"
-#include "common.h"
-#include "eval.h"
-#include "log.h"
-#include "random_seed.h"
-#include "time_internal.h"
-#include "parseutils.h"
-#include "time.h"
+#ಅನ್ತರ್ಭಾವ "avstring.h"
+#ಅನ್ತರ್ಭಾವ "avutil.h"
+#ಅನ್ತರ್ಭಾವ "common.h"
+#ಅನ್ತರ್ಭಾವ "eval.h"
+#ಅನ್ತರ್ಭಾವ "log.h"
+#ಅನ್ತರ್ಭಾವ "random_seed.h"
+#ಅನ್ತರ್ಭಾವ "time_internal.h"
+#ಅನ್ತರ್ಭಾವ "parseutils.h"
+#ಅನ್ತರ್ಭಾವ "time.h"
 
-#ifdef TEST
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ TEST
 
-#define av_get_random_seed av_get_random_seed_deterministic
-static uint32_t av_get_random_seed_deterministic(void);
+#ವ್ಯಾಖ್ಯಾನಿಸು av_get_random_ಬೀಜ av_get_random_ಬೀಜ_deterministic
+ಸ್ಥಿರ uint32_t av_get_random_ಬೀಜ_deterministic(ಶೂನ್ಯ);
 
-#define av_gettime() 1331972053200000
+#ವ್ಯಾಖ್ಯಾನಿಸು av_gettime() 1331972053200000
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx)
+ಪೂರ್ಣಾಂಕ av_parse_ಅನುಪಾತ(AVRational *q, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str, ಪೂರ್ಣಾಂಕ max,
+                   ಪೂರ್ಣಾಂಕ log_ಸ್ಥಾನಾಂತರ, ಶೂನ್ಯ *log_ctx)
 {
-    char c;
-    int ret;
+    ಅಕ್ಷರ c;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (sscanf(str, "%d:%d%c", &q->num, &q->den, &c) != 2) {
-        double d;
-        ret = av_expr_parse_and_eval(&d, str, NULL, NULL,
-                                     NULL, NULL, NULL, NULL,
-                                     NULL, log_offset, log_ctx);
-        if (ret < 0)
-            return ret;
+    ಆದರೆ (ಅಕ್ಷರಸರಣಿ_ಓದು(str, "%d:%d%c", &q->ಅಂಕೆ, &q->den, &c) != 2) {
+        ದ್ವಿಗುಣ d;
+        ret = av_ಅಭಿವ್ಯಕ್ತಿ_parse_and_eval(&d, str, ಖಾಲಿ, ಖಾಲಿ,
+                                     ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ,
+                                     ಖಾಲಿ, log_ಸ್ಥಾನಾಂತರ, log_ctx);
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ ret;
         *q = av_d2q(d, max);
-    } else {
-        av_reduce(&q->num, &q->den, q->num, q->den, max);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        av_reduce(&q->ಅಂಕೆ, &q->den, q->ಅಂಕೆ, q->den, max);
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-typedef struct VideoSizeAbbr {
-    const char *abbr;
-    int width, height;
-} VideoSizeAbbr;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ Video_ಗಾತ್ರ_Abbr {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *abbr;
+    ಪೂರ್ಣಾಂಕ ಅಗಲ, ಎತ್ತರ;
+} Video_ಗಾತ್ರ_Abbr;
 
-typedef struct VideoRateAbbr {
-    const char *abbr;
-    AVRational rate;
-} VideoRateAbbr;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ Video_ದರ_Abbr {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *abbr;
+    AVRational ದರ;
+} Video_ದರ_Abbr;
 
-static const VideoSizeAbbr video_size_abbrs[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Video_ಗಾತ್ರ_Abbr video_ಗಾತ್ರ_abbrs[] = {
     { "ntsc",      720, 480 },
     { "pal",       720, 576 },
     { "qntsc",     352, 240 }, /* VCD compliant NTSC */
@@ -131,7 +131,7 @@ static const VideoSizeAbbr video_size_abbrs[] = {
     { "uhd4320",  7680,4320 },
 };
 
-static const VideoRateAbbr video_rate_abbrs[]= {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Video_ದರ_Abbr video_ದರ_abbrs[]= {
     { "ntsc",      { 30000, 1001 } },
     { "pal",       {    25,    1 } },
     { "qntsc",     { 30000, 1001 } }, /* VCD compliant NTSC */
@@ -142,71 +142,71 @@ static const VideoRateAbbr video_rate_abbrs[]= {
     { "ntsc-film", { 24000, 1001 } },
 };
 
-static const char *months[12] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *months[12] = {
     "january", "february", "march", "april", "may", "june", "july", "august",
     "september", "october", "november", "december"
 };
 
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str)
+ಪೂರ್ಣಾಂಕ av_parse_video_ಗಾತ್ರ(ಪೂರ್ಣಾಂಕ *ಅಗಲ_ptr, ಪೂರ್ಣಾಂಕ *ಎತ್ತರ_ptr, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str)
 {
-    int i;
-    int n = FF_ARRAY_ELEMS(video_size_abbrs);
-    const char *p;
-    int width = 0, height = 0;
+    ಪೂರ್ಣಾಂಕ i;
+    ಪೂರ್ಣಾಂಕ n = FF_ARRAY_ELEMS(video_ಗಾತ್ರ_abbrs);
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p;
+    ಪೂರ್ಣಾಂಕ ಅಗಲ = 0, ಎತ್ತರ = 0;
 
-    for (i = 0; i < n; i++) {
-        if (!strcmp(video_size_abbrs[i].abbr, str)) {
-            width  = video_size_abbrs[i].width;
-            height = video_size_abbrs[i].height;
-            break;
+    ಗಾಗಿ (i = 0; i < n; i++) {
+        ಆದರೆ (!strcmp(video_ಗಾತ್ರ_abbrs[i].abbr, str)) {
+            ಅಗಲ  = video_ಗಾತ್ರ_abbrs[i].ಅಗಲ;
+            ಎತ್ತರ = video_ಗಾತ್ರ_abbrs[i].ಎತ್ತರ;
+            ನಿಲ್ಲಿಸು;
         }
     }
-    if (i == n) {
-        width = strtol(str, (void*)&p, 10);
-        if (*p)
+    ಆದರೆ (i == n) {
+        ಅಗಲ = strtol(str, (ಶೂನ್ಯ*)&p, 10);
+        ಆದರೆ (*p)
             p++;
-        height = strtol(p, (void*)&p, 10);
+        ಎತ್ತರ = strtol(p, (ಶೂನ್ಯ*)&p, 10);
 
         /* trailing extraneous data detected, like in 123x345foobar */
-        if (*p)
-            return AVERROR(EINVAL);
+        ಆದರೆ (*p)
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
     }
-    if (width <= 0 || height <= 0)
-        return AVERROR(EINVAL);
-    *width_ptr  = width;
-    *height_ptr = height;
-    return 0;
+    ಆದರೆ (ಅಗಲ <= 0 || ಎತ್ತರ <= 0)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
+    *ಅಗಲ_ptr  = ಅಗಲ;
+    *ಎತ್ತರ_ptr = ಎತ್ತರ;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_parse_video_rate(AVRational *rate, const char *arg)
+ಪೂರ್ಣಾಂಕ av_parse_video_ದರ(AVRational *ದರ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *arg)
 {
-    int i, ret;
-    int n = FF_ARRAY_ELEMS(video_rate_abbrs);
+    ಪೂರ್ಣಾಂಕ i, ret;
+    ಪೂರ್ಣಾಂಕ n = FF_ARRAY_ELEMS(video_ದರ_abbrs);
 
     /* First, we check our abbreviation table */
-    for (i = 0; i < n; ++i)
-        if (!strcmp(video_rate_abbrs[i].abbr, arg)) {
-            *rate = video_rate_abbrs[i].rate;
-            return 0;
+    ಗಾಗಿ (i = 0; i < n; ++i)
+        ಆದರೆ (!strcmp(video_ದರ_abbrs[i].abbr, arg)) {
+            *ದರ = video_ದರ_abbrs[i].ದರ;
+            ಹಿಂತಿರುಗಿ 0;
         }
 
     /* Then, we try to parse it as fraction */
-    if ((ret = av_parse_ratio_quiet(rate, arg, 1001000)) < 0)
-        return ret;
-    if (!rate->num || !rate->den)
-        if ((ret = av_parse_ratio_quiet(rate, arg, INT_MAX)) < 0)
-            return ret;
-    if (rate->num <= 0 || rate->den <= 0)
-        return AVERROR(EINVAL);
-    return 0;
+    ಆದರೆ ((ret = av_parse_ಅನುಪಾತ_quiet(ದರ, arg, 1001000)) < 0)
+        ಹಿಂತಿರುಗಿ ret;
+    ಆದರೆ (!ದರ->ಅಂಕೆ || !ದರ->den)
+        ಆದರೆ ((ret = av_parse_ಅನುಪಾತ_quiet(ದರ, arg, ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ)) < 0)
+            ಹಿಂತಿರುಗಿ ret;
+    ಆದರೆ (ದರ->ಅಂಕೆ <= 0 || ದರ->den <= 0)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-typedef struct ColorEntry {
-    const char *name;            ///< a string representing the name of the color
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ Color_ನಮೂದು {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name;            ///< a string representing the name of the color
     uint8_t     rgb_color[3];    ///< RGB values for the color
-} ColorEntry;
+} Color_ನಮೂದು;
 
-static const ColorEntry color_table[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Color_ನಮೂದು color_ಕೋಷ್ಟಕ[] = {
     { "AliceBlue",            { 0xF0, 0xF8, 0xFF } },
     { "AntiqueWhite",         { 0xFA, 0xEB, 0xD7 } },
     { "Aqua",                 { 0x00, 0xFF, 0xFF } },
@@ -349,234 +349,234 @@ static const ColorEntry color_table[] = {
     { "YellowGreen",          { 0x9A, 0xCD, 0x32 } },
 };
 
-static int color_table_compare(const void *lhs, const void *rhs)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ color_ಕೋಷ್ಟಕ_compare(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *lhs, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *rhs)
 {
-    return av_strcasecmp(lhs, ((const ColorEntry *)rhs)->name);
+    ಹಿಂತಿರುಗಿ av_strcasecmp(lhs, ((ಸ್ಥಿರಾಂಕ Color_ನಮೂದು *)rhs)->name);
 }
 
-#define ALPHA_SEP '@'
+#ವ್ಯಾಖ್ಯಾನಿಸು ALPHA_SEP '@'
 
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
-                   void *log_ctx)
+ಪೂರ್ಣಾಂಕ av_parse_color(uint8_t *rgba_color, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *color_string, ಪೂರ್ಣಾಂಕ slen,
+                   ಶೂನ್ಯ *log_ctx)
 {
-    char *tail, color_string2[128];
-    const ColorEntry *entry;
-    int len, hex_offset = 0;
+    ಅಕ್ಷರ *ಬಾಲ, color_string2[128];
+    ಸ್ಥಿರಾಂಕ Color_ನಮೂದು *ನಮೂದು;
+    ಪೂರ್ಣಾಂಕ len, hex_ಸ್ಥಾನಾಂತರ = 0;
 
-    if (color_string[0] == '#') {
-        hex_offset = 1;
-    } else if (!strncmp(color_string, "0x", 2))
-        hex_offset = 2;
+    ಆದರೆ (color_string[0] == '#') {
+        hex_ಸ್ಥಾನಾಂತರ = 1;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (!ಅಕ್ಷರಸರಣಿ_ಹೋಲಿಕೆ(color_string, "0x", 2))
+        hex_ಸ್ಥಾನಾಂತರ = 2;
 
-    if (slen < 0)
-        slen = strlen(color_string);
-    av_strlcpy(color_string2, color_string + hex_offset,
-               FFMIN(slen-hex_offset+1, sizeof(color_string2)));
-    if ((tail = strchr(color_string2, ALPHA_SEP)))
-        *tail++ = 0;
-    len = strlen(color_string2);
+    ಆದರೆ (slen < 0)
+        slen = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(color_string);
+    av_strlcpy(color_string2, color_string + hex_ಸ್ಥಾನಾಂತರ,
+               FFMIN(slen-hex_ಸ್ಥಾನಾಂತರ+1, ಗಾತ್ರ(color_string2)));
+    ಆದರೆ ((ಬಾಲ = strchr(color_string2, ALPHA_SEP)))
+        *ಬಾಲ++ = 0;
+    len = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(color_string2);
     rgba_color[3] = 255;
 
-    if (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
-        int rgba = av_get_random_seed();
+    ಆದರೆ (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
+        ಪೂರ್ಣಾಂಕ rgba = av_get_random_ಬೀಜ();
         rgba_color[0] = rgba >> 24;
         rgba_color[1] = rgba >> 16;
         rgba_color[2] = rgba >> 8;
         rgba_color[3] = rgba;
-    } else if (hex_offset ||
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (hex_ಸ್ಥಾನಾಂತರ ||
                strspn(color_string2, "0123456789ABCDEFabcdef") == len) {
-        char *tail;
-        unsigned int rgba = strtoul(color_string2, &tail, 16);
+        ಅಕ್ಷರ *ಬಾಲ;
+        ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ rgba = strtoul(color_string2, &ಬಾಲ, 16);
 
-        if (*tail || (len != 6 && len != 8)) {
+        ಆದರೆ (*ಬಾಲ || (len != 6 && len != 8)) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid 0xRRGGBB[AA] color string: '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
         }
-        if (len == 8) {
+        ಆದರೆ (len == 8) {
             rgba_color[3] = rgba;
             rgba >>= 8;
         }
         rgba_color[0] = rgba >> 16;
         rgba_color[1] = rgba >> 8;
         rgba_color[2] = rgba;
-    } else {
-        entry = bsearch(color_string2,
-                        color_table,
-                        FF_ARRAY_ELEMS(color_table),
-                        sizeof(ColorEntry),
-                        color_table_compare);
-        if (!entry) {
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ನಮೂದು = bsearch(color_string2,
+                        color_ಕೋಷ್ಟಕ,
+                        FF_ARRAY_ELEMS(color_ಕೋಷ್ಟಕ),
+                        ಗಾತ್ರ(Color_ನಮೂದು),
+                        color_ಕೋಷ್ಟಕ_compare);
+        ಆದರೆ (!ನಮೂದು) {
             av_log(log_ctx, AV_LOG_ERROR, "Cannot find color '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
         }
-        memcpy(rgba_color, entry->rgb_color, 3);
+        ಸ್ಮರಣೆ_ನಕಲು(rgba_color, ನಮೂದು->rgb_color, 3);
     }
 
-    if (tail) {
-        double alpha;
-        const char *alpha_string = tail;
-        if (!strncmp(alpha_string, "0x", 2)) {
-            alpha = strtoul(alpha_string, &tail, 16);
-        } else {
-            double norm_alpha = strtod(alpha_string, &tail);
-            if (norm_alpha < 0.0 || norm_alpha > 1.0)
+    ಆದರೆ (ಬಾಲ) {
+        ದ್ವಿಗುಣ alpha;
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *alpha_string = ಬಾಲ;
+        ಆದರೆ (!ಅಕ್ಷರಸರಣಿ_ಹೋಲಿಕೆ(alpha_string, "0x", 2)) {
+            alpha = strtoul(alpha_string, &ಬಾಲ, 16);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ದ್ವಿಗುಣ norm_alpha = strtod(alpha_string, &ಬಾಲ);
+            ಆದರೆ (norm_alpha < 0.0 || norm_alpha > 1.0)
                 alpha = 256;
-            else
+            ಇಲ್ಲದಿದ್ದರೆ
                 alpha = 255 * norm_alpha;
         }
 
-        if (tail == alpha_string || *tail || alpha > 255 || alpha < 0) {
+        ಆದರೆ (ಬಾಲ == alpha_string || *ಬಾಲ || alpha > 255 || alpha < 0) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid alpha value specifier '%s' in '%s'\n",
                    alpha_string, color_string);
-            return AVERROR(EINVAL);
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
         }
         rgba_color[3] = alpha;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgbp)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_get_ತಿಳಿದ_color_name(ಪೂರ್ಣಾಂಕ color_idx, ಸ್ಥಿರಾಂಕ uint8_t **rgbp)
 {
-    const ColorEntry *color;
+    ಸ್ಥಿರಾಂಕ Color_ನಮೂದು *color;
 
-    if ((unsigned)color_idx >= FF_ARRAY_ELEMS(color_table))
-        return NULL;
+    ಆದರೆ ((ಚಿಹ್ನೆರಹಿತ)color_idx >= FF_ARRAY_ELEMS(color_ಕೋಷ್ಟಕ))
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    color = &color_table[color_idx];
-    if (rgbp)
+    color = &color_ಕೋಷ್ಟಕ[color_idx];
+    ಆದರೆ (rgbp)
         *rgbp = color->rgb_color;
 
-    return color->name;
+    ಹಿಂತಿರುಗಿ color->name;
 }
 
 /* get a positive number between n_min and n_max, for a maximum length
    of len_max. Return -1 if error. */
-static int date_get_num(const char **pp,
-                        int n_min, int n_max, int len_max)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ date_get_ಅಂಕೆ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **pp,
+                        ಪೂರ್ಣಾಂಕ n_min, ಪೂರ್ಣಾಂಕ n_max, ಪೂರ್ಣಾಂಕ len_max)
 {
-    int i, val, c;
-    const char *p;
+    ಪೂರ್ಣಾಂಕ i, val, c;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p;
 
     p = *pp;
     val = 0;
-    for(i = 0; i < len_max; i++) {
+    ಗಾಗಿ(i = 0; i < len_max; i++) {
         c = *p;
-        if (!av_isdigit(c))
-            break;
+        ಆದರೆ (!av_isdigit(c))
+            ನಿಲ್ಲಿಸು;
         val = (val * 10) + c - '0';
         p++;
     }
     /* no number read ? */
-    if (p == *pp)
-        return -1;
-    if (val < n_min || val > n_max)
-        return -1;
+    ಆದರೆ (p == *pp)
+        ಹಿಂತಿರುಗಿ -1;
+    ಆದರೆ (val < n_min || val > n_max)
+        ಹಿಂತಿರುಗಿ -1;
     *pp = p;
-    return val;
+    ಹಿಂತಿರುಗಿ val;
 }
 
-static int date_get_month(const char **pp) {
-    int i = 0;
-    for (; i < 12; i++) {
-        if (!av_strncasecmp(*pp, months[i], 3)) {
-            const char *mo_full = months[i] + 3;
-            int len = strlen(mo_full);
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ date_get_month(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **pp) {
+    ಪೂರ್ಣಾಂಕ i = 0;
+    ಗಾಗಿ (; i < 12; i++) {
+        ಆದರೆ (!av_strncasecmp(*pp, months[i], 3)) {
+            ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *mo_ತುಂಬಿದ = months[i] + 3;
+            ಪೂರ್ಣಾಂಕ len = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(mo_ತುಂಬಿದ);
             *pp += 3;
-            if (len > 0 && !av_strncasecmp(*pp, mo_full, len))
+            ಆದರೆ (len > 0 && !av_strncasecmp(*pp, mo_ತುಂಬಿದ, len))
                 *pp += len;
-            return i;
+            ಹಿಂತಿರುಗಿ i;
         }
     }
-    return -1;
+    ಹಿಂತಿರುಗಿ -1;
 }
 
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt)
+ಅಕ್ಷರ *av_small_strptime(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *fmt, ರಚನೆ tm *dt)
 {
-    int c, val;
+    ಪೂರ್ಣಾಂಕ c, val;
 
-    while((c = *fmt++)) {
-        if (c != '%') {
-            if (av_isspace(c))
-                for (; *p && av_isspace(*p); p++);
-            else if (*p != c)
-                return NULL;
-            else p++;
-            continue;
+    ಆಗ((c = *fmt++)) {
+        ಆದರೆ (c != '%') {
+            ಆದರೆ (av_isspace(c))
+                ಗಾಗಿ (; *p && av_isspace(*p); p++);
+            ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (*p != c)
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+            ಇಲ್ಲದಿದ್ದರೆ p++;
+            ಮುಂದುವರಿ;
         }
 
         c = *fmt++;
-        switch(c) {
-        case 'H':
-        case 'J':
-            val = date_get_num(&p, 0, c == 'H' ? 23 : INT_MAX, c == 'H' ? 2 : 4);
+        ಆಯ್ಕೆ(c) {
+        ಸ್ಥಿತಿ 'H':
+        ಸ್ಥಿತಿ 'J':
+            val = date_get_ಅಂಕೆ(&p, 0, c == 'H' ? 23 : ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ, c == 'H' ? 2 : 4);
 
-            if (val == -1)
-                return NULL;
+            ಆದರೆ (val == -1)
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             dt->tm_hour = val;
-            break;
-        case 'M':
-            val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ 'M':
+            val = date_get_ಅಂಕೆ(&p, 0, 59, 2);
+            ಆದರೆ (val == -1)
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             dt->tm_min = val;
-            break;
-        case 'S':
-            val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ 'S':
+            val = date_get_ಅಂಕೆ(&p, 0, 59, 2);
+            ಆದರೆ (val == -1)
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             dt->tm_sec = val;
-            break;
-        case 'Y':
-            val = date_get_num(&p, 0, 9999, 4);
-            if (val == -1)
-                return NULL;
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ 'Y':
+            val = date_get_ಅಂಕೆ(&p, 0, 9999, 4);
+            ಆದರೆ (val == -1)
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             dt->tm_year = val - 1900;
-            break;
-        case 'm':
-            val = date_get_num(&p, 1, 12, 2);
-            if (val == -1)
-                return NULL;
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ 'm':
+            val = date_get_ಅಂಕೆ(&p, 1, 12, 2);
+            ಆದರೆ (val == -1)
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             dt->tm_mon = val - 1;
-            break;
-        case 'd':
-            val = date_get_num(&p, 1, 31, 2);
-            if (val == -1)
-                return NULL;
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ 'd':
+            val = date_get_ಅಂಕೆ(&p, 1, 31, 2);
+            ಆದರೆ (val == -1)
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             dt->tm_mday = val;
-            break;
-        case 'T':
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ 'T':
             p = av_small_strptime(p, "%H:%M:%S", dt);
-            if (!p)
-                return NULL;
-            break;
-        case 'b':
-        case 'B':
-        case 'h':
+            ಆದರೆ (!p)
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ 'b':
+        ಸ್ಥಿತಿ 'B':
+        ಸ್ಥಿತಿ 'h':
             val = date_get_month(&p);
-            if (val == -1)
-                return NULL;
+            ಆದರೆ (val == -1)
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             dt->tm_mon = val;
-            break;
-        case '%':
-            if (*p++ != '%')
-                return NULL;
-            break;
-        default:
-            return NULL;
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ '%':
+            ಆದರೆ (*p++ != '%')
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+            ನಿಲ್ಲಿಸು;
+        ಪೂರ್ವನಿಯೋಜಿತ:
+            ಹಿಂತಿರುಗಿ ಖಾಲಿ;
         }
     }
 
-    return (char*)p;
+    ಹಿಂತಿರುಗಿ (ಅಕ್ಷರ*)p;
 }
 
-time_t av_timegm(struct tm *tm)
+time_t av_timegm(ರಚನೆ tm *tm)
 {
     time_t t;
 
-    int y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
+    ಪೂರ್ಣಾಂಕ y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
 
-    if (m < 3) {
+    ಆದರೆ (m < 3) {
         m += 12;
         y--;
     }
@@ -586,147 +586,147 @@ time_t av_timegm(struct tm *tm)
 
     t += 3600 * tm->tm_hour + 60 * tm->tm_min + tm->tm_sec;
 
-    return t;
+    ಹಿಂತಿರುಗಿ t;
 }
 
-int av_parse_time(int64_t *timeval, const char *timestr, int duration)
+ಪೂರ್ಣಾಂಕ av_parse_ಸಮಯ(int64_t *timeval, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *timestr, ಪೂರ್ಣಾಂಕ duration)
 {
-    const char *p, *q;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p, *q;
     int64_t t, now64;
     time_t now;
-    struct tm dt = { 0 }, tmbuf;
-    int today = 0, negative = 0, microseconds = 0, suffix = 1000000;
-    int i;
-    static const char * const date_fmt[] = {
+    ರಚನೆ tm dt = { 0 }, tmbuf;
+    ಪೂರ್ಣಾಂಕ today = 0, negative = 0, microseconds = 0, suffix = 1000000;
+    ಪೂರ್ಣಾಂಕ i;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ date_fmt[] = {
         "%Y - %m - %d",
         "%Y%m%d",
     };
-    static const char * const time_fmt[] = {
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ ಸಮಯ_fmt[] = {
         "%H:%M:%S",
         "%H%M%S",
     };
-    static const char * const tz_fmt[] = {
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ tz_fmt[] = {
         "%H:%M",
         "%H%M",
         "%H",
     };
 
     p = timestr;
-    q = NULL;
+    q = ಖಾಲಿ;
     *timeval = INT64_MIN;
-    if (!duration) {
+    ಆದರೆ (!duration) {
         now64 = av_gettime();
         now = now64 / 1000000;
 
-        if (!av_strcasecmp(timestr, "now")) {
+        ಆದರೆ (!av_strcasecmp(timestr, "now")) {
             *timeval = now64;
-            return 0;
+            ಹಿಂತಿರುಗಿ 0;
         }
 
         /* parse the year-month-day part */
-        for (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
+        ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
             q = av_small_strptime(p, date_fmt[i], &dt);
-            if (q)
-                break;
+            ಆದರೆ (q)
+                ನಿಲ್ಲಿಸು;
         }
 
         /* if the year-month-day part is missing, then take the
          * current year-month-day time */
-        if (!q) {
+        ಆದರೆ (!q) {
             today = 1;
             q = p;
         }
         p = q;
 
-        if (*p == 'T' || *p == 't')
+        ಆದರೆ (*p == 'T' || *p == 't')
             p++;
-        else
-            while (av_isspace(*p))
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಆಗ (av_isspace(*p))
                 p++;
 
         /* parse the hour-minute-second part */
-        for (i = 0; i < FF_ARRAY_ELEMS(time_fmt); i++) {
-            q = av_small_strptime(p, time_fmt[i], &dt);
-            if (q)
-                break;
+        ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(ಸಮಯ_fmt); i++) {
+            q = av_small_strptime(p, ಸಮಯ_fmt[i], &dt);
+            ಆದರೆ (q)
+                ನಿಲ್ಲಿಸು;
         }
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* parse timestr as a duration */
-        if (p[0] == '-') {
+        ಆದರೆ (p[0] == '-') {
             negative = 1;
             ++p;
         }
         /* parse timestr as HH:MM:SS */
         q = av_small_strptime(p, "%J:%M:%S", &dt);
-        if (!q) {
+        ಆದರೆ (!q) {
             /* parse timestr as MM:SS */
             q = av_small_strptime(p, "%M:%S", &dt);
             dt.tm_hour = 0;
         }
-        if (!q) {
-            char *o;
+        ಆದರೆ (!q) {
+            ಅಕ್ಷರ *o;
             /* parse timestr as S+ */
             errno = 0;
             t = strtoll(p, &o, 10);
-            if (o == p) /* the parsing didn't succeed */
-                return AVERROR(EINVAL);
-            if (errno == ERANGE)
-                return AVERROR(ERANGE);
+            ಆದರೆ (o == p) /* the parsing didn't succeed */
+                ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
+            ಆದರೆ (errno == ERANGE)
+                ಹಿಂತಿರುಗಿ AVERROR(ERANGE);
             q = o;
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             t = dt.tm_hour * 3600 + dt.tm_min * 60 + dt.tm_sec;
         }
     }
 
     /* Now we have all the fields that we can get */
-    if (!q)
-        return AVERROR(EINVAL);
+    ಆದರೆ (!q)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
     /* parse the .m... part */
-    if (*q == '.') {
-        int n;
+    ಆದರೆ (*q == '.') {
+        ಪೂರ್ಣಾಂಕ n;
         q++;
-        for (n = 100000; n >= 1; n /= 10, q++) {
-            if (!av_isdigit(*q))
-                break;
+        ಗಾಗಿ (n = 100000; n >= 1; n /= 10, q++) {
+            ಆದರೆ (!av_isdigit(*q))
+                ನಿಲ್ಲಿಸು;
             microseconds += n * (*q - '0');
         }
-        while (av_isdigit(*q))
+        ಆಗ (av_isdigit(*q))
             q++;
     }
 
-    if (duration) {
-        if (q[0] == 'm' && q[1] == 's') {
+    ಆದರೆ (duration) {
+        ಆದರೆ (q[0] == 'm' && q[1] == 's') {
             suffix = 1000;
             microseconds /= 1000;
             q += 2;
-        } else if (q[0] == 'u' && q[1] == 's') {
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (q[0] == 'u' && q[1] == 's') {
             suffix = 1;
             microseconds = 0;
             q += 2;
-        } else if (*q == 's')
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (*q == 's')
             q++;
-    } else {
-        int is_utc = *q == 'Z' || *q == 'z';
-        int tzoffset = 0;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಪೂರ್ಣಾಂಕ is_utc = *q == 'Z' || *q == 'z';
+        ಪೂರ್ಣಾಂಕ tzoffset = 0;
         q += is_utc;
-        if (!today && !is_utc && (*q == '+' || *q == '-')) {
-            struct tm tz = { 0 };
-            int sign = (*q == '+' ? -1 : 1);
+        ಆದರೆ (!today && !is_utc && (*q == '+' || *q == '-')) {
+            ರಚನೆ tm tz = { 0 };
+            ಪೂರ್ಣಾಂಕ sign = (*q == '+' ? -1 : 1);
             q++;
             p = q;
-            for (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
+            ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
                 q = av_small_strptime(p, tz_fmt[i], &tz);
-                if (q)
-                    break;
+                ಆದರೆ (q)
+                    ನಿಲ್ಲಿಸು;
             }
-            if (!q)
-                return AVERROR(EINVAL);
+            ಆದರೆ (!q)
+                ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
             tzoffset = sign * (tz.tm_hour * 60 + tz.tm_min) * 60;
             is_utc = 1;
         }
-        if (today) { /* fill in today's date */
-            struct tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
+        ಆದರೆ (today) { /* fill in today's date */
+            ರಚನೆ tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
             dt2.tm_hour = dt.tm_hour;
             dt2.tm_min  = dt.tm_min;
             dt2.tm_sec  = dt.tm_sec;
@@ -738,56 +738,56 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration)
     }
 
     /* Check that we are at the end of the string */
-    if (*q)
-        return AVERROR(EINVAL);
+    ಆದರೆ (*q)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    if (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
-        return AVERROR(ERANGE);
+    ಆದರೆ (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
+        ಹಿಂತಿರುಗಿ AVERROR(ERANGE);
     t *= suffix;
-    if (INT64_MAX - microseconds < t)
-        return AVERROR(ERANGE);
+    ಆದರೆ (INT64_MAX - microseconds < t)
+        ಹಿಂತಿರುಗಿ AVERROR(ERANGE);
     t += microseconds;
-    if (t == INT64_MIN && negative)
-        return AVERROR(ERANGE);
+    ಆದರೆ (t == INT64_MIN && negative)
+        ಹಿಂತಿರುಗಿ AVERROR(ERANGE);
     *timeval = negative ? -t : t;
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info)
+ಪೂರ್ಣಾಂಕ av_ಕಂಡುಹಿಡಿ_info_ಟ್ಯಾಗ್(ಅಕ್ಷರ *arg, ಪೂರ್ಣಾಂಕ arg_ಗಾತ್ರ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *tag1, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *info)
 {
-    const char *p;
-    char tag[128], *q;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p;
+    ಅಕ್ಷರ ಟ್ಯಾಗ್[128], *q;
 
     p = info;
-    if (*p == '?')
+    ಆದರೆ (*p == '?')
         p++;
-    for(;;) {
-        q = tag;
-        while (*p != '\0' && *p != '=' && *p != '&') {
-            if ((q - tag) < sizeof(tag) - 1)
+    ಗಾಗಿ(;;) {
+        q = ಟ್ಯಾಗ್;
+        ಆಗ (*p != '\0' && *p != '=' && *p != '&') {
+            ಆದರೆ ((q - ಟ್ಯಾಗ್) < ಗಾತ್ರ(ಟ್ಯಾಗ್) - 1)
                 *q++ = *p;
             p++;
         }
         *q = '\0';
         q = arg;
-        if (*p == '=') {
+        ಆದರೆ (*p == '=') {
             p++;
-            while (*p != '&' && *p != '\0') {
-                if ((q - arg) < arg_size - 1) {
-                    if (*p == '+')
+            ಆಗ (*p != '&' && *p != '\0') {
+                ಆದರೆ ((q - arg) < arg_ಗಾತ್ರ - 1) {
+                    ಆದರೆ (*p == '+')
                         *q++ = ' ';
-                    else
+                    ಇಲ್ಲದಿದ್ದರೆ
                         *q++ = *p;
                 }
                 p++;
             }
         }
         *q = '\0';
-        if (!strcmp(tag, tag1))
-            return 1;
-        if (*p != '&')
-            break;
+        ಆದರೆ (!strcmp(ಟ್ಯಾಗ್, tag1))
+            ಹಿಂತಿರುಗಿ 1;
+        ಆದರೆ (*p != '&')
+            ನಿಲ್ಲಿಸು;
         p++;
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

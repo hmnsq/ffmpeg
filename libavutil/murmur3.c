@@ -18,91 +18,91 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
-#include "mem.h"
-#include "intreadwrite.h"
-#include "murmur3.h"
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "intreadwrite.h"
+#ಅನ್ತರ್ಭಾವ "murmur3.h"
 
-typedef struct AVMurMur3 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVMurMur3 {
     uint64_t h1, h2;
     uint8_t state[16];
-    int state_pos;
+    ಪೂರ್ಣಾಂಕ state_pos;
     uint64_t len;
 } AVMurMur3;
 
-AVMurMur3 *av_murmur3_alloc(void)
+AVMurMur3 *av_murmur3_alloc(ಶೂನ್ಯ)
 {
-    return av_mallocz(sizeof(AVMurMur3));
+    ಹಿಂತಿರುಗಿ av_mallocz(ಗಾತ್ರ(AVMurMur3));
 }
 
-void av_murmur3_init_seeded(AVMurMur3 *c, uint64_t seed)
+ಶೂನ್ಯ av_murmur3_init_seeded(AVMurMur3 *c, uint64_t ಬೀಜ)
 {
-    memset(c, 0, sizeof(*c));
-    c->h1 = c->h2 = seed;
+    memset(c, 0, ಗಾತ್ರ(*c));
+    c->h1 = c->h2 = ಬೀಜ;
 }
 
-void av_murmur3_init(AVMurMur3 *c)
+ಶೂನ್ಯ av_murmur3_init(AVMurMur3 *c)
 {
     // arbitrary random number as seed
     av_murmur3_init_seeded(c, 0x725acc55daddca55);
 }
 
-static const uint64_t c1 = UINT64_C(0x87c37b91114253d5);
-static const uint64_t c2 = UINT64_C(0x4cf5ad432745937f);
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint64_t c1 = UINT64_C(0x87c37b91114253d5);
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint64_t c2 = UINT64_C(0x4cf5ad432745937f);
 
-#define ROT(a, b) (((a) << (b)) | ((a) >> (64 - (b))))
+#ವ್ಯಾಖ್ಯಾನಿಸು ROT(a, b) (((a) << (b)) | ((a) >> (64 - (b))))
 
-static uint64_t inline get_k1(const uint8_t *src)
+ಸ್ಥಿರ uint64_t ಸಾಲೊಳಗೆ get_k1(ಸ್ಥಿರಾಂಕ uint8_t *src)
 {
     uint64_t k = AV_RL64(src);
     k *= c1;
     k = ROT(k, 31);
     k *= c2;
-    return k;
+    ಹಿಂತಿರುಗಿ k;
 }
 
-static inline uint64_t get_k2(const uint8_t *src)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ uint64_t get_k2(ಸ್ಥಿರಾಂಕ uint8_t *src)
 {
     uint64_t k = AV_RL64(src + 8);
     k *= c2;
     k = ROT(k, 33);
     k *= c1;
-    return k;
+    ಹಿಂತಿರುಗಿ k;
 }
 
-static inline uint64_t update_h1(uint64_t k, uint64_t h1, uint64_t h2)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ uint64_t update_h1(uint64_t k, uint64_t h1, uint64_t h2)
 {
     k ^= h1;
     k = ROT(k, 27);
     k += h2;
     k *= 5;
     k += 0x52dce729;
-    return k;
+    ಹಿಂತಿರುಗಿ k;
 }
 
-static inline uint64_t update_h2(uint64_t k, uint64_t h1, uint64_t h2)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ uint64_t update_h2(uint64_t k, uint64_t h1, uint64_t h2)
 {
     k ^= h2;
     k = ROT(k, 31);
     k += h1;
     k *= 5;
     k += 0x38495ab5;
-    return k;
+    ಹಿಂತಿರುಗಿ k;
 }
 
-void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
+ಶೂನ್ಯ av_murmur3_update(AVMurMur3 *c, ಸ್ಥಿರಾಂಕ uint8_t *src, size_t len)
 {
-    const uint8_t *end;
+    ಸ್ಥಿರಾಂಕ uint8_t *ಕೊನೆ;
     uint64_t h1 = c->h1, h2 = c->h2;
     uint64_t k1, k2;
-    if (len <= 0) return;
+    ಆದರೆ (len <= 0) ಹಿಂತಿರುಗಿ;
     c->len += len;
-    if (c->state_pos > 0) {
-        while (c->state_pos < 16) {
+    ಆದರೆ (c->state_pos > 0) {
+        ಆಗ (c->state_pos < 16) {
             c->state[c->state_pos++] = *src++;
-            if (--len <= 0) return;
+            ಆದರೆ (--len <= 0) ಹಿಂತಿರುಗಿ;
         }
         c->state_pos = 0;
         k1 = get_k1(c->state);
@@ -111,8 +111,8 @@ void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
         h2 = update_h2(k2, h1, h2);
     }
 
-    end = src + (len & ~15);
-    while (src < end) {
+    ಕೊನೆ = src + (len & ~15);
+    ಆಗ (src < ಕೊನೆ) {
         // These could be done sequentially instead
         // of interleaved, but like this is over 10% faster
         k1 = get_k1(src);
@@ -125,26 +125,26 @@ void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
     c->h2 = h2;
 
     len &= 15;
-    if (len > 0) {
-        memcpy(c->state, src, len);
+    ಆದರೆ (len > 0) {
+        ಸ್ಮರಣೆ_ನಕಲು(c->state, src, len);
         c->state_pos = len;
     }
 }
 
-static inline uint64_t fmix(uint64_t k)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ uint64_t fmix(uint64_t k)
 {
     k ^= k >> 33;
     k *= UINT64_C(0xff51afd7ed558ccd);
     k ^= k >> 33;
     k *= UINT64_C(0xc4ceb9fe1a85ec53);
     k ^= k >> 33;
-    return k;
+    ಹಿಂತಿರುಗಿ k;
 }
 
-void av_murmur3_final(AVMurMur3 *c, uint8_t dst[16])
+ಶೂನ್ಯ av_murmur3_final(AVMurMur3 *c, uint8_t dst[16])
 {
     uint64_t h1 = c->h1, h2 = c->h2;
-    memset(c->state + c->state_pos, 0, sizeof(c->state) - c->state_pos);
+    memset(c->state + c->state_pos, 0, ಗಾತ್ರ(c->state) - c->state_pos);
     h1 ^= get_k1(c->state) ^ c->len;
     h2 ^= get_k2(c->state) ^ c->len;
     h1 += h2;

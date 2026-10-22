@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_D3D12VA_H
-#define AVUTIL_HWCONTEXT_D3D12VA_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_HWCONTEXT_D3D12VA_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_HWCONTEXT_D3D12VA_H
 
 /**
  * @file
@@ -30,17 +30,17 @@
  * AVHWFramesContext.pool must contain AVBufferRefs whose
  * data pointer points to an AVD3D12VAFrame struct.
  */
-#include <stdint.h>
-#include <initguid.h>
-#include <d3d12.h>
-#include <d3d12sdklayers.h>
-#include <d3d12video.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <initguid.h>
+#ಅನ್ತರ್ಭಾವ <d3d12.h>
+#ಅನ್ತರ್ಭಾವ <d3d12sdklayers.h>
+#ಅನ್ತರ್ಭಾವ <d3d12video.h>
 
 /**
  * @brief This struct is allocated as AVHWDeviceContext.hwctx
  *
  */
-typedef struct AVD3D12VADeviceContext {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVD3D12VADeviceContext {
     /**
      * Device used for objects creation and access. This can also be
      * used to set the libavcodec decoding device.
@@ -72,9 +72,9 @@ typedef struct AVD3D12VADeviceContext {
      * The underlying lock must be recursive. lock_ctx is for free use by the
      * locking implementation.
      */
-    void (*lock)(void *lock_ctx);
-    void (*unlock)(void *lock_ctx);
-    void *lock_ctx;
+    ಶೂನ್ಯ (*ಬೀಗ_2)(ಶೂನ್ಯ *ಬೀಗ_ctx);
+    ಶೂನ್ಯ (*unlock)(ಶೂನ್ಯ *ಬೀಗ_ctx);
+    ಶೂನ್ಯ *ಬೀಗ_ctx;
 
     /**
      * Resource flags to be applied to D3D12 resources allocated
@@ -94,14 +94,14 @@ typedef struct AVD3D12VADeviceContext {
      *
      * It applies globally to all AVD3D12VAFramesContext allocated from this device context.
      */
-    D3D12_HEAP_FLAGS heap_flags;
+    D3_D12_ರಾಶಿ_FLAGS ರಾಶಿ_flags;
 } AVD3D12VADeviceContext;
 
 /**
  * @brief This struct is used to sync d3d12 execution
  *
  */
-typedef struct AVD3D12VASyncContext {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVD3D12VASyncContext {
     /**
      * D3D12 fence object
      */
@@ -116,26 +116,26 @@ typedef struct AVD3D12VASyncContext {
     /**
      * The fence value used for sync
      */
-    uint64_t fence_value;
+    uint64_t fence_ಮೌಲ್ಯ;
 } AVD3D12VASyncContext;
 
 /**
  * Define the behaviours of frame allocation.
  */
-typedef enum AVD3D12VAFrameFlags {
-    AV_D3D12VA_FRAME_FLAG_NONE = 0,
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ AVD3D12VAFrameFlags {
+    AV_D3_D12_VA_ಚೌಕಟ್ಟು_FLAG_NONE = 0,
 
     /**
      * Indicates that frame data should be allocated using a texture array resource.
      */
-    AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY = (1 << 1),
+    AV_D3_D12_VA_ಚೌಕಟ್ಟು_FLAG_TEXTURE_ARRAY = (1 << 1),
 } AVD3D12VAFrameFlags;
 
 /**
  * @brief D3D12VA frame descriptor for pool allocation.
  *
  */
-typedef struct AVD3D12VAFrame {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVD3D12VAFrame {
     /**
      * The texture in which the frame is located. The reference count is
      * managed by the AVBufferRef, and destroying the reference will release
@@ -149,7 +149,7 @@ typedef struct AVD3D12VAFrame {
      * In texture array mode, this specifies the array slice index.
      * When texture array mode is not used, this value is always 0.
      */
-    int subresource_index;
+    ಪೂರ್ಣಾಂಕ subresource_ಸೂಚ್ಯಂಕ;
 
     /**
      * The sync context for the texture
@@ -169,7 +169,7 @@ typedef struct AVD3D12VAFrame {
  * @brief This struct is allocated as AVHWFramesContext.hwctx
  *
  */
-typedef struct AVD3D12VAFramesContext {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVD3D12VAFramesContext {
     /**
      * DXGI_FORMAT format. MUST be compatible with the pixel format.
      * If unset, will be automatically set.
@@ -190,7 +190,7 @@ typedef struct AVD3D12VAFramesContext {
      *
      * @see https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
      */
-    D3D12_HEAP_FLAGS heap_flags;
+    D3_D12_ರಾಶಿ_FLAGS ರಾಶಿ_flags;
 
     /**
      * In texture array mode, the D3D12 uses the same texture array (resource)for all
@@ -206,4 +206,4 @@ typedef struct AVD3D12VAFramesContext {
     AVD3D12VAFrameFlags flags;
 } AVD3D12VAFramesContext;
 
-#endif /* AVUTIL_HWCONTEXT_D3D12VA_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_HWCONTEXT_D3D12VA_H */

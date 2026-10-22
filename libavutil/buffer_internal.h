@@ -16,28 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BUFFER_INTERNAL_H
-#define AVUTIL_BUFFER_INTERNAL_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_ಬಫರ್_ಆಂತರಿಕ_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_ಬಫರ್_ಆಂತರಿಕ_H
 
-#include <stdatomic.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdatomic.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "buffer.h"
-#include "thread.h"
+#ಅನ್ತರ್ಭಾವ "buffer.h"
+#ಅನ್ತರ್ಭಾವ "thread.h"
 
 /**
  * The buffer was av_realloc()ed, so it is reallocatable.
  */
-#define BUFFER_FLAG_REALLOCATABLE (1 << 0)
+#ವ್ಯಾಖ್ಯಾನಿಸು ಬಫರ್_FLAG_REALLOCATABLE (1 << 0)
 /**
  * The AVBuffer structure is part of a larger structure
  * and should not be freed.
  */
-#define BUFFER_FLAG_NO_FREE       (1 << 1)
+#ವ್ಯಾಖ್ಯಾನಿಸು ಬಫರ್_FLAG_NO_FREE       (1 << 1)
 
-struct AVBuffer {
-    uint8_t *data; /**< data described by this buffer */
-    size_t size; /**< size of data in bytes */
+ರಚನೆ AVBuffer {
+    uint8_t *ದತ್ತಾಂಶ; /**< data described by this buffer */
+    size_t ಗಾತ್ರ_2; /**< size of data in bytes */
 
     /**
      *  number of existing AVBufferRef instances referring to this buffer
@@ -47,47 +47,47 @@ struct AVBuffer {
     /**
      * a callback for freeing the data
      */
-    void (*free)(void *opaque, uint8_t *data);
+    ಶೂನ್ಯ (*ಬಿಡುಗಡೆ)(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ);
 
     /**
      * an opaque pointer, to be used by the freeing callback
      */
-    void *opaque;
+    ಶೂನ್ಯ *opaque;
 
     /**
      * A combination of AV_BUFFER_FLAG_*
      */
-    int flags;
+    ಪೂರ್ಣಾಂಕ flags;
 
     /**
      * A combination of BUFFER_FLAG_*
      */
-    int flags_internal;
+    ಪೂರ್ಣಾಂಕ flags_ಆಂತರಿಕ;
 };
 
-typedef struct BufferPoolEntry {
-    uint8_t *data;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ ಬಫರ್_Pool_ನಮೂದು {
+    uint8_t *ದತ್ತಾಂಶ;
 
     /*
      * Backups of the original opaque/free of the AVBuffer corresponding to
      * data. They will be used to free the buffer when the pool is freed.
      */
-    void *opaque;
-    void (*free)(void *opaque, uint8_t *data);
+    ಶೂನ್ಯ *opaque;
+    ಶೂನ್ಯ (*ಬಿಡುಗಡೆ)(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ);
 
     AVBufferPool *pool;
-    struct BufferPoolEntry *next;
+    ರಚನೆ ಬಫರ್_Pool_ನಮೂದು *ಮುಂದಿನ;
 
     /*
      * An AVBuffer structure to (re)use as AVBuffer for subsequent uses
      * of this BufferPoolEntry.
      */
-    AVBuffer buffer;
-} BufferPoolEntry;
+    AVBuffer ಬಫರ್;
+} ಬಫರ್_Pool_ನಮೂದು;
 
-struct AVBufferPool {
+ರಚನೆ AVBufferPool {
     AVMutex mutex;
-    BufferPoolEntry *pool;
+    ಬಫರ್_Pool_ನಮೂದು *pool;
 
     /*
      * This is used to track when the pool is to be freed.
@@ -100,11 +100,11 @@ struct AVBufferPool {
      */
     atomic_uint refcount;
 
-    size_t size;
-    void *opaque;
-    AVBufferRef* (*alloc)(size_t size);
-    AVBufferRef* (*alloc2)(void *opaque, size_t size);
-    void         (*pool_free)(void *opaque);
+    size_t ಗಾತ್ರ_2;
+    ಶೂನ್ಯ *opaque;
+    AVBufferRef* (*alloc)(size_t ಗಾತ್ರ_2);
+    AVBufferRef* (*alloc2)(ಶೂನ್ಯ *opaque, size_t ಗಾತ್ರ_2);
+    ಶೂನ್ಯ         (*pool_free)(ಶೂನ್ಯ *opaque);
 };
 
-#endif /* AVUTIL_BUFFER_INTERNAL_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_BUFFER_INTERNAL_H */

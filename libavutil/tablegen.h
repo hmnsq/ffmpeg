@@ -21,35 +21,35 @@
  * Compatibility libm for table generation files
  */
 
-#ifndef AVUTIL_TABLEGEN_H
-#define AVUTIL_TABLEGEN_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_TABLEGEN_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_TABLEGEN_H
 
-#include <math.h>
+#ಅನ್ತರ್ಭಾವ <math.h>
 
 // we lack some functions on all host platforms, and we don't care about
 // performance and/or strict ISO C semantics as it's performed at build time
-static inline double ff_cbrt(double x)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ದ್ವಿಗುಣ ff_cbrt(ದ್ವಿಗುಣ x)
 {
-    return x < 0 ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
+    ಹಿಂತಿರುಗಿ x < 0 ? -ಘಾತ(-x, 1.0 / 3.0) : ಘಾತ(x, 1.0 / 3.0);
 }
-#define cbrt ff_cbrt
+#ವ್ಯಾಖ್ಯಾನಿಸು cbrt ff_cbrt
 
-static inline double ff_rint(double x)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ದ್ವಿಗುಣ ff_rint(ದ್ವಿಗುಣ x)
 {
-    return x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
+    ಹಿಂತಿರುಗಿ x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
 }
-#define rint ff_rint
+#ವ್ಯಾಖ್ಯಾನಿಸು rint ff_rint
 
-static inline long long ff_llrint(double x)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ದೀರ್ಘ ದೀರ್ಘ ff_llrint(ದ್ವಿಗುಣ x)
 {
-    return rint(x);
+    ಹಿಂತಿರುಗಿ rint(x);
 }
-#define llrint ff_llrint
+#ವ್ಯಾಖ್ಯಾನಿಸು llrint ff_llrint
 
-static inline long ff_lrint(double x)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ದೀರ್ಘ ff_lrint(ದ್ವಿಗುಣ x)
 {
-    return rint(x);
+    ಹಿಂತಿರುಗಿ rint(x);
 }
-#define lrint ff_lrint
+#ವ್ಯಾಖ್ಯಾನಿಸು lrint ff_lrint
 
-#endif /* AVUTIL_TABLEGEN_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_TABLEGEN_H */

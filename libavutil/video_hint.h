@@ -18,28 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_VIDEO_HINT_H
-#define AVUTIL_VIDEO_HINT_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_VIDEO_HINT_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_VIDEO_HINT_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "libavutil/avassert.h"
-#include "libavutil/frame.h"
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ "libavutil/avassert.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/frame.h"
 
-typedef struct AVVideoRect {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVVideoRect {
     uint32_t x, y;
-    uint32_t width, height;
+    uint32_t ಅಗಲ, ಎತ್ತರ;
 } AVVideoRect;
 
-typedef enum AVVideoHintType {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ AVVideoHintType {
     /* rectangled delimit the constant areas (unchanged), default is changed */
     AV_VIDEO_HINT_TYPE_CONSTANT,
 
     /* rectangled delimit the constant areas (changed), default is not changed */
-    AV_VIDEO_HINT_TYPE_CHANGED,
+    AV_VIDEO_HINT_TYPE_ಬದಲಾಯಿತು,
 } AVVideoHintType;
 
-typedef struct AVVideoHint {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVVideoHint {
     /**
      * Number of AVVideoRect present.
      *
@@ -53,24 +53,24 @@ typedef struct AVVideoHint {
      * Offset in bytes from the beginning of this structure at which the array
      * of AVVideoRect starts.
      */
-    size_t rect_offset;
+    size_t rect_ಸ್ಥಾನಾಂತರ;
 
     /**
      * Size in bytes of AVVideoRect.
      */
-    size_t rect_size;
+    size_t rect_ಗಾತ್ರ;
 
     AVVideoHintType type;
 } AVVideoHint;
 
-static av_always_inline AVVideoRect *
-av_video_hint_rects(const AVVideoHint *hints) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
+ಸ್ಥಿರ av_always_inline AVVideoRect *
+av_video_hint_rects(ಸ್ಥಿರಾಂಕ AVVideoHint *hints) {
+    ಹಿಂತಿರುಗಿ (AVVideoRect *)((uint8_t *)hints + hints->rect_ಸ್ಥಾನಾಂತರ);
 }
 
-static av_always_inline AVVideoRect *
-av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
+ಸ್ಥಿರ av_always_inline AVVideoRect *
+av_video_hint_get_rect(ಸ್ಥಿರಾಂಕ AVVideoHint *hints, size_t idx) {
+    ಹಿಂತಿರುಗಿ (AVVideoRect *)((uint8_t *)hints + hints->rect_ಸ್ಥಾನಾಂತರ + idx * hints->rect_ಗಾತ್ರ);
 }
 
 /**
@@ -94,14 +94,14 @@ av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
  *         av_free()) on success, NULL on memory allocation failure
  */
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
-                                 size_t *out_size);
+                                 size_t *ಹೊರಹೋಗು_ಗಾತ್ರ);
 
 /**
  * Same as av_video_hint_alloc(), except newly-allocated AVVideoHint is attached
  * as side data of type AV_FRAME_DATA_VIDEO_HINT_INFO to frame.
  */
-AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
+AVVideoHint *av_video_hint_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು,
                                             size_t nb_rects);
 
 
-#endif /* AVUTIL_VIDEO_HINT_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_VIDEO_HINT_H */

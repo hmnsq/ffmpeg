@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <math.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/mathematics.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/eval.h"
 
-static const double const_values[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ದ್ವಿಗುಣ const_ಮೌಲ್ಯಗಳು[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ const_ಹೆಸರುಗಳು[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಪೂರ್ಣಾಂಕ argc, ಅಕ್ಷರ **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    ಪೂರ್ಣಾಂಕ i;
+    ದ್ವಿಗುಣ d;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ *ಅಭಿವ್ಯಕ್ತಿ;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        ಖಾಲಿ
     };
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
-            printf("av_expr_parse_and_eval failed\n");
+    ಗಾಗಿ (ಅಭಿವ್ಯಕ್ತಿ = exprs; *ಅಭಿವ್ಯಕ್ತಿ; ಅಭಿವ್ಯಕ್ತಿ++) {
+        ಬರೆ("Evaluating '%s'\n", *ಅಭಿವ್ಯಕ್ತಿ);
+        ret = av_ಅಭಿವ್ಯಕ್ತಿ_parse_and_eval(&d, *ಅಭಿವ್ಯಕ್ತಿ,
+                               const_ಹೆಸರುಗಳು, const_ಮೌಲ್ಯಗಳು,
+                               ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, 0, ಖಾಲಿ);
+        ಆದರೆ (isnan(d))
+            ಬರೆ("'%s' -> nan\n\n", *ಅಭಿವ್ಯಕ್ತಿ);
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಬರೆ("'%s' -> %f\n\n", *ಅಭಿವ್ಯಕ್ತಿ, d);
+        ಆದರೆ (ret < 0)
+            ಬರೆ("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 12.7\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 0.931322575\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
+    ret = av_ಅಭಿವ್ಯಕ್ತಿ_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_ಹೆಸರುಗಳು, const_ಮೌಲ್ಯಗಳು,
+                           ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, 0, ಖಾಲಿ);
+    ಬರೆ("%f == 12.7\n", d);
+    ಆದರೆ (ret < 0)
+        ಬರೆ("av_expr_parse_and_eval failed\n");
+    ret = av_ಅಭಿವ್ಯಕ್ತಿ_parse_and_eval(&d, "80G/80Gi",
+                           const_ಹೆಸರುಗಳು, const_ಮೌಲ್ಯಗಳು,
+                           ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, 0, ಖಾಲಿ);
+    ಬರೆ("%f == 0.931322575\n", d);
+    ಆದರೆ (ret < 0)
+        ಬರೆ("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
-            START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
-                printf("av_expr_parse_and_eval failed\n");
+    ಆದರೆ (argc > 1 && !strcmp(argv[1], "-t")) {
+        ಗಾಗಿ (i = 0; i < 1050; i++) {
+            ಆರಂಭ_TIMER;
+            ret = av_ಅಭಿವ್ಯಕ್ತಿ_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_ಹೆಸರುಗಳು, const_ಮೌಲ್ಯಗಳು,
+                                   ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, 0, ಖಾಲಿ);
+            ಆದರೆ (ret < 0)
+                ಬರೆ("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

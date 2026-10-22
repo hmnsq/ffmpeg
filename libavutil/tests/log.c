@@ -19,54 +19,54 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/log.c"
+#ಅನ್ತರ್ಭಾವ "libavutil/log.c"
 
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-static int call_log_format_line2(const char *fmt, char *buffer, int buffer_size, ...)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ call_log_format_line2(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *fmt, ಅಕ್ಷರ *ಬಫರ್, ಪೂರ್ಣಾಂಕ ಬಫರ್_ಗಾತ್ರ, ...)
 {
-    va_list args;
-    int ret;
-    int print_prefix=1;
-    va_start(args, buffer_size);
-    ret = av_log_format_line2(NULL, AV_LOG_INFO, fmt, args, buffer, buffer_size, &print_prefix);
-    va_end(args);
-    return ret;
+    va_list ವಾದಗಳು;
+    ಪೂರ್ಣಾಂಕ ret;
+    ಪೂರ್ಣಾಂಕ print_ಪೂರ್ವಪ್ರತ್ಯಯ=1;
+    va_start(ವಾದಗಳು, ಬಫರ್_ಗಾತ್ರ);
+    ret = av_log_format_line2(ಖಾಲಿ, AV_LOG_INFO, fmt, ವಾದಗಳು, ಬಫರ್, ಬಫರ್_ಗಾತ್ರ, &print_ಪೂರ್ವಪ್ರತ್ಯಯ);
+    va_end(ವಾದಗಳು);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int main(int argc, char **argv)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಪೂರ್ಣಾಂಕ argc, ಅಕ್ಷರ **argv)
 {
-    int i;
-    av_log_set_level(AV_LOG_DEBUG);
+    ಪೂರ್ಣಾಂಕ i;
+    av_log_ಗಣ_level(AV_LOG_DEBUG);
     check_color_terminal();
-    for (use_color=0; use_color<=256; use_color = 255*use_color+1) {
-        av_log(NULL, AV_LOG_FATAL, "use_color: %d\n", use_color);
-        for (i = AV_LOG_DEBUG; i>=AV_LOG_QUIET; i-=8) {
-            av_log(NULL, i, " %d", i);
-            av_log(NULL, AV_LOG_INFO, "e ");
-            av_log(NULL, i + 256*123, "C%d", i);
-            av_log(NULL, AV_LOG_INFO, "e");
+    ಗಾಗಿ (use_color=0; use_color<=256; use_color = 255*use_color+1) {
+        av_log(ಖಾಲಿ, AV_LOG_FATAL, "use_color: %d\n", use_color);
+        ಗಾಗಿ (i = AV_LOG_DEBUG; i>=AV_LOG_QUIET; i-=8) {
+            av_log(ಖಾಲಿ, i, " %d", i);
+            av_log(ಖಾಲಿ, AV_LOG_INFO, "e ");
+            av_log(ಖಾಲಿ, i + 256*123, "C%d", i);
+            av_log(ಖಾಲಿ, AV_LOG_INFO, "e");
         }
-        av_log(NULL, AV_LOG_PANIC, "\n");
+        av_log(ಖಾಲಿ, AV_LOG_PANIC, "\n");
     }
     {
-        int result;
-        char buffer[4];
-        result = call_log_format_line2("foo", NULL, 0);
-        if(result != 3) {
-            printf("Test NULL buffer failed.\n");
-            return 1;
+        ಪೂರ್ಣಾಂಕ ಫಲಿತಾಂಶ;
+        ಅಕ್ಷರ ಬಫರ್[4];
+        ಫಲಿತಾಂಶ = call_log_format_line2("foo", ಖಾಲಿ, 0);
+        ಆದರೆ(ಫಲಿತಾಂಶ != 3) {
+            ಬರೆ("Test NULL buffer failed.\n");
+            ಹಿಂತಿರುಗಿ 1;
         }
-        result = call_log_format_line2("foo", buffer, 2);
-        if(result != 3 || strncmp(buffer, "f", 2)) {
-            printf("Test buffer too small failed.\n");
-            return 1;
+        ಫಲಿತಾಂಶ = call_log_format_line2("foo", ಬಫರ್, 2);
+        ಆದರೆ(ಫಲಿತಾಂಶ != 3 || ಅಕ್ಷರಸರಣಿ_ಹೋಲಿಕೆ(ಬಫರ್, "f", 2)) {
+            ಬರೆ("Test buffer too small failed.\n");
+            ಹಿಂತಿರುಗಿ 1;
         }
-        result = call_log_format_line2("foo", buffer, 4);
-        if(result != 3 || strncmp(buffer, "foo", 4)) {
-            printf("Test buffer sufficiently big failed.\n");
-            return 1;
+        ಫಲಿತಾಂಶ = call_log_format_line2("foo", ಬಫರ್, 4);
+        ಆದರೆ(ಫಲಿತಾಂಶ != 3 || ಅಕ್ಷರಸರಣಿ_ಹೋಲಿಕೆ(ಬಫರ್, "foo", 4)) {
+            ಬರೆ("Test buffer sufficiently big failed.\n");
+            ಹಿಂತಿರುಗಿ 1;
         }
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

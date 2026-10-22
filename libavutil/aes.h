@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AES_H
-#define AVUTIL_AES_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_AES_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_AES_H
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "attributes.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
 
 /**
  * @defgroup lavu_aes AES
@@ -31,14 +31,14 @@
  * @{
  */
 
-extern const int av_aes_size;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ av_aes_ಗಾತ್ರ;
 
-struct AVAES;
+ರಚನೆ AVAES;
 
 /**
  * Allocate an AVAES context.
  */
-struct AVAES *av_aes_alloc(void);
+ರಚನೆ AVAES *av_aes_alloc(ಶೂನ್ಯ);
 
 /**
  * Initialize an AVAES context.
@@ -48,7 +48,7 @@ struct AVAES *av_aes_alloc(void);
  * @param key_bits 128, 192 or 256
  * @param decrypt 0 for encryption, 1 for decryption
  */
-int av_aes_init(struct AVAES *a, const uint8_t *key, int key_bits, int decrypt);
+ಪೂರ್ಣಾಂಕ av_aes_init(ರಚನೆ AVAES *a, ಸ್ಥಿರಾಂಕ uint8_t *ಕೀಲಿ, ಪೂರ್ಣಾಂಕ ಕೀಲಿ_ಬಿಟ್ಟುಗಳು, ಪೂರ್ಣಾಂಕ decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -60,10 +60,10 @@ int av_aes_init(struct AVAES *a, const uint8_t *key, int key_bits, int decrypt);
  * @param iv initialization vector for CBC mode, if NULL then ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_aes_crypt(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+ಶೂನ್ಯ av_aes_crypt(ರಚನೆ AVAES *a, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src, ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ decrypt);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_AES_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_AES_H */

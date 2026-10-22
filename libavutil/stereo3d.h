@@ -24,12 +24,12 @@
  * Stereoscopic video
  */
 
-#ifndef AVUTIL_STEREO3D_H
-#define AVUTIL_STEREO3D_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_STEREO3D_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_STEREO3D_H
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "frame.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
 
 /**
  * @defgroup lavu_video_stereo3d Stereo3D types and functions
@@ -45,7 +45,7 @@
 /**
  * List of possible 3D Types
  */
-enum AVStereo3DType {
+ಎಣಿಕೆ AVStereo3DType {
     /**
      * Video is not stereoscopic (and metadata has to be there).
      */
@@ -123,7 +123,7 @@ enum AVStereo3DType {
      *    ...
      * @endcode
      */
-    AV_STEREO3D_LINES,
+    AV_STEREO3_D_ಸಾಲುಗಳು,
 
     /**
      * Views are packed per column.
@@ -146,7 +146,7 @@ enum AVStereo3DType {
 /**
  * List of possible view types.
  */
-enum AVStereo3DView {
+ಎಣಿಕೆ AVStereo3DView {
     /**
      * Frame contains two packed views.
      */
@@ -155,12 +155,12 @@ enum AVStereo3DView {
     /**
      * Frame contains only the left view.
      */
-    AV_STEREO3D_VIEW_LEFT,
+    AV_STEREO3_D_VIEW_ಎಡ,
 
     /**
      * Frame contains only the right view.
      */
-    AV_STEREO3D_VIEW_RIGHT,
+    AV_STEREO3_D_VIEW_ಬಲ,
 
     /**
      * Content is unspecified.
@@ -171,7 +171,7 @@ enum AVStereo3DView {
 /**
  * List of possible primary eyes.
  */
-enum AVStereo3DPrimaryEye {
+ಎಣಿಕೆ AVStereo3DPrimaryEye {
     /**
      * Neither eye.
      */
@@ -180,18 +180,18 @@ enum AVStereo3DPrimaryEye {
     /**
      * Left eye.
      */
-    AV_PRIMARY_EYE_LEFT,
+    AV_PRIMARY_EYE_ಎಡ,
 
     /**
      * Right eye
      */
-    AV_PRIMARY_EYE_RIGHT,
+    AV_PRIMARY_EYE_ಬಲ,
 };
 
 /**
  * Inverted views, Right/Bottom represents the left view.
  */
-#define AV_STEREO3D_FLAG_INVERT     (1 << 0)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_STEREO3D_FLAG_INVERT     (1 << 0)
 
 /**
  * Stereo 3D type: this structure describes how two videos are packed
@@ -200,26 +200,26 @@ enum AVStereo3DPrimaryEye {
  * @note The struct must be allocated with av_stereo3d_alloc() and
  *       its size is not a part of the public ABI.
  */
-typedef struct AVStereo3D {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVStereo3D {
     /**
      * How views are packed within the video.
      */
-    enum AVStereo3DType type;
+    ಎಣಿಕೆ AVStereo3DType type;
 
     /**
      * Additional information about the frame packing.
      */
-    int flags;
+    ಪೂರ್ಣಾಂಕ flags;
 
     /**
      * Determines which views are packed.
      */
-    enum AVStereo3DView view;
+    ಎಣಿಕೆ AVStereo3DView view;
 
     /**
      * Which eye is the primary eye when rendering in 2D.
      */
-    enum AVStereo3DPrimaryEye primary_eye;
+    ಎಣಿಕೆ AVStereo3DPrimaryEye primary_eye;
 
     /**
      * The distance between the centres of the lenses of the camera system,
@@ -236,7 +236,7 @@ typedef struct AVStereo3D {
     /**
      * Horizontal field of view, in degrees. Zero if unset.
      */
-    AVRational horizontal_field_of_view;
+    AVRational horizontal_ಕ್ಷೇತ್ರ_ದ_view;
 } AVStereo3D;
 
 /**
@@ -245,7 +245,7 @@ typedef struct AVStereo3D {
  *
  * @return An AVStereo3D filled with default values or NULL on failure.
  */
-AVStereo3D *av_stereo3d_alloc(void);
+AVStereo3D *av_stereo3d_alloc(ಶೂನ್ಯ);
 
 /**
  * Allocate an AVStereo3D structure and set its fields to default values.
@@ -253,7 +253,7 @@ AVStereo3D *av_stereo3d_alloc(void);
  *
  * @return An AVStereo3D filled with default values or NULL on failure.
  */
-AVStereo3D *av_stereo3d_alloc_size(size_t *size);
+AVStereo3D *av_stereo3d_alloc_ಗಾತ್ರ(size_t *ಗಾತ್ರ_2);
 
 /**
  * Allocate a complete AVFrameSideData and add it to the frame.
@@ -262,7 +262,7 @@ AVStereo3D *av_stereo3d_alloc_size(size_t *size);
  *
  * @return The AVStereo3D structure to be filled by caller.
  */
-AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame);
+AVStereo3D *av_stereo3d_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು);
 
 /**
  * Provide a human-readable name of a given stereo3d type.
@@ -271,7 +271,7 @@ AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame);
  *
  * @return The name of the stereo3d value, or "unknown".
  */
-const char *av_stereo3d_type_name(unsigned int type);
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_stereo3d_type_name(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ type);
 
 /**
  * Get the AVStereo3DType form a human-readable name.
@@ -280,7 +280,7 @@ const char *av_stereo3d_type_name(unsigned int type);
  *
  * @return The AVStereo3DType value, or -1 if not found.
  */
-int av_stereo3d_from_name(const char *name);
+ಪೂರ್ಣಾಂಕ av_stereo3d_from_name(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name);
 
 /**
  * Provide a human-readable name of a given stereo3d view.
@@ -289,7 +289,7 @@ int av_stereo3d_from_name(const char *name);
  *
  * @return The name of the stereo3d view value, or "unknown".
  */
-const char *av_stereo3d_view_name(unsigned int view);
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_stereo3d_view_name(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ view);
 
 /**
  * Get the AVStereo3DView form a human-readable name.
@@ -298,7 +298,7 @@ const char *av_stereo3d_view_name(unsigned int view);
  *
  * @return The AVStereo3DView value, or -1 if not found.
  */
-int av_stereo3d_view_from_name(const char *name);
+ಪೂರ್ಣಾಂಕ av_stereo3d_view_from_name(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name);
 
 /**
  * Provide a human-readable name of a given stereo3d primary eye.
@@ -307,7 +307,7 @@ int av_stereo3d_view_from_name(const char *name);
  *
  * @return The name of the stereo3d primary eye value, or "unknown".
  */
-const char *av_stereo3d_primary_eye_name(unsigned int eye);
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_stereo3d_primary_eye_name(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ eye);
 
 /**
  * Get the AVStereo3DPrimaryEye form a human-readable name.
@@ -316,10 +316,10 @@ const char *av_stereo3d_primary_eye_name(unsigned int eye);
  *
  * @return The AVStereo3DPrimaryEye value, or -1 if not found.
  */
-int av_stereo3d_primary_eye_from_name(const char *name);
+ಪೂರ್ಣಾಂಕ av_stereo3d_primary_eye_from_name(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_STEREO3D_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_STEREO3D_H */

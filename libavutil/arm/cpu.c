@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu_internal.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#define CORE_FLAG(f) \
+#ವ್ಯಾಖ್ಯಾನಿಸು CORE_FLAG(f) \
     (AV_CPU_FLAG_ ## f * (HAVE_ ## f ## _EXTERNAL || HAVE_ ## f ## _INLINE))
 
-#define CORE_CPU_FLAGS                          \
+#ವ್ಯಾಖ್ಯಾನಿಸು CORE_CPU_FLAGS                          \
     (CORE_FLAG(ARMV5TE) |                       \
      CORE_FLAG(ARMV6)   |                       \
      CORE_FLAG(ARMV6T2) |                       \
@@ -31,125 +31,125 @@
      CORE_FLAG(VFPV3)   |                       \
      CORE_FLAG(NEON))
 
-#if defined __linux__ || defined __ANDROID__ || HAVE_ELF_AUX_INFO
+#ಆದರೆ defined __linux__ || defined __ANDROID__ || HAVE_ELF_AUX_INFO
 
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include "libavutil/avstring.h"
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಅನ್ತರ್ಭಾವ "libavutil/avstring.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-#include <sys/auxv.h>
-#endif
+#ಆದರೆ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#ಅನ್ತರ್ಭಾವ <sys/auxv.h>
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifndef AT_HWCAP
-#define AT_HWCAP        16
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AT_HWCAP
+#ವ್ಯಾಖ್ಯಾನಿಸು AT_HWCAP        16
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* Relevant HWCAP values from <sys/auxv.h> that includes <bits/hwcap.h> */
-#ifndef HWCAP_ARM_VFP
-#define HWCAP_ARM_VFP     (1 << 6)
-#endif
-#ifndef HWCAP_ARM_EDSP
-#define HWCAP_ARM_EDSP    (1 << 7)
-#endif
-#ifndef HWCAP_ARM_THUMBEE
-#define HWCAP_ARM_THUMBEE (1 << 11)
-#endif
-#ifndef HWCAP_ARM_NEON
-#define HWCAP_ARM_NEON    (1 << 12)
-#endif
-#ifndef HWCAP_ARM_VFPv3
-#define HWCAP_ARM_VFPv3   (1 << 13)
-#endif
-#ifndef HWCAP_ARM_TLS
-#define HWCAP_ARM_TLS     (1 << 15)
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ HWCAP_ARM_VFP
+#ವ್ಯಾಖ್ಯಾನಿಸು HWCAP_ARM_VFP     (1 << 6)
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ HWCAP_ARM_EDSP
+#ವ್ಯಾಖ್ಯಾನಿಸು HWCAP_ARM_EDSP    (1 << 7)
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ HWCAP_ARM_THUMBEE
+#ವ್ಯಾಖ್ಯಾನಿಸು HWCAP_ARM_THUMBEE (1 << 11)
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ HWCAP_ARM_NEON
+#ವ್ಯಾಖ್ಯಾನಿಸು HWCAP_ARM_NEON    (1 << 12)
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ HWCAP_ARM_VFPv3
+#ವ್ಯಾಖ್ಯಾನಿಸು HWCAP_ARM_VFPv3   (1 << 13)
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ HWCAP_ARM_TLS
+#ವ್ಯಾಖ್ಯಾನಿಸು HWCAP_ARM_TLS     (1 << 15)
+#ಆದರೆ_ಅಂತ್ಯ
 
-static int get_auxval(uint32_t *hwcap)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ get_auxval(uint32_t *hwcap)
 {
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-    unsigned long ret = ff_getauxval(AT_HWCAP);
-    if (ret == 0)
-        return -1;
+#ಆದರೆ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+    ಚಿಹ್ನೆರಹಿತ ದೀರ್ಘ ret = ff_getauxval(AT_HWCAP);
+    ಆದರೆ (ret == 0)
+        ಹಿಂತಿರುಗಿ -1;
     *hwcap = ret;
-    return 0;
-#else
-    return -1;
-#endif
+    ಹಿಂತಿರುಗಿ 0;
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಹಿಂತಿರುಗಿ -1;
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
-#if defined __linux__ || defined __ANDROID__
-static int get_hwcap(uint32_t *hwcap)
+#ಆದರೆ defined __linux__ || defined __ANDROID__
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ get_hwcap(uint32_t *hwcap)
 {
-    struct { uint32_t a_type; uint32_t a_val; } auxv;
+    ರಚನೆ { uint32_t a_type; uint32_t a_val; } auxv;
     FILE *f = fopen("/proc/self/auxv", "r");
-    int err = -1;
+    ಪೂರ್ಣಾಂಕ err = -1;
 
-    if (!f)
-        return -1;
+    ಆದರೆ (!f)
+        ಹಿಂತಿರುಗಿ -1;
 
-    while (fread(&auxv, sizeof(auxv), 1, f) > 0) {
-        if (auxv.a_type == AT_HWCAP) {
+    ಆಗ (fread(&auxv, ಗಾತ್ರ(auxv), 1, f) > 0) {
+        ಆದರೆ (auxv.a_type == AT_HWCAP) {
             *hwcap = auxv.a_val;
             err = 0;
-            break;
+            ನಿಲ್ಲಿಸು;
         }
     }
 
     fclose(f);
-    return err;
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static int get_cpuinfo(uint32_t *hwcap)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ get_cpuinfo(uint32_t *hwcap)
 {
     FILE *f = fopen("/proc/cpuinfo", "r");
-    char buf[200];
+    ಅಕ್ಷರ buf[200];
 
-    if (!f)
-        return -1;
+    ಆದರೆ (!f)
+        ಹಿಂತಿರುಗಿ -1;
 
     *hwcap = 0;
-    while (fgets(buf, sizeof(buf), f)) {
-        if (av_strstart(buf, "Features", NULL)) {
-            if (strstr(buf, " edsp "))
+    ಆಗ (fgets(buf, ಗಾತ್ರ(buf), f)) {
+        ಆದರೆ (av_strstart(buf, "Features", ಖಾಲಿ)) {
+            ಆದರೆ (ಅಕ್ಷರಸರಣಿ_ಹುಡುಕು(buf, " edsp "))
                 *hwcap |= HWCAP_ARM_EDSP;
-            if (strstr(buf, " tls "))
+            ಆದರೆ (ಅಕ್ಷರಸರಣಿ_ಹುಡುಕು(buf, " tls "))
                 *hwcap |= HWCAP_ARM_TLS;
-            if (strstr(buf, " thumbee "))
+            ಆದರೆ (ಅಕ್ಷರಸರಣಿ_ಹುಡುಕು(buf, " thumbee "))
                 *hwcap |= HWCAP_ARM_THUMBEE;
-            if (strstr(buf, " vfp "))
+            ಆದರೆ (ಅಕ್ಷರಸರಣಿ_ಹುಡುಕು(buf, " vfp "))
                 *hwcap |= HWCAP_ARM_VFP;
-            if (strstr(buf, " vfpv3 "))
+            ಆದರೆ (ಅಕ್ಷರಸರಣಿ_ಹುಡುಕು(buf, " vfpv3 "))
                 *hwcap |= HWCAP_ARM_VFPv3;
-            if (strstr(buf, " neon ") || strstr(buf, " asimd "))
+            ಆದರೆ (ಅಕ್ಷರಸರಣಿ_ಹುಡುಕು(buf, " neon ") || ಅಕ್ಷರಸರಣಿ_ಹುಡುಕು(buf, " asimd "))
                 *hwcap |= HWCAP_ARM_NEON;
-            if (strstr(buf, " fp ")) // Listed on 64 bit ARMv8 kernels
+            ಆದರೆ (ಅಕ್ಷರಸರಣಿ_ಹುಡುಕು(buf, " fp ")) // Listed on 64 bit ARMv8 kernels
                 *hwcap |= HWCAP_ARM_VFP | HWCAP_ARM_VFPv3;
-            break;
+            ನಿಲ್ಲಿಸು;
         }
     }
     fclose(f);
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-int ff_get_cpu_flags_arm(void)
+ಪೂರ್ಣಾಂಕ ff_get_cpu_flags_arm(ಶೂನ್ಯ)
 {
-    int flags = CORE_CPU_FLAGS;
+    ಪೂರ್ಣಾಂಕ flags = CORE_CPU_FLAGS;
     uint32_t hwcap;
 
-    if (get_auxval(&hwcap) < 0)
-#if defined __linux__ || defined __ANDROID__
-        if (get_hwcap(&hwcap) < 0)
-            if (get_cpuinfo(&hwcap) < 0)
-#endif
-                return flags;
+    ಆದರೆ (get_auxval(&hwcap) < 0)
+#ಆದರೆ defined __linux__ || defined __ANDROID__
+        ಆದರೆ (get_hwcap(&hwcap) < 0)
+            ಆದರೆ (get_cpuinfo(&hwcap) < 0)
+#ಆದರೆ_ಅಂತ್ಯ
+                ಹಿಂತಿರುಗಿ flags;
 
-#define check_cap(cap, flag) do {               \
-        if (hwcap & HWCAP_ARM_ ## cap)          \
+#ವ್ಯಾಖ್ಯಾನಿಸು check_cap(cap, flag) ಮಾಡು {               \
+        ಆದರೆ (hwcap & HWCAP_ARM_ ## cap)          \
             flags |= AV_CPU_FLAG_ ## flag;      \
-    } while (0)
+    } ಆಗ (0)
 
     /* No flags explicitly indicate v6 or v6T2 so check others which
        imply support. */
@@ -162,29 +162,29 @@ int ff_get_cpu_flags_arm(void)
 
     /* The v6 checks above are not reliable so let higher flags
        trickle down. */
-    if (flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON))
+    ಆದರೆ (flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON))
         flags |= AV_CPU_FLAG_ARMV6T2;
-    else if (flags & (AV_CPU_FLAG_ARMV6T2 | AV_CPU_FLAG_ARMV6))
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (flags & (AV_CPU_FLAG_ARMV6T2 | AV_CPU_FLAG_ARMV6))
     /* Some functions use the 'setend' instruction which is deprecated on ARMv8
      * and serializing on some ARMv7 cores. This ensures such functions
      * are only enabled on ARMv6. */
         flags |= AV_CPU_FLAG_SETEND;
 
-    if (flags & AV_CPU_FLAG_ARMV6T2)
+    ಆದರೆ (flags & AV_CPU_FLAG_ARMV6T2)
         flags |= AV_CPU_FLAG_ARMV6;
 
     /* set the virtual VFPv2 vector mode flag */
-    if ((flags & AV_CPU_FLAG_VFP) && !(flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON)))
+    ಆದರೆ ((flags & AV_CPU_FLAG_VFP) && !(flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON)))
         flags |= AV_CPU_FLAG_VFP_VM;
 
-    return flags;
+    ಹಿಂತಿರುಗಿ flags;
 }
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
-int ff_get_cpu_flags_arm(void)
+ಪೂರ್ಣಾಂಕ ff_get_cpu_flags_arm(ಶೂನ್ಯ)
 {
-    return AV_CPU_FLAG_ARMV5TE * HAVE_ARMV5TE |
+    ಹಿಂತಿರುಗಿ AV_CPU_FLAG_ARMV5TE * HAVE_ARMV5TE |
            AV_CPU_FLAG_ARMV6   * HAVE_ARMV6   |
            AV_CPU_FLAG_ARMV6T2 * HAVE_ARMV6T2 |
            AV_CPU_FLAG_VFP     * HAVE_VFP     |
@@ -193,14 +193,14 @@ int ff_get_cpu_flags_arm(void)
            AV_CPU_FLAG_SETEND  * !(HAVE_NEON | HAVE_VFPV3);
 }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-size_t ff_get_cpu_max_align_arm(void)
+size_t ff_get_cpu_max_align_arm(ಶೂನ್ಯ)
 {
-    int flags = av_get_cpu_flags();
+    ಪೂರ್ಣಾಂಕ flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_NEON)
-        return 16;
+    ಆದರೆ (flags & AV_CPU_FLAG_NEON)
+        ಹಿಂತಿರುಗಿ 16;
 
-    return 8;
+    ಹಿಂತಿರುಗಿ 8;
 }

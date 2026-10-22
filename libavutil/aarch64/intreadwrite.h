@@ -16,27 +16,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AARCH64_INTREADWRITE_H
-#define AVUTIL_AARCH64_INTREADWRITE_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_AARCH64_INTREADWRITE_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_AARCH64_INTREADWRITE_H
 
-#if HAVE_INTRINSICS_NEON
+#ಆದರೆ HAVE_INTRINSICS_NEON
 
-#include <arm_neon.h>
+#ಅನ್ತರ್ಭಾವ <arm_neon.h>
 
-#define AV_COPY128 AV_COPY128
-static av_always_inline void AV_COPY128(void *d, const void *s)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_COPY128 AV_COPY128
+ಸ್ಥಿರ av_always_inline ಶೂನ್ಯ AV_COPY128(ಶೂನ್ಯ *d, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *s)
 {
-    uint8x16_t tmp = vld1q_u8((const uint8_t *)s);
+    uint8x16_t tmp = vld1q_u8((ಸ್ಥಿರಾಂಕ uint8_t *)s);
     vst1q_u8((uint8_t *)d, tmp);
 }
 
-#define AV_ZERO128 AV_ZERO128
-static av_always_inline void AV_ZERO128(void *d)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_ZERO128 AV_ZERO128
+ಸ್ಥಿರ av_always_inline ಶೂನ್ಯ AV_ZERO128(ಶೂನ್ಯ *d)
 {
     uint8x16_t zero = vdupq_n_u8(0);
     vst1q_u8((uint8_t *)d, zero);
 }
 
-#endif /* HAVE_INTRINSICS_NEON */
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_INTRINSICS_NEON */
 
-#endif /* AVUTIL_AARCH64_INTREADWRITE_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_AARCH64_INTREADWRITE_H */

@@ -60,83 +60,83 @@
  * @author Zane van Iperen <zane@zanevaniperen.com>
  */
 
-#include "attributes_internal.h"
-#include "uuid.h"
-#include "error.h"
-#include "avstring.h"
+#ಅನ್ತರ್ಭಾವ "attributes_internal.h"
+#ಅನ್ತರ್ಭಾವ "uuid.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+ಪೂರ್ಣಾಂಕ av_uuid_parse(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಒಳ, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    ಆದರೆ (ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(ಒಳ) != 36)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    ಹಿಂತಿರುಗಿ av_uuid_parse_range(ಒಳ, ಒಳ + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ xdigit_ಗಮ್ಯ_int(ಅಕ್ಷರ c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    ಆದರೆ (c >= 'a' && c <= 'f')
+        ಹಿಂತಿರುಗಿ c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    ಆದರೆ (c >= '0' && c <= '9')
+        ಹಿಂತಿರುಗಿ c - '0';
 
-    return -1;
+    ಹಿಂತಿರುಗಿ -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+ಪೂರ್ಣಾಂಕ av_uuid_parse_range(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಒಳ_ಆರಂಭ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಒಳ_ಕೊನೆ, AVUUID uu)
 {
-    int i;
-    const char *cp;
+    ಪೂರ್ಣಾಂಕ i;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    ಆದರೆ ((ಒಳ_ಕೊನೆ - ಒಳ_ಆರಂಭ) != 36)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    ಗಾಗಿ (i = 0, cp = ಒಳ_ಆರಂಭ; i < 16; i++) {
+        ಪೂರ್ಣಾಂಕ hi;
+        ಪೂರ್ಣಾಂಕ lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        ಆದರೆ (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
-        hi = xdigit_to_int(*cp++);
-        lo = xdigit_to_int(*cp++);
+        hi = xdigit_ಗಮ್ಯ_int(*cp++);
+        lo = xdigit_ಗಮ್ಯ_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        ಆದರೆ (hi == -1 || lo == -1)
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
+ಸ್ಥಿರ attribute_nonstring ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ hexdigits_ಅಧೋ[16] = "0123456789abcdef";
 
-void av_uuid_unparse(const AVUUID uuid, char *out)
+ಶೂನ್ಯ av_uuid_unparse(ಸ್ಥಿರಾಂಕ AVUUID uuid, ಅಕ್ಷರ *ಹೊರಹೋಗು)
 {
-    char *p = out;
+    ಅಕ್ಷರ *p = ಹೊರಹೋಗು;
 
-    for (int i = 0; i < 16; i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        ಆದರೆ (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
-        *p++ = hexdigits_lower[tmp >> 4];
-        *p++ = hexdigits_lower[tmp & 15];
+        *p++ = hexdigits_ಅಧೋ[tmp >> 4];
+        *p++ = hexdigits_ಅಧೋ[tmp & 15];
     }
 
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+ಪೂರ್ಣಾಂಕ av_uuid_urn_parse(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಒಳ, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    ಆದರೆ (av_stristr(ಒಳ, "urn:uuid:") != ಒಳ)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    ಹಿಂತಿರುಗಿ av_uuid_parse(ಒಳ + 9, uu);
 }

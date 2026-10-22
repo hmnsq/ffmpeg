@@ -16,27 +16,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define TEST
-#include "libavutil/parseutils.c"
+#ವ್ಯಾಖ್ಯಾನಿಸು TEST
+#ಅನ್ತರ್ಭಾವ "libavutil/parseutils.c"
 
-#include <stdint.h>
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/log.h"
-#include "libavutil/rational.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/common.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/log.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/rational.h"
 
-static uint32_t randomv = MKTAG('L','A','V','U');
+ಸ್ಥಿರ uint32_t randomv = MKTAG('L','A','V','U');
 
-static uint32_t av_get_random_seed_deterministic(void)
+ಸ್ಥಿರ uint32_t av_get_random_ಬೀಜ_deterministic(ಶೂನ್ಯ)
 {
-    return randomv = randomv * 1664525 + 1013904223;
+    ಹಿಂತಿರುಗಿ randomv = randomv * 1664525 + 1013904223;
 }
 
-static void test_av_parse_video_rate(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_av_parse_video_ದರ(ಶೂನ್ಯ)
 {
-    int i;
-    static const char *const rates[] = {
+    ಪೂರ್ಣಾಂಕ i;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ rates[] = {
         "-inf",
         "inf",
         "nan",
@@ -64,20 +64,20 @@ static void test_av_parse_video_rate(void)
         " -21332.2324   ",
     };
 
-    for (i = 0; i < FF_ARRAY_ELEMS(rates); i++) {
-        int ret;
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(rates); i++) {
+        ಪೂರ್ಣಾಂಕ ret;
         AVRational q = { 0, 0 };
-        ret = av_parse_video_rate(&q, rates[i]);
-        printf("'%s' -> %d/%d %s\n",
-               rates[i], q.num, q.den, ret ? "ERROR" : "OK");
+        ret = av_parse_video_ದರ(&q, rates[i]);
+        ಬರೆ("'%s' -> %d/%d %s\n",
+               rates[i], q.ಅಂಕೆ, q.den, ret ? "ERROR" : "OK");
     }
 }
 
-static void test_av_parse_color(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_av_parse_color(ಶೂನ್ಯ)
 {
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
     uint8_t rgba[4];
-    static const char *const color_names[] = {
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ color_ಹೆಸರುಗಳು[] = {
         "bikeshed",
         "RaNdOm",
         "foo",
@@ -116,23 +116,23 @@ static void test_av_parse_color(void)
         "red@-0.0",
     };
 
-    av_log_set_level(AV_LOG_DEBUG);
+    av_log_ಗಣ_level(AV_LOG_DEBUG);
 
-    for (i = 0;  i < FF_ARRAY_ELEMS(color_names); i++) {
-        if (av_parse_color(rgba, color_names[i], -1, NULL) >= 0)
-            printf("%s -> R(%d) G(%d) B(%d) A(%d)\n",
-                   color_names[i], rgba[0], rgba[1], rgba[2], rgba[3]);
-        else
-            printf("%s -> error\n", color_names[i]);
+    ಗಾಗಿ (i = 0;  i < FF_ARRAY_ELEMS(color_ಹೆಸರುಗಳು); i++) {
+        ಆದರೆ (av_parse_color(rgba, color_ಹೆಸರುಗಳು[i], -1, ಖಾಲಿ) >= 0)
+            ಬರೆ("%s -> R(%d) G(%d) B(%d) A(%d)\n",
+                   color_ಹೆಸರುಗಳು[i], rgba[0], rgba[1], rgba[2], rgba[3]);
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಬರೆ("%s -> error\n", color_ಹೆಸರುಗಳು[i]);
     }
 }
 
-static void test_av_small_strptime(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_av_small_strptime(ಶೂನ್ಯ)
 {
-    int i;
-    struct tm tm = { 0 };
-    struct fmt_timespec_entry {
-        const char *fmt, *timespec;
+    ಪೂರ್ಣಾಂಕ i;
+    ರಚನೆ tm tm = { 0 };
+    ರಚನೆ fmt_timespec_ನಮೂದು {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *fmt, *timespec;
     } fmt_timespec_entries[] = {
         { "%Y-%m-%d",                    "2012-12-21" },
         { "%Y - %m - %d",                "2012-12-21" },
@@ -147,30 +147,30 @@ static void test_av_small_strptime(void)
         { "  %Y - %B - %d %H : %M : %S", "   2012 - January -  21   20 : 12 : 21" },
     };
 
-    av_log_set_level(AV_LOG_DEBUG);
-    for (i = 0;  i < FF_ARRAY_ELEMS(fmt_timespec_entries); i++) {
-        char *p;
-        struct fmt_timespec_entry *e = &fmt_timespec_entries[i];
-        printf("fmt:'%s' spec:'%s' -> ", e->fmt, e->timespec);
+    av_log_ಗಣ_level(AV_LOG_DEBUG);
+    ಗಾಗಿ (i = 0;  i < FF_ARRAY_ELEMS(fmt_timespec_entries); i++) {
+        ಅಕ್ಷರ *p;
+        ರಚನೆ fmt_timespec_ನಮೂದು *e = &fmt_timespec_entries[i];
+        ಬರೆ("fmt:'%s' spec:'%s' -> ", e->fmt, e->timespec);
         p = av_small_strptime(e->timespec, e->fmt, &tm);
-        if (p) {
-            printf("%04d-%02d-%2d %02d:%02d:%02d\n",
+        ಆದರೆ (p) {
+            ಬರೆ("%04d-%02d-%2d %02d:%02d:%02d\n",
                    1900+tm.tm_year, tm.tm_mon+1, tm.tm_mday,
                    tm.tm_hour, tm.tm_min, tm.tm_sec);
-        } else {
-            printf("error\n");
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಬರೆ("error\n");
         }
     }
 }
 
-static void test_av_parse_time(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_av_parse_ಸಮಯ(ಶೂನ್ಯ)
 {
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
     int64_t tv;
     time_t tvi;
-    struct tm *tm;
-    static char tzstr[] = "TZ=CET-1";
-    static const char * const time_string[] = {
+    ರಚನೆ tm *tm;
+    ಸ್ಥಿರ ಅಕ್ಷರ tzstr[] = "TZ=CET-1";
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ ಸಮಯ_string[] = {
         "now",
         "12:35:46",
         "2000-12-20 0:02:47.5z",
@@ -179,7 +179,7 @@ static void test_av_parse_time(void)
         "2000-12-12 1:35:46+05:30",
         "2002-12-12 22:30:40-02",
     };
-    static const char * const duration_string[] = {
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ duration_string[] = {
         "2:34:56.79",
         "-1:23:45.67",
         "42.1729",
@@ -191,81 +191,81 @@ static void test_av_parse_time(void)
         "9223372036854775808us",
     };
 
-    av_log_set_level(AV_LOG_DEBUG);
+    av_log_ಗಣ_level(AV_LOG_DEBUG);
     putenv(tzstr);
-    printf("(now is 2012-03-17 09:14:13.2 +0100, local time is UTC+1)\n");
-    for (i = 0;  i < FF_ARRAY_ELEMS(time_string); i++) {
-        printf("%-24s -> ", time_string[i]);
-        if (av_parse_time(&tv, time_string[i], 0)) {
-            printf("error\n");
-        } else {
+    ಬರೆ("(now is 2012-03-17 09:14:13.2 +0100, local time is UTC+1)\n");
+    ಗಾಗಿ (i = 0;  i < FF_ARRAY_ELEMS(ಸಮಯ_string); i++) {
+        ಬರೆ("%-24s -> ", ಸಮಯ_string[i]);
+        ಆದರೆ (av_parse_ಸಮಯ(&tv, ಸಮಯ_string[i], 0)) {
+            ಬರೆ("error\n");
+        } ಇಲ್ಲದಿದ್ದರೆ {
             tvi = tv / 1000000;
             tm = gmtime(&tvi);
-            printf("%14"PRIi64".%06d = %04d-%02d-%02dT%02d:%02d:%02dZ\n",
-                   tv / 1000000, (int)(tv % 1000000),
+            ಬರೆ("%14"PRIi64".%06d = %04d-%02d-%02dT%02d:%02d:%02dZ\n",
+                   tv / 1000000, (ಪೂರ್ಣಾಂಕ)(tv % 1000000),
                    tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
                    tm->tm_hour, tm->tm_min, tm->tm_sec);
         }
     }
-    for (i = 0;  i < FF_ARRAY_ELEMS(duration_string); i++) {
-        printf("%-24s -> ", duration_string[i]);
-        if (av_parse_time(&tv, duration_string[i], 1)) {
-            printf("error\n");
-        } else {
-            printf("%+21"PRIi64"\n", tv);
+    ಗಾಗಿ (i = 0;  i < FF_ARRAY_ELEMS(duration_string); i++) {
+        ಬರೆ("%-24s -> ", duration_string[i]);
+        ಆದರೆ (av_parse_ಸಮಯ(&tv, duration_string[i], 1)) {
+            ಬರೆ("error\n");
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಬರೆ("%+21"PRIi64"\n", tv);
         }
     }
 }
 
-static void test_av_get_known_color_name(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_av_get_ತಿಳಿದ_color_name(ಶೂನ್ಯ)
 {
-    int i;
-    const uint8_t *rgba;
-    const char *color;
+    ಪೂರ್ಣಾಂಕ i;
+    ಸ್ಥಿರಾಂಕ uint8_t *rgba;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *color;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_table); ++i) {
-        color = av_get_known_color_name(i, &rgba);
-        if (color)
-            printf("%s -> R(%d) G(%d) B(%d) A(%d)\n",
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(color_ಕೋಷ್ಟಕ); ++i) {
+        color = av_get_ತಿಳಿದ_color_name(i, &rgba);
+        ಆದರೆ (color)
+            ಬರೆ("%s -> R(%d) G(%d) B(%d) A(%d)\n",
                     color, rgba[0], rgba[1], rgba[2], rgba[3]);
-        else
-            printf("Color ID: %d not found\n", i);
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಬರೆ("Color ID: %d not found\n", i);
     }
 }
 
-static void test_av_find_info_tag(void)
+ಸ್ಥಿರ ಶೂನ್ಯ test_av_ಕಂಡುಹಿಡಿ_info_ಟ್ಯಾಗ್(ಶೂನ್ಯ)
 {
-    static const char args[] = "?tag1=val1&tag2=val2&tag3=val3&tag41=value 41&tag42=random1";
-    static const char *tags[] = {"tag1", "tag2", "tag3", "tag4", "tag41", "41", "random1"};
-    char buff[16];
-    int i;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ ವಾದಗಳು[] = "?tag1=val1&tag2=val2&tag3=val3&tag41=value 41&tag42=random1";
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಟ್ಯಾಗುಗಳು[] = {"tag1", "tag2", "tag3", "tag4", "tag41", "41", "random1"};
+    ಅಕ್ಷರ buff[16];
+    ಪೂರ್ಣಾಂಕ i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(tags); ++i) {
-        if (av_find_info_tag(buff, sizeof(buff), tags[i], args))
-            printf("%d. %s found: %s\n", i, tags[i], buff);
-        else
-            printf("%d. %s not found\n", i, tags[i]);
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(ಟ್ಯಾಗುಗಳು); ++i) {
+        ಆದರೆ (av_ಕಂಡುಹಿಡಿ_info_ಟ್ಯಾಗ್(buff, ಗಾತ್ರ(buff), ಟ್ಯಾಗುಗಳು[i], ವಾದಗಳು))
+            ಬರೆ("%d. %s found: %s\n", i, ಟ್ಯಾಗುಗಳು[i], buff);
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಬರೆ("%d. %s not found\n", i, ಟ್ಯಾಗುಗಳು[i]);
     }
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
-    printf("Testing av_parse_video_rate()\n");
-    test_av_parse_video_rate();
+    ಬರೆ("Testing av_parse_video_rate()\n");
+    test_av_parse_video_ದರ();
 
-    printf("\nTesting av_parse_color()\n");
+    ಬರೆ("\nTesting av_parse_color()\n");
     test_av_parse_color();
 
-    printf("\nTesting av_small_strptime()\n");
+    ಬರೆ("\nTesting av_small_strptime()\n");
     test_av_small_strptime();
 
-    printf("\nTesting av_parse_time()\n");
-    test_av_parse_time();
+    ಬರೆ("\nTesting av_parse_time()\n");
+    test_av_parse_ಸಮಯ();
 
-    printf("\nTesting av_get_known_color_name()\n");
-    test_av_get_known_color_name();
+    ಬರೆ("\nTesting av_get_known_color_name()\n");
+    test_av_get_ತಿಳಿದ_color_name();
 
-    printf("\nTesting av_find_info_tag()\n");
-    test_av_find_info_tag();
-    return 0;
+    ಬರೆ("\nTesting av_find_info_tag()\n");
+    test_av_ಕಂಡುಹಿಡಿ_info_ಟ್ಯಾಗ್();
+    ಹಿಂತಿರುಗಿ 0;
 }

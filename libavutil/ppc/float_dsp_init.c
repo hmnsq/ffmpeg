@@ -18,31 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
-#include "libavutil/ppc/cpu.h"
-#include "float_dsp_altivec.h"
-#include "float_dsp_vsx.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/float_dsp.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/ppc/cpu.h"
+#ಅನ್ತರ್ಭಾವ "float_dsp_altivec.h"
+#ಅನ್ತರ್ಭಾವ "float_dsp_vsx.h"
 
-av_cold void ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, int bit_exact)
+av_cold ಶೂನ್ಯ ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, ಪೂರ್ಣಾಂಕ ಬಿಟ್_exact)
 {
-    if (PPC_ALTIVEC(av_get_cpu_flags())) {
-        fdsp->vector_fmul = ff_vector_fmul_altivec;
-        fdsp->vector_fmul_add = ff_vector_fmul_add_altivec;
-        fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_altivec;
+    ಆದರೆ (PPC_ALTIVEC(av_get_cpu_flags())) {
+        fdsp->ಸದಿಶ_fmul = ff_ಸದಿಶ_fmul_altivec;
+        fdsp->ಸದಿಶ_fmul_ಕೂಡಿಸು = ff_ಸದಿಶ_fmul_ಕೂಡಿಸು_altivec;
+        fdsp->ಸದಿಶ_fmul_ಹಿಮ್ಮುಖ = ff_ಸದಿಶ_fmul_ಹಿಮ್ಮುಖ_altivec;
 
-        if (!bit_exact) {
-            fdsp->vector_fmul_window = ff_vector_fmul_window_altivec;
+        ಆದರೆ (!ಬಿಟ್_exact) {
+            fdsp->ಸದಿಶ_fmul_ಕಿಟಕಿ = ff_ಸದಿಶ_fmul_ಕಿಟಕಿ_altivec;
         }
     }
 
     // The disabled function below are near identical to altivec and have
     // been disabled to reduce code duplication
-    if (PPC_VSX(av_get_cpu_flags())) {
+    ಆದರೆ (PPC_VSX(av_get_cpu_flags())) {
 //         fdsp->vector_fmul = ff_vector_fmul_vsx;
-        fdsp->vector_fmul_add = ff_vector_fmul_add_vsx;
+        fdsp->ಸದಿಶ_fmul_ಕೂಡಿಸು = ff_ಸದಿಶ_fmul_ಕೂಡಿಸು_vsx;
 //         fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_vsx;
 
 //         if (!bit_exact) {

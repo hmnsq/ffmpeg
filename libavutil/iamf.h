@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_IAMF_H
-#define AVUTIL_IAMF_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_IAMF_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_IAMF_H
 
 /**
  * @file
@@ -27,14 +27,14 @@
  * @see <a href="https://aomediacodec.github.io/iamf/">Immersive Audio Model and Formats</a>
  */
 
-#include <stdint.h>
-#include <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
 
-#include "attributes.h"
-#include "avassert.h"
-#include "channel_layout.h"
-#include "dict.h"
-#include "rational.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "channel_layout.h"
+#ಅನ್ತರ್ಭಾವ "dict.h"
+#ಅನ್ತರ್ಭಾವ "rational.h"
 
 /**
  * @defgroup lavu_iamf Immersive Audio Model and Formats
@@ -63,9 +63,9 @@
  * @addtogroup lavu_iamf_params
  * @{
  */
-enum AVIAMFAnimationType {
-    AV_IAMF_ANIMATION_TYPE_STEP,
-    AV_IAMF_ANIMATION_TYPE_LINEAR,
+ಎಣಿಕೆ AVIAMFAnimationType {
+    AV_IAMF_ANIMATION_TYPE_ಹೆಜ್ಜೆ,
+    AV_IAMF_ANIMATION_TYPE_ರೇಖೀಯ,
     AV_IAMF_ANIMATION_TYPE_BEZIER,
 };
 
@@ -74,26 +74,26 @@ enum AVIAMFAnimationType {
  *
  * @note This struct's size is not a part of the public ABI.
  */
-typedef struct AVIAMFMixGain {
-    const AVClass *av_class;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVIAMFMixGain {
+    ಸ್ಥಿರಾಂಕ AVClass *av_class;
 
     /**
      * Duration for the given subblock, in units of
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
-    unsigned int subblock_duration;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ subblock_duration;
     /**
      * The type of animation applied to the parameter values.
      */
-    enum AVIAMFAnimationType animation_type;
+    ಎಣಿಕೆ AVIAMFAnimationType animation_type;
     /**
      * Parameter value that is applied at the start of the subblock.
      * Applies to all defined Animation Types.
      *
      * Valid range of values is -128.0 to 128.0
      */
-    AVRational start_point_value;
+    AVRational ಆರಂಭ_ಬಿಂದು_ಮೌಲ್ಯ;
     /**
      * Parameter value that is applied at the end of the subblock.
      * Applies only to AV_IAMF_ANIMATION_TYPE_LINEAR and
@@ -101,7 +101,7 @@ typedef struct AVIAMFMixGain {
      *
      * Valid range of values is -128.0 to 128.0
      */
-    AVRational end_point_value;
+    AVRational ಕೊನೆ_ಬಿಂದು_ಮೌಲ್ಯ;
     /**
      * Parameter value of the middle control point of a quadratic Bezier
      * curve, i.e., its y-axis value.
@@ -109,7 +109,7 @@ typedef struct AVIAMFMixGain {
      *
      * Valid range of values is -128.0 to 128.0
      */
-    AVRational control_point_value;
+    AVRational control_ಬಿಂದು_ಮೌಲ್ಯ;
     /**
      * Parameter value of the time of the middle control point of a
      * quadratic Bezier curve, i.e., its x-axis value.
@@ -117,7 +117,7 @@ typedef struct AVIAMFMixGain {
      *
      * Valid range of values is 0.0 to 1.0
      */
-    AVRational control_point_relative_time;
+    AVRational control_ಬಿಂದು_relative_ಸಮಯ;
 } AVIAMFMixGain;
 
 /**
@@ -125,19 +125,19 @@ typedef struct AVIAMFMixGain {
  *
  * @note This struct's size is not a part of the public ABI.
  */
-typedef struct AVIAMFDemixingInfo {
-    const AVClass *av_class;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVIAMFDemixingInfo {
+    ಸ್ಥಿರಾಂಕ AVClass *av_class;
 
     /**
      * Duration for the given subblock, in units of
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
-    unsigned int subblock_duration;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ subblock_duration;
     /**
      * Pre-defined combination of demixing parameters.
      */
-    unsigned int dmixp_mode;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ dmixp_ಬಹುಲಕ;
 } AVIAMFDemixingInfo;
 
 /**
@@ -145,15 +145,15 @@ typedef struct AVIAMFDemixingInfo {
  *
  * @note This struct's size is not a part of the public ABI.
  */
-typedef struct AVIAMFReconGain {
-    const AVClass *av_class;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVIAMFReconGain {
+    ಸ್ಥಿರಾಂಕ AVClass *av_class;
 
     /**
      * Duration for the given subblock, in units of
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
-    unsigned int subblock_duration;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ subblock_duration;
 
     /**
      * Array of gain values to be applied to each channel for each layer
@@ -166,7 +166,7 @@ typedef struct AVIAMFReconGain {
     uint8_t recon_gain[6][12];
 } AVIAMFReconGain;
 
-enum AVIAMFParamDefinitionType {
+ಎಣಿಕೆ AVIAMFParamDefinitionType {
    /**
     * Subblocks are of struct type AVIAMFMixGain
     */
@@ -190,36 +190,36 @@ enum AVIAMFParamDefinitionType {
  *
  * @note This struct's size is not a part of the public ABI.
  */
-typedef struct AVIAMFParamDefinition {
-    const AVClass *av_class;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVIAMFParamDefinition {
+    ಸ್ಥಿರಾಂಕ AVClass *av_class;
 
     /**
      * Offset in bytes from the start of this struct, at which the subblocks
      * array is located.
      */
-    size_t subblocks_offset;
+    size_t subblocks_ಸ್ಥಾನಾಂತರ;
     /**
      * Size in bytes of each element in the subblocks array.
      */
-    size_t subblock_size;
+    size_t subblock_ಗಾತ್ರ;
     /**
      * Number of subblocks in the array.
      */
-    unsigned int nb_subblocks;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_subblocks;
 
     /**
      * Parameters type. Determines the type of the subblock elements.
      */
-    enum AVIAMFParamDefinitionType type;
+    ಎಣಿಕೆ AVIAMFParamDefinitionType type;
 
     /**
      * Identifier for the parameter substream.
      */
-    unsigned int parameter_id;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ parameter_id;
     /**
      * Sample rate for the parameter substream. It must not be 0.
      */
-    unsigned int parameter_rate;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ parameter_ದರ;
 
     /**
      * The accumulated duration of all blocks in this parameter definition,
@@ -228,17 +228,17 @@ typedef struct AVIAMFParamDefinition {
      * May be 0, in which case all duration values should be specified in
      * another parameter definition referencing the same parameter_id.
      */
-    unsigned int duration;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ duration;
     /**
      * The duration of every subblock in the case where all subblocks, with
      * the optional exception of the last subblock, have equal durations.
      *
      * Must be 0 if subblocks have different durations.
      */
-    unsigned int constant_subblock_duration;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ constant_subblock_duration;
 } AVIAMFParamDefinition;
 
-const AVClass *av_iamf_param_definition_get_class(void);
+ಸ್ಥಿರಾಂಕ AVClass *av_iamf_param_definition_get_class(ಶೂನ್ಯ);
 
 /**
  * Allocates memory for AVIAMFParamDefinition, plus an array of {@code nb_subblocks}
@@ -247,8 +247,8 @@ const AVClass *av_iamf_param_definition_get_class(void);
  *
  * @param size if non-NULL, the size in bytes of the resulting data array is written here.
  */
-AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinitionType type,
-                                                      unsigned int nb_subblocks, size_t *size);
+AVIAMFParamDefinition *av_iamf_param_definition_alloc(ಎಣಿಕೆ AVIAMFParamDefinitionType type,
+                                                      ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_subblocks, size_t *ಗಾತ್ರ_2);
 
 /**
  * Get the subblock at the specified {@code idx}. Must be between 0 and nb_subblocks - 1.
@@ -256,11 +256,11 @@ AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinition
  * The @ref AVIAMFParamDefinition.type "param definition type" defines
  * the struct type of the returned pointer.
  */
-static av_always_inline void*
-av_iamf_param_definition_get_subblock(const AVIAMFParamDefinition *par, unsigned int idx)
+ಸ್ಥಿರ av_always_inline ಶೂನ್ಯ*
+av_iamf_param_definition_get_subblock(ಸ್ಥಿರಾಂಕ AVIAMFParamDefinition *par, ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ idx)
 {
     av_assert0(idx < par->nb_subblocks);
-    return (void *)((uint8_t *)par + par->subblocks_offset + idx * par->subblock_size);
+    ಹಿಂತಿರುಗಿ (ಶೂನ್ಯ *)((uint8_t *)par + par->subblocks_ಸ್ಥಾನಾಂತರ + idx * par->subblock_ಗಾತ್ರ);
 }
 
 /**
@@ -269,15 +269,15 @@ av_iamf_param_definition_get_subblock(const AVIAMFParamDefinition *par, unsigned
  * @{
  */
 
-enum AVIAMFAmbisonicsMode {
-    AV_IAMF_AMBISONICS_MODE_MONO,
-    AV_IAMF_AMBISONICS_MODE_PROJECTION,
+ಎಣಿಕೆ AVIAMFAmbisonics_ಬಹುಲಕ {
+    AV_IAMF_AMBISONICS_ಬಹುಲಕ_MONO,
+    AV_IAMF_AMBISONICS_ಬಹುಲಕ_PROJECTION,
 };
 
 /**
  * Recon gain information for the layer is present in AVIAMFReconGain
  */
-#define AV_IAMF_LAYER_FLAG_RECON_GAIN (1 << 0)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_IAMF_LAYER_FLAG_RECON_GAIN (1 << 0)
 
 /**
  * A layer defining a Channel Layout in the Audio Element.
@@ -291,15 +291,15 @@ enum AVIAMFAmbisonicsMode {
  * @note The struct should be allocated with av_iamf_audio_element_add_layer()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFLayer {
-    const AVClass *av_class;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVIAMFLayer {
+    ಸ್ಥಿರಾಂಕ AVClass *av_class;
 
     AVChannelLayout ch_layout;
 
     /**
      * A bitmask which may contain a combination of AV_IAMF_LAYER_FLAG_* flags.
      */
-    unsigned int flags;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ flags;
     /**
      * Output gain channel flags as defined in section 3.6.2 of IAMF.
      *
@@ -307,7 +307,7 @@ typedef struct AVIAMFLayer {
      * "the parent's Audio Element type" is AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL,
      * must be 0 otherwise.
      */
-    unsigned int output_gain_flags;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ output_gain_flags;
     /**
      * Output gain as defined in section 3.6.2 of IAMF.
      *
@@ -325,7 +325,7 @@ typedef struct AVIAMFLayer {
      * @ref ch_layout.
      * If AV_IAMF_AMBISONICS_MODE_PROJECTION, @ref demixing_matrix must be set.
      */
-    enum AVIAMFAmbisonicsMode ambisonics_mode;
+    ಎಣಿಕೆ AVIAMFAmbisonics_ಬಹುಲಕ ambisonics_ಬಹುಲಕ;
 
     /**
      * Demixing matrix as defined in section 3.6.3 of IAMF.
@@ -333,18 +333,18 @@ typedef struct AVIAMFLayer {
      * May be set only if @ref ambisonics_mode == AV_IAMF_AMBISONICS_MODE_PROJECTION,
      * must be NULL otherwise.
      */
-    AVRational *demixing_matrix;
+    AVRational *demixing_ಮಾತೃಕೆ;
 
     /**
      * The length of the Demixing matrix array. Must be ch_layout.nb_channels multiplied
      * by the sum of the amount of streams in the group plus the amount of streams in
      * the group that are stereo.
      */
-    unsigned int nb_demixing_matrix;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_demixing_ಮಾತೃಕೆ;
 } AVIAMFLayer;
 
 
-enum AVIAMFAudioElementType {
+ಎಣಿಕೆ AVIAMFAudioElementType {
     AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL,
     AV_IAMF_AUDIO_ELEMENT_TYPE_SCENE,
 };
@@ -356,8 +356,8 @@ enum AVIAMFAudioElementType {
  * @note The struct should be allocated with av_iamf_audio_element_alloc()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFAudioElement {
-    const AVClass *av_class;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVIAMFAudioElement {
+    ಸ್ಥಿರಾಂಕ AVClass *av_class;
 
     AVIAMFLayer **layers;
     /**
@@ -368,7 +368,7 @@ typedef struct AVIAMFAudioElement {
      * Set by av_iamf_audio_element_add_layer(), must not be
      * modified by any other code.
      */
-    unsigned int nb_layers;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_layers;
 
     /**
      * Demixing information used to reconstruct a scalable channel audio
@@ -388,15 +388,15 @@ typedef struct AVIAMFAudioElement {
     /**
      * Audio element type as defined in section 3.6 of IAMF.
      */
-    enum AVIAMFAudioElementType audio_element_type;
+    ಎಣಿಕೆ AVIAMFAudioElementType audio_element_type;
 
     /**
      * Default weight value as defined in section 3.6 of IAMF.
      */
-    unsigned int default_w;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ default_w;
 } AVIAMFAudioElement;
 
-const AVClass *av_iamf_audio_element_get_class(void);
+ಸ್ಥಿರಾಂಕ AVClass *av_iamf_audio_element_get_class(ಶೂನ್ಯ);
 
 /**
  * Allocates a AVIAMFAudioElement, and initializes its fields with default values.
@@ -404,7 +404,7 @@ const AVClass *av_iamf_audio_element_get_class(void);
  *
  * @see av_iamf_audio_element_add_layer()
  */
-AVIAMFAudioElement *av_iamf_audio_element_alloc(void);
+AVIAMFAudioElement *av_iamf_audio_element_alloc(ಶೂನ್ಯ);
 
 /**
  * Allocate a layer and add it to a given AVIAMFAudioElement.
@@ -413,7 +413,7 @@ AVIAMFAudioElement *av_iamf_audio_element_alloc(void);
  *
  * @return a pointer to the allocated layer.
  */
-AVIAMFLayer *av_iamf_audio_element_add_layer(AVIAMFAudioElement *audio_element);
+AVIAMFLayer *av_iamf_audio_element_ಕೂಡಿಸು_layer(AVIAMFAudioElement *audio_element);
 
 /**
  * Free an AVIAMFAudioElement and all its contents.
@@ -421,7 +421,7 @@ AVIAMFLayer *av_iamf_audio_element_add_layer(AVIAMFAudioElement *audio_element);
  * @param audio_element pointer to pointer to an allocated AVIAMFAudioElement.
  *                      upon return, *audio_element will be set to NULL.
  */
-void av_iamf_audio_element_free(AVIAMFAudioElement **audio_element);
+ಶೂನ್ಯ av_iamf_audio_element_free(AVIAMFAudioElement **audio_element);
 
 /**
  * @}
@@ -429,15 +429,15 @@ void av_iamf_audio_element_free(AVIAMFAudioElement **audio_element);
  * @{
  */
 
-enum AVIAMFHeadphonesMode {
+ಎಣಿಕೆ AVIAMFHeadphones_ಬಹುಲಕ {
     /**
      * The referenced Audio Element shall be rendered to stereo loudspeakers.
      */
-    AV_IAMF_HEADPHONES_MODE_STEREO,
+    AV_IAMF_HEADPHONES_ಬಹುಲಕ_STEREO,
     /**
      * The referenced Audio Element shall be rendered with a binaural renderer.
      */
-    AV_IAMF_HEADPHONES_MODE_BINAURAL,
+    AV_IAMF_HEADPHONES_ಬಹುಲಕ_BINAURAL,
 };
 
 /**
@@ -446,13 +446,13 @@ enum AVIAMFHeadphonesMode {
  * @note The struct should be allocated with av_iamf_submix_add_element()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFSubmixElement {
-    const AVClass *av_class;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVIAMFSubmixElement {
+    ಸ್ಥಿರಾಂಕ AVClass *av_class;
 
     /**
      * The id of the Audio Element this submix element references.
      */
-    unsigned int audio_element_id;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ audio_element_id;
 
     /**
      * Information required required for applying any processing to the
@@ -478,7 +478,7 @@ typedef struct AVIAMFSubmixElement {
      * If the Audio Element is not of @ref AVIAMFAudioElement.audio_element_type
      * "type" AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL, then this field is undefined.
      */
-    enum AVIAMFHeadphonesMode headphones_rendering_mode;
+    ಎಣಿಕೆ AVIAMFHeadphones_ಬಹುಲಕ headphones_rendering_ಬಹುಲಕ;
 
     /**
      * A dictionary of strings describing the submix in different languages.
@@ -493,7 +493,7 @@ typedef struct AVIAMFSubmixElement {
     AVDictionary *annotations;
 } AVIAMFSubmixElement;
 
-enum AVIAMFSubmixLayoutType {
+ಎಣಿಕೆ AVIAMFSubmixLayoutType {
     /**
      * The layout follows the loudspeaker sound system convention of ITU-2051-3.
      * @ref AVIAMFSubmixLayout.sound_system must be set.
@@ -514,10 +514,10 @@ enum AVIAMFSubmixLayoutType {
  * @note The struct should be allocated with av_iamf_submix_add_layout()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFSubmixLayout {
-    const AVClass *av_class;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVIAMFSubmixLayout {
+    ಸ್ಥಿರಾಂಕ AVClass *av_class;
 
-    enum AVIAMFSubmixLayoutType layout_type;
+    ಎಣಿಕೆ AVIAMFSubmixLayoutType layout_type;
 
     /**
      * Channel layout matching one of Sound Systems A to J of ITU-2051-3, plus
@@ -556,8 +556,8 @@ typedef struct AVIAMFSubmixLayout {
  * @note The struct should be allocated with av_iamf_mix_presentation_add_submix()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFSubmix {
-    const AVClass *av_class;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVIAMFSubmix {
+    ಸ್ಥಿರಾಂಕ AVClass *av_class;
 
     /**
      * Array of submix elements.
@@ -572,7 +572,7 @@ typedef struct AVIAMFSubmix {
      * Set by av_iamf_submix_add_element(), must not be modified by any
      * other code.
      */
-    unsigned int nb_elements;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_elements;
 
     /**
      * Array of submix layouts.
@@ -587,7 +587,7 @@ typedef struct AVIAMFSubmix {
      * Set by av_iamf_submix_add_layout(), must not be modified by any
      * other code.
      */
-    unsigned int nb_layouts;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_layouts;
 
     /**
      * Information required for post-processing the mixed audio signal to
@@ -613,8 +613,8 @@ typedef struct AVIAMFSubmix {
  * @note The struct should be allocated with av_iamf_mix_presentation_alloc()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFMixPresentation {
-    const AVClass *av_class;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVIAMFMixPresentation {
+    ಸ್ಥಿರಾಂಕ AVClass *av_class;
 
     /**
      * Array of submixes.
@@ -629,7 +629,7 @@ typedef struct AVIAMFMixPresentation {
      * Set by av_iamf_mix_presentation_add_submix(), must not be modified
      * by any other code.
      */
-    unsigned int nb_submixes;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_submixes;
 
     /**
      * A dictionary of strings describing the mix in different languages.
@@ -644,7 +644,7 @@ typedef struct AVIAMFMixPresentation {
     AVDictionary *annotations;
 } AVIAMFMixPresentation;
 
-const AVClass *av_iamf_mix_presentation_get_class(void);
+ಸ್ಥಿರಾಂಕ AVClass *av_iamf_mix_presentation_get_class(ಶೂನ್ಯ);
 
 /**
  * Allocates a AVIAMFMixPresentation, and initializes its fields with default
@@ -653,7 +653,7 @@ const AVClass *av_iamf_mix_presentation_get_class(void);
  *
  * @see av_iamf_mix_presentation_add_submix()
  */
-AVIAMFMixPresentation *av_iamf_mix_presentation_alloc(void);
+AVIAMFMixPresentation *av_iamf_mix_presentation_alloc(ಶೂನ್ಯ);
 
 /**
  * Allocate a submix and add it to a given AVIAMFMixPresentation.
@@ -662,7 +662,7 @@ AVIAMFMixPresentation *av_iamf_mix_presentation_alloc(void);
  *
  * @return a pointer to the allocated submix.
  */
-AVIAMFSubmix *av_iamf_mix_presentation_add_submix(AVIAMFMixPresentation *mix_presentation);
+AVIAMFSubmix *av_iamf_mix_presentation_ಕೂಡಿಸು_submix(AVIAMFMixPresentation *mix_presentation);
 
 /**
  * Allocate a submix element and add it to a given AVIAMFSubmix.
@@ -671,7 +671,7 @@ AVIAMFSubmix *av_iamf_mix_presentation_add_submix(AVIAMFMixPresentation *mix_pre
  *
  * @return a pointer to the allocated submix.
  */
-AVIAMFSubmixElement *av_iamf_submix_add_element(AVIAMFSubmix *submix);
+AVIAMFSubmixElement *av_iamf_submix_ಕೂಡಿಸು_element(AVIAMFSubmix *submix);
 
 /**
  * Allocate a submix layout and add it to a given AVIAMFSubmix.
@@ -680,7 +680,7 @@ AVIAMFSubmixElement *av_iamf_submix_add_element(AVIAMFSubmix *submix);
  *
  * @return a pointer to the allocated submix.
  */
-AVIAMFSubmixLayout *av_iamf_submix_add_layout(AVIAMFSubmix *submix);
+AVIAMFSubmixLayout *av_iamf_submix_ಕೂಡಿಸು_layout(AVIAMFSubmix *submix);
 
 /**
  * Free an AVIAMFMixPresentation and all its contents.
@@ -688,10 +688,10 @@ AVIAMFSubmixLayout *av_iamf_submix_add_layout(AVIAMFSubmix *submix);
  * @param mix_presentation pointer to pointer to an allocated AVIAMFMixPresentation.
  *                         upon return, *mix_presentation will be set to NULL.
  */
-void av_iamf_mix_presentation_free(AVIAMFMixPresentation **mix_presentation);
+ಶೂನ್ಯ av_iamf_mix_presentation_free(AVIAMFMixPresentation **mix_presentation);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_IAMF_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_IAMF_H */

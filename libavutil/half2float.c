@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/half2float.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/half2float.h"
 
-#if !HAVE_FAST_FLOAT16
-static uint32_t convertmantissa(uint32_t i)
+#ಆದರೆ !HAVE_FAST_FLOAT16
+ಸ್ಥಿರ uint32_t convertmantissa(uint32_t i)
 {
     int32_t m = i << 13; // Zero pad mantissa bits
     int32_t e = 0; // Zero exponent
 
-    while (!(m & 0x00800000)) { // While not normalized
+    ಆಗ (!(m & 0x00800000)) { // While not normalized
         e -= 0x00800000; // Decrement exponent (1<<23)
         m <<= 1; // Shift mantissa
     }
@@ -32,36 +32,36 @@ static uint32_t convertmantissa(uint32_t i)
     m &= ~0x00800000; // Clear leading 1 bit
     e +=  0x38800000; // Adjust bias ((127-14)<<23)
 
-    return m | e; // Return combined number
+    ಹಿಂತಿರುಗಿ m | e; // Return combined number
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-void ff_init_half2float_tables(Half2FloatTables *t)
+ಶೂನ್ಯ ff_init_half2float_tables(Half2FloatTables *t)
 {
-#if !HAVE_FAST_FLOAT16
+#ಆದರೆ !HAVE_FAST_FLOAT16
     t->mantissatable[0] = 0;
-    for (int i = 1; i < 1024; i++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 1; i < 1024; i++)
         t->mantissatable[i] = convertmantissa(i);
-    for (int i = 1024; i < 2048; i++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 1024; i < 2048; i++)
         t->mantissatable[i] = 0x38000000UL + ((i - 1024) << 13UL);
-    for (int i = 2048; i < 3072; i++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 2048; i < 3072; i++)
         t->mantissatable[i] = t->mantissatable[i - 1024] | 0x400000UL;
     t->mantissatable[2048] = t->mantissatable[1024];
 
     t->exponenttable[0] = 0;
-    for (int i = 1; i < 31; i++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 1; i < 31; i++)
         t->exponenttable[i] = i << 23;
-    for (int i = 33; i < 63; i++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 33; i < 63; i++)
         t->exponenttable[i] = 0x80000000UL + ((i - 32) << 23UL);
     t->exponenttable[31]= 0x47800000UL;
     t->exponenttable[32]= 0x80000000UL;
     t->exponenttable[63]= 0xC7800000UL;
 
     t->offsettable[0] = 0;
-    for (int i = 1; i < 64; i++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 1; i < 64; i++)
         t->offsettable[i] = 1024;
     t->offsettable[31] = 2048;
     t->offsettable[32] = 0;
     t->offsettable[63] = 2048;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }

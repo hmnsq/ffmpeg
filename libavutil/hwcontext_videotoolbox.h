@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_VIDEOTOOLBOX_H
-#define AVUTIL_HWCONTEXT_VIDEOTOOLBOX_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_HWCONTEXT_VIDEOTOOLBOX_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_HWCONTEXT_VIDEOTOOLBOX_H
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include <VideoToolbox/VideoToolbox.h>
+#ಅನ್ತರ್ಭಾವ <VideoToolbox/VideoToolbox.h>
 
-#include "frame.h"
-#include "pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
+#ಅನ್ತರ್ಭಾವ "pixfmt.h"
 
 /**
  * @file
@@ -42,27 +42,27 @@
  * Currently AVHWDeviceContext.hwctx are always NULL.
  */
 
-typedef struct AVVTFramesContext {
-    enum AVColorRange color_range;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVVTFramesContext {
+    ಎಣಿಕೆ AVColorRange color_range;
 } AVVTFramesContext;
 
 /**
  * Convert a VideoToolbox (actually CoreVideo) format to AVPixelFormat.
  * Returns AV_PIX_FMT_NONE if no known equivalent was found.
  */
-enum AVPixelFormat av_map_videotoolbox_format_to_pixfmt(uint32_t cv_fmt);
+ಎಣಿಕೆ AVPixelFormat av_map_videotoolbox_format_ಗಮ್ಯ_pixfmt(uint32_t cv_fmt);
 
 /**
  * Convert an AVPixelFormat to a VideoToolbox (actually CoreVideo) format.
  * Returns 0 if no known equivalent was found.
  */
-uint32_t av_map_videotoolbox_format_from_pixfmt(enum AVPixelFormat pix_fmt);
+uint32_t av_map_videotoolbox_format_from_pixfmt(ಎಣಿಕೆ AVPixelFormat pix_fmt);
 
 /**
  * Same as av_map_videotoolbox_format_from_pixfmt function, but can map and
  * return full range pixel formats via a flag.
  */
-uint32_t av_map_videotoolbox_format_from_pixfmt2(enum AVPixelFormat pix_fmt, bool full_range);
+uint32_t av_map_videotoolbox_format_from_pixfmt2(ಎಣಿಕೆ AVPixelFormat pix_fmt, bool ತುಂಬಿದ_range);
 
 /**
  * Convert an AVChromaLocation to a VideoToolbox/CoreVideo chroma location string.
@@ -71,7 +71,7 @@ uint32_t av_map_videotoolbox_format_from_pixfmt2(enum AVPixelFormat pix_fmt, boo
  *
  * Returns NULL if no known equivalent was found.
  */
-CFStringRef av_map_videotoolbox_chroma_loc_from_av(enum AVChromaLocation loc);
+CFStringRef av_map_videotoolbox_chroma_loc_from_av(ಎಣಿಕೆ AVChromaLocation loc);
 
 /**
  * Convert an AVColorSpace to a VideoToolbox/CoreVideo color matrix string.
@@ -83,7 +83,7 @@ CFStringRef av_map_videotoolbox_chroma_loc_from_av(enum AVChromaLocation loc);
  *
  * Returns NULL if no known equivalent was found.
  */
-CFStringRef av_map_videotoolbox_color_matrix_from_av(enum AVColorSpace space);
+CFStringRef av_map_videotoolbox_color_ಮಾತೃಕೆ_from_av(ಎಣಿಕೆ AVColorSpace space);
 
 /**
  * Convert an AVColorPrimaries to a VideoToolbox/CoreVideo color primaries string.
@@ -95,7 +95,7 @@ CFStringRef av_map_videotoolbox_color_matrix_from_av(enum AVColorSpace space);
  *
  * Returns NULL if no known equivalent was found.
  */
-CFStringRef av_map_videotoolbox_color_primaries_from_av(enum AVColorPrimaries pri);
+CFStringRef av_map_videotoolbox_color_primaries_from_av(ಎಣಿಕೆ AVColorPrimaries pri);
 
 /**
  * Convert an AVColorTransferCharacteristic to a VideoToolbox/CoreVideo color transfer
@@ -108,7 +108,7 @@ CFStringRef av_map_videotoolbox_color_primaries_from_av(enum AVColorPrimaries pr
  *
  * Returns NULL if no known equivalent was found.
  */
-CFStringRef av_map_videotoolbox_color_trc_from_av(enum AVColorTransferCharacteristic trc);
+CFStringRef av_map_videotoolbox_color_trc_from_av(ಎಣಿಕೆ AVColorTransferCharacteristic trc);
 
 /**
  * Set CVPixelBufferRef's metadata based on an AVFrame.
@@ -121,7 +121,7 @@ CFStringRef av_map_videotoolbox_color_trc_from_av(enum AVColorTransferCharacteri
  *
  * Returns < 0 in case of an error.
  */
-int av_vt_pixbuf_set_attachments(void *log_ctx,
-                                 CVPixelBufferRef pixbuf, const struct AVFrame *src);
+ಪೂರ್ಣಾಂಕ av_vt_pixbuf_ಗಣ_attachments(ಶೂನ್ಯ *log_ctx,
+                                 CVPixel_ಬಫರ್_Ref pixbuf, ಸ್ಥಿರಾಂಕ ರಚನೆ AVFrame *src);
 
-#endif /* AVUTIL_HWCONTEXT_VIDEOTOOLBOX_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_HWCONTEXT_VIDEOTOOLBOX_H */

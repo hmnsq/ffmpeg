@@ -18,39 +18,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <assert.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/lls.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/riscv/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/lls.h"
 
-void ff_lls_update_covariance_rvv(double covar[][36], const double *var,
-                                  int count);
-double ff_scalarproduct_double_rvv(const double *, const double *, size_t);
+ಶೂನ್ಯ ff_lls_update_covariance_rvv(ದ್ವಿಗುಣ covar[][36], ಸ್ಥಿರಾಂಕ ದ್ವಿಗುಣ *var,
+                                  ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2);
+ದ್ವಿಗುಣ ff_scalarproduct_double_rvv(ಸ್ಥಿರಾಂಕ ದ್ವಿಗುಣ *, ಸ್ಥಿರಾಂಕ ದ್ವಿಗುಣ *, size_t);
 
-static void ff_lls_update_rvv(struct LLSModel *m, const double *var)
+ಸ್ಥಿರ ಶೂನ್ಯ ff_lls_update_rvv(ರಚನೆ LLSModel *m, ಸ್ಥಿರಾಂಕ ದ್ವಿಗುಣ *var)
 {
-    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_count + 1);
+    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_ಎಣಿಕೆ + 1);
 }
 
-static double ff_lls_evaluate_rvv(struct LLSModel *m, const double *var,
-                                  int order)
+ಸ್ಥಿರ ದ್ವಿಗುಣ ff_lls_evaluate_rvv(ರಚನೆ LLSModel *m, ಸ್ಥಿರಾಂಕ ದ್ವಿಗುಣ *var,
+                                  ಪೂರ್ಣಾಂಕ ಕ್ರಮ)
 {
-    return ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
+    ಹಿಂತಿರುಗಿ ff_scalarproduct_double_rvv(m->coeff[ಕ್ರಮ], var, ಕ್ರಮ + 1);
 }
 
-av_cold void ff_init_lls_riscv(LLSModel *m)
+av_cold ಶೂನ್ಯ ff_init_lls_riscv(LLSModel *m)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#ಆದರೆ HAVE_RVV
+    ಪೂರ್ಣಾಂಕ flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
-        if (ff_get_rv_vlenb() > m->indep_count)
+    ಆದರೆ ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
+        ಆದರೆ (ff_get_rv_vlenb() > m->indep_ಎಣಿಕೆ)
             m->update_lls = ff_lls_update_rvv;
         m->evaluate_lls = ff_lls_evaluate_rvv;
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }

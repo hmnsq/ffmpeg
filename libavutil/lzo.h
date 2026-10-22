@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LZO_H
-#define AVUTIL_LZO_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_LZO_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_LZO_H
 
 /**
  * @defgroup lavu_lzo LZO
@@ -29,22 +29,22 @@
  * @{
  */
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
 /** @name Error flags returned by av_lzo1x_decode
  * @{ */
 /// end of the input buffer reached before decoding finished
-#define AV_LZO_INPUT_DEPLETED  1
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_LZO_ಒಳಹರಿವು_DEPLETED  1
 /// decoded data did not fit into output buffer
-#define AV_LZO_OUTPUT_FULL     2
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_LZO_OUTPUT_ತುಂಬಿದ     2
 /// a reference to previously decoded data was wrong
-#define AV_LZO_INVALID_BACKPTR 4
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_LZO_INVALID_BACKPTR 4
 /// a non-specific error in the compressed bitstream
-#define AV_LZO_ERROR           8
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_LZO_ERROR           8
 /** @} */
 
-#define AV_LZO_INPUT_PADDING   8
-#define AV_LZO_OUTPUT_PADDING 12
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_LZO_ಒಳಹರಿವು_PADDING   8
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_LZO_OUTPUT_PADDING 12
 
 /**
  * @brief Decodes LZO 1x compressed data.
@@ -57,10 +57,10 @@
  * Make sure all buffers are appropriately padded, in must provide
  * AV_LZO_INPUT_PADDING, out must provide AV_LZO_OUTPUT_PADDING additional bytes.
  */
-int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen);
+ಪೂರ್ಣಾಂಕ av_lzo1x_decode(ಶೂನ್ಯ *ಹೊರಹೋಗು, ಪೂರ್ಣಾಂಕ *outlen, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಒಳ, ಪೂರ್ಣಾಂಕ *inlen);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_LZO_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_LZO_H */

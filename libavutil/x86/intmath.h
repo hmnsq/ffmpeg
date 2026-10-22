@@ -18,102 +18,102 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_INTMATH_H
-#define AVUTIL_X86_INTMATH_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_X86_INTMATH_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_X86_INTMATH_H
 
-#include <stdint.h>
-#include <stdlib.h>
-#if HAVE_FAST_CLZ
-#if defined(_MSC_VER)
-#include <intrin.h>
-#elif defined(__INTEL_COMPILER)
-#include <immintrin.h>
-#endif
-#endif
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಆದರೆ HAVE_FAST_CLZ
+#ಆದರೆ defined(_MSC_VER)
+#ಅನ್ತರ್ಭಾವ <intrin.h>
+#ಅಥವಾಆದರೆ defined(__INTEL_COMPILER)
+#ಅನ್ತರ್ಭಾವ <immintrin.h>
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#if HAVE_FAST_CLZ
-#if (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
-#   if defined(__INTEL_COMPILER)
-#       define ff_log2(x) (_bit_scan_reverse((x)|1))
-#   else
+#ಆದರೆ HAVE_FAST_CLZ
+#ಆದರೆ (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
+#   ಆದರೆ defined(__INTEL_COMPILER)
+#       define ff_log2(x) (ಬಿಟ್_ಪರಿಶೀಲನೆ_ಹಿಮ್ಮುಖ((x)|1))
+#   ಇಲ್ಲದಿದ್ದರೆ
 #       define ff_log2 ff_log2_x86
-static av_always_inline av_const int ff_log2_x86(unsigned int v)
+ಸ್ಥಿರ av_always_inline av_const ಪೂರ್ಣಾಂಕ ff_log2_x86(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ v)
 {
-    unsigned long n;
-    _BitScanReverse(&n, v|1);
-    return n;
+    ಚಿಹ್ನೆರಹಿತ ದೀರ್ಘ n;
+    ಬಿಟ್_ಪರಿಶೀಲನೆ_ಹಿಮ್ಮುಖ_2(&n, v|1);
+    ಹಿಂತಿರುಗಿ n;
 }
 #   endif
 #   define ff_log2_16bit av_log2
 
-#if defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
+#ಆದರೆ defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
                                   (defined(__BMI__) || !defined(__clang__)))
 #   define ff_ctz(v) _tzcnt_u32(v)
 
-#   if ARCH_X86_64
+#   ಆದರೆ ARCH_X86_64
 #       define ff_ctzll(v) _tzcnt_u64(v)
-#   else
+#   ಇಲ್ಲದಿದ್ದರೆ
 #       define ff_ctzll ff_ctzll_x86
-static av_always_inline av_const int ff_ctzll_x86(long long v)
+ಸ್ಥಿರ av_always_inline av_const ಪೂರ್ಣಾಂಕ ff_ctzll_x86(ದೀರ್ಘ ದೀರ್ಘ v)
 {
-    return ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
+    ಹಿಂತಿರುಗಿ ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
 }
 #   endif
-#endif /* _MSC_VER */
+#ಆದರೆ_ಅಂತ್ಯ /* _MSC_VER */
 
-#endif /* __INTEL_COMPILER */
+#ಆದರೆ_ಅಂತ್ಯ /* __INTEL_COMPILER */
 
-#endif /* HAVE_FAST_CLZ */
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_FAST_CLZ */
 
-#if defined(__GNUC__) || defined(__clang__)
+#ಆದರೆ defined(__GNUC__) || defined(__clang__)
 
 /* Our generic version of av_popcount is faster than GCC's built-in on
  * CPUs that don't support the popcnt instruction.
  */
-#if defined(__POPCNT__)
-    #define av_popcount   __builtin_popcount
-#if ARCH_X86_64
-    #define av_popcount64 __builtin_popcountll
-#endif
+#ಆದರೆ defined(__POPCNT__)
+    #ವ್ಯಾಖ್ಯಾನಿಸು av_popcount   __builtin_popcount
+#ಆದರೆ ARCH_X86_64
+    #ವ್ಯಾಖ್ಯಾನಿಸು av_popcount64 __builtin_popcountll
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif /* __POPCNT__ */
+#ಆದರೆ_ಅಂತ್ಯ /* __POPCNT__ */
 
-#if defined(__BMI2__)
+#ಆದರೆ defined(__BMI2__)
 
-#if AV_GCC_VERSION_AT_LEAST(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-#define av_zero_extend av_zero_extend_bmi2
-static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
+#ಆದರೆ AV_GCC_ಆವೃತ್ತಿ_AT_ಕನಿಷ್ಠ(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
+#ಆದರೆ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+#ವ್ಯಾಖ್ಯಾನಿಸು av_zero_extend av_zero_extend_bmi2
+ಸ್ಥಿರ av_always_inline av_const ಚಿಹ್ನೆರಹಿತ av_zero_extend_bmi2(ಚಿಹ್ನೆರಹಿತ a, ಚಿಹ್ನೆರಹಿತ p)
 {
-    if (p > 31) abort();
-    return __builtin_ia32_bzhi_si(a, p);
+    ಆದರೆ (p > 31) abort();
+    ಹಿಂತಿರುಗಿ __builtin_ia32_bzhi_si(a, p);
 }
-#else
-#define av_zero_extend __builtin_ia32_bzhi_si
-#endif
-#elif HAVE_INLINE_ASM
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು av_zero_extend __builtin_ia32_bzhi_si
+#ಆದರೆ_ಅಂತ್ಯ
+#ಅಥವಾಆದರೆ HAVE_INLINE_ASM
 /* GCC releases before 5.1.0 have a broken bzhi builtin, so for those we
  * implement it using inline assembly
  */
-#define av_zero_extend av_zero_extend_bmi2
-static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
+#ವ್ಯಾಖ್ಯಾನಿಸು av_zero_extend av_zero_extend_bmi2
+ಸ್ಥಿರ av_always_inline av_const ಚಿಹ್ನೆರಹಿತ av_zero_extend_bmi2(ಚಿಹ್ನೆರಹಿತ a, ಚಿಹ್ನೆರಹಿತ p)
 {
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (p > 31) abort();
-#endif
-    if (av_builtin_constant_p(p))
-        return a & ((1U << p) - 1);
-    else {
-        unsigned x;
+#ಆದರೆ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    ಆದರೆ (p > 31) abort();
+#ಆದರೆ_ಅಂತ್ಯ
+    ಆದರೆ (av_builtin_constant_p(p))
+        ಹಿಂತಿರುಗಿ a & ((1U << p) - 1);
+    ಇಲ್ಲದಿದ್ದರೆ {
+        ಚಿಹ್ನೆರಹಿತ x;
         __asm__ ("bzhi %2, %1, %0 \n\t" : "=r"(x) : "rm"(a), "r"(p));
-        return x;
+        ಹಿಂತಿರುಗಿ x;
     }
 }
-#endif /* AV_GCC_VERSION_AT_LEAST */
+#ಆದರೆ_ಅಂತ್ಯ /* AV_GCC_VERSION_AT_LEAST */
 
-#endif /* __BMI2__ */
+#ಆದರೆ_ಅಂತ್ಯ /* __BMI2__ */
 
-#endif /* __GNUC__ */
+#ಆದರೆ_ಅಂತ್ಯ /* __GNUC__ */
 
-#endif /* AVUTIL_X86_INTMATH_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_X86_INTMATH_H */

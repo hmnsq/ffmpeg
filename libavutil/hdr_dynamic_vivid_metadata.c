@@ -18,28 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "hdr_dynamic_vivid_metadata.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ "hdr_dynamic_vivid_metadata.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *size)
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *ಗಾತ್ರ_2)
 {
-    AVDynamicHDRVivid *hdr_vivid = av_mallocz(sizeof(AVDynamicHDRVivid));
+    AVDynamicHDRVivid *hdr_vivid = av_mallocz(ಗಾತ್ರ(AVDynamicHDRVivid));
 
-    if (size)
-        *size = hdr_vivid ? sizeof(*hdr_vivid) : 0;
+    ಆದರೆ (ಗಾತ್ರ_2)
+        *ಗಾತ್ರ_2 = hdr_vivid ? ಗಾತ್ರ(*hdr_vivid) : 0;
 
-    return hdr_vivid;
+    ಹಿಂತಿರುಗಿ hdr_vivid;
 }
 
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_data(AVFrame *frame)
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು)
 {
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_DYNAMIC_HDR_VIVID,
-                                                        sizeof(AVDynamicHDRVivid));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_ದತ್ತಾಂಶ *side_ದತ್ತಾಂಶ = av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು,
+                                                        AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_DYNAMIC_HDR_VIVID,
+                                                        ಗಾತ್ರ(AVDynamicHDRVivid));
+    ಆದರೆ (!side_ದತ್ತಾಂಶ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    memset(side_data->data, 0, sizeof(AVDynamicHDRVivid));
+    memset(side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ, 0, ಗಾತ್ರ(AVDynamicHDRVivid));
 
-    return (AVDynamicHDRVivid *)side_data->data;
+    ಹಿಂತಿರುಗಿ (AVDynamicHDRVivid *)side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ;
 }

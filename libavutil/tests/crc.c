@@ -16,32 +16,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "libavutil/crc.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/crc.h"
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
     uint8_t buf[1999];
-    int i;
-    static const unsigned p[7][3] = {
-        { AV_CRC_32_IEEE_LE, 0xEDB88320, 0x3D5CDD04 },
-        { AV_CRC_32_IEEE   , 0x04C11DB7, 0xC0F5BAE0 },
-        { AV_CRC_24_IEEE   , 0x864CFB  , 0xB704CE   },
-        { AV_CRC_16_ANSI_LE, 0xA001    , 0xBFD8     },
-        { AV_CRC_16_ANSI   , 0x8005    , 0x1FBB     },
-        { AV_CRC_8_ATM     , 0x07      , 0xE3       },
-        { AV_CRC_8_EBU     , 0x1D      , 0xD6       },
+    ಪೂರ್ಣಾಂಕ i;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಚಿಹ್ನೆರಹಿತ p[7][3] = {
+        { AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_IEEE_LE, 0xEDB88320, 0x3D5CDD04 },
+        { AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_IEEE   , 0x04C11DB7, 0xC0F5BAE0 },
+        { AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_24_IEEE   , 0x864CFB  , 0xB704CE   },
+        { AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_ANSI_LE, 0xA001    , 0xBFD8     },
+        { AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_ANSI   , 0x8005    , 0x1FBB     },
+        { AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_8_ATM     , 0x07      , 0xE3       },
+        { AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_8_EBU     , 0x1D      , 0xD6       },
     };
-    const AVCRC *ctx;
+    ಸ್ಥಿರಾಂಕ AVCRC *ctx;
 
-    for (i = 0; i < sizeof(buf); i++)
+    ಗಾಗಿ (i = 0; i < ಗಾತ್ರ(buf); i++)
         buf[i] = i + i * i;
 
-    for (i = 0; i < 7; i++) {
-        ctx = av_crc_get_table(p[i][0]);
-        printf("crc %08X = %X\n", p[i][1], av_crc(ctx, 0, buf, sizeof(buf)));
+    ಗಾಗಿ (i = 0; i < 7; i++) {
+        ctx = av_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_get_ಕೋಷ್ಟಕ(p[i][0]);
+        ಬರೆ("crc %08X = %X\n", p[i][1], av_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ(ctx, 0, buf, ಗಾತ್ರ(buf)));
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

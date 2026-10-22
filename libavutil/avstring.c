@@ -19,445 +19,445 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stdarg.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "config.h"
-#include "mem.h"
-#include "avassert.h"
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "avstring.h"
+#ಅನ್ತರ್ಭಾವ "bprint.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
 
-int av_strstart(const char *str, const char *pfx, const char **ptr)
+ಪೂರ್ಣಾಂಕ av_strstart(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *pfx, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **ptr)
 {
-    while (*pfx && *pfx == *str) {
+    ಆಗ (*pfx && *pfx == *str) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    ಆದರೆ (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    ಹಿಂತಿರುಗಿ !*pfx;
 }
 
-int av_stristart(const char *str, const char *pfx, const char **ptr)
+ಪೂರ್ಣಾಂಕ av_stristart(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *pfx, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **ptr)
 {
-    while (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
+    ಆಗ (*pfx && av_toupper((ಚಿಹ್ನೆರಹಿತ)*pfx) == av_toupper((ಚಿಹ್ನೆರಹಿತ)*str)) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    ಆದರೆ (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    ಹಿಂತಿರುಗಿ !*pfx;
 }
 
-char *av_stristr(const char *s1, const char *s2)
+ಅಕ್ಷರ *av_stristr(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s1, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s2)
 {
-    if (!*s2)
-        return (char*)(intptr_t)s1;
+    ಆದರೆ (!*s2)
+        ಹಿಂತಿರುಗಿ (ಅಕ್ಷರ*)(intptr_t)s1;
 
-    do
-        if (av_stristart(s1, s2, NULL))
-            return (char*)(intptr_t)s1;
-    while (*s1++);
+    ಮಾಡು
+        ಆದರೆ (av_stristart(s1, s2, ಖಾಲಿ))
+            ಹಿಂತಿರುಗಿ (ಅಕ್ಷರ*)(intptr_t)s1;
+    ಆಗ (*s1++);
 
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length)
+ಅಕ್ಷರ *av_strnstr(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *haystack, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *needle, size_t hay_ಉದ್ದಳತೆ)
 {
-    size_t needle_len = strlen(needle);
-    if (!needle_len)
-        return (char*)haystack;
-    while (hay_length >= needle_len) {
-        hay_length--;
-        if (!memcmp(haystack, needle, needle_len))
-            return (char*)haystack;
+    size_t needle_len = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(needle);
+    ಆದರೆ (!needle_len)
+        ಹಿಂತಿರುಗಿ (ಅಕ್ಷರ*)haystack;
+    ಆಗ (hay_ಉದ್ದಳತೆ >= needle_len) {
+        hay_ಉದ್ದಳತೆ--;
+        ಆದರೆ (!memcmp(haystack, needle, needle_len))
+            ಹಿಂತಿರುಗಿ (ಅಕ್ಷರ*)haystack;
         haystack++;
     }
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-size_t av_strlcpy(char *dst, const char *src, size_t size)
+size_t av_strlcpy(ಅಕ್ಷರ *dst, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *src, size_t ಗಾತ್ರ_2)
 {
     size_t len = 0;
-    while (++len < size && *src)
+    ಆಗ (++len < ಗಾತ್ರ_2 && *src)
         *dst++ = *src++;
-    if (len <= size)
+    ಆದರೆ (len <= ಗಾತ್ರ_2)
         *dst = 0;
-    return len + strlen(src) - 1;
+    ಹಿಂತಿರುಗಿ len + ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(src) - 1;
 }
 
-size_t av_strlcat(char *dst, const char *src, size_t size)
+size_t av_strlcat(ಅಕ್ಷರ *dst, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *src, size_t ಗಾತ್ರ_2)
 {
-    size_t len = strlen(dst);
-    if (size <= len + 1)
-        return len + strlen(src);
-    return len + av_strlcpy(dst + len, src, size - len);
+    size_t len = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(dst);
+    ಆದರೆ (ಗಾತ್ರ_2 <= len + 1)
+        ಹಿಂತಿರುಗಿ len + ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(src);
+    ಹಿಂತಿರುಗಿ len + av_strlcpy(dst + len, src, ಗಾತ್ರ_2 - len);
 }
 
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
+size_t av_strlcatf(ಅಕ್ಷರ *dst, size_t ಗಾತ್ರ_2, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *fmt, ...)
 {
-    size_t len = strlen(dst);
+    size_t len = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(dst);
     va_list vl;
 
     va_start(vl, fmt);
-    len += vsnprintf(dst + len, size > len ? size - len : 0, fmt, vl);
+    len += vsnprintf(dst + len, ಗಾತ್ರ_2 > len ? ಗಾತ್ರ_2 - len : 0, fmt, vl);
     va_end(vl);
 
-    return len;
+    ಹಿಂತಿರುಗಿ len;
 }
 
-char *av_asprintf(const char *fmt, ...)
+ಅಕ್ಷರ *av_asprintf(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *fmt, ...)
 {
-    char *p = NULL;
+    ಅಕ್ಷರ *p = ಖಾಲಿ;
     va_list va;
-    int len;
+    ಪೂರ್ಣಾಂಕ len;
 
     va_start(va, fmt);
-    len = vsnprintf(NULL, 0, fmt, va);
+    len = vsnprintf(ಖಾಲಿ, 0, fmt, va);
     va_end(va);
-    if (len < 0)
-        goto end;
+    ಆದರೆ (len < 0)
+        ಹೋಗು ಕೊನೆ;
 
     p = av_malloc(len + 1);
-    if (!p)
-        goto end;
+    ಆದರೆ (!p)
+        ಹೋಗು ಕೊನೆ;
 
     va_start(va, fmt);
     len = vsnprintf(p, len + 1, fmt, va);
     va_end(va);
-    if (len < 0)
+    ಆದರೆ (len < 0)
         av_freep(&p);
 
-end:
-    return p;
+ಕೊನೆ:
+    ಹಿಂತಿರುಗಿ p;
 }
 
-#define WHITESPACES " \n\t\r"
+#ವ್ಯಾಖ್ಯಾನಿಸು WHITESPACES " \n\t\r"
 
-char *av_get_token(const char **buf, const char *term)
+ಅಕ್ಷರ *av_get_token(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **buf, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಪದ)
 {
-    char *out     = av_realloc(NULL, strlen(*buf) + 1);
-    char *ret     = out, *end = out;
-    const char *p = *buf;
-    if (!out)
-        return NULL;
+    ಅಕ್ಷರ *ಹೊರಹೋಗು     = av_realloc(ಖಾಲಿ, ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(*buf) + 1);
+    ಅಕ್ಷರ *ret     = ಹೊರಹೋಗು, *ಕೊನೆ = ಹೊರಹೋಗು;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p = *buf;
+    ಆದರೆ (!ಹೊರಹೋಗು)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     p += strspn(p, WHITESPACES);
 
-    while (*p && !strspn(p, term)) {
-        char c = *p++;
-        if (c == '\\' && *p) {
-            *out++ = *p++;
-            end    = out;
-        } else if (c == '\'') {
-            while (*p && *p != '\'')
-                *out++ = *p++;
-            if (*p) {
+    ಆಗ (*p && !strspn(p, ಪದ)) {
+        ಅಕ್ಷರ c = *p++;
+        ಆದರೆ (c == '\\' && *p) {
+            *ಹೊರಹೋಗು++ = *p++;
+            ಕೊನೆ    = ಹೊರಹೋಗು;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (c == '\'') {
+            ಆಗ (*p && *p != '\'')
+                *ಹೊರಹೋಗು++ = *p++;
+            ಆದರೆ (*p) {
                 p++;
-                end = out;
+                ಕೊನೆ = ಹೊರಹೋಗು;
             }
-        } else {
-            *out++ = c;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            *ಹೊರಹೋಗು++ = c;
         }
     }
 
-    do
-        *out-- = 0;
-    while (out >= end && strspn(out, WHITESPACES));
+    ಮಾಡು
+        *ಹೊರಹೋಗು-- = 0;
+    ಆಗ (ಹೊರಹೋಗು >= ಕೊನೆ && strspn(ಹೊರಹೋಗು, WHITESPACES));
 
     *buf = p;
 
-    char *small_ret = av_realloc(ret, out - ret + 2);
-    return small_ret ? small_ret : ret;
+    ಅಕ್ಷರ *small_ret = av_realloc(ret, ಹೊರಹೋಗು - ret + 2);
+    ಹಿಂತಿರುಗಿ small_ret ? small_ret : ret;
 }
 
-char *av_strtok(char *s, const char *delim, char **saveptr)
+ಅಕ್ಷರ *av_strtok(ಅಕ್ಷರ *s, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *delim, ಅಕ್ಷರ **saveptr)
 {
-    char *tok;
+    ಅಕ್ಷರ *tok;
 
-    if (!s && !(s = *saveptr))
-        return NULL;
+    ಆದರೆ (!s && !(s = *saveptr))
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
     /* skip leading delimiters */
     s += strspn(s, delim);
 
     /* s now points to the first non delimiter char, or to the end of the string */
-    if (!*s) {
-        *saveptr = NULL;
-        return NULL;
+    ಆದರೆ (!*s) {
+        *saveptr = ಖಾಲಿ;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
     tok = s++;
 
     /* skip non delimiters */
     s += strcspn(s, delim);
-    if (*s) {
+    ಆದರೆ (*s) {
         *s = 0;
         *saveptr = s+1;
-    } else {
-        *saveptr = NULL;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        *saveptr = ಖಾಲಿ;
     }
 
-    return tok;
+    ಹಿಂತಿರುಗಿ tok;
 }
 
-int av_strcasecmp(const char *a, const char *b)
+ಪೂರ್ಣಾಂಕ av_strcasecmp(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *a, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *b)
 {
     uint8_t c1, c2;
-    do {
+    ಮಾಡು {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (c1 && c1 == c2);
-    return c1 - c2;
+    } ಆಗ (c1 && c1 == c2);
+    ಹಿಂತಿರುಗಿ c1 - c2;
 }
 
-int av_strncasecmp(const char *a, const char *b, size_t n)
+ಪೂರ್ಣಾಂಕ av_strncasecmp(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *a, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *b, size_t n)
 {
     uint8_t c1, c2;
-    if (n <= 0)
-        return 0;
-    do {
+    ಆದರೆ (n <= 0)
+        ಹಿಂತಿರುಗಿ 0;
+    ಮಾಡು {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (--n && c1 && c1 == c2);
-    return c1 - c2;
+    } ಆಗ (--n && c1 && c1 == c2);
+    ಹಿಂತಿರುಗಿ c1 - c2;
 }
 
-char *av_strireplace(const char *str, const char *from, const char *to)
+ಅಕ್ಷರ *av_strireplace(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *from, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಗಮ್ಯ)
 {
-    char *ret = NULL;
-    const char *pstr2, *pstr = str;
-    size_t tolen = strlen(to), fromlen = strlen(from);
+    ಅಕ್ಷರ *ret = ಖಾಲಿ;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *pstr2, *pstr = str;
+    size_t tolen = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(ಗಮ್ಯ), fromlen = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(from);
     AVBPrint pbuf;
 
-    if (!fromlen)
-        return av_strdup(str);
+    ಆದರೆ (!fromlen)
+        ಹಿಂತಿರುಗಿ av_strdup(str);
 
-    av_bprint_init(&pbuf, 1, AV_BPRINT_SIZE_UNLIMITED);
-    while ((pstr2 = av_stristr(pstr, from))) {
-        av_bprint_append_data(&pbuf, pstr, pstr2 - pstr);
+    av_bprint_init(&pbuf, 1, AV_BPRINT_ಗಾತ್ರ_UNLIMITED);
+    ಆಗ ((pstr2 = av_stristr(pstr, from))) {
+        av_bprint_append_ದತ್ತಾಂಶ(&pbuf, pstr, pstr2 - pstr);
         pstr = pstr2 + fromlen;
-        av_bprint_append_data(&pbuf, to, tolen);
+        av_bprint_append_ದತ್ತಾಂಶ(&pbuf, ಗಮ್ಯ, tolen);
     }
-    av_bprint_append_data(&pbuf, pstr, strlen(pstr));
-    if (!av_bprint_is_complete(&pbuf)) {
-        av_bprint_finalize(&pbuf, NULL);
-    } else {
+    av_bprint_append_ದತ್ತಾಂಶ(&pbuf, pstr, ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(pstr));
+    ಆದರೆ (!av_bprint_is_complete(&pbuf)) {
+        av_bprint_finalize(&pbuf, ಖಾಲಿ);
+    } ಇಲ್ಲದಿದ್ದರೆ {
         av_bprint_finalize(&pbuf, &ret);
     }
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-const char *av_basename(const char *path)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_basename(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಮಾರ್ಗ)
 {
-    if (!path || *path == '\0')
-        return ".";
+    ಆದರೆ (!ಮಾರ್ಗ || *ಮಾರ್ಗ == '\0')
+        ಹಿಂತಿರುಗಿ ".";
 
-    const char *p = strrchr(path, '/');
-#if HAVE_DOS_PATHS
-    const char *q = strrchr(path, '\\');
-    const char *d = strchr(path, ':');
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p = strrchr(ಮಾರ್ಗ, '/');
+#ಆದರೆ HAVE_DOS_PATHS
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *q = strrchr(ಮಾರ್ಗ, '\\');
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *d = strchr(ಮಾರ್ಗ, ':');
     p = FFMAX3(p, q, d);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    if (!p)
-        return path;
+    ಆದರೆ (!p)
+        ಹಿಂತಿರುಗಿ ಮಾರ್ಗ;
 
-    return p + 1;
+    ಹಿಂತಿರುಗಿ p + 1;
 }
 
-const char *av_dirname(char *path)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_dirname(ಅಕ್ಷರ *ಮಾರ್ಗ)
 {
-    char *p = path ? strrchr(path, '/') : NULL;
+    ಅಕ್ಷರ *p = ಮಾರ್ಗ ? strrchr(ಮಾರ್ಗ, '/') : ಖಾಲಿ;
 
-#if HAVE_DOS_PATHS
-    char *q = path ? strrchr(path, '\\') : NULL;
-    char *d = path ? strchr(path, ':')  : NULL;
+#ಆದರೆ HAVE_DOS_PATHS
+    ಅಕ್ಷರ *q = ಮಾರ್ಗ ? strrchr(ಮಾರ್ಗ, '\\') : ಖಾಲಿ;
+    ಅಕ್ಷರ *d = ಮಾರ್ಗ ? strchr(ಮಾರ್ಗ, ':')  : ಖಾಲಿ;
 
     d = d ? d + 1 : d;
 
     p = FFMAX3(p, q, d);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    if (!p)
-        return ".";
+    ಆದರೆ (!p)
+        ಹಿಂತಿರುಗಿ ".";
 
     *p = '\0';
 
-    return path;
+    ಹಿಂತಿರುಗಿ ಮಾರ್ಗ;
 }
 
-char *av_append_path_component(const char *path, const char *component)
+ಅಕ್ಷರ *av_append_ಮಾರ್ಗ_component(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಮಾರ್ಗ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *component)
 {
     size_t p_len, c_len;
-    char *fullpath;
+    ಅಕ್ಷರ *fullpath;
 
-    if (!path)
-        return av_strdup(component);
-    if (!component)
-        return av_strdup(path);
+    ಆದರೆ (!ಮಾರ್ಗ)
+        ಹಿಂತಿರುಗಿ av_strdup(component);
+    ಆದರೆ (!component)
+        ಹಿಂತಿರುಗಿ av_strdup(ಮಾರ್ಗ);
 
-    p_len = strlen(path);
-    c_len = strlen(component);
-    if (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
-        return NULL;
+    p_len = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(ಮಾರ್ಗ);
+    c_len = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(component);
+    ಆದರೆ (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     fullpath = av_malloc(p_len + c_len + 2);
-    if (fullpath) {
-        if (p_len) {
-            av_strlcpy(fullpath, path, p_len + 1);
-            if (c_len) {
-                if (fullpath[p_len - 1] != '/' && component[0] != '/')
+    ಆದರೆ (fullpath) {
+        ಆದರೆ (p_len) {
+            av_strlcpy(fullpath, ಮಾರ್ಗ, p_len + 1);
+            ಆದರೆ (c_len) {
+                ಆದರೆ (fullpath[p_len - 1] != '/' && component[0] != '/')
                     fullpath[p_len++] = '/';
-                else if (fullpath[p_len - 1] == '/' && component[0] == '/')
+                ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (fullpath[p_len - 1] == '/' && component[0] == '/')
                     p_len--;
             }
         }
         av_strlcpy(&fullpath[p_len], component, c_len + 1);
         fullpath[p_len + c_len] = 0;
     }
-    return fullpath;
+    ಹಿಂತಿರುಗಿ fullpath;
 }
 
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags)
+ಪೂರ್ಣಾಂಕ av_escape(ಅಕ್ಷರ **dst, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *src, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *special_chars,
+              ಎಣಿಕೆ AVEscape_ಬಹುಲಕ ಬಹುಲಕ, ಪೂರ್ಣಾಂಕ flags)
 {
     AVBPrint dstbuf;
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    av_bprint_init(&dstbuf, 1, INT_MAX); /* (int)dstbuf.len must be >= 0 */
-    av_bprint_escape(&dstbuf, src, special_chars, mode, flags);
+    av_bprint_init(&dstbuf, 1, ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ); /* (int)dstbuf.len must be >= 0 */
+    av_bprint_escape(&dstbuf, src, special_chars, ಬಹುಲಕ, flags);
 
-    if (!av_bprint_is_complete(&dstbuf)) {
-        av_bprint_finalize(&dstbuf, NULL);
-        return AVERROR(ENOMEM);
+    ಆದರೆ (!av_bprint_is_complete(&dstbuf)) {
+        av_bprint_finalize(&dstbuf, ಖಾಲಿ);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
     }
-    if ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
-        return ret;
-    return dstbuf.len;
+    ಆದರೆ ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
+        ಹಿಂತಿರುಗಿ ret;
+    ಹಿಂತಿರುಗಿ dstbuf.len;
 }
 
-int av_match_name(const char *name, const char *names)
+ಪೂರ್ಣಾಂಕ av_ಹೊಂದಿಕೆ_name(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಹೆಸರುಗಳು)
 {
-    const char *p;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p;
     size_t len, namelen;
 
-    if (!name || !names)
-        return 0;
+    ಆದರೆ (!name || !ಹೆಸರುಗಳು)
+        ಹಿಂತಿರುಗಿ 0;
 
-    namelen = strlen(name);
-    while (*names) {
-        int negate = '-' == *names;
-        p = strchr(names, ',');
-        if (!p)
-            p = names + strlen(names);
-        names += negate;
-        len = FFMAX(p - names, namelen);
-        if (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
-            return !negate;
-        names = p + (*p == ',');
+    namelen = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(name);
+    ಆಗ (*ಹೆಸರುಗಳು) {
+        ಪೂರ್ಣಾಂಕ negate = '-' == *ಹೆಸರುಗಳು;
+        p = strchr(ಹೆಸರುಗಳು, ',');
+        ಆದರೆ (!p)
+            p = ಹೆಸರುಗಳು + ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(ಹೆಸರುಗಳು);
+        ಹೆಸರುಗಳು += negate;
+        len = FFMAX(p - ಹೆಸರುಗಳು, namelen);
+        ಆದರೆ (!av_strncasecmp(name, ಹೆಸರುಗಳು, len) || !ಅಕ್ಷರಸರಣಿ_ಹೋಲಿಕೆ("ALL", ಹೆಸರುಗಳು, FFMAX(3, p - ಹೆಸರುಗಳು)))
+            ಹಿಂತಿರುಗಿ !negate;
+        ಹೆಸರುಗಳು = p + (*p == ',');
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags)
+ಪೂರ್ಣಾಂಕ av_utf8_decode(int32_t *codep, ಸ್ಥಿರಾಂಕ uint8_t **bufp, ಸ್ಥಿರಾಂಕ uint8_t *buf_ಕೊನೆ,
+                   ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ flags)
 {
-    const uint8_t *p = *bufp;
-    uint32_t top;
-    uint64_t code;
-    int ret = 0, tail_len;
+    ಸ್ಥಿರಾಂಕ uint8_t *p = *bufp;
+    uint32_t ತುದಿ;
+    uint64_t ಸಂಕೇತ_2;
+    ಪೂರ್ಣಾಂಕ ret = 0, ಬಾಲ_len;
     uint32_t overlong_encoding_mins[6] = {
         0x00000000, 0x00000080, 0x00000800, 0x00010000, 0x00200000, 0x04000000,
     };
 
-    if (p >= buf_end)
-        return 0;
+    ಆದರೆ (p >= buf_ಕೊನೆ)
+        ಹಿಂತಿರುಗಿ 0;
 
-    code = *p++;
+    ಸಂಕೇತ_2 = *p++;
 
     /* first sequence byte starts with 10, or is 1111-1110 or 1111-1111,
        which is not admitted */
-    if ((code & 0xc0) == 0x80 || code >= 0xFE) {
+    ಆದರೆ ((ಸಂಕೇತ_2 & 0xc0) == 0x80 || ಸಂಕೇತ_2 >= 0xFE) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
-    top = (code & 128) >> 1;
+    ತುದಿ = (ಸಂಕೇತ_2 & 128) >> 1;
 
-    tail_len = 0;
-    while (code & top) {
-        int tmp;
-        tail_len++;
-        if (p >= buf_end) {
+    ಬಾಲ_len = 0;
+    ಆಗ (ಸಂಕೇತ_2 & ತುದಿ) {
+        ಪೂರ್ಣಾಂಕ tmp;
+        ಬಾಲ_len++;
+        ಆದರೆ (p >= buf_ಕೊನೆ) {
             (*bufp) ++;
-            return AVERROR(EILSEQ); /* incomplete sequence */
+            ಹಿಂತಿರುಗಿ AVERROR(EILSEQ); /* incomplete sequence */
         }
 
         /* we assume the byte to be in the form 10xx-xxxx */
         tmp = *p++ - 128;   /* strip leading 1 */
-        if (tmp>>6) {
+        ಆದರೆ (tmp>>6) {
             (*bufp) ++;
-            return AVERROR(EILSEQ);
+            ಹಿಂತಿರುಗಿ AVERROR(EILSEQ);
         }
-        code = (code<<6) + tmp;
-        top <<= 5;
+        ಸಂಕೇತ_2 = (ಸಂಕೇತ_2<<6) + tmp;
+        ತುದಿ <<= 5;
     }
-    code &= (top << 1) - 1;
+    ಸಂಕೇತ_2 &= (ತುದಿ << 1) - 1;
 
     /* check for overlong encodings */
-    av_assert0(tail_len <= 5);
-    if (code < overlong_encoding_mins[tail_len]) {
+    av_assert0(ಬಾಲ_len <= 5);
+    ಆದರೆ (ಸಂಕೇತ_2 < overlong_encoding_mins[ಬಾಲ_len]) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
 
-    if (code >= 1U<<31) {
+    ಆದರೆ (ಸಂಕೇತ_2 >= 1U<<31) {
         ret = AVERROR(EILSEQ);  /* out-of-range value */
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
 
-    *codep = code;
+    *codep = ಸಂಕೇತ_2;
 
-    if (code > 0x10FFFF &&
+    ಆದರೆ (ಸಂಕೇತ_2 > 0x10FFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES))
         ret = AVERROR(EILSEQ);
-    if (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
+    ಆದರೆ (ಸಂಕೇತ_2 < 0x20 && ಸಂಕೇತ_2 != 0x9 && ಸಂಕೇತ_2 != 0xA && ಸಂಕೇತ_2 != 0xD &&
         flags & AV_UTF8_FLAG_EXCLUDE_XML_INVALID_CONTROL_CODES)
         ret = AVERROR(EILSEQ);
-    if (code >= 0xD800 && code <= 0xDFFF &&
+    ಆದರೆ (ಸಂಕೇತ_2 >= 0xD800 && ಸಂಕೇತ_2 <= 0xDFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_SURROGATES))
         ret = AVERROR(EILSEQ);
-    if ((code == 0xFFFE || code == 0xFFFF) &&
+    ಆದರೆ ((ಸಂಕೇತ_2 == 0xFFFE || ಸಂಕೇತ_2 == 0xFFFF) &&
         !(flags & AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS))
         ret = AVERROR(EILSEQ);
 
-end:
+ಕೊನೆ:
     *bufp = p;
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int av_match_list(const char *name, const char *list, char separator)
+ಪೂರ್ಣಾಂಕ av_ಹೊಂದಿಕೆ_list(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *list, ಅಕ್ಷರ separator)
 {
-    const char *p, *q;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p, *q;
 
-    for (p = name; p && *p; ) {
-        for (q = list; q && *q; ) {
-            int k;
-            for (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
-                if (k && (!p[k] || p[k] == separator))
-                    return 1;
+    ಗಾಗಿ (p = name; p && *p; ) {
+        ಗಾಗಿ (q = list; q && *q; ) {
+            ಪೂರ್ಣಾಂಕ k;
+            ಗಾಗಿ (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
+                ಆದರೆ (k && (!p[k] || p[k] == separator))
+                    ಹಿಂತಿರುಗಿ 1;
             q = strchr(q, separator);
-            if(q)
+            ಆದರೆ(q)
                 q++;
         }
         p = strchr(p, separator);
-        if (p)
+        ಆದರೆ (p)
             p++;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

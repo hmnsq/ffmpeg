@@ -16,34 +16,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_TIME_INTERNAL_H
-#define AVUTIL_TIME_INTERNAL_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_ಸಮಯ_ಆಂತರಿಕ_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_ಸಮಯ_ಆಂತರಿಕ_H
 
-#include <time.h>
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ <time.h>
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
-static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
+#ಆದರೆ !HAVE_GMTIME_R && !defined(gmtime_r)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ರಚನೆ tm *ff_gmtime_r(ಸ್ಥಿರಾಂಕ time_t* clock, ರಚನೆ tm *ಫಲಿತಾಂಶ)
 {
-    struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
-    *result = *ptr;
-    return result;
+    ರಚನೆ tm *ptr = gmtime(clock);
+    ಆದರೆ (!ptr)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    *ಫಲಿತಾಂಶ = *ptr;
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
-#define gmtime_r ff_gmtime_r
-#endif
+#ವ್ಯಾಖ್ಯಾನಿಸು gmtime_r ff_gmtime_r
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
-static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
+#ಆದರೆ !HAVE_LOCALTIME_R && !defined(localtime_r)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ರಚನೆ tm *ff_localtime_r(ಸ್ಥಿರಾಂಕ time_t* clock, ರಚನೆ tm *ಫಲಿತಾಂಶ)
 {
-    struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
-    *result = *ptr;
-    return result;
+    ರಚನೆ tm *ptr = localtime(clock);
+    ಆದರೆ (!ptr)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    *ಫಲಿತಾಂಶ = *ptr;
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
-#define localtime_r ff_localtime_r
-#endif
+#ವ್ಯಾಖ್ಯಾನಿಸು localtime_r ff_localtime_r
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif /* AVUTIL_TIME_INTERNAL_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_TIME_INTERNAL_H */

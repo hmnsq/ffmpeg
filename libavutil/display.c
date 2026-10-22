@@ -18,56 +18,56 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
-#include <math.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಅನ್ತರ್ಭಾವ <math.h>
 
-#include "display.h"
-#include "mathematics.h"
+#ಅನ್ತರ್ಭಾವ "display.h"
+#ಅನ್ತರ್ಭಾವ "mathematics.h"
 
 // fixed point to double
-#define CONV_FP(x) ((double) (x)) / (1 << 16)
+#ವ್ಯಾಖ್ಯಾನಿಸು CONV_FP(x) ((ದ್ವಿಗುಣ) (x)) / (1 << 16)
 
 // double to fixed point
-#define CONV_DB(x) (int32_t) ((x) * (1 << 16))
+#ವ್ಯಾಖ್ಯಾನಿಸು CONV_DB(x) (int32_t) ((x) * (1 << 16))
 
-double av_display_rotation_get(const int32_t matrix[9])
+ದ್ವಿಗುಣ av_display_rotation_get(ಸ್ಥಿರಾಂಕ int32_t ಮಾತೃಕೆ[9])
 {
-    double rotation, scale[2];
+    ದ್ವಿಗುಣ rotation, scale[2];
 
-    scale[0] = hypot(CONV_FP(matrix[0]), CONV_FP(matrix[3]));
-    scale[1] = hypot(CONV_FP(matrix[1]), CONV_FP(matrix[4]));
+    scale[0] = hypot(CONV_FP(ಮಾತೃಕೆ[0]), CONV_FP(ಮಾತೃಕೆ[3]));
+    scale[1] = hypot(CONV_FP(ಮಾತೃಕೆ[1]), CONV_FP(ಮಾತೃಕೆ[4]));
 
-    if (scale[0] == 0.0 || scale[1] == 0.0)
-        return NAN;
+    ಆದರೆ (scale[0] == 0.0 || scale[1] == 0.0)
+        ಹಿಂತಿರುಗಿ NAN;
 
-    rotation = atan2(CONV_FP(matrix[1]) / scale[1],
-                     CONV_FP(matrix[0]) / scale[0]) * 180 / M_PI;
+    rotation = atan2(CONV_FP(ಮಾತೃಕೆ[1]) / scale[1],
+                     CONV_FP(ಮಾತೃಕೆ[0]) / scale[0]) * 180 / M_PI;
 
-    return -rotation;
+    ಹಿಂತಿರುಗಿ -rotation;
 }
 
-void av_display_rotation_set(int32_t matrix[9], double angle)
+ಶೂನ್ಯ av_display_rotation_ಗಣ(int32_t ಮಾತೃಕೆ[9], ದ್ವಿಗುಣ angle)
 {
-    double radians = -angle * M_PI / 180.0f;
-    double c = cos(radians);
-    double s = sin(radians);
+    ದ್ವಿಗುಣ radians = -angle * M_PI / 180.0f;
+    ದ್ವಿಗುಣ c = ಕೋಜ್ಯಾ(radians);
+    ದ್ವಿಗುಣ s = ಜ್ಯಾ(radians);
 
-    memset(matrix, 0, 9 * sizeof(int32_t));
+    memset(ಮಾತೃಕೆ, 0, 9 * ಗಾತ್ರ(int32_t));
 
-    matrix[0] = CONV_DB(c);
-    matrix[1] = CONV_DB(-s);
-    matrix[3] = CONV_DB(s);
-    matrix[4] = CONV_DB(c);
-    matrix[8] = 1 << 30;
+    ಮಾತೃಕೆ[0] = CONV_DB(c);
+    ಮಾತೃಕೆ[1] = CONV_DB(-s);
+    ಮಾತೃಕೆ[3] = CONV_DB(s);
+    ಮಾತೃಕೆ[4] = CONV_DB(c);
+    ಮಾತೃಕೆ[8] = 1 << 30;
 }
 
-void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip)
+ಶೂನ್ಯ av_display_ಮಾತೃಕೆ_flip(int32_t ಮಾತೃಕೆ[9], ಪೂರ್ಣಾಂಕ hflip, ಪೂರ್ಣಾಂಕ vflip)
 {
-    int i;
-    const int flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
+    ಪೂರ್ಣಾಂಕ i;
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
 
-    if (hflip || vflip)
-        for (i = 0; i < 9; i++)
-            matrix[i] *= flip[i % 3];
+    ಆದರೆ (hflip || vflip)
+        ಗಾಗಿ (i = 0; i < 9; i++)
+            ಮಾತೃಕೆ[i] *= flip[i % 3];
 }

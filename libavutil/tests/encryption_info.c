@@ -16,82 +16,82 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/encryption_info.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/encryption_info.h"
 
-#include <stdio.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "libavutil/avassert.h"
-#include "libavutil/mem.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/avassert.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/mem.h"
 
-static const AVSubsampleEncryptionInfo test_subsamples[] = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
-static const size_t test_subsample_count = sizeof(test_subsamples) / sizeof(test_subsamples[0]);
-static const uint8_t test_iv[] = {0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18};
-static const uint8_t test_key_id[] = {0x21, 0x22, 0x23, 0x24};
-static const uint8_t test_key_id_2[] = {0x31, 0x32, 0x33, 0x34};
-static const uint8_t test_system_id[] = {0x41, 0x42, 0x43};
-static const uint8_t test_data[] = {0x51, 0x52};
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVSubsampleEncryptionInfo test_subsamples[] = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ size_t test_subsample_ಎಣಿಕೆ = ಗಾತ್ರ(test_subsamples) / ಗಾತ್ರ(test_subsamples[0]);
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t test_iv[] = {0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18};
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t test_ಕೀಲಿ_id[] = {0x21, 0x22, 0x23, 0x24};
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t test_ಕೀಲಿ_id_2[] = {0x31, 0x32, 0x33, 0x34};
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t test_system_id[] = {0x41, 0x42, 0x43};
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t test_ದತ್ತಾಂಶ[] = {0x51, 0x52};
 
-static int compare_encryption_info(const AVEncryptionInfo *a, const AVEncryptionInfo *b) {
-    if (!a || !b || a->scheme != b->scheme || a->crypt_byte_block != b->crypt_byte_block ||
-        a->skip_byte_block != b->skip_byte_block || a->key_id_size != b->key_id_size ||
-        a->iv_size != b->iv_size || a->subsample_count != b->subsample_count)
-        return 1;
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ compare_encryption_info(ಸ್ಥಿರಾಂಕ AVEncryptionInfo *a, ಸ್ಥಿರಾಂಕ AVEncryptionInfo *b) {
+    ಆದರೆ (!a || !b || a->scheme != b->scheme || a->crypt_byte_ಖಂಡ != b->crypt_byte_ಖಂಡ ||
+        a->skip_byte_ಖಂಡ != b->skip_byte_ಖಂಡ || a->ಕೀಲಿ_id_ಗಾತ್ರ != b->ಕೀಲಿ_id_ಗಾತ್ರ ||
+        a->iv_ಗಾತ್ರ != b->iv_ಗಾತ್ರ || a->subsample_ಎಣಿಕೆ != b->subsample_ಎಣಿಕೆ)
+        ಹಿಂತಿರುಗಿ 1;
 
-    if (memcmp(a->key_id, b->key_id, a->key_id_size) != 0 ||
-        memcmp(a->iv, b->iv, a->iv_size) != 0 ||
-        memcmp(a->subsamples, b->subsamples, a->subsample_count * sizeof(a->subsamples[0])))
-        return 1;
+    ಆದರೆ (memcmp(a->ಕೀಲಿ_id, b->ಕೀಲಿ_id, a->ಕೀಲಿ_id_ಗಾತ್ರ) != 0 ||
+        memcmp(a->iv, b->iv, a->iv_ಗಾತ್ರ) != 0 ||
+        memcmp(a->subsamples, b->subsamples, a->subsample_ಎಣಿಕೆ * ಗಾತ್ರ(a->subsamples[0])))
+        ಹಿಂತಿರುಗಿ 1;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int compare_encryption_init_info(const AVEncryptionInitInfo *a, const AVEncryptionInitInfo *b) {
-    if (!a || !b || a->system_id_size != b->system_id_size ||
-        a->num_key_ids != b->num_key_ids || a->key_id_size != b->key_id_size ||
-        a->data_size != b->data_size)
-        return 1;
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ compare_encryption_init_info(ಸ್ಥಿರಾಂಕ AVEncryptionInitInfo *a, ಸ್ಥಿರಾಂಕ AVEncryptionInitInfo *b) {
+    ಆದರೆ (!a || !b || a->system_id_ಗಾತ್ರ != b->system_id_ಗಾತ್ರ ||
+        a->ಅಂಕೆ_ಕೀಲಿ_ids != b->ಅಂಕೆ_ಕೀಲಿ_ids || a->ಕೀಲಿ_id_ಗಾತ್ರ != b->ಕೀಲಿ_id_ಗಾತ್ರ ||
+        a->ದತ್ತಾಂಶ_ಗಾತ್ರ != b->ದತ್ತಾಂಶ_ಗಾತ್ರ)
+        ಹಿಂತಿರುಗಿ 1;
 
-    if (memcmp(a->system_id, b->system_id, a->system_id_size) != 0 ||
-        memcmp(a->data, b->data, a->data_size) != 0)
-        return 1;
+    ಆದರೆ (memcmp(a->system_id, b->system_id, a->system_id_ಗಾತ್ರ) != 0 ||
+        memcmp(a->ದತ್ತಾಂಶ, b->ದತ್ತಾಂಶ, a->ದತ್ತಾಂಶ_ಗಾತ್ರ) != 0)
+        ಹಿಂತಿರುಗಿ 1;
 
-    for (uint32_t i = 0; i < a->num_key_ids; i++) {
-        if (memcmp(a->key_ids[i], b->key_ids[i], a->key_id_size) != 0)
-            return 1;
+    ಗಾಗಿ (uint32_t i = 0; i < a->ಅಂಕೆ_ಕೀಲಿ_ids; i++) {
+        ಆದರೆ (memcmp(a->ಕೀಲಿ_ids[i], b->ಕೀಲಿ_ids[i], a->ಕೀಲಿ_id_ಗಾತ್ರ) != 0)
+            ಹಿಂತಿರುಗಿ 1;
     }
 
-    if (a->next || b->next) {
-        if (!a->next || !b->next)
-            return 1;
-        if (compare_encryption_init_info(a->next, b->next) != 0)
-            return 1;
+    ಆದರೆ (a->ಮುಂದಿನ || b->ಮುಂದಿನ) {
+        ಆದರೆ (!a->ಮುಂದಿನ || !b->ಮುಂದಿನ)
+            ಹಿಂತಿರುಗಿ 1;
+        ಆದರೆ (compare_encryption_init_info(a->ಮುಂದಿನ, b->ಮುಂದಿನ) != 0)
+            ಹಿಂತಿರುಗಿ 1;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static void run_encryption_info_test(void)
+ಸ್ಥಿರ ಶೂನ್ಯ ಸತತ_encryption_info_test(ಶೂನ್ಯ)
 {
     AVEncryptionInfo *info, *copy;
-    uint8_t *side_data;
-    size_t side_data_size;
+    uint8_t *side_ದತ್ತಾಂಶ;
+    size_t side_ದತ್ತಾಂಶ_ಗಾತ್ರ;
 
-    info = av_encryption_info_alloc(test_subsample_count, sizeof(test_key_id), sizeof(test_iv));
+    info = av_encryption_info_alloc(test_subsample_ಎಣಿಕೆ, ಗಾತ್ರ(test_ಕೀಲಿ_id), ಗಾತ್ರ(test_iv));
     av_assert0(info);
-    av_assert0(info->key_id);
-    av_assert0(info->key_id_size == sizeof(test_key_id));
+    av_assert0(info->ಕೀಲಿ_id);
+    av_assert0(info->ಕೀಲಿ_id_ಗಾತ್ರ == ಗಾತ್ರ(test_ಕೀಲಿ_id));
     av_assert0(info->iv);
-    av_assert0(info->iv_size == sizeof(test_iv));
+    av_assert0(info->iv_ಗಾತ್ರ == ಗಾತ್ರ(test_iv));
     av_assert0(info->subsamples);
-    av_assert0(info->subsample_count == test_subsample_count);
+    av_assert0(info->subsample_ಎಣಿಕೆ == test_subsample_ಎಣಿಕೆ);
 
     info->scheme = 1234;
-    info->crypt_byte_block = 333;
-    info->skip_byte_block = 444;
-    memcpy(info->key_id, test_key_id, sizeof(test_key_id));
-    memcpy(info->iv, test_iv, sizeof(test_iv));
-    memcpy(info->subsamples, test_subsamples, sizeof(test_subsamples));
+    info->crypt_byte_ಖಂಡ = 333;
+    info->skip_byte_ಖಂಡ = 444;
+    ಸ್ಮರಣೆ_ನಕಲು(info->ಕೀಲಿ_id, test_ಕೀಲಿ_id, ಗಾತ್ರ(test_ಕೀಲಿ_id));
+    ಸ್ಮರಣೆ_ನಕಲು(info->iv, test_iv, ಗಾತ್ರ(test_iv));
+    ಸ್ಮರಣೆ_ನಕಲು(info->subsamples, test_subsamples, ಗಾತ್ರ(test_subsamples));
 
     copy = av_encryption_info_clone(info);
     av_assert0(copy);
@@ -99,87 +99,87 @@ static void run_encryption_info_test(void)
     av_assert0(compare_encryption_info(info, copy) == 0);
     av_encryption_info_free(copy);
 
-    side_data = av_encryption_info_add_side_data(info, &side_data_size);
-    av_assert0(side_data);
-    av_assert0(side_data_size > 0);
+    side_ದತ್ತಾಂಶ = av_encryption_info_ಕೂಡಿಸು_side_ದತ್ತಾಂಶ(info, &side_ದತ್ತಾಂಶ_ಗಾತ್ರ);
+    av_assert0(side_ದತ್ತಾಂಶ);
+    av_assert0(side_ದತ್ತಾಂಶ_ಗಾತ್ರ > 0);
 
-    copy = av_encryption_info_get_side_data(side_data, side_data_size);
+    copy = av_encryption_info_get_side_ದತ್ತಾಂಶ(side_ದತ್ತಾಂಶ, side_ದತ್ತಾಂಶ_ಗಾತ್ರ);
     av_assert0(copy);
     av_assert0(copy != info);
     av_assert0(compare_encryption_info(info, copy) == 0);
     av_encryption_info_free(copy);
-    av_free(side_data);
+    av_free(side_ದತ್ತಾಂಶ);
 
     av_encryption_info_free(info);
 }
 
-static AVEncryptionInitInfo *create_init_info(void)
+ಸ್ಥಿರ AVEncryptionInitInfo *create_init_info(ಶೂನ್ಯ)
 {
     AVEncryptionInitInfo *info;
 
-    info = av_encryption_init_info_alloc(sizeof(test_system_id), 2, sizeof(test_key_id), sizeof(test_data));
+    info = av_encryption_init_info_alloc(ಗಾತ್ರ(test_system_id), 2, ಗಾತ್ರ(test_ಕೀಲಿ_id), ಗಾತ್ರ(test_ದತ್ತಾಂಶ));
     av_assert0(info);
     av_assert0(info->system_id);
-    av_assert0(info->system_id_size == sizeof(test_system_id));
-    av_assert0(info->key_ids);
-    av_assert0(info->num_key_ids == 2);
-    av_assert0(info->key_id_size == sizeof(test_key_id));
-    av_assert0(info->key_ids[0]);
-    av_assert0(info->key_ids[1]);
-    av_assert0(info->data);
-    av_assert0(info->data_size == sizeof(test_data));
-    av_assert0(!info->next);
+    av_assert0(info->system_id_ಗಾತ್ರ == ಗಾತ್ರ(test_system_id));
+    av_assert0(info->ಕೀಲಿ_ids);
+    av_assert0(info->ಅಂಕೆ_ಕೀಲಿ_ids == 2);
+    av_assert0(info->ಕೀಲಿ_id_ಗಾತ್ರ == ಗಾತ್ರ(test_ಕೀಲಿ_id));
+    av_assert0(info->ಕೀಲಿ_ids[0]);
+    av_assert0(info->ಕೀಲಿ_ids[1]);
+    av_assert0(info->ದತ್ತಾಂಶ);
+    av_assert0(info->ದತ್ತಾಂಶ_ಗಾತ್ರ == ಗಾತ್ರ(test_ದತ್ತಾಂಶ));
+    av_assert0(!info->ಮುಂದಿನ);
 
-    memcpy(info->system_id, test_system_id, sizeof(test_system_id));
-    memcpy(info->key_ids[0], test_key_id, sizeof(test_key_id));
-    memcpy(info->key_ids[1], test_key_id_2, sizeof(test_key_id_2));
-    memcpy(info->data, test_data, sizeof(test_data));
+    ಸ್ಮರಣೆ_ನಕಲು(info->system_id, test_system_id, ಗಾತ್ರ(test_system_id));
+    ಸ್ಮರಣೆ_ನಕಲು(info->ಕೀಲಿ_ids[0], test_ಕೀಲಿ_id, ಗಾತ್ರ(test_ಕೀಲಿ_id));
+    ಸ್ಮರಣೆ_ನಕಲು(info->ಕೀಲಿ_ids[1], test_ಕೀಲಿ_id_2, ಗಾತ್ರ(test_ಕೀಲಿ_id_2));
+    ಸ್ಮರಣೆ_ನಕಲು(info->ದತ್ತಾಂಶ, test_ದತ್ತಾಂಶ, ಗಾತ್ರ(test_ದತ್ತಾಂಶ));
 
-    return info;
+    ಹಿಂತಿರುಗಿ info;
 }
 
-static void run_encryption_init_info_test(void)
+ಸ್ಥಿರ ಶೂನ್ಯ ಸತತ_encryption_init_info_test(ಶೂನ್ಯ)
 {
     AVEncryptionInitInfo *info, *copy;
-    uint8_t *side_data, *appended;
-    size_t side_data_size, appended_size;
-    unsigned int allocated_size = 0;
+    uint8_t *side_ದತ್ತಾಂಶ, *appended;
+    size_t side_ದತ್ತಾಂಶ_ಗಾತ್ರ, appended_ಗಾತ್ರ;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ allocated_ಗಾತ್ರ = 0;
 
     info = create_init_info();
 
-    side_data = av_encryption_init_info_add_side_data(info, &side_data_size);
-    av_assert0(side_data);
-    av_assert0(side_data_size > 0);
-    copy = av_encryption_init_info_get_side_data(side_data, side_data_size);
+    side_ದತ್ತಾಂಶ = av_encryption_init_info_ಕೂಡಿಸು_side_ದತ್ತಾಂಶ(info, &side_ದತ್ತಾಂಶ_ಗಾತ್ರ);
+    av_assert0(side_ದತ್ತಾಂಶ);
+    av_assert0(side_ದತ್ತಾಂಶ_ಗಾತ್ರ > 0);
+    copy = av_encryption_init_info_get_side_ದತ್ತಾಂಶ(side_ದತ್ತಾಂಶ, side_ದತ್ತಾಂಶ_ಗಾತ್ರ);
     av_assert0(copy);
     av_assert0(compare_encryption_init_info(info, copy) == 0);
     av_encryption_init_info_free(copy);
-    av_free(side_data);
+    av_free(side_ದತ್ತಾಂಶ);
 
     // Make the first init info different from the second to test the correct order.
-    memset(info->system_id, 0, info->system_id_size);
-    appended = av_encryption_init_info_add_side_data(info, &appended_size);
+    memset(info->system_id, 0, info->system_id_ಗಾತ್ರ);
+    appended = av_encryption_init_info_ಕೂಡಿಸು_side_ದತ್ತಾಂಶ(info, &appended_ಗಾತ್ರ);
     av_assert0(appended);
-    info->next = create_init_info();
-    side_data = av_encryption_init_info_add_side_data(info, &side_data_size);
-    av_assert0(side_data);
-    copy = av_encryption_init_info_get_side_data(side_data, side_data_size);
+    info->ಮುಂದಿನ = create_init_info();
+    side_ದತ್ತಾಂಶ = av_encryption_init_info_ಕೂಡಿಸು_side_ದತ್ತಾಂಶ(info, &side_ದತ್ತಾಂಶ_ಗಾತ್ರ);
+    av_assert0(side_ದತ್ತಾಂಶ);
+    copy = av_encryption_init_info_get_side_ದತ್ತಾಂಶ(side_ದತ್ತಾಂಶ, side_ದತ್ತಾಂಶ_ಗಾತ್ರ);
     av_assert0(copy);
     av_assert0(compare_encryption_init_info(info, copy) == 0);
     av_encryption_init_info_free(copy);
 
-    av_assert0(av_encryption_init_info_append_side_data(&appended, &appended_size, &allocated_size, info->next) == 0);
-    av_assert0(appended_size == side_data_size);
-    av_assert0(memcmp(appended, side_data, side_data_size) == 0);
+    av_assert0(av_encryption_init_info_append_side_ದತ್ತಾಂಶ(&appended, &appended_ಗಾತ್ರ, &allocated_ಗಾತ್ರ, info->ಮುಂದಿನ) == 0);
+    av_assert0(appended_ಗಾತ್ರ == side_ದತ್ತಾಂಶ_ಗಾತ್ರ);
+    av_assert0(memcmp(appended, side_ದತ್ತಾಂಶ, side_ದತ್ತಾಂಶ_ಗಾತ್ರ) == 0);
     av_free(appended);
-    av_free(side_data);
+    av_free(side_ದತ್ತಾಂಶ);
 
     av_encryption_init_info_free(info);
 }
 
-int main(int argc, char **argv)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಪೂರ್ಣಾಂಕ argc, ಅಕ್ಷರ **argv)
 {
-    run_encryption_info_test();
-    run_encryption_init_info_test();
-    return 0;
+    ಸತತ_encryption_info_test();
+    ಸತತ_encryption_init_info_test();
+    ಹಿಂತಿರುಗಿ 0;
 }

@@ -24,55 +24,55 @@
  * default memory allocator for libavutil
  */
 
-#define _XOPEN_SOURCE 600
+#ವ್ಯಾಖ್ಯಾನಿಸು XOPEN_ಮೂಲ 600
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdatomic.h>
-#include <string.h>
-#if HAVE_MALLOC_H
-#include <malloc.h>
-#endif
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಅನ್ತರ್ಭಾವ <stdatomic.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಆದರೆ HAVE_MALLOC_H
+#ಅನ್ತರ್ಭಾವ <malloc.h>
+#ಆದರೆ_ಅಂತ್ಯ
 
-#include "attributes.h"
-#include "avassert.h"
-#include "dynarray.h"
-#include "error.h"
-#include "internal.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "sanitizer.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "dynarray.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "internal.h"
+#ಅನ್ತರ್ಭಾವ "intreadwrite.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "sanitizer.h"
 
-#ifdef MALLOC_PREFIX
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ MALLOC_ಪೂರ್ವಪ್ರತ್ಯಯ
 
-#define malloc         AV_JOIN(MALLOC_PREFIX, malloc)
-#define memalign       AV_JOIN(MALLOC_PREFIX, memalign)
-#define posix_memalign AV_JOIN(MALLOC_PREFIX, posix_memalign)
-#define realloc        AV_JOIN(MALLOC_PREFIX, realloc)
-#define free           AV_JOIN(MALLOC_PREFIX, free)
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಮರಣೆ_ಕೊಡು         AV_JOIN(MALLOC_ಪೂರ್ವಪ್ರತ್ಯಯ, ಸ್ಮರಣೆ_ಕೊಡು)
+#ವ್ಯಾಖ್ಯಾನಿಸು memalign       AV_JOIN(MALLOC_ಪೂರ್ವಪ್ರತ್ಯಯ, memalign)
+#ವ್ಯಾಖ್ಯಾನಿಸು posix_memalign AV_JOIN(MALLOC_ಪೂರ್ವಪ್ರತ್ಯಯ, posix_memalign)
+#ವ್ಯಾಖ್ಯಾನಿಸು realloc        AV_JOIN(MALLOC_ಪೂರ್ವಪ್ರತ್ಯಯ, realloc)
+#ವ್ಯಾಖ್ಯಾನಿಸು ಬಿಡುಗಡೆ           AV_JOIN(MALLOC_ಪೂರ್ವಪ್ರತ್ಯಯ, ಬಿಡುಗಡೆ)
 
-void *malloc(size_t size);
-void *memalign(size_t align, size_t size);
-int   posix_memalign(void **ptr, size_t align, size_t size);
-void *realloc(void *ptr, size_t size);
-void  free(void *ptr);
+ಶೂನ್ಯ *ಸ್ಮರಣೆ_ಕೊಡು(size_t ಗಾತ್ರ_2);
+ಶೂನ್ಯ *memalign(size_t align, size_t ಗಾತ್ರ_2);
+ಪೂರ್ಣಾಂಕ   posix_memalign(ಶೂನ್ಯ **ptr, size_t align, size_t ಗಾತ್ರ_2);
+ಶೂನ್ಯ *realloc(ಶೂನ್ಯ *ptr, size_t ಗಾತ್ರ_2);
+ಶೂನ್ಯ  ಬಿಡುಗಡೆ(ಶೂನ್ಯ *ptr);
 
-#endif /* MALLOC_PREFIX */
+#ಆದರೆ_ಅಂತ್ಯ /* MALLOC_PREFIX */
 
-#define ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : (HAVE_SIMD_ALIGN_32 ? 32 : 16))
+#ವ್ಯಾಖ್ಯಾನಿಸು ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : (HAVE_SIMD_ALIGN_32 ? 32 : 16))
 
-#define FF_MEMORY_POISON 0x2a
+#ವ್ಯಾಖ್ಯಾನಿಸು FF_ಸ್ಮರಣೆ_POISON 0x2a
 
-static void poison_memory(void *ptr, size_t size)
+ಸ್ಥಿರ ಶೂನ್ಯ poison_ಸ್ಮರಣೆ(ಶೂನ್ಯ *ptr, size_t ಗಾತ್ರ_2)
 {
-#if CONFIG_MEMORY_POISONING
-    memset(ptr, FF_MEMORY_POISON, size);
-#endif
-    FF_MEM_UNDEFINED(ptr, size);
+#ಆದರೆ CONFIG_ಸ್ಮರಣೆ_POISONING
+    memset(ptr, FF_ಸ್ಮರಣೆ_POISON, ಗಾತ್ರ_2);
+#ಆದರೆ_ಅಂತ್ಯ
+    FF_MEM_UNDEFINED(ptr, ಗಾತ್ರ_2);
 }
 
 /* The LLVM ASan runtime for Windows does not intercept the _aligned_malloc
@@ -81,139 +81,139 @@ static void poison_memory(void *ptr, size_t size)
  * intercept it. Which one is linked cannot be told at compile time, so probe
  * once whether the byte after an aligned allocation is poisoned and align by
  * hand only when it is not. */
-#if HAVE_ASAN && HAVE_ALIGNED_MALLOC && !HAVE_POSIX_MEMALIGN && !HAVE_MEMALIGN
-#define ASAN_ALIGNED_ALLOC 1
+#ಆದರೆ HAVE_ASAN && HAVE_ALIGNED_MALLOC && !HAVE_POSIX_MEMALIGN && !HAVE_MEMALIGN
+#ವ್ಯಾಖ್ಯಾನಿಸು ASAN_ALIGNED_ALLOC 1
 
-static int asan_aligned_alloc_needed(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ asan_aligned_alloc_needed(ಶೂನ್ಯ)
 {
-    static atomic_int needed = -1;
-    int ret = atomic_load_explicit(&needed, memory_order_relaxed);
+    ಸ್ಥಿರ atomic_int needed = -1;
+    ಪೂರ್ಣಾಂಕ ret = atomic_load_explicit(&needed, memory_order_relaxed);
 
-    if (ret < 0) {
+    ಆದರೆ (ret < 0) {
         uint8_t *p = _aligned_malloc(16, ALIGN);
-        int probed = !p || !__asan_address_is_poisoned(p + 16);
+        ಪೂರ್ಣಾಂಕ probed = !p || !__asan_address_is_poisoned(p + 16);
         _aligned_free(p);
         /* Every block must be freed by the allocator that made it, so the
          * first probe to finish decides for all callers. */
-        if (atomic_compare_exchange_strong_explicit(&needed, &ret, probed,
+        ಆದರೆ (atomic_compare_exchange_strong_explicit(&needed, &ret, probed,
                                                     memory_order_relaxed,
                                                     memory_order_relaxed))
             ret = probed;
     }
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-typedef struct AsanAlignedHeader {
-    void  *base;
-    size_t size;
-} AsanAlignedHeader;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ Asan_Aligned_ಶೀರ್ಷಿಕೆ {
+    ಶೂನ್ಯ  *ತಳ_2;
+    size_t ಗಾತ್ರ_2;
+} Asan_Aligned_ಶೀರ್ಷಿಕೆ;
 
-static void *asan_aligned_malloc(size_t size)
+ಸ್ಥಿರ ಶೂನ್ಯ *asan_aligned_malloc(size_t ಗಾತ್ರ_2)
 {
-    AsanAlignedHeader *hdr;
-    uint8_t *base, *ptr;
-    size_t total;
+    Asan_Aligned_ಶೀರ್ಷಿಕೆ *hdr;
+    uint8_t *ತಳ_2, *ptr;
+    size_t ಒಟ್ಟು;
 
-    if (size > SIZE_MAX - ALIGN - sizeof(*hdr))
-        return NULL;
-    total = size + ALIGN + sizeof(*hdr);
-    base  = malloc(total);
-    if (!base)
-        return NULL;
-    ptr = (uint8_t *)FFALIGN((uintptr_t)base + sizeof(*hdr), ALIGN);
-    hdr = (AsanAlignedHeader *)ptr - 1;
-    hdr->base = base;
-    hdr->size = size;
-    FF_ASAN_POISON(base, ptr - base);
-    FF_ASAN_POISON(ptr + size, base + total - (ptr + size));
-    return ptr;
+    ಆದರೆ (ಗಾತ್ರ_2 > SIZE_MAX - ALIGN - ಗಾತ್ರ(*hdr))
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ಒಟ್ಟು = ಗಾತ್ರ_2 + ALIGN + ಗಾತ್ರ(*hdr);
+    ತಳ_2  = ಸ್ಮರಣೆ_ಕೊಡು(ಒಟ್ಟು);
+    ಆದರೆ (!ತಳ_2)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ptr = (uint8_t *)FFALIGN((uintptr_t)ತಳ_2 + ಗಾತ್ರ(*hdr), ALIGN);
+    hdr = (Asan_Aligned_ಶೀರ್ಷಿಕೆ *)ptr - 1;
+    hdr->ತಳ_2 = ತಳ_2;
+    hdr->ಗಾತ್ರ_2 = ಗಾತ್ರ_2;
+    FF_ASAN_POISON(ತಳ_2, ptr - ತಳ_2);
+    FF_ASAN_POISON(ptr + ಗಾತ್ರ_2, ತಳ_2 + ಒಟ್ಟು - (ptr + ಗಾತ್ರ_2));
+    ಹಿಂತಿರುಗಿ ptr;
 }
 
-static AsanAlignedHeader *asan_aligned_header(void *ptr)
+ಸ್ಥಿರ Asan_Aligned_ಶೀರ್ಷಿಕೆ *asan_aligned_ಶೀರ್ಷಿಕೆ(ಶೂನ್ಯ *ptr)
 {
-    AsanAlignedHeader *hdr = (AsanAlignedHeader *)ptr - 1;
-    FF_ASAN_UNPOISON(hdr, sizeof(*hdr));
-    return hdr;
+    Asan_Aligned_ಶೀರ್ಷಿಕೆ *hdr = (Asan_Aligned_ಶೀರ್ಷಿಕೆ *)ptr - 1;
+    FF_ASAN_UNPOISON(hdr, ಗಾತ್ರ(*hdr));
+    ಹಿಂತಿರುಗಿ hdr;
 }
 
-static void asan_aligned_free(void *ptr)
+ಸ್ಥಿರ ಶೂನ್ಯ asan_aligned_free(ಶೂನ್ಯ *ptr)
 {
-    if (ptr)
-        free(asan_aligned_header(ptr)->base);
+    ಆದರೆ (ptr)
+        ಬಿಡುಗಡೆ(asan_aligned_ಶೀರ್ಷಿಕೆ(ptr)->ತಳ_2);
 }
 
-static void *asan_aligned_realloc(void *ptr, size_t size)
+ಸ್ಥಿರ ಶೂನ್ಯ *asan_aligned_realloc(ಶೂನ್ಯ *ptr, size_t ಗಾತ್ರ_2)
 {
-    AsanAlignedHeader *hdr;
-    void *ret;
+    Asan_Aligned_ಶೀರ್ಷಿಕೆ *hdr;
+    ಶೂನ್ಯ *ret;
 
-    if (!ptr)
-        return asan_aligned_malloc(size);
-    ret = asan_aligned_malloc(size);
-    if (!ret)
-        return NULL;
-    hdr = asan_aligned_header(ptr);
-    memcpy(ret, ptr, FFMIN(size, hdr->size));
-    free(hdr->base);
-    return ret;
+    ಆದರೆ (!ptr)
+        ಹಿಂತಿರುಗಿ asan_aligned_malloc(ಗಾತ್ರ_2);
+    ret = asan_aligned_malloc(ಗಾತ್ರ_2);
+    ಆದರೆ (!ret)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    hdr = asan_aligned_ಶೀರ್ಷಿಕೆ(ptr);
+    ಸ್ಮರಣೆ_ನಕಲು(ret, ptr, FFMIN(ಗಾತ್ರ_2, hdr->ಗಾತ್ರ_2));
+    ಬಿಡುಗಡೆ(hdr->ತಳ_2);
+    ಹಿಂತಿರುಗಿ ret;
 }
-#else
-#define ASAN_ALIGNED_ALLOC 0
-#endif
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು ASAN_ALIGNED_ALLOC 0
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* NOTE: if you want to override these functions with your own
  * implementations (not recommended) you have to link libav* as
  * dynamic libraries and remove -Wl,-Bsymbolic from the linker flags.
  * Note that this will cost performance. */
 
-static atomic_size_t max_alloc_size = INT_MAX;
+ಸ್ಥಿರ atomic_size_t max_alloc_ಗಾತ್ರ = ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ;
 
-void av_max_alloc(size_t max){
-    atomic_store_explicit(&max_alloc_size, max, memory_order_relaxed);
+ಶೂನ್ಯ av_max_alloc(size_t max){
+    atomic_store_explicit(&max_alloc_ಗಾತ್ರ, max, memory_order_relaxed);
 }
 
-static int size_mult(size_t a, size_t b, size_t *r)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ ಗಾತ್ರ_mult(size_t a, size_t b, size_t *r)
 {
     size_t t;
 
-#if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_mul_overflow)
-    if (__builtin_mul_overflow(a, b, &t))
-        return AVERROR(EINVAL);
-#else
+#ಆದರೆ (!defined(__INTEL_COMPILER) && AV_GCC_ಆವೃತ್ತಿ_AT_ಕನಿಷ್ಠ(5,1)) || AV_HAS_BUILTIN(__builtin_mul_overflow)
+    ಆದರೆ (__builtin_mul_overflow(a, b, &t))
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
+#ಇಲ್ಲದಿದ್ದರೆ
     t = a * b;
     /* Hack inspired from glibc: don't try the division if nelem and elsize
      * are both less than sqrt(SIZE_MAX). */
-    if ((a | b) >= ((size_t)1 << (sizeof(size_t) * 4)) && a && t / a != b)
-        return AVERROR(EINVAL);
-#endif
+    ಆದರೆ ((a | b) >= ((size_t)1 << (ಗಾತ್ರ(size_t) * 4)) && a && t / a != b)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
+#ಆದರೆ_ಅಂತ್ಯ
     *r = t;
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-void *av_malloc(size_t size)
+ಶೂನ್ಯ *av_malloc(size_t ಗಾತ್ರ_2)
 {
-    void *ptr = NULL;
+    ಶೂನ್ಯ *ptr = ಖಾಲಿ;
 
-    if (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
-        return NULL;
+    ಆದರೆ (ಗಾತ್ರ_2 > atomic_load_explicit(&max_alloc_ಗಾತ್ರ, memory_order_relaxed))
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
-        ptr = asan_aligned_malloc(size);
-    else
-        ptr = _aligned_malloc(size, ALIGN);
-#elif HAVE_POSIX_MEMALIGN
-    if (size) //OS X on SDK 10.6 has a broken posix_memalign implementation
-    if (posix_memalign(&ptr, ALIGN, size))
-        ptr = NULL;
-#elif HAVE_ALIGNED_MALLOC
-    ptr = _aligned_malloc(size, ALIGN);
-#elif HAVE_MEMALIGN
-#ifndef __DJGPP__
-    ptr = memalign(ALIGN, size);
-#else
-    ptr = memalign(size, ALIGN);
-#endif
+#ಆದರೆ ASAN_ALIGNED_ALLOC
+    ಆದರೆ (asan_aligned_alloc_needed())
+        ptr = asan_aligned_malloc(ಗಾತ್ರ_2);
+    ಇಲ್ಲದಿದ್ದರೆ
+        ptr = _aligned_malloc(ಗಾತ್ರ_2, ALIGN);
+#ಅಥವಾಆದರೆ HAVE_POSIX_MEMALIGN
+    ಆದರೆ (ಗಾತ್ರ_2) //OS X on SDK 10.6 has a broken posix_memalign implementation
+    ಆದರೆ (posix_memalign(&ptr, ALIGN, ಗಾತ್ರ_2))
+        ptr = ಖಾಲಿ;
+#ಅಥವಾಆದರೆ HAVE_ALIGNED_MALLOC
+    ptr = _aligned_malloc(ಗಾತ್ರ_2, ALIGN);
+#ಅಥವಾಆದರೆ HAVE_MEMALIGN
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __DJGPP__
+    ptr = memalign(ALIGN, ಗಾತ್ರ_2);
+#ಇಲ್ಲದಿದ್ದರೆ
+    ptr = memalign(ಗಾತ್ರ_2, ALIGN);
+#ಆದರೆ_ಅಂತ್ಯ
     /* Why 64?
      * Indeed, we should align it:
      *   on  4 for 386
@@ -238,263 +238,263 @@ void *av_malloc(size_t size)
      *
      * BTW, malloc seems to do 8-byte alignment by default here.
      */
-#else
-    ptr = malloc(size);
-#endif
-    if(!ptr && !size) {
-        size = 1;
+#ಇಲ್ಲದಿದ್ದರೆ
+    ptr = ಸ್ಮರಣೆ_ಕೊಡು(ಗಾತ್ರ_2);
+#ಆದರೆ_ಅಂತ್ಯ
+    ಆದರೆ(!ptr && !ಗಾತ್ರ_2) {
+        ಗಾತ್ರ_2 = 1;
         ptr= av_malloc(1);
     }
-    if (ptr)
-        poison_memory(ptr, size);
-    return ptr;
+    ಆದರೆ (ptr)
+        poison_ಸ್ಮರಣೆ(ptr, ಗಾತ್ರ_2);
+    ಹಿಂತಿರುಗಿ ptr;
 }
 
-void *av_realloc(void *ptr, size_t size)
+ಶೂನ್ಯ *av_realloc(ಶೂನ್ಯ *ptr, size_t ಗಾತ್ರ_2)
 {
-    void *ret;
-    if (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
-        return NULL;
+    ಶೂನ್ಯ *ret;
+    ಆದರೆ (ಗಾತ್ರ_2 > atomic_load_explicit(&max_alloc_ಗಾತ್ರ, memory_order_relaxed))
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
-        ret = asan_aligned_realloc(ptr, size + !size);
-    else
-        ret = _aligned_realloc(ptr, size + !size, ALIGN);
-#elif HAVE_ALIGNED_MALLOC
-    ret = _aligned_realloc(ptr, size + !size, ALIGN);
-#else
-    ret = realloc(ptr, size + !size);
-#endif
-    if (ret && !ptr)
-        poison_memory(ret, size);
-    return ret;
+#ಆದರೆ ASAN_ALIGNED_ALLOC
+    ಆದರೆ (asan_aligned_alloc_needed())
+        ret = asan_aligned_realloc(ptr, ಗಾತ್ರ_2 + !ಗಾತ್ರ_2);
+    ಇಲ್ಲದಿದ್ದರೆ
+        ret = _aligned_realloc(ptr, ಗಾತ್ರ_2 + !ಗಾತ್ರ_2, ALIGN);
+#ಅಥವಾಆದರೆ HAVE_ALIGNED_MALLOC
+    ret = _aligned_realloc(ptr, ಗಾತ್ರ_2 + !ಗಾತ್ರ_2, ALIGN);
+#ಇಲ್ಲದಿದ್ದರೆ
+    ret = realloc(ptr, ಗಾತ್ರ_2 + !ಗಾತ್ರ_2);
+#ಆದರೆ_ಅಂತ್ಯ
+    ಆದರೆ (ret && !ptr)
+        poison_ಸ್ಮರಣೆ(ret, ಗಾತ್ರ_2);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-void *av_realloc_f(void *ptr, size_t nelem, size_t elsize)
+ಶೂನ್ಯ *av_realloc_f(ಶೂನ್ಯ *ptr, size_t nelem, size_t elsize)
 {
-    size_t size;
-    void *r;
+    size_t ಗಾತ್ರ_2;
+    ಶೂನ್ಯ *r;
 
-    if (size_mult(elsize, nelem, &size)) {
+    ಆದರೆ (ಗಾತ್ರ_mult(elsize, nelem, &ಗಾತ್ರ_2)) {
         av_free(ptr);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
-    r = av_realloc(ptr, size);
-    if (!r)
+    r = av_realloc(ptr, ಗಾತ್ರ_2);
+    ಆದರೆ (!r)
         av_free(ptr);
-    return r;
+    ಹಿಂತಿರುಗಿ r;
 }
 
-int av_reallocp(void *ptr, size_t size)
+ಪೂರ್ಣಾಂಕ av_reallocp(ಶೂನ್ಯ *ptr, size_t ಗಾತ್ರ_2)
 {
-    void *val;
+    ಶೂನ್ಯ *val;
 
-    if (!size) {
+    ಆದರೆ (!ಗಾತ್ರ_2) {
         av_freep(ptr);
-        return 0;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    memcpy(&val, ptr, sizeof(val));
-    val = av_realloc(val, size);
+    ಸ್ಮರಣೆ_ನಕಲು(&val, ptr, ಗಾತ್ರ(val));
+    val = av_realloc(val, ಗಾತ್ರ_2);
 
-    if (!val) {
+    ಆದರೆ (!val) {
         av_freep(ptr);
-        return AVERROR(ENOMEM);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
     }
 
-    memcpy(ptr, &val, sizeof(val));
-    return 0;
+    ಸ್ಮರಣೆ_ನಕಲು(ptr, &val, ಗಾತ್ರ(val));
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-void *av_malloc_array(size_t nmemb, size_t size)
+ಶೂನ್ಯ *av_malloc_array(size_t nmemb, size_t ಗಾತ್ರ_2)
 {
-    size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_malloc(result);
+    size_t ಫಲಿತಾಂಶ;
+    ಆದರೆ (ಗಾತ್ರ_mult(nmemb, ಗಾತ್ರ_2, &ಫಲಿತಾಂಶ) < 0)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ಹಿಂತಿರುಗಿ av_malloc(ಫಲಿತಾಂಶ);
 }
 
-void *av_realloc_array(void *ptr, size_t nmemb, size_t size)
+ಶೂನ್ಯ *av_realloc_array(ಶೂನ್ಯ *ptr, size_t nmemb, size_t ಗಾತ್ರ_2)
 {
-    size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_realloc(ptr, result);
+    size_t ಫಲಿತಾಂಶ;
+    ಆದರೆ (ಗಾತ್ರ_mult(nmemb, ಗಾತ್ರ_2, &ಫಲಿತಾಂಶ) < 0)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ಹಿಂತಿರುಗಿ av_realloc(ptr, ಫಲಿತಾಂಶ);
 }
 
-int av_reallocp_array(void *ptr, size_t nmemb, size_t size)
+ಪೂರ್ಣಾಂಕ av_reallocp_array(ಶೂನ್ಯ *ptr, size_t nmemb, size_t ಗಾತ್ರ_2)
 {
-    void *val;
+    ಶೂನ್ಯ *val;
 
-    memcpy(&val, ptr, sizeof(val));
-    val = av_realloc_f(val, nmemb, size);
-    memcpy(ptr, &val, sizeof(val));
-    if (!val && nmemb && size)
-        return AVERROR(ENOMEM);
+    ಸ್ಮರಣೆ_ನಕಲು(&val, ptr, ಗಾತ್ರ(val));
+    val = av_realloc_f(val, nmemb, ಗಾತ್ರ_2);
+    ಸ್ಮರಣೆ_ನಕಲು(ptr, &val, ಗಾತ್ರ(val));
+    ಆದರೆ (!val && nmemb && ಗಾತ್ರ_2)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-void av_free(void *ptr)
+ಶೂನ್ಯ av_free(ಶೂನ್ಯ *ptr)
 {
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
+#ಆದರೆ ASAN_ALIGNED_ALLOC
+    ಆದರೆ (asan_aligned_alloc_needed())
         asan_aligned_free(ptr);
-    else
+    ಇಲ್ಲದಿದ್ದರೆ
         _aligned_free(ptr);
-#elif HAVE_ALIGNED_MALLOC
+#ಅಥವಾಆದರೆ HAVE_ALIGNED_MALLOC
     _aligned_free(ptr);
-#else
-    free(ptr);
-#endif
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಬಿಡುಗಡೆ(ptr);
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
-void av_freep(void *arg)
+ಶೂನ್ಯ av_freep(ಶೂನ್ಯ *arg)
 {
-    void *val;
+    ಶೂನ್ಯ *val;
 
-    memcpy(&val, arg, sizeof(val));
-    memcpy(arg, &(void *){ NULL }, sizeof(val));
+    ಸ್ಮರಣೆ_ನಕಲು(&val, arg, ಗಾತ್ರ(val));
+    ಸ್ಮರಣೆ_ನಕಲು(arg, &(ಶೂನ್ಯ *){ ಖಾಲಿ }, ಗಾತ್ರ(val));
     av_free(val);
 }
 
-void *av_mallocz(size_t size)
+ಶೂನ್ಯ *av_mallocz(size_t ಗಾತ್ರ_2)
 {
-    void *ptr = av_malloc(size);
-    if (ptr)
-        memset(ptr, 0, size);
-    return ptr;
+    ಶೂನ್ಯ *ptr = av_malloc(ಗಾತ್ರ_2);
+    ಆದರೆ (ptr)
+        memset(ptr, 0, ಗಾತ್ರ_2);
+    ಹಿಂತಿರುಗಿ ptr;
 }
 
-void *av_calloc(size_t nmemb, size_t size)
+ಶೂನ್ಯ *av_calloc(size_t nmemb, size_t ಗಾತ್ರ_2)
 {
-    size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_mallocz(result);
+    size_t ಫಲಿತಾಂಶ;
+    ಆದರೆ (ಗಾತ್ರ_mult(nmemb, ಗಾತ್ರ_2, &ಫಲಿತಾಂಶ) < 0)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ಹಿಂತಿರುಗಿ av_mallocz(ಫಲಿತಾಂಶ);
 }
 
-char *av_strdup(const char *s)
+ಅಕ್ಷರ *av_strdup(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s)
 {
-    char *ptr = NULL;
-    if (s) {
-        size_t len = strlen(s) + 1;
-        ptr = av_realloc(NULL, len);
-        if (ptr)
-            memcpy(ptr, s, len);
+    ಅಕ್ಷರ *ptr = ಖಾಲಿ;
+    ಆದರೆ (s) {
+        size_t len = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(s) + 1;
+        ptr = av_realloc(ಖಾಲಿ, len);
+        ಆದರೆ (ptr)
+            ಸ್ಮರಣೆ_ನಕಲು(ptr, s, len);
     }
-    return ptr;
+    ಹಿಂತಿರುಗಿ ptr;
 }
 
-char *av_strndup(const char *s, size_t len)
+ಅಕ್ಷರ *av_strndup(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, size_t len)
 {
-    if (!s)
-        return NULL;
+    ಆದರೆ (!s)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    const char *end = memchr(s, 0, len);
-    if (end)
-        len = end - s;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೊನೆ = memchr(s, 0, len);
+    ಆದರೆ (ಕೊನೆ)
+        len = ಕೊನೆ - s;
 
-    char *ret = av_realloc(NULL, len + 1);
-    if (!ret)
-        return NULL;
+    ಅಕ್ಷರ *ret = av_realloc(ಖಾಲಿ, len + 1);
+    ಆದರೆ (!ret)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    memcpy(ret, s, len);
+    ಸ್ಮರಣೆ_ನಕಲು(ret, s, len);
     ret[len] = 0;
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-void *av_memdup(const void *p, size_t size)
+ಶೂನ್ಯ *av_memdup(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *p, size_t ಗಾತ್ರ_2)
 {
-    void *ptr = NULL;
-    if (p) {
-        ptr = av_malloc(size);
-        if (ptr)
-            memcpy(ptr, p, size);
+    ಶೂನ್ಯ *ptr = ಖಾಲಿ;
+    ಆದರೆ (p) {
+        ptr = av_malloc(ಗಾತ್ರ_2);
+        ಆದರೆ (ptr)
+            ಸ್ಮರಣೆ_ನಕಲು(ptr, p, ಗಾತ್ರ_2);
     }
-    return ptr;
+    ಹಿಂತಿರುಗಿ ptr;
 }
 
-int av_dynarray_add_nofree(void *tab_ptr, int *nb_ptr, void *elem)
+ಪೂರ್ಣಾಂಕ av_dynarray_ಕೂಡಿಸು_nofree(ಶೂನ್ಯ *tab_ptr, ಪೂರ್ಣಾಂಕ *nb_ptr, ಶೂನ್ಯ *elem)
 {
-    void **tab;
-    memcpy(&tab, tab_ptr, sizeof(tab));
+    ಶೂನ್ಯ **tab;
+    ಸ್ಮರಣೆ_ನಕಲು(&tab, tab_ptr, ಗಾತ್ರ(tab));
 
-    FF_DYNARRAY_ADD(INT_MAX, sizeof(*tab), tab, *nb_ptr, {
+    FF_DYNARRAY_ಕೂಡಿಸು(ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ, ಗಾತ್ರ(*tab), tab, *nb_ptr, {
         tab[*nb_ptr] = elem;
-        memcpy(tab_ptr, &tab, sizeof(tab));
+        ಸ್ಮರಣೆ_ನಕಲು(tab_ptr, &tab, ಗಾತ್ರ(tab));
     }, {
-        return AVERROR(ENOMEM);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
     });
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-void av_dynarray_add(void *tab_ptr, int *nb_ptr, void *elem)
+ಶೂನ್ಯ av_dynarray_ಕೂಡಿಸು(ಶೂನ್ಯ *tab_ptr, ಪೂರ್ಣಾಂಕ *nb_ptr, ಶೂನ್ಯ *elem)
 {
-    void **tab;
-    memcpy(&tab, tab_ptr, sizeof(tab));
+    ಶೂನ್ಯ **tab;
+    ಸ್ಮರಣೆ_ನಕಲು(&tab, tab_ptr, ಗಾತ್ರ(tab));
 
-    FF_DYNARRAY_ADD(INT_MAX, sizeof(*tab), tab, *nb_ptr, {
+    FF_DYNARRAY_ಕೂಡಿಸು(ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ, ಗಾತ್ರ(*tab), tab, *nb_ptr, {
         tab[*nb_ptr] = elem;
-        memcpy(tab_ptr, &tab, sizeof(tab));
+        ಸ್ಮರಣೆ_ನಕಲು(tab_ptr, &tab, ಗಾತ್ರ(tab));
     }, {
         *nb_ptr = 0;
         av_freep(tab_ptr);
     });
 }
 
-void *av_dynarray2_add(void **tab_ptr, int *nb_ptr, size_t elem_size,
-                       const uint8_t *elem_data)
+ಶೂನ್ಯ *av_dynarray2_ಕೂಡಿಸು(ಶೂನ್ಯ **tab_ptr, ಪೂರ್ಣಾಂಕ *nb_ptr, size_t elem_ಗಾತ್ರ,
+                       ಸ್ಥಿರಾಂಕ uint8_t *elem_ದತ್ತಾಂಶ)
 {
-    uint8_t *tab_elem_data = NULL;
+    uint8_t *tab_elem_ದತ್ತಾಂಶ = ಖಾಲಿ;
 
-    FF_DYNARRAY_ADD(INT_MAX, elem_size, *tab_ptr, *nb_ptr, {
-        tab_elem_data = (uint8_t *)*tab_ptr + (*nb_ptr) * elem_size;
-        if (elem_data)
-            memcpy(tab_elem_data, elem_data, elem_size);
-        else
-            poison_memory(tab_elem_data, elem_size);
+    FF_DYNARRAY_ಕೂಡಿಸು(ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ, elem_ಗಾತ್ರ, *tab_ptr, *nb_ptr, {
+        tab_elem_ದತ್ತಾಂಶ = (uint8_t *)*tab_ptr + (*nb_ptr) * elem_ಗಾತ್ರ;
+        ಆದರೆ (elem_ದತ್ತಾಂಶ)
+            ಸ್ಮರಣೆ_ನಕಲು(tab_elem_ದತ್ತಾಂಶ, elem_ದತ್ತಾಂಶ, elem_ಗಾತ್ರ);
+        ಇಲ್ಲದಿದ್ದರೆ
+            poison_ಸ್ಮರಣೆ(tab_elem_ದತ್ತಾಂಶ, elem_ಗಾತ್ರ);
     }, {
         av_freep(tab_ptr);
         *nb_ptr = 0;
     });
-    return tab_elem_data;
+    ಹಿಂತಿರುಗಿ tab_elem_ದತ್ತಾಂಶ;
 }
 
-static void fill16(uint8_t *dst, int len)
+ಸ್ಥಿರ ಶೂನ್ಯ fill16(uint8_t *dst, ಪೂರ್ಣಾಂಕ len)
 {
     uint32_t v = AV_RN16(dst - 2);
 
     v |= v << 16;
 
-    while (len >= 4) {
+    ಆಗ (len >= 4) {
         AV_WN32(dst, v);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    ಆಗ (len--) {
         *dst = dst[-2];
         dst++;
     }
 }
 
-static void fill24(uint8_t *dst, int len)
+ಸ್ಥಿರ ಶೂನ್ಯ fill24(uint8_t *dst, ಪೂರ್ಣಾಂಕ len)
 {
-#if HAVE_BIGENDIAN
+#ಆದರೆ HAVE_BIGENDIAN
     uint32_t v = AV_RB24(dst - 3);
     uint32_t a = v << 8  | v >> 16;
     uint32_t b = v << 16 | v >> 8;
     uint32_t c = v << 24 | v;
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
     uint32_t v = AV_RL24(dst - 3);
     uint32_t a = v       | v << 24;
     uint32_t b = v >> 8  | v << 16;
     uint32_t c = v >> 16 | v << 8;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    while (len >= 12) {
+    ಆಗ (len >= 12) {
         AV_WN32(dst,     a);
         AV_WN32(dst + 4, b);
         AV_WN32(dst + 8, c);
@@ -502,31 +502,31 @@ static void fill24(uint8_t *dst, int len)
         len -= 12;
     }
 
-    if (len >= 4) {
+    ಆದರೆ (len >= 4) {
         AV_WN32(dst, a);
         dst += 4;
         len -= 4;
     }
 
-    if (len >= 4) {
+    ಆದರೆ (len >= 4) {
         AV_WN32(dst, b);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    ಆಗ (len--) {
         *dst = dst[-3];
         dst++;
     }
 }
 
-static void fill32(uint8_t *dst, int len)
+ಸ್ಥಿರ ಶೂನ್ಯ fill32(uint8_t *dst, ಪೂರ್ಣಾಂಕ len)
 {
     uint32_t v = AV_RN32(dst - 4);
 
-#if HAVE_FAST_64BIT
+#ಆದರೆ HAVE_FAST_64_ಬಿಟ್
     uint64_t v2= v + ((uint64_t)v<<32);
-    while (len >= 32) {
+    ಆಗ (len >= 32) {
         AV_WN64(dst   , v2);
         AV_WN64(dst+ 8, v2);
         AV_WN64(dst+16, v2);
@@ -534,141 +534,141 @@ static void fill32(uint8_t *dst, int len)
         dst += 32;
         len -= 32;
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    while (len >= 4) {
+    ಆಗ (len >= 4) {
         AV_WN32(dst, v);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    ಆಗ (len--) {
         *dst = dst[-4];
         dst++;
     }
 }
 
-void av_memcpy_backptr(uint8_t *dst, int back, int cnt)
+ಶೂನ್ಯ av_memcpy_backptr(uint8_t *dst, ಪೂರ್ಣಾಂಕ ಹಿಂಭಾಗ, ಪೂರ್ಣಾಂಕ cnt)
 {
-    const uint8_t *src = &dst[-back];
-    if (!back)
-        return;
+    ಸ್ಥಿರಾಂಕ uint8_t *src = &dst[-ಹಿಂಭಾಗ];
+    ಆದರೆ (!ಹಿಂಭಾಗ)
+        ಹಿಂತಿರುಗಿ;
 
-    if (back == 1) {
+    ಆದರೆ (ಹಿಂಭಾಗ == 1) {
         memset(dst, *src, cnt);
-    } else if (back == 2) {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಹಿಂಭಾಗ == 2) {
         fill16(dst, cnt);
-    } else if (back == 3) {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಹಿಂಭಾಗ == 3) {
         fill24(dst, cnt);
-    } else if (back == 4) {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಹಿಂಭಾಗ == 4) {
         fill32(dst, cnt);
-    } else {
-        if (cnt >= 16) {
-            int blocklen = back;
-            while (cnt > blocklen) {
-                memcpy(dst, src, blocklen);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಆದರೆ (cnt >= 16) {
+            ಪೂರ್ಣಾಂಕ blocklen = ಹಿಂಭಾಗ;
+            ಆಗ (cnt > blocklen) {
+                ಸ್ಮರಣೆ_ನಕಲು(dst, src, blocklen);
                 dst       += blocklen;
                 cnt       -= blocklen;
                 blocklen <<= 1;
             }
-            memcpy(dst, src, cnt);
-            return;
+            ಸ್ಮರಣೆ_ನಕಲು(dst, src, cnt);
+            ಹಿಂತಿರುಗಿ;
         }
-        if (cnt >= 8) {
+        ಆದರೆ (cnt >= 8) {
             AV_COPY32U(dst,     src);
             AV_COPY32U(dst + 4, src + 4);
             src += 8;
             dst += 8;
             cnt -= 8;
         }
-        if (cnt >= 4) {
+        ಆದರೆ (cnt >= 4) {
             AV_COPY32U(dst, src);
             src += 4;
             dst += 4;
             cnt -= 4;
         }
-        if (cnt >= 2) {
+        ಆದರೆ (cnt >= 2) {
             AV_COPY16U(dst, src);
             src += 2;
             dst += 2;
             cnt -= 2;
         }
-        if (cnt)
+        ಆದರೆ (cnt)
             *dst = *src;
     }
 }
 
-void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
+ಶೂನ್ಯ *av_fast_realloc(ಶೂನ್ಯ *ptr, ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ *ಗಾತ್ರ_2, size_t min_ಗಾತ್ರ)
 {
-    size_t max_size;
+    size_t max_ಗಾತ್ರ;
 
-    if (min_size <= *size)
-        return ptr;
+    ಆದರೆ (min_ಗಾತ್ರ <= *ಗಾತ್ರ_2)
+        ಹಿಂತಿರುಗಿ ptr;
 
-    max_size = atomic_load_explicit(&max_alloc_size, memory_order_relaxed);
+    max_ಗಾತ್ರ = atomic_load_explicit(&max_alloc_ಗಾತ್ರ, memory_order_relaxed);
     /* *size is an unsigned, so the real maximum is <= UINT_MAX. */
-    max_size = FFMIN(max_size, UINT_MAX);
+    max_ಗಾತ್ರ = FFMIN(max_ಗಾತ್ರ, UINT_MAX);
 
-    if (min_size > max_size) {
-        *size = 0;
-        return NULL;
+    ಆದರೆ (min_ಗಾತ್ರ > max_ಗಾತ್ರ) {
+        *ಗಾತ್ರ_2 = 0;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    min_size = FFMIN(max_size, FFMAX(min_size + min_size / 16 + 32, min_size));
+    min_ಗಾತ್ರ = FFMIN(max_ಗಾತ್ರ, FFMAX(min_ಗಾತ್ರ + min_ಗಾತ್ರ / 16 + 32, min_ಗಾತ್ರ));
 
-    ptr = av_realloc(ptr, min_size);
+    ptr = av_realloc(ptr, min_ಗಾತ್ರ);
     /* we could set this to the unmodified min_size but this is safer
      * if the user lost the ptr and uses NULL now
      */
-    if (!ptr)
-        min_size = 0;
+    ಆದರೆ (!ptr)
+        min_ಗಾತ್ರ = 0;
 
-    *size = min_size;
+    *ಗಾತ್ರ_2 = min_ಗಾತ್ರ;
 
-    return ptr;
+    ಹಿಂತಿರುಗಿ ptr;
 }
 
-static inline void fast_malloc(void *ptr, unsigned int *size, size_t min_size, int zero_realloc)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಶೂನ್ಯ fast_malloc(ಶೂನ್ಯ *ptr, ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ *ಗಾತ್ರ_2, size_t min_ಗಾತ್ರ, ಪೂರ್ಣಾಂಕ zero_realloc)
 {
-    size_t max_size;
-    void *val;
+    size_t max_ಗಾತ್ರ;
+    ಶೂನ್ಯ *val;
 
-    memcpy(&val, ptr, sizeof(val));
-    if (min_size <= *size) {
-        av_assert0(val || !min_size);
-        return;
+    ಸ್ಮರಣೆ_ನಕಲು(&val, ptr, ಗಾತ್ರ(val));
+    ಆದರೆ (min_ಗಾತ್ರ <= *ಗಾತ್ರ_2) {
+        av_assert0(val || !min_ಗಾತ್ರ);
+        ಹಿಂತಿರುಗಿ;
     }
 
-    max_size = atomic_load_explicit(&max_alloc_size, memory_order_relaxed);
+    max_ಗಾತ್ರ = atomic_load_explicit(&max_alloc_ಗಾತ್ರ, memory_order_relaxed);
     /* *size is an unsigned, so the real maximum is <= UINT_MAX. */
-    max_size = FFMIN(max_size, UINT_MAX);
+    max_ಗಾತ್ರ = FFMIN(max_ಗಾತ್ರ, UINT_MAX);
 
-    if (min_size > max_size) {
+    ಆದರೆ (min_ಗಾತ್ರ > max_ಗಾತ್ರ) {
         av_freep(ptr);
-        *size = 0;
-        return;
+        *ಗಾತ್ರ_2 = 0;
+        ಹಿಂತಿರುಗಿ;
     }
-    min_size = FFMIN(max_size, FFMAX(min_size + min_size / 16 + 32, min_size));
+    min_ಗಾತ್ರ = FFMIN(max_ಗಾತ್ರ, FFMAX(min_ಗಾತ್ರ + min_ಗಾತ್ರ / 16 + 32, min_ಗಾತ್ರ));
     av_freep(ptr);
-    val = zero_realloc ? av_mallocz(min_size) : av_malloc(min_size);
-    memcpy(ptr, &val, sizeof(val));
-    if (!val)
-        min_size = 0;
-    *size = min_size;
-    return;
+    val = zero_realloc ? av_mallocz(min_ಗಾತ್ರ) : av_malloc(min_ಗಾತ್ರ);
+    ಸ್ಮರಣೆ_ನಕಲು(ptr, &val, ಗಾತ್ರ(val));
+    ಆದರೆ (!val)
+        min_ಗಾತ್ರ = 0;
+    *ಗಾತ್ರ_2 = min_ಗಾತ್ರ;
+    ಹಿಂತಿರುಗಿ;
 }
 
-void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size)
+ಶೂನ್ಯ av_fast_malloc(ಶೂನ್ಯ *ptr, ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ *ಗಾತ್ರ_2, size_t min_ಗಾತ್ರ)
 {
-    fast_malloc(ptr, size, min_size, 0);
+    fast_malloc(ptr, ಗಾತ್ರ_2, min_ಗಾತ್ರ, 0);
 }
 
-void av_fast_mallocz(void *ptr, unsigned int *size, size_t min_size)
+ಶೂನ್ಯ av_fast_mallocz(ಶೂನ್ಯ *ptr, ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ *ಗಾತ್ರ_2, size_t min_ಗಾತ್ರ)
 {
-    fast_malloc(ptr, size, min_size, 1);
+    fast_malloc(ptr, ಗಾತ್ರ_2, min_ಗಾತ್ರ, 1);
 }
 
-int av_size_mult(size_t a, size_t b, size_t *r)
+ಪೂರ್ಣಾಂಕ av_ಗಾತ್ರ_mult(size_t a, size_t b, size_t *r)
 {
-    return size_mult(a, b, r);
+    ಹಿಂತಿರುಗಿ ಗಾತ್ರ_mult(a, b, r);
 }

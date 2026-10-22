@@ -30,36 +30,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "bswap.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "md5.h"
+#ಅನ್ತರ್ಭಾವ "bswap.h"
+#ಅನ್ತರ್ಭಾವ "intreadwrite.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "md5.h"
 
-typedef struct AVMD5 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVMD5 {
     uint64_t len;
-    uint8_t  block[64];
+    uint8_t  ಖಂಡ[64];
     uint32_t ABCD[4];
 } AVMD5;
 
-const int av_md5_size = sizeof(AVMD5);
+ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ av_md5_ಗಾತ್ರ = ಗಾತ್ರ(AVMD5);
 
-struct AVMD5 *av_md5_alloc(void)
+ರಚನೆ AVMD5 *av_md5_alloc(ಶೂನ್ಯ)
 {
-    return av_mallocz(sizeof(struct AVMD5));
+    ಹಿಂತಿರುಗಿ av_mallocz(ಗಾತ್ರ(ರಚನೆ AVMD5));
 }
 
-static const uint8_t S[4][4] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t S[4][4] = {
     { 7, 12, 17, 22 },  /* round 1 */
     { 5,  9, 14, 20 },  /* round 2 */
     { 4, 11, 16, 23 },  /* round 3 */
     { 6, 10, 15, 21 }   /* round 4 */
 };
 
-static const uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,   /* round 1 */
     0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
     0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
@@ -81,40 +81,40 @@ static const uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
     0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391,
 };
 
-#define CORE(i, a, b, c, d)                                             \
-    do {                                                                \
+#ವ್ಯಾಖ್ಯಾನಿಸು CORE(i, a, b, c, d)                                             \
+    ಮಾಡು {                                                                \
         t  = S[i >> 4][i & 3];                                          \
         a += T[i];                                                      \
                                                                         \
-        if (i < 32) {                                                   \
-            if (i < 16)                                                 \
+        ಆದರೆ (i < 32) {                                                   \
+            ಆದರೆ (i < 16)                                                 \
                 a += (d ^ (b & (c ^ d)))  + AV_RL32(X+(       i  & 15));\
-            else                                                        \
+            ಇಲ್ಲದಿದ್ದರೆ                                                        \
                 a += ((d & b) | (~d & c)) + AV_RL32(X+((1 + 5*i) & 15));\
-        } else {                                                        \
-            if (i < 48)                                                 \
+        } ಇಲ್ಲದಿದ್ದರೆ {                                                        \
+            ಆದರೆ (i < 48)                                                 \
                 a += (b ^ c ^ d)          + AV_RL32(X+((5 + 3*i) & 15));\
-            else                                                        \
+            ಇಲ್ಲದಿದ್ದರೆ                                                        \
                 a += (c ^ (b | ~d))       + AV_RL32(X+((    7*i) & 15));\
         }                                                               \
         a = b + (a << t | a >> (32 - t));                               \
-    } while (0)
+    } ಆಗ (0)
 
-static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
+ಸ್ಥಿರ ಶೂನ್ಯ body(uint32_t ABCD[4], ಸ್ಥಿರಾಂಕ uint8_t *src, size_t nblocks)
 {
-    const uint32_t *X;
+    ಸ್ಥಿರಾಂಕ uint32_t *X;
     uint32_t a, b, c, d, t;
 
-    for (size_t n = 0; n < nblocks; n++) {
+    ಗಾಗಿ (size_t n = 0; n < nblocks; n++) {
         a = ABCD[3];
         b = ABCD[2];
         c = ABCD[1];
         d = ABCD[0];
 
-        X = (const uint32_t *)src + n * 16;
+        X = (ಸ್ಥಿರಾಂಕ uint32_t *)src + n * 16;
 
-#if CONFIG_SMALL
-        for (int i = 0; i < 64; i++) {
+#ಆದರೆ CONFIG_SMALL
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < 64; i++) {
             CORE(i, a, b, c, d);
             t = d;
             d = c;
@@ -122,16 +122,16 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
             b = a;
             a = t;
         }
-#else
-#define CORE2(i)                                                        \
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು CORE2(i)                                                        \
         CORE(i, a, b, c, d); CORE((i + 1), d, a, b, c);                 \
         CORE((i + 2), c, d, a, b); CORE((i + 3), b, c, d, a)
-#define CORE4(i) CORE2(i); CORE2((i + 4)); CORE2((i + 8)); CORE2((i + 12))
+#ವ್ಯಾಖ್ಯಾನಿಸು CORE4(i) CORE2(i); CORE2((i + 4)); CORE2((i + 8)); CORE2((i + 12))
         CORE4(0);
         CORE4(16);
         CORE4(32);
         CORE4(48);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
         ABCD[0] += d;
         ABCD[1] += c;
@@ -140,7 +140,7 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
     }
 }
 
-void av_md5_init(AVMD5 *ctx)
+ಶೂನ್ಯ av_md5_init(AVMD5 *ctx)
 {
     ctx->len     = 0;
 
@@ -150,57 +150,57 @@ void av_md5_init(AVMD5 *ctx)
     ctx->ABCD[3] = 0x67452301;
 }
 
-void av_md5_update(AVMD5 *ctx, const uint8_t *src, size_t len)
+ಶೂನ್ಯ av_md5_update(AVMD5 *ctx, ಸ್ಥಿರಾಂಕ uint8_t *src, size_t len)
 {
-    const uint8_t *end;
-    int j;
+    ಸ್ಥಿರಾಂಕ uint8_t *ಕೊನೆ;
+    ಪೂರ್ಣಾಂಕ j;
 
     j         = ctx->len & 63;
     ctx->len += len;
 
-    if (j) {
-        int cnt = FFMIN(len, 64 - j);
-        memcpy(ctx->block + j, src, cnt);
+    ಆದರೆ (j) {
+        ಪೂರ್ಣಾಂಕ cnt = FFMIN(len, 64 - j);
+        ಸ್ಮರಣೆ_ನಕಲು(ctx->ಖಂಡ + j, src, cnt);
         src += cnt;
         len -= cnt;
-        if (j + cnt < 64)
-            return;
-        body(ctx->ABCD, ctx->block, 1);
+        ಆದರೆ (j + cnt < 64)
+            ಹಿಂತಿರುಗಿ;
+        body(ctx->ABCD, ctx->ಖಂಡ, 1);
     }
 
-    end = src + (len & ~63);
-    if (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
-       while (src < end) {
-           memcpy(ctx->block, src, 64);
-           body(ctx->ABCD, ctx->block, 1);
+    ಕೊನೆ = src + (len & ~63);
+    ಆದರೆ (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
+       ಆಗ (src < ಕೊನೆ) {
+           ಸ್ಮರಣೆ_ನಕಲು(ctx->ಖಂಡ, src, 64);
+           body(ctx->ABCD, ctx->ಖಂಡ, 1);
            src += 64;
         }
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         size_t nblocks = len / 64;
         body(ctx->ABCD, src, nblocks);
-        src = end;
+        src = ಕೊನೆ;
     }
     len &= 63;
-    if (len > 0)
-        memcpy(ctx->block, src, len);
+    ಆದರೆ (len > 0)
+        ಸ್ಮರಣೆ_ನಕಲು(ctx->ಖಂಡ, src, len);
 }
 
-void av_md5_final(AVMD5 *ctx, uint8_t *dst)
+ಶೂನ್ಯ av_md5_final(AVMD5 *ctx, uint8_t *dst)
 {
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
     uint64_t finalcount = av_le2ne64(ctx->len << 3);
 
     av_md5_update(ctx, "\200", 1);
-    while ((ctx->len & 63) != 56)
+    ಆಗ ((ctx->len & 63) != 56)
         av_md5_update(ctx, "", 1);
 
     av_md5_update(ctx, (uint8_t *) &finalcount, 8);
 
-    for (i = 0; i < 4; i++)
+    ಗಾಗಿ (i = 0; i < 4; i++)
         AV_WL32(dst + 4 * i, ctx->ABCD[3 - i]);
 }
 
-void av_md5_sum(uint8_t *dst, const uint8_t *src, size_t len)
+ಶೂನ್ಯ av_md5_ಮೊತ್ತ(uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src, size_t len)
 {
     AVMD5 ctx;
 

@@ -20,72 +20,72 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "config.h"
-#include "aes.h"
-#include "aes_internal.h"
-#include "attributes.h"
-#include "error.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "thread.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "aes.h"
+#ಅನ್ತರ್ಭಾವ "aes_internal.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "intreadwrite.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "thread.h"
 
-const int av_aes_size= sizeof(AVAES);
+ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ av_aes_ಗಾತ್ರ= ಗಾತ್ರ(AVAES);
 
-struct AVAES *av_aes_alloc(void)
+ರಚನೆ AVAES *av_aes_alloc(ಶೂನ್ಯ)
 {
-    return av_mallocz(sizeof(struct AVAES));
+    ಹಿಂತಿರುಗಿ av_mallocz(ಗಾತ್ರ(ರಚನೆ AVAES));
 }
 
-static const uint8_t rcon[10] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t rcon[10] = {
     0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
 };
 
-static uint8_t     sbox[256];
-static uint8_t inv_sbox[256];
-#if CONFIG_SMALL
-static uint32_t enc_multbl[1][256];
-static uint32_t dec_multbl[1][256];
-#else
-static uint32_t enc_multbl[4][256];
-static uint32_t dec_multbl[4][256];
-#endif
+ಸ್ಥಿರ uint8_t     sbox[256];
+ಸ್ಥಿರ uint8_t inv_sbox[256];
+#ಆದರೆ CONFIG_SMALL
+ಸ್ಥಿರ uint32_t enc_multbl[1][256];
+ಸ್ಥಿರ uint32_t dec_multbl[1][256];
+#ಇಲ್ಲದಿದ್ದರೆ
+ಸ್ಥಿರ uint32_t enc_multbl[4][256];
+ಸ್ಥಿರ uint32_t dec_multbl[4][256];
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if HAVE_BIGENDIAN
+#ಆದರೆ HAVE_BIGENDIAN
 #   define ROT(x, s) (((x) >> (s)) | ((x) << (32-(s))))
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 #   define ROT(x, s) (((x) << (s)) | ((x) >> (32-(s))))
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-static inline void addkey(av_aes_block *dst, const av_aes_block *src,
-                          const av_aes_block *round_key)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಶೂನ್ಯ addkey(av_aes_ಖಂಡ *dst, ಸ್ಥಿರಾಂಕ av_aes_ಖಂಡ *src,
+                          ಸ್ಥಿರಾಂಕ av_aes_ಖಂಡ *ಸುತ್ತು_ಕೀಲಿ)
 {
-    dst->u64[0] = src->u64[0] ^ round_key->u64[0];
-    dst->u64[1] = src->u64[1] ^ round_key->u64[1];
+    dst->u64[0] = src->u64[0] ^ ಸುತ್ತು_ಕೀಲಿ->u64[0];
+    dst->u64[1] = src->u64[1] ^ ಸುತ್ತು_ಕೀಲಿ->u64[1];
 }
 
-static inline void addkey_s(av_aes_block *dst, const uint8_t *src,
-                            const av_aes_block *round_key)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಶೂನ್ಯ addkey_s(av_aes_ಖಂಡ *dst, ಸ್ಥಿರಾಂಕ uint8_t *src,
+                            ಸ್ಥಿರಾಂಕ av_aes_ಖಂಡ *ಸುತ್ತು_ಕೀಲಿ)
 {
-    dst->u64[0] = AV_RN64(src)     ^ round_key->u64[0];
-    dst->u64[1] = AV_RN64(src + 8) ^ round_key->u64[1];
+    dst->u64[0] = AV_RN64(src)     ^ ಸುತ್ತು_ಕೀಲಿ->u64[0];
+    dst->u64[1] = AV_RN64(src + 8) ^ ಸುತ್ತು_ಕೀಲಿ->u64[1];
 }
 
-static inline void addkey_d(uint8_t *dst, const av_aes_block *src,
-                            const av_aes_block *round_key)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಶೂನ್ಯ addkey_d(uint8_t *dst, ಸ್ಥಿರಾಂಕ av_aes_ಖಂಡ *src,
+                            ಸ್ಥಿರಾಂಕ av_aes_ಖಂಡ *ಸುತ್ತು_ಕೀಲಿ)
 {
-    AV_WN64(dst,     src->u64[0] ^ round_key->u64[0]);
-    AV_WN64(dst + 8, src->u64[1] ^ round_key->u64[1]);
+    AV_WN64(dst,     src->u64[0] ^ ಸುತ್ತು_ಕೀಲಿ->u64[0]);
+    AV_WN64(dst + 8, src->u64[1] ^ ಸುತ್ತು_ಕೀಲಿ->u64[1]);
 }
 
-static void subshift(av_aes_block s0[2], int s, const uint8_t *box)
+ಸ್ಥಿರ ಶೂನ್ಯ subshift(av_aes_ಖಂಡ s0[2], ಪೂರ್ಣಾಂಕ s, ಸ್ಥಿರಾಂಕ uint8_t *box)
 {
-    unsigned char *s1_dst = (unsigned char*)s0[0].u8 + 3 - s;
-    const unsigned char *s1_src = s1_dst + sizeof(*s0);
-    unsigned char *s3_dst = (unsigned char*)s0[0].u8 + s + 1;
-    const unsigned char *s3_src = s3_dst + sizeof(*s0);
+    ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ *s1_dst = (ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ*)s0[0].u8 + 3 - s;
+    ಸ್ಥಿರಾಂಕ ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ *s1_src = s1_dst + ಗಾತ್ರ(*s0);
+    ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ *s3_dst = (ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ*)s0[0].u8 + s + 1;
+    ಸ್ಥಿರಾಂಕ ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ *s3_src = s3_dst + ಗಾತ್ರ(*s0);
 
     s0[0].u8[ 0] = box[s0[1].u8[ 0]];
     s0[0].u8[ 4] = box[s0[1].u8[ 4]];
@@ -105,16 +105,16 @@ static void subshift(av_aes_block s0[2], int s, const uint8_t *box)
     s3_dst[ 4] = box[s3_src[ 0]];
 }
 
-static inline int mix_core(uint32_t multbl[][256], int a, int b, int c, int d)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ mix_core(uint32_t multbl[][256], ಪೂರ್ಣಾಂಕ a, ಪೂರ್ಣಾಂಕ b, ಪೂರ್ಣಾಂಕ c, ಪೂರ್ಣಾಂಕ d)
 {
-#if CONFIG_SMALL
-    return multbl[0][a] ^ ROT(multbl[0][b], 8) ^ ROT(multbl[0][c], 16) ^ ROT(multbl[0][d], 24);
-#else
-    return multbl[0][a] ^ multbl[1][b] ^ multbl[2][c] ^ multbl[3][d];
-#endif
+#ಆದರೆ CONFIG_SMALL
+    ಹಿಂತಿರುಗಿ multbl[0][a] ^ ROT(multbl[0][b], 8) ^ ROT(multbl[0][c], 16) ^ ROT(multbl[0][d], 24);
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಹಿಂತಿರುಗಿ multbl[0][a] ^ multbl[1][b] ^ multbl[2][c] ^ multbl[3][d];
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
-static inline void mix(av_aes_block state[2], uint32_t multbl[][256], int s1, int s3)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಶೂನ್ಯ mix(av_aes_ಖಂಡ state[2], uint32_t multbl[][256], ಪೂರ್ಣಾಂಕ s1, ಪೂರ್ಣಾಂಕ s3)
 {
     uint8_t (*src)[4] = state[1].u8x4;
     state[0].u32[0] = mix_core(multbl, src[0][0], src[s1    ][1], src[2][2], src[s3    ][3]);
@@ -123,163 +123,163 @@ static inline void mix(av_aes_block state[2], uint32_t multbl[][256], int s1, in
     state[0].u32[3] = mix_core(multbl, src[3][0], src[s1 - 1][1], src[1][2], src[s3 - 1][3]);
 }
 
-static inline void aes_crypt(AVAES *a, int s, const uint8_t *sbox_arg,
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಶೂನ್ಯ aes_crypt(AVAES *a, ಪೂರ್ಣಾಂಕ s, ಸ್ಥಿರಾಂಕ uint8_t *sbox_arg,
                          uint32_t multbl[][256])
 {
-    int r;
+    ಪೂರ್ಣಾಂಕ r;
 
-    for (r = a->rounds - 1; r > 0; r--) {
+    ಗಾಗಿ (r = a->ಸುತ್ತುಗಳು - 1; r > 0; r--) {
         mix(a->state, multbl, 3 - s, 1 + s);
-        addkey(&a->state[1], &a->state[0], &a->round_key[r]);
+        addkey(&a->state[1], &a->state[0], &a->ಸುತ್ತು_ಕೀಲಿ[r]);
     }
 
     subshift(&a->state[0], s, sbox_arg);
 }
 
-static void aes_encrypt(AVAES *a, uint8_t *dst, const uint8_t *src,
-                        int count, uint8_t *iv, int rounds)
+ಸ್ಥಿರ ಶೂನ್ಯ aes_encrypt(AVAES *a, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src,
+                        ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ ಸುತ್ತುಗಳು)
 {
-    while (count--) {
-        addkey_s(&a->state[1], src, &a->round_key[rounds]);
-        if (iv)
+    ಆಗ (ಎಣಿಕೆ_2--) {
+        addkey_s(&a->state[1], src, &a->ಸುತ್ತು_ಕೀಲಿ[ಸುತ್ತುಗಳು]);
+        ಆದರೆ (iv)
             addkey_s(&a->state[1], iv, &a->state[1]);
         aes_crypt(a, 2, sbox, enc_multbl);
-        addkey_d(dst, &a->state[0], &a->round_key[0]);
-        if (iv)
-            memcpy(iv, dst, 16);
+        addkey_d(dst, &a->state[0], &a->ಸುತ್ತು_ಕೀಲಿ[0]);
+        ಆದರೆ (iv)
+            ಸ್ಮರಣೆ_ನಕಲು(iv, dst, 16);
         src += 16;
         dst += 16;
     }
 }
 
-static void aes_decrypt(AVAES *a, uint8_t *dst, const uint8_t *src,
-                        int count, uint8_t *iv, int rounds)
+ಸ್ಥಿರ ಶೂನ್ಯ aes_decrypt(AVAES *a, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src,
+                        ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ ಸುತ್ತುಗಳು)
 {
-    while (count--) {
-        addkey_s(&a->state[1], src, &a->round_key[rounds]);
+    ಆಗ (ಎಣಿಕೆ_2--) {
+        addkey_s(&a->state[1], src, &a->ಸುತ್ತು_ಕೀಲಿ[ಸುತ್ತುಗಳು]);
         aes_crypt(a, 0, inv_sbox, dec_multbl);
-        if (iv) {
+        ಆದರೆ (iv) {
             addkey_s(&a->state[0], iv, &a->state[0]);
-            memcpy(iv, src, 16);
+            ಸ್ಮರಣೆ_ನಕಲು(iv, src, 16);
         }
-        addkey_d(dst, &a->state[0], &a->round_key[0]);
+        addkey_d(dst, &a->state[0], &a->ಸುತ್ತು_ಕೀಲಿ[0]);
         src += 16;
         dst += 16;
     }
 }
 
-void av_aes_crypt(AVAES *a, uint8_t *dst, const uint8_t *src,
-                  int count, uint8_t *iv, int decrypt)
+ಶೂನ್ಯ av_aes_crypt(AVAES *a, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src,
+                  ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ decrypt)
 {
-    a->crypt(a, dst, src, count, iv, a->rounds);
+    a->crypt(a, dst, src, ಎಣಿಕೆ_2, iv, a->ಸುತ್ತುಗಳು);
 }
 
-static void init_multbl2(uint32_t tbl[][256], const int c[4],
-                         const uint8_t *log8, const uint8_t *alog8,
-                         const uint8_t *sbox_arg)
+ಸ್ಥಿರ ಶೂನ್ಯ init_multbl2(uint32_t tbl[][256], ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ c[4],
+                         ಸ್ಥಿರಾಂಕ uint8_t *log8, ಸ್ಥಿರಾಂಕ uint8_t *alog8,
+                         ಸ್ಥಿರಾಂಕ uint8_t *sbox_arg)
 {
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
 
-    for (i = 0; i < 256; i++) {
-        int x = sbox_arg[i];
-        if (x) {
-            int k, l, m, n;
+    ಗಾಗಿ (i = 0; i < 256; i++) {
+        ಪೂರ್ಣಾಂಕ x = sbox_arg[i];
+        ಆದರೆ (x) {
+            ಪೂರ್ಣಾಂಕ k, l, m, n;
             x = log8[x];
             k = alog8[x + log8[c[0]]];
             l = alog8[x + log8[c[1]]];
             m = alog8[x + log8[c[2]]];
             n = alog8[x + log8[c[3]]];
             tbl[0][i] = AV_NE(MKBETAG(k, l, m, n), MKTAG(k, l, m, n));
-#if !CONFIG_SMALL
+#ಆದರೆ !CONFIG_SMALL
             tbl[1][i] = ROT(tbl[0][i], 8);
             tbl[2][i] = ROT(tbl[0][i], 16);
             tbl[3][i] = ROT(tbl[0][i], 24);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
         }
     }
 }
 
-static AVOnce aes_static_init = AV_ONCE_INIT;
+ಸ್ಥಿರ AVOnce aes_static_init = AV_ONCE_INIT;
 
-static av_cold void aes_init_static(void)
+ಸ್ಥಿರ av_cold ಶೂನ್ಯ aes_init_static(ಶೂನ್ಯ)
 {
     uint8_t log8[256];
     uint8_t alog8[512];
-    int i, j = 1;
+    ಪೂರ್ಣಾಂಕ i, j = 1;
 
-    for (i = 0; i < 255; i++) {
+    ಗಾಗಿ (i = 0; i < 255; i++) {
         alog8[i] = alog8[i + 255] = j;
         log8[j] = i;
         j ^= j + j;
-        if (j > 255)
+        ಆದರೆ (j > 255)
             j ^= 0x11B;
     }
-    for (i = 0; i < 256; i++) {
+    ಗಾಗಿ (i = 0; i < 256; i++) {
         j = i ? alog8[255 - log8[i]] : 0;
         j ^= (j << 1) ^ (j << 2) ^ (j << 3) ^ (j << 4);
         j = (j ^ (j >> 8) ^ 99) & 255;
         inv_sbox[j] = i;
         sbox[i]     = j;
     }
-    init_multbl2(dec_multbl, (const int[4]) { 0xe, 0x9, 0xd, 0xb },
+    init_multbl2(dec_multbl, (ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ[4]) { 0xe, 0x9, 0xd, 0xb },
                  log8, alog8, inv_sbox);
-    init_multbl2(enc_multbl, (const int[4]) { 0x2, 0x1, 0x1, 0x3 },
+    init_multbl2(enc_multbl, (ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ[4]) { 0x2, 0x1, 0x1, 0x3 },
                  log8, alog8, sbox);
 }
 
 // this is based on the reference AES code by Paulo Barreto and Vincent Rijmen
-int av_aes_init(AVAES *a, const uint8_t *key, int key_bits, int decrypt)
+ಪೂರ್ಣಾಂಕ av_aes_init(AVAES *a, ಸ್ಥಿರಾಂಕ uint8_t *ಕೀಲಿ, ಪೂರ್ಣಾಂಕ ಕೀಲಿ_ಬಿಟ್ಟುಗಳು, ಪೂರ್ಣಾಂಕ decrypt)
 {
-    int i, j, t, rconpointer = 0;
+    ಪೂರ್ಣಾಂಕ i, j, t, rconpointer = 0;
     uint8_t tk[8][4];
-    int KC = key_bits >> 5;
-    int rounds = KC + 6;
+    ಪೂರ್ಣಾಂಕ KC = ಕೀಲಿ_ಬಿಟ್ಟುಗಳು >> 5;
+    ಪೂರ್ಣಾಂಕ ಸುತ್ತುಗಳು = KC + 6;
 
-    a->rounds = rounds;
+    a->ಸುತ್ತುಗಳು = ಸುತ್ತುಗಳು;
     a->crypt = decrypt ? aes_decrypt : aes_encrypt;
-#if ARCH_X86 && HAVE_X86ASM && HAVE_AESNI_EXTERNAL
+#ಆದರೆ ARCH_X86 && HAVE_X86ASM && HAVE_AESNI_EXTERNAL
     ff_init_aes_x86(a, decrypt);
-#elif ARCH_AARCH64 && HAVE_ARM_AES
+#ಅಥವಾಆದರೆ ARCH_AARCH64 && HAVE_ARM_AES
     ff_init_aes_aarch64(a, decrypt);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     ff_thread_once(&aes_static_init, aes_init_static);
 
-    if (key_bits != 128 && key_bits != 192 && key_bits != 256)
-        return AVERROR(EINVAL);
+    ಆದರೆ (ಕೀಲಿ_ಬಿಟ್ಟುಗಳು != 128 && ಕೀಲಿ_ಬಿಟ್ಟುಗಳು != 192 && ಕೀಲಿ_ಬಿಟ್ಟುಗಳು != 256)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    memcpy(tk, key, KC * 4);
-    memcpy(a->round_key[0].u8, key, KC * 4);
+    ಸ್ಮರಣೆ_ನಕಲು(tk, ಕೀಲಿ, KC * 4);
+    ಸ್ಮರಣೆ_ನಕಲು(a->ಸುತ್ತು_ಕೀಲಿ[0].u8, ಕೀಲಿ, KC * 4);
 
-    for (t = KC * 4; t < (rounds + 1) * 16; t += KC * 4) {
-        for (i = 0; i < 4; i++)
+    ಗಾಗಿ (t = KC * 4; t < (ಸುತ್ತುಗಳು + 1) * 16; t += KC * 4) {
+        ಗಾಗಿ (i = 0; i < 4; i++)
             tk[0][i] ^= sbox[tk[KC - 1][(i + 1) & 3]];
         tk[0][0] ^= rcon[rconpointer++];
 
-        for (j = 1; j < KC; j++) {
-            if (KC != 8 || j != KC >> 1)
-                for (i = 0; i < 4; i++)
+        ಗಾಗಿ (j = 1; j < KC; j++) {
+            ಆದರೆ (KC != 8 || j != KC >> 1)
+                ಗಾಗಿ (i = 0; i < 4; i++)
                     tk[j][i] ^= tk[j - 1][i];
-            else
-                for (i = 0; i < 4; i++)
+            ಇಲ್ಲದಿದ್ದರೆ
+                ಗಾಗಿ (i = 0; i < 4; i++)
                     tk[j][i] ^= sbox[tk[j - 1][i]];
         }
 
-        memcpy((unsigned char*)a->round_key + t, tk, KC * 4);
+        ಸ್ಮರಣೆ_ನಕಲು((ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ*)a->ಸುತ್ತು_ಕೀಲಿ + t, tk, KC * 4);
     }
 
-    if (decrypt) {
-        for (i = 1; i < rounds; i++) {
-            av_aes_block tmp[3];
-            tmp[2] = a->round_key[i];
+    ಆದರೆ (decrypt) {
+        ಗಾಗಿ (i = 1; i < ಸುತ್ತುಗಳು; i++) {
+            av_aes_ಖಂಡ tmp[3];
+            tmp[2] = a->ಸುತ್ತು_ಕೀಲಿ[i];
             subshift(&tmp[1], 0, sbox);
             mix(tmp, dec_multbl, 1, 3);
-            a->round_key[i] = tmp[0];
+            a->ಸುತ್ತು_ಕೀಲಿ[i] = tmp[0];
         }
-    } else {
-        for (i = 0; i < (rounds + 1) >> 1; i++)
-            FFSWAP(av_aes_block, a->round_key[i], a->round_key[rounds - i]);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಗಾಗಿ (i = 0; i < (ಸುತ್ತುಗಳು + 1) >> 1; i++)
+            FFSWAP(av_aes_ಖಂಡ, a->ಸುತ್ತು_ಕೀಲಿ[i], a->ಸುತ್ತು_ಕೀಲಿ[ಸುತ್ತುಗಳು - i]);
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

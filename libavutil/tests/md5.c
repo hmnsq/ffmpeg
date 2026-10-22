@@ -16,40 +16,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "libavutil/md5.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/md5.h"
 
-static void print_md5(uint8_t *md5)
+ಸ್ಥಿರ ಶೂನ್ಯ print_md5(uint8_t *md5)
 {
-    int i;
-    for (i = 0; i < 16; i++)
-        printf("%02x", md5[i]);
-    printf("\n");
+    ಪೂರ್ಣಾಂಕ i;
+    ಗಾಗಿ (i = 0; i < 16; i++)
+        ಬರೆ("%02x", md5[i]);
+    ಬರೆ("\n");
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
     uint8_t md5val[16];
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
 
-    uint8_t in[1000];
+    uint8_t ಒಳ[1000];
 
-    for (i = 0; i < 1000; i++)
-        in[i] = i * i;
-    av_md5_sum(md5val, in, 1000);
+    ಗಾಗಿ (i = 0; i < 1000; i++)
+        ಒಳ[i] = i * i;
+    av_md5_ಮೊತ್ತ(md5val, ಒಳ, 1000);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 63);
+    av_md5_ಮೊತ್ತ(md5val, ಒಳ, 63);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 64);
+    av_md5_ಮೊತ್ತ(md5val, ಒಳ, 64);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 65);
+    av_md5_ಮೊತ್ತ(md5val, ಒಳ, 65);
     print_md5(md5val);
-    for (i = 0; i < 1000; i++)
-        in[i] = i % 127;
-    av_md5_sum(md5val, in, 999);
+    ಗಾಗಿ (i = 0; i < 1000; i++)
+        ಒಳ[i] = i % 127;
+    av_md5_ಮೊತ್ತ(md5val, ಒಳ, 999);
     print_md5(md5val);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

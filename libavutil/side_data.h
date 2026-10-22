@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_SIDE_DATA_H
-#define AVUTIL_SIDE_DATA_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_SIDE_ದತ್ತಾಂಶ_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_SIDE_ದತ್ತಾಂಶ_H
 
-#include "buffer.h"
-#include "frame.h"
+#ಅನ್ತರ್ಭಾವ "buffer.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
 
-AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
-                                                 enum AVFrameSideDataType type,
+AVFrame_Side_ದತ್ತಾಂಶ *ff_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_ಕೂಡಿಸು_from_buf(AVFrame_Side_ದತ್ತಾಂಶ ***sd,
+                                                 ಪೂರ್ಣಾಂಕ *nb_sd,
+                                                 ಎಣಿಕೆ AVFrame_Side_ದತ್ತಾಂಶ_Type type,
                                                  AVBufferRef *buf);
 
-#endif // AVUTIL_SIDE_DATA_H
+#ಆದರೆ_ಅಂತ್ಯ // AVUTIL_SIDE_DATA_H

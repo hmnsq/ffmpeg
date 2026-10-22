@@ -18,22 +18,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#include "thread.h"
-#include "avassert.h"
-#include "bswap.h"
-#include "crc.h"
-#include "error.h"
-#if ARCH_AARCH64
-#include "libavutil/aarch64/crc.h"
-#elif ARCH_X86
-#include "libavutil/x86/crc.h"
-#endif
+#ಅನ್ತರ್ಭಾವ "thread.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "bswap.h"
+#ಅನ್ತರ್ಭಾವ "crc.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಆದರೆ ARCH_AARCH64
+#ಅನ್ತರ್ಭಾವ "libavutil/aarch64/crc.h"
+#ಅಥವಾಆದರೆ ARCH_X86
+#ಅನ್ತರ್ಭಾವ "libavutil/x86/crc.h"
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if CONFIG_HARDCODED_TABLES
-static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
-    [AV_CRC_8_ATM] = {
+#ಆದರೆ CONFIG_HARDCODED_TABLES
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVCRC av_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_ಕೋಷ್ಟಕ[AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_MAX][257] = {
+    [AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_8_ATM] = {
         0x00, 0x07, 0x0E, 0x09, 0x1C, 0x1B, 0x12, 0x15, 0x38, 0x3F, 0x36, 0x31,
         0x24, 0x23, 0x2A, 0x2D, 0x70, 0x77, 0x7E, 0x79, 0x6C, 0x6B, 0x62, 0x65,
         0x48, 0x4F, 0x46, 0x41, 0x54, 0x53, 0x5A, 0x5D, 0xE0, 0xE7, 0xEE, 0xE9,
@@ -57,7 +57,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0xDE, 0xD9, 0xD0, 0xD7, 0xC2, 0xC5, 0xCC, 0xCB, 0xE6, 0xE1, 0xE8, 0xEF,
         0xFA, 0xFD, 0xF4, 0xF3, 0x01
     },
-    [AV_CRC_8_EBU] = {
+    [AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_8_EBU] = {
         0x00, 0x1D, 0x3A, 0x27, 0x74, 0x69, 0x4E, 0x53, 0xE8, 0xF5, 0xD2, 0xCF,
         0x9C, 0x81, 0xA6, 0xBB, 0xCD, 0xD0, 0xF7, 0xEA, 0xB9, 0xA4, 0x83, 0x9E,
         0x25, 0x38, 0x1F, 0x02, 0x51, 0x4C, 0x6B, 0x76, 0x87, 0x9A, 0xBD, 0xA0,
@@ -81,7 +81,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x7F, 0x62, 0x45, 0x58, 0x0B, 0x16, 0x31, 0x2C, 0x97, 0x8A, 0xAD, 0xB0,
         0xE3, 0xFE, 0xD9, 0xC4, 0x01
     },
-    [AV_CRC_16_ANSI] = {
+    [AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_ANSI] = {
         0x0000, 0x0580, 0x0F80, 0x0A00, 0x1B80, 0x1E00, 0x1400, 0x1180,
         0x3380, 0x3600, 0x3C00, 0x3980, 0x2800, 0x2D80, 0x2780, 0x2200,
         0x6380, 0x6600, 0x6C00, 0x6980, 0x7800, 0x7D80, 0x7780, 0x7200,
@@ -116,7 +116,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x1382, 0x1602, 0x1C02, 0x1982, 0x0802, 0x0D82, 0x0782, 0x0202,
         0x0001
     },
-    [AV_CRC_16_CCITT] = {
+    [AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_CCITT] = {
         0x0000, 0x2110, 0x4220, 0x6330, 0x8440, 0xA550, 0xC660, 0xE770,
         0x0881, 0x2991, 0x4AA1, 0x6BB1, 0x8CC1, 0xADD1, 0xCEE1, 0xEFF1,
         0x3112, 0x1002, 0x7332, 0x5222, 0xB552, 0x9442, 0xF772, 0xD662,
@@ -151,7 +151,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x176E, 0x367E, 0x554E, 0x745E, 0x932E, 0xB23E, 0xD10E, 0xF01E,
         0x0001
     },
-    [AV_CRC_24_IEEE] = {
+    [AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_24_IEEE] = {
         0x000000, 0xFB4C86, 0x0DD58A, 0xF6990C, 0xE1E693, 0x1AAA15, 0xEC3319,
         0x177F9F, 0x3981A1, 0xC2CD27, 0x34542B, 0xCF18AD, 0xD86732, 0x232BB4,
         0xD5B2B8, 0x2EFE3E, 0x894EC5, 0x720243, 0x849B4F, 0x7FD7C9, 0x68A856,
@@ -190,7 +190,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x0CD1F6, 0xFA48FA, 0x01047C, 0x2FFA42, 0xD4B6C4, 0x222FC8, 0xD9634E,
         0xCE1CD1, 0x355057, 0xC3C95B, 0x3885DD, 0x000001,
     },
-    [AV_CRC_32_IEEE] = {
+    [AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_IEEE] = {
         0x00000000, 0xB71DC104, 0x6E3B8209, 0xD926430D, 0xDC760413, 0x6B6BC517,
         0xB24D861A, 0x0550471E, 0xB8ED0826, 0x0FF0C922, 0xD6D68A2F, 0x61CB4B2B,
         0x649B0C35, 0xD386CD31, 0x0AA08E3C, 0xBDBD4F38, 0x70DB114C, 0xC7C6D048,
@@ -235,7 +235,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0xBBB03E93, 0x0CADFF97, 0xB110B0AF, 0x060D71AB, 0xDF2B32A6, 0x6836F3A2,
         0x6D66B4BC, 0xDA7B75B8, 0x035D36B5, 0xB440F7B1, 0x00000001
     },
-    [AV_CRC_32_IEEE_LE] = {
+    [AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_IEEE_LE] = {
         0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419, 0x706AF48F,
         0xE963A535, 0x9E6495A3, 0x0EDB8832, 0x79DCB8A4, 0xE0D5E91E, 0x97D2D988,
         0x09B64C2B, 0x7EB17CBD, 0xE7B82D07, 0x90BF1D91, 0x1DB71064, 0x6AB020F2,
@@ -280,7 +280,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x54DE5729, 0x23D967BF, 0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94,
         0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D, 0x00000001
     },
-    [AV_CRC_16_ANSI_LE] = {
+    [AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_ANSI_LE] = {
         0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
         0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
         0xCC01, 0x0CC0, 0x0D80, 0xCD41, 0x0F00, 0xCFC1, 0xCE81, 0x0E40,
@@ -316,138 +316,138 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x0001
     },
 };
-#else
-#if CONFIG_SMALL
-#define CRC_TABLE_SIZE 257
-#else
-#define CRC_TABLE_SIZE 1024
-#endif
-static AVCRC av_crc_table[AV_CRC_MAX][CRC_TABLE_SIZE];
+#ಇಲ್ಲದಿದ್ದರೆ
+#ಆದರೆ CONFIG_SMALL
+#ವ್ಯಾಖ್ಯಾನಿಸು ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_ಕೋಷ್ಟಕ_ಗಾತ್ರ 257
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_ಕೋಷ್ಟಕ_ಗಾತ್ರ 1024
+#ಆದರೆ_ಅಂತ್ಯ
+ಸ್ಥಿರ AVCRC av_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_ಕೋಷ್ಟಕ[AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_MAX][ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_ಕೋಷ್ಟಕ_ಗಾತ್ರ];
 
-#define DECLARE_CRC_INIT_TABLE_ONCE(id, le, bits, poly)                                       \
-static AVOnce id ## _once_control = AV_ONCE_INIT;                                             \
-static void id ## _init_table_once(void)                                                      \
+#ವ್ಯಾಖ್ಯಾನಿಸು DECLARE_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(id, le, ಬಿಟ್ಟುಗಳು, poly)                                       \
+ಸ್ಥಿರ AVOnce id ## _once_control = AV_ONCE_INIT;                                             \
+ಸ್ಥಿರ ಶೂನ್ಯ id ## init_ಕೋಷ್ಟಕ_once(ಶೂನ್ಯ)                                                      \
 {                                                                                             \
-    av_assert0(av_crc_init(av_crc_table[id], le, bits, poly, sizeof(av_crc_table[id])) >= 0); \
+    av_assert0(av_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_init(av_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_ಕೋಷ್ಟಕ[id], le, ಬಿಟ್ಟುಗಳು, poly, ಗಾತ್ರ(av_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_ಕೋಷ್ಟಕ[id])) >= 0); \
 }
 
-#define CRC_INIT_TABLE_ONCE(id) ff_thread_once(&id ## _once_control, id ## _init_table_once)
+#ವ್ಯಾಖ್ಯಾನಿಸು ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(id) ff_thread_once(&id ## _once_control, id ## init_ಕೋಷ್ಟಕ_once)
 
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_8_ATM,      0,  8,       0x07)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_8_EBU,      0,  8,       0x1D)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI,    0, 16,     0x8005)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_16_CCITT,   0, 16,     0x1021)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_24_IEEE,    0, 24,   0x864CFB)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE,    0, 32, 0x04C11DB7)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE_LE, 1, 32, 0xEDB88320)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI_LE, 1, 16,     0xA001)
-#endif
+DECLARE_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_8_ATM,      0,  8,       0x07)
+DECLARE_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_8_EBU,      0,  8,       0x1D)
+DECLARE_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_ANSI,    0, 16,     0x8005)
+DECLARE_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_CCITT,   0, 16,     0x1021)
+DECLARE_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_24_IEEE,    0, 24,   0x864CFB)
+DECLARE_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_IEEE,    0, 32, 0x04C11DB7)
+DECLARE_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_IEEE_LE, 1, 32, 0xEDB88320)
+DECLARE_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_ANSI_LE, 1, 16,     0xA001)
+#ಆದರೆ_ಅಂತ್ಯ
 
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+ಪೂರ್ಣಾಂಕ av_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_init(AVCRC *ctx, ಪೂರ್ಣಾಂಕ le, ಪೂರ್ಣಾಂಕ ಬಿಟ್ಟುಗಳು, uint32_t poly, ಪೂರ್ಣಾಂಕ ctx_ಗಾತ್ರ)
 {
-    unsigned i, j;
+    ಚಿಹ್ನೆರಹಿತ i, j;
     uint32_t c;
 
-    if (bits < 8 || bits > 32 || poly >= (1LL << bits))
-        return AVERROR(EINVAL);
-    if (ctx_size != sizeof(AVCRC) * 257 && ctx_size != sizeof(AVCRC) * 1024)
-        return AVERROR(EINVAL);
+    ಆದರೆ (ಬಿಟ್ಟುಗಳು < 8 || ಬಿಟ್ಟುಗಳು > 32 || poly >= (1LL << ಬಿಟ್ಟುಗಳು))
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
+    ಆದರೆ (ctx_ಗಾತ್ರ != ಗಾತ್ರ(AVCRC) * 257 && ctx_ಗಾತ್ರ != ಗಾತ್ರ(AVCRC) * 1024)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-#if ARCH_X86
-    int done = ff_crc_init_x86(ctx, le, bits, poly, ctx_size);
-    if (done)
-        return 0;
-#elif ARCH_AARCH64
-    int done = ff_crc_init_aarch64(ctx, le, bits, poly, ctx_size);
-    if (done)
-        return 0;
-#endif
+#ಆದರೆ ARCH_X86
+    ಪೂರ್ಣಾಂಕ ಮುಗಿದ = ff_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_init_x86(ctx, le, ಬಿಟ್ಟುಗಳು, poly, ctx_ಗಾತ್ರ);
+    ಆದರೆ (ಮುಗಿದ)
+        ಹಿಂತಿರುಗಿ 0;
+#ಅಥವಾಆದರೆ ARCH_AARCH64
+    ಪೂರ್ಣಾಂಕ ಮುಗಿದ = ff_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_init_aarch64(ctx, le, ಬಿಟ್ಟುಗಳು, poly, ctx_ಗಾತ್ರ);
+    ಆದರೆ (ಮುಗಿದ)
+        ಹಿಂತಿರುಗಿ 0;
+#ಆದರೆ_ಅಂತ್ಯ
 
-    for (i = 0; i < 256; i++) {
-        if (le) {
-            for (c = i, j = 0; j < 8; j++)
+    ಗಾಗಿ (i = 0; i < 256; i++) {
+        ಆದರೆ (le) {
+            ಗಾಗಿ (c = i, j = 0; j < 8; j++)
                 c = (c >> 1) ^ (poly & (-(c & 1)));
             ctx[i] = c;
-        } else {
-            for (c = i << 24, j = 0; j < 8; j++)
-                c = (c << 1) ^ ((poly << (32 - bits)) & (((int32_t) c) >> 31));
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಗಾಗಿ (c = i << 24, j = 0; j < 8; j++)
+                c = (c << 1) ^ ((poly << (32 - ಬಿಟ್ಟುಗಳು)) & (((int32_t) c) >> 31));
             ctx[i] = av_bswap32(c);
         }
     }
     ctx[256] = 1;
-#if !CONFIG_SMALL
-    if (ctx_size >= sizeof(AVCRC) * 1024)
-        for (i = 0; i < 256; i++)
-            for (j = 0; j < 3; j++)
+#ಆದರೆ !CONFIG_SMALL
+    ಆದರೆ (ctx_ಗಾತ್ರ >= ಗಾತ್ರ(AVCRC) * 1024)
+        ಗಾಗಿ (i = 0; i < 256; i++)
+            ಗಾಗಿ (j = 0; j < 3; j++)
                 ctx[256 * (j + 1) + i] =
                     (ctx[256 * j + i] >> 8) ^ ctx[ctx[256 * j + i] & 0xFF];
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-const AVCRC *av_crc_get_table(AVCRCId crc_id)
+ಸ್ಥಿರಾಂಕ AVCRC *av_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_get_ಕೋಷ್ಟಕ(AVCRCId ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_id)
 {
-    if ((unsigned)crc_id >= AV_CRC_MAX)
-        return NULL;
+    ಆದರೆ ((ಚಿಹ್ನೆರಹಿತ)ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_id >= AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_MAX)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 // Check for arch-specific extensions first to avoid initializing
 // ordinary CRC tables unnecessarily.
-#if ARCH_AARCH64
-    const AVCRC *table = ff_crc_get_table_aarch64(crc_id);
-    if (table)
-        return table;
-#elif ARCH_X86
-    const AVCRC *table = ff_crc_get_table_x86(crc_id);
-    if (table)
-        return table;
-#endif
+#ಆದರೆ ARCH_AARCH64
+    ಸ್ಥಿರಾಂಕ AVCRC *ಕೋಷ್ಟಕ = ff_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_get_ಕೋಷ್ಟಕ_aarch64(ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_id);
+    ಆದರೆ (ಕೋಷ್ಟಕ)
+        ಹಿಂತಿರುಗಿ ಕೋಷ್ಟಕ;
+#ಅಥವಾಆದರೆ ARCH_X86
+    ಸ್ಥಿರಾಂಕ AVCRC *ಕೋಷ್ಟಕ = ff_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_get_ಕೋಷ್ಟಕ_x86(ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_id);
+    ಆದರೆ (ಕೋಷ್ಟಕ)
+        ಹಿಂತಿರುಗಿ ಕೋಷ್ಟಕ;
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if !CONFIG_HARDCODED_TABLES
-    switch (crc_id) {
-    case AV_CRC_8_ATM:      CRC_INIT_TABLE_ONCE(AV_CRC_8_ATM); break;
-    case AV_CRC_8_EBU:      CRC_INIT_TABLE_ONCE(AV_CRC_8_EBU); break;
-    case AV_CRC_16_ANSI:    CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI); break;
-    case AV_CRC_16_CCITT:   CRC_INIT_TABLE_ONCE(AV_CRC_16_CCITT); break;
-    case AV_CRC_24_IEEE:    CRC_INIT_TABLE_ONCE(AV_CRC_24_IEEE); break;
-    case AV_CRC_32_IEEE:    CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE); break;
-    case AV_CRC_32_IEEE_LE: CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE_LE); break;
-    case AV_CRC_16_ANSI_LE: CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI_LE); break;
-    default: av_unreachable("already checked");
+#ಆದರೆ !CONFIG_HARDCODED_TABLES
+    ಆಯ್ಕೆ (ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_id) {
+    ಸ್ಥಿತಿ AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_8_ATM:      ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_8_ATM); ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_8_EBU:      ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_8_EBU); ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_ANSI:    ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_ANSI); ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_CCITT:   ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_CCITT); ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_24_IEEE:    ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_24_IEEE); ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_IEEE:    ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_IEEE); ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_IEEE_LE: ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_IEEE_LE); ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_ANSI_LE: ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_INIT_ಕೋಷ್ಟಕ_ONCE(AV_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_16_ANSI_LE); ನಿಲ್ಲಿಸು;
+    ಪೂರ್ವನಿಯೋಜಿತ: av_unreachable("already checked");
     }
-#endif
-    return av_crc_table[crc_id];
+#ಆದರೆ_ಅಂತ್ಯ
+    ಹಿಂತಿರುಗಿ av_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_ಕೋಷ್ಟಕ[ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_id];
 }
 
-uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
-                const uint8_t *buffer, size_t length)
+uint32_t av_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ(ಸ್ಥಿರಾಂಕ AVCRC *ctx, uint32_t ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ,
+                ಸ್ಥಿರಾಂಕ uint8_t *ಬಫರ್, size_t ಉದ್ದಳತೆ)
 {
-    if (ctx[0]) {
-#if ARCH_AARCH64
-        return ff_crc_aarch64(ctx, crc, buffer, length);
-#elif ARCH_X86
-        return ff_crc_x86(ctx, crc, buffer, length);
-#endif
+    ಆದರೆ (ctx[0]) {
+#ಆದರೆ ARCH_AARCH64
+        ಹಿಂತಿರುಗಿ ff_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_aarch64(ctx, ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ, ಬಫರ್, ಉದ್ದಳತೆ);
+#ಅಥವಾಆದರೆ ARCH_X86
+        ಹಿಂತಿರುಗಿ ff_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_x86(ctx, ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ, ಬಫರ್, ಉದ್ದಳತೆ);
+#ಆದರೆ_ಅಂತ್ಯ
     }
     av_assert2(ctx[0] == 0);
 
-    const uint8_t *end = buffer + length;
+    ಸ್ಥಿರಾಂಕ uint8_t *ಕೊನೆ = ಬಫರ್ + ಉದ್ದಳತೆ;
 
-#if !CONFIG_SMALL
-    if (!ctx[256]) {
-        while (((intptr_t) buffer & 3) && buffer < end)
-            crc = ctx[((uint8_t) crc) ^ *buffer++] ^ (crc >> 8);
+#ಆದರೆ !CONFIG_SMALL
+    ಆದರೆ (!ctx[256]) {
+        ಆಗ (((intptr_t) ಬಫರ್ & 3) && ಬಫರ್ < ಕೊನೆ)
+            ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = ctx[((uint8_t) ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ) ^ *ಬಫರ್++] ^ (ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ >> 8);
 
-        while (buffer < end - 3) {
-            crc ^= av_le2ne32(*(const uint32_t *) buffer); buffer += 4;
-            crc = ctx[3 * 256 + ( crc        & 0xFF)] ^
-                  ctx[2 * 256 + ((crc >> 8 ) & 0xFF)] ^
-                  ctx[1 * 256 + ((crc >> 16) & 0xFF)] ^
-                  ctx[0 * 256 + ((crc >> 24)       )];
+        ಆಗ (ಬಫರ್ < ಕೊನೆ - 3) {
+            ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ ^= av_le2ne32(*(ಸ್ಥಿರಾಂಕ uint32_t *) ಬಫರ್); ಬಫರ್ += 4;
+            ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = ctx[3 * 256 + ( ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ        & 0xFF)] ^
+                  ctx[2 * 256 + ((ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ >> 8 ) & 0xFF)] ^
+                  ctx[1 * 256 + ((ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ >> 16) & 0xFF)] ^
+                  ctx[0 * 256 + ((ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ >> 24)       )];
         }
     }
-#endif
-    while (buffer < end)
-        crc = ctx[((uint8_t) crc) ^ *buffer++] ^ (crc >> 8);
+#ಆದರೆ_ಅಂತ್ಯ
+    ಆಗ (ಬಫರ್ < ಕೊನೆ)
+        ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = ctx[((uint8_t) ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ) ^ *ಬಫರ್++] ^ (ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ >> 8);
 
-    return crc;
+    ಹಿಂತಿರುಗಿ ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ;
 }

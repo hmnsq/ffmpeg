@@ -18,77 +18,77 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "mastering_display_metadata.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ "mastering_display_metadata.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
-static void get_defaults(AVMasteringDisplayMetadata *mastering)
+ಸ್ಥಿರ ಶೂನ್ಯ get_defaults(AVMasteringDisplayMetadata *mastering)
 {
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 2; j++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < 3; i++)
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < 2; j++)
             mastering->display_primaries[i][j] = (AVRational) { 0, 1 };
-    mastering->white_point[0] =
-    mastering->white_point[1] =
+    mastering->white_ಬಿಂದು_2[0] =
+    mastering->white_ಬಿಂದು_2[1] =
     mastering->min_luminance  =
     mastering->max_luminance  = (AVRational) { 0, 1 };
 }
 
-AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(void)
+AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(ಶೂನ್ಯ)
 {
-    return av_mastering_display_metadata_alloc_size(NULL);
+    ಹಿಂತಿರುಗಿ av_mastering_display_metadata_alloc_ಗಾತ್ರ(ಖಾಲಿ);
 }
 
-AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc_size(size_t *size)
+AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc_ಗಾತ್ರ(size_t *ಗಾತ್ರ_2)
 {
-    AVMasteringDisplayMetadata *mastering = av_mallocz(sizeof(AVMasteringDisplayMetadata));
+    AVMasteringDisplayMetadata *mastering = av_mallocz(ಗಾತ್ರ(AVMasteringDisplayMetadata));
 
-    if (size)
-        *size = mastering ? sizeof(*mastering) : 0;
+    ಆದರೆ (ಗಾತ್ರ_2)
+        *ಗಾತ್ರ_2 = mastering ? ಗಾತ್ರ(*mastering) : 0;
 
-    if (!mastering)
-        return NULL;
+    ಆದರೆ (!mastering)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
     get_defaults(mastering);
 
-    return mastering;
+    ಹಿಂತಿರುಗಿ mastering;
 }
 
-AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_data(AVFrame *frame)
+AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು)
 {
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_MASTERING_DISPLAY_METADATA,
-                                                        sizeof(AVMasteringDisplayMetadata));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_ದತ್ತಾಂಶ *side_ದತ್ತಾಂಶ = av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು,
+                                                        AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_MASTERING_DISPLAY_METADATA,
+                                                        ಗಾತ್ರ(AVMasteringDisplayMetadata));
+    ಆದರೆ (!side_ದತ್ತಾಂಶ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    memset(side_data->data, 0, sizeof(AVMasteringDisplayMetadata));
-    get_defaults((AVMasteringDisplayMetadata *)side_data->data);
+    memset(side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ, 0, ಗಾತ್ರ(AVMasteringDisplayMetadata));
+    get_defaults((AVMasteringDisplayMetadata *)side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ);
 
-    return (AVMasteringDisplayMetadata *)side_data->data;
+    ಹಿಂತಿರುಗಿ (AVMasteringDisplayMetadata *)side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ;
 }
 
-AVContentLightMetadata *av_content_light_metadata_alloc(size_t *size)
+AVContentLightMetadata *av_content_light_metadata_alloc(size_t *ಗಾತ್ರ_2)
 {
-    AVContentLightMetadata *metadata = av_mallocz(sizeof(AVContentLightMetadata));
+    AVContentLightMetadata *metadata = av_mallocz(ಗಾತ್ರ(AVContentLightMetadata));
 
-    if (size)
-        *size = metadata ? sizeof(*metadata) : 0;
+    ಆದರೆ (ಗಾತ್ರ_2)
+        *ಗಾತ್ರ_2 = metadata ? ಗಾತ್ರ(*metadata) : 0;
 
-    return metadata;
+    ಹಿಂತಿರುಗಿ metadata;
 }
 
-AVContentLightMetadata *av_content_light_metadata_create_side_data(AVFrame *frame)
+AVContentLightMetadata *av_content_light_metadata_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು)
 {
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                                                        sizeof(AVContentLightMetadata));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_ದತ್ತಾಂಶ *side_ದತ್ತಾಂಶ = av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು,
+                                                        AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_CONTENT_LIGHT_LEVEL,
+                                                        ಗಾತ್ರ(AVContentLightMetadata));
+    ಆದರೆ (!side_ದತ್ತಾಂಶ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    memset(side_data->data, 0, sizeof(AVContentLightMetadata));
+    memset(side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ, 0, ಗಾತ್ರ(AVContentLightMetadata));
 
-    return (AVContentLightMetadata *)side_data->data;
+    ಹಿಂತಿರುಗಿ (AVContentLightMetadata *)side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ;
 }

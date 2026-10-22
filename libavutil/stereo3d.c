@@ -18,134 +18,134 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "stereo3d.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "stereo3d.h"
 
-static void get_defaults(AVStereo3D *stereo)
+ಸ್ಥಿರ ಶೂನ್ಯ get_defaults(AVStereo3D *stereo)
 {
     stereo->horizontal_disparity_adjustment = (AVRational) { 0, 1 };
-    stereo->horizontal_field_of_view = (AVRational) { 0, 1 };
+    stereo->horizontal_ಕ್ಷೇತ್ರ_ದ_view = (AVRational) { 0, 1 };
 }
 
-AVStereo3D *av_stereo3d_alloc(void)
+AVStereo3D *av_stereo3d_alloc(ಶೂನ್ಯ)
 {
-    return av_stereo3d_alloc_size(NULL);
+    ಹಿಂತಿರುಗಿ av_stereo3d_alloc_ಗಾತ್ರ(ಖಾಲಿ);
 }
 
-AVStereo3D *av_stereo3d_alloc_size(size_t *size)
+AVStereo3D *av_stereo3d_alloc_ಗಾತ್ರ(size_t *ಗಾತ್ರ_2)
 {
-    AVStereo3D *stereo = av_mallocz(sizeof(AVStereo3D));
+    AVStereo3D *stereo = av_mallocz(ಗಾತ್ರ(AVStereo3D));
 
-    if (size)
-        *size = stereo ? sizeof(*stereo) : 0;
+    ಆದರೆ (ಗಾತ್ರ_2)
+        *ಗಾತ್ರ_2 = stereo ? ಗಾತ್ರ(*stereo) : 0;
 
-    if (!stereo)
-        return NULL;
+    ಆದರೆ (!stereo)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
     get_defaults(stereo);
 
-    return stereo;
+    ಹಿಂತಿರುಗಿ stereo;
 }
 
-AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame)
+AVStereo3D *av_stereo3d_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು)
 {
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_STEREO3D,
-                                                        sizeof(AVStereo3D));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_ದತ್ತಾಂಶ *side_ದತ್ತಾಂಶ = av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು,
+                                                        AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_STEREO3_D,
+                                                        ಗಾತ್ರ(AVStereo3D));
+    ಆದರೆ (!side_ದತ್ತಾಂಶ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    memset(side_data->data, 0, sizeof(AVStereo3D));
-    get_defaults((AVStereo3D *)side_data->data);
+    memset(side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ, 0, ಗಾತ್ರ(AVStereo3D));
+    get_defaults((AVStereo3D *)side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ);
 
-    return (AVStereo3D *)side_data->data;
+    ಹಿಂತಿರುಗಿ (AVStereo3D *)side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ;
 }
 
-static const char * const stereo3d_type_names[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ stereo3d_type_ಹೆಸರುಗಳು[] = {
     [AV_STEREO3D_2D]                  = "2D",
     [AV_STEREO3D_SIDEBYSIDE]          = "side by side",
     [AV_STEREO3D_TOPBOTTOM]           = "top and bottom",
     [AV_STEREO3D_FRAMESEQUENCE]       = "frame alternate",
     [AV_STEREO3D_CHECKERBOARD]        = "checkerboard",
     [AV_STEREO3D_SIDEBYSIDE_QUINCUNX] = "side by side (quincunx subsampling)",
-    [AV_STEREO3D_LINES]               = "interleaved lines",
+    [AV_STEREO3_D_ಸಾಲುಗಳು]               = "interleaved lines",
     [AV_STEREO3D_COLUMNS]             = "interleaved columns",
     [AV_STEREO3D_UNSPEC]              = "unspecified",
 };
 
-static const char * const stereo3d_view_names[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ stereo3d_view_ಹೆಸರುಗಳು[] = {
     [AV_STEREO3D_VIEW_PACKED] = "packed",
-    [AV_STEREO3D_VIEW_LEFT]   = "left",
-    [AV_STEREO3D_VIEW_RIGHT]  = "right",
+    [AV_STEREO3_D_VIEW_ಎಡ]   = "left",
+    [AV_STEREO3_D_VIEW_ಬಲ]  = "right",
     [AV_STEREO3D_VIEW_UNSPEC] = "unspecified",
 };
 
-static const char * const stereo3d_primary_eye_names[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ stereo3d_primary_eye_ಹೆಸರುಗಳು[] = {
     [AV_PRIMARY_EYE_NONE]  = "none",
-    [AV_PRIMARY_EYE_LEFT]  = "left",
-    [AV_PRIMARY_EYE_RIGHT] = "right",
+    [AV_PRIMARY_EYE_ಎಡ]  = "left",
+    [AV_PRIMARY_EYE_ಬಲ] = "right",
 };
 
-const char *av_stereo3d_type_name(unsigned int type)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_stereo3d_type_name(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ type)
 {
-    if (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
-        return "unknown";
+    ಆದರೆ (type >= FF_ARRAY_ELEMS(stereo3d_type_ಹೆಸರುಗಳು))
+        ಹಿಂತಿರುಗಿ "unknown";
 
-    return stereo3d_type_names[type];
+    ಹಿಂತಿರುಗಿ stereo3d_type_ಹೆಸರುಗಳು[type];
 }
 
-int av_stereo3d_from_name(const char *name)
+ಪೂರ್ಣಾಂಕ av_stereo3d_from_name(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name)
 {
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
-        if (!strcmp(name, stereo3d_type_names[i]))
-            return i;
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_ಹೆಸರುಗಳು); i++) {
+        ಆದರೆ (!strcmp(name, stereo3d_type_ಹೆಸರುಗಳು[i]))
+            ಹಿಂತಿರುಗಿ i;
     }
 
-    return -1;
+    ಹಿಂತಿರುಗಿ -1;
 }
 
-const char *av_stereo3d_view_name(unsigned int view)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_stereo3d_view_name(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ view)
 {
-    if (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
-        return "unknown";
+    ಆದರೆ (view >= FF_ARRAY_ELEMS(stereo3d_view_ಹೆಸರುಗಳು))
+        ಹಿಂತಿರುಗಿ "unknown";
 
-    return stereo3d_view_names[view];
+    ಹಿಂತಿರುಗಿ stereo3d_view_ಹೆಸರುಗಳು[view];
 }
 
-int av_stereo3d_view_from_name(const char *name)
+ಪೂರ್ಣಾಂಕ av_stereo3d_view_from_name(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name)
 {
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
-        if (!strcmp(name, stereo3d_view_names[i]))
-            return i;
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_ಹೆಸರುಗಳು); i++) {
+        ಆದರೆ (!strcmp(name, stereo3d_view_ಹೆಸರುಗಳು[i]))
+            ಹಿಂತಿರುಗಿ i;
     }
 
-    return -1;
+    ಹಿಂತಿರುಗಿ -1;
 }
 
-const char *av_stereo3d_primary_eye_name(unsigned int eye)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_stereo3d_primary_eye_name(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ eye)
 {
-    if (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
-        return "unknown";
+    ಆದರೆ (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_ಹೆಸರುಗಳು))
+        ಹಿಂತಿರುಗಿ "unknown";
 
-    return stereo3d_primary_eye_names[eye];
+    ಹಿಂತಿರುಗಿ stereo3d_primary_eye_ಹೆಸರುಗಳು[eye];
 }
 
-int av_stereo3d_primary_eye_from_name(const char *name)
+ಪೂರ್ಣಾಂಕ av_stereo3d_primary_eye_from_name(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name)
 {
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
-        if (!strcmp(name, stereo3d_primary_eye_names[i]))
-            return i;
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_ಹೆಸರುಗಳು); i++) {
+        ಆದರೆ (!strcmp(name, stereo3d_primary_eye_ಹೆಸರುಗಳು[i]))
+            ಹಿಂತಿರುಗಿ i;
     }
 
-    return -1;
+    ಹಿಂತಿರುಗಿ -1;
 }

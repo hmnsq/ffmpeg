@@ -18,62 +18,62 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define VK_NO_PROTOTYPES
-#define VK_ENABLE_BETA_EXTENSIONS
+#ವ್ಯಾಖ್ಯಾನಿಸು VK_NO_PROTOTYPES
+#ವ್ಯಾಖ್ಯಾನಿಸು VK_ENABLE_BETA_EXTENSIONS
 
-#ifdef _WIN32
-#include <windows.h> /* Included to prevent conflicts with CreateSemaphore */
-#include <versionhelpers.h>
-#include "compat/w32dlfcn.h"
-#else
-#include <dlfcn.h>
-#include <unistd.h>
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
+#ಅನ್ತರ್ಭಾವ <windows.h> /* Included to prevent conflicts with CreateSemaphore */
+#ಅನ್ತರ್ಭಾವ <versionhelpers.h>
+#ಅನ್ತರ್ಭಾವ "compat/w32dlfcn.h"
+#ಇಲ್ಲದಿದ್ದರೆ
+#ಅನ್ತರ್ಭಾವ <dlfcn.h>
+#ಅನ್ತರ್ಭಾವ <unistd.h>
+#ಆದರೆ_ಅಂತ್ಯ
 
-#include "thread.h"
+#ಅನ್ತರ್ಭಾವ "thread.h"
 
-#include "config.h"
-#include "pixdesc.h"
-#include "avstring.h"
-#include "imgutils.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_vulkan.h"
-#include "mem.h"
-#include "uuid.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "pixdesc.h"
+#ಅನ್ತರ್ಭಾವ "avstring.h"
+#ಅನ್ತರ್ಭಾವ "imgutils.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext_internal.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext_vulkan.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "uuid.h"
 
-#include "vulkan.h"
-#include "vulkan_loader.h"
+#ಅನ್ತರ್ಭಾವ "vulkan.h"
+#ಅನ್ತರ್ಭಾವ "vulkan_loader.h"
 
-#if CONFIG_VAAPI
-#include "hwcontext_vaapi.h"
-#endif
+#ಆದರೆ CONFIG_VAAPI
+#ಅನ್ತರ್ಭಾವ "hwcontext_vaapi.h"
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if CONFIG_LIBDRM
-#if CONFIG_VAAPI
-#include <va/va_drmcommon.h>
-#endif
-#ifdef __linux__
-#include <sys/sysmacros.h>
-#endif
-#include <sys/stat.h>
-#include <xf86drm.h>
-#include <drm_fourcc.h>
-#include "hwcontext_drm.h"
-#endif
+#ಆದರೆ CONFIG_LIBDRM
+#ಆದರೆ CONFIG_VAAPI
+#ಅನ್ತರ್ಭಾವ <va/va_drmcommon.h>
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __linux__
+#ಅನ್ತರ್ಭಾವ <sys/sysmacros.h>
+#ಆದರೆ_ಅಂತ್ಯ
+#ಅನ್ತರ್ಭಾವ <sys/stat.h>
+#ಅನ್ತರ್ಭಾವ <xf86drm.h>
+#ಅನ್ತರ್ಭಾವ <drm_fourcc.h>
+#ಅನ್ತರ್ಭಾವ "hwcontext_drm.h"
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if HAVE_LINUX_DMA_BUF_H
-#include <sys/ioctl.h>
-#include <linux/dma-buf.h>
-#endif
+#ಆದರೆ HAVE_LINUX_DMA_BUF_H
+#ಅನ್ತರ್ಭಾವ <sys/ioctl.h>
+#ಅನ್ತರ್ಭಾವ <linux/dma-buf.h>
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if CONFIG_CUDA
-#include "hwcontext_cuda_internal.h"
-#include "cuda_check.h"
-#define CHECK_CU(x) FF_CUDA_CHECK_DL(cuda_cu, cu, x)
-#endif
+#ಆದರೆ CONFIG_CUDA
+#ಅನ್ತರ್ಭಾವ "hwcontext_cuda_internal.h"
+#ಅನ್ತರ್ಭಾವ "cuda_check.h"
+#ವ್ಯಾಖ್ಯಾನಿಸು CHECK_CU(x) FF_CUDA_CHECK_DL(cuda_cu, cu, x)
+#ಆದರೆ_ಅಂತ್ಯ
 
-typedef struct VulkanDeviceFeatures {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ VulkanDeviceFeatures {
     VkPhysicalDeviceFeatures2 device;
 
     VkPhysicalDeviceVulkan11Features vulkan_1_1;
@@ -82,80 +82,80 @@ typedef struct VulkanDeviceFeatures {
     VkPhysicalDeviceTimelineSemaphoreFeatures timeline_semaphore;
     VkPhysicalDeviceShaderSubgroupRotateFeaturesKHR subgroup_rotate;
     VkPhysicalDeviceHostImageCopyFeaturesEXT host_image_copy;
-    VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR explicit_mem_layout;
+    Vk_Physical_Device_Workgroup_ಸ್ಮರಣೆ_Explicit_Layout_Features_KHR explicit_mem_layout;
 
-#ifdef VK_EXT_shader_long_vector
-    VkPhysicalDeviceShaderLongVectorFeaturesEXT long_vector;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_shader_long_ಸದಿಶ
+    Vk_Physical_Device_Shader_Long_ಸದಿಶ_Features_EXT long_ಸದಿಶ;
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_EXT_shader_replicated_composites
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_shader_replicated_composites
     VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT replicated_composites;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_EXT_zero_initialize_device_memory
-    VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT zero_initialize;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_zero_initialize_device_ಸ್ಮರಣೆ
+    Vk_Physical_Device_Zero_Initialize_Device_ಸ್ಮರಣೆ_Features_EXT zero_initialize;
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_shader_expect_assume
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_expect_assume
     VkPhysicalDeviceShaderExpectAssumeFeaturesKHR expect_assume;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_shader_maximal_reconvergence
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_maximal_reconvergence
     VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR maximal_reconvergence;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_maintenance9
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_maintenance9
     VkPhysicalDeviceMaintenance9FeaturesKHR maintenance_9;
-#endif
-#ifdef VK_KHR_maintenance11
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_maintenance11
     VkPhysicalDeviceMaintenance11FeaturesKHR maintenance_11;
-#endif
-#ifdef VK_KHR_unified_image_layouts
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_unified_image_layouts
     VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR unified_layouts;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     VkPhysicalDeviceVideoMaintenance1FeaturesKHR video_maintenance_1;
-#ifdef VK_KHR_video_maintenance2
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_maintenance2
     VkPhysicalDeviceVideoMaintenance2FeaturesKHR video_maintenance_2;
-#endif
-#ifdef VK_KHR_video_decode_vp9
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_decode_vp9
     VkPhysicalDeviceVideoDecodeVP9FeaturesKHR vp9_decode;
-#endif
-#ifdef VK_KHR_video_encode_av1
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_encode_av1
     VkPhysicalDeviceVideoEncodeAV1FeaturesKHR av1_encode;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     VkPhysicalDeviceShaderObjectFeaturesEXT shader_object;
-    VkPhysicalDeviceCooperativeMatrixFeaturesKHR cooperative_matrix;
+    Vk_Physical_Device_Cooperative_ಮಾತೃಕೆ_Features_KHR cooperative_ಮಾತೃಕೆ;
     VkPhysicalDeviceShaderAtomicFloatFeaturesEXT atomic_float;
 
-#ifdef VK_KHR_shader_relaxed_extended_instruction
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_relaxed_extended_instruction
     VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR relaxed_extended_instruction;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_internally_synchronized_queues
-    VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR internal_queue_sync;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_internally_synchronized_queues
+    VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR ಆಂತರಿಕ_ಸರತಿ_sync;
+#ಆದರೆ_ಅಂತ್ಯ
     VkPhysicalDeviceOpticalFlowFeaturesNV optical_flow;
 } VulkanDeviceFeatures;
 
-typedef struct VulkanDevicePriv {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ VulkanDevicePriv {
     /**
      * The public AVVulkanDeviceContext. See hwcontext_vulkan.h for it.
      */
     AVVulkanDeviceContext p;
 
     /* Vulkan library and loader functions */
-    void *libvulkan;
+    ಶೂನ್ಯ *libvulkan;
 
     FFVulkanContext    vkctx;
-    AVVulkanDeviceQueueFamily *compute_qf;
-    AVVulkanDeviceQueueFamily *transfer_qf;
+    AVVulkan_Device_ಸರತಿ_Family *compute_qf;
+    AVVulkan_Device_ಸರತಿ_Family *transfer_qf;
 
     /* Properties */
     VkPhysicalDeviceProperties2 props;
-    VkPhysicalDeviceMemoryProperties mprops;
-    VkPhysicalDeviceExternalMemoryHostPropertiesEXT hprops;
+    Vk_Physical_Device_ಸ್ಮರಣೆ_Properties mprops;
+    Vk_Physical_Device_External_ಸ್ಮರಣೆ_Host_Properties_EXT hprops;
     VkPhysicalDeviceDriverProperties dprops;
 
     /* Opaque FD external semaphore properties */
@@ -174,29 +174,29 @@ typedef struct VulkanDevicePriv {
     VkDebugUtilsMessengerEXT debug_ctx;
 
     /* Settings */
-    int use_linear_images;
+    ಪೂರ್ಣಾಂಕ use_ರೇಖೀಯ_images;
 
     /* Option to allocate all image planes in a single allocation */
-    int contiguous_planes;
+    ಪೂರ್ಣಾಂಕ contiguous_planes;
 
     /* Disable multiplane images */
-    int disable_multiplane;
+    ಪೂರ್ಣಾಂಕ disable_multiplane;
 
     /* Prefer memcpy over dynamic host pointer imports */
-    int avoid_host_import;
+    ಪೂರ್ಣಾಂಕ avoid_host_import;
 
     /* Alignment the transfer queue needs for buffer offsets in image copies */
-    int transfer_offset_align;
+    ಪೂರ್ಣಾಂಕ transfer_ಸ್ಥಾನಾಂತರ_align;
 
     /* Maximum queues */
-    int limit_queues;
+    ಪೂರ್ಣಾಂಕ ಎಲ್ಲೆ_queues;
 } VulkanDevicePriv;
 
-typedef struct VulkanFramesPriv {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv {
     /**
      * The public AVVulkanFramesContext. See hwcontext_vulkan.h for it.
      */
-    AVVulkanFramesContext p;
+    AVVulkan_ಚೌಕಟ್ಟುಗಳು_Context p;
 
     /* Image conversions */
     FFVkExecPool compute_exec;
@@ -215,33 +215,33 @@ typedef struct VulkanFramesPriv {
     VkDrmFormatModifierPropertiesEXT drm_format_modifier_properties[5];
 
     /* Set when physical device reports DEDICATED_ONLY for DMA-BUF export (try_export_flags) */
-    int export_requires_dedicated;
-} VulkanFramesPriv;
+    ಪೂರ್ಣಾಂಕ export_requires_dedicated;
+} Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv;
 
-typedef struct AVVkFrameInternal {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVVk_ಚೌಕಟ್ಟು_ಆಂತರಿಕ {
     pthread_mutex_t update_mutex;
 
     /* Binary semaphore for SYNC_FD export at DRM map time. Created once lazily,
      * re-signaled each time via a submit in vulkan_map_to_drm. */
     VkSemaphore drm_sync_sem;
 
-#if CONFIG_CUDA
+#ಆದರೆ CONFIG_CUDA
     /* Importing external memory into cuda is really expensive so we keep the
      * memory imported all the time */
     AVBufferRef *cuda_fc_ref; /* Need to keep it around for uninit */
-    CUexternalMemory ext_mem[AV_NUM_DATA_POINTERS];
-    CUmipmappedArray cu_mma[AV_NUM_DATA_POINTERS];
-    CUarray cu_array[AV_NUM_DATA_POINTERS];
-    CUexternalSemaphore cu_sem[AV_NUM_DATA_POINTERS];
-#ifdef _WIN32
-    HANDLE ext_mem_handle[AV_NUM_DATA_POINTERS];
-    HANDLE ext_sem_handle[AV_NUM_DATA_POINTERS];
-#endif
-#endif
-} AVVkFrameInternal;
+    CUexternal_ಸ್ಮರಣೆ ext_mem[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
+    CUmipmappedArray cu_mma[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
+    CUarray cu_array[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
+    CUexternalSemaphore cu_sem[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
+    HANDLE ext_mem_handle[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
+    HANDLE ext_sem_handle[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
+} AVVk_ಚೌಕಟ್ಟು_ಆಂತರಿಕ;
 
 /* Initialize all structs in VulkanDeviceFeatures */
-static void device_features_init(AVHWDeviceContext *ctx, VulkanDeviceFeatures *feats)
+ಸ್ಥಿರ ಶೂನ್ಯ device_features_init(AVHWDeviceContext *ctx, VulkanDeviceFeatures *feats)
 {
     VulkanDevicePriv *p = ctx->hwctx;
     FFVulkanContext *s = &p->vkctx;
@@ -264,95 +264,95 @@ static void device_features_init(AVHWDeviceContext *ctx, VulkanDeviceFeatures *f
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->host_image_copy, FF_VK_EXT_HOST_IMAGE_COPY,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES_EXT);
 
-#ifdef VK_EXT_shader_long_vector
-    FF_VK_STRUCT_EXT(s, &feats->device, &feats->long_vector, FF_VK_EXT_LONG_VECTOR,
-                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT);
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_shader_long_ಸದಿಶ
+    FF_VK_STRUCT_EXT(s, &feats->device, &feats->long_ಸದಿಶ, FF_VK_EXT_LONG_ಸದಿಶ,
+                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_ಸದಿಶ_FEATURES_EXT);
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_EXT_shader_replicated_composites
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_shader_replicated_composites
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->replicated_composites, FF_VK_EXT_REPLICATED_COMPOSITES,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_EXT_zero_initialize_device_memory
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_zero_initialize_device_ಸ್ಮರಣೆ
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->zero_initialize, FF_VK_EXT_ZERO_INITIALIZE,
-                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT);
-#endif
+                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_ಸ್ಮರಣೆ_FEATURES_EXT);
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_shader_expect_assume
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_expect_assume
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->expect_assume, FF_VK_EXT_EXPECT_ASSUME,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES_KHR);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_shader_maximal_reconvergence
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_maximal_reconvergence
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->maximal_reconvergence, FF_VK_EXT_MAXIMAL_RECONVERGENCE,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MAXIMAL_RECONVERGENCE_FEATURES_KHR);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_maintenance9
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_maintenance9
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->maintenance_9, FF_VK_EXT_MAINTENANCE_9,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR);
-#endif
-#ifdef VK_KHR_maintenance11
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_maintenance11
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->maintenance_11, FF_VK_EXT_MAINTENANCE_11,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR);
-#endif
-#ifdef VK_KHR_unified_image_layouts
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_unified_image_layouts
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->unified_layouts, FF_VK_EXT_UNIFIED_IMAGE_LAYOUTS,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->video_maintenance_1, FF_VK_EXT_VIDEO_MAINTENANCE_1,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_MAINTENANCE_1_FEATURES_KHR);
-#ifdef VK_KHR_video_maintenance2
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_maintenance2
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->video_maintenance_2, FF_VK_EXT_VIDEO_MAINTENANCE_2,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_MAINTENANCE_2_FEATURES_KHR);
-#endif
-#ifdef VK_KHR_video_decode_vp9
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_decode_vp9
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->vp9_decode, FF_VK_EXT_VIDEO_DECODE_VP9,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_DECODE_VP9_FEATURES_KHR);
-#endif
-#ifdef VK_KHR_video_encode_av1
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_encode_av1
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->av1_encode, FF_VK_EXT_VIDEO_ENCODE_AV1,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_AV1_FEATURES_KHR);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->shader_object, FF_VK_EXT_SHADER_OBJECT,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT);
-    FF_VK_STRUCT_EXT(s, &feats->device, &feats->cooperative_matrix, FF_VK_EXT_COOP_MATRIX,
-                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_KHR);
+    FF_VK_STRUCT_EXT(s, &feats->device, &feats->cooperative_ಮಾತೃಕೆ, FF_VK_EXT_COOP_ಮಾತೃಕೆ,
+                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_ಮಾತೃಕೆ_FEATURES_KHR);
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->atomic_float, FF_VK_EXT_ATOMIC_FLOAT,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT);
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->explicit_mem_layout, FF_VK_EXT_EXPLICIT_MEM_LAYOUT,
-                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_FEATURES_KHR);
+                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_WORKGROUP_ಸ್ಮರಣೆ_EXPLICIT_LAYOUT_FEATURES_KHR);
 
-#ifdef VK_KHR_shader_relaxed_extended_instruction
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_relaxed_extended_instruction
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->relaxed_extended_instruction, FF_VK_EXT_RELAXED_EXTENDED_INSTR,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_RELAXED_EXTENDED_INSTRUCTION_FEATURES_KHR);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_internally_synchronized_queues
-    FF_VK_STRUCT_EXT(s, &feats->device, &feats->internal_queue_sync, FF_VK_EXT_INTERNAL_QUEUE_SYNC,
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_internally_synchronized_queues
+    FF_VK_STRUCT_EXT(s, &feats->device, &feats->ಆಂತರಿಕ_ಸರತಿ_sync, FF_VK_EXT_ಆಂತರಿಕ_ಸರತಿ_SYNC,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->optical_flow, FF_VK_EXT_OPTICAL_FLOW,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPTICAL_FLOW_FEATURES_NV);
 }
 
 /* Copy all needed device features */
-static void device_features_copy_needed(VulkanDeviceFeatures *dst, VulkanDeviceFeatures *src)
+ಸ್ಥಿರ ಶೂನ್ಯ device_features_copy_needed(VulkanDeviceFeatures *dst, VulkanDeviceFeatures *src)
 {
-#define COPY_VAL(VAL)        \
-    do {                     \
+#ವ್ಯಾಖ್ಯಾನಿಸು COPY_VAL(VAL)        \
+    ಮಾಡು {                     \
         dst->VAL = src->VAL; \
-    } while (0)              \
+    } ಆಗ (0)              \
 
     COPY_VAL(device.features.shaderImageGatherExtended);
     COPY_VAL(device.features.shaderStorageImageReadWithoutFormat);
     COPY_VAL(device.features.shaderStorageImageWriteWithoutFormat);
     COPY_VAL(device.features.fragmentStoresAndAtomics);
-    COPY_VAL(device.features.vertexPipelineStoresAndAtomics);
+    COPY_VAL(device.features.ಶೃಂಗ_Pipeline_Stores_And_Atomics);
     COPY_VAL(device.features.shaderInt64);
     COPY_VAL(device.features.shaderInt16);
     COPY_VAL(device.features.shaderFloat64);
@@ -360,175 +360,175 @@ static void device_features_copy_needed(VulkanDeviceFeatures *dst, VulkanDeviceF
     COPY_VAL(device.features.shaderStorageImageWriteWithoutFormat);
 
     COPY_VAL(vulkan_1_1.samplerYcbcrConversion);
-    COPY_VAL(vulkan_1_1.storagePushConstant16);
-    COPY_VAL(vulkan_1_1.storageBuffer16BitAccess);
-    COPY_VAL(vulkan_1_1.uniformAndStorageBuffer16BitAccess);
+    COPY_VAL(vulkan_1_1.storage_ತಳ್ಳು_Constant16);
+    COPY_VAL(vulkan_1_1.storage_Buffer16_ಬಿಟ್_Access);
+    COPY_VAL(vulkan_1_1.ಏಕರೂಪ_And_Storage_Buffer16_ಬಿಟ್_Access);
 
     COPY_VAL(vulkan_1_2.timelineSemaphore);
-    COPY_VAL(vulkan_1_2.scalarBlockLayout);
-    COPY_VAL(vulkan_1_2.bufferDeviceAddress);
+    COPY_VAL(vulkan_1_2.scalar_ಖಂಡ_Layout);
+    COPY_VAL(vulkan_1_2.ಬಫರ್_Device_ವಿಳಾಸ);
     COPY_VAL(vulkan_1_2.hostQueryReset);
-    COPY_VAL(vulkan_1_2.storagePushConstant8);
+    COPY_VAL(vulkan_1_2.storage_ತಳ್ಳು_Constant8);
     COPY_VAL(vulkan_1_2.shaderInt8);
-    COPY_VAL(vulkan_1_2.storageBuffer8BitAccess);
-    COPY_VAL(vulkan_1_2.uniformAndStorageBuffer8BitAccess);
+    COPY_VAL(vulkan_1_2.storage_Buffer8_ಬಿಟ್_Access);
+    COPY_VAL(vulkan_1_2.ಏಕರೂಪ_And_Storage_Buffer8_ಬಿಟ್_Access);
     COPY_VAL(vulkan_1_2.shaderFloat16);
-    COPY_VAL(vulkan_1_2.shaderBufferInt64Atomics);
+    COPY_VAL(vulkan_1_2.shader_ಬಫರ್_Int64_Atomics);
     COPY_VAL(vulkan_1_2.shaderSharedInt64Atomics);
-    COPY_VAL(vulkan_1_2.vulkanMemoryModel);
-    COPY_VAL(vulkan_1_2.vulkanMemoryModelDeviceScope);
-    COPY_VAL(vulkan_1_2.vulkanMemoryModelAvailabilityVisibilityChains);
-    COPY_VAL(vulkan_1_2.uniformBufferStandardLayout);
+    COPY_VAL(vulkan_1_2.vulkan_ಸ್ಮರಣೆ_Model);
+    COPY_VAL(vulkan_1_2.vulkan_ಸ್ಮರಣೆ_Model_Device_Scope);
+    COPY_VAL(vulkan_1_2.vulkan_ಸ್ಮರಣೆ_Model_Availability_Visibility_Chains);
+    COPY_VAL(vulkan_1_2.ಏಕರೂಪ_ಬಫರ್_Standard_Layout);
     COPY_VAL(vulkan_1_2.runtimeDescriptorArray);
     COPY_VAL(vulkan_1_2.shaderSubgroupExtendedTypes);
-    COPY_VAL(vulkan_1_2.shaderUniformBufferArrayNonUniformIndexing);
-    COPY_VAL(vulkan_1_2.shaderSampledImageArrayNonUniformIndexing);
-    COPY_VAL(vulkan_1_2.shaderStorageBufferArrayNonUniformIndexing);
-    COPY_VAL(vulkan_1_2.shaderStorageImageArrayNonUniformIndexing);
+    COPY_VAL(vulkan_1_2.shader_ಏಕರೂಪ_ಬಫರ್_Array_Non_ಏಕರೂಪ_Indexing);
+    COPY_VAL(vulkan_1_2.shader_Sampled_Image_Array_Non_ಏಕರೂಪ_Indexing);
+    COPY_VAL(vulkan_1_2.shader_Storage_ಬಫರ್_Array_Non_ಏಕರೂಪ_Indexing);
+    COPY_VAL(vulkan_1_2.shader_Storage_Image_Array_Non_ಏಕರೂಪ_Indexing);
 
     COPY_VAL(vulkan_1_3.dynamicRendering);
     COPY_VAL(vulkan_1_3.maintenance4);
     COPY_VAL(vulkan_1_3.synchronization2);
-    COPY_VAL(vulkan_1_3.computeFullSubgroups);
-    COPY_VAL(vulkan_1_3.subgroupSizeControl);
-    COPY_VAL(vulkan_1_3.shaderZeroInitializeWorkgroupMemory);
+    COPY_VAL(vulkan_1_3.compute_ತುಂಬಿದ_Subgroups);
+    COPY_VAL(vulkan_1_3.subgroup_ಗಾತ್ರ_Control);
+    COPY_VAL(vulkan_1_3.shader_Zero_Initialize_Workgroup_ಸ್ಮರಣೆ);
     COPY_VAL(vulkan_1_3.dynamicRendering);
 
     COPY_VAL(timeline_semaphore.timelineSemaphore);
     COPY_VAL(subgroup_rotate.shaderSubgroupRotate);
     COPY_VAL(host_image_copy.hostImageCopy);
 
-#ifdef VK_EXT_shader_long_vector
-    COPY_VAL(long_vector.longVector);
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_shader_long_ಸದಿಶ
+    COPY_VAL(long_ಸದಿಶ.long_ಸದಿಶ_2);
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_EXT_shader_replicated_composites
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_shader_replicated_composites
     COPY_VAL(replicated_composites.shaderReplicatedComposites);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_EXT_zero_initialize_device_memory
-    COPY_VAL(zero_initialize.zeroInitializeDeviceMemory);
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_zero_initialize_device_ಸ್ಮರಣೆ
+    COPY_VAL(zero_initialize.zero_Initialize_Device_ಸ್ಮರಣೆ);
+#ಆದರೆ_ಅಂತ್ಯ
 
     COPY_VAL(video_maintenance_1.videoMaintenance1);
-#ifdef VK_KHR_video_maintenance2
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_maintenance2
     COPY_VAL(video_maintenance_2.videoMaintenance2);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_video_decode_vp9
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_decode_vp9
     COPY_VAL(vp9_decode.videoDecodeVP9);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_video_encode_av1
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_encode_av1
     COPY_VAL(av1_encode.videoEncodeAV1);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     COPY_VAL(shader_object.shaderObject);
 
-    COPY_VAL(cooperative_matrix.cooperativeMatrix);
+    COPY_VAL(cooperative_ಮಾತೃಕೆ.cooperative_ಮಾತೃಕೆ_2);
 
-    COPY_VAL(atomic_float.shaderBufferFloat32Atomics);
-    COPY_VAL(atomic_float.shaderBufferFloat32AtomicAdd);
+    COPY_VAL(atomic_float.shader_ಬಫರ್_Float32_Atomics);
+    COPY_VAL(atomic_float.shader_ಬಫರ್_Float32_Atomic_ಕೂಡಿಸು);
 
-    COPY_VAL(explicit_mem_layout.workgroupMemoryExplicitLayout);
-    COPY_VAL(explicit_mem_layout.workgroupMemoryExplicitLayoutScalarBlockLayout);
-    COPY_VAL(explicit_mem_layout.workgroupMemoryExplicitLayout8BitAccess);
-    COPY_VAL(explicit_mem_layout.workgroupMemoryExplicitLayout16BitAccess);
+    COPY_VAL(explicit_mem_layout.workgroup_ಸ್ಮರಣೆ_Explicit_Layout);
+    COPY_VAL(explicit_mem_layout.workgroup_ಸ್ಮರಣೆ_Explicit_Layout_Scalar_ಖಂಡ_Layout);
+    COPY_VAL(explicit_mem_layout.workgroup_ಸ್ಮರಣೆ_Explicit_Layout8_ಬಿಟ್_Access);
+    COPY_VAL(explicit_mem_layout.workgroup_ಸ್ಮರಣೆ_Explicit_Layout16_ಬಿಟ್_Access);
 
-#ifdef VK_KHR_shader_relaxed_extended_instruction
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_relaxed_extended_instruction
     COPY_VAL(relaxed_extended_instruction.shaderRelaxedExtendedInstruction);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_shader_expect_assume
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_expect_assume
     COPY_VAL(expect_assume.shaderExpectAssume);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_shader_maximal_reconvergence
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_maximal_reconvergence
     COPY_VAL(maximal_reconvergence.shaderMaximalReconvergence);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_maintenance9
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_maintenance9
     COPY_VAL(maintenance_9.maintenance9);
-#endif
-#ifdef VK_KHR_maintenance11
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_maintenance11
     COPY_VAL(maintenance_11.maintenance11);
-#endif
-#ifdef VK_KHR_unified_image_layouts
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_unified_image_layouts
     COPY_VAL(unified_layouts.unifiedImageLayouts);
     COPY_VAL(unified_layouts.unifiedImageLayoutsVideo);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_internally_synchronized_queues
-    COPY_VAL(internal_queue_sync.internallySynchronizedQueues);
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_internally_synchronized_queues
+    COPY_VAL(ಆಂತರಿಕ_ಸರತಿ_sync.internallySynchronizedQueues);
+#ಆದರೆ_ಅಂತ್ಯ
 
     COPY_VAL(optical_flow.opticalFlow);
 
-#undef COPY_VAL
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು COPY_VAL
 }
 
-#define ASPECT_2PLANE (VK_IMAGE_ASPECT_PLANE_0_BIT | VK_IMAGE_ASPECT_PLANE_1_BIT)
-#define ASPECT_3PLANE (VK_IMAGE_ASPECT_PLANE_0_BIT | VK_IMAGE_ASPECT_PLANE_1_BIT | VK_IMAGE_ASPECT_PLANE_2_BIT)
+#ವ್ಯಾಖ್ಯಾನಿಸು ASPECT_2PLANE (VK_IMAGE_ASPECT_PLANE_0_ಬಿಟ್ | VK_IMAGE_ASPECT_PLANE_1_ಬಿಟ್)
+#ವ್ಯಾಖ್ಯಾನಿಸು ASPECT_3PLANE (VK_IMAGE_ASPECT_PLANE_0_ಬಿಟ್ | VK_IMAGE_ASPECT_PLANE_1_ಬಿಟ್ | VK_IMAGE_ASPECT_PLANE_2_ಬಿಟ್)
 
-static const struct FFVkFormatEntry {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ರಚನೆ FFVk_Format_ನಮೂದು {
     VkFormat vkf;
-    enum AVPixelFormat pixfmt;
+    ಎಣಿಕೆ AVPixelFormat pixfmt;
     VkImageAspectFlags aspect;
-    int vk_planes;
-    int nb_images;
-    int nb_images_fallback;
-    const VkFormat fallback[5];
+    ಪೂರ್ಣಾಂಕ vk_planes;
+    ಪೂರ್ಣಾಂಕ nb_images;
+    ಪೂರ್ಣಾಂಕ nb_images_fallback;
+    ಸ್ಥಿರಾಂಕ VkFormat fallback[5];
 } vk_formats_list[] = {
     /* Gray formats */
-    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_GRAY8,   VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R8_UNORM   } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GRAY10,  VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GRAY12,  VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GRAY14,  VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GRAY16,  VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R32_UINT,   AV_PIX_FMT_GRAY32,  VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R32_UINT   } },
-    { VK_FORMAT_R32_SFLOAT, AV_PIX_FMT_GRAYF32, VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R32_SFLOAT } },
+    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_GRAY8,   VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R8_UNORM   } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GRAY10,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GRAY12,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GRAY14,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GRAY16,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R32_UINT,   AV_PIX_FMT_GRAY32,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R32_UINT   } },
+    { VK_FORMAT_R32_SFLOAT, AV_PIX_FMT_GRAYF32, VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R32_SFLOAT } },
 
     /* RGB formats */
-    { VK_FORMAT_R8G8B8A8_UNORM,           AV_PIX_FMT_BGRA,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM           } },
-    { VK_FORMAT_R8G8B8A8_UNORM,           AV_PIX_FMT_RGBA,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM           } },
-    { VK_FORMAT_R8G8B8_UNORM,             AV_PIX_FMT_RGB24,   VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R8G8B8_UNORM             } },
-    { VK_FORMAT_B8G8R8_UNORM,             AV_PIX_FMT_BGR24,   VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_B8G8R8_UNORM             } },
-    { VK_FORMAT_R16G16B16_UNORM,          AV_PIX_FMT_RGB48,   VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16G16B16_UNORM          } },
-    { VK_FORMAT_R16G16B16A16_UNORM,       AV_PIX_FMT_RGBA64,  VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM       } },
-    { VK_FORMAT_R8G8B8A8_UNORM,           AV_PIX_FMT_BGR0,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM           } },
-    { VK_FORMAT_R8G8B8A8_UNORM,           AV_PIX_FMT_RGB0,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM           } },
-    { VK_FORMAT_A2R10G10B10_UNORM_PACK32, AV_PIX_FMT_X2RGB10, VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_A2R10G10B10_UNORM_PACK32 } },
-    { VK_FORMAT_A2B10G10R10_UNORM_PACK32, AV_PIX_FMT_X2BGR10, VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_A2B10G10R10_UNORM_PACK32 } },
-    { VK_FORMAT_R32G32B32_SFLOAT,         AV_PIX_FMT_RGBF32,  VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R32G32B32_SFLOAT         } },
-    { VK_FORMAT_R16G16B16A16_SFLOAT,      AV_PIX_FMT_RGBAF16, VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16G16B16A16_SFLOAT      } },
-    { VK_FORMAT_R32G32B32A32_SFLOAT,      AV_PIX_FMT_RGBAF32, VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R32G32B32A32_SFLOAT      } },
-    { VK_FORMAT_R32G32B32_UINT,           AV_PIX_FMT_RGB96,   VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R32G32B32_UINT           } },
-    { VK_FORMAT_R32G32B32A32_UINT,        AV_PIX_FMT_RGBA128, VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R32G32B32A32_UINT        } },
+    { VK_FORMAT_R8G8B8A8_UNORM,           AV_PIX_FMT_BGRA,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM           } },
+    { VK_FORMAT_R8G8B8A8_UNORM,           AV_PIX_FMT_RGBA,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM           } },
+    { VK_FORMAT_R8G8B8_UNORM,             AV_PIX_FMT_RGB24,   VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R8G8B8_UNORM             } },
+    { VK_FORMAT_B8G8R8_UNORM,             AV_PIX_FMT_BGR24,   VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_B8G8R8_UNORM             } },
+    { VK_FORMAT_R16G16B16_UNORM,          AV_PIX_FMT_RGB48,   VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16G16B16_UNORM          } },
+    { VK_FORMAT_R16G16B16A16_UNORM,       AV_PIX_FMT_RGBA64,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM       } },
+    { VK_FORMAT_R8G8B8A8_UNORM,           AV_PIX_FMT_BGR0,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM           } },
+    { VK_FORMAT_R8G8B8A8_UNORM,           AV_PIX_FMT_RGB0,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM           } },
+    { VK_FORMAT_A2R10G10B10_UNORM_PACK32, AV_PIX_FMT_X2RGB10, VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_A2R10G10B10_UNORM_PACK32 } },
+    { VK_FORMAT_A2B10G10R10_UNORM_PACK32, AV_PIX_FMT_X2BGR10, VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_A2B10G10R10_UNORM_PACK32 } },
+    { VK_FORMAT_R32G32B32_SFLOAT,         AV_PIX_FMT_RGBF32,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R32G32B32_SFLOAT         } },
+    { VK_FORMAT_R16G16B16A16_SFLOAT,      AV_PIX_FMT_RGBAF16, VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16G16B16A16_SFLOAT      } },
+    { VK_FORMAT_R32G32B32A32_SFLOAT,      AV_PIX_FMT_RGBAF32, VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R32G32B32A32_SFLOAT      } },
+    { VK_FORMAT_R32G32B32_UINT,           AV_PIX_FMT_RGB96,   VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R32G32B32_UINT           } },
+    { VK_FORMAT_R32G32B32A32_UINT,        AV_PIX_FMT_RGBA128, VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R32G32B32A32_UINT        } },
 
     /* Planar RGB */
-    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_GBRP,     VK_IMAGE_ASPECT_COLOR_BIT, 3, 3, 3, { VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM   } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRP10,   VK_IMAGE_ASPECT_COLOR_BIT, 3, 3, 3, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRP12,   VK_IMAGE_ASPECT_COLOR_BIT, 3, 3, 3, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRP14,   VK_IMAGE_ASPECT_COLOR_BIT, 3, 3, 3, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRP16,   VK_IMAGE_ASPECT_COLOR_BIT, 3, 3, 3, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_SFLOAT, AV_PIX_FMT_GBRPF16,  VK_IMAGE_ASPECT_COLOR_BIT, 3, 3, 3, { VK_FORMAT_R16_SFLOAT,  VK_FORMAT_R16_SFLOAT,  VK_FORMAT_R16_SFLOAT  } },
-    { VK_FORMAT_R32_SFLOAT, AV_PIX_FMT_GBRPF32,  VK_IMAGE_ASPECT_COLOR_BIT, 3, 3, 3, { VK_FORMAT_R32_SFLOAT, VK_FORMAT_R32_SFLOAT, VK_FORMAT_R32_SFLOAT } },
+    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_GBRP,     VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 3, 3, 3, { VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM   } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRP10,   VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 3, 3, 3, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRP12,   VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 3, 3, 3, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRP14,   VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 3, 3, 3, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRP16,   VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 3, 3, 3, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_SFLOAT, AV_PIX_FMT_GBRPF16,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 3, 3, 3, { VK_FORMAT_R16_SFLOAT,  VK_FORMAT_R16_SFLOAT,  VK_FORMAT_R16_SFLOAT  } },
+    { VK_FORMAT_R32_SFLOAT, AV_PIX_FMT_GBRPF32,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 3, 3, 3, { VK_FORMAT_R32_SFLOAT, VK_FORMAT_R32_SFLOAT, VK_FORMAT_R32_SFLOAT } },
 
     /* XYZ */
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_XYZP12,   VK_IMAGE_ASPECT_COLOR_BIT, 3, 3, 3, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_XYZP12,   VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 3, 3, 3, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
 
     /* Planar RGB + Alpha */
-    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_GBRAP,    VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM   } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRAP10,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRAP12,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRAP14,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRAP16,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_SFLOAT, AV_PIX_FMT_GBRAPF16, VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_SFLOAT, VK_FORMAT_R16_SFLOAT, VK_FORMAT_R16_SFLOAT, VK_FORMAT_R16_SFLOAT } },
-    { VK_FORMAT_R32_UINT,   AV_PIX_FMT_GBRAP32,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R32_UINT,   VK_FORMAT_R32_UINT,   VK_FORMAT_R32_UINT,   VK_FORMAT_R32_UINT   } },
-    { VK_FORMAT_R32_SFLOAT, AV_PIX_FMT_GBRAPF32, VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R32_SFLOAT, VK_FORMAT_R32_SFLOAT, VK_FORMAT_R32_SFLOAT, VK_FORMAT_R32_SFLOAT } },
+    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_GBRAP,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM   } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRAP10,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRAP12,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRAP14,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_GBRAP16,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_SFLOAT, AV_PIX_FMT_GBRAPF16, VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_SFLOAT, VK_FORMAT_R16_SFLOAT, VK_FORMAT_R16_SFLOAT, VK_FORMAT_R16_SFLOAT } },
+    { VK_FORMAT_R32_UINT,   AV_PIX_FMT_GBRAP32,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R32_UINT,   VK_FORMAT_R32_UINT,   VK_FORMAT_R32_UINT,   VK_FORMAT_R32_UINT   } },
+    { VK_FORMAT_R32_SFLOAT, AV_PIX_FMT_GBRAPF32, VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R32_SFLOAT, VK_FORMAT_R32_SFLOAT, VK_FORMAT_R32_SFLOAT, VK_FORMAT_R32_SFLOAT } },
 
     /* Bayer */
-    { VK_FORMAT_R16_UNORM, AV_PIX_FMT_BAYER_RGGB16, VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16_UNORM } },
+    { VK_FORMAT_R16_UNORM, AV_PIX_FMT_BAYER_RGGB16, VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16_UNORM } },
 
     /* Two-plane 420 YUV at 8, 10, 12 and 16 bits */
     { VK_FORMAT_G8_B8R8_2PLANE_420_UNORM,                  AV_PIX_FMT_NV12, ASPECT_2PLANE, 2, 1, 2, { VK_FORMAT_R8_UNORM,  VK_FORMAT_R8G8_UNORM   } },
@@ -563,379 +563,379 @@ static const struct FFVkFormatEntry {
     { VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM, AV_PIX_FMT_YUV444P16, ASPECT_3PLANE, 3, 1, 3, { VK_FORMAT_R16_UNORM, VK_FORMAT_R16_UNORM, VK_FORMAT_R16_UNORM } },
 
     /* Single plane 422 at 8, 10, 12 and 16 bits */
-    { VK_FORMAT_G8B8G8R8_422_UNORM,                     AV_PIX_FMT_YUYV422, VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM     } },
-    { VK_FORMAT_B8G8R8G8_422_UNORM,                     AV_PIX_FMT_UYVY422, VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM     } },
-    { VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16, AV_PIX_FMT_Y210,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
-    { VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16, AV_PIX_FMT_Y212,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
-    { VK_FORMAT_G16B16G16R16_422_UNORM,                 AV_PIX_FMT_Y216,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
+    { VK_FORMAT_G8B8G8R8_422_UNORM,                     AV_PIX_FMT_YUYV422, VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM     } },
+    { VK_FORMAT_B8G8R8G8_422_UNORM,                     AV_PIX_FMT_UYVY422, VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R8G8B8A8_UNORM     } },
+    { VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16, AV_PIX_FMT_Y210,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
+    { VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16, AV_PIX_FMT_Y212,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
+    { VK_FORMAT_G16B16G16R16_422_UNORM,                 AV_PIX_FMT_Y216,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
 
     /* Planar YUVA 420 at 8, 10 and 16 bits */
-    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_YUVA420P,    VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM   } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA420P10,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA420P16,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_YUVA420P,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM   } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA420P10,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA420P16,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
 
     /* Planar YUVA 422 at 8, 10, 12 and 16 bits */
-    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_YUVA422P,    VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM   } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA422P10,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA422P12,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA422P16,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_YUVA422P,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM   } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA422P10,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA422P12,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA422P16,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
 
     /* Planar YUVA 444 at 8, 10, 12 and 16 bits */
-    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_YUVA444P,    VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM   } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA444P10,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA444P12,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
-    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA444P16,  VK_IMAGE_ASPECT_COLOR_BIT, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_YUVA444P,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM,   VK_FORMAT_R8_UNORM   } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA444P10,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA444P12,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
+    { VK_FORMAT_R16_UNORM,  AV_PIX_FMT_YUVA444P16,  VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 4, 4, 4, { VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM,  VK_FORMAT_R16_UNORM  } },
 
     /* Single plane 444 at 8, 10, 12 and 16 bits */
-    { VK_FORMAT_A2R10G10B10_UNORM_PACK32,               AV_PIX_FMT_XV30,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_A2R10G10B10_UNORM_PACK32 } },
-    { VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16,     AV_PIX_FMT_XV36,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
-    { VK_FORMAT_R16G16B16A16_UNORM,                     AV_PIX_FMT_XV48,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
+    { VK_FORMAT_A2R10G10B10_UNORM_PACK32,               AV_PIX_FMT_XV30,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_A2R10G10B10_UNORM_PACK32 } },
+    { VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16,     AV_PIX_FMT_XV36,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
+    { VK_FORMAT_R16G16B16A16_UNORM,                     AV_PIX_FMT_XV48,    VK_IMAGE_ASPECT_COLOR_ಬಿಟ್, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
 };
-static const int nb_vk_formats_list = FF_ARRAY_ELEMS(vk_formats_list);
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ nb_vk_formats_list = FF_ARRAY_ELEMS(vk_formats_list);
 
-const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p)
+ಸ್ಥಿರಾಂಕ VkFormat *av_vkfmt_from_pixfmt(ಎಣಿಕೆ AVPixelFormat p)
 {
-    for (int i = 0; i < nb_vk_formats_list; i++)
-        if (vk_formats_list[i].pixfmt == p)
-            return vk_formats_list[i].fallback;
-    return NULL;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_vk_formats_list; i++)
+        ಆದರೆ (vk_formats_list[i].pixfmt == p)
+            ಹಿಂತಿರುಗಿ vk_formats_list[i].fallback;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-static const struct FFVkFormatEntry *vk_find_format_entry(enum AVPixelFormat p)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ರಚನೆ FFVk_Format_ನಮೂದು *vk_ಕಂಡುಹಿಡಿ_format_ನಮೂದು(ಎಣಿಕೆ AVPixelFormat p)
 {
-    for (int i = 0; i < nb_vk_formats_list; i++)
-        if (vk_formats_list[i].pixfmt == p)
-            return &vk_formats_list[i];
-    return NULL;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_vk_formats_list; i++)
+        ಆದರೆ (vk_formats_list[i].pixfmt == p)
+            ಹಿಂತಿರುಗಿ &vk_formats_list[i];
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-static int vkfmt_from_pixfmt2(AVHWDeviceContext *dev_ctx, enum AVPixelFormat p,
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vkfmt_from_pixfmt2(AVHWDeviceContext *dev_ctx, ಎಣಿಕೆ AVPixelFormat p,
                               VkImageTiling tiling,
-                              VkFormat fmts[AV_NUM_DATA_POINTERS], /* Output format list */
-                              int *nb_images,                      /* Output number of images */
+                              VkFormat fmts[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು], /* Output format list */
+                              ಪೂರ್ಣಾಂಕ *nb_images,                      /* Output number of images */
                               VkImageAspectFlags *aspect,          /* Output aspect */
                               VkImageUsageFlags *supported_usage,  /* Output supported usage */
-                              int disable_multiplane, int need_storage)
+                              ಪೂರ್ಣಾಂಕ disable_multiplane, ಪೂರ್ಣಾಂಕ need_storage)
 {
     VulkanDevicePriv *priv = dev_ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &priv->p;
     FFVulkanFunctions *vk = &priv->vkctx.vkfn;
 
-    const VkFormatFeatureFlagBits2 basic_flags = VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT |
-                                                 VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT  |
-                                                 VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT;
+    ಸ್ಥಿರಾಂಕ VkFormatFeatureFlagBits2 basic_flags = VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_ಬಿಟ್ |
+                                                 VK_FORMAT_FEATURE_2_TRANSFER_SRC_ಬಿಟ್  |
+                                                 VK_FORMAT_FEATURE_2_TRANSFER_DST_ಬಿಟ್;
 
-    for (int i = 0; i < nb_vk_formats_list; i++) {
-        if (vk_formats_list[i].pixfmt == p) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_vk_formats_list; i++) {
+        ಆದರೆ (vk_formats_list[i].pixfmt == p) {
             VkFormatProperties3 fprops = {
                 .sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3,
             };
             VkFormatProperties2 prop = {
                 .sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2,
-                .pNext = &fprops,
+                .p_ಮುಂದಿನ = &fprops,
             };
             VkFormatFeatureFlagBits2 feats_primary, feats_secondary;
-            int basics_primary = 0, basics_secondary = 0;
-            int storage_primary = 0, storage_secondary = 0;
+            ಪೂರ್ಣಾಂಕ basics_primary = 0, basics_secondary = 0;
+            ಪೂರ್ಣಾಂಕ storage_primary = 0, storage_secondary = 0;
 
             vk->GetPhysicalDeviceFormatProperties2(hwctx->phys_dev,
                                                    vk_formats_list[i].vkf,
                                                    &prop);
 
-            feats_primary = tiling == VK_IMAGE_TILING_LINEAR ?
-                             fprops.linearTilingFeatures : fprops.optimalTilingFeatures;
+            feats_primary = tiling == VK_IMAGE_TILING_ರೇಖೀಯ ?
+                             fprops.ರೇಖೀಯ_Tiling_Features : fprops.optimalTilingFeatures;
             basics_primary = (feats_primary & basic_flags) == basic_flags;
-            storage_primary = !!(feats_primary & VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT);
+            storage_primary = !!(feats_primary & VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ಬಿಟ್);
 
-            if (vk_formats_list[i].vkf != vk_formats_list[i].fallback[0]) {
+            ಆದರೆ (vk_formats_list[i].vkf != vk_formats_list[i].fallback[0]) {
                 vk->GetPhysicalDeviceFormatProperties2(hwctx->phys_dev,
                                                        vk_formats_list[i].fallback[0],
                                                        &prop);
-                feats_secondary = tiling == VK_IMAGE_TILING_LINEAR ?
-                                  fprops.linearTilingFeatures : fprops.optimalTilingFeatures;
+                feats_secondary = tiling == VK_IMAGE_TILING_ರೇಖೀಯ ?
+                                  fprops.ರೇಖೀಯ_Tiling_Features : fprops.optimalTilingFeatures;
                 basics_secondary = (feats_secondary & basic_flags) == basic_flags;
-                storage_secondary = !!(feats_secondary & VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT);
-            } else {
+                storage_secondary = !!(feats_secondary & VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ಬಿಟ್);
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 feats_secondary = feats_primary;
                 basics_secondary = basics_primary;
                 storage_secondary = storage_primary;
             }
 
-            if (basics_primary &&
+            ಆದರೆ (basics_primary &&
                 !(disable_multiplane && vk_formats_list[i].vk_planes > 1) &&
                 (!need_storage || (need_storage && (storage_primary | storage_secondary)))) {
-                if (fmts) {
-                    if (vk_formats_list[i].nb_images > 1) {
-                        for (int j = 0; j < vk_formats_list[i].nb_images_fallback; j++)
+                ಆದರೆ (fmts) {
+                    ಆದರೆ (vk_formats_list[i].nb_images > 1) {
+                        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < vk_formats_list[i].nb_images_fallback; j++)
                             fmts[j] = vk_formats_list[i].fallback[j];
-                    } else {
+                    } ಇಲ್ಲದಿದ್ದರೆ {
                         fmts[0] = vk_formats_list[i].vkf;
                     }
                 }
-                if (nb_images)
+                ಆದರೆ (nb_images)
                     *nb_images = 1;
-                if (aspect)
+                ಆದರೆ (aspect)
                     *aspect = vk_formats_list[i].aspect;
-                if (supported_usage)
-                    *supported_usage = ff_vk_map_feats_to_usage(feats_primary) |
+                ಆದರೆ (supported_usage)
+                    *supported_usage = ff_vk_map_feats_ಗಮ್ಯ_usage(feats_primary) |
                                        ((need_storage && (storage_primary | storage_secondary)) ?
-                                        VK_IMAGE_USAGE_STORAGE_BIT : 0);
-                return 0;
-            } else if (basics_secondary &&
+                                        VK_IMAGE_USAGE_STORAGE_ಬಿಟ್ : 0);
+                ಹಿಂತಿರುಗಿ 0;
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (basics_secondary &&
                        (!need_storage || (need_storage && storage_secondary))) {
-                if (fmts) {
-                    for (int j = 0; j < vk_formats_list[i].nb_images_fallback; j++)
+                ಆದರೆ (fmts) {
+                    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < vk_formats_list[i].nb_images_fallback; j++)
                         fmts[j] = vk_formats_list[i].fallback[j];
                 }
-                if (nb_images)
+                ಆದರೆ (nb_images)
                     *nb_images = vk_formats_list[i].nb_images_fallback;
-                if (aspect)
+                ಆದರೆ (aspect)
                     *aspect = vk_formats_list[i].aspect;
-                if (supported_usage)
-                    *supported_usage = ff_vk_map_feats_to_usage(feats_secondary);
-                return 0;
-            } else {
-                return AVERROR(ENOTSUP);
+                ಆದರೆ (supported_usage)
+                    *supported_usage = ff_vk_map_feats_ಗಮ್ಯ_usage(feats_secondary);
+                ಹಿಂತಿರುಗಿ 0;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                ಹಿಂತಿರುಗಿ AVERROR(ENOTSUP);
             }
         }
     }
 
-    return AVERROR(EINVAL);
+    ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 }
 
-#if CONFIG_VULKAN_STATIC
+#ಆದರೆ CONFIG_VULKAN_STATIC
 VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetInstanceProcAddr(VkInstance instance,
-                                                               const char *pName);
-#endif
+                                                               ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *pName);
+#ಆದರೆ_ಅಂತ್ಯ
 
-static int load_libvulkan(AVHWDeviceContext *ctx)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ ತುಂಬು_libvulkan(AVHWDeviceContext *ctx)
 {
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
 
-#if CONFIG_VULKAN_STATIC
+#ಆದರೆ CONFIG_VULKAN_STATIC
     hwctx->get_proc_addr = vkGetInstanceProcAddr;
-#else
-    static const char *lib_names[] = {
-#if defined(_WIN32)
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *lib_ಹೆಸರುಗಳು[] = {
+#ಆದರೆ defined(_WIN32)
         "vulkan-1.dll",
-#elif defined(__APPLE__)
+#ಅಥವಾಆದರೆ defined(__APPLE__)
         "libvulkan.dylib",
         "libvulkan.1.dylib",
         "libMoltenVK.dylib",
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
         "libvulkan.so.1",
         "libvulkan.so",
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     };
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(lib_names); i++) {
-        p->libvulkan = dlopen(lib_names[i], RTLD_NOW | RTLD_LOCAL);
-        if (p->libvulkan)
-            break;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(lib_ಹೆಸರುಗಳು); i++) {
+        p->libvulkan = dlopen(lib_ಹೆಸರುಗಳು[i], RTLD_NOW | RTLD_LOCAL);
+        ಆದರೆ (p->libvulkan)
+            ನಿಲ್ಲಿಸು;
     }
 
-    if (!p->libvulkan) {
+    ಆದರೆ (!p->libvulkan) {
         av_log(ctx, AV_LOG_ERROR, "Unable to open the libvulkan library!\n");
-        return AVERROR_UNKNOWN;
+        ಹಿಂತಿರುಗಿ AVERROR_UNKNOWN;
     }
 
     hwctx->get_proc_addr = (PFN_vkGetInstanceProcAddr)dlsym(p->libvulkan, "vkGetInstanceProcAddr");
-#endif /* CONFIG_VULKAN_STATIC */
+#ಆದರೆ_ಅಂತ್ಯ /* CONFIG_VULKAN_STATIC */
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-typedef struct VulkanOptExtension {
-    const char *name;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ VulkanOptExtension {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name;
     FFVulkanExtensions flag;
 } VulkanOptExtension;
 
-static const VulkanOptExtension optional_instance_exts[] = {
-#ifdef __APPLE__
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ VulkanOptExtension optional_instance_exts[] = {
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __APPLE__
     { VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,          FF_VK_EXT_NO_FLAG                },
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     { 0 },
 };
 
-static const VulkanOptExtension optional_device_exts[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ VulkanOptExtension optional_device_exts[] = {
     /* Misc or required by other extensions */
     { VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME,               FF_VK_EXT_PORTABILITY_SUBSET     },
-    { VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME,                  FF_VK_EXT_PUSH_DESCRIPTOR        },
+    { VK_KHR_ತಳ್ಳು_DESCRIPTOR_EXTENSION_NAME,                  FF_VK_EXT_ತಳ್ಳು_DESCRIPTOR        },
     { VK_EXT_PHYSICAL_DEVICE_DRM_EXTENSION_NAME,              FF_VK_EXT_DEVICE_DRM             },
     { VK_EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME,              FF_VK_EXT_ATOMIC_FLOAT           },
-    { VK_KHR_COOPERATIVE_MATRIX_EXTENSION_NAME,               FF_VK_EXT_COOP_MATRIX            },
+    { VK_KHR_COOPERATIVE_ಮಾತೃಕೆ_EXTENSION_NAME,               FF_VK_EXT_COOP_ಮಾತೃಕೆ            },
     { VK_EXT_SHADER_OBJECT_EXTENSION_NAME,                    FF_VK_EXT_SHADER_OBJECT          },
     { VK_KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME,           FF_VK_EXT_SUBGROUP_ROTATE        },
     { VK_EXT_HOST_IMAGE_COPY_EXTENSION_NAME,                  FF_VK_EXT_HOST_IMAGE_COPY        },
-    { VK_KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME, FF_VK_EXT_EXPLICIT_MEM_LAYOUT    },
-#ifdef VK_KHR_shader_relaxed_extended_instruction
+    { VK_KHR_WORKGROUP_ಸ್ಮರಣೆ_EXPLICIT_LAYOUT_EXTENSION_NAME, FF_VK_EXT_EXPLICIT_MEM_LAYOUT    },
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_relaxed_extended_instruction
     { VK_KHR_SHADER_RELAXED_EXTENDED_INSTRUCTION_EXTENSION_NAME, FF_VK_EXT_RELAXED_EXTENDED_INSTR },
-#endif
-#ifdef VK_EXT_shader_long_vector
-    { VK_EXT_SHADER_LONG_VECTOR_EXTENSION_NAME,               FF_VK_EXT_LONG_VECTOR            },
-#endif
-#ifdef VK_EXT_shader_replicated_composites
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_shader_long_ಸದಿಶ
+    { VK_EXT_SHADER_LONG_ಸದಿಶ_EXTENSION_NAME,               FF_VK_EXT_LONG_ಸದಿಶ            },
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_shader_replicated_composites
     { VK_EXT_SHADER_REPLICATED_COMPOSITES_EXTENSION_NAME,     FF_VK_EXT_REPLICATED_COMPOSITES  },
-#endif
-#ifdef VK_EXT_zero_initialize_device_memory
-    { VK_EXT_ZERO_INITIALIZE_DEVICE_MEMORY_EXTENSION_NAME,    FF_VK_EXT_ZERO_INITIALIZE        },
-#endif
-#ifdef VK_KHR_shader_expect_assume
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_EXT_zero_initialize_device_ಸ್ಮರಣೆ
+    { VK_EXT_ZERO_INITIALIZE_DEVICE_ಸ್ಮರಣೆ_EXTENSION_NAME,    FF_VK_EXT_ZERO_INITIALIZE        },
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_expect_assume
     { VK_KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME,             FF_VK_EXT_EXPECT_ASSUME          },
-#endif
-#ifdef VK_KHR_shader_maximal_reconvergence
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_maximal_reconvergence
     { VK_KHR_SHADER_MAXIMAL_RECONVERGENCE_EXTENSION_NAME,     FF_VK_EXT_MAXIMAL_RECONVERGENCE  },
-#endif
-#ifdef VK_KHR_maintenance9
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_maintenance9
     { VK_KHR_MAINTENANCE_9_EXTENSION_NAME,                    FF_VK_EXT_MAINTENANCE_9          },
-#endif
-#ifdef VK_KHR_maintenance11
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_maintenance11
     { VK_KHR_MAINTENANCE_11_EXTENSION_NAME,                   FF_VK_EXT_MAINTENANCE_11         },
-#endif
-#ifdef VK_KHR_unified_image_layouts
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_unified_image_layouts
     { VK_KHR_UNIFIED_IMAGE_LAYOUTS_EXTENSION_NAME,            FF_VK_EXT_UNIFIED_IMAGE_LAYOUTS  },
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     { VK_KHR_VIDEO_MAINTENANCE_1_EXTENSION_NAME,              FF_VK_EXT_VIDEO_MAINTENANCE_1    },
-#ifdef VK_KHR_video_maintenance2
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_maintenance2
     { VK_KHR_VIDEO_MAINTENANCE_2_EXTENSION_NAME,              FF_VK_EXT_VIDEO_MAINTENANCE_2    },
-#endif
-#ifdef VK_KHR_internally_synchronized_queues
-    { VK_KHR_INTERNALLY_SYNCHRONIZED_QUEUES_EXTENSION_NAME,   FF_VK_EXT_INTERNAL_QUEUE_SYNC    },
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_internally_synchronized_queues
+    { VK_KHR_INTERNALLY_SYNCHRONIZED_QUEUES_EXTENSION_NAME,   FF_VK_EXT_ಆಂತರಿಕ_ಸರತಿ_SYNC    },
+#ಆದರೆ_ಅಂತ್ಯ
     { VK_NV_OPTICAL_FLOW_EXTENSION_NAME,                      FF_VK_EXT_OPTICAL_FLOW           },
 
     /* Imports/exports */
-    { VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME,               FF_VK_EXT_EXTERNAL_FD_MEMORY     },
-    { VK_EXT_EXTERNAL_MEMORY_DMA_BUF_EXTENSION_NAME,          FF_VK_EXT_EXTERNAL_DMABUF_MEMORY },
+    { VK_KHR_EXTERNAL_ಸ್ಮರಣೆ_FD_EXTENSION_NAME,               FF_VK_EXT_EXTERNAL_FD_ಸ್ಮರಣೆ     },
+    { VK_EXT_EXTERNAL_ಸ್ಮರಣೆ_DMA_BUF_EXTENSION_NAME,          FF_VK_EXT_EXTERNAL_DMABUF_ಸ್ಮರಣೆ },
     { VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME,        FF_VK_EXT_DRM_MODIFIER_FLAGS     },
     { VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,            FF_VK_EXT_EXTERNAL_FD_SEM        },
-    { VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME,             FF_VK_EXT_EXTERNAL_HOST_MEMORY   },
-#ifdef _WIN32
-    { VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME,            FF_VK_EXT_EXTERNAL_WIN32_MEMORY  },
+    { VK_EXT_EXTERNAL_ಸ್ಮರಣೆ_HOST_EXTENSION_NAME,             FF_VK_EXT_EXTERNAL_HOST_ಸ್ಮರಣೆ   },
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
+    { VK_KHR_EXTERNAL_ಸ್ಮರಣೆ_WIN32_EXTENSION_NAME,            FF_VK_EXT_EXTERNAL_WIN32_ಸ್ಮರಣೆ  },
     { VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,         FF_VK_EXT_EXTERNAL_WIN32_SEM     },
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     /* Video encoding/decoding */
-    { VK_KHR_VIDEO_QUEUE_EXTENSION_NAME,                      FF_VK_EXT_VIDEO_QUEUE            },
-    { VK_KHR_VIDEO_ENCODE_QUEUE_EXTENSION_NAME,               FF_VK_EXT_VIDEO_ENCODE_QUEUE     },
-    { VK_KHR_VIDEO_DECODE_QUEUE_EXTENSION_NAME,               FF_VK_EXT_VIDEO_DECODE_QUEUE     },
+    { VK_KHR_VIDEO_ಸರತಿ_EXTENSION_NAME,                      FF_VK_EXT_VIDEO_ಸರತಿ            },
+    { VK_KHR_VIDEO_ENCODE_ಸರತಿ_EXTENSION_NAME,               FF_VK_EXT_VIDEO_ENCODE_ಸರತಿ     },
+    { VK_KHR_VIDEO_DECODE_ಸರತಿ_EXTENSION_NAME,               FF_VK_EXT_VIDEO_DECODE_ಸರತಿ     },
     { VK_KHR_VIDEO_ENCODE_H264_EXTENSION_NAME,                FF_VK_EXT_VIDEO_ENCODE_H264      },
     { VK_KHR_VIDEO_DECODE_H264_EXTENSION_NAME,                FF_VK_EXT_VIDEO_DECODE_H264      },
     { VK_KHR_VIDEO_ENCODE_H265_EXTENSION_NAME,                FF_VK_EXT_VIDEO_ENCODE_H265      },
     { VK_KHR_VIDEO_DECODE_H265_EXTENSION_NAME,                FF_VK_EXT_VIDEO_DECODE_H265      },
-#ifdef VK_KHR_video_decode_vp9
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_decode_vp9
     { VK_KHR_VIDEO_DECODE_VP9_EXTENSION_NAME,                 FF_VK_EXT_VIDEO_DECODE_VP9       },
-#endif
-#ifdef VK_KHR_video_encode_av1
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_encode_av1
     { VK_KHR_VIDEO_ENCODE_AV1_EXTENSION_NAME,                 FF_VK_EXT_VIDEO_ENCODE_AV1       },
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     { VK_KHR_VIDEO_DECODE_AV1_EXTENSION_NAME,                 FF_VK_EXT_VIDEO_DECODE_AV1       },
 };
 
-const char **av_vk_get_optional_instance_extensions(int *count)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **av_vk_get_optional_instance_extensions(ಪೂರ್ಣಾಂಕ *ಎಣಿಕೆ_2)
 {
-    const char **exts = av_malloc_array(sizeof(*exts),
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **exts = av_malloc_array(ಗಾತ್ರ(*exts),
                                         FF_ARRAY_ELEMS(optional_instance_exts) - 1);
-    if (!exts)
-        return NULL;
+    ಆದರೆ (!exts)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    for (int i = 0; i < (int)FF_ARRAY_ELEMS(optional_instance_exts) - 1; i++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < (ಪೂರ್ಣಾಂಕ)FF_ARRAY_ELEMS(optional_instance_exts) - 1; i++)
         exts[i] = optional_instance_exts[i].name;
 
-    *count = FF_ARRAY_ELEMS(optional_instance_exts) - 1;
-    return exts;
+    *ಎಣಿಕೆ_2 = FF_ARRAY_ELEMS(optional_instance_exts) - 1;
+    ಹಿಂತಿರುಗಿ exts;
 }
 
-const char **av_vk_get_optional_device_extensions(int *count)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **av_vk_get_optional_device_extensions(ಪೂರ್ಣಾಂಕ *ಎಣಿಕೆ_2)
 {
-    const char **exts = av_malloc_array(sizeof(*exts),
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **exts = av_malloc_array(ಗಾತ್ರ(*exts),
                                         FF_ARRAY_ELEMS(optional_device_exts));
-    if (!exts)
-        return NULL;
+    ಆದರೆ (!exts)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(optional_device_exts); i++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(optional_device_exts); i++)
         exts[i] = optional_device_exts[i].name;
 
-    *count = FF_ARRAY_ELEMS(optional_device_exts);
-    return exts;
+    *ಎಣಿಕೆ_2 = FF_ARRAY_ELEMS(optional_device_exts);
+    ಹಿಂತಿರುಗಿ exts;
 }
 
-static VKAPI_ATTR
-VkBool32 VKAPI_CALL vk_dbg_callback(VkDebugUtilsMessageSeverityFlagBitsEXT severity,
-                                    VkDebugUtilsMessageTypeFlagsEXT messageType,
-                                    const VkDebugUtilsMessengerCallbackDataEXT *data,
-                                    void *priv)
+ಸ್ಥಿರ VKAPI_ATTR
+VkBool32 VKAPI_CALL vk_dbg_callback(Vk_Debug_Utils_ಸಂದೇಶ_Severity_Flag_ಬಿಟ್ಟುಗಳು_EXT severity,
+                                    Vk_Debug_Utils_ಸಂದೇಶ_Type_Flags_EXT ಸಂದೇಶ_Type,
+                                    ಸ್ಥಿರಾಂಕ Vk_Debug_Utils_Messenger_Callback_ದತ್ತಾಂಶ_EXT *ದತ್ತಾಂಶ,
+                                    ಶೂನ್ಯ *priv)
 {
-    int l;
+    ಪೂರ್ಣಾಂಕ l;
     AVHWDeviceContext *ctx = priv;
 
     /* Ignore false positives */
-    switch (data->messageIdNumber) {
-    case 0x086974c1: /* BestPractices-vkCreateCommandPool-command-buffer-reset */
-    case 0xfd92477a: /* BestPractices-vkAllocateMemory-small-allocation */
-        return VK_FALSE;
-    default:
-        break;
+    ಆಯ್ಕೆ (ದತ್ತಾಂಶ->ಸಂದೇಶ_Id_ಸಂಖ್ಯೆ) {
+    ಸ್ಥಿತಿ 0x086974c1: /* BestPractices-vkCreateCommandPool-command-buffer-reset */
+    ಸ್ಥಿತಿ 0xfd92477a: /* BestPractices-vkAllocateMemory-small-allocation */
+        ಹಿಂತಿರುಗಿ VK_FALSE;
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ನಿಲ್ಲಿಸು;
     }
 
-    switch (severity) {
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: l = AV_LOG_VERBOSE; break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:    l = AV_LOG_INFO;    break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: l = AV_LOG_WARNING; break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:   l = AV_LOG_ERROR;   break;
-    default:                                              l = AV_LOG_DEBUG;   break;
+    ಆಯ್ಕೆ (severity) {
+    ಸ್ಥಿತಿ VK_DEBUG_UTILS_ಸಂದೇಶ_SEVERITY_VERBOSE_ಬಿಟ್_EXT: l = AV_LOG_VERBOSE; ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ VK_DEBUG_UTILS_ಸಂದೇಶ_SEVERITY_INFO_ಬಿಟ್_EXT:    l = AV_LOG_INFO;    ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ VK_DEBUG_UTILS_ಸಂದೇಶ_SEVERITY_WARNING_ಬಿಟ್_EXT: l = AV_LOG_WARNING; ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ VK_DEBUG_UTILS_ಸಂದೇಶ_SEVERITY_ERROR_ಬಿಟ್_EXT:   l = AV_LOG_ERROR;   ನಿಲ್ಲಿಸು;
+    ಪೂರ್ವನಿಯೋಜಿತ:                                              l = AV_LOG_DEBUG;   ನಿಲ್ಲಿಸು;
     }
 
-    av_log(ctx, l, "%s\n", data->pMessage);
-    for (int i = 0; i < data->cmdBufLabelCount; i++)
-        av_log(ctx, l, "\t%i: %s\n", i, data->pCmdBufLabels[i].pLabelName);
+    av_log(ctx, l, "%s\n", ದತ್ತಾಂಶ->p_ಸಂದೇಶ);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ದತ್ತಾಂಶ->cmd_Buf_Label_ಎಣಿಕೆ; i++)
+        av_log(ctx, l, "\t%i: %s\n", i, ದತ್ತಾಂಶ->pCmdBufLabels[i].pLabelName);
 
-    return VK_FALSE;
+    ಹಿಂತಿರುಗಿ VK_FALSE;
 }
 
-#define ADD_VAL_TO_LIST(list, count, val)                                      \
-    do {                                                                       \
-        list = av_realloc_array(list, ++count, sizeof(*list));                 \
-        if (!list) {                                                           \
+#ವ್ಯಾಖ್ಯಾನಿಸು ಕೂಡಿಸು_VAL_ಗಮ್ಯ_LIST(list, ಎಣಿಕೆ_2, val)                                      \
+    ಮಾಡು {                                                                       \
+        list = av_realloc_array(list, ++ಎಣಿಕೆ_2, ಗಾತ್ರ(*list));                 \
+        ಆದರೆ (!list) {                                                           \
             err = AVERROR(ENOMEM);                                             \
-            goto fail;                                                         \
+            ಹೋಗು fail;                                                         \
         }                                                                      \
-        list[count - 1] = av_strdup(val);                                      \
-        if (!list[count - 1]) {                                                \
+        list[ಎಣಿಕೆ_2 - 1] = av_strdup(val);                                      \
+        ಆದರೆ (!list[ಎಣಿಕೆ_2 - 1]) {                                                \
             err = AVERROR(ENOMEM);                                             \
-            goto fail;                                                         \
+            ಹೋಗು fail;                                                         \
         }                                                                      \
-    } while(0)
+    } ಆಗ(0)
 
-#define RELEASE_PROPS(props, count)                                            \
-    if (props) {                                                               \
-        for (int i = 0; i < count; i++)                                        \
-            av_free((void *)((props)[i]));                                     \
-        av_free((void *)props);                                                \
+#ವ್ಯಾಖ್ಯಾನಿಸು RELEASE_PROPS(props, ಎಣಿಕೆ_2)                                            \
+    ಆದರೆ (props) {                                                               \
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಎಣಿಕೆ_2; i++)                                        \
+            av_free((ಶೂನ್ಯ *)((props)[i]));                                     \
+        av_free((ಶೂನ್ಯ *)props);                                                \
     }
 
-static int vulkan_device_has_rebar(AVHWDeviceContext *ctx)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_device_has_rebar(AVHWDeviceContext *ctx)
 {
     VulkanDevicePriv *p = ctx->hwctx;
-    VkDeviceSize max_vram = 0, max_visible_vram = 0;
+    Vk_Device_ಗಾತ್ರ max_vram = 0, max_visible_vram = 0;
 
     /* Get device memory properties */
-    av_assert0(p->mprops.memoryTypeCount);
-    for (int i = 0; i < p->mprops.memoryTypeCount; i++) {
-        const VkMemoryType type = p->mprops.memoryTypes[i];
-        const VkMemoryHeap heap = p->mprops.memoryHeaps[type.heapIndex];
-        if (!(type.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT))
-            continue;
-        max_vram = FFMAX(max_vram, heap.size);
-        if (type.propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
-            max_visible_vram = FFMAX(max_visible_vram, heap.size);
+    av_assert0(p->mprops.ಸ್ಮರಣೆ_Type_ಎಣಿಕೆ);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < p->mprops.ಸ್ಮರಣೆ_Type_ಎಣಿಕೆ; i++) {
+        ಸ್ಥಿರಾಂಕ Vk_ಸ್ಮರಣೆ_Type type = p->mprops.ಸ್ಮರಣೆ_Types[i];
+        ಸ್ಥಿರಾಂಕ Vk_ಸ್ಮರಣೆ_ರಾಶಿ ರಾಶಿ = p->mprops.ಸ್ಮರಣೆ_Heaps[type.ರಾಶಿ_ಸೂಚ್ಯಂಕ_2];
+        ಆದರೆ (!(type.propertyFlags & VK_ಸ್ಮರಣೆ_PROPERTY_DEVICE_LOCAL_ಬಿಟ್))
+            ಮುಂದುವರಿ;
+        max_vram = FFMAX(max_vram, ರಾಶಿ.ಗಾತ್ರ_2);
+        ಆದರೆ (type.propertyFlags & VK_ಸ್ಮರಣೆ_PROPERTY_HOST_VISIBLE_ಬಿಟ್)
+            max_visible_vram = FFMAX(max_visible_vram, ರಾಶಿ.ಗಾತ್ರ_2);
     }
 
-    return max_vram - max_visible_vram < 1024; /* 1 kB tolerance */
+    ಹಿಂತಿರುಗಿ max_vram - max_visible_vram < 1024; /* 1 kB tolerance */
 }
 
-enum FFVulkanDebugMode {
+ಎಣಿಕೆ FFVulkan_Debug_ಬಹುಲಕ {
     FF_VULKAN_DEBUG_NONE = 0,
     /* Standard GPU-assisted validation */
     FF_VULKAN_DEBUG_VALIDATE = 1,
@@ -947,337 +947,337 @@ enum FFVulkanDebugMode {
     FF_VULKAN_DEBUG_NB,
 };
 
-static int check_extensions(AVHWDeviceContext *ctx, int dev, AVDictionary *opts,
-                            const char * const **dst, uint32_t *num,
-                            enum FFVulkanDebugMode debug_mode)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ check_extensions(AVHWDeviceContext *ctx, ಪೂರ್ಣಾಂಕ dev, AVDictionary *opts,
+                            ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ **dst, uint32_t *ಅಂಕೆ,
+                            ಎಣಿಕೆ FFVulkan_Debug_ಬಹುಲಕ debug_ಬಹುಲಕ)
 {
-    const char *tstr;
-    const char **extension_names = NULL;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *tstr;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **extension_ಹೆಸರುಗಳು = ಖಾಲಿ;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    int err = 0, found, extensions_found = 0;
+    ಪೂರ್ಣಾಂಕ err = 0, ಸಿಕ್ಕಿತು, extensions_ಸಿಕ್ಕಿತು = 0;
 
-    const char *mod;
-    int optional_exts_num;
-    uint32_t sup_ext_count;
-    char *user_exts_str = NULL;
-    AVDictionaryEntry *user_exts;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *mod;
+    ಪೂರ್ಣಾಂಕ optional_exts_ಅಂಕೆ;
+    uint32_t sup_ext_ಎಣಿಕೆ;
+    ಅಕ್ಷರ *user_exts_str = ಖಾಲಿ;
+    AVDictionary_ನಮೂದು *user_exts;
     VkExtensionProperties *sup_ext;
-    const VulkanOptExtension *optional_exts;
+    ಸ್ಥಿರಾಂಕ VulkanOptExtension *optional_exts;
 
-    if (!dev) {
+    ಆದರೆ (!dev) {
         mod = "instance";
         optional_exts = optional_instance_exts;
-        optional_exts_num = FF_ARRAY_ELEMS(optional_instance_exts) - 1;
-        user_exts = av_dict_get(opts, "instance_extensions", NULL, 0);
-        if (user_exts) {
-            user_exts_str = av_strdup(user_exts->value);
-            if (!user_exts_str) {
+        optional_exts_ಅಂಕೆ = FF_ARRAY_ELEMS(optional_instance_exts) - 1;
+        user_exts = av_dict_get(opts, "instance_extensions", ಖಾಲಿ, 0);
+        ಆದರೆ (user_exts) {
+            user_exts_str = av_strdup(user_exts->ಮೌಲ್ಯ);
+            ಆದರೆ (!user_exts_str) {
                 err = AVERROR(ENOMEM);
-                goto fail;
+                ಹೋಗು fail;
             }
         }
-        vk->EnumerateInstanceExtensionProperties(NULL, &sup_ext_count, NULL);
-        sup_ext = av_malloc_array(sup_ext_count, sizeof(VkExtensionProperties));
-        if (!sup_ext)
-            return AVERROR(ENOMEM);
-        vk->EnumerateInstanceExtensionProperties(NULL, &sup_ext_count, sup_ext);
-    } else {
+        vk->EnumerateInstanceExtensionProperties(ಖಾಲಿ, &sup_ext_ಎಣಿಕೆ, ಖಾಲಿ);
+        sup_ext = av_malloc_array(sup_ext_ಎಣಿಕೆ, ಗಾತ್ರ(VkExtensionProperties));
+        ಆದರೆ (!sup_ext)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
+        vk->EnumerateInstanceExtensionProperties(ಖಾಲಿ, &sup_ext_ಎಣಿಕೆ, sup_ext);
+    } ಇಲ್ಲದಿದ್ದರೆ {
         mod = "device";
         optional_exts = optional_device_exts;
-        optional_exts_num = FF_ARRAY_ELEMS(optional_device_exts);
-        user_exts = av_dict_get(opts, "device_extensions", NULL, 0);
-        if (user_exts) {
-            user_exts_str = av_strdup(user_exts->value);
-            if (!user_exts_str) {
+        optional_exts_ಅಂಕೆ = FF_ARRAY_ELEMS(optional_device_exts);
+        user_exts = av_dict_get(opts, "device_extensions", ಖಾಲಿ, 0);
+        ಆದರೆ (user_exts) {
+            user_exts_str = av_strdup(user_exts->ಮೌಲ್ಯ);
+            ಆದರೆ (!user_exts_str) {
                 err = AVERROR(ENOMEM);
-                goto fail;
+                ಹೋಗು fail;
             }
         }
-        vk->EnumerateDeviceExtensionProperties(hwctx->phys_dev, NULL,
-                                               &sup_ext_count, NULL);
-        sup_ext = av_malloc_array(sup_ext_count, sizeof(VkExtensionProperties));
-        if (!sup_ext)
-            return AVERROR(ENOMEM);
-        vk->EnumerateDeviceExtensionProperties(hwctx->phys_dev, NULL,
-                                               &sup_ext_count, sup_ext);
+        vk->EnumerateDeviceExtensionProperties(hwctx->phys_dev, ಖಾಲಿ,
+                                               &sup_ext_ಎಣಿಕೆ, ಖಾಲಿ);
+        sup_ext = av_malloc_array(sup_ext_ಎಣಿಕೆ, ಗಾತ್ರ(VkExtensionProperties));
+        ಆದರೆ (!sup_ext)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
+        vk->EnumerateDeviceExtensionProperties(hwctx->phys_dev, ಖಾಲಿ,
+                                               &sup_ext_ಎಣಿಕೆ, sup_ext);
     }
 
-    for (int i = 0; i < optional_exts_num; i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < optional_exts_ಅಂಕೆ; i++) {
         tstr = optional_exts[i].name;
-        found = 0;
+        ಸಿಕ್ಕಿತು = 0;
 
         /* Check if the device has ReBAR for host image copies */
-        if (!strcmp(tstr, VK_EXT_HOST_IMAGE_COPY_EXTENSION_NAME) &&
+        ಆದರೆ (!strcmp(tstr, VK_EXT_HOST_IMAGE_COPY_EXTENSION_NAME) &&
             !vulkan_device_has_rebar(ctx))
-            continue;
+            ಮುಂದುವರಿ;
 
-        if (dev &&
-            ((debug_mode == FF_VULKAN_DEBUG_VALIDATE) ||
-             (debug_mode == FF_VULKAN_DEBUG_PRINTF) ||
-             (debug_mode == FF_VULKAN_DEBUG_PRACTICES)) &&
+        ಆದರೆ (dev &&
+            ((debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_VALIDATE) ||
+             (debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_PRINTF) ||
+             (debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_PRACTICES)) &&
             (!strcmp(tstr, VK_EXT_SHADER_OBJECT_EXTENSION_NAME))) {
-            continue;
+            ಮುಂದುವರಿ;
         }
 
-        for (int j = 0; j < sup_ext_count; j++) {
-            if (!strcmp(tstr, sup_ext[j].extensionName)) {
-                found = 1;
-                break;
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < sup_ext_ಎಣಿಕೆ; j++) {
+            ಆದರೆ (!strcmp(tstr, sup_ext[j].extensionName)) {
+                ಸಿಕ್ಕಿತು = 1;
+                ನಿಲ್ಲಿಸು;
             }
         }
-        if (!found)
-            continue;
+        ಆದರೆ (!ಸಿಕ್ಕಿತು)
+            ಮುಂದುವರಿ;
 
         av_log(ctx, AV_LOG_VERBOSE, "Using %s extension %s\n", mod, tstr);
         p->vkctx.extensions |= optional_exts[i].flag;
-        ADD_VAL_TO_LIST(extension_names, extensions_found, tstr);
+        ಕೂಡಿಸು_VAL_ಗಮ್ಯ_LIST(extension_ಹೆಸರುಗಳು, extensions_ಸಿಕ್ಕಿತು, tstr);
     }
 
-    if (!dev &&
-        ((debug_mode == FF_VULKAN_DEBUG_VALIDATE) ||
-         (debug_mode == FF_VULKAN_DEBUG_PRINTF) ||
-         (debug_mode == FF_VULKAN_DEBUG_PRACTICES))) {
+    ಆದರೆ (!dev &&
+        ((debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_VALIDATE) ||
+         (debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_PRINTF) ||
+         (debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_PRACTICES))) {
         tstr = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
-        found = 0;
-        for (int j = 0; j < sup_ext_count; j++) {
-            if (!strcmp(tstr, sup_ext[j].extensionName)) {
-                found = 1;
-                break;
+        ಸಿಕ್ಕಿತು = 0;
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < sup_ext_ಎಣಿಕೆ; j++) {
+            ಆದರೆ (!strcmp(tstr, sup_ext[j].extensionName)) {
+                ಸಿಕ್ಕಿತು = 1;
+                ನಿಲ್ಲಿಸು;
             }
         }
-        if (found) {
+        ಆದರೆ (ಸಿಕ್ಕಿತು) {
             av_log(ctx, AV_LOG_VERBOSE, "Using %s extension %s\n", mod, tstr);
-            ADD_VAL_TO_LIST(extension_names, extensions_found, tstr);
-        } else {
+            ಕೂಡಿಸು_VAL_ಗಮ್ಯ_LIST(extension_ಹೆಸರುಗಳು, extensions_ಸಿಕ್ಕಿತು, tstr);
+        } ಇಲ್ಲದಿದ್ದರೆ {
             av_log(ctx, AV_LOG_ERROR, "Debug extension \"%s\" not found!\n",
                    tstr);
             err = AVERROR(EINVAL);
-            goto fail;
+            ಹೋಗು fail;
         }
     }
 
-#ifdef VK_KHR_shader_relaxed_extended_instruction
-    if ((debug_mode == FF_VULKAN_DEBUG_PRINTF) && dev) {
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_shader_relaxed_extended_instruction
+    ಆದರೆ ((debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_PRINTF) && dev) {
         tstr = VK_KHR_SHADER_RELAXED_EXTENDED_INSTRUCTION_EXTENSION_NAME;
-        found = 0;
-        for (int j = 0; j < sup_ext_count; j++) {
-            if (!strcmp(tstr, sup_ext[j].extensionName)) {
-                found = 1;
-                break;
+        ಸಿಕ್ಕಿತು = 0;
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < sup_ext_ಎಣಿಕೆ; j++) {
+            ಆದರೆ (!strcmp(tstr, sup_ext[j].extensionName)) {
+                ಸಿಕ್ಕಿತು = 1;
+                ನಿಲ್ಲಿಸು;
             }
         }
-        if (!found) {
+        ಆದರೆ (!ಸಿಕ್ಕಿತು) {
             av_log(ctx, AV_LOG_ERROR, "Debug_printf/profile enabled, but extension \"%s\" not found!\n",
                    tstr);
             err = AVERROR(EINVAL);
-            goto fail;
+            ಹೋಗು fail;
         }
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    if (user_exts_str) {
-        char *save, *token = av_strtok(user_exts_str, "+", &save);
-        while (token) {
-            found = 0;
-            for (int j = 0; j < sup_ext_count; j++) {
-                if (!strcmp(token, sup_ext[j].extensionName)) {
-                    found = 1;
-                    break;
+    ಆದರೆ (user_exts_str) {
+        ಅಕ್ಷರ *save, *token = av_strtok(user_exts_str, "+", &save);
+        ಆಗ (token) {
+            ಸಿಕ್ಕಿತು = 0;
+            ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < sup_ext_ಎಣಿಕೆ; j++) {
+                ಆದರೆ (!strcmp(token, sup_ext[j].extensionName)) {
+                    ಸಿಕ್ಕಿತು = 1;
+                    ನಿಲ್ಲಿಸು;
                 }
             }
-            if (found) {
+            ಆದರೆ (ಸಿಕ್ಕಿತು) {
                 av_log(ctx, AV_LOG_VERBOSE, "Using %s extension \"%s\"\n", mod, token);
-                ADD_VAL_TO_LIST(extension_names, extensions_found, token);
-            } else {
+                ಕೂಡಿಸು_VAL_ಗಮ್ಯ_LIST(extension_ಹೆಸರುಗಳು, extensions_ಸಿಕ್ಕಿತು, token);
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 av_log(ctx, AV_LOG_WARNING, "%s extension \"%s\" not found, excluding.\n",
                        mod, token);
             }
-            token = av_strtok(NULL, "+", &save);
+            token = av_strtok(ಖಾಲಿ, "+", &save);
         }
     }
 
-    *dst = extension_names;
-    *num = extensions_found;
+    *dst = extension_ಹೆಸರುಗಳು;
+    *ಅಂಕೆ = extensions_ಸಿಕ್ಕಿತು;
 
     av_free(user_exts_str);
     av_free(sup_ext);
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    RELEASE_PROPS(extension_names, extensions_found);
+    RELEASE_PROPS(extension_ಹೆಸರುಗಳು, extensions_ಸಿಕ್ಕಿತು);
     av_free(user_exts_str);
     av_free(sup_ext);
-    return err;
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static int check_layers(AVHWDeviceContext *ctx, AVDictionary *opts,
-                        const char * const **dst, uint32_t *num,
-                        enum FFVulkanDebugMode *debug_mode)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ check_layers(AVHWDeviceContext *ctx, AVDictionary *opts,
+                        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ **dst, uint32_t *ಅಂಕೆ,
+                        ಎಣಿಕೆ FFVulkan_Debug_ಬಹುಲಕ *debug_ಬಹುಲಕ)
 {
-    int err = 0;
+    ಪೂರ್ಣಾಂಕ err = 0;
     VulkanDevicePriv *priv = ctx->hwctx;
     FFVulkanFunctions *vk = &priv->vkctx.vkfn;
 
-    static const char layer_standard_validation[] = { "VK_LAYER_KHRONOS_validation" };
-    int layer_standard_validation_found = 0;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ layer_standard_validation[] = { "VK_LAYER_KHRONOS_validation" };
+    ಪೂರ್ಣಾಂಕ layer_standard_validation_ಸಿಕ್ಕಿತು = 0;
 
-    uint32_t sup_layer_count;
+    uint32_t sup_layer_ಎಣಿಕೆ;
     VkLayerProperties *sup_layers;
 
-    AVDictionaryEntry *user_layers = av_dict_get(opts, "layers", NULL, 0);
-    char *user_layers_str = NULL;
-    char *save, *token;
+    AVDictionary_ನಮೂದು *user_layers = av_dict_get(opts, "layers", ಖಾಲಿ, 0);
+    ಅಕ್ಷರ *user_layers_str = ಖಾಲಿ;
+    ಅಕ್ಷರ *save, *token;
 
-    const char **enabled_layers = NULL;
-    uint32_t enabled_layers_count = 0;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **enabled_layers = ಖಾಲಿ;
+    uint32_t enabled_layers_ಎಣಿಕೆ = 0;
 
-    AVDictionaryEntry *debug_opt = av_dict_get(opts, "debug", NULL, 0);
-    enum FFVulkanDebugMode mode;
+    AVDictionary_ನಮೂದು *debug_opt = av_dict_get(opts, "debug", ಖಾಲಿ, 0);
+    ಎಣಿಕೆ FFVulkan_Debug_ಬಹುಲಕ ಬಹುಲಕ;
 
-    *debug_mode = mode = FF_VULKAN_DEBUG_NONE;
+    *debug_ಬಹುಲಕ = ಬಹುಲಕ = FF_VULKAN_DEBUG_NONE;
 
     /* Get a list of all layers */
-    vk->EnumerateInstanceLayerProperties(&sup_layer_count, NULL);
-    sup_layers = av_malloc_array(sup_layer_count, sizeof(VkLayerProperties));
-    if (!sup_layers)
-        return AVERROR(ENOMEM);
-    vk->EnumerateInstanceLayerProperties(&sup_layer_count, sup_layers);
+    vk->EnumerateInstanceLayerProperties(&sup_layer_ಎಣಿಕೆ, ಖಾಲಿ);
+    sup_layers = av_malloc_array(sup_layer_ಎಣಿಕೆ, ಗಾತ್ರ(VkLayerProperties));
+    ಆದರೆ (!sup_layers)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
+    vk->EnumerateInstanceLayerProperties(&sup_layer_ಎಣಿಕೆ, sup_layers);
 
     av_log(ctx, AV_LOG_VERBOSE, "Supported layers:\n");
-    for (int i = 0; i < sup_layer_count; i++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < sup_layer_ಎಣಿಕೆ; i++)
         av_log(ctx, AV_LOG_VERBOSE, "\t%s\n", sup_layers[i].layerName);
 
     /* If no user layers or debug layers are given, return */
-    if (!debug_opt && !user_layers)
-        goto end;
+    ಆದರೆ (!debug_opt && !user_layers)
+        ಹೋಗು ಕೊನೆ;
 
     /* Check for any properly supported validation layer */
-    if (debug_opt) {
-        if (!strcmp(debug_opt->value, "printf")) {
-            mode = FF_VULKAN_DEBUG_PRINTF;
-        } else if (!strcmp(debug_opt->value, "validate")) {
-            mode = FF_VULKAN_DEBUG_VALIDATE;
-        } else if (!strcmp(debug_opt->value, "practices")) {
-            mode = FF_VULKAN_DEBUG_PRACTICES;
-        } else {
-            char *end_ptr = NULL;
-            int idx = strtol(debug_opt->value, &end_ptr, 10);
-            if (end_ptr == debug_opt->value || end_ptr[0] != '\0' ||
+    ಆದರೆ (debug_opt) {
+        ಆದರೆ (!strcmp(debug_opt->ಮೌಲ್ಯ, "printf")) {
+            ಬಹುಲಕ = FF_VULKAN_DEBUG_PRINTF;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (!strcmp(debug_opt->ಮೌಲ್ಯ, "validate")) {
+            ಬಹುಲಕ = FF_VULKAN_DEBUG_VALIDATE;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (!strcmp(debug_opt->ಮೌಲ್ಯ, "practices")) {
+            ಬಹುಲಕ = FF_VULKAN_DEBUG_PRACTICES;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಅಕ್ಷರ *ಕೊನೆ_ptr = ಖಾಲಿ;
+            ಪೂರ್ಣಾಂಕ idx = strtol(debug_opt->ಮೌಲ್ಯ, &ಕೊನೆ_ptr, 10);
+            ಆದರೆ (ಕೊನೆ_ptr == debug_opt->ಮೌಲ್ಯ || ಕೊನೆ_ptr[0] != '\0' ||
                 idx < 0 || idx >= FF_VULKAN_DEBUG_NB) {
                 av_log(ctx, AV_LOG_ERROR, "Invalid debugging mode \"%s\"\n",
-                       debug_opt->value);
+                       debug_opt->ಮೌಲ್ಯ);
                 err = AVERROR(EINVAL);
-                goto end;
+                ಹೋಗು ಕೊನೆ;
             }
-            mode = idx;
+            ಬಹುಲಕ = idx;
         }
     }
 
     /* If mode is VALIDATE or PRINTF, try to find the standard validation layer extension */
-    if ((mode == FF_VULKAN_DEBUG_VALIDATE) ||
-        (mode == FF_VULKAN_DEBUG_PRINTF) ||
-        (mode == FF_VULKAN_DEBUG_PRACTICES)) {
-        for (int i = 0; i < sup_layer_count; i++) {
-            if (!strcmp(layer_standard_validation, sup_layers[i].layerName)) {
+    ಆದರೆ ((ಬಹುಲಕ == FF_VULKAN_DEBUG_VALIDATE) ||
+        (ಬಹುಲಕ == FF_VULKAN_DEBUG_PRINTF) ||
+        (ಬಹುಲಕ == FF_VULKAN_DEBUG_PRACTICES)) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < sup_layer_ಎಣಿಕೆ; i++) {
+            ಆದರೆ (!strcmp(layer_standard_validation, sup_layers[i].layerName)) {
                 av_log(ctx, AV_LOG_VERBOSE, "Standard validation layer %s is enabled\n",
                        layer_standard_validation);
-                ADD_VAL_TO_LIST(enabled_layers, enabled_layers_count, layer_standard_validation);
-                *debug_mode = mode;
-                layer_standard_validation_found = 1;
-                break;
+                ಕೂಡಿಸು_VAL_ಗಮ್ಯ_LIST(enabled_layers, enabled_layers_ಎಣಿಕೆ, layer_standard_validation);
+                *debug_ಬಹುಲಕ = ಬಹುಲಕ;
+                layer_standard_validation_ಸಿಕ್ಕಿತು = 1;
+                ನಿಲ್ಲಿಸು;
             }
         }
-        if (!layer_standard_validation_found) {
+        ಆದರೆ (!layer_standard_validation_ಸಿಕ್ಕಿತು) {
             av_log(ctx, AV_LOG_ERROR,
                    "Validation Layer \"%s\" not supported\n", layer_standard_validation);
             err = AVERROR(ENOTSUP);
-            goto end;
+            ಹೋಗು ಕೊನೆ;
         }
     }
 
     /* Process any custom layers enabled */
-    if (user_layers) {
-        int found;
+    ಆದರೆ (user_layers) {
+        ಪೂರ್ಣಾಂಕ ಸಿಕ್ಕಿತು;
 
-        user_layers_str = av_strdup(user_layers->value);
-        if (!user_layers_str) {
+        user_layers_str = av_strdup(user_layers->ಮೌಲ್ಯ);
+        ಆದರೆ (!user_layers_str) {
             err = AVERROR(ENOMEM);
-            goto fail;
+            ಹೋಗು fail;
         }
 
         token = av_strtok(user_layers_str, "+", &save);
-        while (token) {
-            found = 0;
+        ಆಗ (token) {
+            ಸಿಕ್ಕಿತು = 0;
 
             /* If debug=1/2 was specified as an option, skip this layer */
-            if (!strcmp(layer_standard_validation, token) && layer_standard_validation_found) {
-                token = av_strtok(NULL, "+", &save);
-                break;
+            ಆದರೆ (!strcmp(layer_standard_validation, token) && layer_standard_validation_ಸಿಕ್ಕಿತು) {
+                token = av_strtok(ಖಾಲಿ, "+", &save);
+                ನಿಲ್ಲಿಸು;
             }
 
             /* Try to find the layer in the list of supported layers */
-            for (int j = 0; j < sup_layer_count; j++) {
-                if (!strcmp(token, sup_layers[j].layerName)) {
-                    found = 1;
-                    break;
+            ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < sup_layer_ಎಣಿಕೆ; j++) {
+                ಆದರೆ (!strcmp(token, sup_layers[j].layerName)) {
+                    ಸಿಕ್ಕಿತು = 1;
+                    ನಿಲ್ಲಿಸು;
                 }
             }
 
-            if (found) {
+            ಆದರೆ (ಸಿಕ್ಕಿತು) {
                 av_log(ctx, AV_LOG_VERBOSE, "Using layer: %s\n", token);
-                ADD_VAL_TO_LIST(enabled_layers, enabled_layers_count, token);
+                ಕೂಡಿಸು_VAL_ಗಮ್ಯ_LIST(enabled_layers, enabled_layers_ಎಣಿಕೆ, token);
 
                 /* If debug was not set as an option, force it */
-                if (!strcmp(layer_standard_validation, token))
-                    *debug_mode = FF_VULKAN_DEBUG_VALIDATE;
-            } else {
+                ಆದರೆ (!strcmp(layer_standard_validation, token))
+                    *debug_ಬಹುಲಕ = FF_VULKAN_DEBUG_VALIDATE;
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 av_log(ctx, AV_LOG_ERROR,
                        "Layer \"%s\" not supported\n", token);
                 err = AVERROR(EINVAL);
-                goto end;
+                ಹೋಗು ಕೊನೆ;
             }
 
-            token = av_strtok(NULL, "+", &save);
+            token = av_strtok(ಖಾಲಿ, "+", &save);
         }
     }
 
 fail:
-end:
+ಕೊನೆ:
     av_free(sup_layers);
     av_free(user_layers_str);
 
-    if (err < 0) {
-        RELEASE_PROPS(enabled_layers, enabled_layers_count);
-    } else {
+    ಆದರೆ (err < 0) {
+        RELEASE_PROPS(enabled_layers, enabled_layers_ಎಣಿಕೆ);
+    } ಇಲ್ಲದಿದ್ದರೆ {
         *dst = enabled_layers;
-        *num = enabled_layers_count;
+        *ಅಂಕೆ = enabled_layers_ಎಣಿಕೆ;
     }
 
-    return err;
+    ಹಿಂತಿರುಗಿ err;
 }
 
 /* Creates a VkInstance */
-static int create_instance(AVHWDeviceContext *ctx, AVDictionary *opts,
-                           enum FFVulkanDebugMode *debug_mode)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ create_instance(AVHWDeviceContext *ctx, AVDictionary *opts,
+                           ಎಣಿಕೆ FFVulkan_Debug_ಬಹುಲಕ *debug_ಬಹುಲಕ)
 {
-    int err = 0;
-    VkResult ret;
+    ಪೂರ್ಣಾಂಕ err = 0;
+    Vk_ಫಲಿತಾಂಶ ret;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
     VkApplicationInfo application_info = {
         .sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pApplicationName   = "ffmpeg",
-        .applicationVersion = VK_MAKE_VERSION(LIBAVUTIL_VERSION_MAJOR,
-                                              LIBAVUTIL_VERSION_MINOR,
-                                              LIBAVUTIL_VERSION_MICRO),
+        .application_ಆವೃತ್ತಿ_2 = VK_MAKE_ಆವೃತ್ತಿ(LIBAVUTIL_ಆವೃತ್ತಿ_MAJOR,
+                                              LIBAVUTIL_ಆವೃತ್ತಿ_MINOR,
+                                              LIBAVUTIL_ಆವೃತ್ತಿ_MICRO),
         .pEngineName        = "libavutil",
-        .apiVersion         = VK_API_VERSION_1_3,
-        .engineVersion      = VK_MAKE_VERSION(LIBAVUTIL_VERSION_MAJOR,
-                                              LIBAVUTIL_VERSION_MINOR,
-                                              LIBAVUTIL_VERSION_MICRO),
+        .api_ಆವೃತ್ತಿ         = VK_API_ಆವೃತ್ತಿ_1_3,
+        .engine_ಆವೃತ್ತಿ      = VK_MAKE_ಆವೃತ್ತಿ(LIBAVUTIL_ಆವೃತ್ತಿ_MAJOR,
+                                              LIBAVUTIL_ಆವೃತ್ತಿ_MINOR,
+                                              LIBAVUTIL_ಆವೃತ್ತಿ_MICRO),
     };
     VkValidationFeaturesEXT validation_features = {
         .sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT,
@@ -1287,102 +1287,102 @@ static int create_instance(AVHWDeviceContext *ctx, AVDictionary *opts,
         .pApplicationInfo = &application_info,
     };
 
-    if (!hwctx->get_proc_addr) {
-        err = load_libvulkan(ctx);
-        if (err < 0)
-            return err;
+    ಆದರೆ (!hwctx->get_proc_addr) {
+        err = ತುಂಬು_libvulkan(ctx);
+        ಆದರೆ (err < 0)
+            ಹಿಂತಿರುಗಿ err;
     }
 
-    err = ff_vk_load_functions(ctx, vk, p->vkctx.extensions, 0, 0);
-    if (err < 0) {
+    err = ff_vk_ತುಂಬು_functions(ctx, vk, p->vkctx.extensions, 0, 0);
+    ಆದರೆ (err < 0) {
         av_log(ctx, AV_LOG_ERROR, "Unable to load instance enumeration functions!\n");
-        return err;
+        ಹಿಂತಿರುಗಿ err;
     }
 
-    err = check_layers(ctx, opts, &inst_props.ppEnabledLayerNames,
-                       &inst_props.enabledLayerCount, debug_mode);
-    if (err)
-        goto fail;
+    err = check_layers(ctx, opts, &inst_props.pp_Enabled_Layer_ಹೆಸರುಗಳು,
+                       &inst_props.enabled_Layer_ಎಣಿಕೆ, debug_ಬಹುಲಕ);
+    ಆದರೆ (err)
+        ಹೋಗು fail;
 
     /* Check for present/missing extensions */
-    err = check_extensions(ctx, 0, opts, &inst_props.ppEnabledExtensionNames,
-                           &inst_props.enabledExtensionCount, *debug_mode);
-    hwctx->enabled_inst_extensions = inst_props.ppEnabledExtensionNames;
-    hwctx->nb_enabled_inst_extensions = inst_props.enabledExtensionCount;
-    if (err < 0)
-        goto fail;
+    err = check_extensions(ctx, 0, opts, &inst_props.pp_Enabled_Extension_ಹೆಸರುಗಳು,
+                           &inst_props.enabled_Extension_ಎಣಿಕೆ, *debug_ಬಹುಲಕ);
+    hwctx->enabled_inst_extensions = inst_props.pp_Enabled_Extension_ಹೆಸರುಗಳು;
+    hwctx->nb_enabled_inst_extensions = inst_props.enabled_Extension_ಎಣಿಕೆ;
+    ಆದರೆ (err < 0)
+        ಹೋಗು fail;
 
     /* Enable debug features if needed */
-    if (*debug_mode == FF_VULKAN_DEBUG_VALIDATE) {
-        static const VkValidationFeatureEnableEXT feat_list_validate[] = {
+    ಆದರೆ (*debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_VALIDATE) {
+        ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ VkValidationFeatureEnableEXT feat_list_validate[] = {
             VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT,
-            VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT,
+            VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_ಸ್ಥಾನ_EXT,
             VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT,
         };
         validation_features.pEnabledValidationFeatures = feat_list_validate;
-        validation_features.enabledValidationFeatureCount = FF_ARRAY_ELEMS(feat_list_validate);
-        inst_props.pNext = &validation_features;
-    } else if (*debug_mode == FF_VULKAN_DEBUG_PRINTF) {
-        static const VkValidationFeatureEnableEXT feat_list_debug[] = {
+        validation_features.enabled_Validation_Feature_ಎಣಿಕೆ = FF_ARRAY_ELEMS(feat_list_validate);
+        inst_props.p_ಮುಂದಿನ = &validation_features;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (*debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_PRINTF) {
+        ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ VkValidationFeatureEnableEXT feat_list_debug[] = {
             VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT,
-            VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT,
+            VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_ಸ್ಥಾನ_EXT,
             VK_VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT,
         };
         validation_features.pEnabledValidationFeatures = feat_list_debug;
-        validation_features.enabledValidationFeatureCount = FF_ARRAY_ELEMS(feat_list_debug);
-        inst_props.pNext = &validation_features;
-    } else if (*debug_mode == FF_VULKAN_DEBUG_PRACTICES) {
-        static const VkValidationFeatureEnableEXT feat_list_practices[] = {
+        validation_features.enabled_Validation_Feature_ಎಣಿಕೆ = FF_ARRAY_ELEMS(feat_list_debug);
+        inst_props.p_ಮುಂದಿನ = &validation_features;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (*debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_PRACTICES) {
+        ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ VkValidationFeatureEnableEXT feat_list_practices[] = {
             VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT,
-            VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT,
+            VK_VALIDATION_FEATURE_ENABLE_ಉತ್ತಮ_PRACTICES_EXT,
         };
         validation_features.pEnabledValidationFeatures = feat_list_practices;
-        validation_features.enabledValidationFeatureCount = FF_ARRAY_ELEMS(feat_list_practices);
-        inst_props.pNext = &validation_features;
+        validation_features.enabled_Validation_Feature_ಎಣಿಕೆ = FF_ARRAY_ELEMS(feat_list_practices);
+        inst_props.p_ಮುಂದಿನ = &validation_features;
     }
 
-#ifdef __APPLE__
-    for (int i = 0; i < inst_props.enabledExtensionCount; i++) {
-        if (!strcmp(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
-                    inst_props.ppEnabledExtensionNames[i])) {
-            inst_props.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
-            break;
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __APPLE__
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < inst_props.enabled_Extension_ಎಣಿಕೆ; i++) {
+        ಆದರೆ (!strcmp(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
+                    inst_props.pp_Enabled_Extension_ಹೆಸರುಗಳು[i])) {
+            inst_props.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_ಬಿಟ್_KHR;
+            ನಿಲ್ಲಿಸು;
         }
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     /* Try to create the instance */
     ret = vk->CreateInstance(&inst_props, hwctx->alloc, &hwctx->inst);
 
     /* Check for errors */
-    if (ret != VK_SUCCESS) {
+    ಆದರೆ (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Instance creation failure: %s\n",
                ff_vk_ret2str(ret));
         err = AVERROR_EXTERNAL;
-        goto fail;
+        ಹೋಗು fail;
     }
 
-    err = ff_vk_load_functions(ctx, vk, p->vkctx.extensions, 1, 0);
-    if (err < 0) {
+    err = ff_vk_ತುಂಬು_functions(ctx, vk, p->vkctx.extensions, 1, 0);
+    ಆದರೆ (err < 0) {
         av_log(ctx, AV_LOG_ERROR, "Unable to load instance functions!\n");
-        goto fail;
+        ಹೋಗು fail;
     }
 
     /* Setup debugging callback if needed */
-    if ((*debug_mode == FF_VULKAN_DEBUG_VALIDATE) ||
-        (*debug_mode == FF_VULKAN_DEBUG_PRINTF) ||
-        (*debug_mode == FF_VULKAN_DEBUG_PRACTICES)) {
+    ಆದರೆ ((*debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_VALIDATE) ||
+        (*debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_PRINTF) ||
+        (*debug_ಬಹುಲಕ == FF_VULKAN_DEBUG_PRACTICES)) {
         VkDebugUtilsMessengerCreateInfoEXT dbg = {
             .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-            .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
-                               VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT    |
-                               VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-                               VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-            .messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT    |
-                           VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-                           VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+            .ಸಂದೇಶ_Severity = VK_DEBUG_UTILS_ಸಂದೇಶ_SEVERITY_VERBOSE_ಬಿಟ್_EXT |
+                               VK_DEBUG_UTILS_ಸಂದೇಶ_SEVERITY_INFO_ಬಿಟ್_EXT    |
+                               VK_DEBUG_UTILS_ಸಂದೇಶ_SEVERITY_WARNING_ಬಿಟ್_EXT |
+                               VK_DEBUG_UTILS_ಸಂದೇಶ_SEVERITY_ERROR_ಬಿಟ್_EXT,
+            .ಸಂದೇಶ_Type = VK_DEBUG_UTILS_ಸಂದೇಶ_TYPE_GENERAL_ಬಿಟ್_EXT    |
+                           VK_DEBUG_UTILS_ಸಂದೇಶ_TYPE_VALIDATION_ಬಿಟ್_EXT |
+                           VK_DEBUG_UTILS_ಸಂದೇಶ_TYPE_PERFORMANCE_ಬಿಟ್_EXT,
             .pfnUserCallback = vk_dbg_callback,
-            .pUserData = ctx,
+            .p_User_ದತ್ತಾಂಶ = ctx,
         };
 
         vk->CreateDebugUtilsMessengerEXT(hwctx->inst, &dbg,
@@ -1392,103 +1392,103 @@ static int create_instance(AVHWDeviceContext *ctx, AVDictionary *opts,
     err = 0;
 
 fail:
-    RELEASE_PROPS(inst_props.ppEnabledLayerNames, inst_props.enabledLayerCount);
-    return err;
+    RELEASE_PROPS(inst_props.pp_Enabled_Layer_ಹೆಸರುಗಳು, inst_props.enabled_Layer_ಎಣಿಕೆ);
+    ಹಿಂತಿರುಗಿ err;
 }
 
-typedef struct VulkanDeviceSelection {
-    uint8_t uuid[VK_UUID_SIZE]; /* Will use this first unless !has_uuid */
-    int has_uuid;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ VulkanDeviceSelection {
+    uint8_t uuid[VK_UUID_ಗಾತ್ರ]; /* Will use this first unless !has_uuid */
+    ಪೂರ್ಣಾಂಕ has_uuid;
     uint32_t drm_major; /* Will use this second unless !has_drm */
     uint32_t drm_minor; /* Will use this second unless !has_drm */
     uint32_t has_drm; /* has drm node info */
-    const char *name; /* Will use this third unless NULL */
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name; /* Will use this third unless NULL */
     uint32_t pci_device; /* Will use this fourth unless 0x0 */
     uint32_t vendor_id; /* Last resort to find something deterministic */
-    int index; /* Finally fall back to index */
+    ಪೂರ್ಣಾಂಕ ಸೂಚ್ಯಂಕ; /* Finally fall back to index */
 } VulkanDeviceSelection;
 
-static const char *vk_dev_type(enum VkPhysicalDeviceType type)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *vk_dev_type(ಎಣಿಕೆ VkPhysicalDeviceType type)
 {
-    switch (type) {
-    case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: return "integrated";
-    case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:   return "discrete";
-    case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:    return "virtual";
-    case VK_PHYSICAL_DEVICE_TYPE_CPU:            return "software";
-    default:                                     return "unknown";
+    ಆಯ್ಕೆ (type) {
+    ಸ್ಥಿತಿ VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: ಹಿಂತಿರುಗಿ "integrated";
+    ಸ್ಥಿತಿ VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:   ಹಿಂತಿರುಗಿ "discrete";
+    ಸ್ಥಿತಿ VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:    ಹಿಂತಿರುಗಿ "virtual";
+    ಸ್ಥಿತಿ VK_PHYSICAL_DEVICE_TYPE_CPU:            ಹಿಂತಿರುಗಿ "software";
+    ಪೂರ್ವನಿಯೋಜಿತ:                                     ಹಿಂತಿರುಗಿ "unknown";
     }
 }
 
 /* Finds a device */
-static int find_device(AVHWDeviceContext *ctx, VulkanDeviceSelection *select)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ ಕಂಡುಹಿಡಿ_device(AVHWDeviceContext *ctx, VulkanDeviceSelection *select)
 {
-    int err = 0, choice = -1;
-    uint32_t num;
-    VkResult ret;
+    ಪೂರ್ಣಾಂಕ err = 0, choice = -1;
+    uint32_t ಅಂಕೆ;
+    Vk_ಫಲಿತಾಂಶ ret;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VkPhysicalDevice *devices = NULL;
-    VkPhysicalDeviceIDProperties *idp = NULL;
-    VkPhysicalDeviceProperties2 *prop = NULL;
-    VkPhysicalDeviceDriverProperties *driver_prop = NULL;
-    VkPhysicalDeviceDrmPropertiesEXT *drm_prop = NULL;
+    VkPhysicalDevice *devices = ಖಾಲಿ;
+    VkPhysicalDeviceIDProperties *idp = ಖಾಲಿ;
+    VkPhysicalDeviceProperties2 *prop = ಖಾಲಿ;
+    VkPhysicalDeviceDriverProperties *driver_prop = ಖಾಲಿ;
+    VkPhysicalDeviceDrmPropertiesEXT *drm_prop = ಖಾಲಿ;
 
-    ret = vk->EnumeratePhysicalDevices(hwctx->inst, &num, NULL);
-    if (ret != VK_SUCCESS || !num) {
+    ret = vk->EnumeratePhysicalDevices(hwctx->inst, &ಅಂಕೆ, ಖಾಲಿ);
+    ಆದರೆ (ret != VK_SUCCESS || !ಅಂಕೆ) {
         av_log(ctx, AV_LOG_ERROR, "No devices found: %s!\n", ff_vk_ret2str(ret));
-        return AVERROR(ENODEV);
+        ಹಿಂತಿರುಗಿ AVERROR(ENODEV);
     }
 
-    devices = av_malloc_array(num, sizeof(VkPhysicalDevice));
-    if (!devices)
-        return AVERROR(ENOMEM);
+    devices = av_malloc_array(ಅಂಕೆ, ಗಾತ್ರ(VkPhysicalDevice));
+    ಆದರೆ (!devices)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    ret = vk->EnumeratePhysicalDevices(hwctx->inst, &num, devices);
-    if (ret != VK_SUCCESS) {
+    ret = vk->EnumeratePhysicalDevices(hwctx->inst, &ಅಂಕೆ, devices);
+    ಆದರೆ (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Failed enumerating devices: %s\n",
                ff_vk_ret2str(ret));
         err = AVERROR(ENODEV);
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
 
-    prop = av_calloc(num, sizeof(*prop));
-    if (!prop) {
+    prop = av_calloc(ಅಂಕೆ, ಗಾತ್ರ(*prop));
+    ಆದರೆ (!prop) {
         err = AVERROR(ENOMEM);
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
 
-    idp = av_calloc(num, sizeof(*idp));
-    if (!idp) {
+    idp = av_calloc(ಅಂಕೆ, ಗಾತ್ರ(*idp));
+    ಆದರೆ (!idp) {
         err = AVERROR(ENOMEM);
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
 
-    driver_prop = av_calloc(num, sizeof(*driver_prop));
-    if (!driver_prop) {
+    driver_prop = av_calloc(ಅಂಕೆ, ಗಾತ್ರ(*driver_prop));
+    ಆದರೆ (!driver_prop) {
         err = AVERROR(ENOMEM);
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
 
-    if (p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) {
-        drm_prop = av_calloc(num, sizeof(*drm_prop));
-        if (!drm_prop) {
+    ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) {
+        drm_prop = av_calloc(ಅಂಕೆ, ಗಾತ್ರ(*drm_prop));
+        ಆದರೆ (!drm_prop) {
             err = AVERROR(ENOMEM);
-            goto end;
+            ಹೋಗು ಕೊನೆ;
         }
     }
 
     av_log(ctx, AV_LOG_VERBOSE, "GPU listing:\n");
-    for (int i = 0; i < num; i++) {
-        if (p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಅಂಕೆ; i++) {
+        ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) {
             drm_prop[i].sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT;
-            driver_prop[i].pNext = &drm_prop[i];
+            driver_prop[i].p_ಮುಂದಿನ = &drm_prop[i];
         }
         driver_prop[i].sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
-        idp[i].pNext = &driver_prop[i];
+        idp[i].p_ಮುಂದಿನ = &driver_prop[i];
         idp[i].sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES;
         prop[i].sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-        prop[i].pNext = &idp[i];
+        prop[i].p_ಮುಂದಿನ = &idp[i];
 
         vk->GetPhysicalDeviceProperties2(devices[i], &prop[i]);
         av_log(ctx, AV_LOG_VERBOSE, "    %d: %s (%s) (0x%x)\n", i,
@@ -1497,88 +1497,88 @@ static int find_device(AVHWDeviceContext *ctx, VulkanDeviceSelection *select)
                prop[i].properties.deviceID);
     }
 
-    if (select->has_uuid) {
-        for (int i = 0; i < num; i++) {
-            if (!memcmp(idp[i].deviceUUID, select->uuid, VK_UUID_SIZE)) {
+    ಆದರೆ (select->has_uuid) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಅಂಕೆ; i++) {
+            ಆದರೆ (!memcmp(idp[i].deviceUUID, select->uuid, VK_UUID_ಗಾತ್ರ)) {
                 choice = i;
-                goto end;
+                ಹೋಗು ಕೊನೆ;
              }
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device by given UUID!\n");
         err = AVERROR(ENODEV);
-        goto end;
-    } else if ((p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) && select->has_drm) {
-        for (int i = 0; i < num; i++) {
-            if ((select->drm_major == drm_prop[i].primaryMajor &&
+        ಹೋಗು ಕೊನೆ;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ ((p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) && select->has_drm) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಅಂಕೆ; i++) {
+            ಆದರೆ ((select->drm_major == drm_prop[i].primaryMajor &&
                  select->drm_minor == drm_prop[i].primaryMinor) ||
                 (select->drm_major == drm_prop[i].renderMajor &&
                  select->drm_minor == drm_prop[i].renderMinor)) {
                 choice = i;
-                goto end;
+                ಹೋಗು ಕೊನೆ;
              }
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device by given DRM node numbers %i:%i!\n",
                select->drm_major, select->drm_minor);
         err = AVERROR(ENODEV);
-        goto end;
-    } else if (select->name) {
+        ಹೋಗು ಕೊನೆ;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (select->name) {
         av_log(ctx, AV_LOG_VERBOSE, "Requested device: %s\n", select->name);
-        for (int i = 0; i < num; i++) {
-            if (strstr(prop[i].properties.deviceName, select->name)) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಅಂಕೆ; i++) {
+            ಆದರೆ (ಅಕ್ಷರಸರಣಿ_ಹುಡುಕು(prop[i].properties.deviceName, select->name)) {
                 choice = i;
-                goto end;
+                ಹೋಗು ಕೊನೆ;
              }
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device \"%s\"!\n",
                select->name);
         err = AVERROR(ENODEV);
-        goto end;
-    } else if (select->pci_device) {
+        ಹೋಗು ಕೊನೆ;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (select->pci_device) {
         av_log(ctx, AV_LOG_VERBOSE, "Requested device: 0x%x\n", select->pci_device);
-        for (int i = 0; i < num; i++) {
-            if (select->pci_device == prop[i].properties.deviceID) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಅಂಕೆ; i++) {
+            ಆದರೆ (select->pci_device == prop[i].properties.deviceID) {
                 choice = i;
-                goto end;
+                ಹೋಗು ಕೊನೆ;
             }
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device with PCI ID 0x%x!\n",
                select->pci_device);
         err = AVERROR(EINVAL);
-        goto end;
-    } else if (select->vendor_id) {
+        ಹೋಗು ಕೊನೆ;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (select->vendor_id) {
         av_log(ctx, AV_LOG_VERBOSE, "Requested vendor: 0x%x\n", select->vendor_id);
-        for (int i = 0; i < num; i++) {
-            if (select->vendor_id == prop[i].properties.vendorID) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಅಂಕೆ; i++) {
+            ಆದರೆ (select->vendor_id == prop[i].properties.vendorID) {
                 choice = i;
-                goto end;
+                ಹೋಗು ಕೊನೆ;
             }
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device with Vendor ID 0x%x!\n",
                select->vendor_id);
         err = AVERROR(ENODEV);
-        goto end;
-    } else {
-        if (select->index < num) {
-            choice = select->index;
-            goto end;
+        ಹೋಗು ಕೊನೆ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಆದರೆ (select->ಸೂಚ್ಯಂಕ < ಅಂಕೆ) {
+            choice = select->ಸೂಚ್ಯಂಕ;
+            ಹೋಗು ಕೊನೆ;
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device with index %i!\n",
-               select->index);
+               select->ಸೂಚ್ಯಂಕ);
         err = AVERROR(ENODEV);
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
 
-end:
-    if (choice > -1) {
+ಕೊನೆ:
+    ಆದರೆ (choice > -1) {
         av_log(ctx, AV_LOG_VERBOSE, "Device %d selected: %s (%s) (0x%x)\n",
                choice, prop[choice].properties.deviceName,
                vk_dev_type(prop[choice].properties.deviceType),
                prop[choice].properties.deviceID);
         hwctx->phys_dev = devices[choice];
         p->props = prop[choice];
-        p->props.pNext = NULL;
+        p->props.p_ಮುಂದಿನ = ಖಾಲಿ;
         p->dprops = driver_prop[choice];
-        p->dprops.pNext = NULL;
+        p->dprops.p_ಮುಂದಿನ = ಖಾಲಿ;
     }
 
     av_free(devices);
@@ -1587,238 +1587,238 @@ end:
     av_free(drm_prop);
     av_free(driver_prop);
 
-    return err;
+    ಹಿಂತಿರುಗಿ err;
 }
 
 /* Picks the least used qf with the fewest unneeded flags, or -1 if none found */
-static inline int pick_queue_family(VkQueueFamilyProperties2 *qf, uint32_t num_qf,
-                                    VkQueueFlagBits flags)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ pick_ಸರತಿ_family(Vk_ಸರತಿ_Family_Properties2 *qf, uint32_t ಅಂಕೆ_qf,
+                                    Vk_ಸರತಿ_Flag_ಬಿಟ್ಟುಗಳು flags)
 {
-    int index = -1;
+    ಪೂರ್ಣಾಂಕ ಸೂಚ್ಯಂಕ = -1;
     uint32_t min_score = UINT32_MAX;
 
-    for (int i = 0; i < num_qf; i++) {
-        VkQueueFlagBits qflags = qf[i].queueFamilyProperties.queueFlags;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಅಂಕೆ_qf; i++) {
+        Vk_ಸರತಿ_Flag_ಬಿಟ್ಟುಗಳು qflags = qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_Flags;
 
         /* Per the spec, reporting transfer caps is optional for these 2 types */
-        if ((flags & VK_QUEUE_TRANSFER_BIT) &&
-            (qflags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT)))
-            qflags |= VK_QUEUE_TRANSFER_BIT;
+        ಆದರೆ ((flags & VK_ಸರತಿ_TRANSFER_ಬಿಟ್) &&
+            (qflags & (VK_ಸರತಿ_GRAPHICS_ಬಿಟ್ | VK_ಸರತಿ_COMPUTE_ಬಿಟ್)))
+            qflags |= VK_ಸರತಿ_TRANSFER_ಬಿಟ್;
 
-        if (qflags & flags) {
-            uint32_t score = av_popcount(qflags) + qf[i].queueFamilyProperties.timestampValidBits;
-            if (score < min_score) {
-                index = i;
+        ಆದರೆ (qflags & flags) {
+            uint32_t score = av_popcount(qflags) + qf[i].ಸರತಿ_Family_Properties.timestamp_Valid_ಬಿಟ್ಟುಗಳು;
+            ಆದರೆ (score < min_score) {
+                ಸೂಚ್ಯಂಕ = i;
                 min_score = score;
             }
         }
     }
 
-    if (index > -1)
-        qf[index].queueFamilyProperties.timestampValidBits++;
+    ಆದರೆ (ಸೂಚ್ಯಂಕ > -1)
+        qf[ಸೂಚ್ಯಂಕ].ಸರತಿ_Family_Properties.timestamp_Valid_ಬಿಟ್ಟುಗಳು++;
 
-    return index;
+    ಹಿಂತಿರುಗಿ ಸೂಚ್ಯಂಕ;
 }
 
-static inline int pick_video_queue_family(VkQueueFamilyProperties2 *qf,
-                                          VkQueueFamilyVideoPropertiesKHR *qf_vid, uint32_t num_qf,
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ pick_video_ಸರತಿ_family(Vk_ಸರತಿ_Family_Properties2 *qf,
+                                          Vk_ಸರತಿ_Family_Video_Properties_KHR *qf_vid, uint32_t ಅಂಕೆ_qf,
                                           VkVideoCodecOperationFlagsKHR flags)
 {
-    int index = -1;
+    ಪೂರ್ಣಾಂಕ ಸೂಚ್ಯಂಕ = -1;
     uint32_t min_score = UINT32_MAX;
 
-    for (int i = 0; i < num_qf; i++) {
-        const VkQueueFlags qflags = qf[i].queueFamilyProperties.queueFlags;
-        const VkVideoCodecOperationFlagsKHR vflags = qf_vid[i].videoCodecOperations;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಅಂಕೆ_qf; i++) {
+        ಸ್ಥಿರಾಂಕ Vk_ಸರತಿ_Flags qflags = qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_Flags;
+        ಸ್ಥಿರಾಂಕ VkVideoCodecOperationFlagsKHR vflags = qf_vid[i].videoCodecOperations;
 
-        if (!(qflags & (VK_QUEUE_VIDEO_ENCODE_BIT_KHR | VK_QUEUE_VIDEO_DECODE_BIT_KHR)))
-            continue;
+        ಆದರೆ (!(qflags & (VK_ಸರತಿ_VIDEO_ENCODE_ಬಿಟ್_KHR | VK_ಸರತಿ_VIDEO_DECODE_ಬಿಟ್_KHR)))
+            ಮುಂದುವರಿ;
 
-        if (vflags & flags) {
-            uint32_t score = av_popcount(vflags) + qf[i].queueFamilyProperties.timestampValidBits;
-            if (score < min_score) {
-                index = i;
+        ಆದರೆ (vflags & flags) {
+            uint32_t score = av_popcount(vflags) + qf[i].ಸರತಿ_Family_Properties.timestamp_Valid_ಬಿಟ್ಟುಗಳು;
+            ಆದರೆ (score < min_score) {
+                ಸೂಚ್ಯಂಕ = i;
                 min_score = score;
             }
         }
     }
 
-    if (index > -1)
-        qf[index].queueFamilyProperties.timestampValidBits++;
+    ಆದರೆ (ಸೂಚ್ಯಂಕ > -1)
+        qf[ಸೂಚ್ಯಂಕ].ಸರತಿ_Family_Properties.timestamp_Valid_ಬಿಟ್ಟುಗಳು++;
 
-    return index;
+    ಹಿಂತಿರುಗಿ ಸೂಚ್ಯಂಕ;
 }
 
-static int setup_queue_families(AVHWDeviceContext *ctx, VkDeviceCreateInfo *cd)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ ಸಿದ್ಧತೆ_ಸರತಿ_families(AVHWDeviceContext *ctx, VkDeviceCreateInfo *cd)
 {
-    uint32_t num;
+    uint32_t ಅಂಕೆ;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    VkQueueFamilyProperties2 *qf = NULL;
-    VkQueueFamilyVideoPropertiesKHR *qf_vid = NULL;
+    Vk_ಸರತಿ_Family_Properties2 *qf = ಖಾಲಿ;
+    Vk_ಸರತಿ_Family_Video_Properties_KHR *qf_vid = ಖಾಲಿ;
 
     /* First get the number of queue families */
-    vk->GetPhysicalDeviceQueueFamilyProperties(hwctx->phys_dev, &num, NULL);
-    if (!num) {
+    vk->Get_Physical_Device_ಸರತಿ_Family_Properties(hwctx->phys_dev, &ಅಂಕೆ, ಖಾಲಿ);
+    ಆದರೆ (!ಅಂಕೆ) {
         av_log(ctx, AV_LOG_ERROR, "Failed to get queues!\n");
-        return AVERROR_EXTERNAL;
+        ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
     }
 
     /* Then allocate memory */
-    qf = av_malloc_array(num, sizeof(VkQueueFamilyProperties2));
-    if (!qf)
-        return AVERROR(ENOMEM);
+    qf = av_malloc_array(ಅಂಕೆ, ಗಾತ್ರ(Vk_ಸರತಿ_Family_Properties2));
+    ಆದರೆ (!qf)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    qf_vid = av_malloc_array(num, sizeof(VkQueueFamilyVideoPropertiesKHR));
-    if (!qf_vid)
-        return AVERROR(ENOMEM);
+    qf_vid = av_malloc_array(ಅಂಕೆ, ಗಾತ್ರ(Vk_ಸರತಿ_Family_Video_Properties_KHR));
+    ಆದರೆ (!qf_vid)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    for (uint32_t i = 0; i < num; i++) {
-        qf_vid[i] = (VkQueueFamilyVideoPropertiesKHR) {
-            .sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_VIDEO_PROPERTIES_KHR,
+    ಗಾಗಿ (uint32_t i = 0; i < ಅಂಕೆ; i++) {
+        qf_vid[i] = (Vk_ಸರತಿ_Family_Video_Properties_KHR) {
+            .sType = VK_STRUCTURE_TYPE_ಸರತಿ_FAMILY_VIDEO_PROPERTIES_KHR,
         };
-        qf[i] = (VkQueueFamilyProperties2) {
-            .sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2,
-            .pNext = p->vkctx.extensions & FF_VK_EXT_VIDEO_QUEUE ? &qf_vid[i] : NULL,
+        qf[i] = (Vk_ಸರತಿ_Family_Properties2) {
+            .sType = VK_STRUCTURE_TYPE_ಸರತಿ_FAMILY_PROPERTIES_2,
+            .p_ಮುಂದಿನ = p->vkctx.extensions & FF_VK_EXT_VIDEO_ಸರತಿ ? &qf_vid[i] : ಖಾಲಿ,
         };
     }
 
     /* Finally retrieve the queue families */
-    vk->GetPhysicalDeviceQueueFamilyProperties2(hwctx->phys_dev, &num, qf);
+    vk->Get_Physical_Device_ಸರತಿ_Family_Properties2(hwctx->phys_dev, &ಅಂಕೆ, qf);
 
     av_log(ctx, AV_LOG_VERBOSE, "Queue families:\n");
-    for (int i = 0; i < num; i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಅಂಕೆ; i++) {
         av_log(ctx, AV_LOG_VERBOSE, "    %i:%s%s%s%s%s%s%s%s (queues: %i)\n", i,
-               ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_GRAPHICS_BIT) ? " graphics" : "",
-               ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_COMPUTE_BIT) ? " compute" : "",
-               ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_TRANSFER_BIT) ? " transfer" : "",
-               ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_VIDEO_ENCODE_BIT_KHR) ? " encode" : "",
-               ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_VIDEO_DECODE_BIT_KHR) ? " decode" : "",
-               ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_SPARSE_BINDING_BIT) ? " sparse" : "",
-               ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_OPTICAL_FLOW_BIT_NV) ? " optical_flow" : "",
-               ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_PROTECTED_BIT) ? " protected" : "",
-               qf[i].queueFamilyProperties.queueCount);
+               ((qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_Flags) & VK_ಸರತಿ_GRAPHICS_ಬಿಟ್) ? " graphics" : "",
+               ((qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_Flags) & VK_ಸರತಿ_COMPUTE_ಬಿಟ್) ? " compute" : "",
+               ((qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_Flags) & VK_ಸರತಿ_TRANSFER_ಬಿಟ್) ? " transfer" : "",
+               ((qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_Flags) & VK_ಸರತಿ_VIDEO_ENCODE_ಬಿಟ್_KHR) ? " encode" : "",
+               ((qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_Flags) & VK_ಸರತಿ_VIDEO_DECODE_ಬಿಟ್_KHR) ? " decode" : "",
+               ((qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_Flags) & VK_ಸರತಿ_SPARSE_BINDING_ಬಿಟ್) ? " sparse" : "",
+               ((qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_Flags) & VK_ಸರತಿ_OPTICAL_FLOW_ಬಿಟ್_NV) ? " optical_flow" : "",
+               ((qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_Flags) & VK_ಸರತಿ_PROTECTED_ಬಿಟ್) ? " protected" : "",
+               qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_ಎಣಿಕೆ);
 
         /* We use this field to keep a score of how many times we've used that
          * queue family in order to make better choices. */
-        qf[i].queueFamilyProperties.timestampValidBits = 0;
+        qf[i].ಸರತಿ_Family_Properties.timestamp_Valid_ಬಿಟ್ಟುಗಳು = 0;
     }
 
     hwctx->nb_qf = 0;
-    hwctx->queue_flags = 0;
-#ifdef VK_KHR_internally_synchronized_queues
-    if (p->vkctx.extensions & FF_VK_EXT_INTERNAL_QUEUE_SYNC)
-        hwctx->queue_flags |= VK_DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR;
-#endif
+    hwctx->ಸರತಿ_flags = 0;
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_internally_synchronized_queues
+    ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_ಆಂತರಿಕ_ಸರತಿ_SYNC)
+        hwctx->ಸರತಿ_flags |= VK_DEVICE_ಸರತಿ_CREATE_INTERNALLY_SYNCHRONIZED_ಬಿಟ್_KHR;
+#ಆದರೆ_ಅಂತ್ಯ
 
     /* Pick each queue family to use. */
-#define PICK_QF(type, vid_op)                                            \
-    do {                                                                 \
+#ವ್ಯಾಖ್ಯಾನಿಸು PICK_QF(type, vid_op)                                            \
+    ಮಾಡು {                                                                 \
         uint32_t i;                                                      \
         uint32_t idx;                                                    \
                                                                          \
-        if (vid_op)                                                      \
-            idx = pick_video_queue_family(qf, qf_vid, num, vid_op);      \
-        else                                                             \
-            idx = pick_queue_family(qf, num, type);                      \
+        ಆದರೆ (vid_op)                                                      \
+            idx = pick_video_ಸರತಿ_family(qf, qf_vid, ಅಂಕೆ, vid_op);      \
+        ಇಲ್ಲದಿದ್ದರೆ                                                             \
+            idx = pick_ಸರತಿ_family(qf, ಅಂಕೆ, type);                      \
                                                                          \
-        if (idx == -1)                                                   \
-            continue;                                                    \
+        ಆದರೆ (idx == -1)                                                   \
+            ಮುಂದುವರಿ;                                                    \
                                                                          \
-        for (i = 0; i < hwctx->nb_qf; i++) {                             \
-            if (hwctx->qf[i].idx == idx) {                               \
+        ಗಾಗಿ (i = 0; i < hwctx->nb_qf; i++) {                             \
+            ಆದರೆ (hwctx->qf[i].idx == idx) {                               \
                 hwctx->qf[i].flags |= type;                              \
                 hwctx->qf[i].video_caps |= vid_op;                       \
-                break;                                                   \
+                ನಿಲ್ಲಿಸು;                                                   \
             }                                                            \
         }                                                                \
-        if (i == hwctx->nb_qf) {                                         \
+        ಆದರೆ (i == hwctx->nb_qf) {                                         \
             hwctx->qf[i].idx = idx;                                      \
-            hwctx->qf[i].num = qf[idx].queueFamilyProperties.queueCount; \
-            if (p->limit_queues ||                                       \
+            hwctx->qf[i].ಅಂಕೆ = qf[idx].ಸರತಿ_Family_Properties.ಸರತಿ_ಎಣಿಕೆ; \
+            ಆದರೆ (p->ಎಲ್ಲೆ_queues ||                                       \
                 p->dprops.driverID == VK_DRIVER_ID_NVIDIA_PROPRIETARY) { \
-                int max = p->limit_queues;                               \
-                if (type == VK_QUEUE_GRAPHICS_BIT)                       \
-                    hwctx->qf[i].num = FFMIN(hwctx->qf[i].num,           \
+                ಪೂರ್ಣಾಂಕ max = p->ಎಲ್ಲೆ_queues;                               \
+                ಆದರೆ (type == VK_ಸರತಿ_GRAPHICS_ಬಿಟ್)                       \
+                    hwctx->qf[i].ಅಂಕೆ = FFMIN(hwctx->qf[i].ಅಂಕೆ,           \
                                              max ? max : 1);             \
-                else if (max)                                            \
-                    hwctx->qf[i].num = FFMIN(hwctx->qf[i].num, max);     \
+                ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (max)                                            \
+                    hwctx->qf[i].ಅಂಕೆ = FFMIN(hwctx->qf[i].ಅಂಕೆ, max);     \
             }                                                            \
             hwctx->qf[i].flags = type;                                   \
             hwctx->qf[i].video_caps = vid_op;                            \
             hwctx->nb_qf++;                                              \
         }                                                                \
-    } while (0)
+    } ಆಗ (0)
 
-    PICK_QF(VK_QUEUE_GRAPHICS_BIT, VK_VIDEO_CODEC_OPERATION_NONE_KHR);
-    PICK_QF(VK_QUEUE_COMPUTE_BIT, VK_VIDEO_CODEC_OPERATION_NONE_KHR);
-    PICK_QF(VK_QUEUE_TRANSFER_BIT, VK_VIDEO_CODEC_OPERATION_NONE_KHR);
+    PICK_QF(VK_ಸರತಿ_GRAPHICS_ಬಿಟ್, VK_VIDEO_CODEC_OPERATION_NONE_KHR);
+    PICK_QF(VK_ಸರತಿ_COMPUTE_ಬಿಟ್, VK_VIDEO_CODEC_OPERATION_NONE_KHR);
+    PICK_QF(VK_ಸರತಿ_TRANSFER_ಬಿಟ್, VK_VIDEO_CODEC_OPERATION_NONE_KHR);
 
-    PICK_QF(VK_QUEUE_VIDEO_ENCODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_ENCODE_H264_BIT_KHR);
-    PICK_QF(VK_QUEUE_VIDEO_DECODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_DECODE_H264_BIT_KHR);
+    PICK_QF(VK_ಸರತಿ_VIDEO_ENCODE_ಬಿಟ್_KHR, VK_VIDEO_CODEC_OPERATION_ENCODE_H264_ಬಿಟ್_KHR);
+    PICK_QF(VK_ಸರತಿ_VIDEO_DECODE_ಬಿಟ್_KHR, VK_VIDEO_CODEC_OPERATION_DECODE_H264_ಬಿಟ್_KHR);
 
-    PICK_QF(VK_QUEUE_VIDEO_ENCODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_ENCODE_H265_BIT_KHR);
-    PICK_QF(VK_QUEUE_VIDEO_DECODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_DECODE_H265_BIT_KHR);
+    PICK_QF(VK_ಸರತಿ_VIDEO_ENCODE_ಬಿಟ್_KHR, VK_VIDEO_CODEC_OPERATION_ENCODE_H265_ಬಿಟ್_KHR);
+    PICK_QF(VK_ಸರತಿ_VIDEO_DECODE_ಬಿಟ್_KHR, VK_VIDEO_CODEC_OPERATION_DECODE_H265_ಬಿಟ್_KHR);
 
-#ifdef VK_KHR_video_decode_vp9
-    PICK_QF(VK_QUEUE_VIDEO_DECODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_DECODE_VP9_BIT_KHR);
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_decode_vp9
+    PICK_QF(VK_ಸರತಿ_VIDEO_DECODE_ಬಿಟ್_KHR, VK_VIDEO_CODEC_OPERATION_DECODE_VP9_ಬಿಟ್_KHR);
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef VK_KHR_video_encode_av1
-    PICK_QF(VK_QUEUE_VIDEO_ENCODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_ENCODE_AV1_BIT_KHR);
-#endif
-    PICK_QF(VK_QUEUE_VIDEO_DECODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_DECODE_AV1_BIT_KHR);
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_video_encode_av1
+    PICK_QF(VK_ಸರತಿ_VIDEO_ENCODE_ಬಿಟ್_KHR, VK_VIDEO_CODEC_OPERATION_ENCODE_AV1_ಬಿಟ್_KHR);
+#ಆದರೆ_ಅಂತ್ಯ
+    PICK_QF(VK_ಸರತಿ_VIDEO_DECODE_ಬಿಟ್_KHR, VK_VIDEO_CODEC_OPERATION_DECODE_AV1_ಬಿಟ್_KHR);
 
-    if (p->vkctx.extensions & FF_VK_EXT_OPTICAL_FLOW)
-        PICK_QF(VK_QUEUE_OPTICAL_FLOW_BIT_NV, VK_VIDEO_CODEC_OPERATION_NONE_KHR);
+    ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_OPTICAL_FLOW)
+        PICK_QF(VK_ಸರತಿ_OPTICAL_FLOW_ಬಿಟ್_NV, VK_VIDEO_CODEC_OPERATION_NONE_KHR);
 
     av_free(qf);
     av_free(qf_vid);
 
-#undef PICK_QF
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು PICK_QF
 
-    cd->pQueueCreateInfos = av_malloc_array(hwctx->nb_qf,
-                                            sizeof(VkDeviceQueueCreateInfo));
-    if (!cd->pQueueCreateInfos)
-        return AVERROR(ENOMEM);
+    cd->p_ಸರತಿ_Create_Infos = av_malloc_array(hwctx->nb_qf,
+                                            ಗಾತ್ರ(Vk_Device_ಸರತಿ_Create_Info));
+    ಆದರೆ (!cd->p_ಸರತಿ_Create_Infos)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    for (uint32_t i = 0; i < hwctx->nb_qf; i++) {
-        int dup = 0;
-        float *weights = NULL;
-        VkDeviceQueueCreateInfo *pc;
-        for (uint32_t j = 0; j < cd->queueCreateInfoCount; j++) {
-            if (hwctx->qf[i].idx == cd->pQueueCreateInfos[j].queueFamilyIndex) {
+    ಗಾಗಿ (uint32_t i = 0; i < hwctx->nb_qf; i++) {
+        ಪೂರ್ಣಾಂಕ dup = 0;
+        ದಶಮಾಂಶ *weights = ಖಾಲಿ;
+        Vk_Device_ಸರತಿ_Create_Info *pc;
+        ಗಾಗಿ (uint32_t j = 0; j < cd->ಸರತಿ_Create_Info_ಎಣಿಕೆ; j++) {
+            ಆದರೆ (hwctx->qf[i].idx == cd->p_ಸರತಿ_Create_Infos[j].ಸರತಿ_Family_ಸೂಚ್ಯಂಕ) {
                 dup = 1;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
         }
-        if (dup)
-            continue;
+        ಆದರೆ (dup)
+            ಮುಂದುವರಿ;
 
-        weights = av_malloc_array(hwctx->qf[i].num, sizeof(float));
-        if (!weights) {
-            for (uint32_t j = 0; j < cd->queueCreateInfoCount; j++)
-                av_free((void *)cd->pQueueCreateInfos[i].pQueuePriorities);
-            av_free((void *)cd->pQueueCreateInfos);
-            return AVERROR(ENOMEM);
+        weights = av_malloc_array(hwctx->qf[i].ಅಂಕೆ, ಗಾತ್ರ(ದಶಮಾಂಶ));
+        ಆದರೆ (!weights) {
+            ಗಾಗಿ (uint32_t j = 0; j < cd->ಸರತಿ_Create_Info_ಎಣಿಕೆ; j++)
+                av_free((ಶೂನ್ಯ *)cd->p_ಸರತಿ_Create_Infos[i].p_ಸರತಿ_Priorities);
+            av_free((ಶೂನ್ಯ *)cd->p_ಸರತಿ_Create_Infos);
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
         }
 
-        for (uint32_t j = 0; j < hwctx->qf[i].num; j++)
+        ಗಾಗಿ (uint32_t j = 0; j < hwctx->qf[i].ಅಂಕೆ; j++)
             weights[j] = 1.0;
 
-        pc = (VkDeviceQueueCreateInfo *)cd->pQueueCreateInfos;
-        pc[cd->queueCreateInfoCount++] = (VkDeviceQueueCreateInfo) {
-            .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-            .flags = hwctx->queue_flags,
-            .queueFamilyIndex = hwctx->qf[i].idx,
-            .queueCount = hwctx->qf[i].num,
-            .pQueuePriorities = weights,
+        pc = (Vk_Device_ಸರತಿ_Create_Info *)cd->p_ಸರತಿ_Create_Infos;
+        pc[cd->ಸರತಿ_Create_Info_ಎಣಿಕೆ++] = (Vk_Device_ಸರತಿ_Create_Info) {
+            .sType = VK_STRUCTURE_TYPE_DEVICE_ಸರತಿ_CREATE_INFO,
+            .flags = hwctx->ಸರತಿ_flags,
+            .ಸರತಿ_Family_ಸೂಚ್ಯಂಕ = hwctx->qf[i].idx,
+            .ಸರತಿ_ಎಣಿಕೆ = hwctx->qf[i].ಅಂಕೆ,
+            .p_ಸರತಿ_Priorities = weights,
         };
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
 /* Only resources created by vulkan_device_create should be released here,
@@ -1826,35 +1826,35 @@ static int setup_queue_families(AVHWDeviceContext *ctx, VkDeviceCreateInfo *cd)
  * vulkan_device_uninit, to make sure we don't free user provided resources,
  * and there is no leak.
  */
-static void vulkan_device_free(AVHWDeviceContext *ctx)
+ಸ್ಥಿರ ಶೂನ್ಯ vulkan_device_free(AVHWDeviceContext *ctx)
 {
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    if (hwctx->act_dev)
+    ಆದರೆ (hwctx->act_dev)
         vk->DestroyDevice(hwctx->act_dev, hwctx->alloc);
 
-    if (p->debug_ctx)
+    ಆದರೆ (p->debug_ctx)
         vk->DestroyDebugUtilsMessengerEXT(hwctx->inst, p->debug_ctx,
                                           hwctx->alloc);
 
-    if (hwctx->inst)
+    ಆದರೆ (hwctx->inst)
         vk->DestroyInstance(hwctx->inst, hwctx->alloc);
 
-    if (p->libvulkan)
+    ಆದರೆ (p->libvulkan)
         dlclose(p->libvulkan);
 
     RELEASE_PROPS(hwctx->enabled_inst_extensions, hwctx->nb_enabled_inst_extensions);
     RELEASE_PROPS(hwctx->enabled_dev_extensions, hwctx->nb_enabled_dev_extensions);
 }
 
-static void vulkan_device_uninit(AVHWDeviceContext *ctx)
+ಸ್ಥಿರ ಶೂನ್ಯ vulkan_device_uninit(AVHWDeviceContext *ctx)
 {
     VulkanDevicePriv *p = ctx->hwctx;
 
-    if (p->qf_mutex) {
-        for (uint32_t i = 0; i < p->nb_tot_qfs; i++) {
+    ಆದರೆ (p->qf_mutex) {
+        ಗಾಗಿ (uint32_t i = 0; i < p->nb_tot_qfs; i++) {
             pthread_mutex_destroy(p->qf_mutex[i]);
             av_freep(&p->qf_mutex[i]);
         }
@@ -1864,41 +1864,41 @@ static void vulkan_device_uninit(AVHWDeviceContext *ctx)
     ff_vk_uninit(&p->vkctx);
 }
 
-static int vulkan_device_create_internal(AVHWDeviceContext *ctx,
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_device_create_ಆಂತರಿಕ(AVHWDeviceContext *ctx,
                                          VulkanDeviceSelection *dev_select,
-                                         int disable_multiplane,
-                                         AVDictionary *opts, int flags)
+                                         ಪೂರ್ಣಾಂಕ disable_multiplane,
+                                         AVDictionary *opts, ಪೂರ್ಣಾಂಕ flags)
 {
-    int err = 0;
-    VkResult ret;
-    AVDictionaryEntry *opt_d;
+    ಪೂರ್ಣಾಂಕ err = 0;
+    Vk_ಫಲಿತಾಂಶ ret;
+    AVDictionary_ನಮೂದು *opt_d;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    enum FFVulkanDebugMode debug_mode = FF_VULKAN_DEBUG_NONE;
+    ಎಣಿಕೆ FFVulkan_Debug_ಬಹುಲಕ debug_ಬಹುಲಕ = FF_VULKAN_DEBUG_NONE;
     VulkanDeviceFeatures supported_feats = { 0 };
     VkDeviceCreateInfo dev_info = {
         .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
     };
 
     /* Create an instance if not given one */
-    if ((err = create_instance(ctx, opts, &debug_mode)))
-        goto end;
+    ಆದರೆ ((err = create_instance(ctx, opts, &debug_ಬಹುಲಕ)))
+        ಹೋಗು ಕೊನೆ;
 
     /* Find a physical device (if not given one) */
-    if ((err = find_device(ctx, dev_select)))
-        goto end;
+    ಆದರೆ ((err = ಕಂಡುಹಿಡಿ_device(ctx, dev_select)))
+        ಹೋಗು ಕೊನೆ;
 
     /* Get supported memory types */
-    vk->GetPhysicalDeviceMemoryProperties(hwctx->phys_dev, &p->mprops);
+    vk->Get_Physical_Device_ಸ್ಮರಣೆ_Properties(hwctx->phys_dev, &p->mprops);
 
     /* Find and enable extensions for the physical device */
-    if ((err = check_extensions(ctx, 1, opts, &dev_info.ppEnabledExtensionNames,
-                                &dev_info.enabledExtensionCount, debug_mode))) {
-        for (int i = 0; i < dev_info.queueCreateInfoCount; i++)
-            av_free((void *)dev_info.pQueueCreateInfos[i].pQueuePriorities);
-        av_free((void *)dev_info.pQueueCreateInfos);
-        goto end;
+    ಆದರೆ ((err = check_extensions(ctx, 1, opts, &dev_info.pp_Enabled_Extension_ಹೆಸರುಗಳು,
+                                &dev_info.enabled_Extension_ಎಣಿಕೆ, debug_ಬಹುಲಕ))) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < dev_info.ಸರತಿ_Create_Info_ಎಣಿಕೆ; i++)
+            av_free((ಶೂನ್ಯ *)dev_info.p_ಸರತಿ_Create_Infos[i].p_ಸರತಿ_Priorities);
+        av_free((ಶೂನ್ಯ *)dev_info.p_ಸರತಿ_Create_Infos);
+        ಹೋಗು ಕೊನೆ;
     }
 
     /* Get all supported features for the physical device */
@@ -1908,115 +1908,115 @@ static int vulkan_device_create_internal(AVHWDeviceContext *ctx,
     /* Copy all needed features from those supported and activate them */
     device_features_init(ctx, &p->feats);
     device_features_copy_needed(&p->feats, &supported_feats);
-    dev_info.pNext = p->feats.device.pNext;
+    dev_info.p_ಮುಂದಿನ = p->feats.device.p_ಮುಂದಿನ;
     dev_info.pEnabledFeatures = &p->feats.device.features;
 
     /* Limit queues to a given number if needed */
-    opt_d = av_dict_get(opts, "limit_queues", NULL, 0);
-    if (opt_d)
-        p->limit_queues = strtol(opt_d->value, NULL, 10);
+    opt_d = av_dict_get(opts, "limit_queues", ಖಾಲಿ, 0);
+    ಆದರೆ (opt_d)
+        p->ಎಲ್ಲೆ_queues = strtol(opt_d->ಮೌಲ್ಯ, ಖಾಲಿ, 10);
 
     /* Setup enabled queue families */
-    if ((err = setup_queue_families(ctx, &dev_info)))
-        goto end;
+    ಆದರೆ ((err = ಸಿದ್ಧತೆ_ಸರತಿ_families(ctx, &dev_info)))
+        ಹೋಗು ಕೊನೆ;
 
     /* Finally create the device */
     ret = vk->CreateDevice(hwctx->phys_dev, &dev_info, hwctx->alloc,
                            &hwctx->act_dev);
 
-    for (int i = 0; i < dev_info.queueCreateInfoCount; i++)
-        av_free((void *)dev_info.pQueueCreateInfos[i].pQueuePriorities);
-    av_free((void *)dev_info.pQueueCreateInfos);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < dev_info.ಸರತಿ_Create_Info_ಎಣಿಕೆ; i++)
+        av_free((ಶೂನ್ಯ *)dev_info.p_ಸರತಿ_Create_Infos[i].p_ಸರತಿ_Priorities);
+    av_free((ಶೂನ್ಯ *)dev_info.p_ಸರತಿ_Create_Infos);
 
-    if (ret != VK_SUCCESS) {
+    ಆದರೆ (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Device creation failure: %s\n",
                ff_vk_ret2str(ret));
-        for (int i = 0; i < dev_info.enabledExtensionCount; i++)
-            av_free((void *)dev_info.ppEnabledExtensionNames[i]);
-        av_free((void *)dev_info.ppEnabledExtensionNames);
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < dev_info.enabled_Extension_ಎಣಿಕೆ; i++)
+            av_free((ಶೂನ್ಯ *)dev_info.pp_Enabled_Extension_ಹೆಸರುಗಳು[i]);
+        av_free((ಶೂನ್ಯ *)dev_info.pp_Enabled_Extension_ಹೆಸರುಗಳು);
         err = AVERROR_EXTERNAL;
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
 
     /* Tiled images setting, use them by default */
-    opt_d = av_dict_get(opts, "linear_images", NULL, 0);
-    if (opt_d)
-        p->use_linear_images = strtol(opt_d->value, NULL, 10);
+    opt_d = av_dict_get(opts, "linear_images", ಖಾಲಿ, 0);
+    ಆದರೆ (opt_d)
+        p->use_ರೇಖೀಯ_images = strtol(opt_d->ಮೌಲ್ಯ, ಖಾಲಿ, 10);
 
     /* The disable_multiplane argument takes precedent over the option */
     p->disable_multiplane = disable_multiplane;
-    if (!p->disable_multiplane) {
-        opt_d = av_dict_get(opts, "disable_multiplane", NULL, 0);
-        if (opt_d)
-            p->disable_multiplane = strtol(opt_d->value, NULL, 10);
+    ಆದರೆ (!p->disable_multiplane) {
+        opt_d = av_dict_get(opts, "disable_multiplane", ಖಾಲಿ, 0);
+        ಆದರೆ (opt_d)
+            p->disable_multiplane = strtol(opt_d->ಮೌಲ್ಯ, ಖಾಲಿ, 10);
     }
 
     /* Disable host pointer imports (by default on nvidia) */
     p->avoid_host_import = p->dprops.driverID == VK_DRIVER_ID_NVIDIA_PROPRIETARY;
-    opt_d = av_dict_get(opts, "avoid_host_import", NULL, 0);
-    if (opt_d)
-        p->avoid_host_import = strtol(opt_d->value, NULL, 10);
+    opt_d = av_dict_get(opts, "avoid_host_import", ಖಾಲಿ, 0);
+    ಆದರೆ (opt_d)
+        p->avoid_host_import = strtol(opt_d->ಮೌಲ್ಯ, ಖಾಲಿ, 10);
 
     /* Set the public device feature struct and its pNext chain */
     hwctx->device_features = p->feats.device;
 
     /* Set the list of all active extensions */
-    hwctx->enabled_dev_extensions = dev_info.ppEnabledExtensionNames;
-    hwctx->nb_enabled_dev_extensions = dev_info.enabledExtensionCount;
+    hwctx->enabled_dev_extensions = dev_info.pp_Enabled_Extension_ಹೆಸರುಗಳು;
+    hwctx->nb_enabled_dev_extensions = dev_info.enabled_Extension_ಎಣಿಕೆ;
 
     /* The extension lists need to be freed */
-    ctx->free = vulkan_device_free;
+    ctx->ಬಿಡುಗಡೆ = vulkan_device_free;
 
-end:
-    return err;
+ಕೊನೆ:
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static void lock_queue(AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index)
+ಸ್ಥಿರ ಶೂನ್ಯ ಬೀಗ_ಸರತಿ(AVHWDeviceContext *ctx, uint32_t ಸರತಿ_family, uint32_t ಸೂಚ್ಯಂಕ)
 {
     VulkanDevicePriv *p = ctx->hwctx;
-    if (p->qf_mutex)
-        pthread_mutex_lock(&p->qf_mutex[queue_family][index]);
+    ಆದರೆ (p->qf_mutex)
+        pthread_mutex_ಬೀಗ(&p->qf_mutex[ಸರತಿ_family][ಸೂಚ್ಯಂಕ]);
 }
 
-static void unlock_queue(AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index)
+ಸ್ಥಿರ ಶೂನ್ಯ unlock_ಸರತಿ(AVHWDeviceContext *ctx, uint32_t ಸರತಿ_family, uint32_t ಸೂಚ್ಯಂಕ)
 {
     VulkanDevicePriv *p = ctx->hwctx;
-    if (p->qf_mutex)
-        pthread_mutex_unlock(&p->qf_mutex[queue_family][index]);
+    ಆದರೆ (p->qf_mutex)
+        pthread_mutex_unlock(&p->qf_mutex[ಸರತಿ_family][ಸೂಚ್ಯಂಕ]);
 }
 
-static int vulkan_device_init(AVHWDeviceContext *ctx)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_device_init(AVHWDeviceContext *ctx)
 {
-    int err = 0;
-    uint32_t qf_num;
+    ಪೂರ್ಣಾಂಕ err = 0;
+    uint32_t qf_ಅಂಕೆ;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VkQueueFamilyProperties2 *qf;
-    VkQueueFamilyVideoPropertiesKHR *qf_vid;
+    Vk_ಸರತಿ_Family_Properties2 *qf;
+    Vk_ಸರತಿ_Family_Video_Properties_KHR *qf_vid;
     VkPhysicalDeviceExternalSemaphoreInfo ext_sem_props_info;
 
     /* Set device extension flags */
-    for (int i = 0; i < hwctx->nb_enabled_dev_extensions; i++) {
-        for (int j = 0; j < FF_ARRAY_ELEMS(optional_device_exts); j++) {
-            if (!strcmp(hwctx->enabled_dev_extensions[i],
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < hwctx->nb_enabled_dev_extensions; i++) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < FF_ARRAY_ELEMS(optional_device_exts); j++) {
+            ಆದರೆ (!strcmp(hwctx->enabled_dev_extensions[i],
                         optional_device_exts[j].name)) {
                 p->vkctx.extensions |= optional_device_exts[j].flag;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
         }
     }
 
-    err = ff_vk_load_functions(ctx, vk, p->vkctx.extensions, 1, 1);
-    if (err < 0) {
+    err = ff_vk_ತುಂಬು_functions(ctx, vk, p->vkctx.extensions, 1, 1);
+    ಆದರೆ (err < 0) {
         av_log(ctx, AV_LOG_ERROR, "Unable to load functions!\n");
-        return err;
+        ಹಿಂತಿರುಗಿ err;
     }
 
     p->props.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-    p->props.pNext = &p->hprops;
-    p->hprops.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT;
-    p->hprops.pNext = &p->dprops;
+    p->props.p_ಮುಂದಿನ = &p->hprops;
+    p->hprops.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_ಸ್ಮರಣೆ_HOST_PROPERTIES_EXT;
+    p->hprops.p_ಮುಂದಿನ = &p->dprops;
     p->dprops.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
 
     vk->GetPhysicalDeviceProperties2(hwctx->phys_dev, &p->props);
@@ -2024,19 +2024,19 @@ static int vulkan_device_init(AVHWDeviceContext *ctx)
            p->props.properties.deviceName);
     av_log(ctx, AV_LOG_VERBOSE, "Alignments:\n");
     av_log(ctx, AV_LOG_VERBOSE, "    optimalBufferCopyRowPitchAlignment: %"PRIu64"\n",
-           p->props.properties.limits.optimalBufferCopyRowPitchAlignment);
+           p->props.properties.limits.optimal_ಬಫರ್_Copy_ಅಡ್ಡಸಾಲು_Pitch_Alignment);
     av_log(ctx, AV_LOG_VERBOSE, "    minMemoryMapAlignment:              %zu\n",
-           p->props.properties.limits.minMemoryMapAlignment);
+           p->props.properties.limits.min_ಸ್ಮರಣೆ_Map_Alignment);
     av_log(ctx, AV_LOG_VERBOSE, "    nonCoherentAtomSize:                %"PRIu64"\n",
-           p->props.properties.limits.nonCoherentAtomSize);
-    if (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_HOST_MEMORY)
+           p->props.properties.limits.non_Coherent_Atom_ಗಾತ್ರ);
+    ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_HOST_ಸ್ಮರಣೆ)
         av_log(ctx, AV_LOG_VERBOSE, "    minImportedHostPointerAlignment:    %"PRIu64"\n",
-               p->hprops.minImportedHostPointerAlignment);
+               p->hprops.min_Imported_Host_ಸೂಚಕ_Alignment);
 
-    vk->GetPhysicalDeviceQueueFamilyProperties(hwctx->phys_dev, &qf_num, NULL);
-    if (!qf_num) {
+    vk->Get_Physical_Device_ಸರತಿ_Family_Properties(hwctx->phys_dev, &qf_ಅಂಕೆ, ಖಾಲಿ);
+    ಆದರೆ (!qf_ಅಂಕೆ) {
         av_log(ctx, AV_LOG_ERROR, "Failed to get queues!\n");
-        return AVERROR_EXTERNAL;
+        ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
     }
 
     ext_sem_props_info = (VkPhysicalDeviceExternalSemaphoreInfo) {
@@ -2045,240 +2045,240 @@ static int vulkan_device_init(AVHWDeviceContext *ctx)
 
     /* Opaque FD semaphore properties */
     ext_sem_props_info.handleType =
-#ifdef _WIN32
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
         IsWindows8OrGreater()
-            ? VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
-            : VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT;
-#else
-        VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT;
-#endif
+            ? VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_ಬಿಟ್
+            : VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_ಬಿಟ್;
+#ಇಲ್ಲದಿದ್ದರೆ
+        VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_ಬಿಟ್;
+#ಆದರೆ_ಅಂತ್ಯ
     p->ext_sem_props_opaque.sType = VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES;
     vk->GetPhysicalDeviceExternalSemaphoreProperties(hwctx->phys_dev,
                                                      &ext_sem_props_info,
                                                      &p->ext_sem_props_opaque);
 
-    qf = av_malloc_array(qf_num, sizeof(VkQueueFamilyProperties2));
-    if (!qf)
-        return AVERROR(ENOMEM);
+    qf = av_malloc_array(qf_ಅಂಕೆ, ಗಾತ್ರ(Vk_ಸರತಿ_Family_Properties2));
+    ಆದರೆ (!qf)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    qf_vid = av_malloc_array(qf_num, sizeof(VkQueueFamilyVideoPropertiesKHR));
-    if (!qf_vid) {
+    qf_vid = av_malloc_array(qf_ಅಂಕೆ, ಗಾತ್ರ(Vk_ಸರತಿ_Family_Video_Properties_KHR));
+    ಆದರೆ (!qf_vid) {
         av_free(qf);
-        return AVERROR(ENOMEM);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
     }
 
-    for (uint32_t i = 0; i < qf_num; i++) {
-        qf_vid[i] = (VkQueueFamilyVideoPropertiesKHR) {
-            .sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_VIDEO_PROPERTIES_KHR,
+    ಗಾಗಿ (uint32_t i = 0; i < qf_ಅಂಕೆ; i++) {
+        qf_vid[i] = (Vk_ಸರತಿ_Family_Video_Properties_KHR) {
+            .sType = VK_STRUCTURE_TYPE_ಸರತಿ_FAMILY_VIDEO_PROPERTIES_KHR,
         };
-        qf[i] = (VkQueueFamilyProperties2) {
-            .sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2,
-            .pNext = p->vkctx.extensions & FF_VK_EXT_VIDEO_QUEUE ? &qf_vid[i] : NULL,
+        qf[i] = (Vk_ಸರತಿ_Family_Properties2) {
+            .sType = VK_STRUCTURE_TYPE_ಸರತಿ_FAMILY_PROPERTIES_2,
+            .p_ಮುಂದಿನ = p->vkctx.extensions & FF_VK_EXT_VIDEO_ಸರತಿ ? &qf_vid[i] : ಖಾಲಿ,
         };
     }
 
-    vk->GetPhysicalDeviceQueueFamilyProperties2(hwctx->phys_dev, &qf_num, qf);
+    vk->Get_Physical_Device_ಸರತಿ_Family_Properties2(hwctx->phys_dev, &qf_ಅಂಕೆ, qf);
 
-    p->nb_tot_qfs = qf_num;
+    p->nb_tot_qfs = qf_ಅಂಕೆ;
 
-    if (!(p->vkctx.extensions & FF_VK_EXT_INTERNAL_QUEUE_SYNC)) {
-        p->qf_mutex = av_calloc(qf_num, sizeof(*p->qf_mutex));
-        if (!p->qf_mutex) {
+    ಆದರೆ (!(p->vkctx.extensions & FF_VK_EXT_ಆಂತರಿಕ_ಸರತಿ_SYNC)) {
+        p->qf_mutex = av_calloc(qf_ಅಂಕೆ, ಗಾತ್ರ(*p->qf_mutex));
+        ಆದರೆ (!p->qf_mutex) {
             err = AVERROR(ENOMEM);
-            goto end;
+            ಹೋಗು ಕೊನೆ;
         }
 
-        for (uint32_t i = 0; i < qf_num; i++) {
-            p->qf_mutex[i] = av_calloc(qf[i].queueFamilyProperties.queueCount,
-                                       sizeof(**p->qf_mutex));
-            if (!p->qf_mutex[i]) {
+        ಗಾಗಿ (uint32_t i = 0; i < qf_ಅಂಕೆ; i++) {
+            p->qf_mutex[i] = av_calloc(qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_ಎಣಿಕೆ,
+                                       ಗಾತ್ರ(**p->qf_mutex));
+            ಆದರೆ (!p->qf_mutex[i]) {
                 err = AVERROR(ENOMEM);
-                goto end;
+                ಹೋಗು ಕೊನೆ;
             }
-            for (uint32_t j = 0; j < qf[i].queueFamilyProperties.queueCount; j++) {
-                err = pthread_mutex_init(&p->qf_mutex[i][j], NULL);
-                if (err != 0) {
+            ಗಾಗಿ (uint32_t j = 0; j < qf[i].ಸರತಿ_Family_Properties.ಸರತಿ_ಎಣಿಕೆ; j++) {
+                err = pthread_mutex_init(&p->qf_mutex[i][j], ಖಾಲಿ);
+                ಆದರೆ (err != 0) {
                     av_log(ctx, AV_LOG_ERROR, "pthread_mutex_init failed : %s\n",
                            av_err2str(err));
                     err = AVERROR(err);
-                    goto end;
+                    ಹೋಗು ಕೊನೆ;
                 }
             }
         }
     }
 
-    for (int i = 0; i < hwctx->nb_qf; i++) {
-        if (!hwctx->qf[i].video_caps &&
-            hwctx->qf[i].flags & (VK_QUEUE_VIDEO_DECODE_BIT_KHR |
-                                  VK_QUEUE_VIDEO_ENCODE_BIT_KHR)) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < hwctx->nb_qf; i++) {
+        ಆದರೆ (!hwctx->qf[i].video_caps &&
+            hwctx->qf[i].flags & (VK_ಸರತಿ_VIDEO_DECODE_ಬಿಟ್_KHR |
+                                  VK_ಸರತಿ_VIDEO_ENCODE_ಬಿಟ್_KHR)) {
             hwctx->qf[i].video_caps = qf_vid[hwctx->qf[i].idx].videoCodecOperations;
         }
     }
 
     /* Setup array for pQueueFamilyIndices with used queue families */
     p->nb_img_qfs = 0;
-    for (int i = 0; i < hwctx->nb_qf; i++) {
-        int seen = 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < hwctx->nb_qf; i++) {
+        ಪೂರ್ಣಾಂಕ ನೋಡಿದ = 0;
         /* Make sure each entry is unique
          * (VUID-VkBufferCreateInfo-sharingMode-01419) */
-        for (int j = (i - 1); j >= 0; j--) {
-            if (hwctx->qf[i].idx == hwctx->qf[j].idx) {
-                seen = 1;
-                break;
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = (i - 1); j >= 0; j--) {
+            ಆದರೆ (hwctx->qf[i].idx == hwctx->qf[j].idx) {
+                ನೋಡಿದ = 1;
+                ನಿಲ್ಲಿಸು;
             }
         }
-        if (!seen)
+        ಆದರೆ (!ನೋಡಿದ)
             p->img_qfs[p->nb_img_qfs++] = hwctx->qf[i].idx;
     }
 
-#if FF_API_VULKAN_SYNC_QUEUES
+#ಆದರೆ FF_API_VULKAN_SYNC_QUEUES
 FF_DISABLE_DEPRECATION_WARNINGS
-    if (!hwctx->lock_queue)
-        hwctx->lock_queue = lock_queue;
-    if (!hwctx->unlock_queue)
-        hwctx->unlock_queue = unlock_queue;
+    ಆದರೆ (!hwctx->ಬೀಗ_ಸರತಿ)
+        hwctx->ಬೀಗ_ಸರತಿ = ಬೀಗ_ಸರತಿ;
+    ಆದರೆ (!hwctx->unlock_ಸರತಿ)
+        hwctx->unlock_ಸರತಿ = unlock_ಸರತಿ;
 FF_ENABLE_DEPRECATION_WARNINGS
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     /* Re-query device capabilities, in case the device was created externally */
-    vk->GetPhysicalDeviceMemoryProperties(hwctx->phys_dev, &p->mprops);
+    vk->Get_Physical_Device_ಸ್ಮರಣೆ_Properties(hwctx->phys_dev, &p->mprops);
 
     p->vkctx.device = ctx;
     p->vkctx.hwctx = hwctx;
 
-    ff_vk_load_props(&p->vkctx);
-    p->compute_qf = ff_vk_qf_find(&p->vkctx, VK_QUEUE_COMPUTE_BIT, 0);
-    p->transfer_qf = ff_vk_qf_find(&p->vkctx, VK_QUEUE_TRANSFER_BIT, 0);
+    ff_vk_ತುಂಬು_props(&p->vkctx);
+    p->compute_qf = ff_vk_qf_ಕಂಡುಹಿಡಿ(&p->vkctx, VK_ಸರತಿ_COMPUTE_ಬಿಟ್, 0);
+    p->transfer_qf = ff_vk_qf_ಕಂಡುಹಿಡಿ(&p->vkctx, VK_ಸರತಿ_TRANSFER_ಬಿಟ್, 0);
 
     /* Transfer-only queues need 4-byte aligned buffer offsets in image copies */
-    p->transfer_offset_align = 1;
-    if (p->transfer_qf) {
-        VkQueueFlags flags = p->vkctx.qf_props[p->transfer_qf->idx].queueFamilyProperties.queueFlags;
-        if (!(flags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT)))
-            p->transfer_offset_align = 4;
+    p->transfer_ಸ್ಥಾನಾಂತರ_align = 1;
+    ಆದರೆ (p->transfer_qf) {
+        Vk_ಸರತಿ_Flags flags = p->vkctx.qf_props[p->transfer_qf->idx].ಸರತಿ_Family_Properties.ಸರತಿ_Flags;
+        ಆದರೆ (!(flags & (VK_ಸರತಿ_GRAPHICS_ಬಿಟ್ | VK_ಸರತಿ_COMPUTE_ಬಿಟ್)))
+            p->transfer_ಸ್ಥಾನಾಂತರ_align = 4;
     }
-#ifdef VK_KHR_maintenance11
-    if (p->vkctx.maintenance_11_feats.maintenance11)
-        p->transfer_offset_align = 1;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ VK_KHR_maintenance11
+    ಆದರೆ (p->vkctx.maintenance_11_feats.maintenance11)
+        p->transfer_ಸ್ಥಾನಾಂತರ_align = 1;
+#ಆದರೆ_ಅಂತ್ಯ
 
     /* Re-query device capabilities, in case the device was created externally */
-    vk->GetPhysicalDeviceMemoryProperties(hwctx->phys_dev, &p->mprops);
+    vk->Get_Physical_Device_ಸ್ಮರಣೆ_Properties(hwctx->phys_dev, &p->mprops);
 
-end:
+ಕೊನೆ:
     av_free(qf_vid);
     av_free(qf);
-    return err;
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static int vulkan_device_create(AVHWDeviceContext *ctx, const char *device,
-                                AVDictionary *opts, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_device_create(AVHWDeviceContext *ctx, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *device,
+                                AVDictionary *opts, ಪೂರ್ಣಾಂಕ flags)
 {
     VulkanDeviceSelection dev_select = { 0 };
-    if (device && device[0]) {
-        char *end = NULL;
+    ಆದರೆ (device && device[0]) {
+        ಅಕ್ಷರ *ಕೊನೆ = ಖಾಲಿ;
 
-        if (!av_uuid_parse(device, dev_select.uuid)) {
+        ಆದರೆ (!av_uuid_parse(device, dev_select.uuid)) {
             dev_select.has_uuid = 1;
-        } else {
-            dev_select.index = strtol(device, &end, 10);
-            if (end == device || *end) {
-                dev_select.index = 0;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            dev_select.ಸೂಚ್ಯಂಕ = strtol(device, &ಕೊನೆ, 10);
+            ಆದರೆ (ಕೊನೆ == device || *ಕೊನೆ) {
+                dev_select.ಸೂಚ್ಯಂಕ = 0;
                 dev_select.name  = device;
             }
         }
     }
 
-    return vulkan_device_create_internal(ctx, &dev_select, 0, opts, flags);
+    ಹಿಂತಿರುಗಿ vulkan_device_create_ಆಂತರಿಕ(ctx, &dev_select, 0, opts, flags);
 }
 
-static int vulkan_device_derive(AVHWDeviceContext *ctx,
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_device_derive(AVHWDeviceContext *ctx,
                                 AVHWDeviceContext *src_ctx,
-                                AVDictionary *opts, int flags)
+                                AVDictionary *opts, ಪೂರ್ಣಾಂಕ flags)
 {
-    av_unused VulkanDeviceSelection dev_select = { 0 };
+    av_ಬಳಸದ VulkanDeviceSelection dev_select = { 0 };
 
     /* If there's only one device on the system, then even if its not covered
      * by the following checks (e.g. non-PCIe ARM GPU), having an empty
      * dev_select will mean it'll get picked. */
-    switch(src_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI: {
+    ಆಯ್ಕೆ(src_ctx->type) {
+#ಆದರೆ CONFIG_VAAPI
+    ಸ್ಥಿತಿ AV_HWDEVICE_TYPE_VAAPI: {
         AVVAAPIDeviceContext *src_hwctx = src_ctx->hwctx;
         VADisplay dpy = src_hwctx->display;
-#if VA_CHECK_VERSION(1, 15, 0)
+#ಆದರೆ VA_CHECK_ಆವೃತ್ತಿ(1, 15, 0)
         VAStatus vas;
         VADisplayAttribute attr = {
             .type = VADisplayPCIID,
         };
-#endif
-        const char *vendor;
+#ಆದರೆ_ಅಂತ್ಯ
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *vendor;
 
-#if VA_CHECK_VERSION(1, 15, 0)
-        vas = vaGetDisplayAttributes(dpy, &attr, 1);
-        if (vas == VA_STATUS_SUCCESS && attr.flags != VA_DISPLAY_ATTRIB_NOT_SUPPORTED)
-            dev_select.pci_device = (attr.value & 0xFFFF);
-#endif
+#ಆದರೆ VA_CHECK_ಆವೃತ್ತಿ(1, 15, 0)
+        vas = va_Get_Display_ಗುಣಲಕ್ಷಣಗಳು(dpy, &attr, 1);
+        ಆದರೆ (vas == VA_ಸ್ಥಿತಿ_SUCCESS && attr.flags != VA_DISPLAY_ATTRIB_NOT_SUPPORTED)
+            dev_select.pci_device = (attr.ಮೌಲ್ಯ & 0xFFFF);
+#ಆದರೆ_ಅಂತ್ಯ
 
-        if (!dev_select.pci_device) {
+        ಆದರೆ (!dev_select.pci_device) {
             vendor = vaQueryVendorString(dpy);
-            if (!vendor) {
+            ಆದರೆ (!vendor) {
                 av_log(ctx, AV_LOG_ERROR, "Unable to get device info from VAAPI!\n");
-                return AVERROR_EXTERNAL;
+                ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
             }
 
-            if (strstr(vendor, "AMD"))
+            ಆದರೆ (ಅಕ್ಷರಸರಣಿ_ಹುಡುಕು(vendor, "AMD"))
                 dev_select.vendor_id = 0x1002;
         }
 
-        return vulkan_device_create_internal(ctx, &dev_select, 0, opts, flags);
+        ಹಿಂತಿರುಗಿ vulkan_device_create_ಆಂತರಿಕ(ctx, &dev_select, 0, opts, flags);
     }
-#endif
-#if CONFIG_LIBDRM
-    case AV_HWDEVICE_TYPE_DRM: {
-        int err;
-        struct stat drm_node_info;
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_LIBDRM
+    ಸ್ಥಿತಿ AV_HWDEVICE_TYPE_DRM: {
+        ಪೂರ್ಣಾಂಕ err;
+        ರಚನೆ stat drm_ಗಂಟು_info;
         drmDevice *drm_dev_info;
         AVDRMDeviceContext *src_hwctx = src_ctx->hwctx;
 
-        err = fstat(src_hwctx->fd, &drm_node_info);
-        if (err) {
+        err = fstat(src_hwctx->fd, &drm_ಗಂಟು_info);
+        ಆದರೆ (err) {
             av_log(ctx, AV_LOG_ERROR, "Unable to get node info from DRM fd: %s!\n",
                    av_err2str(AVERROR(errno)));
-            return AVERROR_EXTERNAL;
+            ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
         }
 
-        dev_select.drm_major = major(drm_node_info.st_dev);
-        dev_select.drm_minor = minor(drm_node_info.st_dev);
+        dev_select.drm_major = major(drm_ಗಂಟು_info.st_dev);
+        dev_select.drm_minor = minor(drm_ಗಂಟು_info.st_dev);
         dev_select.has_drm   = 1;
 
         err = drmGetDevice(src_hwctx->fd, &drm_dev_info);
-        if (err) {
+        ಆದರೆ (err) {
             av_log(ctx, AV_LOG_ERROR, "Unable to get device info from DRM fd: %s!\n",
                    av_err2str(AVERROR(errno)));
-            return AVERROR_EXTERNAL;
+            ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
         }
 
-        if (drm_dev_info->bustype == DRM_BUS_PCI)
+        ಆದರೆ (drm_dev_info->bustype == DRM_BUS_PCI)
             dev_select.pci_device = drm_dev_info->deviceinfo.pci->device_id;
 
         drmFreeDevice(&drm_dev_info);
 
-        return vulkan_device_create_internal(ctx, &dev_select, 0, opts, flags);
+        ಹಿಂತಿರುಗಿ vulkan_device_create_ಆಂತರಿಕ(ctx, &dev_select, 0, opts, flags);
     }
-#endif
-#if CONFIG_CUDA
-    case AV_HWDEVICE_TYPE_CUDA: {
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_CUDA
+    ಸ್ಥಿತಿ AV_HWDEVICE_TYPE_CUDA: {
         AVHWDeviceContext *cuda_cu = src_ctx;
         AVCUDADeviceContext *src_hwctx = src_ctx->hwctx;
-        AVCUDADeviceContextInternal *cu_internal = src_hwctx->internal;
-        CudaFunctions *cu = cu_internal->cuda_dl;
+        AVCUDADevice_Context_ಆಂತರಿಕ *cu_ಆಂತರಿಕ = src_hwctx->ಆಂತರಿಕ;
+        CudaFunctions *cu = cu_ಆಂತರಿಕ->cuda_dl;
 
-        int ret = CHECK_CU(cu->cuDeviceGetUuid((CUuuid *)&dev_select.uuid,
-                                               cu_internal->cuda_device));
-        if (ret < 0) {
+        ಪೂರ್ಣಾಂಕ ret = CHECK_CU(cu->cuDeviceGetUuid((CUuuid *)&dev_select.uuid,
+                                               cu_ಆಂತರಿಕ->cuda_device));
+        ಆದರೆ (ret < 0) {
             av_log(ctx, AV_LOG_ERROR, "Unable to get UUID from CUDA!\n");
-            return AVERROR_EXTERNAL;
+            ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
         }
 
         dev_select.has_uuid = 1;
@@ -2287,761 +2287,761 @@ static int vulkan_device_derive(AVHWDeviceContext *ctx,
          * CUDA is not able to import multiplane images, so always derive a
          * Vulkan device with multiplane disabled.
          */
-        return vulkan_device_create_internal(ctx, &dev_select, 1, opts, flags);
+        ಹಿಂತಿರುಗಿ vulkan_device_create_ಆಂತರಿಕ(ctx, &dev_select, 1, opts, flags);
     }
-#endif
-    default:
-        return AVERROR(ENOSYS);
+#ಆದರೆ_ಅಂತ್ಯ
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
     }
 }
 
-static int vulkan_frames_get_constraints(AVHWDeviceContext *ctx,
-                                         const void *hwconfig,
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_ಚೌಕಟ್ಟುಗಳು_get_constraints(AVHWDeviceContext *ctx,
+                                         ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *hwconfig,
                                          AVHWFramesConstraints *constraints)
 {
-    int count = 0;
+    ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2 = 0;
     VulkanDevicePriv *p = ctx->hwctx;
 
-    for (enum AVPixelFormat i = 0; i < nb_vk_formats_list; i++) {
-        count += vkfmt_from_pixfmt2(ctx, vk_formats_list[i].pixfmt,
-                                    p->use_linear_images ? VK_IMAGE_TILING_LINEAR :
+    ಗಾಗಿ (ಎಣಿಕೆ AVPixelFormat i = 0; i < nb_vk_formats_list; i++) {
+        ಎಣಿಕೆ_2 += vkfmt_from_pixfmt2(ctx, vk_formats_list[i].pixfmt,
+                                    p->use_ರೇಖೀಯ_images ? VK_IMAGE_TILING_ರೇಖೀಯ :
                                                            VK_IMAGE_TILING_OPTIMAL,
-                                    NULL, NULL, NULL, NULL, p->disable_multiplane, 1) >= 0;
+                                    ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, p->disable_multiplane, 1) >= 0;
     }
 
-    constraints->valid_sw_formats = av_malloc_array(count + 1 + CONFIG_CUDA,
-                                                    sizeof(enum AVPixelFormat));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_sw_formats = av_malloc_array(ಎಣಿಕೆ_2 + 1 + CONFIG_CUDA,
+                                                    ಗಾತ್ರ(ಎಣಿಕೆ AVPixelFormat));
+    ಆದರೆ (!constraints->valid_sw_formats)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    count = 0;
-    for (enum AVPixelFormat i = 0; i < nb_vk_formats_list; i++) {
-        if (vkfmt_from_pixfmt2(ctx, vk_formats_list[i].pixfmt,
-                               p->use_linear_images ? VK_IMAGE_TILING_LINEAR :
+    ಎಣಿಕೆ_2 = 0;
+    ಗಾಗಿ (ಎಣಿಕೆ AVPixelFormat i = 0; i < nb_vk_formats_list; i++) {
+        ಆದರೆ (vkfmt_from_pixfmt2(ctx, vk_formats_list[i].pixfmt,
+                               p->use_ರೇಖೀಯ_images ? VK_IMAGE_TILING_ರೇಖೀಯ :
                                                       VK_IMAGE_TILING_OPTIMAL,
-                               NULL, NULL, NULL, NULL, p->disable_multiplane, 1) >= 0) {
-            constraints->valid_sw_formats[count++] = vk_formats_list[i].pixfmt;
+                               ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, ಖಾಲಿ, p->disable_multiplane, 1) >= 0) {
+            constraints->valid_sw_formats[ಎಣಿಕೆ_2++] = vk_formats_list[i].pixfmt;
         }
     }
 
-#if CONFIG_CUDA
-    constraints->valid_sw_formats[count++] = AV_PIX_FMT_CUDA;
-#endif
+#ಆದರೆ CONFIG_CUDA
+    constraints->valid_sw_formats[ಎಣಿಕೆ_2++] = AV_PIX_FMT_CUDA;
+#ಆದರೆ_ಅಂತ್ಯ
 
-    constraints->valid_sw_formats[count++] = AV_PIX_FMT_NONE;
+    constraints->valid_sw_formats[ಎಣಿಕೆ_2++] = AV_PIX_FMT_NONE;
 
-    constraints->min_width  = 1;
-    constraints->min_height = 1;
-    constraints->max_width  = p->props.properties.limits.maxImageDimension2D;
-    constraints->max_height = p->props.properties.limits.maxImageDimension2D;
+    constraints->min_ಅಗಲ  = 1;
+    constraints->min_ಎತ್ತರ = 1;
+    constraints->max_ಅಗಲ  = p->props.properties.limits.maxImageDimension2D;
+    constraints->max_ಎತ್ತರ = p->props.properties.limits.maxImageDimension2D;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(enum AVPixelFormat));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, ಗಾತ್ರ(ಎಣಿಕೆ AVPixelFormat));
+    ಆದರೆ (!constraints->valid_hw_formats)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_VULKAN;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int alloc_mem(AVHWDeviceContext *ctx, VkMemoryRequirements *req,
-                     VkMemoryPropertyFlagBits req_flags, const void *alloc_extension,
-                     VkMemoryPropertyFlagBits *mem_flags, VkDeviceMemory *mem)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ alloc_mem(AVHWDeviceContext *ctx, Vk_ಸ್ಮರಣೆ_Requirements *req,
+                     Vk_ಸ್ಮರಣೆ_Property_Flag_ಬಿಟ್ಟುಗಳು req_flags, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *alloc_extension,
+                     Vk_ಸ್ಮರಣೆ_Property_Flag_ಬಿಟ್ಟುಗಳು *mem_flags, Vk_Device_ಸ್ಮರಣೆ *mem)
 {
-    VkResult ret;
-    int index = -1;
+    Vk_ಫಲಿತಾಂಶ ret;
+    ಪೂರ್ಣಾಂಕ ಸೂಚ್ಯಂಕ = -1;
     VulkanDevicePriv *p = ctx->hwctx;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
     AVVulkanDeviceContext *dev_hwctx = &p->p;
-    VkMemoryAllocateInfo alloc_info = {
-        .sType          = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-        .pNext          = alloc_extension,
-        .allocationSize = req->size,
+    Vk_ಸ್ಮರಣೆ_Allocate_Info alloc_info = {
+        .sType          = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_ALLOCATE_INFO,
+        .p_ಮುಂದಿನ          = alloc_extension,
+        .ಹಂಚಿಕೆ_ಗಾತ್ರ = req->ಗಾತ್ರ_2,
     };
 
     /* The vulkan spec requires memory types to be sorted in the "optimal"
      * order, so the first matching type we find will be the best/fastest one */
-    for (int i = 0; i < p->mprops.memoryTypeCount; i++) {
-        const VkMemoryType *type = &p->mprops.memoryTypes[i];
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < p->mprops.ಸ್ಮರಣೆ_Type_ಎಣಿಕೆ; i++) {
+        ಸ್ಥಿರಾಂಕ Vk_ಸ್ಮರಣೆ_Type *type = &p->mprops.ಸ್ಮರಣೆ_Types[i];
 
         /* The memory type must be supported by the requirements (bitfield) */
-        if (!(req->memoryTypeBits & (1 << i)))
-            continue;
+        ಆದರೆ (!(req->ಸ್ಮರಣೆ_Type_ಬಿಟ್ಟುಗಳು & (1 << i)))
+            ಮುಂದುವರಿ;
 
         /* The memory type flags must include our properties */
-        if ((type->propertyFlags & req_flags) != req_flags)
-            continue;
+        ಆದರೆ ((type->propertyFlags & req_flags) != req_flags)
+            ಮುಂದುವರಿ;
 
         /* The memory type must be large enough */
-        if (req->size > p->mprops.memoryHeaps[type->heapIndex].size)
-            continue;
+        ಆದರೆ (req->ಗಾತ್ರ_2 > p->mprops.ಸ್ಮರಣೆ_Heaps[type->ರಾಶಿ_ಸೂಚ್ಯಂಕ_2].ಗಾತ್ರ_2)
+            ಮುಂದುವರಿ;
 
         /* Found a suitable memory type */
-        index = i;
-        break;
+        ಸೂಚ್ಯಂಕ = i;
+        ನಿಲ್ಲಿಸು;
     }
 
-    if (index < 0) {
+    ಆದರೆ (ಸೂಚ್ಯಂಕ < 0) {
         av_log(ctx, AV_LOG_ERROR, "No memory type found for flags 0x%x\n",
                req_flags);
-        return AVERROR(EINVAL);
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
     }
 
-    alloc_info.memoryTypeIndex = index;
+    alloc_info.ಸ್ಮರಣೆ_Type_ಸೂಚ್ಯಂಕ = ಸೂಚ್ಯಂಕ;
 
-    ret = vk->AllocateMemory(dev_hwctx->act_dev, &alloc_info,
+    ret = vk->Allocate_ಸ್ಮರಣೆ(dev_hwctx->act_dev, &alloc_info,
                              dev_hwctx->alloc, mem);
-    if (ret != VK_SUCCESS) {
+    ಆದರೆ (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Failed to allocate memory: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR(ENOMEM);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
     }
 
-    *mem_flags |= p->mprops.memoryTypes[index].propertyFlags;
+    *mem_flags |= p->mprops.ಸ್ಮರಣೆ_Types[ಸೂಚ್ಯಂಕ].propertyFlags;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static void vulkan_free_internal(VulkanDevicePriv *p, AVVkFrame *f)
+ಸ್ಥಿರ ಶೂನ್ಯ vulkan_free_ಆಂತರಿಕ(VulkanDevicePriv *p, AVVk_ಚೌಕಟ್ಟು *f)
 {
-    av_unused AVVkFrameInternal *internal = f->internal;
+    av_ಬಳಸದ AVVk_ಚೌಕಟ್ಟು_ಆಂತರಿಕ *ಆಂತರಿಕ = f->ಆಂತರಿಕ;
 
     // Make this function safe to call repeatedly
-    if (!internal)
-        return;
+    ಆದರೆ (!ಆಂತರಿಕ)
+        ಹಿಂತಿರುಗಿ;
 
-#if CONFIG_CUDA
-    if (internal->cuda_fc_ref) {
-        AVHWFramesContext *cuda_fc = (AVHWFramesContext *)internal->cuda_fc_ref->data;
-        int planes = av_pix_fmt_count_planes(cuda_fc->sw_format);
+#ಆದರೆ CONFIG_CUDA
+    ಆದರೆ (ಆಂತರಿಕ->cuda_fc_ref) {
+        AVHWFramesContext *cuda_fc = (AVHWFramesContext *)ಆಂತರಿಕ->cuda_fc_ref->ದತ್ತಾಂಶ;
+        ಪೂರ್ಣಾಂಕ planes = av_pix_fmt_ಎಣಿಕೆ_planes(cuda_fc->sw_format);
         AVHWDeviceContext *cuda_cu = cuda_fc->device_ctx;
         AVCUDADeviceContext *cuda_dev = cuda_cu->hwctx;
-        AVCUDADeviceContextInternal *cu_internal = cuda_dev->internal;
-        CudaFunctions *cu = cu_internal->cuda_dl;
+        AVCUDADevice_Context_ಆಂತರಿಕ *cu_ಆಂತರಿಕ = cuda_dev->ಆಂತರಿಕ;
+        CudaFunctions *cu = cu_ಆಂತರಿಕ->cuda_dl;
 
-        for (int i = 0; i < planes; i++) {
-            if (internal->cu_sem[i])
-                CHECK_CU(cu->cuDestroyExternalSemaphore(internal->cu_sem[i]));
-            if (internal->cu_mma[i])
-                CHECK_CU(cu->cuMipmappedArrayDestroy(internal->cu_mma[i]));
-            if (internal->ext_mem[i])
-                CHECK_CU(cu->cuDestroyExternalMemory(internal->ext_mem[i]));
-#ifdef _WIN32
-            if (internal->ext_sem_handle[i])
-                CloseHandle(internal->ext_sem_handle[i]);
-            if (internal->ext_mem_handle[i])
-                CloseHandle(internal->ext_mem_handle[i]);
-#endif
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
+            ಆದರೆ (ಆಂತರಿಕ->cu_sem[i])
+                CHECK_CU(cu->cuDestroyExternalSemaphore(ಆಂತರಿಕ->cu_sem[i]));
+            ಆದರೆ (ಆಂತರಿಕ->cu_mma[i])
+                CHECK_CU(cu->cuMipmappedArrayDestroy(ಆಂತರಿಕ->cu_mma[i]));
+            ಆದರೆ (ಆಂತರಿಕ->ext_mem[i])
+                CHECK_CU(cu->cu_Destroy_External_ಸ್ಮರಣೆ(ಆಂತರಿಕ->ext_mem[i]));
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
+            ಆದರೆ (ಆಂತರಿಕ->ext_sem_handle[i])
+                CloseHandle(ಆಂತರಿಕ->ext_sem_handle[i]);
+            ಆದರೆ (ಆಂತರಿಕ->ext_mem_handle[i])
+                CloseHandle(ಆಂತರಿಕ->ext_mem_handle[i]);
+#ಆದರೆ_ಅಂತ್ಯ
         }
 
-        av_buffer_unref(&internal->cuda_fc_ref);
+        av_ಬಫರ್_unref(&ಆಂತರಿಕ->cuda_fc_ref);
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    if (internal->drm_sync_sem != VK_NULL_HANDLE)
-        p->vkctx.vkfn.DestroySemaphore(p->p.act_dev, internal->drm_sync_sem,
+    ಆದರೆ (ಆಂತರಿಕ->drm_sync_sem != VK_NULL_HANDLE)
+        p->vkctx.vkfn.DestroySemaphore(p->p.act_dev, ಆಂತರಿಕ->drm_sync_sem,
                                         p->p.alloc);
 
-    pthread_mutex_destroy(&internal->update_mutex);
-    av_freep(&f->internal);
+    pthread_mutex_destroy(&ಆಂತರಿಕ->update_mutex);
+    av_freep(&f->ಆಂತರಿಕ);
 }
 
-static void vulkan_frame_free(AVHWFramesContext *hwfc, AVVkFrame *f)
+ಸ್ಥಿರ ಶೂನ್ಯ vulkan_ಚೌಕಟ್ಟು_free(AVHWFramesContext *hwfc, AVVk_ಚೌಕಟ್ಟು *f)
 {
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    int nb_images = ff_vk_count_images(f);
-    int nb_sems = 0;
+    ಪೂರ್ಣಾಂಕ nb_images = ff_vk_ಎಣಿಕೆ_images(f);
+    ಪೂರ್ಣಾಂಕ nb_sems = 0;
 
-    while (nb_sems < FF_ARRAY_ELEMS(f->sem) && f->sem[nb_sems])
+    ಆಗ (nb_sems < FF_ARRAY_ELEMS(f->sem) && f->sem[nb_sems])
         nb_sems++;
 
-    if (nb_sems) {
+    ಆದರೆ (nb_sems) {
         VkSemaphoreWaitInfo sem_wait = {
             .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
             .flags          = 0x0,
             .pSemaphores    = f->sem,
-            .pValues        = f->sem_value,
-            .semaphoreCount = nb_sems,
+            .p_ಮೌಲ್ಯಗಳು        = f->sem_ಮೌಲ್ಯ,
+            .semaphore_ಎಣಿಕೆ = nb_sems,
         };
 
         vk->WaitSemaphores(hwctx->act_dev, &sem_wait, UINT64_MAX);
     }
 
-    vulkan_free_internal(p, f);
+    vulkan_free_ಆಂತರಿಕ(p, f);
 
-    for (int i = 0; i < nb_images; i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_images; i++) {
         vk->DestroyImage(hwctx->act_dev,     f->img[i], hwctx->alloc);
-        vk->FreeMemory(hwctx->act_dev,       f->mem[i], hwctx->alloc);
+        vk->Free_ಸ್ಮರಣೆ(hwctx->act_dev,       f->mem[i], hwctx->alloc);
         vk->DestroySemaphore(hwctx->act_dev, f->sem[i], hwctx->alloc);
     }
 
     av_free(f);
 }
 
-static void vulkan_frame_free_cb(void *opaque, uint8_t *data)
+ಸ್ಥಿರ ಶೂನ್ಯ vulkan_ಚೌಕಟ್ಟು_free_cb(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ)
 {
-    vulkan_frame_free(opaque, (AVVkFrame*)data);
+    vulkan_ಚೌಕಟ್ಟು_free(opaque, (AVVk_ಚೌಕಟ್ಟು*)ದತ್ತಾಂಶ);
 }
 
-static int alloc_bind_mem(AVHWFramesContext *hwfc, AVVkFrame *f,
-                          void *alloc_pnext, size_t alloc_pnext_stride)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ alloc_bind_mem(AVHWFramesContext *hwfc, AVVk_ಚೌಕಟ್ಟು *f,
+                          ಶೂನ್ಯ *alloc_pnext, size_t alloc_pnext_stride)
 {
-    int img_cnt = 0, err;
-    VkResult ret;
+    ಪೂರ್ಣಾಂಕ img_cnt = 0, err;
+    Vk_ಫಲಿತಾಂಶ ret;
     AVHWDeviceContext *ctx = hwfc->device_ctx;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VkBindImageMemoryInfo bind_info[AV_NUM_DATA_POINTERS] = { { 0 } };
+    Vk_Bind_Image_ಸ್ಮರಣೆ_Info bind_info[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು] = { { 0 } };
 
-    while (f->img[img_cnt]) {
-        int use_ded_mem;
-        VkImageMemoryRequirementsInfo2 req_desc = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
+    ಆಗ (f->img[img_cnt]) {
+        ಪೂರ್ಣಾಂಕ use_ded_mem;
+        Vk_Image_ಸ್ಮರಣೆ_Requirements_Info2 req_desc = {
+            .sType = VK_STRUCTURE_TYPE_IMAGE_ಸ್ಮರಣೆ_REQUIREMENTS_INFO_2,
             .image = f->img[img_cnt],
         };
-        VkMemoryDedicatedAllocateInfo ded_alloc = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO,
-            .pNext = (void *)(((uint8_t *)alloc_pnext) + img_cnt*alloc_pnext_stride),
+        Vk_ಸ್ಮರಣೆ_Dedicated_Allocate_Info ded_alloc = {
+            .sType = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_DEDICATED_ALLOCATE_INFO,
+            .p_ಮುಂದಿನ = (ಶೂನ್ಯ *)(((uint8_t *)alloc_pnext) + img_cnt*alloc_pnext_stride),
         };
-        VkMemoryDedicatedRequirements ded_req = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS,
+        Vk_ಸ್ಮರಣೆ_Dedicated_Requirements ded_req = {
+            .sType = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_DEDICATED_REQUIREMENTS,
         };
-        VkMemoryRequirements2 req = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
-            .pNext = &ded_req,
+        Vk_ಸ್ಮರಣೆ_Requirements2 req = {
+            .sType = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_REQUIREMENTS_2,
+            .p_ಮುಂದಿನ = &ded_req,
         };
 
-        vk->GetImageMemoryRequirements2(hwctx->act_dev, &req_desc, &req);
+        vk->Get_Image_ಸ್ಮರಣೆ_Requirements2(hwctx->act_dev, &req_desc, &req);
 
         av_log(hwfc, AV_LOG_TRACE,
                "plane %d: driver reports prefersDedicatedAllocation=%i requiresDedicatedAllocation=%i\n",
-               img_cnt, ded_req.prefersDedicatedAllocation, ded_req.requiresDedicatedAllocation);
+               img_cnt, ded_req.prefers_Dedicated_ಹಂಚಿಕೆ, ded_req.requires_Dedicated_ಹಂಚಿಕೆ);
 
-        if (f->tiling == VK_IMAGE_TILING_LINEAR)
-            req.memoryRequirements.size = FFALIGN(req.memoryRequirements.size,
-                                                  p->props.properties.limits.minMemoryMapAlignment);
+        ಆದರೆ (f->tiling == VK_IMAGE_TILING_ರೇಖೀಯ)
+            req.ಸ್ಮರಣೆ_Requirements.ಗಾತ್ರ_2 = FFALIGN(req.ಸ್ಮರಣೆ_Requirements.ಗಾತ್ರ_2,
+                                                  p->props.properties.limits.min_ಸ್ಮರಣೆ_Map_Alignment);
 
         /* In case the implementation prefers/requires dedicated allocation */
-        use_ded_mem = ded_req.prefersDedicatedAllocation |
-                      ded_req.requiresDedicatedAllocation;
-        if (((VulkanFramesPriv *)hwfc->hwctx)->export_requires_dedicated)
+        use_ded_mem = ded_req.prefers_Dedicated_ಹಂಚಿಕೆ |
+                      ded_req.requires_Dedicated_ಹಂಚಿಕೆ;
+        ಆದರೆ (((Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *)hwfc->hwctx)->export_requires_dedicated)
             use_ded_mem = 1;
-        if (use_ded_mem)
+        ಆದರೆ (use_ded_mem)
             ded_alloc.image = f->img[img_cnt];
 
         /* Allocate memory */
-        if ((err = alloc_mem(ctx, &req.memoryRequirements,
-                             f->tiling == VK_IMAGE_TILING_LINEAR ?
-                             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT :
-                             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-                             use_ded_mem ? &ded_alloc : (void *)ded_alloc.pNext,
+        ಆದರೆ ((err = alloc_mem(ctx, &req.ಸ್ಮರಣೆ_Requirements,
+                             f->tiling == VK_IMAGE_TILING_ರೇಖೀಯ ?
+                             VK_ಸ್ಮರಣೆ_PROPERTY_HOST_VISIBLE_ಬಿಟ್ :
+                             VK_ಸ್ಮರಣೆ_PROPERTY_DEVICE_LOCAL_ಬಿಟ್,
+                             use_ded_mem ? &ded_alloc : (ಶೂನ್ಯ *)ded_alloc.p_ಮುಂದಿನ,
                              &f->flags, &f->mem[img_cnt])))
-            return err;
+            ಹಿಂತಿರುಗಿ err;
 
-        f->size[img_cnt] = req.memoryRequirements.size;
-        bind_info[img_cnt].sType  = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO;
+        f->ಗಾತ್ರ_2[img_cnt] = req.ಸ್ಮರಣೆ_Requirements.ಗಾತ್ರ_2;
+        bind_info[img_cnt].sType  = VK_STRUCTURE_TYPE_BIND_IMAGE_ಸ್ಮರಣೆ_INFO;
         bind_info[img_cnt].image  = f->img[img_cnt];
-        bind_info[img_cnt].memory = f->mem[img_cnt];
+        bind_info[img_cnt].ಸ್ಮರಣೆ = f->mem[img_cnt];
 
         img_cnt++;
     }
 
     /* Bind the allocated memory to the images */
     ret = vk->BindImageMemory2(hwctx->act_dev, img_cnt, bind_info);
-    if (ret != VK_SUCCESS) {
+    ಆದರೆ (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Failed to bind memory: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-enum PrepMode {
-    PREP_MODE_GENERAL,
-    PREP_MODE_WRITE,
-    PREP_MODE_EXTERNAL_EXPORT,
-    PREP_MODE_EXTERNAL_IMPORT,
-    PREP_MODE_DECODING_DST,
-    PREP_MODE_DECODING_DPB,
-    PREP_MODE_ENCODING_DPB,
+ಎಣಿಕೆ Prep_ಬಹುಲಕ {
+    PREP_ಬಹುಲಕ_GENERAL,
+    PREP_ಬಹುಲಕ_WRITE,
+    PREP_ಬಹುಲಕ_EXTERNAL_EXPORT,
+    PREP_ಬಹುಲಕ_EXTERNAL_IMPORT,
+    PREP_ಬಹುಲಕ_DECODING_DST,
+    PREP_ಬಹುಲಕ_DECODING_DPB,
+    PREP_ಬಹುಲಕ_ENCODING_DPB,
 };
 
-static void switch_new_props(enum PrepMode pmode, VkImageLayout *new_layout,
+ಸ್ಥಿರ ಶೂನ್ಯ switch_new_props(ಎಣಿಕೆ Prep_ಬಹುಲಕ pmode, VkImageLayout *new_layout,
                              VkAccessFlags2 *new_access)
 {
-    switch (pmode) {
-    case PREP_MODE_GENERAL:
+    ಆಯ್ಕೆ (pmode) {
+    ಸ್ಥಿತಿ PREP_ಬಹುಲಕ_GENERAL:
         *new_layout = VK_IMAGE_LAYOUT_GENERAL;
-        *new_access = VK_ACCESS_TRANSFER_WRITE_BIT;
-        break;
-    case PREP_MODE_WRITE:
+        *new_access = VK_ACCESS_TRANSFER_WRITE_ಬಿಟ್;
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ PREP_ಬಹುಲಕ_WRITE:
         *new_layout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        *new_access = VK_ACCESS_TRANSFER_WRITE_BIT;
-        break;
-    case PREP_MODE_EXTERNAL_IMPORT:
+        *new_access = VK_ACCESS_TRANSFER_WRITE_ಬಿಟ್;
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ PREP_ಬಹುಲಕ_EXTERNAL_IMPORT:
         *new_layout = VK_IMAGE_LAYOUT_GENERAL;
-        *new_access = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
-        break;
-    case PREP_MODE_EXTERNAL_EXPORT:
+        *new_access = VK_ACCESS_ಸ್ಮರಣೆ_READ_ಬಿಟ್ | VK_ACCESS_ಸ್ಮರಣೆ_WRITE_ಬಿಟ್;
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ PREP_ಬಹುಲಕ_EXTERNAL_EXPORT:
         *new_layout = VK_IMAGE_LAYOUT_GENERAL;
-        *new_access = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
-        break;
-    case PREP_MODE_DECODING_DST:
+        *new_access = VK_ACCESS_ಸ್ಮರಣೆ_READ_ಬಿಟ್ | VK_ACCESS_ಸ್ಮರಣೆ_WRITE_ಬಿಟ್;
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ PREP_ಬಹುಲಕ_DECODING_DST:
         *new_layout = VK_IMAGE_LAYOUT_VIDEO_DECODE_DST_KHR;
-        *new_access = VK_ACCESS_TRANSFER_WRITE_BIT;
-        break;
-    case PREP_MODE_DECODING_DPB:
+        *new_access = VK_ACCESS_TRANSFER_WRITE_ಬಿಟ್;
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ PREP_ಬಹುಲಕ_DECODING_DPB:
         *new_layout = VK_IMAGE_LAYOUT_VIDEO_DECODE_DPB_KHR;
-        *new_access = VK_ACCESS_TRANSFER_READ_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
-        break;
-    case PREP_MODE_ENCODING_DPB:
+        *new_access = VK_ACCESS_TRANSFER_READ_ಬಿಟ್ | VK_ACCESS_TRANSFER_WRITE_ಬಿಟ್;
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ PREP_ಬಹುಲಕ_ENCODING_DPB:
         *new_layout = VK_IMAGE_LAYOUT_VIDEO_ENCODE_DPB_KHR;
-        *new_access = VK_ACCESS_TRANSFER_READ_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
-        break;
+        *new_access = VK_ACCESS_TRANSFER_READ_ಬಿಟ್ | VK_ACCESS_TRANSFER_WRITE_ಬಿಟ್;
+        ನಿಲ್ಲಿಸು;
     }
 }
 
-static int switch_layout(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
-                         AVVkFrame *frame, enum PrepMode pmode)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ switch_layout(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
+                         AVVk_ಚೌಕಟ್ಟು *ಚೌಕಟ್ಟು, ಎಣಿಕೆ Prep_ಬಹುಲಕ pmode)
 {
-    int err;
+    ಪೂರ್ಣಾಂಕ err;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VkImageMemoryBarrier2 img_bar[AV_NUM_DATA_POINTERS];
-    int nb_img_bar = 0;
+    Vk_Image_ಸ್ಮರಣೆ_Barrier2 img_bar[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
+    ಪೂರ್ಣಾಂಕ nb_img_bar = 0;
 
     VkImageLayout new_layout;
     VkAccessFlags2 new_access;
     switch_new_props(pmode, &new_layout, &new_access);
 
-    uint32_t dst_qf = p->nb_img_qfs > 1 ? VK_QUEUE_FAMILY_IGNORED : p->img_qfs[0];
+    uint32_t dst_qf = p->nb_img_qfs > 1 ? VK_ಸರತಿ_FAMILY_IGNORED : p->img_qfs[0];
     VkPipelineStageFlagBits2 src_stage = VK_PIPELINE_STAGE_2_NONE;
-    if (pmode == PREP_MODE_EXTERNAL_EXPORT) {
-        dst_qf     = VK_QUEUE_FAMILY_EXTERNAL_KHR;
-        src_stage  = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT;
+    ಆದರೆ (pmode == PREP_ಬಹುಲಕ_EXTERNAL_EXPORT) {
+        dst_qf     = VK_ಸರತಿ_FAMILY_EXTERNAL_KHR;
+        src_stage  = VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್;
     }
 
     /* This is dirty - but it works. The vulkan.c dependency system doesn't
      * free non-refcounted frames, and non-refcounted hardware frames cannot
      * happen anywhere outside of here. */
     AVBufferRef tmp_ref = {
-        .data = (uint8_t *)hwfc,
+        .ದತ್ತಾಂಶ = (uint8_t *)hwfc,
     };
-    AVFrame tmp_frame = {
-        .data[0] = (uint8_t *)frame,
-        .hw_frames_ctx = &tmp_ref,
+    AVFrame tmp_ಚೌಕಟ್ಟು = {
+        .ದತ್ತಾಂಶ[0] = (uint8_t *)ಚೌಕಟ್ಟು,
+        .hw_ಚೌಕಟ್ಟುಗಳು_ctx = &tmp_ref,
     };
 
-    VkCommandBuffer cmd_buf;
+    Vk_Command_ಬಫರ್ cmd_buf;
     FFVkExecContext *exec = ff_vk_exec_get(&p->vkctx, ectx);
     cmd_buf = exec->buf;
-    err = ff_vk_exec_start(&p->vkctx, exec);
-    if (err < 0)
-        return err;
+    err = ff_vk_exec_ಆರಂಭ(&p->vkctx, exec);
+    ಆದರೆ (err < 0)
+        ಹಿಂತಿರುಗಿ err;
 
     /* NONE does not block any stage, so this queue's layout transition
      * races a decode write submitted on the video queue. */
-    err = ff_vk_exec_add_dep_frame(&p->vkctx, exec, &tmp_frame,
-                                   VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
-                                   VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT);
-    if (err < 0)
-        return err;
+    err = ff_vk_exec_ಕೂಡಿಸು_dep_ಚೌಕಟ್ಟು(&p->vkctx, exec, &tmp_ಚೌಕಟ್ಟು,
+                                   VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್,
+                                   VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್);
+    ಆದರೆ (err < 0)
+        ಹಿಂತಿರುಗಿ err;
 
-    ff_vk_frame_barrier(&p->vkctx, exec, &tmp_frame, img_bar, &nb_img_bar,
+    ff_vk_ಚೌಕಟ್ಟು_barrier(&p->vkctx, exec, &tmp_ಚೌಕಟ್ಟು, img_bar, &nb_img_bar,
                         src_stage,
-                        VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
+                        VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್,
                         new_access, new_layout, dst_qf);
 
     vk->CmdPipelineBarrier2(cmd_buf, &(VkDependencyInfo) {
             .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
-            .pImageMemoryBarriers = img_bar,
-            .imageMemoryBarrierCount = nb_img_bar,
+            .p_Image_ಸ್ಮರಣೆ_Barriers = img_bar,
+            .image_ಸ್ಮರಣೆ_Barrier_ಎಣಿಕೆ = nb_img_bar,
         });
 
     err = ff_vk_exec_submit(&p->vkctx, exec);
-    if (err < 0)
-        return err;
+    ಆದರೆ (err < 0)
+        ಹಿಂತಿರುಗಿ err;
 
     /* Drops the stack-based frame above from the dependency list */
     ff_vk_exec_wait(&p->vkctx, exec);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int switch_layout_host(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
-                              AVVkFrame *frame, enum PrepMode pmode)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ switch_layout_host(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
+                              AVVk_ಚೌಕಟ್ಟು *ಚೌಕಟ್ಟು, ಎಣಿಕೆ Prep_ಬಹುಲಕ pmode)
 {
-    VkResult ret;
+    Vk_ಫಲಿತಾಂಶ ret;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VkHostImageLayoutTransitionInfoEXT layout_change[AV_NUM_DATA_POINTERS];
-    int nb_images = ff_vk_count_images(frame);
+    VkHostImageLayoutTransitionInfoEXT layout_change[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
+    ಪೂರ್ಣಾಂಕ nb_images = ff_vk_ಎಣಿಕೆ_images(ಚೌಕಟ್ಟು);
 
     VkImageLayout new_layout;
     VkAccessFlags2 new_access;
     switch_new_props(pmode, &new_layout, &new_access);
 
-    int i;
-    for (i = 0; i < p->vkctx.host_image_props.copyDstLayoutCount; i++) {
-        if (p->vkctx.host_image_props.pCopyDstLayouts[i] == new_layout)
-            break;
+    ಪೂರ್ಣಾಂಕ i;
+    ಗಾಗಿ (i = 0; i < p->vkctx.host_image_props.copy_Dst_Layout_ಎಣಿಕೆ; i++) {
+        ಆದರೆ (p->vkctx.host_image_props.pCopyDstLayouts[i] == new_layout)
+            ನಿಲ್ಲಿಸು;
     }
-    if (i == p->vkctx.host_image_props.copyDstLayoutCount)
-        return AVERROR(ENOTSUP);
+    ಆದರೆ (i == p->vkctx.host_image_props.copy_Dst_Layout_ಎಣಿಕೆ)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOTSUP);
 
-    for (i = 0; i < nb_images; i++) {
+    ಗಾಗಿ (i = 0; i < nb_images; i++) {
         layout_change[i] = (VkHostImageLayoutTransitionInfoEXT) {
             .sType = VK_STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO_EXT,
-            .image = frame->img[i],
-            .oldLayout = frame->layout[i],
+            .image = ಚೌಕಟ್ಟು->img[i],
+            .oldLayout = ಚೌಕಟ್ಟು->layout[i],
             .newLayout = new_layout,
-            .subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-            .subresourceRange.layerCount = 1,
-            .subresourceRange.levelCount = 1,
+            .subresourceRange.aspect_ಮುಖವಾಡ = VK_IMAGE_ASPECT_COLOR_ಬಿಟ್,
+            .subresourceRange.layer_ಎಣಿಕೆ = 1,
+            .subresourceRange.level_ಎಣಿಕೆ = 1,
         };
-        frame->layout[i] = new_layout;
+        ಚೌಕಟ್ಟು->layout[i] = new_layout;
     }
 
     ret = vk->TransitionImageLayoutEXT(p->vkctx.hwctx->act_dev,
                                        nb_images, layout_change);
-    if (ret != VK_SUCCESS) {
+    ಆದರೆ (ret != VK_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Unable to prepare frame: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int prepare_frame(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
-                         AVVkFrame *frame, enum PrepMode pmode)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ prepare_ಚೌಕಟ್ಟು(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
+                         AVVk_ಚೌಕಟ್ಟು *ಚೌಕಟ್ಟು, ಎಣಿಕೆ Prep_ಬಹುಲಕ pmode)
 {
-    int err = 0;
-    AVVulkanFramesContext *hwfc_vk = hwfc->hwctx;
-    if (hwfc_vk->usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT &&
-        (pmode != PREP_MODE_EXTERNAL_EXPORT) &&
-        (pmode != PREP_MODE_EXTERNAL_IMPORT)) {
-        err = switch_layout_host(hwfc, ectx, frame, pmode);
-        if (err != AVERROR(ENOTSUP))
-            return err;
+    ಪೂರ್ಣಾಂಕ err = 0;
+    AVVulkan_ಚೌಕಟ್ಟುಗಳು_Context *hwfc_vk = hwfc->hwctx;
+    ಆದರೆ (hwfc_vk->usage & VK_IMAGE_USAGE_HOST_TRANSFER_ಬಿಟ್_EXT &&
+        (pmode != PREP_ಬಹುಲಕ_EXTERNAL_EXPORT) &&
+        (pmode != PREP_ಬಹುಲಕ_EXTERNAL_IMPORT)) {
+        err = switch_layout_host(hwfc, ectx, ಚೌಕಟ್ಟು, pmode);
+        ಆದರೆ (err != AVERROR(ENOTSUP))
+            ಹಿಂತಿರುಗಿ err;
     }
 
-    return switch_layout(hwfc, ectx, frame, pmode);
+    ಹಿಂತಿರುಗಿ switch_layout(hwfc, ectx, ಚೌಕಟ್ಟು, pmode);
 }
 
-static inline void get_plane_wh(uint32_t *w, uint32_t *h, enum AVPixelFormat format,
-                                int frame_w, int frame_h, int plane)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಶೂನ್ಯ get_plane_wh(uint32_t *w, uint32_t *h, ಎಣಿಕೆ AVPixelFormat format,
+                                ಪೂರ್ಣಾಂಕ ಚೌಕಟ್ಟು_w, ಪೂರ್ಣಾಂಕ ಚೌಕಟ್ಟು_h, ಪೂರ್ಣಾಂಕ plane)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(format);
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(format);
 
     /* Currently always true unless gray + alpha support is added */
-    if (!plane || (plane == 3) || desc->flags & AV_PIX_FMT_FLAG_RGB ||
+    ಆದರೆ (!plane || (plane == 3) || desc->flags & AV_PIX_FMT_FLAG_RGB ||
         !(desc->flags & AV_PIX_FMT_FLAG_PLANAR)) {
-        *w = frame_w;
-        *h = frame_h;
-        return;
+        *w = ಚೌಕಟ್ಟು_w;
+        *h = ಚೌಕಟ್ಟು_h;
+        ಹಿಂತಿರುಗಿ;
     }
 
-    *w = AV_CEIL_RSHIFT(frame_w, desc->log2_chroma_w);
-    *h = AV_CEIL_RSHIFT(frame_h, desc->log2_chroma_h);
+    *w = AV_CEIL_RSHIFT(ಚೌಕಟ್ಟು_w, desc->log2_chroma_w);
+    *h = AV_CEIL_RSHIFT(ಚೌಕಟ್ಟು_h, desc->log2_chroma_h);
 }
 
-static int create_frame(AVHWFramesContext *hwfc, AVVkFrame **frame,
-                        VkImageTiling tiling, VkImageUsageFlagBits usage,
-                        VkImageCreateFlags flags, int nb_layers,
-                        void *create_pnext)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ create_ಚೌಕಟ್ಟು(AVHWFramesContext *hwfc, AVVk_ಚೌಕಟ್ಟು **ಚೌಕಟ್ಟು,
+                        VkImageTiling tiling, Vk_Image_Usage_Flag_ಬಿಟ್ಟುಗಳು usage,
+                        VkImageCreateFlags flags, ಪೂರ್ಣಾಂಕ nb_layers,
+                        ಶೂನ್ಯ *create_pnext)
 {
-    int err;
-    VkResult ret;
-    AVVulkanFramesContext *hwfc_vk = hwfc->hwctx;
+    ಪೂರ್ಣಾಂಕ err;
+    Vk_ಫಲಿತಾಂಶ ret;
+    AVVulkan_ಚೌಕಟ್ಟುಗಳು_Context *hwfc_vk = hwfc->hwctx;
     AVHWDeviceContext *ctx = hwfc->device_ctx;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    AVVkFrame *f;
+    AVVk_ಚೌಕಟ್ಟು *f;
 
     VkSemaphoreTypeCreateInfo sem_type_info = {
         .sType         = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
         .semaphoreType = VK_SEMAPHORE_TYPE_TIMELINE,
-        .initialValue  = 0,
+        .initial_ಮೌಲ್ಯ  = 0,
     };
     VkSemaphoreCreateInfo sem_spawn = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-        .pNext = &sem_type_info,
+        .p_ಮುಂದಿನ = &sem_type_info,
     };
 
     VkExportSemaphoreCreateInfo ext_sem_info_opaque = {
         .sType = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
-#ifdef _WIN32
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
         .handleTypes = IsWindows8OrGreater()
-            ? VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
-            : VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT,
-#else
-        .handleTypes = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT,
-#endif
+            ? VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_ಬಿಟ್
+            : VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_ಬಿಟ್,
+#ಇಲ್ಲದಿದ್ದರೆ
+        .handleTypes = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_ಬಿಟ್,
+#ಆದರೆ_ಅಂತ್ಯ
     };
 
     /* Check if exporting is supported before chaining any structs */
-    if (p->ext_sem_props_opaque.externalSemaphoreFeatures & VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT) {
-        if (p->vkctx.extensions & (FF_VK_EXT_EXTERNAL_WIN32_SEM | FF_VK_EXT_EXTERNAL_FD_SEM))
+    ಆದರೆ (p->ext_sem_props_opaque.externalSemaphoreFeatures & VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_ಬಿಟ್) {
+        ಆದರೆ (p->vkctx.extensions & (FF_VK_EXT_EXTERNAL_WIN32_SEM | FF_VK_EXT_EXTERNAL_FD_SEM))
             ff_vk_link_struct(&sem_type_info, &ext_sem_info_opaque);
     }
 
-    f = av_vk_frame_alloc();
-    if (!f) {
+    f = av_vk_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (!f) {
         av_log(ctx, AV_LOG_ERROR, "Unable to allocate memory for AVVkFrame!\n");
-        return AVERROR(ENOMEM);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
     }
 
     // TODO: check width and height for alignment in case of multiplanar (must be mod-2 if subsampled)
 
     /* Create the images */
-    for (int i = 0; (hwfc_vk->format[i] != VK_FORMAT_UNDEFINED); i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; (hwfc_vk->format[i] != VK_FORMAT_UNDEFINED); i++) {
         VkImageCreateInfo create_info = {
             .sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-            .pNext                 = create_pnext,
+            .p_ಮುಂದಿನ                 = create_pnext,
             .imageType             = VK_IMAGE_TYPE_2D,
             .format                = hwfc_vk->format[i],
-            .extent.depth          = 1,
-            .mipLevels             = 1,
+            .extent.ಆಳ          = 1,
+            .mip_ಮಟ್ಟಗಳು             = 1,
             .arrayLayers           = nb_layers,
             .flags                 = flags,
             .tiling                = tiling,
             .initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED,
             .usage                 = usage,
-            .samples               = VK_SAMPLE_COUNT_1_BIT,
-            .pQueueFamilyIndices   = p->img_qfs,
-            .queueFamilyIndexCount = p->nb_img_qfs,
-            .sharingMode           = p->nb_img_qfs > 1 ? VK_SHARING_MODE_CONCURRENT :
-                                                         VK_SHARING_MODE_EXCLUSIVE,
+            .samples               = VK_SAMPLE_ಎಣಿಕೆ_1_ಬಿಟ್,
+            .p_ಸರತಿ_Family_Indices   = p->img_qfs,
+            .ಸರತಿ_Family_ಸೂಚ್ಯಂಕ_ಎಣಿಕೆ = p->nb_img_qfs,
+            .sharing_ಬಹುಲಕ           = p->nb_img_qfs > 1 ? VK_SHARING_ಬಹುಲಕ_CONCURRENT :
+                                                         VK_SHARING_ಬಹುಲಕ_EXCLUSIVE,
         };
 
-        get_plane_wh(&create_info.extent.width, &create_info.extent.height,
-                     hwfc->sw_format, hwfc->width, hwfc->height, i);
+        get_plane_wh(&create_info.extent.ಅಗಲ, &create_info.extent.ಎತ್ತರ,
+                     hwfc->sw_format, hwfc->ಅಗಲ, hwfc->ಎತ್ತರ, i);
 
         ret = vk->CreateImage(hwctx->act_dev, &create_info,
                               hwctx->alloc, &f->img[i]);
-        if (ret != VK_SUCCESS) {
+        ಆದರೆ (ret != VK_SUCCESS) {
             av_log(ctx, AV_LOG_ERROR, "Image creation failure: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR(EINVAL);
-            goto fail;
+            ಹೋಗು fail;
         }
 
         /* Create semaphore */
         ret = vk->CreateSemaphore(hwctx->act_dev, &sem_spawn,
                                   hwctx->alloc, &f->sem[i]);
-        if (ret != VK_SUCCESS) {
+        ಆದರೆ (ret != VK_SUCCESS) {
             av_log(hwctx, AV_LOG_ERROR, "Failed to create semaphore: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
-            goto fail;
+            ಹೋಗು fail;
         }
 
-        f->queue_family[i] = p->nb_img_qfs > 1 ? VK_QUEUE_FAMILY_IGNORED : p->img_qfs[0];
+        f->ಸರತಿ_family[i] = p->nb_img_qfs > 1 ? VK_ಸರತಿ_FAMILY_IGNORED : p->img_qfs[0];
         f->layout[i] = create_info.initialLayout;
         f->access[i] = 0x0;
-        f->sem_value[i] = 0;
+        f->sem_ಮೌಲ್ಯ[i] = 0;
     }
 
     f->flags     = 0x0;
     f->tiling    = tiling;
 
-    *frame = f;
-    return 0;
+    *ಚೌಕಟ್ಟು = f;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    vulkan_frame_free(hwfc, f);
-    return err;
+    vulkan_ಚೌಕಟ್ಟು_free(hwfc, f);
+    ಹಿಂತಿರುಗಿ err;
 }
 
 /* Checks if an export flag is enabled, and if it is ORs it with *iexp */
-static void try_export_flags(AVHWFramesContext *hwfc,
-                             VkExternalMemoryHandleTypeFlags *comp_handle_types,
-                             VkExternalMemoryHandleTypeFlags *iexp,
-                             VkExternalMemoryHandleTypeFlagBits exp)
+ಸ್ಥಿರ ಶೂನ್ಯ try_export_flags(AVHWFramesContext *hwfc,
+                             Vk_External_ಸ್ಮರಣೆ_Handle_Type_Flags *comp_handle_types,
+                             Vk_External_ಸ್ಮರಣೆ_Handle_Type_Flags *iexp,
+                             Vk_External_ಸ್ಮರಣೆ_Handle_Type_Flag_ಬಿಟ್ಟುಗಳು ಘಾತಾಂಕ)
 {
-    VkResult ret;
-    AVVulkanFramesContext *hwctx = hwfc->hwctx;
+    Vk_ಫಲಿತಾಂಶ ret;
+    AVVulkan_ಚೌಕಟ್ಟುಗಳು_Context *hwctx = hwfc->hwctx;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *dev_hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    const VkImageDrmFormatModifierListCreateInfoEXT *drm_mod_info =
-        ff_vk_find_struct(hwctx->create_pnext,
+    ಸ್ಥಿರಾಂಕ VkImageDrmFormatModifierListCreateInfoEXT *drm_mod_info =
+        ff_vk_ಕಂಡುಹಿಡಿ_struct(hwctx->create_pnext,
                           VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT);
-    int has_mods = hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT && drm_mod_info;
-    int nb_mods;
+    ಪೂರ್ಣಾಂಕ has_mods = hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT && drm_mod_info;
+    ಪೂರ್ಣಾಂಕ nb_mods;
 
     VkExternalImageFormatProperties eprops = {
         .sType = VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES_KHR,
     };
     VkImageFormatProperties2 props = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2,
-        .pNext = &eprops,
+        .p_ಮುಂದಿನ = &eprops,
     };
     VkPhysicalDeviceImageDrmFormatModifierInfoEXT phy_dev_mod_info = {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT,
-        .pNext = NULL,
-        .pQueueFamilyIndices   = p->img_qfs,
-        .queueFamilyIndexCount = p->nb_img_qfs,
-        .sharingMode           = p->nb_img_qfs > 1 ? VK_SHARING_MODE_CONCURRENT :
-                                                     VK_SHARING_MODE_EXCLUSIVE,
+        .p_ಮುಂದಿನ = ಖಾಲಿ,
+        .p_ಸರತಿ_Family_Indices   = p->img_qfs,
+        .ಸರತಿ_Family_ಸೂಚ್ಯಂಕ_ಎಣಿಕೆ = p->nb_img_qfs,
+        .sharing_ಬಹುಲಕ           = p->nb_img_qfs > 1 ? VK_SHARING_ಬಹುಲಕ_CONCURRENT :
+                                                     VK_SHARING_ಬಹುಲಕ_EXCLUSIVE,
     };
     VkPhysicalDeviceExternalImageFormatInfo enext = {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO,
-        .handleType = exp,
-        .pNext = has_mods ? &phy_dev_mod_info : NULL,
+        .handleType = ಘಾತಾಂಕ,
+        .p_ಮುಂದಿನ = has_mods ? &phy_dev_mod_info : ಖಾಲಿ,
     };
     VkPhysicalDeviceImageFormatInfo2 pinfo = {
         .sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2,
-        .pNext  = !exp ? NULL : &enext,
+        .p_ಮುಂದಿನ  = !ಘಾತಾಂಕ ? ಖಾಲಿ : &enext,
         .format = hwctx->format[0],
         .type   = VK_IMAGE_TYPE_2D,
         .tiling = hwctx->tiling,
         .usage  = hwctx->usage,
         .flags  = (hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT && has_mods) ?
-                  (hwctx->img_flags) : hwctx->img_flags ? hwctx->img_flags : (VkImageCreateFlags)(VK_IMAGE_CREATE_ALIAS_BIT),
+                  (hwctx->img_flags) : hwctx->img_flags ? hwctx->img_flags : (VkImageCreateFlags)(VK_IMAGE_CREATE_ALIAS_ಬಿಟ್),
     };
 
-    nb_mods = has_mods ? drm_mod_info->drmFormatModifierCount : 1;
-    for (int i = 0; i < nb_mods; i++) {
-        if (has_mods)
+    nb_mods = has_mods ? drm_mod_info->drm_Format_Modifier_ಎಣಿಕೆ : 1;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_mods; i++) {
+        ಆದರೆ (has_mods)
             phy_dev_mod_info.drmFormatModifier = drm_mod_info->pDrmFormatModifiers[i];
 
         ret = vk->GetPhysicalDeviceImageFormatProperties2(dev_hwctx->phys_dev,
                                                         &pinfo, &props);
 
-        if (has_mods)
+        ಆದರೆ (has_mods)
             av_log(hwfc, AV_LOG_VERBOSE, "GetPhysicalDeviceImageFormatProperties2: mod[%d]=0x%llx -> %s\n",
-                   i, (unsigned long long)phy_dev_mod_info.drmFormatModifier,
+                   i, (ಚಿಹ್ನೆರಹಿತ ದೀರ್ಘ ದೀರ್ಘ)phy_dev_mod_info.drmFormatModifier,
                    ret == VK_SUCCESS ? "OK" : "FAIL");
-        if (ret == VK_SUCCESS) {
-            *iexp |= exp;
-            *comp_handle_types |= eprops.externalMemoryProperties.compatibleHandleTypes;
-            if (exp == VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT) {
-                VulkanFramesPriv *fp = hwfc->hwctx;
-                fp->export_requires_dedicated = !!(eprops.externalMemoryProperties.externalMemoryFeatures &
-                                                  VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT);
+        ಆದರೆ (ret == VK_SUCCESS) {
+            *iexp |= ಘಾತಾಂಕ;
+            *comp_handle_types |= eprops.external_ಸ್ಮರಣೆ_Properties.compatibleHandleTypes;
+            ಆದರೆ (ಘಾತಾಂಕ == VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_DMA_BUF_ಬಿಟ್_EXT) {
+                Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
+                fp->export_requires_dedicated = !!(eprops.external_ಸ್ಮರಣೆ_Properties.external_ಸ್ಮರಣೆ_Features &
+                                                  VK_EXTERNAL_ಸ್ಮರಣೆ_FEATURE_DEDICATED_ONLY_ಬಿಟ್);
             }
         }
     }
 }
 
 /* Computes the external memory handle types for the frame context. */
-static void get_export_handle_types(AVHWFramesContext *hwfc,
-                                    VkExternalMemoryHandleTypeFlags *comp_handle_types,
-                                    VkExternalMemoryHandleTypeFlags *export_types)
+ಸ್ಥಿರ ಶೂನ್ಯ get_export_handle_types(AVHWFramesContext *hwfc,
+                                    Vk_External_ಸ್ಮರಣೆ_Handle_Type_Flags *comp_handle_types,
+                                    Vk_External_ಸ್ಮರಣೆ_Handle_Type_Flags *export_types)
 {
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
-    av_unused AVVulkanFramesContext *hwctx = &((VulkanFramesPriv *)hwfc->hwctx)->p;
+    av_ಬಳಸದ AVVulkan_ಚೌಕಟ್ಟುಗಳು_Context *hwctx = &((Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *)hwfc->hwctx)->p;
 
     *comp_handle_types = 0x0;
     *export_types = 0x0;
 
-#ifdef _WIN32
-    if (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_MEMORY)
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
+    ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_ಸ್ಮರಣೆ)
         try_export_flags(hwfc, comp_handle_types, export_types, IsWindows8OrGreater()
-                             ? VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
-                             : VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT);
-#else
-    if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_MEMORY) &&
+                             ? VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_OPAQUE_WIN32_ಬಿಟ್
+                             : VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_OPAQUE_WIN32_KMT_ಬಿಟ್);
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಆದರೆ ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_ಸ್ಮರಣೆ) &&
         (hwctx->tiling != VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT))
         try_export_flags(hwfc, comp_handle_types, export_types,
-                         VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT);
+                         VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_OPAQUE_FD_ಬಿಟ್);
 
-    if (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_DMABUF_MEMORY &&
+    ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_DMABUF_ಸ್ಮರಣೆ &&
         hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT)
         try_export_flags(hwfc, comp_handle_types, export_types,
-                         VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT);
-#endif
+                         VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_DMA_BUF_ಬಿಟ್_EXT);
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
-static AVBufferRef *vulkan_pool_alloc(void *opaque, size_t size)
+ಸ್ಥಿರ AVBufferRef *vulkan_pool_alloc(ಶೂನ್ಯ *opaque, size_t ಗಾತ್ರ_2)
 {
-    int err;
-    AVVkFrame *f;
-    AVBufferRef *avbuf = NULL;
+    ಪೂರ್ಣಾಂಕ err;
+    AVVk_ಚೌಕಟ್ಟು *f;
+    AVBufferRef *avbuf = ಖಾಲಿ;
     AVHWFramesContext *hwfc = opaque;
-    VulkanFramesPriv *fp = hwfc->hwctx;
-    AVVulkanFramesContext *hwctx = &fp->p;
-    VkExternalMemoryHandleTypeFlags e;
-    VkExportMemoryAllocateInfo eminfo[AV_NUM_DATA_POINTERS];
+    Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
+    AVVulkan_ಚೌಕಟ್ಟುಗಳು_Context *hwctx = &fp->p;
+    Vk_External_ಸ್ಮರಣೆ_Handle_Type_Flags e;
+    Vk_Export_ಸ್ಮರಣೆ_Allocate_Info eminfo[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
 
-    VkExternalMemoryImageCreateInfo eiinfo = {
-        .sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
-        .pNext       = hwctx->create_pnext,
+    Vk_External_ಸ್ಮರಣೆ_Image_Create_Info eiinfo = {
+        .sType       = VK_STRUCTURE_TYPE_EXTERNAL_ಸ್ಮರಣೆ_IMAGE_CREATE_INFO,
+        .p_ಮುಂದಿನ       = hwctx->create_pnext,
     };
 
     get_export_handle_types(hwfc, &eiinfo.handleTypes, &e);
 
-    for (int i = 0; i < av_pix_fmt_count_planes(hwfc->sw_format); i++) {
-        eminfo[i].sType       = VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO;
-        eminfo[i].pNext       = hwctx->alloc_pnext[i];
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < av_pix_fmt_ಎಣಿಕೆ_planes(hwfc->sw_format); i++) {
+        eminfo[i].sType       = VK_STRUCTURE_TYPE_EXPORT_ಸ್ಮರಣೆ_ALLOCATE_INFO;
+        eminfo[i].p_ಮುಂದಿನ       = hwctx->alloc_pnext[i];
         eminfo[i].handleTypes = e;
     }
 
-    err = create_frame(hwfc, &f, hwctx->tiling, hwctx->usage, hwctx->img_flags,
+    err = create_ಚೌಕಟ್ಟು(hwfc, &f, hwctx->tiling, hwctx->usage, hwctx->img_flags,
                        hwctx->nb_layers,
                        eiinfo.handleTypes ? &eiinfo : hwctx->create_pnext);
-    if (err) {
+    ಆದರೆ (err) {
         av_log(hwfc, AV_LOG_ERROR, "vulkan_pool_alloc failed: create_frame failed: %d\n", err);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    err = alloc_bind_mem(hwfc, f, eminfo, sizeof(*eminfo));
-    if (err)
-        goto fail;
+    err = alloc_bind_mem(hwfc, f, eminfo, ಗಾತ್ರ(*eminfo));
+    ಆದರೆ (err)
+        ಹೋಗು fail;
 
-    if ( (hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR) &&
-        !(hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR))
-        err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_DECODING_DPB);
-    else if (hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR)
-        err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_DECODING_DST);
-    else if (hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR)
-        err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_ENCODING_DPB);
-    else if (hwctx->usage & VK_IMAGE_USAGE_TRANSFER_DST_BIT)
-        err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_WRITE);
-    else
-        err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_GENERAL);
-    if (err)
-        goto fail;
+    ಆದರೆ ( (hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DPB_ಬಿಟ್_KHR) &&
+        !(hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DST_ಬಿಟ್_KHR))
+        err = prepare_ಚೌಕಟ್ಟು(hwfc, &fp->compute_exec, f, PREP_ಬಹುಲಕ_DECODING_DPB);
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DST_ಬಿಟ್_KHR)
+        err = prepare_ಚೌಕಟ್ಟು(hwfc, &fp->compute_exec, f, PREP_ಬಹುಲಕ_DECODING_DST);
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_ಬಿಟ್_KHR)
+        err = prepare_ಚೌಕಟ್ಟು(hwfc, &fp->compute_exec, f, PREP_ಬಹುಲಕ_ENCODING_DPB);
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (hwctx->usage & VK_IMAGE_USAGE_TRANSFER_DST_ಬಿಟ್)
+        err = prepare_ಚೌಕಟ್ಟು(hwfc, &fp->compute_exec, f, PREP_ಬಹುಲಕ_WRITE);
+    ಇಲ್ಲದಿದ್ದರೆ
+        err = prepare_ಚೌಕಟ್ಟು(hwfc, &fp->compute_exec, f, PREP_ಬಹುಲಕ_GENERAL);
+    ಆದರೆ (err)
+        ಹೋಗು fail;
 
-    avbuf = av_buffer_create((uint8_t *)f, sizeof(AVVkFrame),
-                             vulkan_frame_free_cb, hwfc, 0);
-    if (!avbuf)
-        goto fail;
+    avbuf = av_ಬಫರ್_create((uint8_t *)f, ಗಾತ್ರ(AVVk_ಚೌಕಟ್ಟು),
+                             vulkan_ಚೌಕಟ್ಟು_free_cb, hwfc, 0);
+    ಆದರೆ (!avbuf)
+        ಹೋಗು fail;
 
-    return avbuf;
+    ಹಿಂತಿರುಗಿ avbuf;
 
 fail:
     av_log(hwfc, AV_LOG_ERROR, "vulkan_pool_alloc failed with error %d\n", err);
-    vulkan_frame_free(hwfc, f);
-    return NULL;
+    vulkan_ಚೌಕಟ್ಟು_free(hwfc, f);
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-static void lock_frame(AVHWFramesContext *fc, AVVkFrame *vkf)
+ಸ್ಥಿರ ಶೂನ್ಯ ಬೀಗ_ಚೌಕಟ್ಟು(AVHWFramesContext *fc, AVVk_ಚೌಕಟ್ಟು *vkf)
 {
-    pthread_mutex_lock(&vkf->internal->update_mutex);
+    pthread_mutex_ಬೀಗ(&vkf->ಆಂತರಿಕ->update_mutex);
 }
 
-static void unlock_frame(AVHWFramesContext *fc, AVVkFrame *vkf)
+ಸ್ಥಿರ ಶೂನ್ಯ unlock_ಚೌಕಟ್ಟು(AVHWFramesContext *fc, AVVk_ಚೌಕಟ್ಟು *vkf)
 {
-    pthread_mutex_unlock(&vkf->internal->update_mutex);
+    pthread_mutex_unlock(&vkf->ಆಂತರಿಕ->update_mutex);
 }
 
-static void vulkan_frames_uninit(AVHWFramesContext *hwfc)
+ಸ್ಥಿರ ಶೂನ್ಯ vulkan_ಚೌಕಟ್ಟುಗಳು_uninit(AVHWFramesContext *hwfc)
 {
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
-    VulkanFramesPriv *fp = hwfc->hwctx;
+    Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
 
-    if (fp->modifier_info) {
-        if (fp->modifier_info->pDrmFormatModifiers)
+    ಆದರೆ (fp->modifier_info) {
+        ಆದರೆ (fp->modifier_info->pDrmFormatModifiers)
             av_freep(&fp->modifier_info->pDrmFormatModifiers);
         av_freep(&fp->modifier_info);
     }
@@ -3058,44 +3058,44 @@ static void vulkan_frames_uninit(AVHWFramesContext *hwfc)
  * format feature, yet reject the final image, or provide no memory type from
  * which such an image can be allocated. Notably video decode/encode images
  * are often not possible to allocate from the host visible memory type. */
-static int vulkan_host_transfer_usable(AVHWFramesContext *hwfc)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_host_transfer_usable(AVHWFramesContext *hwfc)
 {
-    VulkanFramesPriv *fp = hwfc->hwctx;
-    AVVulkanFramesContext *hwctx = &fp->p;
+    Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
+    AVVulkan_ಚೌಕಟ್ಟುಗಳು_Context *hwctx = &fp->p;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *dev_hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VkResult ret;
+    Vk_ಫಲಿತಾಂಶ ret;
 
     /* NVIDIA's host image copy resolves every plane's parameters as if it were
      * plane 0, so every plane but the first is corrupted on both upload and
      * download. Frames with one image per plane are unaffected.
      */
-    const struct FFVkFormatEntry *fmt = vk_find_format_entry(hwfc->sw_format);
-    if (p->dprops.driverID == VK_DRIVER_ID_NVIDIA_PROPRIETARY &&
+    ಸ್ಥಿರಾಂಕ ರಚನೆ FFVk_Format_ನಮೂದು *fmt = vk_ಕಂಡುಹಿಡಿ_format_ನಮೂದು(hwfc->sw_format);
+    ಆದರೆ (p->dprops.driverID == VK_DRIVER_ID_NVIDIA_PROPRIETARY &&
         fmt && fmt->vk_planes > 1 && hwctx->format[0] == fmt->vkf) {
         av_log(hwfc, AV_LOG_VERBOSE, "Disabling host image transfers: "
                "NVIDIA drivers mishandle multi-plane images\n");
-        return 0;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    const VkImageDrmFormatModifierListCreateInfoEXT *mod_list =
-        ff_vk_find_struct(hwctx->create_pnext,
+    ಸ್ಥಿರಾಂಕ VkImageDrmFormatModifierListCreateInfoEXT *mod_list =
+        ff_vk_ಕಂಡುಹಿಡಿ_struct(hwctx->create_pnext,
                           VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT);
-    int has_mods = hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT &&
-                   mod_list && mod_list->drmFormatModifierCount;
-    int nb_mods = has_mods ? mod_list->drmFormatModifierCount : 1;
+    ಪೂರ್ಣಾಂಕ has_mods = hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT &&
+                   mod_list && mod_list->drm_Format_Modifier_ಎಣಿಕೆ;
+    ಪೂರ್ಣಾಂಕ nb_mods = has_mods ? mod_list->drm_Format_Modifier_ಎಣಿಕೆ : 1;
 
     /* Without a modifier list the final modifier is not knowable here. */
-    if (hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT && !has_mods)
-        return 0;
+    ಆದರೆ (hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT && !has_mods)
+        ಹಿಂತಿರುಗಿ 0;
 
     VkPhysicalDeviceImageDrmFormatModifierInfoEXT mod_info = {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT,
-        .pQueueFamilyIndices   = p->img_qfs,
-        .queueFamilyIndexCount = p->nb_img_qfs,
-        .sharingMode           = p->nb_img_qfs > 1 ? VK_SHARING_MODE_CONCURRENT :
-                                                     VK_SHARING_MODE_EXCLUSIVE,
+        .p_ಸರತಿ_Family_Indices   = p->img_qfs,
+        .ಸರತಿ_Family_ಸೂಚ್ಯಂಕ_ಎಣಿಕೆ = p->nb_img_qfs,
+        .sharing_ಬಹುಲಕ           = p->nb_img_qfs > 1 ? VK_SHARING_ಬಹುಲಕ_CONCURRENT :
+                                                     VK_SHARING_ಬಹುಲಕ_EXCLUSIVE,
     };
     VkPhysicalDeviceImageFormatInfo2 pinfo = {
         .sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2,
@@ -3105,240 +3105,240 @@ static int vulkan_host_transfer_usable(AVHWFramesContext *hwfc)
         .flags  = hwctx->img_flags,
     };
 
-    if (has_mods)
+    ಆದರೆ (has_mods)
         ff_vk_link_struct(&pinfo, &mod_info);
 
     VkVideoProfileListInfoKHR profile_list;
-    const VkVideoProfileListInfoKHR *pl =
-        ff_vk_find_struct(hwctx->create_pnext,
+    ಸ್ಥಿರಾಂಕ VkVideoProfileListInfoKHR *pl =
+        ff_vk_ಕಂಡುಹಿಡಿ_struct(hwctx->create_pnext,
                           VK_STRUCTURE_TYPE_VIDEO_PROFILE_LIST_INFO_KHR);
-    if (pl) {
+    ಆದರೆ (pl) {
         profile_list = *pl;
-        profile_list.pNext = NULL;
+        profile_list.p_ಮುಂದಿನ = ಖಾಲಿ;
         ff_vk_link_struct(&pinfo, &profile_list);
     }
 
     VkImageFormatListCreateInfo format_list;
-    const VkImageFormatListCreateInfo *fl =
-        ff_vk_find_struct(hwctx->create_pnext,
+    ಸ್ಥಿರಾಂಕ VkImageFormatListCreateInfo *fl =
+        ff_vk_ಕಂಡುಹಿಡಿ_struct(hwctx->create_pnext,
                           VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO);
-    if (fl) {
+    ಆದರೆ (fl) {
         format_list = *fl;
-        format_list.pNext = NULL;
+        format_list.p_ಮುಂದಿನ = ಖಾಲಿ;
         ff_vk_link_struct(&pinfo, &format_list);
     }
 
     /* The same usage is applied to the images of every plane, so each plane
      * format has to support host transfers for the usage to be usable. */
-    for (int i = 0; i < AV_NUM_DATA_POINTERS &&
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು &&
                     hwctx->format[i] != VK_FORMAT_UNDEFINED; i++) {
         pinfo.format = hwctx->format[i];
 
         /* The driver is free to pick any modifier from the list, so all of
          * them have to be compatible. */
-        for (int j = 0; j < nb_mods; j++) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < nb_mods; j++) {
             VkHostImageCopyDevicePerformanceQueryEXT perf = {
                 .sType = VK_STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY_EXT,
             };
             VkImageFormatProperties2 props = {
                 .sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2,
-                .pNext = &perf,
+                .p_ಮುಂದಿನ = &perf,
             };
 
-            if (has_mods)
+            ಆದರೆ (has_mods)
                 mod_info.drmFormatModifier = mod_list->pDrmFormatModifiers[j];
 
             ret = vk->GetPhysicalDeviceImageFormatProperties2(dev_hwctx->phys_dev,
                                                               &pinfo, &props);
-            if (ret != VK_SUCCESS) {
+            ಆದರೆ (ret != VK_SUCCESS) {
                 av_log(hwfc, AV_LOG_VERBOSE, "Disabling host image transfers: "
                        "format %i is not supported: %s\n",
                        pinfo.format, ff_vk_ret2str(ret));
-                return 0;
+                ಹಿಂತಿರುಗಿ 0;
             }
 
-            if (!perf.optimalDeviceAccess) {
+            ಆದರೆ (!perf.optimalDeviceAccess) {
                 av_log(hwfc, AV_LOG_VERBOSE, "Disabling host image transfers: "
                        "format %i has no optimal device access (identical "
                        "memory layout: %i)\n",
-                       pinfo.format, perf.identicalMemoryLayout);
-                return 0;
+                       pinfo.format, perf.identical_ಸ್ಮರಣೆ_Layout);
+                ಹಿಂತಿರುಗಿ 0;
             }
         }
     }
 
-    if (!p->vkctx.host_image_props.identicalMemoryTypeRequirements) {
-        int index;
-        VkExternalMemoryHandleTypeFlags e;
-        VkExternalMemoryImageCreateInfo eiinfo = {
-            .sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
-            .pNext       = hwctx->create_pnext,
+    ಆದರೆ (!p->vkctx.host_image_props.identical_ಸ್ಮರಣೆ_Type_Requirements) {
+        ಪೂರ್ಣಾಂಕ ಸೂಚ್ಯಂಕ;
+        Vk_External_ಸ್ಮರಣೆ_Handle_Type_Flags e;
+        Vk_External_ಸ್ಮರಣೆ_Image_Create_Info eiinfo = {
+            .sType       = VK_STRUCTURE_TYPE_EXTERNAL_ಸ್ಮರಣೆ_IMAGE_CREATE_INFO,
+            .p_ಮುಂದಿನ       = hwctx->create_pnext,
         };
         get_export_handle_types(hwfc, &eiinfo.handleTypes, &e);
         VkImageCreateInfo create_info = {
             .sType       = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-            .pNext       = eiinfo.handleTypes ? &eiinfo : hwctx->create_pnext,
+            .p_ಮುಂದಿನ       = eiinfo.handleTypes ? &eiinfo : hwctx->create_pnext,
             .imageType   = VK_IMAGE_TYPE_2D,
             .format      = hwctx->format[0],
-            .extent      = { hwfc->width, hwfc->height, 1 },
-            .mipLevels   = 1,
+            .extent      = { hwfc->ಅಗಲ, hwfc->ಎತ್ತರ, 1 },
+            .mip_ಮಟ್ಟಗಳು   = 1,
             .arrayLayers = hwctx->nb_layers,
             .flags       = hwctx->img_flags,
             .tiling      = hwctx->tiling,
             .usage       = hwctx->usage,
-            .samples     = VK_SAMPLE_COUNT_1_BIT,
-            .pQueueFamilyIndices   = p->img_qfs,
-            .queueFamilyIndexCount = p->nb_img_qfs,
-            .sharingMode           = p->nb_img_qfs > 1 ? VK_SHARING_MODE_CONCURRENT :
-                                                         VK_SHARING_MODE_EXCLUSIVE,
+            .samples     = VK_SAMPLE_ಎಣಿಕೆ_1_ಬಿಟ್,
+            .p_ಸರತಿ_Family_Indices   = p->img_qfs,
+            .ಸರತಿ_Family_ಸೂಚ್ಯಂಕ_ಎಣಿಕೆ = p->nb_img_qfs,
+            .sharing_ಬಹುಲಕ           = p->nb_img_qfs > 1 ? VK_SHARING_ಬಹುಲಕ_CONCURRENT :
+                                                         VK_SHARING_ಬಹುಲಕ_EXCLUSIVE,
         };
-        VkDeviceImageMemoryRequirements req_info = {
-            .sType       = VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS,
+        Vk_Device_Image_ಸ್ಮರಣೆ_Requirements req_info = {
+            .sType       = VK_STRUCTURE_TYPE_DEVICE_IMAGE_ಸ್ಮರಣೆ_REQUIREMENTS,
             .pCreateInfo = &create_info,
             .planeAspect = hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT ?
-                           VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT : 0,
+                           VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_0_ಬಿಟ್_EXT : 0,
         };
-        VkMemoryRequirements2 req = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
+        Vk_ಸ್ಮರಣೆ_Requirements2 req = {
+            .sType = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_REQUIREMENTS_2,
         };
 
-        vk->GetDeviceImageMemoryRequirements(dev_hwctx->act_dev, &req_info, &req);
+        vk->Get_Device_Image_ಸ್ಮರಣೆ_Requirements(dev_hwctx->act_dev, &req_info, &req);
         /* Check that alloc_bind_mem() will find a compatible memory type. */
-        VkMemoryPropertyFlags req_flags = hwctx->tiling == VK_IMAGE_TILING_LINEAR ?
-                                          VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT :
-                                          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-        for (index = 0; index < p->mprops.memoryTypeCount; index++) {
-            if (!(req.memoryRequirements.memoryTypeBits & (1U << index)))
-                continue;
-            if ((p->mprops.memoryTypes[index].propertyFlags & req_flags) == req_flags)
-                break;
+        Vk_ಸ್ಮರಣೆ_Property_Flags req_flags = hwctx->tiling == VK_IMAGE_TILING_ರೇಖೀಯ ?
+                                          VK_ಸ್ಮರಣೆ_PROPERTY_HOST_VISIBLE_ಬಿಟ್ :
+                                          VK_ಸ್ಮರಣೆ_PROPERTY_DEVICE_LOCAL_ಬಿಟ್;
+        ಗಾಗಿ (ಸೂಚ್ಯಂಕ = 0; ಸೂಚ್ಯಂಕ < p->mprops.ಸ್ಮರಣೆ_Type_ಎಣಿಕೆ; ಸೂಚ್ಯಂಕ++) {
+            ಆದರೆ (!(req.ಸ್ಮರಣೆ_Requirements.ಸ್ಮರಣೆ_Type_ಬಿಟ್ಟುಗಳು & (1U << ಸೂಚ್ಯಂಕ)))
+                ಮುಂದುವರಿ;
+            ಆದರೆ ((p->mprops.ಸ್ಮರಣೆ_Types[ಸೂಚ್ಯಂಕ].propertyFlags & req_flags) == req_flags)
+                ನಿಲ್ಲಿಸು;
         }
-        if (index == p->mprops.memoryTypeCount) {
+        ಆದರೆ (ಸೂಚ್ಯಂಕ == p->mprops.ಸ್ಮರಣೆ_Type_ಎಣಿಕೆ) {
             av_log(hwfc, AV_LOG_VERBOSE, "Disabling host image transfers: "
                    "no compatible memory type\n");
-            return 0;
+            ಹಿಂತಿರುಗಿ 0;
         }
     }
 
-    return 1;
+    ಹಿಂತಿರುಗಿ 1;
 }
 
-static int vulkan_frames_init(AVHWFramesContext *hwfc)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_ಚೌಕಟ್ಟುಗಳು_init(AVHWFramesContext *hwfc)
 {
-    int err;
-    AVVkFrame *f;
-    VulkanFramesPriv *fp = hwfc->hwctx;
-    AVVulkanFramesContext *hwctx = &fp->p;
+    ಪೂರ್ಣಾಂಕ err;
+    AVVk_ಚೌಕಟ್ಟು *f;
+    Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
+    AVVulkan_ಚೌಕಟ್ಟುಗಳು_Context *hwctx = &fp->p;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *dev_hwctx = &p->p;
     VkImageUsageFlags supported_usage;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    const struct FFVkFormatEntry *fmt;
-    const AVPixFmtDescriptor *desc;
-    int disable_multiplane = p->disable_multiplane ||
-                             (hwctx->flags & AV_VK_FRAME_FLAG_DISABLE_MULTIPLANE);
-    int is_lone_dpb = ((hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR) ||
-                       ((hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR) &&
-                        !(hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR)));
+    ಸ್ಥಿರಾಂಕ ರಚನೆ FFVk_Format_ನಮೂದು *fmt;
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc;
+    ಪೂರ್ಣಾಂಕ disable_multiplane = p->disable_multiplane ||
+                             (hwctx->flags & AV_VK_ಚೌಕಟ್ಟು_FLAG_DISABLE_MULTIPLANE);
+    ಪೂರ್ಣಾಂಕ is_lone_dpb = ((hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_ಬಿಟ್_KHR) ||
+                       ((hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DPB_ಬಿಟ್_KHR) &&
+                        !(hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DST_ಬಿಟ್_KHR)));
 
     /* Defaults */
-    if (!hwctx->nb_layers)
+    ಆದರೆ (!hwctx->nb_layers)
         hwctx->nb_layers = 1;
 
     /* VK_IMAGE_TILING_OPTIMAL == 0, can't check for it really */
-    if (p->use_linear_images &&
+    ಆದರೆ (p->use_ರೇಖೀಯ_images &&
         (hwctx->tiling != VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT))
-        hwctx->tiling = VK_IMAGE_TILING_LINEAR;
+        hwctx->tiling = VK_IMAGE_TILING_ರೇಖೀಯ;
 
 
-    fmt = vk_find_format_entry(hwfc->sw_format);
-    if (!fmt) {
+    fmt = vk_ಕಂಡುಹಿಡಿ_format_ನಮೂದು(hwfc->sw_format);
+    ಆದರೆ (!fmt) {
         av_log(hwfc, AV_LOG_ERROR, "Unsupported pixel format: %s!\n",
                av_get_pix_fmt_name(hwfc->sw_format));
-        return AVERROR(ENOTSUP);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOTSUP);
     }
 
     /* _420 and _422 formats need even dimensions, use one image per plane */
     desc = av_pix_fmt_desc_get(hwfc->sw_format);
-    if ((hwfc->width  & ((1 << desc->log2_chroma_w) - 1)) ||
-        (hwfc->height & ((1 << desc->log2_chroma_h) - 1)))
+    ಆದರೆ ((hwfc->ಅಗಲ  & ((1 << desc->log2_chroma_w) - 1)) ||
+        (hwfc->ಎತ್ತರ & ((1 << desc->log2_chroma_h) - 1)))
         disable_multiplane = 1;
 
-    if (hwctx->format[0] != VK_FORMAT_UNDEFINED) {
-        if (hwctx->format[0] != fmt->vkf) {
-            for (int i = 0; i < fmt->nb_images_fallback; i++) {
-                if (hwctx->format[i] != fmt->fallback[i]) {
+    ಆದರೆ (hwctx->format[0] != VK_FORMAT_UNDEFINED) {
+        ಆದರೆ (hwctx->format[0] != fmt->vkf) {
+            ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < fmt->nb_images_fallback; i++) {
+                ಆದರೆ (hwctx->format[i] != fmt->fallback[i]) {
                     av_log(hwfc, AV_LOG_ERROR, "Incompatible Vulkan format given "
                            "for the current sw_format %s!\n",
                            av_get_pix_fmt_name(hwfc->sw_format));
-                    return AVERROR(EINVAL);
+                    ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
                 }
             }
         }
 
         /* Check if the sw_format itself is supported */
         err = vkfmt_from_pixfmt2(hwfc->device_ctx, hwfc->sw_format,
-                                 hwctx->tiling, NULL,
-                                 NULL, NULL, &supported_usage, 0,
+                                 hwctx->tiling, ಖಾಲಿ,
+                                 ಖಾಲಿ, ಖಾಲಿ, &supported_usage, 0,
                                  !hwctx->usage ||
-                                 (hwctx->usage & VK_IMAGE_USAGE_STORAGE_BIT));
-        if (err < 0) {
+                                 (hwctx->usage & VK_IMAGE_USAGE_STORAGE_ಬಿಟ್));
+        ಆದರೆ (err < 0) {
             av_log(hwfc, AV_LOG_ERROR, "Unsupported sw format: %s!\n",
                    av_get_pix_fmt_name(hwfc->sw_format));
-            return AVERROR(EINVAL);
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
         }
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         err = vkfmt_from_pixfmt2(hwfc->device_ctx, hwfc->sw_format,
-                                 hwctx->tiling, hwctx->format, NULL,
-                                 NULL, &supported_usage,
+                                 hwctx->tiling, hwctx->format, ಖಾಲಿ,
+                                 ಖಾಲಿ, &supported_usage,
                                  disable_multiplane,
                                  !hwctx->usage ||
-                                 (hwctx->usage & VK_IMAGE_USAGE_STORAGE_BIT));
-        if (err < 0)
-            return err;
+                                 (hwctx->usage & VK_IMAGE_USAGE_STORAGE_ಬಿಟ್));
+        ಆದರೆ (err < 0)
+            ಹಿಂತಿರುಗಿ err;
     }
 
     /* Lone DPB images do not need additional flags. */
     /* With DRM modifier + video profile the caller has already chosen a valid
      * usage/img_flags/chain; do not add usage or img_flags (supported_usage does
      * not consider the actual modifier or video profile). */
-    int drm_mod_with_video = (hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT &&
-                              ff_vk_find_struct(hwctx->create_pnext,
+    ಪೂರ್ಣಾಂಕ drm_mod_with_video = (hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT &&
+                              ff_vk_ಕಂಡುಹಿಡಿ_struct(hwctx->create_pnext,
                                                 VK_STRUCTURE_TYPE_VIDEO_PROFILE_LIST_INFO_KHR));
 
-    if (!is_lone_dpb && !drm_mod_with_video) {
+    ಆದರೆ (!is_lone_dpb && !drm_mod_with_video) {
         /* Image usage flags */
-        hwctx->usage |= supported_usage & (VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-                                           VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
-                                           VK_IMAGE_USAGE_STORAGE_BIT      |
-                                           VK_IMAGE_USAGE_SAMPLED_BIT);
+        hwctx->usage |= supported_usage & (VK_IMAGE_USAGE_TRANSFER_DST_ಬಿಟ್ |
+                                           VK_IMAGE_USAGE_TRANSFER_SRC_ಬಿಟ್ |
+                                           VK_IMAGE_USAGE_STORAGE_ಬಿಟ್      |
+                                           VK_IMAGE_USAGE_SAMPLED_ಬಿಟ್);
 
         /* Frames which may double as active references (coinciding decode
          * output) cannot support host transfers: decode submissions bake the
          * image layout into their barriers at record time, so a host-side
          * layout transition cannot be synchronized against them, not even
          * by the frame lock and timeline semaphore. */
-        if (p->vkctx.extensions & FF_VK_EXT_HOST_IMAGE_COPY &&
-            !(hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR))
-            hwctx->usage |= supported_usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT;
+        ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_HOST_IMAGE_COPY &&
+            !(hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DPB_ಬಿಟ್_KHR))
+            hwctx->usage |= supported_usage & VK_IMAGE_USAGE_HOST_TRANSFER_ಬಿಟ್_EXT;
 
         /* Enables encoding of images, if supported by format and extensions */
-        if ((supported_usage & VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR) &&
-            (p->vkctx.extensions & FF_VK_EXT_VIDEO_ENCODE_QUEUE) &&
+        ಆದರೆ ((supported_usage & VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_ಬಿಟ್_KHR) &&
+            (p->vkctx.extensions & FF_VK_EXT_VIDEO_ENCODE_ಸರತಿ) &&
             (p->vkctx.extensions & FF_VK_EXT_VIDEO_MAINTENANCE_1))
-            hwctx->usage |= VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR;
+            hwctx->usage |= VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_ಬಿಟ್_KHR;
 
         /* Image creation flags.
          * Only fill them in automatically if the image is not going to be used as
          * a DPB-only image, and we have SAMPLED/STORAGE bits set. */
-        if (!hwctx->img_flags) {
-            int sampleable = hwctx->usage & (VK_IMAGE_USAGE_SAMPLED_BIT |
-                                             VK_IMAGE_USAGE_STORAGE_BIT);
-            hwctx->img_flags = VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
-            if (sampleable) {
-                hwctx->img_flags |= VK_IMAGE_CREATE_ALIAS_BIT;
-                if ((fmt->vk_planes > 1) && (hwctx->format[0] == fmt->vkf))
-                    hwctx->img_flags |= VK_IMAGE_CREATE_EXTENDED_USAGE_BIT;
+        ಆದರೆ (!hwctx->img_flags) {
+            ಪೂರ್ಣಾಂಕ sampleable = hwctx->usage & (VK_IMAGE_USAGE_SAMPLED_ಬಿಟ್ |
+                                             VK_IMAGE_USAGE_STORAGE_ಬಿಟ್);
+            hwctx->img_flags = VK_IMAGE_CREATE_MUTABLE_FORMAT_ಬಿಟ್;
+            ಆದರೆ (sampleable) {
+                hwctx->img_flags |= VK_IMAGE_CREATE_ALIAS_ಬಿಟ್;
+                ಆದರೆ ((fmt->vk_planes > 1) && (hwctx->format[0] == fmt->vkf))
+                    hwctx->img_flags |= VK_IMAGE_CREATE_EXTENDED_USAGE_ಬಿಟ್;
             }
         }
     }
@@ -3347,107 +3347,107 @@ static int vulkan_frames_init(AVHWFramesContext *hwfc)
      * extension is supported, check if it has a profile list.
      * If there's no profile list, or it has no encode operations,
      * then allow creating the image with no specific profile. */
-    if ((hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR) &&
-        (p->vkctx.extensions & FF_VK_EXT_VIDEO_ENCODE_QUEUE) &&
+    ಆದರೆ ((hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_ಬಿಟ್_KHR) &&
+        (p->vkctx.extensions & FF_VK_EXT_VIDEO_ENCODE_ಸರತಿ) &&
         (p->vkctx.extensions & FF_VK_EXT_VIDEO_MAINTENANCE_1)) {
-        const VkVideoProfileListInfoKHR *pl;
-        pl = ff_vk_find_struct(hwctx->create_pnext, VK_STRUCTURE_TYPE_VIDEO_PROFILE_LIST_INFO_KHR);
-        if (!pl) {
-            hwctx->img_flags |= VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR;
-        } else {
+        ಸ್ಥಿರಾಂಕ VkVideoProfileListInfoKHR *pl;
+        pl = ff_vk_ಕಂಡುಹಿಡಿ_struct(hwctx->create_pnext, VK_STRUCTURE_TYPE_VIDEO_PROFILE_LIST_INFO_KHR);
+        ಆದರೆ (!pl) {
+            hwctx->img_flags |= VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_ಬಿಟ್_KHR;
+        } ಇಲ್ಲದಿದ್ದರೆ {
             uint32_t i;
-            for (i = 0; i < pl->profileCount; i++) {
+            ಗಾಗಿ (i = 0; i < pl->profile_ಎಣಿಕೆ; i++) {
                 /* Video ops start at exactly 0x00010000 */
-                if (pl->pProfiles[i].videoCodecOperation & 0xFFFF0000)
-                    break;
+                ಆದರೆ (pl->pProfiles[i].videoCodecOperation & 0xFFFF0000)
+                    ನಿಲ್ಲಿಸು;
             }
-            if (i == pl->profileCount)
-                hwctx->img_flags |= VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR;
+            ಆದರೆ (i == pl->profile_ಎಣಿಕೆ)
+                hwctx->img_flags |= VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_ಬಿಟ್_KHR;
         }
     }
 
     /* Drop the host transfer if it isn't usable for this image configuration. */
-    if ((hwctx->usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT) &&
+    ಆದರೆ ((hwctx->usage & VK_IMAGE_USAGE_HOST_TRANSFER_ಬಿಟ್_EXT) &&
         !vulkan_host_transfer_usable(hwfc))
-        hwctx->usage &= ~VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT;
+        hwctx->usage &= ~VK_IMAGE_USAGE_HOST_TRANSFER_ಬಿಟ್_EXT;
 
-    if (!hwctx->lock_frame)
-        hwctx->lock_frame = lock_frame;
+    ಆದರೆ (!hwctx->ಬೀಗ_ಚೌಕಟ್ಟು)
+        hwctx->ಬೀಗ_ಚೌಕಟ್ಟು = ಬೀಗ_ಚೌಕಟ್ಟು;
 
-    if (!hwctx->unlock_frame)
-        hwctx->unlock_frame = unlock_frame;
+    ಆದರೆ (!hwctx->unlock_ಚೌಕಟ್ಟು)
+        hwctx->unlock_ಚೌಕಟ್ಟು = unlock_ಚೌಕಟ್ಟು;
 
     err = ff_vk_exec_pool_init(&p->vkctx, p->compute_qf, &fp->compute_exec,
-                               2, 0, 0, 0, NULL);
-    if (err)
-        return err;
+                               2, 0, 0, 0, ಖಾಲಿ);
+    ಆದರೆ (err)
+        ಹಿಂತಿರುಗಿ err;
 
     err = ff_vk_exec_pool_init(&p->vkctx, p->transfer_qf, &fp->upload_exec,
-                               FF_VK_DEFAULT_EXEC_CONTEXTS, 0, 0, 0, NULL);
-    if (err)
-        return err;
+                               FF_VK_DEFAULT_EXEC_CONTEXTS, 0, 0, 0, ಖಾಲಿ);
+    ಆದರೆ (err)
+        ಹಿಂತಿರುಗಿ err;
 
     err = ff_vk_exec_pool_init(&p->vkctx, p->transfer_qf, &fp->download_exec,
-                               2, 0, 0, 0, NULL);
-    if (err)
-        return err;
+                               2, 0, 0, 0, ಖಾಲಿ);
+    ಆದರೆ (err)
+        ಹಿಂತಿರುಗಿ err;
 
     /* Test to see if allocation will fail */
-    err = create_frame(hwfc, &f, hwctx->tiling, hwctx->usage, hwctx->img_flags,
+    err = create_ಚೌಕಟ್ಟು(hwfc, &f, hwctx->tiling, hwctx->usage, hwctx->img_flags,
                        hwctx->nb_layers, hwctx->create_pnext);
-    if (err)
-        return err;
+    ಆದರೆ (err)
+        ಹಿಂತಿರುಗಿ err;
 
     /* Collect `VkDrmFormatModifierPropertiesEXT` for each plane. Required for DRM export. */
-    if (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS && hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT) {
+    ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS && hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT) {
         VkImageDrmFormatModifierPropertiesEXT drm_mod = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT,
         };
         err = vk->GetImageDrmFormatModifierPropertiesEXT(dev_hwctx->act_dev, f->img[0],
                                                         &drm_mod);
-        if (err != VK_SUCCESS) {
+        ಆದರೆ (err != VK_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to get image DRM format modifier properties");
-            vulkan_frame_free(hwfc, f);
-            return AVERROR_EXTERNAL;
+            vulkan_ಚೌಕಟ್ಟು_free(hwfc, f);
+            ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
         }
-        for (int i = 0; i < fmt->vk_planes; ++i) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < fmt->vk_planes; ++i) {
             VkDrmFormatModifierPropertiesListEXT modp;
             VkFormatProperties2 fmtp;
-            VkDrmFormatModifierPropertiesEXT *mod_props = NULL;
+            VkDrmFormatModifierPropertiesEXT *mod_props = ಖಾಲಿ;
 
             modp = (VkDrmFormatModifierPropertiesListEXT) {
                 .sType = VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT,
             };
             fmtp = (VkFormatProperties2) {
                 .sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2,
-                .pNext = &modp,
+                .p_ಮುಂದಿನ = &modp,
             };
 
             /* query drmFormatModifierCount by keeping pDrmFormatModifierProperties NULL */
             vk->GetPhysicalDeviceFormatProperties2(dev_hwctx->phys_dev, fmt->fallback[i], &fmtp);
 
             modp.pDrmFormatModifierProperties =
-                av_calloc(modp.drmFormatModifierCount, sizeof(*modp.pDrmFormatModifierProperties));
-            if (!modp.pDrmFormatModifierProperties) {
-                vulkan_frame_free(hwfc, f);
-                return AVERROR(ENOMEM);
+                av_calloc(modp.drm_Format_Modifier_ಎಣಿಕೆ, ಗಾತ್ರ(*modp.pDrmFormatModifierProperties));
+            ಆದರೆ (!modp.pDrmFormatModifierProperties) {
+                vulkan_ಚೌಕಟ್ಟು_free(hwfc, f);
+                ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
             }
             vk->GetPhysicalDeviceFormatProperties2(dev_hwctx->phys_dev, fmt->fallback[i], &fmtp);
 
-            for (uint32_t j = 0; j < modp.drmFormatModifierCount; ++j) {
+            ಗಾಗಿ (uint32_t j = 0; j < modp.drm_Format_Modifier_ಎಣಿಕೆ; ++j) {
                 VkDrmFormatModifierPropertiesEXT *m = &modp.pDrmFormatModifierProperties[j];
-                if (m->drmFormatModifier == drm_mod.drmFormatModifier) {
+                ಆದರೆ (m->drmFormatModifier == drm_mod.drmFormatModifier) {
                     mod_props = m;
-                    break;
+                    ನಿಲ್ಲಿಸು;
                 }
             }
 
-            if (mod_props == NULL) {
+            ಆದರೆ (mod_props == ಖಾಲಿ) {
                 av_log(hwfc, AV_LOG_ERROR, "No DRM format modifier properties found for modifier 0x%016"PRIx64"\n",
                           drm_mod.drmFormatModifier);
                 av_free(modp.pDrmFormatModifierProperties);
-                vulkan_frame_free(hwfc, f);
-                return AVERROR_EXTERNAL;
+                vulkan_ಚೌಕಟ್ಟು_free(hwfc, f);
+                ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
             }
 
             fp->drm_format_modifier_properties[i] = *mod_props;
@@ -3455,67 +3455,67 @@ static int vulkan_frames_init(AVHWFramesContext *hwfc)
         }
     }
 
-    vulkan_frame_free(hwfc, f);
+    vulkan_ಚೌಕಟ್ಟು_free(hwfc, f);
 
     /* If user did not specify a pool, hwfc->pool will be set to the internal one
      * in hwcontext.c just after this gets called */
-    if (!hwfc->pool) {
-        ffhwframesctx(hwfc)->pool_internal = av_buffer_pool_init2(sizeof(AVVkFrame),
+    ಆದರೆ (!hwfc->pool) {
+        ffhwframesctx(hwfc)->pool_ಆಂತರಿಕ = av_ಬಫರ್_pool_init2(ಗಾತ್ರ(AVVk_ಚೌಕಟ್ಟು),
                                                                   hwfc, vulkan_pool_alloc,
-                                                                  NULL);
-        if (!ffhwframesctx(hwfc)->pool_internal)
-            return AVERROR(ENOMEM);
+                                                                  ಖಾಲಿ);
+        ಆದರೆ (!ffhwframesctx(hwfc)->pool_ಆಂತರಿಕ)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int vulkan_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_get_ಬಫರ್(AVHWFramesContext *hwfc, AVFrame *ಚೌಕಟ್ಟು)
 {
-    frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    ಚೌಕಟ್ಟು->buf[0] = av_ಬಫರ್_pool_get(hwfc->pool);
+    ಆದರೆ (!ಚೌಕಟ್ಟು->buf[0])
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    frame->data[0] = frame->buf[0]->data;
-    frame->format  = AV_PIX_FMT_VULKAN;
-    frame->width   = hwfc->width;
-    frame->height  = hwfc->height;
+    ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[0] = ಚೌಕಟ್ಟು->buf[0]->ದತ್ತಾಂಶ;
+    ಚೌಕಟ್ಟು->format  = AV_PIX_FMT_VULKAN;
+    ಚೌಕಟ್ಟು->ಅಗಲ   = hwfc->ಅಗಲ;
+    ಚೌಕಟ್ಟು->ಎತ್ತರ  = hwfc->ಎತ್ತರ;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int vulkan_transfer_get_formats(AVHWFramesContext *hwfc,
-                                       enum AVHWFrameTransferDirection dir,
-                                       enum AVPixelFormat **formats)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_transfer_get_formats(AVHWFramesContext *hwfc,
+                                       ಎಣಿಕೆ AVHWFrameTransferDirection dir,
+                                       ಎಣಿಕೆ AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
-    int n = 2;
+    ಎಣಿಕೆ AVPixelFormat *fmts;
+    ಪೂರ್ಣಾಂಕ n = 2;
 
-#if CONFIG_CUDA
+#ಆದರೆ CONFIG_CUDA
     n++;
-#endif
-    fmts = av_malloc_array(n, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+#ಆದರೆ_ಅಂತ್ಯ
+    fmts = av_malloc_array(n, ಗಾತ್ರ(*fmts));
+    ಆದರೆ (!fmts)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
     n = 0;
     fmts[n++] = hwfc->sw_format;
-#if CONFIG_CUDA
+#ಆದರೆ CONFIG_CUDA
     fmts[n++] = AV_PIX_FMT_CUDA;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     fmts[n++] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-#if CONFIG_LIBDRM
-static void vulkan_unmap_from_drm(AVHWFramesContext *hwfc, HWMapDescriptor *hwmap)
+#ಆದರೆ CONFIG_LIBDRM
+ಸ್ಥಿರ ಶೂನ್ಯ vulkan_unmap_from_drm(AVHWFramesContext *hwfc, HWMapDescriptor *hwmap)
 {
-    vulkan_frame_free(hwfc, hwmap->priv);
+    vulkan_ಚೌಕಟ್ಟು_free(hwfc, hwmap->priv);
 }
 
-static const struct {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ರಚನೆ {
     uint32_t drm_fourcc;
     VkFormat vk_format;
 } vulkan_drm_format_map[] = {
@@ -3535,65 +3535,65 @@ static const struct {
     { DRM_FORMAT_XBGR2101010, VK_FORMAT_A2R10G10B10_UNORM_PACK32 },
 
     // All these DRM_FORMATs were added in the same libdrm commit.
-#ifdef DRM_FORMAT_XYUV8888
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ DRM_FORMAT_XYUV8888
     { DRM_FORMAT_XYUV8888, VK_FORMAT_R8G8B8A8_UNORM     },
     { DRM_FORMAT_XVYU2101010, VK_FORMAT_A2R10G10B10_UNORM_PACK32 } ,
     { DRM_FORMAT_XVYU12_16161616, VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16 } ,
     { DRM_FORMAT_XVYU16161616, VK_FORMAT_R16G16B16A16_UNORM } ,
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 };
 
-static inline VkFormat drm_to_vulkan_fmt(uint32_t drm_fourcc)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ VkFormat drm_ಗಮ್ಯ_vulkan_fmt(uint32_t drm_fourcc)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(vulkan_drm_format_map); i++)
-        if (vulkan_drm_format_map[i].drm_fourcc == drm_fourcc)
-            return vulkan_drm_format_map[i].vk_format;
-    return VK_FORMAT_UNDEFINED;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(vulkan_drm_format_map); i++)
+        ಆದರೆ (vulkan_drm_format_map[i].drm_fourcc == drm_fourcc)
+            ಹಿಂತಿರುಗಿ vulkan_drm_format_map[i].vk_format;
+    ಹಿಂತಿರುಗಿ VK_FORMAT_UNDEFINED;
 }
 
-static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **frame,
-                                          const AVFrame *src, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_map_from_drm_ಚೌಕಟ್ಟು_desc(AVHWFramesContext *hwfc, AVVk_ಚೌಕಟ್ಟು **ಚೌಕಟ್ಟು,
+                                          ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags)
 {
-    int err = 0;
-    VkResult ret;
-    AVVkFrame *f;
-    int bind_counts = 0;
+    ಪೂರ್ಣಾಂಕ err = 0;
+    Vk_ಫಲಿತಾಂಶ ret;
+    AVVk_ಚೌಕಟ್ಟು *f;
+    ಪೂರ್ಣಾಂಕ bind_counts = 0;
     AVHWDeviceContext *ctx = hwfc->device_ctx;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor *)src->data[0];
-    VkBindImageMemoryInfo bind_info[AV_DRM_MAX_PLANES];
-    VkBindImagePlaneMemoryInfo plane_info[AV_DRM_MAX_PLANES];
+    ಸ್ಥಿರಾಂಕ AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor *)src->ದತ್ತಾಂಶ[0];
+    Vk_Bind_Image_ಸ್ಮರಣೆ_Info bind_info[AV_DRM_MAX_PLANES];
+    Vk_Bind_Image_Plane_ಸ್ಮರಣೆ_Info plane_info[AV_DRM_MAX_PLANES];
 
-    for (int i = 0; i < desc->nb_layers; i++) {
-        if (drm_to_vulkan_fmt(desc->layers[i].format) == VK_FORMAT_UNDEFINED) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < desc->nb_layers; i++) {
+        ಆದರೆ (drm_ಗಮ್ಯ_vulkan_fmt(desc->layers[i].format) == VK_FORMAT_UNDEFINED) {
             av_log(ctx, AV_LOG_ERROR, "Unsupported DMABUF layer format %#08x!\n",
                    desc->layers[i].format);
-            return AVERROR(EINVAL);
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
         }
     }
 
-    if (!(f = av_vk_frame_alloc())) {
+    ಆದರೆ (!(f = av_vk_ಚೌಕಟ್ಟು_alloc())) {
         av_log(ctx, AV_LOG_ERROR, "Unable to allocate memory for AVVkFrame!\n");
         err = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
 
     f->tiling = VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT;
 
-    for (int i = 0; i < desc->nb_layers; i++) {
-        const int planes = desc->layers[i].nb_planes;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < desc->nb_layers; i++) {
+        ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ planes = desc->layers[i].nb_planes;
 
         /* Semaphore */
         VkSemaphoreTypeCreateInfo sem_type_info = {
             .sType         = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
             .semaphoreType = VK_SEMAPHORE_TYPE_TIMELINE,
-            .initialValue  = 0,
+            .initial_ಮೌಲ್ಯ  = 0,
         };
         VkSemaphoreCreateInfo sem_spawn = {
             .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-            .pNext = &sem_type_info,
+            .p_ಮುಂದಿನ = &sem_type_info,
         };
 
         /* Image creation */
@@ -3601,31 +3601,31 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
         VkImageDrmFormatModifierExplicitCreateInfoEXT ext_img_mod_spec = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT,
             .drmFormatModifier = desc->objects[0].format_modifier,
-            .drmFormatModifierPlaneCount = planes,
-            .pPlaneLayouts = (const VkSubresourceLayout *)&ext_img_layouts,
+            .drm_Format_Modifier_Plane_ಎಣಿಕೆ = planes,
+            .pPlaneLayouts = (ಸ್ಥಿರಾಂಕ VkSubresourceLayout *)&ext_img_layouts,
         };
-        VkExternalMemoryImageCreateInfo ext_img_spec = {
-            .sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
-            .pNext       = &ext_img_mod_spec,
-            .handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT,
+        Vk_External_ಸ್ಮರಣೆ_Image_Create_Info ext_img_spec = {
+            .sType       = VK_STRUCTURE_TYPE_EXTERNAL_ಸ್ಮರಣೆ_IMAGE_CREATE_INFO,
+            .p_ಮುಂದಿನ       = &ext_img_mod_spec,
+            .handleTypes = VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_DMA_BUF_ಬಿಟ್_EXT,
         };
         VkImageCreateInfo create_info = {
             .sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-            .pNext                 = &ext_img_spec,
+            .p_ಮುಂದಿನ                 = &ext_img_spec,
             .imageType             = VK_IMAGE_TYPE_2D,
-            .format                = drm_to_vulkan_fmt(desc->layers[i].format),
-            .extent.depth          = 1,
-            .mipLevels             = 1,
+            .format                = drm_ಗಮ್ಯ_vulkan_fmt(desc->layers[i].format),
+            .extent.ಆಳ          = 1,
+            .mip_ಮಟ್ಟಗಳು             = 1,
             .arrayLayers           = 1,
             .flags                 = 0x0,
             .tiling                = VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT,
             .initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED, /* specs say so */
             .usage                 = 0x0, /* filled in below */
-            .samples               = VK_SAMPLE_COUNT_1_BIT,
-            .pQueueFamilyIndices   = p->img_qfs,
-            .queueFamilyIndexCount = p->nb_img_qfs,
-            .sharingMode           = p->nb_img_qfs > 1 ? VK_SHARING_MODE_CONCURRENT :
-                                                         VK_SHARING_MODE_EXCLUSIVE,
+            .samples               = VK_SAMPLE_ಎಣಿಕೆ_1_ಬಿಟ್,
+            .p_ಸರತಿ_Family_Indices   = p->img_qfs,
+            .ಸರತಿ_Family_ಸೂಚ್ಯಂಕ_ಎಣಿಕೆ = p->nb_img_qfs,
+            .sharing_ಬಹುಲಕ           = p->nb_img_qfs > 1 ? VK_SHARING_ಬಹುಲಕ_CONCURRENT :
+                                                         VK_SHARING_ಬಹುಲಕ_EXCLUSIVE,
         };
 
         /* The DRM fourcc fixes a specific channel order (f.ex ARGB8888 maps to
@@ -3634,9 +3634,9 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
          * single plane layer, create the image with the sw_format's compatible
          * VkFormat so the image and its views agree without a mutable format
          * list, the format query below validates this */
-        if (planes == 1) {
-            const VkFormat *sw_vkfmts = av_vkfmt_from_pixfmt(hwfc->sw_format);
-            if (sw_vkfmts && sw_vkfmts[i] != VK_FORMAT_UNDEFINED)
+        ಆದರೆ (planes == 1) {
+            ಸ್ಥಿರಾಂಕ VkFormat *sw_vkfmts = av_vkfmt_from_pixfmt(hwfc->sw_format);
+            ಆದರೆ (sw_vkfmts && sw_vkfmts[i] != VK_FORMAT_UNDEFINED)
                 create_info.format = sw_vkfmts[i];
         }
 
@@ -3646,32 +3646,32 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
         };
         VkImageFormatProperties2 props_ret = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2,
-            .pNext = &ext_props,
+            .p_ಮುಂದಿನ = &ext_props,
         };
         VkPhysicalDeviceImageDrmFormatModifierInfoEXT props_drm_mod = {
             .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT,
             .drmFormatModifier = ext_img_mod_spec.drmFormatModifier,
-            .pQueueFamilyIndices = create_info.pQueueFamilyIndices,
-            .queueFamilyIndexCount = create_info.queueFamilyIndexCount,
-            .sharingMode = create_info.sharingMode,
+            .p_ಸರತಿ_Family_Indices = create_info.p_ಸರತಿ_Family_Indices,
+            .ಸರತಿ_Family_ಸೂಚ್ಯಂಕ_ಎಣಿಕೆ = create_info.ಸರತಿ_Family_ಸೂಚ್ಯಂಕ_ಎಣಿಕೆ,
+            .sharing_ಬಹುಲಕ = create_info.sharing_ಬಹುಲಕ,
         };
         VkPhysicalDeviceExternalImageFormatInfo props_ext = {
             .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO,
-            .pNext = &props_drm_mod,
+            .p_ಮುಂದಿನ = &props_drm_mod,
             .handleType = ext_img_spec.handleTypes,
         };
         VkPhysicalDeviceImageFormatInfo2 fmt_props;
 
-        if (flags & AV_HWFRAME_MAP_READ)
-            create_info.usage |= VK_IMAGE_USAGE_SAMPLED_BIT |
-                                 VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-        if (flags & AV_HWFRAME_MAP_WRITE)
-            create_info.usage |= VK_IMAGE_USAGE_STORAGE_BIT |
-                                 VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        ಆದರೆ (flags & AV_HWFRAME_MAP_READ)
+            create_info.usage |= VK_IMAGE_USAGE_SAMPLED_ಬಿಟ್ |
+                                 VK_IMAGE_USAGE_TRANSFER_SRC_ಬಿಟ್;
+        ಆದರೆ (flags & AV_HWFRAME_MAP_WRITE)
+            create_info.usage |= VK_IMAGE_USAGE_STORAGE_ಬಿಟ್ |
+                                 VK_IMAGE_USAGE_TRANSFER_DST_ಬಿಟ್;
 
         fmt_props = (VkPhysicalDeviceImageFormatInfo2) {
             .sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2,
-            .pNext  = &props_ext,
+            .p_ಮುಂದಿನ  = &props_ext,
             .format = create_info.format,
             .type   = create_info.imageType,
             .tiling = create_info.tiling,
@@ -3682,133 +3682,133 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
         /* Check if importing is possible for this combination of parameters */
         ret = vk->GetPhysicalDeviceImageFormatProperties2(hwctx->phys_dev,
                                                           &fmt_props, &props_ret);
-        if (ret != VK_SUCCESS) {
+        ಆದರೆ (ret != VK_SUCCESS) {
             av_log(ctx, AV_LOG_ERROR, "Cannot map DRM frame to Vulkan: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
-            goto fail;
+            ಹೋಗು fail;
         }
 
         /* Set the image width/height */
-        get_plane_wh(&create_info.extent.width, &create_info.extent.height,
-                     hwfc->sw_format, src->width, src->height, i);
+        get_plane_wh(&create_info.extent.ಅಗಲ, &create_info.extent.ಎತ್ತರ,
+                     hwfc->sw_format, src->ಅಗಲ, src->ಎತ್ತರ, i);
 
         /* Set the subresource layout based on the layer properties */
-        for (int j = 0; j < planes; j++) {
-            ext_img_layouts[j].offset     = desc->layers[i].planes[j].offset;
-            ext_img_layouts[j].rowPitch   = desc->layers[i].planes[j].pitch;
-            ext_img_layouts[j].size       = 0; /* The specs say so for all 3 */
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < planes; j++) {
+            ext_img_layouts[j].ಸ್ಥಾನಾಂತರ     = desc->layers[i].planes[j].ಸ್ಥಾನಾಂತರ;
+            ext_img_layouts[j].ಅಡ್ಡಸಾಲು_Pitch_2   = desc->layers[i].planes[j].pitch;
+            ext_img_layouts[j].ಗಾತ್ರ_2       = 0; /* The specs say so for all 3 */
             ext_img_layouts[j].arrayPitch = 0;
-            ext_img_layouts[j].depthPitch = 0;
+            ext_img_layouts[j].ಆಳ_Pitch = 0;
         }
 
         /* Create image */
         ret = vk->CreateImage(hwctx->act_dev, &create_info,
                               hwctx->alloc, &f->img[i]);
-        if (ret != VK_SUCCESS) {
+        ಆದರೆ (ret != VK_SUCCESS) {
             av_log(ctx, AV_LOG_ERROR, "Image creation failure: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR(EINVAL);
-            goto fail;
+            ಹೋಗು fail;
         }
 
         ret = vk->CreateSemaphore(hwctx->act_dev, &sem_spawn,
                                   hwctx->alloc, &f->sem[i]);
-        if (ret != VK_SUCCESS) {
+        ಆದರೆ (ret != VK_SUCCESS) {
             av_log(hwctx, AV_LOG_ERROR, "Failed to create semaphore: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
-            goto fail;
+            ಹೋಗು fail;
         }
 
-        f->queue_family[i] = VK_QUEUE_FAMILY_EXTERNAL;
+        f->ಸರತಿ_family[i] = VK_ಸರತಿ_FAMILY_EXTERNAL;
         f->layout[i] = create_info.initialLayout;
         f->access[i] = 0x0;
-        f->sem_value[i] = 0;
+        f->sem_ಮೌಲ್ಯ[i] = 0;
     }
 
-    for (int i = 0; i < desc->nb_layers; i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < desc->nb_layers; i++) {
         /* Memory requirements */
-        VkImageMemoryRequirementsInfo2 req_desc = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
+        Vk_Image_ಸ್ಮರಣೆ_Requirements_Info2 req_desc = {
+            .sType = VK_STRUCTURE_TYPE_IMAGE_ಸ್ಮರಣೆ_REQUIREMENTS_INFO_2,
             .image = f->img[i],
         };
-        VkMemoryDedicatedRequirements ded_req = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS,
+        Vk_ಸ್ಮರಣೆ_Dedicated_Requirements ded_req = {
+            .sType = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_DEDICATED_REQUIREMENTS,
         };
-        VkMemoryRequirements2 req2 = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
-            .pNext = &ded_req,
+        Vk_ಸ್ಮರಣೆ_Requirements2 req2 = {
+            .sType = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_REQUIREMENTS_2,
+            .p_ಮುಂದಿನ = &ded_req,
         };
 
         /* Allocation/importing */
-        VkMemoryFdPropertiesKHR fdmp = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR,
+        Vk_ಸ್ಮರಣೆ_Fd_Properties_KHR fdmp = {
+            .sType = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_FD_PROPERTIES_KHR,
         };
         /* This assumes that a layer will never be constructed from multiple
          * objects. If that was to happen in the real world, this code would
          * need to import each plane separately.
          */
-        VkImportMemoryFdInfoKHR idesc = {
-            .sType      = VK_STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR,
-            .fd         = dup(desc->objects[desc->layers[i].planes[0].object_index].fd),
-            .handleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT,
+        Vk_Import_ಸ್ಮರಣೆ_Fd_Info_KHR idesc = {
+            .sType      = VK_STRUCTURE_TYPE_IMPORT_ಸ್ಮರಣೆ_FD_INFO_KHR,
+            .fd         = dup(desc->objects[desc->layers[i].planes[0].object_ಸೂಚ್ಯಂಕ].fd),
+            .handleType = VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_DMA_BUF_ಬಿಟ್_EXT,
         };
-        VkMemoryDedicatedAllocateInfo ded_alloc = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO,
-            .pNext = &idesc,
+        Vk_ಸ್ಮರಣೆ_Dedicated_Allocate_Info ded_alloc = {
+            .sType = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_DEDICATED_ALLOCATE_INFO,
+            .p_ಮುಂದಿನ = &idesc,
             .image = req_desc.image,
         };
 
         /* Get object properties */
-        ret = vk->GetMemoryFdPropertiesKHR(hwctx->act_dev,
-                                           VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT,
+        ret = vk->Get_ಸ್ಮರಣೆ_Fd_Properties_KHR(hwctx->act_dev,
+                                           VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_DMA_BUF_ಬಿಟ್_EXT,
                                            idesc.fd, &fdmp);
-        if (ret != VK_SUCCESS) {
+        ಆದರೆ (ret != VK_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to get FD properties: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
             close(idesc.fd);
-            goto fail;
+            ಹೋಗು fail;
         }
 
-        vk->GetImageMemoryRequirements2(hwctx->act_dev, &req_desc, &req2);
+        vk->Get_Image_ಸ್ಮರಣೆ_Requirements2(hwctx->act_dev, &req_desc, &req2);
 
         /* Only a single bit must be set, not a range, and it must match */
-        req2.memoryRequirements.memoryTypeBits = fdmp.memoryTypeBits;
+        req2.ಸ್ಮರಣೆ_Requirements.ಸ್ಮರಣೆ_Type_ಬಿಟ್ಟುಗಳು = fdmp.ಸ್ಮರಣೆ_Type_ಬಿಟ್ಟುಗಳು;
 
-        err = alloc_mem(ctx, &req2.memoryRequirements,
-                        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-                        (ded_req.prefersDedicatedAllocation ||
-                         ded_req.requiresDedicatedAllocation) ?
-                            &ded_alloc : ded_alloc.pNext,
+        err = alloc_mem(ctx, &req2.ಸ್ಮರಣೆ_Requirements,
+                        VK_ಸ್ಮರಣೆ_PROPERTY_DEVICE_LOCAL_ಬಿಟ್,
+                        (ded_req.prefers_Dedicated_ಹಂಚಿಕೆ ||
+                         ded_req.requires_Dedicated_ಹಂಚಿಕೆ) ?
+                            &ded_alloc : ded_alloc.p_ಮುಂದಿನ,
                         &f->flags, &f->mem[i]);
-        if (err) {
+        ಆದರೆ (err) {
             close(idesc.fd);
-            goto fail;
+            ಹೋಗು fail;
         }
 
-        f->size[i] = req2.memoryRequirements.size;
+        f->ಗಾತ್ರ_2[i] = req2.ಸ್ಮರಣೆ_Requirements.ಗಾತ್ರ_2;
     }
 
-    for (int i = 0; i < desc->nb_layers; i++) {
-        const int planes = desc->layers[i].nb_planes;
-        for (int j = 0; j < planes; j++) {
-            VkImageAspectFlagBits aspect = j == 0 ? VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT :
-                                           j == 1 ? VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT :
-                                                    VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < desc->nb_layers; i++) {
+        ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ planes = desc->layers[i].nb_planes;
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < planes; j++) {
+            Vk_Image_Aspect_Flag_ಬಿಟ್ಟುಗಳು aspect = j == 0 ? VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_0_ಬಿಟ್_EXT :
+                                           j == 1 ? VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_1_ಬಿಟ್_EXT :
+                                                    VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_2_ಬಿಟ್_EXT;
 
-            plane_info[bind_counts].sType = VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO;
-            plane_info[bind_counts].pNext = NULL;
+            plane_info[bind_counts].sType = VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_ಸ್ಮರಣೆ_INFO;
+            plane_info[bind_counts].p_ಮುಂದಿನ = ಖಾಲಿ;
             plane_info[bind_counts].planeAspect = aspect;
 
-            bind_info[bind_counts].sType  = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO;
-            bind_info[bind_counts].pNext  = planes > 1 ? &plane_info[bind_counts] : NULL;
+            bind_info[bind_counts].sType  = VK_STRUCTURE_TYPE_BIND_IMAGE_ಸ್ಮರಣೆ_INFO;
+            bind_info[bind_counts].p_ಮುಂದಿನ  = planes > 1 ? &plane_info[bind_counts] : ಖಾಲಿ;
             bind_info[bind_counts].image  = f->img[i];
-            bind_info[bind_counts].memory = f->mem[i];
+            bind_info[bind_counts].ಸ್ಮರಣೆ = f->mem[i];
 
             /* Offset is already signalled via pPlaneLayouts above */
-            bind_info[bind_counts].memoryOffset = 0;
+            bind_info[bind_counts].ಸ್ಮರಣೆ_ಸ್ಥಾನಾಂತರ = 0;
 
             bind_counts++;
         }
@@ -3816,657 +3816,657 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
 
     /* Bind the allocated memory to the images */
     ret = vk->BindImageMemory2(hwctx->act_dev, bind_counts, bind_info);
-    if (ret != VK_SUCCESS) {
+    ಆದರೆ (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Failed to bind memory: %s\n",
                ff_vk_ret2str(ret));
         err = AVERROR_EXTERNAL;
-        goto fail;
+        ಹೋಗು fail;
     }
 
-    *frame = f;
+    *ಚೌಕಟ್ಟು = f;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    vulkan_frame_free(hwfc, f);
+    vulkan_ಚೌಕಟ್ಟು_free(hwfc, f);
 
-    return err;
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static int vulkan_map_from_drm_frame_sync(AVHWFramesContext *hwfc, AVFrame *dst,
-                                          const AVDRMFrameDescriptor *desc, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_map_from_drm_ಚೌಕಟ್ಟು_sync(AVHWFramesContext *hwfc, AVFrame *dst,
+                                          ಸ್ಥಿರಾಂಕ AVDRMFrameDescriptor *desc, ಪೂರ್ಣಾಂಕ flags)
 {
-    int err;
-    VkResult ret;
+    ಪೂರ್ಣಾಂಕ err;
+    Vk_ಫಲಿತಾಂಶ ret;
     AVHWDeviceContext *ctx = hwfc->device_ctx;
     VulkanDevicePriv *p = ctx->hwctx;
-    VulkanFramesPriv *fp = hwfc->hwctx;
+    Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-#ifdef DMA_BUF_IOCTL_EXPORT_SYNC_FILE
-    if (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM) {
-        VkCommandBuffer cmd_buf;
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ DMA_BUF_IOCTL_EXPORT_SYNC_FILE
+    ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM) {
+        Vk_Command_ಬಫರ್ cmd_buf;
         FFVkExecContext *exec;
-        VkImageMemoryBarrier2 img_bar[AV_NUM_DATA_POINTERS];
+        Vk_Image_ಸ್ಮರಣೆ_Barrier2 img_bar[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
         VkSemaphore drm_sync_sem[AV_DRM_MAX_PLANES] = { 0 };
-        int nb_img_bar = 0;
+        ಪೂರ್ಣಾಂಕ nb_img_bar = 0;
 
-        for (int i = 0; i < desc->nb_objects; i++) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < desc->nb_objects; i++) {
             VkSemaphoreTypeCreateInfo sem_type_info = {
                 .sType         = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
-                .semaphoreType = VK_SEMAPHORE_TYPE_BINARY,
+                .semaphoreType = VK_SEMAPHORE_TYPE_ದ್ವಿಮಾನ,
             };
             VkSemaphoreCreateInfo sem_spawn = {
                 .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-                .pNext = &sem_type_info,
+                .p_ಮುಂದಿನ = &sem_type_info,
             };
             VkImportSemaphoreFdInfoKHR import_info;
-            struct dma_buf_export_sync_file implicit_fd_info = {
+            ರಚನೆ dma_buf_export_sync_file implicit_fd_info = {
                 .flags = DMA_BUF_SYNC_READ,
                 .fd = -1,
             };
 
-            if (ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_EXPORT_SYNC_FILE,
+            ಆದರೆ (ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_EXPORT_SYNC_FILE,
                       &implicit_fd_info)) {
                 err = AVERROR(errno);
                 av_log(hwctx, AV_LOG_ERROR, "Failed to retrieve implicit DRM sync file: %s\n",
                        av_err2str(err));
-                for (; i >= 0; i--)
+                ಗಾಗಿ (; i >= 0; i--)
                     vk->DestroySemaphore(hwctx->act_dev, drm_sync_sem[i], hwctx->alloc);
-                return err;
+                ಹಿಂತಿರುಗಿ err;
             }
 
             ret = vk->CreateSemaphore(hwctx->act_dev, &sem_spawn,
                                       hwctx->alloc, &drm_sync_sem[i]);
-            if (ret != VK_SUCCESS) {
+            ಆದರೆ (ret != VK_SUCCESS) {
                 av_log(hwctx, AV_LOG_ERROR, "Failed to create semaphore: %s\n",
                        ff_vk_ret2str(ret));
                 err = AVERROR_EXTERNAL;
-                for (; i >= 0; i--)
+                ಗಾಗಿ (; i >= 0; i--)
                     vk->DestroySemaphore(hwctx->act_dev, drm_sync_sem[i], hwctx->alloc);
-                return err;
+                ಹಿಂತಿರುಗಿ err;
             }
 
             import_info = (VkImportSemaphoreFdInfoKHR) {
                 .sType = VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR,
-                .handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT,
-                .flags = VK_SEMAPHORE_IMPORT_TEMPORARY_BIT,
+                .handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_ಬಿಟ್,
+                .flags = VK_SEMAPHORE_IMPORT_TEMPORARY_ಬಿಟ್,
                 .semaphore = drm_sync_sem[i],
                 .fd = implicit_fd_info.fd,
             };
 
             ret = vk->ImportSemaphoreFdKHR(hwctx->act_dev, &import_info);
-            if (ret != VK_SUCCESS) {
+            ಆದರೆ (ret != VK_SUCCESS) {
                 av_log(hwctx, AV_LOG_ERROR, "Failed to import semaphore: %s\n",
                        ff_vk_ret2str(ret));
                 err = AVERROR_EXTERNAL;
-                for (; i >= 0; i--)
+                ಗಾಗಿ (; i >= 0; i--)
                     vk->DestroySemaphore(hwctx->act_dev, drm_sync_sem[i], hwctx->alloc);
-                return err;
+                ಹಿಂತಿರುಗಿ err;
             }
         }
 
         exec = ff_vk_exec_get(&p->vkctx, &fp->compute_exec);
         cmd_buf = exec->buf;
 
-        err = ff_vk_exec_start(&p->vkctx, exec);
-        if (err < 0) {
-            for (int i = 0; i < desc->nb_objects; i++)
+        err = ff_vk_exec_ಆರಂಭ(&p->vkctx, exec);
+        ಆದರೆ (err < 0) {
+            ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < desc->nb_objects; i++)
                 vk->DestroySemaphore(hwctx->act_dev, drm_sync_sem[i], hwctx->alloc);
-            return err;
+            ಹಿಂತಿರುಗಿ err;
         }
 
         /* Ownership of semaphores is passed */
-        ff_vk_exec_add_dep_bool_sem(&p->vkctx, exec,
+        ff_vk_exec_ಕೂಡಿಸು_dep_bool_sem(&p->vkctx, exec,
                                     drm_sync_sem, desc->nb_objects,
-                                    VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, 1);
+                                    VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್, 1);
 
         /* The imported DRM sync file only orders the external data, not this
          * frame's earlier use by FFmpeg. The frame may be recycled from the
          * pool while it is still in flight (and last used on another queue),
          * so the map waits on its last signal, at ALL_COMMANDS, to be ordered
          * after that previous use. */
-        err = ff_vk_exec_add_dep_frame(&p->vkctx, exec, dst,
-                                       VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
-                                       VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT);
-        if (err < 0) {
+        err = ff_vk_exec_ಕೂಡಿಸು_dep_ಚೌಕಟ್ಟು(&p->vkctx, exec, dst,
+                                       VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್,
+                                       VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್);
+        ಆದರೆ (err < 0) {
             ff_vk_exec_discard(&p->vkctx, exec);
-            return err;
+            ಹಿಂತಿರುಗಿ err;
         }
 
-        ff_vk_frame_barrier(&p->vkctx, exec, dst, img_bar, &nb_img_bar,
+        ff_vk_ಚೌಕಟ್ಟು_barrier(&p->vkctx, exec, dst, img_bar, &nb_img_bar,
                             VK_PIPELINE_STAGE_2_NONE,
-                            VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
+                            VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್,
                             ((flags & AV_HWFRAME_MAP_READ) ?
-                             VK_ACCESS_2_SHADER_SAMPLED_READ_BIT : 0x0) |
+                             VK_ACCESS_2_SHADER_SAMPLED_READ_ಬಿಟ್ : 0x0) |
                             ((flags & AV_HWFRAME_MAP_WRITE) ?
-                             VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT : 0x0),
+                             VK_ACCESS_2_SHADER_STORAGE_WRITE_ಬಿಟ್ : 0x0),
                             VK_IMAGE_LAYOUT_GENERAL,
-                            p->nb_img_qfs > 1 ? VK_QUEUE_FAMILY_IGNORED : p->img_qfs[0]);
+                            p->nb_img_qfs > 1 ? VK_ಸರತಿ_FAMILY_IGNORED : p->img_qfs[0]);
 
         vk->CmdPipelineBarrier2(cmd_buf, &(VkDependencyInfo) {
                 .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
-                .pImageMemoryBarriers = img_bar,
-                .imageMemoryBarrierCount = nb_img_bar,
+                .p_Image_ಸ್ಮರಣೆ_Barriers = img_bar,
+                .image_ಸ್ಮರಣೆ_Barrier_ಎಣಿಕೆ = nb_img_bar,
             });
 
         err = ff_vk_exec_submit(&p->vkctx, exec);
-        if (err < 0)
-            return err;
-    } else
-#endif
+        ಆದರೆ (err < 0)
+            ಹಿಂತಿರುಗಿ err;
+    } ಇಲ್ಲದಿದ್ದರೆ
+#ಆದರೆ_ಅಂತ್ಯ
     {
-        AVVkFrame *f = (AVVkFrame *)dst->data[0];
+        AVVk_ಚೌಕಟ್ಟು *f = (AVVk_ಚೌಕಟ್ಟು *)dst->ದತ್ತಾಂಶ[0];
         av_log(hwctx, AV_LOG_WARNING, "No support for synchronization when importing DMA-BUFs, "
                                       "image may be corrupted.\n");
-        err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_EXTERNAL_IMPORT);
-        if (err)
-            return err;
+        err = prepare_ಚೌಕಟ್ಟು(hwfc, &fp->compute_exec, f, PREP_ಬಹುಲಕ_EXTERNAL_IMPORT);
+        ಆದರೆ (err)
+            ಹಿಂತಿರುಗಿ err;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int vulkan_map_from_drm(AVHWFramesContext *hwfc, AVFrame *dst,
-                               const AVFrame *src, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_map_from_drm(AVHWFramesContext *hwfc, AVFrame *dst,
+                               ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags)
 {
-    int err = 0;
-    AVVkFrame *f;
-    const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor *)src->data[0];
+    ಪೂರ್ಣಾಂಕ err = 0;
+    AVVk_ಚೌಕಟ್ಟು *f;
+    ಸ್ಥಿರಾಂಕ AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor *)src->ದತ್ತಾಂಶ[0];
 
-    if ((err = vulkan_map_from_drm_frame_desc(hwfc, &f, src, flags)))
-        return err;
+    ಆದರೆ ((err = vulkan_map_from_drm_ಚೌಕಟ್ಟು_desc(hwfc, &f, src, flags)))
+        ಹಿಂತಿರುಗಿ err;
 
     /* The unmapping function will free this */
-    dst->data[0] = (uint8_t *)f;
-    dst->width   = src->width;
-    dst->height  = src->height;
+    dst->ದತ್ತಾಂಶ[0] = (uint8_t *)f;
+    dst->ಅಗಲ   = src->ಅಗಲ;
+    dst->ಎತ್ತರ  = src->ಎತ್ತರ;
 
-    err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
+    err = ff_hwframe_map_create(dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx, dst, src,
                                 &vulkan_unmap_from_drm, f);
-    if (err < 0)
-        goto fail;
+    ಆದರೆ (err < 0)
+        ಹೋಗು fail;
 
-    err = vulkan_map_from_drm_frame_sync(hwfc, dst, desc, flags);
-    if (err < 0)
-        return err;
+    err = vulkan_map_from_drm_ಚೌಕಟ್ಟು_sync(hwfc, dst, desc, flags);
+    ಆದರೆ (err < 0)
+        ಹಿಂತಿರುಗಿ err;
 
     av_log(hwfc, AV_LOG_DEBUG, "Mapped DRM object to Vulkan!\n");
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    vulkan_frame_free(hwfc->device_ctx->hwctx, f);
-    dst->data[0] = NULL;
-    return err;
+    vulkan_ಚೌಕಟ್ಟು_free(hwfc->device_ctx->hwctx, f);
+    dst->ದತ್ತಾಂಶ[0] = ಖಾಲಿ;
+    ಹಿಂತಿರುಗಿ err;
 }
 
-#if CONFIG_VAAPI
-static int vulkan_map_from_vaapi(AVHWFramesContext *dst_fc,
-                                 AVFrame *dst, const AVFrame *src,
-                                 int flags)
+#ಆದರೆ CONFIG_VAAPI
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_map_from_vaapi(AVHWFramesContext *dst_fc,
+                                 AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src,
+                                 ಪೂರ್ಣಾಂಕ flags)
 {
-    int err;
-    AVFrame *tmp = av_frame_alloc();
-    AVHWFramesContext *vaapi_fc = (AVHWFramesContext*)src->hw_frames_ctx->data;
+    ಪೂರ್ಣಾಂಕ err;
+    AVFrame *tmp = av_ಚೌಕಟ್ಟು_alloc();
+    AVHWFramesContext *vaapi_fc = (AVHWFramesContext*)src->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
     AVVAAPIDeviceContext *vaapi_ctx = vaapi_fc->device_ctx->hwctx;
-    VASurfaceID surface_id = (VASurfaceID)(uintptr_t)src->data[3];
+    VASurfaceID surface_id = (VASurfaceID)(uintptr_t)src->ದತ್ತಾಂಶ[3];
 
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    ಆದರೆ (!tmp)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
     /* We have to sync since like the previous comment said, no semaphores */
     vaSyncSurface(vaapi_ctx->display, surface_id);
 
-    tmp->format = AV_PIX_FMT_DRM_PRIME;
+    tmp->format = AV_PIX_FMT_DRM_ಅವಿಭಾಜ್ಯ;
 
     err = av_hwframe_map(tmp, src, flags);
-    if (err < 0)
-        goto fail;
+    ಆದರೆ (err < 0)
+        ಹೋಗು fail;
 
     err = vulkan_map_from_drm(dst_fc, dst, tmp, flags);
-    if (err < 0)
-        goto fail;
+    ಆದರೆ (err < 0)
+        ಹೋಗು fail;
 
     err = ff_hwframe_map_replace(dst, src);
 
 fail:
-    av_frame_free(&tmp);
-    return err;
+    av_ಚೌಕಟ್ಟು_free(&tmp);
+    ಹಿಂತಿರುಗಿ err;
 }
-#endif
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if CONFIG_CUDA
-static int export_mem_to_cuda(AVHWDeviceContext *ctx,
+#ಆದರೆ CONFIG_CUDA
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ export_mem_ಗಮ್ಯ_cuda(AVHWDeviceContext *ctx,
                               AVHWDeviceContext *cuda_cu, CudaFunctions *cu,
-                              AVVkFrameInternal *dst_int, int idx,
-                              VkDeviceMemory mem, size_t size)
+                              AVVk_ಚೌಕಟ್ಟು_ಆಂತರಿಕ *dst_int, ಪೂರ್ಣಾಂಕ idx,
+                              Vk_Device_ಸ್ಮರಣೆ mem, size_t ಗಾತ್ರ_2)
 {
-    VkResult ret;
+    Vk_ಫಲಿತಾಂಶ ret;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-#ifdef _WIN32
-    CUDA_EXTERNAL_MEMORY_HANDLE_DESC ext_desc = {
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
+    CUDA_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_DESC ext_desc = {
         .type = IsWindows8OrGreater()
-                ? CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32
-                : CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT,
-            .size = size,
+                ? CU_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_OPAQUE_WIN32
+                : CU_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_OPAQUE_WIN32_KMT,
+            .ಗಾತ್ರ_2 = ಗಾತ್ರ_2,
     };
-    VkMemoryGetWin32HandleInfoKHR export_info = {
-        .sType      = VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR,
-        .memory     = mem,
+    Vk_ಸ್ಮರಣೆ_Get_Win32_Handle_Info_KHR export_info = {
+        .sType      = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_GET_WIN32_HANDLE_INFO_KHR,
+        .ಸ್ಮರಣೆ     = mem,
         .handleType = IsWindows8OrGreater()
-            ? VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
-            : VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT,
+            ? VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_OPAQUE_WIN32_ಬಿಟ್
+            : VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_OPAQUE_WIN32_KMT_ಬಿಟ್,
     };
 
-    ret = vk->GetMemoryWin32HandleKHR(hwctx->act_dev, &export_info,
+    ret = vk->Get_ಸ್ಮರಣೆ_Win32_Handle_KHR(hwctx->act_dev, &export_info,
                                       &ext_desc.handle.win32.handle);
-    if (ret != VK_SUCCESS) {
+    ಆದರೆ (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Unable to export the image as a Win32 Handle: %s!\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
     }
     dst_int->ext_mem_handle[idx] = ext_desc.handle.win32.handle;
-#else
-    CUDA_EXTERNAL_MEMORY_HANDLE_DESC ext_desc = {
-        .type = CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD,
-        .size = size,
+#ಇಲ್ಲದಿದ್ದರೆ
+    CUDA_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_DESC ext_desc = {
+        .type = CU_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_OPAQUE_FD,
+        .ಗಾತ್ರ_2 = ಗಾತ್ರ_2,
     };
-    VkMemoryGetFdInfoKHR export_info = {
-        .sType      = VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR,
-        .memory     = mem,
-        .handleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR,
+    Vk_ಸ್ಮರಣೆ_Get_Fd_Info_KHR export_info = {
+        .sType      = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_GET_FD_INFO_KHR,
+        .ಸ್ಮರಣೆ     = mem,
+        .handleType = VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_OPAQUE_FD_ಬಿಟ್_KHR,
     };
 
-    ret = vk->GetMemoryFdKHR(hwctx->act_dev, &export_info,
+    ret = vk->Get_ಸ್ಮರಣೆ_Fd_KHR(hwctx->act_dev, &export_info,
                              &ext_desc.handle.fd);
-    if (ret != VK_SUCCESS) {
+    ಆದರೆ (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Unable to export the image as a FD: %s!\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    ret = CHECK_CU(cu->cuImportExternalMemory(&dst_int->ext_mem[idx], &ext_desc));
-    if (ret < 0) {
-#ifndef _WIN32
+    ret = CHECK_CU(cu->cu_Import_External_ಸ್ಮರಣೆ(&dst_int->ext_mem[idx], &ext_desc));
+    ಆದರೆ (ret < 0) {
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ _WIN32
         close(ext_desc.handle.fd);
-#endif
-        return AVERROR_EXTERNAL;
+#ಆದರೆ_ಅಂತ್ಯ
+        ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int export_sem_to_cuda(AVHWDeviceContext *ctx,
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ export_sem_ಗಮ್ಯ_cuda(AVHWDeviceContext *ctx,
                               AVHWDeviceContext *cuda_cu, CudaFunctions *cu,
-                              AVVkFrameInternal *dst_int, int idx,
+                              AVVk_ಚೌಕಟ್ಟು_ಆಂತರಿಕ *dst_int, ಪೂರ್ಣಾಂಕ idx,
                               VkSemaphore sem)
 {
-    VkResult ret;
+    Vk_ಫಲಿತಾಂಶ ret;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-#ifdef _WIN32
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
     VkSemaphoreGetWin32HandleInfoKHR sem_export = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR,
         .semaphore = sem,
         .handleType = IsWindows8OrGreater()
-                      ? VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
-                      : VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT,
+                      ? VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_ಬಿಟ್
+                      : VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_ಬಿಟ್,
     };
     CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC ext_sem_desc = {
         .type = 10 /* TODO: CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_TIMELINE_SEMAPHORE_WIN32 */,
     };
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
     VkSemaphoreGetFdInfoKHR sem_export = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR,
         .semaphore = sem,
-        .handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT,
+        .handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_ಬಿಟ್,
     };
     CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC ext_sem_desc = {
         .type = 9 /* TODO: CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_TIMELINE_SEMAPHORE_FD */,
     };
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef _WIN32
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
     ret = vk->GetSemaphoreWin32HandleKHR(hwctx->act_dev, &sem_export,
                                          &ext_sem_desc.handle.win32.handle);
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
     ret = vk->GetSemaphoreFdKHR(hwctx->act_dev, &sem_export,
                                 &ext_sem_desc.handle.fd);
-#endif
-    if (ret != VK_SUCCESS) {
+#ಆದರೆ_ಅಂತ್ಯ
+    ಆದರೆ (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Failed to export semaphore: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
     }
-#ifdef _WIN32
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
     dst_int->ext_sem_handle[idx] = ext_sem_desc.handle.win32.handle;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     ret = CHECK_CU(cu->cuImportExternalSemaphore(&dst_int->cu_sem[idx],
                                                  &ext_sem_desc));
-    if (ret < 0) {
-#ifndef _WIN32
+    ಆದರೆ (ret < 0) {
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ _WIN32
         close(ext_sem_desc.handle.fd);
-#endif
-        return AVERROR_EXTERNAL;
+#ಆದರೆ_ಅಂತ್ಯ
+        ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int vulkan_export_to_cuda(AVHWFramesContext *hwfc,
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_export_ಗಮ್ಯ_cuda(AVHWFramesContext *hwfc,
                                  AVBufferRef *cuda_hwfc,
-                                 const AVFrame *frame)
+                                 ಸ್ಥಿರಾಂಕ AVFrame *ಚೌಕಟ್ಟು)
 {
-    int err;
-    VkResult ret;
-    AVVkFrame *dst_f;
-    AVVkFrameInternal *dst_int;
+    ಪೂರ್ಣಾಂಕ err;
+    Vk_ಫಲಿತಾಂಶ ret;
+    AVVk_ಚೌಕಟ್ಟು *dst_f;
+    AVVk_ಚೌಕಟ್ಟು_ಆಂತರಿಕ *dst_int;
     AVHWDeviceContext *ctx = hwfc->device_ctx;
-    const int planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ planes = av_pix_fmt_ಎಣಿಕೆ_planes(hwfc->sw_format);
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    int nb_images;
+    ಪೂರ್ಣಾಂಕ nb_images;
 
-    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)cuda_hwfc->data;
+    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)cuda_hwfc->ದತ್ತಾಂಶ;
     AVHWDeviceContext *cuda_cu = cuda_fc->device_ctx;
     AVCUDADeviceContext *cuda_dev = cuda_cu->hwctx;
-    AVCUDADeviceContextInternal *cu_internal = cuda_dev->internal;
-    CudaFunctions *cu = cu_internal->cuda_dl;
-    CUarray_format cufmt = desc->comp[0].depth > 8 ? CU_AD_FORMAT_UNSIGNED_INT16 :
+    AVCUDADevice_Context_ಆಂತರಿಕ *cu_ಆಂತರಿಕ = cuda_dev->ಆಂತರಿಕ;
+    CudaFunctions *cu = cu_ಆಂತರಿಕ->cuda_dl;
+    CUarray_format cufmt = desc->comp[0].ಆಳ > 8 ? CU_AD_FORMAT_UNSIGNED_INT16 :
                                                      CU_AD_FORMAT_UNSIGNED_INT8;
-    const int elem_size = 1 + (desc->comp[0].depth > 8);
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ elem_ಗಾತ್ರ = 1 + (desc->comp[0].ಆಳ > 8);
 
-    dst_f = (AVVkFrame *)frame->data[0];
-    dst_int = dst_f->internal;
+    dst_f = (AVVk_ಚೌಕಟ್ಟು *)ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[0];
+    dst_int = dst_f->ಆಂತರಿಕ;
 
-    if (!dst_int->cuda_fc_ref) {
+    ಆದರೆ (!dst_int->cuda_fc_ref) {
         size_t offsets[3] = { 0 };
 
-        dst_int->cuda_fc_ref = av_buffer_ref(cuda_hwfc);
-        if (!dst_int->cuda_fc_ref)
-            return AVERROR(ENOMEM);
+        dst_int->cuda_fc_ref = av_ಬಫರ್_ref(cuda_hwfc);
+        ಆದರೆ (!dst_int->cuda_fc_ref)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-        nb_images = ff_vk_count_images(dst_f);
-        for (int i = 0; i < nb_images; i++) {
-            err = export_mem_to_cuda(ctx, cuda_cu, cu, dst_int, i,
-                                     dst_f->mem[i], dst_f->size[i]);
-            if (err < 0)
-                goto fail;
+        nb_images = ff_vk_ಎಣಿಕೆ_images(dst_f);
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_images; i++) {
+            err = export_mem_ಗಮ್ಯ_cuda(ctx, cuda_cu, cu, dst_int, i,
+                                     dst_f->mem[i], dst_f->ಗಾತ್ರ_2[i]);
+            ಆದರೆ (err < 0)
+                ಹೋಗು fail;
 
-            err = export_sem_to_cuda(ctx, cuda_cu, cu, dst_int, i,
+            err = export_sem_ಗಮ್ಯ_cuda(ctx, cuda_cu, cu, dst_int, i,
                                      dst_f->sem[i]);
-            if (err < 0)
-                goto fail;
+            ಆದರೆ (err < 0)
+                ಹೋಗು fail;
         }
 
-        if (nb_images != planes) {
-            for (int i = 0; i < planes; i++) {
+        ಆದರೆ (nb_images != planes) {
+            ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
                 /* Cuda now defines array formats for semi-planar, but these are
                  * not currently supported for imported Vulkan images. */
-                if (desc->comp[i].step / elem_size > 1) {
+                ಆದರೆ (desc->comp[i].ಹೆಜ್ಜೆ / elem_ಗಾತ್ರ > 1) {
                     av_log(ctx, AV_LOG_ERROR,
                            "Cannot map a multiplane Vulkan image (%d image(s) "
                            "for %d plane(s)) to CUDA; create the Vulkan device "
                            "with the disable_multiplane=1 option (one image per "
                            "plane) for CUDA interop.\n", nb_images, planes);
                     err = AVERROR(ENOSYS);
-                    goto fail;
+                    ಹೋಗು fail;
                 }
 
                 VkImageSubresource subres = {
-                    .aspectMask = i == 2 ? VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT :
-                                  i == 1 ? VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT :
-                                           VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT
+                    .aspect_ಮುಖವಾಡ = i == 2 ? VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_2_ಬಿಟ್_EXT :
+                                  i == 1 ? VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_1_ಬಿಟ್_EXT :
+                                           VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_0_ಬಿಟ್_EXT
                 };
                 VkSubresourceLayout layout = { 0 };
                 vk->GetImageSubresourceLayout(hwctx->act_dev, dst_f->img[FFMIN(i, nb_images - 1)],
                                               &subres, &layout);
-                offsets[i] = layout.offset;
+                offsets[i] = layout.ಸ್ಥಾನಾಂತರ;
             }
         }
 
-        for (int i = 0; i < planes; i++) {
-            CUDA_EXTERNAL_MEMORY_MIPMAPPED_ARRAY_DESC tex_desc = {
-                .offset = offsets[i],
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
+            CUDA_EXTERNAL_ಸ್ಮರಣೆ_MIPMAPPED_ARRAY_DESC tex_desc = {
+                .ಸ್ಥಾನಾಂತರ = offsets[i],
                 .arrayDesc = {
-                    .Depth = 0,
+                    .ಆಳ_2 = 0,
                     .Format = cufmt,
-                    .NumChannels = desc->comp[i].step / elem_size,
+                    .ಅಂಕೆ_Channels = desc->comp[i].ಹೆಜ್ಜೆ / elem_ಗಾತ್ರ,
                     .Flags = 0,
                 },
-                .numLevels = 1,
+                .ಅಂಕೆ_ಮಟ್ಟಗಳು = 1,
             };
-            int p_w, p_h;
+            ಪೂರ್ಣಾಂಕ p_w, p_h;
 
-            get_plane_wh(&p_w, &p_h, hwfc->sw_format, hwfc->width, hwfc->height, i);
-            tex_desc.arrayDesc.Width = p_w;
-            tex_desc.arrayDesc.Height = p_h;
+            get_plane_wh(&p_w, &p_h, hwfc->sw_format, hwfc->ಅಗಲ, hwfc->ಎತ್ತರ, i);
+            tex_desc.arrayDesc.ಅಗಲ_2 = p_w;
+            tex_desc.arrayDesc.ಎತ್ತರ_2 = p_h;
 
-            ret = CHECK_CU(cu->cuExternalMemoryGetMappedMipmappedArray(&dst_int->cu_mma[i],
+            ret = CHECK_CU(cu->cu_External_ಸ್ಮರಣೆ_Get_Mapped_Mipmapped_Array(&dst_int->cu_mma[i],
                                                                        dst_int->ext_mem[FFMIN(i, nb_images - 1)],
                                                                        &tex_desc));
-            if (ret < 0) {
+            ಆದರೆ (ret < 0) {
                 err = AVERROR_EXTERNAL;
-                goto fail;
+                ಹೋಗು fail;
             }
 
             ret = CHECK_CU(cu->cuMipmappedArrayGetLevel(&dst_int->cu_array[i],
                                                         dst_int->cu_mma[i], 0));
-            if (ret < 0) {
+            ಆದರೆ (ret < 0) {
                 err = AVERROR_EXTERNAL;
-                goto fail;
+                ಹೋಗು fail;
             }
 
         }
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    vulkan_free_internal(p, dst_f);
-    return err;
+    vulkan_free_ಆಂತರಿಕ(p, dst_f);
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static int vulkan_transfer_data_from_cuda(AVHWFramesContext *hwfc,
-                                          AVFrame *dst, const AVFrame *src)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_transfer_ದತ್ತಾಂಶ_from_cuda(AVHWFramesContext *hwfc,
+                                          AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    int err;
+    ಪೂರ್ಣಾಂಕ err;
     CUcontext dummy;
-    AVVkFrame *dst_f;
-    AVVkFrameInternal *dst_int;
+    AVVk_ಚೌಕಟ್ಟು *dst_f;
+    AVVk_ಚೌಕಟ್ಟು_ಆಂತರಿಕ *dst_int;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
-    VulkanFramesPriv *fp = hwfc->hwctx;
-    const int planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
-    int nb_images;
+    Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ planes = av_pix_fmt_ಎಣಿಕೆ_planes(hwfc->sw_format);
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
+    ಪೂರ್ಣಾಂಕ nb_images;
 
-    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)src->hw_frames_ctx->data;
+    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)src->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
     AVHWDeviceContext *cuda_cu = cuda_fc->device_ctx;
     AVCUDADeviceContext *cuda_dev = cuda_cu->hwctx;
-    AVCUDADeviceContextInternal *cu_internal = cuda_dev->internal;
-    CudaFunctions *cu = cu_internal->cuda_dl;
-    CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS s_w_par[AV_NUM_DATA_POINTERS] = { 0 };
-    CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS s_s_par[AV_NUM_DATA_POINTERS] = { 0 };
+    AVCUDADevice_Context_ಆಂತರಿಕ *cu_ಆಂತರಿಕ = cuda_dev->ಆಂತರಿಕ;
+    CudaFunctions *cu = cu_ಆಂತರಿಕ->cuda_dl;
+    CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS s_w_par[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು] = { 0 };
+    CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS s_s_par[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು] = { 0 };
 
-    dst_f = (AVVkFrame *)dst->data[0];
-    nb_images = ff_vk_count_images(dst_f);
+    dst_f = (AVVk_ಚೌಕಟ್ಟು *)dst->ದತ್ತಾಂಶ[0];
+    nb_images = ff_vk_ಎಣಿಕೆ_images(dst_f);
 
-    err = prepare_frame(hwfc, &fp->upload_exec, dst_f, PREP_MODE_EXTERNAL_EXPORT);
-    if (err < 0)
-        return err;
+    err = prepare_ಚೌಕಟ್ಟು(hwfc, &fp->upload_exec, dst_f, PREP_ಬಹುಲಕ_EXTERNAL_EXPORT);
+    ಆದರೆ (err < 0)
+        ಹಿಂತಿರುಗಿ err;
 
-    err = CHECK_CU(cu->cuCtxPushCurrent(cuda_dev->cuda_ctx));
-    if (err < 0)
-        return err;
+    err = CHECK_CU(cu->cu_Ctx_ತಳ್ಳು_Current(cuda_dev->cuda_ctx));
+    ಆದರೆ (err < 0)
+        ಹಿಂತಿರುಗಿ err;
 
-    err = vulkan_export_to_cuda(hwfc, src->hw_frames_ctx, dst);
-    if (err < 0) {
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-        return err;
+    err = vulkan_export_ಗಮ್ಯ_cuda(hwfc, src->hw_ಚೌಕಟ್ಟುಗಳು_ctx, dst);
+    ಆದರೆ (err < 0) {
+        CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
+        ಹಿಂತಿರುಗಿ err;
     }
 
-    dst_int = dst_f->internal;
+    dst_int = dst_f->ಆಂತರಿಕ;
 
-    for (int i = 0; i < nb_images; i++) {
-        s_w_par[i].params.fence.value = dst_f->sem_value[i] + 0;
-        s_s_par[i].params.fence.value = dst_f->sem_value[i] + 1;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_images; i++) {
+        s_w_par[i].params.fence.ಮೌಲ್ಯ = dst_f->sem_ಮೌಲ್ಯ[i] + 0;
+        s_s_par[i].params.fence.ಮೌಲ್ಯ = dst_f->sem_ಮೌಲ್ಯ[i] + 1;
     }
 
     err = CHECK_CU(cu->cuWaitExternalSemaphoresAsync(dst_int->cu_sem, s_w_par,
-                                                     nb_images, cuda_dev->stream));
-    if (err < 0)
-        goto fail;
+                                                     nb_images, cuda_dev->ಹರಿವು));
+    ಆದರೆ (err < 0)
+        ಹೋಗು fail;
 
-    for (int i = 0; i < planes; i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
         CUDA_MEMCPY2D cpy = {
-            .srcMemoryType = CU_MEMORYTYPE_DEVICE,
-            .srcDevice     = (CUdeviceptr)src->data[i],
+            .src_ಸ್ಮರಣೆ_Type = CU_MEMORYTYPE_DEVICE,
+            .srcDevice     = (CUdeviceptr)src->ದತ್ತಾಂಶ[i],
             .srcPitch      = src->linesize[i],
             .srcY          = 0,
 
-            .dstMemoryType = CU_MEMORYTYPE_ARRAY,
+            .dst_ಸ್ಮರಣೆ_Type = CU_MEMORYTYPE_ARRAY,
             .dstArray      = dst_int->cu_array[i],
         };
 
-        int p_w, p_h;
-        get_plane_wh(&p_w, &p_h, hwfc->sw_format, hwfc->width, hwfc->height, i);
+        ಪೂರ್ಣಾಂಕ p_w, p_h;
+        get_plane_wh(&p_w, &p_h, hwfc->sw_format, hwfc->ಅಗಲ, hwfc->ಎತ್ತರ, i);
 
-        cpy.WidthInBytes = p_w * desc->comp[i].step;
-        cpy.Height = p_h;
+        cpy.ಅಗಲ_ಒಳ_ಬೈಟುಗಳು = p_w * desc->comp[i].ಹೆಜ್ಜೆ;
+        cpy.ಎತ್ತರ_2 = p_h;
 
-        err = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, cuda_dev->stream));
-        if (err < 0)
-            goto fail;
+        err = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, cuda_dev->ಹರಿವು));
+        ಆದರೆ (err < 0)
+            ಹೋಗು fail;
     }
 
     err = CHECK_CU(cu->cuSignalExternalSemaphoresAsync(dst_int->cu_sem, s_s_par,
-                                                       nb_images, cuda_dev->stream));
-    if (err < 0)
-        goto fail;
+                                                       nb_images, cuda_dev->ಹರಿವು));
+    ಆದರೆ (err < 0)
+        ಹೋಗು fail;
 
-    for (int i = 0; i < nb_images; i++)
-        dst_f->sem_value[i]++;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_images; i++)
+        dst_f->sem_ಮೌಲ್ಯ[i]++;
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
 
     av_log(hwfc, AV_LOG_VERBOSE, "Transferred CUDA image to Vulkan!\n");
 
-    return err = prepare_frame(hwfc, &fp->upload_exec, dst_f, PREP_MODE_EXTERNAL_IMPORT);
+    ಹಿಂತಿರುಗಿ err = prepare_ಚೌಕಟ್ಟು(hwfc, &fp->upload_exec, dst_f, PREP_ಬಹುಲಕ_EXTERNAL_IMPORT);
 
 fail:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-    vulkan_free_internal(p, dst_f);
-    av_buffer_unref(&dst->buf[0]);
-    return err;
+    CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
+    vulkan_free_ಆಂತರಿಕ(p, dst_f);
+    av_ಬಫರ್_unref(&dst->buf[0]);
+    ಹಿಂತಿರುಗಿ err;
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-static int vulkan_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
-                         const AVFrame *src, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_map_ಗಮ್ಯ(AVHWFramesContext *hwfc, AVFrame *dst,
+                         ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags)
 {
-    av_unused VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
+    av_ಬಳಸದ VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
 
-    switch (src->format) {
-#if CONFIG_LIBDRM
-#if CONFIG_VAAPI
-    case AV_PIX_FMT_VAAPI:
-        if (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
-            return vulkan_map_from_vaapi(hwfc, dst, src, flags);
-        else
-            return AVERROR(ENOSYS);
-#endif
-    case AV_PIX_FMT_DRM_PRIME:
-        if (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
-            return vulkan_map_from_drm(hwfc, dst, src, flags);
-        else
-            return AVERROR(ENOSYS);
-#endif
-    default:
-        return AVERROR(ENOSYS);
+    ಆಯ್ಕೆ (src->format) {
+#ಆದರೆ CONFIG_LIBDRM
+#ಆದರೆ CONFIG_VAAPI
+    ಸ್ಥಿತಿ AV_PIX_FMT_VAAPI:
+        ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
+            ಹಿಂತಿರುಗಿ vulkan_map_from_vaapi(hwfc, dst, src, flags);
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
+#ಆದರೆ_ಅಂತ್ಯ
+    ಸ್ಥಿತಿ AV_PIX_FMT_DRM_ಅವಿಭಾಜ್ಯ:
+        ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
+            ಹಿಂತಿರುಗಿ vulkan_map_from_drm(hwfc, dst, src, flags);
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
+#ಆದರೆ_ಅಂತ್ಯ
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
     }
 }
 
-#if CONFIG_LIBDRM
-typedef struct VulkanDRMMapping {
+#ಆದರೆ CONFIG_LIBDRM
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ VulkanDRMMapping {
     AVDRMFrameDescriptor drm_desc;
-    AVVkFrame *source;
+    AVVk_ಚೌಕಟ್ಟು *ಮೂಲ;
 } VulkanDRMMapping;
 
-static void vulkan_unmap_to_drm(AVHWFramesContext *hwfc, HWMapDescriptor *hwmap)
+ಸ್ಥಿರ ಶೂನ್ಯ vulkan_unmap_ಗಮ್ಯ_drm(AVHWFramesContext *hwfc, HWMapDescriptor *hwmap)
 {
     AVDRMFrameDescriptor *drm_desc = hwmap->priv;
 
     /* on unmap from DRM, make sure to import sync objects so that we are sync'd with any work that was
      * done on the buffer while exported. We don't know if who used the dmabuf did reads or writes, so protect against both */
-    vulkan_map_from_drm_frame_sync(hwfc, hwmap->source, drm_desc, AV_HWFRAME_MAP_READ | AV_HWFRAME_MAP_WRITE);
+    vulkan_map_from_drm_ಚೌಕಟ್ಟು_sync(hwfc, hwmap->ಮೂಲ, drm_desc, AV_HWFRAME_MAP_READ | AV_HWFRAME_MAP_WRITE);
 
-    for (int i = 0; i < drm_desc->nb_objects; i++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < drm_desc->nb_objects; i++)
         close(drm_desc->objects[i].fd);
 
     av_free(drm_desc);
 }
 
-static inline uint32_t vulkan_fmt_to_drm(VkFormat vkfmt)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ uint32_t vulkan_fmt_ಗಮ್ಯ_drm(VkFormat vkfmt)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(vulkan_drm_format_map); i++)
-        if (vulkan_drm_format_map[i].vk_format == vkfmt)
-            return vulkan_drm_format_map[i].drm_fourcc;
-    return DRM_FORMAT_INVALID;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(vulkan_drm_format_map); i++)
+        ಆದರೆ (vulkan_drm_format_map[i].vk_format == vkfmt)
+            ಹಿಂತಿರುಗಿ vulkan_drm_format_map[i].drm_fourcc;
+    ಹಿಂತಿರುಗಿ DRM_FORMAT_INVALID;
 }
 
-#define MAX_MEMORY_PLANES 4
-static VkImageAspectFlags plane_index_to_aspect(int plane) {
-    if (plane == 0) return VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT;
-    if (plane == 1) return VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT;
-    if (plane == 2) return VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT;
-    if (plane == 3) return VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT;
+#ವ್ಯಾಖ್ಯಾನಿಸು MAX_ಸ್ಮರಣೆ_PLANES 4
+ಸ್ಥಿರ VkImageAspectFlags plane_ಸೂಚ್ಯಂಕ_ಗಮ್ಯ_aspect(ಪೂರ್ಣಾಂಕ plane) {
+    ಆದರೆ (plane == 0) ಹಿಂತಿರುಗಿ VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_0_ಬಿಟ್_EXT;
+    ಆದರೆ (plane == 1) ಹಿಂತಿರುಗಿ VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_1_ಬಿಟ್_EXT;
+    ಆದರೆ (plane == 2) ಹಿಂತಿರುಗಿ VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_2_ಬಿಟ್_EXT;
+    ಆದರೆ (plane == 3) ಹಿಂತಿರುಗಿ VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_3_ಬಿಟ್_EXT;
 
     av_assert2 (0 && "Invalid plane index");
-    return VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT;
+    ಹಿಂತಿರುಗಿ VK_IMAGE_ASPECT_ಸ್ಮರಣೆ_PLANE_0_ಬಿಟ್_EXT;
 }
 
-#ifdef DMA_BUF_IOCTL_EXPORT_SYNC_FILE
-static int vulkan_drm_export_sync_fd(AVHWFramesContext *hwfc, AVVkFrame *f,
-                                     VulkanFramesPriv *fp, int nb_sems)
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ DMA_BUF_IOCTL_EXPORT_SYNC_FILE
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_drm_export_sync_fd(AVHWFramesContext *hwfc, AVVk_ಚೌಕಟ್ಟು *f,
+                                     Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp, ಪೂರ್ಣಾಂಕ nb_sems)
 {
-    int sync_fd = -1;
-    VkResult ret;
+    ಪೂರ್ಣಾಂಕ sync_fd = -1;
+    Vk_ಫಲಿತಾಂಶ ret;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    if (f->internal->drm_sync_sem == VK_NULL_HANDLE) {
+    ಆದರೆ (f->ಆಂತರಿಕ->drm_sync_sem == VK_NULL_HANDLE) {
         VkExportSemaphoreCreateInfo exp_info = {
             .sType       = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
-            .handleTypes = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT,
+            .handleTypes = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_ಬಿಟ್,
         };
         VkSemaphoreTypeCreateInfo type_info = {
             .sType         = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
-            .pNext         = &exp_info,
-            .semaphoreType = VK_SEMAPHORE_TYPE_BINARY,
+            .p_ಮುಂದಿನ         = &exp_info,
+            .semaphoreType = VK_SEMAPHORE_TYPE_ದ್ವಿಮಾನ,
         };
         VkSemaphoreCreateInfo sem_create = {
             .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-            .pNext = &type_info,
+            .p_ಮುಂದಿನ = &type_info,
         };
         ret = vk->CreateSemaphore(hwctx->act_dev, &sem_create, hwctx->alloc,
-                                  &f->internal->drm_sync_sem);
-        if (ret != VK_SUCCESS) {
+                                  &f->ಆಂತರಿಕ->drm_sync_sem);
+        ಆದರೆ (ret != VK_SUCCESS) {
             av_log(hwctx, AV_LOG_ERROR, "Failed to create DRM export semaphore: %s\n",
                    ff_vk_ret2str(ret));
-            return AVERROR_EXTERNAL;
+            ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
         }
     }
 
@@ -4474,21 +4474,21 @@ static int vulkan_drm_export_sync_fd(AVHWFramesContext *hwfc, AVVkFrame *f,
      * (true last operation on the frame) and signals the binary semaphore,
      * so any Vulkan frame can get a SYNC_FD regardless of origin. */
     FFVkExecContext *exec = ff_vk_exec_get(&p->vkctx, &fp->compute_exec);
-    if (ff_vk_exec_start(&p->vkctx, exec) >= 0) {
-        for (int i = 0; i < nb_sems; i++)
-            ff_vk_exec_add_dep_wait_sem(&p->vkctx, exec, f->sem[i],
-                                        f->sem_value[i],
-                                        VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT);
-        ff_vk_exec_add_dep_bool_sem(&p->vkctx, exec, &f->internal->drm_sync_sem, 1,
-                                    VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, 0);
-        if (ff_vk_exec_submit(&p->vkctx, exec) >= 0) {
+    ಆದರೆ (ff_vk_exec_ಆರಂಭ(&p->vkctx, exec) >= 0) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_sems; i++)
+            ff_vk_exec_ಕೂಡಿಸು_dep_wait_sem(&p->vkctx, exec, f->sem[i],
+                                        f->sem_ಮೌಲ್ಯ[i],
+                                        VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್);
+        ff_vk_exec_ಕೂಡಿಸು_dep_bool_sem(&p->vkctx, exec, &f->ಆಂತರಿಕ->drm_sync_sem, 1,
+                                    VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್, 0);
+        ಆದರೆ (ff_vk_exec_submit(&p->vkctx, exec) >= 0) {
             VkSemaphoreGetFdInfoKHR get_fd_info = {
                 .sType      = VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR,
-                .semaphore  = f->internal->drm_sync_sem,
-                .handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT,
+                .semaphore  = f->ಆಂತರಿಕ->drm_sync_sem,
+                .handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_ಬಿಟ್,
             };
             ret = vk->GetSemaphoreFdKHR(hwctx->act_dev, &get_fd_info, &sync_fd);
-            if (ret != VK_SUCCESS) {
+            ಆದರೆ (ret != VK_SUCCESS) {
                 av_log(hwctx, AV_LOG_WARNING,
                        "Failed to get sync fd from DRM map export semaphore: %s\n",
                        ff_vk_ret2str(ret));
@@ -4497,412 +4497,412 @@ static int vulkan_drm_export_sync_fd(AVHWFramesContext *hwfc, AVVkFrame *f,
         }
     }
 
-    return sync_fd;
+    ಹಿಂತಿರುಗಿ sync_fd;
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-static int vulkan_map_to_drm(AVHWFramesContext *hwfc, AVFrame *dst,
-                             const AVFrame *src, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_map_ಗಮ್ಯ_drm(AVHWFramesContext *hwfc, AVFrame *dst,
+                             ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags)
 {
-    int err = 0;
-    VkResult ret;
-    AVVkFrame *f = (AVVkFrame *)src->data[0];
+    ಪೂರ್ಣಾಂಕ err = 0;
+    Vk_ಫಲಿತಾಂಶ ret;
+    AVVk_ಚೌಕಟ್ಟು *f = (AVVk_ಚೌಕಟ್ಟು *)src->ದತ್ತಾಂಶ[0];
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VulkanFramesPriv *fp = hwfc->hwctx;
-    const int planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    const int nb_images = ff_vk_count_images(f);
+    Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ planes = av_pix_fmt_ಎಣಿಕೆ_planes(hwfc->sw_format);
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ nb_images = ff_vk_ಎಣಿಕೆ_images(f);
     VkImageDrmFormatModifierPropertiesEXT drm_mod = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT,
     };
-    const int nb_sems = nb_images;
-    int free_drm_desc_on_err = 1;
-    int sync_fd = -1;
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ nb_sems = nb_images;
+    ಪೂರ್ಣಾಂಕ free_drm_desc_on_err = 1;
+    ಪೂರ್ಣಾಂಕ sync_fd = -1;
 
-    AVDRMFrameDescriptor *drm_desc = av_mallocz(sizeof(*drm_desc));
-    if (!drm_desc)
-        return AVERROR(ENOMEM);
+    AVDRMFrameDescriptor *drm_desc = av_mallocz(ಗಾತ್ರ(*drm_desc));
+    ಆದರೆ (!drm_desc)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_EXTERNAL_EXPORT);
-    if (err < 0)
-        goto end;
+    err = prepare_ಚೌಕಟ್ಟು(hwfc, &fp->compute_exec, f, PREP_ಬಹುಲಕ_EXTERNAL_EXPORT);
+    ಆದರೆ (err < 0)
+        ಹೋಗು ಕೊನೆ;
 
-#ifdef DMA_BUF_IOCTL_EXPORT_SYNC_FILE
-    if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM) &&
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ DMA_BUF_IOCTL_EXPORT_SYNC_FILE
+    ಆದರೆ ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM) &&
         f->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT &&
         vk->GetSemaphoreFdKHR && vk->CreateSemaphore) {
         err = vulkan_drm_export_sync_fd(hwfc, f, fp, nb_sems);
-        if (err < 0)
-            goto end;
+        ಆದರೆ (err < 0)
+            ಹೋಗು ಕೊನೆ;
         sync_fd = err;
         err = 0;
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    if (sync_fd < 0) {
+    ಆದರೆ (sync_fd < 0) {
         VkSemaphoreWaitInfo wait_info = {
             .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
             .flags          = 0x0,
-            .semaphoreCount = nb_sems,
+            .semaphore_ಎಣಿಕೆ = nb_sems,
             .pSemaphores    = f->sem,
-            .pValues        = f->sem_value,
+            .p_ಮೌಲ್ಯಗಳು        = f->sem_ಮೌಲ್ಯ,
         };
         vk->WaitSemaphores(hwctx->act_dev, &wait_info, UINT64_MAX);
     }
 
-    err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src, &vulkan_unmap_to_drm, drm_desc);
-    if (err < 0)
-        goto end;
+    err = ff_hwframe_map_create(src->hw_ಚೌಕಟ್ಟುಗಳು_ctx, dst, src, &vulkan_unmap_ಗಮ್ಯ_drm, drm_desc);
+    ಆದರೆ (err < 0)
+        ಹೋಗು ಕೊನೆ;
 
     /* It will be freed in ff_hwframe_map_create callback */
     free_drm_desc_on_err = 0;
 
     ret = vk->GetImageDrmFormatModifierPropertiesEXT(hwctx->act_dev, f->img[0],
                                                      &drm_mod);
-    if (ret != VK_SUCCESS) {
+    ಆದರೆ (ret != VK_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to retrieve DRM format modifier!\n");
         err = AVERROR_EXTERNAL;
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
 
-    for (int i = 0; (i < planes) && (f->mem[i]); i++) {
-        VkMemoryGetFdInfoKHR export_info = {
-            .sType      = VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR,
-            .memory     = f->mem[i],
-            .handleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT,
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; (i < planes) && (f->mem[i]); i++) {
+        Vk_ಸ್ಮರಣೆ_Get_Fd_Info_KHR export_info = {
+            .sType      = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_GET_FD_INFO_KHR,
+            .ಸ್ಮರಣೆ     = f->mem[i],
+            .handleType = VK_EXTERNAL_ಸ್ಮರಣೆ_HANDLE_TYPE_DMA_BUF_ಬಿಟ್_EXT,
         };
 
-        ret = vk->GetMemoryFdKHR(hwctx->act_dev, &export_info,
+        ret = vk->Get_ಸ್ಮರಣೆ_Fd_KHR(hwctx->act_dev, &export_info,
                                  &drm_desc->objects[i].fd);
-        if (ret != VK_SUCCESS) {
+        ಆದರೆ (ret != VK_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Unable to export the image as a FD!\n");
             err = AVERROR_EXTERNAL;
-            goto end;
+            ಹೋಗು ಕೊನೆ;
         }
 
-#if HAVE_LINUX_DMA_BUF_H && defined(DMA_BUF_IOCTL_IMPORT_SYNC_FILE)
-        if (sync_fd >= 0) {
-            int dup_fd = dup(sync_fd);
-            if (dup_fd >= 0) {
-                struct dma_buf_import_sync_file import_info = {
+#ಆದರೆ HAVE_LINUX_DMA_BUF_H && defined(DMA_BUF_IOCTL_IMPORT_SYNC_FILE)
+        ಆದರೆ (sync_fd >= 0) {
+            ಪೂರ್ಣಾಂಕ dup_fd = dup(sync_fd);
+            ಆದರೆ (dup_fd >= 0) {
+                ರಚನೆ dma_buf_import_sync_file import_info = {
                     .flags = DMA_BUF_SYNC_WRITE,
                     .fd = dup_fd,
                 };
-                if (ioctl(drm_desc->objects[i].fd, DMA_BUF_IOCTL_IMPORT_SYNC_FILE, &import_info) < 0)
+                ಆದರೆ (ioctl(drm_desc->objects[i].fd, DMA_BUF_IOCTL_IMPORT_SYNC_FILE, &import_info) < 0)
                     av_log(hwfc, AV_LOG_WARNING, "DMA_BUF_IOCTL_IMPORT_SYNC_FILE failed: %s\n", av_err2str(AVERROR(errno)));
                 close(dup_fd);
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 av_log(hwfc, AV_LOG_WARNING, "dup(sync_fd) failed: %s\n", av_err2str(AVERROR(errno)));
             }
         }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
         drm_desc->nb_objects++;
-        drm_desc->objects[i].size = f->size[i];
+        drm_desc->objects[i].ಗಾತ್ರ_2 = f->ಗಾತ್ರ_2[i];
         drm_desc->objects[i].format_modifier = drm_mod.drmFormatModifier;
     }
 
     /* NV12 has 2 planes but 1 image/semaphore */
     drm_desc->nb_layers = FFMAX(planes, nb_images);
-    for (int i = 0; i < drm_desc->nb_layers; i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < drm_desc->nb_layers; i++) {
         VkFormat plane_vkfmt = av_vkfmt_from_pixfmt(hwfc->sw_format)[i];
 
-        drm_desc->layers[i].format = vulkan_fmt_to_drm(plane_vkfmt);
-        drm_desc->layers[i].nb_planes = fp->drm_format_modifier_properties[i].drmFormatModifierPlaneCount;
+        drm_desc->layers[i].format = vulkan_fmt_ಗಮ್ಯ_drm(plane_vkfmt);
+        drm_desc->layers[i].nb_planes = fp->drm_format_modifier_properties[i].drm_Format_Modifier_Plane_ಎಣಿಕೆ;
 
-        if (drm_desc->layers[i].nb_planes > MAX_MEMORY_PLANES) {
+        ಆದರೆ (drm_desc->layers[i].nb_planes > MAX_ಸ್ಮರಣೆ_PLANES) {
             av_log(hwfc, AV_LOG_ERROR, "Too many memory planes for DRM format!\n");
             err = AVERROR_EXTERNAL;
-            goto end;
+            ಹೋಗು ಕೊನೆ;
         }
 
-        for (int j = 0; j < drm_desc->layers[i].nb_planes; j++) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < drm_desc->layers[i].nb_planes; j++) {
             VkSubresourceLayout layout;
-            int aspect_plane = (nb_images == 1) ? i : j;
+            ಪೂರ್ಣಾಂಕ aspect_plane = (nb_images == 1) ? i : j;
             VkImageSubresource sub = {
-                .aspectMask = plane_index_to_aspect(aspect_plane),
+                .aspect_ಮುಖವಾಡ = plane_ಸೂಚ್ಯಂಕ_ಗಮ್ಯ_aspect(aspect_plane),
             };
 
-            drm_desc->layers[i].planes[j].object_index = FFMIN(i, drm_desc->nb_objects - 1);
+            drm_desc->layers[i].planes[j].object_ಸೂಚ್ಯಂಕ = FFMIN(i, drm_desc->nb_objects - 1);
 
             vk->GetImageSubresourceLayout(hwctx->act_dev, f->img[FFMIN(i, nb_images - 1)], &sub, &layout);
-            drm_desc->layers[i].planes[j].offset = layout.offset;
-            drm_desc->layers[i].planes[j].pitch  = layout.rowPitch;
+            drm_desc->layers[i].planes[j].ಸ್ಥಾನಾಂತರ = layout.ಸ್ಥಾನಾಂತರ;
+            drm_desc->layers[i].planes[j].pitch  = layout.ಅಡ್ಡಸಾಲು_Pitch_2;
         }
 
-        if (drm_desc->layers[i].format == DRM_FORMAT_INVALID) {
+        ಆದರೆ (drm_desc->layers[i].format == DRM_FORMAT_INVALID) {
             av_log(hwfc, AV_LOG_ERROR, "Cannot map to DRM layer, unsupported!\n");
             err = AVERROR_PATCHWELCOME;
-            goto end;
+            ಹೋಗು ಕೊನೆ;
         }
 
 
-        if (f->tiling == VK_IMAGE_TILING_OPTIMAL)
-            continue;
+        ಆದರೆ (f->tiling == VK_IMAGE_TILING_OPTIMAL)
+            ಮುಂದುವರಿ;
 
     }
 
-    dst->width   = src->width;
-    dst->height  = src->height;
-    dst->data[0] = (uint8_t *)drm_desc;
-    dst->hw_frames_ctx = av_buffer_ref(src->hw_frames_ctx);
+    dst->ಅಗಲ   = src->ಅಗಲ;
+    dst->ಎತ್ತರ  = src->ಎತ್ತರ;
+    dst->ದತ್ತಾಂಶ[0] = (uint8_t *)drm_desc;
+    dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx = av_ಬಫರ್_ref(src->hw_ಚೌಕಟ್ಟುಗಳು_ctx);
 
-    if (sync_fd >= 0)
+    ಆದರೆ (sync_fd >= 0)
         close(sync_fd);
 
     av_log(hwfc, AV_LOG_VERBOSE, "Mapped AVVkFrame to a DRM object!\n");
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
-end:
-    for (int i = 0; i < drm_desc->nb_objects; i++)
+ಕೊನೆ:
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < drm_desc->nb_objects; i++)
         close(drm_desc->objects[i].fd);
-    if (free_drm_desc_on_err)
+    ಆದರೆ (free_drm_desc_on_err)
         av_free(drm_desc);
-    if (sync_fd >= 0)
+    ಆದರೆ (sync_fd >= 0)
         close(sync_fd);
-    return err;
+    ಹಿಂತಿರುಗಿ err;
 }
 
-#if CONFIG_VAAPI
-static int vulkan_map_to_vaapi(AVHWFramesContext *hwfc, AVFrame *dst,
-                               const AVFrame *src, int flags)
+#ಆದರೆ CONFIG_VAAPI
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_map_ಗಮ್ಯ_vaapi(AVHWFramesContext *hwfc, AVFrame *dst,
+                               ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags)
 {
-    int err;
-    AVFrame *tmp = av_frame_alloc();
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    ಪೂರ್ಣಾಂಕ err;
+    AVFrame *tmp = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (!tmp)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    tmp->format = AV_PIX_FMT_DRM_PRIME;
+    tmp->format = AV_PIX_FMT_DRM_ಅವಿಭಾಜ್ಯ;
 
-    err = vulkan_map_to_drm(hwfc, tmp, src, flags);
-    if (err < 0)
-        goto fail;
+    err = vulkan_map_ಗಮ್ಯ_drm(hwfc, tmp, src, flags);
+    ಆದರೆ (err < 0)
+        ಹೋಗು fail;
 
     err = av_hwframe_map(dst, tmp, flags);
-    if (err < 0)
-        goto fail;
+    ಆದರೆ (err < 0)
+        ಹೋಗು fail;
 
     err = ff_hwframe_map_replace(dst, src);
 
 fail:
-    av_frame_free(&tmp);
-    return err;
+    av_ಚೌಕಟ್ಟು_free(&tmp);
+    ಹಿಂತಿರುಗಿ err;
 }
-#endif
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
 
-static int vulkan_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                           const AVFrame *src, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                           ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags)
 {
-    av_unused VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
+    av_ಬಳಸದ VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
 
-    switch (dst->format) {
-#if CONFIG_LIBDRM
-    case AV_PIX_FMT_DRM_PRIME:
-        if (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
-            return vulkan_map_to_drm(hwfc, dst, src, flags);
-        else
-            return AVERROR(ENOSYS);
-#if CONFIG_VAAPI
-    case AV_PIX_FMT_VAAPI:
-        if (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
-            return vulkan_map_to_vaapi(hwfc, dst, src, flags);
-        else
-            return AVERROR(ENOSYS);
-#endif
-#endif
-    default:
-        break;
+    ಆಯ್ಕೆ (dst->format) {
+#ಆದರೆ CONFIG_LIBDRM
+    ಸ್ಥಿತಿ AV_PIX_FMT_DRM_ಅವಿಭಾಜ್ಯ:
+        ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
+            ಹಿಂತಿರುಗಿ vulkan_map_ಗಮ್ಯ_drm(hwfc, dst, src, flags);
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
+#ಆದರೆ CONFIG_VAAPI
+    ಸ್ಥಿತಿ AV_PIX_FMT_VAAPI:
+        ಆದರೆ (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
+            ಹಿಂತಿರುಗಿ vulkan_map_ಗಮ್ಯ_vaapi(hwfc, dst, src, flags);
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ನಿಲ್ಲಿಸು;
     }
-    return AVERROR(ENOSYS);
+    ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
 }
 
-static int copy_buffer_data(AVHWFramesContext *hwfc, FFVkBuffer *vkbuf,
-                            AVFrame *swf, VkBufferImageCopy *region,
-                            int planes, int upload)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ copy_ಬಫರ್_ದತ್ತಾಂಶ(AVHWFramesContext *hwfc, FFVk_ಬಫರ್ *vkbuf,
+                            AVFrame *swf, Vk_ಬಫರ್_Image_Copy *region,
+                            ಪೂರ್ಣಾಂಕ planes, ಪೂರ್ಣಾಂಕ upload)
 {
-    int err;
+    ಪೂರ್ಣಾಂಕ err;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
-    int bytewidth[AV_NUM_DATA_POINTERS];
+    ಪೂರ್ಣಾಂಕ bytewidth[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
 
     /* Copy only the visible bytes of each row, the last row of a plane
      * does not have to extend to the full linesize. */
-    for (int i = 0; i < planes; i++) {
-        bytewidth[i] = av_image_get_linesize(swf->format, swf->width, i);
-        if (bytewidth[i] < 0)
-            return bytewidth[i];
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
+        bytewidth[i] = av_image_get_linesize(swf->format, swf->ಅಗಲ, i);
+        ಆದರೆ (bytewidth[i] < 0)
+            ಹಿಂತಿರುಗಿ bytewidth[i];
     }
 
-    if (upload) {
-        for (int i = 0; i < planes; i++)
-            av_image_copy_plane(vkbuf->mapped_mem + region[i].bufferOffset,
-                                region[i].bufferRowLength,
-                                swf->data[i],
+    ಆದರೆ (upload) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++)
+            av_image_copy_plane(vkbuf->mapped_mem + region[i].ಬಫರ್_ಸ್ಥಾನಾಂತರ,
+                                region[i].ಬಫರ್_ಅಡ್ಡಸಾಲು_ಉದ್ದಳತೆ,
+                                swf->ದತ್ತಾಂಶ[i],
                                 swf->linesize[i],
                                 bytewidth[i],
-                                region[i].imageExtent.height);
+                                region[i].imageExtent.ಎತ್ತರ);
 
-        err = ff_vk_flush_buffer(&p->vkctx, vkbuf, 0, VK_WHOLE_SIZE, 1);
-        if (err != VK_SUCCESS) {
+        err = ff_vk_flush_ಬಫರ್(&p->vkctx, vkbuf, 0, VK_ಸಂಪೂರ್ಣ_ಗಾತ್ರ, 1);
+        ಆದರೆ (err != VK_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to flush buffer data: %s\n",
                    av_err2str(err));
-            return AVERROR_EXTERNAL;
+            ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
         }
-    } else {
-        err = ff_vk_flush_buffer(&p->vkctx, vkbuf, 0, VK_WHOLE_SIZE, 0);
-        if (err != VK_SUCCESS) {
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        err = ff_vk_flush_ಬಫರ್(&p->vkctx, vkbuf, 0, VK_ಸಂಪೂರ್ಣ_ಗಾತ್ರ, 0);
+        ಆದರೆ (err != VK_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to invalidate buffer data: %s\n",
                    av_err2str(err));
-            return AVERROR_EXTERNAL;
+            ಹಿಂತಿರುಗಿ AVERROR_EXTERNAL;
         }
 
-        for (int i = 0; i < planes; i++)
-            av_image_copy_plane(swf->data[i],
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++)
+            av_image_copy_plane(swf->ದತ್ತಾಂಶ[i],
                                 swf->linesize[i],
-                                vkbuf->mapped_mem + region[i].bufferOffset,
-                                region[i].bufferRowLength,
+                                vkbuf->mapped_mem + region[i].ಬಫರ್_ಸ್ಥಾನಾಂತರ,
+                                region[i].ಬಫರ್_ಅಡ್ಡಸಾಲು_ಉದ್ದಳತೆ,
                                 bytewidth[i],
-                                region[i].imageExtent.height);
+                                region[i].imageExtent.ಎತ್ತರ);
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int get_plane_buf(AVHWFramesContext *hwfc, FFVkBuffer **dst,
-                         AVFrame *swf, VkBufferImageCopy *region, int upload)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ get_plane_buf(AVHWFramesContext *hwfc, FFVk_ಬಫರ್ **dst,
+                         AVFrame *swf, Vk_ಬಫರ್_Image_Copy *region, ಪೂರ್ಣಾಂಕ upload)
 {
-    int err;
+    ಪೂರ್ಣಾಂಕ err;
     uint32_t p_w, p_h;
-    VulkanFramesPriv *fp = hwfc->hwctx;
+    Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
-    const int planes = av_pix_fmt_count_planes(swf->format);
-    VkBufferUsageFlags buf_usage = upload ? VK_BUFFER_USAGE_TRANSFER_SRC_BIT :
-                                            VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ planes = av_pix_fmt_ಎಣಿಕೆ_planes(swf->format);
+    Vk_ಬಫರ್_Usage_Flags buf_usage = upload ? VK_ಬಫರ್_USAGE_TRANSFER_SRC_ಬಿಟ್ :
+                                            VK_ಬಫರ್_USAGE_TRANSFER_DST_ಬಿಟ್;
 
-    size_t buf_offset = 0;
-    for (int i = 0; i < planes; i++) {
-        get_plane_wh(&p_w, &p_h, swf->format, swf->width, swf->height, i);
+    size_t buf_ಸ್ಥಾನಾಂತರ = 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
+        get_plane_wh(&p_w, &p_h, swf->format, swf->ಅಗಲ, swf->ಎತ್ತರ, i);
 
-        region[i] = (VkBufferImageCopy) {
-            .bufferOffset = buf_offset,
-            .bufferRowLength = FFALIGN(FFABS(swf->linesize[i]),
-                                       p->props.properties.limits.optimalBufferCopyRowPitchAlignment),
-            .bufferImageHeight = p_h,
-            .imageSubresource.layerCount = 1,
+        region[i] = (Vk_ಬಫರ್_Image_Copy) {
+            .ಬಫರ್_ಸ್ಥಾನಾಂತರ = buf_ಸ್ಥಾನಾಂತರ,
+            .ಬಫರ್_ಅಡ್ಡಸಾಲು_ಉದ್ದಳತೆ = FFALIGN(FFABS(swf->linesize[i]),
+                                       p->props.properties.limits.optimal_ಬಫರ್_Copy_ಅಡ್ಡಸಾಲು_Pitch_Alignment),
+            .ಬಫರ್_Image_ಎತ್ತರ = p_h,
+            .imageSubresource.layer_ಎಣಿಕೆ = 1,
             .imageExtent = (VkExtent3D){ p_w, p_h, 1 },
             /* Rest of the fields adjusted/filled in later */
         };
 
-        buf_offset += FFALIGN(p_h*region[i].bufferRowLength,
-                              p->props.properties.limits.optimalBufferCopyOffsetAlignment);
+        buf_ಸ್ಥಾನಾಂತರ += FFALIGN(p_h*region[i].ಬಫರ್_ಅಡ್ಡಸಾಲು_ಉದ್ದಳತೆ,
+                              p->props.properties.limits.optimal_ಬಫರ್_Copy_ಸ್ಥಾನಾಂತರ_Alignment);
     }
 
-    err = ff_vk_get_pooled_buffer(&p->vkctx, &fp->tmp, dst, buf_usage,
-                                  NULL, buf_offset,
-                                  VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+    err = ff_vk_get_pooled_ಬಫರ್(&p->vkctx, &fp->tmp, dst, buf_usage,
+                                  ಖಾಲಿ, buf_ಸ್ಥಾನಾಂತರ,
+                                  VK_ಸ್ಮರಣೆ_PROPERTY_HOST_VISIBLE_ಬಿಟ್ |
                                   p->vkctx.host_cached_flag);
-    if (err < 0)
-        return err;
+    ಆದರೆ (err < 0)
+        ಹಿಂತಿರುಗಿ err;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int host_map_frame(AVHWFramesContext *hwfc, FFVkBuffer **dst, int *nb_bufs,
-                          AVFrame *swf, VkBufferImageCopy *region, int upload)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ host_map_ಚೌಕಟ್ಟು(AVHWFramesContext *hwfc, FFVk_ಬಫರ್ **dst, ಪೂರ್ಣಾಂಕ *nb_bufs,
+                          AVFrame *swf, Vk_ಬಫರ್_Image_Copy *region, ಪೂರ್ಣಾಂಕ upload)
 {
-    int err;
+    ಪೂರ್ಣಾಂಕ err;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
 
-    int nb_src_bufs;
-    const int planes = av_pix_fmt_count_planes(swf->format);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
-    VkBufferUsageFlags buf_usage = upload ? VK_BUFFER_USAGE_TRANSFER_SRC_BIT :
-                                            VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+    ಪೂರ್ಣಾಂಕ nb_src_bufs;
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ planes = av_pix_fmt_ಎಣಿಕೆ_planes(swf->format);
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
+    Vk_ಬಫರ್_Usage_Flags buf_usage = upload ? VK_ಬಫರ್_USAGE_TRANSFER_SRC_ಬಿಟ್ :
+                                            VK_ಬಫರ್_USAGE_TRANSFER_DST_ಬಿಟ್;
 
     /* Count the number of buffers in the software frame */
     nb_src_bufs = 0;
-    while (swf->buf[nb_src_bufs])
+    ಆಗ (swf->buf[nb_src_bufs])
         nb_src_bufs++;
 
     /* Single buffer contains all planes */
-    if (nb_src_bufs == 1) {
-        err = ff_vk_host_map_buffer(&p->vkctx, &dst[0],
-                                    swf->data[0], VK_WHOLE_SIZE, swf->buf[0],
+    ಆದರೆ (nb_src_bufs == 1) {
+        err = ff_vk_host_map_ಬಫರ್(&p->vkctx, &dst[0],
+                                    swf->ದತ್ತಾಂಶ[0], VK_ಸಂಪೂರ್ಣ_ಗಾತ್ರ, swf->buf[0],
                                     buf_usage);
-        if (err < 0)
-            return err;
+        ಆದರೆ (err < 0)
+            ಹಿಂತಿರುಗಿ err;
         (*nb_bufs)++;
 
-        for (int i = 0; i < planes; i++)
-            region[i].bufferOffset = dst[0]->virtual_offset +
-                                     swf->data[i] - swf->data[0];
-    } else if (nb_src_bufs == planes) { /* One buffer per plane */
-        for (int i = 0; i < planes; i++) {
-            err = ff_vk_host_map_buffer(&p->vkctx, &dst[i],
-                                        swf->data[i], VK_WHOLE_SIZE,
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++)
+            region[i].ಬಫರ್_ಸ್ಥಾನಾಂತರ = dst[0]->virtual_ಸ್ಥಾನಾಂತರ +
+                                     swf->ದತ್ತಾಂಶ[i] - swf->ದತ್ತಾಂಶ[0];
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (nb_src_bufs == planes) { /* One buffer per plane */
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
+            err = ff_vk_host_map_ಬಫರ್(&p->vkctx, &dst[i],
+                                        swf->ದತ್ತಾಂಶ[i], VK_ಸಂಪೂರ್ಣ_ಗಾತ್ರ,
                                         swf->buf[i], buf_usage);
-            if (err < 0)
-                goto fail;
+            ಆದರೆ (err < 0)
+                ಹೋಗು fail;
             (*nb_bufs)++;
 
-            region[i].bufferOffset = dst[i]->virtual_offset;
+            region[i].ಬಫರ್_ಸ್ಥಾನಾಂತರ = dst[i]->virtual_ಸ್ಥಾನಾಂತರ;
         }
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* Weird layout (3 planes, 2 buffers), patch welcome, fallback to copy */
-        return AVERROR_PATCHWELCOME;
+        ಹಿಂತಿರುಗಿ AVERROR_PATCHWELCOME;
     }
 
     /* Buffer-image copies need offsets aligned to the texel block, and
      * transfer-only queues to 4 bytes; stage anything else, including
      * texel blocks that are not a power of two */
-    for (int i = 0; i < planes; i++) {
-        int align = FFMAX(desc->comp[i].step, p->transfer_offset_align);
-        if ((align & (align - 1)) || (region[i].bufferOffset & (align - 1))) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
+        ಪೂರ್ಣಾಂಕ align = FFMAX(desc->comp[i].ಹೆಜ್ಜೆ, p->transfer_ಸ್ಥಾನಾಂತರ_align);
+        ಆದರೆ ((align & (align - 1)) || (region[i].ಬಫರ್_ಸ್ಥಾನಾಂತರ & (align - 1))) {
             err = AVERROR(EINVAL);
-            goto fail;
+            ಹೋಗು fail;
         }
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    for (int i = 0; i < (*nb_bufs); i++)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < (*nb_bufs); i++)
         av_refstruct_unref(&dst[i]);
-    return err;
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static int vulkan_transfer_host(AVHWFramesContext *hwfc, AVFrame *hwf,
-                                AVFrame *swf, int upload)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_transfer_host(AVHWFramesContext *hwfc, AVFrame *hwf,
+                                AVFrame *swf, ಪೂರ್ಣಾಂಕ upload)
 {
-    VulkanFramesPriv *fp = hwfc->hwctx;
-    AVVulkanFramesContext *hwfc_vk = &fp->p;
+    Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
+    AVVulkan_ಚೌಕಟ್ಟುಗಳು_Context *hwfc_vk = &fp->p;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    AVVkFrame *hwf_vk = (AVVkFrame *)hwf->data[0];
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
-    const int planes = av_pix_fmt_count_planes(swf->format);
-    const int nb_images = ff_vk_count_images(hwf_vk);
+    AVVk_ಚೌಕಟ್ಟು *hwf_vk = (AVVk_ಚೌಕಟ್ಟು *)hwf->ದತ್ತಾಂಶ[0];
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ planes = av_pix_fmt_ಎಣಿಕೆ_planes(swf->format);
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ nb_images = ff_vk_ಎಣಿಕೆ_images(hwf_vk);
 
     VkSemaphoreWaitInfo sem_wait;
-    VkHostImageLayoutTransitionInfoEXT layout_ch_info[AV_NUM_DATA_POINTERS];
-    int nb_layout_ch = 0;
+    VkHostImageLayoutTransitionInfoEXT layout_ch_info[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
+    ಪೂರ್ಣಾಂಕ nb_layout_ch = 0;
 
-    hwfc_vk->lock_frame(hwfc, hwf_vk);
+    hwfc_vk->ಬೀಗ_ಚೌಕಟ್ಟು(hwfc, hwf_vk);
 
-    for (int i = 0; i < nb_images; i++) {
-        int compat = 0;
-        for (int j = 0; j < p->vkctx.host_image_props.copySrcLayoutCount; j++) {
-            if (hwf_vk->layout[i] == p->vkctx.host_image_props.pCopySrcLayouts[j]) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_images; i++) {
+        ಪೂರ್ಣಾಂಕ compat = 0;
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < p->vkctx.host_image_props.copy_Src_Layout_ಎಣಿಕೆ; j++) {
+            ಆದರೆ (hwf_vk->layout[i] == p->vkctx.host_image_props.pCopySrcLayouts[j]) {
                 compat = 1;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
         }
-        if (compat)
-            continue;
+        ಆದರೆ (compat)
+            ಮುಂದುವರಿ;
 
         /* This should only ever happen on uploads, so using UNDEFINED is safe */
         av_assert1(upload);
@@ -4912,9 +4912,9 @@ static int vulkan_transfer_host(AVHWFramesContext *hwfc, AVFrame *hwf,
             .oldLayout = VK_IMAGE_LAYOUT_UNDEFINED,
             .newLayout = VK_IMAGE_LAYOUT_GENERAL,
             .subresourceRange = {
-                .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-                .levelCount = 1,
-                .layerCount = 1,
+                .aspect_ಮುಖವಾಡ = VK_IMAGE_ASPECT_COLOR_ಬಿಟ್,
+                .level_ಎಣಿಕೆ = 1,
+                .layer_ಎಣಿಕೆ = 1,
             },
         };
 
@@ -4925,463 +4925,463 @@ static int vulkan_transfer_host(AVHWFramesContext *hwfc, AVFrame *hwf,
     sem_wait = (VkSemaphoreWaitInfo) {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
         .pSemaphores = hwf_vk->sem,
-        .pValues = hwf_vk->sem_value,
-        .semaphoreCount = nb_images,
+        .p_ಮೌಲ್ಯಗಳು = hwf_vk->sem_ಮೌಲ್ಯ,
+        .semaphore_ಎಣಿಕೆ = nb_images,
     };
 
     vk->WaitSemaphores(hwctx->act_dev, &sem_wait, UINT64_MAX);
 
-    if (nb_layout_ch)
+    ಆದರೆ (nb_layout_ch)
         vk->TransitionImageLayoutEXT(hwctx->act_dev,
                                      nb_layout_ch, layout_ch_info);
 
-    if (upload) {
-        VkMemoryToImageCopyEXT region_info = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY_EXT,
+    ಆದರೆ (upload) {
+        Vk_ಸ್ಮರಣೆ_ಗಮ್ಯ_Image_Copy_EXT region_info = {
+            .sType = VK_STRUCTURE_TYPE_ಸ್ಮರಣೆ_ಗಮ್ಯ_IMAGE_COPY_EXT,
             .imageSubresource = {
-                .layerCount = 1,
+                .layer_ಎಣಿಕೆ = 1,
             },
         };
-        VkCopyMemoryToImageInfoEXT copy_info = {
-            .sType = VK_STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO_EXT,
-            .regionCount = 1,
+        Vk_Copy_ಸ್ಮರಣೆ_ಗಮ್ಯ_Image_Info_EXT copy_info = {
+            .sType = VK_STRUCTURE_TYPE_COPY_ಸ್ಮರಣೆ_ಗಮ್ಯ_IMAGE_INFO_EXT,
+            .region_ಎಣಿಕೆ = 1,
             .pRegions = &region_info,
         };
-        for (int i = 0; i < planes; i++) {
-            int img_idx = FFMIN(i, (nb_images - 1));
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
+            ಪೂರ್ಣಾಂಕ img_idx = FFMIN(i, (nb_images - 1));
             uint32_t p_w, p_h;
-            get_plane_wh(&p_w, &p_h, swf->format, swf->width, swf->height, i);
+            get_plane_wh(&p_w, &p_h, swf->format, swf->ಅಗಲ, swf->ಎತ್ತರ, i);
 
-            region_info.pHostPointer = swf->data[i];
-            region_info.memoryRowLength = swf->linesize[i] / desc->comp[i].step;
-            region_info.imageSubresource.aspectMask = ff_vk_aspect_flag(hwf, i);
+            region_info.p_Host_ಸೂಚಕ = swf->ದತ್ತಾಂಶ[i];
+            region_info.ಸ್ಮರಣೆ_ಅಡ್ಡಸಾಲು_ಉದ್ದಳತೆ = swf->linesize[i] / desc->comp[i].ಹೆಜ್ಜೆ;
+            region_info.imageSubresource.aspect_ಮುಖವಾಡ = ff_vk_aspect_flag(hwf, i);
             region_info.imageExtent = (VkExtent3D){ p_w, p_h, 1 };
             copy_info.dstImage = hwf_vk->img[img_idx];
             copy_info.dstImageLayout = hwf_vk->layout[img_idx];
 
-            vk->CopyMemoryToImageEXT(hwctx->act_dev, &copy_info);
+            vk->Copy_ಸ್ಮರಣೆ_ಗಮ್ಯ_Image_EXT(hwctx->act_dev, &copy_info);
         }
-    } else {
-        VkImageToMemoryCopyEXT region_info = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY_EXT,
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        Vk_Image_ಗಮ್ಯ_ಸ್ಮರಣೆ_Copy_EXT region_info = {
+            .sType = VK_STRUCTURE_TYPE_IMAGE_ಗಮ್ಯ_ಸ್ಮರಣೆ_COPY_EXT,
             .imageSubresource = {
-                .layerCount = 1,
+                .layer_ಎಣಿಕೆ = 1,
             },
         };
-        VkCopyImageToMemoryInfoEXT copy_info = {
-            .sType = VK_STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO_EXT,
-            .regionCount = 1,
+        Vk_Copy_Image_ಗಮ್ಯ_ಸ್ಮರಣೆ_Info_EXT copy_info = {
+            .sType = VK_STRUCTURE_TYPE_COPY_IMAGE_ಗಮ್ಯ_ಸ್ಮರಣೆ_INFO_EXT,
+            .region_ಎಣಿಕೆ = 1,
             .pRegions = &region_info,
         };
-        for (int i = 0; i < planes; i++) {
-            int img_idx = FFMIN(i, (nb_images - 1));
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
+            ಪೂರ್ಣಾಂಕ img_idx = FFMIN(i, (nb_images - 1));
             uint32_t p_w, p_h;
-            get_plane_wh(&p_w, &p_h, swf->format, swf->width, swf->height, i);
+            get_plane_wh(&p_w, &p_h, swf->format, swf->ಅಗಲ, swf->ಎತ್ತರ, i);
 
-            region_info.pHostPointer = swf->data[i];
-            region_info.memoryRowLength = swf->linesize[i] / desc->comp[i].step;
-            region_info.imageSubresource.aspectMask = ff_vk_aspect_flag(hwf, i);
+            region_info.p_Host_ಸೂಚಕ = swf->ದತ್ತಾಂಶ[i];
+            region_info.ಸ್ಮರಣೆ_ಅಡ್ಡಸಾಲು_ಉದ್ದಳತೆ = swf->linesize[i] / desc->comp[i].ಹೆಜ್ಜೆ;
+            region_info.imageSubresource.aspect_ಮುಖವಾಡ = ff_vk_aspect_flag(hwf, i);
             region_info.imageExtent = (VkExtent3D){ p_w, p_h, 1 };
             copy_info.srcImage = hwf_vk->img[img_idx];
             copy_info.srcImageLayout = hwf_vk->layout[img_idx];
 
-            vk->CopyImageToMemoryEXT(hwctx->act_dev, &copy_info);
+            vk->Copy_Image_ಗಮ್ಯ_ಸ್ಮರಣೆ_EXT(hwctx->act_dev, &copy_info);
         }
     }
 
-    hwfc_vk->unlock_frame(hwfc, hwf_vk);
+    hwfc_vk->unlock_ಚೌಕಟ್ಟು(hwfc, hwf_vk);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int vulkan_transfer_frame(AVHWFramesContext *hwfc,
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_transfer_ಚೌಕಟ್ಟು(AVHWFramesContext *hwfc,
                                  AVFrame *swf, AVFrame *hwf,
-                                 int upload)
+                                 ಪೂರ್ಣಾಂಕ upload)
 {
-    int err;
-    VulkanFramesPriv *fp = hwfc->hwctx;
-    AVVulkanFramesContext *hwctx = &fp->p;
+    ಪೂರ್ಣಾಂಕ err;
+    Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
+    AVVulkan_ಚೌಕಟ್ಟುಗಳು_Context *hwctx = &fp->p;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    int host_mapped = 0;
+    ಪೂರ್ಣಾಂಕ host_mapped = 0;
 
-    AVVkFrame *hwf_vk = (AVVkFrame *)hwf->data[0];
-    VkBufferImageCopy region[AV_NUM_DATA_POINTERS]; // always one per plane
+    AVVk_ಚೌಕಟ್ಟು *hwf_vk = (AVVk_ಚೌಕಟ್ಟು *)hwf->ದತ್ತಾಂಶ[0];
+    Vk_ಬಫರ್_Image_Copy region[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು]; // always one per plane
 
-    const int planes = av_pix_fmt_count_planes(swf->format);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
-    const int nb_images = ff_vk_count_images(hwf_vk);
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ planes = av_pix_fmt_ಎಣಿಕೆ_planes(swf->format);
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ nb_images = ff_vk_ಎಣಿಕೆ_images(hwf_vk);
 
-    VkImageMemoryBarrier2 img_bar[AV_NUM_DATA_POINTERS];
-    int nb_img_bar = 0;
+    Vk_Image_ಸ್ಮರಣೆ_Barrier2 img_bar[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
+    ಪೂರ್ಣಾಂಕ nb_img_bar = 0;
 
-    FFVkBuffer *bufs[AV_NUM_DATA_POINTERS];
-    int nb_bufs = 0;
+    FFVk_ಬಫರ್ *bufs[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು];
+    ಪೂರ್ಣಾಂಕ nb_bufs = 0;
 
-    VkCommandBuffer cmd_buf;
+    Vk_Command_ಬಫರ್ cmd_buf;
     FFVkExecContext *exec;
 
     /* Sanity checking */
-    if ((swf->format != AV_PIX_FMT_NONE && !av_vkfmt_from_pixfmt(swf->format))) {
+    ಆದರೆ ((swf->format != AV_PIX_FMT_NONE && !av_vkfmt_from_pixfmt(swf->format))) {
         av_log(hwfc, AV_LOG_ERROR, "Unsupported software frame pixel format!\n");
-        return AVERROR(EINVAL);
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
     }
 
-    if (swf->width > hwfc->width || swf->height > hwfc->height)
-        return AVERROR(EINVAL);
+    ಆದರೆ (swf->ಅಗಲ > hwfc->ಅಗಲ || swf->ಎತ್ತರ > hwfc->ಎತ್ತರ)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    int host_copy = hwctx->usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT;
-    int host_map = p->vkctx.extensions & FF_VK_EXT_EXTERNAL_HOST_MEMORY &&
+    ಪೂರ್ಣಾಂಕ host_copy = hwctx->usage & VK_IMAGE_USAGE_HOST_TRANSFER_ಬಿಟ್_EXT;
+    ಪೂರ್ಣಾಂಕ host_map = p->vkctx.extensions & FF_VK_EXT_EXTERNAL_HOST_ಸ್ಮರಣೆ &&
                    !p->avoid_host_import;
 
     /* Host image copies and host mapping address rows upwards from the plane
      * pointer, so a bottom-up frame goes through the staging buffer */
-    for (int i = 0; i < planes; i++)
-        if (swf->linesize[i] < 0)
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++)
+        ಆದರೆ (swf->linesize[i] < 0)
             host_copy = host_map = 0;
 
     /* Host layout transitions may only originate from a host-copyable layout */
-    if (!upload && host_copy) {
-        for (int i = 0; i < nb_images; i++) {
-            int compat = 0;
-            for (int j = 0; j < p->vkctx.host_image_props.copySrcLayoutCount; j++) {
-                if (hwf_vk->layout[i] == p->vkctx.host_image_props.pCopySrcLayouts[j]) {
+    ಆದರೆ (!upload && host_copy) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_images; i++) {
+            ಪೂರ್ಣಾಂಕ compat = 0;
+            ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < p->vkctx.host_image_props.copy_Src_Layout_ಎಣಿಕೆ; j++) {
+                ಆದರೆ (hwf_vk->layout[i] == p->vkctx.host_image_props.pCopySrcLayouts[j]) {
                     compat = 1;
-                    break;
+                    ನಿಲ್ಲಿಸು;
                 }
             }
-            if (!compat) {
+            ಆದರೆ (!compat) {
                 host_copy = 0;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
         }
     }
 
-    if (host_copy)
-        return vulkan_transfer_host(hwfc, hwf, swf, upload);
+    ಆದರೆ (host_copy)
+        ಹಿಂತಿರುಗಿ vulkan_transfer_host(hwfc, hwf, swf, upload);
 
-    for (int i = 0; i < av_pix_fmt_count_planes(swf->format); i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < av_pix_fmt_ಎಣಿಕೆ_planes(swf->format); i++) {
         uint32_t p_w, p_h;
-        get_plane_wh(&p_w, &p_h, swf->format, swf->width, swf->height, i);
+        get_plane_wh(&p_w, &p_h, swf->format, swf->ಅಗಲ, swf->ಎತ್ತರ, i);
 
         /* Buffer region for this plane */
-        region[i] = (VkBufferImageCopy) {
-            .bufferOffset = 0,
-            .bufferRowLength = FFABS(swf->linesize[i]),
-            .bufferImageHeight = p_h,
-            .imageSubresource.layerCount = 1,
+        region[i] = (Vk_ಬಫರ್_Image_Copy) {
+            .ಬಫರ್_ಸ್ಥಾನಾಂತರ = 0,
+            .ಬಫರ್_ಅಡ್ಡಸಾಲು_ಉದ್ದಳತೆ = FFABS(swf->linesize[i]),
+            .ಬಫರ್_Image_ಎತ್ತರ = p_h,
+            .imageSubresource.layer_ಎಣಿಕೆ = 1,
             .imageExtent = (VkExtent3D){ p_w, p_h, 1 },
             /* Rest of the fields adjusted/filled in later */
         };
     }
 
     /* Setup buffers first */
-    if (host_map) {
-        err = host_map_frame(hwfc, bufs, &nb_bufs, swf, region, upload);
-        if (err >= 0)
+    ಆದರೆ (host_map) {
+        err = host_map_ಚೌಕಟ್ಟು(hwfc, bufs, &nb_bufs, swf, region, upload);
+        ಆದರೆ (err >= 0)
             host_mapped = 1;
     }
 
-    if (!host_mapped) {
+    ಆದರೆ (!host_mapped) {
         err = get_plane_buf(hwfc, &bufs[0], swf, region, upload);
-        if (err < 0)
-            goto end;
+        ಆದರೆ (err < 0)
+            ಹೋಗು ಕೊನೆ;
         nb_bufs = 1;
 
-        if (upload) {
-            err = copy_buffer_data(hwfc, bufs[0], swf, region, planes, 1);
-            if (err < 0)
-                goto end;
+        ಆದರೆ (upload) {
+            err = copy_ಬಫರ್_ದತ್ತಾಂಶ(hwfc, bufs[0], swf, region, planes, 1);
+            ಆದರೆ (err < 0)
+                ಹೋಗು ಕೊನೆ;
         }
     }
 
     exec = ff_vk_exec_get(&p->vkctx, &fp->upload_exec);
     cmd_buf = exec->buf;
 
-    err = ff_vk_exec_start(&p->vkctx, exec);
-    if (err < 0)
-        goto end;
+    err = ff_vk_exec_ಆರಂಭ(&p->vkctx, exec);
+    ಆದರೆ (err < 0)
+        ಹೋಗು ಕೊನೆ;
 
     /* Prep destination Vulkan frame */
-    err = ff_vk_exec_add_dep_frame(&p->vkctx, exec, hwf,
-                                   VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
-                                   VK_PIPELINE_STAGE_2_TRANSFER_BIT);
-    if (err < 0) {
+    err = ff_vk_exec_ಕೂಡಿಸು_dep_ಚೌಕಟ್ಟು(&p->vkctx, exec, hwf,
+                                   VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್,
+                                   VK_PIPELINE_STAGE_2_TRANSFER_ಬಿಟ್);
+    ಆದರೆ (err < 0) {
         ff_vk_exec_discard(&p->vkctx, exec);
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
 
     /* No need to declare buf deps for synchronous transfers (downloads) */
-    if (upload) {
+    ಆದರೆ (upload) {
         /* Add the software frame backing the buffers if we're host mapping */
-        if (host_mapped) {
-            err = ff_vk_exec_add_dep_sw_frame(&p->vkctx, exec, swf);
-            if (err < 0) {
+        ಆದರೆ (host_mapped) {
+            err = ff_vk_exec_ಕೂಡಿಸು_dep_sw_ಚೌಕಟ್ಟು(&p->vkctx, exec, swf);
+            ಆದರೆ (err < 0) {
                 ff_vk_exec_discard(&p->vkctx, exec);
-                goto end;
+                ಹೋಗು ಕೊನೆ;
             }
         }
 
         /* Add the buffers as a dependency */
-        for (int i = 0; i < nb_bufs; i++)
-            ff_vk_exec_add_dep_refstruct(&p->vkctx, exec, bufs[i]);
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_bufs; i++)
+            ff_vk_exec_ಕೂಡಿಸು_dep_refstruct(&p->vkctx, exec, bufs[i]);
     }
 
-    ff_vk_frame_barrier(&p->vkctx, exec, hwf, img_bar, &nb_img_bar,
-                        VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
-                        VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
-                        upload ? VK_ACCESS_TRANSFER_WRITE_BIT :
-                                 VK_ACCESS_TRANSFER_READ_BIT,
+    ff_vk_ಚೌಕಟ್ಟು_barrier(&p->vkctx, exec, hwf, img_bar, &nb_img_bar,
+                        VK_PIPELINE_STAGE_2_ALL_COMMANDS_ಬಿಟ್,
+                        VK_PIPELINE_STAGE_2_TRANSFER_ಬಿಟ್_KHR,
+                        upload ? VK_ACCESS_TRANSFER_WRITE_ಬಿಟ್ :
+                                 VK_ACCESS_TRANSFER_READ_ಬಿಟ್,
                         upload ? VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL :
                                  VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                        p->nb_img_qfs > 1 ? VK_QUEUE_FAMILY_IGNORED : p->img_qfs[0]);
+                        p->nb_img_qfs > 1 ? VK_ಸರತಿ_FAMILY_IGNORED : p->img_qfs[0]);
 
     vk->CmdPipelineBarrier2(cmd_buf, &(VkDependencyInfo) {
             .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
-            .pImageMemoryBarriers = img_bar,
-            .imageMemoryBarrierCount = nb_img_bar,
+            .p_Image_ಸ್ಮರಣೆ_Barriers = img_bar,
+            .image_ಸ್ಮರಣೆ_Barrier_ಎಣಿಕೆ = nb_img_bar,
     });
 
-    for (int i = 0; i < planes; i++) {
-        int buf_idx = FFMIN(i, (nb_bufs - 1));
-        int img_idx = FFMIN(i, (nb_images - 1));
-        FFVkBuffer *vkbuf = bufs[buf_idx];
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
+        ಪೂರ್ಣಾಂಕ buf_idx = FFMIN(i, (nb_bufs - 1));
+        ಪೂರ್ಣಾಂಕ img_idx = FFMIN(i, (nb_images - 1));
+        FFVk_ಬಫರ್ *vkbuf = bufs[buf_idx];
 
-        uint32_t orig_stride = region[i].bufferRowLength;
-        region[i].bufferRowLength /= desc->comp[i].step;
-        region[i].imageSubresource.aspectMask = ff_vk_aspect_flag(hwf, i);
+        uint32_t orig_stride = region[i].ಬಫರ್_ಅಡ್ಡಸಾಲು_ಉದ್ದಳತೆ;
+        region[i].ಬಫರ್_ಅಡ್ಡಸಾಲು_ಉದ್ದಳತೆ /= desc->comp[i].ಹೆಜ್ಜೆ;
+        region[i].imageSubresource.aspect_ಮುಖವಾಡ = ff_vk_aspect_flag(hwf, i);
 
-        if (upload)
-            vk->CmdCopyBufferToImage(cmd_buf, vkbuf->buf,
+        ಆದರೆ (upload)
+            vk->Cmd_Copy_ಬಫರ್_ಗಮ್ಯ_Image(cmd_buf, vkbuf->buf,
                                      hwf_vk->img[img_idx],
                                      img_bar[img_idx].newLayout,
                                      1, &region[i]);
-        else
-            vk->CmdCopyImageToBuffer(cmd_buf, hwf_vk->img[img_idx],
+        ಇಲ್ಲದಿದ್ದರೆ
+            vk->Cmd_Copy_Image_ಗಮ್ಯ_ಬಫರ್(cmd_buf, hwf_vk->img[img_idx],
                                      img_bar[img_idx].newLayout,
                                      vkbuf->buf,
                                      1, &region[i]);
 
-        region[i].bufferRowLength = orig_stride;
+        region[i].ಬಫರ್_ಅಡ್ಡಸಾಲು_ಉದ್ದಳತೆ = orig_stride;
     }
 
     err = ff_vk_exec_submit(&p->vkctx, exec);
-    if (err >= 0 && !upload) {
+    ಆದರೆ (err >= 0 && !upload) {
         ff_vk_exec_wait(&p->vkctx, exec);
-        if (!host_mapped)
-            err = copy_buffer_data(hwfc, bufs[0], swf, region, planes, 0);
+        ಆದರೆ (!host_mapped)
+            err = copy_ಬಫರ್_ದತ್ತಾಂಶ(hwfc, bufs[0], swf, region, planes, 0);
     }
 
-end:
-    for (int i = 0; i < nb_bufs; i++)
+ಕೊನೆ:
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_bufs; i++)
         av_refstruct_unref(&bufs[i]);
 
-    return err;
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static int vulkan_transfer_data_to(AVHWFramesContext *hwfc, AVFrame *dst,
-                                   const AVFrame *src)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ(AVHWFramesContext *hwfc, AVFrame *dst,
+                                   ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    av_unused VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
+    av_ಬಳಸದ VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
 
-    switch (src->format) {
-#if CONFIG_CUDA
-    case AV_PIX_FMT_CUDA:
-#ifdef _WIN32
-        if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_MEMORY) &&
+    ಆಯ್ಕೆ (src->format) {
+#ಆದರೆ CONFIG_CUDA
+    ಸ್ಥಿತಿ AV_PIX_FMT_CUDA:
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
+        ಆದರೆ ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_ಸ್ಮರಣೆ) &&
             (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_SEM))
-#else
-        if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_MEMORY) &&
+#ಇಲ್ಲದಿದ್ದರೆ
+        ಆದರೆ ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_ಸ್ಮರಣೆ) &&
             (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM))
-#endif
-            return vulkan_transfer_data_from_cuda(hwfc, dst, src);
+#ಆದರೆ_ಅಂತ್ಯ
+            ಹಿಂತಿರುಗಿ vulkan_transfer_ದತ್ತಾಂಶ_from_cuda(hwfc, dst, src);
         av_fallthrough;
-#endif
-    default:
-        if (src->hw_frames_ctx)
-            return AVERROR(ENOSYS);
-        else
-            return vulkan_transfer_frame(hwfc, (AVFrame *)src, dst, 1);
+#ಆದರೆ_ಅಂತ್ಯ
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ಆದರೆ (src->hw_ಚೌಕಟ್ಟುಗಳು_ctx)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಹಿಂತಿರುಗಿ vulkan_transfer_ಚೌಕಟ್ಟು(hwfc, (AVFrame *)src, dst, 1);
     }
 }
 
-#if CONFIG_CUDA
-static int vulkan_transfer_data_to_cuda(AVHWFramesContext *hwfc, AVFrame *dst,
-                                        const AVFrame *src)
+#ಆದರೆ CONFIG_CUDA
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ_cuda(AVHWFramesContext *hwfc, AVFrame *dst,
+                                        ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    int err;
+    ಪೂರ್ಣಾಂಕ err;
     CUcontext dummy;
-    AVVkFrame *dst_f;
-    AVVkFrameInternal *dst_int;
+    AVVk_ಚೌಕಟ್ಟು *dst_f;
+    AVVk_ಚೌಕಟ್ಟು_ಆಂತರಿಕ *dst_int;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
-    VulkanFramesPriv *fp = hwfc->hwctx;
-    const int planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
-    int nb_images;
+    Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv *fp = hwfc->hwctx;
+    ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ planes = av_pix_fmt_ಎಣಿಕೆ_planes(hwfc->sw_format);
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
+    ಪೂರ್ಣಾಂಕ nb_images;
 
-    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)dst->hw_frames_ctx->data;
+    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
     AVHWDeviceContext *cuda_cu = cuda_fc->device_ctx;
     AVCUDADeviceContext *cuda_dev = cuda_cu->hwctx;
-    AVCUDADeviceContextInternal *cu_internal = cuda_dev->internal;
-    CudaFunctions *cu = cu_internal->cuda_dl;
-    CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS s_w_par[AV_NUM_DATA_POINTERS] = { 0 };
-    CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS s_s_par[AV_NUM_DATA_POINTERS] = { 0 };
+    AVCUDADevice_Context_ಆಂತರಿಕ *cu_ಆಂತರಿಕ = cuda_dev->ಆಂತರಿಕ;
+    CudaFunctions *cu = cu_ಆಂತರಿಕ->cuda_dl;
+    CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS s_w_par[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು] = { 0 };
+    CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS s_s_par[AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು] = { 0 };
 
-    dst_f = (AVVkFrame *)src->data[0];
-    nb_images = ff_vk_count_images(dst_f);
+    dst_f = (AVVk_ಚೌಕಟ್ಟು *)src->ದತ್ತಾಂಶ[0];
+    nb_images = ff_vk_ಎಣಿಕೆ_images(dst_f);
 
-    err = prepare_frame(hwfc, &fp->upload_exec, dst_f, PREP_MODE_EXTERNAL_EXPORT);
-    if (err < 0)
-        return err;
+    err = prepare_ಚೌಕಟ್ಟು(hwfc, &fp->upload_exec, dst_f, PREP_ಬಹುಲಕ_EXTERNAL_EXPORT);
+    ಆದರೆ (err < 0)
+        ಹಿಂತಿರುಗಿ err;
 
-    err = CHECK_CU(cu->cuCtxPushCurrent(cuda_dev->cuda_ctx));
-    if (err < 0)
-        return err;
+    err = CHECK_CU(cu->cu_Ctx_ತಳ್ಳು_Current(cuda_dev->cuda_ctx));
+    ಆದರೆ (err < 0)
+        ಹಿಂತಿರುಗಿ err;
 
-    err = vulkan_export_to_cuda(hwfc, dst->hw_frames_ctx, src);
-    if (err < 0) {
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-        return err;
+    err = vulkan_export_ಗಮ್ಯ_cuda(hwfc, dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx, src);
+    ಆದರೆ (err < 0) {
+        CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
+        ಹಿಂತಿರುಗಿ err;
     }
 
-    dst_int = dst_f->internal;
+    dst_int = dst_f->ಆಂತರಿಕ;
 
-    for (int i = 0; i < nb_images; i++) {
-        s_w_par[i].params.fence.value = dst_f->sem_value[i] + 0;
-        s_s_par[i].params.fence.value = dst_f->sem_value[i] + 1;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_images; i++) {
+        s_w_par[i].params.fence.ಮೌಲ್ಯ = dst_f->sem_ಮೌಲ್ಯ[i] + 0;
+        s_s_par[i].params.fence.ಮೌಲ್ಯ = dst_f->sem_ಮೌಲ್ಯ[i] + 1;
     }
 
     err = CHECK_CU(cu->cuWaitExternalSemaphoresAsync(dst_int->cu_sem, s_w_par,
-                                                     nb_images, cuda_dev->stream));
-    if (err < 0)
-        goto fail;
+                                                     nb_images, cuda_dev->ಹರಿವು));
+    ಆದರೆ (err < 0)
+        ಹೋಗು fail;
 
-    for (int i = 0; i < planes; i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++) {
         CUDA_MEMCPY2D cpy = {
-            .dstMemoryType = CU_MEMORYTYPE_DEVICE,
-            .dstDevice     = (CUdeviceptr)dst->data[i],
+            .dst_ಸ್ಮರಣೆ_Type = CU_MEMORYTYPE_DEVICE,
+            .dstDevice     = (CUdeviceptr)dst->ದತ್ತಾಂಶ[i],
             .dstPitch      = dst->linesize[i],
             .dstY          = 0,
 
-            .srcMemoryType = CU_MEMORYTYPE_ARRAY,
+            .src_ಸ್ಮರಣೆ_Type = CU_MEMORYTYPE_ARRAY,
             .srcArray      = dst_int->cu_array[i],
         };
 
-        int w, h;
-        get_plane_wh(&w, &h, hwfc->sw_format, hwfc->width, hwfc->height, i);
+        ಪೂರ್ಣಾಂಕ w, h;
+        get_plane_wh(&w, &h, hwfc->sw_format, hwfc->ಅಗಲ, hwfc->ಎತ್ತರ, i);
 
-        cpy.WidthInBytes = w * desc->comp[i].step;
-        cpy.Height = h;
+        cpy.ಅಗಲ_ಒಳ_ಬೈಟುಗಳು = w * desc->comp[i].ಹೆಜ್ಜೆ;
+        cpy.ಎತ್ತರ_2 = h;
 
-        err = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, cuda_dev->stream));
-        if (err < 0)
-            goto fail;
+        err = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, cuda_dev->ಹರಿವು));
+        ಆದರೆ (err < 0)
+            ಹೋಗು fail;
     }
 
     err = CHECK_CU(cu->cuSignalExternalSemaphoresAsync(dst_int->cu_sem, s_s_par,
-                                                       nb_images, cuda_dev->stream));
-    if (err < 0)
-        goto fail;
+                                                       nb_images, cuda_dev->ಹರಿವು));
+    ಆದರೆ (err < 0)
+        ಹೋಗು fail;
 
-    for (int i = 0; i < nb_images; i++)
-        dst_f->sem_value[i]++;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_images; i++)
+        dst_f->sem_ಮೌಲ್ಯ[i]++;
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
 
     av_log(hwfc, AV_LOG_VERBOSE, "Transferred Vulkan image to CUDA!\n");
 
-    return prepare_frame(hwfc, &fp->upload_exec, dst_f, PREP_MODE_EXTERNAL_IMPORT);
+    ಹಿಂತಿರುಗಿ prepare_ಚೌಕಟ್ಟು(hwfc, &fp->upload_exec, dst_f, PREP_ಬಹುಲಕ_EXTERNAL_IMPORT);
 
 fail:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-    vulkan_free_internal(p, dst_f);
-    av_buffer_unref(&dst->buf[0]);
-    return err;
+    CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
+    vulkan_free_ಆಂತರಿಕ(p, dst_f);
+    av_ಬಫರ್_unref(&dst->buf[0]);
+    ಹಿಂತಿರುಗಿ err;
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-static int vulkan_transfer_data_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                                     const AVFrame *src)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_transfer_ದತ್ತಾಂಶ_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                                     ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    av_unused VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
+    av_ಬಳಸದ VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
 
-    switch (dst->format) {
-#if CONFIG_CUDA
-    case AV_PIX_FMT_CUDA:
-#ifdef _WIN32
-        if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_MEMORY) &&
+    ಆಯ್ಕೆ (dst->format) {
+#ಆದರೆ CONFIG_CUDA
+    ಸ್ಥಿತಿ AV_PIX_FMT_CUDA:
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ _WIN32
+        ಆದರೆ ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_ಸ್ಮರಣೆ) &&
             (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_SEM))
-#else
-        if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_MEMORY) &&
+#ಇಲ್ಲದಿದ್ದರೆ
+        ಆದರೆ ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_ಸ್ಮರಣೆ) &&
             (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM))
-#endif
-            return vulkan_transfer_data_to_cuda(hwfc, dst, src);
+#ಆದರೆ_ಅಂತ್ಯ
+            ಹಿಂತಿರುಗಿ vulkan_transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ_cuda(hwfc, dst, src);
         av_fallthrough;
-#endif
-    default:
-        if (dst->hw_frames_ctx)
-            return AVERROR(ENOSYS);
-        else
-            return vulkan_transfer_frame(hwfc, dst, (AVFrame *)src, 0);
+#ಆದರೆ_ಅಂತ್ಯ
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ಆದರೆ (dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಹಿಂತಿರುಗಿ vulkan_transfer_ಚೌಕಟ್ಟು(hwfc, dst, (AVFrame *)src, 0);
     }
 }
 
-static int vulkan_frames_derive_to(AVHWFramesContext *dst_fc,
-                                   AVHWFramesContext *src_fc, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ vulkan_ಚೌಕಟ್ಟುಗಳು_derive_ಗಮ್ಯ(AVHWFramesContext *dst_fc,
+                                   AVHWFramesContext *src_fc, ಪೂರ್ಣಾಂಕ flags)
 {
-    return vulkan_frames_init(dst_fc);
+    ಹಿಂತಿರುಗಿ vulkan_ಚೌಕಟ್ಟುಗಳು_init(dst_fc);
 }
 
-AVVkFrame *av_vk_frame_alloc(void)
+AVVk_ಚೌಕಟ್ಟು *av_vk_ಚೌಕಟ್ಟು_alloc(ಶೂನ್ಯ)
 {
-    int err;
-    AVVkFrame *f = av_mallocz(sizeof(AVVkFrame));
-    if (!f)
-        return NULL;
+    ಪೂರ್ಣಾಂಕ err;
+    AVVk_ಚೌಕಟ್ಟು *f = av_mallocz(ಗಾತ್ರ(AVVk_ಚೌಕಟ್ಟು));
+    ಆದರೆ (!f)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    f->internal = av_mallocz(sizeof(*f->internal));
-    if (!f->internal) {
+    f->ಆಂತರಿಕ = av_mallocz(ಗಾತ್ರ(*f->ಆಂತರಿಕ));
+    ಆದರೆ (!f->ಆಂತರಿಕ) {
         av_free(f);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    err = pthread_mutex_init(&f->internal->update_mutex, NULL);
-    if (err != 0) {
-        av_free(f->internal);
+    err = pthread_mutex_init(&f->ಆಂತರಿಕ->update_mutex, ಖಾಲಿ);
+    ಆದರೆ (err != 0) {
+        av_free(f->ಆಂತರಿಕ);
         av_free(f);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    return f;
+    ಹಿಂತಿರುಗಿ f;
 }
 
-const HWContextType ff_hwcontext_type_vulkan = {
+ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_vulkan = {
     .type                   = AV_HWDEVICE_TYPE_VULKAN,
     .name                   = "Vulkan",
 
-    .device_hwctx_size      = sizeof(VulkanDevicePriv),
-    .frames_hwctx_size      = sizeof(VulkanFramesPriv),
+    .device_hwctx_ಗಾತ್ರ      = ಗಾತ್ರ(VulkanDevicePriv),
+    .ಚೌಕಟ್ಟುಗಳು_hwctx_ಗಾತ್ರ      = ಗಾತ್ರ(Vulkan_ಚೌಕಟ್ಟುಗಳು_Priv),
 
     .device_init            = &vulkan_device_init,
     .device_uninit          = &vulkan_device_uninit,
     .device_create          = &vulkan_device_create,
     .device_derive          = &vulkan_device_derive,
 
-    .frames_get_constraints = &vulkan_frames_get_constraints,
-    .frames_init            = vulkan_frames_init,
-    .frames_get_buffer      = vulkan_get_buffer,
-    .frames_uninit          = vulkan_frames_uninit,
+    .ಚೌಕಟ್ಟುಗಳು_get_constraints = &vulkan_ಚೌಕಟ್ಟುಗಳು_get_constraints,
+    .ಚೌಕಟ್ಟುಗಳು_init            = vulkan_ಚೌಕಟ್ಟುಗಳು_init,
+    .ಚೌಕಟ್ಟುಗಳು_get_ಬಫರ್      = vulkan_get_ಬಫರ್,
+    .ಚೌಕಟ್ಟುಗಳು_uninit          = vulkan_ಚೌಕಟ್ಟುಗಳು_uninit,
 
     .transfer_get_formats   = vulkan_transfer_get_formats,
-    .transfer_data_to       = vulkan_transfer_data_to,
-    .transfer_data_from     = vulkan_transfer_data_from,
+    .transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ       = vulkan_transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ,
+    .transfer_ದತ್ತಾಂಶ_from     = vulkan_transfer_ದತ್ತಾಂಶ_from,
 
-    .map_to                 = vulkan_map_to,
+    .map_ಗಮ್ಯ                 = vulkan_map_ಗಮ್ಯ,
     .map_from               = vulkan_map_from,
-    .frames_derive_to       = &vulkan_frames_derive_to,
+    .ಚೌಕಟ್ಟುಗಳು_derive_ಗಮ್ಯ       = &vulkan_ಚೌಕಟ್ಟುಗಳು_derive_ಗಮ್ಯ,
 
-    .pix_fmts = (const enum AVPixelFormat []) {
+    .pix_fmts = (ಸ್ಥಿರಾಂಕ ಎಣಿಕೆ AVPixelFormat []) {
         AV_PIX_FMT_VULKAN,
         AV_PIX_FMT_NONE
     },

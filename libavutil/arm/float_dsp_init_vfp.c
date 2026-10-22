@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "cpu.h"
-#include "float_dsp_arm.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/float_dsp.h"
+#ಅನ್ತರ್ಭಾವ "cpu.h"
+#ಅನ್ತರ್ಭಾವ "float_dsp_arm.h"
 
-void ff_vector_fmul_vfp(float *dst, const float *src0, const float *src1,
-                        int len);
+ಶೂನ್ಯ ff_ಸದಿಶ_fmul_vfp(ದಶಮಾಂಶ *dst, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src0, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src1,
+                        ಪೂರ್ಣಾಂಕ len);
 
-void ff_vector_fmul_window_vfp(float *dst, const float *src0,
-                               const float *src1, const float *win, int len);
+ಶೂನ್ಯ ff_ಸದಿಶ_fmul_ಕಿಟಕಿ_vfp(ದಶಮಾಂಶ *dst, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src0,
+                               ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src1, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *win, ಪೂರ್ಣಾಂಕ len);
 
-void ff_vector_fmul_reverse_vfp(float *dst, const float *src0,
-                                const float *src1, int len);
+ಶೂನ್ಯ ff_ಸದಿಶ_fmul_ಹಿಮ್ಮುಖ_vfp(ದಶಮಾಂಶ *dst, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src0,
+                                ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src1, ಪೂರ್ಣಾಂಕ len);
 
-void ff_butterflies_float_vfp(float *restrict v1, float *restrict v2, int len);
+ಶೂನ್ಯ ff_butterflies_float_vfp(ದಶಮಾಂಶ *ಸೀಮಿತ v1, ದಶಮಾಂಶ *ಸೀಮಿತ v2, ಪೂರ್ಣಾಂಕ len);
 
-av_cold void ff_float_dsp_init_vfp(AVFloatDSPContext *fdsp, int cpu_flags)
+av_cold ಶೂನ್ಯ ff_float_dsp_init_vfp(AVFloatDSPContext *fdsp, ಪೂರ್ಣಾಂಕ cpu_flags)
 {
-    if (have_vfp_vm(cpu_flags)) {
-        fdsp->vector_fmul = ff_vector_fmul_vfp;
-        fdsp->vector_fmul_window = ff_vector_fmul_window_vfp;
+    ಆದರೆ (have_vfp_vm(cpu_flags)) {
+        fdsp->ಸದಿಶ_fmul = ff_ಸದಿಶ_fmul_vfp;
+        fdsp->ಸದಿಶ_fmul_ಕಿಟಕಿ = ff_ಸದಿಶ_fmul_ಕಿಟಕಿ_vfp;
     }
-    fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_vfp;
-    if (have_vfp_vm(cpu_flags))
+    fdsp->ಸದಿಶ_fmul_ಹಿಮ್ಮುಖ = ff_ಸದಿಶ_fmul_ಹಿಮ್ಮುಖ_vfp;
+    ಆದರೆ (have_vfp_vm(cpu_flags))
         fdsp->butterflies_float = ff_butterflies_float_vfp;
 }

@@ -16,9 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/pixdesc.c"
+#ಅನ್ತರ್ಭಾವ "libavutil/pixdesc.c"
 
-static const enum AVPixelFormat pixfmt_list[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಎಣಿಕೆ AVPixelFormat pixfmt_list[] = {
     AV_PIX_FMT_MONOWHITE,
     AV_PIX_FMT_GRAY8,
     AV_PIX_FMT_GRAY10,
@@ -39,7 +39,7 @@ static const enum AVPixelFormat pixfmt_list[] = {
     AV_PIX_FMT_VAAPI,
 };
 
-static const enum AVPixelFormat semiplanar_list[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಎಣಿಕೆ AVPixelFormat semiplanar_list[] = {
     AV_PIX_FMT_P016,
     AV_PIX_FMT_P012,
     AV_PIX_FMT_P010,
@@ -52,7 +52,7 @@ static const enum AVPixelFormat semiplanar_list[] = {
     AV_PIX_FMT_NV12,
 };
 
-static const enum AVPixelFormat packed_list[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಎಣಿಕೆ AVPixelFormat packed_list[] = {
     AV_PIX_FMT_XV48,
     AV_PIX_FMT_XV36,
     AV_PIX_FMT_XV30,
@@ -63,61 +63,61 @@ static const enum AVPixelFormat packed_list[] = {
     AV_PIX_FMT_YUYV422,
 };
 
-static const enum AVPixelFormat subsampled_list[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಎಣಿಕೆ AVPixelFormat subsampled_list[] = {
     AV_PIX_FMT_YUV411P,
     AV_PIX_FMT_YUV420P,
     AV_PIX_FMT_YUV422P,
     AV_PIX_FMT_YUV444P,
 };
 
-static const enum AVPixelFormat depthchroma_list[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಎಣಿಕೆ AVPixelFormat depthchroma_list[] = {
     AV_PIX_FMT_YUV420P14,
     AV_PIX_FMT_YUV422P14,
     AV_PIX_FMT_YUV444P16,
 };
 
-typedef enum AVPixelFormat (*find_best_t)(enum AVPixelFormat pixfmt);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ AVPixelFormat (*ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_t)(ಎಣಿಕೆ AVPixelFormat pixfmt);
 
-#define find_best_wrapper(name, list) \
-static enum AVPixelFormat find_best_ ## name (enum AVPixelFormat pixfmt)    \
+#ವ್ಯಾಖ್ಯಾನಿಸು ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_wrapper(name, list) \
+ಸ್ಥಿರ ಎಣಿಕೆ AVPixelFormat ಕಂಡುಹಿಡಿ_ಉತ್ತಮ ## name (ಎಣಿಕೆ AVPixelFormat pixfmt)    \
 {                                                                           \
-    enum AVPixelFormat best = AV_PIX_FMT_NONE;                              \
-    int i;                                                                  \
-    for (i = 0; i < FF_ARRAY_ELEMS(list); i++)                              \
-        best = av_find_best_pix_fmt_of_2(best, list[i],                     \
-                                         pixfmt, 0, NULL);                  \
-    return best;                                                            \
+    ಎಣಿಕೆ AVPixelFormat ಉತ್ತಮ = AV_PIX_FMT_NONE;                              \
+    ಪೂರ್ಣಾಂಕ i;                                                                  \
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(list); i++)                              \
+        ಉತ್ತಮ = av_ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_pix_fmt_ದ_2(ಉತ್ತಮ, list[i],                     \
+                                         pixfmt, 0, ಖಾಲಿ);                  \
+    ಹಿಂತಿರುಗಿ ಉತ್ತಮ;                                                            \
 }
 
-find_best_wrapper(base, pixfmt_list)
-find_best_wrapper(seminplanar, semiplanar_list)
-find_best_wrapper(packed, packed_list)
-find_best_wrapper(subsampled, subsampled_list)
-find_best_wrapper(depthchroma, depthchroma_list)
+ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_wrapper(ತಳ_2, pixfmt_list)
+ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_wrapper(seminplanar, semiplanar_list)
+ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_wrapper(packed, packed_list)
+ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_wrapper(subsampled, subsampled_list)
+ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_wrapper(depthchroma, depthchroma_list)
 
-static void test(enum AVPixelFormat input, enum AVPixelFormat expected,
-                 int *pass, int *fail, find_best_t find_best_fn)
+ಸ್ಥಿರ ಶೂನ್ಯ test(ಎಣಿಕೆ AVPixelFormat ಒಳಹರಿವು, ಎಣಿಕೆ AVPixelFormat expected,
+                 ಪೂರ್ಣಾಂಕ *pass, ಪೂರ್ಣಾಂಕ *fail, ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_t ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_fn)
 {
-        enum AVPixelFormat output = find_best_fn(input);
-        if (output != expected) {
-            printf("Matching %s: got %s, expected %s\n",
-                   av_get_pix_fmt_name(input),
+        ಎಣಿಕೆ AVPixelFormat output = ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_fn(ಒಳಹರಿವು);
+        ಆದರೆ (output != expected) {
+            ಬರೆ("Matching %s: got %s, expected %s\n",
+                   av_get_pix_fmt_name(ಒಳಹರಿವು),
                    av_get_pix_fmt_name(output),
                    av_get_pix_fmt_name(expected));
             ++(*fail);
-        } else
+        } ಇಲ್ಲದಿದ್ದರೆ
             ++(*pass);
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
-    int i, pass = 0, fail = 0;
+    ಪೂರ್ಣಾಂಕ i, pass = 0, fail = 0;
 
-#define TEST(input, expected) \
-    test(input, expected, &pass, &fail, find_best_base)
+#ವ್ಯಾಖ್ಯಾನಿಸು TEST(ಒಳಹರಿವು, expected) \
+    test(ಒಳಹರಿವು, expected, &pass, &fail, ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_ತಳ)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(pixfmt_list); i++)
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(pixfmt_list); i++)
         TEST(pixfmt_list[i], pixfmt_list[i]);
 
     // Formats containing the same data in different layouts.
@@ -198,11 +198,11 @@ int main(void)
     // Opaque formats are least unlike each other.
     TEST(AV_PIX_FMT_DXVA2_VLD, AV_PIX_FMT_VDPAU);
 
-#define TEST_SEMIPLANAR(input, expected) \
-    test(input, expected, &pass, &fail, find_best_seminplanar)
+#ವ್ಯಾಖ್ಯಾನಿಸು TEST_SEMIPLANAR(ಒಳಹರಿವು, expected) \
+    test(ಒಳಹರಿವು, expected, &pass, &fail, ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_seminplanar)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(semiplanar_list); i++)
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(semiplanar_list); i++)
         TEST_SEMIPLANAR(semiplanar_list[i], semiplanar_list[i]);
 
     // Formats containing the same data in different layouts.
@@ -220,11 +220,11 @@ int main(void)
     TEST_SEMIPLANAR(AV_PIX_FMT_YUV444P12, AV_PIX_FMT_P416);
     TEST_SEMIPLANAR(AV_PIX_FMT_YUV444P16, AV_PIX_FMT_P416);
 
-#define TEST_PACKED(input, expected) \
-    test(input, expected, &pass, &fail, find_best_packed)
+#ವ್ಯಾಖ್ಯಾನಿಸು TEST_PACKED(ಒಳಹರಿವು, expected) \
+    test(ಒಳಹರಿವು, expected, &pass, &fail, ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_packed)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(packed_list); i++)
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(packed_list); i++)
         TEST_PACKED(packed_list[i], packed_list[i]);
 
     // Formats containing the same data in different layouts.
@@ -237,26 +237,26 @@ int main(void)
     TEST_PACKED(AV_PIX_FMT_YUV422P12, AV_PIX_FMT_Y212);
     TEST_PACKED(AV_PIX_FMT_YUV422P16, AV_PIX_FMT_Y216);
 
-#define TEST_SUBSAMPLED(input, expected) \
-    test(input, expected, &pass, &fail, find_best_subsampled)
+#ವ್ಯಾಖ್ಯಾನಿಸು TEST_SUBSAMPLED(ಒಳಹರಿವು, expected) \
+    test(ಒಳಹರಿವು, expected, &pass, &fail, ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_subsampled)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(subsampled_list); i++)
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(subsampled_list); i++)
         TEST_SUBSAMPLED(subsampled_list[i], subsampled_list[i]);
 
     TEST_SUBSAMPLED(AV_PIX_FMT_YUV410P, AV_PIX_FMT_YUV420P);
 
-#define TEST_DEPTH_CHROMA(input, expected) \
-    test(input, expected, &pass, &fail, find_best_depthchroma)
+#ವ್ಯಾಖ್ಯಾನಿಸು TEST_ಆಳ_CHROMA(ಒಳಹರಿವು, expected) \
+    test(ಒಳಹರಿವು, expected, &pass, &fail, ಕಂಡುಹಿಡಿ_ಉತ್ತಮ_depthchroma)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(depthchroma_list); i++)
-        TEST_DEPTH_CHROMA(depthchroma_list[i], depthchroma_list[i]);
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(depthchroma_list); i++)
+        TEST_ಆಳ_CHROMA(depthchroma_list[i], depthchroma_list[i]);
 
-    TEST_DEPTH_CHROMA(AV_PIX_FMT_YUV420P16, AV_PIX_FMT_YUV444P16);
-    TEST_DEPTH_CHROMA(AV_PIX_FMT_YUV422P16, AV_PIX_FMT_YUV444P16);
+    TEST_ಆಳ_CHROMA(AV_PIX_FMT_YUV420P16, AV_PIX_FMT_YUV444P16);
+    TEST_ಆಳ_CHROMA(AV_PIX_FMT_YUV422P16, AV_PIX_FMT_YUV444P16);
 
 
-    printf("%d tests passed, %d tests failed.\n", pass, fail);
-    return !!fail;
+    ಬರೆ("%d tests passed, %d tests failed.\n", pass, fail);
+    ಹಿಂತಿರುಗಿ !!fail;
 }

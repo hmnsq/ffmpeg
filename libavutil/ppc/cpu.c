@@ -16,141 +16,141 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#ifdef __APPLE__
-#include <sys/sysctl.h>
-#elif HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-#ifdef __FreeBSD__
-#include <machine/cpu.h>
-#endif
-#include <sys/auxv.h>
-#elif defined(__linux__)
-#include <asm/cputable.h>
-#include <linux/auxvec.h>
-#include <fcntl.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#elif defined(__NetBSD__) || defined(__OpenBSD__)
-#include <sys/types.h>
-#include <sys/sysctl.h>
-#include <machine/cpu.h>
-#elif defined(__AMIGAOS4__)
-#include <exec/exec.h>
-#include <interfaces/exec.h>
-#include <proto/exec.h>
-#endif /* __APPLE__ */
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __APPLE__
+#ಅನ್ತರ್ಭಾವ <sys/sysctl.h>
+#ಅಥವಾಆದರೆ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __FreeBSD__
+#ಅನ್ತರ್ಭಾವ <machine/cpu.h>
+#ಆದರೆ_ಅಂತ್ಯ
+#ಅನ್ತರ್ಭಾವ <sys/auxv.h>
+#ಅಥವಾಆದರೆ defined(__linux__)
+#ಅನ್ತರ್ಭಾವ <asm/cputable.h>
+#ಅನ್ತರ್ಭಾವ <linux/auxvec.h>
+#ಅನ್ತರ್ಭಾವ <fcntl.h>
+#ಆದರೆ HAVE_UNISTD_H
+#ಅನ್ತರ್ಭಾವ <unistd.h>
+#ಆದರೆ_ಅಂತ್ಯ
+#ಅಥವಾಆದರೆ defined(__NetBSD__) || defined(__OpenBSD__)
+#ಅನ್ತರ್ಭಾವ <sys/types.h>
+#ಅನ್ತರ್ಭಾವ <sys/sysctl.h>
+#ಅನ್ತರ್ಭಾವ <machine/cpu.h>
+#ಅಥವಾಆದರೆ defined(__AMIGAOS4__)
+#ಅನ್ತರ್ಭಾವ <exec/exec.h>
+#ಅನ್ತರ್ಭಾವ <interfaces/exec.h>
+#ಅನ್ತರ್ಭಾವ <proto/exec.h>
+#ಆದರೆ_ಅಂತ್ಯ /* __APPLE__ */
 
-#include "libavutil/avassert.h"
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/avassert.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu_internal.h"
 
-#ifndef AT_HWCAP
-#define AT_HWCAP             16
-#endif
-#ifndef AT_HWCAP2
-#define AT_HWCAP2            26
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AT_HWCAP
+#ವ್ಯಾಖ್ಯಾನಿಸು AT_HWCAP             16
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AT_HWCAP2
+#ವ್ಯಾಖ್ಯಾನಿಸು AT_HWCAP2            26
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define HWCAP_PPC_VSX        (1U << 7)
-#define HWCAP_PPC_ALTIVEC    (1U << 28)
-#define HWCAP2_PPC_ARCH_2_07 (1U << 31)
+#ವ್ಯಾಖ್ಯಾನಿಸು HWCAP_PPC_VSX        (1U << 7)
+#ವ್ಯಾಖ್ಯಾನಿಸು HWCAP_PPC_ALTIVEC    (1U << 28)
+#ವ್ಯಾಖ್ಯಾನಿಸು HWCAP2_PPC_ARCH_2_07 (1U << 31)
 
 /**
  * This function MAY rely on signal() or fork() in order to make sure AltiVec
  * is present.
  */
-int ff_get_cpu_flags_ppc(void)
+ಪೂರ್ಣಾಂಕ ff_get_cpu_flags_ppc(ಶೂನ್ಯ)
 {
-#if HAVE_ALTIVEC
-#ifdef __AMIGAOS4__
-    ULONG result = 0;
-    extern struct ExecIFace *IExec;
+#ಆದರೆ HAVE_ALTIVEC
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __AMIGAOS4__
+    ULONG ಫಲಿತಾಂಶ = 0;
+    ಬಾಹ್ಯ ರಚನೆ ExecIFace *IExec;
 
-    IExec->GetCPUInfoTags(GCIT_VectorUnit, &result, TAG_DONE);
-    if (result == VECTORTYPE_ALTIVEC)
-        return AV_CPU_FLAG_ALTIVEC;
-    return 0;
-#elif HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-    int flags = 0;
+    IExec->Get_CPUInfo_ಟ್ಯಾಗುಗಳು(GCIT_ಸದಿಶ_Unit, &ಫಲಿತಾಂಶ, ಟ್ಯಾಗ್_ಮುಗಿದ);
+    ಆದರೆ (ಫಲಿತಾಂಶ == VECTORTYPE_ALTIVEC)
+        ಹಿಂತಿರುಗಿ AV_CPU_FLAG_ALTIVEC;
+    ಹಿಂತಿರುಗಿ 0;
+#ಅಥವಾಆದರೆ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+    ಪೂರ್ಣಾಂಕ flags = 0;
 
-    unsigned long hwcap = ff_getauxval(AT_HWCAP);
-    unsigned long hwcap2 = ff_getauxval(AT_HWCAP2);
+    ಚಿಹ್ನೆರಹಿತ ದೀರ್ಘ hwcap = ff_getauxval(AT_HWCAP);
+    ಚಿಹ್ನೆರಹಿತ ದೀರ್ಘ hwcap2 = ff_getauxval(AT_HWCAP2);
 
-    if (hwcap & HWCAP_PPC_ALTIVEC)
+    ಆದರೆ (hwcap & HWCAP_PPC_ALTIVEC)
        flags |= AV_CPU_FLAG_ALTIVEC;
-    if (hwcap & HWCAP_PPC_VSX)
+    ಆದರೆ (hwcap & HWCAP_PPC_VSX)
        flags |= AV_CPU_FLAG_VSX;
-    if (hwcap2 & HWCAP2_PPC_ARCH_2_07)
+    ಆದರೆ (hwcap2 & HWCAP2_PPC_ARCH_2_07)
        flags |= AV_CPU_FLAG_POWER8;
 
-    return flags;
-#elif defined(__APPLE__) || defined(__NetBSD__) || defined(__OpenBSD__)
-#if defined(__NetBSD__) || defined(__OpenBSD__)
-    int sels[2] = {CTL_MACHDEP, CPU_ALTIVEC};
-#else
-    int sels[2] = {CTL_HW, HW_VECTORUNIT};
-#endif
-    int has_vu = 0;
-    size_t len = sizeof(has_vu);
-    int err;
+    ಹಿಂತಿರುಗಿ flags;
+#ಅಥವಾಆದರೆ defined(__APPLE__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#ಆದರೆ defined(__NetBSD__) || defined(__OpenBSD__)
+    ಪೂರ್ಣಾಂಕ sels[2] = {CTL_MACHDEP, CPU_ALTIVEC};
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಪೂರ್ಣಾಂಕ sels[2] = {CTL_HW, HW_VECTORUNIT};
+#ಆದರೆ_ಅಂತ್ಯ
+    ಪೂರ್ಣಾಂಕ has_vu = 0;
+    size_t len = ಗಾತ್ರ(has_vu);
+    ಪೂರ್ಣಾಂಕ err;
 
-    err = sysctl(sels, 2, &has_vu, &len, NULL, 0);
+    err = sysctl(sels, 2, &has_vu, &len, ಖಾಲಿ, 0);
 
-    if (err == 0)
-        return has_vu ? AV_CPU_FLAG_ALTIVEC : 0;
-    return 0;
-#elif defined(__linux__)
+    ಆದರೆ (err == 0)
+        ಹಿಂತಿರುಗಿ has_vu ? AV_CPU_FLAG_ALTIVEC : 0;
+    ಹಿಂತಿರುಗಿ 0;
+#ಅಥವಾಆದರೆ defined(__linux__)
     // The linux kernel could have the altivec support disabled
     // even if the cpu has it.
-    int i, ret = 0;
-    int fd = open("/proc/self/auxv", O_RDONLY);
-    unsigned long buf[64] = { 0 };
-    ssize_t count;
+    ಪೂರ್ಣಾಂಕ i, ret = 0;
+    ಪೂರ್ಣಾಂಕ fd = open("/proc/self/auxv", O_RDONLY);
+    ಚಿಹ್ನೆರಹಿತ ದೀರ್ಘ buf[64] = { 0 };
+    ssize_t ಎಣಿಕೆ_2;
 
-    if (fd < 0)
-        return 0;
+    ಆದರೆ (fd < 0)
+        ಹಿಂತಿರುಗಿ 0;
 
-    while ((count = read(fd, buf, sizeof(buf))) > 0) {
-        for (i = 0; i < count / sizeof(*buf); i += 2) {
-            if (buf[i] == AT_NULL)
-                goto out;
-            if (buf[i] == AT_HWCAP) {
-                if (buf[i + 1] & HWCAP_PPC_ALTIVEC)
+    ಆಗ ((ಎಣಿಕೆ_2 = ಪಠ(fd, buf, ಗಾತ್ರ(buf))) > 0) {
+        ಗಾಗಿ (i = 0; i < ಎಣಿಕೆ_2 / ಗಾತ್ರ(*buf); i += 2) {
+            ಆದರೆ (buf[i] == AT_NULL)
+                ಹೋಗು ಹೊರಹೋಗು;
+            ಆದರೆ (buf[i] == AT_HWCAP) {
+                ಆದರೆ (buf[i + 1] & HWCAP_PPC_ALTIVEC)
                     ret = AV_CPU_FLAG_ALTIVEC;
-                if (buf[i + 1] & HWCAP_PPC_VSX)
+                ಆದರೆ (buf[i + 1] & HWCAP_PPC_VSX)
                     ret |= AV_CPU_FLAG_VSX;
-                if (ret & AV_CPU_FLAG_VSX)
+                ಆದರೆ (ret & AV_CPU_FLAG_VSX)
                     av_assert0(ret & AV_CPU_FLAG_ALTIVEC);
             }
-            else if (buf[i] == AT_HWCAP2) {
-                if (buf[i + 1] & HWCAP2_PPC_ARCH_2_07)
+            ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (buf[i] == AT_HWCAP2) {
+                ಆದರೆ (buf[i + 1] & HWCAP2_PPC_ARCH_2_07)
                     ret |= AV_CPU_FLAG_POWER8;
             }
         }
     }
 
-out:
+ಹೊರಹೋಗು:
     close(fd);
-    return ret;
-#else
+    ಹಿಂತಿರುಗಿ ret;
+#ಇಲ್ಲದಿದ್ದರೆ
     // Since we were compiled for AltiVec, just assume we have it
     // until someone comes up with a proper way (not involving signal hacks).
-    return AV_CPU_FLAG_ALTIVEC;
-#endif /* __AMIGAOS4__ */
-#endif /* HAVE_ALTIVEC */
-    return 0;
+    ಹಿಂತಿರುಗಿ AV_CPU_FLAG_ALTIVEC;
+#ಆದರೆ_ಅಂತ್ಯ /* __AMIGAOS4__ */
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_ALTIVEC */
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-size_t ff_get_cpu_max_align_ppc(void)
+size_t ff_get_cpu_max_align_ppc(ಶೂನ್ಯ)
 {
-    int flags = av_get_cpu_flags();
+    ಪೂರ್ಣಾಂಕ flags = av_get_cpu_flags();
 
-    if (flags & (AV_CPU_FLAG_ALTIVEC   |
+    ಆದರೆ (flags & (AV_CPU_FLAG_ALTIVEC   |
                  AV_CPU_FLAG_VSX       |
                  AV_CPU_FLAG_POWER8))
-        return 16;
+        ಹಿಂತಿರುಗಿ 16;
 
-    return 8;
+    ಹಿಂತಿರುಗಿ 8;
 }

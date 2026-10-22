@@ -16,18 +16,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/fixed_dsp.h"
-#include "cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/fixed_dsp.h"
+#ಅನ್ತರ್ಭಾವ "cpu.h"
 
-void ff_butterflies_fixed_sse2(int *restrict src0, int *restrict src1, int len);
+ಶೂನ್ಯ ff_butterflies_fixed_sse2(ಪೂರ್ಣಾಂಕ *ಸೀಮಿತ src0, ಪೂರ್ಣಾಂಕ *ಸೀಮಿತ src1, ಪೂರ್ಣಾಂಕ len);
 
-av_cold void ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp)
+av_cold ಶೂನ್ಯ ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ಪೂರ್ಣಾಂಕ cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_SSE2(cpu_flags)) {
+    ಆದರೆ (EXTERNAL_SSE2(cpu_flags)) {
         fdsp->butterflies_fixed = ff_butterflies_fixed_sse2;
     }
 }

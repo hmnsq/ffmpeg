@@ -16,42 +16,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HALF2FLOAT_H
-#define AVUTIL_HALF2FLOAT_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_HALF2FLOAT_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_HALF2FLOAT_H
 
-#include <stdint.h>
-#include "intfloat.h"
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ "intfloat.h"
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-typedef struct Half2FloatTables {
-#if HAVE_FAST_FLOAT16
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ Half2FloatTables {
+#ಆದರೆ HAVE_FAST_FLOAT16
     uint8_t dummy;
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
     uint32_t mantissatable[3072];
     uint32_t exponenttable[64];
     uint16_t offsettable[64];
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 } Half2FloatTables;
 
-void ff_init_half2float_tables(Half2FloatTables *t);
+ಶೂನ್ಯ ff_init_half2float_tables(Half2FloatTables *t);
 
-static inline uint32_t half2float(uint16_t h, const Half2FloatTables *t)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ uint32_t half2float(uint16_t h, ಸ್ಥಿರಾಂಕ Half2FloatTables *t)
 {
-#if HAVE_FAST_FLOAT16
-    union {
+#ಆದರೆ HAVE_FAST_FLOAT16
+    ಒಕ್ಕೂಟ {
         _Float16 f;
         uint16_t i;
     } u;
     u.i = h;
-    return av_float2int(u.f);
-#else
+    ಹಿಂತಿರುಗಿ av_float2int(u.f);
+#ಇಲ್ಲದಿದ್ದರೆ
     uint32_t f;
 
     f = t->mantissatable[t->offsettable[h >> 10] + (h & 0x3ff)] + t->exponenttable[h >> 10];
 
-    return f;
-#endif
+    ಹಿಂತಿರುಗಿ f;
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
-#endif /* AVUTIL_HALF2FLOAT_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_HALF2FLOAT_H */

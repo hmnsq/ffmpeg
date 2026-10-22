@@ -20,37 +20,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AARCH64_NEONTEST_H
-#define AVUTIL_AARCH64_NEONTEST_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_AARCH64_NEONTEST_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_AARCH64_NEONTEST_H
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <inttypes.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಅನ್ತರ್ಭಾವ <stdarg.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "libavutil/bswap.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/bswap.h"
 
-#define storeneonregs(mem)                \
-    __asm__ volatile(                     \
+#ವ್ಯಾಖ್ಯಾನಿಸು storeneonregs(mem)                \
+    __asm__ ಅಸ್ಥಿರ(                     \
         "stp d8,  d9,  [%0]\n\t"          \
         "stp d10, d11, [%0, #16]\n\t"     \
         "stp d12, d13, [%0, #32]\n\t"     \
         "stp d14, d15, [%0, #48]\n\t"     \
         :: "r"(mem) : "memory")
 
-#define testneonclobbers(func, ctx, ...)                        \
+#ವ್ಯಾಖ್ಯಾನಿಸು testneonclobbers(func, ctx, ...)                        \
     uint64_t neon[2][8];                                        \
-    int ret;                                                    \
+    ಪೂರ್ಣಾಂಕ ret;                                                    \
     storeneonregs(neon[0]);                                     \
     ret = __real_ ## func(ctx, __VA_ARGS__);                    \
     storeneonregs(neon[1]);                                     \
-    if (memcmp(neon[0], neon[1], sizeof(neon[0]))) {            \
-        int i;                                                  \
+    ಆದರೆ (memcmp(neon[0], neon[1], ಗಾತ್ರ(neon[0]))) {            \
+        ಪೂರ್ಣಾಂಕ i;                                                  \
         av_log(ctx, AV_LOG_ERROR,                               \
                "NEON REGS CLOBBERED IN %s!\n", #func);          \
-        for (i = 0; i < 8; i ++)                                \
-            if (neon[0][i] != neon[1][i]) {                     \
+        ಗಾಗಿ (i = 0; i < 8; i ++)                                \
+            ಆದರೆ (neon[0][i] != neon[1][i]) {                     \
                 av_log(ctx, AV_LOG_ERROR,                       \
                        "d%-2d = %016"PRIx64"\n",                \
                        8 + i, av_bswap64(neon[0][i]));          \
@@ -60,11 +60,11 @@
             }                                                   \
         abort();                                                \
     }                                                           \
-    return ret
+    ಹಿಂತಿರುಗಿ ret
 
-#define wrap(func)      \
-int __real_ ## func;    \
-int __wrap_ ## func;    \
-int __wrap_ ## func
+#ವ್ಯಾಖ್ಯಾನಿಸು wrap(func)      \
+ಪೂರ್ಣಾಂಕ __real_ ## func;    \
+ಪೂರ್ಣಾಂಕ __wrap_ ## func;    \
+ಪೂರ್ಣಾಂಕ __wrap_ ## func
 
-#endif /* AVUTIL_AARCH64_NEONTEST_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_AARCH64_NEONTEST_H */

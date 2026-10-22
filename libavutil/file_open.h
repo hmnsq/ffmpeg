@@ -16,30 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FILE_OPEN_H
-#define AVUTIL_FILE_OPEN_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_FILE_OPEN_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_FILE_OPEN_H
 
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "config.h"
-#include "attributes.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
 
-#if HAVE_LIBC_MSVCRT
-#define avpriv_fopen_utf8 ff_fopen_utf8
-#define avpriv_open ff_open
-#define avpriv_tempfile ff_tempfile
-#endif
+#ಆದರೆ HAVE_LIBC_MSVCRT
+#ವ್ಯಾಖ್ಯಾನಿಸು avpriv_fopen_utf8 ff_fopen_utf8
+#ವ್ಯಾಖ್ಯಾನಿಸು avpriv_open ff_open
+#ವ್ಯಾಖ್ಯಾನಿಸು avpriv_tempfile ff_tempfile
+#ಆದರೆ_ಅಂತ್ಯ
 
  /**
  * A wrapper for open() setting O_CLOEXEC.
  */
-av_warn_unused_result
-int avpriv_open(const char *filename, int flags, ...);
+av_warn_ಬಳಸದ_ಫಲಿತಾಂಶ
+ಪೂರ್ಣಾಂಕ avpriv_open(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *filename, ಪೂರ್ಣಾಂಕ flags, ...);
 
 /**
  * Open a file using a UTF-8 filename.
  */
-FILE *avpriv_fopen_utf8(const char *path, const char *mode);
+FILE *avpriv_fopen_utf8(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಮಾರ್ಗ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಬಹುಲಕ);
 
 /**
  * Wrapper to work around the lack of mkstemp() on mingw.
@@ -52,6 +52,6 @@ FILE *avpriv_fopen_utf8(const char *path, const char *mode);
  *       calling this, av_tempfile() can't call umask itself as it is used in
  *       libraries and could interfere with the calling application.
  */
-int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *log_ctx);
+ಪೂರ್ಣಾಂಕ avpriv_tempfile(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಪೂರ್ವಪ್ರತ್ಯಯ, ಅಕ್ಷರ **filename, ಪೂರ್ಣಾಂಕ log_ಸ್ಥಾನಾಂತರ, ಶೂನ್ಯ *log_ctx);
 
-#endif /* AVUTIL_FILE_OPEN_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_FILE_OPEN_H */

@@ -16,113 +16,113 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/macros.h"
-#include "libavutil/mem.h"
-#include "libavutil/video_hint.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/frame.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/macros.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/mem.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/video_hint.h"
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
     AVVideoHint *hint;
     AVVideoRect *rect;
-    AVFrame *frame;
-    size_t size;
+    AVFrame *ಚೌಕಟ್ಟು;
+    size_t ಗಾತ್ರ_2;
 
-    static const size_t alloc_counts[] = { 0, 1, 4 };
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ size_t alloc_counts[] = { 0, 1, 4 };
 
     /* av_video_hint_alloc - various counts */
-    printf("Testing av_video_hint_alloc()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
+    ಬರೆ("Testing av_video_hint_alloc()\n");
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(alloc_counts); i++) {
         size_t nb = alloc_counts[i];
-        hint = av_video_hint_alloc(nb, &size);
-        if (hint) {
-            printf("alloc %zu: OK, nb_rects=%zu, size>0=%s\n",
-                   nb, hint->nb_rects, size > 0 ? "yes" : "no");
+        hint = av_video_hint_alloc(nb, &ಗಾತ್ರ_2);
+        ಆದರೆ (hint) {
+            ಬರೆ("alloc %zu: OK, nb_rects=%zu, size>0=%s\n",
+                   nb, hint->nb_rects, ಗಾತ್ರ_2 > 0 ? "yes" : "no");
             av_free(hint);
-        } else {
-            printf("alloc %zu: FAIL\n", nb);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಬರೆ("alloc %zu: FAIL\n", nb);
         }
     }
 
     /* pointer consistency and write/read back */
-    printf("\nTesting av_video_hint_get_rect()\n");
-    hint = av_video_hint_alloc(3, &size);
-    if (hint) {
+    ಬರೆ("\nTesting av_video_hint_get_rect()\n");
+    hint = av_video_hint_alloc(3, &ಗಾತ್ರ_2);
+    ಆದರೆ (hint) {
         /* verify av_video_hint_rects points to first rect */
         rect = av_video_hint_rects(hint);
-        if ((uint8_t *)rect != (uint8_t *)hint + hint->rect_offset)
-            printf("rects: pointer inconsistent with rect_offset\n");
+        ಆದರೆ ((uint8_t *)rect != (uint8_t *)hint + hint->rect_ಸ್ಥಾನಾಂತರ)
+            ಬರೆ("rects: pointer inconsistent with rect_offset\n");
 
-        for (int i = 0; i < 3; i++) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < 3; i++) {
             rect = av_video_hint_get_rect(hint, i);
-            if ((uint8_t *)rect != (uint8_t *)hint + hint->rect_offset +
-                                   (size_t)i * hint->rect_size)
-                printf("rect %d: pointer inconsistent with rect_offset/rect_size\n", i);
+            ಆದರೆ ((uint8_t *)rect != (uint8_t *)hint + hint->rect_ಸ್ಥಾನಾಂತರ +
+                                   (size_t)i * hint->rect_ಗಾತ್ರ)
+                ಬರೆ("rect %d: pointer inconsistent with rect_offset/rect_size\n", i);
             rect->x = i * 100;
             rect->y = i * 200;
-            rect->width = 64 + i;
-            rect->height = 48 + i;
+            rect->ಅಗಲ = 64 + i;
+            rect->ಎತ್ತರ = 48 + i;
         }
-        for (int i = 0; i < 3; i++) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < 3; i++) {
             rect = av_video_hint_get_rect(hint, i);
-            printf("rect %d: x=%u y=%u w=%u h=%u\n",
-                   i, rect->x, rect->y, rect->width, rect->height);
+            ಬರೆ("rect %d: x=%u y=%u w=%u h=%u\n",
+                   i, rect->x, rect->y, rect->ಅಗಲ, rect->ಎತ್ತರ);
         }
 
         av_free(hint);
     }
 
     /* type field */
-    printf("\nTesting type field\n");
-    hint = av_video_hint_alloc(1, &size);
-    if (hint) {
+    ಬರೆ("\nTesting type field\n");
+    hint = av_video_hint_alloc(1, &ಗಾತ್ರ_2);
+    ಆದರೆ (hint) {
         hint->type = AV_VIDEO_HINT_TYPE_CONSTANT;
-        printf("constant: type=%d\n", hint->type);
-        hint->type = AV_VIDEO_HINT_TYPE_CHANGED;
-        printf("changed: type=%d\n", hint->type);
+        ಬರೆ("constant: type=%d\n", hint->type);
+        hint->type = AV_VIDEO_HINT_TYPE_ಬದಲಾಯಿತು;
+        ಬರೆ("changed: type=%d\n", hint->type);
         av_free(hint);
     }
 
     /* av_video_hint_create_side_data */
-    printf("\nTesting av_video_hint_create_side_data()\n");
-    frame = av_frame_alloc();
-    if (frame) {
-        hint = av_video_hint_create_side_data(frame, 2);
-        if (hint) {
-            printf("side_data: OK, nb_rects=%zu\n", hint->nb_rects);
+    ಬರೆ("\nTesting av_video_hint_create_side_data()\n");
+    ಚೌಕಟ್ಟು = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (ಚೌಕಟ್ಟು) {
+        hint = av_video_hint_create_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು, 2);
+        ಆದರೆ (hint) {
+            ಬರೆ("side_data: OK, nb_rects=%zu\n", hint->nb_rects);
             rect = av_video_hint_get_rect(hint, 0);
             rect->x = 10;
             rect->y = 20;
-            rect->width = 320;
-            rect->height = 240;
+            rect->ಅಗಲ = 320;
+            rect->ಎತ್ತರ = 240;
             rect = av_video_hint_get_rect(hint, 0);
-            printf("side_data rect 0: x=%u y=%u\n", rect->x, rect->y);
-        } else {
-            printf("side_data: FAIL\n");
+            ಬರೆ("side_data rect 0: x=%u y=%u\n", rect->x, rect->y);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಬರೆ("side_data: FAIL\n");
         }
-        av_frame_free(&frame);
+        av_ಚೌಕಟ್ಟು_free(&ಚೌಕಟ್ಟು);
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    ಬರೆ("\nTesting OOM paths\n");
     av_max_alloc(1);
-    hint = av_video_hint_alloc(1, &size);
-    printf("alloc OOM: %s\n", hint ? "FAIL" : "OK");
+    hint = av_video_hint_alloc(1, &ಗಾತ್ರ_2);
+    ಬರೆ("alloc OOM: %s\n", hint ? "FAIL" : "OK");
     av_free(hint);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ);
 
-    frame = av_frame_alloc();
-    if (frame) {
+    ಚೌಕಟ್ಟು = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (ಚೌಕಟ್ಟು) {
         av_max_alloc(1);
-        hint = av_video_hint_create_side_data(frame, 1);
-        printf("side_data OOM: %s\n", hint ? "FAIL" : "OK");
-        av_max_alloc(INT_MAX);
-        av_frame_free(&frame);
+        hint = av_video_hint_create_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು, 1);
+        ಬರೆ("side_data OOM: %s\n", hint ? "FAIL" : "OK");
+        av_max_alloc(ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ);
+        av_ಚೌಕಟ್ಟು_free(&ಚೌಕಟ್ಟು);
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

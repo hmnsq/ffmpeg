@@ -18,295 +18,295 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <inttypes.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "avassert.h"
-#include "avstring.h"
-#include "dict.h"
-#include "error.h"
-#include "mem.h"
-#include "bprint.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "avstring.h"
+#ಅನ್ತರ್ಭಾವ "dict.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "bprint.h"
 
-struct AVDictionary {
-    int count;
-    AVDictionaryEntry *elems;
-    int duplicate_keys;
+ರಚನೆ AVDictionary {
+    ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2;
+    AVDictionary_ನಮೂದು *elems;
+    ಪೂರ್ಣಾಂಕ duplicate_ಕೀಲಿಗಳು;
 };
 
-int av_dict_count(const AVDictionary *m)
+ಪೂರ್ಣಾಂಕ av_dict_ಎಣಿಕೆ(ಸ್ಥಿರಾಂಕ AVDictionary *m)
 {
-    return m ? m->count : 0;
+    ಹಿಂತಿರುಗಿ m ? m->ಎಣಿಕೆ_2 : 0;
 }
 
-const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
-                                         const AVDictionaryEntry *prev)
+ಸ್ಥಿರಾಂಕ AVDictionary_ನಮೂದು *av_dict_iterate(ಸ್ಥಿರಾಂಕ AVDictionary *m,
+                                         ಸ್ಥಿರಾಂಕ AVDictionary_ನಮೂದು *prev)
 {
-    int i = 0;
+    ಪೂರ್ಣಾಂಕ i = 0;
 
-    if (!m)
-        return NULL;
+    ಆದರೆ (!m)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    if (prev)
+    ಆದರೆ (prev)
         i = prev - m->elems + 1;
 
     av_assert2(i >= 0);
-    if (i >= m->count)
-        return NULL;
+    ಆದರೆ (i >= m->ಎಣಿಕೆ_2)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    return &m->elems[i];
+    ಹಿಂತಿರುಗಿ &m->elems[i];
 }
 
-AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags)
+AVDictionary_ನಮೂದು *av_dict_get(ಸ್ಥಿರಾಂಕ AVDictionary *m, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ,
+                               ಸ್ಥಿರಾಂಕ AVDictionary_ನಮೂದು *prev, ಪೂರ್ಣಾಂಕ flags)
 {
-    const AVDictionaryEntry *entry = prev;
-    unsigned int j;
+    ಸ್ಥಿರಾಂಕ AVDictionary_ನಮೂದು *ನಮೂದು = prev;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ j;
 
-    if (!key)
-        return NULL;
+    ಆದರೆ (!ಕೀಲಿ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    while ((entry = av_dict_iterate(m, entry))) {
-        const char *s = entry->key;
-        if (flags & AV_DICT_MATCH_CASE)
-            for (j = 0; s[j] == key[j] && key[j]; j++)
+    ಆಗ ((ನಮೂದು = av_dict_iterate(m, ನಮೂದು))) {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s = ನಮೂದು->ಕೀಲಿ;
+        ಆದರೆ (flags & AV_DICT_ಹೊಂದಿಕೆ_CASE)
+            ಗಾಗಿ (j = 0; s[j] == ಕೀಲಿ[j] && ಕೀಲಿ[j]; j++)
                 ;
-        else
-            for (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಗಾಗಿ (j = 0; av_toupper(s[j]) == av_toupper(ಕೀಲಿ[j]) && ಕೀಲಿ[j]; j++)
                 ;
-        if (key[j])
-            continue;
-        if (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
-            continue;
-        return (AVDictionaryEntry *)entry;
+        ಆದರೆ (ಕೀಲಿ[j])
+            ಮುಂದುವರಿ;
+        ಆದರೆ (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
+            ಮುಂದುವರಿ;
+        ಹಿಂತಿರುಗಿ (AVDictionary_ನಮೂದು *)ನಮೂದು;
     }
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-int av_dict_set(AVDictionary **pm, const char *key, const char *value,
-                int flags)
+ಪೂರ್ಣಾಂಕ av_dict_ಗಣ(AVDictionary **pm, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಮೌಲ್ಯ,
+                ಪೂರ್ಣಾಂಕ flags)
 {
     AVDictionary *m = *pm;
-    AVDictionaryEntry *tag = NULL;
-    char *copy_key = NULL, *copy_value = NULL;
-    int err;
+    AVDictionary_ನಮೂದು *ಟ್ಯಾಗ್ = ಖಾಲಿ;
+    ಅಕ್ಷರ *copy_ಕೀಲಿ = ಖಾಲಿ, *copy_ಮೌಲ್ಯ = ಖಾಲಿ;
+    ಪೂರ್ಣಾಂಕ err;
 
-    if (flags & AV_DICT_DONT_STRDUP_VAL)
-        copy_value = (void *)value;
-    else if (value)
-        copy_value = av_strdup(value);
-    if (!key) {
+    ಆದರೆ (flags & AV_DICT_DONT_STRDUP_VAL)
+        copy_ಮೌಲ್ಯ = (ಶೂನ್ಯ *)ಮೌಲ್ಯ;
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಮೌಲ್ಯ)
+        copy_ಮೌಲ್ಯ = av_strdup(ಮೌಲ್ಯ);
+    ಆದರೆ (!ಕೀಲಿ) {
         err = AVERROR(EINVAL);
-        goto err_out;
+        ಹೋಗು err_ಹೊರಹೋಗು;
     }
-    if (flags & AV_DICT_DONT_STRDUP_KEY)
-        copy_key = (void *)key;
-    else
-        copy_key = av_strdup(key);
-    if (!copy_key || (value && !copy_value))
-        goto enomem;
+    ಆದರೆ (flags & AV_DICT_DONT_STRDUP_ಕೀಲಿ)
+        copy_ಕೀಲಿ = (ಶೂನ್ಯ *)ಕೀಲಿ;
+    ಇಲ್ಲದಿದ್ದರೆ
+        copy_ಕೀಲಿ = av_strdup(ಕೀಲಿ);
+    ಆದರೆ (!copy_ಕೀಲಿ || (ಮೌಲ್ಯ && !copy_ಮೌಲ್ಯ))
+        ಹೋಗು enomem;
 
-    if (!(flags & AV_DICT_MULTIKEY)) {
-        tag = av_dict_get(m, key, NULL, flags);
-    } else if (flags & AV_DICT_DEDUP) {
-        while ((tag = av_dict_get(m, key, tag, flags))) {
-            if ((!value && !tag->value) ||
-                (value && tag->value && !strcmp(value, tag->value))) {
-                av_free(copy_key);
-                av_free(copy_value);
-                return 0;
+    ಆದರೆ (!(flags & AV_DICT_MULTIKEY)) {
+        ಟ್ಯಾಗ್ = av_dict_get(m, ಕೀಲಿ, ಖಾಲಿ, flags);
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (flags & AV_DICT_DEDUP) {
+        ಆಗ ((ಟ್ಯಾಗ್ = av_dict_get(m, ಕೀಲಿ, ಟ್ಯಾಗ್, flags))) {
+            ಆದರೆ ((!ಮೌಲ್ಯ && !ಟ್ಯಾಗ್->ಮೌಲ್ಯ) ||
+                (ಮೌಲ್ಯ && ಟ್ಯಾಗ್->ಮೌಲ್ಯ && !strcmp(ಮೌಲ್ಯ, ಟ್ಯಾಗ್->ಮೌಲ್ಯ))) {
+                av_free(copy_ಕೀಲಿ);
+                av_free(copy_ಮೌಲ್ಯ);
+                ಹಿಂತಿರುಗಿ 0;
             }
         }
     }
-    if (!m)
-        m = *pm = av_mallocz(sizeof(*m));
-    if (!m)
-        goto enomem;
+    ಆದರೆ (!m)
+        m = *pm = av_mallocz(ಗಾತ್ರ(*m));
+    ಆದರೆ (!m)
+        ಹೋಗು enomem;
 
-    if (tag) {
-        if (flags & AV_DICT_DONT_OVERWRITE) {
-            av_free(copy_key);
-            av_free(copy_value);
-            return 0;
+    ಆದರೆ (ಟ್ಯಾಗ್) {
+        ಆದರೆ (flags & AV_DICT_DONT_OVERWRITE) {
+            av_free(copy_ಕೀಲಿ);
+            av_free(copy_ಮೌಲ್ಯ);
+            ಹಿಂತಿರುಗಿ 0;
         }
-        if (copy_value && flags & AV_DICT_APPEND) {
-            size_t oldlen = strlen(tag->value);
-            size_t new_part_len = strlen(copy_value);
+        ಆದರೆ (copy_ಮೌಲ್ಯ && flags & AV_DICT_APPEND) {
+            size_t oldlen = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(ಟ್ಯಾಗ್->ಮೌಲ್ಯ);
+            size_t new_part_len = ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(copy_ಮೌಲ್ಯ);
             size_t len = oldlen + new_part_len + 1;
-            char *newval = av_realloc(tag->value, len);
-            if (!newval)
-                goto enomem;
-            memcpy(newval + oldlen, copy_value, new_part_len + 1);
-            av_freep(&copy_value);
-            copy_value = newval;
-        } else
-            av_free(tag->value);
-        av_free(tag->key);
-        *tag = m->elems[--m->count];
-    } else if (copy_value) {
-        AVDictionaryEntry *tmp = av_realloc_array(m->elems,
-                                                  m->count + 1, sizeof(*m->elems));
-        if (!tmp)
-            goto enomem;
+            ಅಕ್ಷರ *newval = av_realloc(ಟ್ಯಾಗ್->ಮೌಲ್ಯ, len);
+            ಆದರೆ (!newval)
+                ಹೋಗು enomem;
+            ಸ್ಮರಣೆ_ನಕಲು(newval + oldlen, copy_ಮೌಲ್ಯ, new_part_len + 1);
+            av_freep(&copy_ಮೌಲ್ಯ);
+            copy_ಮೌಲ್ಯ = newval;
+        } ಇಲ್ಲದಿದ್ದರೆ
+            av_free(ಟ್ಯಾಗ್->ಮೌಲ್ಯ);
+        av_free(ಟ್ಯಾಗ್->ಕೀಲಿ);
+        *ಟ್ಯಾಗ್ = m->elems[--m->ಎಣಿಕೆ_2];
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (copy_ಮೌಲ್ಯ) {
+        AVDictionary_ನಮೂದು *tmp = av_realloc_array(m->elems,
+                                                  m->ಎಣಿಕೆ_2 + 1, ಗಾತ್ರ(*m->elems));
+        ಆದರೆ (!tmp)
+            ಹೋಗು enomem;
         m->elems = tmp;
     }
-    if (copy_value) {
-        m->elems[m->count].key = copy_key;
-        m->elems[m->count].value = copy_value;
-        m->count++;
-        if (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
-            m->duplicate_keys = 1;
-    } else {
+    ಆದರೆ (copy_ಮೌಲ್ಯ) {
+        m->elems[m->ಎಣಿಕೆ_2].ಕೀಲಿ = copy_ಕೀಲಿ;
+        m->elems[m->ಎಣಿಕೆ_2].ಮೌಲ್ಯ = copy_ಮೌಲ್ಯ;
+        m->ಎಣಿಕೆ_2++;
+        ಆದರೆ (flags & (AV_DICT_ಹೊಂದಿಕೆ_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
+            m->duplicate_ಕೀಲಿಗಳು = 1;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         err = 0;
-        goto end;
+        ಹೋಗು ಕೊನೆ;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 enomem:
     err = AVERROR(ENOMEM);
-err_out:
-    av_free(copy_value);
-end:
-    if (m && !m->count) {
+err_ಹೊರಹೋಗು:
+    av_free(copy_ಮೌಲ್ಯ);
+ಕೊನೆ:
+    ಆದರೆ (m && !m->ಎಣಿಕೆ_2) {
         av_freep(&m->elems);
         av_freep(pm);
     }
-    av_free(copy_key);
-    return err;
+    av_free(copy_ಕೀಲಿ);
+    ಹಿಂತಿರುಗಿ err;
 }
 
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
-                int flags)
+ಪೂರ್ಣಾಂಕ av_dict_ಗಣ_int(AVDictionary **pm, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ, int64_t ಮೌಲ್ಯ,
+                ಪೂರ್ಣಾಂಕ flags)
 {
-    char valuestr[22];
-    snprintf(valuestr, sizeof(valuestr), "%"PRId64, value);
+    ಅಕ್ಷರ valuestr[22];
+    snprintf(valuestr, ಗಾತ್ರ(valuestr), "%"PRId64, ಮೌಲ್ಯ);
     flags &= ~AV_DICT_DONT_STRDUP_VAL;
-    return av_dict_set(pm, key, valuestr, flags);
+    ಹಿಂತಿರುಗಿ av_dict_ಗಣ(pm, ಕೀಲಿ, valuestr, flags);
 }
 
-static int parse_key_value_pair(AVDictionary **pm, const char **buf,
-                                const char *key_val_sep, const char *pairs_sep,
-                                int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ parse_ಕೀಲಿ_ಮೌಲ್ಯ_pair(AVDictionary **pm, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **buf,
+                                ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ_val_sep, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಜೋಡಿಗಳು_sep,
+                                ಪೂರ್ಣಾಂಕ flags)
 {
-    char *key = av_get_token(buf, key_val_sep);
-    char *val = NULL;
-    int ret;
+    ಅಕ್ಷರ *ಕೀಲಿ = av_get_token(buf, ಕೀಲಿ_val_sep);
+    ಅಕ್ಷರ *val = ಖಾಲಿ;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (key && *key && strspn(*buf, key_val_sep)) {
+    ಆದರೆ (ಕೀಲಿ && *ಕೀಲಿ && strspn(*buf, ಕೀಲಿ_val_sep)) {
         (*buf)++;
-        val = av_get_token(buf, pairs_sep);
+        val = av_get_token(buf, ಜೋಡಿಗಳು_sep);
     }
 
-    if (key && *key && val && *val)
-        ret = av_dict_set(pm, key, val, flags);
-    else
+    ಆದರೆ (ಕೀಲಿ && *ಕೀಲಿ && val && *val)
+        ret = av_dict_ಗಣ(pm, ಕೀಲಿ, val, flags);
+    ಇಲ್ಲದಿದ್ದರೆ
         ret = AVERROR(EINVAL);
 
-    av_freep(&key);
+    av_freep(&ಕೀಲಿ);
     av_freep(&val);
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int av_dict_parse_string(AVDictionary **pm, const char *str,
-                         const char *key_val_sep, const char *pairs_sep,
-                         int flags)
+ಪೂರ್ಣಾಂಕ av_dict_parse_string(AVDictionary **pm, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str,
+                         ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ_val_sep, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಜೋಡಿಗಳು_sep,
+                         ಪೂರ್ಣಾಂಕ flags)
 {
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (!str)
-        return 0;
+    ಆದರೆ (!str)
+        ಹಿಂತಿರುಗಿ 0;
 
     /* ignore STRDUP flags */
-    flags &= ~(AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    flags &= ~(AV_DICT_DONT_STRDUP_ಕೀಲಿ | AV_DICT_DONT_STRDUP_VAL);
 
-    while (*str) {
-        if ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
-            return ret;
+    ಆಗ (*str) {
+        ಆದರೆ ((ret = parse_ಕೀಲಿ_ಮೌಲ್ಯ_pair(pm, &str, ಕೀಲಿ_val_sep, ಜೋಡಿಗಳು_sep, flags)) < 0)
+            ಹಿಂತಿರುಗಿ ret;
 
-        if (*str)
+        ಆದರೆ (*str)
             str++;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-void av_dict_free(AVDictionary **pm)
+ಶೂನ್ಯ av_dict_free(AVDictionary **pm)
 {
     AVDictionary *m = *pm;
 
-    if (m) {
-        while (m->count--) {
-            av_freep(&m->elems[m->count].key);
-            av_freep(&m->elems[m->count].value);
+    ಆದರೆ (m) {
+        ಆಗ (m->ಎಣಿಕೆ_2--) {
+            av_freep(&m->elems[m->ಎಣಿಕೆ_2].ಕೀಲಿ);
+            av_freep(&m->elems[m->ಎಣಿಕೆ_2].ಮೌಲ್ಯ);
         }
         av_freep(&m->elems);
     }
     av_freep(pm);
 }
 
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags)
+ಪೂರ್ಣಾಂಕ av_dict_copy(AVDictionary **dst, ಸ್ಥಿರಾಂಕ AVDictionary *src, ಪೂರ್ಣಾಂಕ flags)
 {
-    const AVDictionaryEntry *t = NULL;
+    ಸ್ಥಿರಾಂಕ AVDictionary_ನಮೂದು *t = ಖಾಲಿ;
 
-    if (!*dst && src && src->count && !src->duplicate_keys &&
+    ಆದರೆ (!*dst && src && src->ಎಣಿಕೆ_2 && !src->duplicate_ಕೀಲಿಗಳು &&
         !(flags & AV_DICT_IGNORE_SUFFIX)) {
-        AVDictionary *m = av_mallocz(sizeof(*m));
-        if (!m)
-            return AVERROR(ENOMEM);
-        m->elems = av_calloc(src->count, sizeof(*m->elems));
-        if (!m->elems) {
+        AVDictionary *m = av_mallocz(ಗಾತ್ರ(*m));
+        ಆದರೆ (!m)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
+        m->elems = av_calloc(src->ಎಣಿಕೆ_2, ಗಾತ್ರ(*m->elems));
+        ಆದರೆ (!m->elems) {
             av_free(m);
-            return AVERROR(ENOMEM);
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
         }
         *dst = m;
-        for (int i = 0; i < src->count; i++) {
-            m->elems[i].key   = av_strdup(src->elems[i].key);
-            m->elems[i].value = av_strdup(src->elems[i].value);
-            m->count++;
-            if (!m->elems[i].key || !m->elems[i].value) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < src->ಎಣಿಕೆ_2; i++) {
+            m->elems[i].ಕೀಲಿ   = av_strdup(src->elems[i].ಕೀಲಿ);
+            m->elems[i].ಮೌಲ್ಯ = av_strdup(src->elems[i].ಮೌಲ್ಯ);
+            m->ಎಣಿಕೆ_2++;
+            ಆದರೆ (!m->elems[i].ಕೀಲಿ || !m->elems[i].ಮೌಲ್ಯ) {
                 av_dict_free(dst);
-                return AVERROR(ENOMEM);
+                ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
             }
         }
-        return 0;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    while ((t = av_dict_iterate(src, t))) {
-        int ret = av_dict_set(dst, t->key, t->value, flags);
-        if (ret < 0)
-            return ret;
+    ಆಗ ((t = av_dict_iterate(src, t))) {
+        ಪೂರ್ಣಾಂಕ ret = av_dict_ಗಣ(dst, t->ಕೀಲಿ, t->ಮೌಲ್ಯ, flags);
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ ret;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_dict_get_string(const AVDictionary *m, char **buffer,
-                       const char key_val_sep, const char pairs_sep)
+ಪೂರ್ಣಾಂಕ av_dict_get_string(ಸ್ಥಿರಾಂಕ AVDictionary *m, ಅಕ್ಷರ **ಬಫರ್,
+                       ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ ಕೀಲಿ_val_sep, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ ಜೋಡಿಗಳು_sep)
 {
-    const AVDictionaryEntry *t = NULL;
+    ಸ್ಥಿರಾಂಕ AVDictionary_ನಮೂದು *t = ಖಾಲಿ;
     AVBPrint bprint;
-    int cnt = 0;
-    char special_chars[] = {pairs_sep, key_val_sep, '\0'};
+    ಪೂರ್ಣಾಂಕ cnt = 0;
+    ಅಕ್ಷರ special_chars[] = {ಜೋಡಿಗಳು_sep, ಕೀಲಿ_val_sep, '\0'};
 
-    if (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
-        pairs_sep == '\\' || key_val_sep == '\\')
-        return AVERROR(EINVAL);
+    ಆದರೆ (!ಬಫರ್ || ಜೋಡಿಗಳು_sep == '\0' || ಕೀಲಿ_val_sep == '\0' || ಜೋಡಿಗಳು_sep == ಕೀಲಿ_val_sep ||
+        ಜೋಡಿಗಳು_sep == '\\' || ಕೀಲಿ_val_sep == '\\')
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    if (!av_dict_count(m)) {
-        *buffer = av_strdup("");
-        return *buffer ? 0 : AVERROR(ENOMEM);
+    ಆದರೆ (!av_dict_ಎಣಿಕೆ(m)) {
+        *ಬಫರ್ = av_strdup("");
+        ಹಿಂತಿರುಗಿ *ಬಫರ್ ? 0 : AVERROR(ENOMEM);
     }
 
-    av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
-    while ((t = av_dict_iterate(m, t))) {
-        if (cnt++)
-            av_bprint_append_data(&bprint, &pairs_sep, 1);
-        av_bprint_escape(&bprint, t->key, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
-        av_bprint_append_data(&bprint, &key_val_sep, 1);
-        av_bprint_escape(&bprint, t->value, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+    av_bprint_init(&bprint, 64, AV_BPRINT_ಗಾತ್ರ_UNLIMITED);
+    ಆಗ ((t = av_dict_iterate(m, t))) {
+        ಆದರೆ (cnt++)
+            av_bprint_append_ದತ್ತಾಂಶ(&bprint, &ಜೋಡಿಗಳು_sep, 1);
+        av_bprint_escape(&bprint, t->ಕೀಲಿ, special_chars, AV_ESCAPE_ಬಹುಲಕ_BACKSLASH, 0);
+        av_bprint_append_ದತ್ತಾಂಶ(&bprint, &ಕೀಲಿ_val_sep, 1);
+        av_bprint_escape(&bprint, t->ಮೌಲ್ಯ, special_chars, AV_ESCAPE_ಬಹುಲಕ_BACKSLASH, 0);
     }
-    return av_bprint_finalize(&bprint, buffer);
+    ಹಿಂತಿರುಗಿ av_bprint_finalize(&bprint, ಬಫರ್);
 }

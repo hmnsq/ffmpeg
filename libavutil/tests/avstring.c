@@ -16,17 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/mem.h"
-#include "libavutil/avstring.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/common.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/mem.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/avstring.h"
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
-    int i;
-    char *fullpath, *ptr;
-    static const char * const strings[] = {
+    ಪೂರ್ಣಾಂಕ i;
+    ಅಕ್ಷರ *fullpath, *ptr;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ ಅಕ್ಷರಸರಣಿಗಳು[] = {
         "''",
         "",
         ":",
@@ -54,53 +54,53 @@ int main(void)
         "'\\fo\\o:': blahblah",
         "\\'fo\\o\\:':  foo  '  :blahblah"
     };
-    const char *haystack = "Education consists mainly in what we have unlearned.";
-    const char * const needle[] = {"learned.", "unlearned.", "Unlearned"};
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *haystack = "Education consists mainly in what we have unlearned.";
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ needle[] = {"learned.", "unlearned.", "Unlearned"};
 
-    printf("Testing av_get_token()\n");
-    for (i = 0; i < FF_ARRAY_ELEMS(strings); i++) {
-        const char *p = strings[i];
-        char *q;
-        printf("|%s|", p);
+    ಬರೆ("Testing av_get_token()\n");
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(ಅಕ್ಷರಸರಣಿಗಳು); i++) {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p = ಅಕ್ಷರಸರಣಿಗಳು[i];
+        ಅಕ್ಷರ *q;
+        ಬರೆ("|%s|", p);
         q = av_get_token(&p, ":");
-        printf(" -> |%s|", q);
-        printf(" + |%s|\n", p);
+        ಬರೆ(" -> |%s|", q);
+        ಬರೆ(" + |%s|\n", p);
         av_free(q);
     }
 
-    printf("Testing av_append_path_component()\n");
-    #define TEST_APPEND_PATH_COMPONENT(path, component, expected) \
-        fullpath = av_append_path_component((path), (component)); \
-        printf("%s = %s\n", fullpath ? fullpath : "(null)", expected); \
+    ಬರೆ("Testing av_append_path_component()\n");
+    #ವ್ಯಾಖ್ಯಾನಿಸು TEST_APPEND_ಮಾರ್ಗ_COMPONENT(ಮಾರ್ಗ, component, expected) \
+        fullpath = av_append_ಮಾರ್ಗ_component((ಮಾರ್ಗ), (component)); \
+        ಬರೆ("%s = %s\n", fullpath ? fullpath : "(null)", expected); \
         av_free(fullpath);
-    TEST_APPEND_PATH_COMPONENT(NULL, NULL, "(null)")
-    TEST_APPEND_PATH_COMPONENT("path", NULL, "path");
-    TEST_APPEND_PATH_COMPONENT(NULL, "comp", "comp");
-    TEST_APPEND_PATH_COMPONENT("path", "comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path/", "comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path", "/comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path/", "/comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path/path2/", "/comp/comp2", "path/path2/comp/comp2");
+    TEST_APPEND_ಮಾರ್ಗ_COMPONENT(ಖಾಲಿ, ಖಾಲಿ, "(null)")
+    TEST_APPEND_ಮಾರ್ಗ_COMPONENT("path", ಖಾಲಿ, "path");
+    TEST_APPEND_ಮಾರ್ಗ_COMPONENT(ಖಾಲಿ, "comp", "comp");
+    TEST_APPEND_ಮಾರ್ಗ_COMPONENT("path", "comp", "path/comp");
+    TEST_APPEND_ಮಾರ್ಗ_COMPONENT("path/", "comp", "path/comp");
+    TEST_APPEND_ಮಾರ್ಗ_COMPONENT("path", "/comp", "path/comp");
+    TEST_APPEND_ಮಾರ್ಗ_COMPONENT("path/", "/comp", "path/comp");
+    TEST_APPEND_ಮಾರ್ಗ_COMPONENT("path/path2/", "/comp/comp2", "path/path2/comp/comp2");
 
     /*Testing av_strnstr()*/
-    #define TEST_STRNSTR(haystack, needle, hay_length, expected) \
-        ptr = av_strnstr(haystack, needle, hay_length); \
-        if (ptr != expected){ \
-            printf("expected: %p, received %p\n", expected, ptr); \
+    #ವ್ಯಾಖ್ಯಾನಿಸು TEST_STRNSTR(haystack, needle, hay_ಉದ್ದಳತೆ, expected) \
+        ptr = av_strnstr(haystack, needle, hay_ಉದ್ದಳತೆ); \
+        ಆದರೆ (ptr != expected){ \
+            ಬರೆ("expected: %p, received %p\n", expected, ptr); \
         }
-    TEST_STRNSTR(haystack, needle [0], strlen(haystack), haystack+44);
-    TEST_STRNSTR(haystack, needle [1], strlen(haystack), haystack+42);
-    TEST_STRNSTR(haystack, needle [2], strlen(haystack), NULL       );
-    TEST_STRNSTR(haystack, strings[1], strlen(haystack), haystack   );
+    TEST_STRNSTR(haystack, needle [0], ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(haystack), haystack+44);
+    TEST_STRNSTR(haystack, needle [1], ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(haystack), haystack+42);
+    TEST_STRNSTR(haystack, needle [2], ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(haystack), ಖಾಲಿ       );
+    TEST_STRNSTR(haystack, ಅಕ್ಷರಸರಣಿಗಳು[1], ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(haystack), haystack   );
 
     /*Testing av_strireplace()*/
-    #define TEST_STRIREPLACE(haystack, needle, expected) \
+    #ವ್ಯಾಖ್ಯಾನಿಸು TEST_STRIREPLACE(haystack, needle, expected) \
         ptr = av_strireplace(haystack, needle, "instead"); \
-        if (ptr == NULL) { \
-            printf("error, received null pointer!\n"); \
-        } else { \
-            if (strcmp(ptr, expected) != 0) \
-                printf( "expected: %s, received: %s\n", expected, ptr); \
+        ಆದರೆ (ptr == ಖಾಲಿ) { \
+            ಬರೆ("error, received null pointer!\n"); \
+        } ಇಲ್ಲದಿದ್ದರೆ { \
+            ಆದರೆ (strcmp(ptr, expected) != 0) \
+                ಬರೆ( "expected: %s, received: %s\n", expected, ptr); \
             av_free(ptr); \
         }
 
@@ -109,5 +109,5 @@ int main(void)
     TEST_STRIREPLACE(haystack, needle [2], "Education consists mainly in what we have instead.");
     TEST_STRIREPLACE(haystack, needle [1], "Education consists mainly in what we have instead");
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

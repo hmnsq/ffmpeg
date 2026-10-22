@@ -16,311 +16,311 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#ಅನ್ತರ್ಭಾವ <fcntl.h>
+#ಅನ್ತರ್ಭಾವ <sys/mman.h>
+#ಅನ್ತರ್ಭಾವ <unistd.h>
 
 /* This was introduced in version 4.6. And may not exist all without an
  * optional package. So to prevent a hard dependency on needing the Linux
  * kernel headers to compile, make this optional. */
-#if HAVE_LINUX_DMA_BUF_H
-#include <linux/dma-buf.h>
-#include <sys/ioctl.h>
-#endif
+#ಆದರೆ HAVE_LINUX_DMA_BUF_H
+#ಅನ್ತರ್ಭಾವ <linux/dma-buf.h>
+#ಅನ್ತರ್ಭಾವ <sys/ioctl.h>
+#ಆದರೆ_ಅಂತ್ಯ
 
-#include <drm.h>
-#include <xf86drm.h>
+#ಅನ್ತರ್ಭಾವ <drm.h>
+#ಅನ್ತರ್ಭಾವ <xf86drm.h>
 
-#include "avassert.h"
-#include "hwcontext.h"
-#include "hwcontext_drm.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext_drm.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext_internal.h"
+#ಅನ್ತರ್ಭಾವ "imgutils.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
 
-static void drm_device_free(AVHWDeviceContext *hwdev)
+ಸ್ಥಿರ ಶೂನ್ಯ drm_device_free(AVHWDeviceContext *hwdev)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
 
     close(hwctx->fd);
 }
 
-static int drm_device_create(AVHWDeviceContext *hwdev, const char *device,
-                             AVDictionary *opts, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ drm_device_create(AVHWDeviceContext *hwdev, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *device,
+                             AVDictionary *opts, ಪೂರ್ಣಾಂಕ flags)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
-    drmVersionPtr version;
+    drm_ಆವೃತ್ತಿ_Ptr ಆವೃತ್ತಿ;
 
     hwctx->fd = open(device, O_RDWR);
-    if (hwctx->fd < 0)
-        return AVERROR(errno);
+    ಆದರೆ (hwctx->fd < 0)
+        ಹಿಂತಿರುಗಿ AVERROR(errno);
 
-    version = drmGetVersion(hwctx->fd);
-    if (!version) {
+    ಆವೃತ್ತಿ = drm_Get_ಆವೃತ್ತಿ(hwctx->fd);
+    ಆದರೆ (!ಆವೃತ್ತಿ) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get version information "
                "from %s: probably not a DRM device?\n", device);
         close(hwctx->fd);
-        return AVERROR(EINVAL);
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
     }
 
     av_log(hwdev, AV_LOG_VERBOSE, "Opened DRM device %s: driver %s "
-           "version %d.%d.%d.\n", device, version->name,
-           version->version_major, version->version_minor,
-           version->version_patchlevel);
+           "version %d.%d.%d.\n", device, ಆವೃತ್ತಿ->name,
+           ಆವೃತ್ತಿ->ಆವೃತ್ತಿ_major, ಆವೃತ್ತಿ->ಆವೃತ್ತಿ_minor,
+           ಆವೃತ್ತಿ->ಆವೃತ್ತಿ_patchlevel);
 
-    drmFreeVersion(version);
+    drm_Free_ಆವೃತ್ತಿ(ಆವೃತ್ತಿ);
 
-    hwdev->free = &drm_device_free;
+    hwdev->ಬಿಡುಗಡೆ = &drm_device_free;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ drm_get_ಬಫರ್(AVHWFramesContext *hwfc, AVFrame *ಚೌಕಟ್ಟು)
 {
-    frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    ಚೌಕಟ್ಟು->buf[0] = av_ಬಫರ್_pool_get(hwfc->pool);
+    ಆದರೆ (!ಚೌಕಟ್ಟು->buf[0])
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    frame->data[0] = (uint8_t*)frame->buf[0]->data;
+    ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[0] = (uint8_t*)ಚೌಕಟ್ಟು->buf[0]->ದತ್ತಾಂಶ;
 
-    frame->format = AV_PIX_FMT_DRM_PRIME;
-    frame->width  = hwfc->width;
-    frame->height = hwfc->height;
+    ಚೌಕಟ್ಟು->format = AV_PIX_FMT_DRM_ಅವಿಭಾಜ್ಯ;
+    ಚೌಕಟ್ಟು->ಅಗಲ  = hwfc->ಅಗಲ;
+    ಚೌಕಟ್ಟು->ಎತ್ತರ = hwfc->ಎತ್ತರ;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-typedef struct DRMMapping {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ DRMMapping {
     // Address and length of each mmap()ed region.
-    int nb_regions;
-    int sync_flags;
-    int object[AV_DRM_MAX_PLANES];
-    void *address[AV_DRM_MAX_PLANES];
-    size_t length[AV_DRM_MAX_PLANES];
+    ಪೂರ್ಣಾಂಕ nb_regions;
+    ಪೂರ್ಣಾಂಕ sync_flags;
+    ಪೂರ್ಣಾಂಕ object[AV_DRM_MAX_PLANES];
+    ಶೂನ್ಯ *ವಿಳಾಸ[AV_DRM_MAX_PLANES];
+    size_t ಉದ್ದಳತೆ[AV_DRM_MAX_PLANES];
 } DRMMapping;
 
-static void drm_unmap_frame(AVHWFramesContext *hwfc,
+ಸ್ಥಿರ ಶೂನ್ಯ drm_unmap_ಚೌಕಟ್ಟು(AVHWFramesContext *hwfc,
                             HWMapDescriptor *hwmap)
 {
     DRMMapping *map = hwmap->priv;
 
-    for (int i = 0; i < map->nb_regions; i++) {
-#if HAVE_LINUX_DMA_BUF_H
-        struct dma_buf_sync sync = { .flags = DMA_BUF_SYNC_END | map->sync_flags };
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < map->nb_regions; i++) {
+#ಆದರೆ HAVE_LINUX_DMA_BUF_H
+        ರಚನೆ dma_buf_sync sync = { .flags = DMA_BUF_SYNC_ಕೊನೆ | map->sync_flags };
         ioctl(map->object[i], DMA_BUF_IOCTL_SYNC, &sync);
-#endif
-        munmap(map->address[i], map->length[i]);
+#ಆದರೆ_ಅಂತ್ಯ
+        munmap(map->ವಿಳಾಸ[i], map->ಉದ್ದಳತೆ[i]);
     }
 
     av_free(map);
 }
 
-static int drm_map_frame(AVHWFramesContext *hwfc,
-                         AVFrame *dst, const AVFrame *src, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ drm_map_ಚೌಕಟ್ಟು(AVHWFramesContext *hwfc,
+                         AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags)
 {
-    const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->data[0];
-#if HAVE_LINUX_DMA_BUF_H
-    struct dma_buf_sync sync_start = { 0 };
-#endif
+    ಸ್ಥಿರಾಂಕ AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->ದತ್ತಾಂಶ[0];
+#ಆದರೆ HAVE_LINUX_DMA_BUF_H
+    ರಚನೆ dma_buf_sync sync_ಆರಂಭ = { 0 };
+#ಆದರೆ_ಅಂತ್ಯ
     DRMMapping *map;
-    int err, i, p, plane;
-    int mmap_prot;
-    void *addr;
+    ಪೂರ್ಣಾಂಕ err, i, p, plane;
+    ಪೂರ್ಣಾಂಕ mmap_prot;
+    ಶೂನ್ಯ *addr;
 
-    map = av_mallocz(sizeof(*map));
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_mallocz(ಗಾತ್ರ(*map));
+    ಆದರೆ (!map)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
     mmap_prot = 0;
-    if (flags & AV_HWFRAME_MAP_READ)
+    ಆದರೆ (flags & AV_HWFRAME_MAP_READ)
         mmap_prot |= PROT_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    ಆದರೆ (flags & AV_HWFRAME_MAP_WRITE)
         mmap_prot |= PROT_WRITE;
 
-#if HAVE_LINUX_DMA_BUF_H
-    if (flags & AV_HWFRAME_MAP_READ)
+#ಆದರೆ HAVE_LINUX_DMA_BUF_H
+    ಆದರೆ (flags & AV_HWFRAME_MAP_READ)
         map->sync_flags |= DMA_BUF_SYNC_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    ಆದರೆ (flags & AV_HWFRAME_MAP_WRITE)
         map->sync_flags |= DMA_BUF_SYNC_WRITE;
-    sync_start.flags = DMA_BUF_SYNC_START | map->sync_flags;
-#endif
+    sync_ಆರಂಭ.flags = DMA_BUF_SYNC_ಆರಂಭ | map->sync_flags;
+#ಆದರೆ_ಅಂತ್ಯ
 
     av_assert0(desc->nb_objects <= AV_DRM_MAX_PLANES);
-    for (i = 0; i < desc->nb_objects; i++) {
-        addr = mmap(NULL, desc->objects[i].size, mmap_prot, MAP_SHARED,
+    ಗಾಗಿ (i = 0; i < desc->nb_objects; i++) {
+        addr = mmap(ಖಾಲಿ, desc->objects[i].ಗಾತ್ರ_2, mmap_prot, MAP_SHARED,
                     desc->objects[i].fd, 0);
-        if (addr == MAP_FAILED) {
+        ಆದರೆ (addr == MAP_FAILED) {
             err = AVERROR(errno);
             av_log(hwfc, AV_LOG_ERROR, "Failed to map DRM object %d to "
                    "memory: %d.\n", desc->objects[i].fd, errno);
-            goto fail;
+            ಹೋಗು fail;
         }
 
-        map->address[i] = addr;
-        map->length[i]  = desc->objects[i].size;
+        map->ವಿಳಾಸ[i] = addr;
+        map->ಉದ್ದಳತೆ[i]  = desc->objects[i].ಗಾತ್ರ_2;
         map->object[i] = desc->objects[i].fd;
 
-#if HAVE_LINUX_DMA_BUF_H
+#ಆದರೆ HAVE_LINUX_DMA_BUF_H
         /* We're not checking for errors here because the kernel may not
          * support the ioctl, in which case its okay to carry on */
-        ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_SYNC, &sync_start);
-#endif
+        ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_SYNC, &sync_ಆರಂಭ);
+#ಆದರೆ_ಅಂತ್ಯ
     }
     map->nb_regions = i;
 
     plane = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
-        const AVDRMLayerDescriptor *layer = &desc->layers[i];
-        for (p = 0; p < layer->nb_planes; p++) {
-            dst->data[plane] =
-                (uint8_t*)map->address[layer->planes[p].object_index] +
-                                       layer->planes[p].offset;
+    ಗಾಗಿ (i = 0; i < desc->nb_layers; i++) {
+        ಸ್ಥಿರಾಂಕ AVDRMLayerDescriptor *layer = &desc->layers[i];
+        ಗಾಗಿ (p = 0; p < layer->nb_planes; p++) {
+            dst->ದತ್ತಾಂಶ[plane] =
+                (uint8_t*)map->ವಿಳಾಸ[layer->planes[p].object_ಸೂಚ್ಯಂಕ] +
+                                       layer->planes[p].ಸ್ಥಾನಾಂತರ;
             dst->linesize[plane] =     layer->planes[p].pitch;
             ++plane;
         }
     }
     av_assert0(plane <= AV_DRM_MAX_PLANES);
 
-    dst->width  = src->width;
-    dst->height = src->height;
+    dst->ಅಗಲ  = src->ಅಗಲ;
+    dst->ಎತ್ತರ = src->ಎತ್ತರ;
 
-    err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
-                                &drm_unmap_frame, map);
-    if (err < 0)
-        goto fail;
+    err = ff_hwframe_map_create(src->hw_ಚೌಕಟ್ಟುಗಳು_ctx, dst, src,
+                                &drm_unmap_ಚೌಕಟ್ಟು, map);
+    ಆದರೆ (err < 0)
+        ಹೋಗು fail;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    for (i = 0; i < desc->nb_objects; i++) {
-        if (map->address[i])
-            munmap(map->address[i], map->length[i]);
+    ಗಾಗಿ (i = 0; i < desc->nb_objects; i++) {
+        ಆದರೆ (map->ವಿಳಾಸ[i])
+            munmap(map->ವಿಳಾಸ[i], map->ಉದ್ದಳತೆ[i]);
     }
     av_free(map);
-    return err;
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static int drm_transfer_get_formats(AVHWFramesContext *ctx,
-                                    enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ drm_transfer_get_formats(AVHWFramesContext *ctx,
+                                    ಎಣಿಕೆ AVHWFrameTransferDirection dir,
+                                    ಎಣಿಕೆ AVPixelFormat **formats)
 {
-    enum AVPixelFormat *pix_fmts;
+    ಎಣಿಕೆ AVPixelFormat *pix_fmts;
 
-    pix_fmts = av_malloc_array(2, sizeof(*pix_fmts));
-    if (!pix_fmts)
-        return AVERROR(ENOMEM);
+    pix_fmts = av_malloc_array(2, ಗಾತ್ರ(*pix_fmts));
+    ಆದರೆ (!pix_fmts)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
     pix_fmts[0] = ctx->sw_format;
     pix_fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = pix_fmts;
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int drm_transfer_data_from(AVHWFramesContext *hwfc,
-                                  AVFrame *dst, const AVFrame *src)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ drm_transfer_ದತ್ತಾಂಶ_from(AVHWFramesContext *hwfc,
+                                  AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    ಪೂರ್ಣಾಂಕ err;
 
-    if (dst->width > hwfc->width || dst->height > hwfc->height)
-        return AVERROR(EINVAL);
+    ಆದರೆ (dst->ಅಗಲ > hwfc->ಅಗಲ || dst->ಎತ್ತರ > hwfc->ಎತ್ತರ)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (!map)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
     map->format = dst->format;
 
-    err = drm_map_frame(hwfc, map, src, AV_HWFRAME_MAP_READ);
-    if (err)
-        goto fail;
+    err = drm_map_ಚೌಕಟ್ಟು(hwfc, map, src, AV_HWFRAME_MAP_READ);
+    ಆದರೆ (err)
+        ಹೋಗು fail;
 
-    map->width  = dst->width;
-    map->height = dst->height;
+    map->ಅಗಲ  = dst->ಅಗಲ;
+    map->ಎತ್ತರ = dst->ಎತ್ತರ;
 
-    err = av_frame_copy(dst, map);
-    if (err)
-        goto fail;
+    err = av_ಚೌಕಟ್ಟು_copy(dst, map);
+    ಆದರೆ (err)
+        ಹೋಗು fail;
 
     err = 0;
 fail:
-    av_frame_free(&map);
-    return err;
+    av_ಚೌಕಟ್ಟು_free(&map);
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static int drm_transfer_data_to(AVHWFramesContext *hwfc,
-                                AVFrame *dst, const AVFrame *src)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ drm_transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ(AVHWFramesContext *hwfc,
+                                AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    ಪೂರ್ಣಾಂಕ err;
 
-    if (src->width > hwfc->width || src->height > hwfc->height)
-        return AVERROR(EINVAL);
+    ಆದರೆ (src->ಅಗಲ > hwfc->ಅಗಲ || src->ಎತ್ತರ > hwfc->ಎತ್ತರ)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (!map)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
     map->format = src->format;
 
-    err = drm_map_frame(hwfc, map, dst, AV_HWFRAME_MAP_WRITE |
+    err = drm_map_ಚೌಕಟ್ಟು(hwfc, map, dst, AV_HWFRAME_MAP_WRITE |
                                         AV_HWFRAME_MAP_OVERWRITE);
-    if (err)
-        goto fail;
+    ಆದರೆ (err)
+        ಹೋಗು fail;
 
-    map->width  = src->width;
-    map->height = src->height;
+    map->ಅಗಲ  = src->ಅಗಲ;
+    map->ಎತ್ತರ = src->ಎತ್ತರ;
 
-    err = av_frame_copy(map, src);
-    if (err)
-        goto fail;
+    err = av_ಚೌಕಟ್ಟು_copy(map, src);
+    ಆದರೆ (err)
+        ಹೋಗು fail;
 
     err = 0;
 fail:
-    av_frame_free(&map);
-    return err;
+    av_ಚೌಕಟ್ಟು_free(&map);
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static int drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                        const AVFrame *src, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                        ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags)
 {
-    int err;
+    ಪೂರ್ಣಾಂಕ err;
 
-    if (dst->format == AV_PIX_FMT_NONE)
+    ಆದರೆ (dst->format == AV_PIX_FMT_NONE)
         dst->format = hwfc->sw_format;
-    else if (hwfc->sw_format != dst->format)
-        return AVERROR(ENOSYS);
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (hwfc->sw_format != dst->format)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
 
-    err = drm_map_frame(hwfc, dst, src, flags);
-    if (err)
-        return err;
+    err = drm_map_ಚೌಕಟ್ಟು(hwfc, dst, src, flags);
+    ಆದರೆ (err)
+        ಹಿಂತಿರುಗಿ err;
 
-    err = av_frame_copy_props(dst, src);
-    if (err)
-        return err;
+    err = av_ಚೌಕಟ್ಟು_copy_props(dst, src);
+    ಆದರೆ (err)
+        ಹಿಂತಿರುಗಿ err;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-const HWContextType ff_hwcontext_type_drm = {
+ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_drm = {
     .type                   = AV_HWDEVICE_TYPE_DRM,
     .name                   = "DRM",
 
-    .device_hwctx_size      = sizeof(AVDRMDeviceContext),
+    .device_hwctx_ಗಾತ್ರ      = ಗಾತ್ರ(AVDRMDeviceContext),
 
     .device_create          = &drm_device_create,
 
-    .frames_get_buffer      = &drm_get_buffer,
+    .ಚೌಕಟ್ಟುಗಳು_get_ಬಫರ್      = &drm_get_ಬಫರ್,
 
     .transfer_get_formats   = &drm_transfer_get_formats,
-    .transfer_data_to       = &drm_transfer_data_to,
-    .transfer_data_from     = &drm_transfer_data_from,
+    .transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ       = &drm_transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ,
+    .transfer_ದತ್ತಾಂಶ_from     = &drm_transfer_ದತ್ತಾಂಶ_from,
     .map_from               = &drm_map_from,
 
-    .pix_fmts = (const enum AVPixelFormat[]) {
-        AV_PIX_FMT_DRM_PRIME,
+    .pix_fmts = (ಸ್ಥಿರಾಂಕ ಎಣಿಕೆ AVPixelFormat[]) {
+        AV_PIX_FMT_DRM_ಅವಿಭಾಜ್ಯ,
         AV_PIX_FMT_NONE
     },
 };

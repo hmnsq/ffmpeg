@@ -18,64 +18,64 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "avstring.h"
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "video_hint.h"
+#ಅನ್ತರ್ಭಾವ "avstring.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "video_hint.h"
 
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
-                                 size_t *out_size)
+                                 size_t *ಹೊರಹೋಗು_ಗಾತ್ರ)
 {
-    struct TestStruct {
+    ರಚನೆ TestStruct {
         AVVideoHint hint;
         AVVideoRect rect;
     };
-    const size_t rect_offset = offsetof(struct TestStruct, rect);
-    size_t size = rect_offset;
+    ಸ್ಥಿರಾಂಕ size_t rect_ಸ್ಥಾನಾಂತರ = offsetof(ರಚನೆ TestStruct, rect);
+    size_t ಗಾತ್ರ_2 = rect_ಸ್ಥಾನಾಂತರ;
     AVVideoHint *hint;
 
-    *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
-    size += sizeof(AVVideoRect) * nb_rects;
+    *ಹೊರಹೋಗು_ಗಾತ್ರ = 0;
+    ಆದರೆ (nb_rects > (SIZE_MAX - ಗಾತ್ರ_2) / ಗಾತ್ರ(AVVideoRect))
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ಗಾತ್ರ_2 += ಗಾತ್ರ(AVVideoRect) * nb_rects;
 
-    hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    hint = av_mallocz(ಗಾತ್ರ_2);
+    ಆದರೆ (!hint)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
     hint->nb_rects    = nb_rects;
-    hint->rect_offset = rect_offset;
-    hint->rect_size   = sizeof(AVVideoRect);
+    hint->rect_ಸ್ಥಾನಾಂತರ = rect_ಸ್ಥಾನಾಂತರ;
+    hint->rect_ಗಾತ್ರ   = ಗಾತ್ರ(AVVideoRect);
 
-    *out_size = size;
+    *ಹೊರಹೋಗು_ಗಾತ್ರ = ಗಾತ್ರ_2;
 
-    return hint;
+    ಹಿಂತಿರುಗಿ hint;
 }
 
-AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
+AVVideoHint *av_video_hint_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು,
                                             size_t nb_rects)
 {
     AVVideoHint *hint;
     AVBufferRef *buf;
-    size_t size = 0;
+    size_t ಗಾತ್ರ_2 = 0;
 
-    hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    hint = av_video_hint_alloc(nb_rects, &ಗಾತ್ರ_2);
+    ಆದರೆ (!hint)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    buf = av_ಬಫರ್_create((uint8_t *)hint, ಗಾತ್ರ_2, ಖಾಲಿ, ಖಾಲಿ, 0);
+    ಆದರೆ (!buf) {
         av_freep(&hint);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    ಆದರೆ (!av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ_from_buf(ಚೌಕಟ್ಟು, AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_VIDEO_HINT, buf)) {
+        av_ಬಫರ್_unref(&buf);
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    return hint;
+    ಹಿಂತಿರುಗಿ hint;
 }

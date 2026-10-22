@@ -16,53 +16,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "libavutil/ambient_viewing_environment.h"
-#include "libavutil/frame.h"
-#include "libavutil/mem.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/ambient_viewing_environment.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/frame.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/mem.h"
 
-static void print_env(const AVAmbientViewingEnvironment *env)
+ಸ್ಥಿರ ಶೂನ್ಯ print_env(ಸ್ಥಿರಾಂಕ AVAmbientViewingEnvironment *env)
 {
-    printf("illuminance=%d/%d, light_x=%d/%d, light_y=%d/%d\n",
-           env->ambient_illuminance.num, env->ambient_illuminance.den,
-           env->ambient_light_x.num,     env->ambient_light_x.den,
-           env->ambient_light_y.num,     env->ambient_light_y.den);
+    ಬರೆ("illuminance=%d/%d, light_x=%d/%d, light_y=%d/%d\n",
+           env->ambient_illuminance.ಅಂಕೆ, env->ambient_illuminance.den,
+           env->ambient_light_x.ಅಂಕೆ,     env->ambient_light_x.den,
+           env->ambient_light_y.ಅಂಕೆ,     env->ambient_light_y.den);
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
     AVAmbientViewingEnvironment *env;
-    AVFrame *frame;
-    size_t size = 0;
+    AVFrame *ಚೌಕಟ್ಟು;
+    size_t ಗಾತ್ರ_2 = 0;
 
     /* av_ambient_viewing_environment_alloc with size out-param */
-    printf("Testing av_ambient_viewing_environment_alloc(&size)\n");
-    env = av_ambient_viewing_environment_alloc(&size);
-    if (env) {
-        printf("alloc: OK, size_set=%s\n", size == sizeof(*env) ? "yes" : "no");
+    ಬರೆ("Testing av_ambient_viewing_environment_alloc(&size)\n");
+    env = av_ambient_viewing_environment_alloc(&ಗಾತ್ರ_2);
+    ಆದರೆ (env) {
+        ಬರೆ("alloc: OK, size_set=%s\n", ಗಾತ್ರ_2 == ಗಾತ್ರ(*env) ? "yes" : "no");
         print_env(env);
         av_free(env);
-    } else {
-        printf("alloc: FAIL\n");
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಬರೆ("alloc: FAIL\n");
     }
 
     /* av_ambient_viewing_environment_alloc with NULL size */
-    printf("\nTesting av_ambient_viewing_environment_alloc(NULL)\n");
-    env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
-        printf("alloc(NULL): OK\n");
+    ಬರೆ("\nTesting av_ambient_viewing_environment_alloc(NULL)\n");
+    env = av_ambient_viewing_environment_alloc(ಖಾಲಿ);
+    ಆದರೆ (env) {
+        ಬರೆ("alloc(NULL): OK\n");
         print_env(env);
         av_free(env);
-    } else {
-        printf("alloc(NULL): FAIL\n");
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಬರೆ("alloc(NULL): FAIL\n");
     }
 
     /* write and read back */
-    printf("\nTesting write/read back\n");
-    env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
+    ಬರೆ("\nTesting write/read back\n");
+    env = av_ambient_viewing_environment_alloc(ಖಾಲಿ);
+    ಆದರೆ (env) {
         env->ambient_illuminance = (AVRational){ 314, 10 };
         env->ambient_light_x     = (AVRational){ 15635, 50000 };
         env->ambient_light_y     = (AVRational){ 16450, 50000 };
@@ -71,38 +71,38 @@ int main(void)
     }
 
     /* av_ambient_viewing_environment_create_side_data */
-    printf("\nTesting av_ambient_viewing_environment_create_side_data()\n");
-    frame = av_frame_alloc();
-    if (frame) {
-        env = av_ambient_viewing_environment_create_side_data(frame);
-        if (env) {
-            printf("side_data: OK\n");
+    ಬರೆ("\nTesting av_ambient_viewing_environment_create_side_data()\n");
+    ಚೌಕಟ್ಟು = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (ಚೌಕಟ್ಟು) {
+        env = av_ambient_viewing_environment_create_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು);
+        ಆದರೆ (env) {
+            ಬರೆ("side_data: OK\n");
             print_env(env);
-        } else {
-            printf("side_data: FAIL\n");
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಬರೆ("side_data: FAIL\n");
         }
-        av_frame_free(&frame);
+        av_ಚೌಕಟ್ಟು_free(&ಚೌಕಟ್ಟು);
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    ಬರೆ("\nTesting OOM paths\n");
     av_max_alloc(1);
-    env = av_ambient_viewing_environment_alloc(&size);
-    printf("alloc OOM: %s\n", env ? "FAIL" : "OK");
+    env = av_ambient_viewing_environment_alloc(&ಗಾತ್ರ_2);
+    ಬರೆ("alloc OOM: %s\n", env ? "FAIL" : "OK");
     av_free(env);
-    env = av_ambient_viewing_environment_alloc(NULL);
-    printf("alloc(NULL) OOM: %s\n", env ? "FAIL" : "OK");
+    env = av_ambient_viewing_environment_alloc(ಖಾಲಿ);
+    ಬರೆ("alloc(NULL) OOM: %s\n", env ? "FAIL" : "OK");
     av_free(env);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ);
 
-    frame = av_frame_alloc();
-    if (frame) {
+    ಚೌಕಟ್ಟು = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (ಚೌಕಟ್ಟು) {
         av_max_alloc(1);
-        env = av_ambient_viewing_environment_create_side_data(frame);
-        printf("side_data OOM: %s\n", env ? "FAIL" : "OK");
-        av_max_alloc(INT_MAX);
-        av_frame_free(&frame);
+        env = av_ambient_viewing_environment_create_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು);
+        ಬರೆ("side_data OOM: %s\n", env ? "FAIL" : "OK");
+        av_max_alloc(ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ);
+        av_ಚೌಕಟ್ಟು_free(&ಚೌಕಟ್ಟು);
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

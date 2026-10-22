@@ -16,45 +16,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/error.c"
+#ಅನ್ತರ್ಭಾವ "libavutil/error.c"
 
 /* errno descriptions depend on the C library, so those are only looked up */
-static const struct {
-    int num;
-    const char *tag;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ರಚನೆ {
+    ಪೂರ್ಣಾಂಕ ಅಂಕೆ;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಟ್ಯಾಗ್;
 } ffmpeg_codes[] = {
-#define ERROR_TAG(CODE, DESC)         { AVERROR_ ## CODE, #CODE },
-#define ERROR_TAG2(CODE, CODE2, DESC) { AVERROR_ ## CODE, #CODE },
-    AVERROR_LIST(ERROR_TAG, ERROR_TAG2)
+#ವ್ಯಾಖ್ಯಾನಿಸು ERROR_ಟ್ಯಾಗ್(ಸಂಕೇತ_3, DESC)         { AVERROR_ ## ಸಂಕೇತ_3, #CODE },
+#ವ್ಯಾಖ್ಯಾನಿಸು ERROR_TAG2(ಸಂಕೇತ_3, CODE2, DESC) { AVERROR_ ## ಸಂಕೇತ_3, #CODE },
+    AVERROR_LIST(ERROR_ಟ್ಯಾಗ್, ERROR_TAG2)
 };
 
-static const int errno_codes[] = {
-#define ERRNO_CODE(CODE, DESC) AVERROR(CODE),
-    STRERROR_LIST(ERRNO_CODE)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ errno_codes[] = {
+#ವ್ಯಾಖ್ಯಾನಿಸು ERRNO_ಸಂಕೇತ(ಸಂಕೇತ_3, DESC) AVERROR(ಸಂಕೇತ_3),
+    STRERROR_LIST(ERRNO_ಸಂಕೇತ)
 };
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
-    char buf[AV_ERROR_MAX_STRING_SIZE];
-    int ret = 0;
+    ಅಕ್ಷರ buf[AV_ERROR_MAX_STRING_ಗಾತ್ರ];
+    ಪೂರ್ಣಾಂಕ ret = 0;
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
-        int num = ffmpeg_codes[i].num;
+    ಗಾಗಿ (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
+        ಪೂರ್ಣಾಂಕ ಅಂಕೆ = ffmpeg_codes[i].ಅಂಕೆ;
 
-        if (av_strerror(num, buf, sizeof(buf)) < 0) {
-            printf("%d: lookup failed [%s]\n", num, ffmpeg_codes[i].tag);
+        ಆದರೆ (av_strerror(ಅಂಕೆ, buf, ಗಾತ್ರ(buf)) < 0) {
+            ಬರೆ("%d: lookup failed [%s]\n", ಅಂಕೆ, ffmpeg_codes[i].ಟ್ಯಾಗ್);
             ret = 1;
-            continue;
+            ಮುಂದುವರಿ;
         }
-        printf("%d: %s [%s]\n", num, buf, ffmpeg_codes[i].tag);
+        ಬರೆ("%d: %s [%s]\n", ಅಂಕೆ, buf, ffmpeg_codes[i].ಟ್ಯಾಗ್);
     }
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
-        if (av_strerror(errno_codes[i], buf, sizeof(buf)) < 0) {
-            printf("errno %d: lookup failed\n", AVUNERROR(errno_codes[i]));
+    ಗಾಗಿ (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
+        ಆದರೆ (av_strerror(errno_codes[i], buf, ಗಾತ್ರ(buf)) < 0) {
+            ಬರೆ("errno %d: lookup failed\n", AVUNERROR(errno_codes[i]));
             ret = 1;
         }
     }
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }

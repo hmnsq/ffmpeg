@@ -16,299 +16,299 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include <stdint.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <stdatomic.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "avassert.h"
-#include "buffer_internal.h"
-#include "common.h"
-#include "mem.h"
-#include "sanitizer.h"
-#include "thread.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "buffer_internal.h"
+#ಅನ್ತರ್ಭಾವ "common.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "sanitizer.h"
+#ಅನ್ತರ್ಭಾವ "thread.h"
 
-static AVBufferRef *buffer_create(AVBuffer *buf, uint8_t *data, size_t size,
-                                  void (*free)(void *opaque, uint8_t *data),
-                                  void *opaque, int flags)
+ಸ್ಥಿರ AVBufferRef *ಬಫರ್_create(AVBuffer *buf, uint8_t *ದತ್ತಾಂಶ, size_t ಗಾತ್ರ_2,
+                                  ಶೂನ್ಯ (*ಬಿಡುಗಡೆ)(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ),
+                                  ಶೂನ್ಯ *opaque, ಪೂರ್ಣಾಂಕ flags)
 {
-    AVBufferRef *ref = NULL;
+    AVBufferRef *ref = ಖಾಲಿ;
 
-    buf->data     = data;
-    buf->size     = size;
-    buf->free     = free ? free : av_buffer_default_free;
+    buf->ದತ್ತಾಂಶ     = ದತ್ತಾಂಶ;
+    buf->ಗಾತ್ರ_2     = ಗಾತ್ರ_2;
+    buf->ಬಿಡುಗಡೆ     = ಬಿಡುಗಡೆ ? ಬಿಡುಗಡೆ : av_ಬಫರ್_default_free;
     buf->opaque   = opaque;
 
     atomic_init(&buf->refcount, 1);
 
     buf->flags = flags;
 
-    ref = av_mallocz(sizeof(*ref));
-    if (!ref)
-        return NULL;
+    ref = av_mallocz(ಗಾತ್ರ(*ref));
+    ಆದರೆ (!ref)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    ref->buffer = buf;
-    ref->data   = data;
-    ref->size   = size;
+    ref->ಬಫರ್ = buf;
+    ref->ದತ್ತಾಂಶ   = ದತ್ತಾಂಶ;
+    ref->ಗಾತ್ರ_2   = ಗಾತ್ರ_2;
 
-    return ref;
+    ಹಿಂತಿರುಗಿ ref;
 }
 
-AVBufferRef *av_buffer_create(uint8_t *data, size_t size,
-                              void (*free)(void *opaque, uint8_t *data),
-                              void *opaque, int flags)
+AVBufferRef *av_ಬಫರ್_create(uint8_t *ದತ್ತಾಂಶ, size_t ಗಾತ್ರ_2,
+                              ಶೂನ್ಯ (*ಬಿಡುಗಡೆ)(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ),
+                              ಶೂನ್ಯ *opaque, ಪೂರ್ಣಾಂಕ flags)
 {
     AVBufferRef *ret;
-    AVBuffer *buf = av_mallocz(sizeof(*buf));
-    if (!buf)
-        return NULL;
+    AVBuffer *buf = av_mallocz(ಗಾತ್ರ(*buf));
+    ಆದರೆ (!buf)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    ret = buffer_create(buf, data, size, free, opaque, flags);
-    if (!ret) {
+    ret = ಬಫರ್_create(buf, ದತ್ತಾಂಶ, ಗಾತ್ರ_2, ಬಿಡುಗಡೆ, opaque, flags);
+    ಆದರೆ (!ret) {
         av_free(buf);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-void av_buffer_default_free(void *opaque, uint8_t *data)
+ಶೂನ್ಯ av_ಬಫರ್_default_free(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ)
 {
-    av_free(data);
+    av_free(ದತ್ತಾಂಶ);
 }
 
-AVBufferRef *av_buffer_alloc(size_t size)
+AVBufferRef *av_ಬಫರ್_alloc(size_t ಗಾತ್ರ_2)
 {
-    AVBufferRef *ret = NULL;
-    uint8_t    *data = NULL;
+    AVBufferRef *ret = ಖಾಲಿ;
+    uint8_t    *ದತ್ತಾಂಶ = ಖಾಲಿ;
 
-    data = av_malloc(size);
-    if (!data)
-        return NULL;
+    ದತ್ತಾಂಶ = av_malloc(ಗಾತ್ರ_2);
+    ಆದರೆ (!ದತ್ತಾಂಶ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    ret = av_buffer_create(data, size, av_buffer_default_free, NULL, 0);
-    if (!ret)
-        av_freep(&data);
+    ret = av_ಬಫರ್_create(ದತ್ತಾಂಶ, ಗಾತ್ರ_2, av_ಬಫರ್_default_free, ಖಾಲಿ, 0);
+    ಆದರೆ (!ret)
+        av_freep(&ದತ್ತಾಂಶ);
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-AVBufferRef *av_buffer_allocz(size_t size)
+AVBufferRef *av_ಬಫರ್_allocz(size_t ಗಾತ್ರ_2)
 {
-    AVBufferRef *ret = av_buffer_alloc(size);
-    if (!ret)
-        return NULL;
+    AVBufferRef *ret = av_ಬಫರ್_alloc(ಗಾತ್ರ_2);
+    ಆದರೆ (!ret)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    memset(ret->data, 0, size);
-    return ret;
+    memset(ret->ದತ್ತಾಂಶ, 0, ಗಾತ್ರ_2);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-AVBufferRef *av_buffer_ref(const AVBufferRef *buf)
+AVBufferRef *av_ಬಫರ್_ref(ಸ್ಥಿರಾಂಕ AVBufferRef *buf)
 {
-    AVBufferRef *ret = av_mallocz(sizeof(*ret));
+    AVBufferRef *ret = av_mallocz(ಗಾತ್ರ(*ret));
 
-    if (!ret)
-        return NULL;
+    ಆದರೆ (!ret)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
     *ret = *buf;
 
-    atomic_fetch_add_explicit(&buf->buffer->refcount, 1, memory_order_relaxed);
+    atomic_fetch_add_explicit(&buf->ಬಫರ್->refcount, 1, memory_order_relaxed);
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static void buffer_replace(AVBufferRef **dst, AVBufferRef **src)
+ಸ್ಥಿರ ಶೂನ್ಯ ಬಫರ್_replace(AVBufferRef **dst, AVBufferRef **src)
 {
     AVBuffer *b;
 
-    b = (*dst)->buffer;
+    b = (*dst)->ಬಫರ್;
 
-    if (src) {
+    ಆದರೆ (src) {
         **dst = **src;
         av_freep(src);
-    } else
+    } ಇಲ್ಲದಿದ್ದರೆ
         av_freep(dst);
 
-    if (atomic_fetch_sub_explicit(&b->refcount, 1, memory_order_acq_rel) == 1) {
+    ಆದರೆ (atomic_fetch_sub_explicit(&b->refcount, 1, memory_order_acq_rel) == 1) {
         /* b->free below might already free the structure containing *b,
          * so we have to read the flag now to avoid use-after-free. */
-        int free_avbuffer = !(b->flags_internal & BUFFER_FLAG_NO_FREE);
-        b->free(b->opaque, b->data);
-        if (free_avbuffer)
+        ಪೂರ್ಣಾಂಕ free_avbuffer = !(b->flags_ಆಂತರಿಕ & ಬಫರ್_FLAG_NO_FREE);
+        b->ಬಿಡುಗಡೆ(b->opaque, b->ದತ್ತಾಂಶ);
+        ಆದರೆ (free_avbuffer)
             av_free(b);
     }
 }
 
-void av_buffer_unref(AVBufferRef **buf)
+ಶೂನ್ಯ av_ಬಫರ್_unref(AVBufferRef **buf)
 {
-    if (!buf || !*buf)
-        return;
+    ಆದರೆ (!buf || !*buf)
+        ಹಿಂತಿರುಗಿ;
 
-    buffer_replace(buf, NULL);
+    ಬಫರ್_replace(buf, ಖಾಲಿ);
 }
 
-int av_buffer_is_writable(const AVBufferRef *buf)
+ಪೂರ್ಣಾಂಕ av_ಬಫರ್_is_writable(ಸ್ಥಿರಾಂಕ AVBufferRef *buf)
 {
-    if (buf->buffer->flags & AV_BUFFER_FLAG_READONLY)
-        return 0;
+    ಆದರೆ (buf->ಬಫರ್->flags & AV_ಬಫರ್_FLAG_READONLY)
+        ಹಿಂತಿರುಗಿ 0;
 
-    return atomic_load(&buf->buffer->refcount) == 1;
+    ಹಿಂತಿರುಗಿ atomic_load(&buf->ಬಫರ್->refcount) == 1;
 }
 
-void *av_buffer_get_opaque(const AVBufferRef *buf)
+ಶೂನ್ಯ *av_ಬಫರ್_get_opaque(ಸ್ಥಿರಾಂಕ AVBufferRef *buf)
 {
-    return buf->buffer->opaque;
+    ಹಿಂತಿರುಗಿ buf->ಬಫರ್->opaque;
 }
 
-int av_buffer_get_ref_count(const AVBufferRef *buf)
+ಪೂರ್ಣಾಂಕ av_ಬಫರ್_get_ref_ಎಣಿಕೆ(ಸ್ಥಿರಾಂಕ AVBufferRef *buf)
 {
-    return atomic_load(&buf->buffer->refcount);
+    ಹಿಂತಿರುಗಿ atomic_load(&buf->ಬಫರ್->refcount);
 }
 
-int av_buffer_make_writable(AVBufferRef **pbuf)
+ಪೂರ್ಣಾಂಕ av_ಬಫರ್_make_writable(AVBufferRef **pbuf)
 {
     AVBufferRef *newbuf, *buf = *pbuf;
 
-    if (av_buffer_is_writable(buf))
-        return 0;
+    ಆದರೆ (av_ಬಫರ್_is_writable(buf))
+        ಹಿಂತಿರುಗಿ 0;
 
-    newbuf = av_buffer_alloc(buf->size);
-    if (!newbuf)
-        return AVERROR(ENOMEM);
+    newbuf = av_ಬಫರ್_alloc(buf->ಗಾತ್ರ_2);
+    ಆದರೆ (!newbuf)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    memcpy(newbuf->data, buf->data, buf->size);
+    ಸ್ಮರಣೆ_ನಕಲು(newbuf->ದತ್ತಾಂಶ, buf->ದತ್ತಾಂಶ, buf->ಗಾತ್ರ_2);
 
-    buffer_replace(pbuf, &newbuf);
+    ಬಫರ್_replace(pbuf, &newbuf);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_buffer_realloc(AVBufferRef **pbuf, size_t size)
+ಪೂರ್ಣಾಂಕ av_ಬಫರ್_realloc(AVBufferRef **pbuf, size_t ಗಾತ್ರ_2)
 {
     AVBufferRef *buf = *pbuf;
     uint8_t *tmp;
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (!buf) {
+    ಆದರೆ (!buf) {
         /* allocate a new buffer with av_realloc(), so it will be reallocatable
          * later */
-        uint8_t *data = av_realloc(NULL, size);
-        if (!data)
-            return AVERROR(ENOMEM);
+        uint8_t *ದತ್ತಾಂಶ = av_realloc(ಖಾಲಿ, ಗಾತ್ರ_2);
+        ಆದರೆ (!ದತ್ತಾಂಶ)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-        buf = av_buffer_create(data, size, av_buffer_default_free, NULL, 0);
-        if (!buf) {
-            av_freep(&data);
-            return AVERROR(ENOMEM);
+        buf = av_ಬಫರ್_create(ದತ್ತಾಂಶ, ಗಾತ್ರ_2, av_ಬಫರ್_default_free, ಖಾಲಿ, 0);
+        ಆದರೆ (!buf) {
+            av_freep(&ದತ್ತಾಂಶ);
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
         }
 
-        buf->buffer->flags_internal |= BUFFER_FLAG_REALLOCATABLE;
+        buf->ಬಫರ್->flags_ಆಂತರಿಕ |= ಬಫರ್_FLAG_REALLOCATABLE;
         *pbuf = buf;
 
-        return 0;
-    } else if (buf->size == size)
-        return 0;
+        ಹಿಂತಿರುಗಿ 0;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (buf->ಗಾತ್ರ_2 == ಗಾತ್ರ_2)
+        ಹಿಂತಿರುಗಿ 0;
 
-    if (!(buf->buffer->flags_internal & BUFFER_FLAG_REALLOCATABLE) ||
-        !av_buffer_is_writable(buf) || buf->data != buf->buffer->data) {
+    ಆದರೆ (!(buf->ಬಫರ್->flags_ಆಂತರಿಕ & ಬಫರ್_FLAG_REALLOCATABLE) ||
+        !av_ಬಫರ್_is_writable(buf) || buf->ದತ್ತಾಂಶ != buf->ಬಫರ್->ದತ್ತಾಂಶ) {
         /* cannot realloc, allocate a new reallocable buffer and copy data */
-        AVBufferRef *new = NULL;
+        AVBufferRef *new = ಖಾಲಿ;
 
-        ret = av_buffer_realloc(&new, size);
-        if (ret < 0)
-            return ret;
+        ret = av_ಬಫರ್_realloc(&new, ಗಾತ್ರ_2);
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ ret;
 
-        memcpy(new->data, buf->data, FFMIN(size, buf->size));
+        ಸ್ಮರಣೆ_ನಕಲು(new->ದತ್ತಾಂಶ, buf->ದತ್ತಾಂಶ, FFMIN(ಗಾತ್ರ_2, buf->ಗಾತ್ರ_2));
 
-        buffer_replace(pbuf, &new);
-        return 0;
+        ಬಫರ್_replace(pbuf, &new);
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    tmp = av_realloc(buf->buffer->data, size);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    tmp = av_realloc(buf->ಬಫರ್->ದತ್ತಾಂಶ, ಗಾತ್ರ_2);
+    ಆದರೆ (!tmp)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    buf->buffer->data = buf->data = tmp;
-    buf->buffer->size = buf->size = size;
-    return 0;
+    buf->ಬಫರ್->ದತ್ತಾಂಶ = buf->ದತ್ತಾಂಶ = tmp;
+    buf->ಬಫರ್->ಗಾತ್ರ_2 = buf->ಗಾತ್ರ_2 = ಗಾತ್ರ_2;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_buffer_replace(AVBufferRef **pdst, const AVBufferRef *src)
+ಪೂರ್ಣಾಂಕ av_ಬಫರ್_replace(AVBufferRef **pdst, ಸ್ಥಿರಾಂಕ AVBufferRef *src)
 {
     AVBufferRef *dst = *pdst;
     AVBufferRef *tmp;
 
-    if (!src) {
-        av_buffer_unref(pdst);
-        return 0;
+    ಆದರೆ (!src) {
+        av_ಬಫರ್_unref(pdst);
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    if (dst && dst->buffer == src->buffer) {
+    ಆದರೆ (dst && dst->ಬಫರ್ == src->ಬಫರ್) {
         /* make sure the data pointers match */
-        dst->data = src->data;
-        dst->size = src->size;
-        return 0;
+        dst->ದತ್ತಾಂಶ = src->ದತ್ತಾಂಶ;
+        dst->ಗಾತ್ರ_2 = src->ಗಾತ್ರ_2;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    tmp = av_buffer_ref(src);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    tmp = av_ಬಫರ್_ref(src);
+    ಆದರೆ (!tmp)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    av_buffer_unref(pdst);
+    av_ಬಫರ್_unref(pdst);
     *pdst = tmp;
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-AVBufferPool *av_buffer_pool_init2(size_t size, void *opaque,
-                                   AVBufferRef* (*alloc)(void *opaque, size_t size),
-                                   void (*pool_free)(void *opaque))
+AVBufferPool *av_ಬಫರ್_pool_init2(size_t ಗಾತ್ರ_2, ಶೂನ್ಯ *opaque,
+                                   AVBufferRef* (*alloc)(ಶೂನ್ಯ *opaque, size_t ಗಾತ್ರ_2),
+                                   ಶೂನ್ಯ (*pool_free)(ಶೂನ್ಯ *opaque))
 {
-    AVBufferPool *pool = av_mallocz(sizeof(*pool));
-    if (!pool)
-        return NULL;
+    AVBufferPool *pool = av_mallocz(ಗಾತ್ರ(*pool));
+    ಆದರೆ (!pool)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    if (ff_mutex_init(&pool->mutex, NULL)) {
+    ಆದರೆ (ff_mutex_init(&pool->mutex, ಖಾಲಿ)) {
         av_free(pool);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    pool->size      = size;
+    pool->ಗಾತ್ರ_2      = ಗಾತ್ರ_2;
     pool->opaque    = opaque;
     pool->alloc2    = alloc;
-    pool->alloc     = av_buffer_alloc; // fallback
+    pool->alloc     = av_ಬಫರ್_alloc; // fallback
     pool->pool_free = pool_free;
 
     atomic_init(&pool->refcount, 1);
 
-    return pool;
+    ಹಿಂತಿರುಗಿ pool;
 }
 
-AVBufferPool *av_buffer_pool_init(size_t size, AVBufferRef* (*alloc)(size_t size))
+AVBufferPool *av_ಬಫರ್_pool_init(size_t ಗಾತ್ರ_2, AVBufferRef* (*alloc)(size_t ಗಾತ್ರ_2))
 {
-    AVBufferPool *pool = av_mallocz(sizeof(*pool));
-    if (!pool)
-        return NULL;
+    AVBufferPool *pool = av_mallocz(ಗಾತ್ರ(*pool));
+    ಆದರೆ (!pool)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    if (ff_mutex_init(&pool->mutex, NULL)) {
+    ಆದರೆ (ff_mutex_init(&pool->mutex, ಖಾಲಿ)) {
         av_free(pool);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    pool->size     = size;
-    pool->alloc    = alloc ? alloc : av_buffer_alloc;
+    pool->ಗಾತ್ರ_2     = ಗಾತ್ರ_2;
+    pool->alloc    = alloc ? alloc : av_ಬಫರ್_alloc;
 
     atomic_init(&pool->refcount, 1);
 
-    return pool;
+    ಹಿಂತಿರುಗಿ pool;
 }
 
-static void buffer_pool_flush(AVBufferPool *pool)
+ಸ್ಥಿರ ಶೂನ್ಯ ಬಫರ್_pool_flush(AVBufferPool *pool)
 {
-    while (pool->pool) {
-        BufferPoolEntry *buf = pool->pool;
-        pool->pool = buf->next;
+    ಆಗ (pool->pool) {
+        ಬಫರ್_Pool_ನಮೂದು *buf = pool->pool;
+        pool->pool = buf->ಮುಂದಿನ;
 
-        if (buf->free == av_buffer_default_free)
-            FF_ASAN_UNPOISON(buf->data, pool->size);
-        buf->free(buf->opaque, buf->data);
+        ಆದರೆ (buf->ಬಿಡುಗಡೆ == av_ಬಫರ್_default_free)
+            FF_ASAN_UNPOISON(buf->ದತ್ತಾಂಶ, pool->ಗಾತ್ರ_2);
+        buf->ಬಿಡುಗಡೆ(buf->opaque, buf->ದತ್ತಾಂಶ);
         av_freep(&buf);
     }
 }
@@ -317,120 +317,120 @@ static void buffer_pool_flush(AVBufferPool *pool)
  * This function gets called when the pool has been uninited and
  * all the buffers returned to it.
  */
-static void buffer_pool_free(AVBufferPool *pool)
+ಸ್ಥಿರ ಶೂನ್ಯ ಬಫರ್_pool_free(AVBufferPool *pool)
 {
-    buffer_pool_flush(pool);
+    ಬಫರ್_pool_flush(pool);
     ff_mutex_destroy(&pool->mutex);
 
-    if (pool->pool_free)
+    ಆದರೆ (pool->pool_free)
         pool->pool_free(pool->opaque);
 
     av_freep(&pool);
 }
 
-void av_buffer_pool_uninit(AVBufferPool **ppool)
+ಶೂನ್ಯ av_ಬಫರ್_pool_uninit(AVBufferPool **ppool)
 {
     AVBufferPool *pool;
 
-    if (!ppool || !*ppool)
-        return;
+    ಆದರೆ (!ppool || !*ppool)
+        ಹಿಂತಿರುಗಿ;
     pool   = *ppool;
-    *ppool = NULL;
+    *ppool = ಖಾಲಿ;
 
-    ff_mutex_lock(&pool->mutex);
-    buffer_pool_flush(pool);
+    ff_mutex_ಬೀಗ(&pool->mutex);
+    ಬಫರ್_pool_flush(pool);
     ff_mutex_unlock(&pool->mutex);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
-        buffer_pool_free(pool);
+    ಆದರೆ (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+        ಬಫರ್_pool_free(pool);
 }
 
-static void pool_release_buffer(void *opaque, uint8_t *data)
+ಸ್ಥಿರ ಶೂನ್ಯ pool_release_ಬಫರ್(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ)
 {
-    BufferPoolEntry *buf = opaque;
+    ಬಫರ್_Pool_ನಮೂದು *buf = opaque;
     AVBufferPool *pool = buf->pool;
 
-    if (buf->free == av_buffer_default_free)
-        FF_ASAN_POISON(buf->data, pool->size);
+    ಆದರೆ (buf->ಬಿಡುಗಡೆ == av_ಬಫರ್_default_free)
+        FF_ASAN_POISON(buf->ದತ್ತಾಂಶ, pool->ಗಾತ್ರ_2);
 
-    ff_mutex_lock(&pool->mutex);
-    buf->next = pool->pool;
+    ff_mutex_ಬೀಗ(&pool->mutex);
+    buf->ಮುಂದಿನ = pool->pool;
     pool->pool = buf;
     ff_mutex_unlock(&pool->mutex);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
-        buffer_pool_free(pool);
+    ಆದರೆ (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+        ಬಫರ್_pool_free(pool);
 }
 
 /* allocate a new buffer and override its free() callback so that
  * it is returned to the pool on free */
-static AVBufferRef *pool_alloc_buffer(AVBufferPool *pool)
+ಸ್ಥಿರ AVBufferRef *pool_alloc_ಬಫರ್(AVBufferPool *pool)
 {
-    BufferPoolEntry *buf;
+    ಬಫರ್_Pool_ನಮೂದು *buf;
     AVBufferRef     *ret;
 
     av_assert0(pool->alloc || pool->alloc2);
 
-    ret = pool->alloc2 ? pool->alloc2(pool->opaque, pool->size) :
-                         pool->alloc(pool->size);
-    if (!ret)
-        return NULL;
+    ret = pool->alloc2 ? pool->alloc2(pool->opaque, pool->ಗಾತ್ರ_2) :
+                         pool->alloc(pool->ಗಾತ್ರ_2);
+    ಆದರೆ (!ret)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    buf = av_mallocz(sizeof(*buf));
-    if (!buf) {
-        av_buffer_unref(&ret);
-        return NULL;
+    buf = av_mallocz(ಗಾತ್ರ(*buf));
+    ಆದರೆ (!buf) {
+        av_ಬಫರ್_unref(&ret);
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    buf->data   = ret->buffer->data;
-    buf->opaque = ret->buffer->opaque;
-    buf->free   = ret->buffer->free;
+    buf->ದತ್ತಾಂಶ   = ret->ಬಫರ್->ದತ್ತಾಂಶ;
+    buf->opaque = ret->ಬಫರ್->opaque;
+    buf->ಬಿಡುಗಡೆ   = ret->ಬಫರ್->ಬಿಡುಗಡೆ;
     buf->pool   = pool;
 
-    ret->buffer->opaque = buf;
-    ret->buffer->free   = pool_release_buffer;
+    ret->ಬಫರ್->opaque = buf;
+    ret->ಬಫರ್->ಬಿಡುಗಡೆ   = pool_release_ಬಫರ್;
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-AVBufferRef *av_buffer_pool_get(AVBufferPool *pool)
+AVBufferRef *av_ಬಫರ್_pool_get(AVBufferPool *pool)
 {
     AVBufferRef *ret;
-    BufferPoolEntry *buf;
+    ಬಫರ್_Pool_ನಮೂದು *buf;
 
-    ff_mutex_lock(&pool->mutex);
+    ff_mutex_ಬೀಗ(&pool->mutex);
     buf = pool->pool;
-    if (buf) {
-        memset(&buf->buffer, 0, sizeof(buf->buffer));
-        ret = buffer_create(&buf->buffer, buf->data, pool->size,
-                            pool_release_buffer, buf, 0);
-        if (ret) {
-            pool->pool = buf->next;
-            buf->next = NULL;
-            buf->buffer.flags_internal |= BUFFER_FLAG_NO_FREE;
-            if (buf->free == av_buffer_default_free) {
-                FF_ASAN_UNPOISON(buf->data, pool->size);
+    ಆದರೆ (buf) {
+        memset(&buf->ಬಫರ್, 0, ಗಾತ್ರ(buf->ಬಫರ್));
+        ret = ಬಫರ್_create(&buf->ಬಫರ್, buf->ದತ್ತಾಂಶ, pool->ಗಾತ್ರ_2,
+                            pool_release_ಬಫರ್, buf, 0);
+        ಆದರೆ (ret) {
+            pool->pool = buf->ಮುಂದಿನ;
+            buf->ಮುಂದಿನ = ಖಾಲಿ;
+            buf->ಬಫರ್.flags_ಆಂತರಿಕ |= ಬಫರ್_FLAG_NO_FREE;
+            ಆದರೆ (buf->ಬಿಡುಗಡೆ == av_ಬಫರ್_default_free) {
+                FF_ASAN_UNPOISON(buf->ದತ್ತಾಂಶ, pool->ಗಾತ್ರ_2);
                 /* A pool that zeroes its buffers may be relied upon for never
                  * written regions staying zero, so only mark a reused buffer
                  * undefined when nothing was ever promised about its contents. */
-                if (!pool->alloc2 && pool->alloc == av_buffer_alloc)
-                    FF_MEM_UNDEFINED(buf->data, pool->size);
+                ಆದರೆ (!pool->alloc2 && pool->alloc == av_ಬಫರ್_alloc)
+                    FF_MEM_UNDEFINED(buf->ದತ್ತಾಂಶ, pool->ಗಾತ್ರ_2);
             }
         }
-    } else {
-        ret = pool_alloc_buffer(pool);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ret = pool_alloc_ಬಫರ್(pool);
     }
     ff_mutex_unlock(&pool->mutex);
 
-    if (ret)
+    ಆದರೆ (ret)
         atomic_fetch_add_explicit(&pool->refcount, 1, memory_order_relaxed);
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-void *av_buffer_pool_buffer_get_opaque(const AVBufferRef *ref)
+ಶೂನ್ಯ *av_ಬಫರ್_pool_ಬಫರ್_get_opaque(ಸ್ಥಿರಾಂಕ AVBufferRef *ref)
 {
-    BufferPoolEntry *buf = ref->buffer->opaque;
+    ಬಫರ್_Pool_ನಮೂದು *buf = ref->ಬಫರ್->opaque;
     av_assert0(buf);
-    return buf->opaque;
+    ಹಿಂತಿರುಗಿ buf->opaque;
 }

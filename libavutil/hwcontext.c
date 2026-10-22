@@ -16,67 +16,67 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#include "avassert.h"
-#include "buffer.h"
-#include "common.h"
-#include "frame_internal.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "log.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "buffer.h"
+#ಅನ್ತರ್ಭಾವ "common.h"
+#ಅನ್ತರ್ಭಾವ "frame_internal.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext_internal.h"
+#ಅನ್ತರ್ಭಾವ "imgutils.h"
+#ಅನ್ತರ್ಭಾವ "log.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "pixdesc.h"
+#ಅನ್ತರ್ಭಾವ "pixfmt.h"
 
-static const HWContextType * const hw_table[] = {
-#if CONFIG_CUDA
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ HWContextType * ಸ್ಥಿರಾಂಕ hw_ಕೋಷ್ಟಕ[] = {
+#ಆದರೆ CONFIG_CUDA
     &ff_hwcontext_type_cuda,
-#endif
-#if CONFIG_D3D11VA
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_D3D11VA
     &ff_hwcontext_type_d3d11va,
-#endif
-#if CONFIG_D3D12VA
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_D3D12VA
     &ff_hwcontext_type_d3d12va,
-#endif
-#if CONFIG_LIBDRM
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_LIBDRM
     &ff_hwcontext_type_drm,
-#endif
-#if CONFIG_DXVA2
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_DXVA2
     &ff_hwcontext_type_dxva2,
-#endif
-#if CONFIG_OPENCL
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_OPENCL
     &ff_hwcontext_type_opencl,
-#endif
-#if CONFIG_QSV
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_QSV
     &ff_hwcontext_type_qsv,
-#endif
-#if CONFIG_VAAPI
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_VAAPI
     &ff_hwcontext_type_vaapi,
-#endif
-#if CONFIG_VDPAU
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_VDPAU
     &ff_hwcontext_type_vdpau,
-#endif
-#if CONFIG_VIDEOTOOLBOX
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_VIDEOTOOLBOX
     &ff_hwcontext_type_videotoolbox,
-#endif
-#if CONFIG_MEDIACODEC
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_MEDIACODEC
     &ff_hwcontext_type_mediacodec,
-#endif
-#if CONFIG_VULKAN
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_VULKAN
     &ff_hwcontext_type_vulkan,
-#endif
-#if CONFIG_AMF
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_AMF
     &ff_hwcontext_type_amf,
-#endif
-#if CONFIG_OHCODEC
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ CONFIG_OHCODEC
     &ff_hwcontext_type_oh,
-#endif
-    NULL,
+#ಆದರೆ_ಅಂತ್ಯ
+    ಖಾಲಿ,
 };
 
-static const char *const hw_type_names[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ hw_type_ಹೆಸರುಗಳು[] = {
     [AV_HWDEVICE_TYPE_CUDA]   = "cuda",
     [AV_HWDEVICE_TYPE_DRM]    = "drm",
     [AV_HWDEVICE_TYPE_DXVA2]  = "dxva2",
@@ -93,210 +93,210 @@ static const char *const hw_type_names[] = {
     [AV_HWDEVICE_TYPE_OHCODEC] = "ohcodec",
 };
 
-typedef struct FFHWDeviceContext {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ FFHWDeviceContext {
     /**
      * The public AVHWDeviceContext. See hwcontext.h for it.
      */
     AVHWDeviceContext p;
 
-    const HWContextType *hw_type;
+    ಸ್ಥಿರಾಂಕ HWContextType *hw_type;
 
     /**
      * For a derived device, a reference to the original device
      * context it was derived from.
      */
-    AVBufferRef *source_device;
+    AVBufferRef *ಮೂಲ_device;
 } FFHWDeviceContext;
 
-enum AVHWDeviceType av_hwdevice_find_type_by_name(const char *name)
+ಎಣಿಕೆ AVHWDeviceType av_hwdevice_ಕಂಡುಹಿಡಿ_type_by_name(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name)
 {
-    int type;
-    for (type = 0; type < FF_ARRAY_ELEMS(hw_type_names); type++) {
-        if (hw_type_names[type] && !strcmp(hw_type_names[type], name))
-            return type;
+    ಪೂರ್ಣಾಂಕ type;
+    ಗಾಗಿ (type = 0; type < FF_ARRAY_ELEMS(hw_type_ಹೆಸರುಗಳು); type++) {
+        ಆದರೆ (hw_type_ಹೆಸರುಗಳು[type] && !strcmp(hw_type_ಹೆಸರುಗಳು[type], name))
+            ಹಿಂತಿರುಗಿ type;
     }
-    return AV_HWDEVICE_TYPE_NONE;
+    ಹಿಂತಿರುಗಿ AV_HWDEVICE_TYPE_NONE;
 }
 
-const char *av_hwdevice_get_type_name(enum AVHWDeviceType type)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_hwdevice_get_type_name(ಎಣಿಕೆ AVHWDeviceType type)
 {
-    if (type > AV_HWDEVICE_TYPE_NONE &&
-        type < FF_ARRAY_ELEMS(hw_type_names))
-        return hw_type_names[type];
-    else
-        return NULL;
+    ಆದರೆ (type > AV_HWDEVICE_TYPE_NONE &&
+        type < FF_ARRAY_ELEMS(hw_type_ಹೆಸರುಗಳು))
+        ಹಿಂತಿರುಗಿ hw_type_ಹೆಸರುಗಳು[type];
+    ಇಲ್ಲದಿದ್ದರೆ
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-enum AVHWDeviceType av_hwdevice_iterate_types(enum AVHWDeviceType prev)
+ಎಣಿಕೆ AVHWDeviceType av_hwdevice_iterate_types(ಎಣಿಕೆ AVHWDeviceType prev)
 {
-    enum AVHWDeviceType next;
-    int i, set = 0;
-    for (i = 0; hw_table[i]; i++) {
-        if (prev != AV_HWDEVICE_TYPE_NONE && hw_table[i]->type <= prev)
-            continue;
-        if (!set || hw_table[i]->type < next) {
-            next = hw_table[i]->type;
-            set = 1;
+    ಎಣಿಕೆ AVHWDeviceType ಮುಂದಿನ;
+    ಪೂರ್ಣಾಂಕ i, ಗಣ = 0;
+    ಗಾಗಿ (i = 0; hw_ಕೋಷ್ಟಕ[i]; i++) {
+        ಆದರೆ (prev != AV_HWDEVICE_TYPE_NONE && hw_ಕೋಷ್ಟಕ[i]->type <= prev)
+            ಮುಂದುವರಿ;
+        ಆದರೆ (!ಗಣ || hw_ಕೋಷ್ಟಕ[i]->type < ಮುಂದಿನ) {
+            ಮುಂದಿನ = hw_ಕೋಷ್ಟಕ[i]->type;
+            ಗಣ = 1;
         }
     }
-    return set ? next : AV_HWDEVICE_TYPE_NONE;
+    ಹಿಂತಿರುಗಿ ಗಣ ? ಮುಂದಿನ : AV_HWDEVICE_TYPE_NONE;
 }
 
-static const char *hwdevice_ctx_get_name(void *ptr)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *hwdevice_ctx_get_name(ಶೂನ್ಯ *ptr)
 {
     FFHWDeviceContext *ctx = ptr;
-    return ctx->hw_type->name;
+    ಹಿಂತಿರುಗಿ ctx->hw_type->name;
 }
 
-static const AVClass hwdevice_ctx_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass hwdevice_ctx_class = {
     .class_name = "AVHWDeviceContext",
-    .item_name  = hwdevice_ctx_get_name,
+    .ಅಂಶ_name  = hwdevice_ctx_get_name,
     .category   = AV_CLASS_CATEGORY_HWDEVICE,
-    .version    = LIBAVUTIL_VERSION_INT,
+    .ಆವೃತ್ತಿ    = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
 };
 
-static void hwdevice_ctx_free(void *opaque, uint8_t *data)
+ಸ್ಥಿರ ಶೂನ್ಯ hwdevice_ctx_free(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ)
 {
-    FFHWDeviceContext *ctxi = (FFHWDeviceContext*)data;
+    FFHWDeviceContext *ctxi = (FFHWDeviceContext*)ದತ್ತಾಂಶ;
     AVHWDeviceContext *ctx  = &ctxi->p;
 
     /* uninit might still want access the hw context and the user
      * free() callback might destroy it, so uninit has to be called first */
-    if (ctxi->hw_type->device_uninit)
+    ಆದರೆ (ctxi->hw_type->device_uninit)
         ctxi->hw_type->device_uninit(ctx);
 
-    if (ctx->free)
-        ctx->free(ctx);
+    ಆದರೆ (ctx->ಬಿಡುಗಡೆ)
+        ctx->ಬಿಡುಗಡೆ(ctx);
 
-    av_buffer_unref(&ctxi->source_device);
+    av_ಬಫರ್_unref(&ctxi->ಮೂಲ_device);
 
     av_freep(&ctx->hwctx);
     av_freep(&ctx);
 }
 
-AVBufferRef *av_hwdevice_ctx_alloc(enum AVHWDeviceType type)
+AVBufferRef *av_hwdevice_ctx_alloc(ಎಣಿಕೆ AVHWDeviceType type)
 {
     FFHWDeviceContext *ctxi;
     AVHWDeviceContext *ctx;
     AVBufferRef *buf;
-    const HWContextType *hw_type = NULL;
-    int i;
+    ಸ್ಥಿರಾಂಕ HWContextType *hw_type = ಖಾಲಿ;
+    ಪೂರ್ಣಾಂಕ i;
 
-    for (i = 0; hw_table[i]; i++) {
-        if (hw_table[i]->type == type) {
-            hw_type = hw_table[i];
-            break;
+    ಗಾಗಿ (i = 0; hw_ಕೋಷ್ಟಕ[i]; i++) {
+        ಆದರೆ (hw_ಕೋಷ್ಟಕ[i]->type == type) {
+            hw_type = hw_ಕೋಷ್ಟಕ[i];
+            ನಿಲ್ಲಿಸು;
         }
     }
-    if (!hw_type)
-        return NULL;
+    ಆದರೆ (!hw_type)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    ctxi = av_mallocz(sizeof(*ctxi));
-    if (!ctxi)
-        return NULL;
+    ctxi = av_mallocz(ಗಾತ್ರ(*ctxi));
+    ಆದರೆ (!ctxi)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     ctx = &ctxi->p;
 
-    if (hw_type->device_hwctx_size) {
-        ctx->hwctx = av_mallocz(hw_type->device_hwctx_size);
-        if (!ctx->hwctx)
-            goto fail;
+    ಆದರೆ (hw_type->device_hwctx_ಗಾತ್ರ) {
+        ctx->hwctx = av_mallocz(hw_type->device_hwctx_ಗಾತ್ರ);
+        ಆದರೆ (!ctx->hwctx)
+            ಹೋಗು fail;
     }
 
-    buf = av_buffer_create((uint8_t*)ctx, sizeof(*ctx),
-                           hwdevice_ctx_free, NULL,
-                           AV_BUFFER_FLAG_READONLY);
-    if (!buf)
-        goto fail;
+    buf = av_ಬಫರ್_create((uint8_t*)ctx, ಗಾತ್ರ(*ctx),
+                           hwdevice_ctx_free, ಖಾಲಿ,
+                           AV_ಬಫರ್_FLAG_READONLY);
+    ಆದರೆ (!buf)
+        ಹೋಗು fail;
 
     ctx->type     = type;
     ctx->av_class = &hwdevice_ctx_class;
 
     ctxi->hw_type = hw_type;
 
-    return buf;
+    ಹಿಂತಿರುಗಿ buf;
 
 fail:
     av_freep(&ctx->hwctx);
     av_freep(&ctx);
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-int av_hwdevice_ctx_init(AVBufferRef *ref)
+ಪೂರ್ಣಾಂಕ av_hwdevice_ctx_init(AVBufferRef *ref)
 {
-    FFHWDeviceContext *ctxi = (FFHWDeviceContext*)ref->data;
+    FFHWDeviceContext *ctxi = (FFHWDeviceContext*)ref->ದತ್ತಾಂಶ;
     AVHWDeviceContext *ctx  = &ctxi->p;
-    int ret = 0;
+    ಪೂರ್ಣಾಂಕ ret = 0;
 
-    if (ctxi->hw_type->device_init)
+    ಆದರೆ (ctxi->hw_type->device_init)
         ret = ctxi->hw_type->device_init(ctx);
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static const AVClass hwframe_ctx_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass hwframe_ctx_class = {
     .class_name = "AVHWFramesContext",
-    .item_name  = av_default_item_name,
-    .version    = LIBAVUTIL_VERSION_INT,
+    .ಅಂಶ_name  = av_default_ಅಂಶ_name,
+    .ಆವೃತ್ತಿ    = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
 };
 
-static void hwframe_ctx_free(void *opaque, uint8_t *data)
+ಸ್ಥಿರ ಶೂನ್ಯ hwframe_ctx_free(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ)
 {
-    FFHWFramesContext *ctxi = (FFHWFramesContext*)data;
+    FFHWFramesContext *ctxi = (FFHWFramesContext*)ದತ್ತಾಂಶ;
     AVHWFramesContext *ctx  = &ctxi->p;
 
-    if (ctxi->pool_internal)
-        av_buffer_pool_uninit(&ctxi->pool_internal);
+    ಆದರೆ (ctxi->pool_ಆಂತರಿಕ)
+        av_ಬಫರ್_pool_uninit(&ctxi->pool_ಆಂತರಿಕ);
 
-    av_buffer_pool_uninit(&ctxi->transfer_pool);
-    ff_mutex_destroy(&ctxi->transfer_pool_lock);
+    av_ಬಫರ್_pool_uninit(&ctxi->transfer_pool);
+    ff_mutex_destroy(&ctxi->transfer_pool_ಬೀಗ);
 
-    if (ctxi->hw_type->frames_uninit)
-        ctxi->hw_type->frames_uninit(ctx);
+    ಆದರೆ (ctxi->hw_type->ಚೌಕಟ್ಟುಗಳು_uninit)
+        ctxi->hw_type->ಚೌಕಟ್ಟುಗಳು_uninit(ctx);
 
-    if (ctx->free)
-        ctx->free(ctx);
+    ಆದರೆ (ctx->ಬಿಡುಗಡೆ)
+        ctx->ಬಿಡುಗಡೆ(ctx);
 
-    av_buffer_unref(&ctxi->source_frames);
+    av_ಬಫರ್_unref(&ctxi->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು);
 
-    av_buffer_unref(&ctx->device_ref);
+    av_ಬಫರ್_unref(&ctx->device_ref);
 
     av_freep(&ctx->hwctx);
     av_freep(&ctx);
 }
 
-AVBufferRef *av_hwframe_ctx_alloc(AVBufferRef *device_ref_in)
+AVBufferRef *av_hwframe_ctx_alloc(AVBufferRef *device_ref_ಒಳ)
 {
-    FFHWDeviceContext *device_ctx = (FFHWDeviceContext*)device_ref_in->data;
-    const HWContextType  *hw_type = device_ctx->hw_type;
+    FFHWDeviceContext *device_ctx = (FFHWDeviceContext*)device_ref_ಒಳ->ದತ್ತಾಂಶ;
+    ಸ್ಥಿರಾಂಕ HWContextType  *hw_type = device_ctx->hw_type;
     FFHWFramesContext *ctxi;
     AVHWFramesContext *ctx;
-    AVBufferRef *buf, *device_ref = NULL;
+    AVBufferRef *buf, *device_ref = ಖಾಲಿ;
 
-    ctxi = av_mallocz(sizeof(*ctxi));
-    if (!ctxi)
-        return NULL;
+    ctxi = av_mallocz(ಗಾತ್ರ(*ctxi));
+    ಆದರೆ (!ctxi)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     ctx  = &ctxi->p;
 
-    if (ff_mutex_init(&ctxi->transfer_pool_lock, NULL)) {
+    ಆದರೆ (ff_mutex_init(&ctxi->transfer_pool_ಬೀಗ, ಖಾಲಿ)) {
         av_free(ctxi);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    if (hw_type->frames_hwctx_size) {
-        ctx->hwctx = av_mallocz(hw_type->frames_hwctx_size);
-        if (!ctx->hwctx)
-            goto fail;
+    ಆದರೆ (hw_type->ಚೌಕಟ್ಟುಗಳು_hwctx_ಗಾತ್ರ) {
+        ctx->hwctx = av_mallocz(hw_type->ಚೌಕಟ್ಟುಗಳು_hwctx_ಗಾತ್ರ);
+        ಆದರೆ (!ctx->hwctx)
+            ಹೋಗು fail;
     }
 
-    device_ref = av_buffer_ref(device_ref_in);
-    if (!device_ref)
-        goto fail;
+    device_ref = av_ಬಫರ್_ref(device_ref_ಒಳ);
+    ಆದರೆ (!device_ref)
+        ಹೋಗು fail;
 
-    buf = av_buffer_create((uint8_t*)ctx, sizeof(*ctx),
-                           hwframe_ctx_free, NULL,
-                           AV_BUFFER_FLAG_READONLY);
-    if (!buf)
-        goto fail;
+    buf = av_ಬಫರ್_create((uint8_t*)ctx, ಗಾತ್ರ(*ctx),
+                           hwframe_ctx_free, ಖಾಲಿ,
+                           AV_ಬಫರ್_FLAG_READONLY);
+    ಆದರೆ (!buf)
+        ಹೋಗು fail;
 
     ctx->av_class   = &hwframe_ctx_class;
     ctx->device_ref = device_ref;
@@ -306,201 +306,201 @@ AVBufferRef *av_hwframe_ctx_alloc(AVBufferRef *device_ref_in)
 
     ctxi->hw_type = hw_type;
 
-    return buf;
+    ಹಿಂತಿರುಗಿ buf;
 
 fail:
-    av_buffer_unref(&device_ref);
-    ff_mutex_destroy(&ctxi->transfer_pool_lock);
+    av_ಬಫರ್_unref(&device_ref);
+    ff_mutex_destroy(&ctxi->transfer_pool_ಬೀಗ);
     av_freep(&ctx->hwctx);
     av_freep(&ctx);
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-static int hwframe_pool_prealloc(AVBufferRef *ref)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ hwframe_pool_prealloc(AVBufferRef *ref)
 {
-    AVHWFramesContext *ctx = (AVHWFramesContext*)ref->data;
-    AVFrame **frames;
-    int i, ret = 0;
+    AVHWFramesContext *ctx = (AVHWFramesContext*)ref->ದತ್ತಾಂಶ;
+    AVFrame **ಚೌಕಟ್ಟುಗಳು;
+    ಪೂರ್ಣಾಂಕ i, ret = 0;
 
-    frames = av_calloc(ctx->initial_pool_size, sizeof(*frames));
-    if (!frames)
-        return AVERROR(ENOMEM);
+    ಚೌಕಟ್ಟುಗಳು = av_calloc(ctx->initial_pool_ಗಾತ್ರ, ಗಾತ್ರ(*ಚೌಕಟ್ಟುಗಳು));
+    ಆದರೆ (!ಚೌಕಟ್ಟುಗಳು)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    for (i = 0; i < ctx->initial_pool_size; i++) {
-        frames[i] = av_frame_alloc();
-        if (!frames[i])
-            goto fail;
+    ಗಾಗಿ (i = 0; i < ctx->initial_pool_ಗಾತ್ರ; i++) {
+        ಚೌಕಟ್ಟುಗಳು[i] = av_ಚೌಕಟ್ಟು_alloc();
+        ಆದರೆ (!ಚೌಕಟ್ಟುಗಳು[i])
+            ಹೋಗು fail;
 
-        ret = av_hwframe_get_buffer(ref, frames[i], 0);
-        if (ret < 0)
-            goto fail;
+        ret = av_hwframe_get_ಬಫರ್(ref, ಚೌಕಟ್ಟುಗಳು[i], 0);
+        ಆದರೆ (ret < 0)
+            ಹೋಗು fail;
     }
 
 fail:
-    for (i = 0; i < ctx->initial_pool_size; i++)
-        av_frame_free(&frames[i]);
-    av_freep(&frames);
+    ಗಾಗಿ (i = 0; i < ctx->initial_pool_ಗಾತ್ರ; i++)
+        av_ಚೌಕಟ್ಟು_free(&ಚೌಕಟ್ಟುಗಳು[i]);
+    av_freep(&ಚೌಕಟ್ಟುಗಳು);
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int av_hwframe_ctx_init(AVBufferRef *ref)
+ಪೂರ್ಣಾಂಕ av_hwframe_ctx_init(AVBufferRef *ref)
 {
-    FFHWFramesContext *ctxi = (FFHWFramesContext*)ref->data;
+    FFHWFramesContext *ctxi = (FFHWFramesContext*)ref->ದತ್ತಾಂಶ;
     AVHWFramesContext *ctx  = &ctxi->p;
-    const enum AVPixelFormat *pix_fmt;
-    int ret;
+    ಸ್ಥಿರಾಂಕ ಎಣಿಕೆ AVPixelFormat *pix_fmt;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (ctxi->source_frames) {
+    ಆದರೆ (ctxi->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು) {
         /* A derived frame context is already initialised. */
-        return 0;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* validate the pixel format */
-    for (pix_fmt = ctxi->hw_type->pix_fmts; *pix_fmt != AV_PIX_FMT_NONE; pix_fmt++) {
-        if (*pix_fmt == ctx->format)
-            break;
+    ಗಾಗಿ (pix_fmt = ctxi->hw_type->pix_fmts; *pix_fmt != AV_PIX_FMT_NONE; pix_fmt++) {
+        ಆದರೆ (*pix_fmt == ctx->format)
+            ನಿಲ್ಲಿಸು;
     }
-    if (*pix_fmt == AV_PIX_FMT_NONE) {
+    ಆದರೆ (*pix_fmt == AV_PIX_FMT_NONE) {
         av_log(ctx, AV_LOG_ERROR,
                "The hardware pixel format '%s' is not supported by the device type '%s'\n",
                av_get_pix_fmt_name(ctx->format), ctxi->hw_type->name);
-        return AVERROR(ENOSYS);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
     }
 
     /* validate the dimensions */
-    ret = av_image_check_size(ctx->width, ctx->height, 0, ctx);
-    if (ret < 0)
-        return ret;
+    ret = av_image_check_ಗಾತ್ರ(ctx->ಅಗಲ, ctx->ಎತ್ತರ, 0, ctx);
+    ಆದರೆ (ret < 0)
+        ಹಿಂತಿರುಗಿ ret;
 
     /* format-specific init */
-    if (ctxi->hw_type->frames_init) {
-        ret = ctxi->hw_type->frames_init(ctx);
-        if (ret < 0)
-            return ret;
+    ಆದರೆ (ctxi->hw_type->ಚೌಕಟ್ಟುಗಳು_init) {
+        ret = ctxi->hw_type->ಚೌಕಟ್ಟುಗಳು_init(ctx);
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ ret;
     }
 
-    if (ctxi->pool_internal && !ctx->pool)
-        ctx->pool = ctxi->pool_internal;
+    ಆದರೆ (ctxi->pool_ಆಂತರಿಕ && !ctx->pool)
+        ctx->pool = ctxi->pool_ಆಂತರಿಕ;
 
     /* preallocate the frames in the pool, if requested */
-    if (ctx->initial_pool_size > 0) {
+    ಆದರೆ (ctx->initial_pool_ಗಾತ್ರ > 0) {
         ret = hwframe_pool_prealloc(ref);
-        if (ret < 0)
-            return ret;
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ ret;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_hwframe_transfer_get_formats(AVBufferRef *hwframe_ref,
-                                    enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats, int flags)
+ಪೂರ್ಣಾಂಕ av_hwframe_transfer_get_formats(AVBufferRef *hwframe_ref,
+                                    ಎಣಿಕೆ AVHWFrameTransferDirection dir,
+                                    ಎಣಿಕೆ AVPixelFormat **formats, ಪೂರ್ಣಾಂಕ flags)
 {
-    FFHWFramesContext *ctxi = (FFHWFramesContext*)hwframe_ref->data;
+    FFHWFramesContext *ctxi = (FFHWFramesContext*)hwframe_ref->ದತ್ತಾಂಶ;
 
-    if (!ctxi->hw_type->transfer_get_formats)
-        return AVERROR(ENOSYS);
+    ಆದರೆ (!ctxi->hw_type->transfer_get_formats)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
 
-    return ctxi->hw_type->transfer_get_formats(&ctxi->p, dir, formats);
+    ಹಿಂತಿರುಗಿ ctxi->hw_type->transfer_get_formats(&ctxi->p, dir, formats);
 }
 
-static void transfer_pool_free(void *opaque)
+ಸ್ಥಿರ ಶೂನ್ಯ transfer_pool_free(ಶೂನ್ಯ *opaque)
 {
     AVBufferRef *device_ref = opaque;
-    av_buffer_unref(&device_ref);
+    av_ಬಫರ್_unref(&device_ref);
 }
 
-static AVBufferRef *transfer_buffer_alloc(void *opaque, size_t size)
+ಸ್ಥಿರ AVBufferRef *transfer_ಬಫರ್_alloc(ಶೂನ್ಯ *opaque, size_t ಗಾತ್ರ_2)
 {
     FFHWFramesContext *ctxi = opaque;
-    AVBufferRef *buf = NULL;
+    AVBufferRef *buf = ಖಾಲಿ;
 
-    ff_mutex_lock(&ctxi->transfer_pool_lock);
-    if (ctxi->transfer_pool_size != size) {
+    ff_mutex_ಬೀಗ(&ctxi->transfer_pool_ಬೀಗ);
+    ಆದರೆ (ctxi->transfer_pool_ಗಾತ್ರ != ಗಾತ್ರ_2) {
         /* buffers of the hardware context type need the device to be freed */
-        AVBufferRef *device_ref = ctxi->hw_type->transfer_buffer_alloc ?
-                                  av_buffer_ref(ctxi->p.device_ref) : NULL;
+        AVBufferRef *device_ref = ctxi->hw_type->transfer_ಬಫರ್_alloc ?
+                                  av_ಬಫರ್_ref(ctxi->p.device_ref) : ಖಾಲಿ;
 
-        av_buffer_pool_uninit(&ctxi->transfer_pool);
+        av_ಬಫರ್_pool_uninit(&ctxi->transfer_pool);
         ctxi->transfer_pool      = device_ref ?
-            av_buffer_pool_init2(size, device_ref,
-                                 ctxi->hw_type->transfer_buffer_alloc,
+            av_ಬಫರ್_pool_init2(ಗಾತ್ರ_2, device_ref,
+                                 ctxi->hw_type->transfer_ಬಫರ್_alloc,
                                  transfer_pool_free) :
-            av_buffer_pool_init(size, NULL);
-        ctxi->transfer_pool_size = ctxi->transfer_pool ? size : 0;
-        if (!ctxi->transfer_pool)
-            av_buffer_unref(&device_ref);
+            av_ಬಫರ್_pool_init(ಗಾತ್ರ_2, ಖಾಲಿ);
+        ctxi->transfer_pool_ಗಾತ್ರ = ctxi->transfer_pool ? ಗಾತ್ರ_2 : 0;
+        ಆದರೆ (!ctxi->transfer_pool)
+            av_ಬಫರ್_unref(&device_ref);
     }
-    if (ctxi->transfer_pool)
-        buf = av_buffer_pool_get(ctxi->transfer_pool);
-    ff_mutex_unlock(&ctxi->transfer_pool_lock);
+    ಆದರೆ (ctxi->transfer_pool)
+        buf = av_ಬಫರ್_pool_get(ctxi->transfer_pool);
+    ff_mutex_unlock(&ctxi->transfer_pool_ಬೀಗ);
 
-    return buf ? buf : av_buffer_alloc(size);
+    ಹಿಂತಿರುಗಿ buf ? buf : av_ಬಫರ್_alloc(ಗಾತ್ರ_2);
 }
 
-int av_hwframe_get_transfer_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame)
+ಪೂರ್ಣಾಂಕ av_hwframe_get_transfer_ಬಫರ್(AVBufferRef *hwframe_ctx, AVFrame *ಚೌಕಟ್ಟು)
 {
-    return ff_frame_get_video_buffer(frame, 0, transfer_buffer_alloc,
-                                     hwframe_ctx->data);
+    ಹಿಂತಿರುಗಿ ff_ಚೌಕಟ್ಟು_get_video_ಬಫರ್(ಚೌಕಟ್ಟು, 0, transfer_ಬಫರ್_alloc,
+                                     hwframe_ctx->ದತ್ತಾಂಶ);
 }
 
-static int transfer_data_alloc(AVFrame *dst, const AVFrame *src, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ transfer_ದತ್ತಾಂಶ_alloc(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags)
 {
     AVHWFramesContext *ctx;
-    AVFrame *frame_tmp;
-    int ret = 0;
+    AVFrame *ಚೌಕಟ್ಟು_tmp;
+    ಪೂರ್ಣಾಂಕ ret = 0;
 
-    if (!src->hw_frames_ctx)
-        return AVERROR(EINVAL);
-    ctx = (AVHWFramesContext*)src->hw_frames_ctx->data;
+    ಆದರೆ (!src->hw_ಚೌಕಟ್ಟುಗಳು_ctx)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
+    ctx = (AVHWFramesContext*)src->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
 
-    frame_tmp = av_frame_alloc();
-    if (!frame_tmp)
-        return AVERROR(ENOMEM);
+    ಚೌಕಟ್ಟು_tmp = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (!ಚೌಕಟ್ಟು_tmp)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
     /* if the format is set, use that
      * otherwise pick the first supported one */
-    if (dst->format >= 0) {
-        frame_tmp->format = dst->format;
-    } else {
-        enum AVPixelFormat *formats;
+    ಆದರೆ (dst->format >= 0) {
+        ಚೌಕಟ್ಟು_tmp->format = dst->format;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಎಣಿಕೆ AVPixelFormat *formats;
 
-        ret = av_hwframe_transfer_get_formats(src->hw_frames_ctx,
+        ret = av_hwframe_transfer_get_formats(src->hw_ಚೌಕಟ್ಟುಗಳು_ctx,
                                               AV_HWFRAME_TRANSFER_DIRECTION_FROM,
                                               &formats, 0);
-        if (ret < 0)
-            goto fail;
-        frame_tmp->format = formats[0];
+        ಆದರೆ (ret < 0)
+            ಹೋಗು fail;
+        ಚೌಕಟ್ಟು_tmp->format = formats[0];
         av_freep(&formats);
     }
-    frame_tmp->width  = ctx->width;
-    frame_tmp->height = ctx->height;
+    ಚೌಕಟ್ಟು_tmp->ಅಗಲ  = ctx->ಅಗಲ;
+    ಚೌಕಟ್ಟು_tmp->ಎತ್ತರ = ctx->ಎತ್ತರ;
 
-    ret = av_hwframe_get_transfer_buffer(src->hw_frames_ctx, frame_tmp);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_get_transfer_ಬಫರ್(src->hw_ಚೌಕಟ್ಟುಗಳು_ctx, ಚೌಕಟ್ಟು_tmp);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
-    ret = av_hwframe_transfer_data(frame_tmp, src, flags);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_transfer_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು_tmp, src, flags);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
-    frame_tmp->width  = src->width;
-    frame_tmp->height = src->height;
+    ಚೌಕಟ್ಟು_tmp->ಅಗಲ  = src->ಅಗಲ;
+    ಚೌಕಟ್ಟು_tmp->ಎತ್ತರ = src->ಎತ್ತರ;
 
-    av_frame_move_ref(dst, frame_tmp);
+    av_ಚೌಕಟ್ಟು_move_ref(dst, ಚೌಕಟ್ಟು_tmp);
 
 fail:
-    av_frame_free(&frame_tmp);
-    return ret;
+    av_ಚೌಕಟ್ಟು_free(&ಚೌಕಟ್ಟು_tmp);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int av_hwframe_transfer_data(AVFrame *dst, const AVFrame *src, int flags)
+ಪೂರ್ಣಾಂಕ av_hwframe_transfer_ದತ್ತಾಂಶ(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags)
 {
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (!dst->buf[0])
-        return transfer_data_alloc(dst, src, flags);
+    ಆದರೆ (!dst->buf[0])
+        ಹಿಂತಿರುಗಿ transfer_ದತ್ತಾಂಶ_alloc(dst, src, flags);
 
     /*
      * Hardware -> Hardware Transfer.
@@ -508,503 +508,503 @@ int av_hwframe_transfer_data(AVFrame *dst, const AVFrame *src, int flags)
      * function could be provided by either the src or dst, depending on
      * the specific combination of hardware.
      */
-    if (src->hw_frames_ctx && dst->hw_frames_ctx) {
+    ಆದರೆ (src->hw_ಚೌಕಟ್ಟುಗಳು_ctx && dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx) {
         FFHWFramesContext *src_ctx =
-            (FFHWFramesContext*)src->hw_frames_ctx->data;
+            (FFHWFramesContext*)src->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
         FFHWFramesContext *dst_ctx =
-            (FFHWFramesContext*)dst->hw_frames_ctx->data;
+            (FFHWFramesContext*)dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
 
-        if (src_ctx->source_frames) {
+        ಆದರೆ (src_ctx->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು) {
             av_log(src_ctx, AV_LOG_ERROR,
                    "A device with a derived frame context cannot be used as "
                    "the source of a HW -> HW transfer.");
-            return AVERROR(ENOSYS);
+            ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
         }
 
-        if (dst_ctx->source_frames) {
+        ಆದರೆ (dst_ctx->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು) {
             av_log(src_ctx, AV_LOG_ERROR,
                    "A device with a derived frame context cannot be used as "
                    "the destination of a HW -> HW transfer.");
-            return AVERROR(ENOSYS);
+            ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
         }
 
         ret = AVERROR(ENOSYS);
-        if (src_ctx->hw_type->transfer_data_from)
-            ret = src_ctx->hw_type->transfer_data_from(&src_ctx->p, dst, src);
-        if (ret == AVERROR(ENOSYS) && dst_ctx->hw_type->transfer_data_to)
-            ret = dst_ctx->hw_type->transfer_data_to(&dst_ctx->p, dst, src);
-        if (ret < 0)
-            return ret;
-    } else {
-        if (src->hw_frames_ctx) {
-            FFHWFramesContext *ctx = (FFHWFramesContext*)src->hw_frames_ctx->data;
+        ಆದರೆ (src_ctx->hw_type->transfer_ದತ್ತಾಂಶ_from)
+            ret = src_ctx->hw_type->transfer_ದತ್ತಾಂಶ_from(&src_ctx->p, dst, src);
+        ಆದರೆ (ret == AVERROR(ENOSYS) && dst_ctx->hw_type->transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ)
+            ret = dst_ctx->hw_type->transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ(&dst_ctx->p, dst, src);
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ ret;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಆದರೆ (src->hw_ಚೌಕಟ್ಟುಗಳು_ctx) {
+            FFHWFramesContext *ctx = (FFHWFramesContext*)src->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
 
-            if (!ctx->hw_type->transfer_data_from)
-                return AVERROR(ENOSYS);
+            ಆದರೆ (!ctx->hw_type->transfer_ದತ್ತಾಂಶ_from)
+                ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
 
-            ret = ctx->hw_type->transfer_data_from(&ctx->p, dst, src);
-            if (ret < 0)
-                return ret;
-        } else if (dst->hw_frames_ctx) {
-            FFHWFramesContext *ctx = (FFHWFramesContext*)dst->hw_frames_ctx->data;
+            ret = ctx->hw_type->transfer_ದತ್ತಾಂಶ_from(&ctx->p, dst, src);
+            ಆದರೆ (ret < 0)
+                ಹಿಂತಿರುಗಿ ret;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx) {
+            FFHWFramesContext *ctx = (FFHWFramesContext*)dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
 
-            if (!ctx->hw_type->transfer_data_to)
-                return AVERROR(ENOSYS);
+            ಆದರೆ (!ctx->hw_type->transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ)
+                ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
 
-            ret = ctx->hw_type->transfer_data_to(&ctx->p, dst, src);
-            if (ret < 0)
-                return ret;
-        } else {
-            return AVERROR(ENOSYS);
+            ret = ctx->hw_type->transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ(&ctx->p, dst, src);
+            ಆದರೆ (ret < 0)
+                ಹಿಂತಿರುಗಿ ret;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
         }
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_hwframe_get_buffer(AVBufferRef *hwframe_ref, AVFrame *frame, int flags)
+ಪೂರ್ಣಾಂಕ av_hwframe_get_ಬಫರ್(AVBufferRef *hwframe_ref, AVFrame *ಚೌಕಟ್ಟು, ಪೂರ್ಣಾಂಕ flags)
 {
-    FFHWFramesContext *ctxi = (FFHWFramesContext*)hwframe_ref->data;
+    FFHWFramesContext *ctxi = (FFHWFramesContext*)hwframe_ref->ದತ್ತಾಂಶ;
     AVHWFramesContext *ctx  = &ctxi->p;
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (ctxi->source_frames) {
+    ಆದರೆ (ctxi->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು) {
         // This is a derived frame context, so we allocate in the source
         // and map the frame immediately.
-        AVFrame *src_frame;
+        AVFrame *src_ಚೌಕಟ್ಟು;
 
-        frame->format = ctx->format;
-        frame->hw_frames_ctx = av_buffer_ref(hwframe_ref);
-        if (!frame->hw_frames_ctx)
-            return AVERROR(ENOMEM);
+        ಚೌಕಟ್ಟು->format = ctx->format;
+        ಚೌಕಟ್ಟು->hw_ಚೌಕಟ್ಟುಗಳು_ctx = av_ಬಫರ್_ref(hwframe_ref);
+        ಆದರೆ (!ಚೌಕಟ್ಟು->hw_ಚೌಕಟ್ಟುಗಳು_ctx)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-        src_frame = av_frame_alloc();
-        if (!src_frame)
-            return AVERROR(ENOMEM);
+        src_ಚೌಕಟ್ಟು = av_ಚೌಕಟ್ಟು_alloc();
+        ಆದರೆ (!src_ಚೌಕಟ್ಟು)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-        ret = av_hwframe_get_buffer(ctxi->source_frames,
-                                    src_frame, 0);
-        if (ret < 0) {
-            av_frame_free(&src_frame);
-            return ret;
+        ret = av_hwframe_get_ಬಫರ್(ctxi->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು,
+                                    src_ಚೌಕಟ್ಟು, 0);
+        ಆದರೆ (ret < 0) {
+            av_ಚೌಕಟ್ಟು_free(&src_ಚೌಕಟ್ಟು);
+            ಹಿಂತಿರುಗಿ ret;
         }
 
-        ret = av_hwframe_map(frame, src_frame,
-                             ctxi->source_allocation_map_flags);
-        if (ret) {
+        ret = av_hwframe_map(ಚೌಕಟ್ಟು, src_ಚೌಕಟ್ಟು,
+                             ctxi->ಮೂಲ_ಹಂಚಿಕೆ_map_flags);
+        ಆದರೆ (ret) {
             av_log(ctx, AV_LOG_ERROR, "Failed to map frame into derived "
                    "frame context: %d.\n", ret);
-            av_frame_free(&src_frame);
-            return ret;
+            av_ಚೌಕಟ್ಟು_free(&src_ಚೌಕಟ್ಟು);
+            ಹಿಂತಿರುಗಿ ret;
         }
 
         // Free the source frame immediately - the mapped frame still
         // contains a reference to it.
-        av_frame_free(&src_frame);
+        av_ಚೌಕಟ್ಟು_free(&src_ಚೌಕಟ್ಟು);
 
-        return 0;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    if (!ctxi->hw_type->frames_get_buffer)
-        return AVERROR(ENOSYS);
+    ಆದರೆ (!ctxi->hw_type->ಚೌಕಟ್ಟುಗಳು_get_ಬಫರ್)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
 
-    if (!ctx->pool)
-        return AVERROR(EINVAL);
+    ಆದರೆ (!ctx->pool)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    frame->hw_frames_ctx = av_buffer_ref(hwframe_ref);
-    if (!frame->hw_frames_ctx)
-        return AVERROR(ENOMEM);
+    ಚೌಕಟ್ಟು->hw_ಚೌಕಟ್ಟುಗಳು_ctx = av_ಬಫರ್_ref(hwframe_ref);
+    ಆದರೆ (!ಚೌಕಟ್ಟು->hw_ಚೌಕಟ್ಟುಗಳು_ctx)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    ret = ctxi->hw_type->frames_get_buffer(ctx, frame);
-    if (ret < 0) {
-        av_buffer_unref(&frame->hw_frames_ctx);
-        return ret;
+    ret = ctxi->hw_type->ಚೌಕಟ್ಟುಗಳು_get_ಬಫರ್(ctx, ಚೌಕಟ್ಟು);
+    ಆದರೆ (ret < 0) {
+        av_ಬಫರ್_unref(&ಚೌಕಟ್ಟು->hw_ಚೌಕಟ್ಟುಗಳು_ctx);
+        ಹಿಂತಿರುಗಿ ret;
     }
 
-    frame->extended_data = frame->data;
+    ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ = ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-void *av_hwdevice_hwconfig_alloc(AVBufferRef *ref)
+ಶೂನ್ಯ *av_hwdevice_hwconfig_alloc(AVBufferRef *ref)
 {
-    FFHWDeviceContext *ctx = (FFHWDeviceContext*)ref->data;
-    const HWContextType  *hw_type = ctx->hw_type;
+    FFHWDeviceContext *ctx = (FFHWDeviceContext*)ref->ದತ್ತಾಂಶ;
+    ಸ್ಥಿರಾಂಕ HWContextType  *hw_type = ctx->hw_type;
 
-    if (hw_type->device_hwconfig_size == 0)
-        return NULL;
+    ಆದರೆ (hw_type->device_hwconfig_ಗಾತ್ರ == 0)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    return av_mallocz(hw_type->device_hwconfig_size);
+    ಹಿಂತಿರುಗಿ av_mallocz(hw_type->device_hwconfig_ಗಾತ್ರ);
 }
 
 AVHWFramesConstraints *av_hwdevice_get_hwframe_constraints(AVBufferRef *ref,
-                                                           const void *hwconfig)
+                                                           ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *hwconfig)
 {
-    FFHWDeviceContext *ctx = (FFHWDeviceContext*)ref->data;
-    const HWContextType  *hw_type = ctx->hw_type;
+    FFHWDeviceContext *ctx = (FFHWDeviceContext*)ref->ದತ್ತಾಂಶ;
+    ಸ್ಥಿರಾಂಕ HWContextType  *hw_type = ctx->hw_type;
     AVHWFramesConstraints *constraints;
 
-    if (!hw_type->frames_get_constraints)
-        return NULL;
+    ಆದರೆ (!hw_type->ಚೌಕಟ್ಟುಗಳು_get_constraints)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    constraints = av_mallocz(sizeof(*constraints));
-    if (!constraints)
-        return NULL;
+    constraints = av_mallocz(ಗಾತ್ರ(*constraints));
+    ಆದರೆ (!constraints)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    constraints->min_width = constraints->min_height = 0;
-    constraints->max_width = constraints->max_height = INT_MAX;
+    constraints->min_ಅಗಲ = constraints->min_ಎತ್ತರ = 0;
+    constraints->max_ಅಗಲ = constraints->max_ಎತ್ತರ = ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ;
 
-    if (hw_type->frames_get_constraints(&ctx->p, hwconfig, constraints) >= 0) {
-        return constraints;
-    } else {
+    ಆದರೆ (hw_type->ಚೌಕಟ್ಟುಗಳು_get_constraints(&ctx->p, hwconfig, constraints) >= 0) {
+        ಹಿಂತಿರುಗಿ constraints;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         av_hwframe_constraints_free(&constraints);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 }
 
-void av_hwframe_constraints_free(AVHWFramesConstraints **constraints)
+ಶೂನ್ಯ av_hwframe_constraints_free(AVHWFramesConstraints **constraints)
 {
-    if (*constraints) {
+    ಆದರೆ (*constraints) {
         av_freep(&(*constraints)->valid_hw_formats);
         av_freep(&(*constraints)->valid_sw_formats);
     }
     av_freep(constraints);
 }
 
-int av_hwdevice_ctx_create(AVBufferRef **pdevice_ref, enum AVHWDeviceType type,
-                           const char *device, AVDictionary *opts, int flags)
+ಪೂರ್ಣಾಂಕ av_hwdevice_ctx_create(AVBufferRef **pdevice_ref, ಎಣಿಕೆ AVHWDeviceType type,
+                           ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *device, AVDictionary *opts, ಪೂರ್ಣಾಂಕ flags)
 {
-    AVBufferRef *device_ref = NULL;
+    AVBufferRef *device_ref = ಖಾಲಿ;
     FFHWDeviceContext *device_ctx;
-    int ret = 0;
+    ಪೂರ್ಣಾಂಕ ret = 0;
 
     device_ref = av_hwdevice_ctx_alloc(type);
-    if (!device_ref) {
+    ಆದರೆ (!device_ref) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
-    device_ctx = (FFHWDeviceContext*)device_ref->data;
+    device_ctx = (FFHWDeviceContext*)device_ref->ದತ್ತಾಂಶ;
 
-    if (!device_ctx->hw_type->device_create) {
+    ಆದರೆ (!device_ctx->hw_type->device_create) {
         ret = AVERROR(ENOSYS);
-        goto fail;
+        ಹೋಗು fail;
     }
 
     ret = device_ctx->hw_type->device_create(&device_ctx->p, device,
                                              opts, flags);
-    if (ret < 0)
-        goto fail;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
     ret = av_hwdevice_ctx_init(device_ref);
-    if (ret < 0)
-        goto fail;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
     *pdevice_ref = device_ref;
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 fail:
-    av_buffer_unref(&device_ref);
-    *pdevice_ref = NULL;
-    return ret;
+    av_ಬಫರ್_unref(&device_ref);
+    *pdevice_ref = ಖಾಲಿ;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ref_ptr,
-                                        enum AVHWDeviceType type,
+ಪೂರ್ಣಾಂಕ av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ref_ptr,
+                                        ಎಣಿಕೆ AVHWDeviceType type,
                                         AVBufferRef *src_ref,
-                                        AVDictionary *options, int flags)
+                                        AVDictionary *options, ಪೂರ್ಣಾಂಕ flags)
 {
-    AVBufferRef *dst_ref = NULL, *tmp_ref;
+    AVBufferRef *dst_ref = ಖಾಲಿ, *tmp_ref;
     FFHWDeviceContext *dst_ctx;
-    int ret = 0;
+    ಪೂರ್ಣಾಂಕ ret = 0;
 
     tmp_ref = src_ref;
-    while (tmp_ref) {
-        FFHWDeviceContext *tmp_ctx = (FFHWDeviceContext*)tmp_ref->data;
-        if (tmp_ctx->p.type == type) {
-            dst_ref = av_buffer_ref(tmp_ref);
-            if (!dst_ref) {
+    ಆಗ (tmp_ref) {
+        FFHWDeviceContext *tmp_ctx = (FFHWDeviceContext*)tmp_ref->ದತ್ತಾಂಶ;
+        ಆದರೆ (tmp_ctx->p.type == type) {
+            dst_ref = av_ಬಫರ್_ref(tmp_ref);
+            ಆದರೆ (!dst_ref) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                ಹೋಗು fail;
             }
-            goto done;
+            ಹೋಗು ಮುಗಿದ;
         }
-        tmp_ref = tmp_ctx->source_device;
+        tmp_ref = tmp_ctx->ಮೂಲ_device;
     }
 
     dst_ref = av_hwdevice_ctx_alloc(type);
-    if (!dst_ref) {
+    ಆದರೆ (!dst_ref) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
-    dst_ctx = (FFHWDeviceContext*)dst_ref->data;
+    dst_ctx = (FFHWDeviceContext*)dst_ref->ದತ್ತಾಂಶ;
 
     tmp_ref = src_ref;
-    while (tmp_ref) {
-        FFHWDeviceContext *tmp_ctx = (FFHWDeviceContext*)tmp_ref->data;
-        if (dst_ctx->hw_type->device_derive) {
+    ಆಗ (tmp_ref) {
+        FFHWDeviceContext *tmp_ctx = (FFHWDeviceContext*)tmp_ref->ದತ್ತಾಂಶ;
+        ಆದರೆ (dst_ctx->hw_type->device_derive) {
             ret = dst_ctx->hw_type->device_derive(&dst_ctx->p,
                                                   &tmp_ctx->p,
                                                   options, flags);
-            if (ret == 0) {
-                dst_ctx->source_device = av_buffer_ref(src_ref);
-                if (!dst_ctx->source_device) {
+            ಆದರೆ (ret == 0) {
+                dst_ctx->ಮೂಲ_device = av_ಬಫರ್_ref(src_ref);
+                ಆದರೆ (!dst_ctx->ಮೂಲ_device) {
                     ret = AVERROR(ENOMEM);
-                    goto fail;
+                    ಹೋಗು fail;
                 }
                 ret = av_hwdevice_ctx_init(dst_ref);
-                if (ret < 0)
-                    goto fail;
-                goto done;
+                ಆದರೆ (ret < 0)
+                    ಹೋಗು fail;
+                ಹೋಗು ಮುಗಿದ;
             }
-            if (ret != AVERROR(ENOSYS))
-                goto fail;
+            ಆದರೆ (ret != AVERROR(ENOSYS))
+                ಹೋಗು fail;
         }
-        tmp_ref = tmp_ctx->source_device;
+        tmp_ref = tmp_ctx->ಮೂಲ_device;
     }
 
     ret = AVERROR(ENOSYS);
-    goto fail;
+    ಹೋಗು fail;
 
-done:
+ಮುಗಿದ:
     *dst_ref_ptr = dst_ref;
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    av_buffer_unref(&dst_ref);
-    *dst_ref_ptr = NULL;
-    return ret;
+    av_ಬಫರ್_unref(&dst_ref);
+    *dst_ref_ptr = ಖಾಲಿ;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int av_hwdevice_ctx_create_derived(AVBufferRef **dst_ref_ptr,
-                                   enum AVHWDeviceType type,
-                                   AVBufferRef *src_ref, int flags)
+ಪೂರ್ಣಾಂಕ av_hwdevice_ctx_create_derived(AVBufferRef **dst_ref_ptr,
+                                   ಎಣಿಕೆ AVHWDeviceType type,
+                                   AVBufferRef *src_ref, ಪೂರ್ಣಾಂಕ flags)
 {
-    return av_hwdevice_ctx_create_derived_opts(dst_ref_ptr, type, src_ref,
-                                               NULL, flags);
+    ಹಿಂತಿರುಗಿ av_hwdevice_ctx_create_derived_opts(dst_ref_ptr, type, src_ref,
+                                               ಖಾಲಿ, flags);
 }
 
-static void ff_hwframe_unmap(void *opaque, uint8_t *data)
+ಸ್ಥಿರ ಶೂನ್ಯ ff_hwframe_unmap(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ)
 {
-    HWMapDescriptor *hwmap = (HWMapDescriptor*)data;
+    HWMapDescriptor *hwmap = (HWMapDescriptor*)ದತ್ತಾಂಶ;
     AVHWFramesContext *ctx = opaque;
 
-    if (hwmap->unmap)
+    ಆದರೆ (hwmap->unmap)
         hwmap->unmap(ctx, hwmap);
 
-    av_frame_free(&hwmap->source);
+    av_ಚೌಕಟ್ಟು_free(&hwmap->ಮೂಲ);
 
-    av_buffer_unref(&hwmap->hw_frames_ctx);
+    av_ಬಫರ್_unref(&hwmap->hw_ಚೌಕಟ್ಟುಗಳು_ctx);
 
     av_free(hwmap);
 }
 
-int ff_hwframe_map_create(AVBufferRef *hwframe_ref,
-                          AVFrame *dst, const AVFrame *src,
-                          void (*unmap)(AVHWFramesContext *ctx,
+ಪೂರ್ಣಾಂಕ ff_hwframe_map_create(AVBufferRef *hwframe_ref,
+                          AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src,
+                          ಶೂನ್ಯ (*unmap)(AVHWFramesContext *ctx,
                                         HWMapDescriptor *hwmap),
-                          void *priv)
+                          ಶೂನ್ಯ *priv)
 {
-    AVHWFramesContext *ctx = (AVHWFramesContext*)hwframe_ref->data;
+    AVHWFramesContext *ctx = (AVHWFramesContext*)hwframe_ref->ದತ್ತಾಂಶ;
     HWMapDescriptor *hwmap;
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    hwmap = av_mallocz(sizeof(*hwmap));
-    if (!hwmap) {
+    hwmap = av_mallocz(ಗಾತ್ರ(*hwmap));
+    ಆದರೆ (!hwmap) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
 
-    hwmap->source = av_frame_alloc();
-    if (!hwmap->source) {
+    hwmap->ಮೂಲ = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (!hwmap->ಮೂಲ) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
-    ret = av_frame_ref(hwmap->source, src);
-    if (ret < 0)
-        goto fail;
+    ret = av_ಚೌಕಟ್ಟು_ref(hwmap->ಮೂಲ, src);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
-    hwmap->hw_frames_ctx = av_buffer_ref(hwframe_ref);
-    if (!hwmap->hw_frames_ctx) {
+    hwmap->hw_ಚೌಕಟ್ಟುಗಳು_ctx = av_ಬಫರ್_ref(hwframe_ref);
+    ಆದರೆ (!hwmap->hw_ಚೌಕಟ್ಟುಗಳು_ctx) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
 
     hwmap->unmap = unmap;
     hwmap->priv  = priv;
 
-    dst->buf[0] = av_buffer_create((uint8_t*)hwmap, sizeof(*hwmap),
+    dst->buf[0] = av_ಬಫರ್_create((uint8_t*)hwmap, ಗಾತ್ರ(*hwmap),
                                    &ff_hwframe_unmap, ctx, 0);
-    if (!dst->buf[0]) {
+    ಆದರೆ (!dst->buf[0]) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    if (hwmap) {
-        av_buffer_unref(&hwmap->hw_frames_ctx);
-        av_frame_free(&hwmap->source);
+    ಆದರೆ (hwmap) {
+        av_ಬಫರ್_unref(&hwmap->hw_ಚೌಕಟ್ಟುಗಳು_ctx);
+        av_ಚೌಕಟ್ಟು_free(&hwmap->ಮೂಲ);
     }
     av_free(hwmap);
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int av_hwframe_map(AVFrame *dst, const AVFrame *src, int flags)
+ಪೂರ್ಣಾಂಕ av_hwframe_map(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags)
 {
-    AVBufferRef    *orig_dst_frames = dst->hw_frames_ctx;
-    enum AVPixelFormat orig_dst_fmt = dst->format;
+    AVBufferRef    *orig_dst_ಚೌಕಟ್ಟುಗಳು = dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx;
+    ಎಣಿಕೆ AVPixelFormat orig_dst_fmt = dst->format;
     HWMapDescriptor *hwmap;
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (src->hw_frames_ctx && dst->hw_frames_ctx) {
-        FFHWFramesContext *src_frames = (FFHWFramesContext*)src->hw_frames_ctx->data;
-        FFHWFramesContext *dst_frames = (FFHWFramesContext*)dst->hw_frames_ctx->data;
+    ಆದರೆ (src->hw_ಚೌಕಟ್ಟುಗಳು_ctx && dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx) {
+        FFHWFramesContext *src_ಚೌಕಟ್ಟುಗಳು = (FFHWFramesContext*)src->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
+        FFHWFramesContext *dst_ಚೌಕಟ್ಟುಗಳು = (FFHWFramesContext*)dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
 
-        if ((src_frames == dst_frames &&
-             src->format == dst_frames->p.sw_format &&
-             dst->format == dst_frames->p.format) ||
-            (src_frames->source_frames &&
-             src_frames->source_frames->data ==
-             (uint8_t*)dst_frames)) {
+        ಆದರೆ ((src_ಚೌಕಟ್ಟುಗಳು == dst_ಚೌಕಟ್ಟುಗಳು &&
+             src->format == dst_ಚೌಕಟ್ಟುಗಳು->p.sw_format &&
+             dst->format == dst_ಚೌಕಟ್ಟುಗಳು->p.format) ||
+            (src_ಚೌಕಟ್ಟುಗಳು->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು &&
+             src_ಚೌಕಟ್ಟುಗಳು->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು->ದತ್ತಾಂಶ ==
+             (uint8_t*)dst_ಚೌಕಟ್ಟುಗಳು)) {
             // This is an unmap operation.  We don't need to directly
             // do anything here other than fill in the original frame,
             // because the real unmap will be invoked when the last
             // reference to the mapped frame disappears.
-            if (!src->buf[0]) {
-                av_log(src_frames, AV_LOG_ERROR, "Invalid mapping "
+            ಆದರೆ (!src->buf[0]) {
+                av_log(src_ಚೌಕಟ್ಟುಗಳು, AV_LOG_ERROR, "Invalid mapping "
                        "found when attempting unmap.\n");
-                return AVERROR(EINVAL);
+                ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
             }
-            hwmap = (HWMapDescriptor*)src->buf[0]->data;
-            return av_frame_replace(dst, hwmap->source);
+            hwmap = (HWMapDescriptor*)src->buf[0]->ದತ್ತಾಂಶ;
+            ಹಿಂತಿರುಗಿ av_ಚೌಕಟ್ಟು_replace(dst, hwmap->ಮೂಲ);
         }
     }
 
-    if (src->hw_frames_ctx) {
-        FFHWFramesContext *src_frames = (FFHWFramesContext*)src->hw_frames_ctx->data;
+    ಆದರೆ (src->hw_ಚೌಕಟ್ಟುಗಳು_ctx) {
+        FFHWFramesContext *src_ಚೌಕಟ್ಟುಗಳು = (FFHWFramesContext*)src->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
 
-        if (src_frames->p.format == src->format &&
-            src_frames->hw_type->map_from) {
-            ret = src_frames->hw_type->map_from(&src_frames->p,
+        ಆದರೆ (src_ಚೌಕಟ್ಟುಗಳು->p.format == src->format &&
+            src_ಚೌಕಟ್ಟುಗಳು->hw_type->map_from) {
+            ret = src_ಚೌಕಟ್ಟುಗಳು->hw_type->map_from(&src_ಚೌಕಟ್ಟುಗಳು->p,
                                                 dst, src, flags);
-            if (ret >= 0)
-                return ret;
-            else if (ret != AVERROR(ENOSYS))
-                goto fail;
+            ಆದರೆ (ret >= 0)
+                ಹಿಂತಿರುಗಿ ret;
+            ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ret != AVERROR(ENOSYS))
+                ಹೋಗು fail;
         }
     }
 
-    if (dst->hw_frames_ctx) {
-        FFHWFramesContext *dst_frames = (FFHWFramesContext*)dst->hw_frames_ctx->data;
+    ಆದರೆ (dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx) {
+        FFHWFramesContext *dst_ಚೌಕಟ್ಟುಗಳು = (FFHWFramesContext*)dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ;
 
-        if (dst_frames->p.format == dst->format &&
-            dst_frames->hw_type->map_to) {
-            ret = dst_frames->hw_type->map_to(&dst_frames->p,
+        ಆದರೆ (dst_ಚೌಕಟ್ಟುಗಳು->p.format == dst->format &&
+            dst_ಚೌಕಟ್ಟುಗಳು->hw_type->map_ಗಮ್ಯ) {
+            ret = dst_ಚೌಕಟ್ಟುಗಳು->hw_type->map_ಗಮ್ಯ(&dst_ಚೌಕಟ್ಟುಗಳು->p,
                                               dst, src, flags);
-            if (ret >= 0)
-                return ret;
-            else if (ret != AVERROR(ENOSYS))
-                goto fail;
+            ಆದರೆ (ret >= 0)
+                ಹಿಂತಿರುಗಿ ret;
+            ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ret != AVERROR(ENOSYS))
+                ಹೋಗು fail;
         }
     }
 
-    return AVERROR(ENOSYS);
+    ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
 
 fail:
     // if the caller provided dst frames context, it should be preserved
     // by this function
-    av_assert0(orig_dst_frames == NULL ||
-               orig_dst_frames == dst->hw_frames_ctx);
+    av_assert0(orig_dst_ಚೌಕಟ್ಟುಗಳು == ಖಾಲಿ ||
+               orig_dst_ಚೌಕಟ್ಟುಗಳು == dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx);
 
     // preserve user-provided dst frame fields, but clean
     // anything we might have set
-    dst->hw_frames_ctx = NULL;
-    av_frame_unref(dst);
+    dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx = ಖಾಲಿ;
+    av_ಚೌಕಟ್ಟು_unref(dst);
 
-    dst->hw_frames_ctx = orig_dst_frames;
+    dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx = orig_dst_ಚೌಕಟ್ಟುಗಳು;
     dst->format        = orig_dst_fmt;
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
-                                  enum AVPixelFormat format,
+ಪೂರ್ಣಾಂಕ av_hwframe_ctx_create_derived(AVBufferRef **derived_ಚೌಕಟ್ಟು_ctx,
+                                  ಎಣಿಕೆ AVPixelFormat format,
                                   AVBufferRef *derived_device_ctx,
-                                  AVBufferRef *source_frame_ctx,
-                                  int flags)
+                                  AVBufferRef *ಮೂಲ_ಚೌಕಟ್ಟು_ctx,
+                                  ಪೂರ್ಣಾಂಕ flags)
 {
-    AVBufferRef   *dst_ref = NULL;
-    FFHWFramesContext *dsti = NULL;
-    FFHWFramesContext *srci = (FFHWFramesContext*)source_frame_ctx->data;
+    AVBufferRef   *dst_ref = ಖಾಲಿ;
+    FFHWFramesContext *dsti = ಖಾಲಿ;
+    FFHWFramesContext *srci = (FFHWFramesContext*)ಮೂಲ_ಚೌಕಟ್ಟು_ctx->ದತ್ತಾಂಶ;
     AVHWFramesContext *dst, *src = &srci->p;
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (srci->source_frames) {
+    ಆದರೆ (srci->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು) {
         AVHWFramesContext *src_src =
-            (AVHWFramesContext*)srci->source_frames->data;
+            (AVHWFramesContext*)srci->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು->ದತ್ತಾಂಶ;
         AVHWDeviceContext *dst_dev =
-            (AVHWDeviceContext*)derived_device_ctx->data;
+            (AVHWDeviceContext*)derived_device_ctx->ದತ್ತಾಂಶ;
 
-        if (src_src->device_ctx == dst_dev) {
+        ಆದರೆ (src_src->device_ctx == dst_dev) {
             // This is actually an unmapping, so we just return a
             // reference to the source frame context.
-            *derived_frame_ctx = av_buffer_ref(srci->source_frames);
-            if (!*derived_frame_ctx) {
+            *derived_ಚೌಕಟ್ಟು_ctx = av_ಬಫರ್_ref(srci->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು);
+            ಆದರೆ (!*derived_ಚೌಕಟ್ಟು_ctx) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                ಹೋಗು fail;
             }
-            return 0;
+            ಹಿಂತಿರುಗಿ 0;
         }
     }
 
     dst_ref = av_hwframe_ctx_alloc(derived_device_ctx);
-    if (!dst_ref) {
+    ಆದರೆ (!dst_ref) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
 
-    dsti = (FFHWFramesContext*)dst_ref->data;
+    dsti = (FFHWFramesContext*)dst_ref->ದತ್ತಾಂಶ;
     dst  = &dsti->p;
 
     dst->format    = format;
     dst->sw_format = src->sw_format;
-    dst->width     = src->width;
-    dst->height    = src->height;
+    dst->ಅಗಲ     = src->ಅಗಲ;
+    dst->ಎತ್ತರ    = src->ಎತ್ತರ;
 
-    dsti->source_frames = av_buffer_ref(source_frame_ctx);
-    if (!dsti->source_frames) {
+    dsti->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು = av_ಬಫರ್_ref(ಮೂಲ_ಚೌಕಟ್ಟು_ctx);
+    ಆದರೆ (!dsti->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
 
-    dsti->source_allocation_map_flags =
+    dsti->ಮೂಲ_ಹಂಚಿಕೆ_map_flags =
         flags & (AV_HWFRAME_MAP_READ      |
                  AV_HWFRAME_MAP_WRITE     |
                  AV_HWFRAME_MAP_OVERWRITE |
-                 AV_HWFRAME_MAP_DIRECT);
+                 AV_HWFRAME_MAP_ನೇರ);
 
     ret = AVERROR(ENOSYS);
-    if (srci->hw_type->frames_derive_from)
-        ret = srci->hw_type->frames_derive_from(dst, src, flags);
-    if (ret == AVERROR(ENOSYS) &&
-        dsti->hw_type->frames_derive_to)
-        ret = dsti->hw_type->frames_derive_to(dst, src, flags);
-    if (ret == AVERROR(ENOSYS))
+    ಆದರೆ (srci->hw_type->ಚೌಕಟ್ಟುಗಳು_derive_from)
+        ret = srci->hw_type->ಚೌಕಟ್ಟುಗಳು_derive_from(dst, src, flags);
+    ಆದರೆ (ret == AVERROR(ENOSYS) &&
+        dsti->hw_type->ಚೌಕಟ್ಟುಗಳು_derive_ಗಮ್ಯ)
+        ret = dsti->hw_type->ಚೌಕಟ್ಟುಗಳು_derive_ಗಮ್ಯ(dst, src, flags);
+    ಆದರೆ (ret == AVERROR(ENOSYS))
         ret = 0;
-    if (ret)
-        goto fail;
+    ಆದರೆ (ret)
+        ಹೋಗು fail;
 
-    *derived_frame_ctx = dst_ref;
-    return 0;
+    *derived_ಚೌಕಟ್ಟು_ctx = dst_ref;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    if (dsti)
-        av_buffer_unref(&dsti->source_frames);
-    av_buffer_unref(&dst_ref);
-    return ret;
+    ಆದರೆ (dsti)
+        av_ಬಫರ್_unref(&dsti->ಮೂಲ_ಚೌಕಟ್ಟುಗಳು);
+    av_ಬಫರ್_unref(&dst_ref);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int ff_hwframe_map_replace(AVFrame *dst, const AVFrame *src)
+ಪೂರ್ಣಾಂಕ ff_hwframe_map_replace(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    HWMapDescriptor *hwmap = (HWMapDescriptor*)dst->buf[0]->data;
-    return av_frame_replace(hwmap->source, src);
+    HWMapDescriptor *hwmap = (HWMapDescriptor*)dst->buf[0]->ದತ್ತಾಂಶ;
+    ಹಿಂತಿರುಗಿ av_ಚೌಕಟ್ಟು_replace(hwmap->ಮೂಲ, src);
 }

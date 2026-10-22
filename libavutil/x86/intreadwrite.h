@@ -18,39 +18,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_INTREADWRITE_H
-#define AVUTIL_X86_INTREADWRITE_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_X86_INTREADWRITE_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_X86_INTREADWRITE_H
 
-#include <stdint.h>
-#include "config.h"
-#if HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
-#include <emmintrin.h>
-#endif
-#include "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಆದರೆ HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
+#ಅನ್ತರ್ಭಾವ <emmintrin.h>
+#ಆದರೆ_ಅಂತ್ಯ
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
 
-#if HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
+#ಆದರೆ HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
 
-#define AV_COPY128 AV_COPY128
-static av_always_inline void AV_COPY128(void *d, const void *s)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_COPY128 AV_COPY128
+ಸ್ಥಿರ av_always_inline ಶೂನ್ಯ AV_COPY128(ಶೂನ್ಯ *d, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *s)
 {
-    __m128i tmp = _mm_load_si128((const __m128i *)s);
+    __m128i tmp = mm_ತುಂಬು_si128((ಸ್ಥಿರಾಂಕ __m128i *)s);
     _mm_store_si128((__m128i *)d, tmp);
 }
 
-#define AV_COPY128U AV_COPY128U
-static av_always_inline void AV_COPY128U(void *d, const void *s)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_COPY128U AV_COPY128U
+ಸ್ಥಿರ av_always_inline ಶೂನ್ಯ AV_COPY128U(ಶೂನ್ಯ *d, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *s)
 {
-    __m128i tmp = _mm_loadu_si128((const __m128i *)s);
+    __m128i tmp = _mm_loadu_si128((ಸ್ಥಿರಾಂಕ __m128i *)s);
     _mm_storeu_si128((__m128i *)d, tmp);
 }
 
-#define AV_ZERO128 AV_ZERO128
-static av_always_inline void AV_ZERO128(void *d)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_ZERO128 AV_ZERO128
+ಸ್ಥಿರ av_always_inline ಶೂನ್ಯ AV_ZERO128(ಶೂನ್ಯ *d)
 {
     __m128i zero = _mm_setzero_si128();
     _mm_store_si128((__m128i *)d, zero);
 }
 
-#endif /* HAVE_INTRINSICS_SSE2 && defined(__SSE2__) */
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_INTRINSICS_SSE2 && defined(__SSE2__) */
 
-#endif /* AVUTIL_X86_INTREADWRITE_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_X86_INTREADWRITE_H */

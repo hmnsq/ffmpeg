@@ -16,123 +16,123 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "libavutil/common.h"
-#include "libavutil/fifo.h"
-#include "libavutil/lfg.h"
-#include "libavutil/random_seed.h"
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಅನ್ತರ್ಭಾವ "libavutil/common.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/fifo.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/lfg.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/random_seed.h"
 
-typedef struct CBState {
-    unsigned int read_idx;
-    unsigned int write_idx;
-    unsigned int to_process;
-    unsigned int offset;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ CBState {
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ read_idx;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ write_idx;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ ಗಮ್ಯ_process;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ ಸ್ಥಾನಾಂತರ;
 } CBState;
 
-static int read_cb(void *opaque, void *buf, size_t *nb_elems)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ read_cb(ಶೂನ್ಯ *opaque, ಶೂನ್ಯ *buf, size_t *nb_elems)
 {
     CBState  *s = opaque;
-    unsigned *b = buf;
+    ಚಿಹ್ನೆರಹಿತ *b = buf;
 
-    *nb_elems = FFMIN(*nb_elems, s->to_process);
+    *nb_elems = FFMIN(*nb_elems, s->ಗಮ್ಯ_process);
 
-    for (unsigned i = 0; i < *nb_elems; i++)
-        if (b[i] != s->read_idx + s->offset + i) {
-            printf("Mismatch at idx %u offset %u i %u\n",
-                   s->read_idx, s->offset, i);
-            return AVERROR_BUG;
+    ಗಾಗಿ (ಚಿಹ್ನೆರಹಿತ i = 0; i < *nb_elems; i++)
+        ಆದರೆ (b[i] != s->read_idx + s->ಸ್ಥಾನಾಂತರ + i) {
+            ಬರೆ("Mismatch at idx %u offset %u i %u\n",
+                   s->read_idx, s->ಸ್ಥಾನಾಂತರ, i);
+            ಹಿಂತಿರುಗಿ AVERROR_BUG;
         }
 
-    s->offset     += *nb_elems;
-    s->to_process -= *nb_elems;
+    s->ಸ್ಥಾನಾಂತರ     += *nb_elems;
+    s->ಗಮ್ಯ_process -= *nb_elems;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int write_cb(void *opaque, void *buf, size_t *nb_elems)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ write_cb(ಶೂನ್ಯ *opaque, ಶೂನ್ಯ *buf, size_t *nb_elems)
 {
     CBState  *s = opaque;
-    unsigned *b = buf;
+    ಚಿಹ್ನೆರಹಿತ *b = buf;
 
-    *nb_elems = FFMIN(*nb_elems, s->to_process);
+    *nb_elems = FFMIN(*nb_elems, s->ಗಮ್ಯ_process);
 
-    for (unsigned i = 0; i < *nb_elems; i++)
+    ಗಾಗಿ (ಚಿಹ್ನೆರಹಿತ i = 0; i < *nb_elems; i++)
         b[i] = s->write_idx + i;
 
     s->write_idx  += *nb_elems;
-    s->to_process -= *nb_elems;
+    s->ಗಮ್ಯ_process -= *nb_elems;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
     /* create a FIFO buffer */
-    AVFifo *fifo = av_fifo_alloc2(13, sizeof(int), 0);
-    int i, j, n, *p;
+    AVFifo *fifo = av_fifo_alloc2(13, ಗಾತ್ರ(ಪೂರ್ಣಾಂಕ), 0);
+    ಪೂರ್ಣಾಂಕ i, j, n, *p;
 
     /* fill data */
-    for (i = 0; av_fifo_can_write(fifo); i++)
+    ಗಾಗಿ (i = 0; av_fifo_can_write(fifo); i++)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    ಗಾಗಿ (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        ಬರೆ("%d: %d\n", i, j);
     }
-    printf("\n");
+    ಬರೆ("\n");
 
     /* generic peek at FIFO */
 
     n = av_fifo_can_read(fifo);
-    p = malloc(n * av_fifo_elem_size(fifo));
-    if (p == NULL) {
+    p = ಸ್ಮರಣೆ_ಕೊಡು(n * av_fifo_elem_ಗಾತ್ರ(fifo));
+    ಆದರೆ (p == ಖಾಲಿ) {
         fprintf(stderr, "failed to allocate memory.\n");
-        exit(1);
+        ನಿರ್ಗಮಿಸು(1);
     }
 
-    (void) av_fifo_peek(fifo, p, n, 0);
+    (ಶೂನ್ಯ) av_fifo_peek(fifo, p, n, 0);
 
     /* read data at p */
-    for(i = 0; i < n; ++i)
-        printf("%d: %d\n", i, p[i]);
+    ಗಾಗಿ(i = 0; i < n; ++i)
+        ಬರೆ("%d: %d\n", i, p[i]);
 
-    putchar('\n');
+    ಅಕ್ಷರ_ಬರೆ('\n');
 
     /* read data */
-    for (i = 0; av_fifo_can_read(fifo); i++) {
+    ಗಾಗಿ (i = 0; av_fifo_can_read(fifo); i++) {
         av_fifo_read(fifo, &j, 1);
-        printf(i == 0 ? "%d" : " %d", j);
+        ಬರೆ(i == 0 ? "%d" : " %d", j);
     }
-    printf("\n");
+    ಬರೆ("\n");
 
     /* fill data */
-    for (i = 0; av_fifo_can_write(fifo); i++)
+    ಗಾಗಿ (i = 0; av_fifo_can_write(fifo); i++)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    ಗಾಗಿ (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        ಬರೆ("%d: %d\n", i, j);
     }
-    putchar('\n');
+    ಅಕ್ಷರ_ಬರೆ('\n');
 
     /* test fifo_grow */
-    (void) av_fifo_grow2(fifo, 15);
+    (ಶೂನ್ಯ) av_fifo_grow2(fifo, 15);
 
     /* fill data */
     n = av_fifo_can_read(fifo);
-    for (i = n; av_fifo_can_write(fifo); ++i)
+    ಗಾಗಿ (i = n; av_fifo_can_write(fifo); ++i)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    ಗಾಗಿ (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        ಬರೆ("%d: %d\n", i, j);
     }
 
     av_fifo_freep2(&fifo);
@@ -140,58 +140,58 @@ int main(void)
     /* test randomly-sized write/read/peek with a callback */
     {
         CBState        s = { 0 };
-        uint32_t    seed = av_get_random_seed();
+        uint32_t    ಬೀಜ = av_get_random_ಬೀಜ();
 
         AVLFG lfg;
-        int ret;
+        ಪೂರ್ಣಾಂಕ ret;
 
-        av_lfg_init(&lfg, seed);
+        av_lfg_init(&lfg, ಬೀಜ);
 
-        fifo = av_fifo_alloc2(1, sizeof(unsigned), AV_FIFO_FLAG_AUTO_GROW);
+        fifo = av_fifo_alloc2(1, ಗಾತ್ರ(ಚಿಹ್ನೆರಹಿತ), AV_FIFO_FLAG_AUTO_GROW);
 
-        for (i = 0; i < 32; i++) {
+        ಗಾಗಿ (i = 0; i < 32; i++) {
             size_t       nb_elems = 16;
-            unsigned   to_process = av_lfg_get(&lfg) % nb_elems;
+            ಚಿಹ್ನೆರಹಿತ   ಗಮ್ಯ_process = av_lfg_get(&lfg) % nb_elems;
 
-            s.to_process = to_process;
+            s.ಗಮ್ಯ_process = ಗಮ್ಯ_process;
 
             ret = av_fifo_write_from_cb(fifo, write_cb, &s, &nb_elems);
-            if (ret < 0 || s.to_process || nb_elems != to_process) {
-                printf("FIFO write fail; seed %"PRIu32"\n", seed);
-                return 1;
+            ಆದರೆ (ret < 0 || s.ಗಮ್ಯ_process || nb_elems != ಗಮ್ಯ_process) {
+                ಬರೆ("FIFO write fail; seed %"PRIu32"\n", ಬೀಜ);
+                ಹಿಂತಿರುಗಿ 1;
             }
 
             nb_elems = av_fifo_can_read(fifo);
-            if (nb_elems > 1) {
-                s.offset     = av_lfg_get(&lfg) % (nb_elems - 1);
-                nb_elems    -= s.offset;
+            ಆದರೆ (nb_elems > 1) {
+                s.ಸ್ಥಾನಾಂತರ     = av_lfg_get(&lfg) % (nb_elems - 1);
+                nb_elems    -= s.ಸ್ಥಾನಾಂತರ;
 
-                s.to_process = av_lfg_get(&lfg) % nb_elems;
-                to_process   = s.to_process;
+                s.ಗಮ್ಯ_process = av_lfg_get(&lfg) % nb_elems;
+                ಗಮ್ಯ_process   = s.ಗಮ್ಯ_process;
 
-                ret = av_fifo_peek_to_cb(fifo, read_cb, &s, &nb_elems, s.offset);
-                if (ret < 0 || s.to_process || nb_elems != to_process) {
-                    printf("FIFO peek fail; seed %"PRIu32"\n", seed);
-                    return 1;
+                ret = av_fifo_peek_ಗಮ್ಯ_cb(fifo, read_cb, &s, &nb_elems, s.ಸ್ಥಾನಾಂತರ);
+                ಆದರೆ (ret < 0 || s.ಗಮ್ಯ_process || nb_elems != ಗಮ್ಯ_process) {
+                    ಬರೆ("FIFO peek fail; seed %"PRIu32"\n", ಬೀಜ);
+                    ಹಿಂತಿರುಗಿ 1;
                 }
             }
 
             nb_elems     = av_fifo_can_read(fifo);
-            to_process   = nb_elems ? av_lfg_get(&lfg) % nb_elems : 0;
-            s.to_process = to_process;
-            s.offset     = 0;
+            ಗಮ್ಯ_process   = nb_elems ? av_lfg_get(&lfg) % nb_elems : 0;
+            s.ಗಮ್ಯ_process = ಗಮ್ಯ_process;
+            s.ಸ್ಥಾನಾಂತರ     = 0;
 
-            ret = av_fifo_read_to_cb(fifo, read_cb, &s, &nb_elems);
-            if (ret < 0 || s.to_process || to_process != nb_elems) {
-                printf("FIFO read fail; seed %"PRIu32"\n", seed);
-                return 1;
+            ret = av_fifo_read_ಗಮ್ಯ_cb(fifo, read_cb, &s, &nb_elems);
+            ಆದರೆ (ret < 0 || s.ಗಮ್ಯ_process || ಗಮ್ಯ_process != nb_elems) {
+                ಬರೆ("FIFO read fail; seed %"PRIu32"\n", ಬೀಜ);
+                ಹಿಂತಿರುಗಿ 1;
             }
-            s.read_idx += s.offset;
+            s.read_idx += s.ಸ್ಥಾನಾಂತರ;
         }
     }
 
     av_fifo_freep2(&fifo);
-    free(p);
+    ಬಿಡುಗಡೆ(p);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

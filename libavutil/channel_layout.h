@@ -19,14 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CHANNEL_LAYOUT_H
-#define AVUTIL_CHANNEL_LAYOUT_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_CHANNEL_LAYOUT_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_CHANNEL_LAYOUT_H
 
-#include <stdint.h>
-#include <stdlib.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
 
-#include "version.h"
-#include "attributes.h"
+#ಅನ್ತರ್ಭಾವ "version.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
 
 /**
  * @file
@@ -44,51 +44,51 @@
  * @{
  */
 
-enum AVChannel {
+ಎಣಿಕೆ AVChannel {
     /// Invalid channel index
     AV_CHAN_NONE = -1,
-    AV_CHAN_FRONT_LEFT,
-    AV_CHAN_FRONT_RIGHT,
+    AV_CHAN_FRONT_ಎಡ,
+    AV_CHAN_FRONT_ಬಲ,
     AV_CHAN_FRONT_CENTER,
-    AV_CHAN_LOW_FREQUENCY,
-    AV_CHAN_BACK_LEFT,
-    AV_CHAN_BACK_RIGHT,
-    AV_CHAN_FRONT_LEFT_OF_CENTER,
-    AV_CHAN_FRONT_RIGHT_OF_CENTER,
-    AV_CHAN_BACK_CENTER,
-    AV_CHAN_SIDE_LEFT,
-    AV_CHAN_SIDE_RIGHT,
-    AV_CHAN_TOP_CENTER,
-    AV_CHAN_TOP_FRONT_LEFT,
-    AV_CHAN_TOP_FRONT_CENTER,
-    AV_CHAN_TOP_FRONT_RIGHT,
-    AV_CHAN_TOP_BACK_LEFT,
-    AV_CHAN_TOP_BACK_CENTER,
-    AV_CHAN_TOP_BACK_RIGHT,
+    AV_CHAN_ಕೆಳಗಿನ_FREQUENCY,
+    AV_CHAN_ಹಿಂಭಾಗ_ಎಡ,
+    AV_CHAN_ಹಿಂಭಾಗ_ಬಲ,
+    AV_CHAN_FRONT_ಎಡ_ದ_CENTER,
+    AV_CHAN_FRONT_ಬಲ_ದ_CENTER,
+    AV_CHAN_ಹಿಂಭಾಗ_CENTER,
+    AV_CHAN_SIDE_ಎಡ,
+    AV_CHAN_SIDE_ಬಲ,
+    AV_CHAN_ತುದಿ_CENTER,
+    AV_CHAN_ತುದಿ_FRONT_ಎಡ,
+    AV_CHAN_ತುದಿ_FRONT_CENTER,
+    AV_CHAN_ತುದಿ_FRONT_ಬಲ,
+    AV_CHAN_ತುದಿ_ಹಿಂಭಾಗ_ಎಡ,
+    AV_CHAN_ತುದಿ_ಹಿಂಭಾಗ_CENTER,
+    AV_CHAN_ತುದಿ_ಹಿಂಭಾಗ_ಬಲ,
     /** Stereo downmix. */
-    AV_CHAN_STEREO_LEFT = 29,
+    AV_CHAN_STEREO_ಎಡ = 29,
     /** See above. */
-    AV_CHAN_STEREO_RIGHT,
-    AV_CHAN_WIDE_LEFT,
-    AV_CHAN_WIDE_RIGHT,
-    AV_CHAN_SURROUND_DIRECT_LEFT,
-    AV_CHAN_SURROUND_DIRECT_RIGHT,
-    AV_CHAN_LOW_FREQUENCY_2,
-    AV_CHAN_TOP_SIDE_LEFT,
-    AV_CHAN_TOP_SIDE_RIGHT,
+    AV_CHAN_STEREO_ಬಲ,
+    AV_CHAN_WIDE_ಎಡ,
+    AV_CHAN_WIDE_ಬಲ,
+    AV_CHAN_SURROUND_ನೇರ_ಎಡ,
+    AV_CHAN_SURROUND_ನೇರ_ಬಲ,
+    AV_CHAN_ಕೆಳಗಿನ_FREQUENCY_2,
+    AV_CHAN_ತುದಿ_SIDE_ಎಡ,
+    AV_CHAN_ತುದಿ_SIDE_ಬಲ,
     AV_CHAN_BOTTOM_FRONT_CENTER,
-    AV_CHAN_BOTTOM_FRONT_LEFT,
-    AV_CHAN_BOTTOM_FRONT_RIGHT,
-    AV_CHAN_SIDE_SURROUND_LEFT,     ///<  +90 degrees, Lss, SiL
-    AV_CHAN_SIDE_SURROUND_RIGHT,    ///<  -90 degrees, Rss, SiR
-    AV_CHAN_TOP_SURROUND_LEFT,      ///< +110 degrees, Lvs, TpLS
-    AV_CHAN_TOP_SURROUND_RIGHT,     ///< -110 degrees, Rvs, TpRS
+    AV_CHAN_BOTTOM_FRONT_ಎಡ,
+    AV_CHAN_BOTTOM_FRONT_ಬಲ,
+    AV_CHAN_SIDE_SURROUND_ಎಡ,     ///<  +90 degrees, Lss, SiL
+    AV_CHAN_SIDE_SURROUND_ಬಲ,    ///<  -90 degrees, Rss, SiR
+    AV_CHAN_ತುದಿ_SURROUND_ಎಡ,      ///< +110 degrees, Lvs, TpLS
+    AV_CHAN_ತುದಿ_SURROUND_ಬಲ,     ///< -110 degrees, Rvs, TpRS
 
-    AV_CHAN_BINAURAL_LEFT = 61,
-    AV_CHAN_BINAURAL_RIGHT,
+    AV_CHAN_BINAURAL_ಎಡ = 61,
+    AV_CHAN_BINAURAL_ಬಲ,
 
     /** Channel is empty can be safely skipped. */
-    AV_CHAN_UNUSED = 0x200,
+    AV_CHAN_ಬಳಸದ = 0x200,
 
     /** Channel contains data, but its position is unknown. */
     AV_CHAN_UNKNOWN = 0x300,
@@ -105,31 +105,31 @@ enum AVChannel {
      * orderings, the AV_CHANNEL_ORDER_AMBISONIC ordering orders the channels
      * implicitly by their position in the stream.
      */
-    AV_CHAN_AMBISONIC_BASE = 0x400,
+    AV_CHAN_AMBISONIC_ತಳ = 0x400,
     // leave space for 1024 ids, which correspond to maximum order-32 harmonics,
     // which should be enough for the foreseeable use cases
-    AV_CHAN_AMBISONIC_END  = 0x7ff,
+    AV_CHAN_AMBISONIC_ಕೊನೆ  = 0x7ff,
 };
 
-enum AVChannelOrder {
+ಎಣಿಕೆ AVChannel_ಕ್ರಮ {
     /**
      * Only the channel count is specified, without any further information
      * about the channel order.
      */
-    AV_CHANNEL_ORDER_UNSPEC,
+    AV_CHANNEL_ಕ್ರಮ_UNSPEC,
     /**
      * The native channel order, i.e. the channels are in the same order in
      * which they are defined in the AVChannel enum. This supports up to 63
      * different channels.
      */
-    AV_CHANNEL_ORDER_NATIVE,
+    AV_CHANNEL_ಕ್ರಮ_NATIVE,
     /**
      * The channel order does not correspond to any other predefined order and
      * is stored as an explicit map. For example, this could be used to support
      * layouts with 64 or more channels, or with empty/skipped (AV_CHAN_UNUSED)
      * channels at arbitrary positions.
      */
-    AV_CHANNEL_ORDER_CUSTOM,
+    AV_CHANNEL_ಕ್ರಮ_CUSTOM,
     /**
      * The audio is represented as the decomposition of the sound field into
      * spherical harmonics. Each channel corresponds to a single expansion
@@ -152,11 +152,11 @@ enum AVChannelOrder {
      * Normalization is assumed to be SN3D (Schmidt Semi-Normalization)
      * as defined in AmbiX format $ 2.1.
      */
-    AV_CHANNEL_ORDER_AMBISONIC,
+    AV_CHANNEL_ಕ್ರಮ_AMBISONIC,
     /**
      * Number of channel orders, not part of ABI/API
      */
-    FF_CHANNEL_ORDER_NB
+    FF_CHANNEL_ಕ್ರಮ_NB
 };
 
 
@@ -172,115 +172,115 @@ enum AVChannelOrder {
  *
  * @{
  */
-#define AV_CH_FRONT_LEFT             (1ULL << AV_CHAN_FRONT_LEFT           )
-#define AV_CH_FRONT_RIGHT            (1ULL << AV_CHAN_FRONT_RIGHT          )
-#define AV_CH_FRONT_CENTER           (1ULL << AV_CHAN_FRONT_CENTER         )
-#define AV_CH_LOW_FREQUENCY          (1ULL << AV_CHAN_LOW_FREQUENCY        )
-#define AV_CH_BACK_LEFT              (1ULL << AV_CHAN_BACK_LEFT            )
-#define AV_CH_BACK_RIGHT             (1ULL << AV_CHAN_BACK_RIGHT           )
-#define AV_CH_FRONT_LEFT_OF_CENTER   (1ULL << AV_CHAN_FRONT_LEFT_OF_CENTER )
-#define AV_CH_FRONT_RIGHT_OF_CENTER  (1ULL << AV_CHAN_FRONT_RIGHT_OF_CENTER)
-#define AV_CH_BACK_CENTER            (1ULL << AV_CHAN_BACK_CENTER          )
-#define AV_CH_SIDE_LEFT              (1ULL << AV_CHAN_SIDE_LEFT            )
-#define AV_CH_SIDE_RIGHT             (1ULL << AV_CHAN_SIDE_RIGHT           )
-#define AV_CH_TOP_CENTER             (1ULL << AV_CHAN_TOP_CENTER           )
-#define AV_CH_TOP_FRONT_LEFT         (1ULL << AV_CHAN_TOP_FRONT_LEFT       )
-#define AV_CH_TOP_FRONT_CENTER       (1ULL << AV_CHAN_TOP_FRONT_CENTER     )
-#define AV_CH_TOP_FRONT_RIGHT        (1ULL << AV_CHAN_TOP_FRONT_RIGHT      )
-#define AV_CH_TOP_BACK_LEFT          (1ULL << AV_CHAN_TOP_BACK_LEFT        )
-#define AV_CH_TOP_BACK_CENTER        (1ULL << AV_CHAN_TOP_BACK_CENTER      )
-#define AV_CH_TOP_BACK_RIGHT         (1ULL << AV_CHAN_TOP_BACK_RIGHT       )
-#define AV_CH_STEREO_LEFT            (1ULL << AV_CHAN_STEREO_LEFT          )
-#define AV_CH_STEREO_RIGHT           (1ULL << AV_CHAN_STEREO_RIGHT         )
-#define AV_CH_WIDE_LEFT              (1ULL << AV_CHAN_WIDE_LEFT            )
-#define AV_CH_WIDE_RIGHT             (1ULL << AV_CHAN_WIDE_RIGHT           )
-#define AV_CH_SURROUND_DIRECT_LEFT   (1ULL << AV_CHAN_SURROUND_DIRECT_LEFT )
-#define AV_CH_SURROUND_DIRECT_RIGHT  (1ULL << AV_CHAN_SURROUND_DIRECT_RIGHT)
-#define AV_CH_LOW_FREQUENCY_2        (1ULL << AV_CHAN_LOW_FREQUENCY_2      )
-#define AV_CH_TOP_SIDE_LEFT          (1ULL << AV_CHAN_TOP_SIDE_LEFT        )
-#define AV_CH_TOP_SIDE_RIGHT         (1ULL << AV_CHAN_TOP_SIDE_RIGHT       )
-#define AV_CH_BOTTOM_FRONT_CENTER    (1ULL << AV_CHAN_BOTTOM_FRONT_CENTER  )
-#define AV_CH_BOTTOM_FRONT_LEFT      (1ULL << AV_CHAN_BOTTOM_FRONT_LEFT    )
-#define AV_CH_BOTTOM_FRONT_RIGHT     (1ULL << AV_CHAN_BOTTOM_FRONT_RIGHT   )
-#define AV_CH_SIDE_SURROUND_LEFT     (1ULL << AV_CHAN_SIDE_SURROUND_LEFT   )
-#define AV_CH_SIDE_SURROUND_RIGHT    (1ULL << AV_CHAN_SIDE_SURROUND_RIGHT  )
-#define AV_CH_TOP_SURROUND_LEFT      (1ULL << AV_CHAN_TOP_SURROUND_LEFT    )
-#define AV_CH_TOP_SURROUND_RIGHT     (1ULL << AV_CHAN_TOP_SURROUND_RIGHT   )
-#define AV_CH_BINAURAL_LEFT          (1ULL << AV_CHAN_BINAURAL_LEFT        )
-#define AV_CH_BINAURAL_RIGHT         (1ULL << AV_CHAN_BINAURAL_RIGHT       )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_FRONT_ಎಡ             (1ULL << AV_CHAN_FRONT_ಎಡ           )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_FRONT_ಬಲ            (1ULL << AV_CHAN_FRONT_ಬಲ          )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_FRONT_CENTER           (1ULL << AV_CHAN_FRONT_CENTER         )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ಕೆಳಗಿನ_FREQUENCY          (1ULL << AV_CHAN_ಕೆಳಗಿನ_FREQUENCY        )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ಹಿಂಭಾಗ_ಎಡ              (1ULL << AV_CHAN_ಹಿಂಭಾಗ_ಎಡ            )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ಹಿಂಭಾಗ_ಬಲ             (1ULL << AV_CHAN_ಹಿಂಭಾಗ_ಬಲ           )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_FRONT_ಎಡ_ದ_CENTER   (1ULL << AV_CHAN_FRONT_ಎಡ_ದ_CENTER )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_FRONT_ಬಲ_ದ_CENTER  (1ULL << AV_CHAN_FRONT_ಬಲ_ದ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ಹಿಂಭಾಗ_CENTER            (1ULL << AV_CHAN_ಹಿಂಭಾಗ_CENTER          )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_SIDE_ಎಡ              (1ULL << AV_CHAN_SIDE_ಎಡ            )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_SIDE_ಬಲ             (1ULL << AV_CHAN_SIDE_ಬಲ           )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ತುದಿ_CENTER             (1ULL << AV_CHAN_ತುದಿ_CENTER           )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ತುದಿ_FRONT_ಎಡ         (1ULL << AV_CHAN_ತುದಿ_FRONT_ಎಡ       )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ತುದಿ_FRONT_CENTER       (1ULL << AV_CHAN_ತುದಿ_FRONT_CENTER     )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ತುದಿ_FRONT_ಬಲ        (1ULL << AV_CHAN_ತುದಿ_FRONT_ಬಲ      )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ತುದಿ_ಹಿಂಭಾಗ_ಎಡ          (1ULL << AV_CHAN_ತುದಿ_ಹಿಂಭಾಗ_ಎಡ        )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ತುದಿ_ಹಿಂಭಾಗ_CENTER        (1ULL << AV_CHAN_ತುದಿ_ಹಿಂಭಾಗ_CENTER      )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ತುದಿ_ಹಿಂಭಾಗ_ಬಲ         (1ULL << AV_CHAN_ತುದಿ_ಹಿಂಭಾಗ_ಬಲ       )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_STEREO_ಎಡ            (1ULL << AV_CHAN_STEREO_ಎಡ          )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_STEREO_ಬಲ           (1ULL << AV_CHAN_STEREO_ಬಲ         )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_WIDE_ಎಡ              (1ULL << AV_CHAN_WIDE_ಎಡ            )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_WIDE_ಬಲ             (1ULL << AV_CHAN_WIDE_ಬಲ           )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_SURROUND_ನೇರ_ಎಡ   (1ULL << AV_CHAN_SURROUND_ನೇರ_ಎಡ )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_SURROUND_ನೇರ_ಬಲ  (1ULL << AV_CHAN_SURROUND_ನೇರ_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ಕೆಳಗಿನ_FREQUENCY_2        (1ULL << AV_CHAN_ಕೆಳಗಿನ_FREQUENCY_2      )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ತುದಿ_SIDE_ಎಡ          (1ULL << AV_CHAN_ತುದಿ_SIDE_ಎಡ        )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ತುದಿ_SIDE_ಬಲ         (1ULL << AV_CHAN_ತುದಿ_SIDE_ಬಲ       )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_BOTTOM_FRONT_CENTER    (1ULL << AV_CHAN_BOTTOM_FRONT_CENTER  )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_BOTTOM_FRONT_ಎಡ      (1ULL << AV_CHAN_BOTTOM_FRONT_ಎಡ    )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_BOTTOM_FRONT_ಬಲ     (1ULL << AV_CHAN_BOTTOM_FRONT_ಬಲ   )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_SIDE_SURROUND_ಎಡ     (1ULL << AV_CHAN_SIDE_SURROUND_ಎಡ   )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_SIDE_SURROUND_ಬಲ    (1ULL << AV_CHAN_SIDE_SURROUND_ಬಲ  )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ತುದಿ_SURROUND_ಎಡ      (1ULL << AV_CHAN_ತುದಿ_SURROUND_ಎಡ    )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_ತುದಿ_SURROUND_ಬಲ     (1ULL << AV_CHAN_ತುದಿ_SURROUND_ಬಲ   )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_BINAURAL_ಎಡ          (1ULL << AV_CHAN_BINAURAL_ಎಡ        )
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_BINAURAL_ಬಲ         (1ULL << AV_CHAN_BINAURAL_ಬಲ       )
 
 /**
  * @}
  * @defgroup channel_mask_c Audio channel layouts
  * @{
  * */
-#define AV_CH_LAYOUT_MONO              (AV_CH_FRONT_CENTER)
-#define AV_CH_LAYOUT_STEREO            (AV_CH_FRONT_LEFT|AV_CH_FRONT_RIGHT)
-#define AV_CH_LAYOUT_2POINT1           (AV_CH_LAYOUT_STEREO|AV_CH_LOW_FREQUENCY)
-#define AV_CH_LAYOUT_2_1               (AV_CH_LAYOUT_STEREO|AV_CH_BACK_CENTER)
-#define AV_CH_LAYOUT_SURROUND          (AV_CH_LAYOUT_STEREO|AV_CH_FRONT_CENTER)
-#define AV_CH_LAYOUT_3POINT1           (AV_CH_LAYOUT_SURROUND|AV_CH_LOW_FREQUENCY)
-#define AV_CH_LAYOUT_4POINT0           (AV_CH_LAYOUT_SURROUND|AV_CH_BACK_CENTER)
-#define AV_CH_LAYOUT_4POINT1           (AV_CH_LAYOUT_4POINT0|AV_CH_LOW_FREQUENCY)
-#define AV_CH_LAYOUT_2_2               (AV_CH_LAYOUT_STEREO|AV_CH_SIDE_LEFT|AV_CH_SIDE_RIGHT)
-#define AV_CH_LAYOUT_QUAD              (AV_CH_LAYOUT_STEREO|AV_CH_BACK_LEFT|AV_CH_BACK_RIGHT)
-#define AV_CH_LAYOUT_5POINT0           (AV_CH_LAYOUT_SURROUND|AV_CH_SIDE_LEFT|AV_CH_SIDE_RIGHT)
-#define AV_CH_LAYOUT_5POINT1           (AV_CH_LAYOUT_5POINT0|AV_CH_LOW_FREQUENCY)
-#define AV_CH_LAYOUT_5POINT0_BACK      (AV_CH_LAYOUT_SURROUND|AV_CH_BACK_LEFT|AV_CH_BACK_RIGHT)
-#define AV_CH_LAYOUT_5POINT1_BACK      (AV_CH_LAYOUT_5POINT0_BACK|AV_CH_LOW_FREQUENCY)
-#define AV_CH_LAYOUT_6POINT0           (AV_CH_LAYOUT_5POINT0|AV_CH_BACK_CENTER)
-#define AV_CH_LAYOUT_6POINT0_FRONT     (AV_CH_LAYOUT_2_2|AV_CH_FRONT_LEFT_OF_CENTER|AV_CH_FRONT_RIGHT_OF_CENTER)
-#define AV_CH_LAYOUT_HEXAGONAL         (AV_CH_LAYOUT_5POINT0_BACK|AV_CH_BACK_CENTER)
-#define AV_CH_LAYOUT_3POINT1POINT2     (AV_CH_LAYOUT_3POINT1|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT)
-#define AV_CH_LAYOUT_6POINT1           (AV_CH_LAYOUT_5POINT1|AV_CH_BACK_CENTER)
-#define AV_CH_LAYOUT_6POINT1_BACK      (AV_CH_LAYOUT_5POINT1_BACK|AV_CH_BACK_CENTER)
-#define AV_CH_LAYOUT_6POINT1_FRONT     (AV_CH_LAYOUT_6POINT0_FRONT|AV_CH_LOW_FREQUENCY)
-#define AV_CH_LAYOUT_7POINT0           (AV_CH_LAYOUT_5POINT0|AV_CH_BACK_LEFT|AV_CH_BACK_RIGHT)
-#define AV_CH_LAYOUT_7POINT0_FRONT     (AV_CH_LAYOUT_5POINT0|AV_CH_FRONT_LEFT_OF_CENTER|AV_CH_FRONT_RIGHT_OF_CENTER)
-#define AV_CH_LAYOUT_7POINT1           (AV_CH_LAYOUT_5POINT1|AV_CH_BACK_LEFT|AV_CH_BACK_RIGHT)
-#define AV_CH_LAYOUT_7POINT1_WIDE      (AV_CH_LAYOUT_5POINT1|AV_CH_FRONT_LEFT_OF_CENTER|AV_CH_FRONT_RIGHT_OF_CENTER)
-#define AV_CH_LAYOUT_7POINT1_WIDE_BACK (AV_CH_LAYOUT_5POINT1_BACK|AV_CH_FRONT_LEFT_OF_CENTER|AV_CH_FRONT_RIGHT_OF_CENTER)
-#define AV_CH_LAYOUT_5POINT1POINT2     (AV_CH_LAYOUT_5POINT1|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT)
-#define AV_CH_LAYOUT_5POINT1POINT2_BACK (AV_CH_LAYOUT_5POINT1_BACK|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT)
-#define AV_CH_LAYOUT_OCTAGONAL         (AV_CH_LAYOUT_5POINT0|AV_CH_BACK_LEFT|AV_CH_BACK_CENTER|AV_CH_BACK_RIGHT)
-#define AV_CH_LAYOUT_CUBE              (AV_CH_LAYOUT_QUAD|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT|AV_CH_TOP_BACK_LEFT|AV_CH_TOP_BACK_RIGHT)
-#define AV_CH_LAYOUT_5POINT1POINT4     (AV_CH_LAYOUT_5POINT1POINT2|AV_CH_TOP_BACK_LEFT|AV_CH_TOP_BACK_RIGHT)
-#define AV_CH_LAYOUT_5POINT1POINT6     (AV_CH_LAYOUT_5POINT1POINT4|AV_CH_TOP_FRONT_CENTER|AV_CH_TOP_CENTER)
-#define AV_CH_LAYOUT_7POINT1POINT2     (AV_CH_LAYOUT_7POINT1|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT)
-#define AV_CH_LAYOUT_7POINT1POINT4     (AV_CH_LAYOUT_7POINT1POINT2|AV_CH_TOP_BACK_LEFT|AV_CH_TOP_BACK_RIGHT)
-#define AV_CH_LAYOUT_7POINT1POINT6     (AV_CH_LAYOUT_7POINT1POINT4|AV_CH_TOP_FRONT_CENTER|AV_CH_TOP_CENTER)
-#define AV_CH_LAYOUT_7POINT2POINT3     (AV_CH_LAYOUT_7POINT1POINT2|AV_CH_TOP_BACK_CENTER|AV_CH_LOW_FREQUENCY_2)
-#define AV_CH_LAYOUT_9POINT1POINT4     (AV_CH_LAYOUT_7POINT1POINT4|AV_CH_FRONT_LEFT_OF_CENTER|AV_CH_FRONT_RIGHT_OF_CENTER)
-#define AV_CH_LAYOUT_9POINT1POINT6     (AV_CH_LAYOUT_9POINT1POINT4|AV_CH_TOP_SIDE_LEFT|AV_CH_TOP_SIDE_RIGHT)
-#define AV_CH_LAYOUT_HEXADECAGONAL     (AV_CH_LAYOUT_OCTAGONAL|AV_CH_WIDE_LEFT|AV_CH_WIDE_RIGHT|AV_CH_TOP_BACK_LEFT|AV_CH_TOP_BACK_RIGHT|AV_CH_TOP_BACK_CENTER|AV_CH_TOP_FRONT_CENTER|AV_CH_TOP_FRONT_LEFT|AV_CH_TOP_FRONT_RIGHT)
-#define AV_CH_LAYOUT_BINAURAL          (AV_CH_BINAURAL_LEFT|AV_CH_BINAURAL_RIGHT)
-#define AV_CH_LAYOUT_STEREO_DOWNMIX    (AV_CH_STEREO_LEFT|AV_CH_STEREO_RIGHT)
-#define AV_CH_LAYOUT_22POINT2          (AV_CH_LAYOUT_9POINT1POINT6|AV_CH_BACK_CENTER|AV_CH_LOW_FREQUENCY_2|AV_CH_TOP_FRONT_CENTER|AV_CH_TOP_CENTER|AV_CH_TOP_BACK_CENTER|AV_CH_BOTTOM_FRONT_CENTER|AV_CH_BOTTOM_FRONT_LEFT|AV_CH_BOTTOM_FRONT_RIGHT)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_MONO              (AV_CH_FRONT_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_STEREO            (AV_CH_FRONT_ಎಡ|AV_CH_FRONT_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_2POINT1           (AV_CH_LAYOUT_STEREO|AV_CH_ಕೆಳಗಿನ_FREQUENCY)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_2_1               (AV_CH_LAYOUT_STEREO|AV_CH_ಹಿಂಭಾಗ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_SURROUND          (AV_CH_LAYOUT_STEREO|AV_CH_FRONT_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_3POINT1           (AV_CH_LAYOUT_SURROUND|AV_CH_ಕೆಳಗಿನ_FREQUENCY)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_4POINT0           (AV_CH_LAYOUT_SURROUND|AV_CH_ಹಿಂಭಾಗ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_4POINT1           (AV_CH_LAYOUT_4POINT0|AV_CH_ಕೆಳಗಿನ_FREQUENCY)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_2_2               (AV_CH_LAYOUT_STEREO|AV_CH_SIDE_ಎಡ|AV_CH_SIDE_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_QUAD              (AV_CH_LAYOUT_STEREO|AV_CH_ಹಿಂಭಾಗ_ಎಡ|AV_CH_ಹಿಂಭಾಗ_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_5POINT0           (AV_CH_LAYOUT_SURROUND|AV_CH_SIDE_ಎಡ|AV_CH_SIDE_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_5POINT1           (AV_CH_LAYOUT_5POINT0|AV_CH_ಕೆಳಗಿನ_FREQUENCY)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_5_POINT0_ಹಿಂಭಾಗ      (AV_CH_LAYOUT_SURROUND|AV_CH_ಹಿಂಭಾಗ_ಎಡ|AV_CH_ಹಿಂಭಾಗ_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_5_POINT1_ಹಿಂಭಾಗ      (AV_CH_LAYOUT_5_POINT0_ಹಿಂಭಾಗ|AV_CH_ಕೆಳಗಿನ_FREQUENCY)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_6POINT0           (AV_CH_LAYOUT_5POINT0|AV_CH_ಹಿಂಭಾಗ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_6POINT0_FRONT     (AV_CH_LAYOUT_2_2|AV_CH_FRONT_ಎಡ_ದ_CENTER|AV_CH_FRONT_ಬಲ_ದ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_HEXAGONAL         (AV_CH_LAYOUT_5_POINT0_ಹಿಂಭಾಗ|AV_CH_ಹಿಂಭಾಗ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_3POINT1POINT2     (AV_CH_LAYOUT_3POINT1|AV_CH_ತುದಿ_FRONT_ಎಡ|AV_CH_ತುದಿ_FRONT_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_6POINT1           (AV_CH_LAYOUT_5POINT1|AV_CH_ಹಿಂಭಾಗ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_6_POINT1_ಹಿಂಭಾಗ      (AV_CH_LAYOUT_5_POINT1_ಹಿಂಭಾಗ|AV_CH_ಹಿಂಭಾಗ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_6POINT1_FRONT     (AV_CH_LAYOUT_6POINT0_FRONT|AV_CH_ಕೆಳಗಿನ_FREQUENCY)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_7POINT0           (AV_CH_LAYOUT_5POINT0|AV_CH_ಹಿಂಭಾಗ_ಎಡ|AV_CH_ಹಿಂಭಾಗ_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_7POINT0_FRONT     (AV_CH_LAYOUT_5POINT0|AV_CH_FRONT_ಎಡ_ದ_CENTER|AV_CH_FRONT_ಬಲ_ದ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_7POINT1           (AV_CH_LAYOUT_5POINT1|AV_CH_ಹಿಂಭಾಗ_ಎಡ|AV_CH_ಹಿಂಭಾಗ_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_7POINT1_WIDE      (AV_CH_LAYOUT_5POINT1|AV_CH_FRONT_ಎಡ_ದ_CENTER|AV_CH_FRONT_ಬಲ_ದ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_7_POINT1_WIDE_ಹಿಂಭಾಗ (AV_CH_LAYOUT_5_POINT1_ಹಿಂಭಾಗ|AV_CH_FRONT_ಎಡ_ದ_CENTER|AV_CH_FRONT_ಬಲ_ದ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_5POINT1POINT2     (AV_CH_LAYOUT_5POINT1|AV_CH_ತುದಿ_FRONT_ಎಡ|AV_CH_ತುದಿ_FRONT_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_5_POINT1_POINT2_ಹಿಂಭಾಗ (AV_CH_LAYOUT_5_POINT1_ಹಿಂಭಾಗ|AV_CH_ತುದಿ_FRONT_ಎಡ|AV_CH_ತುದಿ_FRONT_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_OCTAGONAL         (AV_CH_LAYOUT_5POINT0|AV_CH_ಹಿಂಭಾಗ_ಎಡ|AV_CH_ಹಿಂಭಾಗ_CENTER|AV_CH_ಹಿಂಭಾಗ_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_CUBE              (AV_CH_LAYOUT_QUAD|AV_CH_ತುದಿ_FRONT_ಎಡ|AV_CH_ತುದಿ_FRONT_ಬಲ|AV_CH_ತುದಿ_ಹಿಂಭಾಗ_ಎಡ|AV_CH_ತುದಿ_ಹಿಂಭಾಗ_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_5POINT1POINT4     (AV_CH_LAYOUT_5POINT1POINT2|AV_CH_ತುದಿ_ಹಿಂಭಾಗ_ಎಡ|AV_CH_ತುದಿ_ಹಿಂಭಾಗ_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_5POINT1POINT6     (AV_CH_LAYOUT_5POINT1POINT4|AV_CH_ತುದಿ_FRONT_CENTER|AV_CH_ತುದಿ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_7POINT1POINT2     (AV_CH_LAYOUT_7POINT1|AV_CH_ತುದಿ_FRONT_ಎಡ|AV_CH_ತುದಿ_FRONT_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_7POINT1POINT4     (AV_CH_LAYOUT_7POINT1POINT2|AV_CH_ತುದಿ_ಹಿಂಭಾಗ_ಎಡ|AV_CH_ತುದಿ_ಹಿಂಭಾಗ_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_7POINT1POINT6     (AV_CH_LAYOUT_7POINT1POINT4|AV_CH_ತುದಿ_FRONT_CENTER|AV_CH_ತುದಿ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_7POINT2POINT3     (AV_CH_LAYOUT_7POINT1POINT2|AV_CH_ತುದಿ_ಹಿಂಭಾಗ_CENTER|AV_CH_ಕೆಳಗಿನ_FREQUENCY_2)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_9POINT1POINT4     (AV_CH_LAYOUT_7POINT1POINT4|AV_CH_FRONT_ಎಡ_ದ_CENTER|AV_CH_FRONT_ಬಲ_ದ_CENTER)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_9POINT1POINT6     (AV_CH_LAYOUT_9POINT1POINT4|AV_CH_ತುದಿ_SIDE_ಎಡ|AV_CH_ತುದಿ_SIDE_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_HEXADECAGONAL     (AV_CH_LAYOUT_OCTAGONAL|AV_CH_WIDE_ಎಡ|AV_CH_WIDE_ಬಲ|AV_CH_ತುದಿ_ಹಿಂಭಾಗ_ಎಡ|AV_CH_ತುದಿ_ಹಿಂಭಾಗ_ಬಲ|AV_CH_ತುದಿ_ಹಿಂಭಾಗ_CENTER|AV_CH_ತುದಿ_FRONT_CENTER|AV_CH_ತುದಿ_FRONT_ಎಡ|AV_CH_ತುದಿ_FRONT_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_BINAURAL          (AV_CH_BINAURAL_ಎಡ|AV_CH_BINAURAL_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_STEREO_DOWNMIX    (AV_CH_STEREO_ಎಡ|AV_CH_STEREO_ಬಲ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_22POINT2          (AV_CH_LAYOUT_9POINT1POINT6|AV_CH_ಹಿಂಭಾಗ_CENTER|AV_CH_ಕೆಳಗಿನ_FREQUENCY_2|AV_CH_ತುದಿ_FRONT_CENTER|AV_CH_ತುದಿ_CENTER|AV_CH_ತುದಿ_ಹಿಂಭಾಗ_CENTER|AV_CH_BOTTOM_FRONT_CENTER|AV_CH_BOTTOM_FRONT_ಎಡ|AV_CH_BOTTOM_FRONT_ಬಲ)
 
-#if FF_API_CHANNEL_LAYOUT_BACK
+#ಆದರೆ FF_API_CHANNEL_LAYOUT_ಹಿಂಭಾಗ
 /*
  * The following layout masks are deprecated and will be removed in
  * an upcoming major bump.
  */
-#define AV_CH_LAYOUT_5POINT1POINT4_BACK AV_CH_LAYOUT_5POINT1POINT4
-#define AV_CH_LAYOUT_7POINT1POINT4_BACK AV_CH_LAYOUT_7POINT1POINT4
-#define AV_CH_LAYOUT_9POINT1POINT4_BACK AV_CH_LAYOUT_9POINT1POINT4
-#define AV_CH_LAYOUT_7POINT1_TOP_BACK AV_CH_LAYOUT_5POINT1POINT2_BACK
-#endif
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_5_POINT1_POINT4_ಹಿಂಭಾಗ AV_CH_LAYOUT_5POINT1POINT4
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_7_POINT1_POINT4_ಹಿಂಭಾಗ AV_CH_LAYOUT_7POINT1POINT4
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_9_POINT1_POINT4_ಹಿಂಭಾಗ AV_CH_LAYOUT_9POINT1POINT4
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CH_LAYOUT_7_POINT1_ತುದಿ_ಹಿಂಭಾಗ AV_CH_LAYOUT_5_POINT1_POINT2_ಹಿಂಭಾಗ
+#ಆದರೆ_ಅಂತ್ಯ
 
 /**
  * @}
  */
 
-enum AVMatrixEncoding {
-    AV_MATRIX_ENCODING_NONE,
-    AV_MATRIX_ENCODING_DOLBY,
-    AV_MATRIX_ENCODING_DPLII,
-    AV_MATRIX_ENCODING_DPLIIX,
-    AV_MATRIX_ENCODING_DPLIIZ,
-    AV_MATRIX_ENCODING_DOLBYEX,
-    AV_MATRIX_ENCODING_DOLBYHEADPHONE,
-    AV_MATRIX_ENCODING_NB
+ಎಣಿಕೆ AVMatrixEncoding {
+    AV_ಮಾತೃಕೆ_ENCODING_NONE,
+    AV_ಮಾತೃಕೆ_ENCODING_DOLBY,
+    AV_ಮಾತೃಕೆ_ENCODING_DPLII,
+    AV_ಮಾತೃಕೆ_ENCODING_DPLIIX,
+    AV_ಮಾತೃಕೆ_ENCODING_DPLIIZ,
+    AV_ಮಾತೃಕೆ_ENCODING_DOLBYEX,
+    AV_ಮಾತೃಕೆ_ENCODING_DOLBYHEADPHONE,
+    AV_ಮಾತೃಕೆ_ENCODING_NB
 };
 
 /**
@@ -291,10 +291,10 @@ enum AVMatrixEncoding {
  *
  * No new fields may be added to it without a major version bump.
  */
-typedef struct AVChannelCustom {
-    enum AVChannel id;
-    char name[16];
-    void *opaque;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVChannelCustom {
+    ಎಣಿಕೆ AVChannel id;
+    ಅಕ್ಷರ name[16];
+    ಶೂನ್ಯ *opaque;
 } AVChannelCustom;
 
 /**
@@ -327,24 +327,24 @@ typedef struct AVChannelCustom {
  * No new fields may be added to it without a major version bump, except for
  * new elements of the union fitting in sizeof(uint64_t).
  */
-typedef struct AVChannelLayout {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVChannelLayout {
     /**
      * Channel order used in this layout.
      * This is a mandatory field.
      */
-    enum AVChannelOrder order;
+    ಎಣಿಕೆ AVChannel_ಕ್ರಮ ಕ್ರಮ;
 
     /**
      * Number of channels in this layout. Mandatory field.
      */
-    int nb_channels;
+    ಪೂರ್ಣಾಂಕ nb_channels;
 
     /**
      * Details about which channels are present in this layout.
      * For AV_CHANNEL_ORDER_UNSPEC, this field is undefined and must not be
      * used.
      */
-    union {
+    ಒಕ್ಕೂಟ {
         /**
          * This member must be used for AV_CHANNEL_ORDER_NATIVE, and may be used
          * for AV_CHANNEL_ORDER_AMBISONIC to signal non-diegetic channels.
@@ -359,7 +359,7 @@ typedef struct AVChannelLayout {
          * functions), the code doing it must ensure that the number of set bits
          * is equal to nb_channels.
          */
-        uint64_t mask;
+        uint64_t ಮುಖವಾಡ_2;
         /**
          * This member must be used when the channel order is
          * AV_CHANNEL_ORDER_CUSTOM. It is a nb_channels-sized array, with each
@@ -384,7 +384,7 @@ typedef struct AVChannelLayout {
     /**
      * For some private data of the user.
      */
-    void *opaque;
+    ಶೂನ್ಯ *opaque;
 } AVChannelLayout;
 
 /**
@@ -392,78 +392,78 @@ typedef struct AVChannelLayout {
  *
  * @note This doesn't use designated initializers for compatibility with C++ 17 and older.
  */
-#define AV_CHANNEL_LAYOUT_MASK(nb, m) \
-    { /* .order */ AV_CHANNEL_ORDER_NATIVE, \
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(nb, m) \
+    { /* .order */ AV_CHANNEL_ಕ್ರಮ_NATIVE, \
       /* .nb_channels */  (nb), \
       /* .u.mask */ { m }, \
-      /* .opaque */ NULL }
+      /* .opaque */ ಖಾಲಿ }
 
 /**
  * @name Common pre-defined channel layouts
  * @{
  */
-#define AV_CHANNEL_LAYOUT_MONO              AV_CHANNEL_LAYOUT_MASK(1,  AV_CH_LAYOUT_MONO)
-#define AV_CHANNEL_LAYOUT_STEREO            AV_CHANNEL_LAYOUT_MASK(2,  AV_CH_LAYOUT_STEREO)
-#define AV_CHANNEL_LAYOUT_2POINT1           AV_CHANNEL_LAYOUT_MASK(3,  AV_CH_LAYOUT_2POINT1)
-#define AV_CHANNEL_LAYOUT_2_1               AV_CHANNEL_LAYOUT_MASK(3,  AV_CH_LAYOUT_2_1)
-#define AV_CHANNEL_LAYOUT_SURROUND          AV_CHANNEL_LAYOUT_MASK(3,  AV_CH_LAYOUT_SURROUND)
-#define AV_CHANNEL_LAYOUT_3POINT1           AV_CHANNEL_LAYOUT_MASK(4,  AV_CH_LAYOUT_3POINT1)
-#define AV_CHANNEL_LAYOUT_4POINT0           AV_CHANNEL_LAYOUT_MASK(4,  AV_CH_LAYOUT_4POINT0)
-#define AV_CHANNEL_LAYOUT_4POINT1           AV_CHANNEL_LAYOUT_MASK(5,  AV_CH_LAYOUT_4POINT1)
-#define AV_CHANNEL_LAYOUT_2_2               AV_CHANNEL_LAYOUT_MASK(4,  AV_CH_LAYOUT_2_2)
-#define AV_CHANNEL_LAYOUT_QUAD              AV_CHANNEL_LAYOUT_MASK(4,  AV_CH_LAYOUT_QUAD)
-#define AV_CHANNEL_LAYOUT_5POINT0           AV_CHANNEL_LAYOUT_MASK(5,  AV_CH_LAYOUT_5POINT0)
-#define AV_CHANNEL_LAYOUT_5POINT1           AV_CHANNEL_LAYOUT_MASK(6,  AV_CH_LAYOUT_5POINT1)
-#define AV_CHANNEL_LAYOUT_5POINT0_BACK      AV_CHANNEL_LAYOUT_MASK(5,  AV_CH_LAYOUT_5POINT0_BACK)
-#define AV_CHANNEL_LAYOUT_5POINT1_BACK      AV_CHANNEL_LAYOUT_MASK(6,  AV_CH_LAYOUT_5POINT1_BACK)
-#define AV_CHANNEL_LAYOUT_6POINT0           AV_CHANNEL_LAYOUT_MASK(6,  AV_CH_LAYOUT_6POINT0)
-#define AV_CHANNEL_LAYOUT_6POINT0_FRONT     AV_CHANNEL_LAYOUT_MASK(6,  AV_CH_LAYOUT_6POINT0_FRONT)
-#define AV_CHANNEL_LAYOUT_3POINT1POINT2     AV_CHANNEL_LAYOUT_MASK(6,  AV_CH_LAYOUT_3POINT1POINT2)
-#define AV_CHANNEL_LAYOUT_HEXAGONAL         AV_CHANNEL_LAYOUT_MASK(6,  AV_CH_LAYOUT_HEXAGONAL)
-#define AV_CHANNEL_LAYOUT_6POINT1           AV_CHANNEL_LAYOUT_MASK(7,  AV_CH_LAYOUT_6POINT1)
-#define AV_CHANNEL_LAYOUT_6POINT1_BACK      AV_CHANNEL_LAYOUT_MASK(7,  AV_CH_LAYOUT_6POINT1_BACK)
-#define AV_CHANNEL_LAYOUT_6POINT1_FRONT     AV_CHANNEL_LAYOUT_MASK(7,  AV_CH_LAYOUT_6POINT1_FRONT)
-#define AV_CHANNEL_LAYOUT_7POINT0           AV_CHANNEL_LAYOUT_MASK(7,  AV_CH_LAYOUT_7POINT0)
-#define AV_CHANNEL_LAYOUT_7POINT0_FRONT     AV_CHANNEL_LAYOUT_MASK(7,  AV_CH_LAYOUT_7POINT0_FRONT)
-#define AV_CHANNEL_LAYOUT_7POINT1           AV_CHANNEL_LAYOUT_MASK(8,  AV_CH_LAYOUT_7POINT1)
-#define AV_CHANNEL_LAYOUT_7POINT1_WIDE      AV_CHANNEL_LAYOUT_MASK(8,  AV_CH_LAYOUT_7POINT1_WIDE)
-#define AV_CHANNEL_LAYOUT_7POINT1_WIDE_BACK AV_CHANNEL_LAYOUT_MASK(8,  AV_CH_LAYOUT_7POINT1_WIDE_BACK)
-#define AV_CHANNEL_LAYOUT_5POINT1POINT2     AV_CHANNEL_LAYOUT_MASK(8,  AV_CH_LAYOUT_5POINT1POINT2)
-#define AV_CHANNEL_LAYOUT_5POINT1POINT2_BACK AV_CHANNEL_LAYOUT_MASK(8, AV_CH_LAYOUT_5POINT1POINT2_BACK)
-#define AV_CHANNEL_LAYOUT_OCTAGONAL         AV_CHANNEL_LAYOUT_MASK(8,  AV_CH_LAYOUT_OCTAGONAL)
-#define AV_CHANNEL_LAYOUT_CUBE              AV_CHANNEL_LAYOUT_MASK(8,  AV_CH_LAYOUT_CUBE)
-#define AV_CHANNEL_LAYOUT_5POINT1POINT4     AV_CHANNEL_LAYOUT_MASK(10, AV_CH_LAYOUT_5POINT1POINT4)
-#define AV_CHANNEL_LAYOUT_5POINT1POINT6     AV_CHANNEL_LAYOUT_MASK(12, AV_CH_LAYOUT_5POINT1POINT6)
-#define AV_CHANNEL_LAYOUT_7POINT1POINT2     AV_CHANNEL_LAYOUT_MASK(10, AV_CH_LAYOUT_7POINT1POINT2)
-#define AV_CHANNEL_LAYOUT_7POINT1POINT4     AV_CHANNEL_LAYOUT_MASK(12, AV_CH_LAYOUT_7POINT1POINT4)
-#define AV_CHANNEL_LAYOUT_7POINT1POINT6     AV_CHANNEL_LAYOUT_MASK(14, AV_CH_LAYOUT_7POINT1POINT6)
-#define AV_CHANNEL_LAYOUT_7POINT2POINT3     AV_CHANNEL_LAYOUT_MASK(12, AV_CH_LAYOUT_7POINT2POINT3)
-#define AV_CHANNEL_LAYOUT_9POINT1POINT4     AV_CHANNEL_LAYOUT_MASK(14, AV_CH_LAYOUT_9POINT1POINT4)
-#define AV_CHANNEL_LAYOUT_9POINT1POINT6     AV_CHANNEL_LAYOUT_MASK(16, AV_CH_LAYOUT_9POINT1POINT6)
-#define AV_CHANNEL_LAYOUT_HEXADECAGONAL     AV_CHANNEL_LAYOUT_MASK(16, AV_CH_LAYOUT_HEXADECAGONAL)
-#define AV_CHANNEL_LAYOUT_BINAURAL          AV_CHANNEL_LAYOUT_MASK(2,  AV_CH_LAYOUT_BINAURAL)
-#define AV_CHANNEL_LAYOUT_STEREO_DOWNMIX    AV_CHANNEL_LAYOUT_MASK(2,  AV_CH_LAYOUT_STEREO_DOWNMIX)
-#define AV_CHANNEL_LAYOUT_22POINT2          AV_CHANNEL_LAYOUT_MASK(24, AV_CH_LAYOUT_22POINT2)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_MONO              AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(1,  AV_CH_LAYOUT_MONO)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_STEREO            AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(2,  AV_CH_LAYOUT_STEREO)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_2POINT1           AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(3,  AV_CH_LAYOUT_2POINT1)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_2_1               AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(3,  AV_CH_LAYOUT_2_1)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_SURROUND          AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(3,  AV_CH_LAYOUT_SURROUND)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_3POINT1           AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(4,  AV_CH_LAYOUT_3POINT1)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_4POINT0           AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(4,  AV_CH_LAYOUT_4POINT0)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_4POINT1           AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(5,  AV_CH_LAYOUT_4POINT1)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_2_2               AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(4,  AV_CH_LAYOUT_2_2)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_QUAD              AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(4,  AV_CH_LAYOUT_QUAD)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_5POINT0           AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(5,  AV_CH_LAYOUT_5POINT0)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_5POINT1           AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(6,  AV_CH_LAYOUT_5POINT1)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_5_POINT0_ಹಿಂಭಾಗ      AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(5,  AV_CH_LAYOUT_5_POINT0_ಹಿಂಭಾಗ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_5_POINT1_ಹಿಂಭಾಗ      AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(6,  AV_CH_LAYOUT_5_POINT1_ಹಿಂಭಾಗ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_6POINT0           AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(6,  AV_CH_LAYOUT_6POINT0)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_6POINT0_FRONT     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(6,  AV_CH_LAYOUT_6POINT0_FRONT)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_3POINT1POINT2     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(6,  AV_CH_LAYOUT_3POINT1POINT2)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_HEXAGONAL         AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(6,  AV_CH_LAYOUT_HEXAGONAL)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_6POINT1           AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(7,  AV_CH_LAYOUT_6POINT1)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_6_POINT1_ಹಿಂಭಾಗ      AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(7,  AV_CH_LAYOUT_6_POINT1_ಹಿಂಭಾಗ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_6POINT1_FRONT     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(7,  AV_CH_LAYOUT_6POINT1_FRONT)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_7POINT0           AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(7,  AV_CH_LAYOUT_7POINT0)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_7POINT0_FRONT     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(7,  AV_CH_LAYOUT_7POINT0_FRONT)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_7POINT1           AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(8,  AV_CH_LAYOUT_7POINT1)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_7POINT1_WIDE      AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(8,  AV_CH_LAYOUT_7POINT1_WIDE)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_7_POINT1_WIDE_ಹಿಂಭಾಗ AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(8,  AV_CH_LAYOUT_7_POINT1_WIDE_ಹಿಂಭಾಗ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_5POINT1POINT2     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(8,  AV_CH_LAYOUT_5POINT1POINT2)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_5_POINT1_POINT2_ಹಿಂಭಾಗ AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(8, AV_CH_LAYOUT_5_POINT1_POINT2_ಹಿಂಭಾಗ)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_OCTAGONAL         AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(8,  AV_CH_LAYOUT_OCTAGONAL)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_CUBE              AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(8,  AV_CH_LAYOUT_CUBE)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_5POINT1POINT4     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(10, AV_CH_LAYOUT_5POINT1POINT4)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_5POINT1POINT6     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(12, AV_CH_LAYOUT_5POINT1POINT6)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_7POINT1POINT2     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(10, AV_CH_LAYOUT_7POINT1POINT2)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_7POINT1POINT4     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(12, AV_CH_LAYOUT_7POINT1POINT4)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_7POINT1POINT6     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(14, AV_CH_LAYOUT_7POINT1POINT6)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_7POINT2POINT3     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(12, AV_CH_LAYOUT_7POINT2POINT3)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_9POINT1POINT4     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(14, AV_CH_LAYOUT_9POINT1POINT4)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_9POINT1POINT6     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(16, AV_CH_LAYOUT_9POINT1POINT6)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_HEXADECAGONAL     AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(16, AV_CH_LAYOUT_HEXADECAGONAL)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_BINAURAL          AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(2,  AV_CH_LAYOUT_BINAURAL)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_STEREO_DOWNMIX    AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(2,  AV_CH_LAYOUT_STEREO_DOWNMIX)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_22POINT2          AV_CHANNEL_LAYOUT_ಮುಖವಾಡ(24, AV_CH_LAYOUT_22POINT2)
 
-#if FF_API_CHANNEL_LAYOUT_BACK
+#ಆದರೆ FF_API_CHANNEL_LAYOUT_ಹಿಂಭಾಗ
 /*
  * The following layouts are deprecated and will be removed in
  * an upcoming major bump.
  */
-#define AV_CHANNEL_LAYOUT_5POINT1POINT4_BACK AV_CHANNEL_LAYOUT_5POINT1POINT4
-#define AV_CHANNEL_LAYOUT_7POINT1POINT4_BACK AV_CHANNEL_LAYOUT_7POINT1POINT4
-#define AV_CHANNEL_LAYOUT_9POINT1POINT4_BACK AV_CHANNEL_LAYOUT_9POINT1POINT4
-#define AV_CHANNEL_LAYOUT_7POINT1_TOP_BACK  AV_CHANNEL_LAYOUT_5POINT1POINT2_BACK
-#endif
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_5_POINT1_POINT4_ಹಿಂಭಾಗ AV_CHANNEL_LAYOUT_5POINT1POINT4
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_7_POINT1_POINT4_ಹಿಂಭಾಗ AV_CHANNEL_LAYOUT_7POINT1POINT4
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_9_POINT1_POINT4_ಹಿಂಭಾಗ AV_CHANNEL_LAYOUT_9POINT1POINT4
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_7_POINT1_ತುದಿ_ಹಿಂಭಾಗ  AV_CHANNEL_LAYOUT_5_POINT1_POINT2_ಹಿಂಭಾಗ
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define AV_CHANNEL_LAYOUT_AMBISONIC_FIRST_ORDER \
-    { /* .order */ AV_CHANNEL_ORDER_AMBISONIC, \
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_AMBISONIC_ಮೊದಲ_ಕ್ರಮ \
+    { /* .order */ AV_CHANNEL_ಕ್ರಮ_AMBISONIC, \
       /* .nb_channels */ 4, \
       /* .u.mask */ { 0 }, \
-      /* .opaque */ NULL }
+      /* .opaque */ ಖಾಲಿ }
 /** @} */
 
-struct AVBPrint;
+ರಚನೆ AVBPrint;
 
 /**
  * Get a human readable string in an abbreviated form describing a given channel.
@@ -476,14 +476,14 @@ struct AVBPrint;
  *         on failure. If the returned value is bigger than buf_size, then the
  *         string was truncated.
  */
-int av_channel_name(char *buf, size_t buf_size, enum AVChannel channel);
+ಪೂರ್ಣಾಂಕ av_channel_name(ಅಕ್ಷರ *buf, size_t buf_ಗಾತ್ರ, ಎಣಿಕೆ AVChannel channel);
 
 /**
  * bprint variant of av_channel_name().
  *
  * @note the string will be appended to the bprint buffer.
  */
-void av_channel_name_bprint(struct AVBPrint *bp, enum AVChannel channel_id);
+ಶೂನ್ಯ av_channel_name_bprint(ರಚನೆ AVBPrint *bp, ಎಣಿಕೆ AVChannel channel_id);
 
 /**
  * Get a human readable string describing a given channel.
@@ -495,14 +495,14 @@ void av_channel_name_bprint(struct AVBPrint *bp, enum AVChannel channel_id);
  *         on failure. If the returned value is bigger than buf_size, then the
  *         string was truncated.
  */
-int av_channel_description(char *buf, size_t buf_size, enum AVChannel channel);
+ಪೂರ್ಣಾಂಕ av_channel_description(ಅಕ್ಷರ *buf, size_t buf_ಗಾತ್ರ, ಎಣಿಕೆ AVChannel channel);
 
 /**
  * bprint variant of av_channel_description().
  *
  * @note the string will be appended to the bprint buffer.
  */
-void av_channel_description_bprint(struct AVBPrint *bp, enum AVChannel channel_id);
+ಶೂನ್ಯ av_channel_description_bprint(ರಚನೆ AVBPrint *bp, ಎಣಿಕೆ AVChannel channel_id);
 
 /**
  * This is the inverse function of @ref av_channel_name().
@@ -510,7 +510,7 @@ void av_channel_description_bprint(struct AVBPrint *bp, enum AVChannel channel_i
  * @return the channel with the given name
  *         AV_CHAN_NONE when name does not identify a known channel
  */
-enum AVChannel av_channel_from_string(const char *name);
+ಎಣಿಕೆ AVChannel av_channel_from_string(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name);
 
 /**
  * Initialize a custom channel layout with the specified number of channels.
@@ -527,7 +527,7 @@ enum AVChannel av_channel_from_string(const char *name);
  *         AVERROR(EINVAL) if the number of channels <= 0
  *         AVERROR(ENOMEM) if the channel map could not be allocated
  */
-int av_channel_layout_custom_init(AVChannelLayout *channel_layout, int nb_channels);
+ಪೂರ್ಣಾಂಕ av_channel_layout_custom_init(AVChannelLayout *channel_layout, ಪೂರ್ಣಾಂಕ nb_channels);
 
 /**
  * Initialize a native channel layout from a bitmask indicating which channels
@@ -539,7 +539,7 @@ int av_channel_layout_custom_init(AVChannelLayout *channel_layout, int nb_channe
  * @return 0 on success
  *         AVERROR(EINVAL) for invalid mask values
  */
-int av_channel_layout_from_mask(AVChannelLayout *channel_layout, uint64_t mask);
+ಪೂರ್ಣಾಂಕ av_channel_layout_from_ಮುಖವಾಡ(AVChannelLayout *channel_layout, uint64_t ಮುಖವಾಡ_2);
 
 /**
  * Initialize a channel layout from a given string description.
@@ -562,8 +562,8 @@ int av_channel_layout_from_mask(AVChannelLayout *channel_layout, uint64_t mask);
  *         AVERROR(EINVAL) if an invalid channel layout string was provided
  *         AVERROR(ENOMEM) if there was not enough memory
  */
-int av_channel_layout_from_string(AVChannelLayout *channel_layout,
-                                  const char *str);
+ಪೂರ್ಣಾಂಕ av_channel_layout_from_string(AVChannelLayout *channel_layout,
+                                  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str);
 
 /**
  * Get the default channel layout for a given number of channels.
@@ -571,7 +571,7 @@ int av_channel_layout_from_string(AVChannelLayout *channel_layout,
  * @param ch_layout the layout structure to be initialized
  * @param nb_channels number of channels
  */
-void av_channel_layout_default(AVChannelLayout *ch_layout, int nb_channels);
+ಶೂನ್ಯ av_channel_layout_default(AVChannelLayout *ch_layout, ಪೂರ್ಣಾಂಕ nb_channels);
 
 /**
  * Iterate over all standard channel layouts.
@@ -582,7 +582,7 @@ void av_channel_layout_default(AVChannelLayout *ch_layout, int nb_channels);
  * @return the standard channel layout or NULL when the iteration is
  *         finished
  */
-const AVChannelLayout *av_channel_layout_standard(void **opaque);
+ಸ್ಥಿರಾಂಕ AVChannelLayout *av_channel_layout_standard(ಶೂನ್ಯ **opaque);
 
 /**
  * Free any allocated data in the channel layout and reset the channel
@@ -590,7 +590,7 @@ const AVChannelLayout *av_channel_layout_standard(void **opaque);
  *
  * @param channel_layout the layout structure to be uninitialized
  */
-void av_channel_layout_uninit(AVChannelLayout *channel_layout);
+ಶೂನ್ಯ av_channel_layout_uninit(AVChannelLayout *channel_layout);
 
 /**
  * Make a copy of a channel layout. This differs from just assigning src to dst
@@ -602,7 +602,7 @@ void av_channel_layout_uninit(AVChannelLayout *channel_layout);
  * @param src source channel layout
  * @return 0 on success, a negative AVERROR on error.
  */
-int av_channel_layout_copy(AVChannelLayout *dst, const AVChannelLayout *src);
+ಪೂರ್ಣಾಂಕ av_channel_layout_copy(AVChannelLayout *dst, ಸ್ಥಿರಾಂಕ AVChannelLayout *src);
 
 /**
  * Get a human-readable string describing the channel layout properties.
@@ -617,8 +617,8 @@ int av_channel_layout_copy(AVChannelLayout *dst, const AVChannelLayout *src);
  *         on failure. If the returned value is bigger than buf_size, then the
  *         string was truncated.
  */
-int av_channel_layout_describe(const AVChannelLayout *channel_layout,
-                               char *buf, size_t buf_size);
+ಪೂರ್ಣಾಂಕ av_channel_layout_describe(ಸ್ಥಿರಾಂಕ AVChannelLayout *channel_layout,
+                               ಅಕ್ಷರ *buf, size_t buf_ಗಾತ್ರ);
 
 /**
  * bprint variant of av_channel_layout_describe().
@@ -626,8 +626,8 @@ int av_channel_layout_describe(const AVChannelLayout *channel_layout,
  * @note the string will be appended to the bprint buffer.
  * @return 0 on success, or a negative AVERROR value on failure.
  */
-int av_channel_layout_describe_bprint(const AVChannelLayout *channel_layout,
-                                      struct AVBPrint *bp);
+ಪೂರ್ಣಾಂಕ av_channel_layout_describe_bprint(ಸ್ಥಿರಾಂಕ AVChannelLayout *channel_layout,
+                                      ರಚನೆ AVBPrint *bp);
 
 /**
  * Get the channel with the given index in a channel layout.
@@ -638,8 +638,8 @@ int av_channel_layout_describe_bprint(const AVChannelLayout *channel_layout,
  *         AV_CHAN_NONE on failure (if idx is not valid or the channel order is
  *         unspecified)
  */
-enum AVChannel
-av_channel_layout_channel_from_index(const AVChannelLayout *channel_layout, unsigned int idx);
+ಎಣಿಕೆ AVChannel
+av_channel_layout_channel_from_ಸೂಚ್ಯಂಕ(ಸ್ಥಿರಾಂಕ AVChannelLayout *channel_layout, ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ idx);
 
 /**
  * Get the index of a given channel in a channel layout. In case multiple
@@ -650,8 +650,8 @@ av_channel_layout_channel_from_index(const AVChannelLayout *channel_layout, unsi
  * @return index of channel in channel_layout on success or a negative number if
  *         channel is not present in channel_layout.
  */
-int av_channel_layout_index_from_channel(const AVChannelLayout *channel_layout,
-                                         enum AVChannel channel);
+ಪೂರ್ಣಾಂಕ av_channel_layout_ಸೂಚ್ಯಂಕ_from_channel(ಸ್ಥಿರಾಂಕ AVChannelLayout *channel_layout,
+                                         ಎಣಿಕೆ AVChannel channel);
 
 /**
  * Get the index in a channel layout of a channel described by the given string.
@@ -665,8 +665,8 @@ int av_channel_layout_index_from_channel(const AVChannelLayout *channel_layout,
  * @return a channel index described by the given string, or a negative AVERROR
  *         value.
  */
-int av_channel_layout_index_from_string(const AVChannelLayout *channel_layout,
-                                        const char *name);
+ಪೂರ್ಣಾಂಕ av_channel_layout_ಸೂಚ್ಯಂಕ_from_string(ಸ್ಥಿರಾಂಕ AVChannelLayout *channel_layout,
+                                        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name);
 
 /**
  * Get a channel described by the given string.
@@ -680,9 +680,9 @@ int av_channel_layout_index_from_string(const AVChannelLayout *channel_layout,
  *         or AV_CHAN_NONE on failure (if the string is not valid or the channel
  *         order is unspecified)
  */
-enum AVChannel
-av_channel_layout_channel_from_string(const AVChannelLayout *channel_layout,
-                                      const char *name);
+ಎಣಿಕೆ AVChannel
+av_channel_layout_channel_from_string(ಸ್ಥಿರಾಂಕ AVChannelLayout *channel_layout,
+                                      ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name);
 
 /**
  * Find out what channels from a given set are present in a channel layout,
@@ -693,8 +693,8 @@ av_channel_layout_channel_from_string(const AVChannelLayout *channel_layout,
  * @return a bitfield representing all the channels from mask that are present
  *         in channel_layout
  */
-uint64_t av_channel_layout_subset(const AVChannelLayout *channel_layout,
-                                  uint64_t mask);
+uint64_t av_channel_layout_subset(ಸ್ಥಿರಾಂಕ AVChannelLayout *channel_layout,
+                                  uint64_t ಮುಖವಾಡ_2);
 
 /**
  * Check whether a channel layout is valid, i.e. can possibly describe audio
@@ -703,7 +703,7 @@ uint64_t av_channel_layout_subset(const AVChannelLayout *channel_layout,
  * @param channel_layout input channel layout
  * @return 1 if channel_layout is valid, 0 otherwise.
  */
-int av_channel_layout_check(const AVChannelLayout *channel_layout);
+ಪೂರ್ಣಾಂಕ av_channel_layout_check(ಸ್ಥಿರಾಂಕ AVChannelLayout *channel_layout);
 
 /**
  * Check whether two channel layouts are semantically the same, i.e. the same
@@ -718,7 +718,7 @@ int av_channel_layout_check(const AVChannelLayout *channel_layout);
  * @return 0 if chl and chl1 are equal, 1 if they are not equal. A negative
  *         AVERROR code if one or both are invalid.
  */
-int av_channel_layout_compare(const AVChannelLayout *chl, const AVChannelLayout *chl1);
+ಪೂರ್ಣಾಂಕ av_channel_layout_compare(ಸ್ಥಿರಾಂಕ AVChannelLayout *chl, ಸ್ಥಿರಾಂಕ AVChannelLayout *chl1);
 
 /**
  * Return the order if the layout is n-th order standard-order ambisonic.
@@ -728,19 +728,19 @@ int av_channel_layout_compare(const AVChannelLayout *chl, const AVChannelLayout 
  * @param channel_layout input channel layout
  * @return the order of the layout, a negative error code otherwise.
  */
-int av_channel_layout_ambisonic_order(const AVChannelLayout *channel_layout);
+ಪೂರ್ಣಾಂಕ av_channel_layout_ambisonic_ಕ್ರಮ(ಸ್ಥಿರಾಂಕ AVChannelLayout *channel_layout);
 
 /**
  * The conversion must be lossless.
  */
-#define AV_CHANNEL_LAYOUT_RETYPE_FLAG_LOSSLESS (1 << 0)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_RETYPE_FLAG_LOSSLESS (1 << 0)
 
 /**
  * The specified retype target order is ignored and the simplest possible
  * (canonical) order is used for which the input layout can be losslessy
  * represented.
  */
-#define AV_CHANNEL_LAYOUT_RETYPE_FLAG_CANONICAL (1 << 1)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CHANNEL_LAYOUT_RETYPE_FLAG_CANONICAL (1 << 1)
 
 /**
  * Change the AVChannelOrder of a channel layout.
@@ -775,10 +775,10 @@ int av_channel_layout_ambisonic_order(const AVChannelLayout *channel_layout);
  *           lossy and AV_CHANNEL_LAYOUT_RETYPE_FLAG_LOSSLESS was specified)
  *         AVERROR(EINVAL), AVERROR(ENOMEM) on error
  */
-int av_channel_layout_retype(AVChannelLayout *channel_layout, enum AVChannelOrder order, int flags);
+ಪೂರ್ಣಾಂಕ av_channel_layout_retype(AVChannelLayout *channel_layout, ಎಣಿಕೆ AVChannel_ಕ್ರಮ ಕ್ರಮ, ಪೂರ್ಣಾಂಕ flags);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_CHANNEL_LAYOUT_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_CHANNEL_LAYOUT_H */

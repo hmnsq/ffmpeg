@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BLOWFISH_H
-#define AVUTIL_BLOWFISH_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_BLOWFISH_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_BLOWFISH_H
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
 /**
  * @defgroup lavu_blowfish Blowfish
@@ -30,17 +30,17 @@
  * @{
  */
 
-#define AV_BF_ROUNDS 16
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_BF_ಸುತ್ತುಗಳು 16
 
-typedef struct AVBlowfish {
-    uint32_t p[AV_BF_ROUNDS + 2];
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVBlowfish {
+    uint32_t p[AV_BF_ಸುತ್ತುಗಳು + 2];
     uint32_t s[4][256];
 } AVBlowfish;
 
 /**
  * Allocate an AVBlowfish context.
  */
-AVBlowfish *av_blowfish_alloc(void);
+AVBlowfish *av_blowfish_alloc(ಶೂನ್ಯ);
 
 /**
  * Initialize an AVBlowfish context.
@@ -49,7 +49,7 @@ AVBlowfish *av_blowfish_alloc(void);
  * @param key a key
  * @param key_len length of the key
  */
-void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
+ಶೂನ್ಯ av_blowfish_init(ರಚನೆ AVBlowfish *ctx, ಸ್ಥಿರಾಂಕ uint8_t *ಕೀಲಿ, ಪೂರ್ಣಾಂಕ ಕೀಲಿ_len);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -59,8 +59,8 @@ void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
  * @param xr right four bytes halves of input to be encrypted
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
-                           int decrypt);
+ಶೂನ್ಯ av_blowfish_crypt_ecb(ರಚನೆ AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
+                           ಪೂರ್ಣಾಂಕ decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -72,11 +72,11 @@ void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
  * @param iv initialization vector for CBC mode, if NULL ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_blowfish_crypt(struct AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                       int count, uint8_t *iv, int decrypt);
+ಶೂನ್ಯ av_blowfish_crypt(ರಚನೆ AVBlowfish *ctx, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src,
+                       ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ decrypt);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_BLOWFISH_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_BLOWFISH_H */

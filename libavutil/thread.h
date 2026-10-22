@@ -19,223 +19,223 @@
 // This header should only be used to simplify code where
 // threading is optional, not as a generic threading abstraction.
 
-#ifndef AVUTIL_THREAD_H
-#define AVUTIL_THREAD_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_THREAD_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_THREAD_H
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#if HAVE_PRCTL
-#include <sys/prctl.h>
-#elif (HAVE_PTHREAD_SETNAME_NP || HAVE_PTHREAD_SET_NAME_NP) && HAVE_PTHREAD_NP_H
-#include <pthread_np.h>
-#endif
+#ಆದರೆ HAVE_PRCTL
+#ಅನ್ತರ್ಭಾವ <sys/prctl.h>
+#ಅಥವಾಆದರೆ (HAVE_PTHREAD_SETNAME_NP || HAVE_PTHREAD_ಗಣ_NAME_NP) && HAVE_PTHREAD_NP_H
+#ಅನ್ತರ್ಭಾವ <pthread_np.h>
+#ಆದರೆ_ಅಂತ್ಯ
 
-#include "error.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
 
-#if HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
+#ಆದರೆ HAVE_PTHREADS || HAVE_W32_ಎಳೆಗಳು || HAVE_OS2_ಎಳೆಗಳು
 
-#if HAVE_PTHREADS
-#include <pthread.h>
+#ಆದರೆ HAVE_PTHREADS
+#ಅನ್ತರ್ಭಾವ <pthread.h>
 
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
+#ಆದರೆ defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
 
-#include <stdlib.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
 
-#include "log.h"
-#include "macros.h"
+#ಅನ್ತರ್ಭಾವ "log.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
 
-#define ASSERT_PTHREAD_ABORT(func, ret) do {                            \
-    char errbuf[AV_ERROR_MAX_STRING_SIZE] = "";                         \
-    av_log(NULL, AV_LOG_FATAL, AV_STRINGIFY(func)                       \
+#ವ್ಯಾಖ್ಯಾನಿಸು ASSERT_PTHREAD_ABORT(func, ret) ಮಾಡು {                            \
+    ಅಕ್ಷರ errbuf[AV_ERROR_MAX_STRING_ಗಾತ್ರ] = "";                         \
+    av_log(ಖಾಲಿ, AV_LOG_FATAL, AV_STRINGIFY(func)                       \
            " failed with error: %s\n",                                  \
-           av_make_error_string(errbuf, AV_ERROR_MAX_STRING_SIZE,       \
+           av_make_error_string(errbuf, AV_ERROR_MAX_STRING_ಗಾತ್ರ,       \
                                 AVERROR(ret)));                         \
     abort();                                                            \
-} while (0)
+} ಆಗ (0)
 
-#define ASSERT_PTHREAD_NORET(func, ...) do {                            \
-    int ret = func(__VA_ARGS__);                                        \
-    if (ret)                                                            \
+#ವ್ಯಾಖ್ಯಾನಿಸು ASSERT_PTHREAD_NORET(func, ...) ಮಾಡು {                            \
+    ಪೂರ್ಣಾಂಕ ret = func(__VA_ARGS__);                                        \
+    ಆದರೆ (ret)                                                            \
         ASSERT_PTHREAD_ABORT(func, ret);                                \
-} while (0)
+} ಆಗ (0)
 
-#define ASSERT_PTHREAD(func, ...) do {                                  \
+#ವ್ಯಾಖ್ಯಾನಿಸು ASSERT_PTHREAD(func, ...) ಮಾಡು {                                  \
     ASSERT_PTHREAD_NORET(func, __VA_ARGS__);                            \
-    return 0;                                                           \
-} while (0)
+    ಹಿಂತಿರುಗಿ 0;                                                           \
+} ಆಗ (0)
 
-static inline int strict_pthread_join(pthread_t thread, void **value_ptr)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_join(pthread_t thread, ಶೂನ್ಯ **ಮೌಲ್ಯ_ptr)
 {
-    ASSERT_PTHREAD(pthread_join, thread, value_ptr);
+    ASSERT_PTHREAD(pthread_join, thread, ಮೌಲ್ಯ_ptr);
 }
 
-static inline int strict_pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_mutex_init(pthread_mutex_t *mutex, ಸ್ಥಿರಾಂಕ pthread_mutexattr_t *attr)
 {
-    if (attr) {
+    ಆದರೆ (attr) {
         ASSERT_PTHREAD_NORET(pthread_mutex_init, mutex, attr);
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         pthread_mutexattr_t local_attr;
         ASSERT_PTHREAD_NORET(pthread_mutexattr_init, &local_attr);
         ASSERT_PTHREAD_NORET(pthread_mutexattr_settype, &local_attr, PTHREAD_MUTEX_ERRORCHECK);
         ASSERT_PTHREAD_NORET(pthread_mutex_init, mutex, &local_attr);
         ASSERT_PTHREAD_NORET(pthread_mutexattr_destroy, &local_attr);
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static inline int strict_pthread_mutex_destroy(pthread_mutex_t *mutex)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_mutex_destroy(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_destroy, mutex);
 }
 
-static inline int strict_pthread_mutex_lock(pthread_mutex_t *mutex)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_mutex_ಬೀಗ(pthread_mutex_t *mutex)
 {
-    ASSERT_PTHREAD(pthread_mutex_lock, mutex);
+    ASSERT_PTHREAD(pthread_mutex_ಬೀಗ, mutex);
 }
 
-static inline int strict_pthread_mutex_unlock(pthread_mutex_t *mutex)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_mutex_unlock(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_unlock, mutex);
 }
 
-static inline int strict_pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_cond_init(pthread_cond_t *cond, ಸ್ಥಿರಾಂಕ pthread_condattr_t *attr)
 {
     ASSERT_PTHREAD(pthread_cond_init, cond, attr);
 }
 
-static inline int strict_pthread_cond_destroy(pthread_cond_t *cond)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_cond_destroy(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_destroy, cond);
 }
 
-static inline int strict_pthread_cond_signal(pthread_cond_t *cond)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_cond_signal(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_signal, cond);
 }
 
-static inline int strict_pthread_cond_broadcast(pthread_cond_t *cond)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_cond_ಪ್ರಸಾರ(pthread_cond_t *cond)
 {
-    ASSERT_PTHREAD(pthread_cond_broadcast, cond);
+    ASSERT_PTHREAD(pthread_cond_ಪ್ರಸಾರ, cond);
 }
 
-static inline int strict_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_cond_wait, cond, mutex);
 }
 
-static inline int strict_pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
-                                                const struct timespec *abstime)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
+                                                ಸ್ಥಿರಾಂಕ ರಚನೆ timespec *abstime)
 {
-    int ret = pthread_cond_timedwait(cond, mutex, abstime);
-    if (ret && ret != ETIMEDOUT)
+    ಪೂರ್ಣಾಂಕ ret = pthread_cond_timedwait(cond, mutex, abstime);
+    ಆದರೆ (ret && ret != ETIMEDOUT)
         ASSERT_PTHREAD_ABORT(pthread_cond_timedwait, ret);
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static inline int strict_pthread_once(pthread_once_t *once_control, void (*init_routine)(void))
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ strict_pthread_once(pthread_once_t *once_control, ಶೂನ್ಯ (*init_routine)(ಶೂನ್ಯ))
 {
     ASSERT_PTHREAD(pthread_once, once_control, init_routine);
 }
 
-#define pthread_join           strict_pthread_join
-#define pthread_mutex_init     strict_pthread_mutex_init
-#define pthread_mutex_destroy  strict_pthread_mutex_destroy
-#define pthread_mutex_lock     strict_pthread_mutex_lock
-#define pthread_mutex_unlock   strict_pthread_mutex_unlock
-#define pthread_cond_init      strict_pthread_cond_init
-#define pthread_cond_destroy   strict_pthread_cond_destroy
-#define pthread_cond_signal    strict_pthread_cond_signal
-#define pthread_cond_broadcast strict_pthread_cond_broadcast
-#define pthread_cond_wait      strict_pthread_cond_wait
-#define pthread_cond_timedwait strict_pthread_cond_timedwait
-#define pthread_once           strict_pthread_once
-#endif
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_join           strict_pthread_join
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_mutex_init     strict_pthread_mutex_init
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_mutex_destroy  strict_pthread_mutex_destroy
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_mutex_ಬೀಗ     strict_pthread_mutex_ಬೀಗ
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_mutex_unlock   strict_pthread_mutex_unlock
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_cond_init      strict_pthread_cond_init
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_cond_destroy   strict_pthread_cond_destroy
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_cond_signal    strict_pthread_cond_signal
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_cond_ಪ್ರಸಾರ strict_pthread_cond_ಪ್ರಸಾರ
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_cond_wait      strict_pthread_cond_wait
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_cond_timedwait strict_pthread_cond_timedwait
+#ವ್ಯಾಖ್ಯಾನಿಸು pthread_once           strict_pthread_once
+#ಆದರೆ_ಅಂತ್ಯ
 
-#elif HAVE_OS2THREADS
-#include "compat/os2threads.h"
-#else
-#include "compat/w32pthreads.h"
-#endif
+#ಅಥವಾಆದರೆ HAVE_OS2_ಎಳೆಗಳು
+#ಅನ್ತರ್ಭಾವ "compat/os2threads.h"
+#ಇಲ್ಲದಿದ್ದರೆ
+#ಅನ್ತರ್ಭಾವ "compat/w32pthreads.h"
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define AVMutex pthread_mutex_t
-#define AV_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
+#ವ್ಯಾಖ್ಯಾನಿಸು AVMutex pthread_mutex_t
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
 
-#define ff_mutex_init    pthread_mutex_init
-#define ff_mutex_lock    pthread_mutex_lock
-#define ff_mutex_unlock  pthread_mutex_unlock
-#define ff_mutex_destroy pthread_mutex_destroy
+#ವ್ಯಾಖ್ಯಾನಿಸು ff_mutex_init    pthread_mutex_init
+#ವ್ಯಾಖ್ಯಾನಿಸು ff_mutex_ಬೀಗ    pthread_mutex_ಬೀಗ
+#ವ್ಯಾಖ್ಯಾನಿಸು ff_mutex_unlock  pthread_mutex_unlock
+#ವ್ಯಾಖ್ಯಾನಿಸು ff_mutex_destroy pthread_mutex_destroy
 
-#define AVCond pthread_cond_t
+#ವ್ಯಾಖ್ಯಾನಿಸು AVCond pthread_cond_t
 
-#define ff_cond_init      pthread_cond_init
-#define ff_cond_destroy   pthread_cond_destroy
-#define ff_cond_signal    pthread_cond_signal
-#define ff_cond_broadcast pthread_cond_broadcast
-#define ff_cond_wait      pthread_cond_wait
-#define ff_cond_timedwait pthread_cond_timedwait
+#ವ್ಯಾಖ್ಯಾನಿಸು ff_cond_init      pthread_cond_init
+#ವ್ಯಾಖ್ಯಾನಿಸು ff_cond_destroy   pthread_cond_destroy
+#ವ್ಯಾಖ್ಯಾನಿಸು ff_cond_signal    pthread_cond_signal
+#ವ್ಯಾಖ್ಯಾನಿಸು ff_cond_ಪ್ರಸಾರ pthread_cond_ಪ್ರಸಾರ
+#ವ್ಯಾಖ್ಯಾನಿಸು ff_cond_wait      pthread_cond_wait
+#ವ್ಯಾಖ್ಯಾನಿಸು ff_cond_timedwait pthread_cond_timedwait
 
-#define AVOnce pthread_once_t
-#define AV_ONCE_INIT PTHREAD_ONCE_INIT
+#ವ್ಯಾಖ್ಯಾನಿಸು AVOnce pthread_once_t
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_ONCE_INIT PTHREAD_ONCE_INIT
 
-#define ff_thread_once(control, routine) pthread_once(control, routine)
+#ವ್ಯಾಖ್ಯಾನಿಸು ff_thread_once(control, routine) pthread_once(control, routine)
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
-#define AVMutex char
-#define AV_MUTEX_INITIALIZER 0
+#ವ್ಯಾಖ್ಯಾನಿಸು AVMutex ಅಕ್ಷರ
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_MUTEX_INITIALIZER 0
 
-static inline int ff_mutex_init(AVMutex *mutex, const void *attr){ return 0; }
-static inline int ff_mutex_lock(AVMutex *mutex){ return 0; }
-static inline int ff_mutex_unlock(AVMutex *mutex){ return 0; }
-static inline int ff_mutex_destroy(AVMutex *mutex){ return 0; }
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_mutex_init(AVMutex *mutex, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *attr){ ಹಿಂತಿರುಗಿ 0; }
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_mutex_ಬೀಗ(AVMutex *mutex){ ಹಿಂತಿರುಗಿ 0; }
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_mutex_unlock(AVMutex *mutex){ ಹಿಂತಿರುಗಿ 0; }
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_mutex_destroy(AVMutex *mutex){ ಹಿಂತಿರುಗಿ 0; }
 
-#define AVCond char
+#ವ್ಯಾಖ್ಯಾನಿಸು AVCond ಅಕ್ಷರ
 
-static inline int ff_cond_init(AVCond *cond, const void *attr){ return 0; }
-static inline int ff_cond_destroy(AVCond *cond){ return 0; }
-static inline int ff_cond_signal(AVCond *cond){ return 0; }
-static inline int ff_cond_broadcast(AVCond *cond){ return 0; }
-static inline int ff_cond_wait(AVCond *cond, AVMutex *mutex){ return 0; }
-static inline int ff_cond_timedwait(AVCond *cond, AVMutex *mutex,
-                                    const void *abstime){ return 0; }
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_cond_init(AVCond *cond, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *attr){ ಹಿಂತಿರುಗಿ 0; }
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_cond_destroy(AVCond *cond){ ಹಿಂತಿರುಗಿ 0; }
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_cond_signal(AVCond *cond){ ಹಿಂತಿರುಗಿ 0; }
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_cond_ಪ್ರಸಾರ(AVCond *cond){ ಹಿಂತಿರುಗಿ 0; }
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_cond_wait(AVCond *cond, AVMutex *mutex){ ಹಿಂತಿರುಗಿ 0; }
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_cond_timedwait(AVCond *cond, AVMutex *mutex,
+                                    ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *abstime){ ಹಿಂತಿರುಗಿ 0; }
 
-#define AVOnce char
-#define AV_ONCE_INIT 0
+#ವ್ಯಾಖ್ಯಾನಿಸು AVOnce ಅಕ್ಷರ
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_ONCE_INIT 0
 
-static inline int ff_thread_once(char *control, void (*routine)(void))
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_thread_once(ಅಕ್ಷರ *control, ಶೂನ್ಯ (*routine)(ಶೂನ್ಯ))
 {
-    if (!*control) {
+    ಆದರೆ (!*control) {
         routine();
         *control = 1;
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-static inline int ff_thread_setname(const char *name)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_thread_setname(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name)
 {
-    int ret = 0;
+    ಪೂರ್ಣಾಂಕ ret = 0;
 
-#if HAVE_PRCTL
-    ret = AVERROR(prctl(PR_SET_NAME, name));
-#elif HAVE_PTHREAD_SETNAME_NP
-#if defined(__APPLE__)
+#ಆದರೆ HAVE_PRCTL
+    ret = AVERROR(prctl(PR_ಗಣ_NAME, name));
+#ಅಥವಾಆದರೆ HAVE_PTHREAD_SETNAME_NP
+#ಆದರೆ defined(__APPLE__)
     ret = AVERROR(pthread_setname_np(name));
-#elif defined(__NetBSD__)
+#ಅಥವಾಆದರೆ defined(__NetBSD__)
     ret = AVERROR(pthread_setname_np(pthread_self(), "%s", name));
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
     ret = AVERROR(pthread_setname_np(pthread_self(), name));
-#endif
-#elif HAVE_PTHREAD_SET_NAME_NP
-    pthread_set_name_np(pthread_self(), name);
-#elif HAVE_W32THREADS
+#ಆದರೆ_ಅಂತ್ಯ
+#ಅಥವಾಆದರೆ HAVE_PTHREAD_ಗಣ_NAME_NP
+    pthread_ಗಣ_name_np(pthread_self(), name);
+#ಅಥವಾಆದರೆ HAVE_W32_ಎಳೆಗಳು
     ret = win32_thread_setname(name);
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
     ret = AVERROR(ENOSYS);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-#endif /* AVUTIL_THREAD_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_THREAD_H */

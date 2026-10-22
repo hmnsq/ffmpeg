@@ -16,44 +16,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#include <windows.h>
+#ಅನ್ತರ್ಭಾವ <windows.h>
 
-#define COBJMACROS
+#ವ್ಯಾಖ್ಯಾನಿಸು COBJMACROS
 
-#include <initguid.h>
-#include <d3d11.h>
-#include <dxgi1_2.h>
+#ಅನ್ತರ್ಭಾವ <initguid.h>
+#ಅನ್ತರ್ಭಾವ <d3d11.h>
+#ಅನ್ತರ್ಭಾವ <dxgi1_2.h>
 
-#if HAVE_DXGIDEBUG_H
-#include <dxgidebug.h>
-#endif
+#ಆದರೆ HAVE_DXGIDEBUG_H
+#ಅನ್ತರ್ಭಾವ <dxgidebug.h>
+#ಆದರೆ_ಅಂತ್ಯ
 
-#include "avassert.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_d3d11va.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "thread.h"
-#include "compat/w32dlfcn.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "common.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext_d3d11va.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext_internal.h"
+#ಅನ್ತರ್ಭಾವ "imgutils.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "pixdesc.h"
+#ಅನ್ತರ್ಭಾವ "pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "thread.h"
+#ಅನ್ತರ್ಭಾವ "compat/w32dlfcn.h"
 
-#define MAX_ARRAY_SIZE 64 // Driver specification limits ArraySize to 64 for decoder-bound resources
+#ವ್ಯಾಖ್ಯಾನಿಸು MAX_ARRAY_ಗಾತ್ರ 64 // Driver specification limits ArraySize to 64 for decoder-bound resources
 
-typedef HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, void **ppFactory);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, ಶೂನ್ಯ **ppFactory);
 
-static AVOnce functions_loaded = AV_ONCE_INIT;
+ಸ್ಥಿರ AVOnce functions_loaded = AV_ONCE_INIT;
 
-static PFN_CREATE_DXGI_FACTORY mCreateDXGIFactory;
-static PFN_D3D11_CREATE_DEVICE mD3D11CreateDevice;
+ಸ್ಥಿರ PFN_CREATE_DXGI_FACTORY mCreateDXGIFactory;
+ಸ್ಥಿರ PFN_D3D11_CREATE_DEVICE mD3D11CreateDevice;
 
-static av_cold void load_functions(void)
+ಸ್ಥಿರ av_cold ಶೂನ್ಯ ತುಂಬು_functions(ಶೂನ್ಯ)
 {
-#if !HAVE_UWP
+#ಆದರೆ !HAVE_UWP
     // We let these "leak" - this is fine, as unloading has no great benefit, and
     // Windows will mark a DLL as loaded forever if its internal refcount overflows
     // from too many LoadLibrary calls.
@@ -61,38 +61,38 @@ static av_cold void load_functions(void)
 
     d3dlib  = dlopen("d3d11.dll", 0);
     dxgilib = dlopen("dxgi.dll", 0);
-    if (!d3dlib || !dxgilib)
-        return;
+    ಆದರೆ (!d3dlib || !dxgilib)
+        ಹಿಂತಿರುಗಿ;
 
-    mD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE) GetProcAddress(d3dlib, "D3D11CreateDevice");
-    mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) GetProcAddress(dxgilib, "CreateDXGIFactory1");
-    if (!mCreateDXGIFactory)
-        mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) GetProcAddress(dxgilib, "CreateDXGIFactory");
-#else
+    mD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE) Get_Proc_ವಿಳಾಸ(d3dlib, "D3D11CreateDevice");
+    mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) Get_Proc_ವಿಳಾಸ(dxgilib, "CreateDXGIFactory1");
+    ಆದರೆ (!mCreateDXGIFactory)
+        mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) Get_Proc_ವಿಳಾಸ(dxgilib, "CreateDXGIFactory");
+#ಇಲ್ಲದಿದ್ದರೆ
     // In UWP (which lacks LoadLibrary), CreateDXGIFactory isn't available,
     // only CreateDXGIFactory1
     mD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE) D3D11CreateDevice;
     mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) CreateDXGIFactory1;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
-typedef struct D3D11VAFramesContext {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ D3D11VAFramesContext {
     /**
      * The public AVD3D11VAFramesContext. See hwcontext_d3d11va.h for it.
      */
     AVD3D11VAFramesContext p;
 
-    int nb_surfaces;
-    int nb_surfaces_used;
+    ಪೂರ್ಣಾಂಕ nb_surfaces;
+    ಪೂರ್ಣಾಂಕ nb_surfaces_ಬಳಸಿದ;
 
     DXGI_FORMAT format;
 
     ID3D11Texture2D *staging_texture;
 } D3D11VAFramesContext;
 
-static const struct {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ರಚನೆ {
     DXGI_FORMAT d3d_format;
-    enum AVPixelFormat pix_fmt;
+    ಎಣಿಕೆ AVPixelFormat pix_fmt;
 } supported_formats[] = {
     { DXGI_FORMAT_NV12,         AV_PIX_FMT_NV12 },
     { DXGI_FORMAT_P010,         AV_PIX_FMT_P010 },
@@ -116,111 +116,111 @@ static const struct {
     { DXGI_FORMAT_420_OPAQUE,   AV_PIX_FMT_YUV420P },
 };
 
-static void d3d11va_default_lock(void *ctx)
+ಸ್ಥಿರ ಶೂನ್ಯ d3d11va_default_ಬೀಗ(ಶೂನ್ಯ *ctx)
 {
     WaitForSingleObjectEx(ctx, INFINITE, FALSE);
 }
 
-static void d3d11va_default_unlock(void *ctx)
+ಸ್ಥಿರ ಶೂನ್ಯ d3d11va_default_unlock(ಶೂನ್ಯ *ctx)
 {
     ReleaseMutex(ctx);
 }
 
-static void d3d11va_frames_uninit(AVHWFramesContext *ctx)
+ಸ್ಥಿರ ಶೂನ್ಯ d3d11va_ಚೌಕಟ್ಟುಗಳು_uninit(AVHWFramesContext *ctx)
 {
     D3D11VAFramesContext *s = ctx->hwctx;
-    AVD3D11VAFramesContext *frames_hwctx = &s->p;
+    AVD3D11VAFramesContext *ಚೌಕಟ್ಟುಗಳು_hwctx = &s->p;
 
-    if (frames_hwctx->texture)
-        ID3D11Texture2D_Release(frames_hwctx->texture);
-    frames_hwctx->texture = NULL;
+    ಆದರೆ (ಚೌಕಟ್ಟುಗಳು_hwctx->texture)
+        ID3D11Texture2D_Release(ಚೌಕಟ್ಟುಗಳು_hwctx->texture);
+    ಚೌಕಟ್ಟುಗಳು_hwctx->texture = ಖಾಲಿ;
 
-    if (s->staging_texture)
+    ಆದರೆ (s->staging_texture)
         ID3D11Texture2D_Release(s->staging_texture);
-    s->staging_texture = NULL;
+    s->staging_texture = ಖಾಲಿ;
 
-    av_freep(&frames_hwctx->texture_infos);
+    av_freep(&ಚೌಕಟ್ಟುಗಳು_hwctx->texture_infos);
 }
 
-static int d3d11va_frames_get_constraints(AVHWDeviceContext *ctx,
-                                          const void *hwconfig,
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ d3d11va_ಚೌಕಟ್ಟುಗಳು_get_constraints(AVHWDeviceContext *ctx,
+                                          ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *hwconfig,
                                           AVHWFramesConstraints *constraints)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->hwctx;
-    int nb_sw_formats = 0;
+    ಪೂರ್ಣಾಂಕ nb_sw_formats = 0;
     HRESULT hr;
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_formats) + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    ಗಾತ್ರ(*constraints->valid_sw_formats));
+    ಆದರೆ (!constraints->valid_sw_formats)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
         UINT format_support = 0;
         hr = ID3D11Device_CheckFormatSupport(device_hwctx->device, supported_formats[i].d3d_format, &format_support);
-        if (SUCCEEDED(hr) && (format_support & D3D11_FORMAT_SUPPORT_TEXTURE2D))
+        ಆದರೆ (SUCCEEDED(hr) && (format_support & D3D11_FORMAT_SUPPORT_TEXTURE2D))
             constraints->valid_sw_formats[nb_sw_formats++] = supported_formats[i].pix_fmt;
     }
     constraints->valid_sw_formats[nb_sw_formats] = AV_PIX_FMT_NONE;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, ಗಾತ್ರ(*constraints->valid_hw_formats));
+    ಆದರೆ (!constraints->valid_hw_formats)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_D3D11;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static void free_texture(void *opaque, uint8_t *data)
+ಸ್ಥಿರ ಶೂನ್ಯ free_texture(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ)
 {
     ID3D11Texture2D_Release((ID3D11Texture2D *)opaque);
-    av_free(data);
+    av_free(ದತ್ತಾಂಶ);
 }
 
-static AVBufferRef *wrap_texture_buf(AVHWFramesContext *ctx, ID3D11Texture2D *tex, int index)
+ಸ್ಥಿರ AVBufferRef *wrap_texture_buf(AVHWFramesContext *ctx, ID3D11Texture2D *tex, ಪೂರ್ಣಾಂಕ ಸೂಚ್ಯಂಕ)
 {
     AVBufferRef *buf;
-    AVD3D11FrameDescriptor         *desc = av_mallocz(sizeof(*desc));
+    AVD3_D11_ಚೌಕಟ್ಟು_Descriptor         *desc = av_mallocz(ಗಾತ್ರ(*desc));
     D3D11VAFramesContext              *s = ctx->hwctx;
-    AVD3D11VAFramesContext *frames_hwctx = &s->p;
-    if (!desc) {
+    AVD3D11VAFramesContext *ಚೌಕಟ್ಟುಗಳು_hwctx = &s->p;
+    ಆದರೆ (!desc) {
         ID3D11Texture2D_Release(tex);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    if (s->nb_surfaces <= s->nb_surfaces_used) {
-        frames_hwctx->texture_infos = av_realloc_f(frames_hwctx->texture_infos,
-                                                   s->nb_surfaces_used + 1,
-                                                   sizeof(*frames_hwctx->texture_infos));
-        if (!frames_hwctx->texture_infos) {
+    ಆದರೆ (s->nb_surfaces <= s->nb_surfaces_ಬಳಸಿದ) {
+        ಚೌಕಟ್ಟುಗಳು_hwctx->texture_infos = av_realloc_f(ಚೌಕಟ್ಟುಗಳು_hwctx->texture_infos,
+                                                   s->nb_surfaces_ಬಳಸಿದ + 1,
+                                                   ಗಾತ್ರ(*ಚೌಕಟ್ಟುಗಳು_hwctx->texture_infos));
+        ಆದರೆ (!ಚೌಕಟ್ಟುಗಳು_hwctx->texture_infos) {
             ID3D11Texture2D_Release(tex);
             av_free(desc);
-            return NULL;
+            ಹಿಂತಿರುಗಿ ಖಾಲಿ;
         }
-        s->nb_surfaces = s->nb_surfaces_used + 1;
+        s->nb_surfaces = s->nb_surfaces_ಬಳಸಿದ + 1;
     }
 
-    frames_hwctx->texture_infos[s->nb_surfaces_used].texture = tex;
-    frames_hwctx->texture_infos[s->nb_surfaces_used].index = index;
-    s->nb_surfaces_used++;
+    ಚೌಕಟ್ಟುಗಳು_hwctx->texture_infos[s->nb_surfaces_ಬಳಸಿದ].texture = tex;
+    ಚೌಕಟ್ಟುಗಳು_hwctx->texture_infos[s->nb_surfaces_ಬಳಸಿದ].ಸೂಚ್ಯಂಕ = ಸೂಚ್ಯಂಕ;
+    s->nb_surfaces_ಬಳಸಿದ++;
 
     desc->texture = tex;
-    desc->index   = index;
+    desc->ಸೂಚ್ಯಂಕ   = ಸೂಚ್ಯಂಕ;
 
-    buf = av_buffer_create((uint8_t *)desc, sizeof(*desc), free_texture, tex, 0);
-    if (!buf) {
+    buf = av_ಬಫರ್_create((uint8_t *)desc, ಗಾತ್ರ(*desc), free_texture, tex, 0);
+    ಆದರೆ (!buf) {
         ID3D11Texture2D_Release(tex);
         av_free(desc);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    return buf;
+    ಹಿಂತಿರುಗಿ buf;
 }
 
-static AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
+ಸ್ಥಿರ AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
 {
     D3D11VAFramesContext       *s = ctx->hwctx;
     AVD3D11VAFramesContext *hwctx = &s->p;
@@ -228,527 +228,527 @@ static AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
     HRESULT hr;
     ID3D11Texture2D *tex;
     D3D11_TEXTURE2D_DESC texDesc = {
-        .Width      = ctx->width,
-        .Height     = ctx->height,
-        .MipLevels  = 1,
+        .ಅಗಲ_2      = ctx->ಅಗಲ,
+        .ಎತ್ತರ_2     = ctx->ಎತ್ತರ,
+        .Mip_ಮಟ್ಟಗಳು  = 1,
         .Format     = s->format,
-        .SampleDesc = { .Count = 1 },
-        .ArraySize  = 1,
+        .SampleDesc = { .ಎಣಿಕೆ_3 = 1 },
+        .Array_ಗಾತ್ರ  = 1,
         .Usage      = D3D11_USAGE_DEFAULT,
         .BindFlags  = hwctx->BindFlags,
         .MiscFlags  = hwctx->MiscFlags,
     };
 
-    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &tex);
-    if (FAILED(hr)) {
-        av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (long)hr);
-        return NULL;
+    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, ಖಾಲಿ, &tex);
+    ಆದರೆ (FAILED(hr)) {
+        av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (ದೀರ್ಘ)hr);
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    return wrap_texture_buf(ctx, tex, 0);
+    ಹಿಂತಿರುಗಿ wrap_texture_buf(ctx, tex, 0);
 }
 
-static AVBufferRef *d3d11va_pool_alloc(void *opaque, size_t size)
+ಸ್ಥಿರ AVBufferRef *d3d11va_pool_alloc(ಶೂನ್ಯ *opaque, size_t ಗಾತ್ರ_2)
 {
     AVHWFramesContext        *ctx = (AVHWFramesContext*)opaque;
     D3D11VAFramesContext       *s = ctx->hwctx;
     AVD3D11VAFramesContext *hwctx = &s->p;
     D3D11_TEXTURE2D_DESC  texDesc;
 
-    if (!hwctx->texture)
-        return d3d11va_alloc_single(ctx);
+    ಆದರೆ (!hwctx->texture)
+        ಹಿಂತಿರುಗಿ d3d11va_alloc_single(ctx);
 
     ID3D11Texture2D_GetDesc(hwctx->texture, &texDesc);
 
-    if (s->nb_surfaces_used >= texDesc.ArraySize) {
+    ಆದರೆ (s->nb_surfaces_ಬಳಸಿದ >= texDesc.Array_ಗಾತ್ರ) {
         av_log(ctx, AV_LOG_ERROR, "Static surface pool size exceeded.\n");
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    ID3D11Texture2D_AddRef(hwctx->texture);
-    return wrap_texture_buf(ctx, hwctx->texture, s->nb_surfaces_used);
+    ID3_D11_Texture2_D_ಕೂಡಿಸು_Ref(hwctx->texture);
+    ಹಿಂತಿರುಗಿ wrap_texture_buf(ctx, hwctx->texture, s->nb_surfaces_ಬಳಸಿದ);
 }
 
-static int d3d11va_frames_init(AVHWFramesContext *ctx)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ d3d11va_ಚೌಕಟ್ಟುಗಳು_init(AVHWFramesContext *ctx)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
     AVD3D11VAFramesContext        *hwctx = &s->p;
 
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
     HRESULT hr;
     D3D11_TEXTURE2D_DESC texDesc;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i].pix_fmt) {
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        ಆದರೆ (ctx->sw_format == supported_formats[i].pix_fmt) {
             s->format = supported_formats[i].d3d_format;
-            break;
+            ನಿಲ್ಲಿಸು;
         }
     }
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    ಆದರೆ (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported pixel format: %s\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(EINVAL);
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
     }
 
     hwctx->BindFlags |= device_hwctx->BindFlags;
     hwctx->MiscFlags |= device_hwctx->MiscFlags;
 
-    if (s->format == DXGI_FORMAT_420_OPAQUE)
+    ಆದರೆ (s->format == DXGI_FORMAT_420_OPAQUE)
         hwctx->BindFlags &= ~D3D11_BIND_SHADER_RESOURCE;
 
-    ctx->initial_pool_size = FFMIN(ctx->initial_pool_size, MAX_ARRAY_SIZE);
+    ctx->initial_pool_ಗಾತ್ರ = FFMIN(ctx->initial_pool_ಗಾತ್ರ, MAX_ARRAY_ಗಾತ್ರ);
 
     texDesc = (D3D11_TEXTURE2D_DESC){
-        .Width      = ctx->width,
-        .Height     = ctx->height,
-        .MipLevels  = 1,
+        .ಅಗಲ_2      = ctx->ಅಗಲ,
+        .ಎತ್ತರ_2     = ctx->ಎತ್ತರ,
+        .Mip_ಮಟ್ಟಗಳು  = 1,
         .Format     = s->format,
-        .SampleDesc = { .Count = 1 },
-        .ArraySize  = ctx->initial_pool_size,
+        .SampleDesc = { .ಎಣಿಕೆ_3 = 1 },
+        .Array_ಗಾತ್ರ  = ctx->initial_pool_ಗಾತ್ರ,
         .Usage      = D3D11_USAGE_DEFAULT,
         .BindFlags  = hwctx->BindFlags,
         .MiscFlags  = hwctx->MiscFlags,
     };
 
-    if (hwctx->texture) {
+    ಆದರೆ (hwctx->texture) {
         D3D11_TEXTURE2D_DESC texDesc2;
         ID3D11Texture2D_GetDesc(hwctx->texture, &texDesc2);
 
-        if (texDesc.Width != texDesc2.Width ||
-            texDesc.Height != texDesc2.Height ||
+        ಆದರೆ (texDesc.ಅಗಲ_2 != texDesc2.ಅಗಲ_2 ||
+            texDesc.ಎತ್ತರ_2 != texDesc2.ಎತ್ತರ_2 ||
             texDesc.Format != texDesc2.Format) {
             av_log(ctx, AV_LOG_ERROR, "User-provided texture has mismatching parameters\n");
-            return AVERROR(EINVAL);
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
         }
 
-        ctx->initial_pool_size = texDesc2.ArraySize;
+        ctx->initial_pool_ಗಾತ್ರ = texDesc2.Array_ಗಾತ್ರ;
         hwctx->BindFlags = texDesc2.BindFlags;
         hwctx->MiscFlags = texDesc2.MiscFlags;
-    } else if (texDesc.ArraySize > 0) {
-        hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &hwctx->texture);
-        if (FAILED(hr)) {
-            av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (long)hr);
-            return AVERROR_UNKNOWN;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (texDesc.Array_ಗಾತ್ರ > 0) {
+        hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, ಖಾಲಿ, &hwctx->texture);
+        ಆದರೆ (FAILED(hr)) {
+            av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (ದೀರ್ಘ)hr);
+            ಹಿಂತಿರುಗಿ AVERROR_UNKNOWN;
         }
     }
 
-    hwctx->texture_infos = av_realloc_f(NULL, ctx->initial_pool_size, sizeof(*hwctx->texture_infos));
-    if (!hwctx->texture_infos)
-        return AVERROR(ENOMEM);
-    s->nb_surfaces = ctx->initial_pool_size;
+    hwctx->texture_infos = av_realloc_f(ಖಾಲಿ, ctx->initial_pool_ಗಾತ್ರ, ಗಾತ್ರ(*hwctx->texture_infos));
+    ಆದರೆ (!hwctx->texture_infos)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
+    s->nb_surfaces = ctx->initial_pool_ಗಾತ್ರ;
 
-    ffhwframesctx(ctx)->pool_internal =
-        av_buffer_pool_init2(sizeof(AVD3D11FrameDescriptor),
-                             ctx, d3d11va_pool_alloc, NULL);
-    if (!ffhwframesctx(ctx)->pool_internal)
-        return AVERROR(ENOMEM);
+    ffhwframesctx(ctx)->pool_ಆಂತರಿಕ =
+        av_ಬಫರ್_pool_init2(ಗಾತ್ರ(AVD3_D11_ಚೌಕಟ್ಟು_Descriptor),
+                             ctx, d3d11va_pool_alloc, ಖಾಲಿ);
+    ಆದರೆ (!ffhwframesctx(ctx)->pool_ಆಂತರಿಕ)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int d3d11va_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ d3d11va_get_ಬಫರ್(AVHWFramesContext *ctx, AVFrame *ಚೌಕಟ್ಟು)
 {
-    AVD3D11FrameDescriptor *desc;
+    AVD3_D11_ಚೌಕಟ್ಟು_Descriptor *desc;
 
-    frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    ಚೌಕಟ್ಟು->buf[0] = av_ಬಫರ್_pool_get(ctx->pool);
+    ಆದರೆ (!ಚೌಕಟ್ಟು->buf[0])
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    desc = (AVD3D11FrameDescriptor *)frame->buf[0]->data;
+    desc = (AVD3_D11_ಚೌಕಟ್ಟು_Descriptor *)ಚೌಕಟ್ಟು->buf[0]->ದತ್ತಾಂಶ;
 
-    frame->data[0] = (uint8_t *)desc->texture;
-    frame->data[1] = (uint8_t *)desc->index;
-    frame->format  = AV_PIX_FMT_D3D11;
-    frame->width   = ctx->width;
-    frame->height  = ctx->height;
+    ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[0] = (uint8_t *)desc->texture;
+    ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[1] = (uint8_t *)desc->ಸೂಚ್ಯಂಕ;
+    ಚೌಕಟ್ಟು->format  = AV_PIX_FMT_D3D11;
+    ಚೌಕಟ್ಟು->ಅಗಲ   = ctx->ಅಗಲ;
+    ಚೌಕಟ್ಟು->ಎತ್ತರ  = ctx->ಎತ್ತರ;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int d3d11va_transfer_get_formats(AVHWFramesContext *ctx,
-                                        enum AVHWFrameTransferDirection dir,
-                                        enum AVPixelFormat **formats)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ d3d11va_transfer_get_formats(AVHWFramesContext *ctx,
+                                        ಎಣಿಕೆ AVHWFrameTransferDirection dir,
+                                        ಎಣಿಕೆ AVPixelFormat **formats)
 {
     D3D11VAFramesContext *s = ctx->hwctx;
-    enum AVPixelFormat *fmts;
+    ಎಣಿಕೆ AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, ಗಾತ್ರ(*fmts));
+    ಆದರೆ (!fmts)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     // Don't signal support for opaque formats. Actual access would fail.
-    if (s->format == DXGI_FORMAT_420_OPAQUE)
+    ಆದರೆ (s->format == DXGI_FORMAT_420_OPAQUE)
         fmts[0] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int d3d11va_create_staging_texture(AVHWFramesContext *ctx, DXGI_FORMAT format)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ d3d11va_create_staging_texture(AVHWFramesContext *ctx, DXGI_FORMAT format)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
     HRESULT hr;
     D3D11_TEXTURE2D_DESC texDesc = {
-        .Width          = ctx->width,
-        .Height         = ctx->height,
-        .MipLevels      = 1,
+        .ಅಗಲ_2          = ctx->ಅಗಲ,
+        .ಎತ್ತರ_2         = ctx->ಎತ್ತರ,
+        .Mip_ಮಟ್ಟಗಳು      = 1,
         .Format         = format,
-        .SampleDesc     = { .Count = 1 },
-        .ArraySize      = 1,
+        .SampleDesc     = { .ಎಣಿಕೆ_3 = 1 },
+        .Array_ಗಾತ್ರ      = 1,
         .Usage          = D3D11_USAGE_STAGING,
         .CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE,
     };
 
-    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &s->staging_texture);
-    if (FAILED(hr)) {
-        av_log(ctx, AV_LOG_ERROR, "Could not create the staging texture (%lx)\n", (long)hr);
-        return AVERROR_UNKNOWN;
+    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, ಖಾಲಿ, &s->staging_texture);
+    ಆದರೆ (FAILED(hr)) {
+        av_log(ctx, AV_LOG_ERROR, "Could not create the staging texture (%lx)\n", (ದೀರ್ಘ)hr);
+        ಹಿಂತಿರುಗಿ AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static void fill_texture_ptrs(uint8_t *data[4], int linesize[4],
+ಸ್ಥಿರ ಶೂನ್ಯ fill_texture_ptrs(uint8_t *ದತ್ತಾಂಶ[4], ಪೂರ್ಣಾಂಕ linesize[4],
                               AVHWFramesContext *ctx,
                               D3D11_TEXTURE2D_DESC *desc,
                               D3D11_MAPPED_SUBRESOURCE *map)
 {
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
 
-    for (i = 0; i < 4; i++)
-        linesize[i] = map->RowPitch;
+    ಗಾಗಿ (i = 0; i < 4; i++)
+        linesize[i] = map->ಅಡ್ಡಸಾಲು_Pitch;
 
-    av_image_fill_pointers(data, ctx->sw_format, desc->Height,
-                           (uint8_t*)map->pData, linesize);
+    av_image_fill_ಸೂಚಕಗಳು(ದತ್ತಾಂಶ, ctx->sw_format, desc->ಎತ್ತರ_2,
+                           (uint8_t*)map->p_ದತ್ತಾಂಶ, linesize);
 }
 
-static int d3d11va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ d3d11va_transfer_ದತ್ತಾಂಶ(AVHWFramesContext *ctx, AVFrame *dst,
+                                 ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
-    int download = src->format == AV_PIX_FMT_D3D11;
-    const AVFrame *frame = download ? src : dst;
-    const AVFrame *other = download ? dst : src;
+    ಪೂರ್ಣಾಂಕ download = src->format == AV_PIX_FMT_D3D11;
+    ಸ್ಥಿರಾಂಕ AVFrame *ಚೌಕಟ್ಟು = download ? src : dst;
+    ಸ್ಥಿರಾಂಕ AVFrame *other = download ? dst : src;
     // (The interface types are compatible.)
-    ID3D11Resource *texture = (ID3D11Resource *)(ID3D11Texture2D *)frame->data[0];
-    int index = (intptr_t)frame->data[1];
+    ID3D11Resource *texture = (ID3D11Resource *)(ID3D11Texture2D *)ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[0];
+    ಪೂರ್ಣಾಂಕ ಸೂಚ್ಯಂಕ = (intptr_t)ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[1];
     ID3D11Resource *staging;
-    int w = FFMIN(dst->width,  src->width);
-    int h = FFMIN(dst->height, src->height);
-    uint8_t *map_data[4];
-    int map_linesize[4];
+    ಪೂರ್ಣಾಂಕ w = FFMIN(dst->ಅಗಲ,  src->ಅಗಲ);
+    ಪೂರ್ಣಾಂಕ h = FFMIN(dst->ಎತ್ತರ, src->ಎತ್ತರ);
+    uint8_t *map_ದತ್ತಾಂಶ[4];
+    ಪೂರ್ಣಾಂಕ map_linesize[4];
     D3D11_TEXTURE2D_DESC desc;
     D3D11_MAPPED_SUBRESOURCE map;
     HRESULT hr;
-    int res;
+    ಪೂರ್ಣಾಂಕ res;
 
-    if (frame->hw_frames_ctx->data != (uint8_t *)ctx || other->format != ctx->sw_format)
-        return AVERROR(EINVAL);
+    ಆದರೆ (ಚೌಕಟ್ಟು->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ != (uint8_t *)ctx || other->format != ctx->sw_format)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    device_hwctx->lock(device_hwctx->lock_ctx);
+    device_hwctx->ಬೀಗ_2(device_hwctx->ಬೀಗ_ctx);
 
-    if (!s->staging_texture) {
+    ಆದರೆ (!s->staging_texture) {
         ID3D11Texture2D_GetDesc((ID3D11Texture2D *)texture, &desc);
         res = d3d11va_create_staging_texture(ctx, desc.Format);
-        if (res < 0)
-            return res;
+        ಆದರೆ (res < 0)
+            ಹಿಂತಿರುಗಿ res;
     }
 
     staging = (ID3D11Resource *)s->staging_texture;
 
     ID3D11Texture2D_GetDesc(s->staging_texture, &desc);
 
-    if (download) {
+    ಆದರೆ (download) {
         ID3D11DeviceContext_CopySubresourceRegion(device_hwctx->device_context,
                                                   staging, 0, 0, 0, 0,
-                                                  texture, index, NULL);
+                                                  texture, ಸೂಚ್ಯಂಕ, ಖಾಲಿ);
 
         hr = ID3D11DeviceContext_Map(device_hwctx->device_context,
                                      staging, 0, D3D11_MAP_READ, 0, &map);
-        if (FAILED(hr))
-            goto map_failed;
+        ಆದರೆ (FAILED(hr))
+            ಹೋಗು map_failed;
 
-        fill_texture_ptrs(map_data, map_linesize, ctx, &desc, &map);
+        fill_texture_ptrs(map_ದತ್ತಾಂಶ, map_linesize, ctx, &desc, &map);
 
-        av_image_copy2(dst->data, dst->linesize, map_data, map_linesize,
+        av_image_copy2(dst->ದತ್ತಾಂಶ, dst->linesize, map_ದತ್ತಾಂಶ, map_linesize,
                        ctx->sw_format, w, h);
 
         ID3D11DeviceContext_Unmap(device_hwctx->device_context, staging, 0);
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         hr = ID3D11DeviceContext_Map(device_hwctx->device_context,
                                      staging, 0, D3D11_MAP_WRITE, 0, &map);
-        if (FAILED(hr))
-            goto map_failed;
+        ಆದರೆ (FAILED(hr))
+            ಹೋಗು map_failed;
 
-        fill_texture_ptrs(map_data, map_linesize, ctx, &desc, &map);
+        fill_texture_ptrs(map_ದತ್ತಾಂಶ, map_linesize, ctx, &desc, &map);
 
-        av_image_copy2(map_data, map_linesize, src->data, src->linesize,
+        av_image_copy2(map_ದತ್ತಾಂಶ, map_linesize, src->ದತ್ತಾಂಶ, src->linesize,
                        ctx->sw_format, w, h);
 
         ID3D11DeviceContext_Unmap(device_hwctx->device_context, staging, 0);
 
         ID3D11DeviceContext_CopySubresourceRegion(device_hwctx->device_context,
-                                                  texture, index, 0, 0, 0,
-                                                  staging, 0, NULL);
+                                                  texture, ಸೂಚ್ಯಂಕ, 0, 0, 0,
+                                                  staging, 0, ಖಾಲಿ);
     }
 
-    device_hwctx->unlock(device_hwctx->lock_ctx);
-    return 0;
+    device_hwctx->unlock(device_hwctx->ಬೀಗ_ctx);
+    ಹಿಂತಿರುಗಿ 0;
 
 map_failed:
-    av_log(ctx, AV_LOG_ERROR, "Unable to lock D3D11VA surface (%lx)\n", (long)hr);
-    device_hwctx->unlock(device_hwctx->lock_ctx);
-    return AVERROR_UNKNOWN;
+    av_log(ctx, AV_LOG_ERROR, "Unable to lock D3D11VA surface (%lx)\n", (ದೀರ್ಘ)hr);
+    device_hwctx->unlock(device_hwctx->ಬೀಗ_ctx);
+    ಹಿಂತಿರುಗಿ AVERROR_UNKNOWN;
 }
 
-static int d3d11va_device_init(AVHWDeviceContext *hwdev)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ d3d11va_device_init(AVHWDeviceContext *hwdev)
 {
     AVD3D11VADeviceContext *device_hwctx = hwdev->hwctx;
     HRESULT hr;
 
-    if (!device_hwctx->lock) {
-        device_hwctx->lock_ctx = CreateMutex(NULL, 0, NULL);
-        if (device_hwctx->lock_ctx == INVALID_HANDLE_VALUE) {
-            av_log(NULL, AV_LOG_ERROR, "Failed to create a mutex\n");
-            return AVERROR(EINVAL);
+    ಆದರೆ (!device_hwctx->ಬೀಗ_2) {
+        device_hwctx->ಬೀಗ_ctx = CreateMutex(ಖಾಲಿ, 0, ಖಾಲಿ);
+        ಆದರೆ (device_hwctx->ಬೀಗ_ctx == INVALID_HANDLE_ಮೌಲ್ಯ) {
+            av_log(ಖಾಲಿ, AV_LOG_ERROR, "Failed to create a mutex\n");
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
         }
-        device_hwctx->lock   = d3d11va_default_lock;
+        device_hwctx->ಬೀಗ_2   = d3d11va_default_ಬೀಗ;
         device_hwctx->unlock = d3d11va_default_unlock;
     }
 
-    if (!device_hwctx->device_context) {
-        ID3D11Device_GetImmediateContext(device_hwctx->device, &device_hwctx->device_context);
-        if (!device_hwctx->device_context)
-            return AVERROR_UNKNOWN;
+    ಆದರೆ (!device_hwctx->device_context) {
+        ID3_D11_Device_Get_ತಕ್ಷಣ_Context(device_hwctx->device, &device_hwctx->device_context);
+        ಆದರೆ (!device_hwctx->device_context)
+            ಹಿಂತಿರುಗಿ AVERROR_UNKNOWN;
     }
 
-    if (!device_hwctx->video_device) {
+    ಆದರೆ (!device_hwctx->video_device) {
         hr = ID3D11DeviceContext_QueryInterface(device_hwctx->device, &IID_ID3D11VideoDevice,
-                                                (void **)&device_hwctx->video_device);
-        if (FAILED(hr))
-            return AVERROR_UNKNOWN;
+                                                (ಶೂನ್ಯ **)&device_hwctx->video_device);
+        ಆದರೆ (FAILED(hr))
+            ಹಿಂತಿರುಗಿ AVERROR_UNKNOWN;
     }
 
-    if (!device_hwctx->video_context) {
+    ಆದರೆ (!device_hwctx->video_context) {
         hr = ID3D11DeviceContext_QueryInterface(device_hwctx->device_context, &IID_ID3D11VideoContext,
-                                                (void **)&device_hwctx->video_context);
-        if (FAILED(hr))
-            return AVERROR_UNKNOWN;
+                                                (ಶೂನ್ಯ **)&device_hwctx->video_context);
+        ಆದರೆ (FAILED(hr))
+            ಹಿಂತಿರುಗಿ AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static void d3d11va_device_uninit(AVHWDeviceContext *hwdev)
+ಸ್ಥಿರ ಶೂನ್ಯ d3d11va_device_uninit(AVHWDeviceContext *hwdev)
 {
     AVD3D11VADeviceContext *device_hwctx = hwdev->hwctx;
 
-    if (device_hwctx->device) {
+    ಆದರೆ (device_hwctx->device) {
         ID3D11Device_Release(device_hwctx->device);
-        device_hwctx->device = NULL;
+        device_hwctx->device = ಖಾಲಿ;
     }
 
-    if (device_hwctx->device_context) {
+    ಆದರೆ (device_hwctx->device_context) {
         ID3D11DeviceContext_Release(device_hwctx->device_context);
-        device_hwctx->device_context = NULL;
+        device_hwctx->device_context = ಖಾಲಿ;
     }
 
-    if (device_hwctx->video_device) {
+    ಆದರೆ (device_hwctx->video_device) {
         ID3D11VideoDevice_Release(device_hwctx->video_device);
-        device_hwctx->video_device = NULL;
+        device_hwctx->video_device = ಖಾಲಿ;
     }
 
-    if (device_hwctx->video_context) {
+    ಆದರೆ (device_hwctx->video_context) {
         ID3D11VideoContext_Release(device_hwctx->video_context);
-        device_hwctx->video_context = NULL;
+        device_hwctx->video_context = ಖಾಲಿ;
     }
 
-    if (device_hwctx->lock == d3d11va_default_lock) {
-        CloseHandle(device_hwctx->lock_ctx);
-        device_hwctx->lock_ctx = INVALID_HANDLE_VALUE;
-        device_hwctx->lock = NULL;
+    ಆದರೆ (device_hwctx->ಬೀಗ_2 == d3d11va_default_ಬೀಗ) {
+        CloseHandle(device_hwctx->ಬೀಗ_ctx);
+        device_hwctx->ಬೀಗ_ctx = INVALID_HANDLE_ಮೌಲ್ಯ;
+        device_hwctx->ಬೀಗ_2 = ಖಾಲಿ;
     }
 }
 
-static int d3d11va_device_find_adapter_by_vendor_id(AVHWDeviceContext *ctx, uint32_t flags, const char *vendor_id)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ d3d11va_device_ಕಂಡುಹಿಡಿ_adapter_by_vendor_id(AVHWDeviceContext *ctx, uint32_t flags, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *vendor_id)
 {
     HRESULT hr;
-    IDXGIAdapter *adapter = NULL;
+    IDXGIAdapter *adapter = ಖಾಲಿ;
     IDXGIFactory2 *factory;
-    int adapter_id = 0;
-    long int id = strtol(vendor_id, NULL, 0);
+    ಪೂರ್ಣಾಂಕ adapter_id = 0;
+    ದೀರ್ಘ ಪೂರ್ಣಾಂಕ id = strtol(vendor_id, ಖಾಲಿ, 0);
 
-    hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (void **)&factory);
-    if (FAILED(hr)) {
+    hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (ಶೂನ್ಯ **)&factory);
+    ಆದರೆ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "CreateDXGIFactory returned error\n");
-        return -1;
+        ಹಿಂತಿರುಗಿ -1;
     }
 
-    while (IDXGIFactory2_EnumAdapters(factory, adapter_id++, &adapter) != DXGI_ERROR_NOT_FOUND) {
-        ID3D11Device* device = NULL;
+    ಆಗ (IDXGIFactory2_EnumAdapters(factory, adapter_id++, &adapter) != DXGI_ERROR_NOT_ಸಿಕ್ಕಿತು) {
+        ID3D11Device* device = ಖಾಲಿ;
         DXGI_ADAPTER_DESC adapter_desc;
 
-        hr = mD3D11CreateDevice(adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, flags, NULL, 0, D3D11_SDK_VERSION, &device, NULL, NULL);
-        if (FAILED(hr)) {
+        hr = mD3D11CreateDevice(adapter, D3D_DRIVER_TYPE_UNKNOWN, ಖಾಲಿ, flags, ಖಾಲಿ, 0, D3_D11_SDK_ಆವೃತ್ತಿ, &device, ಖಾಲಿ, ಖಾಲಿ);
+        ಆದರೆ (FAILED(hr)) {
             av_log(ctx, AV_LOG_DEBUG, "D3D11CreateDevice returned error, try next adapter\n");
             IDXGIAdapter_Release(adapter);
-            continue;
+            ಮುಂದುವರಿ;
         }
 
         hr = IDXGIAdapter2_GetDesc(adapter, &adapter_desc);
         ID3D11Device_Release(device);
         IDXGIAdapter_Release(adapter);
-        if (FAILED(hr)) {
+        ಆದರೆ (FAILED(hr)) {
             av_log(ctx, AV_LOG_DEBUG, "IDXGIAdapter2_GetDesc returned error, try next adapter\n");
-            continue;
-        } else if (adapter_desc.VendorId == id) {
+            ಮುಂದುವರಿ;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (adapter_desc.VendorId == id) {
             IDXGIFactory2_Release(factory);
-            return adapter_id - 1;
+            ಹಿಂತಿರುಗಿ adapter_id - 1;
         }
     }
 
     IDXGIFactory2_Release(factory);
-    return -1;
+    ಹಿಂತಿರುಗಿ -1;
 }
 
-static int d3d11va_device_create(AVHWDeviceContext *ctx, const char *device,
-                                 AVDictionary *opts, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ d3d11va_device_create(AVHWDeviceContext *ctx, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *device,
+                                 AVDictionary *opts, ಪೂರ್ಣಾಂಕ flags)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->hwctx;
 
     HRESULT hr;
-    IDXGIAdapter           *pAdapter = NULL;
+    IDXGIAdapter           *pAdapter = ಖಾಲಿ;
     ID3D10Multithread      *pMultithread;
     UINT creationFlags = D3D11_CREATE_DEVICE_VIDEO_SUPPORT;
-    int is_debug       = !!av_dict_get(opts, "debug", NULL, 0);
-    int ret;
-    int adapter = -1;
+    ಪೂರ್ಣಾಂಕ is_debug       = !!av_dict_get(opts, "debug", ಖಾಲಿ, 0);
+    ಪೂರ್ಣಾಂಕ ret;
+    ಪೂರ್ಣಾಂಕ adapter = -1;
 
-    if (is_debug) {
+    ಆದರೆ (is_debug) {
         creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
         av_log(ctx, AV_LOG_INFO, "Enabling d3d11 debugging.\n");
     }
 
-    if ((ret = ff_thread_once(&functions_loaded, load_functions)) != 0)
-        return AVERROR_UNKNOWN;
-    if (!mD3D11CreateDevice || !mCreateDXGIFactory) {
+    ಆದರೆ ((ret = ff_thread_once(&functions_loaded, ತುಂಬು_functions)) != 0)
+        ಹಿಂತಿರುಗಿ AVERROR_UNKNOWN;
+    ಆದರೆ (!mD3D11CreateDevice || !mCreateDXGIFactory) {
         av_log(ctx, AV_LOG_ERROR, "Failed to load D3D11 library or its functions\n");
-        return AVERROR_UNKNOWN;
+        ಹಿಂತಿರುಗಿ AVERROR_UNKNOWN;
     }
 
-    if (device) {
+    ಆದರೆ (device) {
         adapter = atoi(device);
-    } else {
-        AVDictionaryEntry *e = av_dict_get(opts, "vendor_id", NULL, 0);
-        if (e && e->value) {
-            adapter = d3d11va_device_find_adapter_by_vendor_id(ctx, creationFlags, e->value);
-            if (adapter < 0) {
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        AVDictionary_ನಮೂದು *e = av_dict_get(opts, "vendor_id", ಖಾಲಿ, 0);
+        ಆದರೆ (e && e->ಮೌಲ್ಯ) {
+            adapter = d3d11va_device_ಕಂಡುಹಿಡಿ_adapter_by_vendor_id(ctx, creationFlags, e->ಮೌಲ್ಯ);
+            ಆದರೆ (adapter < 0) {
                 av_log(ctx, AV_LOG_ERROR, "Failed to find d3d11va adapter by "
-                       "vendor id %s\n", e->value);
-                return AVERROR_UNKNOWN;
+                       "vendor id %s\n", e->ಮೌಲ್ಯ);
+                ಹಿಂತಿರುಗಿ AVERROR_UNKNOWN;
             }
         }
     }
 
-    if (adapter >= 0) {
+    ಆದರೆ (adapter >= 0) {
         IDXGIFactory2 *pDXGIFactory;
 
         av_log(ctx, AV_LOG_VERBOSE, "Selecting d3d11va adapter %d\n", adapter);
-        hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (void **)&pDXGIFactory);
-        if (SUCCEEDED(hr)) {
-            if (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
-                pAdapter = NULL;
+        hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (ಶೂನ್ಯ **)&pDXGIFactory);
+        ಆದರೆ (SUCCEEDED(hr)) {
+            ಆದರೆ (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
+                pAdapter = ಖಾಲಿ;
             IDXGIFactory2_Release(pDXGIFactory);
         }
     }
 
-    if (pAdapter) {
+    ಆದರೆ (pAdapter) {
         DXGI_ADAPTER_DESC desc;
         hr = IDXGIAdapter2_GetDesc(pAdapter, &desc);
-        if (!FAILED(hr)) {
+        ಆದರೆ (!FAILED(hr)) {
             av_log(ctx, AV_LOG_INFO, "Using device %04x:%04x (%ls).\n",
                    desc.VendorId, desc.DeviceId, desc.Description);
         }
     }
 
-    hr = mD3D11CreateDevice(pAdapter, pAdapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_HARDWARE, NULL, creationFlags, NULL, 0,
-                   D3D11_SDK_VERSION, &device_hwctx->device, NULL, NULL);
-    if (pAdapter)
+    hr = mD3D11CreateDevice(pAdapter, pAdapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_HARDWARE, ಖಾಲಿ, creationFlags, ಖಾಲಿ, 0,
+                   D3_D11_SDK_ಆವೃತ್ತಿ, &device_hwctx->device, ಖಾಲಿ, ಖಾಲಿ);
+    ಆದರೆ (pAdapter)
         IDXGIAdapter_Release(pAdapter);
-    if (FAILED(hr)) {
-        av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device (%lx)\n", (long)hr);
-        return AVERROR_UNKNOWN;
+    ಆದರೆ (FAILED(hr)) {
+        av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device (%lx)\n", (ದೀರ್ಘ)hr);
+        ಹಿಂತಿರುಗಿ AVERROR_UNKNOWN;
     }
 
-    hr = ID3D11Device_QueryInterface(device_hwctx->device, &IID_ID3D10Multithread, (void **)&pMultithread);
-    if (SUCCEEDED(hr)) {
-        ID3D10Multithread_SetMultithreadProtected(pMultithread, TRUE);
+    hr = ID3D11Device_QueryInterface(device_hwctx->device, &IID_ID3D10Multithread, (ಶೂನ್ಯ **)&pMultithread);
+    ಆದರೆ (SUCCEEDED(hr)) {
+        ID3_D10_Multithread_ಗಣ_Multithread_Protected(pMultithread, TRUE);
         ID3D10Multithread_Release(pMultithread);
     }
 
-#if !HAVE_UWP && HAVE_DXGIDEBUG_H
-    if (is_debug) {
-        HANDLE dxgidebug_dll = LoadLibrary("dxgidebug.dll");
-        if (dxgidebug_dll) {
-            HRESULT (WINAPI  * pf_DXGIGetDebugInterface)(const GUID *riid, void **ppDebug)
-                = (void *)GetProcAddress(dxgidebug_dll, "DXGIGetDebugInterface");
-            if (pf_DXGIGetDebugInterface) {
-                IDXGIDebug *dxgi_debug = NULL;
-                hr = pf_DXGIGetDebugInterface(&IID_IDXGIDebug, (void**)&dxgi_debug);
-                if (SUCCEEDED(hr) && dxgi_debug) {
-                    IDXGIDebug_ReportLiveObjects(dxgi_debug, DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+#ಆದರೆ !HAVE_UWP && HAVE_DXGIDEBUG_H
+    ಆದರೆ (is_debug) {
+        HANDLE dxgidebug_dll = ತುಂಬು_Library("dxgidebug.dll");
+        ಆದರೆ (dxgidebug_dll) {
+            HRESULT (WINAPI  * pf_DXGIGetDebugInterface)(ಸ್ಥಿರಾಂಕ GUID *riid, ಶೂನ್ಯ **ppDebug)
+                = (ಶೂನ್ಯ *)Get_Proc_ವಿಳಾಸ(dxgidebug_dll, "DXGIGetDebugInterface");
+            ಆದರೆ (pf_DXGIGetDebugInterface) {
+                IDXGIDebug *dxgi_debug = ಖಾಲಿ;
+                hr = pf_DXGIGetDebugInterface(&IID_IDXGIDebug, (ಶೂನ್ಯ**)&dxgi_debug);
+                ಆದರೆ (SUCCEEDED(hr) && dxgi_debug) {
+                    IDXGIDebug_Report_ಜೀವಂತ_Objects(dxgi_debug, DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
                     av_log(ctx, AV_LOG_INFO, "Enabled dxgi debugging.\n");
-                } else {
+                } ಇಲ್ಲದಿದ್ದರೆ {
                     av_log(ctx, AV_LOG_WARNING, "Failed enabling dxgi debugging.\n");
                 }
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 av_log(ctx, AV_LOG_WARNING, "Failed getting dxgi debug interface.\n");
             }
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             av_log(ctx, AV_LOG_WARNING, "Failed loading dxgi debug library.\n");
         }
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    if (av_dict_get(opts, "SHADER", NULL, 0))
+    ಆದರೆ (av_dict_get(opts, "SHADER", ಖಾಲಿ, 0))
         device_hwctx->BindFlags |= D3D11_BIND_SHADER_RESOURCE;
 
-    if (av_dict_get(opts, "UAV", NULL, 0))
+    ಆದರೆ (av_dict_get(opts, "UAV", ಖಾಲಿ, 0))
         device_hwctx->BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
 
-    if (av_dict_get(opts, "RTV", NULL, 0))
-        device_hwctx->BindFlags |= D3D11_BIND_RENDER_TARGET;
+    ಆದರೆ (av_dict_get(opts, "RTV", ಖಾಲಿ, 0))
+        device_hwctx->BindFlags |= D3_D11_BIND_RENDER_ಗುರಿ;
 
-    if (av_dict_get(opts, "SHARED", NULL, 0))
+    ಆದರೆ (av_dict_get(opts, "SHARED", ಖಾಲಿ, 0))
         device_hwctx->MiscFlags |= D3D11_RESOURCE_MISC_SHARED;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-const HWContextType ff_hwcontext_type_d3d11va = {
+ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_d3d11va = {
     .type                 = AV_HWDEVICE_TYPE_D3D11VA,
     .name                 = "D3D11VA",
 
-    .device_hwctx_size    = sizeof(AVD3D11VADeviceContext),
-    .frames_hwctx_size    = sizeof(D3D11VAFramesContext),
+    .device_hwctx_ಗಾತ್ರ    = ಗಾತ್ರ(AVD3D11VADeviceContext),
+    .ಚೌಕಟ್ಟುಗಳು_hwctx_ಗಾತ್ರ    = ಗಾತ್ರ(D3D11VAFramesContext),
 
     .device_create        = d3d11va_device_create,
     .device_init          = d3d11va_device_init,
     .device_uninit        = d3d11va_device_uninit,
-    .frames_get_constraints = d3d11va_frames_get_constraints,
-    .frames_init          = d3d11va_frames_init,
-    .frames_uninit        = d3d11va_frames_uninit,
-    .frames_get_buffer    = d3d11va_get_buffer,
+    .ಚೌಕಟ್ಟುಗಳು_get_constraints = d3d11va_ಚೌಕಟ್ಟುಗಳು_get_constraints,
+    .ಚೌಕಟ್ಟುಗಳು_init          = d3d11va_ಚೌಕಟ್ಟುಗಳು_init,
+    .ಚೌಕಟ್ಟುಗಳು_uninit        = d3d11va_ಚೌಕಟ್ಟುಗಳು_uninit,
+    .ಚೌಕಟ್ಟುಗಳು_get_ಬಫರ್    = d3d11va_get_ಬಫರ್,
     .transfer_get_formats = d3d11va_transfer_get_formats,
-    .transfer_data_to     = d3d11va_transfer_data,
-    .transfer_data_from   = d3d11va_transfer_data,
+    .transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ     = d3d11va_transfer_ದತ್ತಾಂಶ,
+    .transfer_ದತ್ತಾಂಶ_from   = d3d11va_transfer_ದತ್ತಾಂಶ,
 
-    .pix_fmts             = (const enum AVPixelFormat[]){ AV_PIX_FMT_D3D11, AV_PIX_FMT_NONE },
+    .pix_fmts             = (ಸ್ಥಿರಾಂಕ ಎಣಿಕೆ AVPixelFormat[]){ AV_PIX_FMT_D3D11, AV_PIX_FMT_NONE },
 };

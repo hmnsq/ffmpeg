@@ -16,35 +16,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ARM_BSWAP_H
-#define AVUTIL_ARM_BSWAP_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_ARM_BSWAP_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_ARM_BSWAP_H
 
-#include <stdint.h>
-#include "config.h"
-#include "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
 
-#ifdef __ARMCC_VERSION
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __ARMCC_VERSION
 
-#if HAVE_ARMV6
-#define av_bswap32 av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+#ಆದರೆ HAVE_ARMV6
+#ವ್ಯಾಖ್ಯಾನಿಸು av_bswap32 av_bswap32
+ಸ್ಥಿರ av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return __rev(x);
+    ಹಿಂತಿರುಗಿ __rev(x);
 }
-#endif /* HAVE_ARMV6 */
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_ARMV6 */
 
-#elif HAVE_INLINE_ASM
+#ಅಥವಾಆದರೆ HAVE_INLINE_ASM
 
-#if HAVE_ARMV6_INLINE
-#define av_bswap16 av_bswap16
-static av_always_inline av_const unsigned av_bswap16(unsigned x)
+#ಆದರೆ HAVE_ARMV6_INLINE
+#ವ್ಯಾಖ್ಯಾನಿಸು av_bswap16 av_bswap16
+ಸ್ಥಿರ av_always_inline av_const ಚಿಹ್ನೆರಹಿತ av_bswap16(ಚಿಹ್ನೆರಹಿತ x)
 {
-    unsigned y;
+    ಚಿಹ್ನೆರಹಿತ y;
 
     __asm__("rev16 %0, %1" : "=r"(y) : "r"(x));
-    return y;
+    ಹಿಂತಿರುಗಿ y;
 }
-#endif
-#endif /* __ARMCC_VERSION */
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ /* __ARMCC_VERSION */
 
-#endif /* AVUTIL_ARM_BSWAP_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_ARM_BSWAP_H */

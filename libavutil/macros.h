@@ -22,16 +22,16 @@
  * Utility Preprocessor macros
  */
 
-#ifndef AVUTIL_MACROS_H
-#define AVUTIL_MACROS_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_MACROS_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_MACROS_H
 
-#include "libavutil/avconfig.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/avconfig.h"
 
-#if AV_HAVE_BIGENDIAN
+#ಆದರೆ AV_HAVE_BIGENDIAN
 #   define AV_NE(be, le) (be)
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 #   define AV_NE(be, le) (le)
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 /**
  * Comparator.
@@ -42,18 +42,18 @@
  * As with many macros, this evaluates its argument multiple times, it thus
  * must not have a side-effect.
  */
-#define FFDIFFSIGN(x,y) (((x)>(y)) - ((x)<(y)))
+#ವ್ಯಾಖ್ಯಾನಿಸು FFDIFFSIGN(x,y) (((x)>(y)) - ((x)<(y)))
 
-#define FFMAX(a,b) ((a) > (b) ? (a) : (b))
-#define FFMAX3(a,b,c) FFMAX(FFMAX(a,b),c)
-#define FFMIN(a,b) ((a) > (b) ? (b) : (a))
-#define FFMIN3(a,b,c) FFMIN(FFMIN(a,b),c)
+#ವ್ಯಾಖ್ಯಾನಿಸು FFMAX(a,b) ((a) > (b) ? (a) : (b))
+#ವ್ಯಾಖ್ಯಾನಿಸು FFMAX3(a,b,c) FFMAX(FFMAX(a,b),c)
+#ವ್ಯಾಖ್ಯಾನಿಸು FFMIN(a,b) ((a) > (b) ? (b) : (a))
+#ವ್ಯಾಖ್ಯಾನಿಸು FFMIN3(a,b,c) FFMIN(FFMIN(a,b),c)
 
-#define FFSWAP(type,a,b) do{type SWAP_tmp= b; b= a; a= SWAP_tmp;}while(0)
-#define FF_ARRAY_ELEMS(a) (sizeof(a) / sizeof((a)[0]))
+#ವ್ಯಾಖ್ಯಾನಿಸು FFSWAP(type,a,b) ಮಾಡು{type ಅದಲುಬದಲು_tmp= b; b= a; a= ಅದಲುಬದಲು_tmp;}ಆಗ(0)
+#ವ್ಯಾಖ್ಯಾನಿಸು FF_ARRAY_ELEMS(a) (ಗಾತ್ರ(a) / ಗಾತ್ರ((a)[0]))
 
-#define MKTAG(a,b,c,d)   ((a) | ((b) << 8) | ((c) << 16) | ((unsigned)(d) << 24))
-#define MKBETAG(a,b,c,d) ((d) | ((c) << 8) | ((b) << 16) | ((unsigned)(a) << 24))
+#ವ್ಯಾಖ್ಯಾನಿಸು MKTAG(a,b,c,d)   ((a) | ((b) << 8) | ((c) << 16) | ((ಚಿಹ್ನೆರಹಿತ)(d) << 24))
+#ವ್ಯಾಖ್ಯಾನಿಸು MKBETAG(a,b,c,d) ((d) | ((c) << 8) | ((b) << 16) | ((ಚಿಹ್ನೆರಹಿತ)(a) << 24))
 
 /**
  * @addtogroup preproc_misc Preprocessor String Macros
@@ -63,18 +63,18 @@
  * @{
  */
 
-#define AV_STRINGIFY(s)         AV_TOSTRING(s)
-#define AV_TOSTRING(s) #s
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_STRINGIFY(s)         AV_TOSTRING(s)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_TOSTRING(s) #s
 
-#define AV_GLUE(a, b) a ## b
-#define AV_JOIN(a, b) AV_GLUE(a, b)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_GLUE(a, b) a ## b
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_JOIN(a, b) AV_GLUE(a, b)
 
 /**
  * @}
  */
 
-#define AV_PRAGMA(s) _Pragma(#s)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_PRAGMA(s) _Pragma(#s)
 
-#define FFALIGN(x, a) (((x)+(a)-1)&~((a)-1))
+#ವ್ಯಾಖ್ಯಾನಿಸು FFALIGN(x, a) (((x)+(a)-1)&~((a)-1))
 
-#endif /* AVUTIL_MACROS_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_MACROS_H */

@@ -16,29 +16,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_DETECTION_BBOX_H
-#define AVUTIL_DETECTION_BBOX_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_DETECTION_BBOX_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_DETECTION_BBOX_H
 
-#include "rational.h"
-#include "avassert.h"
-#include "frame.h"
+#ಅನ್ತರ್ಭಾವ "rational.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
 
-typedef struct AVDetectionBBox {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDetectionBBox {
     /**
      * Distance in pixels from the left/top edge of the frame,
      * together with width and height, defining the bounding box.
      */
-    int x;
-    int y;
-    int w;
-    int h;
+    ಪೂರ್ಣಾಂಕ x;
+    ಪೂರ್ಣಾಂಕ y;
+    ಪೂರ್ಣಾಂಕ w;
+    ಪೂರ್ಣಾಂಕ h;
 
-#define AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE 64
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_DETECTION_BBOX_LABEL_NAME_MAX_ಗಾತ್ರ 64
 
     /**
      * Detect result with confidence
      */
-    char detect_label[AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
+    ಅಕ್ಷರ detect_label[AV_DETECTION_BBOX_LABEL_NAME_MAX_ಗಾತ್ರ];
     AVRational detect_confidence;
 
     /**
@@ -47,18 +47,18 @@ typedef struct AVDetectionBBox {
      * DNN models on one bounding box.
      * classify_count is zero if no classification.
      */
-#define AV_NUM_DETECTION_BBOX_CLASSIFY 4
-    uint32_t classify_count;
-    char classify_labels[AV_NUM_DETECTION_BBOX_CLASSIFY][AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
-    AVRational classify_confidences[AV_NUM_DETECTION_BBOX_CLASSIFY];
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_ಅಂಕೆ_DETECTION_BBOX_CLASSIFY 4
+    uint32_t classify_ಎಣಿಕೆ;
+    ಅಕ್ಷರ classify_labels[AV_ಅಂಕೆ_DETECTION_BBOX_CLASSIFY][AV_DETECTION_BBOX_LABEL_NAME_MAX_ಗಾತ್ರ];
+    AVRational classify_confidences[AV_ಅಂಕೆ_DETECTION_BBOX_CLASSIFY];
 } AVDetectionBBox;
 
-typedef struct AVDetectionBBoxHeader {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDetection_BBox_ಶೀರ್ಷಿಕೆ {
     /**
      * Information about how the bounding box is generated.
      * for example, the DNN model name.
      */
-    char source[256];
+    ಅಕ್ಷರ ಮೂಲ[256];
 
     /**
      * Number of bounding boxes in the array.
@@ -69,23 +69,23 @@ typedef struct AVDetectionBBoxHeader {
      * Offset in bytes from the beginning of this structure at which
      * the array of bounding boxes starts.
      */
-    size_t bboxes_offset;
+    size_t bboxes_ಸ್ಥಾನಾಂತರ;
 
     /**
      * Size of each bounding box in bytes.
      */
-    size_t bbox_size;
-} AVDetectionBBoxHeader;
+    size_t bbox_ಗಾತ್ರ;
+} AVDetection_BBox_ಶೀರ್ಷಿಕೆ;
 
 /*
  * Get the bounding box at the specified {@code idx}. Must be between 0 and nb_bboxes.
  */
-static av_always_inline AVDetectionBBox *
-av_get_detection_bbox(const AVDetectionBBoxHeader *header, unsigned int idx)
+ಸ್ಥಿರ av_always_inline AVDetectionBBox *
+av_get_detection_bbox(ಸ್ಥಿರಾಂಕ AVDetection_BBox_ಶೀರ್ಷಿಕೆ *ಶೀರ್ಷಿಕೆ, ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ idx)
 {
-    av_assert0(idx < header->nb_bboxes);
-    return (AVDetectionBBox *)((uint8_t *)header + header->bboxes_offset +
-                               idx * header->bbox_size);
+    av_assert0(idx < ಶೀರ್ಷಿಕೆ->nb_bboxes);
+    ಹಿಂತಿರುಗಿ (AVDetectionBBox *)((uint8_t *)ಶೀರ್ಷಿಕೆ + ಶೀರ್ಷಿಕೆ->bboxes_ಸ್ಥಾನಾಂತರ +
+                               idx * ಶೀರ್ಷಿಕೆ->bbox_ಗಾತ್ರ);
 }
 
 /**
@@ -97,12 +97,12 @@ av_get_detection_bbox(const AVDetectionBBoxHeader *header, unsigned int idx)
  * @param out_size if non-NULL, the size in bytes of the resulting data array is
  * written here.
  */
-AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size);
+AVDetection_BBox_ಶೀರ್ಷಿಕೆ *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *ಹೊರಹೋಗು_ಗಾತ್ರ);
 
 /**
  * Allocates memory for AVDetectionBBoxHeader, plus an array of {@code nb_bboxes}
  * AVDetectionBBox, in the given AVFrame {@code frame} as AVFrameSideData of type
  * AV_FRAME_DATA_DETECTION_BBOXES and initializes the variables.
  */
-AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes);
-#endif
+AVDetection_BBox_ಶೀರ್ಷಿಕೆ *av_detection_bbox_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು, uint32_t nb_bboxes);
+#ಆದರೆ_ಅಂತ್ಯ

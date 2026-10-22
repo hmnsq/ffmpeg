@@ -18,33 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include "libavutil/aes_internal.h"
-#include "libavutil/x86/cpu.h"
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ "libavutil/aes_internal.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/x86/cpu.h"
 
-void ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+ಶೂನ್ಯ ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src,
+                             ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ ಸುತ್ತುಗಳು);
+ಶೂನ್ಯ ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src,
+                             ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ ಸುತ್ತುಗಳು);
+ಶೂನ್ಯ ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src,
+                             ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ ಸುತ್ತುಗಳು);
+ಶೂನ್ಯ ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src,
+                             ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ ಸುತ್ತುಗಳು);
+ಶೂನ್ಯ ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src,
+                             ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ ಸುತ್ತುಗಳು);
+ಶೂನ್ಯ ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src,
+                             ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ ಸುತ್ತುಗಳು);
 
-void ff_init_aes_x86(AVAES *a, int decrypt)
+ಶೂನ್ಯ ff_init_aes_x86(AVAES *a, ಪೂರ್ಣಾಂಕ decrypt)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ಪೂರ್ಣಾಂಕ cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_AESNI(cpu_flags)) {
-        if (a->rounds == 10)
+    ಆದರೆ (EXTERNAL_AESNI(cpu_flags)) {
+        ಆದರೆ (a->ಸುತ್ತುಗಳು == 10)
             a->crypt = decrypt ? ff_aes_decrypt_10_aesni : ff_aes_encrypt_10_aesni;
-        else if (a->rounds == 12)
+        ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (a->ಸುತ್ತುಗಳು == 12)
             a->crypt = decrypt ? ff_aes_decrypt_12_aesni : ff_aes_encrypt_12_aesni;
-        else if (a->rounds == 14)
+        ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (a->ಸುತ್ತುಗಳು == 14)
             a->crypt = decrypt ? ff_aes_decrypt_14_aesni : ff_aes_encrypt_14_aesni;
     }
 }

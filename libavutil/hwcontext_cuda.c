@@ -16,602 +16,602 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "buffer.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_cuda_internal.h"
-#if CONFIG_VULKAN
-#include "hwcontext_vulkan.h"
-#endif
-#include "cuda_check.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "imgutils.h"
+#ಅನ್ತರ್ಭಾವ "buffer.h"
+#ಅನ್ತರ್ಭಾವ "common.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext_internal.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext_cuda_internal.h"
+#ಆದರೆ CONFIG_VULKAN
+#ಅನ್ತರ್ಭಾವ "hwcontext_vulkan.h"
+#ಆದರೆ_ಅಂತ್ಯ
+#ಅನ್ತರ್ಭಾವ "cuda_check.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "pixdesc.h"
+#ಅನ್ತರ್ಭಾವ "pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "imgutils.h"
 
-typedef struct CUDAFramesContext {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ CUDAFramesContext {
     AVCUDAFramesContext p;
 
-    int shift_width, shift_height;
-    int tex_alignment;
+    ಪೂರ್ಣಾಂಕ ಸರಿಸು_ಅಗಲ, ಸರಿಸು_ಎತ್ತರ;
+    ಪೂರ್ಣಾಂಕ tex_alignment;
 
-    int cuarray_num_surfaces_used;
+    ಪೂರ್ಣಾಂಕ cuarray_ಅಂಕೆ_surfaces_ಬಳಸಿದ;
 } CUDAFramesContext;
 
-typedef struct CUDADeviceContext {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ CUDADeviceContext {
     AVCUDADeviceContext p;
-    AVCUDADeviceContextInternal internal;
+    AVCUDADevice_Context_ಆಂತರಿಕ ಆಂತರಿಕ;
 } CUDADeviceContext;
 
 
 
-#define CHECK_CU(x) FF_CUDA_CHECK_DL(device_ctx, cu, x)
+#ವ್ಯಾಖ್ಯಾನಿಸು CHECK_CU(x) FF_CUDA_CHECK_DL(device_ctx, cu, x)
 
-static CUarray_format cuda_array_format_for_pix_fmt(enum AVPixelFormat fmt);
+ಸ್ಥಿರ CUarray_format cuda_array_format_for_pix_fmt(ಎಣಿಕೆ AVPixelFormat fmt);
 
-static int cuda_frames_get_constraints(AVHWDeviceContext *ctx,
-                                       const void *hwconfig,
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ cuda_ಚೌಕಟ್ಟುಗಳು_get_constraints(AVHWDeviceContext *ctx,
+                                       ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *hwconfig,
                                        AVHWFramesConstraints *constraints)
 {
-    const AVCUDAHWConfig *config = hwconfig;
-    enum AVPixelFormat req_fmt = config ? config->hw_format : AV_PIX_FMT_NONE;
-    int n = 0;
+    ಸ್ಥಿರಾಂಕ AVCUDAHWConfig *config = hwconfig;
+    ಎಣಿಕೆ AVPixelFormat req_fmt = config ? config->hw_format : AV_PIX_FMT_NONE;
+    ಪೂರ್ಣಾಂಕ n = 0;
 
-    if (req_fmt == AV_PIX_FMT_CUDA || req_fmt == AV_PIX_FMT_CUARRAY) {
-        constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-        if (!constraints->valid_hw_formats)
-            return AVERROR(ENOMEM);
+    ಆದರೆ (req_fmt == AV_PIX_FMT_CUDA || req_fmt == AV_PIX_FMT_CUARRAY) {
+        constraints->valid_hw_formats = av_malloc_array(2, ಗಾತ್ರ(*constraints->valid_hw_formats));
+        ಆದರೆ (!constraints->valid_hw_formats)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
         constraints->valid_hw_formats[0] = req_fmt;
         constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
-    } else {
-        constraints->valid_hw_formats = av_malloc_array(2 + HAVE_FFNVCODEC_CUARRAY, sizeof(*constraints->valid_hw_formats));
-        if (!constraints->valid_hw_formats)
-            return AVERROR(ENOMEM);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        constraints->valid_hw_formats = av_malloc_array(2 + HAVE_FFNVCODEC_CUARRAY, ಗಾತ್ರ(*constraints->valid_hw_formats));
+        ಆದರೆ (!constraints->valid_hw_formats)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
         constraints->valid_hw_formats[0] = AV_PIX_FMT_CUDA;
-#if HAVE_FFNVCODEC_CUARRAY
+#ಆದರೆ HAVE_FFNVCODEC_CUARRAY
         constraints->valid_hw_formats[1] = AV_PIX_FMT_CUARRAY;
         constraints->valid_hw_formats[2] = AV_PIX_FMT_NONE;
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
         constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     }
 
     constraints->valid_sw_formats = av_malloc_array(AV_PIX_FMT_NB + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    ಗಾತ್ರ(*constraints->valid_sw_formats));
+    ಆದರೆ (!constraints->valid_sw_formats)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
     n = 0;
-    for (int i = 0; i < AV_PIX_FMT_NB; i++) {
-        if (req_fmt == AV_PIX_FMT_CUARRAY) {
-            if (cuda_array_format_for_pix_fmt(i))
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < AV_PIX_FMT_NB; i++) {
+        ಆದರೆ (req_fmt == AV_PIX_FMT_CUARRAY) {
+            ಆದರೆ (cuda_array_format_for_pix_fmt(i))
                 constraints->valid_sw_formats[n++] = i;
-        } else {
-            const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
             /* Palette formats carry their palette in a separate zero-linesize
              * data[1] plane that the transfer path does not handle, so exclude
              * them along with the hwaccel formats. */
-            if (desc && !(desc->flags & (AV_PIX_FMT_FLAG_HWACCEL | AV_PIX_FMT_FLAG_PAL)))
+            ಆದರೆ (desc && !(desc->flags & (AV_PIX_FMT_FLAG_HWACCEL | AV_PIX_FMT_FLAG_PAL)))
                 constraints->valid_sw_formats[n++] = i;
         }
     }
-#if CONFIG_VULKAN
-    if (req_fmt != AV_PIX_FMT_CUARRAY)
+#ಆದರೆ CONFIG_VULKAN
+    ಆದರೆ (req_fmt != AV_PIX_FMT_CUARRAY)
         constraints->valid_sw_formats[n++] = AV_PIX_FMT_VULKAN;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     constraints->valid_sw_formats[n] = AV_PIX_FMT_NONE;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static void cuda_buffer_free(void *opaque, uint8_t *data)
+ಸ್ಥಿರ ಶೂನ್ಯ cuda_ಬಫರ್_free(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ)
 {
     AVHWFramesContext        *ctx = opaque;
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->ಆಂತರಿಕ->cuda_dl;
 
     CUcontext dummy;
 
-    CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+    CHECK_CU(cu->cu_Ctx_ತಳ್ಳು_Current(hwctx->cuda_ctx));
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-        AVCUDAArrayFrameDescriptor *desc = (AVCUDAArrayFrameDescriptor*)data;
+    ಆದರೆ (ctx->format == AV_PIX_FMT_CUARRAY) {
+        AVCUDAArray_ಚೌಕಟ್ಟು_Descriptor *desc = (AVCUDAArray_ಚೌಕಟ್ಟು_Descriptor*)ದತ್ತಾಂಶ;
         CHECK_CU(cu->cuArrayDestroy(desc->array));
         av_free(desc);
-    } else {
-        CHECK_CU(cu->cuMemFree((CUdeviceptr)data));
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        CHECK_CU(cu->cuMemFree((CUdeviceptr)ದತ್ತಾಂಶ));
     }
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
 }
 
-static AVBufferRef *cuda_pool_alloc(void *opaque, size_t size)
+ಸ್ಥಿರ AVBufferRef *cuda_pool_alloc(ಶೂನ್ಯ *opaque, size_t ಗಾತ್ರ_2)
 {
     AVHWFramesContext        *ctx = opaque;
     CUDAFramesContext       *priv = ctx->hwctx;
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->ಆಂತರಿಕ->cuda_dl;
 
-    AVBufferRef *ret = NULL;
-    CUcontext dummy = NULL;
-    CUdeviceptr data;
-    int err;
+    AVBufferRef *ret = ಖಾಲಿ;
+    CUcontext dummy = ಖಾಲಿ;
+    CUdeviceptr ದತ್ತಾಂಶ;
+    ಪೂರ್ಣಾಂಕ err;
 
-    err = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-    if (err < 0)
-        return NULL;
+    err = CHECK_CU(cu->cu_Ctx_ತಳ್ಳು_Current(hwctx->cuda_ctx));
+    ಆದರೆ (err < 0)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-        AVCUDAArrayFrameDescriptor *desc = av_mallocz(sizeof(*desc));
-        if (!desc)
-            goto done;
+    ಆದರೆ (ctx->format == AV_PIX_FMT_CUARRAY) {
+        AVCUDAArray_ಚೌಕಟ್ಟು_Descriptor *desc = av_mallocz(ಗಾತ್ರ(*desc));
+        ಆದರೆ (!desc)
+            ಹೋಗು ಮುಗಿದ;
 
-        if (priv->p.cuarray_num_surfaces > 0) {
-            if (priv->cuarray_num_surfaces_used >= priv->p.cuarray_num_surfaces) {
+        ಆದರೆ (priv->p.cuarray_ಅಂಕೆ_surfaces > 0) {
+            ಆದರೆ (priv->cuarray_ಅಂಕೆ_surfaces_ಬಳಸಿದ >= priv->p.cuarray_ಅಂಕೆ_surfaces) {
                 av_log(ctx, AV_LOG_ERROR, "Static surface pool size exceeded.\n");
                 av_free(desc);
-                goto done;
+                ಹೋಗು ಮುಗಿದ;
             }
-            desc->index = priv->cuarray_num_surfaces_used++;
-            desc->array = priv->p.cuarray_surfaces[desc->index];
-        } else {
+            desc->ಸೂಚ್ಯಂಕ = priv->cuarray_ಅಂಕೆ_surfaces_ಬಳಸಿದ++;
+            desc->array = priv->p.cuarray_surfaces[desc->ಸೂಚ್ಯಂಕ];
+        } ಇಲ್ಲದಿದ್ದರೆ {
             err = CHECK_CU(cu->cuArray3DCreate(&desc->array, &priv->p.cuarray_desc));
-            if (err < 0) {
+            ಆದರೆ (err < 0) {
                 av_free(desc);
-                goto done;
+                ಹೋಗು ಮುಗಿದ;
             }
         }
 
-        ret = av_buffer_create((uint8_t*)desc, sizeof(*desc), cuda_buffer_free, ctx, 0);
-        if (!ret) {
+        ret = av_ಬಫರ್_create((uint8_t*)desc, ಗಾತ್ರ(*desc), cuda_ಬಫರ್_free, ctx, 0);
+        ಆದರೆ (!ret) {
             // It is okay (and necessary) to free a pool array here,
             // since cuarray_num_surfaces_used is already incremented.
             CHECK_CU(cu->cuArrayDestroy(desc->array));
             av_free(desc);
-            goto done;
+            ಹೋಗು ಮುಗಿದ;
         }
 
-        goto done;
+        ಹೋಗು ಮುಗಿದ;
     }
 
-    err = CHECK_CU(cu->cuMemAlloc(&data, size));
-    if (err < 0)
-        goto done;
+    err = CHECK_CU(cu->cuMemAlloc(&ದತ್ತಾಂಶ, ಗಾತ್ರ_2));
+    ಆದರೆ (err < 0)
+        ಹೋಗು ಮುಗಿದ;
 
-    ret = av_buffer_create((uint8_t*)data, size, cuda_buffer_free, ctx, 0);
-    if (!ret) {
-        CHECK_CU(cu->cuMemFree(data));
-        goto done;
+    ret = av_ಬಫರ್_create((uint8_t*)ದತ್ತಾಂಶ, ಗಾತ್ರ_2, cuda_ಬಫರ್_free, ctx, 0);
+    ಆದರೆ (!ret) {
+        CHECK_CU(cu->cuMemFree(ದತ್ತಾಂಶ));
+        ಹೋಗು ಮುಗಿದ;
     }
 
     // Common exit: reached on both success (ret holds the buffer) and
     // failure (ret == NULL); restores the CUDA context and returns ret.
-done:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-    return ret;
+ಮುಗಿದ:
+    CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-#if HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
-static void cuda_transfer_buffer_free(void *opaque, uint8_t *data)
+#ಆದರೆ HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
+ಸ್ಥಿರ ಶೂನ್ಯ cuda_transfer_ಬಫರ್_free(ಶೂನ್ಯ *opaque, uint8_t *ದತ್ತಾಂಶ)
 {
     AVHWDeviceContext *device_ctx = opaque;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->ಆಂತರಿಕ->cuda_dl;
     CUcontext dummy;
 
-    CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-    CHECK_CU(cu->cuMemFreeHost(data));
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_ತಳ್ಳು_Current(hwctx->cuda_ctx));
+    CHECK_CU(cu->cuMemFreeHost(ದತ್ತಾಂಶ));
+    CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
 }
 
 /* The device transfers directly to and from page-locked memory, other memory
  * goes through a buffer of the driver. */
-static AVBufferRef *cuda_transfer_buffer_alloc(void *device_ref, size_t size)
+ಸ್ಥಿರ AVBufferRef *cuda_transfer_ಬಫರ್_alloc(ಶೂನ್ಯ *device_ref, size_t ಗಾತ್ರ_2)
 {
-    AVHWDeviceContext *device_ctx = (AVHWDeviceContext *)((AVBufferRef *)device_ref)->data;
+    AVHWDeviceContext *device_ctx = (AVHWDeviceContext *)((AVBufferRef *)device_ref)->ದತ್ತಾಂಶ;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
-    AVBufferRef *ret = NULL;
+    CudaFunctions             *cu = hwctx->ಆಂತರಿಕ->cuda_dl;
+    AVBufferRef *ret = ಖಾಲಿ;
     CUcontext dummy;
-    void *host;
+    ಶೂನ್ಯ *host;
 
-    if (CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx)) < 0)
-        return av_buffer_alloc(size);
+    ಆದರೆ (CHECK_CU(cu->cu_Ctx_ತಳ್ಳು_Current(hwctx->cuda_ctx)) < 0)
+        ಹಿಂತಿರುಗಿ av_ಬಫರ್_alloc(ಗಾತ್ರ_2);
 
-    if (CHECK_CU(cu->cuMemHostAlloc(&host, size, 0)) >= 0) {
-        ret = av_buffer_create(host, size, cuda_transfer_buffer_free, device_ctx, 0);
-        if (!ret)
+    ಆದರೆ (CHECK_CU(cu->cuMemHostAlloc(&host, ಗಾತ್ರ_2, 0)) >= 0) {
+        ret = av_ಬಫರ್_create(host, ಗಾತ್ರ_2, cuda_transfer_ಬಫರ್_free, device_ctx, 0);
+        ಆದರೆ (!ret)
             CHECK_CU(cu->cuMemFreeHost(host));
     }
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-    return ret ? ret : av_buffer_alloc(size);
+    CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
+    ಹಿಂತಿರುಗಿ ret ? ret : av_ಬಫರ್_alloc(ಗಾತ್ರ_2);
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-static void cuda_frames_uninit(AVHWFramesContext *ctx)
+ಸ್ಥಿರ ಶೂನ್ಯ cuda_ಚೌಕಟ್ಟುಗಳು_uninit(AVHWFramesContext *ctx)
 {
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
     CUDAFramesContext       *priv = ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->ಆಂತರಿಕ->cuda_dl;
 
-    if (priv->p.cuarray_surfaces) {
+    ಆದರೆ (priv->p.cuarray_surfaces) {
         CUcontext dummy;
-        CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+        CHECK_CU(cu->cu_Ctx_ತಳ್ಳು_Current(hwctx->cuda_ctx));
 
         // Make sure we don't free surfaces that have been adopted by the pool already
-        for (int i = priv->cuarray_num_surfaces_used; i < priv->p.cuarray_num_surfaces; i++)
-            if (priv->p.cuarray_surfaces[i])
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = priv->cuarray_ಅಂಕೆ_surfaces_ಬಳಸಿದ; i < priv->p.cuarray_ಅಂಕೆ_surfaces; i++)
+            ಆದರೆ (priv->p.cuarray_surfaces[i])
                 CHECK_CU(cu->cuArrayDestroy(priv->p.cuarray_surfaces[i]));
 
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+        CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
 
         av_freep(&priv->p.cuarray_surfaces);
-        priv->p.cuarray_num_surfaces = 0;
+        priv->p.cuarray_ಅಂಕೆ_surfaces = 0;
     }
 }
 
-static CUarray_format cuda_array_format_for_pix_fmt(enum AVPixelFormat fmt)
+ಸ್ಥಿರ CUarray_format cuda_array_format_for_pix_fmt(ಎಣಿಕೆ AVPixelFormat fmt)
 {
-    switch (fmt) {
-#if HAVE_FFNVCODEC_CUARRAY
-    case AV_PIX_FMT_NV12:      return CU_AD_FORMAT_NV12;
-    case AV_PIX_FMT_P010:
-    case AV_PIX_FMT_P012:
-    case AV_PIX_FMT_P016:      return CU_AD_FORMAT_P016;
-    case AV_PIX_FMT_NV16:      return CU_AD_FORMAT_NV16;
-    case AV_PIX_FMT_P210:
-    case AV_PIX_FMT_P212:
-    case AV_PIX_FMT_P216:      return CU_AD_FORMAT_P216;
-    case AV_PIX_FMT_NV24:      return CU_AD_FORMAT_YUV444_8BIT_SEMIPLANAR;
-    case AV_PIX_FMT_P410:
-    case AV_PIX_FMT_P412:
-    case AV_PIX_FMT_P416:      return CU_AD_FORMAT_YUV444_16BIT_SEMIPLANAR;
-    case AV_PIX_FMT_YUV420P:   return CU_AD_FORMAT_UINT8_PLANAR_420;
-    case AV_PIX_FMT_YUV422P:   return CU_AD_FORMAT_UINT8_PLANAR_422;
-    case AV_PIX_FMT_YUV444P:   return CU_AD_FORMAT_UINT8_PLANAR_444;
-    case AV_PIX_FMT_YUV420P10: return CU_AD_FORMAT_UINT16_PLANAR_420;
-    case AV_PIX_FMT_YUV422P10: return CU_AD_FORMAT_UINT16_PLANAR_422;
-    case AV_PIX_FMT_YUV444P10:
-    case AV_PIX_FMT_YUV444P10MSB:
-    case AV_PIX_FMT_YUV444P12MSB:
-    case AV_PIX_FMT_YUV444P16: return CU_AD_FORMAT_UINT16_PLANAR_444;
-    case AV_PIX_FMT_0RGB32:
-    case AV_PIX_FMT_0BGR32:
-    case AV_PIX_FMT_RGB32:
-    case AV_PIX_FMT_BGR32:     return CU_AD_FORMAT_UNSIGNED_INT8;
-#endif
-    default:                   return 0;
+    ಆಯ್ಕೆ (fmt) {
+#ಆದರೆ HAVE_FFNVCODEC_CUARRAY
+    ಸ್ಥಿತಿ AV_PIX_FMT_NV12:      ಹಿಂತಿರುಗಿ CU_AD_FORMAT_NV12;
+    ಸ್ಥಿತಿ AV_PIX_FMT_P010:
+    ಸ್ಥಿತಿ AV_PIX_FMT_P012:
+    ಸ್ಥಿತಿ AV_PIX_FMT_P016:      ಹಿಂತಿರುಗಿ CU_AD_FORMAT_P016;
+    ಸ್ಥಿತಿ AV_PIX_FMT_NV16:      ಹಿಂತಿರುಗಿ CU_AD_FORMAT_NV16;
+    ಸ್ಥಿತಿ AV_PIX_FMT_P210:
+    ಸ್ಥಿತಿ AV_PIX_FMT_P212:
+    ಸ್ಥಿತಿ AV_PIX_FMT_P216:      ಹಿಂತಿರುಗಿ CU_AD_FORMAT_P216;
+    ಸ್ಥಿತಿ AV_PIX_FMT_NV24:      ಹಿಂತಿರುಗಿ CU_AD_FORMAT_YUV444_8_ಬಿಟ್_SEMIPLANAR;
+    ಸ್ಥಿತಿ AV_PIX_FMT_P410:
+    ಸ್ಥಿತಿ AV_PIX_FMT_P412:
+    ಸ್ಥಿತಿ AV_PIX_FMT_P416:      ಹಿಂತಿರುಗಿ CU_AD_FORMAT_YUV444_16_ಬಿಟ್_SEMIPLANAR;
+    ಸ್ಥಿತಿ AV_PIX_FMT_YUV420P:   ಹಿಂತಿರುಗಿ CU_AD_FORMAT_UINT8_PLANAR_420;
+    ಸ್ಥಿತಿ AV_PIX_FMT_YUV422P:   ಹಿಂತಿರುಗಿ CU_AD_FORMAT_UINT8_PLANAR_422;
+    ಸ್ಥಿತಿ AV_PIX_FMT_YUV444P:   ಹಿಂತಿರುಗಿ CU_AD_FORMAT_UINT8_PLANAR_444;
+    ಸ್ಥಿತಿ AV_PIX_FMT_YUV420P10: ಹಿಂತಿರುಗಿ CU_AD_FORMAT_UINT16_PLANAR_420;
+    ಸ್ಥಿತಿ AV_PIX_FMT_YUV422P10: ಹಿಂತಿರುಗಿ CU_AD_FORMAT_UINT16_PLANAR_422;
+    ಸ್ಥಿತಿ AV_PIX_FMT_YUV444P10:
+    ಸ್ಥಿತಿ AV_PIX_FMT_YUV444P10MSB:
+    ಸ್ಥಿತಿ AV_PIX_FMT_YUV444P12MSB:
+    ಸ್ಥಿತಿ AV_PIX_FMT_YUV444P16: ಹಿಂತಿರುಗಿ CU_AD_FORMAT_UINT16_PLANAR_444;
+    ಸ್ಥಿತಿ AV_PIX_FMT_0RGB32:
+    ಸ್ಥಿತಿ AV_PIX_FMT_0BGR32:
+    ಸ್ಥಿತಿ AV_PIX_FMT_RGB32:
+    ಸ್ಥಿತಿ AV_PIX_FMT_BGR32:     ಹಿಂತಿರುಗಿ CU_AD_FORMAT_UNSIGNED_INT8;
+#ಆದರೆ_ಅಂತ್ಯ
+    ಪೂರ್ವನಿಯೋಜಿತ:                   ಹಿಂತಿರುಗಿ 0;
     }
 }
 
-#if HAVE_FFNVCODEC_CUARRAY
-static unsigned int cuda_array_numchannels_for_pix_fmt(enum AVPixelFormat fmt)
+#ಆದರೆ HAVE_FFNVCODEC_CUARRAY
+ಸ್ಥಿರ ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ cuda_array_numchannels_for_pix_fmt(ಎಣಿಕೆ AVPixelFormat fmt)
 {
-    switch (fmt) {
-    case AV_PIX_FMT_0RGB32:
-    case AV_PIX_FMT_0BGR32:
-    case AV_PIX_FMT_RGB32:
-    case AV_PIX_FMT_BGR32:     return 4;
-    default:                   return 3;
+    ಆಯ್ಕೆ (fmt) {
+    ಸ್ಥಿತಿ AV_PIX_FMT_0RGB32:
+    ಸ್ಥಿತಿ AV_PIX_FMT_0BGR32:
+    ಸ್ಥಿತಿ AV_PIX_FMT_RGB32:
+    ಸ್ಥಿತಿ AV_PIX_FMT_BGR32:     ಹಿಂತಿರುಗಿ 4;
+    ಪೂರ್ವನಿಯೋಜಿತ:                   ಹಿಂತಿರುಗಿ 3;
     }
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-static int cuda_frames_init(AVHWFramesContext *ctx)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ cuda_ಚೌಕಟ್ಟುಗಳು_init(AVHWFramesContext *ctx)
 {
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
     CUDAFramesContext       *priv = ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(ctx->sw_format);
-    int err;
+    CudaFunctions             *cu = hwctx->ಆಂತರಿಕ->cuda_dl;
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(ctx->sw_format);
+    ಪೂರ್ಣಾಂಕ err;
 
-    if (!desc) {
+    ಆದರೆ (!desc) {
         av_log(ctx, AV_LOG_ERROR, "Invalid pixel format\n");
-        return AVERROR(EINVAL);
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
     }
 
     /* Palette formats keep their palette in a separate zero-linesize plane
      * that the transfer path does not copy, so they are not supported. */
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+    ಆದರೆ (desc->flags & AV_PIX_FMT_FLAG_PAL) {
         av_log(ctx, AV_LOG_ERROR, "Palette formats are not supported\n");
-        return AVERROR(ENOSYS);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
     }
 
-#if HAVE_FFNVCODEC_CUARRAY
-    if (ctx->format == AV_PIX_FMT_CUARRAY && !cu->cuArrayGetPlane) {
+#ಆದರೆ HAVE_FFNVCODEC_CUARRAY
+    ಆದರೆ (ctx->format == AV_PIX_FMT_CUARRAY && !cu->cuArrayGetPlane) {
         av_log(ctx, AV_LOG_ERROR, "cuArrayGetPlane not available, update your driver\n");
-        return AVERROR(ENOSYS);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
     }
-#else
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಆದರೆ (ctx->format == AV_PIX_FMT_CUARRAY) {
         av_log(ctx, AV_LOG_ERROR, "Missing support for cuarray frames. Rebuild with newer ffnvcodec headers.\n");
-        return AVERROR(ENOSYS);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     err = CHECK_CU(cu->cuDeviceGetAttribute(&priv->tex_alignment,
                                             14 /* CU_DEVICE_ATTRIBUTE_TEXTURE_ALIGNMENT */,
-                                            hwctx->internal->cuda_device));
-    if (err < 0)
-        return err;
+                                            hwctx->ಆಂತರಿಕ->cuda_device));
+    ಆದರೆ (err < 0)
+        ಹಿಂತಿರುಗಿ err;
 
     av_log(ctx, AV_LOG_DEBUG, "CUDA texture alignment: %d\n", priv->tex_alignment);
 
     // YUV420P is a special case.
     // Since nvenc expects the U/V planes to have half the linesize of the Y plane
     // alignment has to be doubled to ensure the U/V planes still end up aligned.
-    if (ctx->sw_format == AV_PIX_FMT_YUV420P)
+    ಆದರೆ (ctx->sw_format == AV_PIX_FMT_YUV420P)
         priv->tex_alignment *= 2;
 
-    av_pix_fmt_get_chroma_sub_sample(ctx->sw_format, &priv->shift_width, &priv->shift_height);
+    av_pix_fmt_get_chroma_sub_sample(ctx->sw_format, &priv->ಸರಿಸು_ಅಗಲ, &priv->ಸರಿಸು_ಎತ್ತರ);
 
-#if HAVE_FFNVCODEC_CUARRAY
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-        if (!priv->p.cuarray_desc.Width)
-            priv->p.cuarray_desc.Width = ctx->width;
-        if (!priv->p.cuarray_desc.Height)
-            priv->p.cuarray_desc.Height = ctx->height;
-        if (!priv->p.cuarray_desc.NumChannels)
-            priv->p.cuarray_desc.NumChannels = cuda_array_numchannels_for_pix_fmt(ctx->sw_format);
+#ಆದರೆ HAVE_FFNVCODEC_CUARRAY
+    ಆದರೆ (ctx->format == AV_PIX_FMT_CUARRAY) {
+        ಆದರೆ (!priv->p.cuarray_desc.ಅಗಲ_2)
+            priv->p.cuarray_desc.ಅಗಲ_2 = ctx->ಅಗಲ;
+        ಆದರೆ (!priv->p.cuarray_desc.ಎತ್ತರ_2)
+            priv->p.cuarray_desc.ಎತ್ತರ_2 = ctx->ಎತ್ತರ;
+        ಆದರೆ (!priv->p.cuarray_desc.ಅಂಕೆ_Channels)
+            priv->p.cuarray_desc.ಅಂಕೆ_Channels = cuda_array_numchannels_for_pix_fmt(ctx->sw_format);
 
-        if (priv->p.cuarray_desc.Depth) {
+        ಆದರೆ (priv->p.cuarray_desc.ಆಳ_2) {
             av_log(ctx, AV_LOG_ERROR, "CUarrays with non-zero depth are not supported.\n");
-            return AVERROR(EINVAL);
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
         }
 
-        if (!priv->p.cuarray_desc.Format)
+        ಆದರೆ (!priv->p.cuarray_desc.Format)
             priv->p.cuarray_desc.Format = cuda_array_format_for_pix_fmt(ctx->sw_format);
-        if (!priv->p.cuarray_desc.Format) {
+        ಆದರೆ (!priv->p.cuarray_desc.Format) {
             av_log(ctx, AV_LOG_ERROR, "Invalid CUarray pixel format\n");
-            return AVERROR_BUG;
+            ಹಿಂತಿರುಗಿ AVERROR_BUG;
         }
 
         priv->p.cuarray_desc.Flags |= CUDA_ARRAY3D_SURFACE_LDST | CUDA_ARRAY3D_VIDEO_ENCODE_DECODE;
     }
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY && priv->p.cuarray_num_surfaces > 0) {
+    ಆದರೆ (ctx->format == AV_PIX_FMT_CUARRAY && priv->p.cuarray_ಅಂಕೆ_surfaces > 0) {
         CUcontext dummy;
 
-        priv->p.cuarray_surfaces = av_calloc(priv->p.cuarray_num_surfaces, sizeof(*priv->p.cuarray_surfaces));
-        if (!priv->p.cuarray_surfaces)
-            return AVERROR(ENOMEM);
+        priv->p.cuarray_surfaces = av_calloc(priv->p.cuarray_ಅಂಕೆ_surfaces, ಗಾತ್ರ(*priv->p.cuarray_surfaces));
+        ಆದರೆ (!priv->p.cuarray_surfaces)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-        err = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-        if (err < 0) {
+        err = CHECK_CU(cu->cu_Ctx_ತಳ್ಳು_Current(hwctx->cuda_ctx));
+        ಆದರೆ (err < 0) {
             av_freep(&priv->p.cuarray_surfaces);
-            return err;
+            ಹಿಂತಿರುಗಿ err;
         }
 
-        for (int i = 0; i < priv->p.cuarray_num_surfaces; i++) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < priv->p.cuarray_ಅಂಕೆ_surfaces; i++) {
             err = CHECK_CU(cu->cuArray3DCreate(&priv->p.cuarray_surfaces[i], &priv->p.cuarray_desc));
-            if (err < 0) {
-                for (i = i - 1; i >= 0; i--)
+            ಆದರೆ (err < 0) {
+                ಗಾಗಿ (i = i - 1; i >= 0; i--)
                     CHECK_CU(cu->cuArrayDestroy(priv->p.cuarray_surfaces[i]));
-                CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+                CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
 
                 av_freep(&priv->p.cuarray_surfaces);
-                return err;
+                ಹಿಂತಿರುಗಿ err;
             }
         }
 
-        err = CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-        if (err < 0)
-            goto fail;
+        err = CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
+        ಆದರೆ (err < 0)
+            ಹೋಗು fail;
 
         av_log(ctx, AV_LOG_DEBUG, "allocated %d CUarray surfaces (%zux%zu)\n",
-               priv->p.cuarray_num_surfaces, priv->p.cuarray_desc.Width, priv->p.cuarray_desc.Height);
+               priv->p.cuarray_ಅಂಕೆ_surfaces, priv->p.cuarray_desc.ಅಗಲ_2, priv->p.cuarray_desc.ಎತ್ತರ_2);
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    if (!ctx->pool) {
-        int size = av_image_get_buffer_size(ctx->sw_format, ctx->width, ctx->height, priv->tex_alignment);
-        if (size < 0) {
-            err = size;
-            goto fail;
+    ಆದರೆ (!ctx->pool) {
+        ಪೂರ್ಣಾಂಕ ಗಾತ್ರ_2 = av_image_get_ಬಫರ್_ಗಾತ್ರ(ctx->sw_format, ctx->ಅಗಲ, ctx->ಎತ್ತರ, priv->tex_alignment);
+        ಆದರೆ (ಗಾತ್ರ_2 < 0) {
+            err = ಗಾತ್ರ_2;
+            ಹೋಗು fail;
         }
 
-        ffhwframesctx(ctx)->pool_internal =
-            av_buffer_pool_init2(size, ctx, cuda_pool_alloc, NULL);
-        if (!ffhwframesctx(ctx)->pool_internal) {
+        ffhwframesctx(ctx)->pool_ಆಂತರಿಕ =
+            av_ಬಫರ್_pool_init2(ಗಾತ್ರ_2, ctx, cuda_pool_alloc, ಖಾಲಿ);
+        ಆದರೆ (!ffhwframesctx(ctx)->pool_ಆಂತರಿಕ) {
             err = AVERROR(ENOMEM);
-            goto fail;
+            ಹೋಗು fail;
         }
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    cuda_frames_uninit(ctx);
-    return err;
+    cuda_ಚೌಕಟ್ಟುಗಳು_uninit(ctx);
+    ಹಿಂತಿರುಗಿ err;
 }
 
-static int cuda_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ cuda_get_ಬಫರ್(AVHWFramesContext *ctx, AVFrame *ಚೌಕಟ್ಟು)
 {
     CUDAFramesContext       *priv = ctx->hwctx;
-#if HAVE_FFNVCODEC_CUARRAY
+#ಆದರೆ HAVE_FFNVCODEC_CUARRAY
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->ಆಂತರಿಕ->cuda_dl;
 
     CUcontext dummy;
-#endif
-    int res;
+#ಆದರೆ_ಅಂತ್ಯ
+    ಪೂರ್ಣಾಂಕ res;
 
-    frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    ಚೌಕಟ್ಟು->buf[0] = av_ಬಫರ್_pool_get(ctx->pool);
+    ಆದರೆ (!ಚೌಕಟ್ಟು->buf[0])
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-#if HAVE_FFNVCODEC_CUARRAY
-        AVCUDAArrayFrameDescriptor *desc = (AVCUDAArrayFrameDescriptor*)frame->buf[0]->data;
-        if (!desc) {
-            frame->format = ctx->format;
-            frame->width  = ctx->width;
-            frame->height = ctx->height;
-            return 0;
+    ಆದರೆ (ctx->format == AV_PIX_FMT_CUARRAY) {
+#ಆದರೆ HAVE_FFNVCODEC_CUARRAY
+        AVCUDAArray_ಚೌಕಟ್ಟು_Descriptor *desc = (AVCUDAArray_ಚೌಕಟ್ಟು_Descriptor*)ಚೌಕಟ್ಟು->buf[0]->ದತ್ತಾಂಶ;
+        ಆದರೆ (!desc) {
+            ಚೌಕಟ್ಟು->format = ctx->format;
+            ಚೌಕಟ್ಟು->ಅಗಲ  = ctx->ಅಗಲ;
+            ಚೌಕಟ್ಟು->ಎತ್ತರ = ctx->ಎತ್ತರ;
+            ಹಿಂತಿರುಗಿ 0;
         }
-        frame->data[0] = (uint8_t*)desc->array;
-        frame->data[1] = (uint8_t*)desc->index;
+        ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[0] = (uint8_t*)desc->array;
+        ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[1] = (uint8_t*)desc->ಸೂಚ್ಯಂಕ;
 
-        res = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-        if (res < 0)
-            return res;
+        res = CHECK_CU(cu->cu_Ctx_ತಳ್ಳು_Current(hwctx->cuda_ctx));
+        ಆದರೆ (res < 0)
+            ಹಿಂತಿರುಗಿ res;
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(frame->linesize); i++) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(ಚೌಕಟ್ಟು->linesize); i++) {
             CUDA_ARRAY3D_DESCRIPTOR plane_desc = { 0 };
             CUarray plane_array;
             CUresult arr_plane_res = cu->cuArrayGetPlane(&plane_array, desc->array, i);
 
-            if (arr_plane_res == CUDA_ERROR_INVALID_VALUE) {
-                if (i > 0)
-                    break;
+            ಆದರೆ (arr_plane_res == CUDA_ERROR_INVALID_ಮೌಲ್ಯ) {
+                ಆದರೆ (i > 0)
+                    ನಿಲ್ಲಿಸು;
                 /* Non-planar format (e.g. UNSIGNED_INT8 x4 for packed RGB):
                  * cuArrayGetPlane is unsupported, query the array directly. */
                 res = CHECK_CU(cu->cuArray3DGetDescriptor(&plane_desc, desc->array));
-                if (res < 0)
-                    goto fail;
-            } else if (arr_plane_res != CUDA_SUCCESS) {
+                ಆದರೆ (res < 0)
+                    ಹೋಗು fail;
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (arr_plane_res != CUDA_SUCCESS) {
                 res = CHECK_CU(arr_plane_res);
-                goto fail;
-            } else {
+                ಹೋಗು fail;
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 res = CHECK_CU(cu->cuArray3DGetDescriptor(&plane_desc, plane_array));
-                if (res < 0)
-                    goto fail;
+                ಆದರೆ (res < 0)
+                    ಹೋಗು fail;
             }
 
-            int elem_size = ff_cuda_cuarray_elem_size(plane_desc.Format);
-            if (elem_size <= 0) {
+            ಪೂರ್ಣಾಂಕ elem_ಗಾತ್ರ = ff_cuda_cuarray_elem_ಗಾತ್ರ(plane_desc.Format);
+            ಆದರೆ (elem_ಗಾತ್ರ <= 0) {
                 res = AVERROR_BUG;
-                goto fail;
+                ಹೋಗು fail;
             }
 
-            frame->linesize[i] = plane_desc.Width * plane_desc.NumChannels * elem_size;
+            ಚೌಕಟ್ಟು->linesize[i] = plane_desc.ಅಗಲ_2 * plane_desc.ಅಂಕೆ_Channels * elem_ಗಾತ್ರ;
 
-            if (arr_plane_res == CUDA_ERROR_INVALID_VALUE)
-                break;
+            ಆದರೆ (arr_plane_res == CUDA_ERROR_INVALID_ಮೌಲ್ಯ)
+                ನಿಲ್ಲಿಸು;
         }
 
-        res = CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-        if (res < 0)
-            return res;
-#else
-        return AVERROR(ENOSYS);
-#endif
-    } else {
-        res = av_image_fill_arrays(frame->data, frame->linesize, frame->buf[0]->data,
-                                   ctx->sw_format, ctx->width, ctx->height, priv->tex_alignment);
-        if (res < 0)
-            return res;
+        res = CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
+        ಆದರೆ (res < 0)
+            ಹಿಂತಿರುಗಿ res;
+#ಇಲ್ಲದಿದ್ದರೆ
+        ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
+#ಆದರೆ_ಅಂತ್ಯ
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        res = av_image_fill_arrays(ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ, ಚೌಕಟ್ಟು->linesize, ಚೌಕಟ್ಟು->buf[0]->ದತ್ತಾಂಶ,
+                                   ctx->sw_format, ctx->ಅಗಲ, ctx->ಎತ್ತರ, priv->tex_alignment);
+        ಆದರೆ (res < 0)
+            ಹಿಂತಿರುಗಿ res;
 
         // YUV420P is a special case.
         // Nvenc expects the U/V planes in swapped order from how ffmpeg expects them, also chroma is half-aligned
-        if (ctx->sw_format == AV_PIX_FMT_YUV420P) {
-            frame->linesize[1] = frame->linesize[2] = frame->linesize[0] / 2;
-            frame->data[2]     = frame->data[1];
-            frame->data[1]     = frame->data[2] + frame->linesize[2] * AV_CEIL_RSHIFT(ctx->height, 1);
+        ಆದರೆ (ctx->sw_format == AV_PIX_FMT_YUV420P) {
+            ಚೌಕಟ್ಟು->linesize[1] = ಚೌಕಟ್ಟು->linesize[2] = ಚೌಕಟ್ಟು->linesize[0] / 2;
+            ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[2]     = ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[1];
+            ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[1]     = ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[2] + ಚೌಕಟ್ಟು->linesize[2] * AV_CEIL_RSHIFT(ctx->ಎತ್ತರ, 1);
         }
     }
 
-    frame->format = ctx->format;
-    frame->width  = ctx->width;
-    frame->height = ctx->height;
+    ಚೌಕಟ್ಟು->format = ctx->format;
+    ಚೌಕಟ್ಟು->ಅಗಲ  = ctx->ಅಗಲ;
+    ಚೌಕಟ್ಟು->ಎತ್ತರ = ctx->ಎತ್ತರ;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
-#if HAVE_FFNVCODEC_CUARRAY
+#ಆದರೆ HAVE_FFNVCODEC_CUARRAY
 fail:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-    return res;
-#endif
+    CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
+    ಹಿಂತಿರುಗಿ res;
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
-static enum AVPixelFormat cuda_frame_hw_format(const AVFrame *frame)
+ಸ್ಥಿರ ಎಣಿಕೆ AVPixelFormat cuda_ಚೌಕಟ್ಟು_hw_format(ಸ್ಥಿರಾಂಕ AVFrame *ಚೌಕಟ್ಟು)
 {
-    if (!frame->hw_frames_ctx)
-        return AV_PIX_FMT_NONE;
-    return ((AVHWFramesContext *)frame->hw_frames_ctx->data)->format;
+    ಆದರೆ (!ಚೌಕಟ್ಟು->hw_ಚೌಕಟ್ಟುಗಳು_ctx)
+        ಹಿಂತಿರುಗಿ AV_PIX_FMT_NONE;
+    ಹಿಂತಿರುಗಿ ((AVHWFramesContext *)ಚೌಕಟ್ಟು->hw_ಚೌಕಟ್ಟುಗಳು_ctx->ದತ್ತಾಂಶ)->format;
 }
 
-static int cuda_transfer_get_formats(AVHWFramesContext *ctx,
-                                     enum AVHWFrameTransferDirection dir,
-                                     enum AVPixelFormat **formats)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ cuda_transfer_get_formats(AVHWFramesContext *ctx,
+                                     ಎಣಿಕೆ AVHWFrameTransferDirection dir,
+                                     ಎಣಿಕೆ AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
+    ಎಣಿಕೆ AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, ಗಾತ್ರ(*fmts));
+    ಆದರೆ (!fmts)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int cuda_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ cuda_transfer_ದತ್ತಾಂಶ(AVHWFramesContext *ctx, AVFrame *dst,
+                                 ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
     CUDAFramesContext       *priv = ctx->hwctx;
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->ಆಂತರಿಕ->cuda_dl;
 
-    const AVFrame *sw_frame = src->hw_frames_ctx ? dst : src;
-    AVFrame *top_down = NULL, *bottom_up_dst = NULL;
+    ಸ್ಥಿರಾಂಕ AVFrame *sw_ಚೌಕಟ್ಟು = src->hw_ಚೌಕಟ್ಟುಗಳು_ctx ? dst : src;
+    AVFrame *ತುದಿ_ಕೆಳಕ್ಕೆ = ಖಾಲಿ, *bottom_ಮೇಲೆ_dst = ಖಾಲಿ;
     CUcontext dummy;
-    int i, ret, copy_queued = 0, bottom_up = 0;
+    ಪೂರ್ಣಾಂಕ i, ret, copy_queued = 0, bottom_ಮೇಲೆ = 0;
 
     {
-        enum AVPixelFormat src_fmt = cuda_frame_hw_format(src);
-        enum AVPixelFormat dst_fmt = cuda_frame_hw_format(dst);
-        if ((src_fmt != AV_PIX_FMT_NONE &&
+        ಎಣಿಕೆ AVPixelFormat src_fmt = cuda_ಚೌಕಟ್ಟು_hw_format(src);
+        ಎಣಿಕೆ AVPixelFormat dst_fmt = cuda_ಚೌಕಟ್ಟು_hw_format(dst);
+        ಆದರೆ ((src_fmt != AV_PIX_FMT_NONE &&
              src_fmt != AV_PIX_FMT_CUDA && src_fmt != AV_PIX_FMT_CUARRAY) ||
             (dst_fmt != AV_PIX_FMT_NONE &&
              dst_fmt != AV_PIX_FMT_CUDA && dst_fmt != AV_PIX_FMT_CUARRAY))
-            return AVERROR(ENOSYS);
+            ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(sw_frame->linesize); i++)
-        bottom_up |= sw_frame->linesize[i] < 0;
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(sw_ಚೌಕಟ್ಟು->linesize); i++)
+        bottom_ಮೇಲೆ |= sw_ಚೌಕಟ್ಟು->linesize[i] < 0;
 
     /* The device copies rows upwards through memory, so a bottom-up frame is
      * transferred through a top-down copy of it. */
-    if (bottom_up) {
-        top_down = av_frame_alloc();
-        if (!top_down)
-            return AVERROR(ENOMEM);
-        top_down->format = ctx->sw_format;
-        top_down->width  = ctx->width;
-        top_down->height = ctx->height;
-        ret = av_hwframe_get_transfer_buffer((src->hw_frames_ctx ? src : dst)->hw_frames_ctx,
-                                             top_down);
-        if (ret < 0)
-            goto free_top_down;
-        top_down->width  = src->width;
-        top_down->height = src->height;
-        if (sw_frame == src) {
-            av_image_copy2(top_down->data, top_down->linesize, src->data, src->linesize,
-                           ctx->sw_format, src->width, src->height);
-            src = top_down;
-        } else {
-            bottom_up_dst = dst;
-            dst           = top_down;
+    ಆದರೆ (bottom_ಮೇಲೆ) {
+        ತುದಿ_ಕೆಳಕ್ಕೆ = av_ಚೌಕಟ್ಟು_alloc();
+        ಆದರೆ (!ತುದಿ_ಕೆಳಕ್ಕೆ)
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
+        ತುದಿ_ಕೆಳಕ್ಕೆ->format = ctx->sw_format;
+        ತುದಿ_ಕೆಳಕ್ಕೆ->ಅಗಲ  = ctx->ಅಗಲ;
+        ತುದಿ_ಕೆಳಕ್ಕೆ->ಎತ್ತರ = ctx->ಎತ್ತರ;
+        ret = av_hwframe_get_transfer_ಬಫರ್((src->hw_ಚೌಕಟ್ಟುಗಳು_ctx ? src : dst)->hw_ಚೌಕಟ್ಟುಗಳು_ctx,
+                                             ತುದಿ_ಕೆಳಕ್ಕೆ);
+        ಆದರೆ (ret < 0)
+            ಹೋಗು free_ತುದಿ_ಕೆಳಕ್ಕೆ;
+        ತುದಿ_ಕೆಳಕ್ಕೆ->ಅಗಲ  = src->ಅಗಲ;
+        ತುದಿ_ಕೆಳಕ್ಕೆ->ಎತ್ತರ = src->ಎತ್ತರ;
+        ಆದರೆ (sw_ಚೌಕಟ್ಟು == src) {
+            av_image_copy2(ತುದಿ_ಕೆಳಕ್ಕೆ->ದತ್ತಾಂಶ, ತುದಿ_ಕೆಳಕ್ಕೆ->linesize, src->ದತ್ತಾಂಶ, src->linesize,
+                           ctx->sw_format, src->ಅಗಲ, src->ಎತ್ತರ);
+            src = ತುದಿ_ಕೆಳಕ್ಕೆ;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            bottom_ಮೇಲೆ_dst = dst;
+            dst           = ತುದಿ_ಕೆಳಕ್ಕೆ;
         }
     }
 
-    ret = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-    if (ret < 0)
-        goto free_top_down;
+    ret = CHECK_CU(cu->cu_Ctx_ತಳ್ಳು_Current(hwctx->cuda_ctx));
+    ಆದರೆ (ret < 0)
+        ಹೋಗು free_ತುದಿ_ಕೆಳಕ್ಕೆ;
 
     /*
      * Copy one plane per iteration, bounded by the AVFrame linesizes. src and
@@ -631,411 +631,411 @@ static int cuda_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
      *     generic cures != CUDA_SUCCESS branch) rather than silently copying a
      *     subset of the planes.
      */
-    for (i = 0; i < FF_ARRAY_ELEMS(src->data) && src->linesize[i]; i++) {
-        int src_is_nonplanar_cuarray = 0;
-        int dst_is_nonplanar_cuarray = 0;
+    ಗಾಗಿ (i = 0; i < FF_ARRAY_ELEMS(src->ದತ್ತಾಂಶ) && src->linesize[i]; i++) {
+        ಪೂರ್ಣಾಂಕ src_is_nonplanar_cuarray = 0;
+        ಪೂರ್ಣಾಂಕ dst_is_nonplanar_cuarray = 0;
 
-        int bytewidth = av_image_get_linesize(ctx->sw_format, src->width, i);
-        if (bytewidth < 0) {
+        ಪೂರ್ಣಾಂಕ bytewidth = av_image_get_linesize(ctx->sw_format, src->ಅಗಲ, i);
+        ಆದರೆ (bytewidth < 0) {
             ret = bytewidth;
-            goto fail;
+            ಹೋಗು fail;
         }
 
         CUDA_MEMCPY2D cpy = {
             .srcPitch      = src->linesize[i],
             .dstPitch      = dst->linesize[i],
-            .WidthInBytes  = bytewidth,
-            .Height        = AV_CEIL_RSHIFT(src->height, ((i == 0 || i == 3) ? 0 : priv->shift_height)),
+            .ಅಗಲ_ಒಳ_ಬೈಟುಗಳು  = bytewidth,
+            .ಎತ್ತರ_2        = AV_CEIL_RSHIFT(src->ಎತ್ತರ, ((i == 0 || i == 3) ? 0 : priv->ಸರಿಸು_ಎತ್ತರ)),
         };
 
-        if (src->format == AV_PIX_FMT_CUDA) {
-            cpy.srcMemoryType = CU_MEMORYTYPE_DEVICE;
-            cpy.srcDevice     = (CUdeviceptr)src->data[i];
-        } else if (src->format == AV_PIX_FMT_CUARRAY) {
-#if HAVE_FFNVCODEC_CUARRAY
+        ಆದರೆ (src->format == AV_PIX_FMT_CUDA) {
+            cpy.src_ಸ್ಮರಣೆ_Type = CU_MEMORYTYPE_DEVICE;
+            cpy.srcDevice     = (CUdeviceptr)src->ದತ್ತಾಂಶ[i];
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (src->format == AV_PIX_FMT_CUARRAY) {
+#ಆದರೆ HAVE_FFNVCODEC_CUARRAY
             CUarray array;
-            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)src->data[0], i);
-            if (cures == CUDA_ERROR_INVALID_VALUE && i == 0) {
+            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)src->ದತ್ತಾಂಶ[0], i);
+            ಆದರೆ (cures == CUDA_ERROR_INVALID_ಮೌಲ್ಯ && i == 0) {
                 /* Not a multi-planar array (packed format): the whole array is
                  * the single plane. */
-                array = (CUarray)src->data[0];
+                array = (CUarray)src->ದತ್ತಾಂಶ[0];
                 src_is_nonplanar_cuarray = 1;
-            } else if (cures != CUDA_SUCCESS) {
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (cures != CUDA_SUCCESS) {
                 ret = CHECK_CU(cures);
-                goto fail;
+                ಹೋಗು fail;
             }
 
-            cpy.srcMemoryType = CU_MEMORYTYPE_ARRAY;
+            cpy.src_ಸ್ಮರಣೆ_Type = CU_MEMORYTYPE_ARRAY;
             cpy.srcArray      = array;
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
             ret = AVERROR(ENOSYS);
-            goto exit;
-#endif
-        } else {
-            cpy.srcMemoryType = CU_MEMORYTYPE_HOST;
-            cpy.srcHost       = src->data[i];
+            ಹೋಗು ನಿರ್ಗಮಿಸು;
+#ಆದರೆ_ಅಂತ್ಯ
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            cpy.src_ಸ್ಮರಣೆ_Type = CU_MEMORYTYPE_HOST;
+            cpy.srcHost       = src->ದತ್ತಾಂಶ[i];
         }
 
-        if (dst->format == AV_PIX_FMT_CUDA) {
-            cpy.dstMemoryType = CU_MEMORYTYPE_DEVICE;
-            cpy.dstDevice     = (CUdeviceptr)dst->data[i];
-        } else if (dst->format == AV_PIX_FMT_CUARRAY) {
-#if HAVE_FFNVCODEC_CUARRAY
+        ಆದರೆ (dst->format == AV_PIX_FMT_CUDA) {
+            cpy.dst_ಸ್ಮರಣೆ_Type = CU_MEMORYTYPE_DEVICE;
+            cpy.dstDevice     = (CUdeviceptr)dst->ದತ್ತಾಂಶ[i];
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (dst->format == AV_PIX_FMT_CUARRAY) {
+#ಆದರೆ HAVE_FFNVCODEC_CUARRAY
             CUarray array;
-            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)dst->data[0], i);
-            if (cures == CUDA_ERROR_INVALID_VALUE && i == 0) {
+            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)dst->ದತ್ತಾಂಶ[0], i);
+            ಆದರೆ (cures == CUDA_ERROR_INVALID_ಮೌಲ್ಯ && i == 0) {
                 /* Not a multi-planar array (packed format): the whole array is
                  * the single plane. */
-                array = (CUarray)dst->data[0];
+                array = (CUarray)dst->ದತ್ತಾಂಶ[0];
                 dst_is_nonplanar_cuarray = 1;
-            } else if (cures != CUDA_SUCCESS) {
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (cures != CUDA_SUCCESS) {
                 ret = CHECK_CU(cures);
-                goto fail;
+                ಹೋಗು fail;
             }
 
-            cpy.dstMemoryType = CU_MEMORYTYPE_ARRAY;
+            cpy.dst_ಸ್ಮರಣೆ_Type = CU_MEMORYTYPE_ARRAY;
             cpy.dstArray      = array;
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
             ret = AVERROR(ENOSYS);
-            goto exit;
-#endif
-        } else {
-            cpy.dstMemoryType = CU_MEMORYTYPE_HOST;
-            cpy.dstHost       = dst->data[i];
+            ಹೋಗು ನಿರ್ಗಮಿಸು;
+#ಆದರೆ_ಅಂತ್ಯ
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            cpy.dst_ಸ್ಮರಣೆ_Type = CU_MEMORYTYPE_HOST;
+            cpy.dstHost       = dst->ದತ್ತಾಂಶ[i];
         }
 
-        ret = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, hwctx->stream));
-        if (ret < 0)
-            goto fail;
+        ret = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, hwctx->ಹರಿವು));
+        ಆದರೆ (ret < 0)
+            ಹೋಗು fail;
         copy_queued = 1;
 
-        if (src_is_nonplanar_cuarray || dst_is_nonplanar_cuarray)
-            break;
+        ಆದರೆ (src_is_nonplanar_cuarray || dst_is_nonplanar_cuarray)
+            ನಿಲ್ಲಿಸು;
     }
 
     /* The caller may reuse host memory once the transfer returns. */
-    if (!src->hw_frames_ctx || !dst->hw_frames_ctx) {
-        ret = CHECK_CU(cu->cuStreamSynchronize(hwctx->stream));
-        if (ret < 0)
-            goto exit;
+    ಆದರೆ (!src->hw_ಚೌಕಟ್ಟುಗಳು_ctx || !dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx) {
+        ret = CHECK_CU(cu->cu_ಹರಿವು_Synchronize(hwctx->ಹರಿವು));
+        ಆದರೆ (ret < 0)
+            ಹೋಗು ನಿರ್ಗಮಿಸು;
     }
 
 fail:
-    if (ret < 0 && copy_queued)
-        CHECK_CU(cu->cuStreamSynchronize(hwctx->stream));
-exit:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    ಆದರೆ (ret < 0 && copy_queued)
+        CHECK_CU(cu->cu_ಹರಿವು_Synchronize(hwctx->ಹರಿವು));
+ನಿರ್ಗಮಿಸು:
+    CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
 
-    if (bottom_up_dst && ret >= 0)
-        av_image_copy2(bottom_up_dst->data, bottom_up_dst->linesize,
-                       top_down->data, top_down->linesize,
-                       ctx->sw_format, src->width, src->height);
-free_top_down:
-    av_frame_free(&top_down);
+    ಆದರೆ (bottom_ಮೇಲೆ_dst && ret >= 0)
+        av_image_copy2(bottom_ಮೇಲೆ_dst->ದತ್ತಾಂಶ, bottom_ಮೇಲೆ_dst->linesize,
+                       ತುದಿ_ಕೆಳಕ್ಕೆ->ದತ್ತಾಂಶ, ತುದಿ_ಕೆಳಕ್ಕೆ->linesize,
+                       ctx->sw_format, src->ಅಗಲ, src->ಎತ್ತರ);
+free_ತುದಿ_ಕೆಳಕ್ಕೆ:
+    av_ಚೌಕಟ್ಟು_free(&ತುದಿ_ಕೆಳಕ್ಕೆ);
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static void cuda_device_uninit(AVHWDeviceContext *device_ctx)
+ಸ್ಥಿರ ಶೂನ್ಯ cuda_device_uninit(AVHWDeviceContext *device_ctx)
 {
     CUDADeviceContext *hwctx = device_ctx->hwctx;
 
-    if (hwctx->p.internal) {
-        CudaFunctions *cu = hwctx->internal.cuda_dl;
+    ಆದರೆ (hwctx->p.ಆಂತರಿಕ) {
+        CudaFunctions *cu = hwctx->ಆಂತರಿಕ.cuda_dl;
 
-        if (hwctx->internal.is_allocated && hwctx->p.cuda_ctx) {
-            if (hwctx->internal.flags & AV_CUDA_USE_PRIMARY_CONTEXT)
-                CHECK_CU(cu->cuDevicePrimaryCtxRelease(hwctx->internal.cuda_device));
-            else if (!(hwctx->internal.flags & AV_CUDA_USE_CURRENT_CONTEXT))
+        ಆದರೆ (hwctx->ಆಂತರಿಕ.is_allocated && hwctx->p.cuda_ctx) {
+            ಆದರೆ (hwctx->ಆಂತರಿಕ.flags & AV_CUDA_USE_PRIMARY_CONTEXT)
+                CHECK_CU(cu->cuDevicePrimaryCtxRelease(hwctx->ಆಂತರಿಕ.cuda_device));
+            ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (!(hwctx->ಆಂತರಿಕ.flags & AV_CUDA_USE_CURRENT_CONTEXT))
                 CHECK_CU(cu->cuCtxDestroy(hwctx->p.cuda_ctx));
 
-            hwctx->p.cuda_ctx = NULL;
+            hwctx->p.cuda_ctx = ಖಾಲಿ;
         }
 
-        cuda_free_functions(&hwctx->internal.cuda_dl);
-        memset(&hwctx->internal, 0, sizeof(hwctx->internal));
-        hwctx->p.internal = NULL;
+        cuda_free_functions(&hwctx->ಆಂತರಿಕ.cuda_dl);
+        memset(&hwctx->ಆಂತರಿಕ, 0, ಗಾತ್ರ(hwctx->ಆಂತರಿಕ));
+        hwctx->p.ಆಂತರಿಕ = ಖಾಲಿ;
     }
 }
 
-static int cuda_device_init(AVHWDeviceContext *ctx)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ cuda_device_init(AVHWDeviceContext *ctx)
 {
     CUDADeviceContext *hwctx = ctx->hwctx;
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    hwctx->p.internal = &hwctx->internal;
+    hwctx->p.ಆಂತರಿಕ = &hwctx->ಆಂತರಿಕ;
 
-    if (!hwctx->internal.cuda_dl) {
-        ret = cuda_load_functions(&hwctx->internal.cuda_dl, ctx);
-        if (ret < 0) {
+    ಆದರೆ (!hwctx->ಆಂತರಿಕ.cuda_dl) {
+        ret = cuda_ತುಂಬು_functions(&hwctx->ಆಂತರಿಕ.cuda_dl, ctx);
+        ಆದರೆ (ret < 0) {
             av_log(ctx, AV_LOG_ERROR, "Could not dynamically load CUDA\n");
-            goto error;
+            ಹೋಗು error;
         }
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 error:
     cuda_device_uninit(ctx);
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static int cuda_context_init(AVHWDeviceContext *device_ctx, int flags) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ cuda_context_init(AVHWDeviceContext *device_ctx, ಪೂರ್ಣಾಂಕ flags) {
     AVCUDADeviceContext *hwctx = device_ctx->hwctx;
     CudaFunctions *cu;
     CUcontext dummy;
-    int ret, dev_active = 0;
-    unsigned int dev_flags = 0;
+    ಪೂರ್ಣಾಂಕ ret, dev_ಸಕ್ರಿಯ = 0;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ dev_flags = 0;
 
-    const unsigned int desired_flags = CU_CTX_SCHED_BLOCKING_SYNC;
+    ಸ್ಥಿರಾಂಕ ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ desired_flags = CU_CTX_SCHED_BLOCKING_SYNC;
 
-    cu = hwctx->internal->cuda_dl;
+    cu = hwctx->ಆಂತರಿಕ->cuda_dl;
 
-    hwctx->internal->flags = flags;
+    hwctx->ಆಂತರಿಕ->flags = flags;
 
-    if (flags & AV_CUDA_USE_PRIMARY_CONTEXT) {
-        ret = CHECK_CU(cu->cuDevicePrimaryCtxGetState(hwctx->internal->cuda_device,
-                       &dev_flags, &dev_active));
-        if (ret < 0)
-            return ret;
+    ಆದರೆ (flags & AV_CUDA_USE_PRIMARY_CONTEXT) {
+        ret = CHECK_CU(cu->cuDevicePrimaryCtxGetState(hwctx->ಆಂತರಿಕ->cuda_device,
+                       &dev_flags, &dev_ಸಕ್ರಿಯ));
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ ret;
 
-        if (dev_active && dev_flags != desired_flags) {
+        ಆದರೆ (dev_ಸಕ್ರಿಯ && dev_flags != desired_flags) {
             av_log(device_ctx, AV_LOG_ERROR, "Primary context already active with incompatible flags.\n");
-            return AVERROR(ENOTSUP);
-        } else if (dev_flags != desired_flags) {
-            ret = CHECK_CU(cu->cuDevicePrimaryCtxSetFlags(hwctx->internal->cuda_device,
+            ಹಿಂತಿರುಗಿ AVERROR(ENOTSUP);
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (dev_flags != desired_flags) {
+            ret = CHECK_CU(cu->cu_Device_Primary_Ctx_ಗಣ_Flags(hwctx->ಆಂತರಿಕ->cuda_device,
                            desired_flags));
-            if (ret < 0)
-                return ret;
+            ಆದರೆ (ret < 0)
+                ಹಿಂತಿರುಗಿ ret;
         }
 
         ret = CHECK_CU(cu->cuDevicePrimaryCtxRetain(&hwctx->cuda_ctx,
-                                                    hwctx->internal->cuda_device));
-        if (ret < 0)
-            return ret;
-    } else if (flags & AV_CUDA_USE_CURRENT_CONTEXT) {
+                                                    hwctx->ಆಂತರಿಕ->cuda_device));
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ ret;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (flags & AV_CUDA_USE_CURRENT_CONTEXT) {
         ret = CHECK_CU(cu->cuCtxGetCurrent(&hwctx->cuda_ctx));
-        if (ret < 0)
-            return ret;
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ ret;
         av_log(device_ctx, AV_LOG_INFO, "Using current CUDA context.\n");
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         ret = CHECK_CU(cu->cuCtxCreate(&hwctx->cuda_ctx, desired_flags,
-                                       hwctx->internal->cuda_device));
-        if (ret < 0)
-            return ret;
+                                       hwctx->ಆಂತರಿಕ->cuda_device));
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ ret;
 
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+        CHECK_CU(cu->cu_Ctx_ತೆಗೆ_Current(&dummy));
     }
 
-    hwctx->internal->is_allocated = 1;
+    hwctx->ಆಂತರಿಕ->is_allocated = 1;
 
     // Setting stream to NULL will make functions automatically use the default CUstream
-    hwctx->stream = NULL;
+    hwctx->ಹರಿವು = ಖಾಲಿ;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int cuda_flags_from_opts(AVHWDeviceContext *device_ctx,
-                                AVDictionary *opts, int *flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ cuda_flags_from_opts(AVHWDeviceContext *device_ctx,
+                                AVDictionary *opts, ಪೂರ್ಣಾಂಕ *flags)
 {
-    AVDictionaryEntry *primary_ctx_opt = av_dict_get(opts, "primary_ctx", NULL, 0);
-    AVDictionaryEntry *current_ctx_opt = av_dict_get(opts, "current_ctx", NULL, 0);
+    AVDictionary_ನಮೂದು *primary_ctx_opt = av_dict_get(opts, "primary_ctx", ಖಾಲಿ, 0);
+    AVDictionary_ನಮೂದು *current_ctx_opt = av_dict_get(opts, "current_ctx", ಖಾಲಿ, 0);
 
-    int use_primary_ctx = 0, use_current_ctx = 0;
-    if (primary_ctx_opt)
-        use_primary_ctx = strtol(primary_ctx_opt->value, NULL, 10);
+    ಪೂರ್ಣಾಂಕ use_primary_ctx = 0, use_current_ctx = 0;
+    ಆದರೆ (primary_ctx_opt)
+        use_primary_ctx = strtol(primary_ctx_opt->ಮೌಲ್ಯ, ಖಾಲಿ, 10);
 
-    if (current_ctx_opt)
-        use_current_ctx = strtol(current_ctx_opt->value, NULL, 10);
+    ಆದರೆ (current_ctx_opt)
+        use_current_ctx = strtol(current_ctx_opt->ಮೌಲ್ಯ, ಖಾಲಿ, 10);
 
-    if (use_primary_ctx && use_current_ctx) {
+    ಆದರೆ (use_primary_ctx && use_current_ctx) {
         av_log(device_ctx, AV_LOG_ERROR, "Requested both primary and current CUDA context simultaneously.\n");
-        return AVERROR(EINVAL);
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
     }
 
-    if (primary_ctx_opt && use_primary_ctx) {
+    ಆದರೆ (primary_ctx_opt && use_primary_ctx) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Using CUDA primary device context\n");
         *flags |= AV_CUDA_USE_PRIMARY_CONTEXT;
-    } else if (primary_ctx_opt) {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (primary_ctx_opt) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Disabling use of CUDA primary device context\n");
         *flags &= ~AV_CUDA_USE_PRIMARY_CONTEXT;
     }
 
-    if (current_ctx_opt && use_current_ctx) {
+    ಆದರೆ (current_ctx_opt && use_current_ctx) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Using CUDA current device context\n");
         *flags |= AV_CUDA_USE_CURRENT_CONTEXT;
-    } else if (current_ctx_opt) {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (current_ctx_opt) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Disabling use of CUDA current device context\n");
         *flags &= ~AV_CUDA_USE_CURRENT_CONTEXT;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int cuda_device_create(AVHWDeviceContext *device_ctx,
-                              const char *device,
-                              AVDictionary *opts, int flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ cuda_device_create(AVHWDeviceContext *device_ctx,
+                              ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *device,
+                              AVDictionary *opts, ಪೂರ್ಣಾಂಕ flags)
 {
     AVCUDADeviceContext *hwctx = device_ctx->hwctx;
     CudaFunctions *cu;
-    int ret, device_idx = 0;
+    ಪೂರ್ಣಾಂಕ ret, device_idx = 0;
 
     ret = cuda_flags_from_opts(device_ctx, opts, &flags);
-    if (ret < 0)
-        goto error;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು error;
 
-    if (device)
-        device_idx = strtol(device, NULL, 0);
+    ಆದರೆ (device)
+        device_idx = strtol(device, ಖಾಲಿ, 0);
 
     ret = cuda_device_init(device_ctx);
-    if (ret < 0)
-        goto error;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು error;
 
-    cu = hwctx->internal->cuda_dl;
+    cu = hwctx->ಆಂತರಿಕ->cuda_dl;
 
     ret = CHECK_CU(cu->cuInit(0));
-    if (ret < 0)
-        goto error;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು error;
 
-    ret = CHECK_CU(cu->cuDeviceGet(&hwctx->internal->cuda_device, device_idx));
-    if (ret < 0)
-        goto error;
+    ret = CHECK_CU(cu->cuDeviceGet(&hwctx->ಆಂತರಿಕ->cuda_device, device_idx));
+    ಆದರೆ (ret < 0)
+        ಹೋಗು error;
 
     ret = cuda_context_init(device_ctx, flags);
-    if (ret < 0)
-        goto error;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು error;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 error:
     cuda_device_uninit(device_ctx);
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static int cuda_device_derive(AVHWDeviceContext *device_ctx,
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ cuda_device_derive(AVHWDeviceContext *device_ctx,
                               AVHWDeviceContext *src_ctx, AVDictionary *opts,
-                              int flags) {
+                              ಪೂರ್ಣಾಂಕ flags) {
     AVCUDADeviceContext *hwctx = device_ctx->hwctx;
     CudaFunctions *cu;
-    const char *src_uuid = NULL;
-#if CONFIG_VULKAN
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *src_uuid = ಖಾಲಿ;
+#ಆದರೆ CONFIG_VULKAN
     VkPhysicalDeviceIDProperties vk_idp;
-#endif
-    int ret, i, device_count;
+#ಆದರೆ_ಅಂತ್ಯ
+    ಪೂರ್ಣಾಂಕ ret, i, device_ಎಣಿಕೆ;
 
     ret = cuda_flags_from_opts(device_ctx, opts, &flags);
-    if (ret < 0)
-        goto error;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು error;
 
-#if CONFIG_VULKAN
+#ಆದರೆ CONFIG_VULKAN
     vk_idp = (VkPhysicalDeviceIDProperties) {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES,
     };
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    switch (src_ctx->type) {
-#if CONFIG_VULKAN
-#define TYPE PFN_vkGetPhysicalDeviceProperties2
-    case AV_HWDEVICE_TYPE_VULKAN: {
+    ಆಯ್ಕೆ (src_ctx->type) {
+#ಆದರೆ CONFIG_VULKAN
+#ವ್ಯಾಖ್ಯಾನಿಸು TYPE PFN_vkGetPhysicalDeviceProperties2
+    ಸ್ಥಿತಿ AV_HWDEVICE_TYPE_VULKAN: {
         AVVulkanDeviceContext *vkctx = src_ctx->hwctx;
         TYPE prop_fn = (TYPE)vkctx->get_proc_addr(vkctx->inst, "vkGetPhysicalDeviceProperties2");
         VkPhysicalDeviceProperties2 vk_dev_props = {
             .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
-            .pNext = &vk_idp,
+            .p_ಮುಂದಿನ = &vk_idp,
         };
         prop_fn(vkctx->phys_dev, &vk_dev_props);
         src_uuid = vk_idp.deviceUUID;
-        break;
+        ನಿಲ್ಲಿಸು;
     }
-#undef TYPE
-#endif
-    default:
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು TYPE
+#ಆದರೆ_ಅಂತ್ಯ
+    ಪೂರ್ವನಿಯೋಜಿತ:
         ret = AVERROR(ENOSYS);
-        goto error;
+        ಹೋಗು error;
     }
 
-    if (!src_uuid) {
+    ಆದರೆ (!src_uuid) {
         av_log(device_ctx, AV_LOG_ERROR,
                "Failed to get UUID of source device.\n");
         ret = AVERROR(EINVAL);
-        goto error;
+        ಹೋಗು error;
     }
 
     ret = cuda_device_init(device_ctx);
-    if (ret < 0)
-        goto error;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು error;
 
-    cu = hwctx->internal->cuda_dl;
+    cu = hwctx->ಆಂತರಿಕ->cuda_dl;
 
     ret = CHECK_CU(cu->cuInit(0));
-    if (ret < 0)
-        goto error;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು error;
 
-    ret = CHECK_CU(cu->cuDeviceGetCount(&device_count));
-    if (ret < 0)
-        goto error;
+    ret = CHECK_CU(cu->cu_Device_Get_ಎಣಿಕೆ(&device_ಎಣಿಕೆ));
+    ಆದರೆ (ret < 0)
+        ಹೋಗು error;
 
-    hwctx->internal->cuda_device = -1;
-    for (i = 0; i < device_count; i++) {
+    hwctx->ಆಂತರಿಕ->cuda_device = -1;
+    ಗಾಗಿ (i = 0; i < device_ಎಣಿಕೆ; i++) {
         CUdevice dev;
         CUuuid uuid;
 
         ret = CHECK_CU(cu->cuDeviceGet(&dev, i));
-        if (ret < 0)
-            goto error;
+        ಆದರೆ (ret < 0)
+            ಹೋಗು error;
 
         ret = CHECK_CU(cu->cuDeviceGetUuid(&uuid, dev));
-        if (ret < 0)
-            goto error;
+        ಆದರೆ (ret < 0)
+            ಹೋಗು error;
 
-        if (memcmp(src_uuid, uuid.bytes, sizeof (uuid.bytes)) == 0) {
-            hwctx->internal->cuda_device = dev;
-            break;
+        ಆದರೆ (memcmp(src_uuid, uuid.ಬೈಟುಗಳು, ಗಾತ್ರ (uuid.ಬೈಟುಗಳು)) == 0) {
+            hwctx->ಆಂತರಿಕ->cuda_device = dev;
+            ನಿಲ್ಲಿಸು;
         }
     }
 
-    if (hwctx->internal->cuda_device == -1) {
+    ಆದರೆ (hwctx->ಆಂತರಿಕ->cuda_device == -1) {
         av_log(device_ctx, AV_LOG_ERROR, "Could not derive CUDA device.\n");
         ret = AVERROR(ENODEV);
-        goto error;
+        ಹೋಗು error;
     }
 
     ret = cuda_context_init(device_ctx, flags);
-    if (ret < 0)
-        goto error;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು error;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 error:
     cuda_device_uninit(device_ctx);
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-const HWContextType ff_hwcontext_type_cuda = {
+ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_cuda = {
     .type                 = AV_HWDEVICE_TYPE_CUDA,
     .name                 = "CUDA",
 
-    .device_hwctx_size    = sizeof(CUDADeviceContext),
-    .frames_hwctx_size    = sizeof(CUDAFramesContext),
+    .device_hwctx_ಗಾತ್ರ    = ಗಾತ್ರ(CUDADeviceContext),
+    .ಚೌಕಟ್ಟುಗಳು_hwctx_ಗಾತ್ರ    = ಗಾತ್ರ(CUDAFramesContext),
 
     .device_create        = cuda_device_create,
     .device_derive        = cuda_device_derive,
     .device_init          = cuda_device_init,
     .device_uninit        = cuda_device_uninit,
-    .frames_get_constraints = cuda_frames_get_constraints,
-    .frames_init          = cuda_frames_init,
-    .frames_uninit        = cuda_frames_uninit,
-    .frames_get_buffer    = cuda_get_buffer,
+    .ಚೌಕಟ್ಟುಗಳು_get_constraints = cuda_ಚೌಕಟ್ಟುಗಳು_get_constraints,
+    .ಚೌಕಟ್ಟುಗಳು_init          = cuda_ಚೌಕಟ್ಟುಗಳು_init,
+    .ಚೌಕಟ್ಟುಗಳು_uninit        = cuda_ಚೌಕಟ್ಟುಗಳು_uninit,
+    .ಚೌಕಟ್ಟುಗಳು_get_ಬಫರ್    = cuda_get_ಬಫರ್,
     .transfer_get_formats = cuda_transfer_get_formats,
-#if HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
-    .transfer_buffer_alloc = cuda_transfer_buffer_alloc,
-#endif
-    .transfer_data_to     = cuda_transfer_data,
-    .transfer_data_from   = cuda_transfer_data,
+#ಆದರೆ HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
+    .transfer_ಬಫರ್_alloc = cuda_transfer_ಬಫರ್_alloc,
+#ಆದರೆ_ಅಂತ್ಯ
+    .transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ     = cuda_transfer_ದತ್ತಾಂಶ,
+    .transfer_ದತ್ತಾಂಶ_from   = cuda_transfer_ದತ್ತಾಂಶ,
 
-    .pix_fmts             = (const enum AVPixelFormat[]){ AV_PIX_FMT_CUDA,
-#if HAVE_FFNVCODEC_CUARRAY
+    .pix_fmts             = (ಸ್ಥಿರಾಂಕ ಎಣಿಕೆ AVPixelFormat[]){ AV_PIX_FMT_CUDA,
+#ಆದರೆ HAVE_FFNVCODEC_CUARRAY
                                                           AV_PIX_FMT_CUARRAY,
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
                                                           AV_PIX_FMT_NONE },
 };

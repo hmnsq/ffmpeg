@@ -24,11 +24,11 @@
  * Audio FIFO Buffer
  */
 
-#ifndef AVUTIL_AUDIO_FIFO_H
-#define AVUTIL_AUDIO_FIFO_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_AUDIO_FIFO_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_AUDIO_FIFO_H
 
-#include "attributes.h"
-#include "samplefmt.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
+#ಅನ್ತರ್ಭಾವ "samplefmt.h"
 
 /**
  * @addtogroup lavu_audio
@@ -45,14 +45,14 @@
  * - Supports multiple channels with either planar or packed sample format.
  * - Automatic reallocation when writing to a full buffer.
  */
-typedef struct AVAudioFifo AVAudioFifo;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVAudioFifo AVAudioFifo;
 
 /**
  * Free an AVAudioFifo.
  *
  * @param af  AVAudioFifo to free
  */
-void av_audio_fifo_free(AVAudioFifo *af);
+ಶೂನ್ಯ av_audio_fifo_free(AVAudioFifo *af);
 
 /**
  * Allocate an AVAudioFifo.
@@ -62,8 +62,8 @@ void av_audio_fifo_free(AVAudioFifo *af);
  * @param nb_samples  initial allocation size, in samples
  * @return            newly allocated AVAudioFifo, or NULL on error
  */
-AVAudioFifo *av_audio_fifo_alloc(enum AVSampleFormat sample_fmt, int channels,
-                                 int nb_samples);
+AVAudioFifo *av_audio_fifo_alloc(ಎಣಿಕೆ AVSampleFormat sample_fmt, ಪೂರ್ಣಾಂಕ channels,
+                                 ಪೂರ್ಣಾಂಕ nb_samples);
 
 /**
  * Reallocate an AVAudioFifo.
@@ -72,8 +72,8 @@ AVAudioFifo *av_audio_fifo_alloc(enum AVSampleFormat sample_fmt, int channels,
  * @param nb_samples  new allocation size, in samples
  * @return            0 if OK, or negative AVERROR code on failure
  */
-av_warn_unused_result
-int av_audio_fifo_realloc(AVAudioFifo *af, int nb_samples);
+av_warn_ಬಳಸದ_ಫಲಿತಾಂಶ
+ಪೂರ್ಣಾಂಕ av_audio_fifo_realloc(AVAudioFifo *af, ಪೂರ್ಣಾಂಕ nb_samples);
 
 /**
  * Write data to an AVAudioFifo.
@@ -91,7 +91,7 @@ int av_audio_fifo_realloc(AVAudioFifo *af, int nb_samples);
  *                    code on failure. If successful, the number of samples
  *                    actually written will always be nb_samples.
  */
-int av_audio_fifo_write(AVAudioFifo *af, void * const *data, int nb_samples);
+ಪೂರ್ಣಾಂಕ av_audio_fifo_write(AVAudioFifo *af, ಶೂನ್ಯ * ಸ್ಥಿರಾಂಕ *ದತ್ತಾಂಶ, ಪೂರ್ಣಾಂಕ nb_samples);
 
 /**
  * Peek data from an AVAudioFifo.
@@ -107,7 +107,7 @@ int av_audio_fifo_write(AVAudioFifo *af, void * const *data, int nb_samples);
  *                    be greater than nb_samples, and will only be less than
  *                    nb_samples if av_audio_fifo_size is less than nb_samples.
  */
-int av_audio_fifo_peek(const AVAudioFifo *af, void * const *data, int nb_samples);
+ಪೂರ್ಣಾಂಕ av_audio_fifo_peek(ಸ್ಥಿರಾಂಕ AVAudioFifo *af, ಶೂನ್ಯ * ಸ್ಥಿರಾಂಕ *ದತ್ತಾಂಶ, ಪೂರ್ಣಾಂಕ nb_samples);
 
 /**
  * Peek data from an AVAudioFifo.
@@ -124,8 +124,8 @@ int av_audio_fifo_peek(const AVAudioFifo *af, void * const *data, int nb_samples
  *                    be greater than nb_samples, and will only be less than
  *                    nb_samples if av_audio_fifo_size is less than nb_samples.
  */
-int av_audio_fifo_peek_at(const AVAudioFifo *af, void * const *data,
-                          int nb_samples, int offset);
+ಪೂರ್ಣಾಂಕ av_audio_fifo_peek_at(ಸ್ಥಿರಾಂಕ AVAudioFifo *af, ಶೂನ್ಯ * ಸ್ಥಿರಾಂಕ *ದತ್ತಾಂಶ,
+                          ಪೂರ್ಣಾಂಕ nb_samples, ಪೂರ್ಣಾಂಕ ಸ್ಥಾನಾಂತರ);
 
 /**
  * Read data from an AVAudioFifo.
@@ -141,7 +141,7 @@ int av_audio_fifo_peek_at(const AVAudioFifo *af, void * const *data,
  *                    be greater than nb_samples, and will only be less than
  *                    nb_samples if av_audio_fifo_size is less than nb_samples.
  */
-int av_audio_fifo_read(AVAudioFifo *af, void * const *data, int nb_samples);
+ಪೂರ್ಣಾಂಕ av_audio_fifo_read(AVAudioFifo *af, ಶೂನ್ಯ * ಸ್ಥಿರಾಂಕ *ದತ್ತಾಂಶ, ಪೂರ್ಣಾಂಕ nb_samples);
 
 /**
  * Drain data from an AVAudioFifo.
@@ -152,7 +152,7 @@ int av_audio_fifo_read(AVAudioFifo *af, void * const *data, int nb_samples);
  * @param nb_samples  number of samples to drain
  * @return            0 if OK, or negative AVERROR code on failure
  */
-int av_audio_fifo_drain(AVAudioFifo *af, int nb_samples);
+ಪೂರ್ಣಾಂಕ av_audio_fifo_drain(AVAudioFifo *af, ಪೂರ್ಣಾಂಕ nb_samples);
 
 /**
  * Reset the AVAudioFifo buffer.
@@ -161,7 +161,7 @@ int av_audio_fifo_drain(AVAudioFifo *af, int nb_samples);
  *
  * @param af  AVAudioFifo to reset
  */
-void av_audio_fifo_reset(AVAudioFifo *af);
+ಶೂನ್ಯ av_audio_fifo_reset(AVAudioFifo *af);
 
 /**
  * Get the current number of samples in the AVAudioFifo available for reading.
@@ -169,7 +169,7 @@ void av_audio_fifo_reset(AVAudioFifo *af);
  * @param af  the AVAudioFifo to query
  * @return    number of samples available for reading
  */
-int av_audio_fifo_size(AVAudioFifo *af);
+ಪೂರ್ಣಾಂಕ av_audio_fifo_ಗಾತ್ರ(AVAudioFifo *af);
 
 /**
  * Get the current number of samples in the AVAudioFifo available for writing.
@@ -177,11 +177,11 @@ int av_audio_fifo_size(AVAudioFifo *af);
  * @param af  the AVAudioFifo to query
  * @return    number of samples available for writing
  */
-int av_audio_fifo_space(AVAudioFifo *af);
+ಪೂರ್ಣಾಂಕ av_audio_fifo_space(AVAudioFifo *af);
 
 /**
  * @}
  * @}
  */
 
-#endif /* AVUTIL_AUDIO_FIFO_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_AUDIO_FIFO_H */

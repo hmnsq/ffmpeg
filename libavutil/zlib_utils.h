@@ -16,73 +16,73 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ZLIB_UTILS_H
-#define AVUTIL_ZLIB_UTILS_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_ZLIB_UTILS_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_ZLIB_UTILS_H
 
-#include <stdint.h>
-#include "log.h"
-#include "error.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ "log.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
-#include <zlib.h>
-#define CHUNK_SIZE 1024 * 64
+#ಅನ್ತರ್ಭಾವ <zlib.h>
+#ವ್ಯಾಖ್ಯಾನಿಸು CHUNK_ಗಾತ್ರ 1024 * 64
 
-static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
-                                 const uint8_t *src, int src_len)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ ff_zlib_expand(ಶೂನ್ಯ *ctx, uint8_t **ಹೊರಹೋಗು, size_t *ಹೊರಹೋಗು_len,
+                                 ಸ್ಥಿರಾಂಕ uint8_t *src, ಪೂರ್ಣಾಂಕ src_len)
 {
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    z_stream stream = { 0 };
-    if (inflateInit2(&stream, 32 + 15) != Z_OK) {
+    z_ಹರಿವು ಹರಿವು = { 0 };
+    ಆದರೆ (inflateInit2(&ಹರಿವು, 32 + 15) != Z_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error during zlib initialisation: %s\n",
-               stream.msg);
-        return AVERROR(ENOSYS);
+               ಹರಿವು.ಸಂದೇಶ);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
     }
 
-    uint64_t buf_size = CHUNK_SIZE * 4;
-    uint8_t *buf = av_realloc(NULL, buf_size);
-    if (!buf) {
-        inflateEnd(&stream);
-        return AVERROR(ENOMEM);
+    uint64_t buf_ಗಾತ್ರ = CHUNK_ಗಾತ್ರ * 4;
+    uint8_t *buf = av_realloc(ಖಾಲಿ, buf_ಗಾತ್ರ);
+    ಆದರೆ (!buf) {
+        inflate_ಕೊನೆ(&ಹರಿವು);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
     }
 
-    stream.next_in = src;
-    stream.avail_in = src_len;
+    ಹರಿವು.ಮುಂದಿನ_ಒಳ = src;
+    ಹರಿವು.avail_ಒಳ = src_len;
 
-    do {
-        stream.avail_out = buf_size - stream.total_out;
-        stream.next_out = buf + stream.total_out;
+    ಮಾಡು {
+        ಹರಿವು.avail_ಹೊರಹೋಗು = buf_ಗಾತ್ರ - ಹರಿವು.ಒಟ್ಟು_ಹೊರಹೋಗು;
+        ಹರಿವು.ಮುಂದಿನ_ಹೊರಹೋಗು = buf + ಹರಿವು.ಒಟ್ಟು_ಹೊರಹೋಗು;
 
-        ret = inflate(&stream, Z_FINISH);
-        if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
+        ret = inflate(&ಹರಿವು, Z_ಮುಕ್ತಾಯ);
+        ಆದರೆ (ret != Z_OK && ret != Z_ಹರಿವು_ಕೊನೆ && ret != Z_BUF_ERROR) {
             av_log(ctx, AV_LOG_ERROR, "zlib inflate error(%d): %s\n",
-                   ret, stream.msg);
-            inflateEnd(&stream);
+                   ret, ಹರಿವು.ಸಂದೇಶ);
+            inflate_ಕೊನೆ(&ಹರಿವು);
             av_free(buf);
-            return AVERROR(EINVAL);
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
         }
 
-        if (stream.avail_out == 0) {
-            buf_size += CHUNK_SIZE;
-            uint8_t *tmp = av_realloc(buf, buf_size);
-            if (!tmp) {
-                inflateEnd(&stream);
+        ಆದರೆ (ಹರಿವು.avail_ಹೊರಹೋಗು == 0) {
+            buf_ಗಾತ್ರ += CHUNK_ಗಾತ್ರ;
+            uint8_t *tmp = av_realloc(buf, buf_ಗಾತ್ರ);
+            ಆದರೆ (!tmp) {
+                inflate_ಕೊನೆ(&ಹರಿವು);
                 av_free(buf);
-                return AVERROR(ENOMEM);
+                ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
             }
             buf = tmp;
         }
-    } while (ret != Z_STREAM_END);
+    } ಆಗ (ret != Z_ಹರಿವು_ಕೊನೆ);
 
     // NULL-terminate string
     // there is guaranteed to be space for this, due to condition in loop
-    buf[stream.total_out] = 0;
+    buf[ಹರಿವು.ಒಟ್ಟು_ಹೊರಹೋಗು] = 0;
 
-    inflateEnd(&stream);
+    inflate_ಕೊನೆ(&ಹರಿವು);
 
-    *out = buf;
-    *out_len = stream.total_out;
+    *ಹೊರಹೋಗು = buf;
+    *ಹೊರಹೋಗು_len = ಹರಿವು.ಒಟ್ಟು_ಹೊರಹೋಗು;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
-#endif /* AVUTIL_ZLIB_UTILS_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_ZLIB_UTILS_H */

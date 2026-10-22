@@ -16,51 +16,51 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CPU_INTERNAL_H
-#define AVUTIL_CPU_INTERNAL_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_CPU_ಆಂತರಿಕ_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_CPU_ಆಂತರಿಕ_H
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#include "cpu.h"
+#ಅನ್ತರ್ಭಾವ "cpu.h"
 
-#define CPUEXT_SUFFIX(flags, suffix, cpuext)                            \
+#ವ್ಯಾಖ್ಯಾನಿಸು CPUEXT_SUFFIX(flags, suffix, cpuext)                            \
     (HAVE_ ## cpuext ## suffix && ((flags) & AV_CPU_FLAG_ ## cpuext))
 
-#define CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, slow_cpuext)         \
+#ವ್ಯಾಖ್ಯಾನಿಸು CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, slow_cpuext)         \
     (HAVE_ ## cpuext ## suffix && ((flags) & AV_CPU_FLAG_ ## cpuext) && \
      !((flags) & AV_CPU_FLAG_ ## slow_cpuext ## SLOW))
 
-#define CPUEXT_SUFFIX_SLOW(flags, suffix, cpuext)                       \
+#ವ್ಯಾಖ್ಯಾನಿಸು CPUEXT_SUFFIX_SLOW(flags, suffix, cpuext)                       \
     (HAVE_ ## cpuext ## suffix &&                                       \
      ((flags) & (AV_CPU_FLAG_ ## cpuext | AV_CPU_FLAG_ ## cpuext ## SLOW)))
 
-#define CPUEXT_SUFFIX_SLOW2(flags, suffix, cpuext, slow_cpuext)         \
+#ವ್ಯಾಖ್ಯಾನಿಸು CPUEXT_SUFFIX_SLOW2(flags, suffix, cpuext, slow_cpuext)         \
     (HAVE_ ## cpuext ## suffix && ((flags) & AV_CPU_FLAG_ ## cpuext) && \
      ((flags) & (AV_CPU_FLAG_ ## slow_cpuext | AV_CPU_FLAG_ ## slow_cpuext ## SLOW)))
 
-#define CPUEXT_SUFFIX_FAST(flags, suffix, cpuext) CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, cpuext)
+#ವ್ಯಾಖ್ಯಾನಿಸು CPUEXT_SUFFIX_FAST(flags, suffix, cpuext) CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, cpuext)
 
-#define CPUEXT(flags, cpuext) CPUEXT_SUFFIX(flags, , cpuext)
-#define CPUEXT_FAST(flags, cpuext) CPUEXT_SUFFIX_FAST(flags, , cpuext)
-#define CPUEXT_SLOW(flags, cpuext) CPUEXT_SUFFIX_SLOW(flags, , cpuext)
+#ವ್ಯಾಖ್ಯಾನಿಸು CPUEXT(flags, cpuext) CPUEXT_SUFFIX(flags, , cpuext)
+#ವ್ಯಾಖ್ಯಾನಿಸು CPUEXT_FAST(flags, cpuext) CPUEXT_SUFFIX_FAST(flags, , cpuext)
+#ವ್ಯಾಖ್ಯಾನಿಸು CPUEXT_SLOW(flags, cpuext) CPUEXT_SUFFIX_SLOW(flags, , cpuext)
 
-int ff_get_cpu_flags_mips(void);
-int ff_get_cpu_flags_aarch64(void);
-int ff_get_cpu_flags_arm(void);
-int ff_get_cpu_flags_ppc(void);
-int ff_get_cpu_flags_riscv(void);
-int ff_get_cpu_flags_wasm(void);
-int ff_get_cpu_flags_x86(void);
-int ff_get_cpu_flags_loongarch(void);
+ಪೂರ್ಣಾಂಕ ff_get_cpu_flags_mips(ಶೂನ್ಯ);
+ಪೂರ್ಣಾಂಕ ff_get_cpu_flags_aarch64(ಶೂನ್ಯ);
+ಪೂರ್ಣಾಂಕ ff_get_cpu_flags_arm(ಶೂನ್ಯ);
+ಪೂರ್ಣಾಂಕ ff_get_cpu_flags_ppc(ಶೂನ್ಯ);
+ಪೂರ್ಣಾಂಕ ff_get_cpu_flags_riscv(ಶೂನ್ಯ);
+ಪೂರ್ಣಾಂಕ ff_get_cpu_flags_wasm(ಶೂನ್ಯ);
+ಪೂರ್ಣಾಂಕ ff_get_cpu_flags_x86(ಶೂನ್ಯ);
+ಪೂರ್ಣಾಂಕ ff_get_cpu_flags_loongarch(ಶೂನ್ಯ);
 
-size_t ff_get_cpu_max_align_mips(void);
-size_t ff_get_cpu_max_align_aarch64(void);
-size_t ff_get_cpu_max_align_arm(void);
-size_t ff_get_cpu_max_align_ppc(void);
-size_t ff_get_cpu_max_align_wasm(void);
-size_t ff_get_cpu_max_align_x86(void);
-size_t ff_get_cpu_max_align_loongarch(void);
+size_t ff_get_cpu_max_align_mips(ಶೂನ್ಯ);
+size_t ff_get_cpu_max_align_aarch64(ಶೂನ್ಯ);
+size_t ff_get_cpu_max_align_arm(ಶೂನ್ಯ);
+size_t ff_get_cpu_max_align_ppc(ಶೂನ್ಯ);
+size_t ff_get_cpu_max_align_wasm(ಶೂನ್ಯ);
+size_t ff_get_cpu_max_align_x86(ಶೂನ್ಯ);
+size_t ff_get_cpu_max_align_loongarch(ಶೂನ್ಯ);
 
-unsigned long ff_getauxval(unsigned long type);
+ಚಿಹ್ನೆರಹಿತ ದೀರ್ಘ ff_getauxval(ಚಿಹ್ನೆರಹಿತ ದೀರ್ಘ type);
 
-#endif /* AVUTIL_CPU_INTERNAL_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_CPU_INTERNAL_H */

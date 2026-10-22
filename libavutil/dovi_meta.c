@@ -18,58 +18,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "dovi_meta.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ "dovi_meta.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
-AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size)
+AVDOVIDecoder_Configuration_ದಾಖಲೆ *av_dovi_alloc(size_t *ಗಾತ್ರ_2)
 {
-    AVDOVIDecoderConfigurationRecord *dovi =
-        av_mallocz(sizeof(AVDOVIDecoderConfigurationRecord));
+    AVDOVIDecoder_Configuration_ದಾಖಲೆ *dovi =
+        av_mallocz(ಗಾತ್ರ(AVDOVIDecoder_Configuration_ದಾಖಲೆ));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    ಆದರೆ (ಗಾತ್ರ_2)
+        *ಗಾತ್ರ_2 = dovi ? ಗಾತ್ರ(*dovi) : 0;
 
-    return dovi;
+    ಹಿಂತಿರುಗಿ dovi;
 }
 
-typedef struct AVDOVIMetadataInternal {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIMetadata_ಆಂತರಿಕ {
     AVDOVIMetadata metadata;
-    AVDOVIRpuDataHeader header;
+    AVDOVIRpu_ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ ಶೀರ್ಷಿಕೆ;
     AVDOVIDataMapping mapping;
     AVDOVIColorMetadata color;
-    AVDOVIDmData ext_blocks[AV_DOVI_MAX_EXT_BLOCKS];
-} AVDOVIMetadataInternal;
+    AVDOVIDm_ದತ್ತಾಂಶ ext_ಖಂಡಗಳು[AV_DOVI_MAX_EXT_ಖಂಡಗಳು];
+} AVDOVIMetadata_ಆಂತರಿಕ;
 
-AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
+AVDOVIMetadata *av_dovi_metadata_alloc(size_t *ಗಾತ್ರ_2)
 {
-    AVDOVIMetadataInternal *dovi = av_mallocz(sizeof(AVDOVIMetadataInternal));
+    AVDOVIMetadata_ಆಂತರಿಕ *dovi = av_mallocz(ಗಾತ್ರ(AVDOVIMetadata_ಆಂತರಿಕ));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    ಆದರೆ (ಗಾತ್ರ_2)
+        *ಗಾತ್ರ_2 = dovi ? ಗಾತ್ರ(*dovi) : 0;
 
-    if (!dovi)
-        return NULL;
+    ಆದರೆ (!dovi)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    dovi->metadata = (struct AVDOVIMetadata) {
-        .header_offset      = offsetof(AVDOVIMetadataInternal, header),
-        .mapping_offset     = offsetof(AVDOVIMetadataInternal, mapping),
-        .color_offset       = offsetof(AVDOVIMetadataInternal, color),
-        .ext_block_offset   = offsetof(AVDOVIMetadataInternal, ext_blocks),
-        .ext_block_size     = sizeof(AVDOVIDmData),
+    dovi->metadata = (ರಚನೆ AVDOVIMetadata) {
+        .ಶೀರ್ಷಿಕೆ_ಸ್ಥಾನಾಂತರ      = offsetof(AVDOVIMetadata_ಆಂತರಿಕ, ಶೀರ್ಷಿಕೆ),
+        .mapping_ಸ್ಥಾನಾಂತರ     = offsetof(AVDOVIMetadata_ಆಂತರಿಕ, mapping),
+        .color_ಸ್ಥಾನಾಂತರ       = offsetof(AVDOVIMetadata_ಆಂತರಿಕ, color),
+        .ext_ಖಂಡ_ಸ್ಥಾನಾಂತರ   = offsetof(AVDOVIMetadata_ಆಂತರಿಕ, ext_ಖಂಡಗಳು),
+        .ext_ಖಂಡ_ಗಾತ್ರ     = ಗಾತ್ರ(AVDOVIDm_ದತ್ತಾಂಶ),
     };
 
-    return &dovi->metadata;
+    ಹಿಂತಿರುಗಿ &dovi->metadata;
 }
 
-AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level)
+AVDOVIDm_ದತ್ತಾಂಶ *av_dovi_ಕಂಡುಹಿಡಿ_level(ಸ್ಥಿರಾಂಕ AVDOVIMetadata *ದತ್ತಾಂಶ, uint8_t level)
 {
-    for (int i = 0; i < data->num_ext_blocks; i++) {
-        AVDOVIDmData *ext = av_dovi_get_ext(data, i);
-        if (ext->level == level)
-            return ext;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ದತ್ತಾಂಶ->ಅಂಕೆ_ext_ಖಂಡಗಳು; i++) {
+        AVDOVIDm_ದತ್ತಾಂಶ *ext = av_dovi_get_ext(ದತ್ತಾಂಶ, i);
+        ಆದರೆ (ext->level == level)
+            ಹಿಂತಿರುಗಿ ext;
     }
 
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }

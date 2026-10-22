@@ -19,12 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "libavutil/macros.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/macros.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/pixdesc.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/pixfmt.h"
 
 /*
  * from_name() may legitimately map to a different index when two enum
@@ -32,164 +32,164 @@
  * AVCOL_PRI_RESERVED both use "reserved"). Accept that as long as
  * name(back) equals name(i).
  */
-static int check_name_equivalence(const char *name, const char *back_name)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ check_name_equivalence(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಹಿಂಭಾಗ_name)
 {
-    return back_name && !strcmp(name, back_name);
+    ಹಿಂತಿರುಗಿ ಹಿಂಭಾಗ_name && !strcmp(name, ಹಿಂಭಾಗ_name);
 }
 
-static int test_pix_fmt_round_trip(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ test_pix_fmt_ಸುತ್ತು_trip(ಶೂನ್ಯ)
 {
-    int fail = 0;
-    for (int i = 0; i < AV_PIX_FMT_NB; i++) {
-        const char *name = av_get_pix_fmt_name(i);
-        if (!name)
-            continue;
-        if (av_get_pix_fmt(name) != i)
+    ಪೂರ್ಣಾಂಕ fail = 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < AV_PIX_FMT_NB; i++) {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name = av_get_pix_fmt_name(i);
+        ಆದರೆ (!name)
+            ಮುಂದುವರಿ;
+        ಆದರೆ (av_get_pix_fmt(name) != i)
             fail++;
     }
-    return fail;
+    ಹಿಂತಿರುಗಿ fail;
 }
 
-static int test_color_range_round_trip(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ test_color_range_ಸುತ್ತು_trip(ಶೂನ್ಯ)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_RANGE_NB; i++) {
-        const char *name = av_color_range_name(i);
-        if (!name)
-            continue;
-        int back = av_color_range_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_range_name(back)))
+    ಪೂರ್ಣಾಂಕ fail = 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < AVCOL_RANGE_NB; i++) {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name = av_color_range_name(i);
+        ಆದರೆ (!name)
+            ಮುಂದುವರಿ;
+        ಪೂರ್ಣಾಂಕ ಹಿಂಭಾಗ = av_color_range_from_name(name);
+        ಆದರೆ (ಹಿಂಭಾಗ < 0 || !check_name_equivalence(name, av_color_range_name(ಹಿಂಭಾಗ)))
             fail++;
     }
-    return fail;
+    ಹಿಂತಿರುಗಿ fail;
 }
 
-static int test_color_primaries_round_trip(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ test_color_primaries_ಸುತ್ತು_trip(ಶೂನ್ಯ)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_PRI_NB; i++) {
-        const char *name = av_color_primaries_name(i);
-        if (!name)
-            continue;
-        int back = av_color_primaries_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_primaries_name(back)))
+    ಪೂರ್ಣಾಂಕ fail = 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < AVCOL_PRI_NB; i++) {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name = av_color_primaries_name(i);
+        ಆದರೆ (!name)
+            ಮುಂದುವರಿ;
+        ಪೂರ್ಣಾಂಕ ಹಿಂಭಾಗ = av_color_primaries_from_name(name);
+        ಆದರೆ (ಹಿಂಭಾಗ < 0 || !check_name_equivalence(name, av_color_primaries_name(ಹಿಂಭಾಗ)))
             fail++;
     }
-    return fail;
+    ಹಿಂತಿರುಗಿ fail;
 }
 
-static int test_color_transfer_round_trip(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ test_color_transfer_ಸುತ್ತು_trip(ಶೂನ್ಯ)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_TRC_NB; i++) {
-        const char *name = av_color_transfer_name(i);
-        if (!name)
-            continue;
-        int back = av_color_transfer_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_transfer_name(back)))
+    ಪೂರ್ಣಾಂಕ fail = 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < AVCOL_TRC_NB; i++) {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name = av_color_transfer_name(i);
+        ಆದರೆ (!name)
+            ಮುಂದುವರಿ;
+        ಪೂರ್ಣಾಂಕ ಹಿಂಭಾಗ = av_color_transfer_from_name(name);
+        ಆದರೆ (ಹಿಂಭಾಗ < 0 || !check_name_equivalence(name, av_color_transfer_name(ಹಿಂಭಾಗ)))
             fail++;
     }
-    return fail;
+    ಹಿಂತಿರುಗಿ fail;
 }
 
-static int test_color_space_round_trip(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ test_color_space_ಸುತ್ತು_trip(ಶೂನ್ಯ)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_SPC_NB; i++) {
-        const char *name = av_color_space_name(i);
-        if (!name)
-            continue;
-        int back = av_color_space_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_space_name(back)))
+    ಪೂರ್ಣಾಂಕ fail = 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < AVCOL_SPC_NB; i++) {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name = av_color_space_name(i);
+        ಆದರೆ (!name)
+            ಮುಂದುವರಿ;
+        ಪೂರ್ಣಾಂಕ ಹಿಂಭಾಗ = av_color_space_from_name(name);
+        ಆದರೆ (ಹಿಂಭಾಗ < 0 || !check_name_equivalence(name, av_color_space_name(ಹಿಂಭಾಗ)))
             fail++;
     }
-    return fail;
+    ಹಿಂತಿರುಗಿ fail;
 }
 
-static int test_chroma_location_round_trip(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ test_chroma_location_ಸುತ್ತು_trip(ಶೂನ್ಯ)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCHROMA_LOC_NB; i++) {
-        const char *name = av_chroma_location_name(i);
-        if (!name)
-            continue;
-        int back = av_chroma_location_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_chroma_location_name(back)))
+    ಪೂರ್ಣಾಂಕ fail = 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < AVCHROMA_LOC_NB; i++) {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name = av_chroma_location_name(i);
+        ಆದರೆ (!name)
+            ಮುಂದುವರಿ;
+        ಪೂರ್ಣಾಂಕ ಹಿಂಭಾಗ = av_chroma_location_from_name(name);
+        ಆದರೆ (ಹಿಂಭಾಗ < 0 || !check_name_equivalence(name, av_chroma_location_name(ಹಿಂಭಾಗ)))
             fail++;
     }
-    return fail;
+    ಹಿಂತಿರುಗಿ fail;
 }
 
-static int test_alpha_mode_round_trip(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ test_alpha_ಬಹುಲಕ_ಸುತ್ತು_trip(ಶೂನ್ಯ)
 {
-    int fail = 0;
-    for (int i = 0; i < AVALPHA_MODE_NB; i++) {
-        const char *name = av_alpha_mode_name(i);
-        if (!name)
-            continue;
-        int back = av_alpha_mode_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_alpha_mode_name(back)))
+    ಪೂರ್ಣಾಂಕ fail = 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < AVALPHA_ಬಹುಲಕ_NB; i++) {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name = av_alpha_ಬಹುಲಕ_name(i);
+        ಆದರೆ (!name)
+            ಮುಂದುವರಿ;
+        ಪೂರ್ಣಾಂಕ ಹಿಂಭಾಗ = av_alpha_ಬಹುಲಕ_from_name(name);
+        ಆದರೆ (ಹಿಂಭಾಗ < 0 || !check_name_equivalence(name, av_alpha_ಬಹುಲಕ_name(ಹಿಂಭಾಗ)))
             fail++;
     }
-    return fail;
+    ಹಿಂತಿರುಗಿ fail;
 }
 
-static int test_chroma_location_pos_round_trip(void)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ test_chroma_location_pos_ಸುತ್ತು_trip(ಶೂನ್ಯ)
 {
-    int fail = 0;
-    for (int i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
-        int xpos, ypos;
-        if (av_chroma_location_enum_to_pos(&xpos, &ypos, i) < 0) {
+    ಪೂರ್ಣಾಂಕ fail = 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
+        ಪೂರ್ಣಾಂಕ xpos, ypos;
+        ಆದರೆ (av_chroma_location_enum_ಗಮ್ಯ_pos(&xpos, &ypos, i) < 0) {
             fail++;
-            continue;
+            ಮುಂದುವರಿ;
         }
-        if ((int)av_chroma_location_pos_to_enum(xpos, ypos) != i)
+        ಆದರೆ ((ಪೂರ್ಣಾಂಕ)av_chroma_location_pos_ಗಮ್ಯ_enum(xpos, ypos) != i)
             fail++;
     }
-    return fail;
+    ಹಿಂತಿರುಗಿ fail;
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
-    int skip = 0;
+    ಪೂರ್ಣಾಂಕ skip = 0;
 
-    printf("Testing av_get_pix_fmt() / av_get_pix_fmt_name() round-trip\n");
-    printf("  result: %s\n",
-           test_pix_fmt_round_trip() ? "FAIL" : "OK");
+    ಬರೆ("Testing av_get_pix_fmt() / av_get_pix_fmt_name() round-trip\n");
+    ಬರೆ("  result: %s\n",
+           test_pix_fmt_ಸುತ್ತು_trip() ? "FAIL" : "OK");
 
-    printf("\nTesting av_color_*_name() / av_color_*_from_name() round-trips\n");
-    printf("  av_color_range:     %s\n",
-           test_color_range_round_trip()     ? "FAIL" : "OK");
-    printf("  av_color_primaries: %s\n",
-           test_color_primaries_round_trip() ? "FAIL" : "OK");
-    printf("  av_color_transfer:  %s\n",
-           test_color_transfer_round_trip()  ? "FAIL" : "OK");
-    printf("  av_color_space:     %s\n",
-           test_color_space_round_trip()     ? "FAIL" : "OK");
-    printf("  av_chroma_location: %s\n",
-           test_chroma_location_round_trip() ? "FAIL" : "OK");
-    printf("  av_alpha_mode:      %s\n",
-           test_alpha_mode_round_trip()      ? "FAIL" : "OK");
+    ಬರೆ("\nTesting av_color_*_name() / av_color_*_from_name() round-trips\n");
+    ಬರೆ("  av_color_range:     %s\n",
+           test_color_range_ಸುತ್ತು_trip()     ? "FAIL" : "OK");
+    ಬರೆ("  av_color_primaries: %s\n",
+           test_color_primaries_ಸುತ್ತು_trip() ? "FAIL" : "OK");
+    ಬರೆ("  av_color_transfer:  %s\n",
+           test_color_transfer_ಸುತ್ತು_trip()  ? "FAIL" : "OK");
+    ಬರೆ("  av_color_space:     %s\n",
+           test_color_space_ಸುತ್ತು_trip()     ? "FAIL" : "OK");
+    ಬರೆ("  av_chroma_location: %s\n",
+           test_chroma_location_ಸುತ್ತು_trip() ? "FAIL" : "OK");
+    ಬರೆ("  av_alpha_mode:      %s\n",
+           test_alpha_ಬಹುಲಕ_ಸುತ್ತು_trip()      ? "FAIL" : "OK");
 
-    printf("\nTesting av_chroma_location_enum_to_pos / pos_to_enum round-trip\n");
-    printf("  result: %s\n",
-           test_chroma_location_pos_round_trip() ? "FAIL" : "OK");
+    ಬರೆ("\nTesting av_chroma_location_enum_to_pos / pos_to_enum round-trip\n");
+    ಬರೆ("  result: %s\n",
+           test_chroma_location_pos_ಸುತ್ತು_trip() ? "FAIL" : "OK");
 
-    printf("\nTesting pixel format descriptors\n");
-    for (int i = 0; i < AV_PIX_FMT_NB * 2; i++) {
-        const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
-        if (!desc || !desc->name) {
+    ಬರೆ("\nTesting pixel format descriptors\n");
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < AV_PIX_FMT_NB * 2; i++) {
+        ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
+        ಆದರೆ (!desc || !desc->name) {
             skip++;
-            continue;
+            ಮುಂದುವರಿ;
         }
-        if (skip) {
-            printf("  %3d unused pixel format values\n", skip);
+        ಆದರೆ (skip) {
+            ಬರೆ("  %3d unused pixel format values\n", skip);
             skip = 0;
         }
-        printf("  pix fmt %s avg_bpp:%d planes:%d\n", desc->name,
-               av_get_padded_bits_per_pixel(desc),
-               av_pix_fmt_count_planes(i));
+        ಬರೆ("  pix fmt %s avg_bpp:%d planes:%d\n", desc->name,
+               av_get_padded_ಬಿಟ್ಟುಗಳು_ಪ್ರತಿ_pixel(desc),
+               av_pix_fmt_ಎಣಿಕೆ_planes(i));
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

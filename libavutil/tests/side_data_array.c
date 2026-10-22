@@ -18,94 +18,94 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include "libavutil/frame.c"
-#include "libavutil/internal.h"
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ "libavutil/frame.c"
+#ಅನ್ತರ್ಭಾವ "libavutil/internal.h"
 
-static void print_entries(const AVFrameSideData **sd, const int nb_sd)
+ಸ್ಥಿರ ಶೂನ್ಯ print_entries(ಸ್ಥಿರಾಂಕ AVFrame_Side_ದತ್ತಾಂಶ **sd, ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ nb_sd)
 {
-    for (int i = 0; i < nb_sd; i++) {
-        const AVFrameSideData *entry = sd[i];
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_sd; i++) {
+        ಸ್ಥಿರಾಂಕ AVFrame_Side_ದತ್ತಾಂಶ *ನಮೂದು = sd[i];
 
-        printf("sd %d (size %zu), %s",
-               i, entry->size, av_frame_side_data_name(entry->type));
+        ಬರೆ("sd %d (size %zu), %s",
+               i, ನಮೂದು->ಗಾತ್ರ_2, av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_name(ನಮೂದು->type));
 
-        if (entry->type != AV_FRAME_DATA_SEI_UNREGISTERED) {
-            putchar('\n');
-            continue;
+        ಆದರೆ (ನಮೂದು->type != AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_SEI_UNREGISTERED) {
+            ಅಕ್ಷರ_ಬರೆ('\n');
+            ಮುಂದುವರಿ;
         }
 
-        printf(": %d\n", *(int32_t *)entry->data);
+        ಬರೆ(": %d\n", *(int32_t *)ನಮೂದು->ದತ್ತಾಂಶ);
     }
 }
 
-typedef struct FrameSideDataSet {
-    AVFrameSideData **sd;
-    int            nb_sd;
-} FrameSideDataSet;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ ಚೌಕಟ್ಟು_Side_ದತ್ತಾಂಶ_ಗಣ {
+    AVFrame_Side_ದತ್ತಾಂಶ **sd;
+    ಪೂರ್ಣಾಂಕ            nb_sd;
+} ಚೌಕಟ್ಟು_Side_ದತ್ತಾಂಶ_ಗಣ;
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
-    FrameSideDataSet set = { 0 };
+    ಚೌಕಟ್ಟು_Side_ದತ್ತಾಂಶ_ಗಣ ಗಣ = { 0 };
 
     av_assert0(
-        av_frame_side_data_new(&set.sd, &set.nb_sd,
-                               AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int64_t), 0));
+        av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_new(&ಗಣ.sd, &ಗಣ.nb_sd,
+                               AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_CONTENT_LIGHT_LEVEL,
+                               ಗಾತ್ರ(int64_t), 0));
     av_assert0(
-        av_frame_side_data_new(&set.sd, &set.nb_sd,
-                               AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+        av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_new(&ಗಣ.sd, &ಗಣ.nb_sd,
+                               AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_CONTENT_LIGHT_LEVEL,
+                               ಗಾತ್ರ(int32_t), AV_ಚೌಕಟ್ಟು_SIDE_ದತ್ತಾಂಶ_FLAG_REPLACE));
 
     // test entries in the middle
-    for (int value = 1; value < 4; value++) {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ ಮೌಲ್ಯ = 1; ಮೌಲ್ಯ < 4; ಮೌಲ್ಯ++) {
+        AVFrame_Side_ದತ್ತಾಂಶ *sd = av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_new(
+            &ಗಣ.sd, &ಗಣ.nb_sd, AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_SEI_UNREGISTERED,
+            ಗಾತ್ರ(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value;
+        *(int32_t *)sd->ದತ್ತಾಂಶ = ಮೌಲ್ಯ;
     }
 
     av_assert0(
-        av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-           sizeof(int64_t), 0));
+        av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_new(
+            &ಗಣ.sd, &ಗಣ.nb_sd, AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_SPHERICAL,
+           ಗಾತ್ರ(int64_t), 0));
 
     av_assert0(
-        av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+        av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_new(
+            &ಗಣ.sd, &ಗಣ.nb_sd, AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_SPHERICAL,
+            ಗಾತ್ರ(int32_t), AV_ಚೌಕಟ್ಟು_SIDE_ದತ್ತಾಂಶ_FLAG_REPLACE));
 
     // test entries at the end
-    for (int value = 1; value < 4; value++) {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ ಮೌಲ್ಯ = 1; ಮೌಲ್ಯ < 4; ಮೌಲ್ಯ++) {
+        AVFrame_Side_ದತ್ತಾಂಶ *sd = av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_new(
+            &ಗಣ.sd, &ಗಣ.nb_sd, AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_SEI_UNREGISTERED,
+            ಗಾತ್ರ(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value + 3;
+        *(int32_t *)sd->ದತ್ತಾಂಶ = ಮೌಲ್ಯ + 3;
     }
 
     puts("Initial addition results with duplicates:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    print_entries((ಸ್ಥಿರಾಂಕ AVFrame_Side_ದತ್ತಾಂಶ **)ಗಣ.sd, ಗಣ.nb_sd);
 
     {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
+        AVFrame_Side_ದತ್ತಾಂಶ *sd = av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_new(
+            &ಗಣ.sd, &ಗಣ.nb_sd, AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_SEI_UNREGISTERED,
+            ಗಾತ್ರ(int32_t), AV_ಚೌಕಟ್ಟು_SIDE_ದತ್ತಾಂಶ_FLAG_UNIQUE);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = 1337;
+        *(int32_t *)sd->ದತ್ತಾಂಶ = 1337;
     }
 
     puts("\nFinal state after a single 'no-duplicates' addition:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    print_entries((ಸ್ಥಿರಾಂಕ AVFrame_Side_ದತ್ತಾಂಶ **)ಗಣ.sd, ಗಣ.nb_sd);
 
-    av_frame_side_data_free(&set.sd, &set.nb_sd);
+    av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_free(&ಗಣ.sd, &ಗಣ.nb_sd);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

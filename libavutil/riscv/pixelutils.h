@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_PIXELUTILS_H
-#define AVUTIL_RISCV_PIXELUTILS_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_RISCV_PIXELUTILS_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_RISCV_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#ಅನ್ತರ್ಭಾವ "cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_rvv(const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad8_rvv (const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
+ಪೂರ್ಣಾಂಕ ff_pixelutils_sad16_rvv(ಸ್ಥಿರಾಂಕ uint8_t *src1, ptrdiff_t stride1,
+                            ಸ್ಥಿರಾಂಕ uint8_t *src2, ptrdiff_t stride2);
+ಪೂರ್ಣಾಂಕ ff_pixelutils_sad8_rvv (ಸ್ಥಿರಾಂಕ uint8_t *src1, ptrdiff_t stride1,
+                            ಸ್ಥಿರಾಂಕ uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, int aligned)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ av_cold ಶೂನ್ಯ ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, ಪೂರ್ಣಾಂಕ aligned)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#ಆದರೆ HAVE_RVV
+    ಪೂರ್ಣಾಂಕ flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
+    ಆದರೆ (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_ಕನಿಷ್ಠ(128)) {
         sad[3] = ff_pixelutils_sad16_rvv;
         sad[2] = ff_pixelutils_sad8_rvv;
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

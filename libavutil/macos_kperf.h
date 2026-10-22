@@ -16,12 +16,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef AVUTIL_MACOS_KPERF_H
-#define AVUTIL_MACOS_KPERF_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_MACOS_KPERF_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_MACOS_KPERF_H
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-void ff_kperf_init(void);
-uint64_t ff_kperf_cycles(void);
+ಶೂನ್ಯ ff_kperf_init(ಶೂನ್ಯ);
+uint64_t ff_kperf_ಚಕ್ರಗಳು(ಶೂನ್ಯ);
 
-#endif /* AVUTIL_MACOS_KPERF_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_MACOS_KPERF_H */

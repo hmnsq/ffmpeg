@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "libavutil/internal.h"
-#include "libavutil/lfg.h"
-#include "libavutil/lls.h"
-#include "libavutil/mem_internal.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/internal.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/lfg.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/lls.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/mem_internal.h"
 
 /* Values below the printed precision are rounding noise whose sign varies
  * between platforms, so print them as zero. */
-static double clean(double v)
+ಸ್ಥಿರ ದ್ವಿಗುಣ clean(ದ್ವಿಗುಣ v)
 {
-    return fabs(v) < 1e-9 ? 0.0 : v;
+    ಹಿಂತಿರುಗಿ fabs(v) < 1e-9 ? 0.0 : v;
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
     LLSModel m;
-    int i, order;
+    ಪೂರ್ಣಾಂಕ i, ಕ್ರಮ;
     AVLFG lfg;
 
     av_lfg_init(&lfg, 1);
     avpriv_init_lls(&m, 3);
 
-    for (i = 0; i < 100; i++) {
-        LOCAL_ALIGNED(32, double, var, [4]);
-        double eval;
+    ಗಾಗಿ (i = 0; i < 100; i++) {
+        LOCAL_ALIGNED(32, ದ್ವಿಗುಣ, var, [4]);
+        ದ್ವಿಗುಣ eval;
 
-        var[0] =         (av_lfg_get(&lfg) / (double) UINT_MAX - 0.5) * 2;
-        var[1] = var[0] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[2] = var[1] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[3] = var[2] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
+        var[0] =         (av_lfg_get(&lfg) / (ದ್ವಿಗುಣ) UINT_MAX - 0.5) * 2;
+        var[1] = var[0] + av_lfg_get(&lfg) / (ದ್ವಿಗುಣ) UINT_MAX - 0.5;
+        var[2] = var[1] + av_lfg_get(&lfg) / (ದ್ವಿಗುಣ) UINT_MAX - 0.5;
+        var[3] = var[2] + av_lfg_get(&lfg) / (ದ್ವಿಗುಣ) UINT_MAX - 0.5;
         m.update_lls(&m, var);
         avpriv_solve_lls(&m, 0.001, 0);
-        for (order = 0; order < 3; order++) {
-            eval = m.evaluate_lls(&m, var + 1, order);
-            printf("real:%9f order:%d pred:%9f var:%f coeffs:%f %9f %9f\n",
-                   var[0], order, eval,
-                   sqrt(FFMAX(m.variance[order], 0) / (i + 1)),
-                   clean(m.coeff[order][0]), clean(m.coeff[order][1]),
-                   clean(m.coeff[order][2]));
+        ಗಾಗಿ (ಕ್ರಮ = 0; ಕ್ರಮ < 3; ಕ್ರಮ++) {
+            eval = m.evaluate_lls(&m, var + 1, ಕ್ರಮ);
+            ಬರೆ("real:%9f order:%d pred:%9f var:%f coeffs:%f %9f %9f\n",
+                   var[0], ಕ್ರಮ, eval,
+                   ವರ್ಗಮೂಲ(FFMAX(m.variance[ಕ್ರಮ], 0) / (i + 1)),
+                   clean(m.coeff[ಕ್ರಮ][0]), clean(m.coeff[ಕ್ರಮ][1]),
+                   clean(m.coeff[ಕ್ರಮ][2]));
         }
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

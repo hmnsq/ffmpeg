@@ -18,334 +18,334 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "avassert.h"
-#include "error.h"
-#include "iamf.h"
-#include "log.h"
-#include "mem.h"
-#include "opt.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "iamf.h"
+#ಅನ್ತರ್ಭಾವ "log.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "opt.h"
 
-#define IAMF_ADD_FUNC_TEMPLATE(parent_type, parent_name, child_type, child_name, suffix)                   \
-child_type *av_iamf_ ## parent_name ## _add_ ## child_name(parent_type *parent_name)                       \
+#ವ್ಯಾಖ್ಯಾನಿಸು IAMF_ಕೂಡಿಸು_FUNC_TEMPLATE(ಪೋಷಕ_type, ಪೋಷಕ_name, ಮಗು_type, ಮಗು_name, suffix)                   \
+ಮಗು_type *av_iamf_ ## ಪೋಷಕ_name ## ಕೂಡಿಸು ## ಮಗು_name(ಪೋಷಕ_type *ಪೋಷಕ_name)                       \
 {                                                                                                          \
-    child_type **child_name ## suffix, *child_name;                                                        \
+    ಮಗು_type **ಮಗು_name ## suffix, *ಮಗು_name;                                                        \
                                                                                                            \
-    if (parent_name->nb_## child_name ## suffix == UINT_MAX)                                               \
-        return NULL;                                                                                       \
+    ಆದರೆ (ಪೋಷಕ_name->nb_## ಮಗು_name ## suffix == UINT_MAX)                                               \
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;                                                                                       \
                                                                                                            \
-    child_name ## suffix = av_realloc_array(parent_name->child_name ## suffix,                             \
-                                            parent_name->nb_## child_name ## suffix + 1,                   \
-                                            sizeof(*parent_name->child_name ## suffix));                   \
-    if (!child_name ## suffix)                                                                             \
-        return NULL;                                                                                       \
+    ಮಗು_name ## suffix = av_realloc_array(ಪೋಷಕ_name->ಮಗು_name ## suffix,                             \
+                                            ಪೋಷಕ_name->nb_## ಮಗು_name ## suffix + 1,                   \
+                                            ಗಾತ್ರ(*ಪೋಷಕ_name->ಮಗು_name ## suffix));                   \
+    ಆದರೆ (!ಮಗು_name ## suffix)                                                                             \
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;                                                                                       \
                                                                                                            \
-    parent_name->child_name ## suffix = child_name ## suffix;                                              \
+    ಪೋಷಕ_name->ಮಗು_name ## suffix = ಮಗು_name ## suffix;                                              \
                                                                                                            \
-    child_name = parent_name->child_name ## suffix[parent_name->nb_## child_name ## suffix]                \
-               = av_mallocz(sizeof(*child_name));                                                          \
-    if (!child_name)                                                                                       \
-        return NULL;                                                                                       \
+    ಮಗು_name = ಪೋಷಕ_name->ಮಗು_name ## suffix[ಪೋಷಕ_name->nb_## ಮಗು_name ## suffix]                \
+               = av_mallocz(ಗಾತ್ರ(*ಮಗು_name));                                                          \
+    ಆದರೆ (!ಮಗು_name)                                                                                       \
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;                                                                                       \
                                                                                                            \
-    child_name->av_class = &child_name ## _class;                                                          \
-    av_opt_set_defaults(child_name);                                                                       \
-    parent_name->nb_## child_name ## suffix++;                                                             \
+    ಮಗು_name->av_class = &ಮಗು_name ## _class;                                                          \
+    av_opt_ಗಣ_defaults(ಮಗು_name);                                                                       \
+    ಪೋಷಕ_name->nb_## ಮಗು_name ## suffix++;                                                             \
                                                                                                            \
-    return child_name;                                                                                     \
+    ಹಿಂತಿರುಗಿ ಮಗು_name;                                                                                     \
 }
 
-#define FLAGS AV_OPT_FLAG_ENCODING_PARAM
+#ವ್ಯಾಖ್ಯಾನಿಸು FLAGS AV_OPT_FLAG_ENCODING_PARAM
 
 //
 // Param Definition
 //
-#define OFFSET(x) offsetof(AVIAMFMixGain, x)
-static const AVOption mix_gain_options[] = {
-    { "subblock_duration", "set subblock_duration", OFFSET(subblock_duration), AV_OPT_TYPE_UINT, {.i64 = 1 }, 1, UINT_MAX, FLAGS },
-    { "animation_type", "set animation_type", OFFSET(animation_type), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, 2, FLAGS },
-    { "start_point_value", "set start_point_value", OFFSET(start_point_value), AV_OPT_TYPE_RATIONAL, {.dbl = 0 }, -128.0, 128.0, FLAGS },
-    { "end_point_value", "set end_point_value", OFFSET(end_point_value), AV_OPT_TYPE_RATIONAL, {.dbl = 0 }, -128.0, 128.0, FLAGS },
-    { "control_point_value", "set control_point_value", OFFSET(control_point_value), AV_OPT_TYPE_RATIONAL, {.dbl = 0 }, -128.0, 128.0, FLAGS },
-    { "control_point_relative_time", "set control_point_relative_time", OFFSET(control_point_relative_time), AV_OPT_TYPE_RATIONAL, {.dbl = 0 }, 0.0, 1.0, FLAGS },
-    { NULL },
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಥಾನಾಂತರ_2(x) offsetof(AVIAMFMixGain, x)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVOption mix_gain_options[] = {
+    { "subblock_duration", "set subblock_duration", ಸ್ಥಾನಾಂತರ_2(subblock_duration), AV_OPT_TYPE_UINT, {.i64 = 1 }, 1, UINT_MAX, FLAGS },
+    { "animation_type", "set animation_type", ಸ್ಥಾನಾಂತರ_2(animation_type), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, 2, FLAGS },
+    { "start_point_value", "set start_point_value", ಸ್ಥಾನಾಂತರ_2(ಆರಂಭ_ಬಿಂದು_ಮೌಲ್ಯ), AV_OPT_TYPE_RATIONAL, {.dbl = 0 }, -128.0, 128.0, FLAGS },
+    { "end_point_value", "set end_point_value", ಸ್ಥಾನಾಂತರ_2(ಕೊನೆ_ಬಿಂದು_ಮೌಲ್ಯ), AV_OPT_TYPE_RATIONAL, {.dbl = 0 }, -128.0, 128.0, FLAGS },
+    { "control_point_value", "set control_point_value", ಸ್ಥಾನಾಂತರ_2(control_ಬಿಂದು_ಮೌಲ್ಯ), AV_OPT_TYPE_RATIONAL, {.dbl = 0 }, -128.0, 128.0, FLAGS },
+    { "control_point_relative_time", "set control_point_relative_time", ಸ್ಥಾನಾಂತರ_2(control_ಬಿಂದು_relative_ಸಮಯ), AV_OPT_TYPE_RATIONAL, {.dbl = 0 }, 0.0, 1.0, FLAGS },
+    { ಖಾಲಿ },
 };
 
-static const AVClass mix_gain_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass mix_gain_class = {
     .class_name     = "AVIAMFMixGain",
-    .item_name      = av_default_item_name,
-    .version        = LIBAVUTIL_VERSION_INT,
+    .ಅಂಶ_name      = av_default_ಅಂಶ_name,
+    .ಆವೃತ್ತಿ        = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
     .option         = mix_gain_options,
 };
 
-#undef OFFSET
-#define OFFSET(x) offsetof(AVIAMFDemixingInfo, x)
-static const AVOption demixing_info_options[] = {
-    { "subblock_duration", "set subblock_duration", OFFSET(subblock_duration), AV_OPT_TYPE_UINT, {.i64 = 1 }, 1, UINT_MAX, FLAGS },
-    { "dmixp_mode", "set dmixp_mode", OFFSET(dmixp_mode), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, 6, FLAGS },
-    { NULL },
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು ಸ್ಥಾನಾಂತರ_2
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಥಾನಾಂತರ_2(x) offsetof(AVIAMFDemixingInfo, x)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVOption demixing_info_options[] = {
+    { "subblock_duration", "set subblock_duration", ಸ್ಥಾನಾಂತರ_2(subblock_duration), AV_OPT_TYPE_UINT, {.i64 = 1 }, 1, UINT_MAX, FLAGS },
+    { "dmixp_mode", "set dmixp_mode", ಸ್ಥಾನಾಂತರ_2(dmixp_ಬಹುಲಕ), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, 6, FLAGS },
+    { ಖಾಲಿ },
 };
 
-static const AVClass demixing_info_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass demixing_info_class = {
     .class_name     = "AVIAMFDemixingInfo",
-    .item_name      = av_default_item_name,
-    .version        = LIBAVUTIL_VERSION_INT,
+    .ಅಂಶ_name      = av_default_ಅಂಶ_name,
+    .ಆವೃತ್ತಿ        = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
     .option         = demixing_info_options,
 };
 
-#undef OFFSET
-#define OFFSET(x) offsetof(AVIAMFReconGain, x)
-static const AVOption recon_gain_options[] = {
-    { "subblock_duration", "set subblock_duration", OFFSET(subblock_duration), AV_OPT_TYPE_UINT, {.i64 = 1 }, 1, UINT_MAX, FLAGS },
-    { NULL },
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು ಸ್ಥಾನಾಂತರ_2
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಥಾನಾಂತರ_2(x) offsetof(AVIAMFReconGain, x)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVOption recon_gain_options[] = {
+    { "subblock_duration", "set subblock_duration", ಸ್ಥಾನಾಂತರ_2(subblock_duration), AV_OPT_TYPE_UINT, {.i64 = 1 }, 1, UINT_MAX, FLAGS },
+    { ಖಾಲಿ },
 };
 
-static const AVClass recon_gain_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass recon_gain_class = {
     .class_name     = "AVIAMFReconGain",
-    .item_name      = av_default_item_name,
-    .version        = LIBAVUTIL_VERSION_INT,
+    .ಅಂಶ_name      = av_default_ಅಂಶ_name,
+    .ಆವೃತ್ತಿ        = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
     .option         = recon_gain_options,
 };
 
-#undef OFFSET
-#define OFFSET(x) offsetof(AVIAMFParamDefinition, x)
-static const AVOption param_definition_options[] = {
-    { "parameter_id", "set parameter_id", OFFSET(parameter_id), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, UINT_MAX, FLAGS },
-    { "parameter_rate", "set parameter_rate", OFFSET(parameter_rate), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, UINT_MAX, FLAGS },
-    { "duration", "set duration", OFFSET(duration), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, UINT_MAX, FLAGS },
-    { "constant_subblock_duration", "set constant_subblock_duration", OFFSET(constant_subblock_duration), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, UINT_MAX, FLAGS },
-    { NULL },
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು ಸ್ಥಾನಾಂತರ_2
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಥಾನಾಂತರ_2(x) offsetof(AVIAMFParamDefinition, x)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVOption param_definition_options[] = {
+    { "parameter_id", "set parameter_id", ಸ್ಥಾನಾಂತರ_2(parameter_id), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, UINT_MAX, FLAGS },
+    { "parameter_rate", "set parameter_rate", ಸ್ಥಾನಾಂತರ_2(parameter_ದರ), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, UINT_MAX, FLAGS },
+    { "duration", "set duration", ಸ್ಥಾನಾಂತರ_2(duration), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, UINT_MAX, FLAGS },
+    { "constant_subblock_duration", "set constant_subblock_duration", ಸ್ಥಾನಾಂತರ_2(constant_subblock_duration), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, UINT_MAX, FLAGS },
+    { ಖಾಲಿ },
 };
 
-static const AVClass *param_definition_child_iterate(void **opaque)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass *param_definition_ಮಗು_iterate(ಶೂನ್ಯ **opaque)
 {
     uintptr_t i = (uintptr_t)*opaque;
-    const AVClass *ret = NULL;
+    ಸ್ಥಿರಾಂಕ AVClass *ret = ಖಾಲಿ;
 
-    switch(i) {
-    case AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
+    ಆಯ್ಕೆ(i) {
+    ಸ್ಥಿತಿ AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
         ret = &mix_gain_class;
-        break;
-    case AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
         ret = &demixing_info_class;
-        break;
-    case AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
         ret = &recon_gain_class;
-        break;
-    default:
-        break;
+        ನಿಲ್ಲಿಸು;
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ನಿಲ್ಲಿಸು;
     }
 
-    if (ret)
-        *opaque = (void*)(i + 1);
-    return ret;
+    ಆದರೆ (ret)
+        *opaque = (ಶೂನ್ಯ*)(i + 1);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static const AVClass param_definition_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass param_definition_class = {
     .class_name          = "AVIAMFParamDefinition",
-    .item_name           = av_default_item_name,
-    .version             = LIBAVUTIL_VERSION_INT,
+    .ಅಂಶ_name           = av_default_ಅಂಶ_name,
+    .ಆವೃತ್ತಿ             = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
     .option              = param_definition_options,
-    .child_class_iterate = param_definition_child_iterate,
+    .ಮಗು_class_iterate = param_definition_ಮಗು_iterate,
 };
 
-const AVClass *av_iamf_param_definition_get_class(void)
+ಸ್ಥಿರಾಂಕ AVClass *av_iamf_param_definition_get_class(ಶೂನ್ಯ)
 {
-    return &param_definition_class;
+    ಹಿಂತಿರುಗಿ &param_definition_class;
 }
 
-AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinitionType type,
-                                                      unsigned int nb_subblocks, size_t *out_size)
+AVIAMFParamDefinition *av_iamf_param_definition_alloc(ಎಣಿಕೆ AVIAMFParamDefinitionType type,
+                                                      ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_subblocks, size_t *ಹೊರಹೋಗು_ಗಾತ್ರ)
 {
 
-    struct MixGainStruct {
+    ರಚನೆ MixGainStruct {
         AVIAMFParamDefinition p;
         AVIAMFMixGain m;
     };
-    struct DemixStruct {
+    ರಚನೆ DemixStruct {
         AVIAMFParamDefinition p;
         AVIAMFDemixingInfo d;
     };
-    struct ReconGainStruct {
+    ರಚನೆ ReconGainStruct {
         AVIAMFParamDefinition p;
         AVIAMFReconGain r;
     };
-    size_t subblocks_offset, subblock_size;
-    size_t size;
+    size_t subblocks_ಸ್ಥಾನಾಂತರ, subblock_ಗಾತ್ರ;
+    size_t ಗಾತ್ರ_2;
     AVIAMFParamDefinition *par;
 
-    switch (type) {
-    case AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
-        subblocks_offset = offsetof(struct MixGainStruct, m);
-        subblock_size = sizeof(AVIAMFMixGain);
-        break;
-    case AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
-        subblocks_offset = offsetof(struct DemixStruct, d);
-        subblock_size = sizeof(AVIAMFDemixingInfo);
-        break;
-    case AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
-        subblocks_offset = offsetof(struct ReconGainStruct, r);
-        subblock_size = sizeof(AVIAMFReconGain);
-        break;
-    default:
-        return NULL;
+    ಆಯ್ಕೆ (type) {
+    ಸ್ಥಿತಿ AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
+        subblocks_ಸ್ಥಾನಾಂತರ = offsetof(ರಚನೆ MixGainStruct, m);
+        subblock_ಗಾತ್ರ = ಗಾತ್ರ(AVIAMFMixGain);
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
+        subblocks_ಸ್ಥಾನಾಂತರ = offsetof(ರಚನೆ DemixStruct, d);
+        subblock_ಗಾತ್ರ = ಗಾತ್ರ(AVIAMFDemixingInfo);
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
+        subblocks_ಸ್ಥಾನಾಂತರ = offsetof(ರಚನೆ ReconGainStruct, r);
+        subblock_ಗಾತ್ರ = ಗಾತ್ರ(AVIAMFReconGain);
+        ನಿಲ್ಲಿಸು;
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    size = subblocks_offset;
-    if (nb_subblocks > (SIZE_MAX - size) / subblock_size)
-        return NULL;
-    size += subblock_size * nb_subblocks;
+    ಗಾತ್ರ_2 = subblocks_ಸ್ಥಾನಾಂತರ;
+    ಆದರೆ (nb_subblocks > (SIZE_MAX - ಗಾತ್ರ_2) / subblock_ಗಾತ್ರ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ಗಾತ್ರ_2 += subblock_ಗಾತ್ರ * nb_subblocks;
 
-    par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    par = av_mallocz(ಗಾತ್ರ_2);
+    ಆದರೆ (!par)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
     par->av_class = &param_definition_class;
-    av_opt_set_defaults(par);
+    av_opt_ಗಣ_defaults(par);
 
     par->type = type;
     par->nb_subblocks = nb_subblocks;
-    par->subblock_size = subblock_size;
-    par->subblocks_offset = subblocks_offset;
+    par->subblock_ಗಾತ್ರ = subblock_ಗಾತ್ರ;
+    par->subblocks_ಸ್ಥಾನಾಂತರ = subblocks_ಸ್ಥಾನಾಂತರ;
 
-    for (int i = 0; i < nb_subblocks; i++) {
-        void *subblock = av_iamf_param_definition_get_subblock(par, i);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < nb_subblocks; i++) {
+        ಶೂನ್ಯ *subblock = av_iamf_param_definition_get_subblock(par, i);
 
-        switch (type) {
-        case AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
+        ಆಯ್ಕೆ (type) {
+        ಸ್ಥಿತಿ AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN:
             ((AVIAMFMixGain *)subblock)->av_class = &mix_gain_class;
-            break;
-        case AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ AV_IAMF_PARAMETER_DEFINITION_DEMIXING:
             ((AVIAMFDemixingInfo *)subblock)->av_class = &demixing_info_class;
-            break;
-        case AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN:
             ((AVIAMFReconGain *)subblock)->av_class = &recon_gain_class;
-            break;
-        default:
+            ನಿಲ್ಲಿಸು;
+        ಪೂರ್ವನಿಯೋಜಿತ:
             av_assert0(0);
         }
     }
 
-    if (out_size)
-        *out_size = size;
+    ಆದರೆ (ಹೊರಹೋಗು_ಗಾತ್ರ)
+        *ಹೊರಹೋಗು_ಗಾತ್ರ = ಗಾತ್ರ_2;
 
-    return par;
+    ಹಿಂತಿರುಗಿ par;
 }
 
 //
 // Audio Element
 //
-static const AVOptionArrayDef demixing_matrix_def = { .size_max = (255 + 255) * 255, .sep = '|' };
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVOptionArrayDef demixing_ಮಾತೃಕೆ_def = { .ಗಾತ್ರ_max = (255 + 255) * 255, .sep = '|' };
 
-#undef OFFSET
-#define OFFSET(x) offsetof(AVIAMFLayer, x)
-static const AVOption layer_options[] = {
-    { "ch_layout", "set ch_layout", OFFSET(ch_layout), AV_OPT_TYPE_CHLAYOUT, {.str = NULL }, 0, 0, FLAGS },
-    { "flags", "set flags", OFFSET(flags), AV_OPT_TYPE_FLAGS,
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು ಸ್ಥಾನಾಂತರ_2
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಥಾನಾಂತರ_2(x) offsetof(AVIAMFLayer, x)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVOption layer_options[] = {
+    { "ch_layout", "set ch_layout", ಸ್ಥಾನಾಂತರ_2(ch_layout), AV_OPT_TYPE_CHLAYOUT, {.str = ಖಾಲಿ }, 0, 0, FLAGS },
+    { "flags", "set flags", ಸ್ಥಾನಾಂತರ_2(flags), AV_OPT_TYPE_FLAGS,
         {.i64 = 0 }, 0, AV_IAMF_LAYER_FLAG_RECON_GAIN, FLAGS, .unit = "flags" },
             {"recon_gain",  "Recon gain is present", 0, AV_OPT_TYPE_CONST,
-                {.i64 = AV_IAMF_LAYER_FLAG_RECON_GAIN }, INT_MIN, INT_MAX, FLAGS, .unit = "flags"},
-    { "output_gain_flags", "set output_gain_flags", OFFSET(output_gain_flags), AV_OPT_TYPE_FLAGS,
+                {.i64 = AV_IAMF_LAYER_FLAG_RECON_GAIN }, INT_MIN, ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ, FLAGS, .unit = "flags"},
+    { "output_gain_flags", "set output_gain_flags", ಸ್ಥಾನಾಂತರ_2(output_gain_flags), AV_OPT_TYPE_FLAGS,
         {.i64 = 0 }, 0, (1 << 6) - 1, FLAGS, .unit = "output_gain_flags" },
             {"FL",  "Left channel",            0, AV_OPT_TYPE_CONST,
-                {.i64 = 1 << 5 }, INT_MIN, INT_MAX, FLAGS, .unit = "output_gain_flags"},
+                {.i64 = 1 << 5 }, INT_MIN, ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ, FLAGS, .unit = "output_gain_flags"},
             {"FR",  "Right channel",           0, AV_OPT_TYPE_CONST,
-                {.i64 = 1 << 4 }, INT_MIN, INT_MAX, FLAGS, .unit = "output_gain_flags"},
+                {.i64 = 1 << 4 }, INT_MIN, ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ, FLAGS, .unit = "output_gain_flags"},
             {"BL",  "Left surround channel",   0, AV_OPT_TYPE_CONST,
-                {.i64 = 1 << 3 }, INT_MIN, INT_MAX, FLAGS, .unit = "output_gain_flags"},
+                {.i64 = 1 << 3 }, INT_MIN, ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ, FLAGS, .unit = "output_gain_flags"},
             {"BR",  "Right surround channel",  0, AV_OPT_TYPE_CONST,
-                {.i64 = 1 << 2 }, INT_MIN, INT_MAX, FLAGS, .unit = "output_gain_flags"},
+                {.i64 = 1 << 2 }, INT_MIN, ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ, FLAGS, .unit = "output_gain_flags"},
             {"TFL", "Left top front channel",  0, AV_OPT_TYPE_CONST,
-                {.i64 = 1 << 1 }, INT_MIN, INT_MAX, FLAGS, .unit = "output_gain_flags"},
+                {.i64 = 1 << 1 }, INT_MIN, ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ, FLAGS, .unit = "output_gain_flags"},
             {"TFR", "Right top front channel", 0, AV_OPT_TYPE_CONST,
-                {.i64 = 1 << 0 }, INT_MIN, INT_MAX, FLAGS, .unit = "output_gain_flags"},
-    { "output_gain", "set output_gain", OFFSET(output_gain), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
-    { "ambisonics_mode", "set ambisonics_mode", OFFSET(ambisonics_mode), AV_OPT_TYPE_INT,
-            { .i64 = AV_IAMF_AMBISONICS_MODE_MONO },
-            AV_IAMF_AMBISONICS_MODE_MONO, AV_IAMF_AMBISONICS_MODE_PROJECTION, FLAGS, .unit = "ambisonics_mode" },
-        { "mono",       NULL, 0, AV_OPT_TYPE_CONST,
-                   { .i64 = AV_IAMF_AMBISONICS_MODE_MONO },       .unit = "ambisonics_mode" },
-        { "projection", NULL, 0, AV_OPT_TYPE_CONST,
-                   { .i64 = AV_IAMF_AMBISONICS_MODE_PROJECTION }, .unit = "ambisonics_mode" },
-    { "demixing_matrix", "set demixing_matrix", OFFSET(demixing_matrix), AV_OPT_TYPE_RATIONAL | AV_OPT_TYPE_FLAG_ARRAY,
-            { .arr = &demixing_matrix_def }, -1.0, 1.0, FLAGS },
-    { NULL },
+                {.i64 = 1 << 0 }, INT_MIN, ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ, FLAGS, .unit = "output_gain_flags"},
+    { "output_gain", "set output_gain", ಸ್ಥಾನಾಂತರ_2(output_gain), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
+    { "ambisonics_mode", "set ambisonics_mode", ಸ್ಥಾನಾಂತರ_2(ambisonics_ಬಹುಲಕ), AV_OPT_TYPE_INT,
+            { .i64 = AV_IAMF_AMBISONICS_ಬಹುಲಕ_MONO },
+            AV_IAMF_AMBISONICS_ಬಹುಲಕ_MONO, AV_IAMF_AMBISONICS_ಬಹುಲಕ_PROJECTION, FLAGS, .unit = "ambisonics_mode" },
+        { "mono",       ಖಾಲಿ, 0, AV_OPT_TYPE_CONST,
+                   { .i64 = AV_IAMF_AMBISONICS_ಬಹುಲಕ_MONO },       .unit = "ambisonics_mode" },
+        { "projection", ಖಾಲಿ, 0, AV_OPT_TYPE_CONST,
+                   { .i64 = AV_IAMF_AMBISONICS_ಬಹುಲಕ_PROJECTION }, .unit = "ambisonics_mode" },
+    { "demixing_matrix", "set demixing_matrix", ಸ್ಥಾನಾಂತರ_2(demixing_ಮಾತೃಕೆ), AV_OPT_TYPE_RATIONAL | AV_OPT_TYPE_FLAG_ARRAY,
+            { .arr = &demixing_ಮಾತೃಕೆ_def }, -1.0, 1.0, FLAGS },
+    { ಖಾಲಿ },
 };
 
-static const AVClass layer_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass layer_class = {
     .class_name     = "AVIAMFLayer",
-    .item_name      = av_default_item_name,
-    .version        = LIBAVUTIL_VERSION_INT,
+    .ಅಂಶ_name      = av_default_ಅಂಶ_name,
+    .ಆವೃತ್ತಿ        = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
     .option         = layer_options,
 };
 
-#undef OFFSET
-#define OFFSET(x) offsetof(AVIAMFAudioElement, x)
-static const AVOption audio_element_options[] = {
-    { "audio_element_type", "set audio_element_type", OFFSET(audio_element_type), AV_OPT_TYPE_INT,
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು ಸ್ಥಾನಾಂತರ_2
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಥಾನಾಂತರ_2(x) offsetof(AVIAMFAudioElement, x)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVOption audio_element_options[] = {
+    { "audio_element_type", "set audio_element_type", ಸ್ಥಾನಾಂತರ_2(audio_element_type), AV_OPT_TYPE_INT,
             {.i64 = AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL },
             AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL, AV_IAMF_AUDIO_ELEMENT_TYPE_SCENE, FLAGS, .unit = "audio_element_type" },
-        { "channel", NULL, 0, AV_OPT_TYPE_CONST,
+        { "channel", ಖಾಲಿ, 0, AV_OPT_TYPE_CONST,
                    { .i64 = AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL }, .unit = "audio_element_type" },
-        { "scene",   NULL, 0, AV_OPT_TYPE_CONST,
+        { "scene",   ಖಾಲಿ, 0, AV_OPT_TYPE_CONST,
                    { .i64 = AV_IAMF_AUDIO_ELEMENT_TYPE_SCENE },   .unit = "audio_element_type" },
-    { "default_w", "set default_w", OFFSET(default_w), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, 10, FLAGS },
-    { NULL },
+    { "default_w", "set default_w", ಸ್ಥಾನಾಂತರ_2(default_w), AV_OPT_TYPE_UINT, {.i64 = 0 }, 0, 10, FLAGS },
+    { ಖಾಲಿ },
 };
 
-static const AVClass *audio_element_child_iterate(void **opaque)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass *audio_element_ಮಗು_iterate(ಶೂನ್ಯ **opaque)
 {
     uintptr_t i = (uintptr_t)*opaque;
-    const AVClass *ret = NULL;
+    ಸ್ಥಿರಾಂಕ AVClass *ret = ಖಾಲಿ;
 
-    if (!i)
+    ಆದರೆ (!i)
         ret = &layer_class;
 
-    if (ret)
-        *opaque = (void*)(i + 1);
-    return ret;
+    ಆದರೆ (ret)
+        *opaque = (ಶೂನ್ಯ*)(i + 1);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static const AVClass audio_element_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass audio_element_class = {
     .class_name          = "AVIAMFAudioElement",
-    .item_name           = av_default_item_name,
-    .version             = LIBAVUTIL_VERSION_INT,
+    .ಅಂಶ_name           = av_default_ಅಂಶ_name,
+    .ಆವೃತ್ತಿ             = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
     .option              = audio_element_options,
-    .child_class_iterate = audio_element_child_iterate,
+    .ಮಗು_class_iterate = audio_element_ಮಗು_iterate,
 };
 
-const AVClass *av_iamf_audio_element_get_class(void)
+ಸ್ಥಿರಾಂಕ AVClass *av_iamf_audio_element_get_class(ಶೂನ್ಯ)
 {
-    return &audio_element_class;
+    ಹಿಂತಿರುಗಿ &audio_element_class;
 }
 
-AVIAMFAudioElement *av_iamf_audio_element_alloc(void)
+AVIAMFAudioElement *av_iamf_audio_element_alloc(ಶೂನ್ಯ)
 {
-    AVIAMFAudioElement *audio_element = av_mallocz(sizeof(*audio_element));
+    AVIAMFAudioElement *audio_element = av_mallocz(ಗಾತ್ರ(*audio_element));
 
-    if (audio_element) {
+    ಆದರೆ (audio_element) {
         audio_element->av_class = &audio_element_class;
-        av_opt_set_defaults(audio_element);
+        av_opt_ಗಣ_defaults(audio_element);
     }
 
-    return audio_element;
+    ಹಿಂತಿರುಗಿ audio_element;
 }
 
-IAMF_ADD_FUNC_TEMPLATE(AVIAMFAudioElement, audio_element, AVIAMFLayer, layer, s)
+IAMF_ಕೂಡಿಸು_FUNC_TEMPLATE(AVIAMFAudioElement, audio_element, AVIAMFLayer, layer, s)
 
-void av_iamf_audio_element_free(AVIAMFAudioElement **paudio_element)
+ಶೂನ್ಯ av_iamf_audio_element_free(AVIAMFAudioElement **paudio_element)
 {
     AVIAMFAudioElement *audio_element = *paudio_element;
 
-    if (!audio_element)
-        return;
+    ಆದರೆ (!audio_element)
+        ಹಿಂತಿರುಗಿ;
 
-    for (int i = 0; i < audio_element->nb_layers; i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < audio_element->nb_layers; i++) {
         AVIAMFLayer *layer = audio_element->layers[i];
         av_opt_free(layer);
-        av_free(layer->demixing_matrix);
+        av_free(layer->demixing_ಮಾತೃಕೆ);
         av_free(layer);
     }
     av_free(audio_element->layers);
@@ -358,198 +358,198 @@ void av_iamf_audio_element_free(AVIAMFAudioElement **paudio_element)
 //
 // Mix Presentation
 //
-#undef OFFSET
-#define OFFSET(x) offsetof(AVIAMFSubmixElement, x)
-static const AVOption submix_element_options[] = {
-    { "headphones_rendering_mode", "Headphones rendering mode", OFFSET(headphones_rendering_mode), AV_OPT_TYPE_INT,
-            { .i64 = AV_IAMF_HEADPHONES_MODE_STEREO },
-            AV_IAMF_HEADPHONES_MODE_STEREO, AV_IAMF_HEADPHONES_MODE_BINAURAL, FLAGS, .unit = "headphones_rendering_mode" },
-        { "stereo",   NULL, 0, AV_OPT_TYPE_CONST,
-                   { .i64 = AV_IAMF_HEADPHONES_MODE_STEREO },   .unit = "headphones_rendering_mode" },
-        { "binaural", NULL, 0, AV_OPT_TYPE_CONST,
-                   { .i64 = AV_IAMF_HEADPHONES_MODE_BINAURAL }, .unit = "headphones_rendering_mode" },
-    { "default_mix_gain", "Default mix gain", OFFSET(default_mix_gain), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
-    { "annotations", "Annotations", OFFSET(annotations), AV_OPT_TYPE_DICT, { .str = NULL }, 0, 0, FLAGS },
-    { NULL },
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು ಸ್ಥಾನಾಂತರ_2
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಥಾನಾಂತರ_2(x) offsetof(AVIAMFSubmixElement, x)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVOption submix_element_options[] = {
+    { "headphones_rendering_mode", "Headphones rendering mode", ಸ್ಥಾನಾಂತರ_2(headphones_rendering_ಬಹುಲಕ), AV_OPT_TYPE_INT,
+            { .i64 = AV_IAMF_HEADPHONES_ಬಹುಲಕ_STEREO },
+            AV_IAMF_HEADPHONES_ಬಹುಲಕ_STEREO, AV_IAMF_HEADPHONES_ಬಹುಲಕ_BINAURAL, FLAGS, .unit = "headphones_rendering_mode" },
+        { "stereo",   ಖಾಲಿ, 0, AV_OPT_TYPE_CONST,
+                   { .i64 = AV_IAMF_HEADPHONES_ಬಹುಲಕ_STEREO },   .unit = "headphones_rendering_mode" },
+        { "binaural", ಖಾಲಿ, 0, AV_OPT_TYPE_CONST,
+                   { .i64 = AV_IAMF_HEADPHONES_ಬಹುಲಕ_BINAURAL }, .unit = "headphones_rendering_mode" },
+    { "default_mix_gain", "Default mix gain", ಸ್ಥಾನಾಂತರ_2(default_mix_gain), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
+    { "annotations", "Annotations", ಸ್ಥಾನಾಂತರ_2(annotations), AV_OPT_TYPE_DICT, { .str = ಖಾಲಿ }, 0, 0, FLAGS },
+    { ಖಾಲಿ },
 };
 
-static void *submix_element_child_next(void *obj, void *prev)
+ಸ್ಥಿರ ಶೂನ್ಯ *submix_element_ಮಗು_ಮುಂದಿನ(ಶೂನ್ಯ *obj, ಶೂನ್ಯ *prev)
 {
     AVIAMFSubmixElement *submix_element = obj;
-    if (!prev)
-        return submix_element->element_mix_config;
+    ಆದರೆ (!prev)
+        ಹಿಂತಿರುಗಿ submix_element->element_mix_config;
 
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-static const AVClass *submix_element_child_iterate(void **opaque)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass *submix_element_ಮಗು_iterate(ಶೂನ್ಯ **opaque)
 {
     uintptr_t i = (uintptr_t)*opaque;
-    const AVClass *ret = NULL;
+    ಸ್ಥಿರಾಂಕ AVClass *ret = ಖಾಲಿ;
 
-    if (!i)
+    ಆದರೆ (!i)
         ret = &param_definition_class;
 
-    if (ret)
-        *opaque = (void*)(i + 1);
-    return ret;
+    ಆದರೆ (ret)
+        *opaque = (ಶೂನ್ಯ*)(i + 1);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static const AVClass element_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass element_class = {
     .class_name          = "AVIAMFSubmixElement",
-    .item_name           = av_default_item_name,
-    .version             = LIBAVUTIL_VERSION_INT,
+    .ಅಂಶ_name           = av_default_ಅಂಶ_name,
+    .ಆವೃತ್ತಿ             = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
     .option              = submix_element_options,
-    .child_next          = submix_element_child_next,
-    .child_class_iterate = submix_element_child_iterate,
+    .ಮಗು_ಮುಂದಿನ          = submix_element_ಮಗು_ಮುಂದಿನ,
+    .ಮಗು_class_iterate = submix_element_ಮಗು_iterate,
 };
 
-IAMF_ADD_FUNC_TEMPLATE(AVIAMFSubmix, submix, AVIAMFSubmixElement, element, s)
+IAMF_ಕೂಡಿಸು_FUNC_TEMPLATE(AVIAMFSubmix, submix, AVIAMFSubmixElement, element, s)
 
-#undef OFFSET
-#define OFFSET(x) offsetof(AVIAMFSubmixLayout, x)
-static const AVOption submix_layout_options[] = {
-    { "layout_type", "Layout type", OFFSET(layout_type), AV_OPT_TYPE_INT,
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು ಸ್ಥಾನಾಂತರ_2
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಥಾನಾಂತರ_2(x) offsetof(AVIAMFSubmixLayout, x)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVOption submix_layout_options[] = {
+    { "layout_type", "Layout type", ಸ್ಥಾನಾಂತರ_2(layout_type), AV_OPT_TYPE_INT,
             { .i64 = AV_IAMF_SUBMIX_LAYOUT_TYPE_LOUDSPEAKERS },
             AV_IAMF_SUBMIX_LAYOUT_TYPE_LOUDSPEAKERS, AV_IAMF_SUBMIX_LAYOUT_TYPE_BINAURAL, FLAGS, .unit = "layout_type" },
-        { "loudspeakers", NULL, 0, AV_OPT_TYPE_CONST,
+        { "loudspeakers", ಖಾಲಿ, 0, AV_OPT_TYPE_CONST,
                    { .i64 = AV_IAMF_SUBMIX_LAYOUT_TYPE_LOUDSPEAKERS }, .unit = "layout_type" },
-        { "binaural",     NULL, 0, AV_OPT_TYPE_CONST,
+        { "binaural",     ಖಾಲಿ, 0, AV_OPT_TYPE_CONST,
                    { .i64 = AV_IAMF_SUBMIX_LAYOUT_TYPE_BINAURAL },     .unit = "layout_type" },
-    { "sound_system", "Sound System", OFFSET(sound_system), AV_OPT_TYPE_CHLAYOUT, { .str = NULL }, 0, 0, FLAGS },
-    { "integrated_loudness", "Integrated loudness", OFFSET(integrated_loudness), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
-    { "digital_peak", "Digital peak", OFFSET(digital_peak), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
-    { "true_peak", "True peak", OFFSET(true_peak), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
-    { "dialog_anchored_loudness", "Anchored loudness (Dialog)", OFFSET(dialogue_anchored_loudness), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
-    { "album_anchored_loudness", "Anchored loudness (Album)", OFFSET(album_anchored_loudness), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
-    { NULL },
+    { "sound_system", "Sound System", ಸ್ಥಾನಾಂತರ_2(sound_system), AV_OPT_TYPE_CHLAYOUT, { .str = ಖಾಲಿ }, 0, 0, FLAGS },
+    { "integrated_loudness", "Integrated loudness", ಸ್ಥಾನಾಂತರ_2(integrated_loudness), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
+    { "digital_peak", "Digital peak", ಸ್ಥಾನಾಂತರ_2(digital_peak), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
+    { "true_peak", "True peak", ಸ್ಥಾನಾಂತರ_2(true_peak), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
+    { "dialog_anchored_loudness", "Anchored loudness (Dialog)", ಸ್ಥಾನಾಂತರ_2(dialogue_anchored_loudness), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
+    { "album_anchored_loudness", "Anchored loudness (Album)", ಸ್ಥಾನಾಂತರ_2(album_anchored_loudness), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
+    { ಖಾಲಿ },
 };
 
-static const AVClass layout_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass layout_class = {
     .class_name     = "AVIAMFSubmixLayout",
-    .item_name      = av_default_item_name,
-    .version        = LIBAVUTIL_VERSION_INT,
+    .ಅಂಶ_name      = av_default_ಅಂಶ_name,
+    .ಆವೃತ್ತಿ        = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
     .option         = submix_layout_options,
 };
 
-IAMF_ADD_FUNC_TEMPLATE(AVIAMFSubmix, submix, AVIAMFSubmixLayout, layout, s)
+IAMF_ಕೂಡಿಸು_FUNC_TEMPLATE(AVIAMFSubmix, submix, AVIAMFSubmixLayout, layout, s)
 
-#undef OFFSET
-#define OFFSET(x) offsetof(AVIAMFSubmix, x)
-static const AVOption submix_presentation_options[] = {
-    { "default_mix_gain", "Default mix gain", OFFSET(default_mix_gain), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
-    { NULL },
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು ಸ್ಥಾನಾಂತರ_2
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಥಾನಾಂತರ_2(x) offsetof(AVIAMFSubmix, x)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVOption submix_presentation_options[] = {
+    { "default_mix_gain", "Default mix gain", ಸ್ಥಾನಾಂತರ_2(default_mix_gain), AV_OPT_TYPE_RATIONAL, { .dbl = 0 }, -128.0, 128.0, FLAGS },
+    { ಖಾಲಿ },
 };
 
-static void *submix_presentation_child_next(void *obj, void *prev)
+ಸ್ಥಿರ ಶೂನ್ಯ *submix_presentation_ಮಗು_ಮುಂದಿನ(ಶೂನ್ಯ *obj, ಶೂನ್ಯ *prev)
 {
     AVIAMFSubmix *sub_mix = obj;
-    if (!prev)
-        return sub_mix->output_mix_config;
+    ಆದರೆ (!prev)
+        ಹಿಂತಿರುಗಿ sub_mix->output_mix_config;
 
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-static const AVClass *submix_presentation_child_iterate(void **opaque)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass *submix_presentation_ಮಗು_iterate(ಶೂನ್ಯ **opaque)
 {
     uintptr_t i = (uintptr_t)*opaque;
-    const AVClass *ret = NULL;
+    ಸ್ಥಿರಾಂಕ AVClass *ret = ಖಾಲಿ;
 
-    switch(i) {
-    case 0:
+    ಆಯ್ಕೆ(i) {
+    ಸ್ಥಿತಿ 0:
         ret = &element_class;
-        break;
-    case 1:
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ 1:
         ret = &layout_class;
-        break;
-    case 2:
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ 2:
         ret = &param_definition_class;
-        break;
-    default:
-        break;
+        ನಿಲ್ಲಿಸು;
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ನಿಲ್ಲಿಸು;
     }
 
-    if (ret)
-        *opaque = (void*)(i + 1);
-    return ret;
+    ಆದರೆ (ret)
+        *opaque = (ಶೂನ್ಯ*)(i + 1);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static const AVClass submix_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass submix_class = {
     .class_name          = "AVIAMFSubmix",
-    .item_name           = av_default_item_name,
-    .version             = LIBAVUTIL_VERSION_INT,
+    .ಅಂಶ_name           = av_default_ಅಂಶ_name,
+    .ಆವೃತ್ತಿ             = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
     .option              = submix_presentation_options,
-    .child_next          = submix_presentation_child_next,
-    .child_class_iterate = submix_presentation_child_iterate,
+    .ಮಗು_ಮುಂದಿನ          = submix_presentation_ಮಗು_ಮುಂದಿನ,
+    .ಮಗು_class_iterate = submix_presentation_ಮಗು_iterate,
 };
 
-#undef OFFSET
-#define OFFSET(x) offsetof(AVIAMFMixPresentation, x)
-static const AVOption mix_presentation_options[] = {
-    { "annotations", "set annotations", OFFSET(annotations), AV_OPT_TYPE_DICT, {.str = NULL }, 0, 0, FLAGS },
-    { NULL },
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು ಸ್ಥಾನಾಂತರ_2
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಥಾನಾಂತರ_2(x) offsetof(AVIAMFMixPresentation, x)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVOption mix_presentation_options[] = {
+    { "annotations", "set annotations", ಸ್ಥಾನಾಂತರ_2(annotations), AV_OPT_TYPE_DICT, {.str = ಖಾಲಿ }, 0, 0, FLAGS },
+    { ಖಾಲಿ },
 };
 
-#undef OFFSET
-#undef FLAGS
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು ಸ್ಥಾನಾಂತರ_2
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು FLAGS
 
-static const AVClass *mix_presentation_child_iterate(void **opaque)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass *mix_presentation_ಮಗು_iterate(ಶೂನ್ಯ **opaque)
 {
     uintptr_t i = (uintptr_t)*opaque;
-    const AVClass *ret = NULL;
+    ಸ್ಥಿರಾಂಕ AVClass *ret = ಖಾಲಿ;
 
-    if (!i)
+    ಆದರೆ (!i)
         ret = &submix_class;
 
-    if (ret)
-        *opaque = (void*)(i + 1);
-    return ret;
+    ಆದರೆ (ret)
+        *opaque = (ಶೂನ್ಯ*)(i + 1);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static const AVClass mix_presentation_class = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ AVClass mix_presentation_class = {
     .class_name          = "AVIAMFMixPresentation",
-    .item_name           = av_default_item_name,
-    .version             = LIBAVUTIL_VERSION_INT,
+    .ಅಂಶ_name           = av_default_ಅಂಶ_name,
+    .ಆವೃತ್ತಿ             = LIBAVUTIL_ಆವೃತ್ತಿ_INT,
     .option              = mix_presentation_options,
-    .child_class_iterate = mix_presentation_child_iterate,
+    .ಮಗು_class_iterate = mix_presentation_ಮಗು_iterate,
 };
 
-const AVClass *av_iamf_mix_presentation_get_class(void)
+ಸ್ಥಿರಾಂಕ AVClass *av_iamf_mix_presentation_get_class(ಶೂನ್ಯ)
 {
-    return &mix_presentation_class;
+    ಹಿಂತಿರುಗಿ &mix_presentation_class;
 }
 
-AVIAMFMixPresentation *av_iamf_mix_presentation_alloc(void)
+AVIAMFMixPresentation *av_iamf_mix_presentation_alloc(ಶೂನ್ಯ)
 {
-    AVIAMFMixPresentation *mix_presentation = av_mallocz(sizeof(*mix_presentation));
+    AVIAMFMixPresentation *mix_presentation = av_mallocz(ಗಾತ್ರ(*mix_presentation));
 
-    if (mix_presentation) {
+    ಆದರೆ (mix_presentation) {
         mix_presentation->av_class = &mix_presentation_class;
-        av_opt_set_defaults(mix_presentation);
+        av_opt_ಗಣ_defaults(mix_presentation);
     }
 
-    return mix_presentation;
+    ಹಿಂತಿರುಗಿ mix_presentation;
 }
 
-IAMF_ADD_FUNC_TEMPLATE(AVIAMFMixPresentation, mix_presentation, AVIAMFSubmix, submix, es)
+IAMF_ಕೂಡಿಸು_FUNC_TEMPLATE(AVIAMFMixPresentation, mix_presentation, AVIAMFSubmix, submix, es)
 
-void av_iamf_mix_presentation_free(AVIAMFMixPresentation **pmix_presentation)
+ಶೂನ್ಯ av_iamf_mix_presentation_free(AVIAMFMixPresentation **pmix_presentation)
 {
     AVIAMFMixPresentation *mix_presentation = *pmix_presentation;
 
-    if (!mix_presentation)
-        return;
+    ಆದರೆ (!mix_presentation)
+        ಹಿಂತಿರುಗಿ;
 
-    for (int i = 0; i < mix_presentation->nb_submixes; i++) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < mix_presentation->nb_submixes; i++) {
         AVIAMFSubmix *sub_mix = mix_presentation->submixes[i];
-        for (int j = 0; j < sub_mix->nb_elements; j++) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < sub_mix->nb_elements; j++) {
             AVIAMFSubmixElement *submix_element = sub_mix->elements[j];
             av_opt_free(submix_element);
             av_free(submix_element->element_mix_config);
             av_free(submix_element);
         }
         av_free(sub_mix->elements);
-        for (int j = 0; j < sub_mix->nb_layouts; j++) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < sub_mix->nb_layouts; j++) {
             AVIAMFSubmixLayout *submix_layout = sub_mix->layouts[j];
             av_opt_free(submix_layout);
             av_free(submix_layout);

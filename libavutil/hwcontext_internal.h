@@ -16,62 +16,62 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_INTERNAL_H
-#define AVUTIL_HWCONTEXT_INTERNAL_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_HWCONTEXT_ಆಂತರಿಕ_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_HWCONTEXT_ಆಂತರಿಕ_H
 
-#include <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
 
-#include "buffer.h"
-#include "hwcontext.h"
-#include "thread.h"
-#include "frame.h"
-#include "pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "buffer.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext.h"
+#ಅನ್ತರ್ಭಾವ "thread.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
+#ಅನ್ತರ್ಭಾವ "pixfmt.h"
 
-typedef struct HWContextType {
-    enum AVHWDeviceType type;
-    const char         *name;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ HWContextType {
+    ಎಣಿಕೆ AVHWDeviceType type;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ         *name;
 
     /**
      * An array of pixel formats supported by the AVHWFramesContext instances
      * Terminated by AV_PIX_FMT_NONE.
      */
-    const enum AVPixelFormat *pix_fmts;
+    ಸ್ಥಿರಾಂಕ ಎಣಿಕೆ AVPixelFormat *pix_fmts;
 
     /**
      * size of the public hardware-specific context,
      * i.e. AVHWDeviceContext.hwctx
      */
-    size_t             device_hwctx_size;
+    size_t             device_hwctx_ಗಾತ್ರ;
 
     /**
      * Size of the hardware-specific device configuration.
      * (Used to query hwframe constraints.)
      */
-    size_t             device_hwconfig_size;
+    size_t             device_hwconfig_ಗಾತ್ರ;
 
     /**
      * size of the public frame pool hardware-specific context,
      * i.e. AVHWFramesContext.hwctx
      */
-    size_t             frames_hwctx_size;
+    size_t             ಚೌಕಟ್ಟುಗಳು_hwctx_ಗಾತ್ರ;
 
-    int              (*device_create)(AVHWDeviceContext *ctx, const char *device,
-                                      AVDictionary *opts, int flags);
-    int              (*device_derive)(AVHWDeviceContext *dst_ctx,
+    ಪೂರ್ಣಾಂಕ              (*device_create)(AVHWDeviceContext *ctx, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *device,
+                                      AVDictionary *opts, ಪೂರ್ಣಾಂಕ flags);
+    ಪೂರ್ಣಾಂಕ              (*device_derive)(AVHWDeviceContext *dst_ctx,
                                       AVHWDeviceContext *src_ctx,
-                                      AVDictionary *opts, int flags);
+                                      AVDictionary *opts, ಪೂರ್ಣಾಂಕ flags);
 
-    int              (*device_init)(AVHWDeviceContext *ctx);
-    void             (*device_uninit)(AVHWDeviceContext *ctx);
+    ಪೂರ್ಣಾಂಕ              (*device_init)(AVHWDeviceContext *ctx);
+    ಶೂನ್ಯ             (*device_uninit)(AVHWDeviceContext *ctx);
 
-    int              (*frames_get_constraints)(AVHWDeviceContext *ctx,
-                                               const void *hwconfig,
+    ಪೂರ್ಣಾಂಕ              (*ಚೌಕಟ್ಟುಗಳು_get_constraints)(AVHWDeviceContext *ctx,
+                                               ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *hwconfig,
                                                AVHWFramesConstraints *constraints);
 
-    int              (*frames_init)(AVHWFramesContext *ctx);
-    void             (*frames_uninit)(AVHWFramesContext *ctx);
+    ಪೂರ್ಣಾಂಕ              (*ಚೌಕಟ್ಟುಗಳು_init)(AVHWFramesContext *ctx);
+    ಶೂನ್ಯ             (*ಚೌಕಟ್ಟುಗಳು_uninit)(AVHWFramesContext *ctx);
 
-    int              (*frames_get_buffer)(AVHWFramesContext *ctx, AVFrame *frame);
+    ಪೂರ್ಣಾಂಕ              (*ಚೌಕಟ್ಟುಗಳು_get_ಬಫರ್)(AVHWFramesContext *ctx, AVFrame *ಚೌಕಟ್ಟು);
 
     /**
      * Allocate a buffer of size bytes for av_hwframe_get_transfer_buffer(),
@@ -79,108 +79,108 @@ typedef struct HWContextType {
      *
      * @param device_ref the AVBufferRef of the AVHWDeviceContext
      */
-    AVBufferRef     *(*transfer_buffer_alloc)(void *device_ref, size_t size);
-    int              (*transfer_get_formats)(AVHWFramesContext *ctx,
-                                             enum AVHWFrameTransferDirection dir,
-                                             enum AVPixelFormat **formats);
-    int              (*transfer_data_to)(AVHWFramesContext *ctx, AVFrame *dst,
-                                         const AVFrame *src);
-    int              (*transfer_data_from)(AVHWFramesContext *ctx, AVFrame *dst,
-                                           const AVFrame *src);
+    AVBufferRef     *(*transfer_ಬಫರ್_alloc)(ಶೂನ್ಯ *device_ref, size_t ಗಾತ್ರ_2);
+    ಪೂರ್ಣಾಂಕ              (*transfer_get_formats)(AVHWFramesContext *ctx,
+                                             ಎಣಿಕೆ AVHWFrameTransferDirection dir,
+                                             ಎಣಿಕೆ AVPixelFormat **formats);
+    ಪೂರ್ಣಾಂಕ              (*transfer_ದತ್ತಾಂಶ_ಗಮ್ಯ)(AVHWFramesContext *ctx, AVFrame *dst,
+                                         ಸ್ಥಿರಾಂಕ AVFrame *src);
+    ಪೂರ್ಣಾಂಕ              (*transfer_ದತ್ತಾಂಶ_from)(AVHWFramesContext *ctx, AVFrame *dst,
+                                           ಸ್ಥಿರಾಂಕ AVFrame *src);
 
-    int              (*map_to)(AVHWFramesContext *ctx, AVFrame *dst,
-                               const AVFrame *src, int flags);
-    int              (*map_from)(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src, int flags);
+    ಪೂರ್ಣಾಂಕ              (*map_ಗಮ್ಯ)(AVHWFramesContext *ctx, AVFrame *dst,
+                               ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags);
+    ಪೂರ್ಣಾಂಕ              (*map_from)(AVHWFramesContext *ctx, AVFrame *dst,
+                                 ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ flags);
 
-    int              (*frames_derive_to)(AVHWFramesContext *dst_ctx,
-                                         AVHWFramesContext *src_ctx, int flags);
-    int              (*frames_derive_from)(AVHWFramesContext *dst_ctx,
-                                           AVHWFramesContext *src_ctx, int flags);
+    ಪೂರ್ಣಾಂಕ              (*ಚೌಕಟ್ಟುಗಳು_derive_ಗಮ್ಯ)(AVHWFramesContext *dst_ctx,
+                                         AVHWFramesContext *src_ctx, ಪೂರ್ಣಾಂಕ flags);
+    ಪೂರ್ಣಾಂಕ              (*ಚೌಕಟ್ಟುಗಳು_derive_from)(AVHWFramesContext *dst_ctx,
+                                           AVHWFramesContext *src_ctx, ಪೂರ್ಣಾಂಕ flags);
 } HWContextType;
 
-typedef struct FFHWFramesContext {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ FFHWFramesContext {
     /**
      * The public AVHWFramesContext. See hwcontext.h for it.
      */
     AVHWFramesContext p;
 
-    const HWContextType *hw_type;
+    ಸ್ಥಿರಾಂಕ HWContextType *hw_type;
 
-    AVBufferPool *pool_internal;
+    AVBufferPool *pool_ಆಂತರಿಕ;
 
     /**
      * Buffers of transfer_pool_size bytes for av_hwframe_get_transfer_buffer(),
      * both guarded by transfer_pool_lock.
      */
     AVBufferPool *transfer_pool;
-    size_t        transfer_pool_size;
-    AVMutex       transfer_pool_lock;
+    size_t        transfer_pool_ಗಾತ್ರ;
+    AVMutex       transfer_pool_ಬೀಗ;
 
     /**
      * For a derived context, a reference to the original frames
      * context it was derived from.
      */
-    AVBufferRef *source_frames;
+    AVBufferRef *ಮೂಲ_ಚೌಕಟ್ಟುಗಳು;
     /**
      * Flags to apply to the mapping from the source to the derived
      * frame context when trying to allocate in the derived context.
      */
-    int source_allocation_map_flags;
+    ಪೂರ್ಣಾಂಕ ಮೂಲ_ಹಂಚಿಕೆ_map_flags;
 } FFHWFramesContext;
 
-static inline FFHWFramesContext *ffhwframesctx(AVHWFramesContext *ctx)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ FFHWFramesContext *ffhwframesctx(AVHWFramesContext *ctx)
 {
-    return (FFHWFramesContext*)ctx;
+    ಹಿಂತಿರುಗಿ (FFHWFramesContext*)ctx;
 }
 
-typedef struct HWMapDescriptor {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ HWMapDescriptor {
     /**
      * A reference to the original source of the mapping.
      */
-    AVFrame *source;
+    AVFrame *ಮೂಲ;
     /**
      * A reference to the hardware frames context in which this
      * mapping was made.  May be the same as source->hw_frames_ctx,
      * but need not be.
      */
-    AVBufferRef *hw_frames_ctx;
+    AVBufferRef *hw_ಚೌಕಟ್ಟುಗಳು_ctx;
     /**
      * Unmap function.
      */
-    void (*unmap)(AVHWFramesContext *ctx,
-                  struct HWMapDescriptor *hwmap);
+    ಶೂನ್ಯ (*unmap)(AVHWFramesContext *ctx,
+                  ರಚನೆ HWMapDescriptor *hwmap);
     /**
      * Hardware-specific private data associated with the mapping.
      */
-    void          *priv;
+    ಶೂನ್ಯ          *priv;
 } HWMapDescriptor;
 
-int ff_hwframe_map_create(AVBufferRef *hwframe_ref,
-                          AVFrame *dst, const AVFrame *src,
-                          void (*unmap)(AVHWFramesContext *ctx,
+ಪೂರ್ಣಾಂಕ ff_hwframe_map_create(AVBufferRef *hwframe_ref,
+                          AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src,
+                          ಶೂನ್ಯ (*unmap)(AVHWFramesContext *ctx,
                                         HWMapDescriptor *hwmap),
-                          void *priv);
+                          ಶೂನ್ಯ *priv);
 
 /**
  * Replace the current hwmap of dst with the one from src, used for indirect
  * mappings like VAAPI->(DRM)->OpenCL/Vulkan where a direct interop is missing
  */
-int ff_hwframe_map_replace(AVFrame *dst, const AVFrame *src);
+ಪೂರ್ಣಾಂಕ ff_hwframe_map_replace(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src);
 
-extern const HWContextType ff_hwcontext_type_cuda;
-extern const HWContextType ff_hwcontext_type_d3d11va;
-extern const HWContextType ff_hwcontext_type_d3d12va;
-extern const HWContextType ff_hwcontext_type_drm;
-extern const HWContextType ff_hwcontext_type_dxva2;
-extern const HWContextType ff_hwcontext_type_opencl;
-extern const HWContextType ff_hwcontext_type_qsv;
-extern const HWContextType ff_hwcontext_type_vaapi;
-extern const HWContextType ff_hwcontext_type_vdpau;
-extern const HWContextType ff_hwcontext_type_videotoolbox;
-extern const HWContextType ff_hwcontext_type_mediacodec;
-extern const HWContextType ff_hwcontext_type_vulkan;
-extern const HWContextType ff_hwcontext_type_amf;
-extern const HWContextType ff_hwcontext_type_oh;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_cuda;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_d3d11va;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_d3d12va;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_drm;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_dxva2;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_opencl;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_qsv;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_vaapi;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_vdpau;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_videotoolbox;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_mediacodec;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_vulkan;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_amf;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ HWContextType ff_hwcontext_type_oh;
 
-#endif /* AVUTIL_HWCONTEXT_INTERNAL_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_HWCONTEXT_INTERNAL_H */

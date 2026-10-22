@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AARCH64_CPU_H
-#define AVUTIL_AARCH64_CPU_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_AARCH64_CPU_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_AARCH64_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu_internal.h"
 
-#define have_armv8(flags)   CPUEXT(flags, ARMV8)
-#define have_neon(flags)    CPUEXT(flags, NEON)
-#define have_vfp(flags)     CPUEXT(flags, VFP)
-#define have_arm_crc(flags) CPUEXT(flags, ARM_CRC)
-#define have_arm_aes(flags) CPUEXT(flags, ARM_AES)
-#define have_pmull(flags)   CPUEXT(flags, PMULL)
-#define have_eor3(flags)    CPUEXT(flags, EOR3)
-#define have_dotprod(flags) CPUEXT(flags, DOTPROD)
-#define have_i8mm(flags)    CPUEXT(flags, I8MM)
-#define have_sve(flags)     CPUEXT(flags, SVE)
-#define have_sve2(flags)    CPUEXT(flags, SVE2)
-#define have_sme(flags)     CPUEXT(flags, SME)
-#define have_sme_i16i64(flags) CPUEXT(flags, SME_I16I64)
-#define have_sme2(flags)    CPUEXT(flags, SME2)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_armv8(flags)   CPUEXT(flags, ARMV8)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_neon(flags)    CPUEXT(flags, NEON)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_vfp(flags)     CPUEXT(flags, VFP)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_arm_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ(flags) CPUEXT(flags, ARM_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_arm_aes(flags) CPUEXT(flags, ARM_AES)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_pmull(flags)   CPUEXT(flags, PMULL)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_eor3(flags)    CPUEXT(flags, EOR3)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_dotprod(flags) CPUEXT(flags, DOTPROD)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_i8mm(flags)    CPUEXT(flags, I8MM)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_sve(flags)     CPUEXT(flags, SVE)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_sve2(flags)    CPUEXT(flags, SVE2)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_sme(flags)     CPUEXT(flags, SME)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_sme_i16i64(flags) CPUEXT(flags, SME_I16I64)
+#ವ್ಯಾಖ್ಯಾನಿಸು have_sme2(flags)    CPUEXT(flags, SME2)
 
-#if HAVE_SVE
-int ff_aarch64_sve_length(void);
-#endif
+#ಆದರೆ HAVE_SVE
+ಪೂರ್ಣಾಂಕ ff_aarch64_sve_ಉದ್ದಳತೆ(ಶೂನ್ಯ);
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if HAVE_SME
-int ff_aarch64_sme_length(void);
-#endif
+#ಆದರೆ HAVE_SME
+ಪೂರ್ಣಾಂಕ ff_aarch64_sme_ಉದ್ದಳತೆ(ಶೂನ್ಯ);
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif /* AVUTIL_AARCH64_CPU_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_AARCH64_CPU_H */

@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_DES_H
-#define AVUTIL_DES_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_DES_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_DES_H
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
 /**
  * @defgroup lavu_des DES
@@ -30,15 +30,15 @@
  * @{
  */
 
-typedef struct AVDES {
-    uint64_t round_keys[3][16];
-    int triple_des;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDES {
+    uint64_t ಸುತ್ತು_ಕೀಲಿಗಳು[3][16];
+    ಪೂರ್ಣಾಂಕ triple_des;
 } AVDES;
 
 /**
  * Allocate an AVDES context.
  */
-AVDES *av_des_alloc(void);
+AVDES *av_des_alloc(ಶೂನ್ಯ);
 
 /**
  * @brief Initializes an AVDES context.
@@ -49,7 +49,7 @@ AVDES *av_des_alloc(void);
  * @param decrypt 0 for encryption/CBC-MAC, 1 for decryption
  * @return zero on success, negative value otherwise
  */
-int av_des_init(struct AVDES *d, const uint8_t *key, int key_bits, int decrypt);
+ಪೂರ್ಣಾಂಕ av_des_init(ರಚನೆ AVDES *d, ಸ್ಥಿರಾಂಕ uint8_t *ಕೀಲಿ, ಪೂರ್ಣಾಂಕ ಕೀಲಿ_ಬಿಟ್ಟುಗಳು, ಪೂರ್ಣಾಂಕ decrypt);
 
 /**
  * @brief Encrypts / decrypts using the DES algorithm.
@@ -62,7 +62,7 @@ int av_des_init(struct AVDES *d, const uint8_t *key, int key_bits, int decrypt);
  *           must be 8-byte aligned
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_des_crypt(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+ಶೂನ್ಯ av_des_crypt(ರಚನೆ AVDES *d, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src, ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2, uint8_t *iv, ಪೂರ್ಣಾಂಕ decrypt);
 
 /**
  * @brief Calculates CBC-MAC using the DES algorithm.
@@ -72,10 +72,10 @@ void av_des_crypt(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count, 
  * @param src source array, can be equal to dst, must be 8-byte aligned, may be NULL
  * @param count number of 8 byte blocks
  */
-void av_des_mac(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count);
+ಶೂನ್ಯ av_des_mac(ರಚನೆ AVDES *d, uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src, ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_DES_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_DES_H */

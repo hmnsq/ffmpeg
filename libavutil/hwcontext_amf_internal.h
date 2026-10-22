@@ -17,29 +17,29 @@
  */
 
 
-#ifndef AVUTIL_HWCONTEXT_AMF_INTERNAL_H
-#define AVUTIL_HWCONTEXT_AMF_INTERNAL_H
-#include <AMF/core/Factory.h>
-#include <AMF/core/Context.h>
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_HWCONTEXT_AMF_ಆಂತರಿಕ_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_HWCONTEXT_AMF_ಆಂತರಿಕ_H
+#ಅನ್ತರ್ಭಾವ <AMF/core/Factory.h>
+#ಅನ್ತರ್ಭಾವ <AMF/core/Context.h>
 
 /**
 * Error handling helper
 */
-#define AMF_RETURN_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#ವ್ಯಾಖ್ಯಾನಿಸು AMF_RETURN_IF_FALSE(avctx, ಘಾತಾಂಕ, ret_ಮೌಲ್ಯ, /*message,*/ ...) \
+    ಆದರೆ (!(ಘಾತಾಂಕ)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        return ret_value; \
+        ಹಿಂತಿರುಗಿ ret_ಮೌಲ್ಯ; \
     }
 
-#define AMF_GOTO_FAIL_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#ವ್ಯಾಖ್ಯಾನಿಸು AMF_GOTO_FAIL_IF_FALSE(avctx, ಘಾತಾಂಕ, ret_ಮೌಲ್ಯ, /*message,*/ ...) \
+    ಆದರೆ (!(ಘಾತಾಂಕ)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        ret = ret_value; \
-        goto fail; \
+        ret = ret_ಮೌಲ್ಯ; \
+        ಹೋಗು fail; \
     }
 
-#define AMF_TIME_BASE_Q          (AVRational){1, AMF_SECOND}
+#ವ್ಯಾಖ್ಯಾನಿಸು AMF_ಸಮಯ_ತಳ_Q          (AVRational){1, AMF_ಎರಡನೇ}
 
-#define AMF_IFACE_CALL(this, function, ...) ((this)->pVtbl->function((this), ##__VA_ARGS__))
+#ವ್ಯಾಖ್ಯಾನಿಸು AMF_IFACE_CALL(this, function, ...) ((this)->pVtbl->function((this), ##__VA_ARGS__))
 
-#endif /* AVUTIL_HWCONTEXT_AMF_INTERNAL_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_HWCONTEXT_AMF_INTERNAL_H */

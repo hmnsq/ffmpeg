@@ -16,58 +16,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "detection_bbox.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ "detection_bbox.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
-AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size)
+AVDetection_BBox_ಶೀರ್ಷಿಕೆ *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *ಹೊರಹೋಗು_ಗಾತ್ರ)
 {
-    size_t size;
-    struct BBoxContext {
-        AVDetectionBBoxHeader header;
+    size_t ಗಾತ್ರ_2;
+    ರಚನೆ BBoxContext {
+        AVDetection_BBox_ಶೀರ್ಷಿಕೆ ಶೀರ್ಷಿಕೆ;
         AVDetectionBBox boxes;
     };
-    const size_t bboxes_offset = offsetof(struct BBoxContext, boxes);
-    const size_t bbox_size = sizeof(AVDetectionBBox);
-    AVDetectionBBoxHeader *header;
+    ಸ್ಥಿರಾಂಕ size_t bboxes_ಸ್ಥಾನಾಂತರ = offsetof(ರಚನೆ BBoxContext, boxes);
+    ಸ್ಥಿರಾಂಕ size_t bbox_ಗಾತ್ರ = ಗಾತ್ರ(AVDetectionBBox);
+    AVDetection_BBox_ಶೀರ್ಷಿಕೆ *ಶೀರ್ಷಿಕೆ;
 
-    size = bboxes_offset;
-    if (nb_bboxes > (SIZE_MAX - size) / bbox_size)
-        return NULL;
-    size += bbox_size * nb_bboxes;
+    ಗಾತ್ರ_2 = bboxes_ಸ್ಥಾನಾಂತರ;
+    ಆದರೆ (nb_bboxes > (SIZE_MAX - ಗಾತ್ರ_2) / bbox_ಗಾತ್ರ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ಗಾತ್ರ_2 += bbox_ಗಾತ್ರ * nb_bboxes;
 
-    header = av_mallocz(size);
-    if (!header)
-        return NULL;
+    ಶೀರ್ಷಿಕೆ = av_mallocz(ಗಾತ್ರ_2);
+    ಆದರೆ (!ಶೀರ್ಷಿಕೆ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    header->nb_bboxes     = nb_bboxes;
-    header->bbox_size     = bbox_size;
-    header->bboxes_offset = bboxes_offset;
+    ಶೀರ್ಷಿಕೆ->nb_bboxes     = nb_bboxes;
+    ಶೀರ್ಷಿಕೆ->bbox_ಗಾತ್ರ     = bbox_ಗಾತ್ರ;
+    ಶೀರ್ಷಿಕೆ->bboxes_ಸ್ಥಾನಾಂತರ = bboxes_ಸ್ಥಾನಾಂತರ;
 
-    if (out_size)
-        *out_size = size;
+    ಆದರೆ (ಹೊರಹೋಗು_ಗಾತ್ರ)
+        *ಹೊರಹೋಗು_ಗಾತ್ರ = ಗಾತ್ರ_2;
 
-    return header;
+    ಹಿಂತಿರುಗಿ ಶೀರ್ಷಿಕೆ;
 }
 
-AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes)
+AVDetection_BBox_ಶೀರ್ಷಿಕೆ *av_detection_bbox_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು, uint32_t nb_bboxes)
 {
     AVBufferRef         *buf;
-    AVDetectionBBoxHeader *header;
-    size_t size;
+    AVDetection_BBox_ಶೀರ್ಷಿಕೆ *ಶೀರ್ಷಿಕೆ;
+    size_t ಗಾತ್ರ_2;
 
-    header = av_detection_bbox_alloc(nb_bboxes, &size);
-    if (!header)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)header, size, NULL, NULL, 0);
-    if (!buf) {
-        av_freep(&header);
-        return NULL;
+    ಶೀರ್ಷಿಕೆ = av_detection_bbox_alloc(nb_bboxes, &ಗಾತ್ರ_2);
+    ಆದರೆ (!ಶೀರ್ಷಿಕೆ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    buf = av_ಬಫರ್_create((uint8_t *)ಶೀರ್ಷಿಕೆ, ಗಾತ್ರ_2, ಖಾಲಿ, ಖಾಲಿ, 0);
+    ಆದರೆ (!buf) {
+        av_freep(&ಶೀರ್ಷಿಕೆ);
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    ಆದರೆ (!av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ_from_buf(ಚೌಕಟ್ಟು, AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_DETECTION_BBOXES, buf)) {
+        av_ಬಫರ್_unref(&buf);
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    return header;
+    ಹಿಂತಿರುಗಿ ಶೀರ್ಷಿಕೆ;
 }

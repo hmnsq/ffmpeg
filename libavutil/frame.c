@@ -16,227 +16,227 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "channel_layout.h"
-#include "avassert.h"
-#include "buffer.h"
-#include "dict.h"
-#include "frame.h"
-#include "frame_internal.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "refstruct.h"
-#include "samplefmt.h"
-#include "side_data.h"
-#include "hwcontext.h"
+#ಅನ್ತರ್ಭಾವ "channel_layout.h"
+#ಅನ್ತರ್ಭಾವ "avassert.h"
+#ಅನ್ತರ್ಭಾವ "buffer.h"
+#ಅನ್ತರ್ಭಾವ "dict.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
+#ಅನ್ತರ್ಭಾವ "frame_internal.h"
+#ಅನ್ತರ್ಭಾವ "imgutils.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "refstruct.h"
+#ಅನ್ತರ್ಭಾವ "samplefmt.h"
+#ಅನ್ತರ್ಭಾವ "side_data.h"
+#ಅನ್ತರ್ಭಾವ "hwcontext.h"
 
-static void get_frame_defaults(AVFrame *frame)
+ಸ್ಥಿರ ಶೂನ್ಯ get_ಚೌಕಟ್ಟು_defaults(AVFrame *ಚೌಕಟ್ಟು)
 {
-    memset(frame, 0, sizeof(*frame));
+    memset(ಚೌಕಟ್ಟು, 0, ಗಾತ್ರ(*ಚೌಕಟ್ಟು));
 
-    frame->pts                   =
-    frame->pkt_dts               = AV_NOPTS_VALUE;
-    frame->best_effort_timestamp = AV_NOPTS_VALUE;
-    frame->duration            = 0;
-    frame->time_base           = (AVRational){ 0, 1 };
-    frame->sample_aspect_ratio = (AVRational){ 0, 1 };
-    frame->format              = -1; /* unknown */
-    frame->extended_data       = frame->data;
-    frame->color_primaries     = AVCOL_PRI_UNSPECIFIED;
-    frame->color_trc           = AVCOL_TRC_UNSPECIFIED;
-    frame->colorspace          = AVCOL_SPC_UNSPECIFIED;
-    frame->color_range         = AVCOL_RANGE_UNSPECIFIED;
-    frame->chroma_location     = AVCHROMA_LOC_UNSPECIFIED;
-    frame->alpha_mode          = AVALPHA_MODE_UNSPECIFIED;
-    frame->flags               = 0;
+    ಚೌಕಟ್ಟು->pts                   =
+    ಚೌಕಟ್ಟು->pkt_dts               = AV_NOPTS_ಮೌಲ್ಯ;
+    ಚೌಕಟ್ಟು->ಉತ್ತಮ_effort_timestamp = AV_NOPTS_ಮೌಲ್ಯ;
+    ಚೌಕಟ್ಟು->duration            = 0;
+    ಚೌಕಟ್ಟು->ಸಮಯ_ತಳ           = (AVRational){ 0, 1 };
+    ಚೌಕಟ್ಟು->sample_aspect_ಅನುಪಾತ = (AVRational){ 0, 1 };
+    ಚೌಕಟ್ಟು->format              = -1; /* unknown */
+    ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ       = ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ;
+    ಚೌಕಟ್ಟು->color_primaries     = AVCOL_PRI_UNSPECIFIED;
+    ಚೌಕಟ್ಟು->color_trc           = AVCOL_TRC_UNSPECIFIED;
+    ಚೌಕಟ್ಟು->colorspace          = AVCOL_SPC_UNSPECIFIED;
+    ಚೌಕಟ್ಟು->color_range         = AVCOL_RANGE_UNSPECIFIED;
+    ಚೌಕಟ್ಟು->chroma_location     = AVCHROMA_LOC_UNSPECIFIED;
+    ಚೌಕಟ್ಟು->alpha_ಬಹುಲಕ          = AVALPHA_ಬಹುಲಕ_UNSPECIFIED;
+    ಚೌಕಟ್ಟು->flags               = 0;
 }
 
-AVFrame *av_frame_alloc(void)
+AVFrame *av_ಚೌಕಟ್ಟು_alloc(ಶೂನ್ಯ)
 {
-    AVFrame *frame = av_malloc(sizeof(*frame));
+    AVFrame *ಚೌಕಟ್ಟು = av_malloc(ಗಾತ್ರ(*ಚೌಕಟ್ಟು));
 
-    if (!frame)
-        return NULL;
+    ಆದರೆ (!ಚೌಕಟ್ಟು)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    get_frame_defaults(frame);
+    get_ಚೌಕಟ್ಟು_defaults(ಚೌಕಟ್ಟು);
 
-    return frame;
+    ಹಿಂತಿರುಗಿ ಚೌಕಟ್ಟು;
 }
 
-void av_frame_free(AVFrame **frame)
+ಶೂನ್ಯ av_ಚೌಕಟ್ಟು_free(AVFrame **ಚೌಕಟ್ಟು)
 {
-    if (!frame || !*frame)
-        return;
+    ಆದರೆ (!ಚೌಕಟ್ಟು || !*ಚೌಕಟ್ಟು)
+        ಹಿಂತಿರುಗಿ;
 
-    av_frame_unref(*frame);
-    av_freep(frame);
+    av_ಚೌಕಟ್ಟು_unref(*ಚೌಕಟ್ಟು);
+    av_freep(ಚೌಕಟ್ಟು);
 }
 
-#define ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
+#ವ್ಯಾಖ್ಯಾನಿಸು ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
 
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
-                              AVBufferRef *(*alloc)(void *opaque, size_t size),
-                              void *opaque)
+ಪೂರ್ಣಾಂಕ ff_ಚೌಕಟ್ಟು_get_video_ಬಫರ್(AVFrame *ಚೌಕಟ್ಟು, ಪೂರ್ಣಾಂಕ align,
+                              AVBufferRef *(*alloc)(ಶೂನ್ಯ *opaque, size_t ಗಾತ್ರ_2),
+                              ಶೂನ್ಯ *opaque)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
-    int ret, padded_height;
-    int plane_padding;
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(ಚೌಕಟ್ಟು->format);
+    ಪೂರ್ಣಾಂಕ ret, padded_ಎತ್ತರ;
+    ಪೂರ್ಣಾಂಕ plane_padding;
     ptrdiff_t linesizes[4];
-    size_t total_size, sizes[4];
+    size_t ಒಟ್ಟು_ಗಾತ್ರ, sizes[4];
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    ಆದರೆ (!desc)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    if ((ret = av_image_check_size(frame->width, frame->height, 0, NULL)) < 0)
-        return ret;
+    ಆದರೆ ((ret = av_image_check_ಗಾತ್ರ(ಚೌಕಟ್ಟು->ಅಗಲ, ಚೌಕಟ್ಟು->ಎತ್ತರ, 0, ಖಾಲಿ)) < 0)
+        ಹಿಂತಿರುಗಿ ret;
 
-    if (align <= 0)
+    ಆದರೆ (align <= 0)
         align = ALIGN;
     plane_padding = FFMAX(ALIGN, align);
 
-    if (!frame->linesize[0]) {
-        for (int i = 1; i <= align; i += i) {
-            ret = av_image_fill_linesizes(frame->linesize, frame->format,
-                                          FFALIGN(frame->width, i));
-            if (ret < 0)
-                return ret;
-            if (!(frame->linesize[0] & (align-1)))
-                break;
+    ಆದರೆ (!ಚೌಕಟ್ಟು->linesize[0]) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 1; i <= align; i += i) {
+            ret = av_image_fill_linesizes(ಚೌಕಟ್ಟು->linesize, ಚೌಕಟ್ಟು->format,
+                                          FFALIGN(ಚೌಕಟ್ಟು->ಅಗಲ, i));
+            ಆದರೆ (ret < 0)
+                ಹಿಂತಿರುಗಿ ret;
+            ಆದರೆ (!(ಚೌಕಟ್ಟು->linesize[0] & (align-1)))
+                ನಿಲ್ಲಿಸು;
         }
 
-        for (int i = 0; i < 4 && frame->linesize[i]; i++)
-            frame->linesize[i] = FFALIGN(frame->linesize[i], align);
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < 4 && ಚೌಕಟ್ಟು->linesize[i]; i++)
+            ಚೌಕಟ್ಟು->linesize[i] = FFALIGN(ಚೌಕಟ್ಟು->linesize[i], align);
     }
 
-    for (int i = 0; i < 4; i++)
-        linesizes[i] = frame->linesize[i];
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < 4; i++)
+        linesizes[i] = ಚೌಕಟ್ಟು->linesize[i];
 
-    padded_height = FFALIGN(frame->height, 32);
-    if ((ret = av_image_fill_plane_sizes(sizes, frame->format,
-                                         padded_height, linesizes)) < 0)
-        return ret;
+    padded_ಎತ್ತರ = FFALIGN(ಚೌಕಟ್ಟು->ಎತ್ತರ, 32);
+    ಆದರೆ ((ret = av_image_fill_plane_sizes(sizes, ಚೌಕಟ್ಟು->format,
+                                         padded_ಎತ್ತರ, linesizes)) < 0)
+        ಹಿಂತಿರುಗಿ ret;
 
-    total_size = 4 * plane_padding + 4 * align;
-    for (int i = 0; i < 4; i++) {
-        if (sizes[i] > SIZE_MAX - total_size)
-            return AVERROR(EINVAL);
-        total_size += sizes[i];
+    ಒಟ್ಟು_ಗಾತ್ರ = 4 * plane_padding + 4 * align;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < 4; i++) {
+        ಆದರೆ (sizes[i] > SIZE_MAX - ಒಟ್ಟು_ಗಾತ್ರ)
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
+        ಒಟ್ಟು_ಗಾತ್ರ += sizes[i];
     }
 
-    frame->buf[0] = alloc ? alloc(opaque, total_size) : av_buffer_alloc(total_size);
-    if (!frame->buf[0]) {
+    ಚೌಕಟ್ಟು->buf[0] = alloc ? alloc(opaque, ಒಟ್ಟು_ಗಾತ್ರ) : av_ಬಫರ್_alloc(ಒಟ್ಟು_ಗಾತ್ರ);
+    ಆದರೆ (!ಚೌಕಟ್ಟು->buf[0]) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
 
-    if ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
-                                      frame->buf[0]->data, frame->linesize)) < 0)
-        goto fail;
+    ಆದರೆ ((ret = av_image_fill_ಸೂಚಕಗಳು(ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ, ಚೌಕಟ್ಟು->format, padded_ಎತ್ತರ,
+                                      ಚೌಕಟ್ಟು->buf[0]->ದತ್ತಾಂಶ, ಚೌಕಟ್ಟು->linesize)) < 0)
+        ಹೋಗು fail;
 
-    for (int i = 1; i < 4; i++) {
-        if (frame->data[i])
-            frame->data[i] += i * plane_padding;
-        frame->data[i] = (uint8_t *)FFALIGN((uintptr_t)frame->data[i], align);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 1; i < 4; i++) {
+        ಆದರೆ (ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i])
+            ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i] += i * plane_padding;
+        ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i] = (uint8_t *)FFALIGN((uintptr_t)ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i], align);
     }
 
-    frame->extended_data = frame->data;
+    ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ = ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 fail:
-    av_frame_unref(frame);
-    return ret;
+    av_ಚೌಕಟ್ಟು_unref(ಚೌಕಟ್ಟು);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static int get_audio_buffer(AVFrame *frame, int align)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ get_audio_ಬಫರ್(AVFrame *ಚೌಕಟ್ಟು, ಪೂರ್ಣಾಂಕ align)
 {
-    int planar   = av_sample_fmt_is_planar(frame->format);
-    int channels, planes;
-    size_t size;
-    int ret;
+    ಪೂರ್ಣಾಂಕ planar   = av_sample_fmt_is_planar(ಚೌಕಟ್ಟು->format);
+    ಪೂರ್ಣಾಂಕ channels, planes;
+    size_t ಗಾತ್ರ_2;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    channels = frame->ch_layout.nb_channels;
+    channels = ಚೌಕಟ್ಟು->ch_layout.nb_channels;
     planes   = planar ? channels : 1;
-    if (!frame->linesize[0]) {
-        ret = av_samples_get_buffer_size(&frame->linesize[0], channels,
-                                         frame->nb_samples, frame->format,
+    ಆದರೆ (!ಚೌಕಟ್ಟು->linesize[0]) {
+        ret = av_samples_get_ಬಫರ್_ಗಾತ್ರ(&ಚೌಕಟ್ಟು->linesize[0], channels,
+                                         ಚೌಕಟ್ಟು->nb_samples, ಚೌಕಟ್ಟು->format,
                                          align);
-        if (ret < 0)
-            return ret;
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ ret;
     }
 
-    if (align <= 0)
+    ಆದರೆ (align <= 0)
         align = ALIGN;
 
-    if (planes > AV_NUM_DATA_POINTERS) {
-        frame->extended_data = av_calloc(planes,
-                                          sizeof(*frame->extended_data));
-        frame->extended_buf  = av_calloc(planes - AV_NUM_DATA_POINTERS,
-                                          sizeof(*frame->extended_buf));
-        if (!frame->extended_data || !frame->extended_buf) {
-            av_freep(&frame->extended_data);
-            av_freep(&frame->extended_buf);
-            return AVERROR(ENOMEM);
+    ಆದರೆ (planes > AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು) {
+        ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ = av_calloc(planes,
+                                          ಗಾತ್ರ(*ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ));
+        ಚೌಕಟ್ಟು->extended_buf  = av_calloc(planes - AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು,
+                                          ಗಾತ್ರ(*ಚೌಕಟ್ಟು->extended_buf));
+        ಆದರೆ (!ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ || !ಚೌಕಟ್ಟು->extended_buf) {
+            av_freep(&ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ);
+            av_freep(&ಚೌಕಟ್ಟು->extended_buf);
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
         }
-        frame->nb_extended_buf = planes - AV_NUM_DATA_POINTERS;
-    } else
-        frame->extended_data = frame->data;
+        ಚೌಕಟ್ಟು->nb_extended_buf = planes - AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು;
+    } ಇಲ್ಲದಿದ್ದರೆ
+        ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ = ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ;
 
-    if (frame->linesize[0] > SIZE_MAX - align)
-        return AVERROR(EINVAL);
-    size = frame->linesize[0] + (size_t)align;
+    ಆದರೆ (ಚೌಕಟ್ಟು->linesize[0] > SIZE_MAX - align)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
+    ಗಾತ್ರ_2 = ಚೌಕಟ್ಟು->linesize[0] + (size_t)align;
 
-    for (int i = 0; i < FFMIN(planes, AV_NUM_DATA_POINTERS); i++) {
-        frame->buf[i] = av_buffer_alloc(size);
-        if (!frame->buf[i]) {
-            av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FFMIN(planes, AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು); i++) {
+        ಚೌಕಟ್ಟು->buf[i] = av_ಬಫರ್_alloc(ಗಾತ್ರ_2);
+        ಆದರೆ (!ಚೌಕಟ್ಟು->buf[i]) {
+            av_ಚೌಕಟ್ಟು_unref(ಚೌಕಟ್ಟು);
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
         }
-        frame->extended_data[i] = frame->data[i] =
-            (uint8_t *)FFALIGN((uintptr_t)frame->buf[i]->data, align);
+        ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ[i] = ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i] =
+            (uint8_t *)FFALIGN((uintptr_t)ಚೌಕಟ್ಟು->buf[i]->ದತ್ತಾಂಶ, align);
     }
-    for (int i = 0; i < planes - AV_NUM_DATA_POINTERS; i++) {
-        frame->extended_buf[i] = av_buffer_alloc(size);
-        if (!frame->extended_buf[i]) {
-            av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes - AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು; i++) {
+        ಚೌಕಟ್ಟು->extended_buf[i] = av_ಬಫರ್_alloc(ಗಾತ್ರ_2);
+        ಆದರೆ (!ಚೌಕಟ್ಟು->extended_buf[i]) {
+            av_ಚೌಕಟ್ಟು_unref(ಚೌಕಟ್ಟು);
+            ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
         }
-        frame->extended_data[i + AV_NUM_DATA_POINTERS] =
-            (uint8_t *)FFALIGN((uintptr_t)frame->extended_buf[i]->data, align);
+        ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ[i + AV_ಅಂಕೆ_ದತ್ತಾಂಶ_ಸೂಚಕಗಳು] =
+            (uint8_t *)FFALIGN((uintptr_t)ಚೌಕಟ್ಟು->extended_buf[i]->ದತ್ತಾಂಶ, align);
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 }
 
-int av_frame_get_buffer(AVFrame *frame, int align)
+ಪೂರ್ಣಾಂಕ av_ಚೌಕಟ್ಟು_get_ಬಫರ್(AVFrame *ಚೌಕಟ್ಟು, ಪೂರ್ಣಾಂಕ align)
 {
-    if (frame->format < 0)
-        return AVERROR(EINVAL);
+    ಆದರೆ (ಚೌಕಟ್ಟು->format < 0)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    if (frame->width > 0 && frame->height > 0)
-        return ff_frame_get_video_buffer(frame, align, NULL, NULL);
-    else if (frame->nb_samples > 0 &&
-             (av_channel_layout_check(&frame->ch_layout)))
-        return get_audio_buffer(frame, align);
+    ಆದರೆ (ಚೌಕಟ್ಟು->ಅಗಲ > 0 && ಚೌಕಟ್ಟು->ಎತ್ತರ > 0)
+        ಹಿಂತಿರುಗಿ ff_ಚೌಕಟ್ಟು_get_video_ಬಫರ್(ಚೌಕಟ್ಟು, align, ಖಾಲಿ, ಖಾಲಿ);
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಚೌಕಟ್ಟು->nb_samples > 0 &&
+             (av_channel_layout_check(&ಚೌಕಟ್ಟು->ch_layout)))
+        ಹಿಂತಿರುಗಿ get_audio_ಬಫರ್(ಚೌಕಟ್ಟು, align);
 
-    return AVERROR(EINVAL);
+    ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 }
 
-static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ ಚೌಕಟ್ಟು_copy_props(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src, ಪೂರ್ಣಾಂಕ force_copy)
 {
     dst->pict_type              = src->pict_type;
-    dst->sample_aspect_ratio    = src->sample_aspect_ratio;
-    dst->crop_top               = src->crop_top;
+    dst->sample_aspect_ಅನುಪಾತ    = src->sample_aspect_ಅನುಪಾತ;
+    dst->crop_ತುದಿ               = src->crop_ತುದಿ;
     dst->crop_bottom            = src->crop_bottom;
-    dst->crop_left              = src->crop_left;
-    dst->crop_right             = src->crop_right;
+    dst->crop_ಎಡ              = src->crop_ಎಡ;
+    dst->crop_ಬಲ             = src->crop_ಬಲ;
     dst->pts                    = src->pts;
     dst->duration               = src->duration;
     dst->repeat_pict            = src->repeat_pict;
-    dst->sample_rate            = src->sample_rate;
+    dst->sample_ದರ            = src->sample_ದರ;
     dst->opaque                 = src->opaque;
     dst->pkt_dts                = src->pkt_dts;
-    dst->time_base              = src->time_base;
+    dst->ಸಮಯ_ತಳ              = src->ಸಮಯ_ತಳ;
     dst->quality                = src->quality;
-    dst->best_effort_timestamp  = src->best_effort_timestamp;
+    dst->ಉತ್ತಮ_effort_timestamp  = src->ಉತ್ತಮ_effort_timestamp;
     dst->flags                  = src->flags;
     dst->decode_error_flags     = src->decode_error_flags;
     dst->color_primaries        = src->color_primaries;
@@ -244,587 +244,587 @@ static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
     dst->colorspace             = src->colorspace;
     dst->color_range            = src->color_range;
     dst->chroma_location        = src->chroma_location;
-    dst->alpha_mode             = src->alpha_mode;
+    dst->alpha_ಬಹುಲಕ             = src->alpha_ಬಹುಲಕ;
 
     av_dict_copy(&dst->metadata, src->metadata, 0);
 
-    for (int i = 0; i < src->nb_side_data; i++) {
-        const AVFrameSideData *sd_src = src->side_data[i];
-        AVFrameSideData *sd_dst;
-        if (   sd_src->type == AV_FRAME_DATA_PANSCAN
-            && (src->width != dst->width || src->height != dst->height))
-            continue;
-        if (force_copy) {
-            sd_dst = av_frame_new_side_data(dst, sd_src->type,
-                                            sd_src->size);
-            if (!sd_dst) {
-                av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < src->nb_side_ದತ್ತಾಂಶ; i++) {
+        ಸ್ಥಿರಾಂಕ AVFrame_Side_ದತ್ತಾಂಶ *sd_src = src->side_ದತ್ತಾಂಶ[i];
+        AVFrame_Side_ದತ್ತಾಂಶ *sd_dst;
+        ಆದರೆ (   sd_src->type == AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_PANSCAN
+            && (src->ಅಗಲ != dst->ಅಗಲ || src->ಎತ್ತರ != dst->ಎತ್ತರ))
+            ಮುಂದುವರಿ;
+        ಆದರೆ (force_copy) {
+            sd_dst = av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ(dst, sd_src->type,
+                                            sd_src->ಗಾತ್ರ_2);
+            ಆದರೆ (!sd_dst) {
+                av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_free(&dst->side_ದತ್ತಾಂಶ, &dst->nb_side_ದತ್ತಾಂಶ);
+                ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
             }
-            memcpy(sd_dst->data, sd_src->data, sd_src->size);
-        } else {
-            AVBufferRef *ref = av_buffer_ref(sd_src->buf);
-            sd_dst = av_frame_new_side_data_from_buf(dst, sd_src->type, ref);
-            if (!sd_dst) {
-                av_buffer_unref(&ref);
-                av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+            ಸ್ಮರಣೆ_ನಕಲು(sd_dst->ದತ್ತಾಂಶ, sd_src->ದತ್ತಾಂಶ, sd_src->ಗಾತ್ರ_2);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            AVBufferRef *ref = av_ಬಫರ್_ref(sd_src->buf);
+            sd_dst = av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ_from_buf(dst, sd_src->type, ref);
+            ಆದರೆ (!sd_dst) {
+                av_ಬಫರ್_unref(&ref);
+                av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_free(&dst->side_ದತ್ತಾಂಶ, &dst->nb_side_ದತ್ತಾಂಶ);
+                ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
             }
         }
         av_dict_copy(&sd_dst->metadata, sd_src->metadata, 0);
     }
 
-    av_refstruct_replace(&dst->private_ref, src->private_ref);
-    return av_buffer_replace(&dst->opaque_ref, src->opaque_ref);
+    av_refstruct_replace(&dst->ಖಾಸಗಿ_ref, src->ಖಾಸಗಿ_ref);
+    ಹಿಂತಿರುಗಿ av_ಬಫರ್_replace(&dst->opaque_ref, src->opaque_ref);
 }
 
-int av_frame_ref(AVFrame *dst, const AVFrame *src)
+ಪೂರ್ಣಾಂಕ av_ಚೌಕಟ್ಟು_ref(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    int ret = 0;
+    ಪೂರ್ಣಾಂಕ ret = 0;
 
-    av_assert1(dst->width == 0 && dst->height == 0);
+    av_assert1(dst->ಅಗಲ == 0 && dst->ಎತ್ತರ == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
-               dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
+               dst->ch_layout.ಕ್ರಮ == AV_CHANNEL_ಕ್ರಮ_UNSPEC);
 
     dst->format         = src->format;
-    dst->width          = src->width;
-    dst->height         = src->height;
+    dst->ಅಗಲ          = src->ಅಗಲ;
+    dst->ಎತ್ತರ         = src->ಎತ್ತರ;
     dst->nb_samples     = src->nb_samples;
 
-    ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    ret = ಚೌಕಟ್ಟು_copy_props(dst, src, 0);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
     /* duplicate the frame data if it's not refcounted */
-    if (!src->buf[0]) {
-        ret = av_frame_get_buffer(dst, 0);
-        if (ret < 0)
-            goto fail;
+    ಆದರೆ (!src->buf[0]) {
+        ret = av_ಚೌಕಟ್ಟು_get_ಬಫರ್(dst, 0);
+        ಆದರೆ (ret < 0)
+            ಹೋಗು fail;
 
-        ret = av_frame_copy(dst, src);
-        if (ret < 0)
-            goto fail;
+        ret = av_ಚೌಕಟ್ಟು_copy(dst, src);
+        ಆದರೆ (ret < 0)
+            ಹೋಗು fail;
 
-        return 0;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* ref the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        if (!src->buf[i])
-            continue;
-        dst->buf[i] = av_buffer_ref(src->buf[i]);
-        if (!dst->buf[i]) {
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        ಆದರೆ (!src->buf[i])
+            ಮುಂದುವರಿ;
+        dst->buf[i] = av_ಬಫರ್_ref(src->buf[i]);
+        ಆದರೆ (!dst->buf[i]) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ಹೋಗು fail;
         }
     }
 
-    if (src->extended_buf) {
+    ಆದರೆ (src->extended_buf) {
         dst->extended_buf = av_calloc(src->nb_extended_buf,
-                                      sizeof(*dst->extended_buf));
-        if (!dst->extended_buf) {
+                                      ಗಾತ್ರ(*dst->extended_buf));
+        ಆದರೆ (!dst->extended_buf) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ಹೋಗು fail;
         }
         dst->nb_extended_buf = src->nb_extended_buf;
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
-            dst->extended_buf[i] = av_buffer_ref(src->extended_buf[i]);
-            if (!dst->extended_buf[i]) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < src->nb_extended_buf; i++) {
+            dst->extended_buf[i] = av_ಬಫರ್_ref(src->extended_buf[i]);
+            ಆದರೆ (!dst->extended_buf[i]) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                ಹೋಗು fail;
             }
         }
     }
 
-    if (src->hw_frames_ctx) {
-        dst->hw_frames_ctx = av_buffer_ref(src->hw_frames_ctx);
-        if (!dst->hw_frames_ctx) {
+    ಆದರೆ (src->hw_ಚೌಕಟ್ಟುಗಳು_ctx) {
+        dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx = av_ಬಫರ್_ref(src->hw_ಚೌಕಟ್ಟುಗಳು_ctx);
+        ಆದರೆ (!dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ಹೋಗು fail;
         }
     }
 
     /* duplicate extended data */
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    ಆದರೆ (src->extended_ದತ್ತಾಂಶ != src->ದತ್ತಾಂಶ) {
+        ಪೂರ್ಣಾಂಕ ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        ಆದರೆ (ch <= 0 || ch > SIZE_MAX / ಗಾತ್ರ(*dst->extended_ದತ್ತಾಂಶ)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            ಹೋಗು fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_ದತ್ತಾಂಶ = av_memdup(src->extended_ದತ್ತಾಂಶ, ಗಾತ್ರ(*dst->extended_ದತ್ತಾಂಶ) * ch);
+        ಆದರೆ (!dst->extended_ದತ್ತಾಂಶ) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ಹೋಗು fail;
         }
-    } else
-        dst->extended_data = dst->data;
+    } ಇಲ್ಲದಿದ್ದರೆ
+        dst->extended_ದತ್ತಾಂಶ = dst->ದತ್ತಾಂಶ;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    ಸ್ಮರಣೆ_ನಕಲು(dst->ದತ್ತಾಂಶ,     src->ದತ್ತಾಂಶ,     ಗಾತ್ರ(src->ದತ್ತಾಂಶ));
+    ಸ್ಮರಣೆ_ನಕಲು(dst->linesize, src->linesize, ಗಾತ್ರ(src->linesize));
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    av_frame_unref(dst);
-    return ret;
+    av_ಚೌಕಟ್ಟು_unref(dst);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int av_frame_replace(AVFrame *dst, const AVFrame *src)
+ಪೂರ್ಣಾಂಕ av_ಚೌಕಟ್ಟು_replace(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    int ret = 0;
+    ಪೂರ್ಣಾಂಕ ret = 0;
 
-    if (dst == src)
-        return AVERROR(EINVAL);
+    ಆದರೆ (dst == src)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    if (!src->buf[0]) {
-        av_frame_unref(dst);
+    ಆದರೆ (!src->buf[0]) {
+        av_ಚೌಕಟ್ಟು_unref(dst);
 
         /* duplicate the frame data if it's not refcounted */
-        if (   src->data[0] || src->data[1]
-            || src->data[2] || src->data[3])
-            return av_frame_ref(dst, src);
+        ಆದರೆ (   src->ದತ್ತಾಂಶ[0] || src->ದತ್ತಾಂಶ[1]
+            || src->ದತ್ತಾಂಶ[2] || src->ದತ್ತಾಂಶ[3])
+            ಹಿಂತಿರುಗಿ av_ಚೌಕಟ್ಟು_ref(dst, src);
 
-        ret = frame_copy_props(dst, src, 0);
-        if (ret < 0)
-            goto fail;
+        ret = ಚೌಕಟ್ಟು_copy_props(dst, src, 0);
+        ಆದರೆ (ret < 0)
+            ಹೋಗು fail;
     }
 
     dst->format         = src->format;
-    dst->width          = src->width;
-    dst->height         = src->height;
+    dst->ಅಗಲ          = src->ಅಗಲ;
+    dst->ಎತ್ತರ         = src->ಎತ್ತರ;
     dst->nb_samples     = src->nb_samples;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
-    av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
+    av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_free(&dst->side_ದತ್ತಾಂಶ, &dst->nb_side_ದತ್ತಾಂಶ);
     av_dict_free(&dst->metadata);
-    ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    ret = ಚೌಕಟ್ಟು_copy_props(dst, src, 0);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
     /* replace the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        ret = av_buffer_replace(&dst->buf[i], src->buf[i]);
-        if (ret < 0)
-            goto fail;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        ret = av_ಬಫರ್_replace(&dst->buf[i], src->buf[i]);
+        ಆದರೆ (ret < 0)
+            ಹೋಗು fail;
     }
 
-    if (src->extended_buf) {
-        if (dst->nb_extended_buf != src->nb_extended_buf) {
-            int nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
-            void *tmp;
+    ಆದರೆ (src->extended_buf) {
+        ಆದರೆ (dst->nb_extended_buf != src->nb_extended_buf) {
+            ಪೂರ್ಣಾಂಕ nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
+            ಶೂನ್ಯ *tmp;
 
-            for (int i = nb_extended_buf; i < dst->nb_extended_buf; i++)
-                av_buffer_unref(&dst->extended_buf[i]);
+            ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = nb_extended_buf; i < dst->nb_extended_buf; i++)
+                av_ಬಫರ್_unref(&dst->extended_buf[i]);
 
             tmp = av_realloc_array(dst->extended_buf, src->nb_extended_buf,
-                                   sizeof(*dst->extended_buf));
-            if (!tmp) {
+                                   ಗಾತ್ರ(*dst->extended_buf));
+            ಆದರೆ (!tmp) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                ಹೋಗು fail;
             }
             dst->extended_buf = tmp;
             dst->nb_extended_buf = src->nb_extended_buf;
 
             memset(&dst->extended_buf[nb_extended_buf], 0,
-                   (src->nb_extended_buf - nb_extended_buf) * sizeof(*dst->extended_buf));
+                   (src->nb_extended_buf - nb_extended_buf) * ಗಾತ್ರ(*dst->extended_buf));
         }
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
-            ret = av_buffer_replace(&dst->extended_buf[i], src->extended_buf[i]);
-            if (ret < 0)
-                goto fail;
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < src->nb_extended_buf; i++) {
+            ret = av_ಬಫರ್_replace(&dst->extended_buf[i], src->extended_buf[i]);
+            ಆದರೆ (ret < 0)
+                ಹೋಗು fail;
         }
-    } else if (dst->extended_buf) {
-        for (int i = 0; i < dst->nb_extended_buf; i++)
-            av_buffer_unref(&dst->extended_buf[i]);
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (dst->extended_buf) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < dst->nb_extended_buf; i++)
+            av_ಬಫರ್_unref(&dst->extended_buf[i]);
         av_freep(&dst->extended_buf);
     }
 
-    ret = av_buffer_replace(&dst->hw_frames_ctx, src->hw_frames_ctx);
-    if (ret < 0)
-        goto fail;
+    ret = av_ಬಫರ್_replace(&dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx, src->hw_ಚೌಕಟ್ಟುಗಳು_ctx);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
-    if (dst->extended_data != dst->data)
-        av_freep(&dst->extended_data);
+    ಆದರೆ (dst->extended_ದತ್ತಾಂಶ != dst->ದತ್ತಾಂಶ)
+        av_freep(&dst->extended_ದತ್ತಾಂಶ);
 
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    ಆದರೆ (src->extended_ದತ್ತಾಂಶ != src->ದತ್ತಾಂಶ) {
+        ಪೂರ್ಣಾಂಕ ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        ಆದರೆ (ch <= 0 || ch > SIZE_MAX / ಗಾತ್ರ(*dst->extended_ದತ್ತಾಂಶ)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            ಹೋಗು fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_ದತ್ತಾಂಶ = av_memdup(src->extended_ದತ್ತಾಂಶ, ಗಾತ್ರ(*dst->extended_ದತ್ತಾಂಶ) * ch);
+        ಆದರೆ (!dst->extended_ದತ್ತಾಂಶ) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ಹೋಗು fail;
         }
-    } else
-        dst->extended_data = dst->data;
+    } ಇಲ್ಲದಿದ್ದರೆ
+        dst->extended_ದತ್ತಾಂಶ = dst->ದತ್ತಾಂಶ;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    ಸ್ಮರಣೆ_ನಕಲು(dst->ದತ್ತಾಂಶ,     src->ದತ್ತಾಂಶ,     ಗಾತ್ರ(src->ದತ್ತಾಂಶ));
+    ಸ್ಮರಣೆ_ನಕಲು(dst->linesize, src->linesize, ಗಾತ್ರ(src->linesize));
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 fail:
-    av_frame_unref(dst);
-    return ret;
+    av_ಚೌಕಟ್ಟು_unref(dst);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-AVFrame *av_frame_clone(const AVFrame *src)
+AVFrame *av_ಚೌಕಟ್ಟು_clone(ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    AVFrame *ret = av_frame_alloc();
+    AVFrame *ret = av_ಚೌಕಟ್ಟು_alloc();
 
-    if (!ret)
-        return NULL;
+    ಆದರೆ (!ret)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    if (av_frame_ref(ret, src) < 0)
-        av_frame_free(&ret);
+    ಆದರೆ (av_ಚೌಕಟ್ಟು_ref(ret, src) < 0)
+        av_ಚೌಕಟ್ಟು_free(&ret);
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-void av_frame_unref(AVFrame *frame)
+ಶೂನ್ಯ av_ಚೌಕಟ್ಟು_unref(AVFrame *ಚೌಕಟ್ಟು)
 {
-    if (!frame)
-        return;
+    ಆದರೆ (!ಚೌಕಟ್ಟು)
+        ಹಿಂತಿರುಗಿ;
 
-    av_frame_side_data_free(&frame->side_data, &frame->nb_side_data);
+    av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_free(&ಚೌಕಟ್ಟು->side_ದತ್ತಾಂಶ, &ಚೌಕಟ್ಟು->nb_side_ದತ್ತಾಂಶ);
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        av_buffer_unref(&frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
-        av_buffer_unref(&frame->extended_buf[i]);
-    av_freep(&frame->extended_buf);
-    av_dict_free(&frame->metadata);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(ಚೌಕಟ್ಟು->buf); i++)
+        av_ಬಫರ್_unref(&ಚೌಕಟ್ಟು->buf[i]);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಚೌಕಟ್ಟು->nb_extended_buf; i++)
+        av_ಬಫರ್_unref(&ಚೌಕಟ್ಟು->extended_buf[i]);
+    av_freep(&ಚೌಕಟ್ಟು->extended_buf);
+    av_dict_free(&ಚೌಕಟ್ಟು->metadata);
 
-    av_buffer_unref(&frame->hw_frames_ctx);
+    av_ಬಫರ್_unref(&ಚೌಕಟ್ಟು->hw_ಚೌಕಟ್ಟುಗಳು_ctx);
 
-    av_buffer_unref(&frame->opaque_ref);
-    av_refstruct_unref(&frame->private_ref);
+    av_ಬಫರ್_unref(&ಚೌಕಟ್ಟು->opaque_ref);
+    av_refstruct_unref(&ಚೌಕಟ್ಟು->ಖಾಸಗಿ_ref);
 
-    if (frame->extended_data != frame->data)
-        av_freep(&frame->extended_data);
+    ಆದರೆ (ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ != ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ)
+        av_freep(&ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ);
 
-    av_channel_layout_uninit(&frame->ch_layout);
+    av_channel_layout_uninit(&ಚೌಕಟ್ಟು->ch_layout);
 
-    get_frame_defaults(frame);
+    get_ಚೌಕಟ್ಟು_defaults(ಚೌಕಟ್ಟು);
 }
 
-void av_frame_move_ref(AVFrame *dst, AVFrame *src)
+ಶೂನ್ಯ av_ಚೌಕಟ್ಟು_move_ref(AVFrame *dst, AVFrame *src)
 {
-    av_assert1(dst->width == 0 && dst->height == 0);
+    av_assert1(dst->ಅಗಲ == 0 && dst->ಎತ್ತರ == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
-               dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
+               dst->ch_layout.ಕ್ರಮ == AV_CHANNEL_ಕ್ರಮ_UNSPEC);
 
     *dst = *src;
-    if (src->extended_data == src->data)
-        dst->extended_data = dst->data;
-    get_frame_defaults(src);
+    ಆದರೆ (src->extended_ದತ್ತಾಂಶ == src->ದತ್ತಾಂಶ)
+        dst->extended_ದತ್ತಾಂಶ = dst->ದತ್ತಾಂಶ;
+    get_ಚೌಕಟ್ಟು_defaults(src);
 }
 
-int av_frame_is_writable(AVFrame *frame)
+ಪೂರ್ಣಾಂಕ av_ಚೌಕಟ್ಟು_is_writable(AVFrame *ಚೌಕಟ್ಟು)
 {
-    int ret = 1;
+    ಪೂರ್ಣಾಂಕ ret = 1;
 
     /* assume non-refcounted frames are not writable */
-    if (!frame->buf[0])
-        return 0;
+    ಆದರೆ (!ಚೌಕಟ್ಟು->buf[0])
+        ಹಿಂತಿರುಗಿ 0;
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        if (frame->buf[i])
-            ret &= !!av_buffer_is_writable(frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
-        ret &= !!av_buffer_is_writable(frame->extended_buf[i]);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(ಚೌಕಟ್ಟು->buf); i++)
+        ಆದರೆ (ಚೌಕಟ್ಟು->buf[i])
+            ret &= !!av_ಬಫರ್_is_writable(ಚೌಕಟ್ಟು->buf[i]);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಚೌಕಟ್ಟು->nb_extended_buf; i++)
+        ret &= !!av_ಬಫರ್_is_writable(ಚೌಕಟ್ಟು->extended_buf[i]);
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int av_frame_make_writable(AVFrame *frame)
+ಪೂರ್ಣಾಂಕ av_ಚೌಕಟ್ಟು_make_writable(AVFrame *ಚೌಕಟ್ಟು)
 {
     AVFrame tmp;
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (av_frame_is_writable(frame))
-        return 0;
+    ಆದರೆ (av_ಚೌಕಟ್ಟು_is_writable(ಚೌಕಟ್ಟು))
+        ಹಿಂತಿರುಗಿ 0;
 
-    memset(&tmp, 0, sizeof(tmp));
-    tmp.format         = frame->format;
-    tmp.width          = frame->width;
-    tmp.height         = frame->height;
-    tmp.nb_samples     = frame->nb_samples;
-    ret = av_channel_layout_copy(&tmp.ch_layout, &frame->ch_layout);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    memset(&tmp, 0, ಗಾತ್ರ(tmp));
+    tmp.format         = ಚೌಕಟ್ಟು->format;
+    tmp.ಅಗಲ          = ಚೌಕಟ್ಟು->ಅಗಲ;
+    tmp.ಎತ್ತರ         = ಚೌಕಟ್ಟು->ಎತ್ತರ;
+    tmp.nb_samples     = ಚೌಕಟ್ಟು->nb_samples;
+    ret = av_channel_layout_copy(&tmp.ch_layout, &ಚೌಕಟ್ಟು->ch_layout);
+    ಆದರೆ (ret < 0) {
+        av_ಚೌಕಟ್ಟು_unref(&tmp);
+        ಹಿಂತಿರುಗಿ ret;
     }
 
-    if (frame->hw_frames_ctx)
-        ret = av_hwframe_get_buffer(frame->hw_frames_ctx, &tmp, 0);
-    else
-        ret = av_frame_get_buffer(&tmp, 0);
-    if (ret < 0)
-        return ret;
+    ಆದರೆ (ಚೌಕಟ್ಟು->hw_ಚೌಕಟ್ಟುಗಳು_ctx)
+        ret = av_hwframe_get_ಬಫರ್(ಚೌಕಟ್ಟು->hw_ಚೌಕಟ್ಟುಗಳು_ctx, &tmp, 0);
+    ಇಲ್ಲದಿದ್ದರೆ
+        ret = av_ಚೌಕಟ್ಟು_get_ಬಫರ್(&tmp, 0);
+    ಆದರೆ (ret < 0)
+        ಹಿಂತಿರುಗಿ ret;
 
-    ret = av_frame_copy(&tmp, frame);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    ret = av_ಚೌಕಟ್ಟು_copy(&tmp, ಚೌಕಟ್ಟು);
+    ಆದರೆ (ret < 0) {
+        av_ಚೌಕಟ್ಟು_unref(&tmp);
+        ಹಿಂತಿರುಗಿ ret;
     }
 
-    ret = av_frame_copy_props(&tmp, frame);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    ret = av_ಚೌಕಟ್ಟು_copy_props(&tmp, ಚೌಕಟ್ಟು);
+    ಆದರೆ (ret < 0) {
+        av_ಚೌಕಟ್ಟು_unref(&tmp);
+        ಹಿಂತಿರುಗಿ ret;
     }
 
-    av_frame_unref(frame);
+    av_ಚೌಕಟ್ಟು_unref(ಚೌಕಟ್ಟು);
 
-    *frame = tmp;
-    if (tmp.data == tmp.extended_data)
-        frame->extended_data = frame->data;
+    *ಚೌಕಟ್ಟು = tmp;
+    ಆದರೆ (tmp.ದತ್ತಾಂಶ == tmp.extended_ದತ್ತಾಂಶ)
+        ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ = ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_frame_copy_props(AVFrame *dst, const AVFrame *src)
+ಪೂರ್ಣಾಂಕ av_ಚೌಕಟ್ಟು_copy_props(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    return frame_copy_props(dst, src, 1);
+    ಹಿಂತಿರುಗಿ ಚೌಕಟ್ಟು_copy_props(dst, src, 1);
 }
 
-AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane)
+AVBufferRef *av_ಚೌಕಟ್ಟು_get_plane_ಬಫರ್(ಸ್ಥಿರಾಂಕ AVFrame *ಚೌಕಟ್ಟು, ಪೂರ್ಣಾಂಕ plane)
 {
-    uintptr_t data;
-    int planes;
+    uintptr_t ದತ್ತಾಂಶ;
+    ಪೂರ್ಣಾಂಕ planes;
 
-    if (frame->nb_samples) {
-        int channels = frame->ch_layout.nb_channels;
-        if (!channels)
-            return NULL;
-        planes = av_sample_fmt_is_planar(frame->format) ? channels : 1;
-    } else
+    ಆದರೆ (ಚೌಕಟ್ಟು->nb_samples) {
+        ಪೂರ್ಣಾಂಕ channels = ಚೌಕಟ್ಟು->ch_layout.nb_channels;
+        ಆದರೆ (!channels)
+            ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+        planes = av_sample_fmt_is_planar(ಚೌಕಟ್ಟು->format) ? channels : 1;
+    } ಇಲ್ಲದಿದ್ದರೆ
         planes = 4;
 
-    if (plane < 0 || plane >= planes || !frame->extended_data[plane])
-        return NULL;
-    data = (uintptr_t)frame->extended_data[plane];
+    ಆದರೆ (plane < 0 || plane >= planes || !ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ[plane])
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ದತ್ತಾಂಶ = (uintptr_t)ಚೌಕಟ್ಟು->extended_ದತ್ತಾಂಶ[plane];
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
-        AVBufferRef *buf = frame->buf[i];
-        uintptr_t buf_begin = (uintptr_t)buf->data;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(ಚೌಕಟ್ಟು->buf) && ಚೌಕಟ್ಟು->buf[i]; i++) {
+        AVBufferRef *buf = ಚೌಕಟ್ಟು->buf[i];
+        uintptr_t buf_begin = (uintptr_t)buf->ದತ್ತಾಂಶ;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        ಆದರೆ (ದತ್ತಾಂಶ >= buf_begin && ದತ್ತಾಂಶ < buf_begin + buf->ಗಾತ್ರ_2)
+            ಹಿಂತಿರುಗಿ buf;
     }
-    for (int i = 0; i < frame->nb_extended_buf; i++) {
-        AVBufferRef *buf = frame->extended_buf[i];
-        uintptr_t buf_begin = (uintptr_t)buf->data;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < ಚೌಕಟ್ಟು->nb_extended_buf; i++) {
+        AVBufferRef *buf = ಚೌಕಟ್ಟು->extended_buf[i];
+        uintptr_t buf_begin = (uintptr_t)buf->ದತ್ತಾಂಶ;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        ಆದರೆ (ದತ್ತಾಂಶ >= buf_begin && ದತ್ತಾಂಶ < buf_begin + buf->ಗಾತ್ರ_2)
+            ಹಿಂತಿರುಗಿ buf;
     }
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
-                                                 enum AVFrameSideDataType type,
+AVFrame_Side_ದತ್ತಾಂಶ *av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ_from_buf(AVFrame *ಚೌಕಟ್ಟು,
+                                                 ಎಣಿಕೆ AVFrame_Side_ದತ್ತಾಂಶ_Type type,
                                                  AVBufferRef *buf)
 {
-    return
-        ff_frame_side_data_add_from_buf(
-            &frame->side_data, &frame->nb_side_data, type, buf);
+    ಹಿಂತಿರುಗಿ
+        ff_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_ಕೂಡಿಸು_from_buf(
+            &ಚೌಕಟ್ಟು->side_ದತ್ತಾಂಶ, &ಚೌಕಟ್ಟು->nb_side_ದತ್ತಾಂಶ, type, buf);
 }
 
-AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
-                                        enum AVFrameSideDataType type,
-                                        size_t size)
+AVFrame_Side_ದತ್ತಾಂಶ *av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು,
+                                        ಎಣಿಕೆ AVFrame_Side_ದತ್ತಾಂಶ_Type type,
+                                        size_t ಗಾತ್ರ_2)
 {
-    AVFrameSideData *ret;
-    AVBufferRef *buf = av_buffer_alloc(size);
-    ret = av_frame_new_side_data_from_buf(frame, type, buf);
-    if (!ret)
-        av_buffer_unref(&buf);
-    return ret;
+    AVFrame_Side_ದತ್ತಾಂಶ *ret;
+    AVBufferRef *buf = av_ಬಫರ್_alloc(ಗಾತ್ರ_2);
+    ret = av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ_from_buf(ಚೌಕಟ್ಟು, type, buf);
+    ಆದರೆ (!ret)
+        av_ಬಫರ್_unref(&buf);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
-                                        enum AVFrameSideDataType type)
+AVFrame_Side_ದತ್ತಾಂಶ *av_ಚೌಕಟ್ಟು_get_side_ದತ್ತಾಂಶ(ಸ್ಥಿರಾಂಕ AVFrame *ಚೌಕಟ್ಟು,
+                                        ಎಣಿಕೆ AVFrame_Side_ದತ್ತಾಂಶ_Type type)
 {
-    return (AVFrameSideData *)av_frame_side_data_get(
-        frame->side_data, frame->nb_side_data,
+    ಹಿಂತಿರುಗಿ (AVFrame_Side_ದತ್ತಾಂಶ *)av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_get(
+        ಚೌಕಟ್ಟು->side_ದತ್ತಾಂಶ, ಚೌಕಟ್ಟು->nb_side_ದತ್ತಾಂಶ,
         type
     );
 }
 
-static int frame_copy_video(AVFrame *dst, const AVFrame *src)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ ಚೌಕಟ್ಟು_copy_video(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    int planes;
+    ಪೂರ್ಣಾಂಕ planes;
 
-    if (dst->width  < src->width ||
-        dst->height < src->height)
-        return AVERROR(EINVAL);
+    ಆದರೆ (dst->ಅಗಲ  < src->ಅಗಲ ||
+        dst->ಎತ್ತರ < src->ಎತ್ತರ)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    if (src->hw_frames_ctx || dst->hw_frames_ctx)
-        return av_hwframe_transfer_data(dst, src, 0);
+    ಆದರೆ (src->hw_ಚೌಕಟ್ಟುಗಳು_ctx || dst->hw_ಚೌಕಟ್ಟುಗಳು_ctx)
+        ಹಿಂತಿರುಗಿ av_hwframe_transfer_ದತ್ತಾಂಶ(dst, src, 0);
 
-    planes = av_pix_fmt_count_planes(dst->format);
-    for (int i = 0; i < planes; i++)
-        if (!dst->data[i] || !src->data[i])
-            return AVERROR(EINVAL);
+    planes = av_pix_fmt_ಎಣಿಕೆ_planes(dst->format);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++)
+        ಆದರೆ (!dst->ದತ್ತಾಂಶ[i] || !src->ದತ್ತಾಂಶ[i])
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    av_image_copy2(dst->data, dst->linesize,
-                   src->data, src->linesize,
-                   dst->format, src->width, src->height);
+    av_image_copy2(dst->ದತ್ತಾಂಶ, dst->linesize,
+                   src->ದತ್ತಾಂಶ, src->linesize,
+                   dst->format, src->ಅಗಲ, src->ಎತ್ತರ);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int frame_copy_audio(AVFrame *dst, const AVFrame *src)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ ಚೌಕಟ್ಟು_copy_audio(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    int planar   = av_sample_fmt_is_planar(dst->format);
-    int channels = dst->ch_layout.nb_channels;
-    int planes   = planar ? channels : 1;
+    ಪೂರ್ಣಾಂಕ planar   = av_sample_fmt_is_planar(dst->format);
+    ಪೂರ್ಣಾಂಕ channels = dst->ch_layout.nb_channels;
+    ಪೂರ್ಣಾಂಕ planes   = planar ? channels : 1;
 
-    if (dst->nb_samples != src->nb_samples ||
+    ಆದರೆ (dst->nb_samples != src->nb_samples ||
         av_channel_layout_compare(&dst->ch_layout, &src->ch_layout))
-        return AVERROR(EINVAL);
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    for (int i = 0; i < planes; i++)
-        if (!dst->extended_data[i] || !src->extended_data[i])
-            return AVERROR(EINVAL);
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < planes; i++)
+        ಆದರೆ (!dst->extended_ದತ್ತಾಂಶ[i] || !src->extended_ದತ್ತಾಂಶ[i])
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    av_samples_copy(dst->extended_data, src->extended_data, 0, 0,
+    av_samples_copy(dst->extended_ದತ್ತಾಂಶ, src->extended_ದತ್ತಾಂಶ, 0, 0,
                     dst->nb_samples, channels, dst->format);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_frame_copy(AVFrame *dst, const AVFrame *src)
+ಪೂರ್ಣಾಂಕ av_ಚೌಕಟ್ಟು_copy(AVFrame *dst, ಸ್ಥಿರಾಂಕ AVFrame *src)
 {
-    if (dst->format != src->format || dst->format < 0)
-        return AVERROR(EINVAL);
+    ಆದರೆ (dst->format != src->format || dst->format < 0)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    if (dst->width > 0 && dst->height > 0)
-        return frame_copy_video(dst, src);
-    else if (dst->nb_samples > 0 &&
+    ಆದರೆ (dst->ಅಗಲ > 0 && dst->ಎತ್ತರ > 0)
+        ಹಿಂತಿರುಗಿ ಚೌಕಟ್ಟು_copy_video(dst, src);
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (dst->nb_samples > 0 &&
              (av_channel_layout_check(&dst->ch_layout)))
-        return frame_copy_audio(dst, src);
+        ಹಿಂತಿರುಗಿ ಚೌಕಟ್ಟು_copy_audio(dst, src);
 
-    return AVERROR(EINVAL);
+    ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 }
 
-void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type)
+ಶೂನ್ಯ av_ಚೌಕಟ್ಟು_remove_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು, ಎಣಿಕೆ AVFrame_Side_ದತ್ತಾಂಶ_Type type)
 {
-    av_frame_side_data_remove(&frame->side_data, &frame->nb_side_data, type);
+    av_ಚೌಕಟ್ಟು_side_ದತ್ತಾಂಶ_remove(&ಚೌಕಟ್ಟು->side_ದತ್ತಾಂಶ, &ಚೌಕಟ್ಟು->nb_side_ದತ್ತಾಂಶ, type);
 }
 
-static int calc_cropping_offsets(size_t offsets[4], const AVFrame *frame,
-                                 const AVPixFmtDescriptor *desc)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ calc_cropping_offsets(size_t offsets[4], ಸ್ಥಿರಾಂಕ AVFrame *ಚೌಕಟ್ಟು,
+                                 ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc)
 {
-    for (int i = 0; frame->data[i]; i++) {
-        const AVComponentDescriptor *comp = NULL;
-        int shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
-        int shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i]; i++) {
+        ಸ್ಥಿರಾಂಕ AVComponentDescriptor *comp = ಖಾಲಿ;
+        ಪೂರ್ಣಾಂಕ ಸರಿಸು_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
+        ಪೂರ್ಣಾಂಕ ಸರಿಸು_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
 
-        if (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
+        ಆದರೆ (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
             offsets[i] = 0;
-            break;
+            ನಿಲ್ಲಿಸು;
         }
 
         /* find any component descriptor for this plane */
-        for (int j = 0; j < desc->nb_components; j++) {
-            if (desc->comp[j].plane == i) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ j = 0; j < desc->nb_components; j++) {
+            ಆದರೆ (desc->comp[j].plane == i) {
                 comp = &desc->comp[j];
-                break;
+                ನಿಲ್ಲಿಸು;
             }
         }
-        if (!comp)
-            return AVERROR_BUG;
+        ಆದರೆ (!comp)
+            ಹಿಂತಿರುಗಿ AVERROR_BUG;
 
-        offsets[i] = (frame->crop_top  >> shift_y) * frame->linesize[i] +
-                     (frame->crop_left >> shift_x) * comp->step;
+        offsets[i] = (ಚೌಕಟ್ಟು->crop_ತುದಿ  >> ಸರಿಸು_y) * ಚೌಕಟ್ಟು->linesize[i] +
+                     (ಚೌಕಟ್ಟು->crop_ಎಡ >> ಸರಿಸು_x) * comp->ಹೆಜ್ಜೆ;
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_frame_apply_cropping(AVFrame *frame, int flags)
+ಪೂರ್ಣಾಂಕ av_ಚೌಕಟ್ಟು_apply_cropping(AVFrame *ಚೌಕಟ್ಟು, ಪೂರ್ಣಾಂಕ flags)
 {
-    const AVPixFmtDescriptor *desc;
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc;
     size_t offsets[4];
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (!(frame->width > 0 && frame->height > 0))
-        return AVERROR(EINVAL);
+    ಆದರೆ (!(ಚೌಕಟ್ಟು->ಅಗಲ > 0 && ಚೌಕಟ್ಟು->ಎತ್ತರ > 0))
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    if (frame->crop_left >= INT_MAX - frame->crop_right        ||
-        frame->crop_top  >= INT_MAX - frame->crop_bottom       ||
-        (frame->crop_left + frame->crop_right) >= frame->width ||
-        (frame->crop_top + frame->crop_bottom) >= frame->height)
-        return AVERROR(ERANGE);
+    ಆದರೆ (ಚೌಕಟ್ಟು->crop_ಎಡ >= ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ - ಚೌಕಟ್ಟು->crop_ಬಲ        ||
+        ಚೌಕಟ್ಟು->crop_ತುದಿ  >= ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ - ಚೌಕಟ್ಟು->crop_bottom       ||
+        (ಚೌಕಟ್ಟು->crop_ಎಡ + ಚೌಕಟ್ಟು->crop_ಬಲ) >= ಚೌಕಟ್ಟು->ಅಗಲ ||
+        (ಚೌಕಟ್ಟು->crop_ತುದಿ + ಚೌಕಟ್ಟು->crop_bottom) >= ಚೌಕಟ್ಟು->ಎತ್ತರ)
+        ಹಿಂತಿರುಗಿ AVERROR(ERANGE);
 
-    desc = av_pix_fmt_desc_get(frame->format);
-    if (!desc)
-        return AVERROR_BUG;
+    desc = av_pix_fmt_desc_get(ಚೌಕಟ್ಟು->format);
+    ಆದರೆ (!desc)
+        ಹಿಂತಿರುಗಿ AVERROR_BUG;
 
     /* Apply just the right/bottom cropping for hwaccel formats. Bitstream
      * formats cannot be easily handled here either (and corresponding decoders
      * should not export any cropping anyway), so do the same for those as well.
      * */
-    if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
-        frame->width      -= frame->crop_right;
-        frame->height     -= frame->crop_bottom;
-        frame->crop_right  = 0;
-        frame->crop_bottom = 0;
-        return 0;
+    ಆದರೆ (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
+        ಚೌಕಟ್ಟು->ಅಗಲ      -= ಚೌಕಟ್ಟು->crop_ಬಲ;
+        ಚೌಕಟ್ಟು->ಎತ್ತರ     -= ಚೌಕಟ್ಟು->crop_bottom;
+        ಚೌಕಟ್ಟು->crop_ಬಲ  = 0;
+        ಚೌಕಟ್ಟು->crop_bottom = 0;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* calculate the offsets for each plane */
-    ret = calc_cropping_offsets(offsets, frame, desc);
-    if (ret < 0)
-        return ret;
+    ret = calc_cropping_offsets(offsets, ಚೌಕಟ್ಟು, desc);
+    ಆದರೆ (ret < 0)
+        ಹಿಂತಿರುಗಿ ret;
 
     /* adjust the offsets to avoid breaking alignment */
-    if (!(flags & AV_FRAME_CROP_UNALIGNED)) {
-        int log2_crop_align = frame->crop_left ? ff_ctz(frame->crop_left) : INT_MAX;
-        int min_log2_align = INT_MAX;
+    ಆದರೆ (!(flags & AV_ಚೌಕಟ್ಟು_CROP_UNALIGNED)) {
+        ಪೂರ್ಣಾಂಕ log2_crop_align = ಚೌಕಟ್ಟು->crop_ಎಡ ? ff_ctz(ಚೌಕಟ್ಟು->crop_ಎಡ) : ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ;
+        ಪೂರ್ಣಾಂಕ min_log2_align = ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ;
 
-        for (int i = 0; frame->data[i]; i++) {
-            int log2_align = offsets[i] ? ff_ctz(offsets[i]) : INT_MAX;
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i]; i++) {
+            ಪೂರ್ಣಾಂಕ log2_align = offsets[i] ? ff_ctz(offsets[i]) : ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ;
             min_log2_align = FFMIN(log2_align, min_log2_align);
         }
 
         /* The data alignment is the cropping alignment scaled by a power of 2,
          * up for multi-byte pixels and down for subsampled planes */
-        if (min_log2_align < 5 && log2_crop_align != INT_MAX) {
-            frame->crop_left &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
-            ret = calc_cropping_offsets(offsets, frame, desc);
-            if (ret < 0)
-                return ret;
+        ಆದರೆ (min_log2_align < 5 && log2_crop_align != ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ) {
+            ಚೌಕಟ್ಟು->crop_ಎಡ &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
+            ret = calc_cropping_offsets(offsets, ಚೌಕಟ್ಟು, desc);
+            ಆದರೆ (ret < 0)
+                ಹಿಂತಿರುಗಿ ret;
         }
     }
 
-    for (int i = 0; frame->data[i]; i++)
-        frame->data[i] += offsets[i];
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i]; i++)
+        ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i] += offsets[i];
 
-    frame->width      -= (frame->crop_left + frame->crop_right);
-    frame->height     -= (frame->crop_top  + frame->crop_bottom);
-    frame->crop_left   = 0;
-    frame->crop_right  = 0;
-    frame->crop_top    = 0;
-    frame->crop_bottom = 0;
+    ಚೌಕಟ್ಟು->ಅಗಲ      -= (ಚೌಕಟ್ಟು->crop_ಎಡ + ಚೌಕಟ್ಟು->crop_ಬಲ);
+    ಚೌಕಟ್ಟು->ಎತ್ತರ     -= (ಚೌಕಟ್ಟು->crop_ತುದಿ  + ಚೌಕಟ್ಟು->crop_bottom);
+    ಚೌಕಟ್ಟು->crop_ಎಡ   = 0;
+    ಚೌಕಟ್ಟು->crop_ಬಲ  = 0;
+    ಚೌಕಟ್ಟು->crop_ತುದಿ    = 0;
+    ಚೌಕಟ್ಟು->crop_bottom = 0;
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

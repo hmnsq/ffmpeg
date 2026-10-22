@@ -18,43 +18,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "ambient_viewing_environment.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ "ambient_viewing_environment.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
-static void get_defaults(AVAmbientViewingEnvironment *env)
+ಸ್ಥಿರ ಶೂನ್ಯ get_defaults(AVAmbientViewingEnvironment *env)
 {
     env->ambient_illuminance =
     env->ambient_light_x     =
     env->ambient_light_y     = (AVRational) { 0, 1 };
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *ಗಾತ್ರ_2)
 {
     AVAmbientViewingEnvironment *env =
-        av_mallocz(sizeof(AVAmbientViewingEnvironment));
+        av_mallocz(ಗಾತ್ರ(AVAmbientViewingEnvironment));
 
-    if (size)
-        *size = env ? sizeof(*env) : 0;
+    ಆದರೆ (ಗಾತ್ರ_2)
+        *ಗಾತ್ರ_2 = env ? ಗಾತ್ರ(*env) : 0;
 
-    if (!env)
-        return NULL;
+    ಆದರೆ (!env)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
     get_defaults(env);
 
-    return env;
+    ಹಿಂತಿರುಗಿ env;
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame,
-                               AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
-                               sizeof(AVAmbientViewingEnvironment));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_ದತ್ತಾಂಶ *side_ದತ್ತಾಂಶ =
+        av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು,
+                               AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_AMBIENT_VIEWING_ENVIRONMENT,
+                               ಗಾತ್ರ(AVAmbientViewingEnvironment));
+    ಆದರೆ (!side_ದತ್ತಾಂಶ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    memset(side_data->data, 0, side_data->size);
-    get_defaults((AVAmbientViewingEnvironment *)side_data->data);
+    memset(side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ, 0, side_ದತ್ತಾಂಶ->ಗಾತ್ರ_2);
+    get_defaults((AVAmbientViewingEnvironment *)side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ);
 
-    return (AVAmbientViewingEnvironment *)side_data->data;
+    ಹಿಂತಿರುಗಿ (AVAmbientViewingEnvironment *)side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ;
 }

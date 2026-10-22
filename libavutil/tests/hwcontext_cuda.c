@@ -16,279 +16,279 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdatomic.h>
-#include <stdio.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <inttypes.h>
+#ಅನ್ತರ್ಭಾವ <stdatomic.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "libavutil/adler32.h"
-#include "libavutil/hwcontext.h"
-#include "libavutil/hwcontext_cuda_internal.h"
-#include "libavutil/imgutils.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixfmt.h"
-#include "libavutil/time.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/adler32.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/hwcontext.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/hwcontext_cuda_internal.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/imgutils.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/log.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/mem.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/pixdesc.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/time.h"
 
-static void vflip(AVFrame *frame, const AVPixFmtDescriptor *desc)
+ಸ್ಥಿರ ಶೂನ್ಯ vflip(AVFrame *ಚೌಕಟ್ಟು, ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->data) && frame->data[i]; i++) {
-        int shift = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ) && ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i]; i++) {
+        ಪೂರ್ಣಾಂಕ ಸರಿಸು = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
 
-        frame->data[i]    += (AV_CEIL_RSHIFT(frame->height, shift) - 1) * frame->linesize[i];
-        frame->linesize[i] = -frame->linesize[i];
+        ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i]    += (AV_CEIL_RSHIFT(ಚೌಕಟ್ಟು->ಎತ್ತರ, ಸರಿಸು) - 1) * ಚೌಕಟ್ಟು->linesize[i];
+        ಚೌಕಟ್ಟು->linesize[i] = -ಚೌಕಟ್ಟು->linesize[i];
     }
 }
 
-static int test_format(AVBufferRef *device_ref, enum AVPixelFormat fmt,
-                       int flip_upload, int flip_download)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ test_format(AVBufferRef *device_ref, ಎಣಿಕೆ AVPixelFormat fmt,
+                       ಪೂರ್ಣಾಂಕ flip_upload, ಪೂರ್ಣಾಂಕ flip_download)
 {
-    AVBufferRef *frames_ref = NULL;
+    AVBufferRef *ಚೌಕಟ್ಟುಗಳು_ref = ಖಾಲಿ;
     AVHWFramesContext *hwfc;
-    AVFrame *sw_frame = NULL, *hw_frame = NULL, *download = NULL;
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
-    int ret;
+    AVFrame *sw_ಚೌಕಟ್ಟು = ಖಾಲಿ, *hw_ಚೌಕಟ್ಟು = ಖಾಲಿ, *download = ಖಾಲಿ;
+    ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
+    ಪೂರ್ಣಾಂಕ ret;
 
-    frames_ref = av_hwframe_ctx_alloc(device_ref);
-    if (!frames_ref) {
+    ಚೌಕಟ್ಟುಗಳು_ref = av_hwframe_ctx_alloc(device_ref);
+    ಆದರೆ (!ಚೌಕಟ್ಟುಗಳು_ref) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
 
-    hwfc = (AVHWFramesContext *)frames_ref->data;
+    hwfc = (AVHWFramesContext *)ಚೌಕಟ್ಟುಗಳು_ref->ದತ್ತಾಂಶ;
     hwfc->format    = AV_PIX_FMT_CUDA;
     hwfc->sw_format = fmt;
-    hwfc->width     = 64;
-    hwfc->height    = 64;
+    hwfc->ಅಗಲ     = 64;
+    hwfc->ಎತ್ತರ    = 64;
 
-    ret = av_hwframe_ctx_init(frames_ref);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_ctx_init(ಚೌಕಟ್ಟುಗಳು_ref);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
-    sw_frame = av_frame_alloc();
-    hw_frame = av_frame_alloc();
-    download = av_frame_alloc();
-    if (!sw_frame || !hw_frame || !download) {
+    sw_ಚೌಕಟ್ಟು = av_ಚೌಕಟ್ಟು_alloc();
+    hw_ಚೌಕಟ್ಟು = av_ಚೌಕಟ್ಟು_alloc();
+    download = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (!sw_ಚೌಕಟ್ಟು || !hw_ಚೌಕಟ್ಟು || !download) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ಹೋಗು fail;
     }
 
-    sw_frame->format = fmt;
-    sw_frame->width  = 64;
-    sw_frame->height = 64;
-    ret = av_frame_get_buffer(sw_frame, 0);
-    if (ret < 0)
-        goto fail;
-    if (flip_upload)
-        vflip(sw_frame, desc);
+    sw_ಚೌಕಟ್ಟು->format = fmt;
+    sw_ಚೌಕಟ್ಟು->ಅಗಲ  = 64;
+    sw_ಚೌಕಟ್ಟು->ಎತ್ತರ = 64;
+    ret = av_ಚೌಕಟ್ಟು_get_ಬಫರ್(sw_ಚೌಕಟ್ಟು, 0);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
+    ಆದರೆ (flip_upload)
+        vflip(sw_ಚೌಕಟ್ಟು, desc);
 
     {
-        int linesizes[4];
+        ಪೂರ್ಣಾಂಕ linesizes[4];
         av_image_fill_linesizes(linesizes, fmt, 64);
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(sw_frame->data) && sw_frame->data[i]; i++) {
-            int shift = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
-            int h = AV_CEIL_RSHIFT(64, shift);
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(sw_ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ) && sw_ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i]; i++) {
+            ಪೂರ್ಣಾಂಕ ಸರಿಸು = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
+            ಪೂರ್ಣಾಂಕ h = AV_CEIL_RSHIFT(64, ಸರಿಸು);
 
-            for (int y = 0; y < h; y++)
-                for (int x = 0; x < linesizes[i]; x++)
-                    sw_frame->data[i][y * sw_frame->linesize[i] + x] =
+            ಗಾಗಿ (ಪೂರ್ಣಾಂಕ y = 0; y < h; y++)
+                ಗಾಗಿ (ಪೂರ್ಣಾಂಕ x = 0; x < linesizes[i]; x++)
+                    sw_ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i][y * sw_ಚೌಕಟ್ಟು->linesize[i] + x] =
                         (uint8_t)(x + y * 3 + i * 17);
         }
     }
 
-    ret = av_hwframe_get_buffer(frames_ref, hw_frame, 0);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_get_ಬಫರ್(ಚೌಕಟ್ಟುಗಳು_ref, hw_ಚೌಕಟ್ಟು, 0);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
-    ret = av_hwframe_transfer_data(hw_frame, sw_frame, 0);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_transfer_ದತ್ತಾಂಶ(hw_ಚೌಕಟ್ಟು, sw_ಚೌಕಟ್ಟು, 0);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
     download->format = fmt;
-    download->width  = 64;
-    download->height = 64;
-    ret = av_frame_get_buffer(download, 0);
-    if (ret < 0)
-        goto fail;
-    if (flip_download)
+    download->ಅಗಲ  = 64;
+    download->ಎತ್ತರ = 64;
+    ret = av_ಚೌಕಟ್ಟು_get_ಬಫರ್(download, 0);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
+    ಆದರೆ (flip_download)
         vflip(download, desc);
 
-    ret = av_hwframe_transfer_data(download, hw_frame, 0);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_transfer_ದತ್ತಾಂಶ(download, hw_ಚೌಕಟ್ಟು, 0);
+    ಆದರೆ (ret < 0)
+        ಹೋಗು fail;
 
     {
-        int linesizes[4];
+        ಪೂರ್ಣಾಂಕ linesizes[4];
         av_image_fill_linesizes(linesizes, fmt, 64);
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(download->data) && download->data[i]; i++) {
-            int shift = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
-            int h = AV_CEIL_RSHIFT(64, shift);
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0; i < FF_ARRAY_ELEMS(download->ದತ್ತಾಂಶ) && download->ದತ್ತಾಂಶ[i]; i++) {
+            ಪೂರ್ಣಾಂಕ ಸರಿಸು = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
+            ಪೂರ್ಣಾಂಕ h = AV_CEIL_RSHIFT(64, ಸರಿಸು);
 
-            for (int y = 0; y < h; y++) {
-                if (memcmp(sw_frame->data[i] + y * sw_frame->linesize[i],
-                           download->data[i] + y * download->linesize[i],
+            ಗಾಗಿ (ಪೂರ್ಣಾಂಕ y = 0; y < h; y++) {
+                ಆದರೆ (memcmp(sw_ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[i] + y * sw_ಚೌಕಟ್ಟು->linesize[i],
+                           download->ದತ್ತಾಂಶ[i] + y * download->linesize[i],
                            linesizes[i])) {
-                    printf("fail: %-16s plane %d row %d mismatch\n",
+                    ಬರೆ("fail: %-16s plane %d row %d mismatch\n",
                            av_get_pix_fmt_name(fmt), i, y);
                     ret = AVERROR(EINVAL);
-                    goto fail;
+                    ಹೋಗು fail;
                 }
             }
         }
     }
 
 fail:
-    av_frame_free(&sw_frame);
-    av_frame_free(&hw_frame);
-    av_frame_free(&download);
-    av_buffer_unref(&frames_ref);
-    return ret;
+    av_ಚೌಕಟ್ಟು_free(&sw_ಚೌಕಟ್ಟು);
+    av_ಚೌಕಟ್ಟು_free(&hw_ಚೌಕಟ್ಟು);
+    av_ಚೌಕಟ್ಟು_free(&download);
+    av_ಬಫರ್_unref(&ಚೌಕಟ್ಟುಗಳು_ref);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-static atomic_int source_overwritten;
+ಸ್ಥಿರ atomic_int ಮೂಲ_overwritten;
 
 /* Hold the stream until the source was overwritten, at most 100 ms. */
-static void CUDAAPI hold_stream(CUstream stream, CUresult status, void *opaque)
+ಸ್ಥಿರ ಶೂನ್ಯ CUDAAPI hold_ಹರಿವು(CUstream ಹರಿವು, CUresult ಸ್ಥಿತಿ_2, ಶೂನ್ಯ *opaque)
 {
-    int64_t start = av_gettime_relative();
-    while (!atomic_load(&source_overwritten) && av_gettime_relative() - start < 100000);
+    int64_t ಆರಂಭ = av_gettime_relative();
+    ಆಗ (!atomic_load(&ಮೂಲ_overwritten) && av_gettime_relative() - ಆರಂಭ < 100000);
 }
 
 /* Reuse the memory of an uploaded transfer buffer while the stream is still
  * busy, the upload must not see the new contents. */
-static int test_source_reuse(AVBufferRef *device_ref)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ test_ಮೂಲ_reuse(AVBufferRef *device_ref)
 {
-    AVCUDADeviceContext *hwctx = ((AVHWDeviceContext *)device_ref->data)->hwctx;
-    CudaFunctions *cu = hwctx->internal->cuda_dl;
-    AVBufferRef *frames_ref = av_hwframe_ctx_alloc(device_ref);
-    AVFrame *sw_frame = av_frame_alloc(), *hw_frame = av_frame_alloc();
-    AVFrame *download = av_frame_alloc();
+    AVCUDADeviceContext *hwctx = ((AVHWDeviceContext *)device_ref->ದತ್ತಾಂಶ)->hwctx;
+    CudaFunctions *cu = hwctx->ಆಂತರಿಕ->cuda_dl;
+    AVBufferRef *ಚೌಕಟ್ಟುಗಳು_ref = av_hwframe_ctx_alloc(device_ref);
+    AVFrame *sw_ಚೌಕಟ್ಟು = av_ಚೌಕಟ್ಟು_alloc(), *hw_ಚೌಕಟ್ಟು = av_ಚೌಕಟ್ಟು_alloc();
+    AVFrame *download = av_ಚೌಕಟ್ಟು_alloc();
     AVHWFramesContext *hwfc;
     CUcontext dummy;
     AVAdler checksum = 1;
-    int ret = AVERROR(ENOMEM);
+    ಪೂರ್ಣಾಂಕ ret = AVERROR(ENOMEM);
 
-    if (!frames_ref || !sw_frame || !hw_frame || !download)
-        goto fail;
+    ಆದರೆ (!ಚೌಕಟ್ಟುಗಳು_ref || !sw_ಚೌಕಟ್ಟು || !hw_ಚೌಕಟ್ಟು || !download)
+        ಹೋಗು fail;
 
-    hwfc = (AVHWFramesContext *)frames_ref->data;
+    hwfc = (AVHWFramesContext *)ಚೌಕಟ್ಟುಗಳು_ref->ದತ್ತಾಂಶ;
     hwfc->format    = AV_PIX_FMT_CUDA;
     hwfc->sw_format = AV_PIX_FMT_GRAY8;
-    hwfc->width     = 64;
-    hwfc->height    = 64;
-    if ((ret = av_hwframe_ctx_init(frames_ref)) < 0 ||
-        (ret = av_hwframe_get_buffer(frames_ref, hw_frame, 0)) < 0)
-        goto fail;
+    hwfc->ಅಗಲ     = 64;
+    hwfc->ಎತ್ತರ    = 64;
+    ಆದರೆ ((ret = av_hwframe_ctx_init(ಚೌಕಟ್ಟುಗಳು_ref)) < 0 ||
+        (ret = av_hwframe_get_ಬಫರ್(ಚೌಕಟ್ಟುಗಳು_ref, hw_ಚೌಕಟ್ಟು, 0)) < 0)
+        ಹೋಗು fail;
 
-    for (int value = 0x11; value <= 0x22; value += 0x11) {
-        av_frame_unref(sw_frame);
-        sw_frame->format = AV_PIX_FMT_GRAY8;
-        sw_frame->width  = 64;
-        sw_frame->height = 64;
-        if ((ret = av_hwframe_get_transfer_buffer(frames_ref, sw_frame)) < 0)
-            goto fail;
-        for (int y = 0; y < 64; y++)
-            memset(sw_frame->data[0] + y * sw_frame->linesize[0], value, 64);
-        if (value == 0x22) {
-            atomic_store(&source_overwritten, 1);
-            break;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ ಮೌಲ್ಯ = 0x11; ಮೌಲ್ಯ <= 0x22; ಮೌಲ್ಯ += 0x11) {
+        av_ಚೌಕಟ್ಟು_unref(sw_ಚೌಕಟ್ಟು);
+        sw_ಚೌಕಟ್ಟು->format = AV_PIX_FMT_GRAY8;
+        sw_ಚೌಕಟ್ಟು->ಅಗಲ  = 64;
+        sw_ಚೌಕಟ್ಟು->ಎತ್ತರ = 64;
+        ಆದರೆ ((ret = av_hwframe_get_transfer_ಬಫರ್(ಚೌಕಟ್ಟುಗಳು_ref, sw_ಚೌಕಟ್ಟು)) < 0)
+            ಹೋಗು fail;
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ y = 0; y < 64; y++)
+            memset(sw_ಚೌಕಟ್ಟು->ದತ್ತಾಂಶ[0] + y * sw_ಚೌಕಟ್ಟು->linesize[0], ಮೌಲ್ಯ, 64);
+        ಆದರೆ (ಮೌಲ್ಯ == 0x22) {
+            atomic_store(&ಮೂಲ_overwritten, 1);
+            ನಿಲ್ಲಿಸು;
         }
 
         ret = AVERROR_EXTERNAL;
-        if (cu->cuCtxPushCurrent(hwctx->cuda_ctx) != CUDA_SUCCESS)
-            goto fail;
-        if (cu->cuStreamAddCallback(hwctx->stream, hold_stream, NULL, 0) == CUDA_SUCCESS)
+        ಆದರೆ (cu->cu_Ctx_ತಳ್ಳು_Current(hwctx->cuda_ctx) != CUDA_SUCCESS)
+            ಹೋಗು fail;
+        ಆದರೆ (cu->cu_ಹರಿವು_ಕೂಡಿಸು_Callback(hwctx->ಹರಿವು, hold_ಹರಿವು, ಖಾಲಿ, 0) == CUDA_SUCCESS)
             ret = 0;
-        cu->cuCtxPopCurrent(&dummy);
-        if (ret < 0)
-            goto fail;
+        cu->cu_Ctx_ತೆಗೆ_Current(&dummy);
+        ಆದರೆ (ret < 0)
+            ಹೋಗು fail;
 
-        if ((ret = av_hwframe_transfer_data(hw_frame, sw_frame, 0)) < 0)
-            goto fail;
+        ಆದರೆ ((ret = av_hwframe_transfer_ದತ್ತಾಂಶ(hw_ಚೌಕಟ್ಟು, sw_ಚೌಕಟ್ಟು, 0)) < 0)
+            ಹೋಗು fail;
     }
 
-    if ((ret = av_hwframe_transfer_data(download, hw_frame, 0)) < 0)
-        goto fail;
-    for (int y = 0; y < 64; y++)
+    ಆದರೆ ((ret = av_hwframe_transfer_ದತ್ತಾಂಶ(download, hw_ಚೌಕಟ್ಟು, 0)) < 0)
+        ಹೋಗು fail;
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ y = 0; y < 64; y++)
         checksum = av_adler32_update(checksum,
-                                     download->data[0] + y * download->linesize[0], 64);
+                                     download->ದತ್ತಾಂಶ[0] + y * download->linesize[0], 64);
     fprintf(stderr, "source reuse checksum: %08"PRIx32"\n", checksum);
 
 fail:
-    av_frame_free(&sw_frame);
-    av_frame_free(&hw_frame);
-    av_frame_free(&download);
-    av_buffer_unref(&frames_ref);
-    return ret;
+    av_ಚೌಕಟ್ಟು_free(&sw_ಚೌಕಟ್ಟು);
+    av_ಚೌಕಟ್ಟು_free(&hw_ಚೌಕಟ್ಟು);
+    av_ಚೌಕಟ್ಟು_free(&download);
+    av_ಬಫರ್_unref(&ಚೌಕಟ್ಟುಗಳು_ref);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
 /* Verify that an unsupported sw_format is refused at init time. Returns 0 when
  * the format is correctly rejected, and an error when it is wrongly accepted. */
-static int test_rejected(AVBufferRef *device_ref, enum AVPixelFormat fmt)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ test_rejected(AVBufferRef *device_ref, ಎಣಿಕೆ AVPixelFormat fmt)
 {
-    AVBufferRef *frames_ref = av_hwframe_ctx_alloc(device_ref);
+    AVBufferRef *ಚೌಕಟ್ಟುಗಳು_ref = av_hwframe_ctx_alloc(device_ref);
     AVHWFramesContext *hwfc;
-    int ret;
+    ಪೂರ್ಣಾಂಕ ret;
 
-    if (!frames_ref)
-        return AVERROR(ENOMEM);
+    ಆದರೆ (!ಚೌಕಟ್ಟುಗಳು_ref)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    hwfc = (AVHWFramesContext *)frames_ref->data;
+    hwfc = (AVHWFramesContext *)ಚೌಕಟ್ಟುಗಳು_ref->ದತ್ತಾಂಶ;
     hwfc->format    = AV_PIX_FMT_CUDA;
     hwfc->sw_format = fmt;
-    hwfc->width     = 64;
-    hwfc->height    = 64;
+    hwfc->ಅಗಲ     = 64;
+    hwfc->ಎತ್ತರ    = 64;
 
     /* Init is expected to fail; silence the resulting error log. */
-    av_log_set_level(AV_LOG_QUIET);
-    ret = av_hwframe_ctx_init(frames_ref);
-    av_log_set_level(AV_LOG_INFO);
+    av_log_ಗಣ_level(AV_LOG_QUIET);
+    ret = av_hwframe_ctx_init(ಚೌಕಟ್ಟುಗಳು_ref);
+    av_log_ಗಣ_level(AV_LOG_INFO);
 
-    av_buffer_unref(&frames_ref);
+    av_ಬಫರ್_unref(&ಚೌಕಟ್ಟುಗಳು_ref);
 
-    return ret >= 0 ? AVERROR(EINVAL) : 0;
+    ಹಿಂತಿರುಗಿ ret >= 0 ? AVERROR(EINVAL) : 0;
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
-    AVBufferRef *device_ref = NULL;
-    enum AVPixelFormat fmt;
-    int ret, failures = 0, total = 0;
+    AVBufferRef *device_ref = ಖಾಲಿ;
+    ಎಣಿಕೆ AVPixelFormat fmt;
+    ಪೂರ್ಣಾಂಕ ret, failures = 0, ಒಟ್ಟು = 0;
 
-    ret = av_hwdevice_ctx_create(&device_ref, AV_HWDEVICE_TYPE_CUDA, NULL, NULL, 0);
-    if (ret < 0) {
+    ret = av_hwdevice_ctx_create(&device_ref, AV_HWDEVICE_TYPE_CUDA, ಖಾಲಿ, ಖಾಲಿ, 0);
+    ಆದರೆ (ret < 0) {
         /* CONFIG_CUDA only requires the ffnvcodec headers and a dynamic
          * loader; a FATE host that compiled CUDA support need not have an
          * NVIDIA GPU or usable driver. Skip cleanly in that case so that
          * make fate does not fail for an unavailable test environment. A real
          * transfer mismatch below still returns a nonzero exit status. */
         fprintf(stderr, "No CUDA device available, skipping.\n");
-        return 0;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    for (fmt = 0; fmt < AV_PIX_FMT_NB; fmt++) {
-        const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
-        if (!desc || (desc->flags & AV_PIX_FMT_FLAG_HWACCEL))
-            continue;
+    ಗಾಗಿ (fmt = 0; fmt < AV_PIX_FMT_NB; fmt++) {
+        ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
+        ಆದರೆ (!desc || (desc->flags & AV_PIX_FMT_FLAG_HWACCEL))
+            ಮುಂದುವರಿ;
 
-        total++;
+        ಒಟ್ಟು++;
         /* Palette formats must be refused rather than silently dropping the
          * palette across a transfer; every other format must round-trip. */
-        if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
-            if (test_rejected(device_ref, fmt) < 0) {
-                printf("fail: %-16s wrongly accepted\n",
+        ಆದರೆ (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+            ಆದರೆ (test_rejected(device_ref, fmt) < 0) {
+                ಬರೆ("fail: %-16s wrongly accepted\n",
                        av_get_pix_fmt_name(fmt));
                 failures++;
             }
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             ret = 0;
-            for (int flip = 0; flip < 4 && ret >= 0; flip++)
+            ಗಾಗಿ (ಪೂರ್ಣಾಂಕ flip = 0; flip < 4 && ret >= 0; flip++)
                 ret = test_format(device_ref, fmt, flip & 1, flip & 2);
-            if (ret < 0) {
-                printf("fail: %-16s %s\n",
+            ಆದರೆ (ret < 0) {
+                ಬರೆ("fail: %-16s %s\n",
                        av_get_pix_fmt_name(fmt),
                        av_err2str(ret));
                 failures++;
@@ -296,19 +296,19 @@ int main(void)
         }
     }
 
-    total++;
-    ret = test_source_reuse(device_ref);
-    if (ret < 0) {
-        printf("fail: source reuse %s\n", av_err2str(ret));
+    ಒಟ್ಟು++;
+    ret = test_ಮೂಲ_reuse(device_ref);
+    ಆದರೆ (ret < 0) {
+        ಬರೆ("fail: source reuse %s\n", av_err2str(ret));
         failures++;
     }
 
-    av_buffer_unref(&device_ref);
+    av_ಬಫರ್_unref(&device_ref);
 
-    if (failures)
-        printf("%d / %d tests failed.\n", failures, total);
-    else
-        printf("%d tests passed.\n", total);
+    ಆದರೆ (failures)
+        ಬರೆ("%d / %d tests failed.\n", failures, ಒಟ್ಟು);
+    ಇಲ್ಲದಿದ್ದರೆ
+        ಬರೆ("%d tests passed.\n", ಒಟ್ಟು);
 
-    return !!failures;
+    ಹಿಂತಿರುಗಿ !!failures;
 }

@@ -21,68 +21,68 @@
  * Contains misc utility macros and inline functions
  */
 
-#ifndef AVUTIL_PPC_UTIL_ALTIVEC_H
-#define AVUTIL_PPC_UTIL_ALTIVEC_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_PPC_UTIL_ALTIVEC_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_PPC_UTIL_ALTIVEC_H
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
 /***********************************************************************
  * Vector types
  **********************************************************************/
-#define vec_u8  vector unsigned char
-#define vec_s8  vector signed char
-#define vec_u16 vector unsigned short
-#define vec_s16 vector signed short
-#define vec_u32 vector unsigned int
-#define vec_s32 vector signed int
-#define vec_f   vector float
+#ವ್ಯಾಖ್ಯಾನಿಸು vec_u8  ಸದಿಶ ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ
+#ವ್ಯಾಖ್ಯಾನಿಸು vec_s8  ಸದಿಶ ಚಿಹ್ನೆಯುಳ್ಳ ಅಕ್ಷರ
+#ವ್ಯಾಖ್ಯಾನಿಸು vec_u16 ಸದಿಶ ಚಿಹ್ನೆರಹಿತ ಗಿಡ್ಡ
+#ವ್ಯಾಖ್ಯಾನಿಸು vec_s16 ಸದಿಶ ಚಿಹ್ನೆಯುಳ್ಳ ಗಿಡ್ಡ
+#ವ್ಯಾಖ್ಯಾನಿಸು vec_u32 ಸದಿಶ ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ
+#ವ್ಯಾಖ್ಯಾನಿಸು vec_s32 ಸದಿಶ ಚಿಹ್ನೆಯುಳ್ಳ ಪೂರ್ಣಾಂಕ
+#ವ್ಯಾಖ್ಯಾನಿಸು vec_f   ಸದಿಶ ದಶಮಾಂಶ
 
 /***********************************************************************
  * Null vector
  **********************************************************************/
-#define LOAD_ZERO const vec_u8 zerov = vec_splat_u8( 0 )
+#ವ್ಯಾಖ್ಯಾನಿಸು ತುಂಬು_ZERO ಸ್ಥಿರಾಂಕ vec_u8 zerov = vec_splat_u8( 0 )
 
-#define zero_u8v  (vec_u8)  zerov
-#define zero_s8v  (vec_s8)  zerov
-#define zero_u16v (vec_u16) zerov
-#define zero_s16v (vec_s16) zerov
-#define zero_u32v (vec_u32) zerov
-#define zero_s32v (vec_s32) zerov
+#ವ್ಯಾಖ್ಯಾನಿಸು zero_u8v  (vec_u8)  zerov
+#ವ್ಯಾಖ್ಯಾನಿಸು zero_s8v  (vec_s8)  zerov
+#ವ್ಯಾಖ್ಯಾನಿಸು zero_u16v (vec_u16) zerov
+#ವ್ಯಾಖ್ಯಾನಿಸು zero_s16v (vec_s16) zerov
+#ವ್ಯಾಖ್ಯಾನಿಸು zero_u32v (vec_u32) zerov
+#ವ್ಯಾಖ್ಯಾನಿಸು zero_s32v (vec_s32) zerov
 
-#if HAVE_ALTIVEC
-#include <altivec.h>
+#ಆದರೆ HAVE_ALTIVEC
+#ಅನ್ತರ್ಭಾವ <altivec.h>
 
 // used to build registers permutation vectors (vcprm)
 // the 's' are for words in the _s_econd vector
-#define WORD_0 0x00,0x01,0x02,0x03
-#define WORD_1 0x04,0x05,0x06,0x07
-#define WORD_2 0x08,0x09,0x0a,0x0b
-#define WORD_3 0x0c,0x0d,0x0e,0x0f
-#define WORD_s0 0x10,0x11,0x12,0x13
-#define WORD_s1 0x14,0x15,0x16,0x17
-#define WORD_s2 0x18,0x19,0x1a,0x1b
-#define WORD_s3 0x1c,0x1d,0x1e,0x1f
-#define vcprm(a,b,c,d) (const vec_u8){WORD_ ## a, WORD_ ## b, WORD_ ## c, WORD_ ## d}
+#ವ್ಯಾಖ್ಯಾನಿಸು ಶಬ್ದ_0 0x00,0x01,0x02,0x03
+#ವ್ಯಾಖ್ಯಾನಿಸು ಶಬ್ದ_1 0x04,0x05,0x06,0x07
+#ವ್ಯಾಖ್ಯಾನಿಸು ಶಬ್ದ_2 0x08,0x09,0x0a,0x0b
+#ವ್ಯಾಖ್ಯಾನಿಸು ಶಬ್ದ_3 0x0c,0x0d,0x0e,0x0f
+#ವ್ಯಾಖ್ಯಾನಿಸು ಶಬ್ದ_s0 0x10,0x11,0x12,0x13
+#ವ್ಯಾಖ್ಯಾನಿಸು ಶಬ್ದ_s1 0x14,0x15,0x16,0x17
+#ವ್ಯಾಖ್ಯಾನಿಸು ಶಬ್ದ_s2 0x18,0x19,0x1a,0x1b
+#ವ್ಯಾಖ್ಯಾನಿಸು ಶಬ್ದ_s3 0x1c,0x1d,0x1e,0x1f
+#ವ್ಯಾಖ್ಯಾನಿಸು vcprm(a,b,c,d) (ಸ್ಥಿರಾಂಕ vec_u8){ಶಬ್ದ ## a, ಶಬ್ದ ## b, ಶಬ್ದ ## c, ಶಬ್ದ ## d}
 
-#define SWP_W2S0 0x02,0x03,0x00,0x01
-#define SWP_W2S1 0x06,0x07,0x04,0x05
-#define SWP_W2S2 0x0a,0x0b,0x08,0x09
-#define SWP_W2S3 0x0e,0x0f,0x0c,0x0d
-#define SWP_W2Ss0 0x12,0x13,0x10,0x11
-#define SWP_W2Ss1 0x16,0x17,0x14,0x15
-#define SWP_W2Ss2 0x1a,0x1b,0x18,0x19
-#define SWP_W2Ss3 0x1e,0x1f,0x1c,0x1d
-#define vcswapi2s(a,b,c,d) (const vector unsigned char){SWP_W2S ## a, SWP_W2S ## b, SWP_W2S ## c, SWP_W2S ## d}
+#ವ್ಯಾಖ್ಯಾನಿಸು SWP_W2S0 0x02,0x03,0x00,0x01
+#ವ್ಯಾಖ್ಯಾನಿಸು SWP_W2S1 0x06,0x07,0x04,0x05
+#ವ್ಯಾಖ್ಯಾನಿಸು SWP_W2S2 0x0a,0x0b,0x08,0x09
+#ವ್ಯಾಖ್ಯಾನಿಸು SWP_W2S3 0x0e,0x0f,0x0c,0x0d
+#ವ್ಯಾಖ್ಯಾನಿಸು SWP_W2Ss0 0x12,0x13,0x10,0x11
+#ವ್ಯಾಖ್ಯಾನಿಸು SWP_W2Ss1 0x16,0x17,0x14,0x15
+#ವ್ಯಾಖ್ಯಾನಿಸು SWP_W2Ss2 0x1a,0x1b,0x18,0x19
+#ವ್ಯಾಖ್ಯಾನಿಸು SWP_W2Ss3 0x1e,0x1f,0x1c,0x1d
+#ವ್ಯಾಖ್ಯಾನಿಸು vcswapi2s(a,b,c,d) (ಸ್ಥಿರಾಂಕ ಸದಿಶ ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ){SWP_W2S ## a, SWP_W2S ## b, SWP_W2S ## c, SWP_W2S ## d}
 
-#define vcswapc() \
-  (const vector unsigned char){0x0f,0x0e,0x0d,0x0c,0x0b,0x0a,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,0x00}
+#ವ್ಯಾಖ್ಯಾನಿಸು vcswapc() \
+  (ಸ್ಥಿರಾಂಕ ಸದಿಶ ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ){0x0f,0x0e,0x0d,0x0c,0x0b,0x0a,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,0x00}
 
 
 // Transpose 8x8 matrix of 16-bit elements (in-place)
-#define TRANSPOSE8(a,b,c,d,e,f,g,h) \
-do { \
+#ವ್ಯಾಖ್ಯಾನಿಸು TRANSPOSE8(a,b,c,d,e,f,g,h) \
+ಮಾಡು { \
     vec_s16 A1, B1, C1, D1, E1, F1, G1, H1; \
     vec_s16 A2, B2, C2, D2, E2, F2, G2, H2; \
  \
@@ -112,55 +112,55 @@ do { \
     f = vec_mergel (C2, G2); \
     g = vec_mergeh (D2, H2); \
     h = vec_mergel (D2, H2); \
-} while (0)
+} ಆಗ (0)
 
 
-#if HAVE_BIGENDIAN
-#define VEC_LD(offset,b)                                   \
-    vec_perm(vec_ld(offset, b), vec_ld((offset)+15, b), vec_lvsl(offset, b))
-#else
-#define VEC_LD(offset,b)                                   \
-    vec_vsx_ld(offset, b)
-#endif
+#ಆದರೆ HAVE_BIGENDIAN
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_LD(ಸ್ಥಾನಾಂತರ,b)                                   \
+    vec_perm(vec_ld(ಸ್ಥಾನಾಂತರ, b), vec_ld((ಸ್ಥಾನಾಂತರ)+15, b), vec_lvsl(ಸ್ಥಾನಾಂತರ, b))
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_LD(ಸ್ಥಾನಾಂತರ,b)                                   \
+    vec_vsx_ld(ಸ್ಥಾನಾಂತರ, b)
+#ಆದರೆ_ಅಂತ್ಯ
 
 /** @brief loads unaligned vector @a *src with offset @a offset
     and returns it */
-#if HAVE_BIGENDIAN
-static inline vec_u8 unaligned_load(int offset, const uint8_t *src)
+#ಆದರೆ HAVE_BIGENDIAN
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ vec_u8 unaligned_ತುಂಬು(ಪೂರ್ಣಾಂಕ ಸ್ಥಾನಾಂತರ, ಸ್ಥಿರಾಂಕ uint8_t *src)
 {
-    register vec_u8 first = vec_ld(offset, src);
-    register vec_u8 second = vec_ld(offset + 15, src);
-    register vec_u8 mask = vec_lvsl(offset, src);
-    return vec_perm(first, second, mask);
+    ನೋಂದಣಿ vec_u8 ಮೊದಲ = vec_ld(ಸ್ಥಾನಾಂತರ, src);
+    ನೋಂದಣಿ vec_u8 ಎರಡನೇ = vec_ld(ಸ್ಥಾನಾಂತರ + 15, src);
+    ನೋಂದಣಿ vec_u8 ಮುಖವಾಡ_2 = vec_lvsl(ಸ್ಥಾನಾಂತರ, src);
+    ಹಿಂತಿರುಗಿ vec_perm(ಮೊದಲ, ಎರಡನೇ, ಮುಖವಾಡ_2);
 }
-static inline vec_u8 load_with_perm_vec(int offset, const uint8_t *src, vec_u8 perm_vec)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ vec_u8 ತುಂಬು_with_perm_vec(ಪೂರ್ಣಾಂಕ ಸ್ಥಾನಾಂತರ, ಸ್ಥಿರಾಂಕ uint8_t *src, vec_u8 perm_vec)
 {
-    vec_u8 a = vec_ld(offset, src);
-    vec_u8 b = vec_ld(offset + 15, src);
-    return vec_perm(a, b, perm_vec);
+    vec_u8 a = vec_ld(ಸ್ಥಾನಾಂತರ, src);
+    vec_u8 b = vec_ld(ಸ್ಥಾನಾಂತರ + 15, src);
+    ಹಿಂತಿರುಗಿ vec_perm(a, b, perm_vec);
 }
-#else
-#define unaligned_load(a,b) VEC_LD(a,b)
-#define load_with_perm_vec(a,b,c) VEC_LD(a,b)
-#endif
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು unaligned_ತುಂಬು(a,b) VEC_LD(a,b)
+#ವ್ಯಾಖ್ಯಾನಿಸು ತುಂಬು_with_perm_vec(a,b,c) VEC_LD(a,b)
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if HAVE_BIGENDIAN
-static inline void unaligned_store(vec_u8 v, uint8_t *dst)
+#ಆದರೆ HAVE_BIGENDIAN
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಶೂನ್ಯ unaligned_store(vec_u8 v, uint8_t *dst)
 {
     vec_u8 lo    = vec_ld(0, dst);
     vec_u8 hi    = vec_ld(15, dst);
-    vec_u8 edges = vec_perm(hi, lo, vec_lvsl(0, dst));
+    vec_u8 ಅಂಚುಗಳು = vec_perm(hi, lo, vec_lvsl(0, dst));
     vec_u8 align = vec_lvsr(0, dst);
 
-    vec_st(vec_perm(v, edges, align), 15, dst);
-    vec_st(vec_perm(edges, v, align), 0, dst);
+    vec_st(vec_perm(v, ಅಂಚುಗಳು, align), 15, dst);
+    vec_st(vec_perm(ಅಂಚುಗಳು, v, align), 0, dst);
 }
-#else
-static inline void unaligned_store(vec_u8 v, uint8_t *dst)
+#ಇಲ್ಲದಿದ್ದರೆ
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಶೂನ್ಯ unaligned_store(vec_u8 v, uint8_t *dst)
 {
     vec_vsx_st(v, 0, dst);
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /**
@@ -168,46 +168,46 @@ static inline void unaligned_store(vec_u8 v, uint8_t *dst)
  * @param perm_vec the align permute vector to combine the two loads from lvsl
  */
 
-#define vec_unaligned_load(b)  VEC_LD(0, b)
+#ವ್ಯಾಖ್ಯಾನಿಸು vec_unaligned_ತುಂಬು(b)  VEC_LD(0, b)
 
-#if HAVE_BIGENDIAN
-#define VEC_MERGEH(a, b) vec_mergeh(a, b)
-#define VEC_MERGEL(a, b) vec_mergel(a, b)
-#else
-#define VEC_MERGEH(a, b) vec_mergeh(b, a)
-#define VEC_MERGEL(a, b) vec_mergel(b, a)
-#endif
+#ಆದರೆ HAVE_BIGENDIAN
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_MERGEH(a, b) vec_mergeh(a, b)
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_MERGEL(a, b) vec_mergel(a, b)
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_MERGEH(a, b) vec_mergeh(b, a)
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_MERGEL(a, b) vec_mergel(b, a)
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if HAVE_BIGENDIAN
-#define VEC_ST(a,b,c) vec_st(a,b,c)
-#else
-#define VEC_ST(a,b,c) vec_vsx_st(a,b,c)
-#endif
+#ಆದರೆ HAVE_BIGENDIAN
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_ST(a,b,c) vec_st(a,b,c)
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_ST(a,b,c) vec_vsx_st(a,b,c)
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if HAVE_BIGENDIAN
-#define VEC_SPLAT16(a,b) vec_splat((vec_s16)(a), b)
-#else
-#define VEC_SPLAT16(a,b) vec_splat((vec_s16)(vec_perm(a, a, vcswapi2s(0,1,2,3))), b)
-#endif
+#ಆದರೆ HAVE_BIGENDIAN
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_SPLAT16(a,b) vec_splat((vec_s16)(a), b)
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_SPLAT16(a,b) vec_splat((vec_s16)(vec_perm(a, a, vcswapi2s(0,1,2,3))), b)
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if HAVE_BIGENDIAN
-#define VEC_SLD16(a,b,c) vec_sld(a, b, c)
-#else
-#define VEC_SLD16(a,b,c) vec_sld(b, a, c)
-#endif
+#ಆದರೆ HAVE_BIGENDIAN
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_SLD16(a,b,c) vec_sld(a, b, c)
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು VEC_SLD16(a,b,c) vec_sld(b, a, c)
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif /* HAVE_ALTIVEC */
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_ALTIVEC */
 
-#if HAVE_VSX
-#if HAVE_BIGENDIAN
-#define vsx_ld_u8_s16(off, p)                               \
+#ಆದರೆ HAVE_VSX
+#ಆದರೆ HAVE_BIGENDIAN
+#ವ್ಯಾಖ್ಯಾನಿಸು vsx_ld_u8_s16(off, p)                               \
     ((vec_s16)vec_mergeh((vec_u8)vec_splat_u8(0),           \
                          (vec_u8)vec_vsx_ld((off), (p))))
-#else
-#define vsx_ld_u8_s16(off, p)                               \
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು vsx_ld_u8_s16(off, p)                               \
     ((vec_s16)vec_mergeh((vec_u8)vec_vsx_ld((off), (p)),    \
                          (vec_u8)vec_splat_u8(0)))
-#endif /* HAVE_BIGENDIAN */
-#endif /* HAVE_VSX */
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_BIGENDIAN */
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_VSX */
 
-#endif /* AVUTIL_PPC_UTIL_ALTIVEC_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_PPC_UTIL_ALTIVEC_H */

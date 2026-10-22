@@ -21,59 +21,59 @@
  * byte swapping routines
  */
 
-#ifndef AVUTIL_X86_BSWAP_H
-#define AVUTIL_X86_BSWAP_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_X86_BSWAP_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_X86_BSWAP_H
 
-#include <stdint.h>
-#if defined(_MSC_VER)
-#include <stdlib.h>
-#include <intrin.h>
-#endif
-#include "config.h"
-#include "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಆದರೆ defined(_MSC_VER)
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಅನ್ತರ್ಭಾವ <intrin.h>
+#ಆದರೆ_ಅಂತ್ಯ
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
 
-#if defined(_MSC_VER)
+#ಆದರೆ defined(_MSC_VER)
 
-#define av_bswap16 av_bswap16
-static av_always_inline av_const uint16_t av_bswap16(uint16_t x)
+#ವ್ಯಾಖ್ಯಾನಿಸು av_bswap16 av_bswap16
+ಸ್ಥಿರ av_always_inline av_const uint16_t av_bswap16(uint16_t x)
 {
-    return _rotr16(x, 8);
+    ಹಿಂತಿರುಗಿ _rotr16(x, 8);
 }
 
-#define av_bswap32 av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+#ವ್ಯಾಖ್ಯಾನಿಸು av_bswap32 av_bswap32
+ಸ್ಥಿರ av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return _byteswap_ulong(x);
+    ಹಿಂತಿರುಗಿ _byteswap_ulong(x);
 }
 
-#if ARCH_X86_64
-#define av_bswap64 av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+#ಆದರೆ ARCH_X86_64
+#ವ್ಯಾಖ್ಯಾನಿಸು av_bswap64 av_bswap64
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ uint64_t av_const av_bswap64(uint64_t x)
 {
-    return _byteswap_uint64(x);
+    ಹಿಂತಿರುಗಿ _byteswap_uint64(x);
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-#elif HAVE_INLINE_ASM
+#ಅಥವಾಆದರೆ HAVE_INLINE_ASM
 
-#ifdef __INTEL_COMPILER
-#define av_bswap32 av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __INTEL_COMPILER
+#ವ್ಯಾಖ್ಯಾನಿಸು av_bswap32 av_bswap32
+ಸ್ಥಿರ av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
     __asm__("bswap   %0" : "+r" (x));
-    return x;
+    ಹಿಂತಿರುಗಿ x;
 }
 
-#if ARCH_X86_64
-#define av_bswap64 av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+#ಆದರೆ ARCH_X86_64
+#ವ್ಯಾಖ್ಯಾನಿಸು av_bswap64 av_bswap64
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ uint64_t av_const av_bswap64(uint64_t x)
 {
     __asm__("bswap  %0": "=r" (x) : "0" (x));
-    return x;
+    ಹಿಂತಿರುಗಿ x;
 }
-#endif
-#endif /* __INTEL_COMPILER */
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ /* __INTEL_COMPILER */
 
-#endif /* HAVE_INLINE_ASM */
-#endif /* AVUTIL_X86_BSWAP_H */
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_INLINE_ASM */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_X86_BSWAP_H */

@@ -18,68 +18,68 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "downmix_info.h"
-#include "frame.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ "downmix_info.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
-AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame)
+AVDownmixInfo *av_downmix_info_update_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು)
 {
-    AVFrameSideData *side_data;
+    AVFrame_Side_ದತ್ತಾಂಶ *side_ದತ್ತಾಂಶ;
 
-    side_data = av_frame_get_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO);
+    side_ದತ್ತಾಂಶ = av_ಚೌಕಟ್ಟು_get_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು, AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_DOWNMIX_INFO);
 
-    if (!side_data) {
-        side_data = av_frame_new_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO,
-                                           sizeof(AVDownmixInfo));
-        if (side_data)
-            memset(side_data->data, 0, sizeof(AVDownmixInfo));
+    ಆದರೆ (!side_ದತ್ತಾಂಶ) {
+        side_ದತ್ತಾಂಶ = av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು, AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_DOWNMIX_INFO,
+                                           ಗಾತ್ರ(AVDownmixInfo));
+        ಆದರೆ (side_ದತ್ತಾಂಶ)
+            memset(side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ, 0, ಗಾತ್ರ(AVDownmixInfo));
     }
 
-    if (!side_data)
-        return NULL;
+    ಆದರೆ (!side_ದತ್ತಾಂಶ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    return (AVDownmixInfo*)side_data->data;
+    ಹಿಂತಿರುಗಿ (AVDownmixInfo*)side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ;
 }
 
-#define MAX_CHANNELS 64
+#ವ್ಯಾಖ್ಯಾನಿಸು MAX_CHANNELS 64
 
-static const int type_map[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ type_map[] = {
     [AV_DOWNMIX_TYPE_UNKNOWN] = 0,
     [AV_DOWNMIX_TYPE_LORO]    = 2,
     [AV_DOWNMIX_TYPE_LTRT]    = 2,
     [AV_DOWNMIX_TYPE_DPLII]   = 2,
 };
 
-AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size)
+AVDownmix_ಮಾತೃಕೆ *av_downmix_ಮಾತೃಕೆ_alloc(ಎಣಿಕೆ AVDownmixType type,
+                                         ಪೂರ್ಣಾಂಕ ಒಳ_ch_ಎಣಿಕೆ, size_t *ಹೊರಹೋಗು_ಗಾತ್ರ)
 {
-    struct TestStruct {
-        AVDownmixMatrix p;
+    ರಚನೆ TestStruct {
+        AVDownmix_ಮಾತೃಕೆ p;
         AVDownmixCoeff  b;
     };
-    const size_t coeffs_offset = offsetof(struct TestStruct, b);
-    size_t size = coeffs_offset;
-    unsigned int nb_coeffs;
-    AVDownmixMatrix *dc;
+    ಸ್ಥಿರಾಂಕ size_t coeffs_ಸ್ಥಾನಾಂತರ = offsetof(ರಚನೆ TestStruct, b);
+    size_t ಗಾತ್ರ_2 = coeffs_ಸ್ಥಾನಾಂತರ;
+    ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_coeffs;
+    AVDownmix_ಮಾತೃಕೆ *dc;
 
-    if ((unsigned)type >= FF_ARRAY_ELEMS(type_map) ||
-        (unsigned)in_ch_count > MAX_CHANNELS)
-        return NULL;
+    ಆದರೆ ((ಚಿಹ್ನೆರಹಿತ)type >= FF_ARRAY_ELEMS(type_map) ||
+        (ಚಿಹ್ನೆರಹಿತ)ಒಳ_ch_ಎಣಿಕೆ > MAX_CHANNELS)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    nb_coeffs = type_map[type] * in_ch_count;
-    size += sizeof(AVDownmixCoeff) * nb_coeffs;
+    nb_coeffs = type_map[type] * ಒಳ_ch_ಎಣಿಕೆ;
+    ಗಾತ್ರ_2 += ಗಾತ್ರ(AVDownmixCoeff) * nb_coeffs;
 
-    dc = av_mallocz(size);
-    if (!dc)
-        return NULL;
+    dc = av_mallocz(ಗಾತ್ರ_2);
+    ಆದರೆ (!dc)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
     dc->downmix_type  = type;
     dc->nb_coeffs     = nb_coeffs;
-    dc->in_ch_count   = in_ch_count;
-    dc->coeffs_offset = coeffs_offset;
+    dc->ಒಳ_ch_ಎಣಿಕೆ   = ಒಳ_ch_ಎಣಿಕೆ;
+    dc->coeffs_ಸ್ಥಾನಾಂತರ = coeffs_ಸ್ಥಾನಾಂತರ;
 
-    if (out_size)
-        *out_size = size;
+    ಆದರೆ (ಹೊರಹೋಗು_ಗಾತ್ರ)
+        *ಹೊರಹೋಗು_ಗಾತ್ರ = ಗಾತ್ರ_2;
 
-    return dc;
+    ಹಿಂತಿರುಗಿ dc;
 }

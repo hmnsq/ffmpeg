@@ -45,14 +45,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FIXED_DSP_H
-#define AVUTIL_FIXED_DSP_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_FIXED_DSP_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_FIXED_DSP_H
 
-#include <stdint.h>
-#include "attributes.h"
-#include "libavcodec/mathops.h"
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ "attributes.h"
+#ಅನ್ತರ್ಭಾವ "libavcodec/mathops.h"
 
-typedef struct AVFixedDSPContext {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVFixedDSPContext {
     /* Assume len is a multiple of 16, and arrays are 32-byte aligned */
     /* Results of multiplications are scaled down by 31 bit (and rounded) if not
      * stated otherwise */
@@ -76,7 +76,7 @@ typedef struct AVFixedDSPContext {
      * @param bits scaling parameter
      *
      */
-    void (*vector_fmul_window_scaled)(int16_t *dst, const int32_t *src0, const int32_t *src1, const int32_t *win, int len, uint8_t bits);
+    ಶೂನ್ಯ (*ಸದಿಶ_fmul_ಕಿಟಕಿ_scaled)(int16_t *dst, ಸ್ಥಿರಾಂಕ int32_t *src0, ಸ್ಥಿರಾಂಕ int32_t *src1, ಸ್ಥಿರಾಂಕ int32_t *win, ಪೂರ್ಣಾಂಕ len, uint8_t ಬಿಟ್ಟುಗಳು);
 
     /**
      * Overlap/add with window function.
@@ -94,7 +94,7 @@ typedef struct AVFixedDSPContext {
      * @param len  length of vector
      *             constraints: multiple of 4
      */
-    void (*vector_fmul_window)(int32_t *dst, const int32_t *src0, const int32_t *src1, const int32_t *win, int len);
+    ಶೂನ್ಯ (*ಸದಿಶ_fmul_ಕಿಟಕಿ)(int32_t *dst, ಸ್ಥಿರಾಂಕ int32_t *src0, ಸ್ಥಿರಾಂಕ int32_t *src1, ಸ್ಥಿರಾಂಕ int32_t *win, ಪೂರ್ಣಾಂಕ len);
 
     /**
      * Fixed-point multiplication that calculates the entry wise product of two
@@ -109,10 +109,10 @@ typedef struct AVFixedDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul)(int *dst, const int *src0, const int *src1,
-                        int len);
+    ಶೂನ್ಯ (*ಸದಿಶ_fmul)(ಪೂರ್ಣಾಂಕ *dst, ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ *src0, ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ *src1,
+                        ಪೂರ್ಣಾಂಕ len);
 
-    void (*vector_fmul_reverse)(int *dst, const int *src0, const int *src1, int len);
+    ಶೂನ್ಯ (*ಸದಿಶ_fmul_ಹಿಮ್ಮುಖ)(ಪೂರ್ಣಾಂಕ *dst, ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ *src0, ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ *src1, ಪೂರ್ಣಾಂಕ len);
     /**
      * Calculate the entry wise product of two vectors of integers, add a third vector of
      * integers and store the result in a vector of integers.
@@ -128,8 +128,8 @@ typedef struct AVFixedDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul_add)(int *dst, const int *src0, const int *src1,
-                            const int *src2, int len);
+    ಶೂನ್ಯ (*ಸದಿಶ_fmul_ಕೂಡಿಸು)(ಪೂರ್ಣಾಂಕ *dst, ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ *src0, ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ *src1,
+                            ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ *src2, ಪೂರ್ಣಾಂಕ len);
 
     /**
      * Calculate the scalar product of two vectors of integers.
@@ -140,7 +140,7 @@ typedef struct AVFixedDSPContext {
      *
      * @return sum of elementwise products
      */
-    int (*scalarproduct_fixed)(const int *v1, const int *v2, int len);
+    ಪೂರ್ಣಾಂಕ (*scalarproduct_fixed)(ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ *v1, ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ *v2, ಪೂರ್ಣಾಂಕ len);
 
     /**
      * Calculate the sum and difference of two vectors of integers.
@@ -149,7 +149,7 @@ typedef struct AVFixedDSPContext {
      * @param v2  second input vector, difference output, 16-byte aligned
      * @param len length of vectors, multiple of 4
      */
-    void (*butterflies_fixed)(int *restrict v1, int *restrict v2, int len);
+    ಶೂನ್ಯ (*butterflies_fixed)(ಪೂರ್ಣಾಂಕ *ಸೀಮಿತ v1, ಪೂರ್ಣಾಂಕ *ಸೀಮಿತ v2, ಪೂರ್ಣಾಂಕ len);
 } AVFixedDSPContext;
 
 /**
@@ -158,10 +158,10 @@ typedef struct AVFixedDSPContext {
  *
  * @param strict  setting to non-zero avoids using functions which may not be IEEE-754 compliant
  */
-AVFixedDSPContext * avpriv_alloc_fixed_dsp(int strict);
+AVFixedDSPContext * avpriv_alloc_fixed_dsp(ಪೂರ್ಣಾಂಕ strict);
 
-void ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp);
-void ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp);
+ಶೂನ್ಯ ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp);
+ಶೂನ್ಯ ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp);
 
 /**
  * Calculate the square root
@@ -173,33 +173,33 @@ void ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp);
  * note: input is normalized to (0, 1) fixed point value
  */
 
-static av_always_inline int fixed_sqrt(int x, int bits)
+ಸ್ಥಿರ av_always_inline ಪೂರ್ಣಾಂಕ fixed_sqrt(ಪೂರ್ಣಾಂಕ x, ಪೂರ್ಣಾಂಕ ಬಿಟ್ಟುಗಳು)
 {
-    int retval, bit_mask, guess, square, i;
+    ಪೂರ್ಣಾಂಕ retval, ಬಿಟ್_ಮುಖವಾಡ, guess, ವರ್ಗಫಲ, i;
     int64_t accu;
-    int shift1 = 30 - bits;
-    int shift2 = bits - 15;
+    ಪೂರ್ಣಾಂಕ shift1 = 30 - ಬಿಟ್ಟುಗಳು;
+    ಪೂರ್ಣಾಂಕ shift2 = ಬಿಟ್ಟುಗಳು - 15;
 
-    if (shift1 > 0) retval = ff_sqrt(x << shift1);
-    else retval = ff_sqrt(x >> -shift1);
+    ಆದರೆ (shift1 > 0) retval = ff_sqrt(x << shift1);
+    ಇಲ್ಲದಿದ್ದರೆ retval = ff_sqrt(x >> -shift1);
 
-    if (shift2 > 0) {
+    ಆದರೆ (shift2 > 0) {
         retval = retval << shift2;
-        bit_mask = (1 << (shift2 - 1));
+        ಬಿಟ್_ಮುಖವಾಡ = (1 << (shift2 - 1));
 
-        for (i=0; i<shift2; i++){
-            guess = retval + bit_mask;
+        ಗಾಗಿ (i=0; i<shift2; i++){
+            guess = retval + ಬಿಟ್_ಮುಖವಾಡ;
             accu = (int64_t)guess * guess;
-            square = (int)((accu + bit_mask) >> bits);
-            if (x >= square)
-                retval += bit_mask;
-            bit_mask >>= 1;
+            ವರ್ಗಫಲ = (ಪೂರ್ಣಾಂಕ)((accu + ಬಿಟ್_ಮುಖವಾಡ) >> ಬಿಟ್ಟುಗಳು);
+            ಆದರೆ (x >= ವರ್ಗಫಲ)
+                retval += ಬಿಟ್_ಮುಖವಾಡ;
+            ಬಿಟ್_ಮುಖವಾಡ >>= 1;
         }
 
     }
-    else retval >>= (-shift2);
+    ಇಲ್ಲದಿದ್ದರೆ retval >>= (-shift2);
 
-    return retval;
+    ಹಿಂತಿರುಗಿ retval;
 }
 
-#endif /* AVUTIL_FIXED_DSP_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_FIXED_DSP_H */

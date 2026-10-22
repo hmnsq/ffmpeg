@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_IMGUTILS_H
-#define AVUTIL_IMGUTILS_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_IMGUTILS_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_IMGUTILS_H
 
 /**
  * @file
@@ -27,11 +27,11 @@
  * @{
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "rational.h"
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ "pixdesc.h"
+#ಅನ್ತರ್ಭಾವ "pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "rational.h"
 
 /**
  * Compute the max pixel step for each plane of an image with a
@@ -50,8 +50,8 @@
  * for each plane which has the max pixel step. May be NULL.
  * @param pixdesc the AVPixFmtDescriptor for the image, describing its format
  */
-void av_image_fill_max_pixsteps(int max_pixsteps[4], int max_pixstep_comps[4],
-                                const AVPixFmtDescriptor *pixdesc);
+ಶೂನ್ಯ av_image_fill_max_pixsteps(ಪೂರ್ಣಾಂಕ max_pixsteps[4], ಪೂರ್ಣಾಂಕ max_pixstep_comps[4],
+                                ಸ್ಥಿರಾಂಕ AVPixFmtDescriptor *pixdesc);
 
 /**
  * Compute the size of an image line with format pix_fmt and width
@@ -59,7 +59,7 @@ void av_image_fill_max_pixsteps(int max_pixsteps[4], int max_pixstep_comps[4],
  *
  * @return the computed size in bytes
  */
-int av_image_get_linesize(enum AVPixelFormat pix_fmt, int width, int plane);
+ಪೂರ್ಣಾಂಕ av_image_get_linesize(ಎಣಿಕೆ AVPixelFormat pix_fmt, ಪೂರ್ಣಾಂಕ ಅಗಲ, ಪೂರ್ಣಾಂಕ plane);
 
 /**
  * Fill plane linesizes for an image with pixel format pix_fmt and
@@ -70,7 +70,7 @@ int av_image_get_linesize(enum AVPixelFormat pix_fmt, int width, int plane);
  * @param width width of the image in pixels
  * @return >= 0 in case of success, a negative error code otherwise
  */
-int av_image_fill_linesizes(int linesizes[4], enum AVPixelFormat pix_fmt, int width);
+ಪೂರ್ಣಾಂಕ av_image_fill_linesizes(ಪೂರ್ಣಾಂಕ linesizes[4], ಎಣಿಕೆ AVPixelFormat pix_fmt, ಪೂರ್ಣಾಂಕ ಅಗಲ);
 
 /**
  * Fill plane sizes for an image with pixel format pix_fmt and height height.
@@ -85,8 +85,8 @@ int av_image_fill_linesizes(int linesizes[4], enum AVPixelFormat pix_fmt, int wi
  * @note The linesize parameters have the type ptrdiff_t here, while they are
  *       int for av_image_fill_linesizes().
  */
-int av_image_fill_plane_sizes(size_t size[4], enum AVPixelFormat pix_fmt,
-                              int height, const ptrdiff_t linesizes[4]);
+ಪೂರ್ಣಾಂಕ av_image_fill_plane_sizes(size_t ಗಾತ್ರ_2[4], ಎಣಿಕೆ AVPixelFormat pix_fmt,
+                              ಪೂರ್ಣಾಂಕ ಎತ್ತರ, ಸ್ಥಿರಾಂಕ ptrdiff_t linesizes[4]);
 
 /**
  * Fill plane data pointers for an image with pixel format pix_fmt and
@@ -101,8 +101,8 @@ int av_image_fill_plane_sizes(size_t size[4], enum AVPixelFormat pix_fmt,
  * @return the size in bytes required for the image buffer, a negative
  * error code in case of failure
  */
-int av_image_fill_pointers(uint8_t *data[4], enum AVPixelFormat pix_fmt, int height,
-                           uint8_t *ptr, const int linesizes[4]);
+ಪೂರ್ಣಾಂಕ av_image_fill_ಸೂಚಕಗಳು(uint8_t *ದತ್ತಾಂಶ[4], ಎಣಿಕೆ AVPixelFormat pix_fmt, ಪೂರ್ಣಾಂಕ ಎತ್ತರ,
+                           uint8_t *ptr, ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ linesizes[4]);
 
 /**
  * Allocate an image with size w and h and pixel format pix_fmt, and
@@ -119,8 +119,8 @@ int av_image_fill_pointers(uint8_t *data[4], enum AVPixelFormat pix_fmt, int hei
  * @return the size in bytes required for the image buffer, a negative
  * error code in case of failure
  */
-int av_image_alloc(uint8_t *pointers[4], int linesizes[4],
-                   int w, int h, enum AVPixelFormat pix_fmt, int align);
+ಪೂರ್ಣಾಂಕ av_image_alloc(uint8_t *ಸೂಚಕಗಳು[4], ಪೂರ್ಣಾಂಕ linesizes[4],
+                   ಪೂರ್ಣಾಂಕ w, ಪೂರ್ಣಾಂಕ h, ಎಣಿಕೆ AVPixelFormat pix_fmt, ಪೂರ್ಣಾಂಕ align);
 
 /**
  * Copy image plane from src to dst.
@@ -137,9 +137,9 @@ int av_image_alloc(uint8_t *pointers[4], int linesizes[4],
  * @param src_linesize linesize for the image plane in src
  * @param height       height (number of lines) of the plane
  */
-void av_image_copy_plane(uint8_t       *dst, int dst_linesize,
-                         const uint8_t *src, int src_linesize,
-                         int bytewidth, int height);
+ಶೂನ್ಯ av_image_copy_plane(uint8_t       *dst, ಪೂರ್ಣಾಂಕ dst_linesize,
+                         ಸ್ಥಿರಾಂಕ uint8_t *src, ಪೂರ್ಣಾಂಕ src_linesize,
+                         ಪೂರ್ಣಾಂಕ bytewidth, ಪೂರ್ಣಾಂಕ ಎತ್ತರ);
 
 /**
  * Copy image data located in uncacheable (e.g. GPU mapped) memory. Where
@@ -155,9 +155,9 @@ void av_image_copy_plane(uint8_t       *dst, int dst_linesize,
  * @note On x86, the linesizes currently need to be aligned to the cacheline
  *       size (i.e. 64) to get improved performance.
  */
-void av_image_copy_plane_uc_from(uint8_t       *dst, ptrdiff_t dst_linesize,
-                                 const uint8_t *src, ptrdiff_t src_linesize,
-                                 ptrdiff_t bytewidth, int height);
+ಶೂನ್ಯ av_image_copy_plane_uc_from(uint8_t       *dst, ptrdiff_t dst_linesize,
+                                 ಸ್ಥಿರಾಂಕ uint8_t *src, ptrdiff_t src_linesize,
+                                 ptrdiff_t bytewidth, ಪೂರ್ಣಾಂಕ ಎತ್ತರ);
 
 /**
  * Copy image in src_data to dst_data.
@@ -170,9 +170,9 @@ void av_image_copy_plane_uc_from(uint8_t       *dst, ptrdiff_t dst_linesize,
  * @param width         width of the image in pixels
  * @param height        height of the image in pixels
  */
-void av_image_copy(uint8_t * const dst_data[4], const int dst_linesizes[4],
-                   const uint8_t * const src_data[4], const int src_linesizes[4],
-                   enum AVPixelFormat pix_fmt, int width, int height);
+ಶೂನ್ಯ av_image_copy(uint8_t * ಸ್ಥಿರಾಂಕ dst_ದತ್ತಾಂಶ[4], ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ dst_linesizes[4],
+                   ಸ್ಥಿರಾಂಕ uint8_t * ಸ್ಥಿರಾಂಕ src_ದತ್ತಾಂಶ[4], ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ src_linesizes[4],
+                   ಎಣಿಕೆ AVPixelFormat pix_fmt, ಪೂರ್ಣಾಂಕ ಅಗಲ, ಪೂರ್ಣಾಂಕ ಎತ್ತರ);
 
 /**
  * Wrapper around av_image_copy() to workaround the limitation
@@ -180,14 +180,14 @@ void av_image_copy(uint8_t * const dst_data[4], const int dst_linesizes[4],
  * is not performed automatically in C.
  * @see av_image_copy()
  */
-static inline
-void av_image_copy2(uint8_t * const dst_data[4], const int dst_linesizes[4],
-                    uint8_t * const src_data[4], const int src_linesizes[4],
-                    enum AVPixelFormat pix_fmt, int width, int height)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ
+ಶೂನ್ಯ av_image_copy2(uint8_t * ಸ್ಥಿರಾಂಕ dst_ದತ್ತಾಂಶ[4], ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ dst_linesizes[4],
+                    uint8_t * ಸ್ಥಿರಾಂಕ src_ದತ್ತಾಂಶ[4], ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ src_linesizes[4],
+                    ಎಣಿಕೆ AVPixelFormat pix_fmt, ಪೂರ್ಣಾಂಕ ಅಗಲ, ಪೂರ್ಣಾಂಕ ಎತ್ತರ)
 {
-    av_image_copy(dst_data, dst_linesizes,
-                  (const uint8_t * const *)src_data, src_linesizes,
-                  pix_fmt, width, height);
+    av_image_copy(dst_ದತ್ತಾಂಶ, dst_linesizes,
+                  (ಸ್ಥಿರಾಂಕ uint8_t * ಸ್ಥಿರಾಂಕ *)src_ದತ್ತಾಂಶ, src_linesizes,
+                  pix_fmt, ಅಗಲ, ಎತ್ತರ);
 }
 
 /**
@@ -204,9 +204,9 @@ void av_image_copy2(uint8_t * const dst_data[4], const int dst_linesizes[4],
  * @note On x86, the linesizes currently need to be aligned to the cacheline
  *       size (i.e. 64) to get improved performance.
  */
-void av_image_copy_uc_from(uint8_t * const dst_data[4],       const ptrdiff_t dst_linesizes[4],
-                           const uint8_t * const src_data[4], const ptrdiff_t src_linesizes[4],
-                           enum AVPixelFormat pix_fmt, int width, int height);
+ಶೂನ್ಯ av_image_copy_uc_from(uint8_t * ಸ್ಥಿರಾಂಕ dst_ದತ್ತಾಂಶ[4],       ಸ್ಥಿರಾಂಕ ptrdiff_t dst_linesizes[4],
+                           ಸ್ಥಿರಾಂಕ uint8_t * ಸ್ಥಿರಾಂಕ src_ದತ್ತಾಂಶ[4], ಸ್ಥಿರಾಂಕ ptrdiff_t src_linesizes[4],
+                           ಎಣಿಕೆ AVPixelFormat pix_fmt, ಪೂರ್ಣಾಂಕ ಅಗಲ, ಪೂರ್ಣಾಂಕ ಎತ್ತರ);
 
 /**
  * Setup the data pointers and linesizes based on the specified image
@@ -234,9 +234,9 @@ void av_image_copy_uc_from(uint8_t * const dst_data[4],       const ptrdiff_t ds
  * @return the size in bytes required for src, a negative error code
  * in case of failure
  */
-int av_image_fill_arrays(uint8_t *dst_data[4], int dst_linesize[4],
-                         const uint8_t *src,
-                         enum AVPixelFormat pix_fmt, int width, int height, int align);
+ಪೂರ್ಣಾಂಕ av_image_fill_arrays(uint8_t *dst_ದತ್ತಾಂಶ[4], ಪೂರ್ಣಾಂಕ dst_linesize[4],
+                         ಸ್ಥಿರಾಂಕ uint8_t *src,
+                         ಎಣಿಕೆ AVPixelFormat pix_fmt, ಪೂರ್ಣಾಂಕ ಅಗಲ, ಪೂರ್ಣಾಂಕ ಎತ್ತರ, ಪೂರ್ಣಾಂಕ align);
 
 /**
  * Return the size in bytes of the amount of data required to store an
@@ -248,7 +248,7 @@ int av_image_fill_arrays(uint8_t *dst_data[4], int dst_linesize[4],
  * @param align    the assumed linesize alignment
  * @return the buffer size in bytes, a negative error code in case of failure
  */
-int av_image_get_buffer_size(enum AVPixelFormat pix_fmt, int width, int height, int align);
+ಪೂರ್ಣಾಂಕ av_image_get_ಬಫರ್_ಗಾತ್ರ(ಎಣಿಕೆ AVPixelFormat pix_fmt, ಪೂರ್ಣಾಂಕ ಅಗಲ, ಪೂರ್ಣಾಂಕ ಎತ್ತರ, ಪೂರ್ಣಾಂಕ align);
 
 /**
  * Copy image data from an image into a buffer.
@@ -267,9 +267,9 @@ int av_image_get_buffer_size(enum AVPixelFormat pix_fmt, int width, int height, 
  * @return the number of bytes written to dst, or a negative value
  * (error code) on error
  */
-int av_image_copy_to_buffer(uint8_t *dst, int dst_size,
-                            const uint8_t * const src_data[4], const int src_linesize[4],
-                            enum AVPixelFormat pix_fmt, int width, int height, int align);
+ಪೂರ್ಣಾಂಕ av_image_copy_ಗಮ್ಯ_ಬಫರ್(uint8_t *dst, ಪೂರ್ಣಾಂಕ dst_ಗಾತ್ರ,
+                            ಸ್ಥಿರಾಂಕ uint8_t * ಸ್ಥಿರಾಂಕ src_ದತ್ತಾಂಶ[4], ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ src_linesize[4],
+                            ಎಣಿಕೆ AVPixelFormat pix_fmt, ಪೂರ್ಣಾಂಕ ಅಗಲ, ಪೂರ್ಣಾಂಕ ಎತ್ತರ, ಪೂರ್ಣಾಂಕ align);
 
 /**
  * Check if the given dimension of an image is valid, meaning that all
@@ -281,7 +281,7 @@ int av_image_copy_to_buffer(uint8_t *dst, int dst_size,
  * @param log_ctx the parent logging context, it may be NULL
  * @return >= 0 if valid, a negative error code otherwise
  */
-int av_image_check_size(unsigned int w, unsigned int h, int log_offset, void *log_ctx);
+ಪೂರ್ಣಾಂಕ av_image_check_ಗಾತ್ರ(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ w, ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ h, ಪೂರ್ಣಾಂಕ log_ಸ್ಥಾನಾಂತರ, ಶೂನ್ಯ *log_ctx);
 
 /**
  * Check if the given dimension of an image is valid, meaning that all
@@ -296,7 +296,7 @@ int av_image_check_size(unsigned int w, unsigned int h, int log_offset, void *lo
  * @param log_ctx the parent logging context, it may be NULL
  * @return >= 0 if valid, a negative error code otherwise
  */
-int av_image_check_size2(unsigned int w, unsigned int h, int64_t max_pixels, enum AVPixelFormat pix_fmt, int log_offset, void *log_ctx);
+ಪೂರ್ಣಾಂಕ av_image_check_size2(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ w, ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ h, int64_t max_pixels, ಎಣಿಕೆ AVPixelFormat pix_fmt, ಪೂರ್ಣಾಂಕ log_ಸ್ಥಾನಾಂತರ, ಶೂನ್ಯ *log_ctx);
 
 /**
  * Check if the given sample aspect ratio of an image is valid.
@@ -310,7 +310,7 @@ int av_image_check_size2(unsigned int w, unsigned int h, int64_t max_pixels, enu
  * @param sar sample aspect ratio of the image
  * @return 0 if valid, a negative AVERROR code otherwise
  */
-int av_image_check_sar(unsigned int w, unsigned int h, AVRational sar);
+ಪೂರ್ಣಾಂಕ av_image_check_sar(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ w, ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ h, AVRational sar);
 
 /**
  * Overwrite the image data with black. This is suitable for filling a
@@ -335,9 +335,9 @@ int av_image_check_sar(unsigned int w, unsigned int h, AVRational sar);
  * @param height        the height of the image in pixels
  * @return 0 if the image data was cleared, a negative AVERROR code otherwise
  */
-int av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
-                        enum AVPixelFormat pix_fmt, enum AVColorRange range,
-                        int width, int height);
+ಪೂರ್ಣಾಂಕ av_image_fill_black(uint8_t * ಸ್ಥಿರಾಂಕ dst_ದತ್ತಾಂಶ[4], ಸ್ಥಿರಾಂಕ ptrdiff_t dst_linesize[4],
+                        ಎಣಿಕೆ AVPixelFormat pix_fmt, ಎಣಿಕೆ AVColorRange range,
+                        ಪೂರ್ಣಾಂಕ ಅಗಲ, ಪೂರ್ಣಾಂಕ ಎತ್ತರ);
 
 /**
  * Overwrite the image data with a color. This is suitable for filling a
@@ -365,13 +365,13 @@ int av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesiz
  * @param flags         currently unused
  * @return 0 if the image data was filled, a negative AVERROR code otherwise
  */
-int av_image_fill_color(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
-                        enum AVPixelFormat pix_fmt, const uint32_t color[4],
-                        int width, int height, int flags);
+ಪೂರ್ಣಾಂಕ av_image_fill_color(uint8_t * ಸ್ಥಿರಾಂಕ dst_ದತ್ತಾಂಶ[4], ಸ್ಥಿರಾಂಕ ptrdiff_t dst_linesize[4],
+                        ಎಣಿಕೆ AVPixelFormat pix_fmt, ಸ್ಥಿರಾಂಕ uint32_t color[4],
+                        ಪೂರ್ಣಾಂಕ ಅಗಲ, ಪೂರ್ಣಾಂಕ ಎತ್ತರ, ಪೂರ್ಣಾಂಕ flags);
 
 /**
  * @}
  */
 
 
-#endif /* AVUTIL_IMGUTILS_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_IMGUTILS_H */

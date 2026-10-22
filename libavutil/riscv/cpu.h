@@ -18,34 +18,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_CPU_H
-#define AVUTIL_RISCV_CPU_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_RISCV_CPU_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_RISCV_CPU_H
 
-#include "config.h"
-#include <stdbool.h>
-#include <stddef.h>
-#include "libavutil/attributes_internal.h"
-#include "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ <stdbool.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes_internal.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
 
-#ifndef __riscv_zbb
-extern attribute_visibility_hidden bool ff_rv_zbb_supported;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __riscv_zbb
+ಬಾಹ್ಯ attribute_visibility_hidden bool ff_rv_zbb_supported;
+#ಆದರೆ_ಅಂತ್ಯ
 
-static inline av_const bool ff_rv_zbb_support(void)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ av_const bool ff_rv_zbb_support(ಶೂನ್ಯ)
 {
-#ifndef __riscv_zbb
-    return ff_rv_zbb_supported;
-#else
-    return true;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __riscv_zbb
+    ಹಿಂತಿರುಗಿ ff_rv_zbb_supported;
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಹಿಂತಿರುಗಿ true;
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
-#if HAVE_RVV
+#ಆದರೆ HAVE_RVV
 /**
  * Returns the vector size in bytes (always a power of two and at least 4).
  * This is undefined behaviour if vectors are not implemented.
  */
-static inline av_const size_t ff_get_rv_vlenb(void)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ av_const size_t ff_get_rv_vlenb(ಶೂನ್ಯ)
 {
     size_t vlenb;
 
@@ -54,27 +54,27 @@ static inline av_const size_t ff_get_rv_vlenb(void)
         ".option arch, +v\n"
         "    csrr %0, vlenb\n"
         ".option pop\n" : "=r" (vlenb));
-    return vlenb;
+    ಹಿಂತಿರುಗಿ vlenb;
 }
 
 /**
  * Checks that the vector bit-size is at least the given value.
  * This is potentially undefined behaviour if vectors are not implemented.
  */
-static inline av_const bool ff_rv_vlen_least(unsigned int bits)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ av_const bool ff_rv_vlen_ಕನಿಷ್ಠ(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ ಬಿಟ್ಟುಗಳು)
 {
-#ifdef __riscv_v_min_vlen
-    if (bits <= __riscv_v_min_vlen)
-        return true;
-#else
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __riscv_v_min_vlen
+    ಆದರೆ (ಬಿಟ್ಟುಗಳು <= __riscv_v_min_vlen)
+        ಹಿಂತಿರುಗಿ true;
+#ಇಲ್ಲದಿದ್ದರೆ
     /*
      * Vector lengths smaller than 128 bits are only possible in embedded cases
      * and cannot be run-time detected, so we can assume 128 bits at least.
      */
-    if (bits <= 128)
-        return true;
-#endif
-    return bits <= (8 * ff_get_rv_vlenb());
+    ಆದರೆ (ಬಿಟ್ಟುಗಳು <= 128)
+        ಹಿಂತಿರುಗಿ true;
+#ಆದರೆ_ಅಂತ್ಯ
+    ಹಿಂತಿರುಗಿ ಬಿಟ್ಟುಗಳು <= (8 * ff_get_rv_vlenb());
 }
-#endif
-#endif /* HAVE_RVV */
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_RVV */

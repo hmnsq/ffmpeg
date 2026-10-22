@@ -18,45 +18,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include "libavutil/display.c"
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ "libavutil/display.c"
 
-static void print_matrix(int32_t matrix[9])
+ಸ್ಥಿರ ಶೂನ್ಯ print_ಮಾತೃಕೆ(int32_t ಮಾತೃಕೆ[9])
 {
-    int i, j;
+    ಪೂರ್ಣಾಂಕ i, j;
 
-    for (i = 0; i < 3; ++i) {
-        for (j = 0; j < 3 - 1; ++j)
-            printf("%d ", matrix[i*3 + j]);
+    ಗಾಗಿ (i = 0; i < 3; ++i) {
+        ಗಾಗಿ (j = 0; j < 3 - 1; ++j)
+            ಬರೆ("%d ", ಮಾತೃಕೆ[i*3 + j]);
 
-        printf("%d\n", matrix[i*3 + j]);
+        ಬರೆ("%d\n", ಮಾತೃಕೆ[i*3 + j]);
     }
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
-    int32_t matrix[9];
+    int32_t ಮಾತೃಕೆ[9];
 
     // Set the matrix to 90 degrees
-    av_display_rotation_set(matrix, 90);
-    print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    av_display_rotation_ಗಣ(ಮಾತೃಕೆ, 90);
+    print_ಮಾತೃಕೆ(ಮಾತೃಕೆ);
+    ಬರೆ("degrees: %f\n", av_display_rotation_get(ಮಾತೃಕೆ));
 
     // Set the matrix to -45 degrees
-    av_display_rotation_set(matrix, -45);
-    print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    av_display_rotation_ಗಣ(ಮಾತೃಕೆ, -45);
+    print_ಮಾತೃಕೆ(ಮಾತೃಕೆ);
+    ಬರೆ("degrees: %f\n", av_display_rotation_get(ಮಾತೃಕೆ));
 
     // flip horizontal
-    av_display_matrix_flip(matrix, 1, 0);
-    print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    av_display_ಮಾತೃಕೆ_flip(ಮಾತೃಕೆ, 1, 0);
+    print_ಮಾತೃಕೆ(ಮಾತೃಕೆ);
+    ಬರೆ("degrees: %f\n", av_display_rotation_get(ಮಾತೃಕೆ));
 
     // flip vertical
-    av_display_matrix_flip(matrix, 0, 1);
-    print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    av_display_ಮಾತೃಕೆ_flip(ಮಾತೃಕೆ, 0, 1);
+    print_ಮಾತೃಕೆ(ಮಾತೃಕೆ);
+    ಬರೆ("degrees: %f\n", av_display_rotation_get(ಮಾತೃಕೆ));
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 
 }

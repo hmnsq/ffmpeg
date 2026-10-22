@@ -50,27 +50,27 @@
  * MIPS optimization for some libm functions
  */
 
-#ifndef AVUTIL_MIPS_LIBM_MIPS_H
-#define AVUTIL_MIPS_LIBM_MIPS_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_MIPS_LIBM_MIPS_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_MIPS_LIBM_MIPS_H
 
-#include <math.h>
+#ಅನ್ತರ್ಭಾವ <math.h>
 
-#include "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
 
-static av_always_inline av_const long int lrintf_mips(float x)
+ಸ್ಥಿರ av_always_inline av_const ದೀರ್ಘ ಪೂರ್ಣಾಂಕ lrintf_mips(ದಶಮಾಂಶ x)
 {
-    register int ret_int;
+    ನೋಂದಣಿ ಪೂರ್ಣಾಂಕ ret_int;
 
-    __asm__ volatile (
+    __asm__ ಅಸ್ಥಿರ (
         "cvt.w.s    %[x],       %[x]    \n\t"
         "mfc1       %[ret_int], %[x]    \n\t"
 
         :[x]"+f"(x), [ret_int]"=r"(ret_int)
     );
-    return ret_int;
+    ಹಿಂತಿರುಗಿ ret_int;
 }
 
-#undef lrintf
-#define lrintf(x)   lrintf_mips(x)
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು lrintf
+#ವ್ಯಾಖ್ಯಾನಿಸು lrintf(x)   lrintf_mips(x)
 
-#endif /* AVUTIL_MIPS_LIBM_MIPS_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_MIPS_LIBM_MIPS_H */

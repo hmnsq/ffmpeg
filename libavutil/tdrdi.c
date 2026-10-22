@@ -16,36 +16,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "mem.h"
-#include "tdrdi.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "tdrdi.h"
 
-AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *out_size)
+AV3DReferenceDisplaysInfo *av_tdrdi_alloc(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_displays, size_t *ಹೊರಹೋಗು_ಗಾತ್ರ)
 {
-    struct TestStruct {
+    ರಚನೆ TestStruct {
         AV3DReferenceDisplaysInfo p;
         AV3DReferenceDisplay      b;
     };
-    const size_t entries_offset = offsetof(struct TestStruct, b);
-    size_t size = entries_offset;
+    ಸ್ಥಿರಾಂಕ size_t entries_ಸ್ಥಾನಾಂತರ = offsetof(ರಚನೆ TestStruct, b);
+    size_t ಗಾತ್ರ_2 = entries_ಸ್ಥಾನಾಂತರ;
     AV3DReferenceDisplaysInfo *tdrdi;
 
-    if (nb_displays > (SIZE_MAX - size) / sizeof(AV3DReferenceDisplay))
-        return NULL;
-    size += sizeof(AV3DReferenceDisplay) * nb_displays;
+    ಆದರೆ (nb_displays > (SIZE_MAX - ಗಾತ್ರ_2) / ಗಾತ್ರ(AV3DReferenceDisplay))
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ಗಾತ್ರ_2 += ಗಾತ್ರ(AV3DReferenceDisplay) * nb_displays;
 
-    tdrdi = av_mallocz(size);
-    if (!tdrdi)
-        return NULL;
+    tdrdi = av_mallocz(ಗಾತ್ರ_2);
+    ಆದರೆ (!tdrdi)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    tdrdi->num_ref_displays = nb_displays;
-    tdrdi->entry_size       = sizeof(AV3DReferenceDisplay);
-    tdrdi->entries_offset   = entries_offset;
+    tdrdi->ಅಂಕೆ_ref_displays = nb_displays;
+    tdrdi->ನಮೂದು_ಗಾತ್ರ       = ಗಾತ್ರ(AV3DReferenceDisplay);
+    tdrdi->entries_ಸ್ಥಾನಾಂತರ   = entries_ಸ್ಥಾನಾಂತರ;
 
-    if (out_size)
-        *out_size = size;
+    ಆದರೆ (ಹೊರಹೋಗು_ಗಾತ್ರ)
+        *ಹೊರಹೋಗು_ಗಾತ್ರ = ಗಾತ್ರ_2;
 
-    return tdrdi;
+    ಹಿಂತಿರುಗಿ tdrdi;
 }

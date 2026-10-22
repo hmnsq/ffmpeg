@@ -24,20 +24,20 @@
  * @author Ryan Martell <rdm4@martellventures.com> (with lots of Michael)
  */
 
-#include <limits.h>
-#include <stddef.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
 
-#include "base64.h"
-#include "base64_internal.h"
-#include "error.h"
+#ಅನ್ತರ್ಭಾವ "base64.h"
+#ಅನ್ತರ್ಭಾವ "base64_internal.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
 
-#if ARCH_AARCH64
-#include "libavutil/aarch64/cpu.h"
-#include "libavutil/aarch64/base64.h"
-#endif
+#ಆದರೆ ARCH_AARCH64
+#ಅನ್ತರ್ಭಾವ "libavutil/aarch64/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/aarch64/base64.h"
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* ---------------- private code */
-static const uint8_t map2[256] =
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t map2[256] =
 {
     0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -76,71 +76,71 @@ static const uint8_t map2[256] =
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
 };
 
-#define BASE64_DEC_STEP(i) do { \
-    bits = map2[in[i]]; \
-    if (bits & 0x80) \
-        goto out ## i; \
-    v = i ? (v << 6) + bits : bits; \
-} while(0)
+#ವ್ಯಾಖ್ಯಾನಿಸು BASE64_DEC_ಹೆಜ್ಜೆ(i) ಮಾಡು { \
+    ಬಿಟ್ಟುಗಳು = map2[ಒಳ[i]]; \
+    ಆದರೆ (ಬಿಟ್ಟುಗಳು & 0x80) \
+        ಹೋಗು ಹೊರಹೋಗು ## i; \
+    v = i ? (v << 6) + ಬಿಟ್ಟುಗಳು : ಬಿಟ್ಟುಗಳು; \
+} ಆಗ(0)
 
-int av_base64_decode(uint8_t *out, const char *in_str, int out_size)
+ಪೂರ್ಣಾಂಕ av_base64_decode(uint8_t *ಹೊರಹೋಗು, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಒಳ_str, ಪೂರ್ಣಾಂಕ ಹೊರಹೋಗು_ಗಾತ್ರ)
 {
-    uint8_t *dst = out;
-    uint8_t *end;
+    uint8_t *dst = ಹೊರಹೋಗು;
+    uint8_t *ಕೊನೆ;
     // no sign extension
-    const uint8_t *in = in_str;
-    unsigned bits = 0xff;
-    unsigned v;
+    ಸ್ಥಿರಾಂಕ uint8_t *ಒಳ = ಒಳ_str;
+    ಚಿಹ್ನೆರಹಿತ ಬಿಟ್ಟುಗಳು = 0xff;
+    ಚಿಹ್ನೆರಹಿತ v;
 
-    if (!out)
-        goto validity_check;
+    ಆದರೆ (!ಹೊರಹೋಗು)
+        ಹೋಗು validity_check;
 
-    end = out + out_size;
-    while (end - dst > 3) {
-        BASE64_DEC_STEP(0);
-        BASE64_DEC_STEP(1);
-        BASE64_DEC_STEP(2);
-        BASE64_DEC_STEP(3);
+    ಕೊನೆ = ಹೊರಹೋಗು + ಹೊರಹೋಗು_ಗಾತ್ರ;
+    ಆಗ (ಕೊನೆ - dst > 3) {
+        BASE64_DEC_ಹೆಜ್ಜೆ(0);
+        BASE64_DEC_ಹೆಜ್ಜೆ(1);
+        BASE64_DEC_ಹೆಜ್ಜೆ(2);
+        BASE64_DEC_ಹೆಜ್ಜೆ(3);
         // Using AV_WB32 directly confuses compiler
         v = av_be2ne32(v << 8);
         AV_WN32(dst, v);
         dst += 3;
-        in += 4;
+        ಒಳ += 4;
     }
-    if (end - dst) {
-        BASE64_DEC_STEP(0);
-        BASE64_DEC_STEP(1);
-        BASE64_DEC_STEP(2);
-        BASE64_DEC_STEP(3);
+    ಆದರೆ (ಕೊನೆ - dst) {
+        BASE64_DEC_ಹೆಜ್ಜೆ(0);
+        BASE64_DEC_ಹೆಜ್ಜೆ(1);
+        BASE64_DEC_ಹೆಜ್ಜೆ(2);
+        BASE64_DEC_ಹೆಜ್ಜೆ(3);
         *dst++ = v >> 16;
-        if (end - dst)
+        ಆದರೆ (ಕೊನೆ - dst)
             *dst++ = v >> 8;
-        if (end - dst)
+        ಆದರೆ (ಕೊನೆ - dst)
             *dst++ = v;
-        in += 4;
+        ಒಳ += 4;
     }
 validity_check:
-    while (1) {
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
+    ಆಗ (1) {
+        BASE64_DEC_ಹೆಜ್ಜೆ(0);
+        ಒಳ++;
+        BASE64_DEC_ಹೆಜ್ಜೆ(0);
+        ಒಳ++;
+        BASE64_DEC_ಹೆಜ್ಜೆ(0);
+        ಒಳ++;
+        BASE64_DEC_ಹೆಜ್ಜೆ(0);
+        ಒಳ++;
     }
 
 out3:
-    if (end - dst)
+    ಆದರೆ (ಕೊನೆ - dst)
         *dst++ = v >> 10;
     v <<= 2;
 out2:
-    if (end - dst)
+    ಆದರೆ (ಕೊನೆ - dst)
         *dst++ = v >> 4;
 out1:
 out0:
-    return bits & 1 ? AVERROR_INVALIDDATA : out ? dst - out : 0;
+    ಹಿಂತಿರುಗಿ ಬಿಟ್ಟುಗಳು & 1 ? AVERROR_INVALIDDATA : ಹೊರಹೋಗು ? dst - ಹೊರಹೋಗು : 0;
 }
 
 /*****************************************************************************
@@ -149,18 +149,18 @@ out0:
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-char *av_base64_encode(char *out, int out_size, const uint8_t *in, int in_size)
+ಅಕ್ಷರ *av_base64_encode(ಅಕ್ಷರ *ಹೊರಹೋಗು, ಪೂರ್ಣಾಂಕ ಹೊರಹೋಗು_ಗಾತ್ರ, ಸ್ಥಿರಾಂಕ uint8_t *ಒಳ, ಪೂರ್ಣಾಂಕ ಒಳ_ಗಾತ್ರ)
 {
-    static const char b64[] =
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ b64[] =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    if (in_size >= UINT_MAX / 4 ||
-        out_size < AV_BASE64_SIZE(in_size))
-        return NULL;
-#if ARCH_AARCH64
-    if (in_size >= 48 && have_neon(av_get_cpu_flags())) {
-        return ff_base64_encode_neon(out, in, in_size, b64);
+    ಆದರೆ (ಒಳ_ಗಾತ್ರ >= UINT_MAX / 4 ||
+        ಹೊರಹೋಗು_ಗಾತ್ರ < AV_BASE64_ಗಾತ್ರ(ಒಳ_ಗಾತ್ರ))
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+#ಆದರೆ ARCH_AARCH64
+    ಆದರೆ (ಒಳ_ಗಾತ್ರ >= 48 && have_neon(av_get_cpu_flags())) {
+        ಹಿಂತಿರುಗಿ ff_base64_encode_neon(ಹೊರಹೋಗು, ಒಳ, ಒಳ_ಗಾತ್ರ, b64);
     }
-#endif
-    return ff_base64_encode_c(out, in, in_size, b64);
+#ಆದರೆ_ಅಂತ್ಯ
+    ಹಿಂತಿರುಗಿ ff_base64_encode_c(ಹೊರಹೋಗು, ಒಳ, ಒಳ_ಗಾತ್ರ, b64);
 }

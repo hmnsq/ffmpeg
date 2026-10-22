@@ -18,30 +18,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "raw_color_params.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ "raw_color_params.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
-AVRawColorParams *av_raw_color_params_alloc(size_t *size)
+AVRawColorParams *av_raw_color_params_alloc(size_t *ಗಾತ್ರ_2)
 {
-    AVRawColorParams *p = av_mallocz(sizeof(AVRawColorParams));
-    if (!p)
-        return NULL;
+    AVRawColorParams *p = av_mallocz(ಗಾತ್ರ(AVRawColorParams));
+    ಆದರೆ (!p)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    if (size)
-        *size = sizeof(*p);
+    ಆದರೆ (ಗಾತ್ರ_2)
+        *ಗಾತ್ರ_2 = ಗಾತ್ರ(*p);
 
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
-AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame)
+AVRawColorParams *av_raw_color_params_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame, AV_FRAME_DATA_RAW_COLOR_PARAMS,
-                               sizeof(AVRawColorParams));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_ದತ್ತಾಂಶ *side_ದತ್ತಾಂಶ =
+        av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು, AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_RAW_COLOR_PARAMS,
+                               ಗಾತ್ರ(AVRawColorParams));
+    ಆದರೆ (!side_ದತ್ತಾಂಶ)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-    memset(side_data->data, 0, side_data->size);
+    memset(side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ, 0, side_ದತ್ತಾಂಶ->ಗಾತ್ರ_2);
 
-    return (AVRawColorParams *)side_data->data;
+    ಹಿಂತಿರುಗಿ (AVRawColorParams *)side_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ;
 }

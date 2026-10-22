@@ -16,254 +16,254 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
-#include "samplefmt.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "samplefmt.h"
 
-#include <limits.h>
-#include <stdio.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-typedef struct SampleFmtInfo {
-    char name[8];
-    int bits;
-    int planar;
-    enum AVSampleFormat altform; ///< planar<->packed alternative form
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ SampleFmtInfo {
+    ಅಕ್ಷರ name[8];
+    ಪೂರ್ಣಾಂಕ ಬಿಟ್ಟುಗಳು;
+    ಪೂರ್ಣಾಂಕ planar;
+    ಎಣಿಕೆ AVSampleFormat altform; ///< planar<->packed alternative form
 } SampleFmtInfo;
 
 /** this table gives more information about formats */
-static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
-    [AV_SAMPLE_FMT_U8]   = { .name =   "u8", .bits =  8, .planar = 0, .altform = AV_SAMPLE_FMT_U8P  },
-    [AV_SAMPLE_FMT_S16]  = { .name =  "s16", .bits = 16, .planar = 0, .altform = AV_SAMPLE_FMT_S16P },
-    [AV_SAMPLE_FMT_S32]  = { .name =  "s32", .bits = 32, .planar = 0, .altform = AV_SAMPLE_FMT_S32P },
-    [AV_SAMPLE_FMT_S64]  = { .name =  "s64", .bits = 64, .planar = 0, .altform = AV_SAMPLE_FMT_S64P },
-    [AV_SAMPLE_FMT_FLT]  = { .name =  "flt", .bits = 32, .planar = 0, .altform = AV_SAMPLE_FMT_FLTP },
-    [AV_SAMPLE_FMT_DBL]  = { .name =  "dbl", .bits = 64, .planar = 0, .altform = AV_SAMPLE_FMT_DBLP },
-    [AV_SAMPLE_FMT_U8P]  = { .name =  "u8p", .bits =  8, .planar = 1, .altform = AV_SAMPLE_FMT_U8   },
-    [AV_SAMPLE_FMT_S16P] = { .name = "s16p", .bits = 16, .planar = 1, .altform = AV_SAMPLE_FMT_S16  },
-    [AV_SAMPLE_FMT_S32P] = { .name = "s32p", .bits = 32, .planar = 1, .altform = AV_SAMPLE_FMT_S32  },
-    [AV_SAMPLE_FMT_S64P] = { .name = "s64p", .bits = 64, .planar = 1, .altform = AV_SAMPLE_FMT_S64  },
-    [AV_SAMPLE_FMT_FLTP] = { .name = "fltp", .bits = 32, .planar = 1, .altform = AV_SAMPLE_FMT_FLT  },
-    [AV_SAMPLE_FMT_DBLP] = { .name = "dblp", .bits = 64, .planar = 1, .altform = AV_SAMPLE_FMT_DBL  },
-    [AV_SAMPLE_FMT_DSD]  = { .name =  "dsd", .bits =  8, .planar = 0, .altform = AV_SAMPLE_FMT_DSD  },
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
+    [AV_SAMPLE_FMT_U8]   = { .name =   "u8", .ಬಿಟ್ಟುಗಳು =  8, .planar = 0, .altform = AV_SAMPLE_FMT_U8P  },
+    [AV_SAMPLE_FMT_S16]  = { .name =  "s16", .ಬಿಟ್ಟುಗಳು = 16, .planar = 0, .altform = AV_SAMPLE_FMT_S16P },
+    [AV_SAMPLE_FMT_S32]  = { .name =  "s32", .ಬಿಟ್ಟುಗಳು = 32, .planar = 0, .altform = AV_SAMPLE_FMT_S32P },
+    [AV_SAMPLE_FMT_S64]  = { .name =  "s64", .ಬಿಟ್ಟುಗಳು = 64, .planar = 0, .altform = AV_SAMPLE_FMT_S64P },
+    [AV_SAMPLE_FMT_FLT]  = { .name =  "flt", .ಬಿಟ್ಟುಗಳು = 32, .planar = 0, .altform = AV_SAMPLE_FMT_FLTP },
+    [AV_SAMPLE_FMT_DBL]  = { .name =  "dbl", .ಬಿಟ್ಟುಗಳು = 64, .planar = 0, .altform = AV_SAMPLE_FMT_DBLP },
+    [AV_SAMPLE_FMT_U8P]  = { .name =  "u8p", .ಬಿಟ್ಟುಗಳು =  8, .planar = 1, .altform = AV_SAMPLE_FMT_U8   },
+    [AV_SAMPLE_FMT_S16P] = { .name = "s16p", .ಬಿಟ್ಟುಗಳು = 16, .planar = 1, .altform = AV_SAMPLE_FMT_S16  },
+    [AV_SAMPLE_FMT_S32P] = { .name = "s32p", .ಬಿಟ್ಟುಗಳು = 32, .planar = 1, .altform = AV_SAMPLE_FMT_S32  },
+    [AV_SAMPLE_FMT_S64P] = { .name = "s64p", .ಬಿಟ್ಟುಗಳು = 64, .planar = 1, .altform = AV_SAMPLE_FMT_S64  },
+    [AV_SAMPLE_FMT_FLTP] = { .name = "fltp", .ಬಿಟ್ಟುಗಳು = 32, .planar = 1, .altform = AV_SAMPLE_FMT_FLT  },
+    [AV_SAMPLE_FMT_DBLP] = { .name = "dblp", .ಬಿಟ್ಟುಗಳು = 64, .planar = 1, .altform = AV_SAMPLE_FMT_DBL  },
+    [AV_SAMPLE_FMT_DSD]  = { .name =  "dsd", .ಬಿಟ್ಟುಗಳು =  8, .planar = 0, .altform = AV_SAMPLE_FMT_DSD  },
 };
 
-const char *av_get_sample_fmt_name(enum AVSampleFormat sample_fmt)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_get_sample_fmt_name(ಎಣಿಕೆ AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return NULL;
-    return sample_fmt_info[sample_fmt].name;
+    ಆದರೆ (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ಹಿಂತಿರುಗಿ sample_fmt_info[sample_fmt].name;
 }
 
-enum AVSampleFormat av_get_sample_fmt(const char *name)
+ಎಣಿಕೆ AVSampleFormat av_get_sample_fmt(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name)
 {
-    int i;
+    ಪೂರ್ಣಾಂಕ i;
 
-    for (i = 0; i < AV_SAMPLE_FMT_NB; i++)
-        if (!strcmp(sample_fmt_info[i].name, name))
-            return i;
-    return AV_SAMPLE_FMT_NONE;
+    ಗಾಗಿ (i = 0; i < AV_SAMPLE_FMT_NB; i++)
+        ಆದರೆ (!strcmp(sample_fmt_info[i].name, name))
+            ಹಿಂತಿರುಗಿ i;
+    ಹಿಂತಿರುಗಿ AV_SAMPLE_FMT_NONE;
 }
 
-enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int planar)
+ಎಣಿಕೆ AVSampleFormat av_get_alt_sample_fmt(ಎಣಿಕೆ AVSampleFormat sample_fmt, ಪೂರ್ಣಾಂಕ planar)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar == planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    ಆದರೆ (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ಹಿಂತಿರುಗಿ AV_SAMPLE_FMT_NONE;
+    ಆದರೆ (sample_fmt_info[sample_fmt].planar == planar)
+        ಹಿಂತಿರುಗಿ sample_fmt;
+    ಹಿಂತಿರುಗಿ sample_fmt_info[sample_fmt].altform;
 }
 
-enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt)
+ಎಣಿಕೆ AVSampleFormat av_get_packed_sample_fmt(ಎಣಿಕೆ AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt_info[sample_fmt].altform;
-    return sample_fmt;
+    ಆದರೆ (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ಹಿಂತಿರುಗಿ AV_SAMPLE_FMT_NONE;
+    ಆದರೆ (sample_fmt_info[sample_fmt].planar)
+        ಹಿಂತಿರುಗಿ sample_fmt_info[sample_fmt].altform;
+    ಹಿಂತಿರುಗಿ sample_fmt;
 }
 
-enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt)
+ಎಣಿಕೆ AVSampleFormat av_get_planar_sample_fmt(ಎಣಿಕೆ AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    ಆದರೆ (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ಹಿಂತಿರುಗಿ AV_SAMPLE_FMT_NONE;
+    ಆದರೆ (sample_fmt_info[sample_fmt].planar)
+        ಹಿಂತಿರುಗಿ sample_fmt;
+    ಹಿಂತಿರುಗಿ sample_fmt_info[sample_fmt].altform;
 }
 
-char *av_get_sample_fmt_string (char *buf, int buf_size, enum AVSampleFormat sample_fmt)
+ಅಕ್ಷರ *av_get_sample_fmt_string (ಅಕ್ಷರ *buf, ಪೂರ್ಣಾಂಕ buf_ಗಾತ್ರ, ಎಣಿಕೆ AVSampleFormat sample_fmt)
 {
     /* print header */
-    if (sample_fmt < 0)
-        snprintf(buf, buf_size, "name  " " depth");
-    else if (sample_fmt < AV_SAMPLE_FMT_NB) {
+    ಆದರೆ (sample_fmt < 0)
+        snprintf(buf, buf_ಗಾತ್ರ, "name  " " depth");
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (sample_fmt < AV_SAMPLE_FMT_NB) {
         SampleFmtInfo info = sample_fmt_info[sample_fmt];
-        snprintf (buf, buf_size, "%-6s" "   %2d ", info.name, info.bits);
+        snprintf (buf, buf_ಗಾತ್ರ, "%-6s" "   %2d ", info.name, info.ಬಿಟ್ಟುಗಳು);
     }
 
-    return buf;
+    ಹಿಂತಿರುಗಿ buf;
 }
 
-int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt)
+ಪೂರ್ಣಾಂಕ av_get_ಬೈಟುಗಳು_ಪ್ರತಿ_sample(ಎಣಿಕೆ AVSampleFormat sample_fmt)
 {
-     return sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
-        0 : sample_fmt_info[sample_fmt].bits >> 3;
+     ಹಿಂತಿರುಗಿ sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
+        0 : sample_fmt_info[sample_fmt].ಬಿಟ್ಟುಗಳು >> 3;
 }
 
-int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt)
+ಪೂರ್ಣಾಂಕ av_sample_fmt_is_planar(ಎಣಿಕೆ AVSampleFormat sample_fmt)
 {
-     if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-         return 0;
-     return sample_fmt_info[sample_fmt].planar;
+     ಆದರೆ (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+         ಹಿಂತಿರುಗಿ 0;
+     ಹಿಂತಿರುಗಿ sample_fmt_info[sample_fmt].planar;
 }
 
-int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
-                               enum AVSampleFormat sample_fmt, int align)
+ಪೂರ್ಣಾಂಕ av_samples_get_ಬಫರ್_ಗಾತ್ರ(ಪೂರ್ಣಾಂಕ *linesize, ಪೂರ್ಣಾಂಕ nb_channels, ಪೂರ್ಣಾಂಕ nb_samples,
+                               ಎಣಿಕೆ AVSampleFormat sample_fmt, ಪೂರ್ಣಾಂಕ align)
 {
-    int line_size;
-    int sample_size = av_get_bytes_per_sample(sample_fmt);
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
+    ಪೂರ್ಣಾಂಕ ಸಾಲು_ಗಾತ್ರ;
+    ಪೂರ್ಣಾಂಕ sample_ಗಾತ್ರ = av_get_ಬೈಟುಗಳು_ಪ್ರತಿ_sample(sample_fmt);
+    ಪೂರ್ಣಾಂಕ planar      = av_sample_fmt_is_planar(sample_fmt);
 
     /* validate parameter ranges */
-    if (!sample_size || nb_samples <= 0 || nb_channels <= 0)
-        return AVERROR(EINVAL);
+    ಆದರೆ (!sample_ಗಾತ್ರ || nb_samples <= 0 || nb_channels <= 0)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
     /* auto-select alignment if not specified */
-    if (!align) {
-        if (nb_samples > INT_MAX - 31)
-            return AVERROR(EINVAL);
+    ಆದರೆ (!align) {
+        ಆದರೆ (nb_samples > ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ - 31)
+            ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
         align = 1;
         nb_samples = FFALIGN(nb_samples, 32);
     }
 
     /* check for integer overflow */
-    if (nb_channels > INT_MAX / align ||
-        (int64_t)nb_channels * nb_samples > (INT_MAX - (align * nb_channels)) / sample_size)
-        return AVERROR(EINVAL);
+    ಆದರೆ (nb_channels > ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ / align ||
+        (int64_t)nb_channels * nb_samples > (ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ - (align * nb_channels)) / sample_ಗಾತ್ರ)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
 
-    line_size = planar ? FFALIGN(nb_samples * sample_size,               align) :
-                         FFALIGN(nb_samples * sample_size * nb_channels, align);
-    if (linesize)
-        *linesize = line_size;
+    ಸಾಲು_ಗಾತ್ರ = planar ? FFALIGN(nb_samples * sample_ಗಾತ್ರ,               align) :
+                         FFALIGN(nb_samples * sample_ಗಾತ್ರ * nb_channels, align);
+    ಆದರೆ (linesize)
+        *linesize = ಸಾಲು_ಗಾತ್ರ;
 
-    return planar ? line_size * nb_channels : line_size;
+    ಹಿಂತಿರುಗಿ planar ? ಸಾಲು_ಗಾತ್ರ * nb_channels : ಸಾಲು_ಗಾತ್ರ;
 }
 
-int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
-                           const uint8_t *buf, int nb_channels, int nb_samples,
-                           enum AVSampleFormat sample_fmt, int align)
+ಪೂರ್ಣಾಂಕ av_samples_fill_arrays(uint8_t **audio_ದತ್ತಾಂಶ, ಪೂರ್ಣಾಂಕ *linesize,
+                           ಸ್ಥಿರಾಂಕ uint8_t *buf, ಪೂರ್ಣಾಂಕ nb_channels, ಪೂರ್ಣಾಂಕ nb_samples,
+                           ಎಣಿಕೆ AVSampleFormat sample_fmt, ಪೂರ್ಣಾಂಕ align)
 {
-    int ch, planar, buf_size, line_size;
+    ಪೂರ್ಣಾಂಕ ch, planar, buf_ಗಾತ್ರ, ಸಾಲು_ಗಾತ್ರ;
 
     planar   = av_sample_fmt_is_planar(sample_fmt);
-    buf_size = av_samples_get_buffer_size(&line_size, nb_channels, nb_samples,
+    buf_ಗಾತ್ರ = av_samples_get_ಬಫರ್_ಗಾತ್ರ(&ಸಾಲು_ಗಾತ್ರ, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (buf_size < 0)
-        return buf_size;
+    ಆದರೆ (buf_ಗಾತ್ರ < 0)
+        ಹಿಂತಿರುಗಿ buf_ಗಾತ್ರ;
 
-    if (linesize)
-        *linesize = line_size;
+    ಆದರೆ (linesize)
+        *linesize = ಸಾಲು_ಗಾತ್ರ;
 
-    memset(audio_data, 0, planar
-                          ? sizeof(*audio_data) * nb_channels
-                          : sizeof(*audio_data));
+    memset(audio_ದತ್ತಾಂಶ, 0, planar
+                          ? ಗಾತ್ರ(*audio_ದತ್ತಾಂಶ) * nb_channels
+                          : ಗಾತ್ರ(*audio_ದತ್ತಾಂಶ));
 
-    if (!buf)
-        return buf_size;
+    ಆದರೆ (!buf)
+        ಹಿಂತಿರುಗಿ buf_ಗಾತ್ರ;
 
-    audio_data[0] = (uint8_t *)buf;
-    for (ch = 1; planar && ch < nb_channels; ch++)
-        audio_data[ch] = audio_data[ch-1] + line_size;
+    audio_ದತ್ತಾಂಶ[0] = (uint8_t *)buf;
+    ಗಾಗಿ (ch = 1; planar && ch < nb_channels; ch++)
+        audio_ದತ್ತಾಂಶ[ch] = audio_ದತ್ತಾಂಶ[ch-1] + ಸಾಲು_ಗಾತ್ರ;
 
-    return buf_size;
+    ಹಿಂತಿರುಗಿ buf_ಗಾತ್ರ;
 }
 
-int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
-                     int nb_samples, enum AVSampleFormat sample_fmt, int align)
+ಪೂರ್ಣಾಂಕ av_samples_alloc(uint8_t **audio_ದತ್ತಾಂಶ, ಪೂರ್ಣಾಂಕ *linesize, ಪೂರ್ಣಾಂಕ nb_channels,
+                     ಪೂರ್ಣಾಂಕ nb_samples, ಎಣಿಕೆ AVSampleFormat sample_fmt, ಪೂರ್ಣಾಂಕ align)
 {
     uint8_t *buf;
-    int size = av_samples_get_buffer_size(NULL, nb_channels, nb_samples,
+    ಪೂರ್ಣಾಂಕ ಗಾತ್ರ_2 = av_samples_get_ಬಫರ್_ಗಾತ್ರ(ಖಾಲಿ, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (size < 0)
-        return size;
+    ಆದರೆ (ಗಾತ್ರ_2 < 0)
+        ಹಿಂತಿರುಗಿ ಗಾತ್ರ_2;
 
-    buf = av_malloc(size);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    buf = av_malloc(ಗಾತ್ರ_2);
+    ಆದರೆ (!buf)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
 
-    size = av_samples_fill_arrays(audio_data, linesize, buf, nb_channels,
+    ಗಾತ್ರ_2 = av_samples_fill_arrays(audio_ದತ್ತಾಂಶ, linesize, buf, nb_channels,
                                   nb_samples, sample_fmt, align);
-    if (size < 0) {
+    ಆದರೆ (ಗಾತ್ರ_2 < 0) {
         av_free(buf);
-        return size;
+        ಹಿಂತಿರುಗಿ ಗಾತ್ರ_2;
     }
 
-    av_samples_set_silence(audio_data, 0, nb_samples, nb_channels, sample_fmt);
+    av_samples_ಗಣ_silence(audio_ದತ್ತಾಂಶ, 0, nb_samples, nb_channels, sample_fmt);
 
-    return size;
+    ಹಿಂತಿರುಗಿ ಗಾತ್ರ_2;
 }
 
-int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int nb_channels,
-                                       int nb_samples, enum AVSampleFormat sample_fmt, int align)
+ಪೂರ್ಣಾಂಕ av_samples_alloc_array_and_samples(uint8_t ***audio_ದತ್ತಾಂಶ, ಪೂರ್ಣಾಂಕ *linesize, ಪೂರ್ಣಾಂಕ nb_channels,
+                                       ಪೂರ್ಣಾಂಕ nb_samples, ಎಣಿಕೆ AVSampleFormat sample_fmt, ಪೂರ್ಣಾಂಕ align)
 {
-    int ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
+    ಪೂರ್ಣಾಂಕ ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
 
-    *audio_data = av_calloc(nb_planes, sizeof(**audio_data));
-    if (!*audio_data)
-        return AVERROR(ENOMEM);
-    ret = av_samples_alloc(*audio_data, linesize, nb_channels,
+    *audio_ದತ್ತಾಂಶ = av_calloc(nb_planes, ಗಾತ್ರ(**audio_ದತ್ತಾಂಶ));
+    ಆದರೆ (!*audio_ದತ್ತಾಂಶ)
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
+    ret = av_samples_alloc(*audio_ದತ್ತಾಂಶ, linesize, nb_channels,
                            nb_samples, sample_fmt, align);
-    if (ret < 0)
-        av_freep(audio_data);
-    return ret;
+    ಆದರೆ (ret < 0)
+        av_freep(audio_ದತ್ತಾಂಶ);
+    ಹಿಂತಿರುಗಿ ret;
 }
 
-int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
-                    int src_offset, int nb_samples, int nb_channels,
-                    enum AVSampleFormat sample_fmt)
+ಪೂರ್ಣಾಂಕ av_samples_copy(uint8_t * ಸ್ಥಿರಾಂಕ *dst, uint8_t * ಸ್ಥಿರಾಂಕ *src, ಪೂರ್ಣಾಂಕ dst_ಸ್ಥಾನಾಂತರ,
+                    ಪೂರ್ಣಾಂಕ src_ಸ್ಥಾನಾಂತರ, ಪೂರ್ಣಾಂಕ nb_samples, ಪೂರ್ಣಾಂಕ nb_channels,
+                    ಎಣಿಕೆ AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int i;
+    ಪೂರ್ಣಾಂಕ planar      = av_sample_fmt_is_planar(sample_fmt);
+    ಪೂರ್ಣಾಂಕ planes      = planar ? nb_channels : 1;
+    ಪೂರ್ಣಾಂಕ ಖಂಡ_align = av_get_ಬೈಟುಗಳು_ಪ್ರತಿ_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    ಪೂರ್ಣಾಂಕ ದತ್ತಾಂಶ_ಗಾತ್ರ   = nb_samples * ಖಂಡ_align;
+    ಪೂರ್ಣಾಂಕ i;
 
-    dst_offset *= block_align;
-    src_offset *= block_align;
+    dst_ಸ್ಥಾನಾಂತರ *= ಖಂಡ_align;
+    src_ಸ್ಥಾನಾಂತರ *= ಖಂಡ_align;
 
-    if((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= data_size) {
-        for (i = 0; i < planes; i++)
-            memcpy(dst[i] + dst_offset, src[i] + src_offset, data_size);
-    } else {
-        for (i = 0; i < planes; i++)
-            memmove(dst[i] + dst_offset, src[i] + src_offset, data_size);
+    ಆದರೆ((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= ದತ್ತಾಂಶ_ಗಾತ್ರ) {
+        ಗಾಗಿ (i = 0; i < planes; i++)
+            ಸ್ಮರಣೆ_ನಕಲು(dst[i] + dst_ಸ್ಥಾನಾಂತರ, src[i] + src_ಸ್ಥಾನಾಂತರ, ದತ್ತಾಂಶ_ಗಾತ್ರ);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಗಾಗಿ (i = 0; i < planes; i++)
+            memmove(dst[i] + dst_ಸ್ಥಾನಾಂತರ, src[i] + src_ಸ್ಥಾನಾಂತರ, ದತ್ತಾಂಶ_ಗಾತ್ರ);
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_samples,
-                           int nb_channels, enum AVSampleFormat sample_fmt)
+ಪೂರ್ಣಾಂಕ av_samples_ಗಣ_silence(uint8_t * ಸ್ಥಿರಾಂಕ *audio_ದತ್ತಾಂಶ, ಪೂರ್ಣಾಂಕ ಸ್ಥಾನಾಂತರ, ಪೂರ್ಣಾಂಕ nb_samples,
+                           ಪೂರ್ಣಾಂಕ nb_channels, ಎಣಿಕೆ AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int fill_char, i;
+    ಪೂರ್ಣಾಂಕ planar      = av_sample_fmt_is_planar(sample_fmt);
+    ಪೂರ್ಣಾಂಕ planes      = planar ? nb_channels : 1;
+    ಪೂರ್ಣಾಂಕ ಖಂಡ_align = av_get_ಬೈಟುಗಳು_ಪ್ರತಿ_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    ಪೂರ್ಣಾಂಕ ದತ್ತಾಂಶ_ಗಾತ್ರ   = nb_samples * ಖಂಡ_align;
+    ಪೂರ್ಣಾಂಕ fill_char, i;
 
-    if (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
+    ಆದರೆ (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
         fill_char = 0x80;
-    else if (sample_fmt == AV_SAMPLE_FMT_DSD)
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (sample_fmt == AV_SAMPLE_FMT_DSD)
         fill_char = 0x69; // only ultrasonic tones, filtered out on playback
-    else
+    ಇಲ್ಲದಿದ್ದರೆ
         fill_char = 0x00;
 
-    offset *= block_align;
+    ಸ್ಥಾನಾಂತರ *= ಖಂಡ_align;
 
-    for (i = 0; i < planes; i++)
-        memset(audio_data[i] + offset, fill_char, data_size);
+    ಗಾಗಿ (i = 0; i < planes; i++)
+        memset(audio_ದತ್ತಾಂಶ[i] + ಸ್ಥಾನಾಂತರ, fill_char, ದತ್ತಾಂಶ_ಗಾತ್ರ);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

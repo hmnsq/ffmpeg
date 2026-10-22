@@ -23,79 +23,79 @@
  * common internal API header
  */
 
-#ifndef AVUTIL_INTERNAL_H
-#define AVUTIL_INTERNAL_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_ಆಂತರಿಕ_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_ಆಂತರಿಕ_H
 
-#if !defined(DEBUG) && !defined(NDEBUG)
+#ಆದರೆ !defined(DEBUG) && !defined(NDEBUG)
 #    define NDEBUG
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 // This can be enabled to allow detection of additional integer overflows with ubsan
 //#define CHECKED
 
-#include <limits.h>
-#include <math.h>
-#include <stdint.h>
-#include <stddef.h>
-#include <assert.h>
-#include <stdio.h>
-#include "config.h"
-#include "attributes.h"
-#include "mathematics.h"
-#include "macros.h"
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <math.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <assert.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
+#ಅನ್ತರ್ಭಾವ "mathematics.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
 
-#ifndef attribute_align_arg
-#if ARCH_X86_32 && defined(__GNUC__)
-#    define attribute_align_arg __attribute__((force_align_arg_pointer))
-#else
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ attribute_align_arg
+#ಆದರೆ ARCH_X86_32 && defined(__GNUC__)
+#    define attribute_align_arg __attribute__((force_align_arg_ಸೂಚಕ))
+#ಇಲ್ಲದಿದ್ದರೆ
 #    define attribute_align_arg
-#endif
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if HAVE_MIPSFPU && HAVE_INLINE_ASM
+#ಆದರೆ HAVE_MIPSFPU && HAVE_INLINE_ASM
 #   include "mips/libm_mips.h"
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if HAVE_PRAGMA_DEPRECATED
-#    if defined(__ICL) || defined (__INTEL_COMPILER)
-#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:1478))
-#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
+#ಆದರೆ HAVE_PRAGMA_DEPRECATED
+#    ಆದರೆ defined(__ICL) || defined (__INTEL_COMPILER)
+#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(ತಳ್ಳು)) __pragma(warning(disable:1478))
+#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(ತೆಗೆ))
 #    elif defined(_MSC_VER)
-#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:4996))
-#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
-#    else
+#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(ತಳ್ಳು)) __pragma(warning(disable:4996))
+#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(ತೆಗೆ))
+#    ಇಲ್ಲದಿದ್ದರೆ
 #        define FF_DISABLE_DEPRECATION_WARNINGS _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #        define FF_ENABLE_DEPRECATION_WARNINGS  _Pragma("GCC diagnostic pop")
 #    endif
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 #    define FF_DISABLE_DEPRECATION_WARNINGS
 #    define FF_ENABLE_DEPRECATION_WARNINGS
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-#ifdef __ANDROID__
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __ANDROID__
 #   include "compat/android/math.h"
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define FF_ALLOC_TYPED_ARRAY(p, nelem)  (p = av_malloc_array(nelem, sizeof(*p)))
-#define FF_ALLOCZ_TYPED_ARRAY(p, nelem) (p = av_calloc(nelem, sizeof(*p)))
+#ವ್ಯಾಖ್ಯಾನಿಸು FF_ALLOC_TYPED_ARRAY(p, nelem)  (p = av_malloc_array(nelem, ಗಾತ್ರ(*p)))
+#ವ್ಯಾಖ್ಯಾನಿಸು FF_ALLOCZ_TYPED_ARRAY(p, nelem) (p = av_calloc(nelem, ಗಾತ್ರ(*p)))
 
-#define FF_PTR_ADD(ptr, off) ((off) ? (ptr) + (off) : (ptr))
+#ವ್ಯಾಖ್ಯಾನಿಸು FF_PTR_ಕೂಡಿಸು(ptr, off) ((off) ? (ptr) + (off) : (ptr))
 
 /**
  * Access a field in a structure by its offset.
  */
-#define FF_FIELD_AT(type, off, obj) (*(type *)((char *)&(obj) + (off)))
+#ವ್ಯಾಖ್ಯಾನಿಸು FF_ಕ್ಷೇತ್ರ_AT(type, off, obj) (*(type *)((ಅಕ್ಷರ *)&(obj) + (off)))
 
 /**
  * Return NULL if CONFIG_SMALL is true, otherwise the argument
  * without modification. Used to disable the definition of strings.
  */
-#if CONFIG_SMALL
-#   define NULL_IF_CONFIG_SMALL(x) NULL
-#else
+#ಆದರೆ CONFIG_SMALL
+#   define NULL_IF_CONFIG_SMALL(x) ಖಾಲಿ
+#ಇಲ್ಲದಿದ್ದರೆ
 #   define NULL_IF_CONFIG_SMALL(x) x
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 /**
  * Log a generic warning message about a missing feature.
@@ -104,8 +104,8 @@
  *                field is a pointer to an AVClass struct
  * @param[in] msg string containing the name of the missing feature
  */
-void avpriv_report_missing_feature(void *avc,
-                                   const char *msg, ...) av_printf_format(2, 3);
+ಶೂನ್ಯ avpriv_report_missing_feature(ಶೂನ್ಯ *avc,
+                                   ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಸಂದೇಶ, ...) av_printf_format(2, 3);
 
 /**
  * Log a generic warning message about a missing feature.
@@ -115,42 +115,42 @@ void avpriv_report_missing_feature(void *avc,
  *                a pointer to an AVClass struct
  * @param[in] msg string containing the name of the missing feature
  */
-void avpriv_request_sample(void *avc,
-                           const char *msg, ...) av_printf_format(2, 3);
+ಶೂನ್ಯ avpriv_request_sample(ಶೂನ್ಯ *avc,
+                           ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಸಂದೇಶ, ...) av_printf_format(2, 3);
 
-#ifdef DEBUG
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ DEBUG
 #   define ff_dlog(ctx, ...) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__)
-#else
-#   define ff_dlog(ctx, ...) do { if (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } while (0)
-#endif
+#ಇಲ್ಲದಿದ್ದರೆ
+#   define ff_dlog(ctx, ...) ಮಾಡು { ಆದರೆ (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } ಆಗ (0)
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifdef TRACE
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ TRACE
 #   define ff_tlog(ctx, ...) av_log(ctx, AV_LOG_TRACE, __VA_ARGS__)
-#else
-#   define ff_tlog(ctx, ...) do { } while(0)
-#endif
+#ಇಲ್ಲದಿದ್ದರೆ
+#   define ff_tlog(ctx, ...) ಮಾಡು { } ಆಗ(0)
+#ಆದರೆ_ಅಂತ್ಯ
 
 // For debugging we use signed operations so overflows can be detected (by ubsan)
 // For production we use unsigned so there are no undefined operations
-#ifdef CHECKED
-#define SUINT   int
-#define SUINT32 int32_t
-#else
-#define SUINT   unsigned
-#define SUINT32 uint32_t
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ CHECKED
+#ವ್ಯಾಖ್ಯಾನಿಸು SUINT   ಪೂರ್ಣಾಂಕ
+#ವ್ಯಾಖ್ಯಾನಿಸು SUINT32 int32_t
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು SUINT   ಚಿಹ್ನೆರಹಿತ
+#ವ್ಯಾಖ್ಯಾನಿಸು SUINT32 uint32_t
+#ಆದರೆ_ಅಂತ್ಯ
 
-static av_always_inline av_const int avpriv_mirror(int x, int w)
+ಸ್ಥಿರ av_always_inline av_const ಪೂರ್ಣಾಂಕ avpriv_mirror(ಪೂರ್ಣಾಂಕ x, ಪೂರ್ಣಾಂಕ w)
 {
-    if (!w)
-        return 0;
+    ಆದರೆ (!w)
+        ಹಿಂತಿರುಗಿ 0;
 
-    while ((unsigned)x > (unsigned)w) {
+    ಆಗ ((ಚಿಹ್ನೆರಹಿತ)x > (ಚಿಹ್ನೆರಹಿತ)w) {
         x = -x;
-        if (x < 0)
+        ಆದರೆ (x < 0)
             x += 2 * w;
     }
-    return x;
+    ಹಿಂತಿರುಗಿ x;
 }
 
-#endif /* AVUTIL_INTERNAL_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_INTERNAL_H */

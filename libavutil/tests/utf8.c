@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "libavutil/avstring.h"
-#include "libavutil/file.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/avstring.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/file.h"
 
-static const uint8_t vectors[] =
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t vectors[] =
     "A\n"
     "\xC3\xA9\n"                /* U+00E9 */
     "\xE2\x82\xAC\n"            /* U+20AC */
@@ -40,52 +40,52 @@ static const uint8_t vectors[] =
     "\xC3" "A\n"                /* missing continuation */
     "\xE2\x82";                 /* truncated */
 
-static void print_sequence(const char *p, int l, int indent)
+ಸ್ಥಿರ ಶೂನ್ಯ print_sequence(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p, ಪೂರ್ಣಾಂಕ l, ಪೂರ್ಣಾಂಕ indent)
 {
-    int i;
-    for (i = 0; i < l; i++)
-        printf("%02X", (uint8_t)p[i]);
-    printf("%*s", indent-l*2, "");
+    ಪೂರ್ಣಾಂಕ i;
+    ಗಾಗಿ (i = 0; i < l; i++)
+        ಬರೆ("%02X", (uint8_t)p[i]);
+    ಬರೆ("%*s", indent-l*2, "");
 }
 
-static void decode(const uint8_t *p, const uint8_t *endp)
+ಸ್ಥಿರ ಶೂನ್ಯ decode(ಸ್ಥಿರಾಂಕ uint8_t *p, ಸ್ಥಿರಾಂಕ uint8_t *endp)
 {
-    uint32_t code;
+    uint32_t ಸಂಕೇತ_2;
 
-    while (p < endp) {
-        int l, r;
-        const uint8_t *p0 = p;
-        code = UINT32_MAX;
-        r = av_utf8_decode(&code, &p, endp, 0);
-        l = (int)(p-p0);
+    ಆಗ (p < endp) {
+        ಪೂರ್ಣಾಂಕ l, r;
+        ಸ್ಥಿರಾಂಕ uint8_t *p0 = p;
+        ಸಂಕೇತ_2 = UINT32_MAX;
+        r = av_utf8_decode(&ಸಂಕೇತ_2, &p, endp, 0);
+        l = (ಪೂರ್ಣಾಂಕ)(p-p0);
         print_sequence(p0, l, 20);
-        if (code != UINT32_MAX) {
-            printf("%-10d 0x%-10X %-5d ", code, code, l);
-            if (r >= 0) {
-                if (*p0 == '\n') printf("\\n\n");
-                else             printf ("%.*s\n", l, p0);
-            } else {
-                printf("invalid code range\n");
+        ಆದರೆ (ಸಂಕೇತ_2 != UINT32_MAX) {
+            ಬರೆ("%-10d 0x%-10X %-5d ", ಸಂಕೇತ_2, ಸಂಕೇತ_2, l);
+            ಆದರೆ (r >= 0) {
+                ಆದರೆ (*p0 == '\n') ಬರೆ("\\n\n");
+                ಇಲ್ಲದಿದ್ದರೆ             ಬರೆ ("%.*s\n", l, p0);
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                ಬರೆ("invalid code range\n");
             }
-        } else {
-            printf("invalid sequence\n");
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಬರೆ("invalid sequence\n");
         }
     }
 }
 
-int main(int argc, char **argv)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಪೂರ್ಣಾಂಕ argc, ಅಕ್ಷರ **argv)
 {
-    if (argc > 1) {
+    ಆದರೆ (argc > 1) {
         uint8_t *file_buf;
-        size_t file_buf_size;
-        int ret = av_file_map(argv[1], &file_buf, &file_buf_size, 0, NULL);
-        if (ret < 0)
-            return 1;
-        decode(file_buf, file_buf + file_buf_size);
-        av_file_unmap(file_buf, file_buf_size);
-    } else {
-        decode(vectors, vectors + sizeof(vectors) - 1);
+        size_t file_buf_ಗಾತ್ರ;
+        ಪೂರ್ಣಾಂಕ ret = av_file_map(argv[1], &file_buf, &file_buf_ಗಾತ್ರ, 0, ಖಾಲಿ);
+        ಆದರೆ (ret < 0)
+            ಹಿಂತಿರುಗಿ 1;
+        decode(file_buf, file_buf + file_buf_ಗಾತ್ರ);
+        av_file_unmap(file_buf, file_buf_ಗಾತ್ರ);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        decode(vectors, vectors + ಗಾತ್ರ(vectors) - 1);
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

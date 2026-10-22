@@ -23,104 +23,104 @@
  * high precision timer, useful to profile code
  */
 
-#ifndef AVUTIL_TIMER_H
-#define AVUTIL_TIMER_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_TIMER_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_TIMER_H
 
-#include "config.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
 
-#if CONFIG_LINUX_PERF
-# ifndef _GNU_SOURCE
-#  define _GNU_SOURCE
+#ಆದರೆ CONFIG_LINUX_PERF
+# ifndef GNU_ಮೂಲ
+#  define GNU_ಮೂಲ
 # endif
 # include <unistd.h> // read(3)
 # include <sys/ioctl.h>
 # include <asm/unistd.h>
 # include <linux/perf_event.h>
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <inttypes.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <inttypes.h>
 
-#if CONFIG_MACOS_KPERF
-#include "macos_kperf.h"
-#endif
+#ಆದರೆ CONFIG_MACOS_KPERF
+#ಅನ್ತರ್ಭಾವ "macos_kperf.h"
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if HAVE_MACH_ABSOLUTE_TIME
-#include <mach/mach_time.h>
-#elif HAVE_CLOCK_GETTIME
-#include <time.h>
-#endif
+#ಆದರೆ HAVE_MACH_ABSOLUTE_ಸಮಯ
+#ಅನ್ತರ್ಭಾವ <mach/mach_time.h>
+#ಅಥವಾಆದರೆ HAVE_CLOCK_GETTIME
+#ಅನ್ತರ್ಭಾವ <time.h>
+#ಆದರೆ_ಅಂತ್ಯ
 
-#include "common.h"
-#include "log.h"
+#ಅನ್ತರ್ಭಾವ "common.h"
+#ಅನ್ತರ್ಭಾವ "log.h"
 
-#if   ARCH_AARCH64
+#ಆದರೆ   ARCH_AARCH64
 #   include "aarch64/timer.h"
-#elif ARCH_PPC
+#ಅಥವಾಆದರೆ ARCH_PPC
 #   include "ppc/timer.h"
-#elif ARCH_X86
+#ಅಥವಾಆದರೆ ARCH_X86
 #   include "x86/timer.h"
-#elif ARCH_LOONGARCH
+#ಅಥವಾಆದರೆ ARCH_LOONGARCH
 #   include "loongarch/timer.h"
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if !defined(AV_READ_TIME)
-#   if HAVE_GETHRTIME
-#       define AV_READ_TIME gethrtime
-#   elif HAVE_MACH_ABSOLUTE_TIME
-#       define AV_READ_TIME mach_absolute_time
+#ಆದರೆ !defined(AV_READ_ಸಮಯ)
+#   ಆದರೆ HAVE_GETHRTIME
+#       define AV_READ_ಸಮಯ gethrtime
+#   elif HAVE_MACH_ABSOLUTE_ಸಮಯ
+#       define AV_READ_ಸಮಯ mach_absolute_ಸಮಯ
 #   elif HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
-        static inline int64_t ff_read_time(void)
+        ಸ್ಥಿರ ಸಾಲೊಳಗೆ int64_t ff_read_ಸಮಯ(ಶೂನ್ಯ)
         {
-            struct timespec ts;
+            ರಚನೆ timespec ts;
             clock_gettime(CLOCK_MONOTONIC, &ts);
-            return ts.tv_sec * INT64_C(1000000000) + ts.tv_nsec;
+            ಹಿಂತಿರುಗಿ ts.tv_sec * INT64_C(1000000000) + ts.tv_nsec;
         }
-#       define AV_READ_TIME ff_read_time
+#       define AV_READ_ಸಮಯ ff_read_ಸಮಯ
 #       define FF_TIMER_UNITS "ns"
 #   endif
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifndef FF_TIMER_UNITS
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ FF_TIMER_UNITS
 #   define FF_TIMER_UNITS "UNITS"
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define TIMER_REPORT(id, tdiff)                                           \
+#ವ್ಯಾಖ್ಯಾನಿಸು TIMER_REPORT(id, tdiff)                                           \
     {                                                                     \
-        static uint64_t tsum   = 0;                                       \
-        static int tcount      = 0;                                       \
-        static int tskip_count = 0;                                       \
-        static int thistogram[32] = {0};                                  \
+        ಸ್ಥಿರ uint64_t tsum   = 0;                                       \
+        ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ tcount      = 0;                                       \
+        ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ tskip_ಎಣಿಕೆ = 0;                                       \
+        ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ thistogram[32] = {0};                                  \
         thistogram[av_log2(tdiff)]++;                                     \
-        if (tcount < 2                ||                                  \
+        ಆದರೆ (tcount < 2                ||                                  \
             (tdiff) < 8 * tsum / tcount ||                                \
             (tdiff) < 2000) {                                             \
             tsum += (tdiff);                                              \
             tcount++;                                                     \
-        } else                                                            \
-            tskip_count++;                                                \
-        if (((tcount + tskip_count) & (tcount + tskip_count - 1)) == 0) { \
-            int i;                                                        \
-            av_log(NULL, AV_LOG_ERROR,                                    \
+        } ಇಲ್ಲದಿದ್ದರೆ                                                            \
+            tskip_ಎಣಿಕೆ++;                                                \
+        ಆದರೆ (((tcount + tskip_ಎಣಿಕೆ) & (tcount + tskip_ಎಣಿಕೆ - 1)) == 0) { \
+            ಪೂರ್ಣಾಂಕ i;                                                        \
+            av_log(ಖಾಲಿ, AV_LOG_ERROR,                                    \
                    "%7" PRIu64 " " FF_TIMER_UNITS " in %s,%8d runs,%7d skips",\
-                   tsum * 10 / tcount, id, tcount, tskip_count);          \
-            for (i = 0; i < 32; i++)                                      \
-                av_log(NULL, AV_LOG_VERBOSE, " %2d", av_log2(2*thistogram[i]));\
-            av_log(NULL, AV_LOG_ERROR, "\n");                             \
+                   tsum * 10 / tcount, id, tcount, tskip_ಎಣಿಕೆ);          \
+            ಗಾಗಿ (i = 0; i < 32; i++)                                      \
+                av_log(ಖಾಲಿ, AV_LOG_VERBOSE, " %2d", av_log2(2*thistogram[i]));\
+            av_log(ಖಾಲಿ, AV_LOG_ERROR, "\n");                             \
         }                                                                 \
     }
 
-#if CONFIG_LINUX_PERF
+#ಆದರೆ CONFIG_LINUX_PERF
 
-#define START_TIMER                                                         \
-    static int linux_perf_fd = -1;                                          \
+#ವ್ಯಾಖ್ಯಾನಿಸು ಆರಂಭ_TIMER                                                         \
+    ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ linux_perf_fd = -1;                                          \
     uint64_t tperf;                                                         \
-    if (linux_perf_fd == -1) {                                              \
-        struct perf_event_attr attr = {                                     \
+    ಆದರೆ (linux_perf_fd == -1) {                                              \
+        ರಚನೆ perf_event_attr attr = {                                     \
             .type           = PERF_TYPE_HARDWARE,                           \
-            .size           = sizeof(struct perf_event_attr),               \
-            .config         = PERF_COUNT_HW_CPU_CYCLES,                     \
+            .ಗಾತ್ರ_2           = ಗಾತ್ರ(ರಚನೆ perf_event_attr),               \
+            .config         = PERF_ಎಣಿಕೆ_HW_CPU_ಚಕ್ರಗಳು,                     \
             .disabled       = 1,                                            \
             .exclude_kernel = 1,                                            \
             .exclude_hv     = 1,                                            \
@@ -128,41 +128,41 @@
         linux_perf_fd = syscall(__NR_perf_event_open, &attr,                \
                                 0, -1, -1, 0);                              \
     }                                                                       \
-    if (linux_perf_fd == -1) {                                              \
-        av_log(NULL, AV_LOG_ERROR, "perf_event_open failed: %s\n",          \
+    ಆದರೆ (linux_perf_fd == -1) {                                              \
+        av_log(ಖಾಲಿ, AV_LOG_ERROR, "perf_event_open failed: %s\n",          \
                av_err2str(AVERROR(errno)));                                 \
-    } else {                                                                \
+    } ಇಲ್ಲದಿದ್ದರೆ {                                                                \
         ioctl(linux_perf_fd, PERF_EVENT_IOC_RESET, 0);                      \
         ioctl(linux_perf_fd, PERF_EVENT_IOC_ENABLE, 0);                     \
     }
 
-#define STOP_TIMER(id)                                                      \
+#ವ್ಯಾಖ್ಯಾನಿಸು STOP_TIMER(id)                                                      \
     ioctl(linux_perf_fd, PERF_EVENT_IOC_DISABLE, 0);                        \
-    if (read(linux_perf_fd, &tperf, sizeof(tperf)) != sizeof(tperf))        \
+    ಆದರೆ (ಪಠ(linux_perf_fd, &tperf, ಗಾತ್ರ(tperf)) != ಗಾತ್ರ(tperf))        \
         tperf = 0;                                                          \
     TIMER_REPORT(id, tperf)
 
-#elif CONFIG_MACOS_KPERF
+#ಅಥವಾಆದರೆ CONFIG_MACOS_KPERF
 
-#define START_TIMER                                                         \
+#ವ್ಯಾಖ್ಯಾನಿಸು ಆರಂಭ_TIMER                                                         \
     uint64_t tperf;                                                         \
     ff_kperf_init();                                                        \
-    tperf = ff_kperf_cycles();
+    tperf = ff_kperf_ಚಕ್ರಗಳು();
 
-#define STOP_TIMER(id)                                                      \
-    TIMER_REPORT(id, ff_kperf_cycles() - tperf);
+#ವ್ಯಾಖ್ಯಾನಿಸು STOP_TIMER(id)                                                      \
+    TIMER_REPORT(id, ff_kperf_ಚಕ್ರಗಳು() - tperf);
 
-#elif defined(AV_READ_TIME)
-#define START_TIMER                             \
+#ಅಥವಾಆದರೆ defined(AV_READ_ಸಮಯ)
+#ವ್ಯಾಖ್ಯಾನಿಸು ಆರಂಭ_TIMER                             \
     uint64_t tend;                              \
-    uint64_t tstart = AV_READ_TIME();           \
+    uint64_t tstart = AV_READ_ಸಮಯ();           \
 
-#define STOP_TIMER(id)                                                    \
-    tend = AV_READ_TIME();                                                \
+#ವ್ಯಾಖ್ಯಾನಿಸು STOP_TIMER(id)                                                    \
+    tend = AV_READ_ಸಮಯ();                                                \
     TIMER_REPORT(id, tend - tstart)
-#else
-#define START_TIMER
-#define STOP_TIMER(id) { }
-#endif
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು ಆರಂಭ_TIMER
+#ವ್ಯಾಖ್ಯಾನಿಸು STOP_TIMER(id) { }
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif /* AVUTIL_TIMER_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_TIMER_H */

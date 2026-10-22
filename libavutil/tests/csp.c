@@ -16,70 +16,70 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "libavutil/csp.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/csp.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/pixdesc.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/pixfmt.h"
 
-static void print_cie(const char *label, AVCIExy xy)
+ಸ್ಥಿರ ಶೂನ್ಯ print_cie(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *label, AVCIExy xy)
 {
-    printf("  %s=(%d/%d, %d/%d)\n", label,
-           xy.x.num, xy.x.den, xy.y.num, xy.y.den);
+    ಬರೆ("  %s=(%d/%d, %d/%d)\n", label,
+           xy.x.ಅಂಕೆ, xy.x.den, xy.y.ಅಂಕೆ, xy.y.den);
 }
 
-static int cie_eq(AVCIExy a, AVCIExy b)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ cie_eq(AVCIExy a, AVCIExy b)
 {
-    return av_cmp_q(a.x, b.x) == 0 && av_cmp_q(a.y, b.y) == 0;
+    ಹಿಂತಿರುಗಿ av_cmp_q(a.x, b.x) == 0 && av_cmp_q(a.y, b.y) == 0;
 }
 
-static int desc_eq(const AVColorPrimariesDesc *a, const AVColorPrimariesDesc *b)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ desc_eq(ಸ್ಥಿರಾಂಕ AVColorPrimariesDesc *a, ಸ್ಥಿರಾಂಕ AVColorPrimariesDesc *b)
 {
-    return cie_eq(a->wp,     b->wp)     &&
+    ಹಿಂತಿರುಗಿ cie_eq(a->wp,     b->wp)     &&
            cie_eq(a->prim.r, b->prim.r) &&
            cie_eq(a->prim.g, b->prim.g) &&
            cie_eq(a->prim.b, b->prim.b);
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
     /* av_csp_luma_coeffs_from_avcsp: iterate every defined colorspace */
-    printf("Testing av_csp_luma_coeffs_from_avcsp()\n");
-    for (enum AVColorSpace csp = 0; csp < AVCOL_SPC_NB; csp++) {
-        const AVLumaCoefficients *c = av_csp_luma_coeffs_from_avcsp(csp);
-        const char *name = av_color_space_name(csp);
-        if (!c) {
-            printf("csp=%-16s -> NULL\n", name ? name : "?");
-            continue;
+    ಬರೆ("Testing av_csp_luma_coeffs_from_avcsp()\n");
+    ಗಾಗಿ (ಎಣಿಕೆ AVColorSpace csp = 0; csp < AVCOL_SPC_NB; csp++) {
+        ಸ್ಥಿರಾಂಕ AVLumaCoefficients *c = av_csp_luma_coeffs_from_avcsp(csp);
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name = av_color_space_name(csp);
+        ಆದರೆ (!c) {
+            ಬರೆ("csp=%-16s -> NULL\n", name ? name : "?");
+            ಮುಂದುವರಿ;
         }
-        printf("csp=%-16s -> cr=%d/%d cg=%d/%d cb=%d/%d\n",
+        ಬರೆ("csp=%-16s -> cr=%d/%d cg=%d/%d cb=%d/%d\n",
                name ? name : "?",
-               c->cr.num, c->cr.den,
-               c->cg.num, c->cg.den,
-               c->cb.num, c->cb.den);
+               c->cr.ಅಂಕೆ, c->cr.den,
+               c->cg.ಅಂಕೆ, c->cg.den,
+               c->cb.ಅಂಕೆ, c->cb.den);
     }
     /* out-of-range enum */
-    printf("csp=AVCOL_SPC_NB         -> %s\n",
+    ಬರೆ("csp=AVCOL_SPC_NB         -> %s\n",
            av_csp_luma_coeffs_from_avcsp(AVCOL_SPC_NB) ? "FAIL" : "NULL");
 
     /* av_csp_primaries_desc_from_id + av_csp_primaries_id_from_desc */
-    printf("\nTesting av_csp_primaries_desc_from_id() round trip\n");
-    for (enum AVColorPrimaries prm = 0; prm < AVCOL_PRI_EXT_NB; prm++) {
-        const AVColorPrimariesDesc *d;
-        const AVColorPrimariesDesc *d_back;
-        enum AVColorPrimaries back;
-        const char *name, *back_name, *status;
+    ಬರೆ("\nTesting av_csp_primaries_desc_from_id() round trip\n");
+    ಗಾಗಿ (ಎಣಿಕೆ AVColorPrimaries prm = 0; prm < AVCOL_PRI_EXT_NB; prm++) {
+        ಸ್ಥಿರಾಂಕ AVColorPrimariesDesc *d;
+        ಸ್ಥಿರಾಂಕ AVColorPrimariesDesc *d_ಹಿಂಭಾಗ;
+        ಎಣಿಕೆ AVColorPrimaries ಹಿಂಭಾಗ;
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name, *ಹಿಂಭಾಗ_name, *ಸ್ಥಿತಿ_2;
 
-        if (prm == AVCOL_PRI_NB)
-            prm = AVCOL_PRI_EXT_BASE;
+        ಆದರೆ (prm == AVCOL_PRI_NB)
+            prm = AVCOL_PRI_EXT_ತಳ;
 
         d    = av_csp_primaries_desc_from_id(prm);
         name = av_color_primaries_name(prm);
-        if (!d) {
-            printf("prm=%-16s -> NULL\n", name ? name : "?");
-            continue;
+        ಆದರೆ (!d) {
+            ಬರೆ("prm=%-16s -> NULL\n", name ? name : "?");
+            ಮುಂದುವರಿ;
         }
-        printf("prm=%-16s ->\n", name ? name : "?");
+        ಬರೆ("prm=%-16s ->\n", name ? name : "?");
         print_cie("wp ", d->wp);
         print_cie("r  ", d->prim.r);
         print_cie("g  ", d->prim.g);
@@ -90,19 +90,19 @@ int main(void)
          * enum, so compare descs not enums.  id_from_desc only searches
          * the base AVCOL_PRI_* range and returns UNSPECIFIED for
          * extended-range inputs that have no base match. */
-        back      = av_csp_primaries_id_from_desc(d);
-        d_back    = av_csp_primaries_desc_from_id(back);
-        back_name = av_color_primaries_name(back);
-        if (back == AVCOL_PRI_UNSPECIFIED)
-            status = prm >= AVCOL_PRI_EXT_BASE ? "ext-no-base-match"
+        ಹಿಂಭಾಗ      = av_csp_primaries_id_from_desc(d);
+        d_ಹಿಂಭಾಗ    = av_csp_primaries_desc_from_id(ಹಿಂಭಾಗ);
+        ಹಿಂಭಾಗ_name = av_color_primaries_name(ಹಿಂಭಾಗ);
+        ಆದರೆ (ಹಿಂಭಾಗ == AVCOL_PRI_UNSPECIFIED)
+            ಸ್ಥಿತಿ_2 = prm >= AVCOL_PRI_EXT_ತಳ ? "ext-no-base-match"
                                                : "MISMATCH";
-        else
-            status = d_back && desc_eq(d, d_back) ? "OK" : "MISMATCH";
-        printf("  round-trip id=%-16s desc=%s\n",
-               back_name ? back_name : "?", status);
+        ಇಲ್ಲದಿದ್ದರೆ
+            ಸ್ಥಿತಿ_2 = d_ಹಿಂಭಾಗ && desc_eq(d, d_ಹಿಂಭಾಗ) ? "OK" : "MISMATCH";
+        ಬರೆ("  round-trip id=%-16s desc=%s\n",
+               ಹಿಂಭಾಗ_name ? ಹಿಂಭಾಗ_name : "?", ಸ್ಥಿತಿ_2);
     }
     /* out-of-range enum */
-    printf("prm=AVCOL_PRI_NB         -> %s\n",
+    ಬರೆ("prm=AVCOL_PRI_NB         -> %s\n",
            av_csp_primaries_desc_from_id(AVCOL_PRI_NB) ? "FAIL" : "NULL");
 
     /* id_from_desc on a garbage description returns UNSPECIFIED */
@@ -115,31 +115,31 @@ int main(void)
                 .b = { { 0, 1 }, { 0, 1 } },
             },
         };
-        enum AVColorPrimaries back = av_csp_primaries_id_from_desc(&garbage);
-        printf("garbage desc -> %s (expect AVCOL_PRI_UNSPECIFIED)\n",
-               av_color_primaries_name(back) ? av_color_primaries_name(back) : "?");
+        ಎಣಿಕೆ AVColorPrimaries ಹಿಂಭಾಗ = av_csp_primaries_id_from_desc(&garbage);
+        ಬರೆ("garbage desc -> %s (expect AVCOL_PRI_UNSPECIFIED)\n",
+               av_color_primaries_name(ಹಿಂಭಾಗ) ? av_color_primaries_name(ಹಿಂಭಾಗ) : "?");
     }
 
     /* av_csp_approximate_trc_gamma + av_csp_approximate_eotf_gamma:
      * both return values from static tables, so output is bitexact. */
-    printf("\nTesting av_csp_approximate_{trc,eotf}_gamma()\n");
-    for (enum AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
-        const char *name;
-        double g_trc, g_eotf;
+    ಬರೆ("\nTesting av_csp_approximate_{trc,eotf}_gamma()\n");
+    ಗಾಗಿ (ಎಣಿಕೆ AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name;
+        ದ್ವಿಗುಣ g_trc, g_eotf;
 
-        if (trc == AVCOL_TRC_NB)
-            trc = AVCOL_TRC_EXT_BASE;
+        ಆದರೆ (trc == AVCOL_TRC_NB)
+            trc = AVCOL_TRC_EXT_ತಳ;
 
         name   = av_color_transfer_name(trc);
         g_trc  = av_csp_approximate_trc_gamma(trc);
         g_eotf = av_csp_approximate_eotf_gamma(trc);
-        printf("trc=%-16s trc_gamma=%.6f eotf_gamma=%.6f\n",
+        ಬರೆ("trc=%-16s trc_gamma=%.6f eotf_gamma=%.6f\n",
                name ? name : "?", g_trc, g_eotf);
     }
     /* out-of-range enum: both must return 0.0 */
-    printf("trc=AVCOL_TRC_NB         trc_gamma=%.6f eotf_gamma=%.6f\n",
+    ಬರೆ("trc=AVCOL_TRC_NB         trc_gamma=%.6f eotf_gamma=%.6f\n",
            av_csp_approximate_trc_gamma(AVCOL_TRC_NB),
            av_csp_approximate_eotf_gamma(AVCOL_TRC_NB));
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

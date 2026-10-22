@@ -16,19 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_IMGUTILS_INTERNAL_H
-#define AVUTIL_IMGUTILS_INTERNAL_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_IMGUTILS_ಆಂತರಿಕ_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_IMGUTILS_ಆಂತರಿಕ_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "pixfmt.h"
 
-int avpriv_set_systematic_pal2(uint32_t pal[256], enum AVPixelFormat pix_fmt);
+ಪೂರ್ಣಾಂಕ avpriv_ಗಣ_systematic_pal2(uint32_t pal[256], ಎಣಿಕೆ AVPixelFormat pix_fmt);
 
-int ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
-                                    const uint8_t *src, ptrdiff_t src_linesize,
-                                    ptrdiff_t bytewidth, int height);
+ಪೂರ್ಣಾಂಕ ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
+                                    ಸ್ಥಿರಾಂಕ uint8_t *src, ptrdiff_t src_linesize,
+                                    ptrdiff_t bytewidth, ಪೂರ್ಣಾಂಕ ಎತ್ತರ);
 
 
-#endif /* AVUTIL_IMGUTILS_INTERNAL_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_IMGUTILS_INTERNAL_H */

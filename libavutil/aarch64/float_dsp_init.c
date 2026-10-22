@@ -19,51 +19,51 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
-#include "cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/attributes.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/cpu.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/float_dsp.h"
+#ಅನ್ತರ್ಭಾವ "cpu.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1,
-                         int len);
+ಶೂನ್ಯ ff_ಸದಿಶ_fmul_neon(ದಶಮಾಂಶ *dst, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src0, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src1,
+                         ಪೂರ್ಣಾಂಕ len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+ಶೂನ್ಯ ff_ಸದಿಶ_fmac_scalar_neon(ದಶಮಾಂಶ *dst, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src, ದಶಮಾಂಶ mul,
+                                ಪೂರ್ಣಾಂಕ len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+ಶೂನ್ಯ ff_ಸದಿಶ_fmul_scalar_neon(ದಶಮಾಂಶ *dst, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src, ದಶಮಾಂಶ mul,
+                                ಪೂರ್ಣಾಂಕ len);
 
-void ff_vector_dmul_scalar_neon(double *dst, const double *src, double mul,
-                                int len);
+ಶೂನ್ಯ ff_ಸದಿಶ_dmul_scalar_neon(ದ್ವಿಗುಣ *dst, ಸ್ಥಿರಾಂಕ ದ್ವಿಗುಣ *src, ದ್ವಿಗುಣ mul,
+                                ಪೂರ್ಣಾಂಕ len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+ಶೂನ್ಯ ff_ಸದಿಶ_fmul_ಕಿಟಕಿ_neon(ದಶಮಾಂಶ *dst, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src0,
+                                ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src1, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *win, ಪೂರ್ಣಾಂಕ len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+ಶೂನ್ಯ ff_ಸದಿಶ_fmul_ಕೂಡಿಸು_neon(ದಶಮಾಂಶ *dst, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src0, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src1,
+                             ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src2, ಪೂರ್ಣಾಂಕ len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+ಶೂನ್ಯ ff_ಸದಿಶ_fmul_ಹಿಮ್ಮುಖ_neon(ದಶಮಾಂಶ *dst, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src0,
+                                 ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *src1, ಪೂರ್ಣಾಂಕ len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+ಶೂನ್ಯ ff_butterflies_float_neon(ದಶಮಾಂಶ *v1, ದಶಮಾಂಶ *v2, ಪೂರ್ಣಾಂಕ len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+ದಶಮಾಂಶ ff_scalarproduct_float_neon(ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *v1, ಸ್ಥಿರಾಂಕ ದಶಮಾಂಶ *v2, ಪೂರ್ಣಾಂಕ len);
 
-av_cold void ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp)
+av_cold ಶೂನ್ಯ ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ಪೂರ್ಣಾಂಕ cpu_flags = av_get_cpu_flags();
 
-    if (have_neon(cpu_flags)) {
+    ಆದರೆ (have_neon(cpu_flags)) {
         fdsp->butterflies_float   = ff_butterflies_float_neon;
         fdsp->scalarproduct_float = ff_scalarproduct_float_neon;
-        fdsp->vector_dmul_scalar  = ff_vector_dmul_scalar_neon;
-        fdsp->vector_fmul         = ff_vector_fmul_neon;
-        fdsp->vector_fmac_scalar  = ff_vector_fmac_scalar_neon;
-        fdsp->vector_fmul_add     = ff_vector_fmul_add_neon;
-        fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_neon;
-        fdsp->vector_fmul_scalar  = ff_vector_fmul_scalar_neon;
-        fdsp->vector_fmul_window  = ff_vector_fmul_window_neon;
+        fdsp->ಸದಿಶ_dmul_scalar  = ff_ಸದಿಶ_dmul_scalar_neon;
+        fdsp->ಸದಿಶ_fmul         = ff_ಸದಿಶ_fmul_neon;
+        fdsp->ಸದಿಶ_fmac_scalar  = ff_ಸದಿಶ_fmac_scalar_neon;
+        fdsp->ಸದಿಶ_fmul_ಕೂಡಿಸು     = ff_ಸದಿಶ_fmul_ಕೂಡಿಸು_neon;
+        fdsp->ಸದಿಶ_fmul_ಹಿಮ್ಮುಖ = ff_ಸದಿಶ_fmul_ಹಿಮ್ಮುಖ_neon;
+        fdsp->ಸದಿಶ_fmul_scalar  = ff_ಸದಿಶ_fmul_scalar_neon;
+        fdsp->ಸದಿಶ_fmul_ಕಿಟಕಿ  = ff_ಸದಿಶ_fmul_ಕಿಟಕಿ_neon;
     }
 }

@@ -18,39 +18,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
+#ಅನ್ತರ್ಭಾವ <assert.h>
 
-#include "config.h"
-#include "avutil.h"
-#include "samplefmt.h"
-#include "version.h"
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "avutil.h"
+#ಅನ್ತರ್ಭಾವ "samplefmt.h"
+#ಅನ್ತರ್ಭಾವ "version.h"
 
-#include "libavutil/ffversion.h"
-const char av_util_ffversion[] = "FFmpeg version " FFMPEG_VERSION;
+#ಅನ್ತರ್ಭಾವ "libavutil/ffversion.h"
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ av_util_ffversion[] = "FFmpeg version " FFMPEG_ಆವೃತ್ತಿ;
 
-const char *av_version_info(void)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_ಆವೃತ್ತಿ_info(ಶೂನ್ಯ)
 {
-    return FFMPEG_VERSION;
+    ಹಿಂತಿರುಗಿ FFMPEG_ಆವೃತ್ತಿ;
 }
 
-unsigned avutil_version(void)
+ಚಿಹ್ನೆರಹಿತ avutil_ಆವೃತ್ತಿ(ಶೂನ್ಯ)
 {
     static_assert(AV_SAMPLE_FMT_S64P      == 11 &&
                   AVMEDIA_TYPE_ATTACHMENT ==  4 &&
                   AV_PICTURE_TYPE_BI      ==  7,
                   "Don't insert new sample/media/picture types in the middle of the list");
-    static_assert(LIBAVUTIL_VERSION_MICRO >= 100, "micro version starts at 100");
+    static_assert(LIBAVUTIL_ಆವೃತ್ತಿ_MICRO >= 100, "micro version starts at 100");
 
-    return LIBAVUTIL_VERSION_INT;
+    ಹಿಂತಿರುಗಿ LIBAVUTIL_ಆವೃತ್ತಿ_INT;
 }
 
-const char *avutil_configuration(void)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *avutil_configuration(ಶೂನ್ಯ)
 {
-    return FFMPEG_CONFIGURATION;
+    ಹಿಂತಿರುಗಿ FFMPEG_CONFIGURATION;
 }
 
-const char *avutil_license(void)
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *avutil_license(ಶೂನ್ಯ)
 {
-#define LICENSE_PREFIX "libavutil license: "
-    return &LICENSE_PREFIX FFMPEG_LICENSE[sizeof(LICENSE_PREFIX) - 1];
+#ವ್ಯಾಖ್ಯಾನಿಸು LICENSE_ಪೂರ್ವಪ್ರತ್ಯಯ "libavutil license: "
+    ಹಿಂತಿರುಗಿ &LICENSE_ಪೂರ್ವಪ್ರತ್ಯಯ FFMPEG_LICENSE[ಗಾತ್ರ(LICENSE_ಪೂರ್ವಪ್ರತ್ಯಯ) - 1];
 }

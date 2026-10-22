@@ -16,72 +16,72 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/hmac.c"
+#ಅನ್ತರ್ಭಾವ "libavutil/hmac.c"
 
-#include <stdio.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-static void test(AVHMAC *hmac, const uint8_t *key, int keylen,
-                 const uint8_t *data, int datalen)
+ಸ್ಥಿರ ಶೂನ್ಯ test(AVHMAC *hmac, ಸ್ಥಿರಾಂಕ uint8_t *ಕೀಲಿ, ಪೂರ್ಣಾಂಕ keylen,
+                 ಸ್ಥಿರಾಂಕ uint8_t *ದತ್ತಾಂಶ, ಪೂರ್ಣಾಂಕ datalen)
 {
     uint8_t buf[MAX_HASHLEN];
-    int out, i;
+    ಪೂರ್ಣಾಂಕ ಹೊರಹೋಗು, i;
     // Some of the test vectors are strings, where sizeof() includes the
     // trailing null byte - remove that.
-    if (!key[keylen - 1])
+    ಆದರೆ (!ಕೀಲಿ[keylen - 1])
         keylen--;
-    if (!data[datalen - 1])
+    ಆದರೆ (!ದತ್ತಾಂಶ[datalen - 1])
         datalen--;
-    out = av_hmac_calc(hmac, data, datalen, key, keylen, buf, sizeof(buf));
-    for (i = 0; i < out; i++)
-        printf("%02x", buf[i]);
-    printf("\n");
+    ಹೊರಹೋಗು = av_hmac_calc(hmac, ದತ್ತಾಂಶ, datalen, ಕೀಲಿ, keylen, buf, ಗಾತ್ರ(buf));
+    ಗಾಗಿ (i = 0; i < ಹೊರಹೋಗು; i++)
+        ಬರೆ("%02x", buf[i]);
+    ಬರೆ("\n");
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
     uint8_t key1[20], key3[131], data3[50];
     AVHMAC *hmac;
-    enum AVHMACType i;
-    static const uint8_t key2[]  = "Jefe";
-    static const uint8_t data1[] = "Hi There";
-    static const uint8_t data2[] = "what do ya want for nothing?";
-    static const uint8_t data4[] = "Test Using Larger Than Block-Size Key - Hash Key First";
-    static const uint8_t data5[] = "Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data";
-    static const uint8_t data6[] = "This is a test using a larger than block-size key and a larger "
+    ಎಣಿಕೆ AVHMACType i;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t key2[]  = "Jefe";
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t data1[] = "Hi There";
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t data2[] = "what do ya want for nothing?";
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t data4[] = "Test Using Larger Than Block-Size Key - Hash Key First";
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t data5[] = "Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data";
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t data6[] = "This is a test using a larger than block-size key and a larger "
                             "than block-size data. The key needs to be hashed before being used"
                             " by the HMAC algorithm.";
-    memset(key1, 0x0b, sizeof(key1));
-    memset(key3, 0xaa, sizeof(key3));
-    memset(data3, 0xdd, sizeof(data3));
+    memset(key1, 0x0b, ಗಾತ್ರ(key1));
+    memset(key3, 0xaa, ಗಾತ್ರ(key3));
+    memset(data3, 0xdd, ಗಾತ್ರ(data3));
 
     /* MD5, SHA-1 */
-    for (i = AV_HMAC_MD5; i <= AV_HMAC_SHA1; i++) {
+    ಗಾಗಿ (i = AV_HMAC_MD5; i <= AV_HMAC_SHA1; i++) {
         hmac = av_hmac_alloc(i);
-        if (!hmac)
-            return 1;
+        ಆದರೆ (!hmac)
+            ಹಿಂತಿರುಗಿ 1;
         // RFC 2202 test vectors
-        test(hmac, key1, hmac->hashlen, data1, sizeof(data1));
-        test(hmac, key2, sizeof(key2),  data2, sizeof(data2));
-        test(hmac, key3, hmac->hashlen, data3, sizeof(data3));
-        test(hmac, key3, 80,            data4, sizeof(data4));
-        test(hmac, key3, 80,            data5, sizeof(data5));
+        test(hmac, key1, hmac->hashlen, data1, ಗಾತ್ರ(data1));
+        test(hmac, key2, ಗಾತ್ರ(key2),  data2, ಗಾತ್ರ(data2));
+        test(hmac, key3, hmac->hashlen, data3, ಗಾತ್ರ(data3));
+        test(hmac, key3, 80,            data4, ಗಾತ್ರ(data4));
+        test(hmac, key3, 80,            data5, ಗಾತ್ರ(data5));
         av_hmac_free(hmac);
     }
 
     /* SHA-2 */
-    for (i = AV_HMAC_SHA224; i <= AV_HMAC_SHA512; i++) {
+    ಗಾಗಿ (i = AV_HMAC_SHA224; i <= AV_HMAC_SHA512; i++) {
         hmac = av_hmac_alloc(i);
-        if (!hmac)
-            return 1;
+        ಆದರೆ (!hmac)
+            ಹಿಂತಿರುಗಿ 1;
         // RFC 4231 test vectors
-        test(hmac, key1, sizeof(key1), data1, sizeof(data1));
-        test(hmac, key2, sizeof(key2), data2, sizeof(data2));
-        test(hmac, key3, 20,           data3, sizeof(data3));
-        test(hmac, key3, sizeof(key3), data4, sizeof(data4));
-        test(hmac, key3, sizeof(key3), data6, sizeof(data6));
+        test(hmac, key1, ಗಾತ್ರ(key1), data1, ಗಾತ್ರ(data1));
+        test(hmac, key2, ಗಾತ್ರ(key2), data2, ಗಾತ್ರ(data2));
+        test(hmac, key3, 20,           data3, ಗಾತ್ರ(data3));
+        test(hmac, key3, ಗಾತ್ರ(key3), data4, ಗಾತ್ರ(data4));
+        test(hmac, key3, ಗಾತ್ರ(key3), data6, ಗಾತ್ರ(data6));
         av_hmac_free(hmac);
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

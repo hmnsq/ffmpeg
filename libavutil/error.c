@@ -16,49 +16,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#undef _GNU_SOURCE
-#define _XOPEN_SOURCE 600 /* XSI-compliant version of strerror_r */
-#include <stdio.h>
-#include <string.h>
-#include "config.h"
-#include "avstring.h"
-#include "error.h"
-#include "macros.h"
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು GNU_ಮೂಲ
+#ವ್ಯಾಖ್ಯಾನಿಸು XOPEN_ಮೂಲ 600 /* XSI-compliant version of strerror_r */
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಅನ್ತರ್ಭಾವ "config.h"
+#ಅನ್ತರ್ಭಾವ "avstring.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "macros.h"
 
-#define AVERROR_INPUT_AND_OUTPUT_CHANGED (AVERROR_INPUT_CHANGED | AVERROR_OUTPUT_CHANGED)
+#ವ್ಯಾಖ್ಯಾನಿಸು AVERROR_ಒಳಹರಿವು_AND_OUTPUT_ಬದಲಾಯಿತು (AVERROR_ಒಳಹರಿವು_ಬದಲಾಯಿತು | AVERROR_OUTPUT_ಬದಲಾಯಿತು)
 
-#define AVERROR_LIST(E, E2)                                                                     \
-    E(BSF_NOT_FOUND,            "Bitstream filter not found")                                   \
+#ವ್ಯಾಖ್ಯಾನಿಸು AVERROR_LIST(E, E2)                                                                     \
+    E(BSF_NOT_ಸಿಕ್ಕಿತು,            "Bitstream filter not found")                                   \
     E(BUG,                      "Internal bug, should not have happened")                       \
     E2(BUG2, BUG,               "Internal bug, should not have happened")                       \
-    E(BUFFER_TOO_SMALL,         "Buffer too small")                                             \
-    E(DECODER_NOT_FOUND,        "Decoder not found")                                            \
-    E(DEMUXER_NOT_FOUND,        "Demuxer not found")                                            \
-    E(ENCODER_NOT_FOUND,        "Encoder not found")                                            \
+    E(ಬಫರ್_TOO_SMALL,         "Buffer too small")                                             \
+    E(DECODER_NOT_ಸಿಕ್ಕಿತು,        "Decoder not found")                                            \
+    E(DEMUXER_NOT_ಸಿಕ್ಕಿತು,        "Demuxer not found")                                            \
+    E(ENCODER_NOT_ಸಿಕ್ಕಿತು,        "Encoder not found")                                            \
     E(EOF,                      "End of file")                                                  \
     E(EXIT,                     "Immediate exit requested")                                     \
     E(EXTERNAL,                 "Generic error in an external library")                         \
-    E(FILTER_NOT_FOUND,         "Filter not found")                                             \
-    E(INPUT_CHANGED,            "Input changed")                                                \
+    E(FILTER_NOT_ಸಿಕ್ಕಿತು,         "Filter not found")                                             \
+    E(ಒಳಹರಿವು_ಬದಲಾಯಿತು,            "Input changed")                                                \
     E(INVALIDDATA,              "Invalid data found when processing input")                     \
-    E(MUXER_NOT_FOUND,          "Muxer not found")                                              \
-    E(OPTION_NOT_FOUND,         "Option not found")                                             \
-    E(OUTPUT_CHANGED,           "Output changed")                                               \
+    E(MUXER_NOT_ಸಿಕ್ಕಿತು,          "Muxer not found")                                              \
+    E(OPTION_NOT_ಸಿಕ್ಕಿತು,         "Option not found")                                             \
+    E(OUTPUT_ಬದಲಾಯಿತು,           "Output changed")                                               \
     E(PATCHWELCOME,             "Not yet implemented in FFmpeg, patches welcome")               \
-    E(PROTOCOL_NOT_FOUND,       "Protocol not found")                                           \
-    E(STREAM_NOT_FOUND,         "Stream not found")                                             \
+    E(PROTOCOL_NOT_ಸಿಕ್ಕಿತು,       "Protocol not found")                                           \
+    E(ಹರಿವು_NOT_ಸಿಕ್ಕಿತು,         "Stream not found")                                             \
     E(UNKNOWN,                  "Unknown error occurred")                                       \
     E(EXPERIMENTAL,             "Experimental feature")                                         \
-    E(INPUT_AND_OUTPUT_CHANGED, "Input and output changed")                                     \
+    E(ಒಳಹರಿವು_AND_OUTPUT_ಬದಲಾಯಿತು, "Input and output changed")                                     \
     E(HTTP_BAD_REQUEST,         "Server returned 400 Bad Request")                              \
     E(HTTP_UNAUTHORIZED,        "Server returned 401 Unauthorized (authorization failed)")      \
     E(HTTP_FORBIDDEN,           "Server returned 403 Forbidden (access denied)")                \
-    E(HTTP_NOT_FOUND,           "Server returned 404 Not Found")                                \
-    E(HTTP_TOO_MANY_REQUESTS,   "Server returned 429 Too Many Requests")                        \
+    E(HTTP_NOT_ಸಿಕ್ಕಿತು,           "Server returned 404 Not Found")                                \
+    E(HTTP_TOO_MANY_ವಿನಂತಿಗಳು,   "Server returned 429 Too Many Requests")                        \
     E(HTTP_OTHER_4XX,           "Server returned 4XX Client Error, but not one of 40{0,1,3,4}") \
     E(HTTP_SERVER_ERROR,        "Server returned 5XX Server Error reply")                       \
 
-#define STRERROR_LIST(E)                                                     \
+#ವ್ಯಾಖ್ಯಾನಿಸು STRERROR_LIST(E)                                                     \
     E(E2BIG,             "Argument list too long")                           \
     E(EACCES,            "Permission denied")                                \
     E(EAGAIN,            "Resource temporarily unavailable")                 \
@@ -98,54 +98,54 @@
     E(ESRCH,             "No such process")                                  \
     E(EXDEV,             "Cross-device link")                                \
 
-enum {
-#define OFFSET(CODE, DESC)     \
-    ERROR_ ## CODE ## _OFFSET, \
-    ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + sizeof(DESC) - 1,
-#define NOTHING(CODE, CODE2, DESC)
-    AVERROR_LIST(OFFSET, NOTHING)
-#if !HAVE_STRERROR_R
-    STRERROR_LIST(OFFSET)
-#endif
+ಎಣಿಕೆ {
+#ವ್ಯಾಖ್ಯಾನಿಸು ಸ್ಥಾನಾಂತರ_2(ಸಂಕೇತ_3, DESC)     \
+    ERROR_ ## ಸಂಕೇತ_3 ## ಸ್ಥಾನಾಂತರ_3, \
+    ERROR_ ## ಸಂಕೇತ_3 ## ಕೊನೆ_ಸ್ಥಾನಾಂತರ = ERROR_ ## ಸಂಕೇತ_3 ## ಸ್ಥಾನಾಂತರ_3 + ಗಾತ್ರ(DESC) - 1,
+#ವ್ಯಾಖ್ಯಾನಿಸು NOTHING(ಸಂಕೇತ_3, CODE2, DESC)
+    AVERROR_LIST(ಸ್ಥಾನಾಂತರ_2, NOTHING)
+#ಆದರೆ !HAVE_STRERROR_R
+    STRERROR_LIST(ಸ್ಥಾನಾಂತರ_2)
+#ಆದರೆ_ಅಂತ್ಯ
 };
 
-#define STRING(CODE, DESC) DESC "\0"
-static const char error_stringtable[] =
+#ವ್ಯಾಖ್ಯಾನಿಸು STRING(ಸಂಕೇತ_3, DESC) DESC "\0"
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ error_stringtable[] =
     AVERROR_LIST(STRING, NOTHING)
-#if !HAVE_STRERROR_R
+#ಆದರೆ !HAVE_STRERROR_R
     STRERROR_LIST(STRING)
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 ;
 
-static const struct ErrorEntry {
-    int num;
-    unsigned offset;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ರಚನೆ Error_ನಮೂದು {
+    ಪೂರ್ಣಾಂಕ ಅಂಕೆ;
+    ಚಿಹ್ನೆರಹಿತ ಸ್ಥಾನಾಂತರ;
 } error_entries[] = {
-#define ENTRY(CODE, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE ## _OFFSET },
-#define ENTRY2(CODE, CODE2, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE2 ## _OFFSET },
-    AVERROR_LIST(ENTRY, ENTRY2)
-#if !HAVE_STRERROR_R
-#undef ENTRY
-#define ENTRY(CODE, DESC) { .num = AVERROR(CODE), .offset = ERROR_ ## CODE ## _OFFSET },
-    STRERROR_LIST(ENTRY)
-#endif
+#ವ್ಯಾಖ್ಯಾನಿಸು ನಮೂದು_2(ಸಂಕೇತ_3, DESC) { .ಅಂಕೆ = AVERROR_ ## ಸಂಕೇತ_3, .ಸ್ಥಾನಾಂತರ = ERROR_ ## ಸಂಕೇತ_3 ## ಸ್ಥಾನಾಂತರ_3 },
+#ವ್ಯಾಖ್ಯಾನಿಸು ENTRY2(ಸಂಕೇತ_3, CODE2, DESC) { .ಅಂಕೆ = AVERROR_ ## ಸಂಕೇತ_3, .ಸ್ಥಾನಾಂತರ = ERROR_ ## CODE2 ## ಸ್ಥಾನಾಂತರ_3 },
+    AVERROR_LIST(ನಮೂದು_2, ENTRY2)
+#ಆದರೆ !HAVE_STRERROR_R
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು ನಮೂದು_2
+#ವ್ಯಾಖ್ಯಾನಿಸು ನಮೂದು_2(ಸಂಕೇತ_3, DESC) { .ಅಂಕೆ = AVERROR(ಸಂಕೇತ_3), .ಸ್ಥಾನಾಂತರ = ERROR_ ## ಸಂಕೇತ_3 ## ಸ್ಥಾನಾಂತರ_3 },
+    STRERROR_LIST(ನಮೂದು_2)
+#ಆದರೆ_ಅಂತ್ಯ
 };
 
-int av_strerror(int errnum, char *errbuf, size_t errbuf_size)
+ಪೂರ್ಣಾಂಕ av_strerror(ಪೂರ್ಣಾಂಕ errnum, ಅಕ್ಷರ *errbuf, size_t errbuf_ಗಾತ್ರ)
 {
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
-        if (errnum == error_entries[i].num) {
-            av_strlcpy(errbuf, error_stringtable + error_entries[i].offset, errbuf_size);
-            return 0;
+    ಗಾಗಿ (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
+        ಆದರೆ (errnum == error_entries[i].ಅಂಕೆ) {
+            av_strlcpy(errbuf, error_stringtable + error_entries[i].ಸ್ಥಾನಾಂತರ, errbuf_ಗಾತ್ರ);
+            ಹಿಂತಿರುಗಿ 0;
         }
     }
-#if HAVE_STRERROR_R
-    int ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
-#else
-    int ret = -1;
-#endif
-    if (ret < 0)
-        snprintf(errbuf, errbuf_size, "Error number %d occurred", errnum);
+#ಆದರೆ HAVE_STRERROR_R
+    ಪೂರ್ಣಾಂಕ ret = AVERROR(strerror_r(AVUNERROR((ಚಿಹ್ನೆರಹಿತ)errnum), errbuf, errbuf_ಗಾತ್ರ));
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಪೂರ್ಣಾಂಕ ret = -1;
+#ಆದರೆ_ಅಂತ್ಯ
+    ಆದರೆ (ret < 0)
+        snprintf(errbuf, errbuf_ಗಾತ್ರ, "Error number %d occurred", errnum);
 
-    return ret;
+    ಹಿಂತಿರುಗಿ ret;
 }

@@ -24,12 +24,12 @@
  * principal component analysis (PCA)
  */
 
-#ifndef AVUTIL_PCA_H
-#define AVUTIL_PCA_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_PCA_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_PCA_H
 
-struct PCA *ff_pca_init(int n);
-void ff_pca_free(struct PCA *pca);
-void ff_pca_add(struct PCA *pca, const double *v);
-int ff_pca(struct PCA *pca, double *eigenvector, double *eigenvalue);
+ರಚನೆ PCA *ff_pca_init(ಪೂರ್ಣಾಂಕ n);
+ಶೂನ್ಯ ff_pca_free(ರಚನೆ PCA *pca);
+ಶೂನ್ಯ ff_pca_ಕೂಡಿಸು(ರಚನೆ PCA *pca, ಸ್ಥಿರಾಂಕ ದ್ವಿಗುಣ *v);
+ಪೂರ್ಣಾಂಕ ff_pca(ರಚನೆ PCA *pca, ದ್ವಿಗುಣ *eigenvector, ದ್ವಿಗುಣ *eigenvalue);
 
-#endif /* AVUTIL_PCA_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_PCA_H */

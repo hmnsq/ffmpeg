@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "buffer.h"
-#include "frame.h"
-#include "mem.h"
-#include "video_enc_params.h"
+#ಅನ್ತರ್ಭಾವ "buffer.h"
+#ಅನ್ತರ್ಭಾವ "frame.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(ಎಣಿಕೆ AVVideoEncParamsType type,
+                                            ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_ಖಂಡಗಳು, size_t *ಹೊರಹೋಗು_ಗಾತ್ರ)
 {
-    struct TestStruct {
+    ರಚನೆ TestStruct {
         AVVideoEncParams   p;
-        AVVideoBlockParams b;
+        AVVideo_ಖಂಡ_Params b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
-    size_t size = blocks_offset;
+    ಸ್ಥಿರಾಂಕ size_t ಖಂಡಗಳು_ಸ್ಥಾನಾಂತರ = offsetof(ರಚನೆ TestStruct, b);
+    size_t ಗಾತ್ರ_2 = ಖಂಡಗಳು_ಸ್ಥಾನಾಂತರ;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    ಆದರೆ (nb_ಖಂಡಗಳು > (SIZE_MAX - ಗಾತ್ರ_2) / ಗಾತ್ರ(AVVideo_ಖಂಡ_Params))
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    ಗಾತ್ರ_2 += ಗಾತ್ರ(AVVideo_ಖಂಡ_Params) * nb_ಖಂಡಗಳು;
 
-    par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    par = av_mallocz(ಗಾತ್ರ_2);
+    ಆದರೆ (!par)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
     par->type          = type;
-    par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
-    par->blocks_offset = blocks_offset;
+    par->nb_ಖಂಡಗಳು     = nb_ಖಂಡಗಳು;
+    par->ಖಂಡ_ಗಾತ್ರ    = ಗಾತ್ರ(AVVideo_ಖಂಡ_Params);
+    par->ಖಂಡಗಳು_ಸ್ಥಾನಾಂತರ = ಖಂಡಗಳು_ಸ್ಥಾನಾಂತರ;
 
-    if (out_size)
-        *out_size = size;
+    ಆದರೆ (ಹೊರಹೋಗು_ಗಾತ್ರ)
+        *ಹೊರಹೋಗು_ಗಾತ್ರ = ಗಾತ್ರ_2;
 
-    return par;
+    ಹಿಂತಿರುಗಿ par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_ದತ್ತಾಂಶ(AVFrame *ಚೌಕಟ್ಟು, ಎಣಿಕೆ AVVideoEncParamsType type,
+                                     ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ nb_ಖಂಡಗಳು)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
-    size_t size;
+    size_t ಗಾತ್ರ_2;
 
-    par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    par = av_video_enc_params_alloc(type, nb_ಖಂಡಗಳು, &ಗಾತ್ರ_2);
+    ಆದರೆ (!par)
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
+    buf = av_ಬಫರ್_create((uint8_t *)par, ಗಾತ್ರ_2, ಖಾಲಿ, ಖಾಲಿ, 0);
+    ಆದರೆ (!buf) {
         av_freep(&par);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    ಆದರೆ (!av_ಚೌಕಟ್ಟು_new_side_ದತ್ತಾಂಶ_from_buf(ಚೌಕಟ್ಟು, AV_ಚೌಕಟ್ಟು_ದತ್ತಾಂಶ_VIDEO_ENC_PARAMS, buf)) {
+        av_ಬಫರ್_unref(&buf);
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    return par;
+    ಹಿಂತಿರುಗಿ par;
 }

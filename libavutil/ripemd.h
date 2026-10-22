@@ -25,13 +25,13 @@
  * Public header for RIPEMD hash function implementation.
  */
 
-#ifndef AVUTIL_RIPEMD_H
-#define AVUTIL_RIPEMD_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_RIPEMD_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_RIPEMD_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "attributes.h"
+#ಅನ್ತರ್ಭಾವ "attributes.h"
 
 /**
  * @defgroup lavu_ripemd RIPEMD
@@ -41,14 +41,14 @@
  * @{
  */
 
-extern const int av_ripemd_size;
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ ಪೂರ್ಣಾಂಕ av_ripemd_ಗಾತ್ರ;
 
-struct AVRIPEMD;
+ರಚನೆ AVRIPEMD;
 
 /**
  * Allocate an AVRIPEMD context.
  */
-struct AVRIPEMD *av_ripemd_alloc(void);
+ರಚನೆ AVRIPEMD *av_ripemd_alloc(ಶೂನ್ಯ);
 
 /**
  * Initialize RIPEMD hashing.
@@ -57,7 +57,7 @@ struct AVRIPEMD *av_ripemd_alloc(void);
  * @param bits    number of bits in digest (128, 160, 256 or 320 bits)
  * @return        zero if initialization succeeded, -1 otherwise
  */
-int av_ripemd_init(struct AVRIPEMD* context, int bits);
+ಪೂರ್ಣಾಂಕ av_ripemd_init(ರಚನೆ AVRIPEMD* context, ಪೂರ್ಣಾಂಕ ಬಿಟ್ಟುಗಳು);
 
 /**
  * Update hash value.
@@ -66,7 +66,7 @@ int av_ripemd_init(struct AVRIPEMD* context, int bits);
  * @param data    input data to update hash with
  * @param len     input data length
  */
-void av_ripemd_update(struct AVRIPEMD* context, const uint8_t* data, size_t len);
+ಶೂನ್ಯ av_ripemd_update(ರಚನೆ AVRIPEMD* context, ಸ್ಥಿರಾಂಕ uint8_t* ದತ್ತಾಂಶ, size_t len);
 
 /**
  * Finish hashing and output digest value.
@@ -74,10 +74,10 @@ void av_ripemd_update(struct AVRIPEMD* context, const uint8_t* data, size_t len)
  * @param context hash function context
  * @param digest  buffer where output digest value is stored
  */
-void av_ripemd_final(struct AVRIPEMD* context, uint8_t *digest);
+ಶೂನ್ಯ av_ripemd_final(ರಚನೆ AVRIPEMD* context, uint8_t *digest);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_RIPEMD_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_RIPEMD_H */

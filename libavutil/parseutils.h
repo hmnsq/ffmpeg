@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PARSEUTILS_H
-#define AVUTIL_PARSEUTILS_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_PARSEUTILS_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_PARSEUTILS_H
 
-#include <time.h>
+#ಅನ್ತರ್ಭಾವ <time.h>
 
-#include "rational.h"
+#ಅನ್ತರ್ಭಾವ "rational.h"
 
 /**
  * @file
@@ -46,11 +46,11 @@
  * @param[in] log_ctx parent logging context
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx);
+ಪೂರ್ಣಾಂಕ av_parse_ಅನುಪಾತ(AVRational *q, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str, ಪೂರ್ಣಾಂಕ max,
+                   ಪೂರ್ಣಾಂಕ log_ಸ್ಥಾನಾಂತರ, ಶೂನ್ಯ *log_ctx);
 
-#define av_parse_ratio_quiet(rate, str, max) \
-    av_parse_ratio(rate, str, max, AV_LOG_MAX_OFFSET, NULL)
+#ವ್ಯಾಖ್ಯಾನಿಸು av_parse_ಅನುಪಾತ_quiet(ದರ, str, max) \
+    av_parse_ಅನುಪಾತ(ದರ, str, max, AV_LOG_MAX_ಸ್ಥಾನಾಂತರ, ಖಾಲಿ)
 
 /**
  * Parse str and put in width_ptr and height_ptr the detected values.
@@ -63,7 +63,7 @@ int av_parse_ratio(AVRational *q, const char *str, int max,
  * width x height or a valid video size abbreviation.
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
+ಪೂರ್ಣಾಂಕ av_parse_video_ಗಾತ್ರ(ಪೂರ್ಣಾಂಕ *ಅಗಲ_ptr, ಪೂರ್ಣಾಂಕ *ಎತ್ತರ_ptr, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str);
 
 /**
  * Parse str and store the detected values in *rate.
@@ -74,7 +74,7 @@ int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
  * rate_num / rate_den, a float number or a valid video rate abbreviation
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_rate(AVRational *rate, const char *str);
+ಪೂರ್ಣಾಂಕ av_parse_video_ದರ(AVRational *ದರ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str);
 
 /**
  * Put the RGBA values that correspond to color_string in rgba_color.
@@ -99,8 +99,8 @@ int av_parse_video_rate(AVRational *rate, const char *str);
  * @return >= 0 in case of success, a negative value in case of
  * failure (for example if color_string cannot be parsed).
  */
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
-                   void *log_ctx);
+ಪೂರ್ಣಾಂಕ av_parse_color(uint8_t *rgba_color, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *color_string, ಪೂರ್ಣಾಂಕ slen,
+                   ಶೂನ್ಯ *log_ctx);
 
 /**
  * Get the name of a color from the internal table of hard-coded named
@@ -113,7 +113,7 @@ int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
  * @param rgb      if not NULL, will point to a 3-elements array with the color value in RGB
  * @return the color name string or NULL if color_idx is not in the array
  */
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *av_get_ತಿಳಿದ_color_name(ಪೂರ್ಣಾಂಕ color_idx, ಸ್ಥಿರಾಂಕ uint8_t **rgb);
 
 /**
  * Parse timestr and return in *time a corresponding number of
@@ -147,7 +147,7 @@ const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_parse_time(int64_t *timeval, const char *timestr, int duration);
+ಪೂರ್ಣಾಂಕ av_parse_ಸಮಯ(int64_t *timeval, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *timestr, ಪೂರ್ಣಾಂಕ duration);
 
 /**
  * Attempt to find a specific tag in a URL.
@@ -155,7 +155,7 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration);
  * syntax: '?tag1=val1&tag2=val2...'. Little URL decoding is done.
  * Return 1 if found.
  */
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info);
+ಪೂರ್ಣಾಂಕ av_ಕಂಡುಹಿಡಿ_info_ಟ್ಯಾಗ್(ಅಕ್ಷರ *arg, ಪೂರ್ಣಾಂಕ arg_ಗಾತ್ರ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *tag1, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *info);
 
 /**
  * Simplified version of strptime
@@ -187,11 +187,11 @@ int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info
  *         is consumed the return value points to the null byte at the end of
  *         the string. On failure NULL is returned.
  */
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt);
+ಅಕ್ಷರ *av_small_strptime(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *fmt, ರಚನೆ tm *dt);
 
 /**
  * Convert the decomposed UTC time in tm to a time_t value.
  */
-time_t av_timegm(struct tm *tm);
+time_t av_timegm(ರಚನೆ tm *tm);
 
-#endif /* AVUTIL_PARSEUTILS_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_PARSEUTILS_H */

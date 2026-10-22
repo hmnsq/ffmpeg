@@ -18,223 +18,223 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stddef.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
 
-#include "error.h"
-#include "fifo.h"
-#include "mem.h"
-#include "threadmessage.h"
-#include "thread.h"
+#ಅನ್ತರ್ಭಾವ "error.h"
+#ಅನ್ತರ್ಭಾವ "fifo.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
+#ಅನ್ತರ್ಭಾವ "threadmessage.h"
+#ಅನ್ತರ್ಭಾವ "thread.h"
 
-struct AVThreadMessageQueue {
-#if HAVE_THREADS
+ರಚನೆ AVThread_ಸಂದೇಶ_ಸರತಿ {
+#ಆದರೆ HAVE_ಎಳೆಗಳು
     AVFifo *fifo;
-    pthread_mutex_t lock;
+    pthread_mutex_t ಬೀಗ_2;
     pthread_cond_t cond_recv;
     pthread_cond_t cond_send;
-    int err_send;
-    int err_recv;
-    unsigned elsize;
-    void (*free_func)(void *msg);
-#else
-    int dummy;
-#endif
+    ಪೂರ್ಣಾಂಕ err_send;
+    ಪೂರ್ಣಾಂಕ err_recv;
+    ಚಿಹ್ನೆರಹಿತ elsize;
+    ಶೂನ್ಯ (*free_func)(ಶೂನ್ಯ *ಸಂದೇಶ);
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಪೂರ್ಣಾಂಕ dummy;
+#ಆದರೆ_ಅಂತ್ಯ
 };
 
-int av_thread_message_queue_alloc(AVThreadMessageQueue **mq,
-                                  unsigned nelem,
-                                  unsigned elsize)
+ಪೂರ್ಣಾಂಕ av_thread_ಸಂದೇಶ_ಸರತಿ_alloc(AVThread_ಸಂದೇಶ_ಸರತಿ **mq,
+                                  ಚಿಹ್ನೆರಹಿತ nelem,
+                                  ಚಿಹ್ನೆರಹಿತ elsize)
 {
-#if HAVE_THREADS
-    AVThreadMessageQueue *rmq;
-    int ret = 0;
+#ಆದರೆ HAVE_ಎಳೆಗಳು
+    AVThread_ಸಂದೇಶ_ಸರತಿ *rmq;
+    ಪೂರ್ಣಾಂಕ ret = 0;
 
-    if (nelem > INT_MAX / elsize)
-        return AVERROR(EINVAL);
-    if (!(rmq = av_mallocz(sizeof(*rmq))))
-        return AVERROR(ENOMEM);
-    if ((ret = pthread_mutex_init(&rmq->lock, NULL))) {
+    ಆದರೆ (nelem > ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ / elsize)
+        ಹಿಂತಿರುಗಿ AVERROR(EINVAL);
+    ಆದರೆ (!(rmq = av_mallocz(ಗಾತ್ರ(*rmq))))
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
+    ಆದರೆ ((ret = pthread_mutex_init(&rmq->ಬೀಗ_2, ಖಾಲಿ))) {
         av_free(rmq);
-        return AVERROR(ret);
+        ಹಿಂತಿರುಗಿ AVERROR(ret);
     }
-    if ((ret = pthread_cond_init(&rmq->cond_recv, NULL))) {
-        pthread_mutex_destroy(&rmq->lock);
+    ಆದರೆ ((ret = pthread_cond_init(&rmq->cond_recv, ಖಾಲಿ))) {
+        pthread_mutex_destroy(&rmq->ಬೀಗ_2);
         av_free(rmq);
-        return AVERROR(ret);
+        ಹಿಂತಿರುಗಿ AVERROR(ret);
     }
-    if ((ret = pthread_cond_init(&rmq->cond_send, NULL))) {
+    ಆದರೆ ((ret = pthread_cond_init(&rmq->cond_send, ಖಾಲಿ))) {
         pthread_cond_destroy(&rmq->cond_recv);
-        pthread_mutex_destroy(&rmq->lock);
+        pthread_mutex_destroy(&rmq->ಬೀಗ_2);
         av_free(rmq);
-        return AVERROR(ret);
+        ಹಿಂತಿರುಗಿ AVERROR(ret);
     }
-    if (!(rmq->fifo = av_fifo_alloc2(nelem, elsize, 0))) {
+    ಆದರೆ (!(rmq->fifo = av_fifo_alloc2(nelem, elsize, 0))) {
         pthread_cond_destroy(&rmq->cond_send);
         pthread_cond_destroy(&rmq->cond_recv);
-        pthread_mutex_destroy(&rmq->lock);
+        pthread_mutex_destroy(&rmq->ಬೀಗ_2);
         av_free(rmq);
-        return AVERROR(ENOMEM);
+        ಹಿಂತಿರುಗಿ AVERROR(ENOMEM);
     }
     rmq->elsize = elsize;
     *mq = rmq;
-    return 0;
-#else
-    *mq = NULL;
-    return AVERROR(ENOSYS);
-#endif /* HAVE_THREADS */
+    ಹಿಂತಿರುಗಿ 0;
+#ಇಲ್ಲದಿದ್ದರೆ
+    *mq = ಖಾಲಿ;
+    ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_free_func(AVThreadMessageQueue *mq,
-                                           void (*free_func)(void *msg))
+ಶೂನ್ಯ av_thread_ಸಂದೇಶ_ಸರತಿ_ಗಣ_free_func(AVThread_ಸಂದೇಶ_ಸರತಿ *mq,
+                                           ಶೂನ್ಯ (*free_func)(ಶೂನ್ಯ *ಸಂದೇಶ))
 {
-#if HAVE_THREADS
+#ಆದರೆ HAVE_ಎಳೆಗಳು
     mq->free_func = free_func;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
-void av_thread_message_queue_free(AVThreadMessageQueue **mq)
+ಶೂನ್ಯ av_thread_ಸಂದೇಶ_ಸರತಿ_free(AVThread_ಸಂದೇಶ_ಸರತಿ **mq)
 {
-#if HAVE_THREADS
-    if (*mq) {
-        av_thread_message_flush(*mq);
+#ಆದರೆ HAVE_ಎಳೆಗಳು
+    ಆದರೆ (*mq) {
+        av_thread_ಸಂದೇಶ_flush(*mq);
         av_fifo_freep2(&(*mq)->fifo);
         pthread_cond_destroy(&(*mq)->cond_send);
         pthread_cond_destroy(&(*mq)->cond_recv);
-        pthread_mutex_destroy(&(*mq)->lock);
+        pthread_mutex_destroy(&(*mq)->ಬೀಗ_2);
         av_freep(mq);
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
-int av_thread_message_queue_nb_elems(AVThreadMessageQueue *mq)
+ಪೂರ್ಣಾಂಕ av_thread_ಸಂದೇಶ_ಸರತಿ_nb_elems(AVThread_ಸಂದೇಶ_ಸರತಿ *mq)
 {
-#if HAVE_THREADS
-    int ret;
-    pthread_mutex_lock(&mq->lock);
+#ಆದರೆ HAVE_ಎಳೆಗಳು
+    ಪೂರ್ಣಾಂಕ ret;
+    pthread_mutex_ಬೀಗ(&mq->ಬೀಗ_2);
     ret = av_fifo_can_read(mq->fifo);
-    pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
-#endif
+    pthread_mutex_unlock(&mq->ಬೀಗ_2);
+    ಹಿಂತಿರುಗಿ ret;
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
-#if HAVE_THREADS
+#ಆದರೆ HAVE_ಎಳೆಗಳು
 
-static int av_thread_message_queue_send_locked(AVThreadMessageQueue *mq,
-                                               void *msg,
-                                               unsigned flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ av_thread_ಸಂದೇಶ_ಸರತಿ_send_locked(AVThread_ಸಂದೇಶ_ಸರತಿ *mq,
+                                               ಶೂನ್ಯ *ಸಂದೇಶ,
+                                               ಚಿಹ್ನೆರಹಿತ flags)
 {
-    while (!mq->err_send && !av_fifo_can_write(mq->fifo)) {
-        if ((flags & AV_THREAD_MESSAGE_NONBLOCK))
-            return AVERROR(EAGAIN);
-        pthread_cond_wait(&mq->cond_send, &mq->lock);
+    ಆಗ (!mq->err_send && !av_fifo_can_write(mq->fifo)) {
+        ಆದರೆ ((flags & AV_THREAD_ಸಂದೇಶ_NONBLOCK))
+            ಹಿಂತಿರುಗಿ AVERROR(EAGAIN);
+        pthread_cond_wait(&mq->cond_send, &mq->ಬೀಗ_2);
     }
-    if (mq->err_send)
-        return mq->err_send;
-    av_fifo_write(mq->fifo, msg, 1);
+    ಆದರೆ (mq->err_send)
+        ಹಿಂತಿರುಗಿ mq->err_send;
+    av_fifo_write(mq->fifo, ಸಂದೇಶ, 1);
     /* one message is sent, signal one receiver */
     pthread_cond_signal(&mq->cond_recv);
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-static int av_thread_message_queue_recv_locked(AVThreadMessageQueue *mq,
-                                               void *msg,
-                                               unsigned flags)
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ av_thread_ಸಂದೇಶ_ಸರತಿ_recv_locked(AVThread_ಸಂದೇಶ_ಸರತಿ *mq,
+                                               ಶೂನ್ಯ *ಸಂದೇಶ,
+                                               ಚಿಹ್ನೆರಹಿತ flags)
 {
-    while (!mq->err_recv && !av_fifo_can_read(mq->fifo)) {
-        if ((flags & AV_THREAD_MESSAGE_NONBLOCK))
-            return AVERROR(EAGAIN);
-        pthread_cond_wait(&mq->cond_recv, &mq->lock);
+    ಆಗ (!mq->err_recv && !av_fifo_can_read(mq->fifo)) {
+        ಆದರೆ ((flags & AV_THREAD_ಸಂದೇಶ_NONBLOCK))
+            ಹಿಂತಿರುಗಿ AVERROR(EAGAIN);
+        pthread_cond_wait(&mq->cond_recv, &mq->ಬೀಗ_2);
     }
-    if (!av_fifo_can_read(mq->fifo))
-        return mq->err_recv;
-    av_fifo_read(mq->fifo, msg, 1);
+    ಆದರೆ (!av_fifo_can_read(mq->fifo))
+        ಹಿಂತಿರುಗಿ mq->err_recv;
+    av_fifo_read(mq->fifo, ಸಂದೇಶ, 1);
     /* one message space appeared, signal one sender */
     pthread_cond_signal(&mq->cond_send);
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-#endif /* HAVE_THREADS */
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_THREADS */
 
-int av_thread_message_queue_send(AVThreadMessageQueue *mq,
-                                 void *msg,
-                                 unsigned flags)
+ಪೂರ್ಣಾಂಕ av_thread_ಸಂದೇಶ_ಸರತಿ_send(AVThread_ಸಂದೇಶ_ಸರತಿ *mq,
+                                 ಶೂನ್ಯ *ಸಂದೇಶ,
+                                 ಚಿಹ್ನೆರಹಿತ flags)
 {
-#if HAVE_THREADS
-    int ret;
+#ಆದರೆ HAVE_ಎಳೆಗಳು
+    ಪೂರ್ಣಾಂಕ ret;
 
-    pthread_mutex_lock(&mq->lock);
-    ret = av_thread_message_queue_send_locked(mq, msg, flags);
-    pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
-#endif /* HAVE_THREADS */
+    pthread_mutex_ಬೀಗ(&mq->ಬೀಗ_2);
+    ret = av_thread_ಸಂದೇಶ_ಸರತಿ_send_locked(mq, ಸಂದೇಶ, flags);
+    pthread_mutex_unlock(&mq->ಬೀಗ_2);
+    ಹಿಂತಿರುಗಿ ret;
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_THREADS */
 }
 
-int av_thread_message_queue_recv(AVThreadMessageQueue *mq,
-                                 void *msg,
-                                 unsigned flags)
+ಪೂರ್ಣಾಂಕ av_thread_ಸಂದೇಶ_ಸರತಿ_recv(AVThread_ಸಂದೇಶ_ಸರತಿ *mq,
+                                 ಶೂನ್ಯ *ಸಂದೇಶ,
+                                 ಚಿಹ್ನೆರಹಿತ flags)
 {
-#if HAVE_THREADS
-    int ret;
+#ಆದರೆ HAVE_ಎಳೆಗಳು
+    ಪೂರ್ಣಾಂಕ ret;
 
-    pthread_mutex_lock(&mq->lock);
-    ret = av_thread_message_queue_recv_locked(mq, msg, flags);
-    pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
-#endif /* HAVE_THREADS */
+    pthread_mutex_ಬೀಗ(&mq->ಬೀಗ_2);
+    ret = av_thread_ಸಂದೇಶ_ಸರತಿ_recv_locked(mq, ಸಂದೇಶ, flags);
+    pthread_mutex_unlock(&mq->ಬೀಗ_2);
+    ಹಿಂತಿರುಗಿ ret;
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಹಿಂತಿರುಗಿ AVERROR(ENOSYS);
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_err_send(AVThreadMessageQueue *mq,
-                                          int err)
+ಶೂನ್ಯ av_thread_ಸಂದೇಶ_ಸರತಿ_ಗಣ_err_send(AVThread_ಸಂದೇಶ_ಸರತಿ *mq,
+                                          ಪೂರ್ಣಾಂಕ err)
 {
-#if HAVE_THREADS
-    pthread_mutex_lock(&mq->lock);
+#ಆದರೆ HAVE_ಎಳೆಗಳು
+    pthread_mutex_ಬೀಗ(&mq->ಬೀಗ_2);
     mq->err_send = err;
-    pthread_cond_broadcast(&mq->cond_send);
-    pthread_mutex_unlock(&mq->lock);
-#endif /* HAVE_THREADS */
+    pthread_cond_ಪ್ರಸಾರ(&mq->cond_send);
+    pthread_mutex_unlock(&mq->ಬೀಗ_2);
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_err_recv(AVThreadMessageQueue *mq,
-                                          int err)
+ಶೂನ್ಯ av_thread_ಸಂದೇಶ_ಸರತಿ_ಗಣ_err_recv(AVThread_ಸಂದೇಶ_ಸರತಿ *mq,
+                                          ಪೂರ್ಣಾಂಕ err)
 {
-#if HAVE_THREADS
-    pthread_mutex_lock(&mq->lock);
+#ಆದರೆ HAVE_ಎಳೆಗಳು
+    pthread_mutex_ಬೀಗ(&mq->ಬೀಗ_2);
     mq->err_recv = err;
-    pthread_cond_broadcast(&mq->cond_recv);
-    pthread_mutex_unlock(&mq->lock);
-#endif /* HAVE_THREADS */
+    pthread_cond_ಪ್ರಸಾರ(&mq->cond_recv);
+    pthread_mutex_unlock(&mq->ಬೀಗ_2);
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_THREADS */
 }
 
-#if HAVE_THREADS
-static int free_func_wrap(void *arg, void *buf, size_t *nb_elems)
+#ಆದರೆ HAVE_ಎಳೆಗಳು
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ free_func_wrap(ಶೂನ್ಯ *arg, ಶೂನ್ಯ *buf, size_t *nb_elems)
 {
-    AVThreadMessageQueue *mq = arg;
-    uint8_t *msg = buf;
-    for (size_t i = 0; i < *nb_elems; i++)
-        mq->free_func(msg + i * mq->elsize);
-    return 0;
+    AVThread_ಸಂದೇಶ_ಸರತಿ *mq = arg;
+    uint8_t *ಸಂದೇಶ = buf;
+    ಗಾಗಿ (size_t i = 0; i < *nb_elems; i++)
+        mq->free_func(ಸಂದೇಶ + i * mq->elsize);
+    ಹಿಂತಿರುಗಿ 0;
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-void av_thread_message_flush(AVThreadMessageQueue *mq)
+ಶೂನ್ಯ av_thread_ಸಂದೇಶ_flush(AVThread_ಸಂದೇಶ_ಸರತಿ *mq)
 {
-#if HAVE_THREADS
-    size_t used;
+#ಆದರೆ HAVE_ಎಳೆಗಳು
+    size_t ಬಳಸಿದ;
 
-    pthread_mutex_lock(&mq->lock);
-    used = av_fifo_can_read(mq->fifo);
-    if (mq->free_func)
-        av_fifo_read_to_cb(mq->fifo, free_func_wrap, mq, &used);
+    pthread_mutex_ಬೀಗ(&mq->ಬೀಗ_2);
+    ಬಳಸಿದ = av_fifo_can_read(mq->fifo);
+    ಆದರೆ (mq->free_func)
+        av_fifo_read_ಗಮ್ಯ_cb(mq->fifo, free_func_wrap, mq, &ಬಳಸಿದ);
     /* only the senders need to be notified since the queue is empty and there
      * is nothing to read */
-    pthread_cond_broadcast(&mq->cond_send);
-    pthread_mutex_unlock(&mq->lock);
-#endif /* HAVE_THREADS */
+    pthread_cond_ಪ್ರಸಾರ(&mq->cond_send);
+    pthread_mutex_unlock(&mq->ಬೀಗ_2);
+#ಆದರೆ_ಅಂತ್ಯ /* HAVE_THREADS */
 }

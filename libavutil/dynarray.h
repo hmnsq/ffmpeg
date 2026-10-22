@@ -16,11 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_DYNARRAY_H
-#define AVUTIL_DYNARRAY_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_DYNARRAY_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_DYNARRAY_H
 
-#include "log.h"
-#include "mem.h"
+#ಅನ್ತರ್ಭಾವ "log.h"
+#ಅನ್ತರ್ಭಾವ "mem.h"
 
 /**
  * Add an element to a dynamic array.
@@ -42,29 +42,29 @@
  *                     array and size are not changed; the statement can end
  *                     with a return or a goto
  */
-#define FF_DYNARRAY_ADD(av_size_max, av_elt_size, av_array, av_size, \
+#ವ್ಯಾಖ್ಯಾನಿಸು FF_DYNARRAY_ಕೂಡಿಸು(av_ಗಾತ್ರ_max, av_elt_ಗಾತ್ರ, av_array, av_ಗಾತ್ರ, \
                         av_success, av_failure) \
-    do { \
-        size_t av_size_new = (av_size); \
-        if (!((av_size) & ((av_size) - 1))) { \
-            av_size_new = (av_size) ? (av_size) << 1 : 1; \
-            if (av_size_new > (av_size_max) / (av_elt_size)) { \
-                av_size_new = 0; \
-            } else { \
-                void *av_array_new = \
-                    av_realloc((av_array), av_size_new * (av_elt_size)); \
-                if (!av_array_new) \
-                    av_size_new = 0; \
-                else \
+    ಮಾಡು { \
+        size_t av_ಗಾತ್ರ_new = (av_ಗಾತ್ರ); \
+        ಆದರೆ (!((av_ಗಾತ್ರ) & ((av_ಗಾತ್ರ) - 1))) { \
+            av_ಗಾತ್ರ_new = (av_ಗಾತ್ರ) ? (av_ಗಾತ್ರ) << 1 : 1; \
+            ಆದರೆ (av_ಗಾತ್ರ_new > (av_ಗಾತ್ರ_max) / (av_elt_ಗಾತ್ರ)) { \
+                av_ಗಾತ್ರ_new = 0; \
+            } ಇಲ್ಲದಿದ್ದರೆ { \
+                ಶೂನ್ಯ *av_array_new = \
+                    av_realloc((av_array), av_ಗಾತ್ರ_new * (av_elt_ಗಾತ್ರ)); \
+                ಆದರೆ (!av_array_new) \
+                    av_ಗಾತ್ರ_new = 0; \
+                ಇಲ್ಲದಿದ್ದರೆ \
                     (av_array) = av_array_new; \
             } \
         } \
-        if (av_size_new) { \
+        ಆದರೆ (av_ಗಾತ್ರ_new) { \
             { av_success } \
-            (av_size)++; \
-        } else { \
+            (av_ಗಾತ್ರ)++; \
+        } ಇಲ್ಲದಿದ್ದರೆ { \
             av_failure \
         } \
-    } while (0)
+    } ಆಗ (0)
 
-#endif /* AVUTIL_DYNARRAY_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_DYNARRAY_H */

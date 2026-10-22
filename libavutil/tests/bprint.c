@@ -18,75 +18,75 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/avassert.h"
-#include "libavutil/bprint.c"
+#ಅನ್ತರ್ಭಾವ "libavutil/avassert.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/bprint.c"
 
-static void bprint_pascal(AVBPrint *b, unsigned size)
+ಸ್ಥಿರ ಶೂನ್ಯ bprint_pascal(AVBPrint *b, ಚಿಹ್ನೆರಹಿತ ಗಾತ್ರ_2)
 {
-    unsigned i, j;
-    unsigned p[42];
+    ಚಿಹ್ನೆರಹಿತ i, j;
+    ಚಿಹ್ನೆರಹಿತ p[42];
 
-    av_assert0(size < FF_ARRAY_ELEMS(p));
+    av_assert0(ಗಾತ್ರ_2 < FF_ARRAY_ELEMS(p));
 
     p[0] = 1;
     av_bprintf(b, "%8d\n", 1);
-    for (i = 1; i <= size; i++) {
+    ಗಾಗಿ (i = 1; i <= ಗಾತ್ರ_2; i++) {
         p[i] = 1;
-        for (j = i - 1; j > 0; j--)
+        ಗಾಗಿ (j = i - 1; j > 0; j--)
             p[j] = p[j] + p[j - 1];
-        for (j = 0; j <= i; j++)
+        ಗಾಗಿ (j = 0; j <= i; j++)
             av_bprintf(b, "%8d", p[j]);
         av_bprintf(b, "\n");
     }
 }
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
     AVBPrint b;
-    char buf[256];
-    struct tm testtime = { .tm_year = 100, .tm_mon = 11, .tm_mday = 20 };
+    ಅಕ್ಷರ buf[256];
+    ರಚನೆ tm testtime = { .tm_year = 100, .tm_mon = 11, .tm_mday = 20 };
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_UNLIMITED);
+    av_bprint_init(&b, 0, AV_BPRINT_ಗಾತ್ರ_UNLIMITED);
     bprint_pascal(&b, 5);
-    printf("Short text in unlimited buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
-    printf("%s\n", b.str);
-    av_bprint_finalize(&b, NULL);
+    ಬರೆ("Short text in unlimited buffer: %u/%u\n", (ಚಿಹ್ನೆರಹಿತ)ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(b.str), b.len);
+    ಬರೆ("%s\n", b.str);
+    av_bprint_finalize(&b, ಖಾಲಿ);
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_UNLIMITED);
+    av_bprint_init(&b, 0, AV_BPRINT_ಗಾತ್ರ_UNLIMITED);
     bprint_pascal(&b, 25);
-    printf("Long text in unlimited buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
-    av_bprint_finalize(&b, NULL);
+    ಬರೆ("Long text in unlimited buffer: %u/%u\n", (ಚಿಹ್ನೆರಹಿತ)ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(b.str), b.len);
+    av_bprint_finalize(&b, ಖಾಲಿ);
 
     av_bprint_init(&b, 0, 2048);
     bprint_pascal(&b, 25);
-    printf("Long text in limited buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
-    av_bprint_finalize(&b, NULL);
+    ಬರೆ("Long text in limited buffer: %u/%u\n", (ಚಿಹ್ನೆರಹಿತ)ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(b.str), b.len);
+    av_bprint_finalize(&b, ಖಾಲಿ);
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_AUTOMATIC);
+    av_bprint_init(&b, 0, AV_BPRINT_ಗಾತ್ರ_AUTOMATIC);
     bprint_pascal(&b, 5);
-    printf("Short text in automatic buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
+    ಬರೆ("Short text in automatic buffer: %u/%u\n", (ಚಿಹ್ನೆರಹಿತ)ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(b.str), b.len);
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_AUTOMATIC);
+    av_bprint_init(&b, 0, AV_BPRINT_ಗಾತ್ರ_AUTOMATIC);
     bprint_pascal(&b, 25);
-    printf("Long text in automatic buffer: %u/%u\n", (unsigned)strlen(b.str)/8*8, b.len);
+    ಬರೆ("Long text in automatic buffer: %u/%u\n", (ಚಿಹ್ನೆರಹಿತ)ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(b.str)/8*8, b.len);
     /* Note that the size of the automatic buffer is arch-dependent. */
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_COUNT_ONLY);
+    av_bprint_init(&b, 0, AV_BPRINT_ಗಾತ್ರ_ಎಣಿಕೆ_ONLY);
     bprint_pascal(&b, 25);
-    printf("Long text count only buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
+    ಬರೆ("Long text count only buffer: %u/%u\n", (ಚಿಹ್ನೆರಹಿತ)ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(b.str), b.len);
 
-    av_bprint_init_for_buffer(&b, buf, sizeof(buf));
+    av_bprint_init_for_ಬಫರ್(&b, buf, ಗಾತ್ರ(buf));
     bprint_pascal(&b, 25);
-    printf("Long text count only buffer: %u/%u\n", (unsigned)strlen(buf), b.len);
+    ಬರೆ("Long text count only buffer: %u/%u\n", (ಚಿಹ್ನೆರಹಿತ)ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(buf), b.len);
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_UNLIMITED);
+    av_bprint_init(&b, 0, AV_BPRINT_ಗಾತ್ರ_UNLIMITED);
     av_bprint_strftime(&b, "%Y-%m-%d", &testtime);
-    printf("strftime full: %u/%u \"%s\"\n", (unsigned)strlen(buf), b.len, b.str);
-    av_bprint_finalize(&b, NULL);
+    ಬರೆ("strftime full: %u/%u \"%s\"\n", (ಚಿಹ್ನೆರಹಿತ)ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(buf), b.len, b.str);
+    av_bprint_finalize(&b, ಖಾಲಿ);
 
     av_bprint_init(&b, 0, 8);
     av_bprint_strftime(&b, "%Y-%m-%d", &testtime);
-    printf("strftime truncated: %u/%u \"%s\"\n", (unsigned)strlen(buf), b.len, b.str);
+    ಬರೆ("strftime truncated: %u/%u \"%s\"\n", (ಚಿಹ್ನೆರಹಿತ)ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(buf), b.len, b.str);
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

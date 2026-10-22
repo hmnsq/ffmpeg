@@ -26,12 +26,12 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_RATIONAL_H
-#define AVUTIL_RATIONAL_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_RATIONAL_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_RATIONAL_H
 
-#include <stdint.h>
-#include <limits.h>
-#include "attributes.h"
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ "attributes.h"
 
 /**
  * @defgroup lavu_math_rational AVRational
@@ -55,9 +55,9 @@
 /**
  * Rational number (pair of numerator and denominator).
  */
-typedef struct AVRational{
-    int num; ///< Numerator
-    int den; ///< Denominator
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVRational{
+    ಪೂರ್ಣಾಂಕ ಅಂಕೆ; ///< Numerator
+    ಪೂರ್ಣಾಂಕ den; ///< Denominator
 } AVRational;
 
 /**
@@ -68,10 +68,10 @@ typedef struct AVRational{
  * @note The return value is not reduced.
  * @see av_reduce()
  */
-static inline AVRational av_make_q(int num, int den)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ AVRational av_make_q(ಪೂರ್ಣಾಂಕ ಅಂಕೆ, ಪೂರ್ಣಾಂಕ den)
 {
-    AVRational r = { num, den };
-    return r;
+    AVRational r = { ಅಂಕೆ, den };
+    ಹಿಂತಿರುಗಿ r;
 }
 
 /**
@@ -86,13 +86,13 @@ static inline AVRational av_make_q(int num, int den)
  *         - -1 if `a < b`
  *         - `INT_MIN` if one of the values is of the form `0 / 0`
  */
-static inline int av_cmp_q(AVRational a, AVRational b){
-    const int64_t tmp= a.num * (int64_t)b.den - b.num * (int64_t)a.den;
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಪೂರ್ಣಾಂಕ av_cmp_q(AVRational a, AVRational b){
+    ಸ್ಥಿರಾಂಕ int64_t tmp= a.ಅಂಕೆ * (int64_t)b.den - b.ಅಂಕೆ * (int64_t)a.den;
 
-    if(tmp) return (int)((tmp ^ a.den ^ b.den)>>63)|1;
-    else if(b.den && a.den) return 0;
-    else if(a.num && b.num) return (a.num>>31) - (b.num>>31);
-    else                    return INT_MIN;
+    ಆದರೆ(tmp) ಹಿಂತಿರುಗಿ (ಪೂರ್ಣಾಂಕ)((tmp ^ a.den ^ b.den)>>63)|1;
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(b.den && a.den) ಹಿಂತಿರುಗಿ 0;
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(a.ಅಂಕೆ && b.ಅಂಕೆ) ಹಿಂತಿರುಗಿ (a.ಅಂಕೆ>>31) - (b.ಅಂಕೆ>>31);
+    ಇಲ್ಲದಿದ್ದರೆ                    ಹಿಂತಿರುಗಿ INT_MIN;
 }
 
 /**
@@ -101,8 +101,8 @@ static inline int av_cmp_q(AVRational a, AVRational b){
  * @return `a` in floating-point form
  * @see av_d2q()
  */
-static inline double av_q2d(AVRational a){
-    return a.num / (double) a.den;
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ದ್ವಿಗುಣ av_q2d(AVRational a){
+    ಹಿಂತಿರುಗಿ a.ಅಂಕೆ / (ದ್ವಿಗುಣ) a.den;
 }
 
 /**
@@ -117,7 +117,7 @@ static inline double av_q2d(AVRational a){
  * @param[in]      max Maximum allowed values for `dst_num` & `dst_den`
  * @return 1 if the operation is exact, 0 otherwise
  */
-int av_reduce(int *dst_num, int *dst_den, int64_t num, int64_t den, int64_t max);
+ಪೂರ್ಣಾಂಕ av_reduce(ಪೂರ್ಣಾಂಕ *dst_ಅಂಕೆ, ಪೂರ್ಣಾಂಕ *dst_den, int64_t ಅಂಕೆ, int64_t den, int64_t max);
 
 /**
  * Multiply two rationals.
@@ -141,7 +141,7 @@ AVRational av_div_q(AVRational b, AVRational c) av_const;
  * @param c Second rational
  * @return b+c
  */
-AVRational av_add_q(AVRational b, AVRational c) av_const;
+AVRational av_ಕೂಡಿಸು_q(AVRational b, AVRational c) av_const;
 
 /**
  * Subtract one rational from another.
@@ -156,10 +156,10 @@ AVRational av_sub_q(AVRational b, AVRational c) av_const;
  * @param q value
  * @return 1 / q
  */
-static av_always_inline AVRational av_inv_q(AVRational q)
+ಸ್ಥಿರ av_always_inline AVRational av_inv_q(AVRational q)
 {
-    AVRational r = { q.den, q.num };
-    return r;
+    AVRational r = { q.den, q.ಅಂಕೆ };
+    ಹಿಂತಿರುಗಿ r;
 }
 
 /**
@@ -177,7 +177,7 @@ static av_always_inline AVRational av_inv_q(AVRational q)
  * @return `d` in AVRational form
  * @see av_q2d()
  */
-AVRational av_d2q(double d, int max) av_const;
+AVRational av_d2q(ದ್ವಿಗುಣ d, ಪೂರ್ಣಾಂಕ max) av_const;
 
 /**
  * Find which of the two rationals is closer to another rational.
@@ -190,7 +190,7 @@ AVRational av_d2q(double d, int max) av_const;
  *         - -1 if `q2` is nearer to `q` than `q1`
  *         - 0 if they have the same distance
  */
-int av_nearer_q(AVRational q, AVRational q1, AVRational q2);
+ಪೂರ್ಣಾಂಕ av_nearer_q(AVRational q, AVRational q1, AVRational q2);
 
 /**
  * Find the value in a list of rationals nearest a given reference rational.
@@ -199,7 +199,7 @@ int av_nearer_q(AVRational q, AVRational q1, AVRational q2);
  * @param q_list Array of rationals terminated by `{0, 0}`
  * @return Index of the nearest value found in the array
  */
-int av_find_nearest_q_idx(AVRational q, const AVRational* q_list);
+ಪೂರ್ಣಾಂಕ av_ಕಂಡುಹಿಡಿ_ಹತ್ತಿರದ_q_idx(AVRational q, ಸ್ಥಿರಾಂಕ AVRational* q_list);
 
 /**
  * Convert an AVRational to a IEEE 32-bit `float` expressed in fixed-point
@@ -216,10 +216,10 @@ uint32_t av_q2intfloat(AVRational q);
  * Return the best rational so that a and b are multiple of it.
  * If the resulting denominator is larger than max_den, return def.
  */
-AVRational av_gcd_q(AVRational a, AVRational b, int max_den, AVRational def);
+AVRational av_ಮಹತ್ತಮ_ಸಾಮಾನ್ಯ_ಅಪವರ್ತನ_q(AVRational a, AVRational b, ಪೂರ್ಣಾಂಕ max_den, AVRational def);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_RATIONAL_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_RATIONAL_H */

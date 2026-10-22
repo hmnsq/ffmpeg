@@ -24,14 +24,14 @@
  */
 
 
-#ifndef AVUTIL_DOVI_META_H
-#define AVUTIL_DOVI_META_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_DOVI_META_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_DOVI_META_H
 
-#include <stdint.h>
-#include <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
 
-#include "rational.h"
-#include "csp.h"
+#ಅನ್ತರ್ಭಾವ "rational.h"
+#ಅನ್ತರ್ಭಾವ "csp.h"
 
 /*
  * DOVI configuration
@@ -52,9 +52,9 @@
  * @note The struct must be allocated with av_dovi_alloc() and
  *       its size is not a part of the public ABI.
  */
-typedef struct AVDOVIDecoderConfigurationRecord {
-    uint8_t dv_version_major;
-    uint8_t dv_version_minor;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDecoder_Configuration_ದಾಖಲೆ {
+    uint8_t dv_ಆವೃತ್ತಿ_major;
+    uint8_t dv_ಆವೃತ್ತಿ_minor;
     uint8_t dv_profile;
     uint8_t dv_level;
     uint8_t rpu_present_flag;
@@ -62,9 +62,9 @@ typedef struct AVDOVIDecoderConfigurationRecord {
     uint8_t bl_present_flag;
     uint8_t dv_bl_signal_compatibility_id;
     uint8_t dv_md_compression;
-} AVDOVIDecoderConfigurationRecord;
+} AVDOVIDecoder_Configuration_ದಾಖಲೆ;
 
-enum AVDOVICompression {
+ಎಣಿಕೆ AVDOVICompression {
     AV_DOVI_COMPRESSION_NONE     = 0,
     AV_DOVI_COMPRESSION_LIMITED  = 1,
     AV_DOVI_COMPRESSION_RESERVED = 2,
@@ -77,34 +77,34 @@ enum AVDOVICompression {
  *
  * @return the newly allocated struct or NULL on failure
  */
-AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size);
+AVDOVIDecoder_Configuration_ದಾಖಲೆ *av_dovi_alloc(size_t *ಗಾತ್ರ_2);
 
 /**
  * Dolby Vision RPU data header.
  *
  * @note sizeof(AVDOVIRpuDataHeader) is not part of the public ABI.
  */
-typedef struct AVDOVIRpuDataHeader {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIRpu_ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ {
     uint8_t rpu_type;
     uint16_t rpu_format;
     uint8_t vdr_rpu_profile;
     uint8_t vdr_rpu_level;
     uint8_t chroma_resampling_explicit_filter_flag;
-    uint8_t coef_data_type; /* informative, lavc always converts to fixed */
+    uint8_t coef_ದತ್ತಾಂಶ_type; /* informative, lavc always converts to fixed */
     uint8_t coef_log2_denom;
     uint8_t vdr_rpu_normalized_idc;
-    uint8_t bl_video_full_range_flag;
-    uint8_t bl_bit_depth; /* [8, 16] */
-    uint8_t el_bit_depth; /* [8, 16] */
-    uint8_t vdr_bit_depth; /* [8, 16] */
+    uint8_t bl_video_ತುಂಬಿದ_range_flag;
+    uint8_t bl_ಬಿಟ್_ಆಳ; /* [8, 16] */
+    uint8_t el_ಬಿಟ್_ಆಳ; /* [8, 16] */
+    uint8_t vdr_ಬಿಟ್_ಆಳ; /* [8, 16] */
     uint8_t spatial_resampling_filter_flag;
     uint8_t el_spatial_resampling_filter_flag;
     uint8_t disable_residual_flag;
     uint8_t ext_mapping_idc_0_4; /* extended base layer inverse mapping indicator */
     uint8_t ext_mapping_idc_5_7; /* reserved */
-} AVDOVIRpuDataHeader;
+} AVDOVIRpu_ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ;
 
-enum AVDOVIMappingMethod {
+ಎಣಿಕೆ AVDOVIMapping_ವಿಧಾನ {
     AV_DOVI_MAPPING_POLYNOMIAL = 0,
     AV_DOVI_MAPPING_MMR = 1,
 };
@@ -113,35 +113,35 @@ enum AVDOVIMappingMethod {
  * Coefficients of a piece-wise function. The pieces of the function span the
  * value ranges between two adjacent pivot values.
  */
-#define AV_DOVI_MAX_PIECES 8
-typedef struct AVDOVIReshapingCurve {
-    uint8_t num_pivots;                         /* [2, 9] */
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_DOVI_MAX_PIECES 8
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIReshaping_ವಕ್ರ {
+    uint8_t ಅಂಕೆ_pivots;                         /* [2, 9] */
     uint16_t pivots[AV_DOVI_MAX_PIECES + 1];    /* sorted ascending */
-    enum AVDOVIMappingMethod mapping_idc[AV_DOVI_MAX_PIECES];
+    ಎಣಿಕೆ AVDOVIMapping_ವಿಧಾನ mapping_idc[AV_DOVI_MAX_PIECES];
     /* AV_DOVI_MAPPING_POLYNOMIAL */
-    uint8_t poly_order[AV_DOVI_MAX_PIECES];     /* [1, 2] */
+    uint8_t poly_ಕ್ರಮ[AV_DOVI_MAX_PIECES];     /* [1, 2] */
     int64_t poly_coef[AV_DOVI_MAX_PIECES][3];   /* x^0, x^1, x^2 */
     /* AV_DOVI_MAPPING_MMR */
-    uint8_t mmr_order[AV_DOVI_MAX_PIECES];      /* [1, 3] */
+    uint8_t mmr_ಕ್ರಮ[AV_DOVI_MAX_PIECES];      /* [1, 3] */
     int64_t mmr_constant[AV_DOVI_MAX_PIECES];
     int64_t mmr_coef[AV_DOVI_MAX_PIECES][3/* order - 1 */][7];
-} AVDOVIReshapingCurve;
+} AVDOVIReshaping_ವಕ್ರ;
 
-enum AVDOVINLQMethod {
+ಎಣಿಕೆ AVDOVINLQMethod {
     AV_DOVI_NLQ_NONE = -1,
-    AV_DOVI_NLQ_LINEAR_DZ = 0,
+    AV_DOVI_NLQ_ರೇಖೀಯ_DZ = 0,
 };
 
 /**
  * Coefficients of the non-linear inverse quantization. For the interpretation
  * of these, see ETSI GS CCM 001.
  */
-typedef struct AVDOVINLQParams {
-    uint16_t nlq_offset;
-    uint64_t vdr_in_max;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVINLQParams {
+    uint16_t nlq_ಸ್ಥಾನಾಂತರ;
+    uint64_t vdr_ಒಳ_max;
     /* AV_DOVI_NLQ_LINEAR_DZ */
-    uint64_t linear_deadzone_slope;
-    uint64_t linear_deadzone_threshold;
+    uint64_t ರೇಖೀಯ_deadzone_ಇಳಿಜಾರು;
+    uint64_t ರೇಖೀಯ_deadzone_ಮಿತಿ;
 } AVDOVINLQParams;
 
 /**
@@ -149,16 +149,16 @@ typedef struct AVDOVINLQParams {
  *
  * @note sizeof(AVDOVIDataMapping) is not part of the public ABI.
  */
-typedef struct AVDOVIDataMapping {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDataMapping {
     uint8_t vdr_rpu_id;
     uint8_t mapping_color_space;
     uint8_t mapping_chroma_format_idc;
-    AVDOVIReshapingCurve curves[3]; /* per component */
+    AVDOVIReshaping_ವಕ್ರ curves[3]; /* per component */
 
     /* Non-linear inverse quantization */
-    enum AVDOVINLQMethod nlq_method_idc;
-    uint32_t num_x_partitions;
-    uint32_t num_y_partitions;
+    ಎಣಿಕೆ AVDOVINLQMethod nlq_ವಿಧಾನ_idc;
+    uint32_t ಅಂಕೆ_x_partitions;
+    uint32_t ಅಂಕೆ_y_partitions;
     AVDOVINLQParams nlq[3]; /* per component */
     uint16_t nlq_pivots[2];
 } AVDOVIDataMapping;
@@ -168,7 +168,7 @@ typedef struct AVDOVIDataMapping {
  *
  * @note sizeof(AVDOVIColorMetadata) is not part of the public ABI.
  */
-typedef struct AVDOVIColorMetadata {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIColorMetadata {
     uint8_t dm_metadata_id;
     uint8_t scene_refresh_flag;
 
@@ -180,9 +180,9 @@ typedef struct AVDOVIColorMetadata {
      * crosstalk. (See the definition of the ICtCp colorspace for more
      * information.)
      */
-    AVRational ycc_to_rgb_matrix[9]; /* before PQ linearization */
-    AVRational ycc_to_rgb_offset[3]; /* input offset of neutral value */
-    AVRational rgb_to_lms_matrix[9]; /* after PQ linearization */
+    AVRational ycc_ಗಮ್ಯ_rgb_ಮಾತೃಕೆ[9]; /* before PQ linearization */
+    AVRational ycc_ಗಮ್ಯ_rgb_ಸ್ಥಾನಾಂತರ[3]; /* input offset of neutral value */
+    AVRational rgb_ಗಮ್ಯ_lms_ಮಾತೃಕೆ[9]; /* after PQ linearization */
 
     /**
      * Extra signal metadata (see Dolby patents for more info).
@@ -191,53 +191,53 @@ typedef struct AVDOVIColorMetadata {
     uint16_t signal_eotf_param0;
     uint16_t signal_eotf_param1;
     uint32_t signal_eotf_param2;
-    uint8_t signal_bit_depth;
+    uint8_t signal_ಬಿಟ್_ಆಳ;
     uint8_t signal_color_space;
     uint8_t signal_chroma_format;
-    uint8_t signal_full_range_flag; /* [0, 3] */
-    uint16_t source_min_pq;
-    uint16_t source_max_pq;
-    uint16_t source_diagonal;
+    uint8_t signal_ತುಂಬಿದ_range_flag; /* [0, 3] */
+    uint16_t ಮೂಲ_min_pq;
+    uint16_t ಮೂಲ_max_pq;
+    uint16_t ಮೂಲ_diagonal;
 } AVDOVIColorMetadata;
 
-typedef struct AVDOVIDmLevel1 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel1 {
     /* Per-frame brightness metadata */
     uint16_t min_pq;
     uint16_t max_pq;
     uint16_t avg_pq;
 } AVDOVIDmLevel1;
 
-typedef struct AVDOVIDmLevel2 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel2 {
     /* Usually derived from level 8 (at different levels) */
-    uint16_t target_max_pq;
-    uint16_t trim_slope;
-    uint16_t trim_offset;
+    uint16_t ಗುರಿ_max_pq;
+    uint16_t trim_ಇಳಿಜಾರು;
+    uint16_t trim_ಸ್ಥಾನಾಂತರ;
     uint16_t trim_power;
-    uint16_t trim_chroma_weight;
+    uint16_t trim_chroma_ತೂಕ;
     uint16_t trim_saturation_gain;
-    int16_t ms_weight;
+    int16_t ms_ತೂಕ;
 } AVDOVIDmLevel2;
 
-typedef struct AVDOVIDmLevel3 {
-    uint16_t min_pq_offset;
-    uint16_t max_pq_offset;
-    uint16_t avg_pq_offset;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel3 {
+    uint16_t min_pq_ಸ್ಥಾನಾಂತರ;
+    uint16_t max_pq_ಸ್ಥಾನಾಂತರ;
+    uint16_t avg_pq_ಸ್ಥಾನಾಂತರ;
 } AVDOVIDmLevel3;
 
-typedef struct AVDOVIDmLevel4 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel4 {
     uint16_t anchor_pq;
     uint16_t anchor_power;
 } AVDOVIDmLevel4;
 
-typedef struct AVDOVIDmLevel5 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel5 {
     /* Active area definition */
-    uint16_t left_offset;
-    uint16_t right_offset;
-    uint16_t top_offset;
-    uint16_t bottom_offset;
+    uint16_t ಎಡ_ಸ್ಥಾನಾಂತರ;
+    uint16_t ಬಲ_ಸ್ಥಾನಾಂತರ;
+    uint16_t ತುದಿ_ಸ್ಥಾನಾಂತರ;
+    uint16_t bottom_ಸ್ಥಾನಾಂತರ;
 } AVDOVIDmLevel5;
 
-typedef struct AVDOVIDmLevel6 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel6 {
     /* Static HDR10 metadata */
     uint16_t max_luminance;
     uint16_t min_luminance;
@@ -245,41 +245,41 @@ typedef struct AVDOVIDmLevel6 {
     uint16_t max_fall;
 } AVDOVIDmLevel6;
 
-typedef struct AVDOVIDmLevel8 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel8 {
     /* Extended version of level 2 */
-    uint8_t target_display_index;
-    uint16_t trim_slope;
-    uint16_t trim_offset;
+    uint8_t ಗುರಿ_display_ಸೂಚ್ಯಂಕ;
+    uint16_t trim_ಇಳಿಜಾರು;
+    uint16_t trim_ಸ್ಥಾನಾಂತರ;
     uint16_t trim_power;
-    uint16_t trim_chroma_weight;
+    uint16_t trim_chroma_ತೂಕ;
     uint16_t trim_saturation_gain;
-    uint16_t ms_weight;
-    uint16_t target_mid_contrast;
+    uint16_t ms_ತೂಕ;
+    uint16_t ಗುರಿ_mid_contrast;
     uint16_t clip_trim;
-    uint8_t saturation_vector_field[6];
-    uint8_t hue_vector_field[6];
+    uint8_t saturation_ಸದಿಶ_ಕ್ಷೇತ್ರ[6];
+    uint8_t hue_ಸದಿಶ_ಕ್ಷೇತ್ರ[6];
 } AVDOVIDmLevel8;
 
-typedef struct AVDOVIDmLevel9 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel9 {
     /* Source display characteristics */
-    uint8_t source_primary_index;
-    AVColorPrimariesDesc source_display_primaries;
+    uint8_t ಮೂಲ_primary_ಸೂಚ್ಯಂಕ;
+    AVColorPrimariesDesc ಮೂಲ_display_primaries;
 } AVDOVIDmLevel9;
 
-typedef struct AVDOVIDmLevel10 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel10 {
     /* Target display characteristics */
-    uint8_t target_display_index;
-    uint16_t target_max_pq;
-    uint16_t target_min_pq;
-    uint8_t target_primary_index;
-    AVColorPrimariesDesc target_display_primaries;
+    uint8_t ಗುರಿ_display_ಸೂಚ್ಯಂಕ;
+    uint16_t ಗುರಿ_max_pq;
+    uint16_t ಗುರಿ_min_pq;
+    uint8_t ಗುರಿ_primary_ಸೂಚ್ಯಂಕ;
+    AVColorPrimariesDesc ಗುರಿ_display_primaries;
 } AVDOVIDmLevel10;
 
-typedef struct AVDOVIDmLevel11 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel11 {
     uint8_t content_type;
     uint8_t whitepoint;
-    uint8_t reference_mode_flag;
-#if FF_API_DOVI_L11_INVALID_PROPS
+    uint8_t reference_ಬಹುಲಕ_flag;
+#ಆದರೆ FF_API_DOVI_L11_INVALID_PROPS
     attribute_deprecated
     uint8_t sharpness;
     attribute_deprecated
@@ -287,24 +287,24 @@ typedef struct AVDOVIDmLevel11 {
     attribute_deprecated
     uint8_t mpeg_noise_reduction;
     attribute_deprecated
-    uint8_t frame_rate_conversion;
+    uint8_t ಚೌಕಟ್ಟು_ದರ_conversion;
     attribute_deprecated
     uint8_t brightness;
     attribute_deprecated
     uint8_t color;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 } AVDOVIDmLevel11;
 
-typedef struct AVDOVIDmLevel254 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel254 {
     /* DMv2 info block, always present in samples with DMv2 metadata */
-    uint8_t dm_mode;
-    uint8_t dm_version_index;
+    uint8_t dm_ಬಹುಲಕ;
+    uint8_t dm_ಆವೃತ್ತಿ_ಸೂಚ್ಯಂಕ;
 } AVDOVIDmLevel254;
 
-typedef struct AVDOVIDmLevel255 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDmLevel255 {
     /* Debug block, not really used in samples */
-    uint8_t dm_run_mode;
-    uint8_t dm_run_version;
+    uint8_t dm_ಸತತ_ಬಹುಲಕ;
+    uint8_t dm_ಸತತ_ಆವೃತ್ತಿ;
     uint8_t dm_debug[4];
 } AVDOVIDmLevel255;
 
@@ -315,9 +315,9 @@ typedef struct AVDOVIDmLevel255 {
  *
  * @note sizeof(AVDOVIDmData) is not part of the public API.
  */
-typedef struct AVDOVIDmData {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIDm_ದತ್ತಾಂಶ {
     uint8_t level; /* [1, 255] */
-    union {
+    ಒಕ್ಕೂಟ {
         AVDOVIDmLevel1 l1; /* dynamic */
         AVDOVIDmLevel2 l2; /* dynamic, may appear multiple times */
         AVDOVIDmLevel3 l3; /* dynamic */
@@ -332,7 +332,7 @@ typedef struct AVDOVIDmData {
         AVDOVIDmLevel254 l254; /* static */
         AVDOVIDmLevel255 l255; /* static */
     };
-} AVDOVIDmData;
+} AVDOVIDm_ದತ್ತಾಂಶ;
 
 /**
  * Combined struct representing a combination of header, mapping and color
@@ -342,57 +342,57 @@ typedef struct AVDOVIDmData {
  *       its size is not a part of the public ABI.
  */
 
-typedef struct AVDOVIMetadata {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVDOVIMetadata {
     /**
      * Offset in bytes from the beginning of this structure at which the
      * respective structs start.
      */
-    size_t header_offset;   /* AVDOVIRpuDataHeader */
-    size_t mapping_offset;  /* AVDOVIDataMapping */
-    size_t color_offset;    /* AVDOVIColorMetadata */
+    size_t ಶೀರ್ಷಿಕೆ_ಸ್ಥಾನಾಂತರ;   /* AVDOVIRpuDataHeader */
+    size_t mapping_ಸ್ಥಾನಾಂತರ;  /* AVDOVIDataMapping */
+    size_t color_ಸ್ಥಾನಾಂತರ;    /* AVDOVIColorMetadata */
 
-    size_t ext_block_offset; /* offset to start of ext blocks array */
-    size_t ext_block_size; /* size per element */
-    int num_ext_blocks; /* number of extension blocks */
+    size_t ext_ಖಂಡ_ಸ್ಥಾನಾಂತರ; /* offset to start of ext blocks array */
+    size_t ext_ಖಂಡ_ಗಾತ್ರ; /* size per element */
+    ಪೂರ್ಣಾಂಕ ಅಂಕೆ_ext_ಖಂಡಗಳು; /* number of extension blocks */
 
     /* static limit on num_ext_blocks, derived from bitstream limitations */
-#define AV_DOVI_MAX_EXT_BLOCKS 32
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_DOVI_MAX_EXT_ಖಂಡಗಳು 32
 } AVDOVIMetadata;
 
-static av_always_inline AVDOVIRpuDataHeader *
-av_dovi_get_header(const AVDOVIMetadata *data)
+ಸ್ಥಿರ av_always_inline AVDOVIRpu_ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ *
+av_dovi_get_ಶೀರ್ಷಿಕೆ(ಸ್ಥಿರಾಂಕ AVDOVIMetadata *ದತ್ತಾಂಶ)
 {
-    return (AVDOVIRpuDataHeader *)((uint8_t *) data + data->header_offset);
+    ಹಿಂತಿರುಗಿ (AVDOVIRpu_ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ *)((uint8_t *) ದತ್ತಾಂಶ + ದತ್ತಾಂಶ->ಶೀರ್ಷಿಕೆ_ಸ್ಥಾನಾಂತರ);
 }
 
-static av_always_inline AVDOVIDataMapping *
-av_dovi_get_mapping(const AVDOVIMetadata *data)
+ಸ್ಥಿರ av_always_inline AVDOVIDataMapping *
+av_dovi_get_mapping(ಸ್ಥಿರಾಂಕ AVDOVIMetadata *ದತ್ತಾಂಶ)
 {
-    return (AVDOVIDataMapping *)((uint8_t *) data + data->mapping_offset);
+    ಹಿಂತಿರುಗಿ (AVDOVIDataMapping *)((uint8_t *) ದತ್ತಾಂಶ + ದತ್ತಾಂಶ->mapping_ಸ್ಥಾನಾಂತರ);
 }
 
-static av_always_inline AVDOVIColorMetadata *
-av_dovi_get_color(const AVDOVIMetadata *data)
+ಸ್ಥಿರ av_always_inline AVDOVIColorMetadata *
+av_dovi_get_color(ಸ್ಥಿರಾಂಕ AVDOVIMetadata *ದತ್ತಾಂಶ)
 {
-    return (AVDOVIColorMetadata *)((uint8_t *) data + data->color_offset);
+    ಹಿಂತಿರುಗಿ (AVDOVIColorMetadata *)((uint8_t *) ದತ್ತಾಂಶ + ದತ್ತಾಂಶ->color_ಸ್ಥಾನಾಂತರ);
 }
 
 /**
  * Gets the specified Dolby Vision Display Management (DM) metadata
  * @param index must be non negative and below data->num_ext_blocks
  */
-static av_always_inline AVDOVIDmData *
-av_dovi_get_ext(const AVDOVIMetadata *data, int index)
+ಸ್ಥಿರ av_always_inline AVDOVIDm_ದತ್ತಾಂಶ *
+av_dovi_get_ext(ಸ್ಥಿರಾಂಕ AVDOVIMetadata *ದತ್ತಾಂಶ, ಪೂರ್ಣಾಂಕ ಸೂಚ್ಯಂಕ)
 {
-    return (AVDOVIDmData *)((uint8_t *) data + data->ext_block_offset +
-                            data->ext_block_size * index);
+    ಹಿಂತಿರುಗಿ (AVDOVIDm_ದತ್ತಾಂಶ *)((uint8_t *) ದತ್ತಾಂಶ + ದತ್ತಾಂಶ->ext_ಖಂಡ_ಸ್ಥಾನಾಂತರ +
+                            ದತ್ತಾಂಶ->ext_ಖಂಡ_ಗಾತ್ರ * ಸೂಚ್ಯಂಕ);
 }
 
 /**
  * Find an extension block with a given level, or NULL. In the case of
  * multiple extension blocks, only the first is returned.
  */
-AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level);
+AVDOVIDm_ದತ್ತಾಂಶ *av_dovi_ಕಂಡುಹಿಡಿ_level(ಸ್ಥಿರಾಂಕ AVDOVIMetadata *ದತ್ತಾಂಶ, uint8_t level);
 
 /**
  * Allocate an AVDOVIMetadata structure and initialize its
@@ -403,6 +403,6 @@ AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level);
  *
  * @return the newly allocated struct or NULL on failure
  */
-AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size);
+AVDOVIMetadata *av_dovi_metadata_alloc(size_t *ಗಾತ್ರ_2);
 
-#endif /* AVUTIL_DOVI_META_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_DOVI_META_H */

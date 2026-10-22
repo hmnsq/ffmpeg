@@ -16,85 +16,85 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/hdr_dynamic_vivid_metadata.h"
-#include "libavutil/mem.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/frame.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/hdr_dynamic_vivid_metadata.h"
+#ಅನ್ತರ್ಭಾವ "libavutil/mem.h"
 
-int main(void)
+ಪೂರ್ಣಾಂಕ ಮುಖ್ಯ(ಶೂನ್ಯ)
 {
     AVDynamicHDRVivid *vivid;
-    AVFrame *frame;
-    size_t size;
+    AVFrame *ಚೌಕಟ್ಟು;
+    size_t ಗಾತ್ರ_2;
 
     /* av_dynamic_hdr_vivid_alloc */
-    printf("Testing av_dynamic_hdr_vivid_alloc()\n");
-    vivid = av_dynamic_hdr_vivid_alloc(&size);
-    if (vivid) {
-        printf("alloc: OK, size>0=%s\n", size > 0 ? "yes" : "no");
-        printf("defaults: system_start_code=%u, num_windows=%u\n",
-               vivid->system_start_code, vivid->num_windows);
+    ಬರೆ("Testing av_dynamic_hdr_vivid_alloc()\n");
+    vivid = av_dynamic_hdr_vivid_alloc(&ಗಾತ್ರ_2);
+    ಆದರೆ (vivid) {
+        ಬರೆ("alloc: OK, size>0=%s\n", ಗಾತ್ರ_2 > 0 ? "yes" : "no");
+        ಬರೆ("defaults: system_start_code=%u, num_windows=%u\n",
+               vivid->system_ಆರಂಭ_ಸಂಕೇತ, vivid->ಅಂಕೆ_windows);
 
         /* write and read back */
-        vivid->system_start_code = 0x01;
-        vivid->num_windows = 1;
+        vivid->system_ಆರಂಭ_ಸಂಕೇತ = 0x01;
+        vivid->ಅಂಕೆ_windows = 1;
         vivid->params[0].minimum_maxrgb = (AVRational){ 100, 1 };
-        vivid->params[0].average_maxrgb = (AVRational){ 500, 1 };
+        vivid->params[0].ಸರಾಸರಿ_ಮೌಲ್ಯ_maxrgb = (AVRational){ 500, 1 };
         vivid->params[0].variance_maxrgb = (AVRational){ 200, 1 };
-        vivid->params[0].maximum_maxrgb = (AVRational){ 1000, 1 };
-        printf("write: system_start_code=%u, num_windows=%u\n",
-               vivid->system_start_code, vivid->num_windows);
-        printf("params[0]: min=%d/%d avg=%d/%d var=%d/%d max=%d/%d\n",
-               vivid->params[0].minimum_maxrgb.num,
+        vivid->params[0].ಗರಿಷ್ಠ_maxrgb = (AVRational){ 1000, 1 };
+        ಬರೆ("write: system_start_code=%u, num_windows=%u\n",
+               vivid->system_ಆರಂಭ_ಸಂಕೇತ, vivid->ಅಂಕೆ_windows);
+        ಬರೆ("params[0]: min=%d/%d avg=%d/%d var=%d/%d max=%d/%d\n",
+               vivid->params[0].minimum_maxrgb.ಅಂಕೆ,
                vivid->params[0].minimum_maxrgb.den,
-               vivid->params[0].average_maxrgb.num,
-               vivid->params[0].average_maxrgb.den,
-               vivid->params[0].variance_maxrgb.num,
+               vivid->params[0].ಸರಾಸರಿ_ಮೌಲ್ಯ_maxrgb.ಅಂಕೆ,
+               vivid->params[0].ಸರಾಸರಿ_ಮೌಲ್ಯ_maxrgb.den,
+               vivid->params[0].variance_maxrgb.ಅಂಕೆ,
                vivid->params[0].variance_maxrgb.den,
-               vivid->params[0].maximum_maxrgb.num,
-               vivid->params[0].maximum_maxrgb.den);
+               vivid->params[0].ಗರಿಷ್ಠ_maxrgb.ಅಂಕೆ,
+               vivid->params[0].ಗರಿಷ್ಠ_maxrgb.den);
         av_free(vivid);
     }
 
     /* alloc with NULL size */
-    vivid = av_dynamic_hdr_vivid_alloc(NULL);
-    printf("alloc (no size): %s\n", vivid ? "OK" : "FAIL");
+    vivid = av_dynamic_hdr_vivid_alloc(ಖಾಲಿ);
+    ಬರೆ("alloc (no size): %s\n", vivid ? "OK" : "FAIL");
     av_free(vivid);
 
     /* av_dynamic_hdr_vivid_create_side_data */
-    printf("\nTesting av_dynamic_hdr_vivid_create_side_data()\n");
-    frame = av_frame_alloc();
-    if (frame) {
-        vivid = av_dynamic_hdr_vivid_create_side_data(frame);
-        if (vivid) {
-            printf("side_data: OK\n");
-            vivid->system_start_code = 0x02;
-            printf("side_data write: system_start_code=%u\n",
-                   vivid->system_start_code);
-        } else {
-            printf("side_data: FAIL\n");
+    ಬರೆ("\nTesting av_dynamic_hdr_vivid_create_side_data()\n");
+    ಚೌಕಟ್ಟು = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (ಚೌಕಟ್ಟು) {
+        vivid = av_dynamic_hdr_vivid_create_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು);
+        ಆದರೆ (vivid) {
+            ಬರೆ("side_data: OK\n");
+            vivid->system_ಆರಂಭ_ಸಂಕೇತ = 0x02;
+            ಬರೆ("side_data write: system_start_code=%u\n",
+                   vivid->system_ಆರಂಭ_ಸಂಕೇತ);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಬರೆ("side_data: FAIL\n");
         }
-        av_frame_free(&frame);
+        av_ಚೌಕಟ್ಟು_free(&ಚೌಕಟ್ಟು);
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    ಬರೆ("\nTesting OOM paths\n");
     av_max_alloc(1);
-    vivid = av_dynamic_hdr_vivid_alloc(&size);
-    printf("alloc OOM: %s\n", vivid ? "FAIL" : "OK");
+    vivid = av_dynamic_hdr_vivid_alloc(&ಗಾತ್ರ_2);
+    ಬರೆ("alloc OOM: %s\n", vivid ? "FAIL" : "OK");
     av_free(vivid);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ);
 
-    frame = av_frame_alloc();
-    if (frame) {
+    ಚೌಕಟ್ಟು = av_ಚೌಕಟ್ಟು_alloc();
+    ಆದರೆ (ಚೌಕಟ್ಟು) {
         av_max_alloc(1);
-        vivid = av_dynamic_hdr_vivid_create_side_data(frame);
-        printf("side_data OOM: %s\n", vivid ? "FAIL" : "OK");
-        av_max_alloc(INT_MAX);
-        av_frame_free(&frame);
+        vivid = av_dynamic_hdr_vivid_create_side_ದತ್ತಾಂಶ(ಚೌಕಟ್ಟು);
+        ಬರೆ("side_data OOM: %s\n", vivid ? "FAIL" : "OK");
+        av_max_alloc(ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ);
+        av_ಚೌಕಟ್ಟು_free(&ಚೌಕಟ್ಟು);
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }

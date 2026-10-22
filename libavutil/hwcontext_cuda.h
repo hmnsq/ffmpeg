@@ -17,16 +17,16 @@
  */
 
 
-#ifndef AVUTIL_HWCONTEXT_CUDA_H
-#define AVUTIL_HWCONTEXT_CUDA_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_HWCONTEXT_CUDA_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_HWCONTEXT_CUDA_H
 
-#ifndef CUDA_VERSION
-#include <cuda.h>
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ CUDA_ಆವೃತ್ತಿ
+#ಅನ್ತರ್ಭಾವ <cuda.h>
+#ಆದರೆ_ಅಂತ್ಯ
 
-#include <stdint.h>
+#ಅನ್ತರ್ಭಾವ <stdint.h>
 
-#include "pixfmt.h"
+#ಅನ್ತರ್ಭಾವ "pixfmt.h"
 
 /**
  * @file
@@ -36,15 +36,15 @@
  * AVBufferRefs whose data pointer is a CUdeviceptr.
  */
 
-typedef struct AVCUDADeviceContextInternal AVCUDADeviceContextInternal;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVCUDADevice_Context_ಆಂತರಿಕ AVCUDADevice_Context_ಆಂತರಿಕ;
 
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVCUDADeviceContext {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVCUDADeviceContext {
     CUcontext cuda_ctx;
-    CUstream stream;
-    AVCUDADeviceContextInternal *internal;
+    CUstream ಹರಿವು;
+    AVCUDADevice_Context_ಆಂತರಿಕ *ಆಂತರಿಕ;
 } AVCUDADeviceContext;
 
 /**
@@ -57,7 +57,7 @@ typedef struct AVCUDADeviceContext {
  * This has no use outside of custom allocation, and AVFrame AVBufferRef do not
  * necessarily point to an instance of this struct.
  */
-typedef struct AVCUDAArrayFrameDescriptor {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVCUDAArray_ಚೌಕಟ್ಟು_Descriptor {
     /**
      * The CUarray containing the frame data.
      *
@@ -70,13 +70,13 @@ typedef struct AVCUDAArrayFrameDescriptor {
      *
      * Normally stored in AVFrame.data[1] (cast from intptr_t).
      */
-    intptr_t index;
-} AVCUDAArrayFrameDescriptor;
+    intptr_t ಸೂಚ್ಯಂಕ;
+} AVCUDAArray_ಚೌಕಟ್ಟು_Descriptor;
 
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVCUDAFramesContext {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVCUDAFramesContext {
     /**
      * CUDA_ARRAY3D_DESCRIPTOR CUarrays will be initialized with.
      * Mostly used to provide external Flags.
@@ -95,7 +95,7 @@ typedef struct AVCUDAFramesContext {
      *
      * Only applicable for AV_PIX_FMT_CUARRAY.
      */
-    int cuarray_num_surfaces;
+    ಪೂರ್ಣಾಂಕ cuarray_ಅಂಕೆ_surfaces;
 
     /**
      * If cuarray_num_surfaces is >0, this contains the array of pre-allocated surfaces.
@@ -113,12 +113,12 @@ typedef struct AVCUDAFramesContext {
  * will be filtered to only those compatible with the specified
  * hw_format.
  */
-typedef struct AVCUDAHWConfig {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ AVCUDAHWConfig {
     /**
      * The hardware pixel format to query constraints for.
      * Must be AV_PIX_FMT_CUDA or AV_PIX_FMT_CUARRAY.
      */
-    enum AVPixelFormat hw_format;
+    ಎಣಿಕೆ AVPixelFormat hw_format;
 } AVCUDAHWConfig;
 
 /**
@@ -132,15 +132,15 @@ typedef struct AVCUDAHWConfig {
 /**
  * Use primary device context instead of creating a new one.
  */
-#define AV_CUDA_USE_PRIMARY_CONTEXT (1 << 0)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CUDA_USE_PRIMARY_CONTEXT (1 << 0)
 
 /**
  * Use current device context instead of creating a new one.
  */
-#define AV_CUDA_USE_CURRENT_CONTEXT (1 << 1)
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_CUDA_USE_CURRENT_CONTEXT (1 << 1)
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_HWCONTEXT_CUDA_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_HWCONTEXT_CUDA_H */

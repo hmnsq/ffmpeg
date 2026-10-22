@@ -21,16 +21,16 @@
  * timestamp utils, mostly useful for debugging/logging purposes
  */
 
-#ifndef AVUTIL_TIMESTAMP_H
-#define AVUTIL_TIMESTAMP_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_TIMESTAMP_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_TIMESTAMP_H
 
-#include "avutil.h"
+#ಅನ್ತರ್ಭಾವ "avutil.h"
 
-#if defined(__cplusplus) && !defined(__STDC_FORMAT_MACROS) && !defined(PRId64)
-#error missing -D__STDC_FORMAT_MACROS / #define __STDC_FORMAT_MACROS
-#endif
+#ಆದರೆ defined(__cplusplus) && !defined(__STDC_FORMAT_MACROS) && !defined(PRId64)
+#ದೋಷ missing -D__STDC_FORMAT_MACROS / #ವ್ಯಾಖ್ಯಾನಿಸು __STDC_FORMAT_MACROS
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define AV_TS_MAX_STRING_SIZE 32
+#ವ್ಯಾಖ್ಯಾನಿಸು AV_TS_MAX_STRING_ಗಾತ್ರ 32
 
 /**
  * Fill the provided buffer with a string containing a timestamp
@@ -40,18 +40,18 @@
  * @param ts the timestamp to represent
  * @return the buffer in input
  */
-static inline char *av_ts_make_string(char *buf, int64_t ts)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಅಕ್ಷರ *av_ts_make_string(ಅಕ್ಷರ *buf, int64_t ts)
 {
-    if (ts == AV_NOPTS_VALUE) snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
-    else                      snprintf(buf, AV_TS_MAX_STRING_SIZE, "%" PRId64, ts);
-    return buf;
+    ಆದರೆ (ts == AV_NOPTS_ಮೌಲ್ಯ) snprintf(buf, AV_TS_MAX_STRING_ಗಾತ್ರ, "NOPTS");
+    ಇಲ್ಲದಿದ್ದರೆ                      snprintf(buf, AV_TS_MAX_STRING_ಗಾತ್ರ, "%" PRId64, ts);
+    ಹಿಂತಿರುಗಿ buf;
 }
 
 /**
  * Convenience macro, the return value should be used only directly in
  * function arguments but never stand-alone.
  */
-#define av_ts2str(ts) av_ts_make_string((char[AV_TS_MAX_STRING_SIZE]){0}, ts)
+#ವ್ಯಾಖ್ಯಾನಿಸು av_ts2str(ts) av_ts_make_string((ಅಕ್ಷರ[AV_TS_MAX_STRING_ಗಾತ್ರ]){0}, ts)
 
 /**
  * Fill the provided buffer with a string containing a timestamp time
@@ -62,7 +62,7 @@ static inline char *av_ts_make_string(char *buf, int64_t ts)
  * @param tb the timebase of the timestamp
  * @return the buffer in input
  */
-char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb);
+ಅಕ್ಷರ *av_ts_make_ಸಮಯ_string2(ಅಕ್ಷರ *buf, int64_t ts, AVRational tb);
 
 /**
  * Fill the provided buffer with a string containing a timestamp
@@ -70,16 +70,16 @@ char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb);
  *
  * @see av_ts_make_time_string2
  */
-static inline char *av_ts_make_time_string(char *buf, int64_t ts,
-                                           const AVRational *tb)
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಅಕ್ಷರ *av_ts_make_ಸಮಯ_string(ಅಕ್ಷರ *buf, int64_t ts,
+                                           ಸ್ಥಿರಾಂಕ AVRational *tb)
 {
-    return av_ts_make_time_string2(buf, ts, *tb);
+    ಹಿಂತಿರುಗಿ av_ts_make_ಸಮಯ_string2(buf, ts, *tb);
 }
 
 /**
  * Convenience macro, the return value should be used only directly in
  * function arguments but never stand-alone.
  */
-#define av_ts2timestr(ts, tb) av_ts_make_time_string((char[AV_TS_MAX_STRING_SIZE]){0}, ts, tb)
+#ವ್ಯಾಖ್ಯಾನಿಸು av_ts2timestr(ts, tb) av_ts_make_ಸಮಯ_string((ಅಕ್ಷರ[AV_TS_MAX_STRING_ಗಾತ್ರ]){0}, ts, tb)
 
-#endif /* AVUTIL_TIMESTAMP_H */
+#ಆದರೆ_ಅಂತ್ಯ /* AVUTIL_TIMESTAMP_H */

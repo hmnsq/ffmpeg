@@ -29,21 +29,21 @@
  * And passes testu01 and practrand test suits.
  */
 
-#ifndef AVUTIL_SFC64_H
-#define AVUTIL_SFC64_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ AVUTIL_SFC64_H
+#ವ್ಯಾಖ್ಯಾನಿಸು AVUTIL_SFC64_H
 
-#include <inttypes.h>
+#ಅನ್ತರ್ಭಾವ <inttypes.h>
 
-typedef struct FFSFC64 {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ FFSFC64 {
     uint64_t a,b,c,counter;
 } FFSFC64;
 
-static inline uint64_t ff_sfc64_get(FFSFC64 *s) {
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ uint64_t ff_sfc64_get(FFSFC64 *s) {
     uint64_t tmp = s->a + s->b + s->counter++;
     s->a = s->b ^ (s->b >> 11);
     s->b = s->c + (s->c << 3); // This is a multiply by 9
     s->c = (s->c << 24 | s->c >> 40) + tmp;
-    return tmp;
+    ಹಿಂತಿರುಗಿ tmp;
 }
 
 /**
@@ -52,7 +52,7 @@ static inline uint64_t ff_sfc64_get(FFSFC64 *s) {
  * It is safe to take values before the first, but such values can be highly
  * correlated to the seeds.
  */
-static inline uint64_t ff_sfc64_reverse_get(FFSFC64 *s) {
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ uint64_t ff_sfc64_ಹಿಮ್ಮುಖ_get(FFSFC64 *s) {
     uint64_t prev_c = s->b * 0x8E38E38E38E38E39;
     uint64_t tmp = s->c - (prev_c << 24 | prev_c >> 40);
     s->b = s->a ^ (s->a >> 11);
@@ -62,7 +62,7 @@ static inline uint64_t ff_sfc64_reverse_get(FFSFC64 *s) {
     s->a = tmp - s->b - --s->counter;
     s->c = prev_c;
 
-    return tmp;
+    ಹಿಂತಿರುಗಿ tmp;
 }
 
 /**
@@ -72,13 +72,13 @@ static inline uint64_t ff_sfc64_reverse_get(FFSFC64 *s) {
  *               12 is a good choice if all 3 seeds are equal
  *
  */
-static inline void ff_sfc64_init(FFSFC64 *s, uint64_t seeda, uint64_t seedb, uint64_t seedc, int rounds) {
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಶೂನ್ಯ ff_sfc64_init(FFSFC64 *s, uint64_t seeda, uint64_t seedb, uint64_t seedc, ಪೂರ್ಣಾಂಕ ಸುತ್ತುಗಳು) {
     s->a       = seeda;
     s->b       = seedb;
     s->c       = seedc;
     s->counter = 1;
-    while (rounds--)
+    ಆಗ (ಸುತ್ತುಗಳು--)
         ff_sfc64_get(s);
 }
 
-#endif // AVUTIL_SFC64_H
+#ಆದರೆ_ಅಂತ್ಯ // AVUTIL_SFC64_H
