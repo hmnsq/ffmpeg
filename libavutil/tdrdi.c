@@ -22,30 +22,30 @@
 #include "mem.h"
 #include "tdrdi.h"
 
-AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *out_size)
+AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned ကိန်းပြည့် nb_displays, size_t *out_size)
 {
-    struct TestStruct {
+    sa_nracanaa TestStruct {
         AV3DReferenceDisplaysInfo p;
         AV3DReferenceDisplay      b;
     };
-    const size_t entries_offset = offsetof(struct TestStruct, b);
+    const size_t entries_offset = offsetof(sa_nracanaa TestStruct, b);
     size_t size = entries_offset;
     AV3DReferenceDisplaysInfo *tdrdi;
 
-    if (nb_displays > (SIZE_MAX - size) / sizeof(AV3DReferenceDisplay))
-        return NULL;
-    size += sizeof(AV3DReferenceDisplay) * nb_displays;
+    အကယ်၍ (nb_displays > (SIZE_MAX - size) / parimaa_na(AV3DReferenceDisplay))
+        ပြန်ပေး NULL;
+    size += parimaa_na(AV3DReferenceDisplay) * nb_displays;
 
     tdrdi = av_mallocz(size);
-    if (!tdrdi)
-        return NULL;
+    အကယ်၍ (!tdrdi)
+        ပြန်ပေး NULL;
 
     tdrdi->num_ref_displays = nb_displays;
-    tdrdi->entry_size       = sizeof(AV3DReferenceDisplay);
+    tdrdi->entry_size       = parimaa_na(AV3DReferenceDisplay);
     tdrdi->entries_offset   = entries_offset;
 
-    if (out_size)
+    အကယ်၍ (out_size)
         *out_size = size;
 
-    return tdrdi;
+    ပြန်ပေး tdrdi;
 }

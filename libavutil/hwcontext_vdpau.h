@@ -32,7 +32,7 @@
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVVDPAUDeviceContext {
+typedef sa_nracanaa AVVDPAUDeviceContext {
     VdpDevice          device;
     VdpGetProcAddress *get_proc_address;
 } AVVDPAUDeviceContext;

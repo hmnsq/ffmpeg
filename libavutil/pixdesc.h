@@ -27,34 +27,34 @@
 #include "attributes.h"
 #include "pixfmt.h"
 
-typedef struct AVComponentDescriptor {
+typedef sa_nracanaa AVComponentDescriptor {
     /**
      * Which of the 4 planes contains the component.
      */
-    int plane;
+    ကိန်းပြည့် plane;
 
     /**
      * Number of elements between 2 horizontally consecutive pixels.
      * Elements are bits for bitstream formats, bytes otherwise.
      */
-    int step;
+    ကိန်းပြည့် step;
 
     /**
      * Number of elements before the component of the first pixel.
      * Elements are bits for bitstream formats, bytes otherwise.
      */
-    int offset;
+    ကိန်းပြည့် offset;
 
     /**
      * Number of least significant bits that must be shifted away
      * to get the value.
      */
-    int shift;
+    ကိန်းပြည့် shift;
 
     /**
      * Number of bits in the component.
      */
-    int depth;
+    ကိန်းပြည့် depth;
 } AVComponentDescriptor;
 
 /**
@@ -66,8 +66,8 @@ typedef struct AVComponentDescriptor {
  *       and all the YUV variants) AVPixFmtDescriptor just stores how values
  *       are stored not what these values represent.
  */
-typedef struct AVPixFmtDescriptor {
-    const char *name;
+typedef sa_nracanaa AVPixFmtDescriptor {
+    const var_na *name;
     uint8_t nb_components;  ///< The number of components each pixel has, (1-4)
 
     /**
@@ -107,7 +107,7 @@ typedef struct AVPixFmtDescriptor {
     /**
      * Alternative comma-separated names.
      */
-    const char *alias;
+    const var_na *alias;
 } AVPixFmtDescriptor;
 
 /**
@@ -171,19 +171,19 @@ typedef struct AVPixFmtDescriptor {
  * used for storing the pixel information, that is padding bits are
  * not counted.
  */
-int av_get_bits_per_pixel(const AVPixFmtDescriptor *pixdesc);
+ကိန်းပြည့် av_get_bits_per_pixel(const AVPixFmtDescriptor *pixdesc);
 
 /**
  * Return the number of bits per pixel for the pixel format
  * described by pixdesc, including any padding or unused bits.
  */
-int av_get_padded_bits_per_pixel(const AVPixFmtDescriptor *pixdesc);
+ကိန်းပြည့် av_get_padded_bits_per_pixel(const AVPixFmtDescriptor *pixdesc);
 
 /**
  * @return a pixel format descriptor for provided pixel format or NULL if
  * this pixel format is unknown.
  */
-const AVPixFmtDescriptor *av_pix_fmt_desc_get(enum AVPixelFormat pix_fmt);
+const AVPixFmtDescriptor *av_pix_fmt_desc_get(ga_nanaa AVPixelFormat pix_fmt);
 
 /**
  * Iterate over all pixel format descriptors known to libavutil.
@@ -198,7 +198,7 @@ const AVPixFmtDescriptor *av_pix_fmt_desc_next(const AVPixFmtDescriptor *prev);
  * @return an AVPixelFormat id described by desc, or AV_PIX_FMT_NONE if desc
  * is not a valid pointer to a pixel format descriptor.
  */
-enum AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc);
+ga_nanaa AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc);
 
 /**
  * Utility function to access log2_chroma_w log2_chroma_h from
@@ -210,64 +210,64 @@ enum AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc);
  *
  * @return 0 on success, AVERROR(ENOSYS) on invalid or unknown pixel format
  */
-int av_pix_fmt_get_chroma_sub_sample(enum AVPixelFormat pix_fmt,
-                                     int *h_shift, int *v_shift);
+ကိန်းပြည့် av_pix_fmt_get_chroma_sub_sample(ga_nanaa AVPixelFormat pix_fmt,
+                                     ကိန်းပြည့် *h_shift, ကိန်းပြည့် *v_shift);
 
 /**
  * @return number of planes in pix_fmt, a negative AVERROR if pix_fmt is not a
  * valid pixel format.
  */
-int av_pix_fmt_count_planes(enum AVPixelFormat pix_fmt);
+ကိန်းပြည့် av_pix_fmt_count_planes(ga_nanaa AVPixelFormat pix_fmt);
 
 /**
  * @return the name for provided color range or NULL if unknown.
  */
-const char *av_color_range_name(enum AVColorRange range);
+const var_na *av_color_range_name(ga_nanaa AVColorRange range);
 
 /**
  * @return the AVColorRange value for name or an AVError if not found.
  */
-int av_color_range_from_name(const char *name);
+ကိန်းပြည့် av_color_range_from_name(const var_na *name);
 
 /**
  * @return the name for provided color primaries or NULL if unknown.
  */
-const char *av_color_primaries_name(enum AVColorPrimaries primaries);
+const var_na *av_color_primaries_name(ga_nanaa AVColorPrimaries primaries);
 
 /**
  * @return the AVColorPrimaries value for name or an AVError if not found.
  */
-int av_color_primaries_from_name(const char *name);
+ကိန်းပြည့် av_color_primaries_from_name(const var_na *name);
 
 /**
  * @return the name for provided color transfer or NULL if unknown.
  */
-const char *av_color_transfer_name(enum AVColorTransferCharacteristic transfer);
+const var_na *av_color_transfer_name(ga_nanaa AVColorTransferCharacteristic transfer);
 
 /**
  * @return the AVColorTransferCharacteristic value for name or an AVError if not found.
  */
-int av_color_transfer_from_name(const char *name);
+ကိန်းပြည့် av_color_transfer_from_name(const var_na *name);
 
 /**
  * @return the name for provided color space or NULL if unknown.
  */
-const char *av_color_space_name(enum AVColorSpace space);
+const var_na *av_color_space_name(ga_nanaa AVColorSpace space);
 
 /**
  * @return the AVColorSpace value for name or an AVError if not found.
  */
-int av_color_space_from_name(const char *name);
+ကိန်းပြည့် av_color_space_from_name(const var_na *name);
 
 /**
  * @return the name for provided chroma location or NULL if unknown.
  */
-const char *av_chroma_location_name(enum AVChromaLocation location);
+const var_na *av_chroma_location_name(ga_nanaa AVChromaLocation location);
 
 /**
  * @return the AVChromaLocation value for name or an AVError if not found.
  */
-int av_chroma_location_from_name(const char *name);
+ကိန်းပြည့် av_chroma_location_from_name(const var_na *name);
 
 /**
  * Converts AVChromaLocation to swscale x/y chroma position.
@@ -278,7 +278,7 @@ int av_chroma_location_from_name(const char *name);
  * @param xpos  horizontal chroma sample position
  * @param ypos  vertical   chroma sample position
  */
-int av_chroma_location_enum_to_pos(int *xpos, int *ypos, enum AVChromaLocation pos);
+ကိန်းပြည့် av_chroma_location_enum_to_pos(ကိန်းပြည့် *xpos, ကိန်းပြည့် *ypos, ga_nanaa AVChromaLocation pos);
 
 /**
  * Converts swscale x/y chroma position to AVChromaLocation.
@@ -289,17 +289,17 @@ int av_chroma_location_enum_to_pos(int *xpos, int *ypos, enum AVChromaLocation p
  * @param xpos  horizontal chroma sample position
  * @param ypos  vertical   chroma sample position
  */
-enum AVChromaLocation av_chroma_location_pos_to_enum(int xpos, int ypos);
+ga_nanaa AVChromaLocation av_chroma_location_pos_to_enum(ကိန်းပြည့် xpos, ကိန်းပြည့် ypos);
 
 /**
  * @return the name for provided alpha mode or NULL if unknown.
  */
-const char *av_alpha_mode_name(enum AVAlphaMode mode);
+const var_na *av_alpha_mode_name(ga_nanaa AVAlphaMode mode);
 
 /**
  * @return the AVAlphaMode value for name or an AVError if not found.
  */
-enum AVAlphaMode av_alpha_mode_from_name(const char *name);
+ga_nanaa AVAlphaMode av_alpha_mode_from_name(const var_na *name);
 
 /**
  * Return the pixel format corresponding to name.
@@ -312,7 +312,7 @@ enum AVAlphaMode av_alpha_mode_from_name(const char *name);
  *
  * Finally if no pixel format has been found, returns AV_PIX_FMT_NONE.
  */
-enum AVPixelFormat av_get_pix_fmt(const char *name);
+ga_nanaa AVPixelFormat av_get_pix_fmt(const var_na *name);
 
 /**
  * Return the short name for a pixel format, NULL in case pix_fmt is
@@ -320,7 +320,7 @@ enum AVPixelFormat av_get_pix_fmt(const char *name);
  *
  * @see av_get_pix_fmt(), av_get_pix_fmt_string()
  */
-const char *av_get_pix_fmt_name(enum AVPixelFormat pix_fmt);
+const var_na *av_get_pix_fmt_name(ga_nanaa AVPixelFormat pix_fmt);
 
 /**
  * Print in buf the string corresponding to the pixel format with
@@ -332,8 +332,8 @@ const char *av_get_pix_fmt_name(enum AVPixelFormat pix_fmt);
  * corresponding info string, or a negative value to print the
  * corresponding header.
  */
-char *av_get_pix_fmt_string(char *buf, int buf_size,
-                            enum AVPixelFormat pix_fmt);
+var_na *av_get_pix_fmt_string(var_na *buf, ကိန်းပြည့် buf_size,
+                            ga_nanaa AVPixelFormat pix_fmt);
 
 /**
  * Read a line from an image, and write the values of the
@@ -353,13 +353,13 @@ char *av_get_pix_fmt_string(char *buf, int buf_size,
  * @param dst_element_size size of elements in dst array (2 or 4 byte)
  */
 void av_read_image_line2(void *dst, const uint8_t *data[4],
-                        const int linesize[4], const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w, int read_pal_component,
-                        int dst_element_size);
+                        const ကိန်းပြည့် linesize[4], const AVPixFmtDescriptor *desc,
+                        ကိန်းပြည့် x, ကိန်းပြည့် y, ကိန်းပြည့် c, ကိန်းပြည့် w, ကိန်းပြည့် read_pal_component,
+                        ကိန်းပြည့် dst_element_size);
 
 void av_read_image_line(uint16_t *dst, const uint8_t *data[4],
-                        const int linesize[4], const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w, int read_pal_component);
+                        const ကိန်းပြည့် linesize[4], const AVPixFmtDescriptor *desc,
+                        ကိန်းပြည့် x, ကိန်းပြည့် y, ကိန်းပြည့် c, ကိန်းပြည့် w, ကိန်းပြည့် read_pal_component);
 
 /**
  * Write the values from src to the pixel format component c of an
@@ -377,12 +377,12 @@ void av_read_image_line(uint16_t *dst, const uint8_t *data[4],
  * @param src_element_size size of elements in src array (2 or 4 byte)
  */
 void av_write_image_line2(const void *src, uint8_t *data[4],
-                         const int linesize[4], const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w, int src_element_size);
+                         const ကိန်းပြည့် linesize[4], const AVPixFmtDescriptor *desc,
+                         ကိန်းပြည့် x, ကိန်းပြည့် y, ကိန်းပြည့် c, ကိန်းပြည့် w, ကိန်းပြည့် src_element_size);
 
 void av_write_image_line(const uint16_t *src, uint8_t *data[4],
-                         const int linesize[4], const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w);
+                         const ကိန်းပြည့် linesize[4], const AVPixFmtDescriptor *desc,
+                         ကိန်းပြည့် x, ကိန်းပြည့် y, ကိန်းပြည့် c, ကိန်းပြည့် w);
 
 /**
  * Utility function to swap the endianness of a pixel format.
@@ -392,7 +392,7 @@ void av_write_image_line(const uint16_t *src, uint8_t *data[4],
  * @return pixel format with swapped endianness if it exists,
  * otherwise AV_PIX_FMT_NONE
  */
-enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt);
+ga_nanaa AVPixelFormat av_pix_fmt_swap_endianness(ga_nanaa AVPixelFormat pix_fmt);
 
 #define FF_LOSS_RESOLUTION        0x0001 /**< loss due to resolution change */
 #define FF_LOSS_DEPTH             0x0002 /**< loss due to color depth change */
@@ -422,9 +422,9 @@ enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt);
  * @return Combination of flags informing you what kind of losses will occur
  * (maximum loss for an invalid dst_pix_fmt).
  */
-int av_get_pix_fmt_loss(enum AVPixelFormat dst_pix_fmt,
-                        enum AVPixelFormat src_pix_fmt,
-                        int has_alpha);
+ကိန်းပြည့် av_get_pix_fmt_loss(ga_nanaa AVPixelFormat dst_pix_fmt,
+                        ga_nanaa AVPixelFormat src_pix_fmt,
+                        ကိန်းပြည့် has_alpha);
 
 /**
  * Compute what kind of losses will occur when converting from one specific
@@ -444,7 +444,7 @@ int av_get_pix_fmt_loss(enum AVPixelFormat dst_pix_fmt,
  * @return Combination of flags informing you what kind of losses will occur
  * (maximum loss for an invalid dst_pix_fmt).
  */
-enum AVPixelFormat av_find_best_pix_fmt_of_2(enum AVPixelFormat dst_pix_fmt1, enum AVPixelFormat dst_pix_fmt2,
-                                             enum AVPixelFormat src_pix_fmt, int has_alpha, int *loss_ptr);
+ga_nanaa AVPixelFormat av_find_best_pix_fmt_of_2(ga_nanaa AVPixelFormat dst_pix_fmt1, ga_nanaa AVPixelFormat dst_pix_fmt2,
+                                             ga_nanaa AVPixelFormat src_pix_fmt, ကိန်းပြည့် has_alpha, ကိန်းပြည့် *loss_ptr);
 
 #endif /* AVUTIL_PIXDESC_H */

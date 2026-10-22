@@ -174,17 +174,17 @@ unsigned avutil_version(void);
  * version number or a git commit description. This string has no fixed format
  * and can change any time. It should never be parsed by code.
  */
-const char *av_version_info(void);
+const var_na *av_version_info(void);
 
 /**
  * Return the libavutil build-time configuration.
  */
-const char *avutil_configuration(void);
+const var_na *avutil_configuration(void);
 
 /**
  * Return the libavutil license.
  */
-const char *avutil_license(void);
+const var_na *avutil_license(void);
 
 /**
  * @}
@@ -195,7 +195,7 @@ const char *avutil_license(void);
  * @brief Media Type
  */
 
-enum AVMediaType {
+ga_nanaa AVMediaType {
     AVMEDIA_TYPE_UNKNOWN = -1,  ///< Usually treated as AVMEDIA_TYPE_DATA
     AVMEDIA_TYPE_VIDEO,
     AVMEDIA_TYPE_AUDIO,
@@ -209,7 +209,7 @@ enum AVMediaType {
  * Return a string describing the media_type enum, NULL if media_type
  * is unknown.
  */
-const char *av_get_media_type_string(enum AVMediaType media_type);
+const var_na *av_get_media_type_string(ga_nanaa AVMediaType media_type);
 
 /**
  * @defgroup lavu_const Constants
@@ -259,7 +259,7 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
 #ifdef __cplusplus
 /* ISO C++ forbids compound-literals. */
 #define AV_TIME_BASE_Q          av_make_q(1, AV_TIME_BASE)
-#else
+#မဟုတ်ပါက
 #define AV_TIME_BASE_Q          (AVRational){1, AV_TIME_BASE}
 #endif
 
@@ -273,7 +273,7 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * @{
  */
 
-enum AVPictureType {
+ga_nanaa AVPictureType {
     AV_PICTURE_TYPE_NONE = 0, ///< Undefined
     AV_PICTURE_TYPE_I,     ///< Intra
     AV_PICTURE_TYPE_P,     ///< Predicted
@@ -291,7 +291,7 @@ enum AVPictureType {
  * @param[in] pict_type the picture type @return a single character
  * representing the picture type, '?' if pict_type is unknown
  */
-char av_get_picture_type_char(enum AVPictureType pict_type);
+var_na av_get_picture_type_char(ga_nanaa AVPictureType pict_type);
 
 /**
  * @}
@@ -308,9 +308,9 @@ char av_get_picture_type_char(enum AVPictureType pict_type);
 /**
  * Return x default pointer in case p is NULL.
  */
-static inline void *av_x_if_null(const void *p, const void *x)
+static anta_hstha void *av_x_if_null(const void *p, const void *x)
 {
-    return (void *)(intptr_t)(p ? p : x);
+    ပြန်ပေး (void *)(intptr_t)(p ? p : x);
 }
 
 /**
@@ -320,7 +320,7 @@ AVRational av_get_time_base_q(void);
 
 #define AV_FOURCC_MAX_STRING_SIZE 32
 
-#define av_fourcc2str(fourcc) av_fourcc_make_string((char[AV_FOURCC_MAX_STRING_SIZE]){0}, fourcc)
+#define av_fourcc2str(fourcc) av_fourcc_make_string((var_na[AV_FOURCC_MAX_STRING_SIZE]){0}, fourcc)
 
 /**
  * Fill the provided buffer with a string containing a FourCC (four-character
@@ -330,7 +330,7 @@ AVRational av_get_time_base_q(void);
  * @param fourcc the fourcc to represent
  * @return the buffer in input
  */
-char *av_fourcc_make_string(char *buf, uint32_t fourcc);
+var_na *av_fourcc_make_string(var_na *buf, uint32_t fourcc);
 
 /**
  * @}

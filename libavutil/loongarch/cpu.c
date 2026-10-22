@@ -25,37 +25,37 @@
 
 #define LA_HWCAP_LSX    (1<<4)
 #define LA_HWCAP_LASX   (1<<5)
-static int cpu_flags_getauxval(void)
+static ကိန်းပြည့် cpu_flags_getauxval(void)
 {
-    int flags = 0;
-    int flag  = (int)ff_getauxval(AT_HWCAP);
+    ကိန်းပြည့် flags = 0;
+    ကိန်းပြည့် flag  = (ကိန်းပြည့်)ff_getauxval(AT_HWCAP);
 
-    if (flag & LA_HWCAP_LSX)
+    အကယ်၍ (flag & LA_HWCAP_LSX)
         flags |= AV_CPU_FLAG_LSX;
-    if (flag & LA_HWCAP_LASX)
+    အကယ်၍ (flag & LA_HWCAP_LASX)
         flags |= AV_CPU_FLAG_LASX;
 
-    return flags;
+    ပြန်ပေး flags;
 }
 
-int ff_get_cpu_flags_loongarch(void)
+ကိန်းပြည့် ff_get_cpu_flags_loongarch(void)
 {
-#if defined __linux__
-    return cpu_flags_getauxval();
-#else
+#အကယ်၍ defined __linux__
+    ပြန်ပေး cpu_flags_getauxval();
+#မဟုတ်ပါက
     /* Assume no SIMD ASE supported */
-    return 0;
+    ပြန်ပေး 0;
 #endif
 }
 
 size_t ff_get_cpu_max_align_loongarch(void)
 {
-    int flags = av_get_cpu_flags();
+    ကိန်းပြည့် flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_LASX)
-        return 32;
-    if (flags & AV_CPU_FLAG_LSX)
-        return 16;
+    အကယ်၍ (flags & AV_CPU_FLAG_LASX)
+        ပြန်ပေး 32;
+    အကယ်၍ (flags & AV_CPU_FLAG_LSX)
+        ပြန်ပေး 16;
 
-    return 8;
+    ပြန်ပေး 8;
 }

@@ -21,12 +21,12 @@
 
 #include "float_dsp.h"
 
-float ff_scalarproduct_float_c(const float *v1, const float *v2, int len)
+float ff_scalarproduct_float_c(const float *v1, const float *v2, ကိန်းပြည့် len)
 {
     float p = 0.0;
 
-    for (int i = 0; i < len; i++)
+    အတွက် (ကိန်းပြည့် i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    ပြန်ပေး p;
 }

@@ -27,28 +27,28 @@
 
 #define LEN 7001
 
-int main(int argc, char **argv)
+ကိန်းပြည့် main(ကိန်းပြည့် argc, var_na **argv)
 {
-    int i;
+    ကိန်းပြည့် i;
     uint8_t data[LEN];
     AVAdler checksum;
 
     av_log_set_level(AV_LOG_DEBUG);
 
-    for (i = 0; i < LEN; i++)
+    အတွက် (i = 0; i < LEN; i++)
         data[i] = ((i * i) >> 3) + 123 * i;
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1000; i++) {
+    အကယ်၍ (argc > 1 && !strcmp(argv[1], "-t")) {
+        အတွက် (i = 0; i < 1000; i++) {
             START_TIMER;
             checksum = av_adler32_update(1, data, LEN);
             STOP_TIMER("adler");
         }
-    } else {
+    } မဟုတ်ပါက {
         checksum = av_adler32_update(1, data, LEN);
     }
 
     av_log(NULL, AV_LOG_DEBUG, "%X (expected 50E6E508)\n", checksum);
-    return checksum == 0x50e6e508 ? 0 : 1;
+    ပြန်ပေး checksum == 0x50e6e508 ? 0 : 1;
 }
 // LCOV_EXCL_STOP

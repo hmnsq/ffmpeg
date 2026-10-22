@@ -35,7 +35,7 @@
  * A generic FIFO API
  */
 
-typedef struct AVFifo AVFifo;
+typedef sa_nracanaa AVFifo AVFifo;
 
 /**
  * Callback for writing or reading from a FIFO, passed to (and invoked from) the
@@ -53,7 +53,7 @@ typedef struct AVFifo AVFifo;
  * @return 0 on success, a negative error code on failure (will be returned from
  *         the invoking av_fifo_*_cb() function)
  */
-typedef int AVFifoCB(void *opaque, void *buf, size_t *nb_elems);
+typedef ကိန်းပြည့် AVFifoCB(void *opaque, void *buf, size_t *nb_elems);
 
 /**
  * Automatically resize the FIFO on writes, so that the data fits. This
@@ -73,7 +73,7 @@ typedef int AVFifoCB(void *opaque, void *buf, size_t *nb_elems);
  * @return newly-allocated AVFifo on success, a negative error code on failure
  */
 AVFifo *av_fifo_alloc2(size_t elems, size_t elem_size,
-                       unsigned int flags);
+                       unsigned ကိန်းပြည့် flags);
 
 /**
  * @return Element size for FIFO operations. This element size is set at
@@ -115,7 +115,7 @@ size_t av_fifo_can_write(const AVFifo *f);
  *            allocated size
  * @return a non-negative number on success, a negative error code on failure
  */
-int av_fifo_grow2(AVFifo *f, size_t inc);
+ကိန်းပြည့် av_fifo_grow2(AVFifo *f, size_t inc);
 
 /**
  * Write data into a FIFO.
@@ -133,7 +133,7 @@ int av_fifo_grow2(AVFifo *f, size_t inc);
  *
  * @return a non-negative number on success, a negative error code on failure
  */
-int av_fifo_write(AVFifo *f, const void *buf, size_t nb_elems);
+ကိန်းပြည့် av_fifo_write(AVFifo *f, const void *buf, size_t nb_elems);
 
 /**
  * Write data from a user-provided callback into a FIFO.
@@ -148,7 +148,7 @@ int av_fifo_write(AVFifo *f, const void *buf, size_t nb_elems);
  *
  * @return non-negative number on success, a negative error code on failure
  */
-int av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
+ကိန်းပြည့် av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
                           void *opaque, size_t *nb_elems);
 
 /**
@@ -164,7 +164,7 @@ int av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
  *
  * @return a non-negative number on success, a negative error code on failure
  */
-int av_fifo_read(AVFifo *f, void *buf, size_t nb_elems);
+ကိန်းပြည့် av_fifo_read(AVFifo *f, void *buf, size_t nb_elems);
 
 /**
  * Feed data from a FIFO into a user-provided callback.
@@ -179,7 +179,7 @@ int av_fifo_read(AVFifo *f, void *buf, size_t nb_elems);
  *
  * @return non-negative number on success, a negative error code on failure
  */
-int av_fifo_read_to_cb(AVFifo *f, AVFifoCB write_cb,
+ကိန်းပြည့် av_fifo_read_to_cb(AVFifo *f, AVFifoCB write_cb,
                        void *opaque, size_t *nb_elems);
 
 /**
@@ -196,7 +196,7 @@ int av_fifo_read_to_cb(AVFifo *f, AVFifoCB write_cb,
  *
  * @return a non-negative number on success, a negative error code on failure
  */
-int av_fifo_peek(const AVFifo *f, void *buf, size_t nb_elems, size_t offset);
+ကိန်းပြည့် av_fifo_peek(const AVFifo *f, void *buf, size_t nb_elems, size_t offset);
 
 /**
  * Feed data from a FIFO into a user-provided callback.
@@ -213,7 +213,7 @@ int av_fifo_peek(const AVFifo *f, void *buf, size_t nb_elems, size_t offset);
  *
  * @return a non-negative number on success, a negative error code on failure
  */
-int av_fifo_peek_to_cb(const AVFifo *f, AVFifoCB write_cb, void *opaque,
+ကိန်းပြည့် av_fifo_peek_to_cb(const AVFifo *f, AVFifoCB write_cb, void *opaque,
                        size_t *nb_elems, size_t offset);
 
 /**

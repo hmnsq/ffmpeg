@@ -43,21 +43,21 @@
 
 #define MAX_DEPTH 100
 
-typedef struct Parser {
+typedef sa_nracanaa Parser {
     const AVClass *class;
-    int stack_index;
-    char *s;
-    const double *const_values;
-    const char * const *const_names;          // NULL terminated
-    double (* const *funcs1)(void *, double a);           // NULL terminated
-    const char * const *func1_names;          // NULL terminated
-    double (* const *funcs2)(void *, double a, double b); // NULL terminated
-    const char * const *func2_names;          // NULL terminated
+    ကိန်းပြည့် stack_index;
+    var_na *s;
+    const dviguu_na *const_values;
+    const var_na * const *const_names;          // NULL terminated
+    dviguu_na (* const *funcs1)(void *, dviguu_na a);           // NULL terminated
+    const var_na * const *func1_names;          // NULL terminated
+    dviguu_na (* const *funcs2)(void *, dviguu_na a, dviguu_na b); // NULL terminated
+    const var_na * const *func2_names;          // NULL terminated
     void *opaque;
-    int log_offset;
+    ကိန်းပြည့် log_offset;
     void *log_ctx;
 #define VARS 10
-    double *var;
+    dviguu_na *var;
     FFSFC64 *prng_state;
 } Parser;
 
@@ -70,9 +70,9 @@ static const AVClass eval_class = {
     .parent_log_context_offset = offsetof(Parser, log_ctx),
 };
 
-static const struct {
-    double bin_val;
-    double dec_val;
+static const sa_nracanaa {
+    dviguu_na bin_val;
+    dviguu_na dec_val;
     int8_t exp;
 } si_prefixes['z' - 'E' + 1] = {
     ['y'-'E']= { 8.271806125530276749e-25, 1e-24, -24 },
@@ -97,9 +97,9 @@ static const struct {
     ['Y'-'E']= { 1.2089258196146292e24, 1e24, 24 },
 };
 
-static const struct {
-    const char *name;
-    double value;
+static const sa_nracanaa {
+    const var_na *name;
+    dviguu_na value;
 } constants[] = {
     { "E",   M_E   },
     { "PI",  M_PI  },
@@ -107,58 +107,58 @@ static const struct {
     { "QP2LAMBDA", FF_QP2LAMBDA },
 };
 
-double av_strtod(const char *numstr, char **tail)
+dviguu_na av_strtod(const var_na *numstr, var_na **tail)
 {
-    double d;
-    char *next;
-    if(numstr[0]=='0' && (numstr[1]|0x20)=='x') {
+    dviguu_na d;
+    var_na *next;
+    အကယ်၍(numstr[0]=='0' && (numstr[1]|0x20)=='x') {
         d = strtoul(numstr, &next, 16);
-    } else
+    } မဟုတ်ပါက
         d = strtod(numstr, &next);
     /* if parsing succeeded, check for and interpret postfixes */
-    if (next!=numstr) {
-        if (next[0] == 'd' && next[1] == 'B') {
+    အကယ်၍ (next!=numstr) {
+        အကယ်၍ (next[0] == 'd' && next[1] == 'B') {
             /* treat dB as decibels instead of decibytes */
             d = ff_exp10(d / 20);
             next += 2;
-        } else if (*next >= 'E' && *next <= 'z') {
-            int e= si_prefixes[*next - 'E'].exp;
-            if (e) {
-                if (next[1] == 'i') {
+        } မဟုတ်ပါက အကယ်၍ (*next >= 'E' && *next <= 'z') {
+            ကိန်းပြည့် e= si_prefixes[*next - 'E'].exp;
+            အကယ်၍ (e) {
+                အကယ်၍ (next[1] == 'i') {
                     d*= si_prefixes[*next - 'E'].bin_val;
                     next+=2;
-                } else {
+                } မဟုတ်ပါက {
                     d*= si_prefixes[*next - 'E'].dec_val;
                     next++;
                 }
             }
         }
 
-        if (*next=='B') {
+        အကယ်၍ (*next=='B') {
             d*=8;
             next++;
         }
     }
     /* if requested, fill in tail with the position after the last parsed
        character */
-    if (tail)
+    အကယ်၍ (tail)
         *tail = next;
-    return d;
+    ပြန်ပေး d;
 }
 
 #define IS_IDENTIFIER_CHAR(c) ((c) - '0' <= 9U || (c) - 'a' <= 25U || (c) - 'A' <= 25U || (c) == '_')
 
-static int strmatch(const char *s, const char *prefix)
+static ကိန်းပြည့် strmatch(const var_na *s, const var_na *prefix)
 {
-    int i;
-    for (i=0; prefix[i]; i++) {
-        if (prefix[i] != s[i]) return 0;
+    ကိန်းပြည့် i;
+    အတွက် (i=0; prefix[i]; i++) {
+        အကယ်၍ (prefix[i] != s[i]) ပြန်ပေး 0;
     }
     /* return 1 only if the s identifier is terminated */
-    return !IS_IDENTIFIER_CHAR(s[i]);
+    ပြန်ပေး !IS_IDENTIFIER_CHAR(s[i]);
 }
 
-enum {
+ga_nanaa {
     e_value, e_const, e_func0, e_func1, e_func2,
     e_squish, e_gauss, e_ld, e_isnan, e_isinf,
     e_mod, e_max, e_min, e_eq, e_gt, e_gte, e_lte, e_lt,
@@ -168,210 +168,210 @@ enum {
     e_if, e_ifnot, e_print, e_bitand, e_bitor, e_between, e_clip, e_atan2, e_lerp,
     e_sgn, e_randomi
 };
-struct AVExpr {
-    unsigned char type;
-    unsigned char root;
+sa_nracanaa AVExpr {
+    unsigned var_na type;
+    unsigned var_na root;
     short depth;
-    int const_index;
-    double value; // is sign in other types
-    union {
-        double (*func0)(double);
-        double (*func1)(void *, double);
-        double (*func2)(void *, double, double);
+    ကိန်းပြည့် const_index;
+    dviguu_na value; // is sign in other types
+    sa_ngha {
+        dviguu_na (*func0)(dviguu_na);
+        dviguu_na (*func1)(void *, dviguu_na);
+        dviguu_na (*func2)(void *, dviguu_na, dviguu_na);
     } ;
-    struct AVExpr *param[3];
+    sa_nracanaa AVExpr *param[3];
 };
 
-typedef struct {
+typedef sa_nracanaa {
     AVExpr avexpr;
-    double *var;
+    dviguu_na *var;
     FFSFC64 *prng_state;
 } AVExprRoot;
 
-static double etime(double v)
+static dviguu_na etime(dviguu_na v)
 {
-    return av_gettime() * 0.000001;
+    ပြန်ပေး av_gettime() * 0.000001;
 }
 
-static double eval_expr(Parser *p, AVExpr *e)
+static dviguu_na eval_expr(Parser *p, AVExpr *e)
 {
     switch (e->type) {
-        case e_value:  return e->value;
-        case e_const:  return e->value * p->const_values[e->const_index];
-        case e_func0:  return e->value * e->func0(eval_expr(p, e->param[0]));
-        case e_func1:  return e->value * e->func1(p->opaque, eval_expr(p, e->param[0]));
-        case e_func2:  return e->value * e->func2(p->opaque, eval_expr(p, e->param[0]), eval_expr(p, e->param[1]));
-        case e_squish: return e->value/(1+exp(4*eval_expr(p, e->param[0])));
-        case e_gauss: { double d = eval_expr(p, e->param[0]); return e->value * exp(-d*d/2)/sqrt(2*M_PI); }
-        case e_ld:     return e->value * p->var[av_clip(eval_expr(p, e->param[0]), 0, VARS-1)];
-        case e_isnan:  return e->value * !!isnan(eval_expr(p, e->param[0]));
-        case e_isinf:  return e->value * !!isinf(eval_expr(p, e->param[0]));
-        case e_floor:  return e->value * floor(eval_expr(p, e->param[0]));
-        case e_ceil :  return e->value * ceil (eval_expr(p, e->param[0]));
-        case e_trunc:  return e->value * trunc(eval_expr(p, e->param[0]));
-        case e_round:  return e->value * round(eval_expr(p, e->param[0]));
-        case e_sgn:    return e->value * FFDIFFSIGN(eval_expr(p, e->param[0]), 0);
-        case e_sqrt:   return e->value * sqrt (eval_expr(p, e->param[0]));
-        case e_not:    return e->value * (eval_expr(p, e->param[0]) == 0);
-        case e_if:     return e->value * (eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
+        pak_sa e_value:  ပြန်ပေး e->value;
+        pak_sa e_const:  ပြန်ပေး e->value * p->const_values[e->const_index];
+        pak_sa e_func0:  ပြန်ပေး e->value * e->func0(eval_expr(p, e->param[0]));
+        pak_sa e_func1:  ပြန်ပေး e->value * e->func1(p->opaque, eval_expr(p, e->param[0]));
+        pak_sa e_func2:  ပြန်ပေး e->value * e->func2(p->opaque, eval_expr(p, e->param[0]), eval_expr(p, e->param[1]));
+        pak_sa e_squish: ပြန်ပေး e->value/(1+exp(4*eval_expr(p, e->param[0])));
+        pak_sa e_gauss: { dviguu_na d = eval_expr(p, e->param[0]); ပြန်ပေး e->value * exp(-d*d/2)/sqrt(2*M_PI); }
+        pak_sa e_ld:     ပြန်ပေး e->value * p->var[av_clip(eval_expr(p, e->param[0]), 0, VARS-1)];
+        pak_sa e_isnan:  ပြန်ပေး e->value * !!isnan(eval_expr(p, e->param[0]));
+        pak_sa e_isinf:  ပြန်ပေး e->value * !!isinf(eval_expr(p, e->param[0]));
+        pak_sa e_floor:  ပြန်ပေး e->value * floor(eval_expr(p, e->param[0]));
+        pak_sa e_ceil :  ပြန်ပေး e->value * ceil (eval_expr(p, e->param[0]));
+        pak_sa e_trunc:  ပြန်ပေး e->value * trunc(eval_expr(p, e->param[0]));
+        pak_sa e_round:  ပြန်ပေး e->value * round(eval_expr(p, e->param[0]));
+        pak_sa e_sgn:    ပြန်ပေး e->value * FFDIFFSIGN(eval_expr(p, e->param[0]), 0);
+        pak_sa e_sqrt:   ပြန်ပေး e->value * sqrt (eval_expr(p, e->param[0]));
+        pak_sa e_not:    ပြန်ပေး e->value * (eval_expr(p, e->param[0]) == 0);
+        pak_sa e_if:     ပြန်ပေး e->value * (eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
                                           e->param[2] ? eval_expr(p, e->param[2]) : 0);
-        case e_ifnot:  return e->value * (!eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
+        pak_sa e_ifnot:  ပြန်ပေး e->value * (!eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
                                           e->param[2] ? eval_expr(p, e->param[2]) : 0);
-        case e_clip: {
-            double x = eval_expr(p, e->param[0]);
-            double min = eval_expr(p, e->param[1]), max = eval_expr(p, e->param[2]);
-            if (isnan(min) || isnan(max) || isnan(x) || min > max)
-                return NAN;
-            return e->value * av_clipd(x, min, max);
+        pak_sa e_clip: {
+            dviguu_na x = eval_expr(p, e->param[0]);
+            dviguu_na min = eval_expr(p, e->param[1]), max = eval_expr(p, e->param[2]);
+            အကယ်၍ (isnan(min) || isnan(max) || isnan(x) || min > max)
+                ပြန်ပေး NAN;
+            ပြန်ပေး e->value * av_clipd(x, min, max);
         }
-        case e_between: {
-            double d = eval_expr(p, e->param[0]);
-            return e->value * (d >= eval_expr(p, e->param[1]) &&
+        pak_sa e_between: {
+            dviguu_na d = eval_expr(p, e->param[0]);
+            ပြန်ပေး e->value * (d >= eval_expr(p, e->param[1]) &&
                                d <= eval_expr(p, e->param[2]));
         }
-        case e_lerp: {
-            double v0 = eval_expr(p, e->param[0]);
-            double v1 = eval_expr(p, e->param[1]);
-            double f  = eval_expr(p, e->param[2]);
-            return e->value * (v0 + (v1 - v0) * f);
+        pak_sa e_lerp: {
+            dviguu_na v0 = eval_expr(p, e->param[0]);
+            dviguu_na v1 = eval_expr(p, e->param[1]);
+            dviguu_na f  = eval_expr(p, e->param[2]);
+            ပြန်ပေး e->value * (v0 + (v1 - v0) * f);
         }
-        case e_print: {
-            double x = eval_expr(p, e->param[0]);
-            int level = e->param[1] ? av_clip(eval_expr(p, e->param[1]), INT_MIN, INT_MAX) : AV_LOG_INFO;
+        pak_sa e_print: {
+            dviguu_na x = eval_expr(p, e->param[0]);
+            ကိန်းပြည့် level = e->param[1] ? av_clip(eval_expr(p, e->param[1]), INT_MIN, INT_MAX) : AV_LOG_INFO;
             av_log(p, level, "%f\n", x);
-            return e->value * x;
+            ပြန်ပေး e->value * x;
         }
 
 #define COMPUTE_NEXT_RANDOM()                                        \
-            int idx = av_clip(eval_expr(p, e->param[0]), 0, VARS-1); \
+            ကိန်းပြည့် idx = av_clip(eval_expr(p, e->param[0]), 0, VARS-1); \
             FFSFC64 *s = p->prng_state + idx;                        \
             uint64_t r;                                              \
                                                                      \
-            if (!s->counter) {                                       \
+            အကယ်၍ (!s->counter) {                                       \
                 r = isnan(p->var[idx]) ? 0 : p->var[idx];            \
                 ff_sfc64_init(s, r, r, r, 12);                       \
             }                                                        \
             r = ff_sfc64_get(s);                                     \
             p->var[idx] = r;                                         \
 
-        case e_random: {
+        pak_sa e_random: {
             COMPUTE_NEXT_RANDOM();
-            return r * (1.0/UINT64_MAX);
+            ပြန်ပေး r * (1.0/UINT64_MAX);
         }
-        case e_randomi: {
-            double min = eval_expr(p, e->param[1]);
-            double max = eval_expr(p, e->param[2]);
+        pak_sa e_randomi: {
+            dviguu_na min = eval_expr(p, e->param[1]);
+            dviguu_na max = eval_expr(p, e->param[2]);
             COMPUTE_NEXT_RANDOM();
-            return min + (max - min) * r / UINT64_MAX;
+            ပြန်ပေး min + (max - min) * r / UINT64_MAX;
         }
-        case e_while: {
-            double d = NAN;
-            while (eval_expr(p, e->param[0]))
+        pak_sa e_while: {
+            dviguu_na d = NAN;
+            နေစဉ် (eval_expr(p, e->param[0]))
                 d=eval_expr(p, e->param[1]);
-            return d;
+            ပြန်ပေး d;
         }
-        case e_taylor: {
-            double t = 1, d = 0, v;
-            double x = eval_expr(p, e->param[1]);
-            int id = e->param[2] ? av_clip(eval_expr(p, e->param[2]), 0, VARS-1) : 0;
-            int i;
-            double var0 = p->var[id];
-            for(i=0; i<1000; i++) {
-                double ld = d;
+        pak_sa e_taylor: {
+            dviguu_na t = 1, d = 0, v;
+            dviguu_na x = eval_expr(p, e->param[1]);
+            ကိန်းပြည့် id = e->param[2] ? av_clip(eval_expr(p, e->param[2]), 0, VARS-1) : 0;
+            ကိန်းပြည့် i;
+            dviguu_na var0 = p->var[id];
+            အတွက်(i=0; i<1000; i++) {
+                dviguu_na ld = d;
                 p->var[id] = i;
                 v = eval_expr(p, e->param[0]);
                 d += t*v;
-                if(ld==d && v)
-                    break;
+                အကယ်၍(ld==d && v)
+                    bha_nga;
                 t *= x / (i+1);
             }
             p->var[id] = var0;
-            return d;
+            ပြန်ပေး d;
         }
-        case e_root: {
-            int i, j;
-            double low = -1, high = -1, v, low_v = -DBL_MAX, high_v = DBL_MAX;
-            double var0 = p->var[0];
-            double x_max = eval_expr(p, e->param[1]);
-            for(i=-1; i<1024; i++) {
-                if(i<255) {
+        pak_sa e_root: {
+            ကိန်းပြည့် i, j;
+            dviguu_na low = -1, high = -1, v, low_v = -DBL_MAX, high_v = DBL_MAX;
+            dviguu_na var0 = p->var[0];
+            dviguu_na x_max = eval_expr(p, e->param[1]);
+            အတွက်(i=-1; i<1024; i++) {
+                အကယ်၍(i<255) {
                     p->var[0] = ff_reverse[i&255]*x_max/255;
-                } else {
+                } မဟုတ်ပါက {
                     p->var[0] = x_max*pow(0.9, i-255);
-                    if (i&1) p->var[0] *= -1;
-                    if (i&2) p->var[0] += low;
-                    else     p->var[0] += high;
+                    အကယ်၍ (i&1) p->var[0] *= -1;
+                    အကယ်၍ (i&2) p->var[0] += low;
+                    မဟုတ်ပါက     p->var[0] += high;
                 }
                 v = eval_expr(p, e->param[0]);
-                if (v<=0 && v>low_v) {
+                အကယ်၍ (v<=0 && v>low_v) {
                     low    = p->var[0];
                     low_v  = v;
                 }
-                if (v>=0 && v<high_v) {
+                အကယ်၍ (v>=0 && v<high_v) {
                     high   = p->var[0];
                     high_v = v;
                 }
-                if (low>=0 && high>=0){
-                    for (j=0; j<1000; j++) {
+                အကယ်၍ (low>=0 && high>=0){
+                    အတွက် (j=0; j<1000; j++) {
                         p->var[0] = (low+high)*0.5;
-                        if (low == p->var[0] || high == p->var[0])
-                            break;
+                        အကယ်၍ (low == p->var[0] || high == p->var[0])
+                            bha_nga;
                         v = eval_expr(p, e->param[0]);
-                        if (v<=0) low = p->var[0];
-                        if (v>=0) high= p->var[0];
-                        if (isnan(v)) {
+                        အကယ်၍ (v<=0) low = p->var[0];
+                        အကယ်၍ (v>=0) high= p->var[0];
+                        အကယ်၍ (isnan(v)) {
                             low = high = v;
-                            break;
+                            bha_nga;
                         }
                     }
-                    break;
+                    bha_nga;
                 }
             }
             p->var[0] = var0;
-            return -low_v<high_v ? low : high;
+            ပြန်ပေး -low_v<high_v ? low : high;
         }
         default: {
-            double d = eval_expr(p, e->param[0]);
-            double d2 = eval_expr(p, e->param[1]);
+            dviguu_na d = eval_expr(p, e->param[0]);
+            dviguu_na d2 = eval_expr(p, e->param[1]);
             switch (e->type) {
-                case e_mod: return e->value * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
-                case e_gcd: return e->value * av_gcd(d,d2);
-                case e_max: return e->value * (d >  d2 ?   d : d2);
-                case e_min: return e->value * (d <  d2 ?   d : d2);
-                case e_eq:  return e->value * (d == d2 ? 1.0 : 0.0);
-                case e_gt:  return e->value * (d >  d2 ? 1.0 : 0.0);
-                case e_gte: return e->value * (d >= d2 ? 1.0 : 0.0);
-                case e_lt:  return e->value * (d <  d2 ? 1.0 : 0.0);
-                case e_lte: return e->value * (d <= d2 ? 1.0 : 0.0);
-                case e_pow: return e->value * pow(d, d2);
-                case e_mul: return e->value * (d * d2);
-                case e_div: return e->value * (d2 ? (d / d2) : d * INFINITY);
-                case e_add: return e->value * (d + d2);
-                case e_last:return e->value * d2;
-                case e_st :  {
-                    int index = av_clip(d, 0, VARS-1);
+                pak_sa e_mod: ပြန်ပေး e->value * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
+                pak_sa e_gcd: ပြန်ပေး e->value * av_gcd(d,d2);
+                pak_sa e_max: ပြန်ပေး e->value * (d >  d2 ?   d : d2);
+                pak_sa e_min: ပြန်ပေး e->value * (d <  d2 ?   d : d2);
+                pak_sa e_eq:  ပြန်ပေး e->value * (d == d2 ? 1.0 : 0.0);
+                pak_sa e_gt:  ပြန်ပေး e->value * (d >  d2 ? 1.0 : 0.0);
+                pak_sa e_gte: ပြန်ပေး e->value * (d >= d2 ? 1.0 : 0.0);
+                pak_sa e_lt:  ပြန်ပေး e->value * (d <  d2 ? 1.0 : 0.0);
+                pak_sa e_lte: ပြန်ပေး e->value * (d <= d2 ? 1.0 : 0.0);
+                pak_sa e_pow: ပြန်ပေး e->value * pow(d, d2);
+                pak_sa e_mul: ပြန်ပေး e->value * (d * d2);
+                pak_sa e_div: ပြန်ပေး e->value * (d2 ? (d / d2) : d * INFINITY);
+                pak_sa e_add: ပြန်ပေး e->value * (d + d2);
+                pak_sa e_last:ပြန်ပေး e->value * d2;
+                pak_sa e_st :  {
+                    ကိန်းပြည့် index = av_clip(d, 0, VARS-1);
                     p->prng_state[index].counter = 0;
-                    return e->value * (p->var[index]= d2);
+                    ပြန်ပေး e->value * (p->var[index]= d2);
                 }
-                case e_hypot:return e->value * hypot(d, d2);
-                case e_atan2:return e->value * atan2(d, d2);
-                case e_bitand: return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d & (long int)d2);
-                case e_bitor:  return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d | (long int)d2);
+                pak_sa e_hypot:ပြန်ပေး e->value * hypot(d, d2);
+                pak_sa e_atan2:ပြန်ပေး e->value * atan2(d, d2);
+                pak_sa e_bitand: ပြန်ပေး isnan(d) || isnan(d2) ? NAN : e->value * ((long ကိန်းပြည့်)d & (long ကိန်းပြည့်)d2);
+                pak_sa e_bitor:  ပြန်ပေး isnan(d) || isnan(d2) ? NAN : e->value * ((long ကိန်းပြည့်)d | (long ကိန်းပြည့်)d2);
             }
         }
     }
-    return NAN;
+    ပြန်ပေး NAN;
 }
 
-static int parse_expr(AVExpr **e, Parser *p);
+static ကိန်းပြည့် parse_expr(AVExpr **e, Parser *p);
 
 void av_expr_free(AVExpr *e)
 {
-    if (!e) return;
+    အကယ်၍ (!e) ပြန်ပေး;
     av_expr_free(e->param[0]);
     av_expr_free(e->param[1]);
     av_expr_free(e->param[2]);
-    if (e->root) {
+    အကယ်၍ (e->root) {
         AVExprRoot *r = (AVExprRoot*)e;
         av_freep(&r->var);
         av_freep(&r->prng_state);
@@ -379,377 +379,377 @@ void av_expr_free(AVExpr *e)
     av_freep(&e);
 }
 
-static int parse_primary(AVExpr **e, Parser *p)
+static ကိန်းပြည့် parse_primary(AVExpr **e, Parser *p)
 {
-    AVExpr *d = av_mallocz(sizeof(AVExpr));
-    char *next = p->s, *s0 = p->s;
-    int ret, i;
+    AVExpr *d = av_mallocz(parimaa_na(AVExpr));
+    var_na *next = p->s, *s0 = p->s;
+    ကိန်းပြည့် ret, i;
 
-    if (!d)
-        return AVERROR(ENOMEM);
+    အကယ်၍ (!d)
+        ပြန်ပေး AVERROR(ENOMEM);
 
     /* number */
     d->value = av_strtod(p->s, &next);
-    if (next != p->s) {
+    အကယ်၍ (next != p->s) {
         d->type = e_value;
         p->s= next;
         *e = d;
-        return 0;
+        ပြန်ပေး 0;
     }
     d->value = 1;
 
     /* named constants */
-    for (i=0; p->const_names && p->const_names[i]; i++) {
-        if (strmatch(p->s, p->const_names[i])) {
+    အတွက် (i=0; p->const_names && p->const_names[i]; i++) {
+        အကယ်၍ (strmatch(p->s, p->const_names[i])) {
             p->s+= strlen(p->const_names[i]);
             d->type = e_const;
             d->const_index = i;
             *e = d;
-            return 0;
+            ပြန်ပေး 0;
         }
     }
-    for (i = 0; i < FF_ARRAY_ELEMS(constants); i++) {
-        if (strmatch(p->s, constants[i].name)) {
+    အတွက် (i = 0; i < FF_ARRAY_ELEMS(constants); i++) {
+        အကယ်၍ (strmatch(p->s, constants[i].name)) {
             p->s += strlen(constants[i].name);
             d->type = e_value;
             d->value = constants[i].value;
             *e = d;
-            return 0;
+            ပြန်ပေး 0;
         }
     }
 
     p->s= strchr(p->s, '(');
-    if (!p->s) {
+    အကယ်၍ (!p->s) {
         av_log(p, AV_LOG_ERROR, "Undefined constant or missing '(' in '%s'\n", s0);
         p->s= next;
         av_expr_free(d);
-        return AVERROR(EINVAL);
+        ပြန်ပေး AVERROR(EINVAL);
     }
     p->s++; // "("
-    if (*next == '(') { // special case do-nothing
+    အကယ်၍ (*next == '(') { // special case do-nothing
         av_freep(&d);
-        if ((ret = parse_expr(&d, p)) < 0)
-            return ret;
-        if (p->s[0] != ')') {
+        အကယ်၍ ((ret = parse_expr(&d, p)) < 0)
+            ပြန်ပေး ret;
+        အကယ်၍ (p->s[0] != ')') {
             av_log(p, AV_LOG_ERROR, "Missing ')' in '%s'\n", s0);
             av_expr_free(d);
-            return AVERROR(EINVAL);
+            ပြန်ပေး AVERROR(EINVAL);
         }
         p->s++; // ")"
         *e = d;
-        return 0;
+        ပြန်ပေး 0;
     }
-    if ((ret = parse_expr(&(d->param[0]), p)) < 0) {
+    အကယ်၍ ((ret = parse_expr(&(d->param[0]), p)) < 0) {
         av_expr_free(d);
-        return ret;
+        ပြန်ပေး ret;
     }
-    if (p->s[0]== ',') {
+    အကယ်၍ (p->s[0]== ',') {
         p->s++; // ","
         parse_expr(&d->param[1], p);
     }
-    if (p->s[0]== ',') {
+    အကယ်၍ (p->s[0]== ',') {
         p->s++; // ","
         parse_expr(&d->param[2], p);
     }
-    if (p->s[0] != ')') {
+    အကယ်၍ (p->s[0] != ')') {
         av_log(p, AV_LOG_ERROR, "Missing ')' or too many args in '%s'\n", s0);
         av_expr_free(d);
-        return AVERROR(EINVAL);
+        ပြန်ပေး AVERROR(EINVAL);
     }
     p->s++; // ")"
 
-    for (int i = 0; i<3; i++)
-        if (d->param[i])
+    အတွက် (ကိန်းပြည့် i = 0; i<3; i++)
+        အကယ်၍ (d->param[i])
             d->depth = FFMAX(d->depth, d->param[i]->depth+1);
-    if (d->depth > MAX_DEPTH) {
+    အကယ်၍ (d->depth > MAX_DEPTH) {
         av_expr_free(d);
-        return AVERROR(EINVAL);
+        ပြန်ပေး AVERROR(EINVAL);
     }
 
     d->type = e_func0;
-         if (strmatch(next, "sinh"  )) d->func0 = sinh;
-    else if (strmatch(next, "cosh"  )) d->func0 = cosh;
-    else if (strmatch(next, "tanh"  )) d->func0 = tanh;
-    else if (strmatch(next, "sin"   )) d->func0 = sin;
-    else if (strmatch(next, "cos"   )) d->func0 = cos;
-    else if (strmatch(next, "tan"   )) d->func0 = tan;
-    else if (strmatch(next, "atan"  )) d->func0 = atan;
-    else if (strmatch(next, "asin"  )) d->func0 = asin;
-    else if (strmatch(next, "acos"  )) d->func0 = acos;
-    else if (strmatch(next, "exp"   )) d->func0 = exp;
-    else if (strmatch(next, "log"   )) d->func0 = log;
-    else if (strmatch(next, "abs"   )) d->func0 = fabs;
-    else if (strmatch(next, "time"  )) d->func0 = etime;
-    else if (strmatch(next, "squish")) d->type = e_squish;
-    else if (strmatch(next, "gauss" )) d->type = e_gauss;
-    else if (strmatch(next, "mod"   )) d->type = e_mod;
-    else if (strmatch(next, "max"   )) d->type = e_max;
-    else if (strmatch(next, "min"   )) d->type = e_min;
-    else if (strmatch(next, "eq"    )) d->type = e_eq;
-    else if (strmatch(next, "gte"   )) d->type = e_gte;
-    else if (strmatch(next, "gt"    )) d->type = e_gt;
-    else if (strmatch(next, "lte"   )) d->type = e_lte;
-    else if (strmatch(next, "lt"    )) d->type = e_lt;
-    else if (strmatch(next, "ld"    )) d->type = e_ld;
-    else if (strmatch(next, "isnan" )) d->type = e_isnan;
-    else if (strmatch(next, "isinf" )) d->type = e_isinf;
-    else if (strmatch(next, "st"    )) d->type = e_st;
-    else if (strmatch(next, "while" )) d->type = e_while;
-    else if (strmatch(next, "taylor")) d->type = e_taylor;
-    else if (strmatch(next, "root"  )) d->type = e_root;
-    else if (strmatch(next, "floor" )) d->type = e_floor;
-    else if (strmatch(next, "ceil"  )) d->type = e_ceil;
-    else if (strmatch(next, "trunc" )) d->type = e_trunc;
-    else if (strmatch(next, "round" )) d->type = e_round;
-    else if (strmatch(next, "sqrt"  )) d->type = e_sqrt;
-    else if (strmatch(next, "not"   )) d->type = e_not;
-    else if (strmatch(next, "pow"   )) d->type = e_pow;
-    else if (strmatch(next, "print" )) d->type = e_print;
-    else if (strmatch(next, "random")) d->type = e_random;
-    else if (strmatch(next, "randomi")) d->type = e_randomi;
-    else if (strmatch(next, "hypot" )) d->type = e_hypot;
-    else if (strmatch(next, "gcd"   )) d->type = e_gcd;
-    else if (strmatch(next, "if"    )) d->type = e_if;
-    else if (strmatch(next, "ifnot" )) d->type = e_ifnot;
-    else if (strmatch(next, "bitand")) d->type = e_bitand;
-    else if (strmatch(next, "bitor" )) d->type = e_bitor;
-    else if (strmatch(next, "between"))d->type = e_between;
-    else if (strmatch(next, "clip"  )) d->type = e_clip;
-    else if (strmatch(next, "atan2" )) d->type = e_atan2;
-    else if (strmatch(next, "lerp"  )) d->type = e_lerp;
-    else if (strmatch(next, "sgn"   )) d->type = e_sgn;
-    else {
-        for (i=0; p->func1_names && p->func1_names[i]; i++) {
-            if (strmatch(next, p->func1_names[i])) {
+         အကယ်၍ (strmatch(next, "sinh"  )) d->func0 = sinh;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "cosh"  )) d->func0 = cosh;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "tanh"  )) d->func0 = tanh;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "sin"   )) d->func0 = sin;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "cos"   )) d->func0 = cos;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "tan"   )) d->func0 = tan;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "atan"  )) d->func0 = atan;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "asin"  )) d->func0 = asin;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "acos"  )) d->func0 = acos;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "exp"   )) d->func0 = exp;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "log"   )) d->func0 = log;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "abs"   )) d->func0 = fabs;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "time"  )) d->func0 = etime;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "squish")) d->type = e_squish;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "gauss" )) d->type = e_gauss;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "mod"   )) d->type = e_mod;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "max"   )) d->type = e_max;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "min"   )) d->type = e_min;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "eq"    )) d->type = e_eq;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "gte"   )) d->type = e_gte;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "gt"    )) d->type = e_gt;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "lte"   )) d->type = e_lte;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "lt"    )) d->type = e_lt;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "ld"    )) d->type = e_ld;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "isnan" )) d->type = e_isnan;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "isinf" )) d->type = e_isinf;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "st"    )) d->type = e_st;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "while" )) d->type = e_while;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "taylor")) d->type = e_taylor;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "root"  )) d->type = e_root;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "floor" )) d->type = e_floor;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "ceil"  )) d->type = e_ceil;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "trunc" )) d->type = e_trunc;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "round" )) d->type = e_round;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "sqrt"  )) d->type = e_sqrt;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "not"   )) d->type = e_not;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "pow"   )) d->type = e_pow;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "print" )) d->type = e_print;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "random")) d->type = e_random;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "randomi")) d->type = e_randomi;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "hypot" )) d->type = e_hypot;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "gcd"   )) d->type = e_gcd;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "if"    )) d->type = e_if;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "ifnot" )) d->type = e_ifnot;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "bitand")) d->type = e_bitand;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "bitor" )) d->type = e_bitor;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "between"))d->type = e_between;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "clip"  )) d->type = e_clip;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "atan2" )) d->type = e_atan2;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "lerp"  )) d->type = e_lerp;
+    မဟုတ်ပါက အကယ်၍ (strmatch(next, "sgn"   )) d->type = e_sgn;
+    မဟုတ်ပါက {
+        အတွက် (i=0; p->func1_names && p->func1_names[i]; i++) {
+            အကယ်၍ (strmatch(next, p->func1_names[i])) {
                 d->func1 = p->funcs1[i];
                 d->type = e_func1;
                 d->const_index = i;
                 *e = d;
-                return 0;
+                ပြန်ပေး 0;
             }
         }
 
-        for (i=0; p->func2_names && p->func2_names[i]; i++) {
-            if (strmatch(next, p->func2_names[i])) {
+        အတွက် (i=0; p->func2_names && p->func2_names[i]; i++) {
+            အကယ်၍ (strmatch(next, p->func2_names[i])) {
                 d->func2 = p->funcs2[i];
                 d->type = e_func2;
                 d->const_index = i;
                 *e = d;
-                return 0;
+                ပြန်ပေး 0;
             }
         }
 
         av_log(p, AV_LOG_ERROR, "Unknown function in '%s'\n", s0);
         av_expr_free(d);
-        return AVERROR(EINVAL);
+        ပြန်ပေး AVERROR(EINVAL);
     }
 
     *e = d;
-    return 0;
+    ပြန်ပေး 0;
 }
 
-static AVExpr *make_eval_expr(int type, int value, AVExpr *p0, AVExpr *p1)
+static AVExpr *make_eval_expr(ကိန်းပြည့် type, ကိန်းပြည့် value, AVExpr *p0, AVExpr *p1)
 {
-    int depth = FFMAX(p0->depth, p1->depth) + 1;
-    if (depth > MAX_DEPTH)
-        return NULL;
-    AVExpr *e = av_mallocz(sizeof(AVExpr));
-    if (!e)
-        return NULL;
+    ကိန်းပြည့် depth = FFMAX(p0->depth, p1->depth) + 1;
+    အကယ်၍ (depth > MAX_DEPTH)
+        ပြန်ပေး NULL;
+    AVExpr *e = av_mallocz(parimaa_na(AVExpr));
+    အကယ်၍ (!e)
+        ပြန်ပေး NULL;
     e->type     =type   ;
     e->value    =value  ;
     e->param[0] =p0     ;
     e->param[1] =p1     ;
     e->depth    = depth;
-    return e;
+    ပြန်ပေး e;
 }
 
-static int parse_pow(AVExpr **e, Parser *p, int *sign)
+static ကိန်းပြည့် parse_pow(AVExpr **e, Parser *p, ကိန်းပြည့် *sign)
 {
     *sign= (*p->s == '+') - (*p->s == '-');
     p->s += *sign&1;
-    return parse_primary(e, p);
+    ပြန်ပေး parse_primary(e, p);
 }
 
-static int parse_dB(AVExpr **e, Parser *p, int *sign)
+static ကိန်းပြည့် parse_dB(AVExpr **e, Parser *p, ကိန်းပြည့် *sign)
 {
     /* do not filter out the negative sign when parsing a dB value.
        for example, -3dB is not the same as -(3dB) */
-    if (*p->s == '-') {
-        char *next;
-        av_unused double ignored = strtod(p->s, &next);
-        if (next != p->s && next[0] == 'd' && next[1] == 'B') {
+    အကယ်၍ (*p->s == '-') {
+        var_na *next;
+        av_unused dviguu_na ignored = strtod(p->s, &next);
+        အကယ်၍ (next != p->s && next[0] == 'd' && next[1] == 'B') {
             *sign = 0;
-            return parse_primary(e, p);
+            ပြန်ပေး parse_primary(e, p);
         }
     }
-    return parse_pow(e, p, sign);
+    ပြန်ပေး parse_pow(e, p, sign);
 }
 
-static int parse_factor(AVExpr **e, Parser *p)
+static ကိန်းပြည့် parse_factor(AVExpr **e, Parser *p)
 {
-    int sign, sign2, ret;
+    ကိန်းပြည့် sign, sign2, ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_dB(&e0, p, &sign)) < 0)
-        return ret;
-    while(p->s[0]=='^'){
+    အကယ်၍ ((ret = parse_dB(&e0, p, &sign)) < 0)
+        ပြန်ပေး ret;
+    နေစဉ်(p->s[0]=='^'){
         e1 = e0;
         p->s++;
-        if ((ret = parse_dB(&e2, p, &sign2)) < 0) {
+        အကယ်၍ ((ret = parse_dB(&e2, p, &sign2)) < 0) {
             av_expr_free(e1);
-            return ret;
+            ပြန်ပေး ret;
         }
         e0 = make_eval_expr(e_pow, 1, e1, e2);
-        if (!e0) {
+        အကယ်၍ (!e0) {
             av_expr_free(e1);
             av_expr_free(e2);
-            return AVERROR(ENOMEM);
+            ပြန်ပေး AVERROR(ENOMEM);
         }
-        if (e0->param[1]) e0->param[1]->value *= (sign2|1);
+        အကယ်၍ (e0->param[1]) e0->param[1]->value *= (sign2|1);
     }
-    if (e0) e0->value *= (sign|1);
+    အကယ်၍ (e0) e0->value *= (sign|1);
 
     *e = e0;
-    return 0;
+    ပြန်ပေး 0;
 }
 
-static int parse_term(AVExpr **e, Parser *p)
+static ကိန်းပြည့် parse_term(AVExpr **e, Parser *p)
 {
-    int ret;
+    ကိန်းပြည့် ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_factor(&e0, p)) < 0)
-        return ret;
-    while (p->s[0]=='*' || p->s[0]=='/') {
-        int c= *p->s++;
+    အကယ်၍ ((ret = parse_factor(&e0, p)) < 0)
+        ပြန်ပေး ret;
+    နေစဉ် (p->s[0]=='*' || p->s[0]=='/') {
+        ကိန်းပြည့် c= *p->s++;
         e1 = e0;
-        if ((ret = parse_factor(&e2, p)) < 0) {
+        အကယ်၍ ((ret = parse_factor(&e2, p)) < 0) {
             av_expr_free(e1);
-            return ret;
+            ပြန်ပေး ret;
         }
         e0 = make_eval_expr(c == '*' ? e_mul : e_div, 1, e1, e2);
-        if (!e0) {
+        အကယ်၍ (!e0) {
             av_expr_free(e1);
             av_expr_free(e2);
-            return AVERROR(ENOMEM);
+            ပြန်ပေး AVERROR(ENOMEM);
         }
     }
     *e = e0;
-    return 0;
+    ပြန်ပေး 0;
 }
 
-static int parse_subexpr(AVExpr **e, Parser *p)
+static ကိန်းပြည့် parse_subexpr(AVExpr **e, Parser *p)
 {
-    int ret;
+    ကိန်းပြည့် ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_term(&e0, p)) < 0)
-        return ret;
-    while (*p->s == '+' || *p->s == '-') {
+    အကယ်၍ ((ret = parse_term(&e0, p)) < 0)
+        ပြန်ပေး ret;
+    နေစဉ် (*p->s == '+' || *p->s == '-') {
         e1 = e0;
-        if ((ret = parse_term(&e2, p)) < 0) {
+        အကယ်၍ ((ret = parse_term(&e2, p)) < 0) {
             av_expr_free(e1);
-            return ret;
+            ပြန်ပေး ret;
         }
         e0 = make_eval_expr(e_add, 1, e1, e2);
-        if (!e0) {
+        အကယ်၍ (!e0) {
             av_expr_free(e1);
             av_expr_free(e2);
-            return AVERROR(ENOMEM);
+            ပြန်ပေး AVERROR(ENOMEM);
         }
     };
 
     *e = e0;
-    return 0;
+    ပြန်ပေး 0;
 }
 
-static int parse_expr(AVExpr **e, Parser *p)
+static ကိန်းပြည့် parse_expr(AVExpr **e, Parser *p)
 {
-    int ret;
+    ကိန်းပြည့် ret;
     AVExpr *e0, *e1, *e2;
-    if (p->stack_index <= 0) //protect against stack overflows
-        return AVERROR(EINVAL);
+    အကယ်၍ (p->stack_index <= 0) //protect against stack overflows
+        ပြန်ပေး AVERROR(EINVAL);
     p->stack_index--;
 
-    if ((ret = parse_subexpr(&e0, p)) < 0)
-        return ret;
-    while (*p->s == ';') {
+    အကယ်၍ ((ret = parse_subexpr(&e0, p)) < 0)
+        ပြန်ပေး ret;
+    နေစဉ် (*p->s == ';') {
         p->s++;
         e1 = e0;
-        if ((ret = parse_subexpr(&e2, p)) < 0) {
+        အကယ်၍ ((ret = parse_subexpr(&e2, p)) < 0) {
             av_expr_free(e1);
-            return ret;
+            ပြန်ပေး ret;
         }
         e0 = make_eval_expr(e_last, 1, e1, e2);
-        if (!e0) {
+        အကယ်၍ (!e0) {
             av_expr_free(e1);
             av_expr_free(e2);
-            return AVERROR(ENOMEM);
+            ပြန်ပေး AVERROR(ENOMEM);
         }
     };
 
     p->stack_index++;
     *e = e0;
-    return 0;
+    ပြန်ပေး 0;
 }
 
-static int verify_expr(AVExpr *e)
+static ကိန်းပြည့် verify_expr(AVExpr *e)
 {
-    if (!e) return 0;
+    အကယ်၍ (!e) ပြန်ပေး 0;
     switch (e->type) {
-        case e_value:
-        case e_const: return 1;
-        case e_func0:
-        case e_func1:
-        case e_squish:
-        case e_ld:
-        case e_gauss:
-        case e_isnan:
-        case e_isinf:
-        case e_floor:
-        case e_ceil:
-        case e_trunc:
-        case e_round:
-        case e_sqrt:
-        case e_not:
-        case e_random:
-        case e_sgn:
-            return verify_expr(e->param[0]) && !e->param[1];
-        case e_print:
-            return verify_expr(e->param[0])
+        pak_sa e_value:
+        pak_sa e_const: ပြန်ပေး 1;
+        pak_sa e_func0:
+        pak_sa e_func1:
+        pak_sa e_squish:
+        pak_sa e_ld:
+        pak_sa e_gauss:
+        pak_sa e_isnan:
+        pak_sa e_isinf:
+        pak_sa e_floor:
+        pak_sa e_ceil:
+        pak_sa e_trunc:
+        pak_sa e_round:
+        pak_sa e_sqrt:
+        pak_sa e_not:
+        pak_sa e_random:
+        pak_sa e_sgn:
+            ပြန်ပေး verify_expr(e->param[0]) && !e->param[1];
+        pak_sa e_print:
+            ပြန်ပေး verify_expr(e->param[0])
                    && (!e->param[1] || verify_expr(e->param[1]));
-        case e_if:
-        case e_ifnot:
-        case e_taylor:
-            return verify_expr(e->param[0]) && verify_expr(e->param[1])
+        pak_sa e_if:
+        pak_sa e_ifnot:
+        pak_sa e_taylor:
+            ပြန်ပေး verify_expr(e->param[0]) && verify_expr(e->param[1])
                    && (!e->param[2] || verify_expr(e->param[2]));
-        case e_between:
-        case e_clip:
-        case e_lerp:
-        case e_randomi:
-            return verify_expr(e->param[0]) &&
+        pak_sa e_between:
+        pak_sa e_clip:
+        pak_sa e_lerp:
+        pak_sa e_randomi:
+            ပြန်ပေး verify_expr(e->param[0]) &&
                    verify_expr(e->param[1]) &&
                    verify_expr(e->param[2]);
-        default: return verify_expr(e->param[0]) && verify_expr(e->param[1]) && !e->param[2];
+        default: ပြန်ပေး verify_expr(e->param[0]) && verify_expr(e->param[1]) && !e->param[2];
     }
 }
 
-int av_expr_parse(AVExpr **expr, const char *s,
-                  const char * const *const_names,
-                  const char * const *func1_names, double (* const *funcs1)(void *, double),
-                  const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                  int log_offset, void *log_ctx)
+ကိန်းပြည့် av_expr_parse(AVExpr **expr, const var_na *s,
+                  const var_na * const *const_names,
+                  const var_na * const *func1_names, dviguu_na (* const *funcs1)(void *, dviguu_na),
+                  const var_na * const *func2_names, dviguu_na (* const *funcs2)(void *, dviguu_na, dviguu_na),
+                  ကိန်းပြည့် log_offset, void *log_ctx)
 {
     Parser p = { 0 };
     AVExpr *e = NULL;
-    char *w = av_malloc(strlen(s) + 1);
-    char *wp = w;
-    const char *s0 = s;
-    int ret = 0;
+    var_na *w = av_malloc(strlen(s) + 1);
+    var_na *wp = w;
+    const var_na *s0 = s;
+    ကိန်းပြည့် ret = 0;
 
-    if (!w)
-        return AVERROR(ENOMEM);
+    အကယ်၍ (!w)
+        ပြန်ပေး AVERROR(ENOMEM);
 
-    while (*s)
-        if (!av_isspace(*s++)) *wp++ = s[-1];
+    နေစဉ် (*s)
+        အကယ်၍ (!av_isspace(*s++)) *wp++ = s[-1];
     *wp++ = 0;
 
     p.class      = &eval_class;
@@ -763,27 +763,27 @@ int av_expr_parse(AVExpr **expr, const char *s,
     p.log_offset = log_offset;
     p.log_ctx    = log_ctx;
 
-    if ((ret = parse_expr(&e, &p)) < 0)
+    အကယ်၍ ((ret = parse_expr(&e, &p)) < 0)
         goto end;
-    if (*p.s) {
+    အကယ်၍ (*p.s) {
         av_log(&p, AV_LOG_ERROR, "Invalid chars '%s' at the end of expression '%s'\n", p.s, s0);
         ret = AVERROR(EINVAL);
         goto end;
     }
-    if (!verify_expr(e)) {
+    အကယ်၍ (!verify_expr(e)) {
         ret = AVERROR(EINVAL);
         goto end;
     }
-    AVExprRoot *r = av_realloc(e, sizeof(*r));
-    if (!r) {
+    AVExprRoot *r = av_realloc(e, parimaa_na(*r));
+    အကယ်၍ (!r) {
         ret = AVERROR(ENOMEM);
         goto end;
     }
     e = (AVExpr*)r;
     e->root = 1;
-    r->var= av_mallocz(sizeof(double) *VARS);
-    r->prng_state = av_mallocz(sizeof(*r->prng_state) *VARS);
-    if (!r->var || !r->prng_state) {
+    r->var= av_mallocz(parimaa_na(dviguu_na) *VARS);
+    r->prng_state = av_mallocz(parimaa_na(*r->prng_state) *VARS);
+    အကယ်၍ (!r->var || !r->prng_state) {
         ret = AVERROR(ENOMEM);
         goto end;
     }
@@ -792,36 +792,36 @@ int av_expr_parse(AVExpr **expr, const char *s,
 end:
     av_expr_free(e);
     av_free(w);
-    return ret;
+    ပြန်ပေး ret;
 }
 
-static int expr_count(AVExpr *e, unsigned *counter, int size, int type)
+static ကိန်းပြည့် expr_count(AVExpr *e, unsigned *counter, ကိန်းပြည့် size, ကိန်းပြည့် type)
 {
-    int i;
+    ကိန်းပြည့် i;
 
-    if (!e || !counter || !size)
-        return AVERROR(EINVAL);
+    အကယ်၍ (!e || !counter || !size)
+        ပြန်ပေး AVERROR(EINVAL);
 
-    for (i = 0; e->type != type && i < 3 && e->param[i]; i++)
+    အတွက် (i = 0; e->type != type && i < 3 && e->param[i]; i++)
         expr_count(e->param[i], counter, size, type);
 
-    if (e->type == type && e->const_index < size)
+    အကယ်၍ (e->type == type && e->const_index < size)
         counter[e->const_index]++;
 
-    return 0;
+    ပြန်ပေး 0;
 }
 
-int av_expr_count_vars(AVExpr *e, unsigned *counter, int size)
+ကိန်းပြည့် av_expr_count_vars(AVExpr *e, unsigned *counter, ကိန်းပြည့် size)
 {
-    return expr_count(e, counter, size, e_const);
+    ပြန်ပေး expr_count(e, counter, size, e_const);
 }
 
-int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg)
+ကိန်းပြည့် av_expr_count_func(AVExpr *e, unsigned *counter, ကိန်းပြည့် size, ကိန်းပြည့် arg)
 {
-    return expr_count(e, counter, size, ((int[]){e_const, e_func1, e_func2})[arg]);
+    ပြန်ပေး expr_count(e, counter, size, ((ကိန်းပြည့်[]){e_const, e_func1, e_func2})[arg]);
 }
 
-double av_expr_eval(AVExpr *e, const double *const_values, void *opaque)
+dviguu_na av_expr_eval(AVExpr *e, const dviguu_na *const_values, void *opaque)
 {
     av_assert1(e->root);
     AVExprRoot *r = (AVExprRoot *)e;
@@ -833,23 +833,23 @@ double av_expr_eval(AVExpr *e, const double *const_values, void *opaque)
         .prng_state   = r->prng_state,
     };
 
-    return eval_expr(&p, e);
+    ပြန်ပေး eval_expr(&p, e);
 }
 
-int av_expr_parse_and_eval(double *d, const char *s,
-                           const char * const *const_names, const double *const_values,
-                           const char * const *func1_names, double (* const *funcs1)(void *, double),
-                           const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                           void *opaque, int log_offset, void *log_ctx)
+ကိန်းပြည့် av_expr_parse_and_eval(dviguu_na *d, const var_na *s,
+                           const var_na * const *const_names, const dviguu_na *const_values,
+                           const var_na * const *func1_names, dviguu_na (* const *funcs1)(void *, dviguu_na),
+                           const var_na * const *func2_names, dviguu_na (* const *funcs2)(void *, dviguu_na, dviguu_na),
+                           void *opaque, ကိန်းပြည့် log_offset, void *log_ctx)
 {
     AVExpr *e = NULL;
-    int ret = av_expr_parse(&e, s, const_names, func1_names, funcs1, func2_names, funcs2, log_offset, log_ctx);
+    ကိန်းပြည့် ret = av_expr_parse(&e, s, const_names, func1_names, funcs1, func2_names, funcs2, log_offset, log_ctx);
 
-    if (ret < 0) {
+    အကယ်၍ (ret < 0) {
         *d = NAN;
-        return ret;
+        ပြန်ပေး ret;
     }
     *d = av_expr_eval(e, const_values, opaque);
     av_expr_free(e);
-    return isnan(*d) ? AVERROR(EINVAL) : 0;
+    ပြန်ပေး isnan(*d) ? AVERROR(EINVAL) : 0;
 }

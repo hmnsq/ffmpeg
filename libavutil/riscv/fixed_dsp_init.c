@@ -27,26 +27,26 @@
 
 void ff_vector_fmul_window_scaled_rvv(int16_t *dst, const int32_t *src0,
                                       const int32_t *src1, const int32_t *win,
-                                      int len, uint8_t bits);
+                                      ကိန်းပြည့် len, uint8_t bits);
 void ff_vector_fmul_window_fixed_rvv(int32_t *dst, const int32_t *src0,
                                      const int32_t *src1, const int32_t *win,
-                                     int len);
-void ff_vector_fmul_fixed_rvv(int *dst, const int *src0, const int *src1,
-                              int len);
-void ff_vector_fmul_reverse_fixed_rvv(int *dst, const int *src0,
-                                      const int *src1, int len);
-void ff_vector_fmul_add_fixed_rvv(int *dst, const int *src0, const int *src1,
-                                  const int *src2, int len);
-int ff_scalarproduct_fixed_rvv(const int *v1, const int *v2, int len);
-void ff_butterflies_fixed_rvv(int *v1, int *v2, int len);
+                                     ကိန်းပြည့် len);
+void ff_vector_fmul_fixed_rvv(ကိန်းပြည့် *dst, const ကိန်းပြည့် *src0, const ကိန်းပြည့် *src1,
+                              ကိန်းပြည့် len);
+void ff_vector_fmul_reverse_fixed_rvv(ကိန်းပြည့် *dst, const ကိန်းပြည့် *src0,
+                                      const ကိန်းပြည့် *src1, ကိန်းပြည့် len);
+void ff_vector_fmul_add_fixed_rvv(ကိန်းပြည့် *dst, const ကိန်းပြည့် *src0, const ကိန်းပြည့် *src1,
+                                  const ကိန်းပြည့် *src2, ကိန်းပြည့် len);
+ကိန်းပြည့် ff_scalarproduct_fixed_rvv(const ကိန်းပြည့် *v1, const ကိန်းပြည့် *v2, ကိန်းပြည့် len);
+void ff_butterflies_fixed_rvv(ကိန်းပြည့် *v1, ကိန်းပြည့် *v2, ကိန်းပြည့် len);
 
 av_cold void ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#အကယ်၍ HAVE_RVV
+    ကိန်းပြည့် flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVV_I32) && (flags & AV_CPU_FLAG_RVB)) {
-        if (flags & AV_CPU_FLAG_RVV_I64) {
+    အကယ်၍ ((flags & AV_CPU_FLAG_RVV_I32) && (flags & AV_CPU_FLAG_RVB)) {
+        အကယ်၍ (flags & AV_CPU_FLAG_RVV_I64) {
             fdsp->vector_fmul_window_scaled = ff_vector_fmul_window_scaled_rvv;
             fdsp->vector_fmul_window = ff_vector_fmul_window_fixed_rvv;
         }
@@ -55,7 +55,7 @@ av_cold void ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp)
         fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_fixed_rvv;
         fdsp->vector_fmul_add = ff_vector_fmul_add_fixed_rvv;
 
-        if (flags & AV_CPU_FLAG_RVV_I64)
+        အကယ်၍ (flags & AV_CPU_FLAG_RVV_I64)
             fdsp->scalarproduct_fixed = ff_scalarproduct_fixed_rvv;
 
         fdsp->butterflies_fixed = ff_butterflies_fixed_rvv;

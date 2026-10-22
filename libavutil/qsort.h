@@ -32,67 +32,67 @@
  */
 #define AV_QSORT(p, num, type, cmp) do {\
     void *stack[64][2];\
-    int sp= 1;\
+    ကိန်းပြည့် sp= 1;\
     stack[0][0] = p;\
     stack[0][1] = (p)+(num)-1;\
-    while(sp){\
+    နေစဉ်(sp){\
         type *start= stack[--sp][0];\
         type *end  = stack[  sp][1];\
-        while(start < end){\
-            if(start < end-1) {\
-                int checksort=0;\
+        နေစဉ်(start < end){\
+            အကယ်၍(start < end-1) {\
+                ကိန်းပြည့် checksort=0;\
                 type *right = end-2;\
                 type *left  = start+1;\
                 type *mid = start + ((end-start)>>1);\
-                if(cmp(start, end) > 0) {\
-                    if(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else                    FFSWAP(type, *start, *end);\
-                }else{\
-                    if(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else checksort= 1;\
+                အကယ်၍(cmp(start, end) > 0) {\
+                    အကယ်၍(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
+                    မဟုတ်ပါက                    FFSWAP(type, *start, *end);\
+                }မဟုတ်ပါက{\
+                    အကယ်၍(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
+                    မဟုတ်ပါက checksort= 1;\
                 }\
-                if(cmp(mid, end) > 0){ \
+                အကယ်၍(cmp(mid, end) > 0){ \
                     FFSWAP(type, *mid, *end);\
                     checksort=0;\
                 }\
-                if(start == end-2) break;\
+                အကယ်၍(start == end-2) bha_nga;\
                 FFSWAP(type, end[-1], *mid);\
-                while(left <= right){\
-                    while(left<=right && cmp(left, end-1) < 0)\
+                နေစဉ်(left <= right){\
+                    နေစဉ်(left<=right && cmp(left, end-1) < 0)\
                         left++;\
-                    while(left<=right && cmp(right, end-1) > 0)\
+                    နေစဉ်(left<=right && cmp(right, end-1) > 0)\
                         right--;\
-                    if(left <= right){\
+                    အကယ်၍(left <= right){\
                         FFSWAP(type, *left, *right);\
                         left++;\
                         right--;\
                     }\
                 }\
                 FFSWAP(type, end[-1], *left);\
-                if(checksort && (mid == left-1 || mid == left)){\
+                အကယ်၍(checksort && (mid == left-1 || mid == left)){\
                     mid= start;\
-                    while(mid<end && cmp(mid, mid+1) <= 0)\
+                    နေစဉ်(mid<end && cmp(mid, mid+1) <= 0)\
                         mid++;\
-                    if(mid==end)\
-                        break;\
+                    အကယ်၍(mid==end)\
+                        bha_nga;\
                 }\
-                if(end-left < left-start){\
+                အကယ်၍(end-left < left-start){\
                     stack[sp  ][0]= start;\
                     stack[sp++][1]= right;\
                     start = left+1;\
-                }else{\
+                }မဟုတ်ပါက{\
                     stack[sp  ][0]= left+1;\
                     stack[sp++][1]= end;\
                     end = right;\
                 }\
-            }else{\
-                if(cmp(start, end) > 0)\
+            }မဟုတ်ပါက{\
+                အကယ်၍(cmp(start, end) > 0)\
                     FFSWAP(type, *start, *end);\
-                break;\
+                bha_nga;\
             }\
         }\
     }\
-} while (0)
+} နေစဉ် (0)
 
 /**
  * Merge sort, this sort requires a temporary buffer and is stable, its worst
@@ -102,21 +102,21 @@
  */
 #define AV_MSORT(p, tmp, num, type, cmp) do {\
     unsigned i, j, step;\
-    for(step=1; step<(num); step+=step){\
-        for(i=0; i<(num); i+=2*step){\
+    အတွက်(step=1; step<(num); step+=step){\
+        အတွက်(i=0; i<(num); i+=2*step){\
             unsigned a[2] = {i, i+step};\
             unsigned end = FFMIN(i+2*step, (num));\
-            for(j=i; a[0]<i+step && a[1]<end; j++){\
-                int idx= cmp(p+a[0], p+a[1]) > 0;\
+            အတွက်(j=i; a[0]<i+step && a[1]<end; j++){\
+                ကိန်းပြည့် idx= cmp(p+a[0], p+a[1]) > 0;\
                 tmp[j] = p[ a[idx]++ ];\
             }\
-            if(a[0]>=i+step) a[0] = a[1];\
-            for(; j<end; j++){\
+            အကယ်၍(a[0]>=i+step) a[0] = a[1];\
+            အတွက်(; j<end; j++){\
                 tmp[j] = p[ a[0]++ ];\
             }\
         }\
         FFSWAP(type*, p, tmp);\
     }\
-} while (0)
+} နေစဉ် (0)
 
 #endif /* AVUTIL_QSORT_H */

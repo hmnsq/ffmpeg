@@ -25,18 +25,18 @@
 #include <dlfcn.h>
 
 #define KPERF_LIST                                             \
-    F(int, kpc_get_counting, void)                             \
-    F(int, kpc_force_all_ctrs_set, int)                        \
-    F(int, kpc_set_counting, uint32_t)                         \
-    F(int, kpc_set_thread_counting, uint32_t)                  \
-    F(int, kpc_set_config, uint32_t, void *)                   \
-    F(int, kpc_get_config, uint32_t, void *)                   \
-    F(int, kpc_set_period, uint32_t, void *)                   \
-    F(int, kpc_get_period, uint32_t, void *)                   \
+    F(ကိန်းပြည့်, kpc_get_counting, void)                             \
+    F(ကိန်းပြည့်, kpc_force_all_ctrs_set, ကိန်းပြည့်)                        \
+    F(ကိန်းပြည့်, kpc_set_counting, uint32_t)                         \
+    F(ကိန်းပြည့်, kpc_set_thread_counting, uint32_t)                  \
+    F(ကိန်းပြည့်, kpc_set_config, uint32_t, void *)                   \
+    F(ကိန်းပြည့်, kpc_get_config, uint32_t, void *)                   \
+    F(ကိန်းပြည့်, kpc_set_period, uint32_t, void *)                   \
+    F(ကိန်းပြည့်, kpc_get_period, uint32_t, void *)                   \
     F(uint32_t, kpc_get_counter_count, uint32_t)               \
     F(uint32_t, kpc_get_config_count, uint32_t)                \
-    F(int, kperf_sample_get, int *)                            \
-    F(int, kpc_get_thread_counters, int, unsigned int, void *)
+    F(ကိန်းပြည့်, kperf_sample_get, ကိန်းပြည့် *)                            \
+    F(ကိန်းပြည့်, kpc_get_thread_counters, ကိန်းပြည့်, unsigned ကိန်းပြည့်, void *)
 
 #define F(ret, name, ...)                                      \
     typedef ret name##proc(__VA_ARGS__);                       \
@@ -109,9 +109,9 @@ uint64_t ff_kperf_cycles(void)
 {
     uint64_t counters[KPC_MAX_COUNTERS];
 
-    if (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
-        return -1;
+    အကယ်၍ (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
+        ပြန်ပေး -1;
     }
 
-    return counters[0];
+    ပြန်ပေး counters[0];
 }

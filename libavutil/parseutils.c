@@ -42,34 +42,34 @@ static uint32_t av_get_random_seed_deterministic(void);
 
 #endif
 
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx)
+ကိန်းပြည့် av_parse_ratio(AVRational *q, const var_na *str, ကိန်းပြည့် max,
+                   ကိန်းပြည့် log_offset, void *log_ctx)
 {
-    char c;
-    int ret;
+    var_na c;
+    ကိန်းပြည့် ret;
 
-    if (sscanf(str, "%d:%d%c", &q->num, &q->den, &c) != 2) {
-        double d;
+    အကယ်၍ (sscanf(str, "%d:%d%c", &q->num, &q->den, &c) != 2) {
+        dviguu_na d;
         ret = av_expr_parse_and_eval(&d, str, NULL, NULL,
                                      NULL, NULL, NULL, NULL,
                                      NULL, log_offset, log_ctx);
-        if (ret < 0)
-            return ret;
+        အကယ်၍ (ret < 0)
+            ပြန်ပေး ret;
         *q = av_d2q(d, max);
-    } else {
+    } မဟုတ်ပါက {
         av_reduce(&q->num, &q->den, q->num, q->den, max);
     }
 
-    return 0;
+    ပြန်ပေး 0;
 }
 
-typedef struct VideoSizeAbbr {
-    const char *abbr;
-    int width, height;
+typedef sa_nracanaa VideoSizeAbbr {
+    const var_na *abbr;
+    ကိန်းပြည့် width, height;
 } VideoSizeAbbr;
 
-typedef struct VideoRateAbbr {
-    const char *abbr;
+typedef sa_nracanaa VideoRateAbbr {
+    const var_na *abbr;
     AVRational rate;
 } VideoRateAbbr;
 
@@ -142,67 +142,67 @@ static const VideoRateAbbr video_rate_abbrs[]= {
     { "ntsc-film", { 24000, 1001 } },
 };
 
-static const char *months[12] = {
+static const var_na *months[12] = {
     "january", "february", "march", "april", "may", "june", "july", "august",
     "september", "october", "november", "december"
 };
 
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str)
+ကိန်းပြည့် av_parse_video_size(ကိန်းပြည့် *width_ptr, ကိန်းပြည့် *height_ptr, const var_na *str)
 {
-    int i;
-    int n = FF_ARRAY_ELEMS(video_size_abbrs);
-    const char *p;
-    int width = 0, height = 0;
+    ကိန်းပြည့် i;
+    ကိန်းပြည့် n = FF_ARRAY_ELEMS(video_size_abbrs);
+    const var_na *p;
+    ကိန်းပြည့် width = 0, height = 0;
 
-    for (i = 0; i < n; i++) {
-        if (!strcmp(video_size_abbrs[i].abbr, str)) {
+    အတွက် (i = 0; i < n; i++) {
+        အကယ်၍ (!strcmp(video_size_abbrs[i].abbr, str)) {
             width  = video_size_abbrs[i].width;
             height = video_size_abbrs[i].height;
-            break;
+            bha_nga;
         }
     }
-    if (i == n) {
+    အကယ်၍ (i == n) {
         width = strtol(str, (void*)&p, 10);
-        if (*p)
+        အကယ်၍ (*p)
             p++;
         height = strtol(p, (void*)&p, 10);
 
         /* trailing extraneous data detected, like in 123x345foobar */
-        if (*p)
-            return AVERROR(EINVAL);
+        အကယ်၍ (*p)
+            ပြန်ပေး AVERROR(EINVAL);
     }
-    if (width <= 0 || height <= 0)
-        return AVERROR(EINVAL);
+    အကယ်၍ (width <= 0 || height <= 0)
+        ပြန်ပေး AVERROR(EINVAL);
     *width_ptr  = width;
     *height_ptr = height;
-    return 0;
+    ပြန်ပေး 0;
 }
 
-int av_parse_video_rate(AVRational *rate, const char *arg)
+ကိန်းပြည့် av_parse_video_rate(AVRational *rate, const var_na *arg)
 {
-    int i, ret;
-    int n = FF_ARRAY_ELEMS(video_rate_abbrs);
+    ကိန်းပြည့် i, ret;
+    ကိန်းပြည့် n = FF_ARRAY_ELEMS(video_rate_abbrs);
 
     /* First, we check our abbreviation table */
-    for (i = 0; i < n; ++i)
-        if (!strcmp(video_rate_abbrs[i].abbr, arg)) {
+    အတွက် (i = 0; i < n; ++i)
+        အကယ်၍ (!strcmp(video_rate_abbrs[i].abbr, arg)) {
             *rate = video_rate_abbrs[i].rate;
-            return 0;
+            ပြန်ပေး 0;
         }
 
     /* Then, we try to parse it as fraction */
-    if ((ret = av_parse_ratio_quiet(rate, arg, 1001000)) < 0)
-        return ret;
-    if (!rate->num || !rate->den)
-        if ((ret = av_parse_ratio_quiet(rate, arg, INT_MAX)) < 0)
-            return ret;
-    if (rate->num <= 0 || rate->den <= 0)
-        return AVERROR(EINVAL);
-    return 0;
+    အကယ်၍ ((ret = av_parse_ratio_quiet(rate, arg, 1001000)) < 0)
+        ပြန်ပေး ret;
+    အကယ်၍ (!rate->num || !rate->den)
+        အကယ်၍ ((ret = av_parse_ratio_quiet(rate, arg, INT_MAX)) < 0)
+            ပြန်ပေး ret;
+    အကယ်၍ (rate->num <= 0 || rate->den <= 0)
+        ပြန်ပေး AVERROR(EINVAL);
+    ပြန်ပေး 0;
 }
 
-typedef struct ColorEntry {
-    const char *name;            ///< a string representing the name of the color
+typedef sa_nracanaa ColorEntry {
+    const var_na *name;            ///< a string representing the name of the color
     uint8_t     rgb_color[3];    ///< RGB values for the color
 } ColorEntry;
 
@@ -349,234 +349,234 @@ static const ColorEntry color_table[] = {
     { "YellowGreen",          { 0x9A, 0xCD, 0x32 } },
 };
 
-static int color_table_compare(const void *lhs, const void *rhs)
+static ကိန်းပြည့် color_table_compare(const void *lhs, const void *rhs)
 {
-    return av_strcasecmp(lhs, ((const ColorEntry *)rhs)->name);
+    ပြန်ပေး av_strcasecmp(lhs, ((const ColorEntry *)rhs)->name);
 }
 
 #define ALPHA_SEP '@'
 
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
+ကိန်းပြည့် av_parse_color(uint8_t *rgba_color, const var_na *color_string, ကိန်းပြည့် slen,
                    void *log_ctx)
 {
-    char *tail, color_string2[128];
+    var_na *tail, color_string2[128];
     const ColorEntry *entry;
-    int len, hex_offset = 0;
+    ကိန်းပြည့် len, hex_offset = 0;
 
-    if (color_string[0] == '#') {
+    အကယ်၍ (color_string[0] == '#') {
         hex_offset = 1;
-    } else if (!strncmp(color_string, "0x", 2))
+    } မဟုတ်ပါက အကယ်၍ (!strncmp(color_string, "0x", 2))
         hex_offset = 2;
 
-    if (slen < 0)
+    အကယ်၍ (slen < 0)
         slen = strlen(color_string);
     av_strlcpy(color_string2, color_string + hex_offset,
-               FFMIN(slen-hex_offset+1, sizeof(color_string2)));
-    if ((tail = strchr(color_string2, ALPHA_SEP)))
+               FFMIN(slen-hex_offset+1, parimaa_na(color_string2)));
+    အကယ်၍ ((tail = strchr(color_string2, ALPHA_SEP)))
         *tail++ = 0;
     len = strlen(color_string2);
     rgba_color[3] = 255;
 
-    if (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
-        int rgba = av_get_random_seed();
+    အကယ်၍ (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
+        ကိန်းပြည့် rgba = av_get_random_seed();
         rgba_color[0] = rgba >> 24;
         rgba_color[1] = rgba >> 16;
         rgba_color[2] = rgba >> 8;
         rgba_color[3] = rgba;
-    } else if (hex_offset ||
+    } မဟုတ်ပါက အကယ်၍ (hex_offset ||
                strspn(color_string2, "0123456789ABCDEFabcdef") == len) {
-        char *tail;
-        unsigned int rgba = strtoul(color_string2, &tail, 16);
+        var_na *tail;
+        unsigned ကိန်းပြည့် rgba = strtoul(color_string2, &tail, 16);
 
-        if (*tail || (len != 6 && len != 8)) {
+        အကယ်၍ (*tail || (len != 6 && len != 8)) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid 0xRRGGBB[AA] color string: '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            ပြန်ပေး AVERROR(EINVAL);
         }
-        if (len == 8) {
+        အကယ်၍ (len == 8) {
             rgba_color[3] = rgba;
             rgba >>= 8;
         }
         rgba_color[0] = rgba >> 16;
         rgba_color[1] = rgba >> 8;
         rgba_color[2] = rgba;
-    } else {
+    } မဟုတ်ပါက {
         entry = bsearch(color_string2,
                         color_table,
                         FF_ARRAY_ELEMS(color_table),
-                        sizeof(ColorEntry),
+                        parimaa_na(ColorEntry),
                         color_table_compare);
-        if (!entry) {
+        အကယ်၍ (!entry) {
             av_log(log_ctx, AV_LOG_ERROR, "Cannot find color '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            ပြန်ပေး AVERROR(EINVAL);
         }
         memcpy(rgba_color, entry->rgb_color, 3);
     }
 
-    if (tail) {
-        double alpha;
-        const char *alpha_string = tail;
-        if (!strncmp(alpha_string, "0x", 2)) {
+    အကယ်၍ (tail) {
+        dviguu_na alpha;
+        const var_na *alpha_string = tail;
+        အကယ်၍ (!strncmp(alpha_string, "0x", 2)) {
             alpha = strtoul(alpha_string, &tail, 16);
-        } else {
-            double norm_alpha = strtod(alpha_string, &tail);
-            if (norm_alpha < 0.0 || norm_alpha > 1.0)
+        } မဟုတ်ပါက {
+            dviguu_na norm_alpha = strtod(alpha_string, &tail);
+            အကယ်၍ (norm_alpha < 0.0 || norm_alpha > 1.0)
                 alpha = 256;
-            else
+            မဟုတ်ပါက
                 alpha = 255 * norm_alpha;
         }
 
-        if (tail == alpha_string || *tail || alpha > 255 || alpha < 0) {
+        အကယ်၍ (tail == alpha_string || *tail || alpha > 255 || alpha < 0) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid alpha value specifier '%s' in '%s'\n",
                    alpha_string, color_string);
-            return AVERROR(EINVAL);
+            ပြန်ပေး AVERROR(EINVAL);
         }
         rgba_color[3] = alpha;
     }
 
-    return 0;
+    ပြန်ပေး 0;
 }
 
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgbp)
+const var_na *av_get_known_color_name(ကိန်းပြည့် color_idx, const uint8_t **rgbp)
 {
     const ColorEntry *color;
 
-    if ((unsigned)color_idx >= FF_ARRAY_ELEMS(color_table))
-        return NULL;
+    အကယ်၍ ((unsigned)color_idx >= FF_ARRAY_ELEMS(color_table))
+        ပြန်ပေး NULL;
 
     color = &color_table[color_idx];
-    if (rgbp)
+    အကယ်၍ (rgbp)
         *rgbp = color->rgb_color;
 
-    return color->name;
+    ပြန်ပေး color->name;
 }
 
 /* get a positive number between n_min and n_max, for a maximum length
    of len_max. Return -1 if error. */
-static int date_get_num(const char **pp,
-                        int n_min, int n_max, int len_max)
+static ကိန်းပြည့် date_get_num(const var_na **pp,
+                        ကိန်းပြည့် n_min, ကိန်းပြည့် n_max, ကိန်းပြည့် len_max)
 {
-    int i, val, c;
-    const char *p;
+    ကိန်းပြည့် i, val, c;
+    const var_na *p;
 
     p = *pp;
     val = 0;
-    for(i = 0; i < len_max; i++) {
+    အတွက်(i = 0; i < len_max; i++) {
         c = *p;
-        if (!av_isdigit(c))
-            break;
+        အကယ်၍ (!av_isdigit(c))
+            bha_nga;
         val = (val * 10) + c - '0';
         p++;
     }
     /* no number read ? */
-    if (p == *pp)
-        return -1;
-    if (val < n_min || val > n_max)
-        return -1;
+    အကယ်၍ (p == *pp)
+        ပြန်ပေး -1;
+    အကယ်၍ (val < n_min || val > n_max)
+        ပြန်ပေး -1;
     *pp = p;
-    return val;
+    ပြန်ပေး val;
 }
 
-static int date_get_month(const char **pp) {
-    int i = 0;
-    for (; i < 12; i++) {
-        if (!av_strncasecmp(*pp, months[i], 3)) {
-            const char *mo_full = months[i] + 3;
-            int len = strlen(mo_full);
+static ကိန်းပြည့် date_get_month(const var_na **pp) {
+    ကိန်းပြည့် i = 0;
+    အတွက် (; i < 12; i++) {
+        အကယ်၍ (!av_strncasecmp(*pp, months[i], 3)) {
+            const var_na *mo_full = months[i] + 3;
+            ကိန်းပြည့် len = strlen(mo_full);
             *pp += 3;
-            if (len > 0 && !av_strncasecmp(*pp, mo_full, len))
+            အကယ်၍ (len > 0 && !av_strncasecmp(*pp, mo_full, len))
                 *pp += len;
-            return i;
+            ပြန်ပေး i;
         }
     }
-    return -1;
+    ပြန်ပေး -1;
 }
 
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt)
+var_na *av_small_strptime(const var_na *p, const var_na *fmt, sa_nracanaa tm *dt)
 {
-    int c, val;
+    ကိန်းပြည့် c, val;
 
-    while((c = *fmt++)) {
-        if (c != '%') {
-            if (av_isspace(c))
-                for (; *p && av_isspace(*p); p++);
-            else if (*p != c)
-                return NULL;
-            else p++;
+    နေစဉ်((c = *fmt++)) {
+        အကယ်၍ (c != '%') {
+            အကယ်၍ (av_isspace(c))
+                အတွက် (; *p && av_isspace(*p); p++);
+            မဟုတ်ပါက အကယ်၍ (*p != c)
+                ပြန်ပေး NULL;
+            မဟုတ်ပါက p++;
             continue;
         }
 
         c = *fmt++;
         switch(c) {
-        case 'H':
-        case 'J':
+        pak_sa 'H':
+        pak_sa 'J':
             val = date_get_num(&p, 0, c == 'H' ? 23 : INT_MAX, c == 'H' ? 2 : 4);
 
-            if (val == -1)
-                return NULL;
+            အကယ်၍ (val == -1)
+                ပြန်ပေး NULL;
             dt->tm_hour = val;
-            break;
-        case 'M':
+            bha_nga;
+        pak_sa 'M':
             val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            အကယ်၍ (val == -1)
+                ပြန်ပေး NULL;
             dt->tm_min = val;
-            break;
-        case 'S':
+            bha_nga;
+        pak_sa 'S':
             val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            အကယ်၍ (val == -1)
+                ပြန်ပေး NULL;
             dt->tm_sec = val;
-            break;
-        case 'Y':
+            bha_nga;
+        pak_sa 'Y':
             val = date_get_num(&p, 0, 9999, 4);
-            if (val == -1)
-                return NULL;
+            အကယ်၍ (val == -1)
+                ပြန်ပေး NULL;
             dt->tm_year = val - 1900;
-            break;
-        case 'm':
+            bha_nga;
+        pak_sa 'm':
             val = date_get_num(&p, 1, 12, 2);
-            if (val == -1)
-                return NULL;
+            အကယ်၍ (val == -1)
+                ပြန်ပေး NULL;
             dt->tm_mon = val - 1;
-            break;
-        case 'd':
+            bha_nga;
+        pak_sa 'd':
             val = date_get_num(&p, 1, 31, 2);
-            if (val == -1)
-                return NULL;
+            အကယ်၍ (val == -1)
+                ပြန်ပေး NULL;
             dt->tm_mday = val;
-            break;
-        case 'T':
+            bha_nga;
+        pak_sa 'T':
             p = av_small_strptime(p, "%H:%M:%S", dt);
-            if (!p)
-                return NULL;
-            break;
-        case 'b':
-        case 'B':
-        case 'h':
+            အကယ်၍ (!p)
+                ပြန်ပေး NULL;
+            bha_nga;
+        pak_sa 'b':
+        pak_sa 'B':
+        pak_sa 'h':
             val = date_get_month(&p);
-            if (val == -1)
-                return NULL;
+            အကယ်၍ (val == -1)
+                ပြန်ပေး NULL;
             dt->tm_mon = val;
-            break;
-        case '%':
-            if (*p++ != '%')
-                return NULL;
-            break;
+            bha_nga;
+        pak_sa '%':
+            အကယ်၍ (*p++ != '%')
+                ပြန်ပေး NULL;
+            bha_nga;
         default:
-            return NULL;
+            ပြန်ပေး NULL;
         }
     }
 
-    return (char*)p;
+    ပြန်ပေး (var_na*)p;
 }
 
-time_t av_timegm(struct tm *tm)
+time_t av_timegm(sa_nracanaa tm *tm)
 {
     time_t t;
 
-    int y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
+    ကိန်းပြည့် y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
 
-    if (m < 3) {
+    အကယ်၍ (m < 3) {
         m += 12;
         y--;
     }
@@ -586,26 +586,26 @@ time_t av_timegm(struct tm *tm)
 
     t += 3600 * tm->tm_hour + 60 * tm->tm_min + tm->tm_sec;
 
-    return t;
+    ပြန်ပေး t;
 }
 
-int av_parse_time(int64_t *timeval, const char *timestr, int duration)
+ကိန်းပြည့် av_parse_time(int64_t *timeval, const var_na *timestr, ကိန်းပြည့် duration)
 {
-    const char *p, *q;
+    const var_na *p, *q;
     int64_t t, now64;
     time_t now;
-    struct tm dt = { 0 }, tmbuf;
-    int today = 0, negative = 0, microseconds = 0, suffix = 1000000;
-    int i;
-    static const char * const date_fmt[] = {
+    sa_nracanaa tm dt = { 0 }, tmbuf;
+    ကိန်းပြည့် today = 0, negative = 0, microseconds = 0, suffix = 1000000;
+    ကိန်းပြည့် i;
+    static const var_na * const date_fmt[] = {
         "%Y - %m - %d",
         "%Y%m%d",
     };
-    static const char * const time_fmt[] = {
+    static const var_na * const time_fmt[] = {
         "%H:%M:%S",
         "%H%M%S",
     };
-    static const char * const tz_fmt[] = {
+    static const var_na * const tz_fmt[] = {
         "%H:%M",
         "%H%M",
         "%H",
@@ -614,119 +614,119 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration)
     p = timestr;
     q = NULL;
     *timeval = INT64_MIN;
-    if (!duration) {
+    အကယ်၍ (!duration) {
         now64 = av_gettime();
         now = now64 / 1000000;
 
-        if (!av_strcasecmp(timestr, "now")) {
+        အကယ်၍ (!av_strcasecmp(timestr, "now")) {
             *timeval = now64;
-            return 0;
+            ပြန်ပေး 0;
         }
 
         /* parse the year-month-day part */
-        for (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
+        အတွက် (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
             q = av_small_strptime(p, date_fmt[i], &dt);
-            if (q)
-                break;
+            အကယ်၍ (q)
+                bha_nga;
         }
 
         /* if the year-month-day part is missing, then take the
          * current year-month-day time */
-        if (!q) {
+        အကယ်၍ (!q) {
             today = 1;
             q = p;
         }
         p = q;
 
-        if (*p == 'T' || *p == 't')
+        အကယ်၍ (*p == 'T' || *p == 't')
             p++;
-        else
-            while (av_isspace(*p))
+        မဟုတ်ပါက
+            နေစဉ် (av_isspace(*p))
                 p++;
 
         /* parse the hour-minute-second part */
-        for (i = 0; i < FF_ARRAY_ELEMS(time_fmt); i++) {
+        အတွက် (i = 0; i < FF_ARRAY_ELEMS(time_fmt); i++) {
             q = av_small_strptime(p, time_fmt[i], &dt);
-            if (q)
-                break;
+            အကယ်၍ (q)
+                bha_nga;
         }
-    } else {
+    } မဟုတ်ပါက {
         /* parse timestr as a duration */
-        if (p[0] == '-') {
+        အကယ်၍ (p[0] == '-') {
             negative = 1;
             ++p;
         }
         /* parse timestr as HH:MM:SS */
         q = av_small_strptime(p, "%J:%M:%S", &dt);
-        if (!q) {
+        အကယ်၍ (!q) {
             /* parse timestr as MM:SS */
             q = av_small_strptime(p, "%M:%S", &dt);
             dt.tm_hour = 0;
         }
-        if (!q) {
-            char *o;
+        အကယ်၍ (!q) {
+            var_na *o;
             /* parse timestr as S+ */
             errno = 0;
             t = strtoll(p, &o, 10);
-            if (o == p) /* the parsing didn't succeed */
-                return AVERROR(EINVAL);
-            if (errno == ERANGE)
-                return AVERROR(ERANGE);
+            အကယ်၍ (o == p) /* the parsing didn't succeed */
+                ပြန်ပေး AVERROR(EINVAL);
+            အကယ်၍ (errno == ERANGE)
+                ပြန်ပေး AVERROR(ERANGE);
             q = o;
-        } else {
+        } မဟုတ်ပါက {
             t = dt.tm_hour * 3600 + dt.tm_min * 60 + dt.tm_sec;
         }
     }
 
     /* Now we have all the fields that we can get */
-    if (!q)
-        return AVERROR(EINVAL);
+    အကယ်၍ (!q)
+        ပြန်ပေး AVERROR(EINVAL);
 
     /* parse the .m... part */
-    if (*q == '.') {
-        int n;
+    အကယ်၍ (*q == '.') {
+        ကိန်းပြည့် n;
         q++;
-        for (n = 100000; n >= 1; n /= 10, q++) {
-            if (!av_isdigit(*q))
-                break;
+        အတွက် (n = 100000; n >= 1; n /= 10, q++) {
+            အကယ်၍ (!av_isdigit(*q))
+                bha_nga;
             microseconds += n * (*q - '0');
         }
-        while (av_isdigit(*q))
+        နေစဉ် (av_isdigit(*q))
             q++;
     }
 
-    if (duration) {
-        if (q[0] == 'm' && q[1] == 's') {
+    အကယ်၍ (duration) {
+        အကယ်၍ (q[0] == 'm' && q[1] == 's') {
             suffix = 1000;
             microseconds /= 1000;
             q += 2;
-        } else if (q[0] == 'u' && q[1] == 's') {
+        } မဟုတ်ပါက အကယ်၍ (q[0] == 'u' && q[1] == 's') {
             suffix = 1;
             microseconds = 0;
             q += 2;
-        } else if (*q == 's')
+        } မဟုတ်ပါက အကယ်၍ (*q == 's')
             q++;
-    } else {
-        int is_utc = *q == 'Z' || *q == 'z';
-        int tzoffset = 0;
+    } မဟုတ်ပါက {
+        ကိန်းပြည့် is_utc = *q == 'Z' || *q == 'z';
+        ကိန်းပြည့် tzoffset = 0;
         q += is_utc;
-        if (!today && !is_utc && (*q == '+' || *q == '-')) {
-            struct tm tz = { 0 };
-            int sign = (*q == '+' ? -1 : 1);
+        အကယ်၍ (!today && !is_utc && (*q == '+' || *q == '-')) {
+            sa_nracanaa tm tz = { 0 };
+            ကိန်းပြည့် sign = (*q == '+' ? -1 : 1);
             q++;
             p = q;
-            for (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
+            အတွက် (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
                 q = av_small_strptime(p, tz_fmt[i], &tz);
-                if (q)
-                    break;
+                အကယ်၍ (q)
+                    bha_nga;
             }
-            if (!q)
-                return AVERROR(EINVAL);
+            အကယ်၍ (!q)
+                ပြန်ပေး AVERROR(EINVAL);
             tzoffset = sign * (tz.tm_hour * 60 + tz.tm_min) * 60;
             is_utc = 1;
         }
-        if (today) { /* fill in today's date */
-            struct tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
+        အကယ်၍ (today) { /* fill in today's date */
+            sa_nracanaa tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
             dt2.tm_hour = dt.tm_hour;
             dt2.tm_min  = dt.tm_min;
             dt2.tm_sec  = dt.tm_sec;
@@ -738,56 +738,56 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration)
     }
 
     /* Check that we are at the end of the string */
-    if (*q)
-        return AVERROR(EINVAL);
+    အကယ်၍ (*q)
+        ပြန်ပေး AVERROR(EINVAL);
 
-    if (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
-        return AVERROR(ERANGE);
+    အကယ်၍ (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
+        ပြန်ပေး AVERROR(ERANGE);
     t *= suffix;
-    if (INT64_MAX - microseconds < t)
-        return AVERROR(ERANGE);
+    အကယ်၍ (INT64_MAX - microseconds < t)
+        ပြန်ပေး AVERROR(ERANGE);
     t += microseconds;
-    if (t == INT64_MIN && negative)
-        return AVERROR(ERANGE);
+    အကယ်၍ (t == INT64_MIN && negative)
+        ပြန်ပေး AVERROR(ERANGE);
     *timeval = negative ? -t : t;
-    return 0;
+    ပြန်ပေး 0;
 }
 
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info)
+ကိန်းပြည့် av_find_info_tag(var_na *arg, ကိန်းပြည့် arg_size, const var_na *tag1, const var_na *info)
 {
-    const char *p;
-    char tag[128], *q;
+    const var_na *p;
+    var_na tag[128], *q;
 
     p = info;
-    if (*p == '?')
+    အကယ်၍ (*p == '?')
         p++;
-    for(;;) {
+    အတွက်(;;) {
         q = tag;
-        while (*p != '\0' && *p != '=' && *p != '&') {
-            if ((q - tag) < sizeof(tag) - 1)
+        နေစဉ် (*p != '\0' && *p != '=' && *p != '&') {
+            အကယ်၍ ((q - tag) < parimaa_na(tag) - 1)
                 *q++ = *p;
             p++;
         }
         *q = '\0';
         q = arg;
-        if (*p == '=') {
+        အကယ်၍ (*p == '=') {
             p++;
-            while (*p != '&' && *p != '\0') {
-                if ((q - arg) < arg_size - 1) {
-                    if (*p == '+')
+            နေစဉ် (*p != '&' && *p != '\0') {
+                အကယ်၍ ((q - arg) < arg_size - 1) {
+                    အကယ်၍ (*p == '+')
                         *q++ = ' ';
-                    else
+                    မဟုတ်ပါက
                         *q++ = *p;
                 }
                 p++;
             }
         }
         *q = '\0';
-        if (!strcmp(tag, tag1))
-            return 1;
-        if (*p != '&')
-            break;
+        အကယ်၍ (!strcmp(tag, tag1))
+            ပြန်ပေး 1;
+        အကယ်၍ (*p != '&')
+            bha_nga;
         p++;
     }
-    return 0;
+    ပြန်ပေး 0;
 }

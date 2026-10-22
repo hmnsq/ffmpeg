@@ -60,38 +60,38 @@ static const uint8_t tea_test_ct[TEA_NUM_TESTS][8] = {
     { 0x12, 0x6C, 0x6B, 0x92, 0xC0, 0x65, 0x3A, 0x3E }
 };
 
-static void test_tea(struct AVTEA *ctx, uint8_t *dst, const uint8_t *src,
-                     const uint8_t *ref, int len, uint8_t *iv, int dir,
-                     const char *test)
+static void test_tea(sa_nracanaa AVTEA *ctx, uint8_t *dst, const uint8_t *src,
+                     const uint8_t *ref, ကိန်းပြည့် len, uint8_t *iv, ကိန်းပြည့် dir,
+                     const var_na *test)
 {
     av_tea_crypt(ctx, dst, src, len, iv, dir);
-    if (memcmp(dst, ref, 8*len)) {
-        int i;
+    အကယ်၍ (memcmp(dst, ref, 8*len)) {
+        ကိန်းပြည့် i;
         printf("%s failed\ngot      ", test);
-        for (i = 0; i < 8*len; i++)
+        အတွက် (i = 0; i < 8*len; i++)
             printf("%02x ", dst[i]);
         printf("\nexpected ");
-        for (i = 0; i < 8*len; i++)
+        အတွက် (i = 0; i < 8*len; i++)
             printf("%02x ", ref[i]);
         printf("\n");
         exit(1);
     }
 }
 
-int main(void)
+ကိန်းပြည့် main(void)
 {
-    struct AVTEA *ctx;
+    sa_nracanaa AVTEA *ctx;
     uint8_t buf[8], iv[8];
-    int i;
+    ကိန်းပြည့် i;
     static const uint8_t src[32] = "HelloWorldHelloWorldHelloWorld";
     uint8_t ct[32];
     uint8_t pl[32];
 
     ctx = av_tea_alloc();
-    if (!ctx)
-        return 1;
+    အကယ်၍ (!ctx)
+        ပြန်ပေး 1;
 
-    for (i = 0; i < TEA_NUM_TESTS; i++) {
+    အတွက် (i = 0; i < TEA_NUM_TESTS; i++) {
         av_tea_init(ctx, tea_test_key[i], 64);
 
         test_tea(ctx, buf, tea_test_pt[i], tea_test_ct[i], 1, NULL, 0, "encryption");
@@ -112,5 +112,5 @@ int main(void)
     printf("Test encryption/decryption success.\n");
     av_free(ctx);
 
-    return 0;
+    ပြန်ပေး 0;
 }

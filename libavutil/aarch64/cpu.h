@@ -37,12 +37,12 @@
 #define have_sme_i16i64(flags) CPUEXT(flags, SME_I16I64)
 #define have_sme2(flags)    CPUEXT(flags, SME2)
 
-#if HAVE_SVE
-int ff_aarch64_sve_length(void);
+#အကယ်၍ HAVE_SVE
+ကိန်းပြည့် ff_aarch64_sve_length(void);
 #endif
 
-#if HAVE_SME
-int ff_aarch64_sme_length(void);
+#အကယ်၍ HAVE_SME
+ကိန်းပြည့် ff_aarch64_sme_length(void);
 #endif
 
 #endif /* AVUTIL_AARCH64_CPU_H */

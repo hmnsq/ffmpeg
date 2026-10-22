@@ -19,7 +19,7 @@
 #include "libavutil/cpu.h"
 #include "libavutil/cpu_internal.h"
 #include "config.h"
-#if defined __linux__ || defined __ANDROID__
+#အကယ်၍ defined __linux__ || defined __ANDROID__
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -28,13 +28,13 @@
 #include "libavutil/avstring.h"
 #endif
 
-#if defined __linux__ || defined __ANDROID__
+#အကယ်၍ defined __linux__ || defined __ANDROID__
 
 #define HWCAP_LOONGSON_CPUCFG (1 << 14)
 
-static int cpucfg_available(void)
+static ကိန်းပြည့် cpucfg_available(void)
 {
-    return ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
+    ပြန်ပေး ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
 }
 
 /* Most toolchains have no CPUCFG support yet */
@@ -51,7 +51,7 @@ static uint32_t read_cpucfg(uint32_t reg)
                 :"r"(reg)
                 :
                 );
-        return __res;
+        ပြန်ပေး __res;
 }
 
 #define LOONGSON_CFG1 0x1
@@ -59,76 +59,76 @@ static uint32_t read_cpucfg(uint32_t reg)
 #define LOONGSON_CFG1_MMI    (1 << 4)
 #define LOONGSON_CFG1_MSA1   (1 << 5)
 
-static int cpu_flags_cpucfg(void)
+static ကိန်းပြည့် cpu_flags_cpucfg(void)
 {
-    int flags = 0;
+    ကိန်းပြည့် flags = 0;
     uint32_t cfg1 = read_cpucfg(LOONGSON_CFG1);
 
-    if (cfg1 & LOONGSON_CFG1_MMI)
+    အကယ်၍ (cfg1 & LOONGSON_CFG1_MMI)
         flags |= AV_CPU_FLAG_MMI;
 
-    if (cfg1 & LOONGSON_CFG1_MSA1)
+    အကယ်၍ (cfg1 & LOONGSON_CFG1_MSA1)
         flags |= AV_CPU_FLAG_MSA;
 
-    return flags;
+    ပြန်ပေး flags;
 }
 
-static int cpu_flags_cpuinfo(void)
+static ကိန်းပြည့် cpu_flags_cpuinfo(void)
 {
     FILE *f = fopen("/proc/cpuinfo", "r");
-    char buf[200];
-    int flags = 0;
+    var_na buf[200];
+    ကိန်းပြည့် flags = 0;
 
-    if (!f)
-        return -1;
+    အကယ်၍ (!f)
+        ပြန်ပေး -1;
 
-    while (fgets(buf, sizeof(buf), f)) {
+    နေစဉ် (fgets(buf, parimaa_na(buf), f)) {
         /* Legacy kernel may not export MMI in ASEs implemented */
-        if (av_strstart(buf, "cpu model", NULL)) {
-            if (strstr(buf, "Loongson-3 "))
+        အကယ်၍ (av_strstart(buf, "cpu model", NULL)) {
+            အကယ်၍ (strstr(buf, "Loongson-3 "))
                 flags |= AV_CPU_FLAG_MMI;
         }
 
-        if (av_strstart(buf, "ASEs implemented", NULL)) {
-            if (strstr(buf, " loongson-mmi"))
+        အကယ်၍ (av_strstart(buf, "ASEs implemented", NULL)) {
+            အကယ်၍ (strstr(buf, " loongson-mmi"))
                 flags |= AV_CPU_FLAG_MMI;
-            if (strstr(buf, " msa"))
+            အကယ်၍ (strstr(buf, " msa"))
                 flags |= AV_CPU_FLAG_MSA;
 
-            break;
+            bha_nga;
         }
     }
     fclose(f);
-    return flags;
+    ပြန်ပေး flags;
 }
 #endif
 
-int ff_get_cpu_flags_mips(void)
+ကိန်းပြည့် ff_get_cpu_flags_mips(void)
 {
-#if defined __linux__ || defined __ANDROID__
-    if (cpucfg_available())
-        return cpu_flags_cpucfg();
-    else
-        return cpu_flags_cpuinfo();
-#else
+#အကယ်၍ defined __linux__ || defined __ANDROID__
+    အကယ်၍ (cpucfg_available())
+        ပြန်ပေး cpu_flags_cpucfg();
+    မဟုတ်ပါက
+        ပြန်ပေး cpu_flags_cpuinfo();
+#မဟုတ်ပါက
     /* Assume no SIMD ASE supported */
-    return 0;
+    ပြန်ပေး 0;
 #endif
 }
 
 size_t ff_get_cpu_max_align_mips(void)
 {
-    int flags = av_get_cpu_flags();
+    ကိန်းပြည့် flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_MSA)
-        return 16;
+    အကယ်၍ (flags & AV_CPU_FLAG_MSA)
+        ပြန်ပေး 16;
 
     /*
      * MMI itself is 64-bit but quad word load & store
      * needs 128-bit align.
      */
-    if (flags & AV_CPU_FLAG_MMI)
-        return 16;
+    အကယ်၍ (flags & AV_CPU_FLAG_MMI)
+        ပြန်ပေး 16;
 
-    return 8;
+    ပြန်ပေး 8;
 }

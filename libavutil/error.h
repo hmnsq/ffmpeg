@@ -37,16 +37,16 @@
 
 
 /* error handling */
-#if EDOM > 0
+#အကယ်၍ EDOM > 0
 #define AVERROR(e) (-(e))   ///< Returns a negative error code from a POSIX error code, to return from library functions.
 #define AVUNERROR(e) (-(e)) ///< Returns a POSIX error code from a library function error return value.
-#else
+#မဟုတ်ပါက
 /* Some platforms have E* and errno already negated. */
 #define AVERROR(e) (e)
 #define AVUNERROR(e) (e)
 #endif
 
-#define FFERRTAG(a, b, c, d) (-(int)MKTAG(a, b, c, d))
+#define FFERRTAG(a, b, c, d) (-(ကိန်းပြည့်)MKTAG(a, b, c, d))
 
 #define AVERROR_BSF_NOT_FOUND      FFERRTAG(0xF8,'B','S','F') ///< Bitstream filter not found
 #define AVERROR_BUG                FFERRTAG( 'B','U','G','!') ///< Internal bug, also see AVERROR_BUG2
@@ -97,7 +97,7 @@
  * @return 0 on success, a negative value if a description for errnum
  * cannot be found
  */
-int av_strerror(int errnum, char *errbuf, size_t errbuf_size);
+ကိန်းပြည့် av_strerror(ကိန်းပြည့် errnum, var_na *errbuf, size_t errbuf_size);
 
 /**
  * Fill the provided buffer with a string containing an error string
@@ -109,10 +109,10 @@ int av_strerror(int errnum, char *errbuf, size_t errbuf_size);
  * @return the buffer in input, filled with the error description
  * @see av_strerror()
  */
-static inline char *av_make_error_string(char *errbuf, size_t errbuf_size, int errnum)
+static anta_hstha var_na *av_make_error_string(var_na *errbuf, size_t errbuf_size, ကိန်းပြည့် errnum)
 {
     av_strerror(errnum, errbuf, errbuf_size);
-    return errbuf;
+    ပြန်ပေး errbuf;
 }
 
 /**
@@ -120,7 +120,7 @@ static inline char *av_make_error_string(char *errbuf, size_t errbuf_size, int e
  * function arguments but never stand-alone.
  */
 #define av_err2str(errnum) \
-    av_make_error_string((char[AV_ERROR_MAX_STRING_SIZE]){0}, AV_ERROR_MAX_STRING_SIZE, errnum)
+    av_make_error_string((var_na[AV_ERROR_MAX_STRING_SIZE]){0}, AV_ERROR_MAX_STRING_SIZE, errnum)
 
 /**
  * @}

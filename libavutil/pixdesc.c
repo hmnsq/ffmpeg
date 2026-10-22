@@ -29,85 +29,85 @@
 #include "intreadwrite.h"
 
 void av_read_image_line2(void *dst,
-                        const uint8_t *data[4], const int linesize[4],
+                        const uint8_t *data[4], const ကိန်းပြည့် linesize[4],
                         const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w,
-                        int read_pal_component,
-                        int dst_element_size)
+                        ကိန်းပြည့် x, ကိန်းပြည့် y, ကိန်းပြည့် c, ကိန်းပြည့် w,
+                        ကိန်းပြည့် read_pal_component,
+                        ကိန်းပြည့် dst_element_size)
 {
     AVComponentDescriptor comp = desc->comp[c];
-    int plane = comp.plane;
-    int depth = comp.depth;
+    ကိန်းပြည့် plane = comp.plane;
+    ကိန်းပြည့် depth = comp.depth;
     unsigned mask  = (1ULL << depth) - 1;
-    int shift = comp.shift;
-    int step  = comp.step;
-    int flags = desc->flags;
+    ကိန်းပြည့် shift = comp.shift;
+    ကိန်းပြည့် step  = comp.step;
+    ကိန်းပြည့် flags = desc->flags;
     uint16_t *dst16 = dst;
     uint32_t *dst32 = dst;
 
-    if (!depth)
-        return;
+    အကယ်၍ (!depth)
+        ပြန်ပေး;
 
-    if (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
-        if (step > 8) {
+    အကယ်၍ (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+        အကယ်၍ (step > 8) {
             // Assume all channels are packed into a 32bit value
             const uint8_t *byte_p = data[plane] + y * linesize[plane];
             const uint32_t *p = (uint32_t *)byte_p;
 
-            while (w--) {
-                int val = AV_RB32(p);
+            နေစဉ် (w--) {
+                ကိန်းပြည့် val = AV_RB32(p);
                 val = (val >> comp.offset) & mask;
-                if (read_pal_component)
+                အကယ်၍ (read_pal_component)
                     val = data[1][4*val + c];
-                if (dst_element_size == 4) *dst32++ = val;
-                else                       *dst16++ = val;
+                အကယ်၍ (dst_element_size == 4) *dst32++ = val;
+                မဟုတ်ပါက                       *dst16++ = val;
                 p++;
             }
-        } else {
-            int skip = x * step + comp.offset;
+        } မဟုတ်ပါက {
+            ကိန်းပြည့် skip = x * step + comp.offset;
             const uint8_t *p = data[plane] + y * linesize[plane] + (skip >> 3);
-            int shift = 8 - depth - (skip & 7);
+            ကိန်းပြည့် shift = 8 - depth - (skip & 7);
 
-            while (w--) {
-                int val = (*p >> shift) & mask;
-                if (read_pal_component)
+            နေစဉ် (w--) {
+                ကိန်းပြည့် val = (*p >> shift) & mask;
+                အကယ်၍ (read_pal_component)
                     val = data[1][4*val + c];
                 shift -= step;
                 p -= shift >> 3;
                 shift &= 7;
-                if (dst_element_size == 4) *dst32++ = val;
-                else                       *dst16++ = val;
+                အကယ်၍ (dst_element_size == 4) *dst32++ = val;
+                မဟုတ်ပါက                       *dst16++ = val;
             }
         }
-    } else {
+    } မဟုတ်ပါက {
         const uint8_t *p = data[plane] + y * linesize[plane] +
                            x * step + comp.offset;
-        int is_8bit = shift + depth <= 8;
-        int is_16bit= shift + depth <=16;
+        ကိန်းပြည့် is_8bit = shift + depth <= 8;
+        ကိန်းပြည့် is_16bit= shift + depth <=16;
 
-        if (is_8bit)
+        အကယ်၍ (is_8bit)
             p += !!(flags & AV_PIX_FMT_FLAG_BE);
 
-        while (w--) {
+        နေစဉ် (w--) {
             unsigned val;
-            if     (is_8bit)  val = *p;
-            else if(is_16bit) val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB16(p) : AV_RL16(p);
-            else              val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB32(p) : AV_RL32(p);
+            အကယ်၍     (is_8bit)  val = *p;
+            မဟုတ်ပါက အကယ်၍(is_16bit) val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB16(p) : AV_RL16(p);
+            မဟုတ်ပါက              val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB32(p) : AV_RL32(p);
             val = (val >> shift) & mask;
-            if (read_pal_component)
+            အကယ်၍ (read_pal_component)
                 val = data[1][4 * val + c];
             p += step;
-            if (dst_element_size == 4) *dst32++ = val;
-            else                       *dst16++ = val;
+            အကယ်၍ (dst_element_size == 4) *dst32++ = val;
+            မဟုတ်ပါက                       *dst16++ = val;
         }
     }
 }
 
 void av_read_image_line(uint16_t *dst,
-                        const uint8_t *data[4], const int linesize[4],
+                        const uint8_t *data[4], const ကိန်းပြည့် linesize[4],
                         const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w,
-                        int read_pal_component)
+                        ကိန်းပြည့် x, ကိန်းပြည့် y, ကိန်းပြည့် c, ကိန်းပြည့် w,
+                        ကိန်းပြည့် read_pal_component)
 {
     av_read_image_line2(dst, data, linesize, desc,x, y, c, w,
                         read_pal_component,
@@ -115,73 +115,73 @@ void av_read_image_line(uint16_t *dst,
 }
 
 void av_write_image_line2(const void *src,
-                         uint8_t *data[4], const int linesize[4],
+                         uint8_t *data[4], const ကိန်းပြည့် linesize[4],
                          const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w, int src_element_size)
+                         ကိန်းပြည့် x, ကိန်းပြည့် y, ကိန်းပြည့် c, ကိန်းပြည့် w, ကိန်းပြည့် src_element_size)
 {
     AVComponentDescriptor comp = desc->comp[c];
-    int plane = comp.plane;
-    int depth = comp.depth;
-    int step  = comp.step;
-    int flags = desc->flags;
+    ကိန်းပြည့် plane = comp.plane;
+    ကိန်းပြည့် depth = comp.depth;
+    ကိန်းပြည့် step  = comp.step;
+    ကိန်းပြည့် flags = desc->flags;
     const uint32_t *src32 = src;
     const uint16_t *src16 = src;
 
-    if (!depth)
-        return;
+    အကယ်၍ (!depth)
+        ပြန်ပေး;
 
-    if (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
-        if (step > 8) {
+    အကယ်၍ (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+        အကယ်၍ (step > 8) {
             // Assume all channels are packed into a 32bit value
             const uint8_t *byte_p = data[plane] + y * linesize[plane];
             uint32_t *p = (uint32_t *)byte_p;
-            int offset = comp.offset;
+            ကိန်းပြည့် offset = comp.offset;
             uint32_t mask  = ((1ULL << depth) - 1) << offset;
 
-            while (w--) {
+            နေစဉ် (w--) {
                 unsigned val = src_element_size == 4 ? *src32++ : *src16++;
                 AV_WB32(p, (AV_RB32(p) & ~mask) | (val << offset));
                 p++;
             }
-        } else {
-            int skip = x * step + comp.offset;
+        } မဟုတ်ပါက {
+            ကိန်းပြည့် skip = x * step + comp.offset;
             uint8_t *p = data[plane] + y * linesize[plane] + (skip >> 3);
-            int shift = 8 - depth - (skip & 7);
+            ကိန်းပြည့် shift = 8 - depth - (skip & 7);
 
-            while (w--) {
+            နေစဉ် (w--) {
                 *p |= (src_element_size == 4 ? *src32++ : *src16++) << shift;
                 shift -= step;
                 p -= shift >> 3;
                 shift &= 7;
             }
         }
-    } else {
-        int shift = comp.shift;
+    } မဟုတ်ပါက {
+        ကိန်းပြည့် shift = comp.shift;
         uint8_t *p = data[plane] + y * linesize[plane] +
                      x * step + comp.offset;
 
-        if (shift + depth <= 8) {
+        အကယ်၍ (shift + depth <= 8) {
             p += !!(flags & AV_PIX_FMT_FLAG_BE);
-            while (w--) {
+            နေစဉ် (w--) {
                 *p |= ((src_element_size == 4 ? *src32++ : *src16++) << shift);
                 p += step;
             }
-        } else {
-            while (w--) {
+        } မဟုတ်ပါက {
+            နေစဉ် (w--) {
                 unsigned s = (src_element_size == 4 ? *src32++ : *src16++);
-                if (shift + depth <= 16) {
-                    if (flags & AV_PIX_FMT_FLAG_BE) {
+                အကယ်၍ (shift + depth <= 16) {
+                    အကယ်၍ (flags & AV_PIX_FMT_FLAG_BE) {
                         uint16_t val = AV_RB16(p) | (s << shift);
                         AV_WB16(p, val);
-                    } else {
+                    } မဟုတ်ပါက {
                         uint16_t val = AV_RL16(p) | (s << shift);
                         AV_WL16(p, val);
                     }
-                } else {
-                    if (flags & AV_PIX_FMT_FLAG_BE) {
+                } မဟုတ်ပါက {
+                    အကယ်၍ (flags & AV_PIX_FMT_FLAG_BE) {
                         uint32_t val = AV_RB32(p) | (s << shift);
                         AV_WB32(p, val);
-                    } else {
+                    } မဟုတ်ပါက {
                         uint32_t val = AV_RL32(p) | (s << shift);
                         AV_WL32(p, val);
                     }
@@ -193,9 +193,9 @@ void av_write_image_line2(const void *src,
 }
 
 void av_write_image_line(const uint16_t *src,
-                         uint8_t *data[4], const int linesize[4],
+                         uint8_t *data[4], const ကိန်းပြည့် linesize[4],
                          const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w)
+                         ကိန်းပြည့် x, ကိန်းပြည့် y, ကိန်းပြည့် c, ကိန်းပြည့် w)
 {
     av_write_image_line2(src, data, linesize, desc, x, y, c, w, 2);
 }
@@ -3297,13 +3297,13 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
     },
 };
 
-static const char * const color_range_names[] = {
+static const var_na * const color_range_names[] = {
     [AVCOL_RANGE_UNSPECIFIED] = "unknown",
     [AVCOL_RANGE_MPEG] = "tv",
     [AVCOL_RANGE_JPEG] = "pc",
 };
 
-static const char * const color_primaries_names[AVCOL_PRI_NB] = {
+static const var_na * const color_primaries_names[AVCOL_PRI_NB] = {
     [AVCOL_PRI_RESERVED0] = "reserved",
     [AVCOL_PRI_BT709] = "bt709",
     [AVCOL_PRI_UNSPECIFIED] = "unknown",
@@ -3320,12 +3320,12 @@ static const char * const color_primaries_names[AVCOL_PRI_NB] = {
     [AVCOL_PRI_EBU3213] = "ebu3213",
 };
 
-static const char * const color_primaries_names_ext[AVCOL_PRI_EXT_NB -
+static const var_na * const color_primaries_names_ext[AVCOL_PRI_EXT_NB -
                                                     AVCOL_PRI_EXT_BASE] = {
     [AVCOL_PRI_V_GAMUT - AVCOL_PRI_EXT_BASE] = "vgamut",
 };
 
-static const char * const color_transfer_names[] = {
+static const var_na * const color_transfer_names[] = {
     [AVCOL_TRC_RESERVED0] = "reserved",
     [AVCOL_TRC_BT709] = "bt709",
     [AVCOL_TRC_UNSPECIFIED] = "unknown",
@@ -3347,11 +3347,11 @@ static const char * const color_transfer_names[] = {
     [AVCOL_TRC_ARIB_STD_B67] = "arib-std-b67",
 };
 
-static const char * const color_transfer_names_ext[] = {
+static const var_na * const color_transfer_names_ext[] = {
     [AVCOL_TRC_V_LOG - AVCOL_TRC_EXT_BASE] = "vlog",
 };
 
-static const char * const color_space_names[] = {
+static const var_na * const color_space_names[] = {
     [AVCOL_SPC_RGB] = "gbr",
     [AVCOL_SPC_BT709] = "bt709",
     [AVCOL_SPC_UNSPECIFIED] = "unknown",
@@ -3372,7 +3372,7 @@ static const char * const color_space_names[] = {
     [AVCOL_SPC_YCGCO_RO] = "ycgco-ro",
 };
 
-static const char * const chroma_location_names[] = {
+static const var_na * const chroma_location_names[] = {
     [AVCHROMA_LOC_UNSPECIFIED] = "unspecified",
     [AVCHROMA_LOC_LEFT] = "left",
     [AVCHROMA_LOC_CENTER] = "center",
@@ -3382,176 +3382,176 @@ static const char * const chroma_location_names[] = {
     [AVCHROMA_LOC_BOTTOM] = "bottom",
 };
 
-static const char * const alpha_mode_names[] = {
+static const var_na * const alpha_mode_names[] = {
     [AVALPHA_MODE_UNSPECIFIED] = "unspecified",
     [AVALPHA_MODE_PREMULTIPLIED] = "premultiplied",
     [AVALPHA_MODE_STRAIGHT] = "straight",
 };
 
-static enum AVPixelFormat get_pix_fmt_internal(const char *name)
+static ga_nanaa AVPixelFormat get_pix_fmt_internal(const var_na *name)
 {
-    enum AVPixelFormat pix_fmt;
+    ga_nanaa AVPixelFormat pix_fmt;
 
-    for (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++)
-        if (av_pix_fmt_descriptors[pix_fmt].name &&
+    အတွက် (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++)
+        အကယ်၍ (av_pix_fmt_descriptors[pix_fmt].name &&
             (!strcmp(av_pix_fmt_descriptors[pix_fmt].name, name) ||
              av_match_name(name, av_pix_fmt_descriptors[pix_fmt].alias)))
-            return pix_fmt;
+            ပြန်ပေး pix_fmt;
 
-    return AV_PIX_FMT_NONE;
+    ပြန်ပေး AV_PIX_FMT_NONE;
 }
 
-const char *av_get_pix_fmt_name(enum AVPixelFormat pix_fmt)
+const var_na *av_get_pix_fmt_name(ga_nanaa AVPixelFormat pix_fmt)
 {
-    return (unsigned)pix_fmt < AV_PIX_FMT_NB ?
+    ပြန်ပေး (unsigned)pix_fmt < AV_PIX_FMT_NB ?
         av_pix_fmt_descriptors[pix_fmt].name : NULL;
 }
 
-#if HAVE_BIGENDIAN
+#အကယ်၍ HAVE_BIGENDIAN
 #   define X_NE(be, le) be
-#else
+#မဟုတ်ပါက
 #   define X_NE(be, le) le
 #endif
 
-enum AVPixelFormat av_get_pix_fmt(const char *name)
+ga_nanaa AVPixelFormat av_get_pix_fmt(const var_na *name)
 {
-    enum AVPixelFormat pix_fmt;
+    ga_nanaa AVPixelFormat pix_fmt;
 
-    if (!strcmp(name, "rgb32"))
+    အကယ်၍ (!strcmp(name, "rgb32"))
         name = X_NE("argb", "bgra");
-    else if (!strcmp(name, "bgr32"))
+    မဟုတ်ပါက အကယ်၍ (!strcmp(name, "bgr32"))
         name = X_NE("abgr", "rgba");
 
     pix_fmt = get_pix_fmt_internal(name);
-    if (pix_fmt == AV_PIX_FMT_NONE) {
-        char name2[32];
+    အကယ်၍ (pix_fmt == AV_PIX_FMT_NONE) {
+        var_na name2[32];
 
-        snprintf(name2, sizeof(name2), "%s%s", name, X_NE("be", "le"));
+        snprintf(name2, parimaa_na(name2), "%s%s", name, X_NE("be", "le"));
         pix_fmt = get_pix_fmt_internal(name2);
     }
 
-    return pix_fmt;
+    ပြန်ပေး pix_fmt;
 }
 
-int av_get_bits_per_pixel(const AVPixFmtDescriptor *pixdesc)
+ကိန်းပြည့် av_get_bits_per_pixel(const AVPixFmtDescriptor *pixdesc)
 {
-    int c, bits = 0;
-    int log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
+    ကိန်းပြည့် c, bits = 0;
+    ကိန်းပြည့် log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
 
-    for (c = 0; c < pixdesc->nb_components; c++) {
-        int s = c == 1 || c == 2 ? 0 : log2_pixels;
+    အတွက် (c = 0; c < pixdesc->nb_components; c++) {
+        ကိန်းပြည့် s = c == 1 || c == 2 ? 0 : log2_pixels;
         bits += pixdesc->comp[c].depth << s;
     }
 
-    return bits >> log2_pixels;
+    ပြန်ပေး bits >> log2_pixels;
 }
 
-int av_get_padded_bits_per_pixel(const AVPixFmtDescriptor *pixdesc)
+ကိန်းပြည့် av_get_padded_bits_per_pixel(const AVPixFmtDescriptor *pixdesc)
 {
-    int c, bits = 0;
-    int log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
-    int steps[4] = {0};
+    ကိန်းပြည့် c, bits = 0;
+    ကိန်းပြည့် log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
+    ကိန်းပြည့် steps[4] = {0};
 
-    for (c = 0; c < pixdesc->nb_components; c++) {
+    အတွက် (c = 0; c < pixdesc->nb_components; c++) {
         const AVComponentDescriptor *comp = &pixdesc->comp[c];
-        int s = c == 1 || c == 2 ? 0 : log2_pixels;
+        ကိန်းပြည့် s = c == 1 || c == 2 ? 0 : log2_pixels;
         steps[comp->plane] = comp->step << s;
     }
-    for (c = 0; c < 4; c++)
+    အတွက် (c = 0; c < 4; c++)
         bits += steps[c];
 
-    if(!(pixdesc->flags & AV_PIX_FMT_FLAG_BITSTREAM))
+    အကယ်၍(!(pixdesc->flags & AV_PIX_FMT_FLAG_BITSTREAM))
         bits *= 8;
 
-    return bits >> log2_pixels;
+    ပြန်ပေး bits >> log2_pixels;
 }
 
-char *av_get_pix_fmt_string(char *buf, int buf_size,
-                            enum AVPixelFormat pix_fmt)
+var_na *av_get_pix_fmt_string(var_na *buf, ကိန်းပြည့် buf_size,
+                            ga_nanaa AVPixelFormat pix_fmt)
 {
     /* print header */
-    if (pix_fmt < 0) {
+    အကယ်၍ (pix_fmt < 0) {
        snprintf (buf, buf_size, "name" " nb_components" " nb_bits");
-    } else {
+    } မဟုတ်ပါက {
         const AVPixFmtDescriptor *pixdesc = &av_pix_fmt_descriptors[pix_fmt];
         snprintf(buf, buf_size, "%-11s %7d %10d", pixdesc->name,
                  pixdesc->nb_components, av_get_bits_per_pixel(pixdesc));
     }
 
-    return buf;
+    ပြန်ပေး buf;
 }
 
-const AVPixFmtDescriptor *av_pix_fmt_desc_get(enum AVPixelFormat pix_fmt)
+const AVPixFmtDescriptor *av_pix_fmt_desc_get(ga_nanaa AVPixelFormat pix_fmt)
 {
-    if (pix_fmt < 0 || pix_fmt >= AV_PIX_FMT_NB)
-        return NULL;
-    return &av_pix_fmt_descriptors[pix_fmt];
+    အကယ်၍ (pix_fmt < 0 || pix_fmt >= AV_PIX_FMT_NB)
+        ပြန်ပေး NULL;
+    ပြန်ပေး &av_pix_fmt_descriptors[pix_fmt];
 }
 
 const AVPixFmtDescriptor *av_pix_fmt_desc_next(const AVPixFmtDescriptor *prev)
 {
-    if (!prev)
-        return &av_pix_fmt_descriptors[0];
-    while (prev - av_pix_fmt_descriptors < FF_ARRAY_ELEMS(av_pix_fmt_descriptors) - 1) {
+    အကယ်၍ (!prev)
+        ပြန်ပေး &av_pix_fmt_descriptors[0];
+    နေစဉ် (prev - av_pix_fmt_descriptors < FF_ARRAY_ELEMS(av_pix_fmt_descriptors) - 1) {
         prev++;
-        if (prev->name)
-            return prev;
+        အကယ်၍ (prev->name)
+            ပြန်ပေး prev;
     }
-    return NULL;
+    ပြန်ပေး NULL;
 }
 
-enum AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc)
+ga_nanaa AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc)
 {
-    if (desc < av_pix_fmt_descriptors ||
+    အကယ်၍ (desc < av_pix_fmt_descriptors ||
         desc >= av_pix_fmt_descriptors + FF_ARRAY_ELEMS(av_pix_fmt_descriptors))
-        return AV_PIX_FMT_NONE;
+        ပြန်ပေး AV_PIX_FMT_NONE;
 
-    return desc - av_pix_fmt_descriptors;
+    ပြန်ပေး desc - av_pix_fmt_descriptors;
 }
 
-int av_pix_fmt_get_chroma_sub_sample(enum AVPixelFormat pix_fmt,
-                                     int *h_shift, int *v_shift)
+ကိန်းပြည့် av_pix_fmt_get_chroma_sub_sample(ga_nanaa AVPixelFormat pix_fmt,
+                                     ကိန်းပြည့် *h_shift, ကိန်းပြည့် *v_shift)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    if (!desc)
-        return AVERROR(ENOSYS);
+    အကယ်၍ (!desc)
+        ပြန်ပေး AVERROR(ENOSYS);
     *h_shift = desc->log2_chroma_w;
     *v_shift = desc->log2_chroma_h;
 
-    return 0;
+    ပြန်ပေး 0;
 }
 
-int av_pix_fmt_count_planes(enum AVPixelFormat pix_fmt)
+ကိန်းပြည့် av_pix_fmt_count_planes(ga_nanaa AVPixelFormat pix_fmt)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int i, planes[4] = { 0 }, ret = 0;
+    ကိန်းပြည့် i, planes[4] = { 0 }, ret = 0;
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    အကယ်၍ (!desc)
+        ပြန်ပေး AVERROR(EINVAL);
 
-    for (i = 0; i < desc->nb_components; i++)
+    အတွက် (i = 0; i < desc->nb_components; i++)
         planes[desc->comp[i].plane] = 1;
-    for (i = 0; i < FF_ARRAY_ELEMS(planes); i++)
+    အတွက် (i = 0; i < FF_ARRAY_ELEMS(planes); i++)
         ret += planes[i];
-    return ret;
+    ပြန်ပေး ret;
 }
 
-enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt)
+ga_nanaa AVPixelFormat av_pix_fmt_swap_endianness(ga_nanaa AVPixelFormat pix_fmt)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    char name[16];
-    int i;
+    var_na name[16];
+    ကိန်းပြည့် i;
 
-    if (!desc || strlen(desc->name) < 2)
-        return AV_PIX_FMT_NONE;
-    av_strlcpy(name, desc->name, sizeof(name));
+    အကယ်၍ (!desc || strlen(desc->name) < 2)
+        ပြန်ပေး AV_PIX_FMT_NONE;
+    av_strlcpy(name, desc->name, parimaa_na(name));
     i = strlen(name) - 2;
-    if (strcmp(name + i, "be") && strcmp(name + i, "le"))
-        return AV_PIX_FMT_NONE;
+    အကယ်၍ (strcmp(name + i, "be") && strcmp(name + i, "le"))
+        ပြန်ပေး AV_PIX_FMT_NONE;
 
     name[i] ^= 'b' ^ 'l';
 
-    return get_pix_fmt_internal(name);
+    ပြန်ပေး get_pix_fmt_internal(name);
 }
 
 #define FF_COLOR_NA      -1
@@ -3565,95 +3565,95 @@ enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt)
     ((pixdesc)->flags & AV_PIX_FMT_FLAG_ALPHA)
 
 
-static int get_color_type(const AVPixFmtDescriptor *desc) {
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL)
-        return FF_COLOR_RGB;
+static ကိန်းပြည့် get_color_type(const AVPixFmtDescriptor *desc) {
+    အကယ်၍ (desc->flags & AV_PIX_FMT_FLAG_PAL)
+        ပြန်ပေး FF_COLOR_RGB;
 
-    if(desc->nb_components == 1 || desc->nb_components == 2)
-        return FF_COLOR_GRAY;
+    အကယ်၍(desc->nb_components == 1 || desc->nb_components == 2)
+        ပြန်ပေး FF_COLOR_GRAY;
 
-    if (desc->name) {
-        if (av_strstart(desc->name, "yuvj", NULL))
-            return FF_COLOR_YUV_JPEG;
+    အကယ်၍ (desc->name) {
+        အကယ်၍ (av_strstart(desc->name, "yuvj", NULL))
+            ပြန်ပေး FF_COLOR_YUV_JPEG;
     }
 
-    if(desc->flags & AV_PIX_FMT_FLAG_RGB)
-        return FF_COLOR_RGB;
+    အကယ်၍(desc->flags & AV_PIX_FMT_FLAG_RGB)
+        ပြန်ပေး FF_COLOR_RGB;
 
-    if(desc->flags & AV_PIX_FMT_FLAG_XYZ)
-        return FF_COLOR_XYZ;
+    အကယ်၍(desc->flags & AV_PIX_FMT_FLAG_XYZ)
+        ပြန်ပေး FF_COLOR_XYZ;
 
-    if(desc->nb_components == 0)
-        return FF_COLOR_NA;
+    အကယ်၍(desc->nb_components == 0)
+        ပြန်ပေး FF_COLOR_NA;
 
-    return FF_COLOR_YUV;
+    ပြန်ပေး FF_COLOR_YUV;
 }
 
-static int get_pix_fmt_depth(int *min, int *max, enum AVPixelFormat pix_fmt)
+static ကိန်းပြည့် get_pix_fmt_depth(ကိန်းပြည့် *min, ကိန်းပြည့် *max, ga_nanaa AVPixelFormat pix_fmt)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int i;
+    ကိန်းပြည့် i;
 
-    if (!desc || !desc->nb_components) {
+    အကယ်၍ (!desc || !desc->nb_components) {
         *min = *max = 0;
-        return AVERROR(EINVAL);
+        ပြန်ပေး AVERROR(EINVAL);
     }
 
     *min = INT_MAX, *max = -INT_MAX;
-    for (i = 0; i < desc->nb_components; i++) {
+    အတွက် (i = 0; i < desc->nb_components; i++) {
         *min = FFMIN(desc->comp[i].depth, *min);
         *max = FFMAX(desc->comp[i].depth, *max);
     }
-    return 0;
+    ပြန်ပေး 0;
 }
 
-static int get_pix_fmt_score(enum AVPixelFormat dst_pix_fmt,
-                              enum AVPixelFormat src_pix_fmt,
+static ကိန်းပြည့် get_pix_fmt_score(ga_nanaa AVPixelFormat dst_pix_fmt,
+                              ga_nanaa AVPixelFormat src_pix_fmt,
                               unsigned *lossp, unsigned consider)
 {
     const AVPixFmtDescriptor *src_desc = av_pix_fmt_desc_get(src_pix_fmt);
     const AVPixFmtDescriptor *dst_desc = av_pix_fmt_desc_get(dst_pix_fmt);
-    int src_color, dst_color;
-    int src_min_depth, src_max_depth, dst_min_depth, dst_max_depth;
-    int ret, loss, i, nb_components;
-    int score = INT_MAX - 1;
+    ကိန်းပြည့် src_color, dst_color;
+    ကိန်းပြည့် src_min_depth, src_max_depth, dst_min_depth, dst_max_depth;
+    ကိန်းပြည့် ret, loss, i, nb_components;
+    ကိန်းပြည့် score = INT_MAX - 1;
 
-    if (!src_desc || !dst_desc)
-        return -4;
+    အကယ်၍ (!src_desc || !dst_desc)
+        ပြန်ပေး -4;
 
-    if ((src_desc->flags & AV_PIX_FMT_FLAG_HWACCEL) ||
+    အကယ်၍ ((src_desc->flags & AV_PIX_FMT_FLAG_HWACCEL) ||
         (dst_desc->flags & AV_PIX_FMT_FLAG_HWACCEL)) {
-        if (dst_pix_fmt == src_pix_fmt)
-            return -1;
-        else
-            return -2;
+        အကယ်၍ (dst_pix_fmt == src_pix_fmt)
+            ပြန်ပေး -1;
+        မဟုတ်ပါက
+            ပြန်ပေး -2;
     }
 
     /* compute loss */
     *lossp = loss = 0;
 
-    if (dst_pix_fmt == src_pix_fmt)
-        return INT_MAX;
+    အကယ်၍ (dst_pix_fmt == src_pix_fmt)
+        ပြန်ပေး INT_MAX;
 
-    if ((ret = get_pix_fmt_depth(&src_min_depth, &src_max_depth, src_pix_fmt)) < 0)
-        return -3;
-    if ((ret = get_pix_fmt_depth(&dst_min_depth, &dst_max_depth, dst_pix_fmt)) < 0)
-        return -3;
+    အကယ်၍ ((ret = get_pix_fmt_depth(&src_min_depth, &src_max_depth, src_pix_fmt)) < 0)
+        ပြန်ပေး -3;
+    အကယ်၍ ((ret = get_pix_fmt_depth(&dst_min_depth, &dst_max_depth, dst_pix_fmt)) < 0)
+        ပြန်ပေး -3;
 
     src_color = get_color_type(src_desc);
     dst_color = get_color_type(dst_desc);
-    if (dst_pix_fmt == AV_PIX_FMT_PAL8)
+    အကယ်၍ (dst_pix_fmt == AV_PIX_FMT_PAL8)
         nb_components = FFMIN(src_desc->nb_components, 4);
-    else
+    မဟုတ်ပါက
         nb_components = FFMIN(src_desc->nb_components, dst_desc->nb_components);
 
-    for (i = 0; i < nb_components; i++) {
-        int depth_minus1 = (dst_pix_fmt == AV_PIX_FMT_PAL8) ? 7/nb_components : (dst_desc->comp[i].depth - 1);
-        int depth_delta = src_desc->comp[i].depth - 1 - depth_minus1;
-        if (depth_delta > 0 && (consider & FF_LOSS_DEPTH)) {
+    အတွက် (i = 0; i < nb_components; i++) {
+        ကိန်းပြည့် depth_minus1 = (dst_pix_fmt == AV_PIX_FMT_PAL8) ? 7/nb_components : (dst_desc->comp[i].depth - 1);
+        ကိန်းပြည့် depth_delta = src_desc->comp[i].depth - 1 - depth_minus1;
+        အကယ်၍ (depth_delta > 0 && (consider & FF_LOSS_DEPTH)) {
             loss |= FF_LOSS_DEPTH;
             score -= 65536 >> depth_minus1;
-        } else if (depth_delta < 0 && (consider & FF_LOSS_EXCESS_DEPTH)) {
+        } မဟုတ်ပါက အကယ်၍ (depth_delta < 0 && (consider & FF_LOSS_EXCESS_DEPTH)) {
             // Favour formats where bit depth exactly matches. If all other
             // scoring is equal, we'd rather use the bit depth that most closely
             // matches the source.
@@ -3662,305 +3662,305 @@ static int get_pix_fmt_score(enum AVPixelFormat dst_pix_fmt,
         }
     }
 
-    if (consider & FF_LOSS_RESOLUTION) {
-        if (dst_desc->log2_chroma_w > src_desc->log2_chroma_w) {
+    အကယ်၍ (consider & FF_LOSS_RESOLUTION) {
+        အကယ်၍ (dst_desc->log2_chroma_w > src_desc->log2_chroma_w) {
             loss |= FF_LOSS_RESOLUTION;
             score -= 256 << dst_desc->log2_chroma_w;
         }
-        if (dst_desc->log2_chroma_h > src_desc->log2_chroma_h) {
+        အကယ်၍ (dst_desc->log2_chroma_h > src_desc->log2_chroma_h) {
             loss |= FF_LOSS_RESOLUTION;
             score -= 256 << dst_desc->log2_chroma_h;
         }
         // don't favor 422 over 420 if downsampling is needed, because 420 has much better support on the decoder side
-        if (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 0 &&
+        အကယ်၍ (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 0 &&
             dst_desc->log2_chroma_h == 1 && src_desc->log2_chroma_h == 0 ) {
             score += 512;
         }
     }
 
-    if (consider & FF_LOSS_EXCESS_RESOLUTION) {
+    အကယ်၍ (consider & FF_LOSS_EXCESS_RESOLUTION) {
         // Favour formats where chroma subsampling exactly matches. If all other
         // scoring is equal, we'd rather use the subsampling that most closely
         // matches the source.
-        if (dst_desc->log2_chroma_w < src_desc->log2_chroma_w) {
+        အကယ်၍ (dst_desc->log2_chroma_w < src_desc->log2_chroma_w) {
             loss |= FF_LOSS_EXCESS_RESOLUTION;
             score -= 1 << (src_desc->log2_chroma_w - dst_desc->log2_chroma_w);
         }
 
-        if (dst_desc->log2_chroma_h < src_desc->log2_chroma_h) {
+        အကယ်၍ (dst_desc->log2_chroma_h < src_desc->log2_chroma_h) {
             loss |= FF_LOSS_EXCESS_RESOLUTION;
             score -= 1 << (src_desc->log2_chroma_h - dst_desc->log2_chroma_h);
         }
 
         // don't favour 411 over 420, because 420 has much better support on the
         // decoder side.
-        if (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 2 &&
+        အကယ်၍ (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 2 &&
             dst_desc->log2_chroma_h == 1 && src_desc->log2_chroma_h == 2) {
                 score += 4;
             }
     }
 
-    if(consider & FF_LOSS_COLORSPACE)
+    အကယ်၍(consider & FF_LOSS_COLORSPACE)
     switch(dst_color) {
-    case FF_COLOR_RGB:
-        if (src_color != FF_COLOR_RGB &&
+    pak_sa FF_COLOR_RGB:
+        အကယ်၍ (src_color != FF_COLOR_RGB &&
             src_color != FF_COLOR_GRAY)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_GRAY:
-        if (src_color != FF_COLOR_GRAY)
+        bha_nga;
+    pak_sa FF_COLOR_GRAY:
+        အကယ်၍ (src_color != FF_COLOR_GRAY)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_YUV:
-        if (src_color != FF_COLOR_YUV)
+        bha_nga;
+    pak_sa FF_COLOR_YUV:
+        အကယ်၍ (src_color != FF_COLOR_YUV)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_YUV_JPEG:
-        if (src_color != FF_COLOR_YUV_JPEG &&
+        bha_nga;
+    pak_sa FF_COLOR_YUV_JPEG:
+        အကယ်၍ (src_color != FF_COLOR_YUV_JPEG &&
             src_color != FF_COLOR_YUV &&
             src_color != FF_COLOR_GRAY)
             loss |= FF_LOSS_COLORSPACE;
-        break;
+        bha_nga;
     default:
         /* fail safe test */
-        if (src_color != dst_color)
+        အကယ်၍ (src_color != dst_color)
             loss |= FF_LOSS_COLORSPACE;
-        break;
+        bha_nga;
     }
-    if(loss & FF_LOSS_COLORSPACE)
+    အကယ်၍(loss & FF_LOSS_COLORSPACE)
         score -= (nb_components * 65536) >> FFMIN(dst_desc->comp[0].depth - 1, src_desc->comp[0].depth - 1);
 
-    if (dst_color == FF_COLOR_GRAY &&
+    အကယ်၍ (dst_color == FF_COLOR_GRAY &&
         src_color != FF_COLOR_GRAY && (consider & FF_LOSS_CHROMA)) {
         loss |= FF_LOSS_CHROMA;
         score -= 2 * 65536;
     }
-    if (!pixdesc_has_alpha(dst_desc) && (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))) {
+    အကယ်၍ (!pixdesc_has_alpha(dst_desc) && (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))) {
         loss |= FF_LOSS_ALPHA;
         score -= 65536;
     }
-    if (dst_pix_fmt == AV_PIX_FMT_PAL8 && (consider & FF_LOSS_COLORQUANT) &&
+    အကယ်၍ (dst_pix_fmt == AV_PIX_FMT_PAL8 && (consider & FF_LOSS_COLORQUANT) &&
         (src_pix_fmt != AV_PIX_FMT_PAL8 && (src_color != FF_COLOR_GRAY || (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))))) {
         loss |= FF_LOSS_COLORQUANT;
         score -= 65536;
     }
 
     *lossp = loss;
-    return score;
+    ပြန်ပေး score;
 }
 
-int av_get_pix_fmt_loss(enum AVPixelFormat dst_pix_fmt,
-                            enum AVPixelFormat src_pix_fmt,
-                            int has_alpha)
+ကိန်းပြည့် av_get_pix_fmt_loss(ga_nanaa AVPixelFormat dst_pix_fmt,
+                            ga_nanaa AVPixelFormat src_pix_fmt,
+                            ကိန်းပြည့် has_alpha)
 {
-    int loss;
-    int ret = get_pix_fmt_score(dst_pix_fmt, src_pix_fmt, &loss, has_alpha ? ~0 : ~FF_LOSS_ALPHA);
-    if (ret < 0)
-        return ret;
-    return loss;
+    ကိန်းပြည့် loss;
+    ကိန်းပြည့် ret = get_pix_fmt_score(dst_pix_fmt, src_pix_fmt, &loss, has_alpha ? ~0 : ~FF_LOSS_ALPHA);
+    အကယ်၍ (ret < 0)
+        ပြန်ပေး ret;
+    ပြန်ပေး loss;
 }
 
-enum AVPixelFormat av_find_best_pix_fmt_of_2(enum AVPixelFormat dst_pix_fmt1, enum AVPixelFormat dst_pix_fmt2,
-                                             enum AVPixelFormat src_pix_fmt, int has_alpha, int *loss_ptr)
+ga_nanaa AVPixelFormat av_find_best_pix_fmt_of_2(ga_nanaa AVPixelFormat dst_pix_fmt1, ga_nanaa AVPixelFormat dst_pix_fmt2,
+                                             ga_nanaa AVPixelFormat src_pix_fmt, ကိန်းပြည့် has_alpha, ကိန်းပြည့် *loss_ptr)
 {
-    enum AVPixelFormat dst_pix_fmt;
-    int loss1, loss2, loss_mask;
+    ga_nanaa AVPixelFormat dst_pix_fmt;
+    ကိန်းပြည့် loss1, loss2, loss_mask;
     const AVPixFmtDescriptor *desc1 = av_pix_fmt_desc_get(dst_pix_fmt1);
     const AVPixFmtDescriptor *desc2 = av_pix_fmt_desc_get(dst_pix_fmt2);
-    int score1, score2;
+    ကိန်းပြည့် score1, score2;
 
-    if (!desc1) {
+    အကယ်၍ (!desc1) {
         dst_pix_fmt = dst_pix_fmt2;
-    } else if (!desc2) {
+    } မဟုတ်ပါက အကယ်၍ (!desc2) {
         dst_pix_fmt = dst_pix_fmt1;
-    } else {
+    } မဟုတ်ပါက {
         loss_mask= loss_ptr?~*loss_ptr:~0; /* use loss mask if provided */
-        if(!has_alpha)
+        အကယ်၍(!has_alpha)
             loss_mask &= ~FF_LOSS_ALPHA;
 
         score1 = get_pix_fmt_score(dst_pix_fmt1, src_pix_fmt, &loss1, loss_mask);
         score2 = get_pix_fmt_score(dst_pix_fmt2, src_pix_fmt, &loss2, loss_mask);
 
-        if (score1 == score2) {
-            if(av_get_padded_bits_per_pixel(desc2) != av_get_padded_bits_per_pixel(desc1)) {
+        အကယ်၍ (score1 == score2) {
+            အကယ်၍(av_get_padded_bits_per_pixel(desc2) != av_get_padded_bits_per_pixel(desc1)) {
                 dst_pix_fmt = av_get_padded_bits_per_pixel(desc2) < av_get_padded_bits_per_pixel(desc1) ? dst_pix_fmt2 : dst_pix_fmt1;
-            } else {
+            } မဟုတ်ပါက {
                 dst_pix_fmt = desc2->nb_components < desc1->nb_components ? dst_pix_fmt2 : dst_pix_fmt1;
             }
-        } else {
+        } မဟုတ်ပါက {
             dst_pix_fmt = score1 < score2 ? dst_pix_fmt2 : dst_pix_fmt1;
         }
     }
 
-    if (loss_ptr)
+    အကယ်၍ (loss_ptr)
         *loss_ptr = av_get_pix_fmt_loss(dst_pix_fmt, src_pix_fmt, has_alpha);
-    return dst_pix_fmt;
+    ပြန်ပေး dst_pix_fmt;
 }
 
-const char *av_color_range_name(enum AVColorRange range)
+const var_na *av_color_range_name(ga_nanaa AVColorRange range)
 {
-    return (unsigned) range < AVCOL_RANGE_NB ?
+    ပြန်ပေး (unsigned) range < AVCOL_RANGE_NB ?
         color_range_names[range] : NULL;
 }
 
-int av_color_range_from_name(const char *name)
+ကိန်းပြည့် av_color_range_from_name(const var_na *name)
 {
-    int i;
+    ကိန်းပြည့် i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_range_names); i++) {
-        if (!strcmp(name, color_range_names[i]))
-            return i;
+    အတွက် (i = 0; i < FF_ARRAY_ELEMS(color_range_names); i++) {
+        အကယ်၍ (!strcmp(name, color_range_names[i]))
+            ပြန်ပေး i;
     }
 
-    return AVERROR(EINVAL);
+    ပြန်ပေး AVERROR(EINVAL);
 }
 
-const char *av_color_primaries_name(enum AVColorPrimaries primaries)
+const var_na *av_color_primaries_name(ga_nanaa AVColorPrimaries primaries)
 {
-    if ((unsigned)primaries < AVCOL_PRI_NB)
-        return color_primaries_names[primaries];
-    else if (((unsigned)primaries >= AVCOL_PRI_EXT_BASE) &&
+    အကယ်၍ ((unsigned)primaries < AVCOL_PRI_NB)
+        ပြန်ပေး color_primaries_names[primaries];
+    မဟုတ်ပါက အကယ်၍ (((unsigned)primaries >= AVCOL_PRI_EXT_BASE) &&
              ((unsigned)primaries < AVCOL_PRI_EXT_NB))
-        return color_primaries_names_ext[primaries - AVCOL_TRC_EXT_BASE];
-    return NULL;
+        ပြန်ပေး color_primaries_names_ext[primaries - AVCOL_TRC_EXT_BASE];
+    ပြန်ပေး NULL;
 }
 
-int av_color_primaries_from_name(const char *name)
+ကိန်းပြည့် av_color_primaries_from_name(const var_na *name)
 {
-    int i;
+    ကိန်းပြည့် i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names); i++) {
-        if (!color_primaries_names[i])
+    အတွက် (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names); i++) {
+        အကယ်၍ (!color_primaries_names[i])
             continue;
 
-        if (!strcmp(name, color_primaries_names[i]))
-            return i;
+        အကယ်၍ (!strcmp(name, color_primaries_names[i]))
+            ပြန်ပေး i;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names_ext); i++) {
-        if (!color_primaries_names_ext[i])
+    အတွက် (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names_ext); i++) {
+        အကယ်၍ (!color_primaries_names_ext[i])
             continue;
 
-        if (!strcmp(name, color_primaries_names_ext[i]))
-            return AVCOL_PRI_EXT_BASE + i;
+        အကယ်၍ (!strcmp(name, color_primaries_names_ext[i]))
+            ပြန်ပေး AVCOL_PRI_EXT_BASE + i;
     }
 
-    return AVERROR(EINVAL);
+    ပြန်ပေး AVERROR(EINVAL);
 }
 
-const char *av_color_transfer_name(enum AVColorTransferCharacteristic transfer)
+const var_na *av_color_transfer_name(ga_nanaa AVColorTransferCharacteristic transfer)
 {
-    if ((unsigned)transfer < AVCOL_TRC_NB)
-        return color_transfer_names[transfer];
-    else if (((unsigned)transfer >= AVCOL_TRC_EXT_BASE) &&
+    အကယ်၍ ((unsigned)transfer < AVCOL_TRC_NB)
+        ပြန်ပေး color_transfer_names[transfer];
+    မဟုတ်ပါက အကယ်၍ (((unsigned)transfer >= AVCOL_TRC_EXT_BASE) &&
              ((unsigned)transfer < AVCOL_TRC_EXT_NB))
-        return color_transfer_names_ext[transfer - AVCOL_TRC_EXT_BASE];
-    return NULL;
+        ပြန်ပေး color_transfer_names_ext[transfer - AVCOL_TRC_EXT_BASE];
+    ပြန်ပေး NULL;
 }
 
-int av_color_transfer_from_name(const char *name)
+ကိန်းပြည့် av_color_transfer_from_name(const var_na *name)
 {
-    int i;
+    ကိန်းပြည့် i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names); i++) {
-        if (!color_transfer_names[i])
+    အတွက် (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names); i++) {
+        အကယ်၍ (!color_transfer_names[i])
             continue;
 
-        if (!strcmp(name, color_transfer_names[i]))
-            return i;
+        အကယ်၍ (!strcmp(name, color_transfer_names[i]))
+            ပြန်ပေး i;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names_ext); i++) {
-        if (!color_transfer_names_ext[i])
+    အတွက် (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names_ext); i++) {
+        အကယ်၍ (!color_transfer_names_ext[i])
             continue;
 
-        if (!strcmp(name, color_transfer_names_ext[i]))
-            return AVCOL_TRC_EXT_BASE + i;
+        အကယ်၍ (!strcmp(name, color_transfer_names_ext[i]))
+            ပြန်ပေး AVCOL_TRC_EXT_BASE + i;
     }
 
-    return AVERROR(EINVAL);
+    ပြန်ပေး AVERROR(EINVAL);
 }
 
-const char *av_color_space_name(enum AVColorSpace space)
+const var_na *av_color_space_name(ga_nanaa AVColorSpace space)
 {
-    return (unsigned) space < AVCOL_SPC_NB ?
+    ပြန်ပေး (unsigned) space < AVCOL_SPC_NB ?
         color_space_names[space] : NULL;
 }
 
-int av_color_space_from_name(const char *name)
+ကိန်းပြည့် av_color_space_from_name(const var_na *name)
 {
-    int i;
+    ကိန်းပြည့် i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_space_names); i++) {
-        if (!color_space_names[i])
+    အတွက် (i = 0; i < FF_ARRAY_ELEMS(color_space_names); i++) {
+        အကယ်၍ (!color_space_names[i])
             continue;
 
-        if (!strcmp(name, color_space_names[i]))
-            return i;
+        အကယ်၍ (!strcmp(name, color_space_names[i]))
+            ပြန်ပေး i;
     }
 
-    return AVERROR(EINVAL);
+    ပြန်ပေး AVERROR(EINVAL);
 }
 
-const char *av_chroma_location_name(enum AVChromaLocation location)
+const var_na *av_chroma_location_name(ga_nanaa AVChromaLocation location)
 {
-    return (unsigned) location < AVCHROMA_LOC_NB ?
+    ပြန်ပေး (unsigned) location < AVCHROMA_LOC_NB ?
         chroma_location_names[location] : NULL;
 }
 
-int av_chroma_location_from_name(const char *name)
+ကိန်းပြည့် av_chroma_location_from_name(const var_na *name)
 {
-    int i;
+    ကိန်းပြည့် i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(chroma_location_names); i++) {
-        if (!chroma_location_names[i])
+    အတွက် (i = 0; i < FF_ARRAY_ELEMS(chroma_location_names); i++) {
+        အကယ်၍ (!chroma_location_names[i])
             continue;
 
-        if (!strcmp(name, chroma_location_names[i]))
-            return i;
+        အကယ်၍ (!strcmp(name, chroma_location_names[i]))
+            ပြန်ပေး i;
     }
 
-    return AVERROR(EINVAL);
+    ပြန်ပေး AVERROR(EINVAL);
 }
 
-int av_chroma_location_enum_to_pos(int *xpos, int *ypos, enum AVChromaLocation pos)
+ကိန်းပြည့် av_chroma_location_enum_to_pos(ကိန်းပြည့် *xpos, ကိန်းပြည့် *ypos, ga_nanaa AVChromaLocation pos)
 {
-    if (pos <= AVCHROMA_LOC_UNSPECIFIED || pos >= AVCHROMA_LOC_NB)
-        return AVERROR(EINVAL);
+    အကယ်၍ (pos <= AVCHROMA_LOC_UNSPECIFIED || pos >= AVCHROMA_LOC_NB)
+        ပြန်ပေး AVERROR(EINVAL);
     pos--;
 
     *xpos = (pos&1) * 128;
     *ypos = ((pos>>1)^(pos<4)) * 128;
 
-    return 0;
+    ပြန်ပေး 0;
 }
 
-enum AVChromaLocation av_chroma_location_pos_to_enum(int xpos, int ypos)
+ga_nanaa AVChromaLocation av_chroma_location_pos_to_enum(ကိန်းပြည့် xpos, ကိန်းပြည့် ypos)
 {
-    int pos, xout, yout;
+    ကိန်းပြည့် pos, xout, yout;
 
-    for (pos = AVCHROMA_LOC_UNSPECIFIED + 1; pos < AVCHROMA_LOC_NB; pos++) {
-        if (av_chroma_location_enum_to_pos(&xout, &yout, pos) == 0 && xout == xpos && yout == ypos)
-            return pos;
+    အတွက် (pos = AVCHROMA_LOC_UNSPECIFIED + 1; pos < AVCHROMA_LOC_NB; pos++) {
+        အကယ်၍ (av_chroma_location_enum_to_pos(&xout, &yout, pos) == 0 && xout == xpos && yout == ypos)
+            ပြန်ပေး pos;
     }
-    return AVCHROMA_LOC_UNSPECIFIED;
+    ပြန်ပေး AVCHROMA_LOC_UNSPECIFIED;
 }
 
-const char *av_alpha_mode_name(enum AVAlphaMode mode)
+const var_na *av_alpha_mode_name(ga_nanaa AVAlphaMode mode)
 {
-    return (unsigned) mode < AVALPHA_MODE_NB ?
+    ပြန်ပေး (unsigned) mode < AVALPHA_MODE_NB ?
         alpha_mode_names[mode] : NULL;
 }
 
-enum AVAlphaMode av_alpha_mode_from_name(const char *name)
+ga_nanaa AVAlphaMode av_alpha_mode_from_name(const var_na *name)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(alpha_mode_names); i++) {
-        if (!alpha_mode_names[i])
+    အတွက် (ကိန်းပြည့် i = 0; i < FF_ARRAY_ELEMS(alpha_mode_names); i++) {
+        အကယ်၍ (!alpha_mode_names[i])
             continue;
 
-        if (!strcmp(name, alpha_mode_names[i]))
-            return i;
+        အကယ်၍ (!strcmp(name, alpha_mode_names[i]))
+            ပြန်ပေး i;
     }
 
-    return AVERROR(EINVAL);
+    ပြန်ပေး AVERROR(EINVAL);
 }

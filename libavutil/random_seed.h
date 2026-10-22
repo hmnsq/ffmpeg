@@ -48,7 +48,7 @@ uint32_t av_get_random_seed(void);
  *                                   into buf
  * @retval "a negative AVERROR code" random data could not be generated
  */
-int av_random_bytes(uint8_t *buf, size_t len);
+ကိန်းပြည့် av_random_bytes(uint8_t *buf, size_t len);
 
 /**
  * @}

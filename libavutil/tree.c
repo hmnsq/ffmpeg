@@ -23,69 +23,69 @@
 #include "mem.h"
 #include "tree.h"
 
-typedef struct AVTreeNode {
-    struct AVTreeNode *child[2];
+typedef sa_nracanaa AVTreeNode {
+    sa_nracanaa AVTreeNode *child[2];
     void *elem;
-    int state;
+    ကိန်းပြည့် state;
 } AVTreeNode;
 
-const int av_tree_node_size = sizeof(AVTreeNode);
+const ကိန်းပြည့် av_tree_node_size = parimaa_na(AVTreeNode);
 
-struct AVTreeNode *av_tree_node_alloc(void)
+sa_nracanaa AVTreeNode *av_tree_node_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVTreeNode));
+    ပြန်ပေး av_mallocz(parimaa_na(sa_nracanaa AVTreeNode));
 }
 
 void *av_tree_find(const AVTreeNode *t, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2])
+                   ကိန်းပြည့် (*cmp)(const void *key, const void *b), void *next[2])
 {
-    if (t) {
-        unsigned int v = cmp(key, t->elem);
-        if (v) {
-            if (next)
+    အကယ်၍ (t) {
+        unsigned ကိန်းပြည့် v = cmp(key, t->elem);
+        အကယ်၍ (v) {
+            အကယ်၍ (next)
                 next[v >> 31] = t->elem;
-            return av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
-        } else {
-            if (next) {
+            ပြန်ပေး av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
+        } မဟုတ်ပါက {
+            အကယ်၍ (next) {
                 av_tree_find(t->child[0], key, cmp, next);
                 av_tree_find(t->child[1], key, cmp, next);
             }
-            return t->elem;
+            ပြန်ပေး t->elem;
         }
     }
-    return NULL;
+    ပြန်ပေး NULL;
 }
 
 void *av_tree_insert(AVTreeNode **tp, void *key,
-                     int (*cmp)(const void *key, const void *b), AVTreeNode **next)
+                     ကိန်းပြည့် (*cmp)(const void *key, const void *b), AVTreeNode **next)
 {
     AVTreeNode *t = *tp;
-    if (t) {
-        unsigned int v = cmp(t->elem, key);
+    အကယ်၍ (t) {
+        unsigned ကိန်းပြည့် v = cmp(t->elem, key);
         void *ret;
-        if (!v) {
-            if (*next)
-                return t->elem;
-            else if (t->child[0] || t->child[1]) {
-                int i = !t->child[0];
+        အကယ်၍ (!v) {
+            အကယ်၍ (*next)
+                ပြန်ပေး t->elem;
+            မဟုတ်ပါက အကယ်၍ (t->child[0] || t->child[1]) {
+                ကိန်းပြည့် i = !t->child[0];
                 void *next_elem[2];
                 av_tree_find(t->child[i], key, cmp, next_elem);
                 key = t->elem = next_elem[i];
                 v   = -i;
-            } else {
+            } မဟုတ်ပါက {
                 *next = t;
                 *tp   = NULL;
-                return NULL;
+                ပြန်ပေး NULL;
             }
         }
         ret = av_tree_insert(&t->child[v >> 31], key, cmp, next);
-        if (!ret) {
-            int i              = (v >> 31) ^ !!*next;
+        အကယ်၍ (!ret) {
+            ကိန်းပြည့် i              = (v >> 31) ^ !!*next;
             AVTreeNode **child = &t->child[i];
             t->state += 2 * i - 1;
 
-            if (!(t->state & 1)) {
-                if (t->state) {
+            အကယ်၍ (!(t->state & 1)) {
+                အကယ်၍ (t->state) {
                     /* The following code is equivalent to
                      * if ((*child)->state * 2 == -t->state)
                      *     rotate(child, i ^ 1);
@@ -106,7 +106,7 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                      * }
                      * but such a rotate function is both bigger and slower
                      */
-                    if ((*child)->state * 2 == -t->state) {
+                    အကယ်၍ ((*child)->state * 2 == -t->state) {
                         *tp                    = (*child)->child[i ^ 1];
                         (*child)->child[i ^ 1] = (*tp)->child[i];
                         (*tp)->child[i]        = *child;
@@ -116,36 +116,36 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                         (*tp)->child[0]->state = -((*tp)->state > 0);
                         (*tp)->child[1]->state = (*tp)->state < 0;
                         (*tp)->state           = 0;
-                    } else {
+                    } မဟုတ်ပါက {
                         *tp                 = *child;
                         *child              = (*child)->child[i ^ 1];
                         (*tp)->child[i ^ 1] = t;
-                        if ((*tp)->state)
+                        အကယ်၍ ((*tp)->state)
                             t->state = 0;
-                        else
+                        မဟုတ်ပါက
                             t->state >>= 1;
                         (*tp)->state = -t->state;
                     }
                 }
             }
-            if (!(*tp)->state ^ !!*next)
-                return key;
+            အကယ်၍ (!(*tp)->state ^ !!*next)
+                ပြန်ပေး key;
         }
-        return ret;
-    } else {
+        ပြန်ပေး ret;
+    } မဟုတ်ပါက {
         *tp   = *next;
         *next = NULL;
-        if (*tp) {
+        အကယ်၍ (*tp) {
             (*tp)->elem = key;
-            return NULL;
-        } else
-            return key;
+            ပြန်ပေး NULL;
+        } မဟုတ်ပါက
+            ပြန်ပေး key;
     }
 }
 
 void av_tree_destroy(AVTreeNode *t)
 {
-    if (t) {
+    အကယ်၍ (t) {
         av_tree_destroy(t->child[0]);
         av_tree_destroy(t->child[1]);
         av_free(t);
@@ -153,16 +153,16 @@ void av_tree_destroy(AVTreeNode *t)
 }
 
 void av_tree_enumerate(AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem))
+                       ကိန်းပြည့် (*cmp)(void *opaque, void *elem),
+                       ကိန်းပြည့် (*enu)(void *opaque, void *elem))
 {
-    if (t) {
-        int v = cmp ? cmp(opaque, t->elem) : 0;
-        if (v >= 0)
+    အကယ်၍ (t) {
+        ကိန်းပြည့် v = cmp ? cmp(opaque, t->elem) : 0;
+        အကယ်၍ (v >= 0)
             av_tree_enumerate(t->child[0], opaque, cmp, enu);
-        if (v == 0)
+        အကယ်၍ (v == 0)
             enu(opaque, t->elem);
-        if (v <= 0)
+        အကယ်၍ (v <= 0)
             av_tree_enumerate(t->child[1], opaque, cmp, enu);
     }
 }

@@ -27,28 +27,28 @@
 
 typedef uint32_t (*random_seed_ptr_t)(void);
 
-int main(void)
+ကိန်းပြည့် main(void)
 {
-    int i, j, rsf, retry;
+    ကိန်းပြည့် i, j, rsf, retry;
     uint32_t seeds[N];
     random_seed_ptr_t random_seed[F] = {av_get_random_seed, get_generic_seed};
 
-    for (rsf=0; rsf<F; ++rsf){
-        for (retry=0; retry<3; retry++){
-            for (i=0; i<N; i++){
+    အတွက် (rsf=0; rsf<F; ++rsf){
+        အတွက် (retry=0; retry<3; retry++){
+            အတွက် (i=0; i<N; i++){
                 seeds[i] = random_seed[rsf]();
-                for (j=0; j<i; j++)
-                    if (seeds[j] == seeds[i])
+                အတွက် (j=0; j<i; j++)
+                    အကယ်၍ (seeds[j] == seeds[i])
                         goto retry;
             }
             printf("seeds OK\n");
-            break;
+            bha_nga;
             retry:;
         }
-        if (retry >= 3) {
+        အကယ်၍ (retry >= 3) {
             printf("rsf %d: FAIL at %d with %"PRIX32"\n", rsf, j, seeds[j]);
-            return 1;
+            ပြန်ပေး 1;
         }
     }
-    return 0;
+    ပြန်ပေး 0;
 }

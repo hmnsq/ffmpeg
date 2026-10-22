@@ -41,14 +41,14 @@
  * @param x exponent
  * @return 10^x
  */
-static av_always_inline double ff_exp10(double x)
+static av_always_inline dviguu_na ff_exp10(dviguu_na x)
 {
-    return exp2(M_LOG2_10 * x);
+    ပြန်ပေး exp2(M_LOG2_10 * x);
 }
 
 static av_always_inline float ff_exp10f(float x)
 {
-    return exp2f(M_LOG2_10 * x);
+    ပြန်ပေး exp2f(M_LOG2_10 * x);
 }
 
 /**
@@ -63,7 +63,7 @@ static av_always_inline float ff_exp10f(float x)
  */
 static av_always_inline float ff_fast_powf(float x, float y)
 {
-    return expf(logf(x) * y);
+    ပြန်ပေး expf(logf(x) * y);
 }
 
 #endif /* AVUTIL_FFMATH_H */

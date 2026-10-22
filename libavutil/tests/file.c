@@ -22,42 +22,42 @@
 #include "libavutil/file.c"
 #include "libavutil/log.h"
 
-static int last_log_level = -1;
+static ကိန်းပြည့် last_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+static void log_callback(void *ctx, ကိန်းပြည့် level, const var_na *fmt, va_list args)
 {
     (void)ctx; (void)fmt; (void)args;
     last_log_level = level;
 }
 
-int main(int argc, char **argv)
+ကိန်းပြည့် main(ကိန်းပြည့် argc, var_na **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    const var_na *path = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
     size_t size;
 
     av_log_set_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
+    အကယ်၍ (av_file_map(path, &buf, &size, 0, NULL) < 0)
+        ပြန်ပေး 1;
     av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    အကယ်၍ (size == 0)
+        ပြန်ပေး 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
+    အတွက် (ကိန်းပြည့် i = 0; i < 2; i++) {
         last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
+        အကယ်၍ (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
             av_file_unmap(buf, size);
-            return 2;
+            ပြန်ပေး 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
+        အကယ်၍ (last_log_level != AV_LOG_ERROR + i) {
             fprintf(stderr, "expected level %d with offset=%d, got %d\n",
                     AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+            ပြန်ပေး 3;
         }
     }
 
-    return 0;
+    ပြန်ပေး 0;
 }

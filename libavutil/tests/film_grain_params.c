@@ -21,26 +21,26 @@
 #include "libavutil/film_grain_params.h"
 #include "libavutil/mem.h"
 
-static AVFrame *create_frame(enum AVPixelFormat format, int width, int height)
+static AVFrame *create_frame(ga_nanaa AVPixelFormat format, ကိန်းပြည့် width, ကိန်းပြည့် height)
 {
     AVFrame *frame = av_frame_alloc();
-    if (!frame)
-        return NULL;
+    အကယ်၍ (!frame)
+        ပြန်ပေး NULL;
     frame->format = format;
     frame->width  = width;
     frame->height = height;
-    return frame;
+    ပြန်ပေး frame;
 }
 
 static AVFilmGrainParams *add_grain(AVFrame *frame,
-                                     enum AVFilmGrainParamsType type,
-                                     int width, int height,
-                                     int sub_x, int sub_y,
-                                     int bd_luma, int bd_chroma)
+                                     ga_nanaa AVFilmGrainParamsType type,
+                                     ကိန်းပြည့် width, ကိန်းပြည့် height,
+                                     ကိန်းပြည့် sub_x, ကိန်းပြည့် sub_y,
+                                     ကိန်းပြည့် bd_luma, ကိန်းပြည့် bd_chroma)
 {
     AVFilmGrainParams *fgp = av_film_grain_params_create_side_data(frame);
-    if (!fgp)
-        return NULL;
+    အကယ်၍ (!fgp)
+        ပြန်ပေး NULL;
     fgp->type             = type;
     fgp->width            = width;
     fgp->height           = height;
@@ -48,10 +48,10 @@ static AVFilmGrainParams *add_grain(AVFrame *frame,
     fgp->subsampling_y    = sub_y;
     fgp->bit_depth_luma   = bd_luma;
     fgp->bit_depth_chroma = bd_chroma;
-    return fgp;
+    ပြန်ပေး fgp;
 }
 
-int main(void)
+ကိန်းပြည့် main(void)
 {
     AVFilmGrainParams *fgp;
     const AVFilmGrainParams *sel;
@@ -72,11 +72,11 @@ int main(void)
 
     frame = av_frame_alloc();
     fgp = av_film_grain_params_create_side_data(frame);
-    if (fgp)
+    အကယ်၍ (fgp)
         printf("create: OK\ndefaults: range=%d pri=%d trc=%d space=%d\n",
                fgp->color_range, fgp->color_primaries,
                fgp->color_trc, fgp->color_space);
-    else
+    မဟုတ်ပါက
         printf("create: FAIL\n");
     av_frame_free(&frame);
 
@@ -239,5 +239,5 @@ int main(void)
            sel ? sel->width : -1, sel ? sel->height : -1);
     av_frame_free(&frame);
 
-    return 0;
+    ပြန်ပေး 0;
 }

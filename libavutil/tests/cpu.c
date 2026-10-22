@@ -23,24 +23,24 @@
 #include "libavutil/cpu.h"
 #include "libavutil/avstring.h"
 
-#if ARCH_AARCH64
+#အကယ်၍ ARCH_AARCH64
 #include "libavutil/aarch64/cpu.h"
 #elif ARCH_RISCV
 #include "libavutil/riscv/cpu.h"
 #endif
 
-#if HAVE_UNISTD_H
+#အကယ်၍ HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#if !HAVE_GETOPT
+#အကယ်၍ !HAVE_GETOPT
 #include "compat/getopt.c"
 #endif
 
-static const struct {
-    int flag;
-    const char *name;
+static const sa_nracanaa {
+    ကိန်းပြည့် flag;
+    const var_na *name;
 } cpu_flag_tab[] = {
-#if   ARCH_AARCH64
+#အကယ်၍   ARCH_AARCH64
     { AV_CPU_FLAG_ARMV8,     "armv8"      },
     { AV_CPU_FLAG_NEON,      "neon"       },
     { AV_CPU_FLAG_VFP,       "vfp"        },
@@ -118,53 +118,53 @@ static const struct {
     { 0 }
 };
 
-static void print_cpu_flags(int cpu_flags, const char *type)
+static void print_cpu_flags(ကိန်းပြည့် cpu_flags, const var_na *type)
 {
-    int i;
+    ကိန်းပြည့် i;
 
     printf("cpu_flags(%s) = 0x%08X\n", type, cpu_flags);
     printf("cpu_flags_str(%s) =", type);
-    for (i = 0; cpu_flag_tab[i].flag; i++)
-        if (cpu_flags & cpu_flag_tab[i].flag)
+    အတွက် (i = 0; cpu_flag_tab[i].flag; i++)
+        အကယ်၍ (cpu_flags & cpu_flag_tab[i].flag)
             printf(" %s", cpu_flag_tab[i].name);
     printf("\n");
 }
 
 
-int main(int argc, char **argv)
+ကိန်းပြည့် main(ကိန်းပြည့် argc, var_na **argv)
 {
-    int cpu_flags_raw = av_get_cpu_flags();
-    int cpu_flags_eff;
-    int cpu_count = av_cpu_count();
-    const char *threads = "auto";
-    int i;
+    ကိန်းပြည့် cpu_flags_raw = av_get_cpu_flags();
+    ကိန်းပြည့် cpu_flags_eff;
+    ကိန်းပြည့် cpu_count = av_cpu_count();
+    const var_na *threads = "auto";
+    ကိန်းပြည့် i;
 
-    for(i = 0; cpu_flag_tab[i].flag; i++) {
+    အတွက်(i = 0; cpu_flag_tab[i].flag; i++) {
         unsigned tmp = 0;
-        if (av_parse_cpu_caps(&tmp, cpu_flag_tab[i].name) < 0) {
+        အကယ်၍ (av_parse_cpu_caps(&tmp, cpu_flag_tab[i].name) < 0) {
             fprintf(stderr, "Table missing %s\n", cpu_flag_tab[i].name);
-            return 4;
+            ပြန်ပေး 4;
         }
     }
 
-    if (cpu_flags_raw < 0)
-        return 1;
+    အကယ်၍ (cpu_flags_raw < 0)
+        ပြန်ပေး 1;
 
-    for (;;) {
-        int c = getopt(argc, argv, "c:t:");
-        if (c == -1)
-            break;
+    အတွက် (;;) {
+        ကိန်းပြည့် c = getopt(argc, argv, "c:t:");
+        အကယ်၍ (c == -1)
+            bha_nga;
         switch (c) {
-        case 'c':
+        pak_sa 'c':
         {
             unsigned flags = av_get_cpu_flags();
-            if (av_parse_cpu_caps(&flags, optarg) < 0)
-                return 2;
+            အကယ်၍ (av_parse_cpu_caps(&flags, optarg) < 0)
+                ပြန်ပေး 2;
 
             av_force_cpu_flags(flags);
-            break;
+            bha_nga;
         }
-        case 't':
+        pak_sa 't':
         {
             threads = optarg;
         }
@@ -173,27 +173,27 @@ int main(int argc, char **argv)
 
     cpu_flags_eff = av_get_cpu_flags();
 
-    if (cpu_flags_eff < 0)
-        return 3;
+    အကယ်၍ (cpu_flags_eff < 0)
+        ပြန်ပေး 3;
 
     print_cpu_flags(cpu_flags_raw, "raw");
     print_cpu_flags(cpu_flags_eff, "effective");
     printf("threads = %s (cpu_count = %d)\n", threads, cpu_count);
-#if ARCH_AARCH64 && HAVE_SVE
-    if (cpu_flags_raw & AV_CPU_FLAG_SVE)
+#အကယ်၍ ARCH_AARCH64 && HAVE_SVE
+    အကယ်၍ (cpu_flags_raw & AV_CPU_FLAG_SVE)
         printf("sve_vector_length = %d\n", 8 * ff_aarch64_sve_length());
 #endif
-#if ARCH_AARCH64 && HAVE_SME
-    if (cpu_flags_raw & AV_CPU_FLAG_SME)
+#အကယ်၍ ARCH_AARCH64 && HAVE_SME
+    အကယ်၍ (cpu_flags_raw & AV_CPU_FLAG_SME)
         printf("sme_vector_length = %d\n", 8 * ff_aarch64_sme_length());
 #endif
-#if ARCH_RISCV && HAVE_RVV
-    if (cpu_flags_raw & AV_CPU_FLAG_RVV_I32) {
+#အကယ်၍ ARCH_RISCV && HAVE_RVV
+    အကယ်၍ (cpu_flags_raw & AV_CPU_FLAG_RVV_I32) {
         size_t bytes = ff_get_rv_vlenb();
 
         printf("rv_vlenb = %zu (%zu bits)\n", bytes, 8 * bytes);
     }
 #endif
 
-    return 0;
+    ပြန်ပေး 0;
 }

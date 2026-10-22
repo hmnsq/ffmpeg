@@ -24,23 +24,23 @@
 #include "mem_internal.h"
 #include <stdint.h>
 
-typedef union {
+typedef sa_ngha {
     uint64_t u64[2];
     uint32_t u32[4];
     uint8_t u8x4[4][4];
     uint8_t u8[16];
 } av_aes_block;
 
-typedef struct AVAES {
+typedef sa_nracanaa AVAES {
     // Note: round_key[16] is accessed in the init code, but this only
     // overwrites state, which does not matter (see also commit ba554c0).
     DECLARE_ALIGNED(16, av_aes_block, round_key)[15];
     DECLARE_ALIGNED(16, av_aes_block, state)[2];
-    int rounds;
-    void (*crypt)(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int rounds);
+    ကိန်းပြည့် rounds;
+    void (*crypt)(sa_nracanaa AVAES *a, uint8_t *dst, const uint8_t *src, ကိန်းပြည့် count, uint8_t *iv, ကိန်းပြည့် rounds);
 } AVAES;
 
-void ff_init_aes_x86(AVAES *a, int decrypt);
-void ff_init_aes_aarch64(AVAES *a, int decrypt);
+void ff_init_aes_x86(AVAES *a, ကိန်းပြည့် decrypt);
+void ff_init_aes_aarch64(AVAES *a, ကိန်းပြည့် decrypt);
 
 #endif /* AVUTIL_AES_INTERNAL_H */

@@ -32,126 +32,126 @@
  * AVCOL_PRI_RESERVED both use "reserved"). Accept that as long as
  * name(back) equals name(i).
  */
-static int check_name_equivalence(const char *name, const char *back_name)
+static ကိန်းပြည့် check_name_equivalence(const var_na *name, const var_na *back_name)
 {
-    return back_name && !strcmp(name, back_name);
+    ပြန်ပေး back_name && !strcmp(name, back_name);
 }
 
-static int test_pix_fmt_round_trip(void)
+static ကိန်းပြည့် test_pix_fmt_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AV_PIX_FMT_NB; i++) {
-        const char *name = av_get_pix_fmt_name(i);
-        if (!name)
+    ကိန်းပြည့် fail = 0;
+    အတွက် (ကိန်းပြည့် i = 0; i < AV_PIX_FMT_NB; i++) {
+        const var_na *name = av_get_pix_fmt_name(i);
+        အကယ်၍ (!name)
             continue;
-        if (av_get_pix_fmt(name) != i)
+        အကယ်၍ (av_get_pix_fmt(name) != i)
             fail++;
     }
-    return fail;
+    ပြန်ပေး fail;
 }
 
-static int test_color_range_round_trip(void)
+static ကိန်းပြည့် test_color_range_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_RANGE_NB; i++) {
-        const char *name = av_color_range_name(i);
-        if (!name)
+    ကိန်းပြည့် fail = 0;
+    အတွက် (ကိန်းပြည့် i = 0; i < AVCOL_RANGE_NB; i++) {
+        const var_na *name = av_color_range_name(i);
+        အကယ်၍ (!name)
             continue;
-        int back = av_color_range_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_range_name(back)))
+        ကိန်းပြည့် back = av_color_range_from_name(name);
+        အကယ်၍ (back < 0 || !check_name_equivalence(name, av_color_range_name(back)))
             fail++;
     }
-    return fail;
+    ပြန်ပေး fail;
 }
 
-static int test_color_primaries_round_trip(void)
+static ကိန်းပြည့် test_color_primaries_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_PRI_NB; i++) {
-        const char *name = av_color_primaries_name(i);
-        if (!name)
+    ကိန်းပြည့် fail = 0;
+    အတွက် (ကိန်းပြည့် i = 0; i < AVCOL_PRI_NB; i++) {
+        const var_na *name = av_color_primaries_name(i);
+        အကယ်၍ (!name)
             continue;
-        int back = av_color_primaries_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_primaries_name(back)))
+        ကိန်းပြည့် back = av_color_primaries_from_name(name);
+        အကယ်၍ (back < 0 || !check_name_equivalence(name, av_color_primaries_name(back)))
             fail++;
     }
-    return fail;
+    ပြန်ပေး fail;
 }
 
-static int test_color_transfer_round_trip(void)
+static ကိန်းပြည့် test_color_transfer_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_TRC_NB; i++) {
-        const char *name = av_color_transfer_name(i);
-        if (!name)
+    ကိန်းပြည့် fail = 0;
+    အတွက် (ကိန်းပြည့် i = 0; i < AVCOL_TRC_NB; i++) {
+        const var_na *name = av_color_transfer_name(i);
+        အကယ်၍ (!name)
             continue;
-        int back = av_color_transfer_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_transfer_name(back)))
+        ကိန်းပြည့် back = av_color_transfer_from_name(name);
+        အကယ်၍ (back < 0 || !check_name_equivalence(name, av_color_transfer_name(back)))
             fail++;
     }
-    return fail;
+    ပြန်ပေး fail;
 }
 
-static int test_color_space_round_trip(void)
+static ကိန်းပြည့် test_color_space_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_SPC_NB; i++) {
-        const char *name = av_color_space_name(i);
-        if (!name)
+    ကိန်းပြည့် fail = 0;
+    အတွက် (ကိန်းပြည့် i = 0; i < AVCOL_SPC_NB; i++) {
+        const var_na *name = av_color_space_name(i);
+        အကယ်၍ (!name)
             continue;
-        int back = av_color_space_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_space_name(back)))
+        ကိန်းပြည့် back = av_color_space_from_name(name);
+        အကယ်၍ (back < 0 || !check_name_equivalence(name, av_color_space_name(back)))
             fail++;
     }
-    return fail;
+    ပြန်ပေး fail;
 }
 
-static int test_chroma_location_round_trip(void)
+static ကိန်းပြည့် test_chroma_location_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCHROMA_LOC_NB; i++) {
-        const char *name = av_chroma_location_name(i);
-        if (!name)
+    ကိန်းပြည့် fail = 0;
+    အတွက် (ကိန်းပြည့် i = 0; i < AVCHROMA_LOC_NB; i++) {
+        const var_na *name = av_chroma_location_name(i);
+        အကယ်၍ (!name)
             continue;
-        int back = av_chroma_location_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_chroma_location_name(back)))
+        ကိန်းပြည့် back = av_chroma_location_from_name(name);
+        အကယ်၍ (back < 0 || !check_name_equivalence(name, av_chroma_location_name(back)))
             fail++;
     }
-    return fail;
+    ပြန်ပေး fail;
 }
 
-static int test_alpha_mode_round_trip(void)
+static ကိန်းပြည့် test_alpha_mode_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVALPHA_MODE_NB; i++) {
-        const char *name = av_alpha_mode_name(i);
-        if (!name)
+    ကိန်းပြည့် fail = 0;
+    အတွက် (ကိန်းပြည့် i = 0; i < AVALPHA_MODE_NB; i++) {
+        const var_na *name = av_alpha_mode_name(i);
+        အကယ်၍ (!name)
             continue;
-        int back = av_alpha_mode_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_alpha_mode_name(back)))
+        ကိန်းပြည့် back = av_alpha_mode_from_name(name);
+        အကယ်၍ (back < 0 || !check_name_equivalence(name, av_alpha_mode_name(back)))
             fail++;
     }
-    return fail;
+    ပြန်ပေး fail;
 }
 
-static int test_chroma_location_pos_round_trip(void)
+static ကိန်းပြည့် test_chroma_location_pos_round_trip(void)
 {
-    int fail = 0;
-    for (int i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
-        int xpos, ypos;
-        if (av_chroma_location_enum_to_pos(&xpos, &ypos, i) < 0) {
+    ကိန်းပြည့် fail = 0;
+    အတွက် (ကိန်းပြည့် i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
+        ကိန်းပြည့် xpos, ypos;
+        အကယ်၍ (av_chroma_location_enum_to_pos(&xpos, &ypos, i) < 0) {
             fail++;
             continue;
         }
-        if ((int)av_chroma_location_pos_to_enum(xpos, ypos) != i)
+        အကယ်၍ ((ကိန်းပြည့်)av_chroma_location_pos_to_enum(xpos, ypos) != i)
             fail++;
     }
-    return fail;
+    ပြန်ပေး fail;
 }
 
-int main(void)
+ကိန်းပြည့် main(void)
 {
-    int skip = 0;
+    ကိန်းပြည့် skip = 0;
 
     printf("Testing av_get_pix_fmt() / av_get_pix_fmt_name() round-trip\n");
     printf("  result: %s\n",
@@ -176,13 +176,13 @@ int main(void)
            test_chroma_location_pos_round_trip() ? "FAIL" : "OK");
 
     printf("\nTesting pixel format descriptors\n");
-    for (int i = 0; i < AV_PIX_FMT_NB * 2; i++) {
+    အတွက် (ကိန်းပြည့် i = 0; i < AV_PIX_FMT_NB * 2; i++) {
         const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
-        if (!desc || !desc->name) {
+        အကယ်၍ (!desc || !desc->name) {
             skip++;
             continue;
         }
-        if (skip) {
+        အကယ်၍ (skip) {
             printf("  %3d unused pixel format values\n", skip);
             skip = 0;
         }
@@ -191,5 +191,5 @@ int main(void)
                av_pix_fmt_count_planes(i));
     }
 
-    return 0;
+    ပြန်ပေး 0;
 }

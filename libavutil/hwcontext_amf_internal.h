@@ -26,13 +26,13 @@
 * Error handling helper
 */
 #define AMF_RETURN_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+    အကယ်၍ (!(exp)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        return ret_value; \
+        ပြန်ပေး ret_value; \
     }
 
 #define AMF_GOTO_FAIL_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+    အကယ်၍ (!(exp)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
         ret = ret_value; \
         goto fail; \

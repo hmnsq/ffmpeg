@@ -23,8 +23,8 @@
 #include "frame.h"
 
 AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
-                                                 enum AVFrameSideDataType type,
+                                                 ကိန်းပြည့် *nb_sd,
+                                                 ga_nanaa AVFrameSideDataType type,
                                                  AVBufferRef *buf);
 
 #endif // AVUTIL_SIDE_DATA_H

@@ -100,8 +100,8 @@
 #define INLINE_AVX2(flags)          CPUEXT_SUFFIX(flags, _INLINE, AVX2)
 #define INLINE_AESNI(flags)         CPUEXT_SUFFIX(flags, _INLINE, AESNI)
 
-void ff_cpu_cpuid(int index, int *eax, int *ebx, int *ecx, int *edx);
-void ff_cpu_xgetbv(int op, int *eax, int *edx);
-int  ff_cpu_cpuid_test(void);
+void ff_cpu_cpuid(ကိန်းပြည့် index, ကိန်းပြည့် *eax, ကိန်းပြည့် *ebx, ကိန်းပြည့် *ecx, ကိန်းပြည့် *edx);
+void ff_cpu_xgetbv(ကိန်းပြည့် op, ကိန်းပြည့် *eax, ကိန်းပြည့် *edx);
+ကိန်းပြည့်  ff_cpu_cpuid_test(void);
 
 #endif /* AVUTIL_X86_CPU_H */

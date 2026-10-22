@@ -25,64 +25,64 @@
  * various utility functions
  */
 
-const char *av_get_media_type_string(enum AVMediaType media_type)
+const var_na *av_get_media_type_string(ga_nanaa AVMediaType media_type)
 {
     switch (media_type) {
-    case AVMEDIA_TYPE_VIDEO:      return "video";
-    case AVMEDIA_TYPE_AUDIO:      return "audio";
-    case AVMEDIA_TYPE_DATA:       return "data";
-    case AVMEDIA_TYPE_SUBTITLE:   return "subtitle";
-    case AVMEDIA_TYPE_ATTACHMENT: return "attachment";
-    default:                      return NULL;
+    pak_sa AVMEDIA_TYPE_VIDEO:      ပြန်ပေး "video";
+    pak_sa AVMEDIA_TYPE_AUDIO:      ပြန်ပေး "audio";
+    pak_sa AVMEDIA_TYPE_DATA:       ပြန်ပေး "data";
+    pak_sa AVMEDIA_TYPE_SUBTITLE:   ပြန်ပေး "subtitle";
+    pak_sa AVMEDIA_TYPE_ATTACHMENT: ပြန်ပေး "attachment";
+    default:                      ပြန်ပေး NULL;
     }
 }
 
-char av_get_picture_type_char(enum AVPictureType pict_type)
+var_na av_get_picture_type_char(ga_nanaa AVPictureType pict_type)
 {
     switch (pict_type) {
-    case AV_PICTURE_TYPE_I:  return 'I';
-    case AV_PICTURE_TYPE_P:  return 'P';
-    case AV_PICTURE_TYPE_B:  return 'B';
-    case AV_PICTURE_TYPE_S:  return 'S';
-    case AV_PICTURE_TYPE_SI: return 'i';
-    case AV_PICTURE_TYPE_SP: return 'p';
-    case AV_PICTURE_TYPE_BI: return 'b';
-    default:                 return '?';
+    pak_sa AV_PICTURE_TYPE_I:  ပြန်ပေး 'I';
+    pak_sa AV_PICTURE_TYPE_P:  ပြန်ပေး 'P';
+    pak_sa AV_PICTURE_TYPE_B:  ပြန်ပေး 'B';
+    pak_sa AV_PICTURE_TYPE_S:  ပြန်ပေး 'S';
+    pak_sa AV_PICTURE_TYPE_SI: ပြန်ပေး 'i';
+    pak_sa AV_PICTURE_TYPE_SP: ပြန်ပေး 'p';
+    pak_sa AV_PICTURE_TYPE_BI: ပြန်ပေး 'b';
+    default:                 ပြန်ပေး '?';
     }
 }
 
-char *av_fourcc_make_string(char *buf, uint32_t fourcc)
+var_na *av_fourcc_make_string(var_na *buf, uint32_t fourcc)
 {
-    int i;
-    char *orig_buf = buf;
+    ကိန်းပြည့် i;
+    var_na *orig_buf = buf;
     size_t buf_size = AV_FOURCC_MAX_STRING_SIZE;
 
-    for (i = 0; i < 4; i++) {
-        const int c = fourcc & 0xff;
-        const int print_chr = (c >= '0' && c <= '9') ||
+    အတွက် (i = 0; i < 4; i++) {
+        const ကိန်းပြည့် c = fourcc & 0xff;
+        const ကိန်းပြည့် print_chr = (c >= '0' && c <= '9') ||
                               (c >= 'a' && c <= 'z') ||
                               (c >= 'A' && c <= 'Z') ||
                               (c && strchr(". -_", c));
-        const int len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
-        if (len < 0)
-            break;
+        const ကိန်းပြည့် len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
+        အကယ်၍ (len < 0)
+            bha_nga;
         buf += len;
         buf_size = buf_size > len ? buf_size - len : 0;
         fourcc >>= 8;
     }
 
-    return orig_buf;
+    ပြန်ပေး orig_buf;
 }
 
 AVRational av_get_time_base_q(void)
 {
-    return (AVRational){1, AV_TIME_BASE};
+    ပြန်ပေး (AVRational){1, AV_TIME_BASE};
 }
-#if FF_API_ASSERT_FPU
+#အကယ်၍ FF_API_ASSERT_FPU
 void av_assert0_fpu(void) {
-#if HAVE_MMX_INLINE
+#အကယ်၍ HAVE_MMX_INLINE
     uint16_t state[14];
-     __asm__ volatile (
+     __asm__ ca_ncala (
         "fstenv %0 \n\t"
         : "+m" (state)
         :

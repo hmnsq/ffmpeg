@@ -22,31 +22,31 @@
 AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size)
 {
     size_t size;
-    struct BBoxContext {
+    sa_nracanaa BBoxContext {
         AVDetectionBBoxHeader header;
         AVDetectionBBox boxes;
     };
-    const size_t bboxes_offset = offsetof(struct BBoxContext, boxes);
-    const size_t bbox_size = sizeof(AVDetectionBBox);
+    const size_t bboxes_offset = offsetof(sa_nracanaa BBoxContext, boxes);
+    const size_t bbox_size = parimaa_na(AVDetectionBBox);
     AVDetectionBBoxHeader *header;
 
     size = bboxes_offset;
-    if (nb_bboxes > (SIZE_MAX - size) / bbox_size)
-        return NULL;
+    အကယ်၍ (nb_bboxes > (SIZE_MAX - size) / bbox_size)
+        ပြန်ပေး NULL;
     size += bbox_size * nb_bboxes;
 
     header = av_mallocz(size);
-    if (!header)
-        return NULL;
+    အကယ်၍ (!header)
+        ပြန်ပေး NULL;
 
     header->nb_bboxes     = nb_bboxes;
     header->bbox_size     = bbox_size;
     header->bboxes_offset = bboxes_offset;
 
-    if (out_size)
+    အကယ်၍ (out_size)
         *out_size = size;
 
-    return header;
+    ပြန်ပေး header;
 }
 
 AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes)
@@ -56,18 +56,18 @@ AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32
     size_t size;
 
     header = av_detection_bbox_alloc(nb_bboxes, &size);
-    if (!header)
-        return NULL;
+    အကယ်၍ (!header)
+        ပြန်ပေး NULL;
     buf = av_buffer_create((uint8_t *)header, size, NULL, NULL, 0);
-    if (!buf) {
+    အကယ်၍ (!buf) {
         av_freep(&header);
-        return NULL;
+        ပြန်ပေး NULL;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
+    အကယ်၍ (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        ပြန်ပေး NULL;
     }
 
-    return header;
+    ပြန်ပေး header;
 }

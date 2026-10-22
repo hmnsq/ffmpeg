@@ -22,16 +22,16 @@
 #include <stddef.h>
 #include <stdint.h>
 
-typedef struct AVSubsampleEncryptionInfo {
+typedef sa_nracanaa AVSubsampleEncryptionInfo {
     /** The number of bytes that are clear. */
-    unsigned int bytes_of_clear_data;
+    unsigned ကိန်းပြည့် bytes_of_clear_data;
 
     /**
      * The number of bytes that are protected.  If using pattern encryption,
      * the pattern applies to only the protected bytes; if not using pattern
      * encryption, all these bytes are encrypted.
      */
-    unsigned int bytes_of_protected_data;
+    unsigned ကိန်းပြည့် bytes_of_protected_data;
 } AVSubsampleEncryptionInfo;
 
 /**
@@ -40,7 +40,7 @@ typedef struct AVSubsampleEncryptionInfo {
  *
  * The size of this struct is not part of the public ABI.
  */
-typedef struct AVEncryptionInfo {
+typedef sa_nracanaa AVEncryptionInfo {
     /** The fourcc encryption scheme, in big-endian byte order. */
     uint32_t scheme;
 
@@ -85,7 +85,7 @@ typedef struct AVEncryptionInfo {
  *
  * The size of this struct is not part of the public ABI.
  */
-typedef struct AVEncryptionInitInfo {
+typedef sa_nracanaa AVEncryptionInitInfo {
     /**
      * A unique identifier for the key system this is for, can be NULL if it
      * is not known.  This should always be 16 bytes, but may change in the
@@ -119,7 +119,7 @@ typedef struct AVEncryptionInitInfo {
     /**
      * An optional pointer to the next initialization info in the list.
      */
-    struct AVEncryptionInitInfo *next;
+    sa_nracanaa AVEncryptionInitInfo *next;
 } AVEncryptionInitInfo;
 
 /**
@@ -215,8 +215,8 @@ uint8_t *av_encryption_init_info_add_side_data(
  * @return 0 on success, a negative AVERROR code on failure, in which case
  *         *side_data and *side_data_size are unchanged.
  */
-int av_encryption_init_info_append_side_data(
-    uint8_t **side_data, size_t *side_data_size, unsigned int *allocated_size,
+ကိန်းပြည့် av_encryption_init_info_append_side_data(
+    uint8_t **side_data, size_t *side_data_size, unsigned ကိန်းပြည့် *allocated_size,
     const AVEncryptionInitInfo *info);
 
 #endif /* AVUTIL_ENCRYPTION_INFO_H */
