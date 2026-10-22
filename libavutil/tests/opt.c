@@ -16,54 +16,54 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#ضمن <limits.h>
+#ضمن <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/channel_layout.h"
-#include "libavutil/error.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
-#include "libavutil/rational.h"
-#include "libavutil/opt.h"
-#include "libavutil/pixdesc.h"
+#ضمن "libavutil/common.h"
+#ضمن "libavutil/channel_layout.h"
+#ضمن "libavutil/error.h"
+#ضمن "libavutil/log.h"
+#ضمن "libavutil/mem.h"
+#ضمن "libavutil/rational.h"
+#ضمن "libavutil/opt.h"
+#ضمن "libavutil/pixdesc.h"
 
-typedef struct TestContext {
-    const AVClass *class;
-    struct ChildContext *child;
-    int num;
-    int unum;
-    int toggle;
-    char *string;
-    int flags;
+تعريفنوع بنية TestContext {
+    ثابت AVClass *class;
+    بنية ChildContext *child;
+    صحيح عدد;
+    صحيح unum;
+    صحيح toggle;
+    حرف *string;
+    صحيح flags;
     AVRational rational;
     AVRational video_rate;
-    int w, h;
-    enum AVPixelFormat pix_fmt;
-    enum AVSampleFormat sample_fmt;
+    صحيح w, h;
+    تعداد AVPixelFormat pix_fmt;
+    تعداد AVSampleFormat sample_fmt;
     int64_t duration;
     uint8_t color[4];
     AVChannelLayout channel_layout;
-    void *binary;
-    int binary_size;
-    void *binary1;
-    int binary_size1;
-    void *binary2;
-    int binary_size2;
+    فراغ *ثنائی;
+    صحيح ثنائی_size;
+    فراغ *binary1;
+    صحيح ثنائی_size1;
+    فراغ *binary2;
+    صحيح ثنائی_size2;
     int64_t num64;
-    float flt;
-    double dbl;
-    char *escape;
-    int bool1;
-    int bool2;
-    int bool3;
+    عائم flt;
+    مزدوج dbl;
+    حرف *escape;
+    صحيح bool1;
+    صحيح bool2;
+    صحيح bool3;
     AVDictionary *dict1;
     AVDictionary *dict2;
 
-    int           **array_int;
+    صحيح           **array_int;
     unsigned     nb_array_int;
 
-    char          **array_str;
+    حرف          **array_str;
     unsigned     nb_array_str;
 
     AVDictionary  **array_dict;
@@ -76,18 +76,18 @@ typedef struct TestContext {
 #define TEST_FLAG_LAME 02
 #define TEST_FLAG_MU   04
 
-static const AVOptionArrayDef array_str = {
+ساكن ثابت AVOptionArrayDef array_str = {
     .sep         = '|',
     .def         = "str0|str\\|1|str\\\\2",
 };
 
-static const AVOptionArrayDef array_dict = {
+ساكن ثابت AVOptionArrayDef array_dict = {
     // there are three levels of escaping - C string, array option, dict - so 8 backslashes are needed to get a literal one inside a dict key/val
     .def         = "k00=v\\\\\\\\00:k01=v\\,01,k10=v\\\\=1\\\\:0",
 };
 
-static const AVOption test_options[]= {
-    {"num",        "set num",            OFFSET(num),            AV_OPT_TYPE_INT,            { .i64 = 0 },                     -1,       100, 1 },
+ساكن ثابت AVOption test_options[]= {
+    {"num",        "set num",            OFFSET(عدد),            AV_OPT_TYPE_INT,            { .i64 = 0 },                     -1,       100, 1 },
     {"unum",       "set unum",           OFFSET(unum),           AV_OPT_TYPE_UINT,           { .i64 = 1U << 31 },               0,  1U << 31, 1 },
     {"toggle",     "set toggle",         OFFSET(toggle),         AV_OPT_TYPE_INT,            { .i64 = 1 },                      0,         1, 1 },
     {"rational",   "set rational",       OFFSET(rational),       AV_OPT_TYPE_RATIONAL,       { .dbl = 1 },                      0,        10, 1 },
@@ -104,66 +104,66 @@ static const AVOption test_options[]= {
     {"duration",   "set duration",       OFFSET(duration),       AV_OPT_TYPE_DURATION,       { .i64 = 1000 },                   0, INT64_MAX, 1 },
     {"color",      "set color",          OFFSET(color),          AV_OPT_TYPE_COLOR,          { .str = "pink" },                 0,         0, 1 },
     {"cl",         "set channel layout", OFFSET(channel_layout), AV_OPT_TYPE_CHLAYOUT,       { .str = "hexagonal" },            0,         0, 1 },
-    {"bin",        "set binary value",   OFFSET(binary),         AV_OPT_TYPE_BINARY,         { .str="62696e00" },               0,         0, 1 },
-    {"bin1",       "set binary value",   OFFSET(binary1),        AV_OPT_TYPE_BINARY,         { .str=NULL },                     0,         0, 1 },
-    {"bin2",       "set binary value",   OFFSET(binary2),        AV_OPT_TYPE_BINARY,         { .str="" },                       0,         0, 1 },
+    {"bin",        "set binary value",   OFFSET(ثنائی),         AV_OPT_TYPE_ثنائی,         { .str="62696e00" },               0,         0, 1 },
+    {"bin1",       "set binary value",   OFFSET(binary1),        AV_OPT_TYPE_ثنائی,         { .str=عدم },                     0,         0, 1 },
+    {"bin2",       "set binary value",   OFFSET(binary2),        AV_OPT_TYPE_ثنائی,         { .str="" },                       0,         0, 1 },
     {"num64",      "set num 64bit",      OFFSET(num64),          AV_OPT_TYPE_INT64,          { .i64 = 1LL << 32 },             -1, 1LL << 32, 1 },
     {"flt",        "set float",          OFFSET(flt),            AV_OPT_TYPE_FLOAT,          { .dbl = 1.0 / 3 },                0,       100, 1 },
     {"dbl",        "set double",         OFFSET(dbl),            AV_OPT_TYPE_DOUBLE,         { .dbl = 1.0 / 3 },                0,       100, 1 },
     {"bool1",      "set boolean value",  OFFSET(bool1),          AV_OPT_TYPE_BOOL,           { .i64 = -1 },                    -1,         1, 1 },
     {"bool2",      "set boolean value",  OFFSET(bool2),          AV_OPT_TYPE_BOOL,           { .i64 = 1 },                     -1,         1, 1 },
     {"bool3",      "set boolean value",  OFFSET(bool3),          AV_OPT_TYPE_BOOL,           { .i64 = 0 },                      0,         1, 1 },
-    {"dict1",      "set dictionary value", OFFSET(dict1),        AV_OPT_TYPE_DICT,           { .str = NULL},                    0,         0, 1 },
+    {"dict1",      "set dictionary value", OFFSET(dict1),        AV_OPT_TYPE_DICT,           { .str = عدم},                    0,         0, 1 },
     {"dict2",      "set dictionary value", OFFSET(dict2),        AV_OPT_TYPE_DICT,           { .str = "happy=':-)'"},           0,         0, 1 },
     {"array_int",  "array of ints",        OFFSET(array_int),    AV_OPT_TYPE_INT | AV_OPT_TYPE_FLAG_ARRAY, .max = INT_MAX,           .flags = AV_OPT_FLAG_RUNTIME_PARAM },
     {"array_str",  "array of strings",     OFFSET(array_str),    AV_OPT_TYPE_STRING | AV_OPT_TYPE_FLAG_ARRAY, { .arr = &array_str }, .flags = AV_OPT_FLAG_RUNTIME_PARAM },
     {"array_dict", "array of dicts",       OFFSET(array_dict),   AV_OPT_TYPE_DICT | AV_OPT_TYPE_FLAG_ARRAY, { .arr = &array_dict },  .flags = AV_OPT_FLAG_RUNTIME_PARAM },
-    { NULL },
+    { عدم },
 };
 
-static const char *test_get_name(void *ctx)
+ساكن ثابت حرف *test_get_name(فراغ *ctx)
 {
-    return "test";
+    أرجع "test";
 }
 
-typedef struct ChildContext {
-    const AVClass *class;
+تعريفنوع بنية ChildContext {
+    ثابت AVClass *class;
     int64_t child_num64;
-    int child_num;
-    unsigned int child_unum;
+    صحيح child_عدد;
+    unsigned صحيح child_unum;
 } ChildContext;
 
 #undef OFFSET
 #define OFFSET(x) offsetof(ChildContext, x)
 
-static const AVOption child_options[]= {
+ساكن ثابت AVOption child_options[]= {
     {"child_num64", "set num 64bit", OFFSET(child_num64), AV_OPT_TYPE_INT64, { .i64 = 0 }, 0, 100, 1 | AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
-    {"child_num",   "set child_num", OFFSET(child_num),   AV_OPT_TYPE_INT,   { .i64 = 1 }, 0, 100, 1 },
+    {"child_num",   "set child_num", OFFSET(child_عدد),   AV_OPT_TYPE_INT,   { .i64 = 1 }, 0, 100, 1 },
     {"child_unum",  "set child_unum", OFFSET(child_unum),  AV_OPT_TYPE_UINT,  { .i64 = 0 }, 0, 100, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
-    { NULL },
+    { عدم },
 };
 
-static const char *child_get_name(void *ctx)
+ساكن ثابت حرف *child_get_name(فراغ *ctx)
 {
-    return "child";
+    أرجع "child";
 }
 
-static const AVClass child_class = {
+ساكن ثابت AVClass child_class = {
     .class_name = "ChildContext",
     .item_name  = child_get_name,
     .option     = child_options,
     .version    = LIBAVUTIL_VERSION_INT,
 };
 
-static void *test_child_next(void *obj, void *prev)
+ساكن فراغ *test_child_next(فراغ *obj, فراغ *prev)
 {
     TestContext *test_ctx = obj;
-    if (!prev)
-        return test_ctx->child;
-    return NULL;
+    إذا (!prev)
+        أرجع test_ctx->child;
+    أرجع عدم;
 }
 
-static const AVClass test_class = {
+ساكن ثابت AVClass test_class = {
     .class_name = "TestContext",
     .item_name  = test_get_name,
     .option     = test_options,
@@ -171,14 +171,14 @@ static const AVClass test_class = {
     .version    = LIBAVUTIL_VERSION_INT,
 };
 
-static void log_callback_help(void *ptr, int level, const char *fmt, va_list vl)
+ساكن فراغ log_callback_help(فراغ *ptr, صحيح level, ثابت حرف *fmt, va_list vl)
 {
     vfprintf(stdout, fmt, vl);
 }
 
-int main(void)
+صحيح main(فراغ)
 {
-    int i;
+    صحيح i;
 
     av_log_set_level(AV_LOG_DEBUG);
     av_log_set_callback(log_callback_help);
@@ -189,58 +189,58 @@ int main(void)
         test_ctx.class = &test_class;
         av_opt_set_defaults(&test_ctx);
 
-        printf("num=%d\n", test_ctx.num);
+        printf("num=%d\n", test_ctx.عدد);
         printf("unum=%u\n", test_ctx.unum);
         printf("toggle=%d\n", test_ctx.toggle);
         printf("string=%s\n", test_ctx.string);
         printf("escape=%s\n", test_ctx.escape);
         printf("flags=%d\n", test_ctx.flags);
-        printf("rational=%d/%d\n", test_ctx.rational.num, test_ctx.rational.den);
-        printf("video_rate=%d/%d\n", test_ctx.video_rate.num, test_ctx.video_rate.den);
+        printf("rational=%d/%d\n", test_ctx.rational.عدد, test_ctx.rational.den);
+        printf("video_rate=%d/%d\n", test_ctx.video_rate.عدد, test_ctx.video_rate.den);
         printf("width=%d height=%d\n", test_ctx.w, test_ctx.h);
         printf("pix_fmt=%s\n", av_get_pix_fmt_name(test_ctx.pix_fmt));
         printf("sample_fmt=%s\n", av_get_sample_fmt_name(test_ctx.sample_fmt));
         printf("duration=%"PRId64"\n", test_ctx.duration);
         printf("color=%d %d %d %d\n", test_ctx.color[0], test_ctx.color[1], test_ctx.color[2], test_ctx.color[3]);
         printf("channel_layout=%"PRId64"=%"PRId64"\n", test_ctx.channel_layout.u.mask, (int64_t)AV_CH_LAYOUT_HEXAGONAL);
-        if (test_ctx.binary)
-            printf("binary=%x %x %x %x\n", ((uint8_t*)test_ctx.binary)[0], ((uint8_t*)test_ctx.binary)[1], ((uint8_t*)test_ctx.binary)[2], ((uint8_t*)test_ctx.binary)[3]);
-        printf("binary_size=%d\n", test_ctx.binary_size);
+        إذا (test_ctx.ثنائی)
+            printf("binary=%x %x %x %x\n", ((uint8_t*)test_ctx.ثنائی)[0], ((uint8_t*)test_ctx.ثنائی)[1], ((uint8_t*)test_ctx.ثنائی)[2], ((uint8_t*)test_ctx.ثنائی)[3]);
+        printf("binary_size=%d\n", test_ctx.ثنائی_size);
         printf("num64=%"PRId64"\n", test_ctx.num64);
         printf("flt=%.6f\n", test_ctx.flt);
         printf("dbl=%.6f\n", test_ctx.dbl);
 
-        for (unsigned i = 0; i < test_ctx.nb_array_str; i++)
+        لكل (unsigned i = 0; i < test_ctx.nb_array_str; i++)
             printf("array_str[%u]=%s\n", i, test_ctx.array_str[i]);
 
-        for (unsigned i = 0; i < test_ctx.nb_array_dict; i++) {
+        لكل (unsigned i = 0; i < test_ctx.nb_array_dict; i++) {
             AVDictionary            *d = test_ctx.array_dict[i];
-            const AVDictionaryEntry *e = NULL;
+            ثابت AVDictionaryEntry *e = عدم;
 
-            while ((e = av_dict_iterate(d, e)))
-                printf("array_dict[%u]: %s\t%s\n", i, e->key, e->value);
+            طالما ((e = av_dict_iterate(d, e)))
+                printf("array_dict[%u]: %s\t%s\n", i, e->کلید, e->قدر);
         }
 
-        av_opt_show2(&test_ctx, NULL, -1, 0);
+        av_opt_show2(&test_ctx, عدم, -1, 0);
 
         av_opt_free(&test_ctx);
     }
 
     printf("\nTesting av_opt_is_set_to_default()\n");
     {
-        int ret;
+        صحيح ret;
         TestContext test_ctx = { 0 };
-        const AVOption *o = NULL;
+        ثابت AVOption *o = عدم;
         test_ctx.class = &test_class;
 
         av_log_set_level(AV_LOG_QUIET);
 
-        while (o = av_opt_next(&test_ctx, o)) {
+        طالما (o = av_opt_next(&test_ctx, o)) {
             ret = av_opt_is_set_to_default_by_name(&test_ctx, o->name, 0);
             printf("name:%10s default:%d error:%s\n", o->name, !!ret, ret < 0 ? av_err2str(ret) : "");
         }
         av_opt_set_defaults(&test_ctx);
-        while (o = av_opt_next(&test_ctx, o)) {
+        طالما (o = av_opt_next(&test_ctx, o)) {
             ret = av_opt_is_set_to_default_by_name(&test_ctx, o->name, 0);
             printf("name:%10s default:%d error:%s\n", o->name, !!ret, ret < 0 ? av_err2str(ret) : "");
         }
@@ -251,9 +251,9 @@ int main(void)
     {
         TestContext test_ctx = { 0 };
         TestContext test2_ctx = { 0 };
-        const AVOption *o = NULL;
-        char *val = NULL;
-        int ret;
+        ثابت AVOption *o = عدم;
+        حرف *val = عدم;
+        صحيح ret;
 
         test_ctx.class = &test_class;
         test2_ctx.class = &test_class;
@@ -262,20 +262,20 @@ int main(void)
 
         av_opt_set_defaults(&test_ctx);
 
-        while (o = av_opt_next(&test_ctx, o)) {
-            char *value1 = NULL;
-            char *value2 = NULL;
-            int ret1 = AVERROR_BUG;
-            int ret2 = AVERROR_BUG;
-            int ret3 = AVERROR_BUG;
+        طالما (o = av_opt_next(&test_ctx, o)) {
+            حرف *value1 = عدم;
+            حرف *value2 = عدم;
+            صحيح ret1 = AVERROR_BUG;
+            صحيح ret2 = AVERROR_BUG;
+            صحيح ret3 = AVERROR_BUG;
 
-            if (o->type == AV_OPT_TYPE_CONST)
-                continue;
+            إذا (o->type == AV_OPT_TYPE_CONST)
+                استمر;
 
             ret1 = av_opt_get(&test_ctx, o->name, 0, (uint8_t **)&value1);
-            if (ret1 >= 0) {
+            إذا (ret1 >= 0) {
                 ret2 = av_opt_set(&test2_ctx, o->name, value1, 0);
-                if (ret2 >= 0)
+                إذا (ret2 >= 0)
                     ret3 = av_opt_get(&test2_ctx, o->name, 0, (uint8_t **)&value2);
             }
 
@@ -289,7 +289,7 @@ int main(void)
         }
 
         // av_opt_set(NULL) with an array option resets it
-        ret = av_opt_set(&test_ctx, "array_dict", NULL, 0);
+        ret = av_opt_set(&test_ctx, "array_dict", عدم, 0);
         printf("av_opt_set(\"array_dict\", NULL) -> %d\n", ret);
         printf("array_dict=%sNULL; nb_array_dict=%u\n",
                test_ctx.array_dict ? "non-" : "", test_ctx.nb_array_dict);
@@ -304,16 +304,16 @@ int main(void)
 
     printf("\nTesting av_opt_get_array()\n");
     {
-        static const int int_array[] = { 5, 0, 42, 137, INT_MAX };
+        ساكن ثابت صحيح int_array[] = { 5, 0, 42, 137, INT_MAX };
 
         TestContext test_ctx = { 0 };
 
-        int     out_int   [FF_ARRAY_ELEMS(int_array)] = { 0 };
-        double  out_double[FF_ARRAY_ELEMS(int_array)] = { 0. };
-        char   *out_str   [FF_ARRAY_ELEMS(int_array)] = { NULL };
-        AVDictionary *out_dict[2] = { NULL };
+        صحيح     out_int   [FF_ARRAY_ELEMS(int_array)] = { 0 };
+        مزدوج  out_double[FF_ARRAY_ELEMS(int_array)] = { 0. };
+        حرف   *out_str   [FF_ARRAY_ELEMS(int_array)] = { عدم };
+        AVDictionary *out_dict[2] = { عدم };
 
-        int ret;
+        صحيح ret;
 
         test_ctx.class = &test_class;
 
@@ -321,7 +321,7 @@ int main(void)
 
         av_opt_set_defaults(&test_ctx);
 
-        test_ctx.array_int    = av_memdup(int_array, sizeof(int_array));
+        test_ctx.array_int    = av_memdup(int_array, حجم(int_array));
         test_ctx.nb_array_int = FF_ARRAY_ELEMS(int_array);
 
         // retrieve as int
@@ -343,20 +343,20 @@ int main(void)
                "[ %s, %s, %s, %s, %s ]\n", ret,
                out_str[0], out_str[1], out_str[2], out_str[3], out_str[4]);
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(out_str); i++)
+        لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(out_str); i++)
             av_freep(&out_str[i]);
 
         ret = av_opt_get_array(&test_ctx, "array_dict", 0, 0, 2,
                                AV_OPT_TYPE_DICT, out_dict);
         printf("av_opt_get_array(\"array_dict\", 0, 2, DICT)=%d\n", ret);
 
-        for (int i = 0; i < test_ctx.nb_array_dict; i++) {
-            const AVDictionaryEntry *e = NULL;
-            while ((e = av_dict_iterate(test_ctx.array_dict[i], e))) {
-                const AVDictionaryEntry *e1 = av_dict_get(out_dict[i], e->key, NULL, 0);
-                if (!e1 || strcmp(e->value, e1->value)) {
+        لكل (صحيح i = 0; i < test_ctx.nb_array_dict; i++) {
+            ثابت AVDictionaryEntry *e = عدم;
+            طالما ((e = av_dict_iterate(test_ctx.array_dict[i], e))) {
+                ثابت AVDictionaryEntry *e1 = av_dict_get(out_dict[i], e->کلید, عدم, 0);
+                إذا (!e1 || strcmp(e->قدر, e1->قدر)) {
                     printf("mismatching dict entry %s: %s/%s\n",
-                           e->key, e->value, e1 ? e1->value : "<missing>");
+                           e->کلید, e->قدر, e1 ? e1->قدر : "<missing>");
                 }
             }
             av_dict_free(&out_dict[i]);
@@ -368,92 +368,92 @@ int main(void)
     printf("\nTest av_opt_serialize()\n");
     {
         TestContext test_ctx = { 0 };
-        char *buf;
-        int ret;
+        حرف *buf;
+        صحيح ret;
         test_ctx.class = &test_class;
 
         av_log_set_level(AV_LOG_QUIET);
 
         av_opt_set_defaults(&test_ctx);
-        if (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
+        إذا (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
             printf("%s\n", buf);
             av_opt_free(&test_ctx);
-            memset(&test_ctx, 0, sizeof(test_ctx));
+            memset(&test_ctx, 0, حجم(test_ctx));
             test_ctx.class = &test_class;
             ret = av_set_options_string(&test_ctx, buf, "=", ",");
             av_free(buf);
-            if (ret < 0)
+            إذا (ret < 0)
                 printf("Error ret '%d'\n", ret);
-            if (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
+            إذا (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
                 ChildContext child_ctx = { .child_num64 = 1, .child_unum = 1 };
                 printf("%s\n", buf);
                 av_free(buf);
                 child_ctx.class = &child_class;
                 test_ctx.child = &child_ctx;
                 printf("Exclude flag EXPORT:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                إذا (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
                     av_free(buf);
                 }
                 printf("Include flag EXPORT:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN,
+                إذا (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
                     av_free(buf);
                 }
                 printf("Exclude flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                إذا (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
                     av_free(buf);
                 }
                 printf("Include flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN,
+                إذا (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
                     av_free(buf);
                 }
                 printf("Exclude exact match flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                إذا (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT|AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
                     av_free(buf);
                 }
                 printf("Include exact match flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                إذا (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
                     av_free(buf);
                 }
                 printf("Exclude exact match flag EXPORT|READONLY:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                إذا (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT|AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
                     av_free(buf);
                 }
                 printf("Include exact match flag EXPORT|READONLY:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                إذا (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT,
                                      &buf, '=', ',') >= 0) {
                     printf("%s\n", buf);
                     av_free(buf);
                 }
                 av_opt_free(&child_ctx);
-                test_ctx.child = NULL;
+                test_ctx.child = عدم;
             }
         }
         av_opt_free(&test_ctx);
@@ -462,7 +462,7 @@ int main(void)
     printf("\nTesting av_set_options_string()\n");
     {
         TestContext test_ctx = { 0 };
-        static const char * const options[] = {
+        ساكن ثابت حرف * ثابت options[] = {
             "",
             ":",
             "=",
@@ -548,14 +548,14 @@ int main(void)
 
         av_log_set_level(AV_LOG_QUIET);
 
-        for (i=0; i < FF_ARRAY_ELEMS(options); i++) {
-            int silence_log = !strcmp(options[i], "rational=-1/0"); // inf formatting differs between platforms
+        لكل (i=0; i < FF_ARRAY_ELEMS(options); i++) {
+            صحيح silence_log = !strcmp(options[i], "rational=-1/0"); // inf formatting differs between platforms
             av_log(&test_ctx, AV_LOG_DEBUG, "Setting options string '%s'\n", options[i]);
-            if (silence_log)
-                av_log_set_callback(NULL);
-            if (av_set_options_string(&test_ctx, options[i], "=", ":") < 0)
+            إذا (silence_log)
+                av_log_set_callback(عدم);
+            إذا (av_set_options_string(&test_ctx, options[i], "=", ":") < 0)
                 printf("Error '%s'\n", options[i]);
-            else
+            وإلا
                 printf("OK    '%s'\n", options[i]);
             av_log_set_callback(log_callback_help);
         }
@@ -565,7 +565,7 @@ int main(void)
     printf("\nTesting av_opt_set_from_string()\n");
     {
         TestContext test_ctx = { 0 };
-        static const char * const options[] = {
+        ساكن ثابت حرف * ثابت options[] = {
             "",
             "5",
             "5:hello",
@@ -576,18 +576,18 @@ int main(void)
             " 5 : hello : size = pal ",
             "a_very_long_option_name_that_will_need_to_be_ellipsized_around_here=42"
         };
-        static const char * const shorthand[] = { "num", "string", NULL };
+        ساكن ثابت حرف * ثابت shorthand[] = { "num", "string", عدم };
 
         test_ctx.class = &test_class;
         av_opt_set_defaults(&test_ctx);
 
         av_log_set_level(AV_LOG_QUIET);
 
-        for (i=0; i < FF_ARRAY_ELEMS(options); i++) {
+        لكل (i=0; i < FF_ARRAY_ELEMS(options); i++) {
             av_log(&test_ctx, AV_LOG_DEBUG, "Setting options string '%s'\n", options[i]);
-            if (av_opt_set_from_string(&test_ctx, options[i], shorthand, "=", ":") < 0)
+            إذا (av_opt_set_from_string(&test_ctx, options[i], shorthand, "=", ":") < 0)
                 printf("Error '%s'\n", options[i]);
-            else
+            وإلا
                 printf("OK    '%s'\n", options[i]);
         }
         av_opt_free(&test_ctx);
@@ -597,8 +597,8 @@ int main(void)
     {
         TestContext test_ctx = { 0 };
         ChildContext child_ctx = { 0 };
-        void *target;
-        const AVOption *opt;
+        فراغ *target;
+        ثابت AVOption *opt;
 
         test_ctx.class = &test_class;
         child_ctx.class = &child_class;
@@ -607,38 +607,38 @@ int main(void)
         av_log_set_level(AV_LOG_QUIET);
 
         // Should succeed. num exists and has opt_flags 1
-        opt = av_opt_find2(&test_ctx, "num", NULL, 1, 0, &target);
-        if (opt && target == &test_ctx)
+        opt = av_opt_find2(&test_ctx, "num", عدم, 1, 0, &target);
+        إذا (opt && target == &test_ctx)
             printf("OK    '%s'\n", opt->name);
-        else
+        وإلا
             printf("Error 'num'\n");
 
         // Should fail. num64 exists but has opt_flags 1, not 2
-        opt = av_opt_find(&test_ctx, "num64", NULL, 2, 0);
-        if (opt)
+        opt = av_opt_find(&test_ctx, "num64", عدم, 2, 0);
+        إذا (opt)
             printf("OK    '%s'\n", opt->name);
-        else
+        وإلا
             printf("Error 'num64'\n");
 
         // Should fail. child_num exists but in a child object we're not searching
-        opt = av_opt_find(&test_ctx, "child_num", NULL, 0, 0);
-        if (opt)
+        opt = av_opt_find(&test_ctx, "child_num", عدم, 0, 0);
+        إذا (opt)
             printf("OK    '%s'\n", opt->name);
-        else
+        وإلا
             printf("Error 'child_num'\n");
 
         // Should succeed. child_num exists in a child object we're searching
-        opt = av_opt_find2(&test_ctx, "child_num", NULL, 0, AV_OPT_SEARCH_CHILDREN, &target);
-        if (opt && target == &child_ctx)
+        opt = av_opt_find2(&test_ctx, "child_num", عدم, 0, AV_OPT_تلاش_CHILDREN, &target);
+        إذا (opt && target == &child_ctx)
             printf("OK    '%s'\n", opt->name);
-        else
+        وإلا
             printf("Error 'child_num'\n");
 
         // Should fail. foo doesn't exist
-        opt = av_opt_find(&test_ctx, "foo", NULL, 0, 0);
-        if (opt)
+        opt = av_opt_find(&test_ctx, "foo", عدم, 0, 0);
+        إذا (opt)
             printf("OK    '%s'\n", opt->name);
-        else
+        وإلا
             printf("Error 'foo'\n");
     }
 
@@ -646,15 +646,15 @@ int main(void)
     {
         TestContext test_ctx = { 0 };
         TestContext *copy;
-        uint8_t *layout_name = NULL;
+        uint8_t *layout_name = عدم;
 
         test_ctx.class = &test_class;
         av_opt_set_defaults(&test_ctx);
         av_opt_set(&test_ctx, "cl", "FL@Left+FR@Right", 0);
 
-        copy = av_memdup(&test_ctx, sizeof(test_ctx));
-        if (!copy)
-            return 1;
+        copy = av_memdup(&test_ctx, حجم(test_ctx));
+        إذا (!copy)
+            أرجع 1;
         av_opt_copy(copy, &test_ctx);
         av_opt_free(&test_ctx);
 
@@ -685,5 +685,5 @@ int main(void)
         av_opt_free(&dst);
     }
 
-    return 0;
+    أرجع 0;
 }

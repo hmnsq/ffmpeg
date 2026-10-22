@@ -27,9 +27,9 @@
 #ifndef AVUTIL_PCA_H
 #define AVUTIL_PCA_H
 
-struct PCA *ff_pca_init(int n);
-void ff_pca_free(struct PCA *pca);
-void ff_pca_add(struct PCA *pca, const double *v);
-int ff_pca(struct PCA *pca, double *eigenvector, double *eigenvalue);
+بنية PCA *ff_pca_init(صحيح n);
+فراغ ff_pca_free(بنية PCA *pca);
+فراغ ff_pca_add(بنية PCA *pca, ثابت مزدوج *v);
+صحيح ff_pca(بنية PCA *pca, مزدوج *eigenvector, مزدوج *eigenvalue);
 
 #endif /* AVUTIL_PCA_H */

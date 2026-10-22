@@ -19,36 +19,36 @@
  */
 
 #define TEST 1
-#include "libavutil/random_seed.c"
+#ضمن "libavutil/random_seed.c"
 
 #define N 256
 #define F 2
-#include <stdio.h>
+#ضمن <stdio.h>
 
-typedef uint32_t (*random_seed_ptr_t)(void);
+تعريفنوع uint32_t (*random_seed_ptr_t)(فراغ);
 
-int main(void)
+صحيح main(فراغ)
 {
-    int i, j, rsf, retry;
+    صحيح i, j, rsf, retry;
     uint32_t seeds[N];
     random_seed_ptr_t random_seed[F] = {av_get_random_seed, get_generic_seed};
 
-    for (rsf=0; rsf<F; ++rsf){
-        for (retry=0; retry<3; retry++){
-            for (i=0; i<N; i++){
+    لكل (rsf=0; rsf<F; ++rsf){
+        لكل (retry=0; retry<3; retry++){
+            لكل (i=0; i<N; i++){
                 seeds[i] = random_seed[rsf]();
-                for (j=0; j<i; j++)
-                    if (seeds[j] == seeds[i])
-                        goto retry;
+                لكل (j=0; j<i; j++)
+                    إذا (seeds[j] == seeds[i])
+                        اذهب retry;
             }
             printf("seeds OK\n");
-            break;
+            اكسر;
             retry:;
         }
-        if (retry >= 3) {
+        إذا (retry >= 3) {
             printf("rsf %d: FAIL at %d with %"PRIX32"\n", rsf, j, seeds[j]);
-            return 1;
+            أرجع 1;
         }
     }
-    return 0;
+    أرجع 0;
 }
