@@ -18,22 +18,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
+#অন্তর্ভাব <assert.h>
 
-#include "config.h"
-#include "avutil.h"
-#include "samplefmt.h"
-#include "version.h"
+#অন্তর্ভাব "config.h"
+#অন্তর্ভাব "avutil.h"
+#অন্তর্ভাব "samplefmt.h"
+#অন্তর্ভাব "version.h"
 
-#include "libavutil/ffversion.h"
-const char av_util_ffversion[] = "FFmpeg version " FFMPEG_VERSION;
+#অন্তর্ভাব "libavutil/ffversion.h"
+ধ্রুব বর্ণ av_util_ffversion[] = "FFmpeg version " FFMPEG_VERSION;
 
-const char *av_version_info(void)
+ধ্রুব বর্ণ *av_version_info(শূন্য)
 {
-    return FFMPEG_VERSION;
+    প্রত্যাগম FFMPEG_VERSION;
 }
 
-unsigned avutil_version(void)
+unsigned avutil_version(শূন্য)
 {
     static_assert(AV_SAMPLE_FMT_S64P      == 11 &&
                   AVMEDIA_TYPE_ATTACHMENT ==  4 &&
@@ -41,16 +41,16 @@ unsigned avutil_version(void)
                   "Don't insert new sample/media/picture types in the middle of the list");
     static_assert(LIBAVUTIL_VERSION_MICRO >= 100, "micro version starts at 100");
 
-    return LIBAVUTIL_VERSION_INT;
+    প্রত্যাগম LIBAVUTIL_VERSION_INT;
 }
 
-const char *avutil_configuration(void)
+ধ্রুব বর্ণ *avutil_configuration(শূন্য)
 {
-    return FFMPEG_CONFIGURATION;
+    প্রত্যাগম FFMPEG_CONFIGURATION;
 }
 
-const char *avutil_license(void)
+ধ্রুব বর্ণ *avutil_license(শূন্য)
 {
 #define LICENSE_PREFIX "libavutil license: "
-    return &LICENSE_PREFIX FFMPEG_LICENSE[sizeof(LICENSE_PREFIX) - 1];
+    প্রত্যাগম &LICENSE_PREFIX FFMPEG_LICENSE[পরিমাণ(LICENSE_PREFIX) - 1];
 }

@@ -18,16 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "util_altivec.h"
-#include "float_dsp_vsx.h"
+#অন্তর্ভাব "util_altivec.h"
+#অন্তর্ভাব "float_dsp_vsx.h"
 
-void ff_vector_fmul_vsx(float *dst,
-                        const float *src0, const float *src1,
-                        int len)
+শূন্য ff_vector_fmul_vsx(ভিন্ন *dst,
+                        ধ্রুব ভিন্ন *src0, ধ্রুব ভিন্ন *src1,
+                        পূর্ণাঙ্ক len)
 {
-    int i;
+    পূর্ণাঙ্ক i;
     vec_f d0, d1, zero = (vec_f)vec_splat_u32(0);
-    for (i = 0; i < len - 7; i += 8) {
+    প্রতি (i = 0; i < len - 7; i += 8) {
         d0 = vec_vsx_ld( 0, src0 + i);
         d1 = vec_vsx_ld(16, src0 + i);
         d0 = vec_madd(d0, vec_vsx_ld( 0, src1 + i), zero);
@@ -37,13 +37,13 @@ void ff_vector_fmul_vsx(float *dst,
     }
 }
 
-void ff_vector_fmul_window_vsx(float *dst, const float *src0,
-                               const float *src1, const float *win,
-                               int len)
+শূন্য ff_vector_fmul_window_vsx(ভিন্ন *dst, ধ্রুব ভিন্ন *src0,
+                               ধ্রুব ভিন্ন *src1, ধ্রুব ভিন্ন *win,
+                               পূর্ণাঙ্ক len)
 {
     vec_f zero, t0, t1, s0, s1, wi, wj;
-    const vec_u8 reverse = vcprm(3, 2, 1, 0);
-    int i, j;
+    ধ্রুব vec_u8 reverse = vcprm(3, 2, 1, 0);
+    পূর্ণাঙ্ক i, j;
 
     dst  += len;
     win  += len;
@@ -51,7 +51,7 @@ void ff_vector_fmul_window_vsx(float *dst, const float *src0,
 
     zero = (vec_f)vec_splat_u32(0);
 
-    for (i = -len * 4, j = len * 4 - 16; i < 0; i += 16, j -= 16) {
+    প্রতি (i = -len * 4, j = len * 4 - 16; i < 0; i += 16, j -= 16) {
         s0 = vec_vsx_ld(i, src0);
         s1 = vec_vsx_ld(j, src1);
         wi = vec_vsx_ld(i, win);
@@ -71,14 +71,14 @@ void ff_vector_fmul_window_vsx(float *dst, const float *src0,
     }
 }
 
-void ff_vector_fmul_add_vsx(float *dst, const float *src0,
-                            const float *src1, const float *src2,
-                            int len)
+শূন্য ff_vector_fmul_add_vsx(ভিন্ন *dst, ধ্রুব ভিন্ন *src0,
+                            ধ্রুব ভিন্ন *src1, ধ্রুব ভিন্ন *src2,
+                            পূর্ণাঙ্ক len)
 {
-    int i;
+    পূর্ণাঙ্ক i;
     vec_f d, s0, s1, s2;
 
-    for (i = 0; i < len - 3; i += 4) {
+    প্রতি (i = 0; i < len - 3; i += 4) {
         s0 = vec_vsx_ld(0, src0 + i);
         s1 = vec_vsx_ld(0, src1 + i);
         s2 = vec_vsx_ld(0, src2 + i);
@@ -87,15 +87,15 @@ void ff_vector_fmul_add_vsx(float *dst, const float *src0,
     }
 }
 
-void ff_vector_fmul_reverse_vsx(float *dst, const float *src0,
-                                const float *src1, int len)
+শূন্য ff_vector_fmul_reverse_vsx(ভিন্ন *dst, ধ্রুব ভিন্ন *src0,
+                                ধ্রুব ভিন্ন *src1, পূর্ণাঙ্ক len)
 {
-    int i;
+    পূর্ণাঙ্ক i;
     vec_f d, s0, s1, h0, l0, s2, s3;
     vec_f zero = (vec_f)vec_splat_u32(0);
 
     src1 += len - 4;
-    for (i = 0; i < len - 7; i += 8) {
+    প্রতি (i = 0; i < len - 7; i += 8) {
         s1 = vec_vsx_ld(0, src1 - i);              // [a,b,c,d]
         s0 = vec_vsx_ld(0, src0 + i);
         l0 = vec_mergel(s1, s1);               // [c,c,d,d]

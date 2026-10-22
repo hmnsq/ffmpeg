@@ -36,13 +36,13 @@
  * code will try to load various supported D3D debugging layers.
  */
 
-#include <d3d11.h>
-#include <stdint.h>
+#অন্তর্ভাব <d3d11.h>
+#অন্তর্ভাব <stdint.h>
 
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVD3D11VADeviceContext {
+প্রকারনির্দেশ সংরচনা AVD3D11VADeviceContext {
     /**
      * Device used for texture creation and access. This can also be used to
      * set the libavcodec decoding device.
@@ -91,9 +91,9 @@ typedef struct AVD3D11VADeviceContext {
      * The underlying lock must be recursive. lock_ctx is for free use by the
      * locking implementation.
      */
-    void (*lock)(void *lock_ctx);
-    void (*unlock)(void *lock_ctx);
-    void *lock_ctx;
+    শূন্য (*lock)(শূন্য *lock_ctx);
+    শূন্য (*unlock)(শূন্য *lock_ctx);
+    শূন্য *lock_ctx;
     /**
      * D3D11_TEXTURE2D_DESC.BindFlags to be applied to D3D11 resources allocated
      * for frames using this device context.
@@ -124,7 +124,7 @@ typedef struct AVD3D11VADeviceContext {
  * This has no use outside of custom allocation, and AVFrame AVBufferRef do not
  * necessarily point to an instance of this struct.
  */
-typedef struct AVD3D11FrameDescriptor {
+প্রকারনির্দেশ সংরচনা AVD3D11FrameDescriptor {
     /**
      * The texture in which the frame is located. The reference count is
      * managed by the AVBufferRef, and destroying the reference will release
@@ -146,7 +146,7 @@ typedef struct AVD3D11FrameDescriptor {
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVD3D11VAFramesContext {
+প্রকারনির্দেশ সংরচনা AVD3D11VAFramesContext {
     /**
      * The canonical texture used for pool allocation. If this is set to NULL
      * on init, the hwframes implementation will allocate and set an array

@@ -18,27 +18,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <string.h>
+#অন্তর্ভাব <stdio.h>
+#অন্তর্ভাব <string.h>
 
-#include "libavutil/hash.h"
+#অন্তর্ভাব "libavutil/hash.h"
 
 #define SRC_BUF_SIZE 64
 #define DST_BUF_SIZE (AV_HASH_MAX_SIZE * 8)
 
-int main(void)
+পূর্ণাঙ্ক main(শূন্য)
 {
-   struct AVHashContext *ctx = NULL;
-   int i, j, numhashes = 0;
-   static const uint8_t src[SRC_BUF_SIZE] = { 0 };
+   সংরচনা AVHashContext *ctx = রিক্ত;
+   পূর্ণাঙ্ক i, j, numhashes = 0;
+   স্থির ধ্রুব uint8_t src[SRC_BUF_SIZE] = { 0 };
    uint8_t dst[DST_BUF_SIZE];
 
-   while (av_hash_names(numhashes))
+   যাবত্ (av_hash_names(numhashes))
        numhashes++;
 
-   for (i = 0; i < numhashes; i++) {
-       if (av_hash_alloc(&ctx, av_hash_names(i)) < 0)
-           return 1;
+   প্রতি (i = 0; i < numhashes; i++) {
+       যদি (av_hash_alloc(&ctx, av_hash_names(i)) < 0)
+           প্রত্যাগম 1;
 
        av_hash_init(ctx);
        av_hash_update(ctx, src, SRC_BUF_SIZE);
@@ -50,7 +50,7 @@ int main(void)
        av_hash_update(ctx, src, SRC_BUF_SIZE);
        av_hash_final_bin(ctx, dst, DST_BUF_SIZE);
        printf("%s bin:", av_hash_get_name(ctx));
-       for (j = 0; j < av_hash_get_size(ctx); j++) {
+       প্রতি (j = 0; j < av_hash_get_size(ctx); j++) {
            printf(" %#x", dst[j]);
        }
        printf("\n");
@@ -61,5 +61,5 @@ int main(void)
        printf("%s b64: %s\n", av_hash_get_name(ctx), dst);
        av_hash_freep(&ctx);
    }
-   return 0;
+   প্রত্যাগম 0;
 }

@@ -16,27 +16,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব <stdio.h>
 
-#include "libavutil/md5.h"
+#অন্তর্ভাব "libavutil/md5.h"
 
-static void print_md5(uint8_t *md5)
+স্থির শূন্য print_md5(uint8_t *md5)
 {
-    int i;
-    for (i = 0; i < 16; i++)
+    পূর্ণাঙ্ক i;
+    প্রতি (i = 0; i < 16; i++)
         printf("%02x", md5[i]);
     printf("\n");
 }
 
-int main(void)
+পূর্ণাঙ্ক main(শূন্য)
 {
     uint8_t md5val[16];
-    int i;
+    পূর্ণাঙ্ক i;
 
     uint8_t in[1000];
 
-    for (i = 0; i < 1000; i++)
+    প্রতি (i = 0; i < 1000; i++)
         in[i] = i * i;
     av_md5_sum(md5val, in, 1000);
     print_md5(md5val);
@@ -46,10 +46,10 @@ int main(void)
     print_md5(md5val);
     av_md5_sum(md5val, in, 65);
     print_md5(md5val);
-    for (i = 0; i < 1000; i++)
+    প্রতি (i = 0; i < 1000; i++)
         in[i] = i % 127;
     av_md5_sum(md5val, in, 999);
     print_md5(md5val);
 
-    return 0;
+    প্রত্যাগম 0;
 }

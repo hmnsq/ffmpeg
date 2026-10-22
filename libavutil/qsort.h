@@ -21,7 +21,7 @@
 #ifndef AVUTIL_QSORT_H
 #define AVUTIL_QSORT_H
 
-#include "macros.h"
+#অন্তর্ভাব "macros.h"
 
 
 /**
@@ -30,69 +30,69 @@
  * to construct input that requires O(n^2) time but this is very unlikely to
  * happen with non constructed input.
  */
-#define AV_QSORT(p, num, type, cmp) do {\
-    void *stack[64][2];\
-    int sp= 1;\
-    stack[0][0] = p;\
-    stack[0][1] = (p)+(num)-1;\
-    while(sp){\
-        type *start= stack[--sp][0];\
-        type *end  = stack[  sp][1];\
-        while(start < end){\
-            if(start < end-1) {\
-                int checksort=0;\
-                type *right = end-2;\
-                type *left  = start+1;\
+#define AV_QSORT(p, অঙ্ক, type, cmp) কুরু {\
+    শূন্য *স্তূপ[64][2];\
+    পূর্ণাঙ্ক sp= 1;\
+    স্তূপ[0][0] = p;\
+    স্তূপ[0][1] = (p)+(অঙ্ক)-1;\
+    যাবত্(sp){\
+        type *start= স্তূপ[--sp][0];\
+        type *end  = স্তূপ[  sp][1];\
+        যাবত্(start < end){\
+            যদি(start < end-1) {\
+                পূর্ণাঙ্ক checksort=0;\
+                type *ডান = end-2;\
+                type *বাম  = start+1;\
                 type *mid = start + ((end-start)>>1);\
-                if(cmp(start, end) > 0) {\
-                    if(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else                    FFSWAP(type, *start, *end);\
-                }else{\
-                    if(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else checksort= 1;\
+                যদি(cmp(start, end) > 0) {\
+                    যদি(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
+                    অন্যথা                    FFSWAP(type, *start, *end);\
+                }অন্যথা{\
+                    যদি(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
+                    অন্যথা checksort= 1;\
                 }\
-                if(cmp(mid, end) > 0){ \
+                যদি(cmp(mid, end) > 0){ \
                     FFSWAP(type, *mid, *end);\
                     checksort=0;\
                 }\
-                if(start == end-2) break;\
+                যদি(start == end-2) ভঙ্গ;\
                 FFSWAP(type, end[-1], *mid);\
-                while(left <= right){\
-                    while(left<=right && cmp(left, end-1) < 0)\
-                        left++;\
-                    while(left<=right && cmp(right, end-1) > 0)\
-                        right--;\
-                    if(left <= right){\
-                        FFSWAP(type, *left, *right);\
-                        left++;\
-                        right--;\
+                যাবত্(বাম <= ডান){\
+                    যাবত্(বাম<=ডান && cmp(বাম, end-1) < 0)\
+                        বাম++;\
+                    যাবত্(বাম<=ডান && cmp(ডান, end-1) > 0)\
+                        ডান--;\
+                    যদি(বাম <= ডান){\
+                        FFSWAP(type, *বাম, *ডান);\
+                        বাম++;\
+                        ডান--;\
                     }\
                 }\
-                FFSWAP(type, end[-1], *left);\
-                if(checksort && (mid == left-1 || mid == left)){\
+                FFSWAP(type, end[-1], *বাম);\
+                যদি(checksort && (mid == বাম-1 || mid == বাম)){\
                     mid= start;\
-                    while(mid<end && cmp(mid, mid+1) <= 0)\
+                    যাবত্(mid<end && cmp(mid, mid+1) <= 0)\
                         mid++;\
-                    if(mid==end)\
-                        break;\
+                    যদি(mid==end)\
+                        ভঙ্গ;\
                 }\
-                if(end-left < left-start){\
-                    stack[sp  ][0]= start;\
-                    stack[sp++][1]= right;\
-                    start = left+1;\
-                }else{\
-                    stack[sp  ][0]= left+1;\
-                    stack[sp++][1]= end;\
-                    end = right;\
+                যদি(end-বাম < বাম-start){\
+                    স্তূপ[sp  ][0]= start;\
+                    স্তূপ[sp++][1]= ডান;\
+                    start = বাম+1;\
+                }অন্যথা{\
+                    স্তূপ[sp  ][0]= বাম+1;\
+                    স্তূপ[sp++][1]= end;\
+                    end = ডান;\
                 }\
-            }else{\
-                if(cmp(start, end) > 0)\
+            }অন্যথা{\
+                যদি(cmp(start, end) > 0)\
                     FFSWAP(type, *start, *end);\
-                break;\
+                ভঙ্গ;\
             }\
         }\
     }\
-} while (0)
+} যাবত্ (0)
 
 /**
  * Merge sort, this sort requires a temporary buffer and is stable, its worst
@@ -100,23 +100,23 @@
  * @param p     must be a lvalue pointer, this function may exchange it with tmp
  * @param tmp   must be a lvalue pointer, this function may exchange it with p
  */
-#define AV_MSORT(p, tmp, num, type, cmp) do {\
+#define AV_MSORT(p, tmp, অঙ্ক, type, cmp) কুরু {\
     unsigned i, j, step;\
-    for(step=1; step<(num); step+=step){\
-        for(i=0; i<(num); i+=2*step){\
+    প্রতি(step=1; step<(অঙ্ক); step+=step){\
+        প্রতি(i=0; i<(অঙ্ক); i+=2*step){\
             unsigned a[2] = {i, i+step};\
-            unsigned end = FFMIN(i+2*step, (num));\
-            for(j=i; a[0]<i+step && a[1]<end; j++){\
-                int idx= cmp(p+a[0], p+a[1]) > 0;\
+            unsigned end = FFMIN(i+2*step, (অঙ্ক));\
+            প্রতি(j=i; a[0]<i+step && a[1]<end; j++){\
+                পূর্ণাঙ্ক idx= cmp(p+a[0], p+a[1]) > 0;\
                 tmp[j] = p[ a[idx]++ ];\
             }\
-            if(a[0]>=i+step) a[0] = a[1];\
-            for(; j<end; j++){\
+            যদি(a[0]>=i+step) a[0] = a[1];\
+            প্রতি(; j<end; j++){\
                 tmp[j] = p[ a[0]++ ];\
             }\
         }\
         FFSWAP(type*, p, tmp);\
     }\
-} while (0)
+} যাবত্ (0)
 
 #endif /* AVUTIL_QSORT_H */

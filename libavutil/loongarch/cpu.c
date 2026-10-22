@@ -19,43 +19,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include "cpu.h"
-#include <sys/auxv.h>
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব "cpu.h"
+#অন্তর্ভাব <sys/auxv.h>
 
 #define LA_HWCAP_LSX    (1<<4)
 #define LA_HWCAP_LASX   (1<<5)
-static int cpu_flags_getauxval(void)
+স্থির পূর্ণাঙ্ক cpu_flags_getauxval(শূন্য)
 {
-    int flags = 0;
-    int flag  = (int)ff_getauxval(AT_HWCAP);
+    পূর্ণাঙ্ক flags = 0;
+    পূর্ণাঙ্ক flag  = (পূর্ণাঙ্ক)ff_getauxval(AT_HWCAP);
 
-    if (flag & LA_HWCAP_LSX)
+    যদি (flag & LA_HWCAP_LSX)
         flags |= AV_CPU_FLAG_LSX;
-    if (flag & LA_HWCAP_LASX)
+    যদি (flag & LA_HWCAP_LASX)
         flags |= AV_CPU_FLAG_LASX;
 
-    return flags;
+    প্রত্যাগম flags;
 }
 
-int ff_get_cpu_flags_loongarch(void)
+পূর্ণাঙ্ক ff_get_cpu_flags_loongarch(শূন্য)
 {
-#if defined __linux__
-    return cpu_flags_getauxval();
-#else
+#যদি defined __linux__
+    প্রত্যাগম cpu_flags_getauxval();
+#অন্যথা
     /* Assume no SIMD ASE supported */
-    return 0;
+    প্রত্যাগম 0;
 #endif
 }
 
-size_t ff_get_cpu_max_align_loongarch(void)
+size_t ff_get_cpu_max_align_loongarch(শূন্য)
 {
-    int flags = av_get_cpu_flags();
+    পূর্ণাঙ্ক flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_LASX)
-        return 32;
-    if (flags & AV_CPU_FLAG_LSX)
-        return 16;
+    যদি (flags & AV_CPU_FLAG_LASX)
+        প্রত্যাগম 32;
+    যদি (flags & AV_CPU_FLAG_LSX)
+        প্রত্যাগম 16;
 
-    return 8;
+    প্রত্যাগম 8;
 }

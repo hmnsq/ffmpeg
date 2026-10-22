@@ -22,7 +22,7 @@
 #ifndef AVUTIL_LFG_H
 #define AVUTIL_LFG_H
 
-#include <stdint.h>
+#অন্তর্ভাব <stdint.h>
 
 /**
  * Context structure for the Lagged Fibonacci PRNG.
@@ -30,19 +30,19 @@
  * not be accessed directly. Only its `sizeof()` is guaranteed to stay the same
  * to allow easy instantiation.
  */
-typedef struct AVLFG {
-    unsigned int state[64];
-    int index;
+প্রকারনির্দেশ সংরচনা AVLFG {
+    unsigned পূর্ণাঙ্ক state[64];
+    পূর্ণাঙ্ক index;
 } AVLFG;
 
-void av_lfg_init(AVLFG *c, unsigned int seed);
+শূন্য av_lfg_init(AVLFG *c, unsigned পূর্ণাঙ্ক seed);
 
 /**
  * Seed the state of the ALFG using binary data.
  *
  * @return 0 on success, negative value (AVERROR) on failure.
  */
-int av_lfg_init_from_data(AVLFG *c, const uint8_t *data, unsigned int length);
+পূর্ণাঙ্ক av_lfg_init_from_data(AVLFG *c, ধ্রুব uint8_t *data, unsigned পূর্ণাঙ্ক length);
 
 /**
  * Get the next random unsigned 32-bit number using an ALFG.
@@ -50,10 +50,10 @@ int av_lfg_init_from_data(AVLFG *c, const uint8_t *data, unsigned int length);
  * Please also consider a simple LCG like state= state*1664525+1013904223,
  * it may be good enough and faster for your specific use case.
  */
-static inline unsigned int av_lfg_get(AVLFG *c){
+স্থির অন্তঃস্থ unsigned পূর্ণাঙ্ক av_lfg_get(AVLFG *c){
     unsigned a = c->state[c->index & 63] = c->state[(c->index-24) & 63] + c->state[(c->index-55) & 63];
     c->index += 1U;
-    return a;
+    প্রত্যাগম a;
 }
 
 /**
@@ -61,12 +61,12 @@ static inline unsigned int av_lfg_get(AVLFG *c){
  *
  * Please also consider av_lfg_get() above, it is faster.
  */
-static inline unsigned int av_mlfg_get(AVLFG *c){
-    unsigned int a= c->state[(c->index-55) & 63];
-    unsigned int b= c->state[(c->index-24) & 63];
+স্থির অন্তঃস্থ unsigned পূর্ণাঙ্ক av_mlfg_get(AVLFG *c){
+    unsigned পূর্ণাঙ্ক a= c->state[(c->index-55) & 63];
+    unsigned পূর্ণাঙ্ক b= c->state[(c->index-24) & 63];
     a = c->state[c->index & 63] = 2*a*b+a+b;
     c->index += 1U;
-    return a;
+    প্রত্যাগম a;
 }
 
 /**
@@ -76,6 +76,6 @@ static inline unsigned int av_mlfg_get(AVLFG *c){
  * @param lfg pointer to the context structure
  * @param out array where the two generated numbers are placed
  */
-void av_bmg_get(AVLFG *lfg, double out[2]);
+শূন্য av_bmg_get(AVLFG *lfg, দ্বিগুণ out[2]);
 
 #endif /* AVUTIL_LFG_H */

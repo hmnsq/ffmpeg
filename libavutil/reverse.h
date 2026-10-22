@@ -21,8 +21,8 @@
 #ifndef AVUTIL_REVERSE_H
 #define AVUTIL_REVERSE_H
 
-#include <stdint.h>
+#অন্তর্ভাব <stdint.h>
 
-extern const uint8_t ff_reverse[256];
+বাহ্য ধ্রুব uint8_t ff_reverse[256];
 
 #endif /* AVUTIL_REVERSE_H */

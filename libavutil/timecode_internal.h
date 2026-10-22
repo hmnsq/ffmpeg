@@ -27,8 +27,8 @@
 #ifndef AVUTIL_TIMECODE_INTERNAL_H
 #define AVUTIL_TIMECODE_INTERNAL_H
 
-#include <stdint.h>
-#include "rational.h"
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব "rational.h"
 
 /**
  * Convert SMPTE 12M binary representation to sei info.
@@ -45,7 +45,7 @@
  * @param skip_field prevent the use of a field flag when it is known the field
  *                   bit is arbitrary (e.g. because it is used as PC flag)
  */
-void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned *ss, unsigned *ff,
-                           AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field);
+শূন্য ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned *ss, unsigned *ff,
+                           AVRational rate, uint32_t tcsmpte, পূর্ণাঙ্ক prevent_df, পূর্ণাঙ্ক skip_field);
 
 #endif /* AVUTIL_TIMECODE_INTERNAL_H */

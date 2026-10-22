@@ -19,66 +19,66 @@
 #ifndef AVUTIL_GETENV_UTF8_H
 #define AVUTIL_GETENV_UTF8_H
 
-#include <stdlib.h>
+#অন্তর্ভাব <stdlib.h>
 
-#include "config.h"
-#include "mem.h"
+#অন্তর্ভাব "config.h"
+#অন্তর্ভাব "mem.h"
 
-#if HAVE_GETENV && defined(_WIN32)
+#যদি HAVE_GETENV && defined(_WIN32)
 
-#include "libavutil/wchar_filename.h"
+#অন্তর্ভাব "libavutil/wchar_filename.h"
 
-static inline char *getenv_utf8(const char *varname)
+স্থির অন্তঃস্থ বর্ণ *getenv_utf8(ধ্রুব বর্ণ *varname)
 {
     wchar_t *varname_w, *var_w;
-    char *var;
+    বর্ণ *var;
 
-    if (utf8towchar(varname, &varname_w))
-        return NULL;
-    if (!varname_w)
-        return NULL;
+    যদি (utf8towchar(varname, &varname_w))
+        প্রত্যাগম রিক্ত;
+    যদি (!varname_w)
+        প্রত্যাগম রিক্ত;
 
     var_w = _wgetenv(varname_w);
     av_free(varname_w);
 
-    if (!var_w)
-        return NULL;
-    if (wchartoutf8(var_w, &var))
-        return NULL;
+    যদি (!var_w)
+        প্রত্যাগম রিক্ত;
+    যদি (wchartoutf8(var_w, &var))
+        প্রত্যাগম রিক্ত;
 
-    return var;
+    প্রত্যাগম var;
 
     // No CP_ACP fallback compared to other *_utf8() functions:
     // non UTF-8 strings must not be returned.
 }
 
-static inline void freeenv_utf8(char *var)
+স্থির অন্তঃস্থ শূন্য freeenv_utf8(বর্ণ *var)
 {
     av_free(var);
 }
 
-static inline char *getenv_dup(const char *varname)
+স্থির অন্তঃস্থ বর্ণ *getenv_dup(ধ্রুব বর্ণ *varname)
 {
-    return getenv_utf8(varname);
+    প্রত্যাগম getenv_utf8(varname);
 }
 
-#else
+#অন্যথা
 
-static inline char *getenv_utf8(const char *varname)
+স্থির অন্তঃস্থ বর্ণ *getenv_utf8(ধ্রুব বর্ণ *varname)
 {
-    return getenv(varname);
+    প্রত্যাগম getenv(varname);
 }
 
-static inline void freeenv_utf8(char *var)
+স্থির অন্তঃস্থ শূন্য freeenv_utf8(বর্ণ *var)
 {
 }
 
-static inline char *getenv_dup(const char *varname)
+স্থির অন্তঃস্থ বর্ণ *getenv_dup(ধ্রুব বর্ণ *varname)
 {
-    char *var = getenv(varname);
-    if (!var)
-        return NULL;
-    return av_strdup(var);
+    বর্ণ *var = getenv(varname);
+    যদি (!var)
+        প্রত্যাগম রিক্ত;
+    প্রত্যাগম av_strdup(var);
 }
 
 #endif // HAVE_GETENV && defined(_WIN32)

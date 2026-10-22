@@ -23,171 +23,171 @@
  * audio channel layout utility functions
  */
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
+#অন্তর্ভাব <stdint.h>
+#অন্তর্ভাব <stdlib.h>
+#অন্তর্ভাব <string.h>
 
-#include "avassert.h"
-#include "channel_layout.h"
-#include "bprint.h"
-#include "common.h"
-#include "error.h"
-#include "attributes.h"
-#include "macros.h"
-#include "mem.h"
-#include "opt.h"
+#অন্তর্ভাব "avassert.h"
+#অন্তর্ভাব "channel_layout.h"
+#অন্তর্ভাব "bprint.h"
+#অন্তর্ভাব "common.h"
+#অন্তর্ভাব "error.h"
+#অন্তর্ভাব "attributes.h"
+#অন্তর্ভাব "macros.h"
+#অন্তর্ভাব "mem.h"
+#অন্তর্ভাব "opt.h"
 
 #define CHAN_IS_AMBI(x) ((x) >= AV_CHAN_AMBISONIC_BASE &&\
                          (x) <= AV_CHAN_AMBISONIC_END)
 
-struct channel_name {
-    const char *name;
-    const char *description;
+সংরচনা channel_name {
+    ধ্রুব বর্ণ *name;
+    ধ্রুব বর্ণ *description;
 };
 
-static const struct channel_name channel_names[] = {
-    [AV_CHAN_FRONT_LEFT           ] = { "FL",        "front left"            },
-    [AV_CHAN_FRONT_RIGHT          ] = { "FR",        "front right"           },
+স্থির ধ্রুব সংরচনা channel_name channel_names[] = {
+    [AV_CHAN_FRONT_বাম           ] = { "FL",        "front left"            },
+    [AV_CHAN_FRONT_ডান          ] = { "FR",        "front right"           },
     [AV_CHAN_FRONT_CENTER         ] = { "FC",        "front center"          },
-    [AV_CHAN_LOW_FREQUENCY        ] = { "LFE",       "low frequency"         },
-    [AV_CHAN_BACK_LEFT            ] = { "BL",        "back left"             },
-    [AV_CHAN_BACK_RIGHT           ] = { "BR",        "back right"            },
-    [AV_CHAN_FRONT_LEFT_OF_CENTER ] = { "FLC",       "front left-of-center"  },
-    [AV_CHAN_FRONT_RIGHT_OF_CENTER] = { "FRC",       "front right-of-center" },
+    [AV_CHAN_নিচের_FREQUENCY        ] = { "LFE",       "low frequency"         },
+    [AV_CHAN_BACK_বাম            ] = { "BL",        "back left"             },
+    [AV_CHAN_BACK_ডান           ] = { "BR",        "back right"            },
+    [AV_CHAN_FRONT_বাম_OF_CENTER ] = { "FLC",       "front left-of-center"  },
+    [AV_CHAN_FRONT_ডান_OF_CENTER] = { "FRC",       "front right-of-center" },
     [AV_CHAN_BACK_CENTER          ] = { "BC",        "back center"           },
-    [AV_CHAN_SIDE_LEFT            ] = { "SL",        "side left"             },
-    [AV_CHAN_SIDE_RIGHT           ] = { "SR",        "side right"            },
-    [AV_CHAN_TOP_CENTER           ] = { "TC",        "top center"            },
-    [AV_CHAN_TOP_FRONT_LEFT       ] = { "TFL",       "top front left"        },
-    [AV_CHAN_TOP_FRONT_CENTER     ] = { "TFC",       "top front center"      },
-    [AV_CHAN_TOP_FRONT_RIGHT      ] = { "TFR",       "top front right"       },
-    [AV_CHAN_TOP_BACK_LEFT        ] = { "TBL",       "top back left"         },
-    [AV_CHAN_TOP_BACK_CENTER      ] = { "TBC",       "top back center"       },
-    [AV_CHAN_TOP_BACK_RIGHT       ] = { "TBR",       "top back right"        },
-    [AV_CHAN_STEREO_LEFT          ] = { "DL",        "downmix left"          },
-    [AV_CHAN_STEREO_RIGHT         ] = { "DR",        "downmix right"         },
-    [AV_CHAN_WIDE_LEFT            ] = { "WL",        "wide left"             },
-    [AV_CHAN_WIDE_RIGHT           ] = { "WR",        "wide right"            },
-    [AV_CHAN_SURROUND_DIRECT_LEFT ] = { "SDL",       "surround direct left"  },
-    [AV_CHAN_SURROUND_DIRECT_RIGHT] = { "SDR",       "surround direct right" },
-    [AV_CHAN_LOW_FREQUENCY_2      ] = { "LFE2",      "low frequency 2"       },
-    [AV_CHAN_TOP_SIDE_LEFT        ] = { "TSL",       "top side left"         },
-    [AV_CHAN_TOP_SIDE_RIGHT       ] = { "TSR",       "top side right"        },
+    [AV_CHAN_SIDE_বাম            ] = { "SL",        "side left"             },
+    [AV_CHAN_SIDE_ডান           ] = { "SR",        "side right"            },
+    [AV_CHAN_শীর্ষ_CENTER           ] = { "TC",        "top center"            },
+    [AV_CHAN_শীর্ষ_FRONT_বাম       ] = { "TFL",       "top front left"        },
+    [AV_CHAN_শীর্ষ_FRONT_CENTER     ] = { "TFC",       "top front center"      },
+    [AV_CHAN_শীর্ষ_FRONT_ডান      ] = { "TFR",       "top front right"       },
+    [AV_CHAN_শীর্ষ_BACK_বাম        ] = { "TBL",       "top back left"         },
+    [AV_CHAN_শীর্ষ_BACK_CENTER      ] = { "TBC",       "top back center"       },
+    [AV_CHAN_শীর্ষ_BACK_ডান       ] = { "TBR",       "top back right"        },
+    [AV_CHAN_STEREO_বাম          ] = { "DL",        "downmix left"          },
+    [AV_CHAN_STEREO_ডান         ] = { "DR",        "downmix right"         },
+    [AV_CHAN_WIDE_বাম            ] = { "WL",        "wide left"             },
+    [AV_CHAN_WIDE_ডান           ] = { "WR",        "wide right"            },
+    [AV_CHAN_SURROUND_DIRECT_বাম ] = { "SDL",       "surround direct left"  },
+    [AV_CHAN_SURROUND_DIRECT_ডান] = { "SDR",       "surround direct right" },
+    [AV_CHAN_নিচের_FREQUENCY_2      ] = { "LFE2",      "low frequency 2"       },
+    [AV_CHAN_শীর্ষ_SIDE_বাম        ] = { "TSL",       "top side left"         },
+    [AV_CHAN_শীর্ষ_SIDE_ডান       ] = { "TSR",       "top side right"        },
     [AV_CHAN_BOTTOM_FRONT_CENTER  ] = { "BFC",       "bottom front center"   },
-    [AV_CHAN_BOTTOM_FRONT_LEFT    ] = { "BFL",       "bottom front left"     },
-    [AV_CHAN_BOTTOM_FRONT_RIGHT   ] = { "BFR",       "bottom front right"    },
-    [AV_CHAN_SIDE_SURROUND_LEFT   ] = { "SSL",       "side surround left"    },
-    [AV_CHAN_SIDE_SURROUND_RIGHT  ] = { "SSR",       "side surround right"   },
-    [AV_CHAN_TOP_SURROUND_LEFT    ] = { "TTL",       "top surround left"     },
-    [AV_CHAN_TOP_SURROUND_RIGHT   ] = { "TTR",       "top surround right"    },
-    [AV_CHAN_BINAURAL_LEFT        ] = { "BIL",       "binaural left"         },
-    [AV_CHAN_BINAURAL_RIGHT       ] = { "BIR",       "binaural right"        },
+    [AV_CHAN_BOTTOM_FRONT_বাম    ] = { "BFL",       "bottom front left"     },
+    [AV_CHAN_BOTTOM_FRONT_ডান   ] = { "BFR",       "bottom front right"    },
+    [AV_CHAN_SIDE_SURROUND_বাম   ] = { "SSL",       "side surround left"    },
+    [AV_CHAN_SIDE_SURROUND_ডান  ] = { "SSR",       "side surround right"   },
+    [AV_CHAN_শীর্ষ_SURROUND_বাম    ] = { "TTL",       "top surround left"     },
+    [AV_CHAN_শীর্ষ_SURROUND_ডান   ] = { "TTR",       "top surround right"    },
+    [AV_CHAN_BINAURAL_বাম        ] = { "BIL",       "binaural left"         },
+    [AV_CHAN_BINAURAL_ডান       ] = { "BIR",       "binaural right"        },
 };
 
-void av_channel_name_bprint(AVBPrint *bp, enum AVChannel channel_id)
+শূন্য av_channel_name_bprint(AVBPrint *bp, গণনা AVChannel channel_id)
 {
-    if (channel_id >= AV_CHAN_AMBISONIC_BASE &&
+    যদি (channel_id >= AV_CHAN_AMBISONIC_BASE &&
         channel_id <= AV_CHAN_AMBISONIC_END)
         av_bprintf(bp, "AMBI%d", channel_id - AV_CHAN_AMBISONIC_BASE);
-    else if ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
+    অন্যথা যদি ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
              channel_names[channel_id].name)
         av_bprintf(bp, "%s", channel_names[channel_id].name);
-    else if (channel_id == AV_CHAN_NONE)
+    অন্যথা যদি (channel_id == AV_CHAN_NONE)
         av_bprintf(bp, "NONE");
-    else if (channel_id == AV_CHAN_UNKNOWN)
+    অন্যথা যদি (channel_id == AV_CHAN_UNKNOWN)
         av_bprintf(bp, "UNK");
-    else if (channel_id == AV_CHAN_UNUSED)
+    অন্যথা যদি (channel_id == AV_CHAN_UNUSED)
         av_bprintf(bp, "UNSD");
-    else
+    অন্যথা
         av_bprintf(bp, "USR%d", channel_id);
 }
 
-int av_channel_name(char *buf, size_t buf_size, enum AVChannel channel_id)
+পূর্ণাঙ্ক av_channel_name(বর্ণ *buf, size_t buf_size, গণনা AVChannel channel_id)
 {
     AVBPrint bp;
 
-    if (!buf && buf_size)
-        return AVERROR(EINVAL);
+    যদি (!buf && buf_size)
+        প্রত্যাগম AVERROR(EINVAL);
 
     av_bprint_init_for_buffer(&bp, buf, buf_size);
     av_channel_name_bprint(&bp, channel_id);
 
-    if (bp.len >= INT_MAX)
-        return AVERROR(ERANGE);
-    return bp.len + 1;
+    যদি (bp.len >= INT_MAX)
+        প্রত্যাগম AVERROR(ERANGE);
+    প্রত্যাগম bp.len + 1;
 }
 
-void av_channel_description_bprint(AVBPrint *bp, enum AVChannel channel_id)
+শূন্য av_channel_description_bprint(AVBPrint *bp, গণনা AVChannel channel_id)
 {
-    if (channel_id >= AV_CHAN_AMBISONIC_BASE &&
+    যদি (channel_id >= AV_CHAN_AMBISONIC_BASE &&
         channel_id <= AV_CHAN_AMBISONIC_END)
         av_bprintf(bp, "ambisonic ACN %d", channel_id - AV_CHAN_AMBISONIC_BASE);
-    else if ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
+    অন্যথা যদি ((unsigned)channel_id < FF_ARRAY_ELEMS(channel_names) &&
              channel_names[channel_id].description)
         av_bprintf(bp, "%s", channel_names[channel_id].description);
-    else if (channel_id == AV_CHAN_NONE)
+    অন্যথা যদি (channel_id == AV_CHAN_NONE)
         av_bprintf(bp, "none");
-    else if (channel_id == AV_CHAN_UNKNOWN)
+    অন্যথা যদি (channel_id == AV_CHAN_UNKNOWN)
         av_bprintf(bp, "unknown");
-    else if (channel_id == AV_CHAN_UNUSED)
+    অন্যথা যদি (channel_id == AV_CHAN_UNUSED)
         av_bprintf(bp, "unused");
-    else
+    অন্যথা
         av_bprintf(bp, "user %d", channel_id);
 }
 
-int av_channel_description(char *buf, size_t buf_size, enum AVChannel channel_id)
+পূর্ণাঙ্ক av_channel_description(বর্ণ *buf, size_t buf_size, গণনা AVChannel channel_id)
 {
     AVBPrint bp;
 
-    if (!buf && buf_size)
-        return AVERROR(EINVAL);
+    যদি (!buf && buf_size)
+        প্রত্যাগম AVERROR(EINVAL);
 
     av_bprint_init_for_buffer(&bp, buf, buf_size);
     av_channel_description_bprint(&bp, channel_id);
 
-    if (bp.len >= INT_MAX)
-        return AVERROR(ERANGE);
-    return bp.len + 1;
+    যদি (bp.len >= INT_MAX)
+        প্রত্যাগম AVERROR(ERANGE);
+    প্রত্যাগম bp.len + 1;
 }
 
-enum AVChannel av_channel_from_string(const char *str)
+গণনা AVChannel av_channel_from_string(ধ্রুব বর্ণ *str)
 {
-    int i;
-    char *endptr = (char *)str;
-    enum AVChannel id = AV_CHAN_NONE;
+    পূর্ণাঙ্ক i;
+    বর্ণ *endptr = (বর্ণ *)str;
+    গণনা AVChannel id = AV_CHAN_NONE;
 
-    if (!strncmp(str, "AMBI", 4)) {
-        i = strtol(str + 4, NULL, 0);
-        if (i < 0 || i > AV_CHAN_AMBISONIC_END - AV_CHAN_AMBISONIC_BASE)
-            return AV_CHAN_NONE;
-        return AV_CHAN_AMBISONIC_BASE + i;
+    যদি (!strncmp(str, "AMBI", 4)) {
+        i = strtol(str + 4, রিক্ত, 0);
+        যদি (i < 0 || i > AV_CHAN_AMBISONIC_END - AV_CHAN_AMBISONIC_BASE)
+            প্রত্যাগম AV_CHAN_NONE;
+        প্রত্যাগম AV_CHAN_AMBISONIC_BASE + i;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(channel_names); i++) {
-        if (channel_names[i].name && !strcmp(str, channel_names[i].name))
-            return i;
+    প্রতি (i = 0; i < FF_ARRAY_ELEMS(channel_names); i++) {
+        যদি (channel_names[i].name && !strcmp(str, channel_names[i].name))
+            প্রত্যাগম i;
     }
-    if (!strcmp(str, "UNK"))
-        return AV_CHAN_UNKNOWN;
-    if (!strcmp(str, "UNSD"))
-        return AV_CHAN_UNUSED;
+    যদি (!strcmp(str, "UNK"))
+        প্রত্যাগম AV_CHAN_UNKNOWN;
+    যদি (!strcmp(str, "UNSD"))
+        প্রত্যাগম AV_CHAN_UNUSED;
 
-    if (!strncmp(str, "USR", 3)) {
-        const char *p = str + 3;
+    যদি (!strncmp(str, "USR", 3)) {
+        ধ্রুব বর্ণ *p = str + 3;
         id = strtol(p, &endptr, 0);
     }
-    if (id >= 0 && !*endptr)
-        return id;
+    যদি (id >= 0 && !*endptr)
+        প্রত্যাগম id;
 
-    return AV_CHAN_NONE;
+    প্রত্যাগম AV_CHAN_NONE;
 }
 
-struct channel_layout_name {
-    const char *name;
+সংরচনা channel_layout_name {
+    ধ্রুব বর্ণ *name;
     AVChannelLayout layout;
 };
 
-static const struct channel_layout_name channel_layout_map[] = {
+স্থির ধ্রুব সংরচনা channel_layout_name channel_layout_map[] = {
     { "mono",           AV_CHANNEL_LAYOUT_MONO                },
     { "stereo",         AV_CHANNEL_LAYOUT_STEREO              },
     { "2.1",            AV_CHANNEL_LAYOUT_2POINT1             },
@@ -232,75 +232,75 @@ static const struct channel_layout_name channel_layout_map[] = {
     { "22.2",           AV_CHANNEL_LAYOUT_22POINT2,           },
 };
 
-int av_channel_layout_custom_init(AVChannelLayout *channel_layout, int nb_channels)
+পূর্ণাঙ্ক av_channel_layout_custom_init(AVChannelLayout *channel_layout, পূর্ণাঙ্ক nb_channels)
 {
     AVChannelCustom *map;
 
-    if (nb_channels <= 0)
-        return AVERROR(EINVAL);
+    যদি (nb_channels <= 0)
+        প্রত্যাগম AVERROR(EINVAL);
 
-    map = av_calloc(nb_channels, sizeof(*channel_layout->u.map));
-    if (!map)
-        return AVERROR(ENOMEM);
-    for (int i = 0; i < nb_channels; i++)
+    map = av_calloc(nb_channels, পরিমাণ(*channel_layout->u.map));
+    যদি (!map)
+        প্রত্যাগম AVERROR(ENOMEM);
+    প্রতি (পূর্ণাঙ্ক i = 0; i < nb_channels; i++)
         map[i].id = AV_CHAN_UNKNOWN;
 
     channel_layout->order       = AV_CHANNEL_ORDER_CUSTOM;
     channel_layout->nb_channels = nb_channels;
     channel_layout->u.map       = map;
 
-    return 0;
+    প্রত্যাগম 0;
 }
 
-int av_channel_layout_from_mask(AVChannelLayout *channel_layout,
+পূর্ণাঙ্ক av_channel_layout_from_mask(AVChannelLayout *channel_layout,
                                 uint64_t mask)
 {
-    if (!mask)
-        return AVERROR(EINVAL);
+    যদি (!mask)
+        প্রত্যাগম AVERROR(EINVAL);
 
     channel_layout->order       = AV_CHANNEL_ORDER_NATIVE;
     channel_layout->nb_channels = av_popcount64(mask);
     channel_layout->u.mask      = mask;
 
-    return 0;
+    প্রত্যাগম 0;
 }
 
-static int parse_channel_list(AVChannelLayout *ch_layout, const char *str)
+স্থির পূর্ণাঙ্ক parse_channel_list(AVChannelLayout *ch_layout, ধ্রুব বর্ণ *str)
 {
-    int ret;
-    int nb_channels = 0;
-    AVChannelCustom *map = NULL;
+    পূর্ণাঙ্ক ret;
+    পূর্ণাঙ্ক nb_channels = 0;
+    AVChannelCustom *map = রিক্ত;
     AVChannelCustom custom = {0};
 
-    while (*str) {
-        char *channel, *chname;
-        ret = av_opt_get_key_value(&str, "@", "+", AV_OPT_FLAG_IMPLICIT_KEY, &channel, &chname);
-        if (ret < 0) {
+    যাবত্ (*str) {
+        বর্ণ *channel, *chname;
+        ret = av_opt_get_চাবি_মান(&str, "@", "+", AV_OPT_FLAG_IMPLICIT_চাবি, &channel, &chname);
+        যদি (ret < 0) {
             av_freep(&map);
-            return ret;
+            প্রত্যাগম ret;
         }
-        if (*str)
+        যদি (*str)
             str++; // skip separator
-        if (!channel) {
+        যদি (!channel) {
             channel = chname;
-            chname = NULL;
+            chname = রিক্ত;
         }
-        av_strlcpy(custom.name, chname ? chname : "", sizeof(custom.name));
+        av_strlcpy(custom.name, chname ? chname : "", পরিমাণ(custom.name));
         custom.id = av_channel_from_string(channel);
         av_free(channel);
         av_free(chname);
-        if (custom.id == AV_CHAN_NONE) {
+        যদি (custom.id == AV_CHAN_NONE) {
             av_freep(&map);
-            return AVERROR(EINVAL);
+            প্রত্যাগম AVERROR(EINVAL);
         }
 
-        av_dynarray2_add((void **)&map, &nb_channels, sizeof(custom), (void *)&custom);
-        if (!map)
-            return AVERROR(ENOMEM);
+        av_dynarray2_add((শূন্য **)&map, &nb_channels, পরিমাণ(custom), (শূন্য *)&custom);
+        যদি (!map)
+            প্রত্যাগম AVERROR(ENOMEM);
     }
 
-    if (!nb_channels)
-        return AVERROR(EINVAL);
+    যদি (!nb_channels)
+        প্রত্যাগম AVERROR(EINVAL);
 
     ch_layout->order = AV_CHANNEL_ORDER_CUSTOM;
     ch_layout->u.map = map;
@@ -309,249 +309,249 @@ static int parse_channel_list(AVChannelLayout *ch_layout, const char *str)
     ret = av_channel_layout_retype(ch_layout, 0, AV_CHANNEL_LAYOUT_RETYPE_FLAG_CANONICAL);
     av_assert0(ret == 0);
 
-    return 0;
+    প্রত্যাগম 0;
 }
 
-int av_channel_layout_from_string(AVChannelLayout *channel_layout,
-                                  const char *str)
+পূর্ণাঙ্ক av_channel_layout_from_string(AVChannelLayout *channel_layout,
+                                  ধ্রুব বর্ণ *str)
 {
-    int i, matches, ret;
-    int channels = 0, nb_channels = 0;
-    char *chlist, *end;
+    পূর্ণাঙ্ক i, matches, ret;
+    পূর্ণাঙ্ক channels = 0, nb_channels = 0;
+    বর্ণ *chlist, *end;
     uint64_t mask = 0;
 
     /* channel layout names */
-    for (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++) {
-        if (channel_layout_map[i].name && !strcmp(str, channel_layout_map[i].name)) {
+    প্রতি (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++) {
+        যদি (channel_layout_map[i].name && !strcmp(str, channel_layout_map[i].name)) {
             *channel_layout = channel_layout_map[i].layout;
-            return 0;
+            প্রত্যাগম 0;
         }
     }
 
     /* This function is a channel layout initializer, so we have to
      * zero-initialize before we start setting fields individually. */
-    memset(channel_layout, 0, sizeof(*channel_layout));
+    memset(channel_layout, 0, পরিমাণ(*channel_layout));
 
     /* ambisonic */
-    if (!strncmp(str, "ambisonic ", 10)) {
-        const char *p = str + 10;
-        char *endptr;
+    যদি (!strncmp(str, "ambisonic ", 10)) {
+        ধ্রুব বর্ণ *p = str + 10;
+        বর্ণ *endptr;
         AVChannelLayout extra = {0};
-        int order;
+        পূর্ণাঙ্ক order;
 
         order = strtol(p, &endptr, 0);
-        if (order < 0 || order + 1  > INT_MAX / (order + 1) ||
+        যদি (order < 0 || order + 1  > INT_MAX / (order + 1) ||
             (*endptr && *endptr != '+'))
-            return AVERROR(EINVAL);
+            প্রত্যাগম AVERROR(EINVAL);
 
         channel_layout->order       = AV_CHANNEL_ORDER_AMBISONIC;
         channel_layout->nb_channels = (order + 1) * (order + 1);
 
-        if (*endptr) {
+        যদি (*endptr) {
             ret = av_channel_layout_from_string(&extra, endptr + 1);
-            if (ret < 0)
-                return ret;
-            if (extra.nb_channels >= INT_MAX - channel_layout->nb_channels) {
+            যদি (ret < 0)
+                প্রত্যাগম ret;
+            যদি (extra.nb_channels >= INT_MAX - channel_layout->nb_channels) {
                 av_channel_layout_uninit(&extra);
-                return AVERROR(EINVAL);
+                প্রত্যাগম AVERROR(EINVAL);
             }
 
-            if (extra.order == AV_CHANNEL_ORDER_NATIVE) {
+            যদি (extra.order == AV_CHANNEL_ORDER_NATIVE) {
                 channel_layout->u.mask = extra.u.mask;
-            } else {
+            } অন্যথা {
                 channel_layout->order = AV_CHANNEL_ORDER_CUSTOM;
                 channel_layout->u.map =
                     av_calloc(channel_layout->nb_channels + extra.nb_channels,
-                              sizeof(*channel_layout->u.map));
-                if (!channel_layout->u.map) {
+                              পরিমাণ(*channel_layout->u.map));
+                যদি (!channel_layout->u.map) {
                     av_channel_layout_uninit(&extra);
-                    return AVERROR(ENOMEM);
+                    প্রত্যাগম AVERROR(ENOMEM);
                 }
 
-                for (i = 0; i < channel_layout->nb_channels; i++)
+                প্রতি (i = 0; i < channel_layout->nb_channels; i++)
                     channel_layout->u.map[i].id = AV_CHAN_AMBISONIC_BASE + i;
-                for (i = 0; i < extra.nb_channels; i++) {
-                    enum AVChannel ch = av_channel_layout_channel_from_index(&extra, i);
-                    if (CHAN_IS_AMBI(ch)) {
+                প্রতি (i = 0; i < extra.nb_channels; i++) {
+                    গণনা AVChannel ch = av_channel_layout_channel_from_index(&extra, i);
+                    যদি (CHAN_IS_AMBI(ch)) {
                         av_channel_layout_uninit(channel_layout);
                         av_channel_layout_uninit(&extra);
-                        return AVERROR(EINVAL);
+                        প্রত্যাগম AVERROR(EINVAL);
                     }
                     channel_layout->u.map[channel_layout->nb_channels + i].id = ch;
-                    if (extra.order == AV_CHANNEL_ORDER_CUSTOM &&
+                    যদি (extra.order == AV_CHANNEL_ORDER_CUSTOM &&
                         extra.u.map[i].name[0])
                         av_strlcpy(channel_layout->u.map[channel_layout->nb_channels + i].name,
                                    extra.u.map[i].name,
-                                   sizeof(channel_layout->u.map[channel_layout->nb_channels + i].name));
+                                   পরিমাণ(channel_layout->u.map[channel_layout->nb_channels + i].name));
                 }
             }
             channel_layout->nb_channels += extra.nb_channels;
             av_channel_layout_uninit(&extra);
         }
 
-        return 0;
+        প্রত্যাগম 0;
     }
 
     chlist = av_strdup(str);
-    if (!chlist)
-        return AVERROR(ENOMEM);
+    যদি (!chlist)
+        প্রত্যাগম AVERROR(ENOMEM);
 
     /* channel names */
     matches = av_sscanf(str, "%d channels (%[^)]", &nb_channels, chlist);
     ret = parse_channel_list(channel_layout, chlist);
     av_freep(&chlist);
-    if (ret < 0 && ret != AVERROR(EINVAL))
-        return ret;
+    যদি (ret < 0 && ret != AVERROR(EINVAL))
+        প্রত্যাগম ret;
 
-    if (ret >= 0) {
-        const char *end_par = strchr(str, ')');
-        if (matches == 2 && (nb_channels != channel_layout->nb_channels || !end_par || *++end_par)) {
+    যদি (ret >= 0) {
+        ধ্রুব বর্ণ *end_par = strchr(str, ')');
+        যদি (matches == 2 && (nb_channels != channel_layout->nb_channels || !end_par || *++end_par)) {
             av_channel_layout_uninit(channel_layout);
-            return AVERROR(EINVAL);
+            প্রত্যাগম AVERROR(EINVAL);
         }
-        return 0;
+        প্রত্যাগম 0;
     }
 
     errno = 0;
     mask = strtoull(str, &end, 0);
 
     /* channel layout mask */
-    if (!errno && !*end && !strchr(str, '-') && mask) {
+    যদি (!errno && !*end && !strchr(str, '-') && mask) {
         av_channel_layout_from_mask(channel_layout, mask);
-        return 0;
+        প্রত্যাগম 0;
     }
 
     errno = 0;
     channels = strtol(str, &end, 10);
 
     /* number of channels */
-    if (!errno && !strcmp(end, "c") && channels > 0) {
+    যদি (!errno && !strcmp(end, "c") && channels > 0) {
         av_channel_layout_default(channel_layout, channels);
-        if (channel_layout->order == AV_CHANNEL_ORDER_NATIVE)
-            return 0;
+        যদি (channel_layout->order == AV_CHANNEL_ORDER_NATIVE)
+            প্রত্যাগম 0;
     }
 
     /* number of unordered channels */
-    if (!errno && (!strcmp(end, "C") || !strcmp(end, " channels"))
+    যদি (!errno && (!strcmp(end, "C") || !strcmp(end, " channels"))
         && channels > 0) {
         channel_layout->order = AV_CHANNEL_ORDER_UNSPEC;
         channel_layout->nb_channels = channels;
-        return 0;
+        প্রত্যাগম 0;
     }
 
-    return AVERROR(EINVAL);
+    প্রত্যাগম AVERROR(EINVAL);
 }
 
-void av_channel_layout_uninit(AVChannelLayout *channel_layout)
+শূন্য av_channel_layout_uninit(AVChannelLayout *channel_layout)
 {
-    if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM)
+    যদি (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM)
         av_freep(&channel_layout->u.map);
-    memset(channel_layout, 0, sizeof(*channel_layout));
+    memset(channel_layout, 0, পরিমাণ(*channel_layout));
 }
 
-int av_channel_layout_copy(AVChannelLayout *dst, const AVChannelLayout *src)
+পূর্ণাঙ্ক av_channel_layout_copy(AVChannelLayout *dst, ধ্রুব AVChannelLayout *src)
 {
     av_channel_layout_uninit(dst);
     *dst = *src;
-    if (src->order == AV_CHANNEL_ORDER_CUSTOM) {
-        dst->u.map = av_malloc_array(src->nb_channels, sizeof(*dst->u.map));
-        if (!dst->u.map)
-            return AVERROR(ENOMEM);
-        memcpy(dst->u.map, src->u.map, src->nb_channels * sizeof(*src->u.map));
+    যদি (src->order == AV_CHANNEL_ORDER_CUSTOM) {
+        dst->u.map = av_malloc_array(src->nb_channels, পরিমাণ(*dst->u.map));
+        যদি (!dst->u.map)
+            প্রত্যাগম AVERROR(ENOMEM);
+        memcpy(dst->u.map, src->u.map, src->nb_channels * পরিমাণ(*src->u.map));
     }
-    return 0;
+    প্রত্যাগম 0;
 }
 
-static int64_t masked_description(const AVChannelLayout *channel_layout, int start_channel)
+স্থির int64_t masked_description(ধ্রুব AVChannelLayout *channel_layout, পূর্ণাঙ্ক start_channel)
 {
     uint64_t mask = 0;
-    for (int i = start_channel; i < channel_layout->nb_channels; i++) {
-        enum AVChannel ch = channel_layout->u.map[i].id;
-        if (ch >= 0 && ch < 63 && mask < (1ULL << ch))
+    প্রতি (পূর্ণাঙ্ক i = start_channel; i < channel_layout->nb_channels; i++) {
+        গণনা AVChannel ch = channel_layout->u.map[i].id;
+        যদি (ch >= 0 && ch < 63 && mask < (1ULL << ch))
             mask |= (1ULL << ch);
-        else
-            return AVERROR(EINVAL);
+        অন্যথা
+            প্রত্যাগম AVERROR(EINVAL);
     }
-    return mask;
+    প্রত্যাগম mask;
 }
 
-static int has_channel_names(const AVChannelLayout *channel_layout)
+স্থির পূর্ণাঙ্ক has_channel_names(ধ্রুব AVChannelLayout *channel_layout)
 {
-    if (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
-        return 0;
-    for (int i = 0; i < channel_layout->nb_channels; i++)
-        if (channel_layout->u.map[i].name[0])
-            return 1;
-    return 0;
+    যদি (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
+        প্রত্যাগম 0;
+    প্রতি (পূর্ণাঙ্ক i = 0; i < channel_layout->nb_channels; i++)
+        যদি (channel_layout->u.map[i].name[0])
+            প্রত্যাগম 1;
+    প্রত্যাগম 0;
 }
 
-int av_channel_layout_ambisonic_order(const AVChannelLayout *channel_layout)
+পূর্ণাঙ্ক av_channel_layout_ambisonic_order(ধ্রুব AVChannelLayout *channel_layout)
 {
-    int i, highest_ambi, order;
+    পূর্ণাঙ্ক i, highest_ambi, order;
 
-    if (channel_layout->order != AV_CHANNEL_ORDER_AMBISONIC &&
+    যদি (channel_layout->order != AV_CHANNEL_ORDER_AMBISONIC &&
         channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
-        return AVERROR(EINVAL);
+        প্রত্যাগম AVERROR(EINVAL);
 
     highest_ambi = -1;
-    if (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC)
+    যদি (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC)
         highest_ambi = channel_layout->nb_channels - av_popcount64(channel_layout->u.mask) - 1;
-    else {
-        const AVChannelCustom *map = channel_layout->u.map;
+    অন্যথা {
+        ধ্রুব AVChannelCustom *map = channel_layout->u.map;
         av_assert0(channel_layout->order == AV_CHANNEL_ORDER_CUSTOM);
 
-        for (i = 0; i < channel_layout->nb_channels; i++) {
-            int is_ambi = CHAN_IS_AMBI(map[i].id);
+        প্রতি (i = 0; i < channel_layout->nb_channels; i++) {
+            পূর্ণাঙ্ক is_ambi = CHAN_IS_AMBI(map[i].id);
 
             /* ambisonic following non-ambisonic */
-            if (i > 0 && is_ambi && !CHAN_IS_AMBI(map[i - 1].id))
-                return AVERROR(EINVAL);
+            যদি (i > 0 && is_ambi && !CHAN_IS_AMBI(map[i - 1].id))
+                প্রত্যাগম AVERROR(EINVAL);
 
             /* non-default ordering */
-            if (is_ambi && map[i].id - AV_CHAN_AMBISONIC_BASE != i)
-                return AVERROR(EINVAL);
+            যদি (is_ambi && map[i].id - AV_CHAN_AMBISONIC_BASE != i)
+                প্রত্যাগম AVERROR(EINVAL);
 
-            if (CHAN_IS_AMBI(map[i].id))
+            যদি (CHAN_IS_AMBI(map[i].id))
                 highest_ambi = i;
         }
     }
     /* no ambisonic channels*/
-    if (highest_ambi < 0)
-        return AVERROR(EINVAL);
+    যদি (highest_ambi < 0)
+        প্রত্যাগম AVERROR(EINVAL);
 
     order = floor(sqrt(highest_ambi));
     /* incomplete order - some harmonics are missing */
-    if ((order + 1) * (order + 1) != highest_ambi + 1)
-        return AVERROR(EINVAL);
+    যদি ((order + 1) * (order + 1) != highest_ambi + 1)
+        প্রত্যাগম AVERROR(EINVAL);
 
-    return order;
+    প্রত্যাগম order;
 }
 
-static enum AVChannelOrder canonical_order(AVChannelLayout *channel_layout)
+স্থির গণনা AVChannelOrder canonical_order(AVChannelLayout *channel_layout)
 {
-    int has_known_channel = 0;
-    int order;
+    পূর্ণাঙ্ক has_known_channel = 0;
+    পূর্ণাঙ্ক order;
 
-    if (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
-        return channel_layout->order;
+    যদি (channel_layout->order != AV_CHANNEL_ORDER_CUSTOM)
+        প্রত্যাগম channel_layout->order;
 
-    if (has_channel_names(channel_layout))
-        return AV_CHANNEL_ORDER_CUSTOM;
+    যদি (has_channel_names(channel_layout))
+        প্রত্যাগম AV_CHANNEL_ORDER_CUSTOM;
 
-    for (int i = 0; i < channel_layout->nb_channels && !has_known_channel; i++)
-        if (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN)
+    প্রতি (পূর্ণাঙ্ক i = 0; i < channel_layout->nb_channels && !has_known_channel; i++)
+        যদি (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN)
             has_known_channel = 1;
-    if (!has_known_channel)
-        return AV_CHANNEL_ORDER_UNSPEC;
+    যদি (!has_known_channel)
+        প্রত্যাগম AV_CHANNEL_ORDER_UNSPEC;
 
-    if (masked_description(channel_layout, 0) > 0)
-        return AV_CHANNEL_ORDER_NATIVE;
+    যদি (masked_description(channel_layout, 0) > 0)
+        প্রত্যাগম AV_CHANNEL_ORDER_NATIVE;
 
     order = av_channel_layout_ambisonic_order(channel_layout);
-    if (order >= 0 && masked_description(channel_layout, (order + 1) * (order + 1)) >= 0)
-        return AV_CHANNEL_ORDER_AMBISONIC;
+    যদি (order >= 0 && masked_description(channel_layout, (order + 1) * (order + 1)) >= 0)
+        প্রত্যাগম AV_CHANNEL_ORDER_AMBISONIC;
 
-    return AV_CHANNEL_ORDER_CUSTOM;
+    প্রত্যাগম AV_CHANNEL_ORDER_CUSTOM;
 }
 
 /**
@@ -559,32 +559,32 @@ static enum AVChannelOrder canonical_order(AVChannelLayout *channel_layout)
  * extra non-diegetic channels at the end, write its string description in bp.
  * Return a negative error code otherwise.
  */
-static int try_describe_ambisonic(AVBPrint *bp, const AVChannelLayout *channel_layout)
+স্থির পূর্ণাঙ্ক try_describe_ambisonic(AVBPrint *bp, ধ্রুব AVChannelLayout *channel_layout)
 {
-    int nb_ambi_channels;
-    int order = av_channel_layout_ambisonic_order(channel_layout);
-    if (order < 0)
-        return order;
+    পূর্ণাঙ্ক nb_ambi_channels;
+    পূর্ণাঙ্ক order = av_channel_layout_ambisonic_order(channel_layout);
+    যদি (order < 0)
+        প্রত্যাগম order;
 
     av_bprintf(bp, "ambisonic %d", order);
 
     /* extra channels present */
     nb_ambi_channels = (order + 1) * (order + 1);
-    if (nb_ambi_channels < channel_layout->nb_channels) {
+    যদি (nb_ambi_channels < channel_layout->nb_channels) {
         AVChannelLayout extra = { 0 };
 
-        if (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC) {
+        যদি (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC) {
             extra.order       = AV_CHANNEL_ORDER_NATIVE;
             extra.nb_channels = av_popcount64(channel_layout->u.mask);
             extra.u.mask      = channel_layout->u.mask;
-        } else {
+        } অন্যথা {
             int64_t mask;
-            if (!has_channel_names(channel_layout) &&
+            যদি (!has_channel_names(channel_layout) &&
                 (mask = masked_description(channel_layout, nb_ambi_channels)) > 0) {
                 extra.order       = AV_CHANNEL_ORDER_NATIVE;
                 extra.nb_channels = av_popcount64(mask);
                 extra.u.mask      = mask;
-            } else {
+            } অন্যথা {
                 extra.order       = AV_CHANNEL_ORDER_CUSTOM;
                 extra.nb_channels = channel_layout->nb_channels - nb_ambi_channels;
                 extra.u.map       = channel_layout->u.map + nb_ambi_channels;
@@ -596,386 +596,386 @@ static int try_describe_ambisonic(AVBPrint *bp, const AVChannelLayout *channel_l
         /* Not calling uninit here on extra because we don't own the u.map pointer */
     }
 
-    return 0;
+    প্রত্যাগম 0;
 }
 
-int av_channel_layout_describe_bprint(const AVChannelLayout *channel_layout,
+পূর্ণাঙ্ক av_channel_layout_describe_bprint(ধ্রুব AVChannelLayout *channel_layout,
                                       AVBPrint *bp)
 {
-    int i;
+    পূর্ণাঙ্ক i;
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_NATIVE:
-        for (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
-            if (channel_layout->u.mask == channel_layout_map[i].layout.u.mask) {
+    বিকল্প (channel_layout->order) {
+    পক্ষ AV_CHANNEL_ORDER_NATIVE:
+        প্রতি (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
+            যদি (channel_layout->u.mask == channel_layout_map[i].layout.u.mask) {
                 av_bprintf(bp, "%s", channel_layout_map[i].name);
-                return 0;
+                প্রত্যাগম 0;
             }
         av_fallthrough;
-    case AV_CHANNEL_ORDER_CUSTOM:
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+    পক্ষ AV_CHANNEL_ORDER_CUSTOM:
+        যদি (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             int64_t mask;
-            int res = try_describe_ambisonic(bp, channel_layout);
-            if (res >= 0)
-                return 0;
-            if (!has_channel_names(channel_layout) &&
+            পূর্ণাঙ্ক res = try_describe_ambisonic(bp, channel_layout);
+            যদি (res >= 0)
+                প্রত্যাগম 0;
+            যদি (!has_channel_names(channel_layout) &&
                 (mask = masked_description(channel_layout, 0)) > 0) {
                 AVChannelLayout native = { .order       = AV_CHANNEL_ORDER_NATIVE,
                                            .nb_channels = av_popcount64(mask),
                                            .u.mask      = mask };
-                return av_channel_layout_describe_bprint(&native, bp);
+                প্রত্যাগম av_channel_layout_describe_bprint(&native, bp);
             }
         }
-        if (channel_layout->nb_channels)
+        যদি (channel_layout->nb_channels)
             av_bprintf(bp, "%d channels (", channel_layout->nb_channels);
-        for (i = 0; i < channel_layout->nb_channels; i++) {
-            enum AVChannel ch = av_channel_layout_channel_from_index(channel_layout, i);
+        প্রতি (i = 0; i < channel_layout->nb_channels; i++) {
+            গণনা AVChannel ch = av_channel_layout_channel_from_index(channel_layout, i);
 
-            if (i)
+            যদি (i)
                 av_bprintf(bp, "+");
             av_channel_name_bprint(bp, ch);
-            if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM &&
+            যদি (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM &&
                 channel_layout->u.map[i].name[0])
                 av_bprintf(bp, "@%s", channel_layout->u.map[i].name);
         }
-        if (channel_layout->nb_channels) {
+        যদি (channel_layout->nb_channels) {
             av_bprintf(bp, ")");
-            return 0;
+            প্রত্যাগম 0;
         }
         av_fallthrough;
-    case AV_CHANNEL_ORDER_UNSPEC:
+    পক্ষ AV_CHANNEL_ORDER_UNSPEC:
         av_bprintf(bp, "%d channels", channel_layout->nb_channels);
-        return 0;
-    case AV_CHANNEL_ORDER_AMBISONIC:
-        return try_describe_ambisonic(bp, channel_layout);
-    default:
-        return AVERROR(EINVAL);
+        প্রত্যাগম 0;
+    পক্ষ AV_CHANNEL_ORDER_AMBISONIC:
+        প্রত্যাগম try_describe_ambisonic(bp, channel_layout);
+    স্বভাব:
+        প্রত্যাগম AVERROR(EINVAL);
     }
 }
 
-int av_channel_layout_describe(const AVChannelLayout *channel_layout,
-                               char *buf, size_t buf_size)
+পূর্ণাঙ্ক av_channel_layout_describe(ধ্রুব AVChannelLayout *channel_layout,
+                               বর্ণ *buf, size_t buf_size)
 {
     AVBPrint bp;
-    int ret;
+    পূর্ণাঙ্ক ret;
 
-    if (!buf && buf_size)
-        return AVERROR(EINVAL);
+    যদি (!buf && buf_size)
+        প্রত্যাগম AVERROR(EINVAL);
 
     av_bprint_init_for_buffer(&bp, buf, buf_size);
     ret = av_channel_layout_describe_bprint(channel_layout, &bp);
-    if (ret < 0)
-        return ret;
+    যদি (ret < 0)
+        প্রত্যাগম ret;
 
-    if (bp.len >= INT_MAX)
-        return AVERROR(ERANGE);
-    return bp.len + 1;
+    যদি (bp.len >= INT_MAX)
+        প্রত্যাগম AVERROR(ERANGE);
+    প্রত্যাগম bp.len + 1;
 }
 
-enum AVChannel
-av_channel_layout_channel_from_index(const AVChannelLayout *channel_layout,
-                                     unsigned int idx)
+গণনা AVChannel
+av_channel_layout_channel_from_index(ধ্রুব AVChannelLayout *channel_layout,
+                                     unsigned পূর্ণাঙ্ক idx)
 {
-    int i;
+    পূর্ণাঙ্ক i;
 
-    if (idx >= channel_layout->nb_channels)
-        return AV_CHAN_NONE;
+    যদি (idx >= channel_layout->nb_channels)
+        প্রত্যাগম AV_CHAN_NONE;
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_CUSTOM:
-        return channel_layout->u.map[idx].id;
-    case AV_CHANNEL_ORDER_AMBISONIC: {
-        int ambi_channels = channel_layout->nb_channels - av_popcount64(channel_layout->u.mask);
-        if (idx < ambi_channels)
-            return AV_CHAN_AMBISONIC_BASE + idx;
+    বিকল্প (channel_layout->order) {
+    পক্ষ AV_CHANNEL_ORDER_CUSTOM:
+        প্রত্যাগম channel_layout->u.map[idx].id;
+    পক্ষ AV_CHANNEL_ORDER_AMBISONIC: {
+        পূর্ণাঙ্ক ambi_channels = channel_layout->nb_channels - av_popcount64(channel_layout->u.mask);
+        যদি (idx < ambi_channels)
+            প্রত্যাগম AV_CHAN_AMBISONIC_BASE + idx;
         idx -= ambi_channels;
         }
         av_fallthrough;
-    case AV_CHANNEL_ORDER_NATIVE:
-        for (i = 0; i < 64; i++) {
-            if ((1ULL << i) & channel_layout->u.mask && !idx--)
-                return i;
+    পক্ষ AV_CHANNEL_ORDER_NATIVE:
+        প্রতি (i = 0; i < 64; i++) {
+            যদি ((1ULL << i) & channel_layout->u.mask && !idx--)
+                প্রত্যাগম i;
         }
         av_fallthrough;
-    default:
-        return AV_CHAN_NONE;
+    স্বভাব:
+        প্রত্যাগম AV_CHAN_NONE;
     }
 }
 
-enum AVChannel
-av_channel_layout_channel_from_string(const AVChannelLayout *channel_layout,
-                                      const char *str)
+গণনা AVChannel
+av_channel_layout_channel_from_string(ধ্রুব AVChannelLayout *channel_layout,
+                                      ধ্রুব বর্ণ *str)
 {
-    int index = av_channel_layout_index_from_string(channel_layout, str);
+    পূর্ণাঙ্ক index = av_channel_layout_index_from_string(channel_layout, str);
 
-    if (index < 0)
-        return AV_CHAN_NONE;
+    যদি (index < 0)
+        প্রত্যাগম AV_CHAN_NONE;
 
-    return av_channel_layout_channel_from_index(channel_layout, index);
+    প্রত্যাগম av_channel_layout_channel_from_index(channel_layout, index);
 }
 
-int av_channel_layout_index_from_channel(const AVChannelLayout *channel_layout,
-                                         enum AVChannel channel)
+পূর্ণাঙ্ক av_channel_layout_index_from_channel(ধ্রুব AVChannelLayout *channel_layout,
+                                         গণনা AVChannel channel)
 {
-    int i;
+    পূর্ণাঙ্ক i;
 
-    if (channel == AV_CHAN_NONE)
-        return AVERROR(EINVAL);
+    যদি (channel == AV_CHAN_NONE)
+        প্রত্যাগম AVERROR(EINVAL);
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_CUSTOM:
-        for (i = 0; i < channel_layout->nb_channels; i++)
-            if (channel_layout->u.map[i].id == channel)
-                return i;
-        return AVERROR(EINVAL);
-    case AV_CHANNEL_ORDER_AMBISONIC:
-    case AV_CHANNEL_ORDER_NATIVE: {
+    বিকল্প (channel_layout->order) {
+    পক্ষ AV_CHANNEL_ORDER_CUSTOM:
+        প্রতি (i = 0; i < channel_layout->nb_channels; i++)
+            যদি (channel_layout->u.map[i].id == channel)
+                প্রত্যাগম i;
+        প্রত্যাগম AVERROR(EINVAL);
+    পক্ষ AV_CHANNEL_ORDER_AMBISONIC:
+    পক্ষ AV_CHANNEL_ORDER_NATIVE: {
         uint64_t mask = channel_layout->u.mask;
-        int ambi_channels = channel_layout->nb_channels - av_popcount64(mask);
-        if (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC &&
+        পূর্ণাঙ্ক ambi_channels = channel_layout->nb_channels - av_popcount64(mask);
+        যদি (channel_layout->order == AV_CHANNEL_ORDER_AMBISONIC &&
             channel >= AV_CHAN_AMBISONIC_BASE) {
-            if (channel - AV_CHAN_AMBISONIC_BASE >= ambi_channels)
-                return AVERROR(EINVAL);
-            return channel - AV_CHAN_AMBISONIC_BASE;
+            যদি (channel - AV_CHAN_AMBISONIC_BASE >= ambi_channels)
+                প্রত্যাগম AVERROR(EINVAL);
+            প্রত্যাগম channel - AV_CHAN_AMBISONIC_BASE;
         }
-        if ((unsigned)channel > 63 || !(mask & (1ULL << channel)))
-            return AVERROR(EINVAL);
+        যদি ((unsigned)channel > 63 || !(mask & (1ULL << channel)))
+            প্রত্যাগম AVERROR(EINVAL);
         mask &= (1ULL << channel) - 1;
-        return av_popcount64(mask) + ambi_channels;
+        প্রত্যাগম av_popcount64(mask) + ambi_channels;
         }
-    default:
-        return AVERROR(EINVAL);
+    স্বভাব:
+        প্রত্যাগম AVERROR(EINVAL);
     }
 }
 
-int av_channel_layout_index_from_string(const AVChannelLayout *channel_layout,
-                                        const char *str)
+পূর্ণাঙ্ক av_channel_layout_index_from_string(ধ্রুব AVChannelLayout *channel_layout,
+                                        ধ্রুব বর্ণ *str)
 {
-    const char *chname;
-    enum AVChannel ch = AV_CHAN_NONE;
+    ধ্রুব বর্ণ *chname;
+    গণনা AVChannel ch = AV_CHAN_NONE;
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_CUSTOM:
+    বিকল্প (channel_layout->order) {
+    পক্ষ AV_CHANNEL_ORDER_CUSTOM:
         chname = strstr(str, "@");
-        if (chname) {
-            char buf[16];
+        যদি (chname) {
+            বর্ণ buf[16];
             chname++;
-            av_strlcpy(buf, str, FFMIN(sizeof(buf), chname - str));
-            if (!*chname)
-                chname = NULL;
+            av_strlcpy(buf, str, FFMIN(পরিমাণ(buf), chname - str));
+            যদি (!*chname)
+                chname = রিক্ত;
             ch = av_channel_from_string(buf);
-            if (ch == AV_CHAN_NONE && *buf)
-                return AVERROR(EINVAL);
+            যদি (ch == AV_CHAN_NONE && *buf)
+                প্রত্যাগম AVERROR(EINVAL);
         }
-        for (int i = 0; chname && i < channel_layout->nb_channels; i++) {
-            if (!strcmp(chname, channel_layout->u.map[i].name) &&
+        প্রতি (পূর্ণাঙ্ক i = 0; chname && i < channel_layout->nb_channels; i++) {
+            যদি (!strcmp(chname, channel_layout->u.map[i].name) &&
                 (ch == AV_CHAN_NONE || ch == channel_layout->u.map[i].id))
-                return i;
+                প্রত্যাগম i;
         }
         av_fallthrough;
-    case AV_CHANNEL_ORDER_AMBISONIC:
-    case AV_CHANNEL_ORDER_NATIVE:
+    পক্ষ AV_CHANNEL_ORDER_AMBISONIC:
+    পক্ষ AV_CHANNEL_ORDER_NATIVE:
         ch = av_channel_from_string(str);
-        if (ch == AV_CHAN_NONE)
-            return AVERROR(EINVAL);
-        return av_channel_layout_index_from_channel(channel_layout, ch);
+        যদি (ch == AV_CHAN_NONE)
+            প্রত্যাগম AVERROR(EINVAL);
+        প্রত্যাগম av_channel_layout_index_from_channel(channel_layout, ch);
     }
 
-    return AVERROR(EINVAL);
+    প্রত্যাগম AVERROR(EINVAL);
 }
 
-int av_channel_layout_check(const AVChannelLayout *channel_layout)
+পূর্ণাঙ্ক av_channel_layout_check(ধ্রুব AVChannelLayout *channel_layout)
 {
-    if (channel_layout->nb_channels <= 0)
-        return 0;
+    যদি (channel_layout->nb_channels <= 0)
+        প্রত্যাগম 0;
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_NATIVE:
-        return av_popcount64(channel_layout->u.mask) == channel_layout->nb_channels;
-    case AV_CHANNEL_ORDER_CUSTOM:
-        if (!channel_layout->u.map)
-            return 0;
-        for (int i = 0; i < channel_layout->nb_channels; i++) {
-            if (channel_layout->u.map[i].id == AV_CHAN_NONE)
-                return 0;
+    বিকল্প (channel_layout->order) {
+    পক্ষ AV_CHANNEL_ORDER_NATIVE:
+        প্রত্যাগম av_popcount64(channel_layout->u.mask) == channel_layout->nb_channels;
+    পক্ষ AV_CHANNEL_ORDER_CUSTOM:
+        যদি (!channel_layout->u.map)
+            প্রত্যাগম 0;
+        প্রতি (পূর্ণাঙ্ক i = 0; i < channel_layout->nb_channels; i++) {
+            যদি (channel_layout->u.map[i].id == AV_CHAN_NONE)
+                প্রত্যাগম 0;
         }
-        return 1;
-    case AV_CHANNEL_ORDER_AMBISONIC:
+        প্রত্যাগম 1;
+    পক্ষ AV_CHANNEL_ORDER_AMBISONIC:
         /* If non-diegetic channels are present, ensure they are taken into account */
-        return av_popcount64(channel_layout->u.mask) < channel_layout->nb_channels;
-    case AV_CHANNEL_ORDER_UNSPEC:
-        return 1;
-    default:
-        return 0;
+        প্রত্যাগম av_popcount64(channel_layout->u.mask) < channel_layout->nb_channels;
+    পক্ষ AV_CHANNEL_ORDER_UNSPEC:
+        প্রত্যাগম 1;
+    স্বভাব:
+        প্রত্যাগম 0;
     }
 }
 
-int av_channel_layout_compare(const AVChannelLayout *chl, const AVChannelLayout *chl1)
+পূর্ণাঙ্ক av_channel_layout_compare(ধ্রুব AVChannelLayout *chl, ধ্রুব AVChannelLayout *chl1)
 {
-    int i;
+    পূর্ণাঙ্ক i;
 
     /* different channel counts -> not equal */
-    if (chl->nb_channels != chl1->nb_channels)
-        return 1;
+    যদি (chl->nb_channels != chl1->nb_channels)
+        প্রত্যাগম 1;
 
     /* if only one is unspecified -> not equal */
-    if ((chl->order  == AV_CHANNEL_ORDER_UNSPEC) !=
+    যদি ((chl->order  == AV_CHANNEL_ORDER_UNSPEC) !=
         (chl1->order == AV_CHANNEL_ORDER_UNSPEC))
-        return 1;
+        প্রত্যাগম 1;
     /* both are unspecified -> equal */
-    else if (chl->order == AV_CHANNEL_ORDER_UNSPEC)
-        return 0;
+    অন্যথা যদি (chl->order == AV_CHANNEL_ORDER_UNSPEC)
+        প্রত্যাগম 0;
 
     /* can compare masks directly */
-    if ((chl->order == AV_CHANNEL_ORDER_NATIVE ||
+    যদি ((chl->order == AV_CHANNEL_ORDER_NATIVE ||
          chl->order == AV_CHANNEL_ORDER_AMBISONIC) &&
         chl->order == chl1->order)
-        return chl->u.mask != chl1->u.mask;
+        প্রত্যাগম chl->u.mask != chl1->u.mask;
 
     /* compare channel by channel */
-    for (i = 0; i < chl->nb_channels; i++)
-        if (av_channel_layout_channel_from_index(chl,  i) !=
+    প্রতি (i = 0; i < chl->nb_channels; i++)
+        যদি (av_channel_layout_channel_from_index(chl,  i) !=
             av_channel_layout_channel_from_index(chl1, i))
-            return 1;
-    return 0;
+            প্রত্যাগম 1;
+    প্রত্যাগম 0;
 }
 
-void av_channel_layout_default(AVChannelLayout *ch_layout, int nb_channels)
+শূন্য av_channel_layout_default(AVChannelLayout *ch_layout, পূর্ণাঙ্ক nb_channels)
 {
-    int i;
-    for (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
-        if (nb_channels == channel_layout_map[i].layout.nb_channels) {
+    পূর্ণাঙ্ক i;
+    প্রতি (i = 0; i < FF_ARRAY_ELEMS(channel_layout_map); i++)
+        যদি (nb_channels == channel_layout_map[i].layout.nb_channels) {
             *ch_layout = channel_layout_map[i].layout;
-            return;
+            প্রত্যাগম;
         }
 
     ch_layout->order       = AV_CHANNEL_ORDER_UNSPEC;
     ch_layout->nb_channels = nb_channels;
 }
 
-const AVChannelLayout *av_channel_layout_standard(void **opaque)
+ধ্রুব AVChannelLayout *av_channel_layout_standard(শূন্য **opaque)
 {
     uintptr_t i = (uintptr_t)*opaque;
-    const AVChannelLayout *ch_layout = NULL;
+    ধ্রুব AVChannelLayout *ch_layout = রিক্ত;
 
-    if (i < FF_ARRAY_ELEMS(channel_layout_map)) {
+    যদি (i < FF_ARRAY_ELEMS(channel_layout_map)) {
         ch_layout = &channel_layout_map[i].layout;
-        *opaque = (void*)(i + 1);
+        *opaque = (শূন্য*)(i + 1);
     }
 
-    return ch_layout;
+    প্রত্যাগম ch_layout;
 }
 
-uint64_t av_channel_layout_subset(const AVChannelLayout *channel_layout,
+uint64_t av_channel_layout_subset(ধ্রুব AVChannelLayout *channel_layout,
                                   uint64_t mask)
 {
     uint64_t ret = 0;
-    int i;
+    পূর্ণাঙ্ক i;
 
-    switch (channel_layout->order) {
-    case AV_CHANNEL_ORDER_NATIVE:
-    case AV_CHANNEL_ORDER_AMBISONIC:
-        return channel_layout->u.mask & mask;
-    case AV_CHANNEL_ORDER_CUSTOM:
-        for (i = 0; i < 64; i++)
-            if (mask & (1ULL << i) && av_channel_layout_index_from_channel(channel_layout, i) >= 0)
+    বিকল্প (channel_layout->order) {
+    পক্ষ AV_CHANNEL_ORDER_NATIVE:
+    পক্ষ AV_CHANNEL_ORDER_AMBISONIC:
+        প্রত্যাগম channel_layout->u.mask & mask;
+    পক্ষ AV_CHANNEL_ORDER_CUSTOM:
+        প্রতি (i = 0; i < 64; i++)
+            যদি (mask & (1ULL << i) && av_channel_layout_index_from_channel(channel_layout, i) >= 0)
                 ret |= (1ULL << i);
-        break;
+        ভঙ্গ;
     }
 
-    return ret;
+    প্রত্যাগম ret;
 }
 
-int av_channel_layout_retype(AVChannelLayout *channel_layout, enum AVChannelOrder order, int flags)
+পূর্ণাঙ্ক av_channel_layout_retype(AVChannelLayout *channel_layout, গণনা AVChannelOrder order, পূর্ণাঙ্ক flags)
 {
-    int allow_lossy = !(flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_LOSSLESS);
-    int lossy;
+    পূর্ণাঙ্ক allow_lossy = !(flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_LOSSLESS);
+    পূর্ণাঙ্ক lossy;
 
-    if (!av_channel_layout_check(channel_layout))
-        return AVERROR(EINVAL);
+    যদি (!av_channel_layout_check(channel_layout))
+        প্রত্যাগম AVERROR(EINVAL);
 
-    if (flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_CANONICAL)
+    যদি (flags & AV_CHANNEL_LAYOUT_RETYPE_FLAG_CANONICAL)
         order = canonical_order(channel_layout);
 
-    if (channel_layout->order == order)
-        return 0;
+    যদি (channel_layout->order == order)
+        প্রত্যাগম 0;
 
-    switch (order) {
-    case AV_CHANNEL_ORDER_UNSPEC: {
-        int nb_channels = channel_layout->nb_channels;
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+    বিকল্প (order) {
+    পক্ষ AV_CHANNEL_ORDER_UNSPEC: {
+        পূর্ণাঙ্ক nb_channels = channel_layout->nb_channels;
+        যদি (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             lossy = 0;
-            for (int i = 0; i < nb_channels; i++) {
-                if (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN || channel_layout->u.map[i].name[0]) {
+            প্রতি (পূর্ণাঙ্ক i = 0; i < nb_channels; i++) {
+                যদি (channel_layout->u.map[i].id != AV_CHAN_UNKNOWN || channel_layout->u.map[i].name[0]) {
                     lossy = 1;
-                    break;
+                    ভঙ্গ;
                 }
             }
-        } else {
+        } অন্যথা {
             lossy = 1;
         }
-        if (!lossy || allow_lossy) {
-            void *opaque = channel_layout->opaque;
+        যদি (!lossy || allow_lossy) {
+            শূন্য *opaque = channel_layout->opaque;
             av_channel_layout_uninit(channel_layout);
             channel_layout->order       = AV_CHANNEL_ORDER_UNSPEC;
             channel_layout->nb_channels = nb_channels;
             channel_layout->opaque      = opaque;
-            return lossy;
+            প্রত্যাগম lossy;
         }
-        return AVERROR(ENOSYS);
+        প্রত্যাগম AVERROR(ENOSYS);
         }
-    case AV_CHANNEL_ORDER_NATIVE:
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+    পক্ষ AV_CHANNEL_ORDER_NATIVE:
+        যদি (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             int64_t mask = masked_description(channel_layout, 0);
-            if (mask < 0)
-                return AVERROR(ENOSYS);
+            যদি (mask < 0)
+                প্রত্যাগম AVERROR(ENOSYS);
             lossy = has_channel_names(channel_layout);
-            if (!lossy || allow_lossy) {
-                void *opaque = channel_layout->opaque;
+            যদি (!lossy || allow_lossy) {
+                শূন্য *opaque = channel_layout->opaque;
                 av_channel_layout_uninit(channel_layout);
                 av_channel_layout_from_mask(channel_layout, mask);
                 channel_layout->opaque = opaque;
-                return lossy;
+                প্রত্যাগম lossy;
             }
         }
-        return AVERROR(ENOSYS);
-    case AV_CHANNEL_ORDER_CUSTOM: {
+        প্রত্যাগম AVERROR(ENOSYS);
+    পক্ষ AV_CHANNEL_ORDER_CUSTOM: {
         AVChannelLayout custom = { 0 };
-        int ret = av_channel_layout_custom_init(&custom, channel_layout->nb_channels);
-        void *opaque = channel_layout->opaque;
-        if (ret < 0)
-            return ret;
-        if (channel_layout->order != AV_CHANNEL_ORDER_UNSPEC)
-            for (int i = 0; i < channel_layout->nb_channels; i++)
+        পূর্ণাঙ্ক ret = av_channel_layout_custom_init(&custom, channel_layout->nb_channels);
+        শূন্য *opaque = channel_layout->opaque;
+        যদি (ret < 0)
+            প্রত্যাগম ret;
+        যদি (channel_layout->order != AV_CHANNEL_ORDER_UNSPEC)
+            প্রতি (পূর্ণাঙ্ক i = 0; i < channel_layout->nb_channels; i++)
                 custom.u.map[i].id = av_channel_layout_channel_from_index(channel_layout, i);
         av_channel_layout_uninit(channel_layout);
         *channel_layout = custom;
         channel_layout->opaque = opaque;
-        return 0;
+        প্রত্যাগম 0;
         }
-    case AV_CHANNEL_ORDER_AMBISONIC:
-        if (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
+    পক্ষ AV_CHANNEL_ORDER_AMBISONIC:
+        যদি (channel_layout->order == AV_CHANNEL_ORDER_CUSTOM) {
             int64_t mask;
-            int nb_channels = channel_layout->nb_channels;
-            int amb_order = av_channel_layout_ambisonic_order(channel_layout);
-            if (amb_order < 0)
-                return AVERROR(ENOSYS);
+            পূর্ণাঙ্ক nb_channels = channel_layout->nb_channels;
+            পূর্ণাঙ্ক amb_order = av_channel_layout_ambisonic_order(channel_layout);
+            যদি (amb_order < 0)
+                প্রত্যাগম AVERROR(ENOSYS);
             mask = masked_description(channel_layout, (amb_order + 1) * (amb_order + 1));
-            if (mask < 0)
-                return AVERROR(ENOSYS);
+            যদি (mask < 0)
+                প্রত্যাগম AVERROR(ENOSYS);
             lossy = has_channel_names(channel_layout);
-            if (!lossy || allow_lossy) {
-                void *opaque = channel_layout->opaque;
+            যদি (!lossy || allow_lossy) {
+                শূন্য *opaque = channel_layout->opaque;
                 av_channel_layout_uninit(channel_layout);
                 channel_layout->order       = AV_CHANNEL_ORDER_AMBISONIC;
                 channel_layout->nb_channels = nb_channels;
                 channel_layout->u.mask      = mask;
                 channel_layout->opaque      = opaque;
-                return lossy;
+                প্রত্যাগম lossy;
             }
         }
-        return AVERROR(ENOSYS);
-    default:
-        return AVERROR(EINVAL);
+        প্রত্যাগম AVERROR(ENOSYS);
+    স্বভাব:
+        প্রত্যাগম AVERROR(EINVAL);
     }
 }

@@ -19,27 +19,27 @@
 #ifndef AVUTIL_RISCV_PIXELUTILS_H
 #define AVUTIL_RISCV_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#অন্তর্ভাব <stddef.h>
+#অন্তর্ভাব <stdint.h>
 
-#include "config.h"
+#অন্তর্ভাব "config.h"
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#অন্তর্ভাব "cpu.h"
+#অন্তর্ভাব "libavutil/attributes.h"
+#অন্তর্ভাব "libavutil/cpu.h"
+#অন্তর্ভাব "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_rvv(const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad8_rvv (const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
+পূর্ণাঙ্ক ff_pixelutils_sad16_rvv(ধ্রুব uint8_t *src1, ptrdiff_t stride1,
+                            ধ্রুব uint8_t *src2, ptrdiff_t stride2);
+পূর্ণাঙ্ক ff_pixelutils_sad8_rvv (ধ্রুব uint8_t *src1, ptrdiff_t stride1,
+                            ধ্রুব uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, int aligned)
+স্থির অন্তঃস্থ av_cold শূন্য ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, পূর্ণাঙ্ক aligned)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#যদি HAVE_RVV
+    পূর্ণাঙ্ক flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
+    যদি (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
         sad[3] = ff_pixelutils_sad16_rvv;
         sad[2] = ff_pixelutils_sad8_rvv;
     }

@@ -23,8 +23,8 @@
 #ifndef AVUTIL_CSP_H
 #define AVUTIL_CSP_H
 
-#include "pixfmt.h"
-#include "rational.h"
+#অন্তর্ভাব "pixfmt.h"
+#অন্তর্ভাব "rational.h"
 
 /**
  * @file
@@ -45,7 +45,7 @@
  * Struct containing luma coefficients to be used for RGB to YUV/YCoCg, or similar
  * calculations.
  */
-typedef struct AVLumaCoefficients {
+প্রকারনির্দেশ সংরচনা AVLumaCoefficients {
     AVRational cr, cg, cb;
 } AVLumaCoefficients;
 
@@ -53,7 +53,7 @@ typedef struct AVLumaCoefficients {
  * Struct containing chromaticity x and y values for the standard CIE 1931
  * chromaticity definition.
  */
-typedef struct AVCIExy {
+প্রকারনির্দেশ সংরচনা AVCIExy {
     AVRational x, y;
 } AVCIExy;
 
@@ -61,7 +61,7 @@ typedef struct AVCIExy {
  * Struct defining the red, green, and blue primary locations in terms of CIE
  * 1931 chromaticity x and y.
  */
-typedef struct AVPrimaryCoefficients {
+প্রকারনির্দেশ সংরচনা AVPrimaryCoefficients {
     AVCIExy r, g, b;
 } AVPrimaryCoefficients;
 
@@ -69,13 +69,13 @@ typedef struct AVPrimaryCoefficients {
  * Struct defining white point location in terms of CIE 1931 chromaticity x
  * and y.
  */
-typedef AVCIExy AVWhitepointCoefficients;
+প্রকারনির্দেশ AVCIExy AVWhitepointCoefficients;
 
 /**
  * Struct that contains both white point location and primaries location, providing
  * the complete description of a color gamut.
  */
-typedef struct AVColorPrimariesDesc {
+প্রকারনির্দেশ সংরচনা AVColorPrimariesDesc {
     AVWhitepointCoefficients wp;
     AVPrimaryCoefficients prim;
 } AVColorPrimariesDesc;
@@ -88,7 +88,7 @@ typedef struct AVColorPrimariesDesc {
  *
  * See ITU-T H.273 for more information.
  */
-typedef double (*av_csp_trc_function)(double);
+প্রকারনির্দেশ দ্বিগুণ (*av_csp_trc_function)(দ্বিগুণ);
 
 /**
  * Retrieves the Luma coefficients necessary to construct a conversion matrix
@@ -97,7 +97,7 @@ typedef double (*av_csp_trc_function)(double);
  * @return The Luma coefficients associated with that colorspace, or NULL
  *     if the constant is unknown to libavutil.
  */
-const AVLumaCoefficients *av_csp_luma_coeffs_from_avcsp(enum AVColorSpace csp);
+ধ্রুব AVLumaCoefficients *av_csp_luma_coeffs_from_avcsp(গণনা AVColorSpace csp);
 
 /**
  * Retrieves a complete gamut description from an enum constant describing the
@@ -106,7 +106,7 @@ const AVLumaCoefficients *av_csp_luma_coeffs_from_avcsp(enum AVColorSpace csp);
  * @return A description of the colorspace gamut associated with that enum
  *     constant, or NULL if the constant is unknown to libavutil.
  */
-const AVColorPrimariesDesc *av_csp_primaries_desc_from_id(enum AVColorPrimaries prm);
+ধ্রুব AVColorPrimariesDesc *av_csp_primaries_desc_from_id(গণনা AVColorPrimaries prm);
 
 /**
  * Detects which enum AVColorPrimaries constant corresponds to the given complete
@@ -116,7 +116,7 @@ const AVColorPrimariesDesc *av_csp_primaries_desc_from_id(enum AVColorPrimaries 
  * @return The enum constant associated with this gamut, or
  *     AVCOL_PRI_UNSPECIFIED if no clear match can be identified.
  */
-enum AVColorPrimaries av_csp_primaries_id_from_desc(const AVColorPrimariesDesc *prm);
+গণনা AVColorPrimaries av_csp_primaries_id_from_desc(ধ্রুব AVColorPrimariesDesc *prm);
 
 /**
  * Determine a suitable 'gamma' value to match the supplied
@@ -131,7 +131,7 @@ enum AVColorPrimaries av_csp_primaries_id_from_desc(const AVColorPrimariesDesc *
  *         the supplied Transfer Characteristic, Will return 0.0 for any
  *         we cannot reasonably match against.
  */
-double av_csp_approximate_trc_gamma(enum AVColorTransferCharacteristic trc);
+দ্বিগুণ av_csp_approximate_trc_gamma(গণনা AVColorTransferCharacteristic trc);
 
 /**
  * Determine a suitable EOTF 'gamma' value to match the supplied
@@ -147,7 +147,7 @@ double av_csp_approximate_trc_gamma(enum AVColorTransferCharacteristic trc);
  *         the supplied Transfer Characteristic EOTF, Will return 0.0 for any
  *         we cannot reasonably match against.
  */
-double av_csp_approximate_eotf_gamma(enum AVColorTransferCharacteristic trc);
+দ্বিগুণ av_csp_approximate_eotf_gamma(গণনা AVColorTransferCharacteristic trc);
 
 /**
  * Determine the function needed to apply the given
@@ -161,12 +161,12 @@ double av_csp_approximate_eotf_gamma(enum AVColorTransferCharacteristic trc);
  *         supplied Transfer Characteristic. If unspecified will
  *         return NULL:
  */
-av_csp_trc_function av_csp_trc_func_from_id(enum AVColorTransferCharacteristic trc);
+av_csp_trc_function av_csp_trc_func_from_id(গণনা AVColorTransferCharacteristic trc);
 
 /**
  * Returns the mathematical inverse of the corresponding TRC function.
  */
-av_csp_trc_function av_csp_trc_func_inv_from_id(enum AVColorTransferCharacteristic trc);
+av_csp_trc_function av_csp_trc_func_inv_from_id(গণনা AVColorTransferCharacteristic trc);
 
 /**
  * Function pointer representing an ITU EOTF transfer for a given reference
@@ -175,7 +175,7 @@ av_csp_trc_function av_csp_trc_func_inv_from_id(enum AVColorTransferCharacterist
  * @param Lw The white point luminance of the display, in nits (cd/m^2).
  * @param Lb The black point luminance of the display, in nits (cd/m^2).
  */
-typedef void (*av_csp_eotf_function)(double Lw, double Lb, double c[3]);
+প্রকারনির্দেশ শূন্য (*av_csp_eotf_function)(দ্বিগুণ Lw, দ্বিগুণ Lb, দ্বিগুণ c[3]);
 
 /**
  * Returns the ITU EOTF corresponding to a given TRC. This converts from the
@@ -194,12 +194,12 @@ typedef void (*av_csp_eotf_function)(double Lw, double Lb, double c[3]);
  *       This is also the case for functions like PQ, which are defined over an
  *       absolute signal range independent of the target display capabilities.
  */
-av_csp_eotf_function av_csp_itu_eotf(enum AVColorTransferCharacteristic trc);
+av_csp_eotf_function av_csp_itu_eotf(গণনা AVColorTransferCharacteristic trc);
 
 /**
  * Returns the mathematical inverse of the corresponding EOTF.
  */
-av_csp_eotf_function av_csp_itu_eotf_inv(enum AVColorTransferCharacteristic trc);
+av_csp_eotf_function av_csp_itu_eotf_inv(গণনা AVColorTransferCharacteristic trc);
 
 /**
  * @}

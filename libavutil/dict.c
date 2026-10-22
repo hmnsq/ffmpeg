@@ -18,295 +18,295 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
-#include <string.h>
+#অন্তর্ভাব <inttypes.h>
+#অন্তর্ভাব <stdio.h>
+#অন্তর্ভাব <string.h>
 
-#include "avassert.h"
-#include "avstring.h"
-#include "dict.h"
-#include "error.h"
-#include "mem.h"
-#include "bprint.h"
+#অন্তর্ভাব "avassert.h"
+#অন্তর্ভাব "avstring.h"
+#অন্তর্ভাব "dict.h"
+#অন্তর্ভাব "error.h"
+#অন্তর্ভাব "mem.h"
+#অন্তর্ভাব "bprint.h"
 
-struct AVDictionary {
-    int count;
+সংরচনা AVDictionary {
+    পূর্ণাঙ্ক গুনতি;
     AVDictionaryEntry *elems;
-    int duplicate_keys;
+    পূর্ণাঙ্ক duplicate_চাবিগুলি;
 };
 
-int av_dict_count(const AVDictionary *m)
+পূর্ণাঙ্ক av_dict_গুনতি(ধ্রুব AVDictionary *m)
 {
-    return m ? m->count : 0;
+    প্রত্যাগম m ? m->গুনতি : 0;
 }
 
-const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
-                                         const AVDictionaryEntry *prev)
+ধ্রুব AVDictionaryEntry *av_dict_iterate(ধ্রুব AVDictionary *m,
+                                         ধ্রুব AVDictionaryEntry *prev)
 {
-    int i = 0;
+    পূর্ণাঙ্ক i = 0;
 
-    if (!m)
-        return NULL;
+    যদি (!m)
+        প্রত্যাগম রিক্ত;
 
-    if (prev)
+    যদি (prev)
         i = prev - m->elems + 1;
 
     av_assert2(i >= 0);
-    if (i >= m->count)
-        return NULL;
+    যদি (i >= m->গুনতি)
+        প্রত্যাগম রিক্ত;
 
-    return &m->elems[i];
+    প্রত্যাগম &m->elems[i];
 }
 
-AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags)
+AVDictionaryEntry *av_dict_get(ধ্রুব AVDictionary *m, ধ্রুব বর্ণ *চাবি,
+                               ধ্রুব AVDictionaryEntry *prev, পূর্ণাঙ্ক flags)
 {
-    const AVDictionaryEntry *entry = prev;
-    unsigned int j;
+    ধ্রুব AVDictionaryEntry *entry = prev;
+    unsigned পূর্ণাঙ্ক j;
 
-    if (!key)
-        return NULL;
+    যদি (!চাবি)
+        প্রত্যাগম রিক্ত;
 
-    while ((entry = av_dict_iterate(m, entry))) {
-        const char *s = entry->key;
-        if (flags & AV_DICT_MATCH_CASE)
-            for (j = 0; s[j] == key[j] && key[j]; j++)
+    যাবত্ ((entry = av_dict_iterate(m, entry))) {
+        ধ্রুব বর্ণ *s = entry->চাবি;
+        যদি (flags & AV_DICT_MATCH_CASE)
+            প্রতি (j = 0; s[j] == চাবি[j] && চাবি[j]; j++)
                 ;
-        else
-            for (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
+        অন্যথা
+            প্রতি (j = 0; av_toupper(s[j]) == av_toupper(চাবি[j]) && চাবি[j]; j++)
                 ;
-        if (key[j])
-            continue;
-        if (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
-            continue;
-        return (AVDictionaryEntry *)entry;
+        যদি (চাবি[j])
+            অনুবর্ত;
+        যদি (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
+            অনুবর্ত;
+        প্রত্যাগম (AVDictionaryEntry *)entry;
     }
-    return NULL;
+    প্রত্যাগম রিক্ত;
 }
 
-int av_dict_set(AVDictionary **pm, const char *key, const char *value,
-                int flags)
+পূর্ণাঙ্ক av_dict_set(AVDictionary **pm, ধ্রুব বর্ণ *চাবি, ধ্রুব বর্ণ *মান,
+                পূর্ণাঙ্ক flags)
 {
     AVDictionary *m = *pm;
-    AVDictionaryEntry *tag = NULL;
-    char *copy_key = NULL, *copy_value = NULL;
-    int err;
+    AVDictionaryEntry *tag = রিক্ত;
+    বর্ণ *copy_চাবি = রিক্ত, *copy_মান = রিক্ত;
+    পূর্ণাঙ্ক err;
 
-    if (flags & AV_DICT_DONT_STRDUP_VAL)
-        copy_value = (void *)value;
-    else if (value)
-        copy_value = av_strdup(value);
-    if (!key) {
+    যদি (flags & AV_DICT_DONT_STRDUP_VAL)
+        copy_মান = (শূন্য *)মান;
+    অন্যথা যদি (মান)
+        copy_মান = av_strdup(মান);
+    যদি (!চাবি) {
         err = AVERROR(EINVAL);
-        goto err_out;
+        গচ্ছ err_out;
     }
-    if (flags & AV_DICT_DONT_STRDUP_KEY)
-        copy_key = (void *)key;
-    else
-        copy_key = av_strdup(key);
-    if (!copy_key || (value && !copy_value))
-        goto enomem;
+    যদি (flags & AV_DICT_DONT_STRDUP_চাবি)
+        copy_চাবি = (শূন্য *)চাবি;
+    অন্যথা
+        copy_চাবি = av_strdup(চাবি);
+    যদি (!copy_চাবি || (মান && !copy_মান))
+        গচ্ছ enomem;
 
-    if (!(flags & AV_DICT_MULTIKEY)) {
-        tag = av_dict_get(m, key, NULL, flags);
-    } else if (flags & AV_DICT_DEDUP) {
-        while ((tag = av_dict_get(m, key, tag, flags))) {
-            if ((!value && !tag->value) ||
-                (value && tag->value && !strcmp(value, tag->value))) {
-                av_free(copy_key);
-                av_free(copy_value);
-                return 0;
+    যদি (!(flags & AV_DICT_MULTIKEY)) {
+        tag = av_dict_get(m, চাবি, রিক্ত, flags);
+    } অন্যথা যদি (flags & AV_DICT_DEDUP) {
+        যাবত্ ((tag = av_dict_get(m, চাবি, tag, flags))) {
+            যদি ((!মান && !tag->মান) ||
+                (মান && tag->মান && !strcmp(মান, tag->মান))) {
+                av_free(copy_চাবি);
+                av_free(copy_মান);
+                প্রত্যাগম 0;
             }
         }
     }
-    if (!m)
-        m = *pm = av_mallocz(sizeof(*m));
-    if (!m)
-        goto enomem;
+    যদি (!m)
+        m = *pm = av_mallocz(পরিমাণ(*m));
+    যদি (!m)
+        গচ্ছ enomem;
 
-    if (tag) {
-        if (flags & AV_DICT_DONT_OVERWRITE) {
-            av_free(copy_key);
-            av_free(copy_value);
-            return 0;
+    যদি (tag) {
+        যদি (flags & AV_DICT_DONT_OVERWRITE) {
+            av_free(copy_চাবি);
+            av_free(copy_মান);
+            প্রত্যাগম 0;
         }
-        if (copy_value && flags & AV_DICT_APPEND) {
-            size_t oldlen = strlen(tag->value);
-            size_t new_part_len = strlen(copy_value);
+        যদি (copy_মান && flags & AV_DICT_APPEND) {
+            size_t oldlen = strlen(tag->মান);
+            size_t new_part_len = strlen(copy_মান);
             size_t len = oldlen + new_part_len + 1;
-            char *newval = av_realloc(tag->value, len);
-            if (!newval)
-                goto enomem;
-            memcpy(newval + oldlen, copy_value, new_part_len + 1);
-            av_freep(&copy_value);
-            copy_value = newval;
-        } else
-            av_free(tag->value);
-        av_free(tag->key);
-        *tag = m->elems[--m->count];
-    } else if (copy_value) {
+            বর্ণ *newval = av_realloc(tag->মান, len);
+            যদি (!newval)
+                গচ্ছ enomem;
+            memcpy(newval + oldlen, copy_মান, new_part_len + 1);
+            av_freep(&copy_মান);
+            copy_মান = newval;
+        } অন্যথা
+            av_free(tag->মান);
+        av_free(tag->চাবি);
+        *tag = m->elems[--m->গুনতি];
+    } অন্যথা যদি (copy_মান) {
         AVDictionaryEntry *tmp = av_realloc_array(m->elems,
-                                                  m->count + 1, sizeof(*m->elems));
-        if (!tmp)
-            goto enomem;
+                                                  m->গুনতি + 1, পরিমাণ(*m->elems));
+        যদি (!tmp)
+            গচ্ছ enomem;
         m->elems = tmp;
     }
-    if (copy_value) {
-        m->elems[m->count].key = copy_key;
-        m->elems[m->count].value = copy_value;
-        m->count++;
-        if (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
-            m->duplicate_keys = 1;
-    } else {
+    যদি (copy_মান) {
+        m->elems[m->গুনতি].চাবি = copy_চাবি;
+        m->elems[m->গুনতি].মান = copy_মান;
+        m->গুনতি++;
+        যদি (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
+            m->duplicate_চাবিগুলি = 1;
+    } অন্যথা {
         err = 0;
-        goto end;
+        গচ্ছ end;
     }
 
-    return 0;
+    প্রত্যাগম 0;
 
 enomem:
     err = AVERROR(ENOMEM);
 err_out:
-    av_free(copy_value);
+    av_free(copy_মান);
 end:
-    if (m && !m->count) {
+    যদি (m && !m->গুনতি) {
         av_freep(&m->elems);
         av_freep(pm);
     }
-    av_free(copy_key);
-    return err;
+    av_free(copy_চাবি);
+    প্রত্যাগম err;
 }
 
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
-                int flags)
+পূর্ণাঙ্ক av_dict_set_int(AVDictionary **pm, ধ্রুব বর্ণ *চাবি, int64_t মান,
+                পূর্ণাঙ্ক flags)
 {
-    char valuestr[22];
-    snprintf(valuestr, sizeof(valuestr), "%"PRId64, value);
+    বর্ণ valuestr[22];
+    snprintf(valuestr, পরিমাণ(valuestr), "%"PRId64, মান);
     flags &= ~AV_DICT_DONT_STRDUP_VAL;
-    return av_dict_set(pm, key, valuestr, flags);
+    প্রত্যাগম av_dict_set(pm, চাবি, valuestr, flags);
 }
 
-static int parse_key_value_pair(AVDictionary **pm, const char **buf,
-                                const char *key_val_sep, const char *pairs_sep,
-                                int flags)
+স্থির পূর্ণাঙ্ক parse_চাবি_মান_pair(AVDictionary **pm, ধ্রুব বর্ণ **buf,
+                                ধ্রুব বর্ণ *চাবি_val_sep, ধ্রুব বর্ণ *pairs_sep,
+                                পূর্ণাঙ্ক flags)
 {
-    char *key = av_get_token(buf, key_val_sep);
-    char *val = NULL;
-    int ret;
+    বর্ণ *চাবি = av_get_token(buf, চাবি_val_sep);
+    বর্ণ *val = রিক্ত;
+    পূর্ণাঙ্ক ret;
 
-    if (key && *key && strspn(*buf, key_val_sep)) {
+    যদি (চাবি && *চাবি && strspn(*buf, চাবি_val_sep)) {
         (*buf)++;
         val = av_get_token(buf, pairs_sep);
     }
 
-    if (key && *key && val && *val)
-        ret = av_dict_set(pm, key, val, flags);
-    else
+    যদি (চাবি && *চাবি && val && *val)
+        ret = av_dict_set(pm, চাবি, val, flags);
+    অন্যথা
         ret = AVERROR(EINVAL);
 
-    av_freep(&key);
+    av_freep(&চাবি);
     av_freep(&val);
 
-    return ret;
+    প্রত্যাগম ret;
 }
 
-int av_dict_parse_string(AVDictionary **pm, const char *str,
-                         const char *key_val_sep, const char *pairs_sep,
-                         int flags)
+পূর্ণাঙ্ক av_dict_parse_string(AVDictionary **pm, ধ্রুব বর্ণ *str,
+                         ধ্রুব বর্ণ *চাবি_val_sep, ধ্রুব বর্ণ *pairs_sep,
+                         পূর্ণাঙ্ক flags)
 {
-    int ret;
+    পূর্ণাঙ্ক ret;
 
-    if (!str)
-        return 0;
+    যদি (!str)
+        প্রত্যাগম 0;
 
     /* ignore STRDUP flags */
-    flags &= ~(AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    flags &= ~(AV_DICT_DONT_STRDUP_চাবি | AV_DICT_DONT_STRDUP_VAL);
 
-    while (*str) {
-        if ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
-            return ret;
+    যাবত্ (*str) {
+        যদি ((ret = parse_চাবি_মান_pair(pm, &str, চাবি_val_sep, pairs_sep, flags)) < 0)
+            প্রত্যাগম ret;
 
-        if (*str)
+        যদি (*str)
             str++;
     }
 
-    return 0;
+    প্রত্যাগম 0;
 }
 
-void av_dict_free(AVDictionary **pm)
+শূন্য av_dict_free(AVDictionary **pm)
 {
     AVDictionary *m = *pm;
 
-    if (m) {
-        while (m->count--) {
-            av_freep(&m->elems[m->count].key);
-            av_freep(&m->elems[m->count].value);
+    যদি (m) {
+        যাবত্ (m->গুনতি--) {
+            av_freep(&m->elems[m->গুনতি].চাবি);
+            av_freep(&m->elems[m->গুনতি].মান);
         }
         av_freep(&m->elems);
     }
     av_freep(pm);
 }
 
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags)
+পূর্ণাঙ্ক av_dict_copy(AVDictionary **dst, ধ্রুব AVDictionary *src, পূর্ণাঙ্ক flags)
 {
-    const AVDictionaryEntry *t = NULL;
+    ধ্রুব AVDictionaryEntry *t = রিক্ত;
 
-    if (!*dst && src && src->count && !src->duplicate_keys &&
+    যদি (!*dst && src && src->গুনতি && !src->duplicate_চাবিগুলি &&
         !(flags & AV_DICT_IGNORE_SUFFIX)) {
-        AVDictionary *m = av_mallocz(sizeof(*m));
-        if (!m)
-            return AVERROR(ENOMEM);
-        m->elems = av_calloc(src->count, sizeof(*m->elems));
-        if (!m->elems) {
+        AVDictionary *m = av_mallocz(পরিমাণ(*m));
+        যদি (!m)
+            প্রত্যাগম AVERROR(ENOMEM);
+        m->elems = av_calloc(src->গুনতি, পরিমাণ(*m->elems));
+        যদি (!m->elems) {
             av_free(m);
-            return AVERROR(ENOMEM);
+            প্রত্যাগম AVERROR(ENOMEM);
         }
         *dst = m;
-        for (int i = 0; i < src->count; i++) {
-            m->elems[i].key   = av_strdup(src->elems[i].key);
-            m->elems[i].value = av_strdup(src->elems[i].value);
-            m->count++;
-            if (!m->elems[i].key || !m->elems[i].value) {
+        প্রতি (পূর্ণাঙ্ক i = 0; i < src->গুনতি; i++) {
+            m->elems[i].চাবি   = av_strdup(src->elems[i].চাবি);
+            m->elems[i].মান = av_strdup(src->elems[i].মান);
+            m->গুনতি++;
+            যদি (!m->elems[i].চাবি || !m->elems[i].মান) {
                 av_dict_free(dst);
-                return AVERROR(ENOMEM);
+                প্রত্যাগম AVERROR(ENOMEM);
             }
         }
-        return 0;
+        প্রত্যাগম 0;
     }
 
-    while ((t = av_dict_iterate(src, t))) {
-        int ret = av_dict_set(dst, t->key, t->value, flags);
-        if (ret < 0)
-            return ret;
+    যাবত্ ((t = av_dict_iterate(src, t))) {
+        পূর্ণাঙ্ক ret = av_dict_set(dst, t->চাবি, t->মান, flags);
+        যদি (ret < 0)
+            প্রত্যাগম ret;
     }
 
-    return 0;
+    প্রত্যাগম 0;
 }
 
-int av_dict_get_string(const AVDictionary *m, char **buffer,
-                       const char key_val_sep, const char pairs_sep)
+পূর্ণাঙ্ক av_dict_get_string(ধ্রুব AVDictionary *m, বর্ণ **buffer,
+                       ধ্রুব বর্ণ চাবি_val_sep, ধ্রুব বর্ণ pairs_sep)
 {
-    const AVDictionaryEntry *t = NULL;
+    ধ্রুব AVDictionaryEntry *t = রিক্ত;
     AVBPrint bprint;
-    int cnt = 0;
-    char special_chars[] = {pairs_sep, key_val_sep, '\0'};
+    পূর্ণাঙ্ক cnt = 0;
+    বর্ণ special_chars[] = {pairs_sep, চাবি_val_sep, '\0'};
 
-    if (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
-        pairs_sep == '\\' || key_val_sep == '\\')
-        return AVERROR(EINVAL);
+    যদি (!buffer || pairs_sep == '\0' || চাবি_val_sep == '\0' || pairs_sep == চাবি_val_sep ||
+        pairs_sep == '\\' || চাবি_val_sep == '\\')
+        প্রত্যাগম AVERROR(EINVAL);
 
-    if (!av_dict_count(m)) {
+    যদি (!av_dict_গুনতি(m)) {
         *buffer = av_strdup("");
-        return *buffer ? 0 : AVERROR(ENOMEM);
+        প্রত্যাগম *buffer ? 0 : AVERROR(ENOMEM);
     }
 
     av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
-    while ((t = av_dict_iterate(m, t))) {
-        if (cnt++)
+    যাবত্ ((t = av_dict_iterate(m, t))) {
+        যদি (cnt++)
             av_bprint_append_data(&bprint, &pairs_sep, 1);
-        av_bprint_escape(&bprint, t->key, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
-        av_bprint_append_data(&bprint, &key_val_sep, 1);
-        av_bprint_escape(&bprint, t->value, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+        av_bprint_escape(&bprint, t->চাবি, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+        av_bprint_append_data(&bprint, &চাবি_val_sep, 1);
+        av_bprint_escape(&bprint, t->মান, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
     }
-    return av_bprint_finalize(&bprint, buffer);
+    প্রত্যাগম av_bprint_finalize(&bprint, buffer);
 }

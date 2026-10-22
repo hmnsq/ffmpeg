@@ -18,41 +18,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#অন্তর্ভাব <string.h>
 
-#include "avstring.h"
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "video_hint.h"
+#অন্তর্ভাব "avstring.h"
+#অন্তর্ভাব "frame.h"
+#অন্তর্ভাব "macros.h"
+#অন্তর্ভাব "mem.h"
+#অন্তর্ভাব "video_hint.h"
 
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
                                  size_t *out_size)
 {
-    struct TestStruct {
+    সংরচনা TestStruct {
         AVVideoHint hint;
         AVVideoRect rect;
     };
-    const size_t rect_offset = offsetof(struct TestStruct, rect);
+    ধ্রুব size_t rect_offset = offsetof(সংরচনা TestStruct, rect);
     size_t size = rect_offset;
     AVVideoHint *hint;
 
     *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
-    size += sizeof(AVVideoRect) * nb_rects;
+    যদি (nb_rects > (SIZE_MAX - size) / পরিমাণ(AVVideoRect))
+        প্রত্যাগম রিক্ত;
+    size += পরিমাণ(AVVideoRect) * nb_rects;
 
     hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    যদি (!hint)
+        প্রত্যাগম রিক্ত;
 
     hint->nb_rects    = nb_rects;
     hint->rect_offset = rect_offset;
-    hint->rect_size   = sizeof(AVVideoRect);
+    hint->rect_size   = পরিমাণ(AVVideoRect);
 
     *out_size = size;
 
-    return hint;
+    প্রত্যাগম hint;
 }
 
 AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
@@ -63,19 +63,19 @@ AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
     size_t size = 0;
 
     hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    যদি (!hint)
+        প্রত্যাগম রিক্ত;
 
-    buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    buf = av_buffer_create((uint8_t *)hint, size, রিক্ত, রিক্ত, 0);
+    যদি (!buf) {
         av_freep(&hint);
-        return NULL;
+        প্রত্যাগম রিক্ত;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
+    যদি (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        প্রত্যাগম রিক্ত;
     }
 
-    return hint;
+    প্রত্যাগম hint;
 }
