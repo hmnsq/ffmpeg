@@ -34,46 +34,46 @@
 #define BENCHMARK_LIBLZO_SAFE   0
 #define BENCHMARK_LIBLZO_UNSAFE 0
 
-int main(int argc, char *argv[]) {
+จำนวนเต็ม หลัก(จำนวนเต็ม argc, var_na *argv[]) {
     FILE *in = fopen(argv[1], "rb");
-    int comp_level = argc > 2 ? atoi(argv[2]) : 0;
+    จำนวนเต็ม comp_level = argc > 2 ? atoi(argv[2]) : 0;
     uint8_t *orig = av_malloc(MAXSZ + 16);
     uint8_t *comp = av_malloc(2*MAXSZ + 16);
     uint8_t *decomp = av_malloc(MAXSZ + 16);
     size_t s = fread(orig, 1, MAXSZ, in);
     lzo_uint clen = 0;
     long tmp[LZO1X_MEM_COMPRESS];
-    int inlen, outlen;
-    int i;
+    จำนวนเต็ม inlen, outlen;
+    จำนวนเต็ม i;
     av_log_set_level(AV_LOG_DEBUG);
-    if (comp_level == 0) {
+    ถ้า (comp_level == 0) {
         lzo1x_1_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 11) {
+    } มิฉะนั้น ถ้า (comp_level == 11) {
         lzo1x_1_11_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 12) {
+    } มิฉะนั้น ถ้า (comp_level == 12) {
         lzo1x_1_12_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 15) {
+    } มิฉะนั้น ถ้า (comp_level == 15) {
         lzo1x_1_15_compress(orig, s, comp, &clen, tmp);
-    } else
+    } มิฉะนั้น
         lzo1x_999_compress(orig, s, comp, &clen, tmp);
-    for (i = 0; i < 300; i++) {
+    สำหรับ (i = 0; i < 300; i++) {
         inlen = clen; outlen = MAXSZ;
-#if BENCHMARK_LIBLZO_SAFE
-        if (lzo1x_decompress_safe(comp, inlen, decomp, &outlen, NULL))
+#ถ้า BENCHMARK_LIBLZO_SAFE
+        ถ้า (lzo1x_decompress_safe(comp, inlen, decomp, &outlen, NULL))
 #elif BENCHMARK_LIBLZO_UNSAFE
-        if (lzo1x_decompress(comp, inlen, decomp, &outlen, NULL))
-#else
-        if (av_lzo1x_decode(decomp, &outlen, comp, &inlen))
+        ถ้า (lzo1x_decompress(comp, inlen, decomp, &outlen, NULL))
+#มิฉะนั้น
+        ถ้า (av_lzo1x_decode(decomp, &outlen, comp, &inlen))
 #endif
             av_log(NULL, AV_LOG_ERROR, "decompression error\n");
     }
-    if (memcmp(orig, decomp, s))
+    ถ้า (memcmp(orig, decomp, s))
         av_log(NULL, AV_LOG_ERROR, "decompression incorrect\n");
-    else
+    มิฉะนั้น
         av_log(NULL, AV_LOG_ERROR, "decompression OK\n");
     fclose(in);
     av_free(orig);
     av_free(comp);
     av_free(decomp);
-    return 0;
+    คืน 0;
 }

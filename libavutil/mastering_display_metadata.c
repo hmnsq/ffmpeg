@@ -27,8 +27,8 @@
 
 static void get_defaults(AVMasteringDisplayMetadata *mastering)
 {
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 2; j++)
+    สำหรับ (จำนวนเต็ม i = 0; i < 3; i++)
+        สำหรับ (จำนวนเต็ม j = 0; j < 2; j++)
             mastering->display_primaries[i][j] = (AVRational) { 0, 1 };
     mastering->white_point[0] =
     mastering->white_point[1] =
@@ -38,57 +38,57 @@ static void get_defaults(AVMasteringDisplayMetadata *mastering)
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(void)
 {
-    return av_mastering_display_metadata_alloc_size(NULL);
+    คืน av_mastering_display_metadata_alloc_size(NULL);
 }
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc_size(size_t *size)
 {
-    AVMasteringDisplayMetadata *mastering = av_mallocz(sizeof(AVMasteringDisplayMetadata));
+    AVMasteringDisplayMetadata *mastering = av_mallocz(parimaa_na(AVMasteringDisplayMetadata));
 
-    if (size)
-        *size = mastering ? sizeof(*mastering) : 0;
+    ถ้า (size)
+        *size = mastering ? parimaa_na(*mastering) : 0;
 
-    if (!mastering)
-        return NULL;
+    ถ้า (!mastering)
+        คืน NULL;
 
     get_defaults(mastering);
 
-    return mastering;
+    คืน mastering;
 }
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_MASTERING_DISPLAY_METADATA,
-                                                        sizeof(AVMasteringDisplayMetadata));
-    if (!side_data)
-        return NULL;
+                                                        parimaa_na(AVMasteringDisplayMetadata));
+    ถ้า (!side_data)
+        คืน NULL;
 
-    memset(side_data->data, 0, sizeof(AVMasteringDisplayMetadata));
+    memset(side_data->data, 0, parimaa_na(AVMasteringDisplayMetadata));
     get_defaults((AVMasteringDisplayMetadata *)side_data->data);
 
-    return (AVMasteringDisplayMetadata *)side_data->data;
+    คืน (AVMasteringDisplayMetadata *)side_data->data;
 }
 
 AVContentLightMetadata *av_content_light_metadata_alloc(size_t *size)
 {
-    AVContentLightMetadata *metadata = av_mallocz(sizeof(AVContentLightMetadata));
+    AVContentLightMetadata *metadata = av_mallocz(parimaa_na(AVContentLightMetadata));
 
-    if (size)
-        *size = metadata ? sizeof(*metadata) : 0;
+    ถ้า (size)
+        *size = metadata ? parimaa_na(*metadata) : 0;
 
-    return metadata;
+    คืน metadata;
 }
 
 AVContentLightMetadata *av_content_light_metadata_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                                                        sizeof(AVContentLightMetadata));
-    if (!side_data)
-        return NULL;
+                                                        parimaa_na(AVContentLightMetadata));
+    ถ้า (!side_data)
+        คืน NULL;
 
-    memset(side_data->data, 0, sizeof(AVContentLightMetadata));
+    memset(side_data->data, 0, parimaa_na(AVContentLightMetadata));
 
-    return (AVContentLightMetadata *)side_data->data;
+    คืน (AVContentLightMetadata *)side_data->data;
 }

@@ -27,9 +27,9 @@
 #ifndef AVUTIL_PCA_H
 #define AVUTIL_PCA_H
 
-struct PCA *ff_pca_init(int n);
-void ff_pca_free(struct PCA *pca);
-void ff_pca_add(struct PCA *pca, const double *v);
-int ff_pca(struct PCA *pca, double *eigenvector, double *eigenvalue);
+sa_nracanaa PCA *ff_pca_init(จำนวนเต็ม n);
+void ff_pca_free(sa_nracanaa PCA *pca);
+void ff_pca_add(sa_nracanaa PCA *pca, const dviguu_na *v);
+จำนวนเต็ม ff_pca(sa_nracanaa PCA *pca, dviguu_na *eigenvector, dviguu_na *eigenvalue);
 
 #endif /* AVUTIL_PCA_H */

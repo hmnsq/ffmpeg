@@ -29,17 +29,17 @@
 #include "libavutil/cpu.h"
 #include "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_rvv(const uint8_t *src1, ptrdiff_t stride1,
+จำนวนเต็ม ff_pixelutils_sad16_rvv(const uint8_t *src1, ptrdiff_t stride1,
                             const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad8_rvv (const uint8_t *src1, ptrdiff_t stride1,
+จำนวนเต็ม ff_pixelutils_sad8_rvv (const uint8_t *src1, ptrdiff_t stride1,
                             const uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, int aligned)
+static anta_hstha av_cold void ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, จำนวนเต็ม aligned)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#ถ้า HAVE_RVV
+    จำนวนเต็ม flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
+    ถ้า (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
         sad[3] = ff_pixelutils_sad16_rvv;
         sad[2] = ff_pixelutils_sad8_rvv;
     }

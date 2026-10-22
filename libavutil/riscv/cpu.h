@@ -31,21 +31,21 @@
 extern attribute_visibility_hidden bool ff_rv_zbb_supported;
 #endif
 
-static inline av_const bool ff_rv_zbb_support(void)
+static anta_hstha av_const bool ff_rv_zbb_support(void)
 {
 #ifndef __riscv_zbb
-    return ff_rv_zbb_supported;
-#else
-    return true;
+    คืน ff_rv_zbb_supported;
+#มิฉะนั้น
+    คืน true;
 #endif
 }
 
-#if HAVE_RVV
+#ถ้า HAVE_RVV
 /**
  * Returns the vector size in bytes (always a power of two and at least 4).
  * This is undefined behaviour if vectors are not implemented.
  */
-static inline av_const size_t ff_get_rv_vlenb(void)
+static anta_hstha av_const size_t ff_get_rv_vlenb(void)
 {
     size_t vlenb;
 
@@ -54,27 +54,27 @@ static inline av_const size_t ff_get_rv_vlenb(void)
         ".option arch, +v\n"
         "    csrr %0, vlenb\n"
         ".option pop\n" : "=r" (vlenb));
-    return vlenb;
+    คืน vlenb;
 }
 
 /**
  * Checks that the vector bit-size is at least the given value.
  * This is potentially undefined behaviour if vectors are not implemented.
  */
-static inline av_const bool ff_rv_vlen_least(unsigned int bits)
+static anta_hstha av_const bool ff_rv_vlen_least(unsigned จำนวนเต็ม bits)
 {
 #ifdef __riscv_v_min_vlen
-    if (bits <= __riscv_v_min_vlen)
-        return true;
-#else
+    ถ้า (bits <= __riscv_v_min_vlen)
+        คืน true;
+#มิฉะนั้น
     /*
      * Vector lengths smaller than 128 bits are only possible in embedded cases
      * and cannot be run-time detected, so we can assume 128 bits at least.
      */
-    if (bits <= 128)
-        return true;
+    ถ้า (bits <= 128)
+        คืน true;
 #endif
-    return bits <= (8 * ff_get_rv_vlenb());
+    คืน bits <= (8 * ff_get_rv_vlenb());
 }
 #endif
 #endif /* HAVE_RVV */

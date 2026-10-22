@@ -33,15 +33,15 @@
   * @{
   */
 
-extern const int av_camellia_size;
+extern const จำนวนเต็ม av_camellia_size;
 
-struct AVCAMELLIA;
+sa_nracanaa AVCAMELLIA;
 
 /**
   * Allocate an AVCAMELLIA context
   * To free the struct: av_free(ptr)
   */
-struct AVCAMELLIA *av_camellia_alloc(void);
+sa_nracanaa AVCAMELLIA *av_camellia_alloc(void);
 
 /**
   * Initialize an AVCAMELLIA context.
@@ -50,7 +50,7 @@ struct AVCAMELLIA *av_camellia_alloc(void);
   * @param key a key of 16, 24, 32 bytes used for encryption/decryption
   * @param key_bits number of keybits: possible are 128, 192, 256
  */
-int av_camellia_init(struct AVCAMELLIA *ctx, const uint8_t *key, int key_bits);
+จำนวนเต็ม av_camellia_init(sa_nracanaa AVCAMELLIA *ctx, const uint8_t *key, จำนวนเต็ม key_bits);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context
@@ -62,7 +62,7 @@ int av_camellia_init(struct AVCAMELLIA *ctx, const uint8_t *key, int key_bits);
   * @param iv initialization vector for CBC mode, NULL for ECB mode
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_camellia_crypt(struct AVCAMELLIA *ctx, uint8_t *dst, const uint8_t *src, int count, uint8_t* iv, int decrypt);
+void av_camellia_crypt(sa_nracanaa AVCAMELLIA *ctx, uint8_t *dst, const uint8_t *src, จำนวนเต็ม count, uint8_t* iv, จำนวนเต็ม decrypt);
 
 /**
  * @}

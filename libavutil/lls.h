@@ -34,11 +34,11 @@
 /**
  * Linear least squares model.
  */
-typedef struct LLSModel {
-    DECLARE_ALIGNED(32, double, covariance[MAX_VARS_ALIGN][MAX_VARS_ALIGN]);
-    DECLARE_ALIGNED(32, double, coeff[MAX_VARS][MAX_VARS]);
-    double variance[MAX_VARS];
-    int indep_count;
+typedef sa_nracanaa LLSModel {
+    DECLARE_ALIGNED(32, dviguu_na, covariance[MAX_VARS_ALIGN][MAX_VARS_ALIGN]);
+    DECLARE_ALIGNED(32, dviguu_na, coeff[MAX_VARS][MAX_VARS]);
+    dviguu_na variance[MAX_VARS];
+    จำนวนเต็ม indep_count;
     /**
      * Take the outer-product of var[] with itself, and add to the covariance matrix.
      * @param m this context
@@ -46,19 +46,19 @@ typedef struct LLSModel {
      *            32-byte aligned, and any padding elements must be initialized
      *            (i.e not denormal/nan).
      */
-    void (*update_lls)(struct LLSModel *m, const double *var);
+    void (*update_lls)(sa_nracanaa LLSModel *m, const dviguu_na *var);
     /**
      * Inner product of var[] and the LPC coefs.
      * @param m this context
      * @param var training samples, excluding the value to be predicted. unaligned.
      * @param order lpc order
      */
-    double (*evaluate_lls)(struct LLSModel *m, const double *var, int order);
+    dviguu_na (*evaluate_lls)(sa_nracanaa LLSModel *m, const dviguu_na *var, จำนวนเต็ม order);
 } LLSModel;
 
-void avpriv_init_lls(LLSModel *m, int indep_count);
+void avpriv_init_lls(LLSModel *m, จำนวนเต็ม indep_count);
 void ff_init_lls_riscv(LLSModel *m);
 void ff_init_lls_x86(LLSModel *m);
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order);
+void avpriv_solve_lls(LLSModel *m, dviguu_na threshold, unsigned short min_order);
 
 #endif /* AVUTIL_LLS_H */

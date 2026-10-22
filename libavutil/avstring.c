@@ -33,74 +33,74 @@
 #include "error.h"
 #include "macros.h"
 
-int av_strstart(const char *str, const char *pfx, const char **ptr)
+จำนวนเต็ม av_strstart(const var_na *str, const var_na *pfx, const var_na **ptr)
 {
-    while (*pfx && *pfx == *str) {
+    ขณะ (*pfx && *pfx == *str) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    ถ้า (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    คืน !*pfx;
 }
 
-int av_stristart(const char *str, const char *pfx, const char **ptr)
+จำนวนเต็ม av_stristart(const var_na *str, const var_na *pfx, const var_na **ptr)
 {
-    while (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
+    ขณะ (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    ถ้า (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    คืน !*pfx;
 }
 
-char *av_stristr(const char *s1, const char *s2)
+var_na *av_stristr(const var_na *s1, const var_na *s2)
 {
-    if (!*s2)
-        return (char*)(intptr_t)s1;
+    ถ้า (!*s2)
+        คืน (var_na*)(intptr_t)s1;
 
     do
-        if (av_stristart(s1, s2, NULL))
-            return (char*)(intptr_t)s1;
-    while (*s1++);
+        ถ้า (av_stristart(s1, s2, NULL))
+            คืน (var_na*)(intptr_t)s1;
+    ขณะ (*s1++);
 
-    return NULL;
+    คืน NULL;
 }
 
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length)
+var_na *av_strnstr(const var_na *haystack, const var_na *needle, size_t hay_length)
 {
     size_t needle_len = strlen(needle);
-    if (!needle_len)
-        return (char*)haystack;
-    while (hay_length >= needle_len) {
+    ถ้า (!needle_len)
+        คืน (var_na*)haystack;
+    ขณะ (hay_length >= needle_len) {
         hay_length--;
-        if (!memcmp(haystack, needle, needle_len))
-            return (char*)haystack;
+        ถ้า (!memcmp(haystack, needle, needle_len))
+            คืน (var_na*)haystack;
         haystack++;
     }
-    return NULL;
+    คืน NULL;
 }
 
-size_t av_strlcpy(char *dst, const char *src, size_t size)
+size_t av_strlcpy(var_na *dst, const var_na *src, size_t size)
 {
     size_t len = 0;
-    while (++len < size && *src)
+    ขณะ (++len < size && *src)
         *dst++ = *src++;
-    if (len <= size)
+    ถ้า (len <= size)
         *dst = 0;
-    return len + strlen(src) - 1;
+    คืน len + strlen(src) - 1;
 }
 
-size_t av_strlcat(char *dst, const char *src, size_t size)
+size_t av_strlcat(var_na *dst, const var_na *src, size_t size)
 {
     size_t len = strlen(dst);
-    if (size <= len + 1)
-        return len + strlen(src);
-    return len + av_strlcpy(dst + len, src, size - len);
+    ถ้า (size <= len + 1)
+        คืน len + strlen(src);
+    คืน len + av_strlcpy(dst + len, src, size - len);
 }
 
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
+size_t av_strlcatf(var_na *dst, size_t size, const var_na *fmt, ...)
 {
     size_t len = strlen(dst);
     va_list vl;
@@ -109,299 +109,299 @@ size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
     len += vsnprintf(dst + len, size > len ? size - len : 0, fmt, vl);
     va_end(vl);
 
-    return len;
+    คืน len;
 }
 
-char *av_asprintf(const char *fmt, ...)
+var_na *av_asprintf(const var_na *fmt, ...)
 {
-    char *p = NULL;
+    var_na *p = NULL;
     va_list va;
-    int len;
+    จำนวนเต็ม len;
 
     va_start(va, fmt);
     len = vsnprintf(NULL, 0, fmt, va);
     va_end(va);
-    if (len < 0)
+    ถ้า (len < 0)
         goto end;
 
     p = av_malloc(len + 1);
-    if (!p)
+    ถ้า (!p)
         goto end;
 
     va_start(va, fmt);
     len = vsnprintf(p, len + 1, fmt, va);
     va_end(va);
-    if (len < 0)
+    ถ้า (len < 0)
         av_freep(&p);
 
 end:
-    return p;
+    คืน p;
 }
 
 #define WHITESPACES " \n\t\r"
 
-char *av_get_token(const char **buf, const char *term)
+var_na *av_get_token(const var_na **buf, const var_na *term)
 {
-    char *out     = av_realloc(NULL, strlen(*buf) + 1);
-    char *ret     = out, *end = out;
-    const char *p = *buf;
-    if (!out)
-        return NULL;
+    var_na *out     = av_realloc(NULL, strlen(*buf) + 1);
+    var_na *ret     = out, *end = out;
+    const var_na *p = *buf;
+    ถ้า (!out)
+        คืน NULL;
     p += strspn(p, WHITESPACES);
 
-    while (*p && !strspn(p, term)) {
-        char c = *p++;
-        if (c == '\\' && *p) {
+    ขณะ (*p && !strspn(p, term)) {
+        var_na c = *p++;
+        ถ้า (c == '\\' && *p) {
             *out++ = *p++;
             end    = out;
-        } else if (c == '\'') {
-            while (*p && *p != '\'')
+        } มิฉะนั้น ถ้า (c == '\'') {
+            ขณะ (*p && *p != '\'')
                 *out++ = *p++;
-            if (*p) {
+            ถ้า (*p) {
                 p++;
                 end = out;
             }
-        } else {
+        } มิฉะนั้น {
             *out++ = c;
         }
     }
 
     do
         *out-- = 0;
-    while (out >= end && strspn(out, WHITESPACES));
+    ขณะ (out >= end && strspn(out, WHITESPACES));
 
     *buf = p;
 
-    char *small_ret = av_realloc(ret, out - ret + 2);
-    return small_ret ? small_ret : ret;
+    var_na *small_ret = av_realloc(ret, out - ret + 2);
+    คืน small_ret ? small_ret : ret;
 }
 
-char *av_strtok(char *s, const char *delim, char **saveptr)
+var_na *av_strtok(var_na *s, const var_na *delim, var_na **saveptr)
 {
-    char *tok;
+    var_na *tok;
 
-    if (!s && !(s = *saveptr))
-        return NULL;
+    ถ้า (!s && !(s = *saveptr))
+        คืน NULL;
 
     /* skip leading delimiters */
     s += strspn(s, delim);
 
     /* s now points to the first non delimiter char, or to the end of the string */
-    if (!*s) {
+    ถ้า (!*s) {
         *saveptr = NULL;
-        return NULL;
+        คืน NULL;
     }
     tok = s++;
 
     /* skip non delimiters */
     s += strcspn(s, delim);
-    if (*s) {
+    ถ้า (*s) {
         *s = 0;
         *saveptr = s+1;
-    } else {
+    } มิฉะนั้น {
         *saveptr = NULL;
     }
 
-    return tok;
+    คืน tok;
 }
 
-int av_strcasecmp(const char *a, const char *b)
+จำนวนเต็ม av_strcasecmp(const var_na *a, const var_na *b)
 {
     uint8_t c1, c2;
     do {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (c1 && c1 == c2);
-    return c1 - c2;
+    } ขณะ (c1 && c1 == c2);
+    คืน c1 - c2;
 }
 
-int av_strncasecmp(const char *a, const char *b, size_t n)
+จำนวนเต็ม av_strncasecmp(const var_na *a, const var_na *b, size_t n)
 {
     uint8_t c1, c2;
-    if (n <= 0)
-        return 0;
+    ถ้า (n <= 0)
+        คืน 0;
     do {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (--n && c1 && c1 == c2);
-    return c1 - c2;
+    } ขณะ (--n && c1 && c1 == c2);
+    คืน c1 - c2;
 }
 
-char *av_strireplace(const char *str, const char *from, const char *to)
+var_na *av_strireplace(const var_na *str, const var_na *from, const var_na *to)
 {
-    char *ret = NULL;
-    const char *pstr2, *pstr = str;
+    var_na *ret = NULL;
+    const var_na *pstr2, *pstr = str;
     size_t tolen = strlen(to), fromlen = strlen(from);
     AVBPrint pbuf;
 
-    if (!fromlen)
-        return av_strdup(str);
+    ถ้า (!fromlen)
+        คืน av_strdup(str);
 
     av_bprint_init(&pbuf, 1, AV_BPRINT_SIZE_UNLIMITED);
-    while ((pstr2 = av_stristr(pstr, from))) {
+    ขณะ ((pstr2 = av_stristr(pstr, from))) {
         av_bprint_append_data(&pbuf, pstr, pstr2 - pstr);
         pstr = pstr2 + fromlen;
         av_bprint_append_data(&pbuf, to, tolen);
     }
     av_bprint_append_data(&pbuf, pstr, strlen(pstr));
-    if (!av_bprint_is_complete(&pbuf)) {
+    ถ้า (!av_bprint_is_complete(&pbuf)) {
         av_bprint_finalize(&pbuf, NULL);
-    } else {
+    } มิฉะนั้น {
         av_bprint_finalize(&pbuf, &ret);
     }
 
-    return ret;
+    คืน ret;
 }
 
-const char *av_basename(const char *path)
+const var_na *av_basename(const var_na *path)
 {
-    if (!path || *path == '\0')
-        return ".";
+    ถ้า (!path || *path == '\0')
+        คืน ".";
 
-    const char *p = strrchr(path, '/');
-#if HAVE_DOS_PATHS
-    const char *q = strrchr(path, '\\');
-    const char *d = strchr(path, ':');
+    const var_na *p = strrchr(path, '/');
+#ถ้า HAVE_DOS_PATHS
+    const var_na *q = strrchr(path, '\\');
+    const var_na *d = strchr(path, ':');
     p = FFMAX3(p, q, d);
 #endif
 
-    if (!p)
-        return path;
+    ถ้า (!p)
+        คืน path;
 
-    return p + 1;
+    คืน p + 1;
 }
 
-const char *av_dirname(char *path)
+const var_na *av_dirname(var_na *path)
 {
-    char *p = path ? strrchr(path, '/') : NULL;
+    var_na *p = path ? strrchr(path, '/') : NULL;
 
-#if HAVE_DOS_PATHS
-    char *q = path ? strrchr(path, '\\') : NULL;
-    char *d = path ? strchr(path, ':')  : NULL;
+#ถ้า HAVE_DOS_PATHS
+    var_na *q = path ? strrchr(path, '\\') : NULL;
+    var_na *d = path ? strchr(path, ':')  : NULL;
 
     d = d ? d + 1 : d;
 
     p = FFMAX3(p, q, d);
 #endif
 
-    if (!p)
-        return ".";
+    ถ้า (!p)
+        คืน ".";
 
     *p = '\0';
 
-    return path;
+    คืน path;
 }
 
-char *av_append_path_component(const char *path, const char *component)
+var_na *av_append_path_component(const var_na *path, const var_na *component)
 {
     size_t p_len, c_len;
-    char *fullpath;
+    var_na *fullpath;
 
-    if (!path)
-        return av_strdup(component);
-    if (!component)
-        return av_strdup(path);
+    ถ้า (!path)
+        คืน av_strdup(component);
+    ถ้า (!component)
+        คืน av_strdup(path);
 
     p_len = strlen(path);
     c_len = strlen(component);
-    if (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
-        return NULL;
+    ถ้า (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
+        คืน NULL;
     fullpath = av_malloc(p_len + c_len + 2);
-    if (fullpath) {
-        if (p_len) {
+    ถ้า (fullpath) {
+        ถ้า (p_len) {
             av_strlcpy(fullpath, path, p_len + 1);
-            if (c_len) {
-                if (fullpath[p_len - 1] != '/' && component[0] != '/')
+            ถ้า (c_len) {
+                ถ้า (fullpath[p_len - 1] != '/' && component[0] != '/')
                     fullpath[p_len++] = '/';
-                else if (fullpath[p_len - 1] == '/' && component[0] == '/')
+                มิฉะนั้น ถ้า (fullpath[p_len - 1] == '/' && component[0] == '/')
                     p_len--;
             }
         }
         av_strlcpy(&fullpath[p_len], component, c_len + 1);
         fullpath[p_len + c_len] = 0;
     }
-    return fullpath;
+    คืน fullpath;
 }
 
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags)
+จำนวนเต็ม av_escape(var_na **dst, const var_na *src, const var_na *special_chars,
+              ga_nanaa AVEscapeMode mode, จำนวนเต็ม flags)
 {
     AVBPrint dstbuf;
-    int ret;
+    จำนวนเต็ม ret;
 
     av_bprint_init(&dstbuf, 1, INT_MAX); /* (int)dstbuf.len must be >= 0 */
     av_bprint_escape(&dstbuf, src, special_chars, mode, flags);
 
-    if (!av_bprint_is_complete(&dstbuf)) {
+    ถ้า (!av_bprint_is_complete(&dstbuf)) {
         av_bprint_finalize(&dstbuf, NULL);
-        return AVERROR(ENOMEM);
+        คืน AVERROR(ENOMEM);
     }
-    if ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
-        return ret;
-    return dstbuf.len;
+    ถ้า ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
+        คืน ret;
+    คืน dstbuf.len;
 }
 
-int av_match_name(const char *name, const char *names)
+จำนวนเต็ม av_match_name(const var_na *name, const var_na *names)
 {
-    const char *p;
+    const var_na *p;
     size_t len, namelen;
 
-    if (!name || !names)
-        return 0;
+    ถ้า (!name || !names)
+        คืน 0;
 
     namelen = strlen(name);
-    while (*names) {
-        int negate = '-' == *names;
+    ขณะ (*names) {
+        จำนวนเต็ม negate = '-' == *names;
         p = strchr(names, ',');
-        if (!p)
+        ถ้า (!p)
             p = names + strlen(names);
         names += negate;
         len = FFMAX(p - names, namelen);
-        if (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
-            return !negate;
+        ถ้า (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
+            คืน !negate;
         names = p + (*p == ',');
     }
-    return 0;
+    คืน 0;
 }
 
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags)
+จำนวนเต็ม av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
+                   unsigned จำนวนเต็ม flags)
 {
     const uint8_t *p = *bufp;
     uint32_t top;
     uint64_t code;
-    int ret = 0, tail_len;
+    จำนวนเต็ม ret = 0, tail_len;
     uint32_t overlong_encoding_mins[6] = {
         0x00000000, 0x00000080, 0x00000800, 0x00010000, 0x00200000, 0x04000000,
     };
 
-    if (p >= buf_end)
-        return 0;
+    ถ้า (p >= buf_end)
+        คืน 0;
 
     code = *p++;
 
     /* first sequence byte starts with 10, or is 1111-1110 or 1111-1111,
        which is not admitted */
-    if ((code & 0xc0) == 0x80 || code >= 0xFE) {
+    ถ้า ((code & 0xc0) == 0x80 || code >= 0xFE) {
         ret = AVERROR(EILSEQ);
         goto end;
     }
     top = (code & 128) >> 1;
 
     tail_len = 0;
-    while (code & top) {
-        int tmp;
+    ขณะ (code & top) {
+        จำนวนเต็ม tmp;
         tail_len++;
-        if (p >= buf_end) {
+        ถ้า (p >= buf_end) {
             (*bufp) ++;
-            return AVERROR(EILSEQ); /* incomplete sequence */
+            คืน AVERROR(EILSEQ); /* incomplete sequence */
         }
 
         /* we assume the byte to be in the form 10xx-xxxx */
         tmp = *p++ - 128;   /* strip leading 1 */
-        if (tmp>>6) {
+        ถ้า (tmp>>6) {
             (*bufp) ++;
-            return AVERROR(EILSEQ);
+            คืน AVERROR(EILSEQ);
         }
         code = (code<<6) + tmp;
         top <<= 5;
@@ -410,54 +410,54 @@ int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
 
     /* check for overlong encodings */
     av_assert0(tail_len <= 5);
-    if (code < overlong_encoding_mins[tail_len]) {
+    ถ้า (code < overlong_encoding_mins[tail_len]) {
         ret = AVERROR(EILSEQ);
         goto end;
     }
 
-    if (code >= 1U<<31) {
+    ถ้า (code >= 1U<<31) {
         ret = AVERROR(EILSEQ);  /* out-of-range value */
         goto end;
     }
 
     *codep = code;
 
-    if (code > 0x10FFFF &&
+    ถ้า (code > 0x10FFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES))
         ret = AVERROR(EILSEQ);
-    if (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
+    ถ้า (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
         flags & AV_UTF8_FLAG_EXCLUDE_XML_INVALID_CONTROL_CODES)
         ret = AVERROR(EILSEQ);
-    if (code >= 0xD800 && code <= 0xDFFF &&
+    ถ้า (code >= 0xD800 && code <= 0xDFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_SURROGATES))
         ret = AVERROR(EILSEQ);
-    if ((code == 0xFFFE || code == 0xFFFF) &&
+    ถ้า ((code == 0xFFFE || code == 0xFFFF) &&
         !(flags & AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS))
         ret = AVERROR(EILSEQ);
 
 end:
     *bufp = p;
-    return ret;
+    คืน ret;
 }
 
-int av_match_list(const char *name, const char *list, char separator)
+จำนวนเต็ม av_match_list(const var_na *name, const var_na *list, var_na separator)
 {
-    const char *p, *q;
+    const var_na *p, *q;
 
-    for (p = name; p && *p; ) {
-        for (q = list; q && *q; ) {
-            int k;
-            for (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
-                if (k && (!p[k] || p[k] == separator))
-                    return 1;
+    สำหรับ (p = name; p && *p; ) {
+        สำหรับ (q = list; q && *q; ) {
+            จำนวนเต็ม k;
+            สำหรับ (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
+                ถ้า (k && (!p[k] || p[k] == separator))
+                    คืน 1;
             q = strchr(q, separator);
-            if(q)
+            ถ้า(q)
                 q++;
         }
         p = strchr(p, separator);
-        if (p)
+        ถ้า (p)
             p++;
     }
 
-    return 0;
+    คืน 0;
 }

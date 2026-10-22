@@ -27,23 +27,23 @@
 #include <zlib.h>
 #define CHUNK_SIZE 1024 * 64
 
-static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
-                                 const uint8_t *src, int src_len)
+static anta_hstha จำนวนเต็ม ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
+                                 const uint8_t *src, จำนวนเต็ม src_len)
 {
-    int ret;
+    จำนวนเต็ม ret;
 
     z_stream stream = { 0 };
-    if (inflateInit2(&stream, 32 + 15) != Z_OK) {
+    ถ้า (inflateInit2(&stream, 32 + 15) != Z_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error during zlib initialisation: %s\n",
                stream.msg);
-        return AVERROR(ENOSYS);
+        คืน AVERROR(ENOSYS);
     }
 
     uint64_t buf_size = CHUNK_SIZE * 4;
     uint8_t *buf = av_realloc(NULL, buf_size);
-    if (!buf) {
+    ถ้า (!buf) {
         inflateEnd(&stream);
-        return AVERROR(ENOMEM);
+        คืน AVERROR(ENOMEM);
     }
 
     stream.next_in = src;
@@ -54,25 +54,25 @@ static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
         stream.next_out = buf + stream.total_out;
 
         ret = inflate(&stream, Z_FINISH);
-        if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
+        ถ้า (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
             av_log(ctx, AV_LOG_ERROR, "zlib inflate error(%d): %s\n",
                    ret, stream.msg);
             inflateEnd(&stream);
             av_free(buf);
-            return AVERROR(EINVAL);
+            คืน AVERROR(EINVAL);
         }
 
-        if (stream.avail_out == 0) {
+        ถ้า (stream.avail_out == 0) {
             buf_size += CHUNK_SIZE;
             uint8_t *tmp = av_realloc(buf, buf_size);
-            if (!tmp) {
+            ถ้า (!tmp) {
                 inflateEnd(&stream);
                 av_free(buf);
-                return AVERROR(ENOMEM);
+                คืน AVERROR(ENOMEM);
             }
             buf = tmp;
         }
-    } while (ret != Z_STREAM_END);
+    } ขณะ (ret != Z_STREAM_END);
 
     // NULL-terminate string
     // there is guaranteed to be space for this, due to condition in loop
@@ -83,6 +83,6 @@ static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
     *out = buf;
     *out_len = stream.total_out;
 
-    return 0;
+    คืน 0;
 }
 #endif /* AVUTIL_ZLIB_UTILS_H */

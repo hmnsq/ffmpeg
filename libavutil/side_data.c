@@ -66,18 +66,18 @@ static const AVSideDataDescriptor sd_props[] = {
     [AV_FRAME_DATA_GAIN_MAP_PARAMS]             = { "Gain map parameters",                          AV_SIDE_DATA_PROP_GLOBAL | AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
 };
 
-const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType type)
+const AVSideDataDescriptor *av_frame_side_data_desc(ga_nanaa AVFrameSideDataType type)
 {
     unsigned t = type;
-    if (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
-        return &sd_props[t];
-    return NULL;
+    ถ้า (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
+        คืน &sd_props[t];
+    คืน NULL;
 }
 
-const char *av_frame_side_data_name(enum AVFrameSideDataType type)
+const var_na *av_frame_side_data_name(ga_nanaa AVFrameSideDataType type)
 {
     const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
-    return desc ? desc->name : NULL;
+    คืน desc ? desc->name : NULL;
 }
 
 static void free_side_data_entry(AVFrameSideData **ptr_sd)
@@ -89,12 +89,12 @@ static void free_side_data_entry(AVFrameSideData **ptr_sd)
     av_freep(ptr_sd);
 }
 
-static void remove_side_data_by_entry(AVFrameSideData ***sd, int *nb_sd,
+static void remove_side_data_by_entry(AVFrameSideData ***sd, จำนวนเต็ม *nb_sd,
                                       const AVFrameSideData *target)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    สำหรับ (จำนวนเต็ม i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
-        if (entry != target)
+        ถ้า (entry != target)
             continue;
 
         free_side_data_entry(&entry);
@@ -102,16 +102,16 @@ static void remove_side_data_by_entry(AVFrameSideData ***sd, int *nb_sd,
         ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
         (*nb_sd)--;
 
-        return;
+        คืน;
     }
 }
 
-void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
-                               enum AVFrameSideDataType type)
+void av_frame_side_data_remove(AVFrameSideData ***sd, จำนวนเต็ม *nb_sd,
+                               ga_nanaa AVFrameSideDataType type)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    สำหรับ (จำนวนเต็ม i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
-        if (entry->type != type)
+        ถ้า (entry->type != type)
             continue;
 
         free_side_data_entry(&entry);
@@ -121,13 +121,13 @@ void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
     }
 }
 
-void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
-                                        int props)
+void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, จำนวนเต็ม *nb_sd,
+                                        จำนวนเต็ม props)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    สำหรับ (จำนวนเต็ม i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
         const AVSideDataDescriptor *desc = av_frame_side_data_desc(entry->type);
-        if (!desc || !(desc->props & props))
+        ถ้า (!desc || !(desc->props & props))
             continue;
 
         free_side_data_entry(&entry);
@@ -137,9 +137,9 @@ void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
     }
 }
 
-void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd)
+void av_frame_side_data_free(AVFrameSideData ***sd, จำนวนเต็ม *nb_sd)
 {
-    for (int i = 0; i < *nb_sd; i++)
+    สำหรับ (จำนวนเต็ม i = 0; i < *nb_sd; i++)
         free_side_data_entry(&((*sd)[i]));
     *nb_sd = 0;
 
@@ -147,25 +147,25 @@ void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd)
 }
 
 static AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
-                                                   int *nb_sd,
-                                                   enum AVFrameSideDataType type,
+                                                   จำนวนเต็ม *nb_sd,
+                                                   ga_nanaa AVFrameSideDataType type,
                                                    AVBufferRef *buf, uint8_t *data,
                                                    size_t size)
 {
     AVFrameSideData *ret, **tmp;
 
     // *nb_sd + 1 needs to fit into an int and a size_t.
-    if ((unsigned)*nb_sd >= FFMIN(INT_MAX, SIZE_MAX))
-        return NULL;
+    ถ้า ((unsigned)*nb_sd >= FFMIN(INT_MAX, SIZE_MAX))
+        คืน NULL;
 
-    tmp = av_realloc_array(*sd, *nb_sd + 1, sizeof(**sd));
-    if (!tmp)
-        return NULL;
+    tmp = av_realloc_array(*sd, *nb_sd + 1, parimaa_na(**sd));
+    ถ้า (!tmp)
+        คืน NULL;
     *sd = tmp;
 
-    ret = av_mallocz(sizeof(*ret));
-    if (!ret)
-        return NULL;
+    ret = av_mallocz(parimaa_na(*ret));
+    ถ้า (!ret)
+        คืน NULL;
 
     ret->buf = buf;
     ret->data = data;
@@ -174,149 +174,149 @@ static AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
 
     (*sd)[(*nb_sd)++] = ret;
 
-    return ret;
+    คืน ret;
 }
 
 AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
-                                                 enum AVFrameSideDataType type,
+                                                 จำนวนเต็ม *nb_sd,
+                                                 ga_nanaa AVFrameSideDataType type,
                                                  AVBufferRef *buf)
 {
-    if (!buf)
-        return NULL;
+    ถ้า (!buf)
+        คืน NULL;
 
-    return add_side_data_from_buf_ext(sd, nb_sd, type, buf, buf->data, buf->size);
+    คืน add_side_data_from_buf_ext(sd, nb_sd, type, buf, buf->data, buf->size);
 }
 
 static AVFrameSideData *replace_side_data_from_buf(AVFrameSideData *dst,
-                                                   AVBufferRef *buf, int flags)
+                                                   AVBufferRef *buf, จำนวนเต็ม flags)
 {
-    if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-        return NULL;
+    ถ้า (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
+        คืน NULL;
 
     av_dict_free(&dst->metadata);
     av_buffer_unref(&dst->buf);
     dst->buf  = buf;
     dst->data = buf->data;
     dst->size = buf->size;
-    return dst;
+    คืน dst;
 }
 
-AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        size_t size, unsigned int flags)
+AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, จำนวนเต็ม *nb_sd,
+                                        ga_nanaa AVFrameSideDataType type,
+                                        size_t size, unsigned จำนวนเต็ม flags)
 {
     const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
     AVBufferRef     *buf = av_buffer_alloc(size);
     AVFrameSideData *ret = NULL;
 
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    ถ้า (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    ถ้า ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (ret = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
         ret = replace_side_data_from_buf(ret, buf, flags);
-        if (!ret)
+        ถ้า (!ret)
             av_buffer_unref(&buf);
-        return ret;
+        คืน ret;
     }
 
     ret = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
-    if (!ret)
+    ถ้า (!ret)
         av_buffer_unref(&buf);
 
-    return ret;
+    คืน ret;
 }
 
-AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        AVBufferRef **pbuf, unsigned int flags)
+AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, จำนวนเต็ม *nb_sd,
+                                        ga_nanaa AVFrameSideDataType type,
+                                        AVBufferRef **pbuf, unsigned จำนวนเต็ม flags)
 {
     const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
     AVFrameSideData *sd_dst  = NULL;
     AVBufferRef *buf = *pbuf;
 
-    if ((flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF) && !(buf = av_buffer_ref(*pbuf)))
-        return NULL;
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    ถ้า ((flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF) && !(buf = av_buffer_ref(*pbuf)))
+        คืน NULL;
+    ถ้า (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    ถ้า ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
         sd_dst = replace_side_data_from_buf(sd_dst, buf, flags);
-    } else
+    } มิฉะนั้น
         sd_dst = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
 
-    if (sd_dst && !(flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
+    ถ้า (sd_dst && !(flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
         *pbuf = NULL;
-    else if (!sd_dst && (flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
+    มิฉะนั้น ถ้า (!sd_dst && (flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
         av_buffer_unref(&buf);
-    return sd_dst;
+    คืน sd_dst;
 }
 
-int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
-                             const AVFrameSideData *src, unsigned int flags)
+จำนวนเต็ม av_frame_side_data_clone(AVFrameSideData ***sd, จำนวนเต็ม *nb_sd,
+                             const AVFrameSideData *src, unsigned จำนวนเต็ม flags)
 {
     const AVSideDataDescriptor *desc;
     AVBufferRef     *buf    = NULL;
     AVFrameSideData *sd_dst = NULL;
-    int              ret    = AVERROR_BUG;
+    จำนวนเต็ม              ret    = AVERROR_BUG;
 
-    if (!sd || !src || !nb_sd || (*nb_sd && !*sd))
-        return AVERROR(EINVAL);
+    ถ้า (!sd || !src || !nb_sd || (*nb_sd && !*sd))
+        คืน AVERROR(EINVAL);
 
     desc = av_frame_side_data_desc(src->type);
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    ถ้า (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, src->type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    ถ้า ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, src->type))) {
         AVDictionary *dict = NULL;
 
-        if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-            return AVERROR(EEXIST);
+        ถ้า (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
+            คืน AVERROR(EEXIST);
 
         ret = av_dict_copy(&dict, src->metadata, 0);
-        if (ret < 0)
-            return ret;
+        ถ้า (ret < 0)
+            คืน ret;
 
         ret = av_buffer_replace(&sd_dst->buf, src->buf);
-        if (ret < 0) {
+        ถ้า (ret < 0) {
             av_dict_free(&dict);
-            return ret;
+            คืน ret;
         }
 
         av_dict_free(&sd_dst->metadata);
         sd_dst->metadata = dict;
         sd_dst->data     = src->data;
         sd_dst->size     = src->size;
-        return 0;
+        คืน 0;
     }
 
     buf = av_buffer_ref(src->buf);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    ถ้า (!buf)
+        คืน AVERROR(ENOMEM);
 
     sd_dst = add_side_data_from_buf_ext(sd, nb_sd, src->type, buf,
                                         src->data, src->size);
-    if (!sd_dst) {
+    ถ้า (!sd_dst) {
         av_buffer_unref(&buf);
-        return AVERROR(ENOMEM);
+        คืน AVERROR(ENOMEM);
     }
 
     ret = av_dict_copy(&sd_dst->metadata, src->metadata, 0);
-    if (ret < 0) {
+    ถ้า (ret < 0) {
         remove_side_data_by_entry(sd, nb_sd, sd_dst);
-        return ret;
+        คืน ret;
     }
 
-    return 0;
+    คืน 0;
 }
 
 const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *sd,
-                                                const int nb_sd,
-                                                enum AVFrameSideDataType type)
+                                                const จำนวนเต็ม nb_sd,
+                                                ga_nanaa AVFrameSideDataType type)
 {
-    for (int i = 0; i < nb_sd; i++) {
-        if (sd[i]->type == type)
-            return sd[i];
+    สำหรับ (จำนวนเต็ม i = 0; i < nb_sd; i++) {
+        ถ้า (sd[i]->type == type)
+            คืน sd[i];
     }
-    return NULL;
+    คืน NULL;
 }

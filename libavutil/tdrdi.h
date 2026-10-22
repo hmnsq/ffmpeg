@@ -50,7 +50,7 @@
  * @note The struct must be allocated with av_tdrdi_alloc() and
  *       its size is not a part of the public ABI.
  */
-typedef struct AV3DReferenceDisplaysInfo {
+typedef sa_nracanaa AV3DReferenceDisplaysInfo {
     /**
      * The exponent of the maximum allowable truncation error for
      * {exponent,mantissa}_ref_display_width as given by 2<sup>(-prec_ref_display_width)</sup>.
@@ -97,7 +97,7 @@ typedef struct AV3DReferenceDisplaysInfo {
  * sizeof(AV3DReferenceDisplay) is not a part of the ABI and new fields may be
  * added to it.
 */
-typedef struct AV3DReferenceDisplay {
+typedef sa_nracanaa AV3DReferenceDisplay {
     /**
      * The ViewId of the left view of a stereo pair corresponding to the n-th reference display.
      */
@@ -142,10 +142,10 @@ typedef struct AV3DReferenceDisplay {
 } AV3DReferenceDisplay;
 
 static av_always_inline AV3DReferenceDisplay*
-av_tdrdi_get_display(AV3DReferenceDisplaysInfo *tdrdi, unsigned int idx)
+av_tdrdi_get_display(AV3DReferenceDisplaysInfo *tdrdi, unsigned จำนวนเต็ม idx)
 {
     av_assert0(idx < tdrdi->num_ref_displays);
-    return (AV3DReferenceDisplay *)((uint8_t *)tdrdi + tdrdi->entries_offset +
+    คืน (AV3DReferenceDisplay *)((uint8_t *)tdrdi + tdrdi->entries_offset +
                                     idx * tdrdi->entry_size);
 }
 
@@ -155,7 +155,7 @@ av_tdrdi_get_display(AV3DReferenceDisplaysInfo *tdrdi, unsigned int idx)
  *
  * @return the newly allocated struct or NULL on failure
  */
-AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *size);
+AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned จำนวนเต็ม nb_displays, size_t *size);
 
 /**
  * @}

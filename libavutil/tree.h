@@ -41,13 +41,13 @@
  */
 
 
-struct AVTreeNode;
-extern const int av_tree_node_size;
+sa_nracanaa AVTreeNode;
+extern const จำนวนเต็ม av_tree_node_size;
 
 /**
  * Allocate an AVTreeNode.
  */
-struct AVTreeNode *av_tree_node_alloc(void);
+sa_nracanaa AVTreeNode *av_tree_node_alloc(void);
 
 /**
  * Find an element.
@@ -63,8 +63,8 @@ struct AVTreeNode *av_tree_node_alloc(void);
  * @return An element with cmp(key, elem) == 0 or NULL if no such element
  *         exists in the tree.
  */
-void *av_tree_find(const struct AVTreeNode *root, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2]);
+void *av_tree_find(const sa_nracanaa AVTreeNode *root, void *key,
+                   จำนวนเต็ม (*cmp)(const void *key, const void *b), void *next[2]);
 
 /**
  * Insert or remove an element.
@@ -110,11 +110,11 @@ void *av_tree_find(const struct AVTreeNode *root, void *key,
  *         Which one it is depends on the tree state and the implementation. You
  *         should make no assumptions that it's one or the other in the code.
  */
-void *av_tree_insert(struct AVTreeNode **rootp, void *key,
-                     int (*cmp)(const void *key, const void *b),
-                     struct AVTreeNode **next);
+void *av_tree_insert(sa_nracanaa AVTreeNode **rootp, void *key,
+                     จำนวนเต็ม (*cmp)(const void *key, const void *b),
+                     sa_nracanaa AVTreeNode **next);
 
-void av_tree_destroy(struct AVTreeNode *t);
+void av_tree_destroy(sa_nracanaa AVTreeNode *t);
 
 /**
  * Apply enu(opaque, &elem) to all the elements in the tree in a given range.
@@ -126,9 +126,9 @@ void av_tree_destroy(struct AVTreeNode *t);
  * @note The cmp function should use the same ordering used to construct the
  *       tree.
  */
-void av_tree_enumerate(struct AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem));
+void av_tree_enumerate(sa_nracanaa AVTreeNode *t, void *opaque,
+                       จำนวนเต็ม (*cmp)(void *opaque, void *elem),
+                       จำนวนเต็ม (*enu)(void *opaque, void *elem));
 
 /**
  * @}

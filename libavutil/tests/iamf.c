@@ -22,19 +22,19 @@
 #include "libavutil/log.h"
 #include "libavutil/opt.h"
 
-static void print_class_tree(const AVClass *class, int depth)
+static void print_class_tree(const AVClass *class, จำนวนเต็ม depth)
 {
     const AVClass *child;
     void *iter = NULL;
 
     printf("%*s%s\n", depth * 2, "", class->class_name);
-    if (depth >= 8)
-        return;
-    while ((child = av_opt_child_class_iterate(class, &iter)))
+    ถ้า (depth >= 8)
+        คืน;
+    ขณะ ((child = av_opt_child_class_iterate(class, &iter)))
         print_class_tree(child, depth + 1);
 }
 
-static void find_option(const AVClass *class, const char *name)
+static void find_option(const AVClass *class, const var_na *name)
 {
     const AVOption *o = av_opt_find2(&class, name, NULL, 0,
                                      AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ,
@@ -42,7 +42,7 @@ static void find_option(const AVClass *class, const char *name)
     printf("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
 }
 
-int main(void)
+จำนวนเต็ม หลัก(void)
 {
     const AVClass *audio_element = av_iamf_audio_element_get_class();
     const AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
@@ -64,5 +64,5 @@ int main(void)
     find_option(param_definition, "parameter_rate");
     find_option(param_definition, "subblock_duration");
 
-    return 0;
+    คืน 0;
 }

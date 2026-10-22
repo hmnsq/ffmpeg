@@ -24,7 +24,7 @@
 /**
  * OpenHarmony codec device
  */
-typedef struct AVOHCodecDeviceContext {
+typedef sa_nracanaa AVOHCodecDeviceContext {
     /**
      * Pointer to OHNativeWindow
      */
