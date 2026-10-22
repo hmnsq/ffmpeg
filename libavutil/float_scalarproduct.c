@@ -19,14 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "float_dsp.h"
+#ضمن "float_dsp.h"
 
-float ff_scalarproduct_float_c(const float *v1, const float *v2, int len)
+عائم ff_scalarproduct_float_c(ثابت عائم *v1, ثابت عائم *v2, صحيح len)
 {
-    float p = 0.0;
+    عائم p = 0.0;
 
-    for (int i = 0; i < len; i++)
+    لكل (صحيح i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    إرجاع p;
 }
