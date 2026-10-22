@@ -18,37 +18,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
-#include <stdint.h>
+#अन्तर्भाव <assert.h>
+#अन्तर्भाव <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/lls.h"
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "libavutil/attributes.h"
+#अन्तर्भाव "libavutil/cpu.h"
+#अन्तर्भाव "libavutil/riscv/cpu.h"
+#अन्तर्भाव "libavutil/lls.h"
 
-void ff_lls_update_covariance_rvv(double covar[][36], const double *var,
-                                  int count);
-double ff_scalarproduct_double_rvv(const double *, const double *, size_t);
+शून्य ff_lls_update_covariance_rvv(द्विगुण covar[][36], ध्रुव द्विगुण *var,
+                                  पूर्णाङ्क मोजणी);
+द्विगुण ff_scalarproduct_double_rvv(ध्रुव द्विगुण *, ध्रुव द्विगुण *, size_t);
 
-static void ff_lls_update_rvv(struct LLSModel *m, const double *var)
+स्थिर शून्य ff_lls_update_rvv(संरचना LLSModel *m, ध्रुव द्विगुण *var)
 {
-    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_count + 1);
+    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_मोजणी + 1);
 }
 
-static double ff_lls_evaluate_rvv(struct LLSModel *m, const double *var,
-                                  int order)
+स्थिर द्विगुण ff_lls_evaluate_rvv(संरचना LLSModel *m, ध्रुव द्विगुण *var,
+                                  पूर्णाङ्क order)
 {
-    return ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
+    प्रत्यागम ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
 }
 
-av_cold void ff_init_lls_riscv(LLSModel *m)
+av_cold शून्य ff_init_lls_riscv(LLSModel *m)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#यदि HAVE_RVV
+    पूर्णाङ्क flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
-        if (ff_get_rv_vlenb() > m->indep_count)
+    यदि ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
+        यदि (ff_get_rv_vlenb() > m->indep_मोजणी)
             m->update_lls = ff_lls_update_rvv;
         m->evaluate_lls = ff_lls_evaluate_rvv;
     }

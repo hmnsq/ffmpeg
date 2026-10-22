@@ -19,7 +19,7 @@
 #ifndef AVUTIL_HWCONTEXT_VDPAU_H
 #define AVUTIL_HWCONTEXT_VDPAU_H
 
-#include <vdpau/vdpau.h>
+#अन्तर्भाव <vdpau/vdpau.h>
 
 /**
  * @file
@@ -32,7 +32,7 @@
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVVDPAUDeviceContext {
+प्रकारनिर्देश संरचना AVVDPAUDeviceContext {
     VdpDevice          device;
     VdpGetProcAddress *get_proc_address;
 } AVVDPAUDeviceContext;

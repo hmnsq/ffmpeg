@@ -18,14 +18,14 @@
 
 #undef _GNU_SOURCE
 #define _XOPEN_SOURCE 600 /* XSI-compliant version of strerror_r */
-#include <stdio.h>
-#include <string.h>
-#include "config.h"
-#include "avstring.h"
-#include "error.h"
-#include "macros.h"
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <string.h>
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "avstring.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "macros.h"
 
-#define AVERROR_INPUT_AND_OUTPUT_CHANGED (AVERROR_INPUT_CHANGED | AVERROR_OUTPUT_CHANGED)
+#define AVERROR_आदान_AND_OUTPUT_CHANGED (AVERROR_आदान_CHANGED | AVERROR_OUTPUT_CHANGED)
 
 #define AVERROR_LIST(E, E2)                                                                     \
     E(BSF_NOT_FOUND,            "Bitstream filter not found")                                   \
@@ -39,7 +39,7 @@
     E(EXIT,                     "Immediate exit requested")                                     \
     E(EXTERNAL,                 "Generic error in an external library")                         \
     E(FILTER_NOT_FOUND,         "Filter not found")                                             \
-    E(INPUT_CHANGED,            "Input changed")                                                \
+    E(आदान_CHANGED,            "Input changed")                                                \
     E(INVALIDDATA,              "Invalid data found when processing input")                     \
     E(MUXER_NOT_FOUND,          "Muxer not found")                                              \
     E(OPTION_NOT_FOUND,         "Option not found")                                             \
@@ -49,7 +49,7 @@
     E(STREAM_NOT_FOUND,         "Stream not found")                                             \
     E(UNKNOWN,                  "Unknown error occurred")                                       \
     E(EXPERIMENTAL,             "Experimental feature")                                         \
-    E(INPUT_AND_OUTPUT_CHANGED, "Input and output changed")                                     \
+    E(आदान_AND_OUTPUT_CHANGED, "Input and output changed")                                     \
     E(HTTP_BAD_REQUEST,         "Server returned 400 Bad Request")                              \
     E(HTTP_UNAUTHORIZED,        "Server returned 401 Unauthorized (authorization failed)")      \
     E(HTTP_FORBIDDEN,           "Server returned 403 Forbidden (access denied)")                \
@@ -98,54 +98,54 @@
     E(ESRCH,             "No such process")                                  \
     E(EXDEV,             "Cross-device link")                                \
 
-enum {
+गणना {
 #define OFFSET(CODE, DESC)     \
     ERROR_ ## CODE ## _OFFSET, \
-    ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + sizeof(DESC) - 1,
+    ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + परिमाण(DESC) - 1,
 #define NOTHING(CODE, CODE2, DESC)
     AVERROR_LIST(OFFSET, NOTHING)
-#if !HAVE_STRERROR_R
+#यदि !HAVE_STRERROR_R
     STRERROR_LIST(OFFSET)
 #endif
 };
 
 #define STRING(CODE, DESC) DESC "\0"
-static const char error_stringtable[] =
+स्थिर ध्रुव वर्ण error_stringtable[] =
     AVERROR_LIST(STRING, NOTHING)
-#if !HAVE_STRERROR_R
+#यदि !HAVE_STRERROR_R
     STRERROR_LIST(STRING)
 #endif
 ;
 
-static const struct ErrorEntry {
-    int num;
+स्थिर ध्रुव संरचना ErrorEntry {
+    पूर्णाङ्क अंक;
     unsigned offset;
 } error_entries[] = {
-#define ENTRY(CODE, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE ## _OFFSET },
-#define ENTRY2(CODE, CODE2, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE2 ## _OFFSET },
+#define ENTRY(CODE, DESC) { .अंक = AVERROR_ ## CODE, .offset = ERROR_ ## CODE ## _OFFSET },
+#define ENTRY2(CODE, CODE2, DESC) { .अंक = AVERROR_ ## CODE, .offset = ERROR_ ## CODE2 ## _OFFSET },
     AVERROR_LIST(ENTRY, ENTRY2)
-#if !HAVE_STRERROR_R
+#यदि !HAVE_STRERROR_R
 #undef ENTRY
-#define ENTRY(CODE, DESC) { .num = AVERROR(CODE), .offset = ERROR_ ## CODE ## _OFFSET },
+#define ENTRY(CODE, DESC) { .अंक = AVERROR(CODE), .offset = ERROR_ ## CODE ## _OFFSET },
     STRERROR_LIST(ENTRY)
 #endif
 };
 
-int av_strerror(int errnum, char *errbuf, size_t errbuf_size)
+पूर्णाङ्क av_strerror(पूर्णाङ्क errnum, वर्ण *errbuf, size_t errbuf_size)
 {
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
-        if (errnum == error_entries[i].num) {
+    प्रति (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
+        यदि (errnum == error_entries[i].अंक) {
             av_strlcpy(errbuf, error_stringtable + error_entries[i].offset, errbuf_size);
-            return 0;
+            प्रत्यागम 0;
         }
     }
-#if HAVE_STRERROR_R
-    int ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
-#else
-    int ret = -1;
+#यदि HAVE_STRERROR_R
+    पूर्णाङ्क ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
+#अन्यथा
+    पूर्णाङ्क ret = -1;
 #endif
-    if (ret < 0)
+    यदि (ret < 0)
         snprintf(errbuf, errbuf_size, "Error number %d occurred", errnum);
 
-    return ret;
+    प्रत्यागम ret;
 }

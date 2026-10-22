@@ -18,33 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include "libavutil/aes_internal.h"
-#include "libavutil/x86/cpu.h"
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव "libavutil/aes_internal.h"
+#अन्तर्भाव "libavutil/x86/cpu.h"
 
-void ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+शून्य ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, ध्रुव uint8_t *src,
+                             पूर्णाङ्क मोजणी, uint8_t *iv, पूर्णाङ्क rounds);
+शून्य ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, ध्रुव uint8_t *src,
+                             पूर्णाङ्क मोजणी, uint8_t *iv, पूर्णाङ्क rounds);
+शून्य ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, ध्रुव uint8_t *src,
+                             पूर्णाङ्क मोजणी, uint8_t *iv, पूर्णाङ्क rounds);
+शून्य ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, ध्रुव uint8_t *src,
+                             पूर्णाङ्क मोजणी, uint8_t *iv, पूर्णाङ्क rounds);
+शून्य ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, ध्रुव uint8_t *src,
+                             पूर्णाङ्क मोजणी, uint8_t *iv, पूर्णाङ्क rounds);
+शून्य ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, ध्रुव uint8_t *src,
+                             पूर्णाङ्क मोजणी, uint8_t *iv, पूर्णाङ्क rounds);
 
-void ff_init_aes_x86(AVAES *a, int decrypt)
+शून्य ff_init_aes_x86(AVAES *a, पूर्णाङ्क decrypt)
 {
-    int cpu_flags = av_get_cpu_flags();
+    पूर्णाङ्क cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_AESNI(cpu_flags)) {
-        if (a->rounds == 10)
+    यदि (EXTERNAL_AESNI(cpu_flags)) {
+        यदि (a->rounds == 10)
             a->crypt = decrypt ? ff_aes_decrypt_10_aesni : ff_aes_encrypt_10_aesni;
-        else if (a->rounds == 12)
+        अन्यथा यदि (a->rounds == 12)
             a->crypt = decrypt ? ff_aes_decrypt_12_aesni : ff_aes_encrypt_12_aesni;
-        else if (a->rounds == 14)
+        अन्यथा यदि (a->rounds == 14)
             a->crypt = decrypt ? ff_aes_decrypt_14_aesni : ff_aes_encrypt_14_aesni;
     }
 }

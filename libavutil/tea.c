@@ -22,66 +22,66 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
-#include "intreadwrite.h"
-#include "mem.h"
-#include "tea.h"
+#अन्तर्भाव <string.h>
+#अन्तर्भाव "intreadwrite.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "tea.h"
 
-typedef struct AVTEA {
-    uint32_t key[16];
-    int rounds;
+प्रकारनिर्देश संरचना AVTEA {
+    uint32_t किल्ली[16];
+    पूर्णाङ्क rounds;
 } AVTEA;
 
-struct AVTEA *av_tea_alloc(void)
+संरचना AVTEA *av_tea_alloc(शून्य)
 {
-    return av_mallocz(sizeof(struct AVTEA));
+    प्रत्यागम av_mallocz(परिमाण(संरचना AVTEA));
 }
 
-const int av_tea_size = sizeof(AVTEA);
+ध्रुव पूर्णाङ्क av_tea_size = परिमाण(AVTEA);
 
-void av_tea_init(AVTEA *ctx, const uint8_t key[16], int rounds)
+शून्य av_tea_init(AVTEA *ctx, ध्रुव uint8_t किल्ली[16], पूर्णाङ्क rounds)
 {
-    int i;
+    पूर्णाङ्क i;
 
-    for (i = 0; i < 4; i++)
-        ctx->key[i] = AV_RB32(key + (i << 2));
+    प्रति (i = 0; i < 4; i++)
+        ctx->किल्ली[i] = AV_RB32(किल्ली + (i << 2));
 
     ctx->rounds = rounds;
 }
 
-static void tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, const uint8_t *src,
-                          int decrypt, uint8_t *iv)
+स्थिर शून्य tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, ध्रुव uint8_t *src,
+                          पूर्णाङ्क decrypt, uint8_t *iv)
 {
     uint32_t v0, v1;
-    int rounds = ctx->rounds;
+    पूर्णाङ्क rounds = ctx->rounds;
     uint32_t k0, k1, k2, k3;
-    k0 = ctx->key[0];
-    k1 = ctx->key[1];
-    k2 = ctx->key[2];
-    k3 = ctx->key[3];
+    k0 = ctx->किल्ली[0];
+    k1 = ctx->किल्ली[1];
+    k2 = ctx->किल्ली[2];
+    k3 = ctx->किल्ली[3];
 
     v0 = AV_RB32(src);
     v1 = AV_RB32(src + 4);
 
-    if (decrypt) {
-        int i;
+    यदि (decrypt) {
+        पूर्णाङ्क i;
         uint32_t delta = 0x9E3779B9U, sum = delta * (rounds / 2);
 
-        for (i = 0; i < rounds / 2; i++) {
+        प्रति (i = 0; i < rounds / 2; i++) {
             v1 -= ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
             v0 -= ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
             sum -= delta;
         }
-        if (iv) {
+        यदि (iv) {
             v0 ^= AV_RB32(iv);
             v1 ^= AV_RB32(iv + 4);
             memcpy(iv, src, 8);
         }
-    } else {
-        int i;
+    } अन्यथा {
+        पूर्णाङ्क i;
         uint32_t sum = 0, delta = 0x9E3779B9U;
 
-        for (i = 0; i < rounds / 2; i++) {
+        प्रति (i = 0; i < rounds / 2; i++) {
             sum += delta;
             v0 += ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
             v1 += ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
@@ -92,27 +92,27 @@ static void tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, const uint8_t *src,
     AV_WB32(dst + 4, v1);
 }
 
-void av_tea_crypt(AVTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
-                  uint8_t *iv, int decrypt)
+शून्य av_tea_crypt(AVTEA *ctx, uint8_t *dst, ध्रुव uint8_t *src, पूर्णाङ्क मोजणी,
+                  uint8_t *iv, पूर्णाङ्क decrypt)
 {
-    int i;
+    पूर्णाङ्क i;
 
-    if (decrypt) {
-        while (count--) {
+    यदि (decrypt) {
+        यावत् (मोजणी--) {
             tea_crypt_ecb(ctx, dst, src, decrypt, iv);
 
             src   += 8;
             dst   += 8;
         }
-    } else {
-        while (count--) {
-            if (iv) {
-                for (i = 0; i < 8; i++)
+    } अन्यथा {
+        यावत् (मोजणी--) {
+            यदि (iv) {
+                प्रति (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];
-                tea_crypt_ecb(ctx, dst, dst, decrypt, NULL);
+                tea_crypt_ecb(ctx, dst, dst, decrypt, रिक्त);
                 memcpy(iv, dst, 8);
-            } else {
-                tea_crypt_ecb(ctx, dst, src, decrypt, NULL);
+            } अन्यथा {
+                tea_crypt_ecb(ctx, dst, src, decrypt, रिक्त);
             }
             src   += 8;
             dst   += 8;
