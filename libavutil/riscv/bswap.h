@@ -24,13 +24,13 @@
 #include "libavutil/attributes.h"
 #include "libavutil/riscv/cpu.h"
 
-#if defined (__GNUC__) || defined (__clang__)
+#ប្រសិនបើ defined (__GNUC__) || defined (__clang__)
 #define av_bswap16 __builtin_bswap16
 
 static av_always_inline av_const uint32_t av_bswap32_rv(uint32_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ប្រសិនបើ HAVE_RV && !defined(__riscv_zbb)
+    ប្រសិនបើ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), 1)) {
         uintptr_t y;
 
@@ -39,18 +39,18 @@ static av_always_inline av_const uint32_t av_bswap32_rv(uint32_t x)
             ".option arch, +zbb\n"
             "rev8    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        return y >> (__riscv_xlen - 32);
+        ត្រឡប់ y >> (__riscv_xlen - 32);
     }
 #endif
-    return __builtin_bswap32(x);
+    ត្រឡប់ __builtin_bswap32(x);
 }
 #define av_bswap32 av_bswap32_rv
 
-#if __riscv_xlen >= 64
+#ប្រសិនបើ __riscv_xlen >= 64
 static av_always_inline av_const uint64_t av_bswap64_rv(uint64_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ប្រសិនបើ HAVE_RV && !defined(__riscv_zbb)
+    ប្រសិនបើ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), 1)) {
         uintptr_t y;
 
@@ -59,10 +59,10 @@ static av_always_inline av_const uint64_t av_bswap64_rv(uint64_t x)
             ".option arch, +zbb\n"
             "rev8    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        return y >> (__riscv_xlen - 64);
+        ត្រឡប់ y >> (__riscv_xlen - 64);
     }
 #endif
-    return __builtin_bswap64(x);
+    ត្រឡប់ __builtin_bswap64(x);
 }
 #define av_bswap64 av_bswap64_rv
 #endif

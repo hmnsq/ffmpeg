@@ -127,7 +127,7 @@
 /**
  * Rounding methods.
  */
-enum AVRounding {
+ga_nanaa AVRounding {
     AV_ROUND_ZERO     = 0, ///< Round toward zero.
     AV_ROUND_INF      = 1, ///< Round away from zero.
     AV_ROUND_DOWN     = 2, ///< Round toward -infinity.
@@ -190,7 +190,7 @@ int64_t av_rescale(int64_t a, int64_t b, int64_t c) av_const;
  *
  * @see av_rescale(), av_rescale_q(), av_rescale_q_rnd()
  */
-int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, enum AVRounding rnd) av_const;
+int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, ga_nanaa AVRounding rnd) av_const;
 
 /**
  * Rescale a 64-bit integer by 2 rational numbers.
@@ -211,7 +211,7 @@ int64_t av_rescale_q(int64_t a, AVRational bq, AVRational cq) av_const;
  * @see av_rescale(), av_rescale_rnd(), av_rescale_q()
  */
 int64_t av_rescale_q_rnd(int64_t a, AVRational bq, AVRational cq,
-                         enum AVRounding rnd) av_const;
+                         ga_nanaa AVRounding rnd) av_const;
 
 /**
  * Compare two timestamps each in its own time base.
@@ -225,7 +225,7 @@ int64_t av_rescale_q_rnd(int64_t a, AVRational bq, AVRational cq,
  * The result of the function is undefined if one of the timestamps is outside
  * the `int64_t` range when represented in the other's timebase.
  */
-int av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b);
+ចំនួនគត់ av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b);
 
 /**
  * Compare the remainders of two integer operands divided by a common divisor.
@@ -273,7 +273,7 @@ int64_t av_compare_mod(uint64_t a, uint64_t b, uint64_t mod);
  * @note In the context of this function, "duration" is in term of samples, not
  *       seconds.
  */
-int64_t av_rescale_delta(AVRational in_tb, int64_t in_ts,  AVRational fs_tb, int duration, int64_t *last, AVRational out_tb);
+int64_t av_rescale_delta(AVRational in_tb, int64_t in_ts,  AVRational fs_tb, ចំនួនគត់ duration, int64_t *last, AVRational out_tb);
 
 /**
  * Add a value to a timestamp.
@@ -291,7 +291,7 @@ int64_t av_add_stable(AVRational ts_tb, int64_t ts, AVRational inc_tb, int64_t i
 /**
  * 0th order modified bessel function of the first kind.
  */
-double av_bessel_i0(double x);
+dviguu_na av_bessel_i0(dviguu_na x);
 
 /**
  * @}

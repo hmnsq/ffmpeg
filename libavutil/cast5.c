@@ -39,21 +39,21 @@
         I = LR(cs->Km[i] - r, cs->Kr[i]);                                                            \
         f = ((S1[IA(I)] + S2[IB(I)]) ^ S3[IC(I)]) - S4[ID(I)];                                       \
         l = f ^ l;                                                                                   \
-    } while (0)
+    } ខណៈពេល (0)
 
 #define F2(l, r, i)                                                                                  \
     do {                                                                                             \
         I = LR(cs->Km[i] ^ r, cs->Kr[i]);                                                            \
         f = ((S1[IA(I)] - S2[IB(I)]) + S3[IC(I)]) ^ S4[ID(I)];                                       \
         l = f ^ l;                                                                                   \
-    } while (0)
+    } ខណៈពេល (0)
 
 #define F1(l, r, i)                                                                                  \
     do {                                                                                             \
         I = LR(cs->Km[i] + r, cs->Kr[i]);                                                            \
         f = ((S1[IA(I)] ^ S2[IB(I)]) - S3[IC(I)]) + S4[ID(I)];                                       \
         l = f ^ l;                                                                                   \
-    } while (0)
+    } ខណៈពេល (0)
 
 #define COMPUTE_Z                                                                                    \
     do {                                                                                             \
@@ -61,7 +61,7 @@
         z[1] = x[2] ^ S5[IA(z[0])] ^ S6[IC(z[0])] ^ S7[IB(z[0])] ^ S8[ID(z[0])] ^ S8[IC(x[2])];      \
         z[2] = x[3] ^ S5[ID(z[1])] ^ S6[IC(z[1])] ^ S7[IB(z[1])] ^ S8[IA(z[1])] ^ S5[IB(x[2])];      \
         z[3] = x[1] ^ S5[IC(z[2])] ^ S6[IB(z[2])] ^ S7[ID(z[2])] ^ S8[IA(z[2])] ^ S6[ID(x[2])];      \
-    } while (0)
+    } ខណៈពេល (0)
 
 #define COMPUTE_X                                                                                    \
     do {                                                                                             \
@@ -69,16 +69,16 @@
         x[1] = z[0] ^ S5[IA(x[0])] ^ S6[IC(x[0])] ^ S7[IB(x[0])] ^ S8[ID(x[0])] ^ S8[IC(z[0])];      \
         x[2] = z[1] ^ S5[ID(x[1])] ^ S6[IC(x[1])] ^ S7[IB(x[1])] ^ S8[IA(x[1])] ^ S5[IB(z[0])];      \
         x[3] = z[3] ^ S5[IC(x[2])] ^ S6[IB(x[2])] ^ S7[ID(x[2])] ^ S8[IA(x[2])] ^ S6[ID(z[0])];      \
-    } while (0)
+    } ខណៈពេល (0)
 
 
-typedef struct AVCAST5 {
+typedef sa_nracanaa AVCAST5 {
     uint32_t Km[17];
     uint32_t Kr[17];
-    int rounds;
+    ចំនួនគត់ rounds;
 } AVCAST5;
 
-const int av_cast5_size = sizeof(AVCAST5);
+const ចំនួនគត់ av_cast5_size = parimaa_na(AVCAST5);
 
 static const uint32_t S1[256] = {
     0x30fb40d4, 0x9fa0ff0b, 0x6beccd2f, 0x3f258c7a, 0x1e213f2f, 0x9c004dd3, 0x6003e540, 0xcf9fc949,
@@ -360,7 +360,7 @@ static const uint32_t S8[256] = {
     0x04f19130, 0xba6e4ec0, 0x99265164, 0x1ee7230d, 0x50b2ad80, 0xeaee6801, 0x8db2a283, 0xea8bf59e
 };
 
-static void generate_round_keys(int rnds, uint32_t* K, uint32_t* x, uint32_t* z)
+static void generate_round_keys(ចំនួនគត់ rnds, uint32_t* K, uint32_t* x, uint32_t* z)
 {
     COMPUTE_Z;
 
@@ -385,7 +385,7 @@ static void generate_round_keys(int rnds, uint32_t* K, uint32_t* x, uint32_t* z)
 
     COMPUTE_X;
 
-    if (rnds == 16) {
+    ប្រសិនបើ (rnds == 16) {
         K[13] = S5[IA(x[2])] ^ S6[IB(x[2])] ^ S7[ID(x[1])] ^ S8[IC(x[1])] ^ S5[ID(x[0])];
         K[14] = S5[IC(x[2])] ^ S6[ID(x[2])] ^ S7[IB(x[1])] ^ S8[IA(x[1])] ^ S6[ID(x[1])];
         K[15] = S5[IA(x[3])] ^ S6[IB(x[3])] ^ S7[ID(x[0])] ^ S8[IC(x[0])] ^ S7[IA(x[2])];
@@ -410,7 +410,7 @@ static void encipher(AVCAST5* cs, uint8_t* dst, const uint8_t* src)
     F1(r, l, 10);
     F2(l, r, 11);
     F3(r, l, 12);
-    if (cs->rounds == 16) {
+    ប្រសិនបើ (cs->rounds == 16) {
         F1(l, r, 13);
         F2(r, l, 14);
         F3(l, r, 15);
@@ -425,7 +425,7 @@ static void decipher(AVCAST5* cs, uint8_t* dst, const uint8_t* src, uint8_t *iv)
     uint32_t f, I, r, l;
     l = AV_RB32(src);
     r = AV_RB32(src + 4);
-    if (cs->rounds == 16) {
+    ប្រសិនបើ (cs->rounds == 16) {
         F1(l, r, 16);
         F3(r, l, 15);
         F2(l, r, 14);
@@ -443,7 +443,7 @@ static void decipher(AVCAST5* cs, uint8_t* dst, const uint8_t* src, uint8_t *iv)
     F3(r, l, 3);
     F2(l, r, 2);
     F1(r, l, 1);
-    if (iv) {
+    ប្រសិនបើ (iv) {
         r ^= AV_RB32(iv);
         l ^= AV_RB32(iv + 4);
         memcpy(iv, src, 8);
@@ -452,44 +452,44 @@ static void decipher(AVCAST5* cs, uint8_t* dst, const uint8_t* src, uint8_t *iv)
     AV_WB32(dst + 4, l);
 }
 
-struct AVCAST5 *av_cast5_alloc(void)
+sa_nracanaa AVCAST5 *av_cast5_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVCAST5));
+    ត្រឡប់ av_mallocz(parimaa_na(sa_nracanaa AVCAST5));
 }
 
-av_cold int av_cast5_init(AVCAST5* cs, const uint8_t *key, int key_bits)
+av_cold ចំនួនគត់ av_cast5_init(AVCAST5* cs, const uint8_t *key, ចំនួនគត់ key_bits)
 {
     uint8_t newKey[16];
-    int i;
+    ចំនួនគត់ i;
     uint32_t p[4], q[4];
-    if (key_bits % 8 || key_bits < 40 || key_bits > 128)
-        return AVERROR(EINVAL);
-    memset(newKey, 0, sizeof(newKey));
+    ប្រសិនបើ (key_bits % 8 || key_bits < 40 || key_bits > 128)
+        ត្រឡប់ AVERROR(EINVAL);
+    memset(newKey, 0, parimaa_na(newKey));
     memcpy(newKey, key, key_bits >> 3);
 
     cs->rounds = key_bits <= 80 ? 12 : 16;
-    for (i = 0; i < 4; i++)
+    សម្រាប់ (i = 0; i < 4; i++)
         q[i] = AV_RB32(newKey + (4 * i));
     generate_round_keys(cs->rounds, cs->Km, q, p);
     generate_round_keys(cs->rounds, cs->Kr, q, p);
-    for (i = 0; i <= cs->rounds; i++)
+    សម្រាប់ (i = 0; i <= cs->rounds; i++)
         cs->Kr[i] = cs->Kr[i] & 0x1f;
-    return 0;
+    ត្រឡប់ 0;
 }
 
-void av_cast5_crypt2(AVCAST5* cs, uint8_t* dst, const uint8_t* src, int count, uint8_t *iv, int decrypt)
+void av_cast5_crypt2(AVCAST5* cs, uint8_t* dst, const uint8_t* src, ចំនួនគត់ count, uint8_t *iv, ចំនួនគត់ decrypt)
 {
-    int i;
-    while (count--) {
-        if (decrypt) {
+    ចំនួនគត់ i;
+    ខណៈពេល (count--) {
+        ប្រសិនបើ (decrypt) {
             decipher(cs, dst, src, iv);
-        } else {
-            if (iv) {
-                for (i = 0; i < 8; i++)
+        } បើមិនដូច្នេះ {
+            ប្រសិនបើ (iv) {
+                សម្រាប់ (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];
                 encipher(cs, dst, dst);
                 memcpy(iv, dst, 8);
-            } else {
+            } បើមិនដូច្នេះ {
                 encipher(cs, dst, src);
             }
         }
@@ -497,12 +497,12 @@ void av_cast5_crypt2(AVCAST5* cs, uint8_t* dst, const uint8_t* src, int count, u
         dst = dst + 8;
     }
 }
-void av_cast5_crypt(AVCAST5* cs, uint8_t* dst, const uint8_t* src, int count, int decrypt)
+void av_cast5_crypt(AVCAST5* cs, uint8_t* dst, const uint8_t* src, ចំនួនគត់ count, ចំនួនគត់ decrypt)
 {
-    while (count--) {
-        if (decrypt){
+    ខណៈពេល (count--) {
+        ប្រសិនបើ (decrypt){
             decipher(cs, dst, src, NULL);
-        } else {
+        } បើមិនដូច្នេះ {
             encipher(cs, dst, src);
         }
         src = src + 8;

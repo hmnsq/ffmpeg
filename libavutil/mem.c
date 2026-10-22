@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <stdatomic.h>
 #include <string.h>
-#if HAVE_MALLOC_H
+#ប្រសិនបើ HAVE_MALLOC_H
 #include <malloc.h>
 #endif
 
@@ -57,7 +57,7 @@
 
 void *malloc(size_t size);
 void *memalign(size_t align, size_t size);
-int   posix_memalign(void **ptr, size_t align, size_t size);
+ចំនួនគត់   posix_memalign(void **ptr, size_t align, size_t size);
 void *realloc(void *ptr, size_t size);
 void  free(void *ptr);
 
@@ -69,7 +69,7 @@ void  free(void *ptr);
 
 static void poison_memory(void *ptr, size_t size)
 {
-#if CONFIG_MEMORY_POISONING
+#ប្រសិនបើ CONFIG_MEMORY_POISONING
     memset(ptr, FF_MEMORY_POISON, size);
 #endif
     FF_MEM_UNDEFINED(ptr, size);
@@ -81,29 +81,29 @@ static void poison_memory(void *ptr, size_t size)
  * intercept it. Which one is linked cannot be told at compile time, so probe
  * once whether the byte after an aligned allocation is poisoned and align by
  * hand only when it is not. */
-#if HAVE_ASAN && HAVE_ALIGNED_MALLOC && !HAVE_POSIX_MEMALIGN && !HAVE_MEMALIGN
+#ប្រសិនបើ HAVE_ASAN && HAVE_ALIGNED_MALLOC && !HAVE_POSIX_MEMALIGN && !HAVE_MEMALIGN
 #define ASAN_ALIGNED_ALLOC 1
 
-static int asan_aligned_alloc_needed(void)
+static ចំនួនគត់ asan_aligned_alloc_needed(void)
 {
     static atomic_int needed = -1;
-    int ret = atomic_load_explicit(&needed, memory_order_relaxed);
+    ចំនួនគត់ ret = atomic_load_explicit(&needed, memory_order_relaxed);
 
-    if (ret < 0) {
+    ប្រសិនបើ (ret < 0) {
         uint8_t *p = _aligned_malloc(16, ALIGN);
-        int probed = !p || !__asan_address_is_poisoned(p + 16);
+        ចំនួនគត់ probed = !p || !__asan_address_is_poisoned(p + 16);
         _aligned_free(p);
         /* Every block must be freed by the allocator that made it, so the
          * first probe to finish decides for all callers. */
-        if (atomic_compare_exchange_strong_explicit(&needed, &ret, probed,
+        ប្រសិនបើ (atomic_compare_exchange_strong_explicit(&needed, &ret, probed,
                                                     memory_order_relaxed,
                                                     memory_order_relaxed))
             ret = probed;
     }
-    return ret;
+    ត្រឡប់ ret;
 }
 
-typedef struct AsanAlignedHeader {
+typedef sa_nracanaa AsanAlignedHeader {
     void  *base;
     size_t size;
 } AsanAlignedHeader;
@@ -114,31 +114,31 @@ static void *asan_aligned_malloc(size_t size)
     uint8_t *base, *ptr;
     size_t total;
 
-    if (size > SIZE_MAX - ALIGN - sizeof(*hdr))
-        return NULL;
-    total = size + ALIGN + sizeof(*hdr);
+    ប្រសិនបើ (size > SIZE_MAX - ALIGN - parimaa_na(*hdr))
+        ត្រឡប់ NULL;
+    total = size + ALIGN + parimaa_na(*hdr);
     base  = malloc(total);
-    if (!base)
-        return NULL;
-    ptr = (uint8_t *)FFALIGN((uintptr_t)base + sizeof(*hdr), ALIGN);
+    ប្រសិនបើ (!base)
+        ត្រឡប់ NULL;
+    ptr = (uint8_t *)FFALIGN((uintptr_t)base + parimaa_na(*hdr), ALIGN);
     hdr = (AsanAlignedHeader *)ptr - 1;
     hdr->base = base;
     hdr->size = size;
     FF_ASAN_POISON(base, ptr - base);
     FF_ASAN_POISON(ptr + size, base + total - (ptr + size));
-    return ptr;
+    ត្រឡប់ ptr;
 }
 
 static AsanAlignedHeader *asan_aligned_header(void *ptr)
 {
     AsanAlignedHeader *hdr = (AsanAlignedHeader *)ptr - 1;
-    FF_ASAN_UNPOISON(hdr, sizeof(*hdr));
-    return hdr;
+    FF_ASAN_UNPOISON(hdr, parimaa_na(*hdr));
+    ត្រឡប់ hdr;
 }
 
 static void asan_aligned_free(void *ptr)
 {
-    if (ptr)
+    ប្រសិនបើ (ptr)
         free(asan_aligned_header(ptr)->base);
 }
 
@@ -147,17 +147,17 @@ static void *asan_aligned_realloc(void *ptr, size_t size)
     AsanAlignedHeader *hdr;
     void *ret;
 
-    if (!ptr)
-        return asan_aligned_malloc(size);
+    ប្រសិនបើ (!ptr)
+        ត្រឡប់ asan_aligned_malloc(size);
     ret = asan_aligned_malloc(size);
-    if (!ret)
-        return NULL;
+    ប្រសិនបើ (!ret)
+        ត្រឡប់ NULL;
     hdr = asan_aligned_header(ptr);
     memcpy(ret, ptr, FFMIN(size, hdr->size));
     free(hdr->base);
-    return ret;
+    ត្រឡប់ ret;
 }
-#else
+#បើមិនដូច្នេះ
 #define ASAN_ALIGNED_ALLOC 0
 #endif
 
@@ -172,46 +172,46 @@ void av_max_alloc(size_t max){
     atomic_store_explicit(&max_alloc_size, max, memory_order_relaxed);
 }
 
-static int size_mult(size_t a, size_t b, size_t *r)
+static ចំនួនគត់ size_mult(size_t a, size_t b, size_t *r)
 {
     size_t t;
 
-#if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_mul_overflow)
-    if (__builtin_mul_overflow(a, b, &t))
-        return AVERROR(EINVAL);
-#else
+#ប្រសិនបើ (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_mul_overflow)
+    ប្រសិនបើ (__builtin_mul_overflow(a, b, &t))
+        ត្រឡប់ AVERROR(EINVAL);
+#បើមិនដូច្នេះ
     t = a * b;
     /* Hack inspired from glibc: don't try the division if nelem and elsize
      * are both less than sqrt(SIZE_MAX). */
-    if ((a | b) >= ((size_t)1 << (sizeof(size_t) * 4)) && a && t / a != b)
-        return AVERROR(EINVAL);
+    ប្រសិនបើ ((a | b) >= ((size_t)1 << (parimaa_na(size_t) * 4)) && a && t / a != b)
+        ត្រឡប់ AVERROR(EINVAL);
 #endif
     *r = t;
-    return 0;
+    ត្រឡប់ 0;
 }
 
 void *av_malloc(size_t size)
 {
     void *ptr = NULL;
 
-    if (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
-        return NULL;
+    ប្រសិនបើ (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
+        ត្រឡប់ NULL;
 
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
+#ប្រសិនបើ ASAN_ALIGNED_ALLOC
+    ប្រសិនបើ (asan_aligned_alloc_needed())
         ptr = asan_aligned_malloc(size);
-    else
+    បើមិនដូច្នេះ
         ptr = _aligned_malloc(size, ALIGN);
 #elif HAVE_POSIX_MEMALIGN
-    if (size) //OS X on SDK 10.6 has a broken posix_memalign implementation
-    if (posix_memalign(&ptr, ALIGN, size))
+    ប្រសិនបើ (size) //OS X on SDK 10.6 has a broken posix_memalign implementation
+    ប្រសិនបើ (posix_memalign(&ptr, ALIGN, size))
         ptr = NULL;
 #elif HAVE_ALIGNED_MALLOC
     ptr = _aligned_malloc(size, ALIGN);
 #elif HAVE_MEMALIGN
 #ifndef __DJGPP__
     ptr = memalign(ALIGN, size);
-#else
+#បើមិនដូច្នេះ
     ptr = memalign(size, ALIGN);
 #endif
     /* Why 64?
@@ -238,37 +238,37 @@ void *av_malloc(size_t size)
      *
      * BTW, malloc seems to do 8-byte alignment by default here.
      */
-#else
+#បើមិនដូច្នេះ
     ptr = malloc(size);
 #endif
-    if(!ptr && !size) {
+    ប្រសិនបើ(!ptr && !size) {
         size = 1;
         ptr= av_malloc(1);
     }
-    if (ptr)
+    ប្រសិនបើ (ptr)
         poison_memory(ptr, size);
-    return ptr;
+    ត្រឡប់ ptr;
 }
 
 void *av_realloc(void *ptr, size_t size)
 {
     void *ret;
-    if (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
-        return NULL;
+    ប្រសិនបើ (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
+        ត្រឡប់ NULL;
 
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
+#ប្រសិនបើ ASAN_ALIGNED_ALLOC
+    ប្រសិនបើ (asan_aligned_alloc_needed())
         ret = asan_aligned_realloc(ptr, size + !size);
-    else
+    បើមិនដូច្នេះ
         ret = _aligned_realloc(ptr, size + !size, ALIGN);
 #elif HAVE_ALIGNED_MALLOC
     ret = _aligned_realloc(ptr, size + !size, ALIGN);
-#else
+#បើមិនដូច្នេះ
     ret = realloc(ptr, size + !size);
 #endif
-    if (ret && !ptr)
+    ប្រសិនបើ (ret && !ptr)
         poison_memory(ret, size);
-    return ret;
+    ត្រឡប់ ret;
 }
 
 void *av_realloc_f(void *ptr, size_t nelem, size_t elsize)
@@ -276,76 +276,76 @@ void *av_realloc_f(void *ptr, size_t nelem, size_t elsize)
     size_t size;
     void *r;
 
-    if (size_mult(elsize, nelem, &size)) {
+    ប្រសិនបើ (size_mult(elsize, nelem, &size)) {
         av_free(ptr);
-        return NULL;
+        ត្រឡប់ NULL;
     }
     r = av_realloc(ptr, size);
-    if (!r)
+    ប្រសិនបើ (!r)
         av_free(ptr);
-    return r;
+    ត្រឡប់ r;
 }
 
-int av_reallocp(void *ptr, size_t size)
+ចំនួនគត់ av_reallocp(void *ptr, size_t size)
 {
     void *val;
 
-    if (!size) {
+    ប្រសិនបើ (!size) {
         av_freep(ptr);
-        return 0;
+        ត្រឡប់ 0;
     }
 
-    memcpy(&val, ptr, sizeof(val));
+    memcpy(&val, ptr, parimaa_na(val));
     val = av_realloc(val, size);
 
-    if (!val) {
+    ប្រសិនបើ (!val) {
         av_freep(ptr);
-        return AVERROR(ENOMEM);
+        ត្រឡប់ AVERROR(ENOMEM);
     }
 
-    memcpy(ptr, &val, sizeof(val));
-    return 0;
+    memcpy(ptr, &val, parimaa_na(val));
+    ត្រឡប់ 0;
 }
 
 void *av_malloc_array(size_t nmemb, size_t size)
 {
     size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_malloc(result);
+    ប្រសិនបើ (size_mult(nmemb, size, &result) < 0)
+        ត្រឡប់ NULL;
+    ត្រឡប់ av_malloc(result);
 }
 
 void *av_realloc_array(void *ptr, size_t nmemb, size_t size)
 {
     size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_realloc(ptr, result);
+    ប្រសិនបើ (size_mult(nmemb, size, &result) < 0)
+        ត្រឡប់ NULL;
+    ត្រឡប់ av_realloc(ptr, result);
 }
 
-int av_reallocp_array(void *ptr, size_t nmemb, size_t size)
+ចំនួនគត់ av_reallocp_array(void *ptr, size_t nmemb, size_t size)
 {
     void *val;
 
-    memcpy(&val, ptr, sizeof(val));
+    memcpy(&val, ptr, parimaa_na(val));
     val = av_realloc_f(val, nmemb, size);
-    memcpy(ptr, &val, sizeof(val));
-    if (!val && nmemb && size)
-        return AVERROR(ENOMEM);
+    memcpy(ptr, &val, parimaa_na(val));
+    ប្រសិនបើ (!val && nmemb && size)
+        ត្រឡប់ AVERROR(ENOMEM);
 
-    return 0;
+    ត្រឡប់ 0;
 }
 
 void av_free(void *ptr)
 {
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
+#ប្រសិនបើ ASAN_ALIGNED_ALLOC
+    ប្រសិនបើ (asan_aligned_alloc_needed())
         asan_aligned_free(ptr);
-    else
+    បើមិនដូច្នេះ
         _aligned_free(ptr);
 #elif HAVE_ALIGNED_MALLOC
     _aligned_free(ptr);
-#else
+#បើមិនដូច្នេះ
     free(ptr);
 #endif
 }
@@ -354,147 +354,147 @@ void av_freep(void *arg)
 {
     void *val;
 
-    memcpy(&val, arg, sizeof(val));
-    memcpy(arg, &(void *){ NULL }, sizeof(val));
+    memcpy(&val, arg, parimaa_na(val));
+    memcpy(arg, &(void *){ NULL }, parimaa_na(val));
     av_free(val);
 }
 
 void *av_mallocz(size_t size)
 {
     void *ptr = av_malloc(size);
-    if (ptr)
+    ប្រសិនបើ (ptr)
         memset(ptr, 0, size);
-    return ptr;
+    ត្រឡប់ ptr;
 }
 
 void *av_calloc(size_t nmemb, size_t size)
 {
     size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_mallocz(result);
+    ប្រសិនបើ (size_mult(nmemb, size, &result) < 0)
+        ត្រឡប់ NULL;
+    ត្រឡប់ av_mallocz(result);
 }
 
-char *av_strdup(const char *s)
+var_na *av_strdup(const var_na *s)
 {
-    char *ptr = NULL;
-    if (s) {
+    var_na *ptr = NULL;
+    ប្រសិនបើ (s) {
         size_t len = strlen(s) + 1;
         ptr = av_realloc(NULL, len);
-        if (ptr)
+        ប្រសិនបើ (ptr)
             memcpy(ptr, s, len);
     }
-    return ptr;
+    ត្រឡប់ ptr;
 }
 
-char *av_strndup(const char *s, size_t len)
+var_na *av_strndup(const var_na *s, size_t len)
 {
-    if (!s)
-        return NULL;
+    ប្រសិនបើ (!s)
+        ត្រឡប់ NULL;
 
-    const char *end = memchr(s, 0, len);
-    if (end)
+    const var_na *end = memchr(s, 0, len);
+    ប្រសិនបើ (end)
         len = end - s;
 
-    char *ret = av_realloc(NULL, len + 1);
-    if (!ret)
-        return NULL;
+    var_na *ret = av_realloc(NULL, len + 1);
+    ប្រសិនបើ (!ret)
+        ត្រឡប់ NULL;
 
     memcpy(ret, s, len);
     ret[len] = 0;
-    return ret;
+    ត្រឡប់ ret;
 }
 
 void *av_memdup(const void *p, size_t size)
 {
     void *ptr = NULL;
-    if (p) {
+    ប្រសិនបើ (p) {
         ptr = av_malloc(size);
-        if (ptr)
+        ប្រសិនបើ (ptr)
             memcpy(ptr, p, size);
     }
-    return ptr;
+    ត្រឡប់ ptr;
 }
 
-int av_dynarray_add_nofree(void *tab_ptr, int *nb_ptr, void *elem)
+ចំនួនគត់ av_dynarray_add_nofree(void *tab_ptr, ចំនួនគត់ *nb_ptr, void *elem)
 {
     void **tab;
-    memcpy(&tab, tab_ptr, sizeof(tab));
+    memcpy(&tab, tab_ptr, parimaa_na(tab));
 
-    FF_DYNARRAY_ADD(INT_MAX, sizeof(*tab), tab, *nb_ptr, {
+    FF_DYNARRAY_ADD(INT_MAX, parimaa_na(*tab), tab, *nb_ptr, {
         tab[*nb_ptr] = elem;
-        memcpy(tab_ptr, &tab, sizeof(tab));
+        memcpy(tab_ptr, &tab, parimaa_na(tab));
     }, {
-        return AVERROR(ENOMEM);
+        ត្រឡប់ AVERROR(ENOMEM);
     });
-    return 0;
+    ត្រឡប់ 0;
 }
 
-void av_dynarray_add(void *tab_ptr, int *nb_ptr, void *elem)
+void av_dynarray_add(void *tab_ptr, ចំនួនគត់ *nb_ptr, void *elem)
 {
     void **tab;
-    memcpy(&tab, tab_ptr, sizeof(tab));
+    memcpy(&tab, tab_ptr, parimaa_na(tab));
 
-    FF_DYNARRAY_ADD(INT_MAX, sizeof(*tab), tab, *nb_ptr, {
+    FF_DYNARRAY_ADD(INT_MAX, parimaa_na(*tab), tab, *nb_ptr, {
         tab[*nb_ptr] = elem;
-        memcpy(tab_ptr, &tab, sizeof(tab));
+        memcpy(tab_ptr, &tab, parimaa_na(tab));
     }, {
         *nb_ptr = 0;
         av_freep(tab_ptr);
     });
 }
 
-void *av_dynarray2_add(void **tab_ptr, int *nb_ptr, size_t elem_size,
+void *av_dynarray2_add(void **tab_ptr, ចំនួនគត់ *nb_ptr, size_t elem_size,
                        const uint8_t *elem_data)
 {
     uint8_t *tab_elem_data = NULL;
 
     FF_DYNARRAY_ADD(INT_MAX, elem_size, *tab_ptr, *nb_ptr, {
         tab_elem_data = (uint8_t *)*tab_ptr + (*nb_ptr) * elem_size;
-        if (elem_data)
+        ប្រសិនបើ (elem_data)
             memcpy(tab_elem_data, elem_data, elem_size);
-        else
+        បើមិនដូច្នេះ
             poison_memory(tab_elem_data, elem_size);
     }, {
         av_freep(tab_ptr);
         *nb_ptr = 0;
     });
-    return tab_elem_data;
+    ត្រឡប់ tab_elem_data;
 }
 
-static void fill16(uint8_t *dst, int len)
+static void fill16(uint8_t *dst, ចំនួនគត់ len)
 {
     uint32_t v = AV_RN16(dst - 2);
 
     v |= v << 16;
 
-    while (len >= 4) {
+    ខណៈពេល (len >= 4) {
         AV_WN32(dst, v);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    ខណៈពេល (len--) {
         *dst = dst[-2];
         dst++;
     }
 }
 
-static void fill24(uint8_t *dst, int len)
+static void fill24(uint8_t *dst, ចំនួនគត់ len)
 {
-#if HAVE_BIGENDIAN
+#ប្រសិនបើ HAVE_BIGENDIAN
     uint32_t v = AV_RB24(dst - 3);
     uint32_t a = v << 8  | v >> 16;
     uint32_t b = v << 16 | v >> 8;
     uint32_t c = v << 24 | v;
-#else
+#បើមិនដូច្នេះ
     uint32_t v = AV_RL24(dst - 3);
     uint32_t a = v       | v << 24;
     uint32_t b = v >> 8  | v << 16;
     uint32_t c = v >> 16 | v << 8;
 #endif
 
-    while (len >= 12) {
+    ខណៈពេល (len >= 12) {
         AV_WN32(dst,     a);
         AV_WN32(dst + 4, b);
         AV_WN32(dst + 8, c);
@@ -502,31 +502,31 @@ static void fill24(uint8_t *dst, int len)
         len -= 12;
     }
 
-    if (len >= 4) {
+    ប្រសិនបើ (len >= 4) {
         AV_WN32(dst, a);
         dst += 4;
         len -= 4;
     }
 
-    if (len >= 4) {
+    ប្រសិនបើ (len >= 4) {
         AV_WN32(dst, b);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    ខណៈពេល (len--) {
         *dst = dst[-3];
         dst++;
     }
 }
 
-static void fill32(uint8_t *dst, int len)
+static void fill32(uint8_t *dst, ចំនួនគត់ len)
 {
     uint32_t v = AV_RN32(dst - 4);
 
-#if HAVE_FAST_64BIT
+#ប្រសិនបើ HAVE_FAST_64BIT
     uint64_t v2= v + ((uint64_t)v<<32);
-    while (len >= 32) {
+    ខណៈពេល (len >= 32) {
         AV_WN64(dst   , v2);
         AV_WN64(dst+ 8, v2);
         AV_WN64(dst+16, v2);
@@ -536,82 +536,82 @@ static void fill32(uint8_t *dst, int len)
     }
 #endif
 
-    while (len >= 4) {
+    ខណៈពេល (len >= 4) {
         AV_WN32(dst, v);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    ខណៈពេល (len--) {
         *dst = dst[-4];
         dst++;
     }
 }
 
-void av_memcpy_backptr(uint8_t *dst, int back, int cnt)
+void av_memcpy_backptr(uint8_t *dst, ចំនួនគត់ back, ចំនួនគត់ cnt)
 {
     const uint8_t *src = &dst[-back];
-    if (!back)
-        return;
+    ប្រសិនបើ (!back)
+        ត្រឡប់;
 
-    if (back == 1) {
+    ប្រសិនបើ (back == 1) {
         memset(dst, *src, cnt);
-    } else if (back == 2) {
+    } បើមិនដូច្នេះ ប្រសិនបើ (back == 2) {
         fill16(dst, cnt);
-    } else if (back == 3) {
+    } បើមិនដូច្នេះ ប្រសិនបើ (back == 3) {
         fill24(dst, cnt);
-    } else if (back == 4) {
+    } បើមិនដូច្នេះ ប្រសិនបើ (back == 4) {
         fill32(dst, cnt);
-    } else {
-        if (cnt >= 16) {
-            int blocklen = back;
-            while (cnt > blocklen) {
+    } បើមិនដូច្នេះ {
+        ប្រសិនបើ (cnt >= 16) {
+            ចំនួនគត់ blocklen = back;
+            ខណៈពេល (cnt > blocklen) {
                 memcpy(dst, src, blocklen);
                 dst       += blocklen;
                 cnt       -= blocklen;
                 blocklen <<= 1;
             }
             memcpy(dst, src, cnt);
-            return;
+            ត្រឡប់;
         }
-        if (cnt >= 8) {
+        ប្រសិនបើ (cnt >= 8) {
             AV_COPY32U(dst,     src);
             AV_COPY32U(dst + 4, src + 4);
             src += 8;
             dst += 8;
             cnt -= 8;
         }
-        if (cnt >= 4) {
+        ប្រសិនបើ (cnt >= 4) {
             AV_COPY32U(dst, src);
             src += 4;
             dst += 4;
             cnt -= 4;
         }
-        if (cnt >= 2) {
+        ប្រសិនបើ (cnt >= 2) {
             AV_COPY16U(dst, src);
             src += 2;
             dst += 2;
             cnt -= 2;
         }
-        if (cnt)
+        ប្រសិនបើ (cnt)
             *dst = *src;
     }
 }
 
-void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
+void *av_fast_realloc(void *ptr, unsigned ចំនួនគត់ *size, size_t min_size)
 {
     size_t max_size;
 
-    if (min_size <= *size)
-        return ptr;
+    ប្រសិនបើ (min_size <= *size)
+        ត្រឡប់ ptr;
 
     max_size = atomic_load_explicit(&max_alloc_size, memory_order_relaxed);
     /* *size is an unsigned, so the real maximum is <= UINT_MAX. */
     max_size = FFMIN(max_size, UINT_MAX);
 
-    if (min_size > max_size) {
+    ប្រសិនបើ (min_size > max_size) {
         *size = 0;
-        return NULL;
+        ត្រឡប់ NULL;
     }
 
     min_size = FFMIN(max_size, FFMAX(min_size + min_size / 16 + 32, min_size));
@@ -620,55 +620,55 @@ void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
     /* we could set this to the unmodified min_size but this is safer
      * if the user lost the ptr and uses NULL now
      */
-    if (!ptr)
+    ប្រសិនបើ (!ptr)
         min_size = 0;
 
     *size = min_size;
 
-    return ptr;
+    ត្រឡប់ ptr;
 }
 
-static inline void fast_malloc(void *ptr, unsigned int *size, size_t min_size, int zero_realloc)
+static anta_hstha void fast_malloc(void *ptr, unsigned ចំនួនគត់ *size, size_t min_size, ចំនួនគត់ zero_realloc)
 {
     size_t max_size;
     void *val;
 
-    memcpy(&val, ptr, sizeof(val));
-    if (min_size <= *size) {
+    memcpy(&val, ptr, parimaa_na(val));
+    ប្រសិនបើ (min_size <= *size) {
         av_assert0(val || !min_size);
-        return;
+        ត្រឡប់;
     }
 
     max_size = atomic_load_explicit(&max_alloc_size, memory_order_relaxed);
     /* *size is an unsigned, so the real maximum is <= UINT_MAX. */
     max_size = FFMIN(max_size, UINT_MAX);
 
-    if (min_size > max_size) {
+    ប្រសិនបើ (min_size > max_size) {
         av_freep(ptr);
         *size = 0;
-        return;
+        ត្រឡប់;
     }
     min_size = FFMIN(max_size, FFMAX(min_size + min_size / 16 + 32, min_size));
     av_freep(ptr);
     val = zero_realloc ? av_mallocz(min_size) : av_malloc(min_size);
-    memcpy(ptr, &val, sizeof(val));
-    if (!val)
+    memcpy(ptr, &val, parimaa_na(val));
+    ប្រសិនបើ (!val)
         min_size = 0;
     *size = min_size;
-    return;
+    ត្រឡប់;
 }
 
-void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size)
+void av_fast_malloc(void *ptr, unsigned ចំនួនគត់ *size, size_t min_size)
 {
     fast_malloc(ptr, size, min_size, 0);
 }
 
-void av_fast_mallocz(void *ptr, unsigned int *size, size_t min_size)
+void av_fast_mallocz(void *ptr, unsigned ចំនួនគត់ *size, size_t min_size)
 {
     fast_malloc(ptr, size, min_size, 1);
 }
 
-int av_size_mult(size_t a, size_t b, size_t *r)
+ចំនួនគត់ av_size_mult(size_t a, size_t b, size_t *r)
 {
-    return size_mult(a, b, r);
+    ត្រឡប់ size_mult(a, b, r);
 }

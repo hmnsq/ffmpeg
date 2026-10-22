@@ -23,69 +23,69 @@
 #include "mem.h"
 #include "tree.h"
 
-typedef struct AVTreeNode {
-    struct AVTreeNode *child[2];
+typedef sa_nracanaa AVTreeNode {
+    sa_nracanaa AVTreeNode *child[2];
     void *elem;
-    int state;
+    ចំនួនគត់ state;
 } AVTreeNode;
 
-const int av_tree_node_size = sizeof(AVTreeNode);
+const ចំនួនគត់ av_tree_node_size = parimaa_na(AVTreeNode);
 
-struct AVTreeNode *av_tree_node_alloc(void)
+sa_nracanaa AVTreeNode *av_tree_node_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVTreeNode));
+    ត្រឡប់ av_mallocz(parimaa_na(sa_nracanaa AVTreeNode));
 }
 
 void *av_tree_find(const AVTreeNode *t, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2])
+                   ចំនួនគត់ (*cmp)(const void *key, const void *b), void *next[2])
 {
-    if (t) {
-        unsigned int v = cmp(key, t->elem);
-        if (v) {
-            if (next)
+    ប្រសិនបើ (t) {
+        unsigned ចំនួនគត់ v = cmp(key, t->elem);
+        ប្រសិនបើ (v) {
+            ប្រសិនបើ (next)
                 next[v >> 31] = t->elem;
-            return av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
-        } else {
-            if (next) {
+            ត្រឡប់ av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
+        } បើមិនដូច្នេះ {
+            ប្រសិនបើ (next) {
                 av_tree_find(t->child[0], key, cmp, next);
                 av_tree_find(t->child[1], key, cmp, next);
             }
-            return t->elem;
+            ត្រឡប់ t->elem;
         }
     }
-    return NULL;
+    ត្រឡប់ NULL;
 }
 
 void *av_tree_insert(AVTreeNode **tp, void *key,
-                     int (*cmp)(const void *key, const void *b), AVTreeNode **next)
+                     ចំនួនគត់ (*cmp)(const void *key, const void *b), AVTreeNode **next)
 {
     AVTreeNode *t = *tp;
-    if (t) {
-        unsigned int v = cmp(t->elem, key);
+    ប្រសិនបើ (t) {
+        unsigned ចំនួនគត់ v = cmp(t->elem, key);
         void *ret;
-        if (!v) {
-            if (*next)
-                return t->elem;
-            else if (t->child[0] || t->child[1]) {
-                int i = !t->child[0];
+        ប្រសិនបើ (!v) {
+            ប្រសិនបើ (*next)
+                ត្រឡប់ t->elem;
+            បើមិនដូច្នេះ ប្រសិនបើ (t->child[0] || t->child[1]) {
+                ចំនួនគត់ i = !t->child[0];
                 void *next_elem[2];
                 av_tree_find(t->child[i], key, cmp, next_elem);
                 key = t->elem = next_elem[i];
                 v   = -i;
-            } else {
+            } បើមិនដូច្នេះ {
                 *next = t;
                 *tp   = NULL;
-                return NULL;
+                ត្រឡប់ NULL;
             }
         }
         ret = av_tree_insert(&t->child[v >> 31], key, cmp, next);
-        if (!ret) {
-            int i              = (v >> 31) ^ !!*next;
+        ប្រសិនបើ (!ret) {
+            ចំនួនគត់ i              = (v >> 31) ^ !!*next;
             AVTreeNode **child = &t->child[i];
             t->state += 2 * i - 1;
 
-            if (!(t->state & 1)) {
-                if (t->state) {
+            ប្រសិនបើ (!(t->state & 1)) {
+                ប្រសិនបើ (t->state) {
                     /* The following code is equivalent to
                      * if ((*child)->state * 2 == -t->state)
                      *     rotate(child, i ^ 1);
@@ -106,7 +106,7 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                      * }
                      * but such a rotate function is both bigger and slower
                      */
-                    if ((*child)->state * 2 == -t->state) {
+                    ប្រសិនបើ ((*child)->state * 2 == -t->state) {
                         *tp                    = (*child)->child[i ^ 1];
                         (*child)->child[i ^ 1] = (*tp)->child[i];
                         (*tp)->child[i]        = *child;
@@ -116,36 +116,36 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                         (*tp)->child[0]->state = -((*tp)->state > 0);
                         (*tp)->child[1]->state = (*tp)->state < 0;
                         (*tp)->state           = 0;
-                    } else {
+                    } បើមិនដូច្នេះ {
                         *tp                 = *child;
                         *child              = (*child)->child[i ^ 1];
                         (*tp)->child[i ^ 1] = t;
-                        if ((*tp)->state)
+                        ប្រសិនបើ ((*tp)->state)
                             t->state = 0;
-                        else
+                        បើមិនដូច្នេះ
                             t->state >>= 1;
                         (*tp)->state = -t->state;
                     }
                 }
             }
-            if (!(*tp)->state ^ !!*next)
-                return key;
+            ប្រសិនបើ (!(*tp)->state ^ !!*next)
+                ត្រឡប់ key;
         }
-        return ret;
-    } else {
+        ត្រឡប់ ret;
+    } បើមិនដូច្នេះ {
         *tp   = *next;
         *next = NULL;
-        if (*tp) {
+        ប្រសិនបើ (*tp) {
             (*tp)->elem = key;
-            return NULL;
-        } else
-            return key;
+            ត្រឡប់ NULL;
+        } បើមិនដូច្នេះ
+            ត្រឡប់ key;
     }
 }
 
 void av_tree_destroy(AVTreeNode *t)
 {
-    if (t) {
+    ប្រសិនបើ (t) {
         av_tree_destroy(t->child[0]);
         av_tree_destroy(t->child[1]);
         av_free(t);
@@ -153,16 +153,16 @@ void av_tree_destroy(AVTreeNode *t)
 }
 
 void av_tree_enumerate(AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem))
+                       ចំនួនគត់ (*cmp)(void *opaque, void *elem),
+                       ចំនួនគត់ (*enu)(void *opaque, void *elem))
 {
-    if (t) {
-        int v = cmp ? cmp(opaque, t->elem) : 0;
-        if (v >= 0)
+    ប្រសិនបើ (t) {
+        ចំនួនគត់ v = cmp ? cmp(opaque, t->elem) : 0;
+        ប្រសិនបើ (v >= 0)
             av_tree_enumerate(t->child[0], opaque, cmp, enu);
-        if (v == 0)
+        ប្រសិនបើ (v == 0)
             enu(opaque, t->elem);
-        if (v <= 0)
+        ប្រសិនបើ (v <= 0)
             av_tree_enumerate(t->child[1], opaque, cmp, enu);
     }
 }

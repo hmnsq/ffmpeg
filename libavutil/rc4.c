@@ -28,34 +28,34 @@
 
 AVRC4 *av_rc4_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVRC4));
+    ត្រឡប់ av_mallocz(parimaa_na(sa_nracanaa AVRC4));
 }
 
-int av_rc4_init(AVRC4 *r, const uint8_t *key, int key_bits, int decrypt) {
-    int i, j;
+ចំនួនគត់ av_rc4_init(AVRC4 *r, const uint8_t *key, ចំនួនគត់ key_bits, ចំនួនគត់ decrypt) {
+    ចំនួនគត់ i, j;
     uint8_t y;
     uint8_t *state = r->state;
-    int keylen = key_bits >> 3;
-    if (key_bits & 7)
-        return AVERROR(EINVAL);
-    for (i = 0; i < 256; i++)
+    ចំនួនគត់ keylen = key_bits >> 3;
+    ប្រសិនបើ (key_bits & 7)
+        ត្រឡប់ AVERROR(EINVAL);
+    សម្រាប់ (i = 0; i < 256; i++)
         state[i] = i;
     y = 0;
     // j is i % keylen
-    for (j = 0, i = 0; i < 256; i++, j++) {
-        if (j == keylen) j = 0;
+    សម្រាប់ (j = 0, i = 0; i < 256; i++, j++) {
+        ប្រសិនបើ (j == keylen) j = 0;
         y += state[i] + key[j];
         FFSWAP(uint8_t, state[i], state[y]);
     }
     r->x = 1;
     r->y = state[1];
-    return 0;
+    ត្រឡប់ 0;
 }
 
-void av_rc4_crypt(AVRC4 *r, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt) {
+void av_rc4_crypt(AVRC4 *r, uint8_t *dst, const uint8_t *src, ចំនួនគត់ count, uint8_t *iv, ចំនួនគត់ decrypt) {
     uint8_t x = r->x, y = r->y;
     uint8_t *state = r->state;
-    while (count-- > 0) {
+    ខណៈពេល (count-- > 0) {
         uint8_t sum = state[x] + state[y];
         FFSWAP(uint8_t, state[x], state[y]);
         *dst++ = src ? *src++ ^ state[sum] : state[sum];

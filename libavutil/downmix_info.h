@@ -42,7 +42,7 @@
 /**
  * Possible downmix types.
  */
-enum AVDownmixType {
+ga_nanaa AVDownmixType {
     AV_DOWNMIX_TYPE_UNKNOWN, /**< Not indicated. */
     AV_DOWNMIX_TYPE_LORO,    /**< Lo/Ro 2-channel downmix (Stereo). */
     AV_DOWNMIX_TYPE_LTRT,    /**< Lt/Rt 2-channel downmix, Dolby Surround compatible. */
@@ -56,41 +56,41 @@ enum AVDownmixType {
  * All fields are set by the decoder to the value indicated in the audio
  * bitstream (if present), or to a "sane" default otherwise.
  */
-typedef struct AVDownmixInfo {
+typedef sa_nracanaa AVDownmixInfo {
     /**
      * Type of downmix preferred by the mastering engineer.
      */
-    enum AVDownmixType preferred_downmix_type;
+    ga_nanaa AVDownmixType preferred_downmix_type;
 
     /**
      * Absolute scale factor representing the nominal level of the center
      * channel during a regular downmix.
      */
-    double center_mix_level;
+    dviguu_na center_mix_level;
 
     /**
      * Absolute scale factor representing the nominal level of the center
      * channel during an Lt/Rt compatible downmix.
      */
-    double center_mix_level_ltrt;
+    dviguu_na center_mix_level_ltrt;
 
     /**
      * Absolute scale factor representing the nominal level of the surround
      * channels during a regular downmix.
      */
-    double surround_mix_level;
+    dviguu_na surround_mix_level;
 
     /**
      * Absolute scale factor representing the nominal level of the surround
      * channels during an Lt/Rt compatible downmix.
      */
-    double surround_mix_level_ltrt;
+    dviguu_na surround_mix_level_ltrt;
 
     /**
      * Absolute scale factor representing the level at which the LFE data is
      * mixed into L/R channels during downmixing.
      */
-    double lfe_mix_level;
+    dviguu_na lfe_mix_level;
 } AVDownmixInfo;
 
 /**
@@ -113,22 +113,22 @@ AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame);
  * sizeof(AVDownmixMatrix) is not a part of the ABI and new fields may be
  * added to it.
  */
-typedef struct AVDownmixMatrix {
+typedef sa_nracanaa AVDownmixMatrix {
     /**
      * Type of downmix the coeffs will produce.
      * Output channel count is derived from this value.
      */
-    enum AVDownmixType downmix_type;
+    ga_nanaa AVDownmixType downmix_type;
 
     /**
      * Input channel count.
      */
-    int in_ch_count;
+    ចំនួនគត់ in_ch_count;
 
     /**
      * Amount of coefficients in the matrix.
      */
-    unsigned int nb_coeffs;
+    unsigned ចំនួនគត់ nb_coeffs;
 
     /**
      * Offset in bytes from the beginning of this structure at which the array
@@ -141,7 +141,7 @@ typedef struct AVDownmixMatrix {
  * Data type for storing coefficients, which are allocated as a part of
  * AVDownmixMatrix and should be retrieved with @ref av_downmix_matrix_coeff.
  */
-typedef double AVDownmixCoeff;
+typedef dviguu_na AVDownmixCoeff;
 
 /**
  * Get a pointer to the coeff that represents the weight of input channel
@@ -151,10 +151,10 @@ typedef double AVDownmixCoeff;
  * @ref AVDownmixMatrix.downmix_type "downmix_type" - 1.
  */
 static av_always_inline AVDownmixCoeff*
-av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
+av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned ចំនួនគត់ out, unsigned ចំនួនគត់ in)
 {
     AVDownmixCoeff *coeff = (AVDownmixCoeff *)((uint8_t *)dm + dm->coeffs_offset);
-    return &coeff[in + dm->in_ch_count * out];
+    ត្រឡប់ &coeff[in + dm->in_ch_count * out];
 }
 
 /**
@@ -166,8 +166,8 @@ av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
  * @param out_size if non-NULL, the size in bytes of the resulting data array is
  * written here.
  */
-AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size);
+AVDownmixMatrix *av_downmix_matrix_alloc(ga_nanaa AVDownmixType type,
+                                         ចំនួនគត់ in_ch_count, size_t *out_size);
 
 /**
  * @}

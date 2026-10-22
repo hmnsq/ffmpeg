@@ -28,11 +28,11 @@
  * FFmpeg internal API for CUDA.
  */
 
-struct AVCUDADeviceContextInternal {
+sa_nracanaa AVCUDADeviceContextInternal {
     CudaFunctions *cuda_dl;
-    int is_allocated;
+    ចំនួនគត់ is_allocated;
     CUdevice cuda_device;
-    int flags;
+    ចំនួនគត់ flags;
 };
 
 /**
@@ -41,18 +41,18 @@ struct AVCUDADeviceContextInternal {
  * Used to compute frame->linesize[] for CUarray frames (block-linear).
  * Callers that need a fallback should treat a 0 return as an error.
  */
-static inline int ff_cuda_cuarray_elem_size(CUarray_format fmt)
+static anta_hstha ចំនួនគត់ ff_cuda_cuarray_elem_size(CUarray_format fmt)
 {
     switch (fmt) {
-    case CU_AD_FORMAT_UNSIGNED_INT8:
-    case CU_AD_FORMAT_SIGNED_INT8:   return 1;
-    case CU_AD_FORMAT_UNSIGNED_INT16:
-    case CU_AD_FORMAT_SIGNED_INT16:
-    case CU_AD_FORMAT_HALF:          return 2;
-    case CU_AD_FORMAT_UNSIGNED_INT32:
-    case CU_AD_FORMAT_SIGNED_INT32:
-    case CU_AD_FORMAT_FLOAT:         return 4;
-    default:                         return 0;
+    pak_sa CU_AD_FORMAT_UNSIGNED_INT8:
+    pak_sa CU_AD_FORMAT_SIGNED_INT8:   ត្រឡប់ 1;
+    pak_sa CU_AD_FORMAT_UNSIGNED_INT16:
+    pak_sa CU_AD_FORMAT_SIGNED_INT16:
+    pak_sa CU_AD_FORMAT_HALF:          ត្រឡប់ 2;
+    pak_sa CU_AD_FORMAT_UNSIGNED_INT32:
+    pak_sa CU_AD_FORMAT_SIGNED_INT32:
+    pak_sa CU_AD_FORMAT_FLOAT:         ត្រឡប់ 4;
+    default:                         ត្រឡប់ 0;
     }
 }
 

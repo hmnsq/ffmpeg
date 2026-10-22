@@ -25,24 +25,24 @@
 #include "libavutil/mathematics.h"
 #include "libavutil/eval.h"
 
-static const double const_values[] = {
+static const dviguu_na const_values[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+static const var_na *const const_names[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+ចំនួនគត់ main(ចំនួនគត់ argc, var_na **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    ចំនួនគត់ i;
+    dviguu_na d;
+    const var_na *const *expr;
+    static const var_na *const exprs[] = {
         "",
         "1;2",
         "-20",
@@ -145,18 +145,18 @@ int main(int argc, char **argv)
         "clip(0, 0/0, 1)",
         NULL
     };
-    int ret;
+    ចំនួនគត់ ret;
 
-    for (expr = exprs; *expr; expr++) {
+    សម្រាប់ (expr = exprs; *expr; expr++) {
         printf("Evaluating '%s'\n", *expr);
         ret = av_expr_parse_and_eval(&d, *expr,
                                const_names, const_values,
                                NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
+        ប្រសិនបើ (isnan(d))
             printf("'%s' -> nan\n\n", *expr);
-        else
+        បើមិនដូច្នេះ
             printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
+        ប្រសិនបើ (ret < 0)
             printf("av_expr_parse_and_eval failed\n");
     }
 
@@ -164,26 +164,26 @@ int main(int argc, char **argv)
                            const_names, const_values,
                            NULL, NULL, NULL, NULL, NULL, 0, NULL);
     printf("%f == 12.7\n", d);
-    if (ret < 0)
+    ប្រសិនបើ (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
     ret = av_expr_parse_and_eval(&d, "80G/80Gi",
                            const_names, const_values,
                            NULL, NULL, NULL, NULL, NULL, 0, NULL);
     printf("%f == 0.931322575\n", d);
-    if (ret < 0)
+    ប្រសិនបើ (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
+    ប្រសិនបើ (argc > 1 && !strcmp(argv[1], "-t")) {
+        សម្រាប់ (i = 0; i < 1050; i++) {
             START_TIMER;
             ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
                                    const_names, const_values,
                                    NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
+            ប្រសិនបើ (ret < 0)
                 printf("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    ត្រឡប់ 0;
 }

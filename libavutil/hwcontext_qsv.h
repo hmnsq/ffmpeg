@@ -32,7 +32,7 @@
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVQSVDeviceContext {
+typedef sa_nracanaa AVQSVDeviceContext {
     mfxSession session;
     /**
      * The mfxLoader handle used for mfxSession creation
@@ -50,7 +50,7 @@ typedef struct AVQSVDeviceContext {
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVQSVFramesContext {
+typedef sa_nracanaa AVQSVFramesContext {
     /**
      * A pointer to a mfxFrameSurface1 struct
      *
@@ -67,12 +67,12 @@ typedef struct AVQSVFramesContext {
      * Note only oneVPL GPU runtime 2.9+ can support dynamic frame pools
      * on d3d11va or vaapi
      */
-    int            nb_surfaces;
+    ចំនួនគត់            nb_surfaces;
 
     /**
      * A combination of MFX_MEMTYPE_* describing the frame pool.
      */
-    int frame_type;
+    ចំនួនគត់ frame_type;
 
     /**
      * A pointer to a mfxFrameInfo struct

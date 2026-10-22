@@ -33,232 +33,232 @@
  * compute it explicitly and use it.
  */
 #define av_clip_int8 av_clip_int8_rvi
-static av_always_inline av_const int8_t av_clip_int8_rvi(int a)
+static av_always_inline av_const int8_t av_clip_int8_rvi(ចំនួនគត់ a)
 {
-    union { uint8_t u; int8_t s; } u = { .u = a };
+    sa_ngha { uint8_t u; int8_t s; } u = { .u = a };
 
-    if (a != u.s)
+    ប្រសិនបើ (a != u.s)
         a = ((a >> 31) ^ 0x7F);
-    return a;
+    ត្រឡប់ a;
 }
 
 #define av_clip_int16 av_clip_int16_rvi
-static av_always_inline av_const int16_t av_clip_int16_rvi(int a)
+static av_always_inline av_const int16_t av_clip_int16_rvi(ចំនួនគត់ a)
 {
-    union { uint16_t u; int16_t s; } u = { .u = a };
+    sa_ngha { uint16_t u; int16_t s; } u = { .u = a };
 
-    if (a != u.s)
+    ប្រសិនបើ (a != u.s)
         a = ((a >> 31) ^ 0x7FFF);
-    return a;
+    ត្រឡប់ a;
 }
 
 #define av_clipl_int32 av_clipl_int32_rvi
 static av_always_inline av_const int32_t av_clipl_int32_rvi(int64_t a)
 {
-    union { uint32_t u; int32_t s; } u = { .u = a };
+    sa_ngha { uint32_t u; int32_t s; } u = { .u = a };
 
-    if (a != u.s)
+    ប្រសិនបើ (a != u.s)
         a = ((a >> 63) ^ 0x7FFFFFFF);
-    return a;
+    ត្រឡប់ a;
 }
 
 #define av_clip_intp2 av_clip_intp2_rvi
-static av_always_inline av_const int av_clip_intp2_rvi(int a, int p)
+static av_always_inline av_const ចំនួនគត់ av_clip_intp2_rvi(ចំនួនគត់ a, ចំនួនគត់ p)
 {
-    const int shift = 31 - p;
-    int b = ((int)(((unsigned)a) << shift)) >> shift;
+    const ចំនួនគត់ shift = 31 - p;
+    ចំនួនគត់ b = ((ចំនួនគត់)(((unsigned)a) << shift)) >> shift;
 
-    if (a != b)
+    ប្រសិនបើ (a != b)
         b = (a >> 31) ^ ((1 << p) - 1);
-    return b;
+    ត្រឡប់ b;
 }
 
-#if defined (__riscv_f) || defined (__riscv_zfinx)
+#ប្រសិនបើ defined (__riscv_f) || defined (__riscv_zfinx)
 #define av_clipf av_clipf_rvf
 static av_always_inline av_const float av_clipf_rvf(float a, float min,
                                                     float max)
 {
-    return fminf(fmaxf(a, min), max);
+    ត្រឡប់ fminf(fmaxf(a, min), max);
 }
 #endif
 
-#if defined (__riscv_d) || defined (__riscv_zdinx)
+#ប្រសិនបើ defined (__riscv_d) || defined (__riscv_zdinx)
 #define av_clipd av_clipd_rvd
-static av_always_inline av_const double av_clipd_rvd(double a, double min,
-                                                     double max)
+static av_always_inline av_const dviguu_na av_clipd_rvd(dviguu_na a, dviguu_na min,
+                                                     dviguu_na max)
 {
-    return fmin(fmax(a, min), max);
+    ត្រឡប់ fmin(fmax(a, min), max);
 }
 #endif
 
-#if defined (__GNUC__) || defined (__clang__)
-static inline av_const int ff_ctz_rv(int x)
+#ប្រសិនបើ defined (__GNUC__) || defined (__clang__)
+static anta_hstha av_const ចំនួនគត់ ff_ctz_rv(ចំនួនគត់ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ប្រសិនបើ HAVE_RV && !defined(__riscv_zbb)
+    ប្រសិនបើ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ចំនួនគត់ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ប្រសិនបើ __riscv_xlen >= 64
             "ctzw    %0, %1\n"
-#else
+#បើមិនដូច្នេះ
             "ctz     %0, %1\n"
 #endif
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        ប្រសិនបើ (y > 32)
             __builtin_unreachable();
-        return y;
+        ត្រឡប់ y;
     }
 #endif
-    return __builtin_ctz(x);
+    ត្រឡប់ __builtin_ctz(x);
 }
 #define ff_ctz ff_ctz_rv
 
-static inline av_const int ff_ctzll_rv(long long x)
+static anta_hstha av_const ចំនួនគត់ ff_ctzll_rv(long long x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
-    if (!__builtin_constant_p(x) &&
+#ប្រសិនបើ HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
+    ប្រសិនបើ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ចំនួនគត់ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "ctz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        ប្រសិនបើ (y > 64)
             __builtin_unreachable();
-        return y;
+        ត្រឡប់ y;
     }
 #endif
-    return __builtin_ctzll(x);
+    ត្រឡប់ __builtin_ctzll(x);
 }
 #define ff_ctzll ff_ctzll_rv
 
-static inline av_const int ff_clz_rv(int x)
+static anta_hstha av_const ចំនួនគត់ ff_clz_rv(ចំនួនគត់ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ប្រសិនបើ HAVE_RV && !defined(__riscv_zbb)
+    ប្រសិនបើ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ចំនួនគត់ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ប្រសិនបើ __riscv_xlen >= 64
             "clzw    %0, %1\n"
-#else
+#បើមិនដូច្នេះ
             "clz     %0, %1\n"
 #endif
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        ប្រសិនបើ (y > 32)
             __builtin_unreachable();
-        return y;
+        ត្រឡប់ y;
     }
 #endif
-    return __builtin_clz(x);
+    ត្រឡប់ __builtin_clz(x);
 }
 #define ff_clz ff_clz_rv
 
-#if __riscv_xlen == 64
-static inline av_const int ff_clzll_rv(long long x)
+#ប្រសិនបើ __riscv_xlen == 64
+static anta_hstha av_const ចំនួនគត់ ff_clzll_rv(long long x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ប្រសិនបើ HAVE_RV && !defined(__riscv_zbb)
+    ប្រសិនបើ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ចំនួនគត់ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "clz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        ប្រសិនបើ (y > 64)
             __builtin_unreachable();
-        return y;
+        ត្រឡប់ y;
     }
 #endif
-    return __builtin_clzll(x);
+    ត្រឡប់ __builtin_clzll(x);
 }
 #define ff_clz ff_clz_rv
 #endif
 
-static inline av_const int ff_log2_rv(unsigned int x)
+static anta_hstha av_const ចំនួនគត់ ff_log2_rv(unsigned ចំនួនគត់ x)
 {
-    return 31 - ff_clz_rv(x | 1);
+    ត្រឡប់ 31 - ff_clz_rv(x | 1);
 }
 #define ff_log2 ff_log2_rv
 #define ff_log2_16bit ff_log2_rv
 
-static inline av_const int av_popcount_rv(unsigned int x)
+static anta_hstha av_const ចំនួនគត់ av_popcount_rv(unsigned ចំនួនគត់ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ប្រសិនបើ HAVE_RV && !defined(__riscv_zbb)
+    ប្រសិនបើ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ចំនួនគត់ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ប្រសិនបើ __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#បើមិនដូច្នេះ
             "cpop    %0, %1\n"
 #endif
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        ប្រសិនបើ (y > 32)
             __builtin_unreachable();
-        return y;
+        ត្រឡប់ y;
     }
 #endif
-    return __builtin_popcount(x);
+    ត្រឡប់ __builtin_popcount(x);
 }
 #define av_popcount av_popcount_rv
 
-static inline av_const int av_popcount64_rv(uint64_t x)
+static anta_hstha av_const ចំនួនគត់ av_popcount64_rv(uint64_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
-    if (!__builtin_constant_p(x) &&
+#ប្រសិនបើ HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
+    ប្រសិនបើ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ចំនួនគត់ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "cpop    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        ប្រសិនបើ (y > 64)
             __builtin_unreachable();
-        return y;
+        ត្រឡប់ y;
     }
 #endif
-    return __builtin_popcountl(x);
+    ត្រឡប់ __builtin_popcountl(x);
 }
 #define av_popcount64 av_popcount64_rv
 
-static inline av_const int av_parity_rv(unsigned int x)
+static anta_hstha av_const ចំនួនគត់ av_parity_rv(unsigned ចំនួនគត់ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ប្រសិនបើ HAVE_RV && !defined(__riscv_zbb)
+    ប្រសិនបើ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ចំនួនគត់ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ប្រសិនបើ __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#បើមិនដូច្នេះ
             "cpop    %0, %1\n"
 #endif
             ".option pop" : "=r" (y) : "r" (x));
-        return y & 1;
+        ត្រឡប់ y & 1;
     }
 #endif
-    return __builtin_parity(x);
+    ត្រឡប់ __builtin_parity(x);
 }
 #define av_parity av_parity_rv
 #endif

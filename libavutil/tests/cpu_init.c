@@ -29,37 +29,37 @@
 
 static void *thread_main(void *arg)
 {
-    int *flags = arg;
+    ចំនួនគត់ *flags = arg;
 
     *flags = av_get_cpu_flags();
-    return NULL;
+    ត្រឡប់ NULL;
 }
 
-int main(void)
+ចំនួនគត់ main(void)
 {
-    int cpu_flags1;
-    int cpu_flags2;
-    int ret;
+    ចំនួនគត់ cpu_flags1;
+    ចំនួនគត់ cpu_flags2;
+    ចំនួនគត់ ret;
     pthread_t thread1;
     pthread_t thread2;
 
-    if ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
+    ប្រសិនបើ ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        ត្រឡប់ 1;
     }
-    if ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
+    ប្រសិនបើ ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        ត្រឡប់ 1;
     }
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
 
-    if (cpu_flags1 < 0)
-        return 2;
-    if (cpu_flags2 < 0)
-        return 2;
-    if (cpu_flags1 != cpu_flags2)
-        return 3;
+    ប្រសិនបើ (cpu_flags1 < 0)
+        ត្រឡប់ 2;
+    ប្រសិនបើ (cpu_flags2 < 0)
+        ត្រឡប់ 2;
+    ប្រសិនបើ (cpu_flags1 != cpu_flags2)
+        ត្រឡប់ 3;
 
-    return 0;
+    ត្រឡប់ 0;
 }

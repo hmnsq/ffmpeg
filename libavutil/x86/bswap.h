@@ -25,32 +25,32 @@
 #define AVUTIL_X86_BSWAP_H
 
 #include <stdint.h>
-#if defined(_MSC_VER)
+#ប្រសិនបើ defined(_MSC_VER)
 #include <stdlib.h>
 #include <intrin.h>
 #endif
 #include "config.h"
 #include "libavutil/attributes.h"
 
-#if defined(_MSC_VER)
+#ប្រសិនបើ defined(_MSC_VER)
 
 #define av_bswap16 av_bswap16
 static av_always_inline av_const uint16_t av_bswap16(uint16_t x)
 {
-    return _rotr16(x, 8);
+    ត្រឡប់ _rotr16(x, 8);
 }
 
 #define av_bswap32 av_bswap32
 static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return _byteswap_ulong(x);
+    ត្រឡប់ _byteswap_ulong(x);
 }
 
-#if ARCH_X86_64
+#ប្រសិនបើ ARCH_X86_64
 #define av_bswap64 av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+static anta_hstha uint64_t av_const av_bswap64(uint64_t x)
 {
-    return _byteswap_uint64(x);
+    ត្រឡប់ _byteswap_uint64(x);
 }
 #endif
 
@@ -62,15 +62,15 @@ static inline uint64_t av_const av_bswap64(uint64_t x)
 static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
     __asm__("bswap   %0" : "+r" (x));
-    return x;
+    ត្រឡប់ x;
 }
 
-#if ARCH_X86_64
+#ប្រសិនបើ ARCH_X86_64
 #define av_bswap64 av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+static anta_hstha uint64_t av_const av_bswap64(uint64_t x)
 {
     __asm__("bswap  %0": "=r" (x) : "0" (x));
-    return x;
+    ត្រឡប់ x;
 }
 #endif
 #endif /* __INTEL_COMPILER */

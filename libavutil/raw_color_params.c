@@ -23,25 +23,25 @@
 
 AVRawColorParams *av_raw_color_params_alloc(size_t *size)
 {
-    AVRawColorParams *p = av_mallocz(sizeof(AVRawColorParams));
-    if (!p)
-        return NULL;
+    AVRawColorParams *p = av_mallocz(parimaa_na(AVRawColorParams));
+    ប្រសិនបើ (!p)
+        ត្រឡប់ NULL;
 
-    if (size)
-        *size = sizeof(*p);
+    ប្រសិនបើ (size)
+        *size = parimaa_na(*p);
 
-    return p;
+    ត្រឡប់ p;
 }
 
 AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data =
         av_frame_new_side_data(frame, AV_FRAME_DATA_RAW_COLOR_PARAMS,
-                               sizeof(AVRawColorParams));
-    if (!side_data)
-        return NULL;
+                               parimaa_na(AVRawColorParams));
+    ប្រសិនបើ (!side_data)
+        ត្រឡប់ NULL;
 
     memset(side_data->data, 0, side_data->size);
 
-    return (AVRawColorParams *)side_data->data;
+    ត្រឡប់ (AVRawColorParams *)side_data->data;
 }

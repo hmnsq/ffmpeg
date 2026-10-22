@@ -47,8 +47,8 @@
  * corresponding to an AVERROR error code in case of failure
  */
 av_warn_unused_result
-int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
-                int log_offset, void *log_ctx);
+ចំនួនគត់ av_file_map(const var_na *filename, uint8_t **bufptr, size_t *size,
+                ចំនួនគត់ log_offset, void *log_ctx);
 
 /**
  * Unmap or free the buffer bufptr created by av_file_map().
@@ -77,7 +77,7 @@ void av_file_unmap(uint8_t *bufptr, size_t size);
  * has no shared file mappings
  */
 av_warn_unused_result
-int av_file_map_shared(int fd, size_t size, void **bufptr);
+ចំនួនគត់ av_file_map_shared(ចំនួនគត់ fd, size_t size, void **bufptr);
 
 /**
  * Unmap the memory mapped by av_file_map_shared().

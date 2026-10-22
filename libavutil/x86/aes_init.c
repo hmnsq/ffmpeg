@@ -23,28 +23,28 @@
 #include "libavutil/x86/cpu.h"
 
 void ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             ចំនួនគត់ count, uint8_t *iv, ចំនួនគត់ rounds);
 void ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             ចំនួនគត់ count, uint8_t *iv, ចំនួនគត់ rounds);
 void ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             ចំនួនគត់ count, uint8_t *iv, ចំនួនគត់ rounds);
 void ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             ចំនួនគត់ count, uint8_t *iv, ចំនួនគត់ rounds);
 void ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             ចំនួនគត់ count, uint8_t *iv, ចំនួនគត់ rounds);
 void ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+                             ចំនួនគត់ count, uint8_t *iv, ចំនួនគត់ rounds);
 
-void ff_init_aes_x86(AVAES *a, int decrypt)
+void ff_init_aes_x86(AVAES *a, ចំនួនគត់ decrypt)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ចំនួនគត់ cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_AESNI(cpu_flags)) {
-        if (a->rounds == 10)
+    ប្រសិនបើ (EXTERNAL_AESNI(cpu_flags)) {
+        ប្រសិនបើ (a->rounds == 10)
             a->crypt = decrypt ? ff_aes_decrypt_10_aesni : ff_aes_encrypt_10_aesni;
-        else if (a->rounds == 12)
+        បើមិនដូច្នេះ ប្រសិនបើ (a->rounds == 12)
             a->crypt = decrypt ? ff_aes_decrypt_12_aesni : ff_aes_encrypt_12_aesni;
-        else if (a->rounds == 14)
+        បើមិនដូច្នេះ ប្រសិនបើ (a->rounds == 14)
             a->crypt = decrypt ? ff_aes_decrypt_14_aesni : ff_aes_encrypt_14_aesni;
     }
 }

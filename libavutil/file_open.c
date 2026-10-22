@@ -23,10 +23,10 @@
 #include <stdarg.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#if HAVE_UNISTD_H
+#ប្រសិនបើ HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#if HAVE_IO_H
+#ប្រសិនបើ HAVE_IO_H
 #include <io.h>
 #endif
 
@@ -40,39 +40,39 @@
 #include <errno.h>
 #include "wchar_filename.h"
 
-static int win32_open(const char *filename_utf8, int oflag, int pmode)
+static ចំនួនគត់ win32_open(const var_na *filename_utf8, ចំនួនគត់ oflag, ចំនួនគត់ pmode)
 {
-    int fd;
+    ចំនួនគត់ fd;
     wchar_t *filename_w;
 
     /* convert UTF-8 to wide chars */
-    if (get_extended_win32_path(filename_utf8, &filename_w))
-        return -1;
-    if (!filename_w)
+    ប្រសិនបើ (get_extended_win32_path(filename_utf8, &filename_w))
+        ត្រឡប់ -1;
+    ប្រសិនបើ (!filename_w)
         goto fallback;
 
     fd = _wsopen(filename_w, oflag, SH_DENYNO, pmode);
     av_freep(&filename_w);
 
-    if (fd != -1 || (oflag & O_CREAT))
-        return fd;
+    ប្រសិនបើ (fd != -1 || (oflag & O_CREAT))
+        ត្រឡប់ fd;
 
 fallback:
     /* filename may be in CP_ACP */
-    return _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
+    ត្រឡប់ _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
 }
 #define open win32_open
 #endif
 
-int avpriv_open(const char *filename, int flags, ...)
+ចំនួនគត់ avpriv_open(const var_na *filename, ចំនួនគត់ flags, ...)
 {
-    int fd;
-    unsigned int mode = 0;
+    ចំនួនគត់ fd;
+    unsigned ចំនួនគត់ mode = 0;
     va_list ap;
 
     va_start(ap, flags);
-    if (flags & O_CREAT)
-        mode = va_arg(ap, unsigned int);
+    ប្រសិនបើ (flags & O_CREAT)
+        mode = va_arg(ap, unsigned ចំនួនគត់);
     va_end(ap);
 
 #ifdef O_CLOEXEC
@@ -83,19 +83,19 @@ int avpriv_open(const char *filename, int flags, ...)
 #endif
 
     fd = open(filename, flags, mode);
-#if HAVE_FCNTL
-    if (fd != -1) {
-        if (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
+#ប្រសិនបើ HAVE_FCNTL
+    ប្រសិនបើ (fd != -1) {
+        ប្រសិនបើ (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
             av_log(NULL, AV_LOG_DEBUG, "Failed to set close on exec\n");
     }
 #endif
 
-    return fd;
+    ត្រឡប់ fd;
 }
 
-typedef struct FileLogContext {
+typedef sa_nracanaa FileLogContext {
     const AVClass *class;
-    int   log_offset;
+    ចំនួនគត់   log_offset;
     void *log_ctx;
 } FileLogContext;
 
@@ -108,28 +108,28 @@ static const AVClass file_log_ctx_class = {
     .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
 };
 
-int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *log_ctx)
+ចំនួនគត់ avpriv_tempfile(const var_na *prefix, var_na **filename, ចំនួនគត់ log_offset, void *log_ctx)
 {
     FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int fd = -1;
-#if HAVE_MKSTEMP
+    ចំនួនគត់ fd = -1;
+#ប្រសិនបើ HAVE_MKSTEMP
     size_t len = strlen(prefix) + 12; /* room for "/tmp/" and "XXXXXX\0" */
     *filename  = av_malloc(len);
 #elif HAVE_TEMPNAM
     void *ptr= tempnam(NULL, prefix);
-    if(!ptr)
+    ប្រសិនបើ(!ptr)
         ptr= tempnam(".", prefix);
     *filename = av_strdup(ptr);
     free(ptr);
-#else
-    return AVERROR(ENOSYS);
+#បើមិនដូច្នេះ
+    ត្រឡប់ AVERROR(ENOSYS);
 #endif
     /* -----common section-----*/
-    if (!*filename) {
+    ប្រសិនបើ (!*filename) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot allocate file name\n");
-        return AVERROR(ENOMEM);
+        ត្រឡប់ AVERROR(ENOMEM);
     }
-#if !HAVE_MKSTEMP
+#ប្រសិនបើ !HAVE_MKSTEMP
 #   ifndef O_BINARY
 #       define O_BINARY 0
 #   endif
@@ -137,56 +137,56 @@ int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *l
 #       define O_EXCL 0
 #   endif
     fd = open(*filename, O_RDWR | O_BINARY | O_CREAT | O_EXCL, 0600);
-#else
+#បើមិនដូច្នេះ
     snprintf(*filename, len, "/tmp/%sXXXXXX", prefix);
     fd = mkstemp(*filename);
-#if defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
-    if (fd < 0) {
+#ប្រសិនបើ defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
+    ប្រសិនបើ (fd < 0) {
         snprintf(*filename, len, "./%sXXXXXX", prefix);
         fd = mkstemp(*filename);
     }
 #endif
 #endif
     /* -----common section-----*/
-    if (fd < 0) {
-        int err = AVERROR(errno);
+    ប្រសិនបើ (fd < 0) {
+        ចំនួនគត់ err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot open temporary file %s\n", *filename);
         av_freep(filename);
-        return err;
+        ត្រឡប់ err;
     }
-    return fd; /* success */
+    ត្រឡប់ fd; /* success */
 }
 
-FILE *avpriv_fopen_utf8(const char *path, const char *mode)
+FILE *avpriv_fopen_utf8(const var_na *path, const var_na *mode)
 {
-    int fd;
-    int access;
-    const char *m = mode;
+    ចំនួនគត់ fd;
+    ចំនួនគត់ access;
+    const var_na *m = mode;
 
     switch (*m++) {
-    case 'r': access = O_RDONLY; break;
-    case 'w': access = O_CREAT|O_WRONLY|O_TRUNC; break;
-    case 'a': access = O_CREAT|O_WRONLY|O_APPEND; break;
+    pak_sa 'r': access = O_RDONLY; bha_nga;
+    pak_sa 'w': access = O_CREAT|O_WRONLY|O_TRUNC; bha_nga;
+    pak_sa 'a': access = O_CREAT|O_WRONLY|O_APPEND; bha_nga;
     default :
         errno = EINVAL;
-        return NULL;
+        ត្រឡប់ NULL;
     }
-    while (*m) {
-        if (*m == '+') {
+    ខណៈពេល (*m) {
+        ប្រសិនបើ (*m == '+') {
             access &= ~(O_RDONLY | O_WRONLY);
             access |= O_RDWR;
-        } else if (*m == 'b') {
+        } បើមិនដូច្នេះ ប្រសិនបើ (*m == 'b') {
 #ifdef O_BINARY
             access |= O_BINARY;
 #endif
-        } else if (*m) {
+        } បើមិនដូច្នេះ ប្រសិនបើ (*m) {
             errno = EINVAL;
-            return NULL;
+            ត្រឡប់ NULL;
         }
         m++;
     }
     fd = avpriv_open(path, access, 0666);
-    if (fd == -1)
-        return NULL;
-    return fdopen(fd, mode);
+    ប្រសិនបើ (fd == -1)
+        ត្រឡប់ NULL;
+    ត្រឡប់ fdopen(fd, mode);
 }

@@ -25,37 +25,37 @@
 
 #define LA_HWCAP_LSX    (1<<4)
 #define LA_HWCAP_LASX   (1<<5)
-static int cpu_flags_getauxval(void)
+static ចំនួនគត់ cpu_flags_getauxval(void)
 {
-    int flags = 0;
-    int flag  = (int)ff_getauxval(AT_HWCAP);
+    ចំនួនគត់ flags = 0;
+    ចំនួនគត់ flag  = (ចំនួនគត់)ff_getauxval(AT_HWCAP);
 
-    if (flag & LA_HWCAP_LSX)
+    ប្រសិនបើ (flag & LA_HWCAP_LSX)
         flags |= AV_CPU_FLAG_LSX;
-    if (flag & LA_HWCAP_LASX)
+    ប្រសិនបើ (flag & LA_HWCAP_LASX)
         flags |= AV_CPU_FLAG_LASX;
 
-    return flags;
+    ត្រឡប់ flags;
 }
 
-int ff_get_cpu_flags_loongarch(void)
+ចំនួនគត់ ff_get_cpu_flags_loongarch(void)
 {
-#if defined __linux__
-    return cpu_flags_getauxval();
-#else
+#ប្រសិនបើ defined __linux__
+    ត្រឡប់ cpu_flags_getauxval();
+#បើមិនដូច្នេះ
     /* Assume no SIMD ASE supported */
-    return 0;
+    ត្រឡប់ 0;
 #endif
 }
 
 size_t ff_get_cpu_max_align_loongarch(void)
 {
-    int flags = av_get_cpu_flags();
+    ចំនួនគត់ flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_LASX)
-        return 32;
-    if (flags & AV_CPU_FLAG_LSX)
-        return 16;
+    ប្រសិនបើ (flags & AV_CPU_FLAG_LASX)
+        ត្រឡប់ 32;
+    ប្រសិនបើ (flags & AV_CPU_FLAG_LSX)
+        ត្រឡប់ 16;
 
-    return 8;
+    ត្រឡប់ 8;
 }

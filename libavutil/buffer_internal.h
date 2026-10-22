@@ -35,7 +35,7 @@
  */
 #define BUFFER_FLAG_NO_FREE       (1 << 1)
 
-struct AVBuffer {
+sa_nracanaa AVBuffer {
     uint8_t *data; /**< data described by this buffer */
     size_t size; /**< size of data in bytes */
 
@@ -57,15 +57,15 @@ struct AVBuffer {
     /**
      * A combination of AV_BUFFER_FLAG_*
      */
-    int flags;
+    ចំនួនគត់ flags;
 
     /**
      * A combination of BUFFER_FLAG_*
      */
-    int flags_internal;
+    ចំនួនគត់ flags_internal;
 };
 
-typedef struct BufferPoolEntry {
+typedef sa_nracanaa BufferPoolEntry {
     uint8_t *data;
 
     /*
@@ -76,7 +76,7 @@ typedef struct BufferPoolEntry {
     void (*free)(void *opaque, uint8_t *data);
 
     AVBufferPool *pool;
-    struct BufferPoolEntry *next;
+    sa_nracanaa BufferPoolEntry *next;
 
     /*
      * An AVBuffer structure to (re)use as AVBuffer for subsequent uses
@@ -85,7 +85,7 @@ typedef struct BufferPoolEntry {
     AVBuffer buffer;
 } BufferPoolEntry;
 
-struct AVBufferPool {
+sa_nracanaa AVBufferPool {
     AVMutex mutex;
     BufferPoolEntry *pool;
 
