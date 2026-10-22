@@ -19,22 +19,22 @@
 #ifndef AVUTIL_HWCONTEXT_VULKAN_H
 #define AVUTIL_HWCONTEXT_VULKAN_H
 
-#if defined(_WIN32) && !defined(VK_USE_PLATFORM_WIN32_KHR)
+#إذا defined(_WIN32) && !defined(VK_USE_PLATFORM_WIN32_KHR)
 #define VK_USE_PLATFORM_WIN32_KHR
 #endif
-#include <vulkan/vulkan.h>
+#ضمن <vulkan/vulkan.h>
 
-#include "pixfmt.h"
-#include "frame.h"
-#include "hwcontext.h"
+#ضمن "pixfmt.h"
+#ضمن "frame.h"
+#ضمن "hwcontext.h"
 
-typedef struct AVVkFrame AVVkFrame;
+تعريفنوع بنية AVVkFrame AVVkFrame;
 
-typedef struct AVVulkanDeviceQueueFamily {
+تعريفنوع بنية AVVulkanDeviceQueueFamily {
     /* Queue family index */
-    int idx;
+    صحيح idx;
     /* Number of queues in the queue family in use */
-    int num;
+    صحيح عدد;
     /* Queue family capabilities. Must be non-zero.
      * Flags may be removed to indicate the queue family may not be used
      * for a given purpose. */
@@ -56,11 +56,11 @@ typedef struct AVVulkanDeviceQueueFamily {
  * Main Vulkan context, allocated as AVHWDeviceContext.hwctx.
  * All of these can be set before init to change what the context uses
  */
-typedef struct AVVulkanDeviceContext {
+تعريفنوع بنية AVVulkanDeviceContext {
     /**
      * Custom memory allocator, else NULL
      */
-    const VkAllocationCallbacks *alloc;
+    ثابت VkAllocationCallbacks *alloc;
 
     /**
      * Pointer to a vkGetInstanceProcAddr loading function.
@@ -100,8 +100,8 @@ typedef struct AVVulkanDeviceContext {
      * av_vk_get_optional_instance_extensions() can be used to enumerate extensions
      * that FFmpeg may use if enabled.
      */
-    const char * const *enabled_inst_extensions;
-    int nb_enabled_inst_extensions;
+    ثابت حرف * ثابت *enabled_inst_extensions;
+    صحيح nb_enabled_inst_extensions;
 
     /**
      * Enabled device extensions. By default, VK_KHR_external_memory_fd,
@@ -113,10 +113,10 @@ typedef struct AVVulkanDeviceContext {
      * av_vk_get_optional_device_extensions() can be used to enumerate extensions
      * that FFmpeg may use if enabled.
      */
-    const char * const *enabled_dev_extensions;
-    int nb_enabled_dev_extensions;
+    ثابت حرف * ثابت *enabled_dev_extensions;
+    صحيح nb_enabled_dev_extensions;
 
-#if FF_API_VULKAN_SYNC_QUEUES
+#إذا FF_API_VULKAN_SYNC_QUEUES
     /**
      * Locks a queue, preventing other threads from submitting any command
      * buffers to this queue.
@@ -126,7 +126,7 @@ typedef struct AVVulkanDeviceContext {
      * Deprecated: use VK_KHR_internally_synchronized_queues.
      */
     attribute_deprecated
-    void (*lock_queue)(struct AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index);
+    فراغ (*lock_queue)(بنية AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index);
 
     /**
      * Similar to lock_queue(), unlocks a queue. Must only be called after locking.
@@ -134,7 +134,7 @@ typedef struct AVVulkanDeviceContext {
      * Deprecated: use VK_KHR_internally_synchronized_queues.
      */
     attribute_deprecated
-    void (*unlock_queue)(struct AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index);
+    فراغ (*unlock_queue)(بنية AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index);
 #endif
 
     /**
@@ -146,7 +146,7 @@ typedef struct AVVulkanDeviceContext {
      * this list until they're removed after deprecation.
      */
     AVVulkanDeviceQueueFamily qf[64];
-    int nb_qf;
+    صحيح nb_qf;
 
     /* Queue creation flags, for vkGetDeviceQueue2. */
     VkDeviceQueueCreateFlags queue_flags;
@@ -155,7 +155,7 @@ typedef struct AVVulkanDeviceContext {
 /**
  * Defines the behaviour of frame allocation.
  */
-typedef enum AVVkFrameFlags {
+تعريفنوع تعداد AVVkFrameFlags {
     /* Unless this flag is set, autodetected flags will be OR'd based on the
      * device and tiling during av_hwframe_ctx_init(). */
     AV_VK_FRAME_FLAG_NONE              = (1ULL << 0),
@@ -168,7 +168,7 @@ typedef enum AVVkFrameFlags {
 /**
  * Allocated as AVHWFramesContext.hwctx, used to set pool-specific options
  */
-typedef struct AVVulkanFramesContext {
+تعريفنوع بنية AVVulkanFramesContext {
     /**
      * Controls the tiling of allocated frames.
      * If left as VK_IMAGE_TILING_OPTIMAL (0), will use optimal tiling.
@@ -199,7 +199,7 @@ typedef struct AVVulkanFramesContext {
      * which will be freed automatically on uninit(), so users must only free
      * any structures they've allocated themselves.
      */
-    void *create_pnext;
+    فراغ *create_pnext;
 
     /**
      * Extension data for memory allocation. Must have as many entries as
@@ -208,7 +208,7 @@ typedef struct AVVulkanFramesContext {
      * to make all pool images exportable to other APIs if the necessary
      * extensions are present in enabled_dev_extensions.
      */
-    void *alloc_pnext[AV_NUM_DATA_POINTERS];
+    فراغ *alloc_pnext[AV_عدد_DATA_POINTERS];
 
     /**
      * A combination of AVVkFrameFlags. Unless AV_VK_FRAME_FLAG_NONE is set,
@@ -229,12 +229,12 @@ typedef struct AVVulkanFramesContext {
      * There are at most two compatible formats for a frame - a multiplane
      * format, and a single-plane multi-image format.
      */
-    VkFormat format[AV_NUM_DATA_POINTERS];
+    VkFormat format[AV_عدد_DATA_POINTERS];
 
     /**
      * Number of layers each image will have.
      */
-    int nb_layers;
+    صحيح nb_layers;
 
     /**
      * Locks a frame, preventing other threads from changing frame properties.
@@ -244,12 +244,12 @@ typedef struct AVVulkanFramesContext {
      *
      * If unset, will be set to lavu-internal functions that utilize a mutex.
      */
-    void (*lock_frame)(struct AVHWFramesContext *fc, AVVkFrame *vkf);
+    فراغ (*lock_frame)(بنية AVHWFramesContext *fc, AVVkFrame *vkf);
 
     /**
      * Similar to lock_frame(), unlocks a frame. Must only be called after locking.
      */
-    void (*unlock_frame)(struct AVHWFramesContext *fc, AVVkFrame *vkf);
+    فراغ (*unlock_frame)(بنية AVHWFramesContext *fc, AVVkFrame *vkf);
 } AVVulkanFramesContext;
 
 /*
@@ -258,12 +258,12 @@ typedef struct AVVulkanFramesContext {
  * @note the size of this structure is not part of the ABI, to allocate
  * you must use @av_vk_frame_alloc().
  */
-struct AVVkFrame {
+بنية AVVkFrame {
     /**
      * Vulkan images to which the memory is bound to.
      * May be one for multiplane formats, or multiple.
      */
-    VkImage img[AV_NUM_DATA_POINTERS];
+    VkImage img[AV_عدد_DATA_POINTERS];
 
     /**
      * Tiling for the frame.
@@ -276,8 +276,8 @@ struct AVVkFrame {
      * In case of having multiple VkImages, but one memory, the offset field
      * will indicate the bound offset for each image.
      */
-    VkDeviceMemory mem[AV_NUM_DATA_POINTERS];
-    size_t size[AV_NUM_DATA_POINTERS];
+    VkDeviceMemory mem[AV_عدد_DATA_POINTERS];
+    size_t size[AV_عدد_DATA_POINTERS];
 
     /**
      * OR'd flags for all memory allocated
@@ -287,8 +287,8 @@ struct AVVkFrame {
     /**
      * Updated after every barrier. One per VkImage.
      */
-    VkAccessFlagBits2 access[AV_NUM_DATA_POINTERS];
-    VkImageLayout layout[AV_NUM_DATA_POINTERS];
+    VkAccessFlagBits2 access[AV_عدد_DATA_POINTERS];
+    VkImageLayout layout[AV_عدد_DATA_POINTERS];
 
     /**
      * Synchronization timeline semaphores, one for each VkImage.
@@ -296,7 +296,7 @@ struct AVVkFrame {
      * the value in sem_value, and must be signalled at every submission,
      * using an incremented value.
      */
-    VkSemaphore sem[AV_NUM_DATA_POINTERS];
+    VkSemaphore sem[AV_عدد_DATA_POINTERS];
 
     /**
      * Up to date semaphore value at which each image becomes accessible.
@@ -304,52 +304,52 @@ struct AVVkFrame {
      * Clients must wait on this value when submitting a command queue,
      * and increment it when signalling.
      */
-    uint64_t sem_value[AV_NUM_DATA_POINTERS];
+    uint64_t sem_قدر[AV_عدد_DATA_POINTERS];
 
     /**
      * Describes the binding offset of each image to the VkDeviceMemory.
      * One per VkImage.
      */
-    ptrdiff_t offset[AV_NUM_DATA_POINTERS];
+    ptrdiff_t offset[AV_عدد_DATA_POINTERS];
 
     /**
      * Queue family of the images. Must be VK_QUEUE_FAMILY_IGNORED if
      * the image was allocated with the CONCURRENT concurrency option.
      * One per VkImage.
      */
-    uint32_t queue_family[AV_NUM_DATA_POINTERS];
+    uint32_t queue_family[AV_عدد_DATA_POINTERS];
 
     /**
      * Internal data. Not to be accessed by users in any way.
      */
-    struct AVVkFrameInternal *internal;
+    بنية AVVkFrameInternal *internal;
 };
 
 /**
  * Allocates a single AVVkFrame and initializes everything as 0.
  * @note Must be freed via av_free()
  */
-AVVkFrame *av_vk_frame_alloc(void);
+AVVkFrame *av_vk_frame_alloc(فراغ);
 
 /**
  * Returns the optimal per-plane Vulkan format for a given sw_format,
  * one for each plane.
  * Returns NULL on unsupported formats.
  */
-const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p);
+ثابت VkFormat *av_vkfmt_from_pixfmt(تعداد AVPixelFormat p);
 
 /**
  * Returns an array of optional Vulkan instance extensions that FFmpeg
  * may use if enabled.
  * @note Must be freed via av_free()
  */
-const char **av_vk_get_optional_instance_extensions(int *count);
+ثابت حرف **av_vk_get_optional_instance_extensions(صحيح *گنتی);
 
 /**
  * Returns an array of optional Vulkan device extensions that FFmpeg
  * may use if enabled.
  * @note Must be freed via av_free()
  */
-const char **av_vk_get_optional_device_extensions(int *count);
+ثابت حرف **av_vk_get_optional_device_extensions(صحيح *گنتی);
 
 #endif /* AVUTIL_HWCONTEXT_VULKAN_H */

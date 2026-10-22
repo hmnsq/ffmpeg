@@ -19,8 +19,8 @@
 #ifndef AVUTIL_DYNARRAY_H
 #define AVUTIL_DYNARRAY_H
 
-#include "log.h"
-#include "mem.h"
+#ضمن "log.h"
+#ضمن "mem.h"
 
 /**
  * Add an element to a dynamic array.
@@ -44,27 +44,27 @@
  */
 #define FF_DYNARRAY_ADD(av_size_max, av_elt_size, av_array, av_size, \
                         av_success, av_failure) \
-    do { \
+    افعل { \
         size_t av_size_new = (av_size); \
-        if (!((av_size) & ((av_size) - 1))) { \
+        إذا (!((av_size) & ((av_size) - 1))) { \
             av_size_new = (av_size) ? (av_size) << 1 : 1; \
-            if (av_size_new > (av_size_max) / (av_elt_size)) { \
+            إذا (av_size_new > (av_size_max) / (av_elt_size)) { \
                 av_size_new = 0; \
-            } else { \
-                void *av_array_new = \
+            } وإلا { \
+                فراغ *av_array_new = \
                     av_realloc((av_array), av_size_new * (av_elt_size)); \
-                if (!av_array_new) \
+                إذا (!av_array_new) \
                     av_size_new = 0; \
-                else \
+                وإلا \
                     (av_array) = av_array_new; \
             } \
         } \
-        if (av_size_new) { \
+        إذا (av_size_new) { \
             { av_success } \
             (av_size)++; \
-        } else { \
+        } وإلا { \
             av_failure \
         } \
-    } while (0)
+    } طالما (0)
 
 #endif /* AVUTIL_DYNARRAY_H */
