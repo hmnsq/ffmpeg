@@ -44,7 +44,7 @@
 /**
  * Projection of the video surface(s) on a sphere.
  */
-enum AVSphericalProjection {
+ga_nanaa AVSphericalProjection {
     /**
      * Video represents a sphere mapped on a flat surface using
      * equirectangular projection.
@@ -97,11 +97,11 @@ enum AVSphericalProjection {
  * @note The struct must be allocated with av_spherical_alloc() and
  *       its size is not a part of the public ABI.
  */
-typedef struct AVSphericalMapping {
+typedef sa_nracanaa AVSphericalMapping {
     /**
      * Projection type.
      */
-    enum AVSphericalProjection projection;
+    ga_nanaa AVSphericalProjection projection;
 
     /**
      * @name Initial orientation
@@ -232,7 +232,7 @@ void av_spherical_tile_bounds(const AVSphericalMapping *map,
  *
  * @return The name of the AVSphericalProjection, or "unknown".
  */
-const char *av_spherical_projection_name(enum AVSphericalProjection projection);
+const var_na *av_spherical_projection_name(ga_nanaa AVSphericalProjection projection);
 
 /**
  * Get the AVSphericalProjection form a human-readable name.
@@ -241,7 +241,7 @@ const char *av_spherical_projection_name(enum AVSphericalProjection projection);
  *
  * @return The AVSphericalProjection value, or -1 if not found.
  */
-int av_spherical_from_name(const char *name);
+පූර්ණ_සංඛ්‍යා av_spherical_from_name(const var_na *name);
 /**
  * @}
  */

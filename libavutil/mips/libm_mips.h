@@ -57,17 +57,17 @@
 
 #include "libavutil/attributes.h"
 
-static av_always_inline av_const long int lrintf_mips(float x)
+static av_always_inline av_const long පූර්ණ_සංඛ්‍යා lrintf_mips(float x)
 {
-    register int ret_int;
+    pa_njikaa පූර්ණ_සංඛ්‍යා ret_int;
 
-    __asm__ volatile (
+    __asm__ ca_ncala (
         "cvt.w.s    %[x],       %[x]    \n\t"
         "mfc1       %[ret_int], %[x]    \n\t"
 
         :[x]"+f"(x), [ret_int]"=r"(ret_int)
     );
-    return ret_int;
+    ආපසු ret_int;
 }
 
 #undef lrintf

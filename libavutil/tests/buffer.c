@@ -23,9 +23,9 @@
 #include "libavutil/buffer.h"
 #include "libavutil/mem.h"
 
-static int custom_free_called;
-static int pool_free_called;
-static int pool_alloc2_called;
+static පූර්ණ_සංඛ්‍යා custom_free_called;
+static පූර්ණ_සංඛ්‍යා pool_free_called;
+static පූර්ණ_සංඛ්‍යා pool_alloc2_called;
 
 static void custom_free(void *opaque, uint8_t *data)
 {
@@ -36,7 +36,7 @@ static void custom_free(void *opaque, uint8_t *data)
 static AVBufferRef *pool_alloc2(void *opaque, size_t size)
 {
     pool_alloc2_called = 1;
-    return av_buffer_alloc(size);
+    ආපසු av_buffer_alloc(size);
 }
 
 static void pool_free_cb(void *opaque)
@@ -44,7 +44,7 @@ static void pool_free_cb(void *opaque)
     pool_free_called = 1;
 }
 
-int main(void)
+පූර්ණ_සංඛ්‍යා main(void)
 {
     AVBufferRef *buf, *buf2;
     AVBufferPool *pool;
@@ -52,7 +52,7 @@ int main(void)
     /* av_buffer_alloc */
     printf("Testing av_buffer_alloc()\n");
     buf = av_buffer_alloc(64);
-    if (buf) {
+    නම් (buf) {
         printf("alloc: size=%zu data=%s\n", buf->size, buf->data ? "set" : "null");
         printf("writable: %d\n", av_buffer_is_writable(buf));
         printf("refcount: %d\n", av_buffer_get_ref_count(buf));
@@ -63,10 +63,10 @@ int main(void)
     /* av_buffer_allocz */
     printf("\nTesting av_buffer_allocz()\n");
     buf = av_buffer_allocz(16);
-    if (buf) {
-        int zeroed = 1;
-        for (int i = 0; i < 16; i++)
-            if (buf->data[i] != 0) zeroed = 0;
+    නම් (buf) {
+        පූර්ණ_සංඛ්‍යා zeroed = 1;
+        සඳහා (පූර්ණ_සංඛ්‍යා i = 0; i < 16; i++)
+            නම් (buf->data[i] != 0) zeroed = 0;
         printf("allocz: zeroed=%s\n", zeroed ? "yes" : "no");
         av_buffer_unref(&buf);
     }
@@ -75,17 +75,17 @@ int main(void)
     printf("\nTesting av_buffer_create()\n");
     {
         uint8_t *data = av_malloc(32);
-        if (data) {
+        නම් (data) {
             custom_free_called = 0;
             buf = av_buffer_create(data, 32, custom_free, NULL, 0);
-            if (buf) {
+            නම් (buf) {
                 printf("create: size=%zu\n", buf->size);
                 printf("opaque: %s\n",
                        av_buffer_get_opaque(buf) == NULL ? "null" : "set");
                 av_buffer_unref(&buf);
                 printf("custom_free called: %s\n",
                        custom_free_called ? "yes" : "no");
-            } else {
+            } නැතහොත් {
                 av_free(data);
             }
         }
@@ -95,13 +95,13 @@ int main(void)
     printf("\nTesting AV_BUFFER_FLAG_READONLY\n");
     {
         uint8_t *data = av_malloc(16);
-        if (data) {
+        නම් (data) {
             buf = av_buffer_create(data, 16, custom_free, NULL,
                                    AV_BUFFER_FLAG_READONLY);
-            if (buf) {
+            නම් (buf) {
                 printf("readonly writable: %d\n", av_buffer_is_writable(buf));
                 av_buffer_unref(&buf);
-            } else {
+            } නැතහොත් {
                 av_free(data);
             }
         }
@@ -110,10 +110,10 @@ int main(void)
     /* av_buffer_ref and refcounting */
     printf("\nTesting av_buffer_ref()\n");
     buf = av_buffer_alloc(32);
-    if (buf) {
+    නම් (buf) {
         buf->data[0] = 0xAB;
         buf2 = av_buffer_ref(buf);
-        if (buf2) {
+        නම් (buf2) {
             printf("ref: refcount=%d\n", av_buffer_get_ref_count(buf));
             printf("shared data: %s\n",
                    buf2->data[0] == 0xAB ? "yes" : "no");
@@ -128,11 +128,11 @@ int main(void)
     /* av_buffer_make_writable */
     printf("\nTesting av_buffer_make_writable()\n");
     buf = av_buffer_alloc(16);
-    if (buf) {
+    නම් (buf) {
         buf->data[0] = 0xCD;
         buf2 = av_buffer_ref(buf);
-        if (buf2) {
-            int ret = av_buffer_make_writable(&buf2);
+        නම් (buf2) {
+            පූර්ණ_සංඛ්‍යා ret = av_buffer_make_writable(&buf2);
             printf("make_writable ret: %d\n", ret >= 0);
             printf("data preserved: %s\n",
                    buf2->data[0] == 0xCD ? "yes" : "no");
@@ -147,10 +147,10 @@ int main(void)
     /* av_buffer_realloc */
     printf("\nTesting av_buffer_realloc()\n");
     buf = av_buffer_alloc(16);
-    if (buf) {
+    නම් (buf) {
         memset(buf->data, 0xEF, 16);
         av_buffer_realloc(&buf, 32);
-        if (buf) {
+        නම් (buf) {
             printf("realloc: size=%zu\n", buf->size);
             printf("data preserved: %s\n",
                    buf->data[0] == 0xEF ? "yes" : "no");
@@ -167,7 +167,7 @@ int main(void)
     printf("\nTesting av_buffer_replace()\n");
     buf = av_buffer_alloc(8);
     buf2 = av_buffer_alloc(8);
-    if (buf && buf2) {
+    නම් (buf && buf2) {
         buf->data[0] = 0x11;
         buf2->data[0] = 0x22;
         av_buffer_replace(&buf, buf2);
@@ -179,7 +179,7 @@ int main(void)
 
     /* replace with NULL */
     buf = av_buffer_alloc(8);
-    if (buf) {
+    නම් (buf) {
         av_buffer_replace(&buf, NULL);
         printf("replace with null: %s\n", buf == NULL ? "OK" : "FAIL");
     }
@@ -187,15 +187,15 @@ int main(void)
     /* av_buffer_pool */
     printf("\nTesting av_buffer_pool()\n");
     pool = av_buffer_pool_init(64, NULL);
-    if (pool) {
+    නම් (pool) {
         buf = av_buffer_pool_get(pool);
-        if (buf) {
+        නම් (buf) {
             printf("pool get: size=%zu\n", buf->size);
             av_buffer_unref(&buf);
         }
         /* get again -- should reuse the released buffer */
         buf = av_buffer_pool_get(pool);
-        if (buf) {
+        නම් (buf) {
             printf("pool reuse: size=%zu\n", buf->size);
             av_buffer_unref(&buf);
         }
@@ -208,9 +208,9 @@ int main(void)
     pool_alloc2_called = 0;
     pool_free_called = 0;
     pool = av_buffer_pool_init2(64, NULL, pool_alloc2, pool_free_cb);
-    if (pool) {
+    නම් (pool) {
         buf = av_buffer_pool_get(pool);
-        if (buf) {
+        නම් (buf) {
             printf("pool2 get: size=%zu\n", buf->size);
             printf("alloc2 called: %s\n", pool_alloc2_called ? "yes" : "no");
             printf("pool_buffer_get_opaque: %s\n",
@@ -236,7 +236,7 @@ int main(void)
     av_max_alloc(INT_MAX);
 
     buf = av_buffer_alloc(16);
-    if (buf) {
+    නම් (buf) {
         av_max_alloc(1);
         buf2 = av_buffer_ref(buf);
         printf("ref OOM: %s\n", buf2 ? "FAIL" : "OK");
@@ -247,5 +247,5 @@ int main(void)
         av_buffer_unref(&buf);
     }
 
-    return 0;
+    ආපසු 0;
 }

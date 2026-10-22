@@ -23,28 +23,28 @@
 #include "libavutil/aarch64/cpu.h"
 
 void ff_aes_decrypt_10_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            පූර්ණ_සංඛ්‍යා count, uint8_t *iv, පූර්ණ_සංඛ්‍යා rounds);
 void ff_aes_decrypt_12_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            පූර්ණ_සංඛ්‍යා count, uint8_t *iv, පූර්ණ_සංඛ්‍යා rounds);
 void ff_aes_decrypt_14_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            පූර්ණ_සංඛ්‍යා count, uint8_t *iv, පූර්ණ_සංඛ්‍යා rounds);
 void ff_aes_encrypt_10_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            පූර්ණ_සංඛ්‍යා count, uint8_t *iv, පූර්ණ_සංඛ්‍යා rounds);
 void ff_aes_encrypt_12_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            පූර්ණ_සංඛ්‍යා count, uint8_t *iv, පූර්ණ_සංඛ්‍යා rounds);
 void ff_aes_encrypt_14_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            පූර්ණ_සංඛ්‍යා count, uint8_t *iv, පූර්ණ_සංඛ්‍යා rounds);
 
-void ff_init_aes_aarch64(AVAES *a, int decrypt)
+void ff_init_aes_aarch64(AVAES *a, පූර්ණ_සංඛ්‍යා decrypt)
 {
-    int cpu_flags = av_get_cpu_flags();
+    පූර්ණ_සංඛ්‍යා cpu_flags = av_get_cpu_flags();
 
-    if (have_arm_aes(cpu_flags)) {
-        if (a->rounds == 10)
+    නම් (have_arm_aes(cpu_flags)) {
+        නම් (a->rounds == 10)
             a->crypt = decrypt ? ff_aes_decrypt_10_neon : ff_aes_encrypt_10_neon;
-        else if (a->rounds == 12)
+        නැතහොත් නම් (a->rounds == 12)
             a->crypt = decrypt ? ff_aes_decrypt_12_neon : ff_aes_encrypt_12_neon;
-        else if (a->rounds == 14)
+        නැතහොත් නම් (a->rounds == 14)
             a->crypt = decrypt ? ff_aes_decrypt_14_neon : ff_aes_encrypt_14_neon;
     }
 }

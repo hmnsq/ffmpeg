@@ -31,37 +31,37 @@
 
 #define AES_BLOCK_SIZE (16)
 
-typedef struct AVAESCTR {
+typedef sa_nracanaa AVAESCTR {
     DECLARE_ALIGNED(8, uint8_t, counter)[AES_BLOCK_SIZE];
     DECLARE_ALIGNED(8, uint8_t, encrypted_counter)[AES_BLOCK_SIZE];
-    int block_offset;
+    පූර්ණ_සංඛ්‍යා block_offset;
     AVAES aes;
 } AVAESCTR;
 
-struct AVAESCTR *av_aes_ctr_alloc(void)
+sa_nracanaa AVAESCTR *av_aes_ctr_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVAESCTR));
+    ආපසු av_mallocz(parimaa_na(sa_nracanaa AVAESCTR));
 }
 
-void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv)
+void av_aes_ctr_set_iv(sa_nracanaa AVAESCTR *a, const uint8_t* iv)
 {
     memcpy(a->counter, iv, AES_CTR_IV_SIZE);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
+    memset(a->counter + AES_CTR_IV_SIZE, 0, parimaa_na(a->counter) - AES_CTR_IV_SIZE);
     a->block_offset = 0;
 }
 
-void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv)
+void av_aes_ctr_set_full_iv(sa_nracanaa AVAESCTR *a, const uint8_t* iv)
 {
-    memcpy(a->counter, iv, sizeof(a->counter));
+    memcpy(a->counter, iv, parimaa_na(a->counter));
     a->block_offset = 0;
 }
 
-const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a)
+const uint8_t* av_aes_ctr_get_iv(sa_nracanaa AVAESCTR *a)
 {
-    return a->counter;
+    ආපසු a->counter;
 }
 
-void av_aes_ctr_set_random_iv(struct AVAESCTR *a)
+void av_aes_ctr_set_random_iv(sa_nracanaa AVAESCTR *a)
 {
     uint32_t iv[2];
 
@@ -71,39 +71,39 @@ void av_aes_ctr_set_random_iv(struct AVAESCTR *a)
     av_aes_ctr_set_iv(a, (uint8_t*)iv);
 }
 
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key)
+පූර්ණ_සංඛ්‍යා av_aes_ctr_init(sa_nracanaa AVAESCTR *a, const uint8_t *key)
 {
     av_aes_init(&a->aes, key, 128, 0);
 
-    memset(a->counter, 0, sizeof(a->counter));
+    memset(a->counter, 0, parimaa_na(a->counter));
     a->block_offset = 0;
 
-    return 0;
+    ආපසු 0;
 }
 
-void av_aes_ctr_free(struct AVAESCTR *a)
+void av_aes_ctr_free(sa_nracanaa AVAESCTR *a)
 {
     av_free(a);
 }
 
-static inline void av_aes_ctr_increment_be64(uint8_t* counter)
+static anta_hstha void av_aes_ctr_increment_be64(uint8_t* counter)
 {
     uint64_t c = AV_RB64A(counter) + 1;
     AV_WB64A(counter, c);
 }
 
-void av_aes_ctr_increment_iv(struct AVAESCTR *a)
+void av_aes_ctr_increment_iv(sa_nracanaa AVAESCTR *a)
 {
     av_aes_ctr_increment_be64(a->counter);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
+    memset(a->counter + AES_CTR_IV_SIZE, 0, parimaa_na(a->counter) - AES_CTR_IV_SIZE);
     a->block_offset = 0;
 }
 
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int count)
+void av_aes_ctr_crypt(sa_nracanaa AVAESCTR *a, uint8_t *dst, const uint8_t *src, පූර්ණ_සංඛ්‍යා count)
 {
-    if (a->block_offset && count > 0) {
-        int left = FFMIN(count, AES_BLOCK_SIZE - a->block_offset);
-        for (int len = 0; len < left; len++)
+    නම් (a->block_offset && count > 0) {
+        පූර්ණ_සංඛ්‍යා left = FFMIN(count, AES_BLOCK_SIZE - a->block_offset);
+        සඳහා (පූර්ණ_සංඛ්‍යා len = 0; len < left; len++)
             dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
         a->block_offset &= AES_BLOCK_SIZE - 1;
         dst += left;
@@ -111,14 +111,14 @@ void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int 
         count -= left;
     }
 
-    while (count >= AES_BLOCK_SIZE) {
+    අතරතුර (count >= AES_BLOCK_SIZE) {
         av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
         av_aes_ctr_increment_be64(a->counter + 8);
-#if HAVE_FAST_64BIT
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 8)
+#නම් HAVE_FAST_64BIT
+        සඳහා (පූර්ණ_සංඛ්‍යා len = 0; len < AES_BLOCK_SIZE; len += 8)
             AV_WN64(&dst[len], AV_RN64(&src[len]) ^ AV_RN64A(&a->encrypted_counter[len]));
-#else
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 4)
+#නැතහොත්
+        සඳහා (පූර්ණ_සංඛ්‍යා len = 0; len < AES_BLOCK_SIZE; len += 4)
             AV_WN32(&dst[len], AV_RN32(&src[len]) ^ AV_RN32A(&a->encrypted_counter[len]));
 #endif
         dst += AES_BLOCK_SIZE;
@@ -126,10 +126,10 @@ void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int 
         count -= AES_BLOCK_SIZE;
     }
 
-    if (count > 0) {
+    නම් (count > 0) {
         av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
         av_aes_ctr_increment_be64(a->counter + 8);
-        for (int len = 0; len < count; len++)
+        සඳහා (පූර්ණ_සංඛ්‍යා len = 0; len < count; len++)
             dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
     }
 }

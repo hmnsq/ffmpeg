@@ -29,7 +29,7 @@
 #include <asm/cputable.h>
 #include <linux/auxvec.h>
 #include <fcntl.h>
-#if HAVE_UNISTD_H
+#නම් HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #elif defined(__NetBSD__) || defined(__OpenBSD__)
@@ -61,71 +61,71 @@
  * This function MAY rely on signal() or fork() in order to make sure AltiVec
  * is present.
  */
-int ff_get_cpu_flags_ppc(void)
+පූර්ණ_සංඛ්‍යා ff_get_cpu_flags_ppc(void)
 {
-#if HAVE_ALTIVEC
+#නම් HAVE_ALTIVEC
 #ifdef __AMIGAOS4__
     ULONG result = 0;
-    extern struct ExecIFace *IExec;
+    extern sa_nracanaa ExecIFace *IExec;
 
     IExec->GetCPUInfoTags(GCIT_VectorUnit, &result, TAG_DONE);
-    if (result == VECTORTYPE_ALTIVEC)
-        return AV_CPU_FLAG_ALTIVEC;
-    return 0;
+    නම් (result == VECTORTYPE_ALTIVEC)
+        ආපසු AV_CPU_FLAG_ALTIVEC;
+    ආපසු 0;
 #elif HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-    int flags = 0;
+    පූර්ණ_සංඛ්‍යා flags = 0;
 
     unsigned long hwcap = ff_getauxval(AT_HWCAP);
     unsigned long hwcap2 = ff_getauxval(AT_HWCAP2);
 
-    if (hwcap & HWCAP_PPC_ALTIVEC)
+    නම් (hwcap & HWCAP_PPC_ALTIVEC)
        flags |= AV_CPU_FLAG_ALTIVEC;
-    if (hwcap & HWCAP_PPC_VSX)
+    නම් (hwcap & HWCAP_PPC_VSX)
        flags |= AV_CPU_FLAG_VSX;
-    if (hwcap2 & HWCAP2_PPC_ARCH_2_07)
+    නම් (hwcap2 & HWCAP2_PPC_ARCH_2_07)
        flags |= AV_CPU_FLAG_POWER8;
 
-    return flags;
+    ආපසු flags;
 #elif defined(__APPLE__) || defined(__NetBSD__) || defined(__OpenBSD__)
-#if defined(__NetBSD__) || defined(__OpenBSD__)
-    int sels[2] = {CTL_MACHDEP, CPU_ALTIVEC};
-#else
-    int sels[2] = {CTL_HW, HW_VECTORUNIT};
+#නම් defined(__NetBSD__) || defined(__OpenBSD__)
+    පූර්ණ_සංඛ්‍යා sels[2] = {CTL_MACHDEP, CPU_ALTIVEC};
+#නැතහොත්
+    පූර්ණ_සංඛ්‍යා sels[2] = {CTL_HW, HW_VECTORUNIT};
 #endif
-    int has_vu = 0;
-    size_t len = sizeof(has_vu);
-    int err;
+    පූර්ණ_සංඛ්‍යා has_vu = 0;
+    size_t len = parimaa_na(has_vu);
+    පූර්ණ_සංඛ්‍යා err;
 
     err = sysctl(sels, 2, &has_vu, &len, NULL, 0);
 
-    if (err == 0)
-        return has_vu ? AV_CPU_FLAG_ALTIVEC : 0;
-    return 0;
+    නම් (err == 0)
+        ආපසු has_vu ? AV_CPU_FLAG_ALTIVEC : 0;
+    ආපසු 0;
 #elif defined(__linux__)
     // The linux kernel could have the altivec support disabled
     // even if the cpu has it.
-    int i, ret = 0;
-    int fd = open("/proc/self/auxv", O_RDONLY);
+    පූර්ණ_සංඛ්‍යා i, ret = 0;
+    පූර්ණ_සංඛ්‍යා fd = open("/proc/self/auxv", O_RDONLY);
     unsigned long buf[64] = { 0 };
     ssize_t count;
 
-    if (fd < 0)
-        return 0;
+    නම් (fd < 0)
+        ආපසු 0;
 
-    while ((count = read(fd, buf, sizeof(buf))) > 0) {
-        for (i = 0; i < count / sizeof(*buf); i += 2) {
-            if (buf[i] == AT_NULL)
+    අතරතුර ((count = read(fd, buf, parimaa_na(buf))) > 0) {
+        සඳහා (i = 0; i < count / parimaa_na(*buf); i += 2) {
+            නම් (buf[i] == AT_NULL)
                 goto out;
-            if (buf[i] == AT_HWCAP) {
-                if (buf[i + 1] & HWCAP_PPC_ALTIVEC)
+            නම් (buf[i] == AT_HWCAP) {
+                නම් (buf[i + 1] & HWCAP_PPC_ALTIVEC)
                     ret = AV_CPU_FLAG_ALTIVEC;
-                if (buf[i + 1] & HWCAP_PPC_VSX)
+                නම් (buf[i + 1] & HWCAP_PPC_VSX)
                     ret |= AV_CPU_FLAG_VSX;
-                if (ret & AV_CPU_FLAG_VSX)
+                නම් (ret & AV_CPU_FLAG_VSX)
                     av_assert0(ret & AV_CPU_FLAG_ALTIVEC);
             }
-            else if (buf[i] == AT_HWCAP2) {
-                if (buf[i + 1] & HWCAP2_PPC_ARCH_2_07)
+            නැතහොත් නම් (buf[i] == AT_HWCAP2) {
+                නම් (buf[i + 1] & HWCAP2_PPC_ARCH_2_07)
                     ret |= AV_CPU_FLAG_POWER8;
             }
         }
@@ -133,24 +133,24 @@ int ff_get_cpu_flags_ppc(void)
 
 out:
     close(fd);
-    return ret;
-#else
+    ආපසු ret;
+#නැතහොත්
     // Since we were compiled for AltiVec, just assume we have it
     // until someone comes up with a proper way (not involving signal hacks).
-    return AV_CPU_FLAG_ALTIVEC;
+    ආපසු AV_CPU_FLAG_ALTIVEC;
 #endif /* __AMIGAOS4__ */
 #endif /* HAVE_ALTIVEC */
-    return 0;
+    ආපසු 0;
 }
 
 size_t ff_get_cpu_max_align_ppc(void)
 {
-    int flags = av_get_cpu_flags();
+    පූර්ණ_සංඛ්‍යා flags = av_get_cpu_flags();
 
-    if (flags & (AV_CPU_FLAG_ALTIVEC   |
+    නම් (flags & (AV_CPU_FLAG_ALTIVEC   |
                  AV_CPU_FLAG_VSX       |
                  AV_CPU_FLAG_POWER8))
-        return 16;
+        ආපසු 16;
 
-    return 8;
+    ආපසු 8;
 }

@@ -26,7 +26,7 @@
 #include "libavutil/log.h"
 #include "libavutil/mem.h"
 
-int main(int argc, char *argv[])
+පූර්ණ_සංඛ්‍යා main(පූර්ණ_සංඛ්‍යා argc, var_na *argv[])
 {
     const uint8_t Key[3][32] = {
         {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10},
@@ -39,25 +39,25 @@ int main(int argc, char *argv[])
         {0x9a, 0xcc, 0x23, 0x7d, 0xff, 0x16, 0xd7, 0x6c, 0x20, 0xef, 0x7c, 0x91, 0x9e, 0x3a, 0x75, 0x09}
     };
     const uint8_t rpt[32] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10};
-    const int kbits[3] = {128, 192, 256};
-    int i, j, err = 0;
+    const පූර්ණ_සංඛ්‍යා kbits[3] = {128, 192, 256};
+    පූර්ණ_සංඛ්‍යා i, j, err = 0;
     uint8_t temp[32], iv[16];
-    struct AVCAMELLIA *cs;
+    sa_nracanaa AVCAMELLIA *cs;
     cs = av_camellia_alloc();
-    if (!cs)
-        return 1;
-    for (j = 0; j < 3; j++) {
+    නම් (!cs)
+        ආපසු 1;
+    සඳහා (j = 0; j < 3; j++) {
         av_camellia_init(cs, Key[j], kbits[j]);
         av_camellia_crypt(cs, temp, rpt, 1, NULL, 0);
-        for (i = 0; i < 16; i++) {
-            if (rct[j][i] != temp[i]) {
+        සඳහා (i = 0; i < 16; i++) {
+            නම් (rct[j][i] != temp[i]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rct[j][i], temp[i]);
                 err = 1;
             }
         }
         av_camellia_crypt(cs, temp, rct[j], 1, NULL, 1);
-        for (i = 0; i < 16; i++) {
-            if (rpt[i] != temp[i]) {
+        සඳහා (i = 0; i < 16; i++) {
+            නම් (rpt[i] != temp[i]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rpt[i], temp[i]);
                 err = 1;
             }
@@ -68,12 +68,12 @@ int main(int argc, char *argv[])
     av_camellia_crypt(cs, temp, rpt, 2, iv, 0);
     memcpy(iv, "HALLO123HALLO123", 16);
     av_camellia_crypt(cs, temp, temp, 2, iv, 1);
-    for (i = 0; i < 32; i++) {
-        if (rpt[i] != temp[i]) {
+    සඳහා (i = 0; i < 32; i++) {
+        නම් (rpt[i] != temp[i]) {
             av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rpt[i], temp[i]);
             err = 1;
         }
     }
     av_free(cs);
-    return err;
+    ආපසු err;
 }

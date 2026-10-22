@@ -61,45 +61,45 @@ static const uint8_t xtea_test_ct[XTEA_NUM_TESTS][8] = {
 };
 
 static void test_xtea(AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
-                      const uint8_t *ref, int len, uint8_t *iv, int dir,
-                      const char *test,
-                      void (*crypt)(AVXTEA *, uint8_t *, const uint8_t *, int, uint8_t *, int))
+                      const uint8_t *ref, පූර්ණ_සංඛ්‍යා len, uint8_t *iv, පූර්ණ_සංඛ්‍යා dir,
+                      const var_na *test,
+                      void (*crypt)(AVXTEA *, uint8_t *, const uint8_t *, පූර්ණ_සංඛ්‍යා, uint8_t *, පූර්ණ_සංඛ්‍යා))
 {
     crypt(ctx, dst, src, len, iv, dir);
-    if (memcmp(dst, ref, 8*len)) {
-        int i;
+    නම් (memcmp(dst, ref, 8*len)) {
+        පූර්ණ_සංඛ්‍යා i;
         printf("%s failed\ngot      ", test);
-        for (i = 0; i < 8*len; i++)
+        සඳහා (i = 0; i < 8*len; i++)
             printf("%02x ", dst[i]);
         printf("\nexpected ");
-        for (i = 0; i < 8*len; i++)
+        සඳහා (i = 0; i < 8*len; i++)
             printf("%02x ", ref[i]);
         printf("\n");
         exit(1);
     }
 }
 
-int main(void)
+පූර්ණ_සංඛ්‍යා main(void)
 {
     uint8_t buf[16], iv[8];
-    int i, j;
+    පූර්ණ_සංඛ්‍යා i, j;
     static const uint8_t src[32] = "HelloWorldHelloWorldHelloWorld";
     uint8_t ct[32];
     uint8_t pl[32];
     AVXTEA *ctx = av_xtea_alloc();
-    if (!ctx)
-        return 1;
+    නම් (!ctx)
+        ආපසු 1;
 
-    for (i = 0; i < XTEA_NUM_TESTS; i++) {
+    සඳහා (i = 0; i < XTEA_NUM_TESTS; i++) {
         av_xtea_init(ctx, xtea_test_key[i]);
 
         test_xtea(ctx, buf, xtea_test_pt[i], xtea_test_ct[i], 1, NULL, 0, "encryption", av_xtea_crypt);
         test_xtea(ctx, buf, xtea_test_ct[i], xtea_test_pt[i], 1, NULL, 1, "decryption", av_xtea_crypt);
 
-        for (j = 0; j < 4; j++)
+        සඳහා (j = 0; j < 4; j++)
             AV_WL32(&buf[4*j], AV_RB32(&xtea_test_key[i][4*j]));
         av_xtea_le_init(ctx, buf);
-        for (j = 0; j < 2; j++) {
+        සඳහා (j = 0; j < 2; j++) {
             AV_WL32(&ct[4*j], AV_RB32(&xtea_test_ct[i][4*j]));
             AV_WL32(&pl[4*j], AV_RB32(&xtea_test_pt[i][4*j]));
         }
@@ -121,5 +121,5 @@ int main(void)
     printf("Test encryption/decryption success.\n");
     av_free(ctx);
 
-    return 0;
+    ආපසු 0;
 }

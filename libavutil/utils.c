@@ -25,64 +25,64 @@
  * various utility functions
  */
 
-const char *av_get_media_type_string(enum AVMediaType media_type)
+const var_na *av_get_media_type_string(ga_nanaa AVMediaType media_type)
 {
     switch (media_type) {
-    case AVMEDIA_TYPE_VIDEO:      return "video";
-    case AVMEDIA_TYPE_AUDIO:      return "audio";
-    case AVMEDIA_TYPE_DATA:       return "data";
-    case AVMEDIA_TYPE_SUBTITLE:   return "subtitle";
-    case AVMEDIA_TYPE_ATTACHMENT: return "attachment";
-    default:                      return NULL;
+    pak_sa AVMEDIA_TYPE_VIDEO:      ආපසු "video";
+    pak_sa AVMEDIA_TYPE_AUDIO:      ආපසු "audio";
+    pak_sa AVMEDIA_TYPE_DATA:       ආපසු "data";
+    pak_sa AVMEDIA_TYPE_SUBTITLE:   ආපසු "subtitle";
+    pak_sa AVMEDIA_TYPE_ATTACHMENT: ආපසු "attachment";
+    default:                      ආපසු NULL;
     }
 }
 
-char av_get_picture_type_char(enum AVPictureType pict_type)
+var_na av_get_picture_type_char(ga_nanaa AVPictureType pict_type)
 {
     switch (pict_type) {
-    case AV_PICTURE_TYPE_I:  return 'I';
-    case AV_PICTURE_TYPE_P:  return 'P';
-    case AV_PICTURE_TYPE_B:  return 'B';
-    case AV_PICTURE_TYPE_S:  return 'S';
-    case AV_PICTURE_TYPE_SI: return 'i';
-    case AV_PICTURE_TYPE_SP: return 'p';
-    case AV_PICTURE_TYPE_BI: return 'b';
-    default:                 return '?';
+    pak_sa AV_PICTURE_TYPE_I:  ආපසු 'I';
+    pak_sa AV_PICTURE_TYPE_P:  ආපසු 'P';
+    pak_sa AV_PICTURE_TYPE_B:  ආපසු 'B';
+    pak_sa AV_PICTURE_TYPE_S:  ආපසු 'S';
+    pak_sa AV_PICTURE_TYPE_SI: ආපසු 'i';
+    pak_sa AV_PICTURE_TYPE_SP: ආපසු 'p';
+    pak_sa AV_PICTURE_TYPE_BI: ආපසු 'b';
+    default:                 ආපසු '?';
     }
 }
 
-char *av_fourcc_make_string(char *buf, uint32_t fourcc)
+var_na *av_fourcc_make_string(var_na *buf, uint32_t fourcc)
 {
-    int i;
-    char *orig_buf = buf;
+    පූර්ණ_සංඛ්‍යා i;
+    var_na *orig_buf = buf;
     size_t buf_size = AV_FOURCC_MAX_STRING_SIZE;
 
-    for (i = 0; i < 4; i++) {
-        const int c = fourcc & 0xff;
-        const int print_chr = (c >= '0' && c <= '9') ||
+    සඳහා (i = 0; i < 4; i++) {
+        const පූර්ණ_සංඛ්‍යා c = fourcc & 0xff;
+        const පූර්ණ_සංඛ්‍යා print_chr = (c >= '0' && c <= '9') ||
                               (c >= 'a' && c <= 'z') ||
                               (c >= 'A' && c <= 'Z') ||
                               (c && strchr(". -_", c));
-        const int len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
-        if (len < 0)
-            break;
+        const පූර්ණ_සංඛ්‍යා len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
+        නම් (len < 0)
+            bha_nga;
         buf += len;
         buf_size = buf_size > len ? buf_size - len : 0;
         fourcc >>= 8;
     }
 
-    return orig_buf;
+    ආපසු orig_buf;
 }
 
 AVRational av_get_time_base_q(void)
 {
-    return (AVRational){1, AV_TIME_BASE};
+    ආපසු (AVRational){1, AV_TIME_BASE};
 }
-#if FF_API_ASSERT_FPU
+#නම් FF_API_ASSERT_FPU
 void av_assert0_fpu(void) {
-#if HAVE_MMX_INLINE
+#නම් HAVE_MMX_INLINE
     uint16_t state[14];
-     __asm__ volatile (
+     __asm__ ca_ncala (
         "fstenv %0 \n\t"
         : "+m" (state)
         :

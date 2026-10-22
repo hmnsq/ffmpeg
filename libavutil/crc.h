@@ -45,7 +45,7 @@
 
 typedef uint32_t AVCRC;
 
-typedef enum {
+typedef ga_nanaa {
     AV_CRC_8_ATM,
     AV_CRC_16_ANSI,
     AV_CRC_16_CCITT,
@@ -73,7 +73,7 @@ typedef enum {
  * @param ctx_size size of ctx in bytes
  * @return <0 on failure
  */
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size);
+පූර්ණ_සංඛ්‍යා av_crc_init(AVCRC *ctx, පූර්ණ_සංඛ්‍යා le, පූර්ණ_සංඛ්‍යා bits, uint32_t poly, පූර්ණ_සංඛ්‍යා ctx_size);
 
 /**
  * Get an initialized standard CRC table.

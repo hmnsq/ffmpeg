@@ -21,26 +21,26 @@
 #ifndef AVUTIL_EXECUTOR_H
 #define AVUTIL_EXECUTOR_H
 
-typedef struct AVExecutor AVExecutor;
-typedef struct AVTask AVTask;
+typedef sa_nracanaa AVExecutor AVExecutor;
+typedef sa_nracanaa AVTask AVTask;
 
-struct AVTask {
+sa_nracanaa AVTask {
     AVTask *next;
 };
 
-typedef struct AVTaskCallbacks {
+typedef sa_nracanaa AVTaskCallbacks {
     void *user_data;
 
-    int local_context_size;
+    පූර්ණ_සංඛ්‍යා local_context_size;
 
     // return 1 if a's priority > b's priority
-    int (*priority_higher)(const AVTask *a, const AVTask *b);
+    පූර්ණ_සංඛ්‍යා (*priority_higher)(const AVTask *a, const AVTask *b);
 
     // task is ready for run
-    int (*ready)(const AVTask *t, void *user_data);
+    පූර්ණ_සංඛ්‍යා (*ready)(const AVTask *t, void *user_data);
 
     // run the task
-    int (*run)(AVTask *t, void *local_context, void *user_data);
+    පූර්ණ_සංඛ්‍යා (*run)(AVTask *t, void *local_context, void *user_data);
 } AVTaskCallbacks;
 
 /**
@@ -49,7 +49,7 @@ typedef struct AVTaskCallbacks {
  * @param thread_count worker thread number, 0 for run on caller's thread directly
  * @return return the executor
  */
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *callbacks, int thread_count);
+AVExecutor* av_executor_alloc(const AVTaskCallbacks *callbacks, පූර්ණ_සංඛ්‍යා thread_count);
 
 /**
  * Free executor

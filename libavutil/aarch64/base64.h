@@ -21,6 +21,6 @@
 
 #include <stdint.h>
 
-char *ff_base64_encode_neon(char *out, const uint8_t *in, int in_size, const char *tbl);
+var_na *ff_base64_encode_neon(var_na *out, const uint8_t *in, පූර්ණ_සංඛ්‍යා in_size, const var_na *tbl);
 
 #endif /* AVUTIL_AARCH64_BASE64_H */

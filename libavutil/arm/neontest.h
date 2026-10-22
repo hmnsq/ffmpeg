@@ -32,22 +32,22 @@
 #include "libavutil/bswap.h"
 
 #define storeneonregs(mem)                \
-    __asm__ volatile(                     \
+    __asm__ ca_ncala(                     \
         "vstm %0, {d8-d15}\n\t"           \
         :: "r"(mem) : "memory")
 
 #define testneonclobbers(func, ctx, ...)                        \
     uint64_t neon[2][8];                                        \
-    int ret;                                                    \
+    පූර්ණ_සංඛ්‍යා ret;                                                    \
     storeneonregs(neon[0]);                                     \
     ret = __real_ ## func(ctx, __VA_ARGS__);                    \
     storeneonregs(neon[1]);                                     \
-    if (memcmp(neon[0], neon[1], sizeof(neon[0]))) {            \
-        int i;                                                  \
+    නම් (memcmp(neon[0], neon[1], parimaa_na(neon[0]))) {            \
+        පූර්ණ_සංඛ්‍යා i;                                                  \
         av_log(ctx, AV_LOG_ERROR,                               \
                "NEON REGS CLOBBERED IN %s!\n", #func);          \
-        for (i = 0; i < 8; i ++)                                \
-            if (neon[0][i] != neon[1][i]) {                     \
+        සඳහා (i = 0; i < 8; i ++)                                \
+            නම් (neon[0][i] != neon[1][i]) {                     \
                 av_log(ctx, AV_LOG_ERROR,                       \
                        "d%-2d = %016"PRIx64"\n",                \
                        8 + i, av_bswap64(neon[0][i]));          \
@@ -57,11 +57,11 @@
             }                                                   \
         abort();                                                \
     }                                                           \
-    return ret
+    ආපසු ret
 
 #define wrap(func)      \
-int __real_ ## func;    \
-int __wrap_ ## func;    \
-int __wrap_ ## func
+පූර්ණ_සංඛ්‍යා __real_ ## func;    \
+පූර්ණ_සංඛ්‍යා __wrap_ ## func;    \
+පූර්ණ_සංඛ්‍යා __wrap_ ## func
 
 #endif /* AVUTIL_ARM_NEONTEST_H */

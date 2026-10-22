@@ -31,12 +31,12 @@
 /***********************************************************************
  * Vector types
  **********************************************************************/
-#define vec_u8  vector unsigned char
-#define vec_s8  vector signed char
+#define vec_u8  vector unsigned var_na
+#define vec_s8  vector signed var_na
 #define vec_u16 vector unsigned short
 #define vec_s16 vector signed short
-#define vec_u32 vector unsigned int
-#define vec_s32 vector signed int
+#define vec_u32 vector unsigned පූර්ණ_සංඛ්‍යා
+#define vec_s32 vector signed පූර්ණ_සංඛ්‍යා
 #define vec_f   vector float
 
 /***********************************************************************
@@ -51,7 +51,7 @@
 #define zero_u32v (vec_u32) zerov
 #define zero_s32v (vec_s32) zerov
 
-#if HAVE_ALTIVEC
+#නම් HAVE_ALTIVEC
 #include <altivec.h>
 
 // used to build registers permutation vectors (vcprm)
@@ -74,10 +74,10 @@
 #define SWP_W2Ss1 0x16,0x17,0x14,0x15
 #define SWP_W2Ss2 0x1a,0x1b,0x18,0x19
 #define SWP_W2Ss3 0x1e,0x1f,0x1c,0x1d
-#define vcswapi2s(a,b,c,d) (const vector unsigned char){SWP_W2S ## a, SWP_W2S ## b, SWP_W2S ## c, SWP_W2S ## d}
+#define vcswapi2s(a,b,c,d) (const vector unsigned var_na){SWP_W2S ## a, SWP_W2S ## b, SWP_W2S ## c, SWP_W2S ## d}
 
 #define vcswapc() \
-  (const vector unsigned char){0x0f,0x0e,0x0d,0x0c,0x0b,0x0a,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,0x00}
+  (const vector unsigned var_na){0x0f,0x0e,0x0d,0x0c,0x0b,0x0a,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,0x00}
 
 
 // Transpose 8x8 matrix of 16-bit elements (in-place)
@@ -112,40 +112,40 @@ do { \
     f = vec_mergel (C2, G2); \
     g = vec_mergeh (D2, H2); \
     h = vec_mergel (D2, H2); \
-} while (0)
+} අතරතුර (0)
 
 
-#if HAVE_BIGENDIAN
+#නම් HAVE_BIGENDIAN
 #define VEC_LD(offset,b)                                   \
     vec_perm(vec_ld(offset, b), vec_ld((offset)+15, b), vec_lvsl(offset, b))
-#else
+#නැතහොත්
 #define VEC_LD(offset,b)                                   \
     vec_vsx_ld(offset, b)
 #endif
 
 /** @brief loads unaligned vector @a *src with offset @a offset
     and returns it */
-#if HAVE_BIGENDIAN
-static inline vec_u8 unaligned_load(int offset, const uint8_t *src)
+#නම් HAVE_BIGENDIAN
+static anta_hstha vec_u8 unaligned_load(පූර්ණ_සංඛ්‍යා offset, const uint8_t *src)
 {
-    register vec_u8 first = vec_ld(offset, src);
-    register vec_u8 second = vec_ld(offset + 15, src);
-    register vec_u8 mask = vec_lvsl(offset, src);
-    return vec_perm(first, second, mask);
+    pa_njikaa vec_u8 first = vec_ld(offset, src);
+    pa_njikaa vec_u8 second = vec_ld(offset + 15, src);
+    pa_njikaa vec_u8 mask = vec_lvsl(offset, src);
+    ආපසු vec_perm(first, second, mask);
 }
-static inline vec_u8 load_with_perm_vec(int offset, const uint8_t *src, vec_u8 perm_vec)
+static anta_hstha vec_u8 load_with_perm_vec(පූර්ණ_සංඛ්‍යා offset, const uint8_t *src, vec_u8 perm_vec)
 {
     vec_u8 a = vec_ld(offset, src);
     vec_u8 b = vec_ld(offset + 15, src);
-    return vec_perm(a, b, perm_vec);
+    ආපසු vec_perm(a, b, perm_vec);
 }
-#else
+#නැතහොත්
 #define unaligned_load(a,b) VEC_LD(a,b)
 #define load_with_perm_vec(a,b,c) VEC_LD(a,b)
 #endif
 
-#if HAVE_BIGENDIAN
-static inline void unaligned_store(vec_u8 v, uint8_t *dst)
+#නම් HAVE_BIGENDIAN
+static anta_hstha void unaligned_store(vec_u8 v, uint8_t *dst)
 {
     vec_u8 lo    = vec_ld(0, dst);
     vec_u8 hi    = vec_ld(15, dst);
@@ -155,8 +155,8 @@ static inline void unaligned_store(vec_u8 v, uint8_t *dst)
     vec_st(vec_perm(v, edges, align), 15, dst);
     vec_st(vec_perm(edges, v, align), 0, dst);
 }
-#else
-static inline void unaligned_store(vec_u8 v, uint8_t *dst)
+#නැතහොත්
+static anta_hstha void unaligned_store(vec_u8 v, uint8_t *dst)
 {
     vec_vsx_st(v, 0, dst);
 }
@@ -170,40 +170,40 @@ static inline void unaligned_store(vec_u8 v, uint8_t *dst)
 
 #define vec_unaligned_load(b)  VEC_LD(0, b)
 
-#if HAVE_BIGENDIAN
+#නම් HAVE_BIGENDIAN
 #define VEC_MERGEH(a, b) vec_mergeh(a, b)
 #define VEC_MERGEL(a, b) vec_mergel(a, b)
-#else
+#නැතහොත්
 #define VEC_MERGEH(a, b) vec_mergeh(b, a)
 #define VEC_MERGEL(a, b) vec_mergel(b, a)
 #endif
 
-#if HAVE_BIGENDIAN
+#නම් HAVE_BIGENDIAN
 #define VEC_ST(a,b,c) vec_st(a,b,c)
-#else
+#නැතහොත්
 #define VEC_ST(a,b,c) vec_vsx_st(a,b,c)
 #endif
 
-#if HAVE_BIGENDIAN
+#නම් HAVE_BIGENDIAN
 #define VEC_SPLAT16(a,b) vec_splat((vec_s16)(a), b)
-#else
+#නැතහොත්
 #define VEC_SPLAT16(a,b) vec_splat((vec_s16)(vec_perm(a, a, vcswapi2s(0,1,2,3))), b)
 #endif
 
-#if HAVE_BIGENDIAN
+#නම් HAVE_BIGENDIAN
 #define VEC_SLD16(a,b,c) vec_sld(a, b, c)
-#else
+#නැතහොත්
 #define VEC_SLD16(a,b,c) vec_sld(b, a, c)
 #endif
 
 #endif /* HAVE_ALTIVEC */
 
-#if HAVE_VSX
-#if HAVE_BIGENDIAN
+#නම් HAVE_VSX
+#නම් HAVE_BIGENDIAN
 #define vsx_ld_u8_s16(off, p)                               \
     ((vec_s16)vec_mergeh((vec_u8)vec_splat_u8(0),           \
                          (vec_u8)vec_vsx_ld((off), (p))))
-#else
+#නැතහොත්
 #define vsx_ld_u8_s16(off, p)                               \
     ((vec_s16)vec_mergeh((vec_u8)vec_vsx_ld((off), (p)),    \
                          (vec_u8)vec_splat_u8(0)))

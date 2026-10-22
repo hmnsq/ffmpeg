@@ -45,7 +45,7 @@
 /**
  * List of possible 3D Types
  */
-enum AVStereo3DType {
+ga_nanaa AVStereo3DType {
     /**
      * Video is not stereoscopic (and metadata has to be there).
      */
@@ -146,7 +146,7 @@ enum AVStereo3DType {
 /**
  * List of possible view types.
  */
-enum AVStereo3DView {
+ga_nanaa AVStereo3DView {
     /**
      * Frame contains two packed views.
      */
@@ -171,7 +171,7 @@ enum AVStereo3DView {
 /**
  * List of possible primary eyes.
  */
-enum AVStereo3DPrimaryEye {
+ga_nanaa AVStereo3DPrimaryEye {
     /**
      * Neither eye.
      */
@@ -200,26 +200,26 @@ enum AVStereo3DPrimaryEye {
  * @note The struct must be allocated with av_stereo3d_alloc() and
  *       its size is not a part of the public ABI.
  */
-typedef struct AVStereo3D {
+typedef sa_nracanaa AVStereo3D {
     /**
      * How views are packed within the video.
      */
-    enum AVStereo3DType type;
+    ga_nanaa AVStereo3DType type;
 
     /**
      * Additional information about the frame packing.
      */
-    int flags;
+    පූර්ණ_සංඛ්‍යා flags;
 
     /**
      * Determines which views are packed.
      */
-    enum AVStereo3DView view;
+    ga_nanaa AVStereo3DView view;
 
     /**
      * Which eye is the primary eye when rendering in 2D.
      */
-    enum AVStereo3DPrimaryEye primary_eye;
+    ga_nanaa AVStereo3DPrimaryEye primary_eye;
 
     /**
      * The distance between the centres of the lenses of the camera system,
@@ -271,7 +271,7 @@ AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame);
  *
  * @return The name of the stereo3d value, or "unknown".
  */
-const char *av_stereo3d_type_name(unsigned int type);
+const var_na *av_stereo3d_type_name(unsigned පූර්ණ_සංඛ්‍යා type);
 
 /**
  * Get the AVStereo3DType form a human-readable name.
@@ -280,7 +280,7 @@ const char *av_stereo3d_type_name(unsigned int type);
  *
  * @return The AVStereo3DType value, or -1 if not found.
  */
-int av_stereo3d_from_name(const char *name);
+පූර්ණ_සංඛ්‍යා av_stereo3d_from_name(const var_na *name);
 
 /**
  * Provide a human-readable name of a given stereo3d view.
@@ -289,7 +289,7 @@ int av_stereo3d_from_name(const char *name);
  *
  * @return The name of the stereo3d view value, or "unknown".
  */
-const char *av_stereo3d_view_name(unsigned int view);
+const var_na *av_stereo3d_view_name(unsigned පූර්ණ_සංඛ්‍යා view);
 
 /**
  * Get the AVStereo3DView form a human-readable name.
@@ -298,7 +298,7 @@ const char *av_stereo3d_view_name(unsigned int view);
  *
  * @return The AVStereo3DView value, or -1 if not found.
  */
-int av_stereo3d_view_from_name(const char *name);
+පූර්ණ_සංඛ්‍යා av_stereo3d_view_from_name(const var_na *name);
 
 /**
  * Provide a human-readable name of a given stereo3d primary eye.
@@ -307,7 +307,7 @@ int av_stereo3d_view_from_name(const char *name);
  *
  * @return The name of the stereo3d primary eye value, or "unknown".
  */
-const char *av_stereo3d_primary_eye_name(unsigned int eye);
+const var_na *av_stereo3d_primary_eye_name(unsigned පූර්ණ_සංඛ්‍යා eye);
 
 /**
  * Get the AVStereo3DPrimaryEye form a human-readable name.
@@ -316,7 +316,7 @@ const char *av_stereo3d_primary_eye_name(unsigned int eye);
  *
  * @return The AVStereo3DPrimaryEye value, or -1 if not found.
  */
-int av_stereo3d_primary_eye_from_name(const char *name);
+පූර්ණ_සංඛ්‍යා av_stereo3d_primary_eye_from_name(const var_na *name);
 
 /**
  * @}

@@ -27,26 +27,26 @@
 
 void ff_vector_fmul_window_scaled_rvv(int16_t *dst, const int32_t *src0,
                                       const int32_t *src1, const int32_t *win,
-                                      int len, uint8_t bits);
+                                      පූර්ණ_සංඛ්‍යා len, uint8_t bits);
 void ff_vector_fmul_window_fixed_rvv(int32_t *dst, const int32_t *src0,
                                      const int32_t *src1, const int32_t *win,
-                                     int len);
-void ff_vector_fmul_fixed_rvv(int *dst, const int *src0, const int *src1,
-                              int len);
-void ff_vector_fmul_reverse_fixed_rvv(int *dst, const int *src0,
-                                      const int *src1, int len);
-void ff_vector_fmul_add_fixed_rvv(int *dst, const int *src0, const int *src1,
-                                  const int *src2, int len);
-int ff_scalarproduct_fixed_rvv(const int *v1, const int *v2, int len);
-void ff_butterflies_fixed_rvv(int *v1, int *v2, int len);
+                                     පූර්ණ_සංඛ්‍යා len);
+void ff_vector_fmul_fixed_rvv(පූර්ණ_සංඛ්‍යා *dst, const පූර්ණ_සංඛ්‍යා *src0, const පූර්ණ_සංඛ්‍යා *src1,
+                              පූර්ණ_සංඛ්‍යා len);
+void ff_vector_fmul_reverse_fixed_rvv(පූර්ණ_සංඛ්‍යා *dst, const පූර්ණ_සංඛ්‍යා *src0,
+                                      const පූර්ණ_සංඛ්‍යා *src1, පූර්ණ_සංඛ්‍යා len);
+void ff_vector_fmul_add_fixed_rvv(පූර්ණ_සංඛ්‍යා *dst, const පූර්ණ_සංඛ්‍යා *src0, const පූර්ණ_සංඛ්‍යා *src1,
+                                  const පූර්ණ_සංඛ්‍යා *src2, පූර්ණ_සංඛ්‍යා len);
+පූර්ණ_සංඛ්‍යා ff_scalarproduct_fixed_rvv(const පූර්ණ_සංඛ්‍යා *v1, const පූර්ණ_සංඛ්‍යා *v2, පූර්ණ_සංඛ්‍යා len);
+void ff_butterflies_fixed_rvv(පූර්ණ_සංඛ්‍යා *v1, පූර්ණ_සංඛ්‍යා *v2, පූර්ණ_සංඛ්‍යා len);
 
 av_cold void ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#නම් HAVE_RVV
+    පූර්ණ_සංඛ්‍යා flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVV_I32) && (flags & AV_CPU_FLAG_RVB)) {
-        if (flags & AV_CPU_FLAG_RVV_I64) {
+    නම් ((flags & AV_CPU_FLAG_RVV_I32) && (flags & AV_CPU_FLAG_RVB)) {
+        නම් (flags & AV_CPU_FLAG_RVV_I64) {
             fdsp->vector_fmul_window_scaled = ff_vector_fmul_window_scaled_rvv;
             fdsp->vector_fmul_window = ff_vector_fmul_window_fixed_rvv;
         }
@@ -55,7 +55,7 @@ av_cold void ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp)
         fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_fixed_rvv;
         fdsp->vector_fmul_add = ff_vector_fmul_add_fixed_rvv;
 
-        if (flags & AV_CPU_FLAG_RVV_I64)
+        නම් (flags & AV_CPU_FLAG_RVV_I64)
             fdsp->scalarproduct_fixed = ff_scalarproduct_fixed_rvv;
 
         fdsp->butterflies_fixed = ff_butterflies_fixed_rvv;

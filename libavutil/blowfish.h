@@ -32,7 +32,7 @@
 
 #define AV_BF_ROUNDS 16
 
-typedef struct AVBlowfish {
+typedef sa_nracanaa AVBlowfish {
     uint32_t p[AV_BF_ROUNDS + 2];
     uint32_t s[4][256];
 } AVBlowfish;
@@ -49,7 +49,7 @@ AVBlowfish *av_blowfish_alloc(void);
  * @param key a key
  * @param key_len length of the key
  */
-void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
+void av_blowfish_init(sa_nracanaa AVBlowfish *ctx, const uint8_t *key, පූර්ණ_සංඛ්‍යා key_len);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -59,8 +59,8 @@ void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
  * @param xr right four bytes halves of input to be encrypted
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
-                           int decrypt);
+void av_blowfish_crypt_ecb(sa_nracanaa AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
+                           පූර්ණ_සංඛ්‍යා decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -72,8 +72,8 @@ void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
  * @param iv initialization vector for CBC mode, if NULL ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_blowfish_crypt(struct AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                       int count, uint8_t *iv, int decrypt);
+void av_blowfish_crypt(sa_nracanaa AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
+                       පූර්ණ_සංඛ්‍යා count, uint8_t *iv, පූර්ණ_සංඛ්‍යා decrypt);
 
 /**
  * @}

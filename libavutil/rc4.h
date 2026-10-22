@@ -29,9 +29,9 @@
  * @{
  */
 
-typedef struct AVRC4 {
+typedef sa_nracanaa AVRC4 {
     uint8_t state[256];
-    int x, y;
+    පූර්ණ_සංඛ්‍යා x, y;
 } AVRC4;
 
 /**
@@ -48,7 +48,7 @@ AVRC4 *av_rc4_alloc(void);
  * @param decrypt 0 for encryption, 1 for decryption, currently has no effect
  * @return zero on success, negative value otherwise
  */
-int av_rc4_init(struct AVRC4 *d, const uint8_t *key, int key_bits, int decrypt);
+පූර්ණ_සංඛ්‍යා av_rc4_init(sa_nracanaa AVRC4 *d, const uint8_t *key, පූර්ණ_සංඛ්‍යා key_bits, පූර්ණ_සංඛ්‍යා decrypt);
 
 /**
  * @brief Encrypts / decrypts using the RC4 algorithm.
@@ -60,7 +60,7 @@ int av_rc4_init(struct AVRC4 *d, const uint8_t *key, int key_bits, int decrypt);
  * @param iv not (yet) used for RC4, should be NULL
  * @param decrypt 0 for encryption, 1 for decryption, not (yet) used
  */
-void av_rc4_crypt(struct AVRC4 *d, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+void av_rc4_crypt(sa_nracanaa AVRC4 *d, uint8_t *dst, const uint8_t *src, පූර්ණ_සංඛ්‍යා count, uint8_t *iv, පූර්ණ_සංඛ්‍යා decrypt);
 
 /**
  * @}

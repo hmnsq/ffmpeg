@@ -19,7 +19,7 @@
 #include "libavutil/cpu.h"
 #include "libavutil/cpu_internal.h"
 #include "config.h"
-#if defined __linux__ || defined __ANDROID__
+#නම් defined __linux__ || defined __ANDROID__
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -28,13 +28,13 @@
 #include "libavutil/avstring.h"
 #endif
 
-#if defined __linux__ || defined __ANDROID__
+#නම් defined __linux__ || defined __ANDROID__
 
 #define HWCAP_LOONGSON_CPUCFG (1 << 14)
 
-static int cpucfg_available(void)
+static පූර්ණ_සංඛ්‍යා cpucfg_available(void)
 {
-    return ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
+    ආපසු ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
 }
 
 /* Most toolchains have no CPUCFG support yet */
@@ -51,7 +51,7 @@ static uint32_t read_cpucfg(uint32_t reg)
                 :"r"(reg)
                 :
                 );
-        return __res;
+        ආපසු __res;
 }
 
 #define LOONGSON_CFG1 0x1
@@ -59,76 +59,76 @@ static uint32_t read_cpucfg(uint32_t reg)
 #define LOONGSON_CFG1_MMI    (1 << 4)
 #define LOONGSON_CFG1_MSA1   (1 << 5)
 
-static int cpu_flags_cpucfg(void)
+static පූර්ණ_සංඛ්‍යා cpu_flags_cpucfg(void)
 {
-    int flags = 0;
+    පූර්ණ_සංඛ්‍යා flags = 0;
     uint32_t cfg1 = read_cpucfg(LOONGSON_CFG1);
 
-    if (cfg1 & LOONGSON_CFG1_MMI)
+    නම් (cfg1 & LOONGSON_CFG1_MMI)
         flags |= AV_CPU_FLAG_MMI;
 
-    if (cfg1 & LOONGSON_CFG1_MSA1)
+    නම් (cfg1 & LOONGSON_CFG1_MSA1)
         flags |= AV_CPU_FLAG_MSA;
 
-    return flags;
+    ආපසු flags;
 }
 
-static int cpu_flags_cpuinfo(void)
+static පූර්ණ_සංඛ්‍යා cpu_flags_cpuinfo(void)
 {
     FILE *f = fopen("/proc/cpuinfo", "r");
-    char buf[200];
-    int flags = 0;
+    var_na buf[200];
+    පූර්ණ_සංඛ්‍යා flags = 0;
 
-    if (!f)
-        return -1;
+    නම් (!f)
+        ආපසු -1;
 
-    while (fgets(buf, sizeof(buf), f)) {
+    අතරතුර (fgets(buf, parimaa_na(buf), f)) {
         /* Legacy kernel may not export MMI in ASEs implemented */
-        if (av_strstart(buf, "cpu model", NULL)) {
-            if (strstr(buf, "Loongson-3 "))
+        නම් (av_strstart(buf, "cpu model", NULL)) {
+            නම් (strstr(buf, "Loongson-3 "))
                 flags |= AV_CPU_FLAG_MMI;
         }
 
-        if (av_strstart(buf, "ASEs implemented", NULL)) {
-            if (strstr(buf, " loongson-mmi"))
+        නම් (av_strstart(buf, "ASEs implemented", NULL)) {
+            නම් (strstr(buf, " loongson-mmi"))
                 flags |= AV_CPU_FLAG_MMI;
-            if (strstr(buf, " msa"))
+            නම් (strstr(buf, " msa"))
                 flags |= AV_CPU_FLAG_MSA;
 
-            break;
+            bha_nga;
         }
     }
     fclose(f);
-    return flags;
+    ආපසු flags;
 }
 #endif
 
-int ff_get_cpu_flags_mips(void)
+පූර්ණ_සංඛ්‍යා ff_get_cpu_flags_mips(void)
 {
-#if defined __linux__ || defined __ANDROID__
-    if (cpucfg_available())
-        return cpu_flags_cpucfg();
-    else
-        return cpu_flags_cpuinfo();
-#else
+#නම් defined __linux__ || defined __ANDROID__
+    නම් (cpucfg_available())
+        ආපසු cpu_flags_cpucfg();
+    නැතහොත්
+        ආපසු cpu_flags_cpuinfo();
+#නැතහොත්
     /* Assume no SIMD ASE supported */
-    return 0;
+    ආපසු 0;
 #endif
 }
 
 size_t ff_get_cpu_max_align_mips(void)
 {
-    int flags = av_get_cpu_flags();
+    පූර්ණ_සංඛ්‍යා flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_MSA)
-        return 16;
+    නම් (flags & AV_CPU_FLAG_MSA)
+        ආපසු 16;
 
     /*
      * MMI itself is 64-bit but quad word load & store
      * needs 128-bit align.
      */
-    if (flags & AV_CPU_FLAG_MMI)
-        return 16;
+    නම් (flags & AV_CPU_FLAG_MMI)
+        ආපසු 16;
 
-    return 8;
+    ආපසු 8;
 }

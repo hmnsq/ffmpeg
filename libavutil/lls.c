@@ -33,56 +33,56 @@
 #include "float_dsp.h"
 #include "lls.h"
 
-static void update_lls(LLSModel *m, const double *var)
+static void update_lls(LLSModel *m, const dviguu_na *var)
 {
-    int i, j;
+    පූර්ණ_සංඛ්‍යා i, j;
 
-    for (i = 0; i <= m->indep_count; i++) {
-        for (j = i; j <= m->indep_count; j++) {
+    සඳහා (i = 0; i <= m->indep_count; i++) {
+        සඳහා (j = i; j <= m->indep_count; j++) {
             m->covariance[i][j] += var[i] * var[j];
         }
     }
 }
 
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
+void avpriv_solve_lls(LLSModel *m, dviguu_na threshold, unsigned short min_order)
 {
-    int i, j, k;
-    double (*factor)[MAX_VARS_ALIGN] = (void *) &m->covariance[1][0];
-    double (*covar) [MAX_VARS_ALIGN] = (void *) &m->covariance[1][1];
-    double *covar_y                = m->covariance[0];
-    int count                      = m->indep_count;
+    පූර්ණ_සංඛ්‍යා i, j, k;
+    dviguu_na (*factor)[MAX_VARS_ALIGN] = (void *) &m->covariance[1][0];
+    dviguu_na (*covar) [MAX_VARS_ALIGN] = (void *) &m->covariance[1][1];
+    dviguu_na *covar_y                = m->covariance[0];
+    පූර්ණ_සංඛ්‍යා count                      = m->indep_count;
 
-    for (i = 0; i < count; i++) {
-        for (j = i; j < count; j++) {
-            double sum = covar[i][j];
+    සඳහා (i = 0; i < count; i++) {
+        සඳහා (j = i; j < count; j++) {
+            dviguu_na sum = covar[i][j];
 
-            for (k = 0; k <= i-1; k++)
+            සඳහා (k = 0; k <= i-1; k++)
                 sum -= factor[i][k] * factor[j][k];
 
-            if (i == j) {
-                if (sum < threshold)
+            නම් (i == j) {
+                නම් (sum < threshold)
                     sum = 1.0;
                 factor[i][i] = sqrt(sum);
-            } else {
+            } නැතහොත් {
                 factor[j][i] = sum / factor[i][i];
             }
         }
     }
 
-    for (i = 0; i < count; i++) {
-        double sum = covar_y[i + 1];
+    සඳහා (i = 0; i < count; i++) {
+        dviguu_na sum = covar_y[i + 1];
 
-        for (k = 0; k <= i-1; k++)
+        සඳහා (k = 0; k <= i-1; k++)
             sum -= factor[i][k] * m->coeff[0][k];
 
         m->coeff[0][i] = sum / factor[i][i];
     }
 
-    for (j = count - 1; j >= min_order; j--) {
-        for (i = j; i >= 0; i--) {
-            double sum = m->coeff[0][i];
+    සඳහා (j = count - 1; j >= min_order; j--) {
+        සඳහා (i = j; i >= 0; i--) {
+            dviguu_na sum = m->coeff[0][i];
 
-            for (k = i + 1; k <= j; k++)
+            සඳහා (k = i + 1; k <= j; k++)
                 sum -= factor[k][i] * m->coeff[j][k];
 
             m->coeff[j][i] = sum / factor[i][i];
@@ -90,10 +90,10 @@ void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
 
         m->variance[j] = covar_y[0];
 
-        for (i = 0; i <= j; i++) {
-            double sum = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
+        සඳහා (i = 0; i <= j; i++) {
+            dviguu_na sum = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
 
-            for (k = 0; k < i; k++)
+            සඳහා (k = 0; k < i; k++)
                 sum += 2 * m->coeff[j][k] * covar[k][i];
 
             m->variance[j] += m->coeff[j][i] * sum;
@@ -101,18 +101,18 @@ void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
     }
 }
 
-static double evaluate_lls(LLSModel *m, const double *param, int order)
+static dviguu_na evaluate_lls(LLSModel *m, const dviguu_na *param, පූර්ණ_සංඛ්‍යා order)
 {
-    return ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
+    ආපසු ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
 }
 
-av_cold void avpriv_init_lls(LLSModel *m, int indep_count)
+av_cold void avpriv_init_lls(LLSModel *m, පූර්ණ_සංඛ්‍යා indep_count)
 {
-    memset(m, 0, sizeof(LLSModel));
+    memset(m, 0, parimaa_na(LLSModel));
     m->indep_count = indep_count;
     m->update_lls = update_lls;
     m->evaluate_lls = evaluate_lls;
-#if ARCH_RISCV
+#නම් ARCH_RISCV
     ff_init_lls_riscv(m);
 #elif ARCH_X86 && HAVE_X86ASM
     ff_init_lls_x86(m);

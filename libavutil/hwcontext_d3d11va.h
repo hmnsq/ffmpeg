@@ -42,7 +42,7 @@
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVD3D11VADeviceContext {
+typedef sa_nracanaa AVD3D11VADeviceContext {
     /**
      * Device used for texture creation and access. This can also be used to
      * set the libavcodec decoding device.
@@ -124,7 +124,7 @@ typedef struct AVD3D11VADeviceContext {
  * This has no use outside of custom allocation, and AVFrame AVBufferRef do not
  * necessarily point to an instance of this struct.
  */
-typedef struct AVD3D11FrameDescriptor {
+typedef sa_nracanaa AVD3D11FrameDescriptor {
     /**
      * The texture in which the frame is located. The reference count is
      * managed by the AVBufferRef, and destroying the reference will release
@@ -146,7 +146,7 @@ typedef struct AVD3D11FrameDescriptor {
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVD3D11VAFramesContext {
+typedef sa_nracanaa AVD3D11VAFramesContext {
     /**
      * The canonical texture used for pool allocation. If this is set to NULL
      * on init, the hwframes implementation will allocate and set an array

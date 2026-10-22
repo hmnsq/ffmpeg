@@ -18,7 +18,7 @@
 
 #include "config.h"
 
-#if HAVE_SCHED_GETAFFINITY
+#නම් HAVE_SCHED_GETAFFINITY
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE
 #endif
@@ -35,51 +35,51 @@
 #include "opt.h"
 #include "common.h"
 
-#if HAVE_GETPROCESSAFFINITYMASK || HAVE_WINRT
+#නම් HAVE_GETPROCESSAFFINITYMASK || HAVE_WINRT
 #include <windows.h>
 #endif
-#if HAVE_SYSCTL
-#if HAVE_SYS_PARAM_H
+#නම් HAVE_SYSCTL
+#නම් HAVE_SYS_PARAM_H
 #include <sys/param.h>
 #endif
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #endif
-#if HAVE_UNISTD_H
+#නම් HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#නම් HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
 #include <sys/auxv.h>
 #endif
 
 static atomic_int cpu_flags = -1;
 static atomic_int cpu_count = -1;
 
-static int get_cpu_flags(void)
+static පූර්ණ_සංඛ්‍යා get_cpu_flags(void)
 {
-#if ARCH_MIPS
-    return ff_get_cpu_flags_mips();
+#නම් ARCH_MIPS
+    ආපසු ff_get_cpu_flags_mips();
 #elif ARCH_AARCH64
-    return ff_get_cpu_flags_aarch64();
+    ආපසු ff_get_cpu_flags_aarch64();
 #elif ARCH_ARM
-    return ff_get_cpu_flags_arm();
+    ආපසු ff_get_cpu_flags_arm();
 #elif ARCH_PPC
-    return ff_get_cpu_flags_ppc();
+    ආපසු ff_get_cpu_flags_ppc();
 #elif ARCH_RISCV
-    return ff_get_cpu_flags_riscv();
+    ආපසු ff_get_cpu_flags_riscv();
 #elif ARCH_WASM
-    return ff_get_cpu_flags_wasm();
+    ආපසු ff_get_cpu_flags_wasm();
 #elif ARCH_X86
-    return ff_get_cpu_flags_x86();
+    ආපසු ff_get_cpu_flags_x86();
 #elif ARCH_LOONGARCH
-    return ff_get_cpu_flags_loongarch();
+    ආපසු ff_get_cpu_flags_loongarch();
 #endif
-    return 0;
+    ආපසු 0;
 }
 
-void av_force_cpu_flags(int arg){
-    if (ARCH_X86 &&
+void av_force_cpu_flags(පූර්ණ_සංඛ්‍යා arg){
+    නම් (ARCH_X86 &&
            (arg & ( AV_CPU_FLAG_3DNOW    |
                     AV_CPU_FLAG_3DNOWEXT |
                     AV_CPU_FLAG_MMXEXT   |
@@ -106,21 +106,21 @@ void av_force_cpu_flags(int arg){
     atomic_store_explicit(&cpu_flags, arg, memory_order_relaxed);
 }
 
-int av_get_cpu_flags(void)
+පූර්ණ_සංඛ්‍යා av_get_cpu_flags(void)
 {
-    int flags = atomic_load_explicit(&cpu_flags, memory_order_relaxed);
-    if (flags == -1) {
+    පූර්ණ_සංඛ්‍යා flags = atomic_load_explicit(&cpu_flags, memory_order_relaxed);
+    නම් (flags == -1) {
         flags = get_cpu_flags();
         atomic_store_explicit(&cpu_flags, flags, memory_order_relaxed);
     }
-    return flags;
+    ආපසු flags;
 }
 
-int av_parse_cpu_caps(unsigned *flags, const char *s)
+පූර්ණ_සංඛ්‍යා av_parse_cpu_caps(unsigned *flags, const var_na *s)
 {
         static const AVOption cpuflags_opts[] = {
         { "flags"   , NULL, 0, AV_OPT_TYPE_FLAGS, { .i64 = 0 }, INT64_MIN, INT64_MAX, .unit = "flags" },
-#if   ARCH_PPC
+#නම්   ARCH_PPC
         { "altivec" , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ALTIVEC  },    .unit = "flags" },
         { "vsx"     , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_VSX      },    .unit = "flags" },
         { "power8"  , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_POWER8   },    .unit = "flags" },
@@ -223,40 +223,40 @@ int av_parse_cpu_caps(unsigned *flags, const char *s)
     };
     const AVClass *pclass = &class;
 
-    return av_opt_eval_flags(&pclass, &cpuflags_opts[0], s, flags);
+    ආපසු av_opt_eval_flags(&pclass, &cpuflags_opts[0], s, flags);
 }
 
-int av_cpu_count(void)
+පූර්ණ_සංඛ්‍යා av_cpu_count(void)
 {
     static atomic_int printed = 0;
 
-    int nb_cpus = 1;
-    int count   = 0;
-#if HAVE_WINRT
+    පූර්ණ_සංඛ්‍යා nb_cpus = 1;
+    පූර්ණ_සංඛ්‍යා count   = 0;
+#නම් HAVE_WINRT
     SYSTEM_INFO sysinfo;
 #endif
-#if HAVE_SCHED_GETAFFINITY && defined(CPU_COUNT)
+#නම් HAVE_SCHED_GETAFFINITY && defined(CPU_COUNT)
     cpu_set_t cpuset;
 
     CPU_ZERO(&cpuset);
 
-    if (!sched_getaffinity(0, sizeof(cpuset), &cpuset))
+    නම් (!sched_getaffinity(0, parimaa_na(cpuset), &cpuset))
         nb_cpus = CPU_COUNT(&cpuset);
 #elif HAVE_GETPROCESSAFFINITYMASK
     DWORD_PTR proc_aff, sys_aff;
-    if (GetProcessAffinityMask(GetCurrentProcess(), &proc_aff, &sys_aff))
+    නම් (GetProcessAffinityMask(GetCurrentProcess(), &proc_aff, &sys_aff))
         nb_cpus = av_popcount64(proc_aff);
 #elif HAVE_SYSCTL && defined(HW_NCPUONLINE)
-    int mib[2] = { CTL_HW, HW_NCPUONLINE };
-    size_t len = sizeof(nb_cpus);
+    පූර්ණ_සංඛ්‍යා mib[2] = { CTL_HW, HW_NCPUONLINE };
+    size_t len = parimaa_na(nb_cpus);
 
-    if (sysctl(mib, 2, &nb_cpus, &len, NULL, 0) == -1)
+    නම් (sysctl(mib, 2, &nb_cpus, &len, NULL, 0) == -1)
         nb_cpus = 0;
 #elif HAVE_SYSCTL && defined(HW_NCPU)
-    int mib[2] = { CTL_HW, HW_NCPU };
-    size_t len = sizeof(nb_cpus);
+    පූර්ණ_සංඛ්‍යා mib[2] = { CTL_HW, HW_NCPU };
+    size_t len = parimaa_na(nb_cpus);
 
-    if (sysctl(mib, 2, &nb_cpus, &len, NULL, 0) == -1)
+    නම් (sysctl(mib, 2, &nb_cpus, &len, NULL, 0) == -1)
         nb_cpus = 0;
 #elif HAVE_SYSCONF && defined(_SC_NPROC_ONLN)
     nb_cpus = sysconf(_SC_NPROC_ONLN);
@@ -267,60 +267,60 @@ int av_cpu_count(void)
     nb_cpus = sysinfo.dwNumberOfProcessors;
 #endif
 
-    if (!atomic_exchange_explicit(&printed, 1, memory_order_relaxed))
+    නම් (!atomic_exchange_explicit(&printed, 1, memory_order_relaxed))
         av_log(NULL, AV_LOG_DEBUG, "detected %d logical cores\n", nb_cpus);
 
     count = atomic_load_explicit(&cpu_count, memory_order_relaxed);
 
-    if (count > 0) {
+    නම් (count > 0) {
         nb_cpus = count;
         av_log(NULL, AV_LOG_DEBUG, "overriding to %d logical cores\n", nb_cpus);
     }
 
-    return nb_cpus;
+    ආපසු nb_cpus;
 }
 
-void av_cpu_force_count(int count)
+void av_cpu_force_count(පූර්ණ_සංඛ්‍යා count)
 {
     atomic_store_explicit(&cpu_count, count, memory_order_relaxed);
 }
 
 size_t av_cpu_max_align(void)
 {
-#if ARCH_MIPS
-    return ff_get_cpu_max_align_mips();
+#නම් ARCH_MIPS
+    ආපසු ff_get_cpu_max_align_mips();
 #elif ARCH_AARCH64
-    return ff_get_cpu_max_align_aarch64();
+    ආපසු ff_get_cpu_max_align_aarch64();
 #elif ARCH_ARM
-    return ff_get_cpu_max_align_arm();
+    ආපසු ff_get_cpu_max_align_arm();
 #elif ARCH_PPC
-    return ff_get_cpu_max_align_ppc();
+    ආපසු ff_get_cpu_max_align_ppc();
 #elif ARCH_WASM
-    return ff_get_cpu_max_align_wasm();
+    ආපසු ff_get_cpu_max_align_wasm();
 #elif ARCH_X86
-    return ff_get_cpu_max_align_x86();
+    ආපසු ff_get_cpu_max_align_x86();
 #elif ARCH_LOONGARCH
-    return ff_get_cpu_max_align_loongarch();
+    ආපසු ff_get_cpu_max_align_loongarch();
 #endif
 
-    return 8;
+    ආපසු 8;
 }
 
-#if !ARCH_X86
+#නම් !ARCH_X86
 unsigned long ff_getauxval(unsigned long type)
 {
-#if HAVE_GETAUXVAL
-    return getauxval(type);
+#නම් HAVE_GETAUXVAL
+    ආපසු getauxval(type);
 #elif HAVE_ELF_AUX_INFO
     unsigned long aux = 0;
-    int ret = elf_aux_info(type, &aux, sizeof(aux));
-    if (ret != 0) {
+    පූර්ණ_සංඛ්‍යා ret = elf_aux_info(type, &aux, parimaa_na(aux));
+    නම් (ret != 0) {
         errno = ret;
     }
-    return aux;
-#else
+    ආපසු aux;
+#නැතහොත්
     errno = ENOSYS;
-    return 0;
+    ආපසු 0;
 #endif
 }
 #endif

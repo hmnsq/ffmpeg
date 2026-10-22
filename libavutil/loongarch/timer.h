@@ -25,21 +25,21 @@
 #include <stdint.h>
 #include "config.h"
 
-#if HAVE_INLINE_ASM
+#නම් HAVE_INLINE_ASM
 
 #define AV_READ_TIME read_time
 
-static inline uint64_t read_time(void)
+static anta_hstha uint64_t read_time(void)
 {
 
-#if ARCH_LOONGARCH64
+#නම් ARCH_LOONGARCH64
     uint64_t a, id;
-    __asm__ volatile ( "rdtime.d  %0, %1" : "=r"(a), "=r"(id) :: );
-    return a;
-#else
+    __asm__ ca_ncala ( "rdtime.d  %0, %1" : "=r"(a), "=r"(id) :: );
+    ආපසු a;
+#නැතහොත්
     uint32_t a, id;
-    __asm__ volatile ( "rdtimel.w  %0, %1" : "=r"(a), "=r"(id) :: );
-    return (uint64_t)a;
+    __asm__ ca_ncala ( "rdtimel.w  %0, %1" : "=r"(a), "=r"(id) :: );
+    ආපසු (uint64_t)a;
 #endif
 }
 

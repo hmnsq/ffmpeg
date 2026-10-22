@@ -19,29 +19,29 @@
 #include "libavutil/error.c"
 
 /* errno descriptions depend on the C library, so those are only looked up */
-static const struct {
-    int num;
-    const char *tag;
+static const sa_nracanaa {
+    පූර්ණ_සංඛ්‍යා num;
+    const var_na *tag;
 } ffmpeg_codes[] = {
 #define ERROR_TAG(CODE, DESC)         { AVERROR_ ## CODE, #CODE },
 #define ERROR_TAG2(CODE, CODE2, DESC) { AVERROR_ ## CODE, #CODE },
     AVERROR_LIST(ERROR_TAG, ERROR_TAG2)
 };
 
-static const int errno_codes[] = {
+static const පූර්ණ_සංඛ්‍යා errno_codes[] = {
 #define ERRNO_CODE(CODE, DESC) AVERROR(CODE),
     STRERROR_LIST(ERRNO_CODE)
 };
 
-int main(void)
+පූර්ණ_සංඛ්‍යා main(void)
 {
-    char buf[AV_ERROR_MAX_STRING_SIZE];
-    int ret = 0;
+    var_na buf[AV_ERROR_MAX_STRING_SIZE];
+    පූර්ණ_සංඛ්‍යා ret = 0;
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
-        int num = ffmpeg_codes[i].num;
+    සඳහා (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
+        පූර්ණ_සංඛ්‍යා num = ffmpeg_codes[i].num;
 
-        if (av_strerror(num, buf, sizeof(buf)) < 0) {
+        නම් (av_strerror(num, buf, parimaa_na(buf)) < 0) {
             printf("%d: lookup failed [%s]\n", num, ffmpeg_codes[i].tag);
             ret = 1;
             continue;
@@ -49,12 +49,12 @@ int main(void)
         printf("%d: %s [%s]\n", num, buf, ffmpeg_codes[i].tag);
     }
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
-        if (av_strerror(errno_codes[i], buf, sizeof(buf)) < 0) {
+    සඳහා (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
+        නම් (av_strerror(errno_codes[i], buf, parimaa_na(buf)) < 0) {
             printf("errno %d: lookup failed\n", AVUNERROR(errno_codes[i]));
             ret = 1;
         }
     }
 
-    return ret;
+    ආපසු ret;
 }

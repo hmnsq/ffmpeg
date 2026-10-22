@@ -22,21 +22,21 @@
 #include <stdint.h>
 #include <stddef.h>
 
-typedef struct AVTXContext AVTXContext;
+typedef sa_nracanaa AVTXContext AVTXContext;
 
-typedef struct AVComplexFloat {
+typedef sa_nracanaa AVComplexFloat {
     float re, im;
 } AVComplexFloat;
 
-typedef struct AVComplexDouble {
-    double re, im;
+typedef sa_nracanaa AVComplexDouble {
+    dviguu_na re, im;
 } AVComplexDouble;
 
-typedef struct AVComplexInt32 {
+typedef sa_nracanaa AVComplexInt32 {
     int32_t re, im;
 } AVComplexInt32;
 
-enum AVTXType {
+ga_nanaa AVTXType {
     /**
      * Standard complex to complex FFT with sample data type of AVComplexFloat,
      * AVComplexDouble or AVComplexInt32, for each respective variant.
@@ -153,7 +153,7 @@ typedef void (*av_tx_fn)(AVTXContext *s, void *out, void *in, ptrdiff_t stride);
 /**
  * Flags for av_tx_init()
  */
-enum AVTXFlags {
+ga_nanaa AVTXFlags {
     /**
      * Allows for in-place transformations, where input == output.
      * May be unsupported or slower for some transform types.
@@ -199,8 +199,8 @@ enum AVTXFlags {
  *
  * @return 0 on success, negative error code on failure
  */
-int av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
-               int inv, int len, const void *scale, uint64_t flags);
+පූර්ණ_සංඛ්‍යා av_tx_init(AVTXContext **ctx, av_tx_fn *tx, ga_nanaa AVTXType type,
+               පූර්ණ_සංඛ්‍යා inv, පූර්ණ_සංඛ්‍යා len, const void *scale, uint64_t flags);
 
 /**
  * Frees a context and sets *ctx to NULL, does nothing when *ctx == NULL.

@@ -21,13 +21,13 @@
 #include "libavutil/fixed_dsp.h"
 #include "cpu.h"
 
-void ff_butterflies_fixed_sse2(int *restrict src0, int *restrict src1, int len);
+void ff_butterflies_fixed_sse2(පූර්ණ_සංඛ්‍යා *restrict src0, පූර්ණ_සංඛ්‍යා *restrict src1, පූර්ණ_සංඛ්‍යා len);
 
 av_cold void ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp)
 {
-    int cpu_flags = av_get_cpu_flags();
+    පූර්ණ_සංඛ්‍යා cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_SSE2(cpu_flags)) {
+    නම් (EXTERNAL_SSE2(cpu_flags)) {
         fdsp->butterflies_fixed = ff_butterflies_fixed_sse2;
     }
 }

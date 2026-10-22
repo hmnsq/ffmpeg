@@ -25,18 +25,18 @@
 #include <dlfcn.h>
 
 #define KPERF_LIST                                             \
-    F(int, kpc_get_counting, void)                             \
-    F(int, kpc_force_all_ctrs_set, int)                        \
-    F(int, kpc_set_counting, uint32_t)                         \
-    F(int, kpc_set_thread_counting, uint32_t)                  \
-    F(int, kpc_set_config, uint32_t, void *)                   \
-    F(int, kpc_get_config, uint32_t, void *)                   \
-    F(int, kpc_set_period, uint32_t, void *)                   \
-    F(int, kpc_get_period, uint32_t, void *)                   \
+    F(පූර්ණ_සංඛ්‍යා, kpc_get_counting, void)                             \
+    F(පූර්ණ_සංඛ්‍යා, kpc_force_all_ctrs_set, පූර්ණ_සංඛ්‍යා)                        \
+    F(පූර්ණ_සංඛ්‍යා, kpc_set_counting, uint32_t)                         \
+    F(පූර්ණ_සංඛ්‍යා, kpc_set_thread_counting, uint32_t)                  \
+    F(පූර්ණ_සංඛ්‍යා, kpc_set_config, uint32_t, void *)                   \
+    F(පූර්ණ_සංඛ්‍යා, kpc_get_config, uint32_t, void *)                   \
+    F(පූර්ණ_සංඛ්‍යා, kpc_set_period, uint32_t, void *)                   \
+    F(පූර්ණ_සංඛ්‍යා, kpc_get_period, uint32_t, void *)                   \
     F(uint32_t, kpc_get_counter_count, uint32_t)               \
     F(uint32_t, kpc_get_config_count, uint32_t)                \
-    F(int, kperf_sample_get, int *)                            \
-    F(int, kpc_get_thread_counters, int, unsigned int, void *)
+    F(පූර්ණ_සංඛ්‍යා, kperf_sample_get, පූර්ණ_සංඛ්‍යා *)                            \
+    F(පූර්ණ_සංඛ්‍යා, kpc_get_thread_counters, පූර්ණ_සංඛ්‍යා, unsigned පූර්ණ_සංඛ්‍යා, void *)
 
 #define F(ret, name, ...)                                      \
     typedef ret name##proc(__VA_ARGS__);                       \
@@ -109,9 +109,9 @@ uint64_t ff_kperf_cycles(void)
 {
     uint64_t counters[KPC_MAX_COUNTERS];
 
-    if (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
-        return -1;
+    නම් (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
+        ආපසු -1;
     }
 
-    return counters[0];
+    ආපසු counters[0];
 }

@@ -25,17 +25,17 @@
 
 AVSphericalMapping *av_spherical_alloc(size_t *size)
 {
-    AVSphericalMapping *spherical = av_mallocz(sizeof(AVSphericalMapping));
+    AVSphericalMapping *spherical = av_mallocz(parimaa_na(AVSphericalMapping));
 
-    if (size)
-        *size = spherical ? sizeof(*spherical) : 0;
+    නම් (size)
+        *size = spherical ? parimaa_na(*spherical) : 0;
 
-    if (!spherical)
-        return NULL;
+    නම් (!spherical)
+        ආපසු NULL;
 
     spherical->projection = AV_SPHERICAL_RECTILINEAR;
 
-    return spherical;
+    ආපසු spherical;
 }
 
 void av_spherical_tile_bounds(const AVSphericalMapping *map,
@@ -56,7 +56,7 @@ void av_spherical_tile_bounds(const AVSphericalMapping *map,
     *bottom = orig_height - height - *top;
 }
 
-static const char *const spherical_projection_names[] = {
+static const var_na *const spherical_projection_names[] = {
     [AV_SPHERICAL_EQUIRECTANGULAR]      = "equirectangular",
     [AV_SPHERICAL_CUBEMAP]              = "cubemap",
     [AV_SPHERICAL_EQUIRECTANGULAR_TILE] = "tiled equirectangular",
@@ -66,22 +66,22 @@ static const char *const spherical_projection_names[] = {
     [AV_SPHERICAL_PARAMETRIC_IMMERSIVE] = "parametric immersive",
 };
 
-const char *av_spherical_projection_name(enum AVSphericalProjection projection)
+const var_na *av_spherical_projection_name(ga_nanaa AVSphericalProjection projection)
 {
-    if ((unsigned)projection >= FF_ARRAY_ELEMS(spherical_projection_names))
-        return "unknown";
+    නම් ((unsigned)projection >= FF_ARRAY_ELEMS(spherical_projection_names))
+        ආපසු "unknown";
 
-    return spherical_projection_names[projection];
+    ආපසු spherical_projection_names[projection];
 }
 
-int av_spherical_from_name(const char *name)
+පූර්ණ_සංඛ්‍යා av_spherical_from_name(const var_na *name)
 {
-    int i;
+    පූර්ණ_සංඛ්‍යා i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(spherical_projection_names); i++) {
-        if (av_strstart(name, spherical_projection_names[i], NULL))
-            return i;
+    සඳහා (i = 0; i < FF_ARRAY_ELEMS(spherical_projection_names); i++) {
+        නම් (av_strstart(name, spherical_projection_names[i], NULL))
+            ආපසු i;
     }
 
-    return -1;
+    ආපසු -1;
 }

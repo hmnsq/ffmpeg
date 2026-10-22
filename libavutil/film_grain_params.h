@@ -21,7 +21,7 @@
 
 #include "frame.h"
 
-enum AVFilmGrainParamsType {
+ga_nanaa AVFilmGrainParamsType {
     AV_FILM_GRAIN_PARAMS_NONE = 0,
 
     /**
@@ -41,37 +41,37 @@ enum AVFilmGrainParamsType {
  * @note The struct must be allocated as part of AVFilmGrainParams using
  *       av_film_grain_params_alloc(). Its size is not a part of the public ABI.
  */
-typedef struct AVFilmGrainAOMParams {
+typedef sa_nracanaa AVFilmGrainAOMParams {
     /**
      * Number of points, and the scale and value for each point of the
      * piecewise linear scaling function for the uma plane.
      */
-    int num_y_points;
+    පූර්ණ_සංඛ්‍යා num_y_points;
     uint8_t y_points[14][2 /* value, scaling */];
 
     /**
      * Signals whether to derive the chroma scaling function from the luma.
      * Not equivalent to copying the luma values and scales.
      */
-    int chroma_scaling_from_luma;
+    පූර්ණ_සංඛ්‍යා chroma_scaling_from_luma;
 
     /**
      * If chroma_scaling_from_luma is set to 0, signals the chroma scaling
      * function parameters.
      */
-    int num_uv_points[2 /* cb, cr */];
+    පූර්ණ_සංඛ්‍යා num_uv_points[2 /* cb, cr */];
     uint8_t uv_points[2 /* cb, cr */][10][2 /* value, scaling */];
 
     /**
      * Specifies the shift applied to the chroma components. For AV1, its within
      * [8; 11] and determines the range and quantization of the film grain.
      */
-    int scaling_shift;
+    පූර්ණ_සංඛ්‍යා scaling_shift;
 
     /**
      * Specifies the auto-regression lag.
      */
-    int ar_coeff_lag;
+    පූර්ණ_සංඛ්‍යා ar_coeff_lag;
 
     /**
      * Luma auto-regression coefficients. The number of coefficients is given by
@@ -90,36 +90,36 @@ typedef struct AVFilmGrainAOMParams {
      * 7, 8 and so on represent a range of [-2, 2), [-1, 1), [-0.5, 0.5) and
      * so on. For AV1 must be between 6 and 9.
      */
-    int ar_coeff_shift;
+    පූර්ණ_සංඛ්‍යා ar_coeff_shift;
 
     /**
      * Signals the down shift applied to the generated gaussian numbers during
      * synthesis.
      */
-    int grain_scale_shift;
+    පූර්ණ_සංඛ්‍යා grain_scale_shift;
 
     /**
      * Specifies the luma/chroma multipliers for the index to the component
      * scaling function.
      */
-    int uv_mult[2 /* cb, cr */];
-    int uv_mult_luma[2 /* cb, cr */];
+    පූර්ණ_සංඛ්‍යා uv_mult[2 /* cb, cr */];
+    පූර්ණ_සංඛ්‍යා uv_mult_luma[2 /* cb, cr */];
 
     /**
      * Offset used for component scaling function. For AV1 its a 9-bit value
      * with a range [-256, 255]
      */
-    int uv_offset[2 /* cb, cr */];
+    පූර්ණ_සංඛ්‍යා uv_offset[2 /* cb, cr */];
 
     /**
      * Signals whether to overlap film grain blocks.
      */
-    int overlap_flag;
+    පූර්ණ_සංඛ්‍යා overlap_flag;
 
     /**
      * Signals to clip to limited color levels after film grain application.
      */
-    int limit_output_range;
+    පූර්ණ_සංඛ්‍යා limit_output_range;
 } AVFilmGrainAOMParams;
 
 /**
@@ -129,12 +129,12 @@ typedef struct AVFilmGrainAOMParams {
  * @note The struct must be allocated as part of AVFilmGrainParams using
  *       av_film_grain_params_alloc(). Its size is not a part of the public ABI.
  */
-typedef struct AVFilmGrainH274Params {
+typedef sa_nracanaa AVFilmGrainH274Params {
     /**
      * Specifies the film grain simulation mode.
      * 0 = Frequency filtering, 1 = Auto-regression
      */
-    int model_id;
+    පූර්ණ_සංඛ්‍යා model_id;
 
     /**
      * Specifies the blending mode used to blend the simulated film grain
@@ -142,17 +142,17 @@ typedef struct AVFilmGrainH274Params {
      *
      * 0 = Additive, 1 = Multiplicative
      */
-    int blending_mode_id;
+    පූර්ණ_සංඛ්‍යා blending_mode_id;
 
     /**
      * Specifies a scale factor used in the film grain characterization equations.
      */
-    int log2_scale_factor;
+    පූර්ණ_සංඛ්‍යා log2_scale_factor;
 
     /**
      * Indicates if the modelling of film grain for a given component is present.
      */
-    int component_model_present[3 /* y, cb, cr */];
+    පූර්ණ_සංඛ්‍යා component_model_present[3 /* y, cb, cr */];
 
     /**
      * Specifies the number of intensity intervals for which a specific set of
@@ -198,11 +198,11 @@ typedef struct AVFilmGrainH274Params {
  * @note The struct must be allocated with av_film_grain_params_alloc() and
  *       its size is not a part of the public ABI.
  */
-typedef struct AVFilmGrainParams {
+typedef sa_nracanaa AVFilmGrainParams {
     /**
      * Specifies the codec for which this structure is valid.
      */
-    enum AVFilmGrainParamsType type;
+    ga_nanaa AVFilmGrainParamsType type;
 
     /**
      * Seed to use for the synthesis process, if the codec allows for it.
@@ -217,33 +217,33 @@ typedef struct AVFilmGrainParams {
      * any restrictions.
      */
 
-    int width, height;
+    පූර්ණ_සංඛ්‍යා width, height;
 
     /**
      * Intended subsampling ratio, or 0 for luma-only streams.
      */
-    int subsampling_x, subsampling_y;
+    පූර්ණ_සංඛ්‍යා subsampling_x, subsampling_y;
 
     /**
      * Intended video signal characteristics.
      */
-    enum AVColorRange                  color_range;
-    enum AVColorPrimaries              color_primaries;
-    enum AVColorTransferCharacteristic color_trc;
-    enum AVColorSpace                  color_space;
+    ga_nanaa AVColorRange                  color_range;
+    ga_nanaa AVColorPrimaries              color_primaries;
+    ga_nanaa AVColorTransferCharacteristic color_trc;
+    ga_nanaa AVColorSpace                  color_space;
 
     /**
      * Intended bit depth, or 0 for unknown/unspecified.
      */
-    int bit_depth_luma;
-    int bit_depth_chroma;
+    පූර්ණ_සංඛ්‍යා bit_depth_luma;
+    පූර්ණ_සංඛ්‍යා bit_depth_chroma;
 
     /**
      * Additional fields may be added both here and in any structure included.
      * If a codec's film grain structure differs slightly over another
      * codec's, fields within may change meaning depending on the type.
      */
-    union {
+    sa_ngha {
         AVFilmGrainAOMParams aom;
         AVFilmGrainH274Params h274;
     } codec;

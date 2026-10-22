@@ -30,21 +30,21 @@ static void bprint_pascal(AVBPrint *b, unsigned size)
 
     p[0] = 1;
     av_bprintf(b, "%8d\n", 1);
-    for (i = 1; i <= size; i++) {
+    සඳහා (i = 1; i <= size; i++) {
         p[i] = 1;
-        for (j = i - 1; j > 0; j--)
+        සඳහා (j = i - 1; j > 0; j--)
             p[j] = p[j] + p[j - 1];
-        for (j = 0; j <= i; j++)
+        සඳහා (j = 0; j <= i; j++)
             av_bprintf(b, "%8d", p[j]);
         av_bprintf(b, "\n");
     }
 }
 
-int main(void)
+පූර්ණ_සංඛ්‍යා main(void)
 {
     AVBPrint b;
-    char buf[256];
-    struct tm testtime = { .tm_year = 100, .tm_mon = 11, .tm_mday = 20 };
+    var_na buf[256];
+    sa_nracanaa tm testtime = { .tm_year = 100, .tm_mon = 11, .tm_mday = 20 };
 
     av_bprint_init(&b, 0, AV_BPRINT_SIZE_UNLIMITED);
     bprint_pascal(&b, 5);
@@ -75,7 +75,7 @@ int main(void)
     bprint_pascal(&b, 25);
     printf("Long text count only buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
 
-    av_bprint_init_for_buffer(&b, buf, sizeof(buf));
+    av_bprint_init_for_buffer(&b, buf, parimaa_na(buf));
     bprint_pascal(&b, 25);
     printf("Long text count only buffer: %u/%u\n", (unsigned)strlen(buf), b.len);
 
@@ -88,5 +88,5 @@ int main(void)
     av_bprint_strftime(&b, "%Y-%m-%d", &testtime);
     printf("strftime truncated: %u/%u \"%s\"\n", (unsigned)strlen(buf), b.len, b.str);
 
-    return 0;
+    ආපසු 0;
 }

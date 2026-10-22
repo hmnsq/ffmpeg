@@ -29,37 +29,37 @@
 
 static void *thread_main(void *arg)
 {
-    int *flags = arg;
+    පූර්ණ_සංඛ්‍යා *flags = arg;
 
     *flags = av_get_cpu_flags();
-    return NULL;
+    ආපසු NULL;
 }
 
-int main(void)
+පූර්ණ_සංඛ්‍යා main(void)
 {
-    int cpu_flags1;
-    int cpu_flags2;
-    int ret;
+    පූර්ණ_සංඛ්‍යා cpu_flags1;
+    පූර්ණ_සංඛ්‍යා cpu_flags2;
+    පූර්ණ_සංඛ්‍යා ret;
     pthread_t thread1;
     pthread_t thread2;
 
-    if ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
+    නම් ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        ආපසු 1;
     }
-    if ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
+    නම් ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        ආපසු 1;
     }
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
 
-    if (cpu_flags1 < 0)
-        return 2;
-    if (cpu_flags2 < 0)
-        return 2;
-    if (cpu_flags1 != cpu_flags2)
-        return 3;
+    නම් (cpu_flags1 < 0)
+        ආපසු 2;
+    නම් (cpu_flags2 < 0)
+        ආපසු 2;
+    නම් (cpu_flags1 != cpu_flags2)
+        ආපසු 3;
 
-    return 0;
+    ආපසු 0;
 }

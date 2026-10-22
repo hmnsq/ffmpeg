@@ -34,46 +34,46 @@
 #define BENCHMARK_LIBLZO_SAFE   0
 #define BENCHMARK_LIBLZO_UNSAFE 0
 
-int main(int argc, char *argv[]) {
+පූර්ණ_සංඛ්‍යා main(පූර්ණ_සංඛ්‍යා argc, var_na *argv[]) {
     FILE *in = fopen(argv[1], "rb");
-    int comp_level = argc > 2 ? atoi(argv[2]) : 0;
+    පූර්ණ_සංඛ්‍යා comp_level = argc > 2 ? atoi(argv[2]) : 0;
     uint8_t *orig = av_malloc(MAXSZ + 16);
     uint8_t *comp = av_malloc(2*MAXSZ + 16);
     uint8_t *decomp = av_malloc(MAXSZ + 16);
     size_t s = fread(orig, 1, MAXSZ, in);
     lzo_uint clen = 0;
     long tmp[LZO1X_MEM_COMPRESS];
-    int inlen, outlen;
-    int i;
+    පූර්ණ_සංඛ්‍යා inlen, outlen;
+    පූර්ණ_සංඛ්‍යා i;
     av_log_set_level(AV_LOG_DEBUG);
-    if (comp_level == 0) {
+    නම් (comp_level == 0) {
         lzo1x_1_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 11) {
+    } නැතහොත් නම් (comp_level == 11) {
         lzo1x_1_11_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 12) {
+    } නැතහොත් නම් (comp_level == 12) {
         lzo1x_1_12_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 15) {
+    } නැතහොත් නම් (comp_level == 15) {
         lzo1x_1_15_compress(orig, s, comp, &clen, tmp);
-    } else
+    } නැතහොත්
         lzo1x_999_compress(orig, s, comp, &clen, tmp);
-    for (i = 0; i < 300; i++) {
+    සඳහා (i = 0; i < 300; i++) {
         inlen = clen; outlen = MAXSZ;
-#if BENCHMARK_LIBLZO_SAFE
-        if (lzo1x_decompress_safe(comp, inlen, decomp, &outlen, NULL))
+#නම් BENCHMARK_LIBLZO_SAFE
+        නම් (lzo1x_decompress_safe(comp, inlen, decomp, &outlen, NULL))
 #elif BENCHMARK_LIBLZO_UNSAFE
-        if (lzo1x_decompress(comp, inlen, decomp, &outlen, NULL))
-#else
-        if (av_lzo1x_decode(decomp, &outlen, comp, &inlen))
+        නම් (lzo1x_decompress(comp, inlen, decomp, &outlen, NULL))
+#නැතහොත්
+        නම් (av_lzo1x_decode(decomp, &outlen, comp, &inlen))
 #endif
             av_log(NULL, AV_LOG_ERROR, "decompression error\n");
     }
-    if (memcmp(orig, decomp, s))
+    නම් (memcmp(orig, decomp, s))
         av_log(NULL, AV_LOG_ERROR, "decompression incorrect\n");
-    else
+    නැතහොත්
         av_log(NULL, AV_LOG_ERROR, "decompression OK\n");
     fclose(in);
     av_free(orig);
     av_free(comp);
     av_free(decomp);
-    return 0;
+    ආපසු 0;
 }

@@ -40,21 +40,21 @@
  * @{
  */
 
-extern const int av_md5_size;
+extern const පූර්ණ_සංඛ්‍යා av_md5_size;
 
-struct AVMD5;
+sa_nracanaa AVMD5;
 
 /**
  * Allocate an AVMD5 context.
  */
-struct AVMD5 *av_md5_alloc(void);
+sa_nracanaa AVMD5 *av_md5_alloc(void);
 
 /**
  * Initialize MD5 hashing.
  *
  * @param ctx pointer to the function context (of size av_md5_size)
  */
-void av_md5_init(struct AVMD5 *ctx);
+void av_md5_init(sa_nracanaa AVMD5 *ctx);
 
 /**
  * Update hash value.
@@ -63,7 +63,7 @@ void av_md5_init(struct AVMD5 *ctx);
  * @param src input data to update hash with
  * @param len input data length
  */
-void av_md5_update(struct AVMD5 *ctx, const uint8_t *src, size_t len);
+void av_md5_update(sa_nracanaa AVMD5 *ctx, const uint8_t *src, size_t len);
 
 /**
  * Finish hashing and output digest value.
@@ -71,7 +71,7 @@ void av_md5_update(struct AVMD5 *ctx, const uint8_t *src, size_t len);
  * @param ctx hash function context
  * @param dst buffer where output digest value is stored
  */
-void av_md5_final(struct AVMD5 *ctx, uint8_t *dst);
+void av_md5_final(sa_nracanaa AVMD5 *ctx, uint8_t *dst);
 
 /**
  * Hash an array of data.
