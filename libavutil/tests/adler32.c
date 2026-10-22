@@ -27,9 +27,9 @@
 
 #define LEN 7001
 
-int main(int argc, char **argv)
+puur_naa_nka main(puur_naa_nka argc, var_na **argv)
 {
-    int i;
+    puur_naa_nka i;
     uint8_t data[LEN];
     AVAdler checksum;
 
@@ -38,17 +38,17 @@ int main(int argc, char **argv)
     for (i = 0; i < LEN; i++)
         data[i] = ((i * i) >> 3) + 123 * i;
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
+    ᯀᯮᯝ (argc > 1 && !strcmp(argv[1], "-t")) {
         for (i = 0; i < 1000; i++) {
             START_TIMER;
             checksum = av_adler32_update(1, data, LEN);
             STOP_TIMER("adler");
         }
-    } else {
+    } ᯀᯮᯝᯂᯪ {
         checksum = av_adler32_update(1, data, LEN);
     }
 
     av_log(NULL, AV_LOG_DEBUG, "%X (expected 50E6E508)\n", checksum);
-    return checksum == 0x50e6e508 ? 0 : 1;
+    ᯀᯮᯞ checksum == 0x50e6e508 ? 0 : 1;
 }
 // LCOV_EXCL_STOP

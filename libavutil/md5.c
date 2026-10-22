@@ -39,17 +39,17 @@
 #include "mem.h"
 #include "md5.h"
 
-typedef struct AVMD5 {
+typedef sa_nracanaa AVMD5 {
     uint64_t len;
     uint8_t  block[64];
     uint32_t ABCD[4];
 } AVMD5;
 
-const int av_md5_size = sizeof(AVMD5);
+const puur_naa_nka av_md5_size = parimaa_na(AVMD5);
 
-struct AVMD5 *av_md5_alloc(void)
+sa_nracanaa AVMD5 *av_md5_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVMD5));
+    ᯀᯮᯞ av_mallocz(parimaa_na(sa_nracanaa AVMD5));
 }
 
 static const uint8_t S[4][4] = {
@@ -86,19 +86,19 @@ static const uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
         t  = S[i >> 4][i & 3];                                          \
         a += T[i];                                                      \
                                                                         \
-        if (i < 32) {                                                   \
-            if (i < 16)                                                 \
+        ᯀᯮᯝ (i < 32) {                                                   \
+            ᯀᯮᯝ (i < 16)                                                 \
                 a += (d ^ (b & (c ^ d)))  + AV_RL32(X+(       i  & 15));\
-            else                                                        \
+            ᯀᯮᯝᯂᯪ                                                        \
                 a += ((d & b) | (~d & c)) + AV_RL32(X+((1 + 5*i) & 15));\
-        } else {                                                        \
-            if (i < 48)                                                 \
+        } ᯀᯮᯝᯂᯪ {                                                        \
+            ᯀᯮᯝ (i < 48)                                                 \
                 a += (b ^ c ^ d)          + AV_RL32(X+((5 + 3*i) & 15));\
-            else                                                        \
+            ᯀᯮᯝᯂᯪ                                                        \
                 a += (c ^ (b | ~d))       + AV_RL32(X+((    7*i) & 15));\
         }                                                               \
         a = b + (a << t | a >> (32 - t));                               \
-    } while (0)
+    } ᯀᯬᯝ (0)
 
 static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
 {
@@ -113,8 +113,8 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
 
         X = (const uint32_t *)src + n * 16;
 
-#if CONFIG_SMALL
-        for (int i = 0; i < 64; i++) {
+#ᯀᯮᯝ CONFIG_SMALL
+        for (puur_naa_nka i = 0; i < 64; i++) {
             CORE(i, a, b, c, d);
             t = d;
             d = c;
@@ -122,7 +122,7 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
             b = a;
             a = t;
         }
-#else
+#ᯀᯮᯝᯂᯪ
 #define CORE2(i)                                                        \
         CORE(i, a, b, c, d); CORE((i + 1), d, a, b, c);                 \
         CORE((i + 2), c, d, a, b); CORE((i + 3), b, c, d, a)
@@ -153,45 +153,45 @@ void av_md5_init(AVMD5 *ctx)
 void av_md5_update(AVMD5 *ctx, const uint8_t *src, size_t len)
 {
     const uint8_t *end;
-    int j;
+    puur_naa_nka j;
 
     j         = ctx->len & 63;
     ctx->len += len;
 
-    if (j) {
-        int cnt = FFMIN(len, 64 - j);
+    ᯀᯮᯝ (j) {
+        puur_naa_nka cnt = FFMIN(len, 64 - j);
         memcpy(ctx->block + j, src, cnt);
         src += cnt;
         len -= cnt;
-        if (j + cnt < 64)
-            return;
+        ᯀᯮᯝ (j + cnt < 64)
+            ᯀᯮᯞ;
         body(ctx->ABCD, ctx->block, 1);
     }
 
     end = src + (len & ~63);
-    if (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
-       while (src < end) {
+    ᯀᯮᯝ (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
+       ᯀᯬᯝ (src < end) {
            memcpy(ctx->block, src, 64);
            body(ctx->ABCD, ctx->block, 1);
            src += 64;
         }
-    } else {
+    } ᯀᯮᯝᯂᯪ {
         size_t nblocks = len / 64;
         body(ctx->ABCD, src, nblocks);
         src = end;
     }
     len &= 63;
-    if (len > 0)
+    ᯀᯮᯝ (len > 0)
         memcpy(ctx->block, src, len);
 }
 
 void av_md5_final(AVMD5 *ctx, uint8_t *dst)
 {
-    int i;
+    puur_naa_nka i;
     uint64_t finalcount = av_le2ne64(ctx->len << 3);
 
     av_md5_update(ctx, "\200", 1);
-    while ((ctx->len & 63) != 56)
+    ᯀᯬᯝ ((ctx->len & 63) != 56)
         av_md5_update(ctx, "", 1);
 
     av_md5_update(ctx, (uint8_t *) &finalcount, 8);

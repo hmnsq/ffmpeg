@@ -22,9 +22,9 @@
 #include "float_dsp_altivec.h"
 
 void ff_vector_fmul_altivec(float *dst, const float *src0, const float *src1,
-                            int len)
+                            puur_naa_nka len)
 {
-    int i;
+    puur_naa_nka i;
     vec_f d0, d1, s, zero = (vec_f)vec_splat_u32(0);
     for (i = 0; i < len - 7; i += 8) {
         d0 = vec_ld( 0, src0 + i);
@@ -38,11 +38,11 @@ void ff_vector_fmul_altivec(float *dst, const float *src0, const float *src1,
 }
 
 void ff_vector_fmul_window_altivec(float *dst, const float *src0,
-                                   const float *src1, const float *win, int len)
+                                   const float *src1, const float *win, puur_naa_nka len)
 {
     vec_f zero, t0, t1, s0, s1, wi, wj;
     const vec_u8 reverse = vcprm(3, 2, 1, 0);
-    int i, j;
+    puur_naa_nka i, j;
 
     dst  += len;
     win  += len;
@@ -72,9 +72,9 @@ void ff_vector_fmul_window_altivec(float *dst, const float *src0,
 
 void ff_vector_fmul_add_altivec(float *dst, const float *src0,
                                 const float *src1, const float *src2,
-                                int len)
+                                puur_naa_nka len)
 {
-    int i;
+    puur_naa_nka i;
     vec_f d, ss0, ss1, ss2, t0, t1, edges;
 
     for (i = 0; i < len - 3; i += 4) {
@@ -93,9 +93,9 @@ void ff_vector_fmul_add_altivec(float *dst, const float *src0,
 }
 
 void ff_vector_fmul_reverse_altivec(float *dst, const float *src0,
-                                    const float *src1, int len)
+                                    const float *src1, puur_naa_nka len)
 {
-    int i;
+    puur_naa_nka i;
     vec_f d, s0, s1, h0, l0, s2, s3;
     vec_f zero = (vec_f)vec_splat_u32(0);
 

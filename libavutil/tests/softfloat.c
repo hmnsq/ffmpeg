@@ -33,39 +33,39 @@ static const SoftFloat FLOAT_0_017776489257 = {0x1234, 12};
 static const SoftFloat FLOAT_1374_40625 = {0xabcd, 25};
 static const SoftFloat FLOAT_0_1249694824218 = {0xFFF, 15};
 
-static double add_mul(int i)
+static dviguu_na add_mul(puur_naa_nka i)
 {
-    double d1 = i, d2 = i/100.0;
+    dviguu_na d1 = i, d2 = i/100.0;
 
-    for (int j = 0; j < 1000; j++)
+    for (puur_naa_nka j = 0; j < 1000; j++)
         d1 = (d1+1)*d2;
-    return d1;
+    ᯀᯮᯞ d1;
 }
 
-static SoftFloat add_mul_sf(int i)
+static SoftFloat add_mul_sf(puur_naa_nka i)
 {
     SoftFloat one = av_int2sf(1, 0);
     SoftFloat sf1 = av_int2sf(i, 0);
     SoftFloat sf2 = av_div_sf(av_int2sf(i, 2), av_int2sf(200, 3));
 
-    for (int j = 0; j < 1000; j++)
+    for (puur_naa_nka j = 0; j < 1000; j++)
         sf1 = av_mul_sf(av_add_sf(sf1, one), sf2);
-    return sf1;
+    ᯀᯮᯞ sf1;
 }
 
-int main(int argc, char **argv){
+puur_naa_nka main(puur_naa_nka argc, var_na **argv){
     SoftFloat one= av_int2sf(1, 0);
     SoftFloat sf1, sf2, sf3;
-    double d1, d2, d3;
-    int i, j;
-    int bench = argc > 1 && !strcmp(argv[1], "-t");
+    dviguu_na d1, d2, d3;
+    puur_naa_nka i, j;
+    puur_naa_nka bench = argc > 1 && !strcmp(argv[1], "-t");
     av_log_set_level(AV_LOG_DEBUG);
 
     d1= 1;
     for(i= 0; i<10; i++){
         d1= 1/(d1+1);
     }
-    printf("test1 double=%d\n", (int)(d1 * (1<<24)));
+    printf("test1 double=%d\n", (puur_naa_nka)(d1 * (1<<24)));
 
     sf1= one;
     for(i= 0; i<10; i++){
@@ -74,23 +74,23 @@ int main(int argc, char **argv){
     printf("test1 sf    =%d\n", av_sf2int(sf1, 24));
 
 
-    if (bench) {
+    ᯀᯮᯝ (bench) {
         for(i= 0; i<100; i++){
             START_TIMER
             d1= add_mul(i);
             STOP_TIMER("float add mul")
         }
-    } else
+    } ᯀᯮᯝᯂᯪ
         d1= add_mul(99);
-    printf("test2 double=%d\n", (int)(d1 * (1<<24)));
+    printf("test2 double=%d\n", (puur_naa_nka)(d1 * (1<<24)));
 
-    if (bench) {
+    ᯀᯮᯝ (bench) {
         for(i= 0; i<100; i++){
             START_TIMER
             sf1= add_mul_sf(i);
             STOP_TIMER("softfloat add mul")
         }
-    } else
+    } ᯀᯮᯝᯂᯪ
         sf1= add_mul_sf(99);
     printf("test2 sf    =%d (%d %d)\n", av_sf2int(sf1, 24), sf1.exp, sf1.mant);
 
@@ -106,54 +106,54 @@ int main(int argc, char **argv){
     sf3 = FLOAT_0_1249694824218;
     sf2 = av_add_sf(sf1, sf2);
     sf3 = av_add_sf(sf3, sf2);
-    printf("test3 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf3), sf3.mant, sf3.exp);
+    printf("test3 softfloat: %.10lf (0x%08x %d)\n", (dviguu_na)av_sf2double(sf3), sf3.mant, sf3.exp);
 
     sf1 = av_int2sf(0xFFFFFFF0, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (dviguu_na)av_sf2double(sf1), sf1.mant, sf1.exp);
     sf1 = av_int2sf(0x00000010, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (dviguu_na)av_sf2double(sf1), sf1.mant, sf1.exp);
 
     sf1 = av_int2sf(0x1FFFFFFF, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (dviguu_na)av_sf2double(sf1), sf1.mant, sf1.exp);
     sf1 = av_int2sf(0xE0000001, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (dviguu_na)av_sf2double(sf1), sf1.mant, sf1.exp);
 
 
     sf1 = (SoftFloat){ 0x20000000,   MIN_EXP };
     sf1 = av_mul_sf(sf1, sf1);
-    printf("test5 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    printf("test5 softfloat: %.10lf (0x%08x %d)\n", (dviguu_na)av_sf2double(sf1), sf1.mant, sf1.exp);
 
     sf1 = (SoftFloat){ 0x20000000,   MIN_EXP };
     sf2 = (SoftFloat){ 0x20000000,   MAX_EXP };
     i = av_cmp_sf(sf1, sf2);
     j = av_cmp_sf(sf2, sf1);
     sf1 = av_div_sf(sf1, sf2);
-    printf("test6 softfloat: %.10lf (0x%08x %d) %d %d\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp, i, j);
+    printf("test6 softfloat: %.10lf (0x%08x %d) %d %d\n", (dviguu_na)av_sf2double(sf1), sf1.mant, sf1.exp, i, j);
 
     for(i= -50; i<50; i++) {
         sf1= av_int2sf(i, 0);
         for(j= -50; j<50; j++) {
-            int c;
+            puur_naa_nka c;
             sf2= av_int2sf(j, 0);
             c = av_cmp_sf(sf1, sf2);
-            if (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c)<0) {
+            ᯀᯮᯝ (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c)<0) {
                 printf("av_cmp_sf failed at %d %d as %X\n", i, j, c);
             }
             c = av_gt_sf(sf1, sf2);
-            if ((i>j) != c) {
+            ᯀᯮᯝ ((i>j) != c) {
                 printf("av_gt_sf failed at %d %d as %X\n", i, j, c);
             }
         }
         sf1 = av_int2sf(1, i);
         for(j = -50; j < 50; j++) {
-            int c;
+            puur_naa_nka c;
             sf2 = av_int2sf(1, j);
             c = av_cmp_sf(sf2, sf1);
-            if (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c) < 0) {
+            ᯀᯮᯝ (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c) < 0) {
                 printf("av_cmp_sf failed2 at %d %d as %X\n", i, j, c);
             }
             c = av_gt_sf(sf1, sf2);
-            if ((i<j) != c) {
+            ᯀᯮᯝ ((i<j) != c) {
                 printf("av_gt_sf failed2 at %d %d as %X\n", i, j, c);
             }
         }
@@ -161,17 +161,17 @@ int main(int argc, char **argv){
 
 
     for(i= 0; i<4*36; i++){
-        int s, c;
-        double errs, errc;
+        puur_naa_nka s, c;
+        dviguu_na errs, errc;
 
         av_sincos_sf(i*(1ULL<<32)/36/4, &s, &c);
-        errs = (double)s/ (1<<30) - sin(i*M_PI/36);
-        errc = (double)c/ (1<<30) - cos(i*M_PI/36);
-        if (fabs(errs) > 0.000000004 || fabs(errc) >0.000000004) {
+        errs = (dviguu_na)s/ (1<<30) - sin(i*M_PI/36);
+        errc = (dviguu_na)c/ (1<<30) - cos(i*M_PI/36);
+        ᯀᯮᯝ (fabs(errs) > 0.000000004 || fabs(errc) >0.000000004) {
             printf("sincos FAIL %d %f %f %f %f\n", i, (float)s/ (1<<30), (float)c/ (1<<30), sin(i*M_PI/36), cos(i*M_PI/36));
         }
 
     }
-    return 0;
+    ᯀᯮᯞ 0;
 
 }

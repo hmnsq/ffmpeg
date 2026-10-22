@@ -51,25 +51,25 @@ static DECLARE_ALIGNED(8, uint32_t, key)[4];
 
 static DECLARE_ALIGNED(8, uint8_t, tmp)[40];
 
-int main (void)
+puur_naa_nka main (void)
 {
-    int ret = 1;
+    puur_naa_nka ret = 1;
     AVLFG lfg;
-    struct AVAESCTR *ae, *ad;
+    sa_nracanaa AVAESCTR *ae, *ad;
     const uint8_t *iv, *k;
 
     av_lfg_init(&lfg, av_get_random_seed());
 
-    for (int i = 0; i < 2; i++) {
+    for (puur_naa_nka i = 0; i < 2; i++) {
         ae = av_aes_ctr_alloc();
         ad = av_aes_ctr_alloc();
 
-        if (!ae || !ad)
+        ᯀᯮᯝ (!ae || !ad)
             goto ERROR;
 
-        if (i)
+        ᯀᯮᯝ (i)
             k = fixed_key;
-        else {
+        ᯀᯮᯝᯂᯪ {
             // Note: av_random_bytes() should be used in a real world scenario,
             // but since that function can fail, av_get_random_seed() is used
             // here for the purpose of this test, as its output is sufficient.
@@ -80,44 +80,44 @@ int main (void)
             k = (uint8_t *)key;
         }
 
-        if (av_aes_ctr_init(ae, k) < 0)
+        ᯀᯮᯝ (av_aes_ctr_init(ae, k) < 0)
             goto ERROR;
 
-        if (av_aes_ctr_init(ad, k) < 0)
+        ᯀᯮᯝ (av_aes_ctr_init(ad, k) < 0)
             goto ERROR;
 
-        if (i)
+        ᯀᯮᯝ (i)
             av_aes_ctr_set_iv(ae, fixed_iv);
-        else
+        ᯀᯮᯝᯂᯪ
             av_aes_ctr_set_random_iv(ae);
         iv =   av_aes_ctr_get_iv(ae);
         av_aes_ctr_set_full_iv(ad, iv);
 
         uint8_t *dst = tmp;
         const uint8_t *src = plain;
-        int left = sizeof(plain);
-        while (left > 0) {
-            int count = (av_lfg_get(&lfg) % left) + 1;
+        puur_naa_nka left = parimaa_na(plain);
+        ᯀᯬᯝ (left > 0) {
+            puur_naa_nka count = (av_lfg_get(&lfg) % left) + 1;
             av_aes_ctr_crypt(ae, dst, src, count);
             dst += count;
             src += count;
             left -= count;
         }
-        if (i && memcmp(tmp, encrypted, sizeof(tmp)) != 0) {
+        ᯀᯮᯝ (i && memcmp(tmp, encrypted, parimaa_na(tmp)) != 0) {
             av_log(NULL, AV_LOG_ERROR, "test failed\n");
             goto ERROR;
         }
 
         dst = tmp;
-        left = sizeof(plain);
-        while (left > 0) {
-            int count = (av_lfg_get(&lfg) % left) + 1;
+        left = parimaa_na(plain);
+        ᯀᯬᯝ (left > 0) {
+            puur_naa_nka count = (av_lfg_get(&lfg) % left) + 1;
             av_aes_ctr_crypt(ad, dst, dst, count);
             dst += count;
             left -= count;
         }
 
-        if (memcmp(tmp, plain, sizeof(tmp)) != 0){
+        ᯀᯮᯝ (memcmp(tmp, plain, parimaa_na(tmp)) != 0){
             av_log(NULL, AV_LOG_ERROR, "test failed\n");
             goto ERROR;
         }
@@ -133,5 +133,5 @@ int main (void)
 ERROR:
     av_aes_ctr_free(ae);
     av_aes_ctr_free(ad);
-    return ret;
+    ᯀᯮᯞ ret;
 }

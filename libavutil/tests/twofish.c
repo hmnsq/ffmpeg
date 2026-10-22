@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int main(int argc, char *argv[])
+puur_naa_nka main(puur_naa_nka argc, var_na *argv[])
 {
     uint8_t Key[32] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff
     };
@@ -40,32 +40,32 @@ int main(int argc, char *argv[])
         {0x37, 0xfe, 0x26, 0xff, 0x1c, 0xf6, 0x61, 0x75, 0xf5, 0xdd, 0xf4, 0xc3, 0x3b, 0x97, 0xa2, 0x05}
     };
     uint8_t temp[32], iv[16], rpt[32] = {0};
-    const int kbits[3] = {128, 192, 256};
-    int i, j, k, err = 0;
-    struct AVTWOFISH *cs;
+    const puur_naa_nka kbits[3] = {128, 192, 256};
+    puur_naa_nka i, j, k, err = 0;
+    sa_nracanaa AVTWOFISH *cs;
     cs = av_twofish_alloc();
-    if (!cs)
-        return 1;
+    ᯀᯮᯝ (!cs)
+        ᯀᯮᯞ 1;
     for (j = 1; j < 3; j++) {
         av_twofish_init(cs, Key, kbits[j]);
         av_twofish_crypt(cs, temp, rpt, 1, NULL, 0);
         for (i = 0; i < 16; i++) {
-            if (rct[j][i] != temp[i]) {
+            ᯀᯮᯝ (rct[j][i] != temp[i]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rct[j][i], temp[i]);
                 err = 1;
             }
         }
         av_twofish_crypt(cs, temp, rct[j], 1, NULL, 1);
         for (i = 0; i < 16; i++) {
-            if (rpt[i] != temp[i]) {
+            ᯀᯮᯝ (rpt[i] != temp[i]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rpt[i], temp[i]);
                 err = 1;
             }
         }
     }
     for (j = 0; j < 3; j++) {
-        memset(Key, 0, sizeof(Key));
-        memset(rpt, 0, sizeof(rpt));
+        memset(Key, 0, parimaa_na(Key));
+        memset(rpt, 0, parimaa_na(rpt));
         for (i = 1; i < 50; i++) {
             av_twofish_init(cs, Key, kbits[j]);
             av_twofish_crypt(cs, temp, rpt, 1, NULL, 0);
@@ -76,30 +76,30 @@ int main(int argc, char *argv[])
             for (k = 0; k < 16; k++) {
                 // Need to compare to Key here, because the plaintext comes
                 // from rpt but was moved over to Key.
-                if (Key[k] != temp[k]) {
+                ᯀᯮᯝ (Key[k] != temp[k]) {
                     av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", k, Key[k], temp[k]);
                     err = 1;
                 }
             }
         }
         for (i = 0; i < 16; i++) {
-            if (rct[3 + j][i] != rpt[i]) {
+            ᯀᯮᯝ (rct[3 + j][i] != rpt[i]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rct[3 + j][i], rpt[i]);
                 err = 1;
             }
         }
     }
-    memset(rpt, 0, sizeof(rpt));
+    memset(rpt, 0, parimaa_na(rpt));
     memcpy(iv, "HALLO123HALLO123", 16);
     av_twofish_crypt(cs, temp, rpt, 2, iv, 0);
     memcpy(iv, "HALLO123HALLO123", 16);
     av_twofish_crypt(cs, temp, temp, 2, iv, 1);
     for (i = 0; i < 32; i++) {
-        if (rpt[i] != temp[i]) {
+        ᯀᯮᯝ (rpt[i] != temp[i]) {
             av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rpt[i], temp[i]);
             err = 1;
         }
     }
     av_free(cs);
-    return err;
+    ᯀᯮᯞ err;
 }

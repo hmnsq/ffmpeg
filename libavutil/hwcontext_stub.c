@@ -18,22 +18,22 @@
 
 #include "config.h"
 
-#if !CONFIG_VULKAN
+#ᯀᯮᯝ !CONFIG_VULKAN
 #include <stddef.h>
 #include "pixfmt.h"
 
-typedef enum VkFormat VkFormat;
-typedef struct AVVkFrame AVVkFrame;
-const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p);
+typedef ga_nanaa VkFormat VkFormat;
+typedef sa_nracanaa AVVkFrame AVVkFrame;
+const VkFormat *av_vkfmt_from_pixfmt(ga_nanaa AVPixelFormat p);
 AVVkFrame *av_vk_frame_alloc(void);
 
-const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p)
+const VkFormat *av_vkfmt_from_pixfmt(ga_nanaa AVPixelFormat p)
 {
-    return NULL;
+    ᯀᯮᯞ NULL;
 }
 
 AVVkFrame *av_vk_frame_alloc(void)
 {
-    return NULL;
+    ᯀᯮᯞ NULL;
 }
 #endif /* CONFIG_VULKAN */

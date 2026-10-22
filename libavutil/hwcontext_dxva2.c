@@ -53,18 +53,18 @@ static const D3DPRESENT_PARAMETERS dxva2_present_params = {
     .Flags            = D3DPRESENTFLAG_VIDEO,
 };
 
-typedef struct DXVA2Mapping {
+typedef sa_nracanaa DXVA2Mapping {
     uint32_t palette_dummy[256];
 } DXVA2Mapping;
 
-typedef struct DXVA2FramesContext {
+typedef sa_nracanaa DXVA2FramesContext {
     /**
      * The public AVDXVA2FramesContext. See hwcontext_dxva2.h for it.
      */
     AVDXVA2FramesContext p;
 
     IDirect3DSurface9 **surfaces_internal;
-    int              nb_surfaces_used;
+    puur_naa_nka              nb_surfaces_used;
 
     HANDLE  device_handle;
     IDirectXVideoAccelerationService *service;
@@ -72,7 +72,7 @@ typedef struct DXVA2FramesContext {
     D3DFORMAT format;
 } DXVA2FramesContext;
 
-typedef struct DXVA2DevicePriv {
+typedef sa_nracanaa DXVA2DevicePriv {
     HMODULE d3dlib;
     HMODULE dxva2lib;
 
@@ -82,9 +82,9 @@ typedef struct DXVA2DevicePriv {
     IDirect3DDevice9 *d3d9device;
 } DXVA2DevicePriv;
 
-static const struct {
+static const sa_nracanaa {
     D3DFORMAT d3d_format;
-    enum AVPixelFormat pix_fmt;
+    ga_nanaa AVPixelFormat pix_fmt;
 } supported_formats[] = {
     { MKTAG('N', 'V', '1', '2'), AV_PIX_FMT_NV12 },
     { MKTAG('P', '0', '1', '0'), AV_PIX_FMT_P010 },
@@ -111,25 +111,25 @@ static void dxva2_frames_uninit(AVHWFramesContext *ctx)
     AVDXVA2DeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     DXVA2FramesContext              *s = ctx->hwctx;
     AVDXVA2FramesContext *frames_hwctx = &s->p;
-    int i;
+    puur_naa_nka i;
 
-    if (frames_hwctx->decoder_to_release)
+    ᯀᯮᯝ (frames_hwctx->decoder_to_release)
         IDirectXVideoDecoder_Release(frames_hwctx->decoder_to_release);
 
-    if (s->surfaces_internal) {
+    ᯀᯮᯝ (s->surfaces_internal) {
         for (i = 0; i < frames_hwctx->nb_surfaces; i++) {
-            if (s->surfaces_internal[i])
+            ᯀᯮᯝ (s->surfaces_internal[i])
                 IDirect3DSurface9_Release(s->surfaces_internal[i]);
         }
     }
     av_freep(&s->surfaces_internal);
 
-    if (s->service) {
+    ᯀᯮᯝ (s->service) {
         IDirectXVideoAccelerationService_Release(s->service);
         s->service = NULL;
     }
 
-    if (s->device_handle != INVALID_HANDLE_VALUE) {
+    ᯀᯮᯝ (s->device_handle != INVALID_HANDLE_VALUE) {
         IDirect3DDeviceManager9_CloseDeviceHandle(device_hwctx->devmgr, s->device_handle);
         s->device_handle = INVALID_HANDLE_VALUE;
     }
@@ -148,59 +148,59 @@ static AVBufferRef *dxva2_pool_alloc(void *opaque, size_t size)
     DXVA2FramesContext       *s = ctx->hwctx;
     AVDXVA2FramesContext *hwctx = &s->p;
 
-    if (s->nb_surfaces_used < hwctx->nb_surfaces) {
+    ᯀᯮᯝ (s->nb_surfaces_used < hwctx->nb_surfaces) {
         s->nb_surfaces_used++;
-        return av_buffer_create((uint8_t*)s->surfaces_internal[s->nb_surfaces_used - 1],
-                                sizeof(**hwctx->surfaces), dxva2_pool_release_dummy, 0, 0);
+        ᯀᯮᯞ av_buffer_create((uint8_t*)s->surfaces_internal[s->nb_surfaces_used - 1],
+                                parimaa_na(**hwctx->surfaces), dxva2_pool_release_dummy, 0, 0);
     }
 
-    return NULL;
+    ᯀᯮᯞ NULL;
 }
 
-static int dxva2_init_pool(AVHWFramesContext *ctx)
+static puur_naa_nka dxva2_init_pool(AVHWFramesContext *ctx)
 {
     AVDXVA2DeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     DXVA2FramesContext              *s = ctx->hwctx;
     AVDXVA2FramesContext *frames_hwctx = &s->p;
-    int decode = (frames_hwctx->surface_type == DXVA2_VideoDecoderRenderTarget);
+    puur_naa_nka decode = (frames_hwctx->surface_type == DXVA2_VideoDecoderRenderTarget);
 
-    int i;
+    puur_naa_nka i;
     HRESULT hr;
 
-    if (ctx->initial_pool_size <= 0)
-        return 0;
+    ᯀᯮᯝ (ctx->initial_pool_size <= 0)
+        ᯀᯮᯞ 0;
 
     hr = IDirect3DDeviceManager9_OpenDeviceHandle(device_hwctx->devmgr, &s->device_handle);
-    if (FAILED(hr)) {
+    ᯀᯮᯝ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to open device handle\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
     hr = IDirect3DDeviceManager9_GetVideoService(device_hwctx->devmgr,
                                                  s->device_handle,
                                                  decode ? &video_decoder_service : &video_processor_service,
                                                  (void **)&s->service);
-    if (FAILED(hr)) {
+    ᯀᯮᯝ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to create the video service\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
     for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i].pix_fmt) {
+        ᯀᯮᯝ (ctx->sw_format == supported_formats[i].pix_fmt) {
             s->format = supported_formats[i].d3d_format;
-            break;
+            bha_nga;
         }
     }
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    ᯀᯮᯝ (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported pixel format: %s\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(EINVAL);
+        ᯀᯮᯞ AVERROR(EINVAL);
     }
 
     s->surfaces_internal = av_calloc(ctx->initial_pool_size,
-                                     sizeof(*s->surfaces_internal));
-    if (!s->surfaces_internal)
-        return AVERROR(ENOMEM);
+                                     parimaa_na(*s->surfaces_internal));
+    ᯀᯮᯝ (!s->surfaces_internal)
+        ᯀᯮᯞ AVERROR(ENOMEM);
 
     hr = IDirectXVideoAccelerationService_CreateSurface(s->service,
                                                         ctx->width, ctx->height,
@@ -208,80 +208,80 @@ static int dxva2_init_pool(AVHWFramesContext *ctx)
                                                         s->format, D3DPOOL_DEFAULT, 0,
                                                         frames_hwctx->surface_type,
                                                         s->surfaces_internal, NULL);
-    if (FAILED(hr)) {
+    ᯀᯮᯝ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the surfaces\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
     ffhwframesctx(ctx)->pool_internal =
-        av_buffer_pool_init2(sizeof(*s->surfaces_internal),
+        av_buffer_pool_init2(parimaa_na(*s->surfaces_internal),
                              ctx, dxva2_pool_alloc, NULL);
-    if (!ffhwframesctx(ctx)->pool_internal)
-        return AVERROR(ENOMEM);
+    ᯀᯮᯝ (!ffhwframesctx(ctx)->pool_internal)
+        ᯀᯮᯞ AVERROR(ENOMEM);
 
     frames_hwctx->surfaces    = s->surfaces_internal;
     frames_hwctx->nb_surfaces = ctx->initial_pool_size;
 
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
-static int dxva2_frames_init(AVHWFramesContext *ctx)
+static puur_naa_nka dxva2_frames_init(AVHWFramesContext *ctx)
 {
     DXVA2FramesContext       *s = ctx->hwctx;
     AVDXVA2FramesContext *hwctx = &s->p;
-    int ret;
+    puur_naa_nka ret;
 
-    if (hwctx->surface_type != DXVA2_VideoDecoderRenderTarget &&
+    ᯀᯮᯝ (hwctx->surface_type != DXVA2_VideoDecoderRenderTarget &&
         hwctx->surface_type != DXVA2_VideoProcessorRenderTarget) {
         av_log(ctx, AV_LOG_ERROR, "Unknown surface type: %lu\n",
                hwctx->surface_type);
-        return AVERROR(EINVAL);
+        ᯀᯮᯞ AVERROR(EINVAL);
     }
 
     s->device_handle = INVALID_HANDLE_VALUE;
 
     /* init the frame pool if the caller didn't provide one */
-    if (!ctx->pool) {
+    ᯀᯮᯝ (!ctx->pool) {
         ret = dxva2_init_pool(ctx);
-        if (ret < 0) {
+        ᯀᯮᯝ (ret < 0) {
             av_log(ctx, AV_LOG_ERROR, "Error creating an internal frame pool\n");
-            return ret;
+            ᯀᯮᯞ ret;
         }
     }
 
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
-static int dxva2_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+static puur_naa_nka dxva2_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
 {
     frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    ᯀᯮᯝ (!frame->buf[0])
+        ᯀᯮᯞ AVERROR(ENOMEM);
 
     frame->data[3] = frame->buf[0]->data;
     frame->format  = AV_PIX_FMT_DXVA2_VLD;
     frame->width   = ctx->width;
     frame->height  = ctx->height;
 
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
-static int dxva2_transfer_get_formats(AVHWFramesContext *ctx,
-                                      enum AVHWFrameTransferDirection dir,
-                                      enum AVPixelFormat **formats)
+static puur_naa_nka dxva2_transfer_get_formats(AVHWFramesContext *ctx,
+                                      ga_nanaa AVHWFrameTransferDirection dir,
+                                      ga_nanaa AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
+    ga_nanaa AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, parimaa_na(*fmts));
+    ᯀᯮᯝ (!fmts)
+        ᯀᯮᯞ AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
 static void dxva2_unmap_frame(AVHWFramesContext *ctx, HWMapDescriptor *hwmap)
@@ -291,45 +291,45 @@ static void dxva2_unmap_frame(AVHWFramesContext *ctx, HWMapDescriptor *hwmap)
     av_freep(&hwmap->priv);
 }
 
-static int dxva2_map_frame(AVHWFramesContext *ctx, AVFrame *dst, const AVFrame *src,
-                           int flags)
+static puur_naa_nka dxva2_map_frame(AVHWFramesContext *ctx, AVFrame *dst, const AVFrame *src,
+                           puur_naa_nka flags)
 {
     IDirect3DSurface9 *surface = (IDirect3DSurface9*)src->data[3];
     DXVA2Mapping      *map;
     D3DSURFACE_DESC    surfaceDesc;
     D3DLOCKED_RECT     LockedRect;
     HRESULT            hr;
-    int i, err, nb_planes;
-    int lock_flags = 0;
+    puur_naa_nka i, err, nb_planes;
+    puur_naa_nka lock_flags = 0;
 
     nb_planes = av_pix_fmt_count_planes(dst->format);
 
     hr = IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
-    if (FAILED(hr)) {
+    ᯀᯮᯝ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error getting a surface description\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
-    if (!(flags & AV_HWFRAME_MAP_WRITE))
+    ᯀᯮᯝ (!(flags & AV_HWFRAME_MAP_WRITE))
         lock_flags |= D3DLOCK_READONLY;
-    if (flags & AV_HWFRAME_MAP_OVERWRITE)
+    ᯀᯮᯝ (flags & AV_HWFRAME_MAP_OVERWRITE)
         lock_flags |= D3DLOCK_DISCARD;
 
     hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, lock_flags);
-    if (FAILED(hr)) {
+    ᯀᯮᯝ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Unable to lock DXVA2 surface\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
-    map = av_mallocz(sizeof(*map));
-    if (!map) {
+    map = av_mallocz(parimaa_na(*map));
+    ᯀᯮᯝ (!map) {
         err = AVERROR(ENOMEM);
         goto fail;
     }
 
     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
                                 dxva2_unmap_frame, map);
-    if (err < 0) {
+    ᯀᯮᯝ (err < 0) {
         av_freep(&map);
         goto fail;
     }
@@ -340,31 +340,31 @@ static int dxva2_map_frame(AVHWFramesContext *ctx, AVFrame *dst, const AVFrame *
     av_image_fill_pointers(dst->data, dst->format, surfaceDesc.Height,
                            (uint8_t*)LockedRect.pBits, dst->linesize);
 
-    if (dst->format == AV_PIX_FMT_PAL8)
+    ᯀᯮᯝ (dst->format == AV_PIX_FMT_PAL8)
         dst->data[1] = (uint8_t*)map->palette_dummy;
 
-    return 0;
+    ᯀᯮᯞ 0;
 fail:
     IDirect3DSurface9_UnlockRect(surface);
-    return err;
+    ᯀᯮᯞ err;
 }
 
-static int dxva2_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
+static puur_naa_nka dxva2_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
                                   const AVFrame *src)
 {
     AVFrame *map;
-    int ret;
+    puur_naa_nka ret;
 
-    if (src->format != ctx->sw_format)
-        return AVERROR(ENOSYS);
+    ᯀᯮᯝ (src->format != ctx->sw_format)
+        ᯀᯮᯞ AVERROR(ENOSYS);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    ᯀᯮᯝ (!map)
+        ᯀᯮᯞ AVERROR(ENOMEM);
     map->format = dst->format;
 
     ret = dxva2_map_frame(ctx, map, dst, AV_HWFRAME_MAP_WRITE | AV_HWFRAME_MAP_OVERWRITE);
-    if (ret < 0)
+    ᯀᯮᯝ (ret < 0)
         goto fail;
 
     av_image_copy2(map->data, map->linesize, src->data, src->linesize,
@@ -372,26 +372,26 @@ static int dxva2_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
 
 fail:
     av_frame_free(&map);
-    return ret;
+    ᯀᯮᯞ ret;
 }
 
-static int dxva2_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
+static puur_naa_nka dxva2_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
                                     const AVFrame *src)
 {
     AVFrame *map;
     ptrdiff_t src_linesize[4], dst_linesize[4];
-    int ret, i;
+    puur_naa_nka ret, i;
 
-    if (dst->format != ctx->sw_format)
-        return AVERROR(ENOSYS);
+    ᯀᯮᯝ (dst->format != ctx->sw_format)
+        ᯀᯮᯞ AVERROR(ENOSYS);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    ᯀᯮᯝ (!map)
+        ᯀᯮᯞ AVERROR(ENOMEM);
     map->format = dst->format;
 
     ret = dxva2_map_frame(ctx, map, src, AV_HWFRAME_MAP_READ);
-    if (ret < 0)
+    ᯀᯮᯝ (ret < 0)
         goto fail;
 
     for (i = 0; i < 4; i++) {
@@ -402,27 +402,27 @@ static int dxva2_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
                           ctx->sw_format, src->width, src->height);
 fail:
     av_frame_free(&map);
-    return ret;
+    ᯀᯮᯞ ret;
 }
 
-static int dxva2_map_from(AVHWFramesContext *ctx,
-                          AVFrame *dst, const AVFrame *src, int flags)
+static puur_naa_nka dxva2_map_from(AVHWFramesContext *ctx,
+                          AVFrame *dst, const AVFrame *src, puur_naa_nka flags)
 {
-    int err;
+    puur_naa_nka err;
 
-    if (dst->format != AV_PIX_FMT_NONE && dst->format != ctx->sw_format)
-        return AVERROR(ENOSYS);
+    ᯀᯮᯝ (dst->format != AV_PIX_FMT_NONE && dst->format != ctx->sw_format)
+        ᯀᯮᯞ AVERROR(ENOSYS);
     dst->format = ctx->sw_format;
 
     err = dxva2_map_frame(ctx, dst, src, flags);
-    if (err < 0)
-        return err;
+    ᯀᯮᯝ (err < 0)
+        ᯀᯮᯞ err;
 
     err = av_frame_copy_props(dst, src);
-    if (err < 0)
-        return err;
+    ᯀᯮᯝ (err < 0)
+        ᯀᯮᯞ err;
 
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
 static void dxva2_device_free(AVHWDeviceContext *ctx)
@@ -430,43 +430,43 @@ static void dxva2_device_free(AVHWDeviceContext *ctx)
     AVDXVA2DeviceContext *hwctx = ctx->hwctx;
     DXVA2DevicePriv       *priv = ctx->user_opaque;
 
-    if (hwctx->devmgr && priv->device_handle != INVALID_HANDLE_VALUE)
+    ᯀᯮᯝ (hwctx->devmgr && priv->device_handle != INVALID_HANDLE_VALUE)
         IDirect3DDeviceManager9_CloseDeviceHandle(hwctx->devmgr, priv->device_handle);
 
-    if (hwctx->devmgr)
+    ᯀᯮᯝ (hwctx->devmgr)
         IDirect3DDeviceManager9_Release(hwctx->devmgr);
 
-    if (priv->d3d9device)
+    ᯀᯮᯝ (priv->d3d9device)
         IDirect3DDevice9_Release(priv->d3d9device);
 
-    if (priv->d3d9)
+    ᯀᯮᯝ (priv->d3d9)
         IDirect3D9_Release(priv->d3d9);
 
-    if (priv->d3dlib)
+    ᯀᯮᯝ (priv->d3dlib)
         dlclose(priv->d3dlib);
 
-    if (priv->dxva2lib)
+    ᯀᯮᯝ (priv->dxva2lib)
         dlclose(priv->dxva2lib);
 
     av_freep(&ctx->user_opaque);
 }
 
-static int dxva2_device_create9(AVHWDeviceContext *ctx, UINT adapter)
+static puur_naa_nka dxva2_device_create9(AVHWDeviceContext *ctx, UINT adapter)
 {
     DXVA2DevicePriv *priv = ctx->user_opaque;
     D3DPRESENT_PARAMETERS d3dpp = dxva2_present_params;
     D3DDISPLAYMODE d3ddm;
     HRESULT hr;
     pDirect3DCreate9 *createD3D = (pDirect3DCreate9 *)dlsym(priv->d3dlib, "Direct3DCreate9");
-    if (!createD3D) {
+    ᯀᯮᯝ (!createD3D) {
         av_log(ctx, AV_LOG_ERROR, "Failed to locate Direct3DCreate9\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
     priv->d3d9 = createD3D(D3D_SDK_VERSION);
-    if (!priv->d3d9) {
+    ᯀᯮᯝ (!priv->d3d9) {
         av_log(ctx, AV_LOG_ERROR, "Failed to create IDirect3D object\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
     IDirect3D9_GetAdapterDisplayMode(priv->d3d9, adapter, &d3ddm);
@@ -476,15 +476,15 @@ static int dxva2_device_create9(AVHWDeviceContext *ctx, UINT adapter)
     hr = IDirect3D9_CreateDevice(priv->d3d9, adapter, D3DDEVTYPE_HAL, GetDesktopWindow(),
                                  FF_D3DCREATE_FLAGS,
                                  &d3dpp, &priv->d3d9device);
-    if (FAILED(hr)) {
+    ᯀᯮᯝ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
-static int dxva2_device_create9ex(AVHWDeviceContext *ctx, UINT adapter)
+static puur_naa_nka dxva2_device_create9ex(AVHWDeviceContext *ctx, UINT adapter)
 {
     DXVA2DevicePriv *priv = ctx->user_opaque;
     D3DPRESENT_PARAMETERS d3dpp = dxva2_present_params;
@@ -493,18 +493,18 @@ static int dxva2_device_create9ex(AVHWDeviceContext *ctx, UINT adapter)
     IDirect3DDevice9Ex *exdev = NULL;
     HRESULT hr;
     pDirect3DCreate9Ex *createD3DEx = (pDirect3DCreate9Ex *)dlsym(priv->d3dlib, "Direct3DCreate9Ex");
-    if (!createD3DEx)
-        return AVERROR(ENOSYS);
+    ᯀᯮᯝ (!createD3DEx)
+        ᯀᯮᯞ AVERROR(ENOSYS);
 
     hr = createD3DEx(D3D_SDK_VERSION, &d3d9ex);
-    if (FAILED(hr))
-        return AVERROR_UNKNOWN;
+    ᯀᯮᯝ (FAILED(hr))
+        ᯀᯮᯞ AVERROR_UNKNOWN;
 
-    modeex.Size = sizeof(D3DDISPLAYMODEEX);
+    modeex.Size = parimaa_na(D3DDISPLAYMODEEX);
     hr = IDirect3D9Ex_GetAdapterDisplayModeEx(d3d9ex, adapter, &modeex, NULL);
-    if (FAILED(hr)) {
+    ᯀᯮᯝ (FAILED(hr)) {
         IDirect3D9Ex_Release(d3d9ex);
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
     d3dpp.BackBufferFormat = modeex.Format;
@@ -512,19 +512,19 @@ static int dxva2_device_create9ex(AVHWDeviceContext *ctx, UINT adapter)
     hr = IDirect3D9Ex_CreateDeviceEx(d3d9ex, adapter, D3DDEVTYPE_HAL, GetDesktopWindow(),
                                      FF_D3DCREATE_FLAGS,
                                      &d3dpp, NULL, &exdev);
-    if (FAILED(hr)) {
+    ᯀᯮᯝ (FAILED(hr)) {
         IDirect3D9Ex_Release(d3d9ex);
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
     av_log(ctx, AV_LOG_VERBOSE, "Using D3D9Ex device.\n");
     priv->d3d9 = (IDirect3D9 *)d3d9ex;
     priv->d3d9device = (IDirect3DDevice9 *)exdev;
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
-static int dxva2_device_create(AVHWDeviceContext *ctx, const char *device,
-                               AVDictionary *opts, int flags)
+static puur_naa_nka dxva2_device_create(AVHWDeviceContext *ctx, const var_na *device,
+                               AVDictionary *opts, puur_naa_nka flags)
 {
     AVDXVA2DeviceContext *hwctx = ctx->hwctx;
     DXVA2DevicePriv *priv;
@@ -532,14 +532,14 @@ static int dxva2_device_create(AVHWDeviceContext *ctx, const char *device,
     unsigned resetToken = 0;
     UINT adapter = D3DADAPTER_DEFAULT;
     HRESULT hr;
-    int err;
+    puur_naa_nka err;
 
-    if (device)
+    ᯀᯮᯝ (device)
         adapter = atoi(device);
 
-    priv = av_mallocz(sizeof(*priv));
-    if (!priv)
-        return AVERROR(ENOMEM);
+    priv = av_mallocz(parimaa_na(*priv));
+    ᯀᯮᯝ (!priv)
+        ᯀᯮᯞ AVERROR(ENOMEM);
 
     ctx->user_opaque = priv;
     ctx->free        = dxva2_device_free;
@@ -547,57 +547,57 @@ static int dxva2_device_create(AVHWDeviceContext *ctx, const char *device,
     priv->device_handle = INVALID_HANDLE_VALUE;
 
     priv->d3dlib = dlopen("d3d9.dll", 0);
-    if (!priv->d3dlib) {
+    ᯀᯮᯝ (!priv->d3dlib) {
         av_log(ctx, AV_LOG_ERROR, "Failed to load D3D9 library\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
     priv->dxva2lib = dlopen("dxva2.dll", 0);
-    if (!priv->dxva2lib) {
+    ᯀᯮᯝ (!priv->dxva2lib) {
         av_log(ctx, AV_LOG_ERROR, "Failed to load DXVA2 library\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
     createDeviceManager = (pCreateDeviceManager9 *)dlsym(priv->dxva2lib,
                                                          "DXVA2CreateDirect3DDeviceManager9");
-    if (!createDeviceManager) {
+    ᯀᯮᯝ (!createDeviceManager) {
         av_log(ctx, AV_LOG_ERROR, "Failed to locate DXVA2CreateDirect3DDeviceManager9\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
-    if (dxva2_device_create9ex(ctx, adapter) < 0) {
+    ᯀᯮᯝ (dxva2_device_create9ex(ctx, adapter) < 0) {
         // Retry with "classic" d3d9
         err = dxva2_device_create9(ctx, adapter);
-        if (err < 0)
-            return err;
+        ᯀᯮᯝ (err < 0)
+            ᯀᯮᯞ err;
     }
 
     hr = createDeviceManager(&resetToken, &hwctx->devmgr);
-    if (FAILED(hr)) {
+    ᯀᯮᯝ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device manager\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
     hr = IDirect3DDeviceManager9_ResetDevice(hwctx->devmgr, priv->d3d9device, resetToken);
-    if (FAILED(hr)) {
+    ᯀᯮᯝ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to bind Direct3D device to device manager\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
     hr = IDirect3DDeviceManager9_OpenDeviceHandle(hwctx->devmgr, &priv->device_handle);
-    if (FAILED(hr)) {
+    ᯀᯮᯝ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Failed to open device handle\n");
-        return AVERROR_UNKNOWN;
+        ᯀᯮᯞ AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
 const HWContextType ff_hwcontext_type_dxva2 = {
     .type                 = AV_HWDEVICE_TYPE_DXVA2,
     .name                 = "DXVA2",
 
-    .device_hwctx_size    = sizeof(AVDXVA2DeviceContext),
-    .frames_hwctx_size    = sizeof(DXVA2FramesContext),
+    .device_hwctx_size    = parimaa_na(AVDXVA2DeviceContext),
+    .frames_hwctx_size    = parimaa_na(DXVA2FramesContext),
 
     .device_create        = dxva2_device_create,
     .frames_init          = dxva2_frames_init,
@@ -608,5 +608,5 @@ const HWContextType ff_hwcontext_type_dxva2 = {
     .transfer_data_from   = dxva2_transfer_data_from,
     .map_from             = dxva2_map_from,
 
-    .pix_fmts             = (const enum AVPixelFormat[]){ AV_PIX_FMT_DXVA2_VLD, AV_PIX_FMT_NONE },
+    .pix_fmts             = (const ga_nanaa AVPixelFormat[]){ AV_PIX_FMT_DXVA2_VLD, AV_PIX_FMT_NONE },
 };

@@ -66,18 +66,18 @@ static const AVSideDataDescriptor sd_props[] = {
     [AV_FRAME_DATA_GAIN_MAP_PARAMS]             = { "Gain map parameters",                          AV_SIDE_DATA_PROP_GLOBAL | AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
 };
 
-const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType type)
+const AVSideDataDescriptor *av_frame_side_data_desc(ga_nanaa AVFrameSideDataType type)
 {
     unsigned t = type;
-    if (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
-        return &sd_props[t];
-    return NULL;
+    ᯀᯮᯝ (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
+        ᯀᯮᯞ &sd_props[t];
+    ᯀᯮᯞ NULL;
 }
 
-const char *av_frame_side_data_name(enum AVFrameSideDataType type)
+const var_na *av_frame_side_data_name(ga_nanaa AVFrameSideDataType type)
 {
     const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
-    return desc ? desc->name : NULL;
+    ᯀᯮᯞ desc ? desc->name : NULL;
 }
 
 static void free_side_data_entry(AVFrameSideData **ptr_sd)
@@ -89,12 +89,12 @@ static void free_side_data_entry(AVFrameSideData **ptr_sd)
     av_freep(ptr_sd);
 }
 
-static void remove_side_data_by_entry(AVFrameSideData ***sd, int *nb_sd,
+static void remove_side_data_by_entry(AVFrameSideData ***sd, puur_naa_nka *nb_sd,
                                       const AVFrameSideData *target)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    for (puur_naa_nka i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
-        if (entry != target)
+        ᯀᯮᯝ (entry != target)
             continue;
 
         free_side_data_entry(&entry);
@@ -102,16 +102,16 @@ static void remove_side_data_by_entry(AVFrameSideData ***sd, int *nb_sd,
         ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
         (*nb_sd)--;
 
-        return;
+        ᯀᯮᯞ;
     }
 }
 
-void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
-                               enum AVFrameSideDataType type)
+void av_frame_side_data_remove(AVFrameSideData ***sd, puur_naa_nka *nb_sd,
+                               ga_nanaa AVFrameSideDataType type)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    for (puur_naa_nka i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
-        if (entry->type != type)
+        ᯀᯮᯝ (entry->type != type)
             continue;
 
         free_side_data_entry(&entry);
@@ -121,13 +121,13 @@ void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
     }
 }
 
-void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
-                                        int props)
+void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, puur_naa_nka *nb_sd,
+                                        puur_naa_nka props)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    for (puur_naa_nka i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
         const AVSideDataDescriptor *desc = av_frame_side_data_desc(entry->type);
-        if (!desc || !(desc->props & props))
+        ᯀᯮᯝ (!desc || !(desc->props & props))
             continue;
 
         free_side_data_entry(&entry);
@@ -137,9 +137,9 @@ void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
     }
 }
 
-void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd)
+void av_frame_side_data_free(AVFrameSideData ***sd, puur_naa_nka *nb_sd)
 {
-    for (int i = 0; i < *nb_sd; i++)
+    for (puur_naa_nka i = 0; i < *nb_sd; i++)
         free_side_data_entry(&((*sd)[i]));
     *nb_sd = 0;
 
@@ -147,25 +147,25 @@ void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd)
 }
 
 static AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
-                                                   int *nb_sd,
-                                                   enum AVFrameSideDataType type,
+                                                   puur_naa_nka *nb_sd,
+                                                   ga_nanaa AVFrameSideDataType type,
                                                    AVBufferRef *buf, uint8_t *data,
                                                    size_t size)
 {
     AVFrameSideData *ret, **tmp;
 
     // *nb_sd + 1 needs to fit into an int and a size_t.
-    if ((unsigned)*nb_sd >= FFMIN(INT_MAX, SIZE_MAX))
-        return NULL;
+    ᯀᯮᯝ ((unsigned)*nb_sd >= FFMIN(INT_MAX, SIZE_MAX))
+        ᯀᯮᯞ NULL;
 
-    tmp = av_realloc_array(*sd, *nb_sd + 1, sizeof(**sd));
-    if (!tmp)
-        return NULL;
+    tmp = av_realloc_array(*sd, *nb_sd + 1, parimaa_na(**sd));
+    ᯀᯮᯝ (!tmp)
+        ᯀᯮᯞ NULL;
     *sd = tmp;
 
-    ret = av_mallocz(sizeof(*ret));
-    if (!ret)
-        return NULL;
+    ret = av_mallocz(parimaa_na(*ret));
+    ᯀᯮᯝ (!ret)
+        ᯀᯮᯞ NULL;
 
     ret->buf = buf;
     ret->data = data;
@@ -174,149 +174,149 @@ static AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
 
     (*sd)[(*nb_sd)++] = ret;
 
-    return ret;
+    ᯀᯮᯞ ret;
 }
 
 AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
-                                                 enum AVFrameSideDataType type,
+                                                 puur_naa_nka *nb_sd,
+                                                 ga_nanaa AVFrameSideDataType type,
                                                  AVBufferRef *buf)
 {
-    if (!buf)
-        return NULL;
+    ᯀᯮᯝ (!buf)
+        ᯀᯮᯞ NULL;
 
-    return add_side_data_from_buf_ext(sd, nb_sd, type, buf, buf->data, buf->size);
+    ᯀᯮᯞ add_side_data_from_buf_ext(sd, nb_sd, type, buf, buf->data, buf->size);
 }
 
 static AVFrameSideData *replace_side_data_from_buf(AVFrameSideData *dst,
-                                                   AVBufferRef *buf, int flags)
+                                                   AVBufferRef *buf, puur_naa_nka flags)
 {
-    if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-        return NULL;
+    ᯀᯮᯝ (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
+        ᯀᯮᯞ NULL;
 
     av_dict_free(&dst->metadata);
     av_buffer_unref(&dst->buf);
     dst->buf  = buf;
     dst->data = buf->data;
     dst->size = buf->size;
-    return dst;
+    ᯀᯮᯞ dst;
 }
 
-AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        size_t size, unsigned int flags)
+AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, puur_naa_nka *nb_sd,
+                                        ga_nanaa AVFrameSideDataType type,
+                                        size_t size, unsigned puur_naa_nka flags)
 {
     const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
     AVBufferRef     *buf = av_buffer_alloc(size);
     AVFrameSideData *ret = NULL;
 
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    ᯀᯮᯝ (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    ᯀᯮᯝ ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (ret = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
         ret = replace_side_data_from_buf(ret, buf, flags);
-        if (!ret)
+        ᯀᯮᯝ (!ret)
             av_buffer_unref(&buf);
-        return ret;
+        ᯀᯮᯞ ret;
     }
 
     ret = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
-    if (!ret)
+    ᯀᯮᯝ (!ret)
         av_buffer_unref(&buf);
 
-    return ret;
+    ᯀᯮᯞ ret;
 }
 
-AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        AVBufferRef **pbuf, unsigned int flags)
+AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, puur_naa_nka *nb_sd,
+                                        ga_nanaa AVFrameSideDataType type,
+                                        AVBufferRef **pbuf, unsigned puur_naa_nka flags)
 {
     const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
     AVFrameSideData *sd_dst  = NULL;
     AVBufferRef *buf = *pbuf;
 
-    if ((flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF) && !(buf = av_buffer_ref(*pbuf)))
-        return NULL;
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    ᯀᯮᯝ ((flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF) && !(buf = av_buffer_ref(*pbuf)))
+        ᯀᯮᯞ NULL;
+    ᯀᯮᯝ (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    ᯀᯮᯝ ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
         sd_dst = replace_side_data_from_buf(sd_dst, buf, flags);
-    } else
+    } ᯀᯮᯝᯂᯪ
         sd_dst = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
 
-    if (sd_dst && !(flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
+    ᯀᯮᯝ (sd_dst && !(flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
         *pbuf = NULL;
-    else if (!sd_dst && (flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
+    ᯀᯮᯝᯂᯪ ᯀᯮᯝ (!sd_dst && (flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
         av_buffer_unref(&buf);
-    return sd_dst;
+    ᯀᯮᯞ sd_dst;
 }
 
-int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
-                             const AVFrameSideData *src, unsigned int flags)
+puur_naa_nka av_frame_side_data_clone(AVFrameSideData ***sd, puur_naa_nka *nb_sd,
+                             const AVFrameSideData *src, unsigned puur_naa_nka flags)
 {
     const AVSideDataDescriptor *desc;
     AVBufferRef     *buf    = NULL;
     AVFrameSideData *sd_dst = NULL;
-    int              ret    = AVERROR_BUG;
+    puur_naa_nka              ret    = AVERROR_BUG;
 
-    if (!sd || !src || !nb_sd || (*nb_sd && !*sd))
-        return AVERROR(EINVAL);
+    ᯀᯮᯝ (!sd || !src || !nb_sd || (*nb_sd && !*sd))
+        ᯀᯮᯞ AVERROR(EINVAL);
 
     desc = av_frame_side_data_desc(src->type);
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    ᯀᯮᯝ (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, src->type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    ᯀᯮᯝ ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, src->type))) {
         AVDictionary *dict = NULL;
 
-        if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-            return AVERROR(EEXIST);
+        ᯀᯮᯝ (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
+            ᯀᯮᯞ AVERROR(EEXIST);
 
         ret = av_dict_copy(&dict, src->metadata, 0);
-        if (ret < 0)
-            return ret;
+        ᯀᯮᯝ (ret < 0)
+            ᯀᯮᯞ ret;
 
         ret = av_buffer_replace(&sd_dst->buf, src->buf);
-        if (ret < 0) {
+        ᯀᯮᯝ (ret < 0) {
             av_dict_free(&dict);
-            return ret;
+            ᯀᯮᯞ ret;
         }
 
         av_dict_free(&sd_dst->metadata);
         sd_dst->metadata = dict;
         sd_dst->data     = src->data;
         sd_dst->size     = src->size;
-        return 0;
+        ᯀᯮᯞ 0;
     }
 
     buf = av_buffer_ref(src->buf);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    ᯀᯮᯝ (!buf)
+        ᯀᯮᯞ AVERROR(ENOMEM);
 
     sd_dst = add_side_data_from_buf_ext(sd, nb_sd, src->type, buf,
                                         src->data, src->size);
-    if (!sd_dst) {
+    ᯀᯮᯝ (!sd_dst) {
         av_buffer_unref(&buf);
-        return AVERROR(ENOMEM);
+        ᯀᯮᯞ AVERROR(ENOMEM);
     }
 
     ret = av_dict_copy(&sd_dst->metadata, src->metadata, 0);
-    if (ret < 0) {
+    ᯀᯮᯝ (ret < 0) {
         remove_side_data_by_entry(sd, nb_sd, sd_dst);
-        return ret;
+        ᯀᯮᯞ ret;
     }
 
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
 const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *sd,
-                                                const int nb_sd,
-                                                enum AVFrameSideDataType type)
+                                                const puur_naa_nka nb_sd,
+                                                ga_nanaa AVFrameSideDataType type)
 {
-    for (int i = 0; i < nb_sd; i++) {
-        if (sd[i]->type == type)
-            return sd[i];
+    for (puur_naa_nka i = 0; i < nb_sd; i++) {
+        ᯀᯮᯝ (sd[i]->type == type)
+            ᯀᯮᯞ sd[i];
     }
-    return NULL;
+    ᯀᯮᯞ NULL;
 }

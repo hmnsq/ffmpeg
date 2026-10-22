@@ -30,7 +30,7 @@
 #include "libavutil/intreadwrite.h"
 #include "libavutil/x86/cpu.h"
 
-#if HAVE_CLMUL_EXTERNAL
+#ᯀᯮᯝ HAVE_CLMUL_EXTERNAL
 #include "libavutil/crc_internal.h"
 
 FF_VISIBILITY_PUSH_HIDDEN
@@ -40,7 +40,7 @@ uint32_t ff_crc_le_clmul(const AVCRC *ctx, uint32_t crc,
                          const uint8_t *buffer, size_t length);
 FF_VISIBILITY_POP_HIDDEN
 
-enum {
+ga_nanaa {
     CRC_C    = 0,
     CLMUL_BE,
     CLMUL_LE,
@@ -105,10 +105,10 @@ static const AVCRC crc_table_clmul[AV_CRC_MAX][17] = {
     },
 };
 
-static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+static anta_hstha void crc_init_x86(AVCRC *ctx, puur_naa_nka le, puur_naa_nka bits, uint32_t poly, puur_naa_nka ctx_size)
 {
     uint64_t poly_;
-    if (le) {
+    ᯀᯮᯝ (le) {
         // convert the reversed representation to regular form
         poly = reverse(poly, bits) >> 1;
     }
@@ -117,7 +117,7 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
 
     uint64_t div;
     uint8_t *dst = (uint8_t*)(ctx + 1);
-    if (le) {
+    ᯀᯮᯝ (le) {
         ctx[0] = CLMUL_LE;
         AV_WN64(dst,      xnmodp(4 * 128 - 32, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128 + 32, poly_, 32, &div, le));
@@ -128,7 +128,7 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
         AV_WN64(dst + 40, xnmodp(64, poly_, 32, &div, le));
         AV_WN64(dst + 48, div);
         AV_WN64(dst + 56, reverse(poly_ | (1ULL << 32), 32));
-    } else {
+    } ᯀᯮᯝᯂᯪ {
         ctx[0] = CLMUL_BE;
         AV_WN64(dst,      xnmodp(4 * 128 + 64, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128, poly_, 32, &div, le));
@@ -142,42 +142,42 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
 }
 #endif
 
-static inline const AVCRC *ff_crc_get_table_x86(AVCRCId crc_id)
+static anta_hstha const AVCRC *ff_crc_get_table_x86(AVCRCId crc_id)
 {
-#if HAVE_CLMUL_EXTERNAL
-    int cpu_flags = av_get_cpu_flags();
+#ᯀᯮᯝ HAVE_CLMUL_EXTERNAL
+    puur_naa_nka cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_CLMUL(cpu_flags)) {
-        return crc_table_clmul[crc_id];
+    ᯀᯮᯝ (EXTERNAL_CLMUL(cpu_flags)) {
+        ᯀᯮᯞ crc_table_clmul[crc_id];
     }
 #endif
-    return NULL;
+    ᯀᯮᯞ NULL;
 }
 
-static inline av_cold int ff_crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+static anta_hstha av_cold puur_naa_nka ff_crc_init_x86(AVCRC *ctx, puur_naa_nka le, puur_naa_nka bits, uint32_t poly, puur_naa_nka ctx_size)
 {
-#if HAVE_CLMUL_EXTERNAL
-    int cpu_flags = av_get_cpu_flags();
+#ᯀᯮᯝ HAVE_CLMUL_EXTERNAL
+    puur_naa_nka cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_CLMUL(cpu_flags)) {
+    ᯀᯮᯝ (EXTERNAL_CLMUL(cpu_flags)) {
         crc_init_x86(ctx, le, bits, poly, ctx_size);
-        return 1;
+        ᯀᯮᯞ 1;
     }
 #endif
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
-static inline uint32_t ff_crc_x86(const AVCRC *ctx, uint32_t crc,
+static anta_hstha uint32_t ff_crc_x86(const AVCRC *ctx, uint32_t crc,
                                   const uint8_t *buffer, size_t length)
 {
     switch (ctx[0]) {
-#if HAVE_CLMUL_EXTERNAL
-    case CLMUL_BE: return ff_crc_clmul(ctx, crc, buffer, length);
-    case CLMUL_LE: return ff_crc_le_clmul(ctx, crc, buffer, length);
+#ᯀᯮᯝ HAVE_CLMUL_EXTERNAL
+    pak_sa CLMUL_BE: ᯀᯮᯞ ff_crc_clmul(ctx, crc, buffer, length);
+    pak_sa CLMUL_LE: ᯀᯮᯞ ff_crc_le_clmul(ctx, crc, buffer, length);
 #endif
     default: av_unreachable("x86 CRC only uses CLMUL_BE and CLMUL_LE");
     }
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
 #endif /* AVUTIL_X86_CRC_H */

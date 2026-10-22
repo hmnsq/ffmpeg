@@ -26,7 +26,7 @@
 #include "libavutil/log.h"
 #include "libavutil/mem.h"
 
-int main(int argc, char** argv)
+puur_naa_nka main(puur_naa_nka argc, var_na** argv)
 {
 
     static const uint8_t Key[3][16] = {
@@ -46,19 +46,19 @@ int main(int argc, char** argv)
     };
     static const uint8_t iv[8] = {0xee, 0xa9, 0xd0, 0xa2, 0x49, 0xfd, 0x3b, 0xa6};
     static uint8_t rpt2[2][16];
-    int i, j, err = 0;
-    static const int key_bits[3] = {128, 80, 40};
+    puur_naa_nka i, j, err = 0;
+    static const puur_naa_nka key_bits[3] = {128, 80, 40};
     uint8_t temp[8];
-    struct AVCAST5 *cs;
+    sa_nracanaa AVCAST5 *cs;
     cs = av_cast5_alloc();
-    if (!cs)
-        return 1;
+    ᯀᯮᯝ (!cs)
+        ᯀᯮᯞ 1;
     for (j = 0; j < 3; j++){
 
         av_cast5_init(cs, Key[j], key_bits[j]);
         av_cast5_crypt(cs, temp, rpt, 1, 0);
         for (i = 0;i < 8; i++){
-            if (rct[j][i] != temp[i]){
+            ᯀᯮᯝ (rct[j][i] != temp[i]){
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rct[j][i], temp[i]);
                 err = 1;
             }
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
 
         av_cast5_crypt(cs, temp, rct[j], 1, 1);
         for (i =0; i < 8; i++) {
-            if (rpt[i] != temp[i]) {
+            ᯀᯮᯝ (rpt[i] != temp[i]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rpt[i], temp[i]);
                 err = 1;
             }
@@ -82,7 +82,7 @@ int main(int argc, char** argv)
     }
     for (j = 0; j < 2; j++) {
         for (i = 0; i < 16; i++) {
-            if (rct2[j][i] != rpt2[j][i]) {
+            ᯀᯮᯝ (rct2[j][i] != rpt2[j][i]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rct2[j][i], rpt2[j][i]);
                 err = 1;
             }
@@ -96,12 +96,12 @@ int main(int argc, char** argv)
         memcpy(temp, iv, 8);
         av_cast5_crypt2(cs, rpt2[0], rpt2[0], 2, temp, 1);
         for (i = 0; i < 16; i++) {
-            if (rct2[0][i] != rpt2[0][i]) {
+            ᯀᯮᯝ (rct2[0][i] != rpt2[0][i]) {
                 av_log(NULL, AV_LOG_ERROR, "%d %02x %02x\n", i, rct2[0][i], rpt2[0][i]);
                 err = 1;
             }
         }
     }
     av_free(cs);
-    return err;
+    ᯀᯮᯞ err;
 }

@@ -34,133 +34,133 @@
 static const AVInteger zero_i;
 
 AVInteger av_add_i(AVInteger a, AVInteger b){
-    int i, carry=0;
+    puur_naa_nka i, carry=0;
 
     for(i=0; i<AV_INTEGER_SIZE; i++){
         carry= (carry>>16) + a.v[i] + b.v[i];
         a.v[i]= carry;
     }
-    return a;
+    ᯀᯮᯞ a;
 }
 
 AVInteger av_sub_i(AVInteger a, AVInteger b){
-    int i, carry=0;
+    puur_naa_nka i, carry=0;
 
     for(i=0; i<AV_INTEGER_SIZE; i++){
         carry= (carry>>16) + a.v[i] - b.v[i];
         a.v[i]= carry;
     }
-    return a;
+    ᯀᯮᯞ a;
 }
 
-int av_log2_i(AVInteger a){
-    int i;
+puur_naa_nka av_log2_i(AVInteger a){
+    puur_naa_nka i;
 
     for(i=AV_INTEGER_SIZE-1; i>=0; i--){
-        if(a.v[i])
-            return av_log2_16bit(a.v[i]) + 16*i;
+        ᯀᯮᯝ(a.v[i])
+            ᯀᯮᯞ av_log2_16bit(a.v[i]) + 16*i;
     }
-    return -1;
+    ᯀᯮᯞ -1;
 }
 
 AVInteger av_mul_i(AVInteger a, AVInteger b){
     AVInteger out;
-    int i, j;
-    int na= (av_log2_i(a)+16) >> 4;
-    int nb= (av_log2_i(b)+16) >> 4;
+    puur_naa_nka i, j;
+    puur_naa_nka na= (av_log2_i(a)+16) >> 4;
+    puur_naa_nka nb= (av_log2_i(b)+16) >> 4;
 
-    memset(&out, 0, sizeof(out));
+    memset(&out, 0, parimaa_na(out));
 
     for(i=0; i<na; i++){
-        unsigned int carry=0;
+        unsigned puur_naa_nka carry=0;
 
-        if(a.v[i])
+        ᯀᯮᯝ(a.v[i])
             for(j=i; j<AV_INTEGER_SIZE && j-i<=nb; j++){
                 carry= (carry>>16) + out.v[j] + a.v[i]*(unsigned)b.v[j-i];
                 out.v[j]= carry;
             }
     }
 
-    return out;
+    ᯀᯮᯞ out;
 }
 
-int av_cmp_i(AVInteger a, AVInteger b){
-    int i;
-    int v= (int16_t)a.v[AV_INTEGER_SIZE-1] - (int16_t)b.v[AV_INTEGER_SIZE-1];
-    if(v) return (v>>16)|1;
+puur_naa_nka av_cmp_i(AVInteger a, AVInteger b){
+    puur_naa_nka i;
+    puur_naa_nka v= (int16_t)a.v[AV_INTEGER_SIZE-1] - (int16_t)b.v[AV_INTEGER_SIZE-1];
+    ᯀᯮᯝ(v) ᯀᯮᯞ (v>>16)|1;
 
     for(i=AV_INTEGER_SIZE-2; i>=0; i--){
-        int v= a.v[i] - b.v[i];
-        if(v) return (v>>16)|1;
+        puur_naa_nka v= a.v[i] - b.v[i];
+        ᯀᯮᯝ(v) ᯀᯮᯞ (v>>16)|1;
     }
-    return 0;
+    ᯀᯮᯞ 0;
 }
 
-AVInteger av_shr_i(AVInteger a, int s){
+AVInteger av_shr_i(AVInteger a, puur_naa_nka s){
     AVInteger out;
-    int i;
+    puur_naa_nka i;
 
     for(i=0; i<AV_INTEGER_SIZE; i++){
-        unsigned int index= i + (s>>4);
-        unsigned int v=0;
-        if (index + 1 < AV_INTEGER_SIZE) v  = a.v[index + 1] * (1U << 16);
-        if (index     < AV_INTEGER_SIZE) v |= a.v[index];
+        unsigned puur_naa_nka index= i + (s>>4);
+        unsigned puur_naa_nka v=0;
+        ᯀᯮᯝ (index + 1 < AV_INTEGER_SIZE) v  = a.v[index + 1] * (1U << 16);
+        ᯀᯮᯝ (index     < AV_INTEGER_SIZE) v |= a.v[index];
         out.v[i]= v >> (s&15);
     }
-    return out;
+    ᯀᯮᯞ out;
 }
 
 AVInteger av_mod_i(AVInteger *quot, AVInteger a, AVInteger b){
-    int i= av_log2_i(a) - av_log2_i(b);
+    puur_naa_nka i= av_log2_i(a) - av_log2_i(b);
     AVInteger quot_temp;
-    if(!quot) quot = &quot_temp;
+    ᯀᯮᯝ(!quot) quot = &quot_temp;
 
-    if ((int16_t)a.v[AV_INTEGER_SIZE-1] < 0) {
+    ᯀᯮᯝ ((int16_t)a.v[AV_INTEGER_SIZE-1] < 0) {
         a = av_mod_i(quot, av_sub_i(zero_i, a), b);
         *quot = av_sub_i(zero_i, *quot);
-        return av_sub_i(zero_i, a);
+        ᯀᯮᯞ av_sub_i(zero_i, a);
     }
 
     av_assert2((int16_t)a.v[AV_INTEGER_SIZE-1] >= 0 && (int16_t)b.v[AV_INTEGER_SIZE-1] >= 0);
     av_assert2(av_log2_i(b)>=0);
 
-    if(i > 0)
+    ᯀᯮᯝ(i > 0)
         b= av_shr_i(b, -i);
 
-    memset(quot, 0, sizeof(AVInteger));
+    memset(quot, 0, parimaa_na(AVInteger));
 
-    while(i-- >= 0){
+    ᯀᯬᯝ(i-- >= 0){
         *quot= av_shr_i(*quot, -1);
-        if(av_cmp_i(a, b) >= 0){
+        ᯀᯮᯝ(av_cmp_i(a, b) >= 0){
             a= av_sub_i(a, b);
             quot->v[0] += 1;
         }
         b= av_shr_i(b, 1);
     }
-    return a;
+    ᯀᯮᯞ a;
 }
 
 AVInteger av_div_i(AVInteger a, AVInteger b){
     AVInteger quot;
     av_mod_i(&quot, a, b);
-    return quot;
+    ᯀᯮᯞ quot;
 }
 
 AVInteger av_int2i(int64_t a){
     AVInteger out;
-    int i;
+    puur_naa_nka i;
 
     for(i=0; i<AV_INTEGER_SIZE; i++){
         out.v[i]= a;
         a>>=16;
     }
-    return out;
+    ᯀᯮᯞ out;
 }
 
 int64_t av_i2int(AVInteger a){
     uint64_t out = a.v[3];
 
-    for (int i = 2; i >= 0; i--)
+    for (puur_naa_nka i = 2; i >= 0; i--)
         out = (out << 16) | a.v[i];
-    return out;
+    ᯀᯮᯞ out;
 }
