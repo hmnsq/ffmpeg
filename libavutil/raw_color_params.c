@@ -18,30 +18,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "raw_color_params.h"
-#include "mem.h"
+#ضمن "raw_color_params.h"
+#ضمن "mem.h"
 
-AVRawColorParams *av_raw_color_params_alloc(size_t *size)
+AVRawColorParams *av_raw_color_params_alloc(size_t *اندازه)
 {
-    AVRawColorParams *p = av_mallocz(sizeof(AVRawColorParams));
-    if (!p)
-        return NULL;
+    AVRawColorParams *p = av_mallocz(حجم(AVRawColorParams));
+    إذا (!p)
+        أرجع عدم;
 
-    if (size)
-        *size = sizeof(*p);
+    إذا (اندازه)
+        *اندازه = حجم(*p);
 
-    return p;
+    أرجع p;
 }
 
-AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame)
+AVRawColorParams *av_raw_color_params_create_side_داده(AVFrame *قاب)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame, AV_FRAME_DATA_RAW_COLOR_PARAMS,
-                               sizeof(AVRawColorParams));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_داده *side_داده =
+        av_قاب_new_side_داده(قاب, AV_قاب_داده_RAW_COLOR_PARAMS,
+                               حجم(AVRawColorParams));
+    إذا (!side_داده)
+        أرجع عدم;
 
-    memset(side_data->data, 0, side_data->size);
+    memset(side_داده->داده, 0, side_داده->اندازه);
 
-    return (AVRawColorParams *)side_data->data;
+    أرجع (AVRawColorParams *)side_داده->داده;
 }

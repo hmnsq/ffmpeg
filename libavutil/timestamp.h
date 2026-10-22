@@ -21,16 +21,16 @@
  * timestamp utils, mostly useful for debugging/logging purposes
  */
 
-#ifndef AVUTIL_TIMESTAMP_H
-#define AVUTIL_TIMESTAMP_H
+#اگر_تعریف_نشده AVUTIL_TIMESTAMP_H
+#تعریف_کن AVUTIL_TIMESTAMP_H
 
-#include "avutil.h"
+#ضمن "avutil.h"
 
-#if defined(__cplusplus) && !defined(__STDC_FORMAT_MACROS) && !defined(PRId64)
-#error missing -D__STDC_FORMAT_MACROS / #define __STDC_FORMAT_MACROS
-#endif
+#إذا defined(__cplusplus) && !defined(__STDC_FORMAT_MACROS) && !defined(PRId64)
+#خطا missing -D__STDC_FORMAT_MACROS / #تعریف_کن __STDC_FORMAT_MACROS
+#پایان_اگر
 
-#define AV_TS_MAX_STRING_SIZE 32
+#تعریف_کن AV_TS_MAX_STRING_اندازه 32
 
 /**
  * Fill the provided buffer with a string containing a timestamp
@@ -40,18 +40,18 @@
  * @param ts the timestamp to represent
  * @return the buffer in input
  */
-static inline char *av_ts_make_string(char *buf, int64_t ts)
+ساكن مضمن حرف *av_ts_make_string(حرف *buf, int64_t ts)
 {
-    if (ts == AV_NOPTS_VALUE) snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
-    else                      snprintf(buf, AV_TS_MAX_STRING_SIZE, "%" PRId64, ts);
-    return buf;
+    إذا (ts == AV_NOPTS_مقدار) snprintf(buf, AV_TS_MAX_STRING_اندازه, "NOPTS");
+    وإلا                      snprintf(buf, AV_TS_MAX_STRING_اندازه, "%" PRId64, ts);
+    أرجع buf;
 }
 
 /**
  * Convenience macro, the return value should be used only directly in
  * function arguments but never stand-alone.
  */
-#define av_ts2str(ts) av_ts_make_string((char[AV_TS_MAX_STRING_SIZE]){0}, ts)
+#تعریف_کن av_ts2str(ts) av_ts_make_string((حرف[AV_TS_MAX_STRING_اندازه]){0}, ts)
 
 /**
  * Fill the provided buffer with a string containing a timestamp time
@@ -62,7 +62,7 @@ static inline char *av_ts_make_string(char *buf, int64_t ts)
  * @param tb the timebase of the timestamp
  * @return the buffer in input
  */
-char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb);
+حرف *av_ts_make_زمان_string2(حرف *buf, int64_t ts, AVRational tb);
 
 /**
  * Fill the provided buffer with a string containing a timestamp
@@ -70,16 +70,16 @@ char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb);
  *
  * @see av_ts_make_time_string2
  */
-static inline char *av_ts_make_time_string(char *buf, int64_t ts,
-                                           const AVRational *tb)
+ساكن مضمن حرف *av_ts_make_زمان_string(حرف *buf, int64_t ts,
+                                           ثابت AVRational *tb)
 {
-    return av_ts_make_time_string2(buf, ts, *tb);
+    أرجع av_ts_make_زمان_string2(buf, ts, *tb);
 }
 
 /**
  * Convenience macro, the return value should be used only directly in
  * function arguments but never stand-alone.
  */
-#define av_ts2timestr(ts, tb) av_ts_make_time_string((char[AV_TS_MAX_STRING_SIZE]){0}, ts, tb)
+#تعریف_کن av_ts2timestr(ts, tb) av_ts_make_زمان_string((حرف[AV_TS_MAX_STRING_اندازه]){0}, ts, tb)
 
-#endif /* AVUTIL_TIMESTAMP_H */
+#پایان_اگر /* AVUTIL_TIMESTAMP_H */

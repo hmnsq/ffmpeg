@@ -19,150 +19,150 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "mem.h"
+#ضمن "config.h"
+#ضمن "attributes.h"
+#ضمن "float_dsp.h"
+#ضمن "mem.h"
 
-static void vector_fmul_c(float *dst, const float *src0, const float *src1,
-                          int len)
+ساكن فراغ وکتور_fmul_c(عائم *dst, ثابت عائم *src0, ثابت عائم *src1,
+                          صحيح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحيح i;
+    لكل (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_dmul_c(double *dst, const double *src0, const double *src1,
-                          int len)
+ساكن فراغ وکتور_dmul_c(مزدوج *dst, ثابت مزدوج *src0, ثابت مزدوج *src1,
+                          صحيح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحيح i;
+    لكل (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_fmac_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+ساكن فراغ وکتور_fmac_scalar_c(عائم *dst, ثابت عائم *src, عائم mul,
+                                 صحيح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحيح i;
+    لكل (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_dmac_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+ساكن فراغ وکتور_dmac_scalar_c(مزدوج *dst, ثابت مزدوج *src, مزدوج mul,
+                                 صحيح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحيح i;
+    لكل (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_fmul_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+ساكن فراغ وکتور_fmul_scalar_c(عائم *dst, ثابت عائم *src, عائم mul,
+                                 صحيح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحيح i;
+    لكل (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_dmul_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+ساكن فراغ وکتور_dmul_scalar_c(مزدوج *dst, ثابت مزدوج *src, مزدوج mul,
+                                 صحيح len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    صحيح i;
+    لكل (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_fmul_window_c(float *dst, const float *src0,
-                                 const float *src1, const float *win, int len)
+ساكن فراغ وکتور_fmul_پنجره_c(عائم *dst, ثابت عائم *src0,
+                                 ثابت عائم *src1, ثابت عائم *win, صحيح len)
 {
-    int i, j;
+    صحيح i, j;
 
     dst  += len;
     win  += len;
     src0 += len;
 
-    for (i = -len, j = len - 1; i < 0; i++, j--) {
-        float s0 = src0[i];
-        float s1 = src1[j];
-        float wi = win[i];
-        float wj = win[j];
+    لكل (i = -len, j = len - 1; i < 0; i++, j--) {
+        عائم s0 = src0[i];
+        عائم s1 = src1[j];
+        عائم wi = win[i];
+        عائم wj = win[j];
         dst[i] = s0 * wj - s1 * wi;
         dst[j] = s0 * wi + s1 * wj;
     }
 }
 
-static void vector_fmul_add_c(float *dst, const float *src0, const float *src1,
-                              const float *src2, int len){
-    int i;
+ساكن فراغ وکتور_fmul_جمع_کن_c(عائم *dst, ثابت عائم *src0, ثابت عائم *src1,
+                              ثابت عائم *src2, صحيح len){
+    صحيح i;
 
-    for (i = 0; i < len; i++)
+    لكل (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i] + src2[i];
 }
 
-static void vector_fmul_reverse_c(float *dst, const float *src0,
-                                  const float *src1, int len)
+ساكن فراغ وکتور_fmul_معکوس_c(عائم *dst, ثابت عائم *src0,
+                                  ثابت عائم *src1, صحيح len)
 {
-    int i;
+    صحيح i;
 
     src1 += len-1;
-    for (i = 0; i < len; i++)
+    لكل (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[-i];
 }
 
-static void butterflies_float_c(float *restrict v1, float *restrict v2,
-                                int len)
+ساكن فراغ butterflies_float_c(عائم *محدود v1, عائم *محدود v2,
+                                صحيح len)
 {
-    int i;
+    صحيح i;
 
-    for (i = 0; i < len; i++) {
-        float t = v1[i] - v2[i];
+    لكل (i = 0; i < len; i++) {
+        عائم t = v1[i] - v2[i];
         v1[i] += v2[i];
         v2[i] = t;
     }
 }
 
-double ff_scalarproduct_double_c(const double *v1, const double *v2,
+مزدوج ff_scalarproduct_double_c(ثابت مزدوج *v1, ثابت مزدوج *v2,
                                  size_t len)
 {
-    double p = 0.0;
+    مزدوج p = 0.0;
 
-    for (size_t i = 0; i < len; i++)
+    لكل (size_t i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    أرجع p;
 }
 
-av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
+av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(صحيح بیت_exact)
 {
-    AVFloatDSPContext *fdsp = av_mallocz(sizeof(AVFloatDSPContext));
-    if (!fdsp)
-        return NULL;
+    AVFloatDSPContext *fdsp = av_mallocz(حجم(AVFloatDSPContext));
+    إذا (!fdsp)
+        أرجع عدم;
 
-    fdsp->vector_fmul = vector_fmul_c;
-    fdsp->vector_dmul = vector_dmul_c;
-    fdsp->vector_fmac_scalar = vector_fmac_scalar_c;
-    fdsp->vector_fmul_scalar = vector_fmul_scalar_c;
-    fdsp->vector_dmac_scalar = vector_dmac_scalar_c;
-    fdsp->vector_dmul_scalar = vector_dmul_scalar_c;
-    fdsp->vector_fmul_window = vector_fmul_window_c;
-    fdsp->vector_fmul_add = vector_fmul_add_c;
-    fdsp->vector_fmul_reverse = vector_fmul_reverse_c;
+    fdsp->وکتور_fmul = وکتور_fmul_c;
+    fdsp->وکتور_dmul = وکتور_dmul_c;
+    fdsp->وکتور_fmac_scalar = وکتور_fmac_scalar_c;
+    fdsp->وکتور_fmul_scalar = وکتور_fmul_scalar_c;
+    fdsp->وکتور_dmac_scalar = وکتور_dmac_scalar_c;
+    fdsp->وکتور_dmul_scalar = وکتور_dmul_scalar_c;
+    fdsp->وکتور_fmul_پنجره = وکتور_fmul_پنجره_c;
+    fdsp->وکتور_fmul_جمع_کن = وکتور_fmul_جمع_کن_c;
+    fdsp->وکتور_fmul_معکوس = وکتور_fmul_معکوس_c;
     fdsp->butterflies_float = butterflies_float_c;
     fdsp->scalarproduct_float = ff_scalarproduct_float_c;
     fdsp->scalarproduct_double = ff_scalarproduct_double_c;
 
-#if ARCH_AARCH64
+#إذا ARCH_AARCH64
     ff_float_dsp_init_aarch64(fdsp);
-#elif ARCH_ARM
+#وإلاإذا ARCH_ARM
     ff_float_dsp_init_arm(fdsp);
-#elif ARCH_PPC
-    ff_float_dsp_init_ppc(fdsp, bit_exact);
-#elif ARCH_RISCV
+#وإلاإذا ARCH_PPC
+    ff_float_dsp_init_ppc(fdsp, بیت_exact);
+#وإلاإذا ARCH_RISCV
     ff_float_dsp_init_riscv(fdsp);
-#elif ARCH_X86 && HAVE_X86ASM
+#وإلاإذا ARCH_X86 && HAVE_X86ASM
     ff_float_dsp_init_x86(fdsp);
-#elif ARCH_MIPS
+#وإلاإذا ARCH_MIPS
     ff_float_dsp_init_mips(fdsp);
-#endif
-    return fdsp;
+#پایان_اگر
+    أرجع fdsp;
 }

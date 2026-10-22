@@ -18,45 +18,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avstring.h"
-#include "macros.h"
-#include "mem.h"
-#include "spherical.h"
+#ضمن "avstring.h"
+#ضمن "macros.h"
+#ضمن "mem.h"
+#ضمن "spherical.h"
 
-AVSphericalMapping *av_spherical_alloc(size_t *size)
+AVSphericalMapping *av_spherical_alloc(size_t *اندازه)
 {
-    AVSphericalMapping *spherical = av_mallocz(sizeof(AVSphericalMapping));
+    AVSphericalMapping *spherical = av_mallocz(حجم(AVSphericalMapping));
 
-    if (size)
-        *size = spherical ? sizeof(*spherical) : 0;
+    إذا (اندازه)
+        *اندازه = spherical ? حجم(*spherical) : 0;
 
-    if (!spherical)
-        return NULL;
+    إذا (!spherical)
+        أرجع عدم;
 
     spherical->projection = AV_SPHERICAL_RECTILINEAR;
 
-    return spherical;
+    أرجع spherical;
 }
 
-void av_spherical_tile_bounds(const AVSphericalMapping *map,
-                              size_t width, size_t height,
-                              size_t *left, size_t *top,
-                              size_t *right, size_t *bottom)
+فراغ av_spherical_tile_bounds(ثابت AVSphericalMapping *map,
+                              size_t عرض, size_t ارتفاع,
+                              size_t *چپ, size_t *بالاترین,
+                              size_t *راست, size_t *bottom)
 {
     /* conversion from 0.32 coordinates to pixels */
-    uint64_t orig_width  = (uint64_t) width  * UINT32_MAX /
-                           (UINT32_MAX - map->bound_right  - map->bound_left);
-    uint64_t orig_height = (uint64_t) height * UINT32_MAX /
-                           (UINT32_MAX - map->bound_bottom - map->bound_top);
+    uint64_t orig_عرض  = (uint64_t) عرض  * UINT32_MAX /
+                           (UINT32_MAX - map->bound_راست  - map->bound_چپ);
+    uint64_t orig_ارتفاع = (uint64_t) ارتفاع * UINT32_MAX /
+                           (UINT32_MAX - map->bound_bottom - map->bound_بالاترین);
 
     /* add a (UINT32_MAX - 1) to round up integer division */
-    *left   = (orig_width  * map->bound_left + UINT32_MAX - 1) / UINT32_MAX;
-    *top    = (orig_height * map->bound_top  + UINT32_MAX - 1) / UINT32_MAX;
-    *right  = orig_width  - width  - *left;
-    *bottom = orig_height - height - *top;
+    *چپ   = (orig_عرض  * map->bound_چپ + UINT32_MAX - 1) / UINT32_MAX;
+    *بالاترین    = (orig_ارتفاع * map->bound_بالاترین  + UINT32_MAX - 1) / UINT32_MAX;
+    *راست  = orig_عرض  - عرض  - *چپ;
+    *bottom = orig_ارتفاع - ارتفاع - *بالاترین;
 }
 
-static const char *const spherical_projection_names[] = {
+ساكن ثابت حرف *ثابت spherical_projection_نامها[] = {
     [AV_SPHERICAL_EQUIRECTANGULAR]      = "equirectangular",
     [AV_SPHERICAL_CUBEMAP]              = "cubemap",
     [AV_SPHERICAL_EQUIRECTANGULAR_TILE] = "tiled equirectangular",
@@ -66,22 +66,22 @@ static const char *const spherical_projection_names[] = {
     [AV_SPHERICAL_PARAMETRIC_IMMERSIVE] = "parametric immersive",
 };
 
-const char *av_spherical_projection_name(enum AVSphericalProjection projection)
+ثابت حرف *av_spherical_projection_name(تعداد AVSphericalProjection projection)
 {
-    if ((unsigned)projection >= FF_ARRAY_ELEMS(spherical_projection_names))
-        return "unknown";
+    إذا ((بیعلامت)projection >= FF_ARRAY_ELEMS(spherical_projection_نامها))
+        أرجع "unknown";
 
-    return spherical_projection_names[projection];
+    أرجع spherical_projection_نامها[projection];
 }
 
-int av_spherical_from_name(const char *name)
+صحيح av_spherical_from_name(ثابت حرف *name)
 {
-    int i;
+    صحيح i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(spherical_projection_names); i++) {
-        if (av_strstart(name, spherical_projection_names[i], NULL))
-            return i;
+    لكل (i = 0; i < FF_ARRAY_ELEMS(spherical_projection_نامها); i++) {
+        إذا (av_strstart(name, spherical_projection_نامها[i], عدم))
+            أرجع i;
     }
 
-    return -1;
+    أرجع -1;
 }

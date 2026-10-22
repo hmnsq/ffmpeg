@@ -18,64 +18,64 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ضمن <string.h>
 
-#include "avstring.h"
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "video_hint.h"
+#ضمن "avstring.h"
+#ضمن "frame.h"
+#ضمن "macros.h"
+#ضمن "mem.h"
+#ضمن "video_hint.h"
 
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
-                                 size_t *out_size)
+                                 size_t *بیرون_اندازه)
 {
-    struct TestStruct {
+    بنية TestStruct {
         AVVideoHint hint;
         AVVideoRect rect;
     };
-    const size_t rect_offset = offsetof(struct TestStruct, rect);
-    size_t size = rect_offset;
+    ثابت size_t rect_جابه_جایی = offsetof(بنية TestStruct, rect);
+    size_t اندازه = rect_جابه_جایی;
     AVVideoHint *hint;
 
-    *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
-    size += sizeof(AVVideoRect) * nb_rects;
+    *بیرون_اندازه = 0;
+    إذا (nb_rects > (SIZE_MAX - اندازه) / حجم(AVVideoRect))
+        أرجع عدم;
+    اندازه += حجم(AVVideoRect) * nb_rects;
 
-    hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    hint = av_mallocz(اندازه);
+    إذا (!hint)
+        أرجع عدم;
 
     hint->nb_rects    = nb_rects;
-    hint->rect_offset = rect_offset;
-    hint->rect_size   = sizeof(AVVideoRect);
+    hint->rect_جابه_جایی = rect_جابه_جایی;
+    hint->rect_اندازه   = حجم(AVVideoRect);
 
-    *out_size = size;
+    *بیرون_اندازه = اندازه;
 
-    return hint;
+    أرجع hint;
 }
 
-AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
+AVVideoHint *av_video_hint_create_side_داده(AVFrame *قاب,
                                             size_t nb_rects)
 {
     AVVideoHint *hint;
     AVBufferRef *buf;
-    size_t size = 0;
+    size_t اندازه = 0;
 
-    hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    hint = av_video_hint_alloc(nb_rects, &اندازه);
+    إذا (!hint)
+        أرجع عدم;
 
-    buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    buf = av_میانگیر_create((uint8_t *)hint, اندازه, عدم, عدم, 0);
+    إذا (!buf) {
         av_freep(&hint);
-        return NULL;
+        أرجع عدم;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    إذا (!av_قاب_new_side_داده_from_buf(قاب, AV_قاب_داده_VIDEO_HINT, buf)) {
+        av_میانگیر_unref(&buf);
+        أرجع عدم;
     }
 
-    return hint;
+    أرجع hint;
 }

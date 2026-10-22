@@ -18,31 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
-#include "libavutil/ppc/cpu.h"
-#include "float_dsp_altivec.h"
-#include "float_dsp_vsx.h"
+#ضمن "config.h"
+#ضمن "libavutil/attributes.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/float_dsp.h"
+#ضمن "libavutil/ppc/cpu.h"
+#ضمن "float_dsp_altivec.h"
+#ضمن "float_dsp_vsx.h"
 
-av_cold void ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, int bit_exact)
+av_cold فراغ ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, صحيح بیت_exact)
 {
-    if (PPC_ALTIVEC(av_get_cpu_flags())) {
-        fdsp->vector_fmul = ff_vector_fmul_altivec;
-        fdsp->vector_fmul_add = ff_vector_fmul_add_altivec;
-        fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_altivec;
+    إذا (PPC_ALTIVEC(av_get_cpu_flags())) {
+        fdsp->وکتور_fmul = ff_وکتور_fmul_altivec;
+        fdsp->وکتور_fmul_جمع_کن = ff_وکتور_fmul_جمع_کن_altivec;
+        fdsp->وکتور_fmul_معکوس = ff_وکتور_fmul_معکوس_altivec;
 
-        if (!bit_exact) {
-            fdsp->vector_fmul_window = ff_vector_fmul_window_altivec;
+        إذا (!بیت_exact) {
+            fdsp->وکتور_fmul_پنجره = ff_وکتور_fmul_پنجره_altivec;
         }
     }
 
     // The disabled function below are near identical to altivec and have
     // been disabled to reduce code duplication
-    if (PPC_VSX(av_get_cpu_flags())) {
+    إذا (PPC_VSX(av_get_cpu_flags())) {
 //         fdsp->vector_fmul = ff_vector_fmul_vsx;
-        fdsp->vector_fmul_add = ff_vector_fmul_add_vsx;
+        fdsp->وکتور_fmul_جمع_کن = ff_وکتور_fmul_جمع_کن_vsx;
 //         fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_vsx;
 
 //         if (!bit_exact) {

@@ -18,83 +18,83 @@
 
 // LCOV_EXCL_START
 
-#include "libavutil/timer.h"
+#ضمن "libavutil/timer.h"
 
-#include <stdint.h>
-#include <stdio.h>
+#ضمن <stdint.h>
+#ضمن <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/base64.h"
+#ضمن "libavutil/common.h"
+#ضمن "libavutil/base64.h"
 
-#define MAX_DATA_SIZE    1024
-#define MAX_ENCODED_SIZE 2048
+#تعریف_کن MAX_داده_اندازه    1024
+#تعریف_کن MAX_ENCODED_اندازه 2048
 
-static int test_encode_decode(const uint8_t *data, unsigned int data_size,
-                              const char *encoded_ref)
+ساكن صحيح test_encode_decode(ثابت uint8_t *داده, بیعلامت صحيح داده_اندازه,
+                              ثابت حرف *encoded_ref)
 {
-    char  encoded[MAX_ENCODED_SIZE];
-    uint8_t data2[MAX_DATA_SIZE];
-    int data2_size, max_data2_size = MAX_DATA_SIZE;
+    حرف  encoded[MAX_ENCODED_اندازه];
+    uint8_t data2[MAX_داده_اندازه];
+    صحيح data2_اندازه, max_data2_اندازه = MAX_داده_اندازه;
 
-    if (!av_base64_encode(encoded, MAX_ENCODED_SIZE, data, data_size)) {
-        printf("Failed: cannot encode the input data\n");
-        return 1;
+    إذا (!av_base64_encode(encoded, MAX_ENCODED_اندازه, داده, داده_اندازه)) {
+        چاپ_کن("Failed: cannot encode the input data\n");
+        أرجع 1;
     }
-    if (encoded_ref && strcmp(encoded, encoded_ref)) {
-        printf("Failed: encoded string differs from reference\n"
+    إذا (encoded_ref && strcmp(encoded, encoded_ref)) {
+        چاپ_کن("Failed: encoded string differs from reference\n"
                "Encoded:\n%s\nReference:\n%s\n", encoded, encoded_ref);
-        return 1;
+        أرجع 1;
     }
 
-    if ((data2_size = av_base64_decode(data2, encoded, max_data2_size)) != data_size) {
-        printf("Failed: cannot decode the encoded string\n"
+    إذا ((data2_اندازه = av_base64_decode(data2, encoded, max_data2_اندازه)) != داده_اندازه) {
+        چاپ_کن("Failed: cannot decode the encoded string\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        أرجع 1;
     }
-    if ((data2_size = av_base64_decode(data2, encoded, data_size)) != data_size) {
-        printf("Failed: cannot decode with minimal buffer\n"
+    إذا ((data2_اندازه = av_base64_decode(data2, encoded, داده_اندازه)) != داده_اندازه) {
+        چاپ_کن("Failed: cannot decode with minimal buffer\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        أرجع 1;
     }
-    if (memcmp(data2, data, data_size)) {
-        printf("Failed: encoded/decoded data differs from original data\n");
-        return 1;
+    إذا (memcmp(data2, داده, داده_اندازه)) {
+        چاپ_کن("Failed: encoded/decoded data differs from original data\n");
+        أرجع 1;
     }
-    if (av_base64_decode(NULL, encoded, 0) != 0) {
-        printf("Failed: decode to NULL buffer\n");
-        return 1;
+    إذا (av_base64_decode(عدم, encoded, 0) != 0) {
+        چاپ_کن("Failed: decode to NULL buffer\n");
+        أرجع 1;
     }
-    if (data_size > 0 && (data2_size = av_base64_decode(data2, encoded, data_size - 1)) != data_size - 1) {
-        printf("Failed: out of array write\n"
+    إذا (داده_اندازه > 0 && (data2_اندازه = av_base64_decode(data2, encoded, داده_اندازه - 1)) != داده_اندازه - 1) {
+        چاپ_کن("Failed: out of array write\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        أرجع 1;
     }
-    if (data_size > 1 && (data2_size = av_base64_decode(data2, encoded, data_size - 2)) != data_size - 2) {
-        printf("Failed: out of array write\n"
+    إذا (داده_اندازه > 1 && (data2_اندازه = av_base64_decode(data2, encoded, داده_اندازه - 2)) != داده_اندازه - 2) {
+        چاپ_کن("Failed: out of array write\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        أرجع 1;
     }
-    if (strlen(encoded)) {
-        char *end = strchr(encoded, '=');
-        if (!end)
-            end = encoded + strlen(encoded) - 1;
-        *end = '%';
-        if (av_base64_decode(NULL, encoded, 0) >= 0) {
-            printf("Failed: error detection\n");
-            return 1;
+    إذا (طول_رشته(encoded)) {
+        حرف *انتها = strchr(encoded, '=');
+        إذا (!انتها)
+            انتها = encoded + طول_رشته(encoded) - 1;
+        *انتها = '%';
+        إذا (av_base64_decode(عدم, encoded, 0) >= 0) {
+            چاپ_کن("Failed: error detection\n");
+            أرجع 1;
         }
     }
 
-    printf("Passed!\n");
-    return 0;
+    چاپ_کن("Passed!\n");
+    أرجع 0;
 }
 
-int main(int argc, char ** argv)
+صحيح اصلی(صحيح argc, حرف ** argv)
 {
-    int i, error_count = 0;
-    struct test {
-        const uint8_t *data;
-        const char *encoded_ref;
+    صحيح i, error_شمار = 0;
+    بنية test {
+        ثابت uint8_t *داده;
+        ثابت حرف *encoded_ref;
     } tests[] = {
         { "",        ""},
         { "1",       "MQ=="},
@@ -105,36 +105,36 @@ int main(int argc, char ** argv)
         { "666666",  "NjY2NjY2"},
         { "abc:def", "YWJjOmRlZg=="},
     };
-    char in[1024], out[2048];
+    حرف درون[1024], بیرون[2048];
 
-    printf("Encoding/decoding tests\n");
-    for (i = 0; i < FF_ARRAY_ELEMS(tests); i++)
-        error_count += test_encode_decode(tests[i].data, strlen(tests[i].data), tests[i].encoded_ref);
+    چاپ_کن("Encoding/decoding tests\n");
+    لكل (i = 0; i < FF_ARRAY_ELEMS(tests); i++)
+        error_شمار += test_encode_decode(tests[i].داده, طول_رشته(tests[i].داده), tests[i].encoded_ref);
 
-    if (argc>1 && !strcmp(argv[1], "-t")) {
-        memset(in, 123, sizeof(in));
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_encode(out, sizeof(out), in, sizeof(in));
+    إذا (argc>1 && !strcmp(argv[1], "-t")) {
+        memset(درون, 123, حجم(درون));
+        لكل(i=0; i<10000; i++){
+            شروع_TIMER
+            av_base64_encode(بیرون, حجم(بیرون), درون, حجم(درون));
             STOP_TIMER("encode")
         }
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_decode(in, out, sizeof(in));
+        لكل(i=0; i<10000; i++){
+            شروع_TIMER
+            av_base64_decode(درون, بیرون, حجم(درون));
             STOP_TIMER("decode")
         }
 
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_decode(NULL, out, 0);
+        لكل(i=0; i<10000; i++){
+            شروع_TIMER
+            av_base64_decode(عدم, بیرون, 0);
             STOP_TIMER("syntax check")
         }
     }
 
-    if (error_count)
-        printf("Error Count: %d.\n", error_count);
+    إذا (error_شمار)
+        چاپ_کن("Error Count: %d.\n", error_شمار);
 
-    return !!error_count;
+    أرجع !!error_شمار;
 }
 
 // LCOV_EXCL_STOP

@@ -16,299 +16,299 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include <stdint.h>
-#include <string.h>
+#ضمن <stdatomic.h>
+#ضمن <stdint.h>
+#ضمن <string.h>
 
-#include "avassert.h"
-#include "buffer_internal.h"
-#include "common.h"
-#include "mem.h"
-#include "sanitizer.h"
-#include "thread.h"
+#ضمن "avassert.h"
+#ضمن "buffer_internal.h"
+#ضمن "common.h"
+#ضمن "mem.h"
+#ضمن "sanitizer.h"
+#ضمن "thread.h"
 
-static AVBufferRef *buffer_create(AVBuffer *buf, uint8_t *data, size_t size,
-                                  void (*free)(void *opaque, uint8_t *data),
-                                  void *opaque, int flags)
+ساكن AVBufferRef *میانگیر_create(AVBuffer *buf, uint8_t *داده, size_t اندازه,
+                                  فراغ (*حرر)(فراغ *opaque, uint8_t *داده),
+                                  فراغ *opaque, صحيح flags)
 {
-    AVBufferRef *ref = NULL;
+    AVBufferRef *ref = عدم;
 
-    buf->data     = data;
-    buf->size     = size;
-    buf->free     = free ? free : av_buffer_default_free;
+    buf->داده     = داده;
+    buf->اندازه     = اندازه;
+    buf->حرر     = حرر ? حرر : av_میانگیر_default_free;
     buf->opaque   = opaque;
 
     atomic_init(&buf->refcount, 1);
 
     buf->flags = flags;
 
-    ref = av_mallocz(sizeof(*ref));
-    if (!ref)
-        return NULL;
+    ref = av_mallocz(حجم(*ref));
+    إذا (!ref)
+        أرجع عدم;
 
-    ref->buffer = buf;
-    ref->data   = data;
-    ref->size   = size;
+    ref->میانگیر = buf;
+    ref->داده   = داده;
+    ref->اندازه   = اندازه;
 
-    return ref;
+    أرجع ref;
 }
 
-AVBufferRef *av_buffer_create(uint8_t *data, size_t size,
-                              void (*free)(void *opaque, uint8_t *data),
-                              void *opaque, int flags)
+AVBufferRef *av_میانگیر_create(uint8_t *داده, size_t اندازه,
+                              فراغ (*حرر)(فراغ *opaque, uint8_t *داده),
+                              فراغ *opaque, صحيح flags)
 {
     AVBufferRef *ret;
-    AVBuffer *buf = av_mallocz(sizeof(*buf));
-    if (!buf)
-        return NULL;
+    AVBuffer *buf = av_mallocz(حجم(*buf));
+    إذا (!buf)
+        أرجع عدم;
 
-    ret = buffer_create(buf, data, size, free, opaque, flags);
-    if (!ret) {
+    ret = میانگیر_create(buf, داده, اندازه, حرر, opaque, flags);
+    إذا (!ret) {
         av_free(buf);
-        return NULL;
+        أرجع عدم;
     }
-    return ret;
+    أرجع ret;
 }
 
-void av_buffer_default_free(void *opaque, uint8_t *data)
+فراغ av_میانگیر_default_free(فراغ *opaque, uint8_t *داده)
 {
-    av_free(data);
+    av_free(داده);
 }
 
-AVBufferRef *av_buffer_alloc(size_t size)
+AVBufferRef *av_میانگیر_alloc(size_t اندازه)
 {
-    AVBufferRef *ret = NULL;
-    uint8_t    *data = NULL;
+    AVBufferRef *ret = عدم;
+    uint8_t    *داده = عدم;
 
-    data = av_malloc(size);
-    if (!data)
-        return NULL;
+    داده = av_malloc(اندازه);
+    إذا (!داده)
+        أرجع عدم;
 
-    ret = av_buffer_create(data, size, av_buffer_default_free, NULL, 0);
-    if (!ret)
-        av_freep(&data);
+    ret = av_میانگیر_create(داده, اندازه, av_میانگیر_default_free, عدم, 0);
+    إذا (!ret)
+        av_freep(&داده);
 
-    return ret;
+    أرجع ret;
 }
 
-AVBufferRef *av_buffer_allocz(size_t size)
+AVBufferRef *av_میانگیر_allocz(size_t اندازه)
 {
-    AVBufferRef *ret = av_buffer_alloc(size);
-    if (!ret)
-        return NULL;
+    AVBufferRef *ret = av_میانگیر_alloc(اندازه);
+    إذا (!ret)
+        أرجع عدم;
 
-    memset(ret->data, 0, size);
-    return ret;
+    memset(ret->داده, 0, اندازه);
+    أرجع ret;
 }
 
-AVBufferRef *av_buffer_ref(const AVBufferRef *buf)
+AVBufferRef *av_میانگیر_ref(ثابت AVBufferRef *buf)
 {
-    AVBufferRef *ret = av_mallocz(sizeof(*ret));
+    AVBufferRef *ret = av_mallocz(حجم(*ret));
 
-    if (!ret)
-        return NULL;
+    إذا (!ret)
+        أرجع عدم;
 
     *ret = *buf;
 
-    atomic_fetch_add_explicit(&buf->buffer->refcount, 1, memory_order_relaxed);
+    atomic_fetch_add_explicit(&buf->میانگیر->refcount, 1, memory_order_relaxed);
 
-    return ret;
+    أرجع ret;
 }
 
-static void buffer_replace(AVBufferRef **dst, AVBufferRef **src)
+ساكن فراغ میانگیر_replace(AVBufferRef **dst, AVBufferRef **src)
 {
     AVBuffer *b;
 
-    b = (*dst)->buffer;
+    b = (*dst)->میانگیر;
 
-    if (src) {
+    إذا (src) {
         **dst = **src;
         av_freep(src);
-    } else
+    } وإلا
         av_freep(dst);
 
-    if (atomic_fetch_sub_explicit(&b->refcount, 1, memory_order_acq_rel) == 1) {
+    إذا (atomic_fetch_sub_explicit(&b->refcount, 1, memory_order_acq_rel) == 1) {
         /* b->free below might already free the structure containing *b,
          * so we have to read the flag now to avoid use-after-free. */
-        int free_avbuffer = !(b->flags_internal & BUFFER_FLAG_NO_FREE);
-        b->free(b->opaque, b->data);
-        if (free_avbuffer)
+        صحيح free_avbuffer = !(b->flags_داخلی & میانگیر_FLAG_NO_FREE);
+        b->حرر(b->opaque, b->داده);
+        إذا (free_avbuffer)
             av_free(b);
     }
 }
 
-void av_buffer_unref(AVBufferRef **buf)
+فراغ av_میانگیر_unref(AVBufferRef **buf)
 {
-    if (!buf || !*buf)
-        return;
+    إذا (!buf || !*buf)
+        أرجع;
 
-    buffer_replace(buf, NULL);
+    میانگیر_replace(buf, عدم);
 }
 
-int av_buffer_is_writable(const AVBufferRef *buf)
+صحيح av_میانگیر_is_writable(ثابت AVBufferRef *buf)
 {
-    if (buf->buffer->flags & AV_BUFFER_FLAG_READONLY)
-        return 0;
+    إذا (buf->میانگیر->flags & AV_میانگیر_FLAG_READONLY)
+        أرجع 0;
 
-    return atomic_load(&buf->buffer->refcount) == 1;
+    أرجع atomic_load(&buf->میانگیر->refcount) == 1;
 }
 
-void *av_buffer_get_opaque(const AVBufferRef *buf)
+فراغ *av_میانگیر_get_opaque(ثابت AVBufferRef *buf)
 {
-    return buf->buffer->opaque;
+    أرجع buf->میانگیر->opaque;
 }
 
-int av_buffer_get_ref_count(const AVBufferRef *buf)
+صحيح av_میانگیر_get_ref_شمار(ثابت AVBufferRef *buf)
 {
-    return atomic_load(&buf->buffer->refcount);
+    أرجع atomic_load(&buf->میانگیر->refcount);
 }
 
-int av_buffer_make_writable(AVBufferRef **pbuf)
+صحيح av_میانگیر_make_writable(AVBufferRef **pbuf)
 {
     AVBufferRef *newbuf, *buf = *pbuf;
 
-    if (av_buffer_is_writable(buf))
-        return 0;
+    إذا (av_میانگیر_is_writable(buf))
+        أرجع 0;
 
-    newbuf = av_buffer_alloc(buf->size);
-    if (!newbuf)
-        return AVERROR(ENOMEM);
+    newbuf = av_میانگیر_alloc(buf->اندازه);
+    إذا (!newbuf)
+        أرجع AVERROR(ENOMEM);
 
-    memcpy(newbuf->data, buf->data, buf->size);
+    کپی_حافظه(newbuf->داده, buf->داده, buf->اندازه);
 
-    buffer_replace(pbuf, &newbuf);
+    میانگیر_replace(pbuf, &newbuf);
 
-    return 0;
+    أرجع 0;
 }
 
-int av_buffer_realloc(AVBufferRef **pbuf, size_t size)
+صحيح av_میانگیر_realloc(AVBufferRef **pbuf, size_t اندازه)
 {
     AVBufferRef *buf = *pbuf;
     uint8_t *tmp;
-    int ret;
+    صحيح ret;
 
-    if (!buf) {
+    إذا (!buf) {
         /* allocate a new buffer with av_realloc(), so it will be reallocatable
          * later */
-        uint8_t *data = av_realloc(NULL, size);
-        if (!data)
-            return AVERROR(ENOMEM);
+        uint8_t *داده = av_realloc(عدم, اندازه);
+        إذا (!داده)
+            أرجع AVERROR(ENOMEM);
 
-        buf = av_buffer_create(data, size, av_buffer_default_free, NULL, 0);
-        if (!buf) {
-            av_freep(&data);
-            return AVERROR(ENOMEM);
+        buf = av_میانگیر_create(داده, اندازه, av_میانگیر_default_free, عدم, 0);
+        إذا (!buf) {
+            av_freep(&داده);
+            أرجع AVERROR(ENOMEM);
         }
 
-        buf->buffer->flags_internal |= BUFFER_FLAG_REALLOCATABLE;
+        buf->میانگیر->flags_داخلی |= میانگیر_FLAG_REALLOCATABLE;
         *pbuf = buf;
 
-        return 0;
-    } else if (buf->size == size)
-        return 0;
+        أرجع 0;
+    } وإلا إذا (buf->اندازه == اندازه)
+        أرجع 0;
 
-    if (!(buf->buffer->flags_internal & BUFFER_FLAG_REALLOCATABLE) ||
-        !av_buffer_is_writable(buf) || buf->data != buf->buffer->data) {
+    إذا (!(buf->میانگیر->flags_داخلی & میانگیر_FLAG_REALLOCATABLE) ||
+        !av_میانگیر_is_writable(buf) || buf->داده != buf->میانگیر->داده) {
         /* cannot realloc, allocate a new reallocable buffer and copy data */
-        AVBufferRef *new = NULL;
+        AVBufferRef *new = عدم;
 
-        ret = av_buffer_realloc(&new, size);
-        if (ret < 0)
-            return ret;
+        ret = av_میانگیر_realloc(&new, اندازه);
+        إذا (ret < 0)
+            أرجع ret;
 
-        memcpy(new->data, buf->data, FFMIN(size, buf->size));
+        کپی_حافظه(new->داده, buf->داده, FFMIN(اندازه, buf->اندازه));
 
-        buffer_replace(pbuf, &new);
-        return 0;
+        میانگیر_replace(pbuf, &new);
+        أرجع 0;
     }
 
-    tmp = av_realloc(buf->buffer->data, size);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    tmp = av_realloc(buf->میانگیر->داده, اندازه);
+    إذا (!tmp)
+        أرجع AVERROR(ENOMEM);
 
-    buf->buffer->data = buf->data = tmp;
-    buf->buffer->size = buf->size = size;
-    return 0;
+    buf->میانگیر->داده = buf->داده = tmp;
+    buf->میانگیر->اندازه = buf->اندازه = اندازه;
+    أرجع 0;
 }
 
-int av_buffer_replace(AVBufferRef **pdst, const AVBufferRef *src)
+صحيح av_میانگیر_replace(AVBufferRef **pdst, ثابت AVBufferRef *src)
 {
     AVBufferRef *dst = *pdst;
     AVBufferRef *tmp;
 
-    if (!src) {
-        av_buffer_unref(pdst);
-        return 0;
+    إذا (!src) {
+        av_میانگیر_unref(pdst);
+        أرجع 0;
     }
 
-    if (dst && dst->buffer == src->buffer) {
+    إذا (dst && dst->میانگیر == src->میانگیر) {
         /* make sure the data pointers match */
-        dst->data = src->data;
-        dst->size = src->size;
-        return 0;
+        dst->داده = src->داده;
+        dst->اندازه = src->اندازه;
+        أرجع 0;
     }
 
-    tmp = av_buffer_ref(src);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    tmp = av_میانگیر_ref(src);
+    إذا (!tmp)
+        أرجع AVERROR(ENOMEM);
 
-    av_buffer_unref(pdst);
+    av_میانگیر_unref(pdst);
     *pdst = tmp;
-    return 0;
+    أرجع 0;
 }
 
-AVBufferPool *av_buffer_pool_init2(size_t size, void *opaque,
-                                   AVBufferRef* (*alloc)(void *opaque, size_t size),
-                                   void (*pool_free)(void *opaque))
+AVBufferPool *av_میانگیر_pool_init2(size_t اندازه, فراغ *opaque,
+                                   AVBufferRef* (*alloc)(فراغ *opaque, size_t اندازه),
+                                   فراغ (*pool_free)(فراغ *opaque))
 {
-    AVBufferPool *pool = av_mallocz(sizeof(*pool));
-    if (!pool)
-        return NULL;
+    AVBufferPool *pool = av_mallocz(حجم(*pool));
+    إذا (!pool)
+        أرجع عدم;
 
-    if (ff_mutex_init(&pool->mutex, NULL)) {
+    إذا (ff_mutex_init(&pool->mutex, عدم)) {
         av_free(pool);
-        return NULL;
+        أرجع عدم;
     }
 
-    pool->size      = size;
+    pool->اندازه      = اندازه;
     pool->opaque    = opaque;
     pool->alloc2    = alloc;
-    pool->alloc     = av_buffer_alloc; // fallback
+    pool->alloc     = av_میانگیر_alloc; // fallback
     pool->pool_free = pool_free;
 
     atomic_init(&pool->refcount, 1);
 
-    return pool;
+    أرجع pool;
 }
 
-AVBufferPool *av_buffer_pool_init(size_t size, AVBufferRef* (*alloc)(size_t size))
+AVBufferPool *av_میانگیر_pool_init(size_t اندازه, AVBufferRef* (*alloc)(size_t اندازه))
 {
-    AVBufferPool *pool = av_mallocz(sizeof(*pool));
-    if (!pool)
-        return NULL;
+    AVBufferPool *pool = av_mallocz(حجم(*pool));
+    إذا (!pool)
+        أرجع عدم;
 
-    if (ff_mutex_init(&pool->mutex, NULL)) {
+    إذا (ff_mutex_init(&pool->mutex, عدم)) {
         av_free(pool);
-        return NULL;
+        أرجع عدم;
     }
 
-    pool->size     = size;
-    pool->alloc    = alloc ? alloc : av_buffer_alloc;
+    pool->اندازه     = اندازه;
+    pool->alloc    = alloc ? alloc : av_میانگیر_alloc;
 
     atomic_init(&pool->refcount, 1);
 
-    return pool;
+    أرجع pool;
 }
 
-static void buffer_pool_flush(AVBufferPool *pool)
+ساكن فراغ میانگیر_pool_flush(AVBufferPool *pool)
 {
-    while (pool->pool) {
-        BufferPoolEntry *buf = pool->pool;
-        pool->pool = buf->next;
+    طالما (pool->pool) {
+        میانگیر_Pool_مدخل *buf = pool->pool;
+        pool->pool = buf->بعدی;
 
-        if (buf->free == av_buffer_default_free)
-            FF_ASAN_UNPOISON(buf->data, pool->size);
-        buf->free(buf->opaque, buf->data);
+        إذا (buf->حرر == av_میانگیر_default_free)
+            FF_ASAN_UNPOISON(buf->داده, pool->اندازه);
+        buf->حرر(buf->opaque, buf->داده);
         av_freep(&buf);
     }
 }
@@ -317,120 +317,120 @@ static void buffer_pool_flush(AVBufferPool *pool)
  * This function gets called when the pool has been uninited and
  * all the buffers returned to it.
  */
-static void buffer_pool_free(AVBufferPool *pool)
+ساكن فراغ میانگیر_pool_free(AVBufferPool *pool)
 {
-    buffer_pool_flush(pool);
+    میانگیر_pool_flush(pool);
     ff_mutex_destroy(&pool->mutex);
 
-    if (pool->pool_free)
+    إذا (pool->pool_free)
         pool->pool_free(pool->opaque);
 
     av_freep(&pool);
 }
 
-void av_buffer_pool_uninit(AVBufferPool **ppool)
+فراغ av_میانگیر_pool_uninit(AVBufferPool **ppool)
 {
     AVBufferPool *pool;
 
-    if (!ppool || !*ppool)
-        return;
+    إذا (!ppool || !*ppool)
+        أرجع;
     pool   = *ppool;
-    *ppool = NULL;
+    *ppool = عدم;
 
-    ff_mutex_lock(&pool->mutex);
-    buffer_pool_flush(pool);
+    ff_mutex_قفل(&pool->mutex);
+    میانگیر_pool_flush(pool);
     ff_mutex_unlock(&pool->mutex);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
-        buffer_pool_free(pool);
+    إذا (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+        میانگیر_pool_free(pool);
 }
 
-static void pool_release_buffer(void *opaque, uint8_t *data)
+ساكن فراغ pool_release_میانگیر(فراغ *opaque, uint8_t *داده)
 {
-    BufferPoolEntry *buf = opaque;
+    میانگیر_Pool_مدخل *buf = opaque;
     AVBufferPool *pool = buf->pool;
 
-    if (buf->free == av_buffer_default_free)
-        FF_ASAN_POISON(buf->data, pool->size);
+    إذا (buf->حرر == av_میانگیر_default_free)
+        FF_ASAN_POISON(buf->داده, pool->اندازه);
 
-    ff_mutex_lock(&pool->mutex);
-    buf->next = pool->pool;
+    ff_mutex_قفل(&pool->mutex);
+    buf->بعدی = pool->pool;
     pool->pool = buf;
     ff_mutex_unlock(&pool->mutex);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
-        buffer_pool_free(pool);
+    إذا (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+        میانگیر_pool_free(pool);
 }
 
 /* allocate a new buffer and override its free() callback so that
  * it is returned to the pool on free */
-static AVBufferRef *pool_alloc_buffer(AVBufferPool *pool)
+ساكن AVBufferRef *pool_alloc_میانگیر(AVBufferPool *pool)
 {
-    BufferPoolEntry *buf;
+    میانگیر_Pool_مدخل *buf;
     AVBufferRef     *ret;
 
     av_assert0(pool->alloc || pool->alloc2);
 
-    ret = pool->alloc2 ? pool->alloc2(pool->opaque, pool->size) :
-                         pool->alloc(pool->size);
-    if (!ret)
-        return NULL;
+    ret = pool->alloc2 ? pool->alloc2(pool->opaque, pool->اندازه) :
+                         pool->alloc(pool->اندازه);
+    إذا (!ret)
+        أرجع عدم;
 
-    buf = av_mallocz(sizeof(*buf));
-    if (!buf) {
-        av_buffer_unref(&ret);
-        return NULL;
+    buf = av_mallocz(حجم(*buf));
+    إذا (!buf) {
+        av_میانگیر_unref(&ret);
+        أرجع عدم;
     }
 
-    buf->data   = ret->buffer->data;
-    buf->opaque = ret->buffer->opaque;
-    buf->free   = ret->buffer->free;
+    buf->داده   = ret->میانگیر->داده;
+    buf->opaque = ret->میانگیر->opaque;
+    buf->حرر   = ret->میانگیر->حرر;
     buf->pool   = pool;
 
-    ret->buffer->opaque = buf;
-    ret->buffer->free   = pool_release_buffer;
+    ret->میانگیر->opaque = buf;
+    ret->میانگیر->حرر   = pool_release_میانگیر;
 
-    return ret;
+    أرجع ret;
 }
 
-AVBufferRef *av_buffer_pool_get(AVBufferPool *pool)
+AVBufferRef *av_میانگیر_pool_get(AVBufferPool *pool)
 {
     AVBufferRef *ret;
-    BufferPoolEntry *buf;
+    میانگیر_Pool_مدخل *buf;
 
-    ff_mutex_lock(&pool->mutex);
+    ff_mutex_قفل(&pool->mutex);
     buf = pool->pool;
-    if (buf) {
-        memset(&buf->buffer, 0, sizeof(buf->buffer));
-        ret = buffer_create(&buf->buffer, buf->data, pool->size,
-                            pool_release_buffer, buf, 0);
-        if (ret) {
-            pool->pool = buf->next;
-            buf->next = NULL;
-            buf->buffer.flags_internal |= BUFFER_FLAG_NO_FREE;
-            if (buf->free == av_buffer_default_free) {
-                FF_ASAN_UNPOISON(buf->data, pool->size);
+    إذا (buf) {
+        memset(&buf->میانگیر, 0, حجم(buf->میانگیر));
+        ret = میانگیر_create(&buf->میانگیر, buf->داده, pool->اندازه,
+                            pool_release_میانگیر, buf, 0);
+        إذا (ret) {
+            pool->pool = buf->بعدی;
+            buf->بعدی = عدم;
+            buf->میانگیر.flags_داخلی |= میانگیر_FLAG_NO_FREE;
+            إذا (buf->حرر == av_میانگیر_default_free) {
+                FF_ASAN_UNPOISON(buf->داده, pool->اندازه);
                 /* A pool that zeroes its buffers may be relied upon for never
                  * written regions staying zero, so only mark a reused buffer
                  * undefined when nothing was ever promised about its contents. */
-                if (!pool->alloc2 && pool->alloc == av_buffer_alloc)
-                    FF_MEM_UNDEFINED(buf->data, pool->size);
+                إذا (!pool->alloc2 && pool->alloc == av_میانگیر_alloc)
+                    FF_MEM_UNDEFINED(buf->داده, pool->اندازه);
             }
         }
-    } else {
-        ret = pool_alloc_buffer(pool);
+    } وإلا {
+        ret = pool_alloc_میانگیر(pool);
     }
     ff_mutex_unlock(&pool->mutex);
 
-    if (ret)
+    إذا (ret)
         atomic_fetch_add_explicit(&pool->refcount, 1, memory_order_relaxed);
 
-    return ret;
+    أرجع ret;
 }
 
-void *av_buffer_pool_buffer_get_opaque(const AVBufferRef *ref)
+فراغ *av_میانگیر_pool_میانگیر_get_opaque(ثابت AVBufferRef *ref)
 {
-    BufferPoolEntry *buf = ref->buffer->opaque;
+    میانگیر_Pool_مدخل *buf = ref->میانگیر->opaque;
     av_assert0(buf);
-    return buf->opaque;
+    أرجع buf->opaque;
 }

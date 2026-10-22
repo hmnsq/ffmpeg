@@ -16,31 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ARM_PIXELUTILS_H
-#define AVUTIL_ARM_PIXELUTILS_H
+#اگر_تعریف_نشده AVUTIL_ARM_PIXELUTILS_H
+#تعریف_کن AVUTIL_ARM_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ضمن <stddef.h>
+#ضمن <stdint.h>
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#ضمن "cpu.h"
+#ضمن "libavutil/attributes.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_armv6(const uint8_t *src1, ptrdiff_t stride1,
-                              const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad8_armv6 (const uint8_t *src1, ptrdiff_t stride1,
-                              const uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad16_armv6(ثابت uint8_t *src1, ptrdiff_t stride1,
+                              ثابت uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad8_armv6 (ثابت uint8_t *src1, ptrdiff_t stride1,
+                              ثابت uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_arm(av_pixelutils_sad_fn *sad, int aligned)
+ساكن مضمن av_cold فراغ ff_pixelutils_sad_init_arm(av_pixelutils_sad_fn *sad, صحيح aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    صحيح cpu_flags = av_get_cpu_flags();
 
-    if (have_armv6(cpu_flags)) {
-        if (aligned != 0) {
+    إذا (have_armv6(cpu_flags)) {
+        إذا (aligned != 0) {
             sad[2] = ff_pixelutils_sad8_armv6;
             sad[3] = ff_pixelutils_sad16_armv6;
         }
     }
 }
-#endif
+#پایان_اگر

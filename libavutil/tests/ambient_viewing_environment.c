@@ -16,53 +16,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#ضمن <limits.h>
+#ضمن <stdio.h>
 
-#include "libavutil/ambient_viewing_environment.h"
-#include "libavutil/frame.h"
-#include "libavutil/mem.h"
+#ضمن "libavutil/ambient_viewing_environment.h"
+#ضمن "libavutil/frame.h"
+#ضمن "libavutil/mem.h"
 
-static void print_env(const AVAmbientViewingEnvironment *env)
+ساكن فراغ print_env(ثابت AVAmbientViewingEnvironment *env)
 {
-    printf("illuminance=%d/%d, light_x=%d/%d, light_y=%d/%d\n",
-           env->ambient_illuminance.num, env->ambient_illuminance.den,
-           env->ambient_light_x.num,     env->ambient_light_x.den,
-           env->ambient_light_y.num,     env->ambient_light_y.den);
+    چاپ_کن("illuminance=%d/%d, light_x=%d/%d, light_y=%d/%d\n",
+           env->ambient_illuminance.رقم, env->ambient_illuminance.den,
+           env->ambient_light_x.رقم,     env->ambient_light_x.den,
+           env->ambient_light_y.رقم,     env->ambient_light_y.den);
 }
 
-int main(void)
+صحيح اصلی(فراغ)
 {
     AVAmbientViewingEnvironment *env;
-    AVFrame *frame;
-    size_t size = 0;
+    AVFrame *قاب;
+    size_t اندازه = 0;
 
     /* av_ambient_viewing_environment_alloc with size out-param */
-    printf("Testing av_ambient_viewing_environment_alloc(&size)\n");
-    env = av_ambient_viewing_environment_alloc(&size);
-    if (env) {
-        printf("alloc: OK, size_set=%s\n", size == sizeof(*env) ? "yes" : "no");
+    چاپ_کن("Testing av_ambient_viewing_environment_alloc(&size)\n");
+    env = av_ambient_viewing_environment_alloc(&اندازه);
+    إذا (env) {
+        چاپ_کن("alloc: OK, size_set=%s\n", اندازه == حجم(*env) ? "yes" : "no");
         print_env(env);
         av_free(env);
-    } else {
-        printf("alloc: FAIL\n");
+    } وإلا {
+        چاپ_کن("alloc: FAIL\n");
     }
 
     /* av_ambient_viewing_environment_alloc with NULL size */
-    printf("\nTesting av_ambient_viewing_environment_alloc(NULL)\n");
-    env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
-        printf("alloc(NULL): OK\n");
+    چاپ_کن("\nTesting av_ambient_viewing_environment_alloc(NULL)\n");
+    env = av_ambient_viewing_environment_alloc(عدم);
+    إذا (env) {
+        چاپ_کن("alloc(NULL): OK\n");
         print_env(env);
         av_free(env);
-    } else {
-        printf("alloc(NULL): FAIL\n");
+    } وإلا {
+        چاپ_کن("alloc(NULL): FAIL\n");
     }
 
     /* write and read back */
-    printf("\nTesting write/read back\n");
-    env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
+    چاپ_کن("\nTesting write/read back\n");
+    env = av_ambient_viewing_environment_alloc(عدم);
+    إذا (env) {
         env->ambient_illuminance = (AVRational){ 314, 10 };
         env->ambient_light_x     = (AVRational){ 15635, 50000 };
         env->ambient_light_y     = (AVRational){ 16450, 50000 };
@@ -71,38 +71,38 @@ int main(void)
     }
 
     /* av_ambient_viewing_environment_create_side_data */
-    printf("\nTesting av_ambient_viewing_environment_create_side_data()\n");
-    frame = av_frame_alloc();
-    if (frame) {
-        env = av_ambient_viewing_environment_create_side_data(frame);
-        if (env) {
-            printf("side_data: OK\n");
+    چاپ_کن("\nTesting av_ambient_viewing_environment_create_side_data()\n");
+    قاب = av_قاب_alloc();
+    إذا (قاب) {
+        env = av_ambient_viewing_environment_create_side_داده(قاب);
+        إذا (env) {
+            چاپ_کن("side_data: OK\n");
             print_env(env);
-        } else {
-            printf("side_data: FAIL\n");
+        } وإلا {
+            چاپ_کن("side_data: FAIL\n");
         }
-        av_frame_free(&frame);
+        av_قاب_free(&قاب);
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    چاپ_کن("\nTesting OOM paths\n");
     av_max_alloc(1);
-    env = av_ambient_viewing_environment_alloc(&size);
-    printf("alloc OOM: %s\n", env ? "FAIL" : "OK");
+    env = av_ambient_viewing_environment_alloc(&اندازه);
+    چاپ_کن("alloc OOM: %s\n", env ? "FAIL" : "OK");
     av_free(env);
-    env = av_ambient_viewing_environment_alloc(NULL);
-    printf("alloc(NULL) OOM: %s\n", env ? "FAIL" : "OK");
+    env = av_ambient_viewing_environment_alloc(عدم);
+    چاپ_کن("alloc(NULL) OOM: %s\n", env ? "FAIL" : "OK");
     av_free(env);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(بیشترین_صحیح);
 
-    frame = av_frame_alloc();
-    if (frame) {
+    قاب = av_قاب_alloc();
+    إذا (قاب) {
         av_max_alloc(1);
-        env = av_ambient_viewing_environment_create_side_data(frame);
-        printf("side_data OOM: %s\n", env ? "FAIL" : "OK");
-        av_max_alloc(INT_MAX);
-        av_frame_free(&frame);
+        env = av_ambient_viewing_environment_create_side_داده(قاب);
+        چاپ_کن("side_data OOM: %s\n", env ? "FAIL" : "OK");
+        av_max_alloc(بیشترین_صحیح);
+        av_قاب_free(&قاب);
     }
 
-    return 0;
+    أرجع 0;
 }

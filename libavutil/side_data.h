@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_SIDE_DATA_H
-#define AVUTIL_SIDE_DATA_H
+#اگر_تعریف_نشده AVUTIL_SIDE_داده_H
+#تعریف_کن AVUTIL_SIDE_داده_H
 
-#include "buffer.h"
-#include "frame.h"
+#ضمن "buffer.h"
+#ضمن "frame.h"
 
-AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
-                                                 enum AVFrameSideDataType type,
+AVFrame_Side_داده *ff_قاب_side_داده_جمع_کن_from_buf(AVFrame_Side_داده ***sd,
+                                                 صحيح *nb_sd,
+                                                 تعداد AVFrame_Side_داده_Type type,
                                                  AVBufferRef *buf);
 
-#endif // AVUTIL_SIDE_DATA_H
+#پایان_اگر // AVUTIL_SIDE_DATA_H

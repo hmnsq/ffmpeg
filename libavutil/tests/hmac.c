@@ -16,72 +16,72 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/hmac.c"
+#ضمن "libavutil/hmac.c"
 
-#include <stdio.h>
-#include <string.h>
+#ضمن <stdio.h>
+#ضمن <string.h>
 
-static void test(AVHMAC *hmac, const uint8_t *key, int keylen,
-                 const uint8_t *data, int datalen)
+ساكن فراغ test(AVHMAC *hmac, ثابت uint8_t *کلید, صحيح keylen,
+                 ثابت uint8_t *داده, صحيح datalen)
 {
     uint8_t buf[MAX_HASHLEN];
-    int out, i;
+    صحيح بیرون, i;
     // Some of the test vectors are strings, where sizeof() includes the
     // trailing null byte - remove that.
-    if (!key[keylen - 1])
+    إذا (!کلید[keylen - 1])
         keylen--;
-    if (!data[datalen - 1])
+    إذا (!داده[datalen - 1])
         datalen--;
-    out = av_hmac_calc(hmac, data, datalen, key, keylen, buf, sizeof(buf));
-    for (i = 0; i < out; i++)
-        printf("%02x", buf[i]);
-    printf("\n");
+    بیرون = av_hmac_calc(hmac, داده, datalen, کلید, keylen, buf, حجم(buf));
+    لكل (i = 0; i < بیرون; i++)
+        چاپ_کن("%02x", buf[i]);
+    چاپ_کن("\n");
 }
 
-int main(void)
+صحيح اصلی(فراغ)
 {
     uint8_t key1[20], key3[131], data3[50];
     AVHMAC *hmac;
-    enum AVHMACType i;
-    static const uint8_t key2[]  = "Jefe";
-    static const uint8_t data1[] = "Hi There";
-    static const uint8_t data2[] = "what do ya want for nothing?";
-    static const uint8_t data4[] = "Test Using Larger Than Block-Size Key - Hash Key First";
-    static const uint8_t data5[] = "Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data";
-    static const uint8_t data6[] = "This is a test using a larger than block-size key and a larger "
+    تعداد AVHMACType i;
+    ساكن ثابت uint8_t key2[]  = "Jefe";
+    ساكن ثابت uint8_t data1[] = "Hi There";
+    ساكن ثابت uint8_t data2[] = "what do ya want for nothing?";
+    ساكن ثابت uint8_t data4[] = "Test Using Larger Than Block-Size Key - Hash Key First";
+    ساكن ثابت uint8_t data5[] = "Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data";
+    ساكن ثابت uint8_t data6[] = "This is a test using a larger than block-size key and a larger "
                             "than block-size data. The key needs to be hashed before being used"
                             " by the HMAC algorithm.";
-    memset(key1, 0x0b, sizeof(key1));
-    memset(key3, 0xaa, sizeof(key3));
-    memset(data3, 0xdd, sizeof(data3));
+    memset(key1, 0x0b, حجم(key1));
+    memset(key3, 0xaa, حجم(key3));
+    memset(data3, 0xdd, حجم(data3));
 
     /* MD5, SHA-1 */
-    for (i = AV_HMAC_MD5; i <= AV_HMAC_SHA1; i++) {
+    لكل (i = AV_HMAC_MD5; i <= AV_HMAC_SHA1; i++) {
         hmac = av_hmac_alloc(i);
-        if (!hmac)
-            return 1;
+        إذا (!hmac)
+            أرجع 1;
         // RFC 2202 test vectors
-        test(hmac, key1, hmac->hashlen, data1, sizeof(data1));
-        test(hmac, key2, sizeof(key2),  data2, sizeof(data2));
-        test(hmac, key3, hmac->hashlen, data3, sizeof(data3));
-        test(hmac, key3, 80,            data4, sizeof(data4));
-        test(hmac, key3, 80,            data5, sizeof(data5));
+        test(hmac, key1, hmac->hashlen, data1, حجم(data1));
+        test(hmac, key2, حجم(key2),  data2, حجم(data2));
+        test(hmac, key3, hmac->hashlen, data3, حجم(data3));
+        test(hmac, key3, 80,            data4, حجم(data4));
+        test(hmac, key3, 80,            data5, حجم(data5));
         av_hmac_free(hmac);
     }
 
     /* SHA-2 */
-    for (i = AV_HMAC_SHA224; i <= AV_HMAC_SHA512; i++) {
+    لكل (i = AV_HMAC_SHA224; i <= AV_HMAC_SHA512; i++) {
         hmac = av_hmac_alloc(i);
-        if (!hmac)
-            return 1;
+        إذا (!hmac)
+            أرجع 1;
         // RFC 4231 test vectors
-        test(hmac, key1, sizeof(key1), data1, sizeof(data1));
-        test(hmac, key2, sizeof(key2), data2, sizeof(data2));
-        test(hmac, key3, 20,           data3, sizeof(data3));
-        test(hmac, key3, sizeof(key3), data4, sizeof(data4));
-        test(hmac, key3, sizeof(key3), data6, sizeof(data6));
+        test(hmac, key1, حجم(key1), data1, حجم(data1));
+        test(hmac, key2, حجم(key2), data2, حجم(data2));
+        test(hmac, key3, 20,           data3, حجم(data3));
+        test(hmac, key3, حجم(key3), data4, حجم(data4));
+        test(hmac, key3, حجم(key3), data6, حجم(data6));
         av_hmac_free(hmac);
     }
 
-    return 0;
+    أرجع 0;
 }

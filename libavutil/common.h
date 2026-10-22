@@ -23,47 +23,47 @@
  * common internal and external API header
  */
 
-#ifndef AVUTIL_COMMON_H
-#define AVUTIL_COMMON_H
+#اگر_تعریف_نشده AVUTIL_COMMON_H
+#تعریف_کن AVUTIL_COMMON_H
 
-#if defined(__cplusplus) && !defined(__STDC_CONSTANT_MACROS) && !defined(UINT64_C)
-#error missing -D__STDC_CONSTANT_MACROS / #define __STDC_CONSTANT_MACROS
-#endif
+#إذا defined(__cplusplus) && !defined(__STDC_CONSTANT_MACROS) && !defined(UINT64_C)
+#خطا missing -D__STDC_CONSTANT_MACROS / #تعریف_کن __STDC_CONSTANT_MACROS
+#پایان_اگر
 
-#include <errno.h>
-#include <inttypes.h>
-#include <limits.h>
-#include <math.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ضمن <errno.h>
+#ضمن <inttypes.h>
+#ضمن <limits.h>
+#ضمن <math.h>
+#ضمن <stdint.h>
+#ضمن <stdio.h>
+#ضمن <stdlib.h>
+#ضمن <string.h>
 
-#include "attributes.h"
-#include "error.h"
-#include "macros.h"
-#include "version.h"
+#ضمن "attributes.h"
+#ضمن "error.h"
+#ضمن "macros.h"
+#ضمن "version.h"
 
-#ifdef HAVE_AV_CONFIG_H
+#اگر_تعریف_شده HAVE_AV_CONFIG_H
 #   include "config.h"
 #   include "intmath.h"
 #   include "internal.h"
-#else
+#وإلا
 #   include "mem.h"
-#endif /* HAVE_AV_CONFIG_H */
+#پایان_اگر /* HAVE_AV_CONFIG_H */
 
 //rounded division & shift
-#define RSHIFT(a,b) ((a) > 0 ? ((a) + ((1<<(b))>>1))>>(b) : ((a) + ((1<<(b))>>1)-1)>>(b))
+#تعریف_کن RSHIFT(a,b) ((a) > 0 ? ((a) + ((1<<(b))>>1))>>(b) : ((a) + ((1<<(b))>>1)-1)>>(b))
 /* assume b>0 */
-#define ROUNDED_DIV(a,b) (((a)>=0 ? (a) + ((b)>>1) : (a) - ((b)>>1))/(b))
+#تعریف_کن ROUNDED_DIV(a,b) (((a)>=0 ? (a) + ((b)>>1) : (a) - ((b)>>1))/(b))
 /* Fast a/(1<<b) rounded toward +inf. Assume a>=0 and b>=0 */
-#define AV_CEIL_RSHIFT(a,b) (!av_builtin_constant_p(b) ? -((-(a)) >> (b)) \
+#تعریف_کن AV_CEIL_RSHIFT(a,b) (!av_builtin_constant_p(b) ? -((-(a)) >> (b)) \
                                                        : ((a) + (1<<(b)) - 1) >> (b))
 /* Backwards compat. */
-#define FF_CEIL_RSHIFT AV_CEIL_RSHIFT
+#تعریف_کن FF_CEIL_RSHIFT AV_CEIL_RSHIFT
 
-#define FFUDIV(a,b) (((a)>0 ?(a):(a)-(b)+1) / (b))
-#define FFUMOD(a,b) ((a)-(b)*FFUDIV(a,b))
+#تعریف_کن FFUDIV(a,b) (((a)>0 ?(a):(a)-(b)+1) / (b))
+#تعریف_کن FFUMOD(a,b) ((a)-(b)*FFUDIV(a,b))
 
 /**
  * Absolute value, Note, INT_MIN / INT64_MIN result in undefined behavior as they
@@ -71,8 +71,8 @@
  * as with *abs()
  * @see FFNABS()
  */
-#define FFABS(a) ((a) >= 0 ? (a) : (-(a)))
-#define FFSIGN(a) ((a) > 0 ? 1 : -1)
+#تعریف_کن FFABS(a) ((a) >= 0 ? (a) : (-(a)))
+#تعریف_کن FFSIGN(a) ((a) > 0 ? 1 : -1)
 
 /**
  * Negative Absolute value.
@@ -80,7 +80,7 @@
  * As with many macros, this evaluates its argument twice, it thus must not have
  * a sideeffect, that is FFNABS(x++) has undefined behavior.
  */
-#define FFNABS(a) ((a) <= 0 ? (a) : (-(a)))
+#تعریف_کن FFNABS(a) ((a) <= 0 ? (a) : (-(a)))
 
 /**
  * Unsigned Absolute value.
@@ -88,85 +88,85 @@
  * This also works with INT_MIN which would otherwise not be representable
  * As with many macros, this evaluates its argument twice.
  */
-#define FFABSU(a) ((a) <= 0 ? -(unsigned)(a) : (unsigned)(a))
-#define FFABS64U(a) ((a) <= 0 ? -(uint64_t)(a) : (uint64_t)(a))
+#تعریف_کن FFABSU(a) ((a) <= 0 ? -(بیعلامت)(a) : (بیعلامت)(a))
+#تعریف_کن FFABS64U(a) ((a) <= 0 ? -(uint64_t)(a) : (uint64_t)(a))
 
 /* misc math functions */
 
-#ifndef av_ceil_log2
+#اگر_تعریف_نشده av_ceil_log2
 #   define av_ceil_log2     av_ceil_log2_c
-#endif
-#ifndef av_clip
+#پایان_اگر
+#اگر_تعریف_نشده av_clip
 #   define av_clip          av_clip_c
-#endif
-#ifndef av_clip64
+#پایان_اگر
+#اگر_تعریف_نشده av_clip64
 #   define av_clip64        av_clip64_c
-#endif
-#ifndef av_clip_uint8
+#پایان_اگر
+#اگر_تعریف_نشده av_clip_uint8
 #   define av_clip_uint8    av_clip_uint8_c
-#endif
-#ifndef av_clip_int8
+#پایان_اگر
+#اگر_تعریف_نشده av_clip_int8
 #   define av_clip_int8     av_clip_int8_c
-#endif
-#ifndef av_clip_uint16
+#پایان_اگر
+#اگر_تعریف_نشده av_clip_uint16
 #   define av_clip_uint16   av_clip_uint16_c
-#endif
-#ifndef av_clip_int16
+#پایان_اگر
+#اگر_تعریف_نشده av_clip_int16
 #   define av_clip_int16    av_clip_int16_c
-#endif
-#ifndef av_clipl_int32
+#پایان_اگر
+#اگر_تعریف_نشده av_clipl_int32
 #   define av_clipl_int32   av_clipl_int32_c
-#endif
-#ifndef av_clip_intp2
+#پایان_اگر
+#اگر_تعریف_نشده av_clip_intp2
 #   define av_clip_intp2    av_clip_intp2_c
-#endif
-#ifndef av_clip_uintp2
+#پایان_اگر
+#اگر_تعریف_نشده av_clip_uintp2
 #   define av_clip_uintp2   av_clip_uintp2_c
-#endif
-#ifndef av_sat_add32
+#پایان_اگر
+#اگر_تعریف_نشده av_sat_add32
 #   define av_sat_add32     av_sat_add32_c
-#endif
-#ifndef av_sat_dadd32
+#پایان_اگر
+#اگر_تعریف_نشده av_sat_dadd32
 #   define av_sat_dadd32    av_sat_dadd32_c
-#endif
-#ifndef av_sat_sub32
+#پایان_اگر
+#اگر_تعریف_نشده av_sat_sub32
 #   define av_sat_sub32     av_sat_sub32_c
-#endif
-#ifndef av_sat_dsub32
+#پایان_اگر
+#اگر_تعریف_نشده av_sat_dsub32
 #   define av_sat_dsub32    av_sat_dsub32_c
-#endif
-#ifndef av_sat_add64
+#پایان_اگر
+#اگر_تعریف_نشده av_sat_add64
 #   define av_sat_add64     av_sat_add64_c
-#endif
-#ifndef av_sat_sub64
+#پایان_اگر
+#اگر_تعریف_نشده av_sat_sub64
 #   define av_sat_sub64     av_sat_sub64_c
-#endif
-#ifndef av_clipf
+#پایان_اگر
+#اگر_تعریف_نشده av_clipf
 #   define av_clipf         av_clipf_c
-#endif
-#ifndef av_clipd
+#پایان_اگر
+#اگر_تعریف_نشده av_clipd
 #   define av_clipd         av_clipd_c
-#endif
-#ifndef av_zero_extend
+#پایان_اگر
+#اگر_تعریف_نشده av_zero_extend
 #   define av_zero_extend   av_zero_extend_c
-#endif
-#ifndef av_popcount
+#پایان_اگر
+#اگر_تعریف_نشده av_popcount
 #   define av_popcount      av_popcount_c
-#endif
-#ifndef av_popcount64
+#پایان_اگر
+#اگر_تعریف_نشده av_popcount64
 #   define av_popcount64    av_popcount64_c
-#endif
-#ifndef av_parity
+#پایان_اگر
+#اگر_تعریف_نشده av_parity
 #   define av_parity        av_parity_c
-#endif
+#پایان_اگر
 
-#ifndef av_log2
-av_const int av_log2(unsigned v);
-#endif
+#اگر_تعریف_نشده av_log2
+av_const صحيح av_log2(بیعلامت v);
+#پایان_اگر
 
-#ifndef av_log2_16bit
-av_const int av_log2_16bit(unsigned v);
-#endif
+#اگر_تعریف_نشده av_log2_16bit
+av_const صحيح av_log2_16bit(بیعلامت v);
+#پایان_اگر
 
 /**
  * Clip a signed integer value into the amin-amax range.
@@ -175,14 +175,14 @@ av_const int av_log2_16bit(unsigned v);
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
+ساكن av_always_inline av_const صحيح av_clip_c(صحيح a, صحيح amin, صحيح amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
-    if      (a < amin) return amin;
-    else if (a > amax) return amax;
-    else               return a;
+#إذا defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    إذا (amin > amax) abort();
+#پایان_اگر
+    إذا      (a < amin) أرجع amin;
+    وإلا إذا (a > amax) أرجع amax;
+    وإلا               أرجع a;
 }
 
 /**
@@ -192,14 +192,14 @@ static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, int64_t amax)
+ساكن av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, int64_t amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
-    if      (a < amin) return amin;
-    else if (a > amax) return amax;
-    else               return a;
+#إذا defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    إذا (amin > amax) abort();
+#پایان_اگر
+    إذا      (a < amin) أرجع amin;
+    وإلا إذا (a > amax) أرجع amax;
+    وإلا               أرجع a;
 }
 
 /**
@@ -207,10 +207,10 @@ static av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, in
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const uint8_t av_clip_uint8_c(int a)
+ساكن av_always_inline av_const uint8_t av_clip_uint8_c(صحيح a)
 {
-    if (a&(~0xFF)) return (~a)>>31;
-    else           return a;
+    إذا (a&(~0xFF)) أرجع (~a)>>31;
+    وإلا           أرجع a;
 }
 
 /**
@@ -218,10 +218,10 @@ static av_always_inline av_const uint8_t av_clip_uint8_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const int8_t av_clip_int8_c(int a)
+ساكن av_always_inline av_const int8_t av_clip_int8_c(صحيح a)
 {
-    if ((a+0x80U) & ~0xFF) return (a>>31) ^ 0x7F;
-    else                  return a;
+    إذا ((a+0x80U) & ~0xFF) أرجع (a>>31) ^ 0x7F;
+    وإلا                  أرجع a;
 }
 
 /**
@@ -229,10 +229,10 @@ static av_always_inline av_const int8_t av_clip_int8_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const uint16_t av_clip_uint16_c(int a)
+ساكن av_always_inline av_const uint16_t av_clip_uint16_c(صحيح a)
 {
-    if (a&(~0xFFFF)) return (~a)>>31;
-    else             return a;
+    إذا (a&(~0xFFFF)) أرجع (~a)>>31;
+    وإلا             أرجع a;
 }
 
 /**
@@ -240,10 +240,10 @@ static av_always_inline av_const uint16_t av_clip_uint16_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const int16_t av_clip_int16_c(int a)
+ساكن av_always_inline av_const int16_t av_clip_int16_c(صحيح a)
 {
-    if ((a+0x8000U) & ~0xFFFF) return (a>>31) ^ 0x7FFF;
-    else                      return a;
+    إذا ((a+0x8000U) & ~0xFFFF) أرجع (a>>31) ^ 0x7FFF;
+    وإلا                      أرجع a;
 }
 
 /**
@@ -251,10 +251,10 @@ static av_always_inline av_const int16_t av_clip_int16_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
+ساكن av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
 {
-    if ((a+UINT64_C(0x80000000)) & ~UINT64_C(0xFFFFFFFF)) return (int32_t)((a>>63) ^ 0x7FFFFFFF);
-    else                                                  return (int32_t)a;
+    إذا ((a+UINT64_C(0x80000000)) & ~UINT64_C(0xFFFFFFFF)) أرجع (int32_t)((a>>63) ^ 0x7FFFFFFF);
+    وإلا                                                  أرجع (int32_t)a;
 }
 
 /**
@@ -263,12 +263,12 @@ static av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
  * @param  p bit position to clip at
  * @return clipped value
  */
-static av_always_inline av_const int av_clip_intp2_c(int a, int p)
+ساكن av_always_inline av_const صحيح av_clip_intp2_c(صحيح a, صحيح p)
 {
-    if (((unsigned)a + (1U << p)) & ~((2U << p) - 1))
-        return (a >> 31) ^ ((1 << p) - 1);
-    else
-        return a;
+    إذا (((بیعلامت)a + (1U << p)) & ~((2U << p) - 1))
+        أرجع (a >> 31) ^ ((1 << p) - 1);
+    وإلا
+        أرجع a;
 }
 
 /**
@@ -277,10 +277,10 @@ static av_always_inline av_const int av_clip_intp2_c(int a, int p)
  * @param  p bit position to clip at
  * @return clipped value
  */
-static av_always_inline av_const unsigned av_clip_uintp2_c(int a, int p)
+ساكن av_always_inline av_const بیعلامت av_clip_uintp2_c(صحيح a, صحيح p)
 {
-    if (a & ~((1U<<p) - 1)) return (~a) >> 31 & ((1U<<p) - 1);
-    else                    return  a;
+    إذا (a & ~((1U<<p) - 1)) أرجع (~a) >> 31 & ((1U<<p) - 1);
+    وإلا                    أرجع  a;
 }
 
 /**
@@ -289,12 +289,12 @@ static av_always_inline av_const unsigned av_clip_uintp2_c(int a, int p)
  * @param  p bit position to clip at. Must be between 0 and 31.
  * @return clipped value
  */
-static av_always_inline av_const unsigned av_zero_extend_c(unsigned a, unsigned p)
+ساكن av_always_inline av_const بیعلامت av_zero_extend_c(بیعلامت a, بیعلامت p)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (p > 31) abort();
-#endif
-    return a & ((1U << p) - 1);
+#إذا defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    إذا (p > 31) abort();
+#پایان_اگر
+    أرجع a & ((1U << p) - 1);
 }
 
 /**
@@ -304,9 +304,9 @@ static av_always_inline av_const unsigned av_zero_extend_c(unsigned a, unsigned 
  * @param  b another value
  * @return sum with signed saturation
  */
-static av_always_inline int av_sat_add32_c(int a, int b)
+ساكن av_always_inline صحيح av_sat_add32_c(صحيح a, صحيح b)
 {
-    return av_clipl_int32((int64_t)a + b);
+    أرجع av_clipl_int32((int64_t)a + b);
 }
 
 /**
@@ -316,9 +316,9 @@ static av_always_inline int av_sat_add32_c(int a, int b)
  * @param  b value doubled and added to a
  * @return sum sat(a + sat(2*b)) with signed saturation
  */
-static av_always_inline int av_sat_dadd32_c(int a, int b)
+ساكن av_always_inline صحيح av_sat_dadd32_c(صحيح a, صحيح b)
 {
-    return av_sat_add32(a, av_sat_add32(b, b));
+    أرجع av_sat_add32(a, av_sat_add32(b, b));
 }
 
 /**
@@ -328,9 +328,9 @@ static av_always_inline int av_sat_dadd32_c(int a, int b)
  * @param  b another value
  * @return difference with signed saturation
  */
-static av_always_inline int av_sat_sub32_c(int a, int b)
+ساكن av_always_inline صحيح av_sat_sub32_c(صحيح a, صحيح b)
 {
-    return av_clipl_int32((int64_t)a - b);
+    أرجع av_clipl_int32((int64_t)a - b);
 }
 
 /**
@@ -340,9 +340,9 @@ static av_always_inline int av_sat_sub32_c(int a, int b)
  * @param  b value doubled and subtracted from a
  * @return difference sat(a - sat(2*b)) with signed saturation
  */
-static av_always_inline int av_sat_dsub32_c(int a, int b)
+ساكن av_always_inline صحيح av_sat_dsub32_c(صحيح a, صحيح b)
 {
-    return av_sat_sub32(a, av_sat_add32(b, b));
+    أرجع av_sat_sub32(a, av_sat_add32(b, b));
 }
 
 /**
@@ -352,16 +352,16 @@ static av_always_inline int av_sat_dsub32_c(int a, int b)
  * @param  b another value
  * @return sum with signed saturation
  */
-static av_always_inline int64_t av_sat_add64_c(int64_t a, int64_t b) {
-#if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_add_overflow)
+ساكن av_always_inline int64_t av_sat_add64_c(int64_t a, int64_t b) {
+#إذا (!defined(__INTEL_COMPILER) && AV_GCC_نسخه_AT_کمترین(5,1)) || AV_HAS_BUILTIN(__builtin_add_overflow)
     int64_t tmp;
-    return !__builtin_add_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
-#else
+    أرجع !__builtin_add_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
+#وإلا
     int64_t s = a+(uint64_t)b;
-    if ((int64_t)(a^b | ~s^b) >= 0)
-        return INT64_MAX ^ (b >> 63);
-    return s;
-#endif
+    إذا ((int64_t)(a^b | ~s^b) >= 0)
+        أرجع INT64_MAX ^ (b >> 63);
+    أرجع s;
+#پایان_اگر
 }
 
 /**
@@ -371,17 +371,17 @@ static av_always_inline int64_t av_sat_add64_c(int64_t a, int64_t b) {
  * @param  b another value
  * @return difference with signed saturation
  */
-static av_always_inline int64_t av_sat_sub64_c(int64_t a, int64_t b) {
-#if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_sub_overflow)
+ساكن av_always_inline int64_t av_sat_sub64_c(int64_t a, int64_t b) {
+#إذا (!defined(__INTEL_COMPILER) && AV_GCC_نسخه_AT_کمترین(5,1)) || AV_HAS_BUILTIN(__builtin_sub_overflow)
     int64_t tmp;
-    return !__builtin_sub_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
-#else
-    if (b <= 0 && a >= INT64_MAX + b)
-        return INT64_MAX;
-    if (b >= 0 && a <= INT64_MIN + b)
-        return INT64_MIN;
-    return a - b;
-#endif
+    أرجع !__builtin_sub_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
+#وإلا
+    إذا (b <= 0 && a >= INT64_MAX + b)
+        أرجع INT64_MAX;
+    إذا (b >= 0 && a <= INT64_MIN + b)
+        أرجع INT64_MIN;
+    أرجع a - b;
+#پایان_اگر
 }
 
 /**
@@ -393,12 +393,12 @@ static av_always_inline int64_t av_sat_sub64_c(int64_t a, int64_t b) {
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const float av_clipf_c(float a, float amin, float amax)
+ساكن av_always_inline av_const عائم av_clipf_c(عائم a, عائم amin, عائم amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
-    return FFMIN(FFMAX(a, amin), amax);
+#إذا defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    إذا (amin > amax) abort();
+#پایان_اگر
+    أرجع FFMIN(FFMAX(a, amin), amax);
 }
 
 /**
@@ -410,21 +410,21 @@ static av_always_inline av_const float av_clipf_c(float a, float amin, float ama
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const double av_clipd_c(double a, double amin, double amax)
+ساكن av_always_inline av_const مزدوج av_clipd_c(مزدوج a, مزدوج amin, مزدوج amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
-    return FFMIN(FFMAX(a, amin), amax);
+#إذا defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    إذا (amin > amax) abort();
+#پایان_اگر
+    أرجع FFMIN(FFMAX(a, amin), amax);
 }
 
 /** Compute ceil(log2(x)).
  * @param x value used to compute ceil(log2(x))
  * @return computed ceiling of log2(x)
  */
-static av_always_inline av_const int av_ceil_log2_c(int x)
+ساكن av_always_inline av_const صحيح av_ceil_log2_c(صحيح x)
 {
-    return av_log2((x - 1U) << 1);
+    أرجع av_log2((x - 1U) << 1);
 }
 
 /**
@@ -432,13 +432,13 @@ static av_always_inline av_const int av_ceil_log2_c(int x)
  * @param x value to count bits of
  * @return the number of bits set to one in x
  */
-static av_always_inline av_const int av_popcount_c(uint32_t x)
+ساكن av_always_inline av_const صحيح av_popcount_c(uint32_t x)
 {
     x -= (x >> 1) & 0x55555555;
     x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
     x = (x + (x >> 4)) & 0x0F0F0F0F;
     x += x >> 8;
-    return (x + (x >> 16)) & 0x3F;
+    أرجع (x + (x >> 16)) & 0x3F;
 }
 
 /**
@@ -446,14 +446,14 @@ static av_always_inline av_const int av_popcount_c(uint32_t x)
  * @param x value to count bits of
  * @return the number of bits set to one in x
  */
-static av_always_inline av_const int av_popcount64_c(uint64_t x)
+ساكن av_always_inline av_const صحيح av_popcount64_c(uint64_t x)
 {
-    return av_popcount((uint32_t)x) + av_popcount((uint32_t)(x >> 32));
+    أرجع av_popcount((uint32_t)x) + av_popcount((uint32_t)(x >> 32));
 }
 
-static av_always_inline av_const int av_parity_c(uint32_t v)
+ساكن av_always_inline av_const صحيح av_parity_c(uint32_t v)
 {
-    return av_popcount(v) & 1;
+    أرجع av_popcount(v) & 1;
 }
 
 /**
@@ -474,20 +474,20 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
  * exit from the macro code (e.g. through a goto or a return) in order
  * to prevent undefined results.
  */
-#define GET_UTF8(val, GET_BYTE, ERROR)\
+#تعریف_کن GET_UTF8(val, GET_BYTE, ERROR)\
     val= (uint8_t)(GET_BYTE);\
     {\
-        uint32_t top = (val & 128) >> 1;\
-        if ((val & 0xc0) == 0x80 || val >= 0xFE)\
+        uint32_t بالاترین = (val & 128) >> 1;\
+        إذا ((val & 0xc0) == 0x80 || val >= 0xFE)\
             {ERROR}\
-        while (val & top) {\
-            unsigned int tmp = (uint8_t)(GET_BYTE) - 128;\
-            if(tmp>>6)\
+        طالما (val & بالاترین) {\
+            بیعلامت صحيح tmp = (uint8_t)(GET_BYTE) - 128;\
+            إذا(tmp>>6)\
                 {ERROR}\
             val= (val<<6) + tmp;\
-            top <<= 5;\
+            بالاترین <<= 5;\
         }\
-        val &= (top << 1) - 1;\
+        val &= (بالاترین << 1) - 1;\
     }
 
 /**
@@ -499,13 +499,13 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
  * @param ERROR     Expression to be evaluated on invalid input,
  *                  typically a goto statement.
  */
-#define GET_UTF16(val, GET_16BIT, ERROR)\
-    val = (uint16_t)(GET_16BIT);\
+#تعریف_کن GET_UTF16(val, GET_16_بیت, ERROR)\
+    val = (uint16_t)(GET_16_بیت);\
     {\
-        unsigned int hi = val - 0xD800;\
-        if (hi < 0x800) {\
-            val = (uint16_t)(GET_16BIT) - 0xDC00;\
-            if (val > 0x3FFU || hi > 0x3FFU)\
+        بیعلامت صحيح hi = val - 0xD800;\
+        إذا (hi < 0x800) {\
+            val = (uint16_t)(GET_16_بیت) - 0xDC00;\
+            إذا (val > 0x3FFU || hi > 0x3FFU)\
                 {ERROR}\
             val += (hi<<10) + 0x10000;\
         }\
@@ -527,21 +527,21 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
  * 7 times in the general case, depending on the length of the converted
  * Unicode character.
  */
-#define PUT_UTF8(val, tmp, PUT_BYTE)\
+#تعریف_کن PUT_UTF8(val, tmp, PUT_BYTE)\
     {\
-        int bytes, shift;\
-        uint32_t in = val;\
-        if (in < 0x80) {\
-            tmp = in;\
+        صحيح بایتها, لغزش;\
+        uint32_t درون = val;\
+        إذا (درون < 0x80) {\
+            tmp = درون;\
             PUT_BYTE\
-        } else {\
-            bytes = (av_log2(in) + 4) / 5;\
-            shift = (bytes - 1) * 6;\
-            tmp = (256 - (256 >> bytes)) | (in >> shift);\
+        } وإلا {\
+            بایتها = (av_log2(درون) + 4) / 5;\
+            لغزش = (بایتها - 1) * 6;\
+            tmp = (256 - (256 >> بایتها)) | (درون >> لغزش);\
             PUT_BYTE\
-            while (shift >= 6) {\
-                shift -= 6;\
-                tmp = 0x80 | ((in >> shift) & 0x3f);\
+            طالما (لغزش >= 6) {\
+                لغزش -= 6;\
+                tmp = 0x80 | ((درون >> لغزش) & 0x3f);\
                 PUT_BYTE\
             }\
         }\
@@ -561,18 +561,18 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
  * as the input byte.  For example, PUT_BYTE could be "*output++ = tmp;"
  * PUT_BYTE will be executed 1 or 2 times depending on input character.
  */
-#define PUT_UTF16(val, tmp, PUT_16BIT)\
+#تعریف_کن PUT_UTF16(val, tmp, PUT_16_بیت)\
     {\
-        uint32_t in = val;\
-        if (in < 0x10000) {\
-            tmp = in;\
-            PUT_16BIT\
-        } else {\
-            tmp = 0xD800 | ((in - 0x10000) >> 10);\
-            PUT_16BIT\
-            tmp = 0xDC00 | ((in - 0x10000) & 0x3FF);\
-            PUT_16BIT\
+        uint32_t درون = val;\
+        إذا (درون < 0x10000) {\
+            tmp = درون;\
+            PUT_16_بیت\
+        } وإلا {\
+            tmp = 0xD800 | ((درون - 0x10000) >> 10);\
+            PUT_16_بیت\
+            tmp = 0xDC00 | ((درون - 0x10000) & 0x3FF);\
+            PUT_16_بیت\
         }\
     }\
 
-#endif /* AVUTIL_COMMON_H */
+#پایان_اگر /* AVUTIL_COMMON_H */

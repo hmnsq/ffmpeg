@@ -16,6 +16,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define TX_FLOAT
-#include "tx_priv.h"
-#include "tx_template.c"
+#تعریف_کن TX_FLOAT
+#ضمن "tx_priv.h"
+#ضمن "tx_template.c"

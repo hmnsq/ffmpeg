@@ -16,105 +16,105 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
-#include "cpu.h"
+#ضمن "libavutil/attributes.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/float_dsp.h"
+#ضمن "cpu.h"
 
-void ff_vector_fmul_sse(float *dst, const float *src0, const float *src1,
-                        int len);
-void ff_vector_fmul_avx(float *dst, const float *src0, const float *src1,
-                        int len);
+فراغ ff_وکتور_fmul_sse(عائم *dst, ثابت عائم *src0, ثابت عائم *src1,
+                        صحيح len);
+فراغ ff_وکتور_fmul_avx(عائم *dst, ثابت عائم *src0, ثابت عائم *src1,
+                        صحيح len);
 
-void ff_vector_dmul_sse2(double *dst, const double *src0, const double *src1,
-                         int len);
-void ff_vector_dmul_avx(double *dst, const double *src0, const double *src1,
-                        int len);
+فراغ ff_وکتور_dmul_sse2(مزدوج *dst, ثابت مزدوج *src0, ثابت مزدوج *src1,
+                         صحيح len);
+فراغ ff_وکتور_dmul_avx(مزدوج *dst, ثابت مزدوج *src0, ثابت مزدوج *src1,
+                        صحيح len);
 
-void ff_vector_fmac_scalar_sse(float *dst, const float *src, float mul,
-                               int len);
-void ff_vector_fmac_scalar_avx(float *dst, const float *src, float mul,
-                               int len);
-void ff_vector_fmac_scalar_fma3(float *dst, const float *src, float mul,
-                                int len);
+فراغ ff_وکتور_fmac_scalar_sse(عائم *dst, ثابت عائم *src, عائم mul,
+                               صحيح len);
+فراغ ff_وکتور_fmac_scalar_avx(عائم *dst, ثابت عائم *src, عائم mul,
+                               صحيح len);
+فراغ ff_وکتور_fmac_scalar_fma3(عائم *dst, ثابت عائم *src, عائم mul,
+                                صحيح len);
 
-void ff_vector_fmul_scalar_sse(float *dst, const float *src, float mul,
-                               int len);
+فراغ ff_وکتور_fmul_scalar_sse(عائم *dst, ثابت عائم *src, عائم mul,
+                               صحيح len);
 
-void ff_vector_dmac_scalar_sse2(double *dst, const double *src, double mul,
-                                int len);
-void ff_vector_dmac_scalar_avx(double *dst, const double *src, double mul,
-                               int len);
-void ff_vector_dmac_scalar_fma3(double *dst, const double *src, double mul,
-                                int len);
+فراغ ff_وکتور_dmac_scalar_sse2(مزدوج *dst, ثابت مزدوج *src, مزدوج mul,
+                                صحيح len);
+فراغ ff_وکتور_dmac_scalar_avx(مزدوج *dst, ثابت مزدوج *src, مزدوج mul,
+                               صحيح len);
+فراغ ff_وکتور_dmac_scalar_fma3(مزدوج *dst, ثابت مزدوج *src, مزدوج mul,
+                                صحيح len);
 
-void ff_vector_dmul_scalar_sse2(double *dst, const double *src,
-                                double mul, int len);
-void ff_vector_dmul_scalar_avx(double *dst, const double *src,
-                               double mul, int len);
+فراغ ff_وکتور_dmul_scalar_sse2(مزدوج *dst, ثابت مزدوج *src,
+                                مزدوج mul, صحيح len);
+فراغ ff_وکتور_dmul_scalar_avx(مزدوج *dst, ثابت مزدوج *src,
+                               مزدوج mul, صحيح len);
 
-void ff_vector_fmul_window_sse(float *dst, const float *src0,
-                               const float *src1, const float *win, int len);
+فراغ ff_وکتور_fmul_پنجره_sse(عائم *dst, ثابت عائم *src0,
+                               ثابت عائم *src1, ثابت عائم *win, صحيح len);
 
-void ff_vector_fmul_add_sse(float *dst, const float *src0, const float *src1,
-                            const float *src2, int len);
-void ff_vector_fmul_add_avx(float *dst, const float *src0, const float *src1,
-                            const float *src2, int len);
-void ff_vector_fmul_add_fma3(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+فراغ ff_وکتور_fmul_جمع_کن_sse(عائم *dst, ثابت عائم *src0, ثابت عائم *src1,
+                            ثابت عائم *src2, صحيح len);
+فراغ ff_وکتور_fmul_جمع_کن_avx(عائم *dst, ثابت عائم *src0, ثابت عائم *src1,
+                            ثابت عائم *src2, صحيح len);
+فراغ ff_وکتور_fmul_جمع_کن_fma3(عائم *dst, ثابت عائم *src0, ثابت عائم *src1,
+                             ثابت عائم *src2, صحيح len);
 
-void ff_vector_fmul_reverse_sse(float *dst, const float *src0,
-                                const float *src1, int len);
-void ff_vector_fmul_reverse_avx(float *dst, const float *src0,
-                                const float *src1, int len);
-void ff_vector_fmul_reverse_avx2(float *dst, const float *src0,
-                                 const float *src1, int len);
+فراغ ff_وکتور_fmul_معکوس_sse(عائم *dst, ثابت عائم *src0,
+                                ثابت عائم *src1, صحيح len);
+فراغ ff_وکتور_fmul_معکوس_avx(عائم *dst, ثابت عائم *src0,
+                                ثابت عائم *src1, صحيح len);
+فراغ ff_وکتور_fmul_معکوس_avx2(عائم *dst, ثابت عائم *src0,
+                                 ثابت عائم *src1, صحيح len);
 
-float ff_scalarproduct_float_sse(const float *v1, const float *v2, int order);
-float ff_scalarproduct_float_fma3(const float *v1, const float *v2, int order);
+عائم ff_scalarproduct_float_sse(ثابت عائم *v1, ثابت عائم *v2, صحيح ترتیب);
+عائم ff_scalarproduct_float_fma3(ثابت عائم *v1, ثابت عائم *v2, صحيح ترتیب);
 
-double ff_scalarproduct_double_sse2(const double *v1, const double *v2, size_t order);
-double ff_scalarproduct_double_avx(const double *v1, const double *v2, size_t order);
+مزدوج ff_scalarproduct_double_sse2(ثابت مزدوج *v1, ثابت مزدوج *v2, size_t ترتیب);
+مزدوج ff_scalarproduct_double_avx(ثابت مزدوج *v1, ثابت مزدوج *v2, size_t ترتیب);
 
-void ff_butterflies_float_sse(float *restrict src0, float *restrict src1, int len);
+فراغ ff_butterflies_float_sse(عائم *محدود src0, عائم *محدود src1, صحيح len);
 
-av_cold void ff_float_dsp_init_x86(AVFloatDSPContext *fdsp)
+av_cold فراغ ff_float_dsp_init_x86(AVFloatDSPContext *fdsp)
 {
-    int cpu_flags = av_get_cpu_flags();
+    صحيح cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_SSE(cpu_flags)) {
-        fdsp->vector_fmul = ff_vector_fmul_sse;
-        fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_sse;
-        fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_sse;
-        fdsp->vector_fmul_window = ff_vector_fmul_window_sse;
-        fdsp->vector_fmul_add    = ff_vector_fmul_add_sse;
-        fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_sse;
+    إذا (EXTERNAL_SSE(cpu_flags)) {
+        fdsp->وکتور_fmul = ff_وکتور_fmul_sse;
+        fdsp->وکتور_fmac_scalar = ff_وکتور_fmac_scalar_sse;
+        fdsp->وکتور_fmul_scalar = ff_وکتور_fmul_scalar_sse;
+        fdsp->وکتور_fmul_پنجره = ff_وکتور_fmul_پنجره_sse;
+        fdsp->وکتور_fmul_جمع_کن    = ff_وکتور_fmul_جمع_کن_sse;
+        fdsp->وکتور_fmul_معکوس = ff_وکتور_fmul_معکوس_sse;
         fdsp->scalarproduct_float = ff_scalarproduct_float_sse;
         fdsp->butterflies_float   = ff_butterflies_float_sse;
     }
-    if (EXTERNAL_SSE2(cpu_flags)) {
-        fdsp->vector_dmul = ff_vector_dmul_sse2;
-        fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_sse2;
-        fdsp->vector_dmul_scalar = ff_vector_dmul_scalar_sse2;
+    إذا (EXTERNAL_SSE2(cpu_flags)) {
+        fdsp->وکتور_dmul = ff_وکتور_dmul_sse2;
+        fdsp->وکتور_dmac_scalar = ff_وکتور_dmac_scalar_sse2;
+        fdsp->وکتور_dmul_scalar = ff_وکتور_dmul_scalar_sse2;
         fdsp->scalarproduct_double = ff_scalarproduct_double_sse2;
     }
-    if (EXTERNAL_AVX_FAST(cpu_flags)) {
-        fdsp->vector_fmul = ff_vector_fmul_avx;
-        fdsp->vector_dmul = ff_vector_dmul_avx;
-        fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_avx;
-        fdsp->vector_dmul_scalar = ff_vector_dmul_scalar_avx;
-        fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_avx;
-        fdsp->vector_fmul_add    = ff_vector_fmul_add_avx;
-        fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_avx;
+    إذا (EXTERNAL_AVX_FAST(cpu_flags)) {
+        fdsp->وکتور_fmul = ff_وکتور_fmul_avx;
+        fdsp->وکتور_dmul = ff_وکتور_dmul_avx;
+        fdsp->وکتور_fmac_scalar = ff_وکتور_fmac_scalar_avx;
+        fdsp->وکتور_dmul_scalar = ff_وکتور_dmul_scalar_avx;
+        fdsp->وکتور_dmac_scalar = ff_وکتور_dmac_scalar_avx;
+        fdsp->وکتور_fmul_جمع_کن    = ff_وکتور_fmul_جمع_کن_avx;
+        fdsp->وکتور_fmul_معکوس = ff_وکتور_fmul_معکوس_avx;
         fdsp->scalarproduct_double = ff_scalarproduct_double_avx;
     }
-    if (EXTERNAL_AVX2_FAST(cpu_flags)) {
-        fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_avx2;
+    إذا (EXTERNAL_AVX2_FAST(cpu_flags)) {
+        fdsp->وکتور_fmul_معکوس = ff_وکتور_fmul_معکوس_avx2;
     }
-    if (EXTERNAL_FMA3_FAST(cpu_flags)) {
-        fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_fma3;
-        fdsp->vector_fmul_add    = ff_vector_fmul_add_fma3;
-        fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_fma3;
+    إذا (EXTERNAL_FMA3_FAST(cpu_flags)) {
+        fdsp->وکتور_fmac_scalar = ff_وکتور_fmac_scalar_fma3;
+        fdsp->وکتور_fmul_جمع_کن    = ff_وکتور_fmul_جمع_کن_fma3;
+        fdsp->وکتور_dmac_scalar = ff_وکتور_dmac_scalar_fma3;
         fdsp->scalarproduct_float = ff_scalarproduct_float_fma3;
     }
 }

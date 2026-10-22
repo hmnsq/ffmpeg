@@ -51,30 +51,30 @@
  * Reference: libavutil/float_dsp.c
  */
 
-#include "config.h"
-#include "libavutil/float_dsp.h"
-#include "libavutil/mips/asmdefs.h"
+#ضمن "config.h"
+#ضمن "libavutil/float_dsp.h"
+#ضمن "libavutil/mips/asmdefs.h"
 
-#if HAVE_INLINE_ASM && HAVE_MIPSFPU
-#if !HAVE_MIPS32R6 && !HAVE_MIPS64R6
-static void vector_fmul_mips(float *dst, const float *src0, const float *src1,
-                             int len)
+#إذا HAVE_INLINE_ASM && HAVE_MIPSFPU
+#إذا !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+ساكن فراغ وکتور_fmul_mips(عائم *dst, ثابت عائم *src0, ثابت عائم *src1,
+                             صحيح len)
 {
-    int i;
+    صحيح i;
 
-    if (len & 3) {
-        for (i = 0; i < len; i++)
+    إذا (len & 3) {
+        لكل (i = 0; i < len; i++)
             dst[i] = src0[i] * src1[i];
-    } else {
-        float *d     = (float *)dst;
-        float *d_end = d + len;
-        float *s0    = (float *)src0;
-        float *s1    = (float *)src1;
+    } وإلا {
+        عائم *d     = (عائم *)dst;
+        عائم *d_انتها = d + len;
+        عائم *s0    = (عائم *)src0;
+        عائم *s1    = (عائم *)src1;
 
-        float src0_0, src0_1, src0_2, src0_3;
-        float src1_0, src1_1, src1_2, src1_3;
+        عائم src0_0, src0_1, src0_2, src0_3;
+        عائم src1_0, src1_1, src1_2, src1_3;
 
-        __asm__ volatile (
+        __asm__ متطاير (
             "1:                                         \n\t"
             "lwc1   %[src0_0],  0(%[s0])                \n\t"
             "lwc1   %[src1_0],  0(%[s1])                \n\t"
@@ -102,21 +102,21 @@ static void vector_fmul_mips(float *dst, const float *src0, const float *src1,
               [src1_0]"=&f"(src1_0), [src1_1]"=&f"(src1_1),
               [src1_2]"=&f"(src1_2), [src1_3]"=&f"(src1_3),
               [d]"+r"(d), [s0]"+r"(s0), [s1]"+r"(s1)
-            : [d_end]"r"(d_end)
+            : [d_انتها]"r"(d_انتها)
             : "memory"
         );
     }
 }
 
-static void vector_fmul_scalar_mips(float *dst, const float *src, float mul,
-                                 int len)
+ساكن فراغ وکتور_fmul_scalar_mips(عائم *dst, ثابت عائم *src, عائم mul,
+                                 صحيح len)
 {
-    float temp0, temp1, temp2, temp3;
-    float *local_src = (float*)src;
-    float *end = local_src + len;
+    عائم temp0, temp1, temp2, temp3;
+    عائم *local_src = (عائم*)src;
+    عائم *انتها = local_src + len;
 
     /* loop unrolled 4 times */
-    __asm__ volatile(
+    __asm__ متطاير(
         ".set    push                             \n\t"
         ".set    noreorder                        \n\t"
     "1:                                           \n\t"
@@ -140,30 +140,30 @@ static void vector_fmul_scalar_mips(float *dst, const float *src, float mul,
         : [temp0]"=&f"(temp0), [temp1]"=&f"(temp1),
           [temp2]"=&f"(temp2), [temp3]"=&f"(temp3),
           [dst]"+r"(dst), [src]"+r"(local_src)
-        : [end]"r"(end), [mul]"f"(mul)
+        : [انتها]"r"(انتها), [mul]"f"(mul)
         : "memory"
     );
 }
 
-static void vector_fmul_window_mips(float *dst, const float *src0,
-                                    const float *src1, const float *win, int len)
+ساكن فراغ وکتور_fmul_پنجره_mips(عائم *dst, ثابت عائم *src0,
+                                    ثابت عائم *src1, ثابت عائم *win, صحيح len)
 {
-    float * dst_j, *win_j, *src0_i, *src1_j, *dst_i, *win_i;
-    float temp, temp1, temp2, temp3;
-    float s0, s01, s1, s11;
-    float wi, wi1, wi2, wi3;
-    float wj, wj1, wj2, wj3;
-    const float * lp_end = win + len;
+    عائم * dst_j, *win_j, *src0_i, *src1_j, *dst_i, *win_i;
+    عائم موقت, temp1, temp2, temp3;
+    عائم s0, s01, s1, s11;
+    عائم wi, wi1, wi2, wi3;
+    عائم wj, wj1, wj2, wj3;
+    ثابت عائم * lp_انتها = win + len;
 
-    win_i  = (float *)win;
-    win_j  = (float *)(win + 2 * len -1);
-    src1_j = (float *)(src1 + len - 1);
-    src0_i = (float *)src0;
-    dst_i  = (float *)dst;
-    dst_j  = (float *)(dst + 2 * len -1);
+    win_i  = (عائم *)win;
+    win_j  = (عائم *)(win + 2 * len -1);
+    src1_j = (عائم *)(src1 + len - 1);
+    src0_i = (عائم *)src0;
+    dst_i  = (عائم *)dst;
+    dst_j  = (عائم *)(dst + 2 * len -1);
 
     /* loop unrolled 4 times */
-    __asm__ volatile (
+    __asm__ متطاير (
         "1:"
         "lwc1    %[s1],     0(%[src1_j])                \n\t"
         "lwc1    %[wi],     0(%[win_i])                 \n\t"
@@ -212,29 +212,29 @@ static void vector_fmul_window_mips(float *dst, const float *src0,
         PTR_ADDIU "%[dst_i],16                          \n\t"
         PTR_ADDIU "%[dst_j],-16                         \n\t"
         "bne     %[win_i], %[lp_end], 1b                \n\t"
-        : [temp]"=&f"(temp), [temp1]"=&f"(temp1), [temp2]"=&f"(temp2),
+        : [موقت]"=&f"(موقت), [temp1]"=&f"(temp1), [temp2]"=&f"(temp2),
           [temp3]"=&f"(temp3), [src0_i]"+r"(src0_i), [win_i]"+r"(win_i),
           [src1_j]"+r"(src1_j), [win_j]"+r"(win_j), [dst_i]"+r"(dst_i),
           [dst_j]"+r"(dst_j), [s0] "=&f"(s0), [s01]"=&f"(s01), [s1] "=&f"(s1),
           [s11]"=&f"(s11), [wi] "=&f"(wi), [wj] "=&f"(wj), [wi2]"=&f"(wi2),
           [wj2]"=&f"(wj2), [wi3]"=&f"(wi3), [wj3]"=&f"(wj3), [wi1]"=&f"(wi1),
           [wj1]"=&f"(wj1)
-        : [lp_end]"r"(lp_end)
+        : [lp_انتها]"r"(lp_انتها)
         : "memory"
     );
 }
 
-static void butterflies_float_mips(float *restrict v1, float *restrict v2,
-                                int len)
+ساكن فراغ butterflies_float_mips(عائم *محدود v1, عائم *محدود v2,
+                                صحيح len)
 {
-    float temp0, temp1, temp2, temp3, temp4;
-    float temp5, temp6, temp7, temp8, temp9;
-    float temp10, temp11, temp12, temp13, temp14, temp15;
-    int pom;
+    عائم temp0, temp1, temp2, temp3, temp4;
+    عائم temp5, temp6, temp7, temp8, temp9;
+    عائم temp10, temp11, temp12, temp13, temp14, temp15;
+    صحيح pom;
     pom = (len >> 2)-1;
 
     /* loop unrolled 4 times */
-    __asm__ volatile (
+    __asm__ متطاير (
         "lwc1     %[temp0],    0(%[v1])                 \n\t"
         "lwc1     %[temp1],    4(%[v1])                 \n\t"
         "lwc1     %[temp2],    8(%[v1])                 \n\t"
@@ -302,15 +302,15 @@ static void butterflies_float_mips(float *restrict v1, float *restrict v2,
     );
 }
 
-static void vector_fmul_reverse_mips(float *dst, const float *src0, const float *src1, int len){
-    int i;
-    float temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;
+ساكن فراغ وکتور_fmul_معکوس_mips(عائم *dst, ثابت عائم *src0, ثابت عائم *src1, صحيح len){
+    صحيح i;
+    عائم temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;
     src1 += len-1;
 
-    for(i=0; i<(len>>2); i++)
+    لكل(i=0; i<(len>>2); i++)
     {
         /* loop unrolled 4 times */
-        __asm__ volatile(
+        __asm__ متطاير(
             "lwc1      %[temp0],     0(%[src0])                 \n\t"
             "lwc1      %[temp1],     0(%[src1])                 \n\t"
             "lwc1      %[temp2],     4(%[src0])                 \n\t"
@@ -340,17 +340,17 @@ static void vector_fmul_reverse_mips(float *dst, const float *src0, const float 
         );
     }
 }
-#endif /* !HAVE_MIPS32R6 && !HAVE_MIPS64R6 */
-#endif /* HAVE_INLINE_ASM && HAVE_MIPSFPU */
+#پایان_اگر /* !HAVE_MIPS32R6 && !HAVE_MIPS64R6 */
+#پایان_اگر /* HAVE_INLINE_ASM && HAVE_MIPSFPU */
 
-void ff_float_dsp_init_mips(AVFloatDSPContext *fdsp) {
-#if HAVE_INLINE_ASM && HAVE_MIPSFPU
-#if !HAVE_MIPS32R6 && !HAVE_MIPS64R6
-    fdsp->vector_fmul = vector_fmul_mips;
-    fdsp->vector_fmul_scalar  = vector_fmul_scalar_mips;
-    fdsp->vector_fmul_window = vector_fmul_window_mips;
+فراغ ff_float_dsp_init_mips(AVFloatDSPContext *fdsp) {
+#إذا HAVE_INLINE_ASM && HAVE_MIPSFPU
+#إذا !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+    fdsp->وکتور_fmul = وکتور_fmul_mips;
+    fdsp->وکتور_fmul_scalar  = وکتور_fmul_scalar_mips;
+    fdsp->وکتور_fmul_پنجره = وکتور_fmul_پنجره_mips;
     fdsp->butterflies_float = butterflies_float_mips;
-    fdsp->vector_fmul_reverse = vector_fmul_reverse_mips;
-#endif /* !HAVE_MIPS32R6 && !HAVE_MIPS64R6 */
-#endif /* HAVE_INLINE_ASM && HAVE_MIPSFPU */
+    fdsp->وکتور_fmul_معکوس = وکتور_fmul_معکوس_mips;
+#پایان_اگر /* !HAVE_MIPS32R6 && !HAVE_MIPS64R6 */
+#پایان_اگر /* HAVE_INLINE_ASM && HAVE_MIPSFPU */
 }

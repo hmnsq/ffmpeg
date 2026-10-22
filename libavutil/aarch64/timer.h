@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AARCH64_TIMER_H
-#define AVUTIL_AARCH64_TIMER_H
+#اگر_تعریف_نشده AVUTIL_AARCH64_TIMER_H
+#تعریف_کن AVUTIL_AARCH64_TIMER_H
 
-#include <stdint.h>
-#include "config.h"
+#ضمن <stdint.h>
+#ضمن "config.h"
 
-#if HAVE_INLINE_ASM
+#إذا HAVE_INLINE_ASM
 
-#define AV_READ_TIME read_time
+#تعریف_کن AV_READ_زمان read_زمان
 
-static inline uint64_t read_time(void)
+ساكن مضمن uint64_t read_زمان(فراغ)
 {
-    uint64_t cycle_counter;
-    __asm__ volatile(
+    uint64_t چرخه_counter;
+    __asm__ متطاير(
         "isb                   \t\n"
         // cntvct_el0 has lower resolution than pmccntr_el0, but is usually
         // accessible from user space by default.
         "mrs %0, cntvct_el0        "
-        : "=r"(cycle_counter) :: "memory" );
+        : "=r"(چرخه_counter) :: "memory" );
 
-    return cycle_counter;
+    أرجع چرخه_counter;
 }
 
-#endif /* HAVE_INLINE_ASM */
+#پایان_اگر /* HAVE_INLINE_ASM */
 
-#endif /* AVUTIL_AARCH64_TIMER_H */
+#پایان_اگر /* AVUTIL_AARCH64_TIMER_H */

@@ -17,16 +17,16 @@
  */
 
 
-#ifndef AVUTIL_HWCONTEXT_CUDA_H
-#define AVUTIL_HWCONTEXT_CUDA_H
+#اگر_تعریف_نشده AVUTIL_HWCONTEXT_CUDA_H
+#تعریف_کن AVUTIL_HWCONTEXT_CUDA_H
 
-#ifndef CUDA_VERSION
-#include <cuda.h>
-#endif
+#اگر_تعریف_نشده CUDA_نسخه
+#ضمن <cuda.h>
+#پایان_اگر
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
-#include "pixfmt.h"
+#ضمن "pixfmt.h"
 
 /**
  * @file
@@ -36,15 +36,15 @@
  * AVBufferRefs whose data pointer is a CUdeviceptr.
  */
 
-typedef struct AVCUDADeviceContextInternal AVCUDADeviceContextInternal;
+تعريفنوع بنية AVCUDADevice_Context_داخلی AVCUDADevice_Context_داخلی;
 
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVCUDADeviceContext {
+تعريفنوع بنية AVCUDADeviceContext {
     CUcontext cuda_ctx;
-    CUstream stream;
-    AVCUDADeviceContextInternal *internal;
+    CUstream جریان;
+    AVCUDADevice_Context_داخلی *داخلی;
 } AVCUDADeviceContext;
 
 /**
@@ -57,7 +57,7 @@ typedef struct AVCUDADeviceContext {
  * This has no use outside of custom allocation, and AVFrame AVBufferRef do not
  * necessarily point to an instance of this struct.
  */
-typedef struct AVCUDAArrayFrameDescriptor {
+تعريفنوع بنية AVCUDAArray_قاب_Descriptor {
     /**
      * The CUarray containing the frame data.
      *
@@ -70,13 +70,13 @@ typedef struct AVCUDAArrayFrameDescriptor {
      *
      * Normally stored in AVFrame.data[1] (cast from intptr_t).
      */
-    intptr_t index;
-} AVCUDAArrayFrameDescriptor;
+    intptr_t شاخص;
+} AVCUDAArray_قاب_Descriptor;
 
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVCUDAFramesContext {
+تعريفنوع بنية AVCUDAFramesContext {
     /**
      * CUDA_ARRAY3D_DESCRIPTOR CUarrays will be initialized with.
      * Mostly used to provide external Flags.
@@ -95,7 +95,7 @@ typedef struct AVCUDAFramesContext {
      *
      * Only applicable for AV_PIX_FMT_CUARRAY.
      */
-    int cuarray_num_surfaces;
+    صحيح cuarray_رقم_surfaces;
 
     /**
      * If cuarray_num_surfaces is >0, this contains the array of pre-allocated surfaces.
@@ -113,12 +113,12 @@ typedef struct AVCUDAFramesContext {
  * will be filtered to only those compatible with the specified
  * hw_format.
  */
-typedef struct AVCUDAHWConfig {
+تعريفنوع بنية AVCUDAHWConfig {
     /**
      * The hardware pixel format to query constraints for.
      * Must be AV_PIX_FMT_CUDA or AV_PIX_FMT_CUARRAY.
      */
-    enum AVPixelFormat hw_format;
+    تعداد AVPixelFormat hw_format;
 } AVCUDAHWConfig;
 
 /**
@@ -132,15 +132,15 @@ typedef struct AVCUDAHWConfig {
 /**
  * Use primary device context instead of creating a new one.
  */
-#define AV_CUDA_USE_PRIMARY_CONTEXT (1 << 0)
+#تعریف_کن AV_CUDA_USE_PRIMARY_CONTEXT (1 << 0)
 
 /**
  * Use current device context instead of creating a new one.
  */
-#define AV_CUDA_USE_CURRENT_CONTEXT (1 << 1)
+#تعریف_کن AV_CUDA_USE_CURRENT_CONTEXT (1 << 1)
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_HWCONTEXT_CUDA_H */
+#پایان_اگر /* AVUTIL_HWCONTEXT_CUDA_H */

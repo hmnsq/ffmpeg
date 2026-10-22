@@ -18,60 +18,60 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
+#ضمن "config.h"
+#ضمن "libavutil/attributes.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/float_dsp.h"
 
-void ff_vector_fmul_rvv(float *dst, const float *src0, const float *src1,
-                         int len);
-void ff_vector_fmac_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_window_rvv(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
-void ff_vector_fmul_add_rvv(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
-void ff_vector_fmul_reverse_rvv(float *dst, const float *src0,
-                                 const float *src1, int len);
-void ff_butterflies_float_rvv(float *v1, float *v2, int len);
-float ff_scalarproduct_float_rvv(const float *v1, const float *v2, int len);
+فراغ ff_وکتور_fmul_rvv(عائم *dst, ثابت عائم *src0, ثابت عائم *src1,
+                         صحيح len);
+فراغ ff_وکتور_fmac_scalar_rvv(عائم *dst, ثابت عائم *src, عائم mul,
+                                صحيح len);
+فراغ ff_وکتور_fmul_scalar_rvv(عائم *dst, ثابت عائم *src, عائم mul,
+                                صحيح len);
+فراغ ff_وکتور_fmul_پنجره_rvv(عائم *dst, ثابت عائم *src0,
+                                ثابت عائم *src1, ثابت عائم *win, صحيح len);
+فراغ ff_وکتور_fmul_جمع_کن_rvv(عائم *dst, ثابت عائم *src0, ثابت عائم *src1,
+                             ثابت عائم *src2, صحيح len);
+فراغ ff_وکتور_fmul_معکوس_rvv(عائم *dst, ثابت عائم *src0,
+                                 ثابت عائم *src1, صحيح len);
+فراغ ff_butterflies_float_rvv(عائم *v1, عائم *v2, صحيح len);
+عائم ff_scalarproduct_float_rvv(ثابت عائم *v1, ثابت عائم *v2, صحيح len);
 
-void ff_vector_dmul_rvv(double *dst, const double *src0, const double *src1,
-                         int len);
-void ff_vector_dmac_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-void ff_vector_dmul_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-double ff_scalarproduct_double_rvv(const double *v1, const double *v2,
+فراغ ff_وکتور_dmul_rvv(مزدوج *dst, ثابت مزدوج *src0, ثابت مزدوج *src1,
+                         صحيح len);
+فراغ ff_وکتور_dmac_scalar_rvv(مزدوج *dst, ثابت مزدوج *src, مزدوج mul,
+                                صحيح len);
+فراغ ff_وکتور_dmul_scalar_rvv(مزدوج *dst, ثابت مزدوج *src, مزدوج mul,
+                                صحيح len);
+مزدوج ff_scalarproduct_double_rvv(ثابت مزدوج *v1, ثابت مزدوج *v2,
                                    size_t len);
 
-av_cold void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
+av_cold فراغ ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#إذا HAVE_RVV
+    صحيح flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVB) {
-        if (flags & AV_CPU_FLAG_RVV_F32) {
-            fdsp->vector_fmul = ff_vector_fmul_rvv;
-            fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_rvv;
-            fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_rvv;
-            fdsp->vector_fmul_window = ff_vector_fmul_window_rvv;
-            fdsp->vector_fmul_add = ff_vector_fmul_add_rvv;
-            fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_rvv;
+    إذا (flags & AV_CPU_FLAG_RVB) {
+        إذا (flags & AV_CPU_FLAG_RVV_F32) {
+            fdsp->وکتور_fmul = ff_وکتور_fmul_rvv;
+            fdsp->وکتور_fmac_scalar = ff_وکتور_fmac_scalar_rvv;
+            fdsp->وکتور_fmul_scalar = ff_وکتور_fmul_scalar_rvv;
+            fdsp->وکتور_fmul_پنجره = ff_وکتور_fmul_پنجره_rvv;
+            fdsp->وکتور_fmul_جمع_کن = ff_وکتور_fmul_جمع_کن_rvv;
+            fdsp->وکتور_fmul_معکوس = ff_وکتور_fmul_معکوس_rvv;
             fdsp->butterflies_float = ff_butterflies_float_rvv;
             fdsp->scalarproduct_float = ff_scalarproduct_float_rvv;
         }
 
-        if (flags & AV_CPU_FLAG_RVV_F64) {
-            fdsp->vector_dmul = ff_vector_dmul_rvv;
-            fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_rvv;
-            fdsp->vector_dmul_scalar = ff_vector_dmul_scalar_rvv;
+        إذا (flags & AV_CPU_FLAG_RVV_F64) {
+            fdsp->وکتور_dmul = ff_وکتور_dmul_rvv;
+            fdsp->وکتور_dmac_scalar = ff_وکتور_dmac_scalar_rvv;
+            fdsp->وکتور_dmul_scalar = ff_وکتور_dmul_scalar_rvv;
             fdsp->scalarproduct_double = ff_scalarproduct_double_rvv;
         }
     }
-#endif
+#پایان_اگر
 }

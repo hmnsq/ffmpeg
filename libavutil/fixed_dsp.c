@@ -45,56 +45,56 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "common.h"
-#include "fixed_dsp.h"
-#include "mem.h"
+#ضمن "common.h"
+#ضمن "fixed_dsp.h"
+#ضمن "mem.h"
 
-static void vector_fmul_add_c(int *dst, const int *src0, const int *src1, const int *src2, int len){
-    int i;
+ساكن فراغ وکتور_fmul_جمع_کن_c(صحيح *dst, ثابت صحيح *src0, ثابت صحيح *src1, ثابت صحيح *src2, صحيح len){
+    صحيح i;
     int64_t accu;
 
-    for (i=0; i<len; i++) {
+    لكل (i=0; i<len; i++) {
         accu = (int64_t)src0[i] * src1[i];
-        dst[i] = src2[i] + (int)((accu + 0x40000000) >> 31);
+        dst[i] = src2[i] + (صحيح)((accu + 0x40000000) >> 31);
     }
 }
 
-static void vector_fmul_reverse_c(int *dst, const int *src0, const int *src1, int len)
+ساكن فراغ وکتور_fmul_معکوس_c(صحيح *dst, ثابت صحيح *src0, ثابت صحيح *src1, صحيح len)
 {
-    int i;
+    صحيح i;
     int64_t accu;
 
     src1 += len-1;
-    for (i=0; i<len; i++) {
+    لكل (i=0; i<len; i++) {
         accu = (int64_t)src0[i] * src1[-i];
-        dst[i] = (int)((accu+0x40000000) >> 31);
+        dst[i] = (صحيح)((accu+0x40000000) >> 31);
     }
 }
 
-static void vector_fmul_window_scaled_c(int16_t *dst, const int32_t *src0,
-                                       const int32_t *src1, const int32_t *win,
-                                       int len, uint8_t bits)
+ساكن فراغ وکتور_fmul_پنجره_scaled_c(int16_t *dst, ثابت int32_t *src0,
+                                       ثابت int32_t *src1, ثابت int32_t *win,
+                                       صحيح len, uint8_t بیتها)
 {
     int32_t s0, s1, wi, wj, i,j, round;
 
     dst += len;
     win += len;
     src0+= len;
-    round = bits? 1 << (bits-1) : 0;
+    round = بیتها? 1 << (بیتها-1) : 0;
 
-    for (i=-len, j=len-1; i<0; i++, j--) {
+    لكل (i=-len, j=len-1; i<0; i++, j--) {
         s0 = src0[i];
         s1 = src1[j];
         wi = win[i];
         wj = win[j];
-        dst[i] = av_clip_int16(((((int64_t)s0*wj - (int64_t)s1*wi + 0x40000000) >> 31) + round) >> bits);
-        dst[j] = av_clip_int16(((((int64_t)s0*wi + (int64_t)s1*wj + 0x40000000) >> 31) + round) >> bits);
+        dst[i] = av_clip_int16(((((int64_t)s0*wj - (int64_t)s1*wi + 0x40000000) >> 31) + round) >> بیتها);
+        dst[j] = av_clip_int16(((((int64_t)s0*wi + (int64_t)s1*wj + 0x40000000) >> 31) + round) >> بیتها);
     }
 }
 
-static void vector_fmul_window_c(int32_t *dst, const int32_t *src0,
-                                       const int32_t *src1, const int32_t *win,
-                                       int len)
+ساكن فراغ وکتور_fmul_پنجره_c(int32_t *dst, ثابت int32_t *src0,
+                                       ثابت int32_t *src1, ثابت int32_t *win,
+                                       صحيح len)
 {
     int32_t s0, s1, wi, wj, i, j;
 
@@ -102,7 +102,7 @@ static void vector_fmul_window_c(int32_t *dst, const int32_t *src0,
     win += len;
     src0+= len;
 
-    for (i=-len, j=len-1; i<0; i++, j--) {
+    لكل (i=-len, j=len-1; i<0; i++, j--) {
         s0 = src0[i];
         s1 = src1[j];
         wi = win[i];
@@ -112,62 +112,62 @@ static void vector_fmul_window_c(int32_t *dst, const int32_t *src0,
     }
 }
 
-static void vector_fmul_c(int *dst, const int *src0, const int *src1, int len)
+ساكن فراغ وکتور_fmul_c(صحيح *dst, ثابت صحيح *src0, ثابت صحيح *src1, صحيح len)
 {
-    int i;
+    صحيح i;
     int64_t accu;
 
-    for (i = 0; i < len; i++){
+    لكل (i = 0; i < len; i++){
         accu = (int64_t)src0[i] * src1[i];
-        dst[i] = (int)((accu+0x40000000) >> 31);
+        dst[i] = (صحيح)((accu+0x40000000) >> 31);
     }
 }
 
-static int scalarproduct_fixed_c(const int *v1, const int *v2, int len)
+ساكن صحيح scalarproduct_fixed_c(ثابت صحيح *v1, ثابت صحيح *v2, صحيح len)
 {
     /** p is initialized with 0x40000000 so that the proper rounding will occur
       * at the end */
     int64_t p = 0x40000000;
-    int i;
+    صحيح i;
 
-    for (i = 0; i < len; i++)
+    لكل (i = 0; i < len; i++)
         p += (int64_t)v1[i] * v2[i];
 
-    return (int)(p >> 31);
+    أرجع (صحيح)(p >> 31);
 }
 
-static void butterflies_fixed_c(int *restrict v1s, int *restrict v2, int len)
+ساكن فراغ butterflies_fixed_c(صحيح *محدود v1s, صحيح *محدود v2, صحيح len)
 {
-    int i;
-    unsigned int *v1 = v1s;
+    صحيح i;
+    بیعلامت صحيح *v1 = v1s;
 
-    for (i = 0; i < len; i++){
-        int t = v1[i] - v2[i];
+    لكل (i = 0; i < len; i++){
+        صحيح t = v1[i] - v2[i];
         v1[i] += v2[i];
         v2[i] = t;
     }
 }
 
-AVFixedDSPContext * avpriv_alloc_fixed_dsp(int bit_exact)
+AVFixedDSPContext * avpriv_alloc_fixed_dsp(صحيح بیت_exact)
 {
-    AVFixedDSPContext * fdsp = av_malloc(sizeof(AVFixedDSPContext));
+    AVFixedDSPContext * fdsp = av_malloc(حجم(AVFixedDSPContext));
 
-    if (!fdsp)
-        return NULL;
+    إذا (!fdsp)
+        أرجع عدم;
 
-    fdsp->vector_fmul_window_scaled = vector_fmul_window_scaled_c;
-    fdsp->vector_fmul_window = vector_fmul_window_c;
-    fdsp->vector_fmul = vector_fmul_c;
-    fdsp->vector_fmul_add = vector_fmul_add_c;
-    fdsp->vector_fmul_reverse = vector_fmul_reverse_c;
+    fdsp->وکتور_fmul_پنجره_scaled = وکتور_fmul_پنجره_scaled_c;
+    fdsp->وکتور_fmul_پنجره = وکتور_fmul_پنجره_c;
+    fdsp->وکتور_fmul = وکتور_fmul_c;
+    fdsp->وکتور_fmul_جمع_کن = وکتور_fmul_جمع_کن_c;
+    fdsp->وکتور_fmul_معکوس = وکتور_fmul_معکوس_c;
     fdsp->butterflies_fixed = butterflies_fixed_c;
     fdsp->scalarproduct_fixed = scalarproduct_fixed_c;
 
-#if ARCH_RISCV
+#إذا ARCH_RISCV
     ff_fixed_dsp_init_riscv(fdsp);
-#elif ARCH_X86 && HAVE_X86ASM
+#وإلاإذا ARCH_X86 && HAVE_X86ASM
     ff_fixed_dsp_init_x86(fdsp);
-#endif
+#پایان_اگر
 
-    return fdsp;
+    أرجع fdsp;
 }

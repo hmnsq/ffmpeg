@@ -24,56 +24,56 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_AVASSERT_H
-#define AVUTIL_AVASSERT_H
+#اگر_تعریف_نشده AVUTIL_AVASSERT_H
+#تعریف_کن AVUTIL_AVASSERT_H
 
-#include <stdlib.h>
-#ifdef HAVE_AV_CONFIG_H
+#ضمن <stdlib.h>
+#اگر_تعریف_شده HAVE_AV_CONFIG_H
 #   include "config.h"
-#endif
-#include "attributes.h"
-#include "log.h"
-#include "macros.h"
-#include "version.h"
+#پایان_اگر
+#ضمن "attributes.h"
+#ضمن "log.h"
+#ضمن "macros.h"
+#ضمن "version.h"
 
 /**
  * assert() equivalent, that is always enabled.
  */
-#define av_assert0(cond) do {                                           \
-    if (!(cond)) {                                                      \
-        av_log(NULL, AV_LOG_PANIC, "Assertion %s failed at %s:%d\n",    \
+#تعریف_کن av_assert0(cond) افعل {                                           \
+    إذا (!(cond)) {                                                      \
+        av_log(عدم, AV_LOG_PANIC, "Assertion %s failed at %s:%d\n",    \
                AV_STRINGIFY(cond), __FILE__, __LINE__);                 \
         abort();                                                        \
     }                                                                   \
-} while (0)
+} طالما (0)
 
 
 /**
  * assert() equivalent, that does not lie in speed critical code.
  * These asserts() thus can be enabled without fearing speed loss.
  */
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 0
-#define av_assert1(cond) av_assert0(cond)
-#else
-#define av_assert1(cond) ((void)0)
-#endif
+#إذا defined(ASSERT_LEVEL) && ASSERT_LEVEL > 0
+#تعریف_کن av_assert1(cond) av_assert0(cond)
+#وإلا
+#تعریف_کن av_assert1(cond) ((فراغ)0)
+#پایان_اگر
 
 
 /**
  * assert() equivalent, that does lie in speed critical code.
  */
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
-#define av_assert2(cond) av_assert0(cond)
-#else
-#define av_assert2(cond) ((void)0)
-#endif
+#إذا defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
+#تعریف_کن av_assert2(cond) av_assert0(cond)
+#وإلا
+#تعریف_کن av_assert2(cond) ((فراغ)0)
+#پایان_اگر
 
-#if FF_API_ASSERT_FPU
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
-#define av_assert2_fpu() av_assert0_fpu()
-#else
-#define av_assert2_fpu() ((void)0)
-#endif
+#إذا FF_API_ASSERT_FPU
+#إذا defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
+#تعریف_کن av_assert2_fpu() av_assert0_fpu()
+#وإلا
+#تعریف_کن av_assert2_fpu() ((فراغ)0)
+#پایان_اگر
 /**
  * Assert that floating point operations can be executed.
  *
@@ -81,8 +81,8 @@
  * @deprecated without replacement
  */
 attribute_deprecated
-void av_assert0_fpu(void);
-#endif
+فراغ av_assert0_fpu(فراغ);
+#پایان_اگر
 
 /**
  * Asserts that are used as compiler optimization hints depending
@@ -95,31 +95,31 @@ void av_assert0_fpu(void);
  * The condition used with av_assume() should not have side-effects
  * and should be visible to the compiler.
  */
-#if defined(ASSERT_LEVEL) ? ASSERT_LEVEL > 0 : !defined(HAVE_AV_CONFIG_H) && !defined(NDEBUG)
-#define av_unreachable(msg)                                             \
-do {                                                                    \
-    av_log(NULL, AV_LOG_PANIC,                                          \
+#إذا defined(ASSERT_LEVEL) ? ASSERT_LEVEL > 0 : !defined(HAVE_AV_CONFIG_H) && !defined(NDEBUG)
+#تعریف_کن av_unreachable(پیام)                                             \
+افعل {                                                                    \
+    av_log(عدم, AV_LOG_PANIC,                                          \
            "Reached supposedly unreachable code at %s:%d: %s\n",        \
-           __FILE__, __LINE__, msg);                                    \
+           __FILE__, __LINE__, پیام);                                    \
     abort();                                                            \
-} while (0)
-#define av_assume(cond) av_assert0(cond)
-#else
-#if AV_GCC_VERSION_AT_LEAST(4, 5) || AV_HAS_BUILTIN(__builtin_unreachable)
-#define av_unreachable(msg) __builtin_unreachable()
-#elif  defined(_MSC_VER)
-#define av_unreachable(msg) __assume(0)
-#elif __STDC_VERSION__ >= 202311L
-#include <stddef.h>
-#define av_unreachable(msg) unreachable()
-#else
-#define av_unreachable(msg) ((void)0)
-#endif
+} طالما (0)
+#تعریف_کن av_assume(cond) av_assert0(cond)
+#وإلا
+#إذا AV_GCC_نسخه_AT_کمترین(4, 5) || AV_HAS_BUILTIN(__builtin_unreachable)
+#تعریف_کن av_unreachable(پیام) __builtin_unreachable()
+#وإلاإذا  defined(_MSC_VER)
+#تعریف_کن av_unreachable(پیام) __assume(0)
+#وإلاإذا __STDC_VERSION__ >= 202311L
+#ضمن <stddef.h>
+#تعریف_کن av_unreachable(پیام) unreachable()
+#وإلا
+#تعریف_کن av_unreachable(پیام) ((فراغ)0)
+#پایان_اگر
 
-#define av_assume(cond) do { \
-    if (!(cond))             \
+#تعریف_کن av_assume(cond) افعل { \
+    إذا (!(cond))             \
         av_unreachable();    \
-} while (0)
-#endif
+} طالما (0)
+#پایان_اگر
 
-#endif /* AVUTIL_AVASSERT_H */
+#پایان_اگر /* AVUTIL_AVASSERT_H */

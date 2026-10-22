@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include <stdint.h>
-#include <string.h>
+#ضمن <stdatomic.h>
+#ضمن <stdint.h>
+#ضمن <string.h>
 
-#include <mfxvideo.h>
+#ضمن <mfxvideo.h>
 
-#include "config.h"
+#ضمن "config.h"
 
-#if HAVE_PTHREADS
-#include <pthread.h>
-#endif
+#إذا HAVE_PTHREADS
+#ضمن <pthread.h>
+#پایان_اگر
 
-#define COBJMACROS
-#if CONFIG_VAAPI
-#include "hwcontext_vaapi.h"
-#endif
-#if CONFIG_D3D11VA
-#include "hwcontext_d3d11va.h"
-#endif
-#if CONFIG_DXVA2
-#include <initguid.h>
-#include "hwcontext_dxva2.h"
-#endif
+#تعریف_کن COBJMACROS
+#إذا CONFIG_VAAPI
+#ضمن "hwcontext_vaapi.h"
+#پایان_اگر
+#إذا CONFIG_D3D11VA
+#ضمن "hwcontext_d3d11va.h"
+#پایان_اگر
+#إذا CONFIG_DXVA2
+#ضمن <initguid.h>
+#ضمن "hwcontext_dxva2.h"
+#پایان_اگر
 
-#include "buffer.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_qsv.h"
-#include "mem.h"
-#include "pixfmt.h"
-#include "pixdesc.h"
-#include "time.h"
-#include "imgutils.h"
-#include "avassert.h"
+#ضمن "buffer.h"
+#ضمن "common.h"
+#ضمن "hwcontext.h"
+#ضمن "hwcontext_internal.h"
+#ضمن "hwcontext_qsv.h"
+#ضمن "mem.h"
+#ضمن "pixfmt.h"
+#ضمن "pixdesc.h"
+#ضمن "time.h"
+#ضمن "imgutils.h"
+#ضمن "avassert.h"
 
-#define QSV_VERSION_ATLEAST(MAJOR, MINOR)   \
-    (MFX_VERSION_MAJOR > (MAJOR) ||         \
-     MFX_VERSION_MAJOR == (MAJOR) && MFX_VERSION_MINOR >= (MINOR))
+#تعریف_کن QSV_نسخه_ATLEAST(MAJOR, MINOR)   \
+    (MFX_نسخه_MAJOR > (MAJOR) ||         \
+     MFX_نسخه_MAJOR == (MAJOR) && MFX_نسخه_MINOR >= (MINOR))
 
-#define QSV_RUNTIME_VERSION_ATLEAST(MFX_VERSION, MAJOR, MINOR)          \
-    ((MFX_VERSION.Major > (MAJOR)) ||                                   \
-     (MFX_VERSION.Major == (MAJOR) && MFX_VERSION.Minor >= (MINOR)))
+#تعریف_کن QSV_RUNTIME_نسخه_ATLEAST(MFX_نسخه, MAJOR, MINOR)          \
+    ((MFX_نسخه.Major > (MAJOR)) ||                                   \
+     (MFX_نسخه.Major == (MAJOR) && MFX_نسخه.Minor >= (MINOR)))
 
-#define MFX_IMPL_VIA_MASK(impl) (0x0f00 & (impl))
-#define QSV_ONEVPL       QSV_VERSION_ATLEAST(2, 0)
-#define QSV_HAVE_OPAQUE  !QSV_ONEVPL
+#تعریف_کن MFX_IMPL_از_طریق_ماسک(impl) (0x0f00 & (impl))
+#تعریف_کن QSV_ONEVPL       QSV_نسخه_ATLEAST(2, 0)
+#تعریف_کن QSV_HAVE_OPAQUE  !QSV_ONEVPL
 
-#if QSV_ONEVPL
-#include <mfxdispatcher.h>
-#else
-#define MFXUnload(a) do { } while(0)
-#endif
+#إذا QSV_ONEVPL
+#ضمن <mfxdispatcher.h>
+#وإلا
+#تعریف_کن MFXUnload(a) افعل { } طالما(0)
+#پایان_اگر
 
-typedef struct QSVDevicePriv {
-    AVBufferRef *child_device_ctx;
+تعريفنوع بنية QSVDevicePriv {
+    AVBufferRef *فرزند_device_ctx;
 } QSVDevicePriv;
 
-typedef struct QSVDeviceContext {
+تعريفنوع بنية QSVDeviceContext {
     /**
      * The public AVQSVDeviceContext. See hwcontext_qsv.h for it.
      */
@@ -82,14 +82,14 @@ typedef struct QSVDeviceContext {
 
     mfxHDL              handle;
     mfxHandleType       handle_type;
-    mfxVersion          ver;
+    mfx_نسخه          ver;
     mfxIMPL             impl;
 
-    enum AVHWDeviceType child_device_type;
-    enum AVPixelFormat  child_pix_fmt;
+    تعداد AVHWDeviceType فرزند_device_type;
+    تعداد AVPixelFormat  فرزند_pix_fmt;
 } QSVDeviceContext;
 
-typedef struct QSVFramesContext {
+تعريفنوع بنية QSVFramesContext {
     /**
      * The public AVQSVFramesContext. See hwcontext_qsv.h for it.
      */
@@ -99,39 +99,39 @@ typedef struct QSVFramesContext {
     atomic_int session_download_init;
     mfxSession session_upload;
     atomic_int session_upload_init;
-#if HAVE_PTHREADS
-    pthread_mutex_t session_lock;
-#endif
+#إذا HAVE_PTHREADS
+    pthread_mutex_t session_قفل;
+#پایان_اگر
 
-    AVBufferRef *child_frames_ref;
-    mfxFrameSurface1 *surfaces_internal;
-    mfxHDLPair *handle_pairs_internal;
-    int             nb_surfaces_used;
+    AVBufferRef *فرزند_قابها_ref;
+    mfx_قاب_Surface1 *surfaces_داخلی;
+    mfxHDLPair *handle_جفتها_داخلی;
+    صحيح             nb_surfaces_استفاده_شده;
 
     // used in the frame allocator for non-opaque surfaces
     mfxMemId *mem_ids;
-#if QSV_HAVE_OPAQUE
+#إذا QSV_HAVE_OPAQUE
     // used in the opaque alloc request for opaque surfaces
-    mfxFrameSurface1 **surface_ptrs;
+    mfx_قاب_Surface1 **surface_ptrs;
 
     mfxExtOpaqueSurfaceAlloc opaque_alloc;
-    mfxExtBuffer *ext_buffers[1];
-#endif
-    AVFrame realigned_upload_frame;
-    AVFrame realigned_download_frame;
+    mfx_Ext_میانگیر *ext_buffers[1];
+#پایان_اگر
+    AVFrame realigned_upload_قاب;
+    AVFrame realigned_download_قاب;
 
-    mfxFrameInfo frame_info;
+    mfx_قاب_Info قاب_info;
 } QSVFramesContext;
 
-typedef struct QSVSurface {
-    mfxFrameSurface1 mfx_surface;
-    AVFrame *child_frame;
+تعريفنوع بنية QSVSurface {
+    mfx_قاب_Surface1 mfx_surface;
+    AVFrame *فرزند_قاب;
 } QSVSurface;
 
-static const struct {
-    enum AVPixelFormat pix_fmt;
+ساكن ثابت بنية {
+    تعداد AVPixelFormat pix_fmt;
     uint32_t           fourcc;
-    uint16_t           mfx_shift;
+    uint16_t           mfx_لغزش;
 } supported_pixel_formats[] = {
     { AV_PIX_FMT_NV12, MFX_FOURCC_NV12, 0 },
     { AV_PIX_FMT_BGRA, MFX_FOURCC_RGB4, 0 },
@@ -139,10 +139,10 @@ static const struct {
     { AV_PIX_FMT_PAL8, MFX_FOURCC_P8,   0 },
     { AV_PIX_FMT_YUYV422,
                        MFX_FOURCC_YUY2, 0 },
-#if CONFIG_VAAPI
+#إذا CONFIG_VAAPI
     { AV_PIX_FMT_UYVY422,
                        MFX_FOURCC_UYVY, 0 },
-#endif
+#پایان_اگر
     { AV_PIX_FMT_Y210,
                        MFX_FOURCC_Y210, 1 },
     // VUYX is used for VAAPI child device,
@@ -153,7 +153,7 @@ static const struct {
     // the SDK only declares support for Y410
     { AV_PIX_FMT_XV30,
                        MFX_FOURCC_Y410, 0 },
-#if QSV_VERSION_ATLEAST(1, 31)
+#إذا QSV_نسخه_ATLEAST(1, 31)
     // P012 is used for VAAPI child device,
     // the SDK only declares support for P016
     { AV_PIX_FMT_P012,
@@ -166,728 +166,728 @@ static const struct {
     // the SDK only declares support for Y416
     { AV_PIX_FMT_XV36,
                        MFX_FOURCC_Y416, 1 },
-#endif
+#پایان_اگر
 };
 
-extern int ff_qsv_get_surface_base_handle(mfxFrameSurface1 *surf,
-                                          enum AVHWDeviceType base_dev_type,
-                                          void **base_handle);
+خارجي صحيح ff_qsv_get_surface_پایه_handle(mfx_قاب_Surface1 *surf,
+                                          تعداد AVHWDeviceType پایه_dev_type,
+                                          فراغ **پایه_handle);
 
-static int qsv_init_surface(AVHWFramesContext *ctx, mfxFrameSurface1 *surf);
+ساكن صحيح qsv_init_surface(AVHWFramesContext *ctx, mfx_قاب_Surface1 *surf);
 
 /**
  * Caller needs to allocate enough space for base_handle pointer.
  **/
-int ff_qsv_get_surface_base_handle(mfxFrameSurface1 *surf,
-                                   enum AVHWDeviceType base_dev_type,
-                                   void **base_handle)
+صحيح ff_qsv_get_surface_پایه_handle(mfx_قاب_Surface1 *surf,
+                                   تعداد AVHWDeviceType پایه_dev_type,
+                                   فراغ **پایه_handle)
 {
     mfxHDLPair *handle_pair;
-    handle_pair = surf->Data.MemId;
-    switch (base_dev_type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
-        base_handle[0] = handle_pair->first;
-        return 0;
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
-        base_handle[0] = handle_pair->first;
-        base_handle[1] = handle_pair->second;
-        return 0;
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
-        base_handle[0] = handle_pair->first;
-        return 0;
-#endif
+    handle_pair = surf->داده_2.MemId;
+    بدل (پایه_dev_type) {
+#إذا CONFIG_VAAPI
+    حالة AV_HWDEVICE_TYPE_VAAPI:
+        پایه_handle[0] = handle_pair->اولی;
+        أرجع 0;
+#پایان_اگر
+#إذا CONFIG_D3D11VA
+    حالة AV_HWDEVICE_TYPE_D3D11VA:
+        پایه_handle[0] = handle_pair->اولی;
+        پایه_handle[1] = handle_pair->دومی;
+        أرجع 0;
+#پایان_اگر
+#إذا CONFIG_DXVA2
+    حالة AV_HWDEVICE_TYPE_DXVA2:
+        پایه_handle[0] = handle_pair->اولی;
+        أرجع 0;
+#پایان_اگر
     }
-    return AVERROR(EINVAL);
+    أرجع AVERROR(EINVAL);
 }
 
-static uint32_t qsv_fourcc_from_pix_fmt(enum AVPixelFormat pix_fmt)
+ساكن uint32_t qsv_fourcc_from_pix_fmt(تعداد AVPixelFormat pix_fmt)
 {
-    int i;
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++) {
-        if (supported_pixel_formats[i].pix_fmt == pix_fmt)
-            return supported_pixel_formats[i].fourcc;
+    صحيح i;
+    لكل (i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++) {
+        إذا (supported_pixel_formats[i].pix_fmt == pix_fmt)
+            أرجع supported_pixel_formats[i].fourcc;
     }
-    return 0;
+    أرجع 0;
 }
 
-static uint16_t qsv_shift_from_pix_fmt(enum AVPixelFormat pix_fmt)
+ساكن uint16_t qsv_لغزش_from_pix_fmt(تعداد AVPixelFormat pix_fmt)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++) {
-        if (supported_pixel_formats[i].pix_fmt == pix_fmt)
-            return supported_pixel_formats[i].mfx_shift;
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++) {
+        إذا (supported_pixel_formats[i].pix_fmt == pix_fmt)
+            أرجع supported_pixel_formats[i].mfx_لغزش;
     }
 
-    return 0;
+    أرجع 0;
 }
 
-#if CONFIG_D3D11VA
-static uint32_t qsv_get_d3d11va_bind_flags(int mem_type)
+#إذا CONFIG_D3D11VA
+ساكن uint32_t qsv_get_d3d11va_bind_flags(صحيح mem_type)
 {
     uint32_t bind_flags = 0;
 
-    if ((mem_type & MFX_MEMTYPE_VIDEO_MEMORY_ENCODER_TARGET) && (mem_type & MFX_MEMTYPE_INTERNAL_FRAME))
+    إذا ((mem_type & MFX_MEMTYPE_VIDEO_حافظه_ENCODER_هدف) && (mem_type & MFX_MEMTYPE_داخلی_قاب))
         bind_flags = D3D11_BIND_DECODER | D3D11_BIND_VIDEO_ENCODER;
-    else
+    وإلا
         bind_flags = D3D11_BIND_DECODER;
 
-    if ((MFX_MEMTYPE_FROM_VPPOUT & mem_type) || (MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET & mem_type))
-        bind_flags = D3D11_BIND_RENDER_TARGET;
+    إذا ((MFX_MEMTYPE_FROM_VPPOUT & mem_type) || (MFX_MEMTYPE_VIDEO_حافظه_PROCESSOR_هدف & mem_type))
+        bind_flags = D3_D11_BIND_RENDER_هدف;
 
-    return bind_flags;
+    أرجع bind_flags;
 }
-#endif
+#پایان_اگر
 
-static int qsv_fill_border(AVFrame *dst, const AVFrame *src)
+ساكن صحيح qsv_fill_border(AVFrame *dst, ثابت AVFrame *src)
 {
-    const AVPixFmtDescriptor *desc;
-    int i, planes_nb = 0;
-    if (dst->format != src->format)
-        return AVERROR(EINVAL);
+    ثابت AVPixFmtDescriptor *desc;
+    صحيح i, planes_nb = 0;
+    إذا (dst->format != src->format)
+        أرجع AVERROR(EINVAL);
 
     desc = av_pix_fmt_desc_get(dst->format);
 
-    for (i = 0; i < desc->nb_components; i++)
+    لكل (i = 0; i < desc->nb_components; i++)
         planes_nb = FFMAX(planes_nb, desc->comp[i].plane + 1);
 
-    for (i = 0; i < planes_nb; i++) {
-        int sheight, dheight, y;
+    لكل (i = 0; i < planes_nb; i++) {
+        صحيح sheight, dheight, y;
         ptrdiff_t swidth = av_image_get_linesize(src->format,
-                                                 src->width,
+                                                 src->عرض,
                                                  i);
         ptrdiff_t dwidth = av_image_get_linesize(dst->format,
-                                                 dst->width,
+                                                 dst->عرض,
                                                  i);
-        const AVComponentDescriptor comp = desc->comp[i];
-        if (swidth < 0 || dwidth < 0) {
-            av_log(NULL, AV_LOG_ERROR, "av_image_get_linesize failed\n");
-            return AVERROR(EINVAL);
+        ثابت AVComponentDescriptor comp = desc->comp[i];
+        إذا (swidth < 0 || dwidth < 0) {
+            av_log(عدم, AV_LOG_ERROR, "av_image_get_linesize failed\n");
+            أرجع AVERROR(EINVAL);
         }
-        sheight = src->height;
-        dheight = dst->height;
-        if (i) {
-            sheight = AV_CEIL_RSHIFT(src->height, desc->log2_chroma_h);
-            dheight = AV_CEIL_RSHIFT(dst->height, desc->log2_chroma_h);
+        sheight = src->ارتفاع;
+        dheight = dst->ارتفاع;
+        إذا (i) {
+            sheight = AV_CEIL_RSHIFT(src->ارتفاع, desc->log2_chroma_h);
+            dheight = AV_CEIL_RSHIFT(dst->ارتفاع, desc->log2_chroma_h);
         }
         //fill right padding
-        for (y = 0; y < sheight; y++) {
-            void *line_ptr = dst->data[i] + y*dst->linesize[i] + swidth;
-            av_memcpy_backptr(line_ptr,
-                           comp.depth > 8 ? 2 : 1,
+        لكل (y = 0; y < sheight; y++) {
+            فراغ *سطر_ptr = dst->داده[i] + y*dst->linesize[i] + swidth;
+            av_memcpy_backptr(سطر_ptr,
+                           comp.عمق > 8 ? 2 : 1,
                            dwidth - swidth);
         }
         //fill bottom padding
-        for (y = sheight; y < dheight; y++) {
-            memcpy(dst->data[i]+y*dst->linesize[i],
-                   dst->data[i]+(sheight-1)*dst->linesize[i],
+        لكل (y = sheight; y < dheight; y++) {
+            کپی_حافظه(dst->داده[i]+y*dst->linesize[i],
+                   dst->داده[i]+(sheight-1)*dst->linesize[i],
                    dwidth);
         }
     }
-    return 0;
+    أرجع 0;
 }
 
-static int qsv_device_init(AVHWDeviceContext *ctx)
+ساكن صحيح qsv_device_init(AVHWDeviceContext *ctx)
 {
     QSVDeviceContext       *s = ctx->hwctx;
     AVQSVDeviceContext *hwctx = &s->p;
-    int   hw_handle_supported = 0;
+    صحيح   hw_handle_supported = 0;
     mfxHandleType handle_type;
-    enum AVHWDeviceType device_type;
-    enum AVPixelFormat  pix_fmt;
-    mfxStatus err;
+    تعداد AVHWDeviceType device_type;
+    تعداد AVPixelFormat  pix_fmt;
+    mfx_وضعیت err;
 
     err = MFXQueryIMPL(hwctx->session, &s->impl);
-    if (err == MFX_ERR_NONE)
-        err = MFXQueryVersion(hwctx->session, &s->ver);
-    if (err != MFX_ERR_NONE) {
+    إذا (err == MFX_ERR_NONE)
+        err = MFXQuery_نسخه(hwctx->session, &s->ver);
+    إذا (err != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error querying the session attributes\n");
-        return AVERROR_UNKNOWN;
+        أرجع AVERROR_UNKNOWN;
     }
 
-    if (MFX_IMPL_VIA_VAAPI == MFX_IMPL_VIA_MASK(s->impl)) {
-#if CONFIG_VAAPI
+    إذا (MFX_IMPL_از_طریق_VAAPI == MFX_IMPL_از_طریق_ماسک(s->impl)) {
+#إذا CONFIG_VAAPI
         handle_type = MFX_HANDLE_VA_DISPLAY;
         device_type = AV_HWDEVICE_TYPE_VAAPI;
         pix_fmt = AV_PIX_FMT_VAAPI;
         hw_handle_supported = 1;
-#endif
-    } else if (MFX_IMPL_VIA_D3D11 == MFX_IMPL_VIA_MASK(s->impl)) {
-#if CONFIG_D3D11VA
+#پایان_اگر
+    } وإلا إذا (MFX_IMPL_از_طریق_D3_D11 == MFX_IMPL_از_طریق_ماسک(s->impl)) {
+#إذا CONFIG_D3D11VA
         handle_type = MFX_HANDLE_D3D11_DEVICE;
         device_type = AV_HWDEVICE_TYPE_D3D11VA;
         pix_fmt = AV_PIX_FMT_D3D11;
         hw_handle_supported = 1;
-#endif
-    } else if (MFX_IMPL_VIA_D3D9 == MFX_IMPL_VIA_MASK(s->impl)) {
-#if CONFIG_DXVA2
+#پایان_اگر
+    } وإلا إذا (MFX_IMPL_از_طریق_D3_D9 == MFX_IMPL_از_طریق_ماسک(s->impl)) {
+#إذا CONFIG_DXVA2
         handle_type = MFX_HANDLE_D3D9_DEVICE_MANAGER;
         device_type = AV_HWDEVICE_TYPE_DXVA2;
         pix_fmt = AV_PIX_FMT_DXVA2_VLD;
         hw_handle_supported = 1;
-#endif
+#پایان_اگر
     }
 
-    if (hw_handle_supported) {
+    إذا (hw_handle_supported) {
         err = MFXVideoCORE_GetHandle(hwctx->session, handle_type, &s->handle);
-        if (err == MFX_ERR_NONE) {
+        إذا (err == MFX_ERR_NONE) {
             s->handle_type       = handle_type;
-            s->child_device_type = device_type;
-            s->child_pix_fmt     = pix_fmt;
+            s->فرزند_device_type = device_type;
+            s->فرزند_pix_fmt     = pix_fmt;
         }
     }
-    if (!s->handle) {
+    إذا (!s->handle) {
         av_log(ctx, AV_LOG_VERBOSE, "No supported hw handle could be retrieved "
                "from the session\n");
     }
-    return 0;
+    أرجع 0;
 }
 
-static void qsv_frames_uninit(AVHWFramesContext *ctx)
+ساكن فراغ qsv_قابها_uninit(AVHWFramesContext *ctx)
 {
     QSVFramesContext *s = ctx->hwctx;
 
-    if (s->session_download) {
+    إذا (s->session_download) {
         MFXVideoVPP_Close(s->session_download);
         MFXClose(s->session_download);
     }
-    s->session_download = NULL;
+    s->session_download = عدم;
     s->session_download_init = 0;
 
-    if (s->session_upload) {
+    إذا (s->session_upload) {
         MFXVideoVPP_Close(s->session_upload);
         MFXClose(s->session_upload);
     }
-    s->session_upload = NULL;
+    s->session_upload = عدم;
     s->session_upload_init = 0;
 
-#if HAVE_PTHREADS
-    pthread_mutex_destroy(&s->session_lock);
-#endif
+#إذا HAVE_PTHREADS
+    pthread_mutex_destroy(&s->session_قفل);
+#پایان_اگر
 
     av_freep(&s->mem_ids);
-#if QSV_HAVE_OPAQUE
+#إذا QSV_HAVE_OPAQUE
     av_freep(&s->surface_ptrs);
-#endif
-    av_freep(&s->surfaces_internal);
-    av_freep(&s->handle_pairs_internal);
-    av_frame_unref(&s->realigned_upload_frame);
-    av_frame_unref(&s->realigned_download_frame);
-    av_buffer_unref(&s->child_frames_ref);
+#پایان_اگر
+    av_freep(&s->surfaces_داخلی);
+    av_freep(&s->handle_جفتها_داخلی);
+    av_قاب_unref(&s->realigned_upload_قاب);
+    av_قاب_unref(&s->realigned_download_قاب);
+    av_میانگیر_unref(&s->فرزند_قابها_ref);
 }
 
-static void qsv_pool_release_dummy(void *opaque, uint8_t *data)
+ساكن فراغ qsv_pool_release_dummy(فراغ *opaque, uint8_t *داده)
 {
 }
 
-static void qsv_pool_release(void *opaque, uint8_t *data)
+ساكن فراغ qsv_pool_release(فراغ *opaque, uint8_t *داده)
 {
     AVHWFramesContext *ctx = (AVHWFramesContext*)opaque;
     QSVFramesContext *s = ctx->hwctx;
-    QSVSurface *qsv_surface = (QSVSurface *)data;
-    mfxHDLPair *hdl_pair = (mfxHDLPair *)qsv_surface->mfx_surface.Data.MemId;
-    AVHWFramesContext *child_frames_ctx;
+    QSVSurface *qsv_surface = (QSVSurface *)داده;
+    mfxHDLPair *hdl_pair = (mfxHDLPair *)qsv_surface->mfx_surface.داده_2.MemId;
+    AVHWFramesContext *فرزند_قابها_ctx;
 
-    if (!s->child_frames_ref)
-        return;
+    إذا (!s->فرزند_قابها_ref)
+        أرجع;
 
-    child_frames_ctx = (AVHWFramesContext*)s->child_frames_ref->data;
-    if (!child_frames_ctx->device_ctx)
-        return;
+    فرزند_قابها_ctx = (AVHWFramesContext*)s->فرزند_قابها_ref->داده;
+    إذا (!فرزند_قابها_ctx->device_ctx)
+        أرجع;
 
-#if CONFIG_VAAPI
-    if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_VAAPI)
-        av_freep(&hdl_pair->first);
-#endif
+#إذا CONFIG_VAAPI
+    إذا (فرزند_قابها_ctx->device_ctx->type == AV_HWDEVICE_TYPE_VAAPI)
+        av_freep(&hdl_pair->اولی);
+#پایان_اگر
 
     av_freep(&hdl_pair);
-    av_frame_free(&qsv_surface->child_frame);
+    av_قاب_free(&qsv_surface->فرزند_قاب);
     av_freep(&qsv_surface);
 }
 
-static AVBufferRef *qsv_fixed_pool_alloc(void *opaque, size_t size)
+ساكن AVBufferRef *qsv_fixed_pool_alloc(فراغ *opaque, size_t اندازه)
 {
     AVHWFramesContext    *ctx = (AVHWFramesContext*)opaque;
     QSVFramesContext       *s = ctx->hwctx;
     AVQSVFramesContext *hwctx = &s->p;
 
-    if (s->nb_surfaces_used < hwctx->nb_surfaces) {
-        s->nb_surfaces_used++;
-        return av_buffer_create((uint8_t*)(s->surfaces_internal + s->nb_surfaces_used - 1),
-                                sizeof(*hwctx->surfaces), qsv_pool_release_dummy, NULL, 0);
+    إذا (s->nb_surfaces_استفاده_شده < hwctx->nb_surfaces) {
+        s->nb_surfaces_استفاده_شده++;
+        أرجع av_میانگیر_create((uint8_t*)(s->surfaces_داخلی + s->nb_surfaces_استفاده_شده - 1),
+                                حجم(*hwctx->surfaces), qsv_pool_release_dummy, عدم, 0);
     }
 
-    return NULL;
+    أرجع عدم;
 }
 
-static AVBufferRef *qsv_dynamic_pool_alloc(void *opaque, size_t size)
+ساكن AVBufferRef *qsv_dynamic_pool_alloc(فراغ *opaque, size_t اندازه)
 {
     AVHWFramesContext    *ctx = (AVHWFramesContext*)opaque;
     QSVFramesContext       *s = ctx->hwctx;
-    AVHWFramesContext *child_frames_ctx;
-    QSVSurface *qsv_surface = NULL;
-    mfxHDLPair *handle_pairs_internal = NULL;
-    int ret;
+    AVHWFramesContext *فرزند_قابها_ctx;
+    QSVSurface *qsv_surface = عدم;
+    mfxHDLPair *handle_جفتها_داخلی = عدم;
+    صحيح ret;
 
-    if (!s->child_frames_ref)
-        goto fail;
+    إذا (!s->فرزند_قابها_ref)
+        اذهب fail;
 
-    child_frames_ctx = (AVHWFramesContext*)s->child_frames_ref->data;
-    if (!child_frames_ctx->device_ctx)
-        goto fail;
+    فرزند_قابها_ctx = (AVHWFramesContext*)s->فرزند_قابها_ref->داده;
+    إذا (!فرزند_قابها_ctx->device_ctx)
+        اذهب fail;
 
-#if CONFIG_DXVA2
-    if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
+#إذا CONFIG_DXVA2
+    إذا (فرزند_قابها_ctx->device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
         av_log(ctx, AV_LOG_ERROR,
                "QSV on dxva2 requires a fixed frame pool size\n");
-        goto fail;
+        اذهب fail;
     }
-#endif
+#پایان_اگر
 
-    qsv_surface = av_calloc(1, sizeof(*qsv_surface));
-    if (!qsv_surface)
-        goto fail;
+    qsv_surface = av_calloc(1, حجم(*qsv_surface));
+    إذا (!qsv_surface)
+        اذهب fail;
 
-    qsv_surface->child_frame = av_frame_alloc();
-    if (!qsv_surface->child_frame)
-        goto fail;
+    qsv_surface->فرزند_قاب = av_قاب_alloc();
+    إذا (!qsv_surface->فرزند_قاب)
+        اذهب fail;
 
-    ret = av_hwframe_get_buffer(s->child_frames_ref, qsv_surface->child_frame, 0);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_get_میانگیر(s->فرزند_قابها_ref, qsv_surface->فرزند_قاب, 0);
+    إذا (ret < 0)
+        اذهب fail;
 
-    handle_pairs_internal = av_calloc(1, sizeof(*handle_pairs_internal));
-    if (!handle_pairs_internal)
-        goto fail;
+    handle_جفتها_داخلی = av_calloc(1, حجم(*handle_جفتها_داخلی));
+    إذا (!handle_جفتها_داخلی)
+        اذهب fail;
 
     ret = qsv_init_surface(ctx, &qsv_surface->mfx_surface);
-    if (ret < 0)
-        goto fail;
+    إذا (ret < 0)
+        اذهب fail;
 
-#if CONFIG_VAAPI
-    if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
-        VASurfaceID *surface_id_internal;
+#إذا CONFIG_VAAPI
+    إذا (فرزند_قابها_ctx->device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
+        VASurfaceID *surface_id_داخلی;
 
-        surface_id_internal = av_calloc(1, sizeof(*surface_id_internal));
-        if (!surface_id_internal)
-            goto fail;
+        surface_id_داخلی = av_calloc(1, حجم(*surface_id_داخلی));
+        إذا (!surface_id_داخلی)
+            اذهب fail;
 
-        *surface_id_internal = (VASurfaceID)(uintptr_t)qsv_surface->child_frame->data[3];
-        handle_pairs_internal->first = (mfxHDL)surface_id_internal;
-        handle_pairs_internal->second = (mfxMemId)MFX_INFINITE;
+        *surface_id_داخلی = (VASurfaceID)(uintptr_t)qsv_surface->فرزند_قاب->داده[3];
+        handle_جفتها_داخلی->اولی = (mfxHDL)surface_id_داخلی;
+        handle_جفتها_داخلی->دومی = (mfxMemId)MFX_INFINITE;
     }
-#endif
+#پایان_اگر
 
-#if CONFIG_D3D11VA
-    if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-        AVD3D11VAFramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        handle_pairs_internal->first = (mfxMemId)qsv_surface->child_frame->data[0];
+#إذا CONFIG_D3D11VA
+    إذا (فرزند_قابها_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+        AVD3D11VAFramesContext *فرزند_قابها_hwctx = فرزند_قابها_ctx->hwctx;
+        handle_جفتها_داخلی->اولی = (mfxMemId)qsv_surface->فرزند_قاب->داده[0];
 
-        if (child_frames_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET)
-            handle_pairs_internal->second = (mfxMemId)MFX_INFINITE;
-        else
-            handle_pairs_internal->second = (mfxMemId)qsv_surface->child_frame->data[1];
+        إذا (فرزند_قابها_hwctx->BindFlags & D3_D11_BIND_RENDER_هدف)
+            handle_جفتها_داخلی->دومی = (mfxMemId)MFX_INFINITE;
+        وإلا
+            handle_جفتها_داخلی->دومی = (mfxMemId)qsv_surface->فرزند_قاب->داده[1];
 
     }
-#endif
+#پایان_اگر
 
-    qsv_surface->mfx_surface.Data.MemId = (mfxMemId)handle_pairs_internal;
-    return av_buffer_create((uint8_t *)qsv_surface, sizeof(*qsv_surface),
+    qsv_surface->mfx_surface.داده_2.MemId = (mfxMemId)handle_جفتها_داخلی;
+    أرجع av_میانگیر_create((uint8_t *)qsv_surface, حجم(*qsv_surface),
                             qsv_pool_release, ctx, 0);
 
 fail:
-    if (qsv_surface) {
-        av_frame_free(&qsv_surface->child_frame);
+    إذا (qsv_surface) {
+        av_قاب_free(&qsv_surface->فرزند_قاب);
     }
 
     av_freep(&qsv_surface);
-    av_freep(&handle_pairs_internal);
+    av_freep(&handle_جفتها_داخلی);
 
-    return NULL;
+    أرجع عدم;
 }
 
-static AVBufferRef *qsv_pool_alloc(void *opaque, size_t size)
+ساكن AVBufferRef *qsv_pool_alloc(فراغ *opaque, size_t اندازه)
 {
     AVHWFramesContext    *ctx = (AVHWFramesContext*)opaque;
     AVQSVFramesContext *hwctx = ctx->hwctx;
 
-    if (hwctx->nb_surfaces == 0) {
-        return qsv_dynamic_pool_alloc(opaque, size);
-    } else {
-        return qsv_fixed_pool_alloc(opaque, size);
+    إذا (hwctx->nb_surfaces == 0) {
+        أرجع qsv_dynamic_pool_alloc(opaque, اندازه);
+    } وإلا {
+        أرجع qsv_fixed_pool_alloc(opaque, اندازه);
     }
 }
 
-static int qsv_init_child_ctx(AVHWFramesContext *ctx)
+ساكن صحيح qsv_init_فرزند_ctx(AVHWFramesContext *ctx)
 {
     QSVDeviceContext *device_priv = ctx->device_ctx->hwctx;
     QSVFramesContext           *s = ctx->hwctx;
     AVQSVFramesContext     *hwctx = &s->p;
 
-    AVBufferRef *child_device_ref = NULL;
-    AVBufferRef *child_frames_ref = NULL;
+    AVBufferRef *فرزند_device_ref = عدم;
+    AVBufferRef *فرزند_قابها_ref = عدم;
 
-    AVHWDeviceContext *child_device_ctx;
-    AVHWFramesContext *child_frames_ctx;
+    AVHWDeviceContext *فرزند_device_ctx;
+    AVHWFramesContext *فرزند_قابها_ctx;
 
-    int i, ret = 0;
+    صحيح i, ret = 0;
 
-    if (!device_priv->handle) {
+    إذا (!device_priv->handle) {
         av_log(ctx, AV_LOG_ERROR,
                "Cannot create a non-opaque internal surface pool without "
                "a hardware handle\n");
-        return AVERROR(EINVAL);
+        أرجع AVERROR(EINVAL);
     }
 
-    child_device_ref = av_hwdevice_ctx_alloc(device_priv->child_device_type);
-    if (!child_device_ref)
-        return AVERROR(ENOMEM);
-    child_device_ctx   = (AVHWDeviceContext*)child_device_ref->data;
+    فرزند_device_ref = av_hwdevice_ctx_alloc(device_priv->فرزند_device_type);
+    إذا (!فرزند_device_ref)
+        أرجع AVERROR(ENOMEM);
+    فرزند_device_ctx   = (AVHWDeviceContext*)فرزند_device_ref->داده;
 
-#if CONFIG_VAAPI
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
-        AVVAAPIDeviceContext *child_device_hwctx = child_device_ctx->hwctx;
-        child_device_hwctx->display = (VADisplay)device_priv->handle;
+#إذا CONFIG_VAAPI
+    إذا (فرزند_device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
+        AVVAAPIDeviceContext *فرزند_device_hwctx = فرزند_device_ctx->hwctx;
+        فرزند_device_hwctx->display = (VADisplay)device_priv->handle;
     }
-#endif
-#if CONFIG_D3D11VA
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-        AVD3D11VADeviceContext *child_device_hwctx = child_device_ctx->hwctx;
-        ID3D11Device_AddRef((ID3D11Device*)device_priv->handle);
-        child_device_hwctx->device = (ID3D11Device*)device_priv->handle;
+#پایان_اگر
+#إذا CONFIG_D3D11VA
+    إذا (فرزند_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+        AVD3D11VADeviceContext *فرزند_device_hwctx = فرزند_device_ctx->hwctx;
+        ID3_D11_Device_جمع_کن_Ref((ID3D11Device*)device_priv->handle);
+        فرزند_device_hwctx->device = (ID3D11Device*)device_priv->handle;
     }
-#endif
-#if CONFIG_DXVA2
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
-        AVDXVA2DeviceContext *child_device_hwctx = child_device_ctx->hwctx;
-        child_device_hwctx->devmgr = (IDirect3DDeviceManager9*)device_priv->handle;
+#پایان_اگر
+#إذا CONFIG_DXVA2
+    إذا (فرزند_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
+        AVDXVA2DeviceContext *فرزند_device_hwctx = فرزند_device_ctx->hwctx;
+        فرزند_device_hwctx->devmgr = (IDirect3DDeviceManager9*)device_priv->handle;
     }
-#endif
+#پایان_اگر
 
-    ret = av_hwdevice_ctx_init(child_device_ref);
-    if (ret < 0) {
+    ret = av_hwdevice_ctx_init(فرزند_device_ref);
+    إذا (ret < 0) {
         av_log(ctx, AV_LOG_ERROR, "Error initializing a child device context\n");
-        goto fail;
+        اذهب fail;
     }
 
-    child_frames_ref = av_hwframe_ctx_alloc(child_device_ref);
-    if (!child_frames_ref) {
+    فرزند_قابها_ref = av_hwframe_ctx_alloc(فرزند_device_ref);
+    إذا (!فرزند_قابها_ref) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        اذهب fail;
     }
-    child_frames_ctx = (AVHWFramesContext*)child_frames_ref->data;
+    فرزند_قابها_ctx = (AVHWFramesContext*)فرزند_قابها_ref->داده;
 
-    child_frames_ctx->format            = device_priv->child_pix_fmt;
-    child_frames_ctx->sw_format         = ctx->sw_format;
-    child_frames_ctx->initial_pool_size = ctx->initial_pool_size;
-    child_frames_ctx->width             = FFALIGN(ctx->width, 16);
-    child_frames_ctx->height            = FFALIGN(ctx->height, 16);
+    فرزند_قابها_ctx->format            = device_priv->فرزند_pix_fmt;
+    فرزند_قابها_ctx->sw_format         = ctx->sw_format;
+    فرزند_قابها_ctx->initial_pool_اندازه = ctx->initial_pool_اندازه;
+    فرزند_قابها_ctx->عرض             = FFALIGN(ctx->عرض, 16);
+    فرزند_قابها_ctx->ارتفاع            = FFALIGN(ctx->ارتفاع, 16);
 
-#if CONFIG_D3D11VA
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-        AVD3D11VAFramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        if (hwctx->frame_type == 0)
-            hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-        if (hwctx->frame_type & MFX_MEMTYPE_SHARED_RESOURCE)
-            child_frames_hwctx->MiscFlags = D3D11_RESOURCE_MISC_SHARED;
-        child_frames_hwctx->BindFlags = qsv_get_d3d11va_bind_flags(hwctx->frame_type);
+#إذا CONFIG_D3D11VA
+    إذا (فرزند_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+        AVD3D11VAFramesContext *فرزند_قابها_hwctx = فرزند_قابها_ctx->hwctx;
+        إذا (hwctx->قاب_type == 0)
+            hwctx->قاب_type = MFX_MEMTYPE_VIDEO_حافظه_PROCESSOR_هدف;
+        إذا (hwctx->قاب_type & MFX_MEMTYPE_SHARED_RESOURCE)
+            فرزند_قابها_hwctx->MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+        فرزند_قابها_hwctx->BindFlags = qsv_get_d3d11va_bind_flags(hwctx->قاب_type);
     }
-#endif
-#if CONFIG_DXVA2
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
-        AVDXVA2FramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        if (hwctx->frame_type & MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET)
-            child_frames_hwctx->surface_type = DXVA2_VideoProcessorRenderTarget;
-        else
-            child_frames_hwctx->surface_type = DXVA2_VideoDecoderRenderTarget;
+#پایان_اگر
+#إذا CONFIG_DXVA2
+    إذا (فرزند_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
+        AVDXVA2_قابها_Context *فرزند_قابها_hwctx = فرزند_قابها_ctx->hwctx;
+        إذا (hwctx->قاب_type & MFX_MEMTYPE_VIDEO_حافظه_PROCESSOR_هدف)
+            فرزند_قابها_hwctx->surface_type = DXVA2_Video_Processor_Render_هدف;
+        وإلا
+            فرزند_قابها_hwctx->surface_type = DXVA2_Video_Decoder_Render_هدف;
     }
-#endif
+#پایان_اگر
 
-    ret = av_hwframe_ctx_init(child_frames_ref);
-    if (ret < 0) {
+    ret = av_hwframe_ctx_init(فرزند_قابها_ref);
+    إذا (ret < 0) {
         av_log(ctx, AV_LOG_ERROR, "Error initializing a child frames context\n");
-        goto fail;
+        اذهب fail;
     }
 
-#if CONFIG_VAAPI
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
-        AVVAAPIFramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        for (i = 0; i < ctx->initial_pool_size; i++) {
-            s->handle_pairs_internal[i].first = child_frames_hwctx->surface_ids + i;
-            s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-            s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+#إذا CONFIG_VAAPI
+    إذا (فرزند_device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
+        AVVAAPIFramesContext *فرزند_قابها_hwctx = فرزند_قابها_ctx->hwctx;
+        لكل (i = 0; i < ctx->initial_pool_اندازه; i++) {
+            s->handle_جفتها_داخلی[i].اولی = فرزند_قابها_hwctx->surface_ids + i;
+            s->handle_جفتها_داخلی[i].دومی = (mfxMemId)MFX_INFINITE;
+            s->surfaces_داخلی[i].داده_2.MemId = (mfxMemId)&s->handle_جفتها_داخلی[i];
         }
-        hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+        hwctx->قاب_type = MFX_MEMTYPE_VIDEO_حافظه_DECODER_هدف;
     }
-#endif
-#if CONFIG_D3D11VA
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-        AVD3D11VAFramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        for (i = 0; i < ctx->initial_pool_size; i++) {
-            s->handle_pairs_internal[i].first = (mfxMemId)child_frames_hwctx->texture_infos[i].texture;
-            if(child_frames_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-                s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-            } else {
-                s->handle_pairs_internal[i].second = (mfxMemId)child_frames_hwctx->texture_infos[i].index;
+#پایان_اگر
+#إذا CONFIG_D3D11VA
+    إذا (فرزند_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+        AVD3D11VAFramesContext *فرزند_قابها_hwctx = فرزند_قابها_ctx->hwctx;
+        لكل (i = 0; i < ctx->initial_pool_اندازه; i++) {
+            s->handle_جفتها_داخلی[i].اولی = (mfxMemId)فرزند_قابها_hwctx->texture_infos[i].texture;
+            إذا(فرزند_قابها_hwctx->BindFlags & D3_D11_BIND_RENDER_هدف) {
+                s->handle_جفتها_داخلی[i].دومی = (mfxMemId)MFX_INFINITE;
+            } وإلا {
+                s->handle_جفتها_داخلی[i].دومی = (mfxMemId)فرزند_قابها_hwctx->texture_infos[i].شاخص;
             }
-            s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+            s->surfaces_داخلی[i].داده_2.MemId = (mfxMemId)&s->handle_جفتها_داخلی[i];
         }
-        if (child_frames_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-            hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-        } else {
-            hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+        إذا (فرزند_قابها_hwctx->BindFlags & D3_D11_BIND_RENDER_هدف) {
+            hwctx->قاب_type |= MFX_MEMTYPE_VIDEO_حافظه_PROCESSOR_هدف;
+        } وإلا {
+            hwctx->قاب_type |= MFX_MEMTYPE_VIDEO_حافظه_DECODER_هدف;
         }
     }
-#endif
-#if CONFIG_DXVA2
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
-        AVDXVA2FramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        for (i = 0; i < ctx->initial_pool_size; i++) {
-            s->handle_pairs_internal[i].first = (mfxMemId)child_frames_hwctx->surfaces[i];
-            s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-            s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+#پایان_اگر
+#إذا CONFIG_DXVA2
+    إذا (فرزند_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
+        AVDXVA2_قابها_Context *فرزند_قابها_hwctx = فرزند_قابها_ctx->hwctx;
+        لكل (i = 0; i < ctx->initial_pool_اندازه; i++) {
+            s->handle_جفتها_داخلی[i].اولی = (mfxMemId)فرزند_قابها_hwctx->surfaces[i];
+            s->handle_جفتها_داخلی[i].دومی = (mfxMemId)MFX_INFINITE;
+            s->surfaces_داخلی[i].داده_2.MemId = (mfxMemId)&s->handle_جفتها_داخلی[i];
         }
-        if (child_frames_hwctx->surface_type == DXVA2_VideoProcessorRenderTarget)
-            hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-        else
-            hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+        إذا (فرزند_قابها_hwctx->surface_type == DXVA2_Video_Processor_Render_هدف)
+            hwctx->قاب_type = MFX_MEMTYPE_VIDEO_حافظه_PROCESSOR_هدف;
+        وإلا
+            hwctx->قاب_type = MFX_MEMTYPE_VIDEO_حافظه_DECODER_هدف;
     }
-#endif
+#پایان_اگر
 
-    s->child_frames_ref       = child_frames_ref;
-    child_frames_ref          = NULL;
+    s->فرزند_قابها_ref       = فرزند_قابها_ref;
+    فرزند_قابها_ref          = عدم;
 
 fail:
-    av_buffer_unref(&child_device_ref);
-    av_buffer_unref(&child_frames_ref);
-    return ret;
+    av_میانگیر_unref(&فرزند_device_ref);
+    av_میانگیر_unref(&فرزند_قابها_ref);
+    أرجع ret;
 }
 
-static int qsv_init_surface(AVHWFramesContext *ctx, mfxFrameSurface1 *surf)
+ساكن صحيح qsv_init_surface(AVHWFramesContext *ctx, mfx_قاب_Surface1 *surf)
 {
-    const AVPixFmtDescriptor *desc;
+    ثابت AVPixFmtDescriptor *desc;
     uint32_t fourcc;
 
     desc = av_pix_fmt_desc_get(ctx->sw_format);
-    if (!desc)
-        return AVERROR(EINVAL);
+    إذا (!desc)
+        أرجع AVERROR(EINVAL);
 
     fourcc = qsv_fourcc_from_pix_fmt(ctx->sw_format);
-    if (!fourcc)
-        return AVERROR(EINVAL);
+    إذا (!fourcc)
+        أرجع AVERROR(EINVAL);
 
-    surf->Info.BitDepthLuma   = desc->comp[0].depth;
-    surf->Info.BitDepthChroma = desc->comp[0].depth;
-    surf->Info.Shift          = qsv_shift_from_pix_fmt(ctx->sw_format);
+    surf->Info.بیت_عمق_Luma   = desc->comp[0].عمق;
+    surf->Info.بیت_عمق_Chroma = desc->comp[0].عمق;
+    surf->Info.لغزش_2          = qsv_لغزش_from_pix_fmt(ctx->sw_format);
 
-    if (desc->log2_chroma_w && desc->log2_chroma_h)
+    إذا (desc->log2_chroma_w && desc->log2_chroma_h)
         surf->Info.ChromaFormat   = MFX_CHROMAFORMAT_YUV420;
-    else if (desc->log2_chroma_w)
+    وإلا إذا (desc->log2_chroma_w)
         surf->Info.ChromaFormat   = MFX_CHROMAFORMAT_YUV422;
-    else
+    وإلا
         surf->Info.ChromaFormat   = MFX_CHROMAFORMAT_YUV444;
 
     surf->Info.FourCC         = fourcc;
-    surf->Info.Width          = FFALIGN(ctx->width, 16);
-    surf->Info.CropW          = ctx->width;
-    surf->Info.Height         = FFALIGN(ctx->height, 16);
-    surf->Info.CropH          = ctx->height;
-    surf->Info.FrameRateExtN  = 25;
-    surf->Info.FrameRateExtD  = 1;
+    surf->Info.عرض_2          = FFALIGN(ctx->عرض, 16);
+    surf->Info.CropW          = ctx->عرض;
+    surf->Info.ارتفاع_2         = FFALIGN(ctx->ارتفاع, 16);
+    surf->Info.CropH          = ctx->ارتفاع;
+    surf->Info.قاب_نرخ_Ext_N  = 25;
+    surf->Info.قاب_نرخ_Ext_D  = 1;
     surf->Info.PicStruct      = MFX_PICSTRUCT_PROGRESSIVE;
 
-    return 0;
+    أرجع 0;
 }
 
-static int qsv_init_pool(AVHWFramesContext *ctx, uint32_t fourcc)
+ساكن صحيح qsv_init_pool(AVHWFramesContext *ctx, uint32_t fourcc)
 {
     QSVFramesContext              *s = ctx->hwctx;
-    AVQSVFramesContext *frames_hwctx = &s->p;
+    AVQSVFramesContext *قابها_hwctx = &s->p;
 
-    int i, ret = 0;
+    صحيح i, ret = 0;
 
-    if (ctx->initial_pool_size < 0) {
+    إذا (ctx->initial_pool_اندازه < 0) {
         av_log(ctx, AV_LOG_ERROR, "Invalid frame pool size\n");
-        return AVERROR(EINVAL);
-    } else if (ctx->initial_pool_size == 0) {
-        mfxFrameSurface1 mfx_surf1;
+        أرجع AVERROR(EINVAL);
+    } وإلا إذا (ctx->initial_pool_اندازه == 0) {
+        mfx_قاب_Surface1 mfx_surf1;
 
-        ret = qsv_init_child_ctx(ctx);
-        if (ret < 0)
-            return ret;
+        ret = qsv_init_فرزند_ctx(ctx);
+        إذا (ret < 0)
+            أرجع ret;
 
-        ffhwframesctx(ctx)->pool_internal = av_buffer_pool_init2(sizeof(mfxFrameSurface1),
-                                                                 ctx, qsv_pool_alloc, NULL);
-        if (!ffhwframesctx(ctx)->pool_internal)
-            return AVERROR(ENOMEM);
+        ffhwframesctx(ctx)->pool_داخلی = av_میانگیر_pool_init2(حجم(mfx_قاب_Surface1),
+                                                                 ctx, qsv_pool_alloc, عدم);
+        إذا (!ffhwframesctx(ctx)->pool_داخلی)
+            أرجع AVERROR(ENOMEM);
 
-        memset(&mfx_surf1, 0, sizeof(mfx_surf1));
+        memset(&mfx_surf1, 0, حجم(mfx_surf1));
         qsv_init_surface(ctx, &mfx_surf1);
-        s->frame_info = mfx_surf1.Info;
-        frames_hwctx->info = &s->frame_info;
-        frames_hwctx->nb_surfaces = 0;
+        s->قاب_info = mfx_surf1.Info;
+        قابها_hwctx->info = &s->قاب_info;
+        قابها_hwctx->nb_surfaces = 0;
 
-        return 0;
+        أرجع 0;
     }
 
-    s->handle_pairs_internal = av_calloc(ctx->initial_pool_size,
-                                         sizeof(*s->handle_pairs_internal));
-    if (!s->handle_pairs_internal)
-        return AVERROR(ENOMEM);
+    s->handle_جفتها_داخلی = av_calloc(ctx->initial_pool_اندازه,
+                                         حجم(*s->handle_جفتها_داخلی));
+    إذا (!s->handle_جفتها_داخلی)
+        أرجع AVERROR(ENOMEM);
 
-    s->surfaces_internal = av_calloc(ctx->initial_pool_size,
-                                     sizeof(*s->surfaces_internal));
-    if (!s->surfaces_internal)
-        return AVERROR(ENOMEM);
+    s->surfaces_داخلی = av_calloc(ctx->initial_pool_اندازه,
+                                     حجم(*s->surfaces_داخلی));
+    إذا (!s->surfaces_داخلی)
+        أرجع AVERROR(ENOMEM);
 
-    for (i = 0; i < ctx->initial_pool_size; i++) {
-        ret = qsv_init_surface(ctx, &s->surfaces_internal[i]);
-        if (ret < 0)
-            return ret;
+    لكل (i = 0; i < ctx->initial_pool_اندازه; i++) {
+        ret = qsv_init_surface(ctx, &s->surfaces_داخلی[i]);
+        إذا (ret < 0)
+            أرجع ret;
     }
 
-#if QSV_HAVE_OPAQUE
-    if (!(frames_hwctx->frame_type & MFX_MEMTYPE_OPAQUE_FRAME)) {
-        ret = qsv_init_child_ctx(ctx);
-        if (ret < 0)
-            return ret;
+#إذا QSV_HAVE_OPAQUE
+    إذا (!(قابها_hwctx->قاب_type & MFX_MEMTYPE_OPAQUE_قاب)) {
+        ret = qsv_init_فرزند_ctx(ctx);
+        إذا (ret < 0)
+            أرجع ret;
     }
-#else
-    ret = qsv_init_child_ctx(ctx);
-    if (ret < 0)
-        return ret;
-#endif
+#وإلا
+    ret = qsv_init_فرزند_ctx(ctx);
+    إذا (ret < 0)
+        أرجع ret;
+#پایان_اگر
 
-    ffhwframesctx(ctx)->pool_internal = av_buffer_pool_init2(sizeof(mfxFrameSurface1),
-                                                             ctx, qsv_pool_alloc, NULL);
-    if (!ffhwframesctx(ctx)->pool_internal)
-        return AVERROR(ENOMEM);
+    ffhwframesctx(ctx)->pool_داخلی = av_میانگیر_pool_init2(حجم(mfx_قاب_Surface1),
+                                                             ctx, qsv_pool_alloc, عدم);
+    إذا (!ffhwframesctx(ctx)->pool_داخلی)
+        أرجع AVERROR(ENOMEM);
 
-    frames_hwctx->surfaces    = s->surfaces_internal;
-    frames_hwctx->nb_surfaces = ctx->initial_pool_size;
+    قابها_hwctx->surfaces    = s->surfaces_داخلی;
+    قابها_hwctx->nb_surfaces = ctx->initial_pool_اندازه;
 
-    return 0;
+    أرجع 0;
 }
 
-static mfxStatus frame_alloc(mfxHDL pthis, mfxFrameAllocRequest *req,
-                             mfxFrameAllocResponse *resp)
+ساكن mfx_وضعیت قاب_alloc(mfxHDL pthis, mfx_قاب_Alloc_Request *req,
+                             mfx_قاب_Alloc_Response *resp)
 {
     AVHWFramesContext    *ctx = pthis;
     QSVFramesContext       *s = ctx->hwctx;
     AVQSVFramesContext *hwctx = &s->p;
-    mfxFrameInfo *i  = &req->Info;
-    mfxFrameInfo *i1 = hwctx->nb_surfaces ? &hwctx->surfaces[0].Info : hwctx->info;
+    mfx_قاب_Info *i  = &req->Info;
+    mfx_قاب_Info *i1 = hwctx->nb_surfaces ? &hwctx->surfaces[0].Info : hwctx->info;
 
-    if (!(req->Type & MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET) ||
+    إذا (!(req->Type & MFX_MEMTYPE_VIDEO_حافظه_PROCESSOR_هدف) ||
         !(req->Type & (MFX_MEMTYPE_FROM_VPPIN | MFX_MEMTYPE_FROM_VPPOUT)) ||
-        !(req->Type & MFX_MEMTYPE_EXTERNAL_FRAME))
-        return MFX_ERR_UNSUPPORTED;
-    if (i->Width  > i1->Width || i->Height > i1->Height ||
+        !(req->Type & MFX_MEMTYPE_EXTERNAL_قاب))
+        أرجع MFX_ERR_UNSUPPORTED;
+    إذا (i->عرض_2  > i1->عرض_2 || i->ارتفاع_2 > i1->ارتفاع_2 ||
         i->FourCC != i1->FourCC || i->ChromaFormat != i1->ChromaFormat) {
         av_log(ctx, AV_LOG_ERROR, "Mismatching surface properties in an "
                "allocation request: %dx%d %d %d vs %dx%d %d %d\n",
-               i->Width,  i->Height,  i->FourCC,  i->ChromaFormat,
-               i1->Width, i1->Height, i1->FourCC, i1->ChromaFormat);
-        return MFX_ERR_UNSUPPORTED;
+               i->عرض_2,  i->ارتفاع_2,  i->FourCC,  i->ChromaFormat,
+               i1->عرض_2, i1->ارتفاع_2, i1->FourCC, i1->ChromaFormat);
+        أرجع MFX_ERR_UNSUPPORTED;
     }
 
     resp->mids           = s->mem_ids;
-    resp->NumFrameActual = hwctx->nb_surfaces;
+    resp->رقم_قاب_Actual = hwctx->nb_surfaces;
 
-    return MFX_ERR_NONE;
+    أرجع MFX_ERR_NONE;
 }
 
-static mfxStatus frame_free(mfxHDL pthis, mfxFrameAllocResponse *resp)
+ساكن mfx_وضعیت قاب_free(mfxHDL pthis, mfx_قاب_Alloc_Response *resp)
 {
-    return MFX_ERR_NONE;
+    أرجع MFX_ERR_NONE;
 }
 
-static mfxStatus frame_lock(mfxHDL pthis, mfxMemId mid, mfxFrameData *ptr)
+ساكن mfx_وضعیت قاب_قفل(mfxHDL pthis, mfxMemId mid, mfx_قاب_داده *ptr)
 {
-    return MFX_ERR_UNSUPPORTED;
+    أرجع MFX_ERR_UNSUPPORTED;
 }
 
-static mfxStatus frame_unlock(mfxHDL pthis, mfxMemId mid, mfxFrameData *ptr)
+ساكن mfx_وضعیت قاب_unlock(mfxHDL pthis, mfxMemId mid, mfx_قاب_داده *ptr)
 {
-    return MFX_ERR_UNSUPPORTED;
+    أرجع MFX_ERR_UNSUPPORTED;
 }
 
-static mfxStatus frame_get_hdl(mfxHDL pthis, mfxMemId mid, mfxHDL *hdl)
+ساكن mfx_وضعیت قاب_get_hdl(mfxHDL pthis, mfxMemId mid, mfxHDL *hdl)
 {
     mfxHDLPair *pair_dst = (mfxHDLPair*)hdl;
     mfxHDLPair *pair_src = (mfxHDLPair*)mid;
 
-    pair_dst->first = pair_src->first;
+    pair_dst->اولی = pair_src->اولی;
 
-    if (pair_src->second != (mfxMemId)MFX_INFINITE)
-        pair_dst->second = pair_src->second;
-    return MFX_ERR_NONE;
+    إذا (pair_src->دومی != (mfxMemId)MFX_INFINITE)
+        pair_dst->دومی = pair_src->دومی;
+    أرجع MFX_ERR_NONE;
 }
 
-#if QSV_ONEVPL
+#إذا QSV_ONEVPL
 
-static int qsv_d3d11_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
+ساكن صحيح qsv_d3d11_update_config(فراغ *ctx, mfxHDL handle, mfxConfig cfg)
 {
-    int ret = AVERROR_UNKNOWN;
-#if CONFIG_D3D11VA
-    mfxStatus sts;
+    صحيح ret = AVERROR_UNKNOWN;
+#إذا CONFIG_D3D11VA
+    mfx_وضعیت sts;
     IDXGIAdapter *pDXGIAdapter;
     DXGI_ADAPTER_DESC adapterDesc;
-    IDXGIDevice *pDXGIDevice = NULL;
+    IDXGIDevice *pDXGIDevice = عدم;
     HRESULT hr;
     ID3D11Device *device = handle;
-    mfxVariant impl_value = {0};
+    mfxVariant impl_مقدار = {0};
 
-    hr = ID3D11Device_QueryInterface(device, &IID_IDXGIDevice, (void**)&pDXGIDevice);
-    if (SUCCEEDED(hr)) {
+    hr = ID3D11Device_QueryInterface(device, &IID_IDXGIDevice, (فراغ**)&pDXGIDevice);
+    إذا (SUCCEEDED(hr)) {
         hr = IDXGIDevice_GetAdapter(pDXGIDevice, &pDXGIAdapter);
-        if (FAILED(hr)) {
+        إذا (FAILED(hr)) {
             av_log(ctx, AV_LOG_ERROR, "Error IDXGIDevice_GetAdapter %#lx\n", hr);
             IDXGIDevice_Release(pDXGIDevice);
-            return ret;
+            أرجع ret;
         }
 
         hr = IDXGIAdapter_GetDesc(pDXGIAdapter, &adapterDesc);
-        if (FAILED(hr)) {
+        إذا (FAILED(hr)) {
             av_log(ctx, AV_LOG_ERROR, "Error IDXGIAdapter_GetDesc %#lx\n", hr);
-            goto fail;
+            اذهب fail;
         }
-    } else {
+    } وإلا {
         av_log(ctx, AV_LOG_ERROR, "Error ID3D11Device_QueryInterface %#lx\n", hr);
-        return ret;
+        أرجع ret;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U16;
-    impl_value.Data.U16 = adapterDesc.DeviceId;
+    impl_مقدار.Type = MFX_VARIANT_TYPE_U16;
+    impl_مقدار.داده_2.U16 = adapterDesc.DeviceId;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceID", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ثابت mfxU8 *)"mfxExtendedDeviceId.DeviceID", impl_مقدار);
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "DeviceID property: %d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_PTR;
-    impl_value.Data.Ptr = &adapterDesc.AdapterLuid;
+    impl_مقدار.Type = MFX_VARIANT_TYPE_PTR;
+    impl_مقدار.داده_2.Ptr = &adapterDesc.AdapterLuid;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ثابت mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_مقدار);
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "DeviceLUID property: %d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = 0x0001;
+    impl_مقدار.Type = MFX_VARIANT_TYPE_U32;
+    impl_مقدار.داده_2.U32 = 0x0001;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.LUIDDeviceNodeMask", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ثابت mfxU8 *)"mfxExtendedDeviceId.LUIDDeviceNodeMask", impl_مقدار);
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "LUIDDeviceNodeMask property: %d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
     ret = 0;
@@ -895,80 +895,80 @@ static int qsv_d3d11_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
 fail:
     IDXGIAdapter_Release(pDXGIAdapter);
     IDXGIDevice_Release(pDXGIDevice);
-#endif
-    return ret;
+#پایان_اگر
+    أرجع ret;
 }
 
-static int qsv_d3d9_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
+ساكن صحيح qsv_d3d9_update_config(فراغ *ctx, mfxHDL handle, mfxConfig cfg)
 {
-    int ret = AVERROR_UNKNOWN;
-#if CONFIG_DXVA2
-    mfxStatus sts;
+    صحيح ret = AVERROR_UNKNOWN;
+#إذا CONFIG_DXVA2
+    mfx_وضعیت sts;
     IDirect3DDeviceManager9* devmgr = handle;
-    IDirect3DDevice9 *device = NULL;
-    IDirect3DDevice9Ex *device_ex = NULL;
+    IDirect3DDevice9 *device = عدم;
+    IDirect3DDevice9Ex *device_ex = عدم;
     HANDLE device_handle = 0;
-    IDirect3D9Ex *d3d9ex = NULL;
-    IDirect3D9 *d3d9 = NULL;
+    IDirect3D9Ex *d3d9ex = عدم;
+    IDirect3D9 *d3d9 = عدم;
     LUID luid;
     D3DDEVICE_CREATION_PARAMETERS params;
     HRESULT hr;
-    mfxVariant impl_value = {0};
+    mfxVariant impl_مقدار = {0};
 
     hr = IDirect3DDeviceManager9_OpenDeviceHandle(devmgr, &device_handle);
-    if (FAILED(hr)) {
+    إذا (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error OpenDeviceHandle %#lx\n", hr);
-        goto fail;
+        اذهب fail;
     }
 
-    hr = IDirect3DDeviceManager9_LockDevice(devmgr, device_handle, &device, TRUE);
-    if (FAILED(hr)) {
+    hr = IDirect3_DDevice_Manager9_قفل_Device(devmgr, device_handle, &device, TRUE);
+    إذا (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error LockDevice %#lx\n", hr);
         IDirect3DDeviceManager9_CloseDeviceHandle(devmgr, device_handle);
-        goto fail;
+        اذهب fail;
     }
-    hr = IDirect3DDevice9_QueryInterface(device, &IID_IDirect3DDevice9Ex, (void **)&device_ex);
+    hr = IDirect3DDevice9_QueryInterface(device, &IID_IDirect3DDevice9Ex, (فراغ **)&device_ex);
     IDirect3DDevice9_Release(device);
-    if (FAILED(hr)) {
+    إذا (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error IDirect3DDevice9_QueryInterface %#lx\n", hr);
-        goto unlock;
+        اذهب unlock;
     }
 
     hr = IDirect3DDevice9Ex_GetCreationParameters(device_ex, &params);
-    if (FAILED(hr)) {
+    إذا (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error IDirect3DDevice9_GetCreationParameters %#lx\n", hr);
         IDirect3DDevice9Ex_Release(device_ex);
-        goto unlock;
+        اذهب unlock;
     }
 
     hr = IDirect3DDevice9Ex_GetDirect3D(device_ex, &d3d9);
-    if (FAILED(hr)) {
+    إذا (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error IDirect3DDevice9Ex_GetDirect3D %#lx\n", hr);
         IDirect3DDevice9Ex_Release(device_ex);
-        goto unlock;
+        اذهب unlock;
     }
-    hr = IDirect3D9_QueryInterface(d3d9, &IID_IDirect3D9Ex, (void **)&d3d9ex);
+    hr = IDirect3D9_QueryInterface(d3d9, &IID_IDirect3D9Ex, (فراغ **)&d3d9ex);
     IDirect3D9_Release(d3d9);
-    if (FAILED(hr)) {
+    إذا (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error IDirect3D9_QueryInterface3D %#lx\n", hr);
         IDirect3DDevice9Ex_Release(device_ex);
-        goto unlock;
+        اذهب unlock;
     }
 
     hr = IDirect3D9Ex_GetAdapterLUID(d3d9ex, params.AdapterOrdinal, &luid);
-    if (FAILED(hr)) {
+    إذا (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error IDirect3DDevice9Ex_GetAdapterLUID %#lx\n", hr);
-        goto release;
+        اذهب release;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_PTR;
-    impl_value.Data.Ptr = &luid;
+    impl_مقدار.Type = MFX_VARIANT_TYPE_PTR;
+    impl_مقدار.داده_2.Ptr = &luid;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ثابت mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_مقدار);
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "DeviceLUID property: %d.\n", sts);
-        goto release;
+        اذهب release;
     }
 
     ret = 0;
@@ -981,154 +981,154 @@ unlock:
     IDirect3DDeviceManager9_UnlockDevice(devmgr, device_handle, FALSE);
     IDirect3DDeviceManager9_CloseDeviceHandle(devmgr, device_handle);
 fail:
-#endif
-    return ret;
+#پایان_اگر
+    أرجع ret;
 }
 
-static int qsv_va_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
+ساكن صحيح qsv_va_update_config(فراغ *ctx, mfxHDL handle, mfxConfig cfg)
 {
-#if CONFIG_VAAPI
-#if VA_CHECK_VERSION(1, 15, 0)
-    mfxStatus sts;
+#إذا CONFIG_VAAPI
+#إذا VA_CHECK_نسخه(1, 15, 0)
+    mfx_وضعیت sts;
     VADisplay dpy = handle;
     VAStatus vas;
     VADisplayAttribute attr = {
         .type = VADisplayPCIID,
     };
-    mfxVariant impl_value = {0};
+    mfxVariant impl_مقدار = {0};
 
-    vas = vaGetDisplayAttributes(dpy, &attr, 1);
-    if (vas == VA_STATUS_SUCCESS && attr.flags != VA_DISPLAY_ATTRIB_NOT_SUPPORTED) {
-        impl_value.Type = MFX_VARIANT_TYPE_U16;
-        impl_value.Data.U16 = (attr.value & 0xFFFF);
+    vas = va_Get_Display_صفات(dpy, &attr, 1);
+    إذا (vas == VA_وضعیت_SUCCESS && attr.flags != VA_DISPLAY_ATTRIB_NOT_SUPPORTED) {
+        impl_مقدار.Type = MFX_VARIANT_TYPE_U16;
+        impl_مقدار.داده_2.U16 = (attr.مقدار & 0xFFFF);
         sts = MFXSetConfigFilterProperty(cfg,
-                                         (const mfxU8 *)"mfxImplDescription.mfxDeviceDescription.DeviceID", impl_value);
-        if (sts != MFX_ERR_NONE) {
+                                         (ثابت mfxU8 *)"mfxImplDescription.mfxDeviceDescription.DeviceID", impl_مقدار);
+        إذا (sts != MFX_ERR_NONE) {
             av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                    "DeviceID property: %d.\n", sts);
-            goto fail;
+            اذهب fail;
         }
-    } else {
+    } وإلا {
         av_log(ctx, AV_LOG_ERROR, "libva: Failed to get device id from the driver. Please "
                "consider to upgrade the driver to support VA-API 1.15.0\n");
-        goto fail;
+        اذهب fail;
     }
 
-    return 0;
+    أرجع 0;
 
 fail:
-#else
+#وإلا
     av_log(ctx, AV_LOG_ERROR, "libva: This version of libva doesn't support retrieving "
            "the device information from the driver. Please consider to upgrade libva to "
            "support VA-API 1.15.0\n");
-#endif
-#endif
-    return AVERROR_UNKNOWN;
+#پایان_اگر
+#پایان_اگر
+    أرجع AVERROR_UNKNOWN;
 }
 
-static int qsv_new_mfx_loader(void *ctx,
+ساكن صحيح qsv_new_mfx_loader(فراغ *ctx,
                               mfxHDL handle,
                               mfxHandleType handle_type,
                               mfxIMPL implementation,
-                              mfxVersion *pver,
-                              void **ploader)
+                              mfx_نسخه *pver,
+                              فراغ **ploader)
 {
-    mfxStatus sts;
-    mfxLoader loader = NULL;
+    mfx_وضعیت sts;
+    mfxLoader loader = عدم;
     mfxConfig cfg;
-    mfxVariant impl_value = {0};
+    mfxVariant impl_مقدار = {0};
 
-    *ploader = NULL;
+    *ploader = عدم;
     loader = MFXLoad();
-    if (!loader) {
+    إذا (!loader) {
         av_log(ctx, AV_LOG_ERROR, "Error creating a MFX loader\n");
-        goto fail;
+        اذهب fail;
     }
 
     /* Create configurations for implementation */
     cfg = MFXCreateConfig(loader);
-    if (!cfg) {
+    إذا (!cfg) {
         av_log(ctx, AV_LOG_ERROR, "Error creating a MFX configuration\n");
-        goto fail;
+        اذهب fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = (implementation == MFX_IMPL_SOFTWARE) ?
+    impl_مقدار.Type = MFX_VARIANT_TYPE_U32;
+    impl_مقدار.داده_2.U32 = (implementation == MFX_IMPL_SOFTWARE) ?
         MFX_IMPL_TYPE_SOFTWARE : MFX_IMPL_TYPE_HARDWARE;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxImplDescription.Impl", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ثابت mfxU8 *)"mfxImplDescription.Impl", impl_مقدار);
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration "
                "property: %d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = pver->Version;
+    impl_مقدار.Type = MFX_VARIANT_TYPE_U32;
+    impl_مقدار.داده_2.U32 = pver->نسخه_2;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxImplDescription.ApiVersion.Version",
-                                     impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ثابت mfxU8 *)"mfxImplDescription.ApiVersion.Version",
+                                     impl_مقدار);
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration "
                "property: %d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = 0x8086; // Intel device only
+    impl_مقدار.Type = MFX_VARIANT_TYPE_U32;
+    impl_مقدار.داده_2.U32 = 0x8086; // Intel device only
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxImplDescription.VendorID", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ثابت mfxU8 *)"mfxImplDescription.VendorID", impl_مقدار);
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "VendorID property: %d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
-    if (MFX_HANDLE_VA_DISPLAY == handle_type) {
-        if (handle && qsv_va_update_config(ctx, handle, cfg))
-            goto fail;
+    إذا (MFX_HANDLE_VA_DISPLAY == handle_type) {
+        إذا (handle && qsv_va_update_config(ctx, handle, cfg))
+            اذهب fail;
 
-        impl_value.Data.U32 = MFX_ACCEL_MODE_VIA_VAAPI;
-    } else if (MFX_HANDLE_D3D9_DEVICE_MANAGER == handle_type) {
-        if (handle && qsv_d3d9_update_config(ctx, handle, cfg))
-            goto fail;
+        impl_مقدار.داده_2.U32 = MFX_ACCEL_نما_از_طریق_VAAPI;
+    } وإلا إذا (MFX_HANDLE_D3D9_DEVICE_MANAGER == handle_type) {
+        إذا (handle && qsv_d3d9_update_config(ctx, handle, cfg))
+            اذهب fail;
 
-        impl_value.Data.U32 = MFX_ACCEL_MODE_VIA_D3D9;
-    } else {
-        if (handle && qsv_d3d11_update_config(ctx, handle, cfg))
-            goto fail;
+        impl_مقدار.داده_2.U32 = MFX_ACCEL_نما_از_طریق_D3_D9;
+    } وإلا {
+        إذا (handle && qsv_d3d11_update_config(ctx, handle, cfg))
+            اذهب fail;
 
-        impl_value.Data.U32 = MFX_ACCEL_MODE_VIA_D3D11;
+        impl_مقدار.داده_2.U32 = MFX_ACCEL_نما_از_طریق_D3_D11;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
+    impl_مقدار.Type = MFX_VARIANT_TYPE_U32;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxImplDescription.AccelerationMode", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ثابت mfxU8 *)"mfxImplDescription.AccelerationMode", impl_مقدار);
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "AccelerationMode property: %d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
     *ploader = loader;
 
-    return 0;
+    أرجع 0;
 
 fail:
-    if (loader)
+    إذا (loader)
         MFXUnload(loader);
 
-    return AVERROR_UNKNOWN;
+    أرجع AVERROR_UNKNOWN;
 }
 
-static int qsv_create_mfx_session_from_loader(void *ctx, mfxLoader loader, mfxSession *psession)
+ساكن صحيح qsv_create_mfx_session_from_loader(فراغ *ctx, mfxLoader loader, mfxSession *psession)
 {
-    mfxStatus sts;
-    mfxSession session = NULL;
+    mfx_وضعیت sts;
+    mfxSession session = عدم;
     uint32_t impl_idx = 0;
-    mfxVersion ver;
+    mfx_نسخه ver;
 
-    while (1) {
+    طالما (1) {
         /* Enumerate all implementations */
         mfxImplDescription *impl_desc;
 
@@ -1136,30 +1136,30 @@ static int qsv_create_mfx_session_from_loader(void *ctx, mfxLoader loader, mfxSe
                                      MFX_IMPLCAPS_IMPLDESCSTRUCTURE,
                                      (mfxHDL *)&impl_desc);
         /* Failed to find an available implementation */
-        if (sts == MFX_ERR_NOT_FOUND)
-            break;
-        else if (sts != MFX_ERR_NONE) {
+        إذا (sts == MFX_ERR_NOT_یافت)
+            اكسر;
+        وإلا إذا (sts != MFX_ERR_NONE) {
             impl_idx++;
-            continue;
+            استمر;
         }
 
         sts = MFXCreateSession(loader, impl_idx, &session);
         MFXDispReleaseImplDescription(loader, impl_desc);
-        if (sts == MFX_ERR_NONE)
-            break;
+        إذا (sts == MFX_ERR_NONE)
+            اكسر;
 
         impl_idx++;
     }
 
-    if (sts != MFX_ERR_NONE) {
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error creating a MFX session: %d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
-    sts = MFXQueryVersion(session, &ver);
-    if (sts != MFX_ERR_NONE) {
+    sts = MFXQuery_نسخه(session, &ver);
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error querying a MFX session: %d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
     av_log(ctx, AV_LOG_VERBOSE, "Initialize MFX session: implementation "
@@ -1167,97 +1167,97 @@ static int qsv_create_mfx_session_from_loader(void *ctx, mfxLoader loader, mfxSe
 
     *psession = session;
 
-    return 0;
+    أرجع 0;
 
 fail:
-    if (session)
+    إذا (session)
         MFXClose(session);
 
-    return AVERROR_UNKNOWN;
+    أرجع AVERROR_UNKNOWN;
 }
 
-static int qsv_create_mfx_session(void *ctx,
+ساكن صحيح qsv_create_mfx_session(فراغ *ctx,
                                   mfxHDL handle,
                                   mfxHandleType handle_type,
                                   mfxIMPL implementation,
-                                  mfxVersion *pver,
+                                  mfx_نسخه *pver,
                                   mfxSession *psession,
-                                  void **ploader)
+                                  فراغ **ploader)
 {
-    mfxLoader loader = NULL;
+    mfxLoader loader = عدم;
 
     av_log(ctx, AV_LOG_VERBOSE,
            "Use Intel(R) oneVPL to create MFX session, API version is "
            "%d.%d, the required implementation version is %d.%d\n",
-           MFX_VERSION_MAJOR, MFX_VERSION_MINOR, pver->Major, pver->Minor);
+           MFX_نسخه_MAJOR, MFX_نسخه_MINOR, pver->Major, pver->Minor);
 
-    if (handle_type != MFX_HANDLE_VA_DISPLAY &&
+    إذا (handle_type != MFX_HANDLE_VA_DISPLAY &&
         handle_type != MFX_HANDLE_D3D9_DEVICE_MANAGER &&
         handle_type != MFX_HANDLE_D3D11_DEVICE) {
         av_log(ctx, AV_LOG_ERROR,
                "Invalid MFX device handle type\n");
-        return AVERROR(EXDEV);
+        أرجع AVERROR(EXDEV);
     }
 
-    *psession = NULL;
+    *psession = عدم;
 
-    if (!*ploader) {
-        if (qsv_new_mfx_loader(ctx, handle, handle_type, implementation, pver, (void **)&loader))
-            goto fail;
+    إذا (!*ploader) {
+        إذا (qsv_new_mfx_loader(ctx, handle, handle_type, implementation, pver, (فراغ **)&loader))
+            اذهب fail;
 
         av_assert0(loader);
-    } else
+    } وإلا
         loader = *ploader;      // Use the input mfxLoader to create mfx session
 
-    if (qsv_create_mfx_session_from_loader(ctx, loader, psession))
-        goto fail;
+    إذا (qsv_create_mfx_session_from_loader(ctx, loader, psession))
+        اذهب fail;
 
-    if (!*ploader)
+    إذا (!*ploader)
         *ploader = loader;
 
-    return 0;
+    أرجع 0;
 
 fail:
-    if (!*ploader && loader)
+    إذا (!*ploader && loader)
         MFXUnload(loader);
 
-    return AVERROR_UNKNOWN;
+    أرجع AVERROR_UNKNOWN;
 }
 
-#else
+#وإلا
 
-static int qsv_create_mfx_session(void *ctx,
+ساكن صحيح qsv_create_mfx_session(فراغ *ctx,
                                   mfxHDL handle,
                                   mfxHandleType handle_type,
                                   mfxIMPL implementation,
-                                  mfxVersion *pver,
+                                  mfx_نسخه *pver,
                                   mfxSession *psession,
-                                  void **ploader)
+                                  فراغ **ploader)
 {
-    mfxVersion ver;
-    mfxStatus sts;
-    mfxSession session = NULL;
+    mfx_نسخه ver;
+    mfx_وضعیت sts;
+    mfxSession session = عدم;
 
     av_log(ctx, AV_LOG_VERBOSE,
            "Use Intel(R) Media SDK to create MFX session, API version is "
            "%d.%d, the required implementation version is %d.%d\n",
-           MFX_VERSION_MAJOR, MFX_VERSION_MINOR, pver->Major, pver->Minor);
+           MFX_نسخه_MAJOR, MFX_نسخه_MINOR, pver->Major, pver->Minor);
 
-    *ploader = NULL;
-    *psession = NULL;
+    *ploader = عدم;
+    *psession = عدم;
     ver = *pver;
     sts = MFXInit(implementation, &ver, &session);
-    if (sts != MFX_ERR_NONE) {
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error initializing an MFX session: "
                "%d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
-    sts = MFXQueryVersion(session, &ver);
-    if (sts != MFX_ERR_NONE) {
+    sts = MFXQuery_نسخه(session, &ver);
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error querying an MFX session: "
                "%d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
     av_log(ctx, AV_LOG_VERBOSE, "Initialize MFX session: implementation "
@@ -1266,1109 +1266,1109 @@ static int qsv_create_mfx_session(void *ctx,
     MFXClose(session);
 
     sts = MFXInit(implementation, &ver, &session);
-    if (sts != MFX_ERR_NONE) {
+    إذا (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error initializing an MFX session: "
                "%d.\n", sts);
-        goto fail;
+        اذهب fail;
     }
 
     *psession = session;
 
-    return 0;
+    أرجع 0;
 
 fail:
-    if (session)
+    إذا (session)
         MFXClose(session);
 
-    return AVERROR_UNKNOWN;
+    أرجع AVERROR_UNKNOWN;
 }
 
-#endif
+#پایان_اگر
 
-static int qsv_init_internal_session(AVHWFramesContext *ctx,
-                                     mfxSession *session, int upload)
+ساكن صحيح qsv_init_داخلی_session(AVHWFramesContext *ctx,
+                                     mfxSession *session, صحيح upload)
 {
     QSVFramesContext              *s = ctx->hwctx;
-    AVQSVFramesContext *frames_hwctx = &s->p;
+    AVQSVFramesContext *قابها_hwctx = &s->p;
     QSVDeviceContext   *device_priv  = ctx->device_ctx->hwctx;
     AVQSVDeviceContext *hwctx        = &device_priv->p;
-    int opaque = 0;
+    صحيح opaque = 0;
 
-    mfxFrameAllocator frame_allocator = {
+    mfx_قاب_Allocator قاب_allocator = {
         .pthis  = ctx,
-        .Alloc  = frame_alloc,
-        .Lock   = frame_lock,
-        .Unlock = frame_unlock,
-        .GetHDL = frame_get_hdl,
-        .Free   = frame_free,
+        .Alloc  = قاب_alloc,
+        .قفل_3   = قاب_قفل,
+        .Unlock = قاب_unlock,
+        .GetHDL = قاب_get_hdl,
+        .Free   = قاب_free,
     };
 
     mfxVideoParam par;
-    mfxStatus err;
-    int                   ret = AVERROR_UNKNOWN;
+    mfx_وضعیت err;
+    صحيح                   ret = AVERROR_UNKNOWN;
     /* hwctx->loader is non-NULL for oneVPL user and NULL for non-oneVPL user */
-    void             **loader = &hwctx->loader;
-    mfxSession parent_session = hwctx->session;
+    فراغ             **loader = &hwctx->loader;
+    mfxSession والد_session = hwctx->session;
     mfxIMPL impl;
-    mfxVersion ver;
+    mfx_نسخه ver;
 
-    err = MFXQueryIMPL(parent_session, &impl);
-    if (err == MFX_ERR_NONE)
-        err = MFXQueryVersion(parent_session, &ver);
-    if (err != MFX_ERR_NONE) {
+    err = MFXQueryIMPL(والد_session, &impl);
+    إذا (err == MFX_ERR_NONE)
+        err = MFXQuery_نسخه(والد_session, &ver);
+    إذا (err != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error querying the session attributes.\n");
-        return AVERROR_UNKNOWN;
+        أرجع AVERROR_UNKNOWN;
     }
 
-#if QSV_HAVE_OPAQUE
-    opaque = !!(frames_hwctx->frame_type & MFX_MEMTYPE_OPAQUE_FRAME);
-#endif
+#إذا QSV_HAVE_OPAQUE
+    opaque = !!(قابها_hwctx->قاب_type & MFX_MEMTYPE_OPAQUE_قاب);
+#پایان_اگر
 
     ret = qsv_create_mfx_session(ctx, device_priv->handle, device_priv->handle_type,
                                  device_priv->impl, &device_priv->ver, session, loader);
-    if (ret)
-        goto fail;
+    إذا (ret)
+        اذهب fail;
 
-    if (device_priv->handle) {
-        err = MFXVideoCORE_SetHandle(*session, device_priv->handle_type,
+    إذا (device_priv->handle) {
+        err = MFXVideo_CORE_مجموعه_Handle(*session, device_priv->handle_type,
                                      device_priv->handle);
-        if (err != MFX_ERR_NONE) {
+        إذا (err != MFX_ERR_NONE) {
             ret = AVERROR_UNKNOWN;
-            goto fail;
+            اذهب fail;
         }
     }
 
-    if (QSV_RUNTIME_VERSION_ATLEAST(ver, 1, 25)) {
-        err = MFXJoinSession(parent_session, *session);
-        if (err != MFX_ERR_NONE) {
+    إذا (QSV_RUNTIME_نسخه_ATLEAST(ver, 1, 25)) {
+        err = MFXJoinSession(والد_session, *session);
+        إذا (err != MFX_ERR_NONE) {
             av_log(ctx, AV_LOG_ERROR, "Error joining session.\n");
             ret = AVERROR_UNKNOWN;
-            goto fail;
+            اذهب fail;
         }
     }
 
-    if (!opaque) {
-        err = MFXVideoCORE_SetFrameAllocator(*session, &frame_allocator);
-        if (err != MFX_ERR_NONE) {
+    إذا (!opaque) {
+        err = MFXVideo_CORE_مجموعه_قاب_Allocator(*session, &قاب_allocator);
+        إذا (err != MFX_ERR_NONE) {
             ret = AVERROR_UNKNOWN;
-            goto fail;
+            اذهب fail;
         }
     }
 
-    memset(&par, 0, sizeof(par));
+    memset(&par, 0, حجم(par));
 
-    if (!opaque) {
-        par.IOPattern = upload ? MFX_IOPATTERN_OUT_VIDEO_MEMORY :
-                                 MFX_IOPATTERN_IN_VIDEO_MEMORY;
+    إذا (!opaque) {
+        par.IOPattern = upload ? MFX_IOPATTERN_بیرون_VIDEO_حافظه :
+                                 MFX_IOPATTERN_درون_VIDEO_حافظه;
     }
-#if QSV_HAVE_OPAQUE
-    else {
+#إذا QSV_HAVE_OPAQUE
+    وإلا {
         par.ExtParam    = s->ext_buffers;
-        par.NumExtParam = FF_ARRAY_ELEMS(s->ext_buffers);
-        par.IOPattern   = upload ? MFX_IOPATTERN_OUT_OPAQUE_MEMORY :
-                                   MFX_IOPATTERN_IN_OPAQUE_MEMORY;
+        par.رقم_Ext_Param = FF_ARRAY_ELEMS(s->ext_buffers);
+        par.IOPattern   = upload ? MFX_IOPATTERN_بیرون_OPAQUE_حافظه :
+                                   MFX_IOPATTERN_درون_OPAQUE_حافظه;
     }
-#endif
+#پایان_اگر
 
-    par.IOPattern |= upload ? MFX_IOPATTERN_IN_SYSTEM_MEMORY :
-                              MFX_IOPATTERN_OUT_SYSTEM_MEMORY;
-    par.AsyncDepth = 1;
+    par.IOPattern |= upload ? MFX_IOPATTERN_درون_SYSTEM_حافظه :
+                              MFX_IOPATTERN_بیرون_SYSTEM_حافظه;
+    par.Async_عمق = 1;
 
-    par.vpp.In = frames_hwctx->nb_surfaces ? frames_hwctx->surfaces[0].Info : *frames_hwctx->info;
+    par.vpp.درون_2 = قابها_hwctx->nb_surfaces ? قابها_hwctx->surfaces[0].Info : *قابها_hwctx->info;
 
     /* Apparently VPP requires the frame rate to be set to some value, otherwise
      * init will fail (probably for the framerate conversion filter). Since we
      * are only doing data upload/download here, we just invent an arbitrary
      * value */
-    par.vpp.In.FrameRateExtN = 25;
-    par.vpp.In.FrameRateExtD = 1;
-    par.vpp.Out = par.vpp.In;
+    par.vpp.درون_2.قاب_نرخ_Ext_N = 25;
+    par.vpp.درون_2.قاب_نرخ_Ext_D = 1;
+    par.vpp.بیرون_2 = par.vpp.درون_2;
 
     err = MFXVideoVPP_Init(*session, &par);
-    if (err != MFX_ERR_NONE) {
+    إذا (err != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_VERBOSE, "Error opening the internal VPP session."
                "Surface upload/download will not be possible\n");
 
         ret = AVERROR_UNKNOWN;
-        goto fail;
+        اذهب fail;
     }
 
-    return 0;
+    أرجع 0;
 
 fail:
-    if (*session)
+    إذا (*session)
         MFXClose(*session);
 
-    *session = NULL;
+    *session = عدم;
 
-    return ret;
+    أرجع ret;
 }
 
-static int qsv_frames_init(AVHWFramesContext *ctx)
+ساكن صحيح qsv_قابها_init(AVHWFramesContext *ctx)
 {
     QSVFramesContext              *s = ctx->hwctx;
-    AVQSVFramesContext *frames_hwctx = &s->p;
+    AVQSVFramesContext *قابها_hwctx = &s->p;
 
-    int opaque = 0;
+    صحيح opaque = 0;
 
     uint32_t fourcc;
-    int i, ret;
+    صحيح i, ret;
 
-#if QSV_HAVE_OPAQUE
-    opaque = !!(frames_hwctx->frame_type & MFX_MEMTYPE_OPAQUE_FRAME);
-#endif
+#إذا QSV_HAVE_OPAQUE
+    opaque = !!(قابها_hwctx->قاب_type & MFX_MEMTYPE_OPAQUE_قاب);
+#پایان_اگر
 
     fourcc = qsv_fourcc_from_pix_fmt(ctx->sw_format);
-    if (!fourcc) {
+    إذا (!fourcc) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported pixel format\n");
-        return AVERROR(ENOSYS);
+        أرجع AVERROR(ENOSYS);
     }
 
-    if (!ctx->pool) {
+    إذا (!ctx->pool) {
         ret = qsv_init_pool(ctx, fourcc);
-        if (ret < 0) {
+        إذا (ret < 0) {
             av_log(ctx, AV_LOG_ERROR, "Error creating an internal frame pool\n");
-            return ret;
+            أرجع ret;
         }
     }
 
-    if (!opaque) {
-        s->mem_ids = av_calloc(frames_hwctx->nb_surfaces, sizeof(*s->mem_ids));
-        if (!s->mem_ids)
-            return AVERROR(ENOMEM);
+    إذا (!opaque) {
+        s->mem_ids = av_calloc(قابها_hwctx->nb_surfaces, حجم(*s->mem_ids));
+        إذا (!s->mem_ids)
+            أرجع AVERROR(ENOMEM);
 
-        for (i = 0; i < frames_hwctx->nb_surfaces; i++)
-            s->mem_ids[i] = frames_hwctx->surfaces[i].Data.MemId;
+        لكل (i = 0; i < قابها_hwctx->nb_surfaces; i++)
+            s->mem_ids[i] = قابها_hwctx->surfaces[i].داده_2.MemId;
     }
-#if QSV_HAVE_OPAQUE
-    else {
-        s->surface_ptrs = av_calloc(frames_hwctx->nb_surfaces,
-                                    sizeof(*s->surface_ptrs));
-        if (!s->surface_ptrs)
-            return AVERROR(ENOMEM);
+#إذا QSV_HAVE_OPAQUE
+    وإلا {
+        s->surface_ptrs = av_calloc(قابها_hwctx->nb_surfaces,
+                                    حجم(*s->surface_ptrs));
+        إذا (!s->surface_ptrs)
+            أرجع AVERROR(ENOMEM);
 
-        for (i = 0; i < frames_hwctx->nb_surfaces; i++)
-            s->surface_ptrs[i] = frames_hwctx->surfaces + i;
+        لكل (i = 0; i < قابها_hwctx->nb_surfaces; i++)
+            s->surface_ptrs[i] = قابها_hwctx->surfaces + i;
 
-        s->opaque_alloc.In.Surfaces   = s->surface_ptrs;
-        s->opaque_alloc.In.NumSurface = frames_hwctx->nb_surfaces;
-        s->opaque_alloc.In.Type       = frames_hwctx->frame_type;
+        s->opaque_alloc.درون_2.Surfaces   = s->surface_ptrs;
+        s->opaque_alloc.درون_2.رقم_Surface = قابها_hwctx->nb_surfaces;
+        s->opaque_alloc.درون_2.Type       = قابها_hwctx->قاب_type;
 
-        s->opaque_alloc.Out = s->opaque_alloc.In;
+        s->opaque_alloc.بیرون_2 = s->opaque_alloc.درون_2;
 
-        s->opaque_alloc.Header.BufferId = MFX_EXTBUFF_OPAQUE_SURFACE_ALLOCATION;
-        s->opaque_alloc.Header.BufferSz = sizeof(s->opaque_alloc);
+        s->opaque_alloc.سرآیند_2.میانگیر_Id = MFX_EXTBUFF_OPAQUE_SURFACE_تخصیص;
+        s->opaque_alloc.سرآیند_2.میانگیر_Sz = حجم(s->opaque_alloc);
 
-        s->ext_buffers[0] = (mfxExtBuffer*)&s->opaque_alloc;
+        s->ext_buffers[0] = (mfx_Ext_میانگیر*)&s->opaque_alloc;
     }
-#endif
+#پایان_اگر
 
-    s->session_download = NULL;
-    s->session_upload   = NULL;
+    s->session_download = عدم;
+    s->session_upload   = عدم;
 
     s->session_download_init = 0;
     s->session_upload_init   = 0;
 
-#if HAVE_PTHREADS
-    pthread_mutex_init(&s->session_lock, NULL);
-#endif
+#إذا HAVE_PTHREADS
+    pthread_mutex_init(&s->session_قفل, عدم);
+#پایان_اگر
 
-    return 0;
+    أرجع 0;
 }
 
-static int qsv_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+ساكن صحيح qsv_get_میانگیر(AVHWFramesContext *ctx, AVFrame *قاب)
 {
-    frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    قاب->buf[0] = av_میانگیر_pool_get(ctx->pool);
+    إذا (!قاب->buf[0])
+        أرجع AVERROR(ENOMEM);
 
-    frame->data[3] = frame->buf[0]->data;
-    frame->format  = AV_PIX_FMT_QSV;
-    frame->width   = ctx->width;
-    frame->height  = ctx->height;
+    قاب->داده[3] = قاب->buf[0]->داده;
+    قاب->format  = AV_PIX_FMT_QSV;
+    قاب->عرض   = ctx->عرض;
+    قاب->ارتفاع  = ctx->ارتفاع;
 
-    return 0;
+    أرجع 0;
 }
 
-static int qsv_transfer_get_formats(AVHWFramesContext *ctx,
-                                    enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats)
+ساكن صحيح qsv_transfer_get_formats(AVHWFramesContext *ctx,
+                                    تعداد AVHWFrameTransferDirection dir,
+                                    تعداد AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
+    تعداد AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, حجم(*fmts));
+    إذا (!fmts)
+        أرجع AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    أرجع 0;
 }
 
-static int qsv_frames_derive_from(AVHWFramesContext *dst_ctx,
-                                  AVHWFramesContext *src_ctx, int flags)
+ساكن صحيح qsv_قابها_derive_from(AVHWFramesContext *dst_ctx,
+                                  AVHWFramesContext *src_ctx, صحيح flags)
 {
     AVQSVFramesContext *src_hwctx = src_ctx->hwctx;
-    int i;
+    صحيح i;
 
-    switch (dst_ctx->device_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
+    بدل (dst_ctx->device_ctx->type) {
+#إذا CONFIG_VAAPI
+    حالة AV_HWDEVICE_TYPE_VAAPI:
         {
             AVVAAPIFramesContext *dst_hwctx = dst_ctx->hwctx;
             dst_hwctx->surface_ids = av_calloc(src_hwctx->nb_surfaces,
-                                               sizeof(*dst_hwctx->surface_ids));
-            if (!dst_hwctx->surface_ids)
-                return AVERROR(ENOMEM);
-            for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].Data.MemId;
-                dst_hwctx->surface_ids[i] = *(VASurfaceID*)pair->first;
+                                               حجم(*dst_hwctx->surface_ids));
+            إذا (!dst_hwctx->surface_ids)
+                أرجع AVERROR(ENOMEM);
+            لكل (i = 0; i < src_hwctx->nb_surfaces; i++) {
+                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].داده_2.MemId;
+                dst_hwctx->surface_ids[i] = *(VASurfaceID*)pair->اولی;
             }
             dst_hwctx->nb_surfaces = src_hwctx->nb_surfaces;
         }
-        break;
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+        اكسر;
+#پایان_اگر
+#إذا CONFIG_D3D11VA
+    حالة AV_HWDEVICE_TYPE_D3D11VA:
         {
             D3D11_TEXTURE2D_DESC texDesc;
             AVD3D11VAFramesContext *dst_hwctx;
-            dst_ctx->initial_pool_size = src_ctx->initial_pool_size;
+            dst_ctx->initial_pool_اندازه = src_ctx->initial_pool_اندازه;
             dst_hwctx = dst_ctx->hwctx;
             dst_hwctx->texture_infos = av_calloc(src_hwctx->nb_surfaces,
-                                                 sizeof(*dst_hwctx->texture_infos));
-            if (!dst_hwctx->texture_infos)
-                return AVERROR(ENOMEM);
-            if (src_hwctx->frame_type & MFX_MEMTYPE_SHARED_RESOURCE)
+                                                 حجم(*dst_hwctx->texture_infos));
+            إذا (!dst_hwctx->texture_infos)
+                أرجع AVERROR(ENOMEM);
+            إذا (src_hwctx->قاب_type & MFX_MEMTYPE_SHARED_RESOURCE)
                 dst_hwctx->MiscFlags = D3D11_RESOURCE_MISC_SHARED;
-            for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].Data.MemId;
-                dst_hwctx->texture_infos[i].texture = (ID3D11Texture2D*)pair->first;
-                dst_hwctx->texture_infos[i].index = pair->second == (mfxMemId)MFX_INFINITE ? (intptr_t)0 : (intptr_t)pair->second;
+            لكل (i = 0; i < src_hwctx->nb_surfaces; i++) {
+                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].داده_2.MemId;
+                dst_hwctx->texture_infos[i].texture = (ID3D11Texture2D*)pair->اولی;
+                dst_hwctx->texture_infos[i].شاخص = pair->دومی == (mfxMemId)MFX_INFINITE ? (intptr_t)0 : (intptr_t)pair->دومی;
             }
-            if (src_hwctx->nb_surfaces) {
+            إذا (src_hwctx->nb_surfaces) {
                 ID3D11Texture2D_GetDesc(dst_hwctx->texture_infos[0].texture, &texDesc);
                 dst_hwctx->BindFlags = texDesc.BindFlags;
-            } else
-                dst_hwctx->BindFlags = qsv_get_d3d11va_bind_flags(src_hwctx->frame_type);
+            } وإلا
+                dst_hwctx->BindFlags = qsv_get_d3d11va_bind_flags(src_hwctx->قاب_type);
         }
-        break;
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
+        اكسر;
+#پایان_اگر
+#إذا CONFIG_DXVA2
+    حالة AV_HWDEVICE_TYPE_DXVA2:
         {
-            AVDXVA2FramesContext *dst_hwctx = dst_ctx->hwctx;
+            AVDXVA2_قابها_Context *dst_hwctx = dst_ctx->hwctx;
             dst_hwctx->surfaces = av_calloc(src_hwctx->nb_surfaces,
-                                            sizeof(*dst_hwctx->surfaces));
-            if (!dst_hwctx->surfaces)
-                return AVERROR(ENOMEM);
-            for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].Data.MemId;
-                dst_hwctx->surfaces[i] = (IDirect3DSurface9*)pair->first;
+                                            حجم(*dst_hwctx->surfaces));
+            إذا (!dst_hwctx->surfaces)
+                أرجع AVERROR(ENOMEM);
+            لكل (i = 0; i < src_hwctx->nb_surfaces; i++) {
+                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].داده_2.MemId;
+                dst_hwctx->surfaces[i] = (IDirect3DSurface9*)pair->اولی;
             }
             dst_hwctx->nb_surfaces = src_hwctx->nb_surfaces;
-            if (src_hwctx->frame_type == MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET)
-                dst_hwctx->surface_type = DXVA2_VideoDecoderRenderTarget;
-            else
-                dst_hwctx->surface_type = DXVA2_VideoProcessorRenderTarget;
+            إذا (src_hwctx->قاب_type == MFX_MEMTYPE_VIDEO_حافظه_DECODER_هدف)
+                dst_hwctx->surface_type = DXVA2_Video_Decoder_Render_هدف;
+            وإلا
+                dst_hwctx->surface_type = DXVA2_Video_Processor_Render_هدف;
         }
-        break;
-#endif
-    default:
-        return AVERROR(ENOSYS);
+        اكسر;
+#پایان_اگر
+    افتراضي:
+        أرجع AVERROR(ENOSYS);
     }
 
-    return 0;
+    أرجع 0;
 }
 
-static int qsv_map_from(AVHWFramesContext *ctx,
-                        AVFrame *dst, const AVFrame *src, int flags)
+ساكن صحيح qsv_map_from(AVHWFramesContext *ctx,
+                        AVFrame *dst, ثابت AVFrame *src, صحيح flags)
 {
     QSVFramesContext *s = ctx->hwctx;
-    mfxFrameSurface1 *surf = (mfxFrameSurface1*)src->data[3];
-    AVHWFramesContext *child_frames_ctx;
-    const AVPixFmtDescriptor *desc;
-    uint8_t *child_data;
+    mfx_قاب_Surface1 *surf = (mfx_قاب_Surface1*)src->داده[3];
+    AVHWFramesContext *فرزند_قابها_ctx;
+    ثابت AVPixFmtDescriptor *desc;
+    uint8_t *فرزند_داده;
     AVFrame *dummy;
-    int ret = 0;
+    صحيح ret = 0;
 
-    if (!s->child_frames_ref)
-        return AVERROR(ENOSYS);
-    child_frames_ctx = (AVHWFramesContext*)s->child_frames_ref->data;
+    إذا (!s->فرزند_قابها_ref)
+        أرجع AVERROR(ENOSYS);
+    فرزند_قابها_ctx = (AVHWFramesContext*)s->فرزند_قابها_ref->داده;
 
-    switch (child_frames_ctx->device_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
+    بدل (فرزند_قابها_ctx->device_ctx->type) {
+#إذا CONFIG_VAAPI
+    حالة AV_HWDEVICE_TYPE_VAAPI:
     {
-        mfxHDLPair *pair = (mfxHDLPair*)surf->Data.MemId;
+        mfxHDLPair *pair = (mfxHDLPair*)surf->داده_2.MemId;
         /* pair->first is *VASurfaceID while data[3] in vaapi frame is VASurfaceID, so
          * we need this casting for vaapi.
          * Add intptr_t to force cast from VASurfaceID(uint) type to pointer(long) type
          * to avoid compile warning */
-        child_data = (uint8_t*)(intptr_t)*(VASurfaceID*)pair->first;
-        break;
+        فرزند_داده = (uint8_t*)(intptr_t)*(VASurfaceID*)pair->اولی;
+        اكسر;
     }
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+#پایان_اگر
+#إذا CONFIG_D3D11VA
+    حالة AV_HWDEVICE_TYPE_D3D11VA:
     {
-        mfxHDLPair *pair = (mfxHDLPair*)surf->Data.MemId;
-        child_data = pair->first;
-        break;
+        mfxHDLPair *pair = (mfxHDLPair*)surf->داده_2.MemId;
+        فرزند_داده = pair->اولی;
+        اكسر;
     }
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
+#پایان_اگر
+#إذا CONFIG_DXVA2
+    حالة AV_HWDEVICE_TYPE_DXVA2:
     {
-        mfxHDLPair *pair = (mfxHDLPair*)surf->Data.MemId;
-        child_data = pair->first;
-        break;
+        mfxHDLPair *pair = (mfxHDLPair*)surf->داده_2.MemId;
+        فرزند_داده = pair->اولی;
+        اكسر;
     }
-#endif
-    default:
-        return AVERROR(ENOSYS);
+#پایان_اگر
+    افتراضي:
+        أرجع AVERROR(ENOSYS);
     }
 
-    if (dst->format == child_frames_ctx->format) {
-        ret = ff_hwframe_map_create(s->child_frames_ref,
-                                    dst, src, NULL, NULL);
-        if (ret < 0)
-            return ret;
+    إذا (dst->format == فرزند_قابها_ctx->format) {
+        ret = ff_hwframe_map_create(s->فرزند_قابها_ref,
+                                    dst, src, عدم, عدم);
+        إذا (ret < 0)
+            أرجع ret;
 
-        dst->width   = src->width;
-        dst->height  = src->height;
+        dst->عرض   = src->عرض;
+        dst->ارتفاع  = src->ارتفاع;
 
-       if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-            mfxHDLPair *pair = (mfxHDLPair*)surf->Data.MemId;
-            dst->data[0] = pair->first;
-            dst->data[1] = pair->second == (mfxMemId)MFX_INFINITE ? (uint8_t *)0 : pair->second;
-        } else {
-            dst->data[3] = child_data;
+       إذا (فرزند_قابها_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+            mfxHDLPair *pair = (mfxHDLPair*)surf->داده_2.MemId;
+            dst->داده[0] = pair->اولی;
+            dst->داده[1] = pair->دومی == (mfxMemId)MFX_INFINITE ? (uint8_t *)0 : pair->دومی;
+        } وإلا {
+            dst->داده[3] = فرزند_داده;
         }
 
-        return 0;
+        أرجع 0;
     }
 
     desc = av_pix_fmt_desc_get(dst->format);
-    if (desc && desc->flags & AV_PIX_FMT_FLAG_HWACCEL) {
+    إذا (desc && desc->flags & AV_PIX_FMT_FLAG_HWACCEL) {
         // This only supports mapping to software.
-        return AVERROR(ENOSYS);
+        أرجع AVERROR(ENOSYS);
     }
 
-    dummy = av_frame_alloc();
-    if (!dummy)
-        return AVERROR(ENOMEM);
+    dummy = av_قاب_alloc();
+    إذا (!dummy)
+        أرجع AVERROR(ENOMEM);
 
-    dummy->buf[0]        = av_buffer_ref(src->buf[0]);
-    dummy->hw_frames_ctx = av_buffer_ref(s->child_frames_ref);
-    if (!dummy->buf[0] || !dummy->hw_frames_ctx)
-        goto fail;
+    dummy->buf[0]        = av_میانگیر_ref(src->buf[0]);
+    dummy->hw_قابها_ctx = av_میانگیر_ref(s->فرزند_قابها_ref);
+    إذا (!dummy->buf[0] || !dummy->hw_قابها_ctx)
+        اذهب fail;
 
-    dummy->format        = child_frames_ctx->format;
-    dummy->width         = src->width;
-    dummy->height        = src->height;
+    dummy->format        = فرزند_قابها_ctx->format;
+    dummy->عرض         = src->عرض;
+    dummy->ارتفاع        = src->ارتفاع;
 
-    if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-        mfxHDLPair *pair = (mfxHDLPair*)surf->Data.MemId;
-        dummy->data[0] = pair->first;
-        dummy->data[1] = pair->second == (mfxMemId)MFX_INFINITE ? (uint8_t *)0 : pair->second;
-    } else {
-        dummy->data[3] = child_data;
+    إذا (فرزند_قابها_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+        mfxHDLPair *pair = (mfxHDLPair*)surf->داده_2.MemId;
+        dummy->داده[0] = pair->اولی;
+        dummy->داده[1] = pair->دومی == (mfxMemId)MFX_INFINITE ? (uint8_t *)0 : pair->دومی;
+    } وإلا {
+        dummy->داده[3] = فرزند_داده;
     }
 
     ret = av_hwframe_map(dst, dummy, flags);
 
 fail:
-    av_frame_free(&dummy);
+    av_قاب_free(&dummy);
 
-    return ret;
+    أرجع ret;
 }
 
-static int qsv_transfer_data_child(AVHWFramesContext *ctx, AVFrame *dst,
-                                   const AVFrame *src)
+ساكن صحيح qsv_transfer_داده_فرزند(AVHWFramesContext *ctx, AVFrame *dst,
+                                   ثابت AVFrame *src)
 {
     QSVFramesContext *s = ctx->hwctx;
-    AVHWFramesContext *child_frames_ctx = (AVHWFramesContext*)s->child_frames_ref->data;
-    int download = !!src->hw_frames_ctx;
-    mfxFrameSurface1 *surf = (mfxFrameSurface1*)(download ? src->data[3] : dst->data[3]);
+    AVHWFramesContext *فرزند_قابها_ctx = (AVHWFramesContext*)s->فرزند_قابها_ref->داده;
+    صحيح download = !!src->hw_قابها_ctx;
+    mfx_قاب_Surface1 *surf = (mfx_قاب_Surface1*)(download ? src->داده[3] : dst->داده[3]);
 
     AVFrame *dummy;
-    int ret;
+    صحيح ret;
 
-    dummy = av_frame_alloc();
-    if (!dummy)
-        return AVERROR(ENOMEM);
+    dummy = av_قاب_alloc();
+    إذا (!dummy)
+        أرجع AVERROR(ENOMEM);
 
-    dummy->format        = child_frames_ctx->format;
-    dummy->width         = src->width;
-    dummy->height        = src->height;
+    dummy->format        = فرزند_قابها_ctx->format;
+    dummy->عرض         = src->عرض;
+    dummy->ارتفاع        = src->ارتفاع;
     dummy->buf[0]        = download ? src->buf[0] : dst->buf[0];
-    dummy->data[3]       = surf->Data.MemId;
-    dummy->hw_frames_ctx = s->child_frames_ref;
+    dummy->داده[3]       = surf->داده_2.MemId;
+    dummy->hw_قابها_ctx = s->فرزند_قابها_ref;
 
-    ret = download ? av_hwframe_transfer_data(dst, dummy, 0) :
-                     av_hwframe_transfer_data(dummy, src, 0);
+    ret = download ? av_hwframe_transfer_داده(dst, dummy, 0) :
+                     av_hwframe_transfer_داده(dummy, src, 0);
 
-    dummy->buf[0]        = NULL;
-    dummy->data[3]       = NULL;
-    dummy->hw_frames_ctx = NULL;
+    dummy->buf[0]        = عدم;
+    dummy->داده[3]       = عدم;
+    dummy->hw_قابها_ctx = عدم;
 
-    av_frame_free(&dummy);
+    av_قاب_free(&dummy);
 
-    return ret;
+    أرجع ret;
 }
 
-static int map_frame_to_surface(const AVFrame *frame, mfxFrameSurface1 *surface)
+ساكن صحيح map_قاب_مقصد_surface(ثابت AVFrame *قاب, mfx_قاب_Surface1 *surface)
 {
-    switch (frame->format) {
-    case AV_PIX_FMT_NV12:
-    case AV_PIX_FMT_P010:
-    case AV_PIX_FMT_P012:
-        surface->Data.Y  = frame->data[0];
-        surface->Data.UV = frame->data[1];
-        break;
+    بدل (قاب->format) {
+    حالة AV_PIX_FMT_NV12:
+    حالة AV_PIX_FMT_P010:
+    حالة AV_PIX_FMT_P012:
+        surface->داده_2.Y  = قاب->داده[0];
+        surface->داده_2.UV = قاب->داده[1];
+        اكسر;
 
-    case AV_PIX_FMT_YUV420P:
-        surface->Data.Y = frame->data[0];
-        surface->Data.U = frame->data[1];
-        surface->Data.V = frame->data[2];
-        break;
+    حالة AV_PIX_FMT_YUV420P:
+        surface->داده_2.Y = قاب->داده[0];
+        surface->داده_2.U = قاب->داده[1];
+        surface->داده_2.V = قاب->داده[2];
+        اكسر;
 
-    case AV_PIX_FMT_BGRA:
-        surface->Data.B = frame->data[0];
-        surface->Data.G = frame->data[0] + 1;
-        surface->Data.R = frame->data[0] + 2;
-        surface->Data.A = frame->data[0] + 3;
-        break;
-    case AV_PIX_FMT_YUYV422:
-        surface->Data.Y = frame->data[0];
-        surface->Data.U = frame->data[0] + 1;
-        surface->Data.V = frame->data[0] + 3;
-        break;
+    حالة AV_PIX_FMT_BGRA:
+        surface->داده_2.B = قاب->داده[0];
+        surface->داده_2.G = قاب->داده[0] + 1;
+        surface->داده_2.R = قاب->داده[0] + 2;
+        surface->داده_2.A = قاب->داده[0] + 3;
+        اكسر;
+    حالة AV_PIX_FMT_YUYV422:
+        surface->داده_2.Y = قاب->داده[0];
+        surface->داده_2.U = قاب->داده[0] + 1;
+        surface->داده_2.V = قاب->داده[0] + 3;
+        اكسر;
 
-    case AV_PIX_FMT_Y210:
-    case AV_PIX_FMT_Y212:
-        surface->Data.Y16 = (mfxU16 *)frame->data[0];
-        surface->Data.U16 = (mfxU16 *)frame->data[0] + 1;
-        surface->Data.V16 = (mfxU16 *)frame->data[0] + 3;
-        break;
-    case AV_PIX_FMT_VUYX:
-        surface->Data.V = frame->data[0];
-        surface->Data.U = frame->data[0] + 1;
-        surface->Data.Y = frame->data[0] + 2;
+    حالة AV_PIX_FMT_Y210:
+    حالة AV_PIX_FMT_Y212:
+        surface->داده_2.Y16 = (mfxU16 *)قاب->داده[0];
+        surface->داده_2.U16 = (mfxU16 *)قاب->داده[0] + 1;
+        surface->داده_2.V16 = (mfxU16 *)قاب->داده[0] + 3;
+        اكسر;
+    حالة AV_PIX_FMT_VUYX:
+        surface->داده_2.V = قاب->داده[0];
+        surface->داده_2.U = قاب->داده[0] + 1;
+        surface->داده_2.Y = قاب->داده[0] + 2;
         // Only set Data.A to a valid address, the SDK doesn't
         // use the value from the frame.
-        surface->Data.A = frame->data[0] + 3;
-        break;
-    case AV_PIX_FMT_XV30:
-        surface->Data.U = frame->data[0];
-        break;
-    case AV_PIX_FMT_XV36:
-        surface->Data.U = frame->data[0];
-        surface->Data.Y = frame->data[0] + 2;
-        surface->Data.V = frame->data[0] + 4;
+        surface->داده_2.A = قاب->داده[0] + 3;
+        اكسر;
+    حالة AV_PIX_FMT_XV30:
+        surface->داده_2.U = قاب->داده[0];
+        اكسر;
+    حالة AV_PIX_FMT_XV36:
+        surface->داده_2.U = قاب->داده[0];
+        surface->داده_2.Y = قاب->داده[0] + 2;
+        surface->داده_2.V = قاب->داده[0] + 4;
         // Only set Data.A to a valid address, the SDK doesn't
         // use the value from the frame.
-        surface->Data.A = frame->data[0] + 6;
-        break;
-#if CONFIG_VAAPI
-    case AV_PIX_FMT_UYVY422:
-        surface->Data.Y = frame->data[0] + 1;
-        surface->Data.U = frame->data[0];
-        surface->Data.V = frame->data[0] + 2;
-        break;
-#endif
-    default:
-        return MFX_ERR_UNSUPPORTED;
+        surface->داده_2.A = قاب->داده[0] + 6;
+        اكسر;
+#إذا CONFIG_VAAPI
+    حالة AV_PIX_FMT_UYVY422:
+        surface->داده_2.Y = قاب->داده[0] + 1;
+        surface->داده_2.U = قاب->داده[0];
+        surface->داده_2.V = قاب->داده[0] + 2;
+        اكسر;
+#پایان_اگر
+    افتراضي:
+        أرجع MFX_ERR_UNSUPPORTED;
     }
-    surface->Data.Pitch     = frame->linesize[0];
-    surface->Data.TimeStamp = frame->pts;
+    surface->داده_2.Pitch     = قاب->linesize[0];
+    surface->داده_2.زمان_Stamp = قاب->pts;
 
-    return 0;
+    أرجع 0;
 }
 
-static int qsv_internal_session_check_init(AVHWFramesContext *ctx, int upload)
+ساكن صحيح qsv_داخلی_session_check_init(AVHWFramesContext *ctx, صحيح upload)
 {
     QSVFramesContext *s = ctx->hwctx;
     atomic_int *inited  = upload ? &s->session_upload_init : &s->session_download_init;
     mfxSession *session = upload ? &s->session_upload      : &s->session_download;
-    int ret = 0;
+    صحيح ret = 0;
 
-    if (atomic_load(inited))
-        return 0;
+    إذا (atomic_load(inited))
+        أرجع 0;
 
-#if HAVE_PTHREADS
-    pthread_mutex_lock(&s->session_lock);
-#endif
+#إذا HAVE_PTHREADS
+    pthread_mutex_قفل(&s->session_قفل);
+#پایان_اگر
 
-    if (!atomic_load(inited)) {
-        ret = qsv_init_internal_session(ctx, session, upload);
+    إذا (!atomic_load(inited)) {
+        ret = qsv_init_داخلی_session(ctx, session, upload);
         atomic_store(inited, 1);
     }
 
-#if HAVE_PTHREADS
-    pthread_mutex_unlock(&s->session_lock);
-#endif
+#إذا HAVE_PTHREADS
+    pthread_mutex_unlock(&s->session_قفل);
+#پایان_اگر
 
-    return ret;
+    أرجع ret;
 }
 
-static int qsv_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
-                                  const AVFrame *src)
+ساكن صحيح qsv_transfer_داده_from(AVHWFramesContext *ctx, AVFrame *dst,
+                                  ثابت AVFrame *src)
 {
     QSVFramesContext  *s = ctx->hwctx;
-    mfxFrameSurface1 out = {{ 0 }};
-    mfxFrameSurface1 *in = (mfxFrameSurface1*)src->data[3];
+    mfx_قاب_Surface1 بیرون = {{ 0 }};
+    mfx_قاب_Surface1 *درون = (mfx_قاب_Surface1*)src->داده[3];
 
-    mfxSyncPoint sync = NULL;
-    mfxStatus err;
-    int ret = 0;
+    mfx_Sync_نقطه sync = عدم;
+    mfx_وضعیت err;
+    صحيح ret = 0;
     /* download to temp frame if the output is not padded as libmfx requires */
-    AVFrame *tmp_frame = &s->realigned_download_frame;
-    AVFrame *dst_frame;
-    int realigned = 0;
+    AVFrame *tmp_قاب = &s->realigned_download_قاب;
+    AVFrame *dst_قاب;
+    صحيح realigned = 0;
 
-    ret = qsv_internal_session_check_init(ctx, 0);
-    if (ret < 0)
-        return ret;
+    ret = qsv_داخلی_session_check_init(ctx, 0);
+    إذا (ret < 0)
+        أرجع ret;
 
     /* According to MSDK spec for mfxframeinfo, "Width must be a multiple of 16.
      * Height must be a multiple of 16 for progressive frame sequence and a
      * multiple of 32 otherwise.", so align all frames to 16 before downloading. */
-    if (dst->height & 15 || dst->linesize[0] & 15) {
+    إذا (dst->ارتفاع & 15 || dst->linesize[0] & 15) {
         realigned = 1;
-        if (tmp_frame->format != dst->format ||
-            tmp_frame->width  != FFALIGN(dst->linesize[0], 16) ||
-            tmp_frame->height != FFALIGN(dst->height, 16)) {
-            av_frame_unref(tmp_frame);
+        إذا (tmp_قاب->format != dst->format ||
+            tmp_قاب->عرض  != FFALIGN(dst->linesize[0], 16) ||
+            tmp_قاب->ارتفاع != FFALIGN(dst->ارتفاع, 16)) {
+            av_قاب_unref(tmp_قاب);
 
-            tmp_frame->format = dst->format;
-            tmp_frame->width  = FFALIGN(dst->linesize[0], 16);
-            tmp_frame->height = FFALIGN(dst->height, 16);
-            ret = av_frame_get_buffer(tmp_frame, 0);
-            if (ret < 0)
-                return ret;
+            tmp_قاب->format = dst->format;
+            tmp_قاب->عرض  = FFALIGN(dst->linesize[0], 16);
+            tmp_قاب->ارتفاع = FFALIGN(dst->ارتفاع, 16);
+            ret = av_قاب_get_میانگیر(tmp_قاب, 0);
+            إذا (ret < 0)
+                أرجع ret;
         }
     }
 
-    dst_frame = realigned ? tmp_frame : dst;
+    dst_قاب = realigned ? tmp_قاب : dst;
 
-    if (!s->session_download) {
-        if (s->child_frames_ref)
-            return qsv_transfer_data_child(ctx, dst_frame, src);
+    إذا (!s->session_download) {
+        إذا (s->فرزند_قابها_ref)
+            أرجع qsv_transfer_داده_فرزند(ctx, dst_قاب, src);
 
         av_log(ctx, AV_LOG_ERROR, "Surface download not possible\n");
-        return AVERROR(ENOSYS);
+        أرجع AVERROR(ENOSYS);
     }
 
-    out.Info = in->Info;
-    map_frame_to_surface(dst_frame, &out);
+    بیرون.Info = درون->Info;
+    map_قاب_مقصد_surface(dst_قاب, &بیرون);
 
-    do {
-        err = MFXVideoVPP_RunFrameVPPAsync(s->session_download, in, &out, NULL, &sync);
-        if (err == MFX_WRN_DEVICE_BUSY)
+    افعل {
+        err = MFXVideo_VPP_پیاپی_قاب_VPPAsync(s->session_download, درون, &بیرون, عدم, &sync);
+        إذا (err == MFX_WRN_DEVICE_BUSY)
             av_usleep(1);
-    } while (err == MFX_WRN_DEVICE_BUSY);
+    } طالما (err == MFX_WRN_DEVICE_BUSY);
 
-    if (err < 0 || !sync) {
+    إذا (err < 0 || !sync) {
         av_log(ctx, AV_LOG_ERROR, "Error downloading the surface\n");
-        return AVERROR_UNKNOWN;
+        أرجع AVERROR_UNKNOWN;
     }
 
-    do {
+    افعل {
         err = MFXVideoCORE_SyncOperation(s->session_download, sync, 1000);
-    } while (err == MFX_WRN_IN_EXECUTION);
-    if (err < 0) {
+    } طالما (err == MFX_WRN_درون_EXECUTION);
+    إذا (err < 0) {
         av_log(ctx, AV_LOG_ERROR, "Error synchronizing the operation: %d\n", err);
-        return AVERROR_UNKNOWN;
+        أرجع AVERROR_UNKNOWN;
     }
 
-    if (realigned) {
-        tmp_frame->width  = dst->width;
-        tmp_frame->height = dst->height;
-        ret = av_frame_copy(dst, tmp_frame);
-        tmp_frame->width  = FFALIGN(dst->linesize[0], 16);
-        tmp_frame->height = FFALIGN(dst->height, 16);
-        if (ret < 0)
-            return ret;
+    إذا (realigned) {
+        tmp_قاب->عرض  = dst->عرض;
+        tmp_قاب->ارتفاع = dst->ارتفاع;
+        ret = av_قاب_copy(dst, tmp_قاب);
+        tmp_قاب->عرض  = FFALIGN(dst->linesize[0], 16);
+        tmp_قاب->ارتفاع = FFALIGN(dst->ارتفاع, 16);
+        إذا (ret < 0)
+            أرجع ret;
     }
 
-    return 0;
+    أرجع 0;
 }
 
-static int qsv_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
-                                const AVFrame *src)
+ساكن صحيح qsv_transfer_داده_مقصد(AVHWFramesContext *ctx, AVFrame *dst,
+                                ثابت AVFrame *src)
 {
     QSVFramesContext   *s = ctx->hwctx;
-    mfxFrameSurface1   in = {{ 0 }};
-    mfxFrameSurface1 *out = (mfxFrameSurface1*)dst->data[3];
-    mfxFrameInfo tmp_info;
+    mfx_قاب_Surface1   درون = {{ 0 }};
+    mfx_قاب_Surface1 *بیرون = (mfx_قاب_Surface1*)dst->داده[3];
+    mfx_قاب_Info tmp_info;
 
-    mfxSyncPoint sync = NULL;
-    mfxStatus err;
-    int ret = 0;
+    mfx_Sync_نقطه sync = عدم;
+    mfx_وضعیت err;
+    صحيح ret = 0;
     /* make a copy if the input is not padded as libmfx requires */
-    AVFrame *tmp_frame = &s->realigned_upload_frame;
-    const AVFrame *src_frame;
-    int realigned = 0;
+    AVFrame *tmp_قاب = &s->realigned_upload_قاب;
+    ثابت AVFrame *src_قاب;
+    صحيح realigned = 0;
 
-    ret = qsv_internal_session_check_init(ctx, 1);
-    if (ret < 0)
-        return ret;
+    ret = qsv_داخلی_session_check_init(ctx, 1);
+    إذا (ret < 0)
+        أرجع ret;
 
     /* According to MSDK spec for mfxframeinfo, "Width must be a multiple of 16.
      * Height must be a multiple of 16 for progressive frame sequence and a
      * multiple of 32 otherwise.", so align all frames to 16 before uploading. */
-    if (src->height & 15 || src->linesize[0] & 15) {
+    إذا (src->ارتفاع & 15 || src->linesize[0] & 15) {
         realigned = 1;
-        if (tmp_frame->format != src->format ||
-            tmp_frame->width  != FFALIGN(src->width, 16) ||
-            tmp_frame->height != FFALIGN(src->height, 16)) {
-            av_frame_unref(tmp_frame);
+        إذا (tmp_قاب->format != src->format ||
+            tmp_قاب->عرض  != FFALIGN(src->عرض, 16) ||
+            tmp_قاب->ارتفاع != FFALIGN(src->ارتفاع, 16)) {
+            av_قاب_unref(tmp_قاب);
 
-            tmp_frame->format = src->format;
-            tmp_frame->width  = FFALIGN(src->width, 16);
-            tmp_frame->height = FFALIGN(src->height, 16);
-            ret = av_frame_get_buffer(tmp_frame, 0);
-            if (ret < 0)
-                return ret;
+            tmp_قاب->format = src->format;
+            tmp_قاب->عرض  = FFALIGN(src->عرض, 16);
+            tmp_قاب->ارتفاع = FFALIGN(src->ارتفاع, 16);
+            ret = av_قاب_get_میانگیر(tmp_قاب, 0);
+            إذا (ret < 0)
+                أرجع ret;
         }
-        ret = av_frame_copy(tmp_frame, src);
-        if (ret < 0) {
-            av_frame_unref(tmp_frame);
-            return ret;
+        ret = av_قاب_copy(tmp_قاب, src);
+        إذا (ret < 0) {
+            av_قاب_unref(tmp_قاب);
+            أرجع ret;
         }
-        ret = qsv_fill_border(tmp_frame, src);
-        if (ret < 0) {
-            av_frame_unref(tmp_frame);
-            return ret;
+        ret = qsv_fill_border(tmp_قاب, src);
+        إذا (ret < 0) {
+            av_قاب_unref(tmp_قاب);
+            أرجع ret;
         }
 
-        tmp_info = out->Info;
-        out->Info.CropW = FFMIN(out->Info.Width,  tmp_frame->width);
-        out->Info.CropH = FFMIN(out->Info.Height, tmp_frame->height);
+        tmp_info = بیرون->Info;
+        بیرون->Info.CropW = FFMIN(بیرون->Info.عرض_2,  tmp_قاب->عرض);
+        بیرون->Info.CropH = FFMIN(بیرون->Info.ارتفاع_2, tmp_قاب->ارتفاع);
     }
 
-    src_frame = realigned ? tmp_frame : src;
+    src_قاب = realigned ? tmp_قاب : src;
 
-    if (!s->session_upload) {
-        if (s->child_frames_ref)
-            return qsv_transfer_data_child(ctx, dst, src_frame);
+    إذا (!s->session_upload) {
+        إذا (s->فرزند_قابها_ref)
+            أرجع qsv_transfer_داده_فرزند(ctx, dst, src_قاب);
 
         av_log(ctx, AV_LOG_ERROR, "Surface upload not possible\n");
-        return AVERROR(ENOSYS);
+        أرجع AVERROR(ENOSYS);
     }
 
-    in.Info = out->Info;
-    map_frame_to_surface(src_frame, &in);
+    درون.Info = بیرون->Info;
+    map_قاب_مقصد_surface(src_قاب, &درون);
 
-    do {
-        err = MFXVideoVPP_RunFrameVPPAsync(s->session_upload, &in, out, NULL, &sync);
-        if (err == MFX_WRN_DEVICE_BUSY)
+    افعل {
+        err = MFXVideo_VPP_پیاپی_قاب_VPPAsync(s->session_upload, &درون, بیرون, عدم, &sync);
+        إذا (err == MFX_WRN_DEVICE_BUSY)
             av_usleep(1);
-    } while (err == MFX_WRN_DEVICE_BUSY);
+    } طالما (err == MFX_WRN_DEVICE_BUSY);
 
-    if (err < 0 || !sync) {
+    إذا (err < 0 || !sync) {
         av_log(ctx, AV_LOG_ERROR, "Error uploading the surface\n");
-        return AVERROR_UNKNOWN;
+        أرجع AVERROR_UNKNOWN;
     }
 
-    do {
+    افعل {
         err = MFXVideoCORE_SyncOperation(s->session_upload, sync, 1000);
-    } while (err == MFX_WRN_IN_EXECUTION);
-    if (err < 0) {
+    } طالما (err == MFX_WRN_درون_EXECUTION);
+    إذا (err < 0) {
         av_log(ctx, AV_LOG_ERROR, "Error synchronizing the operation\n");
-        return AVERROR_UNKNOWN;
+        أرجع AVERROR_UNKNOWN;
     }
 
-    if (realigned) {
-        out->Info.CropW = tmp_info.CropW;
-        out->Info.CropH = tmp_info.CropH;
+    إذا (realigned) {
+        بیرون->Info.CropW = tmp_info.CropW;
+        بیرون->Info.CropH = tmp_info.CropH;
     }
 
-    return 0;
+    أرجع 0;
 }
 
-static int qsv_dynamic_frames_derive_to(AVHWFramesContext *dst_ctx,
-                                        AVHWFramesContext *src_ctx, int flags)
+ساكن صحيح qsv_dynamic_قابها_derive_مقصد(AVHWFramesContext *dst_ctx,
+                                        AVHWFramesContext *src_ctx, صحيح flags)
 {
     QSVFramesContext *s = dst_ctx->hwctx;
     AVQSVFramesContext *dst_hwctx = &s->p;
-    mfxFrameSurface1 mfx_surf1;
+    mfx_قاب_Surface1 mfx_surf1;
 
-    switch (src_ctx->device_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
-        dst_hwctx->frame_type  = MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
-        break;
-#endif
+    بدل (src_ctx->device_ctx->type) {
+#إذا CONFIG_VAAPI
+    حالة AV_HWDEVICE_TYPE_VAAPI:
+        dst_hwctx->قاب_type  = MFX_MEMTYPE_VIDEO_حافظه_DECODER_هدف;
+        اكسر;
+#پایان_اگر
 
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+#إذا CONFIG_D3D11VA
+    حالة AV_HWDEVICE_TYPE_D3D11VA:
     {
         AVD3D11VAFramesContext *src_hwctx = src_ctx->hwctx;
 
-        if (src_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-            dst_hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-        } else {
-            dst_hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+        إذا (src_hwctx->BindFlags & D3_D11_BIND_RENDER_هدف) {
+            dst_hwctx->قاب_type |= MFX_MEMTYPE_VIDEO_حافظه_PROCESSOR_هدف;
+        } وإلا {
+            dst_hwctx->قاب_type |= MFX_MEMTYPE_VIDEO_حافظه_DECODER_هدف;
         }
     }
-    break;
-#endif
+    اكسر;
+#پایان_اگر
 
-    default:
-        return AVERROR(ENOSYS);
+    افتراضي:
+        أرجع AVERROR(ENOSYS);
     }
 
-    memset(&mfx_surf1, 0, sizeof(mfx_surf1));
+    memset(&mfx_surf1, 0, حجم(mfx_surf1));
     qsv_init_surface(dst_ctx, &mfx_surf1);
-    s->frame_info = mfx_surf1.Info;
-    dst_hwctx->info = &s->frame_info;
+    s->قاب_info = mfx_surf1.Info;
+    dst_hwctx->info = &s->قاب_info;
     dst_hwctx->nb_surfaces = 0;
-    return 0;
+    أرجع 0;
 }
 
-static int qsv_fixed_frames_derive_to(AVHWFramesContext *dst_ctx,
-                                      AVHWFramesContext *src_ctx, int flags)
+ساكن صحيح qsv_fixed_قابها_derive_مقصد(AVHWFramesContext *dst_ctx,
+                                      AVHWFramesContext *src_ctx, صحيح flags)
 {
     QSVFramesContext *s = dst_ctx->hwctx;
     AVQSVFramesContext *dst_hwctx = &s->p;
-    int i;
+    صحيح i;
 
-    switch (src_ctx->device_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
+    بدل (src_ctx->device_ctx->type) {
+#إذا CONFIG_VAAPI
+    حالة AV_HWDEVICE_TYPE_VAAPI:
         {
             AVVAAPIFramesContext *src_hwctx = src_ctx->hwctx;
-            s->handle_pairs_internal = av_calloc(src_ctx->initial_pool_size,
-                                                 sizeof(*s->handle_pairs_internal));
-            if (!s->handle_pairs_internal)
-                return AVERROR(ENOMEM);
-            s->surfaces_internal = av_calloc(src_hwctx->nb_surfaces,
-                                             sizeof(*s->surfaces_internal));
-            if (!s->surfaces_internal)
-                return AVERROR(ENOMEM);
-            for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-                qsv_init_surface(dst_ctx, &s->surfaces_internal[i]);
-                s->handle_pairs_internal[i].first = src_hwctx->surface_ids + i;
-                s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-                s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+            s->handle_جفتها_داخلی = av_calloc(src_ctx->initial_pool_اندازه,
+                                                 حجم(*s->handle_جفتها_داخلی));
+            إذا (!s->handle_جفتها_داخلی)
+                أرجع AVERROR(ENOMEM);
+            s->surfaces_داخلی = av_calloc(src_hwctx->nb_surfaces,
+                                             حجم(*s->surfaces_داخلی));
+            إذا (!s->surfaces_داخلی)
+                أرجع AVERROR(ENOMEM);
+            لكل (i = 0; i < src_hwctx->nb_surfaces; i++) {
+                qsv_init_surface(dst_ctx, &s->surfaces_داخلی[i]);
+                s->handle_جفتها_داخلی[i].اولی = src_hwctx->surface_ids + i;
+                s->handle_جفتها_داخلی[i].دومی = (mfxMemId)MFX_INFINITE;
+                s->surfaces_داخلی[i].داده_2.MemId = (mfxMemId)&s->handle_جفتها_داخلی[i];
             }
             dst_hwctx->nb_surfaces = src_hwctx->nb_surfaces;
-            dst_hwctx->frame_type  = MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+            dst_hwctx->قاب_type  = MFX_MEMTYPE_VIDEO_حافظه_DECODER_هدف;
         }
-        break;
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+        اكسر;
+#پایان_اگر
+#إذا CONFIG_D3D11VA
+    حالة AV_HWDEVICE_TYPE_D3D11VA:
         {
             AVD3D11VAFramesContext *src_hwctx = src_ctx->hwctx;
-            s->handle_pairs_internal = av_calloc(src_ctx->initial_pool_size,
-                                                 sizeof(*s->handle_pairs_internal));
-            if (!s->handle_pairs_internal)
-                return AVERROR(ENOMEM);
-            s->surfaces_internal = av_calloc(src_ctx->initial_pool_size,
-                                             sizeof(*s->surfaces_internal));
-            if (!s->surfaces_internal)
-                return AVERROR(ENOMEM);
-            for (i = 0; i < src_ctx->initial_pool_size; i++) {
-                qsv_init_surface(dst_ctx, &s->surfaces_internal[i]);
-                s->handle_pairs_internal[i].first = (mfxMemId)src_hwctx->texture_infos[i].texture;
-                if (src_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-                    s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-                } else {
-                    s->handle_pairs_internal[i].second = (mfxMemId)src_hwctx->texture_infos[i].index;
+            s->handle_جفتها_داخلی = av_calloc(src_ctx->initial_pool_اندازه,
+                                                 حجم(*s->handle_جفتها_داخلی));
+            إذا (!s->handle_جفتها_داخلی)
+                أرجع AVERROR(ENOMEM);
+            s->surfaces_داخلی = av_calloc(src_ctx->initial_pool_اندازه,
+                                             حجم(*s->surfaces_داخلی));
+            إذا (!s->surfaces_داخلی)
+                أرجع AVERROR(ENOMEM);
+            لكل (i = 0; i < src_ctx->initial_pool_اندازه; i++) {
+                qsv_init_surface(dst_ctx, &s->surfaces_داخلی[i]);
+                s->handle_جفتها_داخلی[i].اولی = (mfxMemId)src_hwctx->texture_infos[i].texture;
+                إذا (src_hwctx->BindFlags & D3_D11_BIND_RENDER_هدف) {
+                    s->handle_جفتها_داخلی[i].دومی = (mfxMemId)MFX_INFINITE;
+                } وإلا {
+                    s->handle_جفتها_داخلی[i].دومی = (mfxMemId)src_hwctx->texture_infos[i].شاخص;
                 }
-                s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+                s->surfaces_داخلی[i].داده_2.MemId = (mfxMemId)&s->handle_جفتها_داخلی[i];
             }
-            dst_hwctx->nb_surfaces = src_ctx->initial_pool_size;
-            if (src_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-                dst_hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-            } else {
-                dst_hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+            dst_hwctx->nb_surfaces = src_ctx->initial_pool_اندازه;
+            إذا (src_hwctx->BindFlags & D3_D11_BIND_RENDER_هدف) {
+                dst_hwctx->قاب_type |= MFX_MEMTYPE_VIDEO_حافظه_PROCESSOR_هدف;
+            } وإلا {
+                dst_hwctx->قاب_type |= MFX_MEMTYPE_VIDEO_حافظه_DECODER_هدف;
             }
         }
-        break;
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
+        اكسر;
+#پایان_اگر
+#إذا CONFIG_DXVA2
+    حالة AV_HWDEVICE_TYPE_DXVA2:
         {
-            AVDXVA2FramesContext *src_hwctx = src_ctx->hwctx;
-            s->handle_pairs_internal = av_calloc(src_ctx->initial_pool_size,
-                                                 sizeof(*s->handle_pairs_internal));
-            if (!s->handle_pairs_internal)
-                return AVERROR(ENOMEM);
-            s->surfaces_internal = av_calloc(src_hwctx->nb_surfaces,
-                                             sizeof(*s->surfaces_internal));
-            if (!s->surfaces_internal)
-                return AVERROR(ENOMEM);
-            for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-                qsv_init_surface(dst_ctx, &s->surfaces_internal[i]);
-                s->handle_pairs_internal[i].first = (mfxMemId)src_hwctx->surfaces[i];
-                s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-                s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+            AVDXVA2_قابها_Context *src_hwctx = src_ctx->hwctx;
+            s->handle_جفتها_داخلی = av_calloc(src_ctx->initial_pool_اندازه,
+                                                 حجم(*s->handle_جفتها_داخلی));
+            إذا (!s->handle_جفتها_داخلی)
+                أرجع AVERROR(ENOMEM);
+            s->surfaces_داخلی = av_calloc(src_hwctx->nb_surfaces,
+                                             حجم(*s->surfaces_داخلی));
+            إذا (!s->surfaces_داخلی)
+                أرجع AVERROR(ENOMEM);
+            لكل (i = 0; i < src_hwctx->nb_surfaces; i++) {
+                qsv_init_surface(dst_ctx, &s->surfaces_داخلی[i]);
+                s->handle_جفتها_داخلی[i].اولی = (mfxMemId)src_hwctx->surfaces[i];
+                s->handle_جفتها_داخلی[i].دومی = (mfxMemId)MFX_INFINITE;
+                s->surfaces_داخلی[i].داده_2.MemId = (mfxMemId)&s->handle_جفتها_داخلی[i];
             }
             dst_hwctx->nb_surfaces = src_hwctx->nb_surfaces;
-            if (src_hwctx->surface_type == DXVA2_VideoProcessorRenderTarget)
-                dst_hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-            else
-                dst_hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+            إذا (src_hwctx->surface_type == DXVA2_Video_Processor_Render_هدف)
+                dst_hwctx->قاب_type = MFX_MEMTYPE_VIDEO_حافظه_PROCESSOR_هدف;
+            وإلا
+                dst_hwctx->قاب_type = MFX_MEMTYPE_VIDEO_حافظه_DECODER_هدف;
         }
-        break;
-#endif
-    default:
-        return AVERROR(ENOSYS);
+        اكسر;
+#پایان_اگر
+    افتراضي:
+        أرجع AVERROR(ENOSYS);
     }
 
-    dst_hwctx->surfaces = s->surfaces_internal;
+    dst_hwctx->surfaces = s->surfaces_داخلی;
 
-    return 0;
+    أرجع 0;
 }
 
-static int qsv_frames_derive_to(AVHWFramesContext *dst_ctx,
-                                AVHWFramesContext *src_ctx, int flags)
+ساكن صحيح qsv_قابها_derive_مقصد(AVHWFramesContext *dst_ctx,
+                                AVHWFramesContext *src_ctx, صحيح flags)
 {
-    if (src_ctx->initial_pool_size < 0) {
+    إذا (src_ctx->initial_pool_اندازه < 0) {
         av_log(dst_ctx, AV_LOG_ERROR, "Invalid src frame pool. \n");
-        return AVERROR(EINVAL);
-    } else if (src_ctx->initial_pool_size == 0) {
-        return qsv_dynamic_frames_derive_to(dst_ctx, src_ctx, flags);
-    } else {
-        return qsv_fixed_frames_derive_to(dst_ctx, src_ctx, flags);
+        أرجع AVERROR(EINVAL);
+    } وإلا إذا (src_ctx->initial_pool_اندازه == 0) {
+        أرجع qsv_dynamic_قابها_derive_مقصد(dst_ctx, src_ctx, flags);
+    } وإلا {
+        أرجع qsv_fixed_قابها_derive_مقصد(dst_ctx, src_ctx, flags);
     }
 }
 
-static int qsv_fixed_pool_map_to(AVHWFramesContext *dst_ctx,
-                                 AVFrame *dst, const AVFrame *src, int flags)
+ساكن صحيح qsv_fixed_pool_map_مقصد(AVHWFramesContext *dst_ctx,
+                                 AVFrame *dst, ثابت AVFrame *src, صحيح flags)
 {
     AVQSVFramesContext *hwctx = dst_ctx->hwctx;
-    int i, err, index = -1;
+    صحيح i, err, شاخص = -1;
 
-    for (i = 0; i < hwctx->nb_surfaces && index < 0; i++) {
-        switch(src->format) {
-#if CONFIG_VAAPI
-        case AV_PIX_FMT_VAAPI:
+    لكل (i = 0; i < hwctx->nb_surfaces && شاخص < 0; i++) {
+        بدل(src->format) {
+#إذا CONFIG_VAAPI
+        حالة AV_PIX_FMT_VAAPI:
         {
-            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].Data.MemId;
-            if (*(VASurfaceID*)pair->first == (VASurfaceID)(uintptr_t)src->data[3])
-                index = i;
-            break;
+            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].داده_2.MemId;
+            إذا (*(VASurfaceID*)pair->اولی == (VASurfaceID)(uintptr_t)src->داده[3])
+                شاخص = i;
+            اكسر;
         }
-#endif
-#if CONFIG_D3D11VA
-        case AV_PIX_FMT_D3D11:
+#پایان_اگر
+#إذا CONFIG_D3D11VA
+        حالة AV_PIX_FMT_D3D11:
         {
-            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].Data.MemId;
-            if (pair->first == src->data[0]
-                && (pair->second == src->data[1]
-                    || (pair->second == (mfxMemId)MFX_INFINITE && src->data[1] == (uint8_t *)0)))
-                index = i;
-            break;
+            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].داده_2.MemId;
+            إذا (pair->اولی == src->داده[0]
+                && (pair->دومی == src->داده[1]
+                    || (pair->دومی == (mfxMemId)MFX_INFINITE && src->داده[1] == (uint8_t *)0)))
+                شاخص = i;
+            اكسر;
         }
-#endif
-#if CONFIG_DXVA2
-        case AV_PIX_FMT_DXVA2_VLD:
+#پایان_اگر
+#إذا CONFIG_DXVA2
+        حالة AV_PIX_FMT_DXVA2_VLD:
         {
-            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].Data.MemId;
-            if (pair->first == src->data[3])
-                index = i;
-            break;
+            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].داده_2.MemId;
+            إذا (pair->اولی == src->داده[3])
+                شاخص = i;
+            اكسر;
         }
-#endif
+#پایان_اگر
         }
     }
-    if (index < 0) {
+    إذا (شاخص < 0) {
         av_log(dst_ctx, AV_LOG_ERROR, "Trying to map from a surface which "
                "is not in the mapped frames context.\n");
-        return AVERROR(EINVAL);
+        أرجع AVERROR(EINVAL);
     }
 
-    err = ff_hwframe_map_create(dst->hw_frames_ctx,
-                                dst, src, NULL, NULL);
-    if (err)
-        return err;
+    err = ff_hwframe_map_create(dst->hw_قابها_ctx,
+                                dst, src, عدم, عدم);
+    إذا (err)
+        أرجع err;
 
-    dst->width   = src->width;
-    dst->height  = src->height;
-    dst->data[3] = (uint8_t*)&hwctx->surfaces[index];
+    dst->عرض   = src->عرض;
+    dst->ارتفاع  = src->ارتفاع;
+    dst->داده[3] = (uint8_t*)&hwctx->surfaces[شاخص];
 
-    return 0;
+    أرجع 0;
 }
 
-static void qsv_dynamic_pool_unmap(AVHWFramesContext *ctx, HWMapDescriptor *hwmap)
+ساكن فراغ qsv_dynamic_pool_unmap(AVHWFramesContext *ctx, HWMapDescriptor *hwmap)
 {
-    mfxFrameSurface1 *surfaces_internal = (mfxFrameSurface1 *)hwmap->priv;
-    mfxHDLPair *handle_pairs_internal = (mfxHDLPair *)surfaces_internal->Data.MemId;
-    AVHWFramesContext *src_ctx = (AVHWFramesContext *)ffhwframesctx(ctx)->source_frames->data;
+    mfx_قاب_Surface1 *surfaces_داخلی = (mfx_قاب_Surface1 *)hwmap->priv;
+    mfxHDLPair *handle_جفتها_داخلی = (mfxHDLPair *)surfaces_داخلی->داده_2.MemId;
+    AVHWFramesContext *src_ctx = (AVHWFramesContext *)ffhwframesctx(ctx)->منبع_قابها->داده;
 
-    switch (src_ctx->format) {
-#if CONFIG_VAAPI
-    case AV_PIX_FMT_VAAPI:
+    بدل (src_ctx->format) {
+#إذا CONFIG_VAAPI
+    حالة AV_PIX_FMT_VAAPI:
     {
-        av_freep(&handle_pairs_internal->first);
+        av_freep(&handle_جفتها_داخلی->اولی);
 
-        break;
+        اكسر;
     }
-#endif
+#پایان_اگر
 
-#if CONFIG_D3D11VA
-    case AV_PIX_FMT_D3D11:
+#إذا CONFIG_D3D11VA
+    حالة AV_PIX_FMT_D3D11:
     {
         /* Do nothing */
-        break;
+        اكسر;
     }
-#endif
-    default:
+#پایان_اگر
+    افتراضي:
         av_log(ctx, AV_LOG_ERROR, "Should not reach here. \n");
-        break;
+        اكسر;
     }
 
-    av_freep(&handle_pairs_internal);
-    av_freep(&surfaces_internal);
+    av_freep(&handle_جفتها_داخلی);
+    av_freep(&surfaces_داخلی);
 }
 
-static int qsv_dynamic_pool_map_to(AVHWFramesContext *dst_ctx,
-                                   AVFrame *dst, const AVFrame *src, int flags)
+ساكن صحيح qsv_dynamic_pool_map_مقصد(AVHWFramesContext *dst_ctx,
+                                   AVFrame *dst, ثابت AVFrame *src, صحيح flags)
 {
-    mfxFrameSurface1 *surfaces_internal = NULL;
-    mfxHDLPair *handle_pairs_internal = NULL;
-    int ret = 0;
+    mfx_قاب_Surface1 *surfaces_داخلی = عدم;
+    mfxHDLPair *handle_جفتها_داخلی = عدم;
+    صحيح ret = 0;
 
-    surfaces_internal = av_calloc(1, sizeof(*surfaces_internal));
-    if (!surfaces_internal) {
+    surfaces_داخلی = av_calloc(1, حجم(*surfaces_داخلی));
+    إذا (!surfaces_داخلی) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        اذهب fail;
     }
 
-    handle_pairs_internal = av_calloc(1, sizeof(*handle_pairs_internal));
-    if (!handle_pairs_internal) {
+    handle_جفتها_داخلی = av_calloc(1, حجم(*handle_جفتها_داخلی));
+    إذا (!handle_جفتها_داخلی) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        اذهب fail;
     }
 
-    ret = qsv_init_surface(dst_ctx, surfaces_internal);
-    if (ret < 0)
-        goto fail;
+    ret = qsv_init_surface(dst_ctx, surfaces_داخلی);
+    إذا (ret < 0)
+        اذهب fail;
 
-    switch (src->format) {
-#if CONFIG_VAAPI
-    case AV_PIX_FMT_VAAPI:
+    بدل (src->format) {
+#إذا CONFIG_VAAPI
+    حالة AV_PIX_FMT_VAAPI:
     {
-        VASurfaceID *surface_id_internal;
+        VASurfaceID *surface_id_داخلی;
 
-        surface_id_internal = av_calloc(1, sizeof(*surface_id_internal));
-        if (!surface_id_internal) {
+        surface_id_داخلی = av_calloc(1, حجم(*surface_id_داخلی));
+        إذا (!surface_id_داخلی) {
             ret =AVERROR(ENOMEM);
-            goto fail;
+            اذهب fail;
         }
 
-        *surface_id_internal = (VASurfaceID)(uintptr_t)src->data[3];
-        handle_pairs_internal->first = (mfxHDL)surface_id_internal;
-        handle_pairs_internal->second = (mfxMemId)MFX_INFINITE;
+        *surface_id_داخلی = (VASurfaceID)(uintptr_t)src->داده[3];
+        handle_جفتها_داخلی->اولی = (mfxHDL)surface_id_داخلی;
+        handle_جفتها_داخلی->دومی = (mfxMemId)MFX_INFINITE;
 
-        break;
+        اكسر;
     }
-#endif
+#پایان_اگر
 
-#if CONFIG_D3D11VA
-    case AV_PIX_FMT_D3D11:
+#إذا CONFIG_D3D11VA
+    حالة AV_PIX_FMT_D3D11:
     {
-        AVHWFramesContext *src_ctx = (AVHWFramesContext*)src->hw_frames_ctx->data;
+        AVHWFramesContext *src_ctx = (AVHWFramesContext*)src->hw_قابها_ctx->داده;
         AVD3D11VAFramesContext *src_hwctx = src_ctx->hwctx;
 
-        handle_pairs_internal->first = (mfxMemId)src->data[0];
+        handle_جفتها_داخلی->اولی = (mfxMemId)src->داده[0];
 
-        if (src_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-            handle_pairs_internal->second = (mfxMemId)MFX_INFINITE;
-        } else {
-            handle_pairs_internal->second = (mfxMemId)src->data[1];
+        إذا (src_hwctx->BindFlags & D3_D11_BIND_RENDER_هدف) {
+            handle_جفتها_داخلی->دومی = (mfxMemId)MFX_INFINITE;
+        } وإلا {
+            handle_جفتها_داخلی->دومی = (mfxMemId)src->داده[1];
         }
 
-        break;
+        اكسر;
     }
-#endif
-    default:
+#پایان_اگر
+    افتراضي:
         ret = AVERROR(ENOSYS);
-        goto fail;
+        اذهب fail;
     }
 
-    surfaces_internal->Data.MemId = (mfxMemId)handle_pairs_internal;
+    surfaces_داخلی->داده_2.MemId = (mfxMemId)handle_جفتها_داخلی;
 
-    ret = ff_hwframe_map_create(dst->hw_frames_ctx,
-                                dst, src, qsv_dynamic_pool_unmap, surfaces_internal);
-    if (ret)
-        goto fail;
+    ret = ff_hwframe_map_create(dst->hw_قابها_ctx,
+                                dst, src, qsv_dynamic_pool_unmap, surfaces_داخلی);
+    إذا (ret)
+        اذهب fail;
 
-    dst->width   = src->width;
-    dst->height  = src->height;
-    dst->data[3] = (uint8_t*)surfaces_internal;
+    dst->عرض   = src->عرض;
+    dst->ارتفاع  = src->ارتفاع;
+    dst->داده[3] = (uint8_t*)surfaces_داخلی;
 
-    return 0;
+    أرجع 0;
 
 fail:
-    av_freep(&handle_pairs_internal);
-    av_freep(&surfaces_internal);
-    return ret;
+    av_freep(&handle_جفتها_داخلی);
+    av_freep(&surfaces_داخلی);
+    أرجع ret;
 }
 
-static int qsv_map_to(AVHWFramesContext *dst_ctx,
-                      AVFrame *dst, const AVFrame *src, int flags)
+ساكن صحيح qsv_map_مقصد(AVHWFramesContext *dst_ctx,
+                      AVFrame *dst, ثابت AVFrame *src, صحيح flags)
 {
     AVQSVFramesContext *hwctx = dst_ctx->hwctx;
 
-    if (hwctx->nb_surfaces)
-        return qsv_fixed_pool_map_to(dst_ctx, dst, src, flags);
-    else
-        return qsv_dynamic_pool_map_to(dst_ctx, dst, src, flags);
+    إذا (hwctx->nb_surfaces)
+        أرجع qsv_fixed_pool_map_مقصد(dst_ctx, dst, src, flags);
+    وإلا
+        أرجع qsv_dynamic_pool_map_مقصد(dst_ctx, dst, src, flags);
 }
 
-static int qsv_frames_get_constraints(AVHWDeviceContext *ctx,
-                                      const void *hwconfig,
+ساكن صحيح qsv_قابها_get_constraints(AVHWDeviceContext *ctx,
+                                      ثابت فراغ *hwconfig,
                                       AVHWFramesConstraints *constraints)
 {
-    int i;
+    صحيح i;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_pixel_formats) + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    حجم(*constraints->valid_sw_formats));
+    إذا (!constraints->valid_sw_formats)
+        أرجع AVERROR(ENOMEM);
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++)
+    لكل (i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++)
         constraints->valid_sw_formats[i] = supported_pixel_formats[i].pix_fmt;
     constraints->valid_sw_formats[FF_ARRAY_ELEMS(supported_pixel_formats)] = AV_PIX_FMT_NONE;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, حجم(*constraints->valid_hw_formats));
+    إذا (!constraints->valid_hw_formats)
+        أرجع AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_QSV;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    أرجع 0;
 }
 
-static void qsv_device_free(AVHWDeviceContext *ctx)
+ساكن فراغ qsv_device_free(AVHWDeviceContext *ctx)
 {
     AVQSVDeviceContext *hwctx = ctx->hwctx;
     QSVDevicePriv       *priv = ctx->user_opaque;
 
-    if (hwctx->session)
+    إذا (hwctx->session)
         MFXClose(hwctx->session);
 
-    if (hwctx->loader)
+    إذا (hwctx->loader)
         MFXUnload(hwctx->loader);
-    av_buffer_unref(&priv->child_device_ctx);
+    av_میانگیر_unref(&priv->فرزند_device_ctx);
     av_freep(&priv);
 }
 
-static mfxIMPL choose_implementation(const char *device, enum AVHWDeviceType child_device_type)
+ساكن mfxIMPL انتخاب_implementation(ثابت حرف *device, تعداد AVHWDeviceType فرزند_device_type)
 {
-    static const struct {
-        const char *name;
+    ساكن ثابت بنية {
+        ثابت حرف *name;
         mfxIMPL     impl;
     } impl_map[] = {
         { "auto",     MFX_IMPL_AUTO         },
@@ -2382,263 +2382,263 @@ static mfxIMPL choose_implementation(const char *device, enum AVHWDeviceType chi
     };
 
     mfxIMPL impl = MFX_IMPL_AUTO_ANY;
-    int i;
+    صحيح i;
 
-    if (device) {
-        for (i = 0; i < FF_ARRAY_ELEMS(impl_map); i++)
-            if (!strcmp(device, impl_map[i].name)) {
+    إذا (device) {
+        لكل (i = 0; i < FF_ARRAY_ELEMS(impl_map); i++)
+            إذا (!strcmp(device, impl_map[i].name)) {
                 impl = impl_map[i].impl;
-                break;
+                اكسر;
             }
-        if (i == FF_ARRAY_ELEMS(impl_map))
-            impl = strtol(device, NULL, 0);
+        إذا (i == FF_ARRAY_ELEMS(impl_map))
+            impl = strtol(device, عدم, 0);
     }
 
-    if (impl != MFX_IMPL_SOFTWARE) {
-        if (child_device_type == AV_HWDEVICE_TYPE_D3D11VA)
-            impl |= MFX_IMPL_VIA_D3D11;
-        else if (child_device_type == AV_HWDEVICE_TYPE_DXVA2)
-            impl |= MFX_IMPL_VIA_D3D9;
+    إذا (impl != MFX_IMPL_SOFTWARE) {
+        إذا (فرزند_device_type == AV_HWDEVICE_TYPE_D3D11VA)
+            impl |= MFX_IMPL_از_طریق_D3_D11;
+        وإلا إذا (فرزند_device_type == AV_HWDEVICE_TYPE_DXVA2)
+            impl |= MFX_IMPL_از_طریق_D3_D9;
     }
 
-    return impl;
+    أرجع impl;
 }
 
-static int qsv_device_derive_from_child(AVHWDeviceContext *ctx,
+ساكن صحيح qsv_device_derive_from_فرزند(AVHWDeviceContext *ctx,
                                         mfxIMPL implementation,
-                                        AVHWDeviceContext *child_device_ctx,
-                                        int flags)
+                                        AVHWDeviceContext *فرزند_device_ctx,
+                                        صحيح flags)
 {
     AVQSVDeviceContext *hwctx = ctx->hwctx;
 
-    mfxVersion    ver = { { 3, 1 } };
+    mfx_نسخه    ver = { { 3, 1 } };
     mfxHDL        handle;
     mfxHandleType handle_type;
-    mfxStatus     err;
-    int ret;
+    mfx_وضعیت     err;
+    صحيح ret;
 
-    switch (child_device_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
+    بدل (فرزند_device_ctx->type) {
+#إذا CONFIG_VAAPI
+    حالة AV_HWDEVICE_TYPE_VAAPI:
         {
-            AVVAAPIDeviceContext *child_device_hwctx = child_device_ctx->hwctx;
+            AVVAAPIDeviceContext *فرزند_device_hwctx = فرزند_device_ctx->hwctx;
             handle_type = MFX_HANDLE_VA_DISPLAY;
-            handle = (mfxHDL)child_device_hwctx->display;
+            handle = (mfxHDL)فرزند_device_hwctx->display;
         }
-        break;
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+        اكسر;
+#پایان_اگر
+#إذا CONFIG_D3D11VA
+    حالة AV_HWDEVICE_TYPE_D3D11VA:
         {
-            AVD3D11VADeviceContext *child_device_hwctx = child_device_ctx->hwctx;
+            AVD3D11VADeviceContext *فرزند_device_hwctx = فرزند_device_ctx->hwctx;
             handle_type = MFX_HANDLE_D3D11_DEVICE;
-            handle = (mfxHDL)child_device_hwctx->device;
+            handle = (mfxHDL)فرزند_device_hwctx->device;
         }
-        break;
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
+        اكسر;
+#پایان_اگر
+#إذا CONFIG_DXVA2
+    حالة AV_HWDEVICE_TYPE_DXVA2:
         {
-            AVDXVA2DeviceContext *child_device_hwctx = child_device_ctx->hwctx;
+            AVDXVA2DeviceContext *فرزند_device_hwctx = فرزند_device_ctx->hwctx;
             handle_type = MFX_HANDLE_D3D9_DEVICE_MANAGER;
-            handle = (mfxHDL)child_device_hwctx->devmgr;
+            handle = (mfxHDL)فرزند_device_hwctx->devmgr;
         }
-        break;
-#endif
-    default:
+        اكسر;
+#پایان_اگر
+    افتراضي:
         ret = AVERROR(ENOSYS);
-        goto fail;
+        اذهب fail;
     }
 
     ret = qsv_create_mfx_session(ctx, handle, handle_type, implementation, &ver,
                                  &hwctx->session, &hwctx->loader);
-    if (ret)
-        goto fail;
+    إذا (ret)
+        اذهب fail;
 
-    err = MFXVideoCORE_SetHandle(hwctx->session, handle_type, handle);
-    if (err != MFX_ERR_NONE) {
+    err = MFXVideo_CORE_مجموعه_Handle(hwctx->session, handle_type, handle);
+    إذا (err != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error setting child device handle: "
                "%d\n", err);
         ret = AVERROR_UNKNOWN;
-        goto fail;
+        اذهب fail;
     }
 
-    return 0;
+    أرجع 0;
 
 fail:
-    if (hwctx->session)
+    إذا (hwctx->session)
         MFXClose(hwctx->session);
 
-    if (hwctx->loader)
+    إذا (hwctx->loader)
         MFXUnload(hwctx->loader);
 
-    hwctx->session = NULL;
-    hwctx->loader = NULL;
-    return ret;
+    hwctx->session = عدم;
+    hwctx->loader = عدم;
+    أرجع ret;
 }
 
-static int qsv_device_derive(AVHWDeviceContext *ctx,
-                             AVHWDeviceContext *child_device_ctx,
-                             AVDictionary *opts, int flags)
+ساكن صحيح qsv_device_derive(AVHWDeviceContext *ctx,
+                             AVHWDeviceContext *فرزند_device_ctx,
+                             AVDictionary *opts, صحيح flags)
 {
     mfxIMPL impl;
     QSVDevicePriv *priv;
 
-    priv = av_mallocz(sizeof(*priv));
-    if (!priv)
-        return AVERROR(ENOMEM);
+    priv = av_mallocz(حجم(*priv));
+    إذا (!priv)
+        أرجع AVERROR(ENOMEM);
 
     ctx->user_opaque = priv;
-    ctx->free = qsv_device_free;
+    ctx->حرر = qsv_device_free;
 
-    impl = choose_implementation("hw_any", child_device_ctx->type);
-    return qsv_device_derive_from_child(ctx, impl,
-                                        child_device_ctx, flags);
+    impl = انتخاب_implementation("hw_any", فرزند_device_ctx->type);
+    أرجع qsv_device_derive_from_فرزند(ctx, impl,
+                                        فرزند_device_ctx, flags);
 }
 
-static int qsv_device_create(AVHWDeviceContext *ctx, const char *device,
-                             AVDictionary *opts, int flags)
+ساكن صحيح qsv_device_create(AVHWDeviceContext *ctx, ثابت حرف *device,
+                             AVDictionary *opts, صحيح flags)
 {
     QSVDevicePriv *priv;
-    enum AVHWDeviceType child_device_type;
-    AVHWDeviceContext *child_device;
-    AVDictionary *child_device_opts;
-    AVDictionaryEntry *e;
+    تعداد AVHWDeviceType فرزند_device_type;
+    AVHWDeviceContext *فرزند_device;
+    AVDictionary *فرزند_device_opts;
+    AVDictionary_مدخل *e;
 
     mfxIMPL impl;
-    int ret;
+    صحيح ret;
 
-    priv = av_mallocz(sizeof(*priv));
-    if (!priv)
-        return AVERROR(ENOMEM);
+    priv = av_mallocz(حجم(*priv));
+    إذا (!priv)
+        أرجع AVERROR(ENOMEM);
 
     ctx->user_opaque = priv;
-    ctx->free        = qsv_device_free;
+    ctx->حرر        = qsv_device_free;
 
-    e = av_dict_get(opts, "child_device_type", NULL, 0);
-    if (e) {
-        child_device_type = av_hwdevice_find_type_by_name(e->value);
-        if (child_device_type == AV_HWDEVICE_TYPE_NONE) {
+    e = av_dict_get(opts, "child_device_type", عدم, 0);
+    إذا (e) {
+        فرزند_device_type = av_hwdevice_پیدا_کن_type_by_name(e->مقدار);
+        إذا (فرزند_device_type == AV_HWDEVICE_TYPE_NONE) {
             av_log(ctx, AV_LOG_ERROR, "Unknown child device type "
-                   "\"%s\".\n", e->value);
-            return AVERROR(EINVAL);
+                   "\"%s\".\n", e->مقدار);
+            أرجع AVERROR(EINVAL);
         }
-#if QSV_ONEVPL
-    } else if (CONFIG_D3D11VA) {  // Use D3D11 by default if d3d11va is enabled
+#إذا QSV_ONEVPL
+    } وإلا إذا (CONFIG_D3D11VA) {  // Use D3D11 by default if d3d11va is enabled
         av_log(ctx, AV_LOG_VERBOSE,
                "Defaulting child_device_type to AV_HWDEVICE_TYPE_D3D11VA for oneVPL."
                "Please explicitly set child device type via \"-init_hw_device\" "
                "option if needed.\n");
-        child_device_type = AV_HWDEVICE_TYPE_D3D11VA;
-    } else if (CONFIG_DXVA2) {
-        child_device_type = AV_HWDEVICE_TYPE_DXVA2;
-#else
-    } else if (CONFIG_DXVA2) {
-        av_log(NULL, AV_LOG_WARNING,
+        فرزند_device_type = AV_HWDEVICE_TYPE_D3D11VA;
+    } وإلا إذا (CONFIG_DXVA2) {
+        فرزند_device_type = AV_HWDEVICE_TYPE_DXVA2;
+#وإلا
+    } وإلا إذا (CONFIG_DXVA2) {
+        av_log(عدم, AV_LOG_WARNING,
                 "WARNING: defaulting child_device_type to AV_HWDEVICE_TYPE_DXVA2 for compatibility "
                 "with old commandlines. This behaviour will be removed "
                 "in the future. Please explicitly set device type via \"-init_hw_device\" option.\n");
-        child_device_type = AV_HWDEVICE_TYPE_DXVA2;
-    } else if (CONFIG_D3D11VA) {
-        child_device_type = AV_HWDEVICE_TYPE_D3D11VA;
-#endif
-    } else if (CONFIG_VAAPI) {
-        child_device_type = AV_HWDEVICE_TYPE_VAAPI;
-    } else {
+        فرزند_device_type = AV_HWDEVICE_TYPE_DXVA2;
+    } وإلا إذا (CONFIG_D3D11VA) {
+        فرزند_device_type = AV_HWDEVICE_TYPE_D3D11VA;
+#پایان_اگر
+    } وإلا إذا (CONFIG_VAAPI) {
+        فرزند_device_type = AV_HWDEVICE_TYPE_VAAPI;
+    } وإلا {
         av_log(ctx, AV_LOG_ERROR, "No supported child device type is enabled\n");
-        return AVERROR(ENOSYS);
+        أرجع AVERROR(ENOSYS);
     }
 
-#if CONFIG_VAAPI && defined(_WIN32)
+#إذا CONFIG_VAAPI && defined(_WIN32)
     /* AV_HWDEVICE_TYPE_VAAPI on Windows/Libva-win32 not supported */
     /* Reject user specified child_device_type or CONFIG_VAAPI on Windows */
-    if (child_device_type == AV_HWDEVICE_TYPE_VAAPI) {
+    إذا (فرزند_device_type == AV_HWDEVICE_TYPE_VAAPI) {
         av_log(ctx, AV_LOG_ERROR, "VAAPI child device type not supported for oneVPL on Windows"
-                "\"%s\".\n", e->value);
-        return AVERROR(EINVAL);
+                "\"%s\".\n", e->مقدار);
+        أرجع AVERROR(EINVAL);
     }
-#endif
+#پایان_اگر
 
-    child_device_opts = NULL;
-    switch (child_device_type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
+    فرزند_device_opts = عدم;
+    بدل (فرزند_device_type) {
+#إذا CONFIG_VAAPI
+    حالة AV_HWDEVICE_TYPE_VAAPI:
         {
             // libmfx does not actually implement VAAPI properly, rather it
             // depends on the specific behaviour of a matching iHD driver when
             // used on recent Intel hardware.  Set options to the VAAPI device
             // creation so that we should pick a usable setup by default if
             // possible, even when multiple devices and drivers are available.
-            av_dict_set(&child_device_opts, "vendor_id", "0x8086", 0);
-            av_dict_set(&child_device_opts, "driver",    "iHD",    0);
+            av_dict_مجموعه(&فرزند_device_opts, "vendor_id", "0x8086", 0);
+            av_dict_مجموعه(&فرزند_device_opts, "driver",    "iHD",    0);
         }
-        break;
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+        اكسر;
+#پایان_اگر
+#إذا CONFIG_D3D11VA
+    حالة AV_HWDEVICE_TYPE_D3D11VA:
         {
             // Make sure the hardware vendor is Intel when multiple devices are
             // available, it will be ignored if user specifies the child device
             // explicitly
-            av_dict_set(&child_device_opts, "vendor_id",        "0x8086",  0);
+            av_dict_مجموعه(&فرزند_device_opts, "vendor_id",        "0x8086",  0);
         }
-        break;
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
-#if QSV_ONEVPL
+        اكسر;
+#پایان_اگر
+#إذا CONFIG_DXVA2
+    حالة AV_HWDEVICE_TYPE_DXVA2:
+#إذا QSV_ONEVPL
         {
             av_log(ctx, AV_LOG_VERBOSE,
                    "d3d11va is not available or child device type is set to dxva2 "
                    "explicitly for oneVPL.\n");
         }
-#endif
-        break;
-#endif
-    default:
+#پایان_اگر
+        اكسر;
+#پایان_اگر
+    افتراضي:
         {
             av_log(ctx, AV_LOG_ERROR, "No supported child device type is enabled\n");
-            return AVERROR(ENOSYS);
+            أرجع AVERROR(ENOSYS);
         }
-        break;
+        اكسر;
     }
 
-    e = av_dict_get(opts, "child_device", NULL, 0);
-    ret = av_hwdevice_ctx_create(&priv->child_device_ctx, child_device_type,
-                                 e ? e->value : NULL, child_device_opts, 0);
+    e = av_dict_get(opts, "child_device", عدم, 0);
+    ret = av_hwdevice_ctx_create(&priv->فرزند_device_ctx, فرزند_device_type,
+                                 e ? e->مقدار : عدم, فرزند_device_opts, 0);
 
-    av_dict_free(&child_device_opts);
-    if (ret < 0)
-        return ret;
+    av_dict_free(&فرزند_device_opts);
+    إذا (ret < 0)
+        أرجع ret;
 
-    child_device = (AVHWDeviceContext*)priv->child_device_ctx->data;
+    فرزند_device = (AVHWDeviceContext*)priv->فرزند_device_ctx->داده;
 
-    impl = choose_implementation(device, child_device_type);
+    impl = انتخاب_implementation(device, فرزند_device_type);
 
-    return qsv_device_derive_from_child(ctx, impl, child_device, 0);
+    أرجع qsv_device_derive_from_فرزند(ctx, impl, فرزند_device, 0);
 }
 
-const HWContextType ff_hwcontext_type_qsv = {
+ثابت HWContextType ff_hwcontext_type_qsv = {
     .type                   = AV_HWDEVICE_TYPE_QSV,
     .name                   = "QSV",
 
-    .device_hwctx_size      = sizeof(QSVDeviceContext),
-    .frames_hwctx_size      = sizeof(QSVFramesContext),
+    .device_hwctx_اندازه      = حجم(QSVDeviceContext),
+    .قابها_hwctx_اندازه      = حجم(QSVFramesContext),
 
     .device_create          = qsv_device_create,
     .device_derive          = qsv_device_derive,
     .device_init            = qsv_device_init,
-    .frames_get_constraints = qsv_frames_get_constraints,
-    .frames_init            = qsv_frames_init,
-    .frames_uninit          = qsv_frames_uninit,
-    .frames_get_buffer      = qsv_get_buffer,
+    .قابها_get_constraints = qsv_قابها_get_constraints,
+    .قابها_init            = qsv_قابها_init,
+    .قابها_uninit          = qsv_قابها_uninit,
+    .قابها_get_میانگیر      = qsv_get_میانگیر,
     .transfer_get_formats   = qsv_transfer_get_formats,
-    .transfer_data_to       = qsv_transfer_data_to,
-    .transfer_data_from     = qsv_transfer_data_from,
-    .map_to                 = qsv_map_to,
+    .transfer_داده_مقصد       = qsv_transfer_داده_مقصد,
+    .transfer_داده_from     = qsv_transfer_داده_from,
+    .map_مقصد                 = qsv_map_مقصد,
     .map_from               = qsv_map_from,
-    .frames_derive_to       = qsv_frames_derive_to,
-    .frames_derive_from     = qsv_frames_derive_from,
+    .قابها_derive_مقصد       = qsv_قابها_derive_مقصد,
+    .قابها_derive_from     = qsv_قابها_derive_from,
 
-    .pix_fmts = (const enum AVPixelFormat[]){ AV_PIX_FMT_QSV, AV_PIX_FMT_NONE },
+    .pix_fmts = (ثابت تعداد AVPixelFormat[]){ AV_PIX_FMT_QSV, AV_PIX_FMT_NONE },
 };

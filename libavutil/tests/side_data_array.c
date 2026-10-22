@@ -18,94 +18,94 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include "libavutil/frame.c"
-#include "libavutil/internal.h"
+#ضمن <stdio.h>
+#ضمن "libavutil/frame.c"
+#ضمن "libavutil/internal.h"
 
-static void print_entries(const AVFrameSideData **sd, const int nb_sd)
+ساكن فراغ print_entries(ثابت AVFrame_Side_داده **sd, ثابت صحيح nb_sd)
 {
-    for (int i = 0; i < nb_sd; i++) {
-        const AVFrameSideData *entry = sd[i];
+    لكل (صحيح i = 0; i < nb_sd; i++) {
+        ثابت AVFrame_Side_داده *مدخل = sd[i];
 
-        printf("sd %d (size %zu), %s",
-               i, entry->size, av_frame_side_data_name(entry->type));
+        چاپ_کن("sd %d (size %zu), %s",
+               i, مدخل->اندازه, av_قاب_side_داده_name(مدخل->type));
 
-        if (entry->type != AV_FRAME_DATA_SEI_UNREGISTERED) {
-            putchar('\n');
-            continue;
+        إذا (مدخل->type != AV_قاب_داده_SEI_UNREGISTERED) {
+            حرف_چاپ_کن('\n');
+            استمر;
         }
 
-        printf(": %d\n", *(int32_t *)entry->data);
+        چاپ_کن(": %d\n", *(int32_t *)مدخل->داده);
     }
 }
 
-typedef struct FrameSideDataSet {
-    AVFrameSideData **sd;
-    int            nb_sd;
-} FrameSideDataSet;
+تعريفنوع بنية قاب_Side_داده_مجموعه {
+    AVFrame_Side_داده **sd;
+    صحيح            nb_sd;
+} قاب_Side_داده_مجموعه;
 
-int main(void)
+صحيح اصلی(فراغ)
 {
-    FrameSideDataSet set = { 0 };
+    قاب_Side_داده_مجموعه مجموعه = { 0 };
 
     av_assert0(
-        av_frame_side_data_new(&set.sd, &set.nb_sd,
-                               AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int64_t), 0));
+        av_قاب_side_داده_new(&مجموعه.sd, &مجموعه.nb_sd,
+                               AV_قاب_داده_CONTENT_LIGHT_LEVEL,
+                               حجم(int64_t), 0));
     av_assert0(
-        av_frame_side_data_new(&set.sd, &set.nb_sd,
-                               AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                               sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+        av_قاب_side_داده_new(&مجموعه.sd, &مجموعه.nb_sd,
+                               AV_قاب_داده_CONTENT_LIGHT_LEVEL,
+                               حجم(int32_t), AV_قاب_SIDE_داده_FLAG_REPLACE));
 
     // test entries in the middle
-    for (int value = 1; value < 4; value++) {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+    لكل (صحيح مقدار = 1; مقدار < 4; مقدار++) {
+        AVFrame_Side_داده *sd = av_قاب_side_داده_new(
+            &مجموعه.sd, &مجموعه.nb_sd, AV_قاب_داده_SEI_UNREGISTERED,
+            حجم(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value;
+        *(int32_t *)sd->داده = مقدار;
     }
 
     av_assert0(
-        av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-           sizeof(int64_t), 0));
+        av_قاب_side_داده_new(
+            &مجموعه.sd, &مجموعه.nb_sd, AV_قاب_داده_SPHERICAL,
+           حجم(int64_t), 0));
 
     av_assert0(
-        av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SPHERICAL,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_REPLACE));
+        av_قاب_side_داده_new(
+            &مجموعه.sd, &مجموعه.nb_sd, AV_قاب_داده_SPHERICAL,
+            حجم(int32_t), AV_قاب_SIDE_داده_FLAG_REPLACE));
 
     // test entries at the end
-    for (int value = 1; value < 4; value++) {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), 0);
+    لكل (صحيح مقدار = 1; مقدار < 4; مقدار++) {
+        AVFrame_Side_داده *sd = av_قاب_side_داده_new(
+            &مجموعه.sd, &مجموعه.nb_sd, AV_قاب_داده_SEI_UNREGISTERED,
+            حجم(int32_t), 0);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = value + 3;
+        *(int32_t *)sd->داده = مقدار + 3;
     }
 
     puts("Initial addition results with duplicates:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    print_entries((ثابت AVFrame_Side_داده **)مجموعه.sd, مجموعه.nb_sd);
 
     {
-        AVFrameSideData *sd = av_frame_side_data_new(
-            &set.sd, &set.nb_sd, AV_FRAME_DATA_SEI_UNREGISTERED,
-            sizeof(int32_t), AV_FRAME_SIDE_DATA_FLAG_UNIQUE);
+        AVFrame_Side_داده *sd = av_قاب_side_داده_new(
+            &مجموعه.sd, &مجموعه.nb_sd, AV_قاب_داده_SEI_UNREGISTERED,
+            حجم(int32_t), AV_قاب_SIDE_داده_FLAG_UNIQUE);
 
         av_assert0(sd);
 
-        *(int32_t *)sd->data = 1337;
+        *(int32_t *)sd->داده = 1337;
     }
 
     puts("\nFinal state after a single 'no-duplicates' addition:");
-    print_entries((const AVFrameSideData **)set.sd, set.nb_sd);
+    print_entries((ثابت AVFrame_Side_داده **)مجموعه.sd, مجموعه.nb_sd);
 
-    av_frame_side_data_free(&set.sd, &set.nb_sd);
+    av_قاب_side_داده_free(&مجموعه.sd, &مجموعه.nb_sd);
 
-    return 0;
+    أرجع 0;
 }

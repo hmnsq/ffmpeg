@@ -18,60 +18,60 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_INTFLOAT_H
-#define AVUTIL_INTFLOAT_H
+#اگر_تعریف_نشده AVUTIL_INTFLOAT_H
+#تعریف_کن AVUTIL_INTFLOAT_H
 
-#include <stdint.h>
-#include "attributes.h"
+#ضمن <stdint.h>
+#ضمن "attributes.h"
 
-union av_intfloat32 {
+اتحاد av_intfloat32 {
     uint32_t i;
-    float    f;
+    عائم    f;
 };
 
-union av_intfloat64 {
+اتحاد av_intfloat64 {
     uint64_t i;
-    double   f;
+    مزدوج   f;
 };
 
 /**
  * Reinterpret a 32-bit integer as a float.
  */
-static av_always_inline float av_int2float(uint32_t i)
+ساكن av_always_inline عائم av_int2float(uint32_t i)
 {
-    union av_intfloat32 v;
+    اتحاد av_intfloat32 v;
     v.i = i;
-    return v.f;
+    أرجع v.f;
 }
 
 /**
  * Reinterpret a float as a 32-bit integer.
  */
-static av_always_inline uint32_t av_float2int(float f)
+ساكن av_always_inline uint32_t av_float2int(عائم f)
 {
-    union av_intfloat32 v;
+    اتحاد av_intfloat32 v;
     v.f = f;
-    return v.i;
+    أرجع v.i;
 }
 
 /**
  * Reinterpret a 64-bit integer as a double.
  */
-static av_always_inline double av_int2double(uint64_t i)
+ساكن av_always_inline مزدوج av_int2double(uint64_t i)
 {
-    union av_intfloat64 v;
+    اتحاد av_intfloat64 v;
     v.i = i;
-    return v.f;
+    أرجع v.f;
 }
 
 /**
  * Reinterpret a double as a 64-bit integer.
  */
-static av_always_inline uint64_t av_double2int(double f)
+ساكن av_always_inline uint64_t av_double2int(مزدوج f)
 {
-    union av_intfloat64 v;
+    اتحاد av_intfloat64 v;
     v.f = f;
-    return v.i;
+    أرجع v.i;
 }
 
-#endif /* AVUTIL_INTFLOAT_H */
+#پایان_اگر /* AVUTIL_INTFLOAT_H */

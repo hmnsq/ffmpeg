@@ -16,77 +16,77 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdio.h>
+#ضمن <limits.h>
+#ضمن <stdint.h>
+#ضمن <stdio.h>
 
-#include "libavutil/mem.h"
-#include "libavutil/tdrdi.h"
+#ضمن "libavutil/mem.h"
+#ضمن "libavutil/tdrdi.h"
 
-int main(void)
+صحيح اصلی(فراغ)
 {
     AV3DReferenceDisplaysInfo *tdrdi;
     AV3DReferenceDisplay *display;
-    size_t size;
+    size_t اندازه;
 
     /* av_tdrdi_alloc with 1 display */
-    printf("Testing av_tdrdi_alloc()\n");
-    tdrdi = av_tdrdi_alloc(1, &size);
-    if (tdrdi) {
-        printf("alloc 1: size>0=%s, num_ref_displays=%u\n",
-               size > 0 ? "yes" : "no", tdrdi->num_ref_displays);
+    چاپ_کن("Testing av_tdrdi_alloc()\n");
+    tdrdi = av_tdrdi_alloc(1, &اندازه);
+    إذا (tdrdi) {
+        چاپ_کن("alloc 1: size>0=%s, num_ref_displays=%u\n",
+               اندازه > 0 ? "yes" : "no", tdrdi->رقم_ref_displays);
 
         display = av_tdrdi_get_display(tdrdi, 0);
         /* pointer consistency check */
-        if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset)
-            printf("display 0: pointer inconsistent with entries_offset\n");
+        إذا ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_جابه_جایی)
+            چاپ_کن("display 0: pointer inconsistent with entries_offset\n");
 
         /* write and read back */
-        display->exponent_ref_display_width = 3;
-        display->mantissa_ref_display_width = 100;
-        display->left_view_id = 0;
-        display->right_view_id = 1;
+        display->exponent_ref_display_عرض = 3;
+        display->mantissa_ref_display_عرض = 100;
+        display->چپ_view_id = 0;
+        display->راست_view_id = 1;
         display = av_tdrdi_get_display(tdrdi, 0);
-        printf("display 0: width_exp=%u width_man=%u left=%u right=%u\n",
-               display->exponent_ref_display_width,
-               display->mantissa_ref_display_width,
-               display->left_view_id, display->right_view_id);
+        چاپ_کن("display 0: width_exp=%u width_man=%u left=%u right=%u\n",
+               display->exponent_ref_display_عرض,
+               display->mantissa_ref_display_عرض,
+               display->چپ_view_id, display->راست_view_id);
         av_free(tdrdi);
     }
 
     /* alloc with multiple displays */
-    printf("\nTesting multiple displays\n");
-    tdrdi = av_tdrdi_alloc(3, &size);
-    if (tdrdi) {
-        printf("alloc 3: num_ref_displays=%u\n", tdrdi->num_ref_displays);
-        for (int i = 0; i < 3; i++) {
+    چاپ_کن("\nTesting multiple displays\n");
+    tdrdi = av_tdrdi_alloc(3, &اندازه);
+    إذا (tdrdi) {
+        چاپ_کن("alloc 3: num_ref_displays=%u\n", tdrdi->رقم_ref_displays);
+        لكل (صحيح i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
             /* verify stride consistency */
-            if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset +
-                                      (size_t)i * tdrdi->entry_size)
-                printf("display %d: pointer inconsistent\n", i);
-            display->exponent_ref_display_width = i + 1;
+            إذا ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_جابه_جایی +
+                                      (size_t)i * tdrdi->مدخل_اندازه)
+                چاپ_کن("display %d: pointer inconsistent\n", i);
+            display->exponent_ref_display_عرض = i + 1;
         }
-        for (int i = 0; i < 3; i++) {
+        لكل (صحيح i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
-            printf("display %d: width_exp=%u\n", i,
-                   display->exponent_ref_display_width);
+            چاپ_کن("display %d: width_exp=%u\n", i,
+                   display->exponent_ref_display_عرض);
         }
         av_free(tdrdi);
     }
 
     /* alloc with NULL size */
-    tdrdi = av_tdrdi_alloc(1, NULL);
-    printf("\nalloc (no size): %s\n", tdrdi ? "OK" : "FAIL");
+    tdrdi = av_tdrdi_alloc(1, عدم);
+    چاپ_کن("\nalloc (no size): %s\n", tdrdi ? "OK" : "FAIL");
     av_free(tdrdi);
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    چاپ_کن("\nTesting OOM paths\n");
     av_max_alloc(1);
-    tdrdi = av_tdrdi_alloc(1, &size);
-    printf("alloc OOM: %s\n", tdrdi ? "FAIL" : "OK");
+    tdrdi = av_tdrdi_alloc(1, &اندازه);
+    چاپ_کن("alloc OOM: %s\n", tdrdi ? "FAIL" : "OK");
     av_free(tdrdi);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(بیشترین_صحیح);
 
-    return 0;
+    أرجع 0;
 }

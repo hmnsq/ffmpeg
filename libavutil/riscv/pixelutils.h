@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_PIXELUTILS_H
-#define AVUTIL_RISCV_PIXELUTILS_H
+#اگر_تعریف_نشده AVUTIL_RISCV_PIXELUTILS_H
+#تعریف_کن AVUTIL_RISCV_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ضمن <stddef.h>
+#ضمن <stdint.h>
 
-#include "config.h"
+#ضمن "config.h"
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#ضمن "cpu.h"
+#ضمن "libavutil/attributes.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_rvv(const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad8_rvv (const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad16_rvv(ثابت uint8_t *src1, ptrdiff_t stride1,
+                            ثابت uint8_t *src2, ptrdiff_t stride2);
+صحيح ff_pixelutils_sad8_rvv (ثابت uint8_t *src1, ptrdiff_t stride1,
+                            ثابت uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, int aligned)
+ساكن مضمن av_cold فراغ ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, صحيح aligned)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#إذا HAVE_RVV
+    صحيح flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
+    إذا (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_کمترین(128)) {
         sad[3] = ff_pixelutils_sad16_rvv;
         sad[2] = ff_pixelutils_sad8_rvv;
     }
-#endif
+#پایان_اگر
 }
-#endif
+#پایان_اگر

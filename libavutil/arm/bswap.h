@@ -16,35 +16,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ARM_BSWAP_H
-#define AVUTIL_ARM_BSWAP_H
+#اگر_تعریف_نشده AVUTIL_ARM_BSWAP_H
+#تعریف_کن AVUTIL_ARM_BSWAP_H
 
-#include <stdint.h>
-#include "config.h"
-#include "libavutil/attributes.h"
+#ضمن <stdint.h>
+#ضمن "config.h"
+#ضمن "libavutil/attributes.h"
 
-#ifdef __ARMCC_VERSION
+#اگر_تعریف_شده __ARMCC_VERSION
 
-#if HAVE_ARMV6
-#define av_bswap32 av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+#إذا HAVE_ARMV6
+#تعریف_کن av_bswap32 av_bswap32
+ساكن av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return __rev(x);
+    أرجع __rev(x);
 }
-#endif /* HAVE_ARMV6 */
+#پایان_اگر /* HAVE_ARMV6 */
 
-#elif HAVE_INLINE_ASM
+#وإلاإذا HAVE_INLINE_ASM
 
-#if HAVE_ARMV6_INLINE
-#define av_bswap16 av_bswap16
-static av_always_inline av_const unsigned av_bswap16(unsigned x)
+#إذا HAVE_ARMV6_INLINE
+#تعریف_کن av_bswap16 av_bswap16
+ساكن av_always_inline av_const بیعلامت av_bswap16(بیعلامت x)
 {
-    unsigned y;
+    بیعلامت y;
 
     __asm__("rev16 %0, %1" : "=r"(y) : "r"(x));
-    return y;
+    أرجع y;
 }
-#endif
-#endif /* __ARMCC_VERSION */
+#پایان_اگر
+#پایان_اگر /* __ARMCC_VERSION */
 
-#endif /* AVUTIL_ARM_BSWAP_H */
+#پایان_اگر /* AVUTIL_ARM_BSWAP_H */

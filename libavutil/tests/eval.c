@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#ضمن "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#ضمن <math.h>
+#ضمن <stdio.h>
+#ضمن <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#ضمن "libavutil/mathematics.h"
+#ضمن "libavutil/eval.h"
 
-static const double const_values[] = {
+ساكن ثابت مزدوج const_مقادیر[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+ساكن ثابت حرف *ثابت const_نامها[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+صحيح اصلی(صحيح argc, حرف **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    صحيح i;
+    مزدوج d;
+    ثابت حرف *ثابت *عبارت;
+    ساكن ثابت حرف *ثابت exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        عدم
     };
-    int ret;
+    صحيح ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
-            printf("av_expr_parse_and_eval failed\n");
+    لكل (عبارت = exprs; *عبارت; عبارت++) {
+        چاپ_کن("Evaluating '%s'\n", *عبارت);
+        ret = av_عبارت_parse_and_eval(&d, *عبارت,
+                               const_نامها, const_مقادیر,
+                               عدم, عدم, عدم, عدم, عدم, 0, عدم);
+        إذا (isnan(d))
+            چاپ_کن("'%s' -> nan\n\n", *عبارت);
+        وإلا
+            چاپ_کن("'%s' -> %f\n\n", *عبارت, d);
+        إذا (ret < 0)
+            چاپ_کن("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 12.7\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 0.931322575\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
+    ret = av_عبارت_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_نامها, const_مقادیر,
+                           عدم, عدم, عدم, عدم, عدم, 0, عدم);
+    چاپ_کن("%f == 12.7\n", d);
+    إذا (ret < 0)
+        چاپ_کن("av_expr_parse_and_eval failed\n");
+    ret = av_عبارت_parse_and_eval(&d, "80G/80Gi",
+                           const_نامها, const_مقادیر,
+                           عدم, عدم, عدم, عدم, عدم, 0, عدم);
+    چاپ_کن("%f == 0.931322575\n", d);
+    إذا (ret < 0)
+        چاپ_کن("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
-            START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
-                printf("av_expr_parse_and_eval failed\n");
+    إذا (argc > 1 && !strcmp(argv[1], "-t")) {
+        لكل (i = 0; i < 1050; i++) {
+            شروع_TIMER;
+            ret = av_عبارت_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_نامها, const_مقادیر,
+                                   عدم, عدم, عدم, عدم, عدم, 0, عدم);
+            إذا (ret < 0)
+                چاپ_کن("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    أرجع 0;
 }

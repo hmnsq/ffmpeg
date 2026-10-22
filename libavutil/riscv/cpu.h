@@ -18,34 +18,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_CPU_H
-#define AVUTIL_RISCV_CPU_H
+#اگر_تعریف_نشده AVUTIL_RISCV_CPU_H
+#تعریف_کن AVUTIL_RISCV_CPU_H
 
-#include "config.h"
-#include <stdbool.h>
-#include <stddef.h>
-#include "libavutil/attributes_internal.h"
-#include "libavutil/cpu.h"
+#ضمن "config.h"
+#ضمن <stdbool.h>
+#ضمن <stddef.h>
+#ضمن "libavutil/attributes_internal.h"
+#ضمن "libavutil/cpu.h"
 
-#ifndef __riscv_zbb
-extern attribute_visibility_hidden bool ff_rv_zbb_supported;
-#endif
+#اگر_تعریف_نشده __riscv_zbb
+خارجي attribute_visibility_hidden bool ff_rv_zbb_supported;
+#پایان_اگر
 
-static inline av_const bool ff_rv_zbb_support(void)
+ساكن مضمن av_const bool ff_rv_zbb_support(فراغ)
 {
-#ifndef __riscv_zbb
-    return ff_rv_zbb_supported;
-#else
-    return true;
-#endif
+#اگر_تعریف_نشده __riscv_zbb
+    أرجع ff_rv_zbb_supported;
+#وإلا
+    أرجع true;
+#پایان_اگر
 }
 
-#if HAVE_RVV
+#إذا HAVE_RVV
 /**
  * Returns the vector size in bytes (always a power of two and at least 4).
  * This is undefined behaviour if vectors are not implemented.
  */
-static inline av_const size_t ff_get_rv_vlenb(void)
+ساكن مضمن av_const size_t ff_get_rv_vlenb(فراغ)
 {
     size_t vlenb;
 
@@ -54,27 +54,27 @@ static inline av_const size_t ff_get_rv_vlenb(void)
         ".option arch, +v\n"
         "    csrr %0, vlenb\n"
         ".option pop\n" : "=r" (vlenb));
-    return vlenb;
+    أرجع vlenb;
 }
 
 /**
  * Checks that the vector bit-size is at least the given value.
  * This is potentially undefined behaviour if vectors are not implemented.
  */
-static inline av_const bool ff_rv_vlen_least(unsigned int bits)
+ساكن مضمن av_const bool ff_rv_vlen_کمترین(بیعلامت صحيح بیتها)
 {
-#ifdef __riscv_v_min_vlen
-    if (bits <= __riscv_v_min_vlen)
-        return true;
-#else
+#اگر_تعریف_شده __riscv_v_min_vlen
+    إذا (بیتها <= __riscv_v_min_vlen)
+        أرجع true;
+#وإلا
     /*
      * Vector lengths smaller than 128 bits are only possible in embedded cases
      * and cannot be run-time detected, so we can assume 128 bits at least.
      */
-    if (bits <= 128)
-        return true;
-#endif
-    return bits <= (8 * ff_get_rv_vlenb());
+    إذا (بیتها <= 128)
+        أرجع true;
+#پایان_اگر
+    أرجع بیتها <= (8 * ff_get_rv_vlenb());
 }
-#endif
-#endif /* HAVE_RVV */
+#پایان_اگر
+#پایان_اگر /* HAVE_RVV */

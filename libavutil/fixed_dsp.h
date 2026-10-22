@@ -45,14 +45,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FIXED_DSP_H
-#define AVUTIL_FIXED_DSP_H
+#اگر_تعریف_نشده AVUTIL_FIXED_DSP_H
+#تعریف_کن AVUTIL_FIXED_DSP_H
 
-#include <stdint.h>
-#include "attributes.h"
-#include "libavcodec/mathops.h"
+#ضمن <stdint.h>
+#ضمن "attributes.h"
+#ضمن "libavcodec/mathops.h"
 
-typedef struct AVFixedDSPContext {
+تعريفنوع بنية AVFixedDSPContext {
     /* Assume len is a multiple of 16, and arrays are 32-byte aligned */
     /* Results of multiplications are scaled down by 31 bit (and rounded) if not
      * stated otherwise */
@@ -76,7 +76,7 @@ typedef struct AVFixedDSPContext {
      * @param bits scaling parameter
      *
      */
-    void (*vector_fmul_window_scaled)(int16_t *dst, const int32_t *src0, const int32_t *src1, const int32_t *win, int len, uint8_t bits);
+    فراغ (*وکتور_fmul_پنجره_scaled)(int16_t *dst, ثابت int32_t *src0, ثابت int32_t *src1, ثابت int32_t *win, صحيح len, uint8_t بیتها);
 
     /**
      * Overlap/add with window function.
@@ -94,7 +94,7 @@ typedef struct AVFixedDSPContext {
      * @param len  length of vector
      *             constraints: multiple of 4
      */
-    void (*vector_fmul_window)(int32_t *dst, const int32_t *src0, const int32_t *src1, const int32_t *win, int len);
+    فراغ (*وکتور_fmul_پنجره)(int32_t *dst, ثابت int32_t *src0, ثابت int32_t *src1, ثابت int32_t *win, صحيح len);
 
     /**
      * Fixed-point multiplication that calculates the entry wise product of two
@@ -109,10 +109,10 @@ typedef struct AVFixedDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul)(int *dst, const int *src0, const int *src1,
-                        int len);
+    فراغ (*وکتور_fmul)(صحيح *dst, ثابت صحيح *src0, ثابت صحيح *src1,
+                        صحيح len);
 
-    void (*vector_fmul_reverse)(int *dst, const int *src0, const int *src1, int len);
+    فراغ (*وکتور_fmul_معکوس)(صحيح *dst, ثابت صحيح *src0, ثابت صحيح *src1, صحيح len);
     /**
      * Calculate the entry wise product of two vectors of integers, add a third vector of
      * integers and store the result in a vector of integers.
@@ -128,8 +128,8 @@ typedef struct AVFixedDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul_add)(int *dst, const int *src0, const int *src1,
-                            const int *src2, int len);
+    فراغ (*وکتور_fmul_جمع_کن)(صحيح *dst, ثابت صحيح *src0, ثابت صحيح *src1,
+                            ثابت صحيح *src2, صحيح len);
 
     /**
      * Calculate the scalar product of two vectors of integers.
@@ -140,7 +140,7 @@ typedef struct AVFixedDSPContext {
      *
      * @return sum of elementwise products
      */
-    int (*scalarproduct_fixed)(const int *v1, const int *v2, int len);
+    صحيح (*scalarproduct_fixed)(ثابت صحيح *v1, ثابت صحيح *v2, صحيح len);
 
     /**
      * Calculate the sum and difference of two vectors of integers.
@@ -149,7 +149,7 @@ typedef struct AVFixedDSPContext {
      * @param v2  second input vector, difference output, 16-byte aligned
      * @param len length of vectors, multiple of 4
      */
-    void (*butterflies_fixed)(int *restrict v1, int *restrict v2, int len);
+    فراغ (*butterflies_fixed)(صحيح *محدود v1, صحيح *محدود v2, صحيح len);
 } AVFixedDSPContext;
 
 /**
@@ -158,10 +158,10 @@ typedef struct AVFixedDSPContext {
  *
  * @param strict  setting to non-zero avoids using functions which may not be IEEE-754 compliant
  */
-AVFixedDSPContext * avpriv_alloc_fixed_dsp(int strict);
+AVFixedDSPContext * avpriv_alloc_fixed_dsp(صحيح strict);
 
-void ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp);
-void ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp);
+فراغ ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp);
+فراغ ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp);
 
 /**
  * Calculate the square root
@@ -173,33 +173,33 @@ void ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp);
  * note: input is normalized to (0, 1) fixed point value
  */
 
-static av_always_inline int fixed_sqrt(int x, int bits)
+ساكن av_always_inline صحيح fixed_sqrt(صحيح x, صحيح بیتها)
 {
-    int retval, bit_mask, guess, square, i;
+    صحيح retval, بیت_ماسک, guess, مربع, i;
     int64_t accu;
-    int shift1 = 30 - bits;
-    int shift2 = bits - 15;
+    صحيح shift1 = 30 - بیتها;
+    صحيح shift2 = بیتها - 15;
 
-    if (shift1 > 0) retval = ff_sqrt(x << shift1);
-    else retval = ff_sqrt(x >> -shift1);
+    إذا (shift1 > 0) retval = ff_sqrt(x << shift1);
+    وإلا retval = ff_sqrt(x >> -shift1);
 
-    if (shift2 > 0) {
+    إذا (shift2 > 0) {
         retval = retval << shift2;
-        bit_mask = (1 << (shift2 - 1));
+        بیت_ماسک = (1 << (shift2 - 1));
 
-        for (i=0; i<shift2; i++){
-            guess = retval + bit_mask;
+        لكل (i=0; i<shift2; i++){
+            guess = retval + بیت_ماسک;
             accu = (int64_t)guess * guess;
-            square = (int)((accu + bit_mask) >> bits);
-            if (x >= square)
-                retval += bit_mask;
-            bit_mask >>= 1;
+            مربع = (صحيح)((accu + بیت_ماسک) >> بیتها);
+            إذا (x >= مربع)
+                retval += بیت_ماسک;
+            بیت_ماسک >>= 1;
         }
 
     }
-    else retval >>= (-shift2);
+    وإلا retval >>= (-shift2);
 
-    return retval;
+    أرجع retval;
 }
 
-#endif /* AVUTIL_FIXED_DSP_H */
+#پایان_اگر /* AVUTIL_FIXED_DSP_H */

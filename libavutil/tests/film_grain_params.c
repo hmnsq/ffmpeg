@@ -16,228 +16,228 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ضمن <stdio.h>
 
-#include "libavutil/film_grain_params.h"
-#include "libavutil/mem.h"
+#ضمن "libavutil/film_grain_params.h"
+#ضمن "libavutil/mem.h"
 
-static AVFrame *create_frame(enum AVPixelFormat format, int width, int height)
+ساكن AVFrame *create_قاب(تعداد AVPixelFormat format, صحيح عرض, صحيح ارتفاع)
 {
-    AVFrame *frame = av_frame_alloc();
-    if (!frame)
-        return NULL;
-    frame->format = format;
-    frame->width  = width;
-    frame->height = height;
-    return frame;
+    AVFrame *قاب = av_قاب_alloc();
+    إذا (!قاب)
+        أرجع عدم;
+    قاب->format = format;
+    قاب->عرض  = عرض;
+    قاب->ارتفاع = ارتفاع;
+    أرجع قاب;
 }
 
-static AVFilmGrainParams *add_grain(AVFrame *frame,
-                                     enum AVFilmGrainParamsType type,
-                                     int width, int height,
-                                     int sub_x, int sub_y,
-                                     int bd_luma, int bd_chroma)
+ساكن AVFilmGrainParams *جمع_کن_grain(AVFrame *قاب,
+                                     تعداد AVFilmGrainParamsType type,
+                                     صحيح عرض, صحيح ارتفاع,
+                                     صحيح sub_x, صحيح sub_y,
+                                     صحيح bd_luma, صحيح bd_chroma)
 {
-    AVFilmGrainParams *fgp = av_film_grain_params_create_side_data(frame);
-    if (!fgp)
-        return NULL;
+    AVFilmGrainParams *fgp = av_film_grain_params_create_side_داده(قاب);
+    إذا (!fgp)
+        أرجع عدم;
     fgp->type             = type;
-    fgp->width            = width;
-    fgp->height           = height;
+    fgp->عرض            = عرض;
+    fgp->ارتفاع           = ارتفاع;
     fgp->subsampling_x    = sub_x;
     fgp->subsampling_y    = sub_y;
-    fgp->bit_depth_luma   = bd_luma;
-    fgp->bit_depth_chroma = bd_chroma;
-    return fgp;
+    fgp->بیت_عمق_luma   = bd_luma;
+    fgp->بیت_عمق_chroma = bd_chroma;
+    أرجع fgp;
 }
 
-int main(void)
+صحيح اصلی(فراغ)
 {
     AVFilmGrainParams *fgp;
-    const AVFilmGrainParams *sel;
-    AVFrame *frame;
-    size_t size;
+    ثابت AVFilmGrainParams *sel;
+    AVFrame *قاب;
+    size_t اندازه;
 
-    printf("Testing av_film_grain_params_alloc()\n");
+    چاپ_کن("Testing av_film_grain_params_alloc()\n");
 
-    fgp = av_film_grain_params_alloc(&size);
-    printf("alloc with size: %s\n", (fgp && size > 0) ? "OK" : "FAIL");
+    fgp = av_film_grain_params_alloc(&اندازه);
+    چاپ_کن("alloc with size: %s\n", (fgp && اندازه > 0) ? "OK" : "FAIL");
     av_free(fgp);
 
-    fgp = av_film_grain_params_alloc(NULL);
-    printf("alloc without size: %s\n", fgp ? "OK" : "FAIL");
+    fgp = av_film_grain_params_alloc(عدم);
+    چاپ_کن("alloc without size: %s\n", fgp ? "OK" : "FAIL");
     av_free(fgp);
 
-    printf("\nTesting av_film_grain_params_create_side_data()\n");
+    چاپ_کن("\nTesting av_film_grain_params_create_side_data()\n");
 
-    frame = av_frame_alloc();
-    fgp = av_film_grain_params_create_side_data(frame);
-    if (fgp)
-        printf("create: OK\ndefaults: range=%d pri=%d trc=%d space=%d\n",
+    قاب = av_قاب_alloc();
+    fgp = av_film_grain_params_create_side_داده(قاب);
+    إذا (fgp)
+        چاپ_کن("create: OK\ndefaults: range=%d pri=%d trc=%d space=%d\n",
                fgp->color_range, fgp->color_primaries,
                fgp->color_trc, fgp->color_space);
-    else
-        printf("create: FAIL\n");
-    av_frame_free(&frame);
+    وإلا
+        چاپ_کن("create: FAIL\n");
+    av_قاب_free(&قاب);
 
-    printf("\nTesting av_film_grain_params_select()\n");
+    چاپ_کن("\nTesting av_film_grain_params_select()\n");
 
     /* invalid format */
-    frame = av_frame_alloc();
-    frame->format = -1;
-    sel = av_film_grain_params_select(frame);
-    printf("invalid format: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    قاب = av_قاب_alloc();
+    قاب->format = -1;
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("invalid format: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* no side data */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    sel = av_film_grain_params_select(frame);
-    printf("no side data: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("no side data: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* NONE type - skipped */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_NONE, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("NONE type: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_NONE, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("NONE type: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* AV1 exact subsampling match (YUV420P: sub 1,1) */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("AV1 match: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("AV1 match: %s\n", sel ? "OK" : "FAIL");
+    av_قاب_free(&قاب);
 
     /* AV1 subsampling mismatch */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 0, 0, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("AV1 sub mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 0, 0, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("AV1 sub mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* H274 exact match */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("H274 match: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("H274 match: %s\n", sel ? "OK" : "FAIL");
+    av_قاب_free(&قاب);
 
     /* H274 lower subsampling OK (grain sub 0,0 < YUV420P sub 1,1) */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 0, 0, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("H274 lower sub: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 0, 0, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("H274 lower sub: %s\n", sel ? "OK" : "FAIL");
+    av_قاب_free(&قاب);
 
     /* H274 higher subsampling FAIL (grain sub 1,1 > YUV444P sub 0,0) */
-    frame = create_frame(AV_PIX_FMT_YUV444P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("H274 higher sub: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV444P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("H274 higher sub: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* width too large */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 3840, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("width too large: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 3840, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("width too large: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* height too large */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 2160, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("height too large: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 2160, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("height too large: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* width/height = 0 (unspecified) - passes */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("size unspecified: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("size unspecified: %s\n", sel ? "OK" : "FAIL");
+    av_قاب_free(&قاب);
 
     /* bit_depth_luma mismatch (grain=10, YUV420P=8) */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 10, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("bd_luma mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 10, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("bd_luma mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* bit_depth_chroma mismatch (grain=10, YUV420P=8) */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 10);
-    sel = av_film_grain_params_select(frame);
-    printf("bd_chroma mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 10);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("bd_chroma mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* bit_depth = 0 (unspecified) - passes */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("bd unspecified: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("bd unspecified: %s\n", sel ? "OK" : "FAIL");
+    av_قاب_free(&قاب);
 
     /* bit_depth exact match (grain=8, YUV420P=8) */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 8, 8);
-    sel = av_film_grain_params_select(frame);
-    printf("bd exact match: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 8, 8);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("bd exact match: %s\n", sel ? "OK" : "FAIL");
+    av_قاب_free(&قاب);
 
     /* color_range mismatch */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    frame->color_range = AVCOL_RANGE_MPEG;
-    fgp = add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    قاب->color_range = AVCOL_RANGE_MPEG;
+    fgp = جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
     fgp->color_range = AVCOL_RANGE_JPEG;
-    sel = av_film_grain_params_select(frame);
-    printf("color_range mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("color_range mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* color_primaries mismatch */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    frame->color_primaries = AVCOL_PRI_BT709;
-    fgp = add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    قاب->color_primaries = AVCOL_PRI_BT709;
+    fgp = جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
     fgp->color_primaries = AVCOL_PRI_BT470M;
-    sel = av_film_grain_params_select(frame);
-    printf("color_primaries mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("color_primaries mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* color_trc mismatch */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    frame->color_trc = AVCOL_TRC_BT709;
-    fgp = add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    قاب->color_trc = AVCOL_TRC_BT709;
+    fgp = جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
     fgp->color_trc = AVCOL_TRC_GAMMA22;
-    sel = av_film_grain_params_select(frame);
-    printf("color_trc mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("color_trc mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* color_space mismatch */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    frame->colorspace = AVCOL_SPC_BT709;
-    fgp = add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    قاب->colorspace = AVCOL_SPC_BT709;
+    fgp = جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
     fgp->color_space = AVCOL_SPC_BT470BG;
-    sel = av_film_grain_params_select(frame);
-    printf("color_space mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("color_space mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_قاب_free(&قاب);
 
     /* color properties UNSPECIFIED - passes */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("color unspecified: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("color unspecified: %s\n", sel ? "OK" : "FAIL");
+    av_قاب_free(&قاب);
 
     /* multiple entries - best selection by size */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 640,  480,  1, 1, 0, 0);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 1280, 720,  1, 1, 0, 0);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 1000, 1080, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("best selection: width=%d height=%d\n",
-           sel ? sel->width : -1, sel ? sel->height : -1);
-    av_frame_free(&frame);
+    قاب = create_قاب(AV_PIX_FMT_YUV420P, 1920, 1080);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 640,  480,  1, 1, 0, 0);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 1280, 720,  1, 1, 0, 0);
+    جمع_کن_grain(قاب, AV_FILM_GRAIN_PARAMS_AV1, 1000, 1080, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(قاب);
+    چاپ_کن("best selection: width=%d height=%d\n",
+           sel ? sel->عرض : -1, sel ? sel->ارتفاع : -1);
+    av_قاب_free(&قاب);
 
-    return 0;
+    أرجع 0;
 }

@@ -24,12 +24,12 @@
  * Public header for CRC hash function implementation.
  */
 
-#ifndef AVUTIL_CRC_H
-#define AVUTIL_CRC_H
+#اگر_تعریف_نشده AVUTIL_بررسی_چرخهای_H
+#تعریف_کن AVUTIL_بررسی_چرخهای_H
 
-#include <stdint.h>
-#include <stddef.h>
-#include "attributes.h"
+#ضمن <stdint.h>
+#ضمن <stddef.h>
+#ضمن "attributes.h"
 
 /**
  * @defgroup lavu_crc32 CRC
@@ -43,18 +43,18 @@
  * @{
  */
 
-typedef uint32_t AVCRC;
+تعريفنوع uint32_t AVCRC;
 
-typedef enum {
-    AV_CRC_8_ATM,
-    AV_CRC_16_ANSI,
-    AV_CRC_16_CCITT,
-    AV_CRC_32_IEEE,
-    AV_CRC_32_IEEE_LE,  /*< reversed bitorder version of AV_CRC_32_IEEE */
-    AV_CRC_16_ANSI_LE,  /*< reversed bitorder version of AV_CRC_16_ANSI */
-    AV_CRC_24_IEEE,
-    AV_CRC_8_EBU,
-    AV_CRC_MAX,         /*< Not part of public API! Do not use outside libavutil. */
+تعريفنوع تعداد {
+    AV_بررسی_چرخهای_8_ATM,
+    AV_بررسی_چرخهای_16_ANSI,
+    AV_بررسی_چرخهای_16_CCITT,
+    AV_بررسی_چرخهای_32_IEEE,
+    AV_بررسی_چرخهای_32_IEEE_LE,  /*< reversed bitorder version of AV_CRC_32_IEEE */
+    AV_بررسی_چرخهای_16_ANSI_LE,  /*< reversed bitorder version of AV_CRC_16_ANSI */
+    AV_بررسی_چرخهای_24_IEEE,
+    AV_بررسی_چرخهای_8_EBU,
+    AV_بررسی_چرخهای_MAX,         /*< Not part of public API! Do not use outside libavutil. */
 }AVCRCId;
 
 /**
@@ -73,14 +73,14 @@ typedef enum {
  * @param ctx_size size of ctx in bytes
  * @return <0 on failure
  */
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size);
+صحيح av_بررسی_چرخهای_init(AVCRC *ctx, صحيح le, صحيح بیتها, uint32_t poly, صحيح ctx_اندازه);
 
 /**
  * Get an initialized standard CRC table.
  * @param crc_id ID of a standard CRC
  * @return a pointer to the CRC table or NULL on failure
  */
-const AVCRC *av_crc_get_table(AVCRCId crc_id);
+ثابت AVCRC *av_بررسی_چرخهای_get_جدول(AVCRCId بررسی_چرخهای_id);
 
 /**
  * Calculate the CRC of a block.
@@ -92,11 +92,11 @@ const AVCRC *av_crc_get_table(AVCRCId crc_id);
  *
  * @see av_crc_init() "le" parameter
  */
-uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
-                const uint8_t *buffer, size_t length) av_pure;
+uint32_t av_بررسی_چرخهای(ثابت AVCRC *ctx, uint32_t بررسی_چرخهای,
+                ثابت uint8_t *میانگیر, size_t درازی) av_خالص;
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_CRC_H */
+#پایان_اگر /* AVUTIL_CRC_H */

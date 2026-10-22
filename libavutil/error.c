@@ -16,49 +16,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#undef _GNU_SOURCE
-#define _XOPEN_SOURCE 600 /* XSI-compliant version of strerror_r */
-#include <stdio.h>
-#include <string.h>
-#include "config.h"
-#include "avstring.h"
-#include "error.h"
-#include "macros.h"
+#لغو_تعریف GNU_منبع
+#تعریف_کن XOPEN_منبع 600 /* XSI-compliant version of strerror_r */
+#ضمن <stdio.h>
+#ضمن <string.h>
+#ضمن "config.h"
+#ضمن "avstring.h"
+#ضمن "error.h"
+#ضمن "macros.h"
 
-#define AVERROR_INPUT_AND_OUTPUT_CHANGED (AVERROR_INPUT_CHANGED | AVERROR_OUTPUT_CHANGED)
+#تعریف_کن AVERROR_درون_داد_AND_OUTPUT_تغییریافته (AVERROR_درون_داد_تغییریافته | AVERROR_OUTPUT_تغییریافته)
 
-#define AVERROR_LIST(E, E2)                                                                     \
-    E(BSF_NOT_FOUND,            "Bitstream filter not found")                                   \
+#تعریف_کن AVERROR_LIST(E, E2)                                                                     \
+    E(BSF_NOT_یافت,            "Bitstream filter not found")                                   \
     E(BUG,                      "Internal bug, should not have happened")                       \
     E2(BUG2, BUG,               "Internal bug, should not have happened")                       \
-    E(BUFFER_TOO_SMALL,         "Buffer too small")                                             \
-    E(DECODER_NOT_FOUND,        "Decoder not found")                                            \
-    E(DEMUXER_NOT_FOUND,        "Demuxer not found")                                            \
-    E(ENCODER_NOT_FOUND,        "Encoder not found")                                            \
+    E(میانگیر_TOO_SMALL,         "Buffer too small")                                             \
+    E(DECODER_NOT_یافت,        "Decoder not found")                                            \
+    E(DEMUXER_NOT_یافت,        "Demuxer not found")                                            \
+    E(ENCODER_NOT_یافت,        "Encoder not found")                                            \
     E(EOF,                      "End of file")                                                  \
     E(EXIT,                     "Immediate exit requested")                                     \
     E(EXTERNAL,                 "Generic error in an external library")                         \
-    E(FILTER_NOT_FOUND,         "Filter not found")                                             \
-    E(INPUT_CHANGED,            "Input changed")                                                \
+    E(FILTER_NOT_یافت,         "Filter not found")                                             \
+    E(درون_داد_تغییریافته,            "Input changed")                                                \
     E(INVALIDDATA,              "Invalid data found when processing input")                     \
-    E(MUXER_NOT_FOUND,          "Muxer not found")                                              \
-    E(OPTION_NOT_FOUND,         "Option not found")                                             \
-    E(OUTPUT_CHANGED,           "Output changed")                                               \
+    E(MUXER_NOT_یافت,          "Muxer not found")                                              \
+    E(OPTION_NOT_یافت,         "Option not found")                                             \
+    E(OUTPUT_تغییریافته,           "Output changed")                                               \
     E(PATCHWELCOME,             "Not yet implemented in FFmpeg, patches welcome")               \
-    E(PROTOCOL_NOT_FOUND,       "Protocol not found")                                           \
-    E(STREAM_NOT_FOUND,         "Stream not found")                                             \
+    E(PROTOCOL_NOT_یافت,       "Protocol not found")                                           \
+    E(جریان_NOT_یافت,         "Stream not found")                                             \
     E(UNKNOWN,                  "Unknown error occurred")                                       \
     E(EXPERIMENTAL,             "Experimental feature")                                         \
-    E(INPUT_AND_OUTPUT_CHANGED, "Input and output changed")                                     \
+    E(درون_داد_AND_OUTPUT_تغییریافته, "Input and output changed")                                     \
     E(HTTP_BAD_REQUEST,         "Server returned 400 Bad Request")                              \
     E(HTTP_UNAUTHORIZED,        "Server returned 401 Unauthorized (authorization failed)")      \
     E(HTTP_FORBIDDEN,           "Server returned 403 Forbidden (access denied)")                \
-    E(HTTP_NOT_FOUND,           "Server returned 404 Not Found")                                \
-    E(HTTP_TOO_MANY_REQUESTS,   "Server returned 429 Too Many Requests")                        \
+    E(HTTP_NOT_یافت,           "Server returned 404 Not Found")                                \
+    E(HTTP_TOO_MANY_درخواستها,   "Server returned 429 Too Many Requests")                        \
     E(HTTP_OTHER_4XX,           "Server returned 4XX Client Error, but not one of 40{0,1,3,4}") \
     E(HTTP_SERVER_ERROR,        "Server returned 5XX Server Error reply")                       \
 
-#define STRERROR_LIST(E)                                                     \
+#تعریف_کن STRERROR_LIST(E)                                                     \
     E(E2BIG,             "Argument list too long")                           \
     E(EACCES,            "Permission denied")                                \
     E(EAGAIN,            "Resource temporarily unavailable")                 \
@@ -98,54 +98,54 @@
     E(ESRCH,             "No such process")                                  \
     E(EXDEV,             "Cross-device link")                                \
 
-enum {
-#define OFFSET(CODE, DESC)     \
-    ERROR_ ## CODE ## _OFFSET, \
-    ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + sizeof(DESC) - 1,
-#define NOTHING(CODE, CODE2, DESC)
-    AVERROR_LIST(OFFSET, NOTHING)
-#if !HAVE_STRERROR_R
-    STRERROR_LIST(OFFSET)
-#endif
+تعداد {
+#تعریف_کن جابه_جایی_2(کد_2, DESC)     \
+    ERROR_ ## کد_2 ## جابه_جایی_3, \
+    ERROR_ ## کد_2 ## انتها_جابه_جایی = ERROR_ ## کد_2 ## جابه_جایی_3 + حجم(DESC) - 1,
+#تعریف_کن NOTHING(کد_2, CODE2, DESC)
+    AVERROR_LIST(جابه_جایی_2, NOTHING)
+#إذا !HAVE_STRERROR_R
+    STRERROR_LIST(جابه_جایی_2)
+#پایان_اگر
 };
 
-#define STRING(CODE, DESC) DESC "\0"
-static const char error_stringtable[] =
+#تعریف_کن STRING(کد_2, DESC) DESC "\0"
+ساكن ثابت حرف error_stringtable[] =
     AVERROR_LIST(STRING, NOTHING)
-#if !HAVE_STRERROR_R
+#إذا !HAVE_STRERROR_R
     STRERROR_LIST(STRING)
-#endif
+#پایان_اگر
 ;
 
-static const struct ErrorEntry {
-    int num;
-    unsigned offset;
+ساكن ثابت بنية Error_مدخل {
+    صحيح رقم;
+    بیعلامت جابه_جایی;
 } error_entries[] = {
-#define ENTRY(CODE, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE ## _OFFSET },
-#define ENTRY2(CODE, CODE2, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE2 ## _OFFSET },
-    AVERROR_LIST(ENTRY, ENTRY2)
-#if !HAVE_STRERROR_R
-#undef ENTRY
-#define ENTRY(CODE, DESC) { .num = AVERROR(CODE), .offset = ERROR_ ## CODE ## _OFFSET },
-    STRERROR_LIST(ENTRY)
-#endif
+#تعریف_کن مدخل_2(کد_2, DESC) { .رقم = AVERROR_ ## کد_2, .جابه_جایی = ERROR_ ## کد_2 ## جابه_جایی_3 },
+#تعریف_کن ENTRY2(کد_2, CODE2, DESC) { .رقم = AVERROR_ ## کد_2, .جابه_جایی = ERROR_ ## CODE2 ## جابه_جایی_3 },
+    AVERROR_LIST(مدخل_2, ENTRY2)
+#إذا !HAVE_STRERROR_R
+#لغو_تعریف مدخل_2
+#تعریف_کن مدخل_2(کد_2, DESC) { .رقم = AVERROR(کد_2), .جابه_جایی = ERROR_ ## کد_2 ## جابه_جایی_3 },
+    STRERROR_LIST(مدخل_2)
+#پایان_اگر
 };
 
-int av_strerror(int errnum, char *errbuf, size_t errbuf_size)
+صحيح av_strerror(صحيح errnum, حرف *errbuf, size_t errbuf_اندازه)
 {
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
-        if (errnum == error_entries[i].num) {
-            av_strlcpy(errbuf, error_stringtable + error_entries[i].offset, errbuf_size);
-            return 0;
+    لكل (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
+        إذا (errnum == error_entries[i].رقم) {
+            av_strlcpy(errbuf, error_stringtable + error_entries[i].جابه_جایی, errbuf_اندازه);
+            أرجع 0;
         }
     }
-#if HAVE_STRERROR_R
-    int ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
-#else
-    int ret = -1;
-#endif
-    if (ret < 0)
-        snprintf(errbuf, errbuf_size, "Error number %d occurred", errnum);
+#إذا HAVE_STRERROR_R
+    صحيح ret = AVERROR(strerror_r(AVUNERROR((بیعلامت)errnum), errbuf, errbuf_اندازه));
+#وإلا
+    صحيح ret = -1;
+#پایان_اگر
+    إذا (ret < 0)
+        snprintf(errbuf, errbuf_اندازه, "Error number %d occurred", errnum);
 
-    return ret;
+    أرجع ret;
 }

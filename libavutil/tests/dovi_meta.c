@@ -16,123 +16,123 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdio.h>
+#ضمن <limits.h>
+#ضمن <stdint.h>
+#ضمن <stdio.h>
 
-#include "libavutil/dovi_meta.h"
-#include "libavutil/mem.h"
+#ضمن "libavutil/dovi_meta.h"
+#ضمن "libavutil/mem.h"
 
-int main(void)
+صحيح اصلی(فراغ)
 {
-    AVDOVIDecoderConfigurationRecord *cfg;
+    AVDOVIDecoder_Configuration_رکورد *cfg;
     AVDOVIMetadata *md;
-    size_t size;
+    size_t اندازه;
 
     /* av_dovi_alloc */
-    printf("Testing av_dovi_alloc()\n");
-    cfg = av_dovi_alloc(&size);
-    if (cfg) {
-        printf("alloc: OK, size>0=%s, dv_profile=%d\n",
-               size > 0 ? "yes" : "no", cfg->dv_profile);
+    چاپ_کن("Testing av_dovi_alloc()\n");
+    cfg = av_dovi_alloc(&اندازه);
+    إذا (cfg) {
+        چاپ_کن("alloc: OK, size>0=%s, dv_profile=%d\n",
+               اندازه > 0 ? "yes" : "no", cfg->dv_profile);
         av_free(cfg);
-    } else {
-        printf("alloc: FAIL\n");
+    } وإلا {
+        چاپ_کن("alloc: FAIL\n");
     }
 
-    cfg = av_dovi_alloc(NULL);
-    printf("alloc (no size): %s\n", cfg ? "OK" : "FAIL");
+    cfg = av_dovi_alloc(عدم);
+    چاپ_کن("alloc (no size): %s\n", cfg ? "OK" : "FAIL");
     av_free(cfg);
 
     /* av_dovi_metadata_alloc */
-    printf("\nTesting av_dovi_metadata_alloc()\n");
-    md = av_dovi_metadata_alloc(&size);
-    if (md) {
-        AVDOVIRpuDataHeader *header;
+    چاپ_کن("\nTesting av_dovi_metadata_alloc()\n");
+    md = av_dovi_metadata_alloc(&اندازه);
+    إذا (md) {
+        AVDOVIRpu_داده_سرآیند *سرآیند;
         AVDOVIDataMapping *mapping;
         AVDOVIColorMetadata *color;
 
-        printf("alloc: OK, size>0=%s\n", size > 0 ? "yes" : "no");
-        printf("num_ext_blocks=%d\n", md->num_ext_blocks);
+        چاپ_کن("alloc: OK, size>0=%s\n", اندازه > 0 ? "yes" : "no");
+        چاپ_کن("num_ext_blocks=%d\n", md->رقم_ext_بلوکها);
 
         /* pointer consistency checks for inline accessors */
-        header = av_dovi_get_header(md);
-        if ((uint8_t *)header != (uint8_t *)md + md->header_offset)
-            printf("header: pointer inconsistent with header_offset\n");
-        printf("header_offset>0=%s, rpu_type=%d\n",
-               md->header_offset > 0 ? "yes" : "no",
-               header->rpu_type);
+        سرآیند = av_dovi_get_سرآیند(md);
+        إذا ((uint8_t *)سرآیند != (uint8_t *)md + md->سرآیند_جابه_جایی)
+            چاپ_کن("header: pointer inconsistent with header_offset\n");
+        چاپ_کن("header_offset>0=%s, rpu_type=%d\n",
+               md->سرآیند_جابه_جایی > 0 ? "yes" : "no",
+               سرآیند->rpu_type);
 
         mapping = av_dovi_get_mapping(md);
-        if ((uint8_t *)mapping != (uint8_t *)md + md->mapping_offset)
-            printf("mapping: pointer inconsistent with mapping_offset\n");
-        printf("mapping_offset>0=%s, nlq_method_idc=%d\n",
-               md->mapping_offset > 0 ? "yes" : "no",
-               mapping->nlq_method_idc);
+        إذا ((uint8_t *)mapping != (uint8_t *)md + md->mapping_جابه_جایی)
+            چاپ_کن("mapping: pointer inconsistent with mapping_offset\n");
+        چاپ_کن("mapping_offset>0=%s, nlq_method_idc=%d\n",
+               md->mapping_جابه_جایی > 0 ? "yes" : "no",
+               mapping->nlq_روش_idc);
 
         color = av_dovi_get_color(md);
-        if ((uint8_t *)color != (uint8_t *)md + md->color_offset)
-            printf("color: pointer inconsistent with color_offset\n");
-        printf("color_offset>0=%s, dm_metadata_id=%d\n",
-               md->color_offset > 0 ? "yes" : "no",
+        إذا ((uint8_t *)color != (uint8_t *)md + md->color_جابه_جایی)
+            چاپ_کن("color: pointer inconsistent with color_offset\n");
+        چاپ_کن("color_offset>0=%s, dm_metadata_id=%d\n",
+               md->color_جابه_جایی > 0 ? "yes" : "no",
                color->dm_metadata_id);
 
-        printf("ext_block_size>0=%s\n",
-               md->ext_block_size > 0 ? "yes" : "no");
+        چاپ_کن("ext_block_size>0=%s\n",
+               md->ext_بلوک_اندازه > 0 ? "yes" : "no");
 
         av_free(md);
-    } else {
-        printf("alloc: FAIL\n");
+    } وإلا {
+        چاپ_کن("alloc: FAIL\n");
     }
 
-    md = av_dovi_metadata_alloc(NULL);
-    printf("alloc (no size): %s\n", md ? "OK" : "FAIL");
+    md = av_dovi_metadata_alloc(عدم);
+    چاپ_کن("alloc (no size): %s\n", md ? "OK" : "FAIL");
     av_free(md);
 
     /* av_dovi_find_level */
-    printf("\nTesting av_dovi_find_level()\n");
-    md = av_dovi_metadata_alloc(NULL);
-    if (md) {
-        AVDOVIDmData *ext, *found;
+    چاپ_کن("\nTesting av_dovi_find_level()\n");
+    md = av_dovi_metadata_alloc(عدم);
+    إذا (md) {
+        AVDOVIDm_داده *ext, *یافت;
 
         /* set up 3 ext blocks with different levels */
-        md->num_ext_blocks = 3;
+        md->رقم_ext_بلوکها = 3;
         ext = av_dovi_get_ext(md, 0);
-        if ((uint8_t *)ext != (uint8_t *)md + md->ext_block_offset)
-            printf("ext[0]: pointer inconsistent with ext_block_offset\n");
+        إذا ((uint8_t *)ext != (uint8_t *)md + md->ext_بلوک_جابه_جایی)
+            چاپ_کن("ext[0]: pointer inconsistent with ext_block_offset\n");
         ext->level = 1;
         ext = av_dovi_get_ext(md, 1);
         ext->level = 5;
         ext = av_dovi_get_ext(md, 2);
         ext->level = 1;
 
-        found = av_dovi_find_level(md, 1);
-        printf("find level 1: %s\n", found && found->level == 1 ? "OK" : "FAIL");
+        یافت = av_dovi_پیدا_کن_level(md, 1);
+        چاپ_کن("find level 1: %s\n", یافت && یافت->level == 1 ? "OK" : "FAIL");
 
-        found = av_dovi_find_level(md, 5);
-        printf("find level 5: %s\n", found && found->level == 5 ? "OK" : "FAIL");
+        یافت = av_dovi_پیدا_کن_level(md, 5);
+        چاپ_کن("find level 5: %s\n", یافت && یافت->level == 5 ? "OK" : "FAIL");
 
         /* first match -- should return ext[0], not ext[2] */
-        found = av_dovi_find_level(md, 1);
-        printf("find level 1 first match: %s\n",
-               found == av_dovi_get_ext(md, 0) ? "OK" : "FAIL");
+        یافت = av_dovi_پیدا_کن_level(md, 1);
+        چاپ_کن("find level 1 first match: %s\n",
+               یافت == av_dovi_get_ext(md, 0) ? "OK" : "FAIL");
 
-        found = av_dovi_find_level(md, 99);
-        printf("find level 99 (missing): %s\n", found == NULL ? "OK" : "FAIL");
+        یافت = av_dovi_پیدا_کن_level(md, 99);
+        چاپ_کن("find level 99 (missing): %s\n", یافت == عدم ? "OK" : "FAIL");
 
         av_free(md);
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    چاپ_کن("\nTesting OOM paths\n");
     av_max_alloc(1);
-    cfg = av_dovi_alloc(&size);
-    printf("av_dovi_alloc OOM: %s\n", cfg ? "FAIL" : "OK");
+    cfg = av_dovi_alloc(&اندازه);
+    چاپ_کن("av_dovi_alloc OOM: %s\n", cfg ? "FAIL" : "OK");
     av_free(cfg);
-    md = av_dovi_metadata_alloc(&size);
-    printf("av_dovi_metadata_alloc OOM: %s\n", md ? "FAIL" : "OK");
+    md = av_dovi_metadata_alloc(&اندازه);
+    چاپ_کن("av_dovi_metadata_alloc OOM: %s\n", md ? "FAIL" : "OK");
     av_free(md);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(بیشترین_صحیح);
 
-    return 0;
+    أرجع 0;
 }

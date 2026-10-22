@@ -16,227 +16,227 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "channel_layout.h"
-#include "avassert.h"
-#include "buffer.h"
-#include "dict.h"
-#include "frame.h"
-#include "frame_internal.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "refstruct.h"
-#include "samplefmt.h"
-#include "side_data.h"
-#include "hwcontext.h"
+#ضمن "channel_layout.h"
+#ضمن "avassert.h"
+#ضمن "buffer.h"
+#ضمن "dict.h"
+#ضمن "frame.h"
+#ضمن "frame_internal.h"
+#ضمن "imgutils.h"
+#ضمن "mem.h"
+#ضمن "refstruct.h"
+#ضمن "samplefmt.h"
+#ضمن "side_data.h"
+#ضمن "hwcontext.h"
 
-static void get_frame_defaults(AVFrame *frame)
+ساكن فراغ get_قاب_defaults(AVFrame *قاب)
 {
-    memset(frame, 0, sizeof(*frame));
+    memset(قاب, 0, حجم(*قاب));
 
-    frame->pts                   =
-    frame->pkt_dts               = AV_NOPTS_VALUE;
-    frame->best_effort_timestamp = AV_NOPTS_VALUE;
-    frame->duration            = 0;
-    frame->time_base           = (AVRational){ 0, 1 };
-    frame->sample_aspect_ratio = (AVRational){ 0, 1 };
-    frame->format              = -1; /* unknown */
-    frame->extended_data       = frame->data;
-    frame->color_primaries     = AVCOL_PRI_UNSPECIFIED;
-    frame->color_trc           = AVCOL_TRC_UNSPECIFIED;
-    frame->colorspace          = AVCOL_SPC_UNSPECIFIED;
-    frame->color_range         = AVCOL_RANGE_UNSPECIFIED;
-    frame->chroma_location     = AVCHROMA_LOC_UNSPECIFIED;
-    frame->alpha_mode          = AVALPHA_MODE_UNSPECIFIED;
-    frame->flags               = 0;
+    قاب->pts                   =
+    قاب->pkt_dts               = AV_NOPTS_مقدار;
+    قاب->بهترین_effort_timestamp = AV_NOPTS_مقدار;
+    قاب->duration            = 0;
+    قاب->زمان_پایه           = (AVRational){ 0, 1 };
+    قاب->sample_aspect_نسبت = (AVRational){ 0, 1 };
+    قاب->format              = -1; /* unknown */
+    قاب->extended_داده       = قاب->داده;
+    قاب->color_primaries     = AVCOL_PRI_UNSPECIFIED;
+    قاب->color_trc           = AVCOL_TRC_UNSPECIFIED;
+    قاب->colorspace          = AVCOL_SPC_UNSPECIFIED;
+    قاب->color_range         = AVCOL_RANGE_UNSPECIFIED;
+    قاب->chroma_location     = AVCHROMA_LOC_UNSPECIFIED;
+    قاب->alpha_نما          = AVALPHA_نما_UNSPECIFIED;
+    قاب->flags               = 0;
 }
 
-AVFrame *av_frame_alloc(void)
+AVFrame *av_قاب_alloc(فراغ)
 {
-    AVFrame *frame = av_malloc(sizeof(*frame));
+    AVFrame *قاب = av_malloc(حجم(*قاب));
 
-    if (!frame)
-        return NULL;
+    إذا (!قاب)
+        أرجع عدم;
 
-    get_frame_defaults(frame);
+    get_قاب_defaults(قاب);
 
-    return frame;
+    أرجع قاب;
 }
 
-void av_frame_free(AVFrame **frame)
+فراغ av_قاب_free(AVFrame **قاب)
 {
-    if (!frame || !*frame)
-        return;
+    إذا (!قاب || !*قاب)
+        أرجع;
 
-    av_frame_unref(*frame);
-    av_freep(frame);
+    av_قاب_unref(*قاب);
+    av_freep(قاب);
 }
 
-#define ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
+#تعریف_کن ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
 
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
-                              AVBufferRef *(*alloc)(void *opaque, size_t size),
-                              void *opaque)
+صحيح ff_قاب_get_video_میانگیر(AVFrame *قاب, صحيح align,
+                              AVBufferRef *(*alloc)(فراغ *opaque, size_t اندازه),
+                              فراغ *opaque)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
-    int ret, padded_height;
-    int plane_padding;
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(قاب->format);
+    صحيح ret, padded_ارتفاع;
+    صحيح plane_padding;
     ptrdiff_t linesizes[4];
-    size_t total_size, sizes[4];
+    size_t مجموع_اندازه, sizes[4];
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    إذا (!desc)
+        أرجع AVERROR(EINVAL);
 
-    if ((ret = av_image_check_size(frame->width, frame->height, 0, NULL)) < 0)
-        return ret;
+    إذا ((ret = av_image_check_اندازه(قاب->عرض, قاب->ارتفاع, 0, عدم)) < 0)
+        أرجع ret;
 
-    if (align <= 0)
+    إذا (align <= 0)
         align = ALIGN;
     plane_padding = FFMAX(ALIGN, align);
 
-    if (!frame->linesize[0]) {
-        for (int i = 1; i <= align; i += i) {
-            ret = av_image_fill_linesizes(frame->linesize, frame->format,
-                                          FFALIGN(frame->width, i));
-            if (ret < 0)
-                return ret;
-            if (!(frame->linesize[0] & (align-1)))
-                break;
+    إذا (!قاب->linesize[0]) {
+        لكل (صحيح i = 1; i <= align; i += i) {
+            ret = av_image_fill_linesizes(قاب->linesize, قاب->format,
+                                          FFALIGN(قاب->عرض, i));
+            إذا (ret < 0)
+                أرجع ret;
+            إذا (!(قاب->linesize[0] & (align-1)))
+                اكسر;
         }
 
-        for (int i = 0; i < 4 && frame->linesize[i]; i++)
-            frame->linesize[i] = FFALIGN(frame->linesize[i], align);
+        لكل (صحيح i = 0; i < 4 && قاب->linesize[i]; i++)
+            قاب->linesize[i] = FFALIGN(قاب->linesize[i], align);
     }
 
-    for (int i = 0; i < 4; i++)
-        linesizes[i] = frame->linesize[i];
+    لكل (صحيح i = 0; i < 4; i++)
+        linesizes[i] = قاب->linesize[i];
 
-    padded_height = FFALIGN(frame->height, 32);
-    if ((ret = av_image_fill_plane_sizes(sizes, frame->format,
-                                         padded_height, linesizes)) < 0)
-        return ret;
+    padded_ارتفاع = FFALIGN(قاب->ارتفاع, 32);
+    إذا ((ret = av_image_fill_plane_sizes(sizes, قاب->format,
+                                         padded_ارتفاع, linesizes)) < 0)
+        أرجع ret;
 
-    total_size = 4 * plane_padding + 4 * align;
-    for (int i = 0; i < 4; i++) {
-        if (sizes[i] > SIZE_MAX - total_size)
-            return AVERROR(EINVAL);
-        total_size += sizes[i];
+    مجموع_اندازه = 4 * plane_padding + 4 * align;
+    لكل (صحيح i = 0; i < 4; i++) {
+        إذا (sizes[i] > SIZE_MAX - مجموع_اندازه)
+            أرجع AVERROR(EINVAL);
+        مجموع_اندازه += sizes[i];
     }
 
-    frame->buf[0] = alloc ? alloc(opaque, total_size) : av_buffer_alloc(total_size);
-    if (!frame->buf[0]) {
+    قاب->buf[0] = alloc ? alloc(opaque, مجموع_اندازه) : av_میانگیر_alloc(مجموع_اندازه);
+    إذا (!قاب->buf[0]) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        اذهب fail;
     }
 
-    if ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
-                                      frame->buf[0]->data, frame->linesize)) < 0)
-        goto fail;
+    إذا ((ret = av_image_fill_اشارهگرها(قاب->داده, قاب->format, padded_ارتفاع,
+                                      قاب->buf[0]->داده, قاب->linesize)) < 0)
+        اذهب fail;
 
-    for (int i = 1; i < 4; i++) {
-        if (frame->data[i])
-            frame->data[i] += i * plane_padding;
-        frame->data[i] = (uint8_t *)FFALIGN((uintptr_t)frame->data[i], align);
+    لكل (صحيح i = 1; i < 4; i++) {
+        إذا (قاب->داده[i])
+            قاب->داده[i] += i * plane_padding;
+        قاب->داده[i] = (uint8_t *)FFALIGN((uintptr_t)قاب->داده[i], align);
     }
 
-    frame->extended_data = frame->data;
+    قاب->extended_داده = قاب->داده;
 
-    return 0;
+    أرجع 0;
 fail:
-    av_frame_unref(frame);
-    return ret;
+    av_قاب_unref(قاب);
+    أرجع ret;
 }
 
-static int get_audio_buffer(AVFrame *frame, int align)
+ساكن صحيح get_audio_میانگیر(AVFrame *قاب, صحيح align)
 {
-    int planar   = av_sample_fmt_is_planar(frame->format);
-    int channels, planes;
-    size_t size;
-    int ret;
+    صحيح planar   = av_sample_fmt_is_planar(قاب->format);
+    صحيح channels, planes;
+    size_t اندازه;
+    صحيح ret;
 
-    channels = frame->ch_layout.nb_channels;
+    channels = قاب->ch_layout.nb_channels;
     planes   = planar ? channels : 1;
-    if (!frame->linesize[0]) {
-        ret = av_samples_get_buffer_size(&frame->linesize[0], channels,
-                                         frame->nb_samples, frame->format,
+    إذا (!قاب->linesize[0]) {
+        ret = av_samples_get_میانگیر_اندازه(&قاب->linesize[0], channels,
+                                         قاب->nb_samples, قاب->format,
                                          align);
-        if (ret < 0)
-            return ret;
+        إذا (ret < 0)
+            أرجع ret;
     }
 
-    if (align <= 0)
+    إذا (align <= 0)
         align = ALIGN;
 
-    if (planes > AV_NUM_DATA_POINTERS) {
-        frame->extended_data = av_calloc(planes,
-                                          sizeof(*frame->extended_data));
-        frame->extended_buf  = av_calloc(planes - AV_NUM_DATA_POINTERS,
-                                          sizeof(*frame->extended_buf));
-        if (!frame->extended_data || !frame->extended_buf) {
-            av_freep(&frame->extended_data);
-            av_freep(&frame->extended_buf);
-            return AVERROR(ENOMEM);
+    إذا (planes > AV_رقم_داده_اشارهگرها) {
+        قاب->extended_داده = av_calloc(planes,
+                                          حجم(*قاب->extended_داده));
+        قاب->extended_buf  = av_calloc(planes - AV_رقم_داده_اشارهگرها,
+                                          حجم(*قاب->extended_buf));
+        إذا (!قاب->extended_داده || !قاب->extended_buf) {
+            av_freep(&قاب->extended_داده);
+            av_freep(&قاب->extended_buf);
+            أرجع AVERROR(ENOMEM);
         }
-        frame->nb_extended_buf = planes - AV_NUM_DATA_POINTERS;
-    } else
-        frame->extended_data = frame->data;
+        قاب->nb_extended_buf = planes - AV_رقم_داده_اشارهگرها;
+    } وإلا
+        قاب->extended_داده = قاب->داده;
 
-    if (frame->linesize[0] > SIZE_MAX - align)
-        return AVERROR(EINVAL);
-    size = frame->linesize[0] + (size_t)align;
+    إذا (قاب->linesize[0] > SIZE_MAX - align)
+        أرجع AVERROR(EINVAL);
+    اندازه = قاب->linesize[0] + (size_t)align;
 
-    for (int i = 0; i < FFMIN(planes, AV_NUM_DATA_POINTERS); i++) {
-        frame->buf[i] = av_buffer_alloc(size);
-        if (!frame->buf[i]) {
-            av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+    لكل (صحيح i = 0; i < FFMIN(planes, AV_رقم_داده_اشارهگرها); i++) {
+        قاب->buf[i] = av_میانگیر_alloc(اندازه);
+        إذا (!قاب->buf[i]) {
+            av_قاب_unref(قاب);
+            أرجع AVERROR(ENOMEM);
         }
-        frame->extended_data[i] = frame->data[i] =
-            (uint8_t *)FFALIGN((uintptr_t)frame->buf[i]->data, align);
+        قاب->extended_داده[i] = قاب->داده[i] =
+            (uint8_t *)FFALIGN((uintptr_t)قاب->buf[i]->داده, align);
     }
-    for (int i = 0; i < planes - AV_NUM_DATA_POINTERS; i++) {
-        frame->extended_buf[i] = av_buffer_alloc(size);
-        if (!frame->extended_buf[i]) {
-            av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+    لكل (صحيح i = 0; i < planes - AV_رقم_داده_اشارهگرها; i++) {
+        قاب->extended_buf[i] = av_میانگیر_alloc(اندازه);
+        إذا (!قاب->extended_buf[i]) {
+            av_قاب_unref(قاب);
+            أرجع AVERROR(ENOMEM);
         }
-        frame->extended_data[i + AV_NUM_DATA_POINTERS] =
-            (uint8_t *)FFALIGN((uintptr_t)frame->extended_buf[i]->data, align);
+        قاب->extended_داده[i + AV_رقم_داده_اشارهگرها] =
+            (uint8_t *)FFALIGN((uintptr_t)قاب->extended_buf[i]->داده, align);
     }
-    return 0;
+    أرجع 0;
 
 }
 
-int av_frame_get_buffer(AVFrame *frame, int align)
+صحيح av_قاب_get_میانگیر(AVFrame *قاب, صحيح align)
 {
-    if (frame->format < 0)
-        return AVERROR(EINVAL);
+    إذا (قاب->format < 0)
+        أرجع AVERROR(EINVAL);
 
-    if (frame->width > 0 && frame->height > 0)
-        return ff_frame_get_video_buffer(frame, align, NULL, NULL);
-    else if (frame->nb_samples > 0 &&
-             (av_channel_layout_check(&frame->ch_layout)))
-        return get_audio_buffer(frame, align);
+    إذا (قاب->عرض > 0 && قاب->ارتفاع > 0)
+        أرجع ff_قاب_get_video_میانگیر(قاب, align, عدم, عدم);
+    وإلا إذا (قاب->nb_samples > 0 &&
+             (av_channel_layout_check(&قاب->ch_layout)))
+        أرجع get_audio_میانگیر(قاب, align);
 
-    return AVERROR(EINVAL);
+    أرجع AVERROR(EINVAL);
 }
 
-static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
+ساكن صحيح قاب_copy_props(AVFrame *dst, ثابت AVFrame *src, صحيح force_copy)
 {
     dst->pict_type              = src->pict_type;
-    dst->sample_aspect_ratio    = src->sample_aspect_ratio;
-    dst->crop_top               = src->crop_top;
+    dst->sample_aspect_نسبت    = src->sample_aspect_نسبت;
+    dst->crop_بالاترین               = src->crop_بالاترین;
     dst->crop_bottom            = src->crop_bottom;
-    dst->crop_left              = src->crop_left;
-    dst->crop_right             = src->crop_right;
+    dst->crop_چپ              = src->crop_چپ;
+    dst->crop_راست             = src->crop_راست;
     dst->pts                    = src->pts;
     dst->duration               = src->duration;
     dst->repeat_pict            = src->repeat_pict;
-    dst->sample_rate            = src->sample_rate;
+    dst->sample_نرخ            = src->sample_نرخ;
     dst->opaque                 = src->opaque;
     dst->pkt_dts                = src->pkt_dts;
-    dst->time_base              = src->time_base;
+    dst->زمان_پایه              = src->زمان_پایه;
     dst->quality                = src->quality;
-    dst->best_effort_timestamp  = src->best_effort_timestamp;
+    dst->بهترین_effort_timestamp  = src->بهترین_effort_timestamp;
     dst->flags                  = src->flags;
     dst->decode_error_flags     = src->decode_error_flags;
     dst->color_primaries        = src->color_primaries;
@@ -244,587 +244,587 @@ static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
     dst->colorspace             = src->colorspace;
     dst->color_range            = src->color_range;
     dst->chroma_location        = src->chroma_location;
-    dst->alpha_mode             = src->alpha_mode;
+    dst->alpha_نما             = src->alpha_نما;
 
     av_dict_copy(&dst->metadata, src->metadata, 0);
 
-    for (int i = 0; i < src->nb_side_data; i++) {
-        const AVFrameSideData *sd_src = src->side_data[i];
-        AVFrameSideData *sd_dst;
-        if (   sd_src->type == AV_FRAME_DATA_PANSCAN
-            && (src->width != dst->width || src->height != dst->height))
-            continue;
-        if (force_copy) {
-            sd_dst = av_frame_new_side_data(dst, sd_src->type,
-                                            sd_src->size);
-            if (!sd_dst) {
-                av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+    لكل (صحيح i = 0; i < src->nb_side_داده; i++) {
+        ثابت AVFrame_Side_داده *sd_src = src->side_داده[i];
+        AVFrame_Side_داده *sd_dst;
+        إذا (   sd_src->type == AV_قاب_داده_PANSCAN
+            && (src->عرض != dst->عرض || src->ارتفاع != dst->ارتفاع))
+            استمر;
+        إذا (force_copy) {
+            sd_dst = av_قاب_new_side_داده(dst, sd_src->type,
+                                            sd_src->اندازه);
+            إذا (!sd_dst) {
+                av_قاب_side_داده_free(&dst->side_داده, &dst->nb_side_داده);
+                أرجع AVERROR(ENOMEM);
             }
-            memcpy(sd_dst->data, sd_src->data, sd_src->size);
-        } else {
-            AVBufferRef *ref = av_buffer_ref(sd_src->buf);
-            sd_dst = av_frame_new_side_data_from_buf(dst, sd_src->type, ref);
-            if (!sd_dst) {
-                av_buffer_unref(&ref);
-                av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+            کپی_حافظه(sd_dst->داده, sd_src->داده, sd_src->اندازه);
+        } وإلا {
+            AVBufferRef *ref = av_میانگیر_ref(sd_src->buf);
+            sd_dst = av_قاب_new_side_داده_from_buf(dst, sd_src->type, ref);
+            إذا (!sd_dst) {
+                av_میانگیر_unref(&ref);
+                av_قاب_side_داده_free(&dst->side_داده, &dst->nb_side_داده);
+                أرجع AVERROR(ENOMEM);
             }
         }
         av_dict_copy(&sd_dst->metadata, sd_src->metadata, 0);
     }
 
-    av_refstruct_replace(&dst->private_ref, src->private_ref);
-    return av_buffer_replace(&dst->opaque_ref, src->opaque_ref);
+    av_refstruct_replace(&dst->خصوصی_ref, src->خصوصی_ref);
+    أرجع av_میانگیر_replace(&dst->opaque_ref, src->opaque_ref);
 }
 
-int av_frame_ref(AVFrame *dst, const AVFrame *src)
+صحيح av_قاب_ref(AVFrame *dst, ثابت AVFrame *src)
 {
-    int ret = 0;
+    صحيح ret = 0;
 
-    av_assert1(dst->width == 0 && dst->height == 0);
+    av_assert1(dst->عرض == 0 && dst->ارتفاع == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
-               dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
+               dst->ch_layout.ترتیب == AV_CHANNEL_ترتیب_UNSPEC);
 
     dst->format         = src->format;
-    dst->width          = src->width;
-    dst->height         = src->height;
+    dst->عرض          = src->عرض;
+    dst->ارتفاع         = src->ارتفاع;
     dst->nb_samples     = src->nb_samples;
 
-    ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    ret = قاب_copy_props(dst, src, 0);
+    إذا (ret < 0)
+        اذهب fail;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    إذا (ret < 0)
+        اذهب fail;
 
     /* duplicate the frame data if it's not refcounted */
-    if (!src->buf[0]) {
-        ret = av_frame_get_buffer(dst, 0);
-        if (ret < 0)
-            goto fail;
+    إذا (!src->buf[0]) {
+        ret = av_قاب_get_میانگیر(dst, 0);
+        إذا (ret < 0)
+            اذهب fail;
 
-        ret = av_frame_copy(dst, src);
-        if (ret < 0)
-            goto fail;
+        ret = av_قاب_copy(dst, src);
+        إذا (ret < 0)
+            اذهب fail;
 
-        return 0;
+        أرجع 0;
     }
 
     /* ref the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        if (!src->buf[i])
-            continue;
-        dst->buf[i] = av_buffer_ref(src->buf[i]);
-        if (!dst->buf[i]) {
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        إذا (!src->buf[i])
+            استمر;
+        dst->buf[i] = av_میانگیر_ref(src->buf[i]);
+        إذا (!dst->buf[i]) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            اذهب fail;
         }
     }
 
-    if (src->extended_buf) {
+    إذا (src->extended_buf) {
         dst->extended_buf = av_calloc(src->nb_extended_buf,
-                                      sizeof(*dst->extended_buf));
-        if (!dst->extended_buf) {
+                                      حجم(*dst->extended_buf));
+        إذا (!dst->extended_buf) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            اذهب fail;
         }
         dst->nb_extended_buf = src->nb_extended_buf;
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
-            dst->extended_buf[i] = av_buffer_ref(src->extended_buf[i]);
-            if (!dst->extended_buf[i]) {
+        لكل (صحيح i = 0; i < src->nb_extended_buf; i++) {
+            dst->extended_buf[i] = av_میانگیر_ref(src->extended_buf[i]);
+            إذا (!dst->extended_buf[i]) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                اذهب fail;
             }
         }
     }
 
-    if (src->hw_frames_ctx) {
-        dst->hw_frames_ctx = av_buffer_ref(src->hw_frames_ctx);
-        if (!dst->hw_frames_ctx) {
+    إذا (src->hw_قابها_ctx) {
+        dst->hw_قابها_ctx = av_میانگیر_ref(src->hw_قابها_ctx);
+        إذا (!dst->hw_قابها_ctx) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            اذهب fail;
         }
     }
 
     /* duplicate extended data */
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    إذا (src->extended_داده != src->داده) {
+        صحيح ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        إذا (ch <= 0 || ch > SIZE_MAX / حجم(*dst->extended_داده)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            اذهب fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_داده = av_memdup(src->extended_داده, حجم(*dst->extended_داده) * ch);
+        إذا (!dst->extended_داده) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            اذهب fail;
         }
-    } else
-        dst->extended_data = dst->data;
+    } وإلا
+        dst->extended_داده = dst->داده;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    کپی_حافظه(dst->داده,     src->داده,     حجم(src->داده));
+    کپی_حافظه(dst->linesize, src->linesize, حجم(src->linesize));
 
-    return 0;
+    أرجع 0;
 
 fail:
-    av_frame_unref(dst);
-    return ret;
+    av_قاب_unref(dst);
+    أرجع ret;
 }
 
-int av_frame_replace(AVFrame *dst, const AVFrame *src)
+صحيح av_قاب_replace(AVFrame *dst, ثابت AVFrame *src)
 {
-    int ret = 0;
+    صحيح ret = 0;
 
-    if (dst == src)
-        return AVERROR(EINVAL);
+    إذا (dst == src)
+        أرجع AVERROR(EINVAL);
 
-    if (!src->buf[0]) {
-        av_frame_unref(dst);
+    إذا (!src->buf[0]) {
+        av_قاب_unref(dst);
 
         /* duplicate the frame data if it's not refcounted */
-        if (   src->data[0] || src->data[1]
-            || src->data[2] || src->data[3])
-            return av_frame_ref(dst, src);
+        إذا (   src->داده[0] || src->داده[1]
+            || src->داده[2] || src->داده[3])
+            أرجع av_قاب_ref(dst, src);
 
-        ret = frame_copy_props(dst, src, 0);
-        if (ret < 0)
-            goto fail;
+        ret = قاب_copy_props(dst, src, 0);
+        إذا (ret < 0)
+            اذهب fail;
     }
 
     dst->format         = src->format;
-    dst->width          = src->width;
-    dst->height         = src->height;
+    dst->عرض          = src->عرض;
+    dst->ارتفاع         = src->ارتفاع;
     dst->nb_samples     = src->nb_samples;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    إذا (ret < 0)
+        اذهب fail;
 
-    av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
+    av_قاب_side_داده_free(&dst->side_داده, &dst->nb_side_داده);
     av_dict_free(&dst->metadata);
-    ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    ret = قاب_copy_props(dst, src, 0);
+    إذا (ret < 0)
+        اذهب fail;
 
     /* replace the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        ret = av_buffer_replace(&dst->buf[i], src->buf[i]);
-        if (ret < 0)
-            goto fail;
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        ret = av_میانگیر_replace(&dst->buf[i], src->buf[i]);
+        إذا (ret < 0)
+            اذهب fail;
     }
 
-    if (src->extended_buf) {
-        if (dst->nb_extended_buf != src->nb_extended_buf) {
-            int nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
-            void *tmp;
+    إذا (src->extended_buf) {
+        إذا (dst->nb_extended_buf != src->nb_extended_buf) {
+            صحيح nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
+            فراغ *tmp;
 
-            for (int i = nb_extended_buf; i < dst->nb_extended_buf; i++)
-                av_buffer_unref(&dst->extended_buf[i]);
+            لكل (صحيح i = nb_extended_buf; i < dst->nb_extended_buf; i++)
+                av_میانگیر_unref(&dst->extended_buf[i]);
 
             tmp = av_realloc_array(dst->extended_buf, src->nb_extended_buf,
-                                   sizeof(*dst->extended_buf));
-            if (!tmp) {
+                                   حجم(*dst->extended_buf));
+            إذا (!tmp) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                اذهب fail;
             }
             dst->extended_buf = tmp;
             dst->nb_extended_buf = src->nb_extended_buf;
 
             memset(&dst->extended_buf[nb_extended_buf], 0,
-                   (src->nb_extended_buf - nb_extended_buf) * sizeof(*dst->extended_buf));
+                   (src->nb_extended_buf - nb_extended_buf) * حجم(*dst->extended_buf));
         }
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
-            ret = av_buffer_replace(&dst->extended_buf[i], src->extended_buf[i]);
-            if (ret < 0)
-                goto fail;
+        لكل (صحيح i = 0; i < src->nb_extended_buf; i++) {
+            ret = av_میانگیر_replace(&dst->extended_buf[i], src->extended_buf[i]);
+            إذا (ret < 0)
+                اذهب fail;
         }
-    } else if (dst->extended_buf) {
-        for (int i = 0; i < dst->nb_extended_buf; i++)
-            av_buffer_unref(&dst->extended_buf[i]);
+    } وإلا إذا (dst->extended_buf) {
+        لكل (صحيح i = 0; i < dst->nb_extended_buf; i++)
+            av_میانگیر_unref(&dst->extended_buf[i]);
         av_freep(&dst->extended_buf);
     }
 
-    ret = av_buffer_replace(&dst->hw_frames_ctx, src->hw_frames_ctx);
-    if (ret < 0)
-        goto fail;
+    ret = av_میانگیر_replace(&dst->hw_قابها_ctx, src->hw_قابها_ctx);
+    إذا (ret < 0)
+        اذهب fail;
 
-    if (dst->extended_data != dst->data)
-        av_freep(&dst->extended_data);
+    إذا (dst->extended_داده != dst->داده)
+        av_freep(&dst->extended_داده);
 
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    إذا (src->extended_داده != src->داده) {
+        صحيح ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        إذا (ch <= 0 || ch > SIZE_MAX / حجم(*dst->extended_داده)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            اذهب fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_داده = av_memdup(src->extended_داده, حجم(*dst->extended_داده) * ch);
+        إذا (!dst->extended_داده) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            اذهب fail;
         }
-    } else
-        dst->extended_data = dst->data;
+    } وإلا
+        dst->extended_داده = dst->داده;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    کپی_حافظه(dst->داده,     src->داده,     حجم(src->داده));
+    کپی_حافظه(dst->linesize, src->linesize, حجم(src->linesize));
 
-    return 0;
+    أرجع 0;
 
 fail:
-    av_frame_unref(dst);
-    return ret;
+    av_قاب_unref(dst);
+    أرجع ret;
 }
 
-AVFrame *av_frame_clone(const AVFrame *src)
+AVFrame *av_قاب_clone(ثابت AVFrame *src)
 {
-    AVFrame *ret = av_frame_alloc();
+    AVFrame *ret = av_قاب_alloc();
 
-    if (!ret)
-        return NULL;
+    إذا (!ret)
+        أرجع عدم;
 
-    if (av_frame_ref(ret, src) < 0)
-        av_frame_free(&ret);
+    إذا (av_قاب_ref(ret, src) < 0)
+        av_قاب_free(&ret);
 
-    return ret;
+    أرجع ret;
 }
 
-void av_frame_unref(AVFrame *frame)
+فراغ av_قاب_unref(AVFrame *قاب)
 {
-    if (!frame)
-        return;
+    إذا (!قاب)
+        أرجع;
 
-    av_frame_side_data_free(&frame->side_data, &frame->nb_side_data);
+    av_قاب_side_داده_free(&قاب->side_داده, &قاب->nb_side_داده);
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        av_buffer_unref(&frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
-        av_buffer_unref(&frame->extended_buf[i]);
-    av_freep(&frame->extended_buf);
-    av_dict_free(&frame->metadata);
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(قاب->buf); i++)
+        av_میانگیر_unref(&قاب->buf[i]);
+    لكل (صحيح i = 0; i < قاب->nb_extended_buf; i++)
+        av_میانگیر_unref(&قاب->extended_buf[i]);
+    av_freep(&قاب->extended_buf);
+    av_dict_free(&قاب->metadata);
 
-    av_buffer_unref(&frame->hw_frames_ctx);
+    av_میانگیر_unref(&قاب->hw_قابها_ctx);
 
-    av_buffer_unref(&frame->opaque_ref);
-    av_refstruct_unref(&frame->private_ref);
+    av_میانگیر_unref(&قاب->opaque_ref);
+    av_refstruct_unref(&قاب->خصوصی_ref);
 
-    if (frame->extended_data != frame->data)
-        av_freep(&frame->extended_data);
+    إذا (قاب->extended_داده != قاب->داده)
+        av_freep(&قاب->extended_داده);
 
-    av_channel_layout_uninit(&frame->ch_layout);
+    av_channel_layout_uninit(&قاب->ch_layout);
 
-    get_frame_defaults(frame);
+    get_قاب_defaults(قاب);
 }
 
-void av_frame_move_ref(AVFrame *dst, AVFrame *src)
+فراغ av_قاب_move_ref(AVFrame *dst, AVFrame *src)
 {
-    av_assert1(dst->width == 0 && dst->height == 0);
+    av_assert1(dst->عرض == 0 && dst->ارتفاع == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
-               dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
+               dst->ch_layout.ترتیب == AV_CHANNEL_ترتیب_UNSPEC);
 
     *dst = *src;
-    if (src->extended_data == src->data)
-        dst->extended_data = dst->data;
-    get_frame_defaults(src);
+    إذا (src->extended_داده == src->داده)
+        dst->extended_داده = dst->داده;
+    get_قاب_defaults(src);
 }
 
-int av_frame_is_writable(AVFrame *frame)
+صحيح av_قاب_is_writable(AVFrame *قاب)
 {
-    int ret = 1;
+    صحيح ret = 1;
 
     /* assume non-refcounted frames are not writable */
-    if (!frame->buf[0])
-        return 0;
+    إذا (!قاب->buf[0])
+        أرجع 0;
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        if (frame->buf[i])
-            ret &= !!av_buffer_is_writable(frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
-        ret &= !!av_buffer_is_writable(frame->extended_buf[i]);
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(قاب->buf); i++)
+        إذا (قاب->buf[i])
+            ret &= !!av_میانگیر_is_writable(قاب->buf[i]);
+    لكل (صحيح i = 0; i < قاب->nb_extended_buf; i++)
+        ret &= !!av_میانگیر_is_writable(قاب->extended_buf[i]);
 
-    return ret;
+    أرجع ret;
 }
 
-int av_frame_make_writable(AVFrame *frame)
+صحيح av_قاب_make_writable(AVFrame *قاب)
 {
     AVFrame tmp;
-    int ret;
+    صحيح ret;
 
-    if (av_frame_is_writable(frame))
-        return 0;
+    إذا (av_قاب_is_writable(قاب))
+        أرجع 0;
 
-    memset(&tmp, 0, sizeof(tmp));
-    tmp.format         = frame->format;
-    tmp.width          = frame->width;
-    tmp.height         = frame->height;
-    tmp.nb_samples     = frame->nb_samples;
-    ret = av_channel_layout_copy(&tmp.ch_layout, &frame->ch_layout);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    memset(&tmp, 0, حجم(tmp));
+    tmp.format         = قاب->format;
+    tmp.عرض          = قاب->عرض;
+    tmp.ارتفاع         = قاب->ارتفاع;
+    tmp.nb_samples     = قاب->nb_samples;
+    ret = av_channel_layout_copy(&tmp.ch_layout, &قاب->ch_layout);
+    إذا (ret < 0) {
+        av_قاب_unref(&tmp);
+        أرجع ret;
     }
 
-    if (frame->hw_frames_ctx)
-        ret = av_hwframe_get_buffer(frame->hw_frames_ctx, &tmp, 0);
-    else
-        ret = av_frame_get_buffer(&tmp, 0);
-    if (ret < 0)
-        return ret;
+    إذا (قاب->hw_قابها_ctx)
+        ret = av_hwframe_get_میانگیر(قاب->hw_قابها_ctx, &tmp, 0);
+    وإلا
+        ret = av_قاب_get_میانگیر(&tmp, 0);
+    إذا (ret < 0)
+        أرجع ret;
 
-    ret = av_frame_copy(&tmp, frame);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    ret = av_قاب_copy(&tmp, قاب);
+    إذا (ret < 0) {
+        av_قاب_unref(&tmp);
+        أرجع ret;
     }
 
-    ret = av_frame_copy_props(&tmp, frame);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    ret = av_قاب_copy_props(&tmp, قاب);
+    إذا (ret < 0) {
+        av_قاب_unref(&tmp);
+        أرجع ret;
     }
 
-    av_frame_unref(frame);
+    av_قاب_unref(قاب);
 
-    *frame = tmp;
-    if (tmp.data == tmp.extended_data)
-        frame->extended_data = frame->data;
+    *قاب = tmp;
+    إذا (tmp.داده == tmp.extended_داده)
+        قاب->extended_داده = قاب->داده;
 
-    return 0;
+    أرجع 0;
 }
 
-int av_frame_copy_props(AVFrame *dst, const AVFrame *src)
+صحيح av_قاب_copy_props(AVFrame *dst, ثابت AVFrame *src)
 {
-    return frame_copy_props(dst, src, 1);
+    أرجع قاب_copy_props(dst, src, 1);
 }
 
-AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane)
+AVBufferRef *av_قاب_get_plane_میانگیر(ثابت AVFrame *قاب, صحيح plane)
 {
-    uintptr_t data;
-    int planes;
+    uintptr_t داده;
+    صحيح planes;
 
-    if (frame->nb_samples) {
-        int channels = frame->ch_layout.nb_channels;
-        if (!channels)
-            return NULL;
-        planes = av_sample_fmt_is_planar(frame->format) ? channels : 1;
-    } else
+    إذا (قاب->nb_samples) {
+        صحيح channels = قاب->ch_layout.nb_channels;
+        إذا (!channels)
+            أرجع عدم;
+        planes = av_sample_fmt_is_planar(قاب->format) ? channels : 1;
+    } وإلا
         planes = 4;
 
-    if (plane < 0 || plane >= planes || !frame->extended_data[plane])
-        return NULL;
-    data = (uintptr_t)frame->extended_data[plane];
+    إذا (plane < 0 || plane >= planes || !قاب->extended_داده[plane])
+        أرجع عدم;
+    داده = (uintptr_t)قاب->extended_داده[plane];
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
-        AVBufferRef *buf = frame->buf[i];
-        uintptr_t buf_begin = (uintptr_t)buf->data;
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(قاب->buf) && قاب->buf[i]; i++) {
+        AVBufferRef *buf = قاب->buf[i];
+        uintptr_t buf_begin = (uintptr_t)buf->داده;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        إذا (داده >= buf_begin && داده < buf_begin + buf->اندازه)
+            أرجع buf;
     }
-    for (int i = 0; i < frame->nb_extended_buf; i++) {
-        AVBufferRef *buf = frame->extended_buf[i];
-        uintptr_t buf_begin = (uintptr_t)buf->data;
+    لكل (صحيح i = 0; i < قاب->nb_extended_buf; i++) {
+        AVBufferRef *buf = قاب->extended_buf[i];
+        uintptr_t buf_begin = (uintptr_t)buf->داده;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        إذا (داده >= buf_begin && داده < buf_begin + buf->اندازه)
+            أرجع buf;
     }
-    return NULL;
+    أرجع عدم;
 }
 
-AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
-                                                 enum AVFrameSideDataType type,
+AVFrame_Side_داده *av_قاب_new_side_داده_from_buf(AVFrame *قاب,
+                                                 تعداد AVFrame_Side_داده_Type type,
                                                  AVBufferRef *buf)
 {
-    return
-        ff_frame_side_data_add_from_buf(
-            &frame->side_data, &frame->nb_side_data, type, buf);
+    أرجع
+        ff_قاب_side_داده_جمع_کن_from_buf(
+            &قاب->side_داده, &قاب->nb_side_داده, type, buf);
 }
 
-AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
-                                        enum AVFrameSideDataType type,
-                                        size_t size)
+AVFrame_Side_داده *av_قاب_new_side_داده(AVFrame *قاب,
+                                        تعداد AVFrame_Side_داده_Type type,
+                                        size_t اندازه)
 {
-    AVFrameSideData *ret;
-    AVBufferRef *buf = av_buffer_alloc(size);
-    ret = av_frame_new_side_data_from_buf(frame, type, buf);
-    if (!ret)
-        av_buffer_unref(&buf);
-    return ret;
+    AVFrame_Side_داده *ret;
+    AVBufferRef *buf = av_میانگیر_alloc(اندازه);
+    ret = av_قاب_new_side_داده_from_buf(قاب, type, buf);
+    إذا (!ret)
+        av_میانگیر_unref(&buf);
+    أرجع ret;
 }
 
-AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
-                                        enum AVFrameSideDataType type)
+AVFrame_Side_داده *av_قاب_get_side_داده(ثابت AVFrame *قاب,
+                                        تعداد AVFrame_Side_داده_Type type)
 {
-    return (AVFrameSideData *)av_frame_side_data_get(
-        frame->side_data, frame->nb_side_data,
+    أرجع (AVFrame_Side_داده *)av_قاب_side_داده_get(
+        قاب->side_داده, قاب->nb_side_داده,
         type
     );
 }
 
-static int frame_copy_video(AVFrame *dst, const AVFrame *src)
+ساكن صحيح قاب_copy_video(AVFrame *dst, ثابت AVFrame *src)
 {
-    int planes;
+    صحيح planes;
 
-    if (dst->width  < src->width ||
-        dst->height < src->height)
-        return AVERROR(EINVAL);
+    إذا (dst->عرض  < src->عرض ||
+        dst->ارتفاع < src->ارتفاع)
+        أرجع AVERROR(EINVAL);
 
-    if (src->hw_frames_ctx || dst->hw_frames_ctx)
-        return av_hwframe_transfer_data(dst, src, 0);
+    إذا (src->hw_قابها_ctx || dst->hw_قابها_ctx)
+        أرجع av_hwframe_transfer_داده(dst, src, 0);
 
-    planes = av_pix_fmt_count_planes(dst->format);
-    for (int i = 0; i < planes; i++)
-        if (!dst->data[i] || !src->data[i])
-            return AVERROR(EINVAL);
+    planes = av_pix_fmt_شمار_planes(dst->format);
+    لكل (صحيح i = 0; i < planes; i++)
+        إذا (!dst->داده[i] || !src->داده[i])
+            أرجع AVERROR(EINVAL);
 
-    av_image_copy2(dst->data, dst->linesize,
-                   src->data, src->linesize,
-                   dst->format, src->width, src->height);
+    av_image_copy2(dst->داده, dst->linesize,
+                   src->داده, src->linesize,
+                   dst->format, src->عرض, src->ارتفاع);
 
-    return 0;
+    أرجع 0;
 }
 
-static int frame_copy_audio(AVFrame *dst, const AVFrame *src)
+ساكن صحيح قاب_copy_audio(AVFrame *dst, ثابت AVFrame *src)
 {
-    int planar   = av_sample_fmt_is_planar(dst->format);
-    int channels = dst->ch_layout.nb_channels;
-    int planes   = planar ? channels : 1;
+    صحيح planar   = av_sample_fmt_is_planar(dst->format);
+    صحيح channels = dst->ch_layout.nb_channels;
+    صحيح planes   = planar ? channels : 1;
 
-    if (dst->nb_samples != src->nb_samples ||
+    إذا (dst->nb_samples != src->nb_samples ||
         av_channel_layout_compare(&dst->ch_layout, &src->ch_layout))
-        return AVERROR(EINVAL);
+        أرجع AVERROR(EINVAL);
 
-    for (int i = 0; i < planes; i++)
-        if (!dst->extended_data[i] || !src->extended_data[i])
-            return AVERROR(EINVAL);
+    لكل (صحيح i = 0; i < planes; i++)
+        إذا (!dst->extended_داده[i] || !src->extended_داده[i])
+            أرجع AVERROR(EINVAL);
 
-    av_samples_copy(dst->extended_data, src->extended_data, 0, 0,
+    av_samples_copy(dst->extended_داده, src->extended_داده, 0, 0,
                     dst->nb_samples, channels, dst->format);
 
-    return 0;
+    أرجع 0;
 }
 
-int av_frame_copy(AVFrame *dst, const AVFrame *src)
+صحيح av_قاب_copy(AVFrame *dst, ثابت AVFrame *src)
 {
-    if (dst->format != src->format || dst->format < 0)
-        return AVERROR(EINVAL);
+    إذا (dst->format != src->format || dst->format < 0)
+        أرجع AVERROR(EINVAL);
 
-    if (dst->width > 0 && dst->height > 0)
-        return frame_copy_video(dst, src);
-    else if (dst->nb_samples > 0 &&
+    إذا (dst->عرض > 0 && dst->ارتفاع > 0)
+        أرجع قاب_copy_video(dst, src);
+    وإلا إذا (dst->nb_samples > 0 &&
              (av_channel_layout_check(&dst->ch_layout)))
-        return frame_copy_audio(dst, src);
+        أرجع قاب_copy_audio(dst, src);
 
-    return AVERROR(EINVAL);
+    أرجع AVERROR(EINVAL);
 }
 
-void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type)
+فراغ av_قاب_remove_side_داده(AVFrame *قاب, تعداد AVFrame_Side_داده_Type type)
 {
-    av_frame_side_data_remove(&frame->side_data, &frame->nb_side_data, type);
+    av_قاب_side_داده_remove(&قاب->side_داده, &قاب->nb_side_داده, type);
 }
 
-static int calc_cropping_offsets(size_t offsets[4], const AVFrame *frame,
-                                 const AVPixFmtDescriptor *desc)
+ساكن صحيح calc_cropping_offsets(size_t offsets[4], ثابت AVFrame *قاب,
+                                 ثابت AVPixFmtDescriptor *desc)
 {
-    for (int i = 0; frame->data[i]; i++) {
-        const AVComponentDescriptor *comp = NULL;
-        int shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
-        int shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    لكل (صحيح i = 0; قاب->داده[i]; i++) {
+        ثابت AVComponentDescriptor *comp = عدم;
+        صحيح لغزش_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
+        صحيح لغزش_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
 
-        if (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
+        إذا (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
             offsets[i] = 0;
-            break;
+            اكسر;
         }
 
         /* find any component descriptor for this plane */
-        for (int j = 0; j < desc->nb_components; j++) {
-            if (desc->comp[j].plane == i) {
+        لكل (صحيح j = 0; j < desc->nb_components; j++) {
+            إذا (desc->comp[j].plane == i) {
                 comp = &desc->comp[j];
-                break;
+                اكسر;
             }
         }
-        if (!comp)
-            return AVERROR_BUG;
+        إذا (!comp)
+            أرجع AVERROR_BUG;
 
-        offsets[i] = (frame->crop_top  >> shift_y) * frame->linesize[i] +
-                     (frame->crop_left >> shift_x) * comp->step;
+        offsets[i] = (قاب->crop_بالاترین  >> لغزش_y) * قاب->linesize[i] +
+                     (قاب->crop_چپ >> لغزش_x) * comp->گام;
     }
 
-    return 0;
+    أرجع 0;
 }
 
-int av_frame_apply_cropping(AVFrame *frame, int flags)
+صحيح av_قاب_apply_cropping(AVFrame *قاب, صحيح flags)
 {
-    const AVPixFmtDescriptor *desc;
+    ثابت AVPixFmtDescriptor *desc;
     size_t offsets[4];
-    int ret;
+    صحيح ret;
 
-    if (!(frame->width > 0 && frame->height > 0))
-        return AVERROR(EINVAL);
+    إذا (!(قاب->عرض > 0 && قاب->ارتفاع > 0))
+        أرجع AVERROR(EINVAL);
 
-    if (frame->crop_left >= INT_MAX - frame->crop_right        ||
-        frame->crop_top  >= INT_MAX - frame->crop_bottom       ||
-        (frame->crop_left + frame->crop_right) >= frame->width ||
-        (frame->crop_top + frame->crop_bottom) >= frame->height)
-        return AVERROR(ERANGE);
+    إذا (قاب->crop_چپ >= بیشترین_صحیح - قاب->crop_راست        ||
+        قاب->crop_بالاترین  >= بیشترین_صحیح - قاب->crop_bottom       ||
+        (قاب->crop_چپ + قاب->crop_راست) >= قاب->عرض ||
+        (قاب->crop_بالاترین + قاب->crop_bottom) >= قاب->ارتفاع)
+        أرجع AVERROR(ERANGE);
 
-    desc = av_pix_fmt_desc_get(frame->format);
-    if (!desc)
-        return AVERROR_BUG;
+    desc = av_pix_fmt_desc_get(قاب->format);
+    إذا (!desc)
+        أرجع AVERROR_BUG;
 
     /* Apply just the right/bottom cropping for hwaccel formats. Bitstream
      * formats cannot be easily handled here either (and corresponding decoders
      * should not export any cropping anyway), so do the same for those as well.
      * */
-    if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
-        frame->width      -= frame->crop_right;
-        frame->height     -= frame->crop_bottom;
-        frame->crop_right  = 0;
-        frame->crop_bottom = 0;
-        return 0;
+    إذا (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
+        قاب->عرض      -= قاب->crop_راست;
+        قاب->ارتفاع     -= قاب->crop_bottom;
+        قاب->crop_راست  = 0;
+        قاب->crop_bottom = 0;
+        أرجع 0;
     }
 
     /* calculate the offsets for each plane */
-    ret = calc_cropping_offsets(offsets, frame, desc);
-    if (ret < 0)
-        return ret;
+    ret = calc_cropping_offsets(offsets, قاب, desc);
+    إذا (ret < 0)
+        أرجع ret;
 
     /* adjust the offsets to avoid breaking alignment */
-    if (!(flags & AV_FRAME_CROP_UNALIGNED)) {
-        int log2_crop_align = frame->crop_left ? ff_ctz(frame->crop_left) : INT_MAX;
-        int min_log2_align = INT_MAX;
+    إذا (!(flags & AV_قاب_CROP_UNALIGNED)) {
+        صحيح log2_crop_align = قاب->crop_چپ ? ff_ctz(قاب->crop_چپ) : بیشترین_صحیح;
+        صحيح min_log2_align = بیشترین_صحیح;
 
-        for (int i = 0; frame->data[i]; i++) {
-            int log2_align = offsets[i] ? ff_ctz(offsets[i]) : INT_MAX;
+        لكل (صحيح i = 0; قاب->داده[i]; i++) {
+            صحيح log2_align = offsets[i] ? ff_ctz(offsets[i]) : بیشترین_صحیح;
             min_log2_align = FFMIN(log2_align, min_log2_align);
         }
 
         /* The data alignment is the cropping alignment scaled by a power of 2,
          * up for multi-byte pixels and down for subsampled planes */
-        if (min_log2_align < 5 && log2_crop_align != INT_MAX) {
-            frame->crop_left &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
-            ret = calc_cropping_offsets(offsets, frame, desc);
-            if (ret < 0)
-                return ret;
+        إذا (min_log2_align < 5 && log2_crop_align != بیشترین_صحیح) {
+            قاب->crop_چپ &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
+            ret = calc_cropping_offsets(offsets, قاب, desc);
+            إذا (ret < 0)
+                أرجع ret;
         }
     }
 
-    for (int i = 0; frame->data[i]; i++)
-        frame->data[i] += offsets[i];
+    لكل (صحيح i = 0; قاب->داده[i]; i++)
+        قاب->داده[i] += offsets[i];
 
-    frame->width      -= (frame->crop_left + frame->crop_right);
-    frame->height     -= (frame->crop_top  + frame->crop_bottom);
-    frame->crop_left   = 0;
-    frame->crop_right  = 0;
-    frame->crop_top    = 0;
-    frame->crop_bottom = 0;
+    قاب->عرض      -= (قاب->crop_چپ + قاب->crop_راست);
+    قاب->ارتفاع     -= (قاب->crop_بالاترین  + قاب->crop_bottom);
+    قاب->crop_چپ   = 0;
+    قاب->crop_راست  = 0;
+    قاب->crop_بالاترین    = 0;
+    قاب->crop_bottom = 0;
 
-    return 0;
+    أرجع 0;
 }

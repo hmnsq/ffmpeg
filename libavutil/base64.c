@@ -24,20 +24,20 @@
  * @author Ryan Martell <rdm4@martellventures.com> (with lots of Michael)
  */
 
-#include <limits.h>
-#include <stddef.h>
+#ضمن <limits.h>
+#ضمن <stddef.h>
 
-#include "base64.h"
-#include "base64_internal.h"
-#include "error.h"
+#ضمن "base64.h"
+#ضمن "base64_internal.h"
+#ضمن "error.h"
 
-#if ARCH_AARCH64
-#include "libavutil/aarch64/cpu.h"
-#include "libavutil/aarch64/base64.h"
-#endif
+#إذا ARCH_AARCH64
+#ضمن "libavutil/aarch64/cpu.h"
+#ضمن "libavutil/aarch64/base64.h"
+#پایان_اگر
 
 /* ---------------- private code */
-static const uint8_t map2[256] =
+ساكن ثابت uint8_t map2[256] =
 {
     0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -76,71 +76,71 @@ static const uint8_t map2[256] =
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
 };
 
-#define BASE64_DEC_STEP(i) do { \
-    bits = map2[in[i]]; \
-    if (bits & 0x80) \
-        goto out ## i; \
-    v = i ? (v << 6) + bits : bits; \
-} while(0)
+#تعریف_کن BASE64_DEC_گام(i) افعل { \
+    بیتها = map2[درون[i]]; \
+    إذا (بیتها & 0x80) \
+        اذهب بیرون ## i; \
+    v = i ? (v << 6) + بیتها : بیتها; \
+} طالما(0)
 
-int av_base64_decode(uint8_t *out, const char *in_str, int out_size)
+صحيح av_base64_decode(uint8_t *بیرون, ثابت حرف *درون_str, صحيح بیرون_اندازه)
 {
-    uint8_t *dst = out;
-    uint8_t *end;
+    uint8_t *dst = بیرون;
+    uint8_t *انتها;
     // no sign extension
-    const uint8_t *in = in_str;
-    unsigned bits = 0xff;
-    unsigned v;
+    ثابت uint8_t *درون = درون_str;
+    بیعلامت بیتها = 0xff;
+    بیعلامت v;
 
-    if (!out)
-        goto validity_check;
+    إذا (!بیرون)
+        اذهب validity_check;
 
-    end = out + out_size;
-    while (end - dst > 3) {
-        BASE64_DEC_STEP(0);
-        BASE64_DEC_STEP(1);
-        BASE64_DEC_STEP(2);
-        BASE64_DEC_STEP(3);
+    انتها = بیرون + بیرون_اندازه;
+    طالما (انتها - dst > 3) {
+        BASE64_DEC_گام(0);
+        BASE64_DEC_گام(1);
+        BASE64_DEC_گام(2);
+        BASE64_DEC_گام(3);
         // Using AV_WB32 directly confuses compiler
         v = av_be2ne32(v << 8);
         AV_WN32(dst, v);
         dst += 3;
-        in += 4;
+        درون += 4;
     }
-    if (end - dst) {
-        BASE64_DEC_STEP(0);
-        BASE64_DEC_STEP(1);
-        BASE64_DEC_STEP(2);
-        BASE64_DEC_STEP(3);
+    إذا (انتها - dst) {
+        BASE64_DEC_گام(0);
+        BASE64_DEC_گام(1);
+        BASE64_DEC_گام(2);
+        BASE64_DEC_گام(3);
         *dst++ = v >> 16;
-        if (end - dst)
+        إذا (انتها - dst)
             *dst++ = v >> 8;
-        if (end - dst)
+        إذا (انتها - dst)
             *dst++ = v;
-        in += 4;
+        درون += 4;
     }
 validity_check:
-    while (1) {
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
+    طالما (1) {
+        BASE64_DEC_گام(0);
+        درون++;
+        BASE64_DEC_گام(0);
+        درون++;
+        BASE64_DEC_گام(0);
+        درون++;
+        BASE64_DEC_گام(0);
+        درون++;
     }
 
 out3:
-    if (end - dst)
+    إذا (انتها - dst)
         *dst++ = v >> 10;
     v <<= 2;
 out2:
-    if (end - dst)
+    إذا (انتها - dst)
         *dst++ = v >> 4;
 out1:
 out0:
-    return bits & 1 ? AVERROR_INVALIDDATA : out ? dst - out : 0;
+    أرجع بیتها & 1 ? AVERROR_INVALIDDATA : بیرون ? dst - بیرون : 0;
 }
 
 /*****************************************************************************
@@ -149,18 +149,18 @@ out0:
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-char *av_base64_encode(char *out, int out_size, const uint8_t *in, int in_size)
+حرف *av_base64_encode(حرف *بیرون, صحيح بیرون_اندازه, ثابت uint8_t *درون, صحيح درون_اندازه)
 {
-    static const char b64[] =
+    ساكن ثابت حرف b64[] =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    if (in_size >= UINT_MAX / 4 ||
-        out_size < AV_BASE64_SIZE(in_size))
-        return NULL;
-#if ARCH_AARCH64
-    if (in_size >= 48 && have_neon(av_get_cpu_flags())) {
-        return ff_base64_encode_neon(out, in, in_size, b64);
+    إذا (درون_اندازه >= UINT_MAX / 4 ||
+        بیرون_اندازه < AV_BASE64_اندازه(درون_اندازه))
+        أرجع عدم;
+#إذا ARCH_AARCH64
+    إذا (درون_اندازه >= 48 && have_neon(av_get_cpu_flags())) {
+        أرجع ff_base64_encode_neon(بیرون, درون, درون_اندازه, b64);
     }
-#endif
-    return ff_base64_encode_c(out, in, in_size, b64);
+#پایان_اگر
+    أرجع ff_base64_encode_c(بیرون, درون, درون_اندازه, b64);
 }

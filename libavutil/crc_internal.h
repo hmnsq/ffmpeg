@@ -16,53 +16,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CRC_INTERNAL_H
-#define AVUTIL_CRC_INTERNAL_H
+#اگر_تعریف_نشده AVUTIL_بررسی_چرخهای_داخلی_H
+#تعریف_کن AVUTIL_بررسی_چرخهای_داخلی_H
 
-#include <stdint.h>
-#include "libavutil/attributes.h"
-#include "libavutil/reverse.h"
+#ضمن <stdint.h>
+#ضمن "libavutil/attributes.h"
+#ضمن "libavutil/reverse.h"
 
-static uint64_t reverse(uint64_t p, unsigned int deg)
+ساكن uint64_t معکوس(uint64_t p, بیعلامت صحيح deg)
 {
     uint64_t ret = 0;
-    int i;
-    for (i = 0; i < (deg / 8); i += 1) {
-        ret = (ret << 8) | (ff_reverse[p & 0xff]);
+    صحيح i;
+    لكل (i = 0; i < (deg / 8); i += 1) {
+        ret = (ret << 8) | (ff_معکوس[p & 0xff]);
         p >>= 8;
     }
-    int rem = (deg + 1) - 8 * i;
-    ret = (ret << rem) | (ff_reverse[p & 0xff] >> (8 - rem));
-    return ret;
+    صحيح rem = (deg + 1) - 8 * i;
+    ret = (ret << rem) | (ff_معکوس[p & 0xff] >> (8 - rem));
+    أرجع ret;
 }
 
-av_unused static uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
-                                 uint64_t *div, int bitreverse)
+av_استفادهنشده ساكن uint64_t xnmodp(بیعلامت n, uint64_t poly, بیعلامت deg,
+                                 uint64_t *div, صحيح bitreverse)
 {
-    uint64_t mod, mask, high;
+    uint64_t mod, ماسک_2, بالا;
 
-    if (n < deg) {
+    إذا (n < deg) {
         *div = 0;
-        return poly;
+        أرجع poly;
     }
-    mask = ((uint64_t)1 << deg) - 1;
-    poly &= mask;
+    ماسک_2 = ((uint64_t)1 << deg) - 1;
+    poly &= ماسک_2;
     mod = poly;
     *div = 1;
     deg--;
-    while (--n > deg) {
-        high = (mod >> deg) & 1;
-        *div = (*div << 1) | high;
+    طالما (--n > deg) {
+        بالا = (mod >> deg) & 1;
+        *div = (*div << 1) | بالا;
         mod <<= 1;
-        if (high)
+        إذا (بالا)
             mod ^= poly;
     }
-    uint64_t ret = mod & mask;
-    if (bitreverse) {
-        *div = reverse(*div, deg) << 1;
-        return reverse(ret, deg) << 1;
+    uint64_t ret = mod & ماسک_2;
+    إذا (bitreverse) {
+        *div = معکوس(*div, deg) << 1;
+        أرجع معکوس(ret, deg) << 1;
     }
-    return ret;
+    أرجع ret;
 }
 
-#endif /* AVUTIL_CRC_INTERNAL_H */
+#پایان_اگر /* AVUTIL_CRC_INTERNAL_H */
