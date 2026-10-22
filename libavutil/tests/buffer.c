@@ -16,236 +16,236 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
-#include <string.h>
+#समावेश <limits.h>
+#समावेश <stdio.h>
+#समावेश <string.h>
 
-#include "libavutil/buffer.h"
-#include "libavutil/mem.h"
+#समावेश "libavutil/buffer.h"
+#समावेश "libavutil/mem.h"
 
-static int custom_free_called;
-static int pool_free_called;
-static int pool_alloc2_called;
+अटल पूर्णांक custom_free_called;
+अटल पूर्णांक pool_free_called;
+अटल पूर्णांक pool_alloc2_called;
 
-static void custom_free(void *opaque, uint8_t *data)
+अटल व्योम custom_free(व्योम *opaque, uint8_t *तथ्य)
 {
     custom_free_called = 1;
-    av_free(data);
+    av_free(तथ्य);
 }
 
-static AVBufferRef *pool_alloc2(void *opaque, size_t size)
+अटल AVBufferRef *pool_alloc2(व्योम *opaque, माप_प्रकार आकार)
 {
     pool_alloc2_called = 1;
-    return av_buffer_alloc(size);
+    वापस av_बफर_alloc(आकार);
 }
 
-static void pool_free_cb(void *opaque)
+अटल व्योम pool_free_cb(व्योम *opaque)
 {
     pool_free_called = 1;
 }
 
-int main(void)
+पूर्णांक मुख्य(व्योम)
 {
     AVBufferRef *buf, *buf2;
     AVBufferPool *pool;
 
     /* av_buffer_alloc */
-    printf("Testing av_buffer_alloc()\n");
-    buf = av_buffer_alloc(64);
-    if (buf) {
-        printf("alloc: size=%zu data=%s\n", buf->size, buf->data ? "set" : "null");
-        printf("writable: %d\n", av_buffer_is_writable(buf));
-        printf("refcount: %d\n", av_buffer_get_ref_count(buf));
-        av_buffer_unref(&buf);
-        printf("after unref: %s\n", buf == NULL ? "null" : "leaked");
+    म_लिखो("Testing av_buffer_alloc()\n");
+    buf = av_बफर_alloc(64);
+    अगर (buf) {
+        म_लिखो("alloc: size=%zu data=%s\n", buf->आकार, buf->तथ्य ? "set" : "null");
+        म_लिखो("writable: %d\n", av_बफर_is_writable(buf));
+        म_लिखो("refcount: %d\n", av_बफर_get_ref_गिनती(buf));
+        av_बफर_unref(&buf);
+        म_लिखो("after unref: %s\n", buf == शून्य ? "null" : "leaked");
     }
 
     /* av_buffer_allocz */
-    printf("\nTesting av_buffer_allocz()\n");
-    buf = av_buffer_allocz(16);
-    if (buf) {
-        int zeroed = 1;
-        for (int i = 0; i < 16; i++)
-            if (buf->data[i] != 0) zeroed = 0;
-        printf("allocz: zeroed=%s\n", zeroed ? "yes" : "no");
-        av_buffer_unref(&buf);
+    म_लिखो("\nTesting av_buffer_allocz()\n");
+    buf = av_बफर_allocz(16);
+    अगर (buf) {
+        पूर्णांक zeroed = 1;
+        क्रम (पूर्णांक i = 0; i < 16; i++)
+            अगर (buf->तथ्य[i] != 0) zeroed = 0;
+        म_लिखो("allocz: zeroed=%s\n", zeroed ? "yes" : "no");
+        av_बफर_unref(&buf);
     }
 
     /* av_buffer_create with custom free */
-    printf("\nTesting av_buffer_create()\n");
+    म_लिखो("\nTesting av_buffer_create()\n");
     {
-        uint8_t *data = av_malloc(32);
-        if (data) {
+        uint8_t *तथ्य = av_malloc(32);
+        अगर (तथ्य) {
             custom_free_called = 0;
-            buf = av_buffer_create(data, 32, custom_free, NULL, 0);
-            if (buf) {
-                printf("create: size=%zu\n", buf->size);
-                printf("opaque: %s\n",
-                       av_buffer_get_opaque(buf) == NULL ? "null" : "set");
-                av_buffer_unref(&buf);
-                printf("custom_free called: %s\n",
+            buf = av_बफर_create(तथ्य, 32, custom_free, शून्य, 0);
+            अगर (buf) {
+                म_लिखो("create: size=%zu\n", buf->आकार);
+                म_लिखो("opaque: %s\n",
+                       av_बफर_get_opaque(buf) == शून्य ? "null" : "set");
+                av_बफर_unref(&buf);
+                म_लिखो("custom_free called: %s\n",
                        custom_free_called ? "yes" : "no");
-            } else {
-                av_free(data);
+            } अन्यथा {
+                av_free(तथ्य);
             }
         }
     }
 
     /* av_buffer_create with READONLY flag */
-    printf("\nTesting AV_BUFFER_FLAG_READONLY\n");
+    म_लिखो("\nTesting AV_BUFFER_FLAG_READONLY\n");
     {
-        uint8_t *data = av_malloc(16);
-        if (data) {
-            buf = av_buffer_create(data, 16, custom_free, NULL,
-                                   AV_BUFFER_FLAG_READONLY);
-            if (buf) {
-                printf("readonly writable: %d\n", av_buffer_is_writable(buf));
-                av_buffer_unref(&buf);
-            } else {
-                av_free(data);
+        uint8_t *तथ्य = av_malloc(16);
+        अगर (तथ्य) {
+            buf = av_बफर_create(तथ्य, 16, custom_free, शून्य,
+                                   AV_बफर_FLAG_READONLY);
+            अगर (buf) {
+                म_लिखो("readonly writable: %d\n", av_बफर_is_writable(buf));
+                av_बफर_unref(&buf);
+            } अन्यथा {
+                av_free(तथ्य);
             }
         }
     }
 
     /* av_buffer_ref and refcounting */
-    printf("\nTesting av_buffer_ref()\n");
-    buf = av_buffer_alloc(32);
-    if (buf) {
-        buf->data[0] = 0xAB;
-        buf2 = av_buffer_ref(buf);
-        if (buf2) {
-            printf("ref: refcount=%d\n", av_buffer_get_ref_count(buf));
-            printf("shared data: %s\n",
-                   buf2->data[0] == 0xAB ? "yes" : "no");
-            printf("writable after ref: %d\n", av_buffer_is_writable(buf));
-            av_buffer_unref(&buf2);
-            printf("refcount after unref: %d\n", av_buffer_get_ref_count(buf));
-            printf("writable after unref: %d\n", av_buffer_is_writable(buf));
+    म_लिखो("\nTesting av_buffer_ref()\n");
+    buf = av_बफर_alloc(32);
+    अगर (buf) {
+        buf->तथ्य[0] = 0xAB;
+        buf2 = av_बफर_ref(buf);
+        अगर (buf2) {
+            म_लिखो("ref: refcount=%d\n", av_बफर_get_ref_गिनती(buf));
+            म_लिखो("shared data: %s\n",
+                   buf2->तथ्य[0] == 0xAB ? "yes" : "no");
+            म_लिखो("writable after ref: %d\n", av_बफर_is_writable(buf));
+            av_बफर_unref(&buf2);
+            म_लिखो("refcount after unref: %d\n", av_बफर_get_ref_गिनती(buf));
+            म_लिखो("writable after unref: %d\n", av_बफर_is_writable(buf));
         }
-        av_buffer_unref(&buf);
+        av_बफर_unref(&buf);
     }
 
     /* av_buffer_make_writable */
-    printf("\nTesting av_buffer_make_writable()\n");
-    buf = av_buffer_alloc(16);
-    if (buf) {
-        buf->data[0] = 0xCD;
-        buf2 = av_buffer_ref(buf);
-        if (buf2) {
-            int ret = av_buffer_make_writable(&buf2);
-            printf("make_writable ret: %d\n", ret >= 0);
-            printf("data preserved: %s\n",
-                   buf2->data[0] == 0xCD ? "yes" : "no");
-            printf("now writable: %d\n", av_buffer_is_writable(buf2));
-            printf("original still valid: %s\n",
-                   buf->data[0] == 0xCD ? "yes" : "no");
-            av_buffer_unref(&buf2);
+    म_लिखो("\nTesting av_buffer_make_writable()\n");
+    buf = av_बफर_alloc(16);
+    अगर (buf) {
+        buf->तथ्य[0] = 0xCD;
+        buf2 = av_बफर_ref(buf);
+        अगर (buf2) {
+            पूर्णांक ret = av_बफर_make_writable(&buf2);
+            म_लिखो("make_writable ret: %d\n", ret >= 0);
+            म_लिखो("data preserved: %s\n",
+                   buf2->तथ्य[0] == 0xCD ? "yes" : "no");
+            म_लिखो("now writable: %d\n", av_बफर_is_writable(buf2));
+            म_लिखो("original still valid: %s\n",
+                   buf->तथ्य[0] == 0xCD ? "yes" : "no");
+            av_बफर_unref(&buf2);
         }
-        av_buffer_unref(&buf);
+        av_बफर_unref(&buf);
     }
 
     /* av_buffer_realloc */
-    printf("\nTesting av_buffer_realloc()\n");
-    buf = av_buffer_alloc(16);
-    if (buf) {
-        memset(buf->data, 0xEF, 16);
-        av_buffer_realloc(&buf, 32);
-        if (buf) {
-            printf("realloc: size=%zu\n", buf->size);
-            printf("data preserved: %s\n",
-                   buf->data[0] == 0xEF ? "yes" : "no");
+    म_लिखो("\nTesting av_buffer_realloc()\n");
+    buf = av_बफर_alloc(16);
+    अगर (buf) {
+        स_रखो(buf->तथ्य, 0xEF, 16);
+        av_बफर_realloc(&buf, 32);
+        अगर (buf) {
+            म_लिखो("realloc: size=%zu\n", buf->आकार);
+            म_लिखो("data preserved: %s\n",
+                   buf->तथ्य[0] == 0xEF ? "yes" : "no");
         }
-        av_buffer_unref(&buf);
+        av_बफर_unref(&buf);
     }
     /* realloc from NULL */
-    buf = NULL;
-    av_buffer_realloc(&buf, 8);
-    printf("realloc from null: %s\n", buf ? "OK" : "FAIL");
-    av_buffer_unref(&buf);
+    buf = शून्य;
+    av_बफर_realloc(&buf, 8);
+    म_लिखो("realloc from null: %s\n", buf ? "OK" : "FAIL");
+    av_बफर_unref(&buf);
 
     /* av_buffer_replace */
-    printf("\nTesting av_buffer_replace()\n");
-    buf = av_buffer_alloc(8);
-    buf2 = av_buffer_alloc(8);
-    if (buf && buf2) {
-        buf->data[0] = 0x11;
-        buf2->data[0] = 0x22;
-        av_buffer_replace(&buf, buf2);
-        printf("replace: data=0x%02x\n", buf->data[0]);
-        printf("refcount: %d\n", av_buffer_get_ref_count(buf2));
+    म_लिखो("\nTesting av_buffer_replace()\n");
+    buf = av_बफर_alloc(8);
+    buf2 = av_बफर_alloc(8);
+    अगर (buf && buf2) {
+        buf->तथ्य[0] = 0x11;
+        buf2->तथ्य[0] = 0x22;
+        av_बफर_replace(&buf, buf2);
+        म_लिखो("replace: data=0x%02x\n", buf->तथ्य[0]);
+        म_लिखो("refcount: %d\n", av_बफर_get_ref_गिनती(buf2));
     }
-    av_buffer_unref(&buf);
-    av_buffer_unref(&buf2);
+    av_बफर_unref(&buf);
+    av_बफर_unref(&buf2);
 
     /* replace with NULL */
-    buf = av_buffer_alloc(8);
-    if (buf) {
-        av_buffer_replace(&buf, NULL);
-        printf("replace with null: %s\n", buf == NULL ? "OK" : "FAIL");
+    buf = av_बफर_alloc(8);
+    अगर (buf) {
+        av_बफर_replace(&buf, शून्य);
+        म_लिखो("replace with null: %s\n", buf == शून्य ? "OK" : "FAIL");
     }
 
     /* av_buffer_pool */
-    printf("\nTesting av_buffer_pool()\n");
-    pool = av_buffer_pool_init(64, NULL);
-    if (pool) {
-        buf = av_buffer_pool_get(pool);
-        if (buf) {
-            printf("pool get: size=%zu\n", buf->size);
-            av_buffer_unref(&buf);
+    म_लिखो("\nTesting av_buffer_pool()\n");
+    pool = av_बफर_pool_init(64, शून्य);
+    अगर (pool) {
+        buf = av_बफर_pool_get(pool);
+        अगर (buf) {
+            म_लिखो("pool get: size=%zu\n", buf->आकार);
+            av_बफर_unref(&buf);
         }
         /* get again -- should reuse the released buffer */
-        buf = av_buffer_pool_get(pool);
-        if (buf) {
-            printf("pool reuse: size=%zu\n", buf->size);
-            av_buffer_unref(&buf);
+        buf = av_बफर_pool_get(pool);
+        अगर (buf) {
+            म_लिखो("pool reuse: size=%zu\n", buf->आकार);
+            av_बफर_unref(&buf);
         }
-        av_buffer_pool_uninit(&pool);
-        printf("pool uninit: %s\n", pool == NULL ? "OK" : "FAIL");
+        av_बफर_pool_uninit(&pool);
+        म_लिखो("pool uninit: %s\n", pool == शून्य ? "OK" : "FAIL");
     }
 
     /* av_buffer_pool_init2 with custom alloc and pool_free callbacks */
-    printf("\nTesting av_buffer_pool_init2()\n");
+    म_लिखो("\nTesting av_buffer_pool_init2()\n");
     pool_alloc2_called = 0;
     pool_free_called = 0;
-    pool = av_buffer_pool_init2(64, NULL, pool_alloc2, pool_free_cb);
-    if (pool) {
-        buf = av_buffer_pool_get(pool);
-        if (buf) {
-            printf("pool2 get: size=%zu\n", buf->size);
-            printf("alloc2 called: %s\n", pool_alloc2_called ? "yes" : "no");
-            printf("pool_buffer_get_opaque: %s\n",
-                   av_buffer_pool_buffer_get_opaque(buf) == NULL ? "null" : "set");
-            av_buffer_unref(&buf);
+    pool = av_बफर_pool_init2(64, शून्य, pool_alloc2, pool_free_cb);
+    अगर (pool) {
+        buf = av_बफर_pool_get(pool);
+        अगर (buf) {
+            म_लिखो("pool2 get: size=%zu\n", buf->आकार);
+            म_लिखो("alloc2 called: %s\n", pool_alloc2_called ? "yes" : "no");
+            म_लिखो("pool_buffer_get_opaque: %s\n",
+                   av_बफर_pool_बफर_get_opaque(buf) == शून्य ? "null" : "set");
+            av_बफर_unref(&buf);
         }
-        av_buffer_pool_uninit(&pool);
-        printf("pool_free called: %s\n", pool_free_called ? "yes" : "no");
+        av_बफर_pool_uninit(&pool);
+        म_लिखो("pool_free called: %s\n", pool_free_called ? "yes" : "no");
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    म_लिखो("\nTesting OOM paths\n");
     av_max_alloc(1);
-    buf = av_buffer_alloc(64);
-    printf("alloc OOM: %s\n", buf ? "FAIL" : "OK");
-    av_buffer_unref(&buf);
-    buf = av_buffer_allocz(64);
-    printf("allocz OOM: %s\n", buf ? "FAIL" : "OK");
-    av_buffer_unref(&buf);
-    pool = av_buffer_pool_init(64, NULL);
-    printf("pool init OOM: %s\n", pool ? "FAIL" : "OK");
-    av_buffer_pool_uninit(&pool);
-    av_max_alloc(INT_MAX);
+    buf = av_बफर_alloc(64);
+    म_लिखो("alloc OOM: %s\n", buf ? "FAIL" : "OK");
+    av_बफर_unref(&buf);
+    buf = av_बफर_allocz(64);
+    म_लिखो("allocz OOM: %s\n", buf ? "FAIL" : "OK");
+    av_बफर_unref(&buf);
+    pool = av_बफर_pool_init(64, शून्य);
+    म_लिखो("pool init OOM: %s\n", pool ? "FAIL" : "OK");
+    av_बफर_pool_uninit(&pool);
+    av_max_alloc(पूर्णांक_उच्च);
 
-    buf = av_buffer_alloc(16);
-    if (buf) {
+    buf = av_बफर_alloc(16);
+    अगर (buf) {
         av_max_alloc(1);
-        buf2 = av_buffer_ref(buf);
-        printf("ref OOM: %s\n", buf2 ? "FAIL" : "OK");
-        av_buffer_unref(&buf2);
-        printf("realloc OOM: %s\n",
-               av_buffer_realloc(&buf, 1024) < 0 ? "OK" : "FAIL");
-        av_max_alloc(INT_MAX);
-        av_buffer_unref(&buf);
+        buf2 = av_बफर_ref(buf);
+        म_लिखो("ref OOM: %s\n", buf2 ? "FAIL" : "OK");
+        av_बफर_unref(&buf2);
+        म_लिखो("realloc OOM: %s\n",
+               av_बफर_realloc(&buf, 1024) < 0 ? "OK" : "FAIL");
+        av_max_alloc(पूर्णांक_उच्च);
+        av_बफर_unref(&buf);
     }
 
-    return 0;
+    वापस 0;
 }

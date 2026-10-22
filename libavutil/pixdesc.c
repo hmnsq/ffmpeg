@@ -19,169 +19,169 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <string.h>
+#समावेश <stdio.h>
+#समावेश <string.h>
 
-#include "avstring.h"
-#include "common.h"
-#include "pixfmt.h"
-#include "pixdesc.h"
-#include "intreadwrite.h"
+#समावेश "avstring.h"
+#समावेश "common.h"
+#समावेश "pixfmt.h"
+#समावेश "pixdesc.h"
+#समावेश "intreadwrite.h"
 
-void av_read_image_line2(void *dst,
-                        const uint8_t *data[4], const int linesize[4],
-                        const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w,
-                        int read_pal_component,
-                        int dst_element_size)
+व्योम av_read_image_line2(व्योम *dst,
+                        स्थिर uint8_t *तथ्य[4], स्थिर पूर्णांक linesize[4],
+                        स्थिर AVPixFmtDescriptor *desc,
+                        पूर्णांक x, पूर्णांक y, पूर्णांक c, पूर्णांक w,
+                        पूर्णांक read_pal_component,
+                        पूर्णांक dst_element_आकार)
 {
     AVComponentDescriptor comp = desc->comp[c];
-    int plane = comp.plane;
-    int depth = comp.depth;
-    unsigned mask  = (1ULL << depth) - 1;
-    int shift = comp.shift;
-    int step  = comp.step;
-    int flags = desc->flags;
+    पूर्णांक plane = comp.plane;
+    पूर्णांक depth = comp.depth;
+    अचिन्हित mask  = (1ULL << depth) - 1;
+    पूर्णांक shift = comp.shift;
+    पूर्णांक step  = comp.step;
+    पूर्णांक flags = desc->flags;
     uint16_t *dst16 = dst;
     uint32_t *dst32 = dst;
 
-    if (!depth)
-        return;
+    अगर (!depth)
+        वापस;
 
-    if (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
-        if (step > 8) {
+    अगर (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+        अगर (step > 8) {
             // Assume all channels are packed into a 32bit value
-            const uint8_t *byte_p = data[plane] + y * linesize[plane];
-            const uint32_t *p = (uint32_t *)byte_p;
+            स्थिर uint8_t *byte_p = तथ्य[plane] + y * linesize[plane];
+            स्थिर uint32_t *p = (uint32_t *)byte_p;
 
-            while (w--) {
-                int val = AV_RB32(p);
+            जबतक (w--) {
+                पूर्णांक val = AV_RB32(p);
                 val = (val >> comp.offset) & mask;
-                if (read_pal_component)
-                    val = data[1][4*val + c];
-                if (dst_element_size == 4) *dst32++ = val;
-                else                       *dst16++ = val;
+                अगर (read_pal_component)
+                    val = तथ्य[1][4*val + c];
+                अगर (dst_element_आकार == 4) *dst32++ = val;
+                अन्यथा                       *dst16++ = val;
                 p++;
             }
-        } else {
-            int skip = x * step + comp.offset;
-            const uint8_t *p = data[plane] + y * linesize[plane] + (skip >> 3);
-            int shift = 8 - depth - (skip & 7);
+        } अन्यथा {
+            पूर्णांक skip = x * step + comp.offset;
+            स्थिर uint8_t *p = तथ्य[plane] + y * linesize[plane] + (skip >> 3);
+            पूर्णांक shift = 8 - depth - (skip & 7);
 
-            while (w--) {
-                int val = (*p >> shift) & mask;
-                if (read_pal_component)
-                    val = data[1][4*val + c];
+            जबतक (w--) {
+                पूर्णांक val = (*p >> shift) & mask;
+                अगर (read_pal_component)
+                    val = तथ्य[1][4*val + c];
                 shift -= step;
                 p -= shift >> 3;
                 shift &= 7;
-                if (dst_element_size == 4) *dst32++ = val;
-                else                       *dst16++ = val;
+                अगर (dst_element_आकार == 4) *dst32++ = val;
+                अन्यथा                       *dst16++ = val;
             }
         }
-    } else {
-        const uint8_t *p = data[plane] + y * linesize[plane] +
+    } अन्यथा {
+        स्थिर uint8_t *p = तथ्य[plane] + y * linesize[plane] +
                            x * step + comp.offset;
-        int is_8bit = shift + depth <= 8;
-        int is_16bit= shift + depth <=16;
+        पूर्णांक is_8bit = shift + depth <= 8;
+        पूर्णांक is_16bit= shift + depth <=16;
 
-        if (is_8bit)
+        अगर (is_8bit)
             p += !!(flags & AV_PIX_FMT_FLAG_BE);
 
-        while (w--) {
-            unsigned val;
-            if     (is_8bit)  val = *p;
-            else if(is_16bit) val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB16(p) : AV_RL16(p);
-            else              val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB32(p) : AV_RL32(p);
+        जबतक (w--) {
+            अचिन्हित val;
+            अगर     (is_8bit)  val = *p;
+            अन्यथा अगर(is_16bit) val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB16(p) : AV_RL16(p);
+            अन्यथा              val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB32(p) : AV_RL32(p);
             val = (val >> shift) & mask;
-            if (read_pal_component)
-                val = data[1][4 * val + c];
+            अगर (read_pal_component)
+                val = तथ्य[1][4 * val + c];
             p += step;
-            if (dst_element_size == 4) *dst32++ = val;
-            else                       *dst16++ = val;
+            अगर (dst_element_आकार == 4) *dst32++ = val;
+            अन्यथा                       *dst16++ = val;
         }
     }
 }
 
-void av_read_image_line(uint16_t *dst,
-                        const uint8_t *data[4], const int linesize[4],
-                        const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w,
-                        int read_pal_component)
+व्योम av_read_image_पंक्ति(uint16_t *dst,
+                        स्थिर uint8_t *तथ्य[4], स्थिर पूर्णांक linesize[4],
+                        स्थिर AVPixFmtDescriptor *desc,
+                        पूर्णांक x, पूर्णांक y, पूर्णांक c, पूर्णांक w,
+                        पूर्णांक read_pal_component)
 {
-    av_read_image_line2(dst, data, linesize, desc,x, y, c, w,
+    av_read_image_line2(dst, तथ्य, linesize, desc,x, y, c, w,
                         read_pal_component,
                         2);
 }
 
-void av_write_image_line2(const void *src,
-                         uint8_t *data[4], const int linesize[4],
-                         const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w, int src_element_size)
+व्योम av_write_image_line2(स्थिर व्योम *src,
+                         uint8_t *तथ्य[4], स्थिर पूर्णांक linesize[4],
+                         स्थिर AVPixFmtDescriptor *desc,
+                         पूर्णांक x, पूर्णांक y, पूर्णांक c, पूर्णांक w, पूर्णांक src_element_आकार)
 {
     AVComponentDescriptor comp = desc->comp[c];
-    int plane = comp.plane;
-    int depth = comp.depth;
-    int step  = comp.step;
-    int flags = desc->flags;
-    const uint32_t *src32 = src;
-    const uint16_t *src16 = src;
+    पूर्णांक plane = comp.plane;
+    पूर्णांक depth = comp.depth;
+    पूर्णांक step  = comp.step;
+    पूर्णांक flags = desc->flags;
+    स्थिर uint32_t *src32 = src;
+    स्थिर uint16_t *src16 = src;
 
-    if (!depth)
-        return;
+    अगर (!depth)
+        वापस;
 
-    if (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
-        if (step > 8) {
+    अगर (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+        अगर (step > 8) {
             // Assume all channels are packed into a 32bit value
-            const uint8_t *byte_p = data[plane] + y * linesize[plane];
+            स्थिर uint8_t *byte_p = तथ्य[plane] + y * linesize[plane];
             uint32_t *p = (uint32_t *)byte_p;
-            int offset = comp.offset;
+            पूर्णांक offset = comp.offset;
             uint32_t mask  = ((1ULL << depth) - 1) << offset;
 
-            while (w--) {
-                unsigned val = src_element_size == 4 ? *src32++ : *src16++;
+            जबतक (w--) {
+                अचिन्हित val = src_element_आकार == 4 ? *src32++ : *src16++;
                 AV_WB32(p, (AV_RB32(p) & ~mask) | (val << offset));
                 p++;
             }
-        } else {
-            int skip = x * step + comp.offset;
-            uint8_t *p = data[plane] + y * linesize[plane] + (skip >> 3);
-            int shift = 8 - depth - (skip & 7);
+        } अन्यथा {
+            पूर्णांक skip = x * step + comp.offset;
+            uint8_t *p = तथ्य[plane] + y * linesize[plane] + (skip >> 3);
+            पूर्णांक shift = 8 - depth - (skip & 7);
 
-            while (w--) {
-                *p |= (src_element_size == 4 ? *src32++ : *src16++) << shift;
+            जबतक (w--) {
+                *p |= (src_element_आकार == 4 ? *src32++ : *src16++) << shift;
                 shift -= step;
                 p -= shift >> 3;
                 shift &= 7;
             }
         }
-    } else {
-        int shift = comp.shift;
-        uint8_t *p = data[plane] + y * linesize[plane] +
+    } अन्यथा {
+        पूर्णांक shift = comp.shift;
+        uint8_t *p = तथ्य[plane] + y * linesize[plane] +
                      x * step + comp.offset;
 
-        if (shift + depth <= 8) {
+        अगर (shift + depth <= 8) {
             p += !!(flags & AV_PIX_FMT_FLAG_BE);
-            while (w--) {
-                *p |= ((src_element_size == 4 ? *src32++ : *src16++) << shift);
+            जबतक (w--) {
+                *p |= ((src_element_आकार == 4 ? *src32++ : *src16++) << shift);
                 p += step;
             }
-        } else {
-            while (w--) {
-                unsigned s = (src_element_size == 4 ? *src32++ : *src16++);
-                if (shift + depth <= 16) {
-                    if (flags & AV_PIX_FMT_FLAG_BE) {
+        } अन्यथा {
+            जबतक (w--) {
+                अचिन्हित s = (src_element_आकार == 4 ? *src32++ : *src16++);
+                अगर (shift + depth <= 16) {
+                    अगर (flags & AV_PIX_FMT_FLAG_BE) {
                         uint16_t val = AV_RB16(p) | (s << shift);
                         AV_WB16(p, val);
-                    } else {
+                    } अन्यथा {
                         uint16_t val = AV_RL16(p) | (s << shift);
                         AV_WL16(p, val);
                     }
-                } else {
-                    if (flags & AV_PIX_FMT_FLAG_BE) {
+                } अन्यथा {
+                    अगर (flags & AV_PIX_FMT_FLAG_BE) {
                         uint32_t val = AV_RB32(p) | (s << shift);
                         AV_WB32(p, val);
-                    } else {
+                    } अन्यथा {
                         uint32_t val = AV_RL32(p) | (s << shift);
                         AV_WL32(p, val);
                     }
@@ -192,15 +192,15 @@ void av_write_image_line2(const void *src,
     }
 }
 
-void av_write_image_line(const uint16_t *src,
-                         uint8_t *data[4], const int linesize[4],
-                         const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w)
+व्योम av_write_image_पंक्ति(स्थिर uint16_t *src,
+                         uint8_t *तथ्य[4], स्थिर पूर्णांक linesize[4],
+                         स्थिर AVPixFmtDescriptor *desc,
+                         पूर्णांक x, पूर्णांक y, पूर्णांक c, पूर्णांक w)
 {
-    av_write_image_line2(src, data, linesize, desc, x, y, c, w, 2);
+    av_write_image_line2(src, तथ्य, linesize, desc, x, y, c, w, 2);
 }
 
-static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
+अटल स्थिर AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
     [AV_PIX_FMT_YUV420P] = {
         .name = "yuv420p",
         .nb_components = 3,
@@ -2170,7 +2170,7 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
         .flags = AV_PIX_FMT_FLAG_PLANAR | AV_PIX_FMT_FLAG_XYZ | AV_PIX_FMT_FLAG_BE,
     },
 
-#define BAYER8_DESC_COMMON \
+#घोषणा BAYER8_DESC_COMMON \
         .nb_components= 3, \
         .log2_chroma_w= 0, \
         .log2_chroma_h= 0, \
@@ -2180,7 +2180,7 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
             { 0, 1, 0, 0, 2 }, \
         },                 \
 
-#define BAYER16_DESC_COMMON \
+#घोषणा BAYER16_DESC_COMMON \
         .nb_components= 3, \
         .log2_chroma_w= 0, \
         .log2_chroma_h= 0, \
@@ -2645,7 +2645,7 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
         .flags = AV_PIX_FMT_FLAG_PLANAR | AV_PIX_FMT_FLAG_ALPHA |
                  AV_PIX_FMT_FLAG_RGB | AV_PIX_FMT_FLAG_FLOAT,
     },
-    [AV_PIX_FMT_DRM_PRIME] = {
+    [AV_PIX_FMT_DRM_अभाज्य] = {
         .name = "drm_prime",
         .flags = AV_PIX_FMT_FLAG_HWACCEL,
     },
@@ -3297,13 +3297,13 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
     },
 };
 
-static const char * const color_range_names[] = {
+अटल स्थिर अक्षर * स्थिर color_range_names[] = {
     [AVCOL_RANGE_UNSPECIFIED] = "unknown",
     [AVCOL_RANGE_MPEG] = "tv",
     [AVCOL_RANGE_JPEG] = "pc",
 };
 
-static const char * const color_primaries_names[AVCOL_PRI_NB] = {
+अटल स्थिर अक्षर * स्थिर color_primaries_names[AVCOL_PRI_NB] = {
     [AVCOL_PRI_RESERVED0] = "reserved",
     [AVCOL_PRI_BT709] = "bt709",
     [AVCOL_PRI_UNSPECIFIED] = "unknown",
@@ -3320,12 +3320,12 @@ static const char * const color_primaries_names[AVCOL_PRI_NB] = {
     [AVCOL_PRI_EBU3213] = "ebu3213",
 };
 
-static const char * const color_primaries_names_ext[AVCOL_PRI_EXT_NB -
+अटल स्थिर अक्षर * स्थिर color_primaries_names_ext[AVCOL_PRI_EXT_NB -
                                                     AVCOL_PRI_EXT_BASE] = {
     [AVCOL_PRI_V_GAMUT - AVCOL_PRI_EXT_BASE] = "vgamut",
 };
 
-static const char * const color_transfer_names[] = {
+अटल स्थिर अक्षर * स्थिर color_transfer_names[] = {
     [AVCOL_TRC_RESERVED0] = "reserved",
     [AVCOL_TRC_BT709] = "bt709",
     [AVCOL_TRC_UNSPECIFIED] = "unknown",
@@ -3347,11 +3347,11 @@ static const char * const color_transfer_names[] = {
     [AVCOL_TRC_ARIB_STD_B67] = "arib-std-b67",
 };
 
-static const char * const color_transfer_names_ext[] = {
+अटल स्थिर अक्षर * स्थिर color_transfer_names_ext[] = {
     [AVCOL_TRC_V_LOG - AVCOL_TRC_EXT_BASE] = "vlog",
 };
 
-static const char * const color_space_names[] = {
+अटल स्थिर अक्षर * स्थिर color_space_names[] = {
     [AVCOL_SPC_RGB] = "gbr",
     [AVCOL_SPC_BT709] = "bt709",
     [AVCOL_SPC_UNSPECIFIED] = "unknown",
@@ -3372,288 +3372,288 @@ static const char * const color_space_names[] = {
     [AVCOL_SPC_YCGCO_RO] = "ycgco-ro",
 };
 
-static const char * const chroma_location_names[] = {
+अटल स्थिर अक्षर * स्थिर chroma_location_names[] = {
     [AVCHROMA_LOC_UNSPECIFIED] = "unspecified",
-    [AVCHROMA_LOC_LEFT] = "left",
+    [AVCHROMA_LOC_बायाँ] = "left",
     [AVCHROMA_LOC_CENTER] = "center",
     [AVCHROMA_LOC_TOPLEFT] = "topleft",
-    [AVCHROMA_LOC_TOP] = "top",
+    [AVCHROMA_LOC_शीर्ष] = "top",
     [AVCHROMA_LOC_BOTTOMLEFT] = "bottomleft",
     [AVCHROMA_LOC_BOTTOM] = "bottom",
 };
 
-static const char * const alpha_mode_names[] = {
+अटल स्थिर अक्षर * स्थिर alpha_mode_names[] = {
     [AVALPHA_MODE_UNSPECIFIED] = "unspecified",
     [AVALPHA_MODE_PREMULTIPLIED] = "premultiplied",
     [AVALPHA_MODE_STRAIGHT] = "straight",
 };
 
-static enum AVPixelFormat get_pix_fmt_internal(const char *name)
+अटल क्रमागत AVPixelFormat get_pix_fmt_internal(स्थिर अक्षर *name)
 {
-    enum AVPixelFormat pix_fmt;
+    क्रमागत AVPixelFormat pix_fmt;
 
-    for (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++)
-        if (av_pix_fmt_descriptors[pix_fmt].name &&
-            (!strcmp(av_pix_fmt_descriptors[pix_fmt].name, name) ||
+    क्रम (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++)
+        अगर (av_pix_fmt_descriptors[pix_fmt].name &&
+            (!म_भेद(av_pix_fmt_descriptors[pix_fmt].name, name) ||
              av_match_name(name, av_pix_fmt_descriptors[pix_fmt].alias)))
-            return pix_fmt;
+            वापस pix_fmt;
 
-    return AV_PIX_FMT_NONE;
+    वापस AV_PIX_FMT_NONE;
 }
 
-const char *av_get_pix_fmt_name(enum AVPixelFormat pix_fmt)
+स्थिर अक्षर *av_get_pix_fmt_name(क्रमागत AVPixelFormat pix_fmt)
 {
-    return (unsigned)pix_fmt < AV_PIX_FMT_NB ?
-        av_pix_fmt_descriptors[pix_fmt].name : NULL;
+    वापस (अचिन्हित)pix_fmt < AV_PIX_FMT_NB ?
+        av_pix_fmt_descriptors[pix_fmt].name : शून्य;
 }
 
-#if HAVE_BIGENDIAN
+#अगर HAVE_BIGENDIAN
 #   define X_NE(be, le) be
-#else
+#अन्यथा
 #   define X_NE(be, le) le
-#endif
+#पूर्ण_अगर
 
-enum AVPixelFormat av_get_pix_fmt(const char *name)
+क्रमागत AVPixelFormat av_get_pix_fmt(स्थिर अक्षर *name)
 {
-    enum AVPixelFormat pix_fmt;
+    क्रमागत AVPixelFormat pix_fmt;
 
-    if (!strcmp(name, "rgb32"))
+    अगर (!म_भेद(name, "rgb32"))
         name = X_NE("argb", "bgra");
-    else if (!strcmp(name, "bgr32"))
+    अन्यथा अगर (!म_भेद(name, "bgr32"))
         name = X_NE("abgr", "rgba");
 
     pix_fmt = get_pix_fmt_internal(name);
-    if (pix_fmt == AV_PIX_FMT_NONE) {
-        char name2[32];
+    अगर (pix_fmt == AV_PIX_FMT_NONE) {
+        अक्षर name2[32];
 
-        snprintf(name2, sizeof(name2), "%s%s", name, X_NE("be", "le"));
+        snprintf(name2, माप(name2), "%s%s", name, X_NE("be", "le"));
         pix_fmt = get_pix_fmt_internal(name2);
     }
 
-    return pix_fmt;
+    वापस pix_fmt;
 }
 
-int av_get_bits_per_pixel(const AVPixFmtDescriptor *pixdesc)
+पूर्णांक av_get_bits_per_pixel(स्थिर AVPixFmtDescriptor *pixdesc)
 {
-    int c, bits = 0;
-    int log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
+    पूर्णांक c, bits = 0;
+    पूर्णांक log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
 
-    for (c = 0; c < pixdesc->nb_components; c++) {
-        int s = c == 1 || c == 2 ? 0 : log2_pixels;
+    क्रम (c = 0; c < pixdesc->nb_components; c++) {
+        पूर्णांक s = c == 1 || c == 2 ? 0 : log2_pixels;
         bits += pixdesc->comp[c].depth << s;
     }
 
-    return bits >> log2_pixels;
+    वापस bits >> log2_pixels;
 }
 
-int av_get_padded_bits_per_pixel(const AVPixFmtDescriptor *pixdesc)
+पूर्णांक av_get_padded_bits_per_pixel(स्थिर AVPixFmtDescriptor *pixdesc)
 {
-    int c, bits = 0;
-    int log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
-    int steps[4] = {0};
+    पूर्णांक c, bits = 0;
+    पूर्णांक log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
+    पूर्णांक steps[4] = {0};
 
-    for (c = 0; c < pixdesc->nb_components; c++) {
-        const AVComponentDescriptor *comp = &pixdesc->comp[c];
-        int s = c == 1 || c == 2 ? 0 : log2_pixels;
+    क्रम (c = 0; c < pixdesc->nb_components; c++) {
+        स्थिर AVComponentDescriptor *comp = &pixdesc->comp[c];
+        पूर्णांक s = c == 1 || c == 2 ? 0 : log2_pixels;
         steps[comp->plane] = comp->step << s;
     }
-    for (c = 0; c < 4; c++)
+    क्रम (c = 0; c < 4; c++)
         bits += steps[c];
 
-    if(!(pixdesc->flags & AV_PIX_FMT_FLAG_BITSTREAM))
+    अगर(!(pixdesc->flags & AV_PIX_FMT_FLAG_BITSTREAM))
         bits *= 8;
 
-    return bits >> log2_pixels;
+    वापस bits >> log2_pixels;
 }
 
-char *av_get_pix_fmt_string(char *buf, int buf_size,
-                            enum AVPixelFormat pix_fmt)
+अक्षर *av_get_pix_fmt_string(अक्षर *buf, पूर्णांक buf_आकार,
+                            क्रमागत AVPixelFormat pix_fmt)
 {
     /* print header */
-    if (pix_fmt < 0) {
-       snprintf (buf, buf_size, "name" " nb_components" " nb_bits");
-    } else {
-        const AVPixFmtDescriptor *pixdesc = &av_pix_fmt_descriptors[pix_fmt];
-        snprintf(buf, buf_size, "%-11s %7d %10d", pixdesc->name,
+    अगर (pix_fmt < 0) {
+       snprintf (buf, buf_आकार, "name" " nb_components" " nb_bits");
+    } अन्यथा {
+        स्थिर AVPixFmtDescriptor *pixdesc = &av_pix_fmt_descriptors[pix_fmt];
+        snprintf(buf, buf_आकार, "%-11s %7d %10d", pixdesc->name,
                  pixdesc->nb_components, av_get_bits_per_pixel(pixdesc));
     }
 
-    return buf;
+    वापस buf;
 }
 
-const AVPixFmtDescriptor *av_pix_fmt_desc_get(enum AVPixelFormat pix_fmt)
+स्थिर AVPixFmtDescriptor *av_pix_fmt_desc_get(क्रमागत AVPixelFormat pix_fmt)
 {
-    if (pix_fmt < 0 || pix_fmt >= AV_PIX_FMT_NB)
-        return NULL;
-    return &av_pix_fmt_descriptors[pix_fmt];
+    अगर (pix_fmt < 0 || pix_fmt >= AV_PIX_FMT_NB)
+        वापस शून्य;
+    वापस &av_pix_fmt_descriptors[pix_fmt];
 }
 
-const AVPixFmtDescriptor *av_pix_fmt_desc_next(const AVPixFmtDescriptor *prev)
+स्थिर AVPixFmtDescriptor *av_pix_fmt_desc_अग्र(स्थिर AVPixFmtDescriptor *पूर्व)
 {
-    if (!prev)
-        return &av_pix_fmt_descriptors[0];
-    while (prev - av_pix_fmt_descriptors < FF_ARRAY_ELEMS(av_pix_fmt_descriptors) - 1) {
-        prev++;
-        if (prev->name)
-            return prev;
+    अगर (!पूर्व)
+        वापस &av_pix_fmt_descriptors[0];
+    जबतक (पूर्व - av_pix_fmt_descriptors < FF_ARRAY_ELEMS(av_pix_fmt_descriptors) - 1) {
+        पूर्व++;
+        अगर (पूर्व->name)
+            वापस पूर्व;
     }
-    return NULL;
+    वापस शून्य;
 }
 
-enum AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc)
+क्रमागत AVPixelFormat av_pix_fmt_desc_get_id(स्थिर AVPixFmtDescriptor *desc)
 {
-    if (desc < av_pix_fmt_descriptors ||
+    अगर (desc < av_pix_fmt_descriptors ||
         desc >= av_pix_fmt_descriptors + FF_ARRAY_ELEMS(av_pix_fmt_descriptors))
-        return AV_PIX_FMT_NONE;
+        वापस AV_PIX_FMT_NONE;
 
-    return desc - av_pix_fmt_descriptors;
+    वापस desc - av_pix_fmt_descriptors;
 }
 
-int av_pix_fmt_get_chroma_sub_sample(enum AVPixelFormat pix_fmt,
-                                     int *h_shift, int *v_shift)
+पूर्णांक av_pix_fmt_get_chroma_sub_sample(क्रमागत AVPixelFormat pix_fmt,
+                                     पूर्णांक *h_shift, पूर्णांक *v_shift)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    if (!desc)
-        return AVERROR(ENOSYS);
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    अगर (!desc)
+        वापस AVERROR(ENOSYS);
     *h_shift = desc->log2_chroma_w;
     *v_shift = desc->log2_chroma_h;
 
-    return 0;
+    वापस 0;
 }
 
-int av_pix_fmt_count_planes(enum AVPixelFormat pix_fmt)
+पूर्णांक av_pix_fmt_गिनती_planes(क्रमागत AVPixelFormat pix_fmt)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int i, planes[4] = { 0 }, ret = 0;
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    पूर्णांक i, planes[4] = { 0 }, ret = 0;
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    अगर (!desc)
+        वापस AVERROR(EINVAL);
 
-    for (i = 0; i < desc->nb_components; i++)
+    क्रम (i = 0; i < desc->nb_components; i++)
         planes[desc->comp[i].plane] = 1;
-    for (i = 0; i < FF_ARRAY_ELEMS(planes); i++)
+    क्रम (i = 0; i < FF_ARRAY_ELEMS(planes); i++)
         ret += planes[i];
-    return ret;
+    वापस ret;
 }
 
-enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt)
+क्रमागत AVPixelFormat av_pix_fmt_swap_endianness(क्रमागत AVPixelFormat pix_fmt)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    char name[16];
-    int i;
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    अक्षर name[16];
+    पूर्णांक i;
 
-    if (!desc || strlen(desc->name) < 2)
-        return AV_PIX_FMT_NONE;
-    av_strlcpy(name, desc->name, sizeof(name));
-    i = strlen(name) - 2;
-    if (strcmp(name + i, "be") && strcmp(name + i, "le"))
-        return AV_PIX_FMT_NONE;
+    अगर (!desc || म_माप(desc->name) < 2)
+        वापस AV_PIX_FMT_NONE;
+    av_strlcpy(name, desc->name, माप(name));
+    i = म_माप(name) - 2;
+    अगर (म_भेद(name + i, "be") && म_भेद(name + i, "le"))
+        वापस AV_PIX_FMT_NONE;
 
     name[i] ^= 'b' ^ 'l';
 
-    return get_pix_fmt_internal(name);
+    वापस get_pix_fmt_internal(name);
 }
 
-#define FF_COLOR_NA      -1
-#define FF_COLOR_RGB      0 /**< RGB color space */
-#define FF_COLOR_GRAY     1 /**< gray color space */
-#define FF_COLOR_YUV      2 /**< YUV color space. 16 <= Y <= 235, 16 <= U, V <= 240 */
-#define FF_COLOR_YUV_JPEG 3 /**< YUV color space. 0 <= Y <= 255, 0 <= U, V <= 255 */
-#define FF_COLOR_XYZ      4
+#घोषणा FF_COLOR_NA      -1
+#घोषणा FF_COLOR_RGB      0 /**< RGB color space */
+#घोषणा FF_COLOR_GRAY     1 /**< gray color space */
+#घोषणा FF_COLOR_YUV      2 /**< YUV color space. 16 <= Y <= 235, 16 <= U, V <= 240 */
+#घोषणा FF_COLOR_YUV_JPEG 3 /**< YUV color space. 0 <= Y <= 255, 0 <= U, V <= 255 */
+#घोषणा FF_COLOR_XYZ      4
 
-#define pixdesc_has_alpha(pixdesc) \
+#घोषणा pixdesc_has_alpha(pixdesc) \
     ((pixdesc)->flags & AV_PIX_FMT_FLAG_ALPHA)
 
 
-static int get_color_type(const AVPixFmtDescriptor *desc) {
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL)
-        return FF_COLOR_RGB;
+अटल पूर्णांक get_color_type(स्थिर AVPixFmtDescriptor *desc) {
+    अगर (desc->flags & AV_PIX_FMT_FLAG_PAL)
+        वापस FF_COLOR_RGB;
 
-    if(desc->nb_components == 1 || desc->nb_components == 2)
-        return FF_COLOR_GRAY;
+    अगर(desc->nb_components == 1 || desc->nb_components == 2)
+        वापस FF_COLOR_GRAY;
 
-    if (desc->name) {
-        if (av_strstart(desc->name, "yuvj", NULL))
-            return FF_COLOR_YUV_JPEG;
+    अगर (desc->name) {
+        अगर (av_strstart(desc->name, "yuvj", शून्य))
+            वापस FF_COLOR_YUV_JPEG;
     }
 
-    if(desc->flags & AV_PIX_FMT_FLAG_RGB)
-        return FF_COLOR_RGB;
+    अगर(desc->flags & AV_PIX_FMT_FLAG_RGB)
+        वापस FF_COLOR_RGB;
 
-    if(desc->flags & AV_PIX_FMT_FLAG_XYZ)
-        return FF_COLOR_XYZ;
+    अगर(desc->flags & AV_PIX_FMT_FLAG_XYZ)
+        वापस FF_COLOR_XYZ;
 
-    if(desc->nb_components == 0)
-        return FF_COLOR_NA;
+    अगर(desc->nb_components == 0)
+        वापस FF_COLOR_NA;
 
-    return FF_COLOR_YUV;
+    वापस FF_COLOR_YUV;
 }
 
-static int get_pix_fmt_depth(int *min, int *max, enum AVPixelFormat pix_fmt)
+अटल पूर्णांक get_pix_fmt_depth(पूर्णांक *min, पूर्णांक *max, क्रमागत AVPixelFormat pix_fmt)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int i;
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    पूर्णांक i;
 
-    if (!desc || !desc->nb_components) {
+    अगर (!desc || !desc->nb_components) {
         *min = *max = 0;
-        return AVERROR(EINVAL);
+        वापस AVERROR(EINVAL);
     }
 
-    *min = INT_MAX, *max = -INT_MAX;
-    for (i = 0; i < desc->nb_components; i++) {
+    *min = पूर्णांक_उच्च, *max = -पूर्णांक_उच्च;
+    क्रम (i = 0; i < desc->nb_components; i++) {
         *min = FFMIN(desc->comp[i].depth, *min);
         *max = FFMAX(desc->comp[i].depth, *max);
     }
-    return 0;
+    वापस 0;
 }
 
-static int get_pix_fmt_score(enum AVPixelFormat dst_pix_fmt,
-                              enum AVPixelFormat src_pix_fmt,
-                              unsigned *lossp, unsigned consider)
+अटल पूर्णांक get_pix_fmt_score(क्रमागत AVPixelFormat dst_pix_fmt,
+                              क्रमागत AVPixelFormat src_pix_fmt,
+                              अचिन्हित *lossp, अचिन्हित consider)
 {
-    const AVPixFmtDescriptor *src_desc = av_pix_fmt_desc_get(src_pix_fmt);
-    const AVPixFmtDescriptor *dst_desc = av_pix_fmt_desc_get(dst_pix_fmt);
-    int src_color, dst_color;
-    int src_min_depth, src_max_depth, dst_min_depth, dst_max_depth;
-    int ret, loss, i, nb_components;
-    int score = INT_MAX - 1;
+    स्थिर AVPixFmtDescriptor *src_desc = av_pix_fmt_desc_get(src_pix_fmt);
+    स्थिर AVPixFmtDescriptor *dst_desc = av_pix_fmt_desc_get(dst_pix_fmt);
+    पूर्णांक src_color, dst_color;
+    पूर्णांक src_min_depth, src_max_depth, dst_min_depth, dst_max_depth;
+    पूर्णांक ret, loss, i, nb_components;
+    पूर्णांक score = पूर्णांक_उच्च - 1;
 
-    if (!src_desc || !dst_desc)
-        return -4;
+    अगर (!src_desc || !dst_desc)
+        वापस -4;
 
-    if ((src_desc->flags & AV_PIX_FMT_FLAG_HWACCEL) ||
+    अगर ((src_desc->flags & AV_PIX_FMT_FLAG_HWACCEL) ||
         (dst_desc->flags & AV_PIX_FMT_FLAG_HWACCEL)) {
-        if (dst_pix_fmt == src_pix_fmt)
-            return -1;
-        else
-            return -2;
+        अगर (dst_pix_fmt == src_pix_fmt)
+            वापस -1;
+        अन्यथा
+            वापस -2;
     }
 
     /* compute loss */
     *lossp = loss = 0;
 
-    if (dst_pix_fmt == src_pix_fmt)
-        return INT_MAX;
+    अगर (dst_pix_fmt == src_pix_fmt)
+        वापस पूर्णांक_उच्च;
 
-    if ((ret = get_pix_fmt_depth(&src_min_depth, &src_max_depth, src_pix_fmt)) < 0)
-        return -3;
-    if ((ret = get_pix_fmt_depth(&dst_min_depth, &dst_max_depth, dst_pix_fmt)) < 0)
-        return -3;
+    अगर ((ret = get_pix_fmt_depth(&src_min_depth, &src_max_depth, src_pix_fmt)) < 0)
+        वापस -3;
+    अगर ((ret = get_pix_fmt_depth(&dst_min_depth, &dst_max_depth, dst_pix_fmt)) < 0)
+        वापस -3;
 
     src_color = get_color_type(src_desc);
     dst_color = get_color_type(dst_desc);
-    if (dst_pix_fmt == AV_PIX_FMT_PAL8)
+    अगर (dst_pix_fmt == AV_PIX_FMT_PAL8)
         nb_components = FFMIN(src_desc->nb_components, 4);
-    else
+    अन्यथा
         nb_components = FFMIN(src_desc->nb_components, dst_desc->nb_components);
 
-    for (i = 0; i < nb_components; i++) {
-        int depth_minus1 = (dst_pix_fmt == AV_PIX_FMT_PAL8) ? 7/nb_components : (dst_desc->comp[i].depth - 1);
-        int depth_delta = src_desc->comp[i].depth - 1 - depth_minus1;
-        if (depth_delta > 0 && (consider & FF_LOSS_DEPTH)) {
+    क्रम (i = 0; i < nb_components; i++) {
+        पूर्णांक depth_minus1 = (dst_pix_fmt == AV_PIX_FMT_PAL8) ? 7/nb_components : (dst_desc->comp[i].depth - 1);
+        पूर्णांक depth_delta = src_desc->comp[i].depth - 1 - depth_minus1;
+        अगर (depth_delta > 0 && (consider & FF_LOSS_DEPTH)) {
             loss |= FF_LOSS_DEPTH;
             score -= 65536 >> depth_minus1;
-        } else if (depth_delta < 0 && (consider & FF_LOSS_EXCESS_DEPTH)) {
+        } अन्यथा अगर (depth_delta < 0 && (consider & FF_LOSS_EXCESS_DEPTH)) {
             // Favour formats where bit depth exactly matches. If all other
             // scoring is equal, we'd rather use the bit depth that most closely
             // matches the source.
@@ -3662,305 +3662,305 @@ static int get_pix_fmt_score(enum AVPixelFormat dst_pix_fmt,
         }
     }
 
-    if (consider & FF_LOSS_RESOLUTION) {
-        if (dst_desc->log2_chroma_w > src_desc->log2_chroma_w) {
+    अगर (consider & FF_LOSS_RESOLUTION) {
+        अगर (dst_desc->log2_chroma_w > src_desc->log2_chroma_w) {
             loss |= FF_LOSS_RESOLUTION;
             score -= 256 << dst_desc->log2_chroma_w;
         }
-        if (dst_desc->log2_chroma_h > src_desc->log2_chroma_h) {
+        अगर (dst_desc->log2_chroma_h > src_desc->log2_chroma_h) {
             loss |= FF_LOSS_RESOLUTION;
             score -= 256 << dst_desc->log2_chroma_h;
         }
         // don't favor 422 over 420 if downsampling is needed, because 420 has much better support on the decoder side
-        if (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 0 &&
+        अगर (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 0 &&
             dst_desc->log2_chroma_h == 1 && src_desc->log2_chroma_h == 0 ) {
             score += 512;
         }
     }
 
-    if (consider & FF_LOSS_EXCESS_RESOLUTION) {
+    अगर (consider & FF_LOSS_EXCESS_RESOLUTION) {
         // Favour formats where chroma subsampling exactly matches. If all other
         // scoring is equal, we'd rather use the subsampling that most closely
         // matches the source.
-        if (dst_desc->log2_chroma_w < src_desc->log2_chroma_w) {
+        अगर (dst_desc->log2_chroma_w < src_desc->log2_chroma_w) {
             loss |= FF_LOSS_EXCESS_RESOLUTION;
             score -= 1 << (src_desc->log2_chroma_w - dst_desc->log2_chroma_w);
         }
 
-        if (dst_desc->log2_chroma_h < src_desc->log2_chroma_h) {
+        अगर (dst_desc->log2_chroma_h < src_desc->log2_chroma_h) {
             loss |= FF_LOSS_EXCESS_RESOLUTION;
             score -= 1 << (src_desc->log2_chroma_h - dst_desc->log2_chroma_h);
         }
 
         // don't favour 411 over 420, because 420 has much better support on the
         // decoder side.
-        if (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 2 &&
+        अगर (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 2 &&
             dst_desc->log2_chroma_h == 1 && src_desc->log2_chroma_h == 2) {
                 score += 4;
             }
     }
 
-    if(consider & FF_LOSS_COLORSPACE)
-    switch(dst_color) {
-    case FF_COLOR_RGB:
-        if (src_color != FF_COLOR_RGB &&
+    अगर(consider & FF_LOSS_COLORSPACE)
+    चयन(dst_color) {
+    हाल FF_COLOR_RGB:
+        अगर (src_color != FF_COLOR_RGB &&
             src_color != FF_COLOR_GRAY)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_GRAY:
-        if (src_color != FF_COLOR_GRAY)
+        अवरोध;
+    हाल FF_COLOR_GRAY:
+        अगर (src_color != FF_COLOR_GRAY)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_YUV:
-        if (src_color != FF_COLOR_YUV)
+        अवरोध;
+    हाल FF_COLOR_YUV:
+        अगर (src_color != FF_COLOR_YUV)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_YUV_JPEG:
-        if (src_color != FF_COLOR_YUV_JPEG &&
+        अवरोध;
+    हाल FF_COLOR_YUV_JPEG:
+        अगर (src_color != FF_COLOR_YUV_JPEG &&
             src_color != FF_COLOR_YUV &&
             src_color != FF_COLOR_GRAY)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    default:
+        अवरोध;
+    शेष:
         /* fail safe test */
-        if (src_color != dst_color)
+        अगर (src_color != dst_color)
             loss |= FF_LOSS_COLORSPACE;
-        break;
+        अवरोध;
     }
-    if(loss & FF_LOSS_COLORSPACE)
+    अगर(loss & FF_LOSS_COLORSPACE)
         score -= (nb_components * 65536) >> FFMIN(dst_desc->comp[0].depth - 1, src_desc->comp[0].depth - 1);
 
-    if (dst_color == FF_COLOR_GRAY &&
+    अगर (dst_color == FF_COLOR_GRAY &&
         src_color != FF_COLOR_GRAY && (consider & FF_LOSS_CHROMA)) {
         loss |= FF_LOSS_CHROMA;
         score -= 2 * 65536;
     }
-    if (!pixdesc_has_alpha(dst_desc) && (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))) {
+    अगर (!pixdesc_has_alpha(dst_desc) && (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))) {
         loss |= FF_LOSS_ALPHA;
         score -= 65536;
     }
-    if (dst_pix_fmt == AV_PIX_FMT_PAL8 && (consider & FF_LOSS_COLORQUANT) &&
+    अगर (dst_pix_fmt == AV_PIX_FMT_PAL8 && (consider & FF_LOSS_COLORQUANT) &&
         (src_pix_fmt != AV_PIX_FMT_PAL8 && (src_color != FF_COLOR_GRAY || (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))))) {
         loss |= FF_LOSS_COLORQUANT;
         score -= 65536;
     }
 
     *lossp = loss;
-    return score;
+    वापस score;
 }
 
-int av_get_pix_fmt_loss(enum AVPixelFormat dst_pix_fmt,
-                            enum AVPixelFormat src_pix_fmt,
-                            int has_alpha)
+पूर्णांक av_get_pix_fmt_loss(क्रमागत AVPixelFormat dst_pix_fmt,
+                            क्रमागत AVPixelFormat src_pix_fmt,
+                            पूर्णांक has_alpha)
 {
-    int loss;
-    int ret = get_pix_fmt_score(dst_pix_fmt, src_pix_fmt, &loss, has_alpha ? ~0 : ~FF_LOSS_ALPHA);
-    if (ret < 0)
-        return ret;
-    return loss;
+    पूर्णांक loss;
+    पूर्णांक ret = get_pix_fmt_score(dst_pix_fmt, src_pix_fmt, &loss, has_alpha ? ~0 : ~FF_LOSS_ALPHA);
+    अगर (ret < 0)
+        वापस ret;
+    वापस loss;
 }
 
-enum AVPixelFormat av_find_best_pix_fmt_of_2(enum AVPixelFormat dst_pix_fmt1, enum AVPixelFormat dst_pix_fmt2,
-                                             enum AVPixelFormat src_pix_fmt, int has_alpha, int *loss_ptr)
+क्रमागत AVPixelFormat av_find_best_pix_fmt_of_2(क्रमागत AVPixelFormat dst_pix_fmt1, क्रमागत AVPixelFormat dst_pix_fmt2,
+                                             क्रमागत AVPixelFormat src_pix_fmt, पूर्णांक has_alpha, पूर्णांक *loss_ptr)
 {
-    enum AVPixelFormat dst_pix_fmt;
-    int loss1, loss2, loss_mask;
-    const AVPixFmtDescriptor *desc1 = av_pix_fmt_desc_get(dst_pix_fmt1);
-    const AVPixFmtDescriptor *desc2 = av_pix_fmt_desc_get(dst_pix_fmt2);
-    int score1, score2;
+    क्रमागत AVPixelFormat dst_pix_fmt;
+    पूर्णांक loss1, loss2, loss_mask;
+    स्थिर AVPixFmtDescriptor *desc1 = av_pix_fmt_desc_get(dst_pix_fmt1);
+    स्थिर AVPixFmtDescriptor *desc2 = av_pix_fmt_desc_get(dst_pix_fmt2);
+    पूर्णांक score1, score2;
 
-    if (!desc1) {
+    अगर (!desc1) {
         dst_pix_fmt = dst_pix_fmt2;
-    } else if (!desc2) {
+    } अन्यथा अगर (!desc2) {
         dst_pix_fmt = dst_pix_fmt1;
-    } else {
+    } अन्यथा {
         loss_mask= loss_ptr?~*loss_ptr:~0; /* use loss mask if provided */
-        if(!has_alpha)
+        अगर(!has_alpha)
             loss_mask &= ~FF_LOSS_ALPHA;
 
         score1 = get_pix_fmt_score(dst_pix_fmt1, src_pix_fmt, &loss1, loss_mask);
         score2 = get_pix_fmt_score(dst_pix_fmt2, src_pix_fmt, &loss2, loss_mask);
 
-        if (score1 == score2) {
-            if(av_get_padded_bits_per_pixel(desc2) != av_get_padded_bits_per_pixel(desc1)) {
+        अगर (score1 == score2) {
+            अगर(av_get_padded_bits_per_pixel(desc2) != av_get_padded_bits_per_pixel(desc1)) {
                 dst_pix_fmt = av_get_padded_bits_per_pixel(desc2) < av_get_padded_bits_per_pixel(desc1) ? dst_pix_fmt2 : dst_pix_fmt1;
-            } else {
+            } अन्यथा {
                 dst_pix_fmt = desc2->nb_components < desc1->nb_components ? dst_pix_fmt2 : dst_pix_fmt1;
             }
-        } else {
+        } अन्यथा {
             dst_pix_fmt = score1 < score2 ? dst_pix_fmt2 : dst_pix_fmt1;
         }
     }
 
-    if (loss_ptr)
+    अगर (loss_ptr)
         *loss_ptr = av_get_pix_fmt_loss(dst_pix_fmt, src_pix_fmt, has_alpha);
-    return dst_pix_fmt;
+    वापस dst_pix_fmt;
 }
 
-const char *av_color_range_name(enum AVColorRange range)
+स्थिर अक्षर *av_color_range_name(क्रमागत AVColorRange range)
 {
-    return (unsigned) range < AVCOL_RANGE_NB ?
-        color_range_names[range] : NULL;
+    वापस (अचिन्हित) range < AVCOL_RANGE_NB ?
+        color_range_names[range] : शून्य;
 }
 
-int av_color_range_from_name(const char *name)
+पूर्णांक av_color_range_from_name(स्थिर अक्षर *name)
 {
-    int i;
+    पूर्णांक i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_range_names); i++) {
-        if (!strcmp(name, color_range_names[i]))
-            return i;
+    क्रम (i = 0; i < FF_ARRAY_ELEMS(color_range_names); i++) {
+        अगर (!म_भेद(name, color_range_names[i]))
+            वापस i;
     }
 
-    return AVERROR(EINVAL);
+    वापस AVERROR(EINVAL);
 }
 
-const char *av_color_primaries_name(enum AVColorPrimaries primaries)
+स्थिर अक्षर *av_color_primaries_name(क्रमागत AVColorPrimaries primaries)
 {
-    if ((unsigned)primaries < AVCOL_PRI_NB)
-        return color_primaries_names[primaries];
-    else if (((unsigned)primaries >= AVCOL_PRI_EXT_BASE) &&
-             ((unsigned)primaries < AVCOL_PRI_EXT_NB))
-        return color_primaries_names_ext[primaries - AVCOL_TRC_EXT_BASE];
-    return NULL;
+    अगर ((अचिन्हित)primaries < AVCOL_PRI_NB)
+        वापस color_primaries_names[primaries];
+    अन्यथा अगर (((अचिन्हित)primaries >= AVCOL_PRI_EXT_BASE) &&
+             ((अचिन्हित)primaries < AVCOL_PRI_EXT_NB))
+        वापस color_primaries_names_ext[primaries - AVCOL_TRC_EXT_BASE];
+    वापस शून्य;
 }
 
-int av_color_primaries_from_name(const char *name)
+पूर्णांक av_color_primaries_from_name(स्थिर अक्षर *name)
 {
-    int i;
+    पूर्णांक i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names); i++) {
-        if (!color_primaries_names[i])
-            continue;
+    क्रम (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names); i++) {
+        अगर (!color_primaries_names[i])
+            जारी;
 
-        if (!strcmp(name, color_primaries_names[i]))
-            return i;
+        अगर (!म_भेद(name, color_primaries_names[i]))
+            वापस i;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names_ext); i++) {
-        if (!color_primaries_names_ext[i])
-            continue;
+    क्रम (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names_ext); i++) {
+        अगर (!color_primaries_names_ext[i])
+            जारी;
 
-        if (!strcmp(name, color_primaries_names_ext[i]))
-            return AVCOL_PRI_EXT_BASE + i;
+        अगर (!म_भेद(name, color_primaries_names_ext[i]))
+            वापस AVCOL_PRI_EXT_BASE + i;
     }
 
-    return AVERROR(EINVAL);
+    वापस AVERROR(EINVAL);
 }
 
-const char *av_color_transfer_name(enum AVColorTransferCharacteristic transfer)
+स्थिर अक्षर *av_color_transfer_name(क्रमागत AVColorTransferCharacteristic transfer)
 {
-    if ((unsigned)transfer < AVCOL_TRC_NB)
-        return color_transfer_names[transfer];
-    else if (((unsigned)transfer >= AVCOL_TRC_EXT_BASE) &&
-             ((unsigned)transfer < AVCOL_TRC_EXT_NB))
-        return color_transfer_names_ext[transfer - AVCOL_TRC_EXT_BASE];
-    return NULL;
+    अगर ((अचिन्हित)transfer < AVCOL_TRC_NB)
+        वापस color_transfer_names[transfer];
+    अन्यथा अगर (((अचिन्हित)transfer >= AVCOL_TRC_EXT_BASE) &&
+             ((अचिन्हित)transfer < AVCOL_TRC_EXT_NB))
+        वापस color_transfer_names_ext[transfer - AVCOL_TRC_EXT_BASE];
+    वापस शून्य;
 }
 
-int av_color_transfer_from_name(const char *name)
+पूर्णांक av_color_transfer_from_name(स्थिर अक्षर *name)
 {
-    int i;
+    पूर्णांक i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names); i++) {
-        if (!color_transfer_names[i])
-            continue;
+    क्रम (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names); i++) {
+        अगर (!color_transfer_names[i])
+            जारी;
 
-        if (!strcmp(name, color_transfer_names[i]))
-            return i;
+        अगर (!म_भेद(name, color_transfer_names[i]))
+            वापस i;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names_ext); i++) {
-        if (!color_transfer_names_ext[i])
-            continue;
+    क्रम (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names_ext); i++) {
+        अगर (!color_transfer_names_ext[i])
+            जारी;
 
-        if (!strcmp(name, color_transfer_names_ext[i]))
-            return AVCOL_TRC_EXT_BASE + i;
+        अगर (!म_भेद(name, color_transfer_names_ext[i]))
+            वापस AVCOL_TRC_EXT_BASE + i;
     }
 
-    return AVERROR(EINVAL);
+    वापस AVERROR(EINVAL);
 }
 
-const char *av_color_space_name(enum AVColorSpace space)
+स्थिर अक्षर *av_color_space_name(क्रमागत AVColorSpace space)
 {
-    return (unsigned) space < AVCOL_SPC_NB ?
-        color_space_names[space] : NULL;
+    वापस (अचिन्हित) space < AVCOL_SPC_NB ?
+        color_space_names[space] : शून्य;
 }
 
-int av_color_space_from_name(const char *name)
+पूर्णांक av_color_space_from_name(स्थिर अक्षर *name)
 {
-    int i;
+    पूर्णांक i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_space_names); i++) {
-        if (!color_space_names[i])
-            continue;
+    क्रम (i = 0; i < FF_ARRAY_ELEMS(color_space_names); i++) {
+        अगर (!color_space_names[i])
+            जारी;
 
-        if (!strcmp(name, color_space_names[i]))
-            return i;
+        अगर (!म_भेद(name, color_space_names[i]))
+            वापस i;
     }
 
-    return AVERROR(EINVAL);
+    वापस AVERROR(EINVAL);
 }
 
-const char *av_chroma_location_name(enum AVChromaLocation location)
+स्थिर अक्षर *av_chroma_location_name(क्रमागत AVChromaLocation location)
 {
-    return (unsigned) location < AVCHROMA_LOC_NB ?
-        chroma_location_names[location] : NULL;
+    वापस (अचिन्हित) location < AVCHROMA_LOC_NB ?
+        chroma_location_names[location] : शून्य;
 }
 
-int av_chroma_location_from_name(const char *name)
+पूर्णांक av_chroma_location_from_name(स्थिर अक्षर *name)
 {
-    int i;
+    पूर्णांक i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(chroma_location_names); i++) {
-        if (!chroma_location_names[i])
-            continue;
+    क्रम (i = 0; i < FF_ARRAY_ELEMS(chroma_location_names); i++) {
+        अगर (!chroma_location_names[i])
+            जारी;
 
-        if (!strcmp(name, chroma_location_names[i]))
-            return i;
+        अगर (!म_भेद(name, chroma_location_names[i]))
+            वापस i;
     }
 
-    return AVERROR(EINVAL);
+    वापस AVERROR(EINVAL);
 }
 
-int av_chroma_location_enum_to_pos(int *xpos, int *ypos, enum AVChromaLocation pos)
+पूर्णांक av_chroma_location_enum_to_pos(पूर्णांक *xpos, पूर्णांक *ypos, क्रमागत AVChromaLocation pos)
 {
-    if (pos <= AVCHROMA_LOC_UNSPECIFIED || pos >= AVCHROMA_LOC_NB)
-        return AVERROR(EINVAL);
+    अगर (pos <= AVCHROMA_LOC_UNSPECIFIED || pos >= AVCHROMA_LOC_NB)
+        वापस AVERROR(EINVAL);
     pos--;
 
     *xpos = (pos&1) * 128;
     *ypos = ((pos>>1)^(pos<4)) * 128;
 
-    return 0;
+    वापस 0;
 }
 
-enum AVChromaLocation av_chroma_location_pos_to_enum(int xpos, int ypos)
+क्रमागत AVChromaLocation av_chroma_location_pos_to_enum(पूर्णांक xpos, पूर्णांक ypos)
 {
-    int pos, xout, yout;
+    पूर्णांक pos, xout, yout;
 
-    for (pos = AVCHROMA_LOC_UNSPECIFIED + 1; pos < AVCHROMA_LOC_NB; pos++) {
-        if (av_chroma_location_enum_to_pos(&xout, &yout, pos) == 0 && xout == xpos && yout == ypos)
-            return pos;
+    क्रम (pos = AVCHROMA_LOC_UNSPECIFIED + 1; pos < AVCHROMA_LOC_NB; pos++) {
+        अगर (av_chroma_location_enum_to_pos(&xout, &yout, pos) == 0 && xout == xpos && yout == ypos)
+            वापस pos;
     }
-    return AVCHROMA_LOC_UNSPECIFIED;
+    वापस AVCHROMA_LOC_UNSPECIFIED;
 }
 
-const char *av_alpha_mode_name(enum AVAlphaMode mode)
+स्थिर अक्षर *av_alpha_mode_name(क्रमागत AVAlphaMode mode)
 {
-    return (unsigned) mode < AVALPHA_MODE_NB ?
-        alpha_mode_names[mode] : NULL;
+    वापस (अचिन्हित) mode < AVALPHA_MODE_NB ?
+        alpha_mode_names[mode] : शून्य;
 }
 
-enum AVAlphaMode av_alpha_mode_from_name(const char *name)
+क्रमागत AVAlphaMode av_alpha_mode_from_name(स्थिर अक्षर *name)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(alpha_mode_names); i++) {
-        if (!alpha_mode_names[i])
-            continue;
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(alpha_mode_names); i++) {
+        अगर (!alpha_mode_names[i])
+            जारी;
 
-        if (!strcmp(name, alpha_mode_names[i]))
-            return i;
+        अगर (!म_भेद(name, alpha_mode_names[i]))
+            वापस i;
     }
 
-    return AVERROR(EINVAL);
+    वापस AVERROR(EINVAL);
 }

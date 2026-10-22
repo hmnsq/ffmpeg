@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CAST5_H
-#define AVUTIL_CAST5_H
+#अगर_अघोषित AVUTIL_CAST5_H
+#घोषणा AVUTIL_CAST5_H
 
-#include <stdint.h>
+#समावेश <stdint.h>
 
 
 /**
@@ -33,15 +33,15 @@
   * @{
   */
 
-extern const int av_cast5_size;
+बाह्य स्थिर पूर्णांक av_cast5_आकार;
 
-struct AVCAST5;
+काष्ठा AVCAST5;
 
 /**
   * Allocate an AVCAST5 context
   * To free the struct: av_free(ptr)
   */
-struct AVCAST5 *av_cast5_alloc(void);
+काष्ठा AVCAST5 *av_cast5_alloc(व्योम);
 /**
   * Initialize an AVCAST5 context.
   *
@@ -50,7 +50,7 @@ struct AVCAST5 *av_cast5_alloc(void);
   * @param key_bits number of keybits: possible are 40,48,...,128
   * @return 0 on success, less than 0 on failure
  */
-int av_cast5_init(struct AVCAST5 *ctx, const uint8_t *key, int key_bits);
+पूर्णांक av_cast5_init(काष्ठा AVCAST5 *ctx, स्थिर uint8_t *कुंजी, पूर्णांक कुंजी_bits);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context, ECB mode only
@@ -61,7 +61,7 @@ int av_cast5_init(struct AVCAST5 *ctx, const uint8_t *key, int key_bits);
   * @param count number of 8 byte blocks
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_cast5_crypt(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int count, int decrypt);
+व्योम av_cast5_crypt(काष्ठा AVCAST5 *ctx, uint8_t *dst, स्थिर uint8_t *src, पूर्णांक गिनती, पूर्णांक decrypt);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context
@@ -73,8 +73,8 @@ void av_cast5_crypt(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int c
   * @param iv initialization vector for CBC mode, NULL for ECB mode
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_cast5_crypt2(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+व्योम av_cast5_crypt2(काष्ठा AVCAST5 *ctx, uint8_t *dst, स्थिर uint8_t *src, पूर्णांक गिनती, uint8_t *iv, पूर्णांक decrypt);
 /**
  * @}
  */
-#endif /* AVUTIL_CAST5_H */
+#पूर्ण_अगर /* AVUTIL_CAST5_H */

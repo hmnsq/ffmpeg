@@ -19,30 +19,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LOONGARCH_TIMER_H
-#define AVUTIL_LOONGARCH_TIMER_H
+#अगर_अघोषित AVUTIL_LOONGARCH_TIMER_H
+#घोषणा AVUTIL_LOONGARCH_TIMER_H
 
-#include <stdint.h>
-#include "config.h"
+#समावेश <stdint.h>
+#समावेश "config.h"
 
-#if HAVE_INLINE_ASM
+#अगर HAVE_INLINE_ASM
 
-#define AV_READ_TIME read_time
+#घोषणा AV_READ_TIME read_time
 
-static inline uint64_t read_time(void)
+अटल अंतरभूत uint64_t read_time(व्योम)
 {
 
-#if ARCH_LOONGARCH64
+#अगर ARCH_LOONGARCH64
     uint64_t a, id;
-    __asm__ volatile ( "rdtime.d  %0, %1" : "=r"(a), "=r"(id) :: );
-    return a;
-#else
+    __asm__ अस्थिर ( "rdtime.d  %0, %1" : "=r"(a), "=r"(id) :: );
+    वापस a;
+#अन्यथा
     uint32_t a, id;
-    __asm__ volatile ( "rdtimel.w  %0, %1" : "=r"(a), "=r"(id) :: );
-    return (uint64_t)a;
-#endif
+    __asm__ अस्थिर ( "rdtimel.w  %0, %1" : "=r"(a), "=r"(id) :: );
+    वापस (uint64_t)a;
+#पूर्ण_अगर
 }
 
-#endif /* HAVE_INLINE_ASM */
+#पूर्ण_अगर /* HAVE_INLINE_ASM */
 
-#endif /* AVUTIL_LOONGARCH_TIMER_H */
+#पूर्ण_अगर /* AVUTIL_LOONGARCH_TIMER_H */

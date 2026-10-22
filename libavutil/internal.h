@@ -23,79 +23,79 @@
  * common internal API header
  */
 
-#ifndef AVUTIL_INTERNAL_H
-#define AVUTIL_INTERNAL_H
+#अगर_अघोषित AVUTIL_INTERNAL_H
+#घोषणा AVUTIL_INTERNAL_H
 
-#if !defined(DEBUG) && !defined(NDEBUG)
-#    define NDEBUG
-#endif
+#अगर !defined(DEBUG) && !defined(न_संशोधन)
+#    define न_संशोधन
+#पूर्ण_अगर
 
 // This can be enabled to allow detection of additional integer overflows with ubsan
 //#define CHECKED
 
-#include <limits.h>
-#include <math.h>
-#include <stdint.h>
-#include <stddef.h>
-#include <assert.h>
-#include <stdio.h>
-#include "config.h"
-#include "attributes.h"
-#include "mathematics.h"
-#include "macros.h"
+#समावेश <limits.h>
+#समावेश <math.h>
+#समावेश <stdint.h>
+#समावेश <stddef.h>
+#समावेश <assert.h>
+#समावेश <stdio.h>
+#समावेश "config.h"
+#समावेश "attributes.h"
+#समावेश "mathematics.h"
+#समावेश "macros.h"
 
-#ifndef attribute_align_arg
-#if ARCH_X86_32 && defined(__GNUC__)
+#अगर_अघोषित attribute_align_arg
+#अगर ARCH_X86_32 && defined(__GNUC__)
 #    define attribute_align_arg __attribute__((force_align_arg_pointer))
-#else
+#अन्यथा
 #    define attribute_align_arg
-#endif
-#endif
+#पूर्ण_अगर
+#पूर्ण_अगर
 
-#if HAVE_MIPSFPU && HAVE_INLINE_ASM
+#अगर HAVE_MIPSFPU && HAVE_INLINE_ASM
 #   include "mips/libm_mips.h"
-#endif
+#पूर्ण_अगर
 
-#if HAVE_PRAGMA_DEPRECATED
-#    if defined(__ICL) || defined (__INTEL_COMPILER)
-#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:1478))
-#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
+#अगर HAVE_PRAGMA_DEPRECATED
+#    अगर defined(__ICL) || defined (__INTEL_COMPILER)
+#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(धकेलो)) __pragma(warning(disable:1478))
+#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(निकालो))
 #    elif defined(_MSC_VER)
-#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:4996))
-#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
-#    else
+#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(धकेलो)) __pragma(warning(disable:4996))
+#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(निकालो))
+#    अन्यथा
 #        define FF_DISABLE_DEPRECATION_WARNINGS _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #        define FF_ENABLE_DEPRECATION_WARNINGS  _Pragma("GCC diagnostic pop")
 #    endif
-#else
+#अन्यथा
 #    define FF_DISABLE_DEPRECATION_WARNINGS
 #    define FF_ENABLE_DEPRECATION_WARNINGS
-#endif
+#पूर्ण_अगर
 
 
-#ifdef __ANDROID__
+#अगर_घोषित __ANDROID__
 #   include "compat/android/math.h"
-#endif
+#पूर्ण_अगर
 
-#define FF_ALLOC_TYPED_ARRAY(p, nelem)  (p = av_malloc_array(nelem, sizeof(*p)))
-#define FF_ALLOCZ_TYPED_ARRAY(p, nelem) (p = av_calloc(nelem, sizeof(*p)))
+#घोषणा FF_ALLOC_TYPED_ARRAY(p, nelem)  (p = av_malloc_array(nelem, माप(*p)))
+#घोषणा FF_ALLOCZ_TYPED_ARRAY(p, nelem) (p = av_calloc(nelem, माप(*p)))
 
-#define FF_PTR_ADD(ptr, off) ((off) ? (ptr) + (off) : (ptr))
+#घोषणा FF_PTR_ADD(ptr, off) ((off) ? (ptr) + (off) : (ptr))
 
 /**
  * Access a field in a structure by its offset.
  */
-#define FF_FIELD_AT(type, off, obj) (*(type *)((char *)&(obj) + (off)))
+#घोषणा FF_FIELD_AT(type, off, obj) (*(type *)((अक्षर *)&(obj) + (off)))
 
 /**
  * Return NULL if CONFIG_SMALL is true, otherwise the argument
  * without modification. Used to disable the definition of strings.
  */
-#if CONFIG_SMALL
-#   define NULL_IF_CONFIG_SMALL(x) NULL
-#else
+#अगर CONFIG_SMALL
+#   define NULL_IF_CONFIG_SMALL(x) शून्य
+#अन्यथा
 #   define NULL_IF_CONFIG_SMALL(x) x
-#endif
+#पूर्ण_अगर
 
 /**
  * Log a generic warning message about a missing feature.
@@ -104,8 +104,8 @@
  *                field is a pointer to an AVClass struct
  * @param[in] msg string containing the name of the missing feature
  */
-void avpriv_report_missing_feature(void *avc,
-                                   const char *msg, ...) av_printf_format(2, 3);
+व्योम avpriv_report_missing_feature(व्योम *avc,
+                                   स्थिर अक्षर *संदेश, ...) av_printf_format(2, 3);
 
 /**
  * Log a generic warning message about a missing feature.
@@ -115,42 +115,42 @@ void avpriv_report_missing_feature(void *avc,
  *                a pointer to an AVClass struct
  * @param[in] msg string containing the name of the missing feature
  */
-void avpriv_request_sample(void *avc,
-                           const char *msg, ...) av_printf_format(2, 3);
+व्योम avpriv_request_sample(व्योम *avc,
+                           स्थिर अक्षर *संदेश, ...) av_printf_format(2, 3);
 
-#ifdef DEBUG
+#अगर_घोषित DEBUG
 #   define ff_dlog(ctx, ...) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__)
-#else
-#   define ff_dlog(ctx, ...) do { if (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } while (0)
-#endif
+#अन्यथा
+#   define ff_dlog(ctx, ...) करो { अगर (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } जबतक (0)
+#पूर्ण_अगर
 
-#ifdef TRACE
+#अगर_घोषित TRACE
 #   define ff_tlog(ctx, ...) av_log(ctx, AV_LOG_TRACE, __VA_ARGS__)
-#else
-#   define ff_tlog(ctx, ...) do { } while(0)
-#endif
+#अन्यथा
+#   define ff_tlog(ctx, ...) करो { } जबतक(0)
+#पूर्ण_अगर
 
 // For debugging we use signed operations so overflows can be detected (by ubsan)
 // For production we use unsigned so there are no undefined operations
-#ifdef CHECKED
-#define SUINT   int
-#define SUINT32 int32_t
-#else
-#define SUINT   unsigned
-#define SUINT32 uint32_t
-#endif
+#अगर_घोषित CHECKED
+#घोषणा SUINT   पूर्णांक
+#घोषणा SUINT32 int32_t
+#अन्यथा
+#घोषणा SUINT   अचिन्हित
+#घोषणा SUINT32 uint32_t
+#पूर्ण_अगर
 
-static av_always_inline av_const int avpriv_mirror(int x, int w)
+अटल av_always_inline av_const पूर्णांक avpriv_mirror(पूर्णांक x, पूर्णांक w)
 {
-    if (!w)
-        return 0;
+    अगर (!w)
+        वापस 0;
 
-    while ((unsigned)x > (unsigned)w) {
+    जबतक ((अचिन्हित)x > (अचिन्हित)w) {
         x = -x;
-        if (x < 0)
+        अगर (x < 0)
             x += 2 * w;
     }
-    return x;
+    वापस x;
 }
 
-#endif /* AVUTIL_INTERNAL_H */
+#पूर्ण_अगर /* AVUTIL_INTERNAL_H */

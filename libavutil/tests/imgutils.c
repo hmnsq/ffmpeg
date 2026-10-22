@@ -16,112 +16,112 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/imgutils.c"
-#include "libavutil/crc.h"
-#include "libavutil/mem.h"
+#समावेश "libavutil/imgutils.c"
+#समावेश "libavutil/crc.h"
+#समावेश "libavutil/mem.h"
 
-static int check_image_fill(enum AVPixelFormat pix_fmt, int w, int h) {
-    uint8_t *data[4];
-    size_t sizes[4];
-    ptrdiff_t linesizes1[4], offsets[3] = { 0 };
-    int i, total_size, linesizes[4];
+अटल पूर्णांक check_image_fill(क्रमागत AVPixelFormat pix_fmt, पूर्णांक w, पूर्णांक h) {
+    uint8_t *तथ्य[4];
+    माप_प्रकार sizes[4];
+    सूचक_भेद_प्रकार linesizes1[4], offsets[3] = { 0 };
+    पूर्णांक i, योग_आकार, linesizes[4];
 
-    if (av_image_fill_linesizes(linesizes, pix_fmt, w) < 0)
-        return -1;
-    for (i = 0; i < 4; i++)
+    अगर (av_image_fill_linesizes(linesizes, pix_fmt, w) < 0)
+        वापस -1;
+    क्रम (i = 0; i < 4; i++)
         linesizes1[i] = linesizes[i];
-    if (av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1) < 0)
-        return -1;
-    total_size = av_image_fill_pointers(data, pix_fmt, h, (void *)1, linesizes);
-    if (total_size < 0)
-        return -1;
-    for (i = 0; i < 4 && data[i]; i++);
-    printf("planes: %d", i);
+    अगर (av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1) < 0)
+        वापस -1;
+    योग_आकार = av_image_fill_pointers(तथ्य, pix_fmt, h, (व्योम *)1, linesizes);
+    अगर (योग_आकार < 0)
+        वापस -1;
+    क्रम (i = 0; i < 4 && तथ्य[i]; i++);
+    म_लिखो("planes: %d", i);
     // Test the output of av_image_fill_linesizes()
-    printf(", linesizes:");
-    for (i = 0; i < 4; i++)
-        printf(" %3d", linesizes[i]);
+    म_लिखो(", linesizes:");
+    क्रम (i = 0; i < 4; i++)
+        म_लिखो(" %3d", linesizes[i]);
     // Test the output of av_image_fill_plane_sizes()
-    printf(", plane_sizes:");
-    for (i = 0; i < 4; i++)
-        printf(" %5zu", sizes[i]);
+    म_लिखो(", plane_sizes:");
+    क्रम (i = 0; i < 4; i++)
+        म_लिखो(" %5zu", sizes[i]);
     // Test the output of av_image_fill_pointers()
-    for (i = 0; i < 3 && data[i + 1]; i++)
-        offsets[i] = data[i + 1] - data[i];
-    printf(", plane_offsets:");
-    for (i = 0; i < 3; i++)
-        printf(" %5td", offsets[i]);
-    printf(", total_size: %d", total_size);
+    क्रम (i = 0; i < 3 && तथ्य[i + 1]; i++)
+        offsets[i] = तथ्य[i + 1] - तथ्य[i];
+    म_लिखो(", plane_offsets:");
+    क्रम (i = 0; i < 3; i++)
+        म_लिखो(" %5td", offsets[i]);
+    म_लिखो(", total_size: %d", योग_आकार);
 
-    return 0;
+    वापस 0;
 }
 
-static int check_image_fill_black(const AVPixFmtDescriptor *desc, enum AVPixelFormat pix_fmt, int w, int h)
+अटल पूर्णांक check_image_fill_black(स्थिर AVPixFmtDescriptor *desc, क्रमागत AVPixelFormat pix_fmt, पूर्णांक w, पूर्णांक h)
 {
-    uint8_t *data[4];
-    ptrdiff_t linesizes1[4];
-    int ret, total_size, linesizes[4];
+    uint8_t *तथ्य[4];
+    सूचक_भेद_प्रकार linesizes1[4];
+    पूर्णांक ret, योग_आकार, linesizes[4];
 
     ret = av_image_fill_linesizes(linesizes, pix_fmt, w);
-    if (ret < 0)
-        return ret;
-    total_size = av_image_alloc(data, linesizes, w, h, pix_fmt, 4);
-    if (total_size < 0) {
-        printf("alloc failure");
-        return total_size;
+    अगर (ret < 0)
+        वापस ret;
+    योग_आकार = av_image_alloc(तथ्य, linesizes, w, h, pix_fmt, 4);
+    अगर (योग_आकार < 0) {
+        म_लिखो("alloc failure");
+        वापस योग_आकार;
     }
-    printf("total_size: %6d", total_size);
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL)
-        total_size -= 256 * 4;
+    म_लिखो("total_size: %6d", योग_आकार);
+    अगर (desc->flags & AV_PIX_FMT_FLAG_PAL)
+        योग_आकार -= 256 * 4;
     // Make it non-black by default...
-    memset(data[0], 0xA3, total_size);
-    for (int i = 0; i < 4; i++)
+    स_रखो(तथ्य[0], 0xA3, योग_आकार);
+    क्रम (पूर्णांक i = 0; i < 4; i++)
         linesizes1[i] = linesizes[i];
-    for (enum AVColorRange range = 0; range < AVCOL_RANGE_NB; range++) {
-        ret = av_image_fill_black(data, linesizes1, pix_fmt, range, w, h);
-        printf(",  black_%s_crc: ", av_color_range_name(range));
-        if (ret < 0) {
-            printf("----------");
-        } else {
-            const AVCRC *crc = av_crc_get_table(AV_CRC_32_IEEE_LE);
-            printf("0x%08"PRIx32, av_crc(crc, 0, data[0], total_size));
+    क्रम (क्रमागत AVColorRange range = 0; range < AVCOL_RANGE_NB; range++) {
+        ret = av_image_fill_black(तथ्य, linesizes1, pix_fmt, range, w, h);
+        म_लिखो(",  black_%s_crc: ", av_color_range_name(range));
+        अगर (ret < 0) {
+            म_लिखो("----------");
+        } अन्यथा {
+            स्थिर AVCRC *crc = av_crc_get_table(AV_CRC_32_IEEE_LE);
+            म_लिखो("0x%08"PRIx32, av_crc(crc, 0, तथ्य[0], योग_आकार));
         }
     }
-    av_freep(&data[0]);
+    av_freep(&तथ्य[0]);
 
-    return 0;
+    वापस 0;
 }
 
-int main(void)
+पूर्णांक मुख्य(व्योम)
 {
     int64_t x, y;
 
-    for (y = -1; y<UINT_MAX; y+= y/2 + 1) {
-        for (x = -1; x<UINT_MAX; x+= x/2 + 1) {
-            int ret = av_image_check_size(x, y, 0, NULL);
-            printf("%d", ret >= 0);
+    क्रम (y = -1; y<अच_पूर्णांक_उच्च; y+= y/2 + 1) {
+        क्रम (x = -1; x<अच_पूर्णांक_उच्च; x+= x/2 + 1) {
+            पूर्णांक ret = av_image_check_आकार(x, y, 0, शून्य);
+            म_लिखो("%d", ret >= 0);
         }
-        printf("\n");
+        म_लिखो("\n");
     }
-    printf("\n");
+    म_लिखो("\n");
 
-    for (int i = 0; i < 2; i++) {
-        printf(i ? "\nimage_fill_black tests\n" : "image_fill tests\n");
-        for (const AVPixFmtDescriptor *desc = NULL; desc = av_pix_fmt_desc_next(desc);) {
-            int w = 64, h = 48;
-            enum AVPixelFormat pix_fmt = av_pix_fmt_desc_get_id(desc);
+    क्रम (पूर्णांक i = 0; i < 2; i++) {
+        म_लिखो(i ? "\nimage_fill_black tests\n" : "image_fill tests\n");
+        क्रम (स्थिर AVPixFmtDescriptor *desc = शून्य; desc = av_pix_fmt_desc_अग्र(desc);) {
+            पूर्णांक w = 64, h = 48;
+            क्रमागत AVPixelFormat pix_fmt = av_pix_fmt_desc_get_id(desc);
 
-            if (desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-                continue;
+            अगर (desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+                जारी;
 
-            printf("%-16s", desc->name);
-            if (i == 0)
+            म_लिखो("%-16s", desc->name);
+            अगर (i == 0)
                 check_image_fill(pix_fmt, w, h);
-            else
+            अन्यथा
                 check_image_fill_black(desc, pix_fmt, w, h);
-            printf("\n");
+            म_लिखो("\n");
         }
     }
 
-    return 0;
+    वापस 0;
 }

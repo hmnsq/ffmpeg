@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_H
-#define AVUTIL_HWCONTEXT_H
+#अगर_अघोषित AVUTIL_HWCONTEXT_H
+#घोषणा AVUTIL_HWCONTEXT_H
 
-#include "buffer.h"
-#include "frame.h"
-#include "log.h"
-#include "pixfmt.h"
+#समावेश "buffer.h"
+#समावेश "frame.h"
+#समावेश "log.h"
+#समावेश "pixfmt.h"
 
-enum AVHWDeviceType {
+क्रमागत AVHWDeviceType {
     AV_HWDEVICE_TYPE_NONE,
     AV_HWDEVICE_TYPE_VDPAU,
     AV_HWDEVICE_TYPE_CUDA,
@@ -60,11 +60,11 @@ enum AVHWDeviceType {
  * optionally invoking a user-specified callback for uninitializing the hardware
  * state.
  */
-typedef struct AVHWDeviceContext {
+प्रकार काष्ठा AVHWDeviceContext {
     /**
      * A class for logging. Set by av_hwdevice_ctx_alloc().
      */
-    const AVClass *av_class;
+    स्थिर AVClass *av_class;
 
     /**
      * This field identifies the underlying API used for hardware access.
@@ -72,7 +72,7 @@ typedef struct AVHWDeviceContext {
      * This field is set when this struct is allocated and never changed
      * afterwards.
      */
-    enum AVHWDeviceType type;
+    क्रमागत AVHWDeviceType type;
 
     /**
      * The format-specific data, allocated and freed by libavutil along with
@@ -85,7 +85,7 @@ typedef struct AVHWDeviceContext {
      * After calling av_hwdevice_ctx_init() this struct should not be modified
      * by the caller.
      */
-    void *hwctx;
+    व्योम *hwctx;
 
     /**
      * This field may be set by the caller before calling av_hwdevice_ctx_init().
@@ -97,12 +97,12 @@ typedef struct AVHWDeviceContext {
      *       struct, this callback will be invoked after all such child objects
      *       are fully uninitialized and their respective destructors invoked.
      */
-    void (*free)(struct AVHWDeviceContext *ctx);
+    व्योम (*मुक्त)(काष्ठा AVHWDeviceContext *ctx);
 
     /**
      * Arbitrary user data, to be used e.g. by the free() callback.
      */
-    void *user_opaque;
+    व्योम *user_opaque;
 } AVHWDeviceContext;
 
 /**
@@ -115,11 +115,11 @@ typedef struct AVHWDeviceContext {
  * yields a reference, whose data field points to the actual AVHWFramesContext
  * struct.
  */
-typedef struct AVHWFramesContext {
+प्रकार काष्ठा AVHWFramesContext {
     /**
      * A class for logging.
      */
-    const AVClass *av_class;
+    स्थिर AVClass *av_class;
 
     /**
      * A reference to the parent AVHWDeviceContext. This reference is owned and
@@ -150,7 +150,7 @@ typedef struct AVHWFramesContext {
      * After any frames using this context are created, the contents of this
      * struct should not be modified by the caller.
      */
-    void *hwctx;
+    व्योम *hwctx;
 
     /**
      * This field may be set by the caller before calling av_hwframe_ctx_init().
@@ -158,12 +158,12 @@ typedef struct AVHWFramesContext {
      * If non-NULL, this callback will be called when the last reference to
      * this context is unreferenced, immediately before it is freed.
      */
-    void (*free)(struct AVHWFramesContext *ctx);
+    व्योम (*मुक्त)(काष्ठा AVHWFramesContext *ctx);
 
     /**
      * Arbitrary user data, to be used e.g. by the free() callback.
      */
-    void *user_opaque;
+    व्योम *user_opaque;
 
     /**
      * A pool from which the frames are allocated by av_hwframe_get_buffer().
@@ -187,7 +187,7 @@ typedef struct AVHWFramesContext {
      * May be set by the caller before calling av_hwframe_ctx_init(). Must be
      * set if pool is NULL and the device type does not support dynamic pools.
      */
-    int initial_pool_size;
+    पूर्णांक initial_pool_आकार;
 
     /**
      * The pixel format identifying the underlying HW surface type.
@@ -197,7 +197,7 @@ typedef struct AVHWFramesContext {
      *
      * Must be set by the user before calling av_hwframe_ctx_init().
      */
-    enum AVPixelFormat format;
+    क्रमागत AVPixelFormat format;
 
     /**
      * The pixel format identifying the actual data layout of the hardware
@@ -210,14 +210,14 @@ typedef struct AVHWFramesContext {
      * planar version of that format (e.g. for 8-bit 420 YUV it should be
      * AV_PIX_FMT_YUV420P, not AV_PIX_FMT_NV12 or anything else).
      */
-    enum AVPixelFormat sw_format;
+    क्रमागत AVPixelFormat sw_format;
 
     /**
      * The allocated dimensions of the frames in this pool.
      *
      * Must be set by the user before calling av_hwframe_ctx_init().
      */
-    int width, height;
+    पूर्णांक width, height;
 } AVHWFramesContext;
 
 /**
@@ -227,7 +227,7 @@ typedef struct AVHWFramesContext {
  * @return The type from enum AVHWDeviceType, or AV_HWDEVICE_TYPE_NONE if
  *         not found.
  */
-enum AVHWDeviceType av_hwdevice_find_type_by_name(const char *name);
+क्रमागत AVHWDeviceType av_hwdevice_find_type_by_name(स्थिर अक्षर *name);
 
 /** Get the string name of an AVHWDeviceType.
  *
@@ -235,7 +235,7 @@ enum AVHWDeviceType av_hwdevice_find_type_by_name(const char *name);
  * @return Pointer to a static string containing the name, or NULL if the type
  *         is not valid.
  */
-const char *av_hwdevice_get_type_name(enum AVHWDeviceType type);
+स्थिर अक्षर *av_hwdevice_get_type_name(क्रमागत AVHWDeviceType type);
 
 /**
  * Iterate over supported device types.
@@ -245,7 +245,7 @@ const char *av_hwdevice_get_type_name(enum AVHWDeviceType type);
  * @return The next usable device type from enum AVHWDeviceType, or
  *         AV_HWDEVICE_TYPE_NONE if there are no more.
  */
-enum AVHWDeviceType av_hwdevice_iterate_types(enum AVHWDeviceType prev);
+क्रमागत AVHWDeviceType av_hwdevice_iterate_types(क्रमागत AVHWDeviceType पूर्व);
 
 /**
  * Allocate an AVHWDeviceContext for a given hardware type.
@@ -254,7 +254,7 @@ enum AVHWDeviceType av_hwdevice_iterate_types(enum AVHWDeviceType prev);
  * @return a reference to the newly created AVHWDeviceContext on success or NULL
  *         on failure.
  */
-AVBufferRef *av_hwdevice_ctx_alloc(enum AVHWDeviceType type);
+AVBufferRef *av_hwdevice_ctx_alloc(क्रमागत AVHWDeviceType type);
 
 /**
  * Finalize the device context before use. This function must be called after
@@ -264,7 +264,7 @@ AVBufferRef *av_hwdevice_ctx_alloc(enum AVHWDeviceType type);
  * @param ref a reference to the AVHWDeviceContext
  * @return 0 on success, a negative AVERROR code on failure
  */
-int av_hwdevice_ctx_init(AVBufferRef *ref);
+पूर्णांक av_hwdevice_ctx_init(AVBufferRef *ref);
 
 /**
  * Open a device of the specified type and create an AVHWDeviceContext for it.
@@ -291,8 +291,8 @@ int av_hwdevice_ctx_init(AVBufferRef *ref);
  *
  * @return 0 on success, a negative AVERROR code on failure.
  */
-int av_hwdevice_ctx_create(AVBufferRef **device_ctx, enum AVHWDeviceType type,
-                           const char *device, AVDictionary *opts, int flags);
+पूर्णांक av_hwdevice_ctx_create(AVBufferRef **device_ctx, क्रमागत AVHWDeviceType type,
+                           स्थिर अक्षर *device, AVDictionary *opts, पूर्णांक flags);
 
 /**
  * Create a new device of the specified type from an existing device.
@@ -315,9 +315,9 @@ int av_hwdevice_ctx_create(AVBufferRef **device_ctx, enum AVHWDeviceType type,
  * @param flags   Currently unused; should be set to zero.
  * @return        Zero on success, a negative AVERROR code on failure.
  */
-int av_hwdevice_ctx_create_derived(AVBufferRef **dst_ctx,
-                                   enum AVHWDeviceType type,
-                                   AVBufferRef *src_ctx, int flags);
+पूर्णांक av_hwdevice_ctx_create_derived(AVBufferRef **dst_ctx,
+                                   क्रमागत AVHWDeviceType type,
+                                   AVBufferRef *src_ctx, पूर्णांक flags);
 
 /**
  * Create a new device of the specified type from an existing device.
@@ -335,10 +335,10 @@ int av_hwdevice_ctx_create_derived(AVBufferRef **dst_ctx,
  * @param flags   Currently unused; should be set to zero.
  * @return        Zero on success, a negative AVERROR code on failure.
  */
-int av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ctx,
-                                        enum AVHWDeviceType type,
+पूर्णांक av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ctx,
+                                        क्रमागत AVHWDeviceType type,
                                         AVBufferRef *src_ctx,
-                                        AVDictionary *options, int flags);
+                                        AVDictionary *options, पूर्णांक flags);
 
 /**
  * Allocate an AVHWFramesContext tied to a given device context.
@@ -359,7 +359,7 @@ AVBufferRef *av_hwframe_ctx_alloc(AVBufferRef *device_ctx);
  * @param ref a reference to the AVHWFramesContext
  * @return 0 on success, a negative AVERROR code on failure
  */
-int av_hwframe_ctx_init(AVBufferRef *ref);
+पूर्णांक av_hwframe_ctx_init(AVBufferRef *ref);
 
 /**
  * Allocate a new frame attached to the given AVHWFramesContext.
@@ -370,7 +370,7 @@ int av_hwframe_ctx_init(AVBufferRef *ref);
  * @param flags currently unused, should be set to zero
  * @return 0 on success, a negative AVERROR code on failure
  */
-int av_hwframe_get_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame, int flags);
+पूर्णांक av_hwframe_get_बफर(AVBufferRef *hwframe_ctx, AVFrame *frame, पूर्णांक flags);
 
 /**
  * Allocate the buffers of a software frame that data is transferred to or
@@ -385,7 +385,7 @@ int av_hwframe_get_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame, int flags);
  *                    data buffers
  * @return 0 on success, a negative AVERROR code on failure
  */
-int av_hwframe_get_transfer_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame);
+पूर्णांक av_hwframe_get_transfer_बफर(AVBufferRef *hwframe_ctx, AVFrame *frame);
 
 /**
  * Copy data to or from a hw surface. At least one of dst/src must have an
@@ -416,9 +416,9 @@ int av_hwframe_get_transfer_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame);
  * @param flags currently unused, should be set to zero
  * @return 0 on success, a negative AVERROR error code on failure.
  */
-int av_hwframe_transfer_data(AVFrame *dst, const AVFrame *src, int flags);
+पूर्णांक av_hwframe_transfer_तथ्य(AVFrame *dst, स्थिर AVFrame *src, पूर्णांक flags);
 
-enum AVHWFrameTransferDirection {
+क्रमागत AVHWFrameTransferDirection {
     /**
      * Transfer the data from the queried hw frame.
      */
@@ -445,9 +445,9 @@ enum AVHWFrameTransferDirection {
  * @param flags currently unused, should be set to zero
  * @return 0 on success, a negative AVERROR code on failure.
  */
-int av_hwframe_transfer_get_formats(AVBufferRef *hwframe_ctx,
-                                    enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats, int flags);
+पूर्णांक av_hwframe_transfer_get_formats(AVBufferRef *hwframe_ctx,
+                                    क्रमागत AVHWFrameTransferDirection dir,
+                                    क्रमागत AVPixelFormat **formats, पूर्णांक flags);
 
 
 /**
@@ -456,33 +456,33 @@ int av_hwframe_transfer_get_formats(AVBufferRef *hwframe_ctx,
  * by av_hwdevice_get_hwframe_constraints() and must be freed by
  * av_hwframe_constraints_free() after use.
  */
-typedef struct AVHWFramesConstraints {
+प्रकार काष्ठा AVHWFramesConstraints {
     /**
      * A list of possible values for format in the hw_frames_ctx,
      * terminated by AV_PIX_FMT_NONE.  This member will always be filled.
      */
-    enum AVPixelFormat *valid_hw_formats;
+    क्रमागत AVPixelFormat *valid_hw_formats;
 
     /**
      * A list of possible values for sw_format in the hw_frames_ctx,
      * terminated by AV_PIX_FMT_NONE.  Can be NULL if this information is
      * not known.
      */
-    enum AVPixelFormat *valid_sw_formats;
+    क्रमागत AVPixelFormat *valid_sw_formats;
 
     /**
      * The minimum size of frames in this hw_frames_ctx.
      * (Zero if not known.)
      */
-    int min_width;
-    int min_height;
+    पूर्णांक min_width;
+    पूर्णांक min_height;
 
     /**
      * The maximum size of frames in this hw_frames_ctx.
      * (INT_MAX if not known / no limit.)
      */
-    int max_width;
-    int max_height;
+    पूर्णांक max_width;
+    पूर्णांक max_height;
 } AVHWFramesConstraints;
 
 /**
@@ -495,7 +495,7 @@ typedef struct AVHWFramesConstraints {
  * @return The newly created HW-specific configuration structure on
  *         success or NULL on failure.
  */
-void *av_hwdevice_hwconfig_alloc(AVBufferRef *device_ctx);
+व्योम *av_hwdevice_hwconfig_alloc(AVBufferRef *device_ctx);
 
 /**
  * Get the constraints on HW frames given a device and the HW-specific
@@ -510,20 +510,20 @@ void *av_hwdevice_hwconfig_alloc(AVBufferRef *device_ctx);
  *         on the device, or NULL if not available.
  */
 AVHWFramesConstraints *av_hwdevice_get_hwframe_constraints(AVBufferRef *ref,
-                                                           const void *hwconfig);
+                                                           स्थिर व्योम *hwconfig);
 
 /**
  * Free an AVHWFrameConstraints structure.
  *
  * @param constraints The (filled or unfilled) AVHWFrameConstraints structure.
  */
-void av_hwframe_constraints_free(AVHWFramesConstraints **constraints);
+व्योम av_hwframe_constraints_free(AVHWFramesConstraints **constraints);
 
 
 /**
  * Flags to apply to frame mappings.
  */
-enum {
+क्रमागत {
     /**
      * The mapping must be readable.
      */
@@ -586,7 +586,7 @@ enum {
  * @param flags Some combination of AV_HWFRAME_MAP_* flags.
  * @return Zero on success, negative AVERROR code on failure.
  */
-int av_hwframe_map(AVFrame *dst, const AVFrame *src, int flags);
+पूर्णांक av_hwframe_map(AVFrame *dst, स्थिर AVFrame *src, पूर्णांक flags);
 
 
 /**
@@ -607,10 +607,10 @@ int av_hwframe_map(AVFrame *dst, const AVFrame *src, int flags);
  *               in the derived device.
  * @return       Zero on success, negative AVERROR code on failure.
  */
-int av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
-                                  enum AVPixelFormat format,
+पूर्णांक av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
+                                  क्रमागत AVPixelFormat format,
                                   AVBufferRef *derived_device_ctx,
                                   AVBufferRef *source_frame_ctx,
-                                  int flags);
+                                  पूर्णांक flags);
 
-#endif /* AVUTIL_HWCONTEXT_H */
+#पूर्ण_अगर /* AVUTIL_HWCONTEXT_H */

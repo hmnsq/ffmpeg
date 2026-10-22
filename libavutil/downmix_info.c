@@ -18,68 +18,68 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "downmix_info.h"
-#include "frame.h"
-#include "mem.h"
+#समावेश "downmix_info.h"
+#समावेश "frame.h"
+#समावेश "mem.h"
 
-AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame)
+AVDownmixInfo *av_downmix_info_update_side_तथ्य(AVFrame *frame)
 {
-    AVFrameSideData *side_data;
+    AVFrame_Side_तथ्य *side_तथ्य;
 
-    side_data = av_frame_get_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO);
+    side_तथ्य = av_frame_get_side_तथ्य(frame, AV_FRAME_तथ्य_DOWNMIX_INFO);
 
-    if (!side_data) {
-        side_data = av_frame_new_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO,
-                                           sizeof(AVDownmixInfo));
-        if (side_data)
-            memset(side_data->data, 0, sizeof(AVDownmixInfo));
+    अगर (!side_तथ्य) {
+        side_तथ्य = av_frame_new_side_तथ्य(frame, AV_FRAME_तथ्य_DOWNMIX_INFO,
+                                           माप(AVDownmixInfo));
+        अगर (side_तथ्य)
+            स_रखो(side_तथ्य->तथ्य, 0, माप(AVDownmixInfo));
     }
 
-    if (!side_data)
-        return NULL;
+    अगर (!side_तथ्य)
+        वापस शून्य;
 
-    return (AVDownmixInfo*)side_data->data;
+    वापस (AVDownmixInfo*)side_तथ्य->तथ्य;
 }
 
-#define MAX_CHANNELS 64
+#घोषणा MAX_CHANNELS 64
 
-static const int type_map[] = {
+अटल स्थिर पूर्णांक type_map[] = {
     [AV_DOWNMIX_TYPE_UNKNOWN] = 0,
     [AV_DOWNMIX_TYPE_LORO]    = 2,
     [AV_DOWNMIX_TYPE_LTRT]    = 2,
     [AV_DOWNMIX_TYPE_DPLII]   = 2,
 };
 
-AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size)
+AVDownmixMatrix *av_downmix_matrix_alloc(क्रमागत AVDownmixType type,
+                                         पूर्णांक in_ch_गिनती, माप_प्रकार *out_आकार)
 {
-    struct TestStruct {
+    काष्ठा TestStruct {
         AVDownmixMatrix p;
         AVDownmixCoeff  b;
     };
-    const size_t coeffs_offset = offsetof(struct TestStruct, b);
-    size_t size = coeffs_offset;
-    unsigned int nb_coeffs;
+    स्थिर माप_प्रकार coeffs_offset = दुरत्व(काष्ठा TestStruct, b);
+    माप_प्रकार आकार = coeffs_offset;
+    अचिन्हित पूर्णांक nb_coeffs;
     AVDownmixMatrix *dc;
 
-    if ((unsigned)type >= FF_ARRAY_ELEMS(type_map) ||
-        (unsigned)in_ch_count > MAX_CHANNELS)
-        return NULL;
+    अगर ((अचिन्हित)type >= FF_ARRAY_ELEMS(type_map) ||
+        (अचिन्हित)in_ch_गिनती > MAX_CHANNELS)
+        वापस शून्य;
 
-    nb_coeffs = type_map[type] * in_ch_count;
-    size += sizeof(AVDownmixCoeff) * nb_coeffs;
+    nb_coeffs = type_map[type] * in_ch_गिनती;
+    आकार += माप(AVDownmixCoeff) * nb_coeffs;
 
-    dc = av_mallocz(size);
-    if (!dc)
-        return NULL;
+    dc = av_mallocz(आकार);
+    अगर (!dc)
+        वापस शून्य;
 
     dc->downmix_type  = type;
     dc->nb_coeffs     = nb_coeffs;
-    dc->in_ch_count   = in_ch_count;
+    dc->in_ch_गिनती   = in_ch_गिनती;
     dc->coeffs_offset = coeffs_offset;
 
-    if (out_size)
-        *out_size = size;
+    अगर (out_आकार)
+        *out_आकार = आकार;
 
-    return dc;
+    वापस dc;
 }

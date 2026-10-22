@@ -30,17 +30,17 @@
  * @author Zane van Iperen <zane@zanevaniperen.com>
  */
 
-#ifndef AVUTIL_UUID_H
-#define AVUTIL_UUID_H
+#अगर_अघोषित AVUTIL_UUID_H
+#घोषणा AVUTIL_UUID_H
 
-#include <stdint.h>
-#include <string.h>
+#समावेश <stdint.h>
+#समावेश <string.h>
 
-#define AV_PRI_UUID                          \
+#घोषणा AV_PRI_UUID                          \
     "%02hhx%02hhx%02hhx%02hhx-%02hhx%02hhx-" \
     "%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx"
 
-#define AV_PRI_URN_UUID                               \
+#घोषणा AV_PRI_URN_UUID                               \
     "urn:uuid:%02hhx%02hhx%02hhx%02hhx-%02hhx%02hhx-" \
     "%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx"
 
@@ -48,16 +48,16 @@
  * to print UUIDs, e.g.
  * av_log(NULL, AV_LOG_DEBUG, "UUID: " AV_PRI_UUID, AV_UUID_ARG(uuid));
  */
-#define AV_UUID_ARG(x)                  \
+#घोषणा AV_UUID_ARG(x)                  \
     (x)[ 0], (x)[ 1], (x)[ 2], (x)[ 3], \
     (x)[ 4], (x)[ 5], (x)[ 6], (x)[ 7], \
     (x)[ 8], (x)[ 9], (x)[10], (x)[11], \
     (x)[12], (x)[13], (x)[14], (x)[15]
 
-#define AV_UUID_LEN 16
+#घोषणा AV_UUID_LEN 16
 
 /* Binary representation of a UUID */
-typedef uint8_t AVUUID[AV_UUID_LEN];
+प्रकार uint8_t AVUUID[AV_UUID_LEN];
 
 /**
  * Parses a string representation of a UUID formatted according to IETF RFC 4122
@@ -71,7 +71,7 @@ typedef uint8_t AVUUID[AV_UUID_LEN];
  * @param[out] uu  AVUUID
  * @return         A non-zero value in case of an error.
  */
-int av_uuid_parse(const char *in, AVUUID uu);
+पूर्णांक av_uuid_parse(स्थिर अक्षर *in, AVUUID uu);
 
 /**
  * Parses a URN representation of a UUID, as specified at IETF RFC 4122,
@@ -84,7 +84,7 @@ int av_uuid_parse(const char *in, AVUUID uu);
  * @param[out] uu  AVUUID
  * @return         A non-zero value in case of an error.
  */
-int av_uuid_urn_parse(const char *in, AVUUID uu);
+पूर्णांक av_uuid_urn_parse(स्थिर अक्षर *in, AVUUID uu);
 
 /**
  * Parses a string representation of a UUID formatted according to IETF RFC 4122
@@ -97,7 +97,7 @@ int av_uuid_urn_parse(const char *in, AVUUID uu);
  * @param[out] uu       AVUUID
  * @return              A non-zero value in case of an error.
  */
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu);
+पूर्णांक av_uuid_parse_range(स्थिर अक्षर *in_start, स्थिर अक्षर *in_end, AVUUID uu);
 
 /**
  * Serializes a AVUUID into a string representation according to IETF RFC 4122.
@@ -107,7 +107,7 @@ int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu);
  * @param[in]  uu  AVUUID
  * @param[out] out Pointer to an array of no less than 37 characters.
  */
-void av_uuid_unparse(const AVUUID uu, char *out);
+व्योम av_uuid_unparse(स्थिर AVUUID uu, अक्षर *out);
 
 /**
  * Compares two UUIDs for equality.
@@ -116,9 +116,9 @@ void av_uuid_unparse(const AVUUID uu, char *out);
  * @param[in]  uu2  AVUUID
  * @return          Nonzero if uu1 and uu2 are identical, 0 otherwise
  */
-static inline int av_uuid_equal(const AVUUID uu1, const AVUUID uu2)
+अटल अंतरभूत पूर्णांक av_uuid_equal(स्थिर AVUUID uu1, स्थिर AVUUID uu2)
 {
-    return memcmp(uu1, uu2, AV_UUID_LEN) == 0;
+    वापस स_भेद(uu1, uu2, AV_UUID_LEN) == 0;
 }
 
 /**
@@ -127,9 +127,9 @@ static inline int av_uuid_equal(const AVUUID uu1, const AVUUID uu2)
  * @param[out]  dest  AVUUID
  * @param[in]   src   AVUUID
  */
-static inline void av_uuid_copy(AVUUID dest, const AVUUID src)
+अटल अंतरभूत व्योम av_uuid_copy(AVUUID dest, स्थिर AVUUID src)
 {
-    memcpy(dest, src, AV_UUID_LEN);
+    स_नकल(dest, src, AV_UUID_LEN);
 }
 
 /**
@@ -138,9 +138,9 @@ static inline void av_uuid_copy(AVUUID dest, const AVUUID src)
  *
  * @param[in,out]  uu  UUID to be set to the nil UUID
  */
-static inline void av_uuid_nil(AVUUID uu)
+अटल अंतरभूत व्योम av_uuid_nil(AVUUID uu)
 {
-    memset(uu, 0, AV_UUID_LEN);
+    स_रखो(uu, 0, AV_UUID_LEN);
 }
 
-#endif /* AVUTIL_UUID_H */
+#पूर्ण_अगर /* AVUTIL_UUID_H */

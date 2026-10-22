@@ -251,7 +251,7 @@ cglobal crc,    4, 6, 7+4*ARCH_X86_64, 0x10
 .reduce_64_to_32:
     movu           m4, [CTX + 48]
     FOLD_64_TO_32  %1, m1, m4, m5
-    RET
+    वापस
 
 .less_than_64bytes:
     cmp    r3, 16

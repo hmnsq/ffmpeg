@@ -29,21 +29,21 @@
  * And passes testu01 and practrand test suits.
  */
 
-#ifndef AVUTIL_SFC64_H
-#define AVUTIL_SFC64_H
+#अगर_अघोषित AVUTIL_SFC64_H
+#घोषणा AVUTIL_SFC64_H
 
-#include <inttypes.h>
+#समावेश <inttypes.h>
 
-typedef struct FFSFC64 {
-    uint64_t a,b,c,counter;
+प्रकार काष्ठा FFSFC64 {
+    uint64_t a,b,c,गणक;
 } FFSFC64;
 
-static inline uint64_t ff_sfc64_get(FFSFC64 *s) {
-    uint64_t tmp = s->a + s->b + s->counter++;
+अटल अंतरभूत uint64_t ff_sfc64_get(FFSFC64 *s) {
+    uint64_t tmp = s->a + s->b + s->गणक++;
     s->a = s->b ^ (s->b >> 11);
     s->b = s->c + (s->c << 3); // This is a multiply by 9
     s->c = (s->c << 24 | s->c >> 40) + tmp;
-    return tmp;
+    वापस tmp;
 }
 
 /**
@@ -52,17 +52,17 @@ static inline uint64_t ff_sfc64_get(FFSFC64 *s) {
  * It is safe to take values before the first, but such values can be highly
  * correlated to the seeds.
  */
-static inline uint64_t ff_sfc64_reverse_get(FFSFC64 *s) {
-    uint64_t prev_c = s->b * 0x8E38E38E38E38E39;
-    uint64_t tmp = s->c - (prev_c << 24 | prev_c >> 40);
+अटल अंतरभूत uint64_t ff_sfc64_reverse_get(FFSFC64 *s) {
+    uint64_t पूर्व_c = s->b * 0x8E38E38E38E38E39;
+    uint64_t tmp = s->c - (पूर्व_c << 24 | पूर्व_c >> 40);
     s->b = s->a ^ (s->a >> 11);
     s->b ^= s->b >> 22;
     s->b ^= s->b >> 44;
 
-    s->a = tmp - s->b - --s->counter;
-    s->c = prev_c;
+    s->a = tmp - s->b - --s->गणक;
+    s->c = पूर्व_c;
 
-    return tmp;
+    वापस tmp;
 }
 
 /**
@@ -72,13 +72,13 @@ static inline uint64_t ff_sfc64_reverse_get(FFSFC64 *s) {
  *               12 is a good choice if all 3 seeds are equal
  *
  */
-static inline void ff_sfc64_init(FFSFC64 *s, uint64_t seeda, uint64_t seedb, uint64_t seedc, int rounds) {
+अटल अंतरभूत व्योम ff_sfc64_init(FFSFC64 *s, uint64_t seeda, uint64_t seedb, uint64_t seedc, पूर्णांक rounds) {
     s->a       = seeda;
     s->b       = seedb;
     s->c       = seedc;
-    s->counter = 1;
-    while (rounds--)
+    s->गणक = 1;
+    जबतक (rounds--)
         ff_sfc64_get(s);
 }
 
-#endif // AVUTIL_SFC64_H
+#पूर्ण_अगर // AVUTIL_SFC64_H

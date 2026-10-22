@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#समावेश "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#समावेश <math.h>
+#समावेश <stdio.h>
+#समावेश <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#समावेश "libavutil/mathematics.h"
+#समावेश "libavutil/eval.h"
 
-static const double const_values[] = {
+अटल स्थिर द्विगुन const_मूल्यावली[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+अटल स्थिर अक्षर *स्थिर const_names[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+पूर्णांक मुख्य(पूर्णांक argc, अक्षर **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    पूर्णांक i;
+    द्विगुन d;
+    स्थिर अक्षर *स्थिर *व्यंजक;
+    अटल स्थिर अक्षर *स्थिर exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        शून्य
     };
-    int ret;
+    पूर्णांक ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
-            printf("av_expr_parse_and_eval failed\n");
+    क्रम (व्यंजक = exprs; *व्यंजक; व्यंजक++) {
+        म_लिखो("Evaluating '%s'\n", *व्यंजक);
+        ret = av_व्यंजक_parse_and_eval(&d, *व्यंजक,
+                               const_names, const_मूल्यावली,
+                               शून्य, शून्य, शून्य, शून्य, शून्य, 0, शून्य);
+        अगर (isnan(d))
+            म_लिखो("'%s' -> nan\n\n", *व्यंजक);
+        अन्यथा
+            म_लिखो("'%s' -> %f\n\n", *व्यंजक, d);
+        अगर (ret < 0)
+            म_लिखो("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 12.7\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 0.931322575\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
+    ret = av_व्यंजक_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_names, const_मूल्यावली,
+                           शून्य, शून्य, शून्य, शून्य, शून्य, 0, शून्य);
+    म_लिखो("%f == 12.7\n", d);
+    अगर (ret < 0)
+        म_लिखो("av_expr_parse_and_eval failed\n");
+    ret = av_व्यंजक_parse_and_eval(&d, "80G/80Gi",
+                           const_names, const_मूल्यावली,
+                           शून्य, शून्य, शून्य, शून्य, शून्य, 0, शून्य);
+    म_लिखो("%f == 0.931322575\n", d);
+    अगर (ret < 0)
+        म_लिखो("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
+    अगर (argc > 1 && !म_भेद(argv[1], "-t")) {
+        क्रम (i = 0; i < 1050; i++) {
             START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
-                printf("av_expr_parse_and_eval failed\n");
+            ret = av_व्यंजक_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_names, const_मूल्यावली,
+                                   शून्य, शून्य, शून्य, शून्य, शून्य, 0, शून्य);
+            अगर (ret < 0)
+                म_लिखो("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    वापस 0;
 }

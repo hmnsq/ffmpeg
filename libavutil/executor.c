@@ -18,39 +18,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#समावेश "config.h"
 
-#include <stdbool.h>
+#समावेश <stdbool.h>
 
-#include "mem.h"
-#include "thread.h"
+#समावेश "mem.h"
+#समावेश "thread.h"
 
-#include "executor.h"
+#समावेश "executor.h"
 
-#if !HAVE_THREADS
+#अगर !HAVE_THREADS
 
-#define ExecutorThread  char
+#घोषणा ExecutorThread  अक्षर
 
-#define executor_thread_create(t, a, s, ar)      0
-#define executor_thread_join(t, r)               do {} while(0)
+#घोषणा executor_thread_create(t, a, s, ar)      0
+#घोषणा executor_thread_join(t, r)               करो {} जबतक(0)
 
-#else
+#अन्यथा
 
-#define ExecutorThread  pthread_t
+#घोषणा ExecutorThread  pthread_t
 
-#define executor_thread_create(t, a, s, ar)      pthread_create(t, a, s, ar)
-#define executor_thread_join(t, r)               pthread_join(t, r)
+#घोषणा executor_thread_create(t, a, s, ar)      pthread_create(t, a, s, ar)
+#घोषणा executor_thread_join(t, r)               pthread_join(t, r)
 
-#endif //!HAVE_THREADS
+#पूर्ण_अगर //!HAVE_THREADS
 
-typedef struct ThreadInfo {
+प्रकार काष्ठा ThreadInfo {
     AVExecutor *e;
     ExecutorThread thread;
 } ThreadInfo;
 
-struct AVExecutor {
+काष्ठा AVExecutor {
     AVTaskCallbacks cb;
-    int thread_count;
+    पूर्णांक thread_गिनती;
     bool recursive;
 
     ThreadInfo *threads;
@@ -58,79 +58,79 @@ struct AVExecutor {
 
     AVMutex lock;
     AVCond cond;
-    int die;
+    पूर्णांक die;
 
     AVTask *tasks;
 };
 
-static AVTask* remove_task(AVTask **prev, AVTask *t)
+अटल AVTask* remove_task(AVTask **पूर्व, AVTask *t)
 {
-    *prev  = t->next;
-    t->next = NULL;
-    return t;
+    *पूर्व  = t->अग्र;
+    t->अग्र = शून्य;
+    वापस t;
 }
 
-static void add_task(AVTask **prev, AVTask *t)
+अटल व्योम add_task(AVTask **पूर्व, AVTask *t)
 {
-    t->next = *prev;
-    *prev   = t;
+    t->अग्र = *पूर्व;
+    *पूर्व   = t;
 }
 
-static int run_one_task(AVExecutor *e, void *lc)
+अटल पूर्णांक run_one_task(AVExecutor *e, व्योम *lc)
 {
     AVTaskCallbacks *cb = &e->cb;
-    AVTask **prev;
+    AVTask **पूर्व;
 
-    for (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_data); prev = &(*prev)->next)
+    क्रम (पूर्व = &e->tasks; *पूर्व && !cb->ready(*पूर्व, cb->user_तथ्य); पूर्व = &(*पूर्व)->अग्र)
         /* nothing */;
-    if (*prev) {
-        AVTask *t = remove_task(prev, *prev);
-        if (e->thread_count > 0)
+    अगर (*पूर्व) {
+        AVTask *t = remove_task(पूर्व, *पूर्व);
+        अगर (e->thread_गिनती > 0)
             ff_mutex_unlock(&e->lock);
-        cb->run(t, lc, cb->user_data);
-        if (e->thread_count > 0)
+        cb->run(t, lc, cb->user_तथ्य);
+        अगर (e->thread_गिनती > 0)
             ff_mutex_lock(&e->lock);
-        return 1;
+        वापस 1;
     }
-    return 0;
+    वापस 0;
 }
 
-#if HAVE_THREADS
-static void *executor_worker_task(void *data)
+#अगर HAVE_THREADS
+अटल व्योम *executor_worker_task(व्योम *तथ्य)
 {
-    ThreadInfo *ti = (ThreadInfo*)data;
+    ThreadInfo *ti = (ThreadInfo*)तथ्य;
     AVExecutor *e  = ti->e;
-    void *lc       = e->local_contexts + (ti - e->threads) * e->cb.local_context_size;
+    व्योम *lc       = e->local_contexts + (ti - e->threads) * e->cb.local_context_आकार;
 
     ff_mutex_lock(&e->lock);
-    while (1) {
-        if (e->die) break;
+    जबतक (1) {
+        अगर (e->die) अवरोध;
 
-        if (!run_one_task(e, lc)) {
+        अगर (!run_one_task(e, lc)) {
             //no task in one loop
             ff_cond_wait(&e->cond, &e->lock);
         }
     }
     ff_mutex_unlock(&e->lock);
-    return NULL;
+    वापस शून्य;
 }
-#endif
+#पूर्ण_अगर
 
-static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
+अटल व्योम executor_free(AVExecutor *e, स्थिर पूर्णांक has_lock, स्थिर पूर्णांक has_cond)
 {
-    if (e->thread_count) {
+    अगर (e->thread_गिनती) {
         //signal die
         ff_mutex_lock(&e->lock);
         e->die = 1;
         ff_cond_broadcast(&e->cond);
         ff_mutex_unlock(&e->lock);
 
-        for (int i = 0; i < e->thread_count; i++)
-            executor_thread_join(e->threads[i].thread, NULL);
+        क्रम (पूर्णांक i = 0; i < e->thread_गिनती; i++)
+            executor_thread_join(e->threads[i].thread, शून्य);
     }
-    if (has_cond)
+    अगर (has_cond)
         ff_cond_destroy(&e->cond);
-    if (has_lock)
+    अगर (has_lock)
         ff_mutex_destroy(&e->lock);
 
     av_free(e->threads);
@@ -139,82 +139,82 @@ static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
     av_free(e);
 }
 
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, int thread_count)
+AVExecutor* av_executor_alloc(स्थिर AVTaskCallbacks *cb, पूर्णांक thread_गिनती)
 {
     AVExecutor *e;
-    int has_lock = 0, has_cond = 0;
-    if (!cb || !cb->user_data || !cb->ready || !cb->run || !cb->priority_higher)
-        return NULL;
+    पूर्णांक has_lock = 0, has_cond = 0;
+    अगर (!cb || !cb->user_तथ्य || !cb->ready || !cb->run || !cb->priority_higher)
+        वापस शून्य;
 
-    e = av_mallocz(sizeof(*e));
-    if (!e)
-        return NULL;
+    e = av_mallocz(माप(*e));
+    अगर (!e)
+        वापस शून्य;
     e->cb = *cb;
 
-    e->local_contexts = av_calloc(FFMAX(thread_count, 1), e->cb.local_context_size);
-    if (!e->local_contexts)
-        goto free_executor;
+    e->local_contexts = av_calloc(FFMAX(thread_गिनती, 1), e->cb.local_context_आकार);
+    अगर (!e->local_contexts)
+        जाओ free_executor;
 
-    e->threads = av_calloc(FFMAX(thread_count, 1), sizeof(*e->threads));
-    if (!e->threads)
-        goto free_executor;
+    e->threads = av_calloc(FFMAX(thread_गिनती, 1), माप(*e->threads));
+    अगर (!e->threads)
+        जाओ free_executor;
 
-    if (!thread_count)
-        return e;
+    अगर (!thread_गिनती)
+        वापस e;
 
-    has_lock = !ff_mutex_init(&e->lock, NULL);
-    has_cond = !ff_cond_init(&e->cond, NULL);
+    has_lock = !ff_mutex_init(&e->lock, शून्य);
+    has_cond = !ff_cond_init(&e->cond, शून्य);
 
-    if (!has_lock || !has_cond)
-        goto free_executor;
+    अगर (!has_lock || !has_cond)
+        जाओ free_executor;
 
-    for (/* nothing */; e->thread_count < thread_count; e->thread_count++) {
-        ThreadInfo *ti = e->threads + e->thread_count;
+    क्रम (/* nothing */; e->thread_गिनती < thread_गिनती; e->thread_गिनती++) {
+        ThreadInfo *ti = e->threads + e->thread_गिनती;
         ti->e = e;
-        if (executor_thread_create(&ti->thread, NULL, executor_worker_task, ti))
-            goto free_executor;
+        अगर (executor_thread_create(&ti->thread, शून्य, executor_worker_task, ti))
+            जाओ free_executor;
     }
-    return e;
+    वापस e;
 
 free_executor:
     executor_free(e, has_lock, has_cond);
-    return NULL;
+    वापस शून्य;
 }
 
-void av_executor_free(AVExecutor **executor)
+व्योम av_executor_free(AVExecutor **executor)
 {
-    int thread_count;
+    पूर्णांक thread_गिनती;
 
-    if (!executor || !*executor)
-        return;
-    thread_count = (*executor)->thread_count;
-    executor_free(*executor, thread_count, thread_count);
-    *executor = NULL;
+    अगर (!executor || !*executor)
+        वापस;
+    thread_गिनती = (*executor)->thread_गिनती;
+    executor_free(*executor, thread_गिनती, thread_गिनती);
+    *executor = शून्य;
 }
 
-void av_executor_execute(AVExecutor *e, AVTask *t)
+व्योम av_executor_execute(AVExecutor *e, AVTask *t)
 {
     AVTaskCallbacks *cb = &e->cb;
-    AVTask **prev;
+    AVTask **पूर्व;
 
-    if (e->thread_count)
+    अगर (e->thread_गिनती)
         ff_mutex_lock(&e->lock);
-    if (t) {
-        for (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
+    अगर (t) {
+        क्रम (पूर्व = &e->tasks; *पूर्व && cb->priority_higher(*पूर्व, t); पूर्व = &(*पूर्व)->अग्र)
             /* nothing */;
-        add_task(prev, t);
+        add_task(पूर्व, t);
     }
-    if (e->thread_count) {
+    अगर (e->thread_गिनती) {
         ff_cond_signal(&e->cond);
         ff_mutex_unlock(&e->lock);
     }
 
-    if (!e->thread_count || !HAVE_THREADS) {
-        if (e->recursive)
-            return;
+    अगर (!e->thread_गिनती || !HAVE_THREADS) {
+        अगर (e->recursive)
+            वापस;
         e->recursive = true;
         // We are running in a single-threaded environment, so we must handle all tasks ourselves
-        while (run_one_task(e, e->local_contexts))
+        जबतक (run_one_task(e, e->local_contexts))
             /* nothing */;
         e->recursive = false;
     }

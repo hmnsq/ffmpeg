@@ -33,7 +33,7 @@ SECTION .text
 %macro VECTOR_FMUL 0
 cglobal vector_fmul, 4,4,2, dst, src0, src1, len
     lea       lenq, [lend*4 - 64]
-ALIGN 16
+मिलाओ 16
 .loop:
 %assign a 0
 %rep 32/mmsize
@@ -48,7 +48,7 @@ ALIGN 16
 
     sub       lenq, 64
     jge       .loop
-    RET
+    वापस
 %endmacro
 
 INIT_XMM sse
@@ -64,7 +64,7 @@ VECTOR_FMUL
 %macro VECTOR_DMUL 0
 cglobal vector_dmul, 4,4,4, dst, src0, src1, len
     lea       lend, [lenq*8 - mmsize*4]
-ALIGN 16
+मिलाओ 16
 .loop:
     movaps    m0,     [src0q + lenq + 0*mmsize]
     movaps    m1,     [src0q + lenq + 1*mmsize]
@@ -81,7 +81,7 @@ ALIGN 16
 
     sub       lenq, mmsize*4
     jge       .loop
-    RET
+    वापस
 %endmacro
 
 INIT_XMM sse2
@@ -141,7 +141,7 @@ cglobal vector_fmac_scalar, 4,4,5, dst, src, mul, len
 %endif ; mmsize
     sub    lenq, 64
     jge .loop
-    RET
+    वापस
 %endmacro
 
 INIT_XMM sse
@@ -178,7 +178,7 @@ cglobal vector_fmul_scalar, 4,4,3, dst, src, mul, len
     mova  [dstq+lenq], m1
     sub    lenq, mmsize
     jge .loop
-    RET
+    वापस
 %endmacro
 
 INIT_XMM sse
@@ -233,7 +233,7 @@ cglobal vector_dmac_scalar, 4,4,5, dst, src, mul, len
     movaps [dstq+lenq+3*mmsize], m4
     sub    lenq, mmsize*4
     jge .loop
-    RET
+    वापस
 %endmacro
 
 INIT_XMM sse2
@@ -280,7 +280,7 @@ cglobal vector_dmul_scalar, 4,4,3, dst, src, mul, len
     movaps [dstq+lenq+mmsize], m2
     sub          lenq, 2*mmsize
     jge .loop
-    RET
+    वापस
 %endmacro
 
 INIT_XMM sse2
@@ -323,7 +323,7 @@ cglobal vector_fmul_window, 5, 6, 6, dst, src0, src1, win, len, len1
     sub       len1q, mmsize
     add       lenq,  mmsize
     jl .loop
-    RET
+    वापस
 
 ;-----------------------------------------------------------------------------
 ; vector_fmul_add(float *dst, const float *src0, const float *src1,
@@ -332,7 +332,7 @@ cglobal vector_fmul_window, 5, 6, 6, dst, src0, src1, win, len, len1
 %macro VECTOR_FMUL_ADD 0
 cglobal vector_fmul_add, 5,5,4, dst, src0, src1, src2, len
     lea       lenq, [lend*4 - 2*mmsize]
-ALIGN 16
+मिलाओ 16
 .loop:
     mova    m0,   [src0q + lenq]
     mova    m1,   [src0q + lenq + mmsize]
@@ -352,7 +352,7 @@ ALIGN 16
 
     sub     lenq,   2*mmsize
     jge     .loop
-    RET
+    वापस
 %endmacro
 
 INIT_XMM sse
@@ -376,7 +376,7 @@ cglobal vector_fmul_reverse, 4,4,2, dst, src0, src1, len
     movaps  m2, [pd_reverse]
 %endif
     lea       lenq, [lend*4 - 2*mmsize]
-ALIGN 16
+मिलाओ 16
 .loop:
 %if cpuflag(avx2)
     vpermps m0, m2, [src1q]
@@ -401,7 +401,7 @@ ALIGN 16
     add     src1q, 2*mmsize
     sub     lenq,  2*mmsize
     jge     .loop
-    RET
+    वापस
 %endmacro
 
 INIT_XMM sse
@@ -438,7 +438,7 @@ cglobal scalarproduct_float, 3,3,2, v1, v2, offset
     movss     r0m,  xmm0
     fld dword r0m
 %endif
-    RET
+    वापस
 
 INIT_YMM fma3
 cglobal scalarproduct_float, 3,5,8, v1, v2, size, len, offset
@@ -490,7 +490,7 @@ cglobal scalarproduct_float, 3,5,8, v1, v2, size, len, offset
     movss r0m, xm0
     fld dword r0m
 %endif
-    RET
+    वापस
 .l64:
     and    lenq, ~63
     add    lenq, offsetq
@@ -520,7 +520,7 @@ cglobal scalarproduct_float, 3,5,8, v1, v2, size, len, offset
     movss r0m, xm0
     fld dword r0m
 %endif
-    RET
+    वापस
 .l32:
     and    lenq, ~31
     add    lenq, offsetq
@@ -545,7 +545,7 @@ cglobal scalarproduct_float, 3,5,8, v1, v2, size, len, offset
     movss r0m, xm0
     fld dword r0m
 %endif
-    RET
+    वापस
 .l16:
     and    lenq, ~15
     add    lenq, offsetq
@@ -565,7 +565,7 @@ cglobal scalarproduct_float, 3,5,8, v1, v2, size, len, offset
     movss r0m, xm0
     fld dword r0m
 %endif
-    RET
+    वापस
 
 ;---------------------------------------------------------------------------------
 ; double scalarproduct_double(const double *v1, const double *v2, size_t len)
@@ -609,7 +609,7 @@ align 16
     movsd   r0m, xm0
     fld qword r0m
 %endif
-    RET
+    वापस
 %endmacro
 
 INIT_XMM sse2
@@ -637,4 +637,4 @@ cglobal butterflies_float, 3,3,3, src0, src1, len
     mova        [src0q + lenq], m0
     add       lenq, mmsize
     jl .loop
-    RET
+    वापस

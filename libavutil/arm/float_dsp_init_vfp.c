@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "cpu.h"
-#include "float_dsp_arm.h"
+#समावेश "libavutil/attributes.h"
+#समावेश "libavutil/float_dsp.h"
+#समावेश "cpu.h"
+#समावेश "float_dsp_arm.h"
 
-void ff_vector_fmul_vfp(float *dst, const float *src0, const float *src1,
-                        int len);
+व्योम ff_vector_fmul_vfp(भग्न *dst, स्थिर भग्न *src0, स्थिर भग्न *src1,
+                        पूर्णांक len);
 
-void ff_vector_fmul_window_vfp(float *dst, const float *src0,
-                               const float *src1, const float *win, int len);
+व्योम ff_vector_fmul_window_vfp(भग्न *dst, स्थिर भग्न *src0,
+                               स्थिर भग्न *src1, स्थिर भग्न *win, पूर्णांक len);
 
-void ff_vector_fmul_reverse_vfp(float *dst, const float *src0,
-                                const float *src1, int len);
+व्योम ff_vector_fmul_reverse_vfp(भग्न *dst, स्थिर भग्न *src0,
+                                स्थिर भग्न *src1, पूर्णांक len);
 
-void ff_butterflies_float_vfp(float *restrict v1, float *restrict v2, int len);
+व्योम ff_butterflies_float_vfp(भग्न *restrict v1, भग्न *restrict v2, पूर्णांक len);
 
-av_cold void ff_float_dsp_init_vfp(AVFloatDSPContext *fdsp, int cpu_flags)
+av_cold व्योम ff_float_dsp_init_vfp(AVFloatDSPContext *fdsp, पूर्णांक cpu_flags)
 {
-    if (have_vfp_vm(cpu_flags)) {
+    अगर (have_vfp_vm(cpu_flags)) {
         fdsp->vector_fmul = ff_vector_fmul_vfp;
         fdsp->vector_fmul_window = ff_vector_fmul_window_vfp;
     }
     fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_vfp;
-    if (have_vfp_vm(cpu_flags))
+    अगर (have_vfp_vm(cpu_flags))
         fdsp->butterflies_float = ff_butterflies_float_vfp;
 }

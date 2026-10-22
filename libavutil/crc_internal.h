@@ -16,53 +16,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CRC_INTERNAL_H
-#define AVUTIL_CRC_INTERNAL_H
+#अगर_अघोषित AVUTIL_CRC_INTERNAL_H
+#घोषणा AVUTIL_CRC_INTERNAL_H
 
-#include <stdint.h>
-#include "libavutil/attributes.h"
-#include "libavutil/reverse.h"
+#समावेश <stdint.h>
+#समावेश "libavutil/attributes.h"
+#समावेश "libavutil/reverse.h"
 
-static uint64_t reverse(uint64_t p, unsigned int deg)
+अटल uint64_t reverse(uint64_t p, अचिन्हित पूर्णांक deg)
 {
     uint64_t ret = 0;
-    int i;
-    for (i = 0; i < (deg / 8); i += 1) {
+    पूर्णांक i;
+    क्रम (i = 0; i < (deg / 8); i += 1) {
         ret = (ret << 8) | (ff_reverse[p & 0xff]);
         p >>= 8;
     }
-    int rem = (deg + 1) - 8 * i;
+    पूर्णांक rem = (deg + 1) - 8 * i;
     ret = (ret << rem) | (ff_reverse[p & 0xff] >> (8 - rem));
-    return ret;
+    वापस ret;
 }
 
-av_unused static uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
-                                 uint64_t *div, int bitreverse)
+av_unused अटल uint64_t xnmodp(अचिन्हित n, uint64_t poly, अचिन्हित deg,
+                                 uint64_t *भाग, पूर्णांक bitreverse)
 {
-    uint64_t mod, mask, high;
+    uint64_t mod, mask, ऊपरी;
 
-    if (n < deg) {
-        *div = 0;
-        return poly;
+    अगर (n < deg) {
+        *भाग = 0;
+        वापस poly;
     }
     mask = ((uint64_t)1 << deg) - 1;
     poly &= mask;
     mod = poly;
-    *div = 1;
+    *भाग = 1;
     deg--;
-    while (--n > deg) {
-        high = (mod >> deg) & 1;
-        *div = (*div << 1) | high;
+    जबतक (--n > deg) {
+        ऊपरी = (mod >> deg) & 1;
+        *भाग = (*भाग << 1) | ऊपरी;
         mod <<= 1;
-        if (high)
+        अगर (ऊपरी)
             mod ^= poly;
     }
     uint64_t ret = mod & mask;
-    if (bitreverse) {
-        *div = reverse(*div, deg) << 1;
-        return reverse(ret, deg) << 1;
+    अगर (bitreverse) {
+        *भाग = reverse(*भाग, deg) << 1;
+        वापस reverse(ret, deg) << 1;
     }
-    return ret;
+    वापस ret;
 }
 
-#endif /* AVUTIL_CRC_INTERNAL_H */
+#पूर्ण_अगर /* AVUTIL_CRC_INTERNAL_H */

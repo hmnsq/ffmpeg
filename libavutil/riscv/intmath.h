@@ -18,249 +18,249 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_INTMATH_H
-#define AVUTIL_RISCV_INTMATH_H
+#अगर_अघोषित AVUTIL_RISCV_INTMATH_H
+#घोषणा AVUTIL_RISCV_INTMATH_H
 
-#include <stdint.h>
-#include <math.h>
+#समावेश <stdint.h>
+#समावेश <math.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/riscv/cpu.h"
+#समावेश "config.h"
+#समावेश "libavutil/attributes.h"
+#समावेश "libavutil/riscv/cpu.h"
 
 /*
  * The compiler is forced to sign-extend the result anyhow, so it is faster to
  * compute it explicitly and use it.
  */
-#define av_clip_int8 av_clip_int8_rvi
-static av_always_inline av_const int8_t av_clip_int8_rvi(int a)
+#घोषणा av_clip_int8 av_clip_int8_rvi
+अटल av_always_inline av_const int8_t av_clip_int8_rvi(पूर्णांक a)
 {
-    union { uint8_t u; int8_t s; } u = { .u = a };
+    जोड़ { uint8_t u; int8_t s; } u = { .u = a };
 
-    if (a != u.s)
+    अगर (a != u.s)
         a = ((a >> 31) ^ 0x7F);
-    return a;
+    वापस a;
 }
 
-#define av_clip_int16 av_clip_int16_rvi
-static av_always_inline av_const int16_t av_clip_int16_rvi(int a)
+#घोषणा av_clip_int16 av_clip_int16_rvi
+अटल av_always_inline av_const int16_t av_clip_int16_rvi(पूर्णांक a)
 {
-    union { uint16_t u; int16_t s; } u = { .u = a };
+    जोड़ { uint16_t u; int16_t s; } u = { .u = a };
 
-    if (a != u.s)
+    अगर (a != u.s)
         a = ((a >> 31) ^ 0x7FFF);
-    return a;
+    वापस a;
 }
 
-#define av_clipl_int32 av_clipl_int32_rvi
-static av_always_inline av_const int32_t av_clipl_int32_rvi(int64_t a)
+#घोषणा av_clipl_int32 av_clipl_int32_rvi
+अटल av_always_inline av_const int32_t av_clipl_int32_rvi(int64_t a)
 {
-    union { uint32_t u; int32_t s; } u = { .u = a };
+    जोड़ { uint32_t u; int32_t s; } u = { .u = a };
 
-    if (a != u.s)
+    अगर (a != u.s)
         a = ((a >> 63) ^ 0x7FFFFFFF);
-    return a;
+    वापस a;
 }
 
-#define av_clip_intp2 av_clip_intp2_rvi
-static av_always_inline av_const int av_clip_intp2_rvi(int a, int p)
+#घोषणा av_clip_intp2 av_clip_intp2_rvi
+अटल av_always_inline av_const पूर्णांक av_clip_intp2_rvi(पूर्णांक a, पूर्णांक p)
 {
-    const int shift = 31 - p;
-    int b = ((int)(((unsigned)a) << shift)) >> shift;
+    स्थिर पूर्णांक shift = 31 - p;
+    पूर्णांक b = ((पूर्णांक)(((अचिन्हित)a) << shift)) >> shift;
 
-    if (a != b)
+    अगर (a != b)
         b = (a >> 31) ^ ((1 << p) - 1);
-    return b;
+    वापस b;
 }
 
-#if defined (__riscv_f) || defined (__riscv_zfinx)
-#define av_clipf av_clipf_rvf
-static av_always_inline av_const float av_clipf_rvf(float a, float min,
-                                                    float max)
+#अगर defined (__riscv_f) || defined (__riscv_zfinx)
+#घोषणा av_clipf av_clipf_rvf
+अटल av_always_inline av_const भग्न av_clipf_rvf(भग्न a, भग्न min,
+                                                    भग्न max)
 {
-    return fminf(fmaxf(a, min), max);
+    वापस fminf(fmaxf(a, min), max);
 }
-#endif
+#पूर्ण_अगर
 
-#if defined (__riscv_d) || defined (__riscv_zdinx)
-#define av_clipd av_clipd_rvd
-static av_always_inline av_const double av_clipd_rvd(double a, double min,
-                                                     double max)
+#अगर defined (__riscv_d) || defined (__riscv_zdinx)
+#घोषणा av_clipd av_clipd_rvd
+अटल av_always_inline av_const द्विगुन av_clipd_rvd(द्विगुन a, द्विगुन min,
+                                                     द्विगुन max)
 {
-    return fmin(fmax(a, min), max);
+    वापस fmin(fmax(a, min), max);
 }
-#endif
+#पूर्ण_अगर
 
-#if defined (__GNUC__) || defined (__clang__)
-static inline av_const int ff_ctz_rv(int x)
+#अगर defined (__GNUC__) || defined (__clang__)
+अटल अंतरभूत av_const पूर्णांक ff_ctz_rv(पूर्णांक x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#अगर HAVE_RV && !defined(__riscv_zbb)
+    अगर (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णांक y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#अगर __riscv_xlen >= 64
             "ctzw    %0, %1\n"
-#else
+#अन्यथा
             "ctz     %0, %1\n"
-#endif
+#पूर्ण_अगर
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        अगर (y > 32)
             __builtin_unreachable();
-        return y;
+        वापस y;
     }
-#endif
-    return __builtin_ctz(x);
+#पूर्ण_अगर
+    वापस __builtin_ctz(x);
 }
-#define ff_ctz ff_ctz_rv
+#घोषणा ff_ctz ff_ctz_rv
 
-static inline av_const int ff_ctzll_rv(long long x)
+अटल अंतरभूत av_const पूर्णांक ff_ctzll_rv(दीर्घ दीर्घ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
-    if (!__builtin_constant_p(x) &&
+#अगर HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
+    अगर (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णांक y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "ctz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        अगर (y > 64)
             __builtin_unreachable();
-        return y;
+        वापस y;
     }
-#endif
-    return __builtin_ctzll(x);
+#पूर्ण_अगर
+    वापस __builtin_ctzll(x);
 }
-#define ff_ctzll ff_ctzll_rv
+#घोषणा ff_ctzll ff_ctzll_rv
 
-static inline av_const int ff_clz_rv(int x)
+अटल अंतरभूत av_const पूर्णांक ff_clz_rv(पूर्णांक x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#अगर HAVE_RV && !defined(__riscv_zbb)
+    अगर (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णांक y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#अगर __riscv_xlen >= 64
             "clzw    %0, %1\n"
-#else
+#अन्यथा
             "clz     %0, %1\n"
-#endif
+#पूर्ण_अगर
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        अगर (y > 32)
             __builtin_unreachable();
-        return y;
+        वापस y;
     }
-#endif
-    return __builtin_clz(x);
+#पूर्ण_अगर
+    वापस __builtin_clz(x);
 }
-#define ff_clz ff_clz_rv
+#घोषणा ff_clz ff_clz_rv
 
-#if __riscv_xlen == 64
-static inline av_const int ff_clzll_rv(long long x)
+#अगर __riscv_xlen == 64
+अटल अंतरभूत av_const पूर्णांक ff_clzll_rv(दीर्घ दीर्घ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#अगर HAVE_RV && !defined(__riscv_zbb)
+    अगर (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णांक y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "clz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        अगर (y > 64)
             __builtin_unreachable();
-        return y;
+        वापस y;
     }
-#endif
-    return __builtin_clzll(x);
+#पूर्ण_अगर
+    वापस __builtin_clzll(x);
 }
-#define ff_clz ff_clz_rv
-#endif
+#घोषणा ff_clz ff_clz_rv
+#पूर्ण_अगर
 
-static inline av_const int ff_log2_rv(unsigned int x)
+अटल अंतरभूत av_const पूर्णांक ff_log2_rv(अचिन्हित पूर्णांक x)
 {
-    return 31 - ff_clz_rv(x | 1);
+    वापस 31 - ff_clz_rv(x | 1);
 }
-#define ff_log2 ff_log2_rv
-#define ff_log2_16bit ff_log2_rv
+#घोषणा ff_log2 ff_log2_rv
+#घोषणा ff_log2_16bit ff_log2_rv
 
-static inline av_const int av_popcount_rv(unsigned int x)
+अटल अंतरभूत av_const पूर्णांक av_popcount_rv(अचिन्हित पूर्णांक x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#अगर HAVE_RV && !defined(__riscv_zbb)
+    अगर (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णांक y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#अगर __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#अन्यथा
             "cpop    %0, %1\n"
-#endif
+#पूर्ण_अगर
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        अगर (y > 32)
             __builtin_unreachable();
-        return y;
+        वापस y;
     }
-#endif
-    return __builtin_popcount(x);
+#पूर्ण_अगर
+    वापस __builtin_popcount(x);
 }
-#define av_popcount av_popcount_rv
+#घोषणा av_popcount av_popcount_rv
 
-static inline av_const int av_popcount64_rv(uint64_t x)
+अटल अंतरभूत av_const पूर्णांक av_popcount64_rv(uint64_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
-    if (!__builtin_constant_p(x) &&
+#अगर HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
+    अगर (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णांक y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "cpop    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        अगर (y > 64)
             __builtin_unreachable();
-        return y;
+        वापस y;
     }
-#endif
-    return __builtin_popcountl(x);
+#पूर्ण_अगर
+    वापस __builtin_popcountl(x);
 }
-#define av_popcount64 av_popcount64_rv
+#घोषणा av_popcount64 av_popcount64_rv
 
-static inline av_const int av_parity_rv(unsigned int x)
+अटल अंतरभूत av_const पूर्णांक av_parity_rv(अचिन्हित पूर्णांक x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#अगर HAVE_RV && !defined(__riscv_zbb)
+    अगर (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        पूर्णांक y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#अगर __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#अन्यथा
             "cpop    %0, %1\n"
-#endif
+#पूर्ण_अगर
             ".option pop" : "=r" (y) : "r" (x));
-        return y & 1;
+        वापस y & 1;
     }
-#endif
-    return __builtin_parity(x);
+#पूर्ण_अगर
+    वापस __builtin_parity(x);
 }
-#define av_parity av_parity_rv
-#endif
+#घोषणा av_parity av_parity_rv
+#पूर्ण_अगर
 
-#endif /* AVUTIL_RISCV_INTMATH_H */
+#पूर्ण_अगर /* AVUTIL_RISCV_INTMATH_H */

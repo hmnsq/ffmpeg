@@ -24,11 +24,11 @@
  * Public header for MurmurHash3 hash function implementation.
  */
 
-#ifndef AVUTIL_MURMUR3_H
-#define AVUTIL_MURMUR3_H
+#अगर_अघोषित AVUTIL_MURMUR3_H
+#घोषणा AVUTIL_MURMUR3_H
 
-#include <stddef.h>
-#include <stdint.h>
+#समावेश <stddef.h>
+#समावेश <stdint.h>
 
 /**
  * @defgroup lavu_murmur3 Murmur3
@@ -64,7 +64,7 @@
  *
  * @return Uninitialized hash context or `NULL` in case of error
  */
-struct AVMurMur3 *av_murmur3_alloc(void);
+काष्ठा AVMurMur3 *av_murmur3_alloc(व्योम);
 
 /**
  * Initialize or reinitialize an AVMurMur3 hash context with a seed.
@@ -76,7 +76,7 @@ struct AVMurMur3 *av_murmur3_alloc(void);
  * @see @ref lavu_murmur3_seedinfo "Detailed description" on a discussion of
  * seeds for MurmurHash3.
  */
-void av_murmur3_init_seeded(struct AVMurMur3 *c, uint64_t seed);
+व्योम av_murmur3_init_seeded(काष्ठा AVMurMur3 *c, uint64_t seed);
 
 /**
  * Initialize or reinitialize an AVMurMur3 hash context.
@@ -89,7 +89,7 @@ void av_murmur3_init_seeded(struct AVMurMur3 *c, uint64_t seed);
  * @see @ref lavu_murmur3_seedinfo "Detailed description" on a discussion of
  * seeds for MurmurHash3.
  */
-void av_murmur3_init(struct AVMurMur3 *c);
+व्योम av_murmur3_init(काष्ठा AVMurMur3 *c);
 
 /**
  * Update hash context with new data.
@@ -98,7 +98,7 @@ void av_murmur3_init(struct AVMurMur3 *c);
  * @param[in]  src  Input data to update hash with
  * @param[in]  len  Number of bytes to read from `src`
  */
-void av_murmur3_update(struct AVMurMur3 *c, const uint8_t *src, size_t len);
+व्योम av_murmur3_update(काष्ठा AVMurMur3 *c, स्थिर uint8_t *src, माप_प्रकार len);
 
 /**
  * Finish hashing and output digest value.
@@ -106,10 +106,10 @@ void av_murmur3_update(struct AVMurMur3 *c, const uint8_t *src, size_t len);
  * @param[in,out] c    Hash context
  * @param[out]    dst  Buffer where output digest value is stored
  */
-void av_murmur3_final(struct AVMurMur3 *c, uint8_t dst[16]);
+व्योम av_murmur3_final(काष्ठा AVMurMur3 *c, uint8_t dst[16]);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_MURMUR3_H */
+#पूर्ण_अगर /* AVUTIL_MURMUR3_H */

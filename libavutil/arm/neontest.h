@@ -20,34 +20,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ARM_NEONTEST_H
-#define AVUTIL_ARM_NEONTEST_H
+#अगर_अघोषित AVUTIL_ARM_NEONTEST_H
+#घोषणा AVUTIL_ARM_NEONTEST_H
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
+#समावेश <inttypes.h>
+#समावेश <stdint.h>
+#समावेश <stdlib.h>
+#समावेश <stdarg.h>
+#समावेश <string.h>
 
-#include "libavutil/bswap.h"
+#समावेश "libavutil/bswap.h"
 
-#define storeneonregs(mem)                \
-    __asm__ volatile(                     \
+#घोषणा storeneonregs(mem)                \
+    __asm__ अस्थिर(                     \
         "vstm %0, {d8-d15}\n\t"           \
         :: "r"(mem) : "memory")
 
-#define testneonclobbers(func, ctx, ...)                        \
+#घोषणा testneonclobbers(func, ctx, ...)                        \
     uint64_t neon[2][8];                                        \
-    int ret;                                                    \
+    पूर्णांक ret;                                                    \
     storeneonregs(neon[0]);                                     \
     ret = __real_ ## func(ctx, __VA_ARGS__);                    \
     storeneonregs(neon[1]);                                     \
-    if (memcmp(neon[0], neon[1], sizeof(neon[0]))) {            \
-        int i;                                                  \
+    अगर (स_भेद(neon[0], neon[1], माप(neon[0]))) {            \
+        पूर्णांक i;                                                  \
         av_log(ctx, AV_LOG_ERROR,                               \
                "NEON REGS CLOBBERED IN %s!\n", #func);          \
-        for (i = 0; i < 8; i ++)                                \
-            if (neon[0][i] != neon[1][i]) {                     \
+        क्रम (i = 0; i < 8; i ++)                                \
+            अगर (neon[0][i] != neon[1][i]) {                     \
                 av_log(ctx, AV_LOG_ERROR,                       \
                        "d%-2d = %016"PRIx64"\n",                \
                        8 + i, av_bswap64(neon[0][i]));          \
@@ -55,13 +55,13 @@
                        "   -> %016"PRIx64"\n",                  \
                        av_bswap64(neon[1][i]));                 \
             }                                                   \
-        abort();                                                \
+        पात();                                                \
     }                                                           \
-    return ret
+    वापस ret
 
-#define wrap(func)      \
-int __real_ ## func;    \
-int __wrap_ ## func;    \
-int __wrap_ ## func
+#घोषणा wrap(func)      \
+पूर्णांक __real_ ## func;    \
+पूर्णांक __wrap_ ## func;    \
+पूर्णांक __wrap_ ## func
 
-#endif /* AVUTIL_ARM_NEONTEST_H */
+#पूर्ण_अगर /* AVUTIL_ARM_NEONTEST_H */

@@ -18,21 +18,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
-#define AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
+#अगर_अघोषित AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
+#घोषणा AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
 
-void ff_vector_fmul_altivec(float *dst, const float *src0,
-                            const float *src1, int len);
+व्योम ff_vector_fmul_altivec(भग्न *dst, स्थिर भग्न *src0,
+                            स्थिर भग्न *src1, पूर्णांक len);
 
-void ff_vector_fmul_window_altivec(float *dst, const float *src0,
-                                   const float *src1, const float *win,
-                                   int len);
+व्योम ff_vector_fmul_window_altivec(भग्न *dst, स्थिर भग्न *src0,
+                                   स्थिर भग्न *src1, स्थिर भग्न *win,
+                                   पूर्णांक len);
 
-void ff_vector_fmul_add_altivec(float *dst, const float *src0,
-                                const float *src1, const float *src2,
-                                int len);
+व्योम ff_vector_fmul_add_altivec(भग्न *dst, स्थिर भग्न *src0,
+                                स्थिर भग्न *src1, स्थिर भग्न *src2,
+                                पूर्णांक len);
 
-void ff_vector_fmul_reverse_altivec(float *dst, const float *src0,
-                                    const float *src1, int len);
+व्योम ff_vector_fmul_reverse_altivec(भग्न *dst, स्थिर भग्न *src0,
+                                    स्थिर भग्न *src1, पूर्णांक len);
 
-#endif /* AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H */
+#पूर्ण_अगर /* AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H */

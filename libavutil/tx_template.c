@@ -24,12 +24,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "mem.h"
+#समावेश "mem.h"
 
-#define TABLE_DEF(name, size) \
-    DECLARE_ALIGNED(32, TXSample, TX_TAB(ff_tx_tab_ ##name))[size]
+#घोषणा TABLE_DEF(name, आकार) \
+    DECLARE_ALIGNED(32, TXSample, TX_TAB(ff_tx_tab_ ##name))[आकार]
 
-#define SR_POW2_TABLES \
+#घोषणा SR_POW2_TABLES \
     SR_TABLE(8)        \
     SR_TABLE(16)       \
     SR_TABLE(32)       \
@@ -46,49 +46,49 @@
     SR_TABLE(65536)    \
     SR_TABLE(131072)   \
 
-#define SR_TABLE(len) \
+#घोषणा SR_TABLE(len) \
     TABLE_DEF(len, len/4 + 1);
 /* Power of two tables */
 SR_POW2_TABLES
-#undef SR_TABLE
+#अघोषित SR_TABLE
 
 /* Other factors' tables */
 TABLE_DEF(53, 12);
 TABLE_DEF( 7,  6);
 TABLE_DEF( 9,  8);
 
-typedef struct FFTabInitData {
-    void (*func)(void);
-    int factors[TX_MAX_SUB]; /* Must be sorted high -> low */
-} FFTabInitData;
+प्रकार काष्ठा FFTab_Init_तथ्य {
+    व्योम (*func)(व्योम);
+    पूर्णांक factors[TX_MAX_SUB]; /* Must be sorted high -> low */
+} FFTab_Init_तथ्य;
 
-#define SR_TABLE(len)                                              \
-static av_cold void TX_TAB(ff_tx_init_tab_ ##len)(void)            \
+#घोषणा SR_TABLE(len)                                              \
+अटल av_cold व्योम TX_TAB(ff_tx_init_tab_ ##len)(व्योम)            \
 {                                                                  \
-    double freq = 2*M_PI/len;                                      \
+    द्विगुन freq = 2*M_PI/len;                                      \
     TXSample *tab = TX_TAB(ff_tx_tab_ ##len);                      \
                                                                    \
-    for (int i = 0; i < len/4; i++)                                \
+    क्रम (पूर्णांक i = 0; i < len/4; i++)                                \
         *tab++ = RESCALE(cos(i*freq));                             \
                                                                    \
     *tab = 0;                                                      \
 }
 SR_POW2_TABLES
-#undef SR_TABLE
+#अघोषित SR_TABLE
 
-static void (*const sr_tabs_init_funcs[])(void) = {
-#define SR_TABLE(len) TX_TAB(ff_tx_init_tab_ ##len),
+अटल व्योम (*स्थिर sr_tabs_init_funcs[])(व्योम) = {
+#घोषणा SR_TABLE(len) TX_TAB(ff_tx_init_tab_ ##len),
     SR_POW2_TABLES
-#undef SR_TABLE
+#अघोषित SR_TABLE
 };
 
-static AVOnce sr_tabs_init_once[] = {
-#define SR_TABLE(len) AV_ONCE_INIT,
+अटल AVOnce sr_tabs_init_once[] = {
+#घोषणा SR_TABLE(len) AV_ONCE_INIT,
     SR_POW2_TABLES
-#undef SR_TABLE
+#अघोषित SR_TABLE
 };
 
-static av_cold void TX_TAB(ff_tx_init_tab_53)(void)
+अटल av_cold व्योम TX_TAB(ff_tx_init_tab_53)(व्योम)
 {
     /* 5pt, doubled to eliminate AVX lane shuffles */
     TX_TAB(ff_tx_tab_53)[0] = RESCALE(cos(2 * M_PI /  5));
@@ -107,7 +107,7 @@ static av_cold void TX_TAB(ff_tx_init_tab_53)(void)
     TX_TAB(ff_tx_tab_53)[11] = RESCALE(cos(8 * M_PI /  6));
 }
 
-static av_cold void TX_TAB(ff_tx_init_tab_7)(void)
+अटल av_cold व्योम TX_TAB(ff_tx_init_tab_7)(व्योम)
 {
     TX_TAB(ff_tx_tab_7)[0] = RESCALE(cos(2 * M_PI /  7));
     TX_TAB(ff_tx_tab_7)[1] = RESCALE(sin(2 * M_PI /  7));
@@ -117,7 +117,7 @@ static av_cold void TX_TAB(ff_tx_init_tab_7)(void)
     TX_TAB(ff_tx_tab_7)[5] = RESCALE(sin(2 * M_PI / 14));
 }
 
-static av_cold void TX_TAB(ff_tx_init_tab_9)(void)
+अटल av_cold व्योम TX_TAB(ff_tx_init_tab_9)(व्योम)
 {
     TX_TAB(ff_tx_tab_9)[0] = RESCALE(cos(2 * M_PI /  3));
     TX_TAB(ff_tx_tab_9)[1] = RESCALE(sin(2 * M_PI /  3));
@@ -129,61 +129,61 @@ static av_cold void TX_TAB(ff_tx_init_tab_9)(void)
     TX_TAB(ff_tx_tab_9)[7] = TX_TAB(ff_tx_tab_9)[3] - TX_TAB(ff_tx_tab_9)[4];
 }
 
-static const FFTabInitData nptwo_tabs_init_data[] = {
+अटल स्थिर FFTab_Init_तथ्य nptwo_tabs_init_तथ्य[] = {
     { TX_TAB(ff_tx_init_tab_53),      { 15, 5, 3 } },
     { TX_TAB(ff_tx_init_tab_9),       {  9 }       },
     { TX_TAB(ff_tx_init_tab_7),       {  7 }       },
 };
 
-static AVOnce nptwo_tabs_init_once[] = {
+अटल AVOnce nptwo_tabs_init_once[] = {
     AV_ONCE_INIT,
     AV_ONCE_INIT,
     AV_ONCE_INIT,
 };
 
-av_cold void TX_TAB(ff_tx_init_tabs)(int len)
+av_cold व्योम TX_TAB(ff_tx_init_tabs)(पूर्णांक len)
 {
-    int factor_2 = ff_ctz(len);
-    if (factor_2) {
-        int idx = factor_2 - 3;
-        for (int i = 0; i <= idx; i++)
+    पूर्णांक factor_2 = ff_ctz(len);
+    अगर (factor_2) {
+        पूर्णांक idx = factor_2 - 3;
+        क्रम (पूर्णांक i = 0; i <= idx; i++)
             ff_thread_once(&sr_tabs_init_once[i],
                             sr_tabs_init_funcs[i]);
         len >>= factor_2;
     }
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(nptwo_tabs_init_data); i++) {
-        int f, f_idx = 0;
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(nptwo_tabs_init_तथ्य); i++) {
+        पूर्णांक f, f_idx = 0;
 
-        if (len <= 1)
-            return;
+        अगर (len <= 1)
+            वापस;
 
-        while ((f = nptwo_tabs_init_data[i].factors[f_idx++])) {
-            if (f % len)
-                continue;
+        जबतक ((f = nptwo_tabs_init_तथ्य[i].factors[f_idx++])) {
+            अगर (f % len)
+                जारी;
 
             ff_thread_once(&nptwo_tabs_init_once[i],
-                            nptwo_tabs_init_data[i].func);
+                            nptwo_tabs_init_तथ्य[i].func);
             len /= f;
-            break;
+            अवरोध;
         }
     }
 }
 
-static av_always_inline void fft3(TXComplex *out, TXComplex *in,
-                                  ptrdiff_t stride)
+अटल av_always_inline व्योम fft3(TXComplex *out, TXComplex *in,
+                                  सूचक_भेद_प्रकार stride)
 {
     TXComplex tmp[3];
-    const TXSample *tab = TX_TAB(ff_tx_tab_53);
-#ifdef TX_INT32
+    स्थिर TXSample *tab = TX_TAB(ff_tx_tab_53);
+#अगर_घोषित TX_INT32
     int64_t mtmp[4];
-#endif
+#पूर्ण_अगर
 
     tmp[0] = in[0];
     BF(tmp[1].re, tmp[2].im, in[1].im, in[2].im);
     BF(tmp[1].im, tmp[2].re, in[1].re, in[2].re);
 
-#ifdef TX_INT32
+#अगर_घोषित TX_INT32
     out[0*stride].re = (int64_t)tmp[0].re + tmp[2].re;
     out[0*stride].im = (int64_t)tmp[0].im + tmp[2].im;
     mtmp[0] = (int64_t)tab[ 8] * tmp[1].re;
@@ -194,7 +194,7 @@ static av_always_inline void fft3(TXComplex *out, TXComplex *in,
     out[1*stride].im = tmp[0].im - (mtmp[3] - mtmp[1] + 0x40000000 >> 31);
     out[2*stride].re = tmp[0].re - (mtmp[2] - mtmp[0] + 0x40000000 >> 31);
     out[2*stride].im = tmp[0].im - (mtmp[3] + mtmp[1] + 0x40000000 >> 31);
-#else
+#अन्यथा
     out[0*stride].re = tmp[0].re + tmp[2].re;
     out[0*stride].im = tmp[0].im + tmp[2].im;
     tmp[1].re = tab[ 8] * tmp[1].re;
@@ -205,15 +205,15 @@ static av_always_inline void fft3(TXComplex *out, TXComplex *in,
     out[1*stride].im = tmp[0].im - tmp[2].im - tmp[1].im;
     out[2*stride].re = tmp[0].re - tmp[2].re - tmp[1].re;
     out[2*stride].im = tmp[0].im - tmp[2].im + tmp[1].im;
-#endif
+#पूर्ण_अगर
 }
 
-#define DECL_FFT5(NAME, D0, D1, D2, D3, D4)                         \
-static av_always_inline void NAME(TXComplex *out, TXComplex *in,    \
-                                  ptrdiff_t stride)                 \
+#घोषणा DECL_FFT5(NAME, D0, D1, D2, D3, D4)                         \
+अटल av_always_inline व्योम NAME(TXComplex *out, TXComplex *in,    \
+                                  सूचक_भेद_प्रकार stride)                 \
 {                                                                   \
     TXComplex dc, z0[4], t[6];                                      \
-    const TXSample *tab = TX_TAB(ff_tx_tab_53);                     \
+    स्थिर TXSample *tab = TX_TAB(ff_tx_tab_53);                     \
                                                                     \
     dc = in[0];                                                     \
     BF(t[1].im, t[0].re, in[1].re, in[4].re);                       \
@@ -249,14 +249,14 @@ DECL_FFT5(fft5_m1,  0,  6, 12,  3,  9)
 DECL_FFT5(fft5_m2, 10,  1,  7, 13,  4)
 DECL_FFT5(fft5_m3,  5, 11,  2,  8, 14)
 
-static av_always_inline void fft7(TXComplex *out, TXComplex *in,
-                                  ptrdiff_t stride)
+अटल av_always_inline व्योम fft7(TXComplex *out, TXComplex *in,
+                                  सूचक_भेद_प्रकार stride)
 {
     TXComplex dc, t[6], z[3];
-    const TXComplex *tab = (const TXComplex *)TX_TAB(ff_tx_tab_7);
-#ifdef TX_INT32
+    स्थिर TXComplex *tab = (स्थिर TXComplex *)TX_TAB(ff_tx_tab_7);
+#अगर_घोषित TX_INT32
     int64_t mtmp[12];
-#endif
+#पूर्ण_अगर
 
     dc = in[0];
     BF(t[1].re, t[0].re, in[1].re, in[6].re);
@@ -269,7 +269,7 @@ static av_always_inline void fft7(TXComplex *out, TXComplex *in,
     out[0*stride].re = dc.re + t[0].re + t[2].re + t[4].re;
     out[0*stride].im = dc.im + t[0].im + t[2].im + t[4].im;
 
-#ifdef TX_INT32 /* NOTE: it's possible to do this with 16 mults but 72 adds */
+#अगर_घोषित TX_INT32 /* NOTE: it's possible to do this with 16 mults but 72 adds */
     mtmp[ 0] = ((int64_t)tab[0].re)*t[0].re - ((int64_t)tab[2].re)*t[4].re;
     mtmp[ 1] = ((int64_t)tab[0].re)*t[4].re - ((int64_t)tab[1].re)*t[0].re;
     mtmp[ 2] = ((int64_t)tab[0].re)*t[2].re - ((int64_t)tab[2].re)*t[0].re;
@@ -297,7 +297,7 @@ static av_always_inline void fft7(TXComplex *out, TXComplex *in,
     t[0].im = (int32_t)(mtmp[ 9] + ((int64_t)tab[2].im)*t[5].re + 0x40000000 >> 31);
     t[2].im = (int32_t)(mtmp[10] - ((int64_t)tab[1].im)*t[1].re + 0x40000000 >> 31);
     t[4].im = (int32_t)(mtmp[11] - ((int64_t)tab[0].im)*t[3].re + 0x40000000 >> 31);
-#else
+#अन्यथा
     z[0].re = tab[0].re*t[0].re - tab[2].re*t[4].re - tab[1].re*t[2].re;
     z[1].re = tab[0].re*t[4].re - tab[1].re*t[0].re - tab[2].re*t[2].re;
     z[2].re = tab[0].re*t[2].re - tab[2].re*t[0].re - tab[1].re*t[4].re;
@@ -314,7 +314,7 @@ static av_always_inline void fft7(TXComplex *out, TXComplex *in,
     t[0].im = tab[0].im*t[1].re + tab[1].im*t[3].re + tab[2].im*t[5].re;
     t[2].im = tab[2].im*t[3].re + tab[0].im*t[5].re - tab[1].im*t[1].re;
     t[4].im = tab[2].im*t[1].re + tab[1].im*t[5].re - tab[0].im*t[3].re;
-#endif
+#पूर्ण_अगर
 
     BF(t[1].re, z[0].re, z[0].re, t[4].re);
     BF(t[3].re, z[1].re, z[1].re, t[2].re);
@@ -337,14 +337,14 @@ static av_always_inline void fft7(TXComplex *out, TXComplex *in,
     out[6*stride].im = dc.im + z[0].im;
 }
 
-static av_always_inline void fft9(TXComplex *out, TXComplex *in,
-                                  ptrdiff_t stride)
+अटल av_always_inline व्योम fft9(TXComplex *out, TXComplex *in,
+                                  सूचक_भेद_प्रकार stride)
 {
-    const TXComplex *tab = (const TXComplex *)TX_TAB(ff_tx_tab_9);
+    स्थिर TXComplex *tab = (स्थिर TXComplex *)TX_TAB(ff_tx_tab_9);
     TXComplex dc, t[16], w[4], x[5], y[5], z[2];
-#ifdef TX_INT32
+#अगर_घोषित TX_INT32
     int64_t mtmp[12];
-#endif
+#पूर्ण_अगर
 
     dc = in[0];
     BF(t[1].re, t[0].re, in[1].re, in[8].re);
@@ -374,7 +374,7 @@ static av_always_inline void fft9(TXComplex *out, TXComplex *in,
     out[0*stride].re = z[0].re + z[1].re;
     out[0*stride].im = z[0].im + z[1].im;
 
-#ifdef TX_INT32
+#अगर_घोषित TX_INT32
     mtmp[0] = t[1].re - t[3].re + t[7].re;
     mtmp[1] = t[1].im - t[3].im + t[7].im;
 
@@ -412,7 +412,7 @@ static av_always_inline void fft9(TXComplex *out, TXComplex *in,
     y[0].re = (int32_t)(((int64_t)tab[0].im)*t[5].re + 0x40000000 >> 31);
     y[0].im = (int32_t)(((int64_t)tab[0].im)*t[5].im + 0x40000000 >> 31);
 
-#else
+#अन्यथा
     y[3].re = tab[0].im*(t[1].re - t[3].re + t[7].re);
     y[3].im = tab[0].im*(t[1].im - t[3].im + t[7].im);
 
@@ -432,7 +432,7 @@ static av_always_inline void fft9(TXComplex *out, TXComplex *in,
 
     y[0].re = tab[0].im*t[5].re;
     y[0].im = tab[0].im*t[5].im;
-#endif
+#पूर्ण_अगर
 
     x[4].re = x[1].re + x[2].re;
     x[4].im = x[1].im + x[2].im;
@@ -462,12 +462,12 @@ static av_always_inline void fft9(TXComplex *out, TXComplex *in,
     out[8*stride] = (TXComplex){ x[1].re - y[1].im, x[1].im + y[1].re };
 }
 
-static av_always_inline void fft15(TXComplex *out, TXComplex *in,
-                                   ptrdiff_t stride)
+अटल av_always_inline व्योम fft15(TXComplex *out, TXComplex *in,
+                                   सूचक_भेद_प्रकार stride)
 {
     TXComplex tmp[15];
 
-    for (int i = 0; i < 5; i++)
+    क्रम (पूर्णांक i = 0; i < 5; i++)
         fft3(tmp + i, in + i*3, 5);
 
     fft5_m1(out, tmp +  0, stride);
@@ -475,31 +475,31 @@ static av_always_inline void fft15(TXComplex *out, TXComplex *in,
     fft5_m3(out, tmp + 10, stride);
 }
 
-static av_cold int TX_NAME(ff_tx_fft_factor_init)(AVTXContext *s,
-                                                  const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_fft_factor_init)(AVTXContext *s,
+                                                  स्थिर FFTXCodelet *cd,
                                                   uint64_t flags,
                                                   FFTXCodeletOptions *opts,
-                                                  int len, int inv,
-                                                  const void *scale)
+                                                  पूर्णांक len, पूर्णांक inv,
+                                                  स्थिर व्योम *scale)
 {
-    int ret = 0;
+    पूर्णांक ret = 0;
     TX_TAB(ff_tx_init_tabs)(len);
 
-    if (len == 15)
-        ret = ff_tx_gen_pfa_input_map(s, opts, 3, 5);
-    else if (flags & FF_TX_PRESHUFFLE)
+    अगर (len == 15)
+        ret = ff_tx_gen_pfa_निवेश_map(s, opts, 3, 5);
+    अन्यथा अगर (flags & FF_TX_PRESHUFFLE)
         ret = ff_tx_gen_default_map(s, opts);
 
-    return ret;
+    वापस ret;
 }
 
-#define DECL_FACTOR_S(n)                                                       \
-static void TX_NAME(ff_tx_fft##n)(AVTXContext *s, void *dst,                   \
-                                  void *src, ptrdiff_t stride)                 \
+#घोषणा DECL_FACTOR_S(n)                                                       \
+अटल व्योम TX_NAME(ff_tx_fft##n)(AVTXContext *s, व्योम *dst,                   \
+                                  व्योम *src, सूचक_भेद_प्रकार stride)                 \
 {                                                                              \
-    fft##n((TXComplex *)dst, (TXComplex *)src, stride / sizeof(TXComplex));    \
+    fft##n((TXComplex *)dst, (TXComplex *)src, stride / माप(TXComplex));    \
 }                                                                              \
-static const FFTXCodelet TX_NAME(ff_tx_fft##n##_ns_def) = {                    \
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_fft##n##_ns_def) = {                    \
     .name       = TX_NAME_STR("fft" #n "_ns"),                                 \
     .function   = TX_NAME(ff_tx_fft##n),                                       \
     .type       = TX_TYPE(FFT),                                                \
@@ -514,9 +514,9 @@ static const FFTXCodelet TX_NAME(ff_tx_fft##n##_ns_def) = {                    \
     .prio       = FF_TX_PRIO_BASE,                                             \
 };
 
-#define DECL_FACTOR_F(n)                                                       \
+#घोषणा DECL_FACTOR_F(n)                                                       \
 DECL_FACTOR_S(n)                                                               \
-static const FFTXCodelet TX_NAME(ff_tx_fft##n##_fwd_def) = {                   \
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_fft##n##_fwd_def) = {                   \
     .name       = TX_NAME_STR("fft" #n "_fwd"),                                \
     .function   = TX_NAME(ff_tx_fft##n),                                       \
     .type       = TX_TYPE(FFT),                                                \
@@ -537,8 +537,8 @@ DECL_FACTOR_F(7)
 DECL_FACTOR_F(9)
 DECL_FACTOR_S(15)
 
-#define BUTTERFLIES(a0, a1, a2, a3)            \
-    do {                                       \
+#घोषणा BUTTERFLIES(a0, a1, a2, a3)            \
+    करो {                                       \
         r0=a0.re;                              \
         i0=a0.im;                              \
         r1=a1.re;                              \
@@ -549,26 +549,26 @@ DECL_FACTOR_S(15)
         BF(t4, t6, t2, t6);                    \
         BF(a3.re, a1.re, r1, t4);              \
         BF(a2.im, a0.im, i0, t6);              \
-    } while (0)
+    } जबतक (0)
 
-#define TRANSFORM(a0, a1, a2, a3, wre, wim)    \
-    do {                                       \
+#घोषणा TRANSFORM(a0, a1, a2, a3, wre, wim)    \
+    करो {                                       \
         CMUL(t1, t2, a2.re, a2.im, wre, -wim); \
         CMUL(t5, t6, a3.re, a3.im, wre,  wim); \
         BUTTERFLIES(a0, a1, a2, a3);           \
-    } while (0)
+    } जबतक (0)
 
 /* z[0...8n-1], w[1...2n-1] */
-static inline void TX_NAME(ff_tx_fft_sr_combine)(TXComplex *z,
-                                                 const TXSample *cos, int len)
+अटल अंतरभूत व्योम TX_NAME(ff_tx_fft_sr_combine)(TXComplex *z,
+                                                 स्थिर TXSample *cos, पूर्णांक len)
 {
-    int o1 = 2*len;
-    int o2 = 4*len;
-    int o3 = 6*len;
-    const TXSample *wim = cos + o1 - 7;
+    पूर्णांक o1 = 2*len;
+    पूर्णांक o2 = 4*len;
+    पूर्णांक o3 = 6*len;
+    स्थिर TXSample *wim = cos + o1 - 7;
     TXUSample t1, t2, t3, t4, t5, t6, r0, i0, r1, i1;
 
-    for (int i = 0; i < len; i += 4) {
+    क्रम (पूर्णांक i = 0; i < len; i += 4) {
         TRANSFORM(z[0], z[o1 + 0], z[o2 + 0], z[o3 + 0], cos[0], wim[7]);
         TRANSFORM(z[2], z[o1 + 2], z[o2 + 2], z[o3 + 2], cos[2], wim[5]);
         TRANSFORM(z[4], z[o1 + 4], z[o2 + 4], z[o3 + 4], cos[4], wim[3]);
@@ -585,19 +585,19 @@ static inline void TX_NAME(ff_tx_fft_sr_combine)(TXComplex *z,
     }
 }
 
-static av_cold int TX_NAME(ff_tx_fft_sr_codelet_init)(AVTXContext *s,
-                                                      const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_fft_sr_codelet_init)(AVTXContext *s,
+                                                      स्थिर FFTXCodelet *cd,
                                                       uint64_t flags,
                                                       FFTXCodeletOptions *opts,
-                                                      int len, int inv,
-                                                      const void *scale)
+                                                      पूर्णांक len, पूर्णांक inv,
+                                                      स्थिर व्योम *scale)
 {
     TX_TAB(ff_tx_init_tabs)(len);
-    return ff_tx_gen_ptwo_revtab(s, opts);
+    वापस ff_tx_gen_ptwo_revtab(s, opts);
 }
 
-#define DECL_SR_CODELET_DEF(n)                              \
-static const FFTXCodelet TX_NAME(ff_tx_fft##n##_ns_def) = { \
+#घोषणा DECL_SR_CODELET_DEF(n)                              \
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_fft##n##_ns_def) = { \
     .name       = TX_NAME_STR("fft" #n "_ns"),              \
     .function   = TX_NAME(ff_tx_fft##n##_ns),               \
     .type       = TX_TYPE(FFT),                             \
@@ -612,13 +612,13 @@ static const FFTXCodelet TX_NAME(ff_tx_fft##n##_ns_def) = { \
     .prio       = FF_TX_PRIO_BASE,                          \
 };
 
-#define DECL_SR_CODELET(n, n2, n4)                                    \
-static void TX_NAME(ff_tx_fft##n##_ns)(AVTXContext *s, void *_dst,    \
-                                        void *_src, ptrdiff_t stride) \
+#घोषणा DECL_SR_CODELET(n, n2, n4)                                    \
+अटल व्योम TX_NAME(ff_tx_fft##n##_ns)(AVTXContext *s, व्योम *_dst,    \
+                                        व्योम *_src, सूचक_भेद_प्रकार stride) \
 {                                                                     \
     TXComplex *src = _src;                                            \
     TXComplex *dst = _dst;                                            \
-    const TXSample *cos = TX_TAB(ff_tx_tab_##n);                      \
+    स्थिर TXSample *cos = TX_TAB(ff_tx_tab_##n);                      \
                                                                       \
     TX_NAME(ff_tx_fft##n2##_ns)(s, dst,        src,        stride);   \
     TX_NAME(ff_tx_fft##n4##_ns)(s, dst + n4*2, src + n4*2, stride);   \
@@ -628,8 +628,8 @@ static void TX_NAME(ff_tx_fft##n##_ns)(AVTXContext *s, void *_dst,    \
                                                                       \
 DECL_SR_CODELET_DEF(n)
 
-static void TX_NAME(ff_tx_fft2_ns)(AVTXContext *s, void *_dst,
-                                   void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_fft2_ns)(AVTXContext *s, व्योम *_dst,
+                                   व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
@@ -640,8 +640,8 @@ static void TX_NAME(ff_tx_fft2_ns)(AVTXContext *s, void *_dst,
     dst[1] = tmp;
 }
 
-static void TX_NAME(ff_tx_fft4_ns)(AVTXContext *s, void *_dst,
-                                   void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_fft4_ns)(AVTXContext *s, व्योम *_dst,
+                                   व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
@@ -657,13 +657,13 @@ static void TX_NAME(ff_tx_fft4_ns)(AVTXContext *s, void *_dst,
     BF(dst[2].im, dst[0].im, t2, t5);
 }
 
-static void TX_NAME(ff_tx_fft8_ns)(AVTXContext *s, void *_dst,
-                                   void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_fft8_ns)(AVTXContext *s, व्योम *_dst,
+                                   व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
     TXUSample t1, t2, t3, t4, t5, t6, r0, i0, r1, i1;
-    const TXSample cos = TX_TAB(ff_tx_tab_8)[1];
+    स्थिर TXSample cos = TX_TAB(ff_tx_tab_8)[1];
 
     TX_NAME(ff_tx_fft4_ns)(s, dst, src, stride);
 
@@ -676,12 +676,12 @@ static void TX_NAME(ff_tx_fft8_ns)(AVTXContext *s, void *_dst,
     TRANSFORM(dst[1], dst[3], dst[5], dst[7], cos, cos);
 }
 
-static void TX_NAME(ff_tx_fft16_ns)(AVTXContext *s, void *_dst,
-                                    void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_fft16_ns)(AVTXContext *s, व्योम *_dst,
+                                    व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
-    const TXSample *cos = TX_TAB(ff_tx_tab_16);
+    स्थिर TXSample *cos = TX_TAB(ff_tx_tab_16);
 
     TXUSample t1, t2, t3, t4, t5, t6, r0, i0, r1, i1;
     TXSample cos_16_1 = cos[1];
@@ -721,15 +721,15 @@ DECL_SR_CODELET(32768,16384,8192)
 DECL_SR_CODELET(65536,32768,16384)
 DECL_SR_CODELET(131072,65536,32768)
 
-static av_cold int TX_NAME(ff_tx_fft_init)(AVTXContext *s,
-                                           const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_fft_init)(AVTXContext *s,
+                                           स्थिर FFTXCodelet *cd,
                                            uint64_t flags,
                                            FFTXCodeletOptions *opts,
-                                           int len, int inv,
-                                           const void *scale)
+                                           पूर्णांक len, पूर्णांक inv,
+                                           स्थिर व्योम *scale)
 {
-    int ret;
-    int is_inplace = !!(flags & AV_TX_INPLACE);
+    पूर्णांक ret;
+    पूर्णांक is_inplace = !!(flags & AV_TX_INPLACE);
     FFTXCodeletOptions sub_opts = {
         .map_dir = is_inplace ? FF_TX_MAP_SCATTER : FF_TX_MAP_GATHER,
     };
@@ -738,70 +738,70 @@ static av_cold int TX_NAME(ff_tx_fft_init)(AVTXContext *s,
     flags |=  AV_TX_INPLACE;      /* in-place */
     flags |=  FF_TX_PRESHUFFLE;   /* This function handles the permute step */
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len, inv, scale)))
-        return ret;
+    अगर ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len, inv, scale)))
+        वापस ret;
 
-    if (is_inplace && (ret = ff_tx_gen_inplace_map(s, len)))
-        return ret;
+    अगर (is_inplace && (ret = ff_tx_gen_inplace_map(s, len)))
+        वापस ret;
 
-    return 0;
+    वापस 0;
 }
 
-static av_cold int TX_NAME(ff_tx_fft_inplace_small_init)(AVTXContext *s,
-                                                         const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_fft_inplace_small_init)(AVTXContext *s,
+                                                         स्थिर FFTXCodelet *cd,
                                                          uint64_t flags,
                                                          FFTXCodeletOptions *opts,
-                                                         int len, int inv,
-                                                         const void *scale)
+                                                         पूर्णांक len, पूर्णांक inv,
+                                                         स्थिर व्योम *scale)
 {
-    if (!(s->tmp = av_malloc(len*sizeof(*s->tmp))))
-        return AVERROR(ENOMEM);
+    अगर (!(s->tmp = av_malloc(len*माप(*s->tmp))))
+        वापस AVERROR(ENOMEM);
     flags &= ~AV_TX_INPLACE;
-    return TX_NAME(ff_tx_fft_init)(s, cd, flags, opts, len, inv, scale);
+    वापस TX_NAME(ff_tx_fft_init)(s, cd, flags, opts, len, inv, scale);
 }
 
-static void TX_NAME(ff_tx_fft)(AVTXContext *s, void *_dst,
-                               void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_fft)(AVTXContext *s, व्योम *_dst,
+                               व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXComplex *src = _src;
     TXComplex *dst1 = s->flags & AV_TX_INPLACE ? s->tmp : _dst;
     TXComplex *dst2 = _dst;
-    int *map = s->sub[0].map;
-    int len = s->len;
+    पूर्णांक *map = s->sub[0].map;
+    पूर्णांक len = s->len;
 
     /* Compilers can't vectorize this anyway without assuming AVX2, which they
      * generally don't, at least without -march=native -mtune=native */
-    for (int i = 0; i < len; i++)
+    क्रम (पूर्णांक i = 0; i < len; i++)
         dst1[i] = src[map[i]];
 
     s->fn[0](&s->sub[0], dst2, dst1, stride);
 }
 
-static void TX_NAME(ff_tx_fft_inplace)(AVTXContext *s, void *_dst,
-                                       void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_fft_inplace)(AVTXContext *s, व्योम *_dst,
+                                       व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
     TXComplex tmp;
-    const int *map = s->sub->map;
-    const int *inplace_idx = s->map;
-    int src_idx, dst_idx;
+    स्थिर पूर्णांक *map = s->sub->map;
+    स्थिर पूर्णांक *inplace_idx = s->map;
+    पूर्णांक src_idx, dst_idx;
 
     src_idx = *inplace_idx++;
-    do {
+    करो {
         tmp = src[src_idx];
         dst_idx = map[src_idx];
-        do {
+        करो {
             FFSWAP(TXComplex, tmp, src[dst_idx]);
             dst_idx = map[dst_idx];
-        } while (dst_idx != src_idx); /* Can be > as well, but was less predictable */
+        } जबतक (dst_idx != src_idx); /* Can be > as well, but was less predictable */
         src[dst_idx] = tmp;
-    } while ((src_idx = *inplace_idx++));
+    } जबतक ((src_idx = *inplace_idx++));
 
     s->fn[0](&s->sub[0], dst, src, stride);
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_fft_def) = {
     .name       = TX_NAME_STR("fft"),
     .function   = TX_NAME(ff_tx_fft),
     .type       = TX_TYPE(FFT),
@@ -815,7 +815,7 @@ static const FFTXCodelet TX_NAME(ff_tx_fft_def) = {
     .prio       = FF_TX_PRIO_BASE,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_inplace_small_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_fft_inplace_small_def) = {
     .name       = TX_NAME_STR("fft_inplace_small"),
     .function   = TX_NAME(ff_tx_fft),
     .type       = TX_TYPE(FFT),
@@ -829,7 +829,7 @@ static const FFTXCodelet TX_NAME(ff_tx_fft_inplace_small_def) = {
     .prio       = FF_TX_PRIO_BASE - 256,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_inplace_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_fft_inplace_def) = {
     .name       = TX_NAME_STR("fft_inplace"),
     .function   = TX_NAME(ff_tx_fft_inplace),
     .type       = TX_TYPE(FFT),
@@ -843,21 +843,21 @@ static const FFTXCodelet TX_NAME(ff_tx_fft_inplace_def) = {
     .prio       = FF_TX_PRIO_BASE - 512,
 };
 
-static av_cold int TX_NAME(ff_tx_fft_init_naive_small)(AVTXContext *s,
-                                                       const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_fft_init_naive_small)(AVTXContext *s,
+                                                       स्थिर FFTXCodelet *cd,
                                                        uint64_t flags,
                                                        FFTXCodeletOptions *opts,
-                                                       int len, int inv,
-                                                       const void *scale)
+                                                       पूर्णांक len, पूर्णांक inv,
+                                                       स्थिर व्योम *scale)
 {
-    const double phase = s->inv ? 2.0*M_PI/len : -2.0*M_PI/len;
+    स्थिर द्विगुन phase = s->inv ? 2.0*M_PI/len : -2.0*M_PI/len;
 
-    if (!(s->exp = av_malloc(len*len*sizeof(*s->exp))))
-        return AVERROR(ENOMEM);
+    अगर (!(s->exp = av_malloc(len*len*माप(*s->exp))))
+        वापस AVERROR(ENOMEM);
 
-    for (int i = 0; i < len; i++) {
-        for (int j = 0; j < len; j++) {
-            const double factor = phase*i*j;
+    क्रम (पूर्णांक i = 0; i < len; i++) {
+        क्रम (पूर्णांक j = 0; j < len; j++) {
+            स्थिर द्विगुन factor = phase*i*j;
             s->exp[i*j] = (TXComplex){
                 RESCALE(cos(factor)),
                 RESCALE(sin(factor)),
@@ -865,24 +865,24 @@ static av_cold int TX_NAME(ff_tx_fft_init_naive_small)(AVTXContext *s,
         }
     }
 
-    return 0;
+    वापस 0;
 }
 
-static void TX_NAME(ff_tx_fft_naive)(AVTXContext *s, void *_dst, void *_src,
-                                     ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_fft_naive)(AVTXContext *s, व्योम *_dst, व्योम *_src,
+                                     सूचक_भेद_प्रकार stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
-    const int n = s->len;
-    double phase = s->inv ? 2.0*M_PI/n : -2.0*M_PI/n;
+    स्थिर पूर्णांक n = s->len;
+    द्विगुन phase = s->inv ? 2.0*M_PI/n : -2.0*M_PI/n;
 
-    stride /= sizeof(*dst);
+    stride /= माप(*dst);
 
-    for (int i = 0; i < n; i++) {
+    क्रम (पूर्णांक i = 0; i < n; i++) {
         TXComplex tmp = { 0 };
-        for (int j = 0; j < n; j++) {
-            const double factor = phase*i*j;
-            const TXComplex mult = {
+        क्रम (पूर्णांक j = 0; j < n; j++) {
+            स्थिर द्विगुन factor = phase*i*j;
+            स्थिर TXComplex mult = {
                 RESCALE(cos(factor)),
                 RESCALE(sin(factor)),
             };
@@ -895,20 +895,20 @@ static void TX_NAME(ff_tx_fft_naive)(AVTXContext *s, void *_dst, void *_src,
     }
 }
 
-static void TX_NAME(ff_tx_fft_naive_small)(AVTXContext *s, void *_dst, void *_src,
-                                           ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_fft_naive_small)(AVTXContext *s, व्योम *_dst, व्योम *_src,
+                                           सूचक_भेद_प्रकार stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
-    const int n = s->len;
+    स्थिर पूर्णांक n = s->len;
 
-    stride /= sizeof(*dst);
+    stride /= माप(*dst);
 
-    for (int i = 0; i < n; i++) {
+    क्रम (पूर्णांक i = 0; i < n; i++) {
         TXComplex tmp = { 0 };
-        for (int j = 0; j < n; j++) {
+        क्रम (पूर्णांक j = 0; j < n; j++) {
             TXComplex res;
-            const TXComplex mult = s->exp[i*j];
+            स्थिर TXComplex mult = s->exp[i*j];
             CMUL3(res, src[j], mult);
             tmp.re += res.re;
             tmp.im += res.im;
@@ -917,7 +917,7 @@ static void TX_NAME(ff_tx_fft_naive_small)(AVTXContext *s, void *_dst, void *_sr
     }
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_naive_small_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_fft_naive_small_def) = {
     .name       = TX_NAME_STR("fft_naive_small"),
     .function   = TX_NAME(ff_tx_fft_naive_small),
     .type       = TX_TYPE(FFT),
@@ -931,7 +931,7 @@ static const FFTXCodelet TX_NAME(ff_tx_fft_naive_small_def) = {
     .prio       = FF_TX_PRIO_MIN/2,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_naive_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_fft_naive_def) = {
     .name       = TX_NAME_STR("fft_naive"),
     .function   = TX_NAME(ff_tx_fft_naive),
     .type       = TX_TYPE(FFT),
@@ -940,34 +940,34 @@ static const FFTXCodelet TX_NAME(ff_tx_fft_naive_def) = {
     .nb_factors = 1,
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
-    .init       = NULL,
+    .init       = शून्य,
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
     .prio       = FF_TX_PRIO_MIN,
 };
 
-static av_cold int TX_NAME(ff_tx_fft_pfa_init)(AVTXContext *s,
-                                               const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_fft_pfa_init)(AVTXContext *s,
+                                               स्थिर FFTXCodelet *cd,
                                                uint64_t flags,
                                                FFTXCodeletOptions *opts,
-                                               int len, int inv,
-                                               const void *scale)
+                                               पूर्णांक len, पूर्णांक inv,
+                                               स्थिर व्योम *scale)
 {
-    int ret, *tmp, ps = flags & FF_TX_PRESHUFFLE;
+    पूर्णांक ret, *tmp, ps = flags & FF_TX_PRESHUFFLE;
     FFTXCodeletOptions sub_opts = { .map_dir = FF_TX_MAP_GATHER };
-    size_t extra_tmp_len = 0;
-    int len_list[TX_MAX_DECOMPOSITIONS];
+    माप_प्रकार extra_tmp_len = 0;
+    पूर्णांक len_list[TX_MAX_DECOMPOSITIONS];
 
-    if ((ret = ff_tx_decompose_length(len_list, TX_TYPE(FFT), len, inv)) < 0)
-        return ret;
+    अगर ((ret = ff_tx_decompose_लंबाई(len_list, TX_TYPE(FFT), len, inv)) < 0)
+        वापस ret;
 
     /* Two iterations to test both orderings. */
-    for (int i = 0; i < ret; i++) {
-        int len1 = len_list[i];
-        int len2 = len / len1;
+    क्रम (पूर्णांक i = 0; i < ret; i++) {
+        पूर्णांक len1 = len_list[i];
+        पूर्णांक len2 = len / len1;
 
         /* Our ptwo transforms don't support striding the output. */
-        if (len2 & (len2 - 1))
-            FFSWAP(int, len1, len2);
+        अगर (len2 & (len2 - 1))
+            FFSWAP(पूर्णांक, len1, len2);
 
         ff_tx_clear_ctx(s);
 
@@ -979,16 +979,16 @@ static av_cold int TX_NAME(ff_tx_fft_pfa_init)(AVTXContext *s,
         ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                len1, inv, scale);
 
-        if (ret == AVERROR(ENOMEM)) {
-            return ret;
-        } else if (ret < 0) { /* Try again without a preshuffle flag */
+        अगर (ret == AVERROR(ENOMEM)) {
+            वापस ret;
+        } अन्यथा अगर (ret < 0) { /* Try again without a preshuffle flag */
             flags &= ~FF_TX_PRESHUFFLE;
             ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                    len1, inv, scale);
-            if (ret == AVERROR(ENOMEM))
-                return ret;
-            else if (ret < 0)
-                continue;
+            अगर (ret == AVERROR(ENOMEM))
+                वापस ret;
+            अन्यथा अगर (ret < 0)
+                जारी;
         }
 
         /* Second transform. */
@@ -1000,107 +1000,107 @@ retry:
         ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                len2, inv, scale);
 
-        if (ret == AVERROR(ENOMEM)) {
-            return ret;
-        } else if (ret < 0) { /* Try again with an out-of-place transform */
+        अगर (ret == AVERROR(ENOMEM)) {
+            वापस ret;
+        } अन्यथा अगर (ret < 0) { /* Try again with an out-of-place transform */
             flags |= FF_TX_OUT_OF_PLACE;
             flags &= ~AV_TX_INPLACE;
             ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                    len2, inv, scale);
-            if (ret == AVERROR(ENOMEM)) {
-                return ret;
-            } else if (ret < 0) {
-                if (flags & FF_TX_PRESHUFFLE) { /* Retry again without a preshuf flag */
+            अगर (ret == AVERROR(ENOMEM)) {
+                वापस ret;
+            } अन्यथा अगर (ret < 0) {
+                अगर (flags & FF_TX_PRESHUFFLE) { /* Retry again without a preshuf flag */
                     flags &= ~FF_TX_PRESHUFFLE;
-                    goto retry;
-                } else {
-                    continue;
+                    जाओ retry;
+                } अन्यथा {
+                    जारी;
                 }
             }
         }
 
         /* Success */
-        break;
+        अवरोध;
     }
 
     /* If nothing was successful, error out */
-    if (ret < 0)
-        return ret;
+    अगर (ret < 0)
+        वापस ret;
 
     /* Generate PFA map */
-    if ((ret = ff_tx_gen_compound_mapping(s, opts, 0,
+    अगर ((ret = ff_tx_gen_compound_mapping(s, opts, 0,
                                           s->sub[0].len, s->sub[1].len)))
-        return ret;
+        वापस ret;
 
-    if (!(s->tmp = av_malloc(len*sizeof(*s->tmp))))
-        return AVERROR(ENOMEM);
+    अगर (!(s->tmp = av_malloc(len*माप(*s->tmp))))
+        वापस AVERROR(ENOMEM);
 
     /* Flatten input map */
-    tmp = (int *)s->tmp;
-    for (int k = 0; k < len; k += s->sub[0].len) {
-        memcpy(tmp, &s->map[k], s->sub[0].len*sizeof(*tmp));
-        for (int i = 0; i < s->sub[0].len; i++)
+    tmp = (पूर्णांक *)s->tmp;
+    क्रम (पूर्णांक k = 0; k < len; k += s->sub[0].len) {
+        स_नकल(tmp, &s->map[k], s->sub[0].len*माप(*tmp));
+        क्रम (पूर्णांक i = 0; i < s->sub[0].len; i++)
             s->map[k + i] = tmp[s->sub[0].map[i]];
     }
 
     /* Only allocate extra temporary memory if we need it */
-    if (!(s->sub[1].flags & AV_TX_INPLACE))
+    अगर (!(s->sub[1].flags & AV_TX_INPLACE))
         extra_tmp_len = len;
-    else if (!ps)
+    अन्यथा अगर (!ps)
         extra_tmp_len = s->sub[0].len;
 
-    if (extra_tmp_len && !(s->exp = av_malloc(extra_tmp_len*sizeof(*s->exp))))
-        return AVERROR(ENOMEM);
+    अगर (extra_tmp_len && !(s->exp = av_malloc(extra_tmp_len*माप(*s->exp))))
+        वापस AVERROR(ENOMEM);
 
-    return 0;
+    वापस 0;
 }
 
-static void TX_NAME(ff_tx_fft_pfa)(AVTXContext *s, void *_out,
-                                   void *_in, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_fft_pfa)(AVTXContext *s, व्योम *_out,
+                                   व्योम *_in, सूचक_भेद_प्रकार stride)
 {
-    const int n = s->sub[0].len, m = s->sub[1].len, l = s->len;
-    const int *in_map = s->map, *out_map = in_map + l;
-    const int *sub_map = s->sub[1].map;
+    स्थिर पूर्णांक n = s->sub[0].len, m = s->sub[1].len, l = s->len;
+    स्थिर पूर्णांक *in_map = s->map, *out_map = in_map + l;
+    स्थिर पूर्णांक *sub_map = s->sub[1].map;
     TXComplex *tmp1 = s->sub[1].flags & AV_TX_INPLACE ? s->tmp : s->exp;
     TXComplex *in = _in, *out = _out;
 
-    stride /= sizeof(*out);
+    stride /= माप(*out);
 
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++)
+    क्रम (पूर्णांक i = 0; i < m; i++) {
+        क्रम (पूर्णांक j = 0; j < n; j++)
             s->exp[j] = in[in_map[i*n + j]];
-        s->fn[0](&s->sub[0], &s->tmp[sub_map[i]], s->exp, m*sizeof(TXComplex));
+        s->fn[0](&s->sub[0], &s->tmp[sub_map[i]], s->exp, m*माप(TXComplex));
     }
 
-    for (int i = 0; i < n; i++)
-        s->fn[1](&s->sub[1], &tmp1[m*i], &s->tmp[m*i], sizeof(TXComplex));
+    क्रम (पूर्णांक i = 0; i < n; i++)
+        s->fn[1](&s->sub[1], &tmp1[m*i], &s->tmp[m*i], माप(TXComplex));
 
-    for (int i = 0; i < l; i++)
+    क्रम (पूर्णांक i = 0; i < l; i++)
         out[i*stride] = tmp1[out_map[i]];
 }
 
-static void TX_NAME(ff_tx_fft_pfa_ns)(AVTXContext *s, void *_out,
-                                      void *_in, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_fft_pfa_ns)(AVTXContext *s, व्योम *_out,
+                                      व्योम *_in, सूचक_भेद_प्रकार stride)
 {
-    const int n = s->sub[0].len, m = s->sub[1].len, l = s->len;
-    const int *in_map = s->map, *out_map = in_map + l;
-    const int *sub_map = s->sub[1].map;
+    स्थिर पूर्णांक n = s->sub[0].len, m = s->sub[1].len, l = s->len;
+    स्थिर पूर्णांक *in_map = s->map, *out_map = in_map + l;
+    स्थिर पूर्णांक *sub_map = s->sub[1].map;
     TXComplex *tmp1 = s->sub[1].flags & AV_TX_INPLACE ? s->tmp : s->exp;
     TXComplex *in = _in, *out = _out;
 
-    stride /= sizeof(*out);
+    stride /= माप(*out);
 
-    for (int i = 0; i < m; i++)
-        s->fn[0](&s->sub[0], &s->tmp[sub_map[i]], &in[i*n], m*sizeof(TXComplex));
+    क्रम (पूर्णांक i = 0; i < m; i++)
+        s->fn[0](&s->sub[0], &s->tmp[sub_map[i]], &in[i*n], m*माप(TXComplex));
 
-    for (int i = 0; i < n; i++)
-        s->fn[1](&s->sub[1], &tmp1[m*i], &s->tmp[m*i], sizeof(TXComplex));
+    क्रम (पूर्णांक i = 0; i < n; i++)
+        s->fn[1](&s->sub[1], &tmp1[m*i], &s->tmp[m*i], माप(TXComplex));
 
-    for (int i = 0; i < l; i++)
+    क्रम (पूर्णांक i = 0; i < l; i++)
         out[i*stride] = tmp1[out_map[i]];
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_pfa_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_fft_pfa_def) = {
     .name       = TX_NAME_STR("fft_pfa"),
     .function   = TX_NAME(ff_tx_fft_pfa),
     .type       = TX_TYPE(FFT),
@@ -1114,7 +1114,7 @@ static const FFTXCodelet TX_NAME(ff_tx_fft_pfa_def) = {
     .prio       = FF_TX_PRIO_BASE,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_pfa_ns_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_fft_pfa_ns_def) = {
     .name       = TX_NAME_STR("fft_pfa_ns"),
     .function   = TX_NAME(ff_tx_fft_pfa_ns),
     .type       = TX_TYPE(FFT),
@@ -1129,70 +1129,70 @@ static const FFTXCodelet TX_NAME(ff_tx_fft_pfa_ns_def) = {
     .prio       = FF_TX_PRIO_BASE,
 };
 
-static av_cold int TX_NAME(ff_tx_mdct_naive_init)(AVTXContext *s,
-                                                  const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_mdct_naive_init)(AVTXContext *s,
+                                                  स्थिर FFTXCodelet *cd,
                                                   uint64_t flags,
                                                   FFTXCodeletOptions *opts,
-                                                  int len, int inv,
-                                                  const void *scale)
+                                                  पूर्णांक len, पूर्णांक inv,
+                                                  स्थिर व्योम *scale)
 {
     s->scale_d = *((SCALE_TYPE *)scale);
     s->scale_f = s->scale_d;
-    return 0;
+    वापस 0;
 }
 
-static void TX_NAME(ff_tx_mdct_naive_fwd)(AVTXContext *s, void *_dst,
-                                          void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_mdct_naive_fwd)(AVTXContext *s, व्योम *_dst,
+                                          व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXSample *src = _src;
     TXSample *dst = _dst;
-    double scale = s->scale_d;
-    int len = s->len;
-    const double phase = M_PI/(4.0*len);
+    द्विगुन scale = s->scale_d;
+    पूर्णांक len = s->len;
+    स्थिर द्विगुन phase = M_PI/(4.0*len);
 
-    stride /= sizeof(*dst);
+    stride /= माप(*dst);
 
-    for (int i = 0; i < len; i++) {
-        double sum = 0.0;
-        for (int j = 0; j < len*2; j++) {
-            int a = (2*j + 1 + len) * (2*i + 1);
-            sum += UNSCALE(src[j]) * cos(a * phase);
+    क्रम (पूर्णांक i = 0; i < len; i++) {
+        द्विगुन योग = 0.0;
+        क्रम (पूर्णांक j = 0; j < len*2; j++) {
+            पूर्णांक a = (2*j + 1 + len) * (2*i + 1);
+            योग += UNSCALE(src[j]) * cos(a * phase);
         }
-        dst[i*stride] = RESCALE(sum*scale);
+        dst[i*stride] = RESCALE(योग*scale);
     }
 }
 
-static void TX_NAME(ff_tx_mdct_naive_inv)(AVTXContext *s, void *_dst,
-                                          void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_mdct_naive_inv)(AVTXContext *s, व्योम *_dst,
+                                          व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXSample *src = _src;
     TXSample *dst = _dst;
-    double scale = s->scale_d;
-    int len = s->len >> 1;
-    int len2 = len*2;
-    const double phase = M_PI/(4.0*len2);
+    द्विगुन scale = s->scale_d;
+    पूर्णांक len = s->len >> 1;
+    पूर्णांक len2 = len*2;
+    स्थिर द्विगुन phase = M_PI/(4.0*len2);
 
-    stride /= sizeof(*src);
+    stride /= माप(*src);
 
-    for (int i = 0; i < len; i++) {
-        double sum_d = 0.0;
-        double sum_u = 0.0;
-        double i_d = phase * (4*len  - 2*i - 1);
-        double i_u = phase * (3*len2 + 2*i + 1);
-        for (int j = 0; j < len2; j++) {
-            double a = (2 * j + 1);
-            double a_d = cos(a * i_d);
-            double a_u = cos(a * i_u);
-            double val = UNSCALE(src[j*stride]);
-            sum_d += a_d * val;
-            sum_u += a_u * val;
+    क्रम (पूर्णांक i = 0; i < len; i++) {
+        द्विगुन योग_d = 0.0;
+        द्विगुन योग_u = 0.0;
+        द्विगुन i_d = phase * (4*len  - 2*i - 1);
+        द्विगुन i_u = phase * (3*len2 + 2*i + 1);
+        क्रम (पूर्णांक j = 0; j < len2; j++) {
+            द्विगुन a = (2 * j + 1);
+            द्विगुन a_d = cos(a * i_d);
+            द्विगुन a_u = cos(a * i_u);
+            द्विगुन val = UNSCALE(src[j*stride]);
+            योग_d += a_d * val;
+            योग_u += a_u * val;
         }
-        dst[i +   0] = RESCALE( sum_d*scale);
-        dst[i + len] = RESCALE(-sum_u*scale);
+        dst[i +   0] = RESCALE( योग_d*scale);
+        dst[i + len] = RESCALE(-योग_u*scale);
     }
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_mdct_naive_fwd_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_mdct_naive_fwd_def) = {
     .name       = TX_NAME_STR("mdct_naive_fwd"),
     .function   = TX_NAME(ff_tx_mdct_naive_fwd),
     .type       = TX_TYPE(MDCT),
@@ -1206,7 +1206,7 @@ static const FFTXCodelet TX_NAME(ff_tx_mdct_naive_fwd_def) = {
     .prio       = FF_TX_PRIO_MIN,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_mdct_naive_inv_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_mdct_naive_inv_def) = {
     .name       = TX_NAME_STR("mdct_naive_inv"),
     .function   = TX_NAME(ff_tx_mdct_naive_inv),
     .type       = TX_TYPE(MDCT),
@@ -1220,14 +1220,14 @@ static const FFTXCodelet TX_NAME(ff_tx_mdct_naive_inv_def) = {
     .prio       = FF_TX_PRIO_MIN,
 };
 
-static av_cold int TX_NAME(ff_tx_mdct_init)(AVTXContext *s,
-                                            const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_mdct_init)(AVTXContext *s,
+                                            स्थिर FFTXCodelet *cd,
                                             uint64_t flags,
                                             FFTXCodeletOptions *opts,
-                                            int len, int inv,
-                                            const void *scale)
+                                            पूर्णांक len, पूर्णांक inv,
+                                            स्थिर व्योम *scale)
 {
-    int ret;
+    पूर्णांक ret;
     FFTXCodeletOptions sub_opts = {
         .map_dir = !inv ? FF_TX_MAP_SCATTER : FF_TX_MAP_GATHER,
     };
@@ -1239,66 +1239,66 @@ static av_cold int TX_NAME(ff_tx_mdct_init)(AVTXContext *s,
     flags |=  AV_TX_INPLACE;      /* in-place */
     flags |=  FF_TX_PRESHUFFLE;   /* First try with an in-place transform */
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
+    अगर ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
                                 inv, scale))) {
         flags &= ~FF_TX_PRESHUFFLE; /* Now try with a generic FFT */
-        if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
+        अगर ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
                                     inv, scale)))
-            return ret;
+            वापस ret;
     }
 
-    s->map = av_malloc((len >> 1)*sizeof(*s->map));
-    if (!s->map)
-        return AVERROR(ENOMEM);
+    s->map = av_malloc((len >> 1)*माप(*s->map));
+    अगर (!s->map)
+        वापस AVERROR(ENOMEM);
 
     /* If we need to preshuffle copy the map from the subcontext */
-    if (s->sub[0].flags & FF_TX_PRESHUFFLE) {
-        memcpy(s->map, s->sub->map, (len >> 1)*sizeof(*s->map));
-    } else {
-        for (int i = 0; i < len >> 1; i++)
+    अगर (s->sub[0].flags & FF_TX_PRESHUFFLE) {
+        स_नकल(s->map, s->sub->map, (len >> 1)*माप(*s->map));
+    } अन्यथा {
+        क्रम (पूर्णांक i = 0; i < len >> 1; i++)
             s->map[i] = i;
     }
 
-    if ((ret = TX_TAB(ff_tx_mdct_gen_exp)(s, inv ? s->map : NULL)))
-        return ret;
+    अगर ((ret = TX_TAB(ff_tx_mdct_gen_exp)(s, inv ? s->map : शून्य)))
+        वापस ret;
 
     /* Saves a multiply in a hot path. */
-    if (inv)
-        for (int i = 0; i < (s->len >> 1); i++)
+    अगर (inv)
+        क्रम (पूर्णांक i = 0; i < (s->len >> 1); i++)
             s->map[i] <<= 1;
 
-    return 0;
+    वापस 0;
 }
 
-static void TX_NAME(ff_tx_mdct_fwd)(AVTXContext *s, void *_dst, void *_src,
-                                    ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_mdct_fwd)(AVTXContext *s, व्योम *_dst, व्योम *_src,
+                                    सूचक_भेद_प्रकार stride)
 {
     TXSample *src = _src, *dst = _dst;
     TXComplex *exp = s->exp, tmp, *z = _dst;
-    const int len2 = s->len >> 1;
-    const int len4 = s->len >> 2;
-    const int len3 = len2 * 3;
-    const int *sub_map = s->map;
+    स्थिर पूर्णांक len2 = s->len >> 1;
+    स्थिर पूर्णांक len4 = s->len >> 2;
+    स्थिर पूर्णांक len3 = len2 * 3;
+    स्थिर पूर्णांक *sub_map = s->map;
 
-    stride /= sizeof(*dst);
+    stride /= माप(*dst);
 
-    for (int i = 0; i < len2; i++) { /* Folding and pre-reindexing */
-        const int k = 2*i;
-        const int idx = sub_map[i];
-        if (k < len2) {
+    क्रम (पूर्णांक i = 0; i < len2; i++) { /* Folding and pre-reindexing */
+        स्थिर पूर्णांक k = 2*i;
+        स्थिर पूर्णांक idx = sub_map[i];
+        अगर (k < len2) {
             tmp.re = FOLD(-src[ len2 + k],  src[1*len2 - 1 - k]);
             tmp.im = FOLD(-src[ len3 + k], -src[1*len3 - 1 - k]);
-        } else {
+        } अन्यथा {
             tmp.re = FOLD(-src[ len2 + k], -src[5*len2 - 1 - k]);
             tmp.im = FOLD( src[-len2 + k], -src[1*len3 - 1 - k]);
         }
         CMUL(z[idx].im, z[idx].re, tmp.re, tmp.im, exp[i].re, exp[i].im);
     }
 
-    s->fn[0](&s->sub[0], z, z, sizeof(TXComplex));
+    s->fn[0](&s->sub[0], z, z, माप(TXComplex));
 
-    for (int i = 0; i < len4; i++) {
-        const int i0 = len4 + i, i1 = len4 - i - 1;
+    क्रम (पूर्णांक i = 0; i < len4; i++) {
+        स्थिर पूर्णांक i0 = len4 + i, i1 = len4 - i - 1;
         TXComplex src1 = { z[i1].re, z[i1].im };
         TXComplex src0 = { z[i0].re, z[i0].im };
 
@@ -1309,30 +1309,30 @@ static void TX_NAME(ff_tx_mdct_fwd)(AVTXContext *s, void *_dst, void *_src,
     }
 }
 
-static void TX_NAME(ff_tx_mdct_inv)(AVTXContext *s, void *_dst, void *_src,
-                                    ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_mdct_inv)(AVTXContext *s, व्योम *_dst, व्योम *_src,
+                                    सूचक_भेद_प्रकार stride)
 {
     TXComplex *z = _dst, *exp = s->exp;
-    const TXSample *src = _src, *in1, *in2;
-    const int len2 = s->len >> 1;
-    const int len4 = s->len >> 2;
-    const int *sub_map = s->map;
+    स्थिर TXSample *src = _src, *in1, *in2;
+    स्थिर पूर्णांक len2 = s->len >> 1;
+    स्थिर पूर्णांक len4 = s->len >> 2;
+    स्थिर पूर्णांक *sub_map = s->map;
 
-    stride /= sizeof(*src);
+    stride /= माप(*src);
     in1 = src;
     in2 = src + ((len2*2) - 1) * stride;
 
-    for (int i = 0; i < len2; i++) {
-        int k = sub_map[i];
+    क्रम (पूर्णांक i = 0; i < len2; i++) {
+        पूर्णांक k = sub_map[i];
         TXComplex tmp = { in2[-k*stride], in1[k*stride] };
         CMUL3(z[i], tmp, exp[i]);
     }
 
-    s->fn[0](&s->sub[0], z, z, sizeof(TXComplex));
+    s->fn[0](&s->sub[0], z, z, माप(TXComplex));
 
     exp += len2;
-    for (int i = 0; i < len4; i++) {
-        const int i0 = len4 + i, i1 = len4 - i - 1;
+    क्रम (पूर्णांक i = 0; i < len4; i++) {
+        स्थिर पूर्णांक i0 = len4 + i, i1 = len4 - i - 1;
         TXComplex src1 = { z[i1].im, z[i1].re };
         TXComplex src0 = { z[i0].im, z[i0].re };
 
@@ -1341,7 +1341,7 @@ static void TX_NAME(ff_tx_mdct_inv)(AVTXContext *s, void *_dst, void *_src,
     }
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_mdct_fwd_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_mdct_fwd_def) = {
     .name       = TX_NAME_STR("mdct_fwd"),
     .function   = TX_NAME(ff_tx_mdct_fwd),
     .type       = TX_TYPE(MDCT),
@@ -1355,7 +1355,7 @@ static const FFTXCodelet TX_NAME(ff_tx_mdct_fwd_def) = {
     .prio       = FF_TX_PRIO_BASE,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_mdct_inv_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_mdct_inv_def) = {
     .name       = TX_NAME_STR("mdct_inv"),
     .function   = TX_NAME(ff_tx_mdct_inv),
     .type       = TX_TYPE(MDCT),
@@ -1369,45 +1369,45 @@ static const FFTXCodelet TX_NAME(ff_tx_mdct_inv_def) = {
     .prio       = FF_TX_PRIO_BASE,
 };
 
-static av_cold int TX_NAME(ff_tx_mdct_inv_full_init)(AVTXContext *s,
-                                                     const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_mdct_inv_full_init)(AVTXContext *s,
+                                                     स्थिर FFTXCodelet *cd,
                                                      uint64_t flags,
                                                      FFTXCodeletOptions *opts,
-                                                     int len, int inv,
-                                                     const void *scale)
+                                                     पूर्णांक len, पूर्णांक inv,
+                                                     स्थिर व्योम *scale)
 {
-    int ret;
+    पूर्णांक ret;
 
     s->scale_d = *((SCALE_TYPE *)scale);
     s->scale_f = s->scale_d;
 
     flags &= ~AV_TX_FULL_IMDCT;
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(MDCT), flags, NULL, len, 1, scale)))
-        return ret;
+    अगर ((ret = ff_tx_init_subtx(s, TX_TYPE(MDCT), flags, शून्य, len, 1, scale)))
+        वापस ret;
 
-    return 0;
+    वापस 0;
 }
 
-static void TX_NAME(ff_tx_mdct_inv_full)(AVTXContext *s, void *_dst,
-                                         void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_mdct_inv_full)(AVTXContext *s, व्योम *_dst,
+                                         व्योम *_src, सूचक_भेद_प्रकार stride)
 {
-    int len  = s->len << 1;
-    int len2 = len >> 1;
-    int len4 = len >> 2;
+    पूर्णांक len  = s->len << 1;
+    पूर्णांक len2 = len >> 1;
+    पूर्णांक len4 = len >> 2;
     TXSample *dst = _dst;
 
     s->fn[0](&s->sub[0], dst + len4, _src, stride);
 
-    stride /= sizeof(*dst);
+    stride /= माप(*dst);
 
-    for (int i = 0; i < len4; i++) {
+    क्रम (पूर्णांक i = 0; i < len4; i++) {
         dst[            i*stride] = -dst[(len2 - i - 1)*stride];
         dst[(len - i - 1)*stride] =  dst[(len2 + i + 0)*stride];
     }
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_mdct_inv_full_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_mdct_inv_full_def) = {
     .name       = TX_NAME_STR("mdct_inv_full"),
     .function   = TX_NAME(ff_tx_mdct_inv_full),
     .type       = TX_TYPE(MDCT),
@@ -1422,14 +1422,14 @@ static const FFTXCodelet TX_NAME(ff_tx_mdct_inv_full_def) = {
     .prio       = FF_TX_PRIO_BASE,
 };
 
-static av_cold int TX_NAME(ff_tx_mdct_pfa_init)(AVTXContext *s,
-                                                const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_mdct_pfa_init)(AVTXContext *s,
+                                                स्थिर FFTXCodelet *cd,
                                                 uint64_t flags,
                                                 FFTXCodeletOptions *opts,
-                                                int len, int inv,
-                                                const void *scale)
+                                                पूर्णांक len, पूर्णांक inv,
+                                                स्थिर व्योम *scale)
 {
-    int ret, sub_len;
+    पूर्णांक ret, sub_len;
     FFTXCodeletOptions sub_opts = { .map_dir = FF_TX_MAP_SCATTER };
 
     len >>= 1;
@@ -1442,52 +1442,52 @@ static av_cold int TX_NAME(ff_tx_mdct_pfa_init)(AVTXContext *s,
     flags |=  AV_TX_INPLACE;      /* in-place */
     flags |=  FF_TX_PRESHUFFLE;   /* This function handles the permute step */
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
+    अगर ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                 sub_len, inv, scale)))
-        return ret;
+        वापस ret;
 
-    if ((ret = ff_tx_gen_compound_mapping(s, opts, s->inv, cd->factors[0], sub_len)))
-        return ret;
+    अगर ((ret = ff_tx_gen_compound_mapping(s, opts, s->inv, cd->factors[0], sub_len)))
+        वापस ret;
 
     /* Our 15-point transform is also a compound one, so embed its input map */
-    if (cd->factors[0] == 15)
-        TX_EMBED_INPUT_PFA_MAP(s->map, len, 3, 5);
+    अगर (cd->factors[0] == 15)
+        TX_EMBED_निवेश_PFA_MAP(s->map, len, 3, 5);
 
-    if ((ret = TX_TAB(ff_tx_mdct_gen_exp)(s, inv ? s->map : NULL)))
-        return ret;
+    अगर ((ret = TX_TAB(ff_tx_mdct_gen_exp)(s, inv ? s->map : शून्य)))
+        वापस ret;
 
     /* Saves multiplies in loops. */
-    for (int i = 0; i < len; i++)
+    क्रम (पूर्णांक i = 0; i < len; i++)
         s->map[i] <<= 1;
 
-    if (!(s->tmp = av_malloc(len*sizeof(*s->tmp))))
-        return AVERROR(ENOMEM);
+    अगर (!(s->tmp = av_malloc(len*माप(*s->tmp))))
+        वापस AVERROR(ENOMEM);
 
     TX_TAB(ff_tx_init_tabs)(len / sub_len);
 
-    return 0;
+    वापस 0;
 }
 
-#define DECL_COMP_IMDCT(N)                                                     \
-static void TX_NAME(ff_tx_mdct_pfa_##N##xM_inv)(AVTXContext *s, void *_dst,    \
-                                                void *_src, ptrdiff_t stride)  \
+#घोषणा DECL_COMP_IMDCT(N)                                                     \
+अटल व्योम TX_NAME(ff_tx_mdct_pfa_##N##xM_inv)(AVTXContext *s, व्योम *_dst,    \
+                                                व्योम *_src, सूचक_भेद_प्रकार stride)  \
 {                                                                              \
     TXComplex fft##N##in[N];                                                   \
     TXComplex *z = _dst, *exp = s->exp;                                        \
-    const TXSample *src = _src, *in1, *in2;                                    \
-    const int len4 = s->len >> 2;                                              \
-    const int len2 = s->len >> 1;                                              \
-    const int m = s->sub->len;                                                 \
-    const int *in_map = s->map, *out_map = in_map + N*m;                       \
-    const int *sub_map = s->sub->map;                                          \
+    स्थिर TXSample *src = _src, *in1, *in2;                                    \
+    स्थिर पूर्णांक len4 = s->len >> 2;                                              \
+    स्थिर पूर्णांक len2 = s->len >> 1;                                              \
+    स्थिर पूर्णांक m = s->sub->len;                                                 \
+    स्थिर पूर्णांक *in_map = s->map, *out_map = in_map + N*m;                       \
+    स्थिर पूर्णांक *sub_map = s->sub->map;                                          \
                                                                                \
-    stride /= sizeof(*src); /* To convert it from bytes */                     \
+    stride /= माप(*src); /* To convert it from bytes */                     \
     in1 = src;                                                                 \
     in2 = src + ((N*m*2) - 1) * stride;                                        \
                                                                                \
-    for (int i = 0; i < len2; i += N) {                                        \
-        for (int j = 0; j < N; j++) {                                          \
-            const int k = in_map[j];                                           \
+    क्रम (पूर्णांक i = 0; i < len2; i += N) {                                        \
+        क्रम (पूर्णांक j = 0; j < N; j++) {                                          \
+            स्थिर पूर्णांक k = in_map[j];                                           \
             TXComplex tmp = { in2[-k*stride], in1[k*stride] };                 \
             CMUL3(fft##N##in[j], tmp, exp[j]);                                 \
         }                                                                      \
@@ -1496,12 +1496,12 @@ static void TX_NAME(ff_tx_mdct_pfa_##N##xM_inv)(AVTXContext *s, void *_dst,    \
         in_map += N;                                                           \
     }                                                                          \
                                                                                \
-    for (int i = 0; i < N; i++)                                                \
-        s->fn[0](&s->sub[0], s->tmp + m*i, s->tmp + m*i, sizeof(TXComplex));   \
+    क्रम (पूर्णांक i = 0; i < N; i++)                                                \
+        s->fn[0](&s->sub[0], s->tmp + m*i, s->tmp + m*i, माप(TXComplex));   \
                                                                                \
-    for (int i = 0; i < len4; i++) {                                           \
-        const int i0 = len4 + i, i1 = len4 - i - 1;                            \
-        const int s0 = out_map[i0], s1 = out_map[i1];                          \
+    क्रम (पूर्णांक i = 0; i < len4; i++) {                                           \
+        स्थिर पूर्णांक i0 = len4 + i, i1 = len4 - i - 1;                            \
+        स्थिर पूर्णांक s0 = out_map[i0], s1 = out_map[i1];                          \
         TXComplex src1 = { s->tmp[s1].im, s->tmp[s1].re };                     \
         TXComplex src0 = { s->tmp[s0].im, s->tmp[s0].re };                     \
                                                                                \
@@ -1510,7 +1510,7 @@ static void TX_NAME(ff_tx_mdct_pfa_##N##xM_inv)(AVTXContext *s, void *_dst,    \
     }                                                                          \
 }                                                                              \
                                                                                \
-static const FFTXCodelet TX_NAME(ff_tx_mdct_pfa_##N##xM_inv_def) = {           \
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_mdct_pfa_##N##xM_inv_def) = {           \
     .name       = TX_NAME_STR("mdct_pfa_" #N "xM_inv"),                        \
     .function   = TX_NAME(ff_tx_mdct_pfa_##N##xM_inv),                         \
     .type       = TX_TYPE(MDCT),                                               \
@@ -1530,29 +1530,29 @@ DECL_COMP_IMDCT(7)
 DECL_COMP_IMDCT(9)
 DECL_COMP_IMDCT(15)
 
-#define DECL_COMP_MDCT(N)                                                      \
-static void TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd)(AVTXContext *s, void *_dst,    \
-                                                void *_src, ptrdiff_t stride)  \
+#घोषणा DECL_COMP_MDCT(N)                                                      \
+अटल व्योम TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd)(AVTXContext *s, व्योम *_dst,    \
+                                                व्योम *_src, सूचक_भेद_प्रकार stride)  \
 {                                                                              \
     TXComplex fft##N##in[N];                                                   \
     TXSample *src = _src, *dst = _dst;                                         \
     TXComplex *exp = s->exp, tmp;                                              \
-    const int m = s->sub->len;                                                 \
-    const int len4 = N*m;                                                      \
-    const int len3 = len4 * 3;                                                 \
-    const int len8 = s->len >> 2;                                              \
-    const int *in_map = s->map, *out_map = in_map + N*m;                       \
-    const int *sub_map = s->sub->map;                                          \
+    स्थिर पूर्णांक m = s->sub->len;                                                 \
+    स्थिर पूर्णांक len4 = N*m;                                                      \
+    स्थिर पूर्णांक len3 = len4 * 3;                                                 \
+    स्थिर पूर्णांक len8 = s->len >> 2;                                              \
+    स्थिर पूर्णांक *in_map = s->map, *out_map = in_map + N*m;                       \
+    स्थिर पूर्णांक *sub_map = s->sub->map;                                          \
                                                                                \
-    stride /= sizeof(*dst);                                                    \
+    stride /= माप(*dst);                                                    \
                                                                                \
-    for (int i = 0; i < m; i++) { /* Folding and pre-reindexing */             \
-        for (int j = 0; j < N; j++) {                                          \
-            const int k = in_map[i*N + j];                                     \
-            if (k < len4) {                                                    \
+    क्रम (पूर्णांक i = 0; i < m; i++) { /* Folding and pre-reindexing */             \
+        क्रम (पूर्णांक j = 0; j < N; j++) {                                          \
+            स्थिर पूर्णांक k = in_map[i*N + j];                                     \
+            अगर (k < len4) {                                                    \
                 tmp.re = FOLD(-src[ len4 + k],  src[1*len4 - 1 - k]);          \
                 tmp.im = FOLD(-src[ len3 + k], -src[1*len3 - 1 - k]);          \
-            } else {                                                           \
+            } अन्यथा {                                                           \
                 tmp.re = FOLD(-src[ len4 + k], -src[5*len4 - 1 - k]);          \
                 tmp.im = FOLD( src[-len4 + k], -src[1*len3 - 1 - k]);          \
             }                                                                  \
@@ -1562,12 +1562,12 @@ static void TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd)(AVTXContext *s, void *_dst,    \
         fft##N(s->tmp + sub_map[i], fft##N##in, m);                            \
     }                                                                          \
                                                                                \
-    for (int i = 0; i < N; i++)                                                \
-        s->fn[0](&s->sub[0], s->tmp + m*i, s->tmp + m*i, sizeof(TXComplex));   \
+    क्रम (पूर्णांक i = 0; i < N; i++)                                                \
+        s->fn[0](&s->sub[0], s->tmp + m*i, s->tmp + m*i, माप(TXComplex));   \
                                                                                \
-    for (int i = 0; i < len8; i++) {                                           \
-        const int i0 = len8 + i, i1 = len8 - i - 1;                            \
-        const int s0 = out_map[i0], s1 = out_map[i1];                          \
+    क्रम (पूर्णांक i = 0; i < len8; i++) {                                           \
+        स्थिर पूर्णांक i0 = len8 + i, i1 = len8 - i - 1;                            \
+        स्थिर पूर्णांक s0 = out_map[i0], s1 = out_map[i1];                          \
         TXComplex src1 = { s->tmp[s1].re, s->tmp[s1].im };                     \
         TXComplex src0 = { s->tmp[s0].re, s->tmp[s0].im };                     \
                                                                                \
@@ -1578,7 +1578,7 @@ static void TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd)(AVTXContext *s, void *_dst,    \
     }                                                                          \
 }                                                                              \
                                                                                \
-static const FFTXCodelet TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd_def) = {           \
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd_def) = {           \
     .name       = TX_NAME_STR("mdct_pfa_" #N "xM_fwd"),                        \
     .function   = TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd),                         \
     .type       = TX_TYPE(MDCT),                                               \
@@ -1598,29 +1598,29 @@ DECL_COMP_MDCT(7)
 DECL_COMP_MDCT(9)
 DECL_COMP_MDCT(15)
 
-static av_cold int TX_NAME(ff_tx_rdft_init)(AVTXContext *s,
-                                            const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_rdft_init)(AVTXContext *s,
+                                            स्थिर FFTXCodelet *cd,
                                             uint64_t flags,
                                             FFTXCodeletOptions *opts,
-                                            int len, int inv,
-                                            const void *scale)
+                                            पूर्णांक len, पूर्णांक inv,
+                                            स्थिर व्योम *scale)
 {
-    int ret;
-    double f, m;
+    पूर्णांक ret;
+    द्विगुन f, m;
     TXSample *tab;
     uint64_t r2r = flags & AV_TX_REAL_TO_REAL;
-    int len4 = FFALIGN(len, 4) / 4;
+    पूर्णांक len4 = FFALIGN(len, 4) / 4;
 
     s->scale_d = *((SCALE_TYPE *)scale);
     s->scale_f = s->scale_d;
 
     flags &= ~(AV_TX_REAL_TO_REAL | AV_TX_REAL_TO_IMAGINARY);
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, NULL, len >> 1, inv, scale)))
-        return ret;
+    अगर ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, शून्य, len >> 1, inv, scale)))
+        वापस ret;
 
-    if (!(s->exp = av_mallocz((8 + 2*len4)*sizeof(*s->exp))))
-        return AVERROR(ENOMEM);
+    अगर (!(s->exp = av_mallocz((8 + 2*len4)*माप(*s->exp))))
+        वापस AVERROR(ENOMEM);
 
     tab = (TXSample *)s->exp;
 
@@ -1634,78 +1634,78 @@ static av_cold int TX_NAME(ff_tx_rdft_init)(AVTXContext *s,
     *tab++ = RESCALE(-m);
 
     *tab++ = RESCALE( (0.5 - 0.0) * m);
-    if (r2r)
+    अगर (r2r)
         *tab++ = 1 / s->scale_f;
-    else
+    अन्यथा
         *tab++ = RESCALE( (0.0 - 0.5) * m);
     *tab++ = RESCALE( (0.5 - inv) * m);
     *tab++ = RESCALE(-(0.5 - inv) * m);
 
-    for (int i = 0; i < len4; i++)
+    क्रम (पूर्णांक i = 0; i < len4; i++)
         *tab++ = RESCALE(cos(i*f));
 
     tab = ((TXSample *)s->exp) + len4 + 8;
 
-    for (int i = 0; i < len4; i++)
+    क्रम (पूर्णांक i = 0; i < len4; i++)
         *tab++ = RESCALE(cos(((len - i*4)/4.0)*f)) * (inv ? 1 : -1);
 
-    return 0;
+    वापस 0;
 }
 
-#define DECL_RDFT(n, inv)                                                      \
-static void TX_NAME(ff_tx_rdft_ ##n)(AVTXContext *s, void *_dst,               \
-                                     void *_src, ptrdiff_t stride)             \
+#घोषणा DECL_RDFT(n, inv)                                                      \
+अटल व्योम TX_NAME(ff_tx_rdft_ ##n)(AVTXContext *s, व्योम *_dst,               \
+                                     व्योम *_src, सूचक_भेद_प्रकार stride)             \
 {                                                                              \
-    const int len2 = s->len >> 1;                                              \
-    const int len4 = s->len >> 2;                                              \
-    const TXSample *fact = (void *)s->exp;                                     \
-    const TXSample *tcos = fact + 8;                                           \
-    const TXSample *tsin = tcos + len4;                                        \
-    TXComplex *data = inv ? _src : _dst;                                       \
+    स्थिर पूर्णांक len2 = s->len >> 1;                                              \
+    स्थिर पूर्णांक len4 = s->len >> 2;                                              \
+    स्थिर TXSample *fact = (व्योम *)s->exp;                                     \
+    स्थिर TXSample *tcos = fact + 8;                                           \
+    स्थिर TXSample *tsin = tcos + len4;                                        \
+    TXComplex *तथ्य = inv ? _src : _dst;                                       \
     TXComplex t[3];                                                            \
                                                                                \
-    if (!inv)                                                                  \
-        s->fn[0](&s->sub[0], data, _src, sizeof(TXComplex));                   \
-    else                                                                       \
-        data[0].im = data[len2].re;                                            \
+    अगर (!inv)                                                                  \
+        s->fn[0](&s->sub[0], तथ्य, _src, माप(TXComplex));                   \
+    अन्यथा                                                                       \
+        तथ्य[0].im = तथ्य[len2].re;                                            \
                                                                                \
     /* The DC value's both components are real, but we need to change them     \
      * into complex values. Also, the middle of the array is special-cased.    \
      * These operations can be done before or after the loop. */               \
-    t[0].re = data[0].re;                                                      \
-    data[0].re = t[0].re + data[0].im;                                         \
-    data[0].im = t[0].re - data[0].im;                                         \
-    data[   0].re = MULT(fact[0], data[   0].re);                              \
-    data[   0].im = MULT(fact[1], data[   0].im);                              \
-    data[len4].re = MULT(fact[2], data[len4].re);                              \
-    data[len4].im = MULT(fact[3], data[len4].im);                              \
+    t[0].re = तथ्य[0].re;                                                      \
+    तथ्य[0].re = t[0].re + तथ्य[0].im;                                         \
+    तथ्य[0].im = t[0].re - तथ्य[0].im;                                         \
+    तथ्य[   0].re = MULT(fact[0], तथ्य[   0].re);                              \
+    तथ्य[   0].im = MULT(fact[1], तथ्य[   0].im);                              \
+    तथ्य[len4].re = MULT(fact[2], तथ्य[len4].re);                              \
+    तथ्य[len4].im = MULT(fact[3], तथ्य[len4].im);                              \
                                                                                \
-    for (int i = 1; i < len4; i++) {                                           \
+    क्रम (पूर्णांक i = 1; i < len4; i++) {                                           \
         /* Separate even and odd FFTs */                                       \
-        t[0].re = MULT(fact[4], (data[i].re + data[len2 - i].re));             \
-        t[0].im = MULT(fact[5], (data[i].im - data[len2 - i].im));             \
-        t[1].re = MULT(fact[6], (data[i].im + data[len2 - i].im));             \
-        t[1].im = MULT(fact[7], (data[i].re - data[len2 - i].re));             \
+        t[0].re = MULT(fact[4], (तथ्य[i].re + तथ्य[len2 - i].re));             \
+        t[0].im = MULT(fact[5], (तथ्य[i].im - तथ्य[len2 - i].im));             \
+        t[1].re = MULT(fact[6], (तथ्य[i].im + तथ्य[len2 - i].im));             \
+        t[1].im = MULT(fact[7], (तथ्य[i].re - तथ्य[len2 - i].re));             \
                                                                                \
         /* Apply twiddle factors to the odd FFT and add to the even FFT */     \
         CMUL(t[2].re, t[2].im, t[1].re, t[1].im, tcos[i], tsin[i]);            \
                                                                                \
-        data[       i].re = t[0].re + t[2].re;                                 \
-        data[       i].im = t[2].im - t[0].im;                                 \
-        data[len2 - i].re = t[0].re - t[2].re;                                 \
-        data[len2 - i].im = t[2].im + t[0].im;                                 \
+        तथ्य[       i].re = t[0].re + t[2].re;                                 \
+        तथ्य[       i].im = t[2].im - t[0].im;                                 \
+        तथ्य[len2 - i].re = t[0].re - t[2].re;                                 \
+        तथ्य[len2 - i].im = t[2].im + t[0].im;                                 \
     }                                                                          \
                                                                                \
-    if (inv) {                                                                 \
-        s->fn[0](&s->sub[0], _dst, data, sizeof(TXComplex));                   \
-    } else {                                                                   \
+    अगर (inv) {                                                                 \
+        s->fn[0](&s->sub[0], _dst, तथ्य, माप(TXComplex));                   \
+    } अन्यथा {                                                                   \
         /* Move [0].im to the last position, as convention requires */         \
-        data[len2].re = data[0].im;                                            \
-        data[   0].im = data[len2].im = 0;                                     \
+        तथ्य[len2].re = तथ्य[0].im;                                            \
+        तथ्य[   0].im = तथ्य[len2].im = 0;                                     \
     }                                                                          \
 }                                                                              \
                                                                                \
-static const FFTXCodelet TX_NAME(ff_tx_rdft_ ##n## _def) = {                   \
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_rdft_ ##n## _def) = {                   \
     .name       = TX_NAME_STR("rdft_" #n),                                     \
     .function   = TX_NAME(ff_tx_rdft_ ##n),                                    \
     .type       = TX_TYPE(RDFT),                                               \
@@ -1723,93 +1723,93 @@ static const FFTXCodelet TX_NAME(ff_tx_rdft_ ##n## _def) = {                   \
 DECL_RDFT(r2c,  0)
 DECL_RDFT(c2r,  1)
 
-#define DECL_RDFT_HALF(n, mode, mod2)                                          \
-static void TX_NAME(ff_tx_rdft_ ##n)(AVTXContext *s, void *_dst,               \
-                                        void *_src, ptrdiff_t stride)          \
+#घोषणा DECL_RDFT_HALF(n, mode, mod2)                                          \
+अटल व्योम TX_NAME(ff_tx_rdft_ ##n)(AVTXContext *s, व्योम *_dst,               \
+                                        व्योम *_src, सूचक_भेद_प्रकार stride)          \
 {                                                                              \
-    const int len = s->len;                                                    \
-    const int len2 = len >> 1;                                                 \
-    const int len4 = len >> 2;                                                 \
-    const int aligned_len4 = FFALIGN(len, 4)/4;                                \
-    const TXSample *fact = (void *)s->exp;                                     \
-    const TXSample *tcos = fact + 8;                                           \
-    const TXSample *tsin = tcos + aligned_len4;                                \
-    TXComplex *data = _dst;                                                    \
+    स्थिर पूर्णांक len = s->len;                                                    \
+    स्थिर पूर्णांक len2 = len >> 1;                                                 \
+    स्थिर पूर्णांक len4 = len >> 2;                                                 \
+    स्थिर पूर्णांक aligned_len4 = FFALIGN(len, 4)/4;                                \
+    स्थिर TXSample *fact = (व्योम *)s->exp;                                     \
+    स्थिर TXSample *tcos = fact + 8;                                           \
+    स्थिर TXSample *tsin = tcos + aligned_len4;                                \
+    TXComplex *तथ्य = _dst;                                                    \
     TXSample *out = _dst; /* Half-complex is forward-only */                   \
     TXSample tmp_dc;                                                           \
     av_unused TXSample tmp_mid;                                                \
     TXSample tmp[4];                                                           \
     TXComplex sf, sl;                                                          \
                                                                                \
-    s->fn[0](&s->sub[0], _dst, _src, sizeof(TXComplex));                       \
+    s->fn[0](&s->sub[0], _dst, _src, माप(TXComplex));                       \
                                                                                \
-    tmp_dc = data[0].re;                                                       \
-    data[   0].re = tmp_dc + data[0].im;                                       \
-    tmp_dc        = tmp_dc - data[0].im;                                       \
+    tmp_dc = तथ्य[0].re;                                                       \
+    तथ्य[   0].re = tmp_dc + तथ्य[0].im;                                       \
+    tmp_dc        = tmp_dc - तथ्य[0].im;                                       \
                                                                                \
-    data[   0].re = MULT(fact[0], data[   0].re);                              \
+    तथ्य[   0].re = MULT(fact[0], तथ्य[   0].re);                              \
     tmp_dc        = MULT(fact[1],        tmp_dc);                              \
-    data[len4].re = MULT(fact[2], data[len4].re);                              \
+    तथ्य[len4].re = MULT(fact[2], तथ्य[len4].re);                              \
                                                                                \
-    if (!mod2) {                                                               \
-        data[len4].im = MULT(fact[3], data[len4].im);                          \
-    } else {                                                                   \
-        sf = data[len4];                                                       \
-        sl = data[len4 + 1];                                                   \
-        if (mode == AV_TX_REAL_TO_REAL)                                        \
+    अगर (!mod2) {                                                               \
+        तथ्य[len4].im = MULT(fact[3], तथ्य[len4].im);                          \
+    } अन्यथा {                                                                   \
+        sf = तथ्य[len4];                                                       \
+        sl = तथ्य[len4 + 1];                                                   \
+        अगर (mode == AV_TX_REAL_TO_REAL)                                        \
             tmp[0] = MULT(fact[4], (sf.re + sl.re));                           \
-        else                                                                   \
+        अन्यथा                                                                   \
             tmp[0] = MULT(fact[5], (sf.im - sl.im));                           \
         tmp[1] = MULT(fact[6], (sf.im + sl.im));                               \
         tmp[2] = MULT(fact[7], (sf.re - sl.re));                               \
                                                                                \
-        if (mode == AV_TX_REAL_TO_REAL) {                                      \
+        अगर (mode == AV_TX_REAL_TO_REAL) {                                      \
             tmp[3]  = tmp[1]*tcos[len4] - tmp[2]*tsin[len4];                   \
             tmp_mid = (tmp[0] - tmp[3]);                                       \
-        } else {                                                               \
+        } अन्यथा {                                                               \
             tmp[3]  = tmp[1]*tsin[len4] + tmp[2]*tcos[len4];                   \
             tmp_mid = (tmp[0] + tmp[3]);                                       \
         }                                                                      \
     }                                                                          \
                                                                                \
     /* NOTE: unrolling this breaks non-mod8 lengths */                         \
-    for (int i = 1; i <= len4; i++) {                                          \
+    क्रम (पूर्णांक i = 1; i <= len4; i++) {                                          \
         TXSample tmp[4];                                                       \
-        TXComplex sf = data[i];                                                \
-        TXComplex sl = data[len2 - i];                                         \
+        TXComplex sf = तथ्य[i];                                                \
+        TXComplex sl = तथ्य[len2 - i];                                         \
                                                                                \
-        if (mode == AV_TX_REAL_TO_REAL)                                        \
+        अगर (mode == AV_TX_REAL_TO_REAL)                                        \
             tmp[0] = MULT(fact[4], (sf.re + sl.re));                           \
-        else                                                                   \
+        अन्यथा                                                                   \
             tmp[0] = MULT(fact[5], (sf.im - sl.im));                           \
                                                                                \
         tmp[1] = MULT(fact[6], (sf.im + sl.im));                               \
         tmp[2] = MULT(fact[7], (sf.re - sl.re));                               \
                                                                                \
-        if (mode == AV_TX_REAL_TO_REAL) {                                      \
+        अगर (mode == AV_TX_REAL_TO_REAL) {                                      \
             tmp[3]           = tmp[1]*tcos[i] - tmp[2]*tsin[i];                \
             out[i]           = (tmp[0] + tmp[3]);                              \
             out[len - i]     = (tmp[0] - tmp[3]);                              \
-        } else {                                                               \
+        } अन्यथा {                                                               \
             tmp[3]           = tmp[1]*tsin[i] + tmp[2]*tcos[i];                \
             out[i - 1]       = (tmp[3] - tmp[0]);                              \
             out[len - i - 1] = (tmp[0] + tmp[3]);                              \
         }                                                                      \
     }                                                                          \
                                                                                \
-    for (int i = 1; i < (len4 + (mode == AV_TX_REAL_TO_IMAGINARY)); i++)       \
+    क्रम (पूर्णांक i = 1; i < (len4 + (mode == AV_TX_REAL_TO_IMAGINARY)); i++)       \
         out[len2 - i] = out[len - i];                                          \
                                                                                \
-    if (mode == AV_TX_REAL_TO_REAL) {                                          \
+    अगर (mode == AV_TX_REAL_TO_REAL) {                                          \
         out[len2] = tmp_dc;                                                    \
-        if (mod2)                                                              \
+        अगर (mod2)                                                              \
             out[len4 + 1] = tmp_mid * fact[5];                                 \
-    } else if (mod2) {                                                         \
+    } अन्यथा अगर (mod2) {                                                         \
         out[len4] = tmp_mid;                                                   \
     }                                                                          \
 }                                                                              \
                                                                                \
-static const FFTXCodelet TX_NAME(ff_tx_rdft_ ##n## _def) = {                   \
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_rdft_ ##n## _def) = {                   \
     .name       = TX_NAME_STR("rdft_" #n),                                     \
     .function   = TX_NAME(ff_tx_rdft_ ##n),                                    \
     .type       = TX_TYPE(RDFT),                                               \
@@ -1829,70 +1829,70 @@ DECL_RDFT_HALF(r2r_mod2, AV_TX_REAL_TO_REAL,      1)
 DECL_RDFT_HALF(r2i,      AV_TX_REAL_TO_IMAGINARY, 0)
 DECL_RDFT_HALF(r2i_mod2, AV_TX_REAL_TO_IMAGINARY, 1)
 
-static av_cold int TX_NAME(ff_tx_dct_init)(AVTXContext *s,
-                                           const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_dct_init)(AVTXContext *s,
+                                           स्थिर FFTXCodelet *cd,
                                            uint64_t flags,
                                            FFTXCodeletOptions *opts,
-                                           int len, int inv,
-                                           const void *scale)
+                                           पूर्णांक len, पूर्णांक inv,
+                                           स्थिर व्योम *scale)
 {
-    int ret;
-    double freq;
+    पूर्णांक ret;
+    द्विगुन freq;
     TXSample *tab;
     SCALE_TYPE rsc = *((SCALE_TYPE *)scale);
 
-    if (inv) {
+    अगर (inv) {
         len *= 2;
         s->len *= 2;
         rsc *= 0.5;
     }
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(RDFT), flags, NULL, len, inv, &rsc)))
-        return ret;
+    अगर ((ret = ff_tx_init_subtx(s, TX_TYPE(RDFT), flags, शून्य, len, inv, &rsc)))
+        वापस ret;
 
-    s->exp = av_malloc((len/2)*3*sizeof(TXSample));
-    if (!s->exp)
-        return AVERROR(ENOMEM);
+    s->exp = av_malloc((len/2)*3*माप(TXSample));
+    अगर (!s->exp)
+        वापस AVERROR(ENOMEM);
 
     tab = (TXSample *)s->exp;
 
     freq = M_PI/(len*2);
 
-    for (int i = 0; i < len; i++)
+    क्रम (पूर्णांक i = 0; i < len; i++)
         tab[i] = RESCALE(cos(i*freq)*(!inv + 1));
 
-    if (inv) {
-        for (int i = 0; i < len/2; i++)
+    अगर (inv) {
+        क्रम (पूर्णांक i = 0; i < len/2; i++)
             tab[len + i] = RESCALE(0.5 / sin((2*i + 1)*freq));
-    } else {
-        for (int i = 0; i < len/2; i++)
+    } अन्यथा {
+        क्रम (पूर्णांक i = 0; i < len/2; i++)
             tab[len + i] = RESCALE(cos((len - 2*i - 1)*freq));
     }
 
-    return 0;
+    वापस 0;
 }
 
-static void TX_NAME(ff_tx_dctII)(AVTXContext *s, void *_dst,
-                                 void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_dctII)(AVTXContext *s, व्योम *_dst,
+                                 व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXSample *dst = _dst;
     TXSample *src = _src;
-    const int len = s->len;
-    const int len2 = len >> 1;
-    const TXSample *exp = (void *)s->exp;
-    TXSample next;
-#ifdef TX_INT32
+    स्थिर पूर्णांक len = s->len;
+    स्थिर पूर्णांक len2 = len >> 1;
+    स्थिर TXSample *exp = (व्योम *)s->exp;
+    TXSample अग्र;
+#अगर_घोषित TX_INT32
     int64_t tmp1, tmp2;
-#else
+#अन्यथा
     TXSample tmp1, tmp2;
-#endif
+#पूर्ण_अगर
 
-    for (int i = 0; i < len2; i++) {
+    क्रम (पूर्णांक i = 0; i < len2; i++) {
         TXSample in1 = src[i];
         TXSample in2 = src[len - i - 1];
         TXSample s    = exp[len + i];
 
-#ifdef TX_INT32
+#अगर_घोषित TX_INT32
         tmp1 = in1 + in2;
         tmp2 = in1 - in2;
 
@@ -1900,65 +1900,65 @@ static void TX_NAME(ff_tx_dctII)(AVTXContext *s, void *_dst,
         tmp2 *= s;
 
         tmp2 = (tmp2 + 0x40000000) >> 31;
-#else
+#अन्यथा
         tmp1 = (in1 + in2)*0.5;
         tmp2 = (in1 - in2)*s;
-#endif
+#पूर्ण_अगर
 
         src[i]           = tmp1 + tmp2;
         src[len - i - 1] = tmp1 - tmp2;
     }
 
-    s->fn[0](&s->sub[0], dst, src, sizeof(TXComplex));
+    s->fn[0](&s->sub[0], dst, src, माप(TXComplex));
 
-    next = dst[len];
+    अग्र = dst[len];
 
-    for (int i = len - 2; i > 0; i -= 2) {
+    क्रम (पूर्णांक i = len - 2; i > 0; i -= 2) {
         TXSample tmp;
 
         CMUL(tmp, dst[i], exp[len - i], exp[i], dst[i + 0], dst[i + 1]);
 
-        dst[i + 1] = next;
+        dst[i + 1] = अग्र;
 
-        next += tmp;
+        अग्र += tmp;
     }
 
-#ifdef TX_INT32
+#अगर_घोषित TX_INT32
     tmp1 = ((int64_t)exp[0]) * ((int64_t)dst[0]);
     dst[0] = (tmp1 + 0x40000000) >> 31;
-#else
+#अन्यथा
     dst[0] = exp[0] * dst[0];
-#endif
-    dst[1] = next;
+#पूर्ण_अगर
+    dst[1] = अग्र;
 }
 
-static void TX_NAME(ff_tx_dctIII)(AVTXContext *s, void *_dst,
-                                  void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_dctIII)(AVTXContext *s, व्योम *_dst,
+                                  व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXSample *dst = _dst;
     TXSample *src = _src;
-    const int len = s->len;
-    const int len2 = len >> 1;
-    const TXSample *exp = (void *)s->exp;
-#ifdef TX_INT32
+    स्थिर पूर्णांक len = s->len;
+    स्थिर पूर्णांक len2 = len >> 1;
+    स्थिर TXSample *exp = (व्योम *)s->exp;
+#अगर_घोषित TX_INT32
     int64_t  tmp1, tmp2 = src[len - 1];
     tmp2 = (2*tmp2 + 0x40000000) >> 31;
-#else
+#अन्यथा
     TXSample tmp1, tmp2 = 2*src[len - 1];
-#endif
+#पूर्ण_अगर
 
     src[len] = tmp2;
 
-    for (int i = len - 2; i >= 2; i -= 2) {
+    क्रम (पूर्णांक i = len - 2; i >= 2; i -= 2) {
         TXSample val1 = src[i - 0];
         TXSample val2 = src[i - 1] - src[i + 1];
 
         CMUL(src[i + 1], src[i], exp[len - i], exp[i], val1, val2);
     }
 
-    s->fn[0](&s->sub[0], dst, src, sizeof(float));
+    s->fn[0](&s->sub[0], dst, src, माप(भग्न));
 
-    for (int i = 0; i < len2; i++) {
+    क्रम (पूर्णांक i = 0; i < len2; i++) {
         TXSample in1 = dst[i];
         TXSample in2 = dst[len - i - 1];
         TXSample c   = exp[len + i];
@@ -1966,16 +1966,16 @@ static void TX_NAME(ff_tx_dctIII)(AVTXContext *s, void *_dst,
         tmp1 = in1 + in2;
         tmp2 = in1 - in2;
         tmp2 *= c;
-#ifdef TX_INT32
+#अगर_घोषित TX_INT32
         tmp2 = (tmp2 + 0x40000000) >> 31;
-#endif
+#पूर्ण_अगर
 
         dst[i]            = tmp1 + tmp2;
         dst[len - i - 1]  = tmp1 - tmp2;
     }
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_dctII_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_dctII_def) = {
     .name       = TX_NAME_STR("dctII"),
     .function   = TX_NAME(ff_tx_dctII),
     .type       = TX_TYPE(DCT),
@@ -1989,7 +1989,7 @@ static const FFTXCodelet TX_NAME(ff_tx_dctII_def) = {
     .prio       = FF_TX_PRIO_BASE,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_dctIII_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_dctIII_def) = {
     .name       = TX_NAME_STR("dctIII"),
     .function   = TX_NAME(ff_tx_dctIII),
     .type       = TX_TYPE(DCT),
@@ -2003,17 +2003,17 @@ static const FFTXCodelet TX_NAME(ff_tx_dctIII_def) = {
     .prio       = FF_TX_PRIO_BASE,
 };
 
-static av_cold int TX_NAME(ff_tx_dcstI_init)(AVTXContext *s,
-                                             const FFTXCodelet *cd,
+अटल av_cold पूर्णांक TX_NAME(ff_tx_dcstI_init)(AVTXContext *s,
+                                             स्थिर FFTXCodelet *cd,
                                              uint64_t flags,
                                              FFTXCodeletOptions *opts,
-                                             int len, int inv,
-                                             const void *scale)
+                                             पूर्णांक len, पूर्णांक inv,
+                                             स्थिर व्योम *scale)
 {
-    int ret;
+    पूर्णांक ret;
     SCALE_TYPE rsc = *((SCALE_TYPE *)scale);
 
-    if (inv) {
+    अगर (inv) {
         len *= 2;
         s->len *= 2;
         rsc *= 0.5;
@@ -2023,49 +2023,49 @@ static av_cold int TX_NAME(ff_tx_dcstI_init)(AVTXContext *s,
     flags |= cd->type == TX_TYPE(DCT_I) ? AV_TX_REAL_TO_REAL :
                                           AV_TX_REAL_TO_IMAGINARY;
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(RDFT), flags, NULL,
+    अगर ((ret = ff_tx_init_subtx(s, TX_TYPE(RDFT), flags, शून्य,
                                 (len - 1 + 2*(cd->type == TX_TYPE(DST_I)))*2,
                                 0, &rsc)))
-        return ret;
+        वापस ret;
 
-    s->tmp = av_mallocz((len + 1)*2*sizeof(TXSample));
-    if (!s->tmp)
-        return AVERROR(ENOMEM);
+    s->tmp = av_mallocz((len + 1)*2*माप(TXSample));
+    अगर (!s->tmp)
+        वापस AVERROR(ENOMEM);
 
-    return 0;
+    वापस 0;
 }
 
-static void TX_NAME(ff_tx_dctI)(AVTXContext *s, void *_dst,
-                                void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_dctI)(AVTXContext *s, व्योम *_dst,
+                                व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXSample *dst = _dst;
     TXSample *src = _src;
-    const int len = s->len - 1;
+    स्थिर पूर्णांक len = s->len - 1;
     TXSample *tmp = (TXSample *)s->tmp;
 
-    stride /= sizeof(TXSample);
+    stride /= माप(TXSample);
 
-    for (int i = 0; i < len; i++)
+    क्रम (पूर्णांक i = 0; i < len; i++)
         tmp[i] = tmp[2*len - i] = src[i * stride];
 
-    tmp[len] = src[len * stride]; /* Middle */
+    tmp[len] = src[len * stride]; /*मध्य*/
 
-    s->fn[0](&s->sub[0], dst, tmp, sizeof(TXSample));
+    s->fn[0](&s->sub[0], dst, tmp, माप(TXSample));
 }
 
-static void TX_NAME(ff_tx_dstI)(AVTXContext *s, void *_dst,
-                                void *_src, ptrdiff_t stride)
+अटल व्योम TX_NAME(ff_tx_dstI)(AVTXContext *s, व्योम *_dst,
+                                व्योम *_src, सूचक_भेद_प्रकार stride)
 {
     TXSample *dst = _dst;
     TXSample *src = _src;
-    const int len = s->len + 1;
-    TXSample *tmp = (void *)s->tmp;
+    स्थिर पूर्णांक len = s->len + 1;
+    TXSample *tmp = (व्योम *)s->tmp;
 
-    stride /= sizeof(TXSample);
+    stride /= माप(TXSample);
 
     tmp[0] = 0;
 
-    for (int i = 1; i < len; i++) {
+    क्रम (पूर्णांक i = 1; i < len; i++) {
         TXSample a = src[(i - 1) * stride];
         tmp[i] = -a;
         tmp[2*len - i] = a;
@@ -2073,10 +2073,10 @@ static void TX_NAME(ff_tx_dstI)(AVTXContext *s, void *_dst,
 
     tmp[len] = 0; /* i == n, Nyquist */
 
-    s->fn[0](&s->sub[0], dst, tmp, sizeof(float));
+    s->fn[0](&s->sub[0], dst, tmp, माप(भग्न));
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_dctI_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_dctI_def) = {
     .name       = TX_NAME_STR("dctI"),
     .function   = TX_NAME(ff_tx_dctI),
     .type       = TX_TYPE(DCT_I),
@@ -2090,7 +2090,7 @@ static const FFTXCodelet TX_NAME(ff_tx_dctI_def) = {
     .prio       = FF_TX_PRIO_BASE,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_dstI_def) = {
+अटल स्थिर FFTXCodelet TX_NAME(ff_tx_dstI_def) = {
     .name       = TX_NAME_STR("dstI"),
     .function   = TX_NAME(ff_tx_dstI),
     .type       = TX_TYPE(DST_I),
@@ -2104,36 +2104,36 @@ static const FFTXCodelet TX_NAME(ff_tx_dstI_def) = {
     .prio       = FF_TX_PRIO_BASE,
 };
 
-int TX_TAB(ff_tx_mdct_gen_exp)(AVTXContext *s, int *pre_tab)
+पूर्णांक TX_TAB(ff_tx_mdct_gen_exp)(AVTXContext *s, पूर्णांक *pre_tab)
 {
-    int off = 0;
-    int len4 = s->len >> 1;
-    double scale = s->scale_d;
-    const double theta = (scale < 0 ? len4 : 0) + 1.0/8.0;
-    size_t alloc = pre_tab ? 2*len4 : len4;
+    पूर्णांक off = 0;
+    पूर्णांक len4 = s->len >> 1;
+    द्विगुन scale = s->scale_d;
+    स्थिर द्विगुन theta = (scale < 0 ? len4 : 0) + 1.0/8.0;
+    माप_प्रकार alloc = pre_tab ? 2*len4 : len4;
 
-    if (!(s->exp = av_malloc_array(alloc, sizeof(*s->exp))))
-        return AVERROR(ENOMEM);
+    अगर (!(s->exp = av_malloc_array(alloc, माप(*s->exp))))
+        वापस AVERROR(ENOMEM);
 
-    scale = sqrt(fabs(scale));
+    scale = वर्ग_मूल(भ_असल(scale));
 
-    if (pre_tab)
+    अगर (pre_tab)
         off = len4;
 
-    for (int i = 0; i < len4; i++) {
-        const double alpha = M_PI_2 * (i + theta) / len4;
+    क्रम (पूर्णांक i = 0; i < len4; i++) {
+        स्थिर द्विगुन alpha = M_PI_2 * (i + theta) / len4;
         s->exp[off + i] = (TXComplex){ RESCALE(cos(alpha) * scale),
                                        RESCALE(sin(alpha) * scale) };
     }
 
-    if (pre_tab)
-        for (int i = 0; i < len4; i++)
+    अगर (pre_tab)
+        क्रम (पूर्णांक i = 0; i < len4; i++)
             s->exp[i] = s->exp[len4 + pre_tab[i]];
 
-    return 0;
+    वापस 0;
 }
 
-const FFTXCodelet * const TX_NAME(ff_tx_codelet_list)[] = {
+स्थिर FFTXCodelet * स्थिर TX_NAME(ff_tx_codelet_list)[] = {
     /* Split-Radix codelets */
     &TX_NAME(ff_tx_fft2_ns_def),
     &TX_NAME(ff_tx_fft4_ns_def),
@@ -2200,5 +2200,5 @@ const FFTXCodelet * const TX_NAME(ff_tx_codelet_list)[] = {
     &TX_NAME(ff_tx_dctI_def),
     &TX_NAME(ff_tx_dstI_def),
 
-    NULL,
+    शून्य,
 };

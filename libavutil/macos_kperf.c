@@ -16,77 +16,77 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "avassert.h"
-#include "macos_kperf.h"
-#include "thread.h"
+#समावेश "avassert.h"
+#समावेश "macos_kperf.h"
+#समावेश "thread.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <dlfcn.h>
+#समावेश <stdio.h>
+#समावेश <stdlib.h>
+#समावेश <dlfcn.h>
 
-#define KPERF_LIST                                             \
-    F(int, kpc_get_counting, void)                             \
-    F(int, kpc_force_all_ctrs_set, int)                        \
-    F(int, kpc_set_counting, uint32_t)                         \
-    F(int, kpc_set_thread_counting, uint32_t)                  \
-    F(int, kpc_set_config, uint32_t, void *)                   \
-    F(int, kpc_get_config, uint32_t, void *)                   \
-    F(int, kpc_set_period, uint32_t, void *)                   \
-    F(int, kpc_get_period, uint32_t, void *)                   \
-    F(uint32_t, kpc_get_counter_count, uint32_t)               \
-    F(uint32_t, kpc_get_config_count, uint32_t)                \
-    F(int, kperf_sample_get, int *)                            \
-    F(int, kpc_get_thread_counters, int, unsigned int, void *)
+#घोषणा KPERF_LIST                                             \
+    F(पूर्णांक, kpc_get_counting, व्योम)                             \
+    F(पूर्णांक, kpc_force_all_ctrs_set, पूर्णांक)                        \
+    F(पूर्णांक, kpc_set_counting, uint32_t)                         \
+    F(पूर्णांक, kpc_set_thread_counting, uint32_t)                  \
+    F(पूर्णांक, kpc_set_config, uint32_t, व्योम *)                   \
+    F(पूर्णांक, kpc_get_config, uint32_t, व्योम *)                   \
+    F(पूर्णांक, kpc_set_period, uint32_t, व्योम *)                   \
+    F(पूर्णांक, kpc_get_period, uint32_t, व्योम *)                   \
+    F(uint32_t, kpc_get_गणक_गिनती, uint32_t)               \
+    F(uint32_t, kpc_get_config_गिनती, uint32_t)                \
+    F(पूर्णांक, kperf_sample_get, पूर्णांक *)                            \
+    F(पूर्णांक, kpc_get_thread_counters, पूर्णांक, अचिन्हित पूर्णांक, व्योम *)
 
-#define F(ret, name, ...)                                      \
-    typedef ret name##proc(__VA_ARGS__);                       \
-    static name##proc *name = NULL;
+#घोषणा F(ret, name, ...)                                      \
+    प्रकार ret name##proc(__VA_ARGS__);                       \
+    अटल name##proc *name = शून्य;
 KPERF_LIST
-#undef F
+#अघोषित F
 
-#define CFGWORD_EL0A32EN_MASK (0x10000)
-#define CFGWORD_EL0A64EN_MASK (0x20000)
-#define CFGWORD_EL1EN_MASK    (0x40000)
-#define CFGWORD_EL3EN_MASK    (0x80000)
-#define CFGWORD_ALLMODES_MASK (0xf0000)
+#घोषणा CFGWORD_EL0A32EN_MASK (0x10000)
+#घोषणा CFGWORD_EL0A64EN_MASK (0x20000)
+#घोषणा CFGWORD_EL1EN_MASK    (0x40000)
+#घोषणा CFGWORD_EL3EN_MASK    (0x80000)
+#घोषणा CFGWORD_ALLMODES_MASK (0xf0000)
 
-#define CPMU_NONE 0
-#define CPMU_CORE_CYCLE 0x02
-#define CPMU_INST_A64 0x8c
-#define CPMU_INST_BRANCH 0x8d
-#define CPMU_SYNC_DC_LOAD_MISS 0xbf
-#define CPMU_SYNC_DC_STORE_MISS 0xc0
-#define CPMU_SYNC_DTLB_MISS 0xc1
-#define CPMU_SYNC_ST_HIT_YNGR_LD 0xc4
-#define CPMU_SYNC_BR_ANY_MISP 0xcb
-#define CPMU_FED_IC_MISS_DEM 0xd3
-#define CPMU_FED_ITLB_MISS 0xd4
+#घोषणा CPMU_NONE 0
+#घोषणा CPMU_CORE_CYCLE 0x02
+#घोषणा CPMU_INST_A64 0x8c
+#घोषणा CPMU_INST_BRANCH 0x8d
+#घोषणा CPMU_SYNC_DC_LOAD_MISS 0xbf
+#घोषणा CPMU_SYNC_DC_STORE_MISS 0xc0
+#घोषणा CPMU_SYNC_DTLB_MISS 0xc1
+#घोषणा CPMU_SYNC_ST_HIT_YNGR_LD 0xc4
+#घोषणा CPMU_SYNC_BR_ANY_MISP 0xcb
+#घोषणा CPMU_FED_IC_MISS_DEM 0xd3
+#घोषणा CPMU_FED_ITLB_MISS 0xd4
 
-#define KPC_CLASS_FIXED_MASK        (1 << 0)
-#define KPC_CLASS_CONFIGURABLE_MASK (1 << 1)
-#define KPC_CLASS_POWER_MASK        (1 << 2)
-#define KPC_CLASS_RAWPMU_MASK       (1 << 3)
+#घोषणा KPC_CLASS_FIXED_MASK        (1 << 0)
+#घोषणा KPC_CLASS_CONFIGURABLE_MASK (1 << 1)
+#घोषणा KPC_CLASS_POWER_MASK        (1 << 2)
+#घोषणा KPC_CLASS_RAWPMU_MASK       (1 << 3)
 
-#define KPC_MAX_COUNTERS 32
-#define CONFIG_COUNT 8
-#define KPC_MASK (KPC_CLASS_CONFIGURABLE_MASK | KPC_CLASS_FIXED_MASK)
+#घोषणा KPC_MAX_COUNTERS 32
+#घोषणा CONFIG_गिनती 8
+#घोषणा KPC_MASK (KPC_CLASS_CONFIGURABLE_MASK | KPC_CLASS_FIXED_MASK)
 
-static void kperf_init(void)
+अटल व्योम kperf_init(व्योम)
 {
-    uint64_t config[CONFIG_COUNT] = {0};
-    void *kperf = NULL;
+    uint64_t config[CONFIG_गिनती] = {0};
+    व्योम *kperf = शून्य;
     uint32_t n;
 
     av_assert0(kperf = dlopen("/System/Library/PrivateFrameworks/kperf.framework/Versions/A/kperf", RTLD_LAZY));
 
-#define F(ret, name, ...) av_assert0(name = (name##proc *)(dlsym(kperf, #name)));
+#घोषणा F(ret, name, ...) av_assert0(name = (name##proc *)(dlsym(kperf, #name)));
     KPERF_LIST
-#undef F
+#अघोषित F
 
-    n = kpc_get_counter_count(KPC_MASK);
+    n = kpc_get_गणक_गिनती(KPC_MASK);
     av_assert0(n <= KPC_MAX_COUNTERS);
-    n = kpc_get_config_count(KPC_MASK);
-    av_assert0(n <= CONFIG_COUNT);
+    n = kpc_get_config_गिनती(KPC_MASK);
+    av_assert0(n <= CONFIG_गिनती);
 
     config[0] = CPMU_CORE_CYCLE | CFGWORD_EL0A64EN_MASK;
     // config[3] = CPMU_INST_BRANCH | CFGWORD_EL0A64EN_MASK;
@@ -99,19 +99,19 @@ static void kperf_init(void)
     av_assert0(kpc_set_thread_counting(KPC_MASK) == 0);
 }
 
-void ff_kperf_init(void)
+व्योम ff_kperf_init(व्योम)
 {
-    static AVOnce init_static_once = AV_ONCE_INIT;
+    अटल AVOnce init_static_once = AV_ONCE_INIT;
     ff_thread_once(&init_static_once, kperf_init);
 }
 
-uint64_t ff_kperf_cycles(void)
+uint64_t ff_kperf_cycles(व्योम)
 {
     uint64_t counters[KPC_MAX_COUNTERS];
 
-    if (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
-        return -1;
+    अगर (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
+        वापस -1;
     }
 
-    return counters[0];
+    वापस counters[0];
 }

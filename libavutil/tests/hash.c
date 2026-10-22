@@ -18,48 +18,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <string.h>
+#समावेश <stdio.h>
+#समावेश <string.h>
 
-#include "libavutil/hash.h"
+#समावेश "libavutil/hash.h"
 
-#define SRC_BUF_SIZE 64
-#define DST_BUF_SIZE (AV_HASH_MAX_SIZE * 8)
+#घोषणा SRC_BUF_आकार 64
+#घोषणा DST_BUF_आकार (AV_HASH_MAX_आकार * 8)
 
-int main(void)
+पूर्णांक मुख्य(व्योम)
 {
-   struct AVHashContext *ctx = NULL;
-   int i, j, numhashes = 0;
-   static const uint8_t src[SRC_BUF_SIZE] = { 0 };
-   uint8_t dst[DST_BUF_SIZE];
+   काष्ठा AVHashContext *ctx = शून्य;
+   पूर्णांक i, j, numhashes = 0;
+   अटल स्थिर uint8_t src[SRC_BUF_आकार] = { 0 };
+   uint8_t dst[DST_BUF_आकार];
 
-   while (av_hash_names(numhashes))
+   जबतक (av_hash_names(numhashes))
        numhashes++;
 
-   for (i = 0; i < numhashes; i++) {
-       if (av_hash_alloc(&ctx, av_hash_names(i)) < 0)
-           return 1;
+   क्रम (i = 0; i < numhashes; i++) {
+       अगर (av_hash_alloc(&ctx, av_hash_names(i)) < 0)
+           वापस 1;
 
        av_hash_init(ctx);
-       av_hash_update(ctx, src, SRC_BUF_SIZE);
-       memset(dst, 0, DST_BUF_SIZE);
-       av_hash_final_hex(ctx, dst, DST_BUF_SIZE);
-       printf("%s hex: %s\n", av_hash_get_name(ctx), dst);
+       av_hash_update(ctx, src, SRC_BUF_आकार);
+       स_रखो(dst, 0, DST_BUF_आकार);
+       av_hash_final_hex(ctx, dst, DST_BUF_आकार);
+       म_लिखो("%s hex: %s\n", av_hash_get_name(ctx), dst);
 
        av_hash_init(ctx);
-       av_hash_update(ctx, src, SRC_BUF_SIZE);
-       av_hash_final_bin(ctx, dst, DST_BUF_SIZE);
-       printf("%s bin:", av_hash_get_name(ctx));
-       for (j = 0; j < av_hash_get_size(ctx); j++) {
-           printf(" %#x", dst[j]);
+       av_hash_update(ctx, src, SRC_BUF_आकार);
+       av_hash_final_bin(ctx, dst, DST_BUF_आकार);
+       म_लिखो("%s bin:", av_hash_get_name(ctx));
+       क्रम (j = 0; j < av_hash_get_आकार(ctx); j++) {
+           म_लिखो(" %#x", dst[j]);
        }
-       printf("\n");
+       म_लिखो("\n");
 
        av_hash_init(ctx);
-       av_hash_update(ctx, src, SRC_BUF_SIZE);
-       av_hash_final_b64(ctx, dst, DST_BUF_SIZE);
-       printf("%s b64: %s\n", av_hash_get_name(ctx), dst);
+       av_hash_update(ctx, src, SRC_BUF_आकार);
+       av_hash_final_b64(ctx, dst, DST_BUF_आकार);
+       म_लिखो("%s b64: %s\n", av_hash_get_name(ctx), dst);
        av_hash_freep(&ctx);
    }
-   return 0;
+   वापस 0;
 }

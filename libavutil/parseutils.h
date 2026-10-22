@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PARSEUTILS_H
-#define AVUTIL_PARSEUTILS_H
+#अगर_अघोषित AVUTIL_PARSEUTILS_H
+#घोषणा AVUTIL_PARSEUTILS_H
 
-#include <time.h>
+#समावेश <time.h>
 
-#include "rational.h"
+#समावेश "rational.h"
 
 /**
  * @file
@@ -46,11 +46,11 @@
  * @param[in] log_ctx parent logging context
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx);
+पूर्णांक av_parse_ratio(AVRational *q, स्थिर अक्षर *str, पूर्णांक max,
+                   पूर्णांक log_offset, व्योम *log_ctx);
 
-#define av_parse_ratio_quiet(rate, str, max) \
-    av_parse_ratio(rate, str, max, AV_LOG_MAX_OFFSET, NULL)
+#घोषणा av_parse_ratio_quiet(rate, str, max) \
+    av_parse_ratio(rate, str, max, AV_LOG_MAX_OFFSET, शून्य)
 
 /**
  * Parse str and put in width_ptr and height_ptr the detected values.
@@ -63,7 +63,7 @@ int av_parse_ratio(AVRational *q, const char *str, int max,
  * width x height or a valid video size abbreviation.
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
+पूर्णांक av_parse_video_आकार(पूर्णांक *width_ptr, पूर्णांक *height_ptr, स्थिर अक्षर *str);
 
 /**
  * Parse str and store the detected values in *rate.
@@ -74,7 +74,7 @@ int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
  * rate_num / rate_den, a float number or a valid video rate abbreviation
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_rate(AVRational *rate, const char *str);
+पूर्णांक av_parse_video_rate(AVRational *rate, स्थिर अक्षर *str);
 
 /**
  * Put the RGBA values that correspond to color_string in rgba_color.
@@ -99,8 +99,8 @@ int av_parse_video_rate(AVRational *rate, const char *str);
  * @return >= 0 in case of success, a negative value in case of
  * failure (for example if color_string cannot be parsed).
  */
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
-                   void *log_ctx);
+पूर्णांक av_parse_color(uint8_t *rgba_color, स्थिर अक्षर *color_string, पूर्णांक slen,
+                   व्योम *log_ctx);
 
 /**
  * Get the name of a color from the internal table of hard-coded named
@@ -113,7 +113,7 @@ int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
  * @param rgb      if not NULL, will point to a 3-elements array with the color value in RGB
  * @return the color name string or NULL if color_idx is not in the array
  */
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
+स्थिर अक्षर *av_get_known_color_name(पूर्णांक color_idx, स्थिर uint8_t **rgb);
 
 /**
  * Parse timestr and return in *time a corresponding number of
@@ -147,7 +147,7 @@ const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_parse_time(int64_t *timeval, const char *timestr, int duration);
+पूर्णांक av_parse_time(int64_t *timeval, स्थिर अक्षर *timestr, पूर्णांक duration);
 
 /**
  * Attempt to find a specific tag in a URL.
@@ -155,7 +155,7 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration);
  * syntax: '?tag1=val1&tag2=val2...'. Little URL decoding is done.
  * Return 1 if found.
  */
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info);
+पूर्णांक av_find_info_tag(अक्षर *arg, पूर्णांक arg_आकार, स्थिर अक्षर *tag1, स्थिर अक्षर *info);
 
 /**
  * Simplified version of strptime
@@ -187,11 +187,11 @@ int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info
  *         is consumed the return value points to the null byte at the end of
  *         the string. On failure NULL is returned.
  */
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt);
+अक्षर *av_small_strptime(स्थिर अक्षर *p, स्थिर अक्षर *fmt, काष्ठा पंचांग *dt);
 
 /**
  * Convert the decomposed UTC time in tm to a time_t value.
  */
-time_t av_timegm(struct tm *tm);
+समय_प्रकार av_timegm(काष्ठा पंचांग *पंचांग);
 
-#endif /* AVUTIL_PARSEUTILS_H */
+#पूर्ण_अगर /* AVUTIL_PARSEUTILS_H */

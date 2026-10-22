@@ -17,16 +17,16 @@
  */
 
 
-#ifndef AVUTIL_HWCONTEXT_CUDA_H
-#define AVUTIL_HWCONTEXT_CUDA_H
+#अगर_अघोषित AVUTIL_HWCONTEXT_CUDA_H
+#घोषणा AVUTIL_HWCONTEXT_CUDA_H
 
-#ifndef CUDA_VERSION
-#include <cuda.h>
-#endif
+#अगर_अघोषित CUDA_VERSION
+#समावेश <cuda.h>
+#पूर्ण_अगर
 
-#include <stdint.h>
+#समावेश <stdint.h>
 
-#include "pixfmt.h"
+#समावेश "pixfmt.h"
 
 /**
  * @file
@@ -36,12 +36,12 @@
  * AVBufferRefs whose data pointer is a CUdeviceptr.
  */
 
-typedef struct AVCUDADeviceContextInternal AVCUDADeviceContextInternal;
+प्रकार काष्ठा AVCUDADeviceContextInternal AVCUDADeviceContextInternal;
 
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVCUDADeviceContext {
+प्रकार काष्ठा AVCUDADeviceContext {
     CUcontext cuda_ctx;
     CUstream stream;
     AVCUDADeviceContextInternal *internal;
@@ -57,7 +57,7 @@ typedef struct AVCUDADeviceContext {
  * This has no use outside of custom allocation, and AVFrame AVBufferRef do not
  * necessarily point to an instance of this struct.
  */
-typedef struct AVCUDAArrayFrameDescriptor {
+प्रकार काष्ठा AVCUDAArrayFrameDescriptor {
     /**
      * The CUarray containing the frame data.
      *
@@ -70,13 +70,13 @@ typedef struct AVCUDAArrayFrameDescriptor {
      *
      * Normally stored in AVFrame.data[1] (cast from intptr_t).
      */
-    intptr_t index;
+    intptr_t सूचकांक;
 } AVCUDAArrayFrameDescriptor;
 
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVCUDAFramesContext {
+प्रकार काष्ठा AVCUDAFramesContext {
     /**
      * CUDA_ARRAY3D_DESCRIPTOR CUarrays will be initialized with.
      * Mostly used to provide external Flags.
@@ -95,7 +95,7 @@ typedef struct AVCUDAFramesContext {
      *
      * Only applicable for AV_PIX_FMT_CUARRAY.
      */
-    int cuarray_num_surfaces;
+    पूर्णांक cuarray_अंक_surfaces;
 
     /**
      * If cuarray_num_surfaces is >0, this contains the array of pre-allocated surfaces.
@@ -113,12 +113,12 @@ typedef struct AVCUDAFramesContext {
  * will be filtered to only those compatible with the specified
  * hw_format.
  */
-typedef struct AVCUDAHWConfig {
+प्रकार काष्ठा AVCUDAHWConfig {
     /**
      * The hardware pixel format to query constraints for.
      * Must be AV_PIX_FMT_CUDA or AV_PIX_FMT_CUARRAY.
      */
-    enum AVPixelFormat hw_format;
+    क्रमागत AVPixelFormat hw_format;
 } AVCUDAHWConfig;
 
 /**
@@ -132,15 +132,15 @@ typedef struct AVCUDAHWConfig {
 /**
  * Use primary device context instead of creating a new one.
  */
-#define AV_CUDA_USE_PRIMARY_CONTEXT (1 << 0)
+#घोषणा AV_CUDA_USE_PRIMARY_CONTEXT (1 << 0)
 
 /**
  * Use current device context instead of creating a new one.
  */
-#define AV_CUDA_USE_CURRENT_CONTEXT (1 << 1)
+#घोषणा AV_CUDA_USE_CURRENT_CONTEXT (1 << 1)
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_HWCONTEXT_CUDA_H */
+#पूर्ण_अगर /* AVUTIL_HWCONTEXT_CUDA_H */

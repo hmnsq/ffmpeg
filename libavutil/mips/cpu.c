@@ -16,29 +16,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "config.h"
-#if defined __linux__ || defined __ANDROID__
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/auxv.h>
-#include "asmdefs.h"
-#include "libavutil/avstring.h"
-#endif
+#समावेश "libavutil/cpu.h"
+#समावेश "libavutil/cpu_internal.h"
+#समावेश "config.h"
+#अगर defined __linux__ || defined __ANDROID__
+#समावेश <stdint.h>
+#समावेश <stdio.h>
+#समावेश <string.h>
+#समावेश <sys/auxv.h>
+#समावेश "asmdefs.h"
+#समावेश "libavutil/avstring.h"
+#पूर्ण_अगर
 
-#if defined __linux__ || defined __ANDROID__
+#अगर defined __linux__ || defined __ANDROID__
 
-#define HWCAP_LOONGSON_CPUCFG (1 << 14)
+#घोषणा HWCAP_LOONGSON_CPUCFG (1 << 14)
 
-static int cpucfg_available(void)
+अटल पूर्णांक cpucfg_available(व्योम)
 {
-    return ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
+    वापस ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
 }
 
 /* Most toolchains have no CPUCFG support yet */
-static uint32_t read_cpucfg(uint32_t reg)
+अटल uint32_t read_cpucfg(uint32_t reg)
 {
         uint32_t __res;
 
@@ -51,84 +51,84 @@ static uint32_t read_cpucfg(uint32_t reg)
                 :"r"(reg)
                 :
                 );
-        return __res;
+        वापस __res;
 }
 
-#define LOONGSON_CFG1 0x1
+#घोषणा LOONGSON_CFG1 0x1
 
-#define LOONGSON_CFG1_MMI    (1 << 4)
-#define LOONGSON_CFG1_MSA1   (1 << 5)
+#घोषणा LOONGSON_CFG1_MMI    (1 << 4)
+#घोषणा LOONGSON_CFG1_MSA1   (1 << 5)
 
-static int cpu_flags_cpucfg(void)
+अटल पूर्णांक cpu_flags_cpucfg(व्योम)
 {
-    int flags = 0;
+    पूर्णांक flags = 0;
     uint32_t cfg1 = read_cpucfg(LOONGSON_CFG1);
 
-    if (cfg1 & LOONGSON_CFG1_MMI)
+    अगर (cfg1 & LOONGSON_CFG1_MMI)
         flags |= AV_CPU_FLAG_MMI;
 
-    if (cfg1 & LOONGSON_CFG1_MSA1)
+    अगर (cfg1 & LOONGSON_CFG1_MSA1)
         flags |= AV_CPU_FLAG_MSA;
 
-    return flags;
+    वापस flags;
 }
 
-static int cpu_flags_cpuinfo(void)
+अटल पूर्णांक cpu_flags_cpuinfo(व्योम)
 {
-    FILE *f = fopen("/proc/cpuinfo", "r");
-    char buf[200];
-    int flags = 0;
+    खाता *f = ख_खोलो("/proc/cpuinfo", "r");
+    अक्षर buf[200];
+    पूर्णांक flags = 0;
 
-    if (!f)
-        return -1;
+    अगर (!f)
+        वापस -1;
 
-    while (fgets(buf, sizeof(buf), f)) {
+    जबतक (ख_माला_लो(buf, माप(buf), f)) {
         /* Legacy kernel may not export MMI in ASEs implemented */
-        if (av_strstart(buf, "cpu model", NULL)) {
-            if (strstr(buf, "Loongson-3 "))
+        अगर (av_strstart(buf, "cpu model", शून्य)) {
+            अगर (म_माला(buf, "Loongson-3 "))
                 flags |= AV_CPU_FLAG_MMI;
         }
 
-        if (av_strstart(buf, "ASEs implemented", NULL)) {
-            if (strstr(buf, " loongson-mmi"))
+        अगर (av_strstart(buf, "ASEs implemented", शून्य)) {
+            अगर (म_माला(buf, " loongson-mmi"))
                 flags |= AV_CPU_FLAG_MMI;
-            if (strstr(buf, " msa"))
+            अगर (म_माला(buf, " msa"))
                 flags |= AV_CPU_FLAG_MSA;
 
-            break;
+            अवरोध;
         }
     }
-    fclose(f);
-    return flags;
+    ख_बंद(f);
+    वापस flags;
 }
-#endif
+#पूर्ण_अगर
 
-int ff_get_cpu_flags_mips(void)
+पूर्णांक ff_get_cpu_flags_mips(व्योम)
 {
-#if defined __linux__ || defined __ANDROID__
-    if (cpucfg_available())
-        return cpu_flags_cpucfg();
-    else
-        return cpu_flags_cpuinfo();
-#else
+#अगर defined __linux__ || defined __ANDROID__
+    अगर (cpucfg_available())
+        वापस cpu_flags_cpucfg();
+    अन्यथा
+        वापस cpu_flags_cpuinfo();
+#अन्यथा
     /* Assume no SIMD ASE supported */
-    return 0;
-#endif
+    वापस 0;
+#पूर्ण_अगर
 }
 
-size_t ff_get_cpu_max_align_mips(void)
+माप_प्रकार ff_get_cpu_max_align_mips(व्योम)
 {
-    int flags = av_get_cpu_flags();
+    पूर्णांक flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_MSA)
-        return 16;
+    अगर (flags & AV_CPU_FLAG_MSA)
+        वापस 16;
 
     /*
      * MMI itself is 64-bit but quad word load & store
      * needs 128-bit align.
      */
-    if (flags & AV_CPU_FLAG_MMI)
-        return 16;
+    अगर (flags & AV_CPU_FLAG_MMI)
+        वापस 16;
 
-    return 8;
+    वापस 8;
 }

@@ -19,34 +19,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#समावेश <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "float_dsp_arm.h"
+#समावेश "libavutil/attributes.h"
+#समावेश "libavutil/float_dsp.h"
+#समावेश "float_dsp_arm.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1, int len);
+व्योम ff_vector_fmul_neon(भग्न *dst, स्थिर भग्न *src0, स्थिर भग्न *src1, पूर्णांक len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+व्योम ff_vector_fmac_scalar_neon(भग्न *dst, स्थिर भग्न *src, भग्न mul,
+                                पूर्णांक len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+व्योम ff_vector_fmul_scalar_neon(भग्न *dst, स्थिर भग्न *src, भग्न mul,
+                                पूर्णांक len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+व्योम ff_vector_fmul_window_neon(भग्न *dst, स्थिर भग्न *src0,
+                                स्थिर भग्न *src1, स्थिर भग्न *win, पूर्णांक len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+व्योम ff_vector_fmul_add_neon(भग्न *dst, स्थिर भग्न *src0, स्थिर भग्न *src1,
+                             स्थिर भग्न *src2, पूर्णांक len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+व्योम ff_vector_fmul_reverse_neon(भग्न *dst, स्थिर भग्न *src0,
+                                 स्थिर भग्न *src1, पूर्णांक len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+व्योम ff_butterflies_float_neon(भग्न *v1, भग्न *v2, पूर्णांक len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+भग्न ff_scalarproduct_float_neon(स्थिर भग्न *v1, स्थिर भग्न *v2, पूर्णांक len);
 
-av_cold void ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
+av_cold व्योम ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
 {
     fdsp->vector_fmul = ff_vector_fmul_neon;
     fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_neon;

@@ -16,10 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_VAAPI_H
-#define AVUTIL_HWCONTEXT_VAAPI_H
+#अगर_अघोषित AVUTIL_HWCONTEXT_VAAPI_H
+#घोषणा AVUTIL_HWCONTEXT_VAAPI_H
 
-#include <va/va.h>
+#समावेश <va/va.h>
 
 /**
  * @file
@@ -33,7 +33,7 @@
  * with the data pointer set to a VASurfaceID.
  */
 
-enum {
+क्रमागत {
     /**
      * The quirks field has been set by the user and should not be detected
      * automatically by av_hwdevice_ctx_init().
@@ -65,7 +65,7 @@ enum {
  *
  * Allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVVAAPIDeviceContext {
+प्रकार काष्ठा AVVAAPIDeviceContext {
     /**
      * The VADisplay handle, to be filled by the user.
      */
@@ -77,7 +77,7 @@ typedef struct AVVAAPIDeviceContext {
      * may need to refer to this field when performing any later
      * operations using VAAPI with the same VADisplay.
      */
-    unsigned int driver_quirks;
+    अचिन्हित पूर्णांक driver_quirks;
 } AVVAAPIDeviceContext;
 
 /**
@@ -85,13 +85,13 @@ typedef struct AVVAAPIDeviceContext {
  *
  * Allocated as AVHWFramesContext.hwctx.
  */
-typedef struct AVVAAPIFramesContext {
+प्रकार काष्ठा AVVAAPIFramesContext {
     /**
      * Set by the user to apply surface attributes to all surfaces in
      * the frame pool.  If null, default settings are used.
      */
     VASurfaceAttrib *attributes;
-    int           nb_attributes;
+    पूर्णांक           nb_attributes;
     /**
      * The surfaces IDs of all surfaces in the pool after creation.
      * Only valid if AVHWFramesContext.initial_pool_size was positive.
@@ -99,7 +99,7 @@ typedef struct AVVAAPIFramesContext {
      * vaCreateContext().
      */
     VASurfaceID     *surface_ids;
-    int           nb_surfaces;
+    पूर्णांक           nb_surfaces;
 } AVVAAPIFramesContext;
 
 /**
@@ -107,11 +107,11 @@ typedef struct AVVAAPIFramesContext {
  *
  * Allocated with av_hwdevice_hwconfig_alloc().
  */
-typedef struct AVVAAPIHWConfig {
+प्रकार काष्ठा AVVAAPIHWConfig {
     /**
      * ID of a VAAPI pipeline configuration.
      */
     VAConfigID config_id;
 } AVVAAPIHWConfig;
 
-#endif /* AVUTIL_HWCONTEXT_VAAPI_H */
+#पूर्ण_अगर /* AVUTIL_HWCONTEXT_VAAPI_H */

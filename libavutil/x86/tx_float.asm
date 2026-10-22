@@ -54,7 +54,7 @@ cextern tab_ %+ i %+ _float ; ff_tab_i_float...
 cextern tab_53_float
 
 struc AVTXContext
-    .len:          resd 1 ; Length
+    .len:          resd 1 ;लंबाई
     .inv           resd 1 ; Inverse flag
     .map:           ptr 1 ; Lookup table(s)
     .exp:           ptr 1 ; Exponentiation factors
@@ -70,7 +70,7 @@ endstruc
 SECTION_RODATA 32
 
 %define POS 0x00000000
-%define NEG 0x80000000
+%define नकार 0x80000000
 
 %define M_SQRT1_2 0.707106781186547524401
 %define COS16_1   0.92387950420379638671875
@@ -91,13 +91,13 @@ s16_perm:      dd 0, 1, 2, 3, 1, 0, 3, 2
 
 s15_perm:      dd 0, 6, 5, 3, 2, 4, 7, 1
 
-mask_mmppmmmm: dd NEG, NEG, POS, POS, NEG, NEG, NEG, NEG
-mask_mmmmpppm: dd NEG, NEG, NEG, NEG, POS, POS, POS, NEG
-mask_ppmpmmpm: dd POS, POS, NEG, POS, NEG, NEG, POS, NEG
-mask_mppmmpmp: dd NEG, POS, POS, NEG, NEG, POS, NEG, POS
-mask_mpmppmpm: dd NEG, POS, NEG, POS, POS, NEG, POS, NEG
-mask_pmmppmmp: dd POS, NEG, NEG, POS, POS, NEG, NEG, POS
-mask_pmpmpmpm: times 4 dd POS, NEG
+mask_mmppmmmm: dd नकार, नकार, POS, POS, नकार, नकार, नकार, नकार
+mask_mmmmpppm: dd नकार, नकार, नकार, नकार, POS, POS, POS, नकार
+mask_ppmpmmpm: dd POS, POS, नकार, POS, नकार, नकार, POS, नकार
+mask_mppmmpmp: dd नकार, POS, POS, नकार, नकार, POS, नकार, POS
+mask_mpmppmpm: dd नकार, POS, नकार, POS, POS, नकार, POS, नकार
+mask_pmmppmmp: dd POS, नकार, नकार, POS, POS, नकार, नकार, POS
+mask_pmpmpmpm: times 4 dd POS, नकार
 
 SECTION .text
 
@@ -822,7 +822,7 @@ cglobal fft2_float, 4, 4, 2, ctx, out, in, stride
     movaps m0, [inq]
     FFT2 m0, m1
     movaps [outq], m0
-    RET
+    वापस
 
 %macro FFT4_FN 3
 INIT_XMM sse2
@@ -851,7 +851,7 @@ cglobal fft4_ %+ %1 %+ _float, 4, 4, 3, ctx, out, in, stride
 %if %3
     ret
 %else
-    RET
+    वापस
 %endif
 %endmacro
 
@@ -892,13 +892,13 @@ cglobal fft8_float, 4, 4, 6, ctx, out, in, tmp
 %if %1
     ret
 %else
-    RET
+    वापस
 %endif
 
 %if %1
 cglobal fft8_ns_float, 4, 5, 6, ctx, out, in, stride, tmp
     call mangle(ff_tx_fft8_asm_float_sse3)
-    RET
+    वापस
 %endif
 %endmacro
 
@@ -932,13 +932,13 @@ cglobal fft8_float, 4, 4, 4, ctx, out, in, tmp
 %if %1
     ret
 %else
-    RET
+    वापस
 %endif
 
 %if %1
 cglobal fft8_ns_float, 4, 5, 4, ctx, out, in, stride, tmp
     call mangle(ff_tx_fft8_asm_float_avx)
-    RET
+    वापस
 %endif
 %endmacro
 
@@ -981,13 +981,13 @@ cglobal fft16_float, 4, 4, 8, ctx, out, in, tmp
 %if %2
     ret
 %else
-    RET
+    वापस
 %endif
 
 %if %2
 cglobal fft16_ns_float, 4, 5, 8, ctx, out, in, stride, tmp
     call mangle(ff_tx_fft16_asm_float_ %+ %1)
-    RET
+    वापस
 %endif
 %endmacro
 
@@ -1065,13 +1065,13 @@ cglobal fft32_float, 4, 4, 16, ctx, out, in, tmp
 %if %2
     ret
 %else
-    RET
+    वापस
 %endif
 
 %if %2
 cglobal fft32_ns_float, 4, 5, 16, ctx, out, in, stride, tmp
     call mangle(ff_tx_fft32_asm_float_ %+ %1)
-    RET
+    वापस
 %endif
 %endmacro
 
@@ -1083,9 +1083,9 @@ FFT32_FN fma3, 1
 %endif
 
 %macro FFT_SPLIT_RADIX_DEF 1-2
-ALIGN 16
+मिलाओ 16
 .%1 %+ pt:
-    PUSH lenq
+    दो lenq
     mov lenq, (%1/4)
 
     add outq, (%1*4) - (%1/1)
@@ -1094,7 +1094,7 @@ ALIGN 16
     add outq, (%1*2) - (%1/2) ; the synth loops also increment outq
     call .32pt
 
-    POP lenq
+    लो lenq
     sub outq, (%1*4) + (%1*2) + (%1/2)
 
     lea rtabq, [tab_ %+ %1 %+ _float]
@@ -1132,7 +1132,7 @@ cglobal fft_sr_float, 4, 10, 16, 272, ctx, out, in, stride, len, lut, itab, rtab
     mov tgtq, lenq
 
 ; Bottom-most/32-point transform ===============================================
-ALIGN 16
+मिलाओ 16
 .32pt:
 %if %2
     movaps m4, [inq + 4*mmsize]
@@ -1189,7 +1189,7 @@ ALIGN 16
     ret
 
 ; 64-point transform ===========================================================
-ALIGN 16
+मिलाओ 16
 .64pt:
 ; Helper defines, these make it easier to track what's happening
 %define tx1_e0 m4
@@ -1254,9 +1254,9 @@ ALIGN 16
     ret
 
 ; 128-point transform ==========================================================
-ALIGN 16
+मिलाओ 16
 .128pt:
-    PUSH lenq
+    दो lenq
     mov lenq, 32
 
     add outq, 16*mmsize
@@ -1265,7 +1265,7 @@ ALIGN 16
     add outq, 8*mmsize
     call .32pt
 
-    POP lenq
+    लो lenq
     sub outq, 24*mmsize
 
     lea rtabq, [tab_128_float]
@@ -1281,9 +1281,9 @@ ALIGN 16
     ret
 
 ; 256-point transform ==========================================================
-ALIGN 16
+मिलाओ 16
 .256pt:
-    PUSH lenq
+    दो lenq
     mov lenq, 64
 
     add outq, 32*mmsize
@@ -1292,7 +1292,7 @@ ALIGN 16
     add outq, 16*mmsize
     call .32pt
 
-    POP lenq
+    लो lenq
     sub outq, 48*mmsize
 
     lea rtabq, [tab_256_float]
@@ -1309,9 +1309,9 @@ ALIGN 16
     ret
 
 ; 512-point transform ==========================================================
-ALIGN 16
+मिलाओ 16
 .512pt:
-    PUSH lenq
+    दो lenq
     mov lenq, 128
 
     add outq, 64*mmsize
@@ -1320,7 +1320,7 @@ ALIGN 16
     add outq, 32*mmsize
     call .32pt
 
-    POP lenq
+    लो lenq
     sub outq, 96*mmsize
 
     lea rtabq, [tab_512_float]
@@ -1344,9 +1344,9 @@ ALIGN 16
     ret
 
 ; 1024-point transform ==========================================================
-ALIGN 16
+मिलाओ 16
 .1024pt:
-    PUSH lenq
+    दो lenq
     mov lenq, 256
 
     add outq, 96*mmsize
@@ -1355,7 +1355,7 @@ ALIGN 16
     add outq, 64*mmsize
     call .32pt
 
-    POP lenq
+    लो lenq
     sub outq, 192*mmsize
 
     lea rtabq, [tab_1024_float]
@@ -1392,7 +1392,7 @@ FFT_SPLIT_RADIX_DEF 131072
 ;===============================================================================
 .deinterleave:
 %if %2
-    PUSH strideq
+    दो strideq
 %endif
     mov tgtq, lenq
     imul tmpq, lenq, 2
@@ -1407,13 +1407,13 @@ FFT_SPLIT_RADIX_DEF 131072
     jg .synth_deinterleave
 
 %if %2
-    POP strideq
+    लो strideq
     sub outq, tmpq
     neg tmpq
     lea inq, [inq + tmpq*4]
     ret
 %else
-    RET
+    वापस
 %endif
 
 ; 64-point deinterleave which only has to load 4 registers =====================
@@ -1495,7 +1495,7 @@ FFT_SPLIT_RADIX_DEF 131072
     sub inq, 16*mmsize
     ret
 %else
-    RET
+    वापस
 %endif
 
 %if %2
@@ -1504,7 +1504,7 @@ cglobal fft_sr_ns_float, 4, 10, 16, 272, ctx, out, in, tmp, len, lut, itab, rtab
     mov lutq, [ctxq + AVTXContext.map]
 
     call mangle(ff_tx_fft_sr_asm_float_ %+ %1)
-    RET
+    वापस
 %endif
 %endmacro
 
@@ -1572,7 +1572,7 @@ cglobal fft15_ %+ %2, 4, 10, 16, ctx, out, in, stride, len, lut, tmp, tgt5, stri
     movlps [tmpq  + stride3q*1], xm4
     movhps [tmpq  + strideq*4],  xm5
 
-    RET
+    वापस
 %endmacro
 
 %if ARCH_X86_64
@@ -1723,8 +1723,8 @@ cglobal mdct_inv_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, exp, t1,
     mov expq, [ctxq + AVTXContext.exp]
     lea expq, [expq + lenq*4]
 
-    xor t1q, t1q                     ; low
-    lea t2q, [lenq*4 - mmsize]       ; high
+    xor t1q, t1q                     ;निचला
+    lea t2q, [lenq*4 - mmsize]       ;ऊपरी
 
 .post:
     movaps m2, [expq + t2q]          ; tab h
@@ -1760,7 +1760,7 @@ cglobal mdct_inv_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, exp, t1,
     sub lenq, mmsize/2
     jg .post
 
-    RET
+    वापस
 %endmacro
 
 %if ARCH_X86_64
@@ -1778,14 +1778,14 @@ cglobal fft_pfa_15xM_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, buf,
 %endif
 
 %if %2
-    PUSH inq
-    PUSH tgt5q
-    PUSH stride3q
-    PUSH stride5q
-    PUSH btmpq
+    दो inq
+    दो tgt5q
+    दो stride3q
+    दो stride5q
+    दो btmpq
 %endif
 
-    PUSH strideq
+    दो strideq
 
     mov btmpq, outq
 
@@ -1891,7 +1891,7 @@ cglobal fft_pfa_15xM_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, buf,
     lea stride3q, [lutq + lenq*4]                   ; second part of the LUT
     mov stride5q, lenq
     mov tgt5q, btmpq
-    POP strideq
+    लो strideq
     lea tmpq, [strideq + 2*strideq]
 
 .post:
@@ -1909,14 +1909,14 @@ cglobal fft_pfa_15xM_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, buf,
 
 %if %2
     mov outq, btmpq
-    POP btmpq
-    POP stride5q
-    POP stride3q
-    POP tgt5q
-    POP inq
+    लो btmpq
+    लो stride5q
+    लो stride3q
+    लो tgt5q
+    लो inq
     ret
 %else
-    RET
+    वापस
 %endif
 
 %if %2
@@ -1926,7 +1926,7 @@ cglobal fft_pfa_15xM_ns_float, 4, 14, 16, 320, ctx, out, in, stride, len, lut, b
     mov lutq, [ctxq + AVTXContext.map]
 
     call mangle(ff_tx_fft_pfa_15xM_asm_float)
-    RET
+    वापस
 %endif
 %endmacro
 

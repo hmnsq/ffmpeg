@@ -18,63 +18,63 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_CPU_H
-#define AVUTIL_RISCV_CPU_H
+#अगर_अघोषित AVUTIL_RISCV_CPU_H
+#घोषणा AVUTIL_RISCV_CPU_H
 
-#include "config.h"
-#include <stdbool.h>
-#include <stddef.h>
-#include "libavutil/attributes_internal.h"
-#include "libavutil/cpu.h"
+#समावेश "config.h"
+#समावेश <stdbool.h>
+#समावेश <stddef.h>
+#समावेश "libavutil/attributes_internal.h"
+#समावेश "libavutil/cpu.h"
 
-#ifndef __riscv_zbb
-extern attribute_visibility_hidden bool ff_rv_zbb_supported;
-#endif
+#अगर_अघोषित __riscv_zbb
+बाह्य attribute_visibility_hidden bool ff_rv_zbb_supported;
+#पूर्ण_अगर
 
-static inline av_const bool ff_rv_zbb_support(void)
+अटल अंतरभूत av_const bool ff_rv_zbb_support(व्योम)
 {
-#ifndef __riscv_zbb
-    return ff_rv_zbb_supported;
-#else
-    return true;
-#endif
+#अगर_अघोषित __riscv_zbb
+    वापस ff_rv_zbb_supported;
+#अन्यथा
+    वापस true;
+#पूर्ण_अगर
 }
 
-#if HAVE_RVV
+#अगर HAVE_RVV
 /**
  * Returns the vector size in bytes (always a power of two and at least 4).
  * This is undefined behaviour if vectors are not implemented.
  */
-static inline av_const size_t ff_get_rv_vlenb(void)
+अटल अंतरभूत av_const माप_प्रकार ff_get_rv_vlenb(व्योम)
 {
-    size_t vlenb;
+    माप_प्रकार vlenb;
 
     __asm__ (
         ".option push\n"
         ".option arch, +v\n"
         "    csrr %0, vlenb\n"
         ".option pop\n" : "=r" (vlenb));
-    return vlenb;
+    वापस vlenb;
 }
 
 /**
  * Checks that the vector bit-size is at least the given value.
  * This is potentially undefined behaviour if vectors are not implemented.
  */
-static inline av_const bool ff_rv_vlen_least(unsigned int bits)
+अटल अंतरभूत av_const bool ff_rv_vlen_least(अचिन्हित पूर्णांक bits)
 {
-#ifdef __riscv_v_min_vlen
-    if (bits <= __riscv_v_min_vlen)
-        return true;
-#else
+#अगर_घोषित __riscv_v_min_vlen
+    अगर (bits <= __riscv_v_min_vlen)
+        वापस true;
+#अन्यथा
     /*
      * Vector lengths smaller than 128 bits are only possible in embedded cases
      * and cannot be run-time detected, so we can assume 128 bits at least.
      */
-    if (bits <= 128)
-        return true;
-#endif
-    return bits <= (8 * ff_get_rv_vlenb());
+    अगर (bits <= 128)
+        वापस true;
+#पूर्ण_अगर
+    वापस bits <= (8 * ff_get_rv_vlenb());
 }
-#endif
-#endif /* HAVE_RVV */
+#पूर्ण_अगर
+#पूर्ण_अगर /* HAVE_RVV */

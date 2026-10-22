@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#समावेश <limits.h>
+#समावेश <stdio.h>
 
-#include "libavutil/internal.h"
-#include "libavutil/lfg.h"
-#include "libavutil/lls.h"
-#include "libavutil/mem_internal.h"
+#समावेश "libavutil/internal.h"
+#समावेश "libavutil/lfg.h"
+#समावेश "libavutil/lls.h"
+#समावेश "libavutil/mem_internal.h"
 
 /* Values below the printed precision are rounding noise whose sign varies
  * between platforms, so print them as zero. */
-static double clean(double v)
+अटल द्विगुन clean(द्विगुन v)
 {
-    return fabs(v) < 1e-9 ? 0.0 : v;
+    वापस भ_असल(v) < 1e-9 ? 0.0 : v;
 }
 
-int main(void)
+पूर्णांक मुख्य(व्योम)
 {
     LLSModel m;
-    int i, order;
+    पूर्णांक i, order;
     AVLFG lfg;
 
     av_lfg_init(&lfg, 1);
     avpriv_init_lls(&m, 3);
 
-    for (i = 0; i < 100; i++) {
-        LOCAL_ALIGNED(32, double, var, [4]);
-        double eval;
+    क्रम (i = 0; i < 100; i++) {
+        LOCAL_ALIGNED(32, द्विगुन, var, [4]);
+        द्विगुन eval;
 
-        var[0] =         (av_lfg_get(&lfg) / (double) UINT_MAX - 0.5) * 2;
-        var[1] = var[0] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[2] = var[1] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[3] = var[2] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
+        var[0] =         (av_lfg_get(&lfg) / (द्विगुन) अच_पूर्णांक_उच्च - 0.5) * 2;
+        var[1] = var[0] + av_lfg_get(&lfg) / (द्विगुन) अच_पूर्णांक_उच्च - 0.5;
+        var[2] = var[1] + av_lfg_get(&lfg) / (द्विगुन) अच_पूर्णांक_उच्च - 0.5;
+        var[3] = var[2] + av_lfg_get(&lfg) / (द्विगुन) अच_पूर्णांक_उच्च - 0.5;
         m.update_lls(&m, var);
         avpriv_solve_lls(&m, 0.001, 0);
-        for (order = 0; order < 3; order++) {
+        क्रम (order = 0; order < 3; order++) {
             eval = m.evaluate_lls(&m, var + 1, order);
-            printf("real:%9f order:%d pred:%9f var:%f coeffs:%f %9f %9f\n",
+            म_लिखो("real:%9f order:%d pred:%9f var:%f coeffs:%f %9f %9f\n",
                    var[0], order, eval,
-                   sqrt(FFMAX(m.variance[order], 0) / (i + 1)),
+                   वर्ग_मूल(FFMAX(m.variance[order], 0) / (i + 1)),
                    clean(m.coeff[order][0]), clean(m.coeff[order][1]),
                    clean(m.coeff[order][2]));
         }
     }
-    return 0;
+    वापस 0;
 }

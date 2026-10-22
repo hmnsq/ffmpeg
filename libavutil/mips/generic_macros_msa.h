@@ -18,53 +18,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MIPS_GENERIC_MACROS_MSA_H
-#define AVUTIL_MIPS_GENERIC_MACROS_MSA_H
+#अगर_अघोषित AVUTIL_MIPS_GENERIC_MACROS_MSA_H
+#घोषणा AVUTIL_MIPS_GENERIC_MACROS_MSA_H
 
-#include <stdint.h>
-#include <msa.h>
-#include <config.h>
+#समावेश <stdint.h>
+#समावेश <msa.h>
+#समावेश <config.h>
 
-#define ALIGNMENT           16
-#define ALLOC_ALIGNED(align) __attribute__ ((aligned((align) << 1)))
+#घोषणा ALIGNMENT           16
+#घोषणा ALLOC_ALIGNED(align) __attribute__ ((aligned((align) << 1)))
 
-#define LD_V(RTYPE, psrc) *((RTYPE *)(psrc))
-#define LD_UB(...) LD_V(v16u8, __VA_ARGS__)
-#define LD_SB(...) LD_V(v16i8, __VA_ARGS__)
-#define LD_UH(...) LD_V(v8u16, __VA_ARGS__)
-#define LD_SH(...) LD_V(v8i16, __VA_ARGS__)
-#define LD_UW(...) LD_V(v4u32, __VA_ARGS__)
-#define LD_SW(...) LD_V(v4i32, __VA_ARGS__)
+#घोषणा LD_V(RTYPE, psrc) *((RTYPE *)(psrc))
+#घोषणा LD_UB(...) LD_V(v16u8, __VA_ARGS__)
+#घोषणा LD_SB(...) LD_V(v16i8, __VA_ARGS__)
+#घोषणा LD_UH(...) LD_V(v8u16, __VA_ARGS__)
+#घोषणा LD_SH(...) LD_V(v8i16, __VA_ARGS__)
+#घोषणा LD_UW(...) LD_V(v4u32, __VA_ARGS__)
+#घोषणा LD_SW(...) LD_V(v4i32, __VA_ARGS__)
 
-#define ST_V(RTYPE, in, pdst) *((RTYPE *)(pdst)) = (in)
-#define ST_UB(...) ST_V(v16u8, __VA_ARGS__)
-#define ST_SB(...) ST_V(v16i8, __VA_ARGS__)
-#define ST_UH(...) ST_V(v8u16, __VA_ARGS__)
-#define ST_SH(...) ST_V(v8i16, __VA_ARGS__)
-#define ST_UW(...) ST_V(v4u32, __VA_ARGS__)
-#define ST_SW(...) ST_V(v4i32, __VA_ARGS__)
+#घोषणा ST_V(RTYPE, in, pdst) *((RTYPE *)(pdst)) = (in)
+#घोषणा ST_UB(...) ST_V(v16u8, __VA_ARGS__)
+#घोषणा ST_SB(...) ST_V(v16i8, __VA_ARGS__)
+#घोषणा ST_UH(...) ST_V(v8u16, __VA_ARGS__)
+#घोषणा ST_SH(...) ST_V(v8i16, __VA_ARGS__)
+#घोषणा ST_UW(...) ST_V(v4u32, __VA_ARGS__)
+#घोषणा ST_SW(...) ST_V(v4i32, __VA_ARGS__)
 
-#if HAVE_MIPS32R6 || HAVE_MIPS64R6
-    #define LH(psrc)                              \
+#अगर HAVE_MIPS32R6 || HAVE_MIPS64R6
+    #घोषणा LH(psrc)                              \
     ( {                                           \
         uint16_t val_lh_m = *(uint16_t *)(psrc);  \
         val_lh_m;                                 \
     } )
 
-    #define LW(psrc)                              \
+    #घोषणा LW(psrc)                              \
     ( {                                           \
         uint32_t val_lw_m = *(uint32_t *)(psrc);  \
         val_lw_m;                                 \
     } )
 
-    #if (__mips == 64)
-        #define LD(psrc)                               \
+    #अगर (__mips == 64)
+        #घोषणा LD(psrc)                               \
         ( {                                            \
             uint64_t val_ld_m =  *(uint64_t *)(psrc);  \
             val_ld_m;                                  \
         } )
-    #else  // !(__mips == 64)
-        #define LD(psrc)                                                    \
+    #अन्यथा  // !(__mips == 64)
+        #घोषणा LD(psrc)                                                    \
         ( {                                                                 \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);                        \
             uint32_t val0_ld_m, val1_ld_m;                                  \
@@ -79,19 +79,19 @@
                                                                             \
             val_ld_m;                                                       \
         } )
-    #endif  // (__mips == 64)
+    #पूर्ण_अगर  // (__mips == 64)
 
-    #define SH(val, pdst)  *(uint16_t *)(pdst) = (val);
-    #define SW(val, pdst)  *(uint32_t *)(pdst) = (val);
-    #define SD(val, pdst)  *(uint64_t *)(pdst) = (val);
+    #घोषणा SH(val, pdst)  *(uint16_t *)(pdst) = (val);
+    #घोषणा SW(val, pdst)  *(uint32_t *)(pdst) = (val);
+    #घोषणा SD(val, pdst)  *(uint64_t *)(pdst) = (val);
 
-#else  // !HAVE_MIPS32R6 && !HAVE_MIPS64R6
-    #define LH(psrc)                                 \
+#अन्यथा  // !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+    #घोषणा LH(psrc)                                 \
     ( {                                              \
         uint8_t *psrc_lh_m = (uint8_t *) (psrc);     \
         uint16_t val_lh_m;                           \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ अस्थिर (                           \
             "ulh  %[val_lh_m],  %[psrc_lh_m]  \n\t"  \
                                                      \
             : [val_lh_m] "=r" (val_lh_m)             \
@@ -101,12 +101,12 @@
         val_lh_m;                                    \
     } )
 
-    #define LW(psrc)                                 \
+    #घोषणा LW(psrc)                                 \
     ( {                                              \
         uint8_t *psrc_lw_m = (uint8_t *) (psrc);     \
         uint32_t val_lw_m;                           \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ अस्थिर (                           \
             "lwr %[val_lw_m], 0(%[psrc_lw_m]) \n\t"  \
             "lwl %[val_lw_m], 3(%[psrc_lw_m]) \n\t"  \
                                                      \
@@ -117,13 +117,13 @@
         val_lw_m;                                    \
     } )
 
-    #if (__mips == 64)
-        #define LD(psrc)                                 \
+    #अगर (__mips == 64)
+        #घोषणा LD(psrc)                                 \
         ( {                                              \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);     \
             uint64_t val_ld_m = 0;                       \
                                                          \
-            __asm__ volatile (                           \
+            __asm__ अस्थिर (                           \
                 "ldr %[val_ld_m], 0(%[psrc_ld_m]) \n\t"  \
                 "ldl %[val_ld_m], 7(%[psrc_ld_m]) \n\t"  \
                                                          \
@@ -133,8 +133,8 @@
                                                          \
             val_ld_m;                                    \
         } )
-    #else  // !(__mips == 64)
-        #define LD(psrc)                                                    \
+    #अन्यथा  // !(__mips == 64)
+        #घोषणा LD(psrc)                                                    \
         ( {                                                                 \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);                        \
             uint32_t val0_ld_m, val1_ld_m;                                  \
@@ -149,14 +149,14 @@
                                                                             \
             val_ld_m;                                                       \
         } )
-    #endif  // (__mips == 64)
+    #पूर्ण_अगर  // (__mips == 64)
 
-    #define SH(val, pdst)                            \
+    #घोषणा SH(val, pdst)                            \
     {                                                \
         uint8_t *pdst_sh_m = (uint8_t *) (pdst);     \
         uint16_t val_sh_m = (val);                   \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ अस्थिर (                           \
             "ush  %[val_sh_m],  %[pdst_sh_m]  \n\t"  \
                                                      \
             : [pdst_sh_m] "=m" (*pdst_sh_m)          \
@@ -164,12 +164,12 @@
         );                                           \
     }
 
-    #define SW(val, pdst)                            \
+    #घोषणा SW(val, pdst)                            \
     {                                                \
         uint8_t *pdst_sw_m = (uint8_t *) (pdst);     \
         uint32_t val_sw_m = (val);                   \
                                                      \
-        __asm__ volatile (                           \
+        __asm__ अस्थिर (                           \
             "usw  %[val_sw_m],  %[pdst_sw_m]  \n\t"  \
                                                      \
             : [pdst_sw_m] "=m" (*pdst_sw_m)          \
@@ -177,7 +177,7 @@
         );                                           \
     }
 
-    #define SD(val, pdst)                                             \
+    #घोषणा SD(val, pdst)                                             \
     {                                                                 \
         uint8_t *pdst_sd_m = (uint8_t *) (pdst);                      \
         uint32_t val0_sd_m, val1_sd_m;                                \
@@ -188,7 +188,7 @@
         SW(val0_sd_m, pdst_sd_m);                                     \
         SW(val1_sd_m, pdst_sd_m + 4);                                 \
     }
-#endif // HAVE_MIPS32R6 || HAVE_MIPS64R6
+#पूर्ण_अगर // HAVE_MIPS32R6 || HAVE_MIPS64R6
 
 /* Description : Load 4 words with stride
    Arguments   : Inputs  - psrc    (source pointer to load from)
@@ -199,7 +199,7 @@
                  Loads word in 'out2' from (psrc + 2 * stride)
                  Loads word in 'out3' from (psrc + 3 * stride)
 */
-#define LW4(psrc, stride, out0, out1, out2, out3)  \
+#घोषणा LW4(psrc, stride, out0, out1, out2, out3)  \
 {                                                  \
     out0 = LW((psrc));                             \
     out1 = LW((psrc) + stride);                    \
@@ -207,7 +207,7 @@
     out3 = LW((psrc) + 3 * stride);                \
 }
 
-#define LW2(psrc, stride, out0, out1)  \
+#घोषणा LW2(psrc, stride, out0, out1)  \
 {                                      \
     out0 = LW((psrc));                 \
     out1 = LW((psrc) + stride);        \
@@ -220,12 +220,12 @@
    Details     : Loads double word in 'out0' from (psrc)
                  Loads double word in 'out1' from (psrc + stride)
 */
-#define LD2(psrc, stride, out0, out1)  \
+#घोषणा LD2(psrc, stride, out0, out1)  \
 {                                      \
     out0 = LD((psrc));                 \
     out1 = LD((psrc) + stride);        \
 }
-#define LD4(psrc, stride, out0, out1, out2, out3)  \
+#घोषणा LD4(psrc, stride, out0, out1, out2, out3)  \
 {                                                  \
     LD2((psrc), stride, out0, out1);               \
     LD2((psrc) + 2 * stride, stride, out2, out3);  \
@@ -238,7 +238,7 @@
                  Stores word from 'in2' to (pdst + 2 * stride)
                  Stores word from 'in3' to (pdst + 3 * stride)
 */
-#define SW4(in0, in1, in2, in3, pdst, stride)  \
+#घोषणा SW4(in0, in1, in2, in3, pdst, stride)  \
 {                                              \
     SW(in0, (pdst))                            \
     SW(in1, (pdst) + stride);                  \
@@ -253,7 +253,7 @@
                  Stores double word from 'in2' to (pdst + 2 * stride)
                  Stores double word from 'in3' to (pdst + 3 * stride)
 */
-#define SD4(in0, in1, in2, in3, pdst, stride)  \
+#घोषणा SD4(in0, in1, in2, in3, pdst, stride)  \
 {                                              \
     SD(in0, (pdst))                            \
     SD(in1, (pdst) + stride);                  \
@@ -269,76 +269,76 @@
    Details     : Loads elements in 'out0' from (psrc)
                  Loads elements in 'out1' from (psrc + stride)
 */
-#define LD_V2(RTYPE, psrc, stride, out0, out1)  \
+#घोषणा LD_V2(RTYPE, psrc, stride, out0, out1)  \
 {                                               \
     out0 = LD_V(RTYPE, (psrc));                 \
     out1 = LD_V(RTYPE, (psrc) + stride);        \
 }
-#define LD_UB2(...) LD_V2(v16u8, __VA_ARGS__)
-#define LD_SB2(...) LD_V2(v16i8, __VA_ARGS__)
-#define LD_UH2(...) LD_V2(v8u16, __VA_ARGS__)
-#define LD_SH2(...) LD_V2(v8i16, __VA_ARGS__)
-#define LD_SW2(...) LD_V2(v4i32, __VA_ARGS__)
+#घोषणा LD_UB2(...) LD_V2(v16u8, __VA_ARGS__)
+#घोषणा LD_SB2(...) LD_V2(v16i8, __VA_ARGS__)
+#घोषणा LD_UH2(...) LD_V2(v8u16, __VA_ARGS__)
+#घोषणा LD_SH2(...) LD_V2(v8i16, __VA_ARGS__)
+#घोषणा LD_SW2(...) LD_V2(v4i32, __VA_ARGS__)
 
-#define LD_V3(RTYPE, psrc, stride, out0, out1, out2)  \
+#घोषणा LD_V3(RTYPE, psrc, stride, out0, out1, out2)  \
 {                                                     \
     LD_V2(RTYPE, (psrc), stride, out0, out1);         \
     out2 = LD_V(RTYPE, (psrc) + 2 * stride);          \
 }
-#define LD_UB3(...) LD_V3(v16u8, __VA_ARGS__)
-#define LD_SB3(...) LD_V3(v16i8, __VA_ARGS__)
+#घोषणा LD_UB3(...) LD_V3(v16u8, __VA_ARGS__)
+#घोषणा LD_SB3(...) LD_V3(v16i8, __VA_ARGS__)
 
-#define LD_V4(RTYPE, psrc, stride, out0, out1, out2, out3)   \
+#घोषणा LD_V4(RTYPE, psrc, stride, out0, out1, out2, out3)   \
 {                                                            \
     LD_V2(RTYPE, (psrc), stride, out0, out1);                \
     LD_V2(RTYPE, (psrc) + 2 * stride , stride, out2, out3);  \
 }
-#define LD_UB4(...) LD_V4(v16u8, __VA_ARGS__)
-#define LD_SB4(...) LD_V4(v16i8, __VA_ARGS__)
-#define LD_UH4(...) LD_V4(v8u16, __VA_ARGS__)
-#define LD_SH4(...) LD_V4(v8i16, __VA_ARGS__)
-#define LD_SW4(...) LD_V4(v4i32, __VA_ARGS__)
+#घोषणा LD_UB4(...) LD_V4(v16u8, __VA_ARGS__)
+#घोषणा LD_SB4(...) LD_V4(v16i8, __VA_ARGS__)
+#घोषणा LD_UH4(...) LD_V4(v8u16, __VA_ARGS__)
+#घोषणा LD_SH4(...) LD_V4(v8i16, __VA_ARGS__)
+#घोषणा LD_SW4(...) LD_V4(v4i32, __VA_ARGS__)
 
-#define LD_V5(RTYPE, psrc, stride, out0, out1, out2, out3, out4)  \
+#घोषणा LD_V5(RTYPE, psrc, stride, out0, out1, out2, out3, out4)  \
 {                                                                 \
     LD_V4(RTYPE, (psrc), stride, out0, out1, out2, out3);         \
     out4 = LD_V(RTYPE, (psrc) + 4 * stride);                      \
 }
-#define LD_UB5(...) LD_V5(v16u8, __VA_ARGS__)
-#define LD_SB5(...) LD_V5(v16i8, __VA_ARGS__)
+#घोषणा LD_UB5(...) LD_V5(v16u8, __VA_ARGS__)
+#घोषणा LD_SB5(...) LD_V5(v16i8, __VA_ARGS__)
 
-#define LD_V6(RTYPE, psrc, stride, out0, out1, out2, out3, out4, out5)  \
+#घोषणा LD_V6(RTYPE, psrc, stride, out0, out1, out2, out3, out4, out5)  \
 {                                                                       \
     LD_V4(RTYPE, (psrc), stride, out0, out1, out2, out3);               \
     LD_V2(RTYPE, (psrc) + 4 * stride, stride, out4, out5);              \
 }
-#define LD_UB6(...) LD_V6(v16u8, __VA_ARGS__)
-#define LD_SB6(...) LD_V6(v16i8, __VA_ARGS__)
-#define LD_UH6(...) LD_V6(v8u16, __VA_ARGS__)
-#define LD_SH6(...) LD_V6(v8i16, __VA_ARGS__)
+#घोषणा LD_UB6(...) LD_V6(v16u8, __VA_ARGS__)
+#घोषणा LD_SB6(...) LD_V6(v16i8, __VA_ARGS__)
+#घोषणा LD_UH6(...) LD_V6(v8u16, __VA_ARGS__)
+#घोषणा LD_SH6(...) LD_V6(v8i16, __VA_ARGS__)
 
-#define LD_V7(RTYPE, psrc, stride,                               \
+#घोषणा LD_V7(RTYPE, psrc, stride,                               \
               out0, out1, out2, out3, out4, out5, out6)          \
 {                                                                \
     LD_V5(RTYPE, (psrc), stride, out0, out1, out2, out3, out4);  \
     LD_V2(RTYPE, (psrc) + 5 * stride, stride, out5, out6);       \
 }
-#define LD_UB7(...) LD_V7(v16u8, __VA_ARGS__)
-#define LD_SB7(...) LD_V7(v16i8, __VA_ARGS__)
+#घोषणा LD_UB7(...) LD_V7(v16u8, __VA_ARGS__)
+#घोषणा LD_SB7(...) LD_V7(v16i8, __VA_ARGS__)
 
-#define LD_V8(RTYPE, psrc, stride,                                      \
+#घोषणा LD_V8(RTYPE, psrc, stride,                                      \
               out0, out1, out2, out3, out4, out5, out6, out7)           \
 {                                                                       \
     LD_V4(RTYPE, (psrc), stride, out0, out1, out2, out3);               \
     LD_V4(RTYPE, (psrc) + 4 * stride, stride, out4, out5, out6, out7);  \
 }
-#define LD_UB8(...) LD_V8(v16u8, __VA_ARGS__)
-#define LD_SB8(...) LD_V8(v16i8, __VA_ARGS__)
-#define LD_UH8(...) LD_V8(v8u16, __VA_ARGS__)
-#define LD_SH8(...) LD_V8(v8i16, __VA_ARGS__)
-#define LD_SW8(...) LD_V8(v4i32, __VA_ARGS__)
+#घोषणा LD_UB8(...) LD_V8(v16u8, __VA_ARGS__)
+#घोषणा LD_SB8(...) LD_V8(v16i8, __VA_ARGS__)
+#घोषणा LD_UH8(...) LD_V8(v8u16, __VA_ARGS__)
+#घोषणा LD_SH8(...) LD_V8(v8i16, __VA_ARGS__)
+#घोषणा LD_SW8(...) LD_V8(v4i32, __VA_ARGS__)
 
-#define LD_V16(RTYPE, psrc, stride,                                   \
+#घोषणा LD_V16(RTYPE, psrc, stride,                                   \
                out0, out1, out2, out3, out4, out5, out6, out7,        \
                out8, out9, out10, out11, out12, out13, out14, out15)  \
 {                                                                     \
@@ -347,7 +347,7 @@
     LD_V8(RTYPE, (psrc) + 8 * stride, stride,                         \
           out8, out9, out10, out11, out12, out13, out14, out15);      \
 }
-#define LD_SH16(...) LD_V16(v8i16, __VA_ARGS__)
+#घोषणा LD_SH16(...) LD_V16(v8i16, __VA_ARGS__)
 
 /* Description : Store vectors with stride
    Arguments   : Inputs  - in0, in1, stride
@@ -355,42 +355,42 @@
    Details     : Stores elements from 'in0' to (pdst)
                  Stores elements from 'in1' to (pdst + stride)
 */
-#define ST_V2(RTYPE, in0, in1, pdst, stride)  \
+#घोषणा ST_V2(RTYPE, in0, in1, pdst, stride)  \
 {                                             \
     ST_V(RTYPE, in0, (pdst));                 \
     ST_V(RTYPE, in1, (pdst) + stride);        \
 }
-#define ST_UB2(...) ST_V2(v16u8, __VA_ARGS__)
-#define ST_SB2(...) ST_V2(v16i8, __VA_ARGS__)
-#define ST_UH2(...) ST_V2(v8u16, __VA_ARGS__)
-#define ST_SH2(...) ST_V2(v8i16, __VA_ARGS__)
-#define ST_SW2(...) ST_V2(v4i32, __VA_ARGS__)
+#घोषणा ST_UB2(...) ST_V2(v16u8, __VA_ARGS__)
+#घोषणा ST_SB2(...) ST_V2(v16i8, __VA_ARGS__)
+#घोषणा ST_UH2(...) ST_V2(v8u16, __VA_ARGS__)
+#घोषणा ST_SH2(...) ST_V2(v8i16, __VA_ARGS__)
+#घोषणा ST_SW2(...) ST_V2(v4i32, __VA_ARGS__)
 
-#define ST_V4(RTYPE, in0, in1, in2, in3, pdst, stride)    \
+#घोषणा ST_V4(RTYPE, in0, in1, in2, in3, pdst, stride)    \
 {                                                         \
     ST_V2(RTYPE, in0, in1, (pdst), stride);               \
     ST_V2(RTYPE, in2, in3, (pdst) + 2 * stride, stride);  \
 }
-#define ST_UB4(...) ST_V4(v16u8, __VA_ARGS__)
-#define ST_SB4(...) ST_V4(v16i8, __VA_ARGS__)
-#define ST_SH4(...) ST_V4(v8i16, __VA_ARGS__)
-#define ST_SW4(...) ST_V4(v4i32, __VA_ARGS__)
+#घोषणा ST_UB4(...) ST_V4(v16u8, __VA_ARGS__)
+#घोषणा ST_SB4(...) ST_V4(v16i8, __VA_ARGS__)
+#घोषणा ST_SH4(...) ST_V4(v8i16, __VA_ARGS__)
+#घोषणा ST_SW4(...) ST_V4(v4i32, __VA_ARGS__)
 
-#define ST_V6(RTYPE, in0, in1, in2, in3, in4, in5, pdst, stride)  \
+#घोषणा ST_V6(RTYPE, in0, in1, in2, in3, in4, in5, pdst, stride)  \
 {                                                                 \
     ST_V4(RTYPE, in0, in1, in2, in3, (pdst), stride);             \
     ST_V2(RTYPE, in4, in5, (pdst) + 4 * stride, stride);          \
 }
-#define ST_SH6(...) ST_V6(v8i16, __VA_ARGS__)
+#घोषणा ST_SH6(...) ST_V6(v8i16, __VA_ARGS__)
 
-#define ST_V8(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
+#घोषणा ST_V8(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
 {                                                                           \
     ST_V4(RTYPE, in0, in1, in2, in3, (pdst), stride);                       \
     ST_V4(RTYPE, in4, in5, in6, in7, (pdst) + 4 * stride, stride);          \
 }
-#define ST_UB8(...) ST_V8(v16u8, __VA_ARGS__)
-#define ST_SH8(...) ST_V8(v8i16, __VA_ARGS__)
-#define ST_SW8(...) ST_V8(v4i32, __VA_ARGS__)
+#घोषणा ST_UB8(...) ST_V8(v16u8, __VA_ARGS__)
+#घोषणा ST_SH8(...) ST_V8(v8i16, __VA_ARGS__)
+#घोषणा ST_SW8(...) ST_V8(v4i32, __VA_ARGS__)
 
 /* Description : Store half word elements of vector with stride
  * Arguments   : Inputs  - in   source vector
@@ -400,13 +400,13 @@
  *               Stores half word 'idx1' from 'in' to (pdst + stride)
  *               Similar for other elements
  */
-#define ST_H1(in, idx, pdst)                             \
+#घोषणा ST_H1(in, idx, pdst)                             \
 {                                                        \
     uint16_t out0_m;                                     \
     out0_m = __msa_copy_u_h((v8i16) in, idx);            \
     SH(out0_m, (pdst));                                  \
 }
-#define ST_H2(in, idx0, idx1, pdst, stride)              \
+#घोषणा ST_H2(in, idx0, idx1, pdst, stride)              \
 {                                                        \
     uint16_t out0_m, out1_m;                             \
     out0_m = __msa_copy_u_h((v8i16) in, idx0);           \
@@ -414,7 +414,7 @@
     SH(out0_m, (pdst));                                  \
     SH(out1_m, (pdst) + stride);                         \
 }
-#define ST_H4(in, idx0, idx1, idx2, idx3, pdst, stride)  \
+#घोषणा ST_H4(in, idx0, idx1, idx2, idx3, pdst, stride)  \
 {                                                        \
     uint16_t out0_m, out1_m, out2_m, out3_m;             \
     out0_m = __msa_copy_u_h((v8i16) in, idx0);           \
@@ -426,7 +426,7 @@
     SH(out2_m, (pdst) + 2 * stride);                     \
     SH(out3_m, (pdst) + 3 * stride);                     \
 }
-#define ST_H8(in, idx0, idx1, idx2, idx3, idx4, idx5,            \
+#घोषणा ST_H8(in, idx0, idx1, idx2, idx3, idx4, idx5,            \
               idx6, idx7, pdst, stride)                          \
 {                                                                \
     ST_H4(in, idx0, idx1, idx2, idx3, pdst, stride)              \
@@ -441,13 +441,13 @@
  *               Stores word 'idx1' from 'in' to (pdst + stride)
  *               Similar for other elements
  */
-#define ST_W1(in, idx, pdst)                             \
+#घोषणा ST_W1(in, idx, pdst)                             \
 {                                                        \
     uint32_t out0_m;                                     \
     out0_m = __msa_copy_u_w((v4i32) in, idx);            \
     SW(out0_m, (pdst));                                  \
 }
-#define ST_W2(in, idx0, idx1, pdst, stride)              \
+#घोषणा ST_W2(in, idx0, idx1, pdst, stride)              \
 {                                                        \
     uint32_t out0_m, out1_m;                             \
     out0_m = __msa_copy_u_w((v4i32) in, idx0);           \
@@ -455,7 +455,7 @@
     SW(out0_m, (pdst));                                  \
     SW(out1_m, (pdst) + stride);                         \
 }
-#define ST_W4(in, idx0, idx1, idx2, idx3, pdst, stride)  \
+#घोषणा ST_W4(in, idx0, idx1, idx2, idx3, pdst, stride)  \
 {                                                        \
     uint32_t out0_m, out1_m, out2_m, out3_m;             \
     out0_m = __msa_copy_u_w((v4i32) in, idx0);           \
@@ -467,7 +467,7 @@
     SW(out2_m, (pdst) + 2*stride);                       \
     SW(out3_m, (pdst) + 3*stride);                       \
 }
-#define ST_W8(in0, in1, idx0, idx1, idx2, idx3,                 \
+#घोषणा ST_W8(in0, in1, idx0, idx1, idx2, idx3,                 \
               idx4, idx5, idx6, idx7, pdst, stride)             \
 {                                                               \
     ST_W4(in0, idx0, idx1, idx2, idx3, pdst, stride)            \
@@ -482,13 +482,13 @@
  *               Stores double word 'idx1' from 'in' to (pdst + stride)
  *               Similar for other elements
  */
-#define ST_D1(in, idx, pdst)                   \
+#घोषणा ST_D1(in, idx, pdst)                   \
 {                                              \
     uint64_t out0_m;                           \
     out0_m = __msa_copy_u_d((v2i64) in, idx);  \
     SD(out0_m, (pdst));                        \
 }
-#define ST_D2(in, idx0, idx1, pdst, stride)    \
+#घोषणा ST_D2(in, idx0, idx1, pdst, stride)    \
 {                                              \
     uint64_t out0_m, out1_m;                   \
     out0_m = __msa_copy_u_d((v2i64) in, idx0); \
@@ -496,7 +496,7 @@
     SD(out0_m, (pdst));                        \
     SD(out1_m, (pdst) + stride);               \
 }
-#define ST_D4(in0, in1, idx0, idx1, idx2, idx3, pdst, stride) \
+#घोषणा ST_D4(in0, in1, idx0, idx1, idx2, idx3, pdst, stride) \
 {                                                             \
     uint64_t out0_m, out1_m, out2_m, out3_m;                  \
     out0_m = __msa_copy_u_d((v2i64) in0, idx0);               \
@@ -508,7 +508,7 @@
     SD(out2_m, (pdst) + 2 * stride);                          \
     SD(out3_m, (pdst) + 3 * stride);                          \
 }
-#define ST_D8(in0, in1, in2, in3, idx0, idx1, idx2, idx3,              \
+#घोषणा ST_D8(in0, in1, in2, in3, idx0, idx1, idx2, idx3,              \
               idx4, idx5, idx6, idx7, pdst, stride)                    \
 {                                                                      \
     ST_D4(in0, in1, idx0, idx1, idx2, idx3, pdst, stride)              \
@@ -524,7 +524,7 @@
                  (pblk_12x8_m + 8)
                  Similar to remaining lines
 */
-#define ST12x8_UB(in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
+#घोषणा ST12x8_UB(in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
 {                                                                        \
     uint64_t out0_m, out1_m, out2_m, out3_m;                             \
     uint64_t out4_m, out5_m, out6_m, out7_m;                             \
@@ -587,20 +587,20 @@
                 the result to vector 'out0'
                 Similar for the pair of 'in2' and 'in3'
 */
-#define AVER_UB2(RTYPE, in0, in1, in2, in3, out0, out1)       \
+#घोषणा AVER_UB2(RTYPE, in0, in1, in2, in3, out0, out1)       \
 {                                                             \
     out0 = (RTYPE) __msa_aver_u_b((v16u8) in0, (v16u8) in1);  \
     out1 = (RTYPE) __msa_aver_u_b((v16u8) in2, (v16u8) in3);  \
 }
-#define AVER_UB2_UB(...) AVER_UB2(v16u8, __VA_ARGS__)
+#घोषणा AVER_UB2_UB(...) AVER_UB2(v16u8, __VA_ARGS__)
 
-#define AVER_UB4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7, \
+#घोषणा AVER_UB4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7, \
                  out0, out1, out2, out3)                        \
 {                                                               \
     AVER_UB2(RTYPE, in0, in1, in2, in3, out0, out1)             \
     AVER_UB2(RTYPE, in4, in5, in6, in7, out2, out3)             \
 }
-#define AVER_UB4_UB(...) AVER_UB4(v16u8, __VA_ARGS__)
+#घोषणा AVER_UB4_UB(...) AVER_UB4(v16u8, __VA_ARGS__)
 
 /* Description : Immediate number of columns to slide
    Arguments   : Inputs  - s, d, slide_val
@@ -609,40 +609,40 @@
    Details     : Byte elements from 'd' vector are slide into 's' by
                  number of elements specified by 'slide_val'
 */
-#define SLDI_B(RTYPE, d, s, slide_val, out)                       \
+#घोषणा SLDI_B(RTYPE, d, s, slide_val, out)                       \
 {                                                                 \
     out = (RTYPE) __msa_sldi_b((v16i8) d, (v16i8) s, slide_val);  \
 }
 
-#define SLDI_B2(RTYPE, d0, s0, d1, s1, slide_val, out0, out1)  \
+#घोषणा SLDI_B2(RTYPE, d0, s0, d1, s1, slide_val, out0, out1)  \
 {                                                              \
     SLDI_B(RTYPE, d0, s0, slide_val, out0)                     \
     SLDI_B(RTYPE, d1, s1, slide_val, out1)                     \
 }
-#define SLDI_B2_UB(...) SLDI_B2(v16u8, __VA_ARGS__)
-#define SLDI_B2_SB(...) SLDI_B2(v16i8, __VA_ARGS__)
-#define SLDI_B2_SH(...) SLDI_B2(v8i16, __VA_ARGS__)
-#define SLDI_B2_SW(...) SLDI_B2(v4i32, __VA_ARGS__)
+#घोषणा SLDI_B2_UB(...) SLDI_B2(v16u8, __VA_ARGS__)
+#घोषणा SLDI_B2_SB(...) SLDI_B2(v16i8, __VA_ARGS__)
+#घोषणा SLDI_B2_SH(...) SLDI_B2(v8i16, __VA_ARGS__)
+#घोषणा SLDI_B2_SW(...) SLDI_B2(v4i32, __VA_ARGS__)
 
-#define SLDI_B3(RTYPE, d0, s0, d1, s1, d2, s2, slide_val,  \
+#घोषणा SLDI_B3(RTYPE, d0, s0, d1, s1, d2, s2, slide_val,  \
                 out0, out1, out2)                          \
 {                                                          \
     SLDI_B2(RTYPE, d0, s0, d1, s1, slide_val, out0, out1)  \
     SLDI_B(RTYPE, d2, s2, slide_val, out2)                 \
 }
-#define SLDI_B3_UB(...) SLDI_B3(v16u8, __VA_ARGS__)
-#define SLDI_B3_SB(...) SLDI_B3(v16i8, __VA_ARGS__)
-#define SLDI_B3_UH(...) SLDI_B3(v8u16, __VA_ARGS__)
+#घोषणा SLDI_B3_UB(...) SLDI_B3(v16u8, __VA_ARGS__)
+#घोषणा SLDI_B3_SB(...) SLDI_B3(v16i8, __VA_ARGS__)
+#घोषणा SLDI_B3_UH(...) SLDI_B3(v8u16, __VA_ARGS__)
 
-#define SLDI_B4(RTYPE, d0, s0, d1, s1, d2, s2, d3, s3,     \
+#घोषणा SLDI_B4(RTYPE, d0, s0, d1, s1, d2, s2, d3, s3,     \
                 slide_val, out0, out1, out2, out3)         \
 {                                                          \
     SLDI_B2(RTYPE, d0, s0, d1, s1, slide_val, out0, out1)  \
     SLDI_B2(RTYPE, d2, s2, d3, s3, slide_val, out2, out3)  \
 }
-#define SLDI_B4_UB(...) SLDI_B4(v16u8, __VA_ARGS__)
-#define SLDI_B4_SB(...) SLDI_B4(v16i8, __VA_ARGS__)
-#define SLDI_B4_SH(...) SLDI_B4(v8i16, __VA_ARGS__)
+#घोषणा SLDI_B4_UB(...) SLDI_B4(v16u8, __VA_ARGS__)
+#घोषणा SLDI_B4_SB(...) SLDI_B4(v16i8, __VA_ARGS__)
+#घोषणा SLDI_B4_SH(...) SLDI_B4(v8i16, __VA_ARGS__)
 
 /* Description : Shuffle byte vector elements as per mask vector
    Arguments   : Inputs  - in0, in1, in2, in3, mask0, mask1
@@ -653,32 +653,32 @@
                  Selective byte elements from in2 & in3 are copied to out1 as
                  per control vector mask1
 */
-#define VSHF_B2(RTYPE, in0, in1, in2, in3, mask0, mask1, out0, out1)       \
+#घोषणा VSHF_B2(RTYPE, in0, in1, in2, in3, mask0, mask1, out0, out1)       \
 {                                                                          \
     out0 = (RTYPE) __msa_vshf_b((v16i8) mask0, (v16i8) in1, (v16i8) in0);  \
     out1 = (RTYPE) __msa_vshf_b((v16i8) mask1, (v16i8) in3, (v16i8) in2);  \
 }
-#define VSHF_B2_UB(...) VSHF_B2(v16u8, __VA_ARGS__)
-#define VSHF_B2_SB(...) VSHF_B2(v16i8, __VA_ARGS__)
-#define VSHF_B2_UH(...) VSHF_B2(v8u16, __VA_ARGS__)
-#define VSHF_B2_SH(...) VSHF_B2(v8i16, __VA_ARGS__)
+#घोषणा VSHF_B2_UB(...) VSHF_B2(v16u8, __VA_ARGS__)
+#घोषणा VSHF_B2_SB(...) VSHF_B2(v16i8, __VA_ARGS__)
+#घोषणा VSHF_B2_UH(...) VSHF_B2(v8u16, __VA_ARGS__)
+#घोषणा VSHF_B2_SH(...) VSHF_B2(v8i16, __VA_ARGS__)
 
-#define VSHF_B3(RTYPE, in0, in1, in2, in3, in4, in5, mask0, mask1, mask2,  \
+#घोषणा VSHF_B3(RTYPE, in0, in1, in2, in3, in4, in5, mask0, mask1, mask2,  \
                 out0, out1, out2)                                          \
 {                                                                          \
     VSHF_B2(RTYPE, in0, in1, in2, in3, mask0, mask1, out0, out1);          \
     out2 = (RTYPE) __msa_vshf_b((v16i8) mask2, (v16i8) in5, (v16i8) in4);  \
 }
-#define VSHF_B3_SB(...) VSHF_B3(v16i8, __VA_ARGS__)
+#घोषणा VSHF_B3_SB(...) VSHF_B3(v16i8, __VA_ARGS__)
 
-#define VSHF_B4(RTYPE, in0, in1, mask0, mask1, mask2, mask3,       \
+#घोषणा VSHF_B4(RTYPE, in0, in1, mask0, mask1, mask2, mask3,       \
                 out0, out1, out2, out3)                            \
 {                                                                  \
     VSHF_B2(RTYPE, in0, in1, in0, in1, mask0, mask1, out0, out1);  \
     VSHF_B2(RTYPE, in0, in1, in0, in1, mask2, mask3, out2, out3);  \
 }
-#define VSHF_B4_SB(...) VSHF_B4(v16i8, __VA_ARGS__)
-#define VSHF_B4_SH(...) VSHF_B4(v8i16, __VA_ARGS__)
+#घोषणा VSHF_B4_SB(...) VSHF_B4(v16i8, __VA_ARGS__)
+#घोषणा VSHF_B4_SH(...) VSHF_B4(v8i16, __VA_ARGS__)
 
 /* Description : Shuffle halfword vector elements as per mask vector
    Arguments   : Inputs  - in0, in1, in2, in3, mask0, mask1
@@ -689,20 +689,20 @@
                  Selective halfword elements from in2 & in3 are copied to out1
                  as per control vector mask1
 */
-#define VSHF_H2(RTYPE, in0, in1, in2, in3, mask0, mask1, out0, out1)       \
+#घोषणा VSHF_H2(RTYPE, in0, in1, in2, in3, mask0, mask1, out0, out1)       \
 {                                                                          \
     out0 = (RTYPE) __msa_vshf_h((v8i16) mask0, (v8i16) in1, (v8i16) in0);  \
     out1 = (RTYPE) __msa_vshf_h((v8i16) mask1, (v8i16) in3, (v8i16) in2);  \
 }
-#define VSHF_H2_SH(...) VSHF_H2(v8i16, __VA_ARGS__)
+#घोषणा VSHF_H2_SH(...) VSHF_H2(v8i16, __VA_ARGS__)
 
-#define VSHF_H3(RTYPE, in0, in1, in2, in3, in4, in5, mask0, mask1, mask2,  \
+#घोषणा VSHF_H3(RTYPE, in0, in1, in2, in3, in4, in5, mask0, mask1, mask2,  \
                 out0, out1, out2)                                          \
 {                                                                          \
     VSHF_H2(RTYPE, in0, in1, in2, in3, mask0, mask1, out0, out1);          \
     out2 = (RTYPE) __msa_vshf_h((v8i16) mask2, (v8i16) in5, (v8i16) in4);  \
 }
-#define VSHF_H3_SH(...) VSHF_H3(v8i16, __VA_ARGS__)
+#घोषणा VSHF_H3_SH(...) VSHF_H3(v8i16, __VA_ARGS__)
 
 /* Description : Shuffle byte vector elements as per mask vector
    Arguments   : Inputs  - in0, in1, in2, in3, mask0, mask1
@@ -713,12 +713,12 @@
                  Selective byte elements from in2 & in3 are copied to out1 as
                  per control vector mask1
 */
-#define VSHF_W2(RTYPE, in0, in1, in2, in3, mask0, mask1, out0, out1)      \
+#घोषणा VSHF_W2(RTYPE, in0, in1, in2, in3, mask0, mask1, out0, out1)      \
 {                                                                         \
     out0 = (RTYPE) __msa_vshf_w((v4i32) mask0, (v4i32) in1, (v4i32) in0); \
     out1 = (RTYPE) __msa_vshf_w((v4i32) mask1, (v4i32) in3, (v4i32) in2); \
 }
-#define VSHF_W2_SB(...) VSHF_W2(v16i8, __VA_ARGS__)
+#घोषणा VSHF_W2_SB(...) VSHF_W2(v16i8, __VA_ARGS__)
 
 /* Description : Dot product of byte vector elements
    Arguments   : Inputs  - mult0, mult1
@@ -732,21 +732,21 @@
                  are added together and stored to the out vector
                  (2 unsigned halfword results)
 */
-#define DOTP_UB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
+#घोषणा DOTP_UB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
 {                                                                 \
     out0 = (RTYPE) __msa_dotp_u_h((v16u8) mult0, (v16u8) cnst0);  \
     out1 = (RTYPE) __msa_dotp_u_h((v16u8) mult1, (v16u8) cnst1);  \
 }
-#define DOTP_UB2_UH(...) DOTP_UB2(v8u16, __VA_ARGS__)
+#घोषणा DOTP_UB2_UH(...) DOTP_UB2(v8u16, __VA_ARGS__)
 
-#define DOTP_UB4(RTYPE, mult0, mult1, mult2, mult3,           \
+#घोषणा DOTP_UB4(RTYPE, mult0, mult1, mult2, mult3,           \
                  cnst0, cnst1, cnst2, cnst3,                  \
                  out0, out1, out2, out3)                      \
 {                                                             \
     DOTP_UB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1);  \
     DOTP_UB2(RTYPE, mult2, mult3, cnst2, cnst3, out2, out3);  \
 }
-#define DOTP_UB4_UH(...) DOTP_UB4(v8u16, __VA_ARGS__)
+#घोषणा DOTP_UB4_UH(...) DOTP_UB4(v8u16, __VA_ARGS__)
 
 /* Description : Dot product of byte vector elements
    Arguments   : Inputs  - mult0, mult1
@@ -760,28 +760,28 @@
                  are added together and stored to the out vector
                  (2 signed halfword results)
 */
-#define DOTP_SB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
+#घोषणा DOTP_SB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
 {                                                                 \
     out0 = (RTYPE) __msa_dotp_s_h((v16i8) mult0, (v16i8) cnst0);  \
     out1 = (RTYPE) __msa_dotp_s_h((v16i8) mult1, (v16i8) cnst1);  \
 }
-#define DOTP_SB2_SH(...) DOTP_SB2(v8i16, __VA_ARGS__)
+#घोषणा DOTP_SB2_SH(...) DOTP_SB2(v8i16, __VA_ARGS__)
 
-#define DOTP_SB3(RTYPE, mult0, mult1, mult2, cnst0, cnst1, cnst2,  \
+#घोषणा DOTP_SB3(RTYPE, mult0, mult1, mult2, cnst0, cnst1, cnst2,  \
                  out0, out1, out2)                                 \
 {                                                                  \
     DOTP_SB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1);       \
     out2 = (RTYPE) __msa_dotp_s_h((v16i8) mult2, (v16i8) cnst2);   \
 }
-#define DOTP_SB3_SH(...) DOTP_SB3(v8i16, __VA_ARGS__)
+#घोषणा DOTP_SB3_SH(...) DOTP_SB3(v8i16, __VA_ARGS__)
 
-#define DOTP_SB4(RTYPE, mult0, mult1, mult2, mult3,                   \
+#घोषणा DOTP_SB4(RTYPE, mult0, mult1, mult2, mult3,                   \
                  cnst0, cnst1, cnst2, cnst3, out0, out1, out2, out3)  \
 {                                                                     \
     DOTP_SB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1);          \
     DOTP_SB2(RTYPE, mult2, mult3, cnst2, cnst3, out2, out3);          \
 }
-#define DOTP_SB4_SH(...) DOTP_SB4(v8i16, __VA_ARGS__)
+#घोषणा DOTP_SB4_SH(...) DOTP_SB4(v8i16, __VA_ARGS__)
 
 /* Description : Dot product of halfword vector elements
    Arguments   : Inputs  - mult0, mult1
@@ -795,21 +795,21 @@
                  are added together and stored to the out vector
                  (2 signed word results)
 */
-#define DOTP_SH2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
+#घोषणा DOTP_SH2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
 {                                                                 \
     out0 = (RTYPE) __msa_dotp_s_w((v8i16) mult0, (v8i16) cnst0);  \
     out1 = (RTYPE) __msa_dotp_s_w((v8i16) mult1, (v8i16) cnst1);  \
 }
-#define DOTP_SH2_SW(...) DOTP_SH2(v4i32, __VA_ARGS__)
+#घोषणा DOTP_SH2_SW(...) DOTP_SH2(v4i32, __VA_ARGS__)
 
-#define DOTP_SH4(RTYPE, mult0, mult1, mult2, mult3,           \
+#घोषणा DOTP_SH4(RTYPE, mult0, mult1, mult2, mult3,           \
                  cnst0, cnst1, cnst2, cnst3,                  \
                  out0, out1, out2, out3)                      \
 {                                                             \
     DOTP_SH2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1);  \
     DOTP_SH2(RTYPE, mult2, mult3, cnst2, cnst3, out2, out3);  \
 }
-#define DOTP_SH4_SW(...) DOTP_SH4(v4i32, __VA_ARGS__)
+#घोषणा DOTP_SH4_SW(...) DOTP_SH4(v4i32, __VA_ARGS__)
 
 /* Description : Dot product & addition of byte vector elements
    Arguments   : Inputs  - mult0, mult1
@@ -823,22 +823,22 @@
                  are added to the out vector
                  (2 signed halfword results)
 */
-#define DPADD_SB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
+#घोषणा DPADD_SB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
 {                                                                  \
     out0 = (RTYPE) __msa_dpadd_s_h((v8i16) out0,                   \
                                    (v16i8) mult0, (v16i8) cnst0);  \
     out1 = (RTYPE) __msa_dpadd_s_h((v8i16) out1,                   \
                                    (v16i8) mult1, (v16i8) cnst1);  \
 }
-#define DPADD_SB2_SH(...) DPADD_SB2(v8i16, __VA_ARGS__)
+#घोषणा DPADD_SB2_SH(...) DPADD_SB2(v8i16, __VA_ARGS__)
 
-#define DPADD_SB4(RTYPE, mult0, mult1, mult2, mult3,                   \
+#घोषणा DPADD_SB4(RTYPE, mult0, mult1, mult2, mult3,                   \
                   cnst0, cnst1, cnst2, cnst3, out0, out1, out2, out3)  \
 {                                                                      \
     DPADD_SB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1);          \
     DPADD_SB2(RTYPE, mult2, mult3, cnst2, cnst3, out2, out3);          \
 }
-#define DPADD_SB4_SH(...) DPADD_SB4(v8i16, __VA_ARGS__)
+#घोषणा DPADD_SB4_SH(...) DPADD_SB4(v8i16, __VA_ARGS__)
 
 /* Description : Dot product & addition of byte vector elements
    Arguments   : Inputs  - mult0, mult1
@@ -852,14 +852,14 @@
                  are added to the out vector
                  (2 unsigned halfword results)
 */
-#define DPADD_UB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
+#घोषणा DPADD_UB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
 {                                                                  \
     out0 = (RTYPE) __msa_dpadd_u_h((v8u16) out0,                   \
                                    (v16u8) mult0, (v16u8) cnst0);  \
     out1 = (RTYPE) __msa_dpadd_u_h((v8u16) out1,                   \
                                    (v16u8) mult1, (v16u8) cnst1);  \
 }
-#define DPADD_UB2_UH(...) DPADD_UB2(v8u16, __VA_ARGS__)
+#घोषणा DPADD_UB2_UH(...) DPADD_UB2(v8u16, __VA_ARGS__)
 
 /* Description : Dot product & addition of halfword vector elements
    Arguments   : Inputs  - mult0, mult1
@@ -873,22 +873,22 @@
                  are added to the out vector
                  (2 signed word results)
 */
-#define DPADD_SH2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
+#घोषणा DPADD_SH2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1)   \
 {                                                                  \
     out0 = (RTYPE) __msa_dpadd_s_w((v4i32) out0,                   \
                                    (v8i16) mult0, (v8i16) cnst0);  \
     out1 = (RTYPE) __msa_dpadd_s_w((v4i32) out1,                   \
                                    (v8i16) mult1, (v8i16) cnst1);  \
 }
-#define DPADD_SH2_SW(...) DPADD_SH2(v4i32, __VA_ARGS__)
+#घोषणा DPADD_SH2_SW(...) DPADD_SH2(v4i32, __VA_ARGS__)
 
-#define DPADD_SH4(RTYPE, mult0, mult1, mult2, mult3,                   \
+#घोषणा DPADD_SH4(RTYPE, mult0, mult1, mult2, mult3,                   \
                   cnst0, cnst1, cnst2, cnst3, out0, out1, out2, out3)  \
 {                                                                      \
     DPADD_SH2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1);          \
     DPADD_SH2(RTYPE, mult2, mult3, cnst2, cnst3, out2, out3);          \
 }
-#define DPADD_SH4_SW(...) DPADD_SH4(v4i32, __VA_ARGS__)
+#घोषणा DPADD_SH4_SW(...) DPADD_SH4(v4i32, __VA_ARGS__)
 
 /* Description : Minimum values between unsigned elements of
                  either vector are copied to the output vector
@@ -898,19 +898,19 @@
    Details     : Minimum of unsigned halfword element values from 'in0' and
                  'min_value' are written to output vector 'in0'
 */
-#define MIN_UH2(RTYPE, in0, in1, min_vec)               \
+#घोषणा MIN_UH2(RTYPE, in0, in1, min_vec)               \
 {                                                       \
     in0 = (RTYPE) __msa_min_u_h((v8u16) in0, min_vec);  \
     in1 = (RTYPE) __msa_min_u_h((v8u16) in1, min_vec);  \
 }
-#define MIN_UH2_UH(...) MIN_UH2(v8u16, __VA_ARGS__)
+#घोषणा MIN_UH2_UH(...) MIN_UH2(v8u16, __VA_ARGS__)
 
-#define MIN_UH4(RTYPE, in0, in1, in2, in3, min_vec)  \
+#घोषणा MIN_UH4(RTYPE, in0, in1, in2, in3, min_vec)  \
 {                                                    \
     MIN_UH2(RTYPE, in0, in1, min_vec);               \
     MIN_UH2(RTYPE, in2, in3, min_vec);               \
 }
-#define MIN_UH4_UH(...) MIN_UH4(v8u16, __VA_ARGS__)
+#घोषणा MIN_UH4_UH(...) MIN_UH4(v8u16, __VA_ARGS__)
 
 /* Description : Clips all halfword elements of input vector between min & max
                  out = ((in) < (min)) ? (min) : (((in) > (max)) ? (max) : (in))
@@ -920,7 +920,7 @@
                  Outputs - in    (output vector with clipped elements)
                  Return Type - signed halfword
 */
-#define CLIP_SH(in, min, max)                     \
+#घोषणा CLIP_SH(in, min, max)                     \
 {                                                 \
     in = __msa_max_s_h((v8i16) min, (v8i16) in);  \
     in = __msa_min_s_h((v8i16) max, (v8i16) in);  \
@@ -932,25 +932,25 @@
                  Outputs - in    (output vector with clipped elements)
                  Return Type - signed halfwords
 */
-#define CLIP_SH_0_255(in)                       \
+#घोषणा CLIP_SH_0_255(in)                       \
 {                                               \
     in = __msa_maxi_s_h((v8i16) in, 0);         \
     in = (v8i16) __msa_sat_u_h((v8u16) in, 7);  \
 }
 
-#define CLIP_SH2_0_255(in0, in1)  \
+#घोषणा CLIP_SH2_0_255(in0, in1)  \
 {                                 \
     CLIP_SH_0_255(in0);           \
     CLIP_SH_0_255(in1);           \
 }
 
-#define CLIP_SH4_0_255(in0, in1, in2, in3)  \
+#घोषणा CLIP_SH4_0_255(in0, in1, in2, in3)  \
 {                                           \
     CLIP_SH2_0_255(in0, in1);               \
     CLIP_SH2_0_255(in2, in3);               \
 }
 
-#define CLIP_SH8_0_255(in0, in1, in2, in3,  \
+#घोषणा CLIP_SH8_0_255(in0, in1, in2, in3,  \
                        in4, in5, in6, in7)  \
 {                                           \
     CLIP_SH4_0_255(in0, in1, in2, in3);     \
@@ -963,25 +963,25 @@
                  Outputs - in    (output vector with clipped elements)
                  Return Type - signed word
 */
-#define CLIP_SW_0_255(in)                       \
+#घोषणा CLIP_SW_0_255(in)                       \
 {                                               \
     in = __msa_maxi_s_w((v4i32) in, 0);         \
     in = (v4i32) __msa_sat_u_w((v4u32) in, 7);  \
 }
 
-#define CLIP_SW2_0_255(in0, in1)  \
+#घोषणा CLIP_SW2_0_255(in0, in1)  \
 {                                 \
     CLIP_SW_0_255(in0);           \
     CLIP_SW_0_255(in1);           \
 }
 
-#define CLIP_SW4_0_255(in0, in1, in2, in3)  \
+#घोषणा CLIP_SW4_0_255(in0, in1, in2, in3)  \
 {                                           \
     CLIP_SW2_0_255(in0, in1);               \
     CLIP_SW2_0_255(in2, in3);               \
 }
 
-#define CLIP_SW8_0_255(in0, in1, in2, in3,  \
+#घोषणा CLIP_SW8_0_255(in0, in1, in2, in3,  \
                        in4, in5, in6, in7)  \
 {                                           \
     CLIP_SW4_0_255(in0, in1, in2, in3);     \
@@ -995,16 +995,16 @@
                  Outputs - sum_m    (i32 sum)
                  Return Type - signed word
 */
-#define HADD_SW_S32(in)                               \
+#घोषणा HADD_SW_S32(in)                               \
 ( {                                                   \
     v2i64 res0_m, res1_m;                             \
-    int32_t sum_m;                                    \
+    int32_t योग_m;                                    \
                                                       \
     res0_m = __msa_hadd_s_d((v4i32) in, (v4i32) in);  \
     res1_m = __msa_splati_d(res0_m, 1);               \
     res0_m += res1_m;                                 \
-    sum_m = __msa_copy_s_w((v4i32) res0_m, 0);        \
-    sum_m;                                            \
+    योग_m = __msa_copy_s_w((v4i32) res0_m, 0);        \
+    योग_m;                                            \
 } )
 
 /* Description : Addition of 8 unsigned halfword elements
@@ -1014,18 +1014,18 @@
                  Outputs - sum_m    (u32 sum)
                  Return Type - unsigned word
 */
-#define HADD_UH_U32(in)                                  \
+#घोषणा HADD_UH_U32(in)                                  \
 ( {                                                      \
     v4u32 res_m;                                         \
     v2u64 res0_m, res1_m;                                \
-    uint32_t sum_m;                                      \
+    uint32_t योग_m;                                      \
                                                          \
     res_m = __msa_hadd_u_w((v8u16) in, (v8u16) in);      \
     res0_m = __msa_hadd_u_d(res_m, res_m);               \
     res1_m = (v2u64) __msa_splati_d((v2i64) res0_m, 1);  \
     res0_m += res1_m;                                    \
-    sum_m = __msa_copy_u_w((v4i32) res0_m, 0);           \
-    sum_m;                                               \
+    योग_m = __msa_copy_u_w((v4i32) res0_m, 0);           \
+    योग_m;                                               \
 } )
 
 /* Description : Horizontal addition of signed byte vector elements
@@ -1036,20 +1036,20 @@
                  even signed byte element from 'in0' (pairwise) and the
                  halfword result is stored in 'out0'
 */
-#define HADD_SB2(RTYPE, in0, in1, out0, out1)                 \
+#घोषणा HADD_SB2(RTYPE, in0, in1, out0, out1)                 \
 {                                                             \
     out0 = (RTYPE) __msa_hadd_s_h((v16i8) in0, (v16i8) in0);  \
     out1 = (RTYPE) __msa_hadd_s_h((v16i8) in1, (v16i8) in1);  \
 }
-#define HADD_SB2_SH(...) HADD_SB2(v8i16, __VA_ARGS__)
+#घोषणा HADD_SB2_SH(...) HADD_SB2(v8i16, __VA_ARGS__)
 
-#define HADD_SB4(RTYPE, in0, in1, in2, in3, out0, out1, out2, out3)  \
+#घोषणा HADD_SB4(RTYPE, in0, in1, in2, in3, out0, out1, out2, out3)  \
 {                                                                    \
     HADD_SB2(RTYPE, in0, in1, out0, out1);                           \
     HADD_SB2(RTYPE, in2, in3, out2, out3);                           \
 }
-#define HADD_SB4_UH(...) HADD_SB4(v8u16, __VA_ARGS__)
-#define HADD_SB4_SH(...) HADD_SB4(v8i16, __VA_ARGS__)
+#घोषणा HADD_SB4_UH(...) HADD_SB4(v8u16, __VA_ARGS__)
+#घोषणा HADD_SB4_SH(...) HADD_SB4(v8i16, __VA_ARGS__)
 
 /* Description : Horizontal addition of unsigned byte vector elements
    Arguments   : Inputs  - in0, in1
@@ -1059,28 +1059,28 @@
                  even unsigned byte element from 'in0' (pairwise) and the
                  halfword result is stored in 'out0'
 */
-#define HADD_UB2(RTYPE, in0, in1, out0, out1)                 \
+#घोषणा HADD_UB2(RTYPE, in0, in1, out0, out1)                 \
 {                                                             \
     out0 = (RTYPE) __msa_hadd_u_h((v16u8) in0, (v16u8) in0);  \
     out1 = (RTYPE) __msa_hadd_u_h((v16u8) in1, (v16u8) in1);  \
 }
-#define HADD_UB2_UH(...) HADD_UB2(v8u16, __VA_ARGS__)
+#घोषणा HADD_UB2_UH(...) HADD_UB2(v8u16, __VA_ARGS__)
 
-#define HADD_UB3(RTYPE, in0, in1, in2, out0, out1, out2)      \
+#घोषणा HADD_UB3(RTYPE, in0, in1, in2, out0, out1, out2)      \
 {                                                             \
     HADD_UB2(RTYPE, in0, in1, out0, out1);                    \
     out2 = (RTYPE) __msa_hadd_u_h((v16u8) in2, (v16u8) in2);  \
 }
-#define HADD_UB3_UH(...) HADD_UB3(v8u16, __VA_ARGS__)
+#घोषणा HADD_UB3_UH(...) HADD_UB3(v8u16, __VA_ARGS__)
 
-#define HADD_UB4(RTYPE, in0, in1, in2, in3, out0, out1, out2, out3)  \
+#घोषणा HADD_UB4(RTYPE, in0, in1, in2, in3, out0, out1, out2, out3)  \
 {                                                                    \
     HADD_UB2(RTYPE, in0, in1, out0, out1);                           \
     HADD_UB2(RTYPE, in2, in3, out2, out3);                           \
 }
-#define HADD_UB4_UB(...) HADD_UB4(v16u8, __VA_ARGS__)
-#define HADD_UB4_UH(...) HADD_UB4(v8u16, __VA_ARGS__)
-#define HADD_UB4_SH(...) HADD_UB4(v8i16, __VA_ARGS__)
+#घोषणा HADD_UB4_UB(...) HADD_UB4(v16u8, __VA_ARGS__)
+#घोषणा HADD_UB4_UH(...) HADD_UB4(v8u16, __VA_ARGS__)
+#घोषणा HADD_UB4_SH(...) HADD_UB4(v8i16, __VA_ARGS__)
 
 /* Description : Horizontal subtraction of unsigned byte vector elements
    Arguments   : Inputs  - in0, in1
@@ -1090,21 +1090,21 @@
                  even unsigned byte element from 'in0' (pairwise) and the
                  halfword result is stored in 'out0'
 */
-#define HSUB_UB2(RTYPE, in0, in1, out0, out1)                 \
+#घोषणा HSUB_UB2(RTYPE, in0, in1, out0, out1)                 \
 {                                                             \
     out0 = (RTYPE) __msa_hsub_u_h((v16u8) in0, (v16u8) in0);  \
     out1 = (RTYPE) __msa_hsub_u_h((v16u8) in1, (v16u8) in1);  \
 }
-#define HSUB_UB2_UH(...) HSUB_UB2(v8u16, __VA_ARGS__)
-#define HSUB_UB2_SH(...) HSUB_UB2(v8i16, __VA_ARGS__)
+#घोषणा HSUB_UB2_UH(...) HSUB_UB2(v8u16, __VA_ARGS__)
+#घोषणा HSUB_UB2_SH(...) HSUB_UB2(v8i16, __VA_ARGS__)
 
-#define HSUB_UB4(RTYPE, in0, in1, in2, in3, out0, out1, out2, out3)  \
+#घोषणा HSUB_UB4(RTYPE, in0, in1, in2, in3, out0, out1, out2, out3)  \
 {                                                                    \
     HSUB_UB2(RTYPE, in0, in1, out0, out1);                           \
     HSUB_UB2(RTYPE, in2, in3, out2, out3);                           \
 }
-#define HSUB_UB4_UH(...) HSUB_UB4(v8u16, __VA_ARGS__)
-#define HSUB_UB4_SH(...) HSUB_UB4(v8i16, __VA_ARGS__)
+#घोषणा HSUB_UB4_UH(...) HSUB_UB4(v8u16, __VA_ARGS__)
+#घोषणा HSUB_UB4_SH(...) HSUB_UB4(v8i16, __VA_ARGS__)
 
 /* Description : SAD (Sum of Absolute Difference)
    Arguments   : Inputs  - in0, in1, ref0, ref1  (unsigned byte src & ref)
@@ -1115,7 +1115,7 @@
                  unsigned absolute diff values, even-odd pairs are added
                  together to generate 8 halfword results.
 */
-#define SAD_UB2_UH(in0, in1, ref0, ref1)                        \
+#घोषणा SAD_UB2_UH(in0, in1, ref0, ref1)                        \
 ( {                                                             \
     v16u8 diff0_m, diff1_m;                                     \
     v8u16 sad_m = { 0 };                                        \
@@ -1135,25 +1135,25 @@
                  Outputs - out                (output vector)
                  Return Type - as per RTYPE
 */
-#define INSERT_W2(RTYPE, in0, in1, out)                 \
+#घोषणा जोड़ो_W2(RTYPE, in0, in1, out)                 \
 {                                                       \
     out = (RTYPE) __msa_insert_w((v4i32) out, 0, in0);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 1, in1);  \
 }
-#define INSERT_W2_UB(...) INSERT_W2(v16u8, __VA_ARGS__)
-#define INSERT_W2_SB(...) INSERT_W2(v16i8, __VA_ARGS__)
+#घोषणा जोड़ो_W2_UB(...) जोड़ो_W2(v16u8, __VA_ARGS__)
+#घोषणा जोड़ो_W2_SB(...) जोड़ो_W2(v16i8, __VA_ARGS__)
 
-#define INSERT_W4(RTYPE, in0, in1, in2, in3, out)       \
+#घोषणा जोड़ो_W4(RTYPE, in0, in1, in2, in3, out)       \
 {                                                       \
     out = (RTYPE) __msa_insert_w((v4i32) out, 0, in0);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 1, in1);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 2, in2);  \
     out = (RTYPE) __msa_insert_w((v4i32) out, 3, in3);  \
 }
-#define INSERT_W4_UB(...) INSERT_W4(v16u8, __VA_ARGS__)
-#define INSERT_W4_SB(...) INSERT_W4(v16i8, __VA_ARGS__)
-#define INSERT_W4_SH(...) INSERT_W4(v8i16, __VA_ARGS__)
-#define INSERT_W4_SW(...) INSERT_W4(v4i32, __VA_ARGS__)
+#घोषणा जोड़ो_W4_UB(...) जोड़ो_W4(v16u8, __VA_ARGS__)
+#घोषणा जोड़ो_W4_SB(...) जोड़ो_W4(v16i8, __VA_ARGS__)
+#घोषणा जोड़ो_W4_SH(...) जोड़ो_W4(v8i16, __VA_ARGS__)
+#घोषणा जोड़ो_W4_SW(...) जोड़ो_W4(v4i32, __VA_ARGS__)
 
 /* Description : Insert specified double word elements from input vectors to 1
                  destination vector
@@ -1161,15 +1161,15 @@
                  Outputs - out           (output vector)
                  Return Type - as per RTYPE
 */
-#define INSERT_D2(RTYPE, in0, in1, out)                 \
+#घोषणा जोड़ो_D2(RTYPE, in0, in1, out)                 \
 {                                                       \
     out = (RTYPE) __msa_insert_d((v2i64) out, 0, in0);  \
     out = (RTYPE) __msa_insert_d((v2i64) out, 1, in1);  \
 }
-#define INSERT_D2_UB(...) INSERT_D2(v16u8, __VA_ARGS__)
-#define INSERT_D2_SB(...) INSERT_D2(v16i8, __VA_ARGS__)
-#define INSERT_D2_SH(...) INSERT_D2(v8i16, __VA_ARGS__)
-#define INSERT_D2_SD(...) INSERT_D2(v2i64, __VA_ARGS__)
+#घोषणा जोड़ो_D2_UB(...) जोड़ो_D2(v16u8, __VA_ARGS__)
+#घोषणा जोड़ो_D2_SB(...) जोड़ो_D2(v16i8, __VA_ARGS__)
+#घोषणा जोड़ो_D2_SH(...) जोड़ो_D2(v8i16, __VA_ARGS__)
+#घोषणा जोड़ो_D2_SD(...) जोड़ो_D2(v2i64, __VA_ARGS__)
 
 /* Description : Interleave even byte elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1180,15 +1180,15 @@
                  Even byte elements of 'in2' and even byte
                  elements of 'in3' are interleaved and copied to 'out1'
 */
-#define ILVEV_B2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVEV_B2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                            \
     out0 = (RTYPE) __msa_ilvev_b((v16i8) in1, (v16i8) in0);  \
     out1 = (RTYPE) __msa_ilvev_b((v16i8) in3, (v16i8) in2);  \
 }
-#define ILVEV_B2_UB(...) ILVEV_B2(v16u8, __VA_ARGS__)
-#define ILVEV_B2_SB(...) ILVEV_B2(v16i8, __VA_ARGS__)
-#define ILVEV_B2_SH(...) ILVEV_B2(v8i16, __VA_ARGS__)
-#define ILVEV_B2_SD(...) ILVEV_B2(v2i64, __VA_ARGS__)
+#घोषणा ILVEV_B2_UB(...) ILVEV_B2(v16u8, __VA_ARGS__)
+#घोषणा ILVEV_B2_SB(...) ILVEV_B2(v16i8, __VA_ARGS__)
+#घोषणा ILVEV_B2_SH(...) ILVEV_B2(v8i16, __VA_ARGS__)
+#घोषणा ILVEV_B2_SD(...) ILVEV_B2(v2i64, __VA_ARGS__)
 
 /* Description : Interleave even halfword elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1199,14 +1199,14 @@
                  Even halfword elements of 'in2' and even halfword
                  elements of 'in3' are interleaved and copied to 'out1'
 */
-#define ILVEV_H2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVEV_H2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                            \
     out0 = (RTYPE) __msa_ilvev_h((v8i16) in1, (v8i16) in0);  \
     out1 = (RTYPE) __msa_ilvev_h((v8i16) in3, (v8i16) in2);  \
 }
-#define ILVEV_H2_UB(...) ILVEV_H2(v16u8, __VA_ARGS__)
-#define ILVEV_H2_SH(...) ILVEV_H2(v8i16, __VA_ARGS__)
-#define ILVEV_H2_SW(...) ILVEV_H2(v4i32, __VA_ARGS__)
+#घोषणा ILVEV_H2_UB(...) ILVEV_H2(v16u8, __VA_ARGS__)
+#घोषणा ILVEV_H2_SH(...) ILVEV_H2(v8i16, __VA_ARGS__)
+#घोषणा ILVEV_H2_SW(...) ILVEV_H2(v4i32, __VA_ARGS__)
 
 /* Description : Interleave even word elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1217,15 +1217,15 @@
                  Even word elements of 'in2' and even word
                  elements of 'in3' are interleaved and copied to 'out1'
 */
-#define ILVEV_W2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVEV_W2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                            \
     out0 = (RTYPE) __msa_ilvev_w((v4i32) in1, (v4i32) in0);  \
     out1 = (RTYPE) __msa_ilvev_w((v4i32) in3, (v4i32) in2);  \
 }
-#define ILVEV_W2_UB(...) ILVEV_W2(v16u8, __VA_ARGS__)
-#define ILVEV_W2_SB(...) ILVEV_W2(v16i8, __VA_ARGS__)
-#define ILVEV_W2_UH(...) ILVEV_W2(v8u16, __VA_ARGS__)
-#define ILVEV_W2_SD(...) ILVEV_W2(v2i64, __VA_ARGS__)
+#घोषणा ILVEV_W2_UB(...) ILVEV_W2(v16u8, __VA_ARGS__)
+#घोषणा ILVEV_W2_SB(...) ILVEV_W2(v16i8, __VA_ARGS__)
+#घोषणा ILVEV_W2_UH(...) ILVEV_W2(v8u16, __VA_ARGS__)
+#घोषणा ILVEV_W2_SD(...) ILVEV_W2(v2i64, __VA_ARGS__)
 
 /* Description : Interleave even double word elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1236,14 +1236,14 @@
                  Even double word elements of 'in2' and even double word
                  elements of 'in3' are interleaved and copied to 'out1'
 */
-#define ILVEV_D2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVEV_D2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                            \
     out0 = (RTYPE) __msa_ilvev_d((v2i64) in1, (v2i64) in0);  \
     out1 = (RTYPE) __msa_ilvev_d((v2i64) in3, (v2i64) in2);  \
 }
-#define ILVEV_D2_UB(...) ILVEV_D2(v16u8, __VA_ARGS__)
-#define ILVEV_D2_SB(...) ILVEV_D2(v16i8, __VA_ARGS__)
-#define ILVEV_D2_SW(...) ILVEV_D2(v4i32, __VA_ARGS__)
+#घोषणा ILVEV_D2_UB(...) ILVEV_D2(v16u8, __VA_ARGS__)
+#घोषणा ILVEV_D2_SB(...) ILVEV_D2(v16i8, __VA_ARGS__)
+#घोषणा ILVEV_D2_SW(...) ILVEV_D2(v4i32, __VA_ARGS__)
 
 /* Description : Interleave left half of byte elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1254,26 +1254,26 @@
                  Left half of byte elements of in2 and left half of byte
                  elements of in3 are interleaved and copied to out1.
 */
-#define ILVL_B2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVL_B2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                           \
     out0 = (RTYPE) __msa_ilvl_b((v16i8) in0, (v16i8) in1);  \
     out1 = (RTYPE) __msa_ilvl_b((v16i8) in2, (v16i8) in3);  \
 }
-#define ILVL_B2_UB(...) ILVL_B2(v16u8, __VA_ARGS__)
-#define ILVL_B2_SB(...) ILVL_B2(v16i8, __VA_ARGS__)
-#define ILVL_B2_UH(...) ILVL_B2(v8u16, __VA_ARGS__)
-#define ILVL_B2_SH(...) ILVL_B2(v8i16, __VA_ARGS__)
+#घोषणा ILVL_B2_UB(...) ILVL_B2(v16u8, __VA_ARGS__)
+#घोषणा ILVL_B2_SB(...) ILVL_B2(v16i8, __VA_ARGS__)
+#घोषणा ILVL_B2_UH(...) ILVL_B2(v8u16, __VA_ARGS__)
+#घोषणा ILVL_B2_SH(...) ILVL_B2(v8i16, __VA_ARGS__)
 
-#define ILVL_B4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा ILVL_B4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
                 out0, out1, out2, out3)                         \
 {                                                               \
     ILVL_B2(RTYPE, in0, in1, in2, in3, out0, out1);             \
     ILVL_B2(RTYPE, in4, in5, in6, in7, out2, out3);             \
 }
-#define ILVL_B4_UB(...) ILVL_B4(v16u8, __VA_ARGS__)
-#define ILVL_B4_SB(...) ILVL_B4(v16i8, __VA_ARGS__)
-#define ILVL_B4_UH(...) ILVL_B4(v8u16, __VA_ARGS__)
-#define ILVL_B4_SH(...) ILVL_B4(v8i16, __VA_ARGS__)
+#घोषणा ILVL_B4_UB(...) ILVL_B4(v16u8, __VA_ARGS__)
+#घोषणा ILVL_B4_SB(...) ILVL_B4(v16i8, __VA_ARGS__)
+#घोषणा ILVL_B4_UH(...) ILVL_B4(v8u16, __VA_ARGS__)
+#घोषणा ILVL_B4_SH(...) ILVL_B4(v8i16, __VA_ARGS__)
 
 /* Description : Interleave left half of halfword elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1284,22 +1284,22 @@
                  Left half of halfword elements of in2 and left half of halfword
                  elements of in3 are interleaved and copied to out1.
 */
-#define ILVL_H2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVL_H2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                           \
     out0 = (RTYPE) __msa_ilvl_h((v8i16) in0, (v8i16) in1);  \
     out1 = (RTYPE) __msa_ilvl_h((v8i16) in2, (v8i16) in3);  \
 }
-#define ILVL_H2_SH(...) ILVL_H2(v8i16, __VA_ARGS__)
-#define ILVL_H2_SW(...) ILVL_H2(v4i32, __VA_ARGS__)
+#घोषणा ILVL_H2_SH(...) ILVL_H2(v8i16, __VA_ARGS__)
+#घोषणा ILVL_H2_SW(...) ILVL_H2(v4i32, __VA_ARGS__)
 
-#define ILVL_H4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा ILVL_H4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
                 out0, out1, out2, out3)                         \
 {                                                               \
     ILVL_H2(RTYPE, in0, in1, in2, in3, out0, out1);             \
     ILVL_H2(RTYPE, in4, in5, in6, in7, out2, out3);             \
 }
-#define ILVL_H4_SH(...) ILVL_H4(v8i16, __VA_ARGS__)
-#define ILVL_H4_SW(...) ILVL_H4(v4i32, __VA_ARGS__)
+#घोषणा ILVL_H4_SH(...) ILVL_H4(v8i16, __VA_ARGS__)
+#घोषणा ILVL_H4_SW(...) ILVL_H4(v4i32, __VA_ARGS__)
 
 /* Description : Interleave left half of word elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1310,14 +1310,14 @@
                  Left half of word elements of in2 and left half of word
                  elements of in3 are interleaved and copied to out1.
 */
-#define ILVL_W2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVL_W2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                           \
     out0 = (RTYPE) __msa_ilvl_w((v4i32) in0, (v4i32) in1);  \
     out1 = (RTYPE) __msa_ilvl_w((v4i32) in2, (v4i32) in3);  \
 }
-#define ILVL_W2_UB(...) ILVL_W2(v16u8, __VA_ARGS__)
-#define ILVL_W2_SB(...) ILVL_W2(v16i8, __VA_ARGS__)
-#define ILVL_W2_SH(...) ILVL_W2(v8i16, __VA_ARGS__)
+#घोषणा ILVL_W2_UB(...) ILVL_W2(v16u8, __VA_ARGS__)
+#घोषणा ILVL_W2_SB(...) ILVL_W2(v16i8, __VA_ARGS__)
+#घोषणा ILVL_W2_SH(...) ILVL_W2(v8i16, __VA_ARGS__)
 
 /* Description : Interleave right half of byte elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3, in4, in5, in6, in7
@@ -1329,40 +1329,40 @@
                  elements of in3 are interleaved and copied to out1.
                  Similar for other pairs
 */
-#define ILVR_B2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVR_B2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                           \
     out0 = (RTYPE) __msa_ilvr_b((v16i8) in0, (v16i8) in1);  \
     out1 = (RTYPE) __msa_ilvr_b((v16i8) in2, (v16i8) in3);  \
 }
-#define ILVR_B2_UB(...) ILVR_B2(v16u8, __VA_ARGS__)
-#define ILVR_B2_SB(...) ILVR_B2(v16i8, __VA_ARGS__)
-#define ILVR_B2_UH(...) ILVR_B2(v8u16, __VA_ARGS__)
-#define ILVR_B2_SH(...) ILVR_B2(v8i16, __VA_ARGS__)
-#define ILVR_B2_SW(...) ILVR_B2(v4i32, __VA_ARGS__)
+#घोषणा ILVR_B2_UB(...) ILVR_B2(v16u8, __VA_ARGS__)
+#घोषणा ILVR_B2_SB(...) ILVR_B2(v16i8, __VA_ARGS__)
+#घोषणा ILVR_B2_UH(...) ILVR_B2(v8u16, __VA_ARGS__)
+#घोषणा ILVR_B2_SH(...) ILVR_B2(v8i16, __VA_ARGS__)
+#घोषणा ILVR_B2_SW(...) ILVR_B2(v4i32, __VA_ARGS__)
 
-#define ILVR_B3(RTYPE, in0, in1, in2, in3, in4, in5, out0, out1, out2)  \
+#घोषणा ILVR_B3(RTYPE, in0, in1, in2, in3, in4, in5, out0, out1, out2)  \
 {                                                                       \
     ILVR_B2(RTYPE, in0, in1, in2, in3, out0, out1);                     \
     out2 = (RTYPE) __msa_ilvr_b((v16i8) in4, (v16i8) in5);              \
 }
-#define ILVR_B3_UB(...) ILVR_B3(v16u8, __VA_ARGS__)
-#define ILVR_B3_SB(...) ILVR_B3(v16i8, __VA_ARGS__)
-#define ILVR_B3_UH(...) ILVR_B3(v8u16, __VA_ARGS__)
-#define ILVR_B3_SH(...) ILVR_B3(v8i16, __VA_ARGS__)
+#घोषणा ILVR_B3_UB(...) ILVR_B3(v16u8, __VA_ARGS__)
+#घोषणा ILVR_B3_SB(...) ILVR_B3(v16i8, __VA_ARGS__)
+#घोषणा ILVR_B3_UH(...) ILVR_B3(v8u16, __VA_ARGS__)
+#घोषणा ILVR_B3_SH(...) ILVR_B3(v8i16, __VA_ARGS__)
 
-#define ILVR_B4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा ILVR_B4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
                 out0, out1, out2, out3)                         \
 {                                                               \
     ILVR_B2(RTYPE, in0, in1, in2, in3, out0, out1);             \
     ILVR_B2(RTYPE, in4, in5, in6, in7, out2, out3);             \
 }
-#define ILVR_B4_UB(...) ILVR_B4(v16u8, __VA_ARGS__)
-#define ILVR_B4_SB(...) ILVR_B4(v16i8, __VA_ARGS__)
-#define ILVR_B4_UH(...) ILVR_B4(v8u16, __VA_ARGS__)
-#define ILVR_B4_SH(...) ILVR_B4(v8i16, __VA_ARGS__)
-#define ILVR_B4_SW(...) ILVR_B4(v4i32, __VA_ARGS__)
+#घोषणा ILVR_B4_UB(...) ILVR_B4(v16u8, __VA_ARGS__)
+#घोषणा ILVR_B4_SB(...) ILVR_B4(v16i8, __VA_ARGS__)
+#घोषणा ILVR_B4_UH(...) ILVR_B4(v8u16, __VA_ARGS__)
+#घोषणा ILVR_B4_SH(...) ILVR_B4(v8i16, __VA_ARGS__)
+#घोषणा ILVR_B4_SW(...) ILVR_B4(v4i32, __VA_ARGS__)
 
-#define ILVR_B8(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,    \
+#घोषणा ILVR_B8(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,    \
                 in8, in9, in10, in11, in12, in13, in14, in15,     \
                 out0, out1, out2, out3, out4, out5, out6, out7)   \
 {                                                                 \
@@ -1371,8 +1371,8 @@
     ILVR_B4(RTYPE, in8, in9, in10, in11, in12, in13, in14, in15,  \
             out4, out5, out6, out7);                              \
 }
-#define ILVR_B8_UH(...) ILVR_B8(v8u16, __VA_ARGS__)
-#define ILVR_B8_SW(...) ILVR_B8(v4i32, __VA_ARGS__)
+#घोषणा ILVR_B8_UH(...) ILVR_B8(v8u16, __VA_ARGS__)
+#घोषणा ILVR_B8_SW(...) ILVR_B8(v4i32, __VA_ARGS__)
 
 /* Description : Interleave right half of halfword elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3, in4, in5, in6, in7
@@ -1384,47 +1384,47 @@
                  halfword elements of in3 are interleaved and copied to out1.
                  Similar for other pairs
 */
-#define ILVR_H2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVR_H2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                           \
     out0 = (RTYPE) __msa_ilvr_h((v8i16) in0, (v8i16) in1);  \
     out1 = (RTYPE) __msa_ilvr_h((v8i16) in2, (v8i16) in3);  \
 }
-#define ILVR_H2_SH(...) ILVR_H2(v8i16, __VA_ARGS__)
-#define ILVR_H2_SW(...) ILVR_H2(v4i32, __VA_ARGS__)
+#घोषणा ILVR_H2_SH(...) ILVR_H2(v8i16, __VA_ARGS__)
+#घोषणा ILVR_H2_SW(...) ILVR_H2(v4i32, __VA_ARGS__)
 
-#define ILVR_H3(RTYPE, in0, in1, in2, in3, in4, in5, out0, out1, out2)  \
+#घोषणा ILVR_H3(RTYPE, in0, in1, in2, in3, in4, in5, out0, out1, out2)  \
 {                                                                       \
     ILVR_H2(RTYPE, in0, in1, in2, in3, out0, out1);                     \
     out2 = (RTYPE) __msa_ilvr_h((v8i16) in4, (v8i16) in5);              \
 }
-#define ILVR_H3_SH(...) ILVR_H3(v8i16, __VA_ARGS__)
+#घोषणा ILVR_H3_SH(...) ILVR_H3(v8i16, __VA_ARGS__)
 
-#define ILVR_H4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा ILVR_H4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
                 out0, out1, out2, out3)                         \
 {                                                               \
     ILVR_H2(RTYPE, in0, in1, in2, in3, out0, out1);             \
     ILVR_H2(RTYPE, in4, in5, in6, in7, out2, out3);             \
 }
-#define ILVR_H4_SH(...) ILVR_H4(v8i16, __VA_ARGS__)
-#define ILVR_H4_SW(...) ILVR_H4(v4i32, __VA_ARGS__)
+#घोषणा ILVR_H4_SH(...) ILVR_H4(v8i16, __VA_ARGS__)
+#घोषणा ILVR_H4_SW(...) ILVR_H4(v4i32, __VA_ARGS__)
 
-#define ILVR_W2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVR_W2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                           \
     out0 = (RTYPE) __msa_ilvr_w((v4i32) in0, (v4i32) in1);  \
     out1 = (RTYPE) __msa_ilvr_w((v4i32) in2, (v4i32) in3);  \
 }
-#define ILVR_W2_UB(...) ILVR_W2(v16u8, __VA_ARGS__)
-#define ILVR_W2_SB(...) ILVR_W2(v16i8, __VA_ARGS__)
-#define ILVR_W2_SH(...) ILVR_W2(v8i16, __VA_ARGS__)
+#घोषणा ILVR_W2_UB(...) ILVR_W2(v16u8, __VA_ARGS__)
+#घोषणा ILVR_W2_SB(...) ILVR_W2(v16i8, __VA_ARGS__)
+#घोषणा ILVR_W2_SH(...) ILVR_W2(v8i16, __VA_ARGS__)
 
-#define ILVR_W4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा ILVR_W4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
                 out0, out1, out2, out3)                         \
 {                                                               \
     ILVR_W2(RTYPE, in0, in1, in2, in3, out0, out1);             \
     ILVR_W2(RTYPE, in4, in5, in6, in7, out2, out3);             \
 }
-#define ILVR_W4_SB(...) ILVR_W4(v16i8, __VA_ARGS__)
-#define ILVR_W4_UB(...) ILVR_W4(v16u8, __VA_ARGS__)
+#घोषणा ILVR_W4_SB(...) ILVR_W4(v16i8, __VA_ARGS__)
+#घोषणा ILVR_W4_UB(...) ILVR_W4(v16u8, __VA_ARGS__)
 
 /* Description : Interleave right half of double word elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3, in4, in5, in6, in7
@@ -1435,30 +1435,30 @@
                  Right half of double word elements of in2 and right half of
                  double word elements of in3 are interleaved and copied to out1.
 */
-#define ILVR_D2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVR_D2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                           \
     out0 = (RTYPE) __msa_ilvr_d((v2i64) in0, (v2i64) in1);  \
     out1 = (RTYPE) __msa_ilvr_d((v2i64) in2, (v2i64) in3);  \
 }
-#define ILVR_D2_UB(...) ILVR_D2(v16u8, __VA_ARGS__)
-#define ILVR_D2_SB(...) ILVR_D2(v16i8, __VA_ARGS__)
-#define ILVR_D2_SH(...) ILVR_D2(v8i16, __VA_ARGS__)
+#घोषणा ILVR_D2_UB(...) ILVR_D2(v16u8, __VA_ARGS__)
+#घोषणा ILVR_D2_SB(...) ILVR_D2(v16i8, __VA_ARGS__)
+#घोषणा ILVR_D2_SH(...) ILVR_D2(v8i16, __VA_ARGS__)
 
-#define ILVR_D3(RTYPE, in0, in1, in2, in3, in4, in5, out0, out1, out2)  \
+#घोषणा ILVR_D3(RTYPE, in0, in1, in2, in3, in4, in5, out0, out1, out2)  \
 {                                                                       \
     ILVR_D2(RTYPE, in0, in1, in2, in3, out0, out1);                     \
     out2 = (RTYPE) __msa_ilvr_d((v2i64) in4, (v2i64) in5);              \
 }
-#define ILVR_D3_SB(...) ILVR_D3(v16i8, __VA_ARGS__)
+#घोषणा ILVR_D3_SB(...) ILVR_D3(v16i8, __VA_ARGS__)
 
-#define ILVR_D4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा ILVR_D4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
                 out0, out1, out2, out3)                         \
 {                                                               \
     ILVR_D2(RTYPE, in0, in1, in2, in3, out0, out1);             \
     ILVR_D2(RTYPE, in4, in5, in6, in7, out2, out3);             \
 }
-#define ILVR_D4_SB(...) ILVR_D4(v16i8, __VA_ARGS__)
-#define ILVR_D4_UB(...) ILVR_D4(v16u8, __VA_ARGS__)
+#घोषणा ILVR_D4_SB(...) ILVR_D4(v16i8, __VA_ARGS__)
+#घोषणा ILVR_D4_UB(...) ILVR_D4(v16u8, __VA_ARGS__)
 
 /* Description : Interleave left half of double word elements from vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1469,14 +1469,14 @@
                  Left half of double word elements of in2 and left half of
                  double word elements of in3 are interleaved and copied to out1.
 */
-#define ILVL_D2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा ILVL_D2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                           \
     out0 = (RTYPE) __msa_ilvl_d((v2i64) in0, (v2i64) in1);  \
     out1 = (RTYPE) __msa_ilvl_d((v2i64) in2, (v2i64) in3);  \
 }
-#define ILVL_D2_UB(...) ILVL_D2(v16u8, __VA_ARGS__)
-#define ILVL_D2_SB(...) ILVL_D2(v16i8, __VA_ARGS__)
-#define ILVL_D2_SH(...) ILVL_D2(v8i16, __VA_ARGS__)
+#घोषणा ILVL_D2_UB(...) ILVL_D2(v16u8, __VA_ARGS__)
+#घोषणा ILVL_D2_SB(...) ILVL_D2(v16i8, __VA_ARGS__)
+#घोषणा ILVL_D2_SH(...) ILVL_D2(v8i16, __VA_ARGS__)
 
 /* Description : Interleave both left and right half of input vectors
    Arguments   : Inputs  - in0, in1
@@ -1487,35 +1487,35 @@
                  Left half of byte elements from 'in0' and 'in1' are
                  interleaved and stored to 'out1'
 */
-#define ILVRL_B2(RTYPE, in0, in1, out0, out1)               \
+#घोषणा ILVRL_B2(RTYPE, in0, in1, out0, out1)               \
 {                                                           \
     out0 = (RTYPE) __msa_ilvr_b((v16i8) in0, (v16i8) in1);  \
     out1 = (RTYPE) __msa_ilvl_b((v16i8) in0, (v16i8) in1);  \
 }
-#define ILVRL_B2_UB(...) ILVRL_B2(v16u8, __VA_ARGS__)
-#define ILVRL_B2_SB(...) ILVRL_B2(v16i8, __VA_ARGS__)
-#define ILVRL_B2_UH(...) ILVRL_B2(v8u16, __VA_ARGS__)
-#define ILVRL_B2_SH(...) ILVRL_B2(v8i16, __VA_ARGS__)
-#define ILVRL_B2_SW(...) ILVRL_B2(v4i32, __VA_ARGS__)
+#घोषणा ILVRL_B2_UB(...) ILVRL_B2(v16u8, __VA_ARGS__)
+#घोषणा ILVRL_B2_SB(...) ILVRL_B2(v16i8, __VA_ARGS__)
+#घोषणा ILVRL_B2_UH(...) ILVRL_B2(v8u16, __VA_ARGS__)
+#घोषणा ILVRL_B2_SH(...) ILVRL_B2(v8i16, __VA_ARGS__)
+#घोषणा ILVRL_B2_SW(...) ILVRL_B2(v4i32, __VA_ARGS__)
 
-#define ILVRL_H2(RTYPE, in0, in1, out0, out1)               \
+#घोषणा ILVRL_H2(RTYPE, in0, in1, out0, out1)               \
 {                                                           \
     out0 = (RTYPE) __msa_ilvr_h((v8i16) in0, (v8i16) in1);  \
     out1 = (RTYPE) __msa_ilvl_h((v8i16) in0, (v8i16) in1);  \
 }
-#define ILVRL_H2_UB(...) ILVRL_H2(v16u8, __VA_ARGS__)
-#define ILVRL_H2_SB(...) ILVRL_H2(v16i8, __VA_ARGS__)
-#define ILVRL_H2_SH(...) ILVRL_H2(v8i16, __VA_ARGS__)
-#define ILVRL_H2_SW(...) ILVRL_H2(v4i32, __VA_ARGS__)
+#घोषणा ILVRL_H2_UB(...) ILVRL_H2(v16u8, __VA_ARGS__)
+#घोषणा ILVRL_H2_SB(...) ILVRL_H2(v16i8, __VA_ARGS__)
+#घोषणा ILVRL_H2_SH(...) ILVRL_H2(v8i16, __VA_ARGS__)
+#घोषणा ILVRL_H2_SW(...) ILVRL_H2(v4i32, __VA_ARGS__)
 
-#define ILVRL_W2(RTYPE, in0, in1, out0, out1)               \
+#घोषणा ILVRL_W2(RTYPE, in0, in1, out0, out1)               \
 {                                                           \
     out0 = (RTYPE) __msa_ilvr_w((v4i32) in0, (v4i32) in1);  \
     out1 = (RTYPE) __msa_ilvl_w((v4i32) in0, (v4i32) in1);  \
 }
-#define ILVRL_W2_UB(...) ILVRL_W2(v16u8, __VA_ARGS__)
-#define ILVRL_W2_SH(...) ILVRL_W2(v8i16, __VA_ARGS__)
-#define ILVRL_W2_SW(...) ILVRL_W2(v4i32, __VA_ARGS__)
+#घोषणा ILVRL_W2_UB(...) ILVRL_W2(v16u8, __VA_ARGS__)
+#घोषणा ILVRL_W2_SH(...) ILVRL_W2(v8i16, __VA_ARGS__)
+#घोषणा ILVRL_W2_SW(...) ILVRL_W2(v4i32, __VA_ARGS__)
 
 /* Description : Maximum values between signed elements of vector and
                  5-bit signed immediate value are copied to the output vector
@@ -1525,29 +1525,29 @@
    Details     : Maximum of signed halfword element values from 'in0' and
                  'max_val' are written to output vector 'in0'
 */
-#define MAXI_SH2(RTYPE, in0, in1, max_val)               \
+#घोषणा MAXI_SH2(RTYPE, in0, in1, max_val)               \
 {                                                        \
     in0 = (RTYPE) __msa_maxi_s_h((v8i16) in0, max_val);  \
     in1 = (RTYPE) __msa_maxi_s_h((v8i16) in1, max_val);  \
 }
-#define MAXI_SH2_UH(...) MAXI_SH2(v8u16, __VA_ARGS__)
-#define MAXI_SH2_SH(...) MAXI_SH2(v8i16, __VA_ARGS__)
+#घोषणा MAXI_SH2_UH(...) MAXI_SH2(v8u16, __VA_ARGS__)
+#घोषणा MAXI_SH2_SH(...) MAXI_SH2(v8i16, __VA_ARGS__)
 
-#define MAXI_SH4(RTYPE, in0, in1, in2, in3, max_val)  \
+#घोषणा MAXI_SH4(RTYPE, in0, in1, in2, in3, max_val)  \
 {                                                     \
     MAXI_SH2(RTYPE, in0, in1, max_val);               \
     MAXI_SH2(RTYPE, in2, in3, max_val);               \
 }
-#define MAXI_SH4_UH(...) MAXI_SH4(v8u16, __VA_ARGS__)
-#define MAXI_SH4_SH(...) MAXI_SH4(v8i16, __VA_ARGS__)
+#घोषणा MAXI_SH4_UH(...) MAXI_SH4(v8u16, __VA_ARGS__)
+#घोषणा MAXI_SH4_SH(...) MAXI_SH4(v8i16, __VA_ARGS__)
 
-#define MAXI_SH8(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7, max_val)  \
+#घोषणा MAXI_SH8(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7, max_val)  \
 {                                                                         \
     MAXI_SH4(RTYPE, in0, in1, in2, in3, max_val);                         \
     MAXI_SH4(RTYPE, in4, in5, in6, in7, max_val);                         \
 }
-#define MAXI_SH8_UH(...) MAXI_SH8(v8u16, __VA_ARGS__)
-#define MAXI_SH8_SH(...) MAXI_SH8(v8i16, __VA_ARGS__)
+#घोषणा MAXI_SH8_UH(...) MAXI_SH8(v8u16, __VA_ARGS__)
+#घोषणा MAXI_SH8_SH(...) MAXI_SH8(v8i16, __VA_ARGS__)
 
 /* Description : Saturate the halfword element values to the max
                  unsigned value of (sat_val+1 bits)
@@ -1559,29 +1559,29 @@
                  value generated with (sat_val+1) bit range
                  Results are in placed to original vectors
 */
-#define SAT_UH2(RTYPE, in0, in1, sat_val)               \
+#घोषणा SAT_UH2(RTYPE, in0, in1, sat_val)               \
 {                                                       \
     in0 = (RTYPE) __msa_sat_u_h((v8u16) in0, sat_val);  \
     in1 = (RTYPE) __msa_sat_u_h((v8u16) in1, sat_val);  \
 }
-#define SAT_UH2_UH(...) SAT_UH2(v8u16, __VA_ARGS__)
-#define SAT_UH2_SH(...) SAT_UH2(v8i16, __VA_ARGS__)
+#घोषणा SAT_UH2_UH(...) SAT_UH2(v8u16, __VA_ARGS__)
+#घोषणा SAT_UH2_SH(...) SAT_UH2(v8i16, __VA_ARGS__)
 
-#define SAT_UH4(RTYPE, in0, in1, in2, in3, sat_val)  \
+#घोषणा SAT_UH4(RTYPE, in0, in1, in2, in3, sat_val)  \
 {                                                    \
     SAT_UH2(RTYPE, in0, in1, sat_val);               \
     SAT_UH2(RTYPE, in2, in3, sat_val);               \
 }
-#define SAT_UH4_UH(...) SAT_UH4(v8u16, __VA_ARGS__)
-#define SAT_UH4_SH(...) SAT_UH4(v8i16, __VA_ARGS__)
+#घोषणा SAT_UH4_UH(...) SAT_UH4(v8u16, __VA_ARGS__)
+#घोषणा SAT_UH4_SH(...) SAT_UH4(v8i16, __VA_ARGS__)
 
-#define SAT_UH8(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7, sat_val)  \
+#घोषणा SAT_UH8(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7, sat_val)  \
 {                                                                        \
     SAT_UH4(RTYPE, in0, in1, in2, in3, sat_val);                         \
     SAT_UH4(RTYPE, in4, in5, in6, in7, sat_val);                         \
 }
-#define SAT_UH8_UH(...) SAT_UH8(v8u16, __VA_ARGS__)
-#define SAT_UH8_SH(...) SAT_UH8(v8i16, __VA_ARGS__)
+#घोषणा SAT_UH8_UH(...) SAT_UH8(v8u16, __VA_ARGS__)
+#घोषणा SAT_UH8_SH(...) SAT_UH8(v8i16, __VA_ARGS__)
 
 /* Description : Saturate the halfword element values to the max
                  unsigned value of (sat_val+1 bits)
@@ -1593,26 +1593,26 @@
                  value generated with (sat_val+1) bit range
                  Results are in placed to original vectors
 */
-#define SAT_SH2(RTYPE, in0, in1, sat_val)               \
+#घोषणा SAT_SH2(RTYPE, in0, in1, sat_val)               \
 {                                                       \
     in0 = (RTYPE) __msa_sat_s_h((v8i16) in0, sat_val);  \
     in1 = (RTYPE) __msa_sat_s_h((v8i16) in1, sat_val);  \
 }
-#define SAT_SH2_SH(...) SAT_SH2(v8i16, __VA_ARGS__)
+#घोषणा SAT_SH2_SH(...) SAT_SH2(v8i16, __VA_ARGS__)
 
-#define SAT_SH3(RTYPE, in0, in1, in2, sat_val)          \
+#घोषणा SAT_SH3(RTYPE, in0, in1, in2, sat_val)          \
 {                                                       \
     SAT_SH2(RTYPE, in0, in1, sat_val);                  \
     in2 = (RTYPE) __msa_sat_s_h((v8i16) in2, sat_val);  \
 }
-#define SAT_SH3_SH(...) SAT_SH3(v8i16, __VA_ARGS__)
+#घोषणा SAT_SH3_SH(...) SAT_SH3(v8i16, __VA_ARGS__)
 
-#define SAT_SH4(RTYPE, in0, in1, in2, in3, sat_val)  \
+#घोषणा SAT_SH4(RTYPE, in0, in1, in2, in3, sat_val)  \
 {                                                    \
     SAT_SH2(RTYPE, in0, in1, sat_val);               \
     SAT_SH2(RTYPE, in2, in3, sat_val);               \
 }
-#define SAT_SH4_SH(...) SAT_SH4(v8i16, __VA_ARGS__)
+#घोषणा SAT_SH4_SH(...) SAT_SH4(v8i16, __VA_ARGS__)
 
 /* Description : Saturate the word element values to the max
                  unsigned value of (sat_val+1 bits)
@@ -1624,19 +1624,19 @@
                  value generated with (sat_val+1) bit range
                  Results are in placed to original vectors
 */
-#define SAT_SW2(RTYPE, in0, in1, sat_val)               \
+#घोषणा SAT_SW2(RTYPE, in0, in1, sat_val)               \
 {                                                       \
     in0 = (RTYPE) __msa_sat_s_w((v4i32) in0, sat_val);  \
     in1 = (RTYPE) __msa_sat_s_w((v4i32) in1, sat_val);  \
 }
-#define SAT_SW2_SW(...) SAT_SW2(v4i32, __VA_ARGS__)
+#घोषणा SAT_SW2_SW(...) SAT_SW2(v4i32, __VA_ARGS__)
 
-#define SAT_SW4(RTYPE, in0, in1, in2, in3, sat_val)  \
+#घोषणा SAT_SW4(RTYPE, in0, in1, in2, in3, sat_val)  \
 {                                                    \
     SAT_SW2(RTYPE, in0, in1, sat_val);               \
     SAT_SW2(RTYPE, in2, in3, sat_val);               \
 }
-#define SAT_SW4_SW(...) SAT_SW4(v4i32, __VA_ARGS__)
+#घोषणा SAT_SW4_SW(...) SAT_SW4(v4i32, __VA_ARGS__)
 
 /* Description : Indexed halfword element values are replicated to all
                  elements in output vector
@@ -1647,31 +1647,31 @@
                   elements in 'out0' vector
                   Valid index range for halfword operation is 0-7
 */
-#define SPLATI_H2(RTYPE, in, idx0, idx1, out0, out1)  \
+#घोषणा SPLATI_H2(RTYPE, in, idx0, idx1, out0, out1)  \
 {                                                     \
     out0 = (RTYPE) __msa_splati_h((v8i16) in, idx0);  \
     out1 = (RTYPE) __msa_splati_h((v8i16) in, idx1);  \
 }
-#define SPLATI_H2_SB(...) SPLATI_H2(v16i8, __VA_ARGS__)
-#define SPLATI_H2_SH(...) SPLATI_H2(v8i16, __VA_ARGS__)
+#घोषणा SPLATI_H2_SB(...) SPLATI_H2(v16i8, __VA_ARGS__)
+#घोषणा SPLATI_H2_SH(...) SPLATI_H2(v8i16, __VA_ARGS__)
 
-#define SPLATI_H3(RTYPE, in, idx0, idx1, idx2,        \
+#घोषणा SPLATI_H3(RTYPE, in, idx0, idx1, idx2,        \
                   out0, out1, out2)                   \
 {                                                     \
     SPLATI_H2(RTYPE, in, idx0, idx1, out0, out1);     \
     out2 = (RTYPE) __msa_splati_h((v8i16) in, idx2);  \
 }
-#define SPLATI_H3_SB(...) SPLATI_H3(v16i8, __VA_ARGS__)
-#define SPLATI_H3_SH(...) SPLATI_H3(v8i16, __VA_ARGS__)
+#घोषणा SPLATI_H3_SB(...) SPLATI_H3(v16i8, __VA_ARGS__)
+#घोषणा SPLATI_H3_SH(...) SPLATI_H3(v8i16, __VA_ARGS__)
 
-#define SPLATI_H4(RTYPE, in, idx0, idx1, idx2, idx3,  \
+#घोषणा SPLATI_H4(RTYPE, in, idx0, idx1, idx2, idx3,  \
                   out0, out1, out2, out3)             \
 {                                                     \
     SPLATI_H2(RTYPE, in, idx0, idx1, out0, out1);     \
     SPLATI_H2(RTYPE, in, idx2, idx3, out2, out3);     \
 }
-#define SPLATI_H4_SB(...) SPLATI_H4(v16i8, __VA_ARGS__)
-#define SPLATI_H4_SH(...) SPLATI_H4(v8i16, __VA_ARGS__)
+#घोषणा SPLATI_H4_SB(...) SPLATI_H4(v16i8, __VA_ARGS__)
+#घोषणा SPLATI_H4_SH(...) SPLATI_H4(v8i16, __VA_ARGS__)
 
 /* Description : Indexed word element values are replicated to all
                  elements in output vector
@@ -1684,21 +1684,21 @@
                   elements in 'out1' vector
                   Valid index range for halfword operation is 0-3
 */
-#define SPLATI_W2(RTYPE, in, stidx, out0, out1)            \
+#घोषणा SPLATI_W2(RTYPE, in, stidx, out0, out1)            \
 {                                                          \
     out0 = (RTYPE) __msa_splati_w((v4i32) in, stidx);      \
     out1 = (RTYPE) __msa_splati_w((v4i32) in, (stidx+1));  \
 }
-#define SPLATI_W2_SH(...) SPLATI_W2(v8i16, __VA_ARGS__)
-#define SPLATI_W2_SW(...) SPLATI_W2(v4i32, __VA_ARGS__)
+#घोषणा SPLATI_W2_SH(...) SPLATI_W2(v8i16, __VA_ARGS__)
+#घोषणा SPLATI_W2_SW(...) SPLATI_W2(v4i32, __VA_ARGS__)
 
-#define SPLATI_W4(RTYPE, in, out0, out1, out2, out3)  \
+#घोषणा SPLATI_W4(RTYPE, in, out0, out1, out2, out3)  \
 {                                                     \
     SPLATI_W2(RTYPE, in, 0, out0, out1);              \
     SPLATI_W2(RTYPE, in, 2, out2, out3);              \
 }
-#define SPLATI_W4_SH(...) SPLATI_W4(v8i16, __VA_ARGS__)
-#define SPLATI_W4_SW(...) SPLATI_W4(v4i32, __VA_ARGS__)
+#घोषणा SPLATI_W4_SH(...) SPLATI_W4(v8i16, __VA_ARGS__)
+#घोषणा SPLATI_W4_SW(...) SPLATI_W4(v4i32, __VA_ARGS__)
 
 /* Description : Pack even byte elements of vector pairs
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1711,34 +1711,34 @@
                  out1 & even byte elements of in3 are copied to the right
                  half of out1.
 */
-#define PCKEV_B2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा PCKEV_B2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                            \
     out0 = (RTYPE) __msa_pckev_b((v16i8) in0, (v16i8) in1);  \
     out1 = (RTYPE) __msa_pckev_b((v16i8) in2, (v16i8) in3);  \
 }
-#define PCKEV_B2_SB(...) PCKEV_B2(v16i8, __VA_ARGS__)
-#define PCKEV_B2_UB(...) PCKEV_B2(v16u8, __VA_ARGS__)
-#define PCKEV_B2_SH(...) PCKEV_B2(v8i16, __VA_ARGS__)
-#define PCKEV_B2_SW(...) PCKEV_B2(v4i32, __VA_ARGS__)
+#घोषणा PCKEV_B2_SB(...) PCKEV_B2(v16i8, __VA_ARGS__)
+#घोषणा PCKEV_B2_UB(...) PCKEV_B2(v16u8, __VA_ARGS__)
+#घोषणा PCKEV_B2_SH(...) PCKEV_B2(v8i16, __VA_ARGS__)
+#घोषणा PCKEV_B2_SW(...) PCKEV_B2(v4i32, __VA_ARGS__)
 
-#define PCKEV_B3(RTYPE, in0, in1, in2, in3, in4, in5, out0, out1, out2)  \
+#घोषणा PCKEV_B3(RTYPE, in0, in1, in2, in3, in4, in5, out0, out1, out2)  \
 {                                                                        \
     PCKEV_B2(RTYPE, in0, in1, in2, in3, out0, out1);                     \
     out2 = (RTYPE) __msa_pckev_b((v16i8) in4, (v16i8) in5);              \
 }
-#define PCKEV_B3_UB(...) PCKEV_B3(v16u8, __VA_ARGS__)
-#define PCKEV_B3_SB(...) PCKEV_B3(v16i8, __VA_ARGS__)
+#घोषणा PCKEV_B3_UB(...) PCKEV_B3(v16u8, __VA_ARGS__)
+#घोषणा PCKEV_B3_SB(...) PCKEV_B3(v16i8, __VA_ARGS__)
 
-#define PCKEV_B4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा PCKEV_B4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
                  out0, out1, out2, out3)                         \
 {                                                                \
     PCKEV_B2(RTYPE, in0, in1, in2, in3, out0, out1);             \
     PCKEV_B2(RTYPE, in4, in5, in6, in7, out2, out3);             \
 }
-#define PCKEV_B4_SB(...) PCKEV_B4(v16i8, __VA_ARGS__)
-#define PCKEV_B4_UB(...) PCKEV_B4(v16u8, __VA_ARGS__)
-#define PCKEV_B4_SH(...) PCKEV_B4(v8i16, __VA_ARGS__)
-#define PCKEV_B4_SW(...) PCKEV_B4(v4i32, __VA_ARGS__)
+#घोषणा PCKEV_B4_SB(...) PCKEV_B4(v16i8, __VA_ARGS__)
+#घोषणा PCKEV_B4_UB(...) PCKEV_B4(v16u8, __VA_ARGS__)
+#घोषणा PCKEV_B4_SH(...) PCKEV_B4(v8i16, __VA_ARGS__)
+#घोषणा PCKEV_B4_SW(...) PCKEV_B4(v4i32, __VA_ARGS__)
 
 /* Description : Pack even halfword elements of vector pairs
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1751,24 +1751,24 @@
                  out1 & even halfword elements of in3 are copied to the right
                  half of out1.
 */
-#define PCKEV_H2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा PCKEV_H2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                            \
     out0 = (RTYPE) __msa_pckev_h((v8i16) in0, (v8i16) in1);  \
     out1 = (RTYPE) __msa_pckev_h((v8i16) in2, (v8i16) in3);  \
 }
-#define PCKEV_H2_SB(...) PCKEV_H2(v16i8, __VA_ARGS__)
-#define PCKEV_H2_SH(...) PCKEV_H2(v8i16, __VA_ARGS__)
-#define PCKEV_H2_SW(...) PCKEV_H2(v4i32, __VA_ARGS__)
+#घोषणा PCKEV_H2_SB(...) PCKEV_H2(v16i8, __VA_ARGS__)
+#घोषणा PCKEV_H2_SH(...) PCKEV_H2(v8i16, __VA_ARGS__)
+#घोषणा PCKEV_H2_SW(...) PCKEV_H2(v4i32, __VA_ARGS__)
 
-#define PCKEV_H4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा PCKEV_H4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
                  out0, out1, out2, out3)                         \
 {                                                                \
     PCKEV_H2(RTYPE, in0, in1, in2, in3, out0, out1);             \
     PCKEV_H2(RTYPE, in4, in5, in6, in7, out2, out3);             \
 }
-#define PCKEV_H4_SB(...) PCKEV_H4(v16i8, __VA_ARGS__)
-#define PCKEV_H4_SH(...) PCKEV_H4(v8i16, __VA_ARGS__)
-#define PCKEV_H4_SW(...) PCKEV_H4(v4i32, __VA_ARGS__)
+#घोषणा PCKEV_H4_SB(...) PCKEV_H4(v16i8, __VA_ARGS__)
+#घोषणा PCKEV_H4_SH(...) PCKEV_H4(v8i16, __VA_ARGS__)
+#घोषणा PCKEV_H4_SW(...) PCKEV_H4(v4i32, __VA_ARGS__)
 
 /* Description : Pack even double word elements of vector pairs
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1781,22 +1781,22 @@
                  out1 & even double elements of in3 are copied to the right
                  half of out1.
 */
-#define PCKEV_D2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा PCKEV_D2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                            \
     out0 = (RTYPE) __msa_pckev_d((v2i64) in0, (v2i64) in1);  \
     out1 = (RTYPE) __msa_pckev_d((v2i64) in2, (v2i64) in3);  \
 }
-#define PCKEV_D2_UB(...) PCKEV_D2(v16u8, __VA_ARGS__)
-#define PCKEV_D2_SB(...) PCKEV_D2(v16i8, __VA_ARGS__)
-#define PCKEV_D2_SH(...) PCKEV_D2(v8i16, __VA_ARGS__)
+#घोषणा PCKEV_D2_UB(...) PCKEV_D2(v16u8, __VA_ARGS__)
+#घोषणा PCKEV_D2_SB(...) PCKEV_D2(v16i8, __VA_ARGS__)
+#घोषणा PCKEV_D2_SH(...) PCKEV_D2(v8i16, __VA_ARGS__)
 
-#define PCKEV_D4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा PCKEV_D4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
                  out0, out1, out2, out3)                         \
 {                                                                \
     PCKEV_D2(RTYPE, in0, in1, in2, in3, out0, out1);             \
     PCKEV_D2(RTYPE, in4, in5, in6, in7, out2, out3);             \
 }
-#define PCKEV_D4_UB(...) PCKEV_D4(v16u8, __VA_ARGS__)
+#घोषणा PCKEV_D4_UB(...) PCKEV_D4(v16u8, __VA_ARGS__)
 
 /* Description : Pack odd double word elements of vector pairs
    Arguments   : Inputs  - in0, in1
@@ -1807,14 +1807,14 @@
                  As operation is on same input 'in1' vector, index 1 double word
                  element is overwritten to index 0 and result is written to out1
 */
-#define PCKOD_D2(RTYPE, in0, in1, in2, in3, out0, out1)      \
+#घोषणा PCKOD_D2(RTYPE, in0, in1, in2, in3, out0, out1)      \
 {                                                            \
     out0 = (RTYPE) __msa_pckod_d((v2i64) in0, (v2i64) in1);  \
     out1 = (RTYPE) __msa_pckod_d((v2i64) in2, (v2i64) in3);  \
 }
-#define PCKOD_D2_UB(...) PCKOD_D2(v16u8, __VA_ARGS__)
-#define PCKOD_D2_SH(...) PCKOD_D2(v8i16, __VA_ARGS__)
-#define PCKOD_D2_SD(...) PCKOD_D2(v2i64, __VA_ARGS__)
+#घोषणा PCKOD_D2_UB(...) PCKOD_D2(v16u8, __VA_ARGS__)
+#घोषणा PCKOD_D2_SH(...) PCKOD_D2(v8i16, __VA_ARGS__)
+#घोषणा PCKOD_D2_SD(...) PCKOD_D2(v2i64, __VA_ARGS__)
 
 /* Description : Each byte element is logically xor'ed with immediate 128
    Arguments   : Inputs  - in0, in1
@@ -1828,59 +1828,59 @@
                  'in1' vector
                  Similar for other pairs
 */
-#define XORI_B2_128(RTYPE, in0, in1)               \
+#घोषणा XORI_B2_128(RTYPE, in0, in1)               \
 {                                                  \
     in0 = (RTYPE) __msa_xori_b((v16u8) in0, 128);  \
     in1 = (RTYPE) __msa_xori_b((v16u8) in1, 128);  \
 }
-#define XORI_B2_128_UB(...) XORI_B2_128(v16u8, __VA_ARGS__)
-#define XORI_B2_128_SB(...) XORI_B2_128(v16i8, __VA_ARGS__)
-#define XORI_B2_128_SH(...) XORI_B2_128(v8i16, __VA_ARGS__)
+#घोषणा XORI_B2_128_UB(...) XORI_B2_128(v16u8, __VA_ARGS__)
+#घोषणा XORI_B2_128_SB(...) XORI_B2_128(v16i8, __VA_ARGS__)
+#घोषणा XORI_B2_128_SH(...) XORI_B2_128(v8i16, __VA_ARGS__)
 
-#define XORI_B3_128(RTYPE, in0, in1, in2)          \
+#घोषणा XORI_B3_128(RTYPE, in0, in1, in2)          \
 {                                                  \
     XORI_B2_128(RTYPE, in0, in1);                  \
     in2 = (RTYPE) __msa_xori_b((v16u8) in2, 128);  \
 }
-#define XORI_B3_128_SB(...) XORI_B3_128(v16i8, __VA_ARGS__)
+#घोषणा XORI_B3_128_SB(...) XORI_B3_128(v16i8, __VA_ARGS__)
 
-#define XORI_B4_128(RTYPE, in0, in1, in2, in3)  \
+#घोषणा XORI_B4_128(RTYPE, in0, in1, in2, in3)  \
 {                                               \
     XORI_B2_128(RTYPE, in0, in1);               \
     XORI_B2_128(RTYPE, in2, in3);               \
 }
-#define XORI_B4_128_UB(...) XORI_B4_128(v16u8, __VA_ARGS__)
-#define XORI_B4_128_SB(...) XORI_B4_128(v16i8, __VA_ARGS__)
-#define XORI_B4_128_SH(...) XORI_B4_128(v8i16, __VA_ARGS__)
+#घोषणा XORI_B4_128_UB(...) XORI_B4_128(v16u8, __VA_ARGS__)
+#घोषणा XORI_B4_128_SB(...) XORI_B4_128(v16i8, __VA_ARGS__)
+#घोषणा XORI_B4_128_SH(...) XORI_B4_128(v8i16, __VA_ARGS__)
 
-#define XORI_B5_128(RTYPE, in0, in1, in2, in3, in4)  \
+#घोषणा XORI_B5_128(RTYPE, in0, in1, in2, in3, in4)  \
 {                                                    \
     XORI_B3_128(RTYPE, in0, in1, in2);               \
     XORI_B2_128(RTYPE, in3, in4);                    \
 }
-#define XORI_B5_128_SB(...) XORI_B5_128(v16i8, __VA_ARGS__)
+#घोषणा XORI_B5_128_SB(...) XORI_B5_128(v16i8, __VA_ARGS__)
 
-#define XORI_B6_128(RTYPE, in0, in1, in2, in3, in4, in5)  \
+#घोषणा XORI_B6_128(RTYPE, in0, in1, in2, in3, in4, in5)  \
 {                                                         \
     XORI_B4_128(RTYPE, in0, in1, in2, in3);               \
     XORI_B2_128(RTYPE, in4, in5);                         \
 }
-#define XORI_B6_128_SB(...) XORI_B6_128(v16i8, __VA_ARGS__)
+#घोषणा XORI_B6_128_SB(...) XORI_B6_128(v16i8, __VA_ARGS__)
 
-#define XORI_B7_128(RTYPE, in0, in1, in2, in3, in4, in5, in6)  \
+#घोषणा XORI_B7_128(RTYPE, in0, in1, in2, in3, in4, in5, in6)  \
 {                                                              \
     XORI_B4_128(RTYPE, in0, in1, in2, in3);                    \
     XORI_B3_128(RTYPE, in4, in5, in6);                         \
 }
-#define XORI_B7_128_SB(...) XORI_B7_128(v16i8, __VA_ARGS__)
+#घोषणा XORI_B7_128_SB(...) XORI_B7_128(v16i8, __VA_ARGS__)
 
-#define XORI_B8_128(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7)  \
+#घोषणा XORI_B8_128(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7)  \
 {                                                                   \
     XORI_B4_128(RTYPE, in0, in1, in2, in3);                         \
     XORI_B4_128(RTYPE, in4, in5, in6, in7);                         \
 }
-#define XORI_B8_128_SB(...) XORI_B8_128(v16i8, __VA_ARGS__)
-#define XORI_B8_128_UB(...) XORI_B8_128(v16u8, __VA_ARGS__)
+#घोषणा XORI_B8_128_SB(...) XORI_B8_128(v16i8, __VA_ARGS__)
+#घोषणा XORI_B8_128_UB(...) XORI_B8_128(v16u8, __VA_ARGS__)
 
 /* Description : Addition of signed halfword elements and signed saturation
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -1891,21 +1891,21 @@
                  between -32768 to +32767 (as per halfword data type)
                  Similar for other pairs
 */
-#define ADDS_SH2(RTYPE, in0, in1, in2, in3, out0, out1)       \
+#घोषणा ADDS_SH2(RTYPE, in0, in1, in2, in3, out0, out1)       \
 {                                                             \
     out0 = (RTYPE) __msa_adds_s_h((v8i16) in0, (v8i16) in1);  \
     out1 = (RTYPE) __msa_adds_s_h((v8i16) in2, (v8i16) in3);  \
 }
-#define ADDS_SH2_SH(...) ADDS_SH2(v8i16, __VA_ARGS__)
+#घोषणा ADDS_SH2_SH(...) ADDS_SH2(v8i16, __VA_ARGS__)
 
-#define ADDS_SH4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा ADDS_SH4(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
                  out0, out1, out2, out3)                         \
 {                                                                \
     ADDS_SH2(RTYPE, in0, in1, in2, in3, out0, out1);             \
     ADDS_SH2(RTYPE, in4, in5, in6, in7, out2, out3);             \
 }
-#define ADDS_SH4_UH(...) ADDS_SH4(v8u16, __VA_ARGS__)
-#define ADDS_SH4_SH(...) ADDS_SH4(v8i16, __VA_ARGS__)
+#घोषणा ADDS_SH4_UH(...) ADDS_SH4(v8u16, __VA_ARGS__)
+#घोषणा ADDS_SH4_SH(...) ADDS_SH4(v8i16, __VA_ARGS__)
 
 /* Description : Shift left all elements of vector (generic for all data types)
    Arguments   : Inputs  - in0, in1, in2, in3, shift
@@ -1915,12 +1915,12 @@
                  result is in place written to 'in0'
                  Similar for other pairs
 */
-#define SLLI_2V(in0, in1, shift)  \
+#घोषणा SLLI_2V(in0, in1, shift)  \
 {                                 \
     in0 = in0 << shift;           \
     in1 = in1 << shift;           \
 }
-#define SLLI_4V(in0, in1, in2, in3, shift)  \
+#घोषणा SLLI_4V(in0, in1, in2, in3, shift)  \
 {                                           \
     in0 = in0 << shift;                     \
     in1 = in1 << shift;                     \
@@ -1938,7 +1938,7 @@
                  Here, 'shift' is GP variable passed in
                  Similar for other pairs
 */
-#define SRA_4V(in0, in1, in2, in3, shift)  \
+#घोषणा SRA_4V(in0, in1, in2, in3, shift)  \
 {                                          \
     in0 = in0 >> shift;                    \
     in1 = in1 >> shift;                    \
@@ -1956,32 +1956,32 @@
                  Here, 'shift' is a vector passed in
                  Similar for other pairs
 */
-#define SRL_H4(RTYPE, in0, in1, in2, in3, shift)            \
+#घोषणा SRL_H4(RTYPE, in0, in1, in2, in3, shift)            \
 {                                                           \
     in0 = (RTYPE) __msa_srl_h((v8i16) in0, (v8i16) shift);  \
     in1 = (RTYPE) __msa_srl_h((v8i16) in1, (v8i16) shift);  \
     in2 = (RTYPE) __msa_srl_h((v8i16) in2, (v8i16) shift);  \
     in3 = (RTYPE) __msa_srl_h((v8i16) in3, (v8i16) shift);  \
 }
-#define SRL_H4_UH(...) SRL_H4(v8u16, __VA_ARGS__)
+#घोषणा SRL_H4_UH(...) SRL_H4(v8u16, __VA_ARGS__)
 
-#define SRLR_H4(RTYPE, in0, in1, in2, in3, shift)            \
+#घोषणा SRLR_H4(RTYPE, in0, in1, in2, in3, shift)            \
 {                                                            \
     in0 = (RTYPE) __msa_srlr_h((v8i16) in0, (v8i16) shift);  \
     in1 = (RTYPE) __msa_srlr_h((v8i16) in1, (v8i16) shift);  \
     in2 = (RTYPE) __msa_srlr_h((v8i16) in2, (v8i16) shift);  \
     in3 = (RTYPE) __msa_srlr_h((v8i16) in3, (v8i16) shift);  \
 }
-#define SRLR_H4_UH(...) SRLR_H4(v8u16, __VA_ARGS__)
-#define SRLR_H4_SH(...) SRLR_H4(v8i16, __VA_ARGS__)
+#घोषणा SRLR_H4_UH(...) SRLR_H4(v8u16, __VA_ARGS__)
+#घोषणा SRLR_H4_SH(...) SRLR_H4(v8i16, __VA_ARGS__)
 
-#define SRLR_H8(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7, shift)  \
+#घोषणा SRLR_H8(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7, shift)  \
 {                                                                      \
     SRLR_H4(RTYPE, in0, in1, in2, in3, shift);                         \
     SRLR_H4(RTYPE, in4, in5, in6, in7, shift);                         \
 }
-#define SRLR_H8_UH(...) SRLR_H8(v8u16, __VA_ARGS__)
-#define SRLR_H8_SH(...) SRLR_H8(v8i16, __VA_ARGS__)
+#घोषणा SRLR_H8_UH(...) SRLR_H8(v8u16, __VA_ARGS__)
+#घोषणा SRLR_H8_SH(...) SRLR_H8(v8i16, __VA_ARGS__)
 
 /* Description : Shift right arithmetic rounded halfwords
    Arguments   : Inputs  - in0, in1, shift
@@ -1994,28 +1994,28 @@
                  Here, 'shift' is a vector passed in
                  Similar for other pairs
 */
-#define SRAR_H2(RTYPE, in0, in1, shift)                      \
+#घोषणा SRAR_H2(RTYPE, in0, in1, shift)                      \
 {                                                            \
     in0 = (RTYPE) __msa_srar_h((v8i16) in0, (v8i16) shift);  \
     in1 = (RTYPE) __msa_srar_h((v8i16) in1, (v8i16) shift);  \
 }
-#define SRAR_H2_UH(...) SRAR_H2(v8u16, __VA_ARGS__)
-#define SRAR_H2_SH(...) SRAR_H2(v8i16, __VA_ARGS__)
+#घोषणा SRAR_H2_UH(...) SRAR_H2(v8u16, __VA_ARGS__)
+#घोषणा SRAR_H2_SH(...) SRAR_H2(v8i16, __VA_ARGS__)
 
-#define SRAR_H3(RTYPE, in0, in1, in2, shift)                 \
+#घोषणा SRAR_H3(RTYPE, in0, in1, in2, shift)                 \
 {                                                            \
     SRAR_H2(RTYPE, in0, in1, shift)                          \
     in2 = (RTYPE) __msa_srar_h((v8i16) in2, (v8i16) shift);  \
 }
-#define SRAR_H3_SH(...) SRAR_H3(v8i16, __VA_ARGS__)
+#घोषणा SRAR_H3_SH(...) SRAR_H3(v8i16, __VA_ARGS__)
 
-#define SRAR_H4(RTYPE, in0, in1, in2, in3, shift)  \
+#घोषणा SRAR_H4(RTYPE, in0, in1, in2, in3, shift)  \
 {                                                  \
     SRAR_H2(RTYPE, in0, in1, shift)                \
     SRAR_H2(RTYPE, in2, in3, shift)                \
 }
-#define SRAR_H4_UH(...) SRAR_H4(v8u16, __VA_ARGS__)
-#define SRAR_H4_SH(...) SRAR_H4(v8i16, __VA_ARGS__)
+#घोषणा SRAR_H4_UH(...) SRAR_H4(v8u16, __VA_ARGS__)
+#घोषणा SRAR_H4_SH(...) SRAR_H4(v8i16, __VA_ARGS__)
 
 /* Description : Shift right arithmetic rounded words
    Arguments   : Inputs  - in0, in1, shift
@@ -2028,19 +2028,19 @@
                  Here, 'shift' is a vector passed in
                  Similar for other pairs
 */
-#define SRAR_W2(RTYPE, in0, in1, shift)                      \
+#घोषणा SRAR_W2(RTYPE, in0, in1, shift)                      \
 {                                                            \
     in0 = (RTYPE) __msa_srar_w((v4i32) in0, (v4i32) shift);  \
     in1 = (RTYPE) __msa_srar_w((v4i32) in1, (v4i32) shift);  \
 }
-#define SRAR_W2_SW(...) SRAR_W2(v4i32, __VA_ARGS__)
+#घोषणा SRAR_W2_SW(...) SRAR_W2(v4i32, __VA_ARGS__)
 
-#define SRAR_W4(RTYPE, in0, in1, in2, in3, shift)  \
+#घोषणा SRAR_W4(RTYPE, in0, in1, in2, in3, shift)  \
 {                                                  \
     SRAR_W2(RTYPE, in0, in1, shift)                \
     SRAR_W2(RTYPE, in2, in3, shift)                \
 }
-#define SRAR_W4_SW(...) SRAR_W4(v4i32, __VA_ARGS__)
+#घोषणा SRAR_W4_SW(...) SRAR_W4(v4i32, __VA_ARGS__)
 
 /* Description : Shift right arithmetic rounded (immediate)
    Arguments   : Inputs  - in0, in1, in2, in3, shift
@@ -2052,21 +2052,21 @@
                  and the result is in place written to 'in0'
                  Similar for other pairs
 */
-#define SRARI_H2(RTYPE, in0, in1, shift)              \
+#घोषणा SRARI_H2(RTYPE, in0, in1, shift)              \
 {                                                     \
     in0 = (RTYPE) __msa_srari_h((v8i16) in0, shift);  \
     in1 = (RTYPE) __msa_srari_h((v8i16) in1, shift);  \
 }
-#define SRARI_H2_UH(...) SRARI_H2(v8u16, __VA_ARGS__)
-#define SRARI_H2_SH(...) SRARI_H2(v8i16, __VA_ARGS__)
+#घोषणा SRARI_H2_UH(...) SRARI_H2(v8u16, __VA_ARGS__)
+#घोषणा SRARI_H2_SH(...) SRARI_H2(v8i16, __VA_ARGS__)
 
-#define SRARI_H4(RTYPE, in0, in1, in2, in3, shift)    \
+#घोषणा SRARI_H4(RTYPE, in0, in1, in2, in3, shift)    \
 {                                                     \
     SRARI_H2(RTYPE, in0, in1, shift);                 \
     SRARI_H2(RTYPE, in2, in3, shift);                 \
 }
-#define SRARI_H4_UH(...) SRARI_H4(v8u16, __VA_ARGS__)
-#define SRARI_H4_SH(...) SRARI_H4(v8i16, __VA_ARGS__)
+#घोषणा SRARI_H4_UH(...) SRARI_H4(v8u16, __VA_ARGS__)
+#घोषणा SRARI_H4_SH(...) SRARI_H4(v8i16, __VA_ARGS__)
 
 /* Description : Shift right arithmetic rounded (immediate)
    Arguments   : Inputs  - in0, in1, shift
@@ -2078,20 +2078,20 @@
                  and the result is in place written to 'in0'
                  Similar for other pairs
 */
-#define SRARI_W2(RTYPE, in0, in1, shift)              \
+#घोषणा SRARI_W2(RTYPE, in0, in1, shift)              \
 {                                                     \
     in0 = (RTYPE) __msa_srari_w((v4i32) in0, shift);  \
     in1 = (RTYPE) __msa_srari_w((v4i32) in1, shift);  \
 }
-#define SRARI_W2_SW(...) SRARI_W2(v4i32, __VA_ARGS__)
+#घोषणा SRARI_W2_SW(...) SRARI_W2(v4i32, __VA_ARGS__)
 
-#define SRARI_W4(RTYPE, in0, in1, in2, in3, shift)  \
+#घोषणा SRARI_W4(RTYPE, in0, in1, in2, in3, shift)  \
 {                                                   \
     SRARI_W2(RTYPE, in0, in1, shift);               \
     SRARI_W2(RTYPE, in2, in3, shift);               \
 }
-#define SRARI_W4_SH(...) SRARI_W4(v8i16, __VA_ARGS__)
-#define SRARI_W4_SW(...) SRARI_W4(v4i32, __VA_ARGS__)
+#घोषणा SRARI_W4_SH(...) SRARI_W4(v8i16, __VA_ARGS__)
+#घोषणा SRARI_W4_SW(...) SRARI_W4(v4i32, __VA_ARGS__)
 
 /* Description : Multiplication of pairs of vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -2100,12 +2100,12 @@
                  and result is written to 'out0'
                  Similar for other pairs
 */
-#define MUL2(in0, in1, in2, in3, out0, out1)  \
+#घोषणा MUL2(in0, in1, in2, in3, out0, out1)  \
 {                                             \
     out0 = in0 * in1;                         \
     out1 = in2 * in3;                         \
 }
-#define MUL4(in0, in1, in2, in3, in4, in5, in6, in7, out0, out1, out2, out3)  \
+#घोषणा MUL4(in0, in1, in2, in3, in4, in5, in6, in7, out0, out1, out2, out3)  \
 {                                                                             \
     MUL2(in0, in1, in2, in3, out0, out1);                                     \
     MUL2(in4, in5, in6, in7, out2, out3);                                     \
@@ -2117,12 +2117,12 @@
    Details     : Each element from 2 pairs vectors is added and 2 results are
                  produced
 */
-#define ADD2(in0, in1, in2, in3, out0, out1)  \
+#घोषणा ADD2(in0, in1, in2, in3, out0, out1)  \
 {                                             \
     out0 = in0 + in1;                         \
     out1 = in2 + in3;                         \
 }
-#define ADD4(in0, in1, in2, in3, in4, in5, in6, in7, out0, out1, out2, out3)  \
+#घोषणा ADD4(in0, in1, in2, in3, in4, in5, in6, in7, out0, out1, out2, out3)  \
 {                                                                             \
     ADD2(in0, in1, in2, in3, out0, out1);                                     \
     ADD2(in4, in5, in6, in7, out2, out3);                                     \
@@ -2134,12 +2134,12 @@
    Details     : Each element from 2 pairs vectors is subtracted and 2 results
                  are produced
 */
-#define SUB2(in0, in1, in2, in3, out0, out1)  \
+#घोषणा SUB2(in0, in1, in2, in3, out0, out1)  \
 {                                             \
     out0 = in0 - in1;                         \
     out1 = in2 - in3;                         \
 }
-#define SUB4(in0, in1, in2, in3, in4, in5, in6, in7, out0, out1, out2, out3)  \
+#घोषणा SUB4(in0, in1, in2, in3, in4, in5, in6, in7, out0, out1, out2, out3)  \
 {                                                                             \
     out0 = in0 - in1;                                                         \
     out1 = in2 - in3;                                                         \
@@ -2155,7 +2155,7 @@
                  extracted and interleaved with same vector 'in' to generate
                  8 halfword elements keeping sign intact
 */
-#define UNPCK_R_SB_SH(in, out)                       \
+#घोषणा UNPCK_R_SB_SH(in, out)                       \
 {                                                    \
     v16i8 sign_m;                                    \
                                                      \
@@ -2171,7 +2171,7 @@
                  extracted and interleaved with same vector 'in0' to generate
                  4 word elements keeping sign intact
 */
-#define UNPCK_R_SH_SW(in, out)                       \
+#घोषणा UNPCK_R_SH_SW(in, out)                       \
 {                                                    \
     v8i16 sign_m;                                    \
                                                      \
@@ -2190,7 +2190,7 @@
                  Then interleaved left with same vector 'in0' to
                  generate 8 signed halfword elements in 'out1'
 */
-#define UNPCK_SB_SH(in, out0, out1)                  \
+#घोषणा UNPCK_SB_SH(in, out0, out1)                  \
 {                                                    \
     v16i8 tmp_m;                                     \
                                                      \
@@ -2205,7 +2205,7 @@
    Details     : Zero extended right half of vector is returned in 'out0'
                  Zero extended left half of vector is returned in 'out1'
 */
-#define UNPCK_UB_SH(in, out0, out1)                   \
+#घोषणा UNPCK_UB_SH(in, out0, out1)                   \
 {                                                     \
     v16i8 zero_m = { 0 };                             \
                                                       \
@@ -2223,7 +2223,7 @@
                  Then interleaved left with same vector 'in0' to
                  generate 4 signed word elements in 'out1'
 */
-#define UNPCK_SH_SW(in, out0, out1)                  \
+#घोषणा UNPCK_SH_SW(in, out0, out1)                  \
 {                                                    \
     v8i16 tmp_m;                                     \
                                                      \
@@ -2236,7 +2236,7 @@
                  Outputs - in0, in1 (in-place)
    Details     : Swapping of two input variables using xor
 */
-#define SWAP(in0, in1)  \
+#घोषणा SWAP(in0, in1)  \
 {                       \
     in0 = in0 ^ in1;    \
     in1 = in0 ^ in1;    \
@@ -2248,7 +2248,7 @@
                  Outputs - out0, out1, out2, out3
    Details     : Butterfly operation
 */
-#define BUTTERFLY_4(in0, in1, in2, in3, out0, out1, out2, out3)  \
+#घोषणा BUTTERFLY_4(in0, in1, in2, in3, out0, out1, out2, out3)  \
 {                                                                \
     out0 = in0 + in3;                                            \
     out1 = in1 + in2;                                            \
@@ -2262,7 +2262,7 @@
                  Outputs - out0 .. out7
    Details     : Butterfly operation
 */
-#define BUTTERFLY_8(in0, in1, in2, in3, in4, in5, in6, in7,          \
+#घोषणा BUTTERFLY_8(in0, in1, in2, in3, in4, in5, in6, in7,          \
                     out0, out1, out2, out3, out4, out5, out6, out7)  \
 {                                                                    \
     out0 = in0 + in7;                                                \
@@ -2281,7 +2281,7 @@
                  Outputs - out0 .. out15
    Details     : Butterfly operation
 */
-#define BUTTERFLY_16(in0, in1, in2, in3, in4, in5, in6, in7,                \
+#घोषणा BUTTERFLY_16(in0, in1, in2, in3, in4, in5, in6, in7,                \
                      in8, in9,  in10, in11, in12, in13, in14, in15,         \
                      out0, out1, out2, out3, out4, out5, out6, out7,        \
                      out8, out9, out10, out11, out12, out13, out14, out15)  \
@@ -2311,7 +2311,7 @@
                  Return Type - unsigned byte
    Details     :
 */
-#define TRANSPOSE4x4_UB_UB(in0, in1, in2, in3, out0, out1, out2, out3)  \
+#घोषणा TRANSPOSE4x4_UB_UB(in0, in1, in2, in3, out0, out1, out2, out3)  \
 {                                                                       \
     v16i8 zero_m = { 0 };                                               \
     v16i8 s0_m, s1_m, s2_m, s3_m;                                       \
@@ -2331,7 +2331,7 @@
                  Return Type - as per RTYPE
    Details     :
 */
-#define TRANSPOSE8x4_UB(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा TRANSPOSE8x4_UB(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,  \
                         out0, out1, out2, out3)                         \
 {                                                                       \
     v16i8 tmp0_m, tmp1_m, tmp2_m, tmp3_m;                               \
@@ -2347,8 +2347,8 @@
     out1 = (RTYPE) __msa_ilvl_d((v2i64) out2, (v2i64) out0);            \
     out3 = (RTYPE) __msa_ilvl_d((v2i64) out0, (v2i64) out2);            \
 }
-#define TRANSPOSE8x4_UB_UB(...) TRANSPOSE8x4_UB(v16u8, __VA_ARGS__)
-#define TRANSPOSE8x4_UB_UH(...) TRANSPOSE8x4_UB(v8u16, __VA_ARGS__)
+#घोषणा TRANSPOSE8x4_UB_UB(...) TRANSPOSE8x4_UB(v16u8, __VA_ARGS__)
+#घोषणा TRANSPOSE8x4_UB_UH(...) TRANSPOSE8x4_UB(v8u16, __VA_ARGS__)
 
 /* Description : Transposes input 8x8 byte block
    Arguments   : Inputs  - in0, in1, in2, in3, in4, in5, in6, in7
@@ -2358,7 +2358,7 @@
                  Return Type - as per RTYPE
    Details     :
 */
-#define TRANSPOSE8x8_UB(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,   \
+#घोषणा TRANSPOSE8x8_UB(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,   \
                         out0, out1, out2, out3, out4, out5, out6, out7)  \
 {                                                                        \
     v16i8 tmp0_m, tmp1_m, tmp2_m, tmp3_m;                                \
@@ -2374,8 +2374,8 @@
     SLDI_B4(RTYPE, zeros, out0, zeros, out2, zeros, out4, zeros, out6,   \
             8, out1, out3, out5, out7);                                  \
 }
-#define TRANSPOSE8x8_UB_UB(...) TRANSPOSE8x8_UB(v16u8, __VA_ARGS__)
-#define TRANSPOSE8x8_UB_UH(...) TRANSPOSE8x8_UB(v8u16, __VA_ARGS__)
+#घोषणा TRANSPOSE8x8_UB_UB(...) TRANSPOSE8x8_UB(v16u8, __VA_ARGS__)
+#घोषणा TRANSPOSE8x8_UB_UH(...) TRANSPOSE8x8_UB(v8u16, __VA_ARGS__)
 
 /* Description : Transposes 16x4 block into 4x16 with byte elements in vectors
    Arguments   : Inputs  - in0, in1, in2, in3, in4, in5, in6, in7,
@@ -2384,7 +2384,7 @@
                  Return Type - unsigned byte
    Details     :
 */
-#define TRANSPOSE16x4_UB_UB(in0, in1, in2, in3, in4, in5, in6, in7,        \
+#घोषणा TRANSPOSE16x4_UB_UB(in0, in1, in2, in3, in4, in5, in6, in7,        \
                             in8, in9, in10, in11, in12, in13, in14, in15,  \
                             out0, out1, out2, out3)                        \
 {                                                                          \
@@ -2419,7 +2419,7 @@
                  Return Type - unsigned byte
    Details     :
 */
-#define TRANSPOSE16x8_UB_UB(in0, in1, in2, in3, in4, in5, in6, in7,          \
+#घोषणा TRANSPOSE16x8_UB_UB(in0, in1, in2, in3, in4, in5, in6, in7,          \
                             in8, in9, in10, in11, in12, in13, in14, in15,    \
                             out0, out1, out2, out3, out4, out5, out6, out7)  \
 {                                                                            \
@@ -2465,7 +2465,7 @@
                  Return Type - signed halfword
    Details     :
 */
-#define TRANSPOSE4x4_SH_SH(in0, in1, in2, in3, out0, out1, out2, out3)  \
+#घोषणा TRANSPOSE4x4_SH_SH(in0, in1, in2, in3, out0, out1, out2, out3)  \
 {                                                                       \
     v8i16 s0_m, s1_m;                                                   \
                                                                         \
@@ -2481,7 +2481,7 @@
                  Return Type - as per RTYPE
    Details     :
 */
-#define TRANSPOSE8x8_H(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,   \
+#घोषणा TRANSPOSE8x8_H(RTYPE, in0, in1, in2, in3, in4, in5, in6, in7,   \
                        out0, out1, out2, out3, out4, out5, out6, out7)  \
 {                                                                       \
     v8i16 s0_m, s1_m;                                                   \
@@ -2503,8 +2503,8 @@
     out5 = (RTYPE) __msa_pckod_d((v2i64) tmp2_m, (v2i64) tmp6_m);       \
     out7 = (RTYPE) __msa_pckod_d((v2i64) tmp3_m, (v2i64) tmp7_m);       \
 }
-#define TRANSPOSE8x8_UH_UH(...) TRANSPOSE8x8_H(v8u16, __VA_ARGS__)
-#define TRANSPOSE8x8_SH_SH(...) TRANSPOSE8x8_H(v8i16, __VA_ARGS__)
+#घोषणा TRANSPOSE8x8_UH_UH(...) TRANSPOSE8x8_H(v8u16, __VA_ARGS__)
+#घोषणा TRANSPOSE8x8_SH_SH(...) TRANSPOSE8x8_H(v8i16, __VA_ARGS__)
 
 /* Description : Transposes 4x4 block with word elements in vectors
    Arguments   : Inputs  - in0, in1, in2, in3
@@ -2512,7 +2512,7 @@
                  Return Type - signed word
    Details     :
 */
-#define TRANSPOSE4x4_SW_SW(in0, in1, in2, in3, out0, out1, out2, out3)  \
+#घोषणा TRANSPOSE4x4_SW_SW(in0, in1, in2, in3, out0, out1, out2, out3)  \
 {                                                                       \
     v4i32 s0_m, s1_m, s2_m, s3_m;                                       \
                                                                         \
@@ -2539,7 +2539,7 @@
                  The half vector results from all 4 vectors are stored in
                  destination memory as 8x4 byte block
 */
-#define AVE_ST8x4_UB(in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
+#घोषणा AVE_ST8x4_UB(in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
 {                                                                           \
     uint64_t out0_m, out1_m, out2_m, out3_m;                                \
     v16u8 tmp0_m, tmp1_m, tmp2_m, tmp3_m;                                   \
@@ -2570,7 +2570,7 @@
                  The results from all 4 vectors are stored in destination
                  memory as 16x4 byte block
 */
-#define AVE_ST16x4_UB(in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
+#घोषणा AVE_ST16x4_UB(in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
 {                                                                            \
     v16u8 tmp0_m, tmp1_m, tmp2_m, tmp3_m;                                    \
                                                                              \
@@ -2596,7 +2596,7 @@
                  The half vector results from all 4 vectors are stored in
                  destination memory as 8x4 byte block
 */
-#define AVER_ST8x4_UB(in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
+#घोषणा AVER_ST8x4_UB(in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
 {                                                                            \
     uint64_t out0_m, out1_m, out2_m, out3_m;                                 \
     v16u8 tp0_m, tp1_m, tp2_m, tp3_m;                                        \
@@ -2625,7 +2625,7 @@
                  The vector results from all 4 vectors are stored in
                  destination memory as 16x4 byte block
 */
-#define AVER_ST16x4_UB(in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
+#घोषणा AVER_ST16x4_UB(in0, in1, in2, in3, in4, in5, in6, in7, pdst, stride)  \
 {                                                                             \
     v16u8 t0_m, t1_m, t2_m, t3_m;                                             \
                                                                               \
@@ -2649,7 +2649,7 @@
                  The half vector results from all 4 vectors are stored in
                  destination memory as 8x4 byte block
 */
-#define AVER_DST_ST8x4_UB(in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा AVER_DST_ST8x4_UB(in0, in1, in2, in3, in4, in5, in6, in7,  \
                           pdst, stride)                            \
 {                                                                  \
     v16u8 tmp0_m, tmp1_m, tmp2_m, tmp3_m;                          \
@@ -2677,7 +2677,7 @@
                  The vector results from all 4 vectors are stored in
                  destination memory as 16x4 byte block
 */
-#define AVER_DST_ST16x4_UB(in0, in1, in2, in3, in4, in5, in6, in7,  \
+#घोषणा AVER_DST_ST16x4_UB(in0, in1, in2, in3, in4, in5, in6, in7,  \
                            pdst, stride)                            \
 {                                                                   \
     v16u8 tmp0_m, tmp1_m, tmp2_m, tmp3_m;                           \
@@ -2695,7 +2695,7 @@
    Details     : Least significant 4 bytes from each input vector are added to
                  the destination bytes, clipped between 0-255 and then stored.
 */
-#define ADDBLK_ST4x4_UB(in0, in1, in2, in3, pdst, stride)         \
+#घोषणा ADDBLK_ST4x4_UB(in0, in1, in2, in3, pdst, stride)         \
 {                                                                 \
     uint32_t src0_m, src1_m, src2_m, src3_m;                      \
     uint32_t out0_m, out1_m, out2_m, out3_m;                      \
@@ -2706,8 +2706,8 @@
                                                                   \
     ILVR_D2_SH(in1, in0, in3, in2, inp0_m, inp1_m)                \
     LW4(pdst, stride,  src0_m, src1_m, src2_m, src3_m);           \
-    INSERT_W2_SB(src0_m, src1_m, dst0_m);                         \
-    INSERT_W2_SB(src2_m, src3_m, dst1_m);                         \
+    जोड़ो_W2_SB(src0_m, src1_m, dst0_m);                         \
+    जोड़ो_W2_SB(src2_m, src3_m, dst1_m);                         \
     ILVR_B2_SH(zero_m, dst0_m, zero_m, dst1_m, res0_m, res1_m);   \
     ADD2(res0_m, inp0_m, res1_m, inp1_m, res0_m, res1_m);         \
     CLIP_SH2_0_255(res0_m, res1_m);                               \
@@ -2731,7 +2731,7 @@
 
                  out0_m = (in0 * coeff0) + (in1 * coeff1) + (in2 * coeff2)
 */
-#define DPADD_SH3_SH(in0, in1, in2, coeff0, coeff1, coeff2)         \
+#घोषणा DPADD_SH3_SH(in0, in1, in2, coeff0, coeff1, coeff2)         \
 ( {                                                                 \
     v8i16 out0_m;                                                   \
                                                                     \
@@ -2750,7 +2750,7 @@
                  together in one vector and the resulted vector is xor'ed with
                  128 to shift the range from signed to unsigned byte
 */
-#define PCKEV_XORI128_UB(in0, in1)                            \
+#घोषणा PCKEV_XORI128_UB(in0, in1)                            \
 ( {                                                           \
     v16u8 out_m;                                              \
     out_m = (v16u8) __msa_pckev_b((v16i8) in1, (v16i8) in0);  \
@@ -2762,7 +2762,7 @@
                  as 8x4 unsigned byte block
    Arguments   : Inputs  - in0, in1, in2, in3, dst0, dst1, pdst, stride
 */
-#define CONVERT_UB_AVG_ST8x4_UB(in0, in1, in2, in3,           \
+#घोषणा CONVERT_UB_AVG_ST8x4_UB(in0, in1, in2, in3,           \
                                 dst0, dst1, pdst, stride)     \
 {                                                             \
     v16u8 tmp0_m, tmp1_m;                                     \
@@ -2779,7 +2779,7 @@
                  stride
    Arguments   : Inputs  - in0, in1, in2, in3, pdst, stride
 */
-#define PCKEV_ST4x4_UB(in0, in1, in2, in3, pdst, stride)  \
+#घोषणा PCKEV_ST4x4_UB(in0, in1, in2, in3, pdst, stride)  \
 {                                                         \
     uint32_t out0_m, out1_m, out2_m, out3_m;              \
     v16i8 tmp0_m, tmp1_m;                                 \
@@ -2798,7 +2798,7 @@
                  memory
    Arguments   : Inputs  - in0, in1, pdst
 */
-#define PCKEV_ST_SB(in0, in1, pdst)                   \
+#घोषणा PCKEV_ST_SB(in0, in1, pdst)                   \
 {                                                     \
     v16i8 tmp_m;                                      \
     tmp_m = __msa_pckev_b((v16i8) in1, (v16i8) in0);  \
@@ -2808,7 +2808,7 @@
 /* Description : Horizontal 2 tap filter kernel code
    Arguments   : Inputs  - in0, in1, mask, coeff, shift
 */
-#define HORIZ_2TAP_FILT_UH(in0, in1, mask, coeff, shift)            \
+#घोषणा HORIZ_2TAP_FILT_UH(in0, in1, mask, coeff, shift)            \
 ( {                                                                 \
     v16i8 tmp0_m;                                                   \
     v8u16 tmp1_m;                                                   \
@@ -2820,4 +2820,4 @@
                                                                     \
     tmp1_m;                                                         \
 } )
-#endif  /* AVUTIL_MIPS_GENERIC_MACROS_MSA_H */
+#पूर्ण_अगर  /* AVUTIL_MIPS_GENERIC_MACROS_MSA_H */

@@ -18,22 +18,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
+#समावेश <assert.h>
 
-#include "config.h"
-#include "avutil.h"
-#include "samplefmt.h"
-#include "version.h"
+#समावेश "config.h"
+#समावेश "avutil.h"
+#समावेश "samplefmt.h"
+#समावेश "version.h"
 
-#include "libavutil/ffversion.h"
-const char av_util_ffversion[] = "FFmpeg version " FFMPEG_VERSION;
+#समावेश "libavutil/ffversion.h"
+स्थिर अक्षर av_util_ffversion[] = "FFmpeg version " FFMPEG_VERSION;
 
-const char *av_version_info(void)
+स्थिर अक्षर *av_version_info(व्योम)
 {
-    return FFMPEG_VERSION;
+    वापस FFMPEG_VERSION;
 }
 
-unsigned avutil_version(void)
+अचिन्हित avutil_version(व्योम)
 {
     static_assert(AV_SAMPLE_FMT_S64P      == 11 &&
                   AVMEDIA_TYPE_ATTACHMENT ==  4 &&
@@ -41,16 +41,16 @@ unsigned avutil_version(void)
                   "Don't insert new sample/media/picture types in the middle of the list");
     static_assert(LIBAVUTIL_VERSION_MICRO >= 100, "micro version starts at 100");
 
-    return LIBAVUTIL_VERSION_INT;
+    वापस LIBAVUTIL_VERSION_INT;
 }
 
-const char *avutil_configuration(void)
+स्थिर अक्षर *avutil_configuration(व्योम)
 {
-    return FFMPEG_CONFIGURATION;
+    वापस FFMPEG_CONFIGURATION;
 }
 
-const char *avutil_license(void)
+स्थिर अक्षर *avutil_license(व्योम)
 {
-#define LICENSE_PREFIX "libavutil license: "
-    return &LICENSE_PREFIX FFMPEG_LICENSE[sizeof(LICENSE_PREFIX) - 1];
+#घोषणा LICENSE_PREFIX "libavutil license: "
+    वापस &LICENSE_PREFIX FFMPEG_LICENSE[माप(LICENSE_PREFIX) - 1];
 }

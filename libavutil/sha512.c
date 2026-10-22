@@ -21,32 +21,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#समावेश <string.h>
 
-#include "config.h"
-#include "attributes.h"
-#include "bswap.h"
-#include "error.h"
-#include "sha512.h"
-#include "intreadwrite.h"
-#include "mem.h"
+#समावेश "config.h"
+#समावेश "attributes.h"
+#समावेश "bswap.h"
+#समावेश "error.h"
+#समावेश "sha512.h"
+#समावेश "intreadwrite.h"
+#समावेश "mem.h"
 
 /** hash context */
-typedef struct AVSHA512 {
+प्रकार काष्ठा AVSHA512 {
     uint8_t  digest_len;  ///< digest length in 64-bit words
-    uint64_t count;       ///< number of bytes in buffer
-    uint8_t  buffer[128]; ///< 1024-bit buffer of input values used in hash updating
+    uint64_t गिनती;       ///< number of bytes in buffer
+    uint8_t  बफर[128]; ///< 1024-bit buffer of input values used in hash updating
     uint64_t state[8];    ///< current hash value
 } AVSHA512;
 
-const int av_sha512_size = sizeof(AVSHA512);
+स्थिर पूर्णांक av_sha512_आकार = माप(AVSHA512);
 
-struct AVSHA512 *av_sha512_alloc(void)
+काष्ठा AVSHA512 *av_sha512_alloc(व्योम)
 {
-    return av_mallocz(sizeof(struct AVSHA512));
+    वापस av_mallocz(माप(काष्ठा AVSHA512));
 }
 
-static const uint64_t K512[80] = {
+अटल स्थिर uint64_t K512[80] = {
     UINT64_C(0x428a2f98d728ae22),  UINT64_C(0x7137449123ef65cd),
     UINT64_C(0xb5c0fbcfec4d3b2f),  UINT64_C(0xe9b5dba58189dbbc),
     UINT64_C(0x3956c25bf348b538),  UINT64_C(0x59f111f1b605d019),
@@ -89,40 +89,40 @@ static const uint64_t K512[80] = {
     UINT64_C(0x5fcb6fab3ad6faec),  UINT64_C(0x6c44198c4a475817),
 };
 
-#define ror(value, bits) (((value) >> (bits)) | ((value) << (64 - (bits))))
+#घोषणा ror(मूल्य, bits) (((मूल्य) >> (bits)) | ((मूल्य) << (64 - (bits))))
 
-#define Ch(x,y,z)   (((x) & ((y) ^ (z))) ^ (z))
-#define Maj(z,y,x)  ((((x) | (y)) & (z)) | ((x) & (y)))
+#घोषणा Ch(x,y,z)   (((x) & ((y) ^ (z))) ^ (z))
+#घोषणा Maj(z,y,x)  ((((x) | (y)) & (z)) | ((x) & (y)))
 
-#define Sigma0_512(x)   (ror((x), 28) ^ ror((x), 34) ^ ror((x), 39))
-#define Sigma1_512(x)   (ror((x), 14) ^ ror((x), 18) ^ ror((x), 41))
-#define sigma0_512(x)   (ror((x),  1) ^ ror((x),  8) ^ ((x) >> 7))
-#define sigma1_512(x)   (ror((x), 19) ^ ror((x), 61) ^ ((x) >> 6))
+#घोषणा Sigma0_512(x)   (ror((x), 28) ^ ror((x), 34) ^ ror((x), 39))
+#घोषणा Sigma1_512(x)   (ror((x), 14) ^ ror((x), 18) ^ ror((x), 41))
+#घोषणा sigma0_512(x)   (ror((x),  1) ^ ror((x),  8) ^ ((x) >> 7))
+#घोषणा sigma1_512(x)   (ror((x), 19) ^ ror((x), 61) ^ ((x) >> 6))
 
-#define blk0(i) (block[i] = AV_RB64(buffer + 8 * (i)))
-#define blk(i)  (block[i] = block[i - 16] + sigma0_512(block[i - 15]) + \
+#घोषणा blk0(i) (block[i] = AV_RB64(बफर + 8 * (i)))
+#घोषणा blk(i)  (block[i] = block[i - 16] + sigma0_512(block[i - 15]) + \
                             sigma1_512(block[i - 2]) + block[i - 7])
 
-#define ROUND512(a,b,c,d,e,f,g,h)   \
+#घोषणा ROUND512(a,b,c,d,e,f,g,h)   \
     T1 += (h) + Sigma1_512(e) + Ch((e), (f), (g)) + K512[i]; \
     (d) += T1; \
     (h) = T1 + Sigma0_512(a) + Maj((a), (b), (c)); \
     i++
 
-#define ROUND512_0_TO_15(a,b,c,d,e,f,g,h)   \
+#घोषणा ROUND512_0_TO_15(a,b,c,d,e,f,g,h)   \
     T1 = blk0(i); \
     ROUND512(a,b,c,d,e,f,g,h)
 
-#define ROUND512_16_TO_80(a,b,c,d,e,f,g,h)   \
+#घोषणा ROUND512_16_TO_80(a,b,c,d,e,f,g,h)   \
     T1 = blk(i); \
     ROUND512(a,b,c,d,e,f,g,h)
 
-static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
+अटल व्योम sha512_transform(uint64_t *state, स्थिर uint8_t बफर[128])
 {
     uint64_t a, b, c, d, e, f, g, h;
     uint64_t block[80];
     uint64_t T1;
-    int i;
+    पूर्णांक i;
 
     a = state[0];
     b = state[1];
@@ -132,12 +132,12 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
     f = state[5];
     g = state[6];
     h = state[7];
-#if CONFIG_SMALL
-    for (i = 0; i < 80; i++) {
+#अगर CONFIG_SMALL
+    क्रम (i = 0; i < 80; i++) {
         uint64_t T2;
-        if (i < 16)
+        अगर (i < 16)
             T1 = blk0(i);
-        else
+        अन्यथा
             T1 = blk(i);
         T1 += h + Sigma1_512(e) + Ch(e, f, g) + K512[i];
         T2 = Sigma0_512(a) + Maj(a, b, c);
@@ -150,9 +150,9 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
         b = a;
         a = T1 + T2;
     }
-#else
+#अन्यथा
 
-#define R512_0 \
+#घोषणा R512_0 \
     ROUND512_0_TO_15(a, b, c, d, e, f, g, h); \
     ROUND512_0_TO_15(h, a, b, c, d, e, f, g); \
     ROUND512_0_TO_15(g, h, a, b, c, d, e, f); \
@@ -165,7 +165,7 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
     i = 0;
     R512_0; R512_0;
 
-#define R512_16 \
+#घोषणा R512_16 \
     ROUND512_16_TO_80(a, b, c, d, e, f, g, h); \
     ROUND512_16_TO_80(h, a, b, c, d, e, f, g); \
     ROUND512_16_TO_80(g, h, a, b, c, d, e, f); \
@@ -177,7 +177,7 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
 
     R512_16; R512_16; R512_16; R512_16;
     R512_16; R512_16; R512_16; R512_16;
-#endif
+#पूर्ण_अगर
     state[0] += a;
     state[1] += b;
     state[2] += c;
@@ -189,11 +189,11 @@ static void sha512_transform(uint64_t *state, const uint8_t buffer[128])
 }
 
 
-av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
+av_cold पूर्णांक av_sha512_init(AVSHA512 *ctx, पूर्णांक bits)
 {
     ctx->digest_len = bits >> 6;
-    switch (bits) {
-    case 224: // SHA-512/224
+    चयन (bits) {
+    हाल 224: // SHA-512/224
         ctx->state[0] = UINT64_C(0x8C3D37C819544DA2);
         ctx->state[1] = UINT64_C(0x73E1996689DCD4D6);
         ctx->state[2] = UINT64_C(0x1DFAB7AE32FF9C82);
@@ -202,8 +202,8 @@ av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
         ctx->state[5] = UINT64_C(0x77E36F7304C48942);
         ctx->state[6] = UINT64_C(0x3F9D85A86A1D36C8);
         ctx->state[7] = UINT64_C(0x1112E6AD91D692A1);
-        break;
-    case 256: // SHA-512/256
+        अवरोध;
+    हाल 256: // SHA-512/256
         ctx->state[0] = UINT64_C(0x22312194FC2BF72C);
         ctx->state[1] = UINT64_C(0x9F555FA3C84C64C2);
         ctx->state[2] = UINT64_C(0x2393B86B6F53B151);
@@ -212,8 +212,8 @@ av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
         ctx->state[5] = UINT64_C(0xBE5E1E2553863992);
         ctx->state[6] = UINT64_C(0x2B0199FC2C85B8AA);
         ctx->state[7] = UINT64_C(0x0EB72DDC81C52CA2);
-        break;
-    case 384: // SHA-384
+        अवरोध;
+    हाल 384: // SHA-384
         ctx->state[0] = UINT64_C(0xCBBB9D5DC1059ED8);
         ctx->state[1] = UINT64_C(0x629A292A367CD507);
         ctx->state[2] = UINT64_C(0x9159015A3070DD17);
@@ -222,8 +222,8 @@ av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
         ctx->state[5] = UINT64_C(0x8EB44A8768581511);
         ctx->state[6] = UINT64_C(0xDB0C2E0D64F98FA7);
         ctx->state[7] = UINT64_C(0x47B5481DBEFA4FA4);
-        break;
-    case 512: // SHA-512
+        अवरोध;
+    हाल 512: // SHA-512
         ctx->state[0] = UINT64_C(0x6A09E667F3BCC908);
         ctx->state[1] = UINT64_C(0xBB67AE8584CAA73B);
         ctx->state[2] = UINT64_C(0x3C6EF372FE94F82B);
@@ -232,58 +232,58 @@ av_cold int av_sha512_init(AVSHA512 *ctx, int bits)
         ctx->state[5] = UINT64_C(0x9B05688C2B3E6C1F);
         ctx->state[6] = UINT64_C(0x1F83D9ABFB41BD6B);
         ctx->state[7] = UINT64_C(0x5BE0CD19137E2179);
-        break;
-    default:
-        return AVERROR(EINVAL);
+        अवरोध;
+    शेष:
+        वापस AVERROR(EINVAL);
     }
-    ctx->count = 0;
-    return 0;
+    ctx->गिनती = 0;
+    वापस 0;
 }
 
-void av_sha512_update(AVSHA512* ctx, const uint8_t* data, size_t len)
+व्योम av_sha512_update(AVSHA512* ctx, स्थिर uint8_t* तथ्य, माप_प्रकार len)
 {
-    unsigned int j;
-    size_t i;
+    अचिन्हित पूर्णांक j;
+    माप_प्रकार i;
 
-    j = ctx->count & 127;
-    ctx->count += len;
-#if CONFIG_SMALL
-    for (i = 0; i < len; i++) {
-        ctx->buffer[j++] = data[i];
-        if (128 == j) {
-            sha512_transform(ctx->state, ctx->buffer);
+    j = ctx->गिनती & 127;
+    ctx->गिनती += len;
+#अगर CONFIG_SMALL
+    क्रम (i = 0; i < len; i++) {
+        ctx->बफर[j++] = तथ्य[i];
+        अगर (128 == j) {
+            sha512_transform(ctx->state, ctx->बफर);
             j = 0;
         }
     }
-#else
-    if (len >= 128 - j) {
-        const uint8_t *end;
-        memcpy(&ctx->buffer[j], data, (i = 128 - j));
-        sha512_transform(ctx->state, ctx->buffer);
-        data += i;
+#अन्यथा
+    अगर (len >= 128 - j) {
+        स्थिर uint8_t *end;
+        स_नकल(&ctx->बफर[j], तथ्य, (i = 128 - j));
+        sha512_transform(ctx->state, ctx->बफर);
+        तथ्य += i;
         len  -= i;
-        end   = data + (len & ~127);
+        end   = तथ्य + (len & ~127);
         len   = len % 128;
-        for (; data < end; data += 128)
-            sha512_transform(ctx->state, data);
+        क्रम (; तथ्य < end; तथ्य += 128)
+            sha512_transform(ctx->state, तथ्य);
         j = 0;
     }
-    memcpy(&ctx->buffer[j], data, len);
-#endif
+    स_नकल(&ctx->बफर[j], तथ्य, len);
+#पूर्ण_अगर
 }
 
-void av_sha512_final(AVSHA512* ctx, uint8_t *digest)
+व्योम av_sha512_final(AVSHA512* ctx, uint8_t *digest)
 {
     uint64_t i = 0;
-    uint64_t finalcount = av_be2ne64(ctx->count << 3);
+    uint64_t finalcount = av_be2ne64(ctx->गिनती << 3);
 
     av_sha512_update(ctx, "\200", 1);
-    while ((ctx->count & 127) != 112)
+    जबतक ((ctx->गिनती & 127) != 112)
         av_sha512_update(ctx, "", 1);
     av_sha512_update(ctx, (uint8_t *)&i, 8);
     av_sha512_update(ctx, (uint8_t *)&finalcount, 8); /* Should cause a transform() */
-    for (i = 0; i < ctx->digest_len; i++)
+    क्रम (i = 0; i < ctx->digest_len; i++)
         AV_WB64(digest + i*8, ctx->state[i]);
-    if (ctx->digest_len & 1) /* SHA512/224 is 28 bytes, and is not divisible by 8. */
+    अगर (ctx->digest_len & 1) /* SHA512/224 is 28 bytes, and is not divisible by 8. */
         AV_WB32(digest + i*8, ctx->state[i] >> 32);
 }

@@ -16,73 +16,73 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ZLIB_UTILS_H
-#define AVUTIL_ZLIB_UTILS_H
+#अगर_अघोषित AVUTIL_ZLIB_UTILS_H
+#घोषणा AVUTIL_ZLIB_UTILS_H
 
-#include <stdint.h>
-#include "log.h"
-#include "error.h"
-#include "mem.h"
+#समावेश <stdint.h>
+#समावेश "log.h"
+#समावेश "error.h"
+#समावेश "mem.h"
 
-#include <zlib.h>
-#define CHUNK_SIZE 1024 * 64
+#समावेश <zlib.h>
+#घोषणा CHUNK_आकार 1024 * 64
 
-static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
-                                 const uint8_t *src, int src_len)
+अटल अंतरभूत पूर्णांक ff_zlib_expand(व्योम *ctx, uint8_t **out, माप_प्रकार *out_len,
+                                 स्थिर uint8_t *src, पूर्णांक src_len)
 {
-    int ret;
+    पूर्णांक ret;
 
     z_stream stream = { 0 };
-    if (inflateInit2(&stream, 32 + 15) != Z_OK) {
+    अगर (inflateInit2(&stream, 32 + 15) != Z_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error during zlib initialisation: %s\n",
-               stream.msg);
-        return AVERROR(ENOSYS);
+               stream.संदेश);
+        वापस AVERROR(ENOSYS);
     }
 
-    uint64_t buf_size = CHUNK_SIZE * 4;
-    uint8_t *buf = av_realloc(NULL, buf_size);
-    if (!buf) {
+    uint64_t buf_आकार = CHUNK_आकार * 4;
+    uint8_t *buf = av_realloc(शून्य, buf_आकार);
+    अगर (!buf) {
         inflateEnd(&stream);
-        return AVERROR(ENOMEM);
+        वापस AVERROR(ENOMEM);
     }
 
-    stream.next_in = src;
+    stream.अग्र_in = src;
     stream.avail_in = src_len;
 
-    do {
-        stream.avail_out = buf_size - stream.total_out;
-        stream.next_out = buf + stream.total_out;
+    करो {
+        stream.avail_out = buf_आकार - stream.योग_out;
+        stream.अग्र_out = buf + stream.योग_out;
 
         ret = inflate(&stream, Z_FINISH);
-        if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
+        अगर (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
             av_log(ctx, AV_LOG_ERROR, "zlib inflate error(%d): %s\n",
-                   ret, stream.msg);
+                   ret, stream.संदेश);
             inflateEnd(&stream);
             av_free(buf);
-            return AVERROR(EINVAL);
+            वापस AVERROR(EINVAL);
         }
 
-        if (stream.avail_out == 0) {
-            buf_size += CHUNK_SIZE;
-            uint8_t *tmp = av_realloc(buf, buf_size);
-            if (!tmp) {
+        अगर (stream.avail_out == 0) {
+            buf_आकार += CHUNK_आकार;
+            uint8_t *tmp = av_realloc(buf, buf_आकार);
+            अगर (!tmp) {
                 inflateEnd(&stream);
                 av_free(buf);
-                return AVERROR(ENOMEM);
+                वापस AVERROR(ENOMEM);
             }
             buf = tmp;
         }
-    } while (ret != Z_STREAM_END);
+    } जबतक (ret != Z_STREAM_END);
 
     // NULL-terminate string
     // there is guaranteed to be space for this, due to condition in loop
-    buf[stream.total_out] = 0;
+    buf[stream.योग_out] = 0;
 
     inflateEnd(&stream);
 
     *out = buf;
-    *out_len = stream.total_out;
+    *out_len = stream.योग_out;
 
-    return 0;
+    वापस 0;
 }
-#endif /* AVUTIL_ZLIB_UTILS_H */
+#पूर्ण_अगर /* AVUTIL_ZLIB_UTILS_H */

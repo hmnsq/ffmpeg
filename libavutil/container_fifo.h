@@ -16,19 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CONTAINER_FIFO_H
-#define AVUTIL_CONTAINER_FIFO_H
+#अगर_अघोषित AVUTIL_CONTAINER_FIFO_H
+#घोषणा AVUTIL_CONTAINER_FIFO_H
 
-#include <stddef.h>
+#समावेश <stddef.h>
 
 /**
  * AVContainerFifo is a FIFO for "containers" - dynamically allocated reusable
  * structs (e.g. AVFrame or AVPacket). AVContainerFifo uses an internal pool of
  * such containers to avoid allocating and freeing them repeatedly.
  */
-typedef struct AVContainerFifo AVContainerFifo;
+प्रकार काष्ठा AVContainerFifo AVContainerFifo;
 
-enum AVContainerFifoFlags {
+क्रमागत AVContainerFifoFlags {
     /**
      * Signal to av_container_fifo_write() that it should make a new reference
      * to data in src rather than consume its contents.
@@ -62,24 +62,24 @@ enum AVContainerFifoFlags {
  * @return newly allocated AVContainerFifo, or NULL on failure
  */
 AVContainerFifo*
-av_container_fifo_alloc(void *opaque,
-                        void* (*container_alloc)(void *opaque),
-                        void  (*container_reset)(void *opaque, void *obj),
-                        void  (*container_free) (void *opaque, void *obj),
-                        int   (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags),
-                        unsigned flags);
+av_container_fifo_alloc(व्योम *opaque,
+                        व्योम* (*container_alloc)(व्योम *opaque),
+                        व्योम  (*container_reset)(व्योम *opaque, व्योम *obj),
+                        व्योम  (*container_free) (व्योम *opaque, व्योम *obj),
+                        पूर्णांक   (*fifo_transfer)  (व्योम *opaque, व्योम *dst, व्योम *src, अचिन्हित flags),
+                        अचिन्हित flags);
 
 /**
  * Allocate an AVContainerFifo instance for AVFrames.
  *
  * @param flags currently unused
  */
-AVContainerFifo *av_container_fifo_alloc_avframe(unsigned flags);
+AVContainerFifo *av_container_fifo_alloc_avframe(अचिन्हित flags);
 
 /**
  * Free a AVContainerFifo and everything in it.
  */
-void av_container_fifo_free(AVContainerFifo **cf);
+व्योम av_container_fifo_free(AVContainerFifo **cf);
 
 /**
  * Write the contents of obj to the FIFO.
@@ -87,7 +87,7 @@ void av_container_fifo_free(AVContainerFifo **cf);
  * The fifo_transfer() callback previously provided to av_container_fifo_alloc()
  * will be called with obj as src in order to perform the actual transfer.
  */
-int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags);
+पूर्णांक av_container_fifo_write(AVContainerFifo *cf, व्योम *obj, अचिन्हित flags);
 
 /**
  * Read the next available object from the FIFO into obj.
@@ -95,7 +95,7 @@ int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags);
  * The fifo_read() callback previously provided to av_container_fifo_alloc()
  * will be called with obj as dst in order to perform the actual transfer.
  */
-int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags);
+पूर्णांक av_container_fifo_read(AVContainerFifo *cf, व्योम *obj, अचिन्हित flags);
 
 /**
  * Access objects stored in the FIFO without retrieving them. The
@@ -112,7 +112,7 @@ int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags);
  * @retval 0 success, a pointer was written into pobj
  * @retval AVERROR(EINVAL) invalid offset value
  */
-int av_container_fifo_peek(AVContainerFifo *cf, void **pobj, size_t offset);
+पूर्णांक av_container_fifo_peek(AVContainerFifo *cf, व्योम **pobj, माप_प्रकार offset);
 
 /**
  * Discard the specified number of elements from the FIFO.
@@ -120,11 +120,11 @@ int av_container_fifo_peek(AVContainerFifo *cf, void **pobj, size_t offset);
  * @param nb_elems number of elements to discard, MUST NOT be larger than
  *                 av_fifo_can_read(f)
  */
-void av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems);
+व्योम av_container_fifo_drain(AVContainerFifo *cf, माप_प्रकार nb_elems);
 
 /**
  * @return number of objects available for reading
  */
-size_t av_container_fifo_can_read(const AVContainerFifo *cf);
+माप_प्रकार av_container_fifo_can_read(स्थिर AVContainerFifo *cf);
 
-#endif // AVCODEC_CONTAINER_FIFO_H
+#पूर्ण_अगर // AVCODEC_CONTAINER_FIFO_H

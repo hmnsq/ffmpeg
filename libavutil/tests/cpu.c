@@ -16,31 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#समावेश <stdio.h>
 
-#include "config.h"
+#समावेश "config.h"
 
-#include "libavutil/cpu.h"
-#include "libavutil/avstring.h"
+#समावेश "libavutil/cpu.h"
+#समावेश "libavutil/avstring.h"
 
-#if ARCH_AARCH64
-#include "libavutil/aarch64/cpu.h"
-#elif ARCH_RISCV
-#include "libavutil/riscv/cpu.h"
-#endif
+#अगर ARCH_AARCH64
+#समावेश "libavutil/aarch64/cpu.h"
+#या_अगर ARCH_RISCV
+#समावेश "libavutil/riscv/cpu.h"
+#पूर्ण_अगर
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if !HAVE_GETOPT
-#include "compat/getopt.c"
-#endif
+#अगर HAVE_UNISTD_H
+#समावेश <unistd.h>
+#पूर्ण_अगर
+#अगर !HAVE_GETOPT
+#समावेश "compat/getopt.c"
+#पूर्ण_अगर
 
-static const struct {
-    int flag;
-    const char *name;
+अटल स्थिर काष्ठा {
+    पूर्णांक flag;
+    स्थिर अक्षर *name;
 } cpu_flag_tab[] = {
-#if   ARCH_AARCH64
+#अगर   ARCH_AARCH64
     { AV_CPU_FLAG_ARMV8,     "armv8"      },
     { AV_CPU_FLAG_NEON,      "neon"       },
     { AV_CPU_FLAG_VFP,       "vfp"        },
@@ -55,7 +55,7 @@ static const struct {
     { AV_CPU_FLAG_PMULL,     "pmull"      },
     { AV_CPU_FLAG_EOR3,      "eor3"       },
     { AV_CPU_FLAG_ARM_AES,   "aes"        },
-#elif ARCH_ARM
+#या_अगर ARCH_ARM
     { AV_CPU_FLAG_ARMV5TE,   "armv5te"    },
     { AV_CPU_FLAG_ARMV6,     "armv6"      },
     { AV_CPU_FLAG_ARMV6T2,   "armv6t2"    },
@@ -64,14 +64,14 @@ static const struct {
     { AV_CPU_FLAG_VFPV3,     "vfpv3"      },
     { AV_CPU_FLAG_NEON,      "neon"       },
     { AV_CPU_FLAG_SETEND,    "setend"     },
-#elif ARCH_PPC
+#या_अगर ARCH_PPC
     { AV_CPU_FLAG_ALTIVEC,   "altivec"    },
     { AV_CPU_FLAG_VSX,       "vsx"        },
     { AV_CPU_FLAG_POWER8,    "power8"     },
-#elif ARCH_MIPS
+#या_अगर ARCH_MIPS
     { AV_CPU_FLAG_MMI,       "mmi"        },
     { AV_CPU_FLAG_MSA,       "msa"        },
-#elif ARCH_X86
+#या_अगर ARCH_X86
     { AV_CPU_FLAG_MMX,       "mmx"        },
     { AV_CPU_FLAG_MMXEXT,    "mmxext"     },
     { AV_CPU_FLAG_SSE,       "sse"        },
@@ -99,10 +99,10 @@ static const struct {
     { AV_CPU_FLAG_AVX512,    "avx512"     },
     { AV_CPU_FLAG_AVX512ICL, "avx512icl"  },
     { AV_CPU_FLAG_SLOW_GATHER, "slowgather" },
-#elif ARCH_LOONGARCH
+#या_अगर ARCH_LOONGARCH
     { AV_CPU_FLAG_LSX,       "lsx"        },
     { AV_CPU_FLAG_LASX,      "lasx"       },
-#elif ARCH_RISCV
+#या_अगर ARCH_RISCV
     { AV_CPU_FLAG_RVI,       "rvi"        },
     { AV_CPU_FLAG_RVB_BASIC, "zbb"        },
     { AV_CPU_FLAG_RVB,       "rvb"        },
@@ -112,59 +112,59 @@ static const struct {
     { AV_CPU_FLAG_RVV_F64,   "zve64d"     },
     { AV_CPU_FLAG_RV_ZVBB,   "zvbb"       },
     { AV_CPU_FLAG_RV_MISALIGNED, "misaligned" },
-#elif ARCH_WASM
+#या_अगर ARCH_WASM
     { AV_CPU_FLAG_SIMD128,   "simd128"    },
-#endif
+#पूर्ण_अगर
     { 0 }
 };
 
-static void print_cpu_flags(int cpu_flags, const char *type)
+अटल व्योम print_cpu_flags(पूर्णांक cpu_flags, स्थिर अक्षर *type)
 {
-    int i;
+    पूर्णांक i;
 
-    printf("cpu_flags(%s) = 0x%08X\n", type, cpu_flags);
-    printf("cpu_flags_str(%s) =", type);
-    for (i = 0; cpu_flag_tab[i].flag; i++)
-        if (cpu_flags & cpu_flag_tab[i].flag)
-            printf(" %s", cpu_flag_tab[i].name);
-    printf("\n");
+    म_लिखो("cpu_flags(%s) = 0x%08X\n", type, cpu_flags);
+    म_लिखो("cpu_flags_str(%s) =", type);
+    क्रम (i = 0; cpu_flag_tab[i].flag; i++)
+        अगर (cpu_flags & cpu_flag_tab[i].flag)
+            म_लिखो(" %s", cpu_flag_tab[i].name);
+    म_लिखो("\n");
 }
 
 
-int main(int argc, char **argv)
+पूर्णांक मुख्य(पूर्णांक argc, अक्षर **argv)
 {
-    int cpu_flags_raw = av_get_cpu_flags();
-    int cpu_flags_eff;
-    int cpu_count = av_cpu_count();
-    const char *threads = "auto";
-    int i;
+    पूर्णांक cpu_flags_raw = av_get_cpu_flags();
+    पूर्णांक cpu_flags_eff;
+    पूर्णांक cpu_गिनती = av_cpu_गिनती();
+    स्थिर अक्षर *threads = "auto";
+    पूर्णांक i;
 
-    for(i = 0; cpu_flag_tab[i].flag; i++) {
-        unsigned tmp = 0;
-        if (av_parse_cpu_caps(&tmp, cpu_flag_tab[i].name) < 0) {
-            fprintf(stderr, "Table missing %s\n", cpu_flag_tab[i].name);
-            return 4;
+    क्रम(i = 0; cpu_flag_tab[i].flag; i++) {
+        अचिन्हित tmp = 0;
+        अगर (av_parse_cpu_caps(&tmp, cpu_flag_tab[i].name) < 0) {
+            ख_लिखो(मानक_त्रुटि, "Table missing %s\n", cpu_flag_tab[i].name);
+            वापस 4;
         }
     }
 
-    if (cpu_flags_raw < 0)
-        return 1;
+    अगर (cpu_flags_raw < 0)
+        वापस 1;
 
-    for (;;) {
-        int c = getopt(argc, argv, "c:t:");
-        if (c == -1)
-            break;
-        switch (c) {
-        case 'c':
+    क्रम (;;) {
+        पूर्णांक c = getopt(argc, argv, "c:t:");
+        अगर (c == -1)
+            अवरोध;
+        चयन (c) {
+        हाल 'c':
         {
-            unsigned flags = av_get_cpu_flags();
-            if (av_parse_cpu_caps(&flags, optarg) < 0)
-                return 2;
+            अचिन्हित flags = av_get_cpu_flags();
+            अगर (av_parse_cpu_caps(&flags, optarg) < 0)
+                वापस 2;
 
             av_force_cpu_flags(flags);
-            break;
+            अवरोध;
         }
-        case 't':
+        हाल 't':
         {
             threads = optarg;
         }
@@ -173,27 +173,27 @@ int main(int argc, char **argv)
 
     cpu_flags_eff = av_get_cpu_flags();
 
-    if (cpu_flags_eff < 0)
-        return 3;
+    अगर (cpu_flags_eff < 0)
+        वापस 3;
 
     print_cpu_flags(cpu_flags_raw, "raw");
     print_cpu_flags(cpu_flags_eff, "effective");
-    printf("threads = %s (cpu_count = %d)\n", threads, cpu_count);
-#if ARCH_AARCH64 && HAVE_SVE
-    if (cpu_flags_raw & AV_CPU_FLAG_SVE)
-        printf("sve_vector_length = %d\n", 8 * ff_aarch64_sve_length());
-#endif
-#if ARCH_AARCH64 && HAVE_SME
-    if (cpu_flags_raw & AV_CPU_FLAG_SME)
-        printf("sme_vector_length = %d\n", 8 * ff_aarch64_sme_length());
-#endif
-#if ARCH_RISCV && HAVE_RVV
-    if (cpu_flags_raw & AV_CPU_FLAG_RVV_I32) {
-        size_t bytes = ff_get_rv_vlenb();
+    म_लिखो("threads = %s (cpu_count = %d)\n", threads, cpu_गिनती);
+#अगर ARCH_AARCH64 && HAVE_SVE
+    अगर (cpu_flags_raw & AV_CPU_FLAG_SVE)
+        म_लिखो("sve_vector_length = %d\n", 8 * ff_aarch64_sve_लंबाई());
+#पूर्ण_अगर
+#अगर ARCH_AARCH64 && HAVE_SME
+    अगर (cpu_flags_raw & AV_CPU_FLAG_SME)
+        म_लिखो("sme_vector_length = %d\n", 8 * ff_aarch64_sme_लंबाई());
+#पूर्ण_अगर
+#अगर ARCH_RISCV && HAVE_RVV
+    अगर (cpu_flags_raw & AV_CPU_FLAG_RVV_I32) {
+        माप_प्रकार bytes = ff_get_rv_vlenb();
 
-        printf("rv_vlenb = %zu (%zu bits)\n", bytes, 8 * bytes);
+        म_लिखो("rv_vlenb = %zu (%zu bits)\n", bytes, 8 * bytes);
     }
-#endif
+#पूर्ण_अगर
 
-    return 0;
+    वापस 0;
 }

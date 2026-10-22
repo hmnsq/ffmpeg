@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#समावेश <stdio.h>
 
-#include "libavutil/avstring.h"
-#include "libavutil/file.h"
+#समावेश "libavutil/avstring.h"
+#समावेश "libavutil/file.h"
 
-static const uint8_t vectors[] =
+अटल स्थिर uint8_t vectors[] =
     "A\n"
     "\xC3\xA9\n"                /* U+00E9 */
     "\xE2\x82\xAC\n"            /* U+20AC */
@@ -40,52 +40,52 @@ static const uint8_t vectors[] =
     "\xC3" "A\n"                /* missing continuation */
     "\xE2\x82";                 /* truncated */
 
-static void print_sequence(const char *p, int l, int indent)
+अटल व्योम print_sequence(स्थिर अक्षर *p, पूर्णांक l, पूर्णांक indent)
 {
-    int i;
-    for (i = 0; i < l; i++)
-        printf("%02X", (uint8_t)p[i]);
-    printf("%*s", indent-l*2, "");
+    पूर्णांक i;
+    क्रम (i = 0; i < l; i++)
+        म_लिखो("%02X", (uint8_t)p[i]);
+    म_लिखो("%*s", indent-l*2, "");
 }
 
-static void decode(const uint8_t *p, const uint8_t *endp)
+अटल व्योम decode(स्थिर uint8_t *p, स्थिर uint8_t *endp)
 {
     uint32_t code;
 
-    while (p < endp) {
-        int l, r;
-        const uint8_t *p0 = p;
+    जबतक (p < endp) {
+        पूर्णांक l, r;
+        स्थिर uint8_t *p0 = p;
         code = UINT32_MAX;
         r = av_utf8_decode(&code, &p, endp, 0);
-        l = (int)(p-p0);
+        l = (पूर्णांक)(p-p0);
         print_sequence(p0, l, 20);
-        if (code != UINT32_MAX) {
-            printf("%-10d 0x%-10X %-5d ", code, code, l);
-            if (r >= 0) {
-                if (*p0 == '\n') printf("\\n\n");
-                else             printf ("%.*s\n", l, p0);
-            } else {
-                printf("invalid code range\n");
+        अगर (code != UINT32_MAX) {
+            म_लिखो("%-10d 0x%-10X %-5d ", code, code, l);
+            अगर (r >= 0) {
+                अगर (*p0 == '\n') म_लिखो("\\n\n");
+                अन्यथा             म_लिखो ("%.*s\n", l, p0);
+            } अन्यथा {
+                म_लिखो("invalid code range\n");
             }
-        } else {
-            printf("invalid sequence\n");
+        } अन्यथा {
+            म_लिखो("invalid sequence\n");
         }
     }
 }
 
-int main(int argc, char **argv)
+पूर्णांक मुख्य(पूर्णांक argc, अक्षर **argv)
 {
-    if (argc > 1) {
+    अगर (argc > 1) {
         uint8_t *file_buf;
-        size_t file_buf_size;
-        int ret = av_file_map(argv[1], &file_buf, &file_buf_size, 0, NULL);
-        if (ret < 0)
-            return 1;
-        decode(file_buf, file_buf + file_buf_size);
-        av_file_unmap(file_buf, file_buf_size);
-    } else {
-        decode(vectors, vectors + sizeof(vectors) - 1);
+        माप_प्रकार file_buf_आकार;
+        पूर्णांक ret = av_file_map(argv[1], &file_buf, &file_buf_आकार, 0, शून्य);
+        अगर (ret < 0)
+            वापस 1;
+        decode(file_buf, file_buf + file_buf_आकार);
+        av_file_unmap(file_buf, file_buf_आकार);
+    } अन्यथा {
+        decode(vectors, vectors + माप(vectors) - 1);
     }
 
-    return 0;
+    वापस 0;
 }

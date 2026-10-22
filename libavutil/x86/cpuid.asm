@@ -46,7 +46,7 @@ cglobal cpu_cpuid, 5,7
     pop   r4
     mov [r4], edx
     pop  rbx
-    RET
+    वापस
 
 ;-----------------------------------------------------------------------------
 ; void ff_cpu_xgetbv(int op, int *eax, int *edx)
@@ -60,7 +60,7 @@ cglobal cpu_xgetbv, 3,7
     mov [r4], eax
     pop   r4
     mov [r4], edx
-    RET
+    वापस
 
 %if ARCH_X86_64 == 0
 ;-----------------------------------------------------------------------------

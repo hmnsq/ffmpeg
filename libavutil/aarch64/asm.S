@@ -148,7 +148,7 @@ DISABLE_SME2
  * used immediately before saving the LR register (x30) to the stack.
  * |AARCH64_VALIDATE_LINK_REGISTER| should be used immediately after restoring
  * it. Note |AARCH64_SIGN_LINK_REGISTER|'s modifications to LR must be undone
- * with |AARCH64_VALIDATE_LINK_REGISTER| before RET. The SP register must also
+ * with |AARCH64_VALIDATE_LINK_REGISTER| before वापस. The ढस register must also
  * have the same value at the two points. For example:
  *
  *   .global f
@@ -313,11 +313,11 @@ ELF     .size   \name, . - \name
 .macro  movrel rd, val, offset=0
 #if CONFIG_PIC && defined(__APPLE__)
     .if \offset < 0
-        adrp            \rd, \val@PAGE
+        adrp            \rd, \val@पृष्ठ
         add             \rd, \rd, \val@PAGEOFF
         sub             \rd, \rd, -(\offset)
     .else
-        adrp            \rd, \val+(\offset)@PAGE
+        adrp            \rd, \val+(\offset)@पृष्ठ
         add             \rd, \rd, \val+(\offset)@PAGEOFF
     .endif
 #elif CONFIG_PIC && defined(_WIN32)

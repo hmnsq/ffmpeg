@@ -123,7 +123,7 @@ cglobal update_lls, 2,5,8, ctx, var, i, j, covar2
     test    id, id
     jle .loop2x1
 .ret:
-    RET
+    वापस
 
 %macro UPDATE_LLS 0
 cglobal update_lls, 3,6,8, ctx, var, count, i, j, count2
@@ -240,7 +240,7 @@ cglobal update_lls, 3,6,8, ctx, var, count, i, j, count2
     cmp     id, countd
     jle .loop2x1
 .ret:
-    RET
+    वापस
 %endmacro ; UPDATE_LLS
 
 %if HAVE_AVX_EXTERNAL
@@ -287,4 +287,4 @@ cglobal evaluate_lls, 3,4,2, ctx, var, order, i
     movsd  r0m, m0
     fld   qword r0m
 %endif
-    RET
+    वापस

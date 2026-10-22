@@ -236,7 +236,7 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
     %define gprsize 4
 %endif
 
-%macro LEA 2
+%macro भठ 2
 %if ARCH_X86_64
     lea %1, [%2]
 %elif PIC
@@ -258,14 +258,14 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
     %endrep
 %endmacro
 
-%macro PUSH 1
+%macro दो 1
     push %1
     %ifidn rstk, rsp
         %assign stack_offset stack_offset+gprsize
     %endif
 %endmacro
 
-%macro POP 1
+%macro लो 1
     pop %1
     %ifidn rstk, rsp
         %assign stack_offset stack_offset-gprsize
@@ -275,7 +275,7 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
 %macro PUSH_IF_USED 1-*
     %rep %0
         %if %1 < regs_used
-            PUSH r%1
+            दो r%1
         %endif
         %rotate 1
     %endrep
@@ -299,14 +299,14 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
     %endrep
 %endmacro
 
-%macro SUB 2
+%macro घटा 2
     sub %1, %2
     %ifidn %1, rstk
         %assign stack_offset stack_offset+(%2)
     %endif
 %endmacro
 
-%macro ADD 2
+%macro जमा 2
     add %1, %2
     %ifidn %1, rstk
         %assign stack_offset stack_offset-(%2)
@@ -431,7 +431,7 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
                 ; maintain the current stack alignment
                 %assign stack_size_padded stack_size + %%pad + ((-%%pad-stack_offset-gprsize) & (STACK_ALIGNMENT-1))
                 PROBE_STACK stack_size_padded
-                SUB rsp, stack_size_padded
+                घटा rsp, stack_size_padded
             %else
                 %assign %%reg_num (regs_used - 1)
                 %xdefine rstk r %+ %%reg_num
@@ -572,7 +572,7 @@ DECLARE_REG 14, R13, 120
             ; Allocate stack space for callee-saved xmm registers plus shadow space and align the stack.
             %assign %%pad %%xmm_regs_on_stack*16 + 32
             %assign stack_size_padded %%pad + ((-%%pad-stack_offset-gprsize) & (STACK_ALIGNMENT-1))
-            SUB rsp, stack_size_padded
+            घटा rsp, stack_size_padded
         %endif
         WIN64_PUSH_XMM
     %endif
@@ -611,7 +611,7 @@ DECLARE_REG 14, R13, 120
 
 %define has_epilogue (regs_used > 7 || stack_size > 0 || vzeroupper_required || xmm_regs_used > 6+high_mm_regs)
 
-%macro RET 0
+%macro वापस 0
     WIN64_RESTORE_XMM_INTERNAL
     POP_IF_USED 14, 13, 12, 11, 10, 9, 8, 7
     %if vzeroupper_required
@@ -660,7 +660,7 @@ DECLARE_REG 14, R13, 72
 
 %define has_epilogue (regs_used > 9 || stack_size > 0 || vzeroupper_required)
 
-%macro RET 0
+%macro वापस 0
     %if stack_size_padded > 0
         %if required_stack_alignment > STACK_ALIGNMENT
             mov rsp, rstkm
@@ -724,7 +724,7 @@ DECLARE_ARG 7, 8, 9, 10, 11, 12, 13, 14
 
 %define has_epilogue (regs_used > 3 || stack_size > 0 || vzeroupper_required)
 
-%macro RET 0
+%macro वापस 0
     %if stack_size_padded > 0
         %if required_stack_alignment > STACK_ALIGNMENT
             mov rsp, rstkm
@@ -764,7 +764,7 @@ DECLARE_ARG 7, 8, 9, 10, 11, 12, 13, 14
 ; (SSSE3 is a sufficient condition to know that your cpu doesn't have this problem.)
 %macro REP_RET 0
     %if has_epilogue || cpuflag(ssse3)
-        RET
+        वापस
     %else
         rep ret
     %endif
@@ -798,7 +798,7 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
 %macro TAIL_CALL 1-2 1 ; callee, is_nonadjacent
     %if has_epilogue
         call %1
-        RET
+        वापस
     %elif %2
         jmp %1
     %endif

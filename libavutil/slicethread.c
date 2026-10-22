@@ -16,75 +16,75 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include "cpu.h"
-#include "internal.h"
-#include "slicethread.h"
-#include "mem.h"
-#include "thread.h"
-#include "avassert.h"
+#समावेश <stdatomic.h>
+#समावेश "cpu.h"
+#समावेश "internal.h"
+#समावेश "slicethread.h"
+#समावेश "mem.h"
+#समावेश "thread.h"
+#समावेश "avassert.h"
 
-#define MAX_AUTO_THREADS 16
+#घोषणा MAX_AUTO_THREADS 16
 
-#if HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
+#अगर HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
 
-typedef struct WorkerContext {
+प्रकार काष्ठा WorkerContext {
     AVSliceThread   *ctx;
     pthread_mutex_t mutex;
     pthread_cond_t  cond;
     pthread_t       thread;
-    int             done;
+    पूर्णांक             done;
 } WorkerContext;
 
-struct AVSliceThread {
+काष्ठा AVSliceThread {
     WorkerContext   *workers;
-    int             nb_threads;
-    int             nb_active_threads;
-    int             nb_jobs;
+    पूर्णांक             nb_threads;
+    पूर्णांक             nb_active_threads;
+    पूर्णांक             nb_jobs;
 
     atomic_uint     first_job;
     atomic_uint     current_job;
     pthread_mutex_t done_mutex;
     pthread_cond_t  done_cond;
-    int             done;
-    int             finished;
+    पूर्णांक             done;
+    पूर्णांक             finished;
     atomic_int      error;
 
-    void            *priv;
-    int            (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads);
-    int            (*main_func)(void *priv);
+    व्योम            *priv;
+    पूर्णांक            (*worker_func)(व्योम *priv, पूर्णांक jobnr, पूर्णांक threadnr, पूर्णांक nb_jobs, पूर्णांक nb_threads);
+    पूर्णांक            (*main_func)(व्योम *priv);
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
-    void           (*worker_func_v1)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads);
-    void           (*main_func_v1)(void *priv);
-    void            *priv_v1;
-#endif
+#अगर LIBAVUTIL_VERSION_MAJOR < 62
+    व्योम           (*worker_func_v1)(व्योम *priv, पूर्णांक jobnr, पूर्णांक threadnr, पूर्णांक nb_jobs, पूर्णांक nb_threads);
+    व्योम           (*main_func_v1)(व्योम *priv);
+    व्योम            *priv_v1;
+#पूर्ण_अगर
 };
 
-static int run_jobs(AVSliceThread *ctx)
+अटल पूर्णांक run_jobs(AVSliceThread *ctx)
 {
-    unsigned nb_jobs    = ctx->nb_jobs;
-    unsigned nb_active_threads = ctx->nb_active_threads;
-    unsigned first_job    = atomic_fetch_add_explicit(&ctx->first_job, 1, memory_order_acq_rel);
-    unsigned current_job  = first_job;
+    अचिन्हित nb_jobs    = ctx->nb_jobs;
+    अचिन्हित nb_active_threads = ctx->nb_active_threads;
+    अचिन्हित first_job    = atomic_fetch_add_explicit(&ctx->first_job, 1, memory_order_acq_rel);
+    अचिन्हित current_job  = first_job;
 
-    do {
-        int ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
-        if (ret)
-            continue;
+    करो {
+        पूर्णांक ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
+        अगर (ret)
+            जारी;
         ret = ctx->worker_func(ctx->priv, current_job, first_job, nb_jobs, nb_active_threads);
-        if (ret) {
-            int prev = 0;
-            atomic_compare_exchange_strong_explicit(&ctx->error, &prev, ret,
+        अगर (ret) {
+            पूर्णांक पूर्व = 0;
+            atomic_compare_exchange_strong_explicit(&ctx->error, &पूर्व, ret,
                                                     memory_order_relaxed,
                                                     memory_order_relaxed);
         }
-    } while ((current_job = atomic_fetch_add_explicit(&ctx->current_job, 1, memory_order_acq_rel)) < nb_jobs);
+    } जबतक ((current_job = atomic_fetch_add_explicit(&ctx->current_job, 1, memory_order_acq_rel)) < nb_jobs);
 
-    return current_job == nb_jobs + nb_active_threads - 1;
+    वापस current_job == nb_jobs + nb_active_threads - 1;
 }
 
-static void *attribute_align_arg thread_worker(void *v)
+अटल व्योम *attribute_align_arg thread_worker(व्योम *v)
 {
     WorkerContext *w = v;
     AVSliceThread *ctx = w->ctx;
@@ -92,17 +92,17 @@ static void *attribute_align_arg thread_worker(void *v)
     pthread_mutex_lock(&w->mutex);
     pthread_cond_signal(&w->cond);
 
-    while (1) {
+    जबतक (1) {
         w->done = 1;
-        while (w->done)
+        जबतक (w->done)
             pthread_cond_wait(&w->cond, &w->mutex);
 
-        if (ctx->finished) {
+        अगर (ctx->finished) {
             pthread_mutex_unlock(&w->mutex);
-            return NULL;
+            वापस शून्य;
         }
 
-        if (run_jobs(ctx)) {
+        अगर (run_jobs(ctx)) {
             pthread_mutex_lock(&ctx->done_mutex);
             ctx->done = 1;
             pthread_cond_signal(&ctx->done_cond);
@@ -112,35 +112,35 @@ static void *attribute_align_arg thread_worker(void *v)
 }
 
 av_cold
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads)
+पूर्णांक avpriv_slicethread_create2(AVSliceThread **pctx, व्योम *priv,
+                               पूर्णांक (*worker_func)(व्योम *priv, पूर्णांक jobnr, पूर्णांक threadnr, पूर्णांक nb_jobs, पूर्णांक nb_threads),
+                               पूर्णांक (*main_func)(व्योम *priv),
+                               पूर्णांक nb_threads)
 {
     AVSliceThread *ctx;
-    int nb_workers, i;
-    int ret;
+    पूर्णांक nb_workers, i;
+    पूर्णांक ret;
 
     av_assert0(nb_threads >= 0);
-    if (!nb_threads) {
-        int nb_cpus = av_cpu_count();
-        if (nb_cpus > 1)
+    अगर (!nb_threads) {
+        पूर्णांक nb_cpus = av_cpu_गिनती();
+        अगर (nb_cpus > 1)
             nb_threads = FFMIN(nb_cpus + 1, MAX_AUTO_THREADS);
-        else
+        अन्यथा
             nb_threads = 1;
     }
 
     nb_workers = nb_threads;
-    if (!main_func)
+    अगर (!main_func)
         nb_workers--;
 
-    *pctx = ctx = av_mallocz(sizeof(*ctx));
-    if (!ctx)
-        return AVERROR(ENOMEM);
+    *pctx = ctx = av_mallocz(माप(*ctx));
+    अगर (!ctx)
+        वापस AVERROR(ENOMEM);
 
-    if (nb_workers && !(ctx->workers = av_calloc(nb_workers, sizeof(*ctx->workers)))) {
+    अगर (nb_workers && !(ctx->workers = av_calloc(nb_workers, माप(*ctx->workers)))) {
         av_freep(pctx);
-        return AVERROR(ENOMEM);
+        वापस AVERROR(ENOMEM);
     }
 
     ctx->priv        = priv;
@@ -153,59 +153,59 @@ int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
 
     atomic_init(&ctx->first_job, 0);
     atomic_init(&ctx->current_job, 0);
-    ret = pthread_mutex_init(&ctx->done_mutex, NULL);
-    if (ret) {
+    ret = pthread_mutex_init(&ctx->done_mutex, शून्य);
+    अगर (ret) {
         av_freep(&ctx->workers);
         av_freep(pctx);
-        return AVERROR(ret);
+        वापस AVERROR(ret);
     }
-    ret = pthread_cond_init(&ctx->done_cond, NULL);
-    if (ret) {
+    ret = pthread_cond_init(&ctx->done_cond, शून्य);
+    अगर (ret) {
         ctx->nb_threads = main_func ? 0 : 1;
         avpriv_slicethread_free(pctx);
-        return AVERROR(ret);
+        वापस AVERROR(ret);
     }
     ctx->done        = 0;
 
-    for (i = 0; i < nb_workers; i++) {
+    क्रम (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
         w->ctx = ctx;
-        ret = pthread_mutex_init(&w->mutex, NULL);
-        if (ret) {
+        ret = pthread_mutex_init(&w->mutex, शून्य);
+        अगर (ret) {
             ctx->nb_threads = main_func ? i : i + 1;
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            वापस AVERROR(ret);
         }
-        ret = pthread_cond_init(&w->cond, NULL);
-        if (ret) {
+        ret = pthread_cond_init(&w->cond, शून्य);
+        अगर (ret) {
             pthread_mutex_destroy(&w->mutex);
             ctx->nb_threads = main_func ? i : i + 1;
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            वापस AVERROR(ret);
         }
         pthread_mutex_lock(&w->mutex);
         w->done = 0;
 
-        if (ret = pthread_create(&w->thread, NULL, thread_worker, w)) {
+        अगर (ret = pthread_create(&w->thread, शून्य, thread_worker, w)) {
             ctx->nb_threads = main_func ? i : i + 1;
             pthread_mutex_unlock(&w->mutex);
             pthread_cond_destroy(&w->cond);
             pthread_mutex_destroy(&w->mutex);
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            वापस AVERROR(ret);
         }
 
-        while (!w->done)
+        जबतक (!w->done)
             pthread_cond_wait(&w->cond, &w->mutex);
         pthread_mutex_unlock(&w->mutex);
     }
 
-    return nb_threads;
+    वापस nb_threads;
 }
 
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main)
+पूर्णांक avpriv_slicethread_execute2(AVSliceThread *ctx, पूर्णांक nb_jobs, पूर्णांक execute_main)
 {
-    int nb_workers, i, is_last = 0, ret = 0;
+    पूर्णांक nb_workers, i, is_last = 0, ret = 0;
 
     av_assert0(nb_jobs > 0);
     ctx->nb_jobs           = nb_jobs;
@@ -214,10 +214,10 @@ int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_mai
     atomic_store_explicit(&ctx->first_job, 0, memory_order_relaxed);
     atomic_store_explicit(&ctx->current_job, ctx->nb_active_threads, memory_order_relaxed);
     nb_workers             = ctx->nb_active_threads;
-    if (!ctx->main_func || !execute_main)
+    अगर (!ctx->main_func || !execute_main)
         nb_workers--;
 
-    for (i = 0; i < nb_workers; i++) {
+    क्रम (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
         pthread_mutex_lock(&w->mutex);
         w->done = 0;
@@ -225,39 +225,39 @@ int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_mai
         pthread_mutex_unlock(&w->mutex);
     }
 
-    if (ctx->main_func && execute_main) {
+    अगर (ctx->main_func && execute_main) {
         ret = ctx->main_func(ctx->priv);
-    } else
+    } अन्यथा
         is_last = run_jobs(ctx);
 
-    if (!is_last) {
+    अगर (!is_last) {
         pthread_mutex_lock(&ctx->done_mutex);
-        while (!ctx->done)
+        जबतक (!ctx->done)
             pthread_cond_wait(&ctx->done_cond, &ctx->done_mutex);
         ctx->done = 0;
         pthread_mutex_unlock(&ctx->done_mutex);
     }
 
-    if (!ret)
+    अगर (!ret)
         ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
 
-    return ret;
+    वापस ret;
 }
 
-av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
+av_cold व्योम avpriv_slicethread_free(AVSliceThread **pctx)
 {
     AVSliceThread *ctx = *pctx;
-    int nb_workers, i;
+    पूर्णांक nb_workers, i;
 
-    if (!ctx)
-        return;
+    अगर (!ctx)
+        वापस;
 
     nb_workers = ctx->nb_threads;
-    if (!ctx->main_func)
+    अगर (!ctx->main_func)
         nb_workers--;
 
     ctx->finished = 1;
-    for (i = 0; i < nb_workers; i++) {
+    क्रम (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
         pthread_mutex_lock(&w->mutex);
         w->done = 0;
@@ -265,9 +265,9 @@ av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
         pthread_mutex_unlock(&w->mutex);
     }
 
-    for (i = 0; i < nb_workers; i++) {
+    क्रम (i = 0; i < nb_workers; i++) {
         WorkerContext *w = &ctx->workers[i];
-        pthread_join(w->thread, NULL);
+        pthread_join(w->thread, शून्य);
         pthread_cond_destroy(&w->cond);
         pthread_mutex_destroy(&w->mutex);
     }
@@ -282,84 +282,84 @@ av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
  * Backwards compatibility wrapper for the deprecated avpriv_ slicethread API.
  */
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#अगर LIBAVUTIL_VERSION_MAJOR < 62
 
-static int wrapper_worker(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads)
+अटल पूर्णांक wrapper_worker(व्योम *priv, पूर्णांक jobnr, पूर्णांक threadnr, पूर्णांक nb_jobs, पूर्णांक nb_threads)
 {
     AVSliceThread *ctx = priv;
     ctx->worker_func_v1(ctx->priv_v1, jobnr, threadnr, nb_jobs, nb_threads);
-    return 0;
+    वापस 0;
 }
 
-static int wrapper_main(void *priv)
+अटल पूर्णांक wrapper_main(व्योम *priv)
 {
     AVSliceThread *ctx = priv;
     ctx->main_func_v1(ctx->priv_v1);
-    return 0;
+    वापस 0;
 }
 
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                              void (*main_func)(void *priv),
-                              int nb_threads)
+पूर्णांक avpriv_slicethread_create(AVSliceThread **pctx, व्योम *priv,
+                              व्योम (*worker_func)(व्योम *priv, पूर्णांक jobnr, पूर्णांक threadnr, पूर्णांक nb_jobs, पूर्णांक nb_threads),
+                              व्योम (*main_func)(व्योम *priv),
+                              पूर्णांक nb_threads)
 {
-    int ret = avpriv_slicethread_create2(pctx, NULL, wrapper_worker,
-                                         main_func ? wrapper_main : NULL,
+    पूर्णांक ret = avpriv_slicethread_create2(pctx, शून्य, wrapper_worker,
+                                         main_func ? wrapper_main : शून्य,
                                          nb_threads);
-    if (ret < 0)
-        return ret;
+    अगर (ret < 0)
+        वापस ret;
 
     (*pctx)->priv           = *pctx;
     (*pctx)->priv_v1        = priv;
     (*pctx)->worker_func_v1 = worker_func;
     (*pctx)->main_func_v1   = main_func;
-    return ret;
+    वापस ret;
 }
 
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main)
+व्योम avpriv_slicethread_execute(AVSliceThread *ctx, पूर्णांक nb_jobs, पूर्णांक execute_main)
 {
     avpriv_slicethread_execute2(ctx, nb_jobs, execute_main);
 }
 
-#endif /* LIBAVUTIL_VERSION_MAJOR < 62 */
+#पूर्ण_अगर /* LIBAVUTIL_VERSION_MAJOR < 62 */
 
-#else /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
+#अन्यथा /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
 
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads)
+पूर्णांक avpriv_slicethread_create2(AVSliceThread **pctx, व्योम *priv,
+                               पूर्णांक (*worker_func)(व्योम *priv, पूर्णांक jobnr, पूर्णांक threadnr, पूर्णांक nb_jobs, पूर्णांक nb_threads),
+                               पूर्णांक (*main_func)(व्योम *priv),
+                               पूर्णांक nb_threads)
 {
-    *pctx = NULL;
-    return AVERROR(ENOSYS);
+    *pctx = शून्य;
+    वापस AVERROR(ENOSYS);
 }
 
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main)
+पूर्णांक avpriv_slicethread_execute2(AVSliceThread *ctx, पूर्णांक nb_jobs, पूर्णांक execute_main)
 {
     av_assert0(0);
 }
 
-void avpriv_slicethread_free(AVSliceThread **pctx)
+व्योम avpriv_slicethread_free(AVSliceThread **pctx)
 {
     av_assert0(!pctx || !*pctx);
 }
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#अगर LIBAVUTIL_VERSION_MAJOR < 62
 
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                              void (*main_func)(void *priv),
-                              int nb_threads)
+पूर्णांक avpriv_slicethread_create(AVSliceThread **pctx, व्योम *priv,
+                              व्योम (*worker_func)(व्योम *priv, पूर्णांक jobnr, पूर्णांक threadnr, पूर्णांक nb_jobs, पूर्णांक nb_threads),
+                              व्योम (*main_func)(व्योम *priv),
+                              पूर्णांक nb_threads)
 {
-    *pctx = NULL;
-    return AVERROR(ENOSYS);
+    *pctx = शून्य;
+    वापस AVERROR(ENOSYS);
 }
 
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main)
+व्योम avpriv_slicethread_execute(AVSliceThread *ctx, पूर्णांक nb_jobs, पूर्णांक execute_main)
 {
     av_assert0(0);
 }
 
-#endif /* LIBAVUTIL_VERSION_MAJOR < 62 */
+#पूर्ण_अगर /* LIBAVUTIL_VERSION_MAJOR < 62 */
 
-#endif /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
+#पूर्ण_अगर /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */

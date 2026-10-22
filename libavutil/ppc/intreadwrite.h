@@ -18,93 +18,93 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PPC_INTREADWRITE_H
-#define AVUTIL_PPC_INTREADWRITE_H
+#अगर_अघोषित AVUTIL_PPC_INTREADWRITE_H
+#घोषणा AVUTIL_PPC_INTREADWRITE_H
 
-#include <stdint.h>
-#include "config.h"
+#समावेश <stdint.h>
+#समावेश "config.h"
 
-#if HAVE_XFORM_ASM
+#अगर HAVE_XFORM_ASM
 
-#if HAVE_BIGENDIAN
-#define AV_RL16 av_read_bswap16
-#define AV_WL16 av_write_bswap16
-#define AV_RL32 av_read_bswap32
-#define AV_WL32 av_write_bswap32
-#define AV_RL64 av_read_bswap64
-#define AV_WL64 av_write_bswap64
+#अगर HAVE_BIGENDIAN
+#घोषणा AV_RL16 av_read_bswap16
+#घोषणा AV_WL16 av_write_bswap16
+#घोषणा AV_RL32 av_read_bswap32
+#घोषणा AV_WL32 av_write_bswap32
+#घोषणा AV_RL64 av_read_bswap64
+#घोषणा AV_WL64 av_write_bswap64
 
-#else
-#define AV_RB16 av_read_bswap16
-#define AV_WB16 av_write_bswap16
-#define AV_RB32 av_read_bswap32
-#define AV_WB32 av_write_bswap32
-#define AV_RB64 av_read_bswap64
-#define AV_WB64 av_write_bswap64
+#अन्यथा
+#घोषणा AV_RB16 av_read_bswap16
+#घोषणा AV_WB16 av_write_bswap16
+#घोषणा AV_RB32 av_read_bswap32
+#घोषणा AV_WB32 av_write_bswap32
+#घोषणा AV_RB64 av_read_bswap64
+#घोषणा AV_WB64 av_write_bswap64
 
-#endif
+#पूर्ण_अगर
 
-static av_always_inline uint16_t av_read_bswap16(const void *p)
+अटल av_always_inline uint16_t av_read_bswap16(स्थिर व्योम *p)
 {
     uint16_t v;
-    __asm__ ("lhbrx   %0, %y1" : "=r"(v) : "Z"(*(const uint16_t*)p));
-    return v;
+    __asm__ ("lhbrx   %0, %y1" : "=r"(v) : "Z"(*(स्थिर uint16_t*)p));
+    वापस v;
 }
 
-static av_always_inline void av_write_bswap16(void *p, uint16_t v)
+अटल av_always_inline व्योम av_write_bswap16(व्योम *p, uint16_t v)
 {
     __asm__ ("sthbrx  %1, %y0" : "=Z"(*(uint16_t*)p) : "r"(v));
 }
 
-static av_always_inline uint32_t av_read_bswap32(const void *p)
+अटल av_always_inline uint32_t av_read_bswap32(स्थिर व्योम *p)
 {
     uint32_t v;
-    __asm__ ("lwbrx   %0, %y1" : "=r"(v) : "Z"(*(const uint32_t*)p));
-    return v;
+    __asm__ ("lwbrx   %0, %y1" : "=r"(v) : "Z"(*(स्थिर uint32_t*)p));
+    वापस v;
 }
 
-static av_always_inline void av_write_bswap32(void *p, uint32_t v)
+अटल av_always_inline व्योम av_write_bswap32(व्योम *p, uint32_t v)
 {
     __asm__ ("stwbrx  %1, %y0" : "=Z"(*(uint32_t*)p) : "r"(v));
 }
 
-#if HAVE_LDBRX
+#अगर HAVE_LDBRX
 
-static av_always_inline uint64_t av_read_bswap64(const void *p)
+अटल av_always_inline uint64_t av_read_bswap64(स्थिर व्योम *p)
 {
     uint64_t v;
-    __asm__ ("ldbrx   %0, %y1" : "=r"(v) : "Z"(*(const uint64_t*)p));
-    return v;
+    __asm__ ("ldbrx   %0, %y1" : "=r"(v) : "Z"(*(स्थिर uint64_t*)p));
+    वापस v;
 }
 
-static av_always_inline void av_write_bswap64(void *p, uint64_t v)
+अटल av_always_inline व्योम av_write_bswap64(व्योम *p, uint64_t v)
 {
     __asm__ ("stdbrx  %1, %y0" : "=Z"(*(uint64_t*)p) : "r"(v));
 }
 
-#else
+#अन्यथा
 
-static av_always_inline uint64_t av_read_bswap64(const void *p)
+अटल av_always_inline uint64_t av_read_bswap64(स्थिर व्योम *p)
 {
-    union { uint64_t v; uint32_t hl[2]; } v;
+    जोड़ { uint64_t v; uint32_t hl[2]; } v;
     __asm__ ("lwbrx   %0, %y2  \n\t"
              "lwbrx   %1, %y3  \n\t"
              : "=&r"(v.hl[1]), "=r"(v.hl[0])
-             : "Z"(*(const uint32_t*)p), "Z"(*((const uint32_t*)p+1)));
-    return v.v;
+             : "Z"(*(स्थिर uint32_t*)p), "Z"(*((स्थिर uint32_t*)p+1)));
+    वापस v.v;
 }
 
-static av_always_inline void av_write_bswap64(void *p, uint64_t v)
+अटल av_always_inline व्योम av_write_bswap64(व्योम *p, uint64_t v)
 {
-    union { uint64_t v; uint32_t hl[2]; } vv = { v };
+    जोड़ { uint64_t v; uint32_t hl[2]; } vv = { v };
     __asm__ ("stwbrx  %2, %y0  \n\t"
              "stwbrx  %3, %y1  \n\t"
              : "=Z"(*(uint32_t*)p), "=Z"(*((uint32_t*)p+1))
              : "r"(vv.hl[1]), "r"(vv.hl[0]));
 }
 
-#endif /* HAVE_LDBRX */
+#पूर्ण_अगर /* HAVE_LDBRX */
 
-#endif /* HAVE_XFORM_ASM */
+#पूर्ण_अगर /* HAVE_XFORM_ASM */
 
-#endif /* AVUTIL_PPC_INTREADWRITE_H */
+#पूर्ण_अगर /* AVUTIL_PPC_INTREADWRITE_H */

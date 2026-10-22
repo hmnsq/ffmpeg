@@ -16,63 +16,63 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avassert.h"
-#include "container_fifo.h"
-#include "error.h"
-#include "fifo.h"
-#include "frame.h"
-#include "mem.h"
-#include "refstruct.h"
+#समावेश "avassert.h"
+#समावेश "container_fifo.h"
+#समावेश "error.h"
+#समावेश "fifo.h"
+#समावेश "frame.h"
+#समावेश "mem.h"
+#समावेश "refstruct.h"
 
-struct AVContainerFifo {
+काष्ठा AVContainerFifo {
     AVFifo             *fifo;
     AVRefStructPool    *pool;
 
-    void               *opaque;
-    void*             (*container_alloc)(void *opaque);
-    void              (*container_reset)(void *opaque, void *obj);
-    void              (*container_free) (void *opaque, void *obj);
-    int               (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags);
+    व्योम               *opaque;
+    व्योम*             (*container_alloc)(व्योम *opaque);
+    व्योम              (*container_reset)(व्योम *opaque, व्योम *obj);
+    व्योम              (*container_free) (व्योम *opaque, व्योम *obj);
+    पूर्णांक               (*fifo_transfer)  (व्योम *opaque, व्योम *dst, व्योम *src, अचिन्हित flags);
 
 };
 
-static int container_fifo_init_entry(AVRefStructOpaque opaque, void *obj)
+अटल पूर्णांक container_fifo_init_entry(AVRefStructOpaque opaque, व्योम *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    void **pobj = obj;
+    व्योम **pobj = obj;
 
     *pobj = cf->container_alloc(cf->opaque);
-    if (!*pobj)
-        return AVERROR(ENOMEM);
+    अगर (!*pobj)
+        वापस AVERROR(ENOMEM);
 
-    return 0;
+    वापस 0;
 }
 
-static void container_fifo_reset_entry(AVRefStructOpaque opaque, void *obj)
+अटल व्योम container_fifo_reset_entry(AVRefStructOpaque opaque, व्योम *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    cf->container_reset(cf->opaque, *(void**)obj);
+    cf->container_reset(cf->opaque, *(व्योम**)obj);
 }
 
-static void container_fifo_free_entry(AVRefStructOpaque opaque, void *obj)
+अटल व्योम container_fifo_free_entry(AVRefStructOpaque opaque, व्योम *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    cf->container_free(cf->opaque, *(void**)obj);
+    cf->container_free(cf->opaque, *(व्योम**)obj);
 }
 
 AVContainerFifo*
-av_container_fifo_alloc(void *opaque,
-                        void* (*container_alloc)(void *opaque),
-                        void  (*container_reset)(void *opaque, void *obj),
-                        void  (*container_free) (void *opaque, void *obj),
-                        int   (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags),
-                        unsigned flags)
+av_container_fifo_alloc(व्योम *opaque,
+                        व्योम* (*container_alloc)(व्योम *opaque),
+                        व्योम  (*container_reset)(व्योम *opaque, व्योम *obj),
+                        व्योम  (*container_free) (व्योम *opaque, व्योम *obj),
+                        पूर्णांक   (*fifo_transfer)  (व्योम *opaque, व्योम *dst, व्योम *src, अचिन्हित flags),
+                        अचिन्हित flags)
 {
     AVContainerFifo *cf;
 
-    cf = av_mallocz(sizeof(*cf));
-    if (!cf)
-        return NULL;
+    cf = av_mallocz(माप(*cf));
+    अगर (!cf)
+        वापस शून्य;
 
     cf->opaque          = opaque;
     cf->container_alloc = container_alloc;
@@ -80,36 +80,36 @@ av_container_fifo_alloc(void *opaque,
     cf->container_free  = container_free;
     cf->fifo_transfer   = fifo_transfer;
 
-    cf->fifo = av_fifo_alloc2(1, sizeof(void*), AV_FIFO_FLAG_AUTO_GROW);
-    if (!cf->fifo)
-        goto fail;
+    cf->fifo = av_fifo_alloc2(1, माप(व्योम*), AV_FIFO_FLAG_AUTO_GROW);
+    अगर (!cf->fifo)
+        जाओ fail;
 
-    cf->pool = av_refstruct_pool_alloc_ext(sizeof(void*), 0, cf,
+    cf->pool = av_refstruct_pool_alloc_ext(माप(व्योम*), 0, cf,
                                            container_fifo_init_entry,
                                            container_fifo_reset_entry,
                                            container_fifo_free_entry,
-                                           NULL);
-    if (!cf->pool)
-        goto fail;
+                                           शून्य);
+    अगर (!cf->pool)
+        जाओ fail;
 
-    return cf;
+    वापस cf;
 fail:
     av_container_fifo_free(&cf);
-    return NULL;
+    वापस शून्य;
 }
 
-void av_container_fifo_free(AVContainerFifo **pcf)
+व्योम av_container_fifo_free(AVContainerFifo **pcf)
 {
     AVContainerFifo *cf;
 
-    if (!*pcf)
-        return;
+    अगर (!*pcf)
+        वापस;
 
     cf = *pcf;
 
-    if (cf->fifo) {
-        void *obj;
-        while (av_fifo_read(cf->fifo, &obj, 1) >= 0)
+    अगर (cf->fifo) {
+        व्योम *obj;
+        जबतक (av_fifo_read(cf->fifo, &obj, 1) >= 0)
             av_refstruct_unref(&obj);
         av_fifo_freep2(&cf->fifo);
     }
@@ -119,101 +119,101 @@ void av_container_fifo_free(AVContainerFifo **pcf)
     av_freep(pcf);
 }
 
-int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags)
+पूर्णांक av_container_fifo_read(AVContainerFifo *cf, व्योम *obj, अचिन्हित flags)
 {
-    void **psrc;
-    int ret;
+    व्योम **psrc;
+    पूर्णांक ret;
 
     ret = av_fifo_read(cf->fifo, &psrc, 1);
-    if (ret < 0)
-        return ret;
+    अगर (ret < 0)
+        वापस ret;
 
     ret = cf->fifo_transfer(cf->opaque, obj, *psrc, flags);
     av_refstruct_unref(&psrc);
 
-    return ret;
+    वापस ret;
 }
 
-int av_container_fifo_peek(AVContainerFifo *cf, void **pdst, size_t offset)
+पूर्णांक av_container_fifo_peek(AVContainerFifo *cf, व्योम **pdst, माप_प्रकार offset)
 {
-    void **pobj;
-    int ret;
+    व्योम **pobj;
+    पूर्णांक ret;
 
     ret = av_fifo_peek(cf->fifo, &pobj, 1, offset);
-    if (ret < 0)
-        return ret;
+    अगर (ret < 0)
+        वापस ret;
 
     *pdst = *pobj;
 
-    return 0;
+    वापस 0;
 }
 
-void av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems)
+व्योम av_container_fifo_drain(AVContainerFifo *cf, माप_प्रकार nb_elems)
 {
     av_assert0(nb_elems <= av_fifo_can_read(cf->fifo));
-    while (nb_elems--) {
-        void **pobj;
-        int ret = av_fifo_read(cf->fifo, &pobj, 1);
+    जबतक (nb_elems--) {
+        व्योम **pobj;
+        पूर्णांक ret = av_fifo_read(cf->fifo, &pobj, 1);
         av_assert0(ret >= 0);
         av_refstruct_unref(&pobj);
     }
 }
 
-int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags)
+पूर्णांक av_container_fifo_write(AVContainerFifo *cf, व्योम *obj, अचिन्हित flags)
 {
-    void **pdst;
-    int ret;
+    व्योम **pdst;
+    पूर्णांक ret;
 
     pdst = av_refstruct_pool_get(cf->pool);
-    if (!pdst)
-        return AVERROR(ENOMEM);
+    अगर (!pdst)
+        वापस AVERROR(ENOMEM);
 
     ret = cf->fifo_transfer(cf->opaque, *pdst, obj, flags);
-    if (ret < 0)
-        goto fail;
+    अगर (ret < 0)
+        जाओ fail;
 
     ret = av_fifo_write(cf->fifo, &pdst, 1);
-    if (ret < 0)
-        goto fail;
+    अगर (ret < 0)
+        जाओ fail;
 
-    return 0;
+    वापस 0;
 fail:
     av_refstruct_unref(&pdst);
-    return ret;
+    वापस ret;
 }
 
-size_t av_container_fifo_can_read(const AVContainerFifo *cf)
+माप_प्रकार av_container_fifo_can_read(स्थिर AVContainerFifo *cf)
 {
-    return av_fifo_can_read(cf->fifo);
+    वापस av_fifo_can_read(cf->fifo);
 }
 
-static void *frame_alloc(void *opaque)
+अटल व्योम *frame_alloc(व्योम *opaque)
 {
-    return av_frame_alloc();
+    वापस av_frame_alloc();
 }
 
-static void frame_reset(void *opaque, void *obj)
+अटल व्योम frame_reset(व्योम *opaque, व्योम *obj)
 {
     av_frame_unref(obj);
 }
 
-static void frame_free(void *opaque, void *obj)
+अटल व्योम frame_free(व्योम *opaque, व्योम *obj)
 {
     AVFrame *frame = obj;
     av_frame_free(&frame);
 }
 
-static int frame_transfer(void *opaque, void *dst, void *src, unsigned flags)
+अटल पूर्णांक frame_transfer(व्योम *opaque, व्योम *dst, व्योम *src, अचिन्हित flags)
 {
-    if (flags & AV_CONTAINER_FIFO_FLAG_REF)
-        return av_frame_ref(dst, src);
+    अगर (flags & AV_CONTAINER_FIFO_FLAG_REF)
+        वापस av_frame_ref(dst, src);
 
     av_frame_move_ref(dst, src);
-    return 0;
+    वापस 0;
 }
 
-AVContainerFifo *av_container_fifo_alloc_avframe(unsigned flags)
+AVContainerFifo *av_container_fifo_alloc_avframe(अचिन्हित flags)
 {
-    return av_container_fifo_alloc(NULL, frame_alloc, frame_reset, frame_free,
+    वापस av_container_fifo_alloc(शून्य, frame_alloc, frame_reset, frame_free,
                                    frame_transfer, 0);
 }

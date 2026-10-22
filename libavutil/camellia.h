@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CAMELLIA_H
-#define AVUTIL_CAMELLIA_H
+#अगर_अघोषित AVUTIL_CAMELLIA_H
+#घोषणा AVUTIL_CAMELLIA_H
 
-#include <stdint.h>
+#समावेश <stdint.h>
 
 
 /**
@@ -33,15 +33,15 @@
   * @{
   */
 
-extern const int av_camellia_size;
+बाह्य स्थिर पूर्णांक av_camellia_आकार;
 
-struct AVCAMELLIA;
+काष्ठा AVCAMELLIA;
 
 /**
   * Allocate an AVCAMELLIA context
   * To free the struct: av_free(ptr)
   */
-struct AVCAMELLIA *av_camellia_alloc(void);
+काष्ठा AVCAMELLIA *av_camellia_alloc(व्योम);
 
 /**
   * Initialize an AVCAMELLIA context.
@@ -50,7 +50,7 @@ struct AVCAMELLIA *av_camellia_alloc(void);
   * @param key a key of 16, 24, 32 bytes used for encryption/decryption
   * @param key_bits number of keybits: possible are 128, 192, 256
  */
-int av_camellia_init(struct AVCAMELLIA *ctx, const uint8_t *key, int key_bits);
+पूर्णांक av_camellia_init(काष्ठा AVCAMELLIA *ctx, स्थिर uint8_t *कुंजी, पूर्णांक कुंजी_bits);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context
@@ -62,9 +62,9 @@ int av_camellia_init(struct AVCAMELLIA *ctx, const uint8_t *key, int key_bits);
   * @param iv initialization vector for CBC mode, NULL for ECB mode
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_camellia_crypt(struct AVCAMELLIA *ctx, uint8_t *dst, const uint8_t *src, int count, uint8_t* iv, int decrypt);
+व्योम av_camellia_crypt(काष्ठा AVCAMELLIA *ctx, uint8_t *dst, स्थिर uint8_t *src, पूर्णांक गिनती, uint8_t* iv, पूर्णांक decrypt);
 
 /**
  * @}
  */
-#endif /* AVUTIL_CAMELLIA_H */
+#पूर्ण_अगर /* AVUTIL_CAMELLIA_H */

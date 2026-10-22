@@ -16,218 +16,218 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avassert.h"
-#include "intmath.h"
-#include "cpu.h"
-#include "mem.h"
-#include "qsort.h"
-#include "bprint.h"
+#समावेश "avassert.h"
+#समावेश "intmath.h"
+#समावेश "cpu.h"
+#समावेश "mem.h"
+#समावेश "qsort.h"
+#समावेश "bprint.h"
 
-#include "tx_priv.h"
+#समावेश "tx_priv.h"
 
-#define TYPE_IS(type, x)               \
+#घोषणा TYPE_IS(type, x)               \
     (((x) == AV_TX_FLOAT_ ## type)  || \
      ((x) == AV_TX_DOUBLE_ ## type) || \
      ((x) == AV_TX_INT32_ ## type))
 
 /* Calculates the modular multiplicative inverse */
-static av_always_inline int mulinv(int n, int m)
+अटल av_always_inline पूर्णांक mulinv(पूर्णांक n, पूर्णांक m)
 {
     n = n % m;
-    for (int x = 1; x < m; x++)
-        if (((n * x) % m) == 1)
-            return x;
+    क्रम (पूर्णांक x = 1; x < m; x++)
+        अगर (((n * x) % m) == 1)
+            वापस x;
     av_assert0(0); /* Never reached */
-    return 0;
+    वापस 0;
 }
 
-int ff_tx_gen_pfa_input_map(AVTXContext *s, FFTXCodeletOptions *opts,
-                            int d1, int d2)
+पूर्णांक ff_tx_gen_pfa_निवेश_map(AVTXContext *s, FFTXCodeletOptions *opts,
+                            पूर्णांक d1, पूर्णांक d2)
 {
-    const int sl = d1*d2;
+    स्थिर पूर्णांक sl = d1*d2;
 
-    s->map = av_malloc(s->len*sizeof(*s->map));
-    if (!s->map)
-        return AVERROR(ENOMEM);
+    s->map = av_malloc(s->len*माप(*s->map));
+    अगर (!s->map)
+        वापस AVERROR(ENOMEM);
 
-    for (int k = 0; k < s->len; k += sl) {
-        if (s->inv || (opts && opts->map_dir == FF_TX_MAP_SCATTER)) {
-            for (int m = 0; m < d2; m++)
-                for (int n = 0; n < d1; n++)
+    क्रम (पूर्णांक k = 0; k < s->len; k += sl) {
+        अगर (s->inv || (opts && opts->map_dir == FF_TX_MAP_SCATTER)) {
+            क्रम (पूर्णांक m = 0; m < d2; m++)
+                क्रम (पूर्णांक n = 0; n < d1; n++)
                     s->map[k + ((m*d1 + n*d2) % (sl))] = m*d1 + n;
-        } else {
-            for (int m = 0; m < d2; m++)
-                for (int n = 0; n < d1; n++)
+        } अन्यथा {
+            क्रम (पूर्णांक m = 0; m < d2; m++)
+                क्रम (पूर्णांक n = 0; n < d1; n++)
                     s->map[k + m*d1 + n] = (m*d1 + n*d2) % (sl);
         }
 
-        if (s->inv)
-            for (int w = 1; w <= ((sl) >> 1); w++)
-                FFSWAP(int, s->map[k + w], s->map[k + sl - w]);
+        अगर (s->inv)
+            क्रम (पूर्णांक w = 1; w <= ((sl) >> 1); w++)
+                FFSWAP(पूर्णांक, s->map[k + w], s->map[k + sl - w]);
     }
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    वापस 0;
 }
 
 /* Guaranteed to work for any n, m where gcd(n, m) == 1 */
-int ff_tx_gen_compound_mapping(AVTXContext *s, FFTXCodeletOptions *opts,
-                               int inv, int n, int m)
+पूर्णांक ff_tx_gen_compound_mapping(AVTXContext *s, FFTXCodeletOptions *opts,
+                               पूर्णांक inv, पूर्णांक n, पूर्णांक m)
 {
-    int *in_map, *out_map;
-    const int len = n*m;    /* Will not be equal to s->len for MDCTs */
-    int m_inv, n_inv;
+    पूर्णांक *in_map, *out_map;
+    स्थिर पूर्णांक len = n*m;    /* Will not be equal to s->len for MDCTs */
+    पूर्णांक m_inv, n_inv;
 
     /* Make sure the numbers are coprime */
-    if (av_gcd(n, m) != 1)
-        return AVERROR(EINVAL);
+    अगर (av_gcd(n, m) != 1)
+        वापस AVERROR(EINVAL);
 
     m_inv = mulinv(m, n);
     n_inv = mulinv(n, m);
 
-    if (!(s->map = av_malloc(2*len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    अगर (!(s->map = av_malloc(2*len*माप(*s->map))))
+        वापस AVERROR(ENOMEM);
 
     in_map  = s->map;
     out_map = s->map + len;
 
     /* Ruritanian map for input, CRT map for output, can be swapped */
-    if (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
-        for (int j = 0; j < m; j++) {
-            for (int i = 0; i < n; i++) {
+    अगर (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
+        क्रम (पूर्णांक j = 0; j < m; j++) {
+            क्रम (पूर्णांक i = 0; i < n; i++) {
                 in_map[(i*m + j*n) % len] = j*n + i;
                 out_map[(i*m*m_inv + j*n*n_inv) % len] = i*m + j;
             }
         }
-    } else {
-        for (int j = 0; j < m; j++) {
-            for (int i = 0; i < n; i++) {
+    } अन्यथा {
+        क्रम (पूर्णांक j = 0; j < m; j++) {
+            क्रम (पूर्णांक i = 0; i < n; i++) {
                 in_map[j*n + i] = (i*m + j*n) % len;
                 out_map[(i*m*m_inv + j*n*n_inv) % len] = i*m + j;
             }
         }
     }
 
-    if (inv) {
-        for (int i = 0; i < m; i++) {
-            int *in = &in_map[i*n + 1]; /* Skip the DC */
-            for (int j = 0; j < ((n - 1) >> 1); j++)
-                FFSWAP(int, in[j], in[n - j - 2]);
+    अगर (inv) {
+        क्रम (पूर्णांक i = 0; i < m; i++) {
+            पूर्णांक *in = &in_map[i*n + 1]; /* Skip the DC */
+            क्रम (पूर्णांक j = 0; j < ((n - 1) >> 1); j++)
+                FFSWAP(पूर्णांक, in[j], in[n - j - 2]);
         }
     }
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    वापस 0;
 }
 
-static inline int split_radix_permutation(int i, int len, int inv)
+अटल अंतरभूत पूर्णांक split_radix_permutation(पूर्णांक i, पूर्णांक len, पूर्णांक inv)
 {
     len >>= 1;
-    if (len <= 1)
-        return i & 1;
-    if (!(i & len))
-        return split_radix_permutation(i, len, inv) * 2;
+    अगर (len <= 1)
+        वापस i & 1;
+    अगर (!(i & len))
+        वापस split_radix_permutation(i, len, inv) * 2;
     len >>= 1;
-    return split_radix_permutation(i, len, inv) * 4 + 1 - 2*(!(i & len) ^ inv);
+    वापस split_radix_permutation(i, len, inv) * 4 + 1 - 2*(!(i & len) ^ inv);
 }
 
-int ff_tx_gen_ptwo_revtab(AVTXContext *s, FFTXCodeletOptions *opts)
+पूर्णांक ff_tx_gen_ptwo_revtab(AVTXContext *s, FFTXCodeletOptions *opts)
 {
-    int len = s->len;
+    पूर्णांक len = s->len;
 
-    if (!(s->map = av_malloc(len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    अगर (!(s->map = av_malloc(len*माप(*s->map))))
+        वापस AVERROR(ENOMEM);
 
-    if (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
-        for (int i = 0; i < s->len; i++)
+    अगर (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
+        क्रम (पूर्णांक i = 0; i < s->len; i++)
             s->map[-split_radix_permutation(i, len, s->inv) & (len - 1)] = i;
-    } else {
-        for (int i = 0; i < s->len; i++)
+    } अन्यथा {
+        क्रम (पूर्णांक i = 0; i < s->len; i++)
             s->map[i] = -split_radix_permutation(i, len, s->inv) & (len - 1);
     }
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    वापस 0;
 }
 
-int ff_tx_gen_inplace_map(AVTXContext *s, int len)
+पूर्णांक ff_tx_gen_inplace_map(AVTXContext *s, पूर्णांक len)
 {
-    int *src_map, out_map_idx = 0;
+    पूर्णांक *src_map, out_map_idx = 0;
 
-    if (!s->sub || !s->sub->map)
-        return AVERROR(EINVAL);
+    अगर (!s->sub || !s->sub->map)
+        वापस AVERROR(EINVAL);
 
-    if (!(s->map = av_mallocz(len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    अगर (!(s->map = av_mallocz(len*माप(*s->map))))
+        वापस AVERROR(ENOMEM);
 
     src_map = s->sub->map;
 
     /* The first coefficient is always already in-place */
-    for (int src = 1; src < s->len; src++) {
-        int dst = src_map[src];
-        int found = 0;
+    क्रम (पूर्णांक src = 1; src < s->len; src++) {
+        पूर्णांक dst = src_map[src];
+        पूर्णांक found = 0;
 
-        if (dst <= src)
-            continue;
+        अगर (dst <= src)
+            जारी;
 
         /* This just checks if a closed loop has been encountered before,
          * and if so, skips it, since to fully permute a loop we must only
          * enter it once. */
-        do {
-            for (int j = 0; j < out_map_idx; j++) {
-                if (dst == s->map[j]) {
+        करो {
+            क्रम (पूर्णांक j = 0; j < out_map_idx; j++) {
+                अगर (dst == s->map[j]) {
                     found = 1;
-                    break;
+                    अवरोध;
                 }
             }
             dst = src_map[dst];
-        } while (dst != src && !found);
+        } जबतक (dst != src && !found);
 
-        if (!found)
+        अगर (!found)
             s->map[out_map_idx++] = src;
     }
 
     s->map[out_map_idx++] = 0;
 
-    return 0;
+    वापस 0;
 }
 
-static void parity_revtab_generator(int *revtab, int n, int inv, int offset,
-                                    int is_dual, int dual_high, int len,
-                                    int basis, int dual_stride, int inv_lookup)
+अटल व्योम parity_revtab_generator(पूर्णांक *revtab, पूर्णांक n, पूर्णांक inv, पूर्णांक offset,
+                                    पूर्णांक is_dual, पूर्णांक dual_ऊपरी, पूर्णांक len,
+                                    पूर्णांक basis, पूर्णांक dual_stride, पूर्णांक inv_lookup)
 {
     len >>= 1;
 
-    if (len <= basis) {
-        int k1, k2, stride, even_idx, odd_idx;
+    अगर (len <= basis) {
+        पूर्णांक k1, k2, stride, even_idx, odd_idx;
 
         is_dual = is_dual && dual_stride;
-        dual_high = is_dual & dual_high;
+        dual_ऊपरी = is_dual & dual_ऊपरी;
         stride = is_dual ? FFMIN(dual_stride, len) : 0;
 
-        even_idx = offset + dual_high*(stride - 2*len);
-        odd_idx  = even_idx + len + (is_dual && !dual_high)*len + dual_high*len;
+        even_idx = offset + dual_ऊपरी*(stride - 2*len);
+        odd_idx  = even_idx + len + (is_dual && !dual_ऊपरी)*len + dual_ऊपरी*len;
 
-        for (int i = 0; i < len; i++) {
+        क्रम (पूर्णांक i = 0; i < len; i++) {
             k1 = -split_radix_permutation(offset + i*2 + 0, n, inv) & (n - 1);
             k2 = -split_radix_permutation(offset + i*2 + 1, n, inv) & (n - 1);
-            if (inv_lookup) {
+            अगर (inv_lookup) {
                 revtab[even_idx++] = k1;
                 revtab[odd_idx++]  = k2;
-            } else {
+            } अन्यथा {
                 revtab[k1] = even_idx++;
                 revtab[k2] = odd_idx++;
             }
-            if (stride && !((i + 1) % stride)) {
+            अगर (stride && !((i + 1) % stride)) {
                 even_idx += stride;
                 odd_idx  += stride;
             }
         }
 
-        return;
+        वापस;
     }
 
     parity_revtab_generator(revtab, n, inv, offset,
@@ -238,16 +238,16 @@ static void parity_revtab_generator(int *revtab, int n, int inv, int offset,
                             1, 1, len >> 1, basis, dual_stride, inv_lookup);
 }
 
-int ff_tx_gen_split_radix_parity_revtab(AVTXContext *s, int len, int inv,
+पूर्णांक ff_tx_gen_split_radix_parity_revtab(AVTXContext *s, पूर्णांक len, पूर्णांक inv,
                                         FFTXCodeletOptions *opts,
-                                        int basis, int dual_stride)
+                                        पूर्णांक basis, पूर्णांक dual_stride)
 {
     basis >>= 1;
-    if (len < basis)
-        return AVERROR(EINVAL);
+    अगर (len < basis)
+        वापस AVERROR(EINVAL);
 
-    if (!(s->map = av_mallocz(len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    अगर (!(s->map = av_mallocz(len*माप(*s->map))))
+        वापस AVERROR(ENOMEM);
 
     av_assert0(!dual_stride || !(dual_stride & (dual_stride - 1)));
     av_assert0(dual_stride <= basis);
@@ -258,22 +258,22 @@ int ff_tx_gen_split_radix_parity_revtab(AVTXContext *s, int len, int inv,
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    वापस 0;
 }
 
-static void reset_ctx(AVTXContext *s, int free_sub)
+अटल व्योम reset_ctx(AVTXContext *s, पूर्णांक free_sub)
 {
-    if (!s)
-        return;
+    अगर (!s)
+        वापस;
 
-    if (s->sub)
-        for (int i = 0; i < TX_MAX_SUB; i++)
+    अगर (s->sub)
+        क्रम (पूर्णांक i = 0; i < TX_MAX_SUB; i++)
             reset_ctx(&s->sub[i], free_sub + 1);
 
-    if (s->cd_self && s->cd_self->uninit)
+    अगर (s->cd_self && s->cd_self->uninit)
         s->cd_self->uninit(s);
 
-    if (free_sub)
+    अगर (free_sub)
         av_freep(&s->sub);
 
     av_freep(&s->map);
@@ -283,41 +283,41 @@ static void reset_ctx(AVTXContext *s, int free_sub)
     /* Nothing else needs to be reset, it gets overwritten if another
      * ff_tx_init_subtx() call is made. */
     s->nb_sub = 0;
-    s->opaque = NULL;
-    memset(s->fn, 0, sizeof(s->fn));
+    s->opaque = शून्य;
+    स_रखो(s->fn, 0, माप(s->fn));
 }
 
-void ff_tx_clear_ctx(AVTXContext *s)
+व्योम ff_tx_clear_ctx(AVTXContext *s)
 {
     reset_ctx(s, 0);
 }
 
-av_cold void av_tx_uninit(AVTXContext **ctx)
+av_cold व्योम av_tx_uninit(AVTXContext **ctx)
 {
-    if (!(*ctx))
-        return;
+    अगर (!(*ctx))
+        वापस;
 
     reset_ctx(*ctx, 1);
     av_freep(ctx);
 }
 
-static av_cold int ff_tx_null_init(AVTXContext *s, const FFTXCodelet *cd,
+अटल av_cold पूर्णांक ff_tx_null_init(AVTXContext *s, स्थिर FFTXCodelet *cd,
                                    uint64_t flags, FFTXCodeletOptions *opts,
-                                   int len, int inv, const void *scale)
+                                   पूर्णांक len, पूर्णांक inv, स्थिर व्योम *scale)
 {
     /* Can only handle one sample+type to one sample+type transforms */
-    if (TYPE_IS(MDCT, s->type) || TYPE_IS(RDFT, s->type))
-        return AVERROR(EINVAL);
-    return 0;
+    अगर (TYPE_IS(MDCT, s->type) || TYPE_IS(RDFT, s->type))
+        वापस AVERROR(EINVAL);
+    वापस 0;
 }
 
 /* Null transform when the length is 1 */
-static void ff_tx_null(AVTXContext *s, void *_out, void *_in, ptrdiff_t stride)
+अटल व्योम ff_tx_null(AVTXContext *s, व्योम *_out, व्योम *_in, सूचक_भेद_प्रकार stride)
 {
-    memcpy(_out, _in, stride);
+    स_नकल(_out, _in, stride);
 }
 
-static const FFTXCodelet ff_tx_null_def = {
+अटल स्थिर FFTXCodelet ff_tx_null_def = {
     .name       = NULL_IF_CONFIG_SMALL("null"),
     .function   = ff_tx_null,
     .type       = TX_TYPE_ANY,
@@ -331,31 +331,31 @@ static const FFTXCodelet ff_tx_null_def = {
     .prio       = FF_TX_PRIO_MAX,
 };
 
-static const FFTXCodelet * const ff_tx_null_list[] = {
+अटल स्थिर FFTXCodelet * स्थिर ff_tx_null_list[] = {
     &ff_tx_null_def,
-    NULL,
+    शून्य,
 };
 
 /* Array of all compiled codelet lists. Order is irrelevant. */
-static const FFTXCodelet * const * const codelet_list[] = {
+अटल स्थिर FFTXCodelet * स्थिर * स्थिर codelet_list[] = {
     ff_tx_codelet_list_float_c,
     ff_tx_codelet_list_double_c,
     ff_tx_codelet_list_int32_c,
     ff_tx_null_list,
-#if HAVE_X86ASM
+#अगर HAVE_X86ASM
     ff_tx_codelet_list_float_x86,
-#endif
-#if ARCH_AARCH64
+#पूर्ण_अगर
+#अगर ARCH_AARCH64
     ff_tx_codelet_list_float_aarch64,
-#endif
+#पूर्ण_अगर
 };
-static const int codelet_list_num = FF_ARRAY_ELEMS(codelet_list);
+अटल स्थिर पूर्णांक codelet_list_अंक = FF_ARRAY_ELEMS(codelet_list);
 
-static const int cpu_slow_mask = AV_CPU_FLAG_SSE2SLOW | AV_CPU_FLAG_SSE3SLOW  |
+अटल स्थिर पूर्णांक cpu_slow_mask = AV_CPU_FLAG_SSE2SLOW | AV_CPU_FLAG_SSE3SLOW  |
                                  AV_CPU_FLAG_ATOM     | AV_CPU_FLAG_SSSE3SLOW |
                                  AV_CPU_FLAG_AVXSLOW  | AV_CPU_FLAG_SLOW_GATHER;
 
-static const int cpu_slow_penalties[][2] = {
+अटल स्थिर पूर्णांक cpu_slow_penalties[][2] = {
     { AV_CPU_FLAG_SSE2SLOW,    1 + 64  },
     { AV_CPU_FLAG_SSE3SLOW,    1 + 64  },
     { AV_CPU_FLAG_SSSE3SLOW,   1 + 64  },
@@ -364,139 +364,139 @@ static const int cpu_slow_penalties[][2] = {
     { AV_CPU_FLAG_SLOW_GATHER, 1 + 32  },
 };
 
-static int get_codelet_prio(const FFTXCodelet *cd, int cpu_flags, int len)
+अटल पूर्णांक get_codelet_prio(स्थिर FFTXCodelet *cd, पूर्णांक cpu_flags, पूर्णांक len)
 {
-    int prio = cd->prio;
-    int max_factor = 0;
+    पूर्णांक prio = cd->prio;
+    पूर्णांक max_factor = 0;
 
     /* If the CPU has a SLOW flag, and the instruction is also flagged
      * as being slow for such, reduce its priority */
-    for (int i = 0; i < FF_ARRAY_ELEMS(cpu_slow_penalties); i++) {
-        if ((cpu_flags & cd->cpu_flags) & cpu_slow_penalties[i][0])
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(cpu_slow_penalties); i++) {
+        अगर ((cpu_flags & cd->cpu_flags) & cpu_slow_penalties[i][0])
             prio -= cpu_slow_penalties[i][1];
     }
 
     /* Prioritize aligned-only codelets */
-    if ((cd->flags & FF_TX_ALIGNED) && !(cd->flags & AV_TX_UNALIGNED))
+    अगर ((cd->flags & FF_TX_ALIGNED) && !(cd->flags & AV_TX_UNALIGNED))
         prio += 64;
 
     /* Codelets for specific lengths are generally faster */
-    if ((len == cd->min_len) && (len == cd->max_len))
+    अगर ((len == cd->min_len) && (len == cd->max_len))
         prio += 64;
 
     /* Forward-only or inverse-only transforms are generally better */
-    if ((cd->flags & (FF_TX_FORWARD_ONLY | FF_TX_INVERSE_ONLY)))
+    अगर ((cd->flags & (FF_TX_FORWARD_ONLY | FF_TX_INVERSE_ONLY)))
         prio += 64;
 
     /* Larger factors are generally better */
-    for (int i = 0; i < TX_MAX_SUB; i++)
+    क्रम (पूर्णांक i = 0; i < TX_MAX_SUB; i++)
         max_factor = FFMAX(cd->factors[i], max_factor);
-    if (max_factor)
+    अगर (max_factor)
         prio += 16*max_factor;
 
-    return prio;
+    वापस prio;
 }
 
-typedef struct FFTXLenDecomp {
-    int len;
-    int len2;
-    int prio;
-    const FFTXCodelet *cd;
+प्रकार काष्ठा FFTXLenDecomp {
+    पूर्णांक len;
+    पूर्णांक len2;
+    पूर्णांक prio;
+    स्थिर FFTXCodelet *cd;
 } FFTXLenDecomp;
 
-static int cmp_decomp(FFTXLenDecomp *a, FFTXLenDecomp *b)
+अटल पूर्णांक cmp_decomp(FFTXLenDecomp *a, FFTXLenDecomp *b)
 {
-    return FFDIFFSIGN(b->prio, a->prio);
+    वापस FFDIFFSIGN(b->prio, a->prio);
 }
 
-int ff_tx_decompose_length(int dst[TX_MAX_DECOMPOSITIONS], enum AVTXType type,
-                           int len, int inv)
+पूर्णांक ff_tx_decompose_लंबाई(पूर्णांक dst[TX_MAX_DECOMPOSITIONS], क्रमागत AVTXType type,
+                           पूर्णांक len, पूर्णांक inv)
 {
-    int nb_decomp = 0;
+    पूर्णांक nb_decomp = 0;
     FFTXLenDecomp ld[TX_MAX_DECOMPOSITIONS];
-    int codelet_list_idx = codelet_list_num;
+    पूर्णांक codelet_list_idx = codelet_list_अंक;
 
-    const int cpu_flags = av_get_cpu_flags();
+    स्थिर पूर्णांक cpu_flags = av_get_cpu_flags();
 
     /* Loop through all codelets in all codelet lists to find matches
      * to the requirements */
-    while (codelet_list_idx--) {
-        const FFTXCodelet * const * list = codelet_list[codelet_list_idx];
-        const FFTXCodelet *cd = NULL;
+    जबतक (codelet_list_idx--) {
+        स्थिर FFTXCodelet * स्थिर * list = codelet_list[codelet_list_idx];
+        स्थिर FFTXCodelet *cd = शून्य;
 
-        while ((cd = *list++)) {
-            int fl = len;
-            int skip = 0, prio;
-            int factors_product = 1, factors_mod = 0;
+        जबतक ((cd = *list++)) {
+            पूर्णांक fl = len;
+            पूर्णांक skip = 0, prio;
+            पूर्णांक factors_product = 1, factors_mod = 0;
 
-            if (nb_decomp >= TX_MAX_DECOMPOSITIONS)
-                goto sort;
+            अगर (nb_decomp >= TX_MAX_DECOMPOSITIONS)
+                जाओ sort;
 
             /* Check if the type matches */
-            if (cd->type != TX_TYPE_ANY && type != cd->type)
-                continue;
+            अगर (cd->type != TX_TYPE_ANY && type != cd->type)
+                जारी;
 
             /* Check direction for non-orthogonal codelets */
-            if (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
+            अगर (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
                 ((cd->flags & (FF_TX_INVERSE_ONLY | AV_TX_FULL_IMDCT)) && !inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_REAL)) && inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_IMAGINARY)) && inv))
-                continue;
+                जारी;
 
             /* Check if the CPU supports the required ISA */
-            if (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
+            अगर (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
                 !(cpu_flags & (cd->cpu_flags & ~cpu_slow_mask)))
-                continue;
+                जारी;
 
-            for (int i = 0; i < TX_MAX_FACTORS; i++) {
-                if (!cd->factors[i] || (fl == 1))
-                    break;
+            क्रम (पूर्णांक i = 0; i < TX_MAX_FACTORS; i++) {
+                अगर (!cd->factors[i] || (fl == 1))
+                    अवरोध;
 
-                if (cd->factors[i] == TX_FACTOR_ANY) {
+                अगर (cd->factors[i] == TX_FACTOR_ANY) {
                     factors_mod++;
                     factors_product *= fl;
-                } else if (!(fl % cd->factors[i])) {
+                } अन्यथा अगर (!(fl % cd->factors[i])) {
                     factors_mod++;
-                    if (cd->factors[i] == 2) {
-                        int b = ff_ctz(fl);
+                    अगर (cd->factors[i] == 2) {
+                        पूर्णांक b = ff_ctz(fl);
                         fl >>= b;
                         factors_product <<= b;
-                    } else {
-                        do {
+                    } अन्यथा {
+                        करो {
                             fl /= cd->factors[i];
                             factors_product *= cd->factors[i];
-                        } while (!(fl % cd->factors[i]));
+                        } जबतक (!(fl % cd->factors[i]));
                     }
                 }
             }
 
             /* Disqualify if factor requirements are not satisfied or if trivial */
-            if ((factors_mod < cd->nb_factors) || (len == factors_product))
-                continue;
+            अगर ((factors_mod < cd->nb_factors) || (len == factors_product))
+                जारी;
 
-            if (av_gcd(factors_product, fl) != 1)
-                continue;
+            अगर (av_gcd(factors_product, fl) != 1)
+                जारी;
 
             /* Check if length is supported and factorization was successful */
-            if ((factors_product < cd->min_len) ||
+            अगर ((factors_product < cd->min_len) ||
                 (cd->max_len != TX_LEN_UNLIMITED && (factors_product > cd->max_len)))
-                continue;
+                जारी;
 
             prio = get_codelet_prio(cd, cpu_flags, factors_product) * factors_product;
 
             /* Check for duplicates */
-            for (int i = 0; i < nb_decomp; i++) {
-                if (factors_product == ld[i].len) {
+            क्रम (पूर्णांक i = 0; i < nb_decomp; i++) {
+                अगर (factors_product == ld[i].len) {
                     /* Update priority if new one is higher */
-                    if (prio > ld[i].prio)
+                    अगर (prio > ld[i].prio)
                         ld[i].prio = prio;
                     skip = 1;
-                    break;
+                    अवरोध;
                 }
             }
 
             /* Add decomposition if unique */
-            if (!skip) {
+            अगर (!skip) {
                 ld[nb_decomp].cd = cd;
                 ld[nb_decomp].len = factors_product;
                 ld[nb_decomp].len2 = fl;
@@ -506,73 +506,73 @@ int ff_tx_decompose_length(int dst[TX_MAX_DECOMPOSITIONS], enum AVTXType type,
         }
     }
 
-    if (!nb_decomp)
-        return AVERROR(EINVAL);
+    अगर (!nb_decomp)
+        वापस AVERROR(EINVAL);
 
 sort:
     AV_QSORT(ld, nb_decomp, FFTXLenDecomp, cmp_decomp);
 
-    for (int i = 0; i < nb_decomp; i++) {
-        if (ld[i].cd->nb_factors > 1)
+    क्रम (पूर्णांक i = 0; i < nb_decomp; i++) {
+        अगर (ld[i].cd->nb_factors > 1)
             dst[i] = ld[i].len2;
-        else
+        अन्यथा
             dst[i] = ld[i].len;
     }
 
-    return nb_decomp;
+    वापस nb_decomp;
 }
 
-int ff_tx_gen_default_map(AVTXContext *s, FFTXCodeletOptions *opts)
+पूर्णांक ff_tx_gen_default_map(AVTXContext *s, FFTXCodeletOptions *opts)
 {
-    s->map = av_malloc(s->len*sizeof(*s->map));
-    if (!s->map)
-        return AVERROR(ENOMEM);
+    s->map = av_malloc(s->len*माप(*s->map));
+    अगर (!s->map)
+        वापस AVERROR(ENOMEM);
 
     s->map[0] = 0; /* DC is always at the start */
-    if (s->inv) /* Reversing the ACs flips the transform direction */
-        for (int i = 1; i < s->len; i++)
+    अगर (s->inv) /* Reversing the ACs flips the transform direction */
+        क्रम (पूर्णांक i = 1; i < s->len; i++)
             s->map[i] = s->len - i;
-    else
-        for (int i = 1; i < s->len; i++)
+    अन्यथा
+        क्रम (पूर्णांक i = 1; i < s->len; i++)
             s->map[i] = i;
 
     s->map_dir = FF_TX_MAP_GATHER;
 
-    return 0;
+    वापस 0;
 }
 
-#if !CONFIG_SMALL
-static void print_flags(AVBPrint *bp, uint64_t f)
+#अगर !CONFIG_SMALL
+अटल व्योम print_flags(AVBPrint *bp, uint64_t f)
 {
-    int prev = 0;
-    const char *sep = ", ";
+    पूर्णांक पूर्व = 0;
+    स्थिर अक्षर *sep = ", ";
     av_bprintf(bp, "flags: [");
-    if ((f & FF_TX_ALIGNED) && ++prev)
+    अगर ((f & FF_TX_ALIGNED) && ++पूर्व)
         av_bprintf(bp, "aligned");
-    if ((f & AV_TX_UNALIGNED) && ++prev)
-        av_bprintf(bp, "%sunaligned", prev > 1 ? sep : "");
-    if ((f & AV_TX_INPLACE) && ++prev)
-        av_bprintf(bp, "%sinplace", prev > 1 ? sep : "");
-    if ((f & FF_TX_OUT_OF_PLACE) && ++prev)
-        av_bprintf(bp, "%sout_of_place", prev > 1 ? sep : "");
-    if ((f & FF_TX_FORWARD_ONLY) && ++prev)
-        av_bprintf(bp, "%sfwd_only", prev > 1 ? sep : "");
-    if ((f & FF_TX_INVERSE_ONLY) && ++prev)
-        av_bprintf(bp, "%sinv_only", prev > 1 ? sep : "");
-    if ((f & FF_TX_PRESHUFFLE) && ++prev)
-        av_bprintf(bp, "%spreshuf", prev > 1 ? sep : "");
-    if ((f & AV_TX_FULL_IMDCT) && ++prev)
-        av_bprintf(bp, "%simdct_full", prev > 1 ? sep : "");
-    if ((f & AV_TX_REAL_TO_REAL) && ++prev)
-        av_bprintf(bp, "%sreal_to_real", prev > 1 ? sep : "");
-    if ((f & AV_TX_REAL_TO_IMAGINARY) && ++prev)
-        av_bprintf(bp, "%sreal_to_imaginary", prev > 1 ? sep : "");
-    if ((f & FF_TX_ASM_CALL) && ++prev)
-        av_bprintf(bp, "%sasm_call", prev > 1 ? sep : "");
+    अगर ((f & AV_TX_UNALIGNED) && ++पूर्व)
+        av_bprintf(bp, "%sunaligned", पूर्व > 1 ? sep : "");
+    अगर ((f & AV_TX_INPLACE) && ++पूर्व)
+        av_bprintf(bp, "%sinplace", पूर्व > 1 ? sep : "");
+    अगर ((f & FF_TX_OUT_OF_PLACE) && ++पूर्व)
+        av_bprintf(bp, "%sout_of_place", पूर्व > 1 ? sep : "");
+    अगर ((f & FF_TX_FORWARD_ONLY) && ++पूर्व)
+        av_bprintf(bp, "%sfwd_only", पूर्व > 1 ? sep : "");
+    अगर ((f & FF_TX_INVERSE_ONLY) && ++पूर्व)
+        av_bprintf(bp, "%sinv_only", पूर्व > 1 ? sep : "");
+    अगर ((f & FF_TX_PRESHUFFLE) && ++पूर्व)
+        av_bprintf(bp, "%spreshuf", पूर्व > 1 ? sep : "");
+    अगर ((f & AV_TX_FULL_IMDCT) && ++पूर्व)
+        av_bprintf(bp, "%simdct_full", पूर्व > 1 ? sep : "");
+    अगर ((f & AV_TX_REAL_TO_REAL) && ++पूर्व)
+        av_bprintf(bp, "%sreal_to_real", पूर्व > 1 ? sep : "");
+    अगर ((f & AV_TX_REAL_TO_IMAGINARY) && ++पूर्व)
+        av_bprintf(bp, "%sreal_to_imaginary", पूर्व > 1 ? sep : "");
+    अगर ((f & FF_TX_ASM_CALL) && ++पूर्व)
+        av_bprintf(bp, "%sasm_call", पूर्व > 1 ? sep : "");
     av_bprintf(bp, "]");
 }
 
-static void print_type(AVBPrint *bp, enum AVTXType type)
+अटल व्योम print_type(AVBPrint *bp, क्रमागत AVTXType type)
 {
     av_bprintf(bp, "%s",
                type == TX_TYPE_ANY       ? "any"         :
@@ -594,111 +594,111 @@ static void print_type(AVBPrint *bp, enum AVTXType type)
                "unknown");
 }
 
-static void print_cd_info(const FFTXCodelet *cd, int prio, int len, int print_prio,
-                          int log_level)
+अटल व्योम print_cd_info(स्थिर FFTXCodelet *cd, पूर्णांक prio, पूर्णांक len, पूर्णांक print_prio,
+                          पूर्णांक log_level)
 {
     AVBPrint bp;
-    av_bprint_init(&bp, 0, AV_BPRINT_SIZE_AUTOMATIC);
+    av_bprint_init(&bp, 0, AV_BPRINT_आकार_AUTOMATIC);
 
     av_bprintf(&bp, "%s - type: ", cd->name);
 
     print_type(&bp, cd->type);
 
     av_bprintf(&bp, ", len: ");
-    if (!len) {
-        if (cd->min_len != cd->max_len)
+    अगर (!len) {
+        अगर (cd->min_len != cd->max_len)
             av_bprintf(&bp, "[%i, ", cd->min_len);
 
-        if (cd->max_len == TX_LEN_UNLIMITED)
+        अगर (cd->max_len == TX_LEN_UNLIMITED)
             av_bprintf(&bp, "∞");
-        else
+        अन्यथा
             av_bprintf(&bp, "%i", cd->max_len);
-    } else {
+    } अन्यथा {
         av_bprintf(&bp, "%i", len);
     }
 
-    if (cd->factors[1]) {
+    अगर (cd->factors[1]) {
         av_bprintf(&bp, "%s, factors", !len && cd->min_len != cd->max_len ? "]" : "");
-        if (!cd->nb_factors)
+        अगर (!cd->nb_factors)
             av_bprintf(&bp, ": [");
-        else
+        अन्यथा
             av_bprintf(&bp, "[%i]: [", cd->nb_factors);
 
-        for (int i = 0; i < TX_MAX_FACTORS; i++) {
-            if (i && cd->factors[i])
+        क्रम (पूर्णांक i = 0; i < TX_MAX_FACTORS; i++) {
+            अगर (i && cd->factors[i])
                 av_bprintf(&bp, ", ");
-            if (cd->factors[i] == TX_FACTOR_ANY)
+            अगर (cd->factors[i] == TX_FACTOR_ANY)
                 av_bprintf(&bp, "any");
-            else if (cd->factors[i])
+            अन्यथा अगर (cd->factors[i])
                 av_bprintf(&bp, "%i", cd->factors[i]);
-            else
-                break;
+            अन्यथा
+                अवरोध;
         }
 
         av_bprintf(&bp, "], ");
-    } else {
+    } अन्यथा {
         av_bprintf(&bp, "%s, factor: %i, ",
                    !len && cd->min_len != cd->max_len ? "]" : "", cd->factors[0]);
     }
     print_flags(&bp, cd->flags);
 
-    if (print_prio)
+    अगर (print_prio)
         av_bprintf(&bp, ", prio: %i", prio);
 
-    av_log(NULL, log_level, "%s\n", bp.str);
+    av_log(शून्य, log_level, "%s\n", bp.str);
 }
 
-static void print_tx_structure(AVTXContext *s, int depth)
+अटल व्योम print_tx_structure(AVTXContext *s, पूर्णांक depth)
 {
-    const FFTXCodelet *cd = s->cd_self;
+    स्थिर FFTXCodelet *cd = s->cd_self;
 
-    for (int i = 0; i <= depth; i++)
-        av_log(NULL, AV_LOG_DEBUG, "    ");
+    क्रम (पूर्णांक i = 0; i <= depth; i++)
+        av_log(शून्य, AV_LOG_DEBUG, "    ");
 
     print_cd_info(cd, cd->prio, s->len, 0, AV_LOG_DEBUG);
 
-    for (int i = 0; i < s->nb_sub; i++)
+    क्रम (पूर्णांक i = 0; i < s->nb_sub; i++)
         print_tx_structure(&s->sub[i], depth + 1);
 }
-#endif /* CONFIG_SMALL */
+#पूर्ण_अगर /* CONFIG_SMALL */
 
-typedef struct TXCodeletMatch {
-    const FFTXCodelet *cd;
-    int prio;
+प्रकार काष्ठा TXCodeletMatch {
+    स्थिर FFTXCodelet *cd;
+    पूर्णांक prio;
 } TXCodeletMatch;
 
-static int cmp_matches(TXCodeletMatch *a, TXCodeletMatch *b)
+अटल पूर्णांक cmp_matches(TXCodeletMatch *a, TXCodeletMatch *b)
 {
-    return FFDIFFSIGN(b->prio, a->prio);
+    वापस FFDIFFSIGN(b->prio, a->prio);
 }
 
 /* We want all factors to completely cover the length */
-static inline int check_cd_factors(const FFTXCodelet *cd, int len)
+अटल अंतरभूत पूर्णांक check_cd_factors(स्थिर FFTXCodelet *cd, पूर्णांक len)
 {
-    int matches = 0, any_flag = 0;
+    पूर्णांक matches = 0, any_flag = 0;
 
-    for (int i = 0; i < TX_MAX_FACTORS; i++) {
-        int factor = cd->factors[i];
+    क्रम (पूर्णांक i = 0; i < TX_MAX_FACTORS; i++) {
+        पूर्णांक factor = cd->factors[i];
 
-        if (factor == TX_FACTOR_ANY) {
+        अगर (factor == TX_FACTOR_ANY) {
             any_flag = 1;
             matches++;
-            continue;
-        } else if (len <= 1 || !factor) {
-            break;
-        } else if (factor == 2) { /* Fast path */
-            int bits_2 = ff_ctz(len);
-            if (!bits_2)
-                continue; /* Factor not supported */
+            जारी;
+        } अन्यथा अगर (len <= 1 || !factor) {
+            अवरोध;
+        } अन्यथा अगर (factor == 2) { /* Fast path */
+            पूर्णांक bits_2 = ff_ctz(len);
+            अगर (!bits_2)
+                जारी; /* Factor not supported */
 
             len >>= bits_2;
             matches++;
-        } else {
-            int res = len % factor;
-            if (res)
-                continue; /* Factor not supported */
+        } अन्यथा {
+            पूर्णांक res = len % factor;
+            अगर (res)
+                जारी; /* Factor not supported */
 
-            while (!res) {
+            जबतक (!res) {
                 len /= factor;
                 res = len % factor;
             }
@@ -706,26 +706,26 @@ static inline int check_cd_factors(const FFTXCodelet *cd, int len)
         }
     }
 
-    return (cd->nb_factors <= matches) && (any_flag || len == 1);
+    वापस (cd->nb_factors <= matches) && (any_flag || len == 1);
 }
 
-av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
+av_cold पूर्णांक ff_tx_init_subtx(AVTXContext *s, क्रमागत AVTXType type,
                              uint64_t flags, FFTXCodeletOptions *opts,
-                             int len, int inv, const void *scale)
+                             पूर्णांक len, पूर्णांक inv, स्थिर व्योम *scale)
 {
-    int ret = 0;
-    AVTXContext *sub = NULL;
-    TXCodeletMatch *cd_tmp, *cd_matches = NULL;
-    unsigned int cd_matches_size = 0;
-    int codelet_list_idx = codelet_list_num;
-    int nb_cd_matches = 0;
-#if !CONFIG_SMALL
+    पूर्णांक ret = 0;
+    AVTXContext *sub = शून्य;
+    TXCodeletMatch *cd_tmp, *cd_matches = शून्य;
+    अचिन्हित पूर्णांक cd_matches_आकार = 0;
+    पूर्णांक codelet_list_idx = codelet_list_अंक;
+    पूर्णांक nb_cd_matches = 0;
+#अगर !CONFIG_SMALL
     AVBPrint bp;
-#endif
+#पूर्ण_अगर
 
     /* We still accept functions marked with SLOW, even if the CPU is
      * marked with the same flag, but we give them lower priority. */
-    const int cpu_flags = av_get_cpu_flags();
+    स्थिर पूर्णांक cpu_flags = av_get_cpu_flags();
 
     /* Flags the transform wants */
     uint64_t req_flags = flags;
@@ -738,57 +738,57 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
                             FF_TX_ASM_CALL;
 
     /* Unaligned codelets are compatible with the aligned flag */
-    if (req_flags & FF_TX_ALIGNED)
+    अगर (req_flags & FF_TX_ALIGNED)
         req_flags |= AV_TX_UNALIGNED;
 
     /* If either flag is set, both are okay, so don't check for an exact match */
-    if ((req_flags & AV_TX_INPLACE) && (req_flags & FF_TX_OUT_OF_PLACE))
+    अगर ((req_flags & AV_TX_INPLACE) && (req_flags & FF_TX_OUT_OF_PLACE))
         req_flags &= ~(AV_TX_INPLACE | FF_TX_OUT_OF_PLACE);
-    if ((req_flags & FF_TX_ALIGNED) && (req_flags & AV_TX_UNALIGNED))
+    अगर ((req_flags & FF_TX_ALIGNED) && (req_flags & AV_TX_UNALIGNED))
         req_flags &= ~(FF_TX_ALIGNED | AV_TX_UNALIGNED);
 
     /* Loop through all codelets in all codelet lists to find matches
      * to the requirements */
-    while (codelet_list_idx--) {
-        const FFTXCodelet * const * list = codelet_list[codelet_list_idx];
-        const FFTXCodelet *cd = NULL;
+    जबतक (codelet_list_idx--) {
+        स्थिर FFTXCodelet * स्थिर * list = codelet_list[codelet_list_idx];
+        स्थिर FFTXCodelet *cd = शून्य;
 
-        while ((cd = *list++)) {
+        जबतक ((cd = *list++)) {
             /* Check if the type matches */
-            if (cd->type != TX_TYPE_ANY && type != cd->type)
-                continue;
+            अगर (cd->type != TX_TYPE_ANY && type != cd->type)
+                जारी;
 
             /* Check direction for non-orthogonal codelets */
-            if (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
+            अगर (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
                 ((cd->flags & (FF_TX_INVERSE_ONLY | AV_TX_FULL_IMDCT)) && !inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_REAL)) && inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_IMAGINARY)) && inv))
-                continue;
+                जारी;
 
             /* Check if the requested flags match from both sides */
-            if (((req_flags    & cd->flags) != (req_flags)) ||
+            अगर (((req_flags    & cd->flags) != (req_flags)) ||
                 ((inv_req_mask & cd->flags) != (req_flags & inv_req_mask)))
-                continue;
+                जारी;
 
             /* Check if length is supported */
-            if ((len < cd->min_len) || (cd->max_len != -1 && (len > cd->max_len)))
-                continue;
+            अगर ((len < cd->min_len) || (cd->max_len != -1 && (len > cd->max_len)))
+                जारी;
 
             /* Check if the CPU supports the required ISA */
-            if (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
+            अगर (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
                 !(cpu_flags & (cd->cpu_flags & ~cpu_slow_mask)))
-                continue;
+                जारी;
 
             /* Check for factors */
-            if (!check_cd_factors(cd, len))
-                continue;
+            अगर (!check_cd_factors(cd, len))
+                जारी;
 
             /* Realloc array and append */
-            cd_tmp = av_fast_realloc(cd_matches, &cd_matches_size,
-                                     sizeof(*cd_tmp) * (nb_cd_matches + 1));
-            if (!cd_tmp) {
+            cd_tmp = av_fast_realloc(cd_matches, &cd_matches_आकार,
+                                     माप(*cd_tmp) * (nb_cd_matches + 1));
+            अगर (!cd_tmp) {
                 av_free(cd_matches);
-                return AVERROR(ENOMEM);
+                वापस AVERROR(ENOMEM);
             }
 
             cd_matches                     = cd_tmp;
@@ -798,9 +798,9 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
         }
     }
 
-#if !CONFIG_SMALL
+#अगर !CONFIG_SMALL
     /* Print debugging info */
-    av_bprint_init(&bp, 0, AV_BPRINT_SIZE_AUTOMATIC);
+    av_bprint_init(&bp, 0, AV_BPRINT_आकार_AUTOMATIC);
     av_bprintf(&bp, "For transform of length %i, %s, ", len,
                inv ? "inverse" : "forward");
     print_type(&bp, type);
@@ -808,35 +808,35 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
     print_flags(&bp, flags);
     av_bprintf(&bp, ", found %i matches%s", nb_cd_matches,
                nb_cd_matches ? ":" : ".");
-#endif
+#पूर्ण_अगर
 
     /* No matches found */
-    if (!nb_cd_matches)
-        return AVERROR(ENOSYS);
+    अगर (!nb_cd_matches)
+        वापस AVERROR(ENOSYS);
 
     /* Sort the list */
     AV_QSORT(cd_matches, nb_cd_matches, TXCodeletMatch, cmp_matches);
 
-#if !CONFIG_SMALL
-    av_log(NULL, AV_LOG_TRACE, "%s\n", bp.str);
+#अगर !CONFIG_SMALL
+    av_log(शून्य, AV_LOG_TRACE, "%s\n", bp.str);
 
-    for (int i = 0; i < nb_cd_matches; i++) {
-        av_log(NULL, AV_LOG_TRACE, "    %i: ", i + 1);
+    क्रम (पूर्णांक i = 0; i < nb_cd_matches; i++) {
+        av_log(शून्य, AV_LOG_TRACE, "    %i: ", i + 1);
         print_cd_info(cd_matches[i].cd, cd_matches[i].prio, 0, 1, AV_LOG_TRACE);
     }
-#endif
+#पूर्ण_अगर
 
-    if (!s->sub) {
-        s->sub = sub = av_mallocz(TX_MAX_SUB*sizeof(*sub));
-        if (!sub) {
+    अगर (!s->sub) {
+        s->sub = sub = av_mallocz(TX_MAX_SUB*माप(*sub));
+        अगर (!sub) {
             ret = AVERROR(ENOMEM);
-            goto end;
+            जाओ end;
         }
     }
 
     /* Attempt to initialize each */
-    for (int i = 0; i < nb_cd_matches; i++) {
-        const FFTXCodelet *cd = cd_matches[i].cd;
+    क्रम (पूर्णांक i = 0; i < nb_cd_matches; i++) {
+        स्थिर FFTXCodelet *cd = cd_matches[i].cd;
         AVTXContext *sctx = &s->sub[s->nb_sub];
 
         sctx->len        = len;
@@ -849,91 +849,91 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
         s->cd[s->nb_sub] = cd;
 
         ret = 0;
-        if (cd->init)
+        अगर (cd->init)
             ret = cd->init(sctx, cd, flags, opts, len, inv, scale);
 
-        if (ret >= 0) {
-            if (opts && opts->map_dir != FF_TX_MAP_NONE &&
+        अगर (ret >= 0) {
+            अगर (opts && opts->map_dir != FF_TX_MAP_NONE &&
                 sctx->map_dir == FF_TX_MAP_NONE) {
                 /* If a specific map direction was requested, and it doesn't
                  * exist, create one.*/
-                sctx->map = av_malloc(len*sizeof(*sctx->map));
-                if (!sctx->map) {
+                sctx->map = av_malloc(len*माप(*sctx->map));
+                अगर (!sctx->map) {
                     ret = AVERROR(ENOMEM);
-                    goto end;
+                    जाओ end;
                 }
 
-                for (int i = 0; i < len; i++)
+                क्रम (पूर्णांक i = 0; i < len; i++)
                     sctx->map[i] = i;
-            } else if (opts && (opts->map_dir != sctx->map_dir)) {
-                int *tmp = av_malloc(len*sizeof(*sctx->map));
-                if (!tmp) {
+            } अन्यथा अगर (opts && (opts->map_dir != sctx->map_dir)) {
+                पूर्णांक *tmp = av_malloc(len*माप(*sctx->map));
+                अगर (!tmp) {
                     ret = AVERROR(ENOMEM);
-                    goto end;
+                    जाओ end;
                 }
 
-                memcpy(tmp, sctx->map, len*sizeof(*sctx->map));
+                स_नकल(tmp, sctx->map, len*माप(*sctx->map));
 
-                for (int i = 0; i < len; i++)
+                क्रम (पूर्णांक i = 0; i < len; i++)
                     sctx->map[tmp[i]] = i;
 
                 av_free(tmp);
             }
 
             s->nb_sub++;
-            goto end;
+            जाओ end;
         }
 
-        s->fn[s->nb_sub] = NULL;
-        s->cd[s->nb_sub] = NULL;
+        s->fn[s->nb_sub] = शून्य;
+        s->cd[s->nb_sub] = शून्य;
 
         reset_ctx(sctx, 0);
-        if (ret == AVERROR(ENOMEM))
-            break;
+        अगर (ret == AVERROR(ENOMEM))
+            अवरोध;
     }
 
-    if (!s->nb_sub)
+    अगर (!s->nb_sub)
         av_freep(&s->sub);
 
 end:
     av_free(cd_matches);
-    return ret;
+    वापस ret;
 }
 
-av_cold int av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
-                       int inv, int len, const void *scale, uint64_t flags)
+av_cold पूर्णांक av_tx_init(AVTXContext **ctx, av_tx_fn *tx, क्रमागत AVTXType type,
+                       पूर्णांक inv, पूर्णांक len, स्थिर व्योम *scale, uint64_t flags)
 {
-    int ret;
+    पूर्णांक ret;
     AVTXContext tmp = { 0 };
-    const double default_scale_d = 1.0;
-    const float  default_scale_f = 1.0f;
+    स्थिर द्विगुन default_scale_d = 1.0;
+    स्थिर भग्न  default_scale_f = 1.0f;
 
-    if (!len || type >= AV_TX_NB || !ctx || !tx)
-        return AVERROR(EINVAL);
+    अगर (!len || type >= AV_TX_NB || !ctx || !tx)
+        वापस AVERROR(EINVAL);
 
-    if (!(flags & AV_TX_UNALIGNED))
+    अगर (!(flags & AV_TX_UNALIGNED))
         flags |= FF_TX_ALIGNED;
-    if (!(flags & AV_TX_INPLACE))
+    अगर (!(flags & AV_TX_INPLACE))
         flags |= FF_TX_OUT_OF_PLACE;
 
-    if (!scale && ((type == AV_TX_DOUBLE_MDCT) || (type == AV_TX_DOUBLE_DCT) ||
+    अगर (!scale && ((type == AV_TX_DOUBLE_MDCT) || (type == AV_TX_DOUBLE_DCT) ||
                    (type == AV_TX_DOUBLE_DCT_I) || (type == AV_TX_DOUBLE_DST_I) ||
                    (type == AV_TX_DOUBLE_RDFT)))
         scale = &default_scale_d;
-    else if (!scale && !TYPE_IS(FFT, type))
+    अन्यथा अगर (!scale && !TYPE_IS(FFT, type))
         scale = &default_scale_f;
 
-    ret = ff_tx_init_subtx(&tmp, type, flags, NULL, len, inv, scale);
-    if (ret < 0)
-        return ret;
+    ret = ff_tx_init_subtx(&tmp, type, flags, शून्य, len, inv, scale);
+    अगर (ret < 0)
+        वापस ret;
 
     *ctx = &tmp.sub[0];
     *tx  = tmp.fn[0];
 
-#if !CONFIG_SMALL
-    av_log(NULL, AV_LOG_DEBUG, "Transform tree:\n");
+#अगर !CONFIG_SMALL
+    av_log(शून्य, AV_LOG_DEBUG, "Transform tree:\n");
     print_tx_structure(*ctx, 0);
-#endif
+#पूर्ण_अगर
 
-    return ret;
+    वापस ret;
 }

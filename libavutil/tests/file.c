@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#समावेश <stdarg.h>
+#समावेश <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#समावेश "libavutil/file.c"
+#समावेश "libavutil/log.h"
 
-static int last_log_level = -1;
+अटल पूर्णांक last_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+अटल व्योम log_callback(व्योम *ctx, पूर्णांक level, स्थिर अक्षर *fmt, बहु_सूची args)
 {
-    (void)ctx; (void)fmt; (void)args;
+    (व्योम)ctx; (व्योम)fmt; (व्योम)args;
     last_log_level = level;
 }
 
-int main(int argc, char **argv)
+पूर्णांक मुख्य(पूर्णांक argc, अक्षर **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    स्थिर अक्षर *path = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
-    size_t size;
+    माप_प्रकार आकार;
 
     av_log_set_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
-    av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    अगर (av_file_map(path, &buf, &आकार, 0, शून्य) < 0)
+        वापस 1;
+    av_file_unmap(buf, आकार);
+    अगर (आकार == 0)
+        वापस 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
+    क्रम (पूर्णांक i = 0; i < 2; i++) {
         last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
-            av_file_unmap(buf, size);
-            return 2;
+        अगर (av_file_map("no_such_file_xyz", &buf, &आकार, i, शून्य) >= 0) {
+            av_file_unmap(buf, आकार);
+            वापस 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
-            fprintf(stderr, "expected level %d with offset=%d, got %d\n",
+        अगर (last_log_level != AV_LOG_ERROR + i) {
+            ख_लिखो(मानक_त्रुटि, "expected level %d with offset=%d, got %d\n",
                     AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+            वापस 3;
         }
     }
 
-    return 0;
+    वापस 0;
 }

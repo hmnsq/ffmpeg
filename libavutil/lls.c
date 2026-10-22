@@ -25,96 +25,96 @@
  * linear least squares model
  */
 
-#include <math.h>
-#include <string.h>
+#समावेश <math.h>
+#समावेश <string.h>
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "lls.h"
+#समावेश "config.h"
+#समावेश "attributes.h"
+#समावेश "float_dsp.h"
+#समावेश "lls.h"
 
-static void update_lls(LLSModel *m, const double *var)
+अटल व्योम update_lls(LLSModel *m, स्थिर द्विगुन *var)
 {
-    int i, j;
+    पूर्णांक i, j;
 
-    for (i = 0; i <= m->indep_count; i++) {
-        for (j = i; j <= m->indep_count; j++) {
+    क्रम (i = 0; i <= m->indep_गिनती; i++) {
+        क्रम (j = i; j <= m->indep_गिनती; j++) {
             m->covariance[i][j] += var[i] * var[j];
         }
     }
 }
 
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
+व्योम avpriv_solve_lls(LLSModel *m, द्विगुन threshold, अचिन्हित लघु min_order)
 {
-    int i, j, k;
-    double (*factor)[MAX_VARS_ALIGN] = (void *) &m->covariance[1][0];
-    double (*covar) [MAX_VARS_ALIGN] = (void *) &m->covariance[1][1];
-    double *covar_y                = m->covariance[0];
-    int count                      = m->indep_count;
+    पूर्णांक i, j, k;
+    द्विगुन (*factor)[MAX_VARS_ALIGN] = (व्योम *) &m->covariance[1][0];
+    द्विगुन (*covar) [MAX_VARS_ALIGN] = (व्योम *) &m->covariance[1][1];
+    द्विगुन *covar_y                = m->covariance[0];
+    पूर्णांक गिनती                      = m->indep_गिनती;
 
-    for (i = 0; i < count; i++) {
-        for (j = i; j < count; j++) {
-            double sum = covar[i][j];
+    क्रम (i = 0; i < गिनती; i++) {
+        क्रम (j = i; j < गिनती; j++) {
+            द्विगुन योग = covar[i][j];
 
-            for (k = 0; k <= i-1; k++)
-                sum -= factor[i][k] * factor[j][k];
+            क्रम (k = 0; k <= i-1; k++)
+                योग -= factor[i][k] * factor[j][k];
 
-            if (i == j) {
-                if (sum < threshold)
-                    sum = 1.0;
-                factor[i][i] = sqrt(sum);
-            } else {
-                factor[j][i] = sum / factor[i][i];
+            अगर (i == j) {
+                अगर (योग < threshold)
+                    योग = 1.0;
+                factor[i][i] = वर्ग_मूल(योग);
+            } अन्यथा {
+                factor[j][i] = योग / factor[i][i];
             }
         }
     }
 
-    for (i = 0; i < count; i++) {
-        double sum = covar_y[i + 1];
+    क्रम (i = 0; i < गिनती; i++) {
+        द्विगुन योग = covar_y[i + 1];
 
-        for (k = 0; k <= i-1; k++)
-            sum -= factor[i][k] * m->coeff[0][k];
+        क्रम (k = 0; k <= i-1; k++)
+            योग -= factor[i][k] * m->coeff[0][k];
 
-        m->coeff[0][i] = sum / factor[i][i];
+        m->coeff[0][i] = योग / factor[i][i];
     }
 
-    for (j = count - 1; j >= min_order; j--) {
-        for (i = j; i >= 0; i--) {
-            double sum = m->coeff[0][i];
+    क्रम (j = गिनती - 1; j >= min_order; j--) {
+        क्रम (i = j; i >= 0; i--) {
+            द्विगुन योग = m->coeff[0][i];
 
-            for (k = i + 1; k <= j; k++)
-                sum -= factor[k][i] * m->coeff[j][k];
+            क्रम (k = i + 1; k <= j; k++)
+                योग -= factor[k][i] * m->coeff[j][k];
 
-            m->coeff[j][i] = sum / factor[i][i];
+            m->coeff[j][i] = योग / factor[i][i];
         }
 
         m->variance[j] = covar_y[0];
 
-        for (i = 0; i <= j; i++) {
-            double sum = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
+        क्रम (i = 0; i <= j; i++) {
+            द्विगुन योग = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
 
-            for (k = 0; k < i; k++)
-                sum += 2 * m->coeff[j][k] * covar[k][i];
+            क्रम (k = 0; k < i; k++)
+                योग += 2 * m->coeff[j][k] * covar[k][i];
 
-            m->variance[j] += m->coeff[j][i] * sum;
+            m->variance[j] += m->coeff[j][i] * योग;
         }
     }
 }
 
-static double evaluate_lls(LLSModel *m, const double *param, int order)
+अटल द्विगुन evaluate_lls(LLSModel *m, स्थिर द्विगुन *param, पूर्णांक order)
 {
-    return ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
+    वापस ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
 }
 
-av_cold void avpriv_init_lls(LLSModel *m, int indep_count)
+av_cold व्योम avpriv_init_lls(LLSModel *m, पूर्णांक indep_गिनती)
 {
-    memset(m, 0, sizeof(LLSModel));
-    m->indep_count = indep_count;
+    स_रखो(m, 0, माप(LLSModel));
+    m->indep_गिनती = indep_गिनती;
     m->update_lls = update_lls;
     m->evaluate_lls = evaluate_lls;
-#if ARCH_RISCV
+#अगर ARCH_RISCV
     ff_init_lls_riscv(m);
-#elif ARCH_X86 && HAVE_X86ASM
+#या_अगर ARCH_X86 && HAVE_X86ASM
     ff_init_lls_x86(m);
-#endif
+#पूर्ण_अगर
 }

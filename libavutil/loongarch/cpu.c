@@ -19,43 +19,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include "cpu.h"
-#include <sys/auxv.h>
+#समावेश <stdint.h>
+#समावेश "cpu.h"
+#समावेश <sys/auxv.h>
 
-#define LA_HWCAP_LSX    (1<<4)
-#define LA_HWCAP_LASX   (1<<5)
-static int cpu_flags_getauxval(void)
+#घोषणा LA_HWCAP_LSX    (1<<4)
+#घोषणा LA_HWCAP_LASX   (1<<5)
+अटल पूर्णांक cpu_flags_getauxval(व्योम)
 {
-    int flags = 0;
-    int flag  = (int)ff_getauxval(AT_HWCAP);
+    पूर्णांक flags = 0;
+    पूर्णांक flag  = (पूर्णांक)ff_getauxval(AT_HWCAP);
 
-    if (flag & LA_HWCAP_LSX)
+    अगर (flag & LA_HWCAP_LSX)
         flags |= AV_CPU_FLAG_LSX;
-    if (flag & LA_HWCAP_LASX)
+    अगर (flag & LA_HWCAP_LASX)
         flags |= AV_CPU_FLAG_LASX;
 
-    return flags;
+    वापस flags;
 }
 
-int ff_get_cpu_flags_loongarch(void)
+पूर्णांक ff_get_cpu_flags_loongarch(व्योम)
 {
-#if defined __linux__
-    return cpu_flags_getauxval();
-#else
+#अगर defined __linux__
+    वापस cpu_flags_getauxval();
+#अन्यथा
     /* Assume no SIMD ASE supported */
-    return 0;
-#endif
+    वापस 0;
+#पूर्ण_अगर
 }
 
-size_t ff_get_cpu_max_align_loongarch(void)
+माप_प्रकार ff_get_cpu_max_align_loongarch(व्योम)
 {
-    int flags = av_get_cpu_flags();
+    पूर्णांक flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_LASX)
-        return 32;
-    if (flags & AV_CPU_FLAG_LSX)
-        return 16;
+    अगर (flags & AV_CPU_FLAG_LASX)
+        वापस 32;
+    अगर (flags & AV_CPU_FLAG_LSX)
+        वापस 16;
 
-    return 8;
+    वापस 8;
 }

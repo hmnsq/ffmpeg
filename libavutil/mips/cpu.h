@@ -16,13 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MIPS_CPU_H
-#define AVUTIL_MIPS_CPU_H
+#अगर_अघोषित AVUTIL_MIPS_CPU_H
+#घोषणा AVUTIL_MIPS_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#समावेश "libavutil/cpu.h"
+#समावेश "libavutil/cpu_internal.h"
 
-#define have_mmi(flags) CPUEXT(flags, MMI)
-#define have_msa(flags) CPUEXT(flags, MSA)
+#घोषणा have_mmi(flags) CPUEXT(flags, MMI)
+#घोषणा have_msa(flags) CPUEXT(flags, MSA)
 
-#endif /* AVUTIL_MIPS_CPU_H */
+#पूर्ण_अगर /* AVUTIL_MIPS_CPU_H */

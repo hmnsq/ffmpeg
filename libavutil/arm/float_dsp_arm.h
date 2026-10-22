@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ARM_FLOAT_DSP_ARM_H
-#define AVUTIL_ARM_FLOAT_DSP_ARM_H
+#अगर_अघोषित AVUTIL_ARM_FLOAT_DSP_ARM_H
+#घोषणा AVUTIL_ARM_FLOAT_DSP_ARM_H
 
-#include "libavutil/float_dsp.h"
+#समावेश "libavutil/float_dsp.h"
 
-void ff_float_dsp_init_vfp(AVFloatDSPContext *fdsp, int cpu_flags);
-void ff_float_dsp_init_neon(AVFloatDSPContext *fdsp);
+व्योम ff_float_dsp_init_vfp(AVFloatDSPContext *fdsp, पूर्णांक cpu_flags);
+व्योम ff_float_dsp_init_neon(AVFloatDSPContext *fdsp);
 
-#endif /* AVUTIL_ARM_FLOAT_DSP_ARM_H */
+#पूर्ण_अगर /* AVUTIL_ARM_FLOAT_DSP_ARM_H */

@@ -22,16 +22,16 @@
  * Utility Preprocessor macros
  */
 
-#ifndef AVUTIL_MACROS_H
-#define AVUTIL_MACROS_H
+#अगर_अघोषित AVUTIL_MACROS_H
+#घोषणा AVUTIL_MACROS_H
 
-#include "libavutil/avconfig.h"
+#समावेश "libavutil/avconfig.h"
 
-#if AV_HAVE_BIGENDIAN
+#अगर AV_HAVE_BIGENDIAN
 #   define AV_NE(be, le) (be)
-#else
+#अन्यथा
 #   define AV_NE(be, le) (le)
-#endif
+#पूर्ण_अगर
 
 /**
  * Comparator.
@@ -42,18 +42,18 @@
  * As with many macros, this evaluates its argument multiple times, it thus
  * must not have a side-effect.
  */
-#define FFDIFFSIGN(x,y) (((x)>(y)) - ((x)<(y)))
+#घोषणा FFDIFFSIGN(x,y) (((x)>(y)) - ((x)<(y)))
 
-#define FFMAX(a,b) ((a) > (b) ? (a) : (b))
-#define FFMAX3(a,b,c) FFMAX(FFMAX(a,b),c)
-#define FFMIN(a,b) ((a) > (b) ? (b) : (a))
-#define FFMIN3(a,b,c) FFMIN(FFMIN(a,b),c)
+#घोषणा FFMAX(a,b) ((a) > (b) ? (a) : (b))
+#घोषणा FFMAX3(a,b,c) FFMAX(FFMAX(a,b),c)
+#घोषणा FFMIN(a,b) ((a) > (b) ? (b) : (a))
+#घोषणा FFMIN3(a,b,c) FFMIN(FFMIN(a,b),c)
 
-#define FFSWAP(type,a,b) do{type SWAP_tmp= b; b= a; a= SWAP_tmp;}while(0)
-#define FF_ARRAY_ELEMS(a) (sizeof(a) / sizeof((a)[0]))
+#घोषणा FFSWAP(type,a,b) करो{type SWAP_tmp= b; b= a; a= SWAP_tmp;}जबतक(0)
+#घोषणा FF_ARRAY_ELEMS(a) (माप(a) / माप((a)[0]))
 
-#define MKTAG(a,b,c,d)   ((a) | ((b) << 8) | ((c) << 16) | ((unsigned)(d) << 24))
-#define MKBETAG(a,b,c,d) ((d) | ((c) << 8) | ((b) << 16) | ((unsigned)(a) << 24))
+#घोषणा MKTAG(a,b,c,d)   ((a) | ((b) << 8) | ((c) << 16) | ((अचिन्हित)(d) << 24))
+#घोषणा MKBETAG(a,b,c,d) ((d) | ((c) << 8) | ((b) << 16) | ((अचिन्हित)(a) << 24))
 
 /**
  * @addtogroup preproc_misc Preprocessor String Macros
@@ -63,18 +63,18 @@
  * @{
  */
 
-#define AV_STRINGIFY(s)         AV_TOSTRING(s)
-#define AV_TOSTRING(s) #s
+#घोषणा AV_STRINGIFY(s)         AV_TOSTRING(s)
+#घोषणा AV_TOSTRING(s) #s
 
-#define AV_GLUE(a, b) a ## b
-#define AV_JOIN(a, b) AV_GLUE(a, b)
+#घोषणा AV_GLUE(a, b) a ## b
+#घोषणा AV_JOIN(a, b) AV_GLUE(a, b)
 
 /**
  * @}
  */
 
-#define AV_PRAGMA(s) _Pragma(#s)
+#घोषणा AV_PRAGMA(s) _Pragma(#s)
 
-#define FFALIGN(x, a) (((x)+(a)-1)&~((a)-1))
+#घोषणा FFALIGN(x, a) (((x)+(a)-1)&~((a)-1))
 
-#endif /* AVUTIL_MACROS_H */
+#पूर्ण_अगर /* AVUTIL_MACROS_H */

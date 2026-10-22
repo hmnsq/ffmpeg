@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AVUTIL_H
-#define AVUTIL_AVUTIL_H
+#अगर_अघोषित AVUTIL_AVUTIL_H
+#घोषणा AVUTIL_AVUTIL_H
 
 /**
  * @file
@@ -167,24 +167,24 @@
 /**
  * Return the LIBAVUTIL_VERSION_INT constant.
  */
-unsigned avutil_version(void);
+अचिन्हित avutil_version(व्योम);
 
 /**
  * Return an informative version string. This usually is the actual release
  * version number or a git commit description. This string has no fixed format
  * and can change any time. It should never be parsed by code.
  */
-const char *av_version_info(void);
+स्थिर अक्षर *av_version_info(व्योम);
 
 /**
  * Return the libavutil build-time configuration.
  */
-const char *avutil_configuration(void);
+स्थिर अक्षर *avutil_configuration(व्योम);
 
 /**
  * Return the libavutil license.
  */
-const char *avutil_license(void);
+स्थिर अक्षर *avutil_license(व्योम);
 
 /**
  * @}
@@ -195,11 +195,11 @@ const char *avutil_license(void);
  * @brief Media Type
  */
 
-enum AVMediaType {
+क्रमागत AVMediaType {
     AVMEDIA_TYPE_UNKNOWN = -1,  ///< Usually treated as AVMEDIA_TYPE_DATA
     AVMEDIA_TYPE_VIDEO,
     AVMEDIA_TYPE_AUDIO,
-    AVMEDIA_TYPE_DATA,          ///< Opaque data information usually continuous
+    AVMEDIA_TYPE_तथ्य,          ///< Opaque data information usually continuous
     AVMEDIA_TYPE_SUBTITLE,
     AVMEDIA_TYPE_ATTACHMENT,    ///< Opaque data information usually sparse
     AVMEDIA_TYPE_NB
@@ -209,7 +209,7 @@ enum AVMediaType {
  * Return a string describing the media_type enum, NULL if media_type
  * is unknown.
  */
-const char *av_get_media_type_string(enum AVMediaType media_type);
+स्थिर अक्षर *av_get_media_type_string(क्रमागत AVMediaType media_type);
 
 /**
  * @defgroup lavu_const Constants
@@ -221,12 +221,12 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * @{
  */
 
-#define FF_LAMBDA_SHIFT 7
-#define FF_LAMBDA_SCALE (1<<FF_LAMBDA_SHIFT)
-#define FF_QP2LAMBDA 118 ///< factor to convert from H.263 QP to lambda
-#define FF_LAMBDA_MAX (256*128-1)
+#घोषणा FF_LAMBDA_SHIFT 7
+#घोषणा FF_LAMBDA_SCALE (1<<FF_LAMBDA_SHIFT)
+#घोषणा FF_QP2LAMBDA 118 ///< factor to convert from H.263 QP to lambda
+#घोषणा FF_LAMBDA_MAX (256*128-1)
 
-#define FF_QUALITY_SCALE FF_LAMBDA_SCALE //FIXME maybe remove
+#घोषणा FF_QUALITY_SCALE FF_LAMBDA_SCALE //FIXME maybe remove
 
 /**
  * @}
@@ -244,24 +244,24 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * either pts or dts.
  */
 
-#define AV_NOPTS_VALUE          ((int64_t)UINT64_C(0x8000000000000000))
+#घोषणा AV_NOPTS_मूल्य          ((int64_t)UINT64_C(0x8000000000000000))
 
 /**
  * Internal time base represented as integer
  */
 
-#define AV_TIME_BASE            1000000
+#घोषणा AV_TIME_BASE            1000000
 
 /**
  * Internal time base represented as fractional value
  */
 
-#ifdef __cplusplus
+#अगर_घोषित __cplusplus
 /* ISO C++ forbids compound-literals. */
-#define AV_TIME_BASE_Q          av_make_q(1, AV_TIME_BASE)
-#else
-#define AV_TIME_BASE_Q          (AVRational){1, AV_TIME_BASE}
-#endif
+#घोषणा AV_TIME_BASE_Q          av_make_q(1, AV_TIME_BASE)
+#अन्यथा
+#घोषणा AV_TIME_BASE_Q          (AVRational){1, AV_TIME_BASE}
+#पूर्ण_अगर
 
 /**
  * @}
@@ -273,7 +273,7 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * @{
  */
 
-enum AVPictureType {
+क्रमागत AVPictureType {
     AV_PICTURE_TYPE_NONE = 0, ///< Undefined
     AV_PICTURE_TYPE_I,     ///< Intra
     AV_PICTURE_TYPE_P,     ///< Predicted
@@ -291,36 +291,36 @@ enum AVPictureType {
  * @param[in] pict_type the picture type @return a single character
  * representing the picture type, '?' if pict_type is unknown
  */
-char av_get_picture_type_char(enum AVPictureType pict_type);
+अक्षर av_get_picture_type_char(क्रमागत AVPictureType pict_type);
 
 /**
  * @}
  */
 
-#include "common.h"
-#include "rational.h"
-#include "version.h"
-#include "macros.h"
-#include "mathematics.h"
-#include "log.h"
-#include "pixfmt.h"
+#समावेश "common.h"
+#समावेश "rational.h"
+#समावेश "version.h"
+#समावेश "macros.h"
+#समावेश "mathematics.h"
+#समावेश "log.h"
+#समावेश "pixfmt.h"
 
 /**
  * Return x default pointer in case p is NULL.
  */
-static inline void *av_x_if_null(const void *p, const void *x)
+अटल अंतरभूत व्योम *av_x_if_null(स्थिर व्योम *p, स्थिर व्योम *x)
 {
-    return (void *)(intptr_t)(p ? p : x);
+    वापस (व्योम *)(intptr_t)(p ? p : x);
 }
 
 /**
  * Return the fractional representation of the internal time base.
  */
-AVRational av_get_time_base_q(void);
+AVRational av_get_time_base_q(व्योम);
 
-#define AV_FOURCC_MAX_STRING_SIZE 32
+#घोषणा AV_FOURCC_MAX_STRING_आकार 32
 
-#define av_fourcc2str(fourcc) av_fourcc_make_string((char[AV_FOURCC_MAX_STRING_SIZE]){0}, fourcc)
+#घोषणा av_fourcc2str(fourcc) av_fourcc_make_string((अक्षर[AV_FOURCC_MAX_STRING_आकार]){0}, fourcc)
 
 /**
  * Fill the provided buffer with a string containing a FourCC (four-character
@@ -330,11 +330,11 @@ AVRational av_get_time_base_q(void);
  * @param fourcc the fourcc to represent
  * @return the buffer in input
  */
-char *av_fourcc_make_string(char *buf, uint32_t fourcc);
+अक्षर *av_fourcc_make_string(अक्षर *buf, uint32_t fourcc);
 
 /**
  * @}
  * @}
  */
 
-#endif /* AVUTIL_AVUTIL_H */
+#पूर्ण_अगर /* AVUTIL_AVUTIL_H */

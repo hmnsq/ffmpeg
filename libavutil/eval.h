@@ -23,10 +23,10 @@
  * simple arithmetic expression evaluator
  */
 
-#ifndef AVUTIL_EVAL_H
-#define AVUTIL_EVAL_H
+#अगर_अघोषित AVUTIL_EVAL_H
+#घोषणा AVUTIL_EVAL_H
 
-typedef struct AVExpr AVExpr;
+प्रकार काष्ठा AVExpr AVExpr;
 
 /**
  * Parse and evaluate an expression.
@@ -47,11 +47,11 @@ typedef struct AVExpr AVExpr;
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_expr_parse_and_eval(double *res, const char *s,
-                           const char * const *const_names, const double *const_values,
-                           const char * const *func1_names, double (* const *funcs1)(void *, double),
-                           const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                           void *opaque, int log_offset, void *log_ctx);
+पूर्णांक av_व्यंजक_parse_and_eval(द्विगुन *res, स्थिर अक्षर *s,
+                           स्थिर अक्षर * स्थिर *const_names, स्थिर द्विगुन *const_मूल्यावली,
+                           स्थिर अक्षर * स्थिर *func1_names, द्विगुन (* स्थिर *funcs1)(व्योम *, द्विगुन),
+                           स्थिर अक्षर * स्थिर *func2_names, द्विगुन (* स्थिर *funcs2)(व्योम *, द्विगुन, द्विगुन),
+                           व्योम *opaque, पूर्णांक log_offset, व्योम *log_ctx);
 
 /**
  * Parse an expression.
@@ -71,11 +71,11 @@ int av_expr_parse_and_eval(double *res, const char *s,
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_expr_parse(AVExpr **expr, const char *s,
-                  const char * const *const_names,
-                  const char * const *func1_names, double (* const *funcs1)(void *, double),
-                  const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                  int log_offset, void *log_ctx);
+पूर्णांक av_व्यंजक_parse(AVExpr **व्यंजक, स्थिर अक्षर *s,
+                  स्थिर अक्षर * स्थिर *const_names,
+                  स्थिर अक्षर * स्थिर *func1_names, द्विगुन (* स्थिर *funcs1)(व्योम *, द्विगुन),
+                  स्थिर अक्षर * स्थिर *func2_names, द्विगुन (* स्थिर *funcs2)(व्योम *, द्विगुन, द्विगुन),
+                  पूर्णांक log_offset, व्योम *log_ctx);
 
 /**
  * Evaluate a previously parsed expression.
@@ -85,7 +85,7 @@ int av_expr_parse(AVExpr **expr, const char *s,
  * @param opaque a pointer which will be passed to all functions from funcs1 and funcs2
  * @return the value of the expression
  */
-double av_expr_eval(AVExpr *e, const double *const_values, void *opaque);
+द्विगुन av_व्यंजक_eval(AVExpr *e, स्थिर द्विगुन *const_मूल्यावली, व्योम *opaque);
 
 /**
  * Track the presence of variables and their number of occurrences in a parsed expression
@@ -96,7 +96,7 @@ double av_expr_eval(AVExpr *e, const double *const_values, void *opaque);
  * @return 0 on success, a negative value indicates that no expression or array was passed
  * or size was zero
  */
-int av_expr_count_vars(AVExpr *e, unsigned *counter, int size);
+पूर्णांक av_व्यंजक_गिनती_vars(AVExpr *e, अचिन्हित *गणक, पूर्णांक आकार);
 
 /**
  * Track the presence of user provided functions and their number of occurrences
@@ -111,12 +111,12 @@ int av_expr_count_vars(AVExpr *e, unsigned *counter, int size);
  * @return 0 on success, a negative value indicates that no expression or array was passed
  * or size was zero
  */
-int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg);
+पूर्णांक av_व्यंजक_गिनती_func(AVExpr *e, अचिन्हित *गणक, पूर्णांक आकार, पूर्णांक arg);
 
 /**
  * Free a parsed expression previously created with av_expr_parse().
  */
-void av_expr_free(AVExpr *e);
+व्योम av_व्यंजक_free(AVExpr *e);
 
 /**
  * Parse the string in numstr and return its value as a double. If
@@ -135,6 +135,6 @@ void av_expr_free(AVExpr *e);
  * @param tail if non-NULL puts here the pointer to the char next
  * after the last parsed character
  */
-double av_strtod(const char *numstr, char **tail);
+द्विगुन av_strtod(स्थिर अक्षर *numstr, अक्षर **पुच्छ);
 
-#endif /* AVUTIL_EVAL_H */
+#पूर्ण_अगर /* AVUTIL_EVAL_H */

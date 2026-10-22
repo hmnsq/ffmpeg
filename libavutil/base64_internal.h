@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BASE64_INTERNAL_H
-#define AVUTIL_BASE64_INTERNAL_H
+#अगर_अघोषित AVUTIL_BASE64_INTERNAL_H
+#घोषणा AVUTIL_BASE64_INTERNAL_H
 
-#include <stdint.h>
-#include "intreadwrite.h"
+#समावेश <stdint.h>
+#समावेश "intreadwrite.h"
 
 /*****************************************************************************
 * b64_encode: Stolen from VLC's http.c.
@@ -30,15 +30,15 @@
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-static inline char *ff_base64_encode_c(char *out, const uint8_t *in, int in_size, const char *b64)
+अटल अंतरभूत अक्षर *ff_base64_encode_c(अक्षर *out, स्थिर uint8_t *in, पूर्णांक in_आकार, स्थिर अक्षर *b64)
 {
-    char *ret, *dst;
-    unsigned i_bits = 0;
-    int i_shift = 0;
-    int bytes_remaining = in_size;
+    अक्षर *ret, *dst;
+    अचिन्हित i_bits = 0;
+    पूर्णांक i_shift = 0;
+    पूर्णांक bytes_remaining = in_आकार;
 
     ret = dst = out;
-    while (bytes_remaining > 3) {
+    जबतक (bytes_remaining > 3) {
         i_bits = AV_RB32(in);
         in += 3; bytes_remaining -= 3;
         *dst++ = b64[ i_bits>>26        ];
@@ -47,20 +47,20 @@ static inline char *ff_base64_encode_c(char *out, const uint8_t *in, int in_size
         *dst++ = b64[(i_bits>>8 ) & 0x3F];
     }
     i_bits = 0;
-    while (bytes_remaining) {
+    जबतक (bytes_remaining) {
         i_bits = (i_bits << 8) + *in++;
         bytes_remaining--;
         i_shift += 8;
     }
-    while (i_shift > 0) {
+    जबतक (i_shift > 0) {
         *dst++ = b64[(i_bits << 6 >> i_shift) & 0x3f];
         i_shift -= 6;
     }
-    while ((dst - ret) & 3)
+    जबतक ((dst - ret) & 3)
         *dst++ = '=';
     *dst = '\0';
 
-    return ret;
+    वापस ret;
 }
 
-#endif /* AVUTIL_BASE64_INTERNAL_H */
+#पूर्ण_अगर /* AVUTIL_BASE64_INTERNAL_H */

@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <multimedia/player_framework/native_avcodec_base.h>
+#समावेश <multimedia/player_framework/native_avcodec_base.h>
 
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_oh.h"
+#समावेश "hwcontext.h"
+#समावेश "hwcontext_internal.h"
+#समावेश "hwcontext_oh.h"
 
-static int oh_device_create(AVHWDeviceContext *ctx, const char *device,
-                            AVDictionary *opts, int flags)
+अटल पूर्णांक oh_device_create(AVHWDeviceContext *ctx, स्थिर अक्षर *device,
+                            AVDictionary *opts, पूर्णांक flags)
 {
-    if (device && device[0]) {
+    अगर (device && device[0]) {
         av_log(ctx, AV_LOG_ERROR, "Device selection unsupported.\n");
-        return AVERROR_UNKNOWN;
+        वापस AVERROR_UNKNOWN;
     }
 
-    return 0;
+    वापस 0;
 }
 
-const HWContextType ff_hwcontext_type_oh = {
+स्थिर HWContextType ff_hwcontext_type_oh = {
     .type = AV_HWDEVICE_TYPE_OHCODEC,
     .name = "ohcodec",
-    .device_hwctx_size = sizeof(AVOHCodecDeviceContext),
+    .device_hwctx_आकार = माप(AVOHCodecDeviceContext),
     .device_create = oh_device_create,
-    .pix_fmts = (const enum AVPixelFormat[]) {
+    .pix_fmts = (स्थिर क्रमागत AVPixelFormat[]) {
         AV_PIX_FMT_OHCODEC,
         AV_PIX_FMT_NONE
     },

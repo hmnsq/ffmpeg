@@ -18,37 +18,37 @@
 
 // LCOV_EXCL_START
 
-#include "libavutil/timer.h"
+#समावेश "libavutil/timer.h"
 
-#include <string.h>
+#समावेश <string.h>
 
-#include "libavutil/log.h"
-#include "libavutil/adler32.h"
+#समावेश "libavutil/log.h"
+#समावेश "libavutil/adler32.h"
 
-#define LEN 7001
+#घोषणा LEN 7001
 
-int main(int argc, char **argv)
+पूर्णांक मुख्य(पूर्णांक argc, अक्षर **argv)
 {
-    int i;
-    uint8_t data[LEN];
+    पूर्णांक i;
+    uint8_t तथ्य[LEN];
     AVAdler checksum;
 
     av_log_set_level(AV_LOG_DEBUG);
 
-    for (i = 0; i < LEN; i++)
-        data[i] = ((i * i) >> 3) + 123 * i;
+    क्रम (i = 0; i < LEN; i++)
+        तथ्य[i] = ((i * i) >> 3) + 123 * i;
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1000; i++) {
+    अगर (argc > 1 && !म_भेद(argv[1], "-t")) {
+        क्रम (i = 0; i < 1000; i++) {
             START_TIMER;
-            checksum = av_adler32_update(1, data, LEN);
+            checksum = av_adler32_update(1, तथ्य, LEN);
             STOP_TIMER("adler");
         }
-    } else {
-        checksum = av_adler32_update(1, data, LEN);
+    } अन्यथा {
+        checksum = av_adler32_update(1, तथ्य, LEN);
     }
 
-    av_log(NULL, AV_LOG_DEBUG, "%X (expected 50E6E508)\n", checksum);
-    return checksum == 0x50e6e508 ? 0 : 1;
+    av_log(शून्य, AV_LOG_DEBUG, "%X (expected 50E6E508)\n", checksum);
+    वापस checksum == 0x50e6e508 ? 0 : 1;
 }
 // LCOV_EXCL_STOP

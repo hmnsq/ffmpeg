@@ -16,34 +16,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_TIME_INTERNAL_H
-#define AVUTIL_TIME_INTERNAL_H
+#अगर_अघोषित AVUTIL_TIME_INTERNAL_H
+#घोषणा AVUTIL_TIME_INTERNAL_H
 
-#include <time.h>
-#include "config.h"
+#समावेश <time.h>
+#समावेश "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
-static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
+#अगर !HAVE_GMTIME_R && !defined(gmtime_r)
+अटल अंतरभूत काष्ठा पंचांग *ff_gmtime_r(स्थिर समय_प्रकार* घड़ी, काष्ठा पंचांग *परिणाम)
 {
-    struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
-    *result = *ptr;
-    return result;
+    काष्ठा पंचांग *ptr = स_जमट(घड़ी);
+    अगर (!ptr)
+        वापस शून्य;
+    *परिणाम = *ptr;
+    वापस परिणाम;
 }
-#define gmtime_r ff_gmtime_r
-#endif
+#घोषणा gmtime_r ff_gmtime_r
+#पूर्ण_अगर
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
-static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
+#अगर !HAVE_LOCALTIME_R && !defined(localtime_r)
+अटल अंतरभूत काष्ठा पंचांग *ff_localtime_r(स्थिर समय_प्रकार* घड़ी, काष्ठा पंचांग *परिणाम)
 {
-    struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
-    *result = *ptr;
-    return result;
+    काष्ठा पंचांग *ptr = स_स्थानीय(घड़ी);
+    अगर (!ptr)
+        वापस शून्य;
+    *परिणाम = *ptr;
+    वापस परिणाम;
 }
-#define localtime_r ff_localtime_r
-#endif
+#घोषणा localtime_r ff_localtime_r
+#पूर्ण_अगर
 
-#endif /* AVUTIL_TIME_INTERNAL_H */
+#पूर्ण_अगर /* AVUTIL_TIME_INTERNAL_H */

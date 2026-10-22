@@ -18,62 +18,62 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define VK_NO_PROTOTYPES
-#define VK_ENABLE_BETA_EXTENSIONS
+#घोषणा VK_NO_PROTOTYPES
+#घोषणा VK_ENABLE_BETA_EXTENSIONS
 
-#ifdef _WIN32
-#include <windows.h> /* Included to prevent conflicts with CreateSemaphore */
-#include <versionhelpers.h>
-#include "compat/w32dlfcn.h"
-#else
-#include <dlfcn.h>
-#include <unistd.h>
-#endif
+#अगर_घोषित _WIN32
+#समावेश <windows.h> /* Included to prevent conflicts with CreateSemaphore */
+#समावेश <versionhelpers.h>
+#समावेश "compat/w32dlfcn.h"
+#अन्यथा
+#समावेश <dlfcn.h>
+#समावेश <unistd.h>
+#पूर्ण_अगर
 
-#include "thread.h"
+#समावेश "thread.h"
 
-#include "config.h"
-#include "pixdesc.h"
-#include "avstring.h"
-#include "imgutils.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_vulkan.h"
-#include "mem.h"
-#include "uuid.h"
+#समावेश "config.h"
+#समावेश "pixdesc.h"
+#समावेश "avstring.h"
+#समावेश "imgutils.h"
+#समावेश "hwcontext.h"
+#समावेश "hwcontext_internal.h"
+#समावेश "hwcontext_vulkan.h"
+#समावेश "mem.h"
+#समावेश "uuid.h"
 
-#include "vulkan.h"
-#include "vulkan_loader.h"
+#समावेश "vulkan.h"
+#समावेश "vulkan_loader.h"
 
-#if CONFIG_VAAPI
-#include "hwcontext_vaapi.h"
-#endif
+#अगर CONFIG_VAAPI
+#समावेश "hwcontext_vaapi.h"
+#पूर्ण_अगर
 
-#if CONFIG_LIBDRM
-#if CONFIG_VAAPI
-#include <va/va_drmcommon.h>
-#endif
-#ifdef __linux__
-#include <sys/sysmacros.h>
-#endif
-#include <sys/stat.h>
-#include <xf86drm.h>
-#include <drm_fourcc.h>
-#include "hwcontext_drm.h"
-#endif
+#अगर CONFIG_LIBDRM
+#अगर CONFIG_VAAPI
+#समावेश <va/va_drmcommon.h>
+#पूर्ण_अगर
+#अगर_घोषित __linux__
+#समावेश <sys/sysmacros.h>
+#पूर्ण_अगर
+#समावेश <sys/stat.h>
+#समावेश <xf86drm.h>
+#समावेश <drm_fourcc.h>
+#समावेश "hwcontext_drm.h"
+#पूर्ण_अगर
 
-#if HAVE_LINUX_DMA_BUF_H
-#include <sys/ioctl.h>
-#include <linux/dma-buf.h>
-#endif
+#अगर HAVE_LINUX_DMA_BUF_H
+#समावेश <sys/ioctl.h>
+#समावेश <linux/dma-buf.h>
+#पूर्ण_अगर
 
-#if CONFIG_CUDA
-#include "hwcontext_cuda_internal.h"
-#include "cuda_check.h"
-#define CHECK_CU(x) FF_CUDA_CHECK_DL(cuda_cu, cu, x)
-#endif
+#अगर CONFIG_CUDA
+#समावेश "hwcontext_cuda_internal.h"
+#समावेश "cuda_check.h"
+#घोषणा CHECK_CU(x) FF_CUDA_CHECK_DL(cuda_cu, cu, x)
+#पूर्ण_अगर
 
-typedef struct VulkanDeviceFeatures {
+प्रकार काष्ठा VulkanDeviceFeatures {
     VkPhysicalDeviceFeatures2 device;
 
     VkPhysicalDeviceVulkan11Features vulkan_1_1;
@@ -84,69 +84,69 @@ typedef struct VulkanDeviceFeatures {
     VkPhysicalDeviceHostImageCopyFeaturesEXT host_image_copy;
     VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR explicit_mem_layout;
 
-#ifdef VK_EXT_shader_long_vector
+#अगर_घोषित VK_EXT_shader_long_vector
     VkPhysicalDeviceShaderLongVectorFeaturesEXT long_vector;
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_EXT_shader_replicated_composites
+#अगर_घोषित VK_EXT_shader_replicated_composites
     VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT replicated_composites;
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_EXT_zero_initialize_device_memory
+#अगर_घोषित VK_EXT_zero_initialize_device_memory
     VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT zero_initialize;
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_shader_expect_assume
+#अगर_घोषित VK_KHR_shader_expect_assume
     VkPhysicalDeviceShaderExpectAssumeFeaturesKHR expect_assume;
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_shader_maximal_reconvergence
+#अगर_घोषित VK_KHR_shader_maximal_reconvergence
     VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR maximal_reconvergence;
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_maintenance9
+#अगर_घोषित VK_KHR_maintenance9
     VkPhysicalDeviceMaintenance9FeaturesKHR maintenance_9;
-#endif
-#ifdef VK_KHR_maintenance11
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_maintenance11
     VkPhysicalDeviceMaintenance11FeaturesKHR maintenance_11;
-#endif
-#ifdef VK_KHR_unified_image_layouts
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_unified_image_layouts
     VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR unified_layouts;
-#endif
+#पूर्ण_अगर
 
     VkPhysicalDeviceVideoMaintenance1FeaturesKHR video_maintenance_1;
-#ifdef VK_KHR_video_maintenance2
+#अगर_घोषित VK_KHR_video_maintenance2
     VkPhysicalDeviceVideoMaintenance2FeaturesKHR video_maintenance_2;
-#endif
-#ifdef VK_KHR_video_decode_vp9
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_video_decode_vp9
     VkPhysicalDeviceVideoDecodeVP9FeaturesKHR vp9_decode;
-#endif
-#ifdef VK_KHR_video_encode_av1
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_video_encode_av1
     VkPhysicalDeviceVideoEncodeAV1FeaturesKHR av1_encode;
-#endif
+#पूर्ण_अगर
 
     VkPhysicalDeviceShaderObjectFeaturesEXT shader_object;
     VkPhysicalDeviceCooperativeMatrixFeaturesKHR cooperative_matrix;
     VkPhysicalDeviceShaderAtomicFloatFeaturesEXT atomic_float;
 
-#ifdef VK_KHR_shader_relaxed_extended_instruction
+#अगर_घोषित VK_KHR_shader_relaxed_extended_instruction
     VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR relaxed_extended_instruction;
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_internally_synchronized_queues
+#अगर_घोषित VK_KHR_internally_synchronized_queues
     VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR internal_queue_sync;
-#endif
+#पूर्ण_अगर
     VkPhysicalDeviceOpticalFlowFeaturesNV optical_flow;
 } VulkanDeviceFeatures;
 
-typedef struct VulkanDevicePriv {
+प्रकार काष्ठा VulkanDevicePriv {
     /**
      * The public AVVulkanDeviceContext. See hwcontext_vulkan.h for it.
      */
     AVVulkanDeviceContext p;
 
     /* Vulkan library and loader functions */
-    void *libvulkan;
+    व्योम *libvulkan;
 
     FFVulkanContext    vkctx;
     AVVulkanDeviceQueueFamily *compute_qf;
@@ -174,25 +174,25 @@ typedef struct VulkanDevicePriv {
     VkDebugUtilsMessengerEXT debug_ctx;
 
     /* Settings */
-    int use_linear_images;
+    पूर्णांक use_linear_images;
 
     /* Option to allocate all image planes in a single allocation */
-    int contiguous_planes;
+    पूर्णांक contiguous_planes;
 
     /* Disable multiplane images */
-    int disable_multiplane;
+    पूर्णांक disable_multiplane;
 
     /* Prefer memcpy over dynamic host pointer imports */
-    int avoid_host_import;
+    पूर्णांक avoid_host_import;
 
     /* Alignment the transfer queue needs for buffer offsets in image copies */
-    int transfer_offset_align;
+    पूर्णांक transfer_offset_align;
 
     /* Maximum queues */
-    int limit_queues;
+    पूर्णांक limit_queues;
 } VulkanDevicePriv;
 
-typedef struct VulkanFramesPriv {
+प्रकार काष्ठा VulkanFramesPriv {
     /**
      * The public AVVulkanFramesContext. See hwcontext_vulkan.h for it.
      */
@@ -215,33 +215,33 @@ typedef struct VulkanFramesPriv {
     VkDrmFormatModifierPropertiesEXT drm_format_modifier_properties[5];
 
     /* Set when physical device reports DEDICATED_ONLY for DMA-BUF export (try_export_flags) */
-    int export_requires_dedicated;
+    पूर्णांक export_requires_dedicated;
 } VulkanFramesPriv;
 
-typedef struct AVVkFrameInternal {
+प्रकार काष्ठा AVVkFrameInternal {
     pthread_mutex_t update_mutex;
 
     /* Binary semaphore for SYNC_FD export at DRM map time. Created once lazily,
      * re-signaled each time via a submit in vulkan_map_to_drm. */
     VkSemaphore drm_sync_sem;
 
-#if CONFIG_CUDA
+#अगर CONFIG_CUDA
     /* Importing external memory into cuda is really expensive so we keep the
      * memory imported all the time */
     AVBufferRef *cuda_fc_ref; /* Need to keep it around for uninit */
-    CUexternalMemory ext_mem[AV_NUM_DATA_POINTERS];
-    CUmipmappedArray cu_mma[AV_NUM_DATA_POINTERS];
-    CUarray cu_array[AV_NUM_DATA_POINTERS];
-    CUexternalSemaphore cu_sem[AV_NUM_DATA_POINTERS];
-#ifdef _WIN32
-    HANDLE ext_mem_handle[AV_NUM_DATA_POINTERS];
-    HANDLE ext_sem_handle[AV_NUM_DATA_POINTERS];
-#endif
-#endif
+    CUexternalMemory ext_mem[AV_अंक_तथ्य_POINTERS];
+    CUmipmappedArray cu_mma[AV_अंक_तथ्य_POINTERS];
+    CUarray cu_array[AV_अंक_तथ्य_POINTERS];
+    CUexternalSemaphore cu_sem[AV_अंक_तथ्य_POINTERS];
+#अगर_घोषित _WIN32
+    HANDLE ext_mem_handle[AV_अंक_तथ्य_POINTERS];
+    HANDLE ext_sem_handle[AV_अंक_तथ्य_POINTERS];
+#पूर्ण_अगर
+#पूर्ण_अगर
 } AVVkFrameInternal;
 
 /* Initialize all structs in VulkanDeviceFeatures */
-static void device_features_init(AVHWDeviceContext *ctx, VulkanDeviceFeatures *feats)
+अटल व्योम device_features_init(AVHWDeviceContext *ctx, VulkanDeviceFeatures *feats)
 {
     VulkanDevicePriv *p = ctx->hwctx;
     FFVulkanContext *s = &p->vkctx;
@@ -264,58 +264,58 @@ static void device_features_init(AVHWDeviceContext *ctx, VulkanDeviceFeatures *f
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->host_image_copy, FF_VK_EXT_HOST_IMAGE_COPY,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES_EXT);
 
-#ifdef VK_EXT_shader_long_vector
+#अगर_घोषित VK_EXT_shader_long_vector
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->long_vector, FF_VK_EXT_LONG_VECTOR,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_EXT_shader_replicated_composites
+#अगर_घोषित VK_EXT_shader_replicated_composites
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->replicated_composites, FF_VK_EXT_REPLICATED_COMPOSITES,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_EXT_zero_initialize_device_memory
+#अगर_घोषित VK_EXT_zero_initialize_device_memory
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->zero_initialize, FF_VK_EXT_ZERO_INITIALIZE,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_shader_expect_assume
+#अगर_घोषित VK_KHR_shader_expect_assume
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->expect_assume, FF_VK_EXT_EXPECT_ASSUME,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES_KHR);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_shader_maximal_reconvergence
+#अगर_घोषित VK_KHR_shader_maximal_reconvergence
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->maximal_reconvergence, FF_VK_EXT_MAXIMAL_RECONVERGENCE,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MAXIMAL_RECONVERGENCE_FEATURES_KHR);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_maintenance9
+#अगर_घोषित VK_KHR_maintenance9
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->maintenance_9, FF_VK_EXT_MAINTENANCE_9,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR);
-#endif
-#ifdef VK_KHR_maintenance11
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_maintenance11
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->maintenance_11, FF_VK_EXT_MAINTENANCE_11,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR);
-#endif
-#ifdef VK_KHR_unified_image_layouts
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_unified_image_layouts
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->unified_layouts, FF_VK_EXT_UNIFIED_IMAGE_LAYOUTS,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR);
-#endif
+#पूर्ण_अगर
 
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->video_maintenance_1, FF_VK_EXT_VIDEO_MAINTENANCE_1,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_MAINTENANCE_1_FEATURES_KHR);
-#ifdef VK_KHR_video_maintenance2
+#अगर_घोषित VK_KHR_video_maintenance2
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->video_maintenance_2, FF_VK_EXT_VIDEO_MAINTENANCE_2,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_MAINTENANCE_2_FEATURES_KHR);
-#endif
-#ifdef VK_KHR_video_decode_vp9
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_video_decode_vp9
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->vp9_decode, FF_VK_EXT_VIDEO_DECODE_VP9,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_DECODE_VP9_FEATURES_KHR);
-#endif
-#ifdef VK_KHR_video_encode_av1
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_video_encode_av1
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->av1_encode, FF_VK_EXT_VIDEO_ENCODE_AV1,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_AV1_FEATURES_KHR);
-#endif
+#पूर्ण_अगर
 
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->shader_object, FF_VK_EXT_SHADER_OBJECT,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT);
@@ -326,27 +326,27 @@ static void device_features_init(AVHWDeviceContext *ctx, VulkanDeviceFeatures *f
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->explicit_mem_layout, FF_VK_EXT_EXPLICIT_MEM_LAYOUT,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_FEATURES_KHR);
 
-#ifdef VK_KHR_shader_relaxed_extended_instruction
+#अगर_घोषित VK_KHR_shader_relaxed_extended_instruction
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->relaxed_extended_instruction, FF_VK_EXT_RELAXED_EXTENDED_INSTR,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_RELAXED_EXTENDED_INSTRUCTION_FEATURES_KHR);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_internally_synchronized_queues
+#अगर_घोषित VK_KHR_internally_synchronized_queues
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->internal_queue_sync, FF_VK_EXT_INTERNAL_QUEUE_SYNC,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR);
-#endif
+#पूर्ण_अगर
 
     FF_VK_STRUCT_EXT(s, &feats->device, &feats->optical_flow, FF_VK_EXT_OPTICAL_FLOW,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPTICAL_FLOW_FEATURES_NV);
 }
 
 /* Copy all needed device features */
-static void device_features_copy_needed(VulkanDeviceFeatures *dst, VulkanDeviceFeatures *src)
+अटल व्योम device_features_copy_needed(VulkanDeviceFeatures *dst, VulkanDeviceFeatures *src)
 {
-#define COPY_VAL(VAL)        \
-    do {                     \
+#घोषणा COPY_VAL(VAL)        \
+    करो {                     \
         dst->VAL = src->VAL; \
-    } while (0)              \
+    } जबतक (0)              \
 
     COPY_VAL(device.features.shaderImageGatherExtended);
     COPY_VAL(device.features.shaderStorageImageReadWithoutFormat);
@@ -360,37 +360,37 @@ static void device_features_copy_needed(VulkanDeviceFeatures *dst, VulkanDeviceF
     COPY_VAL(device.features.shaderStorageImageWriteWithoutFormat);
 
     COPY_VAL(vulkan_1_1.samplerYcbcrConversion);
-    COPY_VAL(vulkan_1_1.storagePushConstant16);
+    COPY_VAL(vulkan_1_1.storage_धकेलो_Constant16);
     COPY_VAL(vulkan_1_1.storageBuffer16BitAccess);
     COPY_VAL(vulkan_1_1.uniformAndStorageBuffer16BitAccess);
 
     COPY_VAL(vulkan_1_2.timelineSemaphore);
     COPY_VAL(vulkan_1_2.scalarBlockLayout);
-    COPY_VAL(vulkan_1_2.bufferDeviceAddress);
+    COPY_VAL(vulkan_1_2.बफर_Device_Address);
     COPY_VAL(vulkan_1_2.hostQueryReset);
-    COPY_VAL(vulkan_1_2.storagePushConstant8);
+    COPY_VAL(vulkan_1_2.storage_धकेलो_Constant8);
     COPY_VAL(vulkan_1_2.shaderInt8);
     COPY_VAL(vulkan_1_2.storageBuffer8BitAccess);
     COPY_VAL(vulkan_1_2.uniformAndStorageBuffer8BitAccess);
     COPY_VAL(vulkan_1_2.shaderFloat16);
-    COPY_VAL(vulkan_1_2.shaderBufferInt64Atomics);
+    COPY_VAL(vulkan_1_2.shader_बफर_Int64_Atomics);
     COPY_VAL(vulkan_1_2.shaderSharedInt64Atomics);
     COPY_VAL(vulkan_1_2.vulkanMemoryModel);
     COPY_VAL(vulkan_1_2.vulkanMemoryModelDeviceScope);
     COPY_VAL(vulkan_1_2.vulkanMemoryModelAvailabilityVisibilityChains);
-    COPY_VAL(vulkan_1_2.uniformBufferStandardLayout);
+    COPY_VAL(vulkan_1_2.uniform_बफर_Standard_Layout);
     COPY_VAL(vulkan_1_2.runtimeDescriptorArray);
     COPY_VAL(vulkan_1_2.shaderSubgroupExtendedTypes);
-    COPY_VAL(vulkan_1_2.shaderUniformBufferArrayNonUniformIndexing);
+    COPY_VAL(vulkan_1_2.shader_Uniform_बफर_Array_Non_Uniform_Indexing);
     COPY_VAL(vulkan_1_2.shaderSampledImageArrayNonUniformIndexing);
-    COPY_VAL(vulkan_1_2.shaderStorageBufferArrayNonUniformIndexing);
+    COPY_VAL(vulkan_1_2.shader_Storage_बफर_Array_Non_Uniform_Indexing);
     COPY_VAL(vulkan_1_2.shaderStorageImageArrayNonUniformIndexing);
 
     COPY_VAL(vulkan_1_3.dynamicRendering);
     COPY_VAL(vulkan_1_3.maintenance4);
     COPY_VAL(vulkan_1_3.synchronization2);
     COPY_VAL(vulkan_1_3.computeFullSubgroups);
-    COPY_VAL(vulkan_1_3.subgroupSizeControl);
+    COPY_VAL(vulkan_1_3.subgroup_आकार_Control);
     COPY_VAL(vulkan_1_3.shaderZeroInitializeWorkgroupMemory);
     COPY_VAL(vulkan_1_3.dynamicRendering);
 
@@ -398,86 +398,86 @@ static void device_features_copy_needed(VulkanDeviceFeatures *dst, VulkanDeviceF
     COPY_VAL(subgroup_rotate.shaderSubgroupRotate);
     COPY_VAL(host_image_copy.hostImageCopy);
 
-#ifdef VK_EXT_shader_long_vector
+#अगर_घोषित VK_EXT_shader_long_vector
     COPY_VAL(long_vector.longVector);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_EXT_shader_replicated_composites
+#अगर_घोषित VK_EXT_shader_replicated_composites
     COPY_VAL(replicated_composites.shaderReplicatedComposites);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_EXT_zero_initialize_device_memory
+#अगर_घोषित VK_EXT_zero_initialize_device_memory
     COPY_VAL(zero_initialize.zeroInitializeDeviceMemory);
-#endif
+#पूर्ण_अगर
 
     COPY_VAL(video_maintenance_1.videoMaintenance1);
-#ifdef VK_KHR_video_maintenance2
+#अगर_घोषित VK_KHR_video_maintenance2
     COPY_VAL(video_maintenance_2.videoMaintenance2);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_video_decode_vp9
+#अगर_घोषित VK_KHR_video_decode_vp9
     COPY_VAL(vp9_decode.videoDecodeVP9);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_video_encode_av1
+#अगर_घोषित VK_KHR_video_encode_av1
     COPY_VAL(av1_encode.videoEncodeAV1);
-#endif
+#पूर्ण_अगर
 
     COPY_VAL(shader_object.shaderObject);
 
     COPY_VAL(cooperative_matrix.cooperativeMatrix);
 
-    COPY_VAL(atomic_float.shaderBufferFloat32Atomics);
-    COPY_VAL(atomic_float.shaderBufferFloat32AtomicAdd);
+    COPY_VAL(atomic_float.shader_बफर_Float32_Atomics);
+    COPY_VAL(atomic_float.shader_बफर_Float32_Atomic_Add);
 
     COPY_VAL(explicit_mem_layout.workgroupMemoryExplicitLayout);
     COPY_VAL(explicit_mem_layout.workgroupMemoryExplicitLayoutScalarBlockLayout);
     COPY_VAL(explicit_mem_layout.workgroupMemoryExplicitLayout8BitAccess);
     COPY_VAL(explicit_mem_layout.workgroupMemoryExplicitLayout16BitAccess);
 
-#ifdef VK_KHR_shader_relaxed_extended_instruction
+#अगर_घोषित VK_KHR_shader_relaxed_extended_instruction
     COPY_VAL(relaxed_extended_instruction.shaderRelaxedExtendedInstruction);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_shader_expect_assume
+#अगर_घोषित VK_KHR_shader_expect_assume
     COPY_VAL(expect_assume.shaderExpectAssume);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_shader_maximal_reconvergence
+#अगर_घोषित VK_KHR_shader_maximal_reconvergence
     COPY_VAL(maximal_reconvergence.shaderMaximalReconvergence);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_maintenance9
+#अगर_घोषित VK_KHR_maintenance9
     COPY_VAL(maintenance_9.maintenance9);
-#endif
-#ifdef VK_KHR_maintenance11
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_maintenance11
     COPY_VAL(maintenance_11.maintenance11);
-#endif
-#ifdef VK_KHR_unified_image_layouts
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_unified_image_layouts
     COPY_VAL(unified_layouts.unifiedImageLayouts);
     COPY_VAL(unified_layouts.unifiedImageLayoutsVideo);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_internally_synchronized_queues
+#अगर_घोषित VK_KHR_internally_synchronized_queues
     COPY_VAL(internal_queue_sync.internallySynchronizedQueues);
-#endif
+#पूर्ण_अगर
 
     COPY_VAL(optical_flow.opticalFlow);
 
-#undef COPY_VAL
+#अघोषित COPY_VAL
 }
 
-#define ASPECT_2PLANE (VK_IMAGE_ASPECT_PLANE_0_BIT | VK_IMAGE_ASPECT_PLANE_1_BIT)
-#define ASPECT_3PLANE (VK_IMAGE_ASPECT_PLANE_0_BIT | VK_IMAGE_ASPECT_PLANE_1_BIT | VK_IMAGE_ASPECT_PLANE_2_BIT)
+#घोषणा ASPECT_2PLANE (VK_IMAGE_ASPECT_PLANE_0_BIT | VK_IMAGE_ASPECT_PLANE_1_BIT)
+#घोषणा ASPECT_3PLANE (VK_IMAGE_ASPECT_PLANE_0_BIT | VK_IMAGE_ASPECT_PLANE_1_BIT | VK_IMAGE_ASPECT_PLANE_2_BIT)
 
-static const struct FFVkFormatEntry {
+अटल स्थिर काष्ठा FFVkFormatEntry {
     VkFormat vkf;
-    enum AVPixelFormat pixfmt;
+    क्रमागत AVPixelFormat pixfmt;
     VkImageAspectFlags aspect;
-    int vk_planes;
-    int nb_images;
-    int nb_images_fallback;
-    const VkFormat fallback[5];
+    पूर्णांक vk_planes;
+    पूर्णांक nb_images;
+    पूर्णांक nb_images_fallback;
+    स्थिर VkFormat fallback[5];
 } vk_formats_list[] = {
     /* Gray formats */
     { VK_FORMAT_R8_UNORM,   AV_PIX_FMT_GRAY8,   VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R8_UNORM   } },
@@ -591,52 +591,52 @@ static const struct FFVkFormatEntry {
     { VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16,     AV_PIX_FMT_XV36,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
     { VK_FORMAT_R16G16B16A16_UNORM,                     AV_PIX_FMT_XV48,    VK_IMAGE_ASPECT_COLOR_BIT, 1, 1, 1, { VK_FORMAT_R16G16B16A16_UNORM } },
 };
-static const int nb_vk_formats_list = FF_ARRAY_ELEMS(vk_formats_list);
+अटल स्थिर पूर्णांक nb_vk_formats_list = FF_ARRAY_ELEMS(vk_formats_list);
 
-const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p)
+स्थिर VkFormat *av_vkfmt_from_pixfmt(क्रमागत AVPixelFormat p)
 {
-    for (int i = 0; i < nb_vk_formats_list; i++)
-        if (vk_formats_list[i].pixfmt == p)
-            return vk_formats_list[i].fallback;
-    return NULL;
+    क्रम (पूर्णांक i = 0; i < nb_vk_formats_list; i++)
+        अगर (vk_formats_list[i].pixfmt == p)
+            वापस vk_formats_list[i].fallback;
+    वापस शून्य;
 }
 
-static const struct FFVkFormatEntry *vk_find_format_entry(enum AVPixelFormat p)
+अटल स्थिर काष्ठा FFVkFormatEntry *vk_find_format_entry(क्रमागत AVPixelFormat p)
 {
-    for (int i = 0; i < nb_vk_formats_list; i++)
-        if (vk_formats_list[i].pixfmt == p)
-            return &vk_formats_list[i];
-    return NULL;
+    क्रम (पूर्णांक i = 0; i < nb_vk_formats_list; i++)
+        अगर (vk_formats_list[i].pixfmt == p)
+            वापस &vk_formats_list[i];
+    वापस शून्य;
 }
 
-static int vkfmt_from_pixfmt2(AVHWDeviceContext *dev_ctx, enum AVPixelFormat p,
+अटल पूर्णांक vkfmt_from_pixfmt2(AVHWDeviceContext *dev_ctx, क्रमागत AVPixelFormat p,
                               VkImageTiling tiling,
-                              VkFormat fmts[AV_NUM_DATA_POINTERS], /* Output format list */
-                              int *nb_images,                      /* Output number of images */
+                              VkFormat fmts[AV_अंक_तथ्य_POINTERS], /* Output format list */
+                              पूर्णांक *nb_images,                      /* Output number of images */
                               VkImageAspectFlags *aspect,          /* Output aspect */
                               VkImageUsageFlags *supported_usage,  /* Output supported usage */
-                              int disable_multiplane, int need_storage)
+                              पूर्णांक disable_multiplane, पूर्णांक need_storage)
 {
     VulkanDevicePriv *priv = dev_ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &priv->p;
     FFVulkanFunctions *vk = &priv->vkctx.vkfn;
 
-    const VkFormatFeatureFlagBits2 basic_flags = VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT |
+    स्थिर VkFormatFeatureFlagBits2 basic_flags = VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT |
                                                  VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT  |
                                                  VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT;
 
-    for (int i = 0; i < nb_vk_formats_list; i++) {
-        if (vk_formats_list[i].pixfmt == p) {
+    क्रम (पूर्णांक i = 0; i < nb_vk_formats_list; i++) {
+        अगर (vk_formats_list[i].pixfmt == p) {
             VkFormatProperties3 fprops = {
                 .sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3,
             };
             VkFormatProperties2 prop = {
                 .sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2,
-                .pNext = &fprops,
+                .p_अग्र = &fprops,
             };
             VkFormatFeatureFlagBits2 feats_primary, feats_secondary;
-            int basics_primary = 0, basics_secondary = 0;
-            int storage_primary = 0, storage_secondary = 0;
+            पूर्णांक basics_primary = 0, basics_secondary = 0;
+            पूर्णांक storage_primary = 0, storage_secondary = 0;
 
             vk->GetPhysicalDeviceFormatProperties2(hwctx->phys_dev,
                                                    vk_formats_list[i].vkf,
@@ -647,7 +647,7 @@ static int vkfmt_from_pixfmt2(AVHWDeviceContext *dev_ctx, enum AVPixelFormat p,
             basics_primary = (feats_primary & basic_flags) == basic_flags;
             storage_primary = !!(feats_primary & VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT);
 
-            if (vk_formats_list[i].vkf != vk_formats_list[i].fallback[0]) {
+            अगर (vk_formats_list[i].vkf != vk_formats_list[i].fallback[0]) {
                 vk->GetPhysicalDeviceFormatProperties2(hwctx->phys_dev,
                                                        vk_formats_list[i].fallback[0],
                                                        &prop);
@@ -655,113 +655,113 @@ static int vkfmt_from_pixfmt2(AVHWDeviceContext *dev_ctx, enum AVPixelFormat p,
                                   fprops.linearTilingFeatures : fprops.optimalTilingFeatures;
                 basics_secondary = (feats_secondary & basic_flags) == basic_flags;
                 storage_secondary = !!(feats_secondary & VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT);
-            } else {
+            } अन्यथा {
                 feats_secondary = feats_primary;
                 basics_secondary = basics_primary;
                 storage_secondary = storage_primary;
             }
 
-            if (basics_primary &&
+            अगर (basics_primary &&
                 !(disable_multiplane && vk_formats_list[i].vk_planes > 1) &&
                 (!need_storage || (need_storage && (storage_primary | storage_secondary)))) {
-                if (fmts) {
-                    if (vk_formats_list[i].nb_images > 1) {
-                        for (int j = 0; j < vk_formats_list[i].nb_images_fallback; j++)
+                अगर (fmts) {
+                    अगर (vk_formats_list[i].nb_images > 1) {
+                        क्रम (पूर्णांक j = 0; j < vk_formats_list[i].nb_images_fallback; j++)
                             fmts[j] = vk_formats_list[i].fallback[j];
-                    } else {
+                    } अन्यथा {
                         fmts[0] = vk_formats_list[i].vkf;
                     }
                 }
-                if (nb_images)
+                अगर (nb_images)
                     *nb_images = 1;
-                if (aspect)
+                अगर (aspect)
                     *aspect = vk_formats_list[i].aspect;
-                if (supported_usage)
+                अगर (supported_usage)
                     *supported_usage = ff_vk_map_feats_to_usage(feats_primary) |
                                        ((need_storage && (storage_primary | storage_secondary)) ?
                                         VK_IMAGE_USAGE_STORAGE_BIT : 0);
-                return 0;
-            } else if (basics_secondary &&
+                वापस 0;
+            } अन्यथा अगर (basics_secondary &&
                        (!need_storage || (need_storage && storage_secondary))) {
-                if (fmts) {
-                    for (int j = 0; j < vk_formats_list[i].nb_images_fallback; j++)
+                अगर (fmts) {
+                    क्रम (पूर्णांक j = 0; j < vk_formats_list[i].nb_images_fallback; j++)
                         fmts[j] = vk_formats_list[i].fallback[j];
                 }
-                if (nb_images)
+                अगर (nb_images)
                     *nb_images = vk_formats_list[i].nb_images_fallback;
-                if (aspect)
+                अगर (aspect)
                     *aspect = vk_formats_list[i].aspect;
-                if (supported_usage)
+                अगर (supported_usage)
                     *supported_usage = ff_vk_map_feats_to_usage(feats_secondary);
-                return 0;
-            } else {
-                return AVERROR(ENOTSUP);
+                वापस 0;
+            } अन्यथा {
+                वापस AVERROR(ENOTSUP);
             }
         }
     }
 
-    return AVERROR(EINVAL);
+    वापस AVERROR(EINVAL);
 }
 
-#if CONFIG_VULKAN_STATIC
+#अगर CONFIG_VULKAN_STATIC
 VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetInstanceProcAddr(VkInstance instance,
-                                                               const char *pName);
-#endif
+                                                               स्थिर अक्षर *pName);
+#पूर्ण_अगर
 
-static int load_libvulkan(AVHWDeviceContext *ctx)
+अटल पूर्णांक load_libvulkan(AVHWDeviceContext *ctx)
 {
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
 
-#if CONFIG_VULKAN_STATIC
+#अगर CONFIG_VULKAN_STATIC
     hwctx->get_proc_addr = vkGetInstanceProcAddr;
-#else
-    static const char *lib_names[] = {
-#if defined(_WIN32)
+#अन्यथा
+    अटल स्थिर अक्षर *lib_names[] = {
+#अगर defined(_WIN32)
         "vulkan-1.dll",
-#elif defined(__APPLE__)
+#या_अगर defined(__APPLE__)
         "libvulkan.dylib",
         "libvulkan.1.dylib",
         "libMoltenVK.dylib",
-#else
+#अन्यथा
         "libvulkan.so.1",
         "libvulkan.so",
-#endif
+#पूर्ण_अगर
     };
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(lib_names); i++) {
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(lib_names); i++) {
         p->libvulkan = dlopen(lib_names[i], RTLD_NOW | RTLD_LOCAL);
-        if (p->libvulkan)
-            break;
+        अगर (p->libvulkan)
+            अवरोध;
     }
 
-    if (!p->libvulkan) {
+    अगर (!p->libvulkan) {
         av_log(ctx, AV_LOG_ERROR, "Unable to open the libvulkan library!\n");
-        return AVERROR_UNKNOWN;
+        वापस AVERROR_UNKNOWN;
     }
 
     hwctx->get_proc_addr = (PFN_vkGetInstanceProcAddr)dlsym(p->libvulkan, "vkGetInstanceProcAddr");
-#endif /* CONFIG_VULKAN_STATIC */
+#पूर्ण_अगर /* CONFIG_VULKAN_STATIC */
 
-    return 0;
+    वापस 0;
 }
 
-typedef struct VulkanOptExtension {
-    const char *name;
+प्रकार काष्ठा VulkanOptExtension {
+    स्थिर अक्षर *name;
     FFVulkanExtensions flag;
 } VulkanOptExtension;
 
-static const VulkanOptExtension optional_instance_exts[] = {
-#ifdef __APPLE__
+अटल स्थिर VulkanOptExtension optional_instance_exts[] = {
+#अगर_घोषित __APPLE__
     { VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,          FF_VK_EXT_NO_FLAG                },
-#endif
+#पूर्ण_अगर
     { 0 },
 };
 
-static const VulkanOptExtension optional_device_exts[] = {
+अटल स्थिर VulkanOptExtension optional_device_exts[] = {
     /* Misc or required by other extensions */
     { VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME,               FF_VK_EXT_PORTABILITY_SUBSET     },
-    { VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME,                  FF_VK_EXT_PUSH_DESCRIPTOR        },
+    { VK_KHR_धकेलो_DESCRIPTOR_EXTENSION_NAME,                  FF_VK_EXT_धकेलो_DESCRIPTOR        },
     { VK_EXT_PHYSICAL_DEVICE_DRM_EXTENSION_NAME,              FF_VK_EXT_DEVICE_DRM             },
     { VK_EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME,              FF_VK_EXT_ATOMIC_FLOAT           },
     { VK_KHR_COOPERATIVE_MATRIX_EXTENSION_NAME,               FF_VK_EXT_COOP_MATRIX            },
@@ -769,40 +769,40 @@ static const VulkanOptExtension optional_device_exts[] = {
     { VK_KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME,           FF_VK_EXT_SUBGROUP_ROTATE        },
     { VK_EXT_HOST_IMAGE_COPY_EXTENSION_NAME,                  FF_VK_EXT_HOST_IMAGE_COPY        },
     { VK_KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME, FF_VK_EXT_EXPLICIT_MEM_LAYOUT    },
-#ifdef VK_KHR_shader_relaxed_extended_instruction
+#अगर_घोषित VK_KHR_shader_relaxed_extended_instruction
     { VK_KHR_SHADER_RELAXED_EXTENDED_INSTRUCTION_EXTENSION_NAME, FF_VK_EXT_RELAXED_EXTENDED_INSTR },
-#endif
-#ifdef VK_EXT_shader_long_vector
+#पूर्ण_अगर
+#अगर_घोषित VK_EXT_shader_long_vector
     { VK_EXT_SHADER_LONG_VECTOR_EXTENSION_NAME,               FF_VK_EXT_LONG_VECTOR            },
-#endif
-#ifdef VK_EXT_shader_replicated_composites
+#पूर्ण_अगर
+#अगर_घोषित VK_EXT_shader_replicated_composites
     { VK_EXT_SHADER_REPLICATED_COMPOSITES_EXTENSION_NAME,     FF_VK_EXT_REPLICATED_COMPOSITES  },
-#endif
-#ifdef VK_EXT_zero_initialize_device_memory
+#पूर्ण_अगर
+#अगर_घोषित VK_EXT_zero_initialize_device_memory
     { VK_EXT_ZERO_INITIALIZE_DEVICE_MEMORY_EXTENSION_NAME,    FF_VK_EXT_ZERO_INITIALIZE        },
-#endif
-#ifdef VK_KHR_shader_expect_assume
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_shader_expect_assume
     { VK_KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME,             FF_VK_EXT_EXPECT_ASSUME          },
-#endif
-#ifdef VK_KHR_shader_maximal_reconvergence
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_shader_maximal_reconvergence
     { VK_KHR_SHADER_MAXIMAL_RECONVERGENCE_EXTENSION_NAME,     FF_VK_EXT_MAXIMAL_RECONVERGENCE  },
-#endif
-#ifdef VK_KHR_maintenance9
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_maintenance9
     { VK_KHR_MAINTENANCE_9_EXTENSION_NAME,                    FF_VK_EXT_MAINTENANCE_9          },
-#endif
-#ifdef VK_KHR_maintenance11
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_maintenance11
     { VK_KHR_MAINTENANCE_11_EXTENSION_NAME,                   FF_VK_EXT_MAINTENANCE_11         },
-#endif
-#ifdef VK_KHR_unified_image_layouts
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_unified_image_layouts
     { VK_KHR_UNIFIED_IMAGE_LAYOUTS_EXTENSION_NAME,            FF_VK_EXT_UNIFIED_IMAGE_LAYOUTS  },
-#endif
+#पूर्ण_अगर
     { VK_KHR_VIDEO_MAINTENANCE_1_EXTENSION_NAME,              FF_VK_EXT_VIDEO_MAINTENANCE_1    },
-#ifdef VK_KHR_video_maintenance2
+#अगर_घोषित VK_KHR_video_maintenance2
     { VK_KHR_VIDEO_MAINTENANCE_2_EXTENSION_NAME,              FF_VK_EXT_VIDEO_MAINTENANCE_2    },
-#endif
-#ifdef VK_KHR_internally_synchronized_queues
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_internally_synchronized_queues
     { VK_KHR_INTERNALLY_SYNCHRONIZED_QUEUES_EXTENSION_NAME,   FF_VK_EXT_INTERNAL_QUEUE_SYNC    },
-#endif
+#पूर्ण_अगर
     { VK_NV_OPTICAL_FLOW_EXTENSION_NAME,                      FF_VK_EXT_OPTICAL_FLOW           },
 
     /* Imports/exports */
@@ -811,10 +811,10 @@ static const VulkanOptExtension optional_device_exts[] = {
     { VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME,        FF_VK_EXT_DRM_MODIFIER_FLAGS     },
     { VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,            FF_VK_EXT_EXTERNAL_FD_SEM        },
     { VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME,             FF_VK_EXT_EXTERNAL_HOST_MEMORY   },
-#ifdef _WIN32
+#अगर_घोषित _WIN32
     { VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME,            FF_VK_EXT_EXTERNAL_WIN32_MEMORY  },
     { VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,         FF_VK_EXT_EXTERNAL_WIN32_SEM     },
-#endif
+#पूर्ण_अगर
 
     /* Video encoding/decoding */
     { VK_KHR_VIDEO_QUEUE_EXTENSION_NAME,                      FF_VK_EXT_VIDEO_QUEUE            },
@@ -824,118 +824,118 @@ static const VulkanOptExtension optional_device_exts[] = {
     { VK_KHR_VIDEO_DECODE_H264_EXTENSION_NAME,                FF_VK_EXT_VIDEO_DECODE_H264      },
     { VK_KHR_VIDEO_ENCODE_H265_EXTENSION_NAME,                FF_VK_EXT_VIDEO_ENCODE_H265      },
     { VK_KHR_VIDEO_DECODE_H265_EXTENSION_NAME,                FF_VK_EXT_VIDEO_DECODE_H265      },
-#ifdef VK_KHR_video_decode_vp9
+#अगर_घोषित VK_KHR_video_decode_vp9
     { VK_KHR_VIDEO_DECODE_VP9_EXTENSION_NAME,                 FF_VK_EXT_VIDEO_DECODE_VP9       },
-#endif
-#ifdef VK_KHR_video_encode_av1
+#पूर्ण_अगर
+#अगर_घोषित VK_KHR_video_encode_av1
     { VK_KHR_VIDEO_ENCODE_AV1_EXTENSION_NAME,                 FF_VK_EXT_VIDEO_ENCODE_AV1       },
-#endif
+#पूर्ण_अगर
     { VK_KHR_VIDEO_DECODE_AV1_EXTENSION_NAME,                 FF_VK_EXT_VIDEO_DECODE_AV1       },
 };
 
-const char **av_vk_get_optional_instance_extensions(int *count)
+स्थिर अक्षर **av_vk_get_optional_instance_extensions(पूर्णांक *गिनती)
 {
-    const char **exts = av_malloc_array(sizeof(*exts),
+    स्थिर अक्षर **exts = av_malloc_array(माप(*exts),
                                         FF_ARRAY_ELEMS(optional_instance_exts) - 1);
-    if (!exts)
-        return NULL;
+    अगर (!exts)
+        वापस शून्य;
 
-    for (int i = 0; i < (int)FF_ARRAY_ELEMS(optional_instance_exts) - 1; i++)
+    क्रम (पूर्णांक i = 0; i < (पूर्णांक)FF_ARRAY_ELEMS(optional_instance_exts) - 1; i++)
         exts[i] = optional_instance_exts[i].name;
 
-    *count = FF_ARRAY_ELEMS(optional_instance_exts) - 1;
-    return exts;
+    *गिनती = FF_ARRAY_ELEMS(optional_instance_exts) - 1;
+    वापस exts;
 }
 
-const char **av_vk_get_optional_device_extensions(int *count)
+स्थिर अक्षर **av_vk_get_optional_device_extensions(पूर्णांक *गिनती)
 {
-    const char **exts = av_malloc_array(sizeof(*exts),
+    स्थिर अक्षर **exts = av_malloc_array(माप(*exts),
                                         FF_ARRAY_ELEMS(optional_device_exts));
-    if (!exts)
-        return NULL;
+    अगर (!exts)
+        वापस शून्य;
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(optional_device_exts); i++)
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(optional_device_exts); i++)
         exts[i] = optional_device_exts[i].name;
 
-    *count = FF_ARRAY_ELEMS(optional_device_exts);
-    return exts;
+    *गिनती = FF_ARRAY_ELEMS(optional_device_exts);
+    वापस exts;
 }
 
-static VKAPI_ATTR
+अटल VKAPI_ATTR
 VkBool32 VKAPI_CALL vk_dbg_callback(VkDebugUtilsMessageSeverityFlagBitsEXT severity,
                                     VkDebugUtilsMessageTypeFlagsEXT messageType,
-                                    const VkDebugUtilsMessengerCallbackDataEXT *data,
-                                    void *priv)
+                                    स्थिर Vk_Debug_Utils_Messenger_Callback_तथ्य_EXT *तथ्य,
+                                    व्योम *priv)
 {
-    int l;
+    पूर्णांक l;
     AVHWDeviceContext *ctx = priv;
 
     /* Ignore false positives */
-    switch (data->messageIdNumber) {
-    case 0x086974c1: /* BestPractices-vkCreateCommandPool-command-buffer-reset */
-    case 0xfd92477a: /* BestPractices-vkAllocateMemory-small-allocation */
-        return VK_FALSE;
-    default:
-        break;
+    चयन (तथ्य->message_Id_संख्या) {
+    हाल 0x086974c1: /* BestPractices-vkCreateCommandPool-command-buffer-reset */
+    हाल 0xfd92477a: /* BestPractices-vkAllocateMemory-small-allocation */
+        वापस VK_FALSE;
+    शेष:
+        अवरोध;
     }
 
-    switch (severity) {
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: l = AV_LOG_VERBOSE; break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:    l = AV_LOG_INFO;    break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: l = AV_LOG_WARNING; break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:   l = AV_LOG_ERROR;   break;
-    default:                                              l = AV_LOG_DEBUG;   break;
+    चयन (severity) {
+    हाल VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: l = AV_LOG_VERBOSE; अवरोध;
+    हाल VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:    l = AV_LOG_INFO;    अवरोध;
+    हाल VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: l = AV_LOG_WARNING; अवरोध;
+    हाल VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:   l = AV_LOG_ERROR;   अवरोध;
+    शेष:                                              l = AV_LOG_DEBUG;   अवरोध;
     }
 
-    av_log(ctx, l, "%s\n", data->pMessage);
-    for (int i = 0; i < data->cmdBufLabelCount; i++)
-        av_log(ctx, l, "\t%i: %s\n", i, data->pCmdBufLabels[i].pLabelName);
+    av_log(ctx, l, "%s\n", तथ्य->pMessage);
+    क्रम (पूर्णांक i = 0; i < तथ्य->cmd_Buf_Label_गिनती; i++)
+        av_log(ctx, l, "\t%i: %s\n", i, तथ्य->pCmdBufLabels[i].pLabelName);
 
-    return VK_FALSE;
+    वापस VK_FALSE;
 }
 
-#define ADD_VAL_TO_LIST(list, count, val)                                      \
-    do {                                                                       \
-        list = av_realloc_array(list, ++count, sizeof(*list));                 \
-        if (!list) {                                                           \
+#घोषणा ADD_VAL_TO_LIST(list, गिनती, val)                                      \
+    करो {                                                                       \
+        list = av_realloc_array(list, ++गिनती, माप(*list));                 \
+        अगर (!list) {                                                           \
             err = AVERROR(ENOMEM);                                             \
-            goto fail;                                                         \
+            जाओ fail;                                                         \
         }                                                                      \
-        list[count - 1] = av_strdup(val);                                      \
-        if (!list[count - 1]) {                                                \
+        list[गिनती - 1] = av_strdup(val);                                      \
+        अगर (!list[गिनती - 1]) {                                                \
             err = AVERROR(ENOMEM);                                             \
-            goto fail;                                                         \
+            जाओ fail;                                                         \
         }                                                                      \
-    } while(0)
+    } जबतक(0)
 
-#define RELEASE_PROPS(props, count)                                            \
-    if (props) {                                                               \
-        for (int i = 0; i < count; i++)                                        \
-            av_free((void *)((props)[i]));                                     \
-        av_free((void *)props);                                                \
+#घोषणा RELEASE_PROPS(props, गिनती)                                            \
+    अगर (props) {                                                               \
+        क्रम (पूर्णांक i = 0; i < गिनती; i++)                                        \
+            av_free((व्योम *)((props)[i]));                                     \
+        av_free((व्योम *)props);                                                \
     }
 
-static int vulkan_device_has_rebar(AVHWDeviceContext *ctx)
+अटल पूर्णांक vulkan_device_has_rebar(AVHWDeviceContext *ctx)
 {
     VulkanDevicePriv *p = ctx->hwctx;
-    VkDeviceSize max_vram = 0, max_visible_vram = 0;
+    Vk_Device_आकार max_vram = 0, max_visible_vram = 0;
 
     /* Get device memory properties */
-    av_assert0(p->mprops.memoryTypeCount);
-    for (int i = 0; i < p->mprops.memoryTypeCount; i++) {
-        const VkMemoryType type = p->mprops.memoryTypes[i];
-        const VkMemoryHeap heap = p->mprops.memoryHeaps[type.heapIndex];
-        if (!(type.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT))
-            continue;
-        max_vram = FFMAX(max_vram, heap.size);
-        if (type.propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
-            max_visible_vram = FFMAX(max_visible_vram, heap.size);
+    av_assert0(p->mprops.memory_Type_गिनती);
+    क्रम (पूर्णांक i = 0; i < p->mprops.memory_Type_गिनती; i++) {
+        स्थिर VkMemoryType type = p->mprops.memoryTypes[i];
+        स्थिर VkMemoryHeap heap = p->mprops.memoryHeaps[type.heap_सूचकांक];
+        अगर (!(type.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT))
+            जारी;
+        max_vram = FFMAX(max_vram, heap.आकार);
+        अगर (type.propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
+            max_visible_vram = FFMAX(max_visible_vram, heap.आकार);
     }
 
-    return max_vram - max_visible_vram < 1024; /* 1 kB tolerance */
+    वापस max_vram - max_visible_vram < 1024; /* 1 kB tolerance */
 }
 
-enum FFVulkanDebugMode {
+क्रमागत FFVulkanDebugMode {
     FF_VULKAN_DEBUG_NONE = 0,
     /* Standard GPU-assisted validation */
     FF_VULKAN_DEBUG_VALIDATE = 1,
@@ -947,299 +947,299 @@ enum FFVulkanDebugMode {
     FF_VULKAN_DEBUG_NB,
 };
 
-static int check_extensions(AVHWDeviceContext *ctx, int dev, AVDictionary *opts,
-                            const char * const **dst, uint32_t *num,
-                            enum FFVulkanDebugMode debug_mode)
+अटल पूर्णांक check_extensions(AVHWDeviceContext *ctx, पूर्णांक dev, AVDictionary *opts,
+                            स्थिर अक्षर * स्थिर **dst, uint32_t *अंक,
+                            क्रमागत FFVulkanDebugMode debug_mode)
 {
-    const char *tstr;
-    const char **extension_names = NULL;
+    स्थिर अक्षर *tstr;
+    स्थिर अक्षर **extension_names = शून्य;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    int err = 0, found, extensions_found = 0;
+    पूर्णांक err = 0, found, extensions_found = 0;
 
-    const char *mod;
-    int optional_exts_num;
-    uint32_t sup_ext_count;
-    char *user_exts_str = NULL;
+    स्थिर अक्षर *mod;
+    पूर्णांक optional_exts_अंक;
+    uint32_t sup_ext_गिनती;
+    अक्षर *user_exts_str = शून्य;
     AVDictionaryEntry *user_exts;
     VkExtensionProperties *sup_ext;
-    const VulkanOptExtension *optional_exts;
+    स्थिर VulkanOptExtension *optional_exts;
 
-    if (!dev) {
+    अगर (!dev) {
         mod = "instance";
         optional_exts = optional_instance_exts;
-        optional_exts_num = FF_ARRAY_ELEMS(optional_instance_exts) - 1;
-        user_exts = av_dict_get(opts, "instance_extensions", NULL, 0);
-        if (user_exts) {
-            user_exts_str = av_strdup(user_exts->value);
-            if (!user_exts_str) {
+        optional_exts_अंक = FF_ARRAY_ELEMS(optional_instance_exts) - 1;
+        user_exts = av_dict_get(opts, "instance_extensions", शून्य, 0);
+        अगर (user_exts) {
+            user_exts_str = av_strdup(user_exts->मूल्य);
+            अगर (!user_exts_str) {
                 err = AVERROR(ENOMEM);
-                goto fail;
+                जाओ fail;
             }
         }
-        vk->EnumerateInstanceExtensionProperties(NULL, &sup_ext_count, NULL);
-        sup_ext = av_malloc_array(sup_ext_count, sizeof(VkExtensionProperties));
-        if (!sup_ext)
-            return AVERROR(ENOMEM);
-        vk->EnumerateInstanceExtensionProperties(NULL, &sup_ext_count, sup_ext);
-    } else {
+        vk->EnumerateInstanceExtensionProperties(शून्य, &sup_ext_गिनती, शून्य);
+        sup_ext = av_malloc_array(sup_ext_गिनती, माप(VkExtensionProperties));
+        अगर (!sup_ext)
+            वापस AVERROR(ENOMEM);
+        vk->EnumerateInstanceExtensionProperties(शून्य, &sup_ext_गिनती, sup_ext);
+    } अन्यथा {
         mod = "device";
         optional_exts = optional_device_exts;
-        optional_exts_num = FF_ARRAY_ELEMS(optional_device_exts);
-        user_exts = av_dict_get(opts, "device_extensions", NULL, 0);
-        if (user_exts) {
-            user_exts_str = av_strdup(user_exts->value);
-            if (!user_exts_str) {
+        optional_exts_अंक = FF_ARRAY_ELEMS(optional_device_exts);
+        user_exts = av_dict_get(opts, "device_extensions", शून्य, 0);
+        अगर (user_exts) {
+            user_exts_str = av_strdup(user_exts->मूल्य);
+            अगर (!user_exts_str) {
                 err = AVERROR(ENOMEM);
-                goto fail;
+                जाओ fail;
             }
         }
-        vk->EnumerateDeviceExtensionProperties(hwctx->phys_dev, NULL,
-                                               &sup_ext_count, NULL);
-        sup_ext = av_malloc_array(sup_ext_count, sizeof(VkExtensionProperties));
-        if (!sup_ext)
-            return AVERROR(ENOMEM);
-        vk->EnumerateDeviceExtensionProperties(hwctx->phys_dev, NULL,
-                                               &sup_ext_count, sup_ext);
+        vk->EnumerateDeviceExtensionProperties(hwctx->phys_dev, शून्य,
+                                               &sup_ext_गिनती, शून्य);
+        sup_ext = av_malloc_array(sup_ext_गिनती, माप(VkExtensionProperties));
+        अगर (!sup_ext)
+            वापस AVERROR(ENOMEM);
+        vk->EnumerateDeviceExtensionProperties(hwctx->phys_dev, शून्य,
+                                               &sup_ext_गिनती, sup_ext);
     }
 
-    for (int i = 0; i < optional_exts_num; i++) {
+    क्रम (पूर्णांक i = 0; i < optional_exts_अंक; i++) {
         tstr = optional_exts[i].name;
         found = 0;
 
         /* Check if the device has ReBAR for host image copies */
-        if (!strcmp(tstr, VK_EXT_HOST_IMAGE_COPY_EXTENSION_NAME) &&
+        अगर (!म_भेद(tstr, VK_EXT_HOST_IMAGE_COPY_EXTENSION_NAME) &&
             !vulkan_device_has_rebar(ctx))
-            continue;
+            जारी;
 
-        if (dev &&
+        अगर (dev &&
             ((debug_mode == FF_VULKAN_DEBUG_VALIDATE) ||
              (debug_mode == FF_VULKAN_DEBUG_PRINTF) ||
              (debug_mode == FF_VULKAN_DEBUG_PRACTICES)) &&
-            (!strcmp(tstr, VK_EXT_SHADER_OBJECT_EXTENSION_NAME))) {
-            continue;
+            (!म_भेद(tstr, VK_EXT_SHADER_OBJECT_EXTENSION_NAME))) {
+            जारी;
         }
 
-        for (int j = 0; j < sup_ext_count; j++) {
-            if (!strcmp(tstr, sup_ext[j].extensionName)) {
+        क्रम (पूर्णांक j = 0; j < sup_ext_गिनती; j++) {
+            अगर (!म_भेद(tstr, sup_ext[j].extensionName)) {
                 found = 1;
-                break;
+                अवरोध;
             }
         }
-        if (!found)
-            continue;
+        अगर (!found)
+            जारी;
 
         av_log(ctx, AV_LOG_VERBOSE, "Using %s extension %s\n", mod, tstr);
         p->vkctx.extensions |= optional_exts[i].flag;
         ADD_VAL_TO_LIST(extension_names, extensions_found, tstr);
     }
 
-    if (!dev &&
+    अगर (!dev &&
         ((debug_mode == FF_VULKAN_DEBUG_VALIDATE) ||
          (debug_mode == FF_VULKAN_DEBUG_PRINTF) ||
          (debug_mode == FF_VULKAN_DEBUG_PRACTICES))) {
         tstr = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
         found = 0;
-        for (int j = 0; j < sup_ext_count; j++) {
-            if (!strcmp(tstr, sup_ext[j].extensionName)) {
+        क्रम (पूर्णांक j = 0; j < sup_ext_गिनती; j++) {
+            अगर (!म_भेद(tstr, sup_ext[j].extensionName)) {
                 found = 1;
-                break;
+                अवरोध;
             }
         }
-        if (found) {
+        अगर (found) {
             av_log(ctx, AV_LOG_VERBOSE, "Using %s extension %s\n", mod, tstr);
             ADD_VAL_TO_LIST(extension_names, extensions_found, tstr);
-        } else {
+        } अन्यथा {
             av_log(ctx, AV_LOG_ERROR, "Debug extension \"%s\" not found!\n",
                    tstr);
             err = AVERROR(EINVAL);
-            goto fail;
+            जाओ fail;
         }
     }
 
-#ifdef VK_KHR_shader_relaxed_extended_instruction
-    if ((debug_mode == FF_VULKAN_DEBUG_PRINTF) && dev) {
+#अगर_घोषित VK_KHR_shader_relaxed_extended_instruction
+    अगर ((debug_mode == FF_VULKAN_DEBUG_PRINTF) && dev) {
         tstr = VK_KHR_SHADER_RELAXED_EXTENDED_INSTRUCTION_EXTENSION_NAME;
         found = 0;
-        for (int j = 0; j < sup_ext_count; j++) {
-            if (!strcmp(tstr, sup_ext[j].extensionName)) {
+        क्रम (पूर्णांक j = 0; j < sup_ext_गिनती; j++) {
+            अगर (!म_भेद(tstr, sup_ext[j].extensionName)) {
                 found = 1;
-                break;
+                अवरोध;
             }
         }
-        if (!found) {
+        अगर (!found) {
             av_log(ctx, AV_LOG_ERROR, "Debug_printf/profile enabled, but extension \"%s\" not found!\n",
                    tstr);
             err = AVERROR(EINVAL);
-            goto fail;
+            जाओ fail;
         }
     }
-#endif
+#पूर्ण_अगर
 
-    if (user_exts_str) {
-        char *save, *token = av_strtok(user_exts_str, "+", &save);
-        while (token) {
+    अगर (user_exts_str) {
+        अक्षर *save, *token = av_strtok(user_exts_str, "+", &save);
+        जबतक (token) {
             found = 0;
-            for (int j = 0; j < sup_ext_count; j++) {
-                if (!strcmp(token, sup_ext[j].extensionName)) {
+            क्रम (पूर्णांक j = 0; j < sup_ext_गिनती; j++) {
+                अगर (!म_भेद(token, sup_ext[j].extensionName)) {
                     found = 1;
-                    break;
+                    अवरोध;
                 }
             }
-            if (found) {
+            अगर (found) {
                 av_log(ctx, AV_LOG_VERBOSE, "Using %s extension \"%s\"\n", mod, token);
                 ADD_VAL_TO_LIST(extension_names, extensions_found, token);
-            } else {
+            } अन्यथा {
                 av_log(ctx, AV_LOG_WARNING, "%s extension \"%s\" not found, excluding.\n",
                        mod, token);
             }
-            token = av_strtok(NULL, "+", &save);
+            token = av_strtok(शून्य, "+", &save);
         }
     }
 
     *dst = extension_names;
-    *num = extensions_found;
+    *अंक = extensions_found;
 
     av_free(user_exts_str);
     av_free(sup_ext);
-    return 0;
+    वापस 0;
 
 fail:
     RELEASE_PROPS(extension_names, extensions_found);
     av_free(user_exts_str);
     av_free(sup_ext);
-    return err;
+    वापस err;
 }
 
-static int check_layers(AVHWDeviceContext *ctx, AVDictionary *opts,
-                        const char * const **dst, uint32_t *num,
-                        enum FFVulkanDebugMode *debug_mode)
+अटल पूर्णांक check_layers(AVHWDeviceContext *ctx, AVDictionary *opts,
+                        स्थिर अक्षर * स्थिर **dst, uint32_t *अंक,
+                        क्रमागत FFVulkanDebugMode *debug_mode)
 {
-    int err = 0;
+    पूर्णांक err = 0;
     VulkanDevicePriv *priv = ctx->hwctx;
     FFVulkanFunctions *vk = &priv->vkctx.vkfn;
 
-    static const char layer_standard_validation[] = { "VK_LAYER_KHRONOS_validation" };
-    int layer_standard_validation_found = 0;
+    अटल स्थिर अक्षर layer_standard_validation[] = { "VK_LAYER_KHRONOS_validation" };
+    पूर्णांक layer_standard_validation_found = 0;
 
-    uint32_t sup_layer_count;
+    uint32_t sup_layer_गिनती;
     VkLayerProperties *sup_layers;
 
-    AVDictionaryEntry *user_layers = av_dict_get(opts, "layers", NULL, 0);
-    char *user_layers_str = NULL;
-    char *save, *token;
+    AVDictionaryEntry *user_layers = av_dict_get(opts, "layers", शून्य, 0);
+    अक्षर *user_layers_str = शून्य;
+    अक्षर *save, *token;
 
-    const char **enabled_layers = NULL;
-    uint32_t enabled_layers_count = 0;
+    स्थिर अक्षर **enabled_layers = शून्य;
+    uint32_t enabled_layers_गिनती = 0;
 
-    AVDictionaryEntry *debug_opt = av_dict_get(opts, "debug", NULL, 0);
-    enum FFVulkanDebugMode mode;
+    AVDictionaryEntry *debug_opt = av_dict_get(opts, "debug", शून्य, 0);
+    क्रमागत FFVulkanDebugMode mode;
 
     *debug_mode = mode = FF_VULKAN_DEBUG_NONE;
 
     /* Get a list of all layers */
-    vk->EnumerateInstanceLayerProperties(&sup_layer_count, NULL);
-    sup_layers = av_malloc_array(sup_layer_count, sizeof(VkLayerProperties));
-    if (!sup_layers)
-        return AVERROR(ENOMEM);
-    vk->EnumerateInstanceLayerProperties(&sup_layer_count, sup_layers);
+    vk->EnumerateInstanceLayerProperties(&sup_layer_गिनती, शून्य);
+    sup_layers = av_malloc_array(sup_layer_गिनती, माप(VkLayerProperties));
+    अगर (!sup_layers)
+        वापस AVERROR(ENOMEM);
+    vk->EnumerateInstanceLayerProperties(&sup_layer_गिनती, sup_layers);
 
     av_log(ctx, AV_LOG_VERBOSE, "Supported layers:\n");
-    for (int i = 0; i < sup_layer_count; i++)
+    क्रम (पूर्णांक i = 0; i < sup_layer_गिनती; i++)
         av_log(ctx, AV_LOG_VERBOSE, "\t%s\n", sup_layers[i].layerName);
 
     /* If no user layers or debug layers are given, return */
-    if (!debug_opt && !user_layers)
-        goto end;
+    अगर (!debug_opt && !user_layers)
+        जाओ end;
 
     /* Check for any properly supported validation layer */
-    if (debug_opt) {
-        if (!strcmp(debug_opt->value, "printf")) {
+    अगर (debug_opt) {
+        अगर (!म_भेद(debug_opt->मूल्य, "printf")) {
             mode = FF_VULKAN_DEBUG_PRINTF;
-        } else if (!strcmp(debug_opt->value, "validate")) {
+        } अन्यथा अगर (!म_भेद(debug_opt->मूल्य, "validate")) {
             mode = FF_VULKAN_DEBUG_VALIDATE;
-        } else if (!strcmp(debug_opt->value, "practices")) {
+        } अन्यथा अगर (!म_भेद(debug_opt->मूल्य, "practices")) {
             mode = FF_VULKAN_DEBUG_PRACTICES;
-        } else {
-            char *end_ptr = NULL;
-            int idx = strtol(debug_opt->value, &end_ptr, 10);
-            if (end_ptr == debug_opt->value || end_ptr[0] != '\0' ||
+        } अन्यथा {
+            अक्षर *end_ptr = शून्य;
+            पूर्णांक idx = म_से_दीर्घ(debug_opt->मूल्य, &end_ptr, 10);
+            अगर (end_ptr == debug_opt->मूल्य || end_ptr[0] != '\0' ||
                 idx < 0 || idx >= FF_VULKAN_DEBUG_NB) {
                 av_log(ctx, AV_LOG_ERROR, "Invalid debugging mode \"%s\"\n",
-                       debug_opt->value);
+                       debug_opt->मूल्य);
                 err = AVERROR(EINVAL);
-                goto end;
+                जाओ end;
             }
             mode = idx;
         }
     }
 
     /* If mode is VALIDATE or PRINTF, try to find the standard validation layer extension */
-    if ((mode == FF_VULKAN_DEBUG_VALIDATE) ||
+    अगर ((mode == FF_VULKAN_DEBUG_VALIDATE) ||
         (mode == FF_VULKAN_DEBUG_PRINTF) ||
         (mode == FF_VULKAN_DEBUG_PRACTICES)) {
-        for (int i = 0; i < sup_layer_count; i++) {
-            if (!strcmp(layer_standard_validation, sup_layers[i].layerName)) {
+        क्रम (पूर्णांक i = 0; i < sup_layer_गिनती; i++) {
+            अगर (!म_भेद(layer_standard_validation, sup_layers[i].layerName)) {
                 av_log(ctx, AV_LOG_VERBOSE, "Standard validation layer %s is enabled\n",
                        layer_standard_validation);
-                ADD_VAL_TO_LIST(enabled_layers, enabled_layers_count, layer_standard_validation);
+                ADD_VAL_TO_LIST(enabled_layers, enabled_layers_गिनती, layer_standard_validation);
                 *debug_mode = mode;
                 layer_standard_validation_found = 1;
-                break;
+                अवरोध;
             }
         }
-        if (!layer_standard_validation_found) {
+        अगर (!layer_standard_validation_found) {
             av_log(ctx, AV_LOG_ERROR,
                    "Validation Layer \"%s\" not supported\n", layer_standard_validation);
             err = AVERROR(ENOTSUP);
-            goto end;
+            जाओ end;
         }
     }
 
     /* Process any custom layers enabled */
-    if (user_layers) {
-        int found;
+    अगर (user_layers) {
+        पूर्णांक found;
 
-        user_layers_str = av_strdup(user_layers->value);
-        if (!user_layers_str) {
+        user_layers_str = av_strdup(user_layers->मूल्य);
+        अगर (!user_layers_str) {
             err = AVERROR(ENOMEM);
-            goto fail;
+            जाओ fail;
         }
 
         token = av_strtok(user_layers_str, "+", &save);
-        while (token) {
+        जबतक (token) {
             found = 0;
 
             /* If debug=1/2 was specified as an option, skip this layer */
-            if (!strcmp(layer_standard_validation, token) && layer_standard_validation_found) {
-                token = av_strtok(NULL, "+", &save);
-                break;
+            अगर (!म_भेद(layer_standard_validation, token) && layer_standard_validation_found) {
+                token = av_strtok(शून्य, "+", &save);
+                अवरोध;
             }
 
             /* Try to find the layer in the list of supported layers */
-            for (int j = 0; j < sup_layer_count; j++) {
-                if (!strcmp(token, sup_layers[j].layerName)) {
+            क्रम (पूर्णांक j = 0; j < sup_layer_गिनती; j++) {
+                अगर (!म_भेद(token, sup_layers[j].layerName)) {
                     found = 1;
-                    break;
+                    अवरोध;
                 }
             }
 
-            if (found) {
+            अगर (found) {
                 av_log(ctx, AV_LOG_VERBOSE, "Using layer: %s\n", token);
-                ADD_VAL_TO_LIST(enabled_layers, enabled_layers_count, token);
+                ADD_VAL_TO_LIST(enabled_layers, enabled_layers_गिनती, token);
 
                 /* If debug was not set as an option, force it */
-                if (!strcmp(layer_standard_validation, token))
+                अगर (!म_भेद(layer_standard_validation, token))
                     *debug_mode = FF_VULKAN_DEBUG_VALIDATE;
-            } else {
+            } अन्यथा {
                 av_log(ctx, AV_LOG_ERROR,
                        "Layer \"%s\" not supported\n", token);
                 err = AVERROR(EINVAL);
-                goto end;
+                जाओ end;
             }
 
-            token = av_strtok(NULL, "+", &save);
+            token = av_strtok(शून्य, "+", &save);
         }
     }
 
@@ -1248,22 +1248,22 @@ end:
     av_free(sup_layers);
     av_free(user_layers_str);
 
-    if (err < 0) {
-        RELEASE_PROPS(enabled_layers, enabled_layers_count);
-    } else {
+    अगर (err < 0) {
+        RELEASE_PROPS(enabled_layers, enabled_layers_गिनती);
+    } अन्यथा {
         *dst = enabled_layers;
-        *num = enabled_layers_count;
+        *अंक = enabled_layers_गिनती;
     }
 
-    return err;
+    वापस err;
 }
 
 /* Creates a VkInstance */
-static int create_instance(AVHWDeviceContext *ctx, AVDictionary *opts,
-                           enum FFVulkanDebugMode *debug_mode)
+अटल पूर्णांक create_instance(AVHWDeviceContext *ctx, AVDictionary *opts,
+                           क्रमागत FFVulkanDebugMode *debug_mode)
 {
-    int err = 0;
-    VkResult ret;
+    पूर्णांक err = 0;
+    Vk_परिणाम ret;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
@@ -1287,89 +1287,89 @@ static int create_instance(AVHWDeviceContext *ctx, AVDictionary *opts,
         .pApplicationInfo = &application_info,
     };
 
-    if (!hwctx->get_proc_addr) {
+    अगर (!hwctx->get_proc_addr) {
         err = load_libvulkan(ctx);
-        if (err < 0)
-            return err;
+        अगर (err < 0)
+            वापस err;
     }
 
     err = ff_vk_load_functions(ctx, vk, p->vkctx.extensions, 0, 0);
-    if (err < 0) {
+    अगर (err < 0) {
         av_log(ctx, AV_LOG_ERROR, "Unable to load instance enumeration functions!\n");
-        return err;
+        वापस err;
     }
 
     err = check_layers(ctx, opts, &inst_props.ppEnabledLayerNames,
-                       &inst_props.enabledLayerCount, debug_mode);
-    if (err)
-        goto fail;
+                       &inst_props.enabled_Layer_गिनती, debug_mode);
+    अगर (err)
+        जाओ fail;
 
     /* Check for present/missing extensions */
     err = check_extensions(ctx, 0, opts, &inst_props.ppEnabledExtensionNames,
-                           &inst_props.enabledExtensionCount, *debug_mode);
+                           &inst_props.enabled_Extension_गिनती, *debug_mode);
     hwctx->enabled_inst_extensions = inst_props.ppEnabledExtensionNames;
-    hwctx->nb_enabled_inst_extensions = inst_props.enabledExtensionCount;
-    if (err < 0)
-        goto fail;
+    hwctx->nb_enabled_inst_extensions = inst_props.enabled_Extension_गिनती;
+    अगर (err < 0)
+        जाओ fail;
 
     /* Enable debug features if needed */
-    if (*debug_mode == FF_VULKAN_DEBUG_VALIDATE) {
-        static const VkValidationFeatureEnableEXT feat_list_validate[] = {
+    अगर (*debug_mode == FF_VULKAN_DEBUG_VALIDATE) {
+        अटल स्थिर VkValidationFeatureEnableEXT feat_list_validate[] = {
             VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT,
             VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT,
             VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT,
         };
         validation_features.pEnabledValidationFeatures = feat_list_validate;
-        validation_features.enabledValidationFeatureCount = FF_ARRAY_ELEMS(feat_list_validate);
-        inst_props.pNext = &validation_features;
-    } else if (*debug_mode == FF_VULKAN_DEBUG_PRINTF) {
-        static const VkValidationFeatureEnableEXT feat_list_debug[] = {
+        validation_features.enabled_Validation_Feature_गिनती = FF_ARRAY_ELEMS(feat_list_validate);
+        inst_props.p_अग्र = &validation_features;
+    } अन्यथा अगर (*debug_mode == FF_VULKAN_DEBUG_PRINTF) {
+        अटल स्थिर VkValidationFeatureEnableEXT feat_list_debug[] = {
             VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT,
             VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT,
             VK_VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT,
         };
         validation_features.pEnabledValidationFeatures = feat_list_debug;
-        validation_features.enabledValidationFeatureCount = FF_ARRAY_ELEMS(feat_list_debug);
-        inst_props.pNext = &validation_features;
-    } else if (*debug_mode == FF_VULKAN_DEBUG_PRACTICES) {
-        static const VkValidationFeatureEnableEXT feat_list_practices[] = {
+        validation_features.enabled_Validation_Feature_गिनती = FF_ARRAY_ELEMS(feat_list_debug);
+        inst_props.p_अग्र = &validation_features;
+    } अन्यथा अगर (*debug_mode == FF_VULKAN_DEBUG_PRACTICES) {
+        अटल स्थिर VkValidationFeatureEnableEXT feat_list_practices[] = {
             VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT,
             VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT,
         };
         validation_features.pEnabledValidationFeatures = feat_list_practices;
-        validation_features.enabledValidationFeatureCount = FF_ARRAY_ELEMS(feat_list_practices);
-        inst_props.pNext = &validation_features;
+        validation_features.enabled_Validation_Feature_गिनती = FF_ARRAY_ELEMS(feat_list_practices);
+        inst_props.p_अग्र = &validation_features;
     }
 
-#ifdef __APPLE__
-    for (int i = 0; i < inst_props.enabledExtensionCount; i++) {
-        if (!strcmp(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
+#अगर_घोषित __APPLE__
+    क्रम (पूर्णांक i = 0; i < inst_props.enabled_Extension_गिनती; i++) {
+        अगर (!म_भेद(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
                     inst_props.ppEnabledExtensionNames[i])) {
             inst_props.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
-            break;
+            अवरोध;
         }
     }
-#endif
+#पूर्ण_अगर
 
     /* Try to create the instance */
     ret = vk->CreateInstance(&inst_props, hwctx->alloc, &hwctx->inst);
 
     /* Check for errors */
-    if (ret != VK_SUCCESS) {
+    अगर (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Instance creation failure: %s\n",
                ff_vk_ret2str(ret));
         err = AVERROR_EXTERNAL;
-        goto fail;
+        जाओ fail;
     }
 
     err = ff_vk_load_functions(ctx, vk, p->vkctx.extensions, 1, 0);
-    if (err < 0) {
+    अगर (err < 0) {
         av_log(ctx, AV_LOG_ERROR, "Unable to load instance functions!\n");
-        goto fail;
+        जाओ fail;
     }
 
     /* Setup debugging callback if needed */
-    if ((*debug_mode == FF_VULKAN_DEBUG_VALIDATE) ||
+    अगर ((*debug_mode == FF_VULKAN_DEBUG_VALIDATE) ||
         (*debug_mode == FF_VULKAN_DEBUG_PRINTF) ||
         (*debug_mode == FF_VULKAN_DEBUG_PRACTICES)) {
         VkDebugUtilsMessengerCreateInfoEXT dbg = {
@@ -1382,7 +1382,7 @@ static int create_instance(AVHWDeviceContext *ctx, AVDictionary *opts,
                            VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
                            VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
             .pfnUserCallback = vk_dbg_callback,
-            .pUserData = ctx,
+            .p_User_तथ्य = ctx,
         };
 
         vk->CreateDebugUtilsMessengerEXT(hwctx->inst, &dbg,
@@ -1392,103 +1392,103 @@ static int create_instance(AVHWDeviceContext *ctx, AVDictionary *opts,
     err = 0;
 
 fail:
-    RELEASE_PROPS(inst_props.ppEnabledLayerNames, inst_props.enabledLayerCount);
-    return err;
+    RELEASE_PROPS(inst_props.ppEnabledLayerNames, inst_props.enabled_Layer_गिनती);
+    वापस err;
 }
 
-typedef struct VulkanDeviceSelection {
-    uint8_t uuid[VK_UUID_SIZE]; /* Will use this first unless !has_uuid */
-    int has_uuid;
+प्रकार काष्ठा VulkanDeviceSelection {
+    uint8_t uuid[VK_UUID_आकार]; /* Will use this first unless !has_uuid */
+    पूर्णांक has_uuid;
     uint32_t drm_major; /* Will use this second unless !has_drm */
     uint32_t drm_minor; /* Will use this second unless !has_drm */
     uint32_t has_drm; /* has drm node info */
-    const char *name; /* Will use this third unless NULL */
+    स्थिर अक्षर *name; /* Will use this third unless NULL */
     uint32_t pci_device; /* Will use this fourth unless 0x0 */
     uint32_t vendor_id; /* Last resort to find something deterministic */
-    int index; /* Finally fall back to index */
+    पूर्णांक सूचकांक; /* Finally fall back to index */
 } VulkanDeviceSelection;
 
-static const char *vk_dev_type(enum VkPhysicalDeviceType type)
+अटल स्थिर अक्षर *vk_dev_type(क्रमागत VkPhysicalDeviceType type)
 {
-    switch (type) {
-    case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: return "integrated";
-    case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:   return "discrete";
-    case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:    return "virtual";
-    case VK_PHYSICAL_DEVICE_TYPE_CPU:            return "software";
-    default:                                     return "unknown";
+    चयन (type) {
+    हाल VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: वापस "integrated";
+    हाल VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:   वापस "discrete";
+    हाल VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:    वापस "virtual";
+    हाल VK_PHYSICAL_DEVICE_TYPE_CPU:            वापस "software";
+    शेष:                                     वापस "unknown";
     }
 }
 
 /* Finds a device */
-static int find_device(AVHWDeviceContext *ctx, VulkanDeviceSelection *select)
+अटल पूर्णांक find_device(AVHWDeviceContext *ctx, VulkanDeviceSelection *select)
 {
-    int err = 0, choice = -1;
-    uint32_t num;
-    VkResult ret;
+    पूर्णांक err = 0, choice = -1;
+    uint32_t अंक;
+    Vk_परिणाम ret;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VkPhysicalDevice *devices = NULL;
-    VkPhysicalDeviceIDProperties *idp = NULL;
-    VkPhysicalDeviceProperties2 *prop = NULL;
-    VkPhysicalDeviceDriverProperties *driver_prop = NULL;
-    VkPhysicalDeviceDrmPropertiesEXT *drm_prop = NULL;
+    VkPhysicalDevice *devices = शून्य;
+    VkPhysicalDeviceIDProperties *idp = शून्य;
+    VkPhysicalDeviceProperties2 *prop = शून्य;
+    VkPhysicalDeviceDriverProperties *driver_prop = शून्य;
+    VkPhysicalDeviceDrmPropertiesEXT *drm_prop = शून्य;
 
-    ret = vk->EnumeratePhysicalDevices(hwctx->inst, &num, NULL);
-    if (ret != VK_SUCCESS || !num) {
+    ret = vk->EnumeratePhysicalDevices(hwctx->inst, &अंक, शून्य);
+    अगर (ret != VK_SUCCESS || !अंक) {
         av_log(ctx, AV_LOG_ERROR, "No devices found: %s!\n", ff_vk_ret2str(ret));
-        return AVERROR(ENODEV);
+        वापस AVERROR(ENODEV);
     }
 
-    devices = av_malloc_array(num, sizeof(VkPhysicalDevice));
-    if (!devices)
-        return AVERROR(ENOMEM);
+    devices = av_malloc_array(अंक, माप(VkPhysicalDevice));
+    अगर (!devices)
+        वापस AVERROR(ENOMEM);
 
-    ret = vk->EnumeratePhysicalDevices(hwctx->inst, &num, devices);
-    if (ret != VK_SUCCESS) {
+    ret = vk->EnumeratePhysicalDevices(hwctx->inst, &अंक, devices);
+    अगर (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Failed enumerating devices: %s\n",
                ff_vk_ret2str(ret));
         err = AVERROR(ENODEV);
-        goto end;
+        जाओ end;
     }
 
-    prop = av_calloc(num, sizeof(*prop));
-    if (!prop) {
+    prop = av_calloc(अंक, माप(*prop));
+    अगर (!prop) {
         err = AVERROR(ENOMEM);
-        goto end;
+        जाओ end;
     }
 
-    idp = av_calloc(num, sizeof(*idp));
-    if (!idp) {
+    idp = av_calloc(अंक, माप(*idp));
+    अगर (!idp) {
         err = AVERROR(ENOMEM);
-        goto end;
+        जाओ end;
     }
 
-    driver_prop = av_calloc(num, sizeof(*driver_prop));
-    if (!driver_prop) {
+    driver_prop = av_calloc(अंक, माप(*driver_prop));
+    अगर (!driver_prop) {
         err = AVERROR(ENOMEM);
-        goto end;
+        जाओ end;
     }
 
-    if (p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) {
-        drm_prop = av_calloc(num, sizeof(*drm_prop));
-        if (!drm_prop) {
+    अगर (p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) {
+        drm_prop = av_calloc(अंक, माप(*drm_prop));
+        अगर (!drm_prop) {
             err = AVERROR(ENOMEM);
-            goto end;
+            जाओ end;
         }
     }
 
     av_log(ctx, AV_LOG_VERBOSE, "GPU listing:\n");
-    for (int i = 0; i < num; i++) {
-        if (p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) {
+    क्रम (पूर्णांक i = 0; i < अंक; i++) {
+        अगर (p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) {
             drm_prop[i].sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT;
-            driver_prop[i].pNext = &drm_prop[i];
+            driver_prop[i].p_अग्र = &drm_prop[i];
         }
         driver_prop[i].sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
-        idp[i].pNext = &driver_prop[i];
+        idp[i].p_अग्र = &driver_prop[i];
         idp[i].sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES;
         prop[i].sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-        prop[i].pNext = &idp[i];
+        prop[i].p_अग्र = &idp[i];
 
         vk->GetPhysicalDeviceProperties2(devices[i], &prop[i]);
         av_log(ctx, AV_LOG_VERBOSE, "    %d: %s (%s) (0x%x)\n", i,
@@ -1497,88 +1497,88 @@ static int find_device(AVHWDeviceContext *ctx, VulkanDeviceSelection *select)
                prop[i].properties.deviceID);
     }
 
-    if (select->has_uuid) {
-        for (int i = 0; i < num; i++) {
-            if (!memcmp(idp[i].deviceUUID, select->uuid, VK_UUID_SIZE)) {
+    अगर (select->has_uuid) {
+        क्रम (पूर्णांक i = 0; i < अंक; i++) {
+            अगर (!स_भेद(idp[i].deviceUUID, select->uuid, VK_UUID_आकार)) {
                 choice = i;
-                goto end;
+                जाओ end;
              }
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device by given UUID!\n");
         err = AVERROR(ENODEV);
-        goto end;
-    } else if ((p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) && select->has_drm) {
-        for (int i = 0; i < num; i++) {
-            if ((select->drm_major == drm_prop[i].primaryMajor &&
+        जाओ end;
+    } अन्यथा अगर ((p->vkctx.extensions & FF_VK_EXT_DEVICE_DRM) && select->has_drm) {
+        क्रम (पूर्णांक i = 0; i < अंक; i++) {
+            अगर ((select->drm_major == drm_prop[i].primaryMajor &&
                  select->drm_minor == drm_prop[i].primaryMinor) ||
                 (select->drm_major == drm_prop[i].renderMajor &&
                  select->drm_minor == drm_prop[i].renderMinor)) {
                 choice = i;
-                goto end;
+                जाओ end;
              }
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device by given DRM node numbers %i:%i!\n",
                select->drm_major, select->drm_minor);
         err = AVERROR(ENODEV);
-        goto end;
-    } else if (select->name) {
+        जाओ end;
+    } अन्यथा अगर (select->name) {
         av_log(ctx, AV_LOG_VERBOSE, "Requested device: %s\n", select->name);
-        for (int i = 0; i < num; i++) {
-            if (strstr(prop[i].properties.deviceName, select->name)) {
+        क्रम (पूर्णांक i = 0; i < अंक; i++) {
+            अगर (म_माला(prop[i].properties.deviceName, select->name)) {
                 choice = i;
-                goto end;
+                जाओ end;
              }
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device \"%s\"!\n",
                select->name);
         err = AVERROR(ENODEV);
-        goto end;
-    } else if (select->pci_device) {
+        जाओ end;
+    } अन्यथा अगर (select->pci_device) {
         av_log(ctx, AV_LOG_VERBOSE, "Requested device: 0x%x\n", select->pci_device);
-        for (int i = 0; i < num; i++) {
-            if (select->pci_device == prop[i].properties.deviceID) {
+        क्रम (पूर्णांक i = 0; i < अंक; i++) {
+            अगर (select->pci_device == prop[i].properties.deviceID) {
                 choice = i;
-                goto end;
+                जाओ end;
             }
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device with PCI ID 0x%x!\n",
                select->pci_device);
         err = AVERROR(EINVAL);
-        goto end;
-    } else if (select->vendor_id) {
+        जाओ end;
+    } अन्यथा अगर (select->vendor_id) {
         av_log(ctx, AV_LOG_VERBOSE, "Requested vendor: 0x%x\n", select->vendor_id);
-        for (int i = 0; i < num; i++) {
-            if (select->vendor_id == prop[i].properties.vendorID) {
+        क्रम (पूर्णांक i = 0; i < अंक; i++) {
+            अगर (select->vendor_id == prop[i].properties.vendorID) {
                 choice = i;
-                goto end;
+                जाओ end;
             }
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device with Vendor ID 0x%x!\n",
                select->vendor_id);
         err = AVERROR(ENODEV);
-        goto end;
-    } else {
-        if (select->index < num) {
-            choice = select->index;
-            goto end;
+        जाओ end;
+    } अन्यथा {
+        अगर (select->सूचकांक < अंक) {
+            choice = select->सूचकांक;
+            जाओ end;
         }
         av_log(ctx, AV_LOG_ERROR, "Unable to find device with index %i!\n",
-               select->index);
+               select->सूचकांक);
         err = AVERROR(ENODEV);
-        goto end;
+        जाओ end;
     }
 
 end:
-    if (choice > -1) {
+    अगर (choice > -1) {
         av_log(ctx, AV_LOG_VERBOSE, "Device %d selected: %s (%s) (0x%x)\n",
                choice, prop[choice].properties.deviceName,
                vk_dev_type(prop[choice].properties.deviceType),
                prop[choice].properties.deviceID);
         hwctx->phys_dev = devices[choice];
         p->props = prop[choice];
-        p->props.pNext = NULL;
+        p->props.p_अग्र = शून्य;
         p->dprops = driver_prop[choice];
-        p->dprops.pNext = NULL;
+        p->dprops.p_अग्र = शून्य;
     }
 
     av_free(devices);
@@ -1587,109 +1587,109 @@ end:
     av_free(drm_prop);
     av_free(driver_prop);
 
-    return err;
+    वापस err;
 }
 
 /* Picks the least used qf with the fewest unneeded flags, or -1 if none found */
-static inline int pick_queue_family(VkQueueFamilyProperties2 *qf, uint32_t num_qf,
+अटल अंतरभूत पूर्णांक pick_queue_family(VkQueueFamilyProperties2 *qf, uint32_t अंक_qf,
                                     VkQueueFlagBits flags)
 {
-    int index = -1;
+    पूर्णांक सूचकांक = -1;
     uint32_t min_score = UINT32_MAX;
 
-    for (int i = 0; i < num_qf; i++) {
+    क्रम (पूर्णांक i = 0; i < अंक_qf; i++) {
         VkQueueFlagBits qflags = qf[i].queueFamilyProperties.queueFlags;
 
         /* Per the spec, reporting transfer caps is optional for these 2 types */
-        if ((flags & VK_QUEUE_TRANSFER_BIT) &&
+        अगर ((flags & VK_QUEUE_TRANSFER_BIT) &&
             (qflags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT)))
             qflags |= VK_QUEUE_TRANSFER_BIT;
 
-        if (qflags & flags) {
+        अगर (qflags & flags) {
             uint32_t score = av_popcount(qflags) + qf[i].queueFamilyProperties.timestampValidBits;
-            if (score < min_score) {
-                index = i;
+            अगर (score < min_score) {
+                सूचकांक = i;
                 min_score = score;
             }
         }
     }
 
-    if (index > -1)
-        qf[index].queueFamilyProperties.timestampValidBits++;
+    अगर (सूचकांक > -1)
+        qf[सूचकांक].queueFamilyProperties.timestampValidBits++;
 
-    return index;
+    वापस सूचकांक;
 }
 
-static inline int pick_video_queue_family(VkQueueFamilyProperties2 *qf,
-                                          VkQueueFamilyVideoPropertiesKHR *qf_vid, uint32_t num_qf,
+अटल अंतरभूत पूर्णांक pick_video_queue_family(VkQueueFamilyProperties2 *qf,
+                                          VkQueueFamilyVideoPropertiesKHR *qf_vid, uint32_t अंक_qf,
                                           VkVideoCodecOperationFlagsKHR flags)
 {
-    int index = -1;
+    पूर्णांक सूचकांक = -1;
     uint32_t min_score = UINT32_MAX;
 
-    for (int i = 0; i < num_qf; i++) {
-        const VkQueueFlags qflags = qf[i].queueFamilyProperties.queueFlags;
-        const VkVideoCodecOperationFlagsKHR vflags = qf_vid[i].videoCodecOperations;
+    क्रम (पूर्णांक i = 0; i < अंक_qf; i++) {
+        स्थिर VkQueueFlags qflags = qf[i].queueFamilyProperties.queueFlags;
+        स्थिर VkVideoCodecOperationFlagsKHR vflags = qf_vid[i].videoCodecOperations;
 
-        if (!(qflags & (VK_QUEUE_VIDEO_ENCODE_BIT_KHR | VK_QUEUE_VIDEO_DECODE_BIT_KHR)))
-            continue;
+        अगर (!(qflags & (VK_QUEUE_VIDEO_ENCODE_BIT_KHR | VK_QUEUE_VIDEO_DECODE_BIT_KHR)))
+            जारी;
 
-        if (vflags & flags) {
+        अगर (vflags & flags) {
             uint32_t score = av_popcount(vflags) + qf[i].queueFamilyProperties.timestampValidBits;
-            if (score < min_score) {
-                index = i;
+            अगर (score < min_score) {
+                सूचकांक = i;
                 min_score = score;
             }
         }
     }
 
-    if (index > -1)
-        qf[index].queueFamilyProperties.timestampValidBits++;
+    अगर (सूचकांक > -1)
+        qf[सूचकांक].queueFamilyProperties.timestampValidBits++;
 
-    return index;
+    वापस सूचकांक;
 }
 
-static int setup_queue_families(AVHWDeviceContext *ctx, VkDeviceCreateInfo *cd)
+अटल पूर्णांक setup_queue_families(AVHWDeviceContext *ctx, VkDeviceCreateInfo *cd)
 {
-    uint32_t num;
+    uint32_t अंक;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    VkQueueFamilyProperties2 *qf = NULL;
-    VkQueueFamilyVideoPropertiesKHR *qf_vid = NULL;
+    VkQueueFamilyProperties2 *qf = शून्य;
+    VkQueueFamilyVideoPropertiesKHR *qf_vid = शून्य;
 
     /* First get the number of queue families */
-    vk->GetPhysicalDeviceQueueFamilyProperties(hwctx->phys_dev, &num, NULL);
-    if (!num) {
+    vk->GetPhysicalDeviceQueueFamilyProperties(hwctx->phys_dev, &अंक, शून्य);
+    अगर (!अंक) {
         av_log(ctx, AV_LOG_ERROR, "Failed to get queues!\n");
-        return AVERROR_EXTERNAL;
+        वापस AVERROR_EXTERNAL;
     }
 
     /* Then allocate memory */
-    qf = av_malloc_array(num, sizeof(VkQueueFamilyProperties2));
-    if (!qf)
-        return AVERROR(ENOMEM);
+    qf = av_malloc_array(अंक, माप(VkQueueFamilyProperties2));
+    अगर (!qf)
+        वापस AVERROR(ENOMEM);
 
-    qf_vid = av_malloc_array(num, sizeof(VkQueueFamilyVideoPropertiesKHR));
-    if (!qf_vid)
-        return AVERROR(ENOMEM);
+    qf_vid = av_malloc_array(अंक, माप(VkQueueFamilyVideoPropertiesKHR));
+    अगर (!qf_vid)
+        वापस AVERROR(ENOMEM);
 
-    for (uint32_t i = 0; i < num; i++) {
+    क्रम (uint32_t i = 0; i < अंक; i++) {
         qf_vid[i] = (VkQueueFamilyVideoPropertiesKHR) {
             .sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_VIDEO_PROPERTIES_KHR,
         };
         qf[i] = (VkQueueFamilyProperties2) {
             .sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2,
-            .pNext = p->vkctx.extensions & FF_VK_EXT_VIDEO_QUEUE ? &qf_vid[i] : NULL,
+            .p_अग्र = p->vkctx.extensions & FF_VK_EXT_VIDEO_QUEUE ? &qf_vid[i] : शून्य,
         };
     }
 
     /* Finally retrieve the queue families */
-    vk->GetPhysicalDeviceQueueFamilyProperties2(hwctx->phys_dev, &num, qf);
+    vk->GetPhysicalDeviceQueueFamilyProperties2(hwctx->phys_dev, &अंक, qf);
 
     av_log(ctx, AV_LOG_VERBOSE, "Queue families:\n");
-    for (int i = 0; i < num; i++) {
+    क्रम (पूर्णांक i = 0; i < अंक; i++) {
         av_log(ctx, AV_LOG_VERBOSE, "    %i:%s%s%s%s%s%s%s%s (queues: %i)\n", i,
                ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_GRAPHICS_BIT) ? " graphics" : "",
                ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_COMPUTE_BIT) ? " compute" : "",
@@ -1699,7 +1699,7 @@ static int setup_queue_families(AVHWDeviceContext *ctx, VkDeviceCreateInfo *cd)
                ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_SPARSE_BINDING_BIT) ? " sparse" : "",
                ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_OPTICAL_FLOW_BIT_NV) ? " optical_flow" : "",
                ((qf[i].queueFamilyProperties.queueFlags) & VK_QUEUE_PROTECTED_BIT) ? " protected" : "",
-               qf[i].queueFamilyProperties.queueCount);
+               qf[i].queueFamilyProperties.queue_गिनती);
 
         /* We use this field to keep a score of how many times we've used that
          * queue family in order to make better choices. */
@@ -1708,49 +1708,49 @@ static int setup_queue_families(AVHWDeviceContext *ctx, VkDeviceCreateInfo *cd)
 
     hwctx->nb_qf = 0;
     hwctx->queue_flags = 0;
-#ifdef VK_KHR_internally_synchronized_queues
-    if (p->vkctx.extensions & FF_VK_EXT_INTERNAL_QUEUE_SYNC)
+#अगर_घोषित VK_KHR_internally_synchronized_queues
+    अगर (p->vkctx.extensions & FF_VK_EXT_INTERNAL_QUEUE_SYNC)
         hwctx->queue_flags |= VK_DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR;
-#endif
+#पूर्ण_अगर
 
     /* Pick each queue family to use. */
-#define PICK_QF(type, vid_op)                                            \
-    do {                                                                 \
+#घोषणा PICK_QF(type, vid_op)                                            \
+    करो {                                                                 \
         uint32_t i;                                                      \
         uint32_t idx;                                                    \
                                                                          \
-        if (vid_op)                                                      \
-            idx = pick_video_queue_family(qf, qf_vid, num, vid_op);      \
-        else                                                             \
-            idx = pick_queue_family(qf, num, type);                      \
+        अगर (vid_op)                                                      \
+            idx = pick_video_queue_family(qf, qf_vid, अंक, vid_op);      \
+        अन्यथा                                                             \
+            idx = pick_queue_family(qf, अंक, type);                      \
                                                                          \
-        if (idx == -1)                                                   \
-            continue;                                                    \
+        अगर (idx == -1)                                                   \
+            जारी;                                                    \
                                                                          \
-        for (i = 0; i < hwctx->nb_qf; i++) {                             \
-            if (hwctx->qf[i].idx == idx) {                               \
+        क्रम (i = 0; i < hwctx->nb_qf; i++) {                             \
+            अगर (hwctx->qf[i].idx == idx) {                               \
                 hwctx->qf[i].flags |= type;                              \
                 hwctx->qf[i].video_caps |= vid_op;                       \
-                break;                                                   \
+                अवरोध;                                                   \
             }                                                            \
         }                                                                \
-        if (i == hwctx->nb_qf) {                                         \
+        अगर (i == hwctx->nb_qf) {                                         \
             hwctx->qf[i].idx = idx;                                      \
-            hwctx->qf[i].num = qf[idx].queueFamilyProperties.queueCount; \
-            if (p->limit_queues ||                                       \
+            hwctx->qf[i].अंक = qf[idx].queueFamilyProperties.queue_गिनती; \
+            अगर (p->limit_queues ||                                       \
                 p->dprops.driverID == VK_DRIVER_ID_NVIDIA_PROPRIETARY) { \
-                int max = p->limit_queues;                               \
-                if (type == VK_QUEUE_GRAPHICS_BIT)                       \
-                    hwctx->qf[i].num = FFMIN(hwctx->qf[i].num,           \
+                पूर्णांक max = p->limit_queues;                               \
+                अगर (type == VK_QUEUE_GRAPHICS_BIT)                       \
+                    hwctx->qf[i].अंक = FFMIN(hwctx->qf[i].अंक,           \
                                              max ? max : 1);             \
-                else if (max)                                            \
-                    hwctx->qf[i].num = FFMIN(hwctx->qf[i].num, max);     \
+                अन्यथा अगर (max)                                            \
+                    hwctx->qf[i].अंक = FFMIN(hwctx->qf[i].अंक, max);     \
             }                                                            \
             hwctx->qf[i].flags = type;                                   \
             hwctx->qf[i].video_caps = vid_op;                            \
             hwctx->nb_qf++;                                              \
         }                                                                \
-    } while (0)
+    } जबतक (0)
 
     PICK_QF(VK_QUEUE_GRAPHICS_BIT, VK_VIDEO_CODEC_OPERATION_NONE_KHR);
     PICK_QF(VK_QUEUE_COMPUTE_BIT, VK_VIDEO_CODEC_OPERATION_NONE_KHR);
@@ -1762,63 +1762,63 @@ static int setup_queue_families(AVHWDeviceContext *ctx, VkDeviceCreateInfo *cd)
     PICK_QF(VK_QUEUE_VIDEO_ENCODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_ENCODE_H265_BIT_KHR);
     PICK_QF(VK_QUEUE_VIDEO_DECODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_DECODE_H265_BIT_KHR);
 
-#ifdef VK_KHR_video_decode_vp9
+#अगर_घोषित VK_KHR_video_decode_vp9
     PICK_QF(VK_QUEUE_VIDEO_DECODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_DECODE_VP9_BIT_KHR);
-#endif
+#पूर्ण_अगर
 
-#ifdef VK_KHR_video_encode_av1
+#अगर_घोषित VK_KHR_video_encode_av1
     PICK_QF(VK_QUEUE_VIDEO_ENCODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_ENCODE_AV1_BIT_KHR);
-#endif
+#पूर्ण_अगर
     PICK_QF(VK_QUEUE_VIDEO_DECODE_BIT_KHR, VK_VIDEO_CODEC_OPERATION_DECODE_AV1_BIT_KHR);
 
-    if (p->vkctx.extensions & FF_VK_EXT_OPTICAL_FLOW)
+    अगर (p->vkctx.extensions & FF_VK_EXT_OPTICAL_FLOW)
         PICK_QF(VK_QUEUE_OPTICAL_FLOW_BIT_NV, VK_VIDEO_CODEC_OPERATION_NONE_KHR);
 
     av_free(qf);
     av_free(qf_vid);
 
-#undef PICK_QF
+#अघोषित PICK_QF
 
     cd->pQueueCreateInfos = av_malloc_array(hwctx->nb_qf,
-                                            sizeof(VkDeviceQueueCreateInfo));
-    if (!cd->pQueueCreateInfos)
-        return AVERROR(ENOMEM);
+                                            माप(VkDeviceQueueCreateInfo));
+    अगर (!cd->pQueueCreateInfos)
+        वापस AVERROR(ENOMEM);
 
-    for (uint32_t i = 0; i < hwctx->nb_qf; i++) {
-        int dup = 0;
-        float *weights = NULL;
+    क्रम (uint32_t i = 0; i < hwctx->nb_qf; i++) {
+        पूर्णांक dup = 0;
+        भग्न *weights = शून्य;
         VkDeviceQueueCreateInfo *pc;
-        for (uint32_t j = 0; j < cd->queueCreateInfoCount; j++) {
-            if (hwctx->qf[i].idx == cd->pQueueCreateInfos[j].queueFamilyIndex) {
+        क्रम (uint32_t j = 0; j < cd->queue_Create_Info_गिनती; j++) {
+            अगर (hwctx->qf[i].idx == cd->pQueueCreateInfos[j].queue_Family_सूचकांक) {
                 dup = 1;
-                break;
+                अवरोध;
             }
         }
-        if (dup)
-            continue;
+        अगर (dup)
+            जारी;
 
-        weights = av_malloc_array(hwctx->qf[i].num, sizeof(float));
-        if (!weights) {
-            for (uint32_t j = 0; j < cd->queueCreateInfoCount; j++)
-                av_free((void *)cd->pQueueCreateInfos[i].pQueuePriorities);
-            av_free((void *)cd->pQueueCreateInfos);
-            return AVERROR(ENOMEM);
+        weights = av_malloc_array(hwctx->qf[i].अंक, माप(भग्न));
+        अगर (!weights) {
+            क्रम (uint32_t j = 0; j < cd->queue_Create_Info_गिनती; j++)
+                av_free((व्योम *)cd->pQueueCreateInfos[i].pQueuePriorities);
+            av_free((व्योम *)cd->pQueueCreateInfos);
+            वापस AVERROR(ENOMEM);
         }
 
-        for (uint32_t j = 0; j < hwctx->qf[i].num; j++)
+        क्रम (uint32_t j = 0; j < hwctx->qf[i].अंक; j++)
             weights[j] = 1.0;
 
         pc = (VkDeviceQueueCreateInfo *)cd->pQueueCreateInfos;
-        pc[cd->queueCreateInfoCount++] = (VkDeviceQueueCreateInfo) {
+        pc[cd->queue_Create_Info_गिनती++] = (VkDeviceQueueCreateInfo) {
             .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
             .flags = hwctx->queue_flags,
-            .queueFamilyIndex = hwctx->qf[i].idx,
-            .queueCount = hwctx->qf[i].num,
+            .queue_Family_सूचकांक = hwctx->qf[i].idx,
+            .queue_गिनती = hwctx->qf[i].अंक,
             .pQueuePriorities = weights,
         };
     }
 
-    return 0;
+    वापस 0;
 }
 
 /* Only resources created by vulkan_device_create should be released here,
@@ -1826,35 +1826,35 @@ static int setup_queue_families(AVHWDeviceContext *ctx, VkDeviceCreateInfo *cd)
  * vulkan_device_uninit, to make sure we don't free user provided resources,
  * and there is no leak.
  */
-static void vulkan_device_free(AVHWDeviceContext *ctx)
+अटल व्योम vulkan_device_free(AVHWDeviceContext *ctx)
 {
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    if (hwctx->act_dev)
+    अगर (hwctx->act_dev)
         vk->DestroyDevice(hwctx->act_dev, hwctx->alloc);
 
-    if (p->debug_ctx)
+    अगर (p->debug_ctx)
         vk->DestroyDebugUtilsMessengerEXT(hwctx->inst, p->debug_ctx,
                                           hwctx->alloc);
 
-    if (hwctx->inst)
+    अगर (hwctx->inst)
         vk->DestroyInstance(hwctx->inst, hwctx->alloc);
 
-    if (p->libvulkan)
+    अगर (p->libvulkan)
         dlclose(p->libvulkan);
 
     RELEASE_PROPS(hwctx->enabled_inst_extensions, hwctx->nb_enabled_inst_extensions);
     RELEASE_PROPS(hwctx->enabled_dev_extensions, hwctx->nb_enabled_dev_extensions);
 }
 
-static void vulkan_device_uninit(AVHWDeviceContext *ctx)
+अटल व्योम vulkan_device_uninit(AVHWDeviceContext *ctx)
 {
     VulkanDevicePriv *p = ctx->hwctx;
 
-    if (p->qf_mutex) {
-        for (uint32_t i = 0; i < p->nb_tot_qfs; i++) {
+    अगर (p->qf_mutex) {
+        क्रम (uint32_t i = 0; i < p->nb_tot_qfs; i++) {
             pthread_mutex_destroy(p->qf_mutex[i]);
             av_freep(&p->qf_mutex[i]);
         }
@@ -1864,41 +1864,41 @@ static void vulkan_device_uninit(AVHWDeviceContext *ctx)
     ff_vk_uninit(&p->vkctx);
 }
 
-static int vulkan_device_create_internal(AVHWDeviceContext *ctx,
+अटल पूर्णांक vulkan_device_create_internal(AVHWDeviceContext *ctx,
                                          VulkanDeviceSelection *dev_select,
-                                         int disable_multiplane,
-                                         AVDictionary *opts, int flags)
+                                         पूर्णांक disable_multiplane,
+                                         AVDictionary *opts, पूर्णांक flags)
 {
-    int err = 0;
-    VkResult ret;
+    पूर्णांक err = 0;
+    Vk_परिणाम ret;
     AVDictionaryEntry *opt_d;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    enum FFVulkanDebugMode debug_mode = FF_VULKAN_DEBUG_NONE;
+    क्रमागत FFVulkanDebugMode debug_mode = FF_VULKAN_DEBUG_NONE;
     VulkanDeviceFeatures supported_feats = { 0 };
     VkDeviceCreateInfo dev_info = {
         .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
     };
 
     /* Create an instance if not given one */
-    if ((err = create_instance(ctx, opts, &debug_mode)))
-        goto end;
+    अगर ((err = create_instance(ctx, opts, &debug_mode)))
+        जाओ end;
 
     /* Find a physical device (if not given one) */
-    if ((err = find_device(ctx, dev_select)))
-        goto end;
+    अगर ((err = find_device(ctx, dev_select)))
+        जाओ end;
 
     /* Get supported memory types */
     vk->GetPhysicalDeviceMemoryProperties(hwctx->phys_dev, &p->mprops);
 
     /* Find and enable extensions for the physical device */
-    if ((err = check_extensions(ctx, 1, opts, &dev_info.ppEnabledExtensionNames,
-                                &dev_info.enabledExtensionCount, debug_mode))) {
-        for (int i = 0; i < dev_info.queueCreateInfoCount; i++)
-            av_free((void *)dev_info.pQueueCreateInfos[i].pQueuePriorities);
-        av_free((void *)dev_info.pQueueCreateInfos);
-        goto end;
+    अगर ((err = check_extensions(ctx, 1, opts, &dev_info.ppEnabledExtensionNames,
+                                &dev_info.enabled_Extension_गिनती, debug_mode))) {
+        क्रम (पूर्णांक i = 0; i < dev_info.queue_Create_Info_गिनती; i++)
+            av_free((व्योम *)dev_info.pQueueCreateInfos[i].pQueuePriorities);
+        av_free((व्योम *)dev_info.pQueueCreateInfos);
+        जाओ end;
     }
 
     /* Get all supported features for the physical device */
@@ -1908,87 +1908,87 @@ static int vulkan_device_create_internal(AVHWDeviceContext *ctx,
     /* Copy all needed features from those supported and activate them */
     device_features_init(ctx, &p->feats);
     device_features_copy_needed(&p->feats, &supported_feats);
-    dev_info.pNext = p->feats.device.pNext;
+    dev_info.p_अग्र = p->feats.device.p_अग्र;
     dev_info.pEnabledFeatures = &p->feats.device.features;
 
     /* Limit queues to a given number if needed */
-    opt_d = av_dict_get(opts, "limit_queues", NULL, 0);
-    if (opt_d)
-        p->limit_queues = strtol(opt_d->value, NULL, 10);
+    opt_d = av_dict_get(opts, "limit_queues", शून्य, 0);
+    अगर (opt_d)
+        p->limit_queues = म_से_दीर्घ(opt_d->मूल्य, शून्य, 10);
 
     /* Setup enabled queue families */
-    if ((err = setup_queue_families(ctx, &dev_info)))
-        goto end;
+    अगर ((err = setup_queue_families(ctx, &dev_info)))
+        जाओ end;
 
     /* Finally create the device */
     ret = vk->CreateDevice(hwctx->phys_dev, &dev_info, hwctx->alloc,
                            &hwctx->act_dev);
 
-    for (int i = 0; i < dev_info.queueCreateInfoCount; i++)
-        av_free((void *)dev_info.pQueueCreateInfos[i].pQueuePriorities);
-    av_free((void *)dev_info.pQueueCreateInfos);
+    क्रम (पूर्णांक i = 0; i < dev_info.queue_Create_Info_गिनती; i++)
+        av_free((व्योम *)dev_info.pQueueCreateInfos[i].pQueuePriorities);
+    av_free((व्योम *)dev_info.pQueueCreateInfos);
 
-    if (ret != VK_SUCCESS) {
+    अगर (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Device creation failure: %s\n",
                ff_vk_ret2str(ret));
-        for (int i = 0; i < dev_info.enabledExtensionCount; i++)
-            av_free((void *)dev_info.ppEnabledExtensionNames[i]);
-        av_free((void *)dev_info.ppEnabledExtensionNames);
+        क्रम (पूर्णांक i = 0; i < dev_info.enabled_Extension_गिनती; i++)
+            av_free((व्योम *)dev_info.ppEnabledExtensionNames[i]);
+        av_free((व्योम *)dev_info.ppEnabledExtensionNames);
         err = AVERROR_EXTERNAL;
-        goto end;
+        जाओ end;
     }
 
     /* Tiled images setting, use them by default */
-    opt_d = av_dict_get(opts, "linear_images", NULL, 0);
-    if (opt_d)
-        p->use_linear_images = strtol(opt_d->value, NULL, 10);
+    opt_d = av_dict_get(opts, "linear_images", शून्य, 0);
+    अगर (opt_d)
+        p->use_linear_images = म_से_दीर्घ(opt_d->मूल्य, शून्य, 10);
 
     /* The disable_multiplane argument takes precedent over the option */
     p->disable_multiplane = disable_multiplane;
-    if (!p->disable_multiplane) {
-        opt_d = av_dict_get(opts, "disable_multiplane", NULL, 0);
-        if (opt_d)
-            p->disable_multiplane = strtol(opt_d->value, NULL, 10);
+    अगर (!p->disable_multiplane) {
+        opt_d = av_dict_get(opts, "disable_multiplane", शून्य, 0);
+        अगर (opt_d)
+            p->disable_multiplane = म_से_दीर्घ(opt_d->मूल्य, शून्य, 10);
     }
 
     /* Disable host pointer imports (by default on nvidia) */
     p->avoid_host_import = p->dprops.driverID == VK_DRIVER_ID_NVIDIA_PROPRIETARY;
-    opt_d = av_dict_get(opts, "avoid_host_import", NULL, 0);
-    if (opt_d)
-        p->avoid_host_import = strtol(opt_d->value, NULL, 10);
+    opt_d = av_dict_get(opts, "avoid_host_import", शून्य, 0);
+    अगर (opt_d)
+        p->avoid_host_import = म_से_दीर्घ(opt_d->मूल्य, शून्य, 10);
 
     /* Set the public device feature struct and its pNext chain */
     hwctx->device_features = p->feats.device;
 
     /* Set the list of all active extensions */
     hwctx->enabled_dev_extensions = dev_info.ppEnabledExtensionNames;
-    hwctx->nb_enabled_dev_extensions = dev_info.enabledExtensionCount;
+    hwctx->nb_enabled_dev_extensions = dev_info.enabled_Extension_गिनती;
 
     /* The extension lists need to be freed */
-    ctx->free = vulkan_device_free;
+    ctx->मुक्त = vulkan_device_free;
 
 end:
-    return err;
+    वापस err;
 }
 
-static void lock_queue(AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index)
+अटल व्योम lock_queue(AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t सूचकांक)
 {
     VulkanDevicePriv *p = ctx->hwctx;
-    if (p->qf_mutex)
-        pthread_mutex_lock(&p->qf_mutex[queue_family][index]);
+    अगर (p->qf_mutex)
+        pthread_mutex_lock(&p->qf_mutex[queue_family][सूचकांक]);
 }
 
-static void unlock_queue(AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index)
+अटल व्योम unlock_queue(AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t सूचकांक)
 {
     VulkanDevicePriv *p = ctx->hwctx;
-    if (p->qf_mutex)
-        pthread_mutex_unlock(&p->qf_mutex[queue_family][index]);
+    अगर (p->qf_mutex)
+        pthread_mutex_unlock(&p->qf_mutex[queue_family][सूचकांक]);
 }
 
-static int vulkan_device_init(AVHWDeviceContext *ctx)
+अटल पूर्णांक vulkan_device_init(AVHWDeviceContext *ctx)
 {
-    int err = 0;
-    uint32_t qf_num;
+    पूर्णांक err = 0;
+    uint32_t qf_अंक;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
@@ -1997,26 +1997,26 @@ static int vulkan_device_init(AVHWDeviceContext *ctx)
     VkPhysicalDeviceExternalSemaphoreInfo ext_sem_props_info;
 
     /* Set device extension flags */
-    for (int i = 0; i < hwctx->nb_enabled_dev_extensions; i++) {
-        for (int j = 0; j < FF_ARRAY_ELEMS(optional_device_exts); j++) {
-            if (!strcmp(hwctx->enabled_dev_extensions[i],
+    क्रम (पूर्णांक i = 0; i < hwctx->nb_enabled_dev_extensions; i++) {
+        क्रम (पूर्णांक j = 0; j < FF_ARRAY_ELEMS(optional_device_exts); j++) {
+            अगर (!म_भेद(hwctx->enabled_dev_extensions[i],
                         optional_device_exts[j].name)) {
                 p->vkctx.extensions |= optional_device_exts[j].flag;
-                break;
+                अवरोध;
             }
         }
     }
 
     err = ff_vk_load_functions(ctx, vk, p->vkctx.extensions, 1, 1);
-    if (err < 0) {
+    अगर (err < 0) {
         av_log(ctx, AV_LOG_ERROR, "Unable to load functions!\n");
-        return err;
+        वापस err;
     }
 
     p->props.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-    p->props.pNext = &p->hprops;
+    p->props.p_अग्र = &p->hprops;
     p->hprops.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT;
-    p->hprops.pNext = &p->dprops;
+    p->hprops.p_अग्र = &p->dprops;
     p->dprops.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
 
     vk->GetPhysicalDeviceProperties2(hwctx->phys_dev, &p->props);
@@ -2024,19 +2024,19 @@ static int vulkan_device_init(AVHWDeviceContext *ctx)
            p->props.properties.deviceName);
     av_log(ctx, AV_LOG_VERBOSE, "Alignments:\n");
     av_log(ctx, AV_LOG_VERBOSE, "    optimalBufferCopyRowPitchAlignment: %"PRIu64"\n",
-           p->props.properties.limits.optimalBufferCopyRowPitchAlignment);
+           p->props.properties.limits.optimal_बफर_Copy_Row_Pitch_Alignment);
     av_log(ctx, AV_LOG_VERBOSE, "    minMemoryMapAlignment:              %zu\n",
            p->props.properties.limits.minMemoryMapAlignment);
     av_log(ctx, AV_LOG_VERBOSE, "    nonCoherentAtomSize:                %"PRIu64"\n",
-           p->props.properties.limits.nonCoherentAtomSize);
-    if (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_HOST_MEMORY)
+           p->props.properties.limits.non_Coherent_Atom_आकार);
+    अगर (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_HOST_MEMORY)
         av_log(ctx, AV_LOG_VERBOSE, "    minImportedHostPointerAlignment:    %"PRIu64"\n",
                p->hprops.minImportedHostPointerAlignment);
 
-    vk->GetPhysicalDeviceQueueFamilyProperties(hwctx->phys_dev, &qf_num, NULL);
-    if (!qf_num) {
+    vk->GetPhysicalDeviceQueueFamilyProperties(hwctx->phys_dev, &qf_अंक, शून्य);
+    अगर (!qf_अंक) {
         av_log(ctx, AV_LOG_ERROR, "Failed to get queues!\n");
-        return AVERROR_EXTERNAL;
+        वापस AVERROR_EXTERNAL;
     }
 
     ext_sem_props_info = (VkPhysicalDeviceExternalSemaphoreInfo) {
@@ -2045,70 +2045,70 @@ static int vulkan_device_init(AVHWDeviceContext *ctx)
 
     /* Opaque FD semaphore properties */
     ext_sem_props_info.handleType =
-#ifdef _WIN32
+#अगर_घोषित _WIN32
         IsWindows8OrGreater()
             ? VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
             : VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT;
-#else
+#अन्यथा
         VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT;
-#endif
+#पूर्ण_अगर
     p->ext_sem_props_opaque.sType = VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES;
     vk->GetPhysicalDeviceExternalSemaphoreProperties(hwctx->phys_dev,
                                                      &ext_sem_props_info,
                                                      &p->ext_sem_props_opaque);
 
-    qf = av_malloc_array(qf_num, sizeof(VkQueueFamilyProperties2));
-    if (!qf)
-        return AVERROR(ENOMEM);
+    qf = av_malloc_array(qf_अंक, माप(VkQueueFamilyProperties2));
+    अगर (!qf)
+        वापस AVERROR(ENOMEM);
 
-    qf_vid = av_malloc_array(qf_num, sizeof(VkQueueFamilyVideoPropertiesKHR));
-    if (!qf_vid) {
+    qf_vid = av_malloc_array(qf_अंक, माप(VkQueueFamilyVideoPropertiesKHR));
+    अगर (!qf_vid) {
         av_free(qf);
-        return AVERROR(ENOMEM);
+        वापस AVERROR(ENOMEM);
     }
 
-    for (uint32_t i = 0; i < qf_num; i++) {
+    क्रम (uint32_t i = 0; i < qf_अंक; i++) {
         qf_vid[i] = (VkQueueFamilyVideoPropertiesKHR) {
             .sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_VIDEO_PROPERTIES_KHR,
         };
         qf[i] = (VkQueueFamilyProperties2) {
             .sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2,
-            .pNext = p->vkctx.extensions & FF_VK_EXT_VIDEO_QUEUE ? &qf_vid[i] : NULL,
+            .p_अग्र = p->vkctx.extensions & FF_VK_EXT_VIDEO_QUEUE ? &qf_vid[i] : शून्य,
         };
     }
 
-    vk->GetPhysicalDeviceQueueFamilyProperties2(hwctx->phys_dev, &qf_num, qf);
+    vk->GetPhysicalDeviceQueueFamilyProperties2(hwctx->phys_dev, &qf_अंक, qf);
 
-    p->nb_tot_qfs = qf_num;
+    p->nb_tot_qfs = qf_अंक;
 
-    if (!(p->vkctx.extensions & FF_VK_EXT_INTERNAL_QUEUE_SYNC)) {
-        p->qf_mutex = av_calloc(qf_num, sizeof(*p->qf_mutex));
-        if (!p->qf_mutex) {
+    अगर (!(p->vkctx.extensions & FF_VK_EXT_INTERNAL_QUEUE_SYNC)) {
+        p->qf_mutex = av_calloc(qf_अंक, माप(*p->qf_mutex));
+        अगर (!p->qf_mutex) {
             err = AVERROR(ENOMEM);
-            goto end;
+            जाओ end;
         }
 
-        for (uint32_t i = 0; i < qf_num; i++) {
-            p->qf_mutex[i] = av_calloc(qf[i].queueFamilyProperties.queueCount,
-                                       sizeof(**p->qf_mutex));
-            if (!p->qf_mutex[i]) {
+        क्रम (uint32_t i = 0; i < qf_अंक; i++) {
+            p->qf_mutex[i] = av_calloc(qf[i].queueFamilyProperties.queue_गिनती,
+                                       माप(**p->qf_mutex));
+            अगर (!p->qf_mutex[i]) {
                 err = AVERROR(ENOMEM);
-                goto end;
+                जाओ end;
             }
-            for (uint32_t j = 0; j < qf[i].queueFamilyProperties.queueCount; j++) {
-                err = pthread_mutex_init(&p->qf_mutex[i][j], NULL);
-                if (err != 0) {
+            क्रम (uint32_t j = 0; j < qf[i].queueFamilyProperties.queue_गिनती; j++) {
+                err = pthread_mutex_init(&p->qf_mutex[i][j], शून्य);
+                अगर (err != 0) {
                     av_log(ctx, AV_LOG_ERROR, "pthread_mutex_init failed : %s\n",
                            av_err2str(err));
                     err = AVERROR(err);
-                    goto end;
+                    जाओ end;
                 }
             }
         }
     }
 
-    for (int i = 0; i < hwctx->nb_qf; i++) {
-        if (!hwctx->qf[i].video_caps &&
+    क्रम (पूर्णांक i = 0; i < hwctx->nb_qf; i++) {
+        अगर (!hwctx->qf[i].video_caps &&
             hwctx->qf[i].flags & (VK_QUEUE_VIDEO_DECODE_BIT_KHR |
                                   VK_QUEUE_VIDEO_ENCODE_BIT_KHR)) {
             hwctx->qf[i].video_caps = qf_vid[hwctx->qf[i].idx].videoCodecOperations;
@@ -2117,28 +2117,28 @@ static int vulkan_device_init(AVHWDeviceContext *ctx)
 
     /* Setup array for pQueueFamilyIndices with used queue families */
     p->nb_img_qfs = 0;
-    for (int i = 0; i < hwctx->nb_qf; i++) {
-        int seen = 0;
+    क्रम (पूर्णांक i = 0; i < hwctx->nb_qf; i++) {
+        पूर्णांक seen = 0;
         /* Make sure each entry is unique
          * (VUID-VkBufferCreateInfo-sharingMode-01419) */
-        for (int j = (i - 1); j >= 0; j--) {
-            if (hwctx->qf[i].idx == hwctx->qf[j].idx) {
+        क्रम (पूर्णांक j = (i - 1); j >= 0; j--) {
+            अगर (hwctx->qf[i].idx == hwctx->qf[j].idx) {
                 seen = 1;
-                break;
+                अवरोध;
             }
         }
-        if (!seen)
+        अगर (!seen)
             p->img_qfs[p->nb_img_qfs++] = hwctx->qf[i].idx;
     }
 
-#if FF_API_VULKAN_SYNC_QUEUES
+#अगर FF_API_VULKAN_SYNC_QUEUES
 FF_DISABLE_DEPRECATION_WARNINGS
-    if (!hwctx->lock_queue)
+    अगर (!hwctx->lock_queue)
         hwctx->lock_queue = lock_queue;
-    if (!hwctx->unlock_queue)
+    अगर (!hwctx->unlock_queue)
         hwctx->unlock_queue = unlock_queue;
 FF_ENABLE_DEPRECATION_WARNINGS
-#endif
+#पूर्ण_अगर
 
     /* Re-query device capabilities, in case the device was created externally */
     vk->GetPhysicalDeviceMemoryProperties(hwctx->phys_dev, &p->mprops);
@@ -2152,15 +2152,15 @@ FF_ENABLE_DEPRECATION_WARNINGS
 
     /* Transfer-only queues need 4-byte aligned buffer offsets in image copies */
     p->transfer_offset_align = 1;
-    if (p->transfer_qf) {
+    अगर (p->transfer_qf) {
         VkQueueFlags flags = p->vkctx.qf_props[p->transfer_qf->idx].queueFamilyProperties.queueFlags;
-        if (!(flags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT)))
+        अगर (!(flags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT)))
             p->transfer_offset_align = 4;
     }
-#ifdef VK_KHR_maintenance11
-    if (p->vkctx.maintenance_11_feats.maintenance11)
+#अगर_घोषित VK_KHR_maintenance11
+    अगर (p->vkctx.maintenance_11_feats.maintenance11)
         p->transfer_offset_align = 1;
-#endif
+#पूर्ण_अगर
 
     /* Re-query device capabilities, in case the device was created externally */
     vk->GetPhysicalDeviceMemoryProperties(hwctx->phys_dev, &p->mprops);
@@ -2168,117 +2168,117 @@ FF_ENABLE_DEPRECATION_WARNINGS
 end:
     av_free(qf_vid);
     av_free(qf);
-    return err;
+    वापस err;
 }
 
-static int vulkan_device_create(AVHWDeviceContext *ctx, const char *device,
-                                AVDictionary *opts, int flags)
+अटल पूर्णांक vulkan_device_create(AVHWDeviceContext *ctx, स्थिर अक्षर *device,
+                                AVDictionary *opts, पूर्णांक flags)
 {
     VulkanDeviceSelection dev_select = { 0 };
-    if (device && device[0]) {
-        char *end = NULL;
+    अगर (device && device[0]) {
+        अक्षर *end = शून्य;
 
-        if (!av_uuid_parse(device, dev_select.uuid)) {
+        अगर (!av_uuid_parse(device, dev_select.uuid)) {
             dev_select.has_uuid = 1;
-        } else {
-            dev_select.index = strtol(device, &end, 10);
-            if (end == device || *end) {
-                dev_select.index = 0;
+        } अन्यथा {
+            dev_select.सूचकांक = म_से_दीर्घ(device, &end, 10);
+            अगर (end == device || *end) {
+                dev_select.सूचकांक = 0;
                 dev_select.name  = device;
             }
         }
     }
 
-    return vulkan_device_create_internal(ctx, &dev_select, 0, opts, flags);
+    वापस vulkan_device_create_internal(ctx, &dev_select, 0, opts, flags);
 }
 
-static int vulkan_device_derive(AVHWDeviceContext *ctx,
+अटल पूर्णांक vulkan_device_derive(AVHWDeviceContext *ctx,
                                 AVHWDeviceContext *src_ctx,
-                                AVDictionary *opts, int flags)
+                                AVDictionary *opts, पूर्णांक flags)
 {
     av_unused VulkanDeviceSelection dev_select = { 0 };
 
     /* If there's only one device on the system, then even if its not covered
      * by the following checks (e.g. non-PCIe ARM GPU), having an empty
      * dev_select will mean it'll get picked. */
-    switch(src_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI: {
+    चयन(src_ctx->type) {
+#अगर CONFIG_VAAPI
+    हाल AV_HWDEVICE_TYPE_VAAPI: {
         AVVAAPIDeviceContext *src_hwctx = src_ctx->hwctx;
         VADisplay dpy = src_hwctx->display;
-#if VA_CHECK_VERSION(1, 15, 0)
+#अगर VA_CHECK_VERSION(1, 15, 0)
         VAStatus vas;
         VADisplayAttribute attr = {
             .type = VADisplayPCIID,
         };
-#endif
-        const char *vendor;
+#पूर्ण_अगर
+        स्थिर अक्षर *vendor;
 
-#if VA_CHECK_VERSION(1, 15, 0)
+#अगर VA_CHECK_VERSION(1, 15, 0)
         vas = vaGetDisplayAttributes(dpy, &attr, 1);
-        if (vas == VA_STATUS_SUCCESS && attr.flags != VA_DISPLAY_ATTRIB_NOT_SUPPORTED)
-            dev_select.pci_device = (attr.value & 0xFFFF);
-#endif
+        अगर (vas == VA_STATUS_SUCCESS && attr.flags != VA_DISPLAY_ATTRIB_NOT_SUPPORTED)
+            dev_select.pci_device = (attr.मूल्य & 0xFFFF);
+#पूर्ण_अगर
 
-        if (!dev_select.pci_device) {
+        अगर (!dev_select.pci_device) {
             vendor = vaQueryVendorString(dpy);
-            if (!vendor) {
+            अगर (!vendor) {
                 av_log(ctx, AV_LOG_ERROR, "Unable to get device info from VAAPI!\n");
-                return AVERROR_EXTERNAL;
+                वापस AVERROR_EXTERNAL;
             }
 
-            if (strstr(vendor, "AMD"))
+            अगर (म_माला(vendor, "AMD"))
                 dev_select.vendor_id = 0x1002;
         }
 
-        return vulkan_device_create_internal(ctx, &dev_select, 0, opts, flags);
+        वापस vulkan_device_create_internal(ctx, &dev_select, 0, opts, flags);
     }
-#endif
-#if CONFIG_LIBDRM
-    case AV_HWDEVICE_TYPE_DRM: {
-        int err;
-        struct stat drm_node_info;
+#पूर्ण_अगर
+#अगर CONFIG_LIBDRM
+    हाल AV_HWDEVICE_TYPE_DRM: {
+        पूर्णांक err;
+        काष्ठा stat drm_गाँठ_info;
         drmDevice *drm_dev_info;
         AVDRMDeviceContext *src_hwctx = src_ctx->hwctx;
 
-        err = fstat(src_hwctx->fd, &drm_node_info);
-        if (err) {
+        err = ख_स्थिति(src_hwctx->fd, &drm_गाँठ_info);
+        अगर (err) {
             av_log(ctx, AV_LOG_ERROR, "Unable to get node info from DRM fd: %s!\n",
-                   av_err2str(AVERROR(errno)));
-            return AVERROR_EXTERNAL;
+                   av_err2str(AVERROR(त्रुटि_सं)));
+            वापस AVERROR_EXTERNAL;
         }
 
-        dev_select.drm_major = major(drm_node_info.st_dev);
-        dev_select.drm_minor = minor(drm_node_info.st_dev);
+        dev_select.drm_major = major(drm_गाँठ_info.st_dev);
+        dev_select.drm_minor = minor(drm_गाँठ_info.st_dev);
         dev_select.has_drm   = 1;
 
         err = drmGetDevice(src_hwctx->fd, &drm_dev_info);
-        if (err) {
+        अगर (err) {
             av_log(ctx, AV_LOG_ERROR, "Unable to get device info from DRM fd: %s!\n",
-                   av_err2str(AVERROR(errno)));
-            return AVERROR_EXTERNAL;
+                   av_err2str(AVERROR(त्रुटि_सं)));
+            वापस AVERROR_EXTERNAL;
         }
 
-        if (drm_dev_info->bustype == DRM_BUS_PCI)
+        अगर (drm_dev_info->bustype == DRM_BUS_PCI)
             dev_select.pci_device = drm_dev_info->deviceinfo.pci->device_id;
 
         drmFreeDevice(&drm_dev_info);
 
-        return vulkan_device_create_internal(ctx, &dev_select, 0, opts, flags);
+        वापस vulkan_device_create_internal(ctx, &dev_select, 0, opts, flags);
     }
-#endif
-#if CONFIG_CUDA
-    case AV_HWDEVICE_TYPE_CUDA: {
+#पूर्ण_अगर
+#अगर CONFIG_CUDA
+    हाल AV_HWDEVICE_TYPE_CUDA: {
         AVHWDeviceContext *cuda_cu = src_ctx;
         AVCUDADeviceContext *src_hwctx = src_ctx->hwctx;
         AVCUDADeviceContextInternal *cu_internal = src_hwctx->internal;
         CudaFunctions *cu = cu_internal->cuda_dl;
 
-        int ret = CHECK_CU(cu->cuDeviceGetUuid((CUuuid *)&dev_select.uuid,
+        पूर्णांक ret = CHECK_CU(cu->cuDeviceGetUuid((CUuuid *)&dev_select.uuid,
                                                cu_internal->cuda_device));
-        if (ret < 0) {
+        अगर (ret < 0) {
             av_log(ctx, AV_LOG_ERROR, "Unable to get UUID from CUDA!\n");
-            return AVERROR_EXTERNAL;
+            वापस AVERROR_EXTERNAL;
         }
 
         dev_select.has_uuid = 1;
@@ -2287,159 +2287,159 @@ static int vulkan_device_derive(AVHWDeviceContext *ctx,
          * CUDA is not able to import multiplane images, so always derive a
          * Vulkan device with multiplane disabled.
          */
-        return vulkan_device_create_internal(ctx, &dev_select, 1, opts, flags);
+        वापस vulkan_device_create_internal(ctx, &dev_select, 1, opts, flags);
     }
-#endif
-    default:
-        return AVERROR(ENOSYS);
+#पूर्ण_अगर
+    शेष:
+        वापस AVERROR(ENOSYS);
     }
 }
 
-static int vulkan_frames_get_constraints(AVHWDeviceContext *ctx,
-                                         const void *hwconfig,
+अटल पूर्णांक vulkan_frames_get_constraints(AVHWDeviceContext *ctx,
+                                         स्थिर व्योम *hwconfig,
                                          AVHWFramesConstraints *constraints)
 {
-    int count = 0;
+    पूर्णांक गिनती = 0;
     VulkanDevicePriv *p = ctx->hwctx;
 
-    for (enum AVPixelFormat i = 0; i < nb_vk_formats_list; i++) {
-        count += vkfmt_from_pixfmt2(ctx, vk_formats_list[i].pixfmt,
+    क्रम (क्रमागत AVPixelFormat i = 0; i < nb_vk_formats_list; i++) {
+        गिनती += vkfmt_from_pixfmt2(ctx, vk_formats_list[i].pixfmt,
                                     p->use_linear_images ? VK_IMAGE_TILING_LINEAR :
                                                            VK_IMAGE_TILING_OPTIMAL,
-                                    NULL, NULL, NULL, NULL, p->disable_multiplane, 1) >= 0;
+                                    शून्य, शून्य, शून्य, शून्य, p->disable_multiplane, 1) >= 0;
     }
 
-    constraints->valid_sw_formats = av_malloc_array(count + 1 + CONFIG_CUDA,
-                                                    sizeof(enum AVPixelFormat));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_sw_formats = av_malloc_array(गिनती + 1 + CONFIG_CUDA,
+                                                    माप(क्रमागत AVPixelFormat));
+    अगर (!constraints->valid_sw_formats)
+        वापस AVERROR(ENOMEM);
 
-    count = 0;
-    for (enum AVPixelFormat i = 0; i < nb_vk_formats_list; i++) {
-        if (vkfmt_from_pixfmt2(ctx, vk_formats_list[i].pixfmt,
+    गिनती = 0;
+    क्रम (क्रमागत AVPixelFormat i = 0; i < nb_vk_formats_list; i++) {
+        अगर (vkfmt_from_pixfmt2(ctx, vk_formats_list[i].pixfmt,
                                p->use_linear_images ? VK_IMAGE_TILING_LINEAR :
                                                       VK_IMAGE_TILING_OPTIMAL,
-                               NULL, NULL, NULL, NULL, p->disable_multiplane, 1) >= 0) {
-            constraints->valid_sw_formats[count++] = vk_formats_list[i].pixfmt;
+                               शून्य, शून्य, शून्य, शून्य, p->disable_multiplane, 1) >= 0) {
+            constraints->valid_sw_formats[गिनती++] = vk_formats_list[i].pixfmt;
         }
     }
 
-#if CONFIG_CUDA
-    constraints->valid_sw_formats[count++] = AV_PIX_FMT_CUDA;
-#endif
+#अगर CONFIG_CUDA
+    constraints->valid_sw_formats[गिनती++] = AV_PIX_FMT_CUDA;
+#पूर्ण_अगर
 
-    constraints->valid_sw_formats[count++] = AV_PIX_FMT_NONE;
+    constraints->valid_sw_formats[गिनती++] = AV_PIX_FMT_NONE;
 
     constraints->min_width  = 1;
     constraints->min_height = 1;
     constraints->max_width  = p->props.properties.limits.maxImageDimension2D;
     constraints->max_height = p->props.properties.limits.maxImageDimension2D;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(enum AVPixelFormat));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, माप(क्रमागत AVPixelFormat));
+    अगर (!constraints->valid_hw_formats)
+        वापस AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_VULKAN;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    वापस 0;
 }
 
-static int alloc_mem(AVHWDeviceContext *ctx, VkMemoryRequirements *req,
-                     VkMemoryPropertyFlagBits req_flags, const void *alloc_extension,
+अटल पूर्णांक alloc_mem(AVHWDeviceContext *ctx, VkMemoryRequirements *req,
+                     VkMemoryPropertyFlagBits req_flags, स्थिर व्योम *alloc_extension,
                      VkMemoryPropertyFlagBits *mem_flags, VkDeviceMemory *mem)
 {
-    VkResult ret;
-    int index = -1;
+    Vk_परिणाम ret;
+    पूर्णांक सूचकांक = -1;
     VulkanDevicePriv *p = ctx->hwctx;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
     AVVulkanDeviceContext *dev_hwctx = &p->p;
     VkMemoryAllocateInfo alloc_info = {
         .sType          = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-        .pNext          = alloc_extension,
-        .allocationSize = req->size,
+        .p_अग्र          = alloc_extension,
+        .allocation_आकार = req->आकार,
     };
 
     /* The vulkan spec requires memory types to be sorted in the "optimal"
      * order, so the first matching type we find will be the best/fastest one */
-    for (int i = 0; i < p->mprops.memoryTypeCount; i++) {
-        const VkMemoryType *type = &p->mprops.memoryTypes[i];
+    क्रम (पूर्णांक i = 0; i < p->mprops.memory_Type_गिनती; i++) {
+        स्थिर VkMemoryType *type = &p->mprops.memoryTypes[i];
 
         /* The memory type must be supported by the requirements (bitfield) */
-        if (!(req->memoryTypeBits & (1 << i)))
-            continue;
+        अगर (!(req->memoryTypeBits & (1 << i)))
+            जारी;
 
         /* The memory type flags must include our properties */
-        if ((type->propertyFlags & req_flags) != req_flags)
-            continue;
+        अगर ((type->propertyFlags & req_flags) != req_flags)
+            जारी;
 
         /* The memory type must be large enough */
-        if (req->size > p->mprops.memoryHeaps[type->heapIndex].size)
-            continue;
+        अगर (req->आकार > p->mprops.memoryHeaps[type->heap_सूचकांक].आकार)
+            जारी;
 
         /* Found a suitable memory type */
-        index = i;
-        break;
+        सूचकांक = i;
+        अवरोध;
     }
 
-    if (index < 0) {
+    अगर (सूचकांक < 0) {
         av_log(ctx, AV_LOG_ERROR, "No memory type found for flags 0x%x\n",
                req_flags);
-        return AVERROR(EINVAL);
+        वापस AVERROR(EINVAL);
     }
 
-    alloc_info.memoryTypeIndex = index;
+    alloc_info.memory_Type_सूचकांक = सूचकांक;
 
     ret = vk->AllocateMemory(dev_hwctx->act_dev, &alloc_info,
                              dev_hwctx->alloc, mem);
-    if (ret != VK_SUCCESS) {
+    अगर (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Failed to allocate memory: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR(ENOMEM);
+        वापस AVERROR(ENOMEM);
     }
 
-    *mem_flags |= p->mprops.memoryTypes[index].propertyFlags;
+    *mem_flags |= p->mprops.memoryTypes[सूचकांक].propertyFlags;
 
-    return 0;
+    वापस 0;
 }
 
-static void vulkan_free_internal(VulkanDevicePriv *p, AVVkFrame *f)
+अटल व्योम vulkan_free_internal(VulkanDevicePriv *p, AVVkFrame *f)
 {
     av_unused AVVkFrameInternal *internal = f->internal;
 
     // Make this function safe to call repeatedly
-    if (!internal)
-        return;
+    अगर (!internal)
+        वापस;
 
-#if CONFIG_CUDA
-    if (internal->cuda_fc_ref) {
-        AVHWFramesContext *cuda_fc = (AVHWFramesContext *)internal->cuda_fc_ref->data;
-        int planes = av_pix_fmt_count_planes(cuda_fc->sw_format);
+#अगर CONFIG_CUDA
+    अगर (internal->cuda_fc_ref) {
+        AVHWFramesContext *cuda_fc = (AVHWFramesContext *)internal->cuda_fc_ref->तथ्य;
+        पूर्णांक planes = av_pix_fmt_गिनती_planes(cuda_fc->sw_format);
         AVHWDeviceContext *cuda_cu = cuda_fc->device_ctx;
         AVCUDADeviceContext *cuda_dev = cuda_cu->hwctx;
         AVCUDADeviceContextInternal *cu_internal = cuda_dev->internal;
         CudaFunctions *cu = cu_internal->cuda_dl;
 
-        for (int i = 0; i < planes; i++) {
-            if (internal->cu_sem[i])
+        क्रम (पूर्णांक i = 0; i < planes; i++) {
+            अगर (internal->cu_sem[i])
                 CHECK_CU(cu->cuDestroyExternalSemaphore(internal->cu_sem[i]));
-            if (internal->cu_mma[i])
+            अगर (internal->cu_mma[i])
                 CHECK_CU(cu->cuMipmappedArrayDestroy(internal->cu_mma[i]));
-            if (internal->ext_mem[i])
+            अगर (internal->ext_mem[i])
                 CHECK_CU(cu->cuDestroyExternalMemory(internal->ext_mem[i]));
-#ifdef _WIN32
-            if (internal->ext_sem_handle[i])
+#अगर_घोषित _WIN32
+            अगर (internal->ext_sem_handle[i])
                 CloseHandle(internal->ext_sem_handle[i]);
-            if (internal->ext_mem_handle[i])
+            अगर (internal->ext_mem_handle[i])
                 CloseHandle(internal->ext_mem_handle[i]);
-#endif
+#पूर्ण_अगर
         }
 
-        av_buffer_unref(&internal->cuda_fc_ref);
+        av_बफर_unref(&internal->cuda_fc_ref);
     }
-#endif
+#पूर्ण_अगर
 
-    if (internal->drm_sync_sem != VK_NULL_HANDLE)
+    अगर (internal->drm_sync_sem != VK_NULL_HANDLE)
         p->vkctx.vkfn.DestroySemaphore(p->p.act_dev, internal->drm_sync_sem,
                                         p->p.alloc);
 
@@ -2447,24 +2447,24 @@ static void vulkan_free_internal(VulkanDevicePriv *p, AVVkFrame *f)
     av_freep(&f->internal);
 }
 
-static void vulkan_frame_free(AVHWFramesContext *hwfc, AVVkFrame *f)
+अटल व्योम vulkan_frame_free(AVHWFramesContext *hwfc, AVVkFrame *f)
 {
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    int nb_images = ff_vk_count_images(f);
-    int nb_sems = 0;
+    पूर्णांक nb_images = ff_vk_गिनती_images(f);
+    पूर्णांक nb_sems = 0;
 
-    while (nb_sems < FF_ARRAY_ELEMS(f->sem) && f->sem[nb_sems])
+    जबतक (nb_sems < FF_ARRAY_ELEMS(f->sem) && f->sem[nb_sems])
         nb_sems++;
 
-    if (nb_sems) {
+    अगर (nb_sems) {
         VkSemaphoreWaitInfo sem_wait = {
             .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
             .flags          = 0x0,
             .pSemaphores    = f->sem,
-            .pValues        = f->sem_value,
-            .semaphoreCount = nb_sems,
+            .p_मूल्यावली        = f->sem_मूल्य,
+            .semaphore_गिनती = nb_sems,
         };
 
         vk->WaitSemaphores(hwctx->act_dev, &sem_wait, UINT64_MAX);
@@ -2472,7 +2472,7 @@ static void vulkan_frame_free(AVHWFramesContext *hwfc, AVVkFrame *f)
 
     vulkan_free_internal(p, f);
 
-    for (int i = 0; i < nb_images; i++) {
+    क्रम (पूर्णांक i = 0; i < nb_images; i++) {
         vk->DestroyImage(hwctx->act_dev,     f->img[i], hwctx->alloc);
         vk->FreeMemory(hwctx->act_dev,       f->mem[i], hwctx->alloc);
         vk->DestroySemaphore(hwctx->act_dev, f->sem[i], hwctx->alloc);
@@ -2481,38 +2481,38 @@ static void vulkan_frame_free(AVHWFramesContext *hwfc, AVVkFrame *f)
     av_free(f);
 }
 
-static void vulkan_frame_free_cb(void *opaque, uint8_t *data)
+अटल व्योम vulkan_frame_free_cb(व्योम *opaque, uint8_t *तथ्य)
 {
-    vulkan_frame_free(opaque, (AVVkFrame*)data);
+    vulkan_frame_free(opaque, (AVVkFrame*)तथ्य);
 }
 
-static int alloc_bind_mem(AVHWFramesContext *hwfc, AVVkFrame *f,
-                          void *alloc_pnext, size_t alloc_pnext_stride)
+अटल पूर्णांक alloc_bind_mem(AVHWFramesContext *hwfc, AVVkFrame *f,
+                          व्योम *alloc_pnext, माप_प्रकार alloc_pnext_stride)
 {
-    int img_cnt = 0, err;
-    VkResult ret;
+    पूर्णांक img_cnt = 0, err;
+    Vk_परिणाम ret;
     AVHWDeviceContext *ctx = hwfc->device_ctx;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VkBindImageMemoryInfo bind_info[AV_NUM_DATA_POINTERS] = { { 0 } };
+    VkBindImageMemoryInfo bind_info[AV_अंक_तथ्य_POINTERS] = { { 0 } };
 
-    while (f->img[img_cnt]) {
-        int use_ded_mem;
+    जबतक (f->img[img_cnt]) {
+        पूर्णांक use_ded_mem;
         VkImageMemoryRequirementsInfo2 req_desc = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
             .image = f->img[img_cnt],
         };
         VkMemoryDedicatedAllocateInfo ded_alloc = {
             .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO,
-            .pNext = (void *)(((uint8_t *)alloc_pnext) + img_cnt*alloc_pnext_stride),
+            .p_अग्र = (व्योम *)(((uint8_t *)alloc_pnext) + img_cnt*alloc_pnext_stride),
         };
         VkMemoryDedicatedRequirements ded_req = {
             .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS,
         };
         VkMemoryRequirements2 req = {
             .sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
-            .pNext = &ded_req,
+            .p_अग्र = &ded_req,
         };
 
         vk->GetImageMemoryRequirements2(hwctx->act_dev, &req_desc, &req);
@@ -2521,28 +2521,28 @@ static int alloc_bind_mem(AVHWFramesContext *hwfc, AVVkFrame *f,
                "plane %d: driver reports prefersDedicatedAllocation=%i requiresDedicatedAllocation=%i\n",
                img_cnt, ded_req.prefersDedicatedAllocation, ded_req.requiresDedicatedAllocation);
 
-        if (f->tiling == VK_IMAGE_TILING_LINEAR)
-            req.memoryRequirements.size = FFALIGN(req.memoryRequirements.size,
+        अगर (f->tiling == VK_IMAGE_TILING_LINEAR)
+            req.memoryRequirements.आकार = FFALIGN(req.memoryRequirements.आकार,
                                                   p->props.properties.limits.minMemoryMapAlignment);
 
         /* In case the implementation prefers/requires dedicated allocation */
         use_ded_mem = ded_req.prefersDedicatedAllocation |
                       ded_req.requiresDedicatedAllocation;
-        if (((VulkanFramesPriv *)hwfc->hwctx)->export_requires_dedicated)
+        अगर (((VulkanFramesPriv *)hwfc->hwctx)->export_requires_dedicated)
             use_ded_mem = 1;
-        if (use_ded_mem)
+        अगर (use_ded_mem)
             ded_alloc.image = f->img[img_cnt];
 
         /* Allocate memory */
-        if ((err = alloc_mem(ctx, &req.memoryRequirements,
+        अगर ((err = alloc_mem(ctx, &req.memoryRequirements,
                              f->tiling == VK_IMAGE_TILING_LINEAR ?
                              VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT :
                              VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-                             use_ded_mem ? &ded_alloc : (void *)ded_alloc.pNext,
+                             use_ded_mem ? &ded_alloc : (व्योम *)ded_alloc.p_अग्र,
                              &f->flags, &f->mem[img_cnt])))
-            return err;
+            वापस err;
 
-        f->size[img_cnt] = req.memoryRequirements.size;
+        f->आकार[img_cnt] = req.memoryRequirements.आकार;
         bind_info[img_cnt].sType  = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO;
         bind_info[img_cnt].image  = f->img[img_cnt];
         bind_info[img_cnt].memory = f->mem[img_cnt];
@@ -2552,16 +2552,16 @@ static int alloc_bind_mem(AVHWFramesContext *hwfc, AVVkFrame *f,
 
     /* Bind the allocated memory to the images */
     ret = vk->BindImageMemory2(hwctx->act_dev, img_cnt, bind_info);
-    if (ret != VK_SUCCESS) {
+    अगर (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Failed to bind memory: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        वापस AVERROR_EXTERNAL;
     }
 
-    return 0;
+    वापस 0;
 }
 
-enum PrepMode {
+क्रमागत PrepMode {
     PREP_MODE_GENERAL,
     PREP_MODE_WRITE,
     PREP_MODE_EXTERNAL_EXPORT,
@@ -2571,49 +2571,49 @@ enum PrepMode {
     PREP_MODE_ENCODING_DPB,
 };
 
-static void switch_new_props(enum PrepMode pmode, VkImageLayout *new_layout,
+अटल व्योम switch_new_props(क्रमागत PrepMode pmode, VkImageLayout *new_layout,
                              VkAccessFlags2 *new_access)
 {
-    switch (pmode) {
-    case PREP_MODE_GENERAL:
+    चयन (pmode) {
+    हाल PREP_MODE_GENERAL:
         *new_layout = VK_IMAGE_LAYOUT_GENERAL;
         *new_access = VK_ACCESS_TRANSFER_WRITE_BIT;
-        break;
-    case PREP_MODE_WRITE:
+        अवरोध;
+    हाल PREP_MODE_WRITE:
         *new_layout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
         *new_access = VK_ACCESS_TRANSFER_WRITE_BIT;
-        break;
-    case PREP_MODE_EXTERNAL_IMPORT:
+        अवरोध;
+    हाल PREP_MODE_EXTERNAL_IMPORT:
         *new_layout = VK_IMAGE_LAYOUT_GENERAL;
         *new_access = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
-        break;
-    case PREP_MODE_EXTERNAL_EXPORT:
+        अवरोध;
+    हाल PREP_MODE_EXTERNAL_EXPORT:
         *new_layout = VK_IMAGE_LAYOUT_GENERAL;
         *new_access = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
-        break;
-    case PREP_MODE_DECODING_DST:
+        अवरोध;
+    हाल PREP_MODE_DECODING_DST:
         *new_layout = VK_IMAGE_LAYOUT_VIDEO_DECODE_DST_KHR;
         *new_access = VK_ACCESS_TRANSFER_WRITE_BIT;
-        break;
-    case PREP_MODE_DECODING_DPB:
+        अवरोध;
+    हाल PREP_MODE_DECODING_DPB:
         *new_layout = VK_IMAGE_LAYOUT_VIDEO_DECODE_DPB_KHR;
         *new_access = VK_ACCESS_TRANSFER_READ_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
-        break;
-    case PREP_MODE_ENCODING_DPB:
+        अवरोध;
+    हाल PREP_MODE_ENCODING_DPB:
         *new_layout = VK_IMAGE_LAYOUT_VIDEO_ENCODE_DPB_KHR;
         *new_access = VK_ACCESS_TRANSFER_READ_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
-        break;
+        अवरोध;
     }
 }
 
-static int switch_layout(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
-                         AVVkFrame *frame, enum PrepMode pmode)
+अटल पूर्णांक switch_layout(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
+                         AVVkFrame *frame, क्रमागत PrepMode pmode)
 {
-    int err;
+    पूर्णांक err;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VkImageMemoryBarrier2 img_bar[AV_NUM_DATA_POINTERS];
-    int nb_img_bar = 0;
+    VkImageMemoryBarrier2 img_bar[AV_अंक_तथ्य_POINTERS];
+    पूर्णांक nb_img_bar = 0;
 
     VkImageLayout new_layout;
     VkAccessFlags2 new_access;
@@ -2621,7 +2621,7 @@ static int switch_layout(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
 
     uint32_t dst_qf = p->nb_img_qfs > 1 ? VK_QUEUE_FAMILY_IGNORED : p->img_qfs[0];
     VkPipelineStageFlagBits2 src_stage = VK_PIPELINE_STAGE_2_NONE;
-    if (pmode == PREP_MODE_EXTERNAL_EXPORT) {
+    अगर (pmode == PREP_MODE_EXTERNAL_EXPORT) {
         dst_qf     = VK_QUEUE_FAMILY_EXTERNAL_KHR;
         src_stage  = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT;
     }
@@ -2630,27 +2630,27 @@ static int switch_layout(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
      * free non-refcounted frames, and non-refcounted hardware frames cannot
      * happen anywhere outside of here. */
     AVBufferRef tmp_ref = {
-        .data = (uint8_t *)hwfc,
+        .तथ्य = (uint8_t *)hwfc,
     };
     AVFrame tmp_frame = {
-        .data[0] = (uint8_t *)frame,
+        .तथ्य[0] = (uint8_t *)frame,
         .hw_frames_ctx = &tmp_ref,
     };
 
-    VkCommandBuffer cmd_buf;
+    Vk_Command_बफर cmd_buf;
     FFVkExecContext *exec = ff_vk_exec_get(&p->vkctx, ectx);
     cmd_buf = exec->buf;
     err = ff_vk_exec_start(&p->vkctx, exec);
-    if (err < 0)
-        return err;
+    अगर (err < 0)
+        वापस err;
 
     /* NONE does not block any stage, so this queue's layout transition
      * races a decode write submitted on the video queue. */
     err = ff_vk_exec_add_dep_frame(&p->vkctx, exec, &tmp_frame,
                                    VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
                                    VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT);
-    if (err < 0)
-        return err;
+    अगर (err < 0)
+        वापस err;
 
     ff_vk_frame_barrier(&p->vkctx, exec, &tmp_frame, img_bar, &nb_img_bar,
                         src_stage,
@@ -2660,104 +2660,104 @@ static int switch_layout(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
     vk->CmdPipelineBarrier2(cmd_buf, &(VkDependencyInfo) {
             .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
             .pImageMemoryBarriers = img_bar,
-            .imageMemoryBarrierCount = nb_img_bar,
+            .image_Memory_Barrier_गिनती = nb_img_bar,
         });
 
     err = ff_vk_exec_submit(&p->vkctx, exec);
-    if (err < 0)
-        return err;
+    अगर (err < 0)
+        वापस err;
 
     /* Drops the stack-based frame above from the dependency list */
     ff_vk_exec_wait(&p->vkctx, exec);
 
-    return 0;
+    वापस 0;
 }
 
-static int switch_layout_host(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
-                              AVVkFrame *frame, enum PrepMode pmode)
+अटल पूर्णांक switch_layout_host(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
+                              AVVkFrame *frame, क्रमागत PrepMode pmode)
 {
-    VkResult ret;
+    Vk_परिणाम ret;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VkHostImageLayoutTransitionInfoEXT layout_change[AV_NUM_DATA_POINTERS];
-    int nb_images = ff_vk_count_images(frame);
+    VkHostImageLayoutTransitionInfoEXT layout_change[AV_अंक_तथ्य_POINTERS];
+    पूर्णांक nb_images = ff_vk_गिनती_images(frame);
 
     VkImageLayout new_layout;
     VkAccessFlags2 new_access;
     switch_new_props(pmode, &new_layout, &new_access);
 
-    int i;
-    for (i = 0; i < p->vkctx.host_image_props.copyDstLayoutCount; i++) {
-        if (p->vkctx.host_image_props.pCopyDstLayouts[i] == new_layout)
-            break;
+    पूर्णांक i;
+    क्रम (i = 0; i < p->vkctx.host_image_props.copy_Dst_Layout_गिनती; i++) {
+        अगर (p->vkctx.host_image_props.pCopyDstLayouts[i] == new_layout)
+            अवरोध;
     }
-    if (i == p->vkctx.host_image_props.copyDstLayoutCount)
-        return AVERROR(ENOTSUP);
+    अगर (i == p->vkctx.host_image_props.copy_Dst_Layout_गिनती)
+        वापस AVERROR(ENOTSUP);
 
-    for (i = 0; i < nb_images; i++) {
+    क्रम (i = 0; i < nb_images; i++) {
         layout_change[i] = (VkHostImageLayoutTransitionInfoEXT) {
             .sType = VK_STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO_EXT,
             .image = frame->img[i],
             .oldLayout = frame->layout[i],
             .newLayout = new_layout,
             .subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-            .subresourceRange.layerCount = 1,
-            .subresourceRange.levelCount = 1,
+            .subresourceRange.layer_गिनती = 1,
+            .subresourceRange.level_गिनती = 1,
         };
         frame->layout[i] = new_layout;
     }
 
     ret = vk->TransitionImageLayoutEXT(p->vkctx.hwctx->act_dev,
                                        nb_images, layout_change);
-    if (ret != VK_SUCCESS) {
+    अगर (ret != VK_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Unable to prepare frame: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        वापस AVERROR_EXTERNAL;
     }
 
-    return 0;
+    वापस 0;
 }
 
-static int prepare_frame(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
-                         AVVkFrame *frame, enum PrepMode pmode)
+अटल पूर्णांक prepare_frame(AVHWFramesContext *hwfc, FFVkExecPool *ectx,
+                         AVVkFrame *frame, क्रमागत PrepMode pmode)
 {
-    int err = 0;
+    पूर्णांक err = 0;
     AVVulkanFramesContext *hwfc_vk = hwfc->hwctx;
-    if (hwfc_vk->usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT &&
+    अगर (hwfc_vk->usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT &&
         (pmode != PREP_MODE_EXTERNAL_EXPORT) &&
         (pmode != PREP_MODE_EXTERNAL_IMPORT)) {
         err = switch_layout_host(hwfc, ectx, frame, pmode);
-        if (err != AVERROR(ENOTSUP))
-            return err;
+        अगर (err != AVERROR(ENOTSUP))
+            वापस err;
     }
 
-    return switch_layout(hwfc, ectx, frame, pmode);
+    वापस switch_layout(hwfc, ectx, frame, pmode);
 }
 
-static inline void get_plane_wh(uint32_t *w, uint32_t *h, enum AVPixelFormat format,
-                                int frame_w, int frame_h, int plane)
+अटल अंतरभूत व्योम get_plane_wh(uint32_t *w, uint32_t *h, क्रमागत AVPixelFormat format,
+                                पूर्णांक frame_w, पूर्णांक frame_h, पूर्णांक plane)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(format);
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(format);
 
     /* Currently always true unless gray + alpha support is added */
-    if (!plane || (plane == 3) || desc->flags & AV_PIX_FMT_FLAG_RGB ||
+    अगर (!plane || (plane == 3) || desc->flags & AV_PIX_FMT_FLAG_RGB ||
         !(desc->flags & AV_PIX_FMT_FLAG_PLANAR)) {
         *w = frame_w;
         *h = frame_h;
-        return;
+        वापस;
     }
 
     *w = AV_CEIL_RSHIFT(frame_w, desc->log2_chroma_w);
     *h = AV_CEIL_RSHIFT(frame_h, desc->log2_chroma_h);
 }
 
-static int create_frame(AVHWFramesContext *hwfc, AVVkFrame **frame,
+अटल पूर्णांक create_frame(AVHWFramesContext *hwfc, AVVkFrame **frame,
                         VkImageTiling tiling, VkImageUsageFlagBits usage,
-                        VkImageCreateFlags flags, int nb_layers,
-                        void *create_pnext)
+                        VkImageCreateFlags flags, पूर्णांक nb_layers,
+                        व्योम *create_pnext)
 {
-    int err;
-    VkResult ret;
+    पूर्णांक err;
+    Vk_परिणाम ret;
     AVVulkanFramesContext *hwfc_vk = hwfc->hwctx;
     AVHWDeviceContext *ctx = hwfc->device_ctx;
     VulkanDevicePriv *p = ctx->hwctx;
@@ -2768,43 +2768,43 @@ static int create_frame(AVHWFramesContext *hwfc, AVVkFrame **frame,
     VkSemaphoreTypeCreateInfo sem_type_info = {
         .sType         = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
         .semaphoreType = VK_SEMAPHORE_TYPE_TIMELINE,
-        .initialValue  = 0,
+        .initial_मूल्य  = 0,
     };
     VkSemaphoreCreateInfo sem_spawn = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-        .pNext = &sem_type_info,
+        .p_अग्र = &sem_type_info,
     };
 
     VkExportSemaphoreCreateInfo ext_sem_info_opaque = {
         .sType = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
-#ifdef _WIN32
+#अगर_घोषित _WIN32
         .handleTypes = IsWindows8OrGreater()
             ? VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
             : VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT,
-#else
+#अन्यथा
         .handleTypes = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT,
-#endif
+#पूर्ण_अगर
     };
 
     /* Check if exporting is supported before chaining any structs */
-    if (p->ext_sem_props_opaque.externalSemaphoreFeatures & VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT) {
-        if (p->vkctx.extensions & (FF_VK_EXT_EXTERNAL_WIN32_SEM | FF_VK_EXT_EXTERNAL_FD_SEM))
+    अगर (p->ext_sem_props_opaque.externalSemaphoreFeatures & VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT) {
+        अगर (p->vkctx.extensions & (FF_VK_EXT_EXTERNAL_WIN32_SEM | FF_VK_EXT_EXTERNAL_FD_SEM))
             ff_vk_link_struct(&sem_type_info, &ext_sem_info_opaque);
     }
 
     f = av_vk_frame_alloc();
-    if (!f) {
+    अगर (!f) {
         av_log(ctx, AV_LOG_ERROR, "Unable to allocate memory for AVVkFrame!\n");
-        return AVERROR(ENOMEM);
+        वापस AVERROR(ENOMEM);
     }
 
     // TODO: check width and height for alignment in case of multiplanar (must be mod-2 if subsampled)
 
     /* Create the images */
-    for (int i = 0; (hwfc_vk->format[i] != VK_FORMAT_UNDEFINED); i++) {
+    क्रम (पूर्णांक i = 0; (hwfc_vk->format[i] != VK_FORMAT_UNDEFINED); i++) {
         VkImageCreateInfo create_info = {
             .sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-            .pNext                 = create_pnext,
+            .p_अग्र                 = create_pnext,
             .imageType             = VK_IMAGE_TYPE_2D,
             .format                = hwfc_vk->format[i],
             .extent.depth          = 1,
@@ -2814,9 +2814,9 @@ static int create_frame(AVHWFramesContext *hwfc, AVVkFrame **frame,
             .tiling                = tiling,
             .initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED,
             .usage                 = usage,
-            .samples               = VK_SAMPLE_COUNT_1_BIT,
+            .samples               = VK_SAMPLE_गिनती_1_BIT,
             .pQueueFamilyIndices   = p->img_qfs,
-            .queueFamilyIndexCount = p->nb_img_qfs,
+            .queue_Family_सूचकांक_गिनती = p->nb_img_qfs,
             .sharingMode           = p->nb_img_qfs > 1 ? VK_SHARING_MODE_CONCURRENT :
                                                          VK_SHARING_MODE_EXCLUSIVE,
         };
@@ -2826,81 +2826,81 @@ static int create_frame(AVHWFramesContext *hwfc, AVVkFrame **frame,
 
         ret = vk->CreateImage(hwctx->act_dev, &create_info,
                               hwctx->alloc, &f->img[i]);
-        if (ret != VK_SUCCESS) {
+        अगर (ret != VK_SUCCESS) {
             av_log(ctx, AV_LOG_ERROR, "Image creation failure: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR(EINVAL);
-            goto fail;
+            जाओ fail;
         }
 
         /* Create semaphore */
         ret = vk->CreateSemaphore(hwctx->act_dev, &sem_spawn,
                                   hwctx->alloc, &f->sem[i]);
-        if (ret != VK_SUCCESS) {
+        अगर (ret != VK_SUCCESS) {
             av_log(hwctx, AV_LOG_ERROR, "Failed to create semaphore: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
-            goto fail;
+            जाओ fail;
         }
 
         f->queue_family[i] = p->nb_img_qfs > 1 ? VK_QUEUE_FAMILY_IGNORED : p->img_qfs[0];
         f->layout[i] = create_info.initialLayout;
         f->access[i] = 0x0;
-        f->sem_value[i] = 0;
+        f->sem_मूल्य[i] = 0;
     }
 
     f->flags     = 0x0;
     f->tiling    = tiling;
 
     *frame = f;
-    return 0;
+    वापस 0;
 
 fail:
     vulkan_frame_free(hwfc, f);
-    return err;
+    वापस err;
 }
 
 /* Checks if an export flag is enabled, and if it is ORs it with *iexp */
-static void try_export_flags(AVHWFramesContext *hwfc,
+अटल व्योम try_export_flags(AVHWFramesContext *hwfc,
                              VkExternalMemoryHandleTypeFlags *comp_handle_types,
                              VkExternalMemoryHandleTypeFlags *iexp,
                              VkExternalMemoryHandleTypeFlagBits exp)
 {
-    VkResult ret;
+    Vk_परिणाम ret;
     AVVulkanFramesContext *hwctx = hwfc->hwctx;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *dev_hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    const VkImageDrmFormatModifierListCreateInfoEXT *drm_mod_info =
+    स्थिर VkImageDrmFormatModifierListCreateInfoEXT *drm_mod_info =
         ff_vk_find_struct(hwctx->create_pnext,
                           VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT);
-    int has_mods = hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT && drm_mod_info;
-    int nb_mods;
+    पूर्णांक has_mods = hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT && drm_mod_info;
+    पूर्णांक nb_mods;
 
     VkExternalImageFormatProperties eprops = {
         .sType = VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES_KHR,
     };
     VkImageFormatProperties2 props = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2,
-        .pNext = &eprops,
+        .p_अग्र = &eprops,
     };
     VkPhysicalDeviceImageDrmFormatModifierInfoEXT phy_dev_mod_info = {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT,
-        .pNext = NULL,
+        .p_अग्र = शून्य,
         .pQueueFamilyIndices   = p->img_qfs,
-        .queueFamilyIndexCount = p->nb_img_qfs,
+        .queue_Family_सूचकांक_गिनती = p->nb_img_qfs,
         .sharingMode           = p->nb_img_qfs > 1 ? VK_SHARING_MODE_CONCURRENT :
                                                      VK_SHARING_MODE_EXCLUSIVE,
     };
     VkPhysicalDeviceExternalImageFormatInfo enext = {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO,
         .handleType = exp,
-        .pNext = has_mods ? &phy_dev_mod_info : NULL,
+        .p_अग्र = has_mods ? &phy_dev_mod_info : शून्य,
     };
     VkPhysicalDeviceImageFormatInfo2 pinfo = {
         .sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2,
-        .pNext  = !exp ? NULL : &enext,
+        .p_अग्र  = !exp ? शून्य : &enext,
         .format = hwctx->format[0],
         .type   = VK_IMAGE_TYPE_2D,
         .tiling = hwctx->tiling,
@@ -2909,22 +2909,22 @@ static void try_export_flags(AVHWFramesContext *hwfc,
                   (hwctx->img_flags) : hwctx->img_flags ? hwctx->img_flags : (VkImageCreateFlags)(VK_IMAGE_CREATE_ALIAS_BIT),
     };
 
-    nb_mods = has_mods ? drm_mod_info->drmFormatModifierCount : 1;
-    for (int i = 0; i < nb_mods; i++) {
-        if (has_mods)
+    nb_mods = has_mods ? drm_mod_info->drm_Format_Modifier_गिनती : 1;
+    क्रम (पूर्णांक i = 0; i < nb_mods; i++) {
+        अगर (has_mods)
             phy_dev_mod_info.drmFormatModifier = drm_mod_info->pDrmFormatModifiers[i];
 
         ret = vk->GetPhysicalDeviceImageFormatProperties2(dev_hwctx->phys_dev,
                                                         &pinfo, &props);
 
-        if (has_mods)
+        अगर (has_mods)
             av_log(hwfc, AV_LOG_VERBOSE, "GetPhysicalDeviceImageFormatProperties2: mod[%d]=0x%llx -> %s\n",
-                   i, (unsigned long long)phy_dev_mod_info.drmFormatModifier,
+                   i, (अचिन्हित दीर्घ दीर्घ)phy_dev_mod_info.drmFormatModifier,
                    ret == VK_SUCCESS ? "OK" : "FAIL");
-        if (ret == VK_SUCCESS) {
+        अगर (ret == VK_SUCCESS) {
             *iexp |= exp;
             *comp_handle_types |= eprops.externalMemoryProperties.compatibleHandleTypes;
-            if (exp == VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT) {
+            अगर (exp == VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT) {
                 VulkanFramesPriv *fp = hwfc->hwctx;
                 fp->export_requires_dedicated = !!(eprops.externalMemoryProperties.externalMemoryFeatures &
                                                   VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT);
@@ -2934,7 +2934,7 @@ static void try_export_flags(AVHWFramesContext *hwfc,
 }
 
 /* Computes the external memory handle types for the frame context. */
-static void get_export_handle_types(AVHWFramesContext *hwfc,
+अटल व्योम get_export_handle_types(AVHWFramesContext *hwfc,
                                     VkExternalMemoryHandleTypeFlags *comp_handle_types,
                                     VkExternalMemoryHandleTypeFlags *export_types)
 {
@@ -2944,104 +2944,104 @@ static void get_export_handle_types(AVHWFramesContext *hwfc,
     *comp_handle_types = 0x0;
     *export_types = 0x0;
 
-#ifdef _WIN32
-    if (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_MEMORY)
+#अगर_घोषित _WIN32
+    अगर (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_MEMORY)
         try_export_flags(hwfc, comp_handle_types, export_types, IsWindows8OrGreater()
                              ? VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
                              : VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT);
-#else
-    if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_MEMORY) &&
+#अन्यथा
+    अगर ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_MEMORY) &&
         (hwctx->tiling != VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT))
         try_export_flags(hwfc, comp_handle_types, export_types,
                          VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT);
 
-    if (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_DMABUF_MEMORY &&
+    अगर (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_DMABUF_MEMORY &&
         hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT)
         try_export_flags(hwfc, comp_handle_types, export_types,
                          VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT);
-#endif
+#पूर्ण_अगर
 }
 
-static AVBufferRef *vulkan_pool_alloc(void *opaque, size_t size)
+अटल AVBufferRef *vulkan_pool_alloc(व्योम *opaque, माप_प्रकार आकार)
 {
-    int err;
+    पूर्णांक err;
     AVVkFrame *f;
-    AVBufferRef *avbuf = NULL;
+    AVBufferRef *avbuf = शून्य;
     AVHWFramesContext *hwfc = opaque;
     VulkanFramesPriv *fp = hwfc->hwctx;
     AVVulkanFramesContext *hwctx = &fp->p;
     VkExternalMemoryHandleTypeFlags e;
-    VkExportMemoryAllocateInfo eminfo[AV_NUM_DATA_POINTERS];
+    VkExportMemoryAllocateInfo eminfo[AV_अंक_तथ्य_POINTERS];
 
     VkExternalMemoryImageCreateInfo eiinfo = {
         .sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
-        .pNext       = hwctx->create_pnext,
+        .p_अग्र       = hwctx->create_pnext,
     };
 
     get_export_handle_types(hwfc, &eiinfo.handleTypes, &e);
 
-    for (int i = 0; i < av_pix_fmt_count_planes(hwfc->sw_format); i++) {
+    क्रम (पूर्णांक i = 0; i < av_pix_fmt_गिनती_planes(hwfc->sw_format); i++) {
         eminfo[i].sType       = VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO;
-        eminfo[i].pNext       = hwctx->alloc_pnext[i];
+        eminfo[i].p_अग्र       = hwctx->alloc_pnext[i];
         eminfo[i].handleTypes = e;
     }
 
     err = create_frame(hwfc, &f, hwctx->tiling, hwctx->usage, hwctx->img_flags,
                        hwctx->nb_layers,
                        eiinfo.handleTypes ? &eiinfo : hwctx->create_pnext);
-    if (err) {
+    अगर (err) {
         av_log(hwfc, AV_LOG_ERROR, "vulkan_pool_alloc failed: create_frame failed: %d\n", err);
-        return NULL;
+        वापस शून्य;
     }
 
-    err = alloc_bind_mem(hwfc, f, eminfo, sizeof(*eminfo));
-    if (err)
-        goto fail;
+    err = alloc_bind_mem(hwfc, f, eminfo, माप(*eminfo));
+    अगर (err)
+        जाओ fail;
 
-    if ( (hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR) &&
+    अगर ( (hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR) &&
         !(hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR))
         err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_DECODING_DPB);
-    else if (hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR)
+    अन्यथा अगर (hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR)
         err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_DECODING_DST);
-    else if (hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR)
+    अन्यथा अगर (hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR)
         err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_ENCODING_DPB);
-    else if (hwctx->usage & VK_IMAGE_USAGE_TRANSFER_DST_BIT)
+    अन्यथा अगर (hwctx->usage & VK_IMAGE_USAGE_TRANSFER_DST_BIT)
         err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_WRITE);
-    else
+    अन्यथा
         err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_GENERAL);
-    if (err)
-        goto fail;
+    अगर (err)
+        जाओ fail;
 
-    avbuf = av_buffer_create((uint8_t *)f, sizeof(AVVkFrame),
+    avbuf = av_बफर_create((uint8_t *)f, माप(AVVkFrame),
                              vulkan_frame_free_cb, hwfc, 0);
-    if (!avbuf)
-        goto fail;
+    अगर (!avbuf)
+        जाओ fail;
 
-    return avbuf;
+    वापस avbuf;
 
 fail:
     av_log(hwfc, AV_LOG_ERROR, "vulkan_pool_alloc failed with error %d\n", err);
     vulkan_frame_free(hwfc, f);
-    return NULL;
+    वापस शून्य;
 }
 
-static void lock_frame(AVHWFramesContext *fc, AVVkFrame *vkf)
+अटल व्योम lock_frame(AVHWFramesContext *fc, AVVkFrame *vkf)
 {
     pthread_mutex_lock(&vkf->internal->update_mutex);
 }
 
-static void unlock_frame(AVHWFramesContext *fc, AVVkFrame *vkf)
+अटल व्योम unlock_frame(AVHWFramesContext *fc, AVVkFrame *vkf)
 {
     pthread_mutex_unlock(&vkf->internal->update_mutex);
 }
 
-static void vulkan_frames_uninit(AVHWFramesContext *hwfc)
+अटल व्योम vulkan_frames_uninit(AVHWFramesContext *hwfc)
 {
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     VulkanFramesPriv *fp = hwfc->hwctx;
 
-    if (fp->modifier_info) {
-        if (fp->modifier_info->pDrmFormatModifiers)
+    अगर (fp->modifier_info) {
+        अगर (fp->modifier_info->pDrmFormatModifiers)
             av_freep(&fp->modifier_info->pDrmFormatModifiers);
         av_freep(&fp->modifier_info);
     }
@@ -3058,42 +3058,42 @@ static void vulkan_frames_uninit(AVHWFramesContext *hwfc)
  * format feature, yet reject the final image, or provide no memory type from
  * which such an image can be allocated. Notably video decode/encode images
  * are often not possible to allocate from the host visible memory type. */
-static int vulkan_host_transfer_usable(AVHWFramesContext *hwfc)
+अटल पूर्णांक vulkan_host_transfer_usable(AVHWFramesContext *hwfc)
 {
     VulkanFramesPriv *fp = hwfc->hwctx;
     AVVulkanFramesContext *hwctx = &fp->p;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *dev_hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    VkResult ret;
+    Vk_परिणाम ret;
 
     /* NVIDIA's host image copy resolves every plane's parameters as if it were
      * plane 0, so every plane but the first is corrupted on both upload and
      * download. Frames with one image per plane are unaffected.
      */
-    const struct FFVkFormatEntry *fmt = vk_find_format_entry(hwfc->sw_format);
-    if (p->dprops.driverID == VK_DRIVER_ID_NVIDIA_PROPRIETARY &&
+    स्थिर काष्ठा FFVkFormatEntry *fmt = vk_find_format_entry(hwfc->sw_format);
+    अगर (p->dprops.driverID == VK_DRIVER_ID_NVIDIA_PROPRIETARY &&
         fmt && fmt->vk_planes > 1 && hwctx->format[0] == fmt->vkf) {
         av_log(hwfc, AV_LOG_VERBOSE, "Disabling host image transfers: "
                "NVIDIA drivers mishandle multi-plane images\n");
-        return 0;
+        वापस 0;
     }
 
-    const VkImageDrmFormatModifierListCreateInfoEXT *mod_list =
+    स्थिर VkImageDrmFormatModifierListCreateInfoEXT *mod_list =
         ff_vk_find_struct(hwctx->create_pnext,
                           VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT);
-    int has_mods = hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT &&
-                   mod_list && mod_list->drmFormatModifierCount;
-    int nb_mods = has_mods ? mod_list->drmFormatModifierCount : 1;
+    पूर्णांक has_mods = hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT &&
+                   mod_list && mod_list->drm_Format_Modifier_गिनती;
+    पूर्णांक nb_mods = has_mods ? mod_list->drm_Format_Modifier_गिनती : 1;
 
     /* Without a modifier list the final modifier is not knowable here. */
-    if (hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT && !has_mods)
-        return 0;
+    अगर (hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT && !has_mods)
+        वापस 0;
 
     VkPhysicalDeviceImageDrmFormatModifierInfoEXT mod_info = {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT,
         .pQueueFamilyIndices   = p->img_qfs,
-        .queueFamilyIndexCount = p->nb_img_qfs,
+        .queue_Family_सूचकांक_गिनती = p->nb_img_qfs,
         .sharingMode           = p->nb_img_qfs > 1 ? VK_SHARING_MODE_CONCURRENT :
                                                      VK_SHARING_MODE_EXCLUSIVE,
     };
@@ -3105,79 +3105,79 @@ static int vulkan_host_transfer_usable(AVHWFramesContext *hwfc)
         .flags  = hwctx->img_flags,
     };
 
-    if (has_mods)
+    अगर (has_mods)
         ff_vk_link_struct(&pinfo, &mod_info);
 
     VkVideoProfileListInfoKHR profile_list;
-    const VkVideoProfileListInfoKHR *pl =
+    स्थिर VkVideoProfileListInfoKHR *pl =
         ff_vk_find_struct(hwctx->create_pnext,
                           VK_STRUCTURE_TYPE_VIDEO_PROFILE_LIST_INFO_KHR);
-    if (pl) {
+    अगर (pl) {
         profile_list = *pl;
-        profile_list.pNext = NULL;
+        profile_list.p_अग्र = शून्य;
         ff_vk_link_struct(&pinfo, &profile_list);
     }
 
     VkImageFormatListCreateInfo format_list;
-    const VkImageFormatListCreateInfo *fl =
+    स्थिर VkImageFormatListCreateInfo *fl =
         ff_vk_find_struct(hwctx->create_pnext,
                           VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO);
-    if (fl) {
+    अगर (fl) {
         format_list = *fl;
-        format_list.pNext = NULL;
+        format_list.p_अग्र = शून्य;
         ff_vk_link_struct(&pinfo, &format_list);
     }
 
     /* The same usage is applied to the images of every plane, so each plane
      * format has to support host transfers for the usage to be usable. */
-    for (int i = 0; i < AV_NUM_DATA_POINTERS &&
+    क्रम (पूर्णांक i = 0; i < AV_अंक_तथ्य_POINTERS &&
                     hwctx->format[i] != VK_FORMAT_UNDEFINED; i++) {
         pinfo.format = hwctx->format[i];
 
         /* The driver is free to pick any modifier from the list, so all of
          * them have to be compatible. */
-        for (int j = 0; j < nb_mods; j++) {
+        क्रम (पूर्णांक j = 0; j < nb_mods; j++) {
             VkHostImageCopyDevicePerformanceQueryEXT perf = {
                 .sType = VK_STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY_EXT,
             };
             VkImageFormatProperties2 props = {
                 .sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2,
-                .pNext = &perf,
+                .p_अग्र = &perf,
             };
 
-            if (has_mods)
+            अगर (has_mods)
                 mod_info.drmFormatModifier = mod_list->pDrmFormatModifiers[j];
 
             ret = vk->GetPhysicalDeviceImageFormatProperties2(dev_hwctx->phys_dev,
                                                               &pinfo, &props);
-            if (ret != VK_SUCCESS) {
+            अगर (ret != VK_SUCCESS) {
                 av_log(hwfc, AV_LOG_VERBOSE, "Disabling host image transfers: "
                        "format %i is not supported: %s\n",
                        pinfo.format, ff_vk_ret2str(ret));
-                return 0;
+                वापस 0;
             }
 
-            if (!perf.optimalDeviceAccess) {
+            अगर (!perf.optimalDeviceAccess) {
                 av_log(hwfc, AV_LOG_VERBOSE, "Disabling host image transfers: "
                        "format %i has no optimal device access (identical "
                        "memory layout: %i)\n",
                        pinfo.format, perf.identicalMemoryLayout);
-                return 0;
+                वापस 0;
             }
         }
     }
 
-    if (!p->vkctx.host_image_props.identicalMemoryTypeRequirements) {
-        int index;
+    अगर (!p->vkctx.host_image_props.identicalMemoryTypeRequirements) {
+        पूर्णांक सूचकांक;
         VkExternalMemoryHandleTypeFlags e;
         VkExternalMemoryImageCreateInfo eiinfo = {
             .sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
-            .pNext       = hwctx->create_pnext,
+            .p_अग्र       = hwctx->create_pnext,
         };
         get_export_handle_types(hwfc, &eiinfo.handleTypes, &e);
         VkImageCreateInfo create_info = {
             .sType       = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-            .pNext       = eiinfo.handleTypes ? &eiinfo : hwctx->create_pnext,
+            .p_अग्र       = eiinfo.handleTypes ? &eiinfo : hwctx->create_pnext,
             .imageType   = VK_IMAGE_TYPE_2D,
             .format      = hwctx->format[0],
             .extent      = { hwfc->width, hwfc->height, 1 },
@@ -3186,9 +3186,9 @@ static int vulkan_host_transfer_usable(AVHWFramesContext *hwfc)
             .flags       = hwctx->img_flags,
             .tiling      = hwctx->tiling,
             .usage       = hwctx->usage,
-            .samples     = VK_SAMPLE_COUNT_1_BIT,
+            .samples     = VK_SAMPLE_गिनती_1_BIT,
             .pQueueFamilyIndices   = p->img_qfs,
-            .queueFamilyIndexCount = p->nb_img_qfs,
+            .queue_Family_सूचकांक_गिनती = p->nb_img_qfs,
             .sharingMode           = p->nb_img_qfs > 1 ? VK_SHARING_MODE_CONCURRENT :
                                                          VK_SHARING_MODE_EXCLUSIVE,
         };
@@ -3207,25 +3207,25 @@ static int vulkan_host_transfer_usable(AVHWFramesContext *hwfc)
         VkMemoryPropertyFlags req_flags = hwctx->tiling == VK_IMAGE_TILING_LINEAR ?
                                           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT :
                                           VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-        for (index = 0; index < p->mprops.memoryTypeCount; index++) {
-            if (!(req.memoryRequirements.memoryTypeBits & (1U << index)))
-                continue;
-            if ((p->mprops.memoryTypes[index].propertyFlags & req_flags) == req_flags)
-                break;
+        क्रम (सूचकांक = 0; सूचकांक < p->mprops.memory_Type_गिनती; सूचकांक++) {
+            अगर (!(req.memoryRequirements.memoryTypeBits & (1U << सूचकांक)))
+                जारी;
+            अगर ((p->mprops.memoryTypes[सूचकांक].propertyFlags & req_flags) == req_flags)
+                अवरोध;
         }
-        if (index == p->mprops.memoryTypeCount) {
+        अगर (सूचकांक == p->mprops.memory_Type_गिनती) {
             av_log(hwfc, AV_LOG_VERBOSE, "Disabling host image transfers: "
                    "no compatible memory type\n");
-            return 0;
+            वापस 0;
         }
     }
 
-    return 1;
+    वापस 1;
 }
 
-static int vulkan_frames_init(AVHWFramesContext *hwfc)
+अटल पूर्णांक vulkan_frames_init(AVHWFramesContext *hwfc)
 {
-    int err;
+    पूर्णांक err;
     AVVkFrame *f;
     VulkanFramesPriv *fp = hwfc->hwctx;
     AVVulkanFramesContext *hwctx = &fp->p;
@@ -3233,80 +3233,80 @@ static int vulkan_frames_init(AVHWFramesContext *hwfc)
     AVVulkanDeviceContext *dev_hwctx = &p->p;
     VkImageUsageFlags supported_usage;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    const struct FFVkFormatEntry *fmt;
-    const AVPixFmtDescriptor *desc;
-    int disable_multiplane = p->disable_multiplane ||
+    स्थिर काष्ठा FFVkFormatEntry *fmt;
+    स्थिर AVPixFmtDescriptor *desc;
+    पूर्णांक disable_multiplane = p->disable_multiplane ||
                              (hwctx->flags & AV_VK_FRAME_FLAG_DISABLE_MULTIPLANE);
-    int is_lone_dpb = ((hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR) ||
+    पूर्णांक is_lone_dpb = ((hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR) ||
                        ((hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR) &&
                         !(hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR)));
 
     /* Defaults */
-    if (!hwctx->nb_layers)
+    अगर (!hwctx->nb_layers)
         hwctx->nb_layers = 1;
 
     /* VK_IMAGE_TILING_OPTIMAL == 0, can't check for it really */
-    if (p->use_linear_images &&
+    अगर (p->use_linear_images &&
         (hwctx->tiling != VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT))
         hwctx->tiling = VK_IMAGE_TILING_LINEAR;
 
 
     fmt = vk_find_format_entry(hwfc->sw_format);
-    if (!fmt) {
+    अगर (!fmt) {
         av_log(hwfc, AV_LOG_ERROR, "Unsupported pixel format: %s!\n",
                av_get_pix_fmt_name(hwfc->sw_format));
-        return AVERROR(ENOTSUP);
+        वापस AVERROR(ENOTSUP);
     }
 
     /* _420 and _422 formats need even dimensions, use one image per plane */
     desc = av_pix_fmt_desc_get(hwfc->sw_format);
-    if ((hwfc->width  & ((1 << desc->log2_chroma_w) - 1)) ||
+    अगर ((hwfc->width  & ((1 << desc->log2_chroma_w) - 1)) ||
         (hwfc->height & ((1 << desc->log2_chroma_h) - 1)))
         disable_multiplane = 1;
 
-    if (hwctx->format[0] != VK_FORMAT_UNDEFINED) {
-        if (hwctx->format[0] != fmt->vkf) {
-            for (int i = 0; i < fmt->nb_images_fallback; i++) {
-                if (hwctx->format[i] != fmt->fallback[i]) {
+    अगर (hwctx->format[0] != VK_FORMAT_UNDEFINED) {
+        अगर (hwctx->format[0] != fmt->vkf) {
+            क्रम (पूर्णांक i = 0; i < fmt->nb_images_fallback; i++) {
+                अगर (hwctx->format[i] != fmt->fallback[i]) {
                     av_log(hwfc, AV_LOG_ERROR, "Incompatible Vulkan format given "
                            "for the current sw_format %s!\n",
                            av_get_pix_fmt_name(hwfc->sw_format));
-                    return AVERROR(EINVAL);
+                    वापस AVERROR(EINVAL);
                 }
             }
         }
 
         /* Check if the sw_format itself is supported */
         err = vkfmt_from_pixfmt2(hwfc->device_ctx, hwfc->sw_format,
-                                 hwctx->tiling, NULL,
-                                 NULL, NULL, &supported_usage, 0,
+                                 hwctx->tiling, शून्य,
+                                 शून्य, शून्य, &supported_usage, 0,
                                  !hwctx->usage ||
                                  (hwctx->usage & VK_IMAGE_USAGE_STORAGE_BIT));
-        if (err < 0) {
+        अगर (err < 0) {
             av_log(hwfc, AV_LOG_ERROR, "Unsupported sw format: %s!\n",
                    av_get_pix_fmt_name(hwfc->sw_format));
-            return AVERROR(EINVAL);
+            वापस AVERROR(EINVAL);
         }
-    } else {
+    } अन्यथा {
         err = vkfmt_from_pixfmt2(hwfc->device_ctx, hwfc->sw_format,
-                                 hwctx->tiling, hwctx->format, NULL,
-                                 NULL, &supported_usage,
+                                 hwctx->tiling, hwctx->format, शून्य,
+                                 शून्य, &supported_usage,
                                  disable_multiplane,
                                  !hwctx->usage ||
                                  (hwctx->usage & VK_IMAGE_USAGE_STORAGE_BIT));
-        if (err < 0)
-            return err;
+        अगर (err < 0)
+            वापस err;
     }
 
     /* Lone DPB images do not need additional flags. */
     /* With DRM modifier + video profile the caller has already chosen a valid
      * usage/img_flags/chain; do not add usage or img_flags (supported_usage does
      * not consider the actual modifier or video profile). */
-    int drm_mod_with_video = (hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT &&
+    पूर्णांक drm_mod_with_video = (hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT &&
                               ff_vk_find_struct(hwctx->create_pnext,
                                                 VK_STRUCTURE_TYPE_VIDEO_PROFILE_LIST_INFO_KHR));
 
-    if (!is_lone_dpb && !drm_mod_with_video) {
+    अगर (!is_lone_dpb && !drm_mod_with_video) {
         /* Image usage flags */
         hwctx->usage |= supported_usage & (VK_IMAGE_USAGE_TRANSFER_DST_BIT |
                                            VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
@@ -3318,12 +3318,12 @@ static int vulkan_frames_init(AVHWFramesContext *hwfc)
          * image layout into their barriers at record time, so a host-side
          * layout transition cannot be synchronized against them, not even
          * by the frame lock and timeline semaphore. */
-        if (p->vkctx.extensions & FF_VK_EXT_HOST_IMAGE_COPY &&
+        अगर (p->vkctx.extensions & FF_VK_EXT_HOST_IMAGE_COPY &&
             !(hwctx->usage & VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR))
             hwctx->usage |= supported_usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT;
 
         /* Enables encoding of images, if supported by format and extensions */
-        if ((supported_usage & VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR) &&
+        अगर ((supported_usage & VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR) &&
             (p->vkctx.extensions & FF_VK_EXT_VIDEO_ENCODE_QUEUE) &&
             (p->vkctx.extensions & FF_VK_EXT_VIDEO_MAINTENANCE_1))
             hwctx->usage |= VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR;
@@ -3331,13 +3331,13 @@ static int vulkan_frames_init(AVHWFramesContext *hwfc)
         /* Image creation flags.
          * Only fill them in automatically if the image is not going to be used as
          * a DPB-only image, and we have SAMPLED/STORAGE bits set. */
-        if (!hwctx->img_flags) {
-            int sampleable = hwctx->usage & (VK_IMAGE_USAGE_SAMPLED_BIT |
+        अगर (!hwctx->img_flags) {
+            पूर्णांक sampleable = hwctx->usage & (VK_IMAGE_USAGE_SAMPLED_BIT |
                                              VK_IMAGE_USAGE_STORAGE_BIT);
             hwctx->img_flags = VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
-            if (sampleable) {
+            अगर (sampleable) {
                 hwctx->img_flags |= VK_IMAGE_CREATE_ALIAS_BIT;
-                if ((fmt->vk_planes > 1) && (hwctx->format[0] == fmt->vkf))
+                अगर ((fmt->vk_planes > 1) && (hwctx->format[0] == fmt->vkf))
                     hwctx->img_flags |= VK_IMAGE_CREATE_EXTENDED_USAGE_BIT;
             }
         }
@@ -3347,107 +3347,107 @@ static int vulkan_frames_init(AVHWFramesContext *hwfc)
      * extension is supported, check if it has a profile list.
      * If there's no profile list, or it has no encode operations,
      * then allow creating the image with no specific profile. */
-    if ((hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR) &&
+    अगर ((hwctx->usage & VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR) &&
         (p->vkctx.extensions & FF_VK_EXT_VIDEO_ENCODE_QUEUE) &&
         (p->vkctx.extensions & FF_VK_EXT_VIDEO_MAINTENANCE_1)) {
-        const VkVideoProfileListInfoKHR *pl;
+        स्थिर VkVideoProfileListInfoKHR *pl;
         pl = ff_vk_find_struct(hwctx->create_pnext, VK_STRUCTURE_TYPE_VIDEO_PROFILE_LIST_INFO_KHR);
-        if (!pl) {
+        अगर (!pl) {
             hwctx->img_flags |= VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR;
-        } else {
+        } अन्यथा {
             uint32_t i;
-            for (i = 0; i < pl->profileCount; i++) {
+            क्रम (i = 0; i < pl->profile_गिनती; i++) {
                 /* Video ops start at exactly 0x00010000 */
-                if (pl->pProfiles[i].videoCodecOperation & 0xFFFF0000)
-                    break;
+                अगर (pl->pProfiles[i].videoCodecOperation & 0xFFFF0000)
+                    अवरोध;
             }
-            if (i == pl->profileCount)
+            अगर (i == pl->profile_गिनती)
                 hwctx->img_flags |= VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR;
         }
     }
 
     /* Drop the host transfer if it isn't usable for this image configuration. */
-    if ((hwctx->usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT) &&
+    अगर ((hwctx->usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT) &&
         !vulkan_host_transfer_usable(hwfc))
         hwctx->usage &= ~VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT;
 
-    if (!hwctx->lock_frame)
+    अगर (!hwctx->lock_frame)
         hwctx->lock_frame = lock_frame;
 
-    if (!hwctx->unlock_frame)
+    अगर (!hwctx->unlock_frame)
         hwctx->unlock_frame = unlock_frame;
 
     err = ff_vk_exec_pool_init(&p->vkctx, p->compute_qf, &fp->compute_exec,
-                               2, 0, 0, 0, NULL);
-    if (err)
-        return err;
+                               2, 0, 0, 0, शून्य);
+    अगर (err)
+        वापस err;
 
     err = ff_vk_exec_pool_init(&p->vkctx, p->transfer_qf, &fp->upload_exec,
-                               FF_VK_DEFAULT_EXEC_CONTEXTS, 0, 0, 0, NULL);
-    if (err)
-        return err;
+                               FF_VK_DEFAULT_EXEC_CONTEXTS, 0, 0, 0, शून्य);
+    अगर (err)
+        वापस err;
 
     err = ff_vk_exec_pool_init(&p->vkctx, p->transfer_qf, &fp->download_exec,
-                               2, 0, 0, 0, NULL);
-    if (err)
-        return err;
+                               2, 0, 0, 0, शून्य);
+    अगर (err)
+        वापस err;
 
     /* Test to see if allocation will fail */
     err = create_frame(hwfc, &f, hwctx->tiling, hwctx->usage, hwctx->img_flags,
                        hwctx->nb_layers, hwctx->create_pnext);
-    if (err)
-        return err;
+    अगर (err)
+        वापस err;
 
     /* Collect `VkDrmFormatModifierPropertiesEXT` for each plane. Required for DRM export. */
-    if (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS && hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT) {
+    अगर (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS && hwctx->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT) {
         VkImageDrmFormatModifierPropertiesEXT drm_mod = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT,
         };
         err = vk->GetImageDrmFormatModifierPropertiesEXT(dev_hwctx->act_dev, f->img[0],
                                                         &drm_mod);
-        if (err != VK_SUCCESS) {
+        अगर (err != VK_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to get image DRM format modifier properties");
             vulkan_frame_free(hwfc, f);
-            return AVERROR_EXTERNAL;
+            वापस AVERROR_EXTERNAL;
         }
-        for (int i = 0; i < fmt->vk_planes; ++i) {
+        क्रम (पूर्णांक i = 0; i < fmt->vk_planes; ++i) {
             VkDrmFormatModifierPropertiesListEXT modp;
             VkFormatProperties2 fmtp;
-            VkDrmFormatModifierPropertiesEXT *mod_props = NULL;
+            VkDrmFormatModifierPropertiesEXT *mod_props = शून्य;
 
             modp = (VkDrmFormatModifierPropertiesListEXT) {
                 .sType = VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT,
             };
             fmtp = (VkFormatProperties2) {
                 .sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2,
-                .pNext = &modp,
+                .p_अग्र = &modp,
             };
 
             /* query drmFormatModifierCount by keeping pDrmFormatModifierProperties NULL */
             vk->GetPhysicalDeviceFormatProperties2(dev_hwctx->phys_dev, fmt->fallback[i], &fmtp);
 
             modp.pDrmFormatModifierProperties =
-                av_calloc(modp.drmFormatModifierCount, sizeof(*modp.pDrmFormatModifierProperties));
-            if (!modp.pDrmFormatModifierProperties) {
+                av_calloc(modp.drm_Format_Modifier_गिनती, माप(*modp.pDrmFormatModifierProperties));
+            अगर (!modp.pDrmFormatModifierProperties) {
                 vulkan_frame_free(hwfc, f);
-                return AVERROR(ENOMEM);
+                वापस AVERROR(ENOMEM);
             }
             vk->GetPhysicalDeviceFormatProperties2(dev_hwctx->phys_dev, fmt->fallback[i], &fmtp);
 
-            for (uint32_t j = 0; j < modp.drmFormatModifierCount; ++j) {
+            क्रम (uint32_t j = 0; j < modp.drm_Format_Modifier_गिनती; ++j) {
                 VkDrmFormatModifierPropertiesEXT *m = &modp.pDrmFormatModifierProperties[j];
-                if (m->drmFormatModifier == drm_mod.drmFormatModifier) {
+                अगर (m->drmFormatModifier == drm_mod.drmFormatModifier) {
                     mod_props = m;
-                    break;
+                    अवरोध;
                 }
             }
 
-            if (mod_props == NULL) {
+            अगर (mod_props == शून्य) {
                 av_log(hwfc, AV_LOG_ERROR, "No DRM format modifier properties found for modifier 0x%016"PRIx64"\n",
                           drm_mod.drmFormatModifier);
                 av_free(modp.pDrmFormatModifierProperties);
                 vulkan_frame_free(hwfc, f);
-                return AVERROR_EXTERNAL;
+                वापस AVERROR_EXTERNAL;
             }
 
             fp->drm_format_modifier_properties[i] = *mod_props;
@@ -3459,63 +3459,63 @@ static int vulkan_frames_init(AVHWFramesContext *hwfc)
 
     /* If user did not specify a pool, hwfc->pool will be set to the internal one
      * in hwcontext.c just after this gets called */
-    if (!hwfc->pool) {
-        ffhwframesctx(hwfc)->pool_internal = av_buffer_pool_init2(sizeof(AVVkFrame),
+    अगर (!hwfc->pool) {
+        ffhwframesctx(hwfc)->pool_internal = av_बफर_pool_init2(माप(AVVkFrame),
                                                                   hwfc, vulkan_pool_alloc,
-                                                                  NULL);
-        if (!ffhwframesctx(hwfc)->pool_internal)
-            return AVERROR(ENOMEM);
+                                                                  शून्य);
+        अगर (!ffhwframesctx(hwfc)->pool_internal)
+            वापस AVERROR(ENOMEM);
     }
 
-    return 0;
+    वापस 0;
 }
 
-static int vulkan_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+अटल पूर्णांक vulkan_get_बफर(AVHWFramesContext *hwfc, AVFrame *frame)
 {
-    frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    frame->buf[0] = av_बफर_pool_get(hwfc->pool);
+    अगर (!frame->buf[0])
+        वापस AVERROR(ENOMEM);
 
-    frame->data[0] = frame->buf[0]->data;
+    frame->तथ्य[0] = frame->buf[0]->तथ्य;
     frame->format  = AV_PIX_FMT_VULKAN;
     frame->width   = hwfc->width;
     frame->height  = hwfc->height;
 
-    return 0;
+    वापस 0;
 }
 
-static int vulkan_transfer_get_formats(AVHWFramesContext *hwfc,
-                                       enum AVHWFrameTransferDirection dir,
-                                       enum AVPixelFormat **formats)
+अटल पूर्णांक vulkan_transfer_get_formats(AVHWFramesContext *hwfc,
+                                       क्रमागत AVHWFrameTransferDirection dir,
+                                       क्रमागत AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
-    int n = 2;
+    क्रमागत AVPixelFormat *fmts;
+    पूर्णांक n = 2;
 
-#if CONFIG_CUDA
+#अगर CONFIG_CUDA
     n++;
-#endif
-    fmts = av_malloc_array(n, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+#पूर्ण_अगर
+    fmts = av_malloc_array(n, माप(*fmts));
+    अगर (!fmts)
+        वापस AVERROR(ENOMEM);
 
     n = 0;
     fmts[n++] = hwfc->sw_format;
-#if CONFIG_CUDA
+#अगर CONFIG_CUDA
     fmts[n++] = AV_PIX_FMT_CUDA;
-#endif
+#पूर्ण_अगर
     fmts[n++] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
-    return 0;
+    वापस 0;
 }
 
-#if CONFIG_LIBDRM
-static void vulkan_unmap_from_drm(AVHWFramesContext *hwfc, HWMapDescriptor *hwmap)
+#अगर CONFIG_LIBDRM
+अटल व्योम vulkan_unmap_from_drm(AVHWFramesContext *hwfc, HWMapDescriptor *hwmap)
 {
     vulkan_frame_free(hwfc, hwmap->priv);
 }
 
-static const struct {
+अटल स्थिर काष्ठा {
     uint32_t drm_fourcc;
     VkFormat vk_format;
 } vulkan_drm_format_map[] = {
@@ -3535,65 +3535,65 @@ static const struct {
     { DRM_FORMAT_XBGR2101010, VK_FORMAT_A2R10G10B10_UNORM_PACK32 },
 
     // All these DRM_FORMATs were added in the same libdrm commit.
-#ifdef DRM_FORMAT_XYUV8888
+#अगर_घोषित DRM_FORMAT_XYUV8888
     { DRM_FORMAT_XYUV8888, VK_FORMAT_R8G8B8A8_UNORM     },
     { DRM_FORMAT_XVYU2101010, VK_FORMAT_A2R10G10B10_UNORM_PACK32 } ,
     { DRM_FORMAT_XVYU12_16161616, VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16 } ,
     { DRM_FORMAT_XVYU16161616, VK_FORMAT_R16G16B16A16_UNORM } ,
-#endif
+#पूर्ण_अगर
 };
 
-static inline VkFormat drm_to_vulkan_fmt(uint32_t drm_fourcc)
+अटल अंतरभूत VkFormat drm_to_vulkan_fmt(uint32_t drm_fourcc)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(vulkan_drm_format_map); i++)
-        if (vulkan_drm_format_map[i].drm_fourcc == drm_fourcc)
-            return vulkan_drm_format_map[i].vk_format;
-    return VK_FORMAT_UNDEFINED;
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(vulkan_drm_format_map); i++)
+        अगर (vulkan_drm_format_map[i].drm_fourcc == drm_fourcc)
+            वापस vulkan_drm_format_map[i].vk_format;
+    वापस VK_FORMAT_UNDEFINED;
 }
 
-static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **frame,
-                                          const AVFrame *src, int flags)
+अटल पूर्णांक vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **frame,
+                                          स्थिर AVFrame *src, पूर्णांक flags)
 {
-    int err = 0;
-    VkResult ret;
+    पूर्णांक err = 0;
+    Vk_परिणाम ret;
     AVVkFrame *f;
-    int bind_counts = 0;
+    पूर्णांक bind_counts = 0;
     AVHWDeviceContext *ctx = hwfc->device_ctx;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor *)src->data[0];
+    स्थिर AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor *)src->तथ्य[0];
     VkBindImageMemoryInfo bind_info[AV_DRM_MAX_PLANES];
     VkBindImagePlaneMemoryInfo plane_info[AV_DRM_MAX_PLANES];
 
-    for (int i = 0; i < desc->nb_layers; i++) {
-        if (drm_to_vulkan_fmt(desc->layers[i].format) == VK_FORMAT_UNDEFINED) {
+    क्रम (पूर्णांक i = 0; i < desc->nb_layers; i++) {
+        अगर (drm_to_vulkan_fmt(desc->layers[i].format) == VK_FORMAT_UNDEFINED) {
             av_log(ctx, AV_LOG_ERROR, "Unsupported DMABUF layer format %#08x!\n",
                    desc->layers[i].format);
-            return AVERROR(EINVAL);
+            वापस AVERROR(EINVAL);
         }
     }
 
-    if (!(f = av_vk_frame_alloc())) {
+    अगर (!(f = av_vk_frame_alloc())) {
         av_log(ctx, AV_LOG_ERROR, "Unable to allocate memory for AVVkFrame!\n");
         err = AVERROR(ENOMEM);
-        goto fail;
+        जाओ fail;
     }
 
     f->tiling = VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT;
 
-    for (int i = 0; i < desc->nb_layers; i++) {
-        const int planes = desc->layers[i].nb_planes;
+    क्रम (पूर्णांक i = 0; i < desc->nb_layers; i++) {
+        स्थिर पूर्णांक planes = desc->layers[i].nb_planes;
 
         /* Semaphore */
         VkSemaphoreTypeCreateInfo sem_type_info = {
             .sType         = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
             .semaphoreType = VK_SEMAPHORE_TYPE_TIMELINE,
-            .initialValue  = 0,
+            .initial_मूल्य  = 0,
         };
         VkSemaphoreCreateInfo sem_spawn = {
             .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-            .pNext = &sem_type_info,
+            .p_अग्र = &sem_type_info,
         };
 
         /* Image creation */
@@ -3601,17 +3601,17 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
         VkImageDrmFormatModifierExplicitCreateInfoEXT ext_img_mod_spec = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT,
             .drmFormatModifier = desc->objects[0].format_modifier,
-            .drmFormatModifierPlaneCount = planes,
-            .pPlaneLayouts = (const VkSubresourceLayout *)&ext_img_layouts,
+            .drm_Format_Modifier_Plane_गिनती = planes,
+            .pPlaneLayouts = (स्थिर VkSubresourceLayout *)&ext_img_layouts,
         };
         VkExternalMemoryImageCreateInfo ext_img_spec = {
             .sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
-            .pNext       = &ext_img_mod_spec,
+            .p_अग्र       = &ext_img_mod_spec,
             .handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT,
         };
         VkImageCreateInfo create_info = {
             .sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-            .pNext                 = &ext_img_spec,
+            .p_अग्र                 = &ext_img_spec,
             .imageType             = VK_IMAGE_TYPE_2D,
             .format                = drm_to_vulkan_fmt(desc->layers[i].format),
             .extent.depth          = 1,
@@ -3621,9 +3621,9 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
             .tiling                = VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT,
             .initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED, /* specs say so */
             .usage                 = 0x0, /* filled in below */
-            .samples               = VK_SAMPLE_COUNT_1_BIT,
+            .samples               = VK_SAMPLE_गिनती_1_BIT,
             .pQueueFamilyIndices   = p->img_qfs,
-            .queueFamilyIndexCount = p->nb_img_qfs,
+            .queue_Family_सूचकांक_गिनती = p->nb_img_qfs,
             .sharingMode           = p->nb_img_qfs > 1 ? VK_SHARING_MODE_CONCURRENT :
                                                          VK_SHARING_MODE_EXCLUSIVE,
         };
@@ -3634,9 +3634,9 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
          * single plane layer, create the image with the sw_format's compatible
          * VkFormat so the image and its views agree without a mutable format
          * list, the format query below validates this */
-        if (planes == 1) {
-            const VkFormat *sw_vkfmts = av_vkfmt_from_pixfmt(hwfc->sw_format);
-            if (sw_vkfmts && sw_vkfmts[i] != VK_FORMAT_UNDEFINED)
+        अगर (planes == 1) {
+            स्थिर VkFormat *sw_vkfmts = av_vkfmt_from_pixfmt(hwfc->sw_format);
+            अगर (sw_vkfmts && sw_vkfmts[i] != VK_FORMAT_UNDEFINED)
                 create_info.format = sw_vkfmts[i];
         }
 
@@ -3646,32 +3646,32 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
         };
         VkImageFormatProperties2 props_ret = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2,
-            .pNext = &ext_props,
+            .p_अग्र = &ext_props,
         };
         VkPhysicalDeviceImageDrmFormatModifierInfoEXT props_drm_mod = {
             .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT,
             .drmFormatModifier = ext_img_mod_spec.drmFormatModifier,
             .pQueueFamilyIndices = create_info.pQueueFamilyIndices,
-            .queueFamilyIndexCount = create_info.queueFamilyIndexCount,
+            .queue_Family_सूचकांक_गिनती = create_info.queue_Family_सूचकांक_गिनती,
             .sharingMode = create_info.sharingMode,
         };
         VkPhysicalDeviceExternalImageFormatInfo props_ext = {
             .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO,
-            .pNext = &props_drm_mod,
+            .p_अग्र = &props_drm_mod,
             .handleType = ext_img_spec.handleTypes,
         };
         VkPhysicalDeviceImageFormatInfo2 fmt_props;
 
-        if (flags & AV_HWFRAME_MAP_READ)
+        अगर (flags & AV_HWFRAME_MAP_READ)
             create_info.usage |= VK_IMAGE_USAGE_SAMPLED_BIT |
                                  VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-        if (flags & AV_HWFRAME_MAP_WRITE)
+        अगर (flags & AV_HWFRAME_MAP_WRITE)
             create_info.usage |= VK_IMAGE_USAGE_STORAGE_BIT |
                                  VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
         fmt_props = (VkPhysicalDeviceImageFormatInfo2) {
             .sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2,
-            .pNext  = &props_ext,
+            .p_अग्र  = &props_ext,
             .format = create_info.format,
             .type   = create_info.imageType,
             .tiling = create_info.tiling,
@@ -3682,11 +3682,11 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
         /* Check if importing is possible for this combination of parameters */
         ret = vk->GetPhysicalDeviceImageFormatProperties2(hwctx->phys_dev,
                                                           &fmt_props, &props_ret);
-        if (ret != VK_SUCCESS) {
+        अगर (ret != VK_SUCCESS) {
             av_log(ctx, AV_LOG_ERROR, "Cannot map DRM frame to Vulkan: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
-            goto fail;
+            जाओ fail;
         }
 
         /* Set the image width/height */
@@ -3694,10 +3694,10 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
                      hwfc->sw_format, src->width, src->height, i);
 
         /* Set the subresource layout based on the layer properties */
-        for (int j = 0; j < planes; j++) {
+        क्रम (पूर्णांक j = 0; j < planes; j++) {
             ext_img_layouts[j].offset     = desc->layers[i].planes[j].offset;
             ext_img_layouts[j].rowPitch   = desc->layers[i].planes[j].pitch;
-            ext_img_layouts[j].size       = 0; /* The specs say so for all 3 */
+            ext_img_layouts[j].आकार       = 0; /* The specs say so for all 3 */
             ext_img_layouts[j].arrayPitch = 0;
             ext_img_layouts[j].depthPitch = 0;
         }
@@ -3705,29 +3705,29 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
         /* Create image */
         ret = vk->CreateImage(hwctx->act_dev, &create_info,
                               hwctx->alloc, &f->img[i]);
-        if (ret != VK_SUCCESS) {
+        अगर (ret != VK_SUCCESS) {
             av_log(ctx, AV_LOG_ERROR, "Image creation failure: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR(EINVAL);
-            goto fail;
+            जाओ fail;
         }
 
         ret = vk->CreateSemaphore(hwctx->act_dev, &sem_spawn,
                                   hwctx->alloc, &f->sem[i]);
-        if (ret != VK_SUCCESS) {
+        अगर (ret != VK_SUCCESS) {
             av_log(hwctx, AV_LOG_ERROR, "Failed to create semaphore: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
-            goto fail;
+            जाओ fail;
         }
 
         f->queue_family[i] = VK_QUEUE_FAMILY_EXTERNAL;
         f->layout[i] = create_info.initialLayout;
         f->access[i] = 0x0;
-        f->sem_value[i] = 0;
+        f->sem_मूल्य[i] = 0;
     }
 
-    for (int i = 0; i < desc->nb_layers; i++) {
+    क्रम (पूर्णांक i = 0; i < desc->nb_layers; i++) {
         /* Memory requirements */
         VkImageMemoryRequirementsInfo2 req_desc = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
@@ -3738,7 +3738,7 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
         };
         VkMemoryRequirements2 req2 = {
             .sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
-            .pNext = &ded_req,
+            .p_अग्र = &ded_req,
         };
 
         /* Allocation/importing */
@@ -3751,12 +3751,12 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
          */
         VkImportMemoryFdInfoKHR idesc = {
             .sType      = VK_STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR,
-            .fd         = dup(desc->objects[desc->layers[i].planes[0].object_index].fd),
+            .fd         = dup(desc->objects[desc->layers[i].planes[0].object_सूचकांक].fd),
             .handleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT,
         };
         VkMemoryDedicatedAllocateInfo ded_alloc = {
             .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO,
-            .pNext = &idesc,
+            .p_अग्र = &idesc,
             .image = req_desc.image,
         };
 
@@ -3764,12 +3764,12 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
         ret = vk->GetMemoryFdPropertiesKHR(hwctx->act_dev,
                                            VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT,
                                            idesc.fd, &fdmp);
-        if (ret != VK_SUCCESS) {
+        अगर (ret != VK_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to get FD properties: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
-            close(idesc.fd);
-            goto fail;
+            बंद(idesc.fd);
+            जाओ fail;
         }
 
         vk->GetImageMemoryRequirements2(hwctx->act_dev, &req_desc, &req2);
@@ -3781,29 +3781,29 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
                         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
                         (ded_req.prefersDedicatedAllocation ||
                          ded_req.requiresDedicatedAllocation) ?
-                            &ded_alloc : ded_alloc.pNext,
+                            &ded_alloc : ded_alloc.p_अग्र,
                         &f->flags, &f->mem[i]);
-        if (err) {
-            close(idesc.fd);
-            goto fail;
+        अगर (err) {
+            बंद(idesc.fd);
+            जाओ fail;
         }
 
-        f->size[i] = req2.memoryRequirements.size;
+        f->आकार[i] = req2.memoryRequirements.आकार;
     }
 
-    for (int i = 0; i < desc->nb_layers; i++) {
-        const int planes = desc->layers[i].nb_planes;
-        for (int j = 0; j < planes; j++) {
+    क्रम (पूर्णांक i = 0; i < desc->nb_layers; i++) {
+        स्थिर पूर्णांक planes = desc->layers[i].nb_planes;
+        क्रम (पूर्णांक j = 0; j < planes; j++) {
             VkImageAspectFlagBits aspect = j == 0 ? VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT :
                                            j == 1 ? VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT :
                                                     VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT;
 
             plane_info[bind_counts].sType = VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO;
-            plane_info[bind_counts].pNext = NULL;
+            plane_info[bind_counts].p_अग्र = शून्य;
             plane_info[bind_counts].planeAspect = aspect;
 
             bind_info[bind_counts].sType  = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO;
-            bind_info[bind_counts].pNext  = planes > 1 ? &plane_info[bind_counts] : NULL;
+            bind_info[bind_counts].p_अग्र  = planes > 1 ? &plane_info[bind_counts] : शून्य;
             bind_info[bind_counts].image  = f->img[i];
             bind_info[bind_counts].memory = f->mem[i];
 
@@ -3816,76 +3816,76 @@ static int vulkan_map_from_drm_frame_desc(AVHWFramesContext *hwfc, AVVkFrame **f
 
     /* Bind the allocated memory to the images */
     ret = vk->BindImageMemory2(hwctx->act_dev, bind_counts, bind_info);
-    if (ret != VK_SUCCESS) {
+    अगर (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Failed to bind memory: %s\n",
                ff_vk_ret2str(ret));
         err = AVERROR_EXTERNAL;
-        goto fail;
+        जाओ fail;
     }
 
     *frame = f;
 
-    return 0;
+    वापस 0;
 
 fail:
     vulkan_frame_free(hwfc, f);
 
-    return err;
+    वापस err;
 }
 
-static int vulkan_map_from_drm_frame_sync(AVHWFramesContext *hwfc, AVFrame *dst,
-                                          const AVDRMFrameDescriptor *desc, int flags)
+अटल पूर्णांक vulkan_map_from_drm_frame_sync(AVHWFramesContext *hwfc, AVFrame *dst,
+                                          स्थिर AVDRMFrameDescriptor *desc, पूर्णांक flags)
 {
-    int err;
-    VkResult ret;
+    पूर्णांक err;
+    Vk_परिणाम ret;
     AVHWDeviceContext *ctx = hwfc->device_ctx;
     VulkanDevicePriv *p = ctx->hwctx;
     VulkanFramesPriv *fp = hwfc->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-#ifdef DMA_BUF_IOCTL_EXPORT_SYNC_FILE
-    if (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM) {
-        VkCommandBuffer cmd_buf;
+#अगर_घोषित DMA_BUF_IOCTL_EXPORT_SYNC_FILE
+    अगर (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM) {
+        Vk_Command_बफर cmd_buf;
         FFVkExecContext *exec;
-        VkImageMemoryBarrier2 img_bar[AV_NUM_DATA_POINTERS];
+        VkImageMemoryBarrier2 img_bar[AV_अंक_तथ्य_POINTERS];
         VkSemaphore drm_sync_sem[AV_DRM_MAX_PLANES] = { 0 };
-        int nb_img_bar = 0;
+        पूर्णांक nb_img_bar = 0;
 
-        for (int i = 0; i < desc->nb_objects; i++) {
+        क्रम (पूर्णांक i = 0; i < desc->nb_objects; i++) {
             VkSemaphoreTypeCreateInfo sem_type_info = {
                 .sType         = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
-                .semaphoreType = VK_SEMAPHORE_TYPE_BINARY,
+                .semaphoreType = VK_SEMAPHORE_TYPE_द्विआधारी,
             };
             VkSemaphoreCreateInfo sem_spawn = {
                 .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-                .pNext = &sem_type_info,
+                .p_अग्र = &sem_type_info,
             };
             VkImportSemaphoreFdInfoKHR import_info;
-            struct dma_buf_export_sync_file implicit_fd_info = {
+            काष्ठा dma_buf_export_sync_file implicit_fd_info = {
                 .flags = DMA_BUF_SYNC_READ,
                 .fd = -1,
             };
 
-            if (ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_EXPORT_SYNC_FILE,
+            अगर (ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_EXPORT_SYNC_FILE,
                       &implicit_fd_info)) {
-                err = AVERROR(errno);
+                err = AVERROR(त्रुटि_सं);
                 av_log(hwctx, AV_LOG_ERROR, "Failed to retrieve implicit DRM sync file: %s\n",
                        av_err2str(err));
-                for (; i >= 0; i--)
+                क्रम (; i >= 0; i--)
                     vk->DestroySemaphore(hwctx->act_dev, drm_sync_sem[i], hwctx->alloc);
-                return err;
+                वापस err;
             }
 
             ret = vk->CreateSemaphore(hwctx->act_dev, &sem_spawn,
                                       hwctx->alloc, &drm_sync_sem[i]);
-            if (ret != VK_SUCCESS) {
+            अगर (ret != VK_SUCCESS) {
                 av_log(hwctx, AV_LOG_ERROR, "Failed to create semaphore: %s\n",
                        ff_vk_ret2str(ret));
                 err = AVERROR_EXTERNAL;
-                for (; i >= 0; i--)
+                क्रम (; i >= 0; i--)
                     vk->DestroySemaphore(hwctx->act_dev, drm_sync_sem[i], hwctx->alloc);
-                return err;
+                वापस err;
             }
 
             import_info = (VkImportSemaphoreFdInfoKHR) {
@@ -3897,13 +3897,13 @@ static int vulkan_map_from_drm_frame_sync(AVHWFramesContext *hwfc, AVFrame *dst,
             };
 
             ret = vk->ImportSemaphoreFdKHR(hwctx->act_dev, &import_info);
-            if (ret != VK_SUCCESS) {
+            अगर (ret != VK_SUCCESS) {
                 av_log(hwctx, AV_LOG_ERROR, "Failed to import semaphore: %s\n",
                        ff_vk_ret2str(ret));
                 err = AVERROR_EXTERNAL;
-                for (; i >= 0; i--)
+                क्रम (; i >= 0; i--)
                     vk->DestroySemaphore(hwctx->act_dev, drm_sync_sem[i], hwctx->alloc);
-                return err;
+                वापस err;
             }
         }
 
@@ -3911,10 +3911,10 @@ static int vulkan_map_from_drm_frame_sync(AVHWFramesContext *hwfc, AVFrame *dst,
         cmd_buf = exec->buf;
 
         err = ff_vk_exec_start(&p->vkctx, exec);
-        if (err < 0) {
-            for (int i = 0; i < desc->nb_objects; i++)
+        अगर (err < 0) {
+            क्रम (पूर्णांक i = 0; i < desc->nb_objects; i++)
                 vk->DestroySemaphore(hwctx->act_dev, drm_sync_sem[i], hwctx->alloc);
-            return err;
+            वापस err;
         }
 
         /* Ownership of semaphores is passed */
@@ -3930,9 +3930,9 @@ static int vulkan_map_from_drm_frame_sync(AVHWFramesContext *hwfc, AVFrame *dst,
         err = ff_vk_exec_add_dep_frame(&p->vkctx, exec, dst,
                                        VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
                                        VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT);
-        if (err < 0) {
+        अगर (err < 0) {
             ff_vk_exec_discard(&p->vkctx, exec);
-            return err;
+            वापस err;
         }
 
         ff_vk_frame_barrier(&p->vkctx, exec, dst, img_bar, &nb_img_bar,
@@ -3948,113 +3948,113 @@ static int vulkan_map_from_drm_frame_sync(AVHWFramesContext *hwfc, AVFrame *dst,
         vk->CmdPipelineBarrier2(cmd_buf, &(VkDependencyInfo) {
                 .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
                 .pImageMemoryBarriers = img_bar,
-                .imageMemoryBarrierCount = nb_img_bar,
+                .image_Memory_Barrier_गिनती = nb_img_bar,
             });
 
         err = ff_vk_exec_submit(&p->vkctx, exec);
-        if (err < 0)
-            return err;
-    } else
-#endif
+        अगर (err < 0)
+            वापस err;
+    } अन्यथा
+#पूर्ण_अगर
     {
-        AVVkFrame *f = (AVVkFrame *)dst->data[0];
+        AVVkFrame *f = (AVVkFrame *)dst->तथ्य[0];
         av_log(hwctx, AV_LOG_WARNING, "No support for synchronization when importing DMA-BUFs, "
                                       "image may be corrupted.\n");
         err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_EXTERNAL_IMPORT);
-        if (err)
-            return err;
+        अगर (err)
+            वापस err;
     }
 
-    return 0;
+    वापस 0;
 }
 
-static int vulkan_map_from_drm(AVHWFramesContext *hwfc, AVFrame *dst,
-                               const AVFrame *src, int flags)
+अटल पूर्णांक vulkan_map_from_drm(AVHWFramesContext *hwfc, AVFrame *dst,
+                               स्थिर AVFrame *src, पूर्णांक flags)
 {
-    int err = 0;
+    पूर्णांक err = 0;
     AVVkFrame *f;
-    const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor *)src->data[0];
+    स्थिर AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor *)src->तथ्य[0];
 
-    if ((err = vulkan_map_from_drm_frame_desc(hwfc, &f, src, flags)))
-        return err;
+    अगर ((err = vulkan_map_from_drm_frame_desc(hwfc, &f, src, flags)))
+        वापस err;
 
     /* The unmapping function will free this */
-    dst->data[0] = (uint8_t *)f;
+    dst->तथ्य[0] = (uint8_t *)f;
     dst->width   = src->width;
     dst->height  = src->height;
 
     err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
                                 &vulkan_unmap_from_drm, f);
-    if (err < 0)
-        goto fail;
+    अगर (err < 0)
+        जाओ fail;
 
     err = vulkan_map_from_drm_frame_sync(hwfc, dst, desc, flags);
-    if (err < 0)
-        return err;
+    अगर (err < 0)
+        वापस err;
 
     av_log(hwfc, AV_LOG_DEBUG, "Mapped DRM object to Vulkan!\n");
 
-    return 0;
+    वापस 0;
 
 fail:
     vulkan_frame_free(hwfc->device_ctx->hwctx, f);
-    dst->data[0] = NULL;
-    return err;
+    dst->तथ्य[0] = शून्य;
+    वापस err;
 }
 
-#if CONFIG_VAAPI
-static int vulkan_map_from_vaapi(AVHWFramesContext *dst_fc,
-                                 AVFrame *dst, const AVFrame *src,
-                                 int flags)
+#अगर CONFIG_VAAPI
+अटल पूर्णांक vulkan_map_from_vaapi(AVHWFramesContext *dst_fc,
+                                 AVFrame *dst, स्थिर AVFrame *src,
+                                 पूर्णांक flags)
 {
-    int err;
+    पूर्णांक err;
     AVFrame *tmp = av_frame_alloc();
-    AVHWFramesContext *vaapi_fc = (AVHWFramesContext*)src->hw_frames_ctx->data;
+    AVHWFramesContext *vaapi_fc = (AVHWFramesContext*)src->hw_frames_ctx->तथ्य;
     AVVAAPIDeviceContext *vaapi_ctx = vaapi_fc->device_ctx->hwctx;
-    VASurfaceID surface_id = (VASurfaceID)(uintptr_t)src->data[3];
+    VASurfaceID surface_id = (VASurfaceID)(uintptr_t)src->तथ्य[3];
 
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    अगर (!tmp)
+        वापस AVERROR(ENOMEM);
 
     /* We have to sync since like the previous comment said, no semaphores */
     vaSyncSurface(vaapi_ctx->display, surface_id);
 
-    tmp->format = AV_PIX_FMT_DRM_PRIME;
+    tmp->format = AV_PIX_FMT_DRM_अभाज्य;
 
     err = av_hwframe_map(tmp, src, flags);
-    if (err < 0)
-        goto fail;
+    अगर (err < 0)
+        जाओ fail;
 
     err = vulkan_map_from_drm(dst_fc, dst, tmp, flags);
-    if (err < 0)
-        goto fail;
+    अगर (err < 0)
+        जाओ fail;
 
     err = ff_hwframe_map_replace(dst, src);
 
 fail:
     av_frame_free(&tmp);
-    return err;
+    वापस err;
 }
-#endif
-#endif
+#पूर्ण_अगर
+#पूर्ण_अगर
 
-#if CONFIG_CUDA
-static int export_mem_to_cuda(AVHWDeviceContext *ctx,
+#अगर CONFIG_CUDA
+अटल पूर्णांक export_mem_to_cuda(AVHWDeviceContext *ctx,
                               AVHWDeviceContext *cuda_cu, CudaFunctions *cu,
-                              AVVkFrameInternal *dst_int, int idx,
-                              VkDeviceMemory mem, size_t size)
+                              AVVkFrameInternal *dst_int, पूर्णांक idx,
+                              VkDeviceMemory mem, माप_प्रकार आकार)
 {
-    VkResult ret;
+    Vk_परिणाम ret;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-#ifdef _WIN32
+#अगर_घोषित _WIN32
     CUDA_EXTERNAL_MEMORY_HANDLE_DESC ext_desc = {
         .type = IsWindows8OrGreater()
                 ? CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32
                 : CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT,
-            .size = size,
+            .आकार = आकार,
     };
     VkMemoryGetWin32HandleInfoKHR export_info = {
         .sType      = VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR,
@@ -4066,16 +4066,16 @@ static int export_mem_to_cuda(AVHWDeviceContext *ctx,
 
     ret = vk->GetMemoryWin32HandleKHR(hwctx->act_dev, &export_info,
                                       &ext_desc.handle.win32.handle);
-    if (ret != VK_SUCCESS) {
+    अगर (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Unable to export the image as a Win32 Handle: %s!\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        वापस AVERROR_EXTERNAL;
     }
     dst_int->ext_mem_handle[idx] = ext_desc.handle.win32.handle;
-#else
+#अन्यथा
     CUDA_EXTERNAL_MEMORY_HANDLE_DESC ext_desc = {
         .type = CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD,
-        .size = size,
+        .आकार = आकार,
     };
     VkMemoryGetFdInfoKHR export_info = {
         .sType      = VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR,
@@ -4085,35 +4085,35 @@ static int export_mem_to_cuda(AVHWDeviceContext *ctx,
 
     ret = vk->GetMemoryFdKHR(hwctx->act_dev, &export_info,
                              &ext_desc.handle.fd);
-    if (ret != VK_SUCCESS) {
+    अगर (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Unable to export the image as a FD: %s!\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        वापस AVERROR_EXTERNAL;
     }
-#endif
+#पूर्ण_अगर
 
     ret = CHECK_CU(cu->cuImportExternalMemory(&dst_int->ext_mem[idx], &ext_desc));
-    if (ret < 0) {
-#ifndef _WIN32
-        close(ext_desc.handle.fd);
-#endif
-        return AVERROR_EXTERNAL;
+    अगर (ret < 0) {
+#अगर_अघोषित _WIN32
+        बंद(ext_desc.handle.fd);
+#पूर्ण_अगर
+        वापस AVERROR_EXTERNAL;
     }
 
-    return 0;
+    वापस 0;
 }
 
-static int export_sem_to_cuda(AVHWDeviceContext *ctx,
+अटल पूर्णांक export_sem_to_cuda(AVHWDeviceContext *ctx,
                               AVHWDeviceContext *cuda_cu, CudaFunctions *cu,
-                              AVVkFrameInternal *dst_int, int idx,
+                              AVVkFrameInternal *dst_int, पूर्णांक idx,
                               VkSemaphore sem)
 {
-    VkResult ret;
+    Vk_परिणाम ret;
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-#ifdef _WIN32
+#अगर_घोषित _WIN32
     VkSemaphoreGetWin32HandleInfoKHR sem_export = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR,
         .semaphore = sem,
@@ -4124,7 +4124,7 @@ static int export_sem_to_cuda(AVHWDeviceContext *ctx,
     CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC ext_sem_desc = {
         .type = 10 /* TODO: CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_TIMELINE_SEMAPHORE_WIN32 */,
     };
-#else
+#अन्यथा
     VkSemaphoreGetFdInfoKHR sem_export = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR,
         .semaphore = sem,
@@ -4133,96 +4133,96 @@ static int export_sem_to_cuda(AVHWDeviceContext *ctx,
     CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC ext_sem_desc = {
         .type = 9 /* TODO: CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_TIMELINE_SEMAPHORE_FD */,
     };
-#endif
+#पूर्ण_अगर
 
-#ifdef _WIN32
+#अगर_घोषित _WIN32
     ret = vk->GetSemaphoreWin32HandleKHR(hwctx->act_dev, &sem_export,
                                          &ext_sem_desc.handle.win32.handle);
-#else
+#अन्यथा
     ret = vk->GetSemaphoreFdKHR(hwctx->act_dev, &sem_export,
                                 &ext_sem_desc.handle.fd);
-#endif
-    if (ret != VK_SUCCESS) {
+#पूर्ण_अगर
+    अगर (ret != VK_SUCCESS) {
         av_log(ctx, AV_LOG_ERROR, "Failed to export semaphore: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        वापस AVERROR_EXTERNAL;
     }
-#ifdef _WIN32
+#अगर_घोषित _WIN32
     dst_int->ext_sem_handle[idx] = ext_sem_desc.handle.win32.handle;
-#endif
+#पूर्ण_अगर
 
     ret = CHECK_CU(cu->cuImportExternalSemaphore(&dst_int->cu_sem[idx],
                                                  &ext_sem_desc));
-    if (ret < 0) {
-#ifndef _WIN32
-        close(ext_sem_desc.handle.fd);
-#endif
-        return AVERROR_EXTERNAL;
+    अगर (ret < 0) {
+#अगर_अघोषित _WIN32
+        बंद(ext_sem_desc.handle.fd);
+#पूर्ण_अगर
+        वापस AVERROR_EXTERNAL;
     }
 
-    return 0;
+    वापस 0;
 }
 
-static int vulkan_export_to_cuda(AVHWFramesContext *hwfc,
+अटल पूर्णांक vulkan_export_to_cuda(AVHWFramesContext *hwfc,
                                  AVBufferRef *cuda_hwfc,
-                                 const AVFrame *frame)
+                                 स्थिर AVFrame *frame)
 {
-    int err;
-    VkResult ret;
+    पूर्णांक err;
+    Vk_परिणाम ret;
     AVVkFrame *dst_f;
     AVVkFrameInternal *dst_int;
     AVHWDeviceContext *ctx = hwfc->device_ctx;
-    const int planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
+    स्थिर पूर्णांक planes = av_pix_fmt_गिनती_planes(hwfc->sw_format);
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
     VulkanDevicePriv *p = ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
-    int nb_images;
+    पूर्णांक nb_images;
 
-    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)cuda_hwfc->data;
+    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)cuda_hwfc->तथ्य;
     AVHWDeviceContext *cuda_cu = cuda_fc->device_ctx;
     AVCUDADeviceContext *cuda_dev = cuda_cu->hwctx;
     AVCUDADeviceContextInternal *cu_internal = cuda_dev->internal;
     CudaFunctions *cu = cu_internal->cuda_dl;
     CUarray_format cufmt = desc->comp[0].depth > 8 ? CU_AD_FORMAT_UNSIGNED_INT16 :
                                                      CU_AD_FORMAT_UNSIGNED_INT8;
-    const int elem_size = 1 + (desc->comp[0].depth > 8);
+    स्थिर पूर्णांक elem_आकार = 1 + (desc->comp[0].depth > 8);
 
-    dst_f = (AVVkFrame *)frame->data[0];
+    dst_f = (AVVkFrame *)frame->तथ्य[0];
     dst_int = dst_f->internal;
 
-    if (!dst_int->cuda_fc_ref) {
-        size_t offsets[3] = { 0 };
+    अगर (!dst_int->cuda_fc_ref) {
+        माप_प्रकार offsets[3] = { 0 };
 
-        dst_int->cuda_fc_ref = av_buffer_ref(cuda_hwfc);
-        if (!dst_int->cuda_fc_ref)
-            return AVERROR(ENOMEM);
+        dst_int->cuda_fc_ref = av_बफर_ref(cuda_hwfc);
+        अगर (!dst_int->cuda_fc_ref)
+            वापस AVERROR(ENOMEM);
 
-        nb_images = ff_vk_count_images(dst_f);
-        for (int i = 0; i < nb_images; i++) {
+        nb_images = ff_vk_गिनती_images(dst_f);
+        क्रम (पूर्णांक i = 0; i < nb_images; i++) {
             err = export_mem_to_cuda(ctx, cuda_cu, cu, dst_int, i,
-                                     dst_f->mem[i], dst_f->size[i]);
-            if (err < 0)
-                goto fail;
+                                     dst_f->mem[i], dst_f->आकार[i]);
+            अगर (err < 0)
+                जाओ fail;
 
             err = export_sem_to_cuda(ctx, cuda_cu, cu, dst_int, i,
                                      dst_f->sem[i]);
-            if (err < 0)
-                goto fail;
+            अगर (err < 0)
+                जाओ fail;
         }
 
-        if (nb_images != planes) {
-            for (int i = 0; i < planes; i++) {
+        अगर (nb_images != planes) {
+            क्रम (पूर्णांक i = 0; i < planes; i++) {
                 /* Cuda now defines array formats for semi-planar, but these are
                  * not currently supported for imported Vulkan images. */
-                if (desc->comp[i].step / elem_size > 1) {
+                अगर (desc->comp[i].step / elem_आकार > 1) {
                     av_log(ctx, AV_LOG_ERROR,
                            "Cannot map a multiplane Vulkan image (%d image(s) "
                            "for %d plane(s)) to CUDA; create the Vulkan device "
                            "with the disable_multiplane=1 option (one image per "
                            "plane) for CUDA interop.\n", nb_images, planes);
                     err = AVERROR(ENOSYS);
-                    goto fail;
+                    जाओ fail;
                 }
 
                 VkImageSubresource subres = {
@@ -4237,18 +4237,18 @@ static int vulkan_export_to_cuda(AVHWFramesContext *hwfc,
             }
         }
 
-        for (int i = 0; i < planes; i++) {
+        क्रम (पूर्णांक i = 0; i < planes; i++) {
             CUDA_EXTERNAL_MEMORY_MIPMAPPED_ARRAY_DESC tex_desc = {
                 .offset = offsets[i],
                 .arrayDesc = {
                     .Depth = 0,
                     .Format = cufmt,
-                    .NumChannels = desc->comp[i].step / elem_size,
+                    .अंक_Channels = desc->comp[i].step / elem_आकार,
                     .Flags = 0,
                 },
-                .numLevels = 1,
+                .अंक_Levels = 1,
             };
-            int p_w, p_h;
+            पूर्णांक p_w, p_h;
 
             get_plane_wh(&p_w, &p_h, hwfc->sw_format, hwfc->width, hwfc->height, i);
             tex_desc.arrayDesc.Width = p_w;
@@ -4257,82 +4257,82 @@ static int vulkan_export_to_cuda(AVHWFramesContext *hwfc,
             ret = CHECK_CU(cu->cuExternalMemoryGetMappedMipmappedArray(&dst_int->cu_mma[i],
                                                                        dst_int->ext_mem[FFMIN(i, nb_images - 1)],
                                                                        &tex_desc));
-            if (ret < 0) {
+            अगर (ret < 0) {
                 err = AVERROR_EXTERNAL;
-                goto fail;
+                जाओ fail;
             }
 
             ret = CHECK_CU(cu->cuMipmappedArrayGetLevel(&dst_int->cu_array[i],
                                                         dst_int->cu_mma[i], 0));
-            if (ret < 0) {
+            अगर (ret < 0) {
                 err = AVERROR_EXTERNAL;
-                goto fail;
+                जाओ fail;
             }
 
         }
     }
 
-    return 0;
+    वापस 0;
 
 fail:
     vulkan_free_internal(p, dst_f);
-    return err;
+    वापस err;
 }
 
-static int vulkan_transfer_data_from_cuda(AVHWFramesContext *hwfc,
-                                          AVFrame *dst, const AVFrame *src)
+अटल पूर्णांक vulkan_transfer_तथ्य_from_cuda(AVHWFramesContext *hwfc,
+                                          AVFrame *dst, स्थिर AVFrame *src)
 {
-    int err;
+    पूर्णांक err;
     CUcontext dummy;
     AVVkFrame *dst_f;
     AVVkFrameInternal *dst_int;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     VulkanFramesPriv *fp = hwfc->hwctx;
-    const int planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
-    int nb_images;
+    स्थिर पूर्णांक planes = av_pix_fmt_गिनती_planes(hwfc->sw_format);
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
+    पूर्णांक nb_images;
 
-    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)src->hw_frames_ctx->data;
+    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)src->hw_frames_ctx->तथ्य;
     AVHWDeviceContext *cuda_cu = cuda_fc->device_ctx;
     AVCUDADeviceContext *cuda_dev = cuda_cu->hwctx;
     AVCUDADeviceContextInternal *cu_internal = cuda_dev->internal;
     CudaFunctions *cu = cu_internal->cuda_dl;
-    CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS s_w_par[AV_NUM_DATA_POINTERS] = { 0 };
-    CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS s_s_par[AV_NUM_DATA_POINTERS] = { 0 };
+    CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS s_w_par[AV_अंक_तथ्य_POINTERS] = { 0 };
+    CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS s_s_par[AV_अंक_तथ्य_POINTERS] = { 0 };
 
-    dst_f = (AVVkFrame *)dst->data[0];
-    nb_images = ff_vk_count_images(dst_f);
+    dst_f = (AVVkFrame *)dst->तथ्य[0];
+    nb_images = ff_vk_गिनती_images(dst_f);
 
     err = prepare_frame(hwfc, &fp->upload_exec, dst_f, PREP_MODE_EXTERNAL_EXPORT);
-    if (err < 0)
-        return err;
+    अगर (err < 0)
+        वापस err;
 
-    err = CHECK_CU(cu->cuCtxPushCurrent(cuda_dev->cuda_ctx));
-    if (err < 0)
-        return err;
+    err = CHECK_CU(cu->cu_Ctx_धकेलो_Current(cuda_dev->cuda_ctx));
+    अगर (err < 0)
+        वापस err;
 
     err = vulkan_export_to_cuda(hwfc, src->hw_frames_ctx, dst);
-    if (err < 0) {
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-        return err;
+    अगर (err < 0) {
+        CHECK_CU(cu->cu_Ctx_निकालो_Current(&dummy));
+        वापस err;
     }
 
     dst_int = dst_f->internal;
 
-    for (int i = 0; i < nb_images; i++) {
-        s_w_par[i].params.fence.value = dst_f->sem_value[i] + 0;
-        s_s_par[i].params.fence.value = dst_f->sem_value[i] + 1;
+    क्रम (पूर्णांक i = 0; i < nb_images; i++) {
+        s_w_par[i].params.fence.मूल्य = dst_f->sem_मूल्य[i] + 0;
+        s_s_par[i].params.fence.मूल्य = dst_f->sem_मूल्य[i] + 1;
     }
 
     err = CHECK_CU(cu->cuWaitExternalSemaphoresAsync(dst_int->cu_sem, s_w_par,
                                                      nb_images, cuda_dev->stream));
-    if (err < 0)
-        goto fail;
+    अगर (err < 0)
+        जाओ fail;
 
-    for (int i = 0; i < planes; i++) {
+    क्रम (पूर्णांक i = 0; i < planes; i++) {
         CUDA_MEMCPY2D cpy = {
             .srcMemoryType = CU_MEMORYTYPE_DEVICE,
-            .srcDevice     = (CUdeviceptr)src->data[i],
+            .srcDevice     = (CUdeviceptr)src->तथ्य[i],
             .srcPitch      = src->linesize[i],
             .srcY          = 0,
 
@@ -4340,71 +4340,71 @@ static int vulkan_transfer_data_from_cuda(AVHWFramesContext *hwfc,
             .dstArray      = dst_int->cu_array[i],
         };
 
-        int p_w, p_h;
+        पूर्णांक p_w, p_h;
         get_plane_wh(&p_w, &p_h, hwfc->sw_format, hwfc->width, hwfc->height, i);
 
         cpy.WidthInBytes = p_w * desc->comp[i].step;
         cpy.Height = p_h;
 
         err = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, cuda_dev->stream));
-        if (err < 0)
-            goto fail;
+        अगर (err < 0)
+            जाओ fail;
     }
 
     err = CHECK_CU(cu->cuSignalExternalSemaphoresAsync(dst_int->cu_sem, s_s_par,
                                                        nb_images, cuda_dev->stream));
-    if (err < 0)
-        goto fail;
+    अगर (err < 0)
+        जाओ fail;
 
-    for (int i = 0; i < nb_images; i++)
-        dst_f->sem_value[i]++;
+    क्रम (पूर्णांक i = 0; i < nb_images; i++)
+        dst_f->sem_मूल्य[i]++;
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_निकालो_Current(&dummy));
 
     av_log(hwfc, AV_LOG_VERBOSE, "Transferred CUDA image to Vulkan!\n");
 
-    return err = prepare_frame(hwfc, &fp->upload_exec, dst_f, PREP_MODE_EXTERNAL_IMPORT);
+    वापस err = prepare_frame(hwfc, &fp->upload_exec, dst_f, PREP_MODE_EXTERNAL_IMPORT);
 
 fail:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_निकालो_Current(&dummy));
     vulkan_free_internal(p, dst_f);
-    av_buffer_unref(&dst->buf[0]);
-    return err;
+    av_बफर_unref(&dst->buf[0]);
+    वापस err;
 }
-#endif
+#पूर्ण_अगर
 
-static int vulkan_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
-                         const AVFrame *src, int flags)
+अटल पूर्णांक vulkan_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
+                         स्थिर AVFrame *src, पूर्णांक flags)
 {
     av_unused VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
 
-    switch (src->format) {
-#if CONFIG_LIBDRM
-#if CONFIG_VAAPI
-    case AV_PIX_FMT_VAAPI:
-        if (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
-            return vulkan_map_from_vaapi(hwfc, dst, src, flags);
-        else
-            return AVERROR(ENOSYS);
-#endif
-    case AV_PIX_FMT_DRM_PRIME:
-        if (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
-            return vulkan_map_from_drm(hwfc, dst, src, flags);
-        else
-            return AVERROR(ENOSYS);
-#endif
-    default:
-        return AVERROR(ENOSYS);
+    चयन (src->format) {
+#अगर CONFIG_LIBDRM
+#अगर CONFIG_VAAPI
+    हाल AV_PIX_FMT_VAAPI:
+        अगर (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
+            वापस vulkan_map_from_vaapi(hwfc, dst, src, flags);
+        अन्यथा
+            वापस AVERROR(ENOSYS);
+#पूर्ण_अगर
+    हाल AV_PIX_FMT_DRM_अभाज्य:
+        अगर (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
+            वापस vulkan_map_from_drm(hwfc, dst, src, flags);
+        अन्यथा
+            वापस AVERROR(ENOSYS);
+#पूर्ण_अगर
+    शेष:
+        वापस AVERROR(ENOSYS);
     }
 }
 
-#if CONFIG_LIBDRM
-typedef struct VulkanDRMMapping {
+#अगर CONFIG_LIBDRM
+प्रकार काष्ठा VulkanDRMMapping {
     AVDRMFrameDescriptor drm_desc;
     AVVkFrame *source;
 } VulkanDRMMapping;
 
-static void vulkan_unmap_to_drm(AVHWFramesContext *hwfc, HWMapDescriptor *hwmap)
+अटल व्योम vulkan_unmap_to_drm(AVHWFramesContext *hwfc, HWMapDescriptor *hwmap)
 {
     AVDRMFrameDescriptor *drm_desc = hwmap->priv;
 
@@ -4412,61 +4412,61 @@ static void vulkan_unmap_to_drm(AVHWFramesContext *hwfc, HWMapDescriptor *hwmap)
      * done on the buffer while exported. We don't know if who used the dmabuf did reads or writes, so protect against both */
     vulkan_map_from_drm_frame_sync(hwfc, hwmap->source, drm_desc, AV_HWFRAME_MAP_READ | AV_HWFRAME_MAP_WRITE);
 
-    for (int i = 0; i < drm_desc->nb_objects; i++)
-        close(drm_desc->objects[i].fd);
+    क्रम (पूर्णांक i = 0; i < drm_desc->nb_objects; i++)
+        बंद(drm_desc->objects[i].fd);
 
     av_free(drm_desc);
 }
 
-static inline uint32_t vulkan_fmt_to_drm(VkFormat vkfmt)
+अटल अंतरभूत uint32_t vulkan_fmt_to_drm(VkFormat vkfmt)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(vulkan_drm_format_map); i++)
-        if (vulkan_drm_format_map[i].vk_format == vkfmt)
-            return vulkan_drm_format_map[i].drm_fourcc;
-    return DRM_FORMAT_INVALID;
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(vulkan_drm_format_map); i++)
+        अगर (vulkan_drm_format_map[i].vk_format == vkfmt)
+            वापस vulkan_drm_format_map[i].drm_fourcc;
+    वापस DRM_FORMAT_INVALID;
 }
 
-#define MAX_MEMORY_PLANES 4
-static VkImageAspectFlags plane_index_to_aspect(int plane) {
-    if (plane == 0) return VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT;
-    if (plane == 1) return VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT;
-    if (plane == 2) return VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT;
-    if (plane == 3) return VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT;
+#घोषणा MAX_MEMORY_PLANES 4
+अटल VkImageAspectFlags plane_सूचकांक_to_aspect(पूर्णांक plane) {
+    अगर (plane == 0) वापस VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT;
+    अगर (plane == 1) वापस VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT;
+    अगर (plane == 2) वापस VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT;
+    अगर (plane == 3) वापस VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT;
 
     av_assert2 (0 && "Invalid plane index");
-    return VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT;
+    वापस VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT;
 }
 
-#ifdef DMA_BUF_IOCTL_EXPORT_SYNC_FILE
-static int vulkan_drm_export_sync_fd(AVHWFramesContext *hwfc, AVVkFrame *f,
-                                     VulkanFramesPriv *fp, int nb_sems)
+#अगर_घोषित DMA_BUF_IOCTL_EXPORT_SYNC_FILE
+अटल पूर्णांक vulkan_drm_export_sync_fd(AVHWFramesContext *hwfc, AVVkFrame *f,
+                                     VulkanFramesPriv *fp, पूर्णांक nb_sems)
 {
-    int sync_fd = -1;
-    VkResult ret;
+    पूर्णांक sync_fd = -1;
+    Vk_परिणाम ret;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    if (f->internal->drm_sync_sem == VK_NULL_HANDLE) {
+    अगर (f->internal->drm_sync_sem == VK_NULL_HANDLE) {
         VkExportSemaphoreCreateInfo exp_info = {
             .sType       = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
             .handleTypes = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT,
         };
         VkSemaphoreTypeCreateInfo type_info = {
             .sType         = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
-            .pNext         = &exp_info,
-            .semaphoreType = VK_SEMAPHORE_TYPE_BINARY,
+            .p_अग्र         = &exp_info,
+            .semaphoreType = VK_SEMAPHORE_TYPE_द्विआधारी,
         };
         VkSemaphoreCreateInfo sem_create = {
             .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-            .pNext = &type_info,
+            .p_अग्र = &type_info,
         };
         ret = vk->CreateSemaphore(hwctx->act_dev, &sem_create, hwctx->alloc,
                                   &f->internal->drm_sync_sem);
-        if (ret != VK_SUCCESS) {
+        अगर (ret != VK_SUCCESS) {
             av_log(hwctx, AV_LOG_ERROR, "Failed to create DRM export semaphore: %s\n",
                    ff_vk_ret2str(ret));
-            return AVERROR_EXTERNAL;
+            वापस AVERROR_EXTERNAL;
         }
     }
 
@@ -4474,21 +4474,21 @@ static int vulkan_drm_export_sync_fd(AVHWFramesContext *hwfc, AVVkFrame *f,
      * (true last operation on the frame) and signals the binary semaphore,
      * so any Vulkan frame can get a SYNC_FD regardless of origin. */
     FFVkExecContext *exec = ff_vk_exec_get(&p->vkctx, &fp->compute_exec);
-    if (ff_vk_exec_start(&p->vkctx, exec) >= 0) {
-        for (int i = 0; i < nb_sems; i++)
+    अगर (ff_vk_exec_start(&p->vkctx, exec) >= 0) {
+        क्रम (पूर्णांक i = 0; i < nb_sems; i++)
             ff_vk_exec_add_dep_wait_sem(&p->vkctx, exec, f->sem[i],
-                                        f->sem_value[i],
+                                        f->sem_मूल्य[i],
                                         VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT);
         ff_vk_exec_add_dep_bool_sem(&p->vkctx, exec, &f->internal->drm_sync_sem, 1,
                                     VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, 0);
-        if (ff_vk_exec_submit(&p->vkctx, exec) >= 0) {
+        अगर (ff_vk_exec_submit(&p->vkctx, exec) >= 0) {
             VkSemaphoreGetFdInfoKHR get_fd_info = {
                 .sType      = VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR,
                 .semaphore  = f->internal->drm_sync_sem,
                 .handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT,
             };
             ret = vk->GetSemaphoreFdKHR(hwctx->act_dev, &get_fd_info, &sync_fd);
-            if (ret != VK_SUCCESS) {
+            अगर (ret != VK_SUCCESS) {
                 av_log(hwctx, AV_LOG_WARNING,
                        "Failed to get sync fd from DRM map export semaphore: %s\n",
                        ff_vk_ret2str(ret));
@@ -4497,76 +4497,76 @@ static int vulkan_drm_export_sync_fd(AVHWFramesContext *hwfc, AVVkFrame *f,
         }
     }
 
-    return sync_fd;
+    वापस sync_fd;
 }
-#endif
+#पूर्ण_अगर
 
-static int vulkan_map_to_drm(AVHWFramesContext *hwfc, AVFrame *dst,
-                             const AVFrame *src, int flags)
+अटल पूर्णांक vulkan_map_to_drm(AVHWFramesContext *hwfc, AVFrame *dst,
+                             स्थिर AVFrame *src, पूर्णांक flags)
 {
-    int err = 0;
-    VkResult ret;
-    AVVkFrame *f = (AVVkFrame *)src->data[0];
+    पूर्णांक err = 0;
+    Vk_परिणाम ret;
+    AVVkFrame *f = (AVVkFrame *)src->तथ्य[0];
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
     VulkanFramesPriv *fp = hwfc->hwctx;
-    const int planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    const int nb_images = ff_vk_count_images(f);
+    स्थिर पूर्णांक planes = av_pix_fmt_गिनती_planes(hwfc->sw_format);
+    स्थिर पूर्णांक nb_images = ff_vk_गिनती_images(f);
     VkImageDrmFormatModifierPropertiesEXT drm_mod = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT,
     };
-    const int nb_sems = nb_images;
-    int free_drm_desc_on_err = 1;
-    int sync_fd = -1;
+    स्थिर पूर्णांक nb_sems = nb_images;
+    पूर्णांक free_drm_desc_on_err = 1;
+    पूर्णांक sync_fd = -1;
 
-    AVDRMFrameDescriptor *drm_desc = av_mallocz(sizeof(*drm_desc));
-    if (!drm_desc)
-        return AVERROR(ENOMEM);
+    AVDRMFrameDescriptor *drm_desc = av_mallocz(माप(*drm_desc));
+    अगर (!drm_desc)
+        वापस AVERROR(ENOMEM);
 
     err = prepare_frame(hwfc, &fp->compute_exec, f, PREP_MODE_EXTERNAL_EXPORT);
-    if (err < 0)
-        goto end;
+    अगर (err < 0)
+        जाओ end;
 
-#ifdef DMA_BUF_IOCTL_EXPORT_SYNC_FILE
-    if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM) &&
+#अगर_घोषित DMA_BUF_IOCTL_EXPORT_SYNC_FILE
+    अगर ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM) &&
         f->tiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT &&
         vk->GetSemaphoreFdKHR && vk->CreateSemaphore) {
         err = vulkan_drm_export_sync_fd(hwfc, f, fp, nb_sems);
-        if (err < 0)
-            goto end;
+        अगर (err < 0)
+            जाओ end;
         sync_fd = err;
         err = 0;
     }
-#endif
+#पूर्ण_अगर
 
-    if (sync_fd < 0) {
+    अगर (sync_fd < 0) {
         VkSemaphoreWaitInfo wait_info = {
             .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
             .flags          = 0x0,
-            .semaphoreCount = nb_sems,
+            .semaphore_गिनती = nb_sems,
             .pSemaphores    = f->sem,
-            .pValues        = f->sem_value,
+            .p_मूल्यावली        = f->sem_मूल्य,
         };
         vk->WaitSemaphores(hwctx->act_dev, &wait_info, UINT64_MAX);
     }
 
     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src, &vulkan_unmap_to_drm, drm_desc);
-    if (err < 0)
-        goto end;
+    अगर (err < 0)
+        जाओ end;
 
     /* It will be freed in ff_hwframe_map_create callback */
     free_drm_desc_on_err = 0;
 
     ret = vk->GetImageDrmFormatModifierPropertiesEXT(hwctx->act_dev, f->img[0],
                                                      &drm_mod);
-    if (ret != VK_SUCCESS) {
+    अगर (ret != VK_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to retrieve DRM format modifier!\n");
         err = AVERROR_EXTERNAL;
-        goto end;
+        जाओ end;
     }
 
-    for (int i = 0; (i < planes) && (f->mem[i]); i++) {
+    क्रम (पूर्णांक i = 0; (i < planes) && (f->mem[i]); i++) {
         VkMemoryGetFdInfoKHR export_info = {
             .sType      = VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR,
             .memory     = f->mem[i],
@@ -4575,306 +4575,306 @@ static int vulkan_map_to_drm(AVHWFramesContext *hwfc, AVFrame *dst,
 
         ret = vk->GetMemoryFdKHR(hwctx->act_dev, &export_info,
                                  &drm_desc->objects[i].fd);
-        if (ret != VK_SUCCESS) {
+        अगर (ret != VK_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Unable to export the image as a FD!\n");
             err = AVERROR_EXTERNAL;
-            goto end;
+            जाओ end;
         }
 
-#if HAVE_LINUX_DMA_BUF_H && defined(DMA_BUF_IOCTL_IMPORT_SYNC_FILE)
-        if (sync_fd >= 0) {
-            int dup_fd = dup(sync_fd);
-            if (dup_fd >= 0) {
-                struct dma_buf_import_sync_file import_info = {
+#अगर HAVE_LINUX_DMA_BUF_H && defined(DMA_BUF_IOCTL_IMPORT_SYNC_FILE)
+        अगर (sync_fd >= 0) {
+            पूर्णांक dup_fd = dup(sync_fd);
+            अगर (dup_fd >= 0) {
+                काष्ठा dma_buf_import_sync_file import_info = {
                     .flags = DMA_BUF_SYNC_WRITE,
                     .fd = dup_fd,
                 };
-                if (ioctl(drm_desc->objects[i].fd, DMA_BUF_IOCTL_IMPORT_SYNC_FILE, &import_info) < 0)
-                    av_log(hwfc, AV_LOG_WARNING, "DMA_BUF_IOCTL_IMPORT_SYNC_FILE failed: %s\n", av_err2str(AVERROR(errno)));
-                close(dup_fd);
-            } else {
-                av_log(hwfc, AV_LOG_WARNING, "dup(sync_fd) failed: %s\n", av_err2str(AVERROR(errno)));
+                अगर (ioctl(drm_desc->objects[i].fd, DMA_BUF_IOCTL_IMPORT_SYNC_FILE, &import_info) < 0)
+                    av_log(hwfc, AV_LOG_WARNING, "DMA_BUF_IOCTL_IMPORT_SYNC_FILE failed: %s\n", av_err2str(AVERROR(त्रुटि_सं)));
+                बंद(dup_fd);
+            } अन्यथा {
+                av_log(hwfc, AV_LOG_WARNING, "dup(sync_fd) failed: %s\n", av_err2str(AVERROR(त्रुटि_सं)));
             }
         }
-#endif
+#पूर्ण_अगर
 
         drm_desc->nb_objects++;
-        drm_desc->objects[i].size = f->size[i];
+        drm_desc->objects[i].आकार = f->आकार[i];
         drm_desc->objects[i].format_modifier = drm_mod.drmFormatModifier;
     }
 
     /* NV12 has 2 planes but 1 image/semaphore */
     drm_desc->nb_layers = FFMAX(planes, nb_images);
-    for (int i = 0; i < drm_desc->nb_layers; i++) {
+    क्रम (पूर्णांक i = 0; i < drm_desc->nb_layers; i++) {
         VkFormat plane_vkfmt = av_vkfmt_from_pixfmt(hwfc->sw_format)[i];
 
         drm_desc->layers[i].format = vulkan_fmt_to_drm(plane_vkfmt);
-        drm_desc->layers[i].nb_planes = fp->drm_format_modifier_properties[i].drmFormatModifierPlaneCount;
+        drm_desc->layers[i].nb_planes = fp->drm_format_modifier_properties[i].drm_Format_Modifier_Plane_गिनती;
 
-        if (drm_desc->layers[i].nb_planes > MAX_MEMORY_PLANES) {
+        अगर (drm_desc->layers[i].nb_planes > MAX_MEMORY_PLANES) {
             av_log(hwfc, AV_LOG_ERROR, "Too many memory planes for DRM format!\n");
             err = AVERROR_EXTERNAL;
-            goto end;
+            जाओ end;
         }
 
-        for (int j = 0; j < drm_desc->layers[i].nb_planes; j++) {
+        क्रम (पूर्णांक j = 0; j < drm_desc->layers[i].nb_planes; j++) {
             VkSubresourceLayout layout;
-            int aspect_plane = (nb_images == 1) ? i : j;
+            पूर्णांक aspect_plane = (nb_images == 1) ? i : j;
             VkImageSubresource sub = {
-                .aspectMask = plane_index_to_aspect(aspect_plane),
+                .aspectMask = plane_सूचकांक_to_aspect(aspect_plane),
             };
 
-            drm_desc->layers[i].planes[j].object_index = FFMIN(i, drm_desc->nb_objects - 1);
+            drm_desc->layers[i].planes[j].object_सूचकांक = FFMIN(i, drm_desc->nb_objects - 1);
 
             vk->GetImageSubresourceLayout(hwctx->act_dev, f->img[FFMIN(i, nb_images - 1)], &sub, &layout);
             drm_desc->layers[i].planes[j].offset = layout.offset;
             drm_desc->layers[i].planes[j].pitch  = layout.rowPitch;
         }
 
-        if (drm_desc->layers[i].format == DRM_FORMAT_INVALID) {
+        अगर (drm_desc->layers[i].format == DRM_FORMAT_INVALID) {
             av_log(hwfc, AV_LOG_ERROR, "Cannot map to DRM layer, unsupported!\n");
             err = AVERROR_PATCHWELCOME;
-            goto end;
+            जाओ end;
         }
 
 
-        if (f->tiling == VK_IMAGE_TILING_OPTIMAL)
-            continue;
+        अगर (f->tiling == VK_IMAGE_TILING_OPTIMAL)
+            जारी;
 
     }
 
     dst->width   = src->width;
     dst->height  = src->height;
-    dst->data[0] = (uint8_t *)drm_desc;
-    dst->hw_frames_ctx = av_buffer_ref(src->hw_frames_ctx);
+    dst->तथ्य[0] = (uint8_t *)drm_desc;
+    dst->hw_frames_ctx = av_बफर_ref(src->hw_frames_ctx);
 
-    if (sync_fd >= 0)
-        close(sync_fd);
+    अगर (sync_fd >= 0)
+        बंद(sync_fd);
 
     av_log(hwfc, AV_LOG_VERBOSE, "Mapped AVVkFrame to a DRM object!\n");
 
-    return 0;
+    वापस 0;
 
 end:
-    for (int i = 0; i < drm_desc->nb_objects; i++)
-        close(drm_desc->objects[i].fd);
-    if (free_drm_desc_on_err)
+    क्रम (पूर्णांक i = 0; i < drm_desc->nb_objects; i++)
+        बंद(drm_desc->objects[i].fd);
+    अगर (free_drm_desc_on_err)
         av_free(drm_desc);
-    if (sync_fd >= 0)
-        close(sync_fd);
-    return err;
+    अगर (sync_fd >= 0)
+        बंद(sync_fd);
+    वापस err;
 }
 
-#if CONFIG_VAAPI
-static int vulkan_map_to_vaapi(AVHWFramesContext *hwfc, AVFrame *dst,
-                               const AVFrame *src, int flags)
+#अगर CONFIG_VAAPI
+अटल पूर्णांक vulkan_map_to_vaapi(AVHWFramesContext *hwfc, AVFrame *dst,
+                               स्थिर AVFrame *src, पूर्णांक flags)
 {
-    int err;
+    पूर्णांक err;
     AVFrame *tmp = av_frame_alloc();
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    अगर (!tmp)
+        वापस AVERROR(ENOMEM);
 
-    tmp->format = AV_PIX_FMT_DRM_PRIME;
+    tmp->format = AV_PIX_FMT_DRM_अभाज्य;
 
     err = vulkan_map_to_drm(hwfc, tmp, src, flags);
-    if (err < 0)
-        goto fail;
+    अगर (err < 0)
+        जाओ fail;
 
     err = av_hwframe_map(dst, tmp, flags);
-    if (err < 0)
-        goto fail;
+    अगर (err < 0)
+        जाओ fail;
 
     err = ff_hwframe_map_replace(dst, src);
 
 fail:
     av_frame_free(&tmp);
-    return err;
+    वापस err;
 }
-#endif
-#endif
+#पूर्ण_अगर
+#पूर्ण_अगर
 
-static int vulkan_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                           const AVFrame *src, int flags)
+अटल पूर्णांक vulkan_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                           स्थिर AVFrame *src, पूर्णांक flags)
 {
     av_unused VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
 
-    switch (dst->format) {
-#if CONFIG_LIBDRM
-    case AV_PIX_FMT_DRM_PRIME:
-        if (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
-            return vulkan_map_to_drm(hwfc, dst, src, flags);
-        else
-            return AVERROR(ENOSYS);
-#if CONFIG_VAAPI
-    case AV_PIX_FMT_VAAPI:
-        if (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
-            return vulkan_map_to_vaapi(hwfc, dst, src, flags);
-        else
-            return AVERROR(ENOSYS);
-#endif
-#endif
-    default:
-        break;
+    चयन (dst->format) {
+#अगर CONFIG_LIBDRM
+    हाल AV_PIX_FMT_DRM_अभाज्य:
+        अगर (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
+            वापस vulkan_map_to_drm(hwfc, dst, src, flags);
+        अन्यथा
+            वापस AVERROR(ENOSYS);
+#अगर CONFIG_VAAPI
+    हाल AV_PIX_FMT_VAAPI:
+        अगर (p->vkctx.extensions & FF_VK_EXT_DRM_MODIFIER_FLAGS)
+            वापस vulkan_map_to_vaapi(hwfc, dst, src, flags);
+        अन्यथा
+            वापस AVERROR(ENOSYS);
+#पूर्ण_अगर
+#पूर्ण_अगर
+    शेष:
+        अवरोध;
     }
-    return AVERROR(ENOSYS);
+    वापस AVERROR(ENOSYS);
 }
 
-static int copy_buffer_data(AVHWFramesContext *hwfc, FFVkBuffer *vkbuf,
-                            AVFrame *swf, VkBufferImageCopy *region,
-                            int planes, int upload)
+अटल पूर्णांक copy_बफर_तथ्य(AVHWFramesContext *hwfc, FFVk_बफर *vkbuf,
+                            AVFrame *swf, Vk_बफर_Image_Copy *region,
+                            पूर्णांक planes, पूर्णांक upload)
 {
-    int err;
+    पूर्णांक err;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
-    int bytewidth[AV_NUM_DATA_POINTERS];
+    पूर्णांक bytewidth[AV_अंक_तथ्य_POINTERS];
 
     /* Copy only the visible bytes of each row, the last row of a plane
      * does not have to extend to the full linesize. */
-    for (int i = 0; i < planes; i++) {
+    क्रम (पूर्णांक i = 0; i < planes; i++) {
         bytewidth[i] = av_image_get_linesize(swf->format, swf->width, i);
-        if (bytewidth[i] < 0)
-            return bytewidth[i];
+        अगर (bytewidth[i] < 0)
+            वापस bytewidth[i];
     }
 
-    if (upload) {
-        for (int i = 0; i < planes; i++)
-            av_image_copy_plane(vkbuf->mapped_mem + region[i].bufferOffset,
-                                region[i].bufferRowLength,
-                                swf->data[i],
+    अगर (upload) {
+        क्रम (पूर्णांक i = 0; i < planes; i++)
+            av_image_copy_plane(vkbuf->mapped_mem + region[i].बफर_Offset,
+                                region[i].बफर_Row_लंबाई,
+                                swf->तथ्य[i],
                                 swf->linesize[i],
                                 bytewidth[i],
                                 region[i].imageExtent.height);
 
-        err = ff_vk_flush_buffer(&p->vkctx, vkbuf, 0, VK_WHOLE_SIZE, 1);
-        if (err != VK_SUCCESS) {
+        err = ff_vk_flush_बफर(&p->vkctx, vkbuf, 0, VK_WHOLE_आकार, 1);
+        अगर (err != VK_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to flush buffer data: %s\n",
                    av_err2str(err));
-            return AVERROR_EXTERNAL;
+            वापस AVERROR_EXTERNAL;
         }
-    } else {
-        err = ff_vk_flush_buffer(&p->vkctx, vkbuf, 0, VK_WHOLE_SIZE, 0);
-        if (err != VK_SUCCESS) {
+    } अन्यथा {
+        err = ff_vk_flush_बफर(&p->vkctx, vkbuf, 0, VK_WHOLE_आकार, 0);
+        अगर (err != VK_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to invalidate buffer data: %s\n",
                    av_err2str(err));
-            return AVERROR_EXTERNAL;
+            वापस AVERROR_EXTERNAL;
         }
 
-        for (int i = 0; i < planes; i++)
-            av_image_copy_plane(swf->data[i],
+        क्रम (पूर्णांक i = 0; i < planes; i++)
+            av_image_copy_plane(swf->तथ्य[i],
                                 swf->linesize[i],
-                                vkbuf->mapped_mem + region[i].bufferOffset,
-                                region[i].bufferRowLength,
+                                vkbuf->mapped_mem + region[i].बफर_Offset,
+                                region[i].बफर_Row_लंबाई,
                                 bytewidth[i],
                                 region[i].imageExtent.height);
     }
 
-    return 0;
+    वापस 0;
 }
 
-static int get_plane_buf(AVHWFramesContext *hwfc, FFVkBuffer **dst,
-                         AVFrame *swf, VkBufferImageCopy *region, int upload)
+अटल पूर्णांक get_plane_buf(AVHWFramesContext *hwfc, FFVk_बफर **dst,
+                         AVFrame *swf, Vk_बफर_Image_Copy *region, पूर्णांक upload)
 {
-    int err;
+    पूर्णांक err;
     uint32_t p_w, p_h;
     VulkanFramesPriv *fp = hwfc->hwctx;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
-    const int planes = av_pix_fmt_count_planes(swf->format);
-    VkBufferUsageFlags buf_usage = upload ? VK_BUFFER_USAGE_TRANSFER_SRC_BIT :
-                                            VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+    स्थिर पूर्णांक planes = av_pix_fmt_गिनती_planes(swf->format);
+    Vk_बफर_Usage_Flags buf_usage = upload ? VK_बफर_USAGE_TRANSFER_SRC_BIT :
+                                            VK_बफर_USAGE_TRANSFER_DST_BIT;
 
-    size_t buf_offset = 0;
-    for (int i = 0; i < planes; i++) {
+    माप_प्रकार buf_offset = 0;
+    क्रम (पूर्णांक i = 0; i < planes; i++) {
         get_plane_wh(&p_w, &p_h, swf->format, swf->width, swf->height, i);
 
-        region[i] = (VkBufferImageCopy) {
-            .bufferOffset = buf_offset,
-            .bufferRowLength = FFALIGN(FFABS(swf->linesize[i]),
-                                       p->props.properties.limits.optimalBufferCopyRowPitchAlignment),
-            .bufferImageHeight = p_h,
-            .imageSubresource.layerCount = 1,
+        region[i] = (Vk_बफर_Image_Copy) {
+            .बफर_Offset = buf_offset,
+            .बफर_Row_लंबाई = FFALIGN(FFABS(swf->linesize[i]),
+                                       p->props.properties.limits.optimal_बफर_Copy_Row_Pitch_Alignment),
+            .बफर_Image_Height = p_h,
+            .imageSubresource.layer_गिनती = 1,
             .imageExtent = (VkExtent3D){ p_w, p_h, 1 },
             /* Rest of the fields adjusted/filled in later */
         };
 
-        buf_offset += FFALIGN(p_h*region[i].bufferRowLength,
-                              p->props.properties.limits.optimalBufferCopyOffsetAlignment);
+        buf_offset += FFALIGN(p_h*region[i].बफर_Row_लंबाई,
+                              p->props.properties.limits.optimal_बफर_Copy_Offset_Alignment);
     }
 
-    err = ff_vk_get_pooled_buffer(&p->vkctx, &fp->tmp, dst, buf_usage,
-                                  NULL, buf_offset,
+    err = ff_vk_get_pooled_बफर(&p->vkctx, &fp->tmp, dst, buf_usage,
+                                  शून्य, buf_offset,
                                   VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
                                   p->vkctx.host_cached_flag);
-    if (err < 0)
-        return err;
+    अगर (err < 0)
+        वापस err;
 
-    return 0;
+    वापस 0;
 }
 
-static int host_map_frame(AVHWFramesContext *hwfc, FFVkBuffer **dst, int *nb_bufs,
-                          AVFrame *swf, VkBufferImageCopy *region, int upload)
+अटल पूर्णांक host_map_frame(AVHWFramesContext *hwfc, FFVk_बफर **dst, पूर्णांक *nb_bufs,
+                          AVFrame *swf, Vk_बफर_Image_Copy *region, पूर्णांक upload)
 {
-    int err;
+    पूर्णांक err;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
 
-    int nb_src_bufs;
-    const int planes = av_pix_fmt_count_planes(swf->format);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
-    VkBufferUsageFlags buf_usage = upload ? VK_BUFFER_USAGE_TRANSFER_SRC_BIT :
-                                            VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+    पूर्णांक nb_src_bufs;
+    स्थिर पूर्णांक planes = av_pix_fmt_गिनती_planes(swf->format);
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
+    Vk_बफर_Usage_Flags buf_usage = upload ? VK_बफर_USAGE_TRANSFER_SRC_BIT :
+                                            VK_बफर_USAGE_TRANSFER_DST_BIT;
 
     /* Count the number of buffers in the software frame */
     nb_src_bufs = 0;
-    while (swf->buf[nb_src_bufs])
+    जबतक (swf->buf[nb_src_bufs])
         nb_src_bufs++;
 
     /* Single buffer contains all planes */
-    if (nb_src_bufs == 1) {
-        err = ff_vk_host_map_buffer(&p->vkctx, &dst[0],
-                                    swf->data[0], VK_WHOLE_SIZE, swf->buf[0],
+    अगर (nb_src_bufs == 1) {
+        err = ff_vk_host_map_बफर(&p->vkctx, &dst[0],
+                                    swf->तथ्य[0], VK_WHOLE_आकार, swf->buf[0],
                                     buf_usage);
-        if (err < 0)
-            return err;
+        अगर (err < 0)
+            वापस err;
         (*nb_bufs)++;
 
-        for (int i = 0; i < planes; i++)
-            region[i].bufferOffset = dst[0]->virtual_offset +
-                                     swf->data[i] - swf->data[0];
-    } else if (nb_src_bufs == planes) { /* One buffer per plane */
-        for (int i = 0; i < planes; i++) {
-            err = ff_vk_host_map_buffer(&p->vkctx, &dst[i],
-                                        swf->data[i], VK_WHOLE_SIZE,
+        क्रम (पूर्णांक i = 0; i < planes; i++)
+            region[i].बफर_Offset = dst[0]->virtual_offset +
+                                     swf->तथ्य[i] - swf->तथ्य[0];
+    } अन्यथा अगर (nb_src_bufs == planes) { /* One buffer per plane */
+        क्रम (पूर्णांक i = 0; i < planes; i++) {
+            err = ff_vk_host_map_बफर(&p->vkctx, &dst[i],
+                                        swf->तथ्य[i], VK_WHOLE_आकार,
                                         swf->buf[i], buf_usage);
-            if (err < 0)
-                goto fail;
+            अगर (err < 0)
+                जाओ fail;
             (*nb_bufs)++;
 
-            region[i].bufferOffset = dst[i]->virtual_offset;
+            region[i].बफर_Offset = dst[i]->virtual_offset;
         }
-    } else {
+    } अन्यथा {
         /* Weird layout (3 planes, 2 buffers), patch welcome, fallback to copy */
-        return AVERROR_PATCHWELCOME;
+        वापस AVERROR_PATCHWELCOME;
     }
 
     /* Buffer-image copies need offsets aligned to the texel block, and
      * transfer-only queues to 4 bytes; stage anything else, including
      * texel blocks that are not a power of two */
-    for (int i = 0; i < planes; i++) {
-        int align = FFMAX(desc->comp[i].step, p->transfer_offset_align);
-        if ((align & (align - 1)) || (region[i].bufferOffset & (align - 1))) {
+    क्रम (पूर्णांक i = 0; i < planes; i++) {
+        पूर्णांक align = FFMAX(desc->comp[i].step, p->transfer_offset_align);
+        अगर ((align & (align - 1)) || (region[i].बफर_Offset & (align - 1))) {
             err = AVERROR(EINVAL);
-            goto fail;
+            जाओ fail;
         }
     }
 
-    return 0;
+    वापस 0;
 
 fail:
-    for (int i = 0; i < (*nb_bufs); i++)
+    क्रम (पूर्णांक i = 0; i < (*nb_bufs); i++)
         av_refstruct_unref(&dst[i]);
-    return err;
+    वापस err;
 }
 
-static int vulkan_transfer_host(AVHWFramesContext *hwfc, AVFrame *hwf,
-                                AVFrame *swf, int upload)
+अटल पूर्णांक vulkan_transfer_host(AVHWFramesContext *hwfc, AVFrame *hwf,
+                                AVFrame *swf, पूर्णांक upload)
 {
     VulkanFramesPriv *fp = hwfc->hwctx;
     AVVulkanFramesContext *hwfc_vk = &fp->p;
@@ -4882,27 +4882,27 @@ static int vulkan_transfer_host(AVHWFramesContext *hwfc, AVFrame *hwf,
     AVVulkanDeviceContext *hwctx = &p->p;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    AVVkFrame *hwf_vk = (AVVkFrame *)hwf->data[0];
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
-    const int planes = av_pix_fmt_count_planes(swf->format);
-    const int nb_images = ff_vk_count_images(hwf_vk);
+    AVVkFrame *hwf_vk = (AVVkFrame *)hwf->तथ्य[0];
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
+    स्थिर पूर्णांक planes = av_pix_fmt_गिनती_planes(swf->format);
+    स्थिर पूर्णांक nb_images = ff_vk_गिनती_images(hwf_vk);
 
     VkSemaphoreWaitInfo sem_wait;
-    VkHostImageLayoutTransitionInfoEXT layout_ch_info[AV_NUM_DATA_POINTERS];
-    int nb_layout_ch = 0;
+    VkHostImageLayoutTransitionInfoEXT layout_ch_info[AV_अंक_तथ्य_POINTERS];
+    पूर्णांक nb_layout_ch = 0;
 
     hwfc_vk->lock_frame(hwfc, hwf_vk);
 
-    for (int i = 0; i < nb_images; i++) {
-        int compat = 0;
-        for (int j = 0; j < p->vkctx.host_image_props.copySrcLayoutCount; j++) {
-            if (hwf_vk->layout[i] == p->vkctx.host_image_props.pCopySrcLayouts[j]) {
+    क्रम (पूर्णांक i = 0; i < nb_images; i++) {
+        पूर्णांक compat = 0;
+        क्रम (पूर्णांक j = 0; j < p->vkctx.host_image_props.copy_Src_Layout_गिनती; j++) {
+            अगर (hwf_vk->layout[i] == p->vkctx.host_image_props.pCopySrcLayouts[j]) {
                 compat = 1;
-                break;
+                अवरोध;
             }
         }
-        if (compat)
-            continue;
+        अगर (compat)
+            जारी;
 
         /* This should only ever happen on uploads, so using UNDEFINED is safe */
         av_assert1(upload);
@@ -4913,8 +4913,8 @@ static int vulkan_transfer_host(AVHWFramesContext *hwfc, AVFrame *hwf,
             .newLayout = VK_IMAGE_LAYOUT_GENERAL,
             .subresourceRange = {
                 .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-                .levelCount = 1,
-                .layerCount = 1,
+                .level_गिनती = 1,
+                .layer_गिनती = 1,
             },
         };
 
@@ -4925,35 +4925,35 @@ static int vulkan_transfer_host(AVHWFramesContext *hwfc, AVFrame *hwf,
     sem_wait = (VkSemaphoreWaitInfo) {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
         .pSemaphores = hwf_vk->sem,
-        .pValues = hwf_vk->sem_value,
-        .semaphoreCount = nb_images,
+        .p_मूल्यावली = hwf_vk->sem_मूल्य,
+        .semaphore_गिनती = nb_images,
     };
 
     vk->WaitSemaphores(hwctx->act_dev, &sem_wait, UINT64_MAX);
 
-    if (nb_layout_ch)
+    अगर (nb_layout_ch)
         vk->TransitionImageLayoutEXT(hwctx->act_dev,
                                      nb_layout_ch, layout_ch_info);
 
-    if (upload) {
+    अगर (upload) {
         VkMemoryToImageCopyEXT region_info = {
             .sType = VK_STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY_EXT,
             .imageSubresource = {
-                .layerCount = 1,
+                .layer_गिनती = 1,
             },
         };
         VkCopyMemoryToImageInfoEXT copy_info = {
             .sType = VK_STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO_EXT,
-            .regionCount = 1,
+            .region_गिनती = 1,
             .pRegions = &region_info,
         };
-        for (int i = 0; i < planes; i++) {
-            int img_idx = FFMIN(i, (nb_images - 1));
+        क्रम (पूर्णांक i = 0; i < planes; i++) {
+            पूर्णांक img_idx = FFMIN(i, (nb_images - 1));
             uint32_t p_w, p_h;
             get_plane_wh(&p_w, &p_h, swf->format, swf->width, swf->height, i);
 
-            region_info.pHostPointer = swf->data[i];
-            region_info.memoryRowLength = swf->linesize[i] / desc->comp[i].step;
+            region_info.pHostPointer = swf->तथ्य[i];
+            region_info.memory_Row_लंबाई = swf->linesize[i] / desc->comp[i].step;
             region_info.imageSubresource.aspectMask = ff_vk_aspect_flag(hwf, i);
             region_info.imageExtent = (VkExtent3D){ p_w, p_h, 1 };
             copy_info.dstImage = hwf_vk->img[img_idx];
@@ -4961,25 +4961,25 @@ static int vulkan_transfer_host(AVHWFramesContext *hwfc, AVFrame *hwf,
 
             vk->CopyMemoryToImageEXT(hwctx->act_dev, &copy_info);
         }
-    } else {
+    } अन्यथा {
         VkImageToMemoryCopyEXT region_info = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY_EXT,
             .imageSubresource = {
-                .layerCount = 1,
+                .layer_गिनती = 1,
             },
         };
         VkCopyImageToMemoryInfoEXT copy_info = {
             .sType = VK_STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO_EXT,
-            .regionCount = 1,
+            .region_गिनती = 1,
             .pRegions = &region_info,
         };
-        for (int i = 0; i < planes; i++) {
-            int img_idx = FFMIN(i, (nb_images - 1));
+        क्रम (पूर्णांक i = 0; i < planes; i++) {
+            पूर्णांक img_idx = FFMIN(i, (nb_images - 1));
             uint32_t p_w, p_h;
             get_plane_wh(&p_w, &p_h, swf->format, swf->width, swf->height, i);
 
-            region_info.pHostPointer = swf->data[i];
-            region_info.memoryRowLength = swf->linesize[i] / desc->comp[i].step;
+            region_info.pHostPointer = swf->तथ्य[i];
+            region_info.memory_Row_लंबाई = swf->linesize[i] / desc->comp[i].step;
             region_info.imageSubresource.aspectMask = ff_vk_aspect_flag(hwf, i);
             region_info.imageExtent = (VkExtent3D){ p_w, p_h, 1 };
             copy_info.srcImage = hwf_vk->img[img_idx];
@@ -4991,108 +4991,108 @@ static int vulkan_transfer_host(AVHWFramesContext *hwfc, AVFrame *hwf,
 
     hwfc_vk->unlock_frame(hwfc, hwf_vk);
 
-    return 0;
+    वापस 0;
 }
 
-static int vulkan_transfer_frame(AVHWFramesContext *hwfc,
+अटल पूर्णांक vulkan_transfer_frame(AVHWFramesContext *hwfc,
                                  AVFrame *swf, AVFrame *hwf,
-                                 int upload)
+                                 पूर्णांक upload)
 {
-    int err;
+    पूर्णांक err;
     VulkanFramesPriv *fp = hwfc->hwctx;
     AVVulkanFramesContext *hwctx = &fp->p;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     FFVulkanFunctions *vk = &p->vkctx.vkfn;
 
-    int host_mapped = 0;
+    पूर्णांक host_mapped = 0;
 
-    AVVkFrame *hwf_vk = (AVVkFrame *)hwf->data[0];
-    VkBufferImageCopy region[AV_NUM_DATA_POINTERS]; // always one per plane
+    AVVkFrame *hwf_vk = (AVVkFrame *)hwf->तथ्य[0];
+    Vk_बफर_Image_Copy region[AV_अंक_तथ्य_POINTERS]; // always one per plane
 
-    const int planes = av_pix_fmt_count_planes(swf->format);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
-    const int nb_images = ff_vk_count_images(hwf_vk);
+    स्थिर पूर्णांक planes = av_pix_fmt_गिनती_planes(swf->format);
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(swf->format);
+    स्थिर पूर्णांक nb_images = ff_vk_गिनती_images(hwf_vk);
 
-    VkImageMemoryBarrier2 img_bar[AV_NUM_DATA_POINTERS];
-    int nb_img_bar = 0;
+    VkImageMemoryBarrier2 img_bar[AV_अंक_तथ्य_POINTERS];
+    पूर्णांक nb_img_bar = 0;
 
-    FFVkBuffer *bufs[AV_NUM_DATA_POINTERS];
-    int nb_bufs = 0;
+    FFVk_बफर *bufs[AV_अंक_तथ्य_POINTERS];
+    पूर्णांक nb_bufs = 0;
 
-    VkCommandBuffer cmd_buf;
+    Vk_Command_बफर cmd_buf;
     FFVkExecContext *exec;
 
     /* Sanity checking */
-    if ((swf->format != AV_PIX_FMT_NONE && !av_vkfmt_from_pixfmt(swf->format))) {
+    अगर ((swf->format != AV_PIX_FMT_NONE && !av_vkfmt_from_pixfmt(swf->format))) {
         av_log(hwfc, AV_LOG_ERROR, "Unsupported software frame pixel format!\n");
-        return AVERROR(EINVAL);
+        वापस AVERROR(EINVAL);
     }
 
-    if (swf->width > hwfc->width || swf->height > hwfc->height)
-        return AVERROR(EINVAL);
+    अगर (swf->width > hwfc->width || swf->height > hwfc->height)
+        वापस AVERROR(EINVAL);
 
-    int host_copy = hwctx->usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT;
-    int host_map = p->vkctx.extensions & FF_VK_EXT_EXTERNAL_HOST_MEMORY &&
+    पूर्णांक host_copy = hwctx->usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT;
+    पूर्णांक host_map = p->vkctx.extensions & FF_VK_EXT_EXTERNAL_HOST_MEMORY &&
                    !p->avoid_host_import;
 
     /* Host image copies and host mapping address rows upwards from the plane
      * pointer, so a bottom-up frame goes through the staging buffer */
-    for (int i = 0; i < planes; i++)
-        if (swf->linesize[i] < 0)
+    क्रम (पूर्णांक i = 0; i < planes; i++)
+        अगर (swf->linesize[i] < 0)
             host_copy = host_map = 0;
 
     /* Host layout transitions may only originate from a host-copyable layout */
-    if (!upload && host_copy) {
-        for (int i = 0; i < nb_images; i++) {
-            int compat = 0;
-            for (int j = 0; j < p->vkctx.host_image_props.copySrcLayoutCount; j++) {
-                if (hwf_vk->layout[i] == p->vkctx.host_image_props.pCopySrcLayouts[j]) {
+    अगर (!upload && host_copy) {
+        क्रम (पूर्णांक i = 0; i < nb_images; i++) {
+            पूर्णांक compat = 0;
+            क्रम (पूर्णांक j = 0; j < p->vkctx.host_image_props.copy_Src_Layout_गिनती; j++) {
+                अगर (hwf_vk->layout[i] == p->vkctx.host_image_props.pCopySrcLayouts[j]) {
                     compat = 1;
-                    break;
+                    अवरोध;
                 }
             }
-            if (!compat) {
+            अगर (!compat) {
                 host_copy = 0;
-                break;
+                अवरोध;
             }
         }
     }
 
-    if (host_copy)
-        return vulkan_transfer_host(hwfc, hwf, swf, upload);
+    अगर (host_copy)
+        वापस vulkan_transfer_host(hwfc, hwf, swf, upload);
 
-    for (int i = 0; i < av_pix_fmt_count_planes(swf->format); i++) {
+    क्रम (पूर्णांक i = 0; i < av_pix_fmt_गिनती_planes(swf->format); i++) {
         uint32_t p_w, p_h;
         get_plane_wh(&p_w, &p_h, swf->format, swf->width, swf->height, i);
 
         /* Buffer region for this plane */
-        region[i] = (VkBufferImageCopy) {
-            .bufferOffset = 0,
-            .bufferRowLength = FFABS(swf->linesize[i]),
-            .bufferImageHeight = p_h,
-            .imageSubresource.layerCount = 1,
+        region[i] = (Vk_बफर_Image_Copy) {
+            .बफर_Offset = 0,
+            .बफर_Row_लंबाई = FFABS(swf->linesize[i]),
+            .बफर_Image_Height = p_h,
+            .imageSubresource.layer_गिनती = 1,
             .imageExtent = (VkExtent3D){ p_w, p_h, 1 },
             /* Rest of the fields adjusted/filled in later */
         };
     }
 
     /* Setup buffers first */
-    if (host_map) {
+    अगर (host_map) {
         err = host_map_frame(hwfc, bufs, &nb_bufs, swf, region, upload);
-        if (err >= 0)
+        अगर (err >= 0)
             host_mapped = 1;
     }
 
-    if (!host_mapped) {
+    अगर (!host_mapped) {
         err = get_plane_buf(hwfc, &bufs[0], swf, region, upload);
-        if (err < 0)
-            goto end;
+        अगर (err < 0)
+            जाओ end;
         nb_bufs = 1;
 
-        if (upload) {
-            err = copy_buffer_data(hwfc, bufs[0], swf, region, planes, 1);
-            if (err < 0)
-                goto end;
+        अगर (upload) {
+            err = copy_बफर_तथ्य(hwfc, bufs[0], swf, region, planes, 1);
+            अगर (err < 0)
+                जाओ end;
         }
     }
 
@@ -5100,31 +5100,31 @@ static int vulkan_transfer_frame(AVHWFramesContext *hwfc,
     cmd_buf = exec->buf;
 
     err = ff_vk_exec_start(&p->vkctx, exec);
-    if (err < 0)
-        goto end;
+    अगर (err < 0)
+        जाओ end;
 
     /* Prep destination Vulkan frame */
     err = ff_vk_exec_add_dep_frame(&p->vkctx, exec, hwf,
                                    VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
                                    VK_PIPELINE_STAGE_2_TRANSFER_BIT);
-    if (err < 0) {
+    अगर (err < 0) {
         ff_vk_exec_discard(&p->vkctx, exec);
-        goto end;
+        जाओ end;
     }
 
     /* No need to declare buf deps for synchronous transfers (downloads) */
-    if (upload) {
+    अगर (upload) {
         /* Add the software frame backing the buffers if we're host mapping */
-        if (host_mapped) {
+        अगर (host_mapped) {
             err = ff_vk_exec_add_dep_sw_frame(&p->vkctx, exec, swf);
-            if (err < 0) {
+            अगर (err < 0) {
                 ff_vk_exec_discard(&p->vkctx, exec);
-                goto end;
+                जाओ end;
             }
         }
 
         /* Add the buffers as a dependency */
-        for (int i = 0; i < nb_bufs; i++)
+        क्रम (पूर्णांक i = 0; i < nb_bufs; i++)
             ff_vk_exec_add_dep_refstruct(&p->vkctx, exec, bufs[i]);
     }
 
@@ -5140,127 +5140,127 @@ static int vulkan_transfer_frame(AVHWFramesContext *hwfc,
     vk->CmdPipelineBarrier2(cmd_buf, &(VkDependencyInfo) {
             .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
             .pImageMemoryBarriers = img_bar,
-            .imageMemoryBarrierCount = nb_img_bar,
+            .image_Memory_Barrier_गिनती = nb_img_bar,
     });
 
-    for (int i = 0; i < planes; i++) {
-        int buf_idx = FFMIN(i, (nb_bufs - 1));
-        int img_idx = FFMIN(i, (nb_images - 1));
-        FFVkBuffer *vkbuf = bufs[buf_idx];
+    क्रम (पूर्णांक i = 0; i < planes; i++) {
+        पूर्णांक buf_idx = FFMIN(i, (nb_bufs - 1));
+        पूर्णांक img_idx = FFMIN(i, (nb_images - 1));
+        FFVk_बफर *vkbuf = bufs[buf_idx];
 
-        uint32_t orig_stride = region[i].bufferRowLength;
-        region[i].bufferRowLength /= desc->comp[i].step;
+        uint32_t orig_stride = region[i].बफर_Row_लंबाई;
+        region[i].बफर_Row_लंबाई /= desc->comp[i].step;
         region[i].imageSubresource.aspectMask = ff_vk_aspect_flag(hwf, i);
 
-        if (upload)
-            vk->CmdCopyBufferToImage(cmd_buf, vkbuf->buf,
+        अगर (upload)
+            vk->Cmd_Copy_बफर_To_Image(cmd_buf, vkbuf->buf,
                                      hwf_vk->img[img_idx],
                                      img_bar[img_idx].newLayout,
                                      1, &region[i]);
-        else
-            vk->CmdCopyImageToBuffer(cmd_buf, hwf_vk->img[img_idx],
+        अन्यथा
+            vk->Cmd_Copy_Image_To_बफर(cmd_buf, hwf_vk->img[img_idx],
                                      img_bar[img_idx].newLayout,
                                      vkbuf->buf,
                                      1, &region[i]);
 
-        region[i].bufferRowLength = orig_stride;
+        region[i].बफर_Row_लंबाई = orig_stride;
     }
 
     err = ff_vk_exec_submit(&p->vkctx, exec);
-    if (err >= 0 && !upload) {
+    अगर (err >= 0 && !upload) {
         ff_vk_exec_wait(&p->vkctx, exec);
-        if (!host_mapped)
-            err = copy_buffer_data(hwfc, bufs[0], swf, region, planes, 0);
+        अगर (!host_mapped)
+            err = copy_बफर_तथ्य(hwfc, bufs[0], swf, region, planes, 0);
     }
 
 end:
-    for (int i = 0; i < nb_bufs; i++)
+    क्रम (पूर्णांक i = 0; i < nb_bufs; i++)
         av_refstruct_unref(&bufs[i]);
 
-    return err;
+    वापस err;
 }
 
-static int vulkan_transfer_data_to(AVHWFramesContext *hwfc, AVFrame *dst,
-                                   const AVFrame *src)
+अटल पूर्णांक vulkan_transfer_तथ्य_to(AVHWFramesContext *hwfc, AVFrame *dst,
+                                   स्थिर AVFrame *src)
 {
     av_unused VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
 
-    switch (src->format) {
-#if CONFIG_CUDA
-    case AV_PIX_FMT_CUDA:
-#ifdef _WIN32
-        if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_MEMORY) &&
+    चयन (src->format) {
+#अगर CONFIG_CUDA
+    हाल AV_PIX_FMT_CUDA:
+#अगर_घोषित _WIN32
+        अगर ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_MEMORY) &&
             (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_SEM))
-#else
-        if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_MEMORY) &&
+#अन्यथा
+        अगर ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_MEMORY) &&
             (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM))
-#endif
-            return vulkan_transfer_data_from_cuda(hwfc, dst, src);
+#पूर्ण_अगर
+            वापस vulkan_transfer_तथ्य_from_cuda(hwfc, dst, src);
         av_fallthrough;
-#endif
-    default:
-        if (src->hw_frames_ctx)
-            return AVERROR(ENOSYS);
-        else
-            return vulkan_transfer_frame(hwfc, (AVFrame *)src, dst, 1);
+#पूर्ण_अगर
+    शेष:
+        अगर (src->hw_frames_ctx)
+            वापस AVERROR(ENOSYS);
+        अन्यथा
+            वापस vulkan_transfer_frame(hwfc, (AVFrame *)src, dst, 1);
     }
 }
 
-#if CONFIG_CUDA
-static int vulkan_transfer_data_to_cuda(AVHWFramesContext *hwfc, AVFrame *dst,
-                                        const AVFrame *src)
+#अगर CONFIG_CUDA
+अटल पूर्णांक vulkan_transfer_तथ्य_to_cuda(AVHWFramesContext *hwfc, AVFrame *dst,
+                                        स्थिर AVFrame *src)
 {
-    int err;
+    पूर्णांक err;
     CUcontext dummy;
     AVVkFrame *dst_f;
     AVVkFrameInternal *dst_int;
     VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
     VulkanFramesPriv *fp = hwfc->hwctx;
-    const int planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
-    int nb_images;
+    स्थिर पूर्णांक planes = av_pix_fmt_गिनती_planes(hwfc->sw_format);
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(hwfc->sw_format);
+    पूर्णांक nb_images;
 
-    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)dst->hw_frames_ctx->data;
+    AVHWFramesContext *cuda_fc = (AVHWFramesContext*)dst->hw_frames_ctx->तथ्य;
     AVHWDeviceContext *cuda_cu = cuda_fc->device_ctx;
     AVCUDADeviceContext *cuda_dev = cuda_cu->hwctx;
     AVCUDADeviceContextInternal *cu_internal = cuda_dev->internal;
     CudaFunctions *cu = cu_internal->cuda_dl;
-    CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS s_w_par[AV_NUM_DATA_POINTERS] = { 0 };
-    CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS s_s_par[AV_NUM_DATA_POINTERS] = { 0 };
+    CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS s_w_par[AV_अंक_तथ्य_POINTERS] = { 0 };
+    CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS s_s_par[AV_अंक_तथ्य_POINTERS] = { 0 };
 
-    dst_f = (AVVkFrame *)src->data[0];
-    nb_images = ff_vk_count_images(dst_f);
+    dst_f = (AVVkFrame *)src->तथ्य[0];
+    nb_images = ff_vk_गिनती_images(dst_f);
 
     err = prepare_frame(hwfc, &fp->upload_exec, dst_f, PREP_MODE_EXTERNAL_EXPORT);
-    if (err < 0)
-        return err;
+    अगर (err < 0)
+        वापस err;
 
-    err = CHECK_CU(cu->cuCtxPushCurrent(cuda_dev->cuda_ctx));
-    if (err < 0)
-        return err;
+    err = CHECK_CU(cu->cu_Ctx_धकेलो_Current(cuda_dev->cuda_ctx));
+    अगर (err < 0)
+        वापस err;
 
     err = vulkan_export_to_cuda(hwfc, dst->hw_frames_ctx, src);
-    if (err < 0) {
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-        return err;
+    अगर (err < 0) {
+        CHECK_CU(cu->cu_Ctx_निकालो_Current(&dummy));
+        वापस err;
     }
 
     dst_int = dst_f->internal;
 
-    for (int i = 0; i < nb_images; i++) {
-        s_w_par[i].params.fence.value = dst_f->sem_value[i] + 0;
-        s_s_par[i].params.fence.value = dst_f->sem_value[i] + 1;
+    क्रम (पूर्णांक i = 0; i < nb_images; i++) {
+        s_w_par[i].params.fence.मूल्य = dst_f->sem_मूल्य[i] + 0;
+        s_s_par[i].params.fence.मूल्य = dst_f->sem_मूल्य[i] + 1;
     }
 
     err = CHECK_CU(cu->cuWaitExternalSemaphoresAsync(dst_int->cu_sem, s_w_par,
                                                      nb_images, cuda_dev->stream));
-    if (err < 0)
-        goto fail;
+    अगर (err < 0)
+        जाओ fail;
 
-    for (int i = 0; i < planes; i++) {
+    क्रम (पूर्णांक i = 0; i < planes; i++) {
         CUDA_MEMCPY2D cpy = {
             .dstMemoryType = CU_MEMORYTYPE_DEVICE,
-            .dstDevice     = (CUdeviceptr)dst->data[i],
+            .dstDevice     = (CUdeviceptr)dst->तथ्य[i],
             .dstPitch      = dst->linesize[i],
             .dstY          = 0,
 
@@ -5268,100 +5268,100 @@ static int vulkan_transfer_data_to_cuda(AVHWFramesContext *hwfc, AVFrame *dst,
             .srcArray      = dst_int->cu_array[i],
         };
 
-        int w, h;
+        पूर्णांक w, h;
         get_plane_wh(&w, &h, hwfc->sw_format, hwfc->width, hwfc->height, i);
 
         cpy.WidthInBytes = w * desc->comp[i].step;
         cpy.Height = h;
 
         err = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, cuda_dev->stream));
-        if (err < 0)
-            goto fail;
+        अगर (err < 0)
+            जाओ fail;
     }
 
     err = CHECK_CU(cu->cuSignalExternalSemaphoresAsync(dst_int->cu_sem, s_s_par,
                                                        nb_images, cuda_dev->stream));
-    if (err < 0)
-        goto fail;
+    अगर (err < 0)
+        जाओ fail;
 
-    for (int i = 0; i < nb_images; i++)
-        dst_f->sem_value[i]++;
+    क्रम (पूर्णांक i = 0; i < nb_images; i++)
+        dst_f->sem_मूल्य[i]++;
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_निकालो_Current(&dummy));
 
     av_log(hwfc, AV_LOG_VERBOSE, "Transferred Vulkan image to CUDA!\n");
 
-    return prepare_frame(hwfc, &fp->upload_exec, dst_f, PREP_MODE_EXTERNAL_IMPORT);
+    वापस prepare_frame(hwfc, &fp->upload_exec, dst_f, PREP_MODE_EXTERNAL_IMPORT);
 
 fail:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_निकालो_Current(&dummy));
     vulkan_free_internal(p, dst_f);
-    av_buffer_unref(&dst->buf[0]);
-    return err;
+    av_बफर_unref(&dst->buf[0]);
+    वापस err;
 }
-#endif
+#पूर्ण_अगर
 
-static int vulkan_transfer_data_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                                     const AVFrame *src)
+अटल पूर्णांक vulkan_transfer_तथ्य_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                                     स्थिर AVFrame *src)
 {
     av_unused VulkanDevicePriv *p = hwfc->device_ctx->hwctx;
 
-    switch (dst->format) {
-#if CONFIG_CUDA
-    case AV_PIX_FMT_CUDA:
-#ifdef _WIN32
-        if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_MEMORY) &&
+    चयन (dst->format) {
+#अगर CONFIG_CUDA
+    हाल AV_PIX_FMT_CUDA:
+#अगर_घोषित _WIN32
+        अगर ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_MEMORY) &&
             (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_WIN32_SEM))
-#else
-        if ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_MEMORY) &&
+#अन्यथा
+        अगर ((p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_MEMORY) &&
             (p->vkctx.extensions & FF_VK_EXT_EXTERNAL_FD_SEM))
-#endif
-            return vulkan_transfer_data_to_cuda(hwfc, dst, src);
+#पूर्ण_अगर
+            वापस vulkan_transfer_तथ्य_to_cuda(hwfc, dst, src);
         av_fallthrough;
-#endif
-    default:
-        if (dst->hw_frames_ctx)
-            return AVERROR(ENOSYS);
-        else
-            return vulkan_transfer_frame(hwfc, dst, (AVFrame *)src, 0);
+#पूर्ण_अगर
+    शेष:
+        अगर (dst->hw_frames_ctx)
+            वापस AVERROR(ENOSYS);
+        अन्यथा
+            वापस vulkan_transfer_frame(hwfc, dst, (AVFrame *)src, 0);
     }
 }
 
-static int vulkan_frames_derive_to(AVHWFramesContext *dst_fc,
-                                   AVHWFramesContext *src_fc, int flags)
+अटल पूर्णांक vulkan_frames_derive_to(AVHWFramesContext *dst_fc,
+                                   AVHWFramesContext *src_fc, पूर्णांक flags)
 {
-    return vulkan_frames_init(dst_fc);
+    वापस vulkan_frames_init(dst_fc);
 }
 
-AVVkFrame *av_vk_frame_alloc(void)
+AVVkFrame *av_vk_frame_alloc(व्योम)
 {
-    int err;
-    AVVkFrame *f = av_mallocz(sizeof(AVVkFrame));
-    if (!f)
-        return NULL;
+    पूर्णांक err;
+    AVVkFrame *f = av_mallocz(माप(AVVkFrame));
+    अगर (!f)
+        वापस शून्य;
 
-    f->internal = av_mallocz(sizeof(*f->internal));
-    if (!f->internal) {
+    f->internal = av_mallocz(माप(*f->internal));
+    अगर (!f->internal) {
         av_free(f);
-        return NULL;
+        वापस शून्य;
     }
 
-    err = pthread_mutex_init(&f->internal->update_mutex, NULL);
-    if (err != 0) {
+    err = pthread_mutex_init(&f->internal->update_mutex, शून्य);
+    अगर (err != 0) {
         av_free(f->internal);
         av_free(f);
-        return NULL;
+        वापस शून्य;
     }
 
-    return f;
+    वापस f;
 }
 
-const HWContextType ff_hwcontext_type_vulkan = {
+स्थिर HWContextType ff_hwcontext_type_vulkan = {
     .type                   = AV_HWDEVICE_TYPE_VULKAN,
     .name                   = "Vulkan",
 
-    .device_hwctx_size      = sizeof(VulkanDevicePriv),
-    .frames_hwctx_size      = sizeof(VulkanFramesPriv),
+    .device_hwctx_आकार      = माप(VulkanDevicePriv),
+    .frames_hwctx_आकार      = माप(VulkanFramesPriv),
 
     .device_init            = &vulkan_device_init,
     .device_uninit          = &vulkan_device_uninit,
@@ -5370,18 +5370,18 @@ const HWContextType ff_hwcontext_type_vulkan = {
 
     .frames_get_constraints = &vulkan_frames_get_constraints,
     .frames_init            = vulkan_frames_init,
-    .frames_get_buffer      = vulkan_get_buffer,
+    .frames_get_बफर      = vulkan_get_बफर,
     .frames_uninit          = vulkan_frames_uninit,
 
     .transfer_get_formats   = vulkan_transfer_get_formats,
-    .transfer_data_to       = vulkan_transfer_data_to,
-    .transfer_data_from     = vulkan_transfer_data_from,
+    .transfer_तथ्य_to       = vulkan_transfer_तथ्य_to,
+    .transfer_तथ्य_from     = vulkan_transfer_तथ्य_from,
 
     .map_to                 = vulkan_map_to,
     .map_from               = vulkan_map_from,
     .frames_derive_to       = &vulkan_frames_derive_to,
 
-    .pix_fmts = (const enum AVPixelFormat []) {
+    .pix_fmts = (स्थिर क्रमागत AVPixelFormat []) {
         AV_PIX_FMT_VULKAN,
         AV_PIX_FMT_NONE
     },

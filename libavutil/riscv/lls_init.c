@@ -18,39 +18,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
-#include <stdint.h>
+#समावेश <assert.h>
+#समावेश <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/lls.h"
+#समावेश "config.h"
+#समावेश "libavutil/attributes.h"
+#समावेश "libavutil/cpu.h"
+#समावेश "libavutil/riscv/cpu.h"
+#समावेश "libavutil/lls.h"
 
-void ff_lls_update_covariance_rvv(double covar[][36], const double *var,
-                                  int count);
-double ff_scalarproduct_double_rvv(const double *, const double *, size_t);
+व्योम ff_lls_update_covariance_rvv(द्विगुन covar[][36], स्थिर द्विगुन *var,
+                                  पूर्णांक गिनती);
+द्विगुन ff_scalarproduct_double_rvv(स्थिर द्विगुन *, स्थिर द्विगुन *, माप_प्रकार);
 
-static void ff_lls_update_rvv(struct LLSModel *m, const double *var)
+अटल व्योम ff_lls_update_rvv(काष्ठा LLSModel *m, स्थिर द्विगुन *var)
 {
-    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_count + 1);
+    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_गिनती + 1);
 }
 
-static double ff_lls_evaluate_rvv(struct LLSModel *m, const double *var,
-                                  int order)
+अटल द्विगुन ff_lls_evaluate_rvv(काष्ठा LLSModel *m, स्थिर द्विगुन *var,
+                                  पूर्णांक order)
 {
-    return ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
+    वापस ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
 }
 
-av_cold void ff_init_lls_riscv(LLSModel *m)
+av_cold व्योम ff_init_lls_riscv(LLSModel *m)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#अगर HAVE_RVV
+    पूर्णांक flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
-        if (ff_get_rv_vlenb() > m->indep_count)
+    अगर ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
+        अगर (ff_get_rv_vlenb() > m->indep_गिनती)
             m->update_lls = ff_lls_update_rvv;
         m->evaluate_lls = ff_lls_evaluate_rvv;
     }
-#endif
+#पूर्ण_अगर
 }

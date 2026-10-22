@@ -18,91 +18,91 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
-#include "mem.h"
-#include "intreadwrite.h"
-#include "murmur3.h"
+#समावेश <stddef.h>
+#समावेश <stdint.h>
+#समावेश <string.h>
+#समावेश "mem.h"
+#समावेश "intreadwrite.h"
+#समावेश "murmur3.h"
 
-typedef struct AVMurMur3 {
+प्रकार काष्ठा AVMurMur3 {
     uint64_t h1, h2;
     uint8_t state[16];
-    int state_pos;
+    पूर्णांक state_pos;
     uint64_t len;
 } AVMurMur3;
 
-AVMurMur3 *av_murmur3_alloc(void)
+AVMurMur3 *av_murmur3_alloc(व्योम)
 {
-    return av_mallocz(sizeof(AVMurMur3));
+    वापस av_mallocz(माप(AVMurMur3));
 }
 
-void av_murmur3_init_seeded(AVMurMur3 *c, uint64_t seed)
+व्योम av_murmur3_init_seeded(AVMurMur3 *c, uint64_t seed)
 {
-    memset(c, 0, sizeof(*c));
+    स_रखो(c, 0, माप(*c));
     c->h1 = c->h2 = seed;
 }
 
-void av_murmur3_init(AVMurMur3 *c)
+व्योम av_murmur3_init(AVMurMur3 *c)
 {
     // arbitrary random number as seed
     av_murmur3_init_seeded(c, 0x725acc55daddca55);
 }
 
-static const uint64_t c1 = UINT64_C(0x87c37b91114253d5);
-static const uint64_t c2 = UINT64_C(0x4cf5ad432745937f);
+अटल स्थिर uint64_t c1 = UINT64_C(0x87c37b91114253d5);
+अटल स्थिर uint64_t c2 = UINT64_C(0x4cf5ad432745937f);
 
-#define ROT(a, b) (((a) << (b)) | ((a) >> (64 - (b))))
+#घोषणा ROT(a, b) (((a) << (b)) | ((a) >> (64 - (b))))
 
-static uint64_t inline get_k1(const uint8_t *src)
+अटल uint64_t अंतरभूत get_k1(स्थिर uint8_t *src)
 {
     uint64_t k = AV_RL64(src);
     k *= c1;
     k = ROT(k, 31);
     k *= c2;
-    return k;
+    वापस k;
 }
 
-static inline uint64_t get_k2(const uint8_t *src)
+अटल अंतरभूत uint64_t get_k2(स्थिर uint8_t *src)
 {
     uint64_t k = AV_RL64(src + 8);
     k *= c2;
     k = ROT(k, 33);
     k *= c1;
-    return k;
+    वापस k;
 }
 
-static inline uint64_t update_h1(uint64_t k, uint64_t h1, uint64_t h2)
+अटल अंतरभूत uint64_t update_h1(uint64_t k, uint64_t h1, uint64_t h2)
 {
     k ^= h1;
     k = ROT(k, 27);
     k += h2;
     k *= 5;
     k += 0x52dce729;
-    return k;
+    वापस k;
 }
 
-static inline uint64_t update_h2(uint64_t k, uint64_t h1, uint64_t h2)
+अटल अंतरभूत uint64_t update_h2(uint64_t k, uint64_t h1, uint64_t h2)
 {
     k ^= h2;
     k = ROT(k, 31);
     k += h1;
     k *= 5;
     k += 0x38495ab5;
-    return k;
+    वापस k;
 }
 
-void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
+व्योम av_murmur3_update(AVMurMur3 *c, स्थिर uint8_t *src, माप_प्रकार len)
 {
-    const uint8_t *end;
+    स्थिर uint8_t *end;
     uint64_t h1 = c->h1, h2 = c->h2;
     uint64_t k1, k2;
-    if (len <= 0) return;
+    अगर (len <= 0) वापस;
     c->len += len;
-    if (c->state_pos > 0) {
-        while (c->state_pos < 16) {
+    अगर (c->state_pos > 0) {
+        जबतक (c->state_pos < 16) {
             c->state[c->state_pos++] = *src++;
-            if (--len <= 0) return;
+            अगर (--len <= 0) वापस;
         }
         c->state_pos = 0;
         k1 = get_k1(c->state);
@@ -112,7 +112,7 @@ void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
     }
 
     end = src + (len & ~15);
-    while (src < end) {
+    जबतक (src < end) {
         // These could be done sequentially instead
         // of interleaved, but like this is over 10% faster
         k1 = get_k1(src);
@@ -125,26 +125,26 @@ void av_murmur3_update(AVMurMur3 *c, const uint8_t *src, size_t len)
     c->h2 = h2;
 
     len &= 15;
-    if (len > 0) {
-        memcpy(c->state, src, len);
+    अगर (len > 0) {
+        स_नकल(c->state, src, len);
         c->state_pos = len;
     }
 }
 
-static inline uint64_t fmix(uint64_t k)
+अटल अंतरभूत uint64_t fmix(uint64_t k)
 {
     k ^= k >> 33;
     k *= UINT64_C(0xff51afd7ed558ccd);
     k ^= k >> 33;
     k *= UINT64_C(0xc4ceb9fe1a85ec53);
     k ^= k >> 33;
-    return k;
+    वापस k;
 }
 
-void av_murmur3_final(AVMurMur3 *c, uint8_t dst[16])
+व्योम av_murmur3_final(AVMurMur3 *c, uint8_t dst[16])
 {
     uint64_t h1 = c->h1, h2 = c->h2;
-    memset(c->state + c->state_pos, 0, sizeof(c->state) - c->state_pos);
+    स_रखो(c->state + c->state_pos, 0, माप(c->state) - c->state_pos);
     h1 ^= get_k1(c->state) ^ c->len;
     h2 ^= get_k2(c->state) ^ c->len;
     h1 += h2;

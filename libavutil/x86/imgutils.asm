@@ -50,4 +50,4 @@ cglobal image_copy_plane_uc_from, 6, 7, 4, dst, dst_linesize, src, src_linesize,
     dec heightd
     jnz .row_start
 
-    RET
+    वापस

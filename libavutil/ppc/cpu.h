@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PPC_CPU_H
-#define AVUTIL_PPC_CPU_H
+#अगर_अघोषित AVUTIL_PPC_CPU_H
+#घोषणा AVUTIL_PPC_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#समावेश "libavutil/cpu.h"
+#समावेश "libavutil/cpu_internal.h"
 
-#define PPC_ALTIVEC(flags) CPUEXT(flags, ALTIVEC)
-#define PPC_VSX(flags) CPUEXT(flags, VSX)
-#define PPC_POWER8(flags) CPUEXT(flags, POWER8)
+#घोषणा PPC_ALTIVEC(flags) CPUEXT(flags, ALTIVEC)
+#घोषणा PPC_VSX(flags) CPUEXT(flags, VSX)
+#घोषणा PPC_POWER8(flags) CPUEXT(flags, POWER8)
 
-#endif /* AVUTIL_PPC_CPU_H */
+#पूर्ण_अगर /* AVUTIL_PPC_CPU_H */

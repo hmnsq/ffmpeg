@@ -16,70 +16,70 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_VULKAN_FUNCTIONS_H
-#define AVUTIL_VULKAN_FUNCTIONS_H
+#अगर_अघोषित AVUTIL_VULKAN_FUNCTIONS_H
+#घोषणा AVUTIL_VULKAN_FUNCTIONS_H
 
-#define VK_NO_PROTOTYPES
-#define VK_ENABLE_BETA_EXTENSIONS
+#घोषणा VK_NO_PROTOTYPES
+#घोषणा VK_ENABLE_BETA_EXTENSIONS
 
-#include "hwcontext.h"
-#include "hwcontext_vulkan.h"
+#समावेश "hwcontext.h"
+#समावेश "hwcontext_vulkan.h"
 
 /* An enum of bitflags for every optional extension we need */
-typedef uint64_t FFVulkanExtensions;
+प्रकार uint64_t FFVulkanExtensions;
 
 /* NOTE: when adding new entries, make sure to update ff_vk_extensions_to_mask */
-#define FF_VK_EXT_EXTERNAL_DMABUF_MEMORY (1ULL <<  0) /* VK_EXT_external_memory_dma_buf */
-#define FF_VK_EXT_DRM_MODIFIER_FLAGS     (1ULL <<  1) /* VK_EXT_image_drm_format_modifier */
-#define FF_VK_EXT_EXTERNAL_FD_MEMORY     (1ULL <<  2) /* VK_KHR_external_memory_fd */
-#define FF_VK_EXT_EXTERNAL_FD_SEM        (1ULL <<  3) /* VK_KHR_external_semaphore_fd */
-#define FF_VK_EXT_EXTERNAL_HOST_MEMORY   (1ULL <<  4) /* VK_EXT_external_memory_host */
-#define FF_VK_EXT_DEBUG_UTILS            (1ULL <<  5) /* VK_EXT_debug_utils */
+#घोषणा FF_VK_EXT_EXTERNAL_DMABUF_MEMORY (1ULL <<  0) /* VK_EXT_external_memory_dma_buf */
+#घोषणा FF_VK_EXT_DRM_MODIFIER_FLAGS     (1ULL <<  1) /* VK_EXT_image_drm_format_modifier */
+#घोषणा FF_VK_EXT_EXTERNAL_FD_MEMORY     (1ULL <<  2) /* VK_KHR_external_memory_fd */
+#घोषणा FF_VK_EXT_EXTERNAL_FD_SEM        (1ULL <<  3) /* VK_KHR_external_semaphore_fd */
+#घोषणा FF_VK_EXT_EXTERNAL_HOST_MEMORY   (1ULL <<  4) /* VK_EXT_external_memory_host */
+#घोषणा FF_VK_EXT_DEBUG_UTILS            (1ULL <<  5) /* VK_EXT_debug_utils */
 
-#define FF_VK_EXT_EXTERNAL_WIN32_MEMORY  (1ULL <<  6) /* VK_KHR_external_memory_win32 */
-#define FF_VK_EXT_EXTERNAL_WIN32_SEM     (1ULL <<  7) /* VK_KHR_external_semaphore_win32 */
+#घोषणा FF_VK_EXT_EXTERNAL_WIN32_MEMORY  (1ULL <<  6) /* VK_KHR_external_memory_win32 */
+#घोषणा FF_VK_EXT_EXTERNAL_WIN32_SEM     (1ULL <<  7) /* VK_KHR_external_semaphore_win32 */
 
-#define FF_VK_EXT_DEVICE_DRM             (1ULL <<  9) /* VK_EXT_physical_device_drm */
-#define FF_VK_EXT_ATOMIC_FLOAT           (1ULL << 10) /* VK_EXT_shader_atomic_float */
-#define FF_VK_EXT_COOP_MATRIX            (1ULL << 11) /* VK_KHR_cooperative_matrix */
-#define FF_VK_EXT_OPTICAL_FLOW           (1ULL << 12) /* VK_NV_optical_flow */
-#define FF_VK_EXT_SHADER_OBJECT          (1ULL << 13) /* VK_EXT_shader_object */
-#define FF_VK_EXT_PUSH_DESCRIPTOR        (1ULL << 14) /* VK_KHR_push_descriptor */
-#define FF_VK_EXT_RELAXED_EXTENDED_INSTR (1ULL << 15) /* VK_KHR_shader_relaxed_extended_instruction */
-#define FF_VK_EXT_EXPECT_ASSUME          (1ULL << 16) /* VK_KHR_shader_expect_assume */
-#define FF_VK_EXT_SUBGROUP_ROTATE        (1ULL << 17) /* VK_KHR_shader_subgroup_rotate */
-#define FF_VK_EXT_HOST_IMAGE_COPY        (1ULL << 18) /* VK_EXT_host_image_copy */
-#define FF_VK_EXT_ZERO_INITIALIZE        (1ULL << 19) /* VK_EXT_zero_initialize_device_memory */
-#define FF_VK_EXT_EXPLICIT_MEM_LAYOUT    (1ULL << 20) /* VK_KHR_workgroup_memory_explicit_layout */
-#define FF_VK_EXT_REPLICATED_COMPOSITES  (1ULL << 21) /* VK_EXT_shader_replicated_composites */
-#define FF_VK_EXT_LONG_VECTOR            (1ULL << 22) /* VK_EXT_shader_long_vector */
-#define FF_VK_EXT_INTERNAL_QUEUE_SYNC    (1ULL << 23) /* VK_KHR_internally_synchronized_queues */
-#define FF_VK_EXT_MAXIMAL_RECONVERGENCE  (1ULL << 24) /* VK_KHR_shader_maximal_reconvergence */
-#define FF_VK_EXT_MAINTENANCE_9          (1ULL << 25) /* VK_KHR_maintenance9 */
-#define FF_VK_EXT_UNIFIED_IMAGE_LAYOUTS  (1ULL << 26) /* VK_KHR_unified_image_layouts */
-#define FF_VK_EXT_MAINTENANCE_11         (1ULL << 27) /* VK_KHR_maintenance11 */
+#घोषणा FF_VK_EXT_DEVICE_DRM             (1ULL <<  9) /* VK_EXT_physical_device_drm */
+#घोषणा FF_VK_EXT_ATOMIC_FLOAT           (1ULL << 10) /* VK_EXT_shader_atomic_float */
+#घोषणा FF_VK_EXT_COOP_MATRIX            (1ULL << 11) /* VK_KHR_cooperative_matrix */
+#घोषणा FF_VK_EXT_OPTICAL_FLOW           (1ULL << 12) /* VK_NV_optical_flow */
+#घोषणा FF_VK_EXT_SHADER_OBJECT          (1ULL << 13) /* VK_EXT_shader_object */
+#घोषणा FF_VK_EXT_धकेलो_DESCRIPTOR        (1ULL << 14) /* VK_KHR_push_descriptor */
+#घोषणा FF_VK_EXT_RELAXED_EXTENDED_INSTR (1ULL << 15) /* VK_KHR_shader_relaxed_extended_instruction */
+#घोषणा FF_VK_EXT_EXPECT_ASSUME          (1ULL << 16) /* VK_KHR_shader_expect_assume */
+#घोषणा FF_VK_EXT_SUBGROUP_ROTATE        (1ULL << 17) /* VK_KHR_shader_subgroup_rotate */
+#घोषणा FF_VK_EXT_HOST_IMAGE_COPY        (1ULL << 18) /* VK_EXT_host_image_copy */
+#घोषणा FF_VK_EXT_ZERO_INITIALIZE        (1ULL << 19) /* VK_EXT_zero_initialize_device_memory */
+#घोषणा FF_VK_EXT_EXPLICIT_MEM_LAYOUT    (1ULL << 20) /* VK_KHR_workgroup_memory_explicit_layout */
+#घोषणा FF_VK_EXT_REPLICATED_COMPOSITES  (1ULL << 21) /* VK_EXT_shader_replicated_composites */
+#घोषणा FF_VK_EXT_LONG_VECTOR            (1ULL << 22) /* VK_EXT_shader_long_vector */
+#घोषणा FF_VK_EXT_INTERNAL_QUEUE_SYNC    (1ULL << 23) /* VK_KHR_internally_synchronized_queues */
+#घोषणा FF_VK_EXT_MAXIMAL_RECONVERGENCE  (1ULL << 24) /* VK_KHR_shader_maximal_reconvergence */
+#घोषणा FF_VK_EXT_MAINTENANCE_9          (1ULL << 25) /* VK_KHR_maintenance9 */
+#घोषणा FF_VK_EXT_UNIFIED_IMAGE_LAYOUTS  (1ULL << 26) /* VK_KHR_unified_image_layouts */
+#घोषणा FF_VK_EXT_MAINTENANCE_11         (1ULL << 27) /* VK_KHR_maintenance11 */
 
 /* Video extensions */
-#define FF_VK_EXT_VIDEO_QUEUE            (1ULL << 36) /* VK_KHR_video_queue */
-#define FF_VK_EXT_VIDEO_MAINTENANCE_1    (1ULL << 37) /* VK_KHR_video_maintenance1 */
-#define FF_VK_EXT_VIDEO_MAINTENANCE_2    (1ULL << 38) /* VK_KHR_video_maintenance2 */
+#घोषणा FF_VK_EXT_VIDEO_QUEUE            (1ULL << 36) /* VK_KHR_video_queue */
+#घोषणा FF_VK_EXT_VIDEO_MAINTENANCE_1    (1ULL << 37) /* VK_KHR_video_maintenance1 */
+#घोषणा FF_VK_EXT_VIDEO_MAINTENANCE_2    (1ULL << 38) /* VK_KHR_video_maintenance2 */
 
-#define FF_VK_EXT_VIDEO_DECODE_QUEUE     (1ULL << 40) /* VK_KHR_video_decode_queue */
-#define FF_VK_EXT_VIDEO_DECODE_H264      (1ULL << 41) /* VK_KHR_video_decode_h264 */
-#define FF_VK_EXT_VIDEO_DECODE_H265      (1ULL << 42) /* VK_KHR_video_decode_h265 */
-#define FF_VK_EXT_VIDEO_DECODE_VP9       (1ULL << 43) /* VK_KHR_video_decode_vp9 */
-#define FF_VK_EXT_VIDEO_DECODE_AV1       (1ULL << 44) /* VK_KHR_video_decode_av1 */
+#घोषणा FF_VK_EXT_VIDEO_DECODE_QUEUE     (1ULL << 40) /* VK_KHR_video_decode_queue */
+#घोषणा FF_VK_EXT_VIDEO_DECODE_H264      (1ULL << 41) /* VK_KHR_video_decode_h264 */
+#घोषणा FF_VK_EXT_VIDEO_DECODE_H265      (1ULL << 42) /* VK_KHR_video_decode_h265 */
+#घोषणा FF_VK_EXT_VIDEO_DECODE_VP9       (1ULL << 43) /* VK_KHR_video_decode_vp9 */
+#घोषणा FF_VK_EXT_VIDEO_DECODE_AV1       (1ULL << 44) /* VK_KHR_video_decode_av1 */
 
-#define FF_VK_EXT_VIDEO_ENCODE_QUEUE     (1ULL << 50) /* VK_KHR_video_encode_queue */
-#define FF_VK_EXT_VIDEO_ENCODE_H264      (1ULL << 51) /* VK_KHR_video_encode_h264 */
-#define FF_VK_EXT_VIDEO_ENCODE_H265      (1ULL << 52) /* VK_KHR_video_encode_h265 */
-#define FF_VK_EXT_VIDEO_ENCODE_AV1       (1ULL << 53) /* VK_KHR_video_encode_av1 */
+#घोषणा FF_VK_EXT_VIDEO_ENCODE_QUEUE     (1ULL << 50) /* VK_KHR_video_encode_queue */
+#घोषणा FF_VK_EXT_VIDEO_ENCODE_H264      (1ULL << 51) /* VK_KHR_video_encode_h264 */
+#घोषणा FF_VK_EXT_VIDEO_ENCODE_H265      (1ULL << 52) /* VK_KHR_video_encode_h265 */
+#घोषणा FF_VK_EXT_VIDEO_ENCODE_AV1       (1ULL << 53) /* VK_KHR_video_encode_av1 */
 
-#define FF_VK_EXT_PORTABILITY_SUBSET     (1ULL << 62)
-#define FF_VK_EXT_NO_FLAG                (1ULL << 63)
+#घोषणा FF_VK_EXT_PORTABILITY_SUBSET     (1ULL << 62)
+#घोषणा FF_VK_EXT_NO_FLAG                (1ULL << 63)
 
 /* Macro containing every function that we utilize in our codebase */
-#define FN_LIST(MACRO)                                                                   \
+#घोषणा FN_LIST(MACRO)                                                                   \
     /* Instance */                                                                       \
     MACRO(0, 0, FF_VK_EXT_NO_FLAG,              EnumerateInstanceExtensionProperties)    \
     MACRO(0, 0, FF_VK_EXT_NO_FLAG,              EnumerateInstanceLayerProperties)        \
@@ -118,9 +118,9 @@ typedef uint64_t FFVulkanExtensions;
                                                                                          \
     /* Command buffer */                                                                 \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              AllocateCommandBuffers)                  \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              BeginCommandBuffer)                      \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              EndCommandBuffer)                        \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              ResetCommandBuffer)                      \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Begin_Command_बफर)                      \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              End_Command_बफर)                        \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Reset_Command_बफर)                      \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              FreeCommandBuffers)                      \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdDispatch)                             \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdDispatchBase)                                       \
@@ -136,7 +136,7 @@ typedef uint64_t FFVulkanExtensions;
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CreateSemaphore)                         \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              WaitSemaphores)                          \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              SignalSemaphore)                         \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              GetSemaphoreCounterValue)                \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Get_Semaphore_गणक_मूल्य)                \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              DestroySemaphore)                        \
                                                                                          \
     /* Memory */                                                                         \
@@ -152,23 +152,23 @@ typedef uint64_t FFVulkanExtensions;
                                                                                          \
     /* Commands */                                                                       \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdBindDescriptorSets)                   \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdPushConstants)                        \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Cmd_धकेलो_Constants)                        \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdBindPipeline)                         \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdPipelineBarrier)                      \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdCopyBufferToImage)                    \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdCopyImageToBuffer)                    \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Cmd_Copy_बफर_To_Image)                    \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Cmd_Copy_Image_To_बफर)                    \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdCopyImage)                            \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdClearColorImage)                                    \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdCopyBuffer)                                         \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdUpdateBuffer)                                       \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Cmd_Copy_बफर)                                         \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Cmd_Update_बफर)                                       \
                                                                                          \
-    /* Buffer */                                                                         \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              GetBufferMemoryRequirements2)            \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CreateBuffer)                            \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              BindBufferMemory)                        \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              GetBufferDeviceAddress)                    \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdFillBuffer)                             \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              DestroyBuffer)                           \
+    /*बफर*/                                                                         \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Get_बफर_Memory_Requirements2)            \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Create_बफर)                            \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Bind_बफर_Memory)                        \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Get_बफर_Device_Address)                    \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Cmd_Fill_बफर)                             \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Destroy_बफर)                           \
                                                                                          \
     /* Image */                                                                          \
     MACRO(1, 1, FF_VK_EXT_DRM_MODIFIER_FLAGS,   GetImageDrmFormatModifierPropertiesEXT)  \
@@ -197,7 +197,7 @@ typedef uint64_t FFVulkanExtensions;
                                                                                                        \
     /* Descriptors */                                                                                  \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              UpdateDescriptorSets)                                  \
-    MACRO(1, 1, FF_VK_EXT_PUSH_DESCRIPTOR,      CmdPushDescriptorSetKHR)                               \
+    MACRO(1, 1, FF_VK_EXT_धकेलो_DESCRIPTOR,      Cmd_धकेलो_Descriptor_Set_KHR)                               \
                                                                                            \
     /* Queries */                                                                          \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CreateQueryPool)                           \
@@ -262,23 +262,23 @@ typedef uint64_t FFVulkanExtensions;
     MACRO(1, 1, FF_VK_EXT_SHADER_OBJECT,        CmdBindShadersEXT)                         \
     MACRO(1, 1, FF_VK_EXT_SHADER_OBJECT,        CreateShadersEXT)                          \
     MACRO(1, 1, FF_VK_EXT_SHADER_OBJECT,        DestroyShaderEXT)                          \
-    MACRO(1, 1, FF_VK_EXT_SHADER_OBJECT,        GetShaderBinaryDataEXT)
+    MACRO(1, 1, FF_VK_EXT_SHADER_OBJECT,        Get_Shader_द्विआधारी_तथ्य_EXT)
 
 /* Macro containing every win32 specific function that we utilize in our codebase */
-#define FN_LIST_WIN32(MACRO)                                                             \
+#घोषणा FN_LIST_WIN32(MACRO)                                                             \
     MACRO(1, 1, FF_VK_EXT_EXTERNAL_WIN32_SEM,    GetSemaphoreWin32HandleKHR)             \
     MACRO(1, 1, FF_VK_EXT_EXTERNAL_WIN32_MEMORY, GetMemoryWin32HandleKHR)
 
 /* Macro to turn a function name into a definition */
-#define PFN_DEF(req_inst, req_dev, ext_flag, name) \
+#घोषणा PFN_DEF(req_inst, req_dev, ext_flag, name) \
     PFN_vk##name name;
 
 /* Structure with the definition of all listed functions */
-typedef struct FFVulkanFunctions {
+प्रकार काष्ठा FFVulkanFunctions {
     FN_LIST(PFN_DEF)
-#ifdef _WIN32
+#अगर_घोषित _WIN32
     FN_LIST_WIN32(PFN_DEF)
-#endif
+#पूर्ण_अगर
 } FFVulkanFunctions;
 
-#endif /* AVUTIL_VULKAN_FUNCTIONS_H */
+#पूर्ण_अगर /* AVUTIL_VULKAN_FUNCTIONS_H */

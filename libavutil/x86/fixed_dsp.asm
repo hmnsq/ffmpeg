@@ -45,4 +45,4 @@ align 16
     mova        [src1q + lenq], m2
     add       lenq, mmsize
     jl .loop
-    RET
+    वापस

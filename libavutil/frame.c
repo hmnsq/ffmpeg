@@ -16,31 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "channel_layout.h"
-#include "avassert.h"
-#include "buffer.h"
-#include "dict.h"
-#include "frame.h"
-#include "frame_internal.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "refstruct.h"
-#include "samplefmt.h"
-#include "side_data.h"
-#include "hwcontext.h"
+#समावेश "channel_layout.h"
+#समावेश "avassert.h"
+#समावेश "buffer.h"
+#समावेश "dict.h"
+#समावेश "frame.h"
+#समावेश "frame_internal.h"
+#समावेश "imgutils.h"
+#समावेश "mem.h"
+#समावेश "refstruct.h"
+#समावेश "samplefmt.h"
+#समावेश "side_data.h"
+#समावेश "hwcontext.h"
 
-static void get_frame_defaults(AVFrame *frame)
+अटल व्योम get_frame_defaults(AVFrame *frame)
 {
-    memset(frame, 0, sizeof(*frame));
+    स_रखो(frame, 0, माप(*frame));
 
     frame->pts                   =
-    frame->pkt_dts               = AV_NOPTS_VALUE;
-    frame->best_effort_timestamp = AV_NOPTS_VALUE;
+    frame->pkt_dts               = AV_NOPTS_मूल्य;
+    frame->best_effort_timestamp = AV_NOPTS_मूल्य;
     frame->duration            = 0;
     frame->time_base           = (AVRational){ 0, 1 };
     frame->sample_aspect_ratio = (AVRational){ 0, 1 };
     frame->format              = -1; /* unknown */
-    frame->extended_data       = frame->data;
+    frame->extended_तथ्य       = frame->तथ्य;
     frame->color_primaries     = AVCOL_PRI_UNSPECIFIED;
     frame->color_trc           = AVCOL_TRC_UNSPECIFIED;
     frame->colorspace          = AVCOL_SPC_UNSPECIFIED;
@@ -50,184 +50,184 @@ static void get_frame_defaults(AVFrame *frame)
     frame->flags               = 0;
 }
 
-AVFrame *av_frame_alloc(void)
+AVFrame *av_frame_alloc(व्योम)
 {
-    AVFrame *frame = av_malloc(sizeof(*frame));
+    AVFrame *frame = av_malloc(माप(*frame));
 
-    if (!frame)
-        return NULL;
+    अगर (!frame)
+        वापस शून्य;
 
     get_frame_defaults(frame);
 
-    return frame;
+    वापस frame;
 }
 
-void av_frame_free(AVFrame **frame)
+व्योम av_frame_free(AVFrame **frame)
 {
-    if (!frame || !*frame)
-        return;
+    अगर (!frame || !*frame)
+        वापस;
 
     av_frame_unref(*frame);
     av_freep(frame);
 }
 
-#define ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
+#घोषणा ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
 
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
-                              AVBufferRef *(*alloc)(void *opaque, size_t size),
-                              void *opaque)
+पूर्णांक ff_frame_get_video_बफर(AVFrame *frame, पूर्णांक align,
+                              AVBufferRef *(*alloc)(व्योम *opaque, माप_प्रकार आकार),
+                              व्योम *opaque)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
-    int ret, padded_height;
-    int plane_padding;
-    ptrdiff_t linesizes[4];
-    size_t total_size, sizes[4];
+    स्थिर AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
+    पूर्णांक ret, padded_height;
+    पूर्णांक plane_padding;
+    सूचक_भेद_प्रकार linesizes[4];
+    माप_प्रकार योग_आकार, sizes[4];
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    अगर (!desc)
+        वापस AVERROR(EINVAL);
 
-    if ((ret = av_image_check_size(frame->width, frame->height, 0, NULL)) < 0)
-        return ret;
+    अगर ((ret = av_image_check_आकार(frame->width, frame->height, 0, शून्य)) < 0)
+        वापस ret;
 
-    if (align <= 0)
+    अगर (align <= 0)
         align = ALIGN;
     plane_padding = FFMAX(ALIGN, align);
 
-    if (!frame->linesize[0]) {
-        for (int i = 1; i <= align; i += i) {
+    अगर (!frame->linesize[0]) {
+        क्रम (पूर्णांक i = 1; i <= align; i += i) {
             ret = av_image_fill_linesizes(frame->linesize, frame->format,
                                           FFALIGN(frame->width, i));
-            if (ret < 0)
-                return ret;
-            if (!(frame->linesize[0] & (align-1)))
-                break;
+            अगर (ret < 0)
+                वापस ret;
+            अगर (!(frame->linesize[0] & (align-1)))
+                अवरोध;
         }
 
-        for (int i = 0; i < 4 && frame->linesize[i]; i++)
+        क्रम (पूर्णांक i = 0; i < 4 && frame->linesize[i]; i++)
             frame->linesize[i] = FFALIGN(frame->linesize[i], align);
     }
 
-    for (int i = 0; i < 4; i++)
+    क्रम (पूर्णांक i = 0; i < 4; i++)
         linesizes[i] = frame->linesize[i];
 
     padded_height = FFALIGN(frame->height, 32);
-    if ((ret = av_image_fill_plane_sizes(sizes, frame->format,
+    अगर ((ret = av_image_fill_plane_sizes(sizes, frame->format,
                                          padded_height, linesizes)) < 0)
-        return ret;
+        वापस ret;
 
-    total_size = 4 * plane_padding + 4 * align;
-    for (int i = 0; i < 4; i++) {
-        if (sizes[i] > SIZE_MAX - total_size)
-            return AVERROR(EINVAL);
-        total_size += sizes[i];
+    योग_आकार = 4 * plane_padding + 4 * align;
+    क्रम (पूर्णांक i = 0; i < 4; i++) {
+        अगर (sizes[i] > SIZE_MAX - योग_आकार)
+            वापस AVERROR(EINVAL);
+        योग_आकार += sizes[i];
     }
 
-    frame->buf[0] = alloc ? alloc(opaque, total_size) : av_buffer_alloc(total_size);
-    if (!frame->buf[0]) {
+    frame->buf[0] = alloc ? alloc(opaque, योग_आकार) : av_बफर_alloc(योग_आकार);
+    अगर (!frame->buf[0]) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        जाओ fail;
     }
 
-    if ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
-                                      frame->buf[0]->data, frame->linesize)) < 0)
-        goto fail;
+    अगर ((ret = av_image_fill_pointers(frame->तथ्य, frame->format, padded_height,
+                                      frame->buf[0]->तथ्य, frame->linesize)) < 0)
+        जाओ fail;
 
-    for (int i = 1; i < 4; i++) {
-        if (frame->data[i])
-            frame->data[i] += i * plane_padding;
-        frame->data[i] = (uint8_t *)FFALIGN((uintptr_t)frame->data[i], align);
+    क्रम (पूर्णांक i = 1; i < 4; i++) {
+        अगर (frame->तथ्य[i])
+            frame->तथ्य[i] += i * plane_padding;
+        frame->तथ्य[i] = (uint8_t *)FFALIGN((uintptr_t)frame->तथ्य[i], align);
     }
 
-    frame->extended_data = frame->data;
+    frame->extended_तथ्य = frame->तथ्य;
 
-    return 0;
+    वापस 0;
 fail:
     av_frame_unref(frame);
-    return ret;
+    वापस ret;
 }
 
-static int get_audio_buffer(AVFrame *frame, int align)
+अटल पूर्णांक get_audio_बफर(AVFrame *frame, पूर्णांक align)
 {
-    int planar   = av_sample_fmt_is_planar(frame->format);
-    int channels, planes;
-    size_t size;
-    int ret;
+    पूर्णांक planar   = av_sample_fmt_is_planar(frame->format);
+    पूर्णांक channels, planes;
+    माप_प्रकार आकार;
+    पूर्णांक ret;
 
     channels = frame->ch_layout.nb_channels;
     planes   = planar ? channels : 1;
-    if (!frame->linesize[0]) {
-        ret = av_samples_get_buffer_size(&frame->linesize[0], channels,
+    अगर (!frame->linesize[0]) {
+        ret = av_samples_get_बफर_आकार(&frame->linesize[0], channels,
                                          frame->nb_samples, frame->format,
                                          align);
-        if (ret < 0)
-            return ret;
+        अगर (ret < 0)
+            वापस ret;
     }
 
-    if (align <= 0)
+    अगर (align <= 0)
         align = ALIGN;
 
-    if (planes > AV_NUM_DATA_POINTERS) {
-        frame->extended_data = av_calloc(planes,
-                                          sizeof(*frame->extended_data));
-        frame->extended_buf  = av_calloc(planes - AV_NUM_DATA_POINTERS,
-                                          sizeof(*frame->extended_buf));
-        if (!frame->extended_data || !frame->extended_buf) {
-            av_freep(&frame->extended_data);
+    अगर (planes > AV_अंक_तथ्य_POINTERS) {
+        frame->extended_तथ्य = av_calloc(planes,
+                                          माप(*frame->extended_तथ्य));
+        frame->extended_buf  = av_calloc(planes - AV_अंक_तथ्य_POINTERS,
+                                          माप(*frame->extended_buf));
+        अगर (!frame->extended_तथ्य || !frame->extended_buf) {
+            av_freep(&frame->extended_तथ्य);
             av_freep(&frame->extended_buf);
-            return AVERROR(ENOMEM);
+            वापस AVERROR(ENOMEM);
         }
-        frame->nb_extended_buf = planes - AV_NUM_DATA_POINTERS;
-    } else
-        frame->extended_data = frame->data;
+        frame->nb_extended_buf = planes - AV_अंक_तथ्य_POINTERS;
+    } अन्यथा
+        frame->extended_तथ्य = frame->तथ्य;
 
-    if (frame->linesize[0] > SIZE_MAX - align)
-        return AVERROR(EINVAL);
-    size = frame->linesize[0] + (size_t)align;
+    अगर (frame->linesize[0] > SIZE_MAX - align)
+        वापस AVERROR(EINVAL);
+    आकार = frame->linesize[0] + (माप_प्रकार)align;
 
-    for (int i = 0; i < FFMIN(planes, AV_NUM_DATA_POINTERS); i++) {
-        frame->buf[i] = av_buffer_alloc(size);
-        if (!frame->buf[i]) {
+    क्रम (पूर्णांक i = 0; i < FFMIN(planes, AV_अंक_तथ्य_POINTERS); i++) {
+        frame->buf[i] = av_बफर_alloc(आकार);
+        अगर (!frame->buf[i]) {
             av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+            वापस AVERROR(ENOMEM);
         }
-        frame->extended_data[i] = frame->data[i] =
-            (uint8_t *)FFALIGN((uintptr_t)frame->buf[i]->data, align);
+        frame->extended_तथ्य[i] = frame->तथ्य[i] =
+            (uint8_t *)FFALIGN((uintptr_t)frame->buf[i]->तथ्य, align);
     }
-    for (int i = 0; i < planes - AV_NUM_DATA_POINTERS; i++) {
-        frame->extended_buf[i] = av_buffer_alloc(size);
-        if (!frame->extended_buf[i]) {
+    क्रम (पूर्णांक i = 0; i < planes - AV_अंक_तथ्य_POINTERS; i++) {
+        frame->extended_buf[i] = av_बफर_alloc(आकार);
+        अगर (!frame->extended_buf[i]) {
             av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+            वापस AVERROR(ENOMEM);
         }
-        frame->extended_data[i + AV_NUM_DATA_POINTERS] =
-            (uint8_t *)FFALIGN((uintptr_t)frame->extended_buf[i]->data, align);
+        frame->extended_तथ्य[i + AV_अंक_तथ्य_POINTERS] =
+            (uint8_t *)FFALIGN((uintptr_t)frame->extended_buf[i]->तथ्य, align);
     }
-    return 0;
+    वापस 0;
 
 }
 
-int av_frame_get_buffer(AVFrame *frame, int align)
+पूर्णांक av_frame_get_बफर(AVFrame *frame, पूर्णांक align)
 {
-    if (frame->format < 0)
-        return AVERROR(EINVAL);
+    अगर (frame->format < 0)
+        वापस AVERROR(EINVAL);
 
-    if (frame->width > 0 && frame->height > 0)
-        return ff_frame_get_video_buffer(frame, align, NULL, NULL);
-    else if (frame->nb_samples > 0 &&
+    अगर (frame->width > 0 && frame->height > 0)
+        वापस ff_frame_get_video_बफर(frame, align, शून्य, शून्य);
+    अन्यथा अगर (frame->nb_samples > 0 &&
              (av_channel_layout_check(&frame->ch_layout)))
-        return get_audio_buffer(frame, align);
+        वापस get_audio_बफर(frame, align);
 
-    return AVERROR(EINVAL);
+    वापस AVERROR(EINVAL);
 }
 
-static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
+अटल पूर्णांक frame_copy_props(AVFrame *dst, स्थिर AVFrame *src, पूर्णांक force_copy)
 {
     dst->pict_type              = src->pict_type;
     dst->sample_aspect_ratio    = src->sample_aspect_ratio;
-    dst->crop_top               = src->crop_top;
+    dst->crop_शीर्ष               = src->crop_शीर्ष;
     dst->crop_bottom            = src->crop_bottom;
-    dst->crop_left              = src->crop_left;
-    dst->crop_right             = src->crop_right;
+    dst->crop_बायाँ              = src->crop_बायाँ;
+    dst->crop_दायाँ             = src->crop_दायाँ;
     dst->pts                    = src->pts;
     dst->duration               = src->duration;
     dst->repeat_pict            = src->repeat_pict;
@@ -248,39 +248,39 @@ static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
 
     av_dict_copy(&dst->metadata, src->metadata, 0);
 
-    for (int i = 0; i < src->nb_side_data; i++) {
-        const AVFrameSideData *sd_src = src->side_data[i];
-        AVFrameSideData *sd_dst;
-        if (   sd_src->type == AV_FRAME_DATA_PANSCAN
+    क्रम (पूर्णांक i = 0; i < src->nb_side_तथ्य; i++) {
+        स्थिर AVFrame_Side_तथ्य *sd_src = src->side_तथ्य[i];
+        AVFrame_Side_तथ्य *sd_dst;
+        अगर (   sd_src->type == AV_FRAME_तथ्य_PANSCAN
             && (src->width != dst->width || src->height != dst->height))
-            continue;
-        if (force_copy) {
-            sd_dst = av_frame_new_side_data(dst, sd_src->type,
-                                            sd_src->size);
-            if (!sd_dst) {
-                av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+            जारी;
+        अगर (force_copy) {
+            sd_dst = av_frame_new_side_तथ्य(dst, sd_src->type,
+                                            sd_src->आकार);
+            अगर (!sd_dst) {
+                av_frame_side_तथ्य_free(&dst->side_तथ्य, &dst->nb_side_तथ्य);
+                वापस AVERROR(ENOMEM);
             }
-            memcpy(sd_dst->data, sd_src->data, sd_src->size);
-        } else {
-            AVBufferRef *ref = av_buffer_ref(sd_src->buf);
-            sd_dst = av_frame_new_side_data_from_buf(dst, sd_src->type, ref);
-            if (!sd_dst) {
-                av_buffer_unref(&ref);
-                av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+            स_नकल(sd_dst->तथ्य, sd_src->तथ्य, sd_src->आकार);
+        } अन्यथा {
+            AVBufferRef *ref = av_बफर_ref(sd_src->buf);
+            sd_dst = av_frame_new_side_तथ्य_from_buf(dst, sd_src->type, ref);
+            अगर (!sd_dst) {
+                av_बफर_unref(&ref);
+                av_frame_side_तथ्य_free(&dst->side_तथ्य, &dst->nb_side_तथ्य);
+                वापस AVERROR(ENOMEM);
             }
         }
         av_dict_copy(&sd_dst->metadata, sd_src->metadata, 0);
     }
 
     av_refstruct_replace(&dst->private_ref, src->private_ref);
-    return av_buffer_replace(&dst->opaque_ref, src->opaque_ref);
+    वापस av_बफर_replace(&dst->opaque_ref, src->opaque_ref);
 }
 
-int av_frame_ref(AVFrame *dst, const AVFrame *src)
+पूर्णांक av_frame_ref(AVFrame *dst, स्थिर AVFrame *src)
 {
-    int ret = 0;
+    पूर्णांक ret = 0;
 
     av_assert1(dst->width == 0 && dst->height == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
@@ -292,108 +292,108 @@ int av_frame_ref(AVFrame *dst, const AVFrame *src)
     dst->nb_samples     = src->nb_samples;
 
     ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    अगर (ret < 0)
+        जाओ fail;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    अगर (ret < 0)
+        जाओ fail;
 
     /* duplicate the frame data if it's not refcounted */
-    if (!src->buf[0]) {
-        ret = av_frame_get_buffer(dst, 0);
-        if (ret < 0)
-            goto fail;
+    अगर (!src->buf[0]) {
+        ret = av_frame_get_बफर(dst, 0);
+        अगर (ret < 0)
+            जाओ fail;
 
         ret = av_frame_copy(dst, src);
-        if (ret < 0)
-            goto fail;
+        अगर (ret < 0)
+            जाओ fail;
 
-        return 0;
+        वापस 0;
     }
 
     /* ref the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        if (!src->buf[i])
-            continue;
-        dst->buf[i] = av_buffer_ref(src->buf[i]);
-        if (!dst->buf[i]) {
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        अगर (!src->buf[i])
+            जारी;
+        dst->buf[i] = av_बफर_ref(src->buf[i]);
+        अगर (!dst->buf[i]) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            जाओ fail;
         }
     }
 
-    if (src->extended_buf) {
+    अगर (src->extended_buf) {
         dst->extended_buf = av_calloc(src->nb_extended_buf,
-                                      sizeof(*dst->extended_buf));
-        if (!dst->extended_buf) {
+                                      माप(*dst->extended_buf));
+        अगर (!dst->extended_buf) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            जाओ fail;
         }
         dst->nb_extended_buf = src->nb_extended_buf;
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
-            dst->extended_buf[i] = av_buffer_ref(src->extended_buf[i]);
-            if (!dst->extended_buf[i]) {
+        क्रम (पूर्णांक i = 0; i < src->nb_extended_buf; i++) {
+            dst->extended_buf[i] = av_बफर_ref(src->extended_buf[i]);
+            अगर (!dst->extended_buf[i]) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                जाओ fail;
             }
         }
     }
 
-    if (src->hw_frames_ctx) {
-        dst->hw_frames_ctx = av_buffer_ref(src->hw_frames_ctx);
-        if (!dst->hw_frames_ctx) {
+    अगर (src->hw_frames_ctx) {
+        dst->hw_frames_ctx = av_बफर_ref(src->hw_frames_ctx);
+        अगर (!dst->hw_frames_ctx) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            जाओ fail;
         }
     }
 
     /* duplicate extended data */
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    अगर (src->extended_तथ्य != src->तथ्य) {
+        पूर्णांक ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        अगर (ch <= 0 || ch > SIZE_MAX / माप(*dst->extended_तथ्य)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            जाओ fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_तथ्य = av_memdup(src->extended_तथ्य, माप(*dst->extended_तथ्य) * ch);
+        अगर (!dst->extended_तथ्य) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            जाओ fail;
         }
-    } else
-        dst->extended_data = dst->data;
+    } अन्यथा
+        dst->extended_तथ्य = dst->तथ्य;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    स_नकल(dst->तथ्य,     src->तथ्य,     माप(src->तथ्य));
+    स_नकल(dst->linesize, src->linesize, माप(src->linesize));
 
-    return 0;
+    वापस 0;
 
 fail:
     av_frame_unref(dst);
-    return ret;
+    वापस ret;
 }
 
-int av_frame_replace(AVFrame *dst, const AVFrame *src)
+पूर्णांक av_frame_replace(AVFrame *dst, स्थिर AVFrame *src)
 {
-    int ret = 0;
+    पूर्णांक ret = 0;
 
-    if (dst == src)
-        return AVERROR(EINVAL);
+    अगर (dst == src)
+        वापस AVERROR(EINVAL);
 
-    if (!src->buf[0]) {
+    अगर (!src->buf[0]) {
         av_frame_unref(dst);
 
         /* duplicate the frame data if it's not refcounted */
-        if (   src->data[0] || src->data[1]
-            || src->data[2] || src->data[3])
-            return av_frame_ref(dst, src);
+        अगर (   src->तथ्य[0] || src->तथ्य[1]
+            || src->तथ्य[2] || src->तथ्य[3])
+            वापस av_frame_ref(dst, src);
 
         ret = frame_copy_props(dst, src, 0);
-        if (ret < 0)
-            goto fail;
+        अगर (ret < 0)
+            जाओ fail;
     }
 
     dst->format         = src->format;
@@ -402,429 +402,429 @@ int av_frame_replace(AVFrame *dst, const AVFrame *src)
     dst->nb_samples     = src->nb_samples;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    अगर (ret < 0)
+        जाओ fail;
 
-    av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
+    av_frame_side_तथ्य_free(&dst->side_तथ्य, &dst->nb_side_तथ्य);
     av_dict_free(&dst->metadata);
     ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    अगर (ret < 0)
+        जाओ fail;
 
     /* replace the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        ret = av_buffer_replace(&dst->buf[i], src->buf[i]);
-        if (ret < 0)
-            goto fail;
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        ret = av_बफर_replace(&dst->buf[i], src->buf[i]);
+        अगर (ret < 0)
+            जाओ fail;
     }
 
-    if (src->extended_buf) {
-        if (dst->nb_extended_buf != src->nb_extended_buf) {
-            int nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
-            void *tmp;
+    अगर (src->extended_buf) {
+        अगर (dst->nb_extended_buf != src->nb_extended_buf) {
+            पूर्णांक nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
+            व्योम *tmp;
 
-            for (int i = nb_extended_buf; i < dst->nb_extended_buf; i++)
-                av_buffer_unref(&dst->extended_buf[i]);
+            क्रम (पूर्णांक i = nb_extended_buf; i < dst->nb_extended_buf; i++)
+                av_बफर_unref(&dst->extended_buf[i]);
 
             tmp = av_realloc_array(dst->extended_buf, src->nb_extended_buf,
-                                   sizeof(*dst->extended_buf));
-            if (!tmp) {
+                                   माप(*dst->extended_buf));
+            अगर (!tmp) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                जाओ fail;
             }
             dst->extended_buf = tmp;
             dst->nb_extended_buf = src->nb_extended_buf;
 
-            memset(&dst->extended_buf[nb_extended_buf], 0,
-                   (src->nb_extended_buf - nb_extended_buf) * sizeof(*dst->extended_buf));
+            स_रखो(&dst->extended_buf[nb_extended_buf], 0,
+                   (src->nb_extended_buf - nb_extended_buf) * माप(*dst->extended_buf));
         }
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
-            ret = av_buffer_replace(&dst->extended_buf[i], src->extended_buf[i]);
-            if (ret < 0)
-                goto fail;
+        क्रम (पूर्णांक i = 0; i < src->nb_extended_buf; i++) {
+            ret = av_बफर_replace(&dst->extended_buf[i], src->extended_buf[i]);
+            अगर (ret < 0)
+                जाओ fail;
         }
-    } else if (dst->extended_buf) {
-        for (int i = 0; i < dst->nb_extended_buf; i++)
-            av_buffer_unref(&dst->extended_buf[i]);
+    } अन्यथा अगर (dst->extended_buf) {
+        क्रम (पूर्णांक i = 0; i < dst->nb_extended_buf; i++)
+            av_बफर_unref(&dst->extended_buf[i]);
         av_freep(&dst->extended_buf);
     }
 
-    ret = av_buffer_replace(&dst->hw_frames_ctx, src->hw_frames_ctx);
-    if (ret < 0)
-        goto fail;
+    ret = av_बफर_replace(&dst->hw_frames_ctx, src->hw_frames_ctx);
+    अगर (ret < 0)
+        जाओ fail;
 
-    if (dst->extended_data != dst->data)
-        av_freep(&dst->extended_data);
+    अगर (dst->extended_तथ्य != dst->तथ्य)
+        av_freep(&dst->extended_तथ्य);
 
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    अगर (src->extended_तथ्य != src->तथ्य) {
+        पूर्णांक ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        अगर (ch <= 0 || ch > SIZE_MAX / माप(*dst->extended_तथ्य)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            जाओ fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_तथ्य = av_memdup(src->extended_तथ्य, माप(*dst->extended_तथ्य) * ch);
+        अगर (!dst->extended_तथ्य) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            जाओ fail;
         }
-    } else
-        dst->extended_data = dst->data;
+    } अन्यथा
+        dst->extended_तथ्य = dst->तथ्य;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    स_नकल(dst->तथ्य,     src->तथ्य,     माप(src->तथ्य));
+    स_नकल(dst->linesize, src->linesize, माप(src->linesize));
 
-    return 0;
+    वापस 0;
 
 fail:
     av_frame_unref(dst);
-    return ret;
+    वापस ret;
 }
 
-AVFrame *av_frame_clone(const AVFrame *src)
+AVFrame *av_frame_clone(स्थिर AVFrame *src)
 {
     AVFrame *ret = av_frame_alloc();
 
-    if (!ret)
-        return NULL;
+    अगर (!ret)
+        वापस शून्य;
 
-    if (av_frame_ref(ret, src) < 0)
+    अगर (av_frame_ref(ret, src) < 0)
         av_frame_free(&ret);
 
-    return ret;
+    वापस ret;
 }
 
-void av_frame_unref(AVFrame *frame)
+व्योम av_frame_unref(AVFrame *frame)
 {
-    if (!frame)
-        return;
+    अगर (!frame)
+        वापस;
 
-    av_frame_side_data_free(&frame->side_data, &frame->nb_side_data);
+    av_frame_side_तथ्य_free(&frame->side_तथ्य, &frame->nb_side_तथ्य);
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        av_buffer_unref(&frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
-        av_buffer_unref(&frame->extended_buf[i]);
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
+        av_बफर_unref(&frame->buf[i]);
+    क्रम (पूर्णांक i = 0; i < frame->nb_extended_buf; i++)
+        av_बफर_unref(&frame->extended_buf[i]);
     av_freep(&frame->extended_buf);
     av_dict_free(&frame->metadata);
 
-    av_buffer_unref(&frame->hw_frames_ctx);
+    av_बफर_unref(&frame->hw_frames_ctx);
 
-    av_buffer_unref(&frame->opaque_ref);
+    av_बफर_unref(&frame->opaque_ref);
     av_refstruct_unref(&frame->private_ref);
 
-    if (frame->extended_data != frame->data)
-        av_freep(&frame->extended_data);
+    अगर (frame->extended_तथ्य != frame->तथ्य)
+        av_freep(&frame->extended_तथ्य);
 
     av_channel_layout_uninit(&frame->ch_layout);
 
     get_frame_defaults(frame);
 }
 
-void av_frame_move_ref(AVFrame *dst, AVFrame *src)
+व्योम av_frame_move_ref(AVFrame *dst, AVFrame *src)
 {
     av_assert1(dst->width == 0 && dst->height == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
                dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
 
     *dst = *src;
-    if (src->extended_data == src->data)
-        dst->extended_data = dst->data;
+    अगर (src->extended_तथ्य == src->तथ्य)
+        dst->extended_तथ्य = dst->तथ्य;
     get_frame_defaults(src);
 }
 
-int av_frame_is_writable(AVFrame *frame)
+पूर्णांक av_frame_is_writable(AVFrame *frame)
 {
-    int ret = 1;
+    पूर्णांक ret = 1;
 
     /* assume non-refcounted frames are not writable */
-    if (!frame->buf[0])
-        return 0;
+    अगर (!frame->buf[0])
+        वापस 0;
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        if (frame->buf[i])
-            ret &= !!av_buffer_is_writable(frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
-        ret &= !!av_buffer_is_writable(frame->extended_buf[i]);
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
+        अगर (frame->buf[i])
+            ret &= !!av_बफर_is_writable(frame->buf[i]);
+    क्रम (पूर्णांक i = 0; i < frame->nb_extended_buf; i++)
+        ret &= !!av_बफर_is_writable(frame->extended_buf[i]);
 
-    return ret;
+    वापस ret;
 }
 
-int av_frame_make_writable(AVFrame *frame)
+पूर्णांक av_frame_make_writable(AVFrame *frame)
 {
     AVFrame tmp;
-    int ret;
+    पूर्णांक ret;
 
-    if (av_frame_is_writable(frame))
-        return 0;
+    अगर (av_frame_is_writable(frame))
+        वापस 0;
 
-    memset(&tmp, 0, sizeof(tmp));
+    स_रखो(&tmp, 0, माप(tmp));
     tmp.format         = frame->format;
     tmp.width          = frame->width;
     tmp.height         = frame->height;
     tmp.nb_samples     = frame->nb_samples;
     ret = av_channel_layout_copy(&tmp.ch_layout, &frame->ch_layout);
-    if (ret < 0) {
+    अगर (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        वापस ret;
     }
 
-    if (frame->hw_frames_ctx)
-        ret = av_hwframe_get_buffer(frame->hw_frames_ctx, &tmp, 0);
-    else
-        ret = av_frame_get_buffer(&tmp, 0);
-    if (ret < 0)
-        return ret;
+    अगर (frame->hw_frames_ctx)
+        ret = av_hwframe_get_बफर(frame->hw_frames_ctx, &tmp, 0);
+    अन्यथा
+        ret = av_frame_get_बफर(&tmp, 0);
+    अगर (ret < 0)
+        वापस ret;
 
     ret = av_frame_copy(&tmp, frame);
-    if (ret < 0) {
+    अगर (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        वापस ret;
     }
 
     ret = av_frame_copy_props(&tmp, frame);
-    if (ret < 0) {
+    अगर (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        वापस ret;
     }
 
     av_frame_unref(frame);
 
     *frame = tmp;
-    if (tmp.data == tmp.extended_data)
-        frame->extended_data = frame->data;
+    अगर (tmp.तथ्य == tmp.extended_तथ्य)
+        frame->extended_तथ्य = frame->तथ्य;
 
-    return 0;
+    वापस 0;
 }
 
-int av_frame_copy_props(AVFrame *dst, const AVFrame *src)
+पूर्णांक av_frame_copy_props(AVFrame *dst, स्थिर AVFrame *src)
 {
-    return frame_copy_props(dst, src, 1);
+    वापस frame_copy_props(dst, src, 1);
 }
 
-AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane)
+AVBufferRef *av_frame_get_plane_बफर(स्थिर AVFrame *frame, पूर्णांक plane)
 {
-    uintptr_t data;
-    int planes;
+    uintptr_t तथ्य;
+    पूर्णांक planes;
 
-    if (frame->nb_samples) {
-        int channels = frame->ch_layout.nb_channels;
-        if (!channels)
-            return NULL;
+    अगर (frame->nb_samples) {
+        पूर्णांक channels = frame->ch_layout.nb_channels;
+        अगर (!channels)
+            वापस शून्य;
         planes = av_sample_fmt_is_planar(frame->format) ? channels : 1;
-    } else
+    } अन्यथा
         planes = 4;
 
-    if (plane < 0 || plane >= planes || !frame->extended_data[plane])
-        return NULL;
-    data = (uintptr_t)frame->extended_data[plane];
+    अगर (plane < 0 || plane >= planes || !frame->extended_तथ्य[plane])
+        वापस शून्य;
+    तथ्य = (uintptr_t)frame->extended_तथ्य[plane];
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
+    क्रम (पूर्णांक i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
         AVBufferRef *buf = frame->buf[i];
-        uintptr_t buf_begin = (uintptr_t)buf->data;
+        uintptr_t buf_begin = (uintptr_t)buf->तथ्य;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        अगर (तथ्य >= buf_begin && तथ्य < buf_begin + buf->आकार)
+            वापस buf;
     }
-    for (int i = 0; i < frame->nb_extended_buf; i++) {
+    क्रम (पूर्णांक i = 0; i < frame->nb_extended_buf; i++) {
         AVBufferRef *buf = frame->extended_buf[i];
-        uintptr_t buf_begin = (uintptr_t)buf->data;
+        uintptr_t buf_begin = (uintptr_t)buf->तथ्य;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        अगर (तथ्य >= buf_begin && तथ्य < buf_begin + buf->आकार)
+            वापस buf;
     }
-    return NULL;
+    वापस शून्य;
 }
 
-AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
-                                                 enum AVFrameSideDataType type,
+AVFrame_Side_तथ्य *av_frame_new_side_तथ्य_from_buf(AVFrame *frame,
+                                                 क्रमागत AVFrame_Side_तथ्य_Type type,
                                                  AVBufferRef *buf)
 {
-    return
-        ff_frame_side_data_add_from_buf(
-            &frame->side_data, &frame->nb_side_data, type, buf);
+    वापस
+        ff_frame_side_तथ्य_add_from_buf(
+            &frame->side_तथ्य, &frame->nb_side_तथ्य, type, buf);
 }
 
-AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
-                                        enum AVFrameSideDataType type,
-                                        size_t size)
+AVFrame_Side_तथ्य *av_frame_new_side_तथ्य(AVFrame *frame,
+                                        क्रमागत AVFrame_Side_तथ्य_Type type,
+                                        माप_प्रकार आकार)
 {
-    AVFrameSideData *ret;
-    AVBufferRef *buf = av_buffer_alloc(size);
-    ret = av_frame_new_side_data_from_buf(frame, type, buf);
-    if (!ret)
-        av_buffer_unref(&buf);
-    return ret;
+    AVFrame_Side_तथ्य *ret;
+    AVBufferRef *buf = av_बफर_alloc(आकार);
+    ret = av_frame_new_side_तथ्य_from_buf(frame, type, buf);
+    अगर (!ret)
+        av_बफर_unref(&buf);
+    वापस ret;
 }
 
-AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
-                                        enum AVFrameSideDataType type)
+AVFrame_Side_तथ्य *av_frame_get_side_तथ्य(स्थिर AVFrame *frame,
+                                        क्रमागत AVFrame_Side_तथ्य_Type type)
 {
-    return (AVFrameSideData *)av_frame_side_data_get(
-        frame->side_data, frame->nb_side_data,
+    वापस (AVFrame_Side_तथ्य *)av_frame_side_तथ्य_get(
+        frame->side_तथ्य, frame->nb_side_तथ्य,
         type
     );
 }
 
-static int frame_copy_video(AVFrame *dst, const AVFrame *src)
+अटल पूर्णांक frame_copy_video(AVFrame *dst, स्थिर AVFrame *src)
 {
-    int planes;
+    पूर्णांक planes;
 
-    if (dst->width  < src->width ||
+    अगर (dst->width  < src->width ||
         dst->height < src->height)
-        return AVERROR(EINVAL);
+        वापस AVERROR(EINVAL);
 
-    if (src->hw_frames_ctx || dst->hw_frames_ctx)
-        return av_hwframe_transfer_data(dst, src, 0);
+    अगर (src->hw_frames_ctx || dst->hw_frames_ctx)
+        वापस av_hwframe_transfer_तथ्य(dst, src, 0);
 
-    planes = av_pix_fmt_count_planes(dst->format);
-    for (int i = 0; i < planes; i++)
-        if (!dst->data[i] || !src->data[i])
-            return AVERROR(EINVAL);
+    planes = av_pix_fmt_गिनती_planes(dst->format);
+    क्रम (पूर्णांक i = 0; i < planes; i++)
+        अगर (!dst->तथ्य[i] || !src->तथ्य[i])
+            वापस AVERROR(EINVAL);
 
-    av_image_copy2(dst->data, dst->linesize,
-                   src->data, src->linesize,
+    av_image_copy2(dst->तथ्य, dst->linesize,
+                   src->तथ्य, src->linesize,
                    dst->format, src->width, src->height);
 
-    return 0;
+    वापस 0;
 }
 
-static int frame_copy_audio(AVFrame *dst, const AVFrame *src)
+अटल पूर्णांक frame_copy_audio(AVFrame *dst, स्थिर AVFrame *src)
 {
-    int planar   = av_sample_fmt_is_planar(dst->format);
-    int channels = dst->ch_layout.nb_channels;
-    int planes   = planar ? channels : 1;
+    पूर्णांक planar   = av_sample_fmt_is_planar(dst->format);
+    पूर्णांक channels = dst->ch_layout.nb_channels;
+    पूर्णांक planes   = planar ? channels : 1;
 
-    if (dst->nb_samples != src->nb_samples ||
+    अगर (dst->nb_samples != src->nb_samples ||
         av_channel_layout_compare(&dst->ch_layout, &src->ch_layout))
-        return AVERROR(EINVAL);
+        वापस AVERROR(EINVAL);
 
-    for (int i = 0; i < planes; i++)
-        if (!dst->extended_data[i] || !src->extended_data[i])
-            return AVERROR(EINVAL);
+    क्रम (पूर्णांक i = 0; i < planes; i++)
+        अगर (!dst->extended_तथ्य[i] || !src->extended_तथ्य[i])
+            वापस AVERROR(EINVAL);
 
-    av_samples_copy(dst->extended_data, src->extended_data, 0, 0,
+    av_samples_copy(dst->extended_तथ्य, src->extended_तथ्य, 0, 0,
                     dst->nb_samples, channels, dst->format);
 
-    return 0;
+    वापस 0;
 }
 
-int av_frame_copy(AVFrame *dst, const AVFrame *src)
+पूर्णांक av_frame_copy(AVFrame *dst, स्थिर AVFrame *src)
 {
-    if (dst->format != src->format || dst->format < 0)
-        return AVERROR(EINVAL);
+    अगर (dst->format != src->format || dst->format < 0)
+        वापस AVERROR(EINVAL);
 
-    if (dst->width > 0 && dst->height > 0)
-        return frame_copy_video(dst, src);
-    else if (dst->nb_samples > 0 &&
+    अगर (dst->width > 0 && dst->height > 0)
+        वापस frame_copy_video(dst, src);
+    अन्यथा अगर (dst->nb_samples > 0 &&
              (av_channel_layout_check(&dst->ch_layout)))
-        return frame_copy_audio(dst, src);
+        वापस frame_copy_audio(dst, src);
 
-    return AVERROR(EINVAL);
+    वापस AVERROR(EINVAL);
 }
 
-void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type)
+व्योम av_frame_remove_side_तथ्य(AVFrame *frame, क्रमागत AVFrame_Side_तथ्य_Type type)
 {
-    av_frame_side_data_remove(&frame->side_data, &frame->nb_side_data, type);
+    av_frame_side_तथ्य_remove(&frame->side_तथ्य, &frame->nb_side_तथ्य, type);
 }
 
-static int calc_cropping_offsets(size_t offsets[4], const AVFrame *frame,
-                                 const AVPixFmtDescriptor *desc)
+अटल पूर्णांक calc_cropping_offsets(माप_प्रकार offsets[4], स्थिर AVFrame *frame,
+                                 स्थिर AVPixFmtDescriptor *desc)
 {
-    for (int i = 0; frame->data[i]; i++) {
-        const AVComponentDescriptor *comp = NULL;
-        int shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
-        int shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    क्रम (पूर्णांक i = 0; frame->तथ्य[i]; i++) {
+        स्थिर AVComponentDescriptor *comp = शून्य;
+        पूर्णांक shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
+        पूर्णांक shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
 
-        if (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
+        अगर (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
             offsets[i] = 0;
-            break;
+            अवरोध;
         }
 
         /* find any component descriptor for this plane */
-        for (int j = 0; j < desc->nb_components; j++) {
-            if (desc->comp[j].plane == i) {
+        क्रम (पूर्णांक j = 0; j < desc->nb_components; j++) {
+            अगर (desc->comp[j].plane == i) {
                 comp = &desc->comp[j];
-                break;
+                अवरोध;
             }
         }
-        if (!comp)
-            return AVERROR_BUG;
+        अगर (!comp)
+            वापस AVERROR_BUG;
 
-        offsets[i] = (frame->crop_top  >> shift_y) * frame->linesize[i] +
-                     (frame->crop_left >> shift_x) * comp->step;
+        offsets[i] = (frame->crop_शीर्ष  >> shift_y) * frame->linesize[i] +
+                     (frame->crop_बायाँ >> shift_x) * comp->step;
     }
 
-    return 0;
+    वापस 0;
 }
 
-int av_frame_apply_cropping(AVFrame *frame, int flags)
+पूर्णांक av_frame_apply_cropping(AVFrame *frame, पूर्णांक flags)
 {
-    const AVPixFmtDescriptor *desc;
-    size_t offsets[4];
-    int ret;
+    स्थिर AVPixFmtDescriptor *desc;
+    माप_प्रकार offsets[4];
+    पूर्णांक ret;
 
-    if (!(frame->width > 0 && frame->height > 0))
-        return AVERROR(EINVAL);
+    अगर (!(frame->width > 0 && frame->height > 0))
+        वापस AVERROR(EINVAL);
 
-    if (frame->crop_left >= INT_MAX - frame->crop_right        ||
-        frame->crop_top  >= INT_MAX - frame->crop_bottom       ||
-        (frame->crop_left + frame->crop_right) >= frame->width ||
-        (frame->crop_top + frame->crop_bottom) >= frame->height)
-        return AVERROR(ERANGE);
+    अगर (frame->crop_बायाँ >= पूर्णांक_उच्च - frame->crop_दायाँ        ||
+        frame->crop_शीर्ष  >= पूर्णांक_उच्च - frame->crop_bottom       ||
+        (frame->crop_बायाँ + frame->crop_दायाँ) >= frame->width ||
+        (frame->crop_शीर्ष + frame->crop_bottom) >= frame->height)
+        वापस AVERROR(दुस्फल);
 
     desc = av_pix_fmt_desc_get(frame->format);
-    if (!desc)
-        return AVERROR_BUG;
+    अगर (!desc)
+        वापस AVERROR_BUG;
 
     /* Apply just the right/bottom cropping for hwaccel formats. Bitstream
      * formats cannot be easily handled here either (and corresponding decoders
      * should not export any cropping anyway), so do the same for those as well.
      * */
-    if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
-        frame->width      -= frame->crop_right;
+    अगर (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
+        frame->width      -= frame->crop_दायाँ;
         frame->height     -= frame->crop_bottom;
-        frame->crop_right  = 0;
+        frame->crop_दायाँ  = 0;
         frame->crop_bottom = 0;
-        return 0;
+        वापस 0;
     }
 
     /* calculate the offsets for each plane */
     ret = calc_cropping_offsets(offsets, frame, desc);
-    if (ret < 0)
-        return ret;
+    अगर (ret < 0)
+        वापस ret;
 
     /* adjust the offsets to avoid breaking alignment */
-    if (!(flags & AV_FRAME_CROP_UNALIGNED)) {
-        int log2_crop_align = frame->crop_left ? ff_ctz(frame->crop_left) : INT_MAX;
-        int min_log2_align = INT_MAX;
+    अगर (!(flags & AV_FRAME_CROP_UNALIGNED)) {
+        पूर्णांक log2_crop_align = frame->crop_बायाँ ? ff_ctz(frame->crop_बायाँ) : पूर्णांक_उच्च;
+        पूर्णांक min_log2_align = पूर्णांक_उच्च;
 
-        for (int i = 0; frame->data[i]; i++) {
-            int log2_align = offsets[i] ? ff_ctz(offsets[i]) : INT_MAX;
+        क्रम (पूर्णांक i = 0; frame->तथ्य[i]; i++) {
+            पूर्णांक log2_align = offsets[i] ? ff_ctz(offsets[i]) : पूर्णांक_उच्च;
             min_log2_align = FFMIN(log2_align, min_log2_align);
         }
 
         /* The data alignment is the cropping alignment scaled by a power of 2,
          * up for multi-byte pixels and down for subsampled planes */
-        if (min_log2_align < 5 && log2_crop_align != INT_MAX) {
-            frame->crop_left &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
+        अगर (min_log2_align < 5 && log2_crop_align != पूर्णांक_उच्च) {
+            frame->crop_बायाँ &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
             ret = calc_cropping_offsets(offsets, frame, desc);
-            if (ret < 0)
-                return ret;
+            अगर (ret < 0)
+                वापस ret;
         }
     }
 
-    for (int i = 0; frame->data[i]; i++)
-        frame->data[i] += offsets[i];
+    क्रम (पूर्णांक i = 0; frame->तथ्य[i]; i++)
+        frame->तथ्य[i] += offsets[i];
 
-    frame->width      -= (frame->crop_left + frame->crop_right);
-    frame->height     -= (frame->crop_top  + frame->crop_bottom);
-    frame->crop_left   = 0;
-    frame->crop_right  = 0;
-    frame->crop_top    = 0;
+    frame->width      -= (frame->crop_बायाँ + frame->crop_दायाँ);
+    frame->height     -= (frame->crop_शीर्ष  + frame->crop_bottom);
+    frame->crop_बायाँ   = 0;
+    frame->crop_दायाँ  = 0;
+    frame->crop_शीर्ष    = 0;
     frame->crop_bottom = 0;
 
-    return 0;
+    वापस 0;
 }

@@ -18,42 +18,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
-#include <math.h>
+#समावेश <stdint.h>
+#समावेश <string.h>
+#समावेश <math.h>
 
-#include "display.h"
-#include "mathematics.h"
+#समावेश "display.h"
+#समावेश "mathematics.h"
 
 // fixed point to double
-#define CONV_FP(x) ((double) (x)) / (1 << 16)
+#घोषणा CONV_FP(x) ((द्विगुन) (x)) / (1 << 16)
 
 // double to fixed point
-#define CONV_DB(x) (int32_t) ((x) * (1 << 16))
+#घोषणा CONV_DB(x) (int32_t) ((x) * (1 << 16))
 
-double av_display_rotation_get(const int32_t matrix[9])
+द्विगुन av_display_rotation_get(स्थिर int32_t matrix[9])
 {
-    double rotation, scale[2];
+    द्विगुन rotation, scale[2];
 
     scale[0] = hypot(CONV_FP(matrix[0]), CONV_FP(matrix[3]));
     scale[1] = hypot(CONV_FP(matrix[1]), CONV_FP(matrix[4]));
 
-    if (scale[0] == 0.0 || scale[1] == 0.0)
-        return NAN;
+    अगर (scale[0] == 0.0 || scale[1] == 0.0)
+        वापस न_अंक;
 
     rotation = atan2(CONV_FP(matrix[1]) / scale[1],
                      CONV_FP(matrix[0]) / scale[0]) * 180 / M_PI;
 
-    return -rotation;
+    वापस -rotation;
 }
 
-void av_display_rotation_set(int32_t matrix[9], double angle)
+व्योम av_display_rotation_set(int32_t matrix[9], द्विगुन angle)
 {
-    double radians = -angle * M_PI / 180.0f;
-    double c = cos(radians);
-    double s = sin(radians);
+    द्विगुन radians = -angle * M_PI / 180.0f;
+    द्विगुन c = cos(radians);
+    द्विगुन s = sin(radians);
 
-    memset(matrix, 0, 9 * sizeof(int32_t));
+    स_रखो(matrix, 0, 9 * माप(int32_t));
 
     matrix[0] = CONV_DB(c);
     matrix[1] = CONV_DB(-s);
@@ -62,12 +62,12 @@ void av_display_rotation_set(int32_t matrix[9], double angle)
     matrix[8] = 1 << 30;
 }
 
-void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip)
+व्योम av_display_matrix_flip(int32_t matrix[9], पूर्णांक hflip, पूर्णांक vflip)
 {
-    int i;
-    const int flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
+    पूर्णांक i;
+    स्थिर पूर्णांक flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
 
-    if (hflip || vflip)
-        for (i = 0; i < 9; i++)
+    अगर (hflip || vflip)
+        क्रम (i = 0; i < 9; i++)
             matrix[i] *= flip[i % 3];
 }

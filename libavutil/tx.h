@@ -16,27 +16,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_TX_H
-#define AVUTIL_TX_H
+#अगर_अघोषित AVUTIL_TX_H
+#घोषणा AVUTIL_TX_H
 
-#include <stdint.h>
-#include <stddef.h>
+#समावेश <stdint.h>
+#समावेश <stddef.h>
 
-typedef struct AVTXContext AVTXContext;
+प्रकार काष्ठा AVTXContext AVTXContext;
 
-typedef struct AVComplexFloat {
-    float re, im;
+प्रकार काष्ठा AVComplexFloat {
+    भग्न re, im;
 } AVComplexFloat;
 
-typedef struct AVComplexDouble {
-    double re, im;
+प्रकार काष्ठा AVComplexDouble {
+    द्विगुन re, im;
 } AVComplexDouble;
 
-typedef struct AVComplexInt32 {
+प्रकार काष्ठा AVComplexInt32 {
     int32_t re, im;
 } AVComplexInt32;
 
-enum AVTXType {
+क्रमागत AVTXType {
     /**
      * Standard complex to complex FFT with sample data type of AVComplexFloat,
      * AVComplexDouble or AVComplexInt32, for each respective variant.
@@ -148,12 +148,12 @@ enum AVTXType {
  * architecture unless the AV_TX_UNALIGNED flag was set in av_tx_init().
  * The stride must follow the constraints the transform type has specified.
  */
-typedef void (*av_tx_fn)(AVTXContext *s, void *out, void *in, ptrdiff_t stride);
+प्रकार व्योम (*av_tx_fn)(AVTXContext *s, व्योम *out, व्योम *in, सूचक_भेद_प्रकार stride);
 
 /**
  * Flags for av_tx_init()
  */
-enum AVTXFlags {
+क्रमागत AVTXFlags {
     /**
      * Allows for in-place transformations, where input == output.
      * May be unsupported or slower for some transform types.
@@ -199,12 +199,12 @@ enum AVTXFlags {
  *
  * @return 0 on success, negative error code on failure
  */
-int av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
-               int inv, int len, const void *scale, uint64_t flags);
+पूर्णांक av_tx_init(AVTXContext **ctx, av_tx_fn *tx, क्रमागत AVTXType type,
+               पूर्णांक inv, पूर्णांक len, स्थिर व्योम *scale, uint64_t flags);
 
 /**
  * Frees a context and sets *ctx to NULL, does nothing when *ctx == NULL.
  */
-void av_tx_uninit(AVTXContext **ctx);
+व्योम av_tx_uninit(AVTXContext **ctx);
 
-#endif /* AVUTIL_TX_H */
+#पूर्ण_अगर /* AVUTIL_TX_H */

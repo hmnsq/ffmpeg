@@ -18,58 +18,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#समावेश <string.h>
 
-#include "dovi_meta.h"
-#include "mem.h"
+#समावेश "dovi_meta.h"
+#समावेश "mem.h"
 
-AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size)
+AVDOVIDecoderConfigurationRecord *av_dovi_alloc(माप_प्रकार *आकार)
 {
     AVDOVIDecoderConfigurationRecord *dovi =
-        av_mallocz(sizeof(AVDOVIDecoderConfigurationRecord));
+        av_mallocz(माप(AVDOVIDecoderConfigurationRecord));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    अगर (आकार)
+        *आकार = dovi ? माप(*dovi) : 0;
 
-    return dovi;
+    वापस dovi;
 }
 
-typedef struct AVDOVIMetadataInternal {
+प्रकार काष्ठा AVDOVIMetadataInternal {
     AVDOVIMetadata metadata;
-    AVDOVIRpuDataHeader header;
+    AVDOVIRpu_तथ्य_Header header;
     AVDOVIDataMapping mapping;
     AVDOVIColorMetadata color;
-    AVDOVIDmData ext_blocks[AV_DOVI_MAX_EXT_BLOCKS];
+    AVDOVIDm_तथ्य ext_blocks[AV_DOVI_MAX_EXT_BLOCKS];
 } AVDOVIMetadataInternal;
 
-AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
+AVDOVIMetadata *av_dovi_metadata_alloc(माप_प्रकार *आकार)
 {
-    AVDOVIMetadataInternal *dovi = av_mallocz(sizeof(AVDOVIMetadataInternal));
+    AVDOVIMetadataInternal *dovi = av_mallocz(माप(AVDOVIMetadataInternal));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    अगर (आकार)
+        *आकार = dovi ? माप(*dovi) : 0;
 
-    if (!dovi)
-        return NULL;
+    अगर (!dovi)
+        वापस शून्य;
 
-    dovi->metadata = (struct AVDOVIMetadata) {
-        .header_offset      = offsetof(AVDOVIMetadataInternal, header),
-        .mapping_offset     = offsetof(AVDOVIMetadataInternal, mapping),
-        .color_offset       = offsetof(AVDOVIMetadataInternal, color),
-        .ext_block_offset   = offsetof(AVDOVIMetadataInternal, ext_blocks),
-        .ext_block_size     = sizeof(AVDOVIDmData),
+    dovi->metadata = (काष्ठा AVDOVIMetadata) {
+        .header_offset      = दुरत्व(AVDOVIMetadataInternal, header),
+        .mapping_offset     = दुरत्व(AVDOVIMetadataInternal, mapping),
+        .color_offset       = दुरत्व(AVDOVIMetadataInternal, color),
+        .ext_block_offset   = दुरत्व(AVDOVIMetadataInternal, ext_blocks),
+        .ext_block_आकार     = माप(AVDOVIDm_तथ्य),
     };
 
-    return &dovi->metadata;
+    वापस &dovi->metadata;
 }
 
-AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level)
+AVDOVIDm_तथ्य *av_dovi_find_level(स्थिर AVDOVIMetadata *तथ्य, uint8_t level)
 {
-    for (int i = 0; i < data->num_ext_blocks; i++) {
-        AVDOVIDmData *ext = av_dovi_get_ext(data, i);
-        if (ext->level == level)
-            return ext;
+    क्रम (पूर्णांक i = 0; i < तथ्य->अंक_ext_blocks; i++) {
+        AVDOVIDm_तथ्य *ext = av_dovi_get_ext(तथ्य, i);
+        अगर (ext->level == level)
+            वापस ext;
     }
 
-    return NULL;
+    वापस शून्य;
 }

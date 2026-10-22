@@ -24,12 +24,12 @@
  * Public header for Adler-32 hash function implementation.
  */
 
-#ifndef AVUTIL_ADLER32_H
-#define AVUTIL_ADLER32_H
+#अगर_अघोषित AVUTIL_ADLER32_H
+#घोषणा AVUTIL_ADLER32_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "attributes.h"
+#समावेश <stddef.h>
+#समावेश <stdint.h>
+#समावेश "attributes.h"
 
 /**
  * @defgroup lavu_adler32 Adler-32
@@ -39,7 +39,7 @@
  * @{
  */
 
-typedef uint32_t AVAdler;
+प्रकार uint32_t AVAdler;
 
 /**
  * Calculate the Adler32 checksum of a buffer.
@@ -53,11 +53,11 @@ typedef uint32_t AVAdler;
  * @param len   size of input buffer
  * @return      updated checksum
  */
-AVAdler av_adler32_update(AVAdler adler, const uint8_t *buf,
-                          size_t len) av_pure;
+AVAdler av_adler32_update(AVAdler adler, स्थिर uint8_t *buf,
+                          माप_प्रकार len) av_pure;
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_ADLER32_H */
+#पूर्ण_अगर /* AVUTIL_ADLER32_H */

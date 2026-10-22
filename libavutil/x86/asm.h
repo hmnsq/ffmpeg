@@ -18,16 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_ASM_H
-#define AVUTIL_X86_ASM_H
+#अगर_अघोषित AVUTIL_X86_ASM_H
+#घोषणा AVUTIL_X86_ASM_H
 
-#include <stdint.h>
-#include "config.h"
+#समावेश <stdint.h>
+#समावेश "config.h"
 
-typedef struct xmm_reg { uint64_t a, b; } xmm_reg;
-typedef struct ymm_reg { uint64_t a, b, c, d; } ymm_reg;
+प्रकार काष्ठा xmm_reg { uint64_t a, b; } xmm_reg;
+प्रकार काष्ठा ymm_reg { uint64_t a, b, c, d; } ymm_reg;
 
-#if ARCH_X86_64
+#अगर ARCH_X86_64
 #    define FF_OPSIZE "q"
 #    define FF_REG_a "rax"
 #    define FF_REG_b "rbx"
@@ -35,8 +35,8 @@ typedef struct ymm_reg { uint64_t a, b, c, d; } ymm_reg;
 #    define FF_REG_d "rdx"
 #    define FF_REG_D "rdi"
 #    define FF_REG_S "rsi"
-#    define FF_PTR_SIZE "8"
-typedef int64_t x86_reg;
+#    define FF_PTR_आकार "8"
+प्रकार int64_t x86_reg;
 
 #    define FF_REG_SP "rsp"
 #    define FF_REG_BP "rbp"
@@ -47,7 +47,7 @@ typedef int64_t x86_reg;
 #    define FF_REGd    rdx
 #    define FF_REGSP   rsp
 
-#elif ARCH_X86_32
+#या_अगर ARCH_X86_32
 
 #    define FF_OPSIZE "l"
 #    define FF_REG_a "eax"
@@ -56,8 +56,8 @@ typedef int64_t x86_reg;
 #    define FF_REG_d "edx"
 #    define FF_REG_D "edi"
 #    define FF_REG_S "esi"
-#    define FF_PTR_SIZE "4"
-typedef int32_t x86_reg;
+#    define FF_PTR_आकार "4"
+प्रकार int32_t x86_reg;
 
 #    define FF_REG_SP "esp"
 #    define FF_REG_BP "ebp"
@@ -67,13 +67,13 @@ typedef int32_t x86_reg;
 #    define FF_REGc    ecx
 #    define FF_REGd    edx
 #    define FF_REGSP   esp
-#else
-typedef int x86_reg;
-#endif
+#अन्यथा
+प्रकार पूर्णांक x86_reg;
+#पूर्ण_अगर
 
-#if ARCH_X86_64 && defined(PIC)
+#अगर ARCH_X86_64 && defined(PIC)
 #    define BROKEN_RELOCATIONS 1
-#endif
+#पूर्ण_अगर
 
 /*
  * If gcc is not set to support sse (-msse) it will not accept xmm registers
@@ -87,31 +87,31 @@ typedef int x86_reg;
  * and a list with only "xmm0" should become:
  * XMM_CLOBBERS_ONLY("xmm0")
  */
-#if HAVE_XMM_CLOBBERS
+#अगर HAVE_XMM_CLOBBERS
 #    define XMM_CLOBBERS(...)        __VA_ARGS__
 #    define XMM_CLOBBERS_ONLY(...) : __VA_ARGS__
-#else
+#अन्यथा
 #    define XMM_CLOBBERS(...)
 #    define XMM_CLOBBERS_ONLY(...)
-#endif
+#पूर्ण_अगर
 
 /* Use to export labels from asm. */
-#define LABEL_MANGLE(a) EXTERN_PREFIX #a
+#घोषणा LABEL_MANGLE(a) EXTERN_PREFIX #a
 
 // Use rip-relative addressing if compiling PIC code on x86-64.
-#if ARCH_X86_64 && defined(PIC)
+#अगर ARCH_X86_64 && defined(PIC)
 #    define LOCAL_MANGLE(a) #a "(%%rip)"
-#else
+#अन्यथा
 #    define LOCAL_MANGLE(a) #a
-#endif
+#पूर्ण_अगर
 
-#if HAVE_INLINE_ASM_DIRECT_SYMBOL_REFS
+#अगर HAVE_INLINE_ASM_DIRECT_प्रतीक_REFS
 #   define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
 #   define NAMED_CONSTRAINTS_ADD(...)
 #   define NAMED_CONSTRAINTS(...)
 #   define NAMED_CONSTRAINTS_ARRAY_ADD(...)
 #   define NAMED_CONSTRAINTS_ARRAY(...)
-#else
+#अन्यथा
     /* When direct symbol references are used in code passed to a compiler that does not support them
      *  then these references need to be converted to named asm constraints instead.
      * Instead of returning a direct symbol MANGLE now returns a named constraint for that specific symbol.
@@ -145,6 +145,6 @@ typedef int x86_reg;
 #   define NAME_CONSTRAINT_ARRAY(x) [x] "m"(*x)
 #   define NAMED_CONSTRAINTS_ARRAY_ADD(...) , FOR_EACH_VA(NAME_CONSTRAINT_ARRAY,__VA_ARGS__)
 #   define NAMED_CONSTRAINTS_ARRAY(...) FOR_EACH_VA(NAME_CONSTRAINT_ARRAY,__VA_ARGS__)
-#endif
+#पूर्ण_अगर
 
-#endif /* AVUTIL_X86_ASM_H */
+#पूर्ण_अगर /* AVUTIL_X86_ASM_H */

@@ -16,44 +16,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#समावेश <stdio.h>
 
-#include "libavutil/iamf.h"
-#include "libavutil/log.h"
-#include "libavutil/opt.h"
+#समावेश "libavutil/iamf.h"
+#समावेश "libavutil/log.h"
+#समावेश "libavutil/opt.h"
 
-static void print_class_tree(const AVClass *class, int depth)
+अटल व्योम print_class_वृक्ष(स्थिर AVClass *class, पूर्णांक depth)
 {
-    const AVClass *child;
-    void *iter = NULL;
+    स्थिर AVClass *child;
+    व्योम *iter = शून्य;
 
-    printf("%*s%s\n", depth * 2, "", class->class_name);
-    if (depth >= 8)
-        return;
-    while ((child = av_opt_child_class_iterate(class, &iter)))
-        print_class_tree(child, depth + 1);
+    म_लिखो("%*s%s\n", depth * 2, "", class->class_name);
+    अगर (depth >= 8)
+        वापस;
+    जबतक ((child = av_opt_child_class_iterate(class, &iter)))
+        print_class_वृक्ष(child, depth + 1);
 }
 
-static void find_option(const AVClass *class, const char *name)
+अटल व्योम find_option(स्थिर AVClass *class, स्थिर अक्षर *name)
 {
-    const AVOption *o = av_opt_find2(&class, name, NULL, 0,
-                                     AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ,
-                                     NULL);
-    printf("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
+    स्थिर AVOption *o = av_opt_find2(&class, name, शून्य, 0,
+                                     AV_OPT_खोज_CHILDREN | AV_OPT_खोज_FAKE_OBJ,
+                                     शून्य);
+    म_लिखो("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
 }
 
-int main(void)
+पूर्णांक मुख्य(व्योम)
 {
-    const AVClass *audio_element = av_iamf_audio_element_get_class();
-    const AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
-    const AVClass *param_definition = av_iamf_param_definition_get_class();
+    स्थिर AVClass *audio_element = av_iamf_audio_element_get_class();
+    स्थिर AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
+    स्थिर AVClass *param_definition = av_iamf_param_definition_get_class();
 
-    printf("Testing av_opt_child_class_iterate()\n");
-    print_class_tree(audio_element, 0);
-    print_class_tree(mix_presentation, 0);
-    print_class_tree(param_definition, 0);
+    म_लिखो("Testing av_opt_child_class_iterate()\n");
+    print_class_वृक्ष(audio_element, 0);
+    print_class_वृक्ष(mix_presentation, 0);
+    print_class_वृक्ष(param_definition, 0);
 
-    printf("\nTesting av_opt_find2() with AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ\n");
+    म_लिखो("\nTesting av_opt_find2() with AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ\n");
     find_option(audio_element, "default_w");
     find_option(audio_element, "ch_layout");
     find_option(mix_presentation, "annotations");
@@ -64,5 +64,5 @@ int main(void)
     find_option(param_definition, "parameter_rate");
     find_option(param_definition, "subblock_duration");
 
-    return 0;
+    वापस 0;
 }

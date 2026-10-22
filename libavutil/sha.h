@@ -24,13 +24,13 @@
  * Public header for SHA-1 & SHA-256 hash function implementations.
  */
 
-#ifndef AVUTIL_SHA_H
-#define AVUTIL_SHA_H
+#अगर_अघोषित AVUTIL_SHA_H
+#घोषणा AVUTIL_SHA_H
 
-#include <stddef.h>
-#include <stdint.h>
+#समावेश <stddef.h>
+#समावेश <stdint.h>
 
-#include "attributes.h"
+#समावेश "attributes.h"
 
 /**
  * @defgroup lavu_sha SHA
@@ -48,14 +48,14 @@
  * @{
  */
 
-extern const int av_sha_size;
+बाह्य स्थिर पूर्णांक av_sha_आकार;
 
-struct AVSHA;
+काष्ठा AVSHA;
 
 /**
  * Allocate an AVSHA context.
  */
-struct AVSHA *av_sha_alloc(void);
+काष्ठा AVSHA *av_sha_alloc(व्योम);
 
 /**
  * Initialize SHA-1 or SHA-2 hashing.
@@ -64,7 +64,7 @@ struct AVSHA *av_sha_alloc(void);
  * @param bits    number of bits in digest (SHA-1 - 160 bits, SHA-2 224 or 256 bits)
  * @return        zero if initialization succeeded, -1 otherwise
  */
-int av_sha_init(struct AVSHA* context, int bits);
+पूर्णांक av_sha_init(काष्ठा AVSHA* context, पूर्णांक bits);
 
 /**
  * Update hash value.
@@ -73,7 +73,7 @@ int av_sha_init(struct AVSHA* context, int bits);
  * @param data    input data to update hash with
  * @param len     input data length
  */
-void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len);
+व्योम av_sha_update(काष्ठा AVSHA *ctx, स्थिर uint8_t *तथ्य, माप_प्रकार len);
 
 /**
  * Finish hashing and output digest value.
@@ -81,10 +81,10 @@ void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len);
  * @param context hash function context
  * @param digest  buffer where output digest value is stored
  */
-void av_sha_final(struct AVSHA* context, uint8_t *digest);
+व्योम av_sha_final(काष्ठा AVSHA* context, uint8_t *digest);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_SHA_H */
+#पूर्ण_अगर /* AVUTIL_SHA_H */

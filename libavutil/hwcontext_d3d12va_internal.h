@@ -20,40 +20,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H
-#define AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H
+#अगर_अघोषित AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H
+#घोषणा AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H
 
 /**
  * @def COBJMACROS
  *
  * @brief Enable C style interface for D3D12
  */
-#ifndef COBJMACROS
-#define COBJMACROS
-#endif
+#अगर_अघोषित COBJMACROS
+#घोषणा COBJMACROS
+#पूर्ण_अगर
 
 /**
  * @def DX_CHECK
  *
  * @brief A check macro used by D3D12 functions highly frequently
  */
-#define DX_CHECK(hr)                              \
-    do {                                          \
-        if (FAILED(hr))                           \
-            goto fail;                            \
-    } while (0)
+#घोषणा DX_CHECK(hr)                              \
+    करो {                                          \
+        अगर (FAILED(hr))                           \
+            जाओ fail;                            \
+    } जबतक (0)
 
 /**
  * @def D3D12_OBJECT_RELEASE
  *
  * @brief A release macro used by D3D12 objects highly frequently
  */
-#define D3D12_OBJECT_RELEASE(pInterface)              \
-    do {                                              \
-        if (pInterface) {                             \
+#घोषणा D3D12_OBJECT_RELEASE(pInterface)              \
+    करो {                                              \
+        अगर (pInterface) {                             \
             IUnknown_Release((IUnknown *)pInterface); \
-            pInterface = NULL;                        \
+            pInterface = शून्य;                        \
         }                                             \
-    } while (0)
+    } जबतक (0)
 
-#endif /* AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H */
+#पूर्ण_अगर /* AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H */

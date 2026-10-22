@@ -20,25 +20,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LLS_H
-#define AVUTIL_LLS_H
+#अगर_अघोषित AVUTIL_LLS_H
+#घोषणा AVUTIL_LLS_H
 
-#include "macros.h"
-#include "mem_internal.h"
+#समावेश "macros.h"
+#समावेश "mem_internal.h"
 
-#define MAX_VARS 32
-#define MAX_VARS_ALIGN FFALIGN(MAX_VARS+1,4)
+#घोषणा MAX_VARS 32
+#घोषणा MAX_VARS_ALIGN FFALIGN(MAX_VARS+1,4)
 
 //FIXME avoid direct access to LLSModel from outside
 
 /**
  * Linear least squares model.
  */
-typedef struct LLSModel {
-    DECLARE_ALIGNED(32, double, covariance[MAX_VARS_ALIGN][MAX_VARS_ALIGN]);
-    DECLARE_ALIGNED(32, double, coeff[MAX_VARS][MAX_VARS]);
-    double variance[MAX_VARS];
-    int indep_count;
+प्रकार काष्ठा LLSModel {
+    DECLARE_ALIGNED(32, द्विगुन, covariance[MAX_VARS_ALIGN][MAX_VARS_ALIGN]);
+    DECLARE_ALIGNED(32, द्विगुन, coeff[MAX_VARS][MAX_VARS]);
+    द्विगुन variance[MAX_VARS];
+    पूर्णांक indep_गिनती;
     /**
      * Take the outer-product of var[] with itself, and add to the covariance matrix.
      * @param m this context
@@ -46,19 +46,19 @@ typedef struct LLSModel {
      *            32-byte aligned, and any padding elements must be initialized
      *            (i.e not denormal/nan).
      */
-    void (*update_lls)(struct LLSModel *m, const double *var);
+    व्योम (*update_lls)(काष्ठा LLSModel *m, स्थिर द्विगुन *var);
     /**
      * Inner product of var[] and the LPC coefs.
      * @param m this context
      * @param var training samples, excluding the value to be predicted. unaligned.
      * @param order lpc order
      */
-    double (*evaluate_lls)(struct LLSModel *m, const double *var, int order);
+    द्विगुन (*evaluate_lls)(काष्ठा LLSModel *m, स्थिर द्विगुन *var, पूर्णांक order);
 } LLSModel;
 
-void avpriv_init_lls(LLSModel *m, int indep_count);
-void ff_init_lls_riscv(LLSModel *m);
-void ff_init_lls_x86(LLSModel *m);
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order);
+व्योम avpriv_init_lls(LLSModel *m, पूर्णांक indep_गिनती);
+व्योम ff_init_lls_riscv(LLSModel *m);
+व्योम ff_init_lls_x86(LLSModel *m);
+व्योम avpriv_solve_lls(LLSModel *m, द्विगुन threshold, अचिन्हित लघु min_order);
 
-#endif /* AVUTIL_LLS_H */
+#पूर्ण_अगर /* AVUTIL_LLS_H */

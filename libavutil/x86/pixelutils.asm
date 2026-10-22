@@ -53,7 +53,7 @@ cglobal pixelutils_sad_8x8, 4,4,3, src1, stride1, src2, stride2
     movhlps     m1, m0
     paddw       m0, m1
     movd       eax, m0
-    RET
+    वापस
 
 ;-------------------------------------------------------------------------------
 ; int ff_pixelutils_sad_16x16_sse2(const uint8_t *src1, ptrdiff_t stride1,
@@ -83,7 +83,7 @@ cglobal pixelutils_sad_16x16, 4,4,5, src1, stride1, src2, stride2
     movhlps     m0, m4
     paddw       m4, m0
     movd        eax, m4
-    RET
+    वापस
 
 ;-------------------------------------------------------------------------------
 ; int ff_pixelutils_sad_[au]_16x16_sse2(const uint8_t *src1, ptrdiff_t stride1,
@@ -110,7 +110,7 @@ cglobal pixelutils_sad_%1_16x16, 4,4,3, src1, stride1, src2, stride2
     movhlps     m0, m2
     paddw       m2, m0
     movd        eax, m2
-    RET
+    वापस
 %endmacro
 
 SAD_XMM_16x16 a
@@ -218,7 +218,7 @@ cglobal pixelutils_sad_32x32, 4,5,5, src1, stride1, src2, stride2
     movhlps m1,  m0
     paddd   m0,  m1
     movd    eax, m0
-    RET
+    वापस
 
 ;-------------------------------------------------------------------------------
 ; int ff_pixelutils_sad_[au]_32x32_sse2(const uint8_t *src1, ptrdiff_t stride1,
@@ -238,7 +238,7 @@ cglobal pixelutils_sad_%1_32x32, 4,5,3, src1, stride1, src2, stride2
     movhlps m1,  m0
     paddd   m0,  m1
     movd    eax, m0
-    RET
+    वापस
 %endmacro
 
 SAD_XMM_32x32 a
@@ -284,5 +284,5 @@ cglobal pixelutils_sad_32x32, 4,7,3, src1, stride1, src2, stride2
     pshufd         xm1, xm0, 2
     paddd          xm0, xm1
     movd           eax, xm0
-    RET
+    वापस
 %endif

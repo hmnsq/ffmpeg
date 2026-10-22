@@ -16,17 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PIXELUTILS_H
-#define AVUTIL_PIXELUTILS_H
+#अगर_अघोषित AVUTIL_PIXELUTILS_H
+#घोषणा AVUTIL_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#समावेश <stddef.h>
+#समावेश <stdint.h>
 
 /**
  * Sum of abs(src1[x] - src2[x])
  */
-typedef int (*av_pixelutils_sad_fn)(const uint8_t *src1, ptrdiff_t stride1,
-                                    const uint8_t *src2, ptrdiff_t stride2);
+प्रकार पूर्णांक (*av_pixelutils_sad_fn)(स्थिर uint8_t *src1, सूचक_भेद_प्रकार stride1,
+                                    स्थिर uint8_t *src2, सूचक_भेद_प्रकार stride2);
 
 /**
  * Get a potentially optimized pointer to a Sum-of-absolute-differences
@@ -45,7 +45,7 @@ typedef int (*av_pixelutils_sad_fn)(const uint8_t *src1, ptrdiff_t stride1,
  * @return a pointer to the SAD function or NULL in case of error (because of
  *         invalid parameters)
  */
-av_pixelutils_sad_fn av_pixelutils_get_sad_fn(int w_bits, int h_bits,
-                                              int aligned, void *log_ctx);
+av_pixelutils_sad_fn av_pixelutils_get_sad_fn(पूर्णांक w_bits, पूर्णांक h_bits,
+                                              पूर्णांक aligned, व्योम *log_ctx);
 
-#endif /* AVUTIL_PIXELUTILS_H */
+#पूर्ण_अगर /* AVUTIL_PIXELUTILS_H */

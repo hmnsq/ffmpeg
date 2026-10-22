@@ -16,16 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_OPENCL_H
-#define AVUTIL_HWCONTEXT_OPENCL_H
+#अगर_अघोषित AVUTIL_HWCONTEXT_OPENCL_H
+#घोषणा AVUTIL_HWCONTEXT_OPENCL_H
 
-#ifdef __APPLE__
-#include <OpenCL/cl.h>
-#else
-#include <CL/cl.h>
-#endif
+#अगर_घोषित __APPLE__
+#समावेश <OpenCL/cl.h>
+#अन्यथा
+#समावेश <CL/cl.h>
+#पूर्ण_अगर
 
-#include "frame.h"
+#समावेश "frame.h"
 
 /**
  * @file
@@ -44,15 +44,15 @@
  * with the data pointer pointing at an object of this type describing the
  * planes of the frame.
  */
-typedef struct AVOpenCLFrameDescriptor {
+प्रकार काष्ठा AVOpenCLFrameDescriptor {
     /**
      * Number of planes in the frame.
      */
-    int nb_planes;
+    पूर्णांक nb_planes;
     /**
      * OpenCL image2d objects for each plane of the frame.
      */
-    cl_mem planes[AV_NUM_DATA_POINTERS];
+    cl_mem planes[AV_अंक_तथ्य_POINTERS];
 } AVOpenCLFrameDescriptor;
 
 /**
@@ -60,7 +60,7 @@ typedef struct AVOpenCLFrameDescriptor {
  *
  * Allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVOpenCLDeviceContext {
+प्रकार काष्ठा AVOpenCLDeviceContext {
     /**
      * The primary device ID of the device.  If multiple OpenCL devices
      * are associated with the context then this is the one which will
@@ -86,7 +86,7 @@ typedef struct AVOpenCLDeviceContext {
  *
  * Allocated as AVHWFramesContext.hwctx.
  */
-typedef struct AVOpenCLFramesContext {
+प्रकार काष्ठा AVOpenCLFramesContext {
     /**
      * The command queue used for internal asynchronous operations on this
      * device (av_hwframe_transfer_data(), av_hwframe_map()).
@@ -97,4 +97,4 @@ typedef struct AVOpenCLFramesContext {
     cl_command_queue command_queue;
 } AVOpenCLFramesContext;
 
-#endif /* AVUTIL_HWCONTEXT_OPENCL_H */
+#पूर्ण_अगर /* AVUTIL_HWCONTEXT_OPENCL_H */

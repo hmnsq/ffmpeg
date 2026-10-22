@@ -16,51 +16,51 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CPU_INTERNAL_H
-#define AVUTIL_CPU_INTERNAL_H
+#अगर_अघोषित AVUTIL_CPU_INTERNAL_H
+#घोषणा AVUTIL_CPU_INTERNAL_H
 
-#include "config.h"
+#समावेश "config.h"
 
-#include "cpu.h"
+#समावेश "cpu.h"
 
-#define CPUEXT_SUFFIX(flags, suffix, cpuext)                            \
+#घोषणा CPUEXT_SUFFIX(flags, suffix, cpuext)                            \
     (HAVE_ ## cpuext ## suffix && ((flags) & AV_CPU_FLAG_ ## cpuext))
 
-#define CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, slow_cpuext)         \
+#घोषणा CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, slow_cpuext)         \
     (HAVE_ ## cpuext ## suffix && ((flags) & AV_CPU_FLAG_ ## cpuext) && \
      !((flags) & AV_CPU_FLAG_ ## slow_cpuext ## SLOW))
 
-#define CPUEXT_SUFFIX_SLOW(flags, suffix, cpuext)                       \
+#घोषणा CPUEXT_SUFFIX_SLOW(flags, suffix, cpuext)                       \
     (HAVE_ ## cpuext ## suffix &&                                       \
      ((flags) & (AV_CPU_FLAG_ ## cpuext | AV_CPU_FLAG_ ## cpuext ## SLOW)))
 
-#define CPUEXT_SUFFIX_SLOW2(flags, suffix, cpuext, slow_cpuext)         \
+#घोषणा CPUEXT_SUFFIX_SLOW2(flags, suffix, cpuext, slow_cpuext)         \
     (HAVE_ ## cpuext ## suffix && ((flags) & AV_CPU_FLAG_ ## cpuext) && \
      ((flags) & (AV_CPU_FLAG_ ## slow_cpuext | AV_CPU_FLAG_ ## slow_cpuext ## SLOW)))
 
-#define CPUEXT_SUFFIX_FAST(flags, suffix, cpuext) CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, cpuext)
+#घोषणा CPUEXT_SUFFIX_FAST(flags, suffix, cpuext) CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, cpuext)
 
-#define CPUEXT(flags, cpuext) CPUEXT_SUFFIX(flags, , cpuext)
-#define CPUEXT_FAST(flags, cpuext) CPUEXT_SUFFIX_FAST(flags, , cpuext)
-#define CPUEXT_SLOW(flags, cpuext) CPUEXT_SUFFIX_SLOW(flags, , cpuext)
+#घोषणा CPUEXT(flags, cpuext) CPUEXT_SUFFIX(flags, , cpuext)
+#घोषणा CPUEXT_FAST(flags, cpuext) CPUEXT_SUFFIX_FAST(flags, , cpuext)
+#घोषणा CPUEXT_SLOW(flags, cpuext) CPUEXT_SUFFIX_SLOW(flags, , cpuext)
 
-int ff_get_cpu_flags_mips(void);
-int ff_get_cpu_flags_aarch64(void);
-int ff_get_cpu_flags_arm(void);
-int ff_get_cpu_flags_ppc(void);
-int ff_get_cpu_flags_riscv(void);
-int ff_get_cpu_flags_wasm(void);
-int ff_get_cpu_flags_x86(void);
-int ff_get_cpu_flags_loongarch(void);
+पूर्णांक ff_get_cpu_flags_mips(व्योम);
+पूर्णांक ff_get_cpu_flags_aarch64(व्योम);
+पूर्णांक ff_get_cpu_flags_arm(व्योम);
+पूर्णांक ff_get_cpu_flags_ppc(व्योम);
+पूर्णांक ff_get_cpu_flags_riscv(व्योम);
+पूर्णांक ff_get_cpu_flags_wasm(व्योम);
+पूर्णांक ff_get_cpu_flags_x86(व्योम);
+पूर्णांक ff_get_cpu_flags_loongarch(व्योम);
 
-size_t ff_get_cpu_max_align_mips(void);
-size_t ff_get_cpu_max_align_aarch64(void);
-size_t ff_get_cpu_max_align_arm(void);
-size_t ff_get_cpu_max_align_ppc(void);
-size_t ff_get_cpu_max_align_wasm(void);
-size_t ff_get_cpu_max_align_x86(void);
-size_t ff_get_cpu_max_align_loongarch(void);
+माप_प्रकार ff_get_cpu_max_align_mips(व्योम);
+माप_प्रकार ff_get_cpu_max_align_aarch64(व्योम);
+माप_प्रकार ff_get_cpu_max_align_arm(व्योम);
+माप_प्रकार ff_get_cpu_max_align_ppc(व्योम);
+माप_प्रकार ff_get_cpu_max_align_wasm(व्योम);
+माप_प्रकार ff_get_cpu_max_align_x86(व्योम);
+माप_प्रकार ff_get_cpu_max_align_loongarch(व्योम);
 
-unsigned long ff_getauxval(unsigned long type);
+अचिन्हित दीर्घ ff_getauxval(अचिन्हित दीर्घ type);
 
-#endif /* AVUTIL_CPU_INTERNAL_H */
+#पूर्ण_अगर /* AVUTIL_CPU_INTERNAL_H */

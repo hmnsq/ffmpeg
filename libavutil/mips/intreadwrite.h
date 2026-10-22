@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MIPS_INTREADWRITE_H
-#define AVUTIL_MIPS_INTREADWRITE_H
+#अगर_अघोषित AVUTIL_MIPS_INTREADWRITE_H
+#घोषणा AVUTIL_MIPS_INTREADWRITE_H
 
-#include <stdint.h>
-#include "config.h"
+#समावेश <stdint.h>
+#समावेश "config.h"
 
-#if ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6
+#अगर ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6
 
-#define AV_RN32 AV_RN32
-static av_always_inline uint32_t AV_RN32(const void *p)
+#घोषणा AV_RN32 AV_RN32
+अटल av_always_inline uint32_t AV_RN32(स्थिर व्योम *p)
 {
-    struct __attribute__((packed)) u32 { uint32_t v; };
-    const uint8_t *q = p;
-    const struct u32 *pl = (const struct u32 *)(q + 3 * !HAVE_BIGENDIAN);
-    const struct u32 *pr = (const struct u32 *)(q + 3 *  HAVE_BIGENDIAN);
+    काष्ठा __attribute__((packed)) u32 { uint32_t v; };
+    स्थिर uint8_t *q = p;
+    स्थिर काष्ठा u32 *pl = (स्थिर काष्ठा u32 *)(q + 3 * !HAVE_BIGENDIAN);
+    स्थिर काष्ठा u32 *pr = (स्थिर काष्ठा u32 *)(q + 3 *  HAVE_BIGENDIAN);
     uint32_t v;
     __asm__ ("lwl %0, %1  \n\t"
              "lwr %0, %2  \n\t"
              : "=&r"(v)
              : "m"(*pl), "m"(*pr));
-    return v;
+    वापस v;
 }
 
-#endif /* ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6 */
+#पूर्ण_अगर /* ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6 */
 
-#endif /* AVUTIL_MIPS_INTREADWRITE_H */
+#पूर्ण_अगर /* AVUTIL_MIPS_INTREADWRITE_H */

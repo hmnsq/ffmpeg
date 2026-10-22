@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AES_H
-#define AVUTIL_AES_H
+#अगर_अघोषित AVUTIL_AES_H
+#घोषणा AVUTIL_AES_H
 
-#include <stdint.h>
+#समावेश <stdint.h>
 
-#include "attributes.h"
+#समावेश "attributes.h"
 
 /**
  * @defgroup lavu_aes AES
@@ -31,14 +31,14 @@
  * @{
  */
 
-extern const int av_aes_size;
+बाह्य स्थिर पूर्णांक av_aes_आकार;
 
-struct AVAES;
+काष्ठा AVAES;
 
 /**
  * Allocate an AVAES context.
  */
-struct AVAES *av_aes_alloc(void);
+काष्ठा AVAES *av_aes_alloc(व्योम);
 
 /**
  * Initialize an AVAES context.
@@ -48,7 +48,7 @@ struct AVAES *av_aes_alloc(void);
  * @param key_bits 128, 192 or 256
  * @param decrypt 0 for encryption, 1 for decryption
  */
-int av_aes_init(struct AVAES *a, const uint8_t *key, int key_bits, int decrypt);
+पूर्णांक av_aes_init(काष्ठा AVAES *a, स्थिर uint8_t *कुंजी, पूर्णांक कुंजी_bits, पूर्णांक decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -60,10 +60,10 @@ int av_aes_init(struct AVAES *a, const uint8_t *key, int key_bits, int decrypt);
  * @param iv initialization vector for CBC mode, if NULL then ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_aes_crypt(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+व्योम av_aes_crypt(काष्ठा AVAES *a, uint8_t *dst, स्थिर uint8_t *src, पूर्णांक गिनती, uint8_t *iv, पूर्णांक decrypt);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_AES_H */
+#पूर्ण_अगर /* AVUTIL_AES_H */

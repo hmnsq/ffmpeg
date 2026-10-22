@@ -24,20 +24,20 @@
  * @author Ryan Martell <rdm4@martellventures.com> (with lots of Michael)
  */
 
-#include <limits.h>
-#include <stddef.h>
+#समावेश <limits.h>
+#समावेश <stddef.h>
 
-#include "base64.h"
-#include "base64_internal.h"
-#include "error.h"
+#समावेश "base64.h"
+#समावेश "base64_internal.h"
+#समावेश "error.h"
 
-#if ARCH_AARCH64
-#include "libavutil/aarch64/cpu.h"
-#include "libavutil/aarch64/base64.h"
-#endif
+#अगर ARCH_AARCH64
+#समावेश "libavutil/aarch64/cpu.h"
+#समावेश "libavutil/aarch64/base64.h"
+#पूर्ण_अगर
 
 /* ---------------- private code */
-static const uint8_t map2[256] =
+अटल स्थिर uint8_t map2[256] =
 {
     0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -76,27 +76,27 @@ static const uint8_t map2[256] =
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
 };
 
-#define BASE64_DEC_STEP(i) do { \
+#घोषणा BASE64_DEC_STEP(i) करो { \
     bits = map2[in[i]]; \
-    if (bits & 0x80) \
-        goto out ## i; \
+    अगर (bits & 0x80) \
+        जाओ out ## i; \
     v = i ? (v << 6) + bits : bits; \
-} while(0)
+} जबतक(0)
 
-int av_base64_decode(uint8_t *out, const char *in_str, int out_size)
+पूर्णांक av_base64_decode(uint8_t *out, स्थिर अक्षर *in_str, पूर्णांक out_आकार)
 {
     uint8_t *dst = out;
     uint8_t *end;
     // no sign extension
-    const uint8_t *in = in_str;
-    unsigned bits = 0xff;
-    unsigned v;
+    स्थिर uint8_t *in = in_str;
+    अचिन्हित bits = 0xff;
+    अचिन्हित v;
 
-    if (!out)
-        goto validity_check;
+    अगर (!out)
+        जाओ validity_check;
 
-    end = out + out_size;
-    while (end - dst > 3) {
+    end = out + out_आकार;
+    जबतक (end - dst > 3) {
         BASE64_DEC_STEP(0);
         BASE64_DEC_STEP(1);
         BASE64_DEC_STEP(2);
@@ -107,20 +107,20 @@ int av_base64_decode(uint8_t *out, const char *in_str, int out_size)
         dst += 3;
         in += 4;
     }
-    if (end - dst) {
+    अगर (end - dst) {
         BASE64_DEC_STEP(0);
         BASE64_DEC_STEP(1);
         BASE64_DEC_STEP(2);
         BASE64_DEC_STEP(3);
         *dst++ = v >> 16;
-        if (end - dst)
+        अगर (end - dst)
             *dst++ = v >> 8;
-        if (end - dst)
+        अगर (end - dst)
             *dst++ = v;
         in += 4;
     }
 validity_check:
-    while (1) {
+    जबतक (1) {
         BASE64_DEC_STEP(0);
         in++;
         BASE64_DEC_STEP(0);
@@ -132,15 +132,15 @@ validity_check:
     }
 
 out3:
-    if (end - dst)
+    अगर (end - dst)
         *dst++ = v >> 10;
     v <<= 2;
 out2:
-    if (end - dst)
+    अगर (end - dst)
         *dst++ = v >> 4;
 out1:
 out0:
-    return bits & 1 ? AVERROR_INVALIDDATA : out ? dst - out : 0;
+    वापस bits & 1 ? AVERROR_INVALIDDATA : out ? dst - out : 0;
 }
 
 /*****************************************************************************
@@ -149,18 +149,18 @@ out0:
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-char *av_base64_encode(char *out, int out_size, const uint8_t *in, int in_size)
+अक्षर *av_base64_encode(अक्षर *out, पूर्णांक out_आकार, स्थिर uint8_t *in, पूर्णांक in_आकार)
 {
-    static const char b64[] =
+    अटल स्थिर अक्षर b64[] =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    if (in_size >= UINT_MAX / 4 ||
-        out_size < AV_BASE64_SIZE(in_size))
-        return NULL;
-#if ARCH_AARCH64
-    if (in_size >= 48 && have_neon(av_get_cpu_flags())) {
-        return ff_base64_encode_neon(out, in, in_size, b64);
+    अगर (in_आकार >= अच_पूर्णांक_उच्च / 4 ||
+        out_आकार < AV_BASE64_आकार(in_आकार))
+        वापस शून्य;
+#अगर ARCH_AARCH64
+    अगर (in_आकार >= 48 && have_neon(av_get_cpu_flags())) {
+        वापस ff_base64_encode_neon(out, in, in_आकार, b64);
     }
-#endif
-    return ff_base64_encode_c(out, in, in_size, b64);
+#पूर्ण_अगर
+    वापस ff_base64_encode_c(out, in, in_आकार, b64);
 }

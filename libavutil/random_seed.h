@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RANDOM_SEED_H
-#define AVUTIL_RANDOM_SEED_H
+#अगर_अघोषित AVUTIL_RANDOM_SEED_H
+#घोषणा AVUTIL_RANDOM_SEED_H
 
-#include <stddef.h>
-#include <stdint.h>
+#समावेश <stddef.h>
+#समावेश <stdint.h>
 /**
  * @addtogroup lavu_crypto
  * @{
@@ -35,7 +35,7 @@
  * It can be quite slow, which is why it should only be used as seed for a faster
  * PRNG. The quality of the seed depends on the platform.
  */
-uint32_t av_get_random_seed(void);
+uint32_t av_get_random_seed(व्योम);
 
 /**
  * Generate cryptographically secure random data, i.e. suitable for use as
@@ -48,10 +48,10 @@ uint32_t av_get_random_seed(void);
  *                                   into buf
  * @retval "a negative AVERROR code" random data could not be generated
  */
-int av_random_bytes(uint8_t *buf, size_t len);
+पूर्णांक av_random_bytes(uint8_t *buf, माप_प्रकार len);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_RANDOM_SEED_H */
+#पूर्ण_अगर /* AVUTIL_RANDOM_SEED_H */

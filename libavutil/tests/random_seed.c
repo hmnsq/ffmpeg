@@ -18,37 +18,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define TEST 1
-#include "libavutil/random_seed.c"
+#घोषणा TEST 1
+#समावेश "libavutil/random_seed.c"
 
-#define N 256
-#define F 2
-#include <stdio.h>
+#घोषणा N 256
+#घोषणा F 2
+#समावेश <stdio.h>
 
-typedef uint32_t (*random_seed_ptr_t)(void);
+प्रकार uint32_t (*random_seed_ptr_t)(व्योम);
 
-int main(void)
+पूर्णांक मुख्य(व्योम)
 {
-    int i, j, rsf, retry;
+    पूर्णांक i, j, rsf, retry;
     uint32_t seeds[N];
     random_seed_ptr_t random_seed[F] = {av_get_random_seed, get_generic_seed};
 
-    for (rsf=0; rsf<F; ++rsf){
-        for (retry=0; retry<3; retry++){
-            for (i=0; i<N; i++){
+    क्रम (rsf=0; rsf<F; ++rsf){
+        क्रम (retry=0; retry<3; retry++){
+            क्रम (i=0; i<N; i++){
                 seeds[i] = random_seed[rsf]();
-                for (j=0; j<i; j++)
-                    if (seeds[j] == seeds[i])
-                        goto retry;
+                क्रम (j=0; j<i; j++)
+                    अगर (seeds[j] == seeds[i])
+                        जाओ retry;
             }
-            printf("seeds OK\n");
-            break;
+            म_लिखो("seeds OK\n");
+            अवरोध;
             retry:;
         }
-        if (retry >= 3) {
-            printf("rsf %d: FAIL at %d with %"PRIX32"\n", rsf, j, seeds[j]);
-            return 1;
+        अगर (retry >= 3) {
+            म_लिखो("rsf %d: FAIL at %d with %"PRIX32"\n", rsf, j, seeds[j]);
+            वापस 1;
         }
     }
-    return 0;
+    वापस 0;
 }

@@ -24,12 +24,12 @@
  * Public header for CRC hash function implementation.
  */
 
-#ifndef AVUTIL_CRC_H
-#define AVUTIL_CRC_H
+#अगर_अघोषित AVUTIL_CRC_H
+#घोषणा AVUTIL_CRC_H
 
-#include <stdint.h>
-#include <stddef.h>
-#include "attributes.h"
+#समावेश <stdint.h>
+#समावेश <stddef.h>
+#समावेश "attributes.h"
 
 /**
  * @defgroup lavu_crc32 CRC
@@ -43,9 +43,9 @@
  * @{
  */
 
-typedef uint32_t AVCRC;
+प्रकार uint32_t AVCRC;
 
-typedef enum {
+प्रकार क्रमागत {
     AV_CRC_8_ATM,
     AV_CRC_16_ANSI,
     AV_CRC_16_CCITT,
@@ -73,14 +73,14 @@ typedef enum {
  * @param ctx_size size of ctx in bytes
  * @return <0 on failure
  */
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size);
+पूर्णांक av_crc_init(AVCRC *ctx, पूर्णांक le, पूर्णांक bits, uint32_t poly, पूर्णांक ctx_आकार);
 
 /**
  * Get an initialized standard CRC table.
  * @param crc_id ID of a standard CRC
  * @return a pointer to the CRC table or NULL on failure
  */
-const AVCRC *av_crc_get_table(AVCRCId crc_id);
+स्थिर AVCRC *av_crc_get_table(AVCRCId crc_id);
 
 /**
  * Calculate the CRC of a block.
@@ -92,11 +92,11 @@ const AVCRC *av_crc_get_table(AVCRCId crc_id);
  *
  * @see av_crc_init() "le" parameter
  */
-uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
-                const uint8_t *buffer, size_t length) av_pure;
+uint32_t av_crc(स्थिर AVCRC *ctx, uint32_t crc,
+                स्थिर uint8_t *बफर, माप_प्रकार लंबाई) av_pure;
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_CRC_H */
+#पूर्ण_अगर /* AVUTIL_CRC_H */
