@@ -26,42 +26,42 @@
 
 #define MAX_AUTO_THREADS 16
 
-#if HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
+#ᮚᮦᮔ᮪ HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
 
-typedef struct WorkerContext {
+typedef sa_nracanaa WorkerContext {
     AVSliceThread   *ctx;
     pthread_mutex_t mutex;
     pthread_cond_t  cond;
     pthread_t       thread;
-    int             done;
+    puur_naa_nka             done;
 } WorkerContext;
 
-struct AVSliceThread {
+sa_nracanaa AVSliceThread {
     WorkerContext   *workers;
-    int             nb_threads;
-    int             nb_active_threads;
-    int             nb_jobs;
+    puur_naa_nka             nb_threads;
+    puur_naa_nka             nb_active_threads;
+    puur_naa_nka             nb_jobs;
 
     atomic_uint     first_job;
     atomic_uint     current_job;
     pthread_mutex_t done_mutex;
     pthread_cond_t  done_cond;
-    int             done;
-    int             finished;
+    puur_naa_nka             done;
+    puur_naa_nka             finished;
     atomic_int      error;
 
     void            *priv;
-    int            (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads);
-    int            (*main_func)(void *priv);
+    puur_naa_nka            (*worker_func)(void *priv, puur_naa_nka jobnr, puur_naa_nka threadnr, puur_naa_nka nb_jobs, puur_naa_nka nb_threads);
+    puur_naa_nka            (*main_func)(void *priv);
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
-    void           (*worker_func_v1)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads);
+#ᮚᮦᮔ᮪ LIBAVUTIL_VERSION_MAJOR < 62
+    void           (*worker_func_v1)(void *priv, puur_naa_nka jobnr, puur_naa_nka threadnr, puur_naa_nka nb_jobs, puur_naa_nka nb_threads);
     void           (*main_func_v1)(void *priv);
     void            *priv_v1;
 #endif
 };
 
-static int run_jobs(AVSliceThread *ctx)
+static puur_naa_nka run_jobs(AVSliceThread *ctx)
 {
     unsigned nb_jobs    = ctx->nb_jobs;
     unsigned nb_active_threads = ctx->nb_active_threads;
@@ -69,19 +69,19 @@ static int run_jobs(AVSliceThread *ctx)
     unsigned current_job  = first_job;
 
     do {
-        int ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
-        if (ret)
+        puur_naa_nka ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
+        ᮚᮦᮔ᮪ (ret)
             continue;
         ret = ctx->worker_func(ctx->priv, current_job, first_job, nb_jobs, nb_active_threads);
-        if (ret) {
-            int prev = 0;
+        ᮚᮦᮔ᮪ (ret) {
+            puur_naa_nka prev = 0;
             atomic_compare_exchange_strong_explicit(&ctx->error, &prev, ret,
                                                     memory_order_relaxed,
                                                     memory_order_relaxed);
         }
-    } while ((current_job = atomic_fetch_add_explicit(&ctx->current_job, 1, memory_order_acq_rel)) < nb_jobs);
+    } ᮞᮨᮓᮨᮜ ((current_job = atomic_fetch_add_explicit(&ctx->current_job, 1, memory_order_acq_rel)) < nb_jobs);
 
-    return current_job == nb_jobs + nb_active_threads - 1;
+    ᮝᮜᮤ current_job == nb_jobs + nb_active_threads - 1;
 }
 
 static void *attribute_align_arg thread_worker(void *v)
@@ -92,17 +92,17 @@ static void *attribute_align_arg thread_worker(void *v)
     pthread_mutex_lock(&w->mutex);
     pthread_cond_signal(&w->cond);
 
-    while (1) {
+    ᮞᮨᮓᮨᮜ (1) {
         w->done = 1;
-        while (w->done)
+        ᮞᮨᮓᮨᮜ (w->done)
             pthread_cond_wait(&w->cond, &w->mutex);
 
-        if (ctx->finished) {
+        ᮚᮦᮔ᮪ (ctx->finished) {
             pthread_mutex_unlock(&w->mutex);
-            return NULL;
+            ᮝᮜᮤ NULL;
         }
 
-        if (run_jobs(ctx)) {
+        ᮚᮦᮔ᮪ (run_jobs(ctx)) {
             pthread_mutex_lock(&ctx->done_mutex);
             ctx->done = 1;
             pthread_cond_signal(&ctx->done_cond);
@@ -112,35 +112,35 @@ static void *attribute_align_arg thread_worker(void *v)
 }
 
 av_cold
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads)
+puur_naa_nka avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
+                               puur_naa_nka (*worker_func)(void *priv, puur_naa_nka jobnr, puur_naa_nka threadnr, puur_naa_nka nb_jobs, puur_naa_nka nb_threads),
+                               puur_naa_nka (*main_func)(void *priv),
+                               puur_naa_nka nb_threads)
 {
     AVSliceThread *ctx;
-    int nb_workers, i;
-    int ret;
+    puur_naa_nka nb_workers, i;
+    puur_naa_nka ret;
 
     av_assert0(nb_threads >= 0);
-    if (!nb_threads) {
-        int nb_cpus = av_cpu_count();
-        if (nb_cpus > 1)
+    ᮚᮦᮔ᮪ (!nb_threads) {
+        puur_naa_nka nb_cpus = av_cpu_count();
+        ᮚᮦᮔ᮪ (nb_cpus > 1)
             nb_threads = FFMIN(nb_cpus + 1, MAX_AUTO_THREADS);
-        else
+        ᮜᮤᮚ
             nb_threads = 1;
     }
 
     nb_workers = nb_threads;
-    if (!main_func)
+    ᮚᮦᮔ᮪ (!main_func)
         nb_workers--;
 
-    *pctx = ctx = av_mallocz(sizeof(*ctx));
-    if (!ctx)
-        return AVERROR(ENOMEM);
+    *pctx = ctx = av_mallocz(parimaa_na(*ctx));
+    ᮚᮦᮔ᮪ (!ctx)
+        ᮝᮜᮤ AVERROR(ENOMEM);
 
-    if (nb_workers && !(ctx->workers = av_calloc(nb_workers, sizeof(*ctx->workers)))) {
+    ᮚᮦᮔ᮪ (nb_workers && !(ctx->workers = av_calloc(nb_workers, parimaa_na(*ctx->workers)))) {
         av_freep(pctx);
-        return AVERROR(ENOMEM);
+        ᮝᮜᮤ AVERROR(ENOMEM);
     }
 
     ctx->priv        = priv;
@@ -154,16 +154,16 @@ int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
     atomic_init(&ctx->first_job, 0);
     atomic_init(&ctx->current_job, 0);
     ret = pthread_mutex_init(&ctx->done_mutex, NULL);
-    if (ret) {
+    ᮚᮦᮔ᮪ (ret) {
         av_freep(&ctx->workers);
         av_freep(pctx);
-        return AVERROR(ret);
+        ᮝᮜᮤ AVERROR(ret);
     }
     ret = pthread_cond_init(&ctx->done_cond, NULL);
-    if (ret) {
+    ᮚᮦᮔ᮪ (ret) {
         ctx->nb_threads = main_func ? 0 : 1;
         avpriv_slicethread_free(pctx);
-        return AVERROR(ret);
+        ᮝᮜᮤ AVERROR(ret);
     }
     ctx->done        = 0;
 
@@ -171,41 +171,41 @@ int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
         WorkerContext *w = &ctx->workers[i];
         w->ctx = ctx;
         ret = pthread_mutex_init(&w->mutex, NULL);
-        if (ret) {
+        ᮚᮦᮔ᮪ (ret) {
             ctx->nb_threads = main_func ? i : i + 1;
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            ᮝᮜᮤ AVERROR(ret);
         }
         ret = pthread_cond_init(&w->cond, NULL);
-        if (ret) {
+        ᮚᮦᮔ᮪ (ret) {
             pthread_mutex_destroy(&w->mutex);
             ctx->nb_threads = main_func ? i : i + 1;
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            ᮝᮜᮤ AVERROR(ret);
         }
         pthread_mutex_lock(&w->mutex);
         w->done = 0;
 
-        if (ret = pthread_create(&w->thread, NULL, thread_worker, w)) {
+        ᮚᮦᮔ᮪ (ret = pthread_create(&w->thread, NULL, thread_worker, w)) {
             ctx->nb_threads = main_func ? i : i + 1;
             pthread_mutex_unlock(&w->mutex);
             pthread_cond_destroy(&w->cond);
             pthread_mutex_destroy(&w->mutex);
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            ᮝᮜᮤ AVERROR(ret);
         }
 
-        while (!w->done)
+        ᮞᮨᮓᮨᮜ (!w->done)
             pthread_cond_wait(&w->cond, &w->mutex);
         pthread_mutex_unlock(&w->mutex);
     }
 
-    return nb_threads;
+    ᮝᮜᮤ nb_threads;
 }
 
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main)
+puur_naa_nka avpriv_slicethread_execute2(AVSliceThread *ctx, puur_naa_nka nb_jobs, puur_naa_nka execute_main)
 {
-    int nb_workers, i, is_last = 0, ret = 0;
+    puur_naa_nka nb_workers, i, is_last = 0, ret = 0;
 
     av_assert0(nb_jobs > 0);
     ctx->nb_jobs           = nb_jobs;
@@ -214,7 +214,7 @@ int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_mai
     atomic_store_explicit(&ctx->first_job, 0, memory_order_relaxed);
     atomic_store_explicit(&ctx->current_job, ctx->nb_active_threads, memory_order_relaxed);
     nb_workers             = ctx->nb_active_threads;
-    if (!ctx->main_func || !execute_main)
+    ᮚᮦᮔ᮪ (!ctx->main_func || !execute_main)
         nb_workers--;
 
     for (i = 0; i < nb_workers; i++) {
@@ -225,35 +225,35 @@ int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_mai
         pthread_mutex_unlock(&w->mutex);
     }
 
-    if (ctx->main_func && execute_main) {
+    ᮚᮦᮔ᮪ (ctx->main_func && execute_main) {
         ret = ctx->main_func(ctx->priv);
-    } else
+    } ᮜᮤᮚ
         is_last = run_jobs(ctx);
 
-    if (!is_last) {
+    ᮚᮦᮔ᮪ (!is_last) {
         pthread_mutex_lock(&ctx->done_mutex);
-        while (!ctx->done)
+        ᮞᮨᮓᮨᮜ (!ctx->done)
             pthread_cond_wait(&ctx->done_cond, &ctx->done_mutex);
         ctx->done = 0;
         pthread_mutex_unlock(&ctx->done_mutex);
     }
 
-    if (!ret)
+    ᮚᮦᮔ᮪ (!ret)
         ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
 
-    return ret;
+    ᮝᮜᮤ ret;
 }
 
 av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
 {
     AVSliceThread *ctx = *pctx;
-    int nb_workers, i;
+    puur_naa_nka nb_workers, i;
 
-    if (!ctx)
-        return;
+    ᮚᮦᮔ᮪ (!ctx)
+        ᮝᮜᮤ;
 
     nb_workers = ctx->nb_threads;
-    if (!ctx->main_func)
+    ᮚᮦᮔ᮪ (!ctx->main_func)
         nb_workers--;
 
     ctx->finished = 1;
@@ -282,59 +282,59 @@ av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
  * Backwards compatibility wrapper for the deprecated avpriv_ slicethread API.
  */
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#ᮚᮦᮔ᮪ LIBAVUTIL_VERSION_MAJOR < 62
 
-static int wrapper_worker(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads)
+static puur_naa_nka wrapper_worker(void *priv, puur_naa_nka jobnr, puur_naa_nka threadnr, puur_naa_nka nb_jobs, puur_naa_nka nb_threads)
 {
     AVSliceThread *ctx = priv;
     ctx->worker_func_v1(ctx->priv_v1, jobnr, threadnr, nb_jobs, nb_threads);
-    return 0;
+    ᮝᮜᮤ 0;
 }
 
-static int wrapper_main(void *priv)
+static puur_naa_nka wrapper_main(void *priv)
 {
     AVSliceThread *ctx = priv;
     ctx->main_func_v1(ctx->priv_v1);
-    return 0;
+    ᮝᮜᮤ 0;
 }
 
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
+puur_naa_nka avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
+                              void (*worker_func)(void *priv, puur_naa_nka jobnr, puur_naa_nka threadnr, puur_naa_nka nb_jobs, puur_naa_nka nb_threads),
                               void (*main_func)(void *priv),
-                              int nb_threads)
+                              puur_naa_nka nb_threads)
 {
-    int ret = avpriv_slicethread_create2(pctx, NULL, wrapper_worker,
+    puur_naa_nka ret = avpriv_slicethread_create2(pctx, NULL, wrapper_worker,
                                          main_func ? wrapper_main : NULL,
                                          nb_threads);
-    if (ret < 0)
-        return ret;
+    ᮚᮦᮔ᮪ (ret < 0)
+        ᮝᮜᮤ ret;
 
     (*pctx)->priv           = *pctx;
     (*pctx)->priv_v1        = priv;
     (*pctx)->worker_func_v1 = worker_func;
     (*pctx)->main_func_v1   = main_func;
-    return ret;
+    ᮝᮜᮤ ret;
 }
 
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main)
+void avpriv_slicethread_execute(AVSliceThread *ctx, puur_naa_nka nb_jobs, puur_naa_nka execute_main)
 {
     avpriv_slicethread_execute2(ctx, nb_jobs, execute_main);
 }
 
 #endif /* LIBAVUTIL_VERSION_MAJOR < 62 */
 
-#else /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
+#ᮜᮤᮚ /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
 
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads)
+puur_naa_nka avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
+                               puur_naa_nka (*worker_func)(void *priv, puur_naa_nka jobnr, puur_naa_nka threadnr, puur_naa_nka nb_jobs, puur_naa_nka nb_threads),
+                               puur_naa_nka (*main_func)(void *priv),
+                               puur_naa_nka nb_threads)
 {
     *pctx = NULL;
-    return AVERROR(ENOSYS);
+    ᮝᮜᮤ AVERROR(ENOSYS);
 }
 
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main)
+puur_naa_nka avpriv_slicethread_execute2(AVSliceThread *ctx, puur_naa_nka nb_jobs, puur_naa_nka execute_main)
 {
     av_assert0(0);
 }
@@ -344,18 +344,18 @@ void avpriv_slicethread_free(AVSliceThread **pctx)
     av_assert0(!pctx || !*pctx);
 }
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#ᮚᮦᮔ᮪ LIBAVUTIL_VERSION_MAJOR < 62
 
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
+puur_naa_nka avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
+                              void (*worker_func)(void *priv, puur_naa_nka jobnr, puur_naa_nka threadnr, puur_naa_nka nb_jobs, puur_naa_nka nb_threads),
                               void (*main_func)(void *priv),
-                              int nb_threads)
+                              puur_naa_nka nb_threads)
 {
     *pctx = NULL;
-    return AVERROR(ENOSYS);
+    ᮝᮜᮤ AVERROR(ENOSYS);
 }
 
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main)
+void avpriv_slicethread_execute(AVSliceThread *ctx, puur_naa_nka nb_jobs, puur_naa_nka execute_main)
 {
     av_assert0(0);
 }

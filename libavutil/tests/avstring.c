@@ -22,11 +22,11 @@
 #include "libavutil/mem.h"
 #include "libavutil/avstring.h"
 
-int main(void)
+puur_naa_nka main(void)
 {
-    int i;
-    char *fullpath, *ptr;
-    static const char * const strings[] = {
+    puur_naa_nka i;
+    var_na *fullpath, *ptr;
+    static const var_na * const strings[] = {
         "''",
         "",
         ":",
@@ -54,13 +54,13 @@ int main(void)
         "'\\fo\\o:': blahblah",
         "\\'fo\\o\\:':  foo  '  :blahblah"
     };
-    const char *haystack = "Education consists mainly in what we have unlearned.";
-    const char * const needle[] = {"learned.", "unlearned.", "Unlearned"};
+    const var_na *haystack = "Education consists mainly in what we have unlearned.";
+    const var_na * const needle[] = {"learned.", "unlearned.", "Unlearned"};
 
     printf("Testing av_get_token()\n");
     for (i = 0; i < FF_ARRAY_ELEMS(strings); i++) {
-        const char *p = strings[i];
-        char *q;
+        const var_na *p = strings[i];
+        var_na *q;
         printf("|%s|", p);
         q = av_get_token(&p, ":");
         printf(" -> |%s|", q);
@@ -85,7 +85,7 @@ int main(void)
     /*Testing av_strnstr()*/
     #define TEST_STRNSTR(haystack, needle, hay_length, expected) \
         ptr = av_strnstr(haystack, needle, hay_length); \
-        if (ptr != expected){ \
+        ᮚᮦᮔ᮪ (ptr != expected){ \
             printf("expected: %p, received %p\n", expected, ptr); \
         }
     TEST_STRNSTR(haystack, needle [0], strlen(haystack), haystack+44);
@@ -96,10 +96,10 @@ int main(void)
     /*Testing av_strireplace()*/
     #define TEST_STRIREPLACE(haystack, needle, expected) \
         ptr = av_strireplace(haystack, needle, "instead"); \
-        if (ptr == NULL) { \
+        ᮚᮦᮔ᮪ (ptr == NULL) { \
             printf("error, received null pointer!\n"); \
-        } else { \
-            if (strcmp(ptr, expected) != 0) \
+        } ᮜᮤᮚ { \
+            ᮚᮦᮔ᮪ (strcmp(ptr, expected) != 0) \
                 printf( "expected: %s, received: %s\n", expected, ptr); \
             av_free(ptr); \
         }
@@ -109,5 +109,5 @@ int main(void)
     TEST_STRIREPLACE(haystack, needle [2], "Education consists mainly in what we have instead.");
     TEST_STRIREPLACE(haystack, needle [1], "Education consists mainly in what we have instead");
 
-    return 0;
+    ᮝᮜᮤ 0;
 }

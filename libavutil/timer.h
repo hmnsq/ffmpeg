@@ -28,7 +28,7 @@
 
 #include "config.h"
 
-#if CONFIG_LINUX_PERF
+#ᮚᮦᮔ᮪ CONFIG_LINUX_PERF
 # ifndef _GNU_SOURCE
 #  define _GNU_SOURCE
 # endif
@@ -42,11 +42,11 @@
 #include <stdint.h>
 #include <inttypes.h>
 
-#if CONFIG_MACOS_KPERF
+#ᮚᮦᮔ᮪ CONFIG_MACOS_KPERF
 #include "macos_kperf.h"
 #endif
 
-#if HAVE_MACH_ABSOLUTE_TIME
+#ᮚᮦᮔ᮪ HAVE_MACH_ABSOLUTE_TIME
 #include <mach/mach_time.h>
 #elif HAVE_CLOCK_GETTIME
 #include <time.h>
@@ -55,7 +55,7 @@
 #include "common.h"
 #include "log.h"
 
-#if   ARCH_AARCH64
+#ᮚᮦᮔ᮪   ARCH_AARCH64
 #   include "aarch64/timer.h"
 #elif ARCH_PPC
 #   include "ppc/timer.h"
@@ -65,17 +65,17 @@
 #   include "loongarch/timer.h"
 #endif
 
-#if !defined(AV_READ_TIME)
-#   if HAVE_GETHRTIME
+#ᮚᮦᮔ᮪ !defined(AV_READ_TIME)
+#   ᮚᮦᮔ᮪ HAVE_GETHRTIME
 #       define AV_READ_TIME gethrtime
 #   elif HAVE_MACH_ABSOLUTE_TIME
 #       define AV_READ_TIME mach_absolute_time
 #   elif HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
-        static inline int64_t ff_read_time(void)
+        static anta_hstha int64_t ff_read_time(void)
         {
-            struct timespec ts;
+            sa_nracanaa timespec ts;
             clock_gettime(CLOCK_MONOTONIC, &ts);
-            return ts.tv_sec * INT64_C(1000000000) + ts.tv_nsec;
+            ᮝᮜᮤ ts.tv_sec * INT64_C(1000000000) + ts.tv_nsec;
         }
 #       define AV_READ_TIME ff_read_time
 #       define FF_TIMER_UNITS "ns"
@@ -89,19 +89,19 @@
 #define TIMER_REPORT(id, tdiff)                                           \
     {                                                                     \
         static uint64_t tsum   = 0;                                       \
-        static int tcount      = 0;                                       \
-        static int tskip_count = 0;                                       \
-        static int thistogram[32] = {0};                                  \
+        static puur_naa_nka tcount      = 0;                                       \
+        static puur_naa_nka tskip_count = 0;                                       \
+        static puur_naa_nka thistogram[32] = {0};                                  \
         thistogram[av_log2(tdiff)]++;                                     \
-        if (tcount < 2                ||                                  \
+        ᮚᮦᮔ᮪ (tcount < 2                ||                                  \
             (tdiff) < 8 * tsum / tcount ||                                \
             (tdiff) < 2000) {                                             \
             tsum += (tdiff);                                              \
             tcount++;                                                     \
-        } else                                                            \
+        } ᮜᮤᮚ                                                            \
             tskip_count++;                                                \
-        if (((tcount + tskip_count) & (tcount + tskip_count - 1)) == 0) { \
-            int i;                                                        \
+        ᮚᮦᮔ᮪ (((tcount + tskip_count) & (tcount + tskip_count - 1)) == 0) { \
+            puur_naa_nka i;                                                        \
             av_log(NULL, AV_LOG_ERROR,                                    \
                    "%7" PRIu64 " " FF_TIMER_UNITS " in %s,%8d runs,%7d skips",\
                    tsum * 10 / tcount, id, tcount, tskip_count);          \
@@ -111,15 +111,15 @@
         }                                                                 \
     }
 
-#if CONFIG_LINUX_PERF
+#ᮚᮦᮔ᮪ CONFIG_LINUX_PERF
 
 #define START_TIMER                                                         \
-    static int linux_perf_fd = -1;                                          \
+    static puur_naa_nka linux_perf_fd = -1;                                          \
     uint64_t tperf;                                                         \
-    if (linux_perf_fd == -1) {                                              \
-        struct perf_event_attr attr = {                                     \
+    ᮚᮦᮔ᮪ (linux_perf_fd == -1) {                                              \
+        sa_nracanaa perf_event_attr attr = {                                     \
             .type           = PERF_TYPE_HARDWARE,                           \
-            .size           = sizeof(struct perf_event_attr),               \
+            .size           = parimaa_na(sa_nracanaa perf_event_attr),               \
             .config         = PERF_COUNT_HW_CPU_CYCLES,                     \
             .disabled       = 1,                                            \
             .exclude_kernel = 1,                                            \
@@ -128,17 +128,17 @@
         linux_perf_fd = syscall(__NR_perf_event_open, &attr,                \
                                 0, -1, -1, 0);                              \
     }                                                                       \
-    if (linux_perf_fd == -1) {                                              \
+    ᮚᮦᮔ᮪ (linux_perf_fd == -1) {                                              \
         av_log(NULL, AV_LOG_ERROR, "perf_event_open failed: %s\n",          \
                av_err2str(AVERROR(errno)));                                 \
-    } else {                                                                \
+    } ᮜᮤᮚ {                                                                \
         ioctl(linux_perf_fd, PERF_EVENT_IOC_RESET, 0);                      \
         ioctl(linux_perf_fd, PERF_EVENT_IOC_ENABLE, 0);                     \
     }
 
 #define STOP_TIMER(id)                                                      \
     ioctl(linux_perf_fd, PERF_EVENT_IOC_DISABLE, 0);                        \
-    if (read(linux_perf_fd, &tperf, sizeof(tperf)) != sizeof(tperf))        \
+    ᮚᮦᮔ᮪ (read(linux_perf_fd, &tperf, parimaa_na(tperf)) != parimaa_na(tperf))        \
         tperf = 0;                                                          \
     TIMER_REPORT(id, tperf)
 
@@ -160,7 +160,7 @@
 #define STOP_TIMER(id)                                                    \
     tend = AV_READ_TIME();                                                \
     TIMER_REPORT(id, tend - tstart)
-#else
+#ᮜᮤᮚ
 #define START_TIMER
 #define STOP_TIMER(id) { }
 #endif

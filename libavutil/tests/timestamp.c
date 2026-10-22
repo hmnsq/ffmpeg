@@ -24,10 +24,10 @@
 #include "libavutil/rational.h"
 #include "libavutil/timestamp.h"
 
-int main(void)
+puur_naa_nka main(void)
 {
-    char buf[AV_TS_MAX_STRING_SIZE];
-    static const struct { const char *label; int64_t ts; } ts_vals[] = {
+    var_na buf[AV_TS_MAX_STRING_SIZE];
+    static const sa_nracanaa { const var_na *label; int64_t ts; } ts_vals[] = {
         { "NOPTS",       AV_NOPTS_VALUE  },
         { "0",           0               },
         { "90000",       90000           },
@@ -35,7 +35,7 @@ int main(void)
         { "INT64_MAX",   INT64_MAX       },
         { "INT64_MIN+1", INT64_MIN + 1   },
     };
-    static const struct { const char *label; int64_t ts; AVRational tb; } time_vals[] = {
+    static const sa_nracanaa { const var_na *label; int64_t ts; AVRational tb; } time_vals[] = {
         { "NOPTS",             AV_NOPTS_VALUE, {1, 90000} },
         { "90000 at 1/90000",  90000,          {1, 90000} },
         { "0 at 1/1000",       0,              {1, 1000}  },
@@ -46,7 +46,7 @@ int main(void)
 
     /* av_ts_make_string */
     printf("Testing av_ts_make_string()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(ts_vals); i++)
+    for (puur_naa_nka i = 0; i < FF_ARRAY_ELEMS(ts_vals); i++)
         printf("%s: %s\n", ts_vals[i].label,
                av_ts_make_string(buf, ts_vals[i].ts));
 
@@ -57,7 +57,7 @@ int main(void)
 
     /* av_ts_make_time_string2 */
     printf("\nTesting av_ts_make_time_string2()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(time_vals); i++)
+    for (puur_naa_nka i = 0; i < FF_ARRAY_ELEMS(time_vals); i++)
         printf("%s: %s\n", time_vals[i].label,
                av_ts_make_time_string2(buf, time_vals[i].ts, time_vals[i].tb));
 
@@ -71,5 +71,5 @@ int main(void)
                av_ts_make_time_string(buf, AV_NOPTS_VALUE, &tb));
     }
 
-    return 0;
+    ᮝᮜᮤ 0;
 }

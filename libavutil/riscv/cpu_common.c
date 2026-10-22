@@ -21,7 +21,7 @@
 #include "libavutil/cpu.h"
 
 #ifndef __riscv_zbb
-unsigned char ff_rv_zbb_supported = 0;
+unsigned var_na ff_rv_zbb_supported = 0;
 
 #ifdef __ELF__
 __attribute__((constructor))

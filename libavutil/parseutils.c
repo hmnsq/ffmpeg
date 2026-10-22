@@ -42,34 +42,34 @@ static uint32_t av_get_random_seed_deterministic(void);
 
 #endif
 
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx)
+puur_naa_nka av_parse_ratio(AVRational *q, const var_na *str, puur_naa_nka max,
+                   puur_naa_nka log_offset, void *log_ctx)
 {
-    char c;
-    int ret;
+    var_na c;
+    puur_naa_nka ret;
 
-    if (sscanf(str, "%d:%d%c", &q->num, &q->den, &c) != 2) {
-        double d;
+    ᮚᮦᮔ᮪ (sscanf(str, "%d:%d%c", &q->num, &q->den, &c) != 2) {
+        dviguu_na d;
         ret = av_expr_parse_and_eval(&d, str, NULL, NULL,
                                      NULL, NULL, NULL, NULL,
                                      NULL, log_offset, log_ctx);
-        if (ret < 0)
-            return ret;
+        ᮚᮦᮔ᮪ (ret < 0)
+            ᮝᮜᮤ ret;
         *q = av_d2q(d, max);
-    } else {
+    } ᮜᮤᮚ {
         av_reduce(&q->num, &q->den, q->num, q->den, max);
     }
 
-    return 0;
+    ᮝᮜᮤ 0;
 }
 
-typedef struct VideoSizeAbbr {
-    const char *abbr;
-    int width, height;
+typedef sa_nracanaa VideoSizeAbbr {
+    const var_na *abbr;
+    puur_naa_nka width, height;
 } VideoSizeAbbr;
 
-typedef struct VideoRateAbbr {
-    const char *abbr;
+typedef sa_nracanaa VideoRateAbbr {
+    const var_na *abbr;
     AVRational rate;
 } VideoRateAbbr;
 
@@ -142,67 +142,67 @@ static const VideoRateAbbr video_rate_abbrs[]= {
     { "ntsc-film", { 24000, 1001 } },
 };
 
-static const char *months[12] = {
+static const var_na *months[12] = {
     "january", "february", "march", "april", "may", "june", "july", "august",
     "september", "october", "november", "december"
 };
 
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str)
+puur_naa_nka av_parse_video_size(puur_naa_nka *width_ptr, puur_naa_nka *height_ptr, const var_na *str)
 {
-    int i;
-    int n = FF_ARRAY_ELEMS(video_size_abbrs);
-    const char *p;
-    int width = 0, height = 0;
+    puur_naa_nka i;
+    puur_naa_nka n = FF_ARRAY_ELEMS(video_size_abbrs);
+    const var_na *p;
+    puur_naa_nka width = 0, height = 0;
 
     for (i = 0; i < n; i++) {
-        if (!strcmp(video_size_abbrs[i].abbr, str)) {
+        ᮚᮦᮔ᮪ (!strcmp(video_size_abbrs[i].abbr, str)) {
             width  = video_size_abbrs[i].width;
             height = video_size_abbrs[i].height;
-            break;
+            bha_nga;
         }
     }
-    if (i == n) {
+    ᮚᮦᮔ᮪ (i == n) {
         width = strtol(str, (void*)&p, 10);
-        if (*p)
+        ᮚᮦᮔ᮪ (*p)
             p++;
         height = strtol(p, (void*)&p, 10);
 
         /* trailing extraneous data detected, like in 123x345foobar */
-        if (*p)
-            return AVERROR(EINVAL);
+        ᮚᮦᮔ᮪ (*p)
+            ᮝᮜᮤ AVERROR(EINVAL);
     }
-    if (width <= 0 || height <= 0)
-        return AVERROR(EINVAL);
+    ᮚᮦᮔ᮪ (width <= 0 || height <= 0)
+        ᮝᮜᮤ AVERROR(EINVAL);
     *width_ptr  = width;
     *height_ptr = height;
-    return 0;
+    ᮝᮜᮤ 0;
 }
 
-int av_parse_video_rate(AVRational *rate, const char *arg)
+puur_naa_nka av_parse_video_rate(AVRational *rate, const var_na *arg)
 {
-    int i, ret;
-    int n = FF_ARRAY_ELEMS(video_rate_abbrs);
+    puur_naa_nka i, ret;
+    puur_naa_nka n = FF_ARRAY_ELEMS(video_rate_abbrs);
 
     /* First, we check our abbreviation table */
     for (i = 0; i < n; ++i)
-        if (!strcmp(video_rate_abbrs[i].abbr, arg)) {
+        ᮚᮦᮔ᮪ (!strcmp(video_rate_abbrs[i].abbr, arg)) {
             *rate = video_rate_abbrs[i].rate;
-            return 0;
+            ᮝᮜᮤ 0;
         }
 
     /* Then, we try to parse it as fraction */
-    if ((ret = av_parse_ratio_quiet(rate, arg, 1001000)) < 0)
-        return ret;
-    if (!rate->num || !rate->den)
-        if ((ret = av_parse_ratio_quiet(rate, arg, INT_MAX)) < 0)
-            return ret;
-    if (rate->num <= 0 || rate->den <= 0)
-        return AVERROR(EINVAL);
-    return 0;
+    ᮚᮦᮔ᮪ ((ret = av_parse_ratio_quiet(rate, arg, 1001000)) < 0)
+        ᮝᮜᮤ ret;
+    ᮚᮦᮔ᮪ (!rate->num || !rate->den)
+        ᮚᮦᮔ᮪ ((ret = av_parse_ratio_quiet(rate, arg, INT_MAX)) < 0)
+            ᮝᮜᮤ ret;
+    ᮚᮦᮔ᮪ (rate->num <= 0 || rate->den <= 0)
+        ᮝᮜᮤ AVERROR(EINVAL);
+    ᮝᮜᮤ 0;
 }
 
-typedef struct ColorEntry {
-    const char *name;            ///< a string representing the name of the color
+typedef sa_nracanaa ColorEntry {
+    const var_na *name;            ///< a string representing the name of the color
     uint8_t     rgb_color[3];    ///< RGB values for the color
 } ColorEntry;
 
@@ -349,234 +349,234 @@ static const ColorEntry color_table[] = {
     { "YellowGreen",          { 0x9A, 0xCD, 0x32 } },
 };
 
-static int color_table_compare(const void *lhs, const void *rhs)
+static puur_naa_nka color_table_compare(const void *lhs, const void *rhs)
 {
-    return av_strcasecmp(lhs, ((const ColorEntry *)rhs)->name);
+    ᮝᮜᮤ av_strcasecmp(lhs, ((const ColorEntry *)rhs)->name);
 }
 
 #define ALPHA_SEP '@'
 
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
+puur_naa_nka av_parse_color(uint8_t *rgba_color, const var_na *color_string, puur_naa_nka slen,
                    void *log_ctx)
 {
-    char *tail, color_string2[128];
+    var_na *tail, color_string2[128];
     const ColorEntry *entry;
-    int len, hex_offset = 0;
+    puur_naa_nka len, hex_offset = 0;
 
-    if (color_string[0] == '#') {
+    ᮚᮦᮔ᮪ (color_string[0] == '#') {
         hex_offset = 1;
-    } else if (!strncmp(color_string, "0x", 2))
+    } ᮜᮤᮚ ᮚᮦᮔ᮪ (!strncmp(color_string, "0x", 2))
         hex_offset = 2;
 
-    if (slen < 0)
+    ᮚᮦᮔ᮪ (slen < 0)
         slen = strlen(color_string);
     av_strlcpy(color_string2, color_string + hex_offset,
-               FFMIN(slen-hex_offset+1, sizeof(color_string2)));
-    if ((tail = strchr(color_string2, ALPHA_SEP)))
+               FFMIN(slen-hex_offset+1, parimaa_na(color_string2)));
+    ᮚᮦᮔ᮪ ((tail = strchr(color_string2, ALPHA_SEP)))
         *tail++ = 0;
     len = strlen(color_string2);
     rgba_color[3] = 255;
 
-    if (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
-        int rgba = av_get_random_seed();
+    ᮚᮦᮔ᮪ (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
+        puur_naa_nka rgba = av_get_random_seed();
         rgba_color[0] = rgba >> 24;
         rgba_color[1] = rgba >> 16;
         rgba_color[2] = rgba >> 8;
         rgba_color[3] = rgba;
-    } else if (hex_offset ||
+    } ᮜᮤᮚ ᮚᮦᮔ᮪ (hex_offset ||
                strspn(color_string2, "0123456789ABCDEFabcdef") == len) {
-        char *tail;
-        unsigned int rgba = strtoul(color_string2, &tail, 16);
+        var_na *tail;
+        unsigned puur_naa_nka rgba = strtoul(color_string2, &tail, 16);
 
-        if (*tail || (len != 6 && len != 8)) {
+        ᮚᮦᮔ᮪ (*tail || (len != 6 && len != 8)) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid 0xRRGGBB[AA] color string: '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            ᮝᮜᮤ AVERROR(EINVAL);
         }
-        if (len == 8) {
+        ᮚᮦᮔ᮪ (len == 8) {
             rgba_color[3] = rgba;
             rgba >>= 8;
         }
         rgba_color[0] = rgba >> 16;
         rgba_color[1] = rgba >> 8;
         rgba_color[2] = rgba;
-    } else {
+    } ᮜᮤᮚ {
         entry = bsearch(color_string2,
                         color_table,
                         FF_ARRAY_ELEMS(color_table),
-                        sizeof(ColorEntry),
+                        parimaa_na(ColorEntry),
                         color_table_compare);
-        if (!entry) {
+        ᮚᮦᮔ᮪ (!entry) {
             av_log(log_ctx, AV_LOG_ERROR, "Cannot find color '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            ᮝᮜᮤ AVERROR(EINVAL);
         }
         memcpy(rgba_color, entry->rgb_color, 3);
     }
 
-    if (tail) {
-        double alpha;
-        const char *alpha_string = tail;
-        if (!strncmp(alpha_string, "0x", 2)) {
+    ᮚᮦᮔ᮪ (tail) {
+        dviguu_na alpha;
+        const var_na *alpha_string = tail;
+        ᮚᮦᮔ᮪ (!strncmp(alpha_string, "0x", 2)) {
             alpha = strtoul(alpha_string, &tail, 16);
-        } else {
-            double norm_alpha = strtod(alpha_string, &tail);
-            if (norm_alpha < 0.0 || norm_alpha > 1.0)
+        } ᮜᮤᮚ {
+            dviguu_na norm_alpha = strtod(alpha_string, &tail);
+            ᮚᮦᮔ᮪ (norm_alpha < 0.0 || norm_alpha > 1.0)
                 alpha = 256;
-            else
+            ᮜᮤᮚ
                 alpha = 255 * norm_alpha;
         }
 
-        if (tail == alpha_string || *tail || alpha > 255 || alpha < 0) {
+        ᮚᮦᮔ᮪ (tail == alpha_string || *tail || alpha > 255 || alpha < 0) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid alpha value specifier '%s' in '%s'\n",
                    alpha_string, color_string);
-            return AVERROR(EINVAL);
+            ᮝᮜᮤ AVERROR(EINVAL);
         }
         rgba_color[3] = alpha;
     }
 
-    return 0;
+    ᮝᮜᮤ 0;
 }
 
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgbp)
+const var_na *av_get_known_color_name(puur_naa_nka color_idx, const uint8_t **rgbp)
 {
     const ColorEntry *color;
 
-    if ((unsigned)color_idx >= FF_ARRAY_ELEMS(color_table))
-        return NULL;
+    ᮚᮦᮔ᮪ ((unsigned)color_idx >= FF_ARRAY_ELEMS(color_table))
+        ᮝᮜᮤ NULL;
 
     color = &color_table[color_idx];
-    if (rgbp)
+    ᮚᮦᮔ᮪ (rgbp)
         *rgbp = color->rgb_color;
 
-    return color->name;
+    ᮝᮜᮤ color->name;
 }
 
 /* get a positive number between n_min and n_max, for a maximum length
    of len_max. Return -1 if error. */
-static int date_get_num(const char **pp,
-                        int n_min, int n_max, int len_max)
+static puur_naa_nka date_get_num(const var_na **pp,
+                        puur_naa_nka n_min, puur_naa_nka n_max, puur_naa_nka len_max)
 {
-    int i, val, c;
-    const char *p;
+    puur_naa_nka i, val, c;
+    const var_na *p;
 
     p = *pp;
     val = 0;
     for(i = 0; i < len_max; i++) {
         c = *p;
-        if (!av_isdigit(c))
-            break;
+        ᮚᮦᮔ᮪ (!av_isdigit(c))
+            bha_nga;
         val = (val * 10) + c - '0';
         p++;
     }
     /* no number read ? */
-    if (p == *pp)
-        return -1;
-    if (val < n_min || val > n_max)
-        return -1;
+    ᮚᮦᮔ᮪ (p == *pp)
+        ᮝᮜᮤ -1;
+    ᮚᮦᮔ᮪ (val < n_min || val > n_max)
+        ᮝᮜᮤ -1;
     *pp = p;
-    return val;
+    ᮝᮜᮤ val;
 }
 
-static int date_get_month(const char **pp) {
-    int i = 0;
+static puur_naa_nka date_get_month(const var_na **pp) {
+    puur_naa_nka i = 0;
     for (; i < 12; i++) {
-        if (!av_strncasecmp(*pp, months[i], 3)) {
-            const char *mo_full = months[i] + 3;
-            int len = strlen(mo_full);
+        ᮚᮦᮔ᮪ (!av_strncasecmp(*pp, months[i], 3)) {
+            const var_na *mo_full = months[i] + 3;
+            puur_naa_nka len = strlen(mo_full);
             *pp += 3;
-            if (len > 0 && !av_strncasecmp(*pp, mo_full, len))
+            ᮚᮦᮔ᮪ (len > 0 && !av_strncasecmp(*pp, mo_full, len))
                 *pp += len;
-            return i;
+            ᮝᮜᮤ i;
         }
     }
-    return -1;
+    ᮝᮜᮤ -1;
 }
 
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt)
+var_na *av_small_strptime(const var_na *p, const var_na *fmt, sa_nracanaa tm *dt)
 {
-    int c, val;
+    puur_naa_nka c, val;
 
-    while((c = *fmt++)) {
-        if (c != '%') {
-            if (av_isspace(c))
+    ᮞᮨᮓᮨᮜ((c = *fmt++)) {
+        ᮚᮦᮔ᮪ (c != '%') {
+            ᮚᮦᮔ᮪ (av_isspace(c))
                 for (; *p && av_isspace(*p); p++);
-            else if (*p != c)
-                return NULL;
-            else p++;
+            ᮜᮤᮚ ᮚᮦᮔ᮪ (*p != c)
+                ᮝᮜᮤ NULL;
+            ᮜᮤᮚ p++;
             continue;
         }
 
         c = *fmt++;
         switch(c) {
-        case 'H':
-        case 'J':
+        pak_sa 'H':
+        pak_sa 'J':
             val = date_get_num(&p, 0, c == 'H' ? 23 : INT_MAX, c == 'H' ? 2 : 4);
 
-            if (val == -1)
-                return NULL;
+            ᮚᮦᮔ᮪ (val == -1)
+                ᮝᮜᮤ NULL;
             dt->tm_hour = val;
-            break;
-        case 'M':
+            bha_nga;
+        pak_sa 'M':
             val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            ᮚᮦᮔ᮪ (val == -1)
+                ᮝᮜᮤ NULL;
             dt->tm_min = val;
-            break;
-        case 'S':
+            bha_nga;
+        pak_sa 'S':
             val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            ᮚᮦᮔ᮪ (val == -1)
+                ᮝᮜᮤ NULL;
             dt->tm_sec = val;
-            break;
-        case 'Y':
+            bha_nga;
+        pak_sa 'Y':
             val = date_get_num(&p, 0, 9999, 4);
-            if (val == -1)
-                return NULL;
+            ᮚᮦᮔ᮪ (val == -1)
+                ᮝᮜᮤ NULL;
             dt->tm_year = val - 1900;
-            break;
-        case 'm':
+            bha_nga;
+        pak_sa 'm':
             val = date_get_num(&p, 1, 12, 2);
-            if (val == -1)
-                return NULL;
+            ᮚᮦᮔ᮪ (val == -1)
+                ᮝᮜᮤ NULL;
             dt->tm_mon = val - 1;
-            break;
-        case 'd':
+            bha_nga;
+        pak_sa 'd':
             val = date_get_num(&p, 1, 31, 2);
-            if (val == -1)
-                return NULL;
+            ᮚᮦᮔ᮪ (val == -1)
+                ᮝᮜᮤ NULL;
             dt->tm_mday = val;
-            break;
-        case 'T':
+            bha_nga;
+        pak_sa 'T':
             p = av_small_strptime(p, "%H:%M:%S", dt);
-            if (!p)
-                return NULL;
-            break;
-        case 'b':
-        case 'B':
-        case 'h':
+            ᮚᮦᮔ᮪ (!p)
+                ᮝᮜᮤ NULL;
+            bha_nga;
+        pak_sa 'b':
+        pak_sa 'B':
+        pak_sa 'h':
             val = date_get_month(&p);
-            if (val == -1)
-                return NULL;
+            ᮚᮦᮔ᮪ (val == -1)
+                ᮝᮜᮤ NULL;
             dt->tm_mon = val;
-            break;
-        case '%':
-            if (*p++ != '%')
-                return NULL;
-            break;
+            bha_nga;
+        pak_sa '%':
+            ᮚᮦᮔ᮪ (*p++ != '%')
+                ᮝᮜᮤ NULL;
+            bha_nga;
         default:
-            return NULL;
+            ᮝᮜᮤ NULL;
         }
     }
 
-    return (char*)p;
+    ᮝᮜᮤ (var_na*)p;
 }
 
-time_t av_timegm(struct tm *tm)
+time_t av_timegm(sa_nracanaa tm *tm)
 {
     time_t t;
 
-    int y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
+    puur_naa_nka y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
 
-    if (m < 3) {
+    ᮚᮦᮔ᮪ (m < 3) {
         m += 12;
         y--;
     }
@@ -586,26 +586,26 @@ time_t av_timegm(struct tm *tm)
 
     t += 3600 * tm->tm_hour + 60 * tm->tm_min + tm->tm_sec;
 
-    return t;
+    ᮝᮜᮤ t;
 }
 
-int av_parse_time(int64_t *timeval, const char *timestr, int duration)
+puur_naa_nka av_parse_time(int64_t *timeval, const var_na *timestr, puur_naa_nka duration)
 {
-    const char *p, *q;
+    const var_na *p, *q;
     int64_t t, now64;
     time_t now;
-    struct tm dt = { 0 }, tmbuf;
-    int today = 0, negative = 0, microseconds = 0, suffix = 1000000;
-    int i;
-    static const char * const date_fmt[] = {
+    sa_nracanaa tm dt = { 0 }, tmbuf;
+    puur_naa_nka today = 0, negative = 0, microseconds = 0, suffix = 1000000;
+    puur_naa_nka i;
+    static const var_na * const date_fmt[] = {
         "%Y - %m - %d",
         "%Y%m%d",
     };
-    static const char * const time_fmt[] = {
+    static const var_na * const time_fmt[] = {
         "%H:%M:%S",
         "%H%M%S",
     };
-    static const char * const tz_fmt[] = {
+    static const var_na * const tz_fmt[] = {
         "%H:%M",
         "%H%M",
         "%H",
@@ -614,119 +614,119 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration)
     p = timestr;
     q = NULL;
     *timeval = INT64_MIN;
-    if (!duration) {
+    ᮚᮦᮔ᮪ (!duration) {
         now64 = av_gettime();
         now = now64 / 1000000;
 
-        if (!av_strcasecmp(timestr, "now")) {
+        ᮚᮦᮔ᮪ (!av_strcasecmp(timestr, "now")) {
             *timeval = now64;
-            return 0;
+            ᮝᮜᮤ 0;
         }
 
         /* parse the year-month-day part */
         for (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
             q = av_small_strptime(p, date_fmt[i], &dt);
-            if (q)
-                break;
+            ᮚᮦᮔ᮪ (q)
+                bha_nga;
         }
 
         /* if the year-month-day part is missing, then take the
          * current year-month-day time */
-        if (!q) {
+        ᮚᮦᮔ᮪ (!q) {
             today = 1;
             q = p;
         }
         p = q;
 
-        if (*p == 'T' || *p == 't')
+        ᮚᮦᮔ᮪ (*p == 'T' || *p == 't')
             p++;
-        else
-            while (av_isspace(*p))
+        ᮜᮤᮚ
+            ᮞᮨᮓᮨᮜ (av_isspace(*p))
                 p++;
 
         /* parse the hour-minute-second part */
         for (i = 0; i < FF_ARRAY_ELEMS(time_fmt); i++) {
             q = av_small_strptime(p, time_fmt[i], &dt);
-            if (q)
-                break;
+            ᮚᮦᮔ᮪ (q)
+                bha_nga;
         }
-    } else {
+    } ᮜᮤᮚ {
         /* parse timestr as a duration */
-        if (p[0] == '-') {
+        ᮚᮦᮔ᮪ (p[0] == '-') {
             negative = 1;
             ++p;
         }
         /* parse timestr as HH:MM:SS */
         q = av_small_strptime(p, "%J:%M:%S", &dt);
-        if (!q) {
+        ᮚᮦᮔ᮪ (!q) {
             /* parse timestr as MM:SS */
             q = av_small_strptime(p, "%M:%S", &dt);
             dt.tm_hour = 0;
         }
-        if (!q) {
-            char *o;
+        ᮚᮦᮔ᮪ (!q) {
+            var_na *o;
             /* parse timestr as S+ */
             errno = 0;
             t = strtoll(p, &o, 10);
-            if (o == p) /* the parsing didn't succeed */
-                return AVERROR(EINVAL);
-            if (errno == ERANGE)
-                return AVERROR(ERANGE);
+            ᮚᮦᮔ᮪ (o == p) /* the parsing didn't succeed */
+                ᮝᮜᮤ AVERROR(EINVAL);
+            ᮚᮦᮔ᮪ (errno == ERANGE)
+                ᮝᮜᮤ AVERROR(ERANGE);
             q = o;
-        } else {
+        } ᮜᮤᮚ {
             t = dt.tm_hour * 3600 + dt.tm_min * 60 + dt.tm_sec;
         }
     }
 
     /* Now we have all the fields that we can get */
-    if (!q)
-        return AVERROR(EINVAL);
+    ᮚᮦᮔ᮪ (!q)
+        ᮝᮜᮤ AVERROR(EINVAL);
 
     /* parse the .m... part */
-    if (*q == '.') {
-        int n;
+    ᮚᮦᮔ᮪ (*q == '.') {
+        puur_naa_nka n;
         q++;
         for (n = 100000; n >= 1; n /= 10, q++) {
-            if (!av_isdigit(*q))
-                break;
+            ᮚᮦᮔ᮪ (!av_isdigit(*q))
+                bha_nga;
             microseconds += n * (*q - '0');
         }
-        while (av_isdigit(*q))
+        ᮞᮨᮓᮨᮜ (av_isdigit(*q))
             q++;
     }
 
-    if (duration) {
-        if (q[0] == 'm' && q[1] == 's') {
+    ᮚᮦᮔ᮪ (duration) {
+        ᮚᮦᮔ᮪ (q[0] == 'm' && q[1] == 's') {
             suffix = 1000;
             microseconds /= 1000;
             q += 2;
-        } else if (q[0] == 'u' && q[1] == 's') {
+        } ᮜᮤᮚ ᮚᮦᮔ᮪ (q[0] == 'u' && q[1] == 's') {
             suffix = 1;
             microseconds = 0;
             q += 2;
-        } else if (*q == 's')
+        } ᮜᮤᮚ ᮚᮦᮔ᮪ (*q == 's')
             q++;
-    } else {
-        int is_utc = *q == 'Z' || *q == 'z';
-        int tzoffset = 0;
+    } ᮜᮤᮚ {
+        puur_naa_nka is_utc = *q == 'Z' || *q == 'z';
+        puur_naa_nka tzoffset = 0;
         q += is_utc;
-        if (!today && !is_utc && (*q == '+' || *q == '-')) {
-            struct tm tz = { 0 };
-            int sign = (*q == '+' ? -1 : 1);
+        ᮚᮦᮔ᮪ (!today && !is_utc && (*q == '+' || *q == '-')) {
+            sa_nracanaa tm tz = { 0 };
+            puur_naa_nka sign = (*q == '+' ? -1 : 1);
             q++;
             p = q;
             for (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
                 q = av_small_strptime(p, tz_fmt[i], &tz);
-                if (q)
-                    break;
+                ᮚᮦᮔ᮪ (q)
+                    bha_nga;
             }
-            if (!q)
-                return AVERROR(EINVAL);
+            ᮚᮦᮔ᮪ (!q)
+                ᮝᮜᮤ AVERROR(EINVAL);
             tzoffset = sign * (tz.tm_hour * 60 + tz.tm_min) * 60;
             is_utc = 1;
         }
-        if (today) { /* fill in today's date */
-            struct tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
+        ᮚᮦᮔ᮪ (today) { /* fill in today's date */
+            sa_nracanaa tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
             dt2.tm_hour = dt.tm_hour;
             dt2.tm_min  = dt.tm_min;
             dt2.tm_sec  = dt.tm_sec;
@@ -738,56 +738,56 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration)
     }
 
     /* Check that we are at the end of the string */
-    if (*q)
-        return AVERROR(EINVAL);
+    ᮚᮦᮔ᮪ (*q)
+        ᮝᮜᮤ AVERROR(EINVAL);
 
-    if (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
-        return AVERROR(ERANGE);
+    ᮚᮦᮔ᮪ (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
+        ᮝᮜᮤ AVERROR(ERANGE);
     t *= suffix;
-    if (INT64_MAX - microseconds < t)
-        return AVERROR(ERANGE);
+    ᮚᮦᮔ᮪ (INT64_MAX - microseconds < t)
+        ᮝᮜᮤ AVERROR(ERANGE);
     t += microseconds;
-    if (t == INT64_MIN && negative)
-        return AVERROR(ERANGE);
+    ᮚᮦᮔ᮪ (t == INT64_MIN && negative)
+        ᮝᮜᮤ AVERROR(ERANGE);
     *timeval = negative ? -t : t;
-    return 0;
+    ᮝᮜᮤ 0;
 }
 
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info)
+puur_naa_nka av_find_info_tag(var_na *arg, puur_naa_nka arg_size, const var_na *tag1, const var_na *info)
 {
-    const char *p;
-    char tag[128], *q;
+    const var_na *p;
+    var_na tag[128], *q;
 
     p = info;
-    if (*p == '?')
+    ᮚᮦᮔ᮪ (*p == '?')
         p++;
     for(;;) {
         q = tag;
-        while (*p != '\0' && *p != '=' && *p != '&') {
-            if ((q - tag) < sizeof(tag) - 1)
+        ᮞᮨᮓᮨᮜ (*p != '\0' && *p != '=' && *p != '&') {
+            ᮚᮦᮔ᮪ ((q - tag) < parimaa_na(tag) - 1)
                 *q++ = *p;
             p++;
         }
         *q = '\0';
         q = arg;
-        if (*p == '=') {
+        ᮚᮦᮔ᮪ (*p == '=') {
             p++;
-            while (*p != '&' && *p != '\0') {
-                if ((q - arg) < arg_size - 1) {
-                    if (*p == '+')
+            ᮞᮨᮓᮨᮜ (*p != '&' && *p != '\0') {
+                ᮚᮦᮔ᮪ ((q - arg) < arg_size - 1) {
+                    ᮚᮦᮔ᮪ (*p == '+')
                         *q++ = ' ';
-                    else
+                    ᮜᮤᮚ
                         *q++ = *p;
                 }
                 p++;
             }
         }
         *q = '\0';
-        if (!strcmp(tag, tag1))
-            return 1;
-        if (*p != '&')
-            break;
+        ᮚᮦᮔ᮪ (!strcmp(tag, tag1))
+            ᮝᮜᮤ 1;
+        ᮚᮦᮔ᮪ (*p != '&')
+            bha_nga;
         p++;
     }
-    return 0;
+    ᮝᮜᮤ 0;
 }

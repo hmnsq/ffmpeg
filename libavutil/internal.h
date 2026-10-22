@@ -26,7 +26,7 @@
 #ifndef AVUTIL_INTERNAL_H
 #define AVUTIL_INTERNAL_H
 
-#if !defined(DEBUG) && !defined(NDEBUG)
+#ᮚᮦᮔ᮪ !defined(DEBUG) && !defined(NDEBUG)
 #    define NDEBUG
 #endif
 
@@ -45,29 +45,29 @@
 #include "macros.h"
 
 #ifndef attribute_align_arg
-#if ARCH_X86_32 && defined(__GNUC__)
+#ᮚᮦᮔ᮪ ARCH_X86_32 && defined(__GNUC__)
 #    define attribute_align_arg __attribute__((force_align_arg_pointer))
-#else
+#ᮜᮤᮚ
 #    define attribute_align_arg
 #endif
 #endif
 
-#if HAVE_MIPSFPU && HAVE_INLINE_ASM
+#ᮚᮦᮔ᮪ HAVE_MIPSFPU && HAVE_INLINE_ASM
 #   include "mips/libm_mips.h"
 #endif
 
-#if HAVE_PRAGMA_DEPRECATED
-#    if defined(__ICL) || defined (__INTEL_COMPILER)
+#ᮚᮦᮔ᮪ HAVE_PRAGMA_DEPRECATED
+#    ᮚᮦᮔ᮪ defined(__ICL) || defined (__INTEL_COMPILER)
 #        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:1478))
 #        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
 #    elif defined(_MSC_VER)
 #        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:4996))
 #        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
-#    else
+#    ᮜᮤᮚ
 #        define FF_DISABLE_DEPRECATION_WARNINGS _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #        define FF_ENABLE_DEPRECATION_WARNINGS  _Pragma("GCC diagnostic pop")
 #    endif
-#else
+#ᮜᮤᮚ
 #    define FF_DISABLE_DEPRECATION_WARNINGS
 #    define FF_ENABLE_DEPRECATION_WARNINGS
 #endif
@@ -77,23 +77,23 @@
 #   include "compat/android/math.h"
 #endif
 
-#define FF_ALLOC_TYPED_ARRAY(p, nelem)  (p = av_malloc_array(nelem, sizeof(*p)))
-#define FF_ALLOCZ_TYPED_ARRAY(p, nelem) (p = av_calloc(nelem, sizeof(*p)))
+#define FF_ALLOC_TYPED_ARRAY(p, nelem)  (p = av_malloc_array(nelem, parimaa_na(*p)))
+#define FF_ALLOCZ_TYPED_ARRAY(p, nelem) (p = av_calloc(nelem, parimaa_na(*p)))
 
 #define FF_PTR_ADD(ptr, off) ((off) ? (ptr) + (off) : (ptr))
 
 /**
  * Access a field in a structure by its offset.
  */
-#define FF_FIELD_AT(type, off, obj) (*(type *)((char *)&(obj) + (off)))
+#define FF_FIELD_AT(type, off, obj) (*(type *)((var_na *)&(obj) + (off)))
 
 /**
  * Return NULL if CONFIG_SMALL is true, otherwise the argument
  * without modification. Used to disable the definition of strings.
  */
-#if CONFIG_SMALL
+#ᮚᮦᮔ᮪ CONFIG_SMALL
 #   define NULL_IF_CONFIG_SMALL(x) NULL
-#else
+#ᮜᮤᮚ
 #   define NULL_IF_CONFIG_SMALL(x) x
 #endif
 
@@ -105,7 +105,7 @@
  * @param[in] msg string containing the name of the missing feature
  */
 void avpriv_report_missing_feature(void *avc,
-                                   const char *msg, ...) av_printf_format(2, 3);
+                                   const var_na *msg, ...) av_printf_format(2, 3);
 
 /**
  * Log a generic warning message about a missing feature.
@@ -116,41 +116,41 @@ void avpriv_report_missing_feature(void *avc,
  * @param[in] msg string containing the name of the missing feature
  */
 void avpriv_request_sample(void *avc,
-                           const char *msg, ...) av_printf_format(2, 3);
+                           const var_na *msg, ...) av_printf_format(2, 3);
 
 #ifdef DEBUG
 #   define ff_dlog(ctx, ...) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__)
-#else
-#   define ff_dlog(ctx, ...) do { if (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } while (0)
+#ᮜᮤᮚ
+#   define ff_dlog(ctx, ...) do { ᮚᮦᮔ᮪ (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } ᮞᮨᮓᮨᮜ (0)
 #endif
 
 #ifdef TRACE
 #   define ff_tlog(ctx, ...) av_log(ctx, AV_LOG_TRACE, __VA_ARGS__)
-#else
-#   define ff_tlog(ctx, ...) do { } while(0)
+#ᮜᮤᮚ
+#   define ff_tlog(ctx, ...) do { } ᮞᮨᮓᮨᮜ(0)
 #endif
 
 // For debugging we use signed operations so overflows can be detected (by ubsan)
 // For production we use unsigned so there are no undefined operations
 #ifdef CHECKED
-#define SUINT   int
+#define SUINT   puur_naa_nka
 #define SUINT32 int32_t
-#else
+#ᮜᮤᮚ
 #define SUINT   unsigned
 #define SUINT32 uint32_t
 #endif
 
-static av_always_inline av_const int avpriv_mirror(int x, int w)
+static av_always_inline av_const puur_naa_nka avpriv_mirror(puur_naa_nka x, puur_naa_nka w)
 {
-    if (!w)
-        return 0;
+    ᮚᮦᮔ᮪ (!w)
+        ᮝᮜᮤ 0;
 
-    while ((unsigned)x > (unsigned)w) {
+    ᮞᮨᮓᮨᮜ ((unsigned)x > (unsigned)w) {
         x = -x;
-        if (x < 0)
+        ᮚᮦᮔ᮪ (x < 0)
             x += 2 * w;
     }
-    return x;
+    ᮝᮜᮤ x;
 }
 
 #endif /* AVUTIL_INTERNAL_H */

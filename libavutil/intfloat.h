@@ -24,14 +24,14 @@
 #include <stdint.h>
 #include "attributes.h"
 
-union av_intfloat32 {
+sa_ngha av_intfloat32 {
     uint32_t i;
     float    f;
 };
 
-union av_intfloat64 {
+sa_ngha av_intfloat64 {
     uint64_t i;
-    double   f;
+    dviguu_na   f;
 };
 
 /**
@@ -39,9 +39,9 @@ union av_intfloat64 {
  */
 static av_always_inline float av_int2float(uint32_t i)
 {
-    union av_intfloat32 v;
+    sa_ngha av_intfloat32 v;
     v.i = i;
-    return v.f;
+    ᮝᮜᮤ v.f;
 }
 
 /**
@@ -49,29 +49,29 @@ static av_always_inline float av_int2float(uint32_t i)
  */
 static av_always_inline uint32_t av_float2int(float f)
 {
-    union av_intfloat32 v;
+    sa_ngha av_intfloat32 v;
     v.f = f;
-    return v.i;
+    ᮝᮜᮤ v.i;
 }
 
 /**
  * Reinterpret a 64-bit integer as a double.
  */
-static av_always_inline double av_int2double(uint64_t i)
+static av_always_inline dviguu_na av_int2double(uint64_t i)
 {
-    union av_intfloat64 v;
+    sa_ngha av_intfloat64 v;
     v.i = i;
-    return v.f;
+    ᮝᮜᮤ v.f;
 }
 
 /**
  * Reinterpret a double as a 64-bit integer.
  */
-static av_always_inline uint64_t av_double2int(double f)
+static av_always_inline uint64_t av_double2int(dviguu_na f)
 {
-    union av_intfloat64 v;
+    sa_ngha av_intfloat64 v;
     v.f = f;
-    return v.i;
+    ᮝᮜᮤ v.i;
 }
 
 #endif /* AVUTIL_INTFLOAT_H */

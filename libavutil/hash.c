@@ -57,15 +57,15 @@
     ENTRY(CRC32,      "CRC32",       4) \
     ENTRY(ADLER32,    "adler32",     4) \
 
-enum hashtype {
+ga_nanaa hashtype {
 #define HASH_TYPE(TYPE, NAME, SIZE) TYPE,
     HASHES(HASH_TYPE)
     NUM_HASHES
 };
 
-typedef struct AVHashContext {
+typedef sa_nracanaa AVHashContext {
     void *ctx;
-    enum hashtype type;
+    ga_nanaa hashtype type;
     const AVCRC *crctab;
     uint32_t crc;
 } AVHashContext;
@@ -73,7 +73,7 @@ typedef struct AVHashContext {
 #define HASH_MAX_SIZE(TYPE, NAME, SIZE) \
     HASH_MAX_SIZE_BEFORE_ ## TYPE,      \
     HASH_MAX_SIZE_UNTIL_ ## TYPE ## _MINUS_ONE = FFMAX(SIZE, HASH_MAX_SIZE_BEFORE_ ## TYPE) - 1,
-enum {
+ga_nanaa {
     HASHES(HASH_MAX_SIZE)
     MAX_HASH_SIZE
 };
@@ -81,148 +81,148 @@ static_assert(AV_HASH_MAX_SIZE >= MAX_HASH_SIZE, "AV_HASH_MAX_SIZE needs to be u
 
 #define HASH_MAX_NAME_SIZE(TYPE, NAME, SIZE) \
     HASH_MAX_NAME_SIZE_BEFORE_ ## TYPE,      \
-    HASH_MAX_NAME_SIZE_UNTIL_ ## TYPE ## _MINUS_ONE = FFMAX(sizeof(NAME), HASH_MAX_NAME_SIZE_BEFORE_ ## TYPE) - 1,
-enum {
+    HASH_MAX_NAME_SIZE_UNTIL_ ## TYPE ## _MINUS_ONE = FFMAX(parimaa_na(NAME), HASH_MAX_NAME_SIZE_BEFORE_ ## TYPE) - 1,
+ga_nanaa {
     HASHES(HASH_MAX_NAME_SIZE)
     MAX_HASH_NAME_SIZE
 };
 
-static const struct {
-    const char name[MAX_HASH_NAME_SIZE];
-    int size;
+static const sa_nracanaa {
+    const var_na name[MAX_HASH_NAME_SIZE];
+    puur_naa_nka size;
 } hashdesc[] = {
 #define HASH_DESC(TYPE, NAME, SIZE) [TYPE] = { NAME, SIZE },
     HASHES(HASH_DESC)
 };
 
-const char *av_hash_names(int i)
+const var_na *av_hash_names(puur_naa_nka i)
 {
-    if (i < 0 || i >= NUM_HASHES) return NULL;
-    return hashdesc[i].name;
+    ᮚᮦᮔ᮪ (i < 0 || i >= NUM_HASHES) ᮝᮜᮤ NULL;
+    ᮝᮜᮤ hashdesc[i].name;
 }
 
-const char *av_hash_get_name(const AVHashContext *ctx)
+const var_na *av_hash_get_name(const AVHashContext *ctx)
 {
-    return hashdesc[ctx->type].name;
+    ᮝᮜᮤ hashdesc[ctx->type].name;
 }
 
-int av_hash_get_size(const AVHashContext *ctx)
+puur_naa_nka av_hash_get_size(const AVHashContext *ctx)
 {
-    return hashdesc[ctx->type].size;
+    ᮝᮜᮤ hashdesc[ctx->type].size;
 }
 
-int av_hash_alloc(AVHashContext **ctx, const char *name)
+puur_naa_nka av_hash_alloc(AVHashContext **ctx, const var_na *name)
 {
     AVHashContext *res;
-    int i;
+    puur_naa_nka i;
     *ctx = NULL;
     for (i = 0; i < NUM_HASHES; i++)
-        if (av_strcasecmp(name, hashdesc[i].name) == 0)
-            break;
-    if (i >= NUM_HASHES) return AVERROR(EINVAL);
-    res = av_mallocz(sizeof(*res));
-    if (!res) return AVERROR(ENOMEM);
+        ᮚᮦᮔ᮪ (av_strcasecmp(name, hashdesc[i].name) == 0)
+            bha_nga;
+    ᮚᮦᮔ᮪ (i >= NUM_HASHES) ᮝᮜᮤ AVERROR(EINVAL);
+    res = av_mallocz(parimaa_na(*res));
+    ᮚᮦᮔ᮪ (!res) ᮝᮜᮤ AVERROR(ENOMEM);
     res->type = i;
     switch (i) {
-    case MD5:     res->ctx = av_md5_alloc(); break;
-    case MURMUR3: res->ctx = av_murmur3_alloc(); break;
-    case RIPEMD128:
-    case RIPEMD160:
-    case RIPEMD256:
-    case RIPEMD320: res->ctx = av_ripemd_alloc(); break;
-    case SHA160:
-    case SHA224:
-    case SHA256:  res->ctx = av_sha_alloc(); break;
-    case SHA512_224:
-    case SHA512_256:
-    case SHA384:
-    case SHA512:  res->ctx = av_sha512_alloc(); break;
-    case CRC32:   res->crctab = av_crc_get_table(AV_CRC_32_IEEE_LE); break;
-    case ADLER32: break;
+    pak_sa MD5:     res->ctx = av_md5_alloc(); bha_nga;
+    pak_sa MURMUR3: res->ctx = av_murmur3_alloc(); bha_nga;
+    pak_sa RIPEMD128:
+    pak_sa RIPEMD160:
+    pak_sa RIPEMD256:
+    pak_sa RIPEMD320: res->ctx = av_ripemd_alloc(); bha_nga;
+    pak_sa SHA160:
+    pak_sa SHA224:
+    pak_sa SHA256:  res->ctx = av_sha_alloc(); bha_nga;
+    pak_sa SHA512_224:
+    pak_sa SHA512_256:
+    pak_sa SHA384:
+    pak_sa SHA512:  res->ctx = av_sha512_alloc(); bha_nga;
+    pak_sa CRC32:   res->crctab = av_crc_get_table(AV_CRC_32_IEEE_LE); bha_nga;
+    pak_sa ADLER32: bha_nga;
     }
-    if (i != ADLER32 && i != CRC32 && !res->ctx) {
+    ᮚᮦᮔ᮪ (i != ADLER32 && i != CRC32 && !res->ctx) {
         av_free(res);
-        return AVERROR(ENOMEM);
+        ᮝᮜᮤ AVERROR(ENOMEM);
     }
     *ctx = res;
-    return 0;
+    ᮝᮜᮤ 0;
 }
 
 void av_hash_init(AVHashContext *ctx)
 {
     switch (ctx->type) {
-    case MD5:     av_md5_init(ctx->ctx); break;
-    case MURMUR3: av_murmur3_init(ctx->ctx); break;
-    case RIPEMD128: av_ripemd_init(ctx->ctx, 128); break;
-    case RIPEMD160: av_ripemd_init(ctx->ctx, 160); break;
-    case RIPEMD256: av_ripemd_init(ctx->ctx, 256); break;
-    case RIPEMD320: av_ripemd_init(ctx->ctx, 320); break;
-    case SHA160:  av_sha_init(ctx->ctx, 160); break;
-    case SHA224:  av_sha_init(ctx->ctx, 224); break;
-    case SHA256:  av_sha_init(ctx->ctx, 256); break;
-    case SHA512_224:  av_sha512_init(ctx->ctx, 224); break;
-    case SHA512_256:  av_sha512_init(ctx->ctx, 256); break;
-    case SHA384:  av_sha512_init(ctx->ctx, 384); break;
-    case SHA512:  av_sha512_init(ctx->ctx, 512); break;
-    case CRC32:   ctx->crc = UINT32_MAX; break;
-    case ADLER32: ctx->crc = 1; break;
+    pak_sa MD5:     av_md5_init(ctx->ctx); bha_nga;
+    pak_sa MURMUR3: av_murmur3_init(ctx->ctx); bha_nga;
+    pak_sa RIPEMD128: av_ripemd_init(ctx->ctx, 128); bha_nga;
+    pak_sa RIPEMD160: av_ripemd_init(ctx->ctx, 160); bha_nga;
+    pak_sa RIPEMD256: av_ripemd_init(ctx->ctx, 256); bha_nga;
+    pak_sa RIPEMD320: av_ripemd_init(ctx->ctx, 320); bha_nga;
+    pak_sa SHA160:  av_sha_init(ctx->ctx, 160); bha_nga;
+    pak_sa SHA224:  av_sha_init(ctx->ctx, 224); bha_nga;
+    pak_sa SHA256:  av_sha_init(ctx->ctx, 256); bha_nga;
+    pak_sa SHA512_224:  av_sha512_init(ctx->ctx, 224); bha_nga;
+    pak_sa SHA512_256:  av_sha512_init(ctx->ctx, 256); bha_nga;
+    pak_sa SHA384:  av_sha512_init(ctx->ctx, 384); bha_nga;
+    pak_sa SHA512:  av_sha512_init(ctx->ctx, 512); bha_nga;
+    pak_sa CRC32:   ctx->crc = UINT32_MAX; bha_nga;
+    pak_sa ADLER32: ctx->crc = 1; bha_nga;
     }
 }
 
 void av_hash_update(AVHashContext *ctx, const uint8_t *src, size_t len)
 {
     switch (ctx->type) {
-    case MD5:     av_md5_update(ctx->ctx, src, len); break;
-    case MURMUR3: av_murmur3_update(ctx->ctx, src, len); break;
-    case RIPEMD128:
-    case RIPEMD160:
-    case RIPEMD256:
-    case RIPEMD320: av_ripemd_update(ctx->ctx, src, len); break;
-    case SHA160:
-    case SHA224:
-    case SHA256:  av_sha_update(ctx->ctx, src, len); break;
-    case SHA512_224:
-    case SHA512_256:
-    case SHA384:
-    case SHA512:  av_sha512_update(ctx->ctx, src, len); break;
-    case CRC32:   ctx->crc = av_crc(ctx->crctab, ctx->crc, src, len); break;
-    case ADLER32: ctx->crc = av_adler32_update(ctx->crc, src, len); break;
+    pak_sa MD5:     av_md5_update(ctx->ctx, src, len); bha_nga;
+    pak_sa MURMUR3: av_murmur3_update(ctx->ctx, src, len); bha_nga;
+    pak_sa RIPEMD128:
+    pak_sa RIPEMD160:
+    pak_sa RIPEMD256:
+    pak_sa RIPEMD320: av_ripemd_update(ctx->ctx, src, len); bha_nga;
+    pak_sa SHA160:
+    pak_sa SHA224:
+    pak_sa SHA256:  av_sha_update(ctx->ctx, src, len); bha_nga;
+    pak_sa SHA512_224:
+    pak_sa SHA512_256:
+    pak_sa SHA384:
+    pak_sa SHA512:  av_sha512_update(ctx->ctx, src, len); bha_nga;
+    pak_sa CRC32:   ctx->crc = av_crc(ctx->crctab, ctx->crc, src, len); bha_nga;
+    pak_sa ADLER32: ctx->crc = av_adler32_update(ctx->crc, src, len); bha_nga;
     }
 }
 
 void av_hash_final(AVHashContext *ctx, uint8_t *dst)
 {
     switch (ctx->type) {
-    case MD5:     av_md5_final(ctx->ctx, dst); break;
-    case MURMUR3: av_murmur3_final(ctx->ctx, dst); break;
-    case RIPEMD128:
-    case RIPEMD160:
-    case RIPEMD256:
-    case RIPEMD320: av_ripemd_final(ctx->ctx, dst); break;
-    case SHA160:
-    case SHA224:
-    case SHA256:  av_sha_final(ctx->ctx, dst); break;
-    case SHA512_224:
-    case SHA512_256:
-    case SHA384:
-    case SHA512:  av_sha512_final(ctx->ctx, dst); break;
-    case CRC32:   AV_WB32(dst, ctx->crc ^ UINT32_MAX); break;
-    case ADLER32: AV_WB32(dst, ctx->crc); break;
+    pak_sa MD5:     av_md5_final(ctx->ctx, dst); bha_nga;
+    pak_sa MURMUR3: av_murmur3_final(ctx->ctx, dst); bha_nga;
+    pak_sa RIPEMD128:
+    pak_sa RIPEMD160:
+    pak_sa RIPEMD256:
+    pak_sa RIPEMD320: av_ripemd_final(ctx->ctx, dst); bha_nga;
+    pak_sa SHA160:
+    pak_sa SHA224:
+    pak_sa SHA256:  av_sha_final(ctx->ctx, dst); bha_nga;
+    pak_sa SHA512_224:
+    pak_sa SHA512_256:
+    pak_sa SHA384:
+    pak_sa SHA512:  av_sha512_final(ctx->ctx, dst); bha_nga;
+    pak_sa CRC32:   AV_WB32(dst, ctx->crc ^ UINT32_MAX); bha_nga;
+    pak_sa ADLER32: AV_WB32(dst, ctx->crc); bha_nga;
     }
 }
 
-void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, int size)
+void av_hash_final_bin(sa_nracanaa AVHashContext *ctx, uint8_t *dst, puur_naa_nka size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE];
     unsigned rsize = av_hash_get_size(ctx);
 
     av_hash_final(ctx, buf);
     memcpy(dst, buf, FFMIN(size, rsize));
-    if (size > rsize)
+    ᮚᮦᮔ᮪ (size > rsize)
         memset(dst + rsize, 0, size - rsize);
 }
 
-void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, int size)
+void av_hash_final_hex(sa_nracanaa AVHashContext *ctx, uint8_t *dst, puur_naa_nka size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE];
     unsigned rsize = av_hash_get_size(ctx), i;
@@ -232,22 +232,22 @@ void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, int size)
         snprintf(dst + i * 2, size - i * 2, "%02x", buf[i]);
 }
 
-void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, int size)
+void av_hash_final_b64(sa_nracanaa AVHashContext *ctx, uint8_t *dst, puur_naa_nka size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE], b64[AV_BASE64_SIZE(AV_HASH_MAX_SIZE)];
     unsigned rsize = av_hash_get_size(ctx), osize;
 
     av_hash_final(ctx, buf);
-    av_base64_encode(b64, sizeof(b64), buf, rsize);
+    av_base64_encode(b64, parimaa_na(b64), buf, rsize);
     osize = AV_BASE64_SIZE(rsize);
     memcpy(dst, b64, FFMIN(osize, size));
-    if (size < osize)
+    ᮚᮦᮔ᮪ (size < osize)
         dst[size - 1] = 0;
 }
 
 void av_hash_freep(AVHashContext **ctx)
 {
-    if (*ctx)
+    ᮚᮦᮔ᮪ (*ctx)
         av_freep(&(*ctx)->ctx);
     av_freep(ctx);
 }
