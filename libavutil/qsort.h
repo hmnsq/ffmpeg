@@ -21,7 +21,7 @@
 #ifndef AVUTIL_QSORT_H
 #define AVUTIL_QSORT_H
 
-#include "macros.h"
+#अन्तर्भाव "macros.h"
 
 
 /**
@@ -30,69 +30,69 @@
  * to construct input that requires O(n^2) time but this is very unlikely to
  * happen with non constructed input.
  */
-#define AV_QSORT(p, num, type, cmp) do {\
-    void *stack[64][2];\
-    int sp= 1;\
-    stack[0][0] = p;\
-    stack[0][1] = (p)+(num)-1;\
-    while(sp){\
-        type *start= stack[--sp][0];\
-        type *end  = stack[  sp][1];\
-        while(start < end){\
-            if(start < end-1) {\
-                int checksort=0;\
-                type *right = end-2;\
-                type *left  = start+1;\
+#define AV_QSORT(p, अंक, type, cmp) कुरु {\
+    शून्य *ढेर[64][2];\
+    पूर्णाङ्क sp= 1;\
+    ढेर[0][0] = p;\
+    ढेर[0][1] = (p)+(अंक)-1;\
+    यावत्(sp){\
+        type *start= ढेर[--sp][0];\
+        type *end  = ढेर[  sp][1];\
+        यावत्(start < end){\
+            यदि(start < end-1) {\
+                पूर्णाङ्क checksort=0;\
+                type *दायाँ = end-2;\
+                type *बायाँ  = start+1;\
                 type *mid = start + ((end-start)>>1);\
-                if(cmp(start, end) > 0) {\
-                    if(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else                    FFSWAP(type, *start, *end);\
-                }else{\
-                    if(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else checksort= 1;\
+                यदि(cmp(start, end) > 0) {\
+                    यदि(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
+                    अन्यथा                    FFSWAP(type, *start, *end);\
+                }अन्यथा{\
+                    यदि(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
+                    अन्यथा checksort= 1;\
                 }\
-                if(cmp(mid, end) > 0){ \
+                यदि(cmp(mid, end) > 0){ \
                     FFSWAP(type, *mid, *end);\
                     checksort=0;\
                 }\
-                if(start == end-2) break;\
+                यदि(start == end-2) भङ्ग;\
                 FFSWAP(type, end[-1], *mid);\
-                while(left <= right){\
-                    while(left<=right && cmp(left, end-1) < 0)\
-                        left++;\
-                    while(left<=right && cmp(right, end-1) > 0)\
-                        right--;\
-                    if(left <= right){\
-                        FFSWAP(type, *left, *right);\
-                        left++;\
-                        right--;\
+                यावत्(बायाँ <= दायाँ){\
+                    यावत्(बायाँ<=दायाँ && cmp(बायाँ, end-1) < 0)\
+                        बायाँ++;\
+                    यावत्(बायाँ<=दायाँ && cmp(दायाँ, end-1) > 0)\
+                        दायाँ--;\
+                    यदि(बायाँ <= दायाँ){\
+                        FFSWAP(type, *बायाँ, *दायाँ);\
+                        बायाँ++;\
+                        दायाँ--;\
                     }\
                 }\
-                FFSWAP(type, end[-1], *left);\
-                if(checksort && (mid == left-1 || mid == left)){\
+                FFSWAP(type, end[-1], *बायाँ);\
+                यदि(checksort && (mid == बायाँ-1 || mid == बायाँ)){\
                     mid= start;\
-                    while(mid<end && cmp(mid, mid+1) <= 0)\
+                    यावत्(mid<end && cmp(mid, mid+1) <= 0)\
                         mid++;\
-                    if(mid==end)\
-                        break;\
+                    यदि(mid==end)\
+                        भङ्ग;\
                 }\
-                if(end-left < left-start){\
-                    stack[sp  ][0]= start;\
-                    stack[sp++][1]= right;\
-                    start = left+1;\
-                }else{\
-                    stack[sp  ][0]= left+1;\
-                    stack[sp++][1]= end;\
-                    end = right;\
+                यदि(end-बायाँ < बायाँ-start){\
+                    ढेर[sp  ][0]= start;\
+                    ढेर[sp++][1]= दायाँ;\
+                    start = बायाँ+1;\
+                }अन्यथा{\
+                    ढेर[sp  ][0]= बायाँ+1;\
+                    ढेर[sp++][1]= end;\
+                    end = दायाँ;\
                 }\
-            }else{\
-                if(cmp(start, end) > 0)\
+            }अन्यथा{\
+                यदि(cmp(start, end) > 0)\
                     FFSWAP(type, *start, *end);\
-                break;\
+                भङ्ग;\
             }\
         }\
     }\
-} while (0)
+} यावत् (0)
 
 /**
  * Merge sort, this sort requires a temporary buffer and is stable, its worst
@@ -100,23 +100,23 @@
  * @param p     must be a lvalue pointer, this function may exchange it with tmp
  * @param tmp   must be a lvalue pointer, this function may exchange it with p
  */
-#define AV_MSORT(p, tmp, num, type, cmp) do {\
+#define AV_MSORT(p, tmp, अंक, type, cmp) कुरु {\
     unsigned i, j, step;\
-    for(step=1; step<(num); step+=step){\
-        for(i=0; i<(num); i+=2*step){\
+    प्रति(step=1; step<(अंक); step+=step){\
+        प्रति(i=0; i<(अंक); i+=2*step){\
             unsigned a[2] = {i, i+step};\
-            unsigned end = FFMIN(i+2*step, (num));\
-            for(j=i; a[0]<i+step && a[1]<end; j++){\
-                int idx= cmp(p+a[0], p+a[1]) > 0;\
+            unsigned end = FFMIN(i+2*step, (अंक));\
+            प्रति(j=i; a[0]<i+step && a[1]<end; j++){\
+                पूर्णाङ्क idx= cmp(p+a[0], p+a[1]) > 0;\
                 tmp[j] = p[ a[idx]++ ];\
             }\
-            if(a[0]>=i+step) a[0] = a[1];\
-            for(; j<end; j++){\
+            यदि(a[0]>=i+step) a[0] = a[1];\
+            प्रति(; j<end; j++){\
                 tmp[j] = p[ a[0]++ ];\
             }\
         }\
         FFSWAP(type*, p, tmp);\
     }\
-} while (0)
+} यावत् (0)
 
 #endif /* AVUTIL_QSORT_H */
