@@ -23,12 +23,12 @@
 #undef av_log2_16bit
 #include "common.h"
 
-int av_log2(unsigned v)
+整数 av_log2(unsigned v)
 {
-    return ff_log2(v);
+    戻る ff_log2(v);
 }
 
-int av_log2_16bit(unsigned v)
+整数 av_log2_16bit(unsigned v)
 {
-    return ff_log2_16bit(v);
+    戻る ff_log2_16bit(v);
 }

@@ -159,7 +159,7 @@ static const uint8_t cga_font[2048] = {
 
 const uint8_t *avpriv_cga_font_get(void)
 {
-    return cga_font;
+    戻る cga_font;
 }
 
 static const uint8_t vga16_font[4096] = {
@@ -423,5 +423,5 @@ static const uint8_t vga16_font[4096] = {
 
 const uint8_t *avpriv_vga16_font_get(void)
 {
-    return vga16_font;
+    戻る vga16_font;
 }

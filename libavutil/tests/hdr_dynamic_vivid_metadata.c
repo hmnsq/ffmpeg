@@ -23,7 +23,7 @@
 #include "libavutil/hdr_dynamic_vivid_metadata.h"
 #include "libavutil/mem.h"
 
-int main(void)
+整数 メインページ(void)
 {
     AVDynamicHDRVivid *vivid;
     AVFrame *frame;
@@ -32,7 +32,7 @@ int main(void)
     /* av_dynamic_hdr_vivid_alloc */
     printf("Testing av_dynamic_hdr_vivid_alloc()\n");
     vivid = av_dynamic_hdr_vivid_alloc(&size);
-    if (vivid) {
+    もし (vivid) {
         printf("alloc: OK, size>0=%s\n", size > 0 ? "yes" : "no");
         printf("defaults: system_start_code=%u, num_windows=%u\n",
                vivid->system_start_code, vivid->num_windows);
@@ -66,14 +66,14 @@ int main(void)
     /* av_dynamic_hdr_vivid_create_side_data */
     printf("\nTesting av_dynamic_hdr_vivid_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    もし (frame) {
         vivid = av_dynamic_hdr_vivid_create_side_data(frame);
-        if (vivid) {
+        もし (vivid) {
             printf("side_data: OK\n");
             vivid->system_start_code = 0x02;
             printf("side_data write: system_start_code=%u\n",
                    vivid->system_start_code);
-        } else {
+        } 否则 {
             printf("side_data: FAIL\n");
         }
         av_frame_free(&frame);
@@ -88,7 +88,7 @@ int main(void)
     av_max_alloc(INT_MAX);
 
     frame = av_frame_alloc();
-    if (frame) {
+    もし (frame) {
         av_max_alloc(1);
         vivid = av_dynamic_hdr_vivid_create_side_data(frame);
         printf("side_data OOM: %s\n", vivid ? "FAIL" : "OK");
@@ -96,5 +96,5 @@ int main(void)
         av_frame_free(&frame);
     }
 
-    return 0;
+    戻る 0;
 }

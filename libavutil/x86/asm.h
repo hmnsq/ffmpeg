@@ -27,7 +27,7 @@
 typedef struct xmm_reg { uint64_t a, b; } xmm_reg;
 typedef struct ymm_reg { uint64_t a, b, c, d; } ymm_reg;
 
-#if ARCH_X86_64
+#もし ARCH_X86_64
 #    define FF_OPSIZE "q"
 #    define FF_REG_a "rax"
 #    define FF_REG_b "rbx"
@@ -67,11 +67,11 @@ typedef int32_t x86_reg;
 #    define FF_REGc    ecx
 #    define FF_REGd    edx
 #    define FF_REGSP   esp
-#else
-typedef int x86_reg;
+#否则
+typedef 整数 x86_reg;
 #endif
 
-#if ARCH_X86_64 && defined(PIC)
+#もし ARCH_X86_64 && defined(PIC)
 #    define BROKEN_RELOCATIONS 1
 #endif
 
@@ -87,10 +87,10 @@ typedef int x86_reg;
  * and a list with only "xmm0" should become:
  * XMM_CLOBBERS_ONLY("xmm0")
  */
-#if HAVE_XMM_CLOBBERS
+#もし HAVE_XMM_CLOBBERS
 #    define XMM_CLOBBERS(...)        __VA_ARGS__
 #    define XMM_CLOBBERS_ONLY(...) : __VA_ARGS__
-#else
+#否则
 #    define XMM_CLOBBERS(...)
 #    define XMM_CLOBBERS_ONLY(...)
 #endif
@@ -99,19 +99,19 @@ typedef int x86_reg;
 #define LABEL_MANGLE(a) EXTERN_PREFIX #a
 
 // Use rip-relative addressing if compiling PIC code on x86-64.
-#if ARCH_X86_64 && defined(PIC)
+#もし ARCH_X86_64 && defined(PIC)
 #    define LOCAL_MANGLE(a) #a "(%%rip)"
-#else
+#否则
 #    define LOCAL_MANGLE(a) #a
 #endif
 
-#if HAVE_INLINE_ASM_DIRECT_SYMBOL_REFS
+#もし HAVE_INLINE_ASM_DIRECT_SYMBOL_REFS
 #   define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
 #   define NAMED_CONSTRAINTS_ADD(...)
 #   define NAMED_CONSTRAINTS(...)
 #   define NAMED_CONSTRAINTS_ARRAY_ADD(...)
 #   define NAMED_CONSTRAINTS_ARRAY(...)
-#else
+#否则
     /* When direct symbol references are used in code passed to a compiler that does not support them
      *  then these references need to be converted to named asm constraints instead.
      * Instead of returning a direct symbol MANGLE now returns a named constraint for that specific symbol.

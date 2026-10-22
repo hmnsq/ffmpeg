@@ -32,126 +32,126 @@
  * AVCOL_PRI_RESERVED both use "reserved"). Accept that as long as
  * name(back) equals name(i).
  */
-static int check_name_equivalence(const char *name, const char *back_name)
+static 整数 check_name_equivalence(const char *name, const char *back_name)
 {
-    return back_name && !strcmp(name, back_name);
+    戻る back_name && !strcmp(name, back_name);
 }
 
-static int test_pix_fmt_round_trip(void)
+static 整数 test_pix_fmt_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AV_PIX_FMT_NB; i++) {
+    整数 fail = 0;
+    ために (整数 i = 0; i < AV_PIX_FMT_NB; i++) {
         const char *name = av_get_pix_fmt_name(i);
-        if (!name)
+        もし (!name)
             continue;
-        if (av_get_pix_fmt(name) != i)
+        もし (av_get_pix_fmt(name) != i)
             fail++;
     }
-    return fail;
+    戻る fail;
 }
 
-static int test_color_range_round_trip(void)
+static 整数 test_color_range_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_RANGE_NB; i++) {
+    整数 fail = 0;
+    ために (整数 i = 0; i < AVCOL_RANGE_NB; i++) {
         const char *name = av_color_range_name(i);
-        if (!name)
+        もし (!name)
             continue;
-        int back = av_color_range_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_range_name(back)))
+        整数 back = av_color_range_from_name(name);
+        もし (back < 0 || !check_name_equivalence(name, av_color_range_name(back)))
             fail++;
     }
-    return fail;
+    戻る fail;
 }
 
-static int test_color_primaries_round_trip(void)
+static 整数 test_color_primaries_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_PRI_NB; i++) {
+    整数 fail = 0;
+    ために (整数 i = 0; i < AVCOL_PRI_NB; i++) {
         const char *name = av_color_primaries_name(i);
-        if (!name)
+        もし (!name)
             continue;
-        int back = av_color_primaries_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_primaries_name(back)))
+        整数 back = av_color_primaries_from_name(name);
+        もし (back < 0 || !check_name_equivalence(name, av_color_primaries_name(back)))
             fail++;
     }
-    return fail;
+    戻る fail;
 }
 
-static int test_color_transfer_round_trip(void)
+static 整数 test_color_transfer_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_TRC_NB; i++) {
+    整数 fail = 0;
+    ために (整数 i = 0; i < AVCOL_TRC_NB; i++) {
         const char *name = av_color_transfer_name(i);
-        if (!name)
+        もし (!name)
             continue;
-        int back = av_color_transfer_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_transfer_name(back)))
+        整数 back = av_color_transfer_from_name(name);
+        もし (back < 0 || !check_name_equivalence(name, av_color_transfer_name(back)))
             fail++;
     }
-    return fail;
+    戻る fail;
 }
 
-static int test_color_space_round_trip(void)
+static 整数 test_color_space_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_SPC_NB; i++) {
+    整数 fail = 0;
+    ために (整数 i = 0; i < AVCOL_SPC_NB; i++) {
         const char *name = av_color_space_name(i);
-        if (!name)
+        もし (!name)
             continue;
-        int back = av_color_space_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_space_name(back)))
+        整数 back = av_color_space_from_name(name);
+        もし (back < 0 || !check_name_equivalence(name, av_color_space_name(back)))
             fail++;
     }
-    return fail;
+    戻る fail;
 }
 
-static int test_chroma_location_round_trip(void)
+static 整数 test_chroma_location_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCHROMA_LOC_NB; i++) {
+    整数 fail = 0;
+    ために (整数 i = 0; i < AVCHROMA_LOC_NB; i++) {
         const char *name = av_chroma_location_name(i);
-        if (!name)
+        もし (!name)
             continue;
-        int back = av_chroma_location_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_chroma_location_name(back)))
+        整数 back = av_chroma_location_from_name(name);
+        もし (back < 0 || !check_name_equivalence(name, av_chroma_location_name(back)))
             fail++;
     }
-    return fail;
+    戻る fail;
 }
 
-static int test_alpha_mode_round_trip(void)
+static 整数 test_alpha_mode_round_trip(void)
 {
-    int fail = 0;
-    for (int i = 0; i < AVALPHA_MODE_NB; i++) {
+    整数 fail = 0;
+    ために (整数 i = 0; i < AVALPHA_MODE_NB; i++) {
         const char *name = av_alpha_mode_name(i);
-        if (!name)
+        もし (!name)
             continue;
-        int back = av_alpha_mode_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_alpha_mode_name(back)))
+        整数 back = av_alpha_mode_from_name(name);
+        もし (back < 0 || !check_name_equivalence(name, av_alpha_mode_name(back)))
             fail++;
     }
-    return fail;
+    戻る fail;
 }
 
-static int test_chroma_location_pos_round_trip(void)
+static 整数 test_chroma_location_pos_round_trip(void)
 {
-    int fail = 0;
-    for (int i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
-        int xpos, ypos;
-        if (av_chroma_location_enum_to_pos(&xpos, &ypos, i) < 0) {
+    整数 fail = 0;
+    ために (整数 i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
+        整数 xpos, ypos;
+        もし (av_chroma_location_enum_to_pos(&xpos, &ypos, i) < 0) {
             fail++;
             continue;
         }
-        if ((int)av_chroma_location_pos_to_enum(xpos, ypos) != i)
+        もし ((整数)av_chroma_location_pos_to_enum(xpos, ypos) != i)
             fail++;
     }
-    return fail;
+    戻る fail;
 }
 
-int main(void)
+整数 メインページ(void)
 {
-    int skip = 0;
+    整数 skip = 0;
 
     printf("Testing av_get_pix_fmt() / av_get_pix_fmt_name() round-trip\n");
     printf("  result: %s\n",
@@ -176,13 +176,13 @@ int main(void)
            test_chroma_location_pos_round_trip() ? "FAIL" : "OK");
 
     printf("\nTesting pixel format descriptors\n");
-    for (int i = 0; i < AV_PIX_FMT_NB * 2; i++) {
+    ために (整数 i = 0; i < AV_PIX_FMT_NB * 2; i++) {
         const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
-        if (!desc || !desc->name) {
+        もし (!desc || !desc->name) {
             skip++;
             continue;
         }
-        if (skip) {
+        もし (skip) {
             printf("  %3d unused pixel format values\n", skip);
             skip = 0;
         }
@@ -191,5 +191,5 @@ int main(void)
                av_pix_fmt_count_planes(i));
     }
 
-    return 0;
+    戻る 0;
 }

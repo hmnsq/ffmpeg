@@ -22,7 +22,7 @@
 #include "mem.h"
 #include "tdrdi.h"
 
-AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *out_size)
+AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned 整数 nb_displays, size_t *out_size)
 {
     struct TestStruct {
         AV3DReferenceDisplaysInfo p;
@@ -32,20 +32,20 @@ AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *out_
     size_t size = entries_offset;
     AV3DReferenceDisplaysInfo *tdrdi;
 
-    if (nb_displays > (SIZE_MAX - size) / sizeof(AV3DReferenceDisplay))
-        return NULL;
+    もし (nb_displays > (SIZE_MAX - size) / sizeof(AV3DReferenceDisplay))
+        戻る NULL;
     size += sizeof(AV3DReferenceDisplay) * nb_displays;
 
     tdrdi = av_mallocz(size);
-    if (!tdrdi)
-        return NULL;
+    もし (!tdrdi)
+        戻る NULL;
 
     tdrdi->num_ref_displays = nb_displays;
     tdrdi->entry_size       = sizeof(AV3DReferenceDisplay);
     tdrdi->entries_offset   = entries_offset;
 
-    if (out_size)
+    もし (out_size)
         *out_size = size;
 
-    return tdrdi;
+    戻る tdrdi;
 }

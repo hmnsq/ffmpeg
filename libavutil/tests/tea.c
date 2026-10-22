@@ -61,37 +61,37 @@ static const uint8_t tea_test_ct[TEA_NUM_TESTS][8] = {
 };
 
 static void test_tea(struct AVTEA *ctx, uint8_t *dst, const uint8_t *src,
-                     const uint8_t *ref, int len, uint8_t *iv, int dir,
+                     const uint8_t *ref, 整数 len, uint8_t *iv, 整数 dir,
                      const char *test)
 {
     av_tea_crypt(ctx, dst, src, len, iv, dir);
-    if (memcmp(dst, ref, 8*len)) {
-        int i;
+    もし (memcmp(dst, ref, 8*len)) {
+        整数 i;
         printf("%s failed\ngot      ", test);
-        for (i = 0; i < 8*len; i++)
+        ために (i = 0; i < 8*len; i++)
             printf("%02x ", dst[i]);
         printf("\nexpected ");
-        for (i = 0; i < 8*len; i++)
+        ために (i = 0; i < 8*len; i++)
             printf("%02x ", ref[i]);
         printf("\n");
         exit(1);
     }
 }
 
-int main(void)
+整数 メインページ(void)
 {
     struct AVTEA *ctx;
     uint8_t buf[8], iv[8];
-    int i;
+    整数 i;
     static const uint8_t src[32] = "HelloWorldHelloWorldHelloWorld";
     uint8_t ct[32];
     uint8_t pl[32];
 
     ctx = av_tea_alloc();
-    if (!ctx)
-        return 1;
+    もし (!ctx)
+        戻る 1;
 
-    for (i = 0; i < TEA_NUM_TESTS; i++) {
+    ために (i = 0; i < TEA_NUM_TESTS; i++) {
         av_tea_init(ctx, tea_test_key[i], 64);
 
         test_tea(ctx, buf, tea_test_pt[i], tea_test_ct[i], 1, NULL, 0, "encryption");
@@ -112,5 +112,5 @@ int main(void)
     printf("Test encryption/decryption success.\n");
     av_free(ctx);
 
-    return 0;
+    戻る 0;
 }

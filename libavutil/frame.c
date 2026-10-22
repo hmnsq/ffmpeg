@@ -54,18 +54,18 @@ AVFrame *av_frame_alloc(void)
 {
     AVFrame *frame = av_malloc(sizeof(*frame));
 
-    if (!frame)
-        return NULL;
+    もし (!frame)
+        戻る NULL;
 
     get_frame_defaults(frame);
 
-    return frame;
+    戻る frame;
 }
 
 void av_frame_free(AVFrame **frame)
 {
-    if (!frame || !*frame)
-        return;
+    もし (!frame || !*frame)
+        戻る;
 
     av_frame_unref(*frame);
     av_freep(frame);
@@ -73,154 +73,154 @@ void av_frame_free(AVFrame **frame)
 
 #define ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
 
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
+整数 ff_frame_get_video_buffer(AVFrame *frame, 整数 align,
                               AVBufferRef *(*alloc)(void *opaque, size_t size),
                               void *opaque)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
-    int ret, padded_height;
-    int plane_padding;
+    整数 ret, padded_height;
+    整数 plane_padding;
     ptrdiff_t linesizes[4];
     size_t total_size, sizes[4];
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    もし (!desc)
+        戻る AVERROR(EINVAL);
 
-    if ((ret = av_image_check_size(frame->width, frame->height, 0, NULL)) < 0)
-        return ret;
+    もし ((ret = av_image_check_size(frame->width, frame->height, 0, NULL)) < 0)
+        戻る ret;
 
-    if (align <= 0)
+    もし (align <= 0)
         align = ALIGN;
     plane_padding = FFMAX(ALIGN, align);
 
-    if (!frame->linesize[0]) {
-        for (int i = 1; i <= align; i += i) {
+    もし (!frame->linesize[0]) {
+        ために (整数 i = 1; i <= align; i += i) {
             ret = av_image_fill_linesizes(frame->linesize, frame->format,
                                           FFALIGN(frame->width, i));
-            if (ret < 0)
-                return ret;
-            if (!(frame->linesize[0] & (align-1)))
+            もし (ret < 0)
+                戻る ret;
+            もし (!(frame->linesize[0] & (align-1)))
                 break;
         }
 
-        for (int i = 0; i < 4 && frame->linesize[i]; i++)
+        ために (整数 i = 0; i < 4 && frame->linesize[i]; i++)
             frame->linesize[i] = FFALIGN(frame->linesize[i], align);
     }
 
-    for (int i = 0; i < 4; i++)
+    ために (整数 i = 0; i < 4; i++)
         linesizes[i] = frame->linesize[i];
 
     padded_height = FFALIGN(frame->height, 32);
-    if ((ret = av_image_fill_plane_sizes(sizes, frame->format,
+    もし ((ret = av_image_fill_plane_sizes(sizes, frame->format,
                                          padded_height, linesizes)) < 0)
-        return ret;
+        戻る ret;
 
     total_size = 4 * plane_padding + 4 * align;
-    for (int i = 0; i < 4; i++) {
-        if (sizes[i] > SIZE_MAX - total_size)
-            return AVERROR(EINVAL);
+    ために (整数 i = 0; i < 4; i++) {
+        もし (sizes[i] > SIZE_MAX - total_size)
+            戻る AVERROR(EINVAL);
         total_size += sizes[i];
     }
 
     frame->buf[0] = alloc ? alloc(opaque, total_size) : av_buffer_alloc(total_size);
-    if (!frame->buf[0]) {
+    もし (!frame->buf[0]) {
         ret = AVERROR(ENOMEM);
         goto fail;
     }
 
-    if ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
+    もし ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
                                       frame->buf[0]->data, frame->linesize)) < 0)
         goto fail;
 
-    for (int i = 1; i < 4; i++) {
-        if (frame->data[i])
+    ために (整数 i = 1; i < 4; i++) {
+        もし (frame->data[i])
             frame->data[i] += i * plane_padding;
         frame->data[i] = (uint8_t *)FFALIGN((uintptr_t)frame->data[i], align);
     }
 
     frame->extended_data = frame->data;
 
-    return 0;
+    戻る 0;
 fail:
     av_frame_unref(frame);
-    return ret;
+    戻る ret;
 }
 
-static int get_audio_buffer(AVFrame *frame, int align)
+static 整数 get_audio_buffer(AVFrame *frame, 整数 align)
 {
-    int planar   = av_sample_fmt_is_planar(frame->format);
-    int channels, planes;
+    整数 planar   = av_sample_fmt_is_planar(frame->format);
+    整数 channels, planes;
     size_t size;
-    int ret;
+    整数 ret;
 
     channels = frame->ch_layout.nb_channels;
     planes   = planar ? channels : 1;
-    if (!frame->linesize[0]) {
+    もし (!frame->linesize[0]) {
         ret = av_samples_get_buffer_size(&frame->linesize[0], channels,
                                          frame->nb_samples, frame->format,
                                          align);
-        if (ret < 0)
-            return ret;
+        もし (ret < 0)
+            戻る ret;
     }
 
-    if (align <= 0)
+    もし (align <= 0)
         align = ALIGN;
 
-    if (planes > AV_NUM_DATA_POINTERS) {
+    もし (planes > AV_NUM_DATA_POINTERS) {
         frame->extended_data = av_calloc(planes,
                                           sizeof(*frame->extended_data));
         frame->extended_buf  = av_calloc(planes - AV_NUM_DATA_POINTERS,
                                           sizeof(*frame->extended_buf));
-        if (!frame->extended_data || !frame->extended_buf) {
+        もし (!frame->extended_data || !frame->extended_buf) {
             av_freep(&frame->extended_data);
             av_freep(&frame->extended_buf);
-            return AVERROR(ENOMEM);
+            戻る AVERROR(ENOMEM);
         }
         frame->nb_extended_buf = planes - AV_NUM_DATA_POINTERS;
-    } else
+    } 否则
         frame->extended_data = frame->data;
 
-    if (frame->linesize[0] > SIZE_MAX - align)
-        return AVERROR(EINVAL);
+    もし (frame->linesize[0] > SIZE_MAX - align)
+        戻る AVERROR(EINVAL);
     size = frame->linesize[0] + (size_t)align;
 
-    for (int i = 0; i < FFMIN(planes, AV_NUM_DATA_POINTERS); i++) {
+    ために (整数 i = 0; i < FFMIN(planes, AV_NUM_DATA_POINTERS); i++) {
         frame->buf[i] = av_buffer_alloc(size);
-        if (!frame->buf[i]) {
+        もし (!frame->buf[i]) {
             av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+            戻る AVERROR(ENOMEM);
         }
         frame->extended_data[i] = frame->data[i] =
             (uint8_t *)FFALIGN((uintptr_t)frame->buf[i]->data, align);
     }
-    for (int i = 0; i < planes - AV_NUM_DATA_POINTERS; i++) {
+    ために (整数 i = 0; i < planes - AV_NUM_DATA_POINTERS; i++) {
         frame->extended_buf[i] = av_buffer_alloc(size);
-        if (!frame->extended_buf[i]) {
+        もし (!frame->extended_buf[i]) {
             av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+            戻る AVERROR(ENOMEM);
         }
         frame->extended_data[i + AV_NUM_DATA_POINTERS] =
             (uint8_t *)FFALIGN((uintptr_t)frame->extended_buf[i]->data, align);
     }
-    return 0;
+    戻る 0;
 
 }
 
-int av_frame_get_buffer(AVFrame *frame, int align)
+整数 av_frame_get_buffer(AVFrame *frame, 整数 align)
 {
-    if (frame->format < 0)
-        return AVERROR(EINVAL);
+    もし (frame->format < 0)
+        戻る AVERROR(EINVAL);
 
-    if (frame->width > 0 && frame->height > 0)
-        return ff_frame_get_video_buffer(frame, align, NULL, NULL);
-    else if (frame->nb_samples > 0 &&
+    もし (frame->width > 0 && frame->height > 0)
+        戻る ff_frame_get_video_buffer(frame, align, NULL, NULL);
+    否则 もし (frame->nb_samples > 0 &&
              (av_channel_layout_check(&frame->ch_layout)))
-        return get_audio_buffer(frame, align);
+        戻る get_audio_buffer(frame, align);
 
-    return AVERROR(EINVAL);
+    戻る AVERROR(EINVAL);
 }
 
-static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
+static 整数 frame_copy_props(AVFrame *dst, const AVFrame *src, 整数 force_copy)
 {
     dst->pict_type              = src->pict_type;
     dst->sample_aspect_ratio    = src->sample_aspect_ratio;
@@ -248,39 +248,39 @@ static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
 
     av_dict_copy(&dst->metadata, src->metadata, 0);
 
-    for (int i = 0; i < src->nb_side_data; i++) {
+    ために (整数 i = 0; i < src->nb_side_data; i++) {
         const AVFrameSideData *sd_src = src->side_data[i];
         AVFrameSideData *sd_dst;
-        if (   sd_src->type == AV_FRAME_DATA_PANSCAN
+        もし (   sd_src->type == AV_FRAME_DATA_PANSCAN
             && (src->width != dst->width || src->height != dst->height))
             continue;
-        if (force_copy) {
+        もし (force_copy) {
             sd_dst = av_frame_new_side_data(dst, sd_src->type,
                                             sd_src->size);
-            if (!sd_dst) {
+            もし (!sd_dst) {
                 av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+                戻る AVERROR(ENOMEM);
             }
             memcpy(sd_dst->data, sd_src->data, sd_src->size);
-        } else {
+        } 否则 {
             AVBufferRef *ref = av_buffer_ref(sd_src->buf);
             sd_dst = av_frame_new_side_data_from_buf(dst, sd_src->type, ref);
-            if (!sd_dst) {
+            もし (!sd_dst) {
                 av_buffer_unref(&ref);
                 av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+                戻る AVERROR(ENOMEM);
             }
         }
         av_dict_copy(&sd_dst->metadata, sd_src->metadata, 0);
     }
 
     av_refstruct_replace(&dst->private_ref, src->private_ref);
-    return av_buffer_replace(&dst->opaque_ref, src->opaque_ref);
+    戻る av_buffer_replace(&dst->opaque_ref, src->opaque_ref);
 }
 
-int av_frame_ref(AVFrame *dst, const AVFrame *src)
+整数 av_frame_ref(AVFrame *dst, const AVFrame *src)
 {
-    int ret = 0;
+    整数 ret = 0;
 
     av_assert1(dst->width == 0 && dst->height == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
@@ -292,107 +292,107 @@ int av_frame_ref(AVFrame *dst, const AVFrame *src)
     dst->nb_samples     = src->nb_samples;
 
     ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
+    もし (ret < 0)
         goto fail;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
+    もし (ret < 0)
         goto fail;
 
     /* duplicate the frame data if it's not refcounted */
-    if (!src->buf[0]) {
+    もし (!src->buf[0]) {
         ret = av_frame_get_buffer(dst, 0);
-        if (ret < 0)
+        もし (ret < 0)
             goto fail;
 
         ret = av_frame_copy(dst, src);
-        if (ret < 0)
+        もし (ret < 0)
             goto fail;
 
-        return 0;
+        戻る 0;
     }
 
     /* ref the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        if (!src->buf[i])
+    ために (整数 i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        もし (!src->buf[i])
             continue;
         dst->buf[i] = av_buffer_ref(src->buf[i]);
-        if (!dst->buf[i]) {
+        もし (!dst->buf[i]) {
             ret = AVERROR(ENOMEM);
             goto fail;
         }
     }
 
-    if (src->extended_buf) {
+    もし (src->extended_buf) {
         dst->extended_buf = av_calloc(src->nb_extended_buf,
                                       sizeof(*dst->extended_buf));
-        if (!dst->extended_buf) {
+        もし (!dst->extended_buf) {
             ret = AVERROR(ENOMEM);
             goto fail;
         }
         dst->nb_extended_buf = src->nb_extended_buf;
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
+        ために (整数 i = 0; i < src->nb_extended_buf; i++) {
             dst->extended_buf[i] = av_buffer_ref(src->extended_buf[i]);
-            if (!dst->extended_buf[i]) {
+            もし (!dst->extended_buf[i]) {
                 ret = AVERROR(ENOMEM);
                 goto fail;
             }
         }
     }
 
-    if (src->hw_frames_ctx) {
+    もし (src->hw_frames_ctx) {
         dst->hw_frames_ctx = av_buffer_ref(src->hw_frames_ctx);
-        if (!dst->hw_frames_ctx) {
+        もし (!dst->hw_frames_ctx) {
             ret = AVERROR(ENOMEM);
             goto fail;
         }
     }
 
     /* duplicate extended data */
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    もし (src->extended_data != src->data) {
+        整数 ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        もし (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
             ret = AVERROR(EINVAL);
             goto fail;
         }
 
         dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        もし (!dst->extended_data) {
             ret = AVERROR(ENOMEM);
             goto fail;
         }
-    } else
+    } 否则
         dst->extended_data = dst->data;
 
     memcpy(dst->data,     src->data,     sizeof(src->data));
     memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
 
-    return 0;
+    戻る 0;
 
 fail:
     av_frame_unref(dst);
-    return ret;
+    戻る ret;
 }
 
-int av_frame_replace(AVFrame *dst, const AVFrame *src)
+整数 av_frame_replace(AVFrame *dst, const AVFrame *src)
 {
-    int ret = 0;
+    整数 ret = 0;
 
-    if (dst == src)
-        return AVERROR(EINVAL);
+    もし (dst == src)
+        戻る AVERROR(EINVAL);
 
-    if (!src->buf[0]) {
+    もし (!src->buf[0]) {
         av_frame_unref(dst);
 
         /* duplicate the frame data if it's not refcounted */
-        if (   src->data[0] || src->data[1]
+        もし (   src->data[0] || src->data[1]
             || src->data[2] || src->data[3])
-            return av_frame_ref(dst, src);
+            戻る av_frame_ref(dst, src);
 
         ret = frame_copy_props(dst, src, 0);
-        if (ret < 0)
+        もし (ret < 0)
             goto fail;
     }
 
@@ -402,33 +402,33 @@ int av_frame_replace(AVFrame *dst, const AVFrame *src)
     dst->nb_samples     = src->nb_samples;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
+    もし (ret < 0)
         goto fail;
 
     av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
     av_dict_free(&dst->metadata);
     ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
+    もし (ret < 0)
         goto fail;
 
     /* replace the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+    ために (整数 i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
         ret = av_buffer_replace(&dst->buf[i], src->buf[i]);
-        if (ret < 0)
+        もし (ret < 0)
             goto fail;
     }
 
-    if (src->extended_buf) {
-        if (dst->nb_extended_buf != src->nb_extended_buf) {
-            int nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
+    もし (src->extended_buf) {
+        もし (dst->nb_extended_buf != src->nb_extended_buf) {
+            整数 nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
             void *tmp;
 
-            for (int i = nb_extended_buf; i < dst->nb_extended_buf; i++)
+            ために (整数 i = nb_extended_buf; i < dst->nb_extended_buf; i++)
                 av_buffer_unref(&dst->extended_buf[i]);
 
             tmp = av_realloc_array(dst->extended_buf, src->nb_extended_buf,
                                    sizeof(*dst->extended_buf));
-            if (!tmp) {
+            もし (!tmp) {
                 ret = AVERROR(ENOMEM);
                 goto fail;
             }
@@ -439,73 +439,73 @@ int av_frame_replace(AVFrame *dst, const AVFrame *src)
                    (src->nb_extended_buf - nb_extended_buf) * sizeof(*dst->extended_buf));
         }
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
+        ために (整数 i = 0; i < src->nb_extended_buf; i++) {
             ret = av_buffer_replace(&dst->extended_buf[i], src->extended_buf[i]);
-            if (ret < 0)
+            もし (ret < 0)
                 goto fail;
         }
-    } else if (dst->extended_buf) {
-        for (int i = 0; i < dst->nb_extended_buf; i++)
+    } 否则 もし (dst->extended_buf) {
+        ために (整数 i = 0; i < dst->nb_extended_buf; i++)
             av_buffer_unref(&dst->extended_buf[i]);
         av_freep(&dst->extended_buf);
     }
 
     ret = av_buffer_replace(&dst->hw_frames_ctx, src->hw_frames_ctx);
-    if (ret < 0)
+    もし (ret < 0)
         goto fail;
 
-    if (dst->extended_data != dst->data)
+    もし (dst->extended_data != dst->data)
         av_freep(&dst->extended_data);
 
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    もし (src->extended_data != src->data) {
+        整数 ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        もし (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
             ret = AVERROR(EINVAL);
             goto fail;
         }
 
         dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        もし (!dst->extended_data) {
             ret = AVERROR(ENOMEM);
             goto fail;
         }
-    } else
+    } 否则
         dst->extended_data = dst->data;
 
     memcpy(dst->data,     src->data,     sizeof(src->data));
     memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
 
-    return 0;
+    戻る 0;
 
 fail:
     av_frame_unref(dst);
-    return ret;
+    戻る ret;
 }
 
 AVFrame *av_frame_clone(const AVFrame *src)
 {
     AVFrame *ret = av_frame_alloc();
 
-    if (!ret)
-        return NULL;
+    もし (!ret)
+        戻る NULL;
 
-    if (av_frame_ref(ret, src) < 0)
+    もし (av_frame_ref(ret, src) < 0)
         av_frame_free(&ret);
 
-    return ret;
+    戻る ret;
 }
 
 void av_frame_unref(AVFrame *frame)
 {
-    if (!frame)
-        return;
+    もし (!frame)
+        戻る;
 
     av_frame_side_data_free(&frame->side_data, &frame->nb_side_data);
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
+    ために (整数 i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
         av_buffer_unref(&frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
+    ために (整数 i = 0; i < frame->nb_extended_buf; i++)
         av_buffer_unref(&frame->extended_buf[i]);
     av_freep(&frame->extended_buf);
     av_dict_free(&frame->metadata);
@@ -515,7 +515,7 @@ void av_frame_unref(AVFrame *frame)
     av_buffer_unref(&frame->opaque_ref);
     av_refstruct_unref(&frame->private_ref);
 
-    if (frame->extended_data != frame->data)
+    もし (frame->extended_data != frame->data)
         av_freep(&frame->extended_data);
 
     av_channel_layout_uninit(&frame->ch_layout);
@@ -530,35 +530,35 @@ void av_frame_move_ref(AVFrame *dst, AVFrame *src)
                dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
 
     *dst = *src;
-    if (src->extended_data == src->data)
+    もし (src->extended_data == src->data)
         dst->extended_data = dst->data;
     get_frame_defaults(src);
 }
 
-int av_frame_is_writable(AVFrame *frame)
+整数 av_frame_is_writable(AVFrame *frame)
 {
-    int ret = 1;
+    整数 ret = 1;
 
     /* assume non-refcounted frames are not writable */
-    if (!frame->buf[0])
-        return 0;
+    もし (!frame->buf[0])
+        戻る 0;
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        if (frame->buf[i])
+    ために (整数 i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
+        もし (frame->buf[i])
             ret &= !!av_buffer_is_writable(frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
+    ために (整数 i = 0; i < frame->nb_extended_buf; i++)
         ret &= !!av_buffer_is_writable(frame->extended_buf[i]);
 
-    return ret;
+    戻る ret;
 }
 
-int av_frame_make_writable(AVFrame *frame)
+整数 av_frame_make_writable(AVFrame *frame)
 {
     AVFrame tmp;
-    int ret;
+    整数 ret;
 
-    if (av_frame_is_writable(frame))
-        return 0;
+    もし (av_frame_is_writable(frame))
+        戻る 0;
 
     memset(&tmp, 0, sizeof(tmp));
     tmp.format         = frame->format;
@@ -566,83 +566,83 @@ int av_frame_make_writable(AVFrame *frame)
     tmp.height         = frame->height;
     tmp.nb_samples     = frame->nb_samples;
     ret = av_channel_layout_copy(&tmp.ch_layout, &frame->ch_layout);
-    if (ret < 0) {
+    もし (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        戻る ret;
     }
 
-    if (frame->hw_frames_ctx)
+    もし (frame->hw_frames_ctx)
         ret = av_hwframe_get_buffer(frame->hw_frames_ctx, &tmp, 0);
-    else
+    否则
         ret = av_frame_get_buffer(&tmp, 0);
-    if (ret < 0)
-        return ret;
+    もし (ret < 0)
+        戻る ret;
 
     ret = av_frame_copy(&tmp, frame);
-    if (ret < 0) {
+    もし (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        戻る ret;
     }
 
     ret = av_frame_copy_props(&tmp, frame);
-    if (ret < 0) {
+    もし (ret < 0) {
         av_frame_unref(&tmp);
-        return ret;
+        戻る ret;
     }
 
     av_frame_unref(frame);
 
     *frame = tmp;
-    if (tmp.data == tmp.extended_data)
+    もし (tmp.data == tmp.extended_data)
         frame->extended_data = frame->data;
 
-    return 0;
+    戻る 0;
 }
 
-int av_frame_copy_props(AVFrame *dst, const AVFrame *src)
+整数 av_frame_copy_props(AVFrame *dst, const AVFrame *src)
 {
-    return frame_copy_props(dst, src, 1);
+    戻る frame_copy_props(dst, src, 1);
 }
 
-AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane)
+AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, 整数 plane)
 {
     uintptr_t data;
-    int planes;
+    整数 planes;
 
-    if (frame->nb_samples) {
-        int channels = frame->ch_layout.nb_channels;
-        if (!channels)
-            return NULL;
+    もし (frame->nb_samples) {
+        整数 channels = frame->ch_layout.nb_channels;
+        もし (!channels)
+            戻る NULL;
         planes = av_sample_fmt_is_planar(frame->format) ? channels : 1;
-    } else
+    } 否则
         planes = 4;
 
-    if (plane < 0 || plane >= planes || !frame->extended_data[plane])
-        return NULL;
+    もし (plane < 0 || plane >= planes || !frame->extended_data[plane])
+        戻る NULL;
     data = (uintptr_t)frame->extended_data[plane];
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
+    ために (整数 i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
         AVBufferRef *buf = frame->buf[i];
         uintptr_t buf_begin = (uintptr_t)buf->data;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        もし (data >= buf_begin && data < buf_begin + buf->size)
+            戻る buf;
     }
-    for (int i = 0; i < frame->nb_extended_buf; i++) {
+    ために (整数 i = 0; i < frame->nb_extended_buf; i++) {
         AVBufferRef *buf = frame->extended_buf[i];
         uintptr_t buf_begin = (uintptr_t)buf->data;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        もし (data >= buf_begin && data < buf_begin + buf->size)
+            戻る buf;
     }
-    return NULL;
+    戻る NULL;
 }
 
 AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
                                                  enum AVFrameSideDataType type,
                                                  AVBufferRef *buf)
 {
-    return
+    戻る
         ff_frame_side_data_add_from_buf(
             &frame->side_data, &frame->nb_side_data, type, buf);
 }
@@ -654,75 +654,75 @@ AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
     AVFrameSideData *ret;
     AVBufferRef *buf = av_buffer_alloc(size);
     ret = av_frame_new_side_data_from_buf(frame, type, buf);
-    if (!ret)
+    もし (!ret)
         av_buffer_unref(&buf);
-    return ret;
+    戻る ret;
 }
 
 AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
                                         enum AVFrameSideDataType type)
 {
-    return (AVFrameSideData *)av_frame_side_data_get(
+    戻る (AVFrameSideData *)av_frame_side_data_get(
         frame->side_data, frame->nb_side_data,
         type
     );
 }
 
-static int frame_copy_video(AVFrame *dst, const AVFrame *src)
+static 整数 frame_copy_video(AVFrame *dst, const AVFrame *src)
 {
-    int planes;
+    整数 planes;
 
-    if (dst->width  < src->width ||
+    もし (dst->width  < src->width ||
         dst->height < src->height)
-        return AVERROR(EINVAL);
+        戻る AVERROR(EINVAL);
 
-    if (src->hw_frames_ctx || dst->hw_frames_ctx)
-        return av_hwframe_transfer_data(dst, src, 0);
+    もし (src->hw_frames_ctx || dst->hw_frames_ctx)
+        戻る av_hwframe_transfer_data(dst, src, 0);
 
     planes = av_pix_fmt_count_planes(dst->format);
-    for (int i = 0; i < planes; i++)
-        if (!dst->data[i] || !src->data[i])
-            return AVERROR(EINVAL);
+    ために (整数 i = 0; i < planes; i++)
+        もし (!dst->data[i] || !src->data[i])
+            戻る AVERROR(EINVAL);
 
     av_image_copy2(dst->data, dst->linesize,
                    src->data, src->linesize,
                    dst->format, src->width, src->height);
 
-    return 0;
+    戻る 0;
 }
 
-static int frame_copy_audio(AVFrame *dst, const AVFrame *src)
+static 整数 frame_copy_audio(AVFrame *dst, const AVFrame *src)
 {
-    int planar   = av_sample_fmt_is_planar(dst->format);
-    int channels = dst->ch_layout.nb_channels;
-    int planes   = planar ? channels : 1;
+    整数 planar   = av_sample_fmt_is_planar(dst->format);
+    整数 channels = dst->ch_layout.nb_channels;
+    整数 planes   = planar ? channels : 1;
 
-    if (dst->nb_samples != src->nb_samples ||
+    もし (dst->nb_samples != src->nb_samples ||
         av_channel_layout_compare(&dst->ch_layout, &src->ch_layout))
-        return AVERROR(EINVAL);
+        戻る AVERROR(EINVAL);
 
-    for (int i = 0; i < planes; i++)
-        if (!dst->extended_data[i] || !src->extended_data[i])
-            return AVERROR(EINVAL);
+    ために (整数 i = 0; i < planes; i++)
+        もし (!dst->extended_data[i] || !src->extended_data[i])
+            戻る AVERROR(EINVAL);
 
     av_samples_copy(dst->extended_data, src->extended_data, 0, 0,
                     dst->nb_samples, channels, dst->format);
 
-    return 0;
+    戻る 0;
 }
 
-int av_frame_copy(AVFrame *dst, const AVFrame *src)
+整数 av_frame_copy(AVFrame *dst, const AVFrame *src)
 {
-    if (dst->format != src->format || dst->format < 0)
-        return AVERROR(EINVAL);
+    もし (dst->format != src->format || dst->format < 0)
+        戻る AVERROR(EINVAL);
 
-    if (dst->width > 0 && dst->height > 0)
-        return frame_copy_video(dst, src);
-    else if (dst->nb_samples > 0 &&
+    もし (dst->width > 0 && dst->height > 0)
+        戻る frame_copy_video(dst, src);
+    否则 もし (dst->nb_samples > 0 &&
              (av_channel_layout_check(&dst->ch_layout)))
-        return frame_copy_audio(dst, src);
+        戻る frame_copy_audio(dst, src);
 
-    return AVERROR(EINVAL);
+    戻る AVERROR(EINVAL);
 }
 
 void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type)
@@ -730,93 +730,93 @@ void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type)
     av_frame_side_data_remove(&frame->side_data, &frame->nb_side_data, type);
 }
 
-static int calc_cropping_offsets(size_t offsets[4], const AVFrame *frame,
+static 整数 calc_cropping_offsets(size_t offsets[4], const AVFrame *frame,
                                  const AVPixFmtDescriptor *desc)
 {
-    for (int i = 0; frame->data[i]; i++) {
+    ために (整数 i = 0; frame->data[i]; i++) {
         const AVComponentDescriptor *comp = NULL;
-        int shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
-        int shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+        整数 shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
+        整数 shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
 
-        if (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
+        もし (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
             offsets[i] = 0;
             break;
         }
 
         /* find any component descriptor for this plane */
-        for (int j = 0; j < desc->nb_components; j++) {
-            if (desc->comp[j].plane == i) {
+        ために (整数 j = 0; j < desc->nb_components; j++) {
+            もし (desc->comp[j].plane == i) {
                 comp = &desc->comp[j];
                 break;
             }
         }
-        if (!comp)
-            return AVERROR_BUG;
+        もし (!comp)
+            戻る AVERROR_BUG;
 
         offsets[i] = (frame->crop_top  >> shift_y) * frame->linesize[i] +
                      (frame->crop_left >> shift_x) * comp->step;
     }
 
-    return 0;
+    戻る 0;
 }
 
-int av_frame_apply_cropping(AVFrame *frame, int flags)
+整数 av_frame_apply_cropping(AVFrame *frame, 整数 flags)
 {
     const AVPixFmtDescriptor *desc;
     size_t offsets[4];
-    int ret;
+    整数 ret;
 
-    if (!(frame->width > 0 && frame->height > 0))
-        return AVERROR(EINVAL);
+    もし (!(frame->width > 0 && frame->height > 0))
+        戻る AVERROR(EINVAL);
 
-    if (frame->crop_left >= INT_MAX - frame->crop_right        ||
+    もし (frame->crop_left >= INT_MAX - frame->crop_right        ||
         frame->crop_top  >= INT_MAX - frame->crop_bottom       ||
         (frame->crop_left + frame->crop_right) >= frame->width ||
         (frame->crop_top + frame->crop_bottom) >= frame->height)
-        return AVERROR(ERANGE);
+        戻る AVERROR(ERANGE);
 
     desc = av_pix_fmt_desc_get(frame->format);
-    if (!desc)
-        return AVERROR_BUG;
+    もし (!desc)
+        戻る AVERROR_BUG;
 
     /* Apply just the right/bottom cropping for hwaccel formats. Bitstream
      * formats cannot be easily handled here either (and corresponding decoders
      * should not export any cropping anyway), so do the same for those as well.
      * */
-    if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
+    もし (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
         frame->width      -= frame->crop_right;
         frame->height     -= frame->crop_bottom;
         frame->crop_right  = 0;
         frame->crop_bottom = 0;
-        return 0;
+        戻る 0;
     }
 
     /* calculate the offsets for each plane */
     ret = calc_cropping_offsets(offsets, frame, desc);
-    if (ret < 0)
-        return ret;
+    もし (ret < 0)
+        戻る ret;
 
     /* adjust the offsets to avoid breaking alignment */
-    if (!(flags & AV_FRAME_CROP_UNALIGNED)) {
-        int log2_crop_align = frame->crop_left ? ff_ctz(frame->crop_left) : INT_MAX;
-        int min_log2_align = INT_MAX;
+    もし (!(flags & AV_FRAME_CROP_UNALIGNED)) {
+        整数 log2_crop_align = frame->crop_left ? ff_ctz(frame->crop_left) : INT_MAX;
+        整数 min_log2_align = INT_MAX;
 
-        for (int i = 0; frame->data[i]; i++) {
-            int log2_align = offsets[i] ? ff_ctz(offsets[i]) : INT_MAX;
+        ために (整数 i = 0; frame->data[i]; i++) {
+            整数 log2_align = offsets[i] ? ff_ctz(offsets[i]) : INT_MAX;
             min_log2_align = FFMIN(log2_align, min_log2_align);
         }
 
         /* The data alignment is the cropping alignment scaled by a power of 2,
          * up for multi-byte pixels and down for subsampled planes */
-        if (min_log2_align < 5 && log2_crop_align != INT_MAX) {
+        もし (min_log2_align < 5 && log2_crop_align != INT_MAX) {
             frame->crop_left &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
             ret = calc_cropping_offsets(offsets, frame, desc);
-            if (ret < 0)
-                return ret;
+            もし (ret < 0)
+                戻る ret;
         }
     }
 
-    for (int i = 0; frame->data[i]; i++)
+    ために (整数 i = 0; frame->data[i]; i++)
         frame->data[i] += offsets[i];
 
     frame->width      -= (frame->crop_left + frame->crop_right);
@@ -826,5 +826,5 @@ int av_frame_apply_cropping(AVFrame *frame, int flags)
     frame->crop_top    = 0;
     frame->crop_bottom = 0;
 
-    return 0;
+    戻る 0;
 }

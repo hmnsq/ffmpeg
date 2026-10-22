@@ -49,7 +49,7 @@ typedef struct D3D12VAFramesContext {
     ID3D12GraphicsCommandList *command_list;
     AVD3D12VASyncContext       sync_ctx;
     UINT                       luma_component_size;
-    int                        nb_surfaces_used;
+    整数                        nb_surfaces_used;
 } D3D12VAFramesContext;
 
 typedef struct D3D12VADevicePriv {
@@ -83,30 +83,30 @@ static void d3d12va_default_unlock(void *ctx)
     ReleaseMutex(ctx);
 }
 
-static int d3d12va_fence_completion(AVD3D12VASyncContext *psync_ctx)
+static 整数 d3d12va_fence_completion(AVD3D12VASyncContext *psync_ctx)
 {
     uint64_t completion = ID3D12Fence_GetCompletedValue(psync_ctx->fence);
-    if (completion < psync_ctx->fence_value) {
-        if (FAILED(ID3D12Fence_SetEventOnCompletion(psync_ctx->fence, psync_ctx->fence_value, psync_ctx->event)))
-            return AVERROR(EINVAL);
+    もし (completion < psync_ctx->fence_value) {
+        もし (FAILED(ID3D12Fence_SetEventOnCompletion(psync_ctx->fence, psync_ctx->fence_value, psync_ctx->event)))
+            戻る AVERROR(EINVAL);
 
         WaitForSingleObjectEx(psync_ctx->event, INFINITE, FALSE);
     }
 
-    return 0;
+    戻る 0;
 }
 
-static inline int d3d12va_wait_queue_idle(AVD3D12VASyncContext *psync_ctx, ID3D12CommandQueue *command_queue)
+static inline 整数 d3d12va_wait_queue_idle(AVD3D12VASyncContext *psync_ctx, ID3D12CommandQueue *command_queue)
 {
     DX_CHECK(ID3D12CommandQueue_Signal(command_queue, psync_ctx->fence, ++psync_ctx->fence_value));
-    return d3d12va_fence_completion(psync_ctx);
+    戻る d3d12va_fence_completion(psync_ctx);
 
 fail:
-    return AVERROR(EINVAL);
+    戻る AVERROR(EINVAL);
 }
 
-static int d3d12va_create_staging_buffer_resource(AVHWFramesContext *ctx, D3D12_RESOURCE_STATES states,
-                                                  ID3D12Resource **ppResource, int download)
+static 整数 d3d12va_create_staging_buffer_resource(AVHWFramesContext *ctx, D3D12_RESOURCE_STATES states,
+                                                  ID3D12Resource **ppResource, 整数 download)
 {
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D12VAFramesContext   *s            = ctx->hwctx;
@@ -124,16 +124,16 @@ static int d3d12va_create_staging_buffer_resource(AVHWFramesContext *ctx, D3D12_
         .Flags              = D3D12_RESOURCE_FLAG_NONE,
     };
 
-    if (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, D3D12_HEAP_FLAG_NONE, &desc,
+    もし (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, D3D12_HEAP_FLAG_NONE, &desc,
         states, NULL, &IID_ID3D12Resource, (void **)ppResource))) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the staging buffer resource\n");
-        return AVERROR_UNKNOWN;
+        戻る AVERROR_UNKNOWN;
     }
 
-    return 0;
+    戻る 0;
 }
 
-static int d3d12va_create_helper_objects(AVHWFramesContext *ctx)
+static 整数 d3d12va_create_helper_objects(AVHWFramesContext *ctx)
 {
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D12VAFramesContext   *s            = ctx->hwctx;
@@ -152,7 +152,7 @@ static int d3d12va_create_helper_objects(AVHWFramesContext *ctx)
                                       &IID_ID3D12Fence, (void **)&s->sync_ctx.fence));
 
     s->sync_ctx.event = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if (!s->sync_ctx.event)
+    もし (!s->sync_ctx.event)
         goto fail;
 
     DX_CHECK(ID3D12Device_CreateCommandQueue(device_hwctx->device, &queue_desc,
@@ -168,10 +168,10 @@ static int d3d12va_create_helper_objects(AVHWFramesContext *ctx)
 
     ID3D12CommandQueue_ExecuteCommandLists(s->command_queue, 1, (ID3D12CommandList **)&s->command_list);
 
-    return d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
+    戻る d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
 
 fail:
-    return AVERROR(EINVAL);
+    戻る AVERROR(EINVAL);
 }
 
 static void d3d12va_frames_uninit(AVHWFramesContext *ctx)
@@ -180,7 +180,7 @@ static void d3d12va_frames_uninit(AVHWFramesContext *ctx)
     AVD3D12VAFramesContext *hwctx = ctx->hwctx;
 
     D3D12_OBJECT_RELEASE(s->sync_ctx.fence);
-    if (s->sync_ctx.event)
+    もし (s->sync_ctx.event)
         CloseHandle(s->sync_ctx.event);
 
     D3D12_OBJECT_RELEASE(s->staging_download_buffer);
@@ -189,48 +189,48 @@ static void d3d12va_frames_uninit(AVHWFramesContext *ctx)
     D3D12_OBJECT_RELEASE(s->command_list);
     D3D12_OBJECT_RELEASE(s->command_queue);
 
-    if (hwctx->texture_array)
+    もし (hwctx->texture_array)
         D3D12_OBJECT_RELEASE(hwctx->texture_array);
 }
 
-static int d3d12va_frames_get_constraints(AVHWDeviceContext *ctx, const void *hwconfig, AVHWFramesConstraints *constraints)
+static 整数 d3d12va_frames_get_constraints(AVHWDeviceContext *ctx, const void *hwconfig, AVHWFramesConstraints *constraints)
 {
     HRESULT hr;
-    int nb_sw_formats = 0;
+    整数 nb_sw_formats = 0;
     AVD3D12VADeviceContext *device_hwctx = ctx->hwctx;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_formats) + 1,
                                                     sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+    もし (!constraints->valid_sw_formats)
+        戻る AVERROR(ENOMEM);
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+    ために (整数 i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
         D3D12_FEATURE_DATA_FORMAT_SUPPORT format_support = { supported_formats[i].d3d_format };
         hr = ID3D12Device_CheckFeatureSupport(device_hwctx->device, D3D12_FEATURE_FORMAT_SUPPORT, &format_support, sizeof(format_support));
-        if (SUCCEEDED(hr) && (format_support.Support1 & D3D12_FORMAT_SUPPORT1_TEXTURE2D))
+        もし (SUCCEEDED(hr) && (format_support.Support1 & D3D12_FORMAT_SUPPORT1_TEXTURE2D))
             constraints->valid_sw_formats[nb_sw_formats++] = supported_formats[i].pix_fmt;
     }
     constraints->valid_sw_formats[nb_sw_formats] = AV_PIX_FMT_NONE;
 
     constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    もし (!constraints->valid_hw_formats)
+        戻る AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_D3D12;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    戻る 0;
 }
 
 static void free_texture(void *opaque, uint8_t *data)
 {
     AVD3D12VAFrame *frame = (AVD3D12VAFrame *)data;
 
-    if (!(frame->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY))
+    もし (!(frame->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY))
         D3D12_OBJECT_RELEASE(frame->texture);
 
     D3D12_OBJECT_RELEASE(frame->sync_ctx.fence);
-    if (frame->sync_ctx.event)
+    もし (frame->sync_ctx.event)
         CloseHandle(frame->sync_ctx.event);
 
     av_freep(&data);
@@ -249,10 +249,10 @@ static AVBufferRef *d3d12va_pool_alloc_texture_array(AVHWFramesContext *ctx)
     DX_CHECK(ID3D12Device_CreateFence(device_hwctx->device, 0, D3D12_FENCE_FLAG_NONE,
                                       &IID_ID3D12Fence, (void **)&frame->sync_ctx.fence));
     frame->sync_ctx.event = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if (!frame->sync_ctx.event)
+    もし (!frame->sync_ctx.event)
         goto fail;
 
-    if (s->nb_surfaces_used >= ctx->initial_pool_size) {
+    もし (s->nb_surfaces_used >= ctx->initial_pool_size) {
         av_log(ctx, AV_LOG_ERROR, "Static surface pool size exceeded.\n");
         goto fail;
     }
@@ -262,14 +262,14 @@ static AVBufferRef *d3d12va_pool_alloc_texture_array(AVHWFramesContext *ctx)
 
     buf = av_buffer_create((uint8_t *)frame, sizeof(*frame), free_texture, NULL, 0);
 
-    if (!buf)
+    もし (!buf)
         goto fail;
 
     s->nb_surfaces_used++;
-    return buf;
+    戻る buf;
 fail:
     free_texture(NULL, (uint8_t *)frame);
-    return NULL;
+    戻る NULL;
 }
 
 static AVBufferRef *d3d12va_pool_alloc(void *opaque, size_t size)
@@ -281,8 +281,8 @@ static AVBufferRef *d3d12va_pool_alloc(void *opaque, size_t size)
     AVBufferRef *buf;
     AVD3D12VAFrame *frame;
 
-    if (ctx->initial_pool_size > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY)
-        return d3d12va_pool_alloc_texture_array(ctx);
+    もし (ctx->initial_pool_size > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY)
+        戻る d3d12va_pool_alloc_texture_array(ctx);
 
     D3D12_HEAP_PROPERTIES props = { .Type = D3D12_HEAP_TYPE_DEFAULT };
     D3D12_RESOURCE_DESC desc = {
@@ -299,10 +299,10 @@ static AVBufferRef *d3d12va_pool_alloc(void *opaque, size_t size)
     };
 
     frame = av_mallocz(sizeof(AVD3D12VAFrame));
-    if (!frame)
-        return NULL;
+    もし (!frame)
+        戻る NULL;
 
-    if (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
+    もし (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
         D3D12_RESOURCE_STATE_COMMON, NULL, &IID_ID3D12Resource, (void **)&frame->texture))) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the texture\n");
         goto fail;
@@ -312,21 +312,21 @@ static AVBufferRef *d3d12va_pool_alloc(void *opaque, size_t size)
                                       &IID_ID3D12Fence, (void **)&frame->sync_ctx.fence));
 
     frame->sync_ctx.event = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if (!frame->sync_ctx.event)
+    もし (!frame->sync_ctx.event)
         goto fail;
 
     buf = av_buffer_create((uint8_t *)frame, sizeof(*frame), free_texture, NULL, 0);
-    if (!buf)
+    もし (!buf)
         goto fail;
 
-    return buf;
+    戻る buf;
 
 fail:
     free_texture(NULL, (uint8_t *)frame);
-    return NULL;
+    戻る NULL;
 }
 
-static int d3d12va_texture_array_init(AVHWFramesContext *ctx)
+static 整数 d3d12va_texture_array_init(AVHWFramesContext *ctx)
 {
     AVD3D12VAFramesContext *hwctx        = ctx->hwctx;
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
@@ -346,23 +346,23 @@ static int d3d12va_texture_array_init(AVHWFramesContext *ctx)
         .Flags            = hwctx->resource_flags,
     };
 
-    if (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
+    もし (FAILED(ID3D12Device_CreateCommittedResource(device_hwctx->device, &props, hwctx->heap_flags, &desc,
         D3D12_RESOURCE_STATE_COMMON, NULL, &IID_ID3D12Resource, (void **)&hwctx->texture_array))) {
         av_log(ctx, AV_LOG_ERROR, "Could not create the texture array\n");
-        return AVERROR(EINVAL);
+        戻る AVERROR(EINVAL);
     }
-    return 0;
+    戻る 0;
 }
 
-static int d3d12va_frames_init(AVHWFramesContext *ctx)
+static 整数 d3d12va_frames_init(AVHWFramesContext *ctx)
 {
     AVD3D12VAFramesContext *hwctx        = ctx->hwctx;
     AVD3D12VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
-    int i;
+    整数 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i].pix_fmt) {
-            if (hwctx->format != DXGI_FORMAT_UNKNOWN &&
+    ために (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        もし (ctx->sw_format == supported_formats[i].pix_fmt) {
+            もし (hwctx->format != DXGI_FORMAT_UNKNOWN &&
                 hwctx->format != supported_formats[i].d3d_format)
                 av_log(ctx, AV_LOG_WARNING, "Incompatible DXGI format provided by user, will be overided\n");
             hwctx->format = supported_formats[i].d3d_format;
@@ -370,79 +370,79 @@ static int d3d12va_frames_init(AVHWFramesContext *ctx)
         }
     }
 
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    もし (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported pixel format: %s\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(EINVAL);
+        戻る AVERROR(EINVAL);
     }
 
     hwctx->resource_flags |= device_hwctx->resource_flags;
     hwctx->heap_flags     |= device_hwctx->heap_flags;
 
-    if (ctx->initial_pool_size > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY) {
-        int err = d3d12va_texture_array_init(ctx);
-        if (err < 0)
-            return err;
+    もし (ctx->initial_pool_size > 0 && hwctx->flags & AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY) {
+        整数 err = d3d12va_texture_array_init(ctx);
+        もし (err < 0)
+            戻る err;
     }
 
     ffhwframesctx(ctx)->pool_internal = av_buffer_pool_init2(sizeof(AVD3D12VAFrame),
         ctx, d3d12va_pool_alloc, NULL);
 
-    if (!ffhwframesctx(ctx)->pool_internal)
-        return AVERROR(ENOMEM);
+    もし (!ffhwframesctx(ctx)->pool_internal)
+        戻る AVERROR(ENOMEM);
 
-    return 0;
+    戻る 0;
 }
 
-static int d3d12va_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+static 整数 d3d12va_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
 {
-    int ret;
+    整数 ret;
 
     frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    もし (!frame->buf[0])
+        戻る AVERROR(ENOMEM);
 
     ret = av_image_fill_arrays(frame->data, frame->linesize, NULL,
                                ctx->sw_format, ctx->width, ctx->height,
                                D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
-    if (ret < 0)
-        return ret;
+    もし (ret < 0)
+        戻る ret;
 
     frame->data[0] = frame->buf[0]->data;
     frame->format  = AV_PIX_FMT_D3D12;
     frame->width   = ctx->width;
     frame->height  = ctx->height;
 
-    return 0;
+    戻る 0;
 }
 
-static int d3d12va_transfer_get_formats(AVHWFramesContext *ctx,
+static 整数 d3d12va_transfer_get_formats(AVHWFramesContext *ctx,
                                         enum AVHWFrameTransferDirection dir,
                                         enum AVPixelFormat **formats)
 {
     enum AVPixelFormat *fmts;
 
     fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    もし (!fmts)
+        戻る AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    戻る 0;
 }
 
-static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
+static 整数 d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
                                  const AVFrame *src)
 {
     AVD3D12VADeviceContext *hwctx        = ctx->device_ctx->hwctx;
     D3D12VAFramesContext   *s            = ctx->hwctx;
     AVD3D12VAFramesContext *frames_hwctx = &s->p;
 
-    int ret;
-    int download = src->format == AV_PIX_FMT_D3D12;
+    整数 ret;
+    整数 download = src->format == AV_PIX_FMT_D3D12;
     const AVFrame *frame = download ? src : dst;
     const AVFrame *other = download ? dst : src;
 
@@ -451,7 +451,7 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
 
     uint8_t *mapped_data;
     uint8_t *data[4];
-    int linesizes[4];
+    整数 linesizes[4];
 
     D3D12_TEXTURE_COPY_LOCATION staging_y_location  = { 0 };
     D3D12_TEXTURE_COPY_LOCATION staging_uv_location = { 0 };
@@ -479,18 +479,18 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
         },
     };
 
-    if (frame->hw_frames_ctx->data != (uint8_t *)ctx || other->format != ctx->sw_format)
-        return AVERROR(EINVAL);
+    もし (frame->hw_frames_ctx->data != (uint8_t *)ctx || other->format != ctx->sw_format)
+        戻る AVERROR(EINVAL);
 
     hwctx->lock(hwctx->lock_ctx);
 
-    if (!s->command_queue) {
+    もし (!s->command_queue) {
         ret = d3d12va_create_helper_objects(ctx);
-        if (ret < 0)
+        もし (ret < 0)
             goto fail;
     }
 
-    for (int i = 0; i < 4; i++)
+    ために (整数 i = 0; i < 4; i++)
         linesizes[i] = FFALIGN(frame->width * (frames_hwctx->format != DXGI_FORMAT_NV12 ? 2 : 1),
                                D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
@@ -528,11 +528,11 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
 
     DX_CHECK(ID3D12GraphicsCommandList_Reset(s->command_list, s->command_allocator, NULL));
 
-    if (download) {
-        if (!s->staging_download_buffer) {
+    もし (download) {
+        もし (!s->staging_download_buffer) {
             ret = d3d12va_create_staging_buffer_resource(ctx, D3D12_RESOURCE_STATE_COPY_DEST,
                                                          &s->staging_download_buffer, 1);
-            if (ret < 0) {
+            もし (ret < 0) {
                 goto fail;
             }
         }
@@ -560,7 +560,7 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
         ID3D12CommandQueue_ExecuteCommandLists(s->command_queue, 1, (ID3D12CommandList **)&s->command_list);
 
         ret = d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
-        if (ret < 0)
+        もし (ret < 0)
             goto fail;
 
         DX_CHECK(ID3D12Resource_Map(s->staging_download_buffer, 0, NULL, (void **)&mapped_data));
@@ -570,11 +570,11 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
                        ctx->sw_format, ctx->width, ctx->height);
 
         ID3D12Resource_Unmap(s->staging_download_buffer, 0, NULL);
-    } else {
-        if (!s->staging_upload_buffer) {
+    } 否则 {
+        もし (!s->staging_upload_buffer) {
             ret = d3d12va_create_staging_buffer_resource(ctx, D3D12_RESOURCE_STATE_GENERIC_READ,
                                                         &s->staging_upload_buffer, 0);
-            if (ret < 0) {
+            もし (ret < 0) {
                 goto fail;
             }
         }
@@ -608,50 +608,50 @@ static int d3d12va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
         ID3D12CommandQueue_ExecuteCommandLists(s->command_queue, 1, (ID3D12CommandList **)&s->command_list);
 
         ret = d3d12va_wait_queue_idle(&s->sync_ctx, s->command_queue);
-        if (ret < 0)
+        もし (ret < 0)
             goto fail;
     }
 
     hwctx->unlock(hwctx->lock_ctx);
 
-    return 0;
+    戻る 0;
 
 fail:
     hwctx->unlock(hwctx->lock_ctx);
-    return AVERROR(EINVAL);
+    戻る AVERROR(EINVAL);
 }
 
-static int d3d12va_load_functions(AVHWDeviceContext *hwdev)
+static 整数 d3d12va_load_functions(AVHWDeviceContext *hwdev)
 {
     D3D12VADevicePriv *priv = hwdev->hwctx;
 
-#if !HAVE_UWP
+#もし !HAVE_UWP
     priv->d3d12lib = dlopen("d3d12.dll", 0);
     priv->dxgilib  = dlopen("dxgi.dll", 0);
 
-    if (!priv->d3d12lib || !priv->dxgilib)
+    もし (!priv->d3d12lib || !priv->dxgilib)
         goto fail;
 
     priv->create_device = (PFN_D3D12_CREATE_DEVICE)GetProcAddress(priv->d3d12lib, "D3D12CreateDevice");
-    if (!priv->create_device)
+    もし (!priv->create_device)
         goto fail;
 
     priv->create_dxgi_factory2 = (PFN_CREATE_DXGI_FACTORY2)GetProcAddress(priv->dxgilib, "CreateDXGIFactory2");
-    if (!priv->create_dxgi_factory2)
+    もし (!priv->create_dxgi_factory2)
         goto fail;
 
     priv->get_debug_interface  = (PFN_D3D12_GET_DEBUG_INTERFACE)GetProcAddress(priv->d3d12lib, "D3D12GetDebugInterface");
-#else
+#否则
     priv->create_device        = (PFN_D3D12_CREATE_DEVICE) D3D12CreateDevice;
     priv->create_dxgi_factory2 = (PFN_CREATE_DXGI_FACTORY2) CreateDXGIFactory2;
     priv->get_debug_interface  = (PFN_D3D12_GET_DEBUG_INTERFACE) D3D12GetDebugInterface;
 #endif
-    return 0;
+    戻る 0;
 
-#if !HAVE_UWP
+#もし !HAVE_UWP
 fail:
     av_log(hwdev, AV_LOG_ERROR, "Failed to load D3D12 library or its functions\n");
-    return AVERROR_UNKNOWN;
+    戻る AVERROR_UNKNOWN;
 #endif
 }
 
@@ -662,34 +662,34 @@ static void d3d12va_device_free(AVHWDeviceContext *hwdev)
 
     D3D12_OBJECT_RELEASE(ctx->device);
 
-    if (priv->d3d12lib)
+    もし (priv->d3d12lib)
         dlclose(priv->d3d12lib);
 
-    if (priv->dxgilib)
+    もし (priv->dxgilib)
         dlclose(priv->dxgilib);
 }
 
-static int d3d12va_device_init(AVHWDeviceContext *hwdev)
+static 整数 d3d12va_device_init(AVHWDeviceContext *hwdev)
 {
     AVD3D12VADeviceContext *ctx = hwdev->hwctx;
 
-    if (!ctx->lock) {
+    もし (!ctx->lock) {
         ctx->lock_ctx = CreateMutex(NULL, 0, NULL);
-        if (ctx->lock_ctx == INVALID_HANDLE_VALUE) {
+        もし (ctx->lock_ctx == INVALID_HANDLE_VALUE) {
             av_log(NULL, AV_LOG_ERROR, "Failed to create a mutex\n");
-            return AVERROR(EINVAL);
+            戻る AVERROR(EINVAL);
         }
         ctx->lock   = d3d12va_default_lock;
         ctx->unlock = d3d12va_default_unlock;
     }
 
-    if (!ctx->video_device)
+    もし (!ctx->video_device)
         DX_CHECK(ID3D12Device_QueryInterface(ctx->device, &IID_ID3D12VideoDevice, (void **)&ctx->video_device));
 
-    return 0;
+    戻る 0;
 
 fail:
-    return AVERROR(EINVAL);
+    戻る AVERROR(EINVAL);
 }
 
 static void d3d12va_device_uninit(AVHWDeviceContext *hwdev)
@@ -698,15 +698,15 @@ static void d3d12va_device_uninit(AVHWDeviceContext *hwdev)
 
     D3D12_OBJECT_RELEASE(device_hwctx->video_device);
 
-    if (device_hwctx->lock == d3d12va_default_lock) {
+    もし (device_hwctx->lock == d3d12va_default_lock) {
         CloseHandle(device_hwctx->lock_ctx);
         device_hwctx->lock_ctx = INVALID_HANDLE_VALUE;
         device_hwctx->lock = NULL;
     }
 }
 
-static int d3d12va_device_create(AVHWDeviceContext *hwdev, const char *device,
-                                 AVDictionary *opts, int flags)
+static 整数 d3d12va_device_create(AVHWDeviceContext *hwdev, const char *device,
+                                 AVDictionary *opts, 整数 flags)
 {
     D3D12VADevicePriv      *priv = hwdev->hwctx;
     AVD3D12VADeviceContext *ctx  = &priv->p;
@@ -715,18 +715,18 @@ static int d3d12va_device_create(AVHWDeviceContext *hwdev, const char *device,
     UINT create_flags = 0;
     IDXGIAdapter *pAdapter = NULL;
 
-    int ret;
-    int is_debug = !!av_dict_get(opts, "debug", NULL, 0);
+    整数 ret;
+    整数 is_debug = !!av_dict_get(opts, "debug", NULL, 0);
 
     hwdev->free = d3d12va_device_free;
 
     ret = d3d12va_load_functions(hwdev);
-    if (ret < 0)
-        return ret;
+    もし (ret < 0)
+        戻る ret;
 
-    if (is_debug) {
+    もし (is_debug) {
         ID3D12Debug *pDebug;
-        if (priv->get_debug_interface && SUCCEEDED(priv->get_debug_interface(&IID_ID3D12Debug, (void **)&pDebug))) {
+        もし (priv->get_debug_interface && SUCCEEDED(priv->get_debug_interface(&IID_ID3D12Debug, (void **)&pDebug))) {
             create_flags |= DXGI_CREATE_FACTORY_DEBUG;
             ID3D12Debug_EnableDebugLayer(pDebug);
             D3D12_OBJECT_RELEASE(pDebug);
@@ -734,21 +734,21 @@ static int d3d12va_device_create(AVHWDeviceContext *hwdev, const char *device,
         }
     }
 
-    if (!ctx->device) {
+    もし (!ctx->device) {
         IDXGIFactory2 *pDXGIFactory = NULL;
 
         hr = priv->create_dxgi_factory2(create_flags, &IID_IDXGIFactory2, (void **)&pDXGIFactory);
-        if (SUCCEEDED(hr)) {
-            int adapter = device ? atoi(device) : 0;
-            if (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
+        もし (SUCCEEDED(hr)) {
+            整数 adapter = device ? atoi(device) : 0;
+            もし (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
                 pAdapter = NULL;
             IDXGIFactory2_Release(pDXGIFactory);
         }
 
-        if (pAdapter) {
+        もし (pAdapter) {
             DXGI_ADAPTER_DESC desc;
             hr = IDXGIAdapter2_GetDesc(pAdapter, &desc);
-            if (!FAILED(hr)) {
+            もし (!FAILED(hr)) {
                 av_log(hwdev, AV_LOG_INFO, "Using device %04x:%04x (%ls).\n",
                        desc.VendorId, desc.DeviceId, desc.Description);
             }
@@ -756,22 +756,22 @@ static int d3d12va_device_create(AVHWDeviceContext *hwdev, const char *device,
 
         hr = priv->create_device((IUnknown *)pAdapter, D3D_FEATURE_LEVEL_12_0, &IID_ID3D12Device, (void **)&ctx->device);
         D3D12_OBJECT_RELEASE(pAdapter);
-        if (FAILED(hr)) {
+        もし (FAILED(hr)) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to create Direct 3D 12 device (%lx)\n", (long)hr);
-            return AVERROR_UNKNOWN;
+            戻る AVERROR_UNKNOWN;
         }
     }
 
-    if (av_dict_get(opts, "UAV", NULL, 0))
+    もし (av_dict_get(opts, "UAV", NULL, 0))
         ctx->resource_flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
-    if (av_dict_get(opts, "RTV", NULL, 0))
+    もし (av_dict_get(opts, "RTV", NULL, 0))
         ctx->resource_flags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
-    if (av_dict_get(opts, "SHARED", NULL, 0))
+    もし (av_dict_get(opts, "SHARED", NULL, 0))
         ctx->heap_flags |= D3D12_HEAP_FLAG_SHARED;
 
-    return 0;
+    戻る 0;
 }
 
 const HWContextType ff_hwcontext_type_d3d12va = {

@@ -25,37 +25,37 @@
 
 #define LA_HWCAP_LSX    (1<<4)
 #define LA_HWCAP_LASX   (1<<5)
-static int cpu_flags_getauxval(void)
+static 整数 cpu_flags_getauxval(void)
 {
-    int flags = 0;
-    int flag  = (int)ff_getauxval(AT_HWCAP);
+    整数 flags = 0;
+    整数 flag  = (整数)ff_getauxval(AT_HWCAP);
 
-    if (flag & LA_HWCAP_LSX)
+    もし (flag & LA_HWCAP_LSX)
         flags |= AV_CPU_FLAG_LSX;
-    if (flag & LA_HWCAP_LASX)
+    もし (flag & LA_HWCAP_LASX)
         flags |= AV_CPU_FLAG_LASX;
 
-    return flags;
+    戻る flags;
 }
 
-int ff_get_cpu_flags_loongarch(void)
+整数 ff_get_cpu_flags_loongarch(void)
 {
-#if defined __linux__
-    return cpu_flags_getauxval();
-#else
+#もし defined __linux__
+    戻る cpu_flags_getauxval();
+#否则
     /* Assume no SIMD ASE supported */
-    return 0;
+    戻る 0;
 #endif
 }
 
 size_t ff_get_cpu_max_align_loongarch(void)
 {
-    int flags = av_get_cpu_flags();
+    整数 flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_LASX)
-        return 32;
-    if (flags & AV_CPU_FLAG_LSX)
-        return 16;
+    もし (flags & AV_CPU_FLAG_LASX)
+        戻る 32;
+    もし (flags & AV_CPU_FLAG_LSX)
+        戻る 16;
 
-    return 8;
+    戻る 8;
 }

@@ -26,32 +26,32 @@
 #include "libavutil/mem.h"
 #include "libavutil/sha512.h"
 
-int main(void)
+整数 メインページ(void)
 {
-    int i, j, k;
+    整数 i, j, k;
     struct AVSHA512 *ctx;
     unsigned char digest[64];
-    static const int lengths[4] = { 224, 256, 384, 512 };
+    static const 整数 lengths[4] = { 224, 256, 384, 512 };
 
     ctx = av_sha512_alloc();
-    if (!ctx)
-        return 1;
+    もし (!ctx)
+        戻る 1;
 
-    for (j = 0; j < 4; j++) {
-        if (j < 2) printf("Testing SHA-512/%d\n", lengths[j]);
-        else       printf("Testing SHA-%d\n", lengths[j]);
-        for (k = 0; k < 3; k++) {
+    ために (j = 0; j < 4; j++) {
+        もし (j < 2) printf("Testing SHA-512/%d\n", lengths[j]);
+        否则       printf("Testing SHA-%d\n", lengths[j]);
+        ために (k = 0; k < 3; k++) {
             av_sha512_init(ctx, lengths[j]);
-            if (k == 0)
+            もし (k == 0)
                 av_sha512_update(ctx, "abc", 3);
-            else if (k == 1)
+            否则 もし (k == 1)
                 av_sha512_update(ctx, "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmn"
                                        "hijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu", 112);
-            else
-                for (i = 0; i < 1000*1000; i++)
+            否则
+                ために (i = 0; i < 1000*1000; i++)
                     av_sha512_update(ctx, "a", 1);
             av_sha512_final(ctx, digest);
-            for (i = 0; i < lengths[j] >> 3; i++)
+            ために (i = 0; i < lengths[j] >> 3; i++)
                 printf("%02X", digest[i]);
             putchar('\n');
         }
@@ -86,5 +86,5 @@ int main(void)
     }
     av_free(ctx);
 
-    return 0;
+    戻る 0;
 }

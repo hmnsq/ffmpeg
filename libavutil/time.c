@@ -23,13 +23,13 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <time.h>
-#if HAVE_GETTIMEOFDAY
+#もし HAVE_GETTIMEOFDAY
 #include <sys/time.h>
 #endif
-#if HAVE_UNISTD_H
+#もし HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#if HAVE_WINDOWS_H
+#もし HAVE_WINDOWS_H
 #include <windows.h>
 #endif
 
@@ -39,69 +39,69 @@
 
 int64_t av_gettime(void)
 {
-#if HAVE_GETTIMEOFDAY
+#もし HAVE_GETTIMEOFDAY
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    return (int64_t)tv.tv_sec * 1000000 + tv.tv_usec;
+    戻る (int64_t)tv.tv_sec * 1000000 + tv.tv_usec;
 #elif HAVE_GETSYSTEMTIMEASFILETIME
     FILETIME ft;
     int64_t t;
     GetSystemTimeAsFileTime(&ft);
     t = (int64_t)ft.dwHighDateTime << 32 | ft.dwLowDateTime;
-    return t / 10 - 11644473600000000; /* Jan 1, 1601 */
-#else
-    return -1;
+    戻る t / 10 - 11644473600000000; /* Jan 1, 1601 */
+#否则
+    戻る -1;
 #endif
 }
 
 int64_t av_gettime_relative(void)
 {
-#if HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
+#もし HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
 #ifdef __APPLE__
-    if (&clock_gettime)
+    もし (&clock_gettime)
 #endif
     {
         struct timespec ts;
         clock_gettime(CLOCK_MONOTONIC, &ts);
-        return (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
+        戻る (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
     }
 #elif defined(_WIN32)
     LARGE_INTEGER freq;
     LARGE_INTEGER counter;
     QueryPerformanceFrequency(&freq);
     QueryPerformanceCounter(&counter);
-    return av_rescale(counter.QuadPart, 1000000, freq.QuadPart);
+    戻る av_rescale(counter.QuadPart, 1000000, freq.QuadPart);
 #endif
-    return av_gettime() + 42 * 60 * 60 * INT64_C(1000000);
+    戻る av_gettime() + 42 * 60 * 60 * INT64_C(1000000);
 }
 
-int av_gettime_relative_is_monotonic(void)
+整数 av_gettime_relative_is_monotonic(void)
 {
-#if HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
+#もし HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
 #ifdef __APPLE__
-    if (!&clock_gettime)
-        return 0;
+    もし (!&clock_gettime)
+        戻る 0;
 #endif
-    return 1;
+    戻る 1;
 #elif defined(_WIN32)
-    return 1;
-#else
-    return 0;
+    戻る 1;
+#否则
+    戻る 0;
 #endif
 }
 
-int av_usleep(unsigned usec)
+整数 av_usleep(unsigned usec)
 {
-#if HAVE_NANOSLEEP
+#もし HAVE_NANOSLEEP
     struct timespec ts = { usec / 1000000, usec % 1000000 * 1000 };
-    while (nanosleep(&ts, &ts) < 0 && errno == EINTR);
-    return 0;
+    ながら (nanosleep(&ts, &ts) < 0 && errno == EINTR);
+    戻る 0;
 #elif HAVE_USLEEP
-    return usleep(usec);
+    戻る usleep(usec);
 #elif HAVE_SLEEP
     Sleep(usec / 1000);
-    return 0;
-#else
-    return AVERROR(ENOSYS);
+    戻る 0;
+#否则
+    戻る AVERROR(ENOSYS);
 #endif
 }

@@ -49,7 +49,7 @@ typedef struct AVDRMObjectDescriptor {
     /**
      * DRM PRIME fd for the object.
      */
-    int fd;
+    整数 fd;
     /**
      * Total size of the object.
      *
@@ -76,7 +76,7 @@ typedef struct AVDRMPlaneDescriptor {
      * Index of the object containing this plane in the objects
      * array of the enclosing frame descriptor.
      */
-    int object_index;
+    整数 object_index;
     /**
      * Offset within that object of this plane.
      */
@@ -103,7 +103,7 @@ typedef struct AVDRMLayerDescriptor {
      *
      * This must match the number of planes required by format.
      */
-    int nb_planes;
+    整数 nb_planes;
     /**
      * Array of planes in this layer.
      */
@@ -134,7 +134,7 @@ typedef struct AVDRMFrameDescriptor {
     /**
      * Number of DRM objects making up this frame.
      */
-    int nb_objects;
+    整数 nb_objects;
     /**
      * Array of objects making up the frame.
      */
@@ -142,7 +142,7 @@ typedef struct AVDRMFrameDescriptor {
     /**
      * Number of layers in the frame.
      */
-    int nb_layers;
+    整数 nb_layers;
     /**
      * Array of layers in the frame.
      */
@@ -163,7 +163,7 @@ typedef struct AVDRMDeviceContext {
      *
      * If no device is required, set to -1.
      */
-    int fd;
+    整数 fd;
 } AVDRMDeviceContext;
 
 #endif /* AVUTIL_HWCONTEXT_DRM_H */

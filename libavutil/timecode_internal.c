@@ -25,13 +25,13 @@ static unsigned bcd2uint(uint8_t bcd)
 {
    unsigned low  = bcd & 0xf;
    unsigned high = bcd >> 4;
-   if (low > 9 || high > 9)
-       return 0;
-   return low + 10*high;
+   もし (low > 9 || high > 9)
+       戻る 0;
+   戻る low + 10*high;
 }
 
 void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned *ss, unsigned *ff,
-                           AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field)
+                           AVRational rate, uint32_t tcsmpte, 整数 prevent_df, 整数 skip_field)
 {
     *hh   = bcd2uint(tcsmpte     & 0x3f);    // 6-bit hours
     *mm   = bcd2uint(tcsmpte>>8  & 0x7f);    // 7-bit minutes
@@ -39,12 +39,12 @@ void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned 
     *ff   = bcd2uint(tcsmpte>>24 & 0x3f);    // 6-bit frames
     *drop = tcsmpte & 1<<30 && !prevent_df;  // 1-bit drop if not arbitrary bit
 
-    if (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
+    もし (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
         *ff <<= 1;
-        if (!skip_field) {
-            if (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
+        もし (!skip_field) {
+            もし (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
                 *ff += !!(tcsmpte & 1 << 7);
-            else
+            否则
                 *ff += !!(tcsmpte & 1 << 23);
         }
     }

@@ -64,7 +64,7 @@ typedef union {
 
 #include "config.h"
 
-#if ARCH_AARCH64
+#もし ARCH_AARCH64
 #   include "aarch64/intreadwrite.h"
 #elif ARCH_MIPS
 #   include "mips/intreadwrite.h"
@@ -80,125 +80,125 @@ typedef union {
  * Map AV_RNXX <-> AV_R[BL]XX for all variants provided by per-arch headers.
  */
 
-#if AV_HAVE_BIGENDIAN
+#もし AV_HAVE_BIGENDIAN
 
-#   if    defined(AV_RN16) && !defined(AV_RB16)
+#   もし    defined(AV_RN16) && !defined(AV_RB16)
 #       define AV_RB16(p) AV_RN16(p)
 #   elif !defined(AV_RN16) &&  defined(AV_RB16)
 #       define AV_RN16(p) AV_RB16(p)
 #   endif
 
-#   if    defined(AV_WN16) && !defined(AV_WB16)
+#   もし    defined(AV_WN16) && !defined(AV_WB16)
 #       define AV_WB16(p, v) AV_WN16(p, v)
 #   elif !defined(AV_WN16) &&  defined(AV_WB16)
 #       define AV_WN16(p, v) AV_WB16(p, v)
 #   endif
 
-#   if    defined(AV_RN24) && !defined(AV_RB24)
+#   もし    defined(AV_RN24) && !defined(AV_RB24)
 #       define AV_RB24(p) AV_RN24(p)
 #   elif !defined(AV_RN24) &&  defined(AV_RB24)
 #       define AV_RN24(p) AV_RB24(p)
 #   endif
 
-#   if    defined(AV_WN24) && !defined(AV_WB24)
+#   もし    defined(AV_WN24) && !defined(AV_WB24)
 #       define AV_WB24(p, v) AV_WN24(p, v)
 #   elif !defined(AV_WN24) &&  defined(AV_WB24)
 #       define AV_WN24(p, v) AV_WB24(p, v)
 #   endif
 
-#   if    defined(AV_RN32) && !defined(AV_RB32)
+#   もし    defined(AV_RN32) && !defined(AV_RB32)
 #       define AV_RB32(p) AV_RN32(p)
 #   elif !defined(AV_RN32) &&  defined(AV_RB32)
 #       define AV_RN32(p) AV_RB32(p)
 #   endif
 
-#   if    defined(AV_WN32) && !defined(AV_WB32)
+#   もし    defined(AV_WN32) && !defined(AV_WB32)
 #       define AV_WB32(p, v) AV_WN32(p, v)
 #   elif !defined(AV_WN32) &&  defined(AV_WB32)
 #       define AV_WN32(p, v) AV_WB32(p, v)
 #   endif
 
-#   if    defined(AV_RN48) && !defined(AV_RB48)
+#   もし    defined(AV_RN48) && !defined(AV_RB48)
 #       define AV_RB48(p) AV_RN48(p)
 #   elif !defined(AV_RN48) &&  defined(AV_RB48)
 #       define AV_RN48(p) AV_RB48(p)
 #   endif
 
-#   if    defined(AV_WN48) && !defined(AV_WB48)
+#   もし    defined(AV_WN48) && !defined(AV_WB48)
 #       define AV_WB48(p, v) AV_WN48(p, v)
 #   elif !defined(AV_WN48) &&  defined(AV_WB48)
 #       define AV_WN48(p, v) AV_WB48(p, v)
 #   endif
 
-#   if    defined(AV_RN64) && !defined(AV_RB64)
+#   もし    defined(AV_RN64) && !defined(AV_RB64)
 #       define AV_RB64(p) AV_RN64(p)
 #   elif !defined(AV_RN64) &&  defined(AV_RB64)
 #       define AV_RN64(p) AV_RB64(p)
 #   endif
 
-#   if    defined(AV_WN64) && !defined(AV_WB64)
+#   もし    defined(AV_WN64) && !defined(AV_WB64)
 #       define AV_WB64(p, v) AV_WN64(p, v)
 #   elif !defined(AV_WN64) &&  defined(AV_WB64)
 #       define AV_WN64(p, v) AV_WB64(p, v)
 #   endif
 
-#else /* AV_HAVE_BIGENDIAN */
+#否则 /* AV_HAVE_BIGENDIAN */
 
-#   if    defined(AV_RN16) && !defined(AV_RL16)
+#   もし    defined(AV_RN16) && !defined(AV_RL16)
 #       define AV_RL16(p) AV_RN16(p)
 #   elif !defined(AV_RN16) &&  defined(AV_RL16)
 #       define AV_RN16(p) AV_RL16(p)
 #   endif
 
-#   if    defined(AV_WN16) && !defined(AV_WL16)
+#   もし    defined(AV_WN16) && !defined(AV_WL16)
 #       define AV_WL16(p, v) AV_WN16(p, v)
 #   elif !defined(AV_WN16) &&  defined(AV_WL16)
 #       define AV_WN16(p, v) AV_WL16(p, v)
 #   endif
 
-#   if    defined(AV_RN24) && !defined(AV_RL24)
+#   もし    defined(AV_RN24) && !defined(AV_RL24)
 #       define AV_RL24(p) AV_RN24(p)
 #   elif !defined(AV_RN24) &&  defined(AV_RL24)
 #       define AV_RN24(p) AV_RL24(p)
 #   endif
 
-#   if    defined(AV_WN24) && !defined(AV_WL24)
+#   もし    defined(AV_WN24) && !defined(AV_WL24)
 #       define AV_WL24(p, v) AV_WN24(p, v)
 #   elif !defined(AV_WN24) &&  defined(AV_WL24)
 #       define AV_WN24(p, v) AV_WL24(p, v)
 #   endif
 
-#   if    defined(AV_RN32) && !defined(AV_RL32)
+#   もし    defined(AV_RN32) && !defined(AV_RL32)
 #       define AV_RL32(p) AV_RN32(p)
 #   elif !defined(AV_RN32) &&  defined(AV_RL32)
 #       define AV_RN32(p) AV_RL32(p)
 #   endif
 
-#   if    defined(AV_WN32) && !defined(AV_WL32)
+#   もし    defined(AV_WN32) && !defined(AV_WL32)
 #       define AV_WL32(p, v) AV_WN32(p, v)
 #   elif !defined(AV_WN32) &&  defined(AV_WL32)
 #       define AV_WN32(p, v) AV_WL32(p, v)
 #   endif
 
-#   if    defined(AV_RN48) && !defined(AV_RL48)
+#   もし    defined(AV_RN48) && !defined(AV_RL48)
 #       define AV_RL48(p) AV_RN48(p)
 #   elif !defined(AV_RN48) &&  defined(AV_RL48)
 #       define AV_RN48(p) AV_RL48(p)
 #   endif
 
-#   if    defined(AV_WN48) && !defined(AV_WL48)
+#   もし    defined(AV_WN48) && !defined(AV_WL48)
 #       define AV_WL48(p, v) AV_WN48(p, v)
 #   elif !defined(AV_WN48) &&  defined(AV_WL48)
 #       define AV_WN48(p, v) AV_WL48(p, v)
 #   endif
 
-#   if    defined(AV_RN64) && !defined(AV_RL64)
+#   もし    defined(AV_RN64) && !defined(AV_RL64)
 #       define AV_RL64(p) AV_RN64(p)
 #   elif !defined(AV_RN64) &&  defined(AV_RL64)
 #       define AV_RN64(p) AV_RL64(p)
 #   endif
 
-#   if    defined(AV_WN64) && !defined(AV_WL64)
+#   もし    defined(AV_WN64) && !defined(AV_WL64)
 #       define AV_WL64(p, v) AV_WN64(p, v)
 #   elif !defined(AV_WN64) &&  defined(AV_WL64)
 #       define AV_WN64(p, v) AV_WL64(p, v)
@@ -211,7 +211,7 @@ typedef union {
  * by per-arch headers.
  */
 
-#if defined(__GNUC__) || defined(__clang__)
+#もし defined(__GNUC__) || defined(__clang__)
 
 union unaligned_64 { uint64_t l; } __attribute__((packed)) av_alias;
 union unaligned_32 { uint32_t l; } __attribute__((packed)) av_alias;
@@ -230,7 +230,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 #   define AV_RN(s, p) (((const av_alias##s*)(p))->u##s)
 #   define AV_WN(s, p, v) (((av_alias##s*)(p))->u##s = (v))
 
-#else
+#否则
 
 #ifndef AV_RB16
 #   define AV_RB16(x)                           \
@@ -242,7 +242,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         uint16_t d = (val);                     \
         ((uint8_t*)(p))[1] = (d);               \
         ((uint8_t*)(p))[0] = (d)>>8;            \
-    } while(0)
+    } ながら(0)
 #endif
 
 #ifndef AV_RL16
@@ -255,7 +255,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         uint16_t d = (val);                     \
         ((uint8_t*)(p))[0] = (d);               \
         ((uint8_t*)(p))[1] = (d)>>8;            \
-    } while(0)
+    } ながら(0)
 #endif
 
 #ifndef AV_RB32
@@ -272,7 +272,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[2] = (d)>>8;            \
         ((uint8_t*)(p))[1] = (d)>>16;           \
         ((uint8_t*)(p))[0] = (d)>>24;           \
-    } while(0)
+    } ながら(0)
 #endif
 
 #ifndef AV_RL32
@@ -289,7 +289,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[1] = (d)>>8;            \
         ((uint8_t*)(p))[2] = (d)>>16;           \
         ((uint8_t*)(p))[3] = (d)>>24;           \
-    } while(0)
+    } ながら(0)
 #endif
 
 #ifndef AV_RB64
@@ -314,7 +314,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[2] = (d)>>40;           \
         ((uint8_t*)(p))[1] = (d)>>48;           \
         ((uint8_t*)(p))[0] = (d)>>56;           \
-    } while(0)
+    } ながら(0)
 #endif
 
 #ifndef AV_RL64
@@ -339,13 +339,13 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[5] = (d)>>40;           \
         ((uint8_t*)(p))[6] = (d)>>48;           \
         ((uint8_t*)(p))[7] = (d)>>56;           \
-    } while(0)
+    } ながら(0)
 #endif
 
-#if AV_HAVE_BIGENDIAN
+#もし AV_HAVE_BIGENDIAN
 #   define AV_RN(s, p)    AV_RB##s(p)
 #   define AV_WN(s, p, v) AV_WB##s(p, v)
-#else
+#否则
 #   define AV_RN(s, p)    AV_RL##s(p)
 #   define AV_WN(s, p, v) AV_WL##s(p, v)
 #endif
@@ -376,12 +376,12 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 #   define AV_WN64(p, v) AV_WN(64, p, v)
 #endif
 
-#if AV_HAVE_BIGENDIAN
+#もし AV_HAVE_BIGENDIAN
 #   define AV_RB(s, p)    AV_RN##s(p)
 #   define AV_WB(s, p, v) AV_WN##s(p, v)
 #   define AV_RL(s, p)    av_bswap##s(AV_RN##s(p))
 #   define AV_WL(s, p, v) AV_WN##s(p, av_bswap##s(v))
-#else
+#否则
 #   define AV_RB(s, p)    av_bswap##s(AV_RN##s(p))
 #   define AV_WB(s, p, v) AV_WN##s(p, av_bswap##s(v))
 #   define AV_RL(s, p)    AV_RN##s(p)
@@ -389,7 +389,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 #endif
 
 #define AV_RB8(x)     (((const uint8_t*)(x))[0])
-#define AV_WB8(p, d)  do { ((uint8_t*)(p))[0] = (d); } while(0)
+#define AV_WB8(p, d)  do { ((uint8_t*)(p))[0] = (d); } ながら(0)
 
 #define AV_RL8(x)     AV_RB8(x)
 #define AV_WL8(p, d)  AV_WB8(p, d)
@@ -447,7 +447,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[2] = (d);               \
         ((uint8_t*)(p))[1] = (d)>>8;            \
         ((uint8_t*)(p))[0] = (d)>>16;           \
-    } while(0)
+    } ながら(0)
 #endif
 
 #ifndef AV_RL24
@@ -461,7 +461,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[0] = (d);               \
         ((uint8_t*)(p))[1] = (d)>>8;            \
         ((uint8_t*)(p))[2] = (d)>>16;           \
-    } while(0)
+    } ながら(0)
 #endif
 
 #ifndef AV_RB48
@@ -482,7 +482,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[2] = (d)>>24;           \
         ((uint8_t*)(p))[1] = (d)>>32;           \
         ((uint8_t*)(p))[0] = (d)>>40;           \
-    } while(0)
+    } ながら(0)
 #endif
 
 #ifndef AV_RL48
@@ -503,7 +503,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[3] = (d)>>24;           \
         ((uint8_t*)(p))[4] = (d)>>32;           \
         ((uint8_t*)(p))[5] = (d)>>40;           \
-    } while(0)
+    } ながら(0)
 #endif
 
 /*
@@ -538,12 +538,12 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 #   define AV_WN64A(p, v) AV_WNA(64, p, v)
 #endif
 
-#if AV_HAVE_BIGENDIAN
+#もし AV_HAVE_BIGENDIAN
 #   define AV_RLA(s, p)    av_bswap##s(AV_RN##s##A(p))
 #   define AV_WLA(s, p, v) AV_WN##s##A(p, av_bswap##s(v))
 #   define AV_RBA(s, p)    AV_RN##s##A(p)
 #   define AV_WBA(s, p, v) AV_WN##s##A(p, v)
-#else
+#否则
 #   define AV_RLA(s, p)    AV_RN##s##A(p)
 #   define AV_WLA(s, p, v) AV_WN##s##A(p, v)
 #   define AV_RBA(s, p)    av_bswap##s(AV_RN##s##A(p))
@@ -616,7 +616,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
     do {                                                        \
         AV_COPY64U(d, s);                                       \
         AV_COPY64U((char *)(d) + 8, (const char *)(s) + 8);     \
-    } while(0)
+    } ながら(0)
 #endif
 
 /* Parameters for AV_COPY*, AV_SWAP*, AV_ZERO* must be
@@ -643,7 +643,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
     do {                                       \
         AV_COPY64(d, s);                       \
         AV_COPY64((char*)(d)+8, (char*)(s)+8); \
-    } while(0)
+    } ながら(0)
 #endif
 
 #define AV_SWAP(n, a, b) FFSWAP(av_alias##n, *(av_alias##n*)(a), *(av_alias##n*)(b))
@@ -671,7 +671,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
     do {                         \
         AV_ZERO64(d);            \
         AV_ZERO64((char*)(d)+8); \
-    } while(0)
+    } ながら(0)
 #endif
 
 #endif /* AVUTIL_INTREADWRITE_H */

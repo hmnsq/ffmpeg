@@ -32,7 +32,7 @@ static uint64_t rand64(void)
 {
     uint64_t r = rand();
     r = (r << 32) | rand();
-    return r;
+    戻る r;
 }
 
 static const uint8_t test_key[] = { 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0 };
@@ -46,10 +46,10 @@ static const uint8_t cbc_key[] = {
     0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23
 };
 
-static int run_test(int cbc, int decrypt)
+static 整数 run_test(整数 cbc, 整数 decrypt)
 {
     AVDES d;
-    int delay = cbc && !decrypt ? 2 : 1;
+    整数 delay = cbc && !decrypt ? 2 : 1;
     uint64_t res;
     AV_WB64(large_buffer[0], 0x4e6f772069732074ULL);
     AV_WB64(large_buffer[1], 0x1234567890abcdefULL);
@@ -57,16 +57,16 @@ static int run_test(int cbc, int decrypt)
     av_des_init(&d, cbc_key, 192, decrypt);
     av_des_crypt(&d, large_buffer[delay], large_buffer[0], 10000, cbc ? tmp : NULL, decrypt);
     res = AV_RB64(large_buffer[9999 + delay]);
-    if (cbc) {
-        if (decrypt)
-            return res == 0xc5cecf63ecec514cULL;
-        else
-            return res == 0xcb191f85d1ed8439ULL;
-    } else {
-        if (decrypt)
-            return res == 0x8325397644091a0aULL;
-        else
-            return res == 0xdd17e8b8b437d232ULL;
+    もし (cbc) {
+        もし (decrypt)
+            戻る res == 0xc5cecf63ecec514cULL;
+        否则
+            戻る res == 0xcb191f85d1ed8439ULL;
+    } 否则 {
+        もし (decrypt)
+            戻る res == 0x8325397644091a0aULL;
+        否则
+            戻る res == 0xdd17e8b8b437d232ULL;
     }
 }
 
@@ -75,31 +75,31 @@ union word_byte {
     uint8_t byte[8];
 };
 
-int main(void)
+整数 メインページ(void)
 {
     AVDES d;
-    int i;
+    整数 i;
     union word_byte key[3], data, ct;
     uint64_t roundkeys[16];
     srand(av_gettime());
     key[0].word = AV_RB64(test_key);
     data.word   = AV_RB64(plain);
     gen_roundkeys(roundkeys, key[0].word);
-    if (des_encdec(data.word, roundkeys, 0) != AV_RB64(crypt_ref)) {
+    もし (des_encdec(data.word, roundkeys, 0) != AV_RB64(crypt_ref)) {
         printf("Test 1 failed\n");
-        return 1;
+        戻る 1;
     }
     av_des_init(&d, test_key, 64, 0);
     av_des_crypt(&d, tmp, plain, 1, NULL, 0);
-    if (memcmp(tmp, crypt_ref, sizeof(crypt_ref))) {
+    もし (memcmp(tmp, crypt_ref, sizeof(crypt_ref))) {
         printf("Public API decryption failed\n");
-        return 1;
+        戻る 1;
     }
-    if (!run_test(0, 0) || !run_test(0, 1) || !run_test(1, 0) || !run_test(1, 1)) {
+    もし (!run_test(0, 0) || !run_test(0, 1) || !run_test(1, 0) || !run_test(1, 1)) {
         printf("Partial Monte-Carlo test failed\n");
-        return 1;
+        戻る 1;
     }
-    for (i = 0; i < 1000; i++) {
+    ために (i = 0; i < 1000; i++) {
         key[0].word = rand64();
         key[1].word = rand64();
         key[2].word = rand64();
@@ -108,17 +108,17 @@ int main(void)
         av_des_crypt(&d, ct.byte, data.byte, 1, NULL, 0);
         av_des_init(&d, key[0].byte, 192, 1);
         av_des_crypt(&d, ct.byte, ct.byte, 1, NULL, 1);
-        if (ct.word != data.word) {
+        もし (ct.word != data.word) {
             printf("Test 2 failed\n");
-            return 1;
+            戻る 1;
         }
     }
 #ifdef GENTABLES
     printf("static const uint32_t S_boxes_P_shuffle[8][64] = {\n");
-    for (i = 0; i < 8; i++) {
-        int j;
+    ために (i = 0; i < 8; i++) {
+        整数 j;
         printf("    {");
-        for (j = 0; j < 64; j++) {
+        ために (j = 0; j < 64; j++) {
             uint32_t v = S_boxes[i][j >> 1];
             v   = j & 1 ? v >> 4 : v & 0xf;
             v <<= 28 - 4 * i;
@@ -130,5 +130,5 @@ int main(void)
     }
     printf("};\n");
 #endif
-    return 0;
+    戻る 0;
 }

@@ -28,7 +28,7 @@ static const AVDictionaryEntry *dict_iterate(const AVDictionary *m,
     const AVDictionaryEntry *dict_get = av_dict_get(m, "", prev, AV_DICT_IGNORE_SUFFIX);
     const AVDictionaryEntry *dict_iterate = av_dict_iterate(m, prev);
 
-    if (dict_get != dict_iterate) {
+    もし (dict_get != dict_iterate) {
 #define GET(entry, mem) ((entry) ? (entry)->mem : "N/A")
         printf("Iterating with av_dict_iterate() yields a different result "
                "than iterating with av_dict_get() and AV_DICT_IGNORE_SUFFIX "
@@ -39,14 +39,14 @@ static const AVDictionaryEntry *dict_iterate(const AVDictionary *m,
                dict_get, GET(dict_get, key), GET(dict_get, value));
 #undef GET
     }
-    return dict_iterate;
+    戻る dict_iterate;
 }
 
 static void print_dict(const AVDictionary *m)
 {
     const AVDictionaryEntry *t = NULL;
     const char *sep = "";
-    while ((t = dict_iterate(m, t))) {
+    ながら ((t = dict_iterate(m, t))) {
         printf("%s%s %s", sep, t->key, t->value);
         sep = "   ";
     }
@@ -60,7 +60,7 @@ static void test_separators(const AVDictionary *m, const char pair, const char v
     char vals[]  = {val, '\0'};
 
     char *buffer = NULL;
-    int ret;
+    整数 ret;
 
     av_dict_copy(&dict, m, 0);
     print_dict(dict);
@@ -74,7 +74,7 @@ static void test_separators(const AVDictionary *m, const char pair, const char v
     av_dict_free(&dict);
 }
 
-int main(void)
+整数 メインページ(void)
 {
     AVDictionary *dict = NULL;
     const AVDictionaryEntry *e;
@@ -116,14 +116,14 @@ int main(void)
     av_dict_set(&dict, "f", NULL, 0);
     av_dict_set(&dict, "ff", "f", 0);
     av_dict_set(&dict, "ff", "f", AV_DICT_APPEND);
-    if (av_dict_get(dict, NULL, NULL, 0))
+    もし (av_dict_get(dict, NULL, NULL, 0))
         printf("av_dict_get() does not correctly handle NULL key.\n");
     e = NULL;
-    while ((e = dict_iterate(dict, e)))
+    ながら ((e = dict_iterate(dict, e)))
         printf("%s %s\n", e->key, e->value);
     av_dict_free(&dict);
 
-    if (av_dict_set(&dict, NULL, "a", 0) >= 0 ||
+    もし (av_dict_set(&dict, NULL, "a", 0) >= 0 ||
         av_dict_set(&dict, NULL, "b", 0) >= 0 ||
         av_dict_set(&dict, NULL, NULL, AV_DICT_DONT_STRDUP_KEY) >= 0 ||
         av_dict_set(&dict, NULL, av_strdup("b"), AV_DICT_DONT_STRDUP_VAL) >= 0 ||
@@ -131,7 +131,7 @@ int main(void)
         printf("av_dict_set does not correctly handle NULL key\n");
 
     e = NULL;
-    while ((e = dict_iterate(dict, e)))
+    ながら ((e = dict_iterate(dict, e)))
         printf("'%s' '%s'\n", e->key, e->value);
     av_dict_free(&dict);
 
@@ -147,24 +147,24 @@ int main(void)
     av_dict_set_int(&dict, "12", 1, 0);
     av_dict_set_int(&dict, "12", 2, AV_DICT_APPEND);
     e = NULL;
-    while ((e = dict_iterate(dict, e)))
+    ながら ((e = dict_iterate(dict, e)))
         printf("%s %s\n", e->key, e->value);
     av_dict_free(&dict);
 
     //valgrind sensible test
     printf("\nTesting av_dict_set() with existing AVDictionaryEntry.key as key\n");
-    if (av_dict_set(&dict, "key", "old", 0) < 0)
-        return 1;
+    もし (av_dict_set(&dict, "key", "old", 0) < 0)
+        戻る 1;
     e = av_dict_get(dict, "key", NULL, 0);
-    if (av_dict_set(&dict, e->key, "new val OK", 0) < 0)
-        return 1;
+    もし (av_dict_set(&dict, e->key, "new val OK", 0) < 0)
+        戻る 1;
     e = av_dict_get(dict, "key", NULL, 0);
     printf("%s\n", e->value);
-    if (av_dict_set(&dict, e->key, e->value, 0) < 0)
-        return 1;
+    もし (av_dict_set(&dict, e->key, e->value, 0) < 0)
+        戻る 1;
     e = av_dict_get(dict, "key", NULL, 0);
     printf("%s\n", e->value);
     av_dict_free(&dict);
 
-    return 0;
+    戻る 0;
 }

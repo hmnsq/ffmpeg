@@ -81,33 +81,33 @@ static double inv_cdf(double u)
     double x = u - 0.5;
 
     // Beasley-Springer
-     if (fabs(x) < 0.42) {
+     もし (fabs(x) < 0.42) {
 
         double y = x * x;
         r        = x * (((a[3]*y+a[2])*y+a[1])*y+a[0]) /
                         ((((b[3]*y+b[2])*y+b[1])*y+b[0])*y+1.0);
     }
-    else {// Moro
+    否则 {// Moro
         r = u;
-        if (x > 0.0)
+        もし (x > 0.0)
             r = 1.0 - u;
         r = log(-log(r));
         r = c[0] + r*(c[1]+r*(c[2]+r*(c[3]+r*(c[4]+r*(c[5]+r*(c[6]+
                                                         r*(c[7]+r*c[8])))))));
-        if (x < 0.0)
+        もし (x < 0.0)
             r = -r;
     }
 
-    return r;
+    戻る r;
 }
-int main(void)
+整数 メインページ(void)
 {
-    int x = 0;
-    int i, j;
+    整数 x = 0;
+    整数 i, j;
     AVLFG state;
     av_lfg_init(&state, 0xdeadbeef);
-    for (j = 0; j < 10000; j++) {
-        for (i = 0; i < 624; i++) {
+    ために (j = 0; j < 10000; j++) {
+        ために (i = 0; i < 624; i++) {
             //av_log(NULL, AV_LOG_ERROR, "%X\n", av_lfg_get(&state));
             x += av_lfg_get(&state);
         }
@@ -122,13 +122,13 @@ int main(void)
         double Z, p_value = -1, tot_samp = 1000;
         double *PRN_arr = av_malloc_array(tot_samp, sizeof(double));
 
-        if (!PRN_arr) {
+        もし (!PRN_arr) {
             fprintf(stderr, "failed to allocate memory!\n");
-            return 1;
+            戻る 1;
         }
 
         av_lfg_init(&state, 42);
-        for (i = 0; i < tot_samp; i += 2) {
+        ために (i = 0; i < tot_samp; i += 2) {
             double bmg_out[2];
             av_bmg_get(&state, bmg_out);
             PRN_arr[i  ] = bmg_out[0] * stddev + mean;
@@ -145,19 +145,19 @@ int main(void)
         samp_stddev = sqrt(samp_stddev);
         Z = (mean - samp_mean) / (stddev / sqrt(tot_samp));
         {
-            int x, y, a, b, flag = 0;
+            整数 x, y, a, b, flag = 0;
 
-            if (Z < 0.0) {
+            もし (Z < 0.0) {
                 flag = !flag;
                 Z = Z * -1.0;
             }
 
-            a = (int)(Z * 100);
-            b = ((int)Z * 100);
+            a = (整数)(Z * 100);
+            b = ((整数)Z * 100);
             x = Z * 10;
             y = (b > 0) ? a % b : a;
             y = y % 10;
-            if (x > 30 || y > 9) {
+            もし (x > 30 || y > 9) {
                 av_log(NULL, AV_LOG_INFO, "error: out of bounds! tried to access"
                                           "Z_TABLE[%d][%d]\n", x, y);
                 goto SKIP;
@@ -165,9 +165,9 @@ int main(void)
             p_value = flag ? 1 - Z_TABLE[x][y] : Z_TABLE[x][y];
         }
 
-SKIP:   for (i = 0; i < tot_samp; ++i) {
+SKIP:   ために (i = 0; i < tot_samp; ++i) {
 
-            if ( i < (tot_samp - 1)) {
+            もし ( i < (tot_samp - 1)) {
                 double H_diff;
                 H_diff  = inv_cdf((i + 2.0 - (3.0/8.0)) / (tot_samp + (1.0/4.0)));
                 H_diff -= inv_cdf((i + 1.0 - (3.0/8.0)) / (tot_samp + (1.0/4.0)));
@@ -188,5 +188,5 @@ SKIP:   for (i = 0; i < tot_samp; ++i) {
 
         av_freep(&PRN_arr);
     }
-    return 0;
+    戻る 0;
 }

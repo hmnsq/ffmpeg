@@ -24,7 +24,7 @@
 #include "config.h"
 #include "mem.h"
 
-#if HAVE_GETENV && defined(_WIN32)
+#もし HAVE_GETENV && defined(_WIN32)
 
 #include "libavutil/wchar_filename.h"
 
@@ -33,20 +33,20 @@ static inline char *getenv_utf8(const char *varname)
     wchar_t *varname_w, *var_w;
     char *var;
 
-    if (utf8towchar(varname, &varname_w))
-        return NULL;
-    if (!varname_w)
-        return NULL;
+    もし (utf8towchar(varname, &varname_w))
+        戻る NULL;
+    もし (!varname_w)
+        戻る NULL;
 
     var_w = _wgetenv(varname_w);
     av_free(varname_w);
 
-    if (!var_w)
-        return NULL;
-    if (wchartoutf8(var_w, &var))
-        return NULL;
+    もし (!var_w)
+        戻る NULL;
+    もし (wchartoutf8(var_w, &var))
+        戻る NULL;
 
-    return var;
+    戻る var;
 
     // No CP_ACP fallback compared to other *_utf8() functions:
     // non UTF-8 strings must not be returned.
@@ -59,14 +59,14 @@ static inline void freeenv_utf8(char *var)
 
 static inline char *getenv_dup(const char *varname)
 {
-    return getenv_utf8(varname);
+    戻る getenv_utf8(varname);
 }
 
-#else
+#否则
 
 static inline char *getenv_utf8(const char *varname)
 {
-    return getenv(varname);
+    戻る getenv(varname);
 }
 
 static inline void freeenv_utf8(char *var)
@@ -76,9 +76,9 @@ static inline void freeenv_utf8(char *var)
 static inline char *getenv_dup(const char *varname)
 {
     char *var = getenv(varname);
-    if (!var)
-        return NULL;
-    return av_strdup(var);
+    もし (!var)
+        戻る NULL;
+    戻る av_strdup(var);
 }
 
 #endif // HAVE_GETENV && defined(_WIN32)

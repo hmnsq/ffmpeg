@@ -41,7 +41,7 @@ typedef enum AVThreadMessageFlags {
  * @return  >=0 for success; <0 for error, in particular AVERROR(ENOSYS) if
  *          lavu was built without thread support
  */
-int av_thread_message_queue_alloc(AVThreadMessageQueue **mq,
+整数 av_thread_message_queue_alloc(AVThreadMessageQueue **mq,
                                   unsigned nelem,
                                   unsigned elsize);
 
@@ -55,14 +55,14 @@ void av_thread_message_queue_free(AVThreadMessageQueue **mq);
 /**
  * Send a message on the queue.
  */
-int av_thread_message_queue_send(AVThreadMessageQueue *mq,
+整数 av_thread_message_queue_send(AVThreadMessageQueue *mq,
                                  void *msg,
                                  unsigned flags);
 
 /**
  * Receive a message from the queue.
  */
-int av_thread_message_queue_recv(AVThreadMessageQueue *mq,
+整数 av_thread_message_queue_recv(AVThreadMessageQueue *mq,
                                  void *msg,
                                  unsigned flags);
 
@@ -75,7 +75,7 @@ int av_thread_message_queue_recv(AVThreadMessageQueue *mq,
  * suspend its operation.
  */
 void av_thread_message_queue_set_err_send(AVThreadMessageQueue *mq,
-                                          int err);
+                                          整数 err);
 
 /**
  * Set the receiving error code.
@@ -86,7 +86,7 @@ void av_thread_message_queue_set_err_send(AVThreadMessageQueue *mq,
  * to cause the receiving thread to stop or suspend its operation.
  */
 void av_thread_message_queue_set_err_recv(AVThreadMessageQueue *mq,
-                                          int err);
+                                          整数 err);
 
 /**
  * Set the optional free message callback function which will be called if an
@@ -101,7 +101,7 @@ void av_thread_message_queue_set_free_func(AVThreadMessageQueue *mq,
  * @return the current number of messages or AVERROR(ENOSYS) if lavu was built
  *         without thread support
  */
-int av_thread_message_queue_nb_elems(AVThreadMessageQueue *mq);
+整数 av_thread_message_queue_nb_elems(AVThreadMessageQueue *mq);
 
 /**
  * Flush the message queue

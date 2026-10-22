@@ -32,22 +32,22 @@
 #include <AMF/core/Surface.h>
 #include <AMF/core/Trace.h>
 
-#if CONFIG_VULKAN
+#もし CONFIG_VULKAN
 #include "hwcontext_vulkan.h"
 #endif
-#if CONFIG_D3D11VA
+#もし CONFIG_D3D11VA
 #include "libavutil/hwcontext_d3d11va.h"
 #endif
-#if CONFIG_D3D12VA
+#もし CONFIG_D3D12VA
 #include "libavutil/hwcontext_d3d12va.h"
 #endif
-#if CONFIG_DXVA2
+#もし CONFIG_DXVA2
 #define COBJMACROS
 #include "libavutil/hwcontext_dxva2.h"
 #endif
 #ifdef _WIN32
 #include "compat/w32dlfcn.h"
-#else
+#否则
 #include <dlfcn.h>
 #endif
 #define FFMPEG_AMF_WRITER_ID L"ffmpeg_amf"
@@ -82,15 +82,15 @@ static void AMF_CDECL_CALL AMFTraceWriter_Flush(AMFTraceWriter *pThis)
 static AmfTraceWriter * amf_writer_alloc(void  *avctx)
 {
     AmfTraceWriter * writer = av_mallocz(sizeof(AmfTraceWriter));
-    if (!writer)
-        return NULL;
+    もし (!writer)
+        戻る NULL;
 
     writer->vtblp = &writer->vtbl;
     writer->vtblp->Write = AMFTraceWriter_Write;
     writer->vtblp->Flush = AMFTraceWriter_Flush;
     writer->avctx = avctx;
 
-    return writer;
+    戻る writer;
 }
 
 static void amf_writer_free(void  *opaque)
@@ -132,72 +132,72 @@ const FormatMap format_map[] =
 
 enum AMF_SURFACE_FORMAT av_av_to_amf_format(enum AVPixelFormat fmt)
 {
-    int i;
-    for (i = 0; i < amf_countof(format_map); i++) {
-        if (format_map[i].av_format == fmt) {
-            return format_map[i].amf_format;
+    整数 i;
+    ために (i = 0; i < amf_countof(format_map); i++) {
+        もし (format_map[i].av_format == fmt) {
+            戻る format_map[i].amf_format;
         }
     }
-    return AMF_SURFACE_UNKNOWN;
+    戻る AMF_SURFACE_UNKNOWN;
 }
 
 enum AVPixelFormat av_amf_to_av_format(enum AMF_SURFACE_FORMAT fmt)
 {
-    int i;
-    for (i = 0; i < amf_countof(format_map); i++) {
-        if (format_map[i].amf_format == fmt) {
-            return format_map[i].av_format;
+    整数 i;
+    ために (i = 0; i < amf_countof(format_map); i++) {
+        もし (format_map[i].amf_format == fmt) {
+            戻る format_map[i].av_format;
         }
     }
-    return AV_PIX_FMT_NONE;
+    戻る AV_PIX_FMT_NONE;
 }
 
 enum AMF_VIDEO_CONVERTER_COLOR_PROFILE_ENUM av_amf_get_color_profile(enum AVColorRange color_range, enum AVColorSpace color_space)
 {
     switch (color_space) {
     case AVCOL_SPC_SMPTE170M:
-        if (color_range == AVCOL_RANGE_JPEG) {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_601;
-        } else {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_601;
+        もし (color_range == AVCOL_RANGE_JPEG) {
+            戻る AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_601;
+        } 否则 {
+            戻る AMF_VIDEO_CONVERTER_COLOR_PROFILE_601;
         }
         break;
     case AVCOL_SPC_BT709:
-        if (color_range == AVCOL_RANGE_JPEG) {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_709;
-        } else {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_709;
+        もし (color_range == AVCOL_RANGE_JPEG) {
+            戻る AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_709;
+        } 否则 {
+            戻る AMF_VIDEO_CONVERTER_COLOR_PROFILE_709;
         }
         break;
     case AVCOL_SPC_BT2020_NCL:
     case AVCOL_SPC_BT2020_CL:
-        if (color_range == AVCOL_RANGE_JPEG) {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_2020;
-        } else {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_2020;
+        もし (color_range == AVCOL_RANGE_JPEG) {
+            戻る AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_2020;
+        } 否则 {
+            戻る AMF_VIDEO_CONVERTER_COLOR_PROFILE_2020;
         }
         break;
 
     default:
-        return AMF_VIDEO_CONVERTER_COLOR_PROFILE_UNKNOWN;
+        戻る AMF_VIDEO_CONVERTER_COLOR_PROFILE_UNKNOWN;
     }
 }
 
-int av_amf_display_mastering_meta_to_hdrmeta(const AVMasteringDisplayMetadata *display_meta, AMFHDRMetadata *hdrmeta)
+整数 av_amf_display_mastering_meta_to_hdrmeta(const AVMasteringDisplayMetadata *display_meta, AMFHDRMetadata *hdrmeta)
 {
-    if (!display_meta || !hdrmeta)
-        return AVERROR(EINVAL);
+    もし (!display_meta || !hdrmeta)
+        戻る AVERROR(EINVAL);
 
-    if (display_meta->has_luminance) {
-        const unsigned int luma_den = 10000;
+    もし (display_meta->has_luminance) {
+        const unsigned 整数 luma_den = 10000;
         hdrmeta->maxMasteringLuminance =
             (amf_uint32)(luma_den * av_q2d(display_meta->max_luminance));
         hdrmeta->minMasteringLuminance =
             FFMIN((amf_uint32)(luma_den * av_q2d(display_meta->min_luminance)), hdrmeta->maxMasteringLuminance);
     }
 
-    if (display_meta->has_primaries) {
-        const unsigned int chroma_den = 50000;
+    もし (display_meta->has_primaries) {
+        const unsigned 整数 chroma_den = 50000;
         hdrmeta->redPrimary[0] =
             FFMIN((amf_uint16)(chroma_den * av_q2d(display_meta->display_primaries[0][0])), chroma_den);
         hdrmeta->redPrimary[1] =
@@ -216,60 +216,60 @@ int av_amf_display_mastering_meta_to_hdrmeta(const AVMasteringDisplayMetadata *d
             FFMIN((amf_uint16)(chroma_den * av_q2d(display_meta->white_point[1])), chroma_den);
     }
 
-    return 0;
+    戻る 0;
 }
 
-int av_amf_light_metadata_to_hdrmeta(const AVContentLightMetadata *light_meta, AMFHDRMetadata *hdrmeta)
+整数 av_amf_light_metadata_to_hdrmeta(const AVContentLightMetadata *light_meta, AMFHDRMetadata *hdrmeta)
 {
-    if (!light_meta || !hdrmeta)
-        return AVERROR(EINVAL);
+    もし (!light_meta || !hdrmeta)
+        戻る AVERROR(EINVAL);
 
     hdrmeta->maxContentLightLevel = (amf_uint16)light_meta->MaxCLL;
     hdrmeta->maxFrameAverageLightLevel = (amf_uint16)light_meta->MaxFALL;
 
-    return 0;
+    戻る 0;
 }
 
-int av_amf_extract_hdr_metadata(const AVFrame *frame, AMFHDRMetadata *hdrmeta)
+整数 av_amf_extract_hdr_metadata(const AVFrame *frame, AMFHDRMetadata *hdrmeta)
 {
     AVFrameSideData *sidedata;
     AVContentLightMetadata *content_light = NULL;
     AVMasteringDisplayMetadata *mastering_display = NULL;
 
-    if (!frame || !hdrmeta)
-        return AVERROR(EINVAL);
+    もし (!frame || !hdrmeta)
+        戻る AVERROR(EINVAL);
 
     sidedata = av_frame_get_side_data(frame, AV_FRAME_DATA_MASTERING_DISPLAY_METADATA);
-    if (sidedata) {
+    もし (sidedata) {
         mastering_display = (AVMasteringDisplayMetadata *)sidedata->data;
-        if (av_amf_display_mastering_meta_to_hdrmeta(mastering_display, hdrmeta) != 0)
+        もし (av_amf_display_mastering_meta_to_hdrmeta(mastering_display, hdrmeta) != 0)
             mastering_display = NULL;
     }
 
     sidedata = av_frame_get_side_data(frame, AV_FRAME_DATA_CONTENT_LIGHT_LEVEL);
-    if (sidedata) {
+    もし (sidedata) {
         content_light = (AVContentLightMetadata *)sidedata->data;
-        if (av_amf_light_metadata_to_hdrmeta(content_light, hdrmeta) != 0)
+        もし (av_amf_light_metadata_to_hdrmeta(content_light, hdrmeta) != 0)
             content_light = NULL;
     }
 
-    if (!mastering_display && !content_light)
-        return AVERROR(ENODATA);
+    もし (!mastering_display && !content_light)
+        戻る AVERROR(ENODATA);
 
-    return 0;
+    戻る 0;
 }
 
-int av_amf_attach_hdr_metadata(AVFrame *frame, const AMFHDRMetadata *hdrmeta) {
-    if (!hdrmeta || !frame)
-        return AVERROR(EINVAL);
+整数 av_amf_attach_hdr_metadata(AVFrame *frame, const AMFHDRMetadata *hdrmeta) {
+    もし (!hdrmeta || !frame)
+        戻る AVERROR(EINVAL);
 
     AVMasteringDisplayMetadata *mastering =
         av_mastering_display_metadata_create_side_data(frame);
-    const int chroma_den = 50000;
-    const int luma_den = 10000;
+    const 整数 chroma_den = 50000;
+    const 整数 luma_den = 10000;
 
-    if (!mastering)
-      return AVERROR(ENOMEM);
+    もし (!mastering)
+      戻る AVERROR(ENOMEM);
 
     mastering->display_primaries[0][0] =
         av_make_q(hdrmeta->redPrimary[0], chroma_den);
@@ -296,18 +296,18 @@ int av_amf_attach_hdr_metadata(AVFrame *frame, const AMFHDRMetadata *hdrmeta) {
 
     mastering->has_luminance = 1;
     mastering->has_primaries = 1;
-    if (hdrmeta->maxContentLightLevel) {
+    もし (hdrmeta->maxContentLightLevel) {
       AVContentLightMetadata *light =
           av_content_light_metadata_create_side_data(frame);
 
-      if (!light)
-        return AVERROR(ENOMEM);
+      もし (!light)
+        戻る AVERROR(ENOMEM);
 
       light->MaxCLL = hdrmeta->maxContentLightLevel;
       light->MaxFALL = hdrmeta->maxFrameAverageLightLevel;
     }
 
-    return 0;
+    戻る 0;
 }
 
 static const enum AVPixelFormat supported_formats[] = {
@@ -319,13 +319,13 @@ static const enum AVPixelFormat supported_formats[] = {
     AV_PIX_FMT_P010,
     AV_PIX_FMT_X2BGR10,
     AV_PIX_FMT_RGBAF16,
-#if CONFIG_D3D11VA
+#もし CONFIG_D3D11VA
     AV_PIX_FMT_D3D11,
 #endif
-#if CONFIG_D3D12VA
+#もし CONFIG_D3D12VA
     AV_PIX_FMT_D3D12,
 #endif
-#if CONFIG_DXVA2
+#もし CONFIG_DXVA2
     AV_PIX_FMT_DXVA2_VLD,
 #endif
 };
@@ -341,29 +341,29 @@ static const enum AVPixelFormat supported_transfer_formats[] = {
     AV_PIX_FMT_NONE,
 };
 
-static int amf_frames_get_constraints(AVHWDeviceContext *ctx,
+static 整数 amf_frames_get_constraints(AVHWDeviceContext *ctx,
                                        const void *hwconfig,
                                        AVHWFramesConstraints *constraints)
 {
-    int i;
+    整数 i;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_formats) + 1,
                                                     sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+    もし (!constraints->valid_sw_formats)
+        戻る AVERROR(ENOMEM);
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++)
+    ために (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++)
         constraints->valid_sw_formats[i] = supported_formats[i];
     constraints->valid_sw_formats[FF_ARRAY_ELEMS(supported_formats)] = AV_PIX_FMT_NONE;
 
     constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    もし (!constraints->valid_hw_formats)
+        戻る AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_AMF_SURFACE;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    戻る 0;
 }
 
 static void amf_dummy_free(void *opaque, uint8_t *data)
@@ -377,91 +377,91 @@ static AVBufferRef *amf_pool_alloc(void *opaque, size_t size)
     AVBufferRef *buf;
 
     buf = av_buffer_create(NULL, 0, amf_dummy_free, hwfc, AV_BUFFER_FLAG_READONLY);
-    if (!buf) {
+    もし (!buf) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to create buffer for AMF context.\n");
-        return NULL;
+        戻る NULL;
     }
-    return buf;
+    戻る buf;
 }
 
-static int amf_frames_init(AVHWFramesContext *ctx)
+static 整数 amf_frames_init(AVHWFramesContext *ctx)
 {
-    int i;
+    整数 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i])
+    ために (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        もし (ctx->sw_format == supported_formats[i])
             break;
     }
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    もし (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Pixel format '%s' is not supported\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(ENOSYS);
+        戻る AVERROR(ENOSYS);
     }
 
     ffhwframesctx(ctx)->pool_internal =
             av_buffer_pool_init2(sizeof(AMFSurface), ctx,
                                  &amf_pool_alloc, NULL);
 
-    return 0;
+    戻る 0;
 }
 
 
-static int amf_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+static 整数 amf_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
 {
     frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    もし (!frame->buf[0])
+        戻る AVERROR(ENOMEM);
 
     frame->data[0] = frame->buf[0]->data;
     frame->format  = AV_PIX_FMT_AMF_SURFACE;
     frame->width   = ctx->width;
     frame->height  = ctx->height;
-    return 0;
+    戻る 0;
 }
 
-static int amf_transfer_get_formats(AVHWFramesContext *ctx,
+static 整数 amf_transfer_get_formats(AVHWFramesContext *ctx,
                                      enum AVHWFrameTransferDirection dir,
                                      enum AVPixelFormat **formats)
 {
     enum AVPixelFormat *fmts;
-    int i;
+    整数 i;
 
     fmts = av_malloc_array(FF_ARRAY_ELEMS(supported_transfer_formats), sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_transfer_formats); i++)
+    もし (!fmts)
+        戻る AVERROR(ENOMEM);
+    ために (i = 0; i < FF_ARRAY_ELEMS(supported_transfer_formats); i++)
         fmts[i] = supported_transfer_formats[i];
 
     *formats = fmts;
 
-    return 0;
+    戻る 0;
 }
 
 static void amf_free_amfsurface(void *opaque, uint8_t *data)
 {
-    if(!!data){
+    もし(!!data){
         AMFSurface *surface = (AMFSurface*)(data);
         surface->pVtbl->Release(surface);
     }
 }
 
-static int amf_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
+static 整数 amf_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
                                  const AVFrame *src)
 {
     AMFSurface* surface = (AMFSurface*)dst->data[0];
     AMFPlane *plane;
     uint8_t  *dst_data[4];
-    int       dst_linesize[4];
-    int       planes;
-    int       i;
-    int       res;
-    int w = FFMIN(dst->width,  src->width);
-    int h = FFMIN(dst->height, src->height);
+    整数       dst_linesize[4];
+    整数       planes;
+    整数       i;
+    整数       res;
+    整数 w = FFMIN(dst->width,  src->width);
+    整数 h = FFMIN(dst->height, src->height);
 
-    if (dst->hw_frames_ctx->data != (uint8_t *)ctx || src->format != ctx->sw_format)
-        return AVERROR(EINVAL);
+    もし (dst->hw_frames_ctx->data != (uint8_t *)ctx || src->format != ctx->sw_format)
+        戻る AVERROR(EINVAL);
 
-    if (!surface) {
+    もし (!surface) {
         AVHWDeviceContext   *hwdev_ctx = ctx->device_ctx;
         AVAMFDeviceContext  *amf_device_ctx = (AVAMFDeviceContext *)hwdev_ctx->hwctx;
         AMF_SURFACE_FORMAT  format = av_av_to_amf_format(ctx->sw_format);
@@ -475,10 +475,10 @@ static int amf_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
     AMF_RETURN_IF_FALSE(ctx, !!dst->buf[1], AVERROR(ENOMEM), "av_buffer_create for amf surface failed.");
     }
 
-    planes = (int)surface->pVtbl->GetPlanesCount(surface);
+    planes = (整数)surface->pVtbl->GetPlanesCount(surface);
     av_assert0(planes < FF_ARRAY_ELEMS(dst_data));
 
-    for (i = 0; i < planes; i++) {
+    ために (i = 0; i < planes; i++) {
         plane = surface->pVtbl->GetPlaneAt(surface, i);
         dst_data[i] = plane->pVtbl->GetNative(plane);
         dst_linesize[i] = plane->pVtbl->GetHPitch(plane);
@@ -487,32 +487,32 @@ static int amf_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
                    src->data, src->linesize, src->format,
                    w, h);
 
-    return 0;
+    戻る 0;
 }
 
-static int amf_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
+static 整数 amf_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
                                     const AVFrame *src)
 {
     AMFSurface* surface = (AMFSurface*)src->data[0];
     AMFPlane *plane;
     uint8_t  *src_data[4];
-    int       src_linesize[4];
-    int       planes;
-    int       i;
-    int w = FFMIN(dst->width,  src->width);
-    int h = FFMIN(dst->height, src->height);
-    int ret;
+    整数       src_linesize[4];
+    整数       planes;
+    整数       i;
+    整数 w = FFMIN(dst->width,  src->width);
+    整数 h = FFMIN(dst->height, src->height);
+    整数 ret;
 
-    if (src->hw_frames_ctx->data != (uint8_t *)ctx || dst->format != ctx->sw_format)
-        return AVERROR(EINVAL);
+    もし (src->hw_frames_ctx->data != (uint8_t *)ctx || dst->format != ctx->sw_format)
+        戻る AVERROR(EINVAL);
 
     ret = surface->pVtbl->Convert(surface, AMF_MEMORY_HOST);
     AMF_RETURN_IF_FALSE(ctx, ret == AMF_OK, AVERROR_UNKNOWN, "Convert(amf::AMF_MEMORY_HOST) failed with error %d\n", AVERROR_UNKNOWN);
 
-    planes = (int)surface->pVtbl->GetPlanesCount(surface);
+    planes = (整数)surface->pVtbl->GetPlanesCount(surface);
     av_assert0(planes < FF_ARRAY_ELEMS(src_data));
 
-    for (i = 0; i < planes; i++) {
+    ために (i = 0; i < planes; i++) {
         plane = surface->pVtbl->GetPlaneAt(surface, i);
         src_data[i] = plane->pVtbl->GetNative(plane);
         src_linesize[i] = plane->pVtbl->GetHPitch(plane);
@@ -520,7 +520,7 @@ static int amf_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
     av_image_copy2(dst->data, dst->linesize,
                    src_data, src_linesize, dst->format,
                    w, h);
-    return 0;
+    戻る 0;
 }
 
 
@@ -531,28 +531,28 @@ static void amf_device_uninit(AVHWDeviceContext *device_ctx)
     AMF_RESULT          res = AMF_NOT_INITIALIZED;
     AMFTrace           *trace;
 
-    if (amf_ctx->context) {
+    もし (amf_ctx->context) {
         amf_ctx->context->pVtbl->Terminate(amf_ctx->context);
         amf_ctx->context->pVtbl->Release(amf_ctx->context);
         amf_ctx->context = NULL;
     }
 
-    if (amf_ctx->factory)
+    もし (amf_ctx->factory)
         res = amf_ctx->factory->pVtbl->GetTrace(amf_ctx->factory, &trace);
 
-    if (res == AMF_OK) {
+    もし (res == AMF_OK) {
         trace->pVtbl->UnregisterWriter(trace, FFMPEG_AMF_WRITER_ID);
     }
 
-    if(amf_ctx->library) {
+    もし(amf_ctx->library) {
         dlclose(amf_ctx->library);
         amf_ctx->library = NULL;
     }
-    if (amf_ctx->trace_writer) {
+    もし (amf_ctx->trace_writer) {
         amf_writer_free(amf_ctx->trace_writer);
     }
 
-    if (amf_ctx->lock_ctx == amf_lock_default) {
+    もし (amf_ctx->lock_ctx == amf_lock_default) {
         ff_mutex_destroy((AVMutex*)amf_ctx->lock_ctx);
         av_freep(&amf_ctx->lock_ctx);
         amf_ctx->lock = NULL;
@@ -585,38 +585,38 @@ enum AMF_MEMORY_TYPE av_amf_get_memory_type(AVAMFDeviceContext *amf_ctx)
     };
 #endif
 
-    if (!amf_ctx)
-        return AMF_MEMORY_UNKNOWN;
+    もし (!amf_ctx)
+        戻る AMF_MEMORY_UNKNOWN;
 
 #ifdef _WIN32
-    if (AMF_IFACE_CALL(context, QueryInterface, &guid2, (void**)&context2) == AMF_OK)
+    もし (AMF_IFACE_CALL(context, QueryInterface, &guid2, (void**)&context2) == AMF_OK)
     {
         device = AMF_IFACE_CALL(context2, GetDX12Device, AMF_DX12);
         AMF_IFACE_CALL(context2, Release);
 
-        if (device)
-            return AMF_MEMORY_DX12;
+        もし (device)
+            戻る AMF_MEMORY_DX12;
     }
 
-    if (AMF_IFACE_CALL(context, GetDX11Device, AMF_DX11_1))
-        return AMF_MEMORY_DX11;
+    もし (AMF_IFACE_CALL(context, GetDX11Device, AMF_DX11_1))
+        戻る AMF_MEMORY_DX11;
 
-    if (AMF_IFACE_CALL(context, GetDX9Device, AMF_DX9))
-        return AMF_MEMORY_DX9;
+    もし (AMF_IFACE_CALL(context, GetDX9Device, AMF_DX9))
+        戻る AMF_MEMORY_DX9;
 #endif
 
-    if (AMF_IFACE_CALL(context, QueryInterface, &guid1, (void**)&context1) != AMF_OK)
-        return AMF_MEMORY_UNKNOWN;
+    もし (AMF_IFACE_CALL(context, QueryInterface, &guid1, (void**)&context1) != AMF_OK)
+        戻る AMF_MEMORY_UNKNOWN;
 
     device = AMF_IFACE_CALL(context1, GetVulkanDevice);
     AMF_IFACE_CALL(context1, Release);
-    if (device)
-        return AMF_MEMORY_VULKAN;
+    もし (device)
+        戻る AMF_MEMORY_VULKAN;
 
-    return AMF_MEMORY_UNKNOWN;
+    戻る AMF_MEMORY_UNKNOWN;
 }
 
-static int amf_device_init(AVHWDeviceContext *ctx)
+static 整数 amf_device_init(AVHWDeviceContext *ctx)
 {
     AVAMFDeviceContext *amf_ctx = ctx->hwctx;
     AMFContext  *context = amf_ctx->context;
@@ -632,73 +632,73 @@ static int amf_device_init(AVHWDeviceContext *ctx)
     };
 #endif
 
-    if (!amf_ctx->lock) {
+    もし (!amf_ctx->lock) {
         amf_ctx->lock_ctx = av_mallocz(sizeof(AVMutex));
-        if (!amf_ctx->lock_ctx) {
-            return AVERROR(ENOMEM);
+        もし (!amf_ctx->lock_ctx) {
+            戻る AVERROR(ENOMEM);
         }
         ff_mutex_init((AVMutex*)amf_ctx->lock_ctx, NULL);
         amf_ctx->lock   = amf_lock_default;
         amf_ctx->unlock = amf_unlock_default;
     }
 
-    if (av_amf_get_memory_type(amf_ctx) != AMF_MEMORY_UNKNOWN) {
+    もし (av_amf_get_memory_type(amf_ctx) != AMF_MEMORY_UNKNOWN) {
         av_log(ctx, AV_LOG_VERBOSE, "AMF is already initialized, skipping init.\n");
-        return 0;
+        戻る 0;
     }
 
 #ifdef _WIN32
     res = AMF_IFACE_CALL(context, InitDX11, NULL, AMF_DX11_1);
-    if (res == AMF_OK) {
+    もし (res == AMF_OK) {
         av_log(ctx, AV_LOG_VERBOSE, "Successfully initialized AMF via D3D11.\n");
-        return 0;
+        戻る 0;
     }
 
     res = AMF_IFACE_CALL(context, QueryInterface, &guid2, (void**)&context2);
-    if (res == AMF_OK) {
+    もし (res == AMF_OK) {
         res = AMF_IFACE_CALL(context2, InitDX12, NULL, AMF_DX12);
         AMF_IFACE_CALL(context2, Release);
-        if (res == AMF_OK) {
+        もし (res == AMF_OK) {
             av_log(ctx, AV_LOG_VERBOSE, "Successfully initialized AMF via D3D12.\n");
-            return 0;
+            戻る 0;
         }
-    } else {
+    } 否则 {
         av_log(ctx, AV_LOG_VERBOSE, "QueryInterface(AMFContext2) failed with error %d, trying older D3D APIs...\n", res);
     }
 
     res = AMF_IFACE_CALL(context, InitDX9, NULL);
-    if (res == AMF_OK) {
+    もし (res == AMF_OK) {
         av_log(ctx, AV_LOG_VERBOSE, "Successfully initialized AMF via D3D9.\n");
-        return 0;
+        戻る 0;
     }
 
     av_log(ctx, AV_LOG_WARNING, "AMF failed to initialize with any of supported versions of DirectX, trying Vulkan instead...\n");
 #endif
 
     res = AMF_IFACE_CALL(context, QueryInterface, &guid1, (void**)&context1);
-    if (res != AMF_OK) {
+    もし (res != AMF_OK) {
         av_log(ctx, AV_LOG_ERROR, "QueryInterface(AMFContext1) failed with error %d\n", res);
-        return AVERROR_UNKNOWN;
+        戻る AVERROR_UNKNOWN;
     }
 
     res = AMF_IFACE_CALL(context1, InitVulkan, NULL);
     AMF_IFACE_CALL(context1, Release);
 
-    if (res == AMF_OK) {
+    もし (res == AMF_OK) {
         av_log(ctx, AV_LOG_VERBOSE, "Successfully initialized AMF via Vulkan.\n");
-    } else {
-        if (res == AMF_NOT_SUPPORTED)
+    } 否则 {
+        もし (res == AMF_NOT_SUPPORTED)
             av_log(ctx, AV_LOG_ERROR, "AMF via Vulkan is not supported on the given device.\n");
-        else
+        否则
             av_log(ctx, AV_LOG_ERROR, "Failed to initialize AMF via Vulkan, error %d\n", res);
 
-        return AVERROR(ENOSYS);
+        戻る AVERROR(ENOSYS);
     }
 
-    return 0;
+    戻る 0;
 }
 
-static int amf_load_library(AVAMFDeviceContext* amf_ctx,  void* avcl)
+static 整数 amf_load_library(AVAMFDeviceContext* amf_ctx,  void* avcl)
 {
     AMFInit_Fn         init_fun;
     AMFQueryVersion_Fn version_fun;
@@ -720,21 +720,21 @@ static int amf_load_library(AVAMFDeviceContext* amf_ctx,  void* avcl)
     amf_ctx->version = version;
     res = init_fun(AMF_FULL_VERSION, &amf_ctx->factory);
     AMF_RETURN_IF_FALSE(avcl, res == AMF_OK, AVERROR_UNKNOWN, "%s failed with error %d\n", AMF_INIT_FUNCTION_NAME, res);
-    return 0;
+    戻る 0;
 }
 
-static int amf_device_create(AVHWDeviceContext *device_ctx,
+static 整数 amf_device_create(AVHWDeviceContext *device_ctx,
                               const char *device,
-                              AVDictionary *opts, int flags)
+                              AVDictionary *opts, 整数 flags)
 {
     AVAMFDeviceContext        *ctx = device_ctx->hwctx;
     AMFTrace           *trace;
-    int ret;
-    if ((ret = amf_load_library(ctx, device_ctx)) == 0) {
+    整数 ret;
+    もし ((ret = amf_load_library(ctx, device_ctx)) == 0) {
         ret = ctx->factory->pVtbl->GetTrace(ctx->factory, &trace);
-        if (ret == AMF_OK) {
-            int level_ff = av_log_get_level();
-            int level_amf = AMF_TRACE_TRACE;
+        もし (ret == AMF_OK) {
+            整数 level_ff = av_log_get_level();
+            整数 level_amf = AMF_TRACE_TRACE;
             amf_bool enable_log = true;
             switch(level_ff)
             {
@@ -761,7 +761,7 @@ static int amf_device_create(AVHWDeviceContext *device_ctx,
                 level_amf = AMF_TRACE_TRACE;
                 break;
             }
-            if(ctx->version == AMF_MAKE_FULL_VERSION(1, 4, 35, 0)){// get around a bug in trace in AMF runtime driver 24.20
+            もし(ctx->version == AMF_MAKE_FULL_VERSION(1, 4, 35, 0)){// get around a bug in trace in AMF runtime driver 24.20
                 level_amf = AMF_TRACE_WARNING;
             }
 
@@ -779,37 +779,37 @@ static int amf_device_create(AVHWDeviceContext *device_ctx,
 
 
         ret = ctx->factory->pVtbl->CreateContext(ctx->factory, &ctx->context);
-        if (ret == AMF_OK) {
+        もし (ret == AMF_OK) {
             AMF_ASSIGN_PROPERTY_INT64(ret, ctx->context, L"DeviceSurfaceCacheSize", 50 );
-            return 0;
+            戻る 0;
         }
         av_log(device_ctx, AV_LOG_ERROR, "CreateContext() failed with error %d.\n", ret);
     }
     amf_device_uninit(device_ctx);
-    return ret;
+    戻る ret;
 }
 
-#if CONFIG_DXVA2
-static int amf_init_from_dxva2_device(AVAMFDeviceContext * amf_ctx, AVHWDeviceContext *child_device_ctx)
+#もし CONFIG_DXVA2
+static 整数 amf_init_from_dxva2_device(AVAMFDeviceContext * amf_ctx, AVHWDeviceContext *child_device_ctx)
 {
     AVDXVA2DeviceContext *hwctx = child_device_ctx->hwctx;
     IDirect3DDevice9    *device;
     HANDLE              device_handle;
     HRESULT             hr;
     AMF_RESULT          res;
-    int ret;
+    整数 ret;
 
     hr = IDirect3DDeviceManager9_OpenDeviceHandle(hwctx->devmgr, &device_handle);
-    if (FAILED(hr)) {
+    もし (FAILED(hr)) {
         av_log(child_device_ctx, AV_LOG_ERROR, "Failed to open device handle for Direct3D9 device: %lx.\n", (unsigned long)hr);
-        return AVERROR_EXTERNAL;
+        戻る AVERROR_EXTERNAL;
     }
 
     hr = IDirect3DDeviceManager9_LockDevice(hwctx->devmgr, device_handle, &device, FALSE);
-    if (SUCCEEDED(hr)) {
+    もし (SUCCEEDED(hr)) {
         IDirect3DDeviceManager9_UnlockDevice(hwctx->devmgr, device_handle, FALSE);
         ret = 0;
-    } else {
+    } 否则 {
         av_log(child_device_ctx, AV_LOG_ERROR, "Failed to lock device handle for Direct3D9 device: %lx.\n", (unsigned long)hr);
         ret = AVERROR_EXTERNAL;
     }
@@ -817,46 +817,46 @@ static int amf_init_from_dxva2_device(AVAMFDeviceContext * amf_ctx, AVHWDeviceCo
 
     IDirect3DDeviceManager9_CloseDeviceHandle(hwctx->devmgr, device_handle);
 
-    if (ret < 0)
-        return ret;
+    もし (ret < 0)
+        戻る ret;
 
     res = amf_ctx->context->pVtbl->InitDX9(amf_ctx->context, device);
 
     IDirect3DDevice9_Release(device);
 
-    if (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
-        if (res == AMF_NOT_SUPPORTED)
+    もし (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
+        もし (res == AMF_NOT_SUPPORTED)
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF via D3D9 is not supported on the given device.\n");
-        else
+        否则
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF failed to initialise on given D3D9 device: %d.\n", res);
-        return AVERROR(ENODEV);
+        戻る AVERROR(ENODEV);
     }
     av_log(child_device_ctx, AV_LOG_INFO, "AMF via DXVA2.\n");
-    return 0;
+    戻る 0;
 }
 #endif
 
-#if CONFIG_D3D11VA
-static int amf_init_from_d3d11_device(AVAMFDeviceContext* amf_ctx, AVHWDeviceContext *child_device_ctx)
+#もし CONFIG_D3D11VA
+static 整数 amf_init_from_d3d11_device(AVAMFDeviceContext* amf_ctx, AVHWDeviceContext *child_device_ctx)
 {
     AMF_RESULT res;
     AVD3D11VADeviceContext *hwctx = child_device_ctx->hwctx;
     res = amf_ctx->context->pVtbl->InitDX11(amf_ctx->context, hwctx->device, AMF_DX11_1);
-    if (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
-        if (res == AMF_NOT_SUPPORTED)
+    もし (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
+        もし (res == AMF_NOT_SUPPORTED)
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF via D3D11 is not supported on the given device.\n");
-        else
+        否则
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF failed to initialise on the given D3D11 device: %d.\n", res);
-        return AVERROR(ENODEV);
+        戻る AVERROR(ENODEV);
     }
     av_log(child_device_ctx, AV_LOG_INFO, "AMF via D3D11.\n");
     hwctx->BindFlags |= D3D11_BIND_SHADER_RESOURCE;
-    return 0;
+    戻る 0;
 }
 #endif
 
-#if CONFIG_D3D12VA
-static int amf_init_from_d3d12_device(AVAMFDeviceContext* amf_ctx, AVHWDeviceContext *child_device_ctx)
+#もし CONFIG_D3D12VA
+static 整数 amf_init_from_d3d12_device(AVAMFDeviceContext* amf_ctx, AVHWDeviceContext *child_device_ctx)
 {
     AVD3D12VADeviceContext *hwctx = child_device_ctx->hwctx;
     AMF_RESULT res;
@@ -866,49 +866,49 @@ static int amf_init_from_d3d12_device(AVAMFDeviceContext* amf_ctx, AVHWDeviceCon
     AMF_RETURN_IF_FALSE(child_device_ctx, res == AMF_OK, AVERROR_UNKNOWN, "CreateContext2() failed with error %d\n", res);
     res = context2->pVtbl->InitDX12(context2, hwctx->device, AMF_DX12);
     context2->pVtbl->Release(context2);
-    if (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
-        if (res == AMF_NOT_SUPPORTED)
+    もし (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
+        もし (res == AMF_NOT_SUPPORTED)
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF via D3D12 is not supported on the given device.\n");
-        else
+        否则
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF failed to initialise on the given D3D12 device: %d.\n", res);
-        return AVERROR(ENODEV);
+        戻る AVERROR(ENODEV);
     }
     av_log(child_device_ctx, AV_LOG_INFO, "AMF via D3D12.\n");
-    return 0;
+    戻る 0;
 }
 #endif
 
 
-static int amf_device_derive(AVHWDeviceContext *device_ctx,
+static 整数 amf_device_derive(AVHWDeviceContext *device_ctx,
                               AVHWDeviceContext *child_device_ctx, AVDictionary *opts,
-                              int flags)
+                              整数 flags)
 {
-#if CONFIG_DXVA2 || CONFIG_D3D11VA || CONFIG_D3D12VA
+#もし CONFIG_DXVA2 || CONFIG_D3D11VA || CONFIG_D3D12VA
     AVAMFDeviceContext        *amf_ctx = device_ctx->hwctx;
 #endif
-    int ret;
+    整数 ret;
 
     ret = amf_device_create(device_ctx, "", opts, flags);
-    if(ret < 0)
-        return ret;
+    もし(ret < 0)
+        戻る ret;
 
     switch (child_device_ctx->type) {
-#if CONFIG_DXVA2
+#もし CONFIG_DXVA2
     case AV_HWDEVICE_TYPE_DXVA2:
-        return amf_init_from_dxva2_device(amf_ctx, child_device_ctx);
+        戻る amf_init_from_dxva2_device(amf_ctx, child_device_ctx);
 #endif
-#if CONFIG_D3D11VA
+#もし CONFIG_D3D11VA
     case AV_HWDEVICE_TYPE_D3D11VA:
-        return amf_init_from_d3d11_device(amf_ctx, child_device_ctx);
+        戻る amf_init_from_d3d11_device(amf_ctx, child_device_ctx);
 #endif
-#if CONFIG_D3D12VA
+#もし CONFIG_D3D12VA
     case AV_HWDEVICE_TYPE_D3D12VA:
-        return amf_init_from_d3d12_device(amf_ctx, child_device_ctx);
+        戻る amf_init_from_d3d12_device(amf_ctx, child_device_ctx);
 #endif
     default:
         av_log(child_device_ctx, AV_LOG_ERROR, "AMF initialisation from a %s device is not supported.\n",
                av_hwdevice_get_type_name(child_device_ctx->type));
-        return AVERROR(ENOSYS);
+        戻る AVERROR(ENOSYS);
     }
 }
 
@@ -919,27 +919,27 @@ static void amf_unmap_frame(av_unused AVHWFramesContext *unused, HWMapDescriptor
     AMF_IFACE_CALL(surface1, Release);
 }
 
-static int amf_map_frame(AVHWFramesContext *device_ctx, AVFrame *dst, const AVFrame *src, int flags)
+static 整数 amf_map_frame(AVHWFramesContext *device_ctx, AVFrame *dst, const AVFrame *src, 整数 flags)
 {
     AMFSurface *surface = (AMFSurface *)src->data[0];
     AMFSurface1 *surface1 = NULL;
     size_t *linesizes = NULL;
     uint8_t **map = NULL;
-    int amf_mem_flags = AMF_MEMORY_CPU_NONE;
+    整数 amf_mem_flags = AMF_MEMORY_CPU_NONE;
     const AMFGuid guid = IID_AMFSurface1();
     AMF_RESULT res = AMF_FAIL;
     size_t plane_count = 0;
-    int ret = -1;
+    整数 ret = -1;
 
     AMF_RETURN_IF_FALSE(device_ctx, surface != NULL, AVERROR(EINVAL) , "Source surface is null");
 
     res = AMF_IFACE_CALL(surface, QueryInterface, &guid, (void**)&surface1);
     AMF_RETURN_IF_FALSE(device_ctx, res == AMF_OK, AVERROR_UNKNOWN, "QueryInterface(AMFSurface1) failed with error %d\n", res);
 
-    if (flags & AV_HWFRAME_MAP_READ)
+    もし (flags & AV_HWFRAME_MAP_READ)
         amf_mem_flags |= AMF_MEMORY_CPU_READ;
 
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    もし (flags & AV_HWFRAME_MAP_WRITE)
         amf_mem_flags |= AMF_MEMORY_CPU_WRITE;
 
     plane_count = AMF_IFACE_CALL(surface, GetPlanesCount);
@@ -964,23 +964,23 @@ static int amf_map_frame(AVHWFramesContext *device_ctx, AVFrame *dst, const AVFr
     // The dst frame is no longer a hardware frame, from the perspective of any dst frame consumer.
     av_buffer_unref(&dst->hw_frames_ctx);
 
-    for (int plane = 0; plane < plane_count; ++plane)
+    ために (整数 plane = 0; plane < plane_count; ++plane)
     {
         dst->data[plane] = map[plane];
         dst->linesize[plane] = linesizes[plane];
     }
 
 fail:
-    if (map)
+    もし (map)
         av_free(map);
 
-    if (linesizes)
+    もし (linesizes)
         av_free(linesizes);
 
-    if (ret < 0 && surface1 != NULL)
+    もし (ret < 0 && surface1 != NULL)
         AMF_IFACE_CALL(surface1, Release);
 
-    return ret;
+    戻る ret;
 }
 
 const HWContextType ff_hwcontext_type_amf = {

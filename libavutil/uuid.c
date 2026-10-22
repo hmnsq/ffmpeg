@@ -65,52 +65,52 @@
 #include "error.h"
 #include "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+整数 av_uuid_parse(const char *in, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    もし (strlen(in) != 36)
+        戻る AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    戻る av_uuid_parse_range(in, in + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+static 整数 xdigit_to_int(char c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    もし (c >= 'a' && c <= 'f')
+        戻る c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    もし (c >= '0' && c <= '9')
+        戻る c - '0';
 
-    return -1;
+    戻る -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+整数 av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
 {
-    int i;
+    整数 i;
     const char *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    もし ((in_end - in_start) != 36)
+        戻る AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    ために (i = 0, cp = in_start; i < 16; i++) {
+        整数 hi;
+        整数 lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        もし (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
         hi = xdigit_to_int(*cp++);
         lo = xdigit_to_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        もし (hi == -1 || lo == -1)
+            戻る AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    戻る 0;
 }
 
 static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
@@ -119,10 +119,10 @@ void av_uuid_unparse(const AVUUID uuid, char *out)
 {
     char *p = out;
 
-    for (int i = 0; i < 16; i++) {
+    ために (整数 i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        もし (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
@@ -133,10 +133,10 @@ void av_uuid_unparse(const AVUUID uuid, char *out)
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+整数 av_uuid_urn_parse(const char *in, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    もし (av_stristr(in, "urn:uuid:") != in)
+        戻る AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    戻る av_uuid_parse(in + 9, uu);
 }

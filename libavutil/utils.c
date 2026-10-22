@@ -28,59 +28,59 @@
 const char *av_get_media_type_string(enum AVMediaType media_type)
 {
     switch (media_type) {
-    case AVMEDIA_TYPE_VIDEO:      return "video";
-    case AVMEDIA_TYPE_AUDIO:      return "audio";
-    case AVMEDIA_TYPE_DATA:       return "data";
-    case AVMEDIA_TYPE_SUBTITLE:   return "subtitle";
-    case AVMEDIA_TYPE_ATTACHMENT: return "attachment";
-    default:                      return NULL;
+    case AVMEDIA_TYPE_VIDEO:      戻る "video";
+    case AVMEDIA_TYPE_AUDIO:      戻る "audio";
+    case AVMEDIA_TYPE_DATA:       戻る "data";
+    case AVMEDIA_TYPE_SUBTITLE:   戻る "subtitle";
+    case AVMEDIA_TYPE_ATTACHMENT: 戻る "attachment";
+    default:                      戻る NULL;
     }
 }
 
 char av_get_picture_type_char(enum AVPictureType pict_type)
 {
     switch (pict_type) {
-    case AV_PICTURE_TYPE_I:  return 'I';
-    case AV_PICTURE_TYPE_P:  return 'P';
-    case AV_PICTURE_TYPE_B:  return 'B';
-    case AV_PICTURE_TYPE_S:  return 'S';
-    case AV_PICTURE_TYPE_SI: return 'i';
-    case AV_PICTURE_TYPE_SP: return 'p';
-    case AV_PICTURE_TYPE_BI: return 'b';
-    default:                 return '?';
+    case AV_PICTURE_TYPE_I:  戻る 'I';
+    case AV_PICTURE_TYPE_P:  戻る 'P';
+    case AV_PICTURE_TYPE_B:  戻る 'B';
+    case AV_PICTURE_TYPE_S:  戻る 'S';
+    case AV_PICTURE_TYPE_SI: 戻る 'i';
+    case AV_PICTURE_TYPE_SP: 戻る 'p';
+    case AV_PICTURE_TYPE_BI: 戻る 'b';
+    default:                 戻る '?';
     }
 }
 
 char *av_fourcc_make_string(char *buf, uint32_t fourcc)
 {
-    int i;
+    整数 i;
     char *orig_buf = buf;
     size_t buf_size = AV_FOURCC_MAX_STRING_SIZE;
 
-    for (i = 0; i < 4; i++) {
-        const int c = fourcc & 0xff;
-        const int print_chr = (c >= '0' && c <= '9') ||
+    ために (i = 0; i < 4; i++) {
+        const 整数 c = fourcc & 0xff;
+        const 整数 print_chr = (c >= '0' && c <= '9') ||
                               (c >= 'a' && c <= 'z') ||
                               (c >= 'A' && c <= 'Z') ||
                               (c && strchr(". -_", c));
-        const int len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
-        if (len < 0)
+        const 整数 len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
+        もし (len < 0)
             break;
         buf += len;
         buf_size = buf_size > len ? buf_size - len : 0;
         fourcc >>= 8;
     }
 
-    return orig_buf;
+    戻る orig_buf;
 }
 
 AVRational av_get_time_base_q(void)
 {
-    return (AVRational){1, AV_TIME_BASE};
+    戻る (AVRational){1, AV_TIME_BASE};
 }
-#if FF_API_ASSERT_FPU
+#もし FF_API_ASSERT_FPU
 void av_assert0_fpu(void) {
-#if HAVE_MMX_INLINE
+#もし HAVE_MMX_INLINE
     uint16_t state[14];
      __asm__ volatile (
         "fstenv %0 \n\t"

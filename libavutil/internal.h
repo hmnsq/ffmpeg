@@ -26,7 +26,7 @@
 #ifndef AVUTIL_INTERNAL_H
 #define AVUTIL_INTERNAL_H
 
-#if !defined(DEBUG) && !defined(NDEBUG)
+#もし !defined(DEBUG) && !defined(NDEBUG)
 #    define NDEBUG
 #endif
 
@@ -45,29 +45,29 @@
 #include "macros.h"
 
 #ifndef attribute_align_arg
-#if ARCH_X86_32 && defined(__GNUC__)
+#もし ARCH_X86_32 && defined(__GNUC__)
 #    define attribute_align_arg __attribute__((force_align_arg_pointer))
-#else
+#否则
 #    define attribute_align_arg
 #endif
 #endif
 
-#if HAVE_MIPSFPU && HAVE_INLINE_ASM
+#もし HAVE_MIPSFPU && HAVE_INLINE_ASM
 #   include "mips/libm_mips.h"
 #endif
 
-#if HAVE_PRAGMA_DEPRECATED
-#    if defined(__ICL) || defined (__INTEL_COMPILER)
+#もし HAVE_PRAGMA_DEPRECATED
+#    もし defined(__ICL) || defined (__INTEL_COMPILER)
 #        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:1478))
 #        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
 #    elif defined(_MSC_VER)
 #        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:4996))
 #        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
-#    else
+#    否则
 #        define FF_DISABLE_DEPRECATION_WARNINGS _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #        define FF_ENABLE_DEPRECATION_WARNINGS  _Pragma("GCC diagnostic pop")
 #    endif
-#else
+#否则
 #    define FF_DISABLE_DEPRECATION_WARNINGS
 #    define FF_ENABLE_DEPRECATION_WARNINGS
 #endif
@@ -91,9 +91,9 @@
  * Return NULL if CONFIG_SMALL is true, otherwise the argument
  * without modification. Used to disable the definition of strings.
  */
-#if CONFIG_SMALL
+#もし CONFIG_SMALL
 #   define NULL_IF_CONFIG_SMALL(x) NULL
-#else
+#否则
 #   define NULL_IF_CONFIG_SMALL(x) x
 #endif
 
@@ -120,37 +120,37 @@ void avpriv_request_sample(void *avc,
 
 #ifdef DEBUG
 #   define ff_dlog(ctx, ...) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__)
-#else
-#   define ff_dlog(ctx, ...) do { if (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } while (0)
+#否则
+#   define ff_dlog(ctx, ...) do { もし (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } ながら (0)
 #endif
 
 #ifdef TRACE
 #   define ff_tlog(ctx, ...) av_log(ctx, AV_LOG_TRACE, __VA_ARGS__)
-#else
-#   define ff_tlog(ctx, ...) do { } while(0)
+#否则
+#   define ff_tlog(ctx, ...) do { } ながら(0)
 #endif
 
 // For debugging we use signed operations so overflows can be detected (by ubsan)
 // For production we use unsigned so there are no undefined operations
 #ifdef CHECKED
-#define SUINT   int
+#define SUINT   整数
 #define SUINT32 int32_t
-#else
+#否则
 #define SUINT   unsigned
 #define SUINT32 uint32_t
 #endif
 
-static av_always_inline av_const int avpriv_mirror(int x, int w)
+static av_always_inline av_const 整数 avpriv_mirror(整数 x, 整数 w)
 {
-    if (!w)
-        return 0;
+    もし (!w)
+        戻る 0;
 
-    while ((unsigned)x > (unsigned)w) {
+    ながら ((unsigned)x > (unsigned)w) {
         x = -x;
-        if (x < 0)
+        もし (x < 0)
             x += 2 * w;
     }
-    return x;
+    戻る x;
 }
 
 #endif /* AVUTIL_INTERNAL_H */

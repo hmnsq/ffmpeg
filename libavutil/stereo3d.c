@@ -33,22 +33,22 @@ static void get_defaults(AVStereo3D *stereo)
 
 AVStereo3D *av_stereo3d_alloc(void)
 {
-    return av_stereo3d_alloc_size(NULL);
+    戻る av_stereo3d_alloc_size(NULL);
 }
 
 AVStereo3D *av_stereo3d_alloc_size(size_t *size)
 {
     AVStereo3D *stereo = av_mallocz(sizeof(AVStereo3D));
 
-    if (size)
+    もし (size)
         *size = stereo ? sizeof(*stereo) : 0;
 
-    if (!stereo)
-        return NULL;
+    もし (!stereo)
+        戻る NULL;
 
     get_defaults(stereo);
 
-    return stereo;
+    戻る stereo;
 }
 
 AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame)
@@ -56,13 +56,13 @@ AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame)
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_STEREO3D,
                                                         sizeof(AVStereo3D));
-    if (!side_data)
-        return NULL;
+    もし (!side_data)
+        戻る NULL;
 
     memset(side_data->data, 0, sizeof(AVStereo3D));
     get_defaults((AVStereo3D *)side_data->data);
 
-    return (AVStereo3D *)side_data->data;
+    戻る (AVStereo3D *)side_data->data;
 }
 
 static const char * const stereo3d_type_names[] = {
@@ -90,62 +90,62 @@ static const char * const stereo3d_primary_eye_names[] = {
     [AV_PRIMARY_EYE_RIGHT] = "right",
 };
 
-const char *av_stereo3d_type_name(unsigned int type)
+const char *av_stereo3d_type_name(unsigned 整数 type)
 {
-    if (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
-        return "unknown";
+    もし (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
+        戻る "unknown";
 
-    return stereo3d_type_names[type];
+    戻る stereo3d_type_names[type];
 }
 
-int av_stereo3d_from_name(const char *name)
+整数 av_stereo3d_from_name(const char *name)
 {
-    int i;
+    整数 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
-        if (!strcmp(name, stereo3d_type_names[i]))
-            return i;
+    ために (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
+        もし (!strcmp(name, stereo3d_type_names[i]))
+            戻る i;
     }
 
-    return -1;
+    戻る -1;
 }
 
-const char *av_stereo3d_view_name(unsigned int view)
+const char *av_stereo3d_view_name(unsigned 整数 view)
 {
-    if (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
-        return "unknown";
+    もし (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
+        戻る "unknown";
 
-    return stereo3d_view_names[view];
+    戻る stereo3d_view_names[view];
 }
 
-int av_stereo3d_view_from_name(const char *name)
+整数 av_stereo3d_view_from_name(const char *name)
 {
-    int i;
+    整数 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
-        if (!strcmp(name, stereo3d_view_names[i]))
-            return i;
+    ために (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
+        もし (!strcmp(name, stereo3d_view_names[i]))
+            戻る i;
     }
 
-    return -1;
+    戻る -1;
 }
 
-const char *av_stereo3d_primary_eye_name(unsigned int eye)
+const char *av_stereo3d_primary_eye_name(unsigned 整数 eye)
 {
-    if (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
-        return "unknown";
+    もし (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
+        戻る "unknown";
 
-    return stereo3d_primary_eye_names[eye];
+    戻る stereo3d_primary_eye_names[eye];
 }
 
-int av_stereo3d_primary_eye_from_name(const char *name)
+整数 av_stereo3d_primary_eye_from_name(const char *name)
 {
-    int i;
+    整数 i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
-        if (!strcmp(name, stereo3d_primary_eye_names[i]))
-            return i;
+    ために (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
+        もし (!strcmp(name, stereo3d_primary_eye_names[i]))
+            戻る i;
     }
 
-    return -1;
+    戻る -1;
 }

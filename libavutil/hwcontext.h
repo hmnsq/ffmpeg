@@ -187,7 +187,7 @@ typedef struct AVHWFramesContext {
      * May be set by the caller before calling av_hwframe_ctx_init(). Must be
      * set if pool is NULL and the device type does not support dynamic pools.
      */
-    int initial_pool_size;
+    整数 initial_pool_size;
 
     /**
      * The pixel format identifying the underlying HW surface type.
@@ -217,7 +217,7 @@ typedef struct AVHWFramesContext {
      *
      * Must be set by the user before calling av_hwframe_ctx_init().
      */
-    int width, height;
+    整数 width, height;
 } AVHWFramesContext;
 
 /**
@@ -264,7 +264,7 @@ AVBufferRef *av_hwdevice_ctx_alloc(enum AVHWDeviceType type);
  * @param ref a reference to the AVHWDeviceContext
  * @return 0 on success, a negative AVERROR code on failure
  */
-int av_hwdevice_ctx_init(AVBufferRef *ref);
+整数 av_hwdevice_ctx_init(AVBufferRef *ref);
 
 /**
  * Open a device of the specified type and create an AVHWDeviceContext for it.
@@ -291,8 +291,8 @@ int av_hwdevice_ctx_init(AVBufferRef *ref);
  *
  * @return 0 on success, a negative AVERROR code on failure.
  */
-int av_hwdevice_ctx_create(AVBufferRef **device_ctx, enum AVHWDeviceType type,
-                           const char *device, AVDictionary *opts, int flags);
+整数 av_hwdevice_ctx_create(AVBufferRef **device_ctx, enum AVHWDeviceType type,
+                           const char *device, AVDictionary *opts, 整数 flags);
 
 /**
  * Create a new device of the specified type from an existing device.
@@ -315,9 +315,9 @@ int av_hwdevice_ctx_create(AVBufferRef **device_ctx, enum AVHWDeviceType type,
  * @param flags   Currently unused; should be set to zero.
  * @return        Zero on success, a negative AVERROR code on failure.
  */
-int av_hwdevice_ctx_create_derived(AVBufferRef **dst_ctx,
+整数 av_hwdevice_ctx_create_derived(AVBufferRef **dst_ctx,
                                    enum AVHWDeviceType type,
-                                   AVBufferRef *src_ctx, int flags);
+                                   AVBufferRef *src_ctx, 整数 flags);
 
 /**
  * Create a new device of the specified type from an existing device.
@@ -335,10 +335,10 @@ int av_hwdevice_ctx_create_derived(AVBufferRef **dst_ctx,
  * @param flags   Currently unused; should be set to zero.
  * @return        Zero on success, a negative AVERROR code on failure.
  */
-int av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ctx,
+整数 av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ctx,
                                         enum AVHWDeviceType type,
                                         AVBufferRef *src_ctx,
-                                        AVDictionary *options, int flags);
+                                        AVDictionary *options, 整数 flags);
 
 /**
  * Allocate an AVHWFramesContext tied to a given device context.
@@ -359,7 +359,7 @@ AVBufferRef *av_hwframe_ctx_alloc(AVBufferRef *device_ctx);
  * @param ref a reference to the AVHWFramesContext
  * @return 0 on success, a negative AVERROR code on failure
  */
-int av_hwframe_ctx_init(AVBufferRef *ref);
+整数 av_hwframe_ctx_init(AVBufferRef *ref);
 
 /**
  * Allocate a new frame attached to the given AVHWFramesContext.
@@ -370,7 +370,7 @@ int av_hwframe_ctx_init(AVBufferRef *ref);
  * @param flags currently unused, should be set to zero
  * @return 0 on success, a negative AVERROR code on failure
  */
-int av_hwframe_get_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame, int flags);
+整数 av_hwframe_get_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame, 整数 flags);
 
 /**
  * Allocate the buffers of a software frame that data is transferred to or
@@ -385,7 +385,7 @@ int av_hwframe_get_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame, int flags);
  *                    data buffers
  * @return 0 on success, a negative AVERROR code on failure
  */
-int av_hwframe_get_transfer_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame);
+整数 av_hwframe_get_transfer_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame);
 
 /**
  * Copy data to or from a hw surface. At least one of dst/src must have an
@@ -416,7 +416,7 @@ int av_hwframe_get_transfer_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame);
  * @param flags currently unused, should be set to zero
  * @return 0 on success, a negative AVERROR error code on failure.
  */
-int av_hwframe_transfer_data(AVFrame *dst, const AVFrame *src, int flags);
+整数 av_hwframe_transfer_data(AVFrame *dst, const AVFrame *src, 整数 flags);
 
 enum AVHWFrameTransferDirection {
     /**
@@ -445,9 +445,9 @@ enum AVHWFrameTransferDirection {
  * @param flags currently unused, should be set to zero
  * @return 0 on success, a negative AVERROR code on failure.
  */
-int av_hwframe_transfer_get_formats(AVBufferRef *hwframe_ctx,
+整数 av_hwframe_transfer_get_formats(AVBufferRef *hwframe_ctx,
                                     enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats, int flags);
+                                    enum AVPixelFormat **formats, 整数 flags);
 
 
 /**
@@ -474,15 +474,15 @@ typedef struct AVHWFramesConstraints {
      * The minimum size of frames in this hw_frames_ctx.
      * (Zero if not known.)
      */
-    int min_width;
-    int min_height;
+    整数 min_width;
+    整数 min_height;
 
     /**
      * The maximum size of frames in this hw_frames_ctx.
      * (INT_MAX if not known / no limit.)
      */
-    int max_width;
-    int max_height;
+    整数 max_width;
+    整数 max_height;
 } AVHWFramesConstraints;
 
 /**
@@ -586,7 +586,7 @@ enum {
  * @param flags Some combination of AV_HWFRAME_MAP_* flags.
  * @return Zero on success, negative AVERROR code on failure.
  */
-int av_hwframe_map(AVFrame *dst, const AVFrame *src, int flags);
+整数 av_hwframe_map(AVFrame *dst, const AVFrame *src, 整数 flags);
 
 
 /**
@@ -607,10 +607,10 @@ int av_hwframe_map(AVFrame *dst, const AVFrame *src, int flags);
  *               in the derived device.
  * @return       Zero on success, negative AVERROR code on failure.
  */
-int av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
+整数 av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
                                   enum AVPixelFormat format,
                                   AVBufferRef *derived_device_ctx,
                                   AVBufferRef *source_frame_ctx,
-                                  int flags);
+                                  整数 flags);
 
 #endif /* AVUTIL_HWCONTEXT_H */

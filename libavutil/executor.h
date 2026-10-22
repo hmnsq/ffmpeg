@@ -31,16 +31,16 @@ struct AVTask {
 typedef struct AVTaskCallbacks {
     void *user_data;
 
-    int local_context_size;
+    整数 local_context_size;
 
     // return 1 if a's priority > b's priority
-    int (*priority_higher)(const AVTask *a, const AVTask *b);
+    整数 (*priority_higher)(const AVTask *a, const AVTask *b);
 
     // task is ready for run
-    int (*ready)(const AVTask *t, void *user_data);
+    整数 (*ready)(const AVTask *t, void *user_data);
 
     // run the task
-    int (*run)(AVTask *t, void *local_context, void *user_data);
+    整数 (*run)(AVTask *t, void *local_context, void *user_data);
 } AVTaskCallbacks;
 
 /**
@@ -49,7 +49,7 @@ typedef struct AVTaskCallbacks {
  * @param thread_count worker thread number, 0 for run on caller's thread directly
  * @return return the executor
  */
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *callbacks, int thread_count);
+AVExecutor* av_executor_alloc(const AVTaskCallbacks *callbacks, 整数 thread_count);
 
 /**
  * Free executor

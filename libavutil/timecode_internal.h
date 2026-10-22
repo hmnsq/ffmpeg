@@ -46,6 +46,6 @@
  *                   bit is arbitrary (e.g. because it is used as PC flag)
  */
 void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned *ss, unsigned *ff,
-                           AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field);
+                           AVRational rate, uint32_t tcsmpte, 整数 prevent_df, 整数 skip_field);
 
 #endif /* AVUTIL_TIMECODE_INTERNAL_H */

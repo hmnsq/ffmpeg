@@ -39,7 +39,7 @@
  * @param ptr updated if the prefix is matched inside str
  * @return non-zero if the prefix matches, zero otherwise
  */
-int av_strstart(const char *str, const char *pfx, const char **ptr);
+整数 av_strstart(const char *str, const char *pfx, const char **ptr);
 
 /**
  * Return non-zero if pfx is a prefix of str independent of case. If
@@ -51,7 +51,7 @@ int av_strstart(const char *str, const char *pfx, const char **ptr);
  * @param ptr updated if the prefix is matched inside str
  * @return non-zero if the prefix matches, zero otherwise
  */
-int av_stristart(const char *str, const char *pfx, const char **ptr);
+整数 av_stristart(const char *str, const char *pfx, const char **ptr);
 
 /**
  * Locate the first case-independent occurrence in the string haystack
@@ -141,9 +141,9 @@ size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...) av_printf_forma
 static inline size_t av_strnlen(const char *s, size_t len)
 {
     size_t i;
-    for (i = 0; i < len && s[i]; i++)
+    ために (i = 0; i < len && s[i]; i++)
         ;
-    return i;
+    戻る i;
 }
 
 /**
@@ -199,68 +199,68 @@ char *av_strtok(char *s, const char *delim, char **saveptr);
 /**
  * Locale-independent conversion of ASCII isdigit.
  */
-static inline av_const int av_isdigit(int c)
+static inline av_const 整数 av_isdigit(整数 c)
 {
-    return c >= '0' && c <= '9';
+    戻る c >= '0' && c <= '9';
 }
 
 /**
  * Locale-independent conversion of ASCII isgraph.
  */
-static inline av_const int av_isgraph(int c)
+static inline av_const 整数 av_isgraph(整数 c)
 {
-    return c > 32 && c < 127;
+    戻る c > 32 && c < 127;
 }
 
 /**
  * Locale-independent conversion of ASCII isspace.
  */
-static inline av_const int av_isspace(int c)
+static inline av_const 整数 av_isspace(整数 c)
 {
-    return c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
+    戻る c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
            c == '\v';
 }
 
 /**
  * Locale-independent conversion of ASCII characters to uppercase.
  */
-static inline av_const int av_toupper(int c)
+static inline av_const 整数 av_toupper(整数 c)
 {
-    if (c >= 'a' && c <= 'z')
+    もし (c >= 'a' && c <= 'z')
         c ^= 0x20;
-    return c;
+    戻る c;
 }
 
 /**
  * Locale-independent conversion of ASCII characters to lowercase.
  */
-static inline av_const int av_tolower(int c)
+static inline av_const 整数 av_tolower(整数 c)
 {
-    if (c >= 'A' && c <= 'Z')
+    もし (c >= 'A' && c <= 'Z')
         c ^= 0x20;
-    return c;
+    戻る c;
 }
 
 /**
  * Locale-independent conversion of ASCII isxdigit.
  */
-static inline av_const int av_isxdigit(int c)
+static inline av_const 整数 av_isxdigit(整数 c)
 {
     c = av_tolower(c);
-    return av_isdigit(c) || (c >= 'a' && c <= 'f');
+    戻る av_isdigit(c) || (c >= 'a' && c <= 'f');
 }
 
 /**
  * Locale-independent case-insensitive compare.
  * @note This means only ASCII-range characters are case-insensitive
  */
-int av_strcasecmp(const char *a, const char *b);
+整数 av_strcasecmp(const char *a, const char *b);
 
 /**
  * Locale-independent case-insensitive compare.
  * @note This means only ASCII-range characters are case-insensitive
  */
-int av_strncasecmp(const char *a, const char *b, size_t n);
+整数 av_strncasecmp(const char *a, const char *b, size_t n);
 
 /**
  * Locale-independent strings replace.
@@ -299,7 +299,7 @@ const char *av_dirname(char *path);
  * @param names List of names.
  * @return 1 on match, 0 otherwise.
  */
-int av_match_name(const char *name, const char *names);
+整数 av_match_name(const char *name, const char *names);
 
 /**
  * Append path component to the existing path.
@@ -365,8 +365,8 @@ enum AVEscapeMode {
  * @see av_bprint_escape()
  */
 av_warn_unused_result
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags);
+整数 av_escape(char **dst, const char *src, const char *special_chars,
+              enum AVEscapeMode mode, 整数 flags);
 
 #define AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES          1 ///< accept codepoints over 0x10FFFF
 #define AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS             2 ///< accept non-characters - 0xFFFE and 0xFFFF
@@ -405,21 +405,21 @@ int av_escape(char **dst, const char *src, const char *special_chars,
  * value in case of invalid sequence
  */
 av_warn_unused_result
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags);
+整数 av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
+                   unsigned 整数 flags);
 
 /**
  * Check if a name is in a list.
  * @returns 0 if not found, or the 1 based index where it has been found in the
  *            list.
  */
-int av_match_list(const char *name, const char *list, char separator);
+整数 av_match_list(const char *name, const char *list, char separator);
 
 /**
  * See libc sscanf manual for more information.
  * Locale-independent sscanf implementation.
  */
-int av_sscanf(const char *string, const char *format, ...) av_scanf_format(2, 3);
+整数 av_sscanf(const char *string, const char *format, ...) av_scanf_format(2, 3);
 
 /**
  * @}

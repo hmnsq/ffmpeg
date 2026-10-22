@@ -36,45 +36,45 @@
 // This macro presumes the AVBPrint to have been cleared before usage.
 #define CMP_BPRINT_AND_NONBPRINT(bp, func_name, ARG_ORDER, ...) do {       \
     char *str;                                                             \
-    int size;                                                              \
+    整数 size;                                                              \
     func_name ## _bprint(BPRINT_ARGS ## ARG_ORDER((bp), __VA_ARGS__));     \
-    if (strlen((bp)->str) != (bp)->len) {                                  \
+    もし (strlen((bp)->str) != (bp)->len) {                                  \
         printf("strlen of AVBPrint-string returned by "#func_name"_bprint" \
                " differs from AVBPrint.len: %zu vs. %u\n",                 \
                strlen((bp)->str), (bp)->len);                              \
         break;                                                             \
     }                                                                      \
     size = func_name(ORD_ARGS ## ARG_ORDER(NULL, 0, __VA_ARGS__));         \
-    if (size <= 0) {                                                       \
+    もし (size <= 0) {                                                       \
         printf(#func_name " returned %d\n", size);                         \
         break;                                                             \
     }                                                                      \
-    if ((bp)->len != size - 1) {                                           \
+    もし ((bp)->len != size - 1) {                                           \
         printf("Return value %d of " #func_name " inconsistent with length"\
                " %u obtained from corresponding bprint version\n",         \
                size, (bp)->len);                                           \
         break;                                                             \
     }                                                                      \
     str = av_malloc(size);                                                 \
-    if (!str) {                                                            \
+    もし (!str) {                                                            \
         printf("string of size %d could not be allocated.\n", size);       \
         break;                                                             \
     }                                                                      \
     size = func_name(ORD_ARGS ## ARG_ORDER(str, size, __VA_ARGS__));       \
-    if (size <= 0 || (bp)->len != size - 1) {                              \
+    もし (size <= 0 || (bp)->len != size - 1) {                              \
         printf("Return value %d of " #func_name " inconsistent with length"\
                " %d obtained in first pass.\n", size, (bp)->len);          \
         av_free(str);                                                      \
         break;                                                             \
     }                                                                      \
-    if (strcmp(str, (bp)->str)) {                                          \
+    もし (strcmp(str, (bp)->str)) {                                          \
         printf("Ordinary and _bprint versions of "#func_name" disagree: "  \
                "'%s' vs. '%s'\n", str, (bp)->str);                         \
         av_free(str);                                                      \
         break;                                                             \
     }                                                                      \
     av_free(str);                                                          \
-    } while (0)
+    } ながら (0)
 
 
 static void channel_name(AVBPrint *bp, enum AVChannel channel)
@@ -94,10 +94,10 @@ static void channel_layout_from_mask(AVChannelLayout *layout,
 {
     av_channel_layout_uninit(layout);
     av_bprint_clear(bp);
-    if (!av_channel_layout_from_mask(layout, channel_layout) &&
+    もし (!av_channel_layout_from_mask(layout, channel_layout) &&
          av_channel_layout_check(layout))
         CMP_BPRINT_AND_NONBPRINT(bp, av_channel_layout_describe, 0, layout);
-    else
+    否则
         av_bprintf(bp, "fail");
 }
 
@@ -106,10 +106,10 @@ static void channel_layout_from_string(AVChannelLayout *layout,
 {
     av_channel_layout_uninit(layout);
     av_bprint_clear(bp);
-    if (!av_channel_layout_from_string(layout, channel_layout) &&
+    もし (!av_channel_layout_from_string(layout, channel_layout) &&
          av_channel_layout_check(layout))
         CMP_BPRINT_AND_NONBPRINT(bp, av_channel_layout_describe, 0, layout);
-    else
+    否则
         av_bprintf(bp, "fail");
 }
 
@@ -117,11 +117,11 @@ static const char* channel_order_names[]  = {"UNSPEC", "NATIVE", "CUSTOM", "AMBI
 
 static void describe_type(AVBPrint *bp, AVChannelLayout *layout)
 {
-    if ((unsigned)layout->order < FF_ARRAY_ELEMS(channel_order_names)) {
+    もし ((unsigned)layout->order < FF_ARRAY_ELEMS(channel_order_names)) {
         av_bprintf(bp, "%-6s (", channel_order_names[layout->order]);
         av_channel_layout_describe_bprint(layout, bp);
         av_bprintf(bp, ")");
-    } else {
+    } 否则 {
         av_bprintf(bp, "???");
     }
 }
@@ -130,34 +130,34 @@ static const char *channel_layout_retype(AVChannelLayout *layout, AVBPrint *bp, 
 {
     av_channel_layout_uninit(layout);
     av_bprint_clear(bp);
-    if (!av_channel_layout_from_string(layout, channel_layout) &&
+    もし (!av_channel_layout_from_string(layout, channel_layout) &&
         av_channel_layout_check(layout)) {
         describe_type(bp, layout);
-        for (int i = 0; i < FF_CHANNEL_ORDER_NB; i++) {
-            int ret;
+        ために (整数 i = 0; i < FF_CHANNEL_ORDER_NB; i++) {
+            整数 ret;
             AVChannelLayout copy = {0};
             av_bprintf(bp, "\n ");
-            if (av_channel_layout_copy(&copy, layout) < 0)
-                return "nomem";
+            もし (av_channel_layout_copy(&copy, layout) < 0)
+                戻る "nomem";
             ret = av_channel_layout_retype(&copy, i, 0);
-            if (ret < 0 && (copy.order != layout->order || av_channel_layout_compare(&copy, layout)))
+            もし (ret < 0 && (copy.order != layout->order || av_channel_layout_compare(&copy, layout)))
                 av_bprintf(bp, "failed to keep existing layout on failure");
-            if (ret >= 0 && copy.order != i)
+            もし (ret >= 0 && copy.order != i)
                 av_bprintf(bp, "returned success but did not change order");
-            if (ret == AVERROR(ENOSYS)) {
+            もし (ret == AVERROR(ENOSYS)) {
                 av_bprintf(bp, " != %s", channel_order_names[i]);
-            } else if (ret < 0) {
+            } 否则 もし (ret < 0) {
                 av_bprintf(bp, "FAIL");
-            } else {
+            } 否则 {
                 av_bprintf(bp, " %s ", ret ? "~~" : "==");
                 describe_type(bp, &copy);
             }
             av_channel_layout_uninit(&copy);
         }
-    } else {
+    } 否则 {
         av_bprintf(bp, "fail");
     }
-    return bp->str;
+    戻る bp->str;
 }
 
 #define CHANNEL_NAME(x)                                                    \
@@ -176,11 +176,11 @@ static const char *channel_layout_retype(AVChannelLayout *layout, AVBPrint *bp, 
 
 #define CHANNEL_LAYOUT_FROM_STRING(x)                                      \
     channel_layout_from_string(&layout, &bp, (x));                         \
-    printf("With \"%s\":%*s %32s\n", x, strlen(x) > 32 ? 0 : 32 - (int)strlen(x), "", bp.str);
+    printf("With \"%s\":%*s %32s\n", x, strlen(x) > 32 ? 0 : 32 - (整数)strlen(x), "", bp.str);
 
 #define CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(l, x)                            \
     ret = av_channel_layout_channel_from_index(&layout, x);                \
-    if (ret < 0)                                                           \
+    もし (ret < 0)                                                           \
         ret = -1;                                                          \
     printf("On \"%s\" layout with %2d: %8d\n", l,  x, ret)
 
@@ -190,42 +190,42 @@ static const char *channel_layout_retype(AVChannelLayout *layout, AVBPrint *bp, 
 
 #define CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(l, x)                            \
     ret = av_channel_layout_index_from_channel(&layout, x);                \
-    if (ret < 0)                                                           \
+    もし (ret < 0)                                                           \
         ret = -1;                                                          \
     printf("On \"%s\" layout with %-23s %3d\n", l, AV_STRINGIFY(x)":", ret)
 
 #define CHANNEL_LAYOUT_CHANNEL_FROM_STRING(l, x)                           \
     ret = av_channel_layout_channel_from_string(&layout, x);               \
-    if (ret < 0)                                                           \
+    もし (ret < 0)                                                           \
         ret = -1;                                                          \
     printf("On \"%s\" layout with %-21s %3d\n", bp.str, AV_STRINGIFY(x)":", ret);
 
 #define CHANNEL_LAYOUT_INDEX_FROM_STRING(l, x)                             \
     ret = av_channel_layout_index_from_string(&layout, x);                 \
-    if (ret < 0)                                                           \
+    もし (ret < 0)                                                           \
         ret = -1;                                                          \
     printf("On \"%s\" layout with %-20s %3d\n", l, AV_STRINGIFY(x)":", ret);
 
-int main(void)
+整数 メインページ(void)
 {
     const AVChannelLayout *playout;
     AVChannelLayout layout = { 0 }, layout2 = { 0 };
     AVBPrint bp;
     void *iter = NULL;
     uint64_t mask;
-    int ret;
+    整数 ret;
 
     av_bprint_init(&bp, 64, AV_BPRINT_SIZE_AUTOMATIC);
 
     printf("Testing av_channel_layout_standard\n");
-    while (playout = av_channel_layout_standard(&iter)) {
+    ながら (playout = av_channel_layout_standard(&iter)) {
         av_channel_layout_describe_bprint(playout, &bp);
         printf("%-14s ", bp.str);
         av_bprint_clear(&bp);
-        for (int i = 0; i < 63; i++) {
-            int idx = av_channel_layout_index_from_channel(playout, i);
-            if (idx >= 0) {
-                if (idx)
+        ために (整数 i = 0; i < 63; i++) {
+            整数 idx = av_channel_layout_index_from_channel(playout, i);
+            もし (idx >= 0) {
+                もし (idx)
                     av_bprintf(&bp, "+");
                 av_channel_name_bprint(&bp, i);
             }
@@ -354,12 +354,12 @@ int main(void)
     CHANNEL_LAYOUT_FROM_STRING("FR+FL@Foo+USR63@Foo");
 
     ret = av_channel_layout_copy(&layout2, &layout);
-    if (ret < 0) {
+    もし (ret < 0) {
         printf("Copying channel layout \"FR+FL@Foo+USR63@Foo\" failed; "
                "ret %d\n", ret);
     }
     ret = av_channel_layout_compare(&layout, &layout2);
-    if (ret)
+    もし (ret)
         printf("Channel layout and its copy compare unequal; ret: %d\n", ret);
 
     printf("\nTesting av_channel_layout_index_from_string\n");
@@ -435,10 +435,10 @@ int main(void)
             "2C",
             NULL
         };
-        for (int i = 0; layouts[i]; i++)
+        ために (整数 i = 0; layouts[i]; i++)
             printf("With \"%s\": %s\n", layouts[i], channel_layout_retype(&layout, &bp, layouts[i]));
     }
     av_bprint_finalize(&bp, NULL);
 
-    return 0;
+    戻る 0;
 }

@@ -31,178 +31,178 @@
      ((x) == AV_TX_INT32_ ## type))
 
 /* Calculates the modular multiplicative inverse */
-static av_always_inline int mulinv(int n, int m)
+static av_always_inline 整数 mulinv(整数 n, 整数 m)
 {
     n = n % m;
-    for (int x = 1; x < m; x++)
-        if (((n * x) % m) == 1)
-            return x;
+    ために (整数 x = 1; x < m; x++)
+        もし (((n * x) % m) == 1)
+            戻る x;
     av_assert0(0); /* Never reached */
-    return 0;
+    戻る 0;
 }
 
-int ff_tx_gen_pfa_input_map(AVTXContext *s, FFTXCodeletOptions *opts,
-                            int d1, int d2)
+整数 ff_tx_gen_pfa_input_map(AVTXContext *s, FFTXCodeletOptions *opts,
+                            整数 d1, 整数 d2)
 {
-    const int sl = d1*d2;
+    const 整数 sl = d1*d2;
 
     s->map = av_malloc(s->len*sizeof(*s->map));
-    if (!s->map)
-        return AVERROR(ENOMEM);
+    もし (!s->map)
+        戻る AVERROR(ENOMEM);
 
-    for (int k = 0; k < s->len; k += sl) {
-        if (s->inv || (opts && opts->map_dir == FF_TX_MAP_SCATTER)) {
-            for (int m = 0; m < d2; m++)
-                for (int n = 0; n < d1; n++)
+    ために (整数 k = 0; k < s->len; k += sl) {
+        もし (s->inv || (opts && opts->map_dir == FF_TX_MAP_SCATTER)) {
+            ために (整数 m = 0; m < d2; m++)
+                ために (整数 n = 0; n < d1; n++)
                     s->map[k + ((m*d1 + n*d2) % (sl))] = m*d1 + n;
-        } else {
-            for (int m = 0; m < d2; m++)
-                for (int n = 0; n < d1; n++)
+        } 否则 {
+            ために (整数 m = 0; m < d2; m++)
+                ために (整数 n = 0; n < d1; n++)
                     s->map[k + m*d1 + n] = (m*d1 + n*d2) % (sl);
         }
 
-        if (s->inv)
-            for (int w = 1; w <= ((sl) >> 1); w++)
-                FFSWAP(int, s->map[k + w], s->map[k + sl - w]);
+        もし (s->inv)
+            ために (整数 w = 1; w <= ((sl) >> 1); w++)
+                FFSWAP(整数, s->map[k + w], s->map[k + sl - w]);
     }
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    戻る 0;
 }
 
 /* Guaranteed to work for any n, m where gcd(n, m) == 1 */
-int ff_tx_gen_compound_mapping(AVTXContext *s, FFTXCodeletOptions *opts,
-                               int inv, int n, int m)
+整数 ff_tx_gen_compound_mapping(AVTXContext *s, FFTXCodeletOptions *opts,
+                               整数 inv, 整数 n, 整数 m)
 {
-    int *in_map, *out_map;
-    const int len = n*m;    /* Will not be equal to s->len for MDCTs */
-    int m_inv, n_inv;
+    整数 *in_map, *out_map;
+    const 整数 len = n*m;    /* Will not be equal to s->len for MDCTs */
+    整数 m_inv, n_inv;
 
     /* Make sure the numbers are coprime */
-    if (av_gcd(n, m) != 1)
-        return AVERROR(EINVAL);
+    もし (av_gcd(n, m) != 1)
+        戻る AVERROR(EINVAL);
 
     m_inv = mulinv(m, n);
     n_inv = mulinv(n, m);
 
-    if (!(s->map = av_malloc(2*len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    もし (!(s->map = av_malloc(2*len*sizeof(*s->map))))
+        戻る AVERROR(ENOMEM);
 
     in_map  = s->map;
     out_map = s->map + len;
 
     /* Ruritanian map for input, CRT map for output, can be swapped */
-    if (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
-        for (int j = 0; j < m; j++) {
-            for (int i = 0; i < n; i++) {
+    もし (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
+        ために (整数 j = 0; j < m; j++) {
+            ために (整数 i = 0; i < n; i++) {
                 in_map[(i*m + j*n) % len] = j*n + i;
                 out_map[(i*m*m_inv + j*n*n_inv) % len] = i*m + j;
             }
         }
-    } else {
-        for (int j = 0; j < m; j++) {
-            for (int i = 0; i < n; i++) {
+    } 否则 {
+        ために (整数 j = 0; j < m; j++) {
+            ために (整数 i = 0; i < n; i++) {
                 in_map[j*n + i] = (i*m + j*n) % len;
                 out_map[(i*m*m_inv + j*n*n_inv) % len] = i*m + j;
             }
         }
     }
 
-    if (inv) {
-        for (int i = 0; i < m; i++) {
-            int *in = &in_map[i*n + 1]; /* Skip the DC */
-            for (int j = 0; j < ((n - 1) >> 1); j++)
-                FFSWAP(int, in[j], in[n - j - 2]);
+    もし (inv) {
+        ために (整数 i = 0; i < m; i++) {
+            整数 *in = &in_map[i*n + 1]; /* Skip the DC */
+            ために (整数 j = 0; j < ((n - 1) >> 1); j++)
+                FFSWAP(整数, in[j], in[n - j - 2]);
         }
     }
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    戻る 0;
 }
 
-static inline int split_radix_permutation(int i, int len, int inv)
+static inline 整数 split_radix_permutation(整数 i, 整数 len, 整数 inv)
 {
     len >>= 1;
-    if (len <= 1)
-        return i & 1;
-    if (!(i & len))
-        return split_radix_permutation(i, len, inv) * 2;
+    もし (len <= 1)
+        戻る i & 1;
+    もし (!(i & len))
+        戻る split_radix_permutation(i, len, inv) * 2;
     len >>= 1;
-    return split_radix_permutation(i, len, inv) * 4 + 1 - 2*(!(i & len) ^ inv);
+    戻る split_radix_permutation(i, len, inv) * 4 + 1 - 2*(!(i & len) ^ inv);
 }
 
-int ff_tx_gen_ptwo_revtab(AVTXContext *s, FFTXCodeletOptions *opts)
+整数 ff_tx_gen_ptwo_revtab(AVTXContext *s, FFTXCodeletOptions *opts)
 {
-    int len = s->len;
+    整数 len = s->len;
 
-    if (!(s->map = av_malloc(len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    もし (!(s->map = av_malloc(len*sizeof(*s->map))))
+        戻る AVERROR(ENOMEM);
 
-    if (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
-        for (int i = 0; i < s->len; i++)
+    もし (opts && opts->map_dir == FF_TX_MAP_SCATTER) {
+        ために (整数 i = 0; i < s->len; i++)
             s->map[-split_radix_permutation(i, len, s->inv) & (len - 1)] = i;
-    } else {
-        for (int i = 0; i < s->len; i++)
+    } 否则 {
+        ために (整数 i = 0; i < s->len; i++)
             s->map[i] = -split_radix_permutation(i, len, s->inv) & (len - 1);
     }
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    戻る 0;
 }
 
-int ff_tx_gen_inplace_map(AVTXContext *s, int len)
+整数 ff_tx_gen_inplace_map(AVTXContext *s, 整数 len)
 {
-    int *src_map, out_map_idx = 0;
+    整数 *src_map, out_map_idx = 0;
 
-    if (!s->sub || !s->sub->map)
-        return AVERROR(EINVAL);
+    もし (!s->sub || !s->sub->map)
+        戻る AVERROR(EINVAL);
 
-    if (!(s->map = av_mallocz(len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    もし (!(s->map = av_mallocz(len*sizeof(*s->map))))
+        戻る AVERROR(ENOMEM);
 
     src_map = s->sub->map;
 
     /* The first coefficient is always already in-place */
-    for (int src = 1; src < s->len; src++) {
-        int dst = src_map[src];
-        int found = 0;
+    ために (整数 src = 1; src < s->len; src++) {
+        整数 dst = src_map[src];
+        整数 found = 0;
 
-        if (dst <= src)
+        もし (dst <= src)
             continue;
 
         /* This just checks if a closed loop has been encountered before,
          * and if so, skips it, since to fully permute a loop we must only
          * enter it once. */
         do {
-            for (int j = 0; j < out_map_idx; j++) {
-                if (dst == s->map[j]) {
+            ために (整数 j = 0; j < out_map_idx; j++) {
+                もし (dst == s->map[j]) {
                     found = 1;
                     break;
                 }
             }
             dst = src_map[dst];
-        } while (dst != src && !found);
+        } ながら (dst != src && !found);
 
-        if (!found)
+        もし (!found)
             s->map[out_map_idx++] = src;
     }
 
     s->map[out_map_idx++] = 0;
 
-    return 0;
+    戻る 0;
 }
 
-static void parity_revtab_generator(int *revtab, int n, int inv, int offset,
-                                    int is_dual, int dual_high, int len,
-                                    int basis, int dual_stride, int inv_lookup)
+static void parity_revtab_generator(整数 *revtab, 整数 n, 整数 inv, 整数 offset,
+                                    整数 is_dual, 整数 dual_high, 整数 len,
+                                    整数 basis, 整数 dual_stride, 整数 inv_lookup)
 {
     len >>= 1;
 
-    if (len <= basis) {
-        int k1, k2, stride, even_idx, odd_idx;
+    もし (len <= basis) {
+        整数 k1, k2, stride, even_idx, odd_idx;
 
         is_dual = is_dual && dual_stride;
         dual_high = is_dual & dual_high;
@@ -211,23 +211,23 @@ static void parity_revtab_generator(int *revtab, int n, int inv, int offset,
         even_idx = offset + dual_high*(stride - 2*len);
         odd_idx  = even_idx + len + (is_dual && !dual_high)*len + dual_high*len;
 
-        for (int i = 0; i < len; i++) {
+        ために (整数 i = 0; i < len; i++) {
             k1 = -split_radix_permutation(offset + i*2 + 0, n, inv) & (n - 1);
             k2 = -split_radix_permutation(offset + i*2 + 1, n, inv) & (n - 1);
-            if (inv_lookup) {
+            もし (inv_lookup) {
                 revtab[even_idx++] = k1;
                 revtab[odd_idx++]  = k2;
-            } else {
+            } 否则 {
                 revtab[k1] = even_idx++;
                 revtab[k2] = odd_idx++;
             }
-            if (stride && !((i + 1) % stride)) {
+            もし (stride && !((i + 1) % stride)) {
                 even_idx += stride;
                 odd_idx  += stride;
             }
         }
 
-        return;
+        戻る;
     }
 
     parity_revtab_generator(revtab, n, inv, offset,
@@ -238,16 +238,16 @@ static void parity_revtab_generator(int *revtab, int n, int inv, int offset,
                             1, 1, len >> 1, basis, dual_stride, inv_lookup);
 }
 
-int ff_tx_gen_split_radix_parity_revtab(AVTXContext *s, int len, int inv,
+整数 ff_tx_gen_split_radix_parity_revtab(AVTXContext *s, 整数 len, 整数 inv,
                                         FFTXCodeletOptions *opts,
-                                        int basis, int dual_stride)
+                                        整数 basis, 整数 dual_stride)
 {
     basis >>= 1;
-    if (len < basis)
-        return AVERROR(EINVAL);
+    もし (len < basis)
+        戻る AVERROR(EINVAL);
 
-    if (!(s->map = av_mallocz(len*sizeof(*s->map))))
-        return AVERROR(ENOMEM);
+    もし (!(s->map = av_mallocz(len*sizeof(*s->map))))
+        戻る AVERROR(ENOMEM);
 
     av_assert0(!dual_stride || !(dual_stride & (dual_stride - 1)));
     av_assert0(dual_stride <= basis);
@@ -258,22 +258,22 @@ int ff_tx_gen_split_radix_parity_revtab(AVTXContext *s, int len, int inv,
 
     s->map_dir = opts ? opts->map_dir : FF_TX_MAP_GATHER;
 
-    return 0;
+    戻る 0;
 }
 
-static void reset_ctx(AVTXContext *s, int free_sub)
+static void reset_ctx(AVTXContext *s, 整数 free_sub)
 {
-    if (!s)
-        return;
+    もし (!s)
+        戻る;
 
-    if (s->sub)
-        for (int i = 0; i < TX_MAX_SUB; i++)
+    もし (s->sub)
+        ために (整数 i = 0; i < TX_MAX_SUB; i++)
             reset_ctx(&s->sub[i], free_sub + 1);
 
-    if (s->cd_self && s->cd_self->uninit)
+    もし (s->cd_self && s->cd_self->uninit)
         s->cd_self->uninit(s);
 
-    if (free_sub)
+    もし (free_sub)
         av_freep(&s->sub);
 
     av_freep(&s->map);
@@ -294,21 +294,21 @@ void ff_tx_clear_ctx(AVTXContext *s)
 
 av_cold void av_tx_uninit(AVTXContext **ctx)
 {
-    if (!(*ctx))
-        return;
+    もし (!(*ctx))
+        戻る;
 
     reset_ctx(*ctx, 1);
     av_freep(ctx);
 }
 
-static av_cold int ff_tx_null_init(AVTXContext *s, const FFTXCodelet *cd,
+static av_cold 整数 ff_tx_null_init(AVTXContext *s, const FFTXCodelet *cd,
                                    uint64_t flags, FFTXCodeletOptions *opts,
-                                   int len, int inv, const void *scale)
+                                   整数 len, 整数 inv, const void *scale)
 {
     /* Can only handle one sample+type to one sample+type transforms */
-    if (TYPE_IS(MDCT, s->type) || TYPE_IS(RDFT, s->type))
-        return AVERROR(EINVAL);
-    return 0;
+    もし (TYPE_IS(MDCT, s->type) || TYPE_IS(RDFT, s->type))
+        戻る AVERROR(EINVAL);
+    戻る 0;
 }
 
 /* Null transform when the length is 1 */
@@ -342,20 +342,20 @@ static const FFTXCodelet * const * const codelet_list[] = {
     ff_tx_codelet_list_double_c,
     ff_tx_codelet_list_int32_c,
     ff_tx_null_list,
-#if HAVE_X86ASM
+#もし HAVE_X86ASM
     ff_tx_codelet_list_float_x86,
 #endif
-#if ARCH_AARCH64
+#もし ARCH_AARCH64
     ff_tx_codelet_list_float_aarch64,
 #endif
 };
-static const int codelet_list_num = FF_ARRAY_ELEMS(codelet_list);
+static const 整数 codelet_list_num = FF_ARRAY_ELEMS(codelet_list);
 
-static const int cpu_slow_mask = AV_CPU_FLAG_SSE2SLOW | AV_CPU_FLAG_SSE3SLOW  |
+static const 整数 cpu_slow_mask = AV_CPU_FLAG_SSE2SLOW | AV_CPU_FLAG_SSE3SLOW  |
                                  AV_CPU_FLAG_ATOM     | AV_CPU_FLAG_SSSE3SLOW |
                                  AV_CPU_FLAG_AVXSLOW  | AV_CPU_FLAG_SLOW_GATHER;
 
-static const int cpu_slow_penalties[][2] = {
+static const 整数 cpu_slow_penalties[][2] = {
     { AV_CPU_FLAG_SSE2SLOW,    1 + 64  },
     { AV_CPU_FLAG_SSE3SLOW,    1 + 64  },
     { AV_CPU_FLAG_SSSE3SLOW,   1 + 64  },
@@ -364,131 +364,131 @@ static const int cpu_slow_penalties[][2] = {
     { AV_CPU_FLAG_SLOW_GATHER, 1 + 32  },
 };
 
-static int get_codelet_prio(const FFTXCodelet *cd, int cpu_flags, int len)
+static 整数 get_codelet_prio(const FFTXCodelet *cd, 整数 cpu_flags, 整数 len)
 {
-    int prio = cd->prio;
-    int max_factor = 0;
+    整数 prio = cd->prio;
+    整数 max_factor = 0;
 
     /* If the CPU has a SLOW flag, and the instruction is also flagged
      * as being slow for such, reduce its priority */
-    for (int i = 0; i < FF_ARRAY_ELEMS(cpu_slow_penalties); i++) {
-        if ((cpu_flags & cd->cpu_flags) & cpu_slow_penalties[i][0])
+    ために (整数 i = 0; i < FF_ARRAY_ELEMS(cpu_slow_penalties); i++) {
+        もし ((cpu_flags & cd->cpu_flags) & cpu_slow_penalties[i][0])
             prio -= cpu_slow_penalties[i][1];
     }
 
     /* Prioritize aligned-only codelets */
-    if ((cd->flags & FF_TX_ALIGNED) && !(cd->flags & AV_TX_UNALIGNED))
+    もし ((cd->flags & FF_TX_ALIGNED) && !(cd->flags & AV_TX_UNALIGNED))
         prio += 64;
 
     /* Codelets for specific lengths are generally faster */
-    if ((len == cd->min_len) && (len == cd->max_len))
+    もし ((len == cd->min_len) && (len == cd->max_len))
         prio += 64;
 
     /* Forward-only or inverse-only transforms are generally better */
-    if ((cd->flags & (FF_TX_FORWARD_ONLY | FF_TX_INVERSE_ONLY)))
+    もし ((cd->flags & (FF_TX_FORWARD_ONLY | FF_TX_INVERSE_ONLY)))
         prio += 64;
 
     /* Larger factors are generally better */
-    for (int i = 0; i < TX_MAX_SUB; i++)
+    ために (整数 i = 0; i < TX_MAX_SUB; i++)
         max_factor = FFMAX(cd->factors[i], max_factor);
-    if (max_factor)
+    もし (max_factor)
         prio += 16*max_factor;
 
-    return prio;
+    戻る prio;
 }
 
 typedef struct FFTXLenDecomp {
-    int len;
-    int len2;
-    int prio;
+    整数 len;
+    整数 len2;
+    整数 prio;
     const FFTXCodelet *cd;
 } FFTXLenDecomp;
 
-static int cmp_decomp(FFTXLenDecomp *a, FFTXLenDecomp *b)
+static 整数 cmp_decomp(FFTXLenDecomp *a, FFTXLenDecomp *b)
 {
-    return FFDIFFSIGN(b->prio, a->prio);
+    戻る FFDIFFSIGN(b->prio, a->prio);
 }
 
-int ff_tx_decompose_length(int dst[TX_MAX_DECOMPOSITIONS], enum AVTXType type,
-                           int len, int inv)
+整数 ff_tx_decompose_length(整数 dst[TX_MAX_DECOMPOSITIONS], enum AVTXType type,
+                           整数 len, 整数 inv)
 {
-    int nb_decomp = 0;
+    整数 nb_decomp = 0;
     FFTXLenDecomp ld[TX_MAX_DECOMPOSITIONS];
-    int codelet_list_idx = codelet_list_num;
+    整数 codelet_list_idx = codelet_list_num;
 
-    const int cpu_flags = av_get_cpu_flags();
+    const 整数 cpu_flags = av_get_cpu_flags();
 
     /* Loop through all codelets in all codelet lists to find matches
      * to the requirements */
-    while (codelet_list_idx--) {
+    ながら (codelet_list_idx--) {
         const FFTXCodelet * const * list = codelet_list[codelet_list_idx];
         const FFTXCodelet *cd = NULL;
 
-        while ((cd = *list++)) {
-            int fl = len;
-            int skip = 0, prio;
-            int factors_product = 1, factors_mod = 0;
+        ながら ((cd = *list++)) {
+            整数 fl = len;
+            整数 skip = 0, prio;
+            整数 factors_product = 1, factors_mod = 0;
 
-            if (nb_decomp >= TX_MAX_DECOMPOSITIONS)
+            もし (nb_decomp >= TX_MAX_DECOMPOSITIONS)
                 goto sort;
 
             /* Check if the type matches */
-            if (cd->type != TX_TYPE_ANY && type != cd->type)
+            もし (cd->type != TX_TYPE_ANY && type != cd->type)
                 continue;
 
             /* Check direction for non-orthogonal codelets */
-            if (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
+            もし (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
                 ((cd->flags & (FF_TX_INVERSE_ONLY | AV_TX_FULL_IMDCT)) && !inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_REAL)) && inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_IMAGINARY)) && inv))
                 continue;
 
             /* Check if the CPU supports the required ISA */
-            if (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
+            もし (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
                 !(cpu_flags & (cd->cpu_flags & ~cpu_slow_mask)))
                 continue;
 
-            for (int i = 0; i < TX_MAX_FACTORS; i++) {
-                if (!cd->factors[i] || (fl == 1))
+            ために (整数 i = 0; i < TX_MAX_FACTORS; i++) {
+                もし (!cd->factors[i] || (fl == 1))
                     break;
 
-                if (cd->factors[i] == TX_FACTOR_ANY) {
+                もし (cd->factors[i] == TX_FACTOR_ANY) {
                     factors_mod++;
                     factors_product *= fl;
-                } else if (!(fl % cd->factors[i])) {
+                } 否则 もし (!(fl % cd->factors[i])) {
                     factors_mod++;
-                    if (cd->factors[i] == 2) {
-                        int b = ff_ctz(fl);
+                    もし (cd->factors[i] == 2) {
+                        整数 b = ff_ctz(fl);
                         fl >>= b;
                         factors_product <<= b;
-                    } else {
+                    } 否则 {
                         do {
                             fl /= cd->factors[i];
                             factors_product *= cd->factors[i];
-                        } while (!(fl % cd->factors[i]));
+                        } ながら (!(fl % cd->factors[i]));
                     }
                 }
             }
 
             /* Disqualify if factor requirements are not satisfied or if trivial */
-            if ((factors_mod < cd->nb_factors) || (len == factors_product))
+            もし ((factors_mod < cd->nb_factors) || (len == factors_product))
                 continue;
 
-            if (av_gcd(factors_product, fl) != 1)
+            もし (av_gcd(factors_product, fl) != 1)
                 continue;
 
             /* Check if length is supported and factorization was successful */
-            if ((factors_product < cd->min_len) ||
+            もし ((factors_product < cd->min_len) ||
                 (cd->max_len != TX_LEN_UNLIMITED && (factors_product > cd->max_len)))
                 continue;
 
             prio = get_codelet_prio(cd, cpu_flags, factors_product) * factors_product;
 
             /* Check for duplicates */
-            for (int i = 0; i < nb_decomp; i++) {
-                if (factors_product == ld[i].len) {
+            ために (整数 i = 0; i < nb_decomp; i++) {
+                もし (factors_product == ld[i].len) {
                     /* Update priority if new one is higher */
-                    if (prio > ld[i].prio)
+                    もし (prio > ld[i].prio)
                         ld[i].prio = prio;
                     skip = 1;
                     break;
@@ -496,7 +496,7 @@ int ff_tx_decompose_length(int dst[TX_MAX_DECOMPOSITIONS], enum AVTXType type,
             }
 
             /* Add decomposition if unique */
-            if (!skip) {
+            もし (!skip) {
                 ld[nb_decomp].cd = cd;
                 ld[nb_decomp].len = factors_product;
                 ld[nb_decomp].len2 = fl;
@@ -506,68 +506,68 @@ int ff_tx_decompose_length(int dst[TX_MAX_DECOMPOSITIONS], enum AVTXType type,
         }
     }
 
-    if (!nb_decomp)
-        return AVERROR(EINVAL);
+    もし (!nb_decomp)
+        戻る AVERROR(EINVAL);
 
 sort:
     AV_QSORT(ld, nb_decomp, FFTXLenDecomp, cmp_decomp);
 
-    for (int i = 0; i < nb_decomp; i++) {
-        if (ld[i].cd->nb_factors > 1)
+    ために (整数 i = 0; i < nb_decomp; i++) {
+        もし (ld[i].cd->nb_factors > 1)
             dst[i] = ld[i].len2;
-        else
+        否则
             dst[i] = ld[i].len;
     }
 
-    return nb_decomp;
+    戻る nb_decomp;
 }
 
-int ff_tx_gen_default_map(AVTXContext *s, FFTXCodeletOptions *opts)
+整数 ff_tx_gen_default_map(AVTXContext *s, FFTXCodeletOptions *opts)
 {
     s->map = av_malloc(s->len*sizeof(*s->map));
-    if (!s->map)
-        return AVERROR(ENOMEM);
+    もし (!s->map)
+        戻る AVERROR(ENOMEM);
 
     s->map[0] = 0; /* DC is always at the start */
-    if (s->inv) /* Reversing the ACs flips the transform direction */
-        for (int i = 1; i < s->len; i++)
+    もし (s->inv) /* Reversing the ACs flips the transform direction */
+        ために (整数 i = 1; i < s->len; i++)
             s->map[i] = s->len - i;
-    else
-        for (int i = 1; i < s->len; i++)
+    否则
+        ために (整数 i = 1; i < s->len; i++)
             s->map[i] = i;
 
     s->map_dir = FF_TX_MAP_GATHER;
 
-    return 0;
+    戻る 0;
 }
 
-#if !CONFIG_SMALL
+#もし !CONFIG_SMALL
 static void print_flags(AVBPrint *bp, uint64_t f)
 {
-    int prev = 0;
+    整数 prev = 0;
     const char *sep = ", ";
     av_bprintf(bp, "flags: [");
-    if ((f & FF_TX_ALIGNED) && ++prev)
+    もし ((f & FF_TX_ALIGNED) && ++prev)
         av_bprintf(bp, "aligned");
-    if ((f & AV_TX_UNALIGNED) && ++prev)
+    もし ((f & AV_TX_UNALIGNED) && ++prev)
         av_bprintf(bp, "%sunaligned", prev > 1 ? sep : "");
-    if ((f & AV_TX_INPLACE) && ++prev)
+    もし ((f & AV_TX_INPLACE) && ++prev)
         av_bprintf(bp, "%sinplace", prev > 1 ? sep : "");
-    if ((f & FF_TX_OUT_OF_PLACE) && ++prev)
+    もし ((f & FF_TX_OUT_OF_PLACE) && ++prev)
         av_bprintf(bp, "%sout_of_place", prev > 1 ? sep : "");
-    if ((f & FF_TX_FORWARD_ONLY) && ++prev)
+    もし ((f & FF_TX_FORWARD_ONLY) && ++prev)
         av_bprintf(bp, "%sfwd_only", prev > 1 ? sep : "");
-    if ((f & FF_TX_INVERSE_ONLY) && ++prev)
+    もし ((f & FF_TX_INVERSE_ONLY) && ++prev)
         av_bprintf(bp, "%sinv_only", prev > 1 ? sep : "");
-    if ((f & FF_TX_PRESHUFFLE) && ++prev)
+    もし ((f & FF_TX_PRESHUFFLE) && ++prev)
         av_bprintf(bp, "%spreshuf", prev > 1 ? sep : "");
-    if ((f & AV_TX_FULL_IMDCT) && ++prev)
+    もし ((f & AV_TX_FULL_IMDCT) && ++prev)
         av_bprintf(bp, "%simdct_full", prev > 1 ? sep : "");
-    if ((f & AV_TX_REAL_TO_REAL) && ++prev)
+    もし ((f & AV_TX_REAL_TO_REAL) && ++prev)
         av_bprintf(bp, "%sreal_to_real", prev > 1 ? sep : "");
-    if ((f & AV_TX_REAL_TO_IMAGINARY) && ++prev)
+    もし ((f & AV_TX_REAL_TO_IMAGINARY) && ++prev)
         av_bprintf(bp, "%sreal_to_imaginary", prev > 1 ? sep : "");
-    if ((f & FF_TX_ASM_CALL) && ++prev)
+    もし ((f & FF_TX_ASM_CALL) && ++prev)
         av_bprintf(bp, "%sasm_call", prev > 1 ? sep : "");
     av_bprintf(bp, "]");
 }
@@ -594,8 +594,8 @@ static void print_type(AVBPrint *bp, enum AVTXType type)
                "unknown");
 }
 
-static void print_cd_info(const FFTXCodelet *cd, int prio, int len, int print_prio,
-                          int log_level)
+static void print_cd_info(const FFTXCodelet *cd, 整数 prio, 整数 len, 整数 print_prio,
+                          整数 log_level)
 {
     AVBPrint bp;
     av_bprint_init(&bp, 0, AV_BPRINT_SIZE_AUTOMATIC);
@@ -605,100 +605,100 @@ static void print_cd_info(const FFTXCodelet *cd, int prio, int len, int print_pr
     print_type(&bp, cd->type);
 
     av_bprintf(&bp, ", len: ");
-    if (!len) {
-        if (cd->min_len != cd->max_len)
+    もし (!len) {
+        もし (cd->min_len != cd->max_len)
             av_bprintf(&bp, "[%i, ", cd->min_len);
 
-        if (cd->max_len == TX_LEN_UNLIMITED)
+        もし (cd->max_len == TX_LEN_UNLIMITED)
             av_bprintf(&bp, "∞");
-        else
+        否则
             av_bprintf(&bp, "%i", cd->max_len);
-    } else {
+    } 否则 {
         av_bprintf(&bp, "%i", len);
     }
 
-    if (cd->factors[1]) {
+    もし (cd->factors[1]) {
         av_bprintf(&bp, "%s, factors", !len && cd->min_len != cd->max_len ? "]" : "");
-        if (!cd->nb_factors)
+        もし (!cd->nb_factors)
             av_bprintf(&bp, ": [");
-        else
+        否则
             av_bprintf(&bp, "[%i]: [", cd->nb_factors);
 
-        for (int i = 0; i < TX_MAX_FACTORS; i++) {
-            if (i && cd->factors[i])
+        ために (整数 i = 0; i < TX_MAX_FACTORS; i++) {
+            もし (i && cd->factors[i])
                 av_bprintf(&bp, ", ");
-            if (cd->factors[i] == TX_FACTOR_ANY)
+            もし (cd->factors[i] == TX_FACTOR_ANY)
                 av_bprintf(&bp, "any");
-            else if (cd->factors[i])
+            否则 もし (cd->factors[i])
                 av_bprintf(&bp, "%i", cd->factors[i]);
-            else
+            否则
                 break;
         }
 
         av_bprintf(&bp, "], ");
-    } else {
+    } 否则 {
         av_bprintf(&bp, "%s, factor: %i, ",
                    !len && cd->min_len != cd->max_len ? "]" : "", cd->factors[0]);
     }
     print_flags(&bp, cd->flags);
 
-    if (print_prio)
+    もし (print_prio)
         av_bprintf(&bp, ", prio: %i", prio);
 
     av_log(NULL, log_level, "%s\n", bp.str);
 }
 
-static void print_tx_structure(AVTXContext *s, int depth)
+static void print_tx_structure(AVTXContext *s, 整数 depth)
 {
     const FFTXCodelet *cd = s->cd_self;
 
-    for (int i = 0; i <= depth; i++)
+    ために (整数 i = 0; i <= depth; i++)
         av_log(NULL, AV_LOG_DEBUG, "    ");
 
     print_cd_info(cd, cd->prio, s->len, 0, AV_LOG_DEBUG);
 
-    for (int i = 0; i < s->nb_sub; i++)
+    ために (整数 i = 0; i < s->nb_sub; i++)
         print_tx_structure(&s->sub[i], depth + 1);
 }
 #endif /* CONFIG_SMALL */
 
 typedef struct TXCodeletMatch {
     const FFTXCodelet *cd;
-    int prio;
+    整数 prio;
 } TXCodeletMatch;
 
-static int cmp_matches(TXCodeletMatch *a, TXCodeletMatch *b)
+static 整数 cmp_matches(TXCodeletMatch *a, TXCodeletMatch *b)
 {
-    return FFDIFFSIGN(b->prio, a->prio);
+    戻る FFDIFFSIGN(b->prio, a->prio);
 }
 
 /* We want all factors to completely cover the length */
-static inline int check_cd_factors(const FFTXCodelet *cd, int len)
+static inline 整数 check_cd_factors(const FFTXCodelet *cd, 整数 len)
 {
-    int matches = 0, any_flag = 0;
+    整数 matches = 0, any_flag = 0;
 
-    for (int i = 0; i < TX_MAX_FACTORS; i++) {
-        int factor = cd->factors[i];
+    ために (整数 i = 0; i < TX_MAX_FACTORS; i++) {
+        整数 factor = cd->factors[i];
 
-        if (factor == TX_FACTOR_ANY) {
+        もし (factor == TX_FACTOR_ANY) {
             any_flag = 1;
             matches++;
             continue;
-        } else if (len <= 1 || !factor) {
+        } 否则 もし (len <= 1 || !factor) {
             break;
-        } else if (factor == 2) { /* Fast path */
-            int bits_2 = ff_ctz(len);
-            if (!bits_2)
+        } 否则 もし (factor == 2) { /* Fast path */
+            整数 bits_2 = ff_ctz(len);
+            もし (!bits_2)
                 continue; /* Factor not supported */
 
             len >>= bits_2;
             matches++;
-        } else {
-            int res = len % factor;
-            if (res)
+        } 否则 {
+            整数 res = len % factor;
+            もし (res)
                 continue; /* Factor not supported */
 
-            while (!res) {
+            ながら (!res) {
                 len /= factor;
                 res = len % factor;
             }
@@ -706,26 +706,26 @@ static inline int check_cd_factors(const FFTXCodelet *cd, int len)
         }
     }
 
-    return (cd->nb_factors <= matches) && (any_flag || len == 1);
+    戻る (cd->nb_factors <= matches) && (any_flag || len == 1);
 }
 
-av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
+av_cold 整数 ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
                              uint64_t flags, FFTXCodeletOptions *opts,
-                             int len, int inv, const void *scale)
+                             整数 len, 整数 inv, const void *scale)
 {
-    int ret = 0;
+    整数 ret = 0;
     AVTXContext *sub = NULL;
     TXCodeletMatch *cd_tmp, *cd_matches = NULL;
-    unsigned int cd_matches_size = 0;
-    int codelet_list_idx = codelet_list_num;
-    int nb_cd_matches = 0;
-#if !CONFIG_SMALL
+    unsigned 整数 cd_matches_size = 0;
+    整数 codelet_list_idx = codelet_list_num;
+    整数 nb_cd_matches = 0;
+#もし !CONFIG_SMALL
     AVBPrint bp;
 #endif
 
     /* We still accept functions marked with SLOW, even if the CPU is
      * marked with the same flag, but we give them lower priority. */
-    const int cpu_flags = av_get_cpu_flags();
+    const 整数 cpu_flags = av_get_cpu_flags();
 
     /* Flags the transform wants */
     uint64_t req_flags = flags;
@@ -738,57 +738,57 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
                             FF_TX_ASM_CALL;
 
     /* Unaligned codelets are compatible with the aligned flag */
-    if (req_flags & FF_TX_ALIGNED)
+    もし (req_flags & FF_TX_ALIGNED)
         req_flags |= AV_TX_UNALIGNED;
 
     /* If either flag is set, both are okay, so don't check for an exact match */
-    if ((req_flags & AV_TX_INPLACE) && (req_flags & FF_TX_OUT_OF_PLACE))
+    もし ((req_flags & AV_TX_INPLACE) && (req_flags & FF_TX_OUT_OF_PLACE))
         req_flags &= ~(AV_TX_INPLACE | FF_TX_OUT_OF_PLACE);
-    if ((req_flags & FF_TX_ALIGNED) && (req_flags & AV_TX_UNALIGNED))
+    もし ((req_flags & FF_TX_ALIGNED) && (req_flags & AV_TX_UNALIGNED))
         req_flags &= ~(FF_TX_ALIGNED | AV_TX_UNALIGNED);
 
     /* Loop through all codelets in all codelet lists to find matches
      * to the requirements */
-    while (codelet_list_idx--) {
+    ながら (codelet_list_idx--) {
         const FFTXCodelet * const * list = codelet_list[codelet_list_idx];
         const FFTXCodelet *cd = NULL;
 
-        while ((cd = *list++)) {
+        ながら ((cd = *list++)) {
             /* Check if the type matches */
-            if (cd->type != TX_TYPE_ANY && type != cd->type)
+            もし (cd->type != TX_TYPE_ANY && type != cd->type)
                 continue;
 
             /* Check direction for non-orthogonal codelets */
-            if (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
+            もし (((cd->flags & FF_TX_FORWARD_ONLY) && inv) ||
                 ((cd->flags & (FF_TX_INVERSE_ONLY | AV_TX_FULL_IMDCT)) && !inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_REAL)) && inv) ||
                 ((cd->flags & (FF_TX_FORWARD_ONLY | AV_TX_REAL_TO_IMAGINARY)) && inv))
                 continue;
 
             /* Check if the requested flags match from both sides */
-            if (((req_flags    & cd->flags) != (req_flags)) ||
+            もし (((req_flags    & cd->flags) != (req_flags)) ||
                 ((inv_req_mask & cd->flags) != (req_flags & inv_req_mask)))
                 continue;
 
             /* Check if length is supported */
-            if ((len < cd->min_len) || (cd->max_len != -1 && (len > cd->max_len)))
+            もし ((len < cd->min_len) || (cd->max_len != -1 && (len > cd->max_len)))
                 continue;
 
             /* Check if the CPU supports the required ISA */
-            if (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
+            もし (cd->cpu_flags != FF_TX_CPU_FLAGS_ALL &&
                 !(cpu_flags & (cd->cpu_flags & ~cpu_slow_mask)))
                 continue;
 
             /* Check for factors */
-            if (!check_cd_factors(cd, len))
+            もし (!check_cd_factors(cd, len))
                 continue;
 
             /* Realloc array and append */
             cd_tmp = av_fast_realloc(cd_matches, &cd_matches_size,
                                      sizeof(*cd_tmp) * (nb_cd_matches + 1));
-            if (!cd_tmp) {
+            もし (!cd_tmp) {
                 av_free(cd_matches);
-                return AVERROR(ENOMEM);
+                戻る AVERROR(ENOMEM);
             }
 
             cd_matches                     = cd_tmp;
@@ -798,7 +798,7 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
         }
     }
 
-#if !CONFIG_SMALL
+#もし !CONFIG_SMALL
     /* Print debugging info */
     av_bprint_init(&bp, 0, AV_BPRINT_SIZE_AUTOMATIC);
     av_bprintf(&bp, "For transform of length %i, %s, ", len,
@@ -811,31 +811,31 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
 #endif
 
     /* No matches found */
-    if (!nb_cd_matches)
-        return AVERROR(ENOSYS);
+    もし (!nb_cd_matches)
+        戻る AVERROR(ENOSYS);
 
     /* Sort the list */
     AV_QSORT(cd_matches, nb_cd_matches, TXCodeletMatch, cmp_matches);
 
-#if !CONFIG_SMALL
+#もし !CONFIG_SMALL
     av_log(NULL, AV_LOG_TRACE, "%s\n", bp.str);
 
-    for (int i = 0; i < nb_cd_matches; i++) {
+    ために (整数 i = 0; i < nb_cd_matches; i++) {
         av_log(NULL, AV_LOG_TRACE, "    %i: ", i + 1);
         print_cd_info(cd_matches[i].cd, cd_matches[i].prio, 0, 1, AV_LOG_TRACE);
     }
 #endif
 
-    if (!s->sub) {
+    もし (!s->sub) {
         s->sub = sub = av_mallocz(TX_MAX_SUB*sizeof(*sub));
-        if (!sub) {
+        もし (!sub) {
             ret = AVERROR(ENOMEM);
             goto end;
         }
     }
 
     /* Attempt to initialize each */
-    for (int i = 0; i < nb_cd_matches; i++) {
+    ために (整数 i = 0; i < nb_cd_matches; i++) {
         const FFTXCodelet *cd = cd_matches[i].cd;
         AVTXContext *sctx = &s->sub[s->nb_sub];
 
@@ -849,32 +849,32 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
         s->cd[s->nb_sub] = cd;
 
         ret = 0;
-        if (cd->init)
+        もし (cd->init)
             ret = cd->init(sctx, cd, flags, opts, len, inv, scale);
 
-        if (ret >= 0) {
-            if (opts && opts->map_dir != FF_TX_MAP_NONE &&
+        もし (ret >= 0) {
+            もし (opts && opts->map_dir != FF_TX_MAP_NONE &&
                 sctx->map_dir == FF_TX_MAP_NONE) {
                 /* If a specific map direction was requested, and it doesn't
                  * exist, create one.*/
                 sctx->map = av_malloc(len*sizeof(*sctx->map));
-                if (!sctx->map) {
+                もし (!sctx->map) {
                     ret = AVERROR(ENOMEM);
                     goto end;
                 }
 
-                for (int i = 0; i < len; i++)
+                ために (整数 i = 0; i < len; i++)
                     sctx->map[i] = i;
-            } else if (opts && (opts->map_dir != sctx->map_dir)) {
-                int *tmp = av_malloc(len*sizeof(*sctx->map));
-                if (!tmp) {
+            } 否则 もし (opts && (opts->map_dir != sctx->map_dir)) {
+                整数 *tmp = av_malloc(len*sizeof(*sctx->map));
+                もし (!tmp) {
                     ret = AVERROR(ENOMEM);
                     goto end;
                 }
 
                 memcpy(tmp, sctx->map, len*sizeof(*sctx->map));
 
-                for (int i = 0; i < len; i++)
+                ために (整数 i = 0; i < len; i++)
                     sctx->map[tmp[i]] = i;
 
                 av_free(tmp);
@@ -888,52 +888,52 @@ av_cold int ff_tx_init_subtx(AVTXContext *s, enum AVTXType type,
         s->cd[s->nb_sub] = NULL;
 
         reset_ctx(sctx, 0);
-        if (ret == AVERROR(ENOMEM))
+        もし (ret == AVERROR(ENOMEM))
             break;
     }
 
-    if (!s->nb_sub)
+    もし (!s->nb_sub)
         av_freep(&s->sub);
 
 end:
     av_free(cd_matches);
-    return ret;
+    戻る ret;
 }
 
-av_cold int av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
-                       int inv, int len, const void *scale, uint64_t flags)
+av_cold 整数 av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
+                       整数 inv, 整数 len, const void *scale, uint64_t flags)
 {
-    int ret;
+    整数 ret;
     AVTXContext tmp = { 0 };
     const double default_scale_d = 1.0;
     const float  default_scale_f = 1.0f;
 
-    if (!len || type >= AV_TX_NB || !ctx || !tx)
-        return AVERROR(EINVAL);
+    もし (!len || type >= AV_TX_NB || !ctx || !tx)
+        戻る AVERROR(EINVAL);
 
-    if (!(flags & AV_TX_UNALIGNED))
+    もし (!(flags & AV_TX_UNALIGNED))
         flags |= FF_TX_ALIGNED;
-    if (!(flags & AV_TX_INPLACE))
+    もし (!(flags & AV_TX_INPLACE))
         flags |= FF_TX_OUT_OF_PLACE;
 
-    if (!scale && ((type == AV_TX_DOUBLE_MDCT) || (type == AV_TX_DOUBLE_DCT) ||
+    もし (!scale && ((type == AV_TX_DOUBLE_MDCT) || (type == AV_TX_DOUBLE_DCT) ||
                    (type == AV_TX_DOUBLE_DCT_I) || (type == AV_TX_DOUBLE_DST_I) ||
                    (type == AV_TX_DOUBLE_RDFT)))
         scale = &default_scale_d;
-    else if (!scale && !TYPE_IS(FFT, type))
+    否则 もし (!scale && !TYPE_IS(FFT, type))
         scale = &default_scale_f;
 
     ret = ff_tx_init_subtx(&tmp, type, flags, NULL, len, inv, scale);
-    if (ret < 0)
-        return ret;
+    もし (ret < 0)
+        戻る ret;
 
     *ctx = &tmp.sub[0];
     *tx  = tmp.fn[0];
 
-#if !CONFIG_SMALL
+#もし !CONFIG_SMALL
     av_log(NULL, AV_LOG_DEBUG, "Transform tree:\n");
     print_tx_structure(*ctx, 0);
 #endif
 
-    return ret;
+    戻る ret;
 }

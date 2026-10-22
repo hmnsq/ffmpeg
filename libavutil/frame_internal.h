@@ -30,7 +30,7 @@
  * @param alloc  allocates the buffer, av_buffer_alloc() is used if NULL
  * @param opaque passed to alloc
  */
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
+整数 ff_frame_get_video_buffer(AVFrame *frame, 整数 align,
                               AVBufferRef *(*alloc)(void *opaque, size_t size),
                               void *opaque);
 

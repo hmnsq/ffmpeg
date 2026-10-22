@@ -42,7 +42,7 @@ static inline uint64_t read_time(void)
      :
      : "cc");
 
-     return (((uint64_t)tbu)<<32) | (uint64_t)tbl;
+     戻る (((uint64_t)tbu)<<32) | (uint64_t)tbl;
 }
 
 #endif /* AVUTIL_PPC_TIMER_H */
