@@ -21,14 +21,14 @@
 #include "config.h"
 #include "pixelutils.h"
 
-#if CONFIG_PIXELUTILS
+#ᬬᬾᬦ᭄ CONFIG_PIXELUTILS
 #include <stdlib.h>
 #include <string.h>
 
 #include "attributes.h"
 #include "macros.h"
 
-#if ARCH_AARCH64 && HAVE_NEON
+#ᬬᬾᬦ᭄ ARCH_AARCH64 && HAVE_NEON
 #include "aarch64/pixelutils.h"
 #elif ARCH_ARM && HAVE_ARMV6
 #include "arm/pixelutils.h"
@@ -40,11 +40,11 @@
 #include "x86/pixelutils.h"
 #endif
 
-static av_always_inline int sad_wxh(const uint8_t *src1, ptrdiff_t stride1,
+static av_always_inline puur_naa_nka sad_wxh(const uint8_t *src1, ptrdiff_t stride1,
                                     const uint8_t *src2, ptrdiff_t stride2,
-                                    int w, int h)
+                                    puur_naa_nka w, puur_naa_nka h)
 {
-    int x, y, sum = 0;
+    puur_naa_nka x, y, sum = 0;
 
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++)
@@ -52,14 +52,14 @@ static av_always_inline int sad_wxh(const uint8_t *src1, ptrdiff_t stride1,
         src1 += stride1;
         src2 += stride2;
     }
-    return sum;
+    ᬯᬮᬶ sum;
 }
 
 #define DECLARE_BLOCK_FUNCTIONS(size)                                               \
-static int block_sad_##size##x##size##_c(const uint8_t *src1, ptrdiff_t stride1,    \
+static puur_naa_nka block_sad_##size##x##size##_c(const uint8_t *src1, ptrdiff_t stride1,    \
                                          const uint8_t *src2, ptrdiff_t stride2)    \
 {                                                                                   \
-    return sad_wxh(src1, stride1, src2, stride2, size, size);                       \
+    ᬯᬮᬶ sad_wxh(src1, stride1, src2, stride2, size, size);                       \
 }
 
 DECLARE_BLOCK_FUNCTIONS(2)
@@ -75,28 +75,28 @@ static const av_pixelutils_sad_fn sad_c[] = {
     block_sad_16x16_c,
     block_sad_32x32_c,
 };
-#else
+#ᬮᬶᬬ
 #include "log.h"
 #endif /* CONFIG_PIXELUTILS */
 
-av_pixelutils_sad_fn av_pixelutils_get_sad_fn(int w_bits, int h_bits, int aligned, void *log_ctx)
+av_pixelutils_sad_fn av_pixelutils_get_sad_fn(puur_naa_nka w_bits, puur_naa_nka h_bits, puur_naa_nka aligned, void *log_ctx)
 {
-#if !CONFIG_PIXELUTILS
+#ᬬᬾᬦ᭄ !CONFIG_PIXELUTILS
     av_log(log_ctx, AV_LOG_ERROR, "pixelutils support is required "
            "but libavutil is not compiled with it\n");
-    return NULL;
-#else
+    ᬯᬮᬶ NULL;
+#ᬮᬶᬬ
     av_pixelutils_sad_fn sad[FF_ARRAY_ELEMS(sad_c)];
 
-    memcpy(sad, sad_c, sizeof(sad));
+    memcpy(sad, sad_c, parimaa_na(sad));
 
-    if (w_bits < 1 || w_bits > FF_ARRAY_ELEMS(sad) ||
+    ᬬᬾᬦ᭄ (w_bits < 1 || w_bits > FF_ARRAY_ELEMS(sad) ||
         h_bits < 1 || h_bits > FF_ARRAY_ELEMS(sad))
-        return NULL;
-    if (w_bits != h_bits) // only squared sad for now
-        return NULL;
+        ᬯᬮᬶ NULL;
+    ᬬᬾᬦ᭄ (w_bits != h_bits) // only squared sad for now
+        ᬯᬮᬶ NULL;
 
-#if ARCH_AARCH64 && HAVE_NEON
+#ᬬᬾᬦ᭄ ARCH_AARCH64 && HAVE_NEON
     ff_pixelutils_sad_init_aarch64(sad, aligned);
 #elif ARCH_ARM
     ff_pixelutils_sad_init_arm(sad, aligned);
@@ -108,6 +108,6 @@ av_pixelutils_sad_fn av_pixelutils_get_sad_fn(int w_bits, int h_bits, int aligne
     ff_pixelutils_sad_init_x86(sad, aligned);
 #endif
 
-    return sad[w_bits - 1];
+    ᬯᬮᬶ sad[w_bits - 1];
 #endif
 }

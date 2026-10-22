@@ -23,7 +23,7 @@
 #include "libavutil/frame.h"
 #include "libavutil/mem.h"
 
-int main(void)
+puur_naa_nka main(void)
 {
     AVFrame *frame;
     AVDownmixInfo *info, *info2;
@@ -31,11 +31,11 @@ int main(void)
     /* First call: allocates side data, zero-initialized. */
     printf("Testing av_downmix_info_update_side_data()\n");
     frame = av_frame_alloc();
-    if (!frame)
-        return 1;
+    ᬬᬾᬦ᭄ (!frame)
+        ᬯᬮᬶ 1;
 
     info = av_downmix_info_update_side_data(frame);
-    if (info) {
+    ᬬᬾᬦ᭄ (info) {
         printf("create: OK\n");
         printf("defaults: type=%d center=%.3f center_ltrt=%.3f surround=%.3f"
                " surround_ltrt=%.3f lfe=%.3f\n",
@@ -60,13 +60,13 @@ int main(void)
                info->center_mix_level, info->center_mix_level_ltrt,
                info->surround_mix_level, info->surround_mix_level_ltrt,
                info->lfe_mix_level);
-    } else {
+    } ᬮᬶᬬ {
         printf("create: FAIL\n");
     }
 
     /* Second call must reuse the existing side data (same pointer, values kept). */
     info2 = av_downmix_info_update_side_data(frame);
-    if (info && info2) {
+    ᬬᬾᬦ᭄ (info && info2) {
         printf("reuse: same_pointer=%s preserved_type=%d preserved_center=%.3f\n",
                info == info2 ? "yes" : "no",
                info2->preferred_downmix_type, info2->center_mix_level);
@@ -77,7 +77,7 @@ int main(void)
     /* OOM path: av_max_alloc(1) forces the internal side data allocation to fail. */
     printf("\nTesting OOM path\n");
     frame = av_frame_alloc();
-    if (frame) {
+    ᬬᬾᬦ᭄ (frame) {
         av_max_alloc(1);
         info = av_downmix_info_update_side_data(frame);
         printf("OOM: %s\n", info ? "FAIL" : "OK");
@@ -85,5 +85,5 @@ int main(void)
         av_frame_free(&frame);
     }
 
-    return 0;
+    ᬯᬮᬶ 0;
 }

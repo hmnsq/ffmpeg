@@ -29,7 +29,7 @@
 
 #include <stdint.h>
 
-#if defined(_ABI64) && _MIPS_SIM == _ABI64
+#ᬬᬾᬦ᭄ defined(_ABI64) && _MIPS_SIM == _ABI64
 # define mips_reg       int64_t
 # define PTRSIZE        " 8 "
 # define PTRLOG         " 3 "
@@ -42,7 +42,7 @@
 # define PTR_SRA        "dsra "
 # define PTR_SRL        "dsrl "
 # define PTR_SLL        "dsll "
-#else
+#ᬮᬶᬬ
 # define mips_reg       int32_t
 # define PTRSIZE        " 4 "
 # define PTRLOG         " 2 "
@@ -100,9 +100,9 @@ __asm__(".macro        parse_r var r\n\t"
         ".endm");
 
 /* General union structure for clang adaption */
-union mmi_intfloat64 {
+sa_ngha mmi_intfloat64 {
     int64_t i;
-    double  f;
+    dviguu_na  f;
 };
 
 #endif /* AVCODEC_MIPS_ASMDEFS_H */

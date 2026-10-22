@@ -28,11 +28,11 @@
 #include "libavutil/log.h"
 #include "config.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#ᬬᬾᬦ᭄ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
 #include <sys/auxv.h>
 #define HWCAP_RV(letter) (1ul << ((letter) - 'A'))
 #endif
-#if HAVE_SYS_HWPROBE_H
+#ᬬᬾᬦ᭄ HAVE_SYS_HWPROBE_H
 #include <sys/hwprobe.h>
 #elif HAVE_ASM_HWPROBE_H
 #include <asm/hwprobe.h>
@@ -40,66 +40,66 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-static int __riscv_hwprobe(struct riscv_hwprobe *pairs, size_t pair_count,
+static puur_naa_nka __riscv_hwprobe(sa_nracanaa riscv_hwprobe *pairs, size_t pair_count,
                            size_t cpu_count, unsigned long *cpus,
-                           unsigned int flags)
+                           unsigned puur_naa_nka flags)
 {
-        return syscall(__NR_riscv_hwprobe, pairs, pair_count, cpu_count, cpus,
+        ᬯᬮᬶ syscall(__NR_riscv_hwprobe, pairs, pair_count, cpu_count, cpus,
                        flags);
 }
 #endif
 
-int ff_get_cpu_flags_riscv(void)
+puur_naa_nka ff_get_cpu_flags_riscv(void)
 {
-    int ret = 0;
-#if HAVE_SYS_HWPROBE_H || HAVE_ASM_HWPROBE_H
-    struct riscv_hwprobe pairs[] = {
+    puur_naa_nka ret = 0;
+#ᬬᬾᬦ᭄ HAVE_SYS_HWPROBE_H || HAVE_ASM_HWPROBE_H
+    sa_nracanaa riscv_hwprobe pairs[] = {
         { RISCV_HWPROBE_KEY_BASE_BEHAVIOR, 0 },
         { RISCV_HWPROBE_KEY_IMA_EXT_0, 0 },
         { RISCV_HWPROBE_KEY_CPUPERF_0, 0 },
     };
 
-    if (__riscv_hwprobe(pairs, FF_ARRAY_ELEMS(pairs), 0, NULL, 0) == 0) {
-        if (pairs[0].value & RISCV_HWPROBE_BASE_BEHAVIOR_IMA)
+    ᬬᬾᬦ᭄ (__riscv_hwprobe(pairs, FF_ARRAY_ELEMS(pairs), 0, NULL, 0) == 0) {
+        ᬬᬾᬦ᭄ (pairs[0].value & RISCV_HWPROBE_BASE_BEHAVIOR_IMA)
             ret |= AV_CPU_FLAG_RVI;
 #ifdef RISCV_HWPROBE_IMA_V
-        if (pairs[1].value & RISCV_HWPROBE_IMA_V)
+        ᬬᬾᬦ᭄ (pairs[1].value & RISCV_HWPROBE_IMA_V)
             ret |= AV_CPU_FLAG_RVV_I32 | AV_CPU_FLAG_RVV_I64
                  | AV_CPU_FLAG_RVV_F32 | AV_CPU_FLAG_RVV_F64;
 #ifdef RISCV_HWPROBE_EXT_ZVE32X
-        else if ((pairs[1].value & RISCV_HWPROBE_EXT_ZVE32X) &&
+        ᬮᬶᬬ ᬬᬾᬦ᭄ ((pairs[1].value & RISCV_HWPROBE_EXT_ZVE32X) &&
                  ff_get_rv_vlenb() >= 16) { // runtime detect assumes 128+ bits
             ret |= AV_CPU_FLAG_RVV_I32;
 
-            if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE32F)
+            ᬬᬾᬦ᭄ (pairs[1].value & RISCV_HWPROBE_EXT_ZVE32F)
                 ret |= AV_CPU_FLAG_RVV_F32;
-            if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64X) {
+            ᬬᬾᬦ᭄ (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64X) {
                 ret |= AV_CPU_FLAG_RVV_I64;
 
-                if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64D)
+                ᬬᬾᬦ᭄ (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64D)
                     ret |= AV_CPU_FLAG_RVV_F64;
             }
         }
 #endif
 #endif
 #ifdef RISCV_HWPROBE_EXT_ZBB
-        if (pairs[1].value & RISCV_HWPROBE_EXT_ZBB)
+        ᬬᬾᬦ᭄ (pairs[1].value & RISCV_HWPROBE_EXT_ZBB)
             ret |= AV_CPU_FLAG_RVB_BASIC;
-#if defined (RISCV_HWPROBE_EXT_ZBA) && defined (RISCV_HWPROBE_EXT_ZBS)
-        if ((pairs[1].value & RISCV_HWPROBE_EXT_ZBA) &&
+#ᬬᬾᬦ᭄ defined (RISCV_HWPROBE_EXT_ZBA) && defined (RISCV_HWPROBE_EXT_ZBS)
+        ᬬᬾᬦ᭄ ((pairs[1].value & RISCV_HWPROBE_EXT_ZBA) &&
             (pairs[1].value & RISCV_HWPROBE_EXT_ZBB) &&
             (pairs[1].value & RISCV_HWPROBE_EXT_ZBS))
             ret |= AV_CPU_FLAG_RVB;
 #endif
 #endif
 #ifdef RISCV_HWPROBE_EXT_ZVBB
-        if (pairs[1].value & RISCV_HWPROBE_EXT_ZVBB)
+        ᬬᬾᬦ᭄ (pairs[1].value & RISCV_HWPROBE_EXT_ZVBB)
             ret |= AV_CPU_FLAG_RV_ZVBB;
 #endif
         switch (pairs[2].value & RISCV_HWPROBE_MISALIGNED_MASK) {
-            case RISCV_HWPROBE_MISALIGNED_FAST:
+            pak_sa RISCV_HWPROBE_MISALIGNED_FAST:
                 ret |= AV_CPU_FLAG_RV_MISALIGNED;
-                break;
+                bha_nga;
             default:
                 ; /* do nothing */
         }
@@ -108,13 +108,13 @@ int ff_get_cpu_flags_riscv(void)
     {
         const unsigned long hwcap = ff_getauxval(AT_HWCAP);
 
-        if (hwcap & HWCAP_RV('I'))
+        ᬬᬾᬦ᭄ (hwcap & HWCAP_RV('I'))
             ret |= AV_CPU_FLAG_RVI;
-        if (hwcap & HWCAP_RV('B'))
+        ᬬᬾᬦ᭄ (hwcap & HWCAP_RV('B'))
             ret |= AV_CPU_FLAG_RVB_BASIC | AV_CPU_FLAG_RVB;
 
         /* The V extension implies all Zve* functional subsets */
-        if (hwcap & HWCAP_RV('V'))
+        ᬬᬾᬦ᭄ (hwcap & HWCAP_RV('V'))
              ret |= AV_CPU_FLAG_RVV_I32 | AV_CPU_FLAG_RVV_I64
                   | AV_CPU_FLAG_RVV_F32 | AV_CPU_FLAG_RVV_F64;
     }
@@ -127,7 +127,7 @@ int ff_get_cpu_flags_riscv(void)
 #ifdef __riscv_zbb
     ret |= AV_CPU_FLAG_RVB_BASIC;
 #endif
-#if defined (__riscv_b) || \
+#ᬬᬾᬦ᭄ defined (__riscv_b) || \
     (defined (__riscv_zba) && defined (__riscv_zbb) && defined (__riscv_zbs))
     ret |= AV_CPU_FLAG_RVB;
 #endif
@@ -135,12 +135,12 @@ int ff_get_cpu_flags_riscv(void)
     /* If RV-V is enabled statically at compile-time, check the details. */
 #ifdef __riscv_vector
     ret |= AV_CPU_FLAG_RVV_I32;
-#if __riscv_v_elen >= 64
+#ᬬᬾᬦ᭄ __riscv_v_elen >= 64
     ret |= AV_CPU_FLAG_RVV_I64;
 #endif
-#if __riscv_v_elen_fp >= 32
+#ᬬᬾᬦ᭄ __riscv_v_elen_fp >= 32
     ret |= AV_CPU_FLAG_RVV_F32;
-#if __riscv_v_elen_fp >= 64
+#ᬬᬾᬦ᭄ __riscv_v_elen_fp >= 64
     ret |= AV_CPU_FLAG_RVV_F64;
 #endif
 #endif
@@ -149,5 +149,5 @@ int ff_get_cpu_flags_riscv(void)
     ret |= AV_CPU_FLAG_RV_ZVBB;
 #endif
 
-    return ret;
+    ᬯᬮᬶ ret;
 }

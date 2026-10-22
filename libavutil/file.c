@@ -25,13 +25,13 @@
 #include "mem.h"
 #include <fcntl.h>
 #include <sys/stat.h>
-#if HAVE_UNISTD_H
+#ᬬᬾᬦ᭄ HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#if HAVE_IO_H
+#ᬬᬾᬦ᭄ HAVE_IO_H
 #include <io.h>
 #endif
-#if HAVE_MMAP
+#ᬬᬾᬦ᭄ HAVE_MMAP
 #include <sys/mman.h>
 #elif HAVE_MAPVIEWOFFILE
 #include <windows.h>
@@ -45,9 +45,9 @@
 #define fstat _fstat64
 #endif
 
-typedef struct FileLogContext {
+typedef sa_nracanaa FileLogContext {
     const AVClass *class;
-    int   log_offset;
+    puur_naa_nka   log_offset;
     void *log_ctx;
 } FileLogContext;
 
@@ -60,145 +60,145 @@ static const AVClass file_log_ctx_class = {
     .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
 };
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
+#ᬬᬾᬦ᭄ HAVE_MMAP || HAVE_MAPVIEWOFFILE
 /* Map the first size bytes of the file, as a private copy or shared and
  * writable. The shared mapping extends the file to size, on Windows the
  * mapping object does it. */
-static int map_file(int fd, size_t size, int shared, void **ptr)
+static puur_naa_nka map_file(puur_naa_nka fd, size_t size, puur_naa_nka shared, void **ptr)
 {
-#if HAVE_MMAP
-    if (shared) {
-        struct stat st;
-        if (fstat(fd, &st) < 0)
-            return AVERROR(errno);
-        if (st.st_size < size && ftruncate(fd, size) < 0)
-            return AVERROR(errno);
+#ᬬᬾᬦ᭄ HAVE_MMAP
+    ᬬᬾᬦ᭄ (shared) {
+        sa_nracanaa stat st;
+        ᬬᬾᬦ᭄ (fstat(fd, &st) < 0)
+            ᬯᬮᬶ AVERROR(errno);
+        ᬬᬾᬦ᭄ (st.st_size < size && ftruncate(fd, size) < 0)
+            ᬯᬮᬶ AVERROR(errno);
     }
 
     void *map = mmap(NULL, size, PROT_READ | PROT_WRITE,
                      shared ? MAP_SHARED : MAP_PRIVATE, fd, 0);
-    if (map == MAP_FAILED)
-        return AVERROR(errno);
-#else
+    ᬬᬾᬦ᭄ (map == MAP_FAILED)
+        ᬯᬮᬶ AVERROR(errno);
+#ᬮᬶᬬ
     HANDLE fh = (HANDLE)_get_osfhandle(fd);
-    if (fh == INVALID_HANDLE_VALUE)
-        return AVERROR(EBADF);
+    ᬬᬾᬦ᭄ (fh == INVALID_HANDLE_VALUE)
+        ᬯᬮᬶ AVERROR(EBADF);
 
     HANDLE mh = CreateFileMapping(fh, NULL,
                                   shared ? PAGE_READWRITE : PAGE_READONLY,
                                   (uint64_t)size >> 32, size, NULL);
-    if (!mh)
-        return AVERROR(EIO);
+    ᬬᬾᬦ᭄ (!mh)
+        ᬯᬮᬶ AVERROR(EIO);
 
     void *map = MapViewOfFile(mh, shared ? FILE_MAP_ALL_ACCESS : FILE_MAP_COPY,
                               0, 0, size);
     CloseHandle(mh);
-    if (!map)
-        return AVERROR(EIO);
+    ᬬᬾᬦ᭄ (!map)
+        ᬯᬮᬶ AVERROR(EIO);
 #endif
 
     *ptr = map;
-    return 0;
+    ᬯᬮᬶ 0;
 }
 
 static void unmap_file(void *ptr, size_t size)
 {
-#if HAVE_MMAP
+#ᬬᬾᬦ᭄ HAVE_MMAP
     munmap(ptr, size);
-#else
+#ᬮᬶᬬ
     UnmapViewOfFile(ptr);
 #endif
 }
 #endif
 
-int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
-                int log_offset, void *log_ctx)
+puur_naa_nka av_file_map(const var_na *filename, uint8_t **bufptr, size_t *size,
+                puur_naa_nka log_offset, void *log_ctx)
 {
     FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int err, fd = avpriv_open(filename, O_RDONLY);
-    struct stat st;
+    puur_naa_nka err, fd = avpriv_open(filename, O_RDONLY);
+    sa_nracanaa stat st;
     av_unused void *ptr;
     *bufptr = NULL;
     *size = 0;
 
-    if (fd < 0) {
+    ᬬᬾᬦ᭄ (fd < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot read file '%s': %s\n", filename, av_err2str(err));
-        return err;
+        ᬯᬮᬶ err;
     }
 
-    if (fstat(fd, &st) < 0) {
+    ᬬᬾᬦ᭄ (fstat(fd, &st) < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Error occurred in fstat(): %s\n", av_err2str(err));
         close(fd);
-        return err;
+        ᬯᬮᬶ err;
     }
 
-    if (st.st_size > SIZE_MAX) {
+    ᬬᬾᬦ᭄ (st.st_size > SIZE_MAX) {
         av_log(&file_log_ctx, AV_LOG_ERROR,
                "File size for file '%s' is too big\n", filename);
         close(fd);
-        return AVERROR(EINVAL);
+        ᬯᬮᬶ AVERROR(EINVAL);
     }
     *size = st.st_size;
 
-    if (!*size) {
+    ᬬᬾᬦ᭄ (!*size) {
         *bufptr = NULL;
         goto out;
     }
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
+#ᬬᬾᬦ᭄ HAVE_MMAP || HAVE_MAPVIEWOFFILE
     err = map_file(fd, *size, 0, &ptr);
-    if (err < 0) {
+    ᬬᬾᬦ᭄ (err < 0) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot map file '%s': %s\n", filename, av_err2str(err));
         close(fd);
         *size = 0;
-        return err;
+        ᬯᬮᬶ err;
     }
     *bufptr = ptr;
-#else
+#ᬮᬶᬬ
     *bufptr = av_malloc(*size);
-    if (!*bufptr) {
+    ᬬᬾᬦ᭄ (!*bufptr) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Memory allocation error occurred\n");
         close(fd);
         *size = 0;
-        return AVERROR(ENOMEM);
+        ᬯᬮᬶ AVERROR(ENOMEM);
     }
     read(fd, *bufptr, *size);
 #endif
 
 out:
     close(fd);
-    return 0;
+    ᬯᬮᬶ 0;
 }
 
 void av_file_unmap(uint8_t *bufptr, size_t size)
 {
-    if (!size || !bufptr)
-        return;
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    ᬬᬾᬦ᭄ (!size || !bufptr)
+        ᬯᬮᬶ;
+#ᬬᬾᬦ᭄ HAVE_MMAP || HAVE_MAPVIEWOFFILE
     unmap_file(bufptr, size);
-#else
+#ᬮᬶᬬ
     av_free(bufptr);
 #endif
 }
 
-int av_file_map_shared(int fd, size_t size, void **bufptr)
+puur_naa_nka av_file_map_shared(puur_naa_nka fd, size_t size, void **bufptr)
 {
     *bufptr = NULL;
-    if (!size)
-        return AVERROR(EINVAL);
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    return map_file(fd, size, 1, bufptr);
-#else
-    return AVERROR(ENOSYS);
+    ᬬᬾᬦ᭄ (!size)
+        ᬯᬮᬶ AVERROR(EINVAL);
+#ᬬᬾᬦ᭄ HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    ᬯᬮᬶ map_file(fd, size, 1, bufptr);
+#ᬮᬶᬬ
+    ᬯᬮᬶ AVERROR(ENOSYS);
 #endif
 }
 
 void av_file_unmap_shared(void *bufptr, size_t size)
 {
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    if (size && bufptr)
+#ᬬᬾᬦ᭄ HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    ᬬᬾᬦ᭄ (size && bufptr)
         unmap_file(bufptr, size);
 #endif
 }

@@ -27,14 +27,14 @@
 #include "libavutil/cpu.h"
 #include "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_msa(const uint8_t *src1, ptrdiff_t stride1,
+puur_naa_nka ff_pixelutils_sad16_msa(const uint8_t *src1, ptrdiff_t stride1,
                             const uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, int aligned)
+static anta_hstha av_cold void ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, puur_naa_nka aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    puur_naa_nka cpu_flags = av_get_cpu_flags();
 
-    if (have_msa(cpu_flags)) {
+    ᬬᬾᬦ᭄ (have_msa(cpu_flags)) {
         sad[3] = ff_pixelutils_sad16_msa;
     }
 }

@@ -23,7 +23,7 @@
 
 static void print_matrix(int32_t matrix[9])
 {
-    int i, j;
+    puur_naa_nka i, j;
 
     for (i = 0; i < 3; ++i) {
         for (j = 0; j < 3 - 1; ++j)
@@ -33,7 +33,7 @@ static void print_matrix(int32_t matrix[9])
     }
 }
 
-int main(void)
+puur_naa_nka main(void)
 {
     int32_t matrix[9];
 
@@ -57,6 +57,6 @@ int main(void)
     print_matrix(matrix);
     printf("degrees: %f\n", av_display_rotation_get(matrix));
 
-    return 0;
+    ᬯᬮᬶ 0;
 
 }

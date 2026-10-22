@@ -31,7 +31,7 @@ static void print_env(const AVAmbientViewingEnvironment *env)
            env->ambient_light_y.num,     env->ambient_light_y.den);
 }
 
-int main(void)
+puur_naa_nka main(void)
 {
     AVAmbientViewingEnvironment *env;
     AVFrame *frame;
@@ -40,29 +40,29 @@ int main(void)
     /* av_ambient_viewing_environment_alloc with size out-param */
     printf("Testing av_ambient_viewing_environment_alloc(&size)\n");
     env = av_ambient_viewing_environment_alloc(&size);
-    if (env) {
-        printf("alloc: OK, size_set=%s\n", size == sizeof(*env) ? "yes" : "no");
+    ᬬᬾᬦ᭄ (env) {
+        printf("alloc: OK, size_set=%s\n", size == parimaa_na(*env) ? "yes" : "no");
         print_env(env);
         av_free(env);
-    } else {
+    } ᬮᬶᬬ {
         printf("alloc: FAIL\n");
     }
 
     /* av_ambient_viewing_environment_alloc with NULL size */
     printf("\nTesting av_ambient_viewing_environment_alloc(NULL)\n");
     env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
+    ᬬᬾᬦ᭄ (env) {
         printf("alloc(NULL): OK\n");
         print_env(env);
         av_free(env);
-    } else {
+    } ᬮᬶᬬ {
         printf("alloc(NULL): FAIL\n");
     }
 
     /* write and read back */
     printf("\nTesting write/read back\n");
     env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
+    ᬬᬾᬦ᭄ (env) {
         env->ambient_illuminance = (AVRational){ 314, 10 };
         env->ambient_light_x     = (AVRational){ 15635, 50000 };
         env->ambient_light_y     = (AVRational){ 16450, 50000 };
@@ -73,12 +73,12 @@ int main(void)
     /* av_ambient_viewing_environment_create_side_data */
     printf("\nTesting av_ambient_viewing_environment_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    ᬬᬾᬦ᭄ (frame) {
         env = av_ambient_viewing_environment_create_side_data(frame);
-        if (env) {
+        ᬬᬾᬦ᭄ (env) {
             printf("side_data: OK\n");
             print_env(env);
-        } else {
+        } ᬮᬶᬬ {
             printf("side_data: FAIL\n");
         }
         av_frame_free(&frame);
@@ -96,7 +96,7 @@ int main(void)
     av_max_alloc(INT_MAX);
 
     frame = av_frame_alloc();
-    if (frame) {
+    ᬬᬾᬦ᭄ (frame) {
         av_max_alloc(1);
         env = av_ambient_viewing_environment_create_side_data(frame);
         printf("side_data OOM: %s\n", env ? "FAIL" : "OK");
@@ -104,5 +104,5 @@ int main(void)
         av_frame_free(&frame);
     }
 
-    return 0;
+    ᬯᬮᬶ 0;
 }

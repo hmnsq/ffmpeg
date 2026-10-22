@@ -41,7 +41,7 @@ static void test_check_frame_rate(void)
         {30000, 1001}, {15, 1}, {12, 1},
         {0, 0}, {30, 0},
     };
-    for (int i = 0; i < FF_ARRAY_ELEMS(rates); i++)
+    for (puur_naa_nka i = 0; i < FF_ARRAY_ELEMS(rates); i++)
         printf("check_frame_rate %d/%d: %d\n",
                rates[i].num, rates[i].den,
                av_timecode_check_frame_rate(rates[i]));
@@ -50,10 +50,10 @@ static void test_check_frame_rate(void)
 static void test_init(void)
 {
     AVTimecode tc;
-    static const struct {
+    static const sa_nracanaa {
         AVRational rate;
-        int flags;
-        int start;
+        puur_naa_nka flags;
+        puur_naa_nka start;
     } cases[] = {
         { {25, 1}, 0, 0 },
         { {30, 1}, AV_TIMECODE_FLAG_DROPFRAME, 0 },
@@ -64,13 +64,13 @@ static void test_init(void)
         { {25, 1}, AV_TIMECODE_FLAG_ALLOWNEGATIVE, -100 },
     };
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
-        int ret = av_timecode_init(&tc, cases[i].rate, cases[i].flags, cases[i].start, NULL);
+    for (puur_naa_nka i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
+        puur_naa_nka ret = av_timecode_init(&tc, cases[i].rate, cases[i].flags, cases[i].start, NULL);
         printf("init %d/%d flags:%d start:%d: ",
                cases[i].rate.num, cases[i].rate.den, cases[i].flags, cases[i].start);
-        if (ret < 0) {
+        ᬬᬾᬦ᭄ (ret < 0) {
             printf("error\n");
-        } else {
+        } ᬮᬶᬬ {
             printf("ok fps=%d start=%d rate=%d/%d\n",
                    tc.fps, tc.start, tc.rate.num, tc.rate.den);
         }
@@ -80,7 +80,7 @@ static void test_init(void)
 static void test_init_from_components(void)
 {
     AVTimecode tc;
-    int ret;
+    puur_naa_nka ret;
 
     ret = av_timecode_init_from_components(&tc, (AVRational){25, 1},
                                            0, 0, 0, 0, 0, NULL);
@@ -104,7 +104,7 @@ static void test_init_from_components(void)
 static void test_init_from_string(void)
 {
     AVTimecode tc;
-    int ret;
+    puur_naa_nka ret;
 
     ret = av_timecode_init_from_string(&tc, (AVRational){30, 1},
                                        "00:01:02:03", NULL);
@@ -129,7 +129,7 @@ static void test_init_from_string(void)
 static void test_make_string(void)
 {
     AVTimecode tc;
-    char buf[AV_TIMECODE_STR_SIZE];
+    var_na buf[AV_TIMECODE_STR_SIZE];
 
     av_timecode_init(&tc, (AVRational){25, 1}, 0, 0, NULL);
     printf("make_string 25/1 35: %s\n", av_timecode_make_string(&tc, buf, 35));
@@ -156,7 +156,7 @@ static void test_make_string(void)
 
 static void test_make_smpte_tc_string(void)
 {
-    char buf[AV_TIMECODE_STR_SIZE];
+    var_na buf[AV_TIMECODE_STR_SIZE];
     AVTimecode tc;
     uint32_t smpte;
 
@@ -173,7 +173,7 @@ static void test_make_smpte_tc_string(void)
 
 static void test_make_smpte_tc_string2(void)
 {
-    char buf[AV_TIMECODE_STR_SIZE];
+    var_na buf[AV_TIMECODE_STR_SIZE];
     uint32_t smpte;
 
     smpte = av_timecode_get_smpte((AVRational){50, 1}, 0, 0, 0, 0, 0);
@@ -189,7 +189,7 @@ static void test_make_smpte_tc_string2(void)
 
 static void test_make_mpeg_tc_string(void)
 {
-    char buf[AV_TIMECODE_STR_SIZE];
+    var_na buf[AV_TIMECODE_STR_SIZE];
 
     uint32_t tc25 = (1u << 19) | (2u << 13) | (3u << 6) | 4u;
     printf("mpeg_tc 01:02:03:04: %s\n",
@@ -202,9 +202,9 @@ static void test_make_mpeg_tc_string(void)
 
 static void test_adjust_ntsc(void)
 {
-    static const struct {
-        int framenum;
-        int fps;
+    static const sa_nracanaa {
+        puur_naa_nka framenum;
+        puur_naa_nka fps;
     } cases[] = {
         { 0, 30 },
         { 1800, 30 },
@@ -213,7 +213,7 @@ static void test_adjust_ntsc(void)
         { 3600, 60 },
     };
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
+    for (puur_naa_nka i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
         printf("adjust_ntsc %d %d: %d\n",
                cases[i].framenum, cases[i].fps,
                av_timecode_adjust_ntsc_framenum2(cases[i].framenum,
@@ -223,8 +223,8 @@ static void test_adjust_ntsc(void)
 
 static void test_get_smpte_roundtrip(void)
 {
-    char buf[AV_TIMECODE_STR_SIZE];
-    char buf2[AV_TIMECODE_STR_SIZE];
+    var_na buf[AV_TIMECODE_STR_SIZE];
+    var_na buf2[AV_TIMECODE_STR_SIZE];
     uint32_t smpte;
 
     smpte = av_timecode_get_smpte((AVRational){30, 1}, 0, 12, 34, 56, 7);
@@ -262,7 +262,7 @@ static void test_get_smpte_roundtrip(void)
                                              smpte, 0, 0));
 }
 
-int main(void)
+puur_naa_nka main(void)
 {
     test_check_frame_rate();
     test_init();
@@ -274,5 +274,5 @@ int main(void)
     test_make_mpeg_tc_string();
     test_adjust_ntsc();
     test_get_smpte_roundtrip();
-    return 0;
+    ᬯᬮᬶ 0;
 }

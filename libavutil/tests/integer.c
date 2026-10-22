@@ -24,7 +24,7 @@
 #include "libavutil/integer.h"
 #include "libavutil/intmath.h"
 
-int main(void){
+puur_naa_nka main(void){
     int64_t a,b;
 
     for(a=7; a<256*256*256; a+=13215){
@@ -45,5 +45,5 @@ int main(void){
             av_assert0(av_i2int(av_div_i(ai,bi)) == a/b);
         }
     }
-    return 0;
+    ᬯᬮᬶ 0;
 }

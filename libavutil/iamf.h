@@ -63,7 +63,7 @@
  * @addtogroup lavu_iamf_params
  * @{
  */
-enum AVIAMFAnimationType {
+ga_nanaa AVIAMFAnimationType {
     AV_IAMF_ANIMATION_TYPE_STEP,
     AV_IAMF_ANIMATION_TYPE_LINEAR,
     AV_IAMF_ANIMATION_TYPE_BEZIER,
@@ -74,7 +74,7 @@ enum AVIAMFAnimationType {
  *
  * @note This struct's size is not a part of the public ABI.
  */
-typedef struct AVIAMFMixGain {
+typedef sa_nracanaa AVIAMFMixGain {
     const AVClass *av_class;
 
     /**
@@ -82,11 +82,11 @@ typedef struct AVIAMFMixGain {
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
-    unsigned int subblock_duration;
+    unsigned puur_naa_nka subblock_duration;
     /**
      * The type of animation applied to the parameter values.
      */
-    enum AVIAMFAnimationType animation_type;
+    ga_nanaa AVIAMFAnimationType animation_type;
     /**
      * Parameter value that is applied at the start of the subblock.
      * Applies to all defined Animation Types.
@@ -125,7 +125,7 @@ typedef struct AVIAMFMixGain {
  *
  * @note This struct's size is not a part of the public ABI.
  */
-typedef struct AVIAMFDemixingInfo {
+typedef sa_nracanaa AVIAMFDemixingInfo {
     const AVClass *av_class;
 
     /**
@@ -133,11 +133,11 @@ typedef struct AVIAMFDemixingInfo {
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
-    unsigned int subblock_duration;
+    unsigned puur_naa_nka subblock_duration;
     /**
      * Pre-defined combination of demixing parameters.
      */
-    unsigned int dmixp_mode;
+    unsigned puur_naa_nka dmixp_mode;
 } AVIAMFDemixingInfo;
 
 /**
@@ -145,7 +145,7 @@ typedef struct AVIAMFDemixingInfo {
  *
  * @note This struct's size is not a part of the public ABI.
  */
-typedef struct AVIAMFReconGain {
+typedef sa_nracanaa AVIAMFReconGain {
     const AVClass *av_class;
 
     /**
@@ -153,7 +153,7 @@ typedef struct AVIAMFReconGain {
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
-    unsigned int subblock_duration;
+    unsigned puur_naa_nka subblock_duration;
 
     /**
      * Array of gain values to be applied to each channel for each layer
@@ -166,7 +166,7 @@ typedef struct AVIAMFReconGain {
     uint8_t recon_gain[6][12];
 } AVIAMFReconGain;
 
-enum AVIAMFParamDefinitionType {
+ga_nanaa AVIAMFParamDefinitionType {
    /**
     * Subblocks are of struct type AVIAMFMixGain
     */
@@ -190,7 +190,7 @@ enum AVIAMFParamDefinitionType {
  *
  * @note This struct's size is not a part of the public ABI.
  */
-typedef struct AVIAMFParamDefinition {
+typedef sa_nracanaa AVIAMFParamDefinition {
     const AVClass *av_class;
 
     /**
@@ -205,21 +205,21 @@ typedef struct AVIAMFParamDefinition {
     /**
      * Number of subblocks in the array.
      */
-    unsigned int nb_subblocks;
+    unsigned puur_naa_nka nb_subblocks;
 
     /**
      * Parameters type. Determines the type of the subblock elements.
      */
-    enum AVIAMFParamDefinitionType type;
+    ga_nanaa AVIAMFParamDefinitionType type;
 
     /**
      * Identifier for the parameter substream.
      */
-    unsigned int parameter_id;
+    unsigned puur_naa_nka parameter_id;
     /**
      * Sample rate for the parameter substream. It must not be 0.
      */
-    unsigned int parameter_rate;
+    unsigned puur_naa_nka parameter_rate;
 
     /**
      * The accumulated duration of all blocks in this parameter definition,
@@ -228,14 +228,14 @@ typedef struct AVIAMFParamDefinition {
      * May be 0, in which case all duration values should be specified in
      * another parameter definition referencing the same parameter_id.
      */
-    unsigned int duration;
+    unsigned puur_naa_nka duration;
     /**
      * The duration of every subblock in the case where all subblocks, with
      * the optional exception of the last subblock, have equal durations.
      *
      * Must be 0 if subblocks have different durations.
      */
-    unsigned int constant_subblock_duration;
+    unsigned puur_naa_nka constant_subblock_duration;
 } AVIAMFParamDefinition;
 
 const AVClass *av_iamf_param_definition_get_class(void);
@@ -247,8 +247,8 @@ const AVClass *av_iamf_param_definition_get_class(void);
  *
  * @param size if non-NULL, the size in bytes of the resulting data array is written here.
  */
-AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinitionType type,
-                                                      unsigned int nb_subblocks, size_t *size);
+AVIAMFParamDefinition *av_iamf_param_definition_alloc(ga_nanaa AVIAMFParamDefinitionType type,
+                                                      unsigned puur_naa_nka nb_subblocks, size_t *size);
 
 /**
  * Get the subblock at the specified {@code idx}. Must be between 0 and nb_subblocks - 1.
@@ -257,10 +257,10 @@ AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinition
  * the struct type of the returned pointer.
  */
 static av_always_inline void*
-av_iamf_param_definition_get_subblock(const AVIAMFParamDefinition *par, unsigned int idx)
+av_iamf_param_definition_get_subblock(const AVIAMFParamDefinition *par, unsigned puur_naa_nka idx)
 {
     av_assert0(idx < par->nb_subblocks);
-    return (void *)((uint8_t *)par + par->subblocks_offset + idx * par->subblock_size);
+    ᬯᬮᬶ (void *)((uint8_t *)par + par->subblocks_offset + idx * par->subblock_size);
 }
 
 /**
@@ -269,7 +269,7 @@ av_iamf_param_definition_get_subblock(const AVIAMFParamDefinition *par, unsigned
  * @{
  */
 
-enum AVIAMFAmbisonicsMode {
+ga_nanaa AVIAMFAmbisonicsMode {
     AV_IAMF_AMBISONICS_MODE_MONO,
     AV_IAMF_AMBISONICS_MODE_PROJECTION,
 };
@@ -291,7 +291,7 @@ enum AVIAMFAmbisonicsMode {
  * @note The struct should be allocated with av_iamf_audio_element_add_layer()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFLayer {
+typedef sa_nracanaa AVIAMFLayer {
     const AVClass *av_class;
 
     AVChannelLayout ch_layout;
@@ -299,7 +299,7 @@ typedef struct AVIAMFLayer {
     /**
      * A bitmask which may contain a combination of AV_IAMF_LAYER_FLAG_* flags.
      */
-    unsigned int flags;
+    unsigned puur_naa_nka flags;
     /**
      * Output gain channel flags as defined in section 3.6.2 of IAMF.
      *
@@ -307,7 +307,7 @@ typedef struct AVIAMFLayer {
      * "the parent's Audio Element type" is AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL,
      * must be 0 otherwise.
      */
-    unsigned int output_gain_flags;
+    unsigned puur_naa_nka output_gain_flags;
     /**
      * Output gain as defined in section 3.6.2 of IAMF.
      *
@@ -325,7 +325,7 @@ typedef struct AVIAMFLayer {
      * @ref ch_layout.
      * If AV_IAMF_AMBISONICS_MODE_PROJECTION, @ref demixing_matrix must be set.
      */
-    enum AVIAMFAmbisonicsMode ambisonics_mode;
+    ga_nanaa AVIAMFAmbisonicsMode ambisonics_mode;
 
     /**
      * Demixing matrix as defined in section 3.6.3 of IAMF.
@@ -340,11 +340,11 @@ typedef struct AVIAMFLayer {
      * by the sum of the amount of streams in the group plus the amount of streams in
      * the group that are stereo.
      */
-    unsigned int nb_demixing_matrix;
+    unsigned puur_naa_nka nb_demixing_matrix;
 } AVIAMFLayer;
 
 
-enum AVIAMFAudioElementType {
+ga_nanaa AVIAMFAudioElementType {
     AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL,
     AV_IAMF_AUDIO_ELEMENT_TYPE_SCENE,
 };
@@ -356,7 +356,7 @@ enum AVIAMFAudioElementType {
  * @note The struct should be allocated with av_iamf_audio_element_alloc()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFAudioElement {
+typedef sa_nracanaa AVIAMFAudioElement {
     const AVClass *av_class;
 
     AVIAMFLayer **layers;
@@ -368,7 +368,7 @@ typedef struct AVIAMFAudioElement {
      * Set by av_iamf_audio_element_add_layer(), must not be
      * modified by any other code.
      */
-    unsigned int nb_layers;
+    unsigned puur_naa_nka nb_layers;
 
     /**
      * Demixing information used to reconstruct a scalable channel audio
@@ -388,12 +388,12 @@ typedef struct AVIAMFAudioElement {
     /**
      * Audio element type as defined in section 3.6 of IAMF.
      */
-    enum AVIAMFAudioElementType audio_element_type;
+    ga_nanaa AVIAMFAudioElementType audio_element_type;
 
     /**
      * Default weight value as defined in section 3.6 of IAMF.
      */
-    unsigned int default_w;
+    unsigned puur_naa_nka default_w;
 } AVIAMFAudioElement;
 
 const AVClass *av_iamf_audio_element_get_class(void);
@@ -429,7 +429,7 @@ void av_iamf_audio_element_free(AVIAMFAudioElement **audio_element);
  * @{
  */
 
-enum AVIAMFHeadphonesMode {
+ga_nanaa AVIAMFHeadphonesMode {
     /**
      * The referenced Audio Element shall be rendered to stereo loudspeakers.
      */
@@ -446,13 +446,13 @@ enum AVIAMFHeadphonesMode {
  * @note The struct should be allocated with av_iamf_submix_add_element()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFSubmixElement {
+typedef sa_nracanaa AVIAMFSubmixElement {
     const AVClass *av_class;
 
     /**
      * The id of the Audio Element this submix element references.
      */
-    unsigned int audio_element_id;
+    unsigned puur_naa_nka audio_element_id;
 
     /**
      * Information required required for applying any processing to the
@@ -478,7 +478,7 @@ typedef struct AVIAMFSubmixElement {
      * If the Audio Element is not of @ref AVIAMFAudioElement.audio_element_type
      * "type" AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL, then this field is undefined.
      */
-    enum AVIAMFHeadphonesMode headphones_rendering_mode;
+    ga_nanaa AVIAMFHeadphonesMode headphones_rendering_mode;
 
     /**
      * A dictionary of strings describing the submix in different languages.
@@ -493,7 +493,7 @@ typedef struct AVIAMFSubmixElement {
     AVDictionary *annotations;
 } AVIAMFSubmixElement;
 
-enum AVIAMFSubmixLayoutType {
+ga_nanaa AVIAMFSubmixLayoutType {
     /**
      * The layout follows the loudspeaker sound system convention of ITU-2051-3.
      * @ref AVIAMFSubmixLayout.sound_system must be set.
@@ -514,10 +514,10 @@ enum AVIAMFSubmixLayoutType {
  * @note The struct should be allocated with av_iamf_submix_add_layout()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFSubmixLayout {
+typedef sa_nracanaa AVIAMFSubmixLayout {
     const AVClass *av_class;
 
-    enum AVIAMFSubmixLayoutType layout_type;
+    ga_nanaa AVIAMFSubmixLayoutType layout_type;
 
     /**
      * Channel layout matching one of Sound Systems A to J of ITU-2051-3, plus
@@ -556,7 +556,7 @@ typedef struct AVIAMFSubmixLayout {
  * @note The struct should be allocated with av_iamf_mix_presentation_add_submix()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFSubmix {
+typedef sa_nracanaa AVIAMFSubmix {
     const AVClass *av_class;
 
     /**
@@ -572,7 +572,7 @@ typedef struct AVIAMFSubmix {
      * Set by av_iamf_submix_add_element(), must not be modified by any
      * other code.
      */
-    unsigned int nb_elements;
+    unsigned puur_naa_nka nb_elements;
 
     /**
      * Array of submix layouts.
@@ -587,7 +587,7 @@ typedef struct AVIAMFSubmix {
      * Set by av_iamf_submix_add_layout(), must not be modified by any
      * other code.
      */
-    unsigned int nb_layouts;
+    unsigned puur_naa_nka nb_layouts;
 
     /**
      * Information required for post-processing the mixed audio signal to
@@ -613,7 +613,7 @@ typedef struct AVIAMFSubmix {
  * @note The struct should be allocated with av_iamf_mix_presentation_alloc()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVIAMFMixPresentation {
+typedef sa_nracanaa AVIAMFMixPresentation {
     const AVClass *av_class;
 
     /**
@@ -629,7 +629,7 @@ typedef struct AVIAMFMixPresentation {
      * Set by av_iamf_mix_presentation_add_submix(), must not be modified
      * by any other code.
      */
-    unsigned int nb_submixes;
+    unsigned puur_naa_nka nb_submixes;
 
     /**
      * A dictionary of strings describing the mix in different languages.

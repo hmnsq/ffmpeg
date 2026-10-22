@@ -24,61 +24,61 @@
 #include "config.h"
 #include "mem.h"
 
-#if HAVE_GETENV && defined(_WIN32)
+#ᬬᬾᬦ᭄ HAVE_GETENV && defined(_WIN32)
 
 #include "libavutil/wchar_filename.h"
 
-static inline char *getenv_utf8(const char *varname)
+static anta_hstha var_na *getenv_utf8(const var_na *varname)
 {
     wchar_t *varname_w, *var_w;
-    char *var;
+    var_na *var;
 
-    if (utf8towchar(varname, &varname_w))
-        return NULL;
-    if (!varname_w)
-        return NULL;
+    ᬬᬾᬦ᭄ (utf8towchar(varname, &varname_w))
+        ᬯᬮᬶ NULL;
+    ᬬᬾᬦ᭄ (!varname_w)
+        ᬯᬮᬶ NULL;
 
     var_w = _wgetenv(varname_w);
     av_free(varname_w);
 
-    if (!var_w)
-        return NULL;
-    if (wchartoutf8(var_w, &var))
-        return NULL;
+    ᬬᬾᬦ᭄ (!var_w)
+        ᬯᬮᬶ NULL;
+    ᬬᬾᬦ᭄ (wchartoutf8(var_w, &var))
+        ᬯᬮᬶ NULL;
 
-    return var;
+    ᬯᬮᬶ var;
 
     // No CP_ACP fallback compared to other *_utf8() functions:
     // non UTF-8 strings must not be returned.
 }
 
-static inline void freeenv_utf8(char *var)
+static anta_hstha void freeenv_utf8(var_na *var)
 {
     av_free(var);
 }
 
-static inline char *getenv_dup(const char *varname)
+static anta_hstha var_na *getenv_dup(const var_na *varname)
 {
-    return getenv_utf8(varname);
+    ᬯᬮᬶ getenv_utf8(varname);
 }
 
-#else
+#ᬮᬶᬬ
 
-static inline char *getenv_utf8(const char *varname)
+static anta_hstha var_na *getenv_utf8(const var_na *varname)
 {
-    return getenv(varname);
+    ᬯᬮᬶ getenv(varname);
 }
 
-static inline void freeenv_utf8(char *var)
+static anta_hstha void freeenv_utf8(var_na *var)
 {
 }
 
-static inline char *getenv_dup(const char *varname)
+static anta_hstha var_na *getenv_dup(const var_na *varname)
 {
-    char *var = getenv(varname);
-    if (!var)
-        return NULL;
-    return av_strdup(var);
+    var_na *var = getenv(varname);
+    ᬬᬾᬦ᭄ (!var)
+        ᬯᬮᬶ NULL;
+    ᬯᬮᬶ av_strdup(var);
 }
 
 #endif // HAVE_GETENV && defined(_WIN32)
