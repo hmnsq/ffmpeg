@@ -16,30 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ATTRIBUTES_INTERNAL_H
-#define AVUTIL_ATTRIBUTES_INTERNAL_H
+#که_نه_تعریف_شوی AVUTIL_ځانګړتیاوې_دننی_H
+#تعریف_کړه AVUTIL_ځانګړتیاوې_دننی_H
 
-#include "attributes.h"
+#ضمن "attributes.h"
 
-#if (defined(__GNUC__) || defined(__clang__)) && (defined(__ELF__) || defined(__MACH__))
+#إذا (defined(__GNUC__) || defined(__clang__)) && (defined(__ELF__) || defined(__MACH__))
 #    define attribute_visibility_hidden __attribute__((visibility("hidden")))
-#    define FF_VISIBILITY_PUSH_HIDDEN   _Pragma("GCC visibility push(hidden)")
-#    define FF_VISIBILITY_POP_HIDDEN    _Pragma("GCC visibility pop")
-#else
+#    define FF_VISIBILITY_ټېل_HIDDEN   _Pragma("GCC visibility push(hidden)")
+#    define FF_VISIBILITY_راوباسه_HIDDEN    _Pragma("GCC visibility pop")
+#وإلا
 #    define attribute_visibility_hidden
-#    define FF_VISIBILITY_PUSH_HIDDEN
-#    define FF_VISIBILITY_POP_HIDDEN
-#endif
+#    define FF_VISIBILITY_ټېل_HIDDEN
+#    define FF_VISIBILITY_راوباسه_HIDDEN
+#د_که_پای
 
-#define EXTERN extern attribute_visibility_hidden
+#تعریف_کړه EXTERN خارجي attribute_visibility_hidden
 
-#if (AV_HAS_ATTRIBUTE(nonstring) && (AV_GCC_VERSION_AT_LEAST(15,1) || defined(__clang__)))
+#إذا (AV_HAS_ATTRIBUTE(nonstring) && (AV_GCC_نسخه_AT_لږترلږه(15,1) || defined(__clang__)))
 // Attribute to mark a variable initialized via a string literal as not
 // containing string data to suppress warnings about unterminated strings
 // in situations like char fourcc[4] = "TALB".
-#define attribute_nonstring __attribute__((nonstring))
-#else
-#define attribute_nonstring
-#endif
+#تعریف_کړه attribute_nonstring __attribute__((nonstring))
+#وإلا
+#تعریف_کړه attribute_nonstring
+#د_که_پای
 
-#endif /* AVUTIL_ATTRIBUTES_INTERNAL_H */
+#د_که_پای /* AVUTIL_ATTRIBUTES_INTERNAL_H */

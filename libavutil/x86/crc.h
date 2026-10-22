@@ -18,85 +18,85 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_CRC_H
-#define AVUTIL_X86_CRC_H
+#که_نه_تعریف_شوی AVUTIL_X86_دوراني_ازموینه_H
+#تعریف_کړه AVUTIL_X86_دوراني_ازموینه_H
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/attributes_internal.h"
-#include "libavutil/avassert.h"
-#include "libavutil/cpu.h"
-#include "libavutil/crc.h"
-#include "libavutil/intreadwrite.h"
-#include "libavutil/x86/cpu.h"
+#ضمن "config.h"
+#ضمن "libavutil/attributes.h"
+#ضمن "libavutil/attributes_internal.h"
+#ضمن "libavutil/avassert.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/crc.h"
+#ضمن "libavutil/intreadwrite.h"
+#ضمن "libavutil/x86/cpu.h"
 
-#if HAVE_CLMUL_EXTERNAL
-#include "libavutil/crc_internal.h"
+#إذا HAVE_CLMUL_EXTERNAL
+#ضمن "libavutil/crc_internal.h"
 
-FF_VISIBILITY_PUSH_HIDDEN
-uint32_t ff_crc_clmul(const AVCRC *ctx, uint32_t crc,
-                      const uint8_t *buffer, size_t length);
-uint32_t ff_crc_le_clmul(const AVCRC *ctx, uint32_t crc,
-                         const uint8_t *buffer, size_t length);
-FF_VISIBILITY_POP_HIDDEN
+FF_VISIBILITY_ټېل_HIDDEN
+uint32_t ff_دوراني_ازموینه_clmul(ثابت AVCRC *ctx, uint32_t دوراني_ازموینه,
+                      ثابت uint8_t *بفر, size_t اوږدتیا);
+uint32_t ff_دوراني_ازموینه_le_clmul(ثابت AVCRC *ctx, uint32_t دوراني_ازموینه,
+                         ثابت uint8_t *بفر, size_t اوږدتیا);
+FF_VISIBILITY_راوباسه_HIDDEN
 
-enum {
-    CRC_C    = 0,
+تعداد {
+    دوراني_ازموینه_C    = 0,
     CLMUL_BE,
     CLMUL_LE,
 };
 
-static const AVCRC crc_table_clmul[AV_CRC_MAX][17] = {
-    [AV_CRC_8_ATM] = {
+ساكن ثابت AVCRC دوراني_ازموینه_جدول_clmul[AV_دوراني_ازموینه_MAX][17] = {
+    [AV_دوراني_ازموینه_8_ATM] = {
         CLMUL_BE,
         0x32000000, 0x0, 0xbc000000, 0x0,
         0xc4000000, 0x0, 0x94000000, 0x0,
         0x62000000, 0x0, 0x79000000, 0x0,
         0x07156a16, 0x1, 0x07000000, 0x1,
     },
-    [AV_CRC_8_EBU] = {
+    [AV_دوراني_ازموینه_8_EBU] = {
         CLMUL_BE,
         0xb5000000, 0x0, 0xf3000000, 0x0,
         0xfc000000, 0x0, 0x0d000000, 0x0,
         0x6a000000, 0x0, 0x65000000, 0x0,
         0x1c4b8192, 0x1, 0x1d000000, 0x1,
     },
-    [AV_CRC_16_ANSI] = {
+    [AV_دوراني_ازموینه_16_ANSI] = {
         CLMUL_BE,
         0xf9e30000, 0x0, 0x807d0000, 0x0,
         0xf9130000, 0x0, 0xff830000, 0x0,
         0x807b0000, 0x0, 0x86630000, 0x0,
         0xfffbffe7, 0x1, 0x80050000, 0x1,
     },
-    [AV_CRC_16_CCITT] = {
+    [AV_دوراني_ازموینه_16_CCITT] = {
         CLMUL_BE,
         0x60190000, 0x0, 0x59b00000, 0x0,
         0xd5f60000, 0x0, 0x45630000, 0x0,
         0xaa510000, 0x0, 0xeb230000, 0x0,
         0x11303471, 0x1, 0x10210000, 0x1,
     },
-    [AV_CRC_24_IEEE] = {
+    [AV_دوراني_ازموینه_24_IEEE] = {
         CLMUL_BE,
         0x1f428700, 0x0, 0x467d2400, 0x0,
         0x2c8c9d00, 0x0, 0x64e4d700, 0x0,
         0xd9fe8c00, 0x0, 0xfd7e0c00, 0x0,
         0xf845fe24, 0x1, 0x864cfb00, 0x1,
     },
-    [AV_CRC_32_IEEE] = {
+    [AV_دوراني_ازموینه_32_IEEE] = {
         CLMUL_BE,
         0x8833794c, 0x0, 0xe6228b11, 0x0,
         0xc5b9cd4c, 0x0, 0xe8a45605, 0x0,
         0x490d678d, 0x0, 0xf200aa66, 0x0,
         0x04d101df, 0x1, 0x04c11db7, 0x1,
     },
-    [AV_CRC_32_IEEE_LE] = {
+    [AV_دوراني_ازموینه_32_IEEE_LE] = {
         CLMUL_LE,
         0xc6e41596, 0x1, 0x54442bd4, 0x1,
         0xccaa009e, 0x0, 0x751997d0, 0x1,
         0xccaa009e, 0x0, 0x63cd6124, 0x1,
         0xf7011640, 0x1, 0xdb710641, 0x1,
     },
-    [AV_CRC_16_ANSI_LE] = {
+    [AV_دوراني_ازموینه_16_ANSI_LE] = {
         CLMUL_LE,
         0x0000bffa, 0x0, 0x1b0c2, 0x0,
         0x00018cc2, 0x0, 0x1d0c2, 0x0,
@@ -105,19 +105,19 @@ static const AVCRC crc_table_clmul[AV_CRC_MAX][17] = {
     },
 };
 
-static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+ساكن مضمن فراغ دوراني_ازموینه_init_x86(AVCRC *ctx, صحيح le, صحيح بټونه, uint32_t poly, صحيح ctx_اندازه)
 {
     uint64_t poly_;
-    if (le) {
+    إذا (le) {
         // convert the reversed representation to regular form
-        poly = reverse(poly, bits) >> 1;
+        poly = سرچپه(poly, بټونه) >> 1;
     }
     // convert to 32 degree polynomial
-    poly_ = ((uint64_t)poly) << (32 - bits);
+    poly_ = ((uint64_t)poly) << (32 - بټونه);
 
     uint64_t div;
     uint8_t *dst = (uint8_t*)(ctx + 1);
-    if (le) {
+    إذا (le) {
         ctx[0] = CLMUL_LE;
         AV_WN64(dst,      xnmodp(4 * 128 - 32, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128 + 32, poly_, 32, &div, le));
@@ -127,8 +127,8 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
         AV_WN64(dst + 32, tmp);
         AV_WN64(dst + 40, xnmodp(64, poly_, 32, &div, le));
         AV_WN64(dst + 48, div);
-        AV_WN64(dst + 56, reverse(poly_ | (1ULL << 32), 32));
-    } else {
+        AV_WN64(dst + 56, سرچپه(poly_ | (1ULL << 32), 32));
+    } وإلا {
         ctx[0] = CLMUL_BE;
         AV_WN64(dst,      xnmodp(4 * 128 + 64, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128, poly_, 32, &div, le));
@@ -140,44 +140,44 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
         AV_WN64(dst + 56, poly_ | (1ULL << 32));
     }
 }
-#endif
+#د_که_پای
 
-static inline const AVCRC *ff_crc_get_table_x86(AVCRCId crc_id)
+ساكن مضمن ثابت AVCRC *ff_دوراني_ازموینه_get_جدول_x86(AVCRCId دوراني_ازموینه_id)
 {
-#if HAVE_CLMUL_EXTERNAL
-    int cpu_flags = av_get_cpu_flags();
+#إذا HAVE_CLMUL_EXTERNAL
+    صحيح cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_CLMUL(cpu_flags)) {
-        return crc_table_clmul[crc_id];
+    إذا (EXTERNAL_CLMUL(cpu_flags)) {
+        أرجع دوراني_ازموینه_جدول_clmul[دوراني_ازموینه_id];
     }
-#endif
-    return NULL;
+#د_که_پای
+    أرجع عدم;
 }
 
-static inline av_cold int ff_crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+ساكن مضمن av_cold صحيح ff_دوراني_ازموینه_init_x86(AVCRC *ctx, صحيح le, صحيح بټونه, uint32_t poly, صحيح ctx_اندازه)
 {
-#if HAVE_CLMUL_EXTERNAL
-    int cpu_flags = av_get_cpu_flags();
+#إذا HAVE_CLMUL_EXTERNAL
+    صحيح cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_CLMUL(cpu_flags)) {
-        crc_init_x86(ctx, le, bits, poly, ctx_size);
-        return 1;
+    إذا (EXTERNAL_CLMUL(cpu_flags)) {
+        دوراني_ازموینه_init_x86(ctx, le, بټونه, poly, ctx_اندازه);
+        أرجع 1;
     }
-#endif
-    return 0;
+#د_که_پای
+    أرجع 0;
 }
 
-static inline uint32_t ff_crc_x86(const AVCRC *ctx, uint32_t crc,
-                                  const uint8_t *buffer, size_t length)
+ساكن مضمن uint32_t ff_دوراني_ازموینه_x86(ثابت AVCRC *ctx, uint32_t دوراني_ازموینه,
+                                  ثابت uint8_t *بفر, size_t اوږدتیا)
 {
-    switch (ctx[0]) {
-#if HAVE_CLMUL_EXTERNAL
-    case CLMUL_BE: return ff_crc_clmul(ctx, crc, buffer, length);
-    case CLMUL_LE: return ff_crc_le_clmul(ctx, crc, buffer, length);
-#endif
-    default: av_unreachable("x86 CRC only uses CLMUL_BE and CLMUL_LE");
+    بدل (ctx[0]) {
+#إذا HAVE_CLMUL_EXTERNAL
+    حالة CLMUL_BE: أرجع ff_دوراني_ازموینه_clmul(ctx, دوراني_ازموینه, بفر, اوږدتیا);
+    حالة CLMUL_LE: أرجع ff_دوراني_ازموینه_le_clmul(ctx, دوراني_ازموینه, بفر, اوږدتیا);
+#د_که_پای
+    افتراضي: av_unreachable("x86 CRC only uses CLMUL_BE and CLMUL_LE");
     }
-    return 0;
+    أرجع 0;
 }
 
-#endif /* AVUTIL_X86_CRC_H */
+#د_که_پای /* AVUTIL_X86_CRC_H */

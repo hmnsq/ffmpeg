@@ -16,177 +16,177 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "avutil.h"
-#include "file_open.h"
-#include "mem.h"
-#include <stdarg.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if HAVE_IO_H
-#include <io.h>
-#endif
+#ضمن "config.h"
+#ضمن "avutil.h"
+#ضمن "file_open.h"
+#ضمن "mem.h"
+#ضمن <stdarg.h>
+#ضمن <fcntl.h>
+#ضمن <sys/stat.h>
+#إذا HAVE_UNISTD_H
+#ضمن <unistd.h>
+#د_که_پای
+#إذا HAVE_IO_H
+#ضمن <io.h>
+#د_که_پای
 
-#ifdef _WIN32
-#undef open
-#undef lseek
-#undef stat
-#undef fstat
-#include <windows.h>
-#include <share.h>
-#include <errno.h>
-#include "wchar_filename.h"
+#که_تعریف_شوی _WIN32
+#تعریف_لغوه open
+#تعریف_لغوه lseek
+#تعریف_لغوه stat
+#تعریف_لغوه fstat
+#ضمن <windows.h>
+#ضمن <share.h>
+#ضمن <errno.h>
+#ضمن "wchar_filename.h"
 
-static int win32_open(const char *filename_utf8, int oflag, int pmode)
+ساكن صحيح win32_open(ثابت حرف *filename_utf8, صحيح oflag, صحيح pmode)
 {
-    int fd;
+    صحيح fd;
     wchar_t *filename_w;
 
     /* convert UTF-8 to wide chars */
-    if (get_extended_win32_path(filename_utf8, &filename_w))
-        return -1;
-    if (!filename_w)
-        goto fallback;
+    إذا (get_extended_win32_لار(filename_utf8, &filename_w))
+        أرجع -1;
+    إذا (!filename_w)
+        اذهب fallback;
 
     fd = _wsopen(filename_w, oflag, SH_DENYNO, pmode);
     av_freep(&filename_w);
 
-    if (fd != -1 || (oflag & O_CREAT))
-        return fd;
+    إذا (fd != -1 || (oflag & O_CREAT))
+        أرجع fd;
 
 fallback:
     /* filename may be in CP_ACP */
-    return _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
+    أرجع _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
 }
-#define open win32_open
-#endif
+#تعریف_کړه open win32_open
+#د_که_پای
 
-int avpriv_open(const char *filename, int flags, ...)
+صحيح avpriv_open(ثابت حرف *filename, صحيح flags, ...)
 {
-    int fd;
-    unsigned int mode = 0;
+    صحيح fd;
+    بینښه صحيح ډېرپېښ = 0;
     va_list ap;
 
     va_start(ap, flags);
-    if (flags & O_CREAT)
-        mode = va_arg(ap, unsigned int);
+    إذا (flags & O_CREAT)
+        ډېرپېښ = va_arg(ap, بینښه صحيح);
     va_end(ap);
 
-#ifdef O_CLOEXEC
+#که_تعریف_شوی O_CLOEXEC
     flags |= O_CLOEXEC;
-#endif
-#ifdef O_NOINHERIT
+#د_که_پای
+#که_تعریف_شوی O_NOINHERIT
     flags |= O_NOINHERIT;
-#endif
+#د_که_پای
 
-    fd = open(filename, flags, mode);
-#if HAVE_FCNTL
-    if (fd != -1) {
-        if (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
-            av_log(NULL, AV_LOG_DEBUG, "Failed to set close on exec\n");
+    fd = open(filename, flags, ډېرپېښ);
+#إذا HAVE_FCNTL
+    إذا (fd != -1) {
+        إذا (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
+            av_log(عدم, AV_LOG_DEBUG, "Failed to set close on exec\n");
     }
-#endif
+#د_که_پای
 
-    return fd;
+    أرجع fd;
 }
 
-typedef struct FileLogContext {
-    const AVClass *class;
-    int   log_offset;
-    void *log_ctx;
+تعريفنوع بنية FileLogContext {
+    ثابت AVClass *class;
+    صحيح   log_دننه_واټن;
+    فراغ *log_ctx;
 } FileLogContext;
 
-static const AVClass file_log_ctx_class = {
+ساكن ثابت AVClass file_log_ctx_class = {
     .class_name                = "TEMPFILE",
-    .item_name                 = av_default_item_name,
-    .option                    = NULL,
-    .version                   = LIBAVUTIL_VERSION_INT,
-    .log_level_offset_offset   = offsetof(FileLogContext, log_offset),
-    .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
+    .توکی_name                 = av_default_توکی_name,
+    .option                    = عدم,
+    .نسخه                   = LIBAVUTIL_نسخه_INT,
+    .log_level_دننه_واټن_دننه_واټن   = offsetof(FileLogContext, log_دننه_واټن),
+    .پلار_log_context_دننه_واټن = offsetof(FileLogContext, log_ctx),
 };
 
-int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *log_ctx)
+صحيح avpriv_tempfile(ثابت حرف *مختاړی, حرف **filename, صحيح log_دننه_واټن, فراغ *log_ctx)
 {
-    FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int fd = -1;
-#if HAVE_MKSTEMP
-    size_t len = strlen(prefix) + 12; /* room for "/tmp/" and "XXXXXX\0" */
+    FileLogContext file_log_ctx = { &file_log_ctx_class, log_دننه_واټن, log_ctx };
+    صحيح fd = -1;
+#إذا HAVE_MKSTEMP
+    size_t len = مزي_اوږدوالی(مختاړی) + 12; /* room for "/tmp/" and "XXXXXX\0" */
     *filename  = av_malloc(len);
-#elif HAVE_TEMPNAM
-    void *ptr= tempnam(NULL, prefix);
-    if(!ptr)
-        ptr= tempnam(".", prefix);
+#وإلاإذا HAVE_TEMPNAM
+    فراغ *ptr= tempnam(عدم, مختاړی);
+    إذا(!ptr)
+        ptr= tempnam(".", مختاړی);
     *filename = av_strdup(ptr);
-    free(ptr);
-#else
-    return AVERROR(ENOSYS);
-#endif
+    حرر(ptr);
+#وإلا
+    أرجع AVERROR(ENOSYS);
+#د_که_پای
     /* -----common section-----*/
-    if (!*filename) {
+    إذا (!*filename) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot allocate file name\n");
-        return AVERROR(ENOMEM);
+        أرجع AVERROR(ENOMEM);
     }
-#if !HAVE_MKSTEMP
-#   ifndef O_BINARY
-#       define O_BINARY 0
+#إذا !HAVE_MKSTEMP
+#   ifndef O_دوګونی
+#       define O_دوګونی 0
 #   endif
 #   ifndef O_EXCL
 #       define O_EXCL 0
 #   endif
-    fd = open(*filename, O_RDWR | O_BINARY | O_CREAT | O_EXCL, 0600);
-#else
-    snprintf(*filename, len, "/tmp/%sXXXXXX", prefix);
+    fd = open(*filename, O_RDWR | O_دوګونی | O_CREAT | O_EXCL, 0600);
+#وإلا
+    snprintf(*filename, len, "/tmp/%sXXXXXX", مختاړی);
     fd = mkstemp(*filename);
-#if defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
-    if (fd < 0) {
-        snprintf(*filename, len, "./%sXXXXXX", prefix);
+#إذا defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
+    إذا (fd < 0) {
+        snprintf(*filename, len, "./%sXXXXXX", مختاړی);
         fd = mkstemp(*filename);
     }
-#endif
-#endif
+#د_که_پای
+#د_که_پای
     /* -----common section-----*/
-    if (fd < 0) {
-        int err = AVERROR(errno);
+    إذا (fd < 0) {
+        صحيح err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot open temporary file %s\n", *filename);
         av_freep(filename);
-        return err;
+        أرجع err;
     }
-    return fd; /* success */
+    أرجع fd; /* success */
 }
 
-FILE *avpriv_fopen_utf8(const char *path, const char *mode)
+FILE *avpriv_fopen_utf8(ثابت حرف *لار, ثابت حرف *ډېرپېښ)
 {
-    int fd;
-    int access;
-    const char *m = mode;
+    صحيح fd;
+    صحيح access;
+    ثابت حرف *m = ډېرپېښ;
 
-    switch (*m++) {
-    case 'r': access = O_RDONLY; break;
-    case 'w': access = O_CREAT|O_WRONLY|O_TRUNC; break;
-    case 'a': access = O_CREAT|O_WRONLY|O_APPEND; break;
-    default :
+    بدل (*m++) {
+    حالة 'r': access = O_RDONLY; اكسر;
+    حالة 'w': access = O_CREAT|O_WRONLY|O_TRUNC; اكسر;
+    حالة 'a': access = O_CREAT|O_WRONLY|O_APPEND; اكسر;
+    افتراضي :
         errno = EINVAL;
-        return NULL;
+        أرجع عدم;
     }
-    while (*m) {
-        if (*m == '+') {
+    طالما (*m) {
+        إذا (*m == '+') {
             access &= ~(O_RDONLY | O_WRONLY);
             access |= O_RDWR;
-        } else if (*m == 'b') {
-#ifdef O_BINARY
-            access |= O_BINARY;
-#endif
-        } else if (*m) {
+        } وإلا إذا (*m == 'b') {
+#که_تعریف_شوی O_دوګونی
+            access |= O_دوګونی;
+#د_که_پای
+        } وإلا إذا (*m) {
             errno = EINVAL;
-            return NULL;
+            أرجع عدم;
         }
         m++;
     }
-    fd = avpriv_open(path, access, 0666);
-    if (fd == -1)
-        return NULL;
-    return fdopen(fd, mode);
+    fd = avpriv_open(لار, access, 0666);
+    إذا (fd == -1)
+        أرجع عدم;
+    أرجع fdopen(fd, ډېرپېښ);
 }

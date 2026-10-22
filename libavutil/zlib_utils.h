@@ -16,73 +16,73 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ZLIB_UTILS_H
-#define AVUTIL_ZLIB_UTILS_H
+#که_نه_تعریف_شوی AVUTIL_ZLIB_UTILS_H
+#تعریف_کړه AVUTIL_ZLIB_UTILS_H
 
-#include <stdint.h>
-#include "log.h"
-#include "error.h"
-#include "mem.h"
+#ضمن <stdint.h>
+#ضمن "log.h"
+#ضمن "error.h"
+#ضمن "mem.h"
 
-#include <zlib.h>
-#define CHUNK_SIZE 1024 * 64
+#ضمن <zlib.h>
+#تعریف_کړه CHUNK_اندازه 1024 * 64
 
-static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
-                                 const uint8_t *src, int src_len)
+ساكن مضمن صحيح ff_zlib_expand(فراغ *ctx, uint8_t **بهر, size_t *بهر_len,
+                                 ثابت uint8_t *src, صحيح src_len)
 {
-    int ret;
+    صحيح ret;
 
-    z_stream stream = { 0 };
-    if (inflateInit2(&stream, 32 + 15) != Z_OK) {
+    z_بهیر بهیر = { 0 };
+    إذا (inflateInit2(&بهیر, 32 + 15) != Z_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error during zlib initialisation: %s\n",
-               stream.msg);
-        return AVERROR(ENOSYS);
+               بهیر.پیغام);
+        أرجع AVERROR(ENOSYS);
     }
 
-    uint64_t buf_size = CHUNK_SIZE * 4;
-    uint8_t *buf = av_realloc(NULL, buf_size);
-    if (!buf) {
-        inflateEnd(&stream);
-        return AVERROR(ENOMEM);
+    uint64_t buf_اندازه = CHUNK_اندازه * 4;
+    uint8_t *buf = av_realloc(عدم, buf_اندازه);
+    إذا (!buf) {
+        inflate_پای_ټکی(&بهیر);
+        أرجع AVERROR(ENOMEM);
     }
 
-    stream.next_in = src;
-    stream.avail_in = src_len;
+    بهیر.بل_دننه = src;
+    بهیر.avail_دننه = src_len;
 
-    do {
-        stream.avail_out = buf_size - stream.total_out;
-        stream.next_out = buf + stream.total_out;
+    افعل {
+        بهیر.avail_بهر = buf_اندازه - بهیر.ټول_بهر;
+        بهیر.بل_بهر = buf + بهیر.ټول_بهر;
 
-        ret = inflate(&stream, Z_FINISH);
-        if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
+        ret = inflate(&بهیر, Z_پای);
+        إذا (ret != Z_OK && ret != Z_بهیر_پای_ټکی && ret != Z_BUF_ERROR) {
             av_log(ctx, AV_LOG_ERROR, "zlib inflate error(%d): %s\n",
-                   ret, stream.msg);
-            inflateEnd(&stream);
+                   ret, بهیر.پیغام);
+            inflate_پای_ټکی(&بهیر);
             av_free(buf);
-            return AVERROR(EINVAL);
+            أرجع AVERROR(EINVAL);
         }
 
-        if (stream.avail_out == 0) {
-            buf_size += CHUNK_SIZE;
-            uint8_t *tmp = av_realloc(buf, buf_size);
-            if (!tmp) {
-                inflateEnd(&stream);
+        إذا (بهیر.avail_بهر == 0) {
+            buf_اندازه += CHUNK_اندازه;
+            uint8_t *tmp = av_realloc(buf, buf_اندازه);
+            إذا (!tmp) {
+                inflate_پای_ټکی(&بهیر);
                 av_free(buf);
-                return AVERROR(ENOMEM);
+                أرجع AVERROR(ENOMEM);
             }
             buf = tmp;
         }
-    } while (ret != Z_STREAM_END);
+    } طالما (ret != Z_بهیر_پای_ټکی);
 
     // NULL-terminate string
     // there is guaranteed to be space for this, due to condition in loop
-    buf[stream.total_out] = 0;
+    buf[بهیر.ټول_بهر] = 0;
 
-    inflateEnd(&stream);
+    inflate_پای_ټکی(&بهیر);
 
-    *out = buf;
-    *out_len = stream.total_out;
+    *بهر = buf;
+    *بهر_len = بهیر.ټول_بهر;
 
-    return 0;
+    أرجع 0;
 }
-#endif /* AVUTIL_ZLIB_UTILS_H */
+#د_که_پای /* AVUTIL_ZLIB_UTILS_H */

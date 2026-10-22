@@ -16,10 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_SAMPLEFMT_H
-#define AVUTIL_SAMPLEFMT_H
+#که_نه_تعریف_شوی AVUTIL_SAMPLEFMT_H
+#تعریف_کړه AVUTIL_SAMPLEFMT_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
 /**
  * @addtogroup lavu_audio
@@ -52,7 +52,7 @@
  * linesize is the buffer size, in bytes, for the 1 plane.
  *
  */
-enum AVSampleFormat {
+تعداد AVSampleFormat {
     AV_SAMPLE_FMT_NONE = -1,
     AV_SAMPLE_FMT_U8,          ///< unsigned 8 bits
     AV_SAMPLE_FMT_S16,         ///< signed 16 bits
@@ -83,13 +83,13 @@ enum AVSampleFormat {
  * Return the name of sample_fmt, or NULL if sample_fmt is not
  * recognized.
  */
-const char *av_get_sample_fmt_name(enum AVSampleFormat sample_fmt);
+ثابت حرف *av_get_sample_fmt_name(تعداد AVSampleFormat sample_fmt);
 
 /**
  * Return a sample format corresponding to name, or AV_SAMPLE_FMT_NONE
  * on error.
  */
-enum AVSampleFormat av_get_sample_fmt(const char *name);
+تعداد AVSampleFormat av_get_sample_fmt(ثابت حرف *name);
 
 /**
  * Return the planar<->packed alternative form of the given sample format, or
@@ -97,7 +97,7 @@ enum AVSampleFormat av_get_sample_fmt(const char *name);
  * requested planar/packed format, the format returned is the same as the
  * input.
  */
-enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int planar);
+تعداد AVSampleFormat av_get_alt_sample_fmt(تعداد AVSampleFormat sample_fmt, صحيح planar);
 
 /**
  * Get the packed alternative form of the given sample format.
@@ -108,7 +108,7 @@ enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int pl
  * @return  the packed alternative form of the given sample format or
             AV_SAMPLE_FMT_NONE on error.
  */
-enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt);
+تعداد AVSampleFormat av_get_packed_sample_fmt(تعداد AVSampleFormat sample_fmt);
 
 /**
  * Get the planar alternative form of the given sample format.
@@ -119,7 +119,7 @@ enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt);
  * @return  the planar alternative form of the given sample format or
             AV_SAMPLE_FMT_NONE on error.
  */
-enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt);
+تعداد AVSampleFormat av_get_planar_sample_fmt(تعداد AVSampleFormat sample_fmt);
 
 /**
  * Generate a string corresponding to the sample format with
@@ -132,7 +132,7 @@ enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt);
  * corresponding header.
  * @return the pointer to the filled buffer or NULL in case of other errors
  */
-char *av_get_sample_fmt_string(char *buf, int buf_size, enum AVSampleFormat sample_fmt);
+حرف *av_get_sample_fmt_string(حرف *buf, صحيح buf_اندازه, تعداد AVSampleFormat sample_fmt);
 
 /**
  * Return number of bytes per sample.
@@ -141,7 +141,7 @@ char *av_get_sample_fmt_string(char *buf, int buf_size, enum AVSampleFormat samp
  * @return number of bytes per sample or zero if unknown for the given
  * sample format
  */
-int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt);
+صحيح av_get_بایټونه_فی_sample(تعداد AVSampleFormat sample_fmt);
 
 /**
  * Check if the sample format is planar.
@@ -149,7 +149,7 @@ int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt);
  * @param sample_fmt the sample format to inspect
  * @return 1 if the sample format is planar, 0 if it is interleaved
  */
-int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt);
+صحيح av_sample_fmt_is_planar(تعداد AVSampleFormat sample_fmt);
 
 /**
  * Get the required buffer size for the given audio parameters.
@@ -161,8 +161,8 @@ int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt);
  * @param align         buffer size alignment (0 = default, 1 = no alignment)
  * @return              required buffer size, or negative error code on failure
  */
-int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
-                               enum AVSampleFormat sample_fmt, int align);
+صحيح av_samples_get_بفر_اندازه(صحيح *linesize, صحيح nb_channels, صحيح nb_samples,
+                               تعداد AVSampleFormat sample_fmt, صحيح align);
 
 /**
  * @}
@@ -202,10 +202,10 @@ int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
  * @return                 minimum size in bytes required for the buffer on success,
  *                         or a negative error code on failure
  */
-int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
-                           const uint8_t *buf,
-                           int nb_channels, int nb_samples,
-                           enum AVSampleFormat sample_fmt, int align);
+صحيح av_samples_fill_arrays(uint8_t **audio_معلومات, صحيح *linesize,
+                           ثابت uint8_t *buf,
+                           صحيح nb_channels, صحيح nb_samples,
+                           تعداد AVSampleFormat sample_fmt, صحيح align);
 
 /**
  * Allocate a samples buffer for nb_samples samples, and fill data pointers and
@@ -227,8 +227,8 @@ int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
  * @see av_samples_fill_arrays()
  * @see av_samples_alloc_array_and_samples()
  */
-int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
-                     int nb_samples, enum AVSampleFormat sample_fmt, int align);
+صحيح av_samples_alloc(uint8_t **audio_معلومات, صحيح *linesize, صحيح nb_channels,
+                     صحيح nb_samples, تعداد AVSampleFormat sample_fmt, صحيح align);
 
 /**
  * Allocate a data pointers array, samples buffer for nb_samples
@@ -239,8 +239,8 @@ int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
  *
  * @see av_samples_alloc()
  */
-int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int nb_channels,
-                                       int nb_samples, enum AVSampleFormat sample_fmt, int align);
+صحيح av_samples_alloc_array_and_samples(uint8_t ***audio_معلومات, صحيح *linesize, صحيح nb_channels,
+                                       صحيح nb_samples, تعداد AVSampleFormat sample_fmt, صحيح align);
 
 /**
  * Copy samples from src to dst.
@@ -253,9 +253,9 @@ int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int
  * @param nb_channels number of audio channels
  * @param sample_fmt audio sample format
  */
-int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
-                    int src_offset, int nb_samples, int nb_channels,
-                    enum AVSampleFormat sample_fmt);
+صحيح av_samples_copy(uint8_t * ثابت *dst, uint8_t * ثابت *src, صحيح dst_دننه_واټن,
+                    صحيح src_دننه_واټن, صحيح nb_samples, صحيح nb_channels,
+                    تعداد AVSampleFormat sample_fmt);
 
 /**
  * Fill an audio buffer with silence.
@@ -266,11 +266,11 @@ int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
  * @param nb_channels number of audio channels
  * @param sample_fmt  audio sample format
  */
-int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_samples,
-                           int nb_channels, enum AVSampleFormat sample_fmt);
+صحيح av_samples_سېټ_silence(uint8_t * ثابت *audio_معلومات, صحيح دننه_واټن, صحيح nb_samples,
+                           صحيح nb_channels, تعداد AVSampleFormat sample_fmt);
 
 /**
  * @}
  * @}
  */
-#endif /* AVUTIL_SAMPLEFMT_H */
+#د_که_پای /* AVUTIL_SAMPLEFMT_H */

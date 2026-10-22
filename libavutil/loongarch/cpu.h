@@ -19,13 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LOONGARCH_CPU_H
-#define AVUTIL_LOONGARCH_CPU_H
+#که_نه_تعریف_شوی AVUTIL_LOONGARCH_CPU_H
+#تعریف_کړه AVUTIL_LOONGARCH_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/cpu_internal.h"
 
-#define have_lsx(flags) CPUEXT(flags, LSX)
-#define have_lasx(flags) CPUEXT(flags, LASX)
+#تعریف_کړه have_lsx(flags) CPUEXT(flags, LSX)
+#تعریف_کړه have_lasx(flags) CPUEXT(flags, LASX)
 
-#endif /* AVUTIL_LOONGARCH_CPU_H */
+#د_که_پای /* AVUTIL_LOONGARCH_CPU_H */

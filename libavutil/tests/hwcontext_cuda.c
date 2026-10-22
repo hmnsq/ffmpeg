@@ -16,279 +16,279 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdatomic.h>
-#include <stdio.h>
-#include <string.h>
+#ضمن <inttypes.h>
+#ضمن <stdatomic.h>
+#ضمن <stdio.h>
+#ضمن <string.h>
 
-#include "libavutil/adler32.h"
-#include "libavutil/hwcontext.h"
-#include "libavutil/hwcontext_cuda_internal.h"
-#include "libavutil/imgutils.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixfmt.h"
-#include "libavutil/time.h"
+#ضمن "libavutil/adler32.h"
+#ضمن "libavutil/hwcontext.h"
+#ضمن "libavutil/hwcontext_cuda_internal.h"
+#ضمن "libavutil/imgutils.h"
+#ضمن "libavutil/log.h"
+#ضمن "libavutil/mem.h"
+#ضمن "libavutil/pixdesc.h"
+#ضمن "libavutil/pixfmt.h"
+#ضمن "libavutil/time.h"
 
-static void vflip(AVFrame *frame, const AVPixFmtDescriptor *desc)
+ساكن فراغ vflip(AVFrame *چوکاټ, ثابت AVPixFmtDescriptor *desc)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->data) && frame->data[i]; i++) {
-        int shift = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(چوکاټ->معلومات) && چوکاټ->معلومات[i]; i++) {
+        صحيح ښويدنه = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
 
-        frame->data[i]    += (AV_CEIL_RSHIFT(frame->height, shift) - 1) * frame->linesize[i];
-        frame->linesize[i] = -frame->linesize[i];
+        چوکاټ->معلومات[i]    += (AV_CEIL_RSHIFT(چوکاټ->لوړوالی, ښويدنه) - 1) * چوکاټ->linesize[i];
+        چوکاټ->linesize[i] = -چوکاټ->linesize[i];
     }
 }
 
-static int test_format(AVBufferRef *device_ref, enum AVPixelFormat fmt,
-                       int flip_upload, int flip_download)
+ساكن صحيح test_format(AVBufferRef *device_ref, تعداد AVPixelFormat fmt,
+                       صحيح flip_upload, صحيح flip_download)
 {
-    AVBufferRef *frames_ref = NULL;
+    AVBufferRef *چوکاټونه_ref = عدم;
     AVHWFramesContext *hwfc;
-    AVFrame *sw_frame = NULL, *hw_frame = NULL, *download = NULL;
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
-    int ret;
+    AVFrame *sw_چوکاټ = عدم, *hw_چوکاټ = عدم, *download = عدم;
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
+    صحيح ret;
 
-    frames_ref = av_hwframe_ctx_alloc(device_ref);
-    if (!frames_ref) {
+    چوکاټونه_ref = av_hwframe_ctx_alloc(device_ref);
+    إذا (!چوکاټونه_ref) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        اذهب fail;
     }
 
-    hwfc = (AVHWFramesContext *)frames_ref->data;
+    hwfc = (AVHWFramesContext *)چوکاټونه_ref->معلومات;
     hwfc->format    = AV_PIX_FMT_CUDA;
     hwfc->sw_format = fmt;
-    hwfc->width     = 64;
-    hwfc->height    = 64;
+    hwfc->پلنوالی     = 64;
+    hwfc->لوړوالی    = 64;
 
-    ret = av_hwframe_ctx_init(frames_ref);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_ctx_init(چوکاټونه_ref);
+    إذا (ret < 0)
+        اذهب fail;
 
-    sw_frame = av_frame_alloc();
-    hw_frame = av_frame_alloc();
-    download = av_frame_alloc();
-    if (!sw_frame || !hw_frame || !download) {
+    sw_چوکاټ = av_چوکاټ_alloc();
+    hw_چوکاټ = av_چوکاټ_alloc();
+    download = av_چوکاټ_alloc();
+    إذا (!sw_چوکاټ || !hw_چوکاټ || !download) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        اذهب fail;
     }
 
-    sw_frame->format = fmt;
-    sw_frame->width  = 64;
-    sw_frame->height = 64;
-    ret = av_frame_get_buffer(sw_frame, 0);
-    if (ret < 0)
-        goto fail;
-    if (flip_upload)
-        vflip(sw_frame, desc);
+    sw_چوکاټ->format = fmt;
+    sw_چوکاټ->پلنوالی  = 64;
+    sw_چوکاټ->لوړوالی = 64;
+    ret = av_چوکاټ_get_بفر(sw_چوکاټ, 0);
+    إذا (ret < 0)
+        اذهب fail;
+    إذا (flip_upload)
+        vflip(sw_چوکاټ, desc);
 
     {
-        int linesizes[4];
+        صحيح linesizes[4];
         av_image_fill_linesizes(linesizes, fmt, 64);
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(sw_frame->data) && sw_frame->data[i]; i++) {
-            int shift = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
-            int h = AV_CEIL_RSHIFT(64, shift);
+        لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(sw_چوکاټ->معلومات) && sw_چوکاټ->معلومات[i]; i++) {
+            صحيح ښويدنه = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
+            صحيح h = AV_CEIL_RSHIFT(64, ښويدنه);
 
-            for (int y = 0; y < h; y++)
-                for (int x = 0; x < linesizes[i]; x++)
-                    sw_frame->data[i][y * sw_frame->linesize[i] + x] =
+            لكل (صحيح y = 0; y < h; y++)
+                لكل (صحيح x = 0; x < linesizes[i]; x++)
+                    sw_چوکاټ->معلومات[i][y * sw_چوکاټ->linesize[i] + x] =
                         (uint8_t)(x + y * 3 + i * 17);
         }
     }
 
-    ret = av_hwframe_get_buffer(frames_ref, hw_frame, 0);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_get_بفر(چوکاټونه_ref, hw_چوکاټ, 0);
+    إذا (ret < 0)
+        اذهب fail;
 
-    ret = av_hwframe_transfer_data(hw_frame, sw_frame, 0);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_transfer_معلومات(hw_چوکاټ, sw_چوکاټ, 0);
+    إذا (ret < 0)
+        اذهب fail;
 
     download->format = fmt;
-    download->width  = 64;
-    download->height = 64;
-    ret = av_frame_get_buffer(download, 0);
-    if (ret < 0)
-        goto fail;
-    if (flip_download)
+    download->پلنوالی  = 64;
+    download->لوړوالی = 64;
+    ret = av_چوکاټ_get_بفر(download, 0);
+    إذا (ret < 0)
+        اذهب fail;
+    إذا (flip_download)
         vflip(download, desc);
 
-    ret = av_hwframe_transfer_data(download, hw_frame, 0);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_transfer_معلومات(download, hw_چوکاټ, 0);
+    إذا (ret < 0)
+        اذهب fail;
 
     {
-        int linesizes[4];
+        صحيح linesizes[4];
         av_image_fill_linesizes(linesizes, fmt, 64);
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(download->data) && download->data[i]; i++) {
-            int shift = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
-            int h = AV_CEIL_RSHIFT(64, shift);
+        لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(download->معلومات) && download->معلومات[i]; i++) {
+            صحيح ښويدنه = (i == 1 || i == 2) && desc ? desc->log2_chroma_h : 0;
+            صحيح h = AV_CEIL_RSHIFT(64, ښويدنه);
 
-            for (int y = 0; y < h; y++) {
-                if (memcmp(sw_frame->data[i] + y * sw_frame->linesize[i],
-                           download->data[i] + y * download->linesize[i],
+            لكل (صحيح y = 0; y < h; y++) {
+                إذا (memcmp(sw_چوکاټ->معلومات[i] + y * sw_چوکاټ->linesize[i],
+                           download->معلومات[i] + y * download->linesize[i],
                            linesizes[i])) {
-                    printf("fail: %-16s plane %d row %d mismatch\n",
+                    چاپ_کړه("fail: %-16s plane %d row %d mismatch\n",
                            av_get_pix_fmt_name(fmt), i, y);
                     ret = AVERROR(EINVAL);
-                    goto fail;
+                    اذهب fail;
                 }
             }
         }
     }
 
 fail:
-    av_frame_free(&sw_frame);
-    av_frame_free(&hw_frame);
-    av_frame_free(&download);
-    av_buffer_unref(&frames_ref);
-    return ret;
+    av_چوکاټ_free(&sw_چوکاټ);
+    av_چوکاټ_free(&hw_چوکاټ);
+    av_چوکاټ_free(&download);
+    av_بفر_unref(&چوکاټونه_ref);
+    أرجع ret;
 }
 
-static atomic_int source_overwritten;
+ساكن atomic_int سرچینه_overwritten;
 
 /* Hold the stream until the source was overwritten, at most 100 ms. */
-static void CUDAAPI hold_stream(CUstream stream, CUresult status, void *opaque)
+ساكن فراغ CUDAAPI hold_بهیر(CUstream بهیر, CUresult حالت, فراغ *opaque)
 {
-    int64_t start = av_gettime_relative();
-    while (!atomic_load(&source_overwritten) && av_gettime_relative() - start < 100000);
+    int64_t پیل = av_gettime_relative();
+    طالما (!atomic_load(&سرچینه_overwritten) && av_gettime_relative() - پیل < 100000);
 }
 
 /* Reuse the memory of an uploaded transfer buffer while the stream is still
  * busy, the upload must not see the new contents. */
-static int test_source_reuse(AVBufferRef *device_ref)
+ساكن صحيح test_سرچینه_reuse(AVBufferRef *device_ref)
 {
-    AVCUDADeviceContext *hwctx = ((AVHWDeviceContext *)device_ref->data)->hwctx;
-    CudaFunctions *cu = hwctx->internal->cuda_dl;
-    AVBufferRef *frames_ref = av_hwframe_ctx_alloc(device_ref);
-    AVFrame *sw_frame = av_frame_alloc(), *hw_frame = av_frame_alloc();
-    AVFrame *download = av_frame_alloc();
+    AVCUDADeviceContext *hwctx = ((AVHWDeviceContext *)device_ref->معلومات)->hwctx;
+    CudaFunctions *cu = hwctx->دننی->cuda_dl;
+    AVBufferRef *چوکاټونه_ref = av_hwframe_ctx_alloc(device_ref);
+    AVFrame *sw_چوکاټ = av_چوکاټ_alloc(), *hw_چوکاټ = av_چوکاټ_alloc();
+    AVFrame *download = av_چوکاټ_alloc();
     AVHWFramesContext *hwfc;
     CUcontext dummy;
     AVAdler checksum = 1;
-    int ret = AVERROR(ENOMEM);
+    صحيح ret = AVERROR(ENOMEM);
 
-    if (!frames_ref || !sw_frame || !hw_frame || !download)
-        goto fail;
+    إذا (!چوکاټونه_ref || !sw_چوکاټ || !hw_چوکاټ || !download)
+        اذهب fail;
 
-    hwfc = (AVHWFramesContext *)frames_ref->data;
+    hwfc = (AVHWFramesContext *)چوکاټونه_ref->معلومات;
     hwfc->format    = AV_PIX_FMT_CUDA;
     hwfc->sw_format = AV_PIX_FMT_GRAY8;
-    hwfc->width     = 64;
-    hwfc->height    = 64;
-    if ((ret = av_hwframe_ctx_init(frames_ref)) < 0 ||
-        (ret = av_hwframe_get_buffer(frames_ref, hw_frame, 0)) < 0)
-        goto fail;
+    hwfc->پلنوالی     = 64;
+    hwfc->لوړوالی    = 64;
+    إذا ((ret = av_hwframe_ctx_init(چوکاټونه_ref)) < 0 ||
+        (ret = av_hwframe_get_بفر(چوکاټونه_ref, hw_چوکاټ, 0)) < 0)
+        اذهب fail;
 
-    for (int value = 0x11; value <= 0x22; value += 0x11) {
-        av_frame_unref(sw_frame);
-        sw_frame->format = AV_PIX_FMT_GRAY8;
-        sw_frame->width  = 64;
-        sw_frame->height = 64;
-        if ((ret = av_hwframe_get_transfer_buffer(frames_ref, sw_frame)) < 0)
-            goto fail;
-        for (int y = 0; y < 64; y++)
-            memset(sw_frame->data[0] + y * sw_frame->linesize[0], value, 64);
-        if (value == 0x22) {
-            atomic_store(&source_overwritten, 1);
-            break;
+    لكل (صحيح ارزښت = 0x11; ارزښت <= 0x22; ارزښت += 0x11) {
+        av_چوکاټ_unref(sw_چوکاټ);
+        sw_چوکاټ->format = AV_PIX_FMT_GRAY8;
+        sw_چوکاټ->پلنوالی  = 64;
+        sw_چوکاټ->لوړوالی = 64;
+        إذا ((ret = av_hwframe_get_transfer_بفر(چوکاټونه_ref, sw_چوکاټ)) < 0)
+            اذهب fail;
+        لكل (صحيح y = 0; y < 64; y++)
+            memset(sw_چوکاټ->معلومات[0] + y * sw_چوکاټ->linesize[0], ارزښت, 64);
+        إذا (ارزښت == 0x22) {
+            atomic_store(&سرچینه_overwritten, 1);
+            اكسر;
         }
 
         ret = AVERROR_EXTERNAL;
-        if (cu->cuCtxPushCurrent(hwctx->cuda_ctx) != CUDA_SUCCESS)
-            goto fail;
-        if (cu->cuStreamAddCallback(hwctx->stream, hold_stream, NULL, 0) == CUDA_SUCCESS)
+        إذا (cu->cu_Ctx_ټېل_Current(hwctx->cuda_ctx) != CUDA_SUCCESS)
+            اذهب fail;
+        إذا (cu->cu_بهیر_جمع_کړه_Callback(hwctx->بهیر, hold_بهیر, عدم, 0) == CUDA_SUCCESS)
             ret = 0;
-        cu->cuCtxPopCurrent(&dummy);
-        if (ret < 0)
-            goto fail;
+        cu->cu_Ctx_راوباسه_Current(&dummy);
+        إذا (ret < 0)
+            اذهب fail;
 
-        if ((ret = av_hwframe_transfer_data(hw_frame, sw_frame, 0)) < 0)
-            goto fail;
+        إذا ((ret = av_hwframe_transfer_معلومات(hw_چوکاټ, sw_چوکاټ, 0)) < 0)
+            اذهب fail;
     }
 
-    if ((ret = av_hwframe_transfer_data(download, hw_frame, 0)) < 0)
-        goto fail;
-    for (int y = 0; y < 64; y++)
+    إذا ((ret = av_hwframe_transfer_معلومات(download, hw_چوکاټ, 0)) < 0)
+        اذهب fail;
+    لكل (صحيح y = 0; y < 64; y++)
         checksum = av_adler32_update(checksum,
-                                     download->data[0] + y * download->linesize[0], 64);
+                                     download->معلومات[0] + y * download->linesize[0], 64);
     fprintf(stderr, "source reuse checksum: %08"PRIx32"\n", checksum);
 
 fail:
-    av_frame_free(&sw_frame);
-    av_frame_free(&hw_frame);
-    av_frame_free(&download);
-    av_buffer_unref(&frames_ref);
-    return ret;
+    av_چوکاټ_free(&sw_چوکاټ);
+    av_چوکاټ_free(&hw_چوکاټ);
+    av_چوکاټ_free(&download);
+    av_بفر_unref(&چوکاټونه_ref);
+    أرجع ret;
 }
 
 /* Verify that an unsupported sw_format is refused at init time. Returns 0 when
  * the format is correctly rejected, and an error when it is wrongly accepted. */
-static int test_rejected(AVBufferRef *device_ref, enum AVPixelFormat fmt)
+ساكن صحيح test_rejected(AVBufferRef *device_ref, تعداد AVPixelFormat fmt)
 {
-    AVBufferRef *frames_ref = av_hwframe_ctx_alloc(device_ref);
+    AVBufferRef *چوکاټونه_ref = av_hwframe_ctx_alloc(device_ref);
     AVHWFramesContext *hwfc;
-    int ret;
+    صحيح ret;
 
-    if (!frames_ref)
-        return AVERROR(ENOMEM);
+    إذا (!چوکاټونه_ref)
+        أرجع AVERROR(ENOMEM);
 
-    hwfc = (AVHWFramesContext *)frames_ref->data;
+    hwfc = (AVHWFramesContext *)چوکاټونه_ref->معلومات;
     hwfc->format    = AV_PIX_FMT_CUDA;
     hwfc->sw_format = fmt;
-    hwfc->width     = 64;
-    hwfc->height    = 64;
+    hwfc->پلنوالی     = 64;
+    hwfc->لوړوالی    = 64;
 
     /* Init is expected to fail; silence the resulting error log. */
-    av_log_set_level(AV_LOG_QUIET);
-    ret = av_hwframe_ctx_init(frames_ref);
-    av_log_set_level(AV_LOG_INFO);
+    av_log_سېټ_level(AV_LOG_QUIET);
+    ret = av_hwframe_ctx_init(چوکاټونه_ref);
+    av_log_سېټ_level(AV_LOG_INFO);
 
-    av_buffer_unref(&frames_ref);
+    av_بفر_unref(&چوکاټونه_ref);
 
-    return ret >= 0 ? AVERROR(EINVAL) : 0;
+    أرجع ret >= 0 ? AVERROR(EINVAL) : 0;
 }
 
-int main(void)
+صحيح اصلي(فراغ)
 {
-    AVBufferRef *device_ref = NULL;
-    enum AVPixelFormat fmt;
-    int ret, failures = 0, total = 0;
+    AVBufferRef *device_ref = عدم;
+    تعداد AVPixelFormat fmt;
+    صحيح ret, failures = 0, ټول = 0;
 
-    ret = av_hwdevice_ctx_create(&device_ref, AV_HWDEVICE_TYPE_CUDA, NULL, NULL, 0);
-    if (ret < 0) {
+    ret = av_hwdevice_ctx_create(&device_ref, AV_HWDEVICE_TYPE_CUDA, عدم, عدم, 0);
+    إذا (ret < 0) {
         /* CONFIG_CUDA only requires the ffnvcodec headers and a dynamic
          * loader; a FATE host that compiled CUDA support need not have an
          * NVIDIA GPU or usable driver. Skip cleanly in that case so that
          * make fate does not fail for an unavailable test environment. A real
          * transfer mismatch below still returns a nonzero exit status. */
         fprintf(stderr, "No CUDA device available, skipping.\n");
-        return 0;
+        أرجع 0;
     }
 
-    for (fmt = 0; fmt < AV_PIX_FMT_NB; fmt++) {
-        const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
-        if (!desc || (desc->flags & AV_PIX_FMT_FLAG_HWACCEL))
-            continue;
+    لكل (fmt = 0; fmt < AV_PIX_FMT_NB; fmt++) {
+        ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(fmt);
+        إذا (!desc || (desc->flags & AV_PIX_FMT_FLAG_HWACCEL))
+            استمر;
 
-        total++;
+        ټول++;
         /* Palette formats must be refused rather than silently dropping the
          * palette across a transfer; every other format must round-trip. */
-        if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
-            if (test_rejected(device_ref, fmt) < 0) {
-                printf("fail: %-16s wrongly accepted\n",
+        إذا (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+            إذا (test_rejected(device_ref, fmt) < 0) {
+                چاپ_کړه("fail: %-16s wrongly accepted\n",
                        av_get_pix_fmt_name(fmt));
                 failures++;
             }
-        } else {
+        } وإلا {
             ret = 0;
-            for (int flip = 0; flip < 4 && ret >= 0; flip++)
+            لكل (صحيح flip = 0; flip < 4 && ret >= 0; flip++)
                 ret = test_format(device_ref, fmt, flip & 1, flip & 2);
-            if (ret < 0) {
-                printf("fail: %-16s %s\n",
+            إذا (ret < 0) {
+                چاپ_کړه("fail: %-16s %s\n",
                        av_get_pix_fmt_name(fmt),
                        av_err2str(ret));
                 failures++;
@@ -296,19 +296,19 @@ int main(void)
         }
     }
 
-    total++;
-    ret = test_source_reuse(device_ref);
-    if (ret < 0) {
-        printf("fail: source reuse %s\n", av_err2str(ret));
+    ټول++;
+    ret = test_سرچینه_reuse(device_ref);
+    إذا (ret < 0) {
+        چاپ_کړه("fail: source reuse %s\n", av_err2str(ret));
         failures++;
     }
 
-    av_buffer_unref(&device_ref);
+    av_بفر_unref(&device_ref);
 
-    if (failures)
-        printf("%d / %d tests failed.\n", failures, total);
-    else
-        printf("%d tests passed.\n", total);
+    إذا (failures)
+        چاپ_کړه("%d / %d tests failed.\n", failures, ټول);
+    وإلا
+        چاپ_کړه("%d tests passed.\n", ټول);
 
-    return !!failures;
+    أرجع !!failures;
 }

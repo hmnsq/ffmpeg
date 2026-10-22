@@ -18,21 +18,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PPC_FLOAT_DSP_VSX_H
-#define AVUTIL_PPC_FLOAT_DSP_VSX_H
+#که_نه_تعریف_شوی AVUTIL_PPC_FLOAT_DSP_VSX_H
+#تعریف_کړه AVUTIL_PPC_FLOAT_DSP_VSX_H
 
-void ff_vector_fmul_vsx(float *dst, const float *src0,
-                        const float *src1, int len);
+فراغ ff_ویکټور_fmul_vsx(عائم *dst, ثابت عائم *src0,
+                        ثابت عائم *src1, صحيح len);
 
-void ff_vector_fmul_window_vsx(float *dst, const float *src0,
-                               const float *src1, const float *win,
-                               int len);
+فراغ ff_ویکټور_fmul_کړکۍ_vsx(عائم *dst, ثابت عائم *src0,
+                               ثابت عائم *src1, ثابت عائم *win,
+                               صحيح len);
 
-void ff_vector_fmul_add_vsx(float *dst, const float *src0,
-                            const float *src1, const float *src2,
-                            int len);
+فراغ ff_ویکټور_fmul_جمع_کړه_vsx(عائم *dst, ثابت عائم *src0,
+                            ثابت عائم *src1, ثابت عائم *src2,
+                            صحيح len);
 
-void ff_vector_fmul_reverse_vsx(float *dst, const float *src0,
-                                const float *src1, int len);
+فراغ ff_ویکټور_fmul_سرچپه_vsx(عائم *dst, ثابت عائم *src0,
+                                ثابت عائم *src1, صحيح len);
 
-#endif /* AVUTIL_PPC_FLOAT_DSP_VSX_H */
+#د_که_پای /* AVUTIL_PPC_FLOAT_DSP_VSX_H */

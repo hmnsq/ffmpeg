@@ -25,96 +25,96 @@
  * linear least squares model
  */
 
-#include <math.h>
-#include <string.h>
+#ضمن <math.h>
+#ضمن <string.h>
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "lls.h"
+#ضمن "config.h"
+#ضمن "attributes.h"
+#ضمن "float_dsp.h"
+#ضمن "lls.h"
 
-static void update_lls(LLSModel *m, const double *var)
+ساكن فراغ update_lls(LLSModel *m, ثابت مزدوج *var)
 {
-    int i, j;
+    صحيح i, j;
 
-    for (i = 0; i <= m->indep_count; i++) {
-        for (j = i; j <= m->indep_count; j++) {
+    لكل (i = 0; i <= m->indep_شمېر; i++) {
+        لكل (j = i; j <= m->indep_شمېر; j++) {
             m->covariance[i][j] += var[i] * var[j];
         }
     }
 }
 
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
+فراغ avpriv_solve_lls(LLSModel *m, مزدوج پوله, بینښه لنډ min_ترتیب)
 {
-    int i, j, k;
-    double (*factor)[MAX_VARS_ALIGN] = (void *) &m->covariance[1][0];
-    double (*covar) [MAX_VARS_ALIGN] = (void *) &m->covariance[1][1];
-    double *covar_y                = m->covariance[0];
-    int count                      = m->indep_count;
+    صحيح i, j, k;
+    مزدوج (*ضریب)[MAX_VARS_ALIGN] = (فراغ *) &m->covariance[1][0];
+    مزدوج (*covar) [MAX_VARS_ALIGN] = (فراغ *) &m->covariance[1][1];
+    مزدوج *covar_y                = m->covariance[0];
+    صحيح شمېر                      = m->indep_شمېر;
 
-    for (i = 0; i < count; i++) {
-        for (j = i; j < count; j++) {
-            double sum = covar[i][j];
+    لكل (i = 0; i < شمېر; i++) {
+        لكل (j = i; j < شمېر; j++) {
+            مزدوج مجموعه = covar[i][j];
 
-            for (k = 0; k <= i-1; k++)
-                sum -= factor[i][k] * factor[j][k];
+            لكل (k = 0; k <= i-1; k++)
+                مجموعه -= ضریب[i][k] * ضریب[j][k];
 
-            if (i == j) {
-                if (sum < threshold)
-                    sum = 1.0;
-                factor[i][i] = sqrt(sum);
-            } else {
-                factor[j][i] = sum / factor[i][i];
+            إذا (i == j) {
+                إذا (مجموعه < پوله)
+                    مجموعه = 1.0;
+                ضریب[i][i] = جذر(مجموعه);
+            } وإلا {
+                ضریب[j][i] = مجموعه / ضریب[i][i];
             }
         }
     }
 
-    for (i = 0; i < count; i++) {
-        double sum = covar_y[i + 1];
+    لكل (i = 0; i < شمېر; i++) {
+        مزدوج مجموعه = covar_y[i + 1];
 
-        for (k = 0; k <= i-1; k++)
-            sum -= factor[i][k] * m->coeff[0][k];
+        لكل (k = 0; k <= i-1; k++)
+            مجموعه -= ضریب[i][k] * m->coeff[0][k];
 
-        m->coeff[0][i] = sum / factor[i][i];
+        m->coeff[0][i] = مجموعه / ضریب[i][i];
     }
 
-    for (j = count - 1; j >= min_order; j--) {
-        for (i = j; i >= 0; i--) {
-            double sum = m->coeff[0][i];
+    لكل (j = شمېر - 1; j >= min_ترتیب; j--) {
+        لكل (i = j; i >= 0; i--) {
+            مزدوج مجموعه = m->coeff[0][i];
 
-            for (k = i + 1; k <= j; k++)
-                sum -= factor[k][i] * m->coeff[j][k];
+            لكل (k = i + 1; k <= j; k++)
+                مجموعه -= ضریب[k][i] * m->coeff[j][k];
 
-            m->coeff[j][i] = sum / factor[i][i];
+            m->coeff[j][i] = مجموعه / ضریب[i][i];
         }
 
         m->variance[j] = covar_y[0];
 
-        for (i = 0; i <= j; i++) {
-            double sum = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
+        لكل (i = 0; i <= j; i++) {
+            مزدوج مجموعه = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
 
-            for (k = 0; k < i; k++)
-                sum += 2 * m->coeff[j][k] * covar[k][i];
+            لكل (k = 0; k < i; k++)
+                مجموعه += 2 * m->coeff[j][k] * covar[k][i];
 
-            m->variance[j] += m->coeff[j][i] * sum;
+            m->variance[j] += m->coeff[j][i] * مجموعه;
         }
     }
 }
 
-static double evaluate_lls(LLSModel *m, const double *param, int order)
+ساكن مزدوج evaluate_lls(LLSModel *m, ثابت مزدوج *param, صحيح ترتیب)
 {
-    return ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
+    أرجع ff_scalarproduct_double_c(m->coeff[ترتیب], param, ترتیب + 1);
 }
 
-av_cold void avpriv_init_lls(LLSModel *m, int indep_count)
+av_cold فراغ avpriv_init_lls(LLSModel *m, صحيح indep_شمېر)
 {
-    memset(m, 0, sizeof(LLSModel));
-    m->indep_count = indep_count;
+    memset(m, 0, حجم(LLSModel));
+    m->indep_شمېر = indep_شمېر;
     m->update_lls = update_lls;
     m->evaluate_lls = evaluate_lls;
-#if ARCH_RISCV
+#إذا ARCH_RISCV
     ff_init_lls_riscv(m);
-#elif ARCH_X86 && HAVE_X86ASM
+#وإلاإذا ARCH_X86 && HAVE_X86ASM
     ff_init_lls_x86(m);
-#endif
+#د_که_پای
 }

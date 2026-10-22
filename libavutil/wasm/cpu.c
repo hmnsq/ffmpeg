@@ -18,24 +18,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
-#include "libavutil/cpu_internal.h"
+#ضمن "libavutil/cpu_internal.h"
 
-int ff_get_cpu_flags_wasm(void)
+صحيح ff_get_cpu_flags_wasm(فراغ)
 {
-    int flags = 0;
-#if HAVE_SIMD128
+    صحيح flags = 0;
+#إذا HAVE_SIMD128
     flags |= AV_CPU_FLAG_SIMD128;
-#endif
-    return flags;
+#د_که_پای
+    أرجع flags;
 }
 
-size_t ff_get_cpu_max_align_wasm(void)
+size_t ff_get_cpu_max_align_wasm(فراغ)
 {
-#if HAVE_SIMD128
-    return 16;
-#else
-    return 8;
-#endif
+#إذا HAVE_SIMD128
+    أرجع 16;
+#وإلا
+    أرجع 8;
+#د_که_پای
 }

@@ -16,105 +16,105 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ضمن "config.h"
 
-#include <android/native_window.h>
-#include <dlfcn.h>
-#include <media/NdkMediaCodec.h>
+#ضمن <android/native_window.h>
+#ضمن <dlfcn.h>
+#ضمن <media/NdkMediaCodec.h>
 
-#include "buffer.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_mediacodec.h"
+#ضمن "buffer.h"
+#ضمن "common.h"
+#ضمن "hwcontext.h"
+#ضمن "hwcontext_internal.h"
+#ضمن "hwcontext_mediacodec.h"
 
-typedef struct MediaCodecDeviceContext {
+تعريفنوع بنية MediaCodecDeviceContext {
     AVMediaCodecDeviceContext ctx;
 
-    void *libmedia;
-    media_status_t (*create_surface)(ANativeWindow **surface);
+    فراغ *libmedia;
+    media_حالت_t (*create_surface)(ANative_کړکۍ **surface);
 } MediaCodecDeviceContext;
 
 
-static int mc_device_create(AVHWDeviceContext *ctx, const char *device,
-                            AVDictionary *opts, int flags)
+ساكن صحيح mc_device_create(AVHWDeviceContext *ctx, ثابت حرف *device,
+                            AVDictionary *opts, صحيح flags)
 {
-    const AVDictionaryEntry *entry = NULL;
+    ثابت AVDictionary_ثبت *ثبت = عدم;
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = &s->ctx;
 
-    if (device && device[0]) {
+    إذا (device && device[0]) {
         av_log(ctx, AV_LOG_ERROR, "Device selection unsupported.\n");
-        return AVERROR_UNKNOWN;
+        أرجع AVERROR_UNKNOWN;
     }
 
-    while ((entry = av_dict_iterate(opts, entry))) {
-        if (!strcmp(entry->key, "create_window"))
-            dev->create_window = atoi(entry->value);
+    طالما ((ثبت = av_dict_iterate(opts, ثبت))) {
+        إذا (!strcmp(ثبت->کلی, "create_window"))
+            dev->create_کړکۍ = atoi(ثبت->ارزښت);
     }
 
     av_log(ctx, AV_LOG_DEBUG, "%s createPersistentInputSurface\n",
-            dev->create_window ? "Enable" : "Disable");
+            dev->create_کړکۍ ? "Enable" : "Disable");
 
-    return 0;
+    أرجع 0;
 }
 
-static int mc_device_init(AVHWDeviceContext *ctx)
+ساكن صحيح mc_device_init(AVHWDeviceContext *ctx)
 {
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = (AVMediaCodecDeviceContext *)s;
-    ANativeWindow *native_window = NULL;
+    ANative_کړکۍ *native_کړکۍ = عدم;
 
-    if (dev->surface)
-        return 0;
+    إذا (dev->surface)
+        أرجع 0;
 
-    if (dev->native_window)
-        return 0;
+    إذا (dev->native_کړکۍ)
+        أرجع 0;
 
     // For backward compatibility, don't return error for a dummy
     // AVHWDeviceContext without surface or native_window.
-    if (!dev->create_window)
-        return 0;
+    إذا (!dev->create_کړکۍ)
+        أرجع 0;
 
     s->libmedia = dlopen("libmediandk.so", RTLD_NOW);
-    if (!s->libmedia)
-        return AVERROR_UNKNOWN;
+    إذا (!s->libmedia)
+        أرجع AVERROR_UNKNOWN;
 
     s->create_surface = dlsym(s->libmedia, "AMediaCodec_createPersistentInputSurface");
-    if (!s->create_surface)
-        return AVERROR_UNKNOWN;
+    إذا (!s->create_surface)
+        أرجع AVERROR_UNKNOWN;
 
-    s->create_surface(&native_window);
-    dev->native_window = native_window;
-    return 0;
+    s->create_surface(&native_کړکۍ);
+    dev->native_کړکۍ = native_کړکۍ;
+    أرجع 0;
 }
 
-static void mc_device_uninit(AVHWDeviceContext *ctx)
+ساكن فراغ mc_device_uninit(AVHWDeviceContext *ctx)
 {
     MediaCodecDeviceContext *s = ctx->hwctx;
     AVMediaCodecDeviceContext *dev = ctx->hwctx;
-    if (!s->libmedia)
-        return;
+    إذا (!s->libmedia)
+        أرجع;
 
-    if (dev->native_window) {
-        ANativeWindow_release(dev->native_window);
-        dev->native_window = NULL;
+    إذا (dev->native_کړکۍ) {
+        ANative_کړکۍ_release(dev->native_کړکۍ);
+        dev->native_کړکۍ = عدم;
     }
     dlclose(s->libmedia);
-    s->libmedia = NULL;
+    s->libmedia = عدم;
 }
 
-const HWContextType ff_hwcontext_type_mediacodec = {
+ثابت HWContextType ff_hwcontext_type_mediacodec = {
     .type                 = AV_HWDEVICE_TYPE_MEDIACODEC,
     .name                 = "mediacodec",
 
-    .device_hwctx_size    = sizeof(MediaCodecDeviceContext),
+    .device_hwctx_اندازه    = حجم(MediaCodecDeviceContext),
 
     .device_create        = mc_device_create,
     .device_init          = mc_device_init,
     .device_uninit        = mc_device_uninit,
 
-    .pix_fmts = (const enum AVPixelFormat[]){
+    .pix_fmts = (ثابت تعداد AVPixelFormat[]){
         AV_PIX_FMT_MEDIACODEC,
         AV_PIX_FMT_NONE
     },

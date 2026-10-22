@@ -16,311 +16,311 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ضمن "config.h"
 
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#ضمن <fcntl.h>
+#ضمن <sys/mman.h>
+#ضمن <unistd.h>
 
 /* This was introduced in version 4.6. And may not exist all without an
  * optional package. So to prevent a hard dependency on needing the Linux
  * kernel headers to compile, make this optional. */
-#if HAVE_LINUX_DMA_BUF_H
-#include <linux/dma-buf.h>
-#include <sys/ioctl.h>
-#endif
+#إذا HAVE_LINUX_DMA_BUF_H
+#ضمن <linux/dma-buf.h>
+#ضمن <sys/ioctl.h>
+#د_که_پای
 
-#include <drm.h>
-#include <xf86drm.h>
+#ضمن <drm.h>
+#ضمن <xf86drm.h>
 
-#include "avassert.h"
-#include "hwcontext.h"
-#include "hwcontext_drm.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "mem.h"
+#ضمن "avassert.h"
+#ضمن "hwcontext.h"
+#ضمن "hwcontext_drm.h"
+#ضمن "hwcontext_internal.h"
+#ضمن "imgutils.h"
+#ضمن "mem.h"
 
 
-static void drm_device_free(AVHWDeviceContext *hwdev)
+ساكن فراغ drm_device_free(AVHWDeviceContext *hwdev)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
 
     close(hwctx->fd);
 }
 
-static int drm_device_create(AVHWDeviceContext *hwdev, const char *device,
-                             AVDictionary *opts, int flags)
+ساكن صحيح drm_device_create(AVHWDeviceContext *hwdev, ثابت حرف *device,
+                             AVDictionary *opts, صحيح flags)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
-    drmVersionPtr version;
+    drm_نسخه_Ptr نسخه;
 
     hwctx->fd = open(device, O_RDWR);
-    if (hwctx->fd < 0)
-        return AVERROR(errno);
+    إذا (hwctx->fd < 0)
+        أرجع AVERROR(errno);
 
-    version = drmGetVersion(hwctx->fd);
-    if (!version) {
+    نسخه = drm_Get_نسخه(hwctx->fd);
+    إذا (!نسخه) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get version information "
                "from %s: probably not a DRM device?\n", device);
         close(hwctx->fd);
-        return AVERROR(EINVAL);
+        أرجع AVERROR(EINVAL);
     }
 
     av_log(hwdev, AV_LOG_VERBOSE, "Opened DRM device %s: driver %s "
-           "version %d.%d.%d.\n", device, version->name,
-           version->version_major, version->version_minor,
-           version->version_patchlevel);
+           "version %d.%d.%d.\n", device, نسخه->name,
+           نسخه->نسخه_major, نسخه->نسخه_minor,
+           نسخه->نسخه_patchlevel);
 
-    drmFreeVersion(version);
+    drm_Free_نسخه(نسخه);
 
-    hwdev->free = &drm_device_free;
+    hwdev->حرر = &drm_device_free;
 
-    return 0;
+    أرجع 0;
 }
 
-static int drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+ساكن صحيح drm_get_بفر(AVHWFramesContext *hwfc, AVFrame *چوکاټ)
 {
-    frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    چوکاټ->buf[0] = av_بفر_pool_get(hwfc->pool);
+    إذا (!چوکاټ->buf[0])
+        أرجع AVERROR(ENOMEM);
 
-    frame->data[0] = (uint8_t*)frame->buf[0]->data;
+    چوکاټ->معلومات[0] = (uint8_t*)چوکاټ->buf[0]->معلومات;
 
-    frame->format = AV_PIX_FMT_DRM_PRIME;
-    frame->width  = hwfc->width;
-    frame->height = hwfc->height;
+    چوکاټ->format = AV_PIX_FMT_DRM_اولي;
+    چوکاټ->پلنوالی  = hwfc->پلنوالی;
+    چوکاټ->لوړوالی = hwfc->لوړوالی;
 
-    return 0;
+    أرجع 0;
 }
 
-typedef struct DRMMapping {
+تعريفنوع بنية DRMMapping {
     // Address and length of each mmap()ed region.
-    int nb_regions;
-    int sync_flags;
-    int object[AV_DRM_MAX_PLANES];
-    void *address[AV_DRM_MAX_PLANES];
-    size_t length[AV_DRM_MAX_PLANES];
+    صحيح nb_regions;
+    صحيح sync_flags;
+    صحيح object[AV_DRM_MAX_PLANES];
+    فراغ *پته[AV_DRM_MAX_PLANES];
+    size_t اوږدتیا[AV_DRM_MAX_PLANES];
 } DRMMapping;
 
-static void drm_unmap_frame(AVHWFramesContext *hwfc,
+ساكن فراغ drm_unmap_چوکاټ(AVHWFramesContext *hwfc,
                             HWMapDescriptor *hwmap)
 {
     DRMMapping *map = hwmap->priv;
 
-    for (int i = 0; i < map->nb_regions; i++) {
-#if HAVE_LINUX_DMA_BUF_H
-        struct dma_buf_sync sync = { .flags = DMA_BUF_SYNC_END | map->sync_flags };
+    لكل (صحيح i = 0; i < map->nb_regions; i++) {
+#إذا HAVE_LINUX_DMA_BUF_H
+        بنية dma_buf_sync sync = { .flags = DMA_BUF_SYNC_پای_ټکی | map->sync_flags };
         ioctl(map->object[i], DMA_BUF_IOCTL_SYNC, &sync);
-#endif
-        munmap(map->address[i], map->length[i]);
+#د_که_پای
+        munmap(map->پته[i], map->اوږدتیا[i]);
     }
 
     av_free(map);
 }
 
-static int drm_map_frame(AVHWFramesContext *hwfc,
-                         AVFrame *dst, const AVFrame *src, int flags)
+ساكن صحيح drm_map_چوکاټ(AVHWFramesContext *hwfc,
+                         AVFrame *dst, ثابت AVFrame *src, صحيح flags)
 {
-    const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->data[0];
-#if HAVE_LINUX_DMA_BUF_H
-    struct dma_buf_sync sync_start = { 0 };
-#endif
+    ثابت AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->معلومات[0];
+#إذا HAVE_LINUX_DMA_BUF_H
+    بنية dma_buf_sync sync_پیل = { 0 };
+#د_که_پای
     DRMMapping *map;
-    int err, i, p, plane;
-    int mmap_prot;
-    void *addr;
+    صحيح err, i, p, plane;
+    صحيح mmap_prot;
+    فراغ *addr;
 
-    map = av_mallocz(sizeof(*map));
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_mallocz(حجم(*map));
+    إذا (!map)
+        أرجع AVERROR(ENOMEM);
 
     mmap_prot = 0;
-    if (flags & AV_HWFRAME_MAP_READ)
+    إذا (flags & AV_HWFRAME_MAP_READ)
         mmap_prot |= PROT_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    إذا (flags & AV_HWFRAME_MAP_WRITE)
         mmap_prot |= PROT_WRITE;
 
-#if HAVE_LINUX_DMA_BUF_H
-    if (flags & AV_HWFRAME_MAP_READ)
+#إذا HAVE_LINUX_DMA_BUF_H
+    إذا (flags & AV_HWFRAME_MAP_READ)
         map->sync_flags |= DMA_BUF_SYNC_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    إذا (flags & AV_HWFRAME_MAP_WRITE)
         map->sync_flags |= DMA_BUF_SYNC_WRITE;
-    sync_start.flags = DMA_BUF_SYNC_START | map->sync_flags;
-#endif
+    sync_پیل.flags = DMA_BUF_SYNC_پیل | map->sync_flags;
+#د_که_پای
 
     av_assert0(desc->nb_objects <= AV_DRM_MAX_PLANES);
-    for (i = 0; i < desc->nb_objects; i++) {
-        addr = mmap(NULL, desc->objects[i].size, mmap_prot, MAP_SHARED,
+    لكل (i = 0; i < desc->nb_objects; i++) {
+        addr = mmap(عدم, desc->objects[i].اندازه, mmap_prot, MAP_SHARED,
                     desc->objects[i].fd, 0);
-        if (addr == MAP_FAILED) {
+        إذا (addr == MAP_FAILED) {
             err = AVERROR(errno);
             av_log(hwfc, AV_LOG_ERROR, "Failed to map DRM object %d to "
                    "memory: %d.\n", desc->objects[i].fd, errno);
-            goto fail;
+            اذهب fail;
         }
 
-        map->address[i] = addr;
-        map->length[i]  = desc->objects[i].size;
+        map->پته[i] = addr;
+        map->اوږدتیا[i]  = desc->objects[i].اندازه;
         map->object[i] = desc->objects[i].fd;
 
-#if HAVE_LINUX_DMA_BUF_H
+#إذا HAVE_LINUX_DMA_BUF_H
         /* We're not checking for errors here because the kernel may not
          * support the ioctl, in which case its okay to carry on */
-        ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_SYNC, &sync_start);
-#endif
+        ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_SYNC, &sync_پیل);
+#د_که_پای
     }
     map->nb_regions = i;
 
     plane = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
-        const AVDRMLayerDescriptor *layer = &desc->layers[i];
-        for (p = 0; p < layer->nb_planes; p++) {
-            dst->data[plane] =
-                (uint8_t*)map->address[layer->planes[p].object_index] +
-                                       layer->planes[p].offset;
+    لكل (i = 0; i < desc->nb_layers; i++) {
+        ثابت AVDRMLayerDescriptor *layer = &desc->layers[i];
+        لكل (p = 0; p < layer->nb_planes; p++) {
+            dst->معلومات[plane] =
+                (uint8_t*)map->پته[layer->planes[p].object_شاخص] +
+                                       layer->planes[p].دننه_واټن;
             dst->linesize[plane] =     layer->planes[p].pitch;
             ++plane;
         }
     }
     av_assert0(plane <= AV_DRM_MAX_PLANES);
 
-    dst->width  = src->width;
-    dst->height = src->height;
+    dst->پلنوالی  = src->پلنوالی;
+    dst->لوړوالی = src->لوړوالی;
 
-    err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
-                                &drm_unmap_frame, map);
-    if (err < 0)
-        goto fail;
+    err = ff_hwframe_map_create(src->hw_چوکاټونه_ctx, dst, src,
+                                &drm_unmap_چوکاټ, map);
+    إذا (err < 0)
+        اذهب fail;
 
-    return 0;
+    أرجع 0;
 
 fail:
-    for (i = 0; i < desc->nb_objects; i++) {
-        if (map->address[i])
-            munmap(map->address[i], map->length[i]);
+    لكل (i = 0; i < desc->nb_objects; i++) {
+        إذا (map->پته[i])
+            munmap(map->پته[i], map->اوږدتیا[i]);
     }
     av_free(map);
-    return err;
+    أرجع err;
 }
 
-static int drm_transfer_get_formats(AVHWFramesContext *ctx,
-                                    enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats)
+ساكن صحيح drm_transfer_get_formats(AVHWFramesContext *ctx,
+                                    تعداد AVHWFrameTransferDirection dir,
+                                    تعداد AVPixelFormat **formats)
 {
-    enum AVPixelFormat *pix_fmts;
+    تعداد AVPixelFormat *pix_fmts;
 
-    pix_fmts = av_malloc_array(2, sizeof(*pix_fmts));
-    if (!pix_fmts)
-        return AVERROR(ENOMEM);
+    pix_fmts = av_malloc_array(2, حجم(*pix_fmts));
+    إذا (!pix_fmts)
+        أرجع AVERROR(ENOMEM);
 
     pix_fmts[0] = ctx->sw_format;
     pix_fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = pix_fmts;
-    return 0;
+    أرجع 0;
 }
 
-static int drm_transfer_data_from(AVHWFramesContext *hwfc,
-                                  AVFrame *dst, const AVFrame *src)
+ساكن صحيح drm_transfer_معلومات_from(AVHWFramesContext *hwfc,
+                                  AVFrame *dst, ثابت AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    صحيح err;
 
-    if (dst->width > hwfc->width || dst->height > hwfc->height)
-        return AVERROR(EINVAL);
+    إذا (dst->پلنوالی > hwfc->پلنوالی || dst->لوړوالی > hwfc->لوړوالی)
+        أرجع AVERROR(EINVAL);
 
-    map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_چوکاټ_alloc();
+    إذا (!map)
+        أرجع AVERROR(ENOMEM);
     map->format = dst->format;
 
-    err = drm_map_frame(hwfc, map, src, AV_HWFRAME_MAP_READ);
-    if (err)
-        goto fail;
+    err = drm_map_چوکاټ(hwfc, map, src, AV_HWFRAME_MAP_READ);
+    إذا (err)
+        اذهب fail;
 
-    map->width  = dst->width;
-    map->height = dst->height;
+    map->پلنوالی  = dst->پلنوالی;
+    map->لوړوالی = dst->لوړوالی;
 
-    err = av_frame_copy(dst, map);
-    if (err)
-        goto fail;
+    err = av_چوکاټ_copy(dst, map);
+    إذا (err)
+        اذهب fail;
 
     err = 0;
 fail:
-    av_frame_free(&map);
-    return err;
+    av_چوکاټ_free(&map);
+    أرجع err;
 }
 
-static int drm_transfer_data_to(AVHWFramesContext *hwfc,
-                                AVFrame *dst, const AVFrame *src)
+ساكن صحيح drm_transfer_معلومات_منزل(AVHWFramesContext *hwfc,
+                                AVFrame *dst, ثابت AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    صحيح err;
 
-    if (src->width > hwfc->width || src->height > hwfc->height)
-        return AVERROR(EINVAL);
+    إذا (src->پلنوالی > hwfc->پلنوالی || src->لوړوالی > hwfc->لوړوالی)
+        أرجع AVERROR(EINVAL);
 
-    map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_چوکاټ_alloc();
+    إذا (!map)
+        أرجع AVERROR(ENOMEM);
     map->format = src->format;
 
-    err = drm_map_frame(hwfc, map, dst, AV_HWFRAME_MAP_WRITE |
+    err = drm_map_چوکاټ(hwfc, map, dst, AV_HWFRAME_MAP_WRITE |
                                         AV_HWFRAME_MAP_OVERWRITE);
-    if (err)
-        goto fail;
+    إذا (err)
+        اذهب fail;
 
-    map->width  = src->width;
-    map->height = src->height;
+    map->پلنوالی  = src->پلنوالی;
+    map->لوړوالی = src->لوړوالی;
 
-    err = av_frame_copy(map, src);
-    if (err)
-        goto fail;
+    err = av_چوکاټ_copy(map, src);
+    إذا (err)
+        اذهب fail;
 
     err = 0;
 fail:
-    av_frame_free(&map);
-    return err;
+    av_چوکاټ_free(&map);
+    أرجع err;
 }
 
-static int drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                        const AVFrame *src, int flags)
+ساكن صحيح drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                        ثابت AVFrame *src, صحيح flags)
 {
-    int err;
+    صحيح err;
 
-    if (dst->format == AV_PIX_FMT_NONE)
+    إذا (dst->format == AV_PIX_FMT_NONE)
         dst->format = hwfc->sw_format;
-    else if (hwfc->sw_format != dst->format)
-        return AVERROR(ENOSYS);
+    وإلا إذا (hwfc->sw_format != dst->format)
+        أرجع AVERROR(ENOSYS);
 
-    err = drm_map_frame(hwfc, dst, src, flags);
-    if (err)
-        return err;
+    err = drm_map_چوکاټ(hwfc, dst, src, flags);
+    إذا (err)
+        أرجع err;
 
-    err = av_frame_copy_props(dst, src);
-    if (err)
-        return err;
+    err = av_چوکاټ_copy_props(dst, src);
+    إذا (err)
+        أرجع err;
 
-    return 0;
+    أرجع 0;
 }
 
-const HWContextType ff_hwcontext_type_drm = {
+ثابت HWContextType ff_hwcontext_type_drm = {
     .type                   = AV_HWDEVICE_TYPE_DRM,
     .name                   = "DRM",
 
-    .device_hwctx_size      = sizeof(AVDRMDeviceContext),
+    .device_hwctx_اندازه      = حجم(AVDRMDeviceContext),
 
     .device_create          = &drm_device_create,
 
-    .frames_get_buffer      = &drm_get_buffer,
+    .چوکاټونه_get_بفر      = &drm_get_بفر,
 
     .transfer_get_formats   = &drm_transfer_get_formats,
-    .transfer_data_to       = &drm_transfer_data_to,
-    .transfer_data_from     = &drm_transfer_data_from,
+    .transfer_معلومات_منزل       = &drm_transfer_معلومات_منزل,
+    .transfer_معلومات_from     = &drm_transfer_معلومات_from,
     .map_from               = &drm_map_from,
 
-    .pix_fmts = (const enum AVPixelFormat[]) {
-        AV_PIX_FMT_DRM_PRIME,
+    .pix_fmts = (ثابت تعداد AVPixelFormat[]) {
+        AV_PIX_FMT_DRM_اولي,
         AV_PIX_FMT_NONE
     },
 };

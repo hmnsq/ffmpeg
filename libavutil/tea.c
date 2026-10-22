@@ -22,69 +22,69 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
-#include "intreadwrite.h"
-#include "mem.h"
-#include "tea.h"
+#ضمن <string.h>
+#ضمن "intreadwrite.h"
+#ضمن "mem.h"
+#ضمن "tea.h"
 
-typedef struct AVTEA {
-    uint32_t key[16];
-    int rounds;
+تعريفنوع بنية AVTEA {
+    uint32_t کلی[16];
+    صحيح پړاوونه;
 } AVTEA;
 
-struct AVTEA *av_tea_alloc(void)
+بنية AVTEA *av_tea_alloc(فراغ)
 {
-    return av_mallocz(sizeof(struct AVTEA));
+    أرجع av_mallocz(حجم(بنية AVTEA));
 }
 
-const int av_tea_size = sizeof(AVTEA);
+ثابت صحيح av_tea_اندازه = حجم(AVTEA);
 
-void av_tea_init(AVTEA *ctx, const uint8_t key[16], int rounds)
+فراغ av_tea_init(AVTEA *ctx, ثابت uint8_t کلی[16], صحيح پړاوونه)
 {
-    int i;
+    صحيح i;
 
-    for (i = 0; i < 4; i++)
-        ctx->key[i] = AV_RB32(key + (i << 2));
+    لكل (i = 0; i < 4; i++)
+        ctx->کلی[i] = AV_RB32(کلی + (i << 2));
 
-    ctx->rounds = rounds;
+    ctx->پړاوونه = پړاوونه;
 }
 
-static void tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, const uint8_t *src,
-                          int decrypt, uint8_t *iv)
+ساكن فراغ tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, ثابت uint8_t *src,
+                          صحيح decrypt, uint8_t *iv)
 {
     uint32_t v0, v1;
-    int rounds = ctx->rounds;
+    صحيح پړاوونه = ctx->پړاوونه;
     uint32_t k0, k1, k2, k3;
-    k0 = ctx->key[0];
-    k1 = ctx->key[1];
-    k2 = ctx->key[2];
-    k3 = ctx->key[3];
+    k0 = ctx->کلی[0];
+    k1 = ctx->کلی[1];
+    k2 = ctx->کلی[2];
+    k3 = ctx->کلی[3];
 
     v0 = AV_RB32(src);
     v1 = AV_RB32(src + 4);
 
-    if (decrypt) {
-        int i;
-        uint32_t delta = 0x9E3779B9U, sum = delta * (rounds / 2);
+    إذا (decrypt) {
+        صحيح i;
+        uint32_t delta = 0x9E3779B9U, مجموعه = delta * (پړاوونه / 2);
 
-        for (i = 0; i < rounds / 2; i++) {
-            v1 -= ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
-            v0 -= ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
-            sum -= delta;
+        لكل (i = 0; i < پړاوونه / 2; i++) {
+            v1 -= ((v0 << 4) + k2) ^ (v0 + مجموعه) ^ ((v0 >> 5) + k3);
+            v0 -= ((v1 << 4) + k0) ^ (v1 + مجموعه) ^ ((v1 >> 5) + k1);
+            مجموعه -= delta;
         }
-        if (iv) {
+        إذا (iv) {
             v0 ^= AV_RB32(iv);
             v1 ^= AV_RB32(iv + 4);
-            memcpy(iv, src, 8);
+            حافظه_نقل(iv, src, 8);
         }
-    } else {
-        int i;
-        uint32_t sum = 0, delta = 0x9E3779B9U;
+    } وإلا {
+        صحيح i;
+        uint32_t مجموعه = 0, delta = 0x9E3779B9U;
 
-        for (i = 0; i < rounds / 2; i++) {
-            sum += delta;
-            v0 += ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
-            v1 += ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
+        لكل (i = 0; i < پړاوونه / 2; i++) {
+            مجموعه += delta;
+            v0 += ((v1 << 4) + k0) ^ (v1 + مجموعه) ^ ((v1 >> 5) + k1);
+            v1 += ((v0 << 4) + k2) ^ (v0 + مجموعه) ^ ((v0 >> 5) + k3);
         }
     }
 
@@ -92,27 +92,27 @@ static void tea_crypt_ecb(AVTEA *ctx, uint8_t *dst, const uint8_t *src,
     AV_WB32(dst + 4, v1);
 }
 
-void av_tea_crypt(AVTEA *ctx, uint8_t *dst, const uint8_t *src, int count,
-                  uint8_t *iv, int decrypt)
+فراغ av_tea_crypt(AVTEA *ctx, uint8_t *dst, ثابت uint8_t *src, صحيح شمېر,
+                  uint8_t *iv, صحيح decrypt)
 {
-    int i;
+    صحيح i;
 
-    if (decrypt) {
-        while (count--) {
+    إذا (decrypt) {
+        طالما (شمېر--) {
             tea_crypt_ecb(ctx, dst, src, decrypt, iv);
 
             src   += 8;
             dst   += 8;
         }
-    } else {
-        while (count--) {
-            if (iv) {
-                for (i = 0; i < 8; i++)
+    } وإلا {
+        طالما (شمېر--) {
+            إذا (iv) {
+                لكل (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];
-                tea_crypt_ecb(ctx, dst, dst, decrypt, NULL);
-                memcpy(iv, dst, 8);
-            } else {
-                tea_crypt_ecb(ctx, dst, src, decrypt, NULL);
+                tea_crypt_ecb(ctx, dst, dst, decrypt, عدم);
+                حافظه_نقل(iv, dst, 8);
+            } وإلا {
+                tea_crypt_ecb(ctx, dst, src, decrypt, عدم);
             }
             src   += 8;
             dst   += 8;

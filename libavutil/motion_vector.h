@@ -16,18 +16,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MOTION_VECTOR_H
-#define AVUTIL_MOTION_VECTOR_H
+#که_نه_تعریف_شوی AVUTIL_MOTION_ویکټور_H
+#تعریف_کړه AVUTIL_MOTION_ویکټور_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
-typedef struct AVMotionVector {
+تعريفنوع بنية AVMotion_ویکټور {
     /**
      * Where the current macroblock comes from; negative value when it comes
      * from the past, positive value when it comes from the future.
      * XXX: set exact relative ref frame reference instead of a +/- 1 "direction".
      */
-    int32_t source;
+    int32_t سرچینه;
     /**
      * Width and height of the block.
      */
@@ -52,6 +52,6 @@ typedef struct AVMotionVector {
      */
     int32_t motion_x, motion_y;
     uint16_t motion_scale;
-} AVMotionVector;
+} AVMotion_ویکټور;
 
-#endif /* AVUTIL_MOTION_VECTOR_H */
+#د_که_پای /* AVUTIL_MOTION_VECTOR_H */

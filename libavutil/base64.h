@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BASE64_H
-#define AVUTIL_BASE64_H
+#که_نه_تعریف_شوی AVUTIL_BASE64_H
+#تعریف_کړه AVUTIL_BASE64_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
 /**
  * @defgroup lavu_base64 Base64
@@ -39,13 +39,13 @@
  * @return         number of bytes written, or a negative value in case of
  *                 invalid input
  */
-int av_base64_decode(uint8_t *out, const char *in, int out_size);
+صحيح av_base64_decode(uint8_t *بهر, ثابت حرف *دننه, صحيح بهر_اندازه);
 
 /**
  * Calculate the output size in bytes needed to decode a base64 string
  * with length x to a data buffer.
  */
-#define AV_BASE64_DECODE_SIZE(x) ((x) * 3LL / 4)
+#تعریف_کړه AV_BASE64_DECODE_اندازه(x) ((x) * 3LL / 4)
 
 /**
  * Encode data to base64 and null-terminate.
@@ -57,16 +57,16 @@ int av_base64_decode(uint8_t *out, const char *in, int out_size);
  * @param in_size  size in bytes of the in buffer
  * @return         out or NULL in case of error
  */
-char *av_base64_encode(char *out, int out_size, const uint8_t *in, int in_size);
+حرف *av_base64_encode(حرف *بهر, صحيح بهر_اندازه, ثابت uint8_t *دننه, صحيح دننه_اندازه);
 
 /**
  * Calculate the output size needed to base64-encode x bytes to a
  * null-terminated string.
  */
-#define AV_BASE64_SIZE(x)  (((x)+2) / 3 * 4 + 1)
+#تعریف_کړه AV_BASE64_اندازه(x)  (((x)+2) / 3 * 4 + 1)
 
  /**
   * @}
   */
 
-#endif /* AVUTIL_BASE64_H */
+#د_که_پای /* AVUTIL_BASE64_H */

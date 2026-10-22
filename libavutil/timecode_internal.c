@@ -19,19 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "timecode_internal.h"
+#ضمن "timecode_internal.h"
 
-static unsigned bcd2uint(uint8_t bcd)
+ساكن بینښه bcd2uint(uint8_t bcd)
 {
-   unsigned low  = bcd & 0xf;
-   unsigned high = bcd >> 4;
-   if (low > 9 || high > 9)
-       return 0;
-   return low + 10*high;
+   بینښه ټیټ  = bcd & 0xf;
+   بینښه لوړ = bcd >> 4;
+   إذا (ټیټ > 9 || لوړ > 9)
+       أرجع 0;
+   أرجع ټیټ + 10*لوړ;
 }
 
-void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned *ss, unsigned *ff,
-                           AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field)
+فراغ ff_timecode_سېټ_smpte(بینښه *drop, بینښه *hh, بینښه *mm, بینښه *ss, بینښه *ff,
+                           AVRational شرح, uint32_t tcsmpte, صحيح prevent_df, صحيح skip_ډګر)
 {
     *hh   = bcd2uint(tcsmpte     & 0x3f);    // 6-bit hours
     *mm   = bcd2uint(tcsmpte>>8  & 0x7f);    // 7-bit minutes
@@ -39,12 +39,12 @@ void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned 
     *ff   = bcd2uint(tcsmpte>>24 & 0x3f);    // 6-bit frames
     *drop = tcsmpte & 1<<30 && !prevent_df;  // 1-bit drop if not arbitrary bit
 
-    if (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
+    إذا (av_cmp_q(شرح, (AVRational) {30, 1}) == 1) {
         *ff <<= 1;
-        if (!skip_field) {
-            if (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
+        إذا (!skip_ډګر) {
+            إذا (av_cmp_q(شرح, (AVRational) {50, 1}) == 0)
                 *ff += !!(tcsmpte & 1 << 7);
-            else
+            وإلا
                 *ff += !!(tcsmpte & 1 << 23);
         }
     }

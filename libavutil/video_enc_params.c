@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#ضمن <stddef.h>
+#ضمن <stdint.h>
 
-#include "buffer.h"
-#include "frame.h"
-#include "mem.h"
-#include "video_enc_params.h"
+#ضمن "buffer.h"
+#ضمن "frame.h"
+#ضمن "mem.h"
+#ضمن "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(تعداد AVVideoEncParamsType type,
+                                            بینښه صحيح nb_بلاکونه, size_t *بهر_اندازه)
 {
-    struct TestStruct {
+    بنية TestStruct {
         AVVideoEncParams   p;
-        AVVideoBlockParams b;
+        AVVideo_بلاک_Params b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
-    size_t size = blocks_offset;
+    ثابت size_t بلاکونه_دننه_واټن = offsetof(بنية TestStruct, b);
+    size_t اندازه = بلاکونه_دننه_واټن;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    إذا (nb_بلاکونه > (SIZE_MAX - اندازه) / حجم(AVVideo_بلاک_Params))
+        أرجع عدم;
+    اندازه += حجم(AVVideo_بلاک_Params) * nb_بلاکونه;
 
-    par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    par = av_mallocz(اندازه);
+    إذا (!par)
+        أرجع عدم;
 
     par->type          = type;
-    par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
-    par->blocks_offset = blocks_offset;
+    par->nb_بلاکونه     = nb_بلاکونه;
+    par->بلاک_اندازه    = حجم(AVVideo_بلاک_Params);
+    par->بلاکونه_دننه_واټن = بلاکونه_دننه_واټن;
 
-    if (out_size)
-        *out_size = size;
+    إذا (بهر_اندازه)
+        *بهر_اندازه = اندازه;
 
-    return par;
+    أرجع par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_معلومات(AVFrame *چوکاټ, تعداد AVVideoEncParamsType type,
+                                     بینښه صحيح nb_بلاکونه)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
-    size_t size;
+    size_t اندازه;
 
-    par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    par = av_video_enc_params_alloc(type, nb_بلاکونه, &اندازه);
+    إذا (!par)
+        أرجع عدم;
+    buf = av_بفر_create((uint8_t *)par, اندازه, عدم, عدم, 0);
+    إذا (!buf) {
         av_freep(&par);
-        return NULL;
+        أرجع عدم;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    إذا (!av_چوکاټ_new_side_معلومات_from_buf(چوکاټ, AV_چوکاټ_معلومات_VIDEO_ENC_PARAMS, buf)) {
+        av_بفر_unref(&buf);
+        أرجع عدم;
     }
 
-    return par;
+    أرجع par;
 }

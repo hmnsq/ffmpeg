@@ -17,29 +17,29 @@
  */
 
 
-#ifndef AVUTIL_HWCONTEXT_AMF_INTERNAL_H
-#define AVUTIL_HWCONTEXT_AMF_INTERNAL_H
-#include <AMF/core/Factory.h>
-#include <AMF/core/Context.h>
+#که_نه_تعریف_شوی AVUTIL_HWCONTEXT_AMF_دننی_H
+#تعریف_کړه AVUTIL_HWCONTEXT_AMF_دننی_H
+#ضمن <AMF/core/Factory.h>
+#ضمن <AMF/core/Context.h>
 
 /**
 * Error handling helper
 */
-#define AMF_RETURN_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#تعریف_کړه AMF_RETURN_IF_FALSE(avctx, توانیز_تابع, ret_ارزښت, /*message,*/ ...) \
+    إذا (!(توانیز_تابع)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        return ret_value; \
+        أرجع ret_ارزښت; \
     }
 
-#define AMF_GOTO_FAIL_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#تعریف_کړه AMF_GOTO_FAIL_IF_FALSE(avctx, توانیز_تابع, ret_ارزښت, /*message,*/ ...) \
+    إذا (!(توانیز_تابع)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        ret = ret_value; \
-        goto fail; \
+        ret = ret_ارزښت; \
+        اذهب fail; \
     }
 
-#define AMF_TIME_BASE_Q          (AVRational){1, AMF_SECOND}
+#تعریف_کړه AMF_وخت_بنسټ_Q          (AVRational){1, AMF_دوهم}
 
-#define AMF_IFACE_CALL(this, function, ...) ((this)->pVtbl->function((this), ##__VA_ARGS__))
+#تعریف_کړه AMF_IFACE_CALL(this, function, ...) ((this)->pVtbl->function((this), ##__VA_ARGS__))
 
-#endif /* AVUTIL_HWCONTEXT_AMF_INTERNAL_H */
+#د_که_پای /* AVUTIL_HWCONTEXT_AMF_INTERNAL_H */

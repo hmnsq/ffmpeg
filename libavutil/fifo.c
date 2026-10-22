@@ -20,273 +20,273 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
+#ضمن <stdint.h>
+#ضمن <string.h>
 
-#include "avassert.h"
-#include "error.h"
-#include "fifo.h"
-#include "macros.h"
-#include "mem.h"
+#ضمن "avassert.h"
+#ضمن "error.h"
+#ضمن "fifo.h"
+#ضمن "macros.h"
+#ضمن "mem.h"
 
 // by default the FIFO can be auto-grown to 1MB
-#define AUTO_GROW_DEFAULT_BYTES (1024 * 1024)
+#تعریف_کړه AUTO_GROW_DEFAULT_بایټونه (1024 * 1024)
 
-struct AVFifo {
-    uint8_t *buffer;
+بنية AVFifo {
+    uint8_t *بفر;
 
-    size_t elem_size, nb_elems;
-    size_t offset_r, offset_w;
+    size_t elem_اندازه, nb_elems;
+    size_t دننه_واټن_r, دننه_واټن_w;
     // distinguishes the ambiguous situation offset_r == offset_w
-    int    is_empty;
+    صحيح    is_تشه;
 
-    unsigned int flags;
-    size_t       auto_grow_limit;
+    بینښه صحيح flags;
+    size_t       auto_grow_حد;
 };
 
-AVFifo *av_fifo_alloc2(size_t nb_elems, size_t elem_size,
-                       unsigned int flags)
+AVFifo *av_fifo_alloc2(size_t nb_elems, size_t elem_اندازه,
+                       بینښه صحيح flags)
 {
     AVFifo *f;
-    void *buffer = NULL;
+    فراغ *بفر = عدم;
 
-    if (!elem_size)
-        return NULL;
+    إذا (!elem_اندازه)
+        أرجع عدم;
 
-    if (nb_elems) {
-        buffer = av_realloc_array(NULL, nb_elems, elem_size);
-        if (!buffer)
-            return NULL;
+    إذا (nb_elems) {
+        بفر = av_realloc_array(عدم, nb_elems, elem_اندازه);
+        إذا (!بفر)
+            أرجع عدم;
     }
-    f = av_mallocz(sizeof(*f));
-    if (!f) {
-        av_free(buffer);
-        return NULL;
+    f = av_mallocz(حجم(*f));
+    إذا (!f) {
+        av_free(بفر);
+        أرجع عدم;
     }
-    f->buffer    = buffer;
+    f->بفر    = بفر;
     f->nb_elems  = nb_elems;
-    f->elem_size = elem_size;
-    f->is_empty  = 1;
+    f->elem_اندازه = elem_اندازه;
+    f->is_تشه  = 1;
 
     f->flags           = flags;
-    f->auto_grow_limit = FFMAX(AUTO_GROW_DEFAULT_BYTES / elem_size, 1);
+    f->auto_grow_حد = FFMAX(AUTO_GROW_DEFAULT_بایټونه / elem_اندازه, 1);
 
-    return f;
+    أرجع f;
 }
 
-void av_fifo_auto_grow_limit(AVFifo *f, size_t max_elems)
+فراغ av_fifo_auto_grow_حد(AVFifo *f, size_t max_elems)
 {
-    f->auto_grow_limit = max_elems;
+    f->auto_grow_حد = max_elems;
 }
 
-size_t av_fifo_elem_size(const AVFifo *f)
+size_t av_fifo_elem_اندازه(ثابت AVFifo *f)
 {
-    return f->elem_size;
+    أرجع f->elem_اندازه;
 }
 
-size_t av_fifo_can_read(const AVFifo *f)
+size_t av_fifo_can_read(ثابت AVFifo *f)
 {
-    if (f->offset_w <= f->offset_r && !f->is_empty)
-        return f->nb_elems - f->offset_r + f->offset_w;
-    return f->offset_w - f->offset_r;
+    إذا (f->دننه_واټن_w <= f->دننه_واټن_r && !f->is_تشه)
+        أرجع f->nb_elems - f->دننه_واټن_r + f->دننه_واټن_w;
+    أرجع f->دننه_واټن_w - f->دننه_واټن_r;
 }
 
-size_t av_fifo_can_write(const AVFifo *f)
+size_t av_fifo_can_write(ثابت AVFifo *f)
 {
-    return f->nb_elems - av_fifo_can_read(f);
+    أرجع f->nb_elems - av_fifo_can_read(f);
 }
 
-int av_fifo_grow2(AVFifo *f, size_t inc)
+صحيح av_fifo_grow2(AVFifo *f, size_t inc)
 {
     uint8_t *tmp;
 
-    if (inc > SIZE_MAX - f->nb_elems)
-        return AVERROR(EINVAL);
+    إذا (inc > SIZE_MAX - f->nb_elems)
+        أرجع AVERROR(EINVAL);
 
-    tmp = av_realloc_array(f->buffer, f->nb_elems + inc, f->elem_size);
-    if (!tmp)
-        return AVERROR(ENOMEM);
-    f->buffer = tmp;
+    tmp = av_realloc_array(f->بفر, f->nb_elems + inc, f->elem_اندازه);
+    إذا (!tmp)
+        أرجع AVERROR(ENOMEM);
+    f->بفر = tmp;
 
     // move the data from the beginning of the ring buffer
     // to the newly allocated space
-    if (f->offset_w <= f->offset_r && !f->is_empty) {
-        const size_t copy = FFMIN(inc, f->offset_w);
-        memcpy(tmp + f->nb_elems * f->elem_size, tmp, copy * f->elem_size);
-        if (copy < f->offset_w) {
-            memmove(tmp, tmp + copy * f->elem_size,
-                    (f->offset_w - copy) * f->elem_size);
-            f->offset_w -= copy;
-        } else
-            f->offset_w = copy == inc ? 0 : f->nb_elems + copy;
+    إذا (f->دننه_واټن_w <= f->دننه_واټن_r && !f->is_تشه) {
+        ثابت size_t copy = FFMIN(inc, f->دننه_واټن_w);
+        حافظه_نقل(tmp + f->nb_elems * f->elem_اندازه, tmp, copy * f->elem_اندازه);
+        إذا (copy < f->دننه_واټن_w) {
+            memmove(tmp, tmp + copy * f->elem_اندازه,
+                    (f->دننه_واټن_w - copy) * f->elem_اندازه);
+            f->دننه_واټن_w -= copy;
+        } وإلا
+            f->دننه_واټن_w = copy == inc ? 0 : f->nb_elems + copy;
     }
 
     f->nb_elems += inc;
 
-    return 0;
+    أرجع 0;
 }
 
-static int fifo_check_space(AVFifo *f, size_t to_write)
+ساكن صحيح fifo_check_space(AVFifo *f, size_t منزل_write)
 {
-    const size_t can_write = av_fifo_can_write(f);
-    const size_t need_grow = to_write > can_write ? to_write - can_write : 0;
+    ثابت size_t can_write = av_fifo_can_write(f);
+    ثابت size_t need_grow = منزل_write > can_write ? منزل_write - can_write : 0;
     size_t can_grow;
 
-    if (!need_grow)
-        return 0;
+    إذا (!need_grow)
+        أرجع 0;
 
-    can_grow = f->auto_grow_limit > f->nb_elems ?
-               f->auto_grow_limit - f->nb_elems : 0;
-    if ((f->flags & AV_FIFO_FLAG_AUTO_GROW) && need_grow <= can_grow) {
+    can_grow = f->auto_grow_حد > f->nb_elems ?
+               f->auto_grow_حد - f->nb_elems : 0;
+    إذا ((f->flags & AV_FIFO_FLAG_AUTO_GROW) && need_grow <= can_grow) {
         // allocate a bit more than necessary, if we can
-        const size_t inc = (need_grow < can_grow / 2 ) ? need_grow * 2 : can_grow;
-        return av_fifo_grow2(f, inc);
+        ثابت size_t inc = (need_grow < can_grow / 2 ) ? need_grow * 2 : can_grow;
+        أرجع av_fifo_grow2(f, inc);
     }
 
-    return AVERROR(ENOSPC);
+    أرجع AVERROR(ENOSPC);
 }
 
-static int fifo_write_common(AVFifo *f, const uint8_t *buf, size_t *nb_elems,
-                             AVFifoCB read_cb, void *opaque)
+ساكن صحيح fifo_write_common(AVFifo *f, ثابت uint8_t *buf, size_t *nb_elems,
+                             AVFifoCB read_cb, فراغ *opaque)
 {
-    size_t to_write = *nb_elems;
-    size_t offset_w;
-    int         ret = 0;
+    size_t منزل_write = *nb_elems;
+    size_t دننه_واټن_w;
+    صحيح         ret = 0;
 
-    ret = fifo_check_space(f, to_write);
-    if (ret < 0)
-        return ret;
+    ret = fifo_check_space(f, منزل_write);
+    إذا (ret < 0)
+        أرجع ret;
 
-    offset_w = f->offset_w;
+    دننه_واټن_w = f->دننه_واټن_w;
 
-    while (to_write > 0) {
-        size_t    len = FFMIN(f->nb_elems - offset_w, to_write);
-        uint8_t *wptr = f->buffer + offset_w * f->elem_size;
+    طالما (منزل_write > 0) {
+        size_t    len = FFMIN(f->nb_elems - دننه_واټن_w, منزل_write);
+        uint8_t *wptr = f->بفر + دننه_واټن_w * f->elem_اندازه;
 
-        if (read_cb) {
+        إذا (read_cb) {
             ret = read_cb(opaque, wptr, &len);
-            if (ret < 0 || len == 0)
-                break;
-        } else {
-            memcpy(wptr, buf, len * f->elem_size);
-            buf += len * f->elem_size;
+            إذا (ret < 0 || len == 0)
+                اكسر;
+        } وإلا {
+            حافظه_نقل(wptr, buf, len * f->elem_اندازه);
+            buf += len * f->elem_اندازه;
         }
-        offset_w += len;
-        if (offset_w >= f->nb_elems)
-            offset_w = 0;
-        to_write -= len;
+        دننه_واټن_w += len;
+        إذا (دننه_واټن_w >= f->nb_elems)
+            دننه_واټن_w = 0;
+        منزل_write -= len;
     }
-    f->offset_w = offset_w;
+    f->دننه_واټن_w = دننه_واټن_w;
 
-    if (*nb_elems != to_write)
-        f->is_empty = 0;
-    *nb_elems -= to_write;
+    إذا (*nb_elems != منزل_write)
+        f->is_تشه = 0;
+    *nb_elems -= منزل_write;
 
-    return ret;
+    أرجع ret;
 }
 
-int av_fifo_write(AVFifo *f, const void *buf, size_t nb_elems)
+صحيح av_fifo_write(AVFifo *f, ثابت فراغ *buf, size_t nb_elems)
 {
-    return fifo_write_common(f, buf, &nb_elems, NULL, NULL);
+    أرجع fifo_write_common(f, buf, &nb_elems, عدم, عدم);
 }
 
-int av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
-                          void *opaque, size_t *nb_elems)
+صحيح av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
+                          فراغ *opaque, size_t *nb_elems)
 {
-    return fifo_write_common(f, NULL, nb_elems, read_cb, opaque);
+    أرجع fifo_write_common(f, عدم, nb_elems, read_cb, opaque);
 }
 
-static int fifo_peek_common(const AVFifo *f, uint8_t *buf, size_t *nb_elems,
-                            size_t offset, AVFifoCB write_cb, void *opaque)
+ساكن صحيح fifo_peek_common(ثابت AVFifo *f, uint8_t *buf, size_t *nb_elems,
+                            size_t دننه_واټن, AVFifoCB write_cb, فراغ *opaque)
 {
-    size_t  to_read = *nb_elems;
-    size_t offset_r = f->offset_r;
+    size_t  منزل_read = *nb_elems;
+    size_t دننه_واټن_r = f->دننه_واټن_r;
     size_t can_read = av_fifo_can_read(f);
-    int         ret = 0;
+    صحيح         ret = 0;
 
-    if (offset > can_read || to_read > can_read - offset) {
+    إذا (دننه_واټن > can_read || منزل_read > can_read - دننه_واټن) {
         *nb_elems = 0;
-        return AVERROR(EINVAL);
+        أرجع AVERROR(EINVAL);
     }
 
-    if (offset_r >= f->nb_elems - offset)
-        offset_r -= f->nb_elems - offset;
-    else
-        offset_r += offset;
+    إذا (دننه_واټن_r >= f->nb_elems - دننه_واټن)
+        دننه_واټن_r -= f->nb_elems - دننه_واټن;
+    وإلا
+        دننه_واټن_r += دننه_واټن;
 
-    while (to_read > 0) {
-        size_t    len = FFMIN(f->nb_elems - offset_r, to_read);
-        uint8_t *rptr = f->buffer + offset_r * f->elem_size;
+    طالما (منزل_read > 0) {
+        size_t    len = FFMIN(f->nb_elems - دننه_واټن_r, منزل_read);
+        uint8_t *rptr = f->بفر + دننه_واټن_r * f->elem_اندازه;
 
-        if (write_cb) {
+        إذا (write_cb) {
             ret = write_cb(opaque, rptr, &len);
-            if (ret < 0 || len == 0)
-                break;
-        } else {
-            memcpy(buf, rptr, len * f->elem_size);
-            buf += len * f->elem_size;
+            إذا (ret < 0 || len == 0)
+                اكسر;
+        } وإلا {
+            حافظه_نقل(buf, rptr, len * f->elem_اندازه);
+            buf += len * f->elem_اندازه;
         }
-        offset_r += len;
-        if (offset_r >= f->nb_elems)
-            offset_r = 0;
-        to_read -= len;
+        دننه_واټن_r += len;
+        إذا (دننه_واټن_r >= f->nb_elems)
+            دننه_واټن_r = 0;
+        منزل_read -= len;
     }
 
-    *nb_elems -= to_read;
+    *nb_elems -= منزل_read;
 
-    return ret;
+    أرجع ret;
 }
 
-int av_fifo_read(AVFifo *f, void *buf, size_t nb_elems)
+صحيح av_fifo_read(AVFifo *f, فراغ *buf, size_t nb_elems)
 {
-    int ret = fifo_peek_common(f, buf, &nb_elems, 0, NULL, NULL);
+    صحيح ret = fifo_peek_common(f, buf, &nb_elems, 0, عدم, عدم);
     av_fifo_drain2(f, nb_elems);
-    return ret;
+    أرجع ret;
 }
 
-int av_fifo_read_to_cb(AVFifo *f, AVFifoCB write_cb,
-                       void *opaque, size_t *nb_elems)
+صحيح av_fifo_read_منزل_cb(AVFifo *f, AVFifoCB write_cb,
+                       فراغ *opaque, size_t *nb_elems)
 {
-    int ret = fifo_peek_common(f, NULL, nb_elems, 0, write_cb, opaque);
+    صحيح ret = fifo_peek_common(f, عدم, nb_elems, 0, write_cb, opaque);
     av_fifo_drain2(f, *nb_elems);
-    return ret;
+    أرجع ret;
 }
 
-int av_fifo_peek(const AVFifo *f, void *buf, size_t nb_elems, size_t offset)
+صحيح av_fifo_peek(ثابت AVFifo *f, فراغ *buf, size_t nb_elems, size_t دننه_واټن)
 {
-    return fifo_peek_common(f, buf, &nb_elems, offset, NULL, NULL);
+    أرجع fifo_peek_common(f, buf, &nb_elems, دننه_واټن, عدم, عدم);
 }
 
-int av_fifo_peek_to_cb(const AVFifo *f, AVFifoCB write_cb, void *opaque,
-                       size_t *nb_elems, size_t offset)
+صحيح av_fifo_peek_منزل_cb(ثابت AVFifo *f, AVFifoCB write_cb, فراغ *opaque,
+                       size_t *nb_elems, size_t دننه_واټن)
 {
-    return fifo_peek_common(f, NULL, nb_elems, offset, write_cb, opaque);
+    أرجع fifo_peek_common(f, عدم, nb_elems, دننه_واټن, write_cb, opaque);
 }
 
-void av_fifo_drain2(AVFifo *f, size_t size)
+فراغ av_fifo_drain2(AVFifo *f, size_t اندازه)
 {
-    const size_t cur_size = av_fifo_can_read(f);
+    ثابت size_t cur_اندازه = av_fifo_can_read(f);
 
-    av_assert0(cur_size >= size);
-    if (cur_size == size)
-        f->is_empty = 1;
+    av_assert0(cur_اندازه >= اندازه);
+    إذا (cur_اندازه == اندازه)
+        f->is_تشه = 1;
 
-    if (f->offset_r >= f->nb_elems - size)
-        f->offset_r -= f->nb_elems - size;
-    else
-        f->offset_r += size;
+    إذا (f->دننه_واټن_r >= f->nb_elems - اندازه)
+        f->دننه_واټن_r -= f->nb_elems - اندازه;
+    وإلا
+        f->دننه_واټن_r += اندازه;
 }
 
-void av_fifo_reset2(AVFifo *f)
+فراغ av_fifo_reset2(AVFifo *f)
 {
-    f->offset_r = f->offset_w = 0;
-    f->is_empty = 1;
+    f->دننه_واټن_r = f->دننه_واټن_w = 0;
+    f->is_تشه = 1;
 }
 
-void av_fifo_freep2(AVFifo **f)
+فراغ av_fifo_freep2(AVFifo **f)
 {
-    if (*f) {
-        av_freep(&(*f)->buffer);
+    إذا (*f) {
+        av_freep(&(*f)->بفر);
         av_freep(f);
     }
 }

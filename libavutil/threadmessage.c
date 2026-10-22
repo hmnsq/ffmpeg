@@ -18,223 +18,223 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stddef.h>
+#ضمن <limits.h>
+#ضمن <stddef.h>
 
-#include "error.h"
-#include "fifo.h"
-#include "mem.h"
-#include "threadmessage.h"
-#include "thread.h"
+#ضمن "error.h"
+#ضمن "fifo.h"
+#ضمن "mem.h"
+#ضمن "threadmessage.h"
+#ضمن "thread.h"
 
-struct AVThreadMessageQueue {
-#if HAVE_THREADS
+بنية AVThread_پیغام_کتار {
+#إذا HAVE_تارونه
     AVFifo *fifo;
-    pthread_mutex_t lock;
+    pthread_mutex_t قلف;
     pthread_cond_t cond_recv;
     pthread_cond_t cond_send;
-    int err_send;
-    int err_recv;
-    unsigned elsize;
-    void (*free_func)(void *msg);
-#else
-    int dummy;
-#endif
+    صحيح err_send;
+    صحيح err_recv;
+    بینښه elsize;
+    فراغ (*free_func)(فراغ *پیغام);
+#وإلا
+    صحيح dummy;
+#د_که_پای
 };
 
-int av_thread_message_queue_alloc(AVThreadMessageQueue **mq,
-                                  unsigned nelem,
-                                  unsigned elsize)
+صحيح av_thread_پیغام_کتار_alloc(AVThread_پیغام_کتار **mq,
+                                  بینښه nelem,
+                                  بینښه elsize)
 {
-#if HAVE_THREADS
-    AVThreadMessageQueue *rmq;
-    int ret = 0;
+#إذا HAVE_تارونه
+    AVThread_پیغام_کتار *rmq;
+    صحيح ret = 0;
 
-    if (nelem > INT_MAX / elsize)
-        return AVERROR(EINVAL);
-    if (!(rmq = av_mallocz(sizeof(*rmq))))
-        return AVERROR(ENOMEM);
-    if ((ret = pthread_mutex_init(&rmq->lock, NULL))) {
+    إذا (nelem > لوی_عدد / elsize)
+        أرجع AVERROR(EINVAL);
+    إذا (!(rmq = av_mallocz(حجم(*rmq))))
+        أرجع AVERROR(ENOMEM);
+    إذا ((ret = pthread_mutex_init(&rmq->قلف, عدم))) {
         av_free(rmq);
-        return AVERROR(ret);
+        أرجع AVERROR(ret);
     }
-    if ((ret = pthread_cond_init(&rmq->cond_recv, NULL))) {
-        pthread_mutex_destroy(&rmq->lock);
+    إذا ((ret = pthread_cond_init(&rmq->cond_recv, عدم))) {
+        pthread_mutex_destroy(&rmq->قلف);
         av_free(rmq);
-        return AVERROR(ret);
+        أرجع AVERROR(ret);
     }
-    if ((ret = pthread_cond_init(&rmq->cond_send, NULL))) {
+    إذا ((ret = pthread_cond_init(&rmq->cond_send, عدم))) {
         pthread_cond_destroy(&rmq->cond_recv);
-        pthread_mutex_destroy(&rmq->lock);
+        pthread_mutex_destroy(&rmq->قلف);
         av_free(rmq);
-        return AVERROR(ret);
+        أرجع AVERROR(ret);
     }
-    if (!(rmq->fifo = av_fifo_alloc2(nelem, elsize, 0))) {
+    إذا (!(rmq->fifo = av_fifo_alloc2(nelem, elsize, 0))) {
         pthread_cond_destroy(&rmq->cond_send);
         pthread_cond_destroy(&rmq->cond_recv);
-        pthread_mutex_destroy(&rmq->lock);
+        pthread_mutex_destroy(&rmq->قلف);
         av_free(rmq);
-        return AVERROR(ENOMEM);
+        أرجع AVERROR(ENOMEM);
     }
     rmq->elsize = elsize;
     *mq = rmq;
-    return 0;
-#else
-    *mq = NULL;
-    return AVERROR(ENOSYS);
-#endif /* HAVE_THREADS */
+    أرجع 0;
+#وإلا
+    *mq = عدم;
+    أرجع AVERROR(ENOSYS);
+#د_که_پای /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_free_func(AVThreadMessageQueue *mq,
-                                           void (*free_func)(void *msg))
+فراغ av_thread_پیغام_کتار_سېټ_free_func(AVThread_پیغام_کتار *mq,
+                                           فراغ (*free_func)(فراغ *پیغام))
 {
-#if HAVE_THREADS
+#إذا HAVE_تارونه
     mq->free_func = free_func;
-#endif
+#د_که_پای
 }
 
-void av_thread_message_queue_free(AVThreadMessageQueue **mq)
+فراغ av_thread_پیغام_کتار_free(AVThread_پیغام_کتار **mq)
 {
-#if HAVE_THREADS
-    if (*mq) {
-        av_thread_message_flush(*mq);
+#إذا HAVE_تارونه
+    إذا (*mq) {
+        av_thread_پیغام_flush(*mq);
         av_fifo_freep2(&(*mq)->fifo);
         pthread_cond_destroy(&(*mq)->cond_send);
         pthread_cond_destroy(&(*mq)->cond_recv);
-        pthread_mutex_destroy(&(*mq)->lock);
+        pthread_mutex_destroy(&(*mq)->قلف);
         av_freep(mq);
     }
-#endif
+#د_که_پای
 }
 
-int av_thread_message_queue_nb_elems(AVThreadMessageQueue *mq)
+صحيح av_thread_پیغام_کتار_nb_elems(AVThread_پیغام_کتار *mq)
 {
-#if HAVE_THREADS
-    int ret;
-    pthread_mutex_lock(&mq->lock);
+#إذا HAVE_تارونه
+    صحيح ret;
+    pthread_mutex_قلف(&mq->قلف);
     ret = av_fifo_can_read(mq->fifo);
-    pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
-#endif
+    pthread_mutex_unlock(&mq->قلف);
+    أرجع ret;
+#وإلا
+    أرجع AVERROR(ENOSYS);
+#د_که_پای
 }
 
-#if HAVE_THREADS
+#إذا HAVE_تارونه
 
-static int av_thread_message_queue_send_locked(AVThreadMessageQueue *mq,
-                                               void *msg,
-                                               unsigned flags)
+ساكن صحيح av_thread_پیغام_کتار_send_locked(AVThread_پیغام_کتار *mq,
+                                               فراغ *پیغام,
+                                               بینښه flags)
 {
-    while (!mq->err_send && !av_fifo_can_write(mq->fifo)) {
-        if ((flags & AV_THREAD_MESSAGE_NONBLOCK))
-            return AVERROR(EAGAIN);
-        pthread_cond_wait(&mq->cond_send, &mq->lock);
+    طالما (!mq->err_send && !av_fifo_can_write(mq->fifo)) {
+        إذا ((flags & AV_THREAD_پیغام_NONBLOCK))
+            أرجع AVERROR(EAGAIN);
+        pthread_cond_wait(&mq->cond_send, &mq->قلف);
     }
-    if (mq->err_send)
-        return mq->err_send;
-    av_fifo_write(mq->fifo, msg, 1);
+    إذا (mq->err_send)
+        أرجع mq->err_send;
+    av_fifo_write(mq->fifo, پیغام, 1);
     /* one message is sent, signal one receiver */
     pthread_cond_signal(&mq->cond_recv);
-    return 0;
+    أرجع 0;
 }
 
-static int av_thread_message_queue_recv_locked(AVThreadMessageQueue *mq,
-                                               void *msg,
-                                               unsigned flags)
+ساكن صحيح av_thread_پیغام_کتار_recv_locked(AVThread_پیغام_کتار *mq,
+                                               فراغ *پیغام,
+                                               بینښه flags)
 {
-    while (!mq->err_recv && !av_fifo_can_read(mq->fifo)) {
-        if ((flags & AV_THREAD_MESSAGE_NONBLOCK))
-            return AVERROR(EAGAIN);
-        pthread_cond_wait(&mq->cond_recv, &mq->lock);
+    طالما (!mq->err_recv && !av_fifo_can_read(mq->fifo)) {
+        إذا ((flags & AV_THREAD_پیغام_NONBLOCK))
+            أرجع AVERROR(EAGAIN);
+        pthread_cond_wait(&mq->cond_recv, &mq->قلف);
     }
-    if (!av_fifo_can_read(mq->fifo))
-        return mq->err_recv;
-    av_fifo_read(mq->fifo, msg, 1);
+    إذا (!av_fifo_can_read(mq->fifo))
+        أرجع mq->err_recv;
+    av_fifo_read(mq->fifo, پیغام, 1);
     /* one message space appeared, signal one sender */
     pthread_cond_signal(&mq->cond_send);
-    return 0;
+    أرجع 0;
 }
 
-#endif /* HAVE_THREADS */
+#د_که_پای /* HAVE_THREADS */
 
-int av_thread_message_queue_send(AVThreadMessageQueue *mq,
-                                 void *msg,
-                                 unsigned flags)
+صحيح av_thread_پیغام_کتار_send(AVThread_پیغام_کتار *mq,
+                                 فراغ *پیغام,
+                                 بینښه flags)
 {
-#if HAVE_THREADS
-    int ret;
+#إذا HAVE_تارونه
+    صحيح ret;
 
-    pthread_mutex_lock(&mq->lock);
-    ret = av_thread_message_queue_send_locked(mq, msg, flags);
-    pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
-#endif /* HAVE_THREADS */
+    pthread_mutex_قلف(&mq->قلف);
+    ret = av_thread_پیغام_کتار_send_locked(mq, پیغام, flags);
+    pthread_mutex_unlock(&mq->قلف);
+    أرجع ret;
+#وإلا
+    أرجع AVERROR(ENOSYS);
+#د_که_پای /* HAVE_THREADS */
 }
 
-int av_thread_message_queue_recv(AVThreadMessageQueue *mq,
-                                 void *msg,
-                                 unsigned flags)
+صحيح av_thread_پیغام_کتار_recv(AVThread_پیغام_کتار *mq,
+                                 فراغ *پیغام,
+                                 بینښه flags)
 {
-#if HAVE_THREADS
-    int ret;
+#إذا HAVE_تارونه
+    صحيح ret;
 
-    pthread_mutex_lock(&mq->lock);
-    ret = av_thread_message_queue_recv_locked(mq, msg, flags);
-    pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
-#endif /* HAVE_THREADS */
+    pthread_mutex_قلف(&mq->قلف);
+    ret = av_thread_پیغام_کتار_recv_locked(mq, پیغام, flags);
+    pthread_mutex_unlock(&mq->قلف);
+    أرجع ret;
+#وإلا
+    أرجع AVERROR(ENOSYS);
+#د_که_پای /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_err_send(AVThreadMessageQueue *mq,
-                                          int err)
+فراغ av_thread_پیغام_کتار_سېټ_err_send(AVThread_پیغام_کتار *mq,
+                                          صحيح err)
 {
-#if HAVE_THREADS
-    pthread_mutex_lock(&mq->lock);
+#إذا HAVE_تارونه
+    pthread_mutex_قلف(&mq->قلف);
     mq->err_send = err;
-    pthread_cond_broadcast(&mq->cond_send);
-    pthread_mutex_unlock(&mq->lock);
-#endif /* HAVE_THREADS */
+    pthread_cond_خپرونه(&mq->cond_send);
+    pthread_mutex_unlock(&mq->قلف);
+#د_که_پای /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_err_recv(AVThreadMessageQueue *mq,
-                                          int err)
+فراغ av_thread_پیغام_کتار_سېټ_err_recv(AVThread_پیغام_کتار *mq,
+                                          صحيح err)
 {
-#if HAVE_THREADS
-    pthread_mutex_lock(&mq->lock);
+#إذا HAVE_تارونه
+    pthread_mutex_قلف(&mq->قلف);
     mq->err_recv = err;
-    pthread_cond_broadcast(&mq->cond_recv);
-    pthread_mutex_unlock(&mq->lock);
-#endif /* HAVE_THREADS */
+    pthread_cond_خپرونه(&mq->cond_recv);
+    pthread_mutex_unlock(&mq->قلف);
+#د_که_پای /* HAVE_THREADS */
 }
 
-#if HAVE_THREADS
-static int free_func_wrap(void *arg, void *buf, size_t *nb_elems)
+#إذا HAVE_تارونه
+ساكن صحيح free_func_wrap(فراغ *arg, فراغ *buf, size_t *nb_elems)
 {
-    AVThreadMessageQueue *mq = arg;
-    uint8_t *msg = buf;
-    for (size_t i = 0; i < *nb_elems; i++)
-        mq->free_func(msg + i * mq->elsize);
-    return 0;
+    AVThread_پیغام_کتار *mq = arg;
+    uint8_t *پیغام = buf;
+    لكل (size_t i = 0; i < *nb_elems; i++)
+        mq->free_func(پیغام + i * mq->elsize);
+    أرجع 0;
 }
-#endif
+#د_که_پای
 
-void av_thread_message_flush(AVThreadMessageQueue *mq)
+فراغ av_thread_پیغام_flush(AVThread_پیغام_کتار *mq)
 {
-#if HAVE_THREADS
-    size_t used;
+#إذا HAVE_تارونه
+    size_t کارول_شوی;
 
-    pthread_mutex_lock(&mq->lock);
-    used = av_fifo_can_read(mq->fifo);
-    if (mq->free_func)
-        av_fifo_read_to_cb(mq->fifo, free_func_wrap, mq, &used);
+    pthread_mutex_قلف(&mq->قلف);
+    کارول_شوی = av_fifo_can_read(mq->fifo);
+    إذا (mq->free_func)
+        av_fifo_read_منزل_cb(mq->fifo, free_func_wrap, mq, &کارول_شوی);
     /* only the senders need to be notified since the queue is empty and there
      * is nothing to read */
-    pthread_cond_broadcast(&mq->cond_send);
-    pthread_mutex_unlock(&mq->lock);
-#endif /* HAVE_THREADS */
+    pthread_cond_خپرونه(&mq->cond_send);
+    pthread_mutex_unlock(&mq->قلف);
+#د_که_پای /* HAVE_THREADS */
 }

@@ -16,41 +16,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FLOAT2HALF_H
-#define AVUTIL_FLOAT2HALF_H
+#که_نه_تعریف_شوی AVUTIL_FLOAT2HALF_H
+#تعریف_کړه AVUTIL_FLOAT2HALF_H
 
-#include <stdint.h>
-#include "intfloat.h"
+#ضمن <stdint.h>
+#ضمن "intfloat.h"
 
-#include "config.h"
+#ضمن "config.h"
 
-typedef struct Float2HalfTables {
-#if HAVE_FAST_FLOAT16
+تعريفنوع بنية Float2HalfTables {
+#إذا HAVE_FAST_FLOAT16
     uint8_t dummy;
-#else
+#وإلا
     uint16_t basetable[512];
     uint8_t shifttable[512];
-#endif
+#د_که_پای
 } Float2HalfTables;
 
-void ff_init_float2half_tables(Float2HalfTables *t);
+فراغ ff_init_float2half_tables(Float2HalfTables *t);
 
-static inline uint16_t float2half(uint32_t f, const Float2HalfTables *t)
+ساكن مضمن uint16_t float2half(uint32_t f, ثابت Float2HalfTables *t)
 {
-#if HAVE_FAST_FLOAT16
-    union {
+#إذا HAVE_FAST_FLOAT16
+    اتحاد {
         _Float16 f;
         uint16_t i;
     } u;
     u.f = av_int2float(f);
-    return u.i;
-#else
+    أرجع u.i;
+#وإلا
     uint16_t h;
 
     h = t->basetable[(f >> 23) & 0x1ff] + ((f & 0x007fffff) >> t->shifttable[(f >> 23) & 0x1ff]);
 
-    return h;
-#endif
+    أرجع h;
+#د_که_پای
 }
 
-#endif /* AVUTIL_FLOAT2HALF_H */
+#د_که_پای /* AVUTIL_FLOAT2HALF_H */

@@ -24,205 +24,205 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "mem.h"
+#ضمن "mem.h"
 
-#define TABLE_DEF(name, size) \
-    DECLARE_ALIGNED(32, TXSample, TX_TAB(ff_tx_tab_ ##name))[size]
+#تعریف_کړه جدول_DEF(name, اندازه) \
+    DECLARE_ALIGNED(32, TXSample, TX_TAB(ff_tx_tab_ ##name))[اندازه]
 
-#define SR_POW2_TABLES \
-    SR_TABLE(8)        \
-    SR_TABLE(16)       \
-    SR_TABLE(32)       \
-    SR_TABLE(64)       \
-    SR_TABLE(128)      \
-    SR_TABLE(256)      \
-    SR_TABLE(512)      \
-    SR_TABLE(1024)     \
-    SR_TABLE(2048)     \
-    SR_TABLE(4096)     \
-    SR_TABLE(8192)     \
-    SR_TABLE(16384)    \
-    SR_TABLE(32768)    \
-    SR_TABLE(65536)    \
-    SR_TABLE(131072)   \
+#تعریف_کړه SR_POW2_TABLES \
+    SR_جدول(8)        \
+    SR_جدول(16)       \
+    SR_جدول(32)       \
+    SR_جدول(64)       \
+    SR_جدول(128)      \
+    SR_جدول(256)      \
+    SR_جدول(512)      \
+    SR_جدول(1024)     \
+    SR_جدول(2048)     \
+    SR_جدول(4096)     \
+    SR_جدول(8192)     \
+    SR_جدول(16384)    \
+    SR_جدول(32768)    \
+    SR_جدول(65536)    \
+    SR_جدول(131072)   \
 
-#define SR_TABLE(len) \
-    TABLE_DEF(len, len/4 + 1);
+#تعریف_کړه SR_جدول(len) \
+    جدول_DEF(len, len/4 + 1);
 /* Power of two tables */
 SR_POW2_TABLES
-#undef SR_TABLE
+#تعریف_لغوه SR_جدول
 
 /* Other factors' tables */
-TABLE_DEF(53, 12);
-TABLE_DEF( 7,  6);
-TABLE_DEF( 9,  8);
+جدول_DEF(53, 12);
+جدول_DEF( 7,  6);
+جدول_DEF( 9,  8);
 
-typedef struct FFTabInitData {
-    void (*func)(void);
-    int factors[TX_MAX_SUB]; /* Must be sorted high -> low */
-} FFTabInitData;
+تعريفنوع بنية FFTab_Init_معلومات {
+    فراغ (*func)(فراغ);
+    صحيح factors[TX_MAX_SUB]; /* Must be sorted high -> low */
+} FFTab_Init_معلومات;
 
-#define SR_TABLE(len)                                              \
-static av_cold void TX_TAB(ff_tx_init_tab_ ##len)(void)            \
+#تعریف_کړه SR_جدول(len)                                              \
+ساكن av_cold فراغ TX_TAB(ff_tx_init_tab_ ##len)(فراغ)            \
 {                                                                  \
-    double freq = 2*M_PI/len;                                      \
+    مزدوج freq = 2*M_PI/len;                                      \
     TXSample *tab = TX_TAB(ff_tx_tab_ ##len);                      \
                                                                    \
-    for (int i = 0; i < len/4; i++)                                \
-        *tab++ = RESCALE(cos(i*freq));                             \
+    لكل (صحيح i = 0; i < len/4; i++)                                \
+        *tab++ = RESCALE(کوساین(i*freq));                             \
                                                                    \
     *tab = 0;                                                      \
 }
 SR_POW2_TABLES
-#undef SR_TABLE
+#تعریف_لغوه SR_جدول
 
-static void (*const sr_tabs_init_funcs[])(void) = {
-#define SR_TABLE(len) TX_TAB(ff_tx_init_tab_ ##len),
+ساكن فراغ (*ثابت sr_tabs_init_funcs[])(فراغ) = {
+#تعریف_کړه SR_جدول(len) TX_TAB(ff_tx_init_tab_ ##len),
     SR_POW2_TABLES
-#undef SR_TABLE
+#تعریف_لغوه SR_جدول
 };
 
-static AVOnce sr_tabs_init_once[] = {
-#define SR_TABLE(len) AV_ONCE_INIT,
+ساكن AVOnce sr_tabs_init_once[] = {
+#تعریف_کړه SR_جدول(len) AV_ONCE_INIT,
     SR_POW2_TABLES
-#undef SR_TABLE
+#تعریف_لغوه SR_جدول
 };
 
-static av_cold void TX_TAB(ff_tx_init_tab_53)(void)
+ساكن av_cold فراغ TX_TAB(ff_tx_init_tab_53)(فراغ)
 {
     /* 5pt, doubled to eliminate AVX lane shuffles */
-    TX_TAB(ff_tx_tab_53)[0] = RESCALE(cos(2 * M_PI /  5));
-    TX_TAB(ff_tx_tab_53)[1] = RESCALE(cos(2 * M_PI /  5));
-    TX_TAB(ff_tx_tab_53)[2] = RESCALE(cos(2 * M_PI / 10));
-    TX_TAB(ff_tx_tab_53)[3] = RESCALE(cos(2 * M_PI / 10));
-    TX_TAB(ff_tx_tab_53)[4] = RESCALE(sin(2 * M_PI /  5));
-    TX_TAB(ff_tx_tab_53)[5] = RESCALE(sin(2 * M_PI /  5));
-    TX_TAB(ff_tx_tab_53)[6] = RESCALE(sin(2 * M_PI / 10));
-    TX_TAB(ff_tx_tab_53)[7] = RESCALE(sin(2 * M_PI / 10));
+    TX_TAB(ff_tx_tab_53)[0] = RESCALE(کوساین(2 * M_PI /  5));
+    TX_TAB(ff_tx_tab_53)[1] = RESCALE(کوساین(2 * M_PI /  5));
+    TX_TAB(ff_tx_tab_53)[2] = RESCALE(کوساین(2 * M_PI / 10));
+    TX_TAB(ff_tx_tab_53)[3] = RESCALE(کوساین(2 * M_PI / 10));
+    TX_TAB(ff_tx_tab_53)[4] = RESCALE(ساین(2 * M_PI /  5));
+    TX_TAB(ff_tx_tab_53)[5] = RESCALE(ساین(2 * M_PI /  5));
+    TX_TAB(ff_tx_tab_53)[6] = RESCALE(ساین(2 * M_PI / 10));
+    TX_TAB(ff_tx_tab_53)[7] = RESCALE(ساین(2 * M_PI / 10));
 
     /* 3pt */
-    TX_TAB(ff_tx_tab_53)[ 8] = RESCALE(cos(2 * M_PI / 12));
-    TX_TAB(ff_tx_tab_53)[ 9] = RESCALE(cos(2 * M_PI / 12));
-    TX_TAB(ff_tx_tab_53)[10] = RESCALE(cos(2 * M_PI /  6));
-    TX_TAB(ff_tx_tab_53)[11] = RESCALE(cos(8 * M_PI /  6));
+    TX_TAB(ff_tx_tab_53)[ 8] = RESCALE(کوساین(2 * M_PI / 12));
+    TX_TAB(ff_tx_tab_53)[ 9] = RESCALE(کوساین(2 * M_PI / 12));
+    TX_TAB(ff_tx_tab_53)[10] = RESCALE(کوساین(2 * M_PI /  6));
+    TX_TAB(ff_tx_tab_53)[11] = RESCALE(کوساین(8 * M_PI /  6));
 }
 
-static av_cold void TX_TAB(ff_tx_init_tab_7)(void)
+ساكن av_cold فراغ TX_TAB(ff_tx_init_tab_7)(فراغ)
 {
-    TX_TAB(ff_tx_tab_7)[0] = RESCALE(cos(2 * M_PI /  7));
-    TX_TAB(ff_tx_tab_7)[1] = RESCALE(sin(2 * M_PI /  7));
-    TX_TAB(ff_tx_tab_7)[2] = RESCALE(sin(2 * M_PI / 28));
-    TX_TAB(ff_tx_tab_7)[3] = RESCALE(cos(2 * M_PI / 28));
-    TX_TAB(ff_tx_tab_7)[4] = RESCALE(cos(2 * M_PI / 14));
-    TX_TAB(ff_tx_tab_7)[5] = RESCALE(sin(2 * M_PI / 14));
+    TX_TAB(ff_tx_tab_7)[0] = RESCALE(کوساین(2 * M_PI /  7));
+    TX_TAB(ff_tx_tab_7)[1] = RESCALE(ساین(2 * M_PI /  7));
+    TX_TAB(ff_tx_tab_7)[2] = RESCALE(ساین(2 * M_PI / 28));
+    TX_TAB(ff_tx_tab_7)[3] = RESCALE(کوساین(2 * M_PI / 28));
+    TX_TAB(ff_tx_tab_7)[4] = RESCALE(کوساین(2 * M_PI / 14));
+    TX_TAB(ff_tx_tab_7)[5] = RESCALE(ساین(2 * M_PI / 14));
 }
 
-static av_cold void TX_TAB(ff_tx_init_tab_9)(void)
+ساكن av_cold فراغ TX_TAB(ff_tx_init_tab_9)(فراغ)
 {
-    TX_TAB(ff_tx_tab_9)[0] = RESCALE(cos(2 * M_PI /  3));
-    TX_TAB(ff_tx_tab_9)[1] = RESCALE(sin(2 * M_PI /  3));
-    TX_TAB(ff_tx_tab_9)[2] = RESCALE(cos(2 * M_PI /  9));
-    TX_TAB(ff_tx_tab_9)[3] = RESCALE(sin(2 * M_PI /  9));
-    TX_TAB(ff_tx_tab_9)[4] = RESCALE(cos(2 * M_PI / 36));
-    TX_TAB(ff_tx_tab_9)[5] = RESCALE(sin(2 * M_PI / 36));
+    TX_TAB(ff_tx_tab_9)[0] = RESCALE(کوساین(2 * M_PI /  3));
+    TX_TAB(ff_tx_tab_9)[1] = RESCALE(ساین(2 * M_PI /  3));
+    TX_TAB(ff_tx_tab_9)[2] = RESCALE(کوساین(2 * M_PI /  9));
+    TX_TAB(ff_tx_tab_9)[3] = RESCALE(ساین(2 * M_PI /  9));
+    TX_TAB(ff_tx_tab_9)[4] = RESCALE(کوساین(2 * M_PI / 36));
+    TX_TAB(ff_tx_tab_9)[5] = RESCALE(ساین(2 * M_PI / 36));
     TX_TAB(ff_tx_tab_9)[6] = TX_TAB(ff_tx_tab_9)[2] + TX_TAB(ff_tx_tab_9)[5];
     TX_TAB(ff_tx_tab_9)[7] = TX_TAB(ff_tx_tab_9)[3] - TX_TAB(ff_tx_tab_9)[4];
 }
 
-static const FFTabInitData nptwo_tabs_init_data[] = {
+ساكن ثابت FFTab_Init_معلومات nptwo_tabs_init_معلومات[] = {
     { TX_TAB(ff_tx_init_tab_53),      { 15, 5, 3 } },
     { TX_TAB(ff_tx_init_tab_9),       {  9 }       },
     { TX_TAB(ff_tx_init_tab_7),       {  7 }       },
 };
 
-static AVOnce nptwo_tabs_init_once[] = {
+ساكن AVOnce nptwo_tabs_init_once[] = {
     AV_ONCE_INIT,
     AV_ONCE_INIT,
     AV_ONCE_INIT,
 };
 
-av_cold void TX_TAB(ff_tx_init_tabs)(int len)
+av_cold فراغ TX_TAB(ff_tx_init_tabs)(صحيح len)
 {
-    int factor_2 = ff_ctz(len);
-    if (factor_2) {
-        int idx = factor_2 - 3;
-        for (int i = 0; i <= idx; i++)
+    صحيح ضریب_2 = ff_ctz(len);
+    إذا (ضریب_2) {
+        صحيح idx = ضریب_2 - 3;
+        لكل (صحيح i = 0; i <= idx; i++)
             ff_thread_once(&sr_tabs_init_once[i],
                             sr_tabs_init_funcs[i]);
-        len >>= factor_2;
+        len >>= ضریب_2;
     }
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(nptwo_tabs_init_data); i++) {
-        int f, f_idx = 0;
+    لكل (صحيح i = 0; i < FF_ARRAY_ELEMS(nptwo_tabs_init_معلومات); i++) {
+        صحيح f, f_idx = 0;
 
-        if (len <= 1)
-            return;
+        إذا (len <= 1)
+            أرجع;
 
-        while ((f = nptwo_tabs_init_data[i].factors[f_idx++])) {
-            if (f % len)
-                continue;
+        طالما ((f = nptwo_tabs_init_معلومات[i].factors[f_idx++])) {
+            إذا (f % len)
+                استمر;
 
             ff_thread_once(&nptwo_tabs_init_once[i],
-                            nptwo_tabs_init_data[i].func);
+                            nptwo_tabs_init_معلومات[i].func);
             len /= f;
-            break;
+            اكسر;
         }
     }
 }
 
-static av_always_inline void fft3(TXComplex *out, TXComplex *in,
+ساكن av_always_inline فراغ fft3(TXComplex *بهر, TXComplex *دننه,
                                   ptrdiff_t stride)
 {
     TXComplex tmp[3];
-    const TXSample *tab = TX_TAB(ff_tx_tab_53);
-#ifdef TX_INT32
+    ثابت TXSample *tab = TX_TAB(ff_tx_tab_53);
+#که_تعریف_شوی TX_INT32
     int64_t mtmp[4];
-#endif
+#د_که_پای
 
-    tmp[0] = in[0];
-    BF(tmp[1].re, tmp[2].im, in[1].im, in[2].im);
-    BF(tmp[1].im, tmp[2].re, in[1].re, in[2].re);
+    tmp[0] = دننه[0];
+    BF(tmp[1].re, tmp[2].im, دننه[1].im, دننه[2].im);
+    BF(tmp[1].im, tmp[2].re, دننه[1].re, دننه[2].re);
 
-#ifdef TX_INT32
-    out[0*stride].re = (int64_t)tmp[0].re + tmp[2].re;
-    out[0*stride].im = (int64_t)tmp[0].im + tmp[2].im;
+#که_تعریف_شوی TX_INT32
+    بهر[0*stride].re = (int64_t)tmp[0].re + tmp[2].re;
+    بهر[0*stride].im = (int64_t)tmp[0].im + tmp[2].im;
     mtmp[0] = (int64_t)tab[ 8] * tmp[1].re;
     mtmp[1] = (int64_t)tab[ 9] * tmp[1].im;
     mtmp[2] = (int64_t)tab[10] * tmp[2].re;
     mtmp[3] = (int64_t)tab[10] * tmp[2].im;
-    out[1*stride].re = tmp[0].re - (mtmp[2] + mtmp[0] + 0x40000000 >> 31);
-    out[1*stride].im = tmp[0].im - (mtmp[3] - mtmp[1] + 0x40000000 >> 31);
-    out[2*stride].re = tmp[0].re - (mtmp[2] - mtmp[0] + 0x40000000 >> 31);
-    out[2*stride].im = tmp[0].im - (mtmp[3] + mtmp[1] + 0x40000000 >> 31);
-#else
-    out[0*stride].re = tmp[0].re + tmp[2].re;
-    out[0*stride].im = tmp[0].im + tmp[2].im;
+    بهر[1*stride].re = tmp[0].re - (mtmp[2] + mtmp[0] + 0x40000000 >> 31);
+    بهر[1*stride].im = tmp[0].im - (mtmp[3] - mtmp[1] + 0x40000000 >> 31);
+    بهر[2*stride].re = tmp[0].re - (mtmp[2] - mtmp[0] + 0x40000000 >> 31);
+    بهر[2*stride].im = tmp[0].im - (mtmp[3] + mtmp[1] + 0x40000000 >> 31);
+#وإلا
+    بهر[0*stride].re = tmp[0].re + tmp[2].re;
+    بهر[0*stride].im = tmp[0].im + tmp[2].im;
     tmp[1].re = tab[ 8] * tmp[1].re;
     tmp[1].im = tab[ 9] * tmp[1].im;
     tmp[2].re = tab[10] * tmp[2].re;
     tmp[2].im = tab[10] * tmp[2].im;
-    out[1*stride].re = tmp[0].re - tmp[2].re + tmp[1].re;
-    out[1*stride].im = tmp[0].im - tmp[2].im - tmp[1].im;
-    out[2*stride].re = tmp[0].re - tmp[2].re - tmp[1].re;
-    out[2*stride].im = tmp[0].im - tmp[2].im + tmp[1].im;
-#endif
+    بهر[1*stride].re = tmp[0].re - tmp[2].re + tmp[1].re;
+    بهر[1*stride].im = tmp[0].im - tmp[2].im - tmp[1].im;
+    بهر[2*stride].re = tmp[0].re - tmp[2].re - tmp[1].re;
+    بهر[2*stride].im = tmp[0].im - tmp[2].im + tmp[1].im;
+#د_که_پای
 }
 
-#define DECL_FFT5(NAME, D0, D1, D2, D3, D4)                         \
-static av_always_inline void NAME(TXComplex *out, TXComplex *in,    \
+#تعریف_کړه DECL_FFT5(NAME, D0, D1, D2, D3, D4)                         \
+ساكن av_always_inline فراغ NAME(TXComplex *بهر, TXComplex *دننه,    \
                                   ptrdiff_t stride)                 \
 {                                                                   \
     TXComplex dc, z0[4], t[6];                                      \
-    const TXSample *tab = TX_TAB(ff_tx_tab_53);                     \
+    ثابت TXSample *tab = TX_TAB(ff_tx_tab_53);                     \
                                                                     \
-    dc = in[0];                                                     \
-    BF(t[1].im, t[0].re, in[1].re, in[4].re);                       \
-    BF(t[1].re, t[0].im, in[1].im, in[4].im);                       \
-    BF(t[3].im, t[2].re, in[2].re, in[3].re);                       \
-    BF(t[3].re, t[2].im, in[2].im, in[3].im);                       \
+    dc = دننه[0];                                                     \
+    BF(t[1].im, t[0].re, دننه[1].re, دننه[4].re);                       \
+    BF(t[1].re, t[0].im, دننه[1].im, دننه[4].im);                       \
+    BF(t[3].im, t[2].re, دننه[2].re, دننه[3].re);                       \
+    BF(t[3].re, t[2].im, دننه[2].im, دننه[3].im);                       \
                                                                     \
-    out[D0*stride].re = dc.re + (TXUSample)t[0].re + t[2].re;        \
-    out[D0*stride].im = dc.im + (TXUSample)t[0].im + t[2].im;        \
+    بهر[D0*stride].re = dc.re + (TXUSample)t[0].re + t[2].re;        \
+    بهر[D0*stride].im = dc.im + (TXUSample)t[0].im + t[2].im;        \
                                                                     \
     SMUL(t[4].re, t[0].re, tab[0], tab[2], t[2].re, t[0].re);       \
     SMUL(t[4].im, t[0].im, tab[0], tab[2], t[2].im, t[0].im);       \
@@ -234,14 +234,14 @@ static av_always_inline void NAME(TXComplex *out, TXComplex *in,    \
     BF(z0[2].re, z0[1].re, t[4].re, t[5].re);                       \
     BF(z0[2].im, z0[1].im, t[4].im, t[5].im);                       \
                                                                     \
-    out[D1*stride].re = dc.re + (TXUSample)z0[3].re;                 \
-    out[D1*stride].im = dc.im + (TXUSample)z0[0].im;                 \
-    out[D2*stride].re = dc.re + (TXUSample)z0[2].re;                 \
-    out[D2*stride].im = dc.im + (TXUSample)z0[1].im;                 \
-    out[D3*stride].re = dc.re + (TXUSample)z0[1].re;                 \
-    out[D3*stride].im = dc.im + (TXUSample)z0[2].im;                 \
-    out[D4*stride].re = dc.re + (TXUSample)z0[0].re;                 \
-    out[D4*stride].im = dc.im + (TXUSample)z0[3].im;                 \
+    بهر[D1*stride].re = dc.re + (TXUSample)z0[3].re;                 \
+    بهر[D1*stride].im = dc.im + (TXUSample)z0[0].im;                 \
+    بهر[D2*stride].re = dc.re + (TXUSample)z0[2].re;                 \
+    بهر[D2*stride].im = dc.im + (TXUSample)z0[1].im;                 \
+    بهر[D3*stride].re = dc.re + (TXUSample)z0[1].re;                 \
+    بهر[D3*stride].im = dc.im + (TXUSample)z0[2].im;                 \
+    بهر[D4*stride].re = dc.re + (TXUSample)z0[0].re;                 \
+    بهر[D4*stride].im = dc.im + (TXUSample)z0[3].im;                 \
 }
 
 DECL_FFT5(fft5,     0,  1,  2,  3,  4)
@@ -249,27 +249,27 @@ DECL_FFT5(fft5_m1,  0,  6, 12,  3,  9)
 DECL_FFT5(fft5_m2, 10,  1,  7, 13,  4)
 DECL_FFT5(fft5_m3,  5, 11,  2,  8, 14)
 
-static av_always_inline void fft7(TXComplex *out, TXComplex *in,
+ساكن av_always_inline فراغ fft7(TXComplex *بهر, TXComplex *دننه,
                                   ptrdiff_t stride)
 {
     TXComplex dc, t[6], z[3];
-    const TXComplex *tab = (const TXComplex *)TX_TAB(ff_tx_tab_7);
-#ifdef TX_INT32
+    ثابت TXComplex *tab = (ثابت TXComplex *)TX_TAB(ff_tx_tab_7);
+#که_تعریف_شوی TX_INT32
     int64_t mtmp[12];
-#endif
+#د_که_پای
 
-    dc = in[0];
-    BF(t[1].re, t[0].re, in[1].re, in[6].re);
-    BF(t[1].im, t[0].im, in[1].im, in[6].im);
-    BF(t[3].re, t[2].re, in[2].re, in[5].re);
-    BF(t[3].im, t[2].im, in[2].im, in[5].im);
-    BF(t[5].re, t[4].re, in[3].re, in[4].re);
-    BF(t[5].im, t[4].im, in[3].im, in[4].im);
+    dc = دننه[0];
+    BF(t[1].re, t[0].re, دننه[1].re, دننه[6].re);
+    BF(t[1].im, t[0].im, دننه[1].im, دننه[6].im);
+    BF(t[3].re, t[2].re, دننه[2].re, دننه[5].re);
+    BF(t[3].im, t[2].im, دننه[2].im, دننه[5].im);
+    BF(t[5].re, t[4].re, دننه[3].re, دننه[4].re);
+    BF(t[5].im, t[4].im, دننه[3].im, دننه[4].im);
 
-    out[0*stride].re = dc.re + t[0].re + t[2].re + t[4].re;
-    out[0*stride].im = dc.im + t[0].im + t[2].im + t[4].im;
+    بهر[0*stride].re = dc.re + t[0].re + t[2].re + t[4].re;
+    بهر[0*stride].im = dc.im + t[0].im + t[2].im + t[4].im;
 
-#ifdef TX_INT32 /* NOTE: it's possible to do this with 16 mults but 72 adds */
+#که_تعریف_شوی TX_INT32 /* NOTE: it's possible to do this with 16 mults but 72 adds */
     mtmp[ 0] = ((int64_t)tab[0].re)*t[0].re - ((int64_t)tab[2].re)*t[4].re;
     mtmp[ 1] = ((int64_t)tab[0].re)*t[4].re - ((int64_t)tab[1].re)*t[0].re;
     mtmp[ 2] = ((int64_t)tab[0].re)*t[2].re - ((int64_t)tab[2].re)*t[0].re;
@@ -297,7 +297,7 @@ static av_always_inline void fft7(TXComplex *out, TXComplex *in,
     t[0].im = (int32_t)(mtmp[ 9] + ((int64_t)tab[2].im)*t[5].re + 0x40000000 >> 31);
     t[2].im = (int32_t)(mtmp[10] - ((int64_t)tab[1].im)*t[1].re + 0x40000000 >> 31);
     t[4].im = (int32_t)(mtmp[11] - ((int64_t)tab[0].im)*t[3].re + 0x40000000 >> 31);
-#else
+#وإلا
     z[0].re = tab[0].re*t[0].re - tab[2].re*t[4].re - tab[1].re*t[2].re;
     z[1].re = tab[0].re*t[4].re - tab[1].re*t[0].re - tab[2].re*t[2].re;
     z[2].re = tab[0].re*t[2].re - tab[2].re*t[0].re - tab[1].re*t[4].re;
@@ -314,7 +314,7 @@ static av_always_inline void fft7(TXComplex *out, TXComplex *in,
     t[0].im = tab[0].im*t[1].re + tab[1].im*t[3].re + tab[2].im*t[5].re;
     t[2].im = tab[2].im*t[3].re + tab[0].im*t[5].re - tab[1].im*t[1].re;
     t[4].im = tab[2].im*t[1].re + tab[1].im*t[5].re - tab[0].im*t[3].re;
-#endif
+#د_که_پای
 
     BF(t[1].re, z[0].re, z[0].re, t[4].re);
     BF(t[3].re, z[1].re, z[1].re, t[2].re);
@@ -323,38 +323,38 @@ static av_always_inline void fft7(TXComplex *out, TXComplex *in,
     BF(t[3].im, z[1].im, z[1].im, t[2].im);
     BF(t[5].im, z[2].im, z[2].im, t[4].im);
 
-    out[1*stride].re = dc.re + z[0].re;
-    out[1*stride].im = dc.im + t[1].im;
-    out[2*stride].re = dc.re + t[3].re;
-    out[2*stride].im = dc.im + z[1].im;
-    out[3*stride].re = dc.re + z[2].re;
-    out[3*stride].im = dc.im + t[5].im;
-    out[4*stride].re = dc.re + t[5].re;
-    out[4*stride].im = dc.im + z[2].im;
-    out[5*stride].re = dc.re + z[1].re;
-    out[5*stride].im = dc.im + t[3].im;
-    out[6*stride].re = dc.re + t[1].re;
-    out[6*stride].im = dc.im + z[0].im;
+    بهر[1*stride].re = dc.re + z[0].re;
+    بهر[1*stride].im = dc.im + t[1].im;
+    بهر[2*stride].re = dc.re + t[3].re;
+    بهر[2*stride].im = dc.im + z[1].im;
+    بهر[3*stride].re = dc.re + z[2].re;
+    بهر[3*stride].im = dc.im + t[5].im;
+    بهر[4*stride].re = dc.re + t[5].re;
+    بهر[4*stride].im = dc.im + z[2].im;
+    بهر[5*stride].re = dc.re + z[1].re;
+    بهر[5*stride].im = dc.im + t[3].im;
+    بهر[6*stride].re = dc.re + t[1].re;
+    بهر[6*stride].im = dc.im + z[0].im;
 }
 
-static av_always_inline void fft9(TXComplex *out, TXComplex *in,
+ساكن av_always_inline فراغ fft9(TXComplex *بهر, TXComplex *دننه,
                                   ptrdiff_t stride)
 {
-    const TXComplex *tab = (const TXComplex *)TX_TAB(ff_tx_tab_9);
+    ثابت TXComplex *tab = (ثابت TXComplex *)TX_TAB(ff_tx_tab_9);
     TXComplex dc, t[16], w[4], x[5], y[5], z[2];
-#ifdef TX_INT32
+#که_تعریف_شوی TX_INT32
     int64_t mtmp[12];
-#endif
+#د_که_پای
 
-    dc = in[0];
-    BF(t[1].re, t[0].re, in[1].re, in[8].re);
-    BF(t[1].im, t[0].im, in[1].im, in[8].im);
-    BF(t[3].re, t[2].re, in[2].re, in[7].re);
-    BF(t[3].im, t[2].im, in[2].im, in[7].im);
-    BF(t[5].re, t[4].re, in[3].re, in[6].re);
-    BF(t[5].im, t[4].im, in[3].im, in[6].im);
-    BF(t[7].re, t[6].re, in[4].re, in[5].re);
-    BF(t[7].im, t[6].im, in[4].im, in[5].im);
+    dc = دننه[0];
+    BF(t[1].re, t[0].re, دننه[1].re, دننه[8].re);
+    BF(t[1].im, t[0].im, دننه[1].im, دننه[8].im);
+    BF(t[3].re, t[2].re, دننه[2].re, دننه[7].re);
+    BF(t[3].im, t[2].im, دننه[2].im, دننه[7].im);
+    BF(t[5].re, t[4].re, دننه[3].re, دننه[6].re);
+    BF(t[5].im, t[4].im, دننه[3].im, دننه[6].im);
+    BF(t[7].re, t[6].re, دننه[4].re, دننه[5].re);
+    BF(t[7].im, t[6].im, دننه[4].im, دننه[5].im);
 
     w[0].re = t[0].re - t[6].re;
     w[0].im = t[0].im - t[6].im;
@@ -371,10 +371,10 @@ static av_always_inline void fft9(TXComplex *out, TXComplex *in,
     z[1].re = t[0].re + t[2].re + t[6].re;
     z[1].im = t[0].im + t[2].im + t[6].im;
 
-    out[0*stride].re = z[0].re + z[1].re;
-    out[0*stride].im = z[0].im + z[1].im;
+    بهر[0*stride].re = z[0].re + z[1].re;
+    بهر[0*stride].im = z[0].im + z[1].im;
 
-#ifdef TX_INT32
+#که_تعریف_شوی TX_INT32
     mtmp[0] = t[1].re - t[3].re + t[7].re;
     mtmp[1] = t[1].im - t[3].im + t[7].im;
 
@@ -388,8 +388,8 @@ static av_always_inline void fft9(TXComplex *out, TXComplex *in,
 
     x[3].re = z[0].re  + (int32_t)mtmp[0];
     x[3].im = z[0].im  + (int32_t)mtmp[1];
-    z[0].re = in[0].re + (int32_t)mtmp[2];
-    z[0].im = in[0].im + (int32_t)mtmp[3];
+    z[0].re = دننه[0].re + (int32_t)mtmp[2];
+    z[0].im = دننه[0].im + (int32_t)mtmp[3];
 
     mtmp[0] = ((int64_t)tab[1].re)*w[0].re;
     mtmp[1] = ((int64_t)tab[1].re)*w[0].im;
@@ -412,7 +412,7 @@ static av_always_inline void fft9(TXComplex *out, TXComplex *in,
     y[0].re = (int32_t)(((int64_t)tab[0].im)*t[5].re + 0x40000000 >> 31);
     y[0].im = (int32_t)(((int64_t)tab[0].im)*t[5].im + 0x40000000 >> 31);
 
-#else
+#وإلا
     y[3].re = tab[0].im*(t[1].re - t[3].re + t[7].re);
     y[3].im = tab[0].im*(t[1].im - t[3].im + t[7].im);
 
@@ -432,7 +432,7 @@ static av_always_inline void fft9(TXComplex *out, TXComplex *in,
 
     y[0].re = tab[0].im*t[5].re;
     y[0].im = tab[0].im*t[5].im;
-#endif
+#د_که_پای
 
     x[4].re = x[1].re + x[2].re;
     x[4].im = x[1].im + x[2].im;
@@ -452,93 +452,93 @@ static av_always_inline void fft9(TXComplex *out, TXComplex *in,
     y[4].re = y[0].re - y[4].re;
     y[4].im = y[0].im - y[4].im;
 
-    out[1*stride] = (TXComplex){ x[1].re + y[1].im, x[1].im - y[1].re };
-    out[2*stride] = (TXComplex){ x[2].re + y[2].im, x[2].im - y[2].re };
-    out[3*stride] = (TXComplex){ x[3].re + y[3].im, x[3].im - y[3].re };
-    out[4*stride] = (TXComplex){ x[4].re + y[4].im, x[4].im - y[4].re };
-    out[5*stride] = (TXComplex){ x[4].re - y[4].im, x[4].im + y[4].re };
-    out[6*stride] = (TXComplex){ x[3].re - y[3].im, x[3].im + y[3].re };
-    out[7*stride] = (TXComplex){ x[2].re - y[2].im, x[2].im + y[2].re };
-    out[8*stride] = (TXComplex){ x[1].re - y[1].im, x[1].im + y[1].re };
+    بهر[1*stride] = (TXComplex){ x[1].re + y[1].im, x[1].im - y[1].re };
+    بهر[2*stride] = (TXComplex){ x[2].re + y[2].im, x[2].im - y[2].re };
+    بهر[3*stride] = (TXComplex){ x[3].re + y[3].im, x[3].im - y[3].re };
+    بهر[4*stride] = (TXComplex){ x[4].re + y[4].im, x[4].im - y[4].re };
+    بهر[5*stride] = (TXComplex){ x[4].re - y[4].im, x[4].im + y[4].re };
+    بهر[6*stride] = (TXComplex){ x[3].re - y[3].im, x[3].im + y[3].re };
+    بهر[7*stride] = (TXComplex){ x[2].re - y[2].im, x[2].im + y[2].re };
+    بهر[8*stride] = (TXComplex){ x[1].re - y[1].im, x[1].im + y[1].re };
 }
 
-static av_always_inline void fft15(TXComplex *out, TXComplex *in,
+ساكن av_always_inline فراغ fft15(TXComplex *بهر, TXComplex *دننه,
                                    ptrdiff_t stride)
 {
     TXComplex tmp[15];
 
-    for (int i = 0; i < 5; i++)
-        fft3(tmp + i, in + i*3, 5);
+    لكل (صحيح i = 0; i < 5; i++)
+        fft3(tmp + i, دننه + i*3, 5);
 
-    fft5_m1(out, tmp +  0, stride);
-    fft5_m2(out, tmp +  5, stride);
-    fft5_m3(out, tmp + 10, stride);
+    fft5_m1(بهر, tmp +  0, stride);
+    fft5_m2(بهر, tmp +  5, stride);
+    fft5_m3(بهر, tmp + 10, stride);
 }
 
-static av_cold int TX_NAME(ff_tx_fft_factor_init)(AVTXContext *s,
-                                                  const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_fft_ضریب_init)(AVTXContext *s,
+                                                  ثابت FFTXCodelet *cd,
                                                   uint64_t flags,
                                                   FFTXCodeletOptions *opts,
-                                                  int len, int inv,
-                                                  const void *scale)
+                                                  صحيح len, صحيح inv,
+                                                  ثابت فراغ *scale)
 {
-    int ret = 0;
+    صحيح ret = 0;
     TX_TAB(ff_tx_init_tabs)(len);
 
-    if (len == 15)
-        ret = ff_tx_gen_pfa_input_map(s, opts, 3, 5);
-    else if (flags & FF_TX_PRESHUFFLE)
+    إذا (len == 15)
+        ret = ff_tx_gen_pfa_ننوت_map(s, opts, 3, 5);
+    وإلا إذا (flags & FF_TX_PRESHUFFLE)
         ret = ff_tx_gen_default_map(s, opts);
 
-    return ret;
+    أرجع ret;
 }
 
-#define DECL_FACTOR_S(n)                                                       \
-static void TX_NAME(ff_tx_fft##n)(AVTXContext *s, void *dst,                   \
-                                  void *src, ptrdiff_t stride)                 \
+#تعریف_کړه DECL_ضریب_S(n)                                                       \
+ساكن فراغ TX_NAME(ff_tx_fft##n)(AVTXContext *s, فراغ *dst,                   \
+                                  فراغ *src, ptrdiff_t stride)                 \
 {                                                                              \
-    fft##n((TXComplex *)dst, (TXComplex *)src, stride / sizeof(TXComplex));    \
+    fft##n((TXComplex *)dst, (TXComplex *)src, stride / حجم(TXComplex));    \
 }                                                                              \
-static const FFTXCodelet TX_NAME(ff_tx_fft##n##_ns_def) = {                    \
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_fft##n##_ns_def) = {                    \
     .name       = TX_NAME_STR("fft" #n "_ns"),                                 \
     .function   = TX_NAME(ff_tx_fft##n),                                       \
     .type       = TX_TYPE(FFT),                                                \
-    .flags      = AV_TX_INPLACE | FF_TX_OUT_OF_PLACE |                         \
+    .flags      = AV_TX_INPLACE | FF_TX_بهر_د_ځای_پرځای_کړه |                         \
                   AV_TX_UNALIGNED | FF_TX_PRESHUFFLE,                          \
     .factors[0] = n,                                                           \
     .nb_factors = 1,                                                           \
     .min_len    = n,                                                           \
     .max_len    = n,                                                           \
-    .init       = TX_NAME(ff_tx_fft_factor_init),                              \
+    .init       = TX_NAME(ff_tx_fft_ضریب_init),                              \
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,                                         \
-    .prio       = FF_TX_PRIO_BASE,                                             \
+    .prio       = FF_TX_PRIO_بنسټ,                                             \
 };
 
-#define DECL_FACTOR_F(n)                                                       \
-DECL_FACTOR_S(n)                                                               \
-static const FFTXCodelet TX_NAME(ff_tx_fft##n##_fwd_def) = {                   \
+#تعریف_کړه DECL_ضریب_F(n)                                                       \
+DECL_ضریب_S(n)                                                               \
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_fft##n##_fwd_def) = {                   \
     .name       = TX_NAME_STR("fft" #n "_fwd"),                                \
     .function   = TX_NAME(ff_tx_fft##n),                                       \
     .type       = TX_TYPE(FFT),                                                \
-    .flags      = AV_TX_INPLACE | FF_TX_OUT_OF_PLACE |                         \
+    .flags      = AV_TX_INPLACE | FF_TX_بهر_د_ځای_پرځای_کړه |                         \
                   AV_TX_UNALIGNED | FF_TX_FORWARD_ONLY,                        \
     .factors[0] = n,                                                           \
     .nb_factors = 1,                                                           \
     .min_len    = n,                                                           \
     .max_len    = n,                                                           \
-    .init       = TX_NAME(ff_tx_fft_factor_init),                              \
+    .init       = TX_NAME(ff_tx_fft_ضریب_init),                              \
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,                                         \
-    .prio       = FF_TX_PRIO_BASE,                                             \
+    .prio       = FF_TX_PRIO_بنسټ,                                             \
 };
 
-DECL_FACTOR_F(3)
-DECL_FACTOR_F(5)
-DECL_FACTOR_F(7)
-DECL_FACTOR_F(9)
-DECL_FACTOR_S(15)
+DECL_ضریب_F(3)
+DECL_ضریب_F(5)
+DECL_ضریب_F(7)
+DECL_ضریب_F(9)
+DECL_ضریب_S(15)
 
-#define BUTTERFLIES(a0, a1, a2, a3)            \
-    do {                                       \
+#تعریف_کړه BUTTERFLIES(a0, a1, a2, a3)            \
+    افعل {                                       \
         r0=a0.re;                              \
         i0=a0.im;                              \
         r1=a1.re;                              \
@@ -549,59 +549,59 @@ DECL_FACTOR_S(15)
         BF(t4, t6, t2, t6);                    \
         BF(a3.re, a1.re, r1, t4);              \
         BF(a2.im, a0.im, i0, t6);              \
-    } while (0)
+    } طالما (0)
 
-#define TRANSFORM(a0, a1, a2, a3, wre, wim)    \
-    do {                                       \
+#تعریف_کړه TRANSFORM(a0, a1, a2, a3, wre, wim)    \
+    افعل {                                       \
         CMUL(t1, t2, a2.re, a2.im, wre, -wim); \
         CMUL(t5, t6, a3.re, a3.im, wre,  wim); \
         BUTTERFLIES(a0, a1, a2, a3);           \
-    } while (0)
+    } طالما (0)
 
 /* z[0...8n-1], w[1...2n-1] */
-static inline void TX_NAME(ff_tx_fft_sr_combine)(TXComplex *z,
-                                                 const TXSample *cos, int len)
+ساكن مضمن فراغ TX_NAME(ff_tx_fft_sr_combine)(TXComplex *z,
+                                                 ثابت TXSample *کوساین, صحيح len)
 {
-    int o1 = 2*len;
-    int o2 = 4*len;
-    int o3 = 6*len;
-    const TXSample *wim = cos + o1 - 7;
+    صحيح o1 = 2*len;
+    صحيح o2 = 4*len;
+    صحيح o3 = 6*len;
+    ثابت TXSample *wim = کوساین + o1 - 7;
     TXUSample t1, t2, t3, t4, t5, t6, r0, i0, r1, i1;
 
-    for (int i = 0; i < len; i += 4) {
-        TRANSFORM(z[0], z[o1 + 0], z[o2 + 0], z[o3 + 0], cos[0], wim[7]);
-        TRANSFORM(z[2], z[o1 + 2], z[o2 + 2], z[o3 + 2], cos[2], wim[5]);
-        TRANSFORM(z[4], z[o1 + 4], z[o2 + 4], z[o3 + 4], cos[4], wim[3]);
-        TRANSFORM(z[6], z[o1 + 6], z[o2 + 6], z[o3 + 6], cos[6], wim[1]);
+    لكل (صحيح i = 0; i < len; i += 4) {
+        TRANSFORM(z[0], z[o1 + 0], z[o2 + 0], z[o3 + 0], کوساین[0], wim[7]);
+        TRANSFORM(z[2], z[o1 + 2], z[o2 + 2], z[o3 + 2], کوساین[2], wim[5]);
+        TRANSFORM(z[4], z[o1 + 4], z[o2 + 4], z[o3 + 4], کوساین[4], wim[3]);
+        TRANSFORM(z[6], z[o1 + 6], z[o2 + 6], z[o3 + 6], کوساین[6], wim[1]);
 
-        TRANSFORM(z[1], z[o1 + 1], z[o2 + 1], z[o3 + 1], cos[1], wim[6]);
-        TRANSFORM(z[3], z[o1 + 3], z[o2 + 3], z[o3 + 3], cos[3], wim[4]);
-        TRANSFORM(z[5], z[o1 + 5], z[o2 + 5], z[o3 + 5], cos[5], wim[2]);
-        TRANSFORM(z[7], z[o1 + 7], z[o2 + 7], z[o3 + 7], cos[7], wim[0]);
+        TRANSFORM(z[1], z[o1 + 1], z[o2 + 1], z[o3 + 1], کوساین[1], wim[6]);
+        TRANSFORM(z[3], z[o1 + 3], z[o2 + 3], z[o3 + 3], کوساین[3], wim[4]);
+        TRANSFORM(z[5], z[o1 + 5], z[o2 + 5], z[o3 + 5], کوساین[5], wim[2]);
+        TRANSFORM(z[7], z[o1 + 7], z[o2 + 7], z[o3 + 7], کوساین[7], wim[0]);
 
         z   += 2*4;
-        cos += 2*4;
+        کوساین += 2*4;
         wim -= 2*4;
     }
 }
 
-static av_cold int TX_NAME(ff_tx_fft_sr_codelet_init)(AVTXContext *s,
-                                                      const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_fft_sr_codelet_init)(AVTXContext *s,
+                                                      ثابت FFTXCodelet *cd,
                                                       uint64_t flags,
                                                       FFTXCodeletOptions *opts,
-                                                      int len, int inv,
-                                                      const void *scale)
+                                                      صحيح len, صحيح inv,
+                                                      ثابت فراغ *scale)
 {
     TX_TAB(ff_tx_init_tabs)(len);
-    return ff_tx_gen_ptwo_revtab(s, opts);
+    أرجع ff_tx_gen_ptwo_revtab(s, opts);
 }
 
-#define DECL_SR_CODELET_DEF(n)                              \
-static const FFTXCodelet TX_NAME(ff_tx_fft##n##_ns_def) = { \
+#تعریف_کړه DECL_SR_CODELET_DEF(n)                              \
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_fft##n##_ns_def) = { \
     .name       = TX_NAME_STR("fft" #n "_ns"),              \
     .function   = TX_NAME(ff_tx_fft##n##_ns),               \
     .type       = TX_TYPE(FFT),                             \
-    .flags      = FF_TX_OUT_OF_PLACE | AV_TX_INPLACE |      \
+    .flags      = FF_TX_بهر_د_ځای_پرځای_کړه | AV_TX_INPLACE |      \
                   AV_TX_UNALIGNED | FF_TX_PRESHUFFLE,       \
     .factors[0] = 2,                                        \
     .nb_factors = 1,                                        \
@@ -609,27 +609,27 @@ static const FFTXCodelet TX_NAME(ff_tx_fft##n##_ns_def) = { \
     .max_len    = n,                                        \
     .init       = TX_NAME(ff_tx_fft_sr_codelet_init),       \
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,                      \
-    .prio       = FF_TX_PRIO_BASE,                          \
+    .prio       = FF_TX_PRIO_بنسټ,                          \
 };
 
-#define DECL_SR_CODELET(n, n2, n4)                                    \
-static void TX_NAME(ff_tx_fft##n##_ns)(AVTXContext *s, void *_dst,    \
-                                        void *_src, ptrdiff_t stride) \
+#تعریف_کړه DECL_SR_CODELET(n, n2, n4)                                    \
+ساكن فراغ TX_NAME(ff_tx_fft##n##_ns)(AVTXContext *s, فراغ *_dst,    \
+                                        فراغ *_src, ptrdiff_t stride) \
 {                                                                     \
     TXComplex *src = _src;                                            \
     TXComplex *dst = _dst;                                            \
-    const TXSample *cos = TX_TAB(ff_tx_tab_##n);                      \
+    ثابت TXSample *کوساین = TX_TAB(ff_tx_tab_##n);                      \
                                                                       \
     TX_NAME(ff_tx_fft##n2##_ns)(s, dst,        src,        stride);   \
     TX_NAME(ff_tx_fft##n4##_ns)(s, dst + n4*2, src + n4*2, stride);   \
     TX_NAME(ff_tx_fft##n4##_ns)(s, dst + n4*3, src + n4*3, stride);   \
-    TX_NAME(ff_tx_fft_sr_combine)(dst, cos, n4 >> 1);                 \
+    TX_NAME(ff_tx_fft_sr_combine)(dst, کوساین, n4 >> 1);                 \
 }                                                                     \
                                                                       \
 DECL_SR_CODELET_DEF(n)
 
-static void TX_NAME(ff_tx_fft2_ns)(AVTXContext *s, void *_dst,
-                                   void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_fft2_ns)(AVTXContext *s, فراغ *_dst,
+                                   فراغ *_src, ptrdiff_t stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
@@ -640,8 +640,8 @@ static void TX_NAME(ff_tx_fft2_ns)(AVTXContext *s, void *_dst,
     dst[1] = tmp;
 }
 
-static void TX_NAME(ff_tx_fft4_ns)(AVTXContext *s, void *_dst,
-                                   void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_fft4_ns)(AVTXContext *s, فراغ *_dst,
+                                   فراغ *_src, ptrdiff_t stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
@@ -657,13 +657,13 @@ static void TX_NAME(ff_tx_fft4_ns)(AVTXContext *s, void *_dst,
     BF(dst[2].im, dst[0].im, t2, t5);
 }
 
-static void TX_NAME(ff_tx_fft8_ns)(AVTXContext *s, void *_dst,
-                                   void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_fft8_ns)(AVTXContext *s, فراغ *_dst,
+                                   فراغ *_src, ptrdiff_t stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
     TXUSample t1, t2, t3, t4, t5, t6, r0, i0, r1, i1;
-    const TXSample cos = TX_TAB(ff_tx_tab_8)[1];
+    ثابت TXSample کوساین = TX_TAB(ff_tx_tab_8)[1];
 
     TX_NAME(ff_tx_fft4_ns)(s, dst, src, stride);
 
@@ -673,20 +673,20 @@ static void TX_NAME(ff_tx_fft8_ns)(AVTXContext *s, void *_dst,
     BF(t6, dst[7].im, src[6].im, -src[7].im);
 
     BUTTERFLIES(dst[0], dst[2], dst[4], dst[6]);
-    TRANSFORM(dst[1], dst[3], dst[5], dst[7], cos, cos);
+    TRANSFORM(dst[1], dst[3], dst[5], dst[7], کوساین, کوساین);
 }
 
-static void TX_NAME(ff_tx_fft16_ns)(AVTXContext *s, void *_dst,
-                                    void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_fft16_ns)(AVTXContext *s, فراغ *_dst,
+                                    فراغ *_src, ptrdiff_t stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
-    const TXSample *cos = TX_TAB(ff_tx_tab_16);
+    ثابت TXSample *کوساین = TX_TAB(ff_tx_tab_16);
 
     TXUSample t1, t2, t3, t4, t5, t6, r0, i0, r1, i1;
-    TXSample cos_16_1 = cos[1];
-    TXSample cos_16_2 = cos[2];
-    TXSample cos_16_3 = cos[3];
+    TXSample cos_16_1 = کوساین[1];
+    TXSample cos_16_2 = کوساین[2];
+    TXSample cos_16_3 = کوساین[3];
 
     TX_NAME(ff_tx_fft8_ns)(s, dst +  0, src +  0, stride);
     TX_NAME(ff_tx_fft4_ns)(s, dst +  8, src +  8, stride);
@@ -721,170 +721,170 @@ DECL_SR_CODELET(32768,16384,8192)
 DECL_SR_CODELET(65536,32768,16384)
 DECL_SR_CODELET(131072,65536,32768)
 
-static av_cold int TX_NAME(ff_tx_fft_init)(AVTXContext *s,
-                                           const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_fft_init)(AVTXContext *s,
+                                           ثابت FFTXCodelet *cd,
                                            uint64_t flags,
                                            FFTXCodeletOptions *opts,
-                                           int len, int inv,
-                                           const void *scale)
+                                           صحيح len, صحيح inv,
+                                           ثابت فراغ *scale)
 {
-    int ret;
-    int is_inplace = !!(flags & AV_TX_INPLACE);
+    صحيح ret;
+    صحيح is_inplace = !!(flags & AV_TX_INPLACE);
     FFTXCodeletOptions sub_opts = {
         .map_dir = is_inplace ? FF_TX_MAP_SCATTER : FF_TX_MAP_GATHER,
     };
 
-    flags &= ~FF_TX_OUT_OF_PLACE; /* We want the subtransform to be */
+    flags &= ~FF_TX_بهر_د_ځای_پرځای_کړه; /* We want the subtransform to be */
     flags |=  AV_TX_INPLACE;      /* in-place */
     flags |=  FF_TX_PRESHUFFLE;   /* This function handles the permute step */
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len, inv, scale)))
-        return ret;
+    إذا ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len, inv, scale)))
+        أرجع ret;
 
-    if (is_inplace && (ret = ff_tx_gen_inplace_map(s, len)))
-        return ret;
+    إذا (is_inplace && (ret = ff_tx_gen_inplace_map(s, len)))
+        أرجع ret;
 
-    return 0;
+    أرجع 0;
 }
 
-static av_cold int TX_NAME(ff_tx_fft_inplace_small_init)(AVTXContext *s,
-                                                         const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_fft_inplace_small_init)(AVTXContext *s,
+                                                         ثابت FFTXCodelet *cd,
                                                          uint64_t flags,
                                                          FFTXCodeletOptions *opts,
-                                                         int len, int inv,
-                                                         const void *scale)
+                                                         صحيح len, صحيح inv,
+                                                         ثابت فراغ *scale)
 {
-    if (!(s->tmp = av_malloc(len*sizeof(*s->tmp))))
-        return AVERROR(ENOMEM);
+    إذا (!(s->tmp = av_malloc(len*حجم(*s->tmp))))
+        أرجع AVERROR(ENOMEM);
     flags &= ~AV_TX_INPLACE;
-    return TX_NAME(ff_tx_fft_init)(s, cd, flags, opts, len, inv, scale);
+    أرجع TX_NAME(ff_tx_fft_init)(s, cd, flags, opts, len, inv, scale);
 }
 
-static void TX_NAME(ff_tx_fft)(AVTXContext *s, void *_dst,
-                               void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_fft)(AVTXContext *s, فراغ *_dst,
+                               فراغ *_src, ptrdiff_t stride)
 {
     TXComplex *src = _src;
     TXComplex *dst1 = s->flags & AV_TX_INPLACE ? s->tmp : _dst;
     TXComplex *dst2 = _dst;
-    int *map = s->sub[0].map;
-    int len = s->len;
+    صحيح *map = s->sub[0].map;
+    صحيح len = s->len;
 
     /* Compilers can't vectorize this anyway without assuming AVX2, which they
      * generally don't, at least without -march=native -mtune=native */
-    for (int i = 0; i < len; i++)
+    لكل (صحيح i = 0; i < len; i++)
         dst1[i] = src[map[i]];
 
     s->fn[0](&s->sub[0], dst2, dst1, stride);
 }
 
-static void TX_NAME(ff_tx_fft_inplace)(AVTXContext *s, void *_dst,
-                                       void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_fft_inplace)(AVTXContext *s, فراغ *_dst,
+                                       فراغ *_src, ptrdiff_t stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
     TXComplex tmp;
-    const int *map = s->sub->map;
-    const int *inplace_idx = s->map;
-    int src_idx, dst_idx;
+    ثابت صحيح *map = s->sub->map;
+    ثابت صحيح *inplace_idx = s->map;
+    صحيح src_idx, dst_idx;
 
     src_idx = *inplace_idx++;
-    do {
+    افعل {
         tmp = src[src_idx];
         dst_idx = map[src_idx];
-        do {
+        افعل {
             FFSWAP(TXComplex, tmp, src[dst_idx]);
             dst_idx = map[dst_idx];
-        } while (dst_idx != src_idx); /* Can be > as well, but was less predictable */
+        } طالما (dst_idx != src_idx); /* Can be > as well, but was less predictable */
         src[dst_idx] = tmp;
-    } while ((src_idx = *inplace_idx++));
+    } طالما ((src_idx = *inplace_idx++));
 
     s->fn[0](&s->sub[0], dst, src, stride);
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_fft_def) = {
     .name       = TX_NAME_STR("fft"),
     .function   = TX_NAME(ff_tx_fft),
     .type       = TX_TYPE(FFT),
-    .flags      = AV_TX_UNALIGNED | FF_TX_OUT_OF_PLACE,
-    .factors[0] = TX_FACTOR_ANY,
+    .flags      = AV_TX_UNALIGNED | FF_TX_بهر_د_ځای_پرځای_کړه,
+    .factors[0] = TX_ضریب_ANY,
     .nb_factors = 1,
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
     .init       = TX_NAME(ff_tx_fft_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE,
+    .prio       = FF_TX_PRIO_بنسټ,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_inplace_small_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_fft_inplace_small_def) = {
     .name       = TX_NAME_STR("fft_inplace_small"),
     .function   = TX_NAME(ff_tx_fft),
     .type       = TX_TYPE(FFT),
-    .flags      = AV_TX_UNALIGNED | FF_TX_OUT_OF_PLACE | AV_TX_INPLACE,
-    .factors[0] = TX_FACTOR_ANY,
+    .flags      = AV_TX_UNALIGNED | FF_TX_بهر_د_ځای_پرځای_کړه | AV_TX_INPLACE,
+    .factors[0] = TX_ضریب_ANY,
     .nb_factors = 1,
     .min_len    = 2,
     .max_len    = 65536,
     .init       = TX_NAME(ff_tx_fft_inplace_small_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE - 256,
+    .prio       = FF_TX_PRIO_بنسټ - 256,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_inplace_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_fft_inplace_def) = {
     .name       = TX_NAME_STR("fft_inplace"),
     .function   = TX_NAME(ff_tx_fft_inplace),
     .type       = TX_TYPE(FFT),
-    .flags      = AV_TX_UNALIGNED | FF_TX_OUT_OF_PLACE | AV_TX_INPLACE,
-    .factors[0] = TX_FACTOR_ANY,
+    .flags      = AV_TX_UNALIGNED | FF_TX_بهر_د_ځای_پرځای_کړه | AV_TX_INPLACE,
+    .factors[0] = TX_ضریب_ANY,
     .nb_factors = 1,
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
     .init       = TX_NAME(ff_tx_fft_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE - 512,
+    .prio       = FF_TX_PRIO_بنسټ - 512,
 };
 
-static av_cold int TX_NAME(ff_tx_fft_init_naive_small)(AVTXContext *s,
-                                                       const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_fft_init_naive_small)(AVTXContext *s,
+                                                       ثابت FFTXCodelet *cd,
                                                        uint64_t flags,
                                                        FFTXCodeletOptions *opts,
-                                                       int len, int inv,
-                                                       const void *scale)
+                                                       صحيح len, صحيح inv,
+                                                       ثابت فراغ *scale)
 {
-    const double phase = s->inv ? 2.0*M_PI/len : -2.0*M_PI/len;
+    ثابت مزدوج phase = s->inv ? 2.0*M_PI/len : -2.0*M_PI/len;
 
-    if (!(s->exp = av_malloc(len*len*sizeof(*s->exp))))
-        return AVERROR(ENOMEM);
+    إذا (!(s->توانیز_تابع = av_malloc(len*len*حجم(*s->توانیز_تابع))))
+        أرجع AVERROR(ENOMEM);
 
-    for (int i = 0; i < len; i++) {
-        for (int j = 0; j < len; j++) {
-            const double factor = phase*i*j;
-            s->exp[i*j] = (TXComplex){
-                RESCALE(cos(factor)),
-                RESCALE(sin(factor)),
+    لكل (صحيح i = 0; i < len; i++) {
+        لكل (صحيح j = 0; j < len; j++) {
+            ثابت مزدوج ضریب = phase*i*j;
+            s->توانیز_تابع[i*j] = (TXComplex){
+                RESCALE(کوساین(ضریب)),
+                RESCALE(ساین(ضریب)),
             };
         }
     }
 
-    return 0;
+    أرجع 0;
 }
 
-static void TX_NAME(ff_tx_fft_naive)(AVTXContext *s, void *_dst, void *_src,
+ساكن فراغ TX_NAME(ff_tx_fft_naive)(AVTXContext *s, فراغ *_dst, فراغ *_src,
                                      ptrdiff_t stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
-    const int n = s->len;
-    double phase = s->inv ? 2.0*M_PI/n : -2.0*M_PI/n;
+    ثابت صحيح n = s->len;
+    مزدوج phase = s->inv ? 2.0*M_PI/n : -2.0*M_PI/n;
 
-    stride /= sizeof(*dst);
+    stride /= حجم(*dst);
 
-    for (int i = 0; i < n; i++) {
+    لكل (صحيح i = 0; i < n; i++) {
         TXComplex tmp = { 0 };
-        for (int j = 0; j < n; j++) {
-            const double factor = phase*i*j;
-            const TXComplex mult = {
-                RESCALE(cos(factor)),
-                RESCALE(sin(factor)),
+        لكل (صحيح j = 0; j < n; j++) {
+            ثابت مزدوج ضریب = phase*i*j;
+            ثابت TXComplex mult = {
+                RESCALE(کوساین(ضریب)),
+                RESCALE(ساین(ضریب)),
             };
             TXComplex res;
             CMUL3(res, src[j], mult);
@@ -895,20 +895,20 @@ static void TX_NAME(ff_tx_fft_naive)(AVTXContext *s, void *_dst, void *_src,
     }
 }
 
-static void TX_NAME(ff_tx_fft_naive_small)(AVTXContext *s, void *_dst, void *_src,
+ساكن فراغ TX_NAME(ff_tx_fft_naive_small)(AVTXContext *s, فراغ *_dst, فراغ *_src,
                                            ptrdiff_t stride)
 {
     TXComplex *src = _src;
     TXComplex *dst = _dst;
-    const int n = s->len;
+    ثابت صحيح n = s->len;
 
-    stride /= sizeof(*dst);
+    stride /= حجم(*dst);
 
-    for (int i = 0; i < n; i++) {
+    لكل (صحيح i = 0; i < n; i++) {
         TXComplex tmp = { 0 };
-        for (int j = 0; j < n; j++) {
+        لكل (صحيح j = 0; j < n; j++) {
             TXComplex res;
-            const TXComplex mult = s->exp[i*j];
+            ثابت TXComplex mult = s->توانیز_تابع[i*j];
             CMUL3(res, src[j], mult);
             tmp.re += res.re;
             tmp.im += res.im;
@@ -917,12 +917,12 @@ static void TX_NAME(ff_tx_fft_naive_small)(AVTXContext *s, void *_dst, void *_sr
     }
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_naive_small_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_fft_naive_small_def) = {
     .name       = TX_NAME_STR("fft_naive_small"),
     .function   = TX_NAME(ff_tx_fft_naive_small),
     .type       = TX_TYPE(FFT),
-    .flags      = AV_TX_UNALIGNED | FF_TX_OUT_OF_PLACE,
-    .factors[0] = TX_FACTOR_ANY,
+    .flags      = AV_TX_UNALIGNED | FF_TX_بهر_د_ځای_پرځای_کړه,
+    .factors[0] = TX_ضریب_ANY,
     .nb_factors = 1,
     .min_len    = 2,
     .max_len    = 1024,
@@ -931,273 +931,273 @@ static const FFTXCodelet TX_NAME(ff_tx_fft_naive_small_def) = {
     .prio       = FF_TX_PRIO_MIN/2,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_naive_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_fft_naive_def) = {
     .name       = TX_NAME_STR("fft_naive"),
     .function   = TX_NAME(ff_tx_fft_naive),
     .type       = TX_TYPE(FFT),
-    .flags      = AV_TX_UNALIGNED | FF_TX_OUT_OF_PLACE,
-    .factors[0] = TX_FACTOR_ANY,
+    .flags      = AV_TX_UNALIGNED | FF_TX_بهر_د_ځای_پرځای_کړه,
+    .factors[0] = TX_ضریب_ANY,
     .nb_factors = 1,
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
-    .init       = NULL,
+    .init       = عدم,
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
     .prio       = FF_TX_PRIO_MIN,
 };
 
-static av_cold int TX_NAME(ff_tx_fft_pfa_init)(AVTXContext *s,
-                                               const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_fft_pfa_init)(AVTXContext *s,
+                                               ثابت FFTXCodelet *cd,
                                                uint64_t flags,
                                                FFTXCodeletOptions *opts,
-                                               int len, int inv,
-                                               const void *scale)
+                                               صحيح len, صحيح inv,
+                                               ثابت فراغ *scale)
 {
-    int ret, *tmp, ps = flags & FF_TX_PRESHUFFLE;
+    صحيح ret, *tmp, ps = flags & FF_TX_PRESHUFFLE;
     FFTXCodeletOptions sub_opts = { .map_dir = FF_TX_MAP_GATHER };
     size_t extra_tmp_len = 0;
-    int len_list[TX_MAX_DECOMPOSITIONS];
+    صحيح len_list[TX_MAX_DECOMPOSITIONS];
 
-    if ((ret = ff_tx_decompose_length(len_list, TX_TYPE(FFT), len, inv)) < 0)
-        return ret;
+    إذا ((ret = ff_tx_decompose_اوږدتیا(len_list, TX_TYPE(FFT), len, inv)) < 0)
+        أرجع ret;
 
     /* Two iterations to test both orderings. */
-    for (int i = 0; i < ret; i++) {
-        int len1 = len_list[i];
-        int len2 = len / len1;
+    لكل (صحيح i = 0; i < ret; i++) {
+        صحيح len1 = len_list[i];
+        صحيح len2 = len / len1;
 
         /* Our ptwo transforms don't support striding the output. */
-        if (len2 & (len2 - 1))
-            FFSWAP(int, len1, len2);
+        إذا (len2 & (len2 - 1))
+            FFSWAP(صحيح, len1, len2);
 
         ff_tx_clear_ctx(s);
 
         /* First transform */
         sub_opts.map_dir = FF_TX_MAP_GATHER;
         flags &= ~AV_TX_INPLACE;
-        flags |=  FF_TX_OUT_OF_PLACE;
+        flags |=  FF_TX_بهر_د_ځای_پرځای_کړه;
         flags |=  FF_TX_PRESHUFFLE; /* This function handles the permute step */
         ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                len1, inv, scale);
 
-        if (ret == AVERROR(ENOMEM)) {
-            return ret;
-        } else if (ret < 0) { /* Try again without a preshuffle flag */
+        إذا (ret == AVERROR(ENOMEM)) {
+            أرجع ret;
+        } وإلا إذا (ret < 0) { /* Try again without a preshuffle flag */
             flags &= ~FF_TX_PRESHUFFLE;
             ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                    len1, inv, scale);
-            if (ret == AVERROR(ENOMEM))
-                return ret;
-            else if (ret < 0)
-                continue;
+            إذا (ret == AVERROR(ENOMEM))
+                أرجع ret;
+            وإلا إذا (ret < 0)
+                استمر;
         }
 
         /* Second transform. */
         sub_opts.map_dir = FF_TX_MAP_SCATTER;
         flags |=  FF_TX_PRESHUFFLE;
 retry:
-        flags &= ~FF_TX_OUT_OF_PLACE;
+        flags &= ~FF_TX_بهر_د_ځای_پرځای_کړه;
         flags |=  AV_TX_INPLACE;
         ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                len2, inv, scale);
 
-        if (ret == AVERROR(ENOMEM)) {
-            return ret;
-        } else if (ret < 0) { /* Try again with an out-of-place transform */
-            flags |= FF_TX_OUT_OF_PLACE;
+        إذا (ret == AVERROR(ENOMEM)) {
+            أرجع ret;
+        } وإلا إذا (ret < 0) { /* Try again with an out-of-place transform */
+            flags |= FF_TX_بهر_د_ځای_پرځای_کړه;
             flags &= ~AV_TX_INPLACE;
             ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                    len2, inv, scale);
-            if (ret == AVERROR(ENOMEM)) {
-                return ret;
-            } else if (ret < 0) {
-                if (flags & FF_TX_PRESHUFFLE) { /* Retry again without a preshuf flag */
+            إذا (ret == AVERROR(ENOMEM)) {
+                أرجع ret;
+            } وإلا إذا (ret < 0) {
+                إذا (flags & FF_TX_PRESHUFFLE) { /* Retry again without a preshuf flag */
                     flags &= ~FF_TX_PRESHUFFLE;
-                    goto retry;
-                } else {
-                    continue;
+                    اذهب retry;
+                } وإلا {
+                    استمر;
                 }
             }
         }
 
         /* Success */
-        break;
+        اكسر;
     }
 
     /* If nothing was successful, error out */
-    if (ret < 0)
-        return ret;
+    إذا (ret < 0)
+        أرجع ret;
 
     /* Generate PFA map */
-    if ((ret = ff_tx_gen_compound_mapping(s, opts, 0,
+    إذا ((ret = ff_tx_gen_compound_mapping(s, opts, 0,
                                           s->sub[0].len, s->sub[1].len)))
-        return ret;
+        أرجع ret;
 
-    if (!(s->tmp = av_malloc(len*sizeof(*s->tmp))))
-        return AVERROR(ENOMEM);
+    إذا (!(s->tmp = av_malloc(len*حجم(*s->tmp))))
+        أرجع AVERROR(ENOMEM);
 
     /* Flatten input map */
-    tmp = (int *)s->tmp;
-    for (int k = 0; k < len; k += s->sub[0].len) {
-        memcpy(tmp, &s->map[k], s->sub[0].len*sizeof(*tmp));
-        for (int i = 0; i < s->sub[0].len; i++)
+    tmp = (صحيح *)s->tmp;
+    لكل (صحيح k = 0; k < len; k += s->sub[0].len) {
+        حافظه_نقل(tmp, &s->map[k], s->sub[0].len*حجم(*tmp));
+        لكل (صحيح i = 0; i < s->sub[0].len; i++)
             s->map[k + i] = tmp[s->sub[0].map[i]];
     }
 
     /* Only allocate extra temporary memory if we need it */
-    if (!(s->sub[1].flags & AV_TX_INPLACE))
+    إذا (!(s->sub[1].flags & AV_TX_INPLACE))
         extra_tmp_len = len;
-    else if (!ps)
+    وإلا إذا (!ps)
         extra_tmp_len = s->sub[0].len;
 
-    if (extra_tmp_len && !(s->exp = av_malloc(extra_tmp_len*sizeof(*s->exp))))
-        return AVERROR(ENOMEM);
+    إذا (extra_tmp_len && !(s->توانیز_تابع = av_malloc(extra_tmp_len*حجم(*s->توانیز_تابع))))
+        أرجع AVERROR(ENOMEM);
 
-    return 0;
+    أرجع 0;
 }
 
-static void TX_NAME(ff_tx_fft_pfa)(AVTXContext *s, void *_out,
-                                   void *_in, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_fft_pfa)(AVTXContext *s, فراغ *بهر_3,
+                                   فراغ *دننه_3, ptrdiff_t stride)
 {
-    const int n = s->sub[0].len, m = s->sub[1].len, l = s->len;
-    const int *in_map = s->map, *out_map = in_map + l;
-    const int *sub_map = s->sub[1].map;
-    TXComplex *tmp1 = s->sub[1].flags & AV_TX_INPLACE ? s->tmp : s->exp;
-    TXComplex *in = _in, *out = _out;
+    ثابت صحيح n = s->sub[0].len, m = s->sub[1].len, l = s->len;
+    ثابت صحيح *دننه_map = s->map, *بهر_map = دننه_map + l;
+    ثابت صحيح *sub_map = s->sub[1].map;
+    TXComplex *tmp1 = s->sub[1].flags & AV_TX_INPLACE ? s->tmp : s->توانیز_تابع;
+    TXComplex *دننه = دننه_3, *بهر = بهر_3;
 
-    stride /= sizeof(*out);
+    stride /= حجم(*بهر);
 
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++)
-            s->exp[j] = in[in_map[i*n + j]];
-        s->fn[0](&s->sub[0], &s->tmp[sub_map[i]], s->exp, m*sizeof(TXComplex));
+    لكل (صحيح i = 0; i < m; i++) {
+        لكل (صحيح j = 0; j < n; j++)
+            s->توانیز_تابع[j] = دننه[دننه_map[i*n + j]];
+        s->fn[0](&s->sub[0], &s->tmp[sub_map[i]], s->توانیز_تابع, m*حجم(TXComplex));
     }
 
-    for (int i = 0; i < n; i++)
-        s->fn[1](&s->sub[1], &tmp1[m*i], &s->tmp[m*i], sizeof(TXComplex));
+    لكل (صحيح i = 0; i < n; i++)
+        s->fn[1](&s->sub[1], &tmp1[m*i], &s->tmp[m*i], حجم(TXComplex));
 
-    for (int i = 0; i < l; i++)
-        out[i*stride] = tmp1[out_map[i]];
+    لكل (صحيح i = 0; i < l; i++)
+        بهر[i*stride] = tmp1[بهر_map[i]];
 }
 
-static void TX_NAME(ff_tx_fft_pfa_ns)(AVTXContext *s, void *_out,
-                                      void *_in, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_fft_pfa_ns)(AVTXContext *s, فراغ *بهر_3,
+                                      فراغ *دننه_3, ptrdiff_t stride)
 {
-    const int n = s->sub[0].len, m = s->sub[1].len, l = s->len;
-    const int *in_map = s->map, *out_map = in_map + l;
-    const int *sub_map = s->sub[1].map;
-    TXComplex *tmp1 = s->sub[1].flags & AV_TX_INPLACE ? s->tmp : s->exp;
-    TXComplex *in = _in, *out = _out;
+    ثابت صحيح n = s->sub[0].len, m = s->sub[1].len, l = s->len;
+    ثابت صحيح *دننه_map = s->map, *بهر_map = دننه_map + l;
+    ثابت صحيح *sub_map = s->sub[1].map;
+    TXComplex *tmp1 = s->sub[1].flags & AV_TX_INPLACE ? s->tmp : s->توانیز_تابع;
+    TXComplex *دننه = دننه_3, *بهر = بهر_3;
 
-    stride /= sizeof(*out);
+    stride /= حجم(*بهر);
 
-    for (int i = 0; i < m; i++)
-        s->fn[0](&s->sub[0], &s->tmp[sub_map[i]], &in[i*n], m*sizeof(TXComplex));
+    لكل (صحيح i = 0; i < m; i++)
+        s->fn[0](&s->sub[0], &s->tmp[sub_map[i]], &دننه[i*n], m*حجم(TXComplex));
 
-    for (int i = 0; i < n; i++)
-        s->fn[1](&s->sub[1], &tmp1[m*i], &s->tmp[m*i], sizeof(TXComplex));
+    لكل (صحيح i = 0; i < n; i++)
+        s->fn[1](&s->sub[1], &tmp1[m*i], &s->tmp[m*i], حجم(TXComplex));
 
-    for (int i = 0; i < l; i++)
-        out[i*stride] = tmp1[out_map[i]];
+    لكل (صحيح i = 0; i < l; i++)
+        بهر[i*stride] = tmp1[بهر_map[i]];
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_pfa_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_fft_pfa_def) = {
     .name       = TX_NAME_STR("fft_pfa"),
     .function   = TX_NAME(ff_tx_fft_pfa),
     .type       = TX_TYPE(FFT),
-    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | FF_TX_OUT_OF_PLACE,
-    .factors    = { 7, 5, 3, 2, TX_FACTOR_ANY },
+    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | FF_TX_بهر_د_ځای_پرځای_کړه,
+    .factors    = { 7, 5, 3, 2, TX_ضریب_ANY },
     .nb_factors = 2,
     .min_len    = 2*3,
     .max_len    = TX_LEN_UNLIMITED,
     .init       = TX_NAME(ff_tx_fft_pfa_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE,
+    .prio       = FF_TX_PRIO_بنسټ,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_fft_pfa_ns_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_fft_pfa_ns_def) = {
     .name       = TX_NAME_STR("fft_pfa_ns"),
     .function   = TX_NAME(ff_tx_fft_pfa_ns),
     .type       = TX_TYPE(FFT),
-    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | FF_TX_OUT_OF_PLACE |
+    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | FF_TX_بهر_د_ځای_پرځای_کړه |
                   FF_TX_PRESHUFFLE,
-    .factors    = { 7, 5, 3, 2, TX_FACTOR_ANY },
+    .factors    = { 7, 5, 3, 2, TX_ضریب_ANY },
     .nb_factors = 2,
     .min_len    = 2*3,
     .max_len    = TX_LEN_UNLIMITED,
     .init       = TX_NAME(ff_tx_fft_pfa_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE,
+    .prio       = FF_TX_PRIO_بنسټ,
 };
 
-static av_cold int TX_NAME(ff_tx_mdct_naive_init)(AVTXContext *s,
-                                                  const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_mdct_naive_init)(AVTXContext *s,
+                                                  ثابت FFTXCodelet *cd,
                                                   uint64_t flags,
                                                   FFTXCodeletOptions *opts,
-                                                  int len, int inv,
-                                                  const void *scale)
+                                                  صحيح len, صحيح inv,
+                                                  ثابت فراغ *scale)
 {
     s->scale_d = *((SCALE_TYPE *)scale);
     s->scale_f = s->scale_d;
-    return 0;
+    أرجع 0;
 }
 
-static void TX_NAME(ff_tx_mdct_naive_fwd)(AVTXContext *s, void *_dst,
-                                          void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_mdct_naive_fwd)(AVTXContext *s, فراغ *_dst,
+                                          فراغ *_src, ptrdiff_t stride)
 {
     TXSample *src = _src;
     TXSample *dst = _dst;
-    double scale = s->scale_d;
-    int len = s->len;
-    const double phase = M_PI/(4.0*len);
+    مزدوج scale = s->scale_d;
+    صحيح len = s->len;
+    ثابت مزدوج phase = M_PI/(4.0*len);
 
-    stride /= sizeof(*dst);
+    stride /= حجم(*dst);
 
-    for (int i = 0; i < len; i++) {
-        double sum = 0.0;
-        for (int j = 0; j < len*2; j++) {
-            int a = (2*j + 1 + len) * (2*i + 1);
-            sum += UNSCALE(src[j]) * cos(a * phase);
+    لكل (صحيح i = 0; i < len; i++) {
+        مزدوج مجموعه = 0.0;
+        لكل (صحيح j = 0; j < len*2; j++) {
+            صحيح a = (2*j + 1 + len) * (2*i + 1);
+            مجموعه += UNSCALE(src[j]) * کوساین(a * phase);
         }
-        dst[i*stride] = RESCALE(sum*scale);
+        dst[i*stride] = RESCALE(مجموعه*scale);
     }
 }
 
-static void TX_NAME(ff_tx_mdct_naive_inv)(AVTXContext *s, void *_dst,
-                                          void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_mdct_naive_inv)(AVTXContext *s, فراغ *_dst,
+                                          فراغ *_src, ptrdiff_t stride)
 {
     TXSample *src = _src;
     TXSample *dst = _dst;
-    double scale = s->scale_d;
-    int len = s->len >> 1;
-    int len2 = len*2;
-    const double phase = M_PI/(4.0*len2);
+    مزدوج scale = s->scale_d;
+    صحيح len = s->len >> 1;
+    صحيح len2 = len*2;
+    ثابت مزدوج phase = M_PI/(4.0*len2);
 
-    stride /= sizeof(*src);
+    stride /= حجم(*src);
 
-    for (int i = 0; i < len; i++) {
-        double sum_d = 0.0;
-        double sum_u = 0.0;
-        double i_d = phase * (4*len  - 2*i - 1);
-        double i_u = phase * (3*len2 + 2*i + 1);
-        for (int j = 0; j < len2; j++) {
-            double a = (2 * j + 1);
-            double a_d = cos(a * i_d);
-            double a_u = cos(a * i_u);
-            double val = UNSCALE(src[j*stride]);
-            sum_d += a_d * val;
-            sum_u += a_u * val;
+    لكل (صحيح i = 0; i < len; i++) {
+        مزدوج مجموعه_d = 0.0;
+        مزدوج مجموعه_u = 0.0;
+        مزدوج i_d = phase * (4*len  - 2*i - 1);
+        مزدوج i_u = phase * (3*len2 + 2*i + 1);
+        لكل (صحيح j = 0; j < len2; j++) {
+            مزدوج a = (2 * j + 1);
+            مزدوج a_d = کوساین(a * i_d);
+            مزدوج a_u = کوساین(a * i_u);
+            مزدوج val = UNSCALE(src[j*stride]);
+            مجموعه_d += a_d * val;
+            مجموعه_u += a_u * val;
         }
-        dst[i +   0] = RESCALE( sum_d*scale);
-        dst[i + len] = RESCALE(-sum_u*scale);
+        dst[i +   0] = RESCALE( مجموعه_d*scale);
+        dst[i + len] = RESCALE(-مجموعه_u*scale);
     }
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_mdct_naive_fwd_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_mdct_naive_fwd_def) = {
     .name       = TX_NAME_STR("mdct_naive_fwd"),
     .function   = TX_NAME(ff_tx_mdct_naive_fwd),
     .type       = TX_TYPE(MDCT),
-    .flags      = AV_TX_UNALIGNED | FF_TX_OUT_OF_PLACE | FF_TX_FORWARD_ONLY,
-    .factors    = { 2, TX_FACTOR_ANY }, /* MDCTs need an even length */
+    .flags      = AV_TX_UNALIGNED | FF_TX_بهر_د_ځای_پرځای_کړه | FF_TX_FORWARD_ONLY,
+    .factors    = { 2, TX_ضریب_ANY }, /* MDCTs need an even length */
     .nb_factors = 2,
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
@@ -1206,12 +1206,12 @@ static const FFTXCodelet TX_NAME(ff_tx_mdct_naive_fwd_def) = {
     .prio       = FF_TX_PRIO_MIN,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_mdct_naive_inv_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_mdct_naive_inv_def) = {
     .name       = TX_NAME_STR("mdct_naive_inv"),
     .function   = TX_NAME(ff_tx_mdct_naive_inv),
     .type       = TX_TYPE(MDCT),
-    .flags      = AV_TX_UNALIGNED | FF_TX_OUT_OF_PLACE | FF_TX_INVERSE_ONLY,
-    .factors    = { 2, TX_FACTOR_ANY },
+    .flags      = AV_TX_UNALIGNED | FF_TX_بهر_د_ځای_پرځای_کړه | FF_TX_INVERSE_ONLY,
+    .factors    = { 2, TX_ضریب_ANY },
     .nb_factors = 2,
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
@@ -1220,14 +1220,14 @@ static const FFTXCodelet TX_NAME(ff_tx_mdct_naive_inv_def) = {
     .prio       = FF_TX_PRIO_MIN,
 };
 
-static av_cold int TX_NAME(ff_tx_mdct_init)(AVTXContext *s,
-                                            const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_mdct_init)(AVTXContext *s,
+                                            ثابت FFTXCodelet *cd,
                                             uint64_t flags,
                                             FFTXCodeletOptions *opts,
-                                            int len, int inv,
-                                            const void *scale)
+                                            صحيح len, صحيح inv,
+                                            ثابت فراغ *scale)
 {
-    int ret;
+    صحيح ret;
     FFTXCodeletOptions sub_opts = {
         .map_dir = !inv ? FF_TX_MAP_SCATTER : FF_TX_MAP_GATHER,
     };
@@ -1235,201 +1235,201 @@ static av_cold int TX_NAME(ff_tx_mdct_init)(AVTXContext *s,
     s->scale_d = *((SCALE_TYPE *)scale);
     s->scale_f = s->scale_d;
 
-    flags &= ~FF_TX_OUT_OF_PLACE; /* We want the subtransform to be */
+    flags &= ~FF_TX_بهر_د_ځای_پرځای_کړه; /* We want the subtransform to be */
     flags |=  AV_TX_INPLACE;      /* in-place */
     flags |=  FF_TX_PRESHUFFLE;   /* First try with an in-place transform */
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
+    إذا ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
                                 inv, scale))) {
         flags &= ~FF_TX_PRESHUFFLE; /* Now try with a generic FFT */
-        if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
+        إذا ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts, len >> 1,
                                     inv, scale)))
-            return ret;
+            أرجع ret;
     }
 
-    s->map = av_malloc((len >> 1)*sizeof(*s->map));
-    if (!s->map)
-        return AVERROR(ENOMEM);
+    s->map = av_malloc((len >> 1)*حجم(*s->map));
+    إذا (!s->map)
+        أرجع AVERROR(ENOMEM);
 
     /* If we need to preshuffle copy the map from the subcontext */
-    if (s->sub[0].flags & FF_TX_PRESHUFFLE) {
-        memcpy(s->map, s->sub->map, (len >> 1)*sizeof(*s->map));
-    } else {
-        for (int i = 0; i < len >> 1; i++)
+    إذا (s->sub[0].flags & FF_TX_PRESHUFFLE) {
+        حافظه_نقل(s->map, s->sub->map, (len >> 1)*حجم(*s->map));
+    } وإلا {
+        لكل (صحيح i = 0; i < len >> 1; i++)
             s->map[i] = i;
     }
 
-    if ((ret = TX_TAB(ff_tx_mdct_gen_exp)(s, inv ? s->map : NULL)))
-        return ret;
+    إذا ((ret = TX_TAB(ff_tx_mdct_gen_exp)(s, inv ? s->map : عدم)))
+        أرجع ret;
 
     /* Saves a multiply in a hot path. */
-    if (inv)
-        for (int i = 0; i < (s->len >> 1); i++)
+    إذا (inv)
+        لكل (صحيح i = 0; i < (s->len >> 1); i++)
             s->map[i] <<= 1;
 
-    return 0;
+    أرجع 0;
 }
 
-static void TX_NAME(ff_tx_mdct_fwd)(AVTXContext *s, void *_dst, void *_src,
+ساكن فراغ TX_NAME(ff_tx_mdct_fwd)(AVTXContext *s, فراغ *_dst, فراغ *_src,
                                     ptrdiff_t stride)
 {
     TXSample *src = _src, *dst = _dst;
-    TXComplex *exp = s->exp, tmp, *z = _dst;
-    const int len2 = s->len >> 1;
-    const int len4 = s->len >> 2;
-    const int len3 = len2 * 3;
-    const int *sub_map = s->map;
+    TXComplex *توانیز_تابع = s->توانیز_تابع, tmp, *z = _dst;
+    ثابت صحيح len2 = s->len >> 1;
+    ثابت صحيح len4 = s->len >> 2;
+    ثابت صحيح len3 = len2 * 3;
+    ثابت صحيح *sub_map = s->map;
 
-    stride /= sizeof(*dst);
+    stride /= حجم(*dst);
 
-    for (int i = 0; i < len2; i++) { /* Folding and pre-reindexing */
-        const int k = 2*i;
-        const int idx = sub_map[i];
-        if (k < len2) {
+    لكل (صحيح i = 0; i < len2; i++) { /* Folding and pre-reindexing */
+        ثابت صحيح k = 2*i;
+        ثابت صحيح idx = sub_map[i];
+        إذا (k < len2) {
             tmp.re = FOLD(-src[ len2 + k],  src[1*len2 - 1 - k]);
             tmp.im = FOLD(-src[ len3 + k], -src[1*len3 - 1 - k]);
-        } else {
+        } وإلا {
             tmp.re = FOLD(-src[ len2 + k], -src[5*len2 - 1 - k]);
             tmp.im = FOLD( src[-len2 + k], -src[1*len3 - 1 - k]);
         }
-        CMUL(z[idx].im, z[idx].re, tmp.re, tmp.im, exp[i].re, exp[i].im);
+        CMUL(z[idx].im, z[idx].re, tmp.re, tmp.im, توانیز_تابع[i].re, توانیز_تابع[i].im);
     }
 
-    s->fn[0](&s->sub[0], z, z, sizeof(TXComplex));
+    s->fn[0](&s->sub[0], z, z, حجم(TXComplex));
 
-    for (int i = 0; i < len4; i++) {
-        const int i0 = len4 + i, i1 = len4 - i - 1;
+    لكل (صحيح i = 0; i < len4; i++) {
+        ثابت صحيح i0 = len4 + i, i1 = len4 - i - 1;
         TXComplex src1 = { z[i1].re, z[i1].im };
         TXComplex src0 = { z[i0].re, z[i0].im };
 
         CMUL(dst[2*i1*stride + stride], dst[2*i0*stride], src0.re, src0.im,
-             exp[i0].im, exp[i0].re);
+             توانیز_تابع[i0].im, توانیز_تابع[i0].re);
         CMUL(dst[2*i0*stride + stride], dst[2*i1*stride], src1.re, src1.im,
-             exp[i1].im, exp[i1].re);
+             توانیز_تابع[i1].im, توانیز_تابع[i1].re);
     }
 }
 
-static void TX_NAME(ff_tx_mdct_inv)(AVTXContext *s, void *_dst, void *_src,
+ساكن فراغ TX_NAME(ff_tx_mdct_inv)(AVTXContext *s, فراغ *_dst, فراغ *_src,
                                     ptrdiff_t stride)
 {
-    TXComplex *z = _dst, *exp = s->exp;
-    const TXSample *src = _src, *in1, *in2;
-    const int len2 = s->len >> 1;
-    const int len4 = s->len >> 2;
-    const int *sub_map = s->map;
+    TXComplex *z = _dst, *توانیز_تابع = s->توانیز_تابع;
+    ثابت TXSample *src = _src, *in1, *in2;
+    ثابت صحيح len2 = s->len >> 1;
+    ثابت صحيح len4 = s->len >> 2;
+    ثابت صحيح *sub_map = s->map;
 
-    stride /= sizeof(*src);
+    stride /= حجم(*src);
     in1 = src;
     in2 = src + ((len2*2) - 1) * stride;
 
-    for (int i = 0; i < len2; i++) {
-        int k = sub_map[i];
+    لكل (صحيح i = 0; i < len2; i++) {
+        صحيح k = sub_map[i];
         TXComplex tmp = { in2[-k*stride], in1[k*stride] };
-        CMUL3(z[i], tmp, exp[i]);
+        CMUL3(z[i], tmp, توانیز_تابع[i]);
     }
 
-    s->fn[0](&s->sub[0], z, z, sizeof(TXComplex));
+    s->fn[0](&s->sub[0], z, z, حجم(TXComplex));
 
-    exp += len2;
-    for (int i = 0; i < len4; i++) {
-        const int i0 = len4 + i, i1 = len4 - i - 1;
+    توانیز_تابع += len2;
+    لكل (صحيح i = 0; i < len4; i++) {
+        ثابت صحيح i0 = len4 + i, i1 = len4 - i - 1;
         TXComplex src1 = { z[i1].im, z[i1].re };
         TXComplex src0 = { z[i0].im, z[i0].re };
 
-        CMUL(z[i1].re, z[i0].im, src1.re, src1.im, exp[i1].im, exp[i1].re);
-        CMUL(z[i0].re, z[i1].im, src0.re, src0.im, exp[i0].im, exp[i0].re);
+        CMUL(z[i1].re, z[i0].im, src1.re, src1.im, توانیز_تابع[i1].im, توانیز_تابع[i1].re);
+        CMUL(z[i0].re, z[i1].im, src0.re, src0.im, توانیز_تابع[i0].im, توانیز_تابع[i0].re);
     }
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_mdct_fwd_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_mdct_fwd_def) = {
     .name       = TX_NAME_STR("mdct_fwd"),
     .function   = TX_NAME(ff_tx_mdct_fwd),
     .type       = TX_TYPE(MDCT),
-    .flags      = AV_TX_UNALIGNED | FF_TX_OUT_OF_PLACE | FF_TX_FORWARD_ONLY,
-    .factors    = { 2, TX_FACTOR_ANY },
+    .flags      = AV_TX_UNALIGNED | FF_TX_بهر_د_ځای_پرځای_کړه | FF_TX_FORWARD_ONLY,
+    .factors    = { 2, TX_ضریب_ANY },
     .nb_factors = 2,
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
     .init       = TX_NAME(ff_tx_mdct_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE,
+    .prio       = FF_TX_PRIO_بنسټ,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_mdct_inv_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_mdct_inv_def) = {
     .name       = TX_NAME_STR("mdct_inv"),
     .function   = TX_NAME(ff_tx_mdct_inv),
     .type       = TX_TYPE(MDCT),
-    .flags      = AV_TX_UNALIGNED | FF_TX_OUT_OF_PLACE | FF_TX_INVERSE_ONLY,
-    .factors    = { 2, TX_FACTOR_ANY },
+    .flags      = AV_TX_UNALIGNED | FF_TX_بهر_د_ځای_پرځای_کړه | FF_TX_INVERSE_ONLY,
+    .factors    = { 2, TX_ضریب_ANY },
     .nb_factors = 2,
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
     .init       = TX_NAME(ff_tx_mdct_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE,
+    .prio       = FF_TX_PRIO_بنسټ,
 };
 
-static av_cold int TX_NAME(ff_tx_mdct_inv_full_init)(AVTXContext *s,
-                                                     const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_mdct_inv_ډک_init)(AVTXContext *s,
+                                                     ثابت FFTXCodelet *cd,
                                                      uint64_t flags,
                                                      FFTXCodeletOptions *opts,
-                                                     int len, int inv,
-                                                     const void *scale)
+                                                     صحيح len, صحيح inv,
+                                                     ثابت فراغ *scale)
 {
-    int ret;
+    صحيح ret;
 
     s->scale_d = *((SCALE_TYPE *)scale);
     s->scale_f = s->scale_d;
 
-    flags &= ~AV_TX_FULL_IMDCT;
+    flags &= ~AV_TX_ډک_IMDCT;
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(MDCT), flags, NULL, len, 1, scale)))
-        return ret;
+    إذا ((ret = ff_tx_init_subtx(s, TX_TYPE(MDCT), flags, عدم, len, 1, scale)))
+        أرجع ret;
 
-    return 0;
+    أرجع 0;
 }
 
-static void TX_NAME(ff_tx_mdct_inv_full)(AVTXContext *s, void *_dst,
-                                         void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_mdct_inv_ډک)(AVTXContext *s, فراغ *_dst,
+                                         فراغ *_src, ptrdiff_t stride)
 {
-    int len  = s->len << 1;
-    int len2 = len >> 1;
-    int len4 = len >> 2;
+    صحيح len  = s->len << 1;
+    صحيح len2 = len >> 1;
+    صحيح len4 = len >> 2;
     TXSample *dst = _dst;
 
     s->fn[0](&s->sub[0], dst + len4, _src, stride);
 
-    stride /= sizeof(*dst);
+    stride /= حجم(*dst);
 
-    for (int i = 0; i < len4; i++) {
+    لكل (صحيح i = 0; i < len4; i++) {
         dst[            i*stride] = -dst[(len2 - i - 1)*stride];
         dst[(len - i - 1)*stride] =  dst[(len2 + i + 0)*stride];
     }
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_mdct_inv_full_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_mdct_inv_ډک_def) = {
     .name       = TX_NAME_STR("mdct_inv_full"),
-    .function   = TX_NAME(ff_tx_mdct_inv_full),
+    .function   = TX_NAME(ff_tx_mdct_inv_ډک),
     .type       = TX_TYPE(MDCT),
     .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE |
-                  FF_TX_OUT_OF_PLACE | AV_TX_FULL_IMDCT,
-    .factors    = { 2, TX_FACTOR_ANY },
+                  FF_TX_بهر_د_ځای_پرځای_کړه | AV_TX_ډک_IMDCT,
+    .factors    = { 2, TX_ضریب_ANY },
     .nb_factors = 2,
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
-    .init       = TX_NAME(ff_tx_mdct_inv_full_init),
+    .init       = TX_NAME(ff_tx_mdct_inv_ډک_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE,
+    .prio       = FF_TX_PRIO_بنسټ,
 };
 
-static av_cold int TX_NAME(ff_tx_mdct_pfa_init)(AVTXContext *s,
-                                                const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_mdct_pfa_init)(AVTXContext *s,
+                                                ثابت FFTXCodelet *cd,
                                                 uint64_t flags,
                                                 FFTXCodeletOptions *opts,
-                                                int len, int inv,
-                                                const void *scale)
+                                                صحيح len, صحيح inv,
+                                                ثابت فراغ *scale)
 {
-    int ret, sub_len;
+    صحيح ret, sub_len;
     FFTXCodeletOptions sub_opts = { .map_dir = FF_TX_MAP_SCATTER };
 
     len >>= 1;
@@ -1438,90 +1438,90 @@ static av_cold int TX_NAME(ff_tx_mdct_pfa_init)(AVTXContext *s,
     s->scale_d = *((SCALE_TYPE *)scale);
     s->scale_f = s->scale_d;
 
-    flags &= ~FF_TX_OUT_OF_PLACE; /* We want the subtransform to be */
+    flags &= ~FF_TX_بهر_د_ځای_پرځای_کړه; /* We want the subtransform to be */
     flags |=  AV_TX_INPLACE;      /* in-place */
     flags |=  FF_TX_PRESHUFFLE;   /* This function handles the permute step */
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
+    إذا ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, &sub_opts,
                                 sub_len, inv, scale)))
-        return ret;
+        أرجع ret;
 
-    if ((ret = ff_tx_gen_compound_mapping(s, opts, s->inv, cd->factors[0], sub_len)))
-        return ret;
+    إذا ((ret = ff_tx_gen_compound_mapping(s, opts, s->inv, cd->factors[0], sub_len)))
+        أرجع ret;
 
     /* Our 15-point transform is also a compound one, so embed its input map */
-    if (cd->factors[0] == 15)
-        TX_EMBED_INPUT_PFA_MAP(s->map, len, 3, 5);
+    إذا (cd->factors[0] == 15)
+        TX_EMBED_ننوت_PFA_MAP(s->map, len, 3, 5);
 
-    if ((ret = TX_TAB(ff_tx_mdct_gen_exp)(s, inv ? s->map : NULL)))
-        return ret;
+    إذا ((ret = TX_TAB(ff_tx_mdct_gen_exp)(s, inv ? s->map : عدم)))
+        أرجع ret;
 
     /* Saves multiplies in loops. */
-    for (int i = 0; i < len; i++)
+    لكل (صحيح i = 0; i < len; i++)
         s->map[i] <<= 1;
 
-    if (!(s->tmp = av_malloc(len*sizeof(*s->tmp))))
-        return AVERROR(ENOMEM);
+    إذا (!(s->tmp = av_malloc(len*حجم(*s->tmp))))
+        أرجع AVERROR(ENOMEM);
 
     TX_TAB(ff_tx_init_tabs)(len / sub_len);
 
-    return 0;
+    أرجع 0;
 }
 
-#define DECL_COMP_IMDCT(N)                                                     \
-static void TX_NAME(ff_tx_mdct_pfa_##N##xM_inv)(AVTXContext *s, void *_dst,    \
-                                                void *_src, ptrdiff_t stride)  \
+#تعریف_کړه DECL_COMP_IMDCT(N)                                                     \
+ساكن فراغ TX_NAME(ff_tx_mdct_pfa_##N##xM_inv)(AVTXContext *s, فراغ *_dst,    \
+                                                فراغ *_src, ptrdiff_t stride)  \
 {                                                                              \
     TXComplex fft##N##in[N];                                                   \
-    TXComplex *z = _dst, *exp = s->exp;                                        \
-    const TXSample *src = _src, *in1, *in2;                                    \
-    const int len4 = s->len >> 2;                                              \
-    const int len2 = s->len >> 1;                                              \
-    const int m = s->sub->len;                                                 \
-    const int *in_map = s->map, *out_map = in_map + N*m;                       \
-    const int *sub_map = s->sub->map;                                          \
+    TXComplex *z = _dst, *توانیز_تابع = s->توانیز_تابع;                                        \
+    ثابت TXSample *src = _src, *in1, *in2;                                    \
+    ثابت صحيح len4 = s->len >> 2;                                              \
+    ثابت صحيح len2 = s->len >> 1;                                              \
+    ثابت صحيح m = s->sub->len;                                                 \
+    ثابت صحيح *دننه_map = s->map, *بهر_map = دننه_map + N*m;                       \
+    ثابت صحيح *sub_map = s->sub->map;                                          \
                                                                                \
-    stride /= sizeof(*src); /* To convert it from bytes */                     \
+    stride /= حجم(*src); /* To convert it from bytes */                     \
     in1 = src;                                                                 \
     in2 = src + ((N*m*2) - 1) * stride;                                        \
                                                                                \
-    for (int i = 0; i < len2; i += N) {                                        \
-        for (int j = 0; j < N; j++) {                                          \
-            const int k = in_map[j];                                           \
+    لكل (صحيح i = 0; i < len2; i += N) {                                        \
+        لكل (صحيح j = 0; j < N; j++) {                                          \
+            ثابت صحيح k = دننه_map[j];                                           \
             TXComplex tmp = { in2[-k*stride], in1[k*stride] };                 \
-            CMUL3(fft##N##in[j], tmp, exp[j]);                                 \
+            CMUL3(fft##N##in[j], tmp, توانیز_تابع[j]);                                 \
         }                                                                      \
         fft##N(s->tmp + *(sub_map++), fft##N##in, m);                          \
-        exp += N;                                                              \
-        in_map += N;                                                           \
+        توانیز_تابع += N;                                                              \
+        دننه_map += N;                                                           \
     }                                                                          \
                                                                                \
-    for (int i = 0; i < N; i++)                                                \
-        s->fn[0](&s->sub[0], s->tmp + m*i, s->tmp + m*i, sizeof(TXComplex));   \
+    لكل (صحيح i = 0; i < N; i++)                                                \
+        s->fn[0](&s->sub[0], s->tmp + m*i, s->tmp + m*i, حجم(TXComplex));   \
                                                                                \
-    for (int i = 0; i < len4; i++) {                                           \
-        const int i0 = len4 + i, i1 = len4 - i - 1;                            \
-        const int s0 = out_map[i0], s1 = out_map[i1];                          \
+    لكل (صحيح i = 0; i < len4; i++) {                                           \
+        ثابت صحيح i0 = len4 + i, i1 = len4 - i - 1;                            \
+        ثابت صحيح s0 = بهر_map[i0], s1 = بهر_map[i1];                          \
         TXComplex src1 = { s->tmp[s1].im, s->tmp[s1].re };                     \
         TXComplex src0 = { s->tmp[s0].im, s->tmp[s0].re };                     \
                                                                                \
-        CMUL(z[i1].re, z[i0].im, src1.re, src1.im, exp[i1].im, exp[i1].re);    \
-        CMUL(z[i0].re, z[i1].im, src0.re, src0.im, exp[i0].im, exp[i0].re);    \
+        CMUL(z[i1].re, z[i0].im, src1.re, src1.im, توانیز_تابع[i1].im, توانیز_تابع[i1].re);    \
+        CMUL(z[i0].re, z[i1].im, src0.re, src0.im, توانیز_تابع[i0].im, توانیز_تابع[i0].re);    \
     }                                                                          \
 }                                                                              \
                                                                                \
-static const FFTXCodelet TX_NAME(ff_tx_mdct_pfa_##N##xM_inv_def) = {           \
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_mdct_pfa_##N##xM_inv_def) = {           \
     .name       = TX_NAME_STR("mdct_pfa_" #N "xM_inv"),                        \
     .function   = TX_NAME(ff_tx_mdct_pfa_##N##xM_inv),                         \
     .type       = TX_TYPE(MDCT),                                               \
-    .flags      = AV_TX_UNALIGNED | FF_TX_OUT_OF_PLACE | FF_TX_INVERSE_ONLY,   \
-    .factors    = { N, TX_FACTOR_ANY },                                        \
+    .flags      = AV_TX_UNALIGNED | FF_TX_بهر_د_ځای_پرځای_کړه | FF_TX_INVERSE_ONLY,   \
+    .factors    = { N, TX_ضریب_ANY },                                        \
     .nb_factors = 2,                                                           \
     .min_len    = N*2,                                                         \
     .max_len    = TX_LEN_UNLIMITED,                                            \
     .init       = TX_NAME(ff_tx_mdct_pfa_init),                                \
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,                                         \
-    .prio       = FF_TX_PRIO_BASE,                                             \
+    .prio       = FF_TX_PRIO_بنسټ,                                             \
 };
 
 DECL_COMP_IMDCT(3)
@@ -1530,66 +1530,66 @@ DECL_COMP_IMDCT(7)
 DECL_COMP_IMDCT(9)
 DECL_COMP_IMDCT(15)
 
-#define DECL_COMP_MDCT(N)                                                      \
-static void TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd)(AVTXContext *s, void *_dst,    \
-                                                void *_src, ptrdiff_t stride)  \
+#تعریف_کړه DECL_COMP_MDCT(N)                                                      \
+ساكن فراغ TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd)(AVTXContext *s, فراغ *_dst,    \
+                                                فراغ *_src, ptrdiff_t stride)  \
 {                                                                              \
     TXComplex fft##N##in[N];                                                   \
     TXSample *src = _src, *dst = _dst;                                         \
-    TXComplex *exp = s->exp, tmp;                                              \
-    const int m = s->sub->len;                                                 \
-    const int len4 = N*m;                                                      \
-    const int len3 = len4 * 3;                                                 \
-    const int len8 = s->len >> 2;                                              \
-    const int *in_map = s->map, *out_map = in_map + N*m;                       \
-    const int *sub_map = s->sub->map;                                          \
+    TXComplex *توانیز_تابع = s->توانیز_تابع, tmp;                                              \
+    ثابت صحيح m = s->sub->len;                                                 \
+    ثابت صحيح len4 = N*m;                                                      \
+    ثابت صحيح len3 = len4 * 3;                                                 \
+    ثابت صحيح len8 = s->len >> 2;                                              \
+    ثابت صحيح *دننه_map = s->map, *بهر_map = دننه_map + N*m;                       \
+    ثابت صحيح *sub_map = s->sub->map;                                          \
                                                                                \
-    stride /= sizeof(*dst);                                                    \
+    stride /= حجم(*dst);                                                    \
                                                                                \
-    for (int i = 0; i < m; i++) { /* Folding and pre-reindexing */             \
-        for (int j = 0; j < N; j++) {                                          \
-            const int k = in_map[i*N + j];                                     \
-            if (k < len4) {                                                    \
+    لكل (صحيح i = 0; i < m; i++) { /* Folding and pre-reindexing */             \
+        لكل (صحيح j = 0; j < N; j++) {                                          \
+            ثابت صحيح k = دننه_map[i*N + j];                                     \
+            إذا (k < len4) {                                                    \
                 tmp.re = FOLD(-src[ len4 + k],  src[1*len4 - 1 - k]);          \
                 tmp.im = FOLD(-src[ len3 + k], -src[1*len3 - 1 - k]);          \
-            } else {                                                           \
+            } وإلا {                                                           \
                 tmp.re = FOLD(-src[ len4 + k], -src[5*len4 - 1 - k]);          \
                 tmp.im = FOLD( src[-len4 + k], -src[1*len3 - 1 - k]);          \
             }                                                                  \
             CMUL(fft##N##in[j].im, fft##N##in[j].re, tmp.re, tmp.im,           \
-                 exp[k >> 1].re, exp[k >> 1].im);                              \
+                 توانیز_تابع[k >> 1].re, توانیز_تابع[k >> 1].im);                              \
         }                                                                      \
         fft##N(s->tmp + sub_map[i], fft##N##in, m);                            \
     }                                                                          \
                                                                                \
-    for (int i = 0; i < N; i++)                                                \
-        s->fn[0](&s->sub[0], s->tmp + m*i, s->tmp + m*i, sizeof(TXComplex));   \
+    لكل (صحيح i = 0; i < N; i++)                                                \
+        s->fn[0](&s->sub[0], s->tmp + m*i, s->tmp + m*i, حجم(TXComplex));   \
                                                                                \
-    for (int i = 0; i < len8; i++) {                                           \
-        const int i0 = len8 + i, i1 = len8 - i - 1;                            \
-        const int s0 = out_map[i0], s1 = out_map[i1];                          \
+    لكل (صحيح i = 0; i < len8; i++) {                                           \
+        ثابت صحيح i0 = len8 + i, i1 = len8 - i - 1;                            \
+        ثابت صحيح s0 = بهر_map[i0], s1 = بهر_map[i1];                          \
         TXComplex src1 = { s->tmp[s1].re, s->tmp[s1].im };                     \
         TXComplex src0 = { s->tmp[s0].re, s->tmp[s0].im };                     \
                                                                                \
         CMUL(dst[2*i1*stride + stride], dst[2*i0*stride], src0.re, src0.im,    \
-             exp[i0].im, exp[i0].re);                                          \
+             توانیز_تابع[i0].im, توانیز_تابع[i0].re);                                          \
         CMUL(dst[2*i0*stride + stride], dst[2*i1*stride], src1.re, src1.im,    \
-             exp[i1].im, exp[i1].re);                                          \
+             توانیز_تابع[i1].im, توانیز_تابع[i1].re);                                          \
     }                                                                          \
 }                                                                              \
                                                                                \
-static const FFTXCodelet TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd_def) = {           \
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd_def) = {           \
     .name       = TX_NAME_STR("mdct_pfa_" #N "xM_fwd"),                        \
     .function   = TX_NAME(ff_tx_mdct_pfa_##N##xM_fwd),                         \
     .type       = TX_TYPE(MDCT),                                               \
-    .flags      = AV_TX_UNALIGNED | FF_TX_OUT_OF_PLACE | FF_TX_FORWARD_ONLY,   \
-    .factors    = { N, TX_FACTOR_ANY },                                        \
+    .flags      = AV_TX_UNALIGNED | FF_TX_بهر_د_ځای_پرځای_کړه | FF_TX_FORWARD_ONLY,   \
+    .factors    = { N, TX_ضریب_ANY },                                        \
     .nb_factors = 2,                                                           \
     .min_len    = N*2,                                                         \
     .max_len    = TX_LEN_UNLIMITED,                                            \
     .init       = TX_NAME(ff_tx_mdct_pfa_init),                                \
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,                                         \
-    .prio       = FF_TX_PRIO_BASE,                                             \
+    .prio       = FF_TX_PRIO_بنسټ,                                             \
 };
 
 DECL_COMP_MDCT(3)
@@ -1598,31 +1598,31 @@ DECL_COMP_MDCT(7)
 DECL_COMP_MDCT(9)
 DECL_COMP_MDCT(15)
 
-static av_cold int TX_NAME(ff_tx_rdft_init)(AVTXContext *s,
-                                            const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_rdft_init)(AVTXContext *s,
+                                            ثابت FFTXCodelet *cd,
                                             uint64_t flags,
                                             FFTXCodeletOptions *opts,
-                                            int len, int inv,
-                                            const void *scale)
+                                            صحيح len, صحيح inv,
+                                            ثابت فراغ *scale)
 {
-    int ret;
-    double f, m;
+    صحيح ret;
+    مزدوج f, m;
     TXSample *tab;
-    uint64_t r2r = flags & AV_TX_REAL_TO_REAL;
-    int len4 = FFALIGN(len, 4) / 4;
+    uint64_t r2r = flags & AV_TX_REAL_منزل_REAL;
+    صحيح len4 = FFALIGN(len, 4) / 4;
 
     s->scale_d = *((SCALE_TYPE *)scale);
     s->scale_f = s->scale_d;
 
-    flags &= ~(AV_TX_REAL_TO_REAL | AV_TX_REAL_TO_IMAGINARY);
+    flags &= ~(AV_TX_REAL_منزل_REAL | AV_TX_REAL_منزل_IMAGINARY);
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, NULL, len >> 1, inv, scale)))
-        return ret;
+    إذا ((ret = ff_tx_init_subtx(s, TX_TYPE(FFT), flags, عدم, len >> 1, inv, scale)))
+        أرجع ret;
 
-    if (!(s->exp = av_mallocz((8 + 2*len4)*sizeof(*s->exp))))
-        return AVERROR(ENOMEM);
+    إذا (!(s->توانیز_تابع = av_mallocz((8 + 2*len4)*حجم(*s->توانیز_تابع))))
+        أرجع AVERROR(ENOMEM);
 
-    tab = (TXSample *)s->exp;
+    tab = (TXSample *)s->توانیز_تابع;
 
     f = 2*M_PI/len;
 
@@ -1634,265 +1634,265 @@ static av_cold int TX_NAME(ff_tx_rdft_init)(AVTXContext *s,
     *tab++ = RESCALE(-m);
 
     *tab++ = RESCALE( (0.5 - 0.0) * m);
-    if (r2r)
+    إذا (r2r)
         *tab++ = 1 / s->scale_f;
-    else
+    وإلا
         *tab++ = RESCALE( (0.0 - 0.5) * m);
     *tab++ = RESCALE( (0.5 - inv) * m);
     *tab++ = RESCALE(-(0.5 - inv) * m);
 
-    for (int i = 0; i < len4; i++)
-        *tab++ = RESCALE(cos(i*f));
+    لكل (صحيح i = 0; i < len4; i++)
+        *tab++ = RESCALE(کوساین(i*f));
 
-    tab = ((TXSample *)s->exp) + len4 + 8;
+    tab = ((TXSample *)s->توانیز_تابع) + len4 + 8;
 
-    for (int i = 0; i < len4; i++)
-        *tab++ = RESCALE(cos(((len - i*4)/4.0)*f)) * (inv ? 1 : -1);
+    لكل (صحيح i = 0; i < len4; i++)
+        *tab++ = RESCALE(کوساین(((len - i*4)/4.0)*f)) * (inv ? 1 : -1);
 
-    return 0;
+    أرجع 0;
 }
 
-#define DECL_RDFT(n, inv)                                                      \
-static void TX_NAME(ff_tx_rdft_ ##n)(AVTXContext *s, void *_dst,               \
-                                     void *_src, ptrdiff_t stride)             \
+#تعریف_کړه DECL_RDFT(n, inv)                                                      \
+ساكن فراغ TX_NAME(ff_tx_rdft_ ##n)(AVTXContext *s, فراغ *_dst,               \
+                                     فراغ *_src, ptrdiff_t stride)             \
 {                                                                              \
-    const int len2 = s->len >> 1;                                              \
-    const int len4 = s->len >> 2;                                              \
-    const TXSample *fact = (void *)s->exp;                                     \
-    const TXSample *tcos = fact + 8;                                           \
-    const TXSample *tsin = tcos + len4;                                        \
-    TXComplex *data = inv ? _src : _dst;                                       \
+    ثابت صحيح len2 = s->len >> 1;                                              \
+    ثابت صحيح len4 = s->len >> 2;                                              \
+    ثابت TXSample *fact = (فراغ *)s->توانیز_تابع;                                     \
+    ثابت TXSample *tcos = fact + 8;                                           \
+    ثابت TXSample *tsin = tcos + len4;                                        \
+    TXComplex *معلومات = inv ? _src : _dst;                                       \
     TXComplex t[3];                                                            \
                                                                                \
-    if (!inv)                                                                  \
-        s->fn[0](&s->sub[0], data, _src, sizeof(TXComplex));                   \
-    else                                                                       \
-        data[0].im = data[len2].re;                                            \
+    إذا (!inv)                                                                  \
+        s->fn[0](&s->sub[0], معلومات, _src, حجم(TXComplex));                   \
+    وإلا                                                                       \
+        معلومات[0].im = معلومات[len2].re;                                            \
                                                                                \
     /* The DC value's both components are real, but we need to change them     \
      * into complex values. Also, the middle of the array is special-cased.    \
      * These operations can be done before or after the loop. */               \
-    t[0].re = data[0].re;                                                      \
-    data[0].re = t[0].re + data[0].im;                                         \
-    data[0].im = t[0].re - data[0].im;                                         \
-    data[   0].re = MULT(fact[0], data[   0].re);                              \
-    data[   0].im = MULT(fact[1], data[   0].im);                              \
-    data[len4].re = MULT(fact[2], data[len4].re);                              \
-    data[len4].im = MULT(fact[3], data[len4].im);                              \
+    t[0].re = معلومات[0].re;                                                      \
+    معلومات[0].re = t[0].re + معلومات[0].im;                                         \
+    معلومات[0].im = t[0].re - معلومات[0].im;                                         \
+    معلومات[   0].re = MULT(fact[0], معلومات[   0].re);                              \
+    معلومات[   0].im = MULT(fact[1], معلومات[   0].im);                              \
+    معلومات[len4].re = MULT(fact[2], معلومات[len4].re);                              \
+    معلومات[len4].im = MULT(fact[3], معلومات[len4].im);                              \
                                                                                \
-    for (int i = 1; i < len4; i++) {                                           \
+    لكل (صحيح i = 1; i < len4; i++) {                                           \
         /* Separate even and odd FFTs */                                       \
-        t[0].re = MULT(fact[4], (data[i].re + data[len2 - i].re));             \
-        t[0].im = MULT(fact[5], (data[i].im - data[len2 - i].im));             \
-        t[1].re = MULT(fact[6], (data[i].im + data[len2 - i].im));             \
-        t[1].im = MULT(fact[7], (data[i].re - data[len2 - i].re));             \
+        t[0].re = MULT(fact[4], (معلومات[i].re + معلومات[len2 - i].re));             \
+        t[0].im = MULT(fact[5], (معلومات[i].im - معلومات[len2 - i].im));             \
+        t[1].re = MULT(fact[6], (معلومات[i].im + معلومات[len2 - i].im));             \
+        t[1].im = MULT(fact[7], (معلومات[i].re - معلومات[len2 - i].re));             \
                                                                                \
         /* Apply twiddle factors to the odd FFT and add to the even FFT */     \
         CMUL(t[2].re, t[2].im, t[1].re, t[1].im, tcos[i], tsin[i]);            \
                                                                                \
-        data[       i].re = t[0].re + t[2].re;                                 \
-        data[       i].im = t[2].im - t[0].im;                                 \
-        data[len2 - i].re = t[0].re - t[2].re;                                 \
-        data[len2 - i].im = t[2].im + t[0].im;                                 \
+        معلومات[       i].re = t[0].re + t[2].re;                                 \
+        معلومات[       i].im = t[2].im - t[0].im;                                 \
+        معلومات[len2 - i].re = t[0].re - t[2].re;                                 \
+        معلومات[len2 - i].im = t[2].im + t[0].im;                                 \
     }                                                                          \
                                                                                \
-    if (inv) {                                                                 \
-        s->fn[0](&s->sub[0], _dst, data, sizeof(TXComplex));                   \
-    } else {                                                                   \
+    إذا (inv) {                                                                 \
+        s->fn[0](&s->sub[0], _dst, معلومات, حجم(TXComplex));                   \
+    } وإلا {                                                                   \
         /* Move [0].im to the last position, as convention requires */         \
-        data[len2].re = data[0].im;                                            \
-        data[   0].im = data[len2].im = 0;                                     \
+        معلومات[len2].re = معلومات[0].im;                                            \
+        معلومات[   0].im = معلومات[len2].im = 0;                                     \
     }                                                                          \
 }                                                                              \
                                                                                \
-static const FFTXCodelet TX_NAME(ff_tx_rdft_ ##n## _def) = {                   \
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_rdft_ ##n## _def) = {                   \
     .name       = TX_NAME_STR("rdft_" #n),                                     \
     .function   = TX_NAME(ff_tx_rdft_ ##n),                                    \
     .type       = TX_TYPE(RDFT),                                               \
-    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | FF_TX_OUT_OF_PLACE |       \
+    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | FF_TX_بهر_د_ځای_پرځای_کړه |       \
                   (inv ? FF_TX_INVERSE_ONLY : FF_TX_FORWARD_ONLY),             \
-    .factors    = { 4, TX_FACTOR_ANY },                                        \
+    .factors    = { 4, TX_ضریب_ANY },                                        \
     .nb_factors = 2,                                                           \
     .min_len    = 4,                                                           \
     .max_len    = TX_LEN_UNLIMITED,                                            \
     .init       = TX_NAME(ff_tx_rdft_init),                                    \
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,                                         \
-    .prio       = FF_TX_PRIO_BASE,                                             \
+    .prio       = FF_TX_PRIO_بنسټ,                                             \
 };
 
 DECL_RDFT(r2c,  0)
 DECL_RDFT(c2r,  1)
 
-#define DECL_RDFT_HALF(n, mode, mod2)                                          \
-static void TX_NAME(ff_tx_rdft_ ##n)(AVTXContext *s, void *_dst,               \
-                                        void *_src, ptrdiff_t stride)          \
+#تعریف_کړه DECL_RDFT_HALF(n, ډېرپېښ, mod2)                                          \
+ساكن فراغ TX_NAME(ff_tx_rdft_ ##n)(AVTXContext *s, فراغ *_dst,               \
+                                        فراغ *_src, ptrdiff_t stride)          \
 {                                                                              \
-    const int len = s->len;                                                    \
-    const int len2 = len >> 1;                                                 \
-    const int len4 = len >> 2;                                                 \
-    const int aligned_len4 = FFALIGN(len, 4)/4;                                \
-    const TXSample *fact = (void *)s->exp;                                     \
-    const TXSample *tcos = fact + 8;                                           \
-    const TXSample *tsin = tcos + aligned_len4;                                \
-    TXComplex *data = _dst;                                                    \
-    TXSample *out = _dst; /* Half-complex is forward-only */                   \
+    ثابت صحيح len = s->len;                                                    \
+    ثابت صحيح len2 = len >> 1;                                                 \
+    ثابت صحيح len4 = len >> 2;                                                 \
+    ثابت صحيح aligned_len4 = FFALIGN(len, 4)/4;                                \
+    ثابت TXSample *fact = (فراغ *)s->توانیز_تابع;                                     \
+    ثابت TXSample *tcos = fact + 8;                                           \
+    ثابت TXSample *tsin = tcos + aligned_len4;                                \
+    TXComplex *معلومات = _dst;                                                    \
+    TXSample *بهر = _dst; /* Half-complex is forward-only */                   \
     TXSample tmp_dc;                                                           \
-    av_unused TXSample tmp_mid;                                                \
+    av_ناکارول_شوی TXSample tmp_mid;                                                \
     TXSample tmp[4];                                                           \
     TXComplex sf, sl;                                                          \
                                                                                \
-    s->fn[0](&s->sub[0], _dst, _src, sizeof(TXComplex));                       \
+    s->fn[0](&s->sub[0], _dst, _src, حجم(TXComplex));                       \
                                                                                \
-    tmp_dc = data[0].re;                                                       \
-    data[   0].re = tmp_dc + data[0].im;                                       \
-    tmp_dc        = tmp_dc - data[0].im;                                       \
+    tmp_dc = معلومات[0].re;                                                       \
+    معلومات[   0].re = tmp_dc + معلومات[0].im;                                       \
+    tmp_dc        = tmp_dc - معلومات[0].im;                                       \
                                                                                \
-    data[   0].re = MULT(fact[0], data[   0].re);                              \
+    معلومات[   0].re = MULT(fact[0], معلومات[   0].re);                              \
     tmp_dc        = MULT(fact[1],        tmp_dc);                              \
-    data[len4].re = MULT(fact[2], data[len4].re);                              \
+    معلومات[len4].re = MULT(fact[2], معلومات[len4].re);                              \
                                                                                \
-    if (!mod2) {                                                               \
-        data[len4].im = MULT(fact[3], data[len4].im);                          \
-    } else {                                                                   \
-        sf = data[len4];                                                       \
-        sl = data[len4 + 1];                                                   \
-        if (mode == AV_TX_REAL_TO_REAL)                                        \
+    إذا (!mod2) {                                                               \
+        معلومات[len4].im = MULT(fact[3], معلومات[len4].im);                          \
+    } وإلا {                                                                   \
+        sf = معلومات[len4];                                                       \
+        sl = معلومات[len4 + 1];                                                   \
+        إذا (ډېرپېښ == AV_TX_REAL_منزل_REAL)                                        \
             tmp[0] = MULT(fact[4], (sf.re + sl.re));                           \
-        else                                                                   \
+        وإلا                                                                   \
             tmp[0] = MULT(fact[5], (sf.im - sl.im));                           \
         tmp[1] = MULT(fact[6], (sf.im + sl.im));                               \
         tmp[2] = MULT(fact[7], (sf.re - sl.re));                               \
                                                                                \
-        if (mode == AV_TX_REAL_TO_REAL) {                                      \
+        إذا (ډېرپېښ == AV_TX_REAL_منزل_REAL) {                                      \
             tmp[3]  = tmp[1]*tcos[len4] - tmp[2]*tsin[len4];                   \
             tmp_mid = (tmp[0] - tmp[3]);                                       \
-        } else {                                                               \
+        } وإلا {                                                               \
             tmp[3]  = tmp[1]*tsin[len4] + tmp[2]*tcos[len4];                   \
             tmp_mid = (tmp[0] + tmp[3]);                                       \
         }                                                                      \
     }                                                                          \
                                                                                \
     /* NOTE: unrolling this breaks non-mod8 lengths */                         \
-    for (int i = 1; i <= len4; i++) {                                          \
+    لكل (صحيح i = 1; i <= len4; i++) {                                          \
         TXSample tmp[4];                                                       \
-        TXComplex sf = data[i];                                                \
-        TXComplex sl = data[len2 - i];                                         \
+        TXComplex sf = معلومات[i];                                                \
+        TXComplex sl = معلومات[len2 - i];                                         \
                                                                                \
-        if (mode == AV_TX_REAL_TO_REAL)                                        \
+        إذا (ډېرپېښ == AV_TX_REAL_منزل_REAL)                                        \
             tmp[0] = MULT(fact[4], (sf.re + sl.re));                           \
-        else                                                                   \
+        وإلا                                                                   \
             tmp[0] = MULT(fact[5], (sf.im - sl.im));                           \
                                                                                \
         tmp[1] = MULT(fact[6], (sf.im + sl.im));                               \
         tmp[2] = MULT(fact[7], (sf.re - sl.re));                               \
                                                                                \
-        if (mode == AV_TX_REAL_TO_REAL) {                                      \
+        إذا (ډېرپېښ == AV_TX_REAL_منزل_REAL) {                                      \
             tmp[3]           = tmp[1]*tcos[i] - tmp[2]*tsin[i];                \
-            out[i]           = (tmp[0] + tmp[3]);                              \
-            out[len - i]     = (tmp[0] - tmp[3]);                              \
-        } else {                                                               \
+            بهر[i]           = (tmp[0] + tmp[3]);                              \
+            بهر[len - i]     = (tmp[0] - tmp[3]);                              \
+        } وإلا {                                                               \
             tmp[3]           = tmp[1]*tsin[i] + tmp[2]*tcos[i];                \
-            out[i - 1]       = (tmp[3] - tmp[0]);                              \
-            out[len - i - 1] = (tmp[0] + tmp[3]);                              \
+            بهر[i - 1]       = (tmp[3] - tmp[0]);                              \
+            بهر[len - i - 1] = (tmp[0] + tmp[3]);                              \
         }                                                                      \
     }                                                                          \
                                                                                \
-    for (int i = 1; i < (len4 + (mode == AV_TX_REAL_TO_IMAGINARY)); i++)       \
-        out[len2 - i] = out[len - i];                                          \
+    لكل (صحيح i = 1; i < (len4 + (ډېرپېښ == AV_TX_REAL_منزل_IMAGINARY)); i++)       \
+        بهر[len2 - i] = بهر[len - i];                                          \
                                                                                \
-    if (mode == AV_TX_REAL_TO_REAL) {                                          \
-        out[len2] = tmp_dc;                                                    \
-        if (mod2)                                                              \
-            out[len4 + 1] = tmp_mid * fact[5];                                 \
-    } else if (mod2) {                                                         \
-        out[len4] = tmp_mid;                                                   \
+    إذا (ډېرپېښ == AV_TX_REAL_منزل_REAL) {                                          \
+        بهر[len2] = tmp_dc;                                                    \
+        إذا (mod2)                                                              \
+            بهر[len4 + 1] = tmp_mid * fact[5];                                 \
+    } وإلا إذا (mod2) {                                                         \
+        بهر[len4] = tmp_mid;                                                   \
     }                                                                          \
 }                                                                              \
                                                                                \
-static const FFTXCodelet TX_NAME(ff_tx_rdft_ ##n## _def) = {                   \
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_rdft_ ##n## _def) = {                   \
     .name       = TX_NAME_STR("rdft_" #n),                                     \
     .function   = TX_NAME(ff_tx_rdft_ ##n),                                    \
     .type       = TX_TYPE(RDFT),                                               \
-    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | mode |                     \
-                  FF_TX_OUT_OF_PLACE | FF_TX_FORWARD_ONLY,                     \
-    .factors    = { 2 + 2*(!mod2), TX_FACTOR_ANY },                            \
+    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | ډېرپېښ |                     \
+                  FF_TX_بهر_د_ځای_پرځای_کړه | FF_TX_FORWARD_ONLY,                     \
+    .factors    = { 2 + 2*(!mod2), TX_ضریب_ANY },                            \
     .nb_factors = 2,                                                           \
     .min_len    = 2 + 2*(!mod2),                                               \
     .max_len    = TX_LEN_UNLIMITED,                                            \
     .init       = TX_NAME(ff_tx_rdft_init),                                    \
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,                                         \
-    .prio       = FF_TX_PRIO_BASE,                                             \
+    .prio       = FF_TX_PRIO_بنسټ,                                             \
 };
 
-DECL_RDFT_HALF(r2r,      AV_TX_REAL_TO_REAL,      0)
-DECL_RDFT_HALF(r2r_mod2, AV_TX_REAL_TO_REAL,      1)
-DECL_RDFT_HALF(r2i,      AV_TX_REAL_TO_IMAGINARY, 0)
-DECL_RDFT_HALF(r2i_mod2, AV_TX_REAL_TO_IMAGINARY, 1)
+DECL_RDFT_HALF(r2r,      AV_TX_REAL_منزل_REAL,      0)
+DECL_RDFT_HALF(r2r_mod2, AV_TX_REAL_منزل_REAL,      1)
+DECL_RDFT_HALF(r2i,      AV_TX_REAL_منزل_IMAGINARY, 0)
+DECL_RDFT_HALF(r2i_mod2, AV_TX_REAL_منزل_IMAGINARY, 1)
 
-static av_cold int TX_NAME(ff_tx_dct_init)(AVTXContext *s,
-                                           const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_dct_init)(AVTXContext *s,
+                                           ثابت FFTXCodelet *cd,
                                            uint64_t flags,
                                            FFTXCodeletOptions *opts,
-                                           int len, int inv,
-                                           const void *scale)
+                                           صحيح len, صحيح inv,
+                                           ثابت فراغ *scale)
 {
-    int ret;
-    double freq;
+    صحيح ret;
+    مزدوج freq;
     TXSample *tab;
     SCALE_TYPE rsc = *((SCALE_TYPE *)scale);
 
-    if (inv) {
+    إذا (inv) {
         len *= 2;
         s->len *= 2;
         rsc *= 0.5;
     }
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(RDFT), flags, NULL, len, inv, &rsc)))
-        return ret;
+    إذا ((ret = ff_tx_init_subtx(s, TX_TYPE(RDFT), flags, عدم, len, inv, &rsc)))
+        أرجع ret;
 
-    s->exp = av_malloc((len/2)*3*sizeof(TXSample));
-    if (!s->exp)
-        return AVERROR(ENOMEM);
+    s->توانیز_تابع = av_malloc((len/2)*3*حجم(TXSample));
+    إذا (!s->توانیز_تابع)
+        أرجع AVERROR(ENOMEM);
 
-    tab = (TXSample *)s->exp;
+    tab = (TXSample *)s->توانیز_تابع;
 
     freq = M_PI/(len*2);
 
-    for (int i = 0; i < len; i++)
-        tab[i] = RESCALE(cos(i*freq)*(!inv + 1));
+    لكل (صحيح i = 0; i < len; i++)
+        tab[i] = RESCALE(کوساین(i*freq)*(!inv + 1));
 
-    if (inv) {
-        for (int i = 0; i < len/2; i++)
-            tab[len + i] = RESCALE(0.5 / sin((2*i + 1)*freq));
-    } else {
-        for (int i = 0; i < len/2; i++)
-            tab[len + i] = RESCALE(cos((len - 2*i - 1)*freq));
+    إذا (inv) {
+        لكل (صحيح i = 0; i < len/2; i++)
+            tab[len + i] = RESCALE(0.5 / ساین((2*i + 1)*freq));
+    } وإلا {
+        لكل (صحيح i = 0; i < len/2; i++)
+            tab[len + i] = RESCALE(کوساین((len - 2*i - 1)*freq));
     }
 
-    return 0;
+    أرجع 0;
 }
 
-static void TX_NAME(ff_tx_dctII)(AVTXContext *s, void *_dst,
-                                 void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_dctII)(AVTXContext *s, فراغ *_dst,
+                                 فراغ *_src, ptrdiff_t stride)
 {
     TXSample *dst = _dst;
     TXSample *src = _src;
-    const int len = s->len;
-    const int len2 = len >> 1;
-    const TXSample *exp = (void *)s->exp;
-    TXSample next;
-#ifdef TX_INT32
+    ثابت صحيح len = s->len;
+    ثابت صحيح len2 = len >> 1;
+    ثابت TXSample *توانیز_تابع = (فراغ *)s->توانیز_تابع;
+    TXSample بل;
+#که_تعریف_شوی TX_INT32
     int64_t tmp1, tmp2;
-#else
+#وإلا
     TXSample tmp1, tmp2;
-#endif
+#د_که_پای
 
-    for (int i = 0; i < len2; i++) {
+    لكل (صحيح i = 0; i < len2; i++) {
         TXSample in1 = src[i];
         TXSample in2 = src[len - i - 1];
-        TXSample s    = exp[len + i];
+        TXSample s    = توانیز_تابع[len + i];
 
-#ifdef TX_INT32
+#که_تعریف_شوی TX_INT32
         tmp1 = in1 + in2;
         tmp2 = in1 - in2;
 
@@ -1900,172 +1900,172 @@ static void TX_NAME(ff_tx_dctII)(AVTXContext *s, void *_dst,
         tmp2 *= s;
 
         tmp2 = (tmp2 + 0x40000000) >> 31;
-#else
+#وإلا
         tmp1 = (in1 + in2)*0.5;
         tmp2 = (in1 - in2)*s;
-#endif
+#د_که_پای
 
         src[i]           = tmp1 + tmp2;
         src[len - i - 1] = tmp1 - tmp2;
     }
 
-    s->fn[0](&s->sub[0], dst, src, sizeof(TXComplex));
+    s->fn[0](&s->sub[0], dst, src, حجم(TXComplex));
 
-    next = dst[len];
+    بل = dst[len];
 
-    for (int i = len - 2; i > 0; i -= 2) {
+    لكل (صحيح i = len - 2; i > 0; i -= 2) {
         TXSample tmp;
 
-        CMUL(tmp, dst[i], exp[len - i], exp[i], dst[i + 0], dst[i + 1]);
+        CMUL(tmp, dst[i], توانیز_تابع[len - i], توانیز_تابع[i], dst[i + 0], dst[i + 1]);
 
-        dst[i + 1] = next;
+        dst[i + 1] = بل;
 
-        next += tmp;
+        بل += tmp;
     }
 
-#ifdef TX_INT32
-    tmp1 = ((int64_t)exp[0]) * ((int64_t)dst[0]);
+#که_تعریف_شوی TX_INT32
+    tmp1 = ((int64_t)توانیز_تابع[0]) * ((int64_t)dst[0]);
     dst[0] = (tmp1 + 0x40000000) >> 31;
-#else
-    dst[0] = exp[0] * dst[0];
-#endif
-    dst[1] = next;
+#وإلا
+    dst[0] = توانیز_تابع[0] * dst[0];
+#د_که_پای
+    dst[1] = بل;
 }
 
-static void TX_NAME(ff_tx_dctIII)(AVTXContext *s, void *_dst,
-                                  void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_dctIII)(AVTXContext *s, فراغ *_dst,
+                                  فراغ *_src, ptrdiff_t stride)
 {
     TXSample *dst = _dst;
     TXSample *src = _src;
-    const int len = s->len;
-    const int len2 = len >> 1;
-    const TXSample *exp = (void *)s->exp;
-#ifdef TX_INT32
+    ثابت صحيح len = s->len;
+    ثابت صحيح len2 = len >> 1;
+    ثابت TXSample *توانیز_تابع = (فراغ *)s->توانیز_تابع;
+#که_تعریف_شوی TX_INT32
     int64_t  tmp1, tmp2 = src[len - 1];
     tmp2 = (2*tmp2 + 0x40000000) >> 31;
-#else
+#وإلا
     TXSample tmp1, tmp2 = 2*src[len - 1];
-#endif
+#د_که_پای
 
     src[len] = tmp2;
 
-    for (int i = len - 2; i >= 2; i -= 2) {
+    لكل (صحيح i = len - 2; i >= 2; i -= 2) {
         TXSample val1 = src[i - 0];
         TXSample val2 = src[i - 1] - src[i + 1];
 
-        CMUL(src[i + 1], src[i], exp[len - i], exp[i], val1, val2);
+        CMUL(src[i + 1], src[i], توانیز_تابع[len - i], توانیز_تابع[i], val1, val2);
     }
 
-    s->fn[0](&s->sub[0], dst, src, sizeof(float));
+    s->fn[0](&s->sub[0], dst, src, حجم(عائم));
 
-    for (int i = 0; i < len2; i++) {
+    لكل (صحيح i = 0; i < len2; i++) {
         TXSample in1 = dst[i];
         TXSample in2 = dst[len - i - 1];
-        TXSample c   = exp[len + i];
+        TXSample c   = توانیز_تابع[len + i];
 
         tmp1 = in1 + in2;
         tmp2 = in1 - in2;
         tmp2 *= c;
-#ifdef TX_INT32
+#که_تعریف_شوی TX_INT32
         tmp2 = (tmp2 + 0x40000000) >> 31;
-#endif
+#د_که_پای
 
         dst[i]            = tmp1 + tmp2;
         dst[len - i - 1]  = tmp1 - tmp2;
     }
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_dctII_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_dctII_def) = {
     .name       = TX_NAME_STR("dctII"),
     .function   = TX_NAME(ff_tx_dctII),
     .type       = TX_TYPE(DCT),
     .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE |
-                  FF_TX_OUT_OF_PLACE | FF_TX_FORWARD_ONLY,
-    .factors    = { 2, TX_FACTOR_ANY },
+                  FF_TX_بهر_د_ځای_پرځای_کړه | FF_TX_FORWARD_ONLY,
+    .factors    = { 2, TX_ضریب_ANY },
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
     .init       = TX_NAME(ff_tx_dct_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE,
+    .prio       = FF_TX_PRIO_بنسټ,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_dctIII_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_dctIII_def) = {
     .name       = TX_NAME_STR("dctIII"),
     .function   = TX_NAME(ff_tx_dctIII),
     .type       = TX_TYPE(DCT),
     .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE |
-                  FF_TX_OUT_OF_PLACE | FF_TX_INVERSE_ONLY,
-    .factors    = { 2, TX_FACTOR_ANY },
+                  FF_TX_بهر_د_ځای_پرځای_کړه | FF_TX_INVERSE_ONLY,
+    .factors    = { 2, TX_ضریب_ANY },
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
     .init       = TX_NAME(ff_tx_dct_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE,
+    .prio       = FF_TX_PRIO_بنسټ,
 };
 
-static av_cold int TX_NAME(ff_tx_dcstI_init)(AVTXContext *s,
-                                             const FFTXCodelet *cd,
+ساكن av_cold صحيح TX_NAME(ff_tx_dcstI_init)(AVTXContext *s,
+                                             ثابت FFTXCodelet *cd,
                                              uint64_t flags,
                                              FFTXCodeletOptions *opts,
-                                             int len, int inv,
-                                             const void *scale)
+                                             صحيح len, صحيح inv,
+                                             ثابت فراغ *scale)
 {
-    int ret;
+    صحيح ret;
     SCALE_TYPE rsc = *((SCALE_TYPE *)scale);
 
-    if (inv) {
+    إذا (inv) {
         len *= 2;
         s->len *= 2;
         rsc *= 0.5;
     }
 
     /* We want a half-complex RDFT */
-    flags |= cd->type == TX_TYPE(DCT_I) ? AV_TX_REAL_TO_REAL :
-                                          AV_TX_REAL_TO_IMAGINARY;
+    flags |= cd->type == TX_TYPE(DCT_I) ? AV_TX_REAL_منزل_REAL :
+                                          AV_TX_REAL_منزل_IMAGINARY;
 
-    if ((ret = ff_tx_init_subtx(s, TX_TYPE(RDFT), flags, NULL,
+    إذا ((ret = ff_tx_init_subtx(s, TX_TYPE(RDFT), flags, عدم,
                                 (len - 1 + 2*(cd->type == TX_TYPE(DST_I)))*2,
                                 0, &rsc)))
-        return ret;
+        أرجع ret;
 
-    s->tmp = av_mallocz((len + 1)*2*sizeof(TXSample));
-    if (!s->tmp)
-        return AVERROR(ENOMEM);
+    s->tmp = av_mallocz((len + 1)*2*حجم(TXSample));
+    إذا (!s->tmp)
+        أرجع AVERROR(ENOMEM);
 
-    return 0;
+    أرجع 0;
 }
 
-static void TX_NAME(ff_tx_dctI)(AVTXContext *s, void *_dst,
-                                void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_dctI)(AVTXContext *s, فراغ *_dst,
+                                فراغ *_src, ptrdiff_t stride)
 {
     TXSample *dst = _dst;
     TXSample *src = _src;
-    const int len = s->len - 1;
+    ثابت صحيح len = s->len - 1;
     TXSample *tmp = (TXSample *)s->tmp;
 
-    stride /= sizeof(TXSample);
+    stride /= حجم(TXSample);
 
-    for (int i = 0; i < len; i++)
+    لكل (صحيح i = 0; i < len; i++)
         tmp[i] = tmp[2*len - i] = src[i * stride];
 
-    tmp[len] = src[len * stride]; /* Middle */
+    tmp[len] = src[len * stride]; /*منځ*/
 
-    s->fn[0](&s->sub[0], dst, tmp, sizeof(TXSample));
+    s->fn[0](&s->sub[0], dst, tmp, حجم(TXSample));
 }
 
-static void TX_NAME(ff_tx_dstI)(AVTXContext *s, void *_dst,
-                                void *_src, ptrdiff_t stride)
+ساكن فراغ TX_NAME(ff_tx_dstI)(AVTXContext *s, فراغ *_dst,
+                                فراغ *_src, ptrdiff_t stride)
 {
     TXSample *dst = _dst;
     TXSample *src = _src;
-    const int len = s->len + 1;
-    TXSample *tmp = (void *)s->tmp;
+    ثابت صحيح len = s->len + 1;
+    TXSample *tmp = (فراغ *)s->tmp;
 
-    stride /= sizeof(TXSample);
+    stride /= حجم(TXSample);
 
     tmp[0] = 0;
 
-    for (int i = 1; i < len; i++) {
+    لكل (صحيح i = 1; i < len; i++) {
         TXSample a = src[(i - 1) * stride];
         tmp[i] = -a;
         tmp[2*len - i] = a;
@@ -2073,67 +2073,67 @@ static void TX_NAME(ff_tx_dstI)(AVTXContext *s, void *_dst,
 
     tmp[len] = 0; /* i == n, Nyquist */
 
-    s->fn[0](&s->sub[0], dst, tmp, sizeof(float));
+    s->fn[0](&s->sub[0], dst, tmp, حجم(عائم));
 }
 
-static const FFTXCodelet TX_NAME(ff_tx_dctI_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_dctI_def) = {
     .name       = TX_NAME_STR("dctI"),
     .function   = TX_NAME(ff_tx_dctI),
     .type       = TX_TYPE(DCT_I),
-    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | FF_TX_OUT_OF_PLACE,
-    .factors    = { 2, TX_FACTOR_ANY },
+    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | FF_TX_بهر_د_ځای_پرځای_کړه,
+    .factors    = { 2, TX_ضریب_ANY },
     .nb_factors = 2,
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
     .init       = TX_NAME(ff_tx_dcstI_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE,
+    .prio       = FF_TX_PRIO_بنسټ,
 };
 
-static const FFTXCodelet TX_NAME(ff_tx_dstI_def) = {
+ساكن ثابت FFTXCodelet TX_NAME(ff_tx_dstI_def) = {
     .name       = TX_NAME_STR("dstI"),
     .function   = TX_NAME(ff_tx_dstI),
     .type       = TX_TYPE(DST_I),
-    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | FF_TX_OUT_OF_PLACE,
-    .factors    = { 2, TX_FACTOR_ANY },
+    .flags      = AV_TX_UNALIGNED | AV_TX_INPLACE | FF_TX_بهر_د_ځای_پرځای_کړه,
+    .factors    = { 2, TX_ضریب_ANY },
     .nb_factors = 2,
     .min_len    = 2,
     .max_len    = TX_LEN_UNLIMITED,
     .init       = TX_NAME(ff_tx_dcstI_init),
     .cpu_flags  = FF_TX_CPU_FLAGS_ALL,
-    .prio       = FF_TX_PRIO_BASE,
+    .prio       = FF_TX_PRIO_بنسټ,
 };
 
-int TX_TAB(ff_tx_mdct_gen_exp)(AVTXContext *s, int *pre_tab)
+صحيح TX_TAB(ff_tx_mdct_gen_exp)(AVTXContext *s, صحيح *pre_tab)
 {
-    int off = 0;
-    int len4 = s->len >> 1;
-    double scale = s->scale_d;
-    const double theta = (scale < 0 ? len4 : 0) + 1.0/8.0;
+    صحيح off = 0;
+    صحيح len4 = s->len >> 1;
+    مزدوج scale = s->scale_d;
+    ثابت مزدوج theta = (scale < 0 ? len4 : 0) + 1.0/8.0;
     size_t alloc = pre_tab ? 2*len4 : len4;
 
-    if (!(s->exp = av_malloc_array(alloc, sizeof(*s->exp))))
-        return AVERROR(ENOMEM);
+    إذا (!(s->توانیز_تابع = av_malloc_array(alloc, حجم(*s->توانیز_تابع))))
+        أرجع AVERROR(ENOMEM);
 
-    scale = sqrt(fabs(scale));
+    scale = جذر(fabs(scale));
 
-    if (pre_tab)
+    إذا (pre_tab)
         off = len4;
 
-    for (int i = 0; i < len4; i++) {
-        const double alpha = M_PI_2 * (i + theta) / len4;
-        s->exp[off + i] = (TXComplex){ RESCALE(cos(alpha) * scale),
-                                       RESCALE(sin(alpha) * scale) };
+    لكل (صحيح i = 0; i < len4; i++) {
+        ثابت مزدوج alpha = M_PI_2 * (i + theta) / len4;
+        s->توانیز_تابع[off + i] = (TXComplex){ RESCALE(کوساین(alpha) * scale),
+                                       RESCALE(ساین(alpha) * scale) };
     }
 
-    if (pre_tab)
-        for (int i = 0; i < len4; i++)
-            s->exp[i] = s->exp[len4 + pre_tab[i]];
+    إذا (pre_tab)
+        لكل (صحيح i = 0; i < len4; i++)
+            s->توانیز_تابع[i] = s->توانیز_تابع[len4 + pre_tab[i]];
 
-    return 0;
+    أرجع 0;
 }
 
-const FFTXCodelet * const TX_NAME(ff_tx_codelet_list)[] = {
+ثابت FFTXCodelet * ثابت TX_NAME(ff_tx_codelet_list)[] = {
     /* Split-Radix codelets */
     &TX_NAME(ff_tx_fft2_ns_def),
     &TX_NAME(ff_tx_fft4_ns_def),
@@ -2188,7 +2188,7 @@ const FFTXCodelet * const TX_NAME(ff_tx_codelet_list)[] = {
     &TX_NAME(ff_tx_mdct_pfa_15xM_inv_def),
     &TX_NAME(ff_tx_mdct_naive_fwd_def),
     &TX_NAME(ff_tx_mdct_naive_inv_def),
-    &TX_NAME(ff_tx_mdct_inv_full_def),
+    &TX_NAME(ff_tx_mdct_inv_ډک_def),
     &TX_NAME(ff_tx_rdft_r2c_def),
     &TX_NAME(ff_tx_rdft_r2r_def),
     &TX_NAME(ff_tx_rdft_r2r_mod2_def),
@@ -2200,5 +2200,5 @@ const FFTXCodelet * const TX_NAME(ff_tx_codelet_list)[] = {
     &TX_NAME(ff_tx_dctI_def),
     &TX_NAME(ff_tx_dstI_def),
 
-    NULL,
+    عدم,
 };

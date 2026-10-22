@@ -18,17 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_OH_H
-#define AVUTIL_HWCONTEXT_OH_H
+#که_نه_تعریف_شوی AVUTIL_HWCONTEXT_OH_H
+#تعریف_کړه AVUTIL_HWCONTEXT_OH_H
 
 /**
  * OpenHarmony codec device
  */
-typedef struct AVOHCodecDeviceContext {
+تعريفنوع بنية AVOHCodecDeviceContext {
     /**
      * Pointer to OHNativeWindow
      */
-    void *native_window;
+    فراغ *native_کړکۍ;
 } AVOHCodecDeviceContext;
 
-#endif /* AVUTIL_HWCONTEXT_OH_H */
+#د_که_پای /* AVUTIL_HWCONTEXT_OH_H */

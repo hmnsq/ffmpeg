@@ -16,13 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FRAME_INTERNAL_H
-#define AVUTIL_FRAME_INTERNAL_H
+#که_نه_تعریف_شوی AVUTIL_چوکاټ_دننی_H
+#تعریف_کړه AVUTIL_چوکاټ_دننی_H
 
-#include <stddef.h>
+#ضمن <stddef.h>
 
-#include "buffer.h"
-#include "frame.h"
+#ضمن "buffer.h"
+#ضمن "frame.h"
 
 /**
  * Allocate the buffer of a video frame like av_frame_get_buffer().
@@ -30,8 +30,8 @@
  * @param alloc  allocates the buffer, av_buffer_alloc() is used if NULL
  * @param opaque passed to alloc
  */
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
-                              AVBufferRef *(*alloc)(void *opaque, size_t size),
-                              void *opaque);
+صحيح ff_چوکاټ_get_video_بفر(AVFrame *چوکاټ, صحيح align,
+                              AVBufferRef *(*alloc)(فراغ *opaque, size_t اندازه),
+                              فراغ *opaque);
 
-#endif /* AVUTIL_FRAME_INTERNAL_H */
+#د_که_پای /* AVUTIL_FRAME_INTERNAL_H */

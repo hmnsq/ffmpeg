@@ -21,44 +21,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
-#include "rc4.h"
+#ضمن "error.h"
+#ضمن "macros.h"
+#ضمن "mem.h"
+#ضمن "rc4.h"
 
-AVRC4 *av_rc4_alloc(void)
+AVRC4 *av_rc4_alloc(فراغ)
 {
-    return av_mallocz(sizeof(struct AVRC4));
+    أرجع av_mallocz(حجم(بنية AVRC4));
 }
 
-int av_rc4_init(AVRC4 *r, const uint8_t *key, int key_bits, int decrypt) {
-    int i, j;
+صحيح av_rc4_init(AVRC4 *r, ثابت uint8_t *کلی, صحيح کلی_بټونه, صحيح decrypt) {
+    صحيح i, j;
     uint8_t y;
     uint8_t *state = r->state;
-    int keylen = key_bits >> 3;
-    if (key_bits & 7)
-        return AVERROR(EINVAL);
-    for (i = 0; i < 256; i++)
+    صحيح keylen = کلی_بټونه >> 3;
+    إذا (کلی_بټونه & 7)
+        أرجع AVERROR(EINVAL);
+    لكل (i = 0; i < 256; i++)
         state[i] = i;
     y = 0;
     // j is i % keylen
-    for (j = 0, i = 0; i < 256; i++, j++) {
-        if (j == keylen) j = 0;
-        y += state[i] + key[j];
+    لكل (j = 0, i = 0; i < 256; i++, j++) {
+        إذا (j == keylen) j = 0;
+        y += state[i] + کلی[j];
         FFSWAP(uint8_t, state[i], state[y]);
     }
     r->x = 1;
     r->y = state[1];
-    return 0;
+    أرجع 0;
 }
 
-void av_rc4_crypt(AVRC4 *r, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt) {
+فراغ av_rc4_crypt(AVRC4 *r, uint8_t *dst, ثابت uint8_t *src, صحيح شمېر, uint8_t *iv, صحيح decrypt) {
     uint8_t x = r->x, y = r->y;
     uint8_t *state = r->state;
-    while (count-- > 0) {
-        uint8_t sum = state[x] + state[y];
+    طالما (شمېر-- > 0) {
+        uint8_t مجموعه = state[x] + state[y];
         FFSWAP(uint8_t, state[x], state[y]);
-        *dst++ = src ? *src++ ^ state[sum] : state[sum];
+        *dst++ = src ? *src++ ^ state[مجموعه] : state[مجموعه];
         x++;
         y += state[x];
     }

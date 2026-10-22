@@ -17,44 +17,44 @@
  */
 
 
-#ifndef AVUTIL_HWCONTEXT_AMF_H
-#define AVUTIL_HWCONTEXT_AMF_H
+#که_نه_تعریف_شوی AVUTIL_HWCONTEXT_AMF_H
+#تعریف_کړه AVUTIL_HWCONTEXT_AMF_H
 
-#include "pixfmt.h"
-#include "hwcontext.h"
-#include <AMF/core/Factory.h>
-#include <AMF/core/Context.h>
-#include <AMF/core/Trace.h>
-#include <AMF/core/Debug.h>
-#include <AMF/components/ColorSpace.h>
-#include "libavutil/mastering_display_metadata.h"
+#ضمن "pixfmt.h"
+#ضمن "hwcontext.h"
+#ضمن <AMF/core/Factory.h>
+#ضمن <AMF/core/Context.h>
+#ضمن <AMF/core/Trace.h>
+#ضمن <AMF/core/Debug.h>
+#ضمن <AMF/components/ColorSpace.h>
+#ضمن "libavutil/mastering_display_metadata.h"
 
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVAMFDeviceContext {
-    void *              library;
+تعريفنوع بنية AVAMFDeviceContext {
+    فراغ *              library;
     AMFFactory         *factory;
-    void               *trace_writer;
+    فراغ               *trace_writer;
 
-    int64_t             version; ///< version of AMF runtime
+    int64_t             نسخه; ///< version of AMF runtime
     AMFContext         *context;
-    AMF_MEMORY_TYPE     memory_type;
+    AMF_حافظه_TYPE     حافظه_type;
 
-    void (*lock)(void *lock_ctx);
-    void (*unlock)(void *lock_ctx);
-    void *lock_ctx;
+    فراغ (*قلف)(فراغ *قلف_ctx);
+    فراغ (*unlock)(فراغ *قلف_ctx);
+    فراغ *قلف_ctx;
 } AVAMFDeviceContext;
 
-enum AMF_MEMORY_TYPE av_amf_get_memory_type(AVAMFDeviceContext *amf_ctx);
+تعداد AMF_حافظه_TYPE av_amf_get_حافظه_type(AVAMFDeviceContext *amf_ctx);
 
-enum AMF_SURFACE_FORMAT av_av_to_amf_format(enum AVPixelFormat fmt);
-enum AVPixelFormat av_amf_to_av_format(enum AMF_SURFACE_FORMAT fmt);
+تعداد AMF_SURFACE_FORMAT av_av_منزل_amf_format(تعداد AVPixelFormat fmt);
+تعداد AVPixelFormat av_amf_منزل_av_format(تعداد AMF_SURFACE_FORMAT fmt);
 
-enum AMF_VIDEO_CONVERTER_COLOR_PROFILE_ENUM av_amf_get_color_profile(enum AVColorRange color_range, enum AVColorSpace color_space);
-int av_amf_display_mastering_meta_to_hdrmeta(const AVMasteringDisplayMetadata *display_meta, AMFHDRMetadata *hdrmeta);
-int av_amf_light_metadata_to_hdrmeta(const AVContentLightMetadata *light_meta, AMFHDRMetadata *hdrmeta);
-int av_amf_extract_hdr_metadata(const AVFrame *frame, AMFHDRMetadata *hdrmeta);
-int av_amf_attach_hdr_metadata(AVFrame *frame, const AMFHDRMetadata *hdrmeta);
+تعداد AMF_VIDEO_CONVERTER_COLOR_PROFILE_ENUM av_amf_get_color_profile(تعداد AVColorRange color_range, تعداد AVColorSpace color_space);
+صحيح av_amf_display_mastering_meta_منزل_hdrmeta(ثابت AVMasteringDisplayMetadata *display_meta, AMFHDRMetadata *hdrmeta);
+صحيح av_amf_light_metadata_منزل_hdrmeta(ثابت AVContentLightMetadata *light_meta, AMFHDRMetadata *hdrmeta);
+صحيح av_amf_ایستل_hdr_metadata(ثابت AVFrame *چوکاټ, AMFHDRMetadata *hdrmeta);
+صحيح av_amf_attach_hdr_metadata(AVFrame *چوکاټ, ثابت AMFHDRMetadata *hdrmeta);
 
-#endif /* AVUTIL_HWCONTEXT_AMF_H */
+#د_که_پای /* AVUTIL_HWCONTEXT_AMF_H */

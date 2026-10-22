@@ -18,91 +18,91 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_INTMATH_H
-#define AVUTIL_INTMATH_H
+#که_نه_تعریف_شوی AVUTIL_INTMATH_H
+#تعریف_کړه AVUTIL_INTMATH_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
-#include "config.h"
-#include "attributes.h"
+#ضمن "config.h"
+#ضمن "attributes.h"
 
-#if ARCH_ARM
+#إذا ARCH_ARM
 #   include "arm/intmath.h"
-#elif ARCH_RISCV
+#وإلاإذا ARCH_RISCV
 #   include "riscv/intmath.h"
-#elif ARCH_X86
+#وإلاإذا ARCH_X86
 #   include "x86/intmath.h"
-#endif
+#د_که_پای
 
-#if HAVE_FAST_CLZ
-#if defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz)
-#ifndef ff_log2
+#إذا HAVE_FAST_CLZ
+#إذا defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz)
+#که_نه_تعریف_شوی ff_log2
 #   define ff_log2(x) (31 - __builtin_clz((x)|1))
 #   ifndef ff_log2_16bit
 #      define ff_log2_16bit av_log2
 #   endif
-#endif /* ff_log2 */
-#endif /* defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz) */
-#endif
+#د_که_پای /* ff_log2 */
+#د_که_پای /* defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz) */
+#د_که_پای
 
-extern const uint8_t ff_log2_tab[256];
+خارجي ثابت uint8_t ff_log2_tab[256];
 
-#ifndef ff_log2
-#define ff_log2 ff_log2_c
-static av_always_inline av_const int ff_log2_c(unsigned int v)
+#که_نه_تعریف_شوی ff_log2
+#تعریف_کړه ff_log2 ff_log2_c
+ساكن av_always_inline av_const صحيح ff_log2_c(بینښه صحيح v)
 {
-    int n = 0;
-    if (v & 0xffff0000) {
+    صحيح n = 0;
+    إذا (v & 0xffff0000) {
         v >>= 16;
         n += 16;
     }
-    if (v & 0xff00) {
+    إذا (v & 0xff00) {
         v >>= 8;
         n += 8;
     }
     n += ff_log2_tab[v];
 
-    return n;
+    أرجع n;
 }
-#endif
+#د_که_پای
 
-#ifndef ff_log2_16bit
-#define ff_log2_16bit ff_log2_16bit_c
-static av_always_inline av_const int ff_log2_16bit_c(unsigned int v)
+#که_نه_تعریف_شوی ff_log2_16bit
+#تعریف_کړه ff_log2_16bit ff_log2_16bit_c
+ساكن av_always_inline av_const صحيح ff_log2_16bit_c(بینښه صحيح v)
 {
-    int n = 0;
-    if (v & 0xff00) {
+    صحيح n = 0;
+    إذا (v & 0xff00) {
         v >>= 8;
         n += 8;
     }
     n += ff_log2_tab[v];
 
-    return n;
+    أرجع n;
 }
-#endif
+#د_که_پای
 
-#define av_log2       ff_log2
-#define av_log2_16bit ff_log2_16bit
+#تعریف_کړه av_log2       ff_log2
+#تعریف_کړه av_log2_16bit ff_log2_16bit
 
 /**
  * @addtogroup lavu_math
  * @{
  */
 
-#if HAVE_FAST_CLZ
-#if !defined(ff_ctz) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_ctz))
-#define ff_ctz(v) __builtin_ctz(v)
-#endif
-#if !defined(ff_ctzll) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_ctzll))
-#define ff_ctzll(v) __builtin_ctzll(v)
-#endif
-#if !defined(ff_clz) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz))
-#define ff_clz(v) __builtin_clz(v)
-#endif
-#endif
+#إذا HAVE_FAST_CLZ
+#إذا !defined(ff_ctz) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_ctz))
+#تعریف_کړه ff_ctz(v) __builtin_ctz(v)
+#د_که_پای
+#إذا !defined(ff_ctzll) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_ctzll))
+#تعریف_کړه ff_ctzll(v) __builtin_ctzll(v)
+#د_که_پای
+#إذا !defined(ff_clz) && (defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_clz))
+#تعریف_کړه ff_clz(v) __builtin_clz(v)
+#د_که_پای
+#د_که_پای
 
-#ifndef ff_ctz
-#define ff_ctz ff_ctz_c
+#که_نه_تعریف_شوی ff_ctz
+#تعریف_کړه ff_ctz ff_ctz_c
 /**
  * Trailing zero bit count.
  *
@@ -111,54 +111,54 @@ static av_always_inline av_const int ff_log2_16bit_c(unsigned int v)
  */
 /* We use the De-Bruijn method outlined in:
  * http://supertech.csail.mit.edu/papers/debruijn.pdf. */
-static av_always_inline av_const int ff_ctz_c(int v)
+ساكن av_always_inline av_const صحيح ff_ctz_c(صحيح v)
 {
-    static const uint8_t debruijn_ctz32[32] = {
+    ساكن ثابت uint8_t debruijn_ctz32[32] = {
         0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
         31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
     };
-    return debruijn_ctz32[(uint32_t)((v & -(uint32_t)v) * 0x077CB531U) >> 27];
+    أرجع debruijn_ctz32[(uint32_t)((v & -(uint32_t)v) * 0x077CB531U) >> 27];
 }
-#endif
+#د_که_پای
 
-#ifndef ff_ctzll
-#define ff_ctzll ff_ctzll_c
+#که_نه_تعریف_شوی ff_ctzll
+#تعریف_کړه ff_ctzll ff_ctzll_c
 /* We use the De-Bruijn method outlined in:
  * http://supertech.csail.mit.edu/papers/debruijn.pdf. */
-static av_always_inline av_const int ff_ctzll_c(long long v)
+ساكن av_always_inline av_const صحيح ff_ctzll_c(اوږد اوږد v)
 {
-    static const uint8_t debruijn_ctz64[64] = {
+    ساكن ثابت uint8_t debruijn_ctz64[64] = {
         0, 1, 2, 53, 3, 7, 54, 27, 4, 38, 41, 8, 34, 55, 48, 28,
         62, 5, 39, 46, 44, 42, 22, 9, 24, 35, 59, 56, 49, 18, 29, 11,
         63, 52, 6, 26, 37, 40, 33, 47, 61, 45, 43, 21, 23, 58, 17, 10,
         51, 25, 36, 32, 60, 20, 57, 16, 50, 31, 19, 15, 30, 14, 13, 12
     };
-    return debruijn_ctz64[(uint64_t)((v & -(uint64_t)v) * 0x022FDD63CC95386DU) >> 58];
+    أرجع debruijn_ctz64[(uint64_t)((v & -(uint64_t)v) * 0x022FDD63CC95386DU) >> 58];
 }
-#endif
+#د_که_پای
 
-#ifndef ff_clz
-#define ff_clz ff_clz_c
-static av_always_inline av_const unsigned ff_clz_c(unsigned x)
+#که_نه_تعریف_شوی ff_clz
+#تعریف_کړه ff_clz ff_clz_c
+ساكن av_always_inline av_const بینښه ff_clz_c(بینښه x)
 {
-    unsigned i = sizeof(x) * 8;
+    بینښه i = حجم(x) * 8;
 
-    while (x) {
+    طالما (x) {
         x >>= 1;
         i--;
     }
 
-    return i;
+    أرجع i;
 }
-#endif
+#د_که_پای
 
-#if defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_parity)
-#ifndef av_parity
-#define av_parity __builtin_parity
-#endif
-#endif
+#إذا defined(__GNUC__) || AV_HAS_BUILTIN(__builtin_parity)
+#که_نه_تعریف_شوی av_parity
+#تعریف_کړه av_parity __builtin_parity
+#د_که_پای
+#د_که_پای
 
 /**
  * @}
  */
-#endif /* AVUTIL_INTMATH_H */
+#د_که_پای /* AVUTIL_INTMATH_H */

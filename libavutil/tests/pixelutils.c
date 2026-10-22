@@ -16,34 +16,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ضمن <stdio.h>
 
-#include "libavutil/avassert.h"
-#include "libavutil/internal.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixelutils.c"
-#include "libavutil/pixfmt.h"
+#ضمن "libavutil/avassert.h"
+#ضمن "libavutil/internal.h"
+#ضمن "libavutil/log.h"
+#ضمن "libavutil/mem.h"
+#ضمن "libavutil/pixdesc.h"
+#ضمن "libavutil/pixelutils.c"
+#ضمن "libavutil/pixfmt.h"
 
-#define W1 320
-#define H1 240
-#define W2 640
-#define H2 480
+#تعریف_کړه W1 320
+#تعریف_کړه H1 240
+#تعریف_کړه W2 640
+#تعریف_کړه H2 480
 
-static void check_pixfmt_descriptors(void)
+ساكن فراغ check_pixfmt_descriptors(فراغ)
 {
-    const AVPixFmtDescriptor *d, *last = NULL;
-    int i;
+    ثابت AVPixFmtDescriptor *d, *وروستی = عدم;
+    صحيح i;
 
-    for (i = AV_PIX_FMT_NONE, d = NULL; i++, d = av_pix_fmt_desc_next(d);) {
+    لكل (i = AV_PIX_FMT_NONE, d = عدم; i++, d = av_pix_fmt_desc_بل(d);) {
         uint8_t fill[4][8 + 6 + 3] = {{ 0 }};
-        uint8_t *data[4] = { fill[0], fill[1], fill[2], fill[3] };
-        int linesize[4] = { 0, 0, 0, 0 };
+        uint8_t *معلومات[4] = { fill[0], fill[1], fill[2], fill[3] };
+        صحيح linesize[4] = { 0, 0, 0, 0 };
         uint16_t tmp[2];
 
         av_assert0(d->name && d->name[0]);
-        av_log(NULL, AV_LOG_INFO, "Checking: %s\n", d->name);
+        av_log(عدم, AV_LOG_INFO, "Checking: %s\n", d->name);
         av_assert0(d->log2_chroma_w <= 3);
         av_assert0(d->log2_chroma_h <= 3);
         av_assert0(d->nb_components <= 4);
@@ -54,146 +54,146 @@ static void check_pixfmt_descriptors(void)
          * would need to be changed if we changed the way the descriptors
          * are stored. */
         av_assert0(i == av_pix_fmt_desc_get_id(d));
-        av_assert0(!last || last + 1 == d);
+        av_assert0(!وروستی || وروستی + 1 == d);
 
-        for (int j = 0; j < FF_ARRAY_ELEMS(d->comp); j++) {
-            const AVComponentDescriptor *c = &d->comp[j];
-            if (!c->depth) {
-                continue;
+        لكل (صحيح j = 0; j < FF_ARRAY_ELEMS(d->comp); j++) {
+            ثابت AVComponentDescriptor *c = &d->comp[j];
+            إذا (!c->ژوروالی) {
+                استمر;
             }
-            if (d->flags & AV_PIX_FMT_FLAG_BITSTREAM) {
-                av_assert0(c->step >= c->depth);
-            } else {
-                av_assert0(8*c->step >= c->depth);
+            إذا (d->flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+                av_assert0(c->ګام >= c->ژوروالی);
+            } وإلا {
+                av_assert0(8*c->ګام >= c->ژوروالی);
             }
-            if (d->flags & AV_PIX_FMT_FLAG_BAYER)
-                continue;
-            av_read_image_line(tmp, (void*)data, linesize, d, 0, 0, j, 2, 0);
+            إذا (d->flags & AV_PIX_FMT_FLAG_BAYER)
+                استمر;
+            av_read_image_کرښه(tmp, (فراغ*)معلومات, linesize, d, 0, 0, j, 2, 0);
             av_assert0(tmp[0] == 0 && tmp[1] == 0);
-            tmp[0] = tmp[1] = (1ULL << c->depth) - 1;
-            av_write_image_line(tmp, data, linesize, d, 0, 0, j, 2);
+            tmp[0] = tmp[1] = (1ULL << c->ژوروالی) - 1;
+            av_write_image_کرښه(tmp, معلومات, linesize, d, 0, 0, j, 2);
         }
-        last = d;
+        وروستی = d;
     }
     av_assert0(i == AV_PIX_FMT_NB);
 }
 
-static int run_single_test(const char *test,
-                           const uint8_t *block1, ptrdiff_t stride1,
-                           const uint8_t *block2, ptrdiff_t stride2,
-                           int align, int n)
+ساكن صحيح پرلپسې_single_test(ثابت حرف *test,
+                           ثابت uint8_t *block1, ptrdiff_t stride1,
+                           ثابت uint8_t *block2, ptrdiff_t stride2,
+                           صحيح align, صحيح n)
 {
-    int out, ref;
+    صحيح بهر, ref;
     av_pixelutils_sad_fn f_ref = sad_c[n - 1];
-    av_pixelutils_sad_fn f_out = av_pixelutils_get_sad_fn(n, n, align, NULL);
+    av_pixelutils_sad_fn f_بهر = av_pixelutils_get_sad_fn(n, n, align, عدم);
 
-    switch (align) {
-    case 0: block1++; block2++; break;
-    case 1:           block2++; break;
-    case 2:                     break;
+    بدل (align) {
+    حالة 0: block1++; block2++; اكسر;
+    حالة 1:           block2++; اكسر;
+    حالة 2:                     اكسر;
     }
 
-    out = f_out(block1, stride1, block2, stride2);
+    بهر = f_بهر(block1, stride1, block2, stride2);
     ref = f_ref(block1, stride1, block2, stride2);
-    printf("[%s] [%c%c] SAD [%s] %dx%d=%d ref=%d\n",
-           out == ref ? "OK" : "FAIL",
+    چاپ_کړه("[%s] [%c%c] SAD [%s] %dx%d=%d ref=%d\n",
+           بهر == ref ? "OK" : "FAIL",
            align ? 'A' : 'U', align == 2 ? 'A' : 'U',
-           test, 1<<n, 1<<n, out, ref);
-    return out != ref;
+           test, 1<<n, 1<<n, بهر, ref);
+    أرجع بهر != ref;
 }
 
-static int run_test(const char *test,
-                    const uint8_t *b1, const uint8_t *b2)
+ساكن صحيح پرلپسې_test(ثابت حرف *test,
+                    ثابت uint8_t *b1, ثابت uint8_t *b2)
 {
-    int i, a, ret = 0;
+    صحيح i, a, ret = 0;
 
-    for (a = 0; a < 3; a++) {
-        for (i = 1; i <= FF_ARRAY_ELEMS(sad_c); i++) {
-            int r = run_single_test(test, b1, W1, b2, W2, a, i);
-            if (r)
+    لكل (a = 0; a < 3; a++) {
+        لكل (i = 1; i <= FF_ARRAY_ELEMS(sad_c); i++) {
+            صحيح r = پرلپسې_single_test(test, b1, W1, b2, W2, a, i);
+            إذا (r)
                 ret = r;
         }
     }
-    return ret;
+    أرجع ret;
 }
 
-int main(void)
+صحيح اصلي(فراغ)
 {
-    int i, align, ret;
+    صحيح i, align, ret;
     uint8_t *buf1 = av_malloc(W1*H1);
     uint8_t *buf2 = av_malloc(W2*H2);
     uint32_t state = 0;
 
-    if (!buf1 || !buf2) {
+    إذا (!buf1 || !buf2) {
         fprintf(stderr, "malloc failure\n");
         ret = 1;
-        goto end;
+        اذهب پای_ټکی;
     }
 
     check_pixfmt_descriptors();
 
-#define RANDOM_INIT(buf, size) do {             \
-    int k;                                      \
-    for (k = 0; k < size; k++) {                \
+#تعریف_کړه RANDOM_INIT(buf, اندازه) افعل {             \
+    صحيح k;                                      \
+    لكل (k = 0; k < اندازه; k++) {                \
         state = state * 1664525 + 1013904223;   \
         buf[k] = state>>24;                     \
     }                                           \
-} while (0)
+} طالما (0)
 
     /* Normal test with different strides */
     RANDOM_INIT(buf1, W1*H1);
     RANDOM_INIT(buf2, W2*H2);
-    ret = run_test("random", buf1, buf2);
-    if (ret < 0)
-        goto end;
+    ret = پرلپسې_test("random", buf1, buf2);
+    إذا (ret < 0)
+        اذهب پای_ټکی;
 
     /* Check for maximum SAD */
     memset(buf1, 0xff, W1*H1);
     memset(buf2, 0x00, W2*H2);
-    ret = run_test("max", buf1, buf2);
-    if (ret < 0)
-        goto end;
+    ret = پرلپسې_test("max", buf1, buf2);
+    إذا (ret < 0)
+        اذهب پای_ټکی;
 
     /* Check for minimum SAD */
     memset(buf1, 0x90, W1*H1);
     memset(buf2, 0x90, W2*H2);
-    ret = run_test("min", buf1, buf2);
-    if (ret < 0)
-        goto end;
+    ret = پرلپسې_test("min", buf1, buf2);
+    إذا (ret < 0)
+        اذهب پای_ټکی;
 
     /* Exact buffer sizes, to check for overreads */
-    for (i = 1; i <= 5; i++) {
-        for (align = 0; align < 3; align++) {
-            int size1, size2;
+    لكل (i = 1; i <= 5; i++) {
+        لكل (align = 0; align < 3; align++) {
+            صحيح size1, size2;
 
             av_freep(&buf1);
             av_freep(&buf2);
 
             size1 = size2 = 1 << (i << 1);
 
-            switch (align) {
-            case 0: size1++; size2++; break;
-            case 1:          size2++; break;
-            case 2:                   break;
+            بدل (align) {
+            حالة 0: size1++; size2++; اكسر;
+            حالة 1:          size2++; اكسر;
+            حالة 2:                   اكسر;
             }
 
             buf1 = av_malloc(size1);
             buf2 = av_malloc(size2);
-            if (!buf1 || !buf2) {
+            إذا (!buf1 || !buf2) {
                 fprintf(stderr, "malloc failure\n");
                 ret = 1;
-                goto end;
+                اذهب پای_ټکی;
             }
             RANDOM_INIT(buf1, size1);
             RANDOM_INIT(buf2, size2);
-            ret = run_single_test("small", buf1, 1<<i, buf2, 1<<i, align, i);
-            if (ret < 0)
-                goto end;
+            ret = پرلپسې_single_test("small", buf1, 1<<i, buf2, 1<<i, align, i);
+            إذا (ret < 0)
+                اذهب پای_ټکی;
         }
     }
 
-end:
+پای_ټکی:
     av_free(buf1);
     av_free(buf2);
-    return ret;
+    أرجع ret;
 }

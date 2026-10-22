@@ -18,15 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_TIME_H
-#define AVUTIL_TIME_H
+#که_نه_تعریف_شوی AVUTIL_وخت_H
+#تعریف_کړه AVUTIL_وخت_H
 
-#include <stdint.h>
+#ضمن <stdint.h>
 
 /**
  * Get the current time in microseconds.
  */
-int64_t av_gettime(void);
+int64_t av_gettime(فراغ);
 
 /**
  * Get the current time in microseconds since some unspecified starting point.
@@ -35,13 +35,13 @@ int64_t av_gettime(void);
  * The returned values may not be monotonic on platforms where a monotonic
  * clock is not available.
  */
-int64_t av_gettime_relative(void);
+int64_t av_gettime_relative(فراغ);
 
 /**
  * Indicates with a boolean result if the av_gettime_relative() time source
  * is monotonic.
  */
-int av_gettime_relative_is_monotonic(void);
+صحيح av_gettime_relative_is_monotonic(فراغ);
 
 /**
  * Sleep for a period of time.  Although the duration is expressed in
@@ -51,6 +51,6 @@ int av_gettime_relative_is_monotonic(void);
  * @param  usec Number of microseconds to sleep.
  * @return zero on success or (negative) error code.
  */
-int av_usleep(unsigned usec);
+صحيح av_usleep(بینښه usec);
 
-#endif /* AVUTIL_TIME_H */
+#د_که_پای /* AVUTIL_TIME_H */

@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PPC_CPU_H
-#define AVUTIL_PPC_CPU_H
+#که_نه_تعریف_شوی AVUTIL_PPC_CPU_H
+#تعریف_کړه AVUTIL_PPC_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/cpu_internal.h"
 
-#define PPC_ALTIVEC(flags) CPUEXT(flags, ALTIVEC)
-#define PPC_VSX(flags) CPUEXT(flags, VSX)
-#define PPC_POWER8(flags) CPUEXT(flags, POWER8)
+#تعریف_کړه PPC_ALTIVEC(flags) CPUEXT(flags, ALTIVEC)
+#تعریف_کړه PPC_VSX(flags) CPUEXT(flags, VSX)
+#تعریف_کړه PPC_POWER8(flags) CPUEXT(flags, POWER8)
 
-#endif /* AVUTIL_PPC_CPU_H */
+#د_که_پای /* AVUTIL_PPC_CPU_H */
