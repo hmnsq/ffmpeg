@@ -1,0 +1,609 @@
+# What is still missing
+
+76 languages. Each line says in how many languages it is missing.
+
+## Files in languages BURP cannot read yet
+
+- `.v`: 1 files
+
+## Keywords with no word in a language's table
+
+- yantra:RET: 75
+- yantra:NEG: 75
+- yantra:PUSH: 75
+- yantra:POP: 75
+- yantra:ALIGN: 75
+- guru:__FILE__: 75
+- yantra:SUB: 75
+- yantra:PAGE: 75
+- yantra:SP: 75
+- yantra:LEA: 75
+- yantra:ADD: 75
+- guru:size_t: 71
+- guru:ptrdiff_t: 71
+- guru:errno: 71
+- guru:tm: 71
+- guru:offsetof: 71
+- guru:memcmp: 71
+- guru:va_list: 71
+- guru:INT_MIN: 71
+- guru:stderr: 71
+- guru:fprintf: 71
+- guru:UINT_MAX: 71
+- guru:ERANGE: 71
+- guru:wchar_t: 71
+- guru:close: 71
+- guru:fabs: 71
+- guru:strtol: 71
+- guru:DBL_MANT_DIG: 71
+- guru:abort: 71
+- guru:strchr: 71
+- guru:NAN: 71
+- guru:va_end: 71
+- guru:va_start: 71
+- guru:memmove: 71
+- guru:strspn: 71
+- guru:DBL_MAX: 71
+- guru:INFINITY: 71
+- guru:time_t: 71
+- guru:FILE: 71
+- guru:atoi: 71
+- guru:DBL_MIN: 71
+- guru:floor: 71
+- guru:fstat: 71
+- guru:getenv: 71
+- guru:fclose: 71
+- guru:clock: 71
+- guru:fopen: 71
+- guru:va_arg: 71
+- guru:strrchr: 71
+- guru:realloc: 71
+- guru:clock_t: 71
+- guru:fread: 71
+- guru:NDEBUG: 71
+- guru:EOF: 71
+- guru:strtoul: 71
+- guru:strtod: 71
+- guru:fgets: 71
+- guru:memchr: 71
+- guru:fmod: 71
+- guru:strftime: 71
+- guru:EDOM: 71
+- guru:ceil: 71
+- guru:FLT_MAX: 71
+- guru:FLT_MIN: 71
+- guru:strerror: 71
+- guru:CHAR_MIN: 71
+- guru:CHAR_MAX: 71
+- guru:gmtime: 71
+- guru:FLT_MANT_DIG: 71
+- guru:strcspn: 71
+- guru:fputs: 71
+- guru:bsearch: 71
+- guru:mktime: 71
+- guru:setvbuf: 71
+- guru:vfprintf: 71
+- guru:stdout: 71
+- guru:localtime: 71
+- guru:isfinite: 71
+- guru:memset: 70
+- guru:strcmp: 70
+- guru:div: 70
+- guru:open: 70
+- guru:wait: 70
+- guru:rand: 70
+- guru:puts: 70
+- guru:strcpy: 70
+- guru:srand: 70
+- guru:exp: 67
+- guru:cos: 67
+- guru:sin: 67
+- guru:restrict: 67
+- guru:log: 67
+- guru:#define: 66
+- guru:#endif: 66
+- guru:#ifndef: 66
+- guru:#ifdef: 66
+- guru:#undef: 66
+- guru:#error: 66
+- guru:printf: 62
+- guru:unsigned: 62
+- guru:memcpy: 62
+- guru:INT_MAX: 62
+- guru:long: 62
+- guru:strlen: 62
+- guru:pow: 62
+- guru:strstr: 62
+- guru:sqrt: 62
+- guru:strncmp: 62
+- guru:exit: 62
+- guru:short: 62
+- guru:putchar: 62
+- guru:malloc: 62
+- guru:sscanf: 62
+- guru:signed: 62
+- guru:abs: 62
+- guru:main: 54
+- yantra:global: 45
+- yantra:call: 26
+- guru:const: 25
+- guru:void: 25
+- guru:static: 25
+- guru:NULL: 25
+- guru:goto: 25
+- guru:float: 25
+- guru:typedef: 25
+- guru:continue: 25
+- guru:#elif: 25
+- guru:switch: 25
+- guru:do: 25
+- guru:default: 25
+- guru:free: 25
+- guru:extern: 25
+- guru:read: 25
+- guru:for: 9
+- guru:char: 9
+- guru:case: 9
+- guru:sizeof: 9
+- guru:enum: 9
+- guru:double: 9
+- guru:struct: 9
+- guru:break: 9
+- guru:inline: 9
+- guru:union: 9
+- guru:volatile: 9
+- guru:register: 9
+- guru:int: 1
+- guru:if: 1
+- guru:return: 1
+- guru:else: 1
+- guru:#if: 1
+- guru:while: 1
+- guru:#else: 1
+
+## Names with no dictionary entry (the most common first)
+
+- `i`: 76
+- `s`: 76
+- `ret`: 76
+- `ctx`: 76
+- `p`: 76
+- `dst`: 76
+- `flags`: 76
+- `a`: 76
+- `src`: 76
+- `c`: 76
+- `buf`: 76
+- `hwctx`: 76
+- `x`: 76
+- `b`: 76
+- `j`: 76
+- `AVERROR`: 76
+- `e`: 76
+- `len`: 76
+- `err`: 76
+- `name`: 76
+- `d`: 76
+- `f`: 76
+- `av_log`: 76
+- `t`: 76
+- `type`: 76
+- `desc`: 76
+- `AV_LOG_ERROR`: 76
+- `hwfc`: 76
+- `fail`: 76
+- `re`: 76
+- `im`: 76
+- `tmp`: 76
+- `map`: 76
+- `v`: 76
+- `y`: 76
+- `AVRational`: 76
+- `define`: 76
+- `n`: 76
+- `RTYPE`: 76
+- `comp`: 76
+- `priv`: 76
+- `AVFrame`: 76
+- `val`: 76
+- `str`: 76
+- `k`: 76
+- `obj`: 76
+- `o`: 76
+- `in1`: 76
+- `pool`: 76
+- `state`: 76
+- `h`: 76
+- `in0`: 76
+- `w`: 76
+- `defined`: 76
+- `z`: 76
+- `den`: 76
+- `AVHWFramesContext`: 76
+- `format`: 76
+- `stride`: 76
+- `opaque`: 76
+- `m`: 76
+- `nb_components`: 76
+- `av_free`: 76
+- `log2_chroma_h`: 76
+- `log2_chroma_w`: 76
+- `r`: 76
+- `pix_fmt`: 76
+- `in2`: 76
+- `g`: 76
+- `bp`: 76
+- `cs`: 76
+- `vk`: 76
+- `av_freep`: 76
+- `info`: 76
+- `out0`: 76
+- `AVPixelFormat`: 76
+- `out1`: 76
+- `in3`: 76
+- `channel_layout`: 76
+- `iv`: 76
+- `v8i16`: 76
+- `AVBufferRef`: 76
+- `FF_ARRAY_ELEMS`: 76
+- `ptr`: 76
+- `device`: 76
+- `cle`: 76
+- `tab`: 76
+- `TX_NAME`: 76
+- `opts`: 76
+- `device_ctx`: 76
+- `AVHWDeviceContext`: 76
+- `linesize`: 76
+- `hwdev`: 76
+- `E`: 76
+- `params`: 76
+- `sType`: 76
+- `v16i8`: 76
+- `fmt`: 76
+- `constraints`: 76
+- `v16u8`: 76
+- `i64`: 76
+- `sd`: 76
+- `src1`: 76
+- `res`: 76
+- `av_assert0`: 76
+- `cd`: 76
+- `planes`: 76
+- `unit`: 76
+- `q`: 76
+- `AV_PIX_FMT_FLAG_PLANAR`: 76
+- `MACRO`: 76
+- `hr`: 76
+- `shd`: 76
+- `ref`: 76
+- `opt`: 76
+- `fdsp`: 76
+- `vkctx`: 76
+- `v4i32`: 76
+- `nb_channels`: 76
+- `VK_FORMAT_R16_UNORM`: 76
+- `nb_elems`: 76
+- `src0`: 76
+- `pdst`: 76
+- `sw_format`: 76
+- `out2`: 76
+- `l`: 76
+- `test_ctx`: 76
+- `AV_OPT_TYPE_CONST`: 76
+- `av_mallocz`: 76
+- `plane`: 76
+- `vas`: 76
+- `idx`: 76
+- `fd`: 76
+- `nb_samples`: 76
+- `FFVulkanContext`: 76
+- `inv`: 76
+- `K`: 76
+- `av_always_inline`: 76
+- `AV_PIX_FMT_FLAG_BE`: 76
+- `FF_VK_EXT_NO_FLAG`: 76
+- `AV_PIX_FMT_NE`: 76
+- `AVR`: 76
+- `cu`: 76
+- `act_dev`: 76
+- `TXComplex`: 76
+- `av_const`: 76
+- `AVDictionary`: 76
+- `AV_PIX_FMT_FLAG_RGB`: 76
+- `AV_LOG_VERBOSE`: 76
+- `u`: 76
+- `out3`: 76
+- `TEST`: 76
+- `tc`: 76
+- `cpu_flags`: 76
+- `AVClass`: 76
+- `AVERROR_UNKNOWN`: 76
+- `param`: 76
+- `par`: 76
+- `in4`: 76
+- `FFMIN`: 76
+- `device_hwctx`: 76
+- `dst_fc`: 76
+- `cnt`: 76
+- `mapping`: 76
+- `nb_sd`: 76
+- `in5`: 76
+- `context`: 76
+- `v1`: 76
+- `D1`: 76
+- `D2`: 76
+- `AVOption`: 76
+- `nb_planes`: 76
+- `AV_TX_INPLACE`: 76
+- `P`: 76
+- `AV_PIX_FMT_NONE`: 76
+- `display`: 76
+- `props`: 76
+- `mant`: 76
+- `AVTXContext`: 76
+- `fp`: 76
+- `AV_LOG_DEBUG`: 76
+- `qf`: 76
+- `_in0`: 76
+- `level`: 76
+- `pb`: 76
+- `fmts`: 76
+- `_in1`: 76
+- `decrypt`: 76
+- `FFT`: 76
+- `af`: 76
+- `s1`: 76
+- `sample_fmt`: 76
+- `align`: 76
+- `av_bprintf`: 76
+- `AVChannelLayout`: 76
+- `v2i64`: 76
+- `F`: 76
+- `alloc`: 76
+- `scale`: 76
+- `_in2`: 76
+- `_in3`: 76
+- `in6`: 76
+- `CHECK_CU`: 76
+- `s0`: 76
+- `gb`: 76
+- `in7`: 76
+- `hwmap`: 76
+- `dict`: 76
+- `FFTXCodelet`: 76
+- `src_hwctx`: 76
+- `mq`: 76
+- `TXSample`: 76
+- `max`: 76
+- `AV_PIX_FMT_FLAG_ALPHA`: 76
+- `COPY_VAL`: 76
+- `mtmp`: 76
+- `AVPixFmtDescriptor`: 76
+- `av_malloc`: 76
+- `layout`: 76
+- `AVERROR_EXTERNAL`: 76
+- `usage`: 76
+- `feats`: 76
+- `intnum`: 76
+- `ctxi`: 76
+- `av_cold`: 76
+- `sign`: 76
+- `av_malloc_array`: 76
+- `trc`: 76
+- `log_ctx`: 76
+- `dummy`: 76
+- `FFVulkanFunctions`: 76
+- `L`: 76
+- `var`: 76
+- `drm_desc`: 76
+- `_out0`: 76
+- `_out2`: 76
+- `sub`: 76
+- `psrc`: 76
+- `surface`: 76
+- `vkfn`: 76
+- `layers`: 76
+- `default_val`: 76
+- `FFVkExecContext`: 76
+- `AVInteger`: 76
+- `av_calloc`: 76
+- `tmp1_m`: 76
+- `mem`: 76
+- `TX_DEF`: 76
+- `AV_RB32`: 76
+- `hw_type`: 76
+- `surface_id`: 76
+- `av_log_obj`: 76
+- `AVBPrint`: 76
+- `valid_sw_formats`: 76
+- `nb_images`: 76
+- `VK_SUCCESS`: 76
+- `_out1`: 76
+- `_out3`: 76
+- `TX_TAB`: 76
+- `len4`: 76
+- `dc`: 76
+- `image`: 76
+- `v8u16`: 76
+- `AVSampleFormat`: 76
+- `mutex`: 76
+- `ch`: 76
+- `linesizes`: 76
+- `valid_hw_formats`: 76
+- `tmp0_m`: 76
+- `TX_DECL_FN`: 76
+- `v0`: 76
+- `k1`: 76
+- `strmatch`: 76
+- `AV_LOG_INFO`: 76
+- `FF_TX_PRESHUFFLE`: 76
+- `len2`: 76
+- `FIX`: 76
+- `cf`: 76
+- `T`: 76
+- `fgp`: 76
+- `src_ctx`: 76
+- `swf`: 76
+- `pca`: 76
+- `neon`: 76
+- `amf_ctx`: 76
+- `nb_surfaces`: 76
+- `SoftFloat`: 76
+- `mdm`: 76
+- `bias`: 76
+- `t1`: 76
+- `sf1`: 76
+- `prio`: 76
+- `fourcc`: 76
+- `k2`: 76
+- `Lc`: 76
+- `sts`: 76
+- `extensions`: 76
+- `BF`: 76
+- `factors`: 76
+- `cond`: 76
+
+## Comments with no translation
+
+- * =============================================================================
+ * Description : Dot: 76
+- you can redistribute it and/or: 76
+- either: 76
+- if not, write to the Free Software: 76
+- * =============================================================================
+ * Description : Tra: 76
+- * This file is part of FFmpeg.: 76
+- * FFmpeg is free software; you can redistribute it and/or: 76
+- * modify it under the terms of the GNU Lesser General Public: 76
+- * FFmpeg is distributed in the hope that it will be useful,: 76
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU: 76
+- * You should have received a copy of the GNU Lesser General Public: 76
+- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA: 76
+- * =============================================================================
+ * Description : The: 76
+- /< Not part of ABI: 76
+- OOM paths via av_max_alloc: 76
+- This function handles the permute step: 76
+- HAVE_THREADS: 76
+- HAVE_INLINE_ASM: 76
+- We want the subtransform to be: 76
+- in-place: 76
+- dynamic: 76
+- *
+ * This struct is allocated as AVHWDeviceContext.hwctx: 76
+- const uint8_t *src2, ptrdiff_t stride2);: 76
+- NULL terminated: 76
+- reserved_zero: 76
+- Same formats.: 76
+- out[0]: 76
+- temporary registers: 76
+- nothing: 76
+- *
+ * This struct is allocated as AVHWFramesContext.hwctx: 76
+- * =============================================================================
+ * Description : Cli: 76
+- * =============================================================================
+ * Description : But: 76
+- * =============================================================================
+ * Description : Mul: 76
+- loop unrolled 4 times: 76
+- write and read back: 76
+- cpuflag: 76
+- cpuflag(fma3): 76
+- out[10,5]: 76
+- wim77553311: 76
+- wim66442200: 76
+- m2,3[01]imre * cos0246: 76
+- m2,3[23]reim * cos0246: 76
+- +-m2,3[23]imre * wim7531: 76
+- HAVE_AV_CONFIG_H: 76
+- static: 76
+- *
+ * Convenience macro, the return value should be used only directly in
+ * function arguments but n: 76
+- intensity interval: 76
+- *
+     * If unset, this will be set from the device field on init.
+     *
+     * Deallocating the AV: 76
+- *
+     * Duration for the given subblock, in units of
+     * 1 / @ref AVIAMFParamDefinition.paramete: 76
+- !HAVE_MIPS32R6 && !HAVE_MIPS64R6: 76
+- * hash context: 76
+- /< number of bytes in buffer: 76
+- /< current hash value: 76
+- Should cause a transform(): 76
+- *
+ * Finish hashing and output digest value.
+ *
+ * @param context hash function context
+ * @param di: 76
+- LIBAVUTIL_VERSION_MAJOR < 62: 76
+- LCOV_EXCL_START: 76
+- LCOV_EXCL_STOP: 76
+- fill data: 76
+- peek_at at FIFO: 76
+- Formats containing the same data in different layouts.: 76
+- Descriptor buffer: 76
+- * Authors: Loren Merritt <lorenm@u.washington.edu>: 76
+- mmsize: 76
+- int len): 76
+- tab[23232323]: 76
+- cos00224466: 76
+- cos11335577: 76
+- m2,3[01]reim * wim7531 even: 76
+- m2,3[23]reim * wim7531 even: 76
+- m2[0].imre, m2[1].imre, m3[0].imre, m3[1].imre even: 76
+- m2[2].imre, m2[3].imre, m3[2].imre, m3[3].imre even: 76
+- w[0..8] even: 76
+- j[0..8] even: 76
+- backup original context: 76
+- flip: 76
+- #args, #regs, #xmm_regs, [stack_size,] arg_names...: 76
+- %1 == instruction: 76
+- %2 == minimal instruction set: 76
+- last operand must be xmm0 with legacy encoding: 76
+- convert the reversed representation to regular form: 76
+- convert to 32 degree polynomial: 76
+- *
+ * Peek data from an AVAudioFifo.
+ *
+ * @see enum AVSampleFormat
+ * The documentation for AVSample: 76
+- *
+ * Locale-independent case-insensitive compare.
+ * @note This means only ASCII-range characters ar: 76
+- ****************************************************************************
+* b64_encode: Stolen fr: 76
+- *
+ * Encrypt or decrypt a buffer using a previously initialized context.
+ *
+ * @param ctx an AVBlowf: 76
+- *
+ * Append a formatted string to a print buffer.: 76
+- *
+ * @file
+ * byte swapping routines: 76
+- *
+ * The buffer pool. This structure is opaque and not meant to be accessed
+ * directly. It is alloc: 76
+- .order: 76
+- .nb_channels: 76
+- .u.mask: 76
+- .opaque: 76
+- *
+ * Count number of bits set to one in x
+ * @param x value to count bits of
+ * @return the number o: 76
+- /< SSE integer functions or AMD MMX ext: 76
+- /< than regular MMX/SSE (e.g. Core1): 76
+- *
+ * Allocates memory for AVDetectionBBoxHeader, plus an array of {@code nb_bboxes}
+ * AVDetectionBB: 76
+- per component: 76
+- dynamic, may appear multiple times: 76
+- *
+     * Absolute scale factor representing the nominal level of the surround
+     * channels during: 76
